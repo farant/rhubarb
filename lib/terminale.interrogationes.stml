@@ -1,0 +1,141 @@
+<interrogationes unitas="terminale">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I run a standalone terminal window with this library?
+    <responsum symbolum="terminale_argumenta terminale_ambitus pseudoterminale_posix_creare terminale_applicatio_aedificare" via="apps/terminale/terminale.c">Build
+      the child yourself: terminale_argumenta (argv; -fumus gives a
+      short fixed script, otherwise $SHELL -l, falling back to
+      /bin/zsh) and terminale_ambitus (TERM=xterm-256color,
+      COLORTERM=truecolor, TERM_PROGRAM=terminale, TMUX and TMUX_PANE
+      removed) go into pseudoterminale_posix_creare. Then
+      terminale_applicatio_aedificare(app, piscina, intern, pt,
+      latitudo, altitudo) builds the store, registries, dispatcher and
+      emulator host; app.d and app.figurae feed the window loop.
+      apps/terminale/terminale.c is the reference.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I embed a terminal pane inside another app's store, as vicus does?
+    <responsum symbolum="terminale_montare terminale_componere" via="lib/vicus_applicatio.c">terminale_montare(app,
+      piscina, intern, repo, id, argumenta, systemata, latitudo,
+      altitudo) spawns the child itself (argumenta NIHIL = $SHELL -l)
+      and mounts the branch with element terminale and the given id
+      through the embedded organum manifest. It creates NO
+      dispatcher: the host routes events and calls
+      terminale_componere with the app as ctx to build the pane's
+      components.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>what does my main loop have to call every frame?
+    <responsum symbolum="terminale_pulsare aemulator_hospes_pulsare terminale_titulus">The
+      library owns no loop. Each frame call terminale_pulsare(app,
+      mora_ms): it reads superficies_latitudo / superficies_altitudo
+      from the app's branch, resizes the emulator and child when the
+      cell grid changed, then pulses the host. Redraw when the result
+      has mutatum; finitus means the shell exited. Afterwards
+      terminale_titulus(app, &amp;mutatus) gives the OSC 0/2 title,
+      with mutatus VERUM once per change.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I keep the chorda that terminale_titulus returns?
+    <responsum symbolum="terminale_titulus">Only until the next pulse.
+      It points into a fixed CCLVI-byte buffer inside the app's
+      private context (longer titles are cut to CCLVI bytes) and is
+      overwritten whenever the program sets a new title. Copy it if
+      you need it later; the window app copies it into a stack buffer
+      rather than the piscina, because zsh retitles on every prompt
+      and a pool copy per change would grow for the whole
+      session.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does a key press reach the shell only after the next event arrives?
+    <responsum symbolum="codificator_eventa" via="lib/terminale.worklog.md">Real
+      input sources send key down, then its text, then key up, but
+      the encoder wants the key and its text as one series. So a
+      key-down is held as pending; a following committed text event
+      is encoded together with it, and any other event (key up,
+      mouse, focus, wheel, another key down) first flushes the
+      pending key alone. Keys with no text (Enter, Ctrl-C, arrows)
+      therefore go out with the next event, normally their own
+      key-up.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does Cmd+V or any Cmd key never reach the program?
+    <responsum via="lib/terminale.c lib/terminale.worklog.md">Every
+      key with MOD_SUPER is dropped, down and up, which is the macOS
+      terminal convention (Terminal.app, iTerm). The menu handles the
+      shortcut (Cmd+V pastes through it); forwarding the key as well
+      made kitty-keyboard programs such as Claude Code type a stray v
+      before the pasted text.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why do my program's colours look different from the colours it asked for?
+    <responsum via="lib/terminale.c lib/terminale.worklog.md">A
+      minimum contrast of 3.0 (WCAG) is applied: text too close to
+      its background is nudged the smallest step toward black or
+      white that reaches the ratio, because programs assume a dark
+      background and the house theme is light. Faint (SGR 2) text is
+      first blended halfway into its background, and bold 0-7 uses
+      the bright palette. Box drawing and block elements
+      (U+2500-259F) skip the contrast floor, since their colour is
+      the picture.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is ornamenta_pixelorum and when should it be FALSUM?
+    <responsum symbolum="terminale_applicatio_aedificare" via="apps/terminale/terminale_terminalis.c">A
+      flag on TerminaleApplicatio, VERUM after
+      terminale_applicatio_aedificare. It draws underlines (five
+      forms), strike-through, overline, fake bold (glyph drawn again
+      one pixel right) and box/block/braille glyphs as pixel shapes.
+      The terminal twin (terminale_terminalis) sets it FALSUM because
+      its rasteriser turns a horizontal line into box-drawing cells,
+      which would erase the letter under an underline.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what happens on failure, and who closes the pseudoterminal?
+    <responsum symbolum="terminale_applicatio_aedificare terminale_montare terminale_claudere aemulator_hospes_creare">Once
+      the host exists it owns the pseudoterminal, and
+      terminale_claudere closes the child through it. A FALSUM from
+      terminale_applicatio_aedificare closes pt only when the
+      failure comes BEFORE the host is created (bad arguments, no
+      memory for the context, or aemulator_hospes_creare failing,
+      which closes pt itself). A later failure (organum missing,
+      branch refused, store, registries or scratch pool missing)
+      returns FALSUM with the child still running, despite the
+      header's promise; terminale_montare passes on the same
+      result. So zero the TerminaleApplicatio before the call (it is
+      zeroed only after the argument check) and call
+      terminale_claudere after any FALSUM that left app.hospes
+      set.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find which tty the child shell is on?
+    <responsum symbolum="terminale_tty">terminale_tty(app) returns the
+      child's tty path (for example /dev/ttys011), copied into the
+      piscina when the app is built; vicus uses it to match tmux
+      clients to panes. It is an empty chorda when the
+      pseudoterminal has no tty, such as the in-memory
+      bridge.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I mount and close terminals over and over without leaking memory?
+    <responsum symbolum="terminale_claudere terminale_montare piscina_generare_dynamicum">Not
+      completely. Everything else lives in the piscina you pass, but
+      every build also creates its own dynamic scratch piscina
+      (terminale_scrutinium, first block LXIV * MXXIV bytes) for
+      encoding key bytes, and nothing ever destroys it:
+      terminale_claudere only closes the emulator host. vicus mounts
+      a new terminale on every pane opening, so each one leaves that
+      pool behind for the life of the process.</responsum>
+  </interrogatio>
+
+</interrogationes>

@@ -12,17 +12,15 @@
 #include <string.h>
 
 
-/* ========================================================================
+/* ==================================================
  * PROBATIONES - CODIFICATIO SIMPLEX
- * ======================================================================== */
+ * ================================================== */
 
 interior vacuum
 probatio_codificatio_simplex(Piscina* piscina)
 {
     chorda originalis;
     chorda codificata;
-
-    printf("--- Probans codificatio simplex ---\n");
 
     /* Textus simplex sine characteres speciales */
     originalis = chorda_ex_literis("hello", piscina);
@@ -40,17 +38,15 @@ probatio_codificatio_simplex(Piscina* piscina)
 }
 
 
-/* ========================================================================
+/* ==================================================
  * PROBATIONES - CODIFICATIO SPECIALES
- * ======================================================================== */
+ * ================================================== */
 
 interior vacuum
 probatio_codificatio_speciales(Piscina* piscina)
 {
     chorda originalis;
     chorda codificata;
-
-    printf("--- Probans codificatio speciales ---\n");
 
     /* Spatium -> %20 */
     originalis = chorda_ex_literis("hello world", piscina);
@@ -80,17 +76,15 @@ probatio_codificatio_speciales(Piscina* piscina)
 }
 
 
-/* ========================================================================
+/* ==================================================
  * PROBATIONES - DECODIFICATIO
- * ======================================================================== */
+ * ================================================== */
 
 interior vacuum
 probatio_decodificatio(Piscina* piscina)
 {
     chorda codificata;
     chorda decodificata;
-
-    printf("--- Probans decodificatio ---\n");
 
     /* Simplex */
     codificata    = chorda_ex_literis("hello", piscina);
@@ -120,9 +114,9 @@ probatio_decodificatio(Piscina* piscina)
 }
 
 
-/* ========================================================================
+/* ==================================================
  * PROBATIONES - ROUND TRIP
- * ======================================================================== */
+ * ================================================== */
 
 interior vacuum
 probatio_round_trip(Piscina* piscina)
@@ -130,8 +124,6 @@ probatio_round_trip(Piscina* piscina)
     chorda originalis;
     chorda codificata;
     chorda decodificata;
-
-    printf("--- Probans round trip ---\n");
 
     originalis = chorda_ex_literis("Hello World! How are you?",
         piscina);
@@ -151,9 +143,9 @@ probatio_round_trip(Piscina* piscina)
 }
 
 
-/* ========================================================================
+/* ==================================================
  * PROBATIONES - PARAMS CONSTRUERE
- * ======================================================================== */
+ * ================================================== */
 
 interior vacuum
 probatio_params_construere(Piscina* piscina)
@@ -161,8 +153,6 @@ probatio_params_construere(Piscina* piscina)
     chorda claves[III];
     chorda valores[III];
     chorda query;
-
-    printf("--- Probans params construere ---\n");
 
     /* Una par */
     claves[0]   = chorda_ex_literis("name", piscina);
@@ -191,17 +181,15 @@ probatio_params_construere(Piscina* piscina)
 }
 
 
-/* ========================================================================
+/* ==================================================
  * PROBATIONES - PARAMS PARSE
- * ======================================================================== */
+ * ================================================== */
 
 interior vacuum
 probatio_params_parse(Piscina* piscina)
 {
        chorda query;
     UrlParams params;
-
-    printf("--- Probans params parse ---\n");
 
     /* Una par */
     query   = chorda_ex_literis("name=John", piscina);
@@ -232,9 +220,9 @@ probatio_params_parse(Piscina* piscina)
 }
 
 
-/* ========================================================================
+/* ==================================================
  * PROBATIONES - NULLUM ARGUMENTA
- * ======================================================================== */
+ * ================================================== */
 
 interior vacuum
 probatio_nullum_argumenta(Piscina* piscina)
@@ -242,8 +230,6 @@ probatio_nullum_argumenta(Piscina* piscina)
        chorda input;
        chorda result;
     UrlParams params;
-
-    printf("--- Probans nullum argumenta ---\n");
 
     /* Codificare cum NIHIL */
     input.datum    = NIHIL;
@@ -267,42 +253,74 @@ probatio_nullum_argumenta(Piscina* piscina)
 }
 
 
-/* ========================================================================
- * PRINCIPALE
- * ======================================================================== */
+/* ==================================================
+ * SECTIONES
+ * ================================================== */
 
-integer
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    probatio_codificatio_simplex(c->piscina);
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    probatio_codificatio_speciales(c->piscina);
+}
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    probatio_decodificatio(c->piscina);
+}
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    probatio_round_trip(c->piscina);
+}
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    probatio_params_construere(c->piscina);
+}
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    probatio_params_parse(c->piscina);
+}
+
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    probatio_nullum_argumenta(c->piscina);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "codificatio simplex", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "codificatio speciales", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "decodificatio", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "round trip", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "params construere", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "params parse", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nullum argumenta", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
 principale (vacuum)
 {
-    Piscina* piscina;
-        b32  successus;
-
-    printf("\n");
-    printf("========================================\n");
-    printf("PROBATIONES URL\n");
-    printf("========================================\n");
-    printf("\n");
-
-    piscina = piscina_generare_dynamicum("probatio_url", LXIV * M);
-    credo_aperire(piscina);
-
-    probatio_codificatio_simplex(piscina);
-    probatio_codificatio_speciales(piscina);
-    probatio_decodificatio(piscina);
-    probatio_round_trip(piscina);
-    probatio_params_construere(piscina);
-    probatio_params_parse(piscina);
-    probatio_nullum_argumenta(piscina);
-
-    credo_imprimere_compendium();
-
-    printf("========================================\n");
-    printf("\n");
-
-    successus = credo_omnia_praeterierunt();
-
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    redde successus ? 0 : I;
+    redde credo_suitam_currere("url", SECTIONES);
 }

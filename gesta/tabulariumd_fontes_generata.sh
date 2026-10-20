@@ -10,6 +10,7 @@ declare -a RADIX_FONTES=(
     "iter_directoria"
     "json"
     "lectiones"
+    "memoria_processus_macos"
     "moneta"
     "numerus_romanus"
     "paginatio"

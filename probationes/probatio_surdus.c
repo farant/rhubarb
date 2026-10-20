@@ -157,26 +157,52 @@ _aequales (
     redde VERUM;
 }
 
-s32 principale (vacuum)
+/* status plagulae per sectionem (parare omnia ponit): piscina
+ * sectionis, spatium {2, 3, 5}, oraculum (corpus, basis), numeri
+ * casuum - sectio quaeque oraculum suum habet, numeri a nihilo */
+interior vacuum
+_parare (
+    CredoContextus* c)
 {
-    piscina = piscina_generare_dynamicum("probatio_surdus", 1 << 20);
-    si (!piscina)
+    s32 primi[III];
+    s32 s;
+
+    piscina           = c->piscina;
+    casus_oraculi     = ZEPHYRUM;
+    casus_gradus_iii  = ZEPHYRUM;
+    casus_recusati    = ZEPHYRUM;
+    primi[ZEPHYRUM]   = II;
+    primi[I]          = III;
+    primi[II]         = V;
+    (vacuum)surdi_spatium(primi, III, &spatium);
+    corpus = extensio_cosinus(CXX, piscina);
+    si (corpus == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde;
     }
-    credo_aperire(piscina);
+    basis_oraculi[ZEPHYRUM] = algebraicus_ex_fractione(corpus,
+        fractio_ex_s64(I), piscina);
+    per (s = I; s < VIII; s++)
+    {
+        (vacuum)algebraicus_radix_quadrata(corpus, spatium.producta[s],
+            piscina, &basis_oraculi[s]);
+    }
+}
 
 
-    /* ==================================================
-     * SPATIUM
-     * ================================================== */
+/* ==================================================
+ * SPATIUM
+ * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
                  s32 primi[IV];
         SurdiSpatium sp;
 
-        imprimere("\n--- Probans spatium ---\n");
         primi[ZEPHYRUM]  = II;
         primi[I]         = III;
         primi[II]        = V;
@@ -223,18 +249,23 @@ s32 principale (vacuum)
                 spatium.producta[s], piscina, &basis_oraculi[s]));
         }
     }
+}
 
 
-    /* ==================================================
-     * ARITHMETICA
-     * ================================================== */
+/* ==================================================
+ * ARITHMETICA
+ * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Surdus r;
         Surdus x;
         Surdus y;
 
-        imprimere("\n--- Probans arithmeticam ---\n");
         /* sqrt2 sqrt2 = 2; sqrt6 sqrt3 = 3 sqrt2; (sqrt2 + sqrt3)^2 =
          * 5 + 2 sqrt6; sqrt10 sqrt15 = 5 sqrt6 */
         CREDO_VERUM (surdus_basis(&spatium, I, I, &x));
@@ -319,15 +350,20 @@ s32 principale (vacuum)
             _surdus(0, 0x40000000LL, 0, 0, 0, 0, 0, 0), &r));
         CREDO_AEQUALIS_S64 (r.c[ZEPHYRUM], 0x2000000000000000LL);
     }
+}
 
-    /* multiplicatio: via celeris et custodita (bita > 63) contra oraculum:
-     * imago producti == productum imaginum */
+/* multiplicatio: via celeris et custodita (bita > 63) contra oraculum:
+ * imago producti == productum imaginum */
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Sors s;
          s32 k;
          b32 bene = VERUM;
 
-        imprimere("\n--- Probans multiplicationem contra oraculum ---\n");
         sors_seminare(&s, 2026ULL, VII);
         per (k = ZEPHYRUM; k < CC; k++)
         {
@@ -400,18 +436,23 @@ s32 principale (vacuum)
         }
         CREDO_VERUM (bene);
     }
+}
 
 
-    /* ==================================================
-     * SIGNUM CONTRA ORACULUM: casu
-     * ================================================== */
+/* ==================================================
+ * SIGNUM CONTRA ORACULUM: casu
+ * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Sors s;
          s32 k;
          b32 bene = VERUM;
 
-        imprimere("\n--- Probans signum casu ---\n");
         sors_seminare(&s, 2026ULL, XI);
         per (k = ZEPHYRUM; k < M; k++)
         {
@@ -429,12 +470,18 @@ s32 principale (vacuum)
         }
         CREDO_VERUM (bene);
     }
+}
 
 
-    /* ==================================================
-     * PROPE NULLUM: unitates Pell, producta, differentiae
-     * ================================================== */
+/* ==================================================
+ * PROPE NULLUM: unitates Pell, producta, differentiae
+ * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         /* unitates fundamentales x^2 - d y^2 = 1 et subsets */
         constans s64 x1[III]   = { 3, 2, 9 };
@@ -447,7 +494,6 @@ s32 principale (vacuum)
                  s32 q;
                  b32 bene = VERUM;
 
-        imprimere("\n--- Probans prope nullum (Pell) ---\n");
         per (q = ZEPHYRUM; q < III; q++)
         {
             s64 x = x1[q];
@@ -539,13 +585,21 @@ s32 principale (vacuum)
         CREDO_MAIOR_S32 (casus_gradus_iii, L);
         CREDO_MAIOR_S32 (casus_recusati, X);
     }
+}
 
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "spatium", _sectio_prima, _parare, NIHIL, NIHIL, NIHIL },
+    { "arithmeticam", _sectio_secunda, _parare, NIHIL, NIHIL, NIHIL },
+    { "multiplicationem contra oraculum", _sectio_tertia, _parare,
+        NIHIL, NIHIL, NIHIL },
+    { "signum casu", _sectio_quarta, _parare, NIHIL, NIHIL, NIHIL },
+    { "prope nullum (Pell)", _sectio_quinta, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-        credo_claudere();
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("surdus", SECTIONES);
 }

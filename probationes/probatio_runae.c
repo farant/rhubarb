@@ -268,23 +268,13 @@ hic_manens constans CasusBasis CASUS_BASIS[] = {
     { 0x110000, 0x110000, "ultra Unicode" }
 };
 
-s32
-principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-         b32  praeteritus;
-     Piscina* piscina;
-         i32  j;
+    i32 j;
 
-    piscina = piscina_generare_dynamicum("probatio_runae", 1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- Casus latitudinis (Unicode %s) ---\n",
-        RUNAE_VERSIO);
+    (vacuum)c;
     per (j = ZEPHYRUM; j < (i32)(magnitudo(CASUS)
         / magnitudo(CASUS[0]));
          j++)
@@ -300,14 +290,19 @@ principale (vacuum)
         }
         CREDO_AEQUALIS_I32 (l, CASUS[j].latitudo);
     }
+}
 
-    /* Totalitas: omnis codex 0..U+10FFFF latitudinem 0-II habet */
+/* Totalitas: omnis codex 0..U+10FFFF latitudinem 0-II habet */
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         s32 runa;
         i32 numeri[IV]  = { ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM };
         b32 totalis     = VERUM;
 
-        imprimere("\n--- Totalitas ---\n");
         per (runa = ZEPHYRUM; runa <= 0x10FFFF; runa++)
         {
             i32 l = runae_latitudo(runa);
@@ -329,20 +324,35 @@ principale (vacuum)
             (insignatus integer)numeri[III]);
         CREDO_VERUM (totalis);
     }
+}
 
-    /* Aurum oraculi ICU */
+/* Aurum oraculi ICU */
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda aurum = filum_legere_totum(AURUM_VIA, piscina);
            s32 discordiae;
 
-        imprimere("\n--- Aurum oraculi (ICU) ---\n");
         discordiae = _aurum_iudicare(aurum);
         imprimere("  discordiae: %d\n", (integer)discordiae);
         CREDO_AEQUALIS_S32 (discordiae, ZEPHYRUM);
     }
+}
 
-    /* Corpus Lapidis */
-    imprimere("\n--- Corpus Lapidis ---\n");
+/* Corpus Lapidis */
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+     Piscina* piscina;
+         i32  j;
+
+    piscina = c->piscina;
     per (j = ZEPHYRUM; j < (i32)(magnitudo(LINGUAE)
         / magnitudo(LINGUAE[0]));
          j++)
@@ -391,8 +401,15 @@ principale (vacuum)
                 ZEPHYRUM);
         }
     }
+}
 
-    imprimere("\n--- Littera basis (runae_basis) ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    i32 j;
+
+    (vacuum)c;
     per (j = ZEPHYRUM; j < (i32)(magnitudo(CASUS_BASIS)
         / magnitudo(CASUS_BASIS[0])); j++)
     {
@@ -408,9 +425,24 @@ principale (vacuum)
         }
         CREDO_VERUM (b == CASUS_BASIS[j].basis);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Casus latitudinis (Unicode " RUNAE_VERSIO ")", _sectio_prima,
+        NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "Totalitas", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Aurum oraculi (ICU)", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Corpus Lapidis", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Littera basis (runae_basis)", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("runae", SECTIONES);
 }

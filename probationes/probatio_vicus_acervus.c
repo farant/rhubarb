@@ -35,9 +35,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-hic_manens Piscina*             piscina;
-hic_manens InternamentumChorda* intern;
-
 /* ictus UNUS in cellulam paginae sinistrae: latus non focatum focat
  * et iussum sub ictu statim currit (Franus) */
 interior vacuum
@@ -81,6 +78,7 @@ frons_est (
 interior b32
 nuntius_est (
                   Vicus* v,
+                Piscina* piscina,
      constans character* textus)
 {
      VicusLatus* l;
@@ -96,6 +94,7 @@ nuntius_est (
 interior b32
 index_continet (
                 Volumen* vol,
+                Piscina* piscina,
      constans character* textus)
 {
     chorda c;
@@ -106,6 +105,15 @@ index_continet (
     redde inventum && chorda_continet(c, chorda_ex_literis(textus,
         piscina));
 }
+
+/* T4f: cyclus Cmd+] et Cmd+[ (constantes - status nullus inter
+ * sectiones) */
+hic_manens constans character* constans cyclus[] = {
+    "admonitiones", "colloquia", "calendarium" };
+hic_manens constans character* constans argumenta_cycli[] = {
+    NIHIL, NIHIL, "agenda" };
+hic_manens constans character* constans cyclus_malus[] = {
+    "admonitiones", "ignotum" };
 
 interior b32
 focus_est (
@@ -126,7 +134,9 @@ gradus (
     (vacuum)vicus_pulsare(v);
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                           Volumen* vol;
                   VicusApplicatio  app;
@@ -135,22 +145,13 @@ s32 principale (vacuum)
                        ManusLudus* m;
                            vacuum* terminale;
                    ScribaMontatio* sm;
+                          Piscina* piscina;
+              InternamentumChorda* intern;
                           Volumen* vol_imum;
                   VicusApplicatio  app_imum;
-    hic_manens constans character* cyclus[] = {
-        "admonitiones", "colloquia", "calendarium" };
-    hic_manens constans character* argumenta_cycli[] = {
-        NIHIL, NIHIL, "agenda" };
-    hic_manens constans character* cyclus_malus[] = {
-        "admonitiones", "ignotum" };
 
-    piscina = piscina_generare_dynamicum("probatio_vicus_acervus",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
     (vacuum)setenv("SHELL", "/bin/sh", I);
     (vacuum)setenv("RHUBARB_SANCTI", "probationes/fixa/sancti", I);
@@ -175,7 +176,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(numerus_acervi(v), I);
     CREDO_VERUM(frons_est(v, "3_dextrum_scriba"));
 
-    imprimere("\n--- I: '$terminale' - in fronte post pulsum ---\n");
+    CREDO_GRADUS("I: '$terminale' - in fronte post pulsum");
     ictus(v, m, II, III);
     /* petitio: nihil intra tractationem */
     CREDO_AEQUALIS_I32(numerus_acervi(v), I);
@@ -187,11 +188,11 @@ s32 principale (vacuum)
         == vicus_latus(vicus_activa(v), VICUS_DEXTRUM));
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_motus(app.d)->spatium,
         "terminale:3_dextrum_terminale");
-    CREDO_VERUM(index_continet(vol,
+    CREDO_VERUM(index_continet(vol, piscina,
         "<latus genus=\"terminale\" id=\"3_dextrum_terminale\"/>"));
     terminale = vicus_latus(vicus_activa(v), VICUS_DEXTRUM)->montatio;
 
-    imprimere("\n--- II: '$scriba' - ordinaria in frontem ---\n");
+    CREDO_GRADUS("II: '$scriba' - ordinaria in frontem");
     ictus(v, m, II, XIII);
     (vacuum)vicus_pulsare(v);
     dispensator_recomponere(app.d);
@@ -200,7 +201,7 @@ s32 principale (vacuum)
     CREDO_CHORDA_AEQUALIS_LITERIS(acervi(v, ZEPHYRUM)->id,
         "3_dextrum_terminale");
 
-    imprimere("\n--- III: '$terminale' iterum - idem latus ---\n");
+    CREDO_GRADUS("III: '$terminale' iterum - idem latus");
     ictus(v, m, II, III);
     (vacuum)vicus_pulsare(v);
     dispensator_recomponere(app.d);
@@ -209,7 +210,7 @@ s32 principale (vacuum)
     CREDO_VERUM(vicus_latus(vicus_activa(v), VICUS_DEXTRUM)->montatio
         == terminale);
 
-    imprimere("\n--- IV: '$scriba(notae)' - latus novum ---\n");
+    CREDO_GRADUS("IV: '$scriba(notae)' - latus novum");
     ictus(v, m, III, III);
     (vacuum)vicus_pulsare(v);
     dispensator_recomponere(app.d);
@@ -226,31 +227,32 @@ s32 principale (vacuum)
     /* sinister in pagina sua manet */
     CREDO_VERUM(((ScribaMontatio*)vicus_latus(vicus_activa(v),
         VICUS_SINISTRUM)->montatio)->doc != sm->doc);
-    CREDO_VERUM(index_continet(vol, "id=\"3_dextrum_scriba_2\" "
+    CREDO_VERUM(index_continet(vol, piscina,
+        "id=\"3_dextrum_scriba_2\" "
         "argumentum=\"notae\""));
 
-    imprimere("\n--- V: '$pictor(x)' ---\n");
+    CREDO_GRADUS("V: '$pictor(x)'");
     ictus(v, m, II, XX);
     (vacuum)vicus_pulsare(v);
     dispensator_recomponere(app.d);
     CREDO_AEQUALIS_I32(numerus_acervi(v), IV);
     CREDO_VERUM(frons_est(v, "3_dextrum_pictor"));
 
-    imprimere("\n--- VI: errores nihil petunt ---\n");
+    CREDO_GRADUS("VI: errores nihil petunt");
     ictus(v, m, III, XX);
-    CREDO_VERUM(nuntius_est(v,
+    CREDO_VERUM(nuntius_est(v, piscina,
         "scriba: nomen paginae invalidum: Mala"));
     (vacuum)vicus_pulsare(v);
     CREDO_AEQUALIS_I32(numerus_acervi(v), IV);
     ictus(v, m, IV, III);
-    CREDO_VERUM(nuntius_est(v, "terminale: unum argumentum"));
+    CREDO_VERUM(nuntius_est(v, piscina, "terminale: unum argumentum"));
     (vacuum)vicus_pulsare(v);
     CREDO_AEQUALIS_I32(numerus_acervi(v), IV);
     CREDO_VERUM(frons_est(v, "3_dextrum_pictor"));
     /* genus ignotum recusatur */
     CREDO_FALSUM(vicus_acervo_aperire(v, "ignotum", NIHIL));
 
-    imprimere("\n--- VII: reapertura ---\n");
+    CREDO_GRADUS("VII: reapertura");
     CREDO_VERUM(vicus_applicatio_aedificare(&app_altera, piscina,
         intern,
         vol, CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
@@ -273,7 +275,7 @@ s32 principale (vacuum)
     CREDO_VERUM(vicus_latus_focatum(v)
         == vicus_latus(vicus_activa(v), VICUS_SINISTRUM));
 
-    imprimere("\n--- VIII: Cmd+] - domus et cyclus ---\n");
+    CREDO_GRADUS("VIII: Cmd+] - domus et cyclus");
     m = manus_ludus_creare(piscina, app_altera.d);
     dispensator_recomponere(app_altera.d);
     /* domus = pictor, focus sinister (VII) */
@@ -298,7 +300,7 @@ s32 principale (vacuum)
     CREDO_VERUM(frons_est(v, "3_dextrum_pictor"));
     CREDO_VERUM(focus_est(v, VICUS_SINISTRUM));
 
-    imprimere("\n--- IX: Cmd+[ - retrorsum ---\n");
+    CREDO_GRADUS("IX: Cmd+[ - retrorsum");
     gradus(v, m, '[');
     CREDO_AEQUALIS_I32(numerus_acervi(v), V);
     CREDO_VERUM(frons_est(v, "3_dextrum_calendarium"));
@@ -323,7 +325,7 @@ s32 principale (vacuum)
     CREDO_VERUM(frons_est(v, "3_dextrum_pictor"));
     CREDO_VERUM(focus_est(v, VICUS_DEXTRUM));
 
-    imprimere("\n--- X: cyclus ab insigni coeptus ---\n");
+    CREDO_GRADUS("X: cyclus ab insigni coeptus");
     CREDO_VERUM(vicus_focum_ponere(v, VICUS_SINISTRUM));
     CREDO_VERUM(vicus_acervo_aperire(v, "admonitiones", NIHIL));
     (vacuum)vicus_pulsare(v);
@@ -337,7 +339,7 @@ s32 principale (vacuum)
     CREDO_VERUM(frons_est(v, "3_dextrum_pictor"));
     CREDO_VERUM(focus_est(v, VICUS_SINISTRUM));
 
-    imprimere("\n--- XI: gradus duo in pulsu uno ---\n");
+    CREDO_GRADUS("XI: gradus duo in pulsu uno");
     CREDO_VERUM(manus_ludus_clavem(m, ']', MOD_SUPER));
     CREDO_VERUM(manus_ludus_clavem(m, ']', MOD_SUPER));
     (vacuum)vicus_pulsare(v);
@@ -349,7 +351,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(numerus_acervi(v), IV);
     CREDO_VERUM(focus_est(v, VICUS_SINISTRUM));
 
-    imprimere("\n--- XII: API recusat ---\n");
+    CREDO_GRADUS("XII: API recusat");
     CREDO_FALSUM(vicus_cyclo_gradi(v, II));
     CREDO_FALSUM(vicus_cyclum_ponere(v, cyclus_malus, NIHIL, II));
     /* cyclus prior manet */
@@ -364,7 +366,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(numerus_acervi(v), IV);
     CREDO_VERUM(frons_est(v, "3_dextrum_pictor"));
 
-    imprimere("\n--- XIII: calendarium sine argumento = domus ---\n");
+    CREDO_GRADUS("XIII: calendarium sine argumento = domus");
     CREDO_VERUM(vicus_acervo_aperire(v, "calendarium", NIHIL));
     (vacuum)vicus_pulsare(v);
     CREDO_AEQUALIS_I32(numerus_acervi(v), V);
@@ -382,7 +384,7 @@ s32 principale (vacuum)
     CREDO_VERUM(chorda_vacua(vicus_latus(vicus_activa(v),
         VICUS_DEXTRUM)->argumentum));
 
-    imprimere("\n--- XIV: latus cycli imum acervi ---\n");
+    CREDO_GRADUS("XIV: latus cycli imum acervi");
     vol_imum = volumen_temporarium(piscina, "probatio_vicus_acervus");
     CREDO_VERUM(volumen_praesens_ponere(vol_imum,
         chorda_ex_literis("vicus/latera", piscina),
@@ -415,7 +417,7 @@ s32 principale (vacuum)
     gradus(v, m, '[');
     CREDO_AEQUALIS_I32(numerus_acervi(v), I);
     CREDO_VERUM(frons_est(v, "1_dextrum_admonitiones"));
-    imprimere("\n--- XV: sancti (bibliotheca, $saints) ---\n");
+    CREDO_GRADUS("XV: sancti (bibliotheca, $saints)");
     /* corpus fixturae; argumentum sanctum aperit */
     CREDO_VERUM(vicus_acervo_aperire(v, "sancti", "thomas-aquinas"));
     (vacuum)vicus_pulsare(v);
@@ -429,9 +431,17 @@ s32 principale (vacuum)
         CREDO_VERUM(a && chorda_aequalis_literis(*a, "thomas-aquinas"));
     }
     volumen_claudere(vol_imum);
-
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "acervus lateris dextri per iussa", _sectio_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("vicus_acervus", SECTIONES);
 }

@@ -23,12 +23,7 @@
  * (Functiones interiores non accessibiles ex alio filo)
  * ======================================================================== */
 
-hic_manens i8 _praefixum_buf[] = {
-    '/', '*', ' ', 'g', 'e', 'n', 'e', 'r', 'a', 'r', 'e', ':', ' '
-};
 #define GENERARE_PRAEFIXUM_MENSURA  XIII
-
-hic_manens i8 _suffixum_buf[] = { '*', '/' };
 #define GENERARE_SUFFIXUM_MENSURA   II
 
 nomen structura {
@@ -62,12 +57,16 @@ _extrahere_directivas (
      chorda  contentum,
     Piscina* piscina)
 {
-       Xar* directivae;
-    chorda  praefixum;
-    chorda  suffixum;
-       s32  positio;
-    chorda  reliquum;
-       s32  versus_currens;
+        Xar* directivae;
+     chorda  praefixum;
+     chorda  suffixum;
+        s32  positio;
+     chorda  reliquum;
+        s32  versus_currens;
+         i8  _praefixum_buf[] = {
+        '/', '*', ' ', 'g', 'e', 'n', 'e', 'r', 'a', 'r', 'e', ':', ' '
+    };
+         i8 _suffixum_buf[] = { '*', '/' };
 
     directivae = xar_creare(piscina, (i32)magnitudo(ProbatioDirectiva));
     praefixum = chorda_ex_buffer(_praefixum_buf,
@@ -196,32 +195,23 @@ _extrahere_directivas (
  * PRINCIPALE
  * ======================================================================== */
 
-s32 principale(vacuum)
-{
-    Piscina* piscina;
-        b32  praeteritus;
-
-    piscina = piscina_generare_dynamicum("probatio_generare",
-        IV * MXXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ========================================================
      * PROBARE: Una directiva simplex
      * ======================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                    chorda  contentum;
                       Xar* directivae;
         ProbatioDirectiva* dir;
                    chorda* arg;
-
-        imprimere("\n--- Probans una directiva simplex ---\n");
 
         contentum = chorda_ex_literis(
             "/* generare: meum_instrumentum arg1 arg2 */\n"
@@ -246,19 +236,25 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(arg);
         CREDO_CHORDA_AEQUALIS_LITERIS(*arg, "arg2");
     }
+}
 
 
     /* ========================================================
      * PROBARE: Multiplices directivae
      * ======================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                    chorda  contentum;
                       Xar* directivae;
         ProbatioDirectiva* dir0;
         ProbatioDirectiva* dir1;
-
-        imprimere("\n--- Probans multiplices directivas ---\n");
 
         contentum = chorda_ex_literis(
             "/* generare: primum a b */\n"
@@ -280,17 +276,23 @@ s32 principale(vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(dir1->instrumentum, "secundum");
         CREDO_AEQUALIS_I32(xar_numerus(dir1->argumenta), III);
     }
+}
 
 
     /* ========================================================
      * PROBARE: Nullae directivae
      * ======================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda  contentum;
            Xar* directivae;
-
-        imprimere("\n--- Probans nullas directivas ---\n");
 
         contentum = chorda_ex_literis(
             "/* Hoc est commentarium normale */\n"
@@ -301,19 +303,25 @@ s32 principale(vacuum)
 
         CREDO_AEQUALIS_I32(xar_numerus(directivae), ZEPHYRUM);
     }
+}
 
 
     /* ========================================================
      * PROBARE: Directiva cum multis argumentis
      * ======================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                    chorda  contentum;
                       Xar* directivae;
         ProbatioDirectiva* dir;
                    chorda* arg;
-
-        imprimere("\n--- Probans directivam cum multis argumentis ---\n");
 
         contentum = chorda_ex_literis(
             "/* generare: nuntium_schema_generare persona.nuntium gen.h gen.c */\n",
@@ -338,18 +346,24 @@ s32 principale(vacuum)
         arg = (chorda*)xar_obtinere(dir->argumenta, II);
         CREDO_CHORDA_AEQUALIS_LITERIS(*arg, "gen.c");
     }
+}
 
 
     /* ========================================================
      * PROBARE: Spatium album extra
      * ======================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                    chorda  contentum;
                       Xar* directivae;
         ProbatioDirectiva* dir;
-
-        imprimere("\n--- Probans spatium album extra ---\n");
 
         contentum = chorda_ex_literis(
             "/* generare:   instrumentum   arg1   arg2   */\n",
@@ -365,18 +379,24 @@ s32 principale(vacuum)
             "instrumentum");
         CREDO_AEQUALIS_I32(xar_numerus(dir->argumenta), II);
     }
+}
 
 
     /* ========================================================
      * PROBARE: Directiva sine argumentis (solum instrumentum)
      * ======================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                    chorda  contentum;
                       Xar* directivae;
         ProbatioDirectiva* dir;
-
-        imprimere("\n--- Probans directivam sine argumentis ---\n");
 
         contentum = chorda_ex_literis(
             "/* generare: solum_instrumentum */\n",
@@ -392,17 +412,23 @@ s32 principale(vacuum)
             "solum_instrumentum");
         CREDO_AEQUALIS_I32(xar_numerus(dir->argumenta), ZEPHYRUM);
     }
+}
 
 
     /* ========================================================
      * PROBARE: Commentarium similare sed non directiva
      * ======================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda  contentum;
            Xar* directivae;
-
-        imprimere("\n--- Probans commentarium non-directivam ---\n");
 
         contentum = chorda_ex_literis(
             "/* generari: non_est_directiva */\n"
@@ -414,18 +440,24 @@ s32 principale(vacuum)
 
         CREDO_AEQUALIS_I32(xar_numerus(directivae), ZEPHYRUM);
     }
+}
 
 
     /* ========================================================
      * PROBARE: Directiva in medio fili
      * ======================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                    chorda  contentum;
                       Xar* directivae;
         ProbatioDirectiva* dir;
-
-        imprimere("\n--- Probans directivam in medio fili ---\n");
 
         contentum = chorda_ex_literis(
             "#include <stdio.h>\n"
@@ -444,18 +476,24 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(dir);
         CREDO_CHORDA_AEQUALIS_LITERIS(dir->instrumentum, "medio");
     }
+}
 
 
     /* ========================================================
      * PROBARE: Numeri versuum
      * ======================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                    chorda  contentum;
                       Xar* directivae;
         ProbatioDirectiva* dir;
-
-        imprimere("\n--- Probans numeros versuum ---\n");
 
         /* Directiva in linea 1 */
         contentum = chorda_ex_literis(
@@ -495,18 +533,24 @@ s32 principale(vacuum)
         dir = (ProbatioDirectiva*)xar_obtinere(directivae, I);
         CREDO_AEQUALIS_S32(dir->versus, V);
     }
+}
 
 
     /* ========================================================
      * PROBARE: End-to-end - variabiles ambitus
      * ======================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
            b32 scriptum;
            s32 codex;
         chorda indicator_contentum;
-
-        imprimere("\n--- Probans variabiles ambitus ---\n");
 
         /* Scribere filum .c cum directiva in linea 3 */
         scriptum = filum_scribere_literis(
@@ -562,17 +606,21 @@ s32 principale(vacuum)
         filum_delere("/tmp/probatio_generare_env_out");
         filum_delere(INSTRUMENTA "/env_probatio");
     }
+}
 
 
     /* ========================================================
      * PROBARE: End-to-end - scribere filum, currere generare
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         b32 scriptum;
         s32 codex;
-
-        imprimere("\n--- Probans end-to-end ---\n");
 
         scriptum = filum_scribere_literis(
             "/tmp/probatio_generare_test.c",
@@ -599,17 +647,21 @@ s32 principale(vacuum)
         filum_delere("/tmp/probatio_generare_indicator");
         filum_delere(INSTRUMENTA "/echo_test");
     }
+}
 
 
     /* ========================================================
      * PROBARE: End-to-end - error terminat
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         b32 scriptum;
         s32 codex;
-
-        imprimere("\n--- Probans error terminat ---\n");
 
         scriptum = filum_scribere_literis(
             "/tmp/probatio_generare_error.c",
@@ -622,23 +674,35 @@ s32 principale(vacuum)
 
         filum_delere("/tmp/probatio_generare_error.c");
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "una directiva simplex", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "multiplices directivas", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "nullas directivas", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "directivam cum multis argumentis", _sectio_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "spatium album extra", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "directivam sine argumentis", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "commentarium non-directivam", _sectio_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "directivam in medio fili", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "numeros versuum", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "variabiles ambitus", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "end-to-end", _sectio_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "error terminat", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("generare", SECTIONES);
 }

@@ -130,11 +130,11 @@ _clavis (
     redde sigillum_computare(literae, (memoriae_index)strlen(literae));
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-            Piscina* piscina;
           Thesaurus* thesaurus;
-          Thesaurus* secundus;
            Sigillum  sigillum;
            Sigillum  iterum;
            Sigillum  expectatum;
@@ -142,62 +142,55 @@ s32 principale (vacuum)
            Sigillum  clavis_b;
            Sigillum  blobus_a;
            Sigillum  blobus_b;
-           Sigillum  communis;
              chorda  via;
              chorda  via_a;
              chorda  via_b;
-             chorda  via_communis;
              chorda  contentum;
                 Xar* exitus;
                 Xar* capta;
-          character  terminata[DXII];
           character  hex[LXV];
           character  expectata[DXII];
   longus insignatus  identitas_ante;
   longus insignatus  identitas_post;
-                i32  deleta;
 
-    piscina = piscina_generare_dynamicum("probatio_thesaurus", 1048576);
-    credo_aperire(piscina);
     (vacuum)filum_arborem_delere(RADIX);
 
-    imprimere("\n--- I. aperire: radix creatur ---\n");
-    thesaurus = thesaurus_aperire(RADIX, piscina);
+    thesaurus = thesaurus_aperire(RADIX, c->piscina);
     CREDO_NON_NIHIL(thesaurus);
     CREDO_VERUM(filum_directorium_existit(RADIX));
 
-    imprimere("\n--- II. ponere / via: iter rotundum, forma viae ---\n");
+    CREDO_GRADUS("II. ponere / via: iter rotundum, forma viae");
     CREDO_VERUM(thesaurus_ponere(thesaurus,
-        chorda_ex_literis("salve mundus\n", piscina), &sigillum));
+        chorda_ex_literis("salve mundus\n", c->piscina), &sigillum));
     expectatum = sigillum_computare("salve mundus\n", XIII);
     CREDO_VERUM(sigillum_aequale(&sigillum, &expectatum));
-    CREDO_VERUM(thesaurus_via(thesaurus, &sigillum, piscina, &via));
+    CREDO_VERUM(thesaurus_via(thesaurus, &sigillum, c->piscina, &via));
     sigillum_hex(&sigillum, hex);
     sprintf(expectata, "%s/blobi/%.2s/%s", RADIX, hex, hex + II);
     CREDO_VERUM(chorda_aequalis_literis(via, expectata));
-    contentum = filum_legere_totum(expectata, piscina);
+    contentum = filum_legere_totum(expectata, c->piscina);
     CREDO_VERUM(chorda_aequalis_literis(contentum, "salve mundus\n"));
 
-    imprimere("\n--- III. iterum ponere: idem blobus, non rescriptus ---\n");
+    CREDO_GRADUS("III. iterum ponere: idem blobus, non rescriptus");
     CREDO_VERUM(_identitas(expectata, &identitas_ante));
     CREDO_VERUM(thesaurus_ponere(thesaurus,
-        chorda_ex_literis("salve mundus\n", piscina), &iterum));
+        chorda_ex_literis("salve mundus\n", c->piscina), &iterum));
     CREDO_VERUM(sigillum_aequale(&sigillum, &iterum));
     CREDO_VERUM(_identitas(expectata, &identitas_post));
     CREDO_VERUM(identitas_ante == identitas_post);
 
-    imprimere("\n--- IV. actio: clavis -> II exitus; absens FALSUM ---\n");
+    CREDO_GRADUS("IV. actio: clavis -> II exitus; absens FALSUM");
     CREDO_VERUM(thesaurus_ponere(thesaurus,
-        chorda_ex_literis("alpha", piscina), &blobus_a));
+        chorda_ex_literis("alpha", c->piscina), &blobus_a));
     CREDO_VERUM(thesaurus_ponere(thesaurus,
-        chorda_ex_literis("beta", piscina), &blobus_b));
-    exitus = xar_creare(piscina, (i32)magnitudo(Sigillum));
+        chorda_ex_literis("beta", c->piscina), &blobus_b));
+    exitus = xar_creare(c->piscina, (i32)magnitudo(Sigillum));
     *(Sigillum*)xar_addere(exitus) = blobus_a;
     *(Sigillum*)xar_addere(exitus) = blobus_b;
     clavis_a = _clavis("actio prima");
     CREDO_VERUM(thesaurus_actio_ponere(thesaurus, &clavis_a, exitus));
     capta = NIHIL;
-    CREDO_VERUM(thesaurus_actio_capere(thesaurus, &clavis_a, piscina,
+    CREDO_VERUM(thesaurus_actio_capere(thesaurus, &clavis_a, c->piscina,
         &capta));
     CREDO_NON_NIHIL(capta);
     CREDO_AEQUALIS_I32(xar_numerus(capta), II);
@@ -207,7 +200,8 @@ s32 principale (vacuum)
     CREDO_VERUM(sigillum_aequale((Sigillum*)xar_obtinere(capta, I),
         &blobus_b));
     clavis_b = _clavis("actio nusquam");
-    CREDO_FALSUM(thesaurus_actio_capere(thesaurus, &clavis_b, piscina,
+    CREDO_FALSUM(thesaurus_actio_capere(thesaurus, &clavis_b,
+        c->piscina,
         &capta));
     /* actio eadem iterum: non rescripta */
     sigillum_hex(&clavis_a, hex);
@@ -217,38 +211,62 @@ s32 principale (vacuum)
     CREDO_VERUM(_identitas(expectata, &identitas_post));
     CREDO_VERUM(identitas_ante == identitas_post);
 
-    imprimere("\n--- V. blobus corruptus: verificatio delet, FALSUM ---\n");
-    CREDO_VERUM(thesaurus_via(thesaurus, &blobus_a, piscina, &via_a));
-    _corrumpere(via_a, piscina);
+    CREDO_GRADUS("V. blobus corruptus: verificatio delet, FALSUM");
+    CREDO_VERUM(thesaurus_via(thesaurus, &blobus_a, c->piscina,
+        &via_a));
+    _corrumpere(via_a, c->piscina);
     /* sine verificatione: corruptio non videtur (specimen) */
     thesaurus_verificationem_ponere(thesaurus, ZEPHYRUM);
-    CREDO_VERUM(thesaurus_via(thesaurus, &blobus_a, piscina, &via));
+    CREDO_VERUM(thesaurus_via(thesaurus, &blobus_a, c->piscina, &via));
     thesaurus_verificationem_ponere(thesaurus, I);
-    CREDO_FALSUM(thesaurus_via(thesaurus, &blobus_a, piscina, &via));
+    CREDO_FALSUM(thesaurus_via(thesaurus, &blobus_a, c->piscina, &via));
     CREDO_FALSUM(_existit(via_a));
     /* sanus sub verificatione: VERUM */
-    CREDO_VERUM(thesaurus_via(thesaurus, &blobus_b, piscina, &via_b));
+    CREDO_VERUM(thesaurus_via(thesaurus, &blobus_b, c->piscina,
+        &via_b));
+}
 
-    imprimere("\n--- VI. purgare: generationes ultimae servantur ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+          Thesaurus* thesaurus;
+          Thesaurus* secundus;
+           Sigillum  clavis_a;
+           Sigillum  clavis_b;
+           Sigillum  blobus_a;
+           Sigillum  blobus_b;
+           Sigillum  communis;
+             chorda  via_a;
+             chorda  via_b;
+             chorda  via_communis;
+                Xar* exitus;
+                Xar* capta;
+          character  terminata[DXII];
+          character  expectata[DXII];
+                i32  deleta;
+
+    clavis_a = _clavis("actio prima");
+    clavis_b = _clavis("actio nusquam");
     /* GENERATIO = cursus ordinans (fabrica, porta), non processus:
      * THESAURUS_GENERATIO a tempore UTC incipit (ordo nominum = ordo
      * temporis). Sine ea: nullus index (processus solitarius cursus
      * veros e fenestra non expellit). */
     (vacuum)filum_arborem_delere(RADIX);
     unsetenv("THESAURUS_GENERATIO");
-    thesaurus = thesaurus_aperire(RADIX, piscina);
+    thesaurus = thesaurus_aperire(RADIX, c->piscina);
     thesaurus_generationem_notare(thesaurus, &clavis_a);
     sprintf(expectata, "%s/generationes", RADIX);
     CREDO_FALSUM(filum_directorium_existit(expectata));
     setenv("THESAURUS_GENERATIO", "20260101T000000-prima", I);
-    thesaurus = thesaurus_aperire(RADIX, piscina);
+    thesaurus = thesaurus_aperire(RADIX, c->piscina);
     CREDO_NON_NIHIL(thesaurus);
     /* generatio prima: clavis_a -> [blobus_a, communis] */
     CREDO_VERUM(thesaurus_ponere(thesaurus,
-        chorda_ex_literis("alpha", piscina), &blobus_a));
+        chorda_ex_literis("alpha", c->piscina), &blobus_a));
     CREDO_VERUM(thesaurus_ponere(thesaurus,
-        chorda_ex_literis("communis", piscina), &communis));
-    exitus = xar_creare(piscina, (i32)magnitudo(Sigillum));
+        chorda_ex_literis("communis", c->piscina), &communis));
+    exitus = xar_creare(c->piscina, (i32)magnitudo(Sigillum));
     *(Sigillum*)xar_addere(exitus) = blobus_a;
     *(Sigillum*)xar_addere(exitus) = communis;
     CREDO_VERUM(thesaurus_actio_ponere(thesaurus, &clavis_a, exitus));
@@ -257,26 +275,27 @@ s32 principale (vacuum)
      * communis]; processus alter eiusdem generationis in indicem
      * eundem scribit */
     setenv("THESAURUS_GENERATIO", "20260102T000000-secunda", I);
-    secundus = thesaurus_aperire(RADIX, piscina);
+    secundus = thesaurus_aperire(RADIX, c->piscina);
     CREDO_NON_NIHIL(secundus);
     CREDO_VERUM(thesaurus_ponere(secundus,
-        chorda_ex_literis("beta", piscina), &blobus_b));
-    exitus = xar_creare(piscina, (i32)magnitudo(Sigillum));
+        chorda_ex_literis("beta", c->piscina), &blobus_b));
+    exitus = xar_creare(c->piscina, (i32)magnitudo(Sigillum));
     *(Sigillum*)xar_addere(exitus) = blobus_b;
     *(Sigillum*)xar_addere(exitus) = communis;
     CREDO_VERUM(thesaurus_actio_ponere(secundus, &clavis_b, exitus));
     thesaurus_generationem_notare(secundus, &clavis_b);
-    thesaurus_generationem_notare(thesaurus_aperire(RADIX, piscina),
+    thesaurus_generationem_notare(thesaurus_aperire(RADIX, c->piscina),
         &clavis_b);
     sprintf(expectata, "%s/generationes/20260102T000000-secunda.lst",
         RADIX);
-    CREDO_AEQUALIS_I32(filum_legere_totum(expectata, piscina).mensura,
+    CREDO_AEQUALIS_I32(filum_legere_totum(expectata,
+        c->piscina).mensura,
         CXXX);
     unsetenv("THESAURUS_GENERATIO");
     thesaurus_verificationem_ponere(secundus, ZEPHYRUM);
-    CREDO_VERUM(thesaurus_via(secundus, &blobus_a, piscina, &via_a));
-    CREDO_VERUM(thesaurus_via(secundus, &blobus_b, piscina, &via_b));
-    CREDO_VERUM(thesaurus_via(secundus, &communis, piscina,
+    CREDO_VERUM(thesaurus_via(secundus, &blobus_a, c->piscina, &via_a));
+    CREDO_VERUM(thesaurus_via(secundus, &blobus_b, c->piscina, &via_b));
+    CREDO_VERUM(thesaurus_via(secundus, &communis, c->piscina,
         &via_communis));
     /* servare I: generatio secunda sola - actio prima, blobus_a et
      * index primus delentur (III); communis servatur */
@@ -286,12 +305,12 @@ s32 principale (vacuum)
     CREDO_FALSUM(_existit(via_a));
     CREDO_VERUM(_existit(via_b));
     CREDO_VERUM(_existit(via_communis));
-    CREDO_FALSUM(thesaurus_actio_capere(secundus, &clavis_a, piscina,
+    CREDO_FALSUM(thesaurus_actio_capere(secundus, &clavis_a, c->piscina,
         &capta));
-    CREDO_VERUM(thesaurus_actio_capere(secundus, &clavis_b, piscina,
+    CREDO_VERUM(thesaurus_actio_capere(secundus, &clavis_b, c->piscina,
         &capta));
     /* verificare: blobus servatus corruptus deletur */
-    _corrumpere(via_communis, piscina);
+    _corrumpere(via_communis, c->piscina);
     deleta = ZEPHYRUM;
     CREDO_VERUM(thesaurus_purgare(secundus, I, VERUM, &deleta));
     CREDO_AEQUALIS_I32(deleta, I);
@@ -300,9 +319,17 @@ s32 principale (vacuum)
     memcpy(terminata, via_b.datum, via_b.mensura);
     terminata[via_b.mensura] = '\0';
     CREDO_VERUM(chorda_aequalis_literis(
-        filum_legere_totum(terminata, piscina), "beta"));
+        filum_legere_totum(terminata, c->piscina), "beta"));
+}
 
-    imprimere("\n--- VII. concursus: II filii, CC rotae, LXIV KiB ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+          Thesaurus* thesaurus;
+           Sigillum  sigillum;
+             chorda  via;
+
     (vacuum)filum_arborem_delere(RADIX);
     {
         pid_t  filii[II];
@@ -333,23 +360,36 @@ s32 principale (vacuum)
         }
         CREDO_AEQUALIS_S32(fracta_omnia, ZEPHYRUM);
         /* post concursum: omnis blobus integer */
-        thesaurus = thesaurus_aperire(RADIX, piscina);
+        thesaurus = thesaurus_aperire(RADIX, c->piscina);
         thesaurus_verificationem_ponere(thesaurus, I);
-        buffer      = (i8*)piscina_allocare(piscina, CONCURSUS_MENSURA);
-        verificata  = ZEPHYRUM;
+        buffer = (i8*)piscina_allocare(c->piscina,
+            CONCURSUS_MENSURA);
+        verificata = ZEPHYRUM;
         per (rota = ZEPHYRUM; rota < CONCURSUS_ROTAE; rota++)
         {
             _buffer_implere(buffer, rota);
             sigillum = sigillum_computare(buffer, CONCURSUS_MENSURA);
-            si (thesaurus_via(thesaurus, &sigillum, piscina, &via))
+            si (thesaurus_via(thesaurus, &sigillum, c->piscina, &via))
             {
                 verificata++;
             }
         }
         CREDO_AEQUALIS_I32(verificata, CONCURSUS_ROTAE);
     }
+}
 
-    credo_imprimere_compendium();
-    piscina_destruere(piscina);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. aperire: radix creatur", _sectio_prima, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "VI. purgare: generationes ultimae servantur", _sectio_secunda,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VII. concursus: II filii, CC rotae, LXIV KiB", _sectio_tertia,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("thesaurus", SECTIONES);
 }

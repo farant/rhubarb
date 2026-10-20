@@ -1,0 +1,132 @@
+<interrogationes unitas="lapifex_generare">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I turn a grammar into a parse table?
+    <responsum symbolum="lapifex_grammaticam_legere lapifex_first_computare lapifex_collectio_construere lapifex_collectio_lalr_construere lapifex_tabulam_construere" via="lib/nuntium_schema.c">Read
+      the STML grammar with lapifex_grammaticam_legere, run
+      lapifex_first_computare, build the item sets with
+      lapifex_collectio_construere (canonical LR(1)) or
+      lapifex_collectio_lalr_construere (LALR(1)), and turn them into an
+      ACTION/GOTO table with lapifex_tabulam_construere. Every step
+      returns NIHIL or FALSUM on failure. lib/nuntium_schema.c is the
+      live consumer and runs exactly this chain (it also calls
+      lapifex_follow_computare) before handing the table to the
+      lapifex parser.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does the STML grammar format look like?
+    <responsum symbolum="lapifex_grammaticam_legere LapifexSymbolum" via="lib/nuntium_schema.c">A
+      root with three required children: &lt;terminalia&gt; holding
+      &lt;terminalis titulus=".." exemplum=".." genus=".."/&gt; (titulus
+      required; exemplum is the literal or a $identificator/$numerus
+      class used by the lexer; genus is optional), &lt;regulae&gt; holding
+      &lt;regula titulus="lhs"&gt; with one &lt;productio&gt;A B C&lt;/productio&gt;
+      per alternative (symbols separated by spaces), and
+      &lt;initium&gt;start&lt;/initium&gt;. Every name in a production must
+      be a declared terminal or a regula titulus.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I write an empty (epsilon) production?
+    <responsum symbolum="lapifex_grammaticam_legere lapifex_first_computare">No.
+      The reader skips a &lt;productio&gt; whose text is empty after
+      trimming, silently, so an empty alternative simply disappears
+      from the grammar. FIRST and FOLLOW do handle epsilon
+      (habet_epsilon, productions with an empty right side), but no
+      STML grammar can produce one. Write an optional part out as two
+      alternatives instead: A -&gt; B C and A -&gt; C rather than
+      A -&gt; opt_B C with an empty opt_B.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why is there a separate LALR(1) builder, and when should I use it?
+    <responsum symbolum="lapifex_collectio_lalr_construere lapifex_collectio_construere" via="lib/lapifex_generare.worklog.md archivum/lib/lapifex_c89_grammatica.c">The
+      canonical LR(1) builder makes a separate state for every
+      lookahead combination and blew up on the C89 expression grammar
+      (95 productions): it ran indefinitely. The LALR(1) builder makes
+      the LR(0) automaton first (about 155 states there), propagates
+      lookaheads to a fixed point, and returns the same
+      LapifexCollectio type, so it is a drop-in replacement; that
+      table took about two seconds. Small grammars such as
+      nuntium_schema's still use the canonical builder.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what are __initium__, EOF and the -1 terminal?
+    <responsum symbolum="lapifex_grammaticam_legere lapifex_tabulam_construere LapifexActioIntroitus">The
+      reader adds an augmented non-terminal __initium__ with one last
+      production: __initium__ -&gt; start EOF when a terminal titled
+      exactly "EOF" is declared, otherwise __initium__ -&gt; start, and
+      makes it the grammar's initium_index. Terminal index -1 is the
+      end marker $ used as lookahead; ACCEPT is the action on -1 in the
+      state where the augmented production is complete. A terminal
+      named anything else ("END", "eof") gets no special
+      treatment.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I know which production number my reduce callback receives?
+    <responsum symbolum="lapifex_grammaticam_imprimere LapifexProductio" via="lib/nuntium_schema.c">Productions
+      are numbered from 0 in document order: regula by regula,
+      productio by productio (an empty &lt;productio&gt; is skipped and
+      takes no number), with the augmented __initium__ production
+      last. Symbols are numbered the same way: terminals first in
+      declaration order, then the regula non-terminals, then
+      __initium__. lapifex_grammaticam_imprimere prints both lists
+      (P0, P1, ...), and nuntium_schema.c switches on exactly those
+      numbers (its P15 is __initium__ -&gt; schema EOF).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I see the conflicts in my grammar?
+    <responsum symbolum="lapifex_conflictus_imprimere lapifex_tabulam_imprimere lapifex_actiones_quaerere LapifexTabula">The
+      table keeps ALL actions for a (state, terminal) pair, because
+      the GLR parser forks on them: conflicting entries get
+      conflictus_intentus VERUM, the state habet_conflictum, and
+      LapifexTabula.numerus_conflictuum counts conflicting PAIRS (three
+      actions on one terminal count as three). lapifex_conflictus_imprimere
+      lists them on stdout, lapifex_tabulam_imprimere prints the whole
+      table, and lapifex_actiones_quaerere returns every action for a
+      pair.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I keep one table and parse many inputs with it?
+    <responsum symbolum="lapifex_actiones_quaerere lapifex_goto_quaerere" via="archivum/lib/lapifex_c89_grammatica.c lib/lapifex_parsere.c">Yes,
+      archivum/lib/lapifex_c89_grammatica.c (now archived) built its table once into a static
+      piscina. But every call to lapifex_actiones_quaerere allocates a
+      NEW Xar from the grammar's piscina (tabula-&gt;grammatica-&gt;piscina)
+      for its result, and the parsers call it once per step, so that
+      piscina grows with every token parsed for the life of the table.
+      lapifex_goto_quaerere allocates nothing.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does lapifex_grammaticam_legere do with a bad grammar?
+    <responsum symbolum="lapifex_grammaticam_legere">It
+      prints a message to stderr ("lapifex: ...") and returns NIHIL for
+      unparsable STML, a missing &lt;terminalia&gt;, &lt;regulae&gt; or
+      &lt;initium&gt;, a terminalis or regula without titulus, or a
+      production or initium naming an unknown symbol. It does NOT
+      reject a regula whose titulus equals a terminal's: the
+      productions are attached to the terminal as their left side,
+      silently; likewise two regulae with the same titulus are merged
+      into one non-terminal.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I build the table without computing FOLLOW sets?
+    <responsum symbolum="lapifex_follow_computare lapifex_first_computare lapifex_collectio_construere">Yes.
+      Both collection builders use only FIRST (they compute
+      FIRST(beta a) for the lookaheads), so lapifex_first_computare is
+      required and lapifex_follow_computare is not; FOLLOW sets are only
+      read by lapifex_follow_obtinere and lapifex_follow_imprimere. Both
+      sets are Xar of s32 terminal indices (the header comment on
+      lapifex_first_obtinere says i32; the elements are s32). The end marker -1 appears
+      only in FOLLOW sets (lapifex_follow_computare seeds it into the
+      start symbol's FOLLOW); a symbol's FIRST set holds real terminal
+      indices only.</responsum>
+  </interrogatio>
+
+</interrogationes>

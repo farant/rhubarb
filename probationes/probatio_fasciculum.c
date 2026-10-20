@@ -33,37 +33,40 @@ _fasciculum_minimum (
     redde f;
 }
 
-s32
-principale (vacuum)
+/* exsecutabile fictum (fixura suitae): reddere eum EXSISTERE poscit */
+hic_manens constans character* constans via_binarii =
+    "/tmp/probatio_fasciculum_binarium";
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                Piscina* piscina;
-    InternamentumChorda* intern;
-                    b32  praeteritus;
-     constans character* via_binarii =
-         "/tmp/probatio_fasciculum_binarium";
-
-    piscina = piscina_generare_dynamicum("probatio_fasciculum",
-                                         1048576);
-    si (piscina == NIHIL)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    intern = internamentum_creare(piscina);
-    credo_aperire(piscina);
-
-    /* exsecutabile fictum: reddere eum EXSISTERE poscit */
+    (vacuum)c;
     CREDO_VERUM(filum_scribere_literis(via_binarii, "#!/bin/sh\n"));
+}
 
-    /* ---- H1: reddere PURUM ---- */
+interior vacuum
+_suitam_purgare (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    filum_delere(via_binarii);
+}
+
+/* ---- H1: reddere PURUM ---- */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
               Fasciculum  f;
                      Xar* partes;
         FasciculumStatus  status;
                   chorda  sedes;
           FasciculumPars* pars;
-
-        imprimere("\n--- H1: planum purum ---\n");
 
         f = _fasciculum_minimum(via_binarii, piscina);
         CREDO_VERUM(fasciculum_reddere(&f, &partes, &status, &sedes,
@@ -97,15 +100,21 @@ principale (vacuum)
         CREDO_FALSUM(filum_directorium_existit("Contents"));
         CREDO_FALSUM(filum_existit("Contents/Info.plist"));
     }
+}
 
-    /* ---- H7: identitas characteribus iudicata ---- */
+/* ---- H7: identitas characteribus iudicata ---- */
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
               Fasciculum  f;
                      Xar* partes;
         FasciculumStatus  status;
                   chorda  sedes;
-
-        imprimere("\n--- H7: identitas iudicata ---\n");
 
         f = _fasciculum_minimum(via_binarii, piscina);
         f.identitas = chorda_ex_literis("org.rhubarb.salve_vitreum",
@@ -136,8 +145,18 @@ principale (vacuum)
         CREDO_FALSUM(fasciculum_identitas_valida(
             chorda_ex_literis("a/b", piscina)));
     }
+}
 
-    /* ---- H2: claves Info.plist et directio fusionis ---- */
+/* ---- H2: claves Info.plist et directio fusionis ---- */
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
               Fasciculum  f;
                      Xar* partes;
@@ -146,8 +165,6 @@ principale (vacuum)
           FasciculumPars* pars;
            PlistResultus  r;
               PlistValor* v;
-
-        imprimere("\n--- H2: claves et fusio ---\n");
 
         f                = _fasciculum_minimum(via_binarii, piscina);
         f.versio         = chorda_ex_literis("2.5", piscina);
@@ -216,8 +233,16 @@ principale (vacuum)
          * reliquum truncat (culpa plantata II hanc clavem tollit) */
         CREDO_VERUM(v != NIHIL && v->veritas);
     }
+}
 
-    /* ---- H4: scriptor in area, cum icone ---- */
+/* ---- H4: scriptor in area, cum icone ---- */
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
               Fasciculum  f;
                      Xar* partes;
@@ -236,8 +261,6 @@ principale (vacuum)
                character via_plistae[CCLVI];
                character via_exs[CCLVI];
                character via_icon_posita[CCLVI];
-
-        imprimere("\n--- H4: scriptor ---\n");
 
         sprintf(via_contents, "%.200s/Contents", area);
         sprintf(via_macos, "%.200s/Contents/MacOS", area);
@@ -305,8 +328,16 @@ principale (vacuum)
         filum_delere(radix_areae);
         filum_delere(via_iconis);
     }
+}
 
-    /* ---- H6: scriptio semiperfecta status semitam nominat ---- */
+/* ---- H6: scriptio semiperfecta status semitam nominat ---- */
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
               Fasciculum  f;
                      Xar* partes;
@@ -320,8 +351,6 @@ principale (vacuum)
                character via_macos[CCLVI];
                character via_plistae[CCLVI];
                character via_exs[CCLVI];
-
-        imprimere("\n--- H6: scriptio semiperfecta ---\n");
 
         sprintf(via_contents, "%.200s/Contents", area);
         sprintf(via_macos, "%.200s/Contents/MacOS", area);
@@ -367,8 +396,16 @@ principale (vacuum)
         filum_delere(area);
         filum_delere(radix_areae);
     }
+}
 
-    /* ---- H6 b: scriptio GENITI fracta (ramus alter) ---- */
+/* ---- H6 b: scriptio GENITI fracta (ramus alter) ---- */
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
               Fasciculum  f;
                      Xar* partes;
@@ -380,8 +417,6 @@ principale (vacuum)
          "/tmp/probatio_fasciculum_clausa_b/Probatio.app";
                character via_contents[CCLVI];
                character via_plistae[CCLVI];
-
-        imprimere("\n--- H6 b: scriptio geniti fracta ---\n");
 
         sprintf(via_contents, "%.200s/Contents", area);
         sprintf(via_plistae, "%.200s/Contents/Info.plist", area);
@@ -420,8 +455,18 @@ principale (vacuum)
         filum_delere(area);
         filum_delere(radix_areae);
     }
+}
 
-    /* ---- H3: recusationes, unaquaeque statu SUO et sede SUA ---- */
+/* ---- H3: recusationes, unaquaeque statu SUO et sede SUA ---- */
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
               Fasciculum  f;
                      Xar* partes;
@@ -437,8 +482,6 @@ principale (vacuum)
                character via_macos[CCLVI];
                character via_plistae[CCLVI];
                character via_exs[CCLVI];
-
-        imprimere("\n--- H3: recusationes ---\n");
 
         sprintf(via_contents, "%.200s/Contents", area);
         sprintf(via_macos, "%.200s/Contents/MacOS", area);
@@ -539,8 +582,18 @@ principale (vacuum)
         filum_delere(area);
         filum_delere(radix_areae);
     }
+}
 
-    /* ---- H5: iter reditus, et aequalitas EFFECTIVA ---- */
+/* ---- H5: iter reditus, et aequalitas EFFECTIVA ---- */
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
               Fasciculum  f;
               Fasciculum  lectus;
@@ -559,8 +612,6 @@ principale (vacuum)
                character via_plistae[CCLVI];
                character via_exs[CCLVI];
                character via_icon_posita[CCLVI];
-
-        imprimere("\n--- H5: iter reditus ---\n");
 
         sprintf(via_contents, "%.200s/Contents", area);
         sprintf(via_macos, "%.200s/Contents/MacOS", area);
@@ -698,14 +749,27 @@ principale (vacuum)
         filum_delere(area);
         filum_delere(via_iconis);
     }
+}
 
-    filum_delere(via_binarii);
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "H1: planum purum", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "H7: identitas iudicata", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "H2: claves et fusio", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "H4: scriptor", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "H6: scriptio semiperfecta", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "H6 b: scriptio geniti fracta", _sectio_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "H3: recusationes", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "H5: iter reditus", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("fasciculum", SECTIONES,
+        _suitam_parare, _suitam_purgare);
 }

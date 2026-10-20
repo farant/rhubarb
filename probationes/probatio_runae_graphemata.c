@@ -434,298 +434,310 @@ _limites_corporis (
 }
 
 
+/* I. GraphemeBreakTest */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina  = c->piscina;
+     chorda  textus   = filum_legere_totum(PROBATIO_VIA, piscina);
+        i32  initium  = ZEPHYRUM;
+        i32  k;
+        i32  lineae     = ZEPHYRUM;
+        i32  probatae   = ZEPHYRUM;
+        i32  fracturae  = ZEPHYRUM;
+
+    CREDO_VERUM (textus.mensura > ZEPHYRUM);
+    per (k = ZEPHYRUM; k <= textus.mensura; k++)
+    {
+        si (k == textus.mensura || textus.datum[k] == '\n')
+        {
+            lineae++;
+            si (k > initium && textus.datum[initium] != '#')
+            {
+                probatae++;
+                (vacuum)_lineam_probare(textus.datum + initium,
+                    k - initium, lineae, &fracturae);
+            }
+            initium = k + I;
+        }
+    }
+    imprimere("  lineae probatae: %u, fractae: %u\n",
+        (insignatus integer)probatae,
+        (insignatus integer)fracturae);
+    CREDO_VERUM (probatae > M);
+    CREDO_AEQUALIS_I32 (fracturae, ZEPHYRUM);
+}
+
+/* II. Latitudo graphematum */
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    i32 j;
+
+    (vacuum)c;
+    per (j = ZEPHYRUM;
+         j < (i32)(magnitudo(CASUS_GRAPHEMATUM)
+                   / magnitudo(CASUS_GRAPHEMATUM[0]));
+         j++)
+    {
+        constans CasusGraphematis* c        = &CASUS_GRAPHEMATUM[j];
+                      constans i8* initium  = (constans i8*)c->octeti;
+                      constans i8* finis = initium
+                          + strlen(c->octeti);
+                     constans i8* post;
+                     constans i8* cursor;
+                             i32  latitudo;
+                             i32  runae = ZEPHYRUM;
+
+        post = runae_graphema_proximum(initium, finis,
+            &latitudo);
+        cursor = initium;
+        dum (cursor < post)
+        {
+            (vacuum)utf8_decodere(&cursor, post);
+            runae++;
+        }
+        si (   runae    != c->runae_graphematis
+            || latitudo != c->latitudo)
+        {
+            imprimere("  FRACTA: %s: runae %u latitudo %u, exspectatae "
+                "%u et %u\n", c->causa, (insignatus integer)runae,
+                (insignatus integer)latitudo,
+                (insignatus integer)c->runae_graphematis,
+                (insignatus integer)c->latitudo);
+        }
+        CREDO_AEQUALIS_I32 (runae, c->runae_graphematis);
+        CREDO_AEQUALIS_I32 (latitudo, c->latitudo);
+    }
+    {
+         hic_manens constans i8 vacuum_textus[I]  = { 'x' };
+                            i32 latitudo          = VII;
+
+        /* initium == finis: nihil consumitur, latitudo 0 */
+        CREDO_VERUM (runae_graphema_proximum(vacuum_textus,
+            vacuum_textus, &latitudo) == vacuum_textus);
+        CREDO_AEQUALIS_I32 (latitudo, ZEPHYRUM);
+    }
+}
+
+/* IV. Politica SIMPLEX */
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    i32 j;
+
+    (vacuum)c;
+    per (j = ZEPHYRUM;
+         j < (i32)(magnitudo(CASUS_SIMPLICES)
+                   / magnitudo(CASUS_SIMPLICES[0]));
+         j++)
+    {
+        constans CasusGraphematis* c        = &CASUS_SIMPLICES[j];
+                      constans i8* initium  = (constans i8*)c->octeti;
+                      constans i8* finis = initium
+                          + strlen(c->octeti);
+                     constans i8* post;
+                     constans i8* cursor;
+                             i32  latitudo;
+                             i32  runae = ZEPHYRUM;
+
+        post = runae_graphema_ex_politica(initium, finis,
+            RUNAE_POLITICA_SIMPLEX, &latitudo);
+        cursor = initium;
+        dum (cursor < post)
+        {
+            (vacuum)utf8_decodere(&cursor, post);
+            runae++;
+        }
+        si (   runae    != c->runae_graphematis
+            || latitudo != c->latitudo)
+        {
+            imprimere("  FRACTA: SIMPLEX %s: runae %u latitudo %u, "
+                "exspectatae %u et %u\n", c->causa,
+                (insignatus integer)runae,
+                (insignatus integer)latitudo,
+                (insignatus integer)c->runae_graphematis,
+                (insignatus integer)c->latitudo);
+        }
+        CREDO_AEQUALIS_I32 (runae, c->runae_graphematis);
+        CREDO_AEQUALIS_I32 (latitudo, c->latitudo);
+    }
+}
+
+/* V. Textus pingendus: casus */
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    i32 j;
+
+    (vacuum)c;
+    per (j = ZEPHYRUM;
+         j < (i32)(magnitudo(CASUS_TEXTUS)
+                   / magnitudo(CASUS_TEXTUS[0]));
+         j++)
+    {
+        constans CasusTextus* c        = &CASUS_TEXTUS[j];
+                 constans i8* initium  = (constans i8*)c->octeti;
+                         i32  lat      =
+                             runae_latitudo_textus(initium,
+                             initium + strlen(c->octeti),
+                             c->politica);
+
+        si (lat != c->latitudo)
+        {
+            imprimere("  FRACTA: %s: latitudo %u, exspectata %u\n",
+                c->causa, (insignatus integer)lat,
+                (insignatus integer)c->latitudo);
+        }
+        CREDO_AEQUALIS_I32 (lat, c->latitudo);
+    }
+    per (j = ZEPHYRUM;
+         j < (i32)(magnitudo(CASUS_UNITATUM)
+                   / magnitudo(CASUS_UNITATUM[0]));
+         j++)
+    {
+        constans CasusUnitatis* c        = &CASUS_UNITATUM[j];
+                   constans i8* initium  = (constans i8*)c->octeti;
+                           i32  lat      = XCIX;
+                   constans i8* post     = runae_unitas_proxima(
+                       initium, initium + strlen(c->octeti),
+                       c->politica, &lat);
+
+        si (   (i32)(post - initium) != c->consumpti
+            || lat                   != c->latitudo)
+        {
+            imprimere("  FRACTA: unitas %s: consumpti %d latitudo "
+                "%u, exspectati %u et %u\n", c->causa,
+                (integer)(post - initium), (insignatus integer)lat,
+                (insignatus integer)c->consumpti,
+                (insignatus integer)c->latitudo);
+        }
+        CREDO_AEQUALIS_I32 ((i32)(post - initium), c->consumpti);
+        CREDO_AEQUALIS_I32 (lat, c->latitudo);
+    }
+    per (j = ZEPHYRUM;
+         j < (i32)(magnitudo(CASUS_COLUMNARUM)
+                   / magnitudo(CASUS_COLUMNARUM[0]));
+         j++)
+    {
+        constans CasusColumnae* c        = &CASUS_COLUMNARUM[j];
+                   constans i8* initium  = (constans i8*)c->octeti;
+                           i32  col      = XCIX;
+                   constans i8* inventum = runae_columnam_quaerere(
+                       initium, initium + strlen(c->octeti),
+                       c->politica, c->columna, &col);
+
+        si (   (i32)(inventum - initium) != c->offset
+            || col                       != c->columna_initii)
+        {
+            imprimere("  FRACTA: %s: offset %u columna %u, "
+                "exspectata %u et %u\n", c->causa,
+                (insignatus integer)(inventum - initium),
+                (insignatus integer)col,
+                (insignatus integer)c->offset,
+                (insignatus integer)c->columna_initii);
+        }
+        CREDO_AEQUALIS_I32 ((i32)(inventum - initium), c->offset);
+        CREDO_AEQUALIS_I32 (col, c->columna_initii);
+    }
+}
+
+/* III. Aurum graphematum (oraculum ICU) + VI. columnae corporis */
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina  = c->piscina;
+     chorda  aurum    = filum_legere_totum(AURUM_VIA, piscina);
+        i32  k        = ZEPHYRUM;
+        i32  linguae  = ZEPHYRUM;
+
+    dum (k < aurum.mensura)
+    {
+        character lingua[VIII];
+        character via[CXXVIII];
+              i32 j              = ZEPHYRUM;
+              i32 numerus_aurum  = ZEPHYRUM;
+              i32 friatio_aurum  = ZEPHYRUM;
+              i32 numerus;
+              i32 friatio;
+           chorda textus;
+
+        si (aurum.datum[k] == '#')
+        {
+            dum (k < aurum.mensura && aurum.datum[k] != '\n')
+            {
+                k++;
+            }
+            k++;
+            perge;
+        }
+        dum (k < aurum.mensura && aurum.datum[k] != ' ' && j < VII)
+        {
+            lingua[j++] = (character)aurum.datum[k++];
+        }
+        lingua[j] = '\0';
+        k++;
+        dum (   k < aurum.mensura && aurum.datum[k] >= '0'
+             && aurum.datum[k] <= '9')
+        {
+            numerus_aurum = numerus_aurum * X
+                + (i32)(aurum.datum[k++] - '0');
+        }
+        k++;
+        dum (k < aurum.mensura && aurum.datum[k] != '\n')
+        {
+            i8 c = aurum.datum[k++];
+
+            friatio_aurum = friatio_aurum * XVI
+                + (i32)((c <= '9') ? (c - '0') : (c - 'a') + X);
+        }
+        k++;
+        sprintf(via, "probationes/fixa/runae/corpus/%s.txt",
+            lingua);
+        textus = filum_legere_totum(via, piscina);
+        _limites_corporis(textus, &numerus, &friatio);
+        /* VI. columnae per corpus, politica utraque */
+        CREDO_AEQUALIS_I32 (_columnas_corporis(textus,
+            RUNAE_POLITICA_GRAPHEMATUM, lingua), ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_columnas_corporis(textus,
+            RUNAE_POLITICA_SIMPLEX, lingua), ZEPHYRUM);
+        si (numerus != numerus_aurum || friatio != friatio_aurum)
+        {
+            imprimere("  FRACTA: %s: graphemata %u (aurum %u), friatio "
+                "%08x (aurum %08x)\n", lingua,
+                (insignatus integer)numerus,
+                (insignatus integer)numerus_aurum,
+                (insignatus integer)friatio,
+                (insignatus integer)friatio_aurum);
+        }
+        CREDO_AEQUALIS_I32 (numerus, numerus_aurum);
+        CREDO_AEQUALIS_I32 (friatio, friatio_aurum);
+        linguae++;
+    }
+    imprimere("  linguae: %u\n", (insignatus integer)linguae);
+    CREDO_AEQUALIS_I32 (linguae, XXXV);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "GraphemeBreakTest (Unicode " RUNAE_VERSIO ")", _sectio_prima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Latitudo graphematum (Ghostty)", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Politica SIMPLEX", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Textus pingendus: latitudo et columnae", _sectio_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "Aurum graphematum (ICU)", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
 s32
 principale (vacuum)
 {
-         b32  praeteritus;
-     Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_runae_graphemata",
-        4194304);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    /* I. GraphemeBreakTest */
-    {
-        chorda textus   = filum_legere_totum(PROBATIO_VIA, piscina);
-           i32 initium  = ZEPHYRUM;
-           i32 k;
-           i32 lineae     = ZEPHYRUM;
-           i32 probatae   = ZEPHYRUM;
-           i32 fracturae  = ZEPHYRUM;
-
-        imprimere("\n--- GraphemeBreakTest (Unicode %s) ---\n",
-            RUNAE_VERSIO);
-        CREDO_VERUM (textus.mensura > ZEPHYRUM);
-        per (k = ZEPHYRUM; k <= textus.mensura; k++)
-        {
-            si (k == textus.mensura || textus.datum[k] == '\n')
-            {
-                lineae++;
-                si (k > initium && textus.datum[initium] != '#')
-                {
-                    probatae++;
-                    (vacuum)_lineam_probare(textus.datum + initium,
-                        k - initium, lineae, &fracturae);
-                }
-                initium = k + I;
-            }
-        }
-        imprimere("  lineae probatae: %u, fractae: %u\n",
-            (insignatus integer)probatae,
-            (insignatus integer)fracturae);
-        CREDO_VERUM (probatae > M);
-        CREDO_AEQUALIS_I32 (fracturae, ZEPHYRUM);
-    }
-
-    /* II. Latitudo graphematum */
-    {
-        i32 j;
-
-        imprimere("\n--- Latitudo graphematum (Ghostty) ---\n");
-        per (j = ZEPHYRUM;
-             j < (i32)(magnitudo(CASUS_GRAPHEMATUM)
-                       / magnitudo(CASUS_GRAPHEMATUM[0]));
-             j++)
-        {
-            constans CasusGraphematis* c      = &CASUS_GRAPHEMATUM[j];
-                        constans i8* initium  = (constans i8*)c->octeti;
-                        constans i8* finis = initium
-                            + strlen(c->octeti);
-                         constans i8* post;
-                         constans i8* cursor;
-                                 i32  latitudo;
-                                 i32  runae = ZEPHYRUM;
-
-            post = runae_graphema_proximum(initium, finis,
-                &latitudo);
-            cursor = initium;
-            dum (cursor < post)
-            {
-                (vacuum)utf8_decodere(&cursor, post);
-                runae++;
-            }
-            si (   runae    != c->runae_graphematis
-                || latitudo != c->latitudo)
-            {
-                imprimere("  FRACTA: %s: runae %u latitudo %u, exspectatae "
-                    "%u et %u\n", c->causa, (insignatus integer)runae,
-                    (insignatus integer)latitudo,
-                    (insignatus integer)c->runae_graphematis,
-                    (insignatus integer)c->latitudo);
-            }
-            CREDO_AEQUALIS_I32 (runae, c->runae_graphematis);
-            CREDO_AEQUALIS_I32 (latitudo, c->latitudo);
-        }
-        {
-             hic_manens constans i8 vacuum_textus[I]  = { 'x' };
-                                i32 latitudo          = VII;
-
-            /* initium == finis: nihil consumitur, latitudo 0 */
-            CREDO_VERUM (runae_graphema_proximum(vacuum_textus,
-                vacuum_textus, &latitudo) == vacuum_textus);
-            CREDO_AEQUALIS_I32 (latitudo, ZEPHYRUM);
-        }
-    }
-
-    /* IV. Politica SIMPLEX */
-    {
-        i32 j;
-
-        imprimere("\n--- Politica SIMPLEX ---\n");
-        per (j = ZEPHYRUM;
-             j < (i32)(magnitudo(CASUS_SIMPLICES)
-                       / magnitudo(CASUS_SIMPLICES[0]));
-             j++)
-        {
-            constans CasusGraphematis* c      = &CASUS_SIMPLICES[j];
-                        constans i8* initium  = (constans i8*)c->octeti;
-                        constans i8* finis = initium
-                            + strlen(c->octeti);
-                         constans i8* post;
-                         constans i8* cursor;
-                                 i32  latitudo;
-                                 i32  runae = ZEPHYRUM;
-
-            post = runae_graphema_ex_politica(initium, finis,
-                RUNAE_POLITICA_SIMPLEX, &latitudo);
-            cursor = initium;
-            dum (cursor < post)
-            {
-                (vacuum)utf8_decodere(&cursor, post);
-                runae++;
-            }
-            si (   runae    != c->runae_graphematis
-                || latitudo != c->latitudo)
-            {
-                imprimere("  FRACTA: SIMPLEX %s: runae %u latitudo %u, "
-                    "exspectatae %u et %u\n", c->causa,
-                    (insignatus integer)runae,
-                    (insignatus integer)latitudo,
-                    (insignatus integer)c->runae_graphematis,
-                    (insignatus integer)c->latitudo);
-            }
-            CREDO_AEQUALIS_I32 (runae, c->runae_graphematis);
-            CREDO_AEQUALIS_I32 (latitudo, c->latitudo);
-        }
-    }
-
-    /* V. Textus pingendus: casus */
-    {
-        i32 j;
-
-        imprimere("\n--- Textus pingendus: latitudo et columnae ---\n");
-        per (j = ZEPHYRUM;
-             j < (i32)(magnitudo(CASUS_TEXTUS)
-                       / magnitudo(CASUS_TEXTUS[0]));
-             j++)
-        {
-            constans CasusTextus* c        = &CASUS_TEXTUS[j];
-                     constans i8* initium  = (constans i8*)c->octeti;
-                             i32  lat      =
-                                 runae_latitudo_textus(initium,
-                                 initium + strlen(c->octeti),
-                                 c->politica);
-
-            si (lat != c->latitudo)
-            {
-                imprimere("  FRACTA: %s: latitudo %u, exspectata %u\n",
-                    c->causa, (insignatus integer)lat,
-                    (insignatus integer)c->latitudo);
-            }
-            CREDO_AEQUALIS_I32 (lat, c->latitudo);
-        }
-        per (j = ZEPHYRUM;
-             j < (i32)(magnitudo(CASUS_UNITATUM)
-                       / magnitudo(CASUS_UNITATUM[0]));
-             j++)
-        {
-            constans CasusUnitatis* c        = &CASUS_UNITATUM[j];
-                       constans i8* initium  = (constans i8*)c->octeti;
-                               i32  lat      = XCIX;
-                       constans i8* post     = runae_unitas_proxima(
-                           initium, initium + strlen(c->octeti),
-                           c->politica, &lat);
-
-            si (   (i32)(post - initium) != c->consumpti
-                || lat                   != c->latitudo)
-            {
-                imprimere("  FRACTA: unitas %s: consumpti %d latitudo "
-                    "%u, exspectati %u et %u\n", c->causa,
-                    (integer)(post - initium), (insignatus integer)lat,
-                    (insignatus integer)c->consumpti,
-                    (insignatus integer)c->latitudo);
-            }
-            CREDO_AEQUALIS_I32 ((i32)(post - initium), c->consumpti);
-            CREDO_AEQUALIS_I32 (lat, c->latitudo);
-        }
-        per (j = ZEPHYRUM;
-             j < (i32)(magnitudo(CASUS_COLUMNARUM)
-                       / magnitudo(CASUS_COLUMNARUM[0]));
-             j++)
-        {
-            constans CasusColumnae* c        = &CASUS_COLUMNARUM[j];
-                       constans i8* initium  = (constans i8*)c->octeti;
-                               i32  col      = XCIX;
-                       constans i8* inventum = runae_columnam_quaerere(
-                           initium, initium + strlen(c->octeti),
-                           c->politica, c->columna, &col);
-
-            si (   (i32)(inventum - initium) != c->offset
-                || col                       != c->columna_initii)
-            {
-                imprimere("  FRACTA: %s: offset %u columna %u, "
-                    "exspectata %u et %u\n", c->causa,
-                    (insignatus integer)(inventum - initium),
-                    (insignatus integer)col,
-                    (insignatus integer)c->offset,
-                    (insignatus integer)c->columna_initii);
-            }
-            CREDO_AEQUALIS_I32 ((i32)(inventum - initium), c->offset);
-            CREDO_AEQUALIS_I32 (col, c->columna_initii);
-        }
-    }
-
-    /* III. Aurum graphematum (oraculum ICU) + VI. columnae corporis */
-    {
-        chorda aurum    = filum_legere_totum(AURUM_VIA, piscina);
-           i32 k        = ZEPHYRUM;
-           i32 linguae  = ZEPHYRUM;
-
-        imprimere("\n--- Aurum graphematum (ICU) ---\n");
-        dum (k < aurum.mensura)
-        {
-            character lingua[VIII];
-            character via[CXXVIII];
-                  i32 j              = ZEPHYRUM;
-                  i32 numerus_aurum  = ZEPHYRUM;
-                  i32 friatio_aurum  = ZEPHYRUM;
-                  i32 numerus;
-                  i32 friatio;
-               chorda textus;
-
-            si (aurum.datum[k] == '#')
-            {
-                dum (k < aurum.mensura && aurum.datum[k] != '\n')
-                {
-                    k++;
-                }
-                k++;
-                perge;
-            }
-            dum (k < aurum.mensura && aurum.datum[k] != ' ' && j < VII)
-            {
-                lingua[j++] = (character)aurum.datum[k++];
-            }
-            lingua[j] = '\0';
-            k++;
-            dum (   k < aurum.mensura && aurum.datum[k] >= '0'
-                 && aurum.datum[k] <= '9')
-            {
-                numerus_aurum = numerus_aurum * X
-                    + (i32)(aurum.datum[k++] - '0');
-            }
-            k++;
-            dum (k < aurum.mensura && aurum.datum[k] != '\n')
-            {
-                i8 c = aurum.datum[k++];
-
-                friatio_aurum = friatio_aurum * XVI
-                    + (i32)((c <= '9') ? (c - '0') : (c - 'a') + X);
-            }
-            k++;
-            sprintf(via, "probationes/fixa/runae/corpus/%s.txt",
-                lingua);
-            textus = filum_legere_totum(via, piscina);
-            _limites_corporis(textus, &numerus, &friatio);
-            /* VI. columnae per corpus, politica utraque */
-            CREDO_AEQUALIS_I32 (_columnas_corporis(textus,
-                RUNAE_POLITICA_GRAPHEMATUM, lingua), ZEPHYRUM);
-            CREDO_AEQUALIS_I32 (_columnas_corporis(textus,
-                RUNAE_POLITICA_SIMPLEX, lingua), ZEPHYRUM);
-            si (numerus != numerus_aurum || friatio != friatio_aurum)
-            {
-                imprimere("  FRACTA: %s: graphemata %u (aurum %u), friatio "
-                    "%08x (aurum %08x)\n", lingua,
-                    (insignatus integer)numerus,
-                    (insignatus integer)numerus_aurum,
-                    (insignatus integer)friatio,
-                    (insignatus integer)friatio_aurum);
-            }
-            CREDO_AEQUALIS_I32 (numerus, numerus_aurum);
-            CREDO_AEQUALIS_I32 (friatio, friatio_aurum);
-            linguae++;
-        }
-        imprimere("  linguae: %u\n", (insignatus integer)linguae);
-        CREDO_AEQUALIS_I32 (linguae, XXXV);
-    }
-
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+    redde credo_suitam_currere("runae_graphemata", SECTIONES);
 }

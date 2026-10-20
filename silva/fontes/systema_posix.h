@@ -150,6 +150,9 @@ int lstat(const char* via, struct stat* sedes);
  * oraculum effectuum eam interponit (effectus T5, 2026-10-05) */
 int fstatat(int fossa, const char* via, struct stat* sedes,
     int vexilla);
+/* fstat: per fossam iam apertam - via nulla, ergo non canalis
+ * (custodia_secretum_parare, 2026-10-17) */
+int fstat(int fossa, struct stat* sedes);
 
 
 /* ==================================================
@@ -184,6 +187,9 @@ int     pipe(int* fossae);
 ssize_t read(int fossa, void* sedes, size_t mensura);
 ssize_t write(int fossa, const void* datum, size_t mensura);
 int     close(int fossa);
+/* fsync: datum in disco ante reditum (filum_appendere_firmiter,
+ * custodia_secretum_parare) */
+int     fsync(int fossa);
 void    _exit(int status);
 /* <gradus titulus="usleep" genus="obsoletum" pro="nanosleep"/>
  * XSI obsoletum: XPG7 sustulit - sub postulatis strictis glibc/musl
@@ -257,6 +263,8 @@ int WTERMSIG(int status);
 #define O_APPEND   0x0008
 #define O_CREAT    0x0200
 #define O_TRUNC    0x0400
+#define O_EXCL     0x0800
+#define O_NOFOLLOW 0x0100
 #define F_GETFL    3
 #define F_SETFL    4
 #define F_SETFD    2
@@ -554,6 +562,11 @@ struct sigaction {
 #define SIGCHLD  20
 #define SIGTTIN  21
 #define SIGTTOU  22
+/* reactor signa (hospitium v3 T1, 2026-10-16): signa usoris et
+ * restitutio vocationum (valores Darwin, ut ceteri) */
+#define SIGUSR1  30
+#define SIGUSR2  31
+#define SA_RESTART 0x0002
 
 int sigaction(int signum, const struct sigaction* actio,
               struct sigaction* pristina);
@@ -639,3 +652,56 @@ struct rusage {
 #define RUSAGE_CHILDREN (-1)
 
 int getrusage(int quis, struct rusage* usus);
+
+/* rusage_info_v4 (credo memoria T1, 2026-10-19: lib/memoria_processus_
+ * macos.c) - forma Darwin CCXCVI octeti: uuid XVI, deinde XXXV
+ * uint64_t. Lecta: ri_resident_size (LXIV), ri_phys_footprint (LXXII),
+ * ri_lifetime_max_phys_footprint (CCXL) - per officina/auspex_posix.sh */
+#define RUSAGE_INFO_V4  4
+typedef void* rusage_info_t;
+struct rusage_info_v4 {
+    uint8_t  ri_uuid[16];
+    uint64_t ri_user_time;
+    uint64_t ri_system_time;
+    uint64_t ri_pkg_idle_wkups;
+    uint64_t ri_interrupt_wkups;
+    uint64_t ri_pageins;
+    uint64_t ri_wired_size;
+    uint64_t ri_resident_size;
+    uint64_t ri_phys_footprint;
+    uint64_t ri_proc_start_abstime;
+    uint64_t ri_proc_exit_abstime;
+    uint64_t ri_child_user_time;
+    uint64_t ri_child_system_time;
+    uint64_t ri_child_pkg_idle_wkups;
+    uint64_t ri_child_interrupt_wkups;
+    uint64_t ri_child_pageins;
+    uint64_t ri_child_elapsed_abstime;
+    uint64_t ri_diskio_bytesread;
+    uint64_t ri_diskio_byteswritten;
+    uint64_t ri_cpu_time_qos_default;
+    uint64_t ri_cpu_time_qos_maintenance;
+    uint64_t ri_cpu_time_qos_background;
+    uint64_t ri_cpu_time_qos_utility;
+    uint64_t ri_cpu_time_qos_legacy;
+    uint64_t ri_cpu_time_qos_user_initiated;
+    uint64_t ri_cpu_time_qos_user_interactive;
+    uint64_t ri_billed_system_time;
+    uint64_t ri_serviced_system_time;
+    uint64_t ri_logical_writes;
+    uint64_t ri_lifetime_max_phys_footprint;
+    uint64_t ri_instructions;
+    uint64_t ri_cycles;
+    uint64_t ri_billed_energy;
+    uint64_t ri_serviced_energy;
+    uint64_t ri_interval_max_phys_footprint;
+    uint64_t ri_runnable_time;
+};
+
+
+/* ==================================================
+ * <sectio caput="libproc.h" poscit="sys/resource.h"/>
+ * libproc.h - usus processus per pid (credo memoria T1)
+ * ================================================== */
+
+int proc_pid_rusage(int pid, int flavor, rusage_info_t* buffer);

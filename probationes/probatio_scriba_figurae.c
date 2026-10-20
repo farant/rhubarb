@@ -26,14 +26,13 @@
 #include <stdio.h>
 #include <string.h>
 
-hic_manens Piscina*             piscina;
-hic_manens InternamentumChorda* intern;
-
 interior Componens*
 arbor (
-    constans character* ephemera,
-                   i32  latitudo,
-                   i32  altitudo)
+                Piscina* piscina,
+    InternamentumChorda* intern,
+     constans character* ephemera,
+                    i32  latitudo,
+                    i32  altitudo)
 {
      InsulaRepositorium* repo;
        ScribaCompositio  cfg;
@@ -54,6 +53,7 @@ arbor (
 
 interior Componens*
 liberum (
+               Piscina* piscina,
              Componens* c,
     constans character* id)
 {
@@ -96,8 +96,10 @@ in_cellula (
 
 interior TabulaPixelorum*
 reddere (
-        Componens* radix,
-    ScribaFigurae* sf)
+                Piscina* piscina,
+    InternamentumChorda* intern,
+              Componens* radix,
+          ScribaFigurae* sf)
 {
      FiguraRegistrum* reg;
              Mandata* m;
@@ -119,43 +121,28 @@ reddere (
 #define FOLIUM_X(c) (VI + (s32)(c) * VI)
 #define FOLIUM_Y(l) (VIII + (s32)(l) * VIII)
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-             Volumen* vol;
-    ScribaDocumentum* doc;
-      ScribaActiones  sa;
-       ScribaFigurae  sf;
-           Componens* r;
-           Componens* pagina;
-           Componens* prosp;
-           Componens* status;
-     TabulaPixelorum* t;
+                Piscina* piscina;
+    InternamentumChorda* intern;
+              Componens* r;
+              Componens* pagina;
+              Componens* prosp;
+              Componens* status;
 
-    piscina = piscina_generare_dynamicum("probatio_scriba_figurae",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
-    vol = volumen_temporarium(piscina, "probatio_scriba_figurae");
-    doc = scriba_documentum_creare(piscina, intern, vol, "", XVI, VI,
-        IV);
-    scriba_actiones_initiare(&sa, doc, piscina);
-    memcpy(&tabula_cellula(&sa.laboris, ZEPHYRUM, ZEPHYRUM), "salve",
-        V);
-    memcpy(&tabula_cellula(&sa.laboris, II, ZEPHYRUM), "mundus", VI);
-    sf.sa = &sa;
 
-    imprimere("\n--- I: arbor - fines, data figurae, status ---\n");
-    r = arbor("<scriba superficies_latitudo=\"480\""
+    r = arbor(piscina, intern, "<scriba superficies_latitudo=\"480\""
               " superficies_altitudo=\"200\" cursor_linea=\"2\""
               " cursor_columna=\"8\" modus=\"normalis\"/>", CCCXX, CC);
     CREDO_NON_NIHIL(r);
-    prosp   = liberum(r, "prospectus");
-    pagina  = liberum(r, "pagina");
-    status  = liberum(r, "status");
+    prosp   = liberum(piscina, r, "prospectus");
+    pagina  = liberum(piscina, r, "pagina");
+    status  = liberum(piscina, r, "status");
     CREDO_NON_NIHIL(prosp);
     CREDO_NON_NIHIL(pagina);
     CREDO_NON_NIHIL(status);
@@ -175,9 +162,37 @@ s32 principale (vacuum)
     /* totum videtur: nulla volutio */
     CREDO_AEQUALIS_S32(prosp->translatio.x, ZEPHYRUM);
     CREDO_AEQUALIS_S32(prosp->translatio.y, ZEPHYRUM);
+}
 
-    imprimere("\n--- II: pixela - mensa, charta, margo, cursor ---\n");
-    t = reddere(r, &sf);
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                Volumen* vol;
+       ScribaDocumentum* doc;
+         ScribaActiones  sa;
+          ScribaFigurae  sf;
+              Componens* r;
+        TabulaPixelorum* t;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    thema_initiare();
+    vol = volumen_temporarium(piscina, "probatio_scriba_figurae");
+    doc = scriba_documentum_creare(piscina, intern, vol, "", XVI, VI,
+        IV);
+    scriba_actiones_initiare(&sa, doc, piscina);
+    memcpy(&tabula_cellula(&sa.laboris, ZEPHYRUM, ZEPHYRUM), "salve",
+        V);
+    memcpy(&tabula_cellula(&sa.laboris, II, ZEPHYRUM), "mundus", VI);
+    sf.sa = &sa;
+
+    r = arbor(piscina, intern, "<scriba superficies_latitudo=\"480\""
+              " superficies_altitudo=\"200\" cursor_linea=\"2\""
+              " cursor_columna=\"8\" modus=\"normalis\"/>", CCCXX, CC);
+    t = reddere(piscina, intern, r, &sf);
     /* mensa: superficies; arbor sine Motu = focata, ergo puncta
      * exemplaris foci (PUNCTA_DUPLICIA_DISPERSA, tabulae alligata):
      * y C = linea IV (0x88), x CCC = bitus IV positus, CCCI non */
@@ -205,12 +220,38 @@ s32 principale (vacuum)
     /* status: modus colore suo */
     CREDO_VERUM(in_cellula(t, II, CXCII, color(COLOR_STATUS_NORMAL))
                 > ZEPHYRUM);
+    volumen_claudere(vol);
+}
 
-    imprimere("\n--- III: cursor super litteram, modo inserendi ---\n");
-    r = arbor("<scriba superficies_latitudo=\"480\""
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                Volumen* vol;
+       ScribaDocumentum* doc;
+         ScribaActiones  sa;
+          ScribaFigurae  sf;
+              Componens* r;
+        TabulaPixelorum* t;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    thema_initiare();
+    vol = volumen_temporarium(piscina, "probatio_scriba_figurae");
+    doc = scriba_documentum_creare(piscina, intern, vol, "", XVI, VI,
+        IV);
+    scriba_actiones_initiare(&sa, doc, piscina);
+    memcpy(&tabula_cellula(&sa.laboris, ZEPHYRUM, ZEPHYRUM), "salve",
+        V);
+    memcpy(&tabula_cellula(&sa.laboris, II, ZEPHYRUM), "mundus", VI);
+    sf.sa = &sa;
+
+    r = arbor(piscina, intern, "<scriba superficies_latitudo=\"480\""
               " superficies_altitudo=\"200\" cursor_linea=\"0\""
               " cursor_columna=\"1\" modus=\"inserere\"/>", CCCXX, CC);
-    t = reddere(r, &sf);
+    t = reddere(piscina, intern, r, &sf);
     CREDO_VERUM(in_cellula(t, FOLIUM_X(I), FOLIUM_Y(ZEPHYRUM),
         color(COLOR_STATUS_INSERT)) > ZEPHYRUM);
     CREDO_AEQUALIS_I32(in_cellula(t, FOLIUM_X(I), FOLIUM_Y(ZEPHYRUM),
@@ -220,21 +261,49 @@ s32 principale (vacuum)
         color(COLOR_BACKGROUND)) > ZEPHYRUM);
     CREDO_AEQUALIS_I32(in_cellula(t, FOLIUM_X(I), FOLIUM_Y(ZEPHYRUM),
         color(COLOR_TEXT)), ZEPHYRUM);
-    CREDO_CHORDA_AEQUALIS_LITERIS(liberum(r, "status")->titulus,
+    CREDO_CHORDA_AEQUALIS_LITERIS(liberum(piscina, r,
+        "status")->titulus,
         "INSERERE 1:2");
     CREDO_VERUM(in_cellula(t, II, CXCII, color(COLOR_STATUS_INSERT))
                 > ZEPHYRUM);
+    volumen_claudere(vol);
+}
 
-    imprimere("\n--- IV: selectio visualis (lineae totae) ---\n");
-    r = arbor("<scriba superficies_latitudo=\"480\""
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                Volumen* vol;
+       ScribaDocumentum* doc;
+         ScribaActiones  sa;
+          ScribaFigurae  sf;
+              Componens* r;
+              Componens* pagina;
+        TabulaPixelorum* t;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    thema_initiare();
+    vol = volumen_temporarium(piscina, "probatio_scriba_figurae");
+    doc = scriba_documentum_creare(piscina, intern, vol, "", XVI, VI,
+        IV);
+    scriba_actiones_initiare(&sa, doc, piscina);
+    memcpy(&tabula_cellula(&sa.laboris, ZEPHYRUM, ZEPHYRUM), "salve",
+        V);
+    memcpy(&tabula_cellula(&sa.laboris, II, ZEPHYRUM), "mundus", VI);
+    sf.sa = &sa;
+
+    r = arbor(piscina, intern, "<scriba superficies_latitudo=\"480\""
               " superficies_altitudo=\"200\" cursor_linea=\"2\""
               " cursor_columna=\"0\" modus=\"visualis\""
               " selectio_linea=\"0\" selectio_columna=\"0\"/>", CCCXX,
               CC);
-    pagina = liberum(r, "pagina");
+    pagina = liberum(piscina, r, "pagina");
     CREDO_AEQUALIS_I32(pagina->numerus_punctorum, II);
     CREDO_AEQUALIS_S32(pagina->puncta[I].y, ZEPHYRUM);
-    t = reddere(r, &sf);
+    t = reddere(piscina, intern, r, &sf);
     CREDO_AEQUALIS_I32(in_cellula(t, FOLIUM_X(XII), FOLIUM_Y(I),
         color(COLOR_SELECTION)), XLVIII);        /* linea I selecta */
     CREDO_AEQUALIS_I32(in_cellula(t, FOLIUM_X(XII), FOLIUM_Y(III),
@@ -247,25 +316,54 @@ s32 principale (vacuum)
         color(COLOR_STATUS_VISUAL)) > ZEPHYRUM);
     CREDO_VERUM(in_cellula(t, II, CXCII, color(COLOR_STATUS_VISUAL))
                 > ZEPHYRUM);
+    volumen_claudere(vol);
+}
 
-    imprimere("\n--- V: volutio sine statu - cursor centratus ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+              Componens* r;
+              Componens* prosp;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    thema_initiare();
+
     /* superficies X x V cellularum: prospectus X x IV; folium cum
      * margine XVIII x VIII */
-    r = arbor("<scriba superficies_latitudo=\"60\""
+    r = arbor(piscina, intern, "<scriba superficies_latitudo=\"60\""
               " superficies_altitudo=\"40\" cursor_linea=\"2\""
               " cursor_columna=\"3\"/>", LX, XL);
-    prosp = liberum(r, "prospectus");
+    prosp = liberum(piscina, r, "prospectus");
     CREDO_AEQUALIS_S32(prosp->translatio.x, ZEPHYRUM);
     CREDO_AEQUALIS_S32(prosp->translatio.y, -VIII);
-    r = arbor("<scriba superficies_latitudo=\"60\""
+    r = arbor(piscina, intern, "<scriba superficies_latitudo=\"60\""
               " superficies_altitudo=\"40\" cursor_linea=\"5\""
               " cursor_columna=\"15\"/>", LX, XL);
-    prosp = liberum(r, "prospectus");
+    prosp = liberum(piscina, r, "prospectus");
     CREDO_AEQUALIS_S32(prosp->translatio.x, -XLVIII);   /* VIII limes */
     CREDO_AEQUALIS_S32(prosp->translatio.y, -XXXII);    /* IV limes */
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: arbor - fines, data figurae, status", _sectio_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "II: pixela - mensa, charta, margo, cursor", _sectio_secunda,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III: cursor super litteram, modo inserendi", _sectio_tertia,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IV: selectio visualis (lineae totae)", _sectio_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "V: volutio sine statu - cursor centratus", _sectio_quinta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("scriba_figurae", SECTIONES);
 }

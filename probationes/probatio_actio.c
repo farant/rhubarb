@@ -27,7 +27,9 @@ numerare (
     redde VERUM;
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                 Piscina* piscina;
     InternamentumChorda* intern;
@@ -40,15 +42,10 @@ s32 principale (vacuum)
                     Xar* desunt;
                     Xar* otiosae;
 
-    piscina = piscina_generare_dynamicum("probatio_actio", XVI * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
+    piscina  = c->piscina;
     intern   = internamentum_creare(piscina);
     numerus  = ZEPHYRUM;
 
-    imprimere("\n--- Registrare et invenire ---\n");
     reg = actio_registrum_creare(piscina, intern);
     CREDO_NON_NIHIL(reg);
     CREDO_VERUM(actio_registrare(reg, "numerare", numerare, &numerus));
@@ -74,7 +71,7 @@ s32 principale (vacuum)
     CREDO_FALSUM(actio_invenire(NIHIL, chorda_ex_literis("numerare",
                                 piscina), &fn, &ctx));
 
-    imprimere("\n--- Resolutio utrimque ---\n");
+    CREDO_GRADUS("Resolutio utrimque");
     radix  = componens_creare(piscina, intern, "radix", PARTES_NULLUM);
     b      = componens_creare(piscina, intern, "b", PARTES_BOTTONE);
     componens_ponere_actio(b, "numerare");
@@ -99,16 +96,28 @@ s32 principale (vacuum)
     CREDO_CHORDA_AEQUALIS_LITERIS(
         *(chorda*)xar_obtinere(otiosae, ZEPHYRUM), "fugere");
 
-    imprimere("\n--- Arbor sine actionibus: omnes otiosae ---\n");
+    CREDO_GRADUS("Arbor sine actionibus: omnes otiosae");
     radix = componens_creare(piscina, intern, "sola", PARTES_NULLUM);
     CREDO_AEQUALIS_I32(
         xar_numerus(actio_non_registratae(reg, radix, piscina)),
         ZEPHYRUM);
     CREDO_AEQUALIS_I32(
         xar_numerus(actio_non_relatae(reg, radix, piscina)), II);
+}
 
-    imprimere("\n");
-    imprimere("\n--- T2a: vacare et miscere (vicus) ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                ActioFn  fn;
+                 vacuum* ctx;
+                    i32  numerus;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    numerus  = ZEPHYRUM;
     {
          ActioRegistrum* hospes;
          ActioRegistrum* app;
@@ -136,7 +145,18 @@ s32 principale (vacuum)
         CREDO_VERUM(actio_registrare(hospes, "tabula.eligere", numerare,
             &numerus));
     }
+}
 
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Registrare et invenire", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "T2a: vacare et miscere (vicus)", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("actio", SECTIONES);
 }

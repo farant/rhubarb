@@ -244,7 +244,6 @@ probatio_sceleti(Piscina* piscina)
     HttpResponsum c;
     HttpResponsum d;
 
-    imprimere("\n--- Probans herbarium_clavis_sceleti ---\n");
     memset(&a, 0, magnitudo(a));
     memset(&b, 0, magnitudo(b));
     memset(&c, 0, magnitudo(c));
@@ -350,7 +349,6 @@ probatio_captura(Piscina* piscina)
     constans character* constans campi[II] = { "model", NIHIL };
     i32 i;
 
-    imprimere("\n--- Probans herbarium captura ---\n");
     _directorium(dir, "captura");
     _purgare(dir, piscina);
 
@@ -444,7 +442,6 @@ probatio_premere_explicite(Piscina* piscina)
                   Xar* s;
     HerbariumSpecimen* sp;
 
-    imprimere("\n--- Probans herbarium_premere (novitas) ---\n");
     _directorium(dir, "premere");
     _purgare(dir, piscina);
     o              = herbarium_optiones_ordinariae();
@@ -480,7 +477,6 @@ probatio_captura_defectus(Piscina* piscina)
             Herbarium* h;
          HttpResultus  r;
 
-    imprimere("\n--- Probans defectus capturae (responsum intactum) ---\n");
     /* aperire in loco impossibili -> NIHIL; vectura NIHIL transmittit */
     o              = herbarium_optiones_ordinariae();
     o.directorium  = "/dev/null/herbarium";
@@ -533,7 +529,6 @@ probatio_reddere(Piscina* piscina)
                   Xar* specimina;
                   i32  i;
 
-    imprimere("\n--- Probans herbarium_enumerare + herbarium_reddens ---\n");
     _directorium(dir, "redditio");
     _purgare(dir, piscina);
     responsa[0].status = CDXXIX;
@@ -641,7 +636,6 @@ probatio_iudex(Piscina* piscina)
          HttpResultus  r;
                   i32  i;
 
-    imprimere("\n--- Probans iudicem ante usum ---\n");
     _directorium(dir, "iudex");
     _purgare(dir, piscina);
     /* 0: CC cum 'x' -> premitur causa iudicis; 1: CC sine 'x' -> nihil;
@@ -754,7 +748,6 @@ probatio_rivus(Piscina* piscina)
                   i32  i;
                   b32  visum_ducenti = FALSUM;
 
-    imprimere("\n--- Probans herbarium_vectura_rivi + reddens_rivi ---\n");
     _directorium(dir, "rivus");
     _purgare(dir, piscina);
     /* 0: DXXIX -> premitur 'status', rivus tacet; 1: CC SSE cum 'x' ->
@@ -876,7 +869,6 @@ probatio_sedes_ordinaria(Piscina* piscina)
        chorda  causa;
        chorda  sedes;
 
-    imprimere("\n--- Probans sedem ordinariam ---\n");
     _directorium(dir, "sedes");
     (vacuum)mkdir(dir, 0755);
     /* $RHUBARB_HERBARIUM directorium exstans -> <dir>/<hospes> */
@@ -924,28 +916,82 @@ probatio_sedes_ordinaria(Piscina* piscina)
     (vacuum)rmdir(dir);
 }
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    probatio_sceleti(c->piscina);
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    probatio_captura(c->piscina);
+}
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    probatio_premere_explicite(c->piscina);
+}
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    probatio_captura_defectus(c->piscina);
+}
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    probatio_reddere(c->piscina);
+}
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    probatio_iudex(c->piscina);
+}
+
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    probatio_rivus(c->piscina);
+}
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    probatio_sedes_ordinaria(c->piscina);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "herbarium_clavis_sceleti", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "herbarium captura", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "herbarium_premere (novitas)", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "defectus capturae (responsum intactum)", _sectio_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "herbarium_enumerare + herbarium_reddens", _sectio_quinta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "iudicem ante usum", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "herbarium_vectura_rivi + reddens_rivi", _sectio_septima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "sedem ordinariam", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
 s32
 principale (vacuum)
 {
-     Piscina* piscina;
-         b32  successus;
-
-    piscina = piscina_generare_dynamicum("probatio_herbarium", M * M);
-    credo_aperire(piscina);
-
-    probatio_sceleti(piscina);
-    probatio_captura(piscina);
-    probatio_premere_explicite(piscina);
-    probatio_captura_defectus(piscina);
-    probatio_reddere(piscina);
-    /* herbarium-spec-2 H1 */
-    probatio_iudex(piscina);
-    probatio_rivus(piscina);
-    probatio_sedes_ordinaria(piscina);
-
-    credo_imprimere_compendium();
-    successus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
-    redde successus ? 0 : I;
+    redde credo_suitam_currere("herbarium", SECTIONES);
 }

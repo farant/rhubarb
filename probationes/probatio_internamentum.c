@@ -6,30 +6,20 @@
 #include "credo.h"
 #include <stdio.h>
 
-s32 principale (vacuum)
-{
-    Piscina* piscina;
-        b32  praeteritus;
-
-    /* Aperire piscinam et credonem */
-    piscina = piscina_generare_dynamicum("probatio_internamentum",
-        CDLVI);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ==================================================
      * Probare internamentum_creare
      * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         InternamentumChorda* intern;
-
-        imprimere("\n--- Probans internamentum_creare ---\n");
 
         intern = internamentum_creare(piscina);
         CREDO_NON_NIHIL(intern);
@@ -37,18 +27,24 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL(intern->piscina);
         CREDO_AEQUALIS_I32(internamentum_numerus(intern), ZEPHYRUM);
     }
+}
 
 
     /* ==================================================
      * Probare chorda_internare - aequales chordas
      * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         InternamentumChorda* intern;
         chorda s1, s2;
         chorda *interned1, *interned2;
-
-        imprimere("\n--- Probans chorda_internare (aequales) ---\n");
 
         intern = internamentum_creare(piscina);
 
@@ -66,18 +62,24 @@ s32 principale (vacuum)
         /* Numerus debet esse I (una chorda unica) */
         CREDO_AEQUALIS_I32(internamentum_numerus(intern), I);
     }
+}
 
 
     /* ==================================================
      * Probare chorda_internare - differentes chordas
      * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         InternamentumChorda* intern;
         chorda s1, s2, s3;
         chorda *interned1, *interned2, *interned3;
-
-        imprimere("\n--- Probans chorda_internare (differentes) ---\n");
 
         intern = internamentum_creare(piscina);
 
@@ -100,17 +102,23 @@ s32 principale (vacuum)
         /* Numerus debet esse III */
         CREDO_AEQUALIS_I32(internamentum_numerus(intern), III);
     }
+}
 
 
     /* ==================================================
      * Probare chorda_internare_ex_literis
      * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         InternamentumChorda* intern;
         chorda *interned1, *interned2;
-
-        imprimere("\n--- Probans chorda_internare_ex_literis ---\n");
 
         intern = internamentum_creare(piscina);
 
@@ -126,17 +134,23 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(*interned1, chorda_ex_literis("test",
             piscina));
     }
+}
 
 
     /* ==================================================
      * Probare chorda_est_internata
      * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         InternamentumChorda* intern;
         chorda s1, s2;
-
-        imprimere("\n--- Probans chorda_est_internata ---\n");
 
         intern = internamentum_creare(piscina);
 
@@ -150,17 +164,23 @@ s32 principale (vacuum)
         CREDO_VERUM(chorda_est_internata(intern, s1));
         CREDO_FALSUM(chorda_est_internata(intern, s2));
     }
+}
 
 
     /* ==================================================
      * Probare pointer equality pro comparatio
      * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         InternamentumChorda* intern;
         chorda *id1, *id2, *id3;
-
-        imprimere("\n--- Probans pointer equality ---\n");
 
         intern = internamentum_creare(piscina);
 
@@ -177,17 +197,23 @@ s32 principale (vacuum)
 
         /* Comparatio pointer est multo celerior quam chorda_aequalis */
     }
+}
 
 
     /* ==================================================
      * Probare internamentum_vacare
      * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         InternamentumChorda* intern;
                      chorda* interned;
-
-        imprimere("\n--- Probans internamentum_vacare ---\n");
 
         intern = internamentum_creare(piscina);
 
@@ -206,18 +232,24 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL(interned);
         CREDO_AEQUALIS_I32(internamentum_numerus(intern), I);
     }
+}
 
 
     /* ==================================================
      * Probare multa internationes
      * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         InternamentumChorda* intern;
                      chorda* interned[X];
                         i32  i;
-
-        imprimere("\n--- Probans multa internationes ---\n");
 
         intern = internamentum_creare(piscina);
 
@@ -258,6 +290,7 @@ s32 principale (vacuum)
         /* Numerus adhuc X */
         CREDO_AEQUALIS_I32(internamentum_numerus(intern), X);
     }
+}
 
 
     /* ==================================================
@@ -268,12 +301,17 @@ s32 principale (vacuum)
      * contractum tenet ne iterum tacite mutetur.
      * ================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         InternamentumChorda* intern;
                      chorda  vacua_sine_datis;
                      chorda  vacua_cum_datis;
-
-        imprimere("\n--- Probans chordam vacuam (recusatur) ---\n");
 
         intern = internamentum_creare(piscina);
 
@@ -288,27 +326,31 @@ s32 principale (vacuum)
         CREDO_FALSUM(chorda_est_internata(intern, vacua_cum_datis));
         CREDO_AEQUALIS_I32(internamentum_numerus(intern), ZEPHYRUM);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "internamentum_creare", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "chorda_internare (aequales)", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "chorda_internare (differentes)", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "chorda_internare_ex_literis", _sectio_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "chorda_est_internata", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "pointer equality", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "internamentum_vacare", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "multa internationes", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "chordam vacuam (recusatur)", _sectio_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ==================================================
-     * Compendium
-     * ================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    /* Destructio */
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("internamentum", SECTIONES);
 }

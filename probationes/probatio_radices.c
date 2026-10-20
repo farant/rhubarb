@@ -23,8 +23,6 @@
 #include <stdio.h>
 #include <string.h>
 
-interior Piscina* piscina;
-
 nomen structura {
     constans character* polynomium;
                    i32  numerus;
@@ -83,7 +81,8 @@ interior constans Casus exempla[] = {
 
 interior Polynomium
 _p (
-    constans character* textus)
+    constans character* textus,
+               Piscina* piscina)
 {
     Polynomium p = polynomium_nullum();
 
@@ -108,16 +107,18 @@ interior b32
 _radices (
     constans character*  textus,
            RadixRealis** r,
-                   i32*  n)
+                   i32*  n,
+               Piscina*  piscina)
 {
-    redde radices_reales(_p(textus), piscina, r, n);
+    redde radices_reales(_p(textus, piscina), piscina, r, n);
 }
 
 /* S_N(u) = sum_l C(N, 2l+1) (-1)^l u^l: radices tan^2(k pi/N), k = 1 ..
  * N/2 - 1 (knotapel D123) - gradus magnus pro probatione memoriae */
 interior Polynomium
 _tangentium (
-    s32 N)
+        s32  N,
+    Piscina* piscina)
 {
         Magnus binomium = magnus_ex_s64(I);
         Magnus c[LXIV];
@@ -141,26 +142,21 @@ _tangentium (
     redde q;
 }
 
-s32 principale (vacuum)
+
+/* ==================================================
+ * CONTRA ORACULUM
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    piscina = piscina_generare_dynamicum("probatio_radices", 1 << 22);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ==================================================
-     * CONTRA ORACULUM
-     * ================================================== */
+    Piscina* piscina = c->piscina;
 
     {
         i32 k;
         b32 bene = VERUM;
 
-        imprimere("\n--- Probans radices contra oraculum ---\n");
         per (k = ZEPHYRUM; k < magnitudo(exempla)
             / magnitudo(exempla[0]); k++)
         {
@@ -169,7 +165,7 @@ s32 principale (vacuum)
                     i32  j;
                     i32  n_sturm = ZEPHYRUM;
 
-            si (   !_radices(exempla[k].polynomium, &r, &n)
+            si (   !_radices(exempla[k].polynomium, &r, &n, piscina)
                 || n != exempla[k].numerus)
             {
                 imprimere("  FRACTA %s: numerus %u (exspectatus %u)\n",
@@ -202,16 +198,24 @@ s32 principale (vacuum)
             }
             /* numerus contra Sturm (extensio) */
             bene = bene
-                && extensio_radices_reales(_p(exempla[k].polynomium),
+                && extensio_radices_reales(_p(exempla[k].polynomium,
+                piscina),
                 piscina, &n_sturm) && n_sturm == n;
         }
         CREDO_VERUM (bene);
     }
+}
 
 
-    /* ==================================================
-     * RATIONALES, MULTIPLICITAS, REFUTATIONES
-     * ================================================== */
+/* ==================================================
+ * RATIONALES, MULTIPLICITAS, REFUTATIONES
+ * ================================================== */
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         RadixRealis* r;
@@ -220,9 +224,8 @@ s32 principale (vacuum)
             Fractio  q = fractio_ex_s64(ZEPHYRUM);
                 s32  s = XCIX;
 
-        imprimere("\n--- Probans rationales et contractum ---\n");
         /* (2t - 1)(3t + 5) t: -5/3 (non dyadica: intervallum), 0, 1/2 */
-        CREDO_VERUM (_radices("6t^3 + 7t^2 - 5t", &r, &n));
+        CREDO_VERUM (_radices("6t^3 + 7t^2 - 5t", &r, &n, piscina));
         CREDO_AEQUALIS_I32 (n, III);
         CREDO_VERUM (fractio_ex_s64_s64(-V, III, piscina, &q));
         CREDO_VERUM (radix_compara(r[ZEPHYRUM], radix_ex_fractione(q,
@@ -238,12 +241,12 @@ s32 principale (vacuum)
             && _textus_aequalis(c, "0.500"));
         /* multiplicitas abicitur: (t - 1)^3 (t + 2)^2 */
         CREDO_VERUM (_radices("t^5 + t^4 - 5t^3 - t^2 + 8t - 4", &r,
-            &n));
+            &n, piscina));
         CREDO_AEQUALIS_I32 (n, II);
         /* nullae, constans */
-        CREDO_VERUM (_radices("t^2 + 1", &r, &n));
+        CREDO_VERUM (_radices("t^2 + 1", &r, &n, piscina));
         CREDO_AEQUALIS_I32 (n, ZEPHYRUM);
-        CREDO_VERUM (_radices("-7", &r, &n));
+        CREDO_VERUM (_radices("-7", &r, &n, piscina));
         CREDO_AEQUALIS_I32 (n, ZEPHYRUM);
         /* coefficientes nulli in mediis: nullae radices reales */
         {
@@ -253,7 +256,7 @@ s32 principale (vacuum)
 
             per (j = ZEPHYRUM; j < V; j++)
             {
-                CREDO_VERUM (_radices(sine[j], &r, &n));
+                CREDO_VERUM (_radices(sine[j], &r, &n, piscina));
                 CREDO_AEQUALIS_I32 (n, ZEPHYRUM);
             }
             /* nulla in transformatis (x+1)^n Q(1/(x+1)) inter signa
@@ -261,26 +264,33 @@ s32 principale (vacuum)
              * 184 / 4000 casu). Numeri per discriminantem: 2t^4 - 2t^2 + 1
              * (u^2: 4 - 8 < 0) nullae; -3t^2 + 2t - 1 nullae; t(2t^2 + t +
              * 2) una */
-            CREDO_VERUM (_radices("2t^4 - 2t^2 + 1", &r, &n));
+            CREDO_VERUM (_radices("2t^4 - 2t^2 + 1", &r, &n, piscina));
             CREDO_AEQUALIS_I32 (n, ZEPHYRUM);
-            CREDO_VERUM (_radices("-3t^2 + 2t - 1", &r, &n));
+            CREDO_VERUM (_radices("-3t^2 + 2t - 1", &r, &n, piscina));
             CREDO_AEQUALIS_I32 (n, ZEPHYRUM);
-            CREDO_VERUM (_radices("2t^3 + t^2 + 2t", &r, &n));
+            CREDO_VERUM (_radices("2t^3 + t^2 + 2t", &r, &n, piscina));
             CREDO_AEQUALIS_I32 (n, I);
-            CREDO_VERUM (_radices("t^5 - t", &r, &n));
+            CREDO_VERUM (_radices("t^5 - t", &r, &n, piscina));
             CREDO_AEQUALIS_I32 (n, III);
-            CREDO_VERUM (_radices("t^9 - 2t^5 + t", &r, &n));  /* t(t^4-1)^2 */
+            CREDO_VERUM (_radices("t^9 - 2t^5 + t", &r, &n, piscina));  /* t(t^4-1)^2 */
             CREDO_AEQUALIS_I32 (n, III);
         }
         /* refutationes */
-        CREDO_FALSUM (_radices("0", &r, &n));
-        CREDO_FALSUM (_radices("t^-1 + 1", &r, &n));
+        CREDO_FALSUM (_radices("0", &r, &n, piscina));
+        CREDO_FALSUM (_radices("t^-1 + 1", &r, &n, piscina));
     }
+}
 
 
-    /* ==================================================
-     * COMPARATIO TRANS POLYNOMIA, SIGNUM, ANGUSTATIO
-     * ================================================== */
+/* ==================================================
+ * COMPARATIO TRANS POLYNOMIA, SIGNUM, ANGUSTATIO
+ * ================================================== */
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         RadixRealis* a;
@@ -294,10 +304,10 @@ s32 principale (vacuum)
             Fractio  latitudo  = fractio_ex_s64(ZEPHYRUM);
         RadixRealis  angusta;
 
-        imprimere("\n--- Probans comparationem, signum, angustationem ---\n");
-        CREDO_VERUM (_radices("t^2 - 2", &a, &na));            /* -sqrt2, sqrt2 */
-        CREDO_VERUM (_radices("t^3 - 5t^2 - 2t + 10", &b, &nb)); /* (t^2-2)(t-5) */
-        CREDO_VERUM (_radices("t^2 - 3", &c3, &nc));
+        CREDO_VERUM (_radices("t^2 - 2", &a, &na, piscina));            /* -sqrt2, sqrt2 */
+        CREDO_VERUM (_radices("t^3 - 5t^2 - 2t + 10", &b, &nb,
+            piscina)); /* (t^2-2)(t-5) */
+        CREDO_VERUM (_radices("t^2 - 3", &c3, &nc, piscina));
         CREDO_AEQUALIS_I32 (nb, III);
         /* sqrt2 ex polynomiis diversis: aequales (per divisorem) */
         CREDO_VERUM (radix_compara(a[I], b[I], piscina, &s));
@@ -321,21 +331,26 @@ s32 principale (vacuum)
             piscina, &s));
         CREDO_AEQUALIS_S32 (s, I);
         /* signum h(a) */
-        CREDO_VERUM (radix_signum_polynomii(_p("3t^2 - 6"), a[I],
+        CREDO_VERUM (radix_signum_polynomii(_p("3t^2 - 6", piscina),
+            a[I],
             piscina, &s));
         CREDO_AEQUALIS_S32 (s, ZEPHYRUM);
-        CREDO_VERUM (radix_signum_polynomii(_p("t - 1"), a[I], piscina,
+        CREDO_VERUM (radix_signum_polynomii(_p("t - 1", piscina), a[I],
+            piscina,
             &s));
         CREDO_AEQUALIS_S32 (s, I);
-        CREDO_VERUM (radix_signum_polynomii(_p("t"), a[ZEPHYRUM],
+        CREDO_VERUM (radix_signum_polynomii(_p("t", piscina),
+            a[ZEPHYRUM],
             piscina, &s));
         CREDO_AEQUALIS_S32 (s, -(s32)I);
         /* h radicem prope a habens: 1000000t^2 - 1999998 (sqrt(1.999998)) */
-        CREDO_VERUM (radix_signum_polynomii(_p("1000000t^2 - 1999998"),
+        CREDO_VERUM (radix_signum_polynomii(_p("1000000t^2 - 1999998",
+            piscina),
             a[I],
             piscina, &s));
         CREDO_AEQUALIS_S32 (s, I);
-        CREDO_FALSUM (radix_signum_polynomii(_p("t^-2"), a[I], piscina,
+        CREDO_FALSUM (radix_signum_polynomii(_p("t^-2", piscina), a[I],
+            piscina,
             &s));
         /* radix cuius intervallum in aliis radicibus terminatur: sqrt3 ex
          * 2T_12(x/2) - 2 in (1, 2), 1 et 2 radices. h radicem communem
@@ -345,16 +360,18 @@ s32 principale (vacuum)
                     i32  numerus_duodecim = ZEPHYRUM;
 
             CREDO_VERUM (_radices("t^12 - 12t^10 + 54t^8 - 112t^6 + 105t^4 - 36t^2",
-                &radices_duodecim, &numerus_duodecim));
+                &radices_duodecim, &numerus_duodecim, piscina));
             CREDO_AEQUALIS_I32 (numerus_duodecim, VII);
-            CREDO_VERUM (radix_signum_polynomii(_p("t^3 - 2t^2 - 3t + 6"),
+            CREDO_VERUM (radix_signum_polynomii(_p("t^3 - 2t^2 - 3t + 6",
+                piscina),
                 radices_duodecim[V], piscina, &s));
             CREDO_AEQUALIS_S32 (s, ZEPHYRUM);
-            CREDO_VERUM (radix_signum_polynomii(_p("t^2 - 3t + 2"),
+            CREDO_VERUM (radix_signum_polynomii(_p("t^2 - 3t + 2",
+                piscina),
                 radices_duodecim[V],
                 piscina, &s));
             CREDO_AEQUALIS_S32 (s, -(s32)I);
-            CREDO_VERUM (radix_signum_polynomii(_p("t^2 - 1"),
+            CREDO_VERUM (radix_signum_polynomii(_p("t^2 - 1", piscina),
                 radices_duodecim[I], piscina,
                 &s));                                    /* -sqrt3: 2 */
             CREDO_AEQUALIS_S32 (s, I);
@@ -369,11 +386,18 @@ s32 principale (vacuum)
         CREDO_VERUM (radix_compara(angusta, a[I], piscina, &s)
             && s == 0);
     }
+}
 
 
-    /* ==================================================
-     * RECENSIO (4680ff65): radix exacta f non linearis; decimales
-     * ================================================== */
+/* ==================================================
+ * RECENSIO (4680ff65): radix exacta f non linearis; decimales
+ * ================================================== */
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         RadixRealis* a;
@@ -389,12 +413,10 @@ s32 principale (vacuum)
                 s32  s   = XCIX;
              chorda  c;
 
-        imprimere("\n--- Probans recensionem: exacta non linearis,"
-            " decimales ---\n");
         /* H1: 1 punctum exactum ex (t - 1)(t^2 - 2); sqrt2 radix f eius
          * sed non 1 - olim 0 */
-        CREDO_VERUM (_radices("t^2 - 2", &a, &na));
-        CREDO_VERUM (_radices("t^3 - t^2 - 2t + 2", &m, &nm));
+        CREDO_VERUM (_radices("t^2 - 2", &a, &na, piscina));
+        CREDO_VERUM (_radices("t^3 - t^2 - 2t + 2", &m, &nm, piscina));
         CREDO_AEQUALIS_I32 (nm, III);
         CREDO_VERUM (fractio_compara(m[I].infra, m[I].supra, piscina)
             == 0);
@@ -405,9 +427,9 @@ s32 principale (vacuum)
         CREDO_VERUM (radix_compara(a[ZEPHYRUM], m[I], piscina, &s));
         CREDO_AEQUALIS_S32 (s, -(s32)I);
         /* sqrt3 contra 1 et 2 exacta ex 2T_12(x/2) - 2 */
-        CREDO_VERUM (_radices("t^2 - 3", &c3, &nc));
+        CREDO_VERUM (_radices("t^2 - 3", &c3, &nc, piscina));
         CREDO_VERUM (_radices("t^12 - 12t^10 + 54t^8 - 112t^6 + 105t^4 - 36t^2",
-            &duodecim, &nd));
+            &duodecim, &nd, piscina));
         CREDO_AEQUALIS_I32 (nd, VII);
         CREDO_VERUM (fractio_compara(duodecim[IV].infra,
             duodecim[IV].supra, piscina) == 0);
@@ -419,13 +441,13 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (s, ZEPHYRUM);
 
         /* M1: radix rationalis decimalis non dyadica (1/5, -3/10) */
-        CREDO_VERUM (_radices("5t - 1", &r, &n));
+        CREDO_VERUM (_radices("5t - 1", &r, &n, piscina));
         CREDO_AEQUALIS_I32 (n, I);
         CREDO_VERUM (radix_ad_chordam(r[ZEPHYRUM], I, piscina, &c)
             && _textus_aequalis(c, "0.2"));
         CREDO_VERUM (radix_ad_chordam(r[ZEPHYRUM], IV, piscina, &c)
             && _textus_aequalis(c, "0.2000"));
-        CREDO_VERUM (_radices("10t + 3", &r, &n));
+        CREDO_VERUM (_radices("10t + 3", &r, &n, piscina));
         CREDO_VERUM (radix_ad_chordam(r[ZEPHYRUM], II, piscina, &c)
             && _textus_aequalis(c, "-0.30"));
         /* L1: n = 0 sine puncto; negativa parva signum servat */
@@ -433,16 +455,23 @@ s32 principale (vacuum)
             && _textus_aequalis(c, "1"));
         CREDO_VERUM (radix_ad_chordam(a[ZEPHYRUM], ZEPHYRUM, piscina,
             &c) && _textus_aequalis(c, "-1"));
-        CREDO_VERUM (_radices("1000t + 3", &r, &n));
+        CREDO_VERUM (_radices("1000t + 3", &r, &n, piscina));
         CREDO_VERUM (radix_ad_chordam(r[ZEPHYRUM], II, piscina, &c)
             && _textus_aequalis(c, "-0.00"));
     }
+}
 
 
-    /* ==================================================
-     * MEMORIA: temporaria in piscinis propriis, in piscina vocantis
-     * sola effecta (worklog 2026-10-10: D123 3.1 GB -> 33 MB)
-     * ================================================== */
+/* ==================================================
+ * MEMORIA: temporaria in piscinis propriis, in piscina vocantis
+ * sola effecta (worklog 2026-10-10: D123 3.1 GB -> 33 MB)
+ * ================================================== */
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
               Piscina* p = piscina_generare_dynamicum("radices_memoria",
@@ -457,19 +486,20 @@ s32 principale (vacuum)
                chorda  c;
        memoriae_index  ante;
 
-        imprimere("\n--- Probans memoriam: piscina vocantis effecta sola ---\n");
         CREDO_VERUM (p != NIHIL);
         si (p != NIHIL)
         {
             /* gradus XXIV: radices XIII, f et termini - nulla temporaria */
-            CREDO_VERUM (radices_reales(_p(exempla[IV].polynomium), p,
+            CREDO_VERUM (radices_reales(_p(exempla[IV].polynomium,
+                piscina), p,
                 &r,
                 &n));
             CREDO_AEQUALIS_I32 (n, XIII);
             imprimere("    radices_reales gradus XXIV: %lu octeti in piscina "
                 "vocantis\n", (unsigned long)piscina_summa_usus(p));
             CREDO_VERUM (piscina_summa_usus(p) < (memoriae_index)16384);
-            CREDO_VERUM (radices_reales(_p(exempla[V].polynomium), p,
+            CREDO_VERUM (radices_reales(_p(exempla[V].polynomium,
+                piscina), p,
                 &m,
                 &nm));
             CREDO_AEQUALIS_I32 (nm, III);
@@ -485,13 +515,15 @@ s32 principale (vacuum)
                 RadixRealis* q;
                         i32  nq = ZEPHYRUM;
 
-                CREDO_VERUM (radices_reales(_p("1000000t^2 - 2999999"),
+                CREDO_VERUM (radices_reales(_p("1000000t^2 - 2999999",
+                    piscina),
                     piscina, &q, &nq));
                 CREDO_VERUM (nq == II
                     && radix_compara(r[X], q[I], p, &s));
                 CREDO_AEQUALIS_S32 (s, I);
             }
-            CREDO_VERUM (radix_signum_polynomii(_p("t^2 - 3"), r[X], p,
+            CREDO_VERUM (radix_signum_polynomii(_p("t^2 - 3", piscina),
+                r[X], p,
                 &s));
             CREDO_AEQUALIS_S32 (s, ZEPHYRUM);         /* sqrt3 */
             CREDO_VERUM (piscina_summa_usus(p) == ante);
@@ -516,7 +548,8 @@ s32 principale (vacuum)
                         i32  nt = ZEPHYRUM;
 
                 radicum_apices_purgare();
-                CREDO_VERUM (radices_reales(_tangentium(CXX), p, &t,
+                CREDO_VERUM (radices_reales(_tangentium(CXX, piscina),
+                    p, &t,
                     &nt));
                 CREDO_AEQUALIS_I32 (nt, LIX);
                 imprimere("    S_120: apex acervi %lu, officinae %lu octeti\n",
@@ -542,13 +575,24 @@ s32 principale (vacuum)
             piscina_destruere(p);
         }
     }
+}
 
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "radices contra oraculum", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "rationales et contractum", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "comparationem, signum, angustationem", _sectio_tertia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "recensionem: exacta non linearis, decimales", _sectio_quarta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "memoriam: piscina vocantis effecta sola", _sectio_quinta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-        credo_claudere();
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("radices", SECTIONES);
 }

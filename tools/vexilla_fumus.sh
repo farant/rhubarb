@@ -57,8 +57,10 @@ prima_abs="${RADICES_C89[0]:-}"
 [ "$n_rel" -eq "$(echo "$exspectatae" | grep -c .)" ] && [ "$prima_rel" = "-Iinclude" ] && [ "$prima_abs" = "-I/x/include" ]; credo $? "vexilla_radices: $n_rel radices, '$prima_rel', '$prima_abs'"
 
 # VI. RATCHET: scripta cum radicibus manu == tools/radices_manu.tsv
+#     (scopus per iudicem 'vexilla_scriptorum' unitates.stml: fixturae
+#     et archivata non iudicantur)
 manu=""
-for s in $(git ls-files '*.sh' | grep -v '/fixa/'); do
+for s in $(git ls-files '*.sh' | ./tools/iudex_unitatum.sh vexilla_scriptorum); do
     case "$s" in tools/vexilla.sh|tools/vexilla_fumus.sh) continue ;; esac
     grep -qE '(^|[ "(])-I["$a-zA-Z/.]|"-I' "$s" && manu="$manu
 $s"

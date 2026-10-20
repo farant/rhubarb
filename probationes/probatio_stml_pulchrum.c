@@ -684,28 +684,19 @@ _portas_probare (
     CREDO_VERUM (congruens);
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * Litterae authoratae
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    Piscina* piscina;
-        i32  i;
-        i32  numerus_litterarum;
+    i32 i;
+    i32 numerus_litterarum;
 
-    piscina = piscina_generare_dynamicum("probatio_stml_pulchrum",
-                                         4194304);
-    si (piscina == NIHIL)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ==================================================
-     * Litterae authoratae
-     * ================================================== */
-
-    imprimere("\n--- Probans litteras (portae A + B) ---\n");
+    (vacuum)c;
     numerus_litterarum = (i32)(magnitudo(LITTERAE_PULCHRAE)
         / magnitudo(LITTERAE_PULCHRAE[ZEPHYRUM]));
     per (i = ZEPHYRUM; i < numerus_litterarum; i++)
@@ -725,13 +716,21 @@ principale (vacuum)
                         FALSUM);
         piscina_destruere(p);
     }
+}
 
 
-    /* ==================================================
-     * Corpus (viae ex aureo)
-     * ================================================== */
+/* ==================================================
+ * Corpus (viae ex aureo)
+ * ================================================== */
 
-    imprimere("\n--- Probans corpus (portae A + B) ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+        i32  i;
+
+    piscina = c->piscina;
     {
                         chorda   aureum;
             constans character** viae;
@@ -777,15 +776,18 @@ principale (vacuum)
             }
         }
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "litteras (portae A + B)", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "corpus (portae A + B)", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    si (credo_omnia_praeterierunt())
-    {
-        credo_claudere();
-        redde ZEPHYRUM;
-    }
-    credo_claudere();
-    redde I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("stml_pulchrum", SECTIONES);
 }

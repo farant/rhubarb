@@ -37,27 +37,17 @@ _proba_hmac (
     CREDO_VERUM (strcmp(hex, speratum) == ZEPHYRUM);
 }
 
-s32 principale (vacuum)
-{
-        b32  praeteritus;
-    Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_sigillum", 4096);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ========================================================
      * PROBARE: vectores NIST
      * ======================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans vectores NIST ---\n");
-
         _proba_vector("vacuum", "",
             "e3b0c44298fc1c149afbf4c8996fb924"
             "27ae41e4649b934ca495991b7852b855");
@@ -70,6 +60,7 @@ s32 principale (vacuum)
             "248d6a61d20638b8e5c026930c3e6039"
             "a33ce45964ff2167f6ecedd419db06c1");
     }
+}
 
 
     /* ========================================================
@@ -78,14 +69,17 @@ s32 principale (vacuum)
      * farciminis additur, 64 = bloccus exactus)
      * ======================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
                 character nuntius[65];
                  Sigillum uno;
                  Sigillum partim;
         SigillumContextus ctx;
                   integer k;
-
-        imprimere("\n--- Probans limites bloccorum ---\n");
 
         per (k = ZEPHYRUM; k < 64; k++)
         {
@@ -104,20 +98,24 @@ s32 principale (vacuum)
             CREDO_VERUM (sigillum_aequale(&uno, &partim));
         }
     }
+}
 
 
     /* ========================================================
      * PROBARE: nuntius longus ("a" x 1,000,000 - NIST)
      * ======================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
                 character mille_a[1000];
         SigillumContextus ctx;
                  Sigillum s;
                 character hex[SIGILLUM_HEX_MENSURA];
                   integer k;
-
-        imprimere("\n--- Probans nuntium longum ---\n");
 
         per (k = ZEPHYRUM; k < 1000; k++)
         {
@@ -134,6 +132,7 @@ s32 principale (vacuum)
             "cdc76e5c9914fb9281a1c7e284d73e67"
             "f1809a48a497200e046d39ccc7112cd0") == ZEPHYRUM);
     }
+}
 
 
     /* ==================================================
@@ -141,8 +140,12 @@ s32 principale (vacuum)
      * (RFC 4231 casus + margines clavis); lapide feature-requests/005
      * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans HMAC-SHA256 ---\n");
         _proba_hmac("RFC 4231 casus 1",
             "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b"
             "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b", 20,
@@ -201,34 +204,40 @@ s32 principale (vacuum)
             "6ab541b4869dca71c4ca11d8bb1b0253"
             "3b789a557583161429292c7404bc21f6");
     }
+}
 
 
     /* ========================================================
      * PROBARE: aequalitas + identitas contenti
      * ======================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Sigillum a = sigillum_computare("idem", 4);
         Sigillum b = sigillum_computare("idem", 4);
         Sigillum c = sigillum_computare("Idem", 4);
 
-        imprimere("\n--- Probans aequalitatem ---\n");
-
         CREDO_VERUM (sigillum_aequale(&a, &b));
         CREDO_VERUM (!sigillum_aequale(&a, &c));
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "vectores NIST", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "limites bloccorum", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "nuntium longum", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "HMAC-SHA256", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "aequalitatem", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("sigillum", SECTIONES);
 }

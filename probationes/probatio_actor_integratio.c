@@ -83,7 +83,9 @@ simulare_quadrum (
 }
 
 
-s32 principale(vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                     Piscina* piscina;
         InternamentumChorda* intern;
@@ -93,39 +95,23 @@ s32 principale(vacuum)
             CursusNuntiorum* cursus;
     AdministratorTempestivi* tempestivum_admin;
           RegistrumServitii* servitium_reg;
-                        b32  praeteritus;
 
-
-    /* ==================================================
-     * Initium
-     * ================================================== */
-
-    imprimere("\n=== PROBATIO INTEGRATIONIS ACTORUM ===\n\n");
-
-    piscina = piscina_generare_dynamicum("test_integratio",
-        MMM * CXXVIII);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
+    piscina = c->piscina;
 
     intern = internamentum_globale();
     si (!intern)
     {
+        /* nulla assertio -> sectio VACUA (non transit) */
         imprimere("FRACTA: internamentum_globale\n");
-        piscina_destruere(piscina);
-        redde I;
+        redde;
     }
-
-    credo_aperire(piscina);
 
 
     /* ==================================================
      * Creare Infrastructuram
      * ================================================== */
 
-    imprimere("--- Creans infrastructuram ---\n");
+    CREDO_GRADUS("Creans infrastructuram");
 
     /* Persistentia */
     pers = persistentia_memoria_creare(piscina);
@@ -159,7 +145,7 @@ s32 principale(vacuum)
      * Registrare Tractatores
      * ================================================== */
 
-    imprimere("\n--- Registrans tractatores ---\n");
+    CREDO_GRADUS("Registrans tractatores");
 
     CREDO_VERUM(registrum_tractatoris_registrare(
         tractator, "Clock", "tick", clock_tractare_tick));
@@ -175,7 +161,7 @@ s32 principale(vacuum)
         Entitas* clock;
         Entitas* timer;
 
-        imprimere("\n--- Creans Clock widget ---\n");
+        CREDO_GRADUS("Creans Clock widget");
 
         /* Creare entitatem Clock */
         clock = repo->entitas_scaffoldare(repo->datum, "Clock",
@@ -208,7 +194,7 @@ s32 principale(vacuum)
          * Simulare Cyclos
          * ================================================== */
 
-        imprimere("\n--- Simulans cyclos ---\n");
+        CREDO_GRADUS("Simulans cyclos");
 
         /* Reset state */
         g_clock_state.tick_contador  = ZEPHYRUM;
@@ -240,7 +226,7 @@ s32 principale(vacuum)
          * Verificare Statum Entitatis
          * ================================================== */
 
-        imprimere("\n--- Verificans statum entitatis ---\n");
+        CREDO_GRADUS("Verificans statum entitatis");
 
         {
             chorda* ticks_clavis;
@@ -265,7 +251,7 @@ s32 principale(vacuum)
          * Verificare Servitium
          * ================================================== */
 
-        imprimere("\n--- Verificans servitium ---\n");
+        CREDO_GRADUS("Verificans servitium");
 
         {
             Entitas* clock_servitium;
@@ -283,7 +269,7 @@ s32 principale(vacuum)
          * Pausare Timer
          * ================================================== */
 
-        imprimere("\n--- Pausans timer ---\n");
+        CREDO_GRADUS("Pausans timer");
 
         CREDO_VERUM(tempestivum_pausare(tempestivum_admin, timer->id));
         imprimere("  Timer pausatum\n");
@@ -300,7 +286,7 @@ s32 principale(vacuum)
          * Resumere Timer
          * ================================================== */
 
-        imprimere("\n--- Resumens timer ---\n");
+        CREDO_GRADUS("Resumens timer");
 
         CREDO_VERUM(tempestivum_resumere(tempestivum_admin, timer->id));
         imprimere("  Timer resumptum\n");
@@ -317,7 +303,7 @@ s32 principale(vacuum)
          * Annullare Timer
          * ================================================== */
 
-        imprimere("\n--- Annullans timer ---\n");
+        CREDO_GRADUS("Annullans timer");
 
         CREDO_VERUM(tempestivum_annullare(tempestivum_admin,
             timer->id));
@@ -341,7 +327,7 @@ s32 principale(vacuum)
         Entitas* widget2;
             i32  tractati_ante;
 
-        imprimere("\n--- Probans multas entitates ---\n");
+        CREDO_GRADUS("multas entitates");
 
         /* Reset state */
         g_clock_state.tick_contador = ZEPHYRUM;
@@ -381,7 +367,7 @@ s32 principale(vacuum)
         Entitas* receiver;
             i32  tractati_ante;
 
-        imprimere("\n--- Probans nuntium directum ---\n");
+        CREDO_GRADUS("nuntium directum");
 
         receiver = repo->entitas_scaffoldare(repo->datum, "Clock",
             "direct::receiver");
@@ -405,28 +391,28 @@ s32 principale(vacuum)
             I);
     }
 
+}
 
-    /* ==================================================
-     * Compendium
-     * ================================================== */
+/* purgare: g_clock_state (a tractatore scriptum) reponitur - status
+ * inter sectiones non manet (examen XCII) */
+interior vacuum
+_statum_reponere (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    g_clock_state.tick_contador  = ZEPHYRUM;
+    g_clock_state.ultimus_tick   = ZEPHYRUM;
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "integratio actorum", _sectio_prima, NIHIL, _statum_reponere,
+        NIHIL,
+      NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-
-    /* Destructio */
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    imprimere("\n=== FINIS PROBATIONIS ===\n\n");
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("actor_integratio", SECTIONES);
 }

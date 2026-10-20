@@ -89,6 +89,8 @@ The proposals, in the order I would take them:
 
 ### N1. Braids as exact ReLU networks
 
+*Became D128 (2026-10-15; KC 55).*
+
 **Why.** A braid word is naturally deep: one crossing per step. The
 representations knotapel used are linear, so the word collapses to one
 matrix. There is a known action of the braid group that keeps the
@@ -290,6 +292,8 @@ D128 Part D will show whether the pattern stabilizes.
 
 ### N6. The linear-region census: is entropy expressive capacity?
 
+*Became D129 (2026-10-16; KC 56).*
+
 **Why.** The standard measure of what a ReLU network CAN compute is the
 number of its linear regions: the pieces into which its activation
 patterns cut the input space. Deep networks can make exponentially more
@@ -349,3 +353,607 @@ computing scores (the D117 intended hash), and compare across P / Z / E.
 Report the change against D106's two-class table. Its TL representation
 at zeta_8 has to come from a house library or a frozen D106 snapshot;
 the plan settles which.
+
+## 2026-10-16: after D129 — the skeleton and the settling
+
+### Where these come from
+
+D129 (KC 56) found that on B_3 the regions of w^m grow linearly while
+its pieces stay flat, that regions belong to the word and pieces to the
+braid, and that random networks of the same shape grow regions linearly
+too but grow pieces as well. The conversation that followed (recorded
+in full in `brainstorm-skeleton-settling.md`) placed this against
+handwired, ratio graphs and holonomy, B_3 continued fractions,
+Temperley–Lieb nesting and the Dyck language, Latin hyperbaton as
+crossings, the prior art of compiling grammars into weights, the
+nominalist/realist question about what training converges to, and
+Fran's picture of a logical skeleton that statistics settle around
+(with the Yang–Baxter link: knot invariants are statistics settled on
+an algebraic skeleton). Read that file first; each proposal below names
+its section.
+
+Inherited from D119–D129: exact arithmetic; the verdict rule registered
+before the run, naming its nulls; an independent oracle for every
+headline number; plants; and from D129, never read capacity off region
+counts alone (count the function's pieces too).
+
+The proposals, in the order I would take them (smallest and most
+exact first; each settles something cheaply before the larger ones):
+
+| | ledger | proposal | depends on | settles or opens |
+|---|---|---|---|---|
+| N8 | …D8JX2V | Farey steps and D129's slope (B_3) | D129 | a law with a reason for KC 56.1.3's post-hoc pattern |
+| N9 | …3X58Q9 | Latin dependency trees as tangles | oratio's CoNLL-U reader | how often and how Latin crosses; the tangle picture tested on real data |
+| N10 | …HD428V | ideal vs verbose compilation: bounded Dyck | nervus, nervus_regiones_plani (2 inputs) or the d >= 3 counter | a measurable "ideal"; first half exact, second half (training) to plan |
+| N11 | …0TNHGT | a relational skeleton settling: rigidity and frustration | matrix (exact) | Fran's "a new rule settles the statistics differently", exactly |
+| N12 | …NSR9XG | braid networks under FP32 contracts | nervus, plexus | where float evaluation of a braid network first goes wrong; a bridge to handwired |
+| N13 | …KVA8DGY | gauge-invariant path products of braid networks | nervus, plexus | are the network's holonomies the knot's invariants? |
+| N14 | …9XK1EA (oratio region) | toy Latin Sudoku: slot library, exact propagation and settling | matrix/fractio (exact); oratio's ideas, not its code | the laboratory version of oratio's sudoku doctrine; precursor of N5 |
+
+### N8. Farey steps and D129's slope (B_3)
+
+**Why.** D129's exploratory pattern (KC 56.1.3): over m = 6..12 the
+most-regions word adds 6 x its cyclically reduced length in 1,816 of
+2,108 positive-entropy classes (196 fewer, 96 more; 1,804–1,836 over
+tie choices). A post-hoc pattern with exceptions wants a reason. On B_3
+the braid acts through SL(2, Z); a pseudo-Anosov braid's repelling and
+attracting directions are quadratic irrationals with periodic continued
+fractions, and new walls of w^m pile up toward the repeller. Approaching
+it is a walk in the Stern–Brocot (Farey) tree. Hypothesis: regions
+added per pass = the number of Farey steps (the sum of the partial
+quotients) per period, and the exceptions are words whose letters and
+Farey steps disagree. (Brainstorm III.)
+
+**Recalled, to verify first:** the correspondence between B_3 words and
+continued-fraction expansions of the eigen-directions (sign and
+orientation conventions), and the Farey interpretation of the walls.
+
+**Design.** For every E class of D129's census (and every geodesic
+word): the exact repelling direction (a quadratic irrational from the
+SL(2, Z) matrix, via `radices`), its continued-fraction period, the
+number of Farey steps per period; compare with the exact regions added
+per pass from D129 (`nervus_regiones_plani`, already exact). Register
+the rule before the run: "equal for every E word" or "equal except on a
+named set", with the exceptions characterized.
+
+**Oracle.** The continued fraction computed two ways (from the matrix's
+eigenvector, and by iterating the PL map on a point near the repeller);
+D129's frozen counts.
+
+**Output.** A law (or its failure) for the growth rate of regions on
+B_3, replacing the post-hoc cyclic-length pattern.
+
+### N9. Latin dependency trees as tangles
+
+*Became D130 (2026-10-17; KC 57): literary Latin crosses as
+agreement, the charters do not (P2 falls on LLCT); tangles are small.*
+*Corrected after D130's T4 review (15e6df92): that note used the
+amended operand. On the REGISTERED operand P2 falls in four treebanks
+(LLCT, PROIEL, ITTB, UDante); only the verse-heavy CIRCSE and Perseus
+pass. The displaced strand of a crossing carries agreement; its
+partner seldom does (brainstorm XIII).*
+
+**Why.** Brainstorm IV: a Latin sentence's syntax looks like a tangle
+— a planar (projective, TL-like) skeleton, crossings where hyperbaton
+separates words that belong together, agreement as labels carried
+along strands. Before compiling anything, measure whether real Latin
+looks like that: how many arcs cross, how crossings are distributed,
+whether they are bounded (as mildly context-sensitive formalisms
+assume), and which relations cross.
+
+**Design.**
+- Data: the Latin UD treebanks in the repo
+  (`oratio/probationes/fixa/ud/la_llct-*`, `la_circse-*`; `oraculum.sh`
+  fetches ITTB, PROIEL, Perseus, UDante), read with oratio's CoNLL-U
+  reader (`oratio_conllu.h`). English EWT (also present) as the
+  contrast: an order-rigid language.
+- Per sentence: the arc diagram of its dependency tree; crossing pairs;
+  the crossing number of the arc diagram; whether the tree is
+  projective; which relation labels (amod, nmod, obj, ...) take part in
+  crossings; whether the crossing arcs carry agreement (shared case,
+  gender, number in the features column).
+- Map each sentence to a tangle word: the arcs as strands, each crossing
+  as a signed generator (the convention fixed in the plan), and report
+  the distribution of word lengths and of the planar (TL) part.
+
+**Questions it would answer.** Is Latin's non-projectivity rare and
+shallow (a few crossings per sentence) or pervasive? Are crossings
+concentrated in agreement relations (adjective–noun hyperbaton), which
+is where the "labels along strands" picture predicts them? How does
+this compare with English?
+
+**Nulls.** Random trees with the same degree sequence, and the same
+trees with words shuffled under a fixed head-direction model: are
+Latin's crossings more structured than chance?
+
+**Note.** This sits between knotapel and oratio (paused). It needs no
+new library: oratio's reader plus counting. Exact by nature (counts).
+
+### N10. Ideal vs verbose compilation: bounded Dyck
+
+**Why.** Brainstorm VII: current compilers compile the presentation
+(one unit per rule) and carve walls the function does not need; D129's
+two counts give a measurable notion of "ideal" — a compiled network
+whose region complexity approaches its function's piece complexity.
+Bounded Dyck (balanced parentheses of depth <= D) is the cleanest test:
+the prototypical nesting language, with a TL/Catalan structure.
+
+**Design (first half, exact, buildable now).**
+- Two compilations of a bounded-Dyck recognizer (or a depth tracker)
+  into nervus networks: a VERBOSE one in the style of the compilers of
+  brainstorm V (a counter with one gate per condition), and a
+  STRUCTURED one built from the TL/nesting structure (the plan designs
+  it; the question is whether one exists that is smaller and carves
+  fewer walls).
+- For inputs encodable in 2 coordinates, count regions and pieces
+  exactly with `nervus_regiones_plani`; beyond 2 inputs this needs the
+  d >= 3 counter (ledger …QK7A9) or an exact restriction to 2-dimensional
+  slices (the plan says which).
+- Measure: size, depth, regions, pieces, and the ratio regions/pieces,
+  as the depth bound D grows.
+
+**Second half (to plan separately; it involves training).** Train
+small networks on the same language and compare their representations
+with the structured compilation modulo the network's symmetries
+(rescaling, permutations). Convergence toward the structured encoding
+as models improve would be evidence for "converging on a real form";
+scattered results would favour the nominalist reading. Training is
+floating point: the plan must say where floats enter and how the
+comparison is made exact (e.g. exact analysis of the trained network's
+activation patterns and pieces).
+
+### N11. A relational skeleton settling: rigidity and frustration
+
+**Why.** Fran's picture (brainstorm VIII): the logical skeleton is
+fixed; the statistics settle around it; a new rule makes them settle
+differently. In rigidity theory that is exact: a framework's skeleton
+either determines its shape or leaves it flexible; one more edge can
+rigidify it or over-constrain it (stress); in spin-glass terms a cycle
+of constraints that cannot all hold is frustrated. N5 proposed the same
+objects for oratio (rigid directions = forced cells, frustration =
+contradiction); N11 is the clean, small version first.
+
+**Design.**
+- Skeletons: small relational graphs from syllogism-style facts ("all
+  A are B", "no B is C", ...), encoded as constraints on vectors
+  (inclusion as a signed inner-product constraint, or relations as
+  rotations around cycles, RotatE/QuatE style — the plan picks one
+  and says why).
+- Settling: minimize a quadratic energy (constraints as springs), so
+  the equilibrium is a linear system solved EXACTLY over the rationals
+  (`matrix`). Rigidity = rank of the rigidity matrix (exact); stresses =
+  its left kernel; frustration = the residual around each cycle (the
+  holonomy of brainstorm III).
+- Experiment: add one rule at a time (consistent, redundant,
+  contradictory) and record how the equilibrium moves: rigidification,
+  new stress, or frustration localized to a cycle. Compare with a
+  discrete logic oracle (which conclusions follow; which rule set is
+  inconsistent).
+
+**Questions it would answer.** Do "follows from the facts" and "rigid
+in the settled configuration" coincide? Does a contradiction show up as
+frustration on exactly the cycles a logician would name? This is the
+smallest test of skeleton-plus-settling, and the road to N4 and N5.
+
+### N12. Braid networks under FP32 contracts
+
+**Why.** Brainstorm II: handwired is exact in FP32 within declared
+ranges and grids; braid orbits grow like lambda^m, and their structure
+concentrates near walls. Where does float evaluation of a braid network
+first go wrong, and does handwired-style contract reasoning predict it?
+Cheap, practical, and the concrete bridge between the two projects.
+
+**Design.** For the D128/D129 censuses: evaluate w^m in FP32 (round
+after every operation, handwired's rule: f(bias + f(f(c) x v)) per
+term) and exactly (Magnus), on the loops E_k and on lattice points;
+record the first pass where (a) a value differs, (b) an activation
+pattern differs, (c) the settled period or the tie verdict of D129 Part
+C would change. Compare with the prediction log_lambda(2^24 / |x_0|) for
+(a), and with the distance to the nearest wall for (b).
+
+**Output.** A table of failure passes by lambda and starting height,
+and a statement of which contract (range, grid) would have made FP32
+evaluation exact for how many passes. handwired itself is not run; its
+rounding rule is reimplemented in the demo (or a house helper) from its
+documentation.
+
+### N13. Gauge-invariant path products of braid networks
+
+**Why.** Brainstorm III: a ReLU network's function is unchanged by
+rescaling a hidden neuron's inputs by c and outputs by 1/c, so its
+gauge-invariant content is products of weights along paths (the
+path-norm literature). A knot's invariants come from labels on arcs
+made consistent at crossings. Are a braid network's path products (per
+activation pattern, or for the settled linear map of D128 Part D)
+related to the braid's Burau matrix, its Alexander polynomial, or the
+dilatation? A positive answer would make "the network's holonomies are
+the knot's invariants" precise; a negative one would say the ReLU
+structure carries something the linear invariants do not.
+
+**Design.** For each braid of the B_3 and B_4 censuses: the network's
+path-product generating function per pattern (paths from input to
+output weighted by coefficient products, exact via `nervus` and a
+small path enumeration), the settled map's characteristic polynomial
+(D129 Part C's machinery), and Burau / Alexander from `plexus`.
+Register before the run which identities are tested (e.g. "the settled
+map's characteristic polynomial divides / equals Burau's at some t").
+
+**Recalled, to verify first:** the rescaling symmetry for bias-free ReLU
+networks (standard), and whether any known result relates Dynnikov or
+train-track transition matrices to Burau (Bestvina–Handel train tracks
+give the dilatation as a Perron–Frobenius eigenvalue; the link to Burau
+is through Kolev's bound and is known to be inexact).
+
+### N14. Toy Latin Sudoku: slot library, exact propagation and settling
+
+*Added later the same day (brainstorm XI).*
+*Slice 1 = D131 (plan approved 2026-10-19): does morphology pay for
+crossing? Real endings at four morphology levels, readers with and
+without crossings, exact. Slice 2 (the settler at three temperatures,
+brainstorm XIV) still open.*
+*D131 done (KC 58): both registered predictions failed (measure
+design); descriptively, endings pay for displaced ADJECTIVES (garden
+paths 0% / 6.5% / 35.7% / 78.9% from ideal to bare) and not for
+displaced GENITIVES (68-99% at every level). Slice 2's settler has
+the genitive as its target.*
+
+**Why.** Fran's refinement of the skeleton: not syllogisms or facts but
+"a library of things that can take different kinds of slots, and an
+iterative process arriving at the most likely classification for a set
+of candidates" — a force settling, and literally oratio's task. Latin
+makes the slots visible (case endings are slot-type labels on the
+word), and the structure is Sudoku: cells = words, candidates = their
+analyses, constraints = slot frames (valency, agreement), propagation
+eliminates, statistics order what stays open. The brainstorm (XI)
+connects this to relaxation labeling, belief propagation, transformer
+layers and Mercury-style diffusion as one settling picture, and to
+knots through tensor networks and braided monoidal categories
+(DisCoCat: planar string diagrams for projective analyses, a braiding
+for crossings).
+
+**Design.**
+- A toy world with exact ground truth: a few verbs with case-valency
+  frames, a few agreeing adjectives, a few nouns with deliberately
+  ambiguous endings; EVERY grammatical sentence up to 5–6 words in all
+  word orders, with a hyperbaton dial (0 = strictly projective ... free
+  order) and an order-preference knob for the statistics.
+- Oracle: exact constraint propagation (the forced cells) and full
+  enumeration (the solution set per sentence).
+- Settler: relaxation labeling or belief propagation in exact rationals
+  (small factor graphs keep denominators manageable), producing the
+  ordering of open cells; its fixed point compared with the oracle's
+  marginals.
+- Measured: the forced | ordered | open profile per sentence and per
+  dial setting; settling depth (rounds until stable); a left-to-right
+  (autoregressive) analyser against parallel settling; the rule-change
+  knob (add one valency frame, record which cells flip from open to
+  forced, and where frustration appears).
+
+**Register before the run:** which settler, which statistics, and the
+verdicts tested (e.g. "settling never contradicts a forced cell", "the
+settled ordering ranks the oracle's true analysis first in at least X%
+of open cells at dial d").
+
+**Relation to oratio.** This is the laboratory version of oratio's
+sudoku doctrine on a world small enough to enumerate. It borrows
+oratio's ideas, not its code (oratio is paused); its findings would tell
+N5 what a relaxation can and cannot do before it meets real Latin.
+
+
+## 2026-10-19: after D131 — what endings can and cannot do
+
+### Where these come from
+
+D131 (KC 58) found, descriptively, that endings pay for displaced
+ADJECTIVES and cannot pay for displaced GENITIVES: an adjective repeats
+its head's features (a head label), a genitive carries only its role
+(a type label). Both registered predictions failed, by a near-tie and a
+Simpson's paradox. The conversation that followed (brainstorm section
+XV) asked what trained weights would look like on this task, what
+multi-head attention contributes, and Fran's idea of UMBRAE: slots the
+structure implies but the input does not yet (or never) supply,
+carried forward through the evaluation.
+
+Inherited: exact arithmetic where possible; verdict rules registered
+before the run, each measure walked through three or four hand
+sentences of EVERY kind before registering (D131's lesson: a difference
+measure and a pooled split both misled); stratify by kind before
+pooling; an independent oracle; plants; an independent review.
+
+| | ledger | proposal | depends on | settles or opens |
+|---|---|---|---|---|
+| N15 | …PEYPY4 | real Latin and the displaced genitive | dependentia, conllu, D130's treebanks | how readers recover what endings cannot place; D131's idea against real data |
+| N16 | …JCWDDF | train against the compiled ideal | a new house trainer library; D131's world | size, heads, registers, grokking; does training converge on the ideal? |
+| N17 | …NBF5ZX | umbra width of the toy world | D131 | how many open expectations a reader carries, and how many are findable by content |
+| N18 | …3AHG53 | umbra nodes: pro-drop in the slot library | D131 | empty slots as candidates; how pro-drop changes ambiguity and garden paths |
+
+### N15. Real Latin and the displaced genitive
+
+*Became D132 (plan approved 2026-10-19): are displaced genitives SAFE
+(no other noun could host them with a nested arc) more often than a
+per-sentence positional null? G1, G2 registered.*
+*D132 done (KC 59): G1 HOLDS (safe above the null in 6 of 6
+treebanks), G2 HOLDS (most safe in 5 of 6; CIRCSE 45% fails). Small N
+(5-80 displaced genitives per treebank); the charters almost never
+displace a genitive (5 of 2,382).*
+
+**Why.** D131 says a displaced genitive cannot be placed by its ending.
+Real Latin displaces genitives anyway: D130's Part C table already
+shows nmod over-represented among per-arc non-projective arcs in five
+of six Latin treebanks (PROIEL 10.2% against 4.5% of all arcs, Perseus
+12.4% / 4.9%, ITTB 11.6% / 6.0%; LLCT the exception). So the plain
+prediction "writers avoid displacing genitives" is already contradicted
+by numbers we have seen, and must not be registered. The live question:
+how is a displaced genitive recoverable?
+
+**Design (to sharpen at planning).**
+- Restrict to nmod arcs whose dependent has Case=Gen; compare displaced
+  (per-arc non-projective) with nested ones, per treebank.
+- Candidate hosts: for a genitive, the nouns in its sentence that a
+  NESTED attachment could reach (an attachment that would make its arc
+  projective). Hypothesis: displaced genitives have FEWER nested
+  alternative hosts than nested ones do (writers displace where the
+  context leaves one candidate), or their true host agrees with
+  something else that disambiguates (e.g. the host carries a displaced
+  adjective too).
+- Nulls: the same counts over random re-attachment, and over adjectives
+  (where agreement should make the host count irrelevant).
+- NOT seen before registering: the Case=Gen split and every candidate-
+  host count. Seen: D130's nmod shares (above), which must be disclosed.
+
+**Register before the run:** the host-count measure, the comparison,
+the strata (treebanks, verse / prose), and the threshold.
+
+### N16. Train against the compiled ideal
+
+**Why.** Brainstorm VII's question (does training converge on a real
+form or an arbitrary one?) needs a world whose ideal is KNOWN. D131's
+world is one: the grammar compiles to a small exact network, and every
+string's true analysis set is enumerated.
+
+**Design.**
+- Compile the ideal by hand (handwired-style or on nervus): embedding
+  to candidate features, one agreement matcher per word pair, counting
+  for the exactly-one constraints. Count its weights and pieces.
+- Train small transformers on the same task (soft targets = the
+  analysis distribution; or R_P's choice), with a sweep of heads (1, 2,
+  4, 8) at fixed parameters, 0 vs k register tokens, and training on
+  10% of the world to watch for grokking.
+- Measure: exact accuracy against the enumeration; probes for the
+  candidate sets; each head against the compiled heads (one relation
+  per head, or superposed?); the agreement head's QK (block-diagonal,
+  rank ~10?); where genitive uncertainty lives; pieces vs regions
+  (D129's lens).
+- **Needs a house trainer library** (plain gradient descent in C89,
+  deterministic float). Substantial; it also serves N10's second half.
+- **Ternary sub-experiment** (added 2026-10-20, brainstorm XVI): also
+  train the same model TERNARY from scratch ({-1, 0, +1} weights with a
+  scale, BitNet b1.58-style, straight-through gradients). Prediction:
+  the agreement head (skeleton: 0/1 feature matching, natively ternary)
+  survives almost intact; calibrated uncertainty on displaced genitives
+  (settling: graded statistics) degrades first. The compiled ideal is
+  known, so which part breaks is measurable.
+
+**Register before the run:** the head-count knee, the agreement-head
+rank, and the genitive calibration predictions (brainstorm XV).
+
+### N17. Umbra width of the toy world
+
+**Why.** Fran's umbrae: reading left to right, a reader carries the
+slots the structure has promised and not yet filled. In knot terms
+they are open strand ends; projective reading keeps them in stack
+order, a crossing closes one out of order. D131 says agreement makes an
+umbra findable by content; a genitive's is not. How much memory does
+each reader need, and how much of it is content-addressable?
+
+**Design.** Over every pair of D131's world (and each morphology
+level): for each prefix, the open umbrae of the TRUE analysis (words
+whose head has not appeared, and heads whose required dependents have
+not), each marked labelled (an agreement label distinguishes it from
+the other open umbrae) or unlabelled; the maximum width per pair; the
+depth at which an out-of-order umbra is closed. Exact, cheap: D131's
+data, a new measure. Relation to working-memory accounts of reading
+(Gibson, recalled).
+
+**Register before the run:** e.g. "crossed pairs need a content-
+addressable umbra in every case where R_P reads them, and the umbrae
+R_P fails on are unlabelled" - to be walked through hand sentences
+first.
+
+### N18. Umbra nodes: pro-drop in the slot library
+
+**Why.** D131 required an explicit subject. Real Latin drops it: the
+verb's ending carries the subject's person and number. An empty slot
+becomes a CANDIDATE ("is this nominative the subject, or is the subject
+dropped?"), which is Sudoku with "empty" allowed, and the natural place
+to make umbrae explicit.
+
+**Design.** Add an umbra node per verb: an optional subject with
+features from the verb's ending (nominative, the verb's number, gender
+open), present when no overt subject fills the slot. Re-run D131's
+measures at the four levels; count how pro-drop raises ambiguity and
+garden paths, and which crossings it newly licenses or blocks. Six
+words, if the oracle can follow.
+
+**Register before the run:** the direction of the change in A and B,
+per kind of displacement.
+
+### N19. Labels buy distance (D133)
+
+*Added and approved 2026-10-19, from the reading of D130-D132 (KC 57-59):
+a labelled umbra can wait, an unlabelled one must close soon. Became
+D133 directly: displaced adjectives against genitives in foreign words
+(L1, L1u), and within adjectives, unique against shared labels (L3, the
+discriminating test). The first plan to have a design review before
+approval - now the standard step.*
+*D133 done (KC 60): L1, L1u and L3 all FAIL - displaced adjectives and
+genitives wait through the same short distance (mostly one foreign
+word), and a unique label waits no longer than a shared one. Labels
+decide which head, not how far.*
+
+## 2026-10-20: weights - ternary, and dithered
+
+From brainstorm section XVI: is {-1, 0, +1} fundamentally inadequate?
+(No proof of a ceiling; the evidence is a cost in memorisation, not in
+computation.) And Fran's idea: DITHER the weights - an error-diffused
+ternary network, where each synapse carries part of its neighbours'
+graded values, as an Atkinson-dithered pixel carries its neighbourhood.
+
+| | ledger | proposal | depends on | settles or opens |
+|---|---|---|---|---|
+| N20 | …AH87TG | dithered weights: error diffusion into ternary | an exact graded network (no trainer needed for the first slice); possibly a house error-diffusion quantiser | which NEIGHBOURHOOD makes ternary weights faithful; fan-in as viewing distance; Atkinson's partial diffusion as a skeleton / settling knob |
+
+### N20. Dithered weights
+
+**Why.** Error diffusion turns a grey image into black and white whose
+local DENSITY carries the grey; a neuron's fan-in sums its inputs as the
+eye low-pass filters an image. So a graded layer might be represented by
+a ternary one whose weights carry each other's residual error. Prior art
+exists (GPTQ: column-wise quantisation with the error pushed onto the
+remaining weights by the input covariance; sigma-delta / GPFQ with error
+bounds; stochastic rounding as random dither - all recalled). What is
+open is the NEIGHBOURHOOD the error should flow along, and whether
+partial diffusion (Atkinson's 6/8) trades statistical fidelity for
+sparse, skeleton-like structure.
+
+**Design (first slice: exact, no trainer).**
+- A graded linear layer with a known exact target: e.g. a readout from
+  the toy Latin world's 0/1 features to exact reading probabilities
+  (enumerated, D131), or a graded compiled layer; exact rationals.
+- Ternarise it six ways: nearest rounding (no dither); stochastic
+  rounding (random dither, exact over all draws or many); error
+  diffusion along a fixed order (1-D, and 2-D Floyd-Steinberg on the
+  weight matrix); Atkinson (6/8 of the error); covariance-guided
+  (GPTQ-like, using the exact input distribution).
+- Measure exactly over the enumerated inputs: output error, the share of
+  zeros (sparsity), and how both scale with FAN-IN (sweep the layer's
+  input width).
+- Later slices: small ReLU networks on nervus (pieces against regions
+  after dithering - does dithering preserve the function's pieces?);
+  dither a trained toy Latin model (after N16's trainer); skeleton
+  circuits (already ternary) against statistical layers.
+
+**Register before the run** (a design review first): the prediction
+that error diffusion beats nearest rounding by a margin that grows with
+fan-in; that covariance-guided diffusion beats spatial orders; that
+Atkinson's partial diffusion gives more zeros and more error - with the
+effect sizes the test can see.
+
+## 2026-10-20: rules into weights - precision, spectrum, hologram
+
+Fran's question (brainstorm XVII): how does a large set of discrete
+rules - general rule, exceptions, exceptions to the exceptions - get
+"optimised" into a dense classifier, and is a weight like a point of a
+hyperdimensional Fourier decomposition, carrying many waves at once?
+Three proposals, each exact and needing no trainer. They share one test
+world: the toy Latin world (D131) extended with a real Bennett exception
+chain. Every one gets a design review before registration.
+
+| | ledger | proposal | depends on | settles or opens |
+|---|---|---|---|---|
+| N21 | …DXTVZX | priority costs precision: rule lists into threshold units | the shared exception chain; exact rational LP / exhaustive search | whether weight precision tracks nesting depth or tail length; what ternary pays (width or depth) |
+| N22 | …XYDKJ1 | the rule spectrum: exact Walsh-Fourier degree profile | N21's classifiers, D131's readers; a house exact Walsh-Hadamard transform | whether degree or support predicts what quantisation kills; a spectral definition of the skeleton |
+| N23 | …9ZWZFZ | the slot state as a hologram | D131's world; +-1 vector arithmetic (exact) | capacity of one-vector slot states; whether a hologram can detect an umbra (unfilled role) |
+
+**The shared world: one real exception chain.** Third-declension
+endings carry a genuinely NESTED rule list (Bennett, to be checked
+against the text and Whitaker before use): genitive plural in -um;
+except i-stems in -ium (parisyllabic nouns, nominatives in -ns / -rs,
+monosyllables in two consonants, neuters in -e / -al / -ar); except
+nouns that look like i-stems but take -um (canis, iuvenis, senex,
+pater ...); likewise the ablative singular in -e / -i. Features are 0/1
+(class markers, phonological properties, one-hot lemmas for the named
+exceptions); the target is a binary decision per noun. A FLAT tail
+(many lemma one-hots overriding one rule) is built alongside as the
+control: same number of exceptions, nesting depth one.
+
+### N21. Priority costs precision
+
+**Why.** A decision list is one threshold unit with geometrically
+shrinking weights (recalled), so the ORDER of rules becomes the SIZE of
+weights. If that is how exceptions are stored, a low-precision network
+must pay for an exception tail in width or depth - a mechanism for
+"ternary is fine for computation, costly for memorisation" (XVI).
+
+**Design.**
+- Rule lists of nesting depth k = 1 .. K (the real chain, truncated
+  and, past the real depth, extended synthetically) and flat tails of
+  the same length.
+- Exactly, for each list: the minimal integer weight magnitude (and
+  bits) of a single threshold unit realising it (exhaustive or an exact
+  rational LP/ILP on fractio for these sizes); against the canonical
+  geometric compilation.
+- With weights restricted to {-1, 0, +1}: the minimal width of one
+  hidden layer, and the minimal depth, that realise it (exhaustive over
+  small circuits).
+- Later slice: dither the exact graded unit into ternary by N20's
+  methods and see which rules of the list flip first.
+
+**Register before the run.** That required precision tracks NESTING
+DEPTH, not tail length (flat tails stay cheap; nested chains cost about
+a bit or more per level); that ternary pays nesting in width (unary
+magnitude) or depth (one layer per level of veto). Effect sizes and the
+synthetic extension's construction fixed in the plan.
+
+### N22. The rule spectrum
+
+**Why.** A Boolean classifier has an exact Walsh-Fourier spectrum;
+general rules sit at low degree, exceptions are spikes spread over high
+degrees, and noise attacks high degrees first (recalled). If so, the
+spectrum PREDICTS what quantisation kills, and "the skeleton" gets a
+spectral definition: the low-degree part.
+
+**Design.**
+- Exact spectra (fractio) of N21's classifiers and of D131's readers'
+  decisions over their enumerated feature spaces, under the uniform
+  measure AND under the world's own measure (an exact orthogonal basis
+  for that measure, by Gram-Schmidt over rationals).
+- Report per classifier: the degree profile (weight at degree 1, 2, 3,
+  ...) and, separately, each coefficient's SUPPORT (how often it is
+  active in the world) - degree and support are different properties
+  and the encoding moves an exception between them (one-hot lemma: low
+  degree, low support; bit-coded lemma: high degree).
+- Perturb: the exact noise operator (coefficient x rho^|S|, exact
+  noise stability) and N20's ternarisations of a graded realisation;
+  which rules flip, against their degree and their support.
+- House library: a fast Walsh-Hadamard transform over exact numbers
+  (fractio / magnus) is general; it goes in include/ + lib/ with its
+  own suite, not in the demo.
+
+**Register before the run.** Which of degree or support better predicts
+the flipped rules (a stated rank correlation and threshold); that the
+nested chain of N21 has heavier high-degree mass than the flat tail.
+
+### N23. The slot state as a hologram
+
+**Why.** Hyperdimensional computing and holographic reduced
+representations (Kanerva, Plate; recalled) put a whole role-filler
+structure into one vector, every component carrying a little of every
+binding - Fran's "each weight carries many waves" built on purpose. The
+toy world's slot state (XI) and its umbrae (XV, unfilled roles) can be
+written this way, exactly.
+
+**Design.**
+- +-1 vectors of dimension d; bind role and filler by elementwise
+  product (exact for +-1), bundle bindings by sum, read a role by dot
+  product with its key.
+- Two codebooks: ORTHOGONAL (Hadamard rows: zero crosstalk while the
+  bound pairs are distinct rows, then a cliff - note that Sylvester
+  rows form a GROUP under elementwise product, so two bindings can land
+  on the same row; the plan must handle it) and RANDOM (binomial
+  crosstalk, graceful) - the ordered-dither / random-dither contrast of
+  XVI, in vector form.
+- Over the toy world's sentences, exactly: decoding error per role as
+  the number of bindings grows (binomial tails, exact for random codes;
+  exact enumeration for Hadamard); and the UMBRA test - reading an
+  unfilled role returns pure crosstalk; how well the readout magnitude
+  separates filled from unfilled (exact error rates), i.e. can the
+  hologram KNOW what is missing?
+- Structured fillers (words that share agreement features) give
+  correlated crosstalk; measure how that changes capacity.
+
+**Register before the run.** The capacity at which random codes
+overtake orthogonal ones (exact, no claim needed beyond the
+computation); the prediction that umbra detection degrades with the
+number of filled roles at a rate fixed in the plan; that agreement-
+sharing fillers cost capacity (a stated effect size).

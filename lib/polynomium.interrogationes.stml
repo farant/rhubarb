@@ -1,0 +1,129 @@
+<interrogationes unitas="polynomium">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I build a polynomial from text and print it back?
+    <responsum symbolum="polynomium_ex_chorda polynomium_ad_chordam">polynomium_ex_chorda(chorda_ex_literis("3t^2
+      - t + 1 - 2t^-1", piscina), 't', piscina, &amp;p) returns FALSUM on
+      bad text and leaves p untouched. A term is an optional decimal
+      coefficient, then optionally the letter with ^ and an exponent
+      that may start with '-'; terms are joined by + or -, only the first
+      may carry a leading '-' (a leading '+', "3*t" or "+ -3" is
+      refused), spaces and tabs may sit between sign, coefficient and
+      letter but not around ^ ("t ^2" is refused), terms come in any
+      order and repeated exponents are added.
+      The letter must be ASCII a-z or A-Z. polynomium_ad_chordam prints
+      the canonical form, highest degree first, "0" for zero.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why do multiplica, potentia, translata and friends return b32 instead of the polynomial?
+    <responsum symbolum="polynomium_multiplica polynomium_potentia polynomium_monomium" via="lib/polynomium.worklog.md">Exponents
+      are bounded by POLYNOMIUM_EXPONENS_MAXIMUS, 2^30 - 1, so that every
+      span fits i32 and every exponent product fits s64; with the full
+      s32 range a sum's coefficient count wrapped to 0 and corrupted
+      memory. Any operation that takes or moves an exponent returns
+      FALSUM instead of overflowing, and leaves *exitus untouched.
+      nega, adde, subtrahe, multiplica_scalari and inversum cannot leave
+      the range and return the value directly.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I keep a polynomial after rolling back or destroying the piscina its inputs came from?
+    <responsum symbolum="polynomium_transcribe polynomium_translata magnus_transcribe">Only
+      after polynomium_transcribe. Results may share coefficient values
+      (and their magnus limbs) with the arguments, and
+      polynomium_translata shares the whole coefficient array without
+      allocating, so a result can point into the inputs' piscina.
+      polynomium_transcribe copies the array and every coefficient
+      through magnus_transcribe into the piscina you name.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the difference between polynomium_translata and polynomium_translatum?
+    <responsum symbolum="polynomium_translata polynomium_translatum">polynomium_translata(p,
+      k) is p times t^k: it only moves the exponents (shares the
+      coefficients, refuses if out of range). polynomium_translatum(p, c)
+      is the Taylor shift p(t + c) with a magnus c: the coefficients
+      change, and it refuses any negative exponent.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I store a sparse polynomial like t^1000000 + 1 cheaply?
+    <responsum symbolum="polynomium_ex_chorda polynomium_ex_coefficientibus" via="lib/polynomium.worklog.md">No:
+      the representation is dense, summus - imus + 1 coefficients, so
+      t^1000000 alone is one coefficient but t^1000000 + 1 is 1000001.
+      polynomium_ex_chorda refuses a span above
+      POLYNOMIUM_AMPLITUDO_LECTIONIS (2^20) because a 30-byte text could
+      otherwise ask for gigabytes; the arithmetic itself has no such
+      limit, so a wide adde or multiplica simply allocates.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I turn a Kauffman bracket in A into a Jones polynomial in t?
+    <responsum symbolum="polynomium_monomium polynomium_multiplica polynomium_contrahe polynomium_ex_chorda" via="lib/polynomium.worklog.md">With
+      writhe w, the factor (-A^3)^(-w) is the single monomial
+      (-1)^w A^(-3w): build it with polynomium_monomium and multiply the
+      bracket by it with polynomium_multiplica, then call
+      polynomium_contrahe(f, -IV, piscina, &amp;jones), since A =
+      t^(-1/4). contrahe returns FALSUM if some exponent is not
+      divisible by 4. The tests turn the right trefoil's -A^5 - A^-3 +
+      A^-7 (w = 3, factor -A^-9) into -t^4 + t^3 + t this way.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I evaluate a polynomial at a number?
+    <responsum symbolum="polynomium_valor fractio_ex_s64">polynomium_valor(p,
+      x, piscina, &amp;exitus) with x a Fractio (fractio_ex_s64 for an
+      integer): Horner over exact rationals, then times x^imus. It
+      returns FALSUM only when x = 0 and p has a negative
+      exponent.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I divide one polynomial by another?
+    <responsum symbolum="polynomium_divide_exacte polynomium_divisor_communis">polynomium_divide_exacte
+      gives the quotient when b divides a exactly in Z[t, t^-1] (t is a
+      unit there) and FALSUM otherwise, or when b is zero. There is no
+      division with remainder or pseudo-division in the public API;
+      polynomium_divisor_communis computes a gcd internally with
+      pseudo-remainders.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I take the gcd or square-free part of a Laurent polynomial?
+    <responsum symbolum="polynomium_divisor_communis polynomium_pars_libera polynomium_translata">No:
+      polynomium_divisor_communis and polynomium_pars_libera accept only
+      ordinary polynomials (no negative exponent) and return FALSUM
+      otherwise, because in Z[t, t^-1] a gcd is only defined up to a
+      unit t^k. Shift first with polynomium_translata. The gcd is over
+      Q[t], returned primitive with a positive leading coefficient;
+      gcd(0, 0) is 0.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the canonical form, and how do I tell the zero polynomial apart?
+    <responsum symbolum="polynomium_est_nullum polynomium_gradus_imus polynomium_gradus_summus polynomium_aequalis polynomium_normale polynomium_est_symmetricum">Zero
+      has no coefficients and gradus 0, the same degrees as the constant
+      1, so test polynomium_est_nullum. Every other result has non-zero
+      lowest and highest coefficients, which is why polynomium_aequalis
+      can compare parts. polynomium_normale shifts to imus 0 with a
+      positive lowest coefficient (Alexander's form);
+      polynomium_est_symmetricum asks whether the coefficients read the
+      same reversed with the SAME sign. The struct members are private:
+      use the accessors.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does polynomium_apex_officinarum measure?
+    <responsum symbolum="polynomium_apex_officinarum polynomium_multiplica polynomium_divide_exacte" via="lib/polynomium.worklog.md">The
+      peak bytes used in the internal scratch piscinae (officinae) by
+      the most recent multiplica or divide_exacte call, including the
+      ones potentia, divisor_communis and pars_libera make internally:
+      every call resets it, so it is 0 when that call ran in the
+      caller's piscina. Officinae are used only when the term-by-term
+      work is at least LXIV products and some partial sum could leave
+      s64, so the caller keeps only the result. It exists so tests can
+      assert scratch is rolled back.</responsum>
+  </interrogatio>
+
+</interrogationes>

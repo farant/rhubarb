@@ -1,0 +1,162 @@
+<interrogationes unitas="canon">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I check an STML document against its schema from C?
+    <responsum symbolum="canon_legere stml_legere canon_iudicare canon_nuntius CanonVitium">Load
+      the schema with canon_legere(fons, piscina, intern, &amp;causa),
+      parse the document with stml_legere (canon_examen shares one
+      internamentum for both; plain canon_iudicare compares names by
+      content, but the _expansum and _distributum variants need the
+      tree's own), and call canon_iudicare(canon, r.radix, piscina).
+      It returns a Xar of CanonVitium, and an empty Xar means the
+      document is sound. Print each with canon_nuntius(v-&gt;genus) plus
+      v-&gt;elementum and v-&gt;detail (chorda pointers that may be NIHIL);
+      the line is v-&gt;nodus-&gt;linea when v-&gt;nodus is not NIHIL. A NIHIL
+      canon or piscina gives NIHIL, not an empty Xar.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I check a .stml or .canon file against its canon from the shell?
+    <responsum imperium="bin/canon_examen -machina canon.canon" via="tools/canon_examen.c canones.registrum">Run
+      bin/canon_examen FILE... (the canon is looked up in
+      canones.registrum) or bin/canon_examen -canon X.canon FILE; add
+      -machina for TSV output. Run it from the repository root: it
+      reads canones.registrum from the current directory, and -canon
+      applies to the files named after it. Exit 0 = sound, 1 = vitia
+      (a file that does not parse also counts), 2 = no file at all was
+      judged. A file no registry line covers is only reported on
+      stderr and skipped, so with other files judged the exit can
+      still be 0. A .canon file is itself judged against canon.canon
+      (registry keys &lt;canon&gt; and .canon), which is how typos inside
+      a canon are caught.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find which canon applies to a file?
+    <responsum symbolum="canon_registrum_quaerere_radice canon_registrum_quaerere" via="canones.registrum tools/canon_examen.c">Read
+      canones.registrum yourself and pass its text as catalogus: the
+      library does no I/O. The registry has two kinds of key,
+      '&lt;radix&gt;' (the document's root element) and '.ext' (the
+      extension, taken from the last '.' anywhere in the path). Ask
+      canon_registrum_quaerere_radice first and fall back to
+      canon_registrum_quaerere only when it returns an empty chorda:
+      the root wins because .stml carries several dialects. The library
+      does not combine the two for you (canon_examen does). The answer
+      is a slice of the catalogue text (not a piscina copy, whatever
+      the header says), not NUL-terminated and alive only as long as
+      the catalogue, so use chorda_ut_cstr before opening it.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does a canon check, and what does it deliberately not check?
+    <responsum symbolum="canon_iudicare CanonVitiumGenus" via="lib/canon.worklog.md">It
+      checks a closed vocabulary (unknown elements and attributes are
+      vitia), child counts per element (minimum, maximum, order
+      ignored), attribute value genera, required attributes, where
+      text is allowed, uniqueness (unicitas) and key references
+      (citatio). It does not check co-occurrence rules ("a or b",
+      "a &lt;= b"), inheritance, or references into other files except
+      through a claves-externae block. There is no expression language
+      on purpose: that road turns a schema into a programming language,
+      as XSD did. Those rules belong to the caller.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find out why canon_legere returned NIHIL?
+    <responsum symbolum="canon_legere canon_ex_nodo">Pass
+      a chorda* causa: on failure it holds the reason, for example the
+      text does not parse ("canon parsari nequit"), the root is not
+      &lt;canon&gt;, a citatio ad= has no '/', a unicitas or
+      citatio names an attribute no element declares ("porta quae
+      nihil custodit"), an ordinarius= default that does not fit its
+      own genus or fines, fines on a non-numerus attribute, inverted
+      or malformed fines, or a broken fragment or transclusion. Be careful the other way too: the
+      reader tolerates unknown elements and attributes in a canon, so a
+      misspelt keyword silently weakens it. Judge every .canon with
+      canon.canon.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I validate a document that carries its own embedded canon?
+    <responsum symbolum="canon_infixum_invenire canon_ex_nodo canon_iudicare" via="tools/canon_examen.c tools/silex.c">An
+      embedded canon counts only as the FIRST element child of the root,
+      named canon. canon_iudicare with the registry canon just treats
+      it as invisible; it does not apply it. To honour it do what
+      canon_examen does: canon_infixum_invenire(root), judge that node
+      against canon.canon, build it with canon_ex_nodo, and judge the
+      document a second time with it. Both judgments must pass (the
+      registry canon is a floor the document cannot remove; the
+      embedded one can only add rules). Not every tool does this:
+      tools/silex.c judges with the embedded canon INSTEAD of the
+      registry one and skips the canon.canon check.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I validate a document that uses templates, fragments or distribution wrappers?
+    <responsum symbolum="canon_iudicare canon_iudicare_expansum canon_iudicare_distributum stml_expandere">canon_iudicare
+      judges the file as written: fragments and transclusions are
+      resolved transparently, but template calls are quoted material
+      it does not see into. canon_iudicare_expansum runs stml_expandere
+      first and judges what the calls produce;
+      canon_iudicare_distributum also runs stml_distribuere, so it
+      judges what a consumer finally sees. Both must get the tree's own
+      internamentum (identities are compared by interned pointer, and a
+      foreign one makes every call unknown). A failed expansion gives
+      one CANON_EXPANSIO_FRACTA with nodus NIHIL, numerus =
+      StmlExpansioVitium and limes = line.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what attribute value genera can a canon declare?
+    <responsum symbolum="CanonGenusValoris" via="canon.canon">textus
+      (anything), nomen ([a-zA-Z0-9_*]), compositum (nomen plus '-'),
+      titulus (compositum with one optional leading dot), numerus
+      (optional sign and digits; fractio="verum" allows a decimal point
+      with digits on both sides; minimum=/maximum= are inclusive
+      bounds compared digit by digit after stripping leading and
+      trailing zeros, never converted to floats), veritas (verum or
+      falsum), dies, electio (one of the &lt;optio&gt; children),
+      identitas (&amp;name;) and referentia (&amp;name; or .genus). The
+      reader takes an unknown genus word as textus without complaint;
+      only judging the .canon against canon.canon (where genus= is an
+      electio) catches the typo.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a dies attribute reject impossible dates like 2026-02-30?
+    <responsum symbolum="CanonGenusValoris canon_iudicare">No.
+      dies accepts yyyy, yyyy-mm and yyyy-mm-dd and checks only the
+      month (1-12) and the day (1-31), so 2026-02-30 passes. A leading
+      '-' writes a year before Christ in the historical sense ("-312"
+      is 312 BC, not the astronomical year -312), with I to IV digits
+      for a bare year. Year zero is not rejected either: "0000" and
+      "-0" pass although the source comment says that reading has no
+      year zero.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a unicitas rule use super="*" or the parent/child form like citatio does?
+    <responsum symbolum="canon_iudicare canon_legere">No,
+      and nothing warns you. citatio super= understands '*' and
+      'parens/titulus', but unicitas compares each super= entry with
+      element titles literally. The loader accepts both forms, because
+      its check that the attribute exists understands them, so such a
+      rule loads cleanly and then never matches a node: duplicates pass
+      silently. Write plain element titles in unicitas super=.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get typed C structs and a reader generated from a canon?
+    <responsum imperium="tools/canon_coquere.sh -probare" via="tools/canon_coquere.c cocta.registrum">Add
+      a line to cocta.registrum (canon, prefix, header, source) and
+      run tools/canon_coquere.sh; -probare only checks that the
+      committed readers are fresh. bin/canon_coquere turns each element
+      into a struct (chorda* for textual genera, s64 for numerus, b32
+      for veritas, each with a presence flag, an enum for electio, a
+      pointer for a child of maximum 1, Xar* for unbounded children)
+      plus a _legere_nodum reader. The generated reader applies
+      ordinarius= defaults; canon_iudicare never does, since the judge
+      only states the default.</responsum>
+  </interrogatio>
+
+</interrogationes>

@@ -1,7 +1,11 @@
 /* reactor.h - Bibliotheca Reactor (Event Loop)
  *
  * Single-threaded event loop usando poll() pro I/O multiplexing.
- * Permittit handling multarum connexionum in uno thread.
+ * Permittit handling multarum connexionum in uno thread. Praeterea
+ * (hospitium-v3-spec II.1): LABORES cooperativi (opus CPU in gradus
+ * secto - gradus unus per cyclum, poll() non exspectat dum labor
+ * pendet) et SIGNA ut eventus ansae (fistula sui) - processus unus,
+ * ansa una, filum unum.
  *
  * USUS:
  *   Reactor* reactor = reactor_creare(piscina);
@@ -32,6 +36,8 @@
 /* Limites */
 #define REACTOR_FD_MAXIMA       M        /* 1000 FDs maximum */
 #define REACTOR_TIMER_MAXIMA    CXXVIII  /* 128 timers maximum */
+#define REACTOR_LABOR_MAXIMA    LXIV     /* labores simul pendentes */
+#define REACTOR_SIGNA_MAXIMA    VIII     /* signa registrata */
 
 
 /* ========================================================================
@@ -60,6 +66,14 @@ nomen vacuum (*ReactorCallback)(integer fd, i32 eventus, vacuum* data);
  * data: User data
  */
 nomen vacuum (*ReactorTimerCallback)(vacuum* data);
+
+/* Labor cooperativus: gradus UNUS (~1-2 ms operis) per vocationem.
+ * Redde VERUM cum finitum est (labor tollitur), FALSUM ut pergat. */
+nomen b32 (*ReactorLabor)(vacuum* datum);
+
+/* Tractator signi - in ansa vocatur (reactor_poll), numquam in
+ * contextu signi: omnis functio licet */
+nomen vacuum (*ReactorSigniTractator)(vacuum* datum);
 
 
 /* ========================================================================
@@ -154,6 +168,48 @@ b32
 reactor_timer_cancellare (
            Reactor* reactor,
     ReactorTimerId  id);
+
+
+/* ========================================================================
+ * FUNCTIONES - LABORES ET SIGNA
+ * ======================================================================== */
+
+/* Laborem addere: omni cyclo reactor_poll gradum unum laboris quisque
+ * pendentis vocat (post fd et timers); dum labor pendet, poll() cum
+ * mora ZEPHYRI vocatur (I/O et labores alternant). Labor in gradu
+ * alterius additus cyclo PROXIMO primum currit.
+ *
+ * Redde: FALSUM si tabula plena (REACTOR_LABOR_MAXIMA) */
+b32
+reactor_laborem_adicere (
+         Reactor* reactor,
+    ReactorLabor  labor,
+          vacuum* datum);
+
+/* Numerus laborum pendentium */
+i32
+reactor_numerus_laborum (
+    Reactor* reactor);
+
+/* Signum ut eventum ansae: tractator in reactor_poll vocatur postquam
+ * signum venit (fistula sui - tractator systematis octetum solum
+ * scribit). Plura signa ante poll in vocationes pauciores confluere
+ * possunt, numquam perire. Fistula interna in reactor_numerus_fd non
+ * numeratur, sed poll() eam exspectat (reactor solum signum habens
+ * obstat donec signum venit).
+ *
+ * Signa processui toti pertinent: reactor UNUS ea possidet - alter
+ * FALSUM accipit donec possessor destruitur (reactor_destruere
+ * tractatores systematis ordinarios restituit).
+ *
+ * Redde: FALSUM si reactor alter possidet, tabula plena, aut fistula
+ * creari nequit */
+b32
+reactor_signum_adicere (
+                  Reactor* reactor,
+                  integer  signum,
+    ReactorSigniTractator  tractator,
+                   vacuum* datum);
 
 
 /* ========================================================================

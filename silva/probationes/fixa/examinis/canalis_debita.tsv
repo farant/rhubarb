@@ -208,7 +208,6 @@ tools/capsula_generare.c	ante regulam (2026-10-14): migratio ad filum cum tactu 
 tools/diagnostica.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/fabrica_ansae.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/fabrica_sutura.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-tools/glr_quaestio.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/librarium_collector.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/manus_instrumentum.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/mensor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo

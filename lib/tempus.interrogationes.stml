@@ -1,0 +1,112 @@
+<interrogationes unitas="tempus">
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does tempus_nunc return, and can I use it as a date or timestamp?
+    <responsum symbolum="tempus_nunc tempus_initiare fenestra_tempus_obtinere_pulsus mensura_momentum_nunc fasti_nunc">Seconds
+      (f64) since the global clock started, which happens lazily on the
+      first tempus_* call (or explicitly with tempus_initiare). It
+      counts the platform's high-resolution pulses
+      (fenestra_tempus_obtinere_pulsus), so it is for measuring
+      intervals, timeouts and animation, not wall-clock time. For
+      milliseconds since the Unix epoch use mensura_momentum_nunc; for
+      calendar dates use fasti.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I run a frame loop at a fixed frame rate and read the frame delta?
+    <responsum symbolum="tempus_ponere_quadra_destinata tempus_quadrum tempus_delta tempus_exspectare_quadrum tempus_obtinere_statisticas">Set
+      the rate once with tempus_ponere_quadra_destinata (default 60).
+      Each frame call tempus_quadrum first: it records the frame start
+      and updates the delta that tempus_delta returns. After the work,
+      tempus_exspectare_quadrum sleeps until 1/rate seconds after that
+      tempus_quadrum (coarse sleeps, then 100-microsecond naps for the
+      last two milliseconds); a rate of 0 or less disables the wait.
+      tempus_obtinere_statisticas gives the current frame rate, the
+      mean rate over the last CXX frames, and the minimum and maximum
+      frame times in seconds. Caution (audit 2026-10-18, unfixed): the
+      mean rate comes back inf when two tempus_quadrum calls land in
+      the same clock tick (delta 0, common in a tight loop), and a
+      target below about 2.3e-4 fps (a frame period over about 4295 s)
+      overflows the sleep conversion in tempus_exspectare_quadrum,
+      which is undefined behaviour.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I call tempus_initiare again to restart the clock?
+    <responsum symbolum="tempus_initiare tempus_creare tempus_restituere tempus_elapsum tempus_actualizare">You
+      can, but it resets everything global: the start time, every frame
+      statistic and the target rate (back to 60), so a rate set earlier
+      is lost. To time something on its own, make an independent clock
+      with tempus_creare(piscina), restart it with tempus_restituere,
+      read it with tempus_elapsum, and call tempus_actualizare per step
+      to fill its delta_tempus and tempus_totale.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I animate a value smoothly toward a target?
+    <responsum symbolum="animare_ad elastrum_ad interpolare gradus_lenis lenire_cubicus_egressus remappare">animare_ad
+      moves at a constant speed (celeritas times the delta) and lands
+      exactly on the target. elastrum_ad is a damped spring: keep the
+      velocity in your own f32 and pass its address each frame. For a
+      timed tween compute t from 0 to 1, shape it with one of the
+      lenire_* easing curves and feed it to interpolare; gradus_lenis is
+      smoothstep and remappare maps one range onto another. Caution
+      (audit 2026-10-18, unfixed): elastrum_ad is explicit Euler and
+      blows up on large deltas, e.g. k=100, d=10 at a 0.25 s frame
+      reaches -4e33 within 40 steps and k=10, d=30 at 0.1 s diverges,
+      so it is only stable while damnum times delta stays below 2 and
+      delta times sqrt(k) stays small.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I pass values outside 0..1 to the easing functions, or negative time to the unda waves?
+    <responsum symbolum="lenire_linearis unda_triangulus unda_dens_serrae unda_quadratus oscillare cohibere">Nothing
+      is clamped. The lenire_* curves are only defined for t in 0..1
+      (clamp with cohibere first). The waves take fmod of t times the
+      frequency, which keeps the sign of a negative t, so
+      unda_triangulus(-0.25, 1, a) gives -2a, outside its range,
+      unda_dens_serrae also leaves its range, unda_quadratus stays high
+      for all negative t, and oscillare goes negative. Use non-negative
+      time.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I use circumvolvere to wrap any value into a range?
+    <responsum symbolum="circumvolvere interpolare_angulum">Only
+      values a few ranges away: it adds or subtracts the width in a
+      loop, so the time grows with the distance, and it never returns
+      when the width is 0 or when the value is so large that adding the
+      width does not change the f32 (1e9 into 0..1). For far values
+      wrap with fmod yourself and add the width when the result is
+      negative. interpolare_angulum is no substitute: it does not wrap
+      its result, and because C fmod keeps the sign it only takes the
+      shorter way round when b - a is at least -pi (0 toward -4 goes
+      the long way). Caution (audit 2026-10-18, unfixed): circumvolvere
+      also never returns for a reversed range (minimum greater than
+      maximum, e.g. circumvolvere(0.5, 1, 0)) or for an infinite
+      value.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what colour layout does interpolare_colorem expect?
+    <responsum symbolum="interpolare_colorem">A
+      packed i32 with red in bits 0-7, green in 8-15, blue in 16-23 and
+      alpha in 24-31; each channel is interpolated linearly and
+      truncated. t is not clamped, so keep it in 0..1. Caution (audit
+      2026-10-18, unfixed): for any result alpha of 0x80 or more (every
+      opaque colour, e.g. 0xFF000000 toward 0xFF0000FF) the alpha byte
+      is shifted left 24 as a signed int, which is undefined behaviour
+      that only happens to give the right value.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what kind of noise does unda_tumultus produce?
+    <responsum symbolum="unda_tumultus sors_seminare">White
+      noise in [-1, 1) that is a pure function of t: time is cut into
+      buckets of about 81 microseconds (floor of t times 12345.6789),
+      and each bucket seeds sors, so the same t always gives the same
+      value and neighbouring buckets are independent. It is not smooth
+      noise.</responsum>
+  </interrogatio>
+
+</interrogationes>

@@ -1,0 +1,97 @@
+<interrogationes unitas="mandatum">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I build a list of draw commands and put it on the screen?
+    <responsum symbolum="mandata_creare mandata_rectangulum mandata_textus mandata_linea delineare_mandata">Create
+      a Mandata with mandata_creare(piscina, intern), emit primitives
+      in painting order (mandata_rectangulum, mandata_linea,
+      mandata_polygonum, mandata_imago, mandata_textus), then hand the
+      list to a rasterizer such as delineare_mandata, which walks it
+      once into a TabulaPixelorum. mandatum itself only records: it
+      never draws and resolves no colours.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I clip, translate or scale a group of draw commands?
+    <responsum symbolum="mandata_coetus_incipere mandata_coetus_finire delineare_mandata">Wrap
+      them in a coetus: i32 c = mandata_coetus_incipere(m, fines,
+      sectio, translatio_x, translatio_y, scala, provenientia), emit the
+      children, then mandata_coetus_finire(m, c) with the SAME index.
+      Clip, translation and integer scale are properties of the group,
+      not push/pop commands. In delineare_mandata the children's
+      coordinates are relative to the group: origin += fines +
+      translatio, scale multiplies, and sectio clips to fines. A scala
+      below I is stored as I.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I forget mandata_coetus_finire or pass it a different index?
+    <responsum symbolum="mandata_coetus_finire mandata_coetus_incipere mandata_scribere_stml">No,
+      and nothing checks it. A coetus starts with magnitudo_arboris I,
+      so an unclosed group owns no children: the rasterizer and
+      mandata_scribere_stml treat everything after it as siblings and
+      the clip and translation silently do not apply. finire sets
+      magnitudo_arboris to (count now - index) on whatever element is
+      at index, without checking it is a coetus, and an index past
+      the end makes mandata_obtinere return NIHIL, which finire then
+      writes through.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I free or reuse the text buffer after calling mandata_textus?
+    <responsum symbolum="mandata_textus mandata_imago mandata_polygonum mandata_linea">No.
+      mandata_textus and mandata_imago store the chorda you pass as is
+      (pointer and length, no copy), so its bytes must live as long as
+      the Mandata. Points are different: mandata_linea and
+      mandata_polygonum copy them into the Mandata's piscina, so the
+      caller's array may be reused at once.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does the valor of a ColorMandati mean?
+    <responsum symbolum="ColorMandati color_ex_rgba color_ad_pixelum color_ex_mandato">It
+      depends on genus: COLOR_MANDATI_THEMA is a theme token resolved
+      through thema.h, COLOR_MANDATI_INDEX a palette index, and
+      COLOR_MANDATI_RGBA a framebuffer pixel, a&lt;&lt;24 | b&lt;&lt;16 |
+      g&lt;&lt;8 | r, made with color_ad_pixelum(color_ex_rgba(r, g, b, a)).
+      It is NOT a literal 0xRRGGBBAA (the header comment says it once
+      claimed that). Only the rasterizer resolves it, through
+      color_ex_mandato.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I fill a rectangle with a classic Mac pattern instead of a solid colour?
+    <responsum symbolum="mandata_rectangulum_exemplar exemplar_obtinere">mandata_rectangulum_exemplar(m,
+      fines, color, exemplar) with a pattern id from exemplaria.h: only
+      the set bits are painted in color, the background shows through,
+      and the pattern is anchored to framebuffer coordinates so
+      neighbouring fills line up. For a two-colour fill emit a solid
+      mandata_rectangulum first, then the pattern. exemplar 0 means
+      solid.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I snapshot draw commands as text and compare them in a test?
+    <responsum symbolum="mandata_scribere_stml mandata_legere_stml mandata_aequalia stml_attributum_addere">mandata_scribere_stml(m,
+      piscina, pulchrum) writes STML (groups as nested elements),
+      mandata_legere_stml parses it back (NIHIL if the STML does not
+      parse; unknown element names are skipped), and mandata_aequalia
+      compares two lists field by field, including provenientia.
+      Note that the writer builds its child nodes and attribute text in
+      the Mandata's own piscina even though m is constans; only the
+      root element and the final chorda go into the piscina you pass.
+      An empty textus or imago fons does not round-trip: "" interns
+      to NIHIL, the STML writer emits a NIHIL value as a bare
+      attribute, and the reader gets "true".</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why do draw commands carry no ids or click handlers?
+    <responsum symbolum="mandata_coetus_incipere Mandatum" via="lib/mandatum.worklog.md">Draw
+      commands are the pure output of a paint function: identity,
+      actions and parts live in the component tree (componens.h).
+      The only id is a coetus's optional provenientia, which is for
+      the inspector; hit targeting never reads it.</responsum>
+  </interrogatio>
+
+</interrogationes>

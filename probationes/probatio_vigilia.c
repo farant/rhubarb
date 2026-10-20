@@ -23,8 +23,10 @@
 #define VIA_COM "build/probatio_vigilia_commissum"
 
 interior vacuum
-_purgare (vacuum)
+_purgare (
+    CredoContextus* c)
 {
+    (vacuum)c;
     remove(VIA_BIN);
     remove(VIA_MAN);
     remove(VIA_FON);
@@ -70,26 +72,18 @@ _ch (
     redde c;
 }
 
-s32 principale (vacuum)
-{
-    Piscina* piscina;
-        b32  praeteritus;
-
-    piscina = piscina_generare_dynamicum("probatio_vigilia",
-        16777216);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    _purgare();
-
 
     /* ========================================================
      * I. Quieta: cfg NIHIL / campi absentes = numquam monet
      * ======================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                     Vigilia* v = vigilia_creare(piscina, NIHIL);
         VigiliaConfiguratio  cfg;
@@ -112,6 +106,7 @@ s32 principale (vacuum)
         CREDO_VERUM (strcmp(vigilia_signum_breve(v), "abcd")
             == ZEPHYRUM);
     }
+}
 
 
     /* ========================================================
@@ -119,6 +114,13 @@ s32 principale (vacuum)
      * alium figit BINARIUM_NOVIUS (glutinosum)
      * ======================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         VigiliaConfiguratio  cfg;
                     Vigilia* v;
@@ -161,6 +163,7 @@ s32 principale (vacuum)
         CREDO_VERUM (vigilia_inspicere(v, piscina)
             == VIGILIA_BINARIUM_NOVIUS);
     }
+}
 
 
     /* ========================================================
@@ -169,6 +172,13 @@ s32 principale (vacuum)
      * BINARIUM_NOVIUS cum discus quoque mutatur
      * ======================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         VigiliaConfiguratio  cfg;
                     Vigilia* v;
@@ -209,12 +219,20 @@ s32 principale (vacuum)
         CREDO_VERUM (strstr(vigilia_cautio(v),
             "binarium in disco novius") != NIHIL);
     }
+}
 
 
     /* ========================================================
      * IV. continet: congruentia suffixi cum limite '/'
      * ======================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         VigiliaConfiguratio  cfg;
                     Vigilia* v;
@@ -243,6 +261,7 @@ s32 principale (vacuum)
         CREDO_VERUM (!vigilia_continet(v, _ch("nusquam.c")));
         CREDO_VERUM (!vigilia_continet(v, _ch("")));
     }
+}
 
 
     /* ========================================================
@@ -251,6 +270,13 @@ s32 principale (vacuum)
      * iniectum, determinismus sine somnis
      * ======================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         VigiliaConfiguratio  cfg;
                     Vigilia* v;
@@ -319,15 +345,24 @@ s32 principale (vacuum)
 
         remove(VIA_COM);
     }
+}
 
-    _purgare();
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Quieta: cfg NIHIL / campi absentes = numquam monet",
+        _sectio_prima, _purgare, _purgare, NIHIL, NIHIL },
+    { "Vigilia disci: renovatio tacita, BINARIUM_NOVIUS glutinosum",
+        _sectio_secunda, _purgare, _purgare, NIHIL, NIHIL },
+    { "Vigilia fontium (lex ns): promotio FONTES -> BINARIUM_NOVIUS",
+        _sectio_tertia, _purgare, _purgare, NIHIL, NIHIL },
+    { "continet: congruentia suffixi cum limite '/'", _sectio_quarta,
+        _purgare, _purgare, NIHIL, NIHIL },
+    { "Politica tacendi: agnitio explicita + re-armationes quattuor",
+        _sectio_quinta, _purgare, _purgare, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    redde I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("vigilia", SECTIONES);
 }

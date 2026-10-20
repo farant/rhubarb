@@ -240,75 +240,134 @@ probans_libro_limites_index(vacuum)
 
 
 /* ==================================================
- * Main
+ * Sectiones (credo v2)
  * ================================================== */
 
-integer
+/* contextus widget in piscina sectionis propria (olim semel in
+ * principale) */
+interior vacuum
+_parare (
+    CredoContextus* c)
+{
+    g_piscina  = c->piscina;
+    g_intern   = internamentum_creare(c->piscina);
+    g_ctx     = contextus_widget_creare(c->piscina, g_intern, NIHIL,
+        NIHIL, NIHIL, NIHIL, NIHIL);
+}
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    probans_libro_creare();
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    probans_libro_navigare_ad();
+}
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    probans_libro_pagina_proxima();
+}
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    probans_libro_pagina_prior();
+}
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    probans_libro_pagina_prior_ad_initium();
+}
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    probans_libro_historia();
+}
+
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    probans_libro_nominare_pagina();
+}
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    probans_libro_navigare_ad_nomen();
+}
+
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    probans_libro_pagina_nova();
+}
+
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    probans_libro_pagina_currens();
+}
+
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    probans_libro_limites_index();
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "libro_creare", _sectio_prima, _parare, NIHIL, NIHIL, NIHIL },
+    { "libro_navigare_ad", _sectio_secunda, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "libro_pagina_proxima", _sectio_tertia, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "libro_pagina_prior", _sectio_quarta, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "libro_pagina_prior_ad_initium", _sectio_quinta, _parare, NIHIL,
+        NIHIL, NIHIL },
+    { "libro_historia", _sectio_sexta, _parare, NIHIL, NIHIL, NIHIL },
+    { "libro_nominare_pagina", _sectio_septima, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "libro_navigare_ad_nomen", _sectio_octava, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "libro_pagina_nova", _sectio_nona, _parare, NIHIL, NIHIL, NIHIL },
+    { "libro_pagina_currens", _sectio_decima, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "libro_limites_index", _sectio_decima_prima, _parare, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
 principale (vacuum)
 {
-    Piscina* piscina;
-        b32  praeteritus;
-
-    piscina = piscina_generare_dynamicum("test_libro", M * II);  /* 2MB */
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    g_piscina  = piscina;
-    g_intern   = internamentum_creare(piscina);
-    g_ctx = contextus_widget_creare(piscina, g_intern, NIHIL, NIHIL,
-        NIHIL, NIHIL, NIHIL);
-
-    credo_aperire(piscina);
-
-    printf("--- Probans libro_creare ---\n");
-    probans_libro_creare();
-
-    printf("--- Probans libro_navigare_ad ---\n");
-    probans_libro_navigare_ad();
-
-    printf("--- Probans libro_pagina_proxima ---\n");
-    probans_libro_pagina_proxima();
-
-    printf("--- Probans libro_pagina_prior ---\n");
-    probans_libro_pagina_prior();
-
-    printf("--- Probans libro_pagina_prior_ad_initium ---\n");
-    probans_libro_pagina_prior_ad_initium();
-
-    printf("--- Probans libro_historia ---\n");
-    probans_libro_historia();
-
-    printf("--- Probans libro_nominare_pagina ---\n");
-    probans_libro_nominare_pagina();
-
-    printf("--- Probans libro_navigare_ad_nomen ---\n");
-    probans_libro_navigare_ad_nomen();
-
-    printf("--- Probans libro_pagina_nova ---\n");
-    probans_libro_pagina_nova();
-
-    printf("--- Probans libro_pagina_currens ---\n");
-    probans_libro_pagina_currens();
-
-    printf("--- Probans libro_limites_index ---\n");
-    probans_libro_limites_index();
-
-    printf("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+    redde credo_suitam_currere("libro", SECTIONES);
 }

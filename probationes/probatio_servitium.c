@@ -29,42 +29,22 @@ _creare_repo (
 }
 
 
-s32 principale(vacuum)
-{
-                Piscina* piscina;
-    InternamentumChorda* intern;
-                    b32  praeteritus;
-
-
-    /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("test_servitium", MMM * LXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-
-    /* Usare internamentum_globale quia entitas_repositorium usare idem */
-    intern = internamentum_globale();
-    si (!intern)
-    {
-        imprimere("FRACTA: internamentum_globale\n");
-        piscina_destruere(piscina);
-        redde I;
-    }
-
-    credo_aperire(piscina);
-
-
     /* ==================================================
      * Probare registrum_servitii_creare
      * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
           RegistrumServitii* reg;
         EntitasRepositorium* repo;
-
-        imprimere("\n--- Probans registrum_servitii_creare ---\n");
 
         repo = _creare_repo(piscina);
         CREDO_NON_NIHIL(repo);
@@ -86,19 +66,27 @@ s32 principale(vacuum)
         reg = registrum_servitii_creare(piscina, repo, NIHIL);
         CREDO_NIHIL(reg);
     }
+}
 
 
     /* ==================================================
      * Probare servitium_registrare
      * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
           RegistrumServitii* reg;
         EntitasRepositorium* repo;
                     Entitas* clock;
                     Entitas* logger;
-
-        imprimere("\n--- Probans servitium_registrare ---\n");
 
         repo  = _creare_repo(piscina);
         reg   = registrum_servitii_creare(piscina, repo, intern);
@@ -124,18 +112,26 @@ s32 principale(vacuum)
         CREDO_FALSUM(servitium_registrare(reg, NIHIL, clock->id));
         CREDO_FALSUM(servitium_registrare(reg, "test", NIHIL));
     }
+}
 
 
     /* ==================================================
      * Probare servitium_registrare_entitatem
      * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
           RegistrumServitii* reg;
         EntitasRepositorium* repo;
                     Entitas* timer;
-
-        imprimere("\n--- Probans servitium_registrare_entitatem ---\n");
 
         repo  = _creare_repo(piscina);
         reg   = registrum_servitii_creare(piscina, repo, intern);
@@ -156,18 +152,26 @@ s32 principale(vacuum)
         CREDO_FALSUM(servitium_registrare_entitatem(reg, "test",
             NIHIL));
     }
+}
 
 
     /* ==================================================
      * Probare servitium_habet
      * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
           RegistrumServitii* reg;
         EntitasRepositorium* repo;
                     Entitas* service;
-
-        imprimere("\n--- Probans servitium_habet ---\n");
 
         repo  = _creare_repo(piscina);
         reg   = registrum_servitii_creare(piscina, repo, intern);
@@ -192,19 +196,27 @@ s32 principale(vacuum)
         CREDO_FALSUM(servitium_habet(NIHIL, "test"));
         CREDO_FALSUM(servitium_habet(reg, NIHIL));
     }
+}
 
 
     /* ==================================================
      * Probare servitium_obtinere
      * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
           RegistrumServitii* reg;
         EntitasRepositorium* repo;
                     Entitas* clock;
                     Entitas* obtentum;
-
-        imprimere("\n--- Probans servitium_obtinere ---\n");
 
         repo  = _creare_repo(piscina);
         reg   = registrum_servitii_creare(piscina, repo, intern);
@@ -233,19 +245,27 @@ s32 principale(vacuum)
         obtentum = servitium_obtinere(reg, NIHIL);
         CREDO_NIHIL(obtentum);
     }
+}
 
 
     /* ==================================================
      * Probare servitium_obtinere_id
      * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
           RegistrumServitii* reg;
         EntitasRepositorium* repo;
                     Entitas* logger;
                      chorda* id;
-
-        imprimere("\n--- Probans servitium_obtinere_id ---\n");
 
         repo  = _creare_repo(piscina);
         reg   = registrum_servitii_creare(piscina, repo, intern);
@@ -267,18 +287,26 @@ s32 principale(vacuum)
         id = servitium_obtinere_id(reg, "unknown");
         CREDO_NIHIL(id);
     }
+}
 
 
     /* ==================================================
      * Probare servitium_deregistrare
      * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
           RegistrumServitii* reg;
         EntitasRepositorium* repo;
                     Entitas* service;
-
-        imprimere("\n--- Probans servitium_deregistrare ---\n");
 
         repo  = _creare_repo(piscina);
         reg   = registrum_servitii_creare(piscina, repo, intern);
@@ -305,12 +333,22 @@ s32 principale(vacuum)
         CREDO_FALSUM(servitium_deregistrare(NIHIL, "test"));
         CREDO_FALSUM(servitium_deregistrare(reg, NIHIL));
     }
+}
 
 
     /* ==================================================
      * Probare multa servitia
      * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
           RegistrumServitii* reg;
         EntitasRepositorium* repo;
@@ -318,8 +356,6 @@ s32 principale(vacuum)
                   character  titulus_buffer[XXXII];
                   character  via_buffer[LXIV];
                         i32  i;
-
-        imprimere("\n--- Probans multa servitia ---\n");
 
         repo  = _creare_repo(piscina);
         reg   = registrum_servitii_creare(piscina, repo, intern);
@@ -352,12 +388,22 @@ s32 principale(vacuum)
             CREDO_VERUM(obtentum == servitia[i]);
         }
     }
+}
 
 
     /* ==================================================
      * Probare nota servitii
      * ================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
           RegistrumServitii* reg;
         EntitasRepositorium* repo;
@@ -365,8 +411,6 @@ s32 principale(vacuum)
                         i32  numerus_notarum;
                         b32  invenit_notam;
                         i32  i;
-
-        imprimere("\n--- Probans nota servitii ---\n");
 
         repo  = _creare_repo(piscina);
         reg   = registrum_servitii_creare(piscina, repo, intern);
@@ -403,20 +447,28 @@ s32 principale(vacuum)
 
         CREDO_VERUM(invenit_notam);
     }
+}
 
 
     /* ==================================================
      * Probare servitium_discoperire
      * ================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
           RegistrumServitii* reg;
         EntitasRepositorium* repo;
                     Entitas* clock;
                     Entitas* logger;
                         i32  discooperti;
-
-        imprimere("\n--- Probans servitium_discoperire ---\n");
 
         repo  = _creare_repo(piscina);
         reg   = registrum_servitii_creare(piscina, repo, intern);
@@ -448,19 +500,27 @@ s32 principale(vacuum)
         CREDO_VERUM(servitium_obtinere(reg, "clock") == clock);
         CREDO_VERUM(servitium_obtinere(reg, "logger") == logger);
     }
+}
 
 
     /* ==================================================
      * Probare discoperire sine duplicatis
      * ================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
           RegistrumServitii* reg;
         EntitasRepositorium* repo;
                     Entitas* service;
                         i32  discooperti;
-
-        imprimere("\n--- Probans discoperire sine duplicatis ---\n");
 
         repo  = _creare_repo(piscina);
         reg   = registrum_servitii_creare(piscina, repo, intern);
@@ -483,27 +543,33 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(discooperti, ZEPHYRUM);
         CREDO_AEQUALIS_I32(servitium_numerus(reg), I);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "registrum_servitii_creare", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "servitium_registrare", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "servitium_registrare_entitatem", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "servitium_habet", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "servitium_obtinere", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "servitium_obtinere_id", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "servitium_deregistrare", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "multa servitia", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nota servitii", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "servitium_discoperire", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "discoperire sine duplicatis", _sectio_decima_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ==================================================
-     * Compendium
-     * ================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    /* Destructio */
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("servitium", SECTIONES);
 }

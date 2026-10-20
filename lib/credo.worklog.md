@@ -531,3 +531,116 @@ notatam)", and the analytics get a fractus `#beta` run. credo fumus II
 with a section after the crash). Opt-in per-section fork isolation
 (full report despite a crash) parked: fork per section + Cocoa
 fork-unsafety.
+
+## 2026-10-17 - Linux -O2 build (hospitium v3 T9)
+
+- `_credo_arborem_delere` builds child paths with memcpy after the
+  existing length check: gcc -O2 under musl/glibc reports
+  -Wformat-overflow on the sprintf because it cannot prove the bound.
+
+## 2026-10-19 - credo III slice A: values in failures
+
+Wish 01M5B3DF4Z29 (parent 01M5B3AQ1RXB). Before: CREDO_CHORDA_AEQUALIS,
+_CONTINET, _INCIPIT, _TERMINATUR were thin wrappers over CREDO_VERUM, so a
+failure printed only the expression and an empty Speratus (484 uses);
+CREDO_CHORDA_AEQUALIS_LITERIS copied Receptus into a 256-byte buffer and
+silently cut it at 255; AEQUALIS_I32 / INAEQUALITAS_I32 printed unsigned
+i32 with %d (>= 2^31 showed negative); F64_PROXIMUS never printed the
+difference.
+
+Now: one renderer (`_credo_chordam_reddere`) - by length, quoted, escaped
+(\t \n \r \\ \" and \xNN for bytes < 0x20 and 0x7f; bytes >= 0x80 raw so
+UTF-8 stays readable - the Differentia line carries hex), windowed around
+the first difference when > CLX octets ("fenestra [a, b)"). A third line
+`Differentia:` via `_credo_notare_plenum` (the old `_credo_notare` is a
+wrapper, so manus.c and every other caller are unchanged). New:
+LITERAE_AEQUALES, OCTETI_AEQUALES (hex window, `[ff]` marks the byte),
+full S64 and I64 families, F32_PROXIMUS, F64_RELATIVE, F64_ULP (IEEE
+ordering trick: sign-magnitude -> monotone u64, so -0.0 == +0.0; NaN never).
+
+Gotcha caught by the test: helper macros that stringify (`#a`) must do it
+in the OUTER macro - arguments handed to an inner macro are already
+expanded, so `(s64)-V` printed as `(s64)-5`.
+
+Naming: `CREDO_REDDITIO` (redditio is real Latin but unknown to the lint
+lexicon) renamed `CREDO_ALVEUS_EFFUSIONIS` rather than glossed; `ulp` got
+an `ignotum-permissum` glossary entry (not a word in either corpus).
+Test: tools/credo_fumus.sh stage XIV (red first: rc 99 before the
+macros existed), 16 named failures + 21 passing forms.
+
+## 2026-10-19 - credo memoria T2: memory per section
+
+project-specs/credo-memoria-spec.md par. III. Each section's SECTIO line
+gains three KiB fields (XII-XIV): arena peak (`piscina_summa_apex_usus`
+of the section's own piscina, read before `piscina_destruere`), process
+footprint at section end, and the rise of the lifetime peak while the
+section ran (via `memoria_processus_legere(ZEPHYRUM, ...)` before
+`_credo_sectionem_agere` and after `purgare`). KiB, not octets, because
+fabrica's `_numerum_legere` accepts at most nine digits (49 GB in octets
+is eleven; nine digits of KiB is ~950 GB). The fabrica reader now accepts
+X | XI | XIV fields in the SAME commit - before, any other count made the
+whole member "deformis".
+
+Gotchas: the OMISSA path reuses the previous section's `summa`, so it
+zeroes the memory fields itself; credo now links `memoria_processus`, so
+every hand-written dependency list that names "credo" needed
+"memoria_processus_macos" too (briar, ludus_tessera, officina, oratio,
+tessera, credo_fumus struere, venenum BASIS; gesta regenerated).
+Measured in credo_fumus XV: a 32 MiB section reads 32768 / 33824 / 32800,
+the light section after it 0 / 1056 / 0.
+
+## 2026-10-20 - memory ceiling per section (credo memoria T4)
+
+Defaults come from the T3 measurement (`mensor quaestio graves` after a
+forced run of the root suites and the seven subsystem composites):
+3116 sections, the heaviest normal one is 135 MiB, and two are over 256
+(probatio_cellae phasis 389, pictor_imago IV 317). Fran chose ordinary
+256 / gravis 1024, with those two tagged `gravis`.
+
+The check sits between `purgare` and `_credo_sectionem_summare`, which
+is why the memory readings moved before the summary: the failure is
+recorded with `_credo_notare_plenum` while the section's notations are
+still open, so the summary, exit code and SECTIO fracture all pick it
+up with no new path. filum = suite title, versus = section number, so
+the line reads `at <suite>:<n>`. The message names whichever of arena
+peak / peak rise is larger: in the fumus fixture the rise (32800 KiB)
+beat the arena (32768), and my first regex wrongly required "arenae".
+
+Semantics chosen where the spec was ambiguous: `CREDO_MEMORIA_MB`
+replaces only the ordinary ceiling (0 disables it); gravis always uses
+GRAVIS. strtol garbage reads as 0 = off.
+
+Rename slip: a regex rename `vestigium_kib -> vestigium` with
+lookbehind `[\w.>]` protected `summa.vestigium_kib` but not the struct
+field's own declaration. The compile caught it. For locals next to
+same-named members, rename by sites, not by pattern.
+
+The subsystem suites (133) are all v1 (SYNTHETICA), so they're
+invisible here; whole-process `/usr/bin/time -l` shows six silva corpus
+suites at 4.1-7.6 GB (park 01M5CQYDD841) - relevant for T6, not T4.
+
+## 2026-10-20 - the ceiling under AddressSanitizer
+
+The quinta merge check went 42/43; venenum was red: probatio_plexus
+"partitio contra Artin" had a 269 MiB peak rise against 256 MiB. In the
+plain root run the same section is 37 MiB. Same binary, two runs: arena
+37.3 MiB both times; rise 268.9 MiB with ASan's default quarantine, 38.7
+MiB with `ASAN_OPTIONS=quarantine_size_mb=0`. ASan's quarantine and
+shadow memory are in the process footprint, so "how much the process
+peak rose" isn't a property of the section under a sanitizer. My T4
+design didn't consider that.
+
+Fix: compile-time `CREDO_SUB_ASAN` (`__SANITIZE_ADDRESS__`, or
+`__has_feature(address_sanitizer)` behind `defined(__has_feature)` so
+non-clang compilers and silva's model skip it), and under it the weight
+is the arena peak alone. The parameter then goes unused, which
+-Werror rejects, so the ASan branch has `(vacuum)auctus;`. The first
+ASan fixture build caught this, and venenum's build would have failed
+on it the same way.
+
+Fixture lesson: a fixture can't produce a quarantine-sized rise. 16 MiB
+blocks bypassed the quarantine (rise 0), and 4096 × 32 KiB freed blocks
+gave about 1 MiB, presumably because idle uniform pages get compressed.
+The stage instead makes the rise outside the arena directly (64 MiB
+malloc, non-uniform fill, held for the section), which tests what
+matters: under ASan, the rise isn't judged.

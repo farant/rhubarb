@@ -663,6 +663,7 @@ event
 eventor
 events
 ewouldblock
+excl
 exec
 executabile
 execv
@@ -817,6 +818,8 @@ fscanf
 fscr
 fseek
 fsetpos
+fstat
+fsync
 ft
 ftell
 fts
@@ -913,7 +916,6 @@ header32
 header64
 headers
 heap
-hebd
 height
 hello
 helper
@@ -1443,6 +1445,7 @@ nn
 nodalem
 nodalis
 nodelay
+nofollow
 nom
 nonblock
 nonexistens
@@ -1895,6 +1898,7 @@ resolved
 resolver
 resp
 rest
+restart
 result
 result1
 result2
@@ -1957,7 +1961,6 @@ sac
 salt
 saltabile
 sanct
-sanctorale
 sanitizare
 sb
 sc
@@ -2082,6 +2085,8 @@ sigsegv
 sigset
 sigterm
 sigtstp
+sigusr1
+sigusr2
 sigwinch
 silvula
 simple

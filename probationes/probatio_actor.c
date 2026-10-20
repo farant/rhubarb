@@ -7,42 +7,27 @@
 #include <stdio.h>
 
 
-s32 principale(vacuum)
-{
-                Piscina* piscina;
-    InternamentumChorda* intern;
-                    b32  praeteritus;
-
-
-    /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("test_actor", MMM * XVI);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-
-    intern = internamentum_creare(piscina);
-    si (!intern)
-    {
-        imprimere("FRACTA: internamentum_creare\n");
-        piscina_destruere(piscina);
-        redde I;
-    }
-
-    credo_aperire(piscina);
-
-
     /* ==================================================
      * Probare nuntius_creare
      * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (intern == NIHIL)
+    {
+        redde;
+    }
     {
         Nuntius* nuntius;
          chorda  mittens_chorda;
          chorda* mittens_id;
-
-        imprimere("\n--- Probans nuntius_creare ---\n");
 
         /* Creare mittens_id */
         mittens_chorda  = chorda_ex_literis("actor-123", piscina);
@@ -73,19 +58,31 @@ s32 principale(vacuum)
         nuntius = nuntius_creare(piscina, intern, NIHIL, NIHIL);
         CREDO_NIHIL(nuntius);
     }
+}
 
 
     /* ==================================================
      * Probare nuntius_datum_ponere et capere
      * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (intern == NIHIL)
+    {
+        redde;
+    }
     {
         Nuntius* nuntius;
          chorda  valor_chorda;
          chorda* valor_internatum;
          chorda* resultus;
-
-        imprimere("\n--- Probans nuntius_datum ---\n");
 
         nuntius = nuntius_creare(piscina, intern, NIHIL, "update");
         CREDO_NON_NIHIL(nuntius);
@@ -107,18 +104,30 @@ s32 principale(vacuum)
         resultus = nuntius_datum_capere(nuntius, "non_existens");
         CREDO_NIHIL(resultus);
     }
+}
 
 
     /* ==================================================
      * Probare nuntius_datum_ponere_literis
      * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (intern == NIHIL)
+    {
+        redde;
+    }
     {
         Nuntius* nuntius;
          chorda* resultus;
          chorda  speratus;
-
-        imprimere("\n--- Probans nuntius_datum_ponere_literis ---\n");
 
         nuntius = nuntius_creare(piscina, intern, NIHIL, "config");
         CREDO_NON_NIHIL(nuntius);
@@ -138,18 +147,30 @@ s32 principale(vacuum)
         speratus = chorda_ex_literis("Probatio", piscina);
         CREDO_CHORDA_AEQUALIS(*resultus, speratus);
     }
+}
 
 
     /* ==================================================
      * Probare nuntius_datum_ponere_s32 et capere_s32
      * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (intern == NIHIL)
+    {
+        redde;
+    }
     {
         Nuntius* nuntius;
             s32  valor;
             b32  successus;
-
-        imprimere("\n--- Probans nuntius_datum_s32 ---\n");
 
         nuntius = nuntius_creare(piscina, intern, NIHIL, "counter");
         CREDO_NON_NIHIL(nuntius);
@@ -184,18 +205,30 @@ s32 principale(vacuum)
             &valor);
         CREDO_FALSUM(successus);
     }
+}
 
 
     /* ==================================================
      * Probare nuntius_datum_capere_s64
      * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (intern == NIHIL)
+    {
+        redde;
+    }
     {
         Nuntius* nuntius;
             s64  valor;
             b32  successus;
-
-        imprimere("\n--- Probans nuntius_datum_s64 ---\n");
 
         nuntius = nuntius_creare(piscina, intern, NIHIL, "timestamp");
         CREDO_NON_NIHIL(nuntius);
@@ -217,18 +250,30 @@ s32 principale(vacuum)
         CREDO_VERUM(successus);
         CREDO_AEQUALIS_S64(valor, -9876543210LL);
     }
+}
 
 
     /* ==================================================
      * Probare nuntius_datum_capere_f64
      * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (intern == NIHIL)
+    {
+        redde;
+    }
     {
         Nuntius* nuntius;
             f64  valor;
             b32  successus;
-
-        imprimere("\n--- Probans nuntius_datum_f64 ---\n");
 
         nuntius = nuntius_creare(piscina, intern, NIHIL, "metrics");
         CREDO_NON_NIHIL(nuntius);
@@ -249,18 +294,30 @@ s32 principale(vacuum)
         CREDO_VERUM(successus);
         CREDO_VERUM(valor < -273.0 && valor > -274.0);
     }
+}
 
 
     /* ==================================================
      * Probare nuntius_datum_capere_b32
      * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (intern == NIHIL)
+    {
+        redde;
+    }
     {
         Nuntius* nuntius;
             b32  valor;
             b32  successus;
-
-        imprimere("\n--- Probans nuntius_datum_b32 ---\n");
 
         nuntius = nuntius_creare(piscina, intern, NIHIL, "flags");
         CREDO_NON_NIHIL(nuntius);
@@ -316,16 +373,28 @@ s32 principale(vacuum)
             &valor);
         CREDO_FALSUM(successus);
     }
+}
 
 
     /* ==================================================
      * Probare nuntius_datum_habet
      * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (intern == NIHIL)
+    {
+        redde;
+    }
     {
         Nuntius* nuntius;
-
-        imprimere("\n--- Probans nuntius_datum_habet ---\n");
 
         nuntius = nuntius_creare(piscina, intern, NIHIL, "test");
         CREDO_NON_NIHIL(nuntius);
@@ -340,18 +409,30 @@ s32 principale(vacuum)
         CREDO_VERUM(nuntius_datum_habet(nuntius, "clavis"));
         CREDO_FALSUM(nuntius_datum_habet(nuntius, "alia_clavis"));
     }
+}
 
 
     /* ==================================================
      * Probare capsa_creare
      * ================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (intern == NIHIL)
+    {
+        redde;
+    }
     {
          Capsa* capsa;
         chorda  possessor_chorda;
         chorda* possessor_id;
-
-        imprimere("\n--- Probans capsa_creare ---\n");
 
         possessor_chorda  = chorda_ex_literis("widget-456", piscina);
         possessor_id      = chorda_internare(intern, possessor_chorda);
@@ -371,12 +452,26 @@ s32 principale(vacuum)
         capsa = capsa_creare(piscina, NIHIL);
         CREDO_NIHIL(capsa);
     }
+}
 
 
     /* ==================================================
      * Probare capsa_addere et capsa_tollere (FIFO)
      * ================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (intern == NIHIL)
+    {
+        redde;
+    }
     {
           Capsa* capsa;
          chorda  possessor_chorda;
@@ -385,8 +480,6 @@ s32 principale(vacuum)
         Nuntius* n2;
         Nuntius* n3;
         Nuntius* resultus;
-
-        imprimere("\n--- Probans capsa FIFO ---\n");
 
         possessor_chorda  = chorda_ex_literis("fifo-test", piscina);
         possessor_id      = chorda_internare(intern, possessor_chorda);
@@ -430,12 +523,26 @@ s32 principale(vacuum)
         resultus = capsa_tollere(capsa);
         CREDO_NIHIL(resultus);
     }
+}
 
 
     /* ==================================================
      * Probare capsa_inspicere
      * ================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (intern == NIHIL)
+    {
+        redde;
+    }
     {
           Capsa* capsa;
          chorda  possessor_chorda;
@@ -443,8 +550,6 @@ s32 principale(vacuum)
         Nuntius* n1;
         Nuntius* n2;
         Nuntius* resultus;
-
-        imprimere("\n--- Probans capsa_inspicere ---\n");
 
         possessor_chorda  = chorda_ex_literis("peek-test", piscina);
         possessor_id      = chorda_internare(intern, possessor_chorda);
@@ -477,20 +582,32 @@ s32 principale(vacuum)
         resultus = capsa_inspicere(capsa);
         CREDO_VERUM(resultus == n2);
     }
+}
 
 
     /* ==================================================
      * Probare capsa_vacare
      * ================================================== */
 
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (intern == NIHIL)
+    {
+        redde;
+    }
     {
           Capsa* capsa;
          chorda  possessor_chorda;
          chorda* possessor_id;
         Nuntius* n1;
         Nuntius* n2;
-
-        imprimere("\n--- Probans capsa_vacare ---\n");
 
         possessor_chorda  = chorda_ex_literis("clear-test", piscina);
         possessor_id      = chorda_internare(intern, possessor_chorda);
@@ -510,20 +627,32 @@ s32 principale(vacuum)
         CREDO_VERUM(capsa_vacua_est(capsa));
         CREDO_NIHIL(capsa_inspicere(capsa));
     }
+}
 
 
     /* ==================================================
      * Probare nuntius cum multis clavibus
      * ================================================== */
 
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (intern == NIHIL)
+    {
+        redde;
+    }
     {
           Nuntius* nuntius;
               s32  i;
               s32  valor;
               b32  successus;
         character  clavis_buffer[XXXII];
-
-        imprimere("\n--- Probans nuntius_multae_claves ---\n");
 
         nuntius = nuntius_creare(piscina, intern, NIHIL, "bulk");
         CREDO_NON_NIHIL(nuntius);
@@ -546,27 +675,33 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_S32(valor, i * X);
         }
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "nuntius_creare", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nuntius_datum", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nuntius_datum_ponere_literis", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "nuntius_datum_s32", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nuntius_datum_s64", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nuntius_datum_f64", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nuntius_datum_b32", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "nuntius_datum_habet", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "capsa_creare", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "capsa FIFO", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "capsa_inspicere", _sectio_decima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "capsa_vacare", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "nuntius_multae_claves", _sectio_decima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ==================================================
-     * Compendium
-     * ================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    /* Destructio */
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("actor", SECTIONES);
 }

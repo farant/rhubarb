@@ -183,27 +183,21 @@ _differentiam_invenire (
     redde NIHIL;
 }
 
-s32 principale (vacuum)
+
+/* ==================================================
+ * PROBARE: radices clientium - index C (SILEX_RADICES_CLIENTIUM)
+ * == index crustae (tools/corpus_infixum.sh RADICES_CLIENTIUM),
+ * ordine: silex caput quaerit, briar corpus infigit - duae
+ * sedes, una veritas (toml Q13)
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-        b32  praeteritus;
     Piscina* piscina;
 
-    piscina = piscina_generare_dynamicum("probatio_silex", 65536);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ========================================================
-     * PROBARE: radices clientium - index C (SILEX_RADICES_CLIENTIUM)
-     * == index crustae (tools/corpus_infixum.sh RADICES_CLIENTIUM),
-     * ordine: silex caput quaerit, briar corpus infigit - duae
-     * sedes, una veritas (toml Q13)
-     * ======================================================== */
-
+    piscina = c->piscina;
     {
         chorda scriptum = filum_legere_totum("tools/corpus_infixum.sh",
                                piscina);
@@ -213,7 +207,6 @@ s32 principale (vacuum)
            i32 n        = ZEPHYRUM;
            s32 initium  = (s32)-I;
 
-        imprimere("\n--- Probans radices clientium: C == crusta ---\n");
         CREDO_NON_NIHIL (scriptum.datum);
         per (k = ZEPHYRUM; scriptum.datum != NIHIL
              && k + acus.mensura <= scriptum.mensura; k++)
@@ -268,30 +261,25 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (n, II);
         CREDO_NIHIL (SILEX_RADICES_CLIENTIUM[II]);
     }
-
-    /* tabula rasa (percursus prior) */
-    {
-        constans character* argumenta_rm[4];
-
-        argumenta_rm[0] = "/bin/rm";
-        argumenta_rm[1] = "-rf";
-        argumenta_rm[2] = AREA;
-        argumenta_rm[3] = NIHIL;
-        processus_exsequi(argumenta_rm, 5000, piscina);
-    }
+}
 
 
-    /* ========================================================
-     * PROBARE: clausura - semen sine gemino lib
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: clausura - semen sine gemino lib
+ * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Xar* res_omnes;
         interior constans character* constans SEMINA_LATINA[] = {
             "latina.h"
         };
-
-        imprimere("\n--- Probans clausuram (latina sola) ---\n");
 
         res_omnes = silex_clausuram_colligere(piscina,
             silex_fons_disci(piscina, "."), SEMINA_LATINA, 1);
@@ -300,20 +288,26 @@ s32 principale (vacuum)
         CREDO_VERUM(_manifestum_continet(res_omnes,
             "include/latina.h"));
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: clausura - geminus lib + transitiva
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: clausura - geminus lib + transitiva
+ * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
              Xar* res_omnes;
         SilexRes* primus;
         interior constans character* constans SEMINA_CHORDA[] = {
             "chorda.h"
         };
-
-        imprimere("\n--- Probans clausuram (chorda + trans.) ---\n");
 
         res_omnes = silex_clausuram_colligere(piscina,
             silex_fons_disci(piscina, "."), SEMINA_CHORDA, 1);
@@ -331,14 +325,22 @@ s32 principale (vacuum)
         CREDO_VERUM(primus->contentum.mensura > ZEPHYRUM);
         CREDO_VERUM(primus->origo[0] == 'v');   /* "vendicata:..." */
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: clausura - implementatores ANNOTATI ('<aedilis
-     * corpus="lib/fenestra_textus.c"/>' in fenestra.h) + geminus
-     * suffixi (.m) + transitiva eorum; quisque SEMEL
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: clausura - implementatores ANNOTATI ('<aedilis
+ * corpus="lib/fenestra_textus.c"/>' in fenestra.h) + geminus
+ * suffixi (.m) + transitiva eorum; quisque SEMEL
+ * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Xar* res_omnes;
         i32  k;
@@ -346,9 +348,6 @@ s32 principale (vacuum)
         interior constans character* constans SEMINA_FENESTRA[] = {
             "fenestra.h"
         };
-
-        imprimere("\n--- Probans clausuram (fenestra: corpus annotatum)"
-            " ---\n");
 
         res_omnes = silex_clausuram_colligere(piscina,
             silex_fons_disci(piscina, "."), SEMINA_FENESTRA, 1);
@@ -372,17 +371,25 @@ s32 principale (vacuum)
         }
         CREDO_AEQUALIS_I32(textus_vices, I);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: clausura - caput cum GEMINO et annotatione
-     * ALIAM plagulam nominante ('<aedilis
-     * corpus="lib/sanctorale.c"/>' in calendarium_liturgicum.h).
-     * Annotatio post geminum SEMPER legenda est, non solum ubi
-     * geminus deest: fenestra.h (sine gemino) casum celabat, et
-     * kalendarium.thistle nexu defecit (_sanctorale_obtinere).
-     * ================================================== */
+/* ==================================================
+ * PROBARE: clausura - caput cum GEMINO et annotatione
+ * ALIAM plagulam nominante ('<aedilis
+ * corpus="lib/sanctorale.c"/>' in calendarium_liturgicum.h).
+ * Annotatio post geminum SEMPER legenda est, non solum ubi
+ * geminus deest: fenestra.h (sine gemino) casum celabat, et
+ * kalendarium.thistle nexu defecit (_sanctorale_obtinere).
+ * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Xar* res_omnes;
         i32  k;
@@ -390,9 +397,6 @@ s32 principale (vacuum)
         interior constans character* constans SEMINA_CALENDARII[] = {
             "calendarium_liturgicum.h"
         };
-
-        imprimere("\n--- Probans clausuram (calendarium: geminus et"
-            " corpus annotatum) ---\n");
 
         res_omnes = silex_clausuram_colligere(piscina,
             silex_fons_disci(piscina, "."), SEMINA_CALENDARII, 1);
@@ -412,19 +416,25 @@ s32 principale (vacuum)
         }
         CREDO_AEQUALIS_I32(sanctorale_vices, I);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: fabrica invalida = recusatio (in constructore)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: fabrica invalida = recusatio (in constructore)
+ * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Xar* res_omnes;
         interior constans character* constans SEMINA_LATINA[] = {
             "latina.h"
         };
-
-        imprimere("\n--- Probans recusationem fabricae ---\n");
 
         CREDO_NIHIL(silex_fons_disci(piscina,
             "/non/exsistit/fabrica"));
@@ -433,18 +443,25 @@ s32 principale (vacuum)
             SEMINA_LATINA, 1);
         CREDO_NIHIL(res_omnes);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: fons disci - existit/legere
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: fons disci - existit/legere
+ * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         SilexFons* fons      = silex_fons_disci(piscina, ".");
               b32  inventum  = FALSUM;
            chorda  contentum;
 
-        imprimere("\n--- Probans fontem disci ---\n");
         CREDO_NON_NIHIL(fons);
         CREDO_VERUM(silex_fons_existit(fons, "include/latina.h",
             piscina));
@@ -455,12 +472,30 @@ s32 principale (vacuum)
         CREDO_VERUM(inventum);
         CREDO_VERUM(contentum.mensura > 0);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: fons corporis == fons disci (porta differentialis)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: fons corporis == fons disci (porta differentialis)
+ * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    /* tabula rasa (percursus prior) - hic, ante usum primum AREA */
+    {
+        constans character* argumenta_rm[4];
+
+        argumenta_rm[0] = "/bin/rm";
+        argumenta_rm[1] = "-rf";
+        argumenta_rm[2] = AREA;
+        argumenta_rm[3] = NIHIL;
+        processus_exsequi(argumenta_rm, 5000, piscina);
+    }
     {
         interior constans ParFictum PARIA[] = {
             { "corpus.versio", "commit=abc123 dies=2026-08-10\n" },
@@ -486,7 +521,6 @@ s32 principale (vacuum)
                  i32  index;
         CapsulaEmbed  embed = _corpus_fictum(piscina, PARIA, 9);
 
-        imprimere("\n--- Probans corpus == discus ---\n");
         filum_directorium_creare_si_necesse("build");
         filum_directorium_creare_si_necesse(AREA);
         filum_directorium_creare_si_necesse(AREA "/ficta2");
@@ -581,17 +615,23 @@ s32 principale (vacuum)
          * obiectiva_macos.m + vendor par II = VIII */
         CREDO_AEQUALIS_I32((i32)xar_numerus(ex_disco), (i32)8);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: fabricam invenire (ascensus e cwd)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: fabricam invenire (ascensus e cwd)
+ * ================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* radix;
                     chorda  expectata;
-
-        imprimere("\n--- Probans fabricam invenire ---\n");
 
         /* e subdirectorio arboris: radicem ipsam invenit
          * (probationes e radice repositorii currunt) */
@@ -649,17 +689,23 @@ s32 principale (vacuum)
         CREDO_CHORDAE_AEQUALES(radix,
             chorda_ut_cstr(expectata, piscina));
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: novum - proiectum integrum
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: novum - proiectum integrum
+ * ================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         SilexNovumOptiones optiones;
          SilexNovumFructus fructus;
-
-        imprimere("\n--- Probans silex_novum ---\n");
 
         filum_directorium_creare_si_necesse("build");
         filum_directorium_creare_si_necesse(AREA);
@@ -723,21 +769,27 @@ s32 principale (vacuum)
         fructus = silex_novum(piscina, &optiones);
         CREDO_FALSUM(fructus.successus);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: ascensus proiectum silicis PRAETERIT (volumen
-     * radicis = proiectum, numquam fabrica sui ipsius - AMBULATIO
-     * ACCEPTIONIS 2026-08-10: partes intra probandum fabricam
-     * probandum ipsum invenit, xar.h 'deest', corpus numquam
-     * attactum)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: ascensus proiectum silicis PRAETERIT (volumen
+ * radicis = proiectum, numquam fabrica sui ipsius - AMBULATIO
+ * ACCEPTIONIS 2026-08-10: partes intra probandum fabricam
+ * probandum ipsum invenit, xar.h 'deest', corpus numquam
+ * attactum)
+ * ================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* radix;
                     chorda  expectata;
-
-        imprimere("\n--- Probans ascensum praeter proiectum ---\n");
 
         /* AREA/specimen signum fabricae fert (include/latina.h +
          * lib/) SED volumen radicis habet -> praetermittendum;
@@ -749,17 +801,23 @@ s32 principale (vacuum)
         CREDO_CHORDAE_AEQUALES(radix,
             chorda_ut_cstr(expectata, piscina));
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: novum -vitrea - inventarium seminis cordis
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: novum -vitrea - inventarium seminis cordis
+ * ================================================== */
 
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         SilexNovumOptiones optiones;
          SilexNovumFructus fructus;
-
-        imprimere("\n--- Probans novum -vitrea ---\n");
 
         optiones.fons        = silex_fons_disci(piscina, ".");
         optiones.destinatio  = AREA;
@@ -901,19 +959,25 @@ s32 principale (vacuum)
                 "fontes/vitreum_pipa.c", piscina));
         }
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: VCS - status/condere/historia in specimine
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: VCS - status/condere/historia in specimine
+ * ================================================== */
 
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           SilexStatusFructus  status;
         SilexConditioFructus  conditio;
                          Xar* historia;
                          i32  plagulae_primae;
-
-        imprimere("\n--- Probans status (arbor munda) ---\n");
 
         status = silex_status(piscina, AREA "/specimen");
         CREDO_VERUM(status.successus);
@@ -921,7 +985,7 @@ s32 principale (vacuum)
         CREDO_VERUM(status.mundae > (i32)10);
         plagulae_primae = status.mundae;
 
-        imprimere("\n--- Probans status (mutata/nova/absens) ---\n");
+        CREDO_GRADUS("status (mutata/nova/absens)");
 
         /* mutare, addere, delere */
         CREDO_VERUM(filum_scribere_literis(
@@ -966,7 +1030,7 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32((i32)absentes, (i32)1);
         }
 
-        imprimere("\n--- Probans condere ---\n");
+        CREDO_GRADUS("condere");
 
         conditio = silex_condere(piscina, AREA "/specimen",
             "prima conditio manualis");
@@ -988,7 +1052,7 @@ s32 principale (vacuum)
         CREDO_FALSUM(conditio.successus);
         CREDO_VERUM(conditio.erratum != NIHIL);
 
-        imprimere("\n--- Probans historiam ---\n");
+        CREDO_GRADUS("historiam");
 
         historia = silex_historia(piscina, AREA "/specimen");
         CREDO_NON_NIHIL(historia);
@@ -1008,20 +1072,26 @@ s32 principale (vacuum)
             CREDO_VERUM(ultima->momentum.mensura > ZEPHYRUM);
         }
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: proicere - volumen arborem scribit
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: proicere - volumen arborem scribit
+ * ================================================== */
 
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         SilexProiectioFructus  p;
          SilexConditioFructus  conditio;
            SilexStatusFructus  status;
                           Xar* historia;
                        chorda  relatum;
-
-        imprimere("\n--- Probans proicere (consilium/scriptio) ---\n");
 
         /* arbor munda: nihil proiciendum */
         p = silex_proicere(piscina, AREA "/specimen", (s64)0,
@@ -1051,7 +1121,7 @@ s32 principale (vacuum)
             piscina);
         CREDO_CHORDA_AEQUALIS_LITERIS(relatum, "# notae\n");
 
-        imprimere("\n--- Probans obicem (inconditum) ---\n");
+        CREDO_GRADUS("obicem (inconditum)");
 
         /* contentum inconditum -> OBEX; scriptio recusatur,
          * plagula INTACTA manet (foedus: nihil inconditum petit) */
@@ -1075,7 +1145,7 @@ s32 principale (vacuum)
             piscina);
         CREDO_CHORDA_AEQUALIS_LITERIS(relatum, "# vandalismus\n");
 
-        imprimere("\n--- Probans iter temporis (-ad seq) ---\n");
+        CREDO_GRADUS("iter temporis (-ad seq)");
 
         /* conditum -> contentum residet -> superscribibile */
         conditio = silex_condere(piscina, AREA "/specimen",
@@ -1124,7 +1194,7 @@ s32 principale (vacuum)
         status = silex_status(piscina, AREA "/specimen");
         CREDO_AEQUALIS_I32((i32)xar_numerus(status.res), (i32)0);
 
-        imprimere("\n--- Probans alienam (numquam tangitur) ---\n");
+        CREDO_GRADUS("alienam (numquam tangitur)");
 
         CREDO_VERUM(filum_scribere_literis(
             AREA "/specimen/vagus.txt", "vagus\n"));
@@ -1145,22 +1215,28 @@ s32 principale (vacuum)
         CREDO_VERUM(filum_existit(AREA "/specimen/vagus.txt"));
         CREDO_VERUM(filum_delere(AREA "/specimen/vagus.txt"));
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: renovare - sigilla tria contra fabricam FICTAM
-     * (fabrica mutabilis in area - fabricam veram mutare non
-     * possumus)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: renovare - sigilla tria contra fabricam FICTAM
+ * (fabrica mutabilis in area - fabricam veram mutare non
+ * possumus)
+ * ================================================== */
 
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         SilexRenovatioFructus  r;
                       Volumen* vol;
                        chorda  contentum;
                           b32  bene;
                     SilexFons* fons_fictae;
-
-        imprimere("\n--- Probans renovare (fabrica ficta) ---\n");
 
         /* fabrica ficta v1 */
         filum_directorium_creare_si_necesse(AREA "/ficta");
@@ -1406,7 +1482,7 @@ s32 principale (vacuum)
             b32 nova_adest     = FALSUM;
             i32 index;
 
-            imprimere("\n--- Probans partes ---\n");
+            CREDO_GRADUS("partes");
             CREDO_NON_NIHIL(partes);
             per (index = 0; index < xar_numerus(partes);
                 index = index + 1)
@@ -1429,19 +1505,25 @@ s32 principale (vacuum)
             CREDO_VERUM(nova_adest);
         }
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: historia plagulae unius + vexillum renovationis
-     * (fixturae iam divites: notae.md ter condita in specimine,
-     * lib/piscina.c nata et remota; renovandum conditiones
-     * renovationum veras fert)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: historia plagulae unius + vexillum renovationis
+ * (fixturae iam divites: notae.md ter condita in specimine,
+ * lib/piscina.c nata et remota; renovandum conditiones
+ * renovationum veras fert)
+ * ================================================== */
 
+interior vacuum
+_sectio_decima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Xar* hp;
-
-        imprimere("\n--- Probans historiam plagulae (notae.md) ---\n");
 
         /* nova (prima manualis) + vandalismus (experimentum)
          * + restitutio (reversio) = 3 */
@@ -1477,7 +1559,7 @@ s32 principale (vacuum)
             }
         }
 
-        imprimere("\n--- Probans historiam plagulae (remota) ---\n");
+        CREDO_GRADUS("historiam plagulae (remota)");
 
         /* nata (conditio novi) + remota (prima manualis) = 2 */
         hp = silex_historia_plagulae(piscina, AREA "/specimen",
@@ -1496,14 +1578,14 @@ s32 principale (vacuum)
                 (i32)0);
         }
 
-        imprimere("\n--- Probans historiam plagulae (ignota) ---\n");
+        CREDO_GRADUS("historiam plagulae (ignota)");
 
         hp = silex_historia_plagulae(piscina, AREA "/specimen",
             "numquam/fuit.c");
         CREDO_NON_NIHIL(hp);
         CREDO_AEQUALIS_I32((i32)xar_numerus(hp), (i32)0);
 
-        imprimere("\n--- Probans vexillum renovationis ---\n");
+        CREDO_GRADUS("vexillum renovationis");
 
         /* specimen: nulla renovatio umquam */
         {
@@ -1564,22 +1646,28 @@ s32 principale (vacuum)
                 chorda_ex_literis("vendicata:", piscina)));
         }
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: differentia - QUID mutatum, textu
-     * (laborans contra discum, deinde inter plicas; fixturae
-     * profundae: conditio novi -> prima manualis iam MUTATA +
-     * NOVA + ABSENS fert)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: differentia - QUID mutatum, textu
+ * (laborans contra discum, deinde inter plicas; fixturae
+ * profundae: conditio novi -> prima manualis iam MUTATA +
+ * NOVA + ABSENS fert)
+ * ================================================== */
 
+interior vacuum
+_sectio_decima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         SilexDifferentiaFructus f;
            SilexConditioFructus conditio;
                             s64 seq_ante;
                             s64 seq_post;
-
-        imprimere("\n--- Probans differentiam (arbor munda) ---\n");
 
         f = silex_differentia_laborans(piscina, AREA "/specimen",
             (s64)0, VERUM);
@@ -1587,7 +1675,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32((i32)xar_numerus(f.res), (i32)0);
         CREDO_VERUM(f.aequales > (i32)10);
 
-        imprimere("\n--- Probans differentiam (laborans) ---\n");
+        CREDO_GRADUS("differentiam (laborans)");
 
         CREDO_VERUM(filum_scribere_literis(
             AREA "/specimen/notae.md", "# notae\nnova linea\n"));
@@ -1643,7 +1731,7 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32(addenda->textus.mensura, (i32)0);
         }
 
-        imprimere("\n--- Probans differentiam (inter plicas) ---\n");
+        CREDO_GRADUS("differentiam (inter plicas)");
 
         conditio = silex_condere(piscina, AREA "/specimen",
             "differentia probata");
@@ -1685,8 +1773,7 @@ s32 principale (vacuum)
         CREDO_VERUM(f.successus);
         CREDO_AEQUALIS_I32((i32)xar_numerus(f.res), (i32)0);
 
-        imprimere("\n--- Probans differentiam (ABSENS ex"
-            " historia) ---\n");
+        CREDO_GRADUS("differentiam (ABSENS ex historia)");
 
         /* inter conditionem novi et primam manualem:
          * fontes/specimen.c MUTATA, notae.md NOVA,
@@ -1729,17 +1816,23 @@ s32 principale (vacuum)
             }
         }
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: identitas voluminis (decisum red-team IX):
-     * solitarium vincit, plura recusantur
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: identitas voluminis (decisum red-team IX):
+ * solitarium vincit, plura recusantur
+ * ================================================== */
 
+interior vacuum
+_sectio_decima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         SilexStatusFructus status;
-
-        imprimere("\n--- Probans volumen solitarium ---\n");
 
         filum_directorium_creare_si_necesse(AREA "/tergum");
         CREDO_VERUM(filum_copiare(
@@ -1765,17 +1858,23 @@ s32 principale (vacuum)
         status = silex_status(piscina, AREA "/tergum");
         CREDO_FALSUM(status.successus);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: tituli mali recusantur
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: tituli mali recusantur
+ * ================================================== */
 
+interior vacuum
+_sectio_decima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         SilexNovumOptiones optiones;
          SilexNovumFructus fructus;
-
-        imprimere("\n--- Probans recusationem tituli ---\n");
 
         optiones.fons        = silex_fons_disci(piscina, ".");
         optiones.destinatio  = AREA;
@@ -1788,25 +1887,52 @@ s32 principale (vacuum)
         fructus           = silex_novum(piscina, &optiones);
         CREDO_FALSUM(fructus.successus);
     }
+}
 
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
+/* ORDO TABULAE NECESSARIUS: sectiones a 'silex_novum' deinceps
+ * proiectum AREA/specimen (et AREA/renovandum) a prioribus aedificatum
+ * legunt et mutant - CREDO_ORDO=mixtus hanc suitam frangit. */
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "radices clientium: C == crusta", _sectio_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "clausuram (latina sola)", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "clausuram (chorda + trans.)", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "clausuram (fenestra: corpus annotatum)", _sectio_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "clausuram (calendarium: geminus et corpus annotatum)",
+        _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "recusationem fabricae", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fontem disci", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "corpus == discus", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fabricam invenire", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "silex_novum", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ascensum praeter proiectum", _sectio_decima_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "novum -vitrea", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "status (arbor munda)", _sectio_decima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "proicere (consilium/scriptio)", _sectio_decima_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "renovare (fabrica ficta)", _sectio_decima_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "historiam plagulae (notae.md)", _sectio_decima_sexta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "differentiam (arbor munda)", _sectio_decima_septima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "volumen solitarium", _sectio_decima_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "recusationem tituli", _sectio_decima_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("silex", SECTIONES);
 }

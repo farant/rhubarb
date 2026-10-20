@@ -21,37 +21,20 @@ _chorda_ptr_eq_literis (
     redde chorda_aequalis_literis(*ch, cstr);
 }
 
-s32 principale(vacuum)
+
+/* ==================================================
+ * Probare xml_elementum_creare
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                 Piscina* piscina;
     InternamentumChorda* intern;
-                    b32  praeteritus;
 
-    /* Aperire piscinam et credonem */
-    piscina = piscina_generare_dynamicum("probatio_xml", IV * MXXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-
-    intern = internamentum_creare(piscina);
-    si (!intern)
-    {
-        imprimere("FRACTA: internamentum_creare\n");
-        piscina_destruere(piscina);
-        redde I;
-    }
-
-    credo_aperire(piscina);
-
-
-    /* ==================================================
-     * Probare xml_elementum_creare
-     * ================================================== */
-
-    imprimere("\n--- Probans xml_elementum_creare ---\n");
-
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         XmlNodus* nodus;
 
@@ -63,14 +46,22 @@ s32 principale(vacuum)
 
         imprimere("  Elementum 'root' creatum: VERUM\n");
     }
+}
 
 
-    /* ==================================================
-     * Probare xml_textum_creare
-     * ================================================== */
+/* ==================================================
+ * Probare xml_textum_creare
+ * ================================================== */
 
-    imprimere("\n--- Probans xml_textum_creare ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         XmlNodus* nodus;
 
@@ -83,14 +74,22 @@ s32 principale(vacuum)
 
         imprimere("  Textus 'Hello World' creatum: VERUM\n");
     }
+}
 
 
-    /* ==================================================
-     * Probare xml_attributum_addere
-     * ================================================== */
+/* ==================================================
+ * Probare xml_attributum_addere
+ * ================================================== */
 
-    imprimere("\n--- Probans xml_attributum_addere ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         XmlNodus* nodus;
           chorda* valor;
@@ -113,14 +112,22 @@ s32 principale(vacuum)
 
         imprimere("  Attributa addita et obtenta: VERUM\n");
     }
+}
 
 
-    /* ==================================================
-     * Probare xml_liberum_addere
-     * ================================================== */
+/* ==================================================
+ * Probare xml_liberum_addere
+ * ================================================== */
 
-    imprimere("\n--- Probans xml_liberum_addere ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         XmlNodus* parens;
         XmlNodus* liberum;
@@ -136,14 +143,22 @@ s32 principale(vacuum)
 
         imprimere("  Liberum additum: VERUM\n");
     }
+}
 
 
-    /* ==================================================
-     * Probare xml_invenire_liberum
-     * ================================================== */
+/* ==================================================
+ * Probare xml_invenire_liberum
+ * ================================================== */
 
-    imprimere("\n--- Probans xml_invenire_liberum ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         XmlNodus* parens;
         XmlNodus* lib1;
@@ -168,14 +183,22 @@ s32 principale(vacuum)
 
         imprimere("  Invenire liberum: VERUM\n");
     }
+}
 
 
-    /* ==================================================
-     * Probare xml_scribere simplex
-     * ================================================== */
+/* ==================================================
+ * Probare xml_scribere simplex
+ * ================================================== */
 
-    imprimere("\n--- Probans xml_scribere simplex ---\n");
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         XmlNodus* nodus;
           chorda  output;
@@ -188,14 +211,22 @@ s32 principale(vacuum)
         imprimere("  Output: %.*s\n", output.mensura, output.datum);
         CREDO_CHORDA_AEQUALIS_LITERIS(output, "<empty/>");
     }
+}
 
 
-    /* ==================================================
-     * Probare xml_scribere cum attributis
-     * ================================================== */
+/* ==================================================
+ * Probare xml_scribere cum attributis
+ * ================================================== */
 
-    imprimere("\n--- Probans xml_scribere cum attributis ---\n");
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         XmlNodus* nodus;
           chorda  output;
@@ -209,14 +240,22 @@ s32 principale(vacuum)
         imprimere("  Output: %.*s\n", output.mensura, output.datum);
         CREDO_CHORDA_AEQUALIS_LITERIS(output, "<item id=\"42\"/>");
     }
+}
 
 
-    /* ==================================================
-     * Probare xml_scribere cum liberis
-     * ================================================== */
+/* ==================================================
+ * Probare xml_scribere cum liberis
+ * ================================================== */
 
-    imprimere("\n--- Probans xml_scribere cum liberis ---\n");
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         XmlNodus* parens;
         XmlNodus* liberum;
@@ -233,14 +272,22 @@ s32 principale(vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(output,
             "<parent><child/></parent>");
     }
+}
 
 
-    /* ==================================================
-     * Probare xml_scribere cum textu
-     * ================================================== */
+/* ==================================================
+ * Probare xml_scribere cum textu
+ * ================================================== */
 
-    imprimere("\n--- Probans xml_scribere cum textu ---\n");
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         XmlNodus* nodus;
           chorda  output;
@@ -255,14 +302,22 @@ s32 principale(vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(output,
             "<greeting>Hello</greeting>");
     }
+}
 
 
-    /* ==================================================
-     * Probare xml_scribere effugium
-     * ================================================== */
+/* ==================================================
+ * Probare xml_scribere effugium
+ * ================================================== */
 
-    imprimere("\n--- Probans xml_scribere effugium ---\n");
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         XmlNodus* nodus;
           chorda  output;
@@ -277,14 +332,22 @@ s32 principale(vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(output,
             "<data>&lt;&gt;&amp;</data>");
     }
+}
 
 
-    /* ==================================================
-     * Probare xml_scribere pulchrum
-     * ================================================== */
+/* ==================================================
+ * Probare xml_scribere pulchrum
+ * ================================================== */
 
-    imprimere("\n--- Probans xml_scribere pulchrum ---\n");
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         XmlNodus* radix;
         XmlNodus* lib1;
@@ -306,14 +369,22 @@ s32 principale(vacuum)
 
         imprimere("  Output:\n%.*s", output.mensura, output.datum);
     }
+}
 
 
-    /* ==================================================
-     * Probare xml_legere simplex
-     * ================================================== */
+/* ==================================================
+ * Probare xml_legere simplex
+ * ================================================== */
 
-    imprimere("\n--- Probans xml_legere simplex ---\n");
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         XmlResultus res;
 
@@ -325,14 +396,22 @@ s32 principale(vacuum)
 
         imprimere("  Parsatio '<root/>': VERUM\n");
     }
+}
 
 
-    /* ==================================================
-     * Probare xml_legere cum attributis
-     * ================================================== */
+/* ==================================================
+ * Probare xml_legere cum attributis
+ * ================================================== */
 
-    imprimere("\n--- Probans xml_legere cum attributis ---\n");
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         XmlResultus  res;
              chorda* val;
@@ -352,14 +431,22 @@ s32 principale(vacuum)
 
         imprimere("  Parsatio attributa: VERUM\n");
     }
+}
 
 
-    /* ==================================================
-     * Probare xml_legere cum liberis
-     * ================================================== */
+/* ==================================================
+ * Probare xml_legere cum liberis
+ * ================================================== */
 
-    imprimere("\n--- Probans xml_legere cum liberis ---\n");
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         XmlResultus  res;
            XmlNodus* lib;
@@ -375,14 +462,22 @@ s32 principale(vacuum)
 
         imprimere("  Parsatio liberis: VERUM\n");
     }
+}
 
 
-    /* ==================================================
-     * Probare xml_legere cum textu
-     * ================================================== */
+/* ==================================================
+ * Probare xml_legere cum textu
+ * ================================================== */
 
-    imprimere("\n--- Probans xml_legere cum textu ---\n");
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         XmlResultus res;
              chorda textus;
@@ -398,14 +493,22 @@ s32 principale(vacuum)
 
         imprimere("  Parsatio textus: VERUM\n");
     }
+}
 
 
-    /* ==================================================
-     * Probare xml_legere entity references
-     * ================================================== */
+/* ==================================================
+ * Probare xml_legere entity references
+ * ================================================== */
 
-    imprimere("\n--- Probans xml_legere entity references ---\n");
+interior vacuum
+_sectio_decima_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         XmlResultus res;
              chorda textus;
@@ -422,14 +525,22 @@ s32 principale(vacuum)
         imprimere("  Decoded: '%.*s'\n", textus.mensura, textus.datum);
         CREDO_CHORDA_AEQUALIS_LITERIS(textus, "<tag> & \"test\"");
     }
+}
 
 
-    /* ==================================================
-     * Probare xml_legere complexum
-     * ================================================== */
+/* ==================================================
+ * Probare xml_legere complexum
+ * ================================================== */
 
-    imprimere("\n--- Probans xml_legere complexum ---\n");
+interior vacuum
+_sectio_decima_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         constans character* xml_input =
             "<entitas id=\"abc123\" genus=\"Pagina\">\n"
@@ -473,14 +584,22 @@ s32 principale(vacuum)
 
         imprimere("  Parsatio complexa: VERUM\n");
     }
+}
 
 
-    /* ==================================================
-     * Probare roundtrip (parse -> serialize -> parse)
-     * ================================================== */
+/* ==================================================
+ * Probare roundtrip (parse -> serialize -> parse)
+ * ================================================== */
 
-    imprimere("\n--- Probans roundtrip ---\n");
+interior vacuum
+_sectio_decima_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         constans character* xml_original =
             "<root attr=\"value\"><child>text</child></root>";
@@ -523,14 +642,22 @@ s32 principale(vacuum)
 
         imprimere("  Roundtrip: VERUM\n");
     }
+}
 
 
-    /* ==================================================
-     * Probare xml_legere errores
-     * ================================================== */
+/* ==================================================
+ * Probare xml_legere errores
+ * ================================================== */
 
-    imprimere("\n--- Probans xml_legere errores ---\n");
+interior vacuum
+_sectio_decima_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         XmlResultus res;
 
@@ -550,14 +677,22 @@ s32 principale(vacuum)
         CREDO_FALSUM(res.successus);
         imprimere("  Mismatched tags detectum: VERUM\n");
     }
+}
 
 
-    /* ==================================================
-     * Probare xml_legere cum declaratione XML
-     * ================================================== */
+/* ==================================================
+ * Probare xml_legere cum declaratione XML
+ * ================================================== */
 
-    imprimere("\n--- Probans xml_legere cum declaratione ---\n");
+interior vacuum
+_sectio_vicesima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         XmlResultus res;
 
@@ -571,14 +706,22 @@ s32 principale(vacuum)
 
         imprimere("  Declaratio XML saltata: VERUM\n");
     }
+}
 
 
-    /* ==================================================
-     * Probare xml_legere cum commentis
-     * ================================================== */
+/* ==================================================
+ * Probare xml_legere cum commentis
+ * ================================================== */
 
-    imprimere("\n--- Probans xml_legere cum commentis ---\n");
+interior vacuum
+_sectio_vicesima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         XmlResultus res;
 
@@ -595,14 +738,22 @@ s32 principale(vacuum)
 
         imprimere("  Commenta saltata: VERUM\n");
     }
+}
 
 
-    /* ==================================================
-     * Probare xml_invenire_omnes_liberos
-     * ================================================== */
+/* ==================================================
+ * Probare xml_invenire_omnes_liberos
+ * ================================================== */
 
-    imprimere("\n--- Probans xml_invenire_omnes_liberos ---\n");
+interior vacuum
+_sectio_vicesima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         XmlResultus  res;
                 Xar* items;
@@ -624,19 +775,27 @@ s32 principale(vacuum)
         imprimere("  Invenire omnes 'item': %d (expected 3)\n",
             xar_numerus(items));
     }
+}
 
 
-    /* ==================================================
-     * Compendium
-     * ================================================== */
+/* ==================================================
+ * Compendium
+ * ================================================== */
 
 
-    /* ==================================================
-     * Probare DOCTYPE in prologo (plists eam semper ferunt)
-     * ================================================== */
+/* ==================================================
+ * Probare DOCTYPE in prologo (plists eam semper ferunt)
+ * ================================================== */
 
-    imprimere("\n--- Probans DOCTYPE in prologo ---\n");
+interior vacuum
+_sectio_vicesima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
                XmlResultus  r;
         constans character* cum_doctype =
@@ -670,23 +829,59 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)r.status,
                            (i32)XML_ERROR_PARS_INTERNA);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "xml_elementum_creare", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "xml_textum_creare", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "xml_attributum_addere", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "xml_liberum_addere", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "xml_invenire_liberum", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "xml_scribere simplex", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "xml_scribere cum attributis", _sectio_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "xml_scribere cum liberis", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "xml_scribere cum textu", _sectio_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "xml_scribere effugium", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "xml_scribere pulchrum", _sectio_decima_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "xml_legere simplex", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "xml_legere cum attributis", _sectio_decima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "xml_legere cum liberis", _sectio_decima_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "xml_legere cum textu", _sectio_decima_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "xml_legere entity references", _sectio_decima_sexta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "xml_legere complexum", _sectio_decima_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "roundtrip", _sectio_decima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "xml_legere errores", _sectio_decima_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "xml_legere cum declaratione", _sectio_vicesima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "xml_legere cum commentis", _sectio_vicesima_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "xml_invenire_omnes_liberos", _sectio_vicesima_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "DOCTYPE in prologo", _sectio_vicesima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    /* Purificatio */
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("xml", SECTIONES);
 }

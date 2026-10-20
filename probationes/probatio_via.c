@@ -6,30 +6,21 @@
 #include "credo.h"
 #include <stdio.h>
 
-s32 principale (vacuum)
-{
-        b32  praeteritus;
-    Piscina* piscina;
-
-    /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("probatio_via", IV * MXXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ========================================================
 	 * PROBARE: via_iungere - iunctio simplex
 	 * ======================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda partes[II];
         chorda fructus;
-
-        imprimere("\n--- Probans via_iungere (simplex) ---\n");
 
         partes[ZEPHYRUM]  = chorda_ex_literis("foo", piscina);
         partes[I]         = chorda_ex_literis("bar", piscina);
@@ -39,17 +30,23 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("foo/bar",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_iungere - partes multiplices
 	 * ======================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda partes[IV];
         chorda fructus;
-
-        imprimere("\n--- Probans via_iungere (multiplex) ---\n");
 
         partes[ZEPHYRUM]  = chorda_ex_literis("usr", piscina);
         partes[I]         = chorda_ex_literis("local", piscina);
@@ -62,17 +59,23 @@ s32 principale (vacuum)
                               chorda_ex_literis("usr/local/bin/test",
                               piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_iungere - cum separator terminali
 	 * ======================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda partes[II];
         chorda fructus;
-
-        imprimere("\n--- Probans via_iungere (separator terminalis) ---\n");
 
         partes[ZEPHYRUM]  = chorda_ex_literis("foo/", piscina);
         partes[I]         = chorda_ex_literis("bar", piscina);
@@ -82,17 +85,23 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("foo/bar",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_iungere - cum separator initiali
 	 * ======================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda partes[II];
         chorda fructus;
-
-        imprimere("\n--- Probans via_iungere (separator initialis) ---\n");
 
         partes[ZEPHYRUM]  = chorda_ex_literis("foo", piscina);
         partes[I]         = chorda_ex_literis("/bar", piscina);
@@ -102,18 +111,24 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("foo/bar",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_iungere - cum parte vacua
 	 * ======================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda partes[III];
         chorda fructus;
         chorda vacua;
-
-        imprimere("\n--- Probans via_iungere (pars vacua) ---\n");
 
         vacua.datum    = NIHIL;
         vacua.mensura  = ZEPHYRUM;
@@ -127,17 +142,23 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("foo/bar",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_iungere - via absoluta
 	 * ======================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda partes[III];
         chorda fructus;
-
-        imprimere("\n--- Probans via_iungere (absoluta) ---\n");
 
         partes[ZEPHYRUM]  = chorda_ex_literis("/usr", piscina);
         partes[I]         = chorda_ex_literis("local", piscina);
@@ -149,17 +170,23 @@ s32 principale (vacuum)
             chorda_ex_literis("/usr/local/bin",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_normalizare - punctum singularis
 	 * ======================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_normalizare (punctum) ---\n");
 
         via      = chorda_ex_literis("foo/./bar", piscina);
         fructus  = via_normalizare(via, piscina);
@@ -167,17 +194,23 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("foo/bar",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_normalizare - puncta duplicia
 	 * ======================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_normalizare (puncta duplicia) ---\n");
 
         via      = chorda_ex_literis("foo/../bar", piscina);
         fructus  = via_normalizare(via, piscina);
@@ -185,17 +218,23 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("bar",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_normalizare - separatores duplicati
 	 * ======================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_normalizare (separatores duplicati) ---\n");
 
         via      = chorda_ex_literis("foo//bar", piscina);
         fructus  = via_normalizare(via, piscina);
@@ -203,17 +242,23 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("foo/bar",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_normalizare - via absoluta cum ..
 	 * ======================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_normalizare (absoluta cum ..) ---\n");
 
         via      = chorda_ex_literis("/foo/../bar", piscina);
         fructus  = via_normalizare(via, piscina);
@@ -221,17 +266,23 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("/bar",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_normalizare - .. supra radicem
 	 * ======================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_normalizare (.. supra radicem) ---\n");
 
         via      = chorda_ex_literis("/../foo", piscina);
         fructus  = via_normalizare(via, piscina);
@@ -239,17 +290,23 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("/foo",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_normalizare - via relativa cum ..
 	 * ======================================================== */
 
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_normalizare (relativa cum ..) ---\n");
 
         via      = chorda_ex_literis("../foo", piscina);
         fructus  = via_normalizare(via, piscina);
@@ -257,51 +314,69 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("../foo",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_normalizare - radix solum
 	 * ======================================================== */
 
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_normalizare (radix) ---\n");
 
         via      = chorda_ex_literis("/", piscina);
         fructus  = via_normalizare(via, piscina);
 
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("/", piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_normalizare - vacuum ad punctum
 	 * ======================================================== */
 
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_normalizare (vacuum) ---\n");
 
         via      = chorda_ex_literis("./.", piscina);
         fructus  = via_normalizare(via, piscina);
 
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis(".", piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_directorium - via normalis
 	 * ======================================================== */
 
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_directorium (normalis) ---\n");
 
         via      = chorda_ex_literis("/foo/bar/baz.txt", piscina);
         fructus  = via_directorium(via, piscina);
@@ -309,51 +384,69 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("/foo/bar",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_directorium - radix
 	 * ======================================================== */
 
+interior vacuum
+_sectio_decima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_directorium (radix) ---\n");
 
         via      = chorda_ex_literis("/foo", piscina);
         fructus  = via_directorium(via, piscina);
 
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("/", piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_directorium - nullus directorium
 	 * ======================================================== */
 
+interior vacuum
+_sectio_decima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_directorium (nullus) ---\n");
 
         via      = chorda_ex_literis("foo.txt", piscina);
         fructus  = via_directorium(via, piscina);
 
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis(".", piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_directorium - via relativa
 	 * ======================================================== */
 
+interior vacuum
+_sectio_decima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_directorium (relativa) ---\n");
 
         via      = chorda_ex_literis("foo/bar", piscina);
         fructus  = via_directorium(via, piscina);
@@ -361,17 +454,23 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("foo",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_nomen - via absoluta
 	 * ======================================================== */
 
+interior vacuum
+_sectio_decima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_nomen (absoluta) ---\n");
 
         via      = chorda_ex_literis("/foo/bar/baz.txt", piscina);
         fructus  = via_nomen(via, piscina);
@@ -379,17 +478,23 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("baz.txt",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_nomen - sine directorium
 	 * ======================================================== */
 
+interior vacuum
+_sectio_vicesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_nomen (sine directorium) ---\n");
 
         via      = chorda_ex_literis("foo.txt", piscina);
         fructus  = via_nomen(via, piscina);
@@ -397,17 +502,23 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("foo.txt",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_nomen - cum separator terminali
 	 * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_nomen (separator terminalis) ---\n");
 
         /* POSIX basename - olim "" (lapide briar-feedback bugs/012) */
         via      = chorda_ex_literis("/foo/bar/", piscina);
@@ -416,12 +527,20 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("bar",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: par nomen/directorium - casus limitum (POSIX)
 	 * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         /* via, directorium, nomen - POSIX dirname/basename praeter
          * "/" cuius nomen "" est consulto (radix nomen non habet) */
@@ -436,8 +555,6 @@ s32 principale (vacuum)
         };
         i32 k;
 
-        imprimere("\n--- Probans par nomen/directorium (limites) ---\n");
-
         per (k = 0; k < (i32)(magnitudo(casus_limitum)
                               / magnitudo(casus_limitum[0])); k++)
         {
@@ -450,17 +567,23 @@ s32 principale (vacuum)
                 chorda_ex_literis(casus_limitum[k][II], piscina));
         }
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_nomen_radix - cum extensione
 	 * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_nomen_radix (cum extensione) ---\n");
 
         via      = chorda_ex_literis("foo.txt", piscina);
         fructus  = via_nomen_radix(via, piscina);
@@ -468,17 +591,23 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("foo",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_nomen_radix - sine extensione
 	 * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_nomen_radix (sine extensione) ---\n");
 
         via      = chorda_ex_literis("foo", piscina);
         fructus  = via_nomen_radix(via, piscina);
@@ -486,17 +615,23 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("foo",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_nomen_radix - extensio composita
 	 * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_nomen_radix (extensio composita) ---\n");
 
         via      = chorda_ex_literis("archive.tar.gz", piscina);
         fructus  = via_nomen_radix(via, piscina);
@@ -504,17 +639,23 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("archive.tar",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_nomen_radix - dotfile
 	 * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_nomen_radix (dotfile) ---\n");
 
         via      = chorda_ex_literis(".bashrc", piscina);
         fructus  = via_nomen_radix(via, piscina);
@@ -522,17 +663,23 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis(".bashrc",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_nomen_radix - cum via
 	 * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_nomen_radix (cum via) ---\n");
 
         via      = chorda_ex_literis("/foo/bar/baz.txt", piscina);
         fructus  = via_nomen_radix(via, piscina);
@@ -540,17 +687,23 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("baz",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_extensio - singularis
 	 * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_extensio (singularis) ---\n");
 
         via      = chorda_ex_literis("foo.txt", piscina);
         fructus  = via_extensio(via, piscina);
@@ -558,17 +711,23 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis(".txt",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_extensio - composita
 	 * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_extensio (composita) ---\n");
 
         via      = chorda_ex_literis("archive.tar.gz", piscina);
         fructus  = via_extensio(via, piscina);
@@ -576,51 +735,69 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis(".gz",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_extensio - dotfile
 	 * ======================================================== */
 
+interior vacuum
+_sectio_tricesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_extensio (dotfile) ---\n");
 
         via      = chorda_ex_literis(".bashrc", piscina);
         fructus  = via_extensio(via, piscina);
 
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("", piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_extensio - sine extensione
 	 * ======================================================== */
 
+interior vacuum
+_sectio_tricesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_extensio (sine) ---\n");
 
         via      = chorda_ex_literis("foo", piscina);
         fructus  = via_extensio(via, piscina);
 
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis("", piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_extensio - cum via
 	 * ======================================================== */
 
+interior vacuum
+_sectio_tricesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via;
         chorda fructus;
-
-        imprimere("\n--- Probans via_extensio (cum via) ---\n");
 
         via      = chorda_ex_literis("/foo/bar/baz.txt", piscina);
         fructus  = via_extensio(via, piscina);
@@ -628,17 +805,23 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS(fructus, chorda_ex_literis(".txt",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_est_absoluta
 	 * ======================================================== */
 
+interior vacuum
+_sectio_tricesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via_abs;
         chorda via_rel;
-
-        imprimere("\n--- Probans via_est_absoluta ---\n");
 
         via_abs = chorda_ex_literis("/foo/bar", piscina);
         via_rel = chorda_ex_literis("foo/bar", piscina);
@@ -646,17 +829,23 @@ s32 principale (vacuum)
         CREDO_VERUM(via_est_absoluta(via_abs));
         CREDO_FALSUM(via_est_absoluta(via_rel));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_est_relativa
 	 * ======================================================== */
 
+interior vacuum
+_sectio_tricesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via_abs;
         chorda via_rel;
-
-        imprimere("\n--- Probans via_est_relativa ---\n");
 
         via_abs = chorda_ex_literis("/foo/bar", piscina);
         via_rel = chorda_ex_literis("foo/bar", piscina);
@@ -664,16 +853,22 @@ s32 principale (vacuum)
         CREDO_FALSUM(via_est_relativa(via_abs));
         CREDO_VERUM(via_est_relativa(via_rel));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_directorium_currens
 	 * ======================================================== */
 
+interior vacuum
+_sectio_tricesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda cwd;
-
-        imprimere("\n--- Probans via_directorium_currens ---\n");
 
         cwd = via_directorium_currens(piscina);
 
@@ -681,17 +876,23 @@ s32 principale (vacuum)
         CREDO_MAIOR_I32(cwd.mensura, ZEPHYRUM);
         CREDO_VERUM(via_est_absoluta(cwd));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_absoluta - via relativa
 	 * ======================================================== */
 
+interior vacuum
+_sectio_tricesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via_rel;
         chorda fructus;
-
-        imprimere("\n--- Probans via_absoluta (relativa) ---\n");
 
         via_rel = chorda_ex_literis("foo/bar", piscina);
         fructus = via_absoluta(via_rel, piscina);
@@ -701,17 +902,23 @@ s32 principale (vacuum)
         CREDO_CHORDA_TERMINATUR(fructus, chorda_ex_literis("foo/bar",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_absoluta - via iam absoluta
 	 * ======================================================== */
 
+interior vacuum
+_sectio_tricesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via_abs;
         chorda fructus;
-
-        imprimere("\n--- Probans via_absoluta (iam absoluta) ---\n");
 
         via_abs = chorda_ex_literis("/usr/local/bin", piscina);
         fructus = via_absoluta(via_abs, piscina);
@@ -720,17 +927,23 @@ s32 principale (vacuum)
             chorda_ex_literis("/usr/local/bin",
             piscina));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: via_absoluta - cum .. relativa
 	 * ======================================================== */
 
+interior vacuum
+_sectio_tricesima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda via_rel;
         chorda fructus;
-
-        imprimere("\n--- Probans via_absoluta (cum ..) ---\n");
 
         via_rel = chorda_ex_literis("foo/../bar", piscina);
         fructus = via_absoluta(via_rel, piscina);
@@ -740,25 +953,90 @@ s32 principale (vacuum)
         CREDO_CHORDA_TERMINATUR(fructus, chorda_ex_literis("/bar",
             piscina));
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "via_iungere (simplex)", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "via_iungere (multiplex)", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "via_iungere (separator terminalis)", _sectio_tertia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "via_iungere (separator initialis)", _sectio_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "via_iungere (pars vacua)", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "via_iungere (absoluta)", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "via_normalizare (punctum)", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "via_normalizare (puncta duplicia)", _sectio_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "via_normalizare (separatores duplicati)", _sectio_nona, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "via_normalizare (absoluta cum ..)", _sectio_decima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "via_normalizare (.. supra radicem)", _sectio_decima_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "via_normalizare (relativa cum ..)", _sectio_decima_secunda,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "via_normalizare (radix)", _sectio_decima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "via_normalizare (vacuum)", _sectio_decima_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "via_directorium (normalis)", _sectio_decima_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "via_directorium (radix)", _sectio_decima_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "via_directorium (nullus)", _sectio_decima_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "via_directorium (relativa)", _sectio_decima_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "via_nomen (absoluta)", _sectio_decima_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "via_nomen (sine directorium)", _sectio_vicesima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "via_nomen (separator terminalis)", _sectio_vicesima_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "par nomen/directorium (limites)", _sectio_vicesima_secunda,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "via_nomen_radix (cum extensione)", _sectio_vicesima_tertia,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "via_nomen_radix (sine extensione)", _sectio_vicesima_quarta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "via_nomen_radix (extensio composita)", _sectio_vicesima_quinta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "via_nomen_radix (dotfile)", _sectio_vicesima_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "via_nomen_radix (cum via)", _sectio_vicesima_septima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "via_extensio (singularis)", _sectio_vicesima_octava, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "via_extensio (composita)", _sectio_vicesima_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "via_extensio (dotfile)", _sectio_tricesima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "via_extensio (sine)", _sectio_tricesima_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "via_extensio (cum via)", _sectio_tricesima_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "via_est_absoluta", _sectio_tricesima_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "via_est_relativa", _sectio_tricesima_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "via_directorium_currens", _sectio_tricesima_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "via_absoluta (relativa)", _sectio_tricesima_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "via_absoluta (iam absoluta)", _sectio_tricesima_septima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "via_absoluta (cum ..)", _sectio_tricesima_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ========================================================
-	 * Compendium
-	 * ======================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("via", SECTIONES);
 }

@@ -36,42 +36,34 @@ _prope (
     redde (b32)(d < 0.001f && d > -0.001f);
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-          Piscina* piscina;
   ImportatioVisus* v;
             Imago  imago;
                i8  pixela[XVI * IV];
           Eventus  e;
 
-    piscina = piscina_generare_dynamicum("probatio_importatio_visus",
-        M * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
     memset(pixela, ZEPHYRUM, magnitudo(pixela));
     imago.pixela    = pixela;
     imago.latitudo  = IV;
     imago.altitudo  = IV;
-    v               = importatio_visus_creare(piscina);
+    v               = importatio_visus_creare(c->piscina);
     CREDO_NON_NIHIL (v);
     importatio_visus_initiare_sessionem(v, &imago);
     CREDO_VERUM (_prope(v->zoom, 1.0f));
 
-    imprimere("\n--- I. rota: gradus unus (XVI) = +0.5 ---\n");
     e = _rotula(EVENTUS_ROTULA_GRADATA, XVI);
     CREDO_VERUM (importatio_visus_tractare_eventum(v, &e));
     CREDO_VERUM (_prope(v->zoom, 1.5f));
 
-    imprimere("\n--- II. trackpad: pixelum unum = +0.5 ---\n");
+    CREDO_GRADUS("II. trackpad: pixelum unum = +0.5");
     e = _rotula(EVENTUS_ROTULA_PRAECISA, I);
     CREDO_VERUM (importatio_visus_tractare_eventum(v, &e));
     CREDO_VERUM (_prope(v->zoom, 2.0f));
 
-    imprimere("\n--- III. gradus ex FACULTATIBUS (XX) ---\n");
+    CREDO_GRADUS("III. gradus ex FACULTATIBUS (XX)");
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
     e.genus                            = EVENTUS_FACULTATES;
     e.datum.facultates.gradus_rotulae  = XX;
@@ -80,12 +72,20 @@ s32 principale (vacuum)
     CREDO_VERUM (importatio_visus_tractare_eventum(v, &e));
     CREDO_VERUM (_prope(v->zoom, 1.5f));
 
-    imprimere("\n--- IV. dimidius gradus: +0.25 ---\n");
+    CREDO_GRADUS("IV. dimidius gradus: +0.25");
     e = _rotula(EVENTUS_ROTULA_GRADATA, X);
     CREDO_VERUM (importatio_visus_tractare_eventum(v, &e));
     CREDO_VERUM (_prope(v->zoom, 1.75f));
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. rota: gradus unus (XVI) = +0.5", _sectio_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("importatio_visus", SECTIONES);
 }

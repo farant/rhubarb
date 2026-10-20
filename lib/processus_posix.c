@@ -16,10 +16,11 @@
 
 #include "postulata_posix.h"
 #include "processus.h"
+#include "memoria_processus.h"
 
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <sys/select.h>
+#include <poll.h>
 #include <sys/time.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -41,6 +42,11 @@ externus character** environ;
  * quod tota ratio semitae incrementalis est vitare). Cum eo pulsus
  * ad summum CCLVI KiB agit et redit. */
 #define PROCESSUS_FRUSTA_PER_PULSUM LXIV
+
+/* memoria infantis legitur ad summum semel per hoc intervallum (ms):
+ * proc_pid_rusage vilis est, sed fistula effundens poll statim reddit
+ * et lectio per gradum mille per secundum esset */
+#define PROCESSUS_MEMORIA_INTERVALLUM_MS XX
 
 
 /* ========================================================================
@@ -71,9 +77,15 @@ structura Processus {
     i32 mora_maxima_ms;
     i32 mora_ms;
 
+    /* tectum memoriae (credo memoria T5): octeti, ZEPHYRUM = nullum */
+    i64 memoria_maxima;
+    i64 memoria_visa;        /* vestigium quod tectum excessit */
+    i64 memoria_lecta_ms;    /* lectio ultima (_tempus_ms) */
+
     b32 ef_apertus;
     b32 er_apertus;
-    b32 memoria_fracta;
+    b32 memoria_fracta;      /* piscina NOSTRA exhausta */
+    b32 memoria_excessa;     /* vestigium INFANTIS supra tectum */
     b32 tempus_excessum;
     b32 abruptus;
     b32 occisus;
@@ -146,6 +158,38 @@ _terminum_reliquum (
         p->tempus_excessum = VERUM;
     }
     redde reliquum;
+}
+
+/* TECTUM MEMORIAE (credo memoria T5): vestigium infantis currentis
+ * contra memoria_maxima; supra = memoria_excessa (occisio in
+ * _perficere, ut terminus). Post messem nihil - pid alienus esse
+ * potest. Lectio fracta (infans iam abiit) nihil ponit. */
+interior vacuum
+_memoriam_custodire (
+    Processus* p)
+{
+    MemoriaProcessus m;
+                 i64 nunc;
+
+    si (   p->memoria_maxima == (i64)ZEPHYRUM || p->messus
+        || p->memoria_excessa || p->pid <= (pid_t)ZEPHYRUM)
+    {
+        redde;
+    }
+    nunc = _tempus_ms();
+    si (   p->memoria_lecta_ms != (i64)ZEPHYRUM
+        && nunc - p->memoria_lecta_ms
+           < (i64)PROCESSUS_MEMORIA_INTERVALLUM_MS)
+    {
+        redde;
+    }
+    p->memoria_lecta_ms = nunc;
+    si (   memoria_processus_legere((s32)p->pid, &m)
+        && m.vestigium > p->memoria_maxima)
+    {
+        p->memoria_visa     = m.vestigium;
+        p->memoria_excessa  = VERUM;
+    }
 }
 
 /* somnus brevis sine fistulis (select vacuum) - pro anquisitione
@@ -329,14 +373,18 @@ _fistulam_haurire (
 
 /* GRADUS UNUS ansae - corpus quod AMBAE semitae communicant.
  *
- * mora_gradus_ms = ZEPHYRUM : select non obstat (pulsus faciei).
- * mora_gradus_ms > ZEPHYRUM : select ad summum tot ms obstat.
+ * mora_gradus_ms = ZEPHYRUM : poll non obstat (pulsus faciei).
+ * mora_gradus_ms > ZEPHYRUM : poll ad summum tot ms obstat.
+ *
+ * poll(), non select(): FD_SET musl intus signa permutat (-Wsign-
+ * conversion sub -Werror), et select FD_SETSIZE (MXXIV) fossas non
+ * excedit - poll neutrum habet (ut reactor). hospitium v3 T9.
  *
  * GRADUS TERMINATUS, NON INFINITUS, etiam in semita obstante: sic
  * vocator inter gradus infantem inspicere potest. Ansa quae in
  * aeternum EOF exspectat nepotem fistulam tenentem numquam videt
  * (vide _perficere). Terminus TOTALIS hic semper custoditur,
- * ergo 'select redidit ZEPHYRUM' significat solum 'nihil in hoc
+ * ergo 'poll redidit ZEPHYRUM' significat solum 'nihil in hoc
  * gradu' - quae ambiguitas prior hic habitabat.
  */
 interior vacuum
@@ -344,33 +392,33 @@ _ansam_pulsare (
     Processus* p,
           i32  mora_gradus_ms)
 {
-               fd_set legendi;
-    structura timeval  mora;
-    structura timeval* mora_ptr  = NIHIL;
-              integer maximus    = -I;
-              integer paratus;
+    structura pollfd  fossae[II];
+              nfds_t numerus   = 0;
+             integer index_ef  = -I;
+             integer index_er  = -I;
+             integer mora_ms;
+             integer paratus;
 
     si (!p->ef_apertus && !p->er_apertus)
     {
         redde;
     }
 
-    FD_ZERO(&legendi);
     si (p->ef_apertus)
     {
-        FD_SET(p->fd_ef, &legendi);
-        si (p->fd_ef > maximus)
-        {
-            maximus = p->fd_ef;
-        }
+        fossae[numerus].fd       = p->fd_ef;
+        fossae[numerus].events   = POLLIN;
+        fossae[numerus].revents  = 0;
+        index_ef                 = (integer)numerus;
+        numerus++;
     }
     si (p->er_apertus)
     {
-        FD_SET(p->fd_er, &legendi);
-        si (p->fd_er > maximus)
-        {
-            maximus = p->fd_er;
-        }
+        fossae[numerus].fd       = p->fd_er;
+        fossae[numerus].events   = POLLIN;
+        fossae[numerus].revents  = 0;
+        index_er                 = (integer)numerus;
+        numerus++;
     }
 
     /* TERMINUS TOTALIS semper primo - vocator tardus processum
@@ -387,18 +435,19 @@ _ansam_pulsare (
         {
             redde;
         }
+        _memoriam_custodire(p);
+        si (p->memoria_excessa)
+        {
+            redde;
+        }
         si (reliquum < (s64)gradus)
         {
             gradus = (i64)reliquum;
         }
-        /* tv_usec est int in Darwin, longus alibi - conversio per
-         * typum campi ipsius, non per typum coniectum */
-        mora.tv_sec   = (time_t)(gradus / (i64)M);
-        mora.tv_usec  = (integer)((gradus % (i64)M) * (i64)M);
-        mora_ptr      = &mora;
+        mora_ms = (integer)gradus;
     }
 
-    paratus = select(maximus + I, &legendi, NIHIL, NIHIL, mora_ptr);
+    paratus = poll(fossae, numerus, mora_ms);
     si (paratus < 0)
     {
         si (errno == EINTR)
@@ -414,11 +463,14 @@ _ansam_pulsare (
         redde;   /* nihil in hoc gradu; terminus supra custoditur */
     }
 
-    si (p->ef_apertus && FD_ISSET(p->fd_ef, &legendi))
+    /* POLLHUP/POLLERR quoque: fistula clausa EOF legendo nuntiat */
+    si (   p->ef_apertus && index_ef >= 0
+        && (fossae[index_ef].revents & (POLLIN | POLLHUP | POLLERR)))
     {
         _fistulam_haurire(p, p->fd_ef, &p->ef_apertus, &p->sac_ef);
     }
-    si (p->er_apertus && FD_ISSET(p->fd_er, &legendi))
+    si (   p->er_apertus && index_er >= 0
+        && (fossae[index_er].revents & (POLLIN | POLLHUP | POLLERR)))
     {
         _fistulam_haurire(p, p->fd_er, &p->er_apertus, &p->sac_er);
     }
@@ -522,7 +574,8 @@ _perficere (
      * Ergo messem NON-OBSTANTEM primo tentamus: si infans abiit,
      * reliquias haurimus et perficimus. EOF non exspectatur. */
     si (   !p->messus && p->pid > (pid_t)ZEPHYRUM
-        && !p->tempus_excessum && !p->memoria_fracta && !p->abruptus)
+        && !p->tempus_excessum && !p->memoria_fracta && !p->abruptus
+        && !p->memoria_excessa)
     {
         si (_reficere(p, FALSUM))
         {
@@ -548,7 +601,8 @@ _perficere (
      * quod pollicetur (probatio XII id cepit: 'sleep 10' abruptum
      * decem secunda tenuit). */
     si (   !p->messus && (p->ef_apertus || p->er_apertus)
-        && !p->tempus_excessum && !p->memoria_fracta && !p->abruptus)
+        && !p->tempus_excessum && !p->memoria_fracta && !p->abruptus
+        && !p->memoria_excessa)
     {
         si (!obstans)
         {
@@ -559,7 +613,8 @@ _perficere (
          * ansam usque ad terminum totalem teneret - quod villa
          * contra ssh cum ControlPersist passa est. */
         dum (   (p->ef_apertus || p->er_apertus)
-             && !p->tempus_excessum && !p->memoria_fracta)
+             && !p->tempus_excessum && !p->memoria_fracta
+             && !p->memoria_excessa)
         {
             _ansam_pulsare(p, (i32)C);
             si (_reficere(p, FALSUM))
@@ -584,11 +639,13 @@ _perficere (
      * 500 ms moram TOTAM vixit et SUCCESSUS rediit. Hic, ubi
      * fistulae nihil iam significant, directo custodimus. */
     (vacuum)_terminum_reliquum(p);
+    _memoriam_custodire(p);
 
     /* '!p->messus' in custode occisionis: pid messus alienum fieri
      * potest (recyclus), et vexillum terminale post messem positum
      * infantem NOSTRUM iam non nominat */
-    si (   (p->tempus_excessum || p->memoria_fracta || p->abruptus)
+    si (   (   p->tempus_excessum || p->memoria_fracta || p->abruptus
+            || p->memoria_excessa)
         && !p->occisus && !p->messus)
     {
         (vacuum)kill(p->pid, SIGKILL);
@@ -608,13 +665,15 @@ _perficere (
      * sufficit (SIGKILL messem mox terminat; terminus nullus =
      * exspectatio infinita ex contractu). */
     si (   obstans && !p->messus && !p->occisus
-        && p->mora_maxima_ms > ZEPHYRUM)
+        && (   p->mora_maxima_ms > ZEPHYRUM
+            || p->memoria_maxima > (i64)ZEPHYRUM))
     {
         dum (!_reficere(p, FALSUM))
         {
             s64 reliquum = _terminum_reliquum(p);
 
-            si (p->tempus_excessum)
+            _memoriam_custodire(p);
+            si (p->tempus_excessum || p->memoria_excessa)
             {
                 (vacuum)kill(p->pid, SIGKILL);
                 p->occisus = VERUM;
@@ -668,6 +727,18 @@ _resultus_aedificare (
         r.error = PROCESSUS_ERROR_IO;
         r.error_descriptio = chorda_ex_literis("piscina exhausta",
             p->piscina);
+        redde r;
+    }
+    si (p->memoria_excessa)
+    {
+        character nuntius[CXXVIII];
+
+        sprintf(nuntius, "memoria maxima excessa (vestigium %ld MiB >"
+            " %ld MiB) - processus occisus",
+            (longus)(p->memoria_visa / ((i64)MXXIV * (i64)MXXIV)),
+            (longus)(p->memoria_maxima / ((i64)MXXIV * (i64)MXXIV)));
+        r.error             = PROCESSUS_ERROR_MEMORIA;
+        r.error_descriptio  = chorda_ex_literis(nuntius, p->piscina);
         redde r;
     }
     si (p->abruptus)
@@ -756,6 +827,7 @@ processus_error_nomen (
         casus PROCESSUS_ERROR_EXEC:        redde "binarium non exsecutabile";
         casus PROCESSUS_ERROR_TEMPUS:      redde "mora excessa";
         casus PROCESSUS_ERROR_IO:          redde "defectus I/O";
+        casus PROCESSUS_ERROR_MEMORIA:     redde "memoria excessa";
         ordinarius:                        redde "ignotus";
     }
 }
@@ -789,6 +861,8 @@ _incipere_cum (
         redde NIHIL;
     }
     p->mora_maxima_ms = mora_maxima_ms;
+    p->memoria_maxima = (optiones != NIHIL) ? optiones->memoria_maxima
+        : (i64)ZEPHYRUM;
 
     si (pipe(fistula_ef) != 0)
     {
@@ -852,7 +926,13 @@ _incipere_cum (
             && chdir(optiones->directorium) != 0)
         {
             e = errno;
-            (vacuum)write(fistula_exec[I], &e, magnitudo(e));
+            {
+                /* infans moriturus: nihil tractandum (vide infra) */
+                ssize_t scripta = write(fistula_exec[I], &e,
+                    magnitudo(e));
+
+                (vacuum)scripta;
+            }
             _exit(CXXVII);
         }
         si (optiones != NIHIL && optiones->ambitus != NIHIL)
@@ -871,7 +951,13 @@ _incipere_cum (
 
         /* exec fefellit: errno per fistulam tertiam */
         e = errno;
-        (vacuum)write(fistula_exec[I], &e, magnitudo(e));
+        {
+            /* valor ad variabilem: glibc _FORTIFY_SOURCE
+             * warn_unused_result, quem (vacuum) sub gcc non tacet */
+            ssize_t scripta = write(fistula_exec[I], &e, magnitudo(e));
+
+            (vacuum)scripta;
+        }
         _exit(CXXVII);
     }
 

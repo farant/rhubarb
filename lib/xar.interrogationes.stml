@@ -1,0 +1,51 @@
+<interrogationes unitas="xar">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I keep pointers into an array valid while it grows?
+    <responsum symbolum="xar_addere xar_obtinere">Use a Xar: it grows by
+      adding segments (each twice the size of the last) and never
+      reallocates, so a pointer from xar_addere or xar_obtinere stays
+      valid for the life of the piscina. New elements are zeroed unless
+      the array was created with XAR_VEXILLUM_SINE_ZEPHYRUM.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I treat a xar as a flat C array (memcpy, qsort, pointer arithmetic)?
+    <responsum symbolum="xar_copiare_ad_tabulam xar_ordinare xar_obtinere">No.
+      The segments are not contiguous: xar_obtinere(x, 0) points into
+      the first segment only. Copy a range out with
+      xar_copiare_ad_tabulam, sort in place with xar_ordinare, and
+      index every element through xar_obtinere.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I remove an element from the middle of a xar quickly?
+    <responsum symbolum="xar_removere_cum_ultimo xar_removere_ultimum xar_tollere">xar_removere_cum_ultimo
+      moves the last element into the hole: O(1), but the order is not
+      kept. At the end, xar_removere_ultimum drops the last element and
+      xar_tollere copies it out first. There is no order-preserving
+      removal from the middle.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a xar hold more than about 33 million elements?
+    <responsum symbolum="xar_creare_magnum xar_addere">Not the
+      ordinary one: its segment table has XXIV entries (about XXXIII M
+      elements with the default first segment of IV), and past that
+      xar_addere prints a refusal to stderr and returns NIHIL rather
+      than truncating silently. Create the array with xar_creare_magnum
+      (LXIV segments) when it really is that large.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why must a comparator passed to xar_ordinare not allocate from the array's piscina?
+    <responsum symbolum="xar_ordinare piscina_notare piscina_reficere">xar_ordinare
+      is a stable merge sort whose scratch space (2n elements) comes
+      from the array's own piscina between piscina_notare and
+      piscina_reficere. Anything the comparator allocates there is
+      rolled back with the scratch when the sort returns. On a
+      fixed-size piscina with no room left it falls back to an
+      in-place insertion sort (O(n^2), no allocation).</responsum>
+  </interrogatio>
+
+</interrogationes>

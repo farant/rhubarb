@@ -33,6 +33,8 @@
 <fabrica>	fabrica.canon
 <unitates>	unitates.canon
 <unitas>	unitas.canon
+<interrogationes>	interrogationes.canon
+<consilium>	consilium.canon
 <aedificatio>	aedificatio.canon
 <effectus>	effectus.canon
 <mandata>	crusta/effectus_mandata.canon

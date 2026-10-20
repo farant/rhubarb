@@ -194,7 +194,6 @@ figuram_probare (vacuum)
     TabulaPixelorum* t;
        ImagoFructus  lecta;
 
-    imprimere("\n--- I: figura ---\n");
     CREDO_VERUM(machinam_struere(&mc, pseudoterminale_memoriae_creare(
         piscina,
         (constans i8*)"salve \x1B[31m\x1B[48;2;255;255;255mR\x1B[0m "
@@ -262,7 +261,6 @@ claves_probare (vacuum)
 {
     Machina mc;
 
-    imprimere("\n--- II: claves ---\n");
     CREDO_VERUM(machinam_struere(&mc, pseudoterminale_memoriae_creare(
         piscina, (constans i8*)"", ZEPHYRUM, ZEPHYRUM)));
     (vacuum)quadrum(&mc, ZEPHYRUM);
@@ -288,7 +286,6 @@ magnitudinem_probare (vacuum)
     character b[XVI];
     character effusio[CCLVI];
 
-    imprimere("\n--- III: magnitudo et rotula ---\n");
     CREDO_VERUM(machinam_struere(&mc, pseudoterminale_memoriae_creare(
         piscina, (constans i8*)"", ZEPHYRUM, ZEPHYRUM)));
     (vacuum)quadrum(&mc, ZEPHYRUM);
@@ -364,7 +361,6 @@ concham_probare (vacuum)
              constans character* argumenta[] = { "/bin/sh", "-c",
         "read x; printf 'accepi:%s' \"$x\"; sleep 1", NIHIL };
 
-    imprimere("\n--- IV: concha vera ---\n");
     pseudoterminale_configuratio_initiare(&cfg);
     cfg.argumenta = argumenta;
     CREDO_VERUM(machinam_struere(&mc, pseudoterminale_posix_creare(
@@ -457,7 +453,6 @@ modos_probare (vacuum)
     Eventus ev;
     unio { constans character* l; i8* m; } u;
 
-    imprimere("\n--- V: modi ad codificatorem (D6b) ---\n");
     /* DECCKM: sagitta SS3 */
     CREDO_VERUM(machinam_effusione(&mc, "\x1B[?1h"));
     clavem_crudam(&mc, CLAVIS_SURSUM, EVENTUS_CODEX_SAGITTA_SURSUM);
@@ -522,7 +517,6 @@ murem_probare (vacuum)
     Machina mc;
     Eventus ev;
 
-    imprimere("\n--- VI: mus, rotula, focus (D6b) ---\n");
     /* sine modo muris: ictus nihil mittit */
     CREDO_VERUM(machinam_effusione(&mc, ""));
     CREDO_VERUM(manus_ludus_premere_ad(mc.manus, XIII, XVII));
@@ -644,7 +638,6 @@ titulum_colores_probare (vacuum)
       chorda  t;
          b32  mutatus;
 
-    imprimere("\n--- VII: titulus et colores (D6b) ---\n");
     CREDO_VERUM(machinam_effusione(&mc, "\x1B]2;salve\x07"));
     t = terminale_titulus(&mc.app, &mutatus);
     CREDO_VERUM(mutatus);
@@ -725,7 +718,6 @@ contrastum_probare (vacuum)
     Mandatum* md;
          i32  v;
 
-    imprimere("\n--- VIII: contrastus minimus et obscurum ---\n");
     CREDO_VERUM(machinam_effusione(&mc,
         "\x1B[38;2;200;200;200mA\x1B[0m\x1B[30mB\x1B[0mC"
         "\x1B[2mD\x1B[0m\x1B[48;2;0;0;0m\x1B[38;2;20;20;20mE"));
@@ -822,7 +814,6 @@ ornamenta_probare (vacuum)
         Mandatum* md;
     ImagoFructus  lecta;
 
-    imprimere("\n--- IX: ornamenta (D7c) ---\n");
     CREDO_VERUM(machinam_effusione(&mc,
         "\x1B[4mA\x1B[0m\x1B[9mB\x1B[0m\x1B[53mC\x1B[0m\x1B[4:2mD"
         "\x1B[4:3mEE\x1B[4:4mFF\x1B[4:5mGG\x1B[0m\x1B[1mH\x1B[0m"
@@ -885,7 +876,6 @@ inversum_probare (vacuum)
      Machina  mc;
     Mandatum* md;
 
-    imprimere("\n--- X: schirmus inversus (D7c) ---\n");
     CREDO_VERUM(machinam_effusione(&mc,
         "x\x1B[41my\x1B[0m\x1B[?5h"));
     md = mandatum_ad(&mc, MANDATUM_TEXTUS, ZEPHYRUM, ZEPHYRUM);
@@ -945,7 +935,6 @@ ductas_probare (vacuum)
      Machina  mc;
     Mandatum* md;
 
-    imprimere("\n--- XI: figurae ductae (D7c) ---\n");
     /* ─ │ ╭ █(rubrum) ░ ⣿ x ; cursor ad (VII, 0) */
     CREDO_VERUM(machinam_effusione(&mc,
         "\xE2\x94\x80\xE2\x94\x82\xE2\x95\xAD\x1B[31m\xE2\x96\x88"
@@ -1079,7 +1068,6 @@ memoriam_contrastus_probare (vacuum)
              character  effusio[XVI * MXXIV];
                    i32  n;
 
-    imprimere("\n--- XII: memoria contrastus (park 011) ---\n");
     n = ZEPHYRUM;
     n += (i32)sprintf(effusio + n, "\x1B[2J\x1B[H");
     per (k = ZEPHYRUM; k < CCLVI; k++)
@@ -1151,7 +1139,6 @@ ramum_probare (vacuum)
                Machina  mc;
     InsulaRepositorium* alter;
 
-    imprimere("\n--- XIII: ramus (vicus-latera S1a) ---\n");
     CREDO_VERUM(machinam_struere(&mc, pseudoterminale_memoriae_creare(
         piscina, (constans i8*)"", ZEPHYRUM, ZEPHYRUM)));
     (vacuum)quadrum(&mc, ZEPHYRUM);
@@ -1233,7 +1220,6 @@ montationem_probare (vacuum)
                     i32  k;
                     b32  visum;
 
-    imprimere("\n--- XIV: montatio (vicus-latera S1b) ---\n");
     (vacuum)setenv("SHELL", "/bin/sh", I);
     repo = insula_repositorium_creare(piscina, intern,
         "<vicus/>");
@@ -1353,7 +1339,6 @@ organum_probare (vacuum)
             InsulaRamus r;
     SuperficiesProbanda sp;
 
-    imprimere("\n--- XV: organum (status-plan S7c-3) ---\n");
     CREDO_VERUM(machinam_struere(&mc, pseudoterminale_memoriae_creare(
         piscina, (constans i8*)"", ZEPHYRUM, ZEPHYRUM)));
     r            = insula_ramus_radix(mc.app.repo);
@@ -1372,32 +1357,168 @@ organum_probare (vacuum)
     terminale_claudere(&mc.app);
 }
 
+interior vacuum
+_parare (
+    CredoContextus* c)
+{
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    thema_initiare();
+}
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    figuram_probare();
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    claves_probare();
+}
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    magnitudinem_probare();
+}
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    concham_probare();
+}
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    modos_probare();
+}
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    murem_probare();
+}
+
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    titulum_colores_probare();
+}
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    contrastum_probare();
+}
+
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    ornamenta_probare();
+}
+
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    inversum_probare();
+}
+
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    ductas_probare();
+}
+
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    memoriam_contrastus_probare();
+}
+
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    ramum_probare();
+}
+
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    montationem_probare();
+}
+
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    organum_probare();
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: figura", _sectio_prima, _parare, NIHIL, NIHIL, NIHIL },
+    { "II: claves", _sectio_secunda, _parare, NIHIL, NIHIL, NIHIL },
+    { "III: magnitudo et rotula", _sectio_tertia, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "IV: concha vera", _sectio_quarta, _parare, NIHIL, NIHIL, NIHIL },
+    { "V: modi ad codificatorem (D6b)", _sectio_quinta, _parare, NIHIL,
+        NIHIL, NIHIL },
+    { "VI: mus, rotula, focus (D6b)", _sectio_sexta, _parare, NIHIL,
+        NIHIL, NIHIL },
+    { "VII: titulus et colores (D6b)", _sectio_septima, _parare, NIHIL,
+        NIHIL, NIHIL },
+    { "VIII: contrastus minimus et obscurum", _sectio_octava, _parare,
+        NIHIL, NIHIL, NIHIL },
+    { "IX: ornamenta (D7c)", _sectio_nona, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "X: schirmus inversus (D7c)", _sectio_decima, _parare, NIHIL,
+        NIHIL, NIHIL },
+    { "XI: figurae ductae (D7c)", _sectio_decima_prima, _parare, NIHIL,
+        NIHIL, NIHIL },
+    { "XII: memoria contrastus (park 011)", _sectio_decima_secunda,
+        _parare, NIHIL, NIHIL, NIHIL },
+    { "XIII: ramus (vicus-latera S1a)", _sectio_decima_tertia, _parare,
+        NIHIL, NIHIL, NIHIL },
+    { "XIV: montatio (vicus-latera S1b)", _sectio_decima_quarta,
+        _parare, NIHIL, NIHIL, NIHIL },
+    { "XV: organum (status-plan S7c-3)", _sectio_decima_quinta, _parare,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
 s32
 principale (vacuum)
 {
-    piscina = piscina_generare_dynamicum("probatio_terminale",
-        LXIV * MXXIV * MXXIV);
-    intern  = internamentum_creare(piscina);
-    credo_aperire(piscina);
-    thema_initiare();
-
-    figuram_probare();
-    claves_probare();
-    magnitudinem_probare();
-    concham_probare();
-    modos_probare();
-    murem_probare();
-    titulum_colores_probare();
-    contrastum_probare();
-    ornamenta_probare();
-    inversum_probare();
-    ductas_probare();
-    memoriam_contrastus_probare();
-    ramum_probare();
-    montationem_probare();
-    organum_probare();
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+    redde credo_suitam_currere("terminale", SECTIONES);
 }

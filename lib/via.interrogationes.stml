@@ -1,0 +1,113 @@
+<interrogationes unitas="via">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I join a directory and a file name into one path?
+    <responsum symbolum="via_iungere chorda_ex_literis">Put
+      the parts in a chorda array and call via_iungere(partes, numerus,
+      piscina); C89 needs the array filled at run time, not in an
+      initializer. It adds a '/' between two parts only when neither
+      side already has one, skips empty parts, and copies the result
+      into the piscina. It never removes a slash, so "foo/" + "/bar"
+      gives "foo//bar" (run via_normalizare if that matters). Unlike
+      Python's os.path.join an absolute later part does not restart
+      the path: "foo" + "/bar" gives "foo/bar".</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I keep the result of via_nomen or via_directorium after the input path is gone?
+    <responsum symbolum="via_nomen via_directorium via_nomen_radix via_extensio via_iungere via_normalizare chorda_transcribere">Not
+      always, whatever the header's "every function allocates" says.
+      via_nomen, via_nomen_radix and via_extensio return slices of the
+      input (via_nomen ignores its piscina argument), and
+      via_directorium returns a slice too, except that its answers "."
+      and "/" are fresh copies in the piscina. If the input's bytes
+      are freed or rolled back, the slices go with them. via_iungere
+      and via_normalizare copy into the piscina (except that
+      via_normalizare hands an empty input straight back). Copy with
+      chorda_transcribere when you need a slice to outlive the
+      input.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I turn a relative path into an absolute one?
+    <responsum symbolum="via_absoluta via_normalizare via_directorium_currens via_est_absoluta">via_absoluta
+      joins the current directory (via_directorium_currens, getcwd)
+      with the path and then calls via_normalizare; an input that is
+      already absolute is only normalized. It is purely lexical:
+      symlinks are not resolved and the path does not have to exist.
+      If getcwd fails the input comes back unchanged, still relative
+      and not normalized, with no error signal, so test
+      via_est_absoluta on the result when it matters. Caution (audit
+      2026-10-18, unfixed): getcwd also "fails" for a valid current
+      directory longer than 4096 bytes (fixed stack buffer, ERANGE, no
+      retry), so via_directorium_currens returns the empty chorda and
+      via_absoluta("sub/../file") returns the relative input
+      unchanged.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can via_normalizare handle relative paths that climb more than one level with ../?
+    <responsum symbolum="via_normalizare">No,
+      not correctly. It resolves '.', '//' and 'x/..' and keeps a
+      leading ".." on a relative path, but a ".." that meets a kept
+      ".." on its stack pops it instead of being kept: "../../foo"
+      comes out as "foo", "../.." as "." and "a/../../.." as ".".
+      A single "../foo" and absolute paths are fine ("/.." is "/").
+      Do not normalize relative paths that climb more than one level
+      until this is fixed.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what do via_nomen and via_directorium return for trailing slashes and the root?
+    <responsum symbolum="via_nomen via_directorium">They
+      follow POSIX basename and dirname for trailing slashes:
+      "/foo/bar/" gives "bar" and "/foo". For the root "/", via_nomen
+      returns the empty chorda (POSIX basename returns "/", changed on
+      purpose: the root has no name) and via_directorium returns "/".
+      A name with no slash has directory ".", and so does the empty
+      path. Caution (audit 2026-10-18, unfixed): on an input of 2^31
+      bytes or more the s32 scan index overflows and no slash is
+      found, so for "/dir/" + 2^31 bytes + "/name.txt" via_nomen
+      returns the whole input, via_directorium returns "." and
+      via_extensio returns "".</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what counts as the extension of a file name, and what about dotfiles?
+    <responsum symbolum="via_extensio via_nomen_radix">via_extensio
+      returns the last dot and everything after it, dot included
+      ("archive.tar.gz" gives ".gz"). A name starting with a dot has no
+      extension at all, even with a second dot: ".bashrc" and
+      ".config.json" both give "", and via_nomen_radix returns the
+      whole name. Only the last path component is looked at, so a dot
+      in a directory name never counts.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I check whether a path exists, and should I use via_existit or filum_existit?
+    <responsum symbolum="via_existit filum_existit lectiones_notare">via_existit
+      takes a chorda and uses stat, so it is VERUM for directories and
+      for files you cannot read. filum_existit takes a C string and
+      tries fopen(via, "r"), so it is FALSUM for a file you cannot
+      read (on macOS a readable directory opens, so it is VERUM there
+      too). Both record the answer (X or A) in the fabrica read
+      ledger. via_existit returns FALSUM for an empty path or one of
+      IV * MXXIV bytes or more. Caution (audit 2026-10-18, unfixed):
+      via_existit ignores the chorda length past an embedded NUL byte,
+      because stat sees only the prefix, so "/\0nusquam_zzz" or
+      "/etc/hosts\0/nope" gives VERUM instead of FALSUM.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does via_existit write to a ledger file, and what does it cost?
+    <responsum symbolum="via_existit lectiones_notare" via="lib/fabrica.worklog.md">The
+      build layer (fabrica) records what a generator looked up so it
+      can decide when to rebuild. aedilis's include resolution goes
+      through via_existit, and a header it looked for and did not find
+      is a negative dependency: creating it later would change the
+      result. lectiones_notare does nothing unless the environment
+      variable FABRICA_LECTIONES names a file, so ordinary programs pay
+      one getenv per call on top of the stat.</responsum>
+  </interrogatio>
+
+</interrogationes>

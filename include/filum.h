@@ -30,6 +30,35 @@ filum_mensura (
 
 
 /* ==================================================
+ * Lectio per Octetos (binaria, sequens)
+ * ================================================== */
+
+nomen structura FilumOctetorumLector FilumOctetorumLector;
+
+/* Aperire filum pro lectione octetorum binaria, ab initio, sequens:
+ * corpora magna per partes (fontes hospitii) - numquam totum in
+ * memoria. Lectio notatur ut ceterae (lectiones). NIHIL si non
+ * aperitur. */
+FilumOctetorumLector*
+filum_octeti_aperire (
+    constans character* via,
+               Piscina* piscina);
+
+/* Partem legere in capsa (ad n octetos):
+ * >0 octeti lecti, 0 finis fili, -1 error */
+s32
+filum_octeti_legere (
+    FilumOctetorumLector* lector,
+                      i8* capsa,
+                     i32  n);
+
+/* Claudere (tutum iterum; NIHIL tolerat) */
+vacuum
+filum_octeti_claudere (
+    FilumOctetorumLector* lector);
+
+
+/* ==================================================
  * Lectio per Lineas
  * ================================================== */
 
@@ -92,6 +121,14 @@ b32
 filum_scriptor_scribere (
      FilumScriptor* scriptor,
             chorda  contentum);
+
+/* Scribere octetos (binarios, constans - e.g. capsa parseris aliena)
+ * ad filum apertum; n 0 = nihil, VERUM */
+b32
+filum_scriptor_octetos_scribere (
+     FilumScriptor* scriptor,
+       constans i8* octeti,
+               i32  n);
 
 /* Scribere literas C ad filum apertum */
 b32

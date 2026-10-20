@@ -34,9 +34,6 @@
 
 #define QY CDLXVIII   /* centrum quadratorum (CDLVIII + X) */
 
-hic_manens Piscina*             piscina;
-hic_manens InternamentumChorda* intern;
-
 interior chorda
 ephemera_legere (
       PictorApplicatio* app,
@@ -45,7 +42,7 @@ ephemera_legere (
     chorda* a;
 
     a = insula_attributum(app->repo, titulus);
-    redde a ? *a : chorda_ex_literis("", piscina);
+    redde a ? *a : chorda_ex_literis("", app->piscina);
 }
 
 interior Componens*
@@ -54,7 +51,7 @@ nodus_arboris (
     constans character* id)
 {
     redde componens_invenire_per_id(dispensator_arbor(app->d),
-        chorda_ex_literis(id, piscina));
+        chorda_ex_literis(id, app->piscina));
 }
 
 /* optio k palettae coloris (k = valor + I) quadrati x0: palette
@@ -72,21 +69,20 @@ optio_coloris (
         CCCLXXXIV + IV + (k / VI) * XXII + X);
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-           Volumen* vol;
-  PictorApplicatio  app;
-        ManusLudus* m;
-         Componens* radix;
-         Componens* p;
+              Piscina* piscina;
+  InternamentumChorda* intern;
+              Volumen* vol;
+     PictorApplicatio  app;
+           ManusLudus* m;
+            Componens* radix;
+            Componens* p;
 
-    piscina = piscina_generare_dynamicum("probatio_pictor_palette",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_pictor_palette");
     CREDO_VERUM(pictor_applicatio_aedificare(&app, piscina, intern, vol,
@@ -95,7 +91,7 @@ s32 principale (vacuum)
     dispensator_recomponere(app.d);
     CREDO_NIHIL(nodus_arboris(&app, "palette"));
 
-    imprimere("\n--- I: quadratum instrumenti - palette aperta ---\n");
+    /* I: quadratum instrumenti - palette aperta */
     CREDO_VERUM(manus_ludus_premere_ad(m, XVI, QY));
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"),
         "instrumentum");
@@ -115,7 +111,7 @@ s32 principale (vacuum)
         "optio.instrumentum.spongia")->titulus,
         "instrumentum:spongia");
 
-    imprimere("\n--- II: idem claudit, aliud commutat ---\n");
+    /* II: idem claudit, aliud commutat */
     CREDO_VERUM(manus_ludus_premere_ad(m, XVI, QY));
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"), "");
     CREDO_NIHIL(nodus_arboris(&app, "palette"));
@@ -131,7 +127,7 @@ s32 principale (vacuum)
     CREDO_CHORDA_AEQUALIS_LITERIS(nodus_arboris(&app,
         "optio.color_secundus.-1")->titulus, "color:-1:electum");
 
-    imprimere("\n--- III: color secundus VII ---\n");
+    /* III: color secundus VII */
     optio_coloris(m, LVIII, VII);
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
         "color_secundus"),
@@ -140,7 +136,7 @@ s32 principale (vacuum)
     CREDO_CHORDA_AEQUALIS_LITERIS(nodus_arboris(&app,
         "quadratum.color_secundus")->titulus, "color:7");
 
-    imprimere("\n--- IV: color primus nullus, deinde III ---\n");
+    /* IV: color primus nullus, deinde III */
     CREDO_VERUM(manus_ludus_premere_ad(m, XLII, QY));
     CREDO_CHORDA_AEQUALIS_LITERIS(nodus_arboris(&app,
         "optio.color_primus.0")->titulus, "color:0:electum");
@@ -152,7 +148,7 @@ s32 principale (vacuum)
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "color_primus"),
         "3");
 
-    imprimere("\n--- V: optio instrumenti ---\n");
+    /* V: optio instrumenti */
     CREDO_VERUM(manus_ludus_premere_ad(m, XVI, QY));
     /* palette instrumentorum XXVIII alta, y CDXXVIII; aspergillum I */
     CREDO_VERUM(manus_ludus_premere_ad(m, VI + IV + XXII + X,
@@ -161,14 +157,14 @@ s32 principale (vacuum)
         "aspergillum");
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"), "");
 
-    imprimere("\n--- VI: Esc claudit ---\n");
+    /* VI: Esc claudit */
     CREDO_VERUM(manus_ludus_premere_ad(m, XLII, QY));
     CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"), "");
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "instrumentum"),
         "aspergillum");
 
-    imprimere("\n--- VII: ictus in tabula dum aperta ---\n");
+    /* VII: ictus in tabula dum aperta */
     {
         s64 ante;
 
@@ -183,7 +179,7 @@ s32 principale (vacuum)
         CREDO_VERUM(pictor_documentum_cursor(app.doc) > ante);
     }
 
-    imprimere("\n--- VIII: palette super tabulam, electa notata ---\n");
+    /* VIII: palette super tabulam, electa notata */
     {
         Mandata* md;
             i32  i;
@@ -278,8 +274,17 @@ s32 principale (vacuum)
         }
     }
 
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "palettae lineae instrumentorum", _sectio_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("pictor_palette", SECTIONES);
 }

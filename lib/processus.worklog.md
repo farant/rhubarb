@@ -299,3 +299,44 @@ INTERNORUM MACRONUM LIBC - fons idem, vexilla eadem, libc alia,
 verdictum aliud. Optiones posteriores: sutura macro domus cum casto,
 aut tolera, aut vexilla laxata per-platformam. CONSULTO non sanatum
 (stratum diagnosticum ante emendationes - decretum Franis).
+
+## 2026-10-17 - select() -> poll() (hospitium v3 T9, Linux/musl)
+
+- `_ansam_pulsare` now polls the stdout/stderr pipes with `poll()`.
+  Cause: musl's FD_SET/FD_ISSET macros divide an int fd by
+  `8*sizeof(long)`, which -Wsign-conversion turns into an error under
+  -Werror; select() also cannot watch fds >= FD_SETSIZE (1024). The
+  reactor already uses poll, so one I/O-wait idiom for the house.
+- POLLHUP/POLLERR are treated like POLLIN: the drain function reads,
+  sees EOF/error and closes the side - same outcome as select marking
+  the fd readable on a closed pipe.
+- Child-side `write(errno)` before `_exit`: value assigned to a
+  variable (glibc _FORTIFY_SOURCE warn_unused_result).
+
+## 2026-10-20 - memory ceiling for a child (credo memoria T5)
+
+`ProcessusOptiones.memoria_maxima` (bytes, 0 = none) and
+`PROCESSUS_ERROR_MEMORIA`, appended after IO so no value renumbers. The
+footprint comes from `memoria_processus_legere(pid)` (proc_pid_rusage,
+compressed pages included), throttled to one read per 20 ms because a
+chatty child makes poll return immediately. Read sites mirror the time
+limit's: before poll in `_ansam_pulsare` (an early return like
+tempus_excessum), the "no pipes" check in `_perficere`, and the
+blocking WNOHANG reap loop. That loop used to run only with a time
+limit; now a memory limit alone enables it, otherwise a child that
+closed its pipes and kept allocating would be waited on forever. Kill
+and result reuse the time-limit path (`occisus`, partial output kept).
+
+Name clash avoided: `memoria_fracta` already meant "our piscina is
+exhausted" (an IO error). The new flag is `memoria_excessa`, and
+both are commented.
+
+Caller audit: only lib/mensura_contextus.c memset its options. Adding
+a field to a struct that callers fill by hand makes every such caller
+read garbage, a random limit. fabrica_ansae.c and four
+probatio_processus sections now memset, and the header says to.
+
+Test child: `/bin/dd if=/dev/zero of=/dev/null bs=256m count=N`
+allocates and fills a 256 MiB buffer (footprint 257 MiB per
+/usr/bin/time -l), and count=400 runs it about 5 s. Core POSIX, offline,
+no perl. Under 64 MiB it died within one poll step (section 179 ms).

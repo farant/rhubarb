@@ -1,0 +1,99 @@
+<interrogationes unitas="rivus_terminalis">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I turn raw terminal input bytes into key, mouse and paste events?
+    <responsum symbolum="rivus_creare rivus_eventum rivus_mora_ms rivus_spatium rivus_tradere rivus_moram" via="tessera/fontes/tessera_eventum.c">The
+      library never reads or keeps a clock; you drive it. Loop: drain
+      events with rivus_eventum until it returns FALSUM; then ask
+      rivus_mora_ms how long to wait (0 = nothing pending, use your own
+      timeout) and read at most rivus_spatium bytes with that timeout;
+      if bytes came, give them to rivus_tradere and loop; if the wait
+      ran out while something was pending (or rivus_spatium was 0), call
+      rivus_moram and loop. The tempus argument of rivus_eventum and
+      rivus_moram is only stamped onto the events (tessera passes 0).
+      tessera/fontes/tessera_eventum.c is the reference loop.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why must I call rivus_moram, and what does it do to a lone ESC?
+    <responsum symbolum="rivus_moram rivus_mora_ms">Bytes
+      alone cannot tell the Escape key from the start of an escape
+      sequence, so a pending ESC (or half a sequence, half a UTF-8 rune,
+      an unfinished paste) waits for silence. rivus_mora_ms says how
+      long: RIVUS_MORA_FUGAE_MS (25 ms) normally, RIVUS_MORA_GLUTINI_MS
+      (3 s) inside a bracketed paste. When that silence has passed,
+      rivus_moram resolves it: ESC becomes the Escape key, ESC ESC two of
+      them, ESC x becomes Alt+x, other partial sequences (and a half X10
+      mouse report) are dropped, half a rune is dropped, and an
+      unterminated paste is finished and marked truncated. A half SGR
+      mouse report is kept in case the rest arrives, and a lone ESC,
+      although already reported as Escape, is also kept so that a mouse
+      report split right after it still decodes.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I keep a pointer to an event's text after the next call?
+    <responsum symbolum="rivus_eventum rivus_eventum_coalitum eventus_cauda_lectio_incipit">No.
+      Event text (and coalesced mouse samples) live in the event
+      queue's payload buffers, which are emptied when the queue is
+      empty and decoding starts again (eventus_cauda_lectio_incipit).
+      Views are valid until the next rivus_eventum (or
+      rivus_eventum_coalitum); copy anything you need to keep.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I turn on mouse reporting, bracketed paste, focus events or kitty keys?
+    <responsum symbolum="rivus_modos_intrare rivus_modos_exire rivus_modos_exeundi">Call
+      rivus_modos_intrare with RIVUS_MODUS_* bits and a buffer of at
+      least RIVUS_MODI_MAXIMUM bytes; it returns the bytes YOU must
+      write to the terminal (the library is pure and writes nothing).
+      SUPER implies MUS, DEPOSITIO implies GLUTINUM. It returns 0 and
+      changes nothing if modes are already entered, the buffer is too
+      small, or no known bit is set (a caller cannot tell these apart
+      from the return value). Entering also pushes an
+      EVENTUS_FACULTATES event. On exit, rivus_modos_exire gives the
+      reverse sequence (kitty popped first) and clears the state;
+      rivus_modos_exeundi gives the same bytes without changing state,
+      so a signal handler can keep them ready.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the difference between rivus_eventum and rivus_eventum_coalitum?
+    <responsum symbolum="rivus_eventum rivus_eventum_coalitum">rivus_eventum
+      decodes lazily, one lexeme at a time until an event exists, and
+      never merges mouse motion: a consumer that must see every report
+      uses it. rivus_eventum_coalitum, when the queue is empty, decodes
+      ALL bytes already given (up to half the queue), so consecutive
+      motion merges into one event with the samples attached, the way
+      the window does it. Ordinary Eventus consumers want the
+      coalesced form.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a paste of a file path from Finder arrive as a file drop instead of text?
+    <responsum symbolum="rivus_modos_intrare interpres_depositio">Yes,
+      if RIVUS_MODUS_DEPOSITIO is entered: a whole, untruncated paste
+      that parses as absolute paths (shell quoting with backslash,
+      single and double quotes, or file:// URIs with %XX escapes) is
+      promoted to EVENTUS_DEPOSITIO. Anything else stays an ordinary
+      paste text event. The drop position is the last mouse position
+      seen BEFORE the drag, (0,0) if none, because the terminal cannot
+      see a drag from another application; target by focus, not by
+      position.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I hand rivus_tradere a large read buffer?
+    <responsum symbolum="rivus_tradere rivus_spatium rivus_pendentes rivus_creare">It
+      takes at most rivus_spatium bytes (the internal buffer is
+      RIVUS_BUFFER, 256) and returns how many it accepted; the rest is
+      yours to keep and offer again after draining events, so read no
+      more than rivus_spatium in the first place. A paste body is
+      collected separately into a 64 KB buffer and is flagged truncated
+      beyond that. rivus_creare takes those two 64 KB buffers and the
+      event queue from the piscina you pass. rivus_pendentes reports
+      bytes not yet consumed, to check that a stream ended
+      cleanly.</responsum>
+  </interrogatio>
+
+</interrogationes>

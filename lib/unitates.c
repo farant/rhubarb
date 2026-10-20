@@ -1370,16 +1370,18 @@ _unitas_viae (
         s = chorda_sectio(basis, ZEPHYRUM, basis.mensura - II);
     }
     alioquin si (   chorda_aequalis(dir, u->fontes)
-                 && _finit(basis, ".md"))
+                 && (_finit(basis, ".md") || _finit(basis, ".stml")))
     {
-        /* FONTES/S.<quidvis>.md (worklog, phase-log) ad S */
+        /* FONTES/S.<quidvis>.md (worklog, phase-log) et
+         * FONTES/S.<quidvis>.stml (interrogationes) ad S */
         i32 punctum;
+        i32 extensio = _finit(basis, ".md") ? III : V;
 
         per (punctum = ZEPHYRUM; punctum < basis.mensura
             && basis.datum[punctum] != '.'; punctum++)
         {
         }
-        si (punctum + III < basis.mensura)
+        si (punctum + extensio < basis.mensura)
         {
             s = chorda_sectio(basis, ZEPHYRUM, punctum);
         }
@@ -2183,4 +2185,243 @@ unitates_census (
         }
     }
     redde c;
+}
+
+
+/* ==================================================
+ * INTERROGATIONES (U5b)
+ * ================================================== */
+
+#define UNITATES_MUNUS_INTERROGATIONUM "interrogationes"
+
+interior constans character* constans _attributa_interrogationum[] = {
+    "unitas", NIHIL
+};
+interior constans character* constans _attributa_interrogationis[] = {
+    "genus", NIHIL
+};
+interior constans character* constans _attributa_quaestionis[] = {
+    NIHIL
+};
+interior constans character* constans _attributa_responsi[] = {
+    "symbolum", "via", "imperium", NIHIL
+};
+
+/* interrogatio una: quaestio et responsum singula; redditur solum
+ * si ambo adsunt */
+interior vacuum
+_interrogationem_legere (
+           constans Unitas* possessor,
+                 StmlNodus* n,
+                    chorda  via,
+   UnitatesInterrogationes* res,
+            UnitatesCausae* k,
+                   Piscina* piscina)
+{
+     StmlNodus* quaestio   = NIHIL;
+     StmlNodus* responsum  = NIHIL;
+        chorda  genus;
+           i32  i;
+
+    _attributa_clausa(n, _attributa_interrogationis, via, k);
+    genus = _necessarium(n, "genus", via, k);
+    per (i = ZEPHYRUM; i < stml_numerus_liberorum(n); i++)
+    {
+        StmlNodus* m = stml_liberum_ad_indicem(n, i);
+
+        si (m->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+        si (chorda_aequalis_literis(*m->titulus, "quaestio"))
+        {
+            si (quaestio != NIHIL)
+            {
+                _causa(k, via, m->linea, "<quaestio> bis in eadem "
+                    "interrogatione", _vacua(), "");
+                perge;
+            }
+            quaestio = m;
+        }
+        alioquin si (chorda_aequalis_literis(*m->titulus, "responsum"))
+        {
+            si (responsum != NIHIL)
+            {
+                _causa(k, via, m->linea, "<responsum> bis in eadem "
+                    "interrogatione", _vacua(), "");
+                perge;
+            }
+            responsum = m;
+        }
+        alioquin
+        {
+            _causa(k, via, m->linea, "elementum ignotum <", *m->titulus,
+                "> in <interrogatio>");
+        }
+    }
+    si (quaestio == NIHIL)
+    {
+        _causa(k, via, n->linea, "<quaestio> deest", _vacua(), "");
+    }
+    si (responsum == NIHIL)
+    {
+        _causa(k, via, n->linea, "<responsum> deest", _vacua(), "");
+    }
+    si (quaestio == NIHIL || responsum == NIHIL)
+    {
+        redde;
+    }
+    _attributa_clausa(quaestio, _attributa_quaestionis, via, k);
+    _attributa_clausa(responsum, _attributa_responsi, via, k);
+    {
+        UnitatisInterrogatio* x = (UnitatisInterrogatio*)xar_addere(
+            res->interrogationes);
+
+        x->unitas     = possessor;
+        x->via        = via;
+        x->linea      = n->linea;
+        x->genus      = genus;
+        x->quaestio   = stml_textus_fluxus(quaestio, piscina);
+        x->responsum  = stml_textus_fluxus(responsum, piscina);
+        x->symbola    = _verba(_valor(responsum, "symbolum"), piscina);
+        x->viae       = _verba(_valor(responsum, "via"), piscina);
+        x->imperium   = _valor(responsum, "imperium");
+        si (x->quaestio.mensura == ZEPHYRUM)
+        {
+            _causa(k, via, quaestio->linea, "<quaestio> vacua",
+                _vacua(), "");
+        }
+        si (x->responsum.mensura == ZEPHYRUM)
+        {
+            _causa(k, via, responsum->linea, "<responsum> vacuum",
+                _vacua(), "");
+        }
+        si (   xar_numerus(x->symbola) == ZEPHYRUM
+            && xar_numerus(x->viae)    == ZEPHYRUM
+            && x->imperium.mensura     == ZEPHYRUM)
+        {
+            _causa(k, via, responsum->linea, "responsum sine ancora "
+                "(symbolum, via, imperium)", _vacua(), "");
+        }
+    }
+}
+
+interior vacuum
+_interrogationes_legere (
+           constans Unitas* possessor,
+                 StmlNodus* radix,
+                    chorda  via,
+   UnitatesInterrogationes* res,
+            UnitatesCausae* k,
+                   Piscina* piscina)
+{
+    chorda titulus;
+       i32 numerus;
+       i32 i;
+
+    si (!chorda_aequalis_literis(*radix->titulus,
+            UNITATES_MUNUS_INTERROGATIONUM))
+    {
+        _causa(k, via, radix->linea,
+            "radix non est <interrogationes>: <",
+            *radix->titulus, ">");
+        redde;
+    }
+    _attributa_clausa(radix, _attributa_interrogationum, via, k);
+    titulus = _necessarium(radix, "unitas", via, k);
+    si (   titulus.mensura > ZEPHYRUM
+        && !chorda_aequalis(titulus, possessor->titulus))
+    {
+        ChordaAedificator* c = chorda_aedificator_creare(piscina,
+            (memoriae_index)LXIV);
+
+        chorda_aedificator_appendere_chorda(c, titulus);
+        chorda_aedificator_appendere_literis(c,
+            "' non est possessor plagulae ('");
+        chorda_aedificator_appendere_chorda(c, possessor->titulus);
+        chorda_aedificator_appendere_literis(c, "')");
+        _causa(k, via, radix->linea, "unitas '",
+            chorda_aedificator_finire(c), "");
+    }
+    numerus = xar_numerus(res->interrogationes);
+    per (i = ZEPHYRUM; i < stml_numerus_liberorum(radix); i++)
+    {
+        StmlNodus* n = stml_liberum_ad_indicem(radix, i);
+
+        si (n->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+        si (!chorda_aequalis_literis(*n->titulus, "interrogatio"))
+        {
+            _causa(k, via, n->linea, "elementum ignotum <", *n->titulus,
+                ">");
+            perge;
+        }
+        _interrogationem_legere(possessor, n, via, res, k, piscina);
+    }
+    si (xar_numerus(res->interrogationes) == numerus)
+    {
+        _causa(k, via, radix->linea, "nulla <interrogatio> legibilis",
+            _vacua(), "");
+    }
+}
+
+UnitatesInterrogationes*
+unitates_interrogationes (
+    constans Unitates* unitates,
+              Piscina* piscina)
+{
+    UnitatesInterrogationes* res;
+             UnitatesCausae  k;
+        InternamentumChorda* intern;
+                        i32  i;
+
+    res = (UnitatesInterrogationes*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(UnitatesInterrogationes));
+    res->interrogationes = xar_creare(piscina,
+        (i32)magnitudo(UnitatisInterrogatio));
+    k.textus        = chorda_aedificator_creare(piscina,
+        (memoriae_index)CCLVI);
+    k.numerus       = ZEPHYRUM;
+    k.recusationes  = xar_creare(piscina,
+        (i32)magnitudo(UnitatesRecusatio));
+    k.piscina  = piscina;
+    intern     = internamentum_creare(piscina);
+
+    per (i = ZEPHYRUM; i < xar_numerus(unitates->viae); i++)
+    {
+                   chorda via = *(chorda*)xar_obtinere(unitates->viae,
+                       i);
+        UnitatisResponsum  r;
+                   chorda  textus;
+                StmlNodus* radix;
+
+        _respondere(unitates, via, piscina, &r);
+        si (!chorda_aequalis_literis(r.munus.valor,
+                UNITATES_MUNUS_INTERROGATIONUM))
+        {
+            perge;
+        }
+        /* archivata extra usum: nec legitur nec iudicatur */
+        si (_extra_usum(r.unitas))
+        {
+            perge;
+        }
+        si (!unitates->sutura->plagulam_legere(unitates->sutura->datum,
+                via, piscina, &textus))
+        {
+            _causa(&k, via, ZEPHYRUM, "interrogationes legi nequeunt",
+                _vacua(), "");
+            perge;
+        }
+        radix = _parsare(textus, via, piscina, intern, &k);
+        si (radix != NIHIL)
+        {
+            _interrogationes_legere(r.unitas, radix, via, res, &k,
+                piscina);
+        }
+    }
+    res->recusationes = k.recusationes;
+    redde res;
 }

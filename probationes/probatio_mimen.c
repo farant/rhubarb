@@ -14,10 +14,10 @@
  * ======================================================================== */
 
 interior vacuum
-probatio_pro_via(vacuum)
+_sectio_prima (
+    CredoContextus* c)
 {
-    printf("--- Probans mimen_pro_via ---\n");
-
+    (vacuum)c;
     CREDO_VERUM(strcmp(mimen_pro_via("stilus.css"), "text/css") == 0);
     CREDO_VERUM(strcmp(mimen_pro_via("index.html"), "text/html") == 0);
     CREDO_VERUM(strcmp(mimen_pro_via("imago.jpeg"), "image/jpeg") == 0);
@@ -35,8 +35,6 @@ probatio_pro_via(vacuum)
                        "application/octet-stream") == 0);
     CREDO_VERUM(strcmp(mimen_pro_via(NIHIL),
                        "application/octet-stream") == 0);
-
-    printf("\n");
 }
 
 
@@ -45,15 +43,16 @@ probatio_pro_via(vacuum)
  * ======================================================================== */
 
 interior vacuum
-probatio_paritas_chorda(Piscina* piscina)
+_sectio_secunda (
+    CredoContextus* c)
 {
+    Piscina* piscina = c->piscina;
+
     constans character* probanda[] = {
         "stilus.css", "index.html", "res.xyz", "sine_extensione",
         "caudalis.", "a.b/c", "imago.png", "arca.woff2"
     };
     i32 i;
-
-    printf("--- Probans paritas char*/chorda ---\n");
 
     per (i = 0; i < VIII; i++)
     {
@@ -74,24 +73,30 @@ probatio_paritas_chorda(Piscina* piscina)
     }
 
     printf("  Paritas in VIII viis (byteae venenatae post finem)\n");
-    printf("\n");
 }
 
 
 interior vacuum
-probatio_chorda_vacua(vacuum)
+_sectio_tertia (
+    CredoContextus* c)
 {
     chorda vacua;
 
-    printf("--- Probans chorda vacua ---\n");
-
+    (vacuum)c;
     vacua.datum    = NIHIL;
     vacua.mensura  = 0;
     CREDO_VERUM(strcmp(mimen_pro_via_chorda(vacua),
                        "application/octet-stream") == 0);
-
-    printf("\n");
 }
+
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "mimen_pro_via", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "paritas char*/chorda", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "chorda vacua", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
 
 /* ========================================================================
@@ -101,31 +106,5 @@ probatio_chorda_vacua(vacuum)
 integer
 principale (vacuum)
 {
-    Piscina* piscina;
-        b32  successus;
-
-    printf("\n");
-    printf("========================================\n");
-    printf("PROBATIONES MIMEN\n");
-    printf("========================================\n");
-    printf("\n");
-
-    piscina = piscina_generare_dynamicum("probatio_mimen", XVI * M);
-    credo_aperire(piscina);
-
-    probatio_pro_via();
-    probatio_paritas_chorda(piscina);
-    probatio_chorda_vacua();
-
-    credo_imprimere_compendium();
-
-    printf("========================================\n");
-    printf("\n");
-
-    successus = credo_omnia_praeterierunt();
-
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    redde successus ? 0 : I;
+    redde credo_suitam_currere("mimen", SECTIONES);
 }

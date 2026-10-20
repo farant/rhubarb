@@ -27,11 +27,12 @@
  * ======================================================================== */
 
 interior vacuum
-probatio_servus_optiones_default(vacuum)
+_sectio_prima (
+    CredoContextus* c)
 {
     TcpServusOptiones opt;
 
-    printf("--- Probans servus optiones default ---\n");
+    (vacuum)c;
 
     opt = tcp_servus_optiones_default();
     CREDO_VERUM(opt.tergum == CXXVIII);
@@ -47,13 +48,15 @@ probatio_servus_optiones_default(vacuum)
  * ======================================================================== */
 
 interior vacuum
-probatio_creare_simplex(Piscina* piscina)
+_sectio_secunda (
+    CredoContextus* c)
 {
-    TcpServusResultus res;
-                  i32 portus;
-              integer fd;
+              Piscina* piscina;
+    TcpServusResultus  res;
+                  i32  portus;
+              integer  fd;
 
-    printf("--- Probans creare simplex ---\n");
+    piscina = c->piscina;
 
     /* Creare server in portus 0 (auto-select) */
     res = tcp_servus_creare(0, piscina);
@@ -75,13 +78,15 @@ probatio_creare_simplex(Piscina* piscina)
 
 
 interior vacuum
-probatio_creare_cum_optionibus(Piscina* piscina)
+_sectio_tertia (
+    CredoContextus* c)
 {
-    TcpServusResultus res;
-    TcpServusOptiones opt;
-                  i32 portus;
+              Piscina* piscina;
+    TcpServusResultus  res;
+    TcpServusOptiones  opt;
+                  i32  portus;
 
-    printf("--- Probans creare cum optionibus ---\n");
+    piscina = c->piscina;
 
     opt              = tcp_servus_optiones_default();
     opt.non_blocans  = FALSUM;  /* Blocking mode */
@@ -104,12 +109,14 @@ probatio_creare_cum_optionibus(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_auscultare(Piscina* piscina)
+_sectio_quarta (
+    CredoContextus* c)
 {
-    TcpServusResultus res;
-             TcpError err;
+              Piscina* piscina;
+    TcpServusResultus  res;
+             TcpError  err;
 
-    printf("--- Probans auscultare ---\n");
+    piscina = c->piscina;
 
     res = tcp_servus_creare(0, piscina);
     CREDO_VERUM(res.successus);
@@ -128,12 +135,14 @@ probatio_auscultare(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_obtinere_address(Piscina* piscina)
+_sectio_quinta (
+    CredoContextus* c)
 {
-    TcpServusResultus res;
-           TcpAddress addr;
+              Piscina* piscina;
+    TcpServusResultus  res;
+           TcpAddress  addr;
 
-    printf("--- Probans obtinere address ---\n");
+    piscina = c->piscina;
 
     res = tcp_servus_creare(0, piscina);
     CREDO_VERUM(res.successus);
@@ -152,8 +161,10 @@ probatio_obtinere_address(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_accipere_connexio(Piscina* piscina)
+_sectio_sexta (
+    CredoContextus* c)
 {
+               Piscina* piscina;
      TcpServusResultus  servus_res;
            TcpResultus  client_res;
            TcpResultus  accept_res;
@@ -167,7 +178,7 @@ probatio_accipere_connexio(Piscina* piscina)
                    s32  recv_len;
              character  buffer[CXXVIII];
 
-    printf("--- Probans accipere connexio ---\n");
+    piscina = c->piscina;
 
     /* Creare server in BLOCKING mode pro reliabile accept */
     opt              = tcp_servus_optiones_default();
@@ -240,13 +251,15 @@ probatio_accipere_connexio(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_non_blocans(Piscina* piscina)
+_sectio_septima (
+    CredoContextus* c)
 {
-    TcpServusResultus res;
-          TcpResultus accept_res;
-             TcpError err;
+              Piscina* piscina;
+    TcpServusResultus  res;
+          TcpResultus  accept_res;
+             TcpError  err;
 
-    printf("--- Probans non-blocking mode ---\n");
+    piscina = c->piscina;
 
     /* Creare server (default non-blocking) */
     res = tcp_servus_creare(0, piscina);
@@ -271,15 +284,17 @@ probatio_non_blocans(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_ponere_non_blocans(Piscina* piscina)
+_sectio_octava (
+    CredoContextus* c)
 {
-    TcpServusResultus servus_res;
-    TcpServusOptiones opt;
-          TcpResultus res;
-             TcpError err;
-                  i32 portus;
+              Piscina* piscina;
+    TcpServusResultus  servus_res;
+    TcpServusOptiones  opt;
+          TcpResultus  res;
+             TcpError  err;
+                  i32  portus;
 
-    printf("--- Probans ponere non-blocans ---\n");
+    piscina = c->piscina;
 
     /* Servus loopback - connect solum sufficit, nullum accipere opus */
     opt              = tcp_servus_optiones_default();
@@ -319,18 +334,20 @@ probatio_ponere_non_blocans(Piscina* piscina)
 
 /* Tres classes valoris redditi tcp_recipere: ITERUM / data / EOF */
 interior vacuum
-probatio_recipere_iterum(Piscina* piscina)
+_sectio_nona (
+    CredoContextus* c)
 {
-    TcpServusResultus servus_res;
-    TcpServusOptiones opt;
-          TcpResultus client_res;
-          TcpResultus accept_res;
-             TcpError err;
-                  i32 portus;
-            character buffer[XXXII];
-                  s32 n;
+              Piscina* piscina;
+    TcpServusResultus  servus_res;
+    TcpServusOptiones  opt;
+          TcpResultus  client_res;
+          TcpResultus  accept_res;
+             TcpError  err;
+                  i32  portus;
+            character  buffer[XXXII];
+                  s32  n;
 
-    printf("--- Probans recipere: ITERUM / data / EOF ---\n");
+    piscina = c->piscina;
 
     opt              = tcp_servus_optiones_default();
     opt.non_blocans  = FALSUM;
@@ -379,8 +396,10 @@ probatio_recipere_iterum(Piscina* piscina)
 /* Scriptio in socket a pari clausum: EPIPE (-1), non mors SIGPIPE.
  * Attingere assertum finale IPSUM est probatio supervivendi. */
 interior vacuum
-probatio_nosigpipe(Piscina* piscina)
+_sectio_decima (
+    CredoContextus* c)
 {
+               Piscina* piscina;
      TcpServusResultus  servus_res;
      TcpServusOptiones  opt;
            TcpResultus  client_res;
@@ -390,7 +409,7 @@ probatio_nosigpipe(Piscina* piscina)
     constans character* msg;
                    s32  n;
 
-    printf("--- Probans NOSIGPIPE ---\n");
+    piscina = c->piscina;
 
     opt              = tcp_servus_optiones_default();
     opt.non_blocans  = FALSUM;
@@ -431,19 +450,21 @@ probatio_nosigpipe(Piscina* piscina)
 
 /* TCP_NODELAY ponitur in omni fd accepto */
 interior vacuum
-probatio_nodelay(Piscina* piscina)
+_sectio_decima_prima (
+    CredoContextus* c)
 {
-    TcpServusResultus servus_res;
-    TcpServusOptiones opt;
-          TcpResultus client_res;
-          TcpResultus accept_res;
-             TcpError err;
-                  i32 portus;
-              integer fd;
-              integer flag;
-            socklen_t len;
+              Piscina* piscina;
+    TcpServusResultus  servus_res;
+    TcpServusOptiones  opt;
+          TcpResultus  client_res;
+          TcpResultus  accept_res;
+             TcpError  err;
+                  i32  portus;
+              integer  fd;
+              integer  flag;
+            socklen_t  len;
 
-    printf("--- Probans NODELAY in accepto ---\n");
+    piscina = c->piscina;
 
     opt              = tcp_servus_optiones_default();
     opt.non_blocans  = FALSUM;
@@ -481,13 +502,15 @@ probatio_nodelay(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_nullum_argumenta(Piscina* piscina)
+_sectio_decima_secunda (
+    CredoContextus* c)
 {
-    TcpServusResultus res;
-          TcpResultus accept_res;
-             TcpError err;
+              Piscina* piscina;
+    TcpServusResultus  res;
+          TcpResultus  accept_res;
+             TcpError  err;
 
-    printf("--- Probans nullum argumenta ---\n");
+    piscina = c->piscina;
 
     /* Creare cum NIHIL piscina */
     res = tcp_servus_creare(0, NIHIL);
@@ -510,13 +533,15 @@ probatio_nullum_argumenta(Piscina* piscina)
 
 
 interior vacuum
-probatio_client_nullum_argumenta(Piscina* piscina)
+_sectio_decima_tertia (
+    CredoContextus* c)
 {
-    TcpResultus res;
-            s32 result;
-      character buffer[XXXII];
+        Piscina* piscina;
+    TcpResultus  res;
+            s32  result;
+      character  buffer[XXXII];
 
-    printf("--- Probans client nullum argumenta ---\n");
+    piscina = c->piscina;
 
     /* Connectere cum NIHIL hospes */
     res = tcp_connectere(NIHIL, LXXX, piscina);
@@ -550,11 +575,28 @@ probatio_client_nullum_argumenta(Piscina* piscina)
 
 
 interior vacuum
-probatio_error_descriptio(vacuum)
+probatio_optiones_client (vacuum)
+{
+    TcpOptiones opt;
+
+    CREDO_GRADUS("client optiones default");
+
+    opt = tcp_optiones_default();
+    printf("  timeout_ms: %d\n", opt.timeout_ms);
+    printf("  nodelay: %d\n", opt.nodelay);
+    printf("  keepalive: %d\n", opt.keepalive);
+
+    printf("\n");
+}
+
+
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
 {
     constans character* desc;
 
-    printf("--- Probans error descriptio ---\n");
+    (vacuum)c;
 
     desc = tcp_error_descriptio(TCP_OK);
     CREDO_NON_NIHIL(desc);
@@ -581,22 +623,7 @@ probatio_error_descriptio(vacuum)
     printf("  TCP_ERROR_IO: %s\n", desc);
 
     printf("\n");
-}
-
-
-interior vacuum
-probatio_optiones_client (vacuum)
-{
-    TcpOptiones opt;
-
-    printf("--- Probans client optiones default ---\n");
-
-    opt = tcp_optiones_default();
-    printf("  timeout_ms: %d\n", opt.timeout_ms);
-    printf("  nodelay: %d\n", opt.nodelay);
-    printf("  keepalive: %d\n", opt.keepalive);
-
-    printf("\n");
+    probatio_optiones_client();
 }
 
 
@@ -605,8 +632,10 @@ probatio_optiones_client (vacuum)
  * ======================================================================== */
 
 interior vacuum
-probatio_multi_connexiones(Piscina* piscina)
+_sectio_decima_quinta (
+    CredoContextus* c)
 {
+              Piscina* piscina;
     TcpServusResultus  servus_res;
     TcpServusOptiones  opt;
              TcpError  err;
@@ -618,7 +647,7 @@ probatio_multi_connexiones(Piscina* piscina)
             character  buffer[LXIV];
                   s32  n;
 
-    printf("--- Probans multi connexiones ---\n");
+    piscina = c->piscina;
 
     /* Creare server in BLOCKING mode - evitat race condition accept */
     opt              = tcp_servus_optiones_default();
@@ -738,11 +767,12 @@ handler_integratio (
     responsum->status = CC;
 }
 
-hic_manens CapsaTractatoris g_capsa_integratio = { handler_integratio };
-
 interior vacuum
-probatio_integratio_http(Piscina* piscina)
+_sectio_decima_sexta (
+    CredoContextus* c)
 {
+     CapsaTractatoris  g_capsa_integratio = { handler_integratio };
+              Piscina* piscina;
     TcpServusResultus  servus_res;
     TcpServusOptiones  opt;
              TcpError  err;
@@ -764,7 +794,7 @@ probatio_integratio_http(Piscina* piscina)
         HttpResponsum responsum;
                chorda serialized;
 
-    printf("--- Probans integratio HTTP ---\n");
+    piscina = c->piscina;
 
     /* 1. Creare server in BLOCKING mode - evitat race condition accept */
     opt              = tcp_servus_optiones_default();
@@ -865,49 +895,39 @@ probatio_integratio_http(Piscina* piscina)
  * PRINCIPALE
  * ======================================================================== */
 
-integer
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "servus optiones default", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "creare simplex", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "creare cum optionibus", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "auscultare", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "obtinere address", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "accipere connexio", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "non-blocking mode", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "ponere non-blocans", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "recipere: ITERUM / data / EOF", _sectio_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "NOSIGPIPE", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "NODELAY in accepto", _sectio_decima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "nullum argumenta", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "client nullum argumenta", _sectio_decima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "error descriptio", _sectio_decima_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "multi connexiones", _sectio_decima_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "integratio HTTP", _sectio_decima_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
 principale (vacuum)
 {
-    Piscina* piscina;
-        b32  successus;
-
-    printf("\n");
-    printf("========================================\n");
-    printf("PROBATIONES TCP SERVUS\n");
-    printf("========================================\n");
-    printf("\n");
-
-    piscina = piscina_generare_dynamicum("probatio_tcp_servus",
-        CXXVIII * M);
-    credo_aperire(piscina);
-
-    probatio_servus_optiones_default();
-    probatio_creare_simplex(piscina);
-    probatio_creare_cum_optionibus(piscina);
-    probatio_auscultare(piscina);
-    probatio_obtinere_address(piscina);
-    probatio_accipere_connexio(piscina);
-    probatio_non_blocans(piscina);
-    probatio_ponere_non_blocans(piscina);
-    probatio_recipere_iterum(piscina);
-    probatio_nosigpipe(piscina);
-    probatio_nodelay(piscina);
-    probatio_nullum_argumenta(piscina);
-    probatio_client_nullum_argumenta(piscina);
-    probatio_error_descriptio();
-    probatio_optiones_client();
-    probatio_multi_connexiones(piscina);
-    probatio_integratio_http(piscina);
-
-    credo_imprimere_compendium();
-
-    printf("========================================\n");
-    printf("\n");
-
-    successus = credo_omnia_praeterierunt();
-
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    redde successus ? 0 : I;
+    redde credo_suitam_currere("tcp_servus", SECTIONES);
 }

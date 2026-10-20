@@ -640,7 +640,8 @@ _exemplar_addere (
                     Xar* exemplaria,
                  chorda  exemplar,
     PortaeExemplarGenus  genus,
-                 chorda  ratio)
+                 chorda  ratio,
+       PortaeRatioGenus  ratio_genus)
 {
     PortaeExemplar* e;
                i32  i;
@@ -653,10 +654,11 @@ _exemplar_addere (
             redde;
         }
     }
-    e            = (PortaeExemplar*)xar_addere(exemplaria);
-    e->exemplar  = exemplar;
-    e->genus     = genus;
-    e->ratio     = ratio;
+    e               = (PortaeExemplar*)xar_addere(exemplaria);
+    e->exemplar     = exemplar;
+    e->genus        = genus;
+    e->ratio        = ratio;
+    e->ratio_genus  = ratio_genus;
 }
 
 interior b32
@@ -745,7 +747,8 @@ _situm_tractare (
     }
     ratio = _ratio(der->piscina, "", genus_situs, " in ", _valor(situs,
         "plagula"), "");
-    _exemplar_addere(der->o->exemplaria, *via, genus, ratio);
+    _exemplar_addere(der->o->exemplaria, *via, genus, ratio,
+        PORTAE_RATIO_EFFECTUS);
     si (!_finit(*via, ".c"))
     {
         redde;
@@ -755,7 +758,7 @@ _situm_tractare (
     si (genus == PORTAE_EXEMPLAR_VIA && _in_arbore(der, *via))
     {
         _exemplar_addere(der->o->fontes_c, *via, PORTAE_EXEMPLAR_VIA,
-            ratio);
+            ratio, PORTAE_RATIO_EFFECTUS);
     }
     alioquin si (genus == PORTAE_EXEMPLAR_GLOBUS)
     {
@@ -768,7 +771,7 @@ _situm_tractare (
             {
                 _exemplar_addere(der->o->fontes_c, v,
                     PORTAE_EXEMPLAR_VIA,
-                    ratio);
+                    ratio, PORTAE_RATIO_EFFECTUS);
             }
         }
     }
@@ -897,6 +900,52 @@ _possessor (
     redde NIHIL;
 }
 
+/* genus rationis programmatis vocati: 'currit' ANNOTATIONIS
+ * programmatis quod porta alia possidet (bin/x, aut tools/x.c -> bin/x vel bin/x-y)
+ * = infrastructura (CURRIT_ALIENUM); ceterum CURRIT */
+interior PortaeRatioGenus
+_genus_programmatis (
+    constans PortaeDerivatio* der,
+                      chorda  v,
+                         b32  annotatio)
+{
+    constans PortaDeclarata* p = NIHIL;
+
+    si (!annotatio)
+    {
+        redde PORTAE_RATIO_CURRIT;
+    }
+    si (chorda_incipit(v, chorda_ex_literis("bin/", der->piscina)))
+    {
+        p = _possessor(der, v);
+    }
+    alioquin si (   _finit(v, ".c")
+                 && chorda_incipit(v, chorda_ex_literis("tools/",
+                        der->piscina)))
+    {
+        chorda b = chorda_sectio(v, (i32)VI, v.mensura - II);
+        chorda l = chorda_transcribere(b, der->piscina);
+           i32 k;
+
+        p = _possessor(der, _ratio(der->piscina, "bin/", b, "",
+            _vacua(), ""));
+        per (k = ZEPHYRUM; k < l.mensura; k++)
+        {
+            si (l.datum[k] == '_')
+            {
+                l.datum[k] = '-';
+            }
+        }
+        si (p == NIHIL)
+        {
+            p = _possessor(der, _ratio(der->piscina, "bin/", l, "",
+                _vacua(), ""));
+        }
+    }
+    redde p != NIHIL && p != der->o->declaratio
+        ? PORTAE_RATIO_CURRIT_ALIENUM : PORTAE_RATIO_CURRIT;
+}
+
 interior vacuum
 _vocatum_tractare (
     PortaeDerivatio* der,
@@ -904,11 +953,12 @@ _vocatum_tractare (
              chorda  origo,
                 b32  annotatio)
 {
-    chorda  v = _via_norma(verbum);
-    chorda  ratio;
-    chorda  b;
-       Xar* candidati;
-       i32  i;
+              chorda  v = _via_norma(verbum);
+              chorda  ratio;
+              chorda  b;
+                 Xar* candidati;
+                 i32  i;
+    PortaeRatioGenus  rg = _genus_programmatis(der, v, annotatio);
 
     ratio = annotatio ? _ratio(der->piscina, "currit ", v, " (", origo,
         ")")
@@ -928,7 +978,8 @@ _vocatum_tractare (
 
             _exemplar_addere(der->o->binaria, _ratio(der->piscina,
                 "bin/",
-                nomen_b, "", _vacua(), ""), PORTAE_EXEMPLAR_VIA, ratio);
+                nomen_b, "", _vacua(), ""), PORTAE_EXEMPLAR_VIA, ratio,
+                rg);
             /* fons 'x_y.c' -> binarium saepe 'bin/x-y' (briar_spectator.c
              * -> bin/briar-spectator): candidatus alter, fabrica ignotum
              * praeterit */
@@ -944,7 +995,7 @@ _vocatum_tractare (
             {
                 _exemplar_addere(der->o->binaria, _ratio(der->piscina,
                     "bin/", lineatum, "", _vacua(), ""),
-                    PORTAE_EXEMPLAR_VIA, ratio);
+                    PORTAE_EXEMPLAR_VIA, ratio, rg);
             }
         }
         /* probatio quae viam arboris nominat ab ea pendet (scriptum
@@ -952,9 +1003,10 @@ _vocatum_tractare (
         si (!annotatio && !_finit(v, ".sh"))
         {
             ratio = _ratio(der->piscina, "", origo, " nominat ", v, "");
+            rg = PORTAE_RATIO_NOMINAT;
         }
         _exemplar_addere(_finit(v, ".c") ? der->o->fontes_c
-            : der->o->exemplaria, v, PORTAE_EXEMPLAR_VIA, ratio);
+            : der->o->exemplaria, v, PORTAE_EXEMPLAR_VIA, ratio, rg);
         redde;
     }
     si (   !_binarium_est(v) || chorda_continet(v, chorda_ex_literis(
@@ -974,7 +1026,7 @@ _vocatum_tractare (
     si (chorda_incipit(v, chorda_ex_literis("bin/", der->piscina)))
     {
         _exemplar_addere(der->o->binaria, v, PORTAE_EXEMPLAR_VIA,
-            ratio);
+            ratio, rg);
     }
     /* possessio: instrumentum alius portae - infrastructura, non
      * subiectum; 'currit' expressum (annotatio) semper valet */
@@ -1067,7 +1119,7 @@ _vocatum_tractare (
     per (i = ZEPHYRUM; i < xar_numerus(candidati); i++)
     {
         _exemplar_addere(der->o->fontes_c, *(chorda*)xar_obtinere(
-            candidati, i), PORTAE_EXEMPLAR_VIA, ratio);
+            candidati, i), PORTAE_EXEMPLAR_VIA, ratio, rg);
     }
 }
 
@@ -1127,7 +1179,7 @@ _suitam_tractare (
             perge;
         }
         _exemplar_addere(der->o->fontes_c, f, PORTAE_EXEMPLAR_VIA,
-            ratio);
+            ratio, PORTAE_RATIO_SUITA);
         litterae = der->sutura->litterae_probationis != NIHIL
             ? der->sutura->litterae_probationis(der->sutura->datum, f,
                 der->piscina) : NIHIL;
@@ -1204,14 +1256,16 @@ portae_operturas_derivare (
             (i32)magnitudo(PortaeExemplar));
         der.o      = o;
         _exemplar_addere(o->exemplaria, d->via, PORTAE_EXEMPLAR_VIA,
-            _ratio(piscina, "cursor ipse", vacua, "", vacua, ""));
+            _ratio(piscina, "cursor ipse", vacua, "", vacua, ""),
+            PORTAE_RATIO_CURSOR);
         /* instrumenta possessa: porta ea ipsa currit */
         per (j = ZEPHYRUM; d->instrumenta != NIHIL
              && j < xar_numerus(d->instrumenta); j++)
         {
             _exemplar_addere(o->binaria, *(chorda*)xar_obtinere(
                 d->instrumenta, j), PORTAE_EXEMPLAR_VIA, _ratio(piscina,
-                "instrumentum (", locus, ")", vacua, ""));
+                "instrumentum (", locus, ")", vacua, ""),
+                PORTAE_RATIO_INSTRUMENTUM);
         }
         summarium = sutura->effectus != NIHIL
             ? sutura->effectus(sutura->datum, d->via, piscina) : NIHIL;
@@ -1245,7 +1299,7 @@ portae_operturas_derivare (
         {
             _exemplar_addere(o->exemplaria, *(chorda*)xar_obtinere(
                 d->tegit, j), PORTAE_EXEMPLAR_GLOBUS, _ratio(piscina,
-                "tegit (", locus, ")", vacua, ""));
+                "tegit (", locus, ")", vacua, ""), PORTAE_RATIO_TEGIT);
         }
         per (j = ZEPHYRUM; d->currit != NIHIL
              && j < xar_numerus(d->currit); j++)
@@ -1356,6 +1410,8 @@ _viam_iudicare (
                         Xar* memoria,
                         Xar* rationes,
                         b32* tegit,
+                        i32* directa,
+                        i32* clausurae,
                     Piscina* piscina)
 {
     i32 i;
@@ -1369,7 +1425,8 @@ _viam_iudicare (
         {
             perge;
         }
-        *tegit = VERUM;
+        *tegit    = VERUM;
+        *directa  |= (i32)I << (i32)e->ratio_genus;
         _rationem_addere(rationes, e->genus == PORTAE_EXEMPLAR_VIA
             ? _ratio(piscina, "", v, " (", e->ratio, ")")
             : _ratio(piscina, "", v, "", _ratio(piscina, " congruit '",
@@ -1383,7 +1440,8 @@ _viam_iudicare (
 
         si (chorda_aequalis(v, f->exemplar))
         {
-            *tegit = VERUM;
+            *tegit    = VERUM;
+            *directa  |= (i32)I << (i32)f->ratio_genus;
             _rationem_addere(rationes, _ratio(piscina, "", v, " (",
                 f->ratio, ")"));
             perge;
@@ -1396,13 +1454,15 @@ _viam_iudicare (
             piscina);
         si (clausura == NIHIL)
         {
-            *tegit = VERUM;
+            *tegit    = VERUM;
+            *directa  |= (i32)I << (i32)PORTAE_RATIO_IGNOTA;
             _rationem_addere(rationes, _ratio(piscina, "", v,
                 ": clausura ", f->exemplar, " ignota - debetur"));
         }
         alioquin si (_chorda_in(clausura, v))
         {
-            *tegit = VERUM;
+            *tegit      = VERUM;
+            *clausurae  |= (i32)I << (i32)f->ratio_genus;
             _rationem_addere(rationes, _ratio(piscina, "", v, "",
                 _ratio(piscina, " in clausura ", f->exemplar, " (",
                 f->ratio, ")"), ""));
@@ -1410,6 +1470,7 @@ _viam_iudicare (
     }
     per (i = ZEPHYRUM; i < xar_numerus(o->ignota); i++)
     {
+        *directa |= (i32)I << (i32)PORTAE_RATIO_IGNOTA;
         _rationem_addere(rationes, _ratio(piscina, "", v, ": ",
             *(constans chorda*)xar_obtinere(o->ignota, i),
             " - debetur"));
@@ -1489,21 +1550,25 @@ portae_tactus_computare (
             Xar* rationes = xar_creare(piscina,
                 (i32)magnitudo(chorda));
             PortaeTactus* t;
+                     i32  directa    = ZEPHYRUM;
+                     i32  clausurae  = ZEPHYRUM;
 
             _viam_iudicare(sutura, o, *(chorda*)xar_obtinere(mutatae,
                 j),
                 memoria, rationes, (b32*)xar_obtinere(tecta, j),
-                piscina);
+                &directa, &clausurae, piscina);
             si (xar_numerus(rationes) == ZEPHYRUM)
             {
                 perge;
             }
-            t            = (PortaeTactus*)xar_addere(tactus);
-            t->via       = *(chorda*)xar_obtinere(mutatae, j);
-            t->porta     = _porta_operturae(o);
-            t->manu      = o->declaratio->manu;
-            t->rationes  = rationes;
-            t->opertura  = o;
+            t             = (PortaeTactus*)xar_addere(tactus);
+            t->via        = *(chorda*)xar_obtinere(mutatae, j);
+            t->porta      = _porta_operturae(o);
+            t->manu       = o->declaratio->manu;
+            t->rationes   = rationes;
+            t->opertura   = o;
+            t->directa    = directa;
+            t->clausurae  = clausurae;
         }
     }
     si (intecta_out != NIHIL)

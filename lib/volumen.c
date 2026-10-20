@@ -10,6 +10,7 @@
 #include "json.h"
 
 #include <stdio.h>
+#include <string.h>
 
 structura Volumen {
                Piscina* piscina;
@@ -81,8 +82,9 @@ interior constans character* constans MIGRATIONES_VOLUMINIS[] = {
 
 interior Volumen*
 _volumen_struere (
-               Piscina* piscina,
-    constans character* via);
+                     Piscina* piscina,
+          constans character* via,
+    constans VolumenOptiones* optiones);
 
 /* actum sine hora (ante migrationem VII aut a codice vetere): seq et
  * millisecunda momenti eius */
@@ -196,9 +198,12 @@ _horas_supplere (
 
 interior Volumen*
 _volumen_struere (
-               Piscina* piscina,
-    constans character* via)
+                     Piscina* piscina,
+          constans character* via,
+    constans VolumenOptiones* optiones)
 {
+    ScriniumOptiones so;
+
     Volumen* vol;
 
     vol = (Volumen*)piscina_allocare(piscina,
@@ -229,7 +234,9 @@ _volumen_struere (
                 chorda_aedificator_finire(aed), piscina);
         }
     }
-    vol->scrinium = scrinium_aperire(piscina, via);
+    memset(&so, 0, magnitudo(so));
+    so.synchronus_plenus  = optiones && optiones->durabilitas_plena;
+    vol->scrinium         = scrinium_aperire_cum(piscina, via, &so);
     si (vol->scrinium == NIHIL)
     {
         redde NIHIL;
@@ -253,10 +260,11 @@ _volumen_struere (
     redde vol;
 }
 
-Volumen*
-volumen_creare (
-               Piscina* piscina,
-    constans character* via)
+interior Volumen*
+_volumen_creare (
+                     Piscina* piscina,
+          constans character* via,
+    constans VolumenOptiones* optiones)
 {
     Volumen* vol;
      chorda  datum;
@@ -267,7 +275,7 @@ volumen_creare (
             via);
         redde NIHIL;
     }
-    vol = _volumen_struere(piscina, via);
+    vol = _volumen_struere(piscina, via, optiones);
     si (vol == NIHIL)
     {
         redde NIHIL;
@@ -282,6 +290,14 @@ volumen_creare (
 }
 
 Volumen*
+volumen_creare (
+               Piscina* piscina,
+    constans character* via)
+{
+    redde _volumen_creare(piscina, via, NIHIL);
+}
+
+Volumen*
 volumen_aperire (
                Piscina* piscina,
     constans character* via)
@@ -291,7 +307,7 @@ volumen_aperire (
         fprintf(stderr, "volumen_aperire: plagula deest: %s\n", via);
         redde NIHIL;
     }
-    redde _volumen_struere(piscina, via);
+    redde _volumen_struere(piscina, via, NIHIL);
 }
 
 Volumen*
@@ -299,11 +315,27 @@ volumen_aperire_aut_creare (
                Piscina* piscina,
     constans character* via)
 {
+    redde volumen_aperire_aut_creare_cum(piscina, via, NIHIL);
+}
+
+Volumen*
+volumen_aperire_aut_creare_cum (
+                     Piscina* piscina,
+          constans character* via,
+    constans VolumenOptiones* optiones)
+{
     si (filum_existit(via))
     {
-        redde _volumen_struere(piscina, via);
+        redde _volumen_struere(piscina, via, optiones);
     }
-    redde volumen_creare(piscina, via);
+    redde _volumen_creare(piscina, via, optiones);
+}
+
+Scrinium*
+volumen_scrinium (
+    Volumen* volumen)
+{
+    redde volumen ? volumen->scrinium : NIHIL;
 }
 
 vacuum
@@ -1197,4 +1229,307 @@ volumen_summa_massarum (
     Volumen* volumen)
 {
     redde _summa(volumen, "SELECT COUNT(*) FROM massae");
+}
+
+
+/* ========================================================================
+ * MASSAE PER RIVUM (hospitium v3 T6)
+ * ======================================================================== */
+
+#define VOLUMEN_CAPSA_RIVI (LXIV * MXXIV)
+
+structura VolumenMassaLector {
+    Volumen* volumen;
+        s64  ordo;
+        i64  mensura;
+        i64  offset;
+};
+
+/* LXIV signa hex minusculae */
+interior b32
+_sigillum_hex_validum (
+    constans character* hex)
+{
+    i32 i;
+
+    si (hex == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = 0; i < LXIV; i++)
+    {
+        si (!((hex[i] >= '0' && hex[i] <= '9')
+              || (hex[i] >= 'a' && hex[i] <= 'f')))
+        {
+            redde FALSUM;
+        }
+    }
+    redde hex[LXIV] == '\0';
+}
+
+/* VERUM si massa sigilli iam exstat; *ordo rowid (si non NIHIL),
+ * *mensura longitudo (si non NIHIL) */
+interior b32
+_massa_quaerere (
+    Volumen* volumen,
+     chorda  hex,
+        s64* ordo,
+        i64* mensura)
+{
+    ScriniumEnuntiatum* e;
+                   b32  inventa = FALSUM;
+
+    e = scrinium_praeparare(volumen->scrinium,
+        "SELECT rowid, length(contentum) FROM massae WHERE sigillum = ?");
+    si (e == NIHIL)
+    {
+        redde FALSUM;
+    }
+    scrinium_ligare_textum(e, 1, hex);
+    si (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        inventa = VERUM;
+        si (ordo)
+        {
+            *ordo = scrinium_columna_numerus(e, 0);
+        }
+        si (mensura)
+        {
+            *mensura = (i64)scrinium_columna_numerus(e, 1);
+        }
+    }
+    scrinium_finire(e);
+    redde inventa;
+}
+
+b32
+volumen_massam_condere_ex_filo (
+               Volumen* volumen,
+    constans character* via_fili,
+                   i64  mensura,
+    constans character* sigillum_notum)
+{
+                 Piscina* p;
+                  chorda  hex;
+      ScriniumEnuntiatum* e;
+           ScriniumMassa* massa   = NIHIL;
+    FilumOctetorumLector* lector  = NIHIL;
+       SigillumContextus  ctx;
+                      i8* capsa;
+                     i64  scripta = 0;
+                 integer  gradus;
+
+    si (volumen == NIHIL || via_fili == NIHIL)
+    {
+        redde FALSUM;
+    }
+    volumen->erratum = NIHIL;
+    si (!_sigillum_hex_validum(sigillum_notum))
+    {
+        volumen->erratum = "sigillum_hex malum (LXIV hex minusculae)";
+        redde FALSUM;
+    }
+    si (mensura > 0x7FFFFFFFULL)
+    {
+        volumen->erratum = "massa nimis magna (ultra 2 GB)";
+        redde FALSUM;
+    }
+    /* piscina propria: vocationes multae piscinam voluminis non
+     * implent */
+    p = piscina_generare_dynamicum("volumen_rivus",
+        VOLUMEN_CAPSA_RIVI + MXXIV);
+    si (p == NIHIL)
+    {
+        redde FALSUM;
+    }
+    hex = chorda_ex_literis(sigillum_notum, p);
+
+    /* dedup: contentum idem iam conditum - filum non legitur */
+    si (_massa_quaerere(volumen, hex, NIHIL, NIHIL))
+    {
+        piscina_destruere(p);
+        redde VERUM;
+    }
+
+    /* savepoint: intra transactionem vocatoris quoque revolvi potest
+     * sine eius opere perdendo */
+    si (!scrinium_exsequi(volumen->scrinium, "SAVEPOINT massa_ex_filo"))
+    {
+        piscina_destruere(p);
+        redde FALSUM;
+    }
+    e = scrinium_praeparare(volumen->scrinium,
+        "INSERT INTO massae (sigillum, contentum) VALUES (?, ?)");
+    si (e == NIHIL)
+    {
+        salta revolve;
+    }
+    scrinium_ligare_textum(e, 1, hex);
+    scrinium_ligare_massam_nullam(e, 2, (i32)mensura);
+    gradus = scrinium_gradi(e);
+    scrinium_finire(e);
+    si (gradus != SCRINIUM_FACTUM)
+    {
+        salta revolve;
+    }
+
+    lector = filum_octeti_aperire(via_fili, p);
+    si (lector == NIHIL)
+    {
+        volumen->erratum = "filum massae legi nequit";
+        salta revolve;
+    }
+    si (mensura > 0)
+    {
+        massa = scrinium_massam_aperire(volumen->scrinium, "massae",
+            "contentum", scrinium_ultimum_id(volumen->scrinium), VERUM);
+        si (massa == NIHIL)
+        {
+            salta revolve;
+        }
+    }
+    capsa = (i8*)piscina_allocare(p, VOLUMEN_CAPSA_RIVI);
+    sigillum_incipere(&ctx);
+    per (;;)
+    {
+        s32 k = filum_octeti_legere(lector, capsa, VOLUMEN_CAPSA_RIVI);
+
+        si (k < 0)
+        {
+            volumen->erratum = "filum massae legi nequit";
+            salta revolve;
+        }
+        si (k == 0)
+        {
+            frange;
+        }
+        si (scripta + (i64)k > mensura)
+        {
+            volumen->erratum = "mensura mendax: filum longius";
+            salta revolve;
+        }
+        si (!scrinium_massam_scribere(massa, capsa, (i32)k,
+            (i32)scripta))
+        {
+            salta revolve;
+        }
+        sigillum_addere(&ctx, capsa, (memoriae_index)k);
+        scripta += (i64)k;
+    }
+    si (scripta != mensura)
+    {
+        volumen->erratum = "mensura mendax: filum brevius";
+        salta revolve;
+    }
+    {
+         Sigillum s = sigillum_finire(&ctx);
+        character computatum[SIGILLUM_HEX_MENSURA];
+
+        sigillum_hex(&s, computatum);
+        si (strcmp(computatum, sigillum_notum) != 0)
+        {
+            volumen->erratum =
+                "sigillum non congruit cum contentu fili";
+            salta revolve;
+        }
+    }
+    scrinium_massam_claudere(massa);
+    filum_octeti_claudere(lector);
+    piscina_destruere(p);
+    redde scrinium_exsequi(volumen->scrinium,
+        "RELEASE massa_ex_filo");
+
+revolve:
+    scrinium_massam_claudere(massa);
+    filum_octeti_claudere(lector);
+    piscina_destruere(p);
+    (vacuum)scrinium_exsequi(volumen->scrinium,
+        "ROLLBACK TO massa_ex_filo");
+    (vacuum)scrinium_exsequi(volumen->scrinium,
+        "RELEASE massa_ex_filo");
+    redde FALSUM;
+}
+
+VolumenMassaLector*
+volumen_massam_aperire (
+    Volumen* volumen,
+     chorda  sigillum_hex,
+        i64* mensura,
+    Piscina* piscina)
+{
+    VolumenMassaLector* l;
+                   s64  ordo  = 0;
+                   i64  m     = 0;
+
+    si (   volumen == NIHIL || piscina == NIHIL
+        || !_massa_quaerere(volumen, sigillum_hex, &ordo, &m))
+    {
+        redde NIHIL;
+    }
+    l = (VolumenMassaLector*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(VolumenMassaLector));
+    si (l == NIHIL)
+    {
+        redde NIHIL;
+    }
+    l->volumen  = volumen;
+    l->ordo     = ordo;
+    l->mensura  = m;
+    l->offset   = 0;
+    si (mensura)
+    {
+        *mensura = m;
+    }
+    redde l;
+}
+
+s32
+volumen_massam_legere (
+    VolumenMassaLector* lector,
+                    i8* capsa,
+                   i32  n)
+{
+    ScriniumMassa* massa;
+              i64  reliqua;
+              i32  m;
+              b32  bene;
+
+    si (lector == NIHIL || capsa == NIHIL)
+    {
+        redde -I;
+    }
+    reliqua = lector->mensura - lector->offset;
+    si (reliqua == 0 || n == 0)
+    {
+        redde 0;
+    }
+    m = (reliqua < (i64)n) ? (i32)reliqua : n;
+    /* ansa per partem: nulla lectio pendet inter partes, ergo nullum
+     * snapshot WAL tenetur (checkpoint interim perficitur) */
+    massa = scrinium_massam_aperire(lector->volumen->scrinium, "massae",
+        "contentum", lector->ordo, FALSUM);
+    si (massa == NIHIL)
+    {
+        redde -I;
+    }
+    bene = scrinium_massam_legere(massa, capsa, m, (i32)lector->offset);
+    scrinium_massam_claudere(massa);
+    si (!bene)
+    {
+        redde -I;
+    }
+    lector->offset += (i64)m;
+    redde (s32)m;
+}
+
+vacuum
+volumen_massam_claudere (
+    VolumenMassaLector* lector)
+{
+    /* ansa non tenetur (per partem aperta) - nihil liberandum; vita in
+     * piscina vocatoris */
+    si (lector)
+    {
+        lector->offset = lector->mensura;
+    }
 }

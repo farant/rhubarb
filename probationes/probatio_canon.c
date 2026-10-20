@@ -567,36 +567,26 @@ interior constans character* PROPRIETAS_CUM_FINIBUS =
 
 
 /* ==================================================
- * Principale
+ * Sectiones (credo v2)
  * ================================================== */
-
-s32
-principale (vacuum)
-{
-                     b32  praeteritus;
-                 Piscina* piscina;
-     InternamentumChorda* intern;
-                   Canon* hortus;
-
-    piscina = piscina_generare_dynamicum("probatio_canon", 262144);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    intern = internamentum_creare(piscina);
-    credo_aperire(piscina);
 
 
     /* ========================================================
      * PROBARE: lectio canonis
      * ======================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
          Canon* c;
         chorda  causa;
-
-        imprimere("\n--- Probans lectionem canonis ---\n");
 
         c = canon_ex_literis(CANON_HORTUS, piscina, intern);
         CREDO_NON_NIHIL (c);
@@ -605,7 +595,6 @@ principale (vacuum)
         CREDO_NON_NIHIL (c->radix);
         CREDO_CHORDA_AEQUALIS_LITERIS (*c->radix, "hortus");
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(c->unicitates), I);
-        hortus = c;
 
         /* fons fractus */
         c = canon_legere(chorda_ex_literis("<<<", piscina),
@@ -635,6 +624,7 @@ principale (vacuum)
         CREDO_NIHIL (c);
         CREDO_CHORDA_NON_VACUA (causa);
     }
+}
 
 
     /* ========================================================
@@ -656,12 +646,18 @@ principale (vacuum)
      * fert (attributum= citans, ad= clavis).
      * ======================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
          Canon* c;
         chorda  causa;
-
-        imprimere("\n--- Probans regulas attributa ignota "
-                  "nominantes ---\n");
 
         /* --- culpae plantatae: quaeque recusari DEBET --- */
 
@@ -793,6 +789,7 @@ principale (vacuum)
             "</canon>", piscina), piscina, intern, &causa);
         CREDO_NON_NIHIL (c);
     }
+}
 
 
     /* ========================================================
@@ -812,12 +809,18 @@ principale (vacuum)
      * Clamor ubi nihil erat, silentium ubi aliquid erat.
      * ======================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Canon* c_frag;
           Xar* vitia;
-
-        imprimere("\n--- Probans fragmenta et transclusiones "
-                  "---\n");
 
         c_frag = canon_ex_literis(
             "<canon dialectus=\"frag\" versio=\"1\">"
@@ -904,6 +907,7 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (
             quot_generis(vitia, CANON_TRANSCLUSIO_IRRITA), I);
     }
+}
 
 
     /* ========================================================
@@ -917,12 +921,18 @@ principale (vacuum)
      * significat: necessarium DEEST clamat, nomen tamen probatur.
      * ======================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Canon* c_ae;
           Xar* vitia;
-
-        imprimere("\n--- Probans elementa attributorum (canon) "
-                  "---\n");
 
         c_ae = canon_ex_literis(
             "<canon dialectus=\"ae\" versio=\"1\">"
@@ -983,6 +993,7 @@ principale (vacuum)
         CREDO_NON_NIHIL (vitia);
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
     }
+}
 
 
     /* ========================================================
@@ -995,12 +1006,19 @@ principale (vacuum)
      * ordinarium sufficit. Expansio fracta = EXPANSIO_FRACTA.
      * ======================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
                Canon* c_ex;
                  Xar* vitia;
         StmlResultus  res;
-
-        imprimere("\n--- Probans iudicium expansum ---\n");
 
         c_ex = canon_ex_literis(
             "<canon dialectus=\"ex\" versio=\"1\">"
@@ -1050,6 +1068,7 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (
             quot_generis(vitia, CANON_EXPANSIO_FRACTA), I);
     }
+}
 
 
     /* ========================================================
@@ -1062,13 +1081,20 @@ principale (vacuum)
      * 'canon sensum iudicat, non superficiem'.
      * ======================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
                Canon* c_di;
                Canon* c_dimax;
                  Xar* vitia;
         StmlResultus  res;
-
-        imprimere("\n--- Probans iudicium distributum ---\n");
 
         c_di = canon_ex_literis(
             "<canon dialectus=\"di\" versio=\"1\">"
@@ -1148,6 +1174,7 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (
             quot_generis(vitia, CANON_DISTRIBUTIO_FRACTA), I);
     }
+}
 
 
     /* ========================================================
@@ -1166,14 +1193,21 @@ principale (vacuum)
      * probatio 'intra' vitium I reddit pro ZEPHYRUM.
      * ======================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Canon* c_pel;
         Canon* c_card;
         Canon* c_intra;
           Xar* v_trans;
           Xar* v_inline;
-
-        imprimere("\n--- Probans transclusionem pellucidam ---\n");
 
         c_pel = canon_ex_literis(
             "<canon dialectus=\"pel\" versio=\"1\">"
@@ -1245,6 +1279,7 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (
             quot_generis(v_trans, CANON_TRANSCLUSIO_CIRCULARIS), I);
     }
+}
 
 
     /* ========================================================
@@ -1265,13 +1300,20 @@ principale (vacuum)
      * Probatio de re ipsa, non de proxima.
      * ======================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Canon* c_frag;
         Canon* c_inline;
           Xar* v_f;
           Xar* v_i;
-
-        imprimere("\n--- Probans transclusionem in canone ipso ---\n");
 
         /* I. LIBERI per fragmentum: aequalitas cum inline */
         c_frag = canon_ex_literis(
@@ -1383,22 +1425,33 @@ principale (vacuum)
             "<elementum nomen=\"a\"/>"
             "</canon>", piscina, intern));
     }
+}
 
 
     /* ========================================================
      * PROBARE: documentum sanum - nulla vitia
      * ======================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                  Canon* hortus;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    hortus   = canon_ex_literis(CANON_HORTUS, piscina, intern);
     {
         Xar* vitia;
-
-        imprimere("\n--- Probans documentum sanum ---\n");
 
         vitia = iudicare_literis(hortus, HORTUS_SANUS,
                                  piscina, intern);
         CREDO_NON_NIHIL (vitia);
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
     }
+}
 
 
     /* ========================================================
@@ -1408,10 +1461,19 @@ principale (vacuum)
      * probantur)
      * ======================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                  Canon* hortus;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    hortus   = canon_ex_literis(CANON_HORTUS, piscina, intern);
     {
         Xar* vitia;
-
-        imprimere("\n--- Probans classes vitiorum ---\n");
 
         /* elementum ignotum + liberum illicitum (idem nodus bis) */
         vitia = iudicare_literis(hortus,
@@ -1531,17 +1593,25 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (quot_generis(vitia,
             CANON_ELEMENTUM_IGNOTUM), I);
     }
+}
 
 
     /* ========================================================
      * PROBARE: intra= - formae contextu dependentes
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Canon* arca;
           Xar* vitia;
-
-        imprimere("\n--- Probans intra= (formae binae) ---\n");
 
         arca = canon_ex_literis(CANON_ARCA, piscina, intern);
         CREDO_NON_NIHIL (arca);
@@ -1562,12 +1632,22 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (quot_generis(vitia,
             CANON_ATTRIBUTUM_DEEST), I);
     }
+}
 
 
     /* ========================================================
      * PROBARE: canon infixus - contractus, non contentum
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus  r;
            StmlNodus* infixus;
@@ -1575,8 +1655,6 @@ principale (vacuum)
                Canon* capsae;
                  Xar* vitia;
               chorda  causa;
-
-        imprimere("\n--- Probans canonem infixum ---\n");
 
         r = stml_legere(chorda_ex_literis(VIRIDARIUM_INFIXO,
                                           piscina),
@@ -1647,17 +1725,25 @@ principale (vacuum)
         CREDO_NON_NIHIL (vitia);
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
     }
+}
 
 
     /* ========================================================
      * PROBARE: citatio et scopi per instantiam
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Canon* bib_canon;
           Xar* vitia;
-
-        imprimere("\n--- Probans citationem et scopos ---\n");
 
         bib_canon = canon_ex_literis(CANON_BIBLIOTHECAE,
                                      piscina, intern);
@@ -1693,6 +1779,7 @@ principale (vacuum)
             " ad=\"sine_solido\"/>"
             "</canon>", piscina, intern));
     }
+}
 
 
     /* ========================================================
@@ -1704,11 +1791,18 @@ principale (vacuum)
      * citatione utramque acciperet).
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Canon* silvula;
           Xar* vitia;
-
-        imprimere("\n--- Probans citationem indicis ---\n");
 
         silvula = canon_ex_literis(CANON_SILVAE, piscina, intern);
         CREDO_NON_NIHIL (silvula);
@@ -1736,6 +1830,7 @@ principale (vacuum)
             " ad=\" /n\"/>"
             "</canon>", piscina, intern));
     }
+}
 
 
     /* ========================================================
@@ -1746,11 +1841,18 @@ principale (vacuum)
      * '&quercus_prima;' sine clave locali 'clavis absens' erat.
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Canon* c;
           Xar* vitia;
-
-        imprimere("\n--- Probans claves externas ---\n");
 
         c = canon_ex_literis(
             "<canon dialectus=\"nemus\" versio=\"1\">\n"
@@ -1798,6 +1900,7 @@ principale (vacuum)
         CREDO_NON_NIHIL (vitia);
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
     }
+}
 
 
     /* ========================================================
@@ -1812,11 +1915,18 @@ principale (vacuum)
      * recursive iudicantur (modellum contenti eorum vivit).
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Canon* c;
           Xar* vitia;
-
-        imprimere("\n--- Probans augmentationem ---\n");
 
         c = canon_ex_literis(
             "<canon dialectus=\"nemus\" versio=\"1\">\n"
@@ -1934,6 +2044,7 @@ principale (vacuum)
         CREDO_NON_NIHIL (vitia);
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
     }
+}
 
 
     /* ========================================================
@@ -1947,11 +2058,18 @@ principale (vacuum)
      * praetermittitur. Fons alienus exemptionem NON dat.
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Canon* c;
           Xar* vitia;
-
-        imprimere("\n--- Probans collisionem clavium ---\n");
 
         c = canon_ex_literis(
             "<canon dialectus=\"nemus\" versio=\"1\">\n"
@@ -2002,6 +2120,7 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (quot_generis(vitia,
             CANON_CLAVIS_COLLISA), I);
     }
+}
 
 
     /* ========================================================
@@ -2021,11 +2140,18 @@ principale (vacuum)
      * claves externas: spatium clavium computari non poterat).
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Canon* c;
           Xar* vitia;
-
-        imprimere("\n--- Probans genus externum et stellam ---\n");
 
         c = canon_ex_literis(
             "<canon dialectus=\"nemus\" versio=\"1\">\n"
@@ -2109,17 +2235,25 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (quot_generis(vitia,
             CANON_VOCABULUM_IGNOTUM), I);
     }
+}
 
 
     /* ========================================================
      * PROBARE: genera valorum identitas/referentia (signa)
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Canon* grex;
           Xar* vitia;
-
-        imprimere("\n--- Probans signa valorum ---\n");
 
         grex = canon_ex_literis(CANON_SIGNORUM, piscina, intern);
         CREDO_NON_NIHIL (grex);
@@ -2134,17 +2268,25 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (quot_generis(vitia,
             CANON_VALOR_MALUS), VII);
     }
+}
 
 
     /* ========================================================
      * PROBARE: dispositio signorum in citatione
      * ======================================================== */
 
+interior vacuum
+_sectio_vicesima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Canon* grex2;
           Xar* vitia;
-
-        imprimere("\n--- Probans dispositionem signorum ---\n");
 
         grex2 = canon_ex_literis(CANON_GREGIS_CITATI,
                                  piscina, intern);
@@ -2164,18 +2306,24 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (quot_generis(vitia,
             CANON_CITATIO_IRRITA), I);
     }
+}
 
 
     /* ========================================================
      * PROBARE: registrum - clavis extensionis et clavis radicis
      * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda catalogus;
         chorda via;
         chorda radix;
-
-        imprimere("\n--- Probans registrum ---\n");
 
         catalogus = chorda_ex_literis(CATALOGUS_FIXTURA, piscina);
 
@@ -2197,20 +2345,28 @@ principale (vacuum)
                                               piscina);
         CREDO_CHORDA_VACUA (via);
     }
+}
 
 
     /* ========================================================
      * PROBARE: corpus verum - canon.canon se ipsum iudicat
      * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
               chorda  fons;
                Canon* canon_ipse;
         StmlResultus  r;
                  Xar* vitia;
               chorda  causa;
-
-        imprimere("\n--- Probans canonem se hospitantem ---\n");
 
         fons = filum_legere_totum("canon.canon", piscina);
         si (fons.mensura == ZEPHYRUM)
@@ -2289,17 +2445,25 @@ principale (vacuum)
             }
         }
     }
+}
 
 
     /* ========================================================
      * PROBARE: super adstrictum (spec super-adstrictum)
      * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Canon* adstrictus;
           Xar* vitia;
-
-        imprimere("\n--- Probans super adstrictum ---\n");
 
         adstrictus = canon_ex_literis(CANON_SUPER_ADSTRICTI,
                                       piscina, intern);
@@ -2321,17 +2485,27 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (quot_generis(vitia,
             CANON_CITATIO_IRRITA), II);
     }
+}
 
 
     /* ========================================================
      * PROBARE: fines valorum (spec fines)
      * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                  Canon* hortus;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    hortus   = canon_ex_literis(CANON_HORTUS, piscina, intern);
     {
         Canon* finium;
           Xar* vitia;
-
-        imprimere("\n--- Probans fines valorum ---\n");
 
         finium = canon_ex_literis(CANON_FINIUM, piscina, intern);
         CREDO_NON_NIHIL (finium);
@@ -2438,20 +2612,28 @@ principale (vacuum)
         CREDO_NIHIL (canon_ex_literis(CANON_FINES_TEXTUS,
                                       piscina, intern));
     }
+}
 
 
     /* ========================================================
      * PROBARE: glossae in grammaticis (spec glossae)
      * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
          Canon* canon_canonum;
          Canon* canon_naturae;
         chorda  fons;
         chorda  causa;
            Xar* vitia;
-
-        imprimere("\n--- Probans glossas in grammaticis ---\n");
 
         fons = filum_legere_totum("canon.canon", piscina);
         CREDO_MAIOR_I32 (fons.mensura, (i32)ZEPHYRUM);
@@ -2488,6 +2670,7 @@ principale (vacuum)
         CREDO_NON_NIHIL (vitia);
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
     }
+}
 
 
     /* ========================================================
@@ -2495,13 +2678,20 @@ principale (vacuum)
      * (arbor porphyriana 2026-08-10: '<.species>' etc.)
      * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         chorda  fons;
         chorda  causa;
          Canon* canon_ipse2;
            Xar* vitia;
-
-        imprimere("\n--- Probans genus titulus (nomina punctata) ---\n");
 
         fons = filum_legere_totum("canon.canon", piscina);
         CREDO_MAIOR_I32 (fons.mensura, (i32)ZEPHYRUM);
@@ -2543,9 +2733,7 @@ principale (vacuum)
         CREDO_MAIOR_I32 (quot_generis(vitia, CANON_VALOR_MALUS),
                          (i32)ZEPHYRUM);
     }
-
-
-    imprimere("\n");
+}
 
 
     /* ========================================================
@@ -2553,12 +2741,20 @@ principale (vacuum)
      * vocabulario invisibilis (spec exemplarium par. 6)
      * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
          Canon* c;
         chorda  causa;
            Xar* vitia;
 
-        imprimere("\n--- CAPS: EXEMPLAR/PER/TRANSPARENTIA ---\n");
         c = canon_legere(chorda_ex_literis(
             "<canon dialectus=\"lint\" versio=\"1\">"
             "<elementum nomen=\"relatum\">"
@@ -2696,6 +2892,7 @@ principale (vacuum)
             }
         }
     }
+}
 
 
     /* ========================================================
@@ -2708,12 +2905,20 @@ principale (vacuum)
      * exsistit.
      * ======================================================== */
 
+interior vacuum
+_sectio_vicesima_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
          Canon* c;
         chorda  causa;
            Xar* vitia;
 
-        imprimere("\n--- CAPS: sensus expansus iudicatus ---\n");
         c = canon_legere(chorda_ex_literis(
             "<canon dialectus=\"lint2\" versio=\"1\">"
             "<elementum nomen=\"s\">"
@@ -2818,17 +3023,66 @@ principale (vacuum)
             }
         }
     }
+}
 
-    credo_imprimere_compendium();
 
-    praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "lectionem canonis", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "regulas attributa ignota nominantes", _sectio_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "fragmenta et transclusiones", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "elementa attributorum (canon)", _sectio_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "iudicium expansum", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "iudicium distributum", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "transclusionem pellucidam", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "transclusionem in canone ipso", _sectio_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "documentum sanum", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "classes vitiorum", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "intra= (formae binae)", _sectio_decima_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "canonem infixum", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "citationem et scopos", _sectio_decima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "citationem indicis", _sectio_decima_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "claves externas", _sectio_decima_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "augmentationem", _sectio_decima_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "collisionem clavium", _sectio_decima_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "genus externum et stellam", _sectio_decima_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "signa valorum", _sectio_decima_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "dispositionem signorum", _sectio_vicesima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "registrum", _sectio_vicesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "canonem se hospitantem", _sectio_vicesima_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "super adstrictum", _sectio_vicesima_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fines valorum", _sectio_vicesima_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "glossas in grammaticis", _sectio_vicesima_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "genus titulus (nomina punctata)", _sectio_vicesima_sexta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "CAPS: EXEMPLAR/PER/TRANSPARENTIA", _sectio_vicesima_septima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "CAPS: sensus expansus iudicatus", _sectio_vicesima_octava, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("canon", SECTIONES);
 }

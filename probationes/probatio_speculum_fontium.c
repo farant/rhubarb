@@ -163,6 +163,113 @@ probatio_scripta(Capsula* cap)
 }
 
 
+/* ==================================================
+ * SECTIONES
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    Capsula* cap;
+
+    piscina  = c->piscina;
+    cap      = capsula_aperire(&capsula_speculi_hospes, piscina);
+    probatio_aperire(cap);
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    Capsula* cap;
+
+    piscina  = c->piscina;
+    cap      = capsula_aperire(&capsula_speculi_hospes, piscina);
+    si (cap != NIHIL)
+    {
+        probatio_fontes_praesentes(cap);
+    }
+}
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    Capsula* cap;
+
+    piscina  = c->piscina;
+    cap      = capsula_aperire(&capsula_speculi_hospes, piscina);
+    si (cap != NIHIL)
+    {
+        probatio_corpus_verum(cap, piscina);
+    }
+}
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    Capsula* cap;
+
+    piscina  = c->piscina;
+    cap      = capsula_aperire(&capsula_speculi_hospes, piscina);
+    si (cap != NIHIL)
+    {
+        probatio_documenta(cap, piscina);
+    }
+}
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    Capsula* cap;
+
+    piscina  = c->piscina;
+    cap      = capsula_aperire(&capsula_speculi_hospes, piscina);
+    si (cap != NIHIL)
+    {
+        probatio_meta(cap, piscina);
+    }
+}
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+    Capsula* cap;
+
+    piscina  = c->piscina;
+    cap      = capsula_aperire(&capsula_speculi_hospes, piscina);
+    si (cap != NIHIL)
+    {
+        probatio_scripta(cap);
+    }
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "apertio et numerus", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fontes clausurae praesentes", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "corpus verum (gzip circumitus)", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "documenta (worklogs)", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "meta: proventus / exclusa / fontes.txt", _sectio_quinta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "scripta (fabrica + generator)", _sectio_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+
 /* ========================================================================
  * PRINCIPALE
  * ======================================================================== */
@@ -170,31 +277,5 @@ probatio_scripta(Capsula* cap)
 s32
 principale (vacuum)
 {
-    Piscina* piscina;
-    Capsula* cap;
-
-    piscina = piscina_generare_dynamicum("probatio_speculum", 4194304);
-    si (piscina == NIHIL)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("PROBATIO SPECULUM FONTIUM\n");
-    imprimere("=========================\n");
-
-    cap = capsula_aperire(&capsula_speculi_hospes, piscina);
-    probatio_aperire(cap);
-    si (cap != NIHIL)
-    {
-        probatio_fontes_praesentes(cap);
-        probatio_corpus_verum(cap, piscina);
-        probatio_documenta(cap, piscina);
-        probatio_meta(cap, piscina);
-        probatio_scripta(cap);
-    }
-
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+    redde credo_suitam_currere("speculum_fontium", SECTIONES);
 }

@@ -35,9 +35,6 @@
 #include <string.h>
 #include <time.h>
 
-hic_manens Piscina*             piscina;
-hic_manens InternamentumChorda* intern;
-
 /* montatio ficta: pulsus numerati, responsum proximum */
 nomen structura {
        i32  pulsus;
@@ -120,12 +117,17 @@ quietum_describere (
  * quietus, C quietus | vivus - C ULTIMA: nihil post eam pingitur (V) */
 interior Vicus*
 vicum_aperire (
-    Volumen* vol)
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* vol)
 {
     Vicus* v;
 
     v = vicus_creare(piscina, intern, vol, CDLXXX, CDLXXX);
     CREDO_NON_NIHIL(v);
+    /* signum_generis numquam scribitur: inscriptio eius sola signum
+     * contextus est (parametrum 'ctx' non constans) */
+    /* <tolera codex="CREDO_STATUS_NON_PURGATUS" (>inscriptio sola */
     CREDO_VERUM(vicus_genus_addere(v, "vivus", magnitudo(Vivens),
         vivum_montare, vivum_describere, &signum_generis));
     CREDO_VERUM(vicus_genus_addere(v, "gelidus", magnitudo(Vivens),
@@ -205,10 +207,10 @@ lineam_pingere (
             Mandata* md;
     TabulaPixelorum* t;
 
-    md = mandata_creare(piscina, intern);
-    pingere(vicus_componere(v->repo, NIHIL, piscina, intern, v),
+    md = mandata_creare(v->piscina, v->intern);
+    pingere(vicus_componere(v->repo, NIHIL, v->piscina, v->intern, v),
         vicus_figurae(v), ZEPHYRUM, md);
-    t = tabula_pixelorum_creare_nuda(piscina, CDLXXX, VIII);
+    t = tabula_pixelorum_creare_nuda(v->piscina, CDLXXX, VIII);
     tabula_pixelorum_vacare(t, color(COLOR_SUPERFICIES));
     delineare_mandata(md, t, vicus_imago_fons, v);
     redde t;
@@ -220,7 +222,7 @@ zona_tabulae (
      constans character* id)
 {
     redde componens_invenire_per_id(vicus_componere(v->repo, NIHIL,
-        piscina, intern, v), chorda_ex_literis(id, piscina));
+        v->piscina, v->intern, v), chorda_ex_literis(id, v->piscina));
 }
 
 interior vacuum
@@ -247,8 +249,8 @@ exspectare_textum (
     {
         (vacuum)vicus_pulsare(v);
         si (chorda_continet(aemulator_textum_effundere(
-            aemulator_hospes_aemulator(ta->hospes), piscina),
-            chorda_ex_literis(textus, piscina)))
+            aemulator_hospes_aemulator(ta->hospes), v->piscina),
+            chorda_ex_literis(textus, v->piscina)))
         {
             redde VERUM;
         }
@@ -258,8 +260,11 @@ exspectare_textum (
 }
 
 interior vacuum
-genus_verum_probare (vacuum)
+_sectio_secunda (
+    CredoContextus* c)
 {
+            Piscina* piscina;
+InternamentumChorda* intern;
             Volumen* vol;
     VicusApplicatio  app;
          VicusLatus* t;
@@ -267,7 +272,8 @@ TerminaleApplicatio* ta;
                 i32  k;
                 b32  pingendum;
 
-    imprimere("\n--- VII: terminale verum (dispositio ordinaria)\n");
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     (vacuum)setenv("SHELL", "/bin/sh", I);
     vol = volumen_temporarium(piscina, "probatio_vicus_pulsus_verum");
     CREDO_VERUM(vicus_applicatio_aedificare(&app, piscina, intern, vol,
@@ -301,7 +307,7 @@ TerminaleApplicatio* ta;
         (constans i8*)"echo vivit_in_fundo\r", XX);
     CREDO_VERUM(exspectare_textum(app.vicus, ta, "vivit_in_fundo\n"));
 
-    imprimere("\n--- VIII: concha exit - latus finitum ---\n");
+    /* VIII: concha exit - latus finitum */
     (vacuum)aemulator_hospes_scribere(ta->hospes,
         (constans i8*)"exit\r", V);
     pingendum = FALSUM;
@@ -320,109 +326,132 @@ TerminaleApplicatio* ta;
     volumen_claudere(vol);
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-         Volumen* vol;
-           Vicus* v;
-       Componens* c;
- TabulaPixelorum* t;
-          chorda  index;
-             b32  inventum;
-             s32  x;
-             s32  lat;
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
-    piscina = piscina_generare_dynamicum("probatio_vicus_pulsus",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    {
+             Volumen* vol;
+               Vicus* v;
+           Componens* c;
+     TabulaPixelorum* t;
+              chorda  index;
+                 b32  inventum;
+                 s32  x;
+                 s32  lat;
+
+        vol = volumen_temporarium(piscina, "probatio_vicus_pulsus");
+
+        /* I: visibilia et viventes in fundo pulsantur */
+        v = vicum_aperire(piscina, intern, vol);
+        CREDO_AEQUALIS_I32(vicus_numerus_tabularum(v), III);
+        CREDO_FALSUM(vicus_pulsare(v));
+        /* A visibilia ambo; B gelidus in fundo non; C vivus in fundo */
+        CREDO_AEQUALIS_I32(vivens(v, ZEPHYRUM, VICUS_SINISTRUM)->pulsus,
+            I);
+        CREDO_AEQUALIS_I32(vivens(v, ZEPHYRUM, VICUS_DEXTRUM)->pulsus,
+            I);
+        CREDO_AEQUALIS_I32(vivens(v, I, VICUS_SINISTRUM)->pulsus,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32(vivens(v, II, VICUS_DEXTRUM)->pulsus, I);
+
+        /* S2b: contextus generis montatori datus; gelidus NIHIL */
+        CREDO_VERUM(vivens(v, ZEPHYRUM, VICUS_SINISTRUM)->ctx
+            == (vacuum*)&signum_generis);
+        CREDO_NIHIL(vivens(v, ZEPHYRUM, VICUS_DEXTRUM)->ctx);
+
+        /* II: mutatum visibilis pingit, fundi non */
+        vivens(v, II, VICUS_DEXTRUM)->mutatum = VERUM;
+        CREDO_FALSUM(vicus_pulsare(v));
+        vivens(v, ZEPHYRUM, VICUS_DEXTRUM)->mutatum = VERUM;
+        CREDO_VERUM(vicus_pulsare(v));
+        vivens(v, ZEPHYRUM, VICUS_DEXTRUM)->mutatum  = FALSUM;
+        vivens(v, II, VICUS_DEXTRUM)->mutatum        = FALSUM;
+
+        /* III: gelidus solum visibilis */
+        CREDO_VERUM(vicus_activam_ponere(v, "B"));
+        CREDO_FALSUM(vicus_pulsare(v));
+        CREDO_AEQUALIS_I32(vivens(v, I, VICUS_SINISTRUM)->pulsus, I);
+        /* A dextrum (gelidus) nunc in fundo: non pulsatum */
+        CREDO_AEQUALIS_I32(vivens(v, ZEPHYRUM, VICUS_DEXTRUM)->pulsus,
+            III);
+        /* A sinistrum (vivus) in fundo vivit */
+        CREDO_AEQUALIS_I32(vivens(v, ZEPHYRUM, VICUS_SINISTRUM)->pulsus,
+            IV);
+
+        /* IV: finitus in fundo - non iam pulsatum */
+        c = zona_tabulae(v, "vicus.tabula.C");
+        CREDO_NON_NIHIL(c);
+        x    = c ? c->fines.x : ZEPHYRUM;
+        lat  = c ? c->fines.latitudo : ZEPHYRUM;
+        /* titulus 'C vivus' (genus dextri a sinistro differt) */
+        CREDO_AEQUALIS_S32(lat, LIV);
+        t = lineam_pingere(v);
+        CREDO_AEQUALIS_I32(numerare(t, x + XLVIII, ZEPHYRUM, LIV, VIII,
+            color(COLOR_TEXT)), ZEPHYRUM);
+        vivens(v, II, VICUS_DEXTRUM)->finitus = VERUM;
+        CREDO_FALSUM(latus(v, II, VICUS_DEXTRUM)->finita);
+        CREDO_VERUM(vicus_pulsare(v));
+        CREDO_VERUM(latus(v, II, VICUS_DEXTRUM)->finita);
+        CREDO_AEQUALIS_I32(vivens(v, II, VICUS_DEXTRUM)->pulsus, V);
+        CREDO_FALSUM(vicus_pulsare(v));
+        CREDO_AEQUALIS_I32(vivens(v, II, VICUS_DEXTRUM)->pulsus, V);
+        /* activa facta: non pulsatur, sed montatum manet */
+        CREDO_VERUM(vicus_activam_ponere(v, "C"));
+        CREDO_FALSUM(vicus_pulsare(v));
+        CREDO_AEQUALIS_I32(vivens(v, II, VICUS_DEXTRUM)->pulsus, V);
+        CREDO_VERUM(latus(v, II, VICUS_DEXTRUM)->montata);
+        CREDO_VERUM(vicus_activam_ponere(v, "B"));
+
+        /* V: titulus "[exitus]" et zona ictus */
+        /* " [exitus]" = IX cellulae post titulum */
+        c = zona_tabulae(v, "vicus.tabula.C");
+        CREDO_NON_NIHIL(c);
+        CREDO_AEQUALIS_S32(c ? c->fines.x : ZEPHYRUM, x);
+        CREDO_AEQUALIS_S32(c ? c->fines.latitudo : ZEPHYRUM, lat + LIV);
+        t = lineam_pingere(v);
+        CREDO_VERUM(numerare(t, x + XLVIII, ZEPHYRUM, LIV, VIII,
+            color(COLOR_TEXT)) > ZEPHYRUM);
+
+        /* VI: dispositio durabilis intacta */
+        index = volumen_praesens_legere(vol, chorda_ex_literis(
+            "vicus/latera", piscina), piscina, &inventum);
+        CREDO_VERUM(inventum);
+        CREDO_FALSUM(chorda_continet(index, chorda_ex_literis("exitus",
+            piscina)));
+        v = vicum_aperire(piscina, intern, vol);
+        CREDO_FALSUM(latus(v, II, VICUS_DEXTRUM)->finita);
+        c = zona_tabulae(v, "vicus.tabula.C");
+        CREDO_AEQUALIS_S32(c ? c->fines.latitudo : ZEPHYRUM, LIV);
+        volumen_claudere(vol);
     }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: visibilia et viventes in fundo pulsantur", _sectio_prima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VII: terminale verum (dispositio ordinaria)", _sectio_secunda,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+/* Fixura suitae: thema semel initiatur (ut olim ante omnia) */
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+    (vacuum)c;
     thema_initiare();
-    vol = volumen_temporarium(piscina, "probatio_vicus_pulsus");
+}
 
-    imprimere("\n--- I: visibilia et viventes in fundo pulsantur\n");
-    v = vicum_aperire(vol);
-    CREDO_AEQUALIS_I32(vicus_numerus_tabularum(v), III);
-    CREDO_FALSUM(vicus_pulsare(v));
-    /* A visibilia ambo; B gelidus in fundo non; C vivus in fundo */
-    CREDO_AEQUALIS_I32(vivens(v, ZEPHYRUM, VICUS_SINISTRUM)->pulsus, I);
-    CREDO_AEQUALIS_I32(vivens(v, ZEPHYRUM, VICUS_DEXTRUM)->pulsus, I);
-    CREDO_AEQUALIS_I32(vivens(v, I, VICUS_SINISTRUM)->pulsus, ZEPHYRUM);
-    CREDO_AEQUALIS_I32(vivens(v, II, VICUS_DEXTRUM)->pulsus, I);
-
-    /* S2b: contextus generis montatori datus; gelidus NIHIL */
-    CREDO_VERUM(vivens(v, ZEPHYRUM, VICUS_SINISTRUM)->ctx
-        == (vacuum*)&signum_generis);
-    CREDO_NIHIL(vivens(v, ZEPHYRUM, VICUS_DEXTRUM)->ctx);
-
-    imprimere("\n--- II: mutatum visibilis pingit, fundi non ---\n");
-    vivens(v, II, VICUS_DEXTRUM)->mutatum = VERUM;
-    CREDO_FALSUM(vicus_pulsare(v));
-    vivens(v, ZEPHYRUM, VICUS_DEXTRUM)->mutatum = VERUM;
-    CREDO_VERUM(vicus_pulsare(v));
-    vivens(v, ZEPHYRUM, VICUS_DEXTRUM)->mutatum  = FALSUM;
-    vivens(v, II, VICUS_DEXTRUM)->mutatum        = FALSUM;
-
-    imprimere("\n--- III: gelidus solum visibilis ---\n");
-    CREDO_VERUM(vicus_activam_ponere(v, "B"));
-    CREDO_FALSUM(vicus_pulsare(v));
-    CREDO_AEQUALIS_I32(vivens(v, I, VICUS_SINISTRUM)->pulsus, I);
-    /* A dextrum (gelidus) nunc in fundo: non pulsatum */
-    CREDO_AEQUALIS_I32(vivens(v, ZEPHYRUM, VICUS_DEXTRUM)->pulsus, III);
-    /* A sinistrum (vivus) in fundo vivit */
-    CREDO_AEQUALIS_I32(vivens(v, ZEPHYRUM, VICUS_SINISTRUM)->pulsus,
-        IV);
-
-    imprimere("\n--- IV: finitus in fundo - non iam pulsatum ---\n");
-    c = zona_tabulae(v, "vicus.tabula.C");
-    CREDO_NON_NIHIL(c);
-    x    = c ? c->fines.x : ZEPHYRUM;
-    lat  = c ? c->fines.latitudo : ZEPHYRUM;
-    /* titulus 'C vivus' (genus dextri a sinistro differt) */
-    CREDO_AEQUALIS_S32(lat, LIV);
-    t = lineam_pingere(v);
-    CREDO_AEQUALIS_I32(numerare(t, x + XLVIII, ZEPHYRUM, LIV, VIII,
-        color(COLOR_TEXT)), ZEPHYRUM);
-    vivens(v, II, VICUS_DEXTRUM)->finitus = VERUM;
-    CREDO_FALSUM(latus(v, II, VICUS_DEXTRUM)->finita);
-    CREDO_VERUM(vicus_pulsare(v));
-    CREDO_VERUM(latus(v, II, VICUS_DEXTRUM)->finita);
-    CREDO_AEQUALIS_I32(vivens(v, II, VICUS_DEXTRUM)->pulsus, V);
-    CREDO_FALSUM(vicus_pulsare(v));
-    CREDO_AEQUALIS_I32(vivens(v, II, VICUS_DEXTRUM)->pulsus, V);
-    /* activa facta: non pulsatur, sed montatum manet */
-    CREDO_VERUM(vicus_activam_ponere(v, "C"));
-    CREDO_FALSUM(vicus_pulsare(v));
-    CREDO_AEQUALIS_I32(vivens(v, II, VICUS_DEXTRUM)->pulsus, V);
-    CREDO_VERUM(latus(v, II, VICUS_DEXTRUM)->montata);
-    CREDO_VERUM(vicus_activam_ponere(v, "B"));
-
-    imprimere("\n--- V: titulus \"[exitus]\" et zona ictus ---\n");
-    /* " [exitus]" = IX cellulae post titulum */
-    c = zona_tabulae(v, "vicus.tabula.C");
-    CREDO_NON_NIHIL(c);
-    CREDO_AEQUALIS_S32(c ? c->fines.x : ZEPHYRUM, x);
-    CREDO_AEQUALIS_S32(c ? c->fines.latitudo : ZEPHYRUM, lat + LIV);
-    t = lineam_pingere(v);
-    CREDO_VERUM(numerare(t, x + XLVIII, ZEPHYRUM, LIV, VIII,
-        color(COLOR_TEXT)) > ZEPHYRUM);
-
-    imprimere("\n--- VI: dispositio durabilis intacta ---\n");
-    index = volumen_praesens_legere(vol, chorda_ex_literis(
-        "vicus/latera", piscina), piscina, &inventum);
-    CREDO_VERUM(inventum);
-    CREDO_FALSUM(chorda_continet(index, chorda_ex_literis("exitus",
-        piscina)));
-    v = vicum_aperire(vol);
-    CREDO_FALSUM(latus(v, II, VICUS_DEXTRUM)->finita);
-    c = zona_tabulae(v, "vicus.tabula.C");
-    CREDO_AEQUALIS_S32(c ? c->fines.latitudo : ZEPHYRUM, LIV);
-    volumen_claudere(vol);
-
-    genus_verum_probare();
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("vicus_pulsus", SECTIONES,
+        _suitam_parare, NIHIL);
 }

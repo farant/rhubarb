@@ -1,0 +1,75 @@
+<interrogationes unitas="actio">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I make a widget do something when it is clicked or receives a key?
+    <responsum symbolum="componens_ponere_actio actio_registrare ActioFn" via="lib/dispensator.c">Name
+      the action in the tree with componens_ponere_actio(c, name) and
+      register a handler for the same name with actio_registrare(reg,
+      name, fn, ctx). The dispensator walks the ascent from the target
+      upward; at each componens that names an action with a handler
+      registered in its spatium it calls the ActioFn, and VERUM means
+      consumed: the ascent stops. FALSUM lets the ancestors try. The
+      nodus argument is the componens whose action matched, which may
+      be an ancestor of the event's target.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I register the same action name twice or replace a handler?
+    <responsum symbolum="actio_registrare actio_registrum_vacare">No.
+      actio_registrare returns FALSUM for a name already registered in
+      the host spatium, for an empty name (interning returns NIHIL for
+      an empty string) and for a NIHIL fn. There is no single
+      unregister: actio_registrum_vacare empties the whole registry
+      (keeping its memory) so it can be rebuilt.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>who owns the action name strings, and must a lookup use an interned chorda?
+    <responsum symbolum="actio_registrare chorda_internare_ex_literis actio_invenire actio_registrum_miscere">actio_registrare
+      interns the C string into the registry's internamentum, so a
+      string literal or a temporary buffer is fine. Lookups compare by
+      content (chorda_aequalis), so actio_invenire accepts any chorda,
+      interned or not. Merging copies the source's name chordas by
+      reference, so the source's internamentum must outlive the target
+      registry (the header asks for the same internamentum).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a widget inside a mounted pane trigger a handler registered in the host?
+    <responsum symbolum="actio_invenire_in_spatio actio_registrum_miscere_in_spatio componens_spatium">Not
+      one registered in a different spatium. The dispensator looks the
+      name up with actio_invenire_in_spatio in the componens' effective
+      spatium (componens_spatium: the nearest ancestor that sets one),
+      and the lookup is strict. If nothing matches there it skips that
+      componens and keeps ascending, so an ancestor in another spatium
+      can still handle its own action. Put a pane's handlers into the
+      host registry with actio_registrum_miscere_in_spatio; entries
+      that already carry a spatium keep it. The spatium chorda is
+      stored as given and must outlive the registry.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find action names in my tree that have no handler, or handlers nobody uses?
+    <responsum symbolum="actio_non_registratae actio_non_relatae">actio_non_registratae
+      returns the names the tree references with no handler in the
+      componens' spatium (an error for lint L10), and actio_non_relatae
+      the registered names no componens references (a warning). Both
+      return a Xar of chorda, each name once per spatium, allocated
+      from the piscina you pass. The chordas carry the name only, not
+      its spatium. A NIHIL registry or piscina gives NIHIL; a NIHIL
+      tree gives an empty Xar (and every handler counts as
+      unreferenced).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why are insula writes made inside an action handler attributed to the action's name?
+    <responsum symbolum="insula_scriptorem_ponere ActioFn" via="lib/dispensator.c">The
+      dispensator sets the insula writer to the componens' action name
+      with insula_scriptorem_ponere just before calling the handler and
+      clears it right after, so every write the handler makes is
+      owned by that action. Handlers do no I/O (lint L5): they change
+      state through the InsulaRepositorium and the motus they are
+      handed, and effects travel as data.</responsum>
+  </interrogatio>
+
+</interrogationes>

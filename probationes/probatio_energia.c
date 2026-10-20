@@ -11,20 +11,14 @@
 #include <stdio.h>
 #include <string.h>
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-          Piscina* piscina;
-    EnergiaStatus  s;
-    EnergiaStatus  t;
-              b32  r;
+    EnergiaStatus s;
+              b32 r;
 
-    piscina = piscina_generare_dynamicum("probatio_energia", XVI * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- I: status sanus ---\n");
+    (vacuum)c;
     memset(&s, (integer)VII, magnitudo(s));
     r = energia_status(&s);
     CREDO_VERUM(r == s.adest);
@@ -39,8 +33,19 @@ s32 principale (vacuum)
         imprimere("  nulla pila\n");
         CREDO_FALSUM(s.oneratur);
     }
+}
 
-    imprimere("\n--- II: lectio iterata ---\n");
+/* lectio prima propria (sine assertione): sectio a priore libera */
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    EnergiaStatus s;
+    EnergiaStatus t;
+              b32 r;
+
+    (vacuum)c;
+    r = energia_status(&s);
     CREDO_VERUM(energia_status(&t) == r);
     si (r)
     {
@@ -48,8 +53,17 @@ s32 principale (vacuum)
                     && s.centesimae - t.centesimae <= II);
     }
     CREDO_FALSUM(energia_status(NIHIL));
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: status sanus", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "II: lectio iterata", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("energia", SECTIONES);
 }

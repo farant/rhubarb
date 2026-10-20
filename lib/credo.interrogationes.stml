@@ -1,0 +1,205 @@
+<interrogationes unitas="credo">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I write a new test suite with credo?
+    <responsum symbolum="credo_suitam_currere CredoSectio CredoContextus" via="probationes/probatio_admonitiones.c">Use
+      credo v2: a static CredoSectio table of rows {titulus, probare,
+      parare, purgare, signa, exspectata_fracta} ending in a row whose
+      titulus is NIHIL, and principale returns
+      credo_suitam_currere("suita", SECTIONES). Each section gets its
+      own piscina in c-&gt;piscina (destroyed after purgare), runs
+      parare, probare, then purgare (always), and the function returns
+      0 only if every section that ran passed. CREDO_SECTIO=titulus
+      runs one section; an unknown title fails the suite before
+      anything runs.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I end an old-style suite so the exit code reflects failures?
+    <responsum symbolum="credo_aperire credo_omnia_praeterierunt credo_imprimere_compendium credo_claudere" via="probationes/probatio_piscina.c lib/credo.worklog.md">Ask
+      credo_omnia_praeterierunt() BEFORE credo_claudere, print
+      credo_imprimere_compendium, and return 0 or 1 from that answer.
+      credo_claudere resets all counts, so asking after it sees zero
+      assertions, which now reads as FALSUM ("NIHIL PROBATUM"). An
+      assertion before credo_aperire prints FATALE and exits the
+      process with 1.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does a test with zero assertions fail?
+    <responsum symbolum="credo_omnia_praeterierunt credo_suitam_currere" via="lib/credo.worklog.md">Because
+      "nothing failed" is not "something passed": a moved fixture
+      directory or a corpus loop that finds nothing used to exit green.
+      credo_omnia_praeterierunt returns FALSUM when the total is 0, a
+      v2 section with no assertions is VACUA (not passing), and a suite
+      in which no section ran (all OMISSA, say) also returns
+      I.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I compare two chorda values with CREDO_CHORDAE_AEQUALES?
+    <responsum symbolum="_credo_notare_chorda _credo_notare_chorda_literis chorda_aequalis">No:
+      despite the name, CREDO_CHORDAE_AEQUALES takes two C strings
+      (constans character*). For chordae use CREDO_CHORDA_AEQUALIS(a,
+      b), which wraps chorda_aequalis in CREDO_VERUM, so a failure
+      prints only the expression text, never the two values;
+      for a chorda against a literal use
+      CREDO_CHORDA_AEQUALIS_LITERIS(s, "text"), which prints the
+      received chorda (first 255 bytes) next to the
+      expectation.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I read the Speratus and Receptus lines of a failure?
+    <responsum symbolum="_credo_notare _credo_notare_integrum _credo_notare_chordae">The
+      comparison macros take (received, expected): CREDO_AEQUALIS_S32(a,
+      b) prints a as Receptus and b as Speratus, so put the computed
+      value first and the expected constant second. Strings are quoted
+      and escaped (\t, \n, \xNN for control bytes, NUL included) with
+      their length in octets; a value longer than 160 octets shows a
+      window around the first difference, named as "fenestra [a, b)",
+      never a silent cut. Equality of strings or bytes adds a third
+      line, Differentia, naming the first differing octet on both
+      sides (or "finit" where one side ends); float comparisons name
+      the difference and the tolerance there. Every failure line is
+      flushed immediately, so it survives a crash a few lines later
+      even through a pipe. Passing assertions print a dot with no
+      newline, so a failure's F, or any line the test prints itself,
+      follows the dots on the same line: never grep output with a
+      leading ^.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I trust the numbers CREDO_AEQUALIS_I32 prints for large unsigned values?
+    <responsum symbolum="_credo_notare_integrum_i32 _credo_notare_integrum_inaequalitas_i32 _credo_notare_i64">Yes,
+      since credo III (2026-10-19): every _I32 helper prints with %u,
+      so a value at or above 2^31 no longer shows as negative (before
+      that the equality and inequality helpers used %d). For 64 bits
+      there are full families: CREDO_*_S64 (signed) and CREDO_*_I64
+      (unsigned), each with AEQUALIS, INAEQUALITAS, MAIOR, MINOR and the
+      AUT_AEQUALIS forms; a memoriae_index goes into the _I64 forms
+      without a cast.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>which assertion should I use for strings, byte buffers and floats?
+    <responsum symbolum="_credo_notare_chordae _credo_notare_literae _credo_notare_octeti _credo_notare_f64_relative _credo_notare_f64_ulp">Chordas:
+      CREDO_CHORDA_AEQUALIS, _CONTINET, _INCIPIT, _TERMINATUR, and
+      CREDO_CHORDA_AEQUALIS_LITERIS against a C literal. Two C strings:
+      CREDO_LITERAE_AEQUALES (NIHIL-safe; CREDO_CHORDAE_AEQUALES takes C
+      strings too, despite its name, and is kept for old suites). Raw
+      bytes: CREDO_OCTETI_AEQUALES(a, b, n), which names the first
+      differing offset in hex. Floats: CREDO_F64_PROXIMUS and
+      CREDO_F32_PROXIMUS for an absolute epsilon; CREDO_F64_RELATIVE(a,
+      b, r) when magnitudes are very large or very small (|a-b| &lt;=
+      r * max(|a|, |b|)); CREDO_F64_ULP(a, b, n) for "within n
+      representable doubles" (-0.0 equals 0.0, NaN never equals
+      anything). Prefer these over CREDO_VERUM(strcmp(...) == 0): a
+      failing CREDO_VERUM can only print its expression, these print
+      both values.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I see how much memory each section used?
+    <responsum symbolum="credo_suitam_currere memoria_processus_legere">Run
+      the suite with CREDO_VERDICTA=file (fabrica always does): every
+      SECTIO line ends with three numbers in KiB - the peak use of the
+      section's own piscina, the process footprint when the section
+      ended, and how much the process's lifetime peak rose while it ran
+      (the footprint counts compressed pages, which RSS hides). The
+      lifetime peak never resets, so a light section after a heavy one
+      shows a rise of 0, not the heavy one's peak. Nothing is printed to
+      the human output: officina compares stdout with golden files.
+      fabrica copies the three numbers into the annals as facts on each
+      section's run; bin/mensor quaestio graves lists the heaviest
+      sections across the tree.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>why did a section fail with credo_memoria, and how do I let a heavy section through?
+    <responsum symbolum="credo_suitam_currere CREDO_MEMORIA_ORDINARIA_MB CREDO_MEMORIA_GRAVIS_MB">After
+      each section credo compares the larger of its arena peak and the
+      rise in the process's lifetime peak against a ceiling:
+      CREDO_MEMORIA_ORDINARIA_MB (256) normally, CREDO_MEMORIA_GRAVIS_MB
+      (1024) for a section whose signa include "gravis". Going over is
+      an ordinary failure named credo_memoria, so the section is FRACTA
+      and the suite exits 1. If the section really needs the memory,
+      add "gravis" to its signa field; CREDO_SIGNA_OMITTE=gravis then
+      skips such sections. CREDO_MEMORIA_MB=N replaces the ordinary
+      ceiling for one run (0 turns it off). The check runs only when a
+      section ends, so it can't stop a runaway loop. When credo is
+      compiled under AddressSanitizer only the arena peak is judged:
+      ASan's quarantine (256 MB by default) and shadow memory sit in the
+      process footprint, so the rise there isn't the section's.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I stop a section early when a precondition fails instead of crashing on NIHIL?
+    <responsum symbolum="_credo_necesse credo_suitam_currere">CREDO_NECESSE(x)
+      or CREDO_NECESSE_NON_NIHIL(p): it records the assertion and, if
+      it failed, longjmps out of the section (marked ABORTA; purgare
+      still runs). Outside a section it behaves like CREDO_VERUM. For a
+      bail-out site with no expression (fixture missing, file not
+      opened), CREDO_CULPA("reason") records an unconditional failure
+      so the summary and exit code agree; it does not jump, so you
+      still return yourself.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I test that code crashes, or does not crash or hang?
+    <responsum symbolum="credo_processus_incipere credo_processus_iudicare credo_processus_filium_finire">CREDO_NON_RUIT(expr),
+      CREDO_NON_PENDET(expr, mora_ms) and CREDO_RUIT_CUM(expr, SIGSEGV)
+      (or _INTRA with a deadline) run expr in a forked child; the
+      parent waits, kills it with SIGKILL past the deadline (default
+      CREDO_MORA_ORDINARIA_MS, 5000), and judges how it ended. They are
+      statement macros on purpose: as a function argument, expr would
+      be evaluated, and crash, in the parent. Assertions made inside
+      the child are NOT counted by the parent.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can CREDO_NON_RUIT catch a call that exits with an error code?
+    <responsum symbolum="credo_processus_iudicare _credo_necesse">No.
+      With no expected signal the check passes whenever the child
+      exited normally, whatever its exit status, so exit(I) inside the
+      expression (for example a fatal piscina_allocare) or a failed
+      CREDO_NECESSE in the child (which calls _exit(I)) still passes.
+      Also the deadline counts 1 ms sleep iterations, not wall time,
+      so real waits run long (the worklog measured about 25%).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I give a test a scratch directory that is cleaned up?
+    <responsum symbolum="credo_area CredoContextus">credo_area(c)
+      inside a v2 section returns TMPDIR/suite.n.pid (n = the row's
+      position in the table, from 1; in parare_suitae/purgare_suitae
+      it is TMPDIR/suite.suita.pid), created on the first call; the
+      whole tree is deleted after purgare, even after NECESSE or when a
+      CREDO_NON_RUIT child created it. It returns NIHIL outside a
+      running context or if the directory cannot be made.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I share an expensive fixture across sections or skip slow ones?
+    <responsum symbolum="credo_suitam_currere_cum CredoSectio CredoContextus">credo_suitam_currere_cum(suita,
+      sectiones, parare_suitae, purgare_suitae) runs parare_suitae once
+      (its datum reaches every section as c-&gt;suita, read-only) and
+      purgare_suitae always; if the fixture fails no section runs.
+      Tag rows with signa from the closed set "lentus rete fenestra
+      repositorium" and CREDO_SIGNA_OMITTE="rete" reports them OMISSA;
+      an unknown word fails the suite. CREDO_ORDO=mixtus shuffles the
+      sections (seed printed) to find hidden shared state.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I mark a section as a known failure without turning the suite red?
+    <responsum symbolum="CredoSectio credo_suitam_currere">Write
+      the reason in the row's exspectata_fracta field (an empty string
+      is refused before anything runs). A failing or aborted section
+      is then NOTA_FRACTA and counts as passing; if it starts passing it
+      becomes INOPINATA and fails the suite, telling you to delete the
+      line. CREDO_GRADUS("step") names the step inside a section so
+      the first failure says which one.</responsum>
+  </interrogatio>
+
+</interrogationes>

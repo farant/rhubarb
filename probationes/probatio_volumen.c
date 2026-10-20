@@ -25,35 +25,34 @@ _continet (
     redde (strstr(fenum, acus) != NIHIL) ? VERUM : FALSUM;
 }
 
-s32 principale (vacuum)
+/* tabula rasa (percursus prior); sectiones sequentes plagulam
+ * VIA_PROBATIONIS ordine tabulae aedificant */
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-        b32  praeteritus;
-    Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_volumen", 65536);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    /* tabula rasa (percursus prior) */
+    (vacuum)c;
     si (filum_existit(VIA_PROBATIONIS))
     {
         filum_delere(VIA_PROBATIONIS);
     }
+}
 
 
     /* ========================================================
      * PROBARE: volumen_creare - ortus + recusatio duplicati
      * ======================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Volumen* vol;
         Volumen* iterum;
-
-        imprimere("\n--- Probans volumen_creare ---\n");
 
         vol = volumen_creare(piscina, VIA_PROBATIONIS);
         CREDO_NON_NIHIL(vol);
@@ -69,16 +68,22 @@ s32 principale (vacuum)
 
         volumen_claudere(vol);
     }
+}
 
 
     /* ========================================================
      * PROBARE: aperire_aut_creare (ambulatio red-team 2026-08-04)
      * ======================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Volumen* vol;
-
-        imprimere("\n--- Probans aperire_aut_creare ---\n");
 
         /* exsistens: aperit (actum ortus iam ibi, non iteratum) */
         vol = volumen_aperire_aut_creare(piscina, VIA_PROBATIONIS);
@@ -98,18 +103,24 @@ s32 principale (vacuum)
         volumen_claudere(vol);
         filum_delere("build/probatio_volumen_aut.db");
     }
+}
 
 
     /* ========================================================
      * PROBARE: actum_appendere - seq crescens
      * ======================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Volumen* vol;
          chorda  datum;
             s64  seq;
-
-        imprimere("\n--- Probans volumen_actum_appendere ---\n");
 
         vol = volumen_aperire(piscina, VIA_PROBATIONIS);
         CREDO_NON_NIHIL(vol);
@@ -123,20 +134,26 @@ s32 principale (vacuum)
 
         volumen_claudere(vol);
     }
+}
 
 
     /* ========================================================
      * PROBARE: plagulam condere/promere - circuitus integer
      * ======================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Volumen* vol;
          chorda  via;
          chorda  contentum;
          chorda  relatum;
             b32  inventum;
-
-        imprimere("\n--- Probans plagulam condere/promere ---\n");
 
         vol = volumen_aperire(piscina, VIA_PROBATIONIS);
         CREDO_NON_NIHIL(vol);
@@ -162,12 +179,20 @@ s32 principale (vacuum)
 
         volumen_claudere(vol);
     }
+}
 
 
     /* ========================================================
      * PROBARE: massae dedup + upsert per viam
      * ======================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Volumen* vol;
          chorda  contentum;
@@ -175,8 +200,6 @@ s32 principale (vacuum)
          chorda  relatum;
             b32  inventum;
             s64  massae_ante;
-
-        imprimere("\n--- Probans dedup sigillo + upsert ---\n");
 
         vol = volumen_aperire(piscina, VIA_PROBATIONIS);
         CREDO_NON_NIHIL(vol);
@@ -207,19 +230,25 @@ s32 principale (vacuum)
 
         volumen_claudere(vol);
     }
+}
 
 
     /* ========================================================
      * PROBARE: plagula vacua legitima
      * ======================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Volumen* vol;
          chorda  vacua;
          chorda  relatum;
             b32  inventum;
-
-        imprimere("\n--- Probans plagulam vacuam ---\n");
 
         vol = volumen_aperire(piscina, VIA_PROBATIONIS);
         CREDO_NON_NIHIL(vol);
@@ -237,12 +266,20 @@ s32 principale (vacuum)
 
         volumen_claudere(vol);
     }
+}
 
 
     /* ========================================================
      * PROBARE: massae nudae - circuitus binarius (octeti nulli!)
      * ======================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           Volumen* vol;
                i8  octeti[6];
@@ -252,8 +289,6 @@ s32 principale (vacuum)
         character  hex_iterum[SIGILLUM_HEX_MENSURA];
               b32  inventum;
               s64  massae_ante;
-
-        imprimere("\n--- Probans massas nudas (binarias) ---\n");
 
         vol = volumen_aperire(piscina, VIA_PROBATIONIS);
         CREDO_NON_NIHIL(vol);
@@ -291,18 +326,24 @@ s32 principale (vacuum)
 
         volumen_claudere(vol);
     }
+}
 
 
     /* ========================================================
      * PROBARE: enumerare + permanentia trans aperturas
      * ======================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                Volumen* vol;
                    Xar* manifestum;
         VolumenPlagula* p;
-
-        imprimere("\n--- Probans enumerare + permanentiam ---\n");
 
         vol = volumen_aperire(piscina, VIA_PROBATIONIS);
         CREDO_NON_NIHIL(vol);
@@ -319,12 +360,20 @@ s32 principale (vacuum)
 
         volumen_claudere(vol);
     }
+}
 
 
     /* ========================================================
      * PROBARE: plicam_ad - iter temporis replicando acta
      * ======================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                Volumen* vol;
                    Xar* praesens;
@@ -334,8 +383,6 @@ s32 principale (vacuum)
         VolumenPlagula* q;
                    i32  index;
                    s64  ante_remotionem;
-
-        imprimere("\n--- Probans plicam_ad (iter temporis) ---\n");
 
         vol = volumen_aperire(piscina, VIA_PROBATIONIS);
         CREDO_NON_NIHIL(vol);
@@ -412,14 +459,22 @@ s32 principale (vacuum)
 
         volumen_claudere(vol);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: acta generum datorum (historia documenti sui sola) -
-     * ordo seq, post_seq exclusivum, genera exacta (non praefixa),
-     * index acta_genus in plagula
-     * ======================================================== */
+/* ========================================================
+ * PROBARE: acta generum datorum (historia documenti sui sola) -
+ * ordo seq, post_seq exclusivum, genera exacta (non praefixa),
+ * index acta_genus in plagula
+ * ======================================================== */
 
+interior vacuum
+_sectio_acta_generum (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                    Volumen* vol;
                        Xar* x;
@@ -429,7 +484,6 @@ s32 principale (vacuum)
         constans character* genera[III];
         constans character* nulla[I];
 
-        imprimere("\n--- Probans acta_generum_legere ---\n");
         genera[ZEPHYRUM] = "d/mutatio";
         genera[I] = "d/ramus";
         genera[II] = NIHIL;
@@ -481,13 +535,21 @@ s32 principale (vacuum)
         scrinium_claudere(s);
         volumen_claudere(vol);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: praesentia (D1) - ponere/legere, scriptor ultimus
-     * vincit, valor vacuus legitimus, NEC acta NEC massae crescunt
-     * ======================================================== */
+/* ========================================================
+ * PROBARE: praesentia (D1) - ponere/legere, scriptor ultimus
+ * vincit, valor vacuus legitimus, NEC acta NEC massae crescunt
+ * ======================================================== */
 
+interior vacuum
+_sectio_praesentiae (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Volumen* vol;
          chorda  relatum;
@@ -496,7 +558,6 @@ s32 principale (vacuum)
             s64  acta_ante;
             s64  massae_ante;
 
-        imprimere("\n--- Probans praesentiam ---\n");
 
         vol = volumen_temporarium(piscina, "probatio_volumen_praesens");
         CREDO_NECESSE_NON_NIHIL(vol);
@@ -543,14 +604,22 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S64(volumen_summa_plagularum(vol), (s64)0);
         volumen_claudere(vol);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: migratio VI - volumen formae veteris (migrationes
-     * I-IV tantum) instantanea status/ et vicus/latera in praesentiam
-     * semel copiat; plagulae aliae non; plagulae ipsae manent
-     * ======================================================== */
+/* ========================================================
+ * PROBARE: migratio VI - volumen formae veteris (migrationes
+ * I-IV tantum) instantanea status/ et vicus/latera in praesentiam
+ * semel copiat; plagulae aliae non; plagulae ipsae manent
+ * ======================================================== */
 
+interior vacuum
+_sectio_migrationis_praesentiae (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* via_vetus =
             "build/probatio_volumen_vetus.db";
@@ -577,7 +646,6 @@ s32 principale (vacuum)
            chorda  relatum;
               b32  inventum;
 
-        imprimere("\n--- Probans migrationem praesentiae ---\n");
 
         si (filum_existit(via_vetus))
         {
@@ -637,14 +705,22 @@ s32 principale (vacuum)
         volumen_claudere(vol);
         filum_delere(via_vetus);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: identitas actus (D2) - hora stricte crescens ordine
-     * seq etiam intra millisecundam, prope tempus parietis; machina
-     * = identitas huius machinae
-     * ======================================================== */
+/* ========================================================
+ * PROBARE: identitas actus (D2) - hora stricte crescens ordine
+ * seq etiam intra millisecundam, prope tempus parietis; machina
+ * = identitas huius machinae
+ * ======================================================== */
 
+interior vacuum
+_sectio_horae (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
               Volumen* vol;
                   Xar* acta;
@@ -654,7 +730,6 @@ s32 principale (vacuum)
                   s64  prior;
              Momentum  nunc;
 
-        imprimere("\n--- Probans horam actorum ---\n");
 
         vol = volumen_temporarium(piscina, "probatio_volumen_hora");
         CREDO_NECESSE_NON_NIHIL(vol);
@@ -683,13 +758,21 @@ s32 principale (vacuum)
         }
         volumen_claudere(vol);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: basis actus (D2b) - super_appendere basim servat,
-     * appendere simplex sine basi; identitas per seq lectori aequalis
-     * ======================================================== */
+/* ========================================================
+ * PROBARE: basis actus (D2b) - super_appendere basim servat,
+ * appendere simplex sine basi; identitas per seq lectori aequalis
+ * ======================================================== */
 
+interior vacuum
+_sectio_basis (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                  Volumen* vol;
                      Xar* acta;
@@ -699,7 +782,6 @@ s32 principale (vacuum)
                      s64  seq_primum;
                      s64  seq_secundum;
 
-        imprimere("\n--- Probans basim actuum ---\n");
 
         vol = volumen_temporarium(piscina, "probatio_volumen_basis");
         CREDO_NECESSE_NON_NIHIL(vol);
@@ -750,15 +832,23 @@ s32 principale (vacuum)
         }
         volumen_claudere(vol);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: migratio VII-IX - acta vetera supplentur ordine seq:
-     * millisecunda eadem et horologium retro saltans numeratorem
-     * augent; actum a codice vetere post migrationem scriptum (hora
-     * NIHIL) apertione sequenti suppletur
-     * ======================================================== */
+/* ========================================================
+ * PROBARE: migratio VII-IX - acta vetera supplentur ordine seq:
+ * millisecunda eadem et horologium retro saltans numeratorem
+ * augent; actum a codice vetere post migrationem scriptum (hora
+ * NIHIL) apertione sequenti suppletur
+ * ======================================================== */
 
+interior vacuum
+_sectio_supplementi_horarum (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* via_vetus =
             "build/probatio_volumen_horae.db";
@@ -787,7 +877,6 @@ s32 principale (vacuum)
               chorda  machina;
             Momentum  decima;
 
-        imprimere("\n--- Probans supplementum horarum ---\n");
 
         decima   = (Momentum)1792490400 * M;   /* MMXXVI-X-XX X:00 */
         machina  = machina_identitas(piscina);
@@ -852,19 +941,25 @@ s32 principale (vacuum)
         volumen_claudere(vol);
         filum_delere(via_vetus);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: volumen temporarium (scratch)
-     * ======================================================== */
+/* ========================================================
+ * PROBARE: volumen temporarium (scratch)
+ * ======================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                    Volumen* tmp;
         constans character* via_tmp;
                  character  via_servata[CCLVI];
                        s64  seq;
-
-        imprimere("\n--- Probans volumen_temporarium ---\n");
 
         tmp = volumen_temporarium(piscina, "probatio_volumen");
         CREDO_NON_NIHIL (tmp);
@@ -890,6 +985,7 @@ s32 principale (vacuum)
             }
         }
     }
+}
 
 
     /* ========================================================
@@ -915,14 +1011,19 @@ s32 principale (vacuum)
      * speratum.
      * ======================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                    Volumen* ordinarium;
         constans character* via_ord =
             "/tmp/probatio_volumen_ordinarium.volumen";
             PiscinaNotatio  nota;
                         i8* venenum;
-
-        imprimere("\n--- Probans volumen ordinarium SUPERSTES ---\n");
 
         (vacuum)filum_delere(via_ord);
 
@@ -954,25 +1055,47 @@ s32 principale (vacuum)
             (vacuum)filum_delere(via_ord);
         }
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "volumen_creare", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "aperire_aut_creare", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "volumen_actum_appendere", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "plagulam condere/promere", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "dedup sigillo + upsert", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "plagulam vacuam", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "massas nudas (binarias)", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "enumerare + permanentiam", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "plicam_ad (iter temporis)", _sectio_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "acta_generum_legere", _sectio_acta_generum,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "praesentia (D1)", _sectio_praesentiae,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "migratio praesentiae (V-VI)", _sectio_migrationis_praesentiae,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "hora actorum (D2)", _sectio_horae,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "basis actuum (D2b)", _sectio_basis,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "supplementum horarum (VII-XI)", _sectio_supplementi_horarum,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "volumen_temporarium", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "volumen ordinarium SUPERSTES", _sectio_decima_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("volumen", SECTIONES, _suitam_parare,
+        NIHIL);
 }

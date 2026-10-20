@@ -123,7 +123,11 @@ _currere (
         diagnosis);
 }
 
-s32 principale (vacuum)
+/* tabula tota una sectio: scaenae ex plagula leguntur (numerus non
+ * notus ante lectionem), numeri excusationum per omnes crescunt */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                 Piscina* piscina;
     InternamentumChorda* intern;
@@ -134,17 +138,9 @@ s32 principale (vacuum)
                     i32  excusatae           = ZEPHYRUM;
                     b32  excusatio_nominata  = FALSUM;
 
-    piscina =
-        piscina_generare_dynamicum("probatio_conformitas_terminalis",
-        M * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    intern  = internamentum_creare(piscina);
-    fons    = filum_legere_totum(TABULA, piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    fons     = filum_legere_totum(TABULA, piscina);
     tabula  = (fons.mensura > ZEPHYRUM)
         ? eventus_conformitas_legere(chorda_ut_cstr(fons, piscina),
               piscina, intern)
@@ -152,8 +148,7 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL (tabula);
     si (tabula == NIHIL)
     {
-        credo_imprimere_compendium();
-        redde I;
+        redde;
     }
 
     per (i = ZEPHYRUM; i < xar_numerus(tabula); i++)
@@ -205,12 +200,20 @@ s32 principale (vacuum)
         CREDO_VERUM (kitty);
     }
 
-    imprimere("\n--- excusationes nominatae ---\n");
+    CREDO_GRADUS("excusationes nominatae");
     CREDO_AEQUALIS_I32 (cursus, II * xar_numerus(tabula));
     CREDO_AEQUALIS_I32 (excusatae, I);
     CREDO_VERUM (excusatio_nominata);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "tabula conformitatis", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("conformitas_terminalis", SECTIONES);
 }

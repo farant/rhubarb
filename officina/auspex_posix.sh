@@ -207,6 +207,11 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(sizeof(struct rusage) == 144);"
     echo "IUNGO_ASSERTA(OFF(rusage, ru_utime) == 0 && OFF(rusage, ru_stime) == 16);"
     echo "IUNGO_ASSERTA(OFF(rusage, ru_maxrss) == 32 && OFF(rusage, ru_nivcsw) == 136);"
+    # credo memoria T1 (2026-10-19): rusage_info_v4 (proc_pid_rusage)
+    echo "IUNGO_ASSERTA(RUSAGE_INFO_V4 == 4);"
+    echo "IUNGO_ASSERTA(sizeof(struct rusage_info_v4) == 296);"
+    echo "IUNGO_ASSERTA(OFF(rusage_info_v4, ri_resident_size) == 64 && OFF(rusage_info_v4, ri_phys_footprint) == 72);"
+    echo "IUNGO_ASSERTA(OFF(rusage_info_v4, ri_lifetime_max_phys_footprint) == 240);"
 }
 
 PRAEAMBULUM='#define IUNGO2(a,b) a##b
@@ -244,6 +249,7 @@ PRAEAMBULUM='#define IUNGO2(a,b) a##b
     echo "#include <util.h>"
     echo "#include <time.h>"
     echo "#include <sys/resource.h>"
+    echo "#include <libproc.h>"
     echo "$PRAEAMBULUM"
     emittere_asserta
 } > "$GEN_DIR/verum.c"

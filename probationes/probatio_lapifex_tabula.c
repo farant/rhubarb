@@ -83,27 +83,21 @@ tabulam_praeparare(
     redde t;
 }
 
-s32 principale(vacuum)
-{
-    Piscina*              piscina;
-    InternamentumChorda*  intern;
-
-    piscina = piscina_generare_dynamicum("probatio_lapifex_tabula", IV * MXXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    intern = internamentum_creare(piscina);
-    credo_aperire(piscina);
-
     /* ========================================================
      * PROBARE I: Constructio tabulae successit
      * ======================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexTabula* t;
-
-        imprimere("\n--- Probans constructionem tabulae ---\n");
 
         t = tabulam_praeparare(piscina, intern, NIHIL, NIHIL);
         CREDO_NON_NIHIL(t);
@@ -114,17 +108,26 @@ s32 principale(vacuum)
         imprimere("  Tabula constructa: %d status\n",
             (int)xar_numerus(t->status_tabulae));
     }
+}
 
     /* ========================================================
      * PROBARE II: Omnis status habet actiones vel goto
      * ======================================================== */
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexTabula* t;
         i32 num_status;
         i32 s;
         b32 omnes_habent = VERUM;
-
-        imprimere("\n--- Probans omnes status habent introitus ---\n");
 
         t = tabulam_praeparare(piscina, intern, NIHIL, NIHIL);
         CREDO_NON_NIHIL(t);
@@ -148,10 +151,21 @@ s32 principale(vacuum)
         }
         CREDO_VERUM(omnes_habent);
     }
+}
 
     /* ========================================================
      * PROBARE III: Status 0 habet SHIFT pro NUMBER et LPAREN
      * ======================================================== */
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexGrammatica* g;
         LapifexTabula*     t;
@@ -159,8 +173,6 @@ s32 principale(vacuum)
         Xar*               actiones_lparen;
         s32 number_idx;
         s32 lparen_idx;
-
-        imprimere("\n--- Probans SHIFT in statu 0 ---\n");
 
         t = tabulam_praeparare(piscina, intern, &g, NIHIL);
         CREDO_NON_NIHIL(t);
@@ -194,18 +206,27 @@ s32 principale(vacuum)
             imprimere("  LPAREN -> SHIFT %d\n", (int)ai->valor);
         }
     }
+}
 
     /* ========================================================
      * PROBARE IV: ACCEPT in aliquo statu pro $ (-1)
      * ======================================================== */
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexTabula* t;
         i32 num_status;
         i32 s;
         b32 acceptum_inventum = FALSUM;
         s32 status_accepti = -I;
-
-        imprimere("\n--- Probans ACCEPT ---\n");
 
         t = tabulam_praeparare(piscina, intern, NIHIL, NIHIL);
         CREDO_NON_NIHIL(t);
@@ -235,10 +256,21 @@ s32 principale(vacuum)
         CREDO_VERUM(acceptum_inventum);
         imprimere("  ACCEPT in statu %d\n", (int)status_accepti);
     }
+}
 
     /* ========================================================
      * PROBARE V: Status 0 habet GOTO pro expr, term, factor
      * ======================================================== */
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexGrammatica* g;
         LapifexTabula*     t;
@@ -248,8 +280,6 @@ s32 principale(vacuum)
         s32 goto_expr;
         s32 goto_term;
         s32 goto_factor;
-
-        imprimere("\n--- Probans GOTO in statu 0 ---\n");
 
         t = tabulam_praeparare(piscina, intern, &g, NIHIL);
         CREDO_NON_NIHIL(t);
@@ -270,10 +300,21 @@ s32 principale(vacuum)
         imprimere("  GOTO(term) = %d\n", (int)goto_term);
         imprimere("  GOTO(factor) = %d\n", (int)goto_factor);
     }
+}
 
     /* ========================================================
      * PROBARE VI: REDUCE in statu cum factor -> NUMBER .
      * ======================================================== */
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexGrammatica* g;
         LapifexCollectio*  c;
@@ -281,8 +322,6 @@ s32 principale(vacuum)
         b32 reduce_inventum = FALSUM;
         i32 s;
         s32 number_idx;
-
-        imprimere("\n--- Probans REDUCE ---\n");
 
         t = tabulam_praeparare(piscina, intern, &g, &c);
         CREDO_NON_NIHIL(t);
@@ -347,14 +386,23 @@ s32 principale(vacuum)
 
         CREDO_VERUM(reduce_inventum);
     }
+}
 
     /* ========================================================
      * PROBARE VII: Nulli conflictus pro grammatica non-ambigua
      * ======================================================== */
+
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexTabula* t;
-
-        imprimere("\n--- Probans nullos conflictus ---\n");
 
         t = tabulam_praeparare(piscina, intern, NIHIL, NIHIL);
         CREDO_NON_NIHIL(t);
@@ -362,18 +410,27 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32(t->numerus_conflictuum, ZEPHYRUM);
         imprimere("  Conflictus: %d\n", (int)t->numerus_conflictuum);
     }
+}
 
     /* ========================================================
      * PROBARE VIII: Numerus actionum et goto rationabilis
      * ======================================================== */
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexTabula* t;
         i32 s;
         i32 num_status;
         s32 totalis_actiones = ZEPHYRUM;
         s32 totalis_goto = ZEPHYRUM;
-
-        imprimere("\n--- Probans numeros actionum/goto ---\n");
 
         t = tabulam_praeparare(piscina, intern, NIHIL, NIHIL);
         CREDO_NON_NIHIL(t);
@@ -400,14 +457,23 @@ s32 principale(vacuum)
         CREDO_VERUM(totalis_actiones < D);
         CREDO_VERUM(totalis_goto < CC);
     }
+}
 
     /* ========================================================
      * PROBARE IX: Imprimere tabulam pro inspectione
      * ======================================================== */
+
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexTabula* t;
-
-        imprimere("\n--- Imprimere tabulam ---\n");
 
         t = tabulam_praeparare(piscina, intern, NIHIL, NIHIL);
         CREDO_NON_NIHIL(t);
@@ -415,14 +481,23 @@ s32 principale(vacuum)
         lapifex_tabulam_imprimere(t);
         lapifex_conflictus_imprimere(t);
     }
+}
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "constructionem tabulae", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "omnes status habent introitus", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "SHIFT in statu 0", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ACCEPT", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "GOTO in statu 0", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "REDUCE", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nullos conflictus", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "numeros actionum/goto", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Imprimere tabulam", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    piscina_destruere(piscina);
-
-    redde (credo_omnia_praeterierunt() ? ZEPHYRUM : I);
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("lapifex_tabula", SECTIONES);
 }

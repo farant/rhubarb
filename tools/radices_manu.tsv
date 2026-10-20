@@ -26,8 +26,6 @@ gesta/frigida.sh	nondum derivatum
 gesta/frigida_fumus.sh	nondum derivatum
 gesta/tabularium.sh	nondum derivatum
 gesta/tabulariumd.sh	nondum derivatum
-glr_debug.sh	nondum derivatum
-glr_quaestio.sh	nondum derivatum
 ludus_tessera/compile_probationes.sh	nondum derivatum
 materia/coquere.sh	nondum derivatum
 materia/oraculum_silvae_struere.sh	pignus: -I$SEDES (amalgama commissi ad pignus) - isolatio consulta; vivum radices derivatas habet
@@ -45,7 +43,6 @@ officina/vindex.sh	nondum derivatum
 oratio/compile_probationes.sh	nondum derivatum
 probationes/probatio_qr_gyrus.sh	nondum derivatum
 run_benchmark.sh	nondum derivatum
-run_lint.sh	nondum derivatum
 saltuarius/saltuarius.sh	nondum derivatum
 silva/amalgamare.sh	nondum derivatum
 silva/ambigua.sh	nondum derivatum
@@ -98,7 +95,6 @@ tools/iudicium_fumus.sh	nondum derivatum
 tools/latina_numeri.sh	nondum derivatum
 tools/linux/fumus_tabulariumd.sh	nondum derivatum
 tools/linux/percursus.sh	nondum derivatum
-tools/linux/probatio.sh	nondum derivatum
 tools/natura_struere.sh	nondum derivatum
 tools/provenientia_obiectum.sh	nondum derivatum
 tools/runae_generare.sh	nondum derivatum

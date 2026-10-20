@@ -21,6 +21,12 @@
  *   bin/fabrica quid [-machina] [-iudex TITULUS] VIA... | -omnes
  *       quid est plagula: unitas, cura, vita, munus, provenientia,
  *       lingua cum causis (tools/fabrica_unitates.c, lib/unitates.c).
+ *   bin/fabrica consilium [-machina] [-agere [-pergere] [-resumere]]
+ *       VIA
+ *       consilium (documentum consilium.canon) iudicatum: undae,
+ *       conflictus, sententiae politicae; -agere: mandata graduum
+ *       exsequuntur observata, cum diario et resumptione
+ *       (tools/fabrica_consilium.c, lib/consilium.c).
  *
  * Exitus: 0 nihil stalum aut ignotum · 1 stalum aut ignotum
  * aliquod · 2 nihil iudicatum (declarationes absentes/fractae,
@@ -70,6 +76,8 @@
 #include "aedilis_silva.h"
 #include "compilator.h"
 #include "fabrica_sutura.h"
+#include "consilium.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -81,7 +89,8 @@
 
 /* MACHINA (fabrica-6 H1): '-machina' in iudicare et sanare - lineae
  * TSV, genus in campo primo (IUDICIUM, COMPOSITUM, VERDICTUM, SANANDA,
- * ORPHANUM, BINARIA, PRAECONDICIO, SANATIO, AGITUR, UNDA, NOTA, SUMMA)
+ * ORPHANUM, BINARIA, PRAECONDICIO, SANATIO, EXITUS, AGITUR, UNDA, NOTA,
+ * SUMMA)
  * pro consumptoribus (pythonica/silva.py, instrumenta); homines formam
  * ordinariam legunt. Errata (exitus 2) in stderr manent. */
 b32 suturae_machina = FALSUM;
@@ -2189,6 +2198,18 @@ _sanare_eventum (
         _campus_numerus((longus)sanatio->duratio_ms);
         suturae_campus(sanatio->causa);
         putchar('\n');
+        /* EXITUS actio via (consilium S3d): artificia actionis agendae -
+         * consumptor (silva.commissio) effectus scripturae inde proponit
+         * (commissum? in arbore?) sine aedificatione.stml parsata */
+        per (j = ZEPHYRUM; agenda && j < xar_numerus(
+                 sanatio->actio->exitus); j++)
+        {
+            fputs("EXITUS", stdout);
+            suturae_campus(sanatio->actio->titulus);
+            suturae_campus(((FabricaExitus*)xar_obtinere(
+                sanatio->actio->exitus, j))->via);
+            putchar('\n');
+        }
         redde;
     }
     printf("%-11s %.*s", suturae_eventus_titulus(sanatio->eventus),
@@ -2438,6 +2459,98 @@ _sanare_suturam (
     redde _sanare_iudicem_ipsum(m) && _sanare_seram_capere(m);
 }
 
+/* arbor secundaria (git worktree): '.git' plagula est, non
+ * directorium. Cwd = radix (fabrica ex radice curritur) */
+interior b32
+_arbor_secundaria (vacuum)
+{
+    redde filum_existit(".git") && !filum_directorium_existit(".git");
+}
+
+/* CONSILIUM ANTE ACTUM (consilium S4): in arbore secundaria consilium
+ * sanationis (siccum, post stadium iudicum - iudices recentes, consilium
+ * plenum) per lib/consilium iudicatur ANTEQUAM quicquam agitur:
+ * exitus extra arborem (~/.bin) = instituere classis DOMUS, VETITUM per
+ * regulam 'arbor_secundaria'. Olim lex in memoria sola ('numquam
+ * sanare installata ex arbore secundaria'). In arbore principali nihil
+ * fit (institutio ritus eius est). FALSUM = vetitum (nuntiatum) */
+interior b32
+_sanare_consilium (
+    CursusSanandi* m)
+{
+      CursusFabricae* c = &m->cursus;
+                 Xar* planum;
+           Consilium* k;
+                 Xar* regulae;
+                 Xar* iudicia;
+              chorda  radix;
+  constans character* domus;
+                 i32  i;
+                 i32  j;
+
+    si (m->siccum || !_arbor_secundaria())
+    {
+        redde VERUM;
+    }
+    planum = fabrica_sanare(&c->sutura, c->ordo, c->electa, VERUM,
+        c->piscina, &c->causa);
+    si (planum == NIHIL)
+    {
+        redde VERUM;    /* causa a sanatione vera nuntiabitur */
+    }
+    k      = consilium_creare(c->piscina);
+    radix  = suturae_radix_absoluta(c->piscina);
+    domus  = lectiones_ambitus("HOME");
+    per (i = ZEPHYRUM; i < xar_numerus(planum); i++)
+    {
+        constans FabricaSanatio* s = (constans FabricaSanatio*)
+            xar_obtinere(planum, i);
+                ConsiliumGradus* g;
+
+        si (   s->eventus != FABRICA_AGENDUM
+            && s->eventus != FABRICA_FORTASSE)
+        {
+            perge;
+        }
+        g = consilium_gradum_addere(k, s->actio->titulus,
+            chorda_ex_literis("actio", c->piscina),
+            chorda_ex_literis("fabrica sanare", c->piscina));
+        per (j = ZEPHYRUM; j < xar_numerus(s->actio->exitus); j++)
+        {
+            chorda via = ((FabricaExitus*)xar_obtinere(s->actio->exitus,
+                j))->via;
+            ConsiliumClassis classis = consilium_classis_viae(via,
+                chorda_ut_cstr(radix, c->piscina), domus);
+            ConsiliumEffectus e = consilium_effectus(
+                (classis == CONSILIUM_DOMUS
+                    || classis == CONSILIUM_EXTERNA)
+                ? CONSILIUM_INSTITUERE : CONSILIUM_SCRIBERE, via);
+
+            e.classis   = classis;
+            e.cognitio  = CONSILIUM_DECLARATUM;
+            consilium_effectum_addere(k, g, e);
+        }
+    }
+    regulae = xar_creare(c->piscina, (i32)magnitudo(ConsiliumRegula));
+    *(ConsiliumRegula*)xar_addere(regulae) =
+        consilium_regula_arboris_secundariae(c->piscina);
+    iudicia = consilium_iudicare(k, regulae, c->piscina);
+    si (xar_numerus(iudicia) == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    {
+        chorda e = consilium_scribere(k, NIHIL, NIHIL, iudicia,
+            suturae_machina, c->piscina);
+
+        fprintf(stderr, "fabrica sanare: consilium in arbore secundaria"
+            " VETITUM - nihil actum (institue ex arbore principali: "
+            "bin/fabrica sanare installata in main):\n%.*s",
+            (s32)e.mensura, (constans character*)e.datum);
+    }
+    redde FALSUM;
+}
+
 /* stadium iudicum, deinde electa: m->sanationes = iudicum primae,
  * deinde ceterae. FALSUM = exitus II (causa nuntiata) */
 interior b32
@@ -2450,6 +2563,10 @@ _sanare_agere (
                i32  i;
 
     si (!_sanare_iudices(m, &iudicum))
+    {
+        redde FALSUM;
+    }
+    si (!_sanare_consilium(m))
     {
         redde FALSUM;
     }
@@ -3504,6 +3621,10 @@ principale (
     alioquin si (strcmp(argv[1], "quid") == 0)
     {
         exitus = suturae_quid(argc, argv, piscina);
+    }
+    alioquin si (strcmp(argv[1], "consilium") == 0)
+    {
+        exitus = suturae_consilium(argc, argv, piscina);
     }
     alioquin
     {

@@ -19,29 +19,21 @@
 #include "internamentum.h"
 #include <stdio.h>
 
-s32
-principale (
-    vacuum)
+    /* --- documentum sine macris: expansio == clonatio --- */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                 Piscina* piscina;
     InternamentumChorda* intern;
 
-    piscina = piscina_generare_dynamicum("probatio_stml_macros",
-                                         1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
-
-    /* --- documentum sine macris: expansio == clonatio --- */
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- documentum sine macris ---\n");
         fons = chorda_ex_literis("<radix><a x=\"1\"/>t</radix>",
                                  piscina);
         res  = stml_legere(fons, piscina, intern);
@@ -70,13 +62,23 @@ principale (
             }
         }
     }
+}
 
     /* --- (a) definitio demissa + vocatio impleta + nota --- */
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- definitio + vocatio nuda ---\n");
         fons = chorda_ex_literis(
             "<radix><#@f><a/><b/></#><<#@f>></radix>", piscina);
         res  = stml_legere(fons, piscina, intern);
@@ -133,13 +135,23 @@ principale (
             }
         }
     }
+}
 
     /* --- (b) transclusio selectoris transit --- */
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- transclusio selectoris transit ---\n");
         fons = chorda_ex_literis(
             "<radix><<caput titulus>></radix>", piscina);
         res  = stml_legere(fons, piscina, intern);
@@ -162,13 +174,23 @@ principale (
             }
         }
     }
+}
 
     /* --- (c) FRAGMENTUM_IGNOTUM --- */
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- fragmentum ignotum ---\n");
         fons = chorda_ex_literis("<radix><<#@nemo>></radix>",
                                  piscina);
         res  = stml_legere(fons, piscina, intern);
@@ -186,13 +208,23 @@ principale (
             CREDO_VERUM (expansio.radix_expansa == NIHIL);
         }
     }
+}
 
     /* --- (d) FRAGMENTUM_POSTERIUS --- */
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- fragmentum posterius ---\n");
         fons = chorda_ex_literis(
             "<radix><<#@f>><#@f><a/></#></radix>", piscina);
         res  = stml_legere(fons, piscina, intern);
@@ -209,13 +241,23 @@ principale (
                                            "@f");
         }
     }
+}
 
     /* --- (e) FRAGMENTUM_GEMINUM --- */
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- fragmentum geminum ---\n");
         fons = chorda_ex_literis(
             "<radix><#@f><a/></#><#@f><b/></#></radix>", piscina);
         res  = stml_legere(fons, piscina, intern);
@@ -232,13 +274,23 @@ principale (
                                            "@f");
         }
     }
+}
 
     /* --- (g) fragmentum INTRA corpus = contentum --- */
+
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- fragmentum intra corpus ---\n");
         fons = chorda_ex_literis(
             "<radix><#@f><#g/></#><<#@f>></radix>", piscina);
         res  = stml_legere(fons, piscina, intern);
@@ -258,17 +310,27 @@ principale (
             }
         }
     }
+}
 
     /* --- SPATIUM CONTENTI: '<#id>' sine '@' = fragmentum
      * contenti/aliasis (transclusio = alias, non templum -
      * identitas rei consumentis est, e.g. lexN arboris). Machina
      * expansionis ea NON tangit: definitio manet ut contentum,
      * transclusio manet ut nodus, tabula vacua. --- */
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- fragmenta contenti transeunt ---\n");
         fons = chorda_ex_literis(
             "<radix><#lex1><a/></#><<#lex1>></radix>", piscina);
         res  = stml_legere(fons, piscina, intern);
@@ -291,14 +353,24 @@ principale (
             }
         }
     }
+}
 
     /* --- transclusio contenti ad nusquam: res consumentis, non
      * vitium machinae (FRAGMENTUM_IGNOTUM spatio templi solum) --- */
+
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- transclusio contenti sine definitione ---\n");
         fons = chorda_ex_literis(
             "<radix><<#solus>></radix>", piscina);
         res  = stml_legere(fons, piscina, intern);
@@ -318,14 +390,24 @@ principale (
             }
         }
     }
+}
 
     /* --- spatia mixta: templum et contentum in documento uno -
      * casus arboris ipse (post-spatia iuxta lexN) --- */
+
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- spatia mixta (templum + contentum) ---\n");
         fons = chorda_ex_literis(
             "<radix><#@t><x/></#><#lex1><a/></#>"
             "<<#@t>><<#lex1>></radix>", piscina);
@@ -348,13 +430,23 @@ principale (
             }
         }
     }
+}
 
     /* --- (T4 a+b) loculi: impletio attributi tota + interpolata --- */
+
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- loculi: impletio attributorum ---\n");
         fons = chorda_ex_literis(
             "<radix><#@f p=\"@p\">"
             "<a x=\"&@p;\" y=\"pre-&@p;-post\"/></#>"
@@ -376,13 +468,23 @@ principale (
             }
         }
     }
+}
 
     /* --- (T4 c) loculi: impletio textus --- */
+
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- loculi: impletio textus ---\n");
         fons = chorda_ex_literis(
             "<radix><#@t v=\"@v\"><m>&@v;!</m></#>"
             "<<#@t v=\"salve\">></radix>", piscina);
@@ -403,13 +505,23 @@ principale (
             }
         }
     }
+}
 
     /* --- (T4 d) LOCULUS_NON_IMPLETUS --- */
+
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- loculus non impletus ---\n");
         fons = chorda_ex_literis(
             "<radix><#@f p=\"@p\"><a x=\"&@p;\"/></#>"
             "<<#@f>></radix>", piscina);
@@ -428,13 +540,23 @@ principale (
                                            "@f");
         }
     }
+}
 
     /* --- (T4 e) ARGUMENTUM_SUPERFLUUM --- */
+
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- argumentum superfluum ---\n");
         fons = chorda_ex_literis(
             "<radix><#@f p=\"@p\"><a x=\"&@p;\"/></#>"
             "<<#@f p=\"1\" q=\"2\">></radix>", piscina);
@@ -451,13 +573,23 @@ principale (
             CREDO_CHORDA_AEQUALIS_LITERIS (expansio.loculus, "q");
         }
     }
+}
 
     /* --- (T4 f) LOCULUS_IGNOTUS (collectione, sine vocatione) --- */
+
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- loculus ignotus ---\n");
         fons = chorda_ex_literis(
             "<radix><#@f p=\"@p\"><a x=\"&@ignotum;\"/></#></radix>",
             piscina);
@@ -477,13 +609,23 @@ principale (
                                            "@f");
         }
     }
+}
 
     /* --- (T4 g) '&@x;' EXTRA corpus = littera --- */
+
+interior vacuum
+_sectio_decima_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- template-spatium extra corpus ---\n");
         fons  = chorda_ex_literis("<radix>&@x;</radix>", piscina);
         res   = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
@@ -505,13 +647,23 @@ principale (
             }
         }
     }
+}
 
     /* --- (T4 h) argumentum cum '>>' in valore (T1 compositum) --- */
+
+interior vacuum
+_sectio_decima_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- argumentum cum '>>' ---\n");
         fons = chorda_ex_literis(
             "<radix><#@f p=\"@p\"><a x=\"&@p;\"/></#>"
             "<<#@f p=\"a>>b\">></radix>", piscina);
@@ -532,13 +684,23 @@ principale (
             }
         }
     }
+}
 
     /* --- (T5 a) corpus vocat macronem priorem: stratum II --- */
+
+interior vacuum
+_sectio_decima_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- vocatio nidificata ---\n");
         fons = chorda_ex_literis(
             "<radix><#@a><x/></#><#@b><<#@a>><y/></#>"
             "<<#@b>></radix>", piscina);
@@ -579,13 +741,23 @@ principale (
             }
         }
     }
+}
 
     /* --- (T5 b) corpus vocat macronem POSTERIOREM --- */
+
+interior vacuum
+_sectio_decima_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- posterius in corpore ---\n");
         fons = chorda_ex_literis(
             "<radix><#@b><<#@a>></#><#@a><x/></#><<#@b>></radix>",
             piscina);
@@ -603,13 +775,23 @@ principale (
                                            "@a");
         }
     }
+}
 
     /* --- (T5 c) loculus trans strata NON declaratus = IGNOTUS --- */
+
+interior vacuum
+_sectio_vicesima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- trans strata non declaratus ---\n");
         fons = chorda_ex_literis(
             "<radix><#@a p=\"@p\"><x v=\"&@p;\"/></#>"
             "<#@b><<#@a p=\"&@q;\">></#></radix>", piscina);
@@ -628,13 +810,23 @@ principale (
                                            "@b");
         }
     }
+}
 
     /* --- (T5 c2) loculus trans strata declaratus = transitio --- */
+
+interior vacuum
+_sectio_vicesima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- trans strata declaratus ---\n");
         fons = chorda_ex_literis(
             "<radix><#@a p=\"@p\"><x v=\"&@p;\"/></#>"
             "<#@b q=\"@q\"><<#@a p=\"&@q;\">></#>"
@@ -658,13 +850,23 @@ principale (
             }
         }
     }
+}
 
     /* --- (T5 d) catena trium stratorum (terminatio) --- */
+
+interior vacuum
+_sectio_vicesima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- catena trium stratorum ---\n");
         fons = chorda_ex_literis(
             "<radix><#@a><x/></#><#@b><<#@a>></#><#@c><<#@b>></#>"
             "<<#@c>></radix>", piscina);
@@ -697,6 +899,7 @@ principale (
             }
         }
     }
+}
 
 
     /* ================================================
@@ -711,11 +914,20 @@ principale (
      * ================================================ */
 
     /* --- (6.1 a) argumentum bloci scalare == inscriptum --- */
+
+interior vacuum
+_sectio_vicesima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- argumentum bloci scalare ---\n");
         fons = chorda_ex_literis(
             "<radix><#@f p=\"@p\"><a x=\"&@p;\"/></#>"
             "<<#@f>><@p=>123</></radix>", piscina);
@@ -736,14 +948,24 @@ principale (
             }
         }
     }
+}
 
     /* --- (6.1 b) argumentum subarboreum: splex silvae in
      * positione liberorum (textus totus '&@c;') --- */
+
+interior vacuum
+_sectio_vicesima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- argumentum subarboreum ---\n");
         fons = chorda_ex_literis(
             "<radix><#@f c=\"@c\"><wrap>&@c;</wrap></#>"
             "<<#@f>><@c=><x/><y/></></radix>", piscina);
@@ -764,13 +986,23 @@ principale (
             }
         }
     }
+}
 
     /* --- (6.1 c) vitium septimum: subarbor in attributo --- */
+
+interior vacuum
+_sectio_vicesima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- vitium septimum (subarbor in chorda) ---\n");
         fons = chorda_ex_literis(
             "<radix><#@f c=\"@c\"><a x=\"&@c;\"/></#>"
             "<<#@f>><@c=><x/></></radix>", piscina);
@@ -786,13 +1018,23 @@ principale (
                 (i32)STML_EXPANSIO_ARGUMENTUM_ARBOREUM);
         }
     }
+}
 
     /* --- (6.1 d) forma mixta: inscriptum + blocum una vocatione --- */
+
+interior vacuum
+_sectio_vicesima_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- forma mixta ---\n");
         fons = chorda_ex_literis(
             "<radix><#@f p=\"@p\" q=\"@q\">"
             "<a x=\"&@p;\" y=\"&@q;\"/></#>"
@@ -814,13 +1056,23 @@ principale (
             }
         }
     }
+}
 
     /* --- (6.1 e) nomen geminatum (inscriptum + blocum) clamat --- */
+
+interior vacuum
+_sectio_vicesima_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- argumentum geminum ---\n");
         fons = chorda_ex_literis(
             "<radix><#@f p=\"@p\"><a x=\"&@p;\"/></#>"
             "<<#@f p=\"1\">><@p=>2</></radix>", piscina);
@@ -836,14 +1088,24 @@ principale (
                 (i32)STML_EXPANSIO_ARGUMENTUM_GEMINUM);
         }
     }
+}
 
     /* --- (6.1 f) sepulcrum = absentia explicita -> loculus
      * declaratus NON impletur --- */
+
+interior vacuum
+_sectio_vicesima_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- sepulcrum argumenti ---\n");
         fons = chorda_ex_literis(
             "<radix><#@f p=\"@p\"><a x=\"&@p;\"/></#>"
             "<<#@f>><@p=/></radix>", piscina);
@@ -859,17 +1121,27 @@ principale (
                 (i32)STML_EXPANSIO_LOCULUS_NON_IMPLETUS);
         }
     }
+}
 
     /* --- (6.1 g) transitio subarboris trans strata: argumentum
      * bloci in corpore, textus totus '&@d;' ubi d subarbor -
      * silva transit (classificatio POST considerationem
      * referentiae: totus-ref ad subarborem = subarbor, non
      * scalaris) --- */
+
+interior vacuum
+_sectio_vicesima_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- transitio subarboris ---\n");
         fons = chorda_ex_literis(
             "<radix><#@inner c=\"@c\"><wrap>&@c;</wrap></#>"
             "<#@outer d=\"@d\"><<#@inner>><@c=>&@d;</></#>"
@@ -891,6 +1163,7 @@ principale (
             }
         }
     }
+}
 
 
     /* ================================================
@@ -906,11 +1179,20 @@ principale (
      * ================================================ */
 
     /* --- (6.2 a) selectio per est + ORDINARIUS --- */
+
+interior vacuum
+_sectio_tricesima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- COMMUTATIO: selectio est ---\n");
         fons = chorda_ex_literis(
             "<radix><#@f x=\"@x\"><COMMUTATIO de=\"&@x;\">"
             "<CASUS est=\"a\"><unus/></CASUS>"
@@ -935,16 +1217,26 @@ principale (
             }
         }
     }
+}
 
     /* --- (6.2 b) bracchia praesentiae + loculus optionalis:
      * quattuor vocationes (congruens est; alia praesens; absens;
      * sepulcrum = absens). Bracchia est/non-nihil praesentiam
      * statuunt - '&@p;' intra ea licitum. --- */
+
+interior vacuum
+_sectio_tricesima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- COMMUTATIO: praesentia + optionalis ---\n");
         fons = chorda_ex_literis(
             "<radix><#@f p=\"@p?\"><COMMUTATIO de=\"&@p;\">"
             "<CASUS est=\"1\"><unus v=\"&@p;\"/></CASUS>"
@@ -971,14 +1263,24 @@ principale (
             }
         }
     }
+}
 
     /* --- (6.2 c) exhaustio: nullus congruens, nullus ORDINARIUS
      * -> vitium impletionis --- */
+
+interior vacuum
+_sectio_tricesima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- COMMUTATIO: casus nullus ---\n");
         fons = chorda_ex_literis(
             "<radix><#@f x=\"@x\"><COMMUTATIO de=\"&@x;\">"
             "<CASUS est=\"a\"><unus/></CASUS>"
@@ -995,16 +1297,26 @@ principale (
                 (i32)STML_EXPANSIO_CASUS_NULLUS);
         }
     }
+}
 
     /* --- (6.2 d) angustatio: loculus optionalis extra bracchium
      * statuens relatus = vitium COLLECTIONIS (etiam ORDINARIUS
      * praesentiam NON statuit - exsequitur et praesente et
      * absente) --- */
+
+interior vacuum
+_sectio_tricesima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- angustatio violata (extra) ---\n");
         fons = chorda_ex_literis(
             "<radix><#@f p=\"@p?\"><a v=\"&@p;\"/></#></radix>",
             piscina);
@@ -1020,12 +1332,22 @@ principale (
                 (i32)STML_EXPANSIO_LOCULUS_NON_ANGUSTATUS);
         }
     }
+}
 
+
+interior vacuum
+_sectio_tricesima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- angustatio violata (ORDINARIUS) ---\n");
         fons = chorda_ex_literis(
             "<radix><#@f p=\"@p?\"><COMMUTATIO de=\"&@p;\">"
             "<CASUS nihil><caret/></CASUS>"
@@ -1043,14 +1365,24 @@ principale (
                 (i32)STML_EXPANSIO_LOCULUS_NON_ANGUSTATUS);
         }
     }
+}
 
     /* --- (6.2 e) malformatio: est cum referentia (LINEA - numquam
      * praedicata computata); de litterale (non totus-ref) --- */
+
+interior vacuum
+_sectio_tricesima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- COMMUTATIO malformata ---\n");
         fons = chorda_ex_literis(
             "<radix><#@f x=\"@x\" y=\"@y\">"
             "<COMMUTATIO de=\"&@x;\">"
@@ -1085,15 +1417,25 @@ principale (
                 (i32)STML_EXPANSIO_COMMUTATIO_MALFORMATA);
         }
     }
+}
 
     /* --- (6.2 f) COMMUTATIO gradu documenti INTACTA transit
      * (machina eam solum in impletione interpretatur - regula
      * eadem ac '&@x;' extra corpora littera manens) --- */
+
+interior vacuum
+_sectio_tricesima_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- COMMUTATIO gradu documenti ---\n");
         fons = chorda_ex_literis(
             "<radix><COMMUTATIO de=\"x\">"
             "<CASUS est=\"a\"><a/></CASUS>"
@@ -1117,6 +1459,7 @@ principale (
             }
         }
     }
+}
 
 
     /* ==================================================
@@ -1136,11 +1479,20 @@ principale (
      * ================================================== */
 
     /* --- distributio: documentum sine involucris == clonatio --- */
+
+interior vacuum
+_sectio_tricesima_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- distributio: sine involucris ---\n");
         fons = chorda_ex_literis("<radix><a x=\"1\"/>t</radix>",
                                  piscina);
         res  = stml_legere(fons, piscina, intern);
@@ -1162,14 +1514,24 @@ principale (
             }
         }
     }
+}
 
     /* --- distributio basalis: involucrum dissolvitur, typus
      * descendit; originalis intacta --- */
+
+interior vacuum
+_sectio_tricesima_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- distributio basalis ---\n");
         fons = chorda_ex_literis(
             "<nota t=\"a\"><#>emere lac</#><#>ianuam</#></nota>",
             piscina);
@@ -1196,13 +1558,23 @@ principale (
             }
         }
     }
+}
 
     /* --- attributa descendunt; collisio ITEM-VINCIT --- */
+
+interior vacuum
+_sectio_tricesima_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- distributio: item vincit ---\n");
         fons = chorda_ex_literis(
             "<a t=\"x\" u=\"y\"><#>p</#><# u=\"z\">q</#></a>",
             piscina);
@@ -1232,14 +1604,24 @@ principale (
             }
         }
     }
+}
 
     /* --- sepulcrum '<@u=/>' in praefixo item attributum
      * hereditatum DELET (verbum delendi par. 6.3) --- */
+
+interior vacuum
+_sectio_quadragesima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- distributio: sepulcrum delet ---\n");
         fons = chorda_ex_literis(
             "<a t=\"1\" u=\"2\"><#><@u=/>x</#></a>", piscina);
         res  = stml_legere(fons, piscina, intern);
@@ -1266,14 +1648,24 @@ principale (
             }
         }
     }
+}
 
     /* --- praefixum attributorum involucri quoque descendit;
      * item eadem lege vincit --- */
+
+interior vacuum
+_sectio_quadragesima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- distributio: praefixum involucri ---\n");
         fons = chorda_ex_literis(
             "<a><@t=>v</><#>x</#><# t=\"w\">y</#></a>", piscina);
         res  = stml_legere(fons, piscina, intern);
@@ -1293,13 +1685,23 @@ principale (
             }
         }
     }
+}
 
     /* --- homogeneitas CLARA: mixtura anonymi/nominati = vitium --- */
+
+interior vacuum
+_sectio_quadragesima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- distributio: mixtura ---\n");
         fons  = chorda_ex_literis("<a><#>x</#><b/></a>", piscina);
         res   = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
@@ -1315,13 +1717,23 @@ principale (
             CREDO_NIHIL (dist.radix_distributa);
         }
     }
+}
 
     /* --- item vacuum = elementum vacuum --- */
+
+interior vacuum
+_sectio_quadragesima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- distributio: item vacuum ---\n");
         fons  = chorda_ex_literis("<a t=\"1\"><#/></a>", piscina);
         res   = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
@@ -1340,13 +1752,23 @@ principale (
             }
         }
     }
+}
 
     /* --- item silvae sunt: liberi plures --- */
+
+interior vacuum
+_sectio_quadragesima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- distributio: item silva ---\n");
         fons  = chorda_ex_literis("<a><#><b/><c/></#></a>", piscina);
         res   = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
@@ -1365,13 +1787,23 @@ principale (
             }
         }
     }
+}
 
     /* --- nidificatio recursiva: involucrum nominatum intra item --- */
+
+interior vacuum
+_sectio_quadragesima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- distributio: nidificatio nominata ---\n");
         fons = chorda_ex_literis(
             "<r><a><#><b><#>k</#></b></#></a></r>", piscina);
         res  = stml_legere(fons, piscina, intern);
@@ -1391,14 +1823,24 @@ principale (
             }
         }
     }
+}
 
     /* --- nidificatio recursiva: listae anonymae typo eodem
      * PLANANTUR (rithmus PER degeneratae) --- */
+
+interior vacuum
+_sectio_quadragesima_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- distributio: planatio anonyma ---\n");
         fons = chorda_ex_literis(
             "<r><a><#><#>x</#><#>y</#></#></a></r>", piscina);
         res  = stml_legere(fons, piscina, intern);
@@ -1418,14 +1860,24 @@ principale (
             }
         }
     }
+}
 
     /* --- fragmenta anonyma sine parente nominato transeunt
      * (gradu documenti; intra fragmentum nominatum) --- */
+
+interior vacuum
+_sectio_quadragesima_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- distributio: sine parente nominato ---\n");
         fons  = chorda_ex_literis("<#>x</#>", piscina);
         res   = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
@@ -1463,13 +1915,23 @@ principale (
             }
         }
     }
+}
 
     /* --- commenta inter item transeunt positione servata --- */
+
+interior vacuum
+_sectio_quadragesima_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlResultus res;
               chorda fons;
 
-        imprimere("\n--- distributio: commenta inter item ---\n");
         fons = chorda_ex_literis(
             "<a t=\"1\"><#>x</#><!--n--><#>y</#></a>", piscina);
         res  = stml_legere(fons, piscina, intern);
@@ -1489,15 +1951,109 @@ principale (
             }
         }
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "documentum sine macris", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "definitio + vocatio nuda", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "transclusio selectoris transit", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "fragmentum ignotum", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fragmentum posterius", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fragmentum geminum", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fragmentum intra corpus", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fragmenta contenti transeunt", _sectio_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "transclusio contenti sine definitione", _sectio_nona, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "spatia mixta (templum + contentum)", _sectio_decima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "loculi: impletio attributorum", _sectio_decima_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "loculi: impletio textus", _sectio_decima_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "loculus non impletus", _sectio_decima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "argumentum superfluum", _sectio_decima_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "loculus ignotus", _sectio_decima_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "template-spatium extra corpus", _sectio_decima_sexta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "argumentum cum '>>'", _sectio_decima_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "vocatio nidificata", _sectio_decima_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "posterius in corpore", _sectio_decima_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "trans strata non declaratus", _sectio_vicesima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "trans strata declaratus", _sectio_vicesima_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "catena trium stratorum", _sectio_vicesima_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "argumentum bloci scalare", _sectio_vicesima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "argumentum subarboreum", _sectio_vicesima_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "vitium septimum (subarbor in chorda)", _sectio_vicesima_quinta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "forma mixta", _sectio_vicesima_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "argumentum geminum", _sectio_vicesima_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "sepulcrum argumenti", _sectio_vicesima_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "transitio subarboris", _sectio_vicesima_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "COMMUTATIO: selectio est", _sectio_tricesima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "COMMUTATIO: praesentia + optionalis", _sectio_tricesima_prima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "COMMUTATIO: casus nullus", _sectio_tricesima_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "angustatio violata (extra)", _sectio_tricesima_tertia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "angustatio violata (ORDINARIUS)", _sectio_tricesima_quarta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "COMMUTATIO malformata", _sectio_tricesima_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "COMMUTATIO gradu documenti", _sectio_tricesima_sexta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "distributio: sine involucris", _sectio_tricesima_septima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "distributio basalis", _sectio_tricesima_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "distributio: item vincit", _sectio_tricesima_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "distributio: sepulcrum delet", _sectio_quadragesima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "distributio: praefixum involucri", _sectio_quadragesima_prima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "distributio: mixtura", _sectio_quadragesima_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "distributio: item vacuum", _sectio_quadragesima_tertia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "distributio: item silva", _sectio_quadragesima_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "distributio: nidificatio nominata", _sectio_quadragesima_quinta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "distributio: planatio anonyma", _sectio_quadragesima_sexta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "distributio: sine parente nominato",
+        _sectio_quadragesima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "distributio: commenta inter item", _sectio_quadragesima_octava,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    si (credo_omnia_praeterierunt())
-    {
-        credo_claudere();
-        redde ZEPHYRUM;
-    }
-    credo_claudere();
-    redde I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("stml_macros", SECTIONES);
 }

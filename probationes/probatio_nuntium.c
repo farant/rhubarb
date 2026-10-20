@@ -15,26 +15,18 @@
 #define TAG_DATUM   VI
 #define TAG_NIDUM   VII
 
-s32 principale(vacuum)
-{
-    Piscina* piscina;
-        b32  praeteritus;
-
-    /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("probatio_nuntium",
-        IV * MXXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ========================================================
 	 * PROBARE: Varint encoding/decoding
 	 * ======================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NuntiumScriptor* scriptor;
           NuntiumLector* lector;
@@ -42,8 +34,6 @@ s32 principale(vacuum)
                     i32  tag;
                     i32  wire_type;
                     i64  valor;
-
-        imprimere("\n--- Probans varint encoding/decoding ---\n");
 
         scriptor = nuntium_scriptor_creare(piscina, CXXVIII);
         CREDO_NON_NIHIL(scriptor);
@@ -92,12 +82,20 @@ s32 principale(vacuum)
         CREDO_FALSUM(nuntium_lector_habet_plus(lector));
         CREDO_FALSUM(nuntium_lector_error(lector));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: Signed varint (zigzag encoding)
 	 * ======================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NuntiumScriptor* scriptor;
           NuntiumLector* lector;
@@ -105,8 +103,6 @@ s32 principale(vacuum)
                     i32  tag;
                     i32  wire_type;
                     s64  valor;
-
-        imprimere("\n--- Probans signed varint (zigzag) ---\n");
 
         scriptor = nuntium_scriptor_creare(piscina, CXXVIII);
         CREDO_NON_NIHIL(scriptor);
@@ -156,15 +152,19 @@ s32 principale(vacuum)
 
         CREDO_FALSUM(nuntium_lector_error(lector));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: Zigzag encode/decode directly
 	 * ======================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans zigzag encode/decode ---\n");
-
         /* 0 -> 0 */
         CREDO_AEQUALIS_I32((i32)nuntium_zigzag_encode(0), ZEPHYRUM);
         CREDO_AEQUALIS_S32((s32)nuntium_zigzag_decode(0), ZEPHYRUM);
@@ -185,12 +185,20 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)nuntium_zigzag_encode(2), IV);
         CREDO_AEQUALIS_S32((s32)nuntium_zigzag_decode(4), II);
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: Fixed 32-bit
 	 * ======================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NuntiumScriptor* scriptor;
           NuntiumLector* lector;
@@ -198,8 +206,6 @@ s32 principale(vacuum)
                     i32  tag;
                     i32  wire_type;
                     i32  valor;
-
-        imprimere("\n--- Probans fixed 32-bit ---\n");
 
         scriptor = nuntium_scriptor_creare(piscina, CXXVIII);
         CREDO_NON_NIHIL(scriptor);
@@ -229,12 +235,20 @@ s32 principale(vacuum)
 
         CREDO_FALSUM(nuntium_lector_error(lector));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: Fixed 64-bit
 	 * ======================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NuntiumScriptor* scriptor;
           NuntiumLector* lector;
@@ -242,8 +256,6 @@ s32 principale(vacuum)
                     i32  tag;
                     i32  wire_type;
                     i64  valor;
-
-        imprimere("\n--- Probans fixed 64-bit ---\n");
 
         scriptor = nuntium_scriptor_creare(piscina, CXXVIII);
         CREDO_NON_NIHIL(scriptor);
@@ -268,12 +280,20 @@ s32 principale(vacuum)
 
         CREDO_FALSUM(nuntium_lector_error(lector));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: Float (f32)
 	 * ======================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NuntiumScriptor* scriptor;
           NuntiumLector* lector;
@@ -281,8 +301,6 @@ s32 principale(vacuum)
                     i32  tag;
                     i32  wire_type;
                     f32  valor;
-
-        imprimere("\n--- Probans f32 ---\n");
 
         scriptor = nuntium_scriptor_creare(piscina, CXXVIII);
         CREDO_NON_NIHIL(scriptor);
@@ -312,12 +330,20 @@ s32 principale(vacuum)
 
         CREDO_FALSUM(nuntium_lector_error(lector));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: Double (f64)
 	 * ======================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NuntiumScriptor* scriptor;
           NuntiumLector* lector;
@@ -325,8 +351,6 @@ s32 principale(vacuum)
                     i32  tag;
                     i32  wire_type;
                     f64  valor;
-
-        imprimere("\n--- Probans f64 ---\n");
 
         scriptor = nuntium_scriptor_creare(piscina, CXXVIII);
         CREDO_NON_NIHIL(scriptor);
@@ -350,12 +374,20 @@ s32 principale(vacuum)
 
         CREDO_FALSUM(nuntium_lector_error(lector));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: Chorda (length-delimited string)
 	 * ======================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NuntiumScriptor* scriptor;
           NuntiumLector* lector;
@@ -364,8 +396,6 @@ s32 principale(vacuum)
                  chorda  nomen_out;
                     i32  tag;
                     i32  wire_type;
-
-        imprimere("\n--- Probans chorda ---\n");
 
         scriptor = nuntium_scriptor_creare(piscina, CXXVIII);
         CREDO_NON_NIHIL(scriptor);
@@ -399,12 +429,20 @@ s32 principale(vacuum)
 
         CREDO_FALSUM(nuntium_lector_error(lector));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: Bytes (raw binary data)
 	 * ======================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NuntiumScriptor* scriptor;
           NuntiumLector* lector;
@@ -414,8 +452,6 @@ s32 principale(vacuum)
                          (i8)0xFF, (i8)0xFE};
                     i32 tag;
                     i32 wire_type;
-
-        imprimere("\n--- Probans bytes ---\n");
 
         scriptor = nuntium_scriptor_creare(piscina, CXXVIII);
         CREDO_NON_NIHIL(scriptor);
@@ -435,12 +471,20 @@ s32 principale(vacuum)
 
         CREDO_FALSUM(nuntium_lector_error(lector));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: Nuntium compositum (multiple fields)
 	 * ======================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NuntiumScriptor* scriptor;
           NuntiumLector* lector;
@@ -452,8 +496,6 @@ s32 principale(vacuum)
                     i64  id;
                     s64  aetas;
                     b32  activus;
-
-        imprimere("\n--- Probans nuntium compositum ---\n");
 
         scriptor = nuntium_scriptor_creare(piscina, CXXVIII);
         CREDO_NON_NIHIL(scriptor);
@@ -509,12 +551,20 @@ s32 principale(vacuum)
 
         CREDO_FALSUM(nuntium_lector_error(lector));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: Saltare field ignotum
 	 * ======================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NuntiumScriptor* scriptor;
           NuntiumLector* lector;
@@ -523,8 +573,6 @@ s32 principale(vacuum)
                     i32  tag;
                     i32  wire_type;
                     i64  id;
-
-        imprimere("\n--- Probans saltare field ignotum ---\n");
 
         scriptor = nuntium_scriptor_creare(piscina, CXXVIII);
         CREDO_NON_NIHIL(scriptor);
@@ -566,12 +614,20 @@ s32 principale(vacuum)
 
         CREDO_FALSUM(nuntium_lector_error(lector));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: Nuntium nidum (nested message)
 	 * ======================================================== */
 
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NuntiumScriptor* scriptor_exterior;
         NuntiumScriptor* scriptor_interior;
@@ -582,8 +638,6 @@ s32 principale(vacuum)
                  chorda  titulus;
                     i32  tag;
                     i32  wire_type;
-
-        imprimere("\n--- Probans nuntium nidum ---\n");
 
         /* Creare nuntium interiorem */
         scriptor_interior = nuntium_scriptor_creare(piscina, CXXVIII);
@@ -648,20 +702,26 @@ s32 principale(vacuum)
         CREDO_FALSUM(nuntium_lector_error(lector_interior));
         CREDO_FALSUM(nuntium_lector_error(lector_exterior));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: Scriptor purgare et reuse
 	 * ======================================================== */
 
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NuntiumScriptor* scriptor;
           NuntiumLector* lector;
                  chorda  datum;
                     i32  tag;
                     i32  wire_type;
-
-        imprimere("\n--- Probans scriptor purgare ---\n");
 
         scriptor = nuntium_scriptor_creare(piscina, CXXVIII);
         CREDO_NON_NIHIL(scriptor);
@@ -686,35 +746,45 @@ s32 principale(vacuum)
 
         CREDO_FALSUM(nuntium_lector_error(lector));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: Varint mensura
 	 * ======================================================== */
 
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans varint mensura ---\n");
-
         CREDO_AEQUALIS_I32(nuntium_varint_mensura(0), I);
         CREDO_AEQUALIS_I32(nuntium_varint_mensura(CXXVII), I);    /* 127 */
         CREDO_AEQUALIS_I32(nuntium_varint_mensura(CXXVIII), II);  /* 128 */
         CREDO_AEQUALIS_I32(nuntium_varint_mensura(0x3FFF), II);   /* 16383 */
         CREDO_AEQUALIS_I32(nuntium_varint_mensura(0x4000), III);  /* 16384 */
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: Error handling - read past end
 	 * ======================================================== */
 
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         NuntiumLector* lector;
                chorda  datum;
                    i8  datum_bytes[I];
                   i32  tag;
                   i32  wire_type;
-
-        imprimere("\n--- Probans error handling ---\n");
 
         /* Creare datum breve */
         datum_bytes[ZEPHYRUM]  = 'x';
@@ -729,16 +799,20 @@ s32 principale(vacuum)
         /* Trying to read more should fail */
         CREDO_FALSUM(nuntium_legere_field(lector, &tag, &wire_type));
     }
+}
 
 
     /* ========================================================
 	 * PROBARE: NIHIL handling
 	 * ======================================================== */
 
+interior vacuum
+_sectio_decima_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         chorda datum;
-
-        imprimere("\n--- Probans NIHIL handling ---\n");
 
         datum.datum    = NIHIL;
         datum.mensura  = ZEPHYRUM;
@@ -752,27 +826,40 @@ s32 principale(vacuum)
         CREDO_FALSUM(nuntium_scribere_varint(NIHIL, I, I));
         CREDO_FALSUM(nuntium_legere_field(NIHIL, NIHIL, NIHIL));
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "varint encoding/decoding", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "signed varint (zigzag)", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "zigzag encode/decode", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fixed 32-bit", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fixed 64-bit", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "f32", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "f64", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "chorda", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "bytes", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nuntium compositum", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "saltare field ignotum", _sectio_decima_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "nuntium nidum", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "scriptor purgare", _sectio_decima_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "varint mensura", _sectio_decima_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "error handling", _sectio_decima_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "NIHIL handling", _sectio_decima_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ========================================================
-	 * Compendium
-	 * ======================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    /* Destructio */
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("nuntium", SECTIONES);
 }

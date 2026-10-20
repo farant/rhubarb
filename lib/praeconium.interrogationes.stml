@@ -1,0 +1,79 @@
+<interrogationes unitas="praeconium">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I record a Claude Code hook event in the session log?
+    <responsum symbolum="praeconium_ex_hamo praeconium_scribere praeconium_via" via="tools/praeco.c">Parse
+      the hook's stdin JSON with praeconium_ex_hamo (pass TMUX_PANE,
+      TMUX and the time in ms), then praeconium_scribere to
+      praeconium_via(piscina). This is exactly what 'praeco hamus'
+      does. praeconium_ex_hamo returns FALSUM for malformed JSON or a
+      non-object root, and then nothing should be written.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>where is the session event log, and how do I point a test at another one?
+    <responsum symbolum="praeconium_via">praeconium_via
+      returns $RHUBARB_COLLOQUIA/eventa.jsonl when that variable is
+      set and non-empty, otherwise
+      $HOME/.rhubarb/colloquia/eventa.jsonl (with HOME unset it falls
+      back to ./.rhubarb/...). One file is shared by every worktree.
+      Tests set RHUBARB_COLLOQUIA to a temporary directory;
+      praeconium_scribere creates the directory if needed. Never set it
+      to the empty string: the buffer is then sized for the empty value
+      (plus LXIV) but the HOME path is written into it, which overflows
+      once HOME is longer than 31 bytes.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can several hooks append to the log at the same time without corrupting lines?
+    <responsum symbolum="praeconium_scribere filum_appendere_firmiter">Yes:
+      each event is one JSON line written by a single O_APPEND write()
+      (then fsync) through filum_appendere_firmiter, so concurrent
+      writers never interleave inside a line. The test forks four
+      writers of 50 events and reads back all 200 lines intact. To keep
+      lines short, nuntius is cut to 200 bytes, never inside a UTF-8
+      character.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I follow the log incrementally, reading only new events?
+    <responsum symbolum="praeconium_legere_ab praeconium_caudam_legere" via="lib/colloquia_visus.c">Keep
+      an s64 byte position and call praeconium_legere_ab(via,
+      &amp;positio, piscina) on each tick. Start at 0 to replay the
+      whole file; to start from now, do what colloquia_visus does: set
+      positio to the file size (fseek/ftell) FIRST, then seed your state
+      once with praeconium_caudam_legere(via, octeti, piscina), which
+      returns no position of its own (an event written in between is
+      seen twice rather than lost). praeconium_legere_ab returns only complete
+      lines and advances positio to the end of the last one, so a
+      half-written line is read next time. If the file shrank below
+      positio (deleted or rotated) it restarts from 0; if it is missing
+      it returns an empty Xar and sets positio to 0.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what do the genus and nuntius fields of a PraeconiumEventus hold?
+    <responsum symbolum="PraeconiumEventus praeconium_ex_hamo" via="lib/praeconium.worklog.md">They
+      depend on hook_event_name: Notification gives notification_type
+      and message; PreToolUse, PostToolUse, PostToolUseFailure and
+      PermissionRequest give tool_name and the first non-empty of
+      tool_input description, command, file_path, pattern, url;
+      UserPromptSubmit puts the prompt in nuntius; Stop and SubagentStop
+      the last_assistant_message; StopFailure the error; SessionStart
+      sets genus to trigger (or the older source); SessionEnd to
+      reason. servitor is only the socket part of TMUX (before the
+      first comma).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I keep the chorda fields of an event after resetting the piscina I read it with?
+    <responsum symbolum="praeconium_ex_hamo praeconium_caudam_legere praeconium_legere_ab chorda_ut_cstr">No.
+      Every chorda in a PraeconiumEventus points into JSON values
+      allocated in the piscina you passed; resetting it (colloquia_visus
+      calls piscina_vacare on its scratch piscina every tick) leaves
+      them dangling. Copy what you keep. They are chorda, not
+      NUL-terminated: use chorda_ut_cstr before printf or strcmp.
+      Missing fields are empty chorda (datum NIHIL).</responsum>
+  </interrogatio>
+
+</interrogationes>

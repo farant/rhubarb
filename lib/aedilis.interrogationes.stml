@@ -1,0 +1,149 @@
+<interrogationes unitas="aedilis">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I build and run a program or test without writing a build script?
+    <responsum imperium="./bin/aedilis probationes/probatio_stml.c --currere" via="tools/aedilis.c">Run
+      bin/aedilis on the file that has main, from the repository root:
+      it derives the closure, writes build/aedilis/BASIS/manifestum.stml
+      and a bash script, and with --currere runs the script, which
+      leaves the binary at build/aedilis/BASIS/BASIS. --varians picks a
+      platform variant; --enumerare (print the objects) and --ordo
+      (print the headers in dependency order) print and exit without
+      writing the manifest or the script. If derivation fails it
+      refuses loudly (AEDILIS RECUSAT on stderr, exit 1, cause named)
+      and writes nothing; with --currere a failing script also gives
+      exit 1.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I derive a closure from C code instead of the command line?
+    <responsum symbolum="aedilis_configurationem_legere aedilis_derivare aedilis_silva_creare aedilis_silva_extrahere">Read
+      aedilis.stml with aedilis_configurationem_legere, make the real
+      extractor with aedilis_silva_creare, and call aedilis_derivare
+      with aedilis_silva_extrahere and that extractor as its datum
+      (radix_thesauri NIHIL runs without the cross-run cache; with a
+      cache, the key comes from aedilis_thesauri_praefixum). The engine
+      itself never touches silva: the extractor is injected, so tests
+      pass a fixture extractor instead. aedilis_configurationem_legere
+      and aedilis_derivare return NIHIL and fill *causa_out on refusal;
+      there is never a partial result. aedilis_silva_creare has no
+      causa_out: it just returns NIHIL.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what object file does aedilis pick for a header I include?
+    <responsum symbolum="aedilis_derivare">By
+      convention: include/x.h maps to lib/x, any other header to its own
+      directory. For each preferred variant in order (only the given one
+      with --varians, otherwise the praelatio of aedilis.stml, macos
+      then posix) it tries x_VARIANT.m, then x_VARIANT.c; then plain
+      x.c. A plain x.m is never tried: declare it with a corpus
+      annotation. A header with none of these simply has no object. An
+      irregularia rule in aedilis.stml replaces the convention for that
+      header.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what annotations does aedilis read from source comments?
+    <responsum symbolum="aedilis_derivare" via="include/modulus.h">Elements
+      of the form &lt;aedilis VERB="ARG"/&gt; in comments of any file the
+      derivation walks (so never in an unwalked object): obiectum (link this source, never walked), corpus (in
+      a header: its implementation, walked, must exist), vexillum (a
+      LINK flag), nexus (only the value purus), facultas (fenestra, rete
+      or repositorium; scope file only) and instrumentum (a bin/ binary
+      the scope runs; scope file only, under bin/, no duplicates, no
+      ..). Any other verb or value, or obiectum/corpus/vexillum with an
+      empty argument, refuses the whole derivation.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why are the includes of some objects never walked?
+    <responsum symbolum="aedilis_derivare">Two
+      cases are compiled and linked but not walked. Objects declared by
+      an obiectum annotation: their dependencies belong to their
+      generator (parsing 9 MB of generated capsules took 17 s for
+      nothing). And sources over 1 MB, which are treated as data written
+      as code (a 6.1 MB Bible source made silva run out of memory). A
+      declared object missing from disk (absens, e.g. not generated
+      yet) is not walked either. Use a corpus annotation when you DO
+      want the implementation walked; the 1 MB limit still applies to
+      it.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the difference between systemata and inresolutae in a manifest?
+    <responsum symbolum="aedilis_derivare aedilis_manifestum_scribere">An
+      include that resolves nowhere under the root (as written, beside
+      the including file, or under the -I directories of aedilis.stml)
+      goes into systemata. If it was written in quoted form it is also
+      listed in inresolutae: probably one of our headers that the
+      include roots miss, so the manifest is incomplete. Angle-bracket
+      includes are only systemata. The inresolutae section is written
+      only when it is not empty.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I promise that a header pulls in no framework (pure link)?
+    <responsum symbolum="aedilis_nexum_purum_probare" via="include/modulus.h">Put
+      &lt;aedilis nexus="purus"/&gt; in the header's comment.
+      aedilis_nexum_purum_probare derives the header as if it were a
+      scope and fails, naming the include chain and the flags, if its own
+      implementation or any object in its closure has a nexus rule
+      (e.g. fenestra_macos -> Cocoa). A header without the promise
+      passes. bin/aedilis --nexus-purus checks every header under the
+      include roots.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get a bash build script from a derivation?
+    <responsum symbolum="aedilis_scriptum_scribere aedilis_scriptum_scribere_ad">aedilis_scriptum_scribere
+      returns the script text. With solitarius FALSUM objects are shared
+      in build/aedilis/obiecta and rebuilt when missing, older than their
+      source, or older than ANY header of the closure; with VERUM they
+      go to a private solitarius directory and are always rebuilt
+      (vendor objects excepted: in both modes they are rebuilt only
+      when missing or older than their source). Objects are named by flattened path
+      (lib/tcp_posix.c becomes lib__tcp_posix.o, with the flags of a
+      compilatio rule appended, so lib__sigillum__O2.o). The flattening
+      is not one-to-one despite the comment in lib/aedilis.c:
+      lib/a__b.c and lib/a/b.c would both become lib__a__b.o. The script must
+      run from the repository root. aedilis_scriptum_scribere_ad sends
+      outputs and objects to other directories.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a vendored C file get our warning flags?
+    <responsum symbolum="aedilis_scriptum_scribere_ad aedilis_configurationem_legere">No:
+      that is deliberate. An include under vendor/ makes X.c beside X.h
+      (or the file itself) a vendor object, compiled with ONLY the flags
+      of its vendor rule in aedilis.stml: neither the shared VEXILLA
+      nor the -I directories. It is rebuilt only when its own source is
+      newer. A vendor header without a matching .c is treated as
+      header-only.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I list headers so that every header comes after the ones it includes?
+    <responsum symbolum="aedilis_capita_ordinare">aedilis_capita_ordinare
+      returns a Xar of AedilisCaput pointers into the derivation (stable,
+      because xar never moves elements). Within one round the discovery
+      order is kept, so the result is deterministic. An include cycle
+      returns NIHIL and causa_out names every header not yet emitted
+      (the cycle plus anything that depends on it). Edges
+      exist only for headers (a header's inclusa list); implementation
+      files can be in any order.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the extractor cache key from aedilis_thesauri_praefixum?
+    <responsum symbolum="aedilis_thesauri_praefixum">The
+      prefix under which extraction records are cached. When ingressus is
+      a valid digest (64 lowercase hex, built into the binary) the key is
+      the seal of extractor: plus that digest plus the bytes of
+      aedilis.stml, so every binary built from the same extractor sources
+      shares the cache. Otherwise (NIHIL, bootstrap, malformed) it seals
+      the binary file plus the configuration. *fons_out says which was
+      used; FALSUM if a file needed could not be read.</responsum>
+  </interrogatio>
+
+</interrogationes>

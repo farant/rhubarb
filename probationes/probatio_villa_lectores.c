@@ -172,30 +172,22 @@ _via_longitudinis (
     redde c;
 }
 
-s32 principale (vacuum)
-{
-    Piscina* piscina;
-        b32  praeteritus;
-
-    piscina = piscina_generare_dynamicum("probatio_villa_lectores",
-        8388608);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ==============================================================
 	 * I. AEDIFICATOR MANDATI SSH - forma plena
 	 * ============================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ConfiguratioSsh cfg;
             MandatumSsh m;
 
-        imprimere("\n--- I. mandatum ssh: forma plena ---\n");
         memset(&cfg, 0, magnitudo(ConfiguratioSsh));
         cfg.alias         = chorda_ex_literis("smaragda", piscina);
         cfg.via_moderandi = chorda_ex_literis(
@@ -222,13 +214,21 @@ s32 principale (vacuum)
         /* vector NIHIL-terminatus pro processus_exsequi */
         CREDO_NIHIL (m.argumenta[m.numerus]);
     }
+}
 
     /* II. sutura binarii + portus + clavis + usor@hospes */
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ConfiguratioSsh cfg;
             MandatumSsh m;
 
-        imprimere("\n--- II. sutura, portus, clavis, usor ---\n");
         memset(&cfg, 0, magnitudo(ConfiguratioSsh));
         cfg.via_ssh  = "/stipes/ssh";
         cfg.hospes   = chorda_ex_literis("198.51.100.7", piscina);
@@ -254,13 +254,21 @@ s32 principale (vacuum)
         CREDO_FALSUM (_arg_praefixum_adest(&m, "ControlPath="));
         CREDO_FALSUM (_arg_praefixum_adest(&m, "ControlMaster=auto"));
     }
+}
 
     /* III. alias PRAEVALET super hospes/usor (identitas prima) */
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ConfiguratioSsh cfg;
             MandatumSsh m;
 
-        imprimere("\n--- III. alias praevalet ---\n");
         memset(&cfg, 0, magnitudo(ConfiguratioSsh));
         cfg.alias   = chorda_ex_literis("smaragda", piscina);
         cfg.hospes  = chorda_ex_literis("198.51.100.7", piscina);
@@ -273,16 +281,23 @@ s32 principale (vacuum)
         CREDO_VERUM (_arg_est(&m, m.numerus - II, "smaragda"));
         CREDO_FALSUM (_arg_praefixum_adest(&m, "radix@198.51.100.7"));
     }
+}
 
     /* IV. PORTA VIAE MODERANDI - terminus C octetorum.
 	 * Sine hac porta ssh socketum tacite deserit et omne imperium
 	 * ad manum plenam degenerat: defectus se ut MORA INEXPLICATA
 	 * ostendit, non ut error, quia ssh eum nonnisi sub '-v' nuntiat. */
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ConfiguratioSsh cfg;
             MandatumSsh m;
-
-        imprimere("\n--- IV. porta viae moderandi ---\n");
 
         /* LIX + '/' + XL = C exacte: ACCIPITUR (terminus ipse) */
         memset(&cfg, 0, magnitudo(ConfiguratioSsh));
@@ -302,13 +317,20 @@ s32 principale (vacuum)
             chorda_ex_literis("101", piscina));
         CREDO_NIHIL (m.argumenta);
     }
+}
 
     /* V. recusationes nominatae + NULLA CONCHA */
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ConfiguratioSsh cfg;
             MandatumSsh m;
-
-        imprimere("\n--- V. recusationes et concha absens ---\n");
 
         memset(&cfg, 0, magnitudo(ConfiguratioSsh));
         m = villa_mandatum_ssh(&cfg,
@@ -334,6 +356,7 @@ s32 principale (vacuum)
         CREDO_VERUM (_arg_est(&m, m.numerus - I,
             "systemctl restart nginx; echo 'captus' && rm -rf /"));
     }
+}
 
 
     /* ==============================================================
@@ -346,10 +369,15 @@ s32 principale (vacuum)
 	 * praecise ea falleret quae discernere debemus.
 	 * ============================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         CausaExitus c;
-
-        imprimere("\n--- V-bis. discretio exitus ssh ---\n");
 
         /* successus: nihil discernendum */
         c = villa_exitum_discernere(ZEPHYRUM,
@@ -452,19 +480,26 @@ s32 principale (vacuum)
             VILLA_EXITUS_IMPERIUM_ABSENS),
             villa_exitus_nomen(VILLA_EXITUS_SSH_ALIUS)) != ZEPHYRUM);
     }
+}
 
 
     /* ==============================================================
 	 * VI. SYSTEMCTL SHOW - unitates activae
 	 * ============================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda fx = _fixum(piscina,
             "systemctl_show_activae.txt");
         Xar*   servitia = villa_systemctl_legere(fx, piscina);
         constans StatusServitii* nginx;
 
-        imprimere("\n--- VI. systemctl show: activae ---\n");
         CREDO_NON_NIHIL (servitia);
         CREDO_AEQUALIS_I32 (xar_numerus(servitia), (i32)III);
 
@@ -499,14 +534,22 @@ s32 principale (vacuum)
                 "Fri 2025-09-12 19:42:15 UTC");
         }
     }
+}
 
     /* VII. systemctl show - unitas IGNOTA (valores vacui NORMALES) */
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda fx        = _fixum(piscina, "systemctl_show_ignota.txt");
         Xar*   servitia  = villa_systemctl_legere(fx, piscina);
         constans StatusServitii* s;
 
-        imprimere("\n--- VII. systemctl show: ignota ---\n");
         CREDO_NON_NIHIL (servitia);
         CREDO_AEQUALIS_I32 (xar_numerus(servitia), (i32)I);
 
@@ -529,15 +572,23 @@ s32 principale (vacuum)
                 "nulla-tale-servitium.service");
         }
     }
+}
 
     /* VIII. systemctl show - unitas EXSISTENS sed non currens */
+
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda fx = _fixum(piscina,
             "systemctl_show_inactiva.txt");
         Xar*   servitia = villa_systemctl_legere(fx, piscina);
         constans StatusServitii* s;
 
-        imprimere("\n--- VIII. systemctl show: inactiva ---\n");
         CREDO_AEQUALIS_I32 (xar_numerus(servitia), (i32)I);
         s = (constans StatusServitii*)xar_obtinere(servitia,
             ZEPHYRUM);
@@ -553,12 +604,20 @@ s32 principale (vacuum)
             CREDO_CHORDA_VACUA (s->tempus_initii);
         }
     }
+}
 
 
     /* ==============================================================
 	 * IX. LIST-UNITS - legenda, columnae vagae, descriptio spatiosa
 	 * ============================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda  fx        = _fixum(piscina, "list_units.txt");
            Xar* unitates  = villa_unitates_legere(fx, piscina);
@@ -566,7 +625,6 @@ s32 principale (vacuum)
            b32  nginx_inventa = FALSUM;
            b32  prosa_inventa = FALSUM;
 
-        imprimere("\n--- IX. list-units ---\n");
         CREDO_NON_NIHIL (unitates);
 
         /* effusio XXV unitates enumerat; LEGENDA in calce (post
@@ -630,18 +688,25 @@ s32 principale (vacuum)
             CREDO_VERUM (libri_inventa);
         }
     }
+}
 
 
     /* ==============================================================
 	 * X. NGINX -T - clausulae crudae
 	 * ============================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda fx         = _fixum(piscina, "nginx_T.txt");
         Xar*   clausulae  = villa_nginx_clausulas_legere(fx, piscina);
         constans ClausulaNginx* prima;
 
-        imprimere("\n--- X. nginx -T: clausulae crudae ---\n");
         CREDO_NON_NIHIL (clausulae);
 
         /* SEPTEM bloca 'server' vera. Fixum TRIA amplius in
@@ -752,15 +817,23 @@ s32 principale (vacuum)
             CREDO_FALSUM (phantasma);
         }
     }
+}
 
     /* XI. NGINX -T - situs plicati (gemina Certbot conflata) */
+
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                      chorda  fx     = _fixum(piscina, "nginx_T.txt");
                         Xar* situs  = villa_nginx_legere(fx, piscina);
         constans SitusNginx* libri;
         constans SitusNginx* communis;
 
-        imprimere("\n--- XI. nginx -T: situs plicati ---\n");
         CREDO_NON_NIHIL (situs);
 
         /* VII clausulae -> IV situs. Certbot bloca GEMINA parit
@@ -825,12 +898,20 @@ s32 principale (vacuum)
             }
         }
     }
+}
 
 
     /* ==============================================================
 	 * XI-bis. SECTIONES PROBATIONIS - effusio composita
 	 * ============================================================== */
 
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda compositum = chorda_ex_literis(
             "##VILLA##unitates##\n"
@@ -848,7 +929,6 @@ s32 principale (vacuum)
         Xar* sectiones = villa_sectiones_legere(compositum, piscina);
         constans SectioProbationis* s;
 
-        imprimere("\n--- XI-bis. sectiones probationis ---\n");
         CREDO_AEQUALIS_I32 (xar_numerus(sectiones), (i32)III);
 
         s = villa_sectionem_invenire(sectiones, "discus");
@@ -881,10 +961,19 @@ s32 principale (vacuum)
         }
         CREDO_NIHIL (villa_sectionem_invenire(sectiones, "nusquam"));
     }
+}
 
     /* XI-ter. sectio NON CLAUSA - effusio abscissa aut marca
 	 * collisa. Signum unum ambas prodit, et consumptor sectioni
 	 * non clausae fidere non debet. */
+
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda abscissum = chorda_ex_literis(
             "##VILLA##unitates##\n"
@@ -895,7 +984,6 @@ s32 principale (vacuum)
         Xar* sectiones = villa_sectiones_legere(abscissum, piscina);
         constans SectioProbationis* s;
 
-        imprimere("\n--- XI-ter. sectio non clausa ---\n");
         CREDO_AEQUALIS_I32 (xar_numerus(sectiones), (i32)II);
 
         s = villa_sectionem_invenire(sectiones, "unitates");
@@ -933,17 +1021,24 @@ s32 principale (vacuum)
             chorda_ex_literis("prosa nuda\n", piscina), piscina)),
             ZEPHYRUM);
     }
+}
 
 
     /* ==============================================================
 	 * XII. LECTORES PARVI - FORMA figitur, numerus NUMQUAM
 	 * ============================================================== */
 
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
              chorda fx = _fixum(piscina, "df.txt");
         StatusDisci discus;
 
-        imprimere("\n--- XII. df -P ---\n");
         CREDO_VERUM (villa_discum_legere(fx, &discus, piscina));
         CREDO_CHORDA_AEQUALIS_LITERIS (discus.systema, "/dev/vda1");
         CREDO_CHORDA_AEQUALIS_LITERIS (discus.punctum, "/");
@@ -963,13 +1058,21 @@ s32 principale (vacuum)
         CREDO_VERUM (discus.usa + discus.praesto <= discus.frusta);
         CREDO_VERUM (discus.capacitas <= (i32)C);
     }
+}
 
     /* XIII. meminfo */
+
+interior vacuum
+_sectio_decima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                 chorda fx = _fixum(piscina, "meminfo.txt");
         StatusMemoriae memoria;
 
-        imprimere("\n--- XIII. /proc/meminfo ---\n");
         CREDO_VERUM (villa_memoriam_legere(fx, &memoria));
 
         CREDO_VERUM (memoria.summa_kb > ZEPHYRUM);
@@ -981,14 +1084,22 @@ s32 principale (vacuum)
         CREDO_VERUM (memoria.praesto_kb <= memoria.summa_kb);
         CREDO_VERUM (memoria.libera_kb <= memoria.praesto_kb);
     }
+}
 
     /* XIV. /proc/uptime - pars integra sola, nullum punctum
 	 * fluitans in villa */
+
+interior vacuum
+_sectio_decima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda fx       = _fixum(piscina, "uptime.txt");
            i64 secunda  = ZEPHYRUM;
 
-        imprimere("\n--- XIV. /proc/uptime ---\n");
         CREDO_VERUM (villa_tempus_activum_legere(fx, &secunda));
         CREDO_VERUM (secunda > ZEPHYRUM);
         /* '27223431.74 25953501.86' - campus PRIMUS solus, et
@@ -996,14 +1107,22 @@ s32 principale (vacuum)
         CREDO_VERUM (secunda < (i64)27223432);
         CREDO_VERUM (secunda > (i64)27223430);
     }
+}
 
     /* XV. intrantia degenerata: parsatores taceant, non ruant */
+
+interior vacuum
+_sectio_decima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
              chorda vacua;
         StatusDisci discus;
                 i64 secunda = ZEPHYRUM;
 
-        imprimere("\n--- XV. intrantia degenerata ---\n");
         vacua.datum    = NIHIL;
         vacua.mensura  = ZEPHYRUM;
 
@@ -1043,6 +1162,7 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32 (xar_numerus(c), (i32)I);
         }
     }
+}
 
 
     /* ==============================================================
@@ -1056,12 +1176,19 @@ s32 principale (vacuum)
 	 * ============================================================== */
 
     /* XVI. unitas FRACTA: causa et codex adsunt */
+
+interior vacuum
+_sectio_decima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda fx        = _fixum(piscina, "systemctl_show_fracta.txt");
         Xar*   servitia  = villa_systemctl_legere(fx, piscina);
         constans StatusServitii* s;
 
-        imprimere("\n--- XVI. systemctl show: FRACTA ---\n");
         CREDO_AEQUALIS_I32 (xar_numerus(servitia), (i32)I);
         s = (constans StatusServitii*)xar_obtinere(servitia,
             ZEPHYRUM);
@@ -1085,10 +1212,19 @@ s32 principale (vacuum)
                 "static");
         }
     }
+}
 
     /* XVII. DUAE INSIDIAE quas fixum fractum revelavit.
 	 * Hae adsertiones sunt forma DURABILIS monitionis: commentarius
 	 * solus senesceret, probatio clamat. */
+
+interior vacuum
+_sectio_vicesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Xar* fracta = villa_systemctl_legere(
             _fixum(piscina, "systemctl_show_fracta.txt"), piscina);
@@ -1100,7 +1236,6 @@ s32 principale (vacuum)
         constans StatusServitii* g;
         constans StatusServitii* h;
 
-        imprimere("\n--- XVII. insidiae duae ---\n");
         f = (constans StatusServitii*)xar_obtinere(fracta, ZEPHYRUM);
         g = (constans StatusServitii*)xar_obtinere(ignota, ZEPHYRUM);
         h = (constans StatusServitii*)xar_obtinere(inactiva,
@@ -1142,16 +1277,24 @@ s32 principale (vacuum)
             CREDO_VERUM (f->inventa);    /* inventa, fracta */
         }
     }
+}
 
     /* XVIII. unitas ignota IN MEDIO responsi multiplicis - recordum
 	 * non-inventum vicinos suos non corrumpat */
+
+interior vacuum
+_sectio_vicesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda fx = _fixum(piscina,
             "systemctl_show_medio_ignota.txt");
         Xar*   servitia = villa_systemctl_legere(fx, piscina);
         constans StatusServitii* medium;
 
-        imprimere("\n--- XVIII. ignota in medio ---\n");
         CREDO_AEQUALIS_I32 (xar_numerus(servitia), (i32)III);
 
         medium = (constans StatusServitii*)xar_obtinere(servitia, I);
@@ -1178,8 +1321,17 @@ s32 principale (vacuum)
             }
         }
     }
+}
 
     /* XIX. list-units cum unitate fracta / vacuum / diaria vacua */
+
+interior vacuum
+_sectio_vicesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Xar* fractae = villa_unitates_legere(
             _fixum(piscina, "list_units_fractae.txt"), piscina);
@@ -1187,7 +1339,6 @@ s32 principale (vacuum)
             _fixum(piscina, "list_units_vacuae.txt"), piscina);
         constans UnitasCursoria* u;
 
-        imprimere("\n--- XIX. list-units: fractae et vacuae ---\n");
         CREDO_AEQUALIS_I32 (xar_numerus(fractae), (i32)I);
         u = (constans UnitasCursoria*)xar_obtinere(fractae, ZEPHYRUM);
         CREDO_NON_NIHIL (u);
@@ -1217,16 +1368,56 @@ s32 principale (vacuum)
                 chorda_ex_literis("-- No entries --", piscina));
         }
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. mandatum ssh: forma plena", _sectio_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "II. sutura, portus, clavis, usor", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "III. alias praevalet", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "IV. porta viae moderandi", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "V. recusationes et concha absens", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "V-bis. discretio exitus ssh", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "VI. systemctl show: activae", _sectio_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "VII. systemctl show: ignota", _sectio_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "VIII. systemctl show: inactiva", _sectio_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "IX. list-units", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "X. nginx -T: clausulae crudae", _sectio_decima_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "XI. nginx -T: situs plicati", _sectio_decima_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "XI-bis. sectiones probationis", _sectio_decima_tertia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "XI-ter. sectio non clausa", _sectio_decima_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "XII. df -P", _sectio_decima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XIII. /proc/meminfo", _sectio_decima_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "XIV. /proc/uptime", _sectio_decima_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "XV. intrantia degenerata", _sectio_decima_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "XVI. systemctl show: FRACTA", _sectio_decima_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "XVII. insidiae duae", _sectio_vicesima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "XVIII. ignota in medio", _sectio_vicesima_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "XIX. list-units: fractae et vacuae", _sectio_vicesima_secunda,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    redde I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("villa_lectores", SECTIONES);
 }

@@ -86,27 +86,21 @@ invenire_symbolum_per_titulum(
     redde -I;
 }
 
-s32 principale(vacuum)
-{
-    Piscina*              piscina;
-    InternamentumChorda*  intern;
-
-    piscina = piscina_generare_dynamicum("probatio_lapifex", IV * MXXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    intern = internamentum_creare(piscina);
-    credo_aperire(piscina);
-
     /* ========================================================
      * PROBARE: Parsatio grammaticae - structura basica
      * ======================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexGrammatica* g;
-
-        imprimere("\n--- Probans parsationem grammaticae ---\n");
 
         g = lapifex_grammaticam_legere(piscina, intern, GRAMMATICA_STML);
         CREDO_NON_NIHIL(g);
@@ -128,17 +122,26 @@ s32 principale(vacuum)
             (int)g->numerus_non_terminalium,
             (int)xar_numerus(g->productiones));
     }
+}
 
     /* ========================================================
      * PROBARE: Resolutio symbolorum in productionibus
      * ======================================================== */
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexGrammatica* g;
         s32 expr_idx;
         s32 term_idx;
         s32 factor_idx;
-
-        imprimere("\n--- Probans resolutionem symbolorum ---\n");
 
         g = lapifex_grammaticam_legere(piscina, intern, GRAMMATICA_STML);
         CREDO_NON_NIHIL(g);
@@ -192,10 +195,21 @@ s32 principale(vacuum)
         (vacuum)term_idx;
         (vacuum)factor_idx;
     }
+}
 
     /* ========================================================
      * PROBARE: FIRST coniuncta
      * ======================================================== */
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexGrammatica* g;
         s32 expr_idx;
@@ -204,8 +218,6 @@ s32 principale(vacuum)
         Xar* first_expr;
         Xar* first_term;
         Xar* first_factor;
-
-        imprimere("\n--- Probans FIRST coniuncta ---\n");
 
         g = lapifex_grammaticam_legere(piscina, intern, GRAMMATICA_STML);
         CREDO_NON_NIHIL(g);
@@ -241,14 +253,23 @@ s32 principale(vacuum)
         lapifex_grammaticam_imprimere(g);
         lapifex_first_imprimere(g);
     }
+}
 
     /* ========================================================
      * PROBARE: Error handling - STML malformatum
      * ======================================================== */
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexGrammatica* g;
-
-        imprimere("\n--- Probans error handling ---\n");
 
         /* NIHIL input */
         g = lapifex_grammaticam_legere(piscina, intern, NIHIL);
@@ -271,16 +292,25 @@ s32 principale(vacuum)
 
         imprimere("  Error handling recte\n");
     }
+}
 
     /* ========================================================
      * PROBARE: Terminalia FIRST coniuncta
      * ======================================================== */
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina = c->piscina;
+    intern  = internamentum_creare(piscina);
     {
         LapifexGrammatica* g;
         s32 number_idx;
         Xar* first_number;
-
-        imprimere("\n--- Probans terminalia FIRST ---\n");
 
         g = lapifex_grammaticam_legere(piscina, intern, GRAMMATICA_STML);
         CREDO_NON_NIHIL(g);
@@ -297,14 +327,19 @@ s32 principale(vacuum)
 
         imprimere("  Terminalia FIRST recte\n");
     }
+}
 
-    /* ========================================================
-     * Compendium
-     * ======================================================== */
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "parsationem grammaticae", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "resolutionem symbolorum", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "FIRST coniuncta", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "error handling", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "terminalia FIRST", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    piscina_destruere(piscina);
-
-    redde (credo_omnia_praeterierunt() ? ZEPHYRUM : I);
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("lapifex_generare", SECTIONES);
 }

@@ -1,0 +1,66 @@
+<interrogationes unitas="registrum_commandi">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I add a new $command that a pagina tag can run?
+    <responsum symbolum="registrum_commandi_registrare concha_registrare_commandi FunctioCommand">Write
+      a FunctioCommand (b32 fn(ContextusCommandi* ctx), VERUM on
+      success) and register it under its name with
+      registrum_commandi_registrare(reg, "nomen", fn, datum). Inside
+      concha use concha_registrare_commandi, which forwards to the
+      same call. Widgets do it in their _init function (see
+      libro_paginarum_init registering rename, goto and
+      new).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how does a command handler get at the widget or state it belongs to?
+    <responsum symbolum="registrum_commandi_executare ContextusCommandi" via="lib/libro_paginarum.c">Two
+      pointers arrive in the ContextusCommandi.
+      ctx->datum_registratus is the datum given at registration
+      (widgets pass their ContextusWidget and cast it back);
+      registrum_commandi_executare writes it into the context on every
+      call, overwriting whatever the caller left there.
+      ctx->datum_custom is per call site: layout.c passes the libro for
+      a pagina inside a libro and NIHIL otherwise, and schirmata.c
+      passes its libro. The context also carries the pagina, a
+      piscina, and the grid line and column where the tag
+      ends.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I tell "command not found" apart from "the command failed" when I execute one?
+    <responsum symbolum="registrum_commandi_executare registrum_commandi_habet">Not
+      from registrum_commandi_executare alone: it returns FALSUM for
+      an unknown name and otherwise returns whatever the handler
+      returned, so a handler that fails also gives FALSUM. Ask
+      registrum_commandi_habet first when the difference
+      matters.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I re-register a command name or remove a command?
+    <responsum symbolum="registrum_commandi_registrare tabula_dispersa_inserere">Registering
+      the same name again replaces the earlier handler and datum (the
+      hash table overwrites the value; the old Command stays allocated
+      in the piscina). There is no remove function. Registration
+      returns nothing, so a refused registration is silent: a NIHIL
+      registry, name or function returns early, and an empty name is
+      refused by tabula_dispersa_inserere (key length zero) after the
+      Command was already allocated. concha_registrare_commandi
+      returns VERUM for those refusals too (FALSUM only when the
+      concha or its registry is NIHIL).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I list every registered command, for help text or completion?
+    <responsum symbolum="RegistrumCommandi registrum_commandi_habet tabula_dispersa_iterator_initium tabula_dispersa_iterator_proximum">Not
+      through this API: the only query is registrum_commandi_habet for
+      one name. The commands live in reg->tabula, a chorda-keyed
+      TabulaDispersa whose values are Command pointers, so walking
+      that table directly with tabula_dispersa_iterator_initium and
+      tabula_dispersa_iterator_proximum is the only way today. Command.titulus keeps
+      at most XXXI characters of the name, but lookup uses the full
+      name.</responsum>
+  </interrogatio>
+
+</interrogationes>

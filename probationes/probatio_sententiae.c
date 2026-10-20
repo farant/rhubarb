@@ -100,21 +100,32 @@ _anomalias_numerare (
     redde numerus;
 }
 
-s32
-principale (vacuum)
+/* Fixura suitae: documentum verum SEMEL legitur (sine assertione);
+ * sectiones II-X 'liber' (c->suita, copia vadosa) LEGUNT solum.
+ * Sectio prima lectionem ipsam in piscina sua iterat et asserit. */
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
     Piscina* piscina;
-        b32  praeteritus;
+      Liber* liber;
+     chorda  fons;
+
+    piscina   = c->piscina;
+    fons      = filum_legere_totum(FX_RADIX "de_imagine.md", piscina);
+    liber     = (Liber*)piscina_allocare(piscina, magnitudo(Liber));
+    *liber    = sententiae_legere(fons, piscina);
+    c->datum  = liber;
+}
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
       Liber  liber;
 
-    piscina = piscina_generare_dynamicum("probatio_sententiae",
-        16777216);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- I. lectio documenti veri ---\n");
+    piscina = c->piscina;
     {
         chorda fons = _fixum(piscina, "de_imagine.md");
 
@@ -127,8 +138,15 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (xar_numerus(liber.sententiae), (i32)273);
         CREDO_AEQUALIS_I32 (xar_numerus(liber.partes), (i32)14);
     }
+}
 
-    imprimere("\n--- II. prooemium ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+      Liber liber;
+
+    liber = *(constans Liber*)c->suita;
     {
         CREDO_CHORDA_AEQUALIS_LITERIS (liber.titulus, "De Imagine");
         CREDO_CHORDA_AEQUALIS_LITERIS (liber.siglum, "DI");
@@ -147,8 +165,15 @@ principale (vacuum)
             }
         }
     }
+}
 
-    imprimere("\n--- III. vocabularium graduum (decipula c) ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+      Liber liber;
+
+    liber = *(constans Liber*)c->suita;
     {
         /* prooemium ad primum SAEPTUM finit, non ad primam lineam locum
          * simulantem: regula ingenua ad lineam XV truncat et
@@ -163,8 +188,15 @@ principale (vacuum)
                                 ANOMALIA_VOCABULARIUM_ABEST),
                                 (i32)ZEPHYRUM);
     }
+}
 
-    imprimere("\n--- IV. tags per lineas extensa (decipula a) ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+      Liber liber;
+
+    liber = *(constans Liber*)c->suita;
     {
         /* HAEC EST PORTA PRAECIPUA. SEPTEM sententiae retractae sunt
          * (14.1 + 29.1-29.6), quarum SEX per lineas extenduntur - ergo
@@ -189,8 +221,15 @@ principale (vacuum)
             }
         }
     }
+}
 
-    imprimere("\n--- V. segmenta nominata (decipula b) ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+      Liber liber;
+
+    liber = *(constans Liber*)c->suita;
     {
         Sententia* s = sententiae_per_locum(&liber, _ch("4.obj.1.1"));
 
@@ -219,8 +258,15 @@ principale (vacuum)
             CREDO_AEQUALIS_I32 (numerus, (i32)21);
         }
     }
+}
 
-    imprimere("\n--- VI. parens absens est ANOMALIA, non culpa (dec. e) ---\n");
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+      Liber liber;
+
+    liber = *(constans Liber*)c->suita;
     {
         /* novem loci parentem non habent, omnes formae X.obj.1 - si haec
          * culpa STRUCTURAE esset, documentum verum primo cursu
@@ -229,8 +275,15 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (_anomalias_numerare(&liber,
                                 ANOMALIA_PARENS_ABEST), (i32)ZEPHYRUM);
     }
+}
 
-    imprimere("\n--- VII. gradus ET annotatio simul (decipula f) ---\n");
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+      Liber liber;
+
+    liber = *(constans Liber*)c->suita;
     {
         Sententia* s = sententiae_per_locum(&liber, _ch("15.1"));
 
@@ -252,8 +305,15 @@ principale (vacuum)
             CREDO_AEQUALIS_I32 (xar_numerus(s->annotationes), (i32)1);
         }
     }
+}
 
-    imprimere("\n--- VIII. remissiones ---\n");
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+      Liber liber;
+
+    liber = *(constans Liber*)c->suita;
     {
         i32 k;
         i32 internae = ZEPHYRUM;
@@ -290,8 +350,17 @@ principale (vacuum)
                                 ANOMALIA_REMISSIO_INRESOLUTA),
                             (i32)ZEPHYRUM);
     }
+}
 
-    imprimere("\n--- IX. involutio sigillum NON mutat ---\n");
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+      Liber  liber;
+
+    piscina  = c->piscina;
+    liber    = *(constans Liber*)c->suita;
     {
           chorda latum     = _fixum(piscina, "punctum_latum.txt");
           chorda angustum  = _fixum(piscina, "punctum_angustum.txt");
@@ -326,8 +395,15 @@ principale (vacuum)
         CREDO_VERUM (sigillum_aequale(&s_latum, &s_angustum));
         CREDO_VERUM (sigillum_aequale(&s_latum, &s_crlf));
     }
+}
 
-    imprimere("\n--- X. iudicium ancorae ---\n");
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+      Liber liber;
+
+    liber = *(constans Liber*)c->suita;
     {
               Sententia* s = sententiae_per_locum(&liber,
                   _ch("13.5"));
@@ -360,8 +436,13 @@ principale (vacuum)
             CREDO_AEQUALIS_I32 (iudicium.status, (i32)ANCORA_ORBA);
         }
     }
+}
 
-    imprimere("\n--- XI. parens ---\n");
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         chorda parens;
 
@@ -372,8 +453,15 @@ principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS (parens, "1");
         CREDO_FALSUM (sententiae_parentem_capere(_ch("7"), &parens));
     }
+}
 
-    imprimere("\n--- XII. inputa degenerata (nihil ruat) ---\n");
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
          Liber vacuus;
          Liber prosa;
@@ -394,8 +482,15 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (xar_numerus(prosa.sententiae),
             (i32)ZEPHYRUM);
     }
+}
 
-    imprimere("\n--- XIII. culpae structurae OBSTANT ---\n");
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         /* NOTA: 'duplex' hic adhiberi NEQUIT - macrum latinae ('double').
          * Tertia flagratio huius classis in duobus diebus; vide 01KXTRM0DB. */
@@ -417,13 +512,38 @@ principale (vacuum)
             (i32)SENTENTIAE_SAEPTUM_IMPAR);
         CREDO_CHORDA_NON_VACUA (apertum.causa);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    si (praeteritus)
-    { redde ZEPHYRUM;
-    }
-    redde I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. lectio documenti veri", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "II. prooemium", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III. vocabularium graduum (decipula c)", _sectio_tertia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "IV. tags per lineas extensa (decipula a)", _sectio_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "V. segmenta nominata (decipula b)", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "VI. parens absens est ANOMALIA, non culpa (dec. e)",
+        _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VII. gradus ET annotatio simul (decipula f)", _sectio_septima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VIII. remissiones", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IX. involutio sigillum NON mutat", _sectio_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "X. iudicium ancorae", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "XI. parens", _sectio_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XII. inputa degenerata (nihil ruat)", _sectio_decima_secunda,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XIII. culpae structurae OBSTANT", _sectio_decima_tertia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("sententiae", SECTIONES,
+        _suitam_parare, NIHIL);
 }

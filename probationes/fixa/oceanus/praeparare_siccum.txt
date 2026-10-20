@@ -1,0 +1,15 @@
+[locale] ./bin/aedilis tools/oceanus.c
+[locale] bash build/aedilis/oceanus/struere.sh
+[locale] build/aedilis/oceanus/oceanus assecurare golden.earth A exemplar 165.227.210.190 3600
+[smaragda] id -u exemplar >/dev/null 2>&1 || sudo useradd --system --no-create-home --shell /usr/sbin/nologin exemplar
+[smaragda] sudo install -d -o root -g root -m 0755 /opt/exemplar
+[smaragda] sudo install -d -o exemplar -g exemplar -m 0700 /var/lib/exemplar
+[smaragda] sudo test -f /var/lib/exemplar/invitatio || sudo sh -c 'umask 077; head -c 18 /dev/urandom | base64 > /var/lib/exemplar/invitatio; chown exemplar:exemplar /var/lib/exemplar/invitatio'
+[locale] scp -q apps/exemplar/exemplar.service apps/exemplar/exemplar.nginx smaragda:/tmp/
+[smaragda] sudo install -o root -g root -m 0644 /tmp/exemplar.service /etc/systemd/system/exemplar.service && rm -f /tmp/exemplar.service
+[smaragda] sudo systemctl daemon-reload && sudo systemctl enable exemplar
+[smaragda] sudo install -o root -g root -m 0644 /tmp/exemplar.nginx /etc/nginx/sites-available/exemplar.golden.earth && rm -f /tmp/exemplar.nginx
+[smaragda] sudo ln -sf /etc/nginx/sites-available/exemplar.golden.earth /etc/nginx/sites-enabled/exemplar.golden.earth
+[smaragda] sudo nginx -t && sudo systemctl reload nginx
+[smaragda (interactivum)] sudo certbot --nginx -d exemplar.golden.earth
+praeparare: codex invitationis: ssh smaragda sudo cat /var/lib/exemplar/invitatio

@@ -118,6 +118,8 @@ hic_manens constans character* constans POLITICA[] = {
     "  <munus titulus=\"fixtura\" segmentum=\"probationes\"/>",
     "  <munus titulus=\"caput\" extensiones=\".h\"/>",
     "  <munus titulus=\"fons\" extensiones=\".c .m\"/>",
+    "  <munus titulus=\"interrogationes\""
+        " extensiones=\".interrogationes.stml\"/>",
     "  <munus titulus=\"documentum\" extensiones=\".md .html\"/>",
     "  <munus titulus=\"declaratio\" extensiones=\".stml\"/>",
     "  <munus titulus=\"scriptum\" extensiones=\".sh\"/>",
@@ -187,6 +189,8 @@ hic_manens constans PlagulaFicta MUNDUS[] = {
     { "lib/xar.c", "/* xar.c - manu */\n", NIHIL },
     { "lib/xar.worklog.md", "# xar\n", NIHIL },
     { "lib/energia.phase-log.md", "# energia\n", NIHIL },
+    { "lib/xar.interrogationes.stml", "<interrogationes/>\n", NIHIL },
+    { "lib/xar.stml", "<x/>\n", NIHIL },
     { "docs/bibliothecae/xar.html", "<!doctype html>\n<p>xar</p>\n",
         NIHIL },
     { "docs/bibliothecae/index.html", "<!doctype html>\n<p>i</p>\n",
@@ -371,6 +375,13 @@ _sectio_intima (
     r = _quid(c, u, "lib/energia.phase-log.md");
     CREDO_CHORDA_AEQUALIS_LITERIS(r.unitas->titulus, "energia");
     CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.valor, "documentum");
+    /* FONTES/S.<quidvis>.stml (interrogationes) ad S; S.stml sine
+     * medio stemma non est */
+    r = _quid(c, u, "lib/xar.interrogationes.stml");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.unitas->titulus, "xar");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.valor, "interrogationes");
+    r = _quid(c, u, "lib/xar.stml");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.unitas->titulus, "rhubarb");
     r = _quid(c, u, "docs/bibliothecae/xar.html");
     CREDO_CHORDA_AEQUALIS_LITERIS(r.unitas->titulus, "xar");
     CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.valor, "documentum");
@@ -786,6 +797,221 @@ _sectio_census (
         k->indeclarata, I))->via, "tools");
 }
 
+/* XI. interrogationes: plagulae muneris 'interrogationes' solae
+ * leguntur; textus per fluxum (forma manu et forma formatoris idem
+ * reddunt); vitia per plagulam nominata, ceterae tamen leguntur */
+hic_manens constans character* constans INTERROGATIONES_XAR[] = {
+    "<interrogationes unitas=\"xar\">",
+    "  <interrogatio genus=\"quomodo\">",
+    "    <quaestio! (>how do I keep pointers valid?",
+    "    <responsum symbolum=\"xar_addere xar_obtinere\">"
+        "segments never",
+    "      move; pointers stay valid.</responsum>",
+    "  </interrogatio>",
+    "  <interrogatio genus=\"cur\">",
+    "    <quaestio! (>why is there no flat array?",
+    "    <responsum via=\"lib/xar.c\""
+        " imperium=\"./compile_tests.sh xar\">segments",
+    "      are not contiguous.</responsum>",
+    "  </interrogatio>",
+    "</interrogationes>",
+    NIHIL
+};
+
+/* eadem quaestio prima in forma formatoris stml (captiones) */
+hic_manens constans character* constans INTERROGATIONES_PISCINAE[] = {
+    "<interrogationes unitas=\"piscina\" (>",
+    "  <interrogatio genus=\"quomodo\" ((>",
+    "    <quaestio!(>how do I keep pointers valid?",
+    "    <responsum symbolum=\"xar_addere xar_obtinere\" (>",
+    "      segments never move; pointers stay",
+    "      valid.",
+    NIHIL
+};
+
+hic_manens constans character* constans INTERROGATIONES_MALAE[] = {
+    "<interrogationes unitas=\"xar\" color=\"x\">",
+    "  <interrogatio genus=\"quomodo\">",
+    "    <responsum>sine quaestione</responsum>",
+    "  </interrogatio>",
+    "  <interrogatio genus=\"possumne\">",
+    "    <quaestio! (>can I?",
+    "    <quaestio! (>twice?",
+    "    <responsum symbolum=\"a\" sonus=\"x\">yes</responsum>",
+    "    <nota>x</nota>",
+    "  </interrogatio>",
+    "  <interrogatio>",
+    "    <quaestio! (>no type?",
+    "    <responsum>no anchor</responsum>",
+    "  </interrogatio>",
+    "  <aliud/>",
+    "</interrogationes>",
+    NIHIL
+};
+
+interior b32
+_recusatio_habet (
+          constans Xar* recusationes,
+    constans character* via,
+    constans character* pars,
+               Piscina* piscina)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(recusationes); i++)
+    {
+        constans UnitatesRecusatio* r = (constans UnitatesRecusatio*)
+            xar_obtinere(recusationes, i);
+
+        si (   chorda_aequalis_literis(r->via, via)
+            && chorda_continet(r->causa, chorda_ex_literis(pars,
+                piscina)))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior constans UnitatisInterrogatio*
+_interrogatio_unitatis (
+    constans UnitatesInterrogationes* res,
+                  constans character* titulus,
+                                 i32  ordo)
+{
+    i32 i;
+    i32 visae = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < xar_numerus(res->interrogationes); i++)
+    {
+        constans UnitatisInterrogatio* x = (constans
+            UnitatisInterrogatio*)xar_obtinere(res->interrogationes, i);
+
+        si (chorda_aequalis_literis(x->unitas->titulus, titulus))
+        {
+            si (visae == ordo)
+            {
+                redde x;
+            }
+            visae++;
+        }
+    }
+    redde NIHIL;
+}
+
+interior vacuum
+_sectio_interrogationes (
+    CredoContextus* c)
+{
+    hic_manens constans PlagulaFicta mundus[] = {
+        { "unitates.stml", NIHIL, POLITICA },
+        { "unitas.stml", "<unitas titulus=\"rhubarb\" genus=\"" SUB "\""
+            " descriptio=\"r\"/>", NIHIL },
+        { "include/xar.h", "/* x */\n", NIHIL },
+        { "include/piscina.h", "/* p */\n", NIHIL },
+        { "include/energia.h", "/* e */\n", NIHIL },
+        { "include/imago.h", "/* i */\n", NIHIL },
+        { "lib/xar.interrogationes.stml", NIHIL, INTERROGATIONES_XAR },
+        { "lib/piscina.interrogationes.stml", NIHIL,
+            INTERROGATIONES_PISCINAE },
+        { "lib/energia.interrogationes.stml", NIHIL,
+            INTERROGATIONES_MALAE },
+        { "lib/imago.interrogationes.stml",
+            "<interrogationes unitas=\"imago\"\n", NIHIL },
+        { "tools/x.interrogationes.stml", "<unitas/>\n", NIHIL },
+        /* archivata: nec legitur nec iudicatur (vitia sua, si
+         * legeretur, numerum recusationum augerent) */
+        { "archivum/unitas.stml",
+            "<unitas titulus=\"archivum\" genus=\""
+            SUB "\" vita=\"archivata\" descriptio=\"a\"/>", NIHIL },
+        { "archivum/lib/vetus.interrogationes.stml", NIHIL,
+            INTERROGATIONES_MALAE },
+        /* munus declaratio: numquam legitur (STML fractum tacet) */
+        { "lib/xar.stml", "<fractum\n", NIHIL },
+        { NIHIL, NIHIL, NIHIL }
+    };
+                            chorda  causa;
+                          Unitates* u = _mundum_legere(c, mundus,
+                              &causa,
+                              NIHIL);
+           UnitatesInterrogationes* res;
+     constans UnitatisInterrogatio* x;
+     constans UnitatisInterrogatio* y;
+     constans UnitatisInterrogatio* p;
+                constans character* mala =
+                    "lib/energia.interrogationes"
+                    ".stml";
+
+    CREDO_NECESSE_NON_NIHIL(u);
+    res = unitates_interrogationes(u, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(res);
+    /* xar II + piscina I + energia II (possumne, sine genere) */
+    CREDO_AEQUALIS_I32(xar_numerus(res->interrogationes), V);
+
+    x = _interrogatio_unitatis(res, "xar", ZEPHYRUM);
+    CREDO_NECESSE_NON_NIHIL(x);
+    CREDO_CHORDA_AEQUALIS_LITERIS(x->via,
+        "lib/xar.interrogationes.stml");
+    CREDO_AEQUALIS_I32(x->linea, II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(x->genus, "quomodo");
+    CREDO_CHORDA_AEQUALIS_LITERIS(x->quaestio,
+        "how do I keep pointers valid?");
+    CREDO_CHORDA_AEQUALIS_LITERIS(x->responsum,
+        "segments never move; pointers stay valid.");
+    CREDO_AEQUALIS_I32(xar_numerus(x->symbola), II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(x->symbola, I),
+        "xar_obtinere");
+    CREDO_AEQUALIS_I32(xar_numerus(x->viae), ZEPHYRUM);
+    CREDO_AEQUALIS_I32(x->imperium.mensura, ZEPHYRUM);
+
+    y = _interrogatio_unitatis(res, "xar", I);
+    CREDO_NECESSE_NON_NIHIL(y);
+    CREDO_CHORDA_AEQUALIS_LITERIS(y->genus, "cur");
+    CREDO_CHORDA_AEQUALIS_LITERIS(y->responsum,
+        "segments are not contiguous.");
+    CREDO_AEQUALIS_I32(xar_numerus(y->symbola), ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(y->viae,
+        ZEPHYRUM), "lib/xar.c");
+    CREDO_CHORDA_AEQUALIS_LITERIS(y->imperium,
+        "./compile_tests.sh xar");
+
+    /* forma formatoris: textus idem ac forma manu */
+    p = _interrogatio_unitatis(res, "piscina", ZEPHYRUM);
+    CREDO_NECESSE_NON_NIHIL(p);
+    CREDO_CHORDA_AEQUALIS(p->quaestio, x->quaestio);
+    CREDO_CHORDA_AEQUALIS(p->responsum, x->responsum);
+    CREDO_AEQUALIS_I32(xar_numerus(p->symbola), II);
+    CREDO_VERUM(_interrogatio_unitatis(res, "piscina", I) == NIHIL);
+
+    /* vitia nominata per plagulam; sanae nullum */
+    CREDO_VERUM(_recusatio_habet(res->recusationes, mala,
+        "attributum ignotum 'color'", c->piscina));
+    CREDO_VERUM(_recusatio_habet(res->recusationes, mala,
+        "unitas 'xar' non est possessor plagulae ('energia')",
+        c->piscina));
+    CREDO_VERUM(_recusatio_habet(res->recusationes, mala,
+        "<quaestio> deest", c->piscina));
+    CREDO_VERUM(_recusatio_habet(res->recusationes, mala,
+        "<quaestio> bis", c->piscina));
+    CREDO_VERUM(_recusatio_habet(res->recusationes, mala,
+        "attributum ignotum 'sonus'", c->piscina));
+    CREDO_VERUM(_recusatio_habet(res->recusationes, mala,
+        "elementum ignotum <nota> in <interrogatio>", c->piscina));
+    CREDO_VERUM(_recusatio_habet(res->recusationes, mala,
+        "attributum necessarium 'genus' abest", c->piscina));
+    CREDO_VERUM(_recusatio_habet(res->recusationes, mala,
+        "responsum sine ancora", c->piscina));
+    CREDO_VERUM(_recusatio_habet(res->recusationes, mala,
+        "elementum ignotum <aliud>", c->piscina));
+    CREDO_VERUM(_recusatio_habet(res->recusationes,
+        "lib/imago.interrogationes.stml", "STML illegibile",
+        c->piscina));
+    CREDO_VERUM(_recusatio_habet(res->recusationes,
+        "tools/x.interrogationes.stml",
+        "radix non est <interrogationes>", c->piscina));
+    CREDO_AEQUALIS_I32(xar_numerus(res->recusationes), XI);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "lectio sana", _sectio_lectio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "unitas intima", _sectio_intima, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -801,6 +1027,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "viae iudicatae", _sectio_viae_iudicatae, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "census", _sectio_census, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "interrogationes", _sectio_interrogationes, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

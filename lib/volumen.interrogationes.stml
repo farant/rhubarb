@@ -1,0 +1,124 @@
+<interrogationes unitas="volumen">
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is a volumen and what is inside the file?
+    <responsum symbolum="volumen_creare volumen_acta_legere volumen_plagulas_enumerare" via="lib/volumen.worklog.md">One
+      sqlite file that holds a whole document, so copying the file
+      copies the document. Inside are three tables of its own (plus
+      scrinium's _migrationes bookkeeping): acta, an
+      append-only event log that is the truth; massae, content blobs
+      keyed by SHA-256 hex (identical content is stored once); and
+      plagulae, the manifest from path to sigillum, a projection that
+      can be rebuilt from acta plus massae.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I store a file in a volumen and read it back?
+    <responsum symbolum="volumen_aperire_aut_creare volumen_plagulam_condere volumen_plagulam_promere volumen_claudere">Open
+      with volumen_aperire_aut_creare(piscina, via), store with
+      volumen_plagulam_condere(vol, via_relativa, contentum, origo)
+      (one transaction: blob, plagula-condita event, manifest upsert),
+      and read with volumen_plagulam_promere(vol, via_relativa,
+      piscina, &amp;inventum). The result is a chorda in YOUR piscina,
+      binary-safe and NOT NUL-terminated; *inventum separates an
+      unknown path (FALSUM) from a file that is legitimately empty
+      (VERUM, mensura 0). Finish with volumen_claudere.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I pass an empty origo string to volumen_plagulam_condere?
+    <responsum symbolum="volumen_plagulam_condere chorda_ex_literis">No,
+      it returns FALSUM. The origo text is copied with
+      chorda_ex_literis, which gives a NIHIL datum for "" (piscina
+      refuses zero-byte allocations); that binds as SQL NULL and the
+      origo column is NOT NULL. Pass a real label such as "genita" or
+      "vendicata:lib/chorda.c".</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I get a reason when volumen_creare or volumen_aperire returns NIHIL?
+    <responsum symbolum="volumen_creare volumen_aperire volumen_error">Only
+      on stderr. volumen_creare refuses a path that already exists and
+      volumen_aperire one that does not, each printing one line and
+      returning NIHIL; volumen_error(NIHIL) just says "volumen NIHIL".
+      If volumen_creare fails after sqlite has made the file (the
+      volumen-creatum event not written), the file stays on disk and
+      every retry is refused as already existing. Once a Volumen is
+      open, volumen_error gives the last sqlite
+      message after a FALSUM or 0 return.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I write several files atomically?
+    <responsum symbolum="volumen_transactionem_incipere volumen_transactionem_committere volumen_transactionem_revolvere volumen_plagulam_condere">Wrap
+      the calls in volumen_transactionem_incipere and
+      volumen_transactionem_committere (or _revolvere on failure).
+      Inside them volumen_plagulam_condere and
+      volumen_plagulam_removere do not open their own transaction and
+      do not roll back on error: the caller owns it. Nesting is
+      refused: a second incipere returns FALSUM, because sqlite
+      cannot nest transactions.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I see what the document looked like at an earlier point?
+    <responsum symbolum="volumen_plicam_ad volumen_acta_legere volumen_massam_promere">volumen_plicam_ad(vol,
+      seq, piscina) rebuilds the manifest by replaying the
+      plagula-condita and plagula-remota events with seq &lt;= seq
+      (seq &lt;= 0 means all, and then equals
+      volumen_plagulas_enumerare, which the test pins); read the old content with
+      volumen_massam_promere on each sigillum_hex.
+      volumen_acta_legere(vol, post_seq, piscina) returns the events
+      AFTER post_seq (exclusive; 0 = all), in seq order. Events whose
+      JSON does not parse are skipped by the fold, not
+      fatal.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does removing a file not free its content?
+    <responsum symbolum="volumen_plagulam_removere volumen_massam_condere volumen_summa_massarum">volumen_plagulam_removere
+      appends a plagula-remota event and deletes the manifest row, but
+      the blob stays in massae: the history still points at it, and
+      volumen_plicam_ad at an earlier seq shows the file again. Removing
+      a path that is not there still returns VERUM (idempotent) and
+      still appends a plagula-remota event. There
+      is no garbage collection of blobs.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I use a volumen in a test without touching the user's real files?
+    <responsum symbolum="volumen_temporarium volumen_claudere volumen_via">volumen_temporarium(piscina,
+      praefixum) creates /tmp/praefixum-N.volumen with the first free N
+      from 1 to C, and volumen_claudere DELETES that file. A test that
+      forgets to close leaves its file behind, and after C leftovers
+      volumen_temporarium returns NIHIL, so close every one.
+      volumen_via tells you which file is really in use.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I record my own events in a volumen?
+    <responsum symbolum="volumen_actum_appendere volumen_acta_legere VolumenActum">volumen_actum_appendere(vol,
+      genus, datum) appends to acta and returns the new seq (0 means
+      failure). datum is meant to be JSON but is not checked; an empty
+      genus, or an empty datum whose pointer is NIHIL (what
+      chorda_ex_literis gives for ""), binds as SQL NULL and the NOT
+      NULL columns refuse it; the
+      timestamp (momentum, ISO UTC with milliseconds) is stamped by
+      sqlite, not by C. Store image or other binary payloads with
+      volumen_massam_condere and put the returned hex sigillum in the
+      event's JSON: a blob is content, the event says how it is
+      used.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I keep one Volumen open for the whole life of an application?
+    <responsum symbolum="volumen_plagulam_condere volumen_actum_appendere volumen_aperire">Yes,
+      but every write copies small strings (genus, sigillum hex, origo,
+      the event JSON) into the piscina given at open, and an arena
+      never frees them, so that piscina grows with each write. Read
+      results go into the piscina you pass to each read call instead.
+      The sqlite statements themselves are allocated by sqlite, not
+      the piscina.</responsum>
+  </interrogatio>
+
+</interrogationes>

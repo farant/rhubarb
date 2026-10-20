@@ -29,27 +29,17 @@ g816 (
     redde (s32)(insignatus character)fons_8x16_codepoint_ad_glypham(cp);
 }
 
-s32 principale(vacuum)
-{
-    Piscina* piscina;
-        b32  praeteritus;
-
-    piscina = piscina_generare_dynamicum("test_fons", IV * MXXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ==================================================
      * Probare ASCII directum
      * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans ASCII directum ---\n");
-
         /* Characteres communes */
         CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham('A'), 'A');
         CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham('Z'), 'Z');
@@ -73,15 +63,19 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00), 0x00);
         CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x7F), 0x7F);
     }
+}
 
 
     /* ==================================================
      * Probare Latin-1 supplement
      * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans Latin-1 supplement ---\n");
-
         /* Litterae accentuatae */
         CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00E9),
             0xE9);  /* e-acutum */
@@ -102,15 +96,19 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00FF),
             0xFF);  /* y-umlaut */
     }
+}
 
 
     /* ==================================================
      * Probare smart quotes -> rectae
      * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans smart quotes ---\n");
-
         /* Single quotes -> apostrophe */
         CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2018),
             0x27);  /* ' left */
@@ -131,15 +129,19 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x201F),
             0x22);  /* ‟ reversed */
     }
+}
 
 
     /* ==================================================
      * Probare dashes -> hyphen
      * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans dashes ---\n");
-
         CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2013),
             0x2D);  /* en dash */
         CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2014),
@@ -149,29 +151,37 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2212),
             0x2D);  /* minus sign */
     }
+}
 
 
     /* ==================================================
      * Probare ellipsis et alia
      * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans ellipsis et alia ---\n");
-
         CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2026),
             0x2E);  /* ellipsis */
         CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2022),
             0x07);  /* bullet */
     }
+}
 
 
     /* ==================================================
      * Probare codepoints ignoti -> TOFU
      * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans TOFU ---\n");
-
         /* Codepoints invalidi */
         CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(-I),
             FONS_TOFU);
@@ -190,6 +200,7 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x03C0),
             FONS_TOFU);  /* pi */
     }
+}
 
 
     /* ==================================================
@@ -198,6 +209,11 @@ s32 principale(vacuum)
      * terminale eas per glyphae_ductae ducit
      * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         hic_manens constans s32 similes[][II] = {
             { 0x0391, 'A' }, { 0x0392, 'B' }, { 0x0395, 'E' },
@@ -207,7 +223,6 @@ s32 principale(vacuum)
             { 0x03A5, 'Y' }, { 0x03A7, 'X' }, { 0x03BF, 'o' } };
         i32 k;
 
-        imprimere("\n--- Probans Graeca Latinis similia ---\n");
         per (k = ZEPHYRUM; k < (i32)(magnitudo(similes)
                 / magnitudo(similes[ZEPHYRUM])); k++)
         {
@@ -220,15 +235,19 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x0394),
             FONS_TOFU);
     }
+}
 
 
     /* ==================================================
      * Probare fons_est_mappatum
      * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans fons_est_mappatum ---\n");
-
         /* ASCII mappatum */
         CREDO_VERUM(fons_est_mappatum('A'));
         CREDO_VERUM(fons_est_mappatum(' '));
@@ -243,12 +262,18 @@ s32 principale(vacuum)
         CREDO_FALSUM(fons_est_mappatum(0x1F600));  /* emoji */
         CREDO_FALSUM(fons_est_mappatum(0x03C0));   /* pi */
     }
+}
 
 
     /* ==================================================
      * Probare nullam glypham mappatam vacuam (2026-10-09)
      * ================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         s32 cp;
         i32 g;
@@ -256,7 +281,6 @@ s32 principale(vacuum)
         b32 plena;
         i32 vacuae;
 
-        imprimere("\n--- Probans nullam glypham invisibilem ---\n");
         /* lineola mollis consulto invisibilis manet (non TOFU) */
         CREDO_AEQUALIS_S32(glypha(0x00AD), 0xAD);
         /* '×' olim sedem vacuam habebat: invisibile, non TOFU */
@@ -302,17 +326,18 @@ s32 principale(vacuum)
         }
         CREDO_AEQUALIS_I32(vacuae, ZEPHYRUM);
     }
+}
 
-
-    /* ==================================================
-     * Compendium
-     * ================================================== */
-
-    imprimere("\n");
     /* fons_8x16 (V3a): Nix8810 M15 ordine CP437 nativo; 'A' bytes ut
      * in Bm437_Nix8810_M15.FON (fon_ad_fons legit); spatium vacuum;
      * ASCII imprimibile totum pictum; sedes CP437 (0x7F domus, 0x82 e
      * acutum, 0xDB plenum); nihil ultra XVI ordines */
+
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         hic_manens constans i8 a_fontis[XVI] = {
             0x00, 0x38, 0x7C, 0xEE, 0xC6, 0xC6, 0xC6, 0xFE,
@@ -366,9 +391,18 @@ s32 principale(vacuum)
                     || fons_8x16[0x82][II] != ZEPHYRUM
                     || fons_8x16[0x82][III] != ZEPHYRUM);
     }
+}
 
     /* V3b: fons_8x16_codepoint_ad_glypham (CP437), metrica, pictura
      * per Mandatum.fons */
+
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         InternamentumChorda* in;
                     Mandata* md;
@@ -422,20 +456,29 @@ s32 principale(vacuum)
         }
         CREDO_VERUM(aequalis);
     }
+}
 
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "ASCII directum", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Latin-1 supplement", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "smart quotes", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "dashes", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ellipsis et alia", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "TOFU", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Graeca Latinis similia", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fons_est_mappatum", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nullam glypham invisibilem", _sectio_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fons_8x16 (V3a)", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fons_8x16_codepoint_ad_glypham (V3b)", _sectio_decima_prima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("fons", SECTIONES);
 }

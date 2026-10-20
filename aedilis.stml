@@ -13,6 +13,7 @@
     <via (>apps/villa/assets
     <via (>apps/mensor
     <via (>apps/mensor/assets
+    <via (>apps/exemplar
     <via (>vendor
     <via (>gesta/fontes
     <via (>silva/amalgama

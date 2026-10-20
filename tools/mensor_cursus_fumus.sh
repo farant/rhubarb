@@ -46,6 +46,8 @@
 #        notam ultimam scribit, se ut cursum 'mensor:curare' notat;
 #        iteratum intra diem non purgat; cursus summus cum limite
 #        minimo curationem SEPARATAM excitat (apparet intra X s)
+#   XVIII graves (credo memoria T3): facta credo.* sectionis -> 'quaestio
+#        graves' (-machina octeti, homini MiB), titulus membri
 #   VIII extra omne repositorium (contextus vacuus) -> cursus notatus,
 #        commissum et ramus vacui, nulla ruina (planta D T2: setenv cum
 #        NIHIL ruebat)
@@ -391,6 +393,25 @@ done
   && echo "$ultima" | grep -q "purgatio non debita" && [ "$nk3" -ge 3 ]
 credo $? "XIII curare: condit, purgat, notatur; intra diem non purgat; cursus summus curationem separatam excitat"
 
+# XVIII graves (credo memoria T3): sectio fumus/m#s cum factis credo.*
+# (arena 48 MiB, auctus 1 MiB, vestigium 50 MiB) -> 'quaestio graves
+# -machina' octetos reddit; titulus= membri sine '#' sectiones eius
+# quaerit; homini MiB cum decima; membrum alienum nihil
+"$RADIX/bin/mensor" cursus incipere -titulus 'fumus/m#s' > "$T/amb18"
+id18=$(sed -n 's/^MENSOR_PARENS=//p' "$T/amb18")
+for f18 in credo.arena_apex:50331648 credo.apex_auctus:1048576 credo.vestigium:52428800; do
+    env $(tr '\n' ' ' < "$T/amb18") "$RADIX/bin/mensor" cursus factum -titulus "${f18%%:*}" -valor "${f18#*:}" -unitas octeti
+done
+"$RADIX/bin/mensor" cursus finire -id "$id18" -exitus 0 -duratio_ms 5
+g18=$("$RADIX/bin/mensor" quaestio graves titulus=fumus/m -machina 2>&1)
+h18=$("$RADIX/bin/mensor" quaestio graves praefixum=fumus/ 2>&1)
+v18=$("$RADIX/bin/mensor" quaestio graves titulus=fumus/alius -machina 2>&1)
+[ -n "$id18" ] && [ "$g18" = "$(printf 'GRAVIS\tfumus/m#s\t1\t50331648\t1048576\t52428800')" ] \
+  && echo "$h18" | grep -qE '^ +48\.0 MiB  arena +48\.0  auctus +1\.0  vestigium +50\.0  n=1 +fumus/m#s$' \
+  && [ -z "$v18" ]
+credo $? "XVIII graves: facta credo.* per sectionem, octeti machinae, MiB homini, titulus membri sectiones eius"
+[ "$fracta" -eq 0 ] || { echo "      g: $g18"; echo "      h: $h18"; echo "      v: $v18"; }
+
 echo
-if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XVII/XVII)"; exit 0; fi
+if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XVIII/XVIII)"; exit 0; fi
 echo "fumus mensor_cursus: FRACTUM ($fracta)"; exit 1

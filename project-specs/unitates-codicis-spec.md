@@ -707,8 +707,98 @@ Pool = a query, not a file: a legati/natura tool ("quaestio: how do I
 ..." with FTS, like the ledger's). Open: questions in English or Latin;
 next to the function (annotation, fresher) or in the unit's file
 (easier to audit). Pilot when U3 lands: ~5 questions each for xar and
-piscina + the dead-answer check. `FAQ.md` is Fran's (never edited by
-agents) - a seed corpus only if Fran moves entries over.
+piscina + the dead-answer check. (`FAQ.md` was an experiment, deleted
+in main 6061a54c - not a seed corpus.)
+
+**U5b slice 1 (2026-10-16, Fran):** the open questions are answered:
+one file per unit, `lib/S.interrogationes.stml` (not header
+annotations: a recipe spanning three functions has no home there, and
+an anchor implied by position can never go dead, so the audit weakens);
+questions and answers in ENGLISH (the reader types the question that
+way), markup and identifiers Latin. Dialect `interrogationes.canon`
+(registered by root `<interrogationes>`): `interrogatio genus=` is an
+`electio` in the canon (quomodo possumne cur quid - a new type = one
+`<optio>`), `<quaestio! (>` = one raw line, `<responsum symbolum= via=
+imperium=>` = text; "at least one anchor" is the gate's job (slice 3),
+the canon cannot say co-occurrence. The stem rule now claims
+`lib/S.<any>.stml` as well as `.md` (role declaratio, so canon_custos
+judges it); `lib/S.stml` with no middle segment stays with the root.
+Pilot drafts: 5 questions each for xar and piscina, every answer read
+against lib/xar.c and lib/piscina.c - Fran edits them. VETITAE lost
+`FAQ.md`. Next: slice 2 (reader + census count), slice 3 (dead-answer
+gate).
+
+**U5b slice 2 (2026-10-16, Fran: reader in lib/unitates):** role
+`interrogationes` in the policy (`extensiones=".interrogationes.stml"`,
+before `declaratio` - suffix match, no C rule code; canon_custos judges
+it). `unitates_interrogationes(u, piscina)` -> entries {unit, path,
+line, type, question, answer, symbols, paths, command} + per-file
+errors (foreign root, `unitas=` not the owner, unknown element or
+attribute, question/answer missing, twice or empty, answer without an
+anchor, illegible STML); never refuses the whole read. Text is the
+flow reading (`stml_textus_fluxus`), so the hand form and the
+formatter's capture form read identically (pinned). CLI `bin/fabrica
+quid -interrogationes [-machina] [UNITAS...]`: entries, per-type counts
+per unit and in total, errors; exit 1 on any error, 2 on an unknown
+unit. The census counts interrogationes FILES per unit (role count, no
+read); the expectation "library answers >= 1 question" is NOT added
+yet (it would add ~250 gaps beside the 61 test gaps - Fran's call).
+Gate `unitates` stage VIII: canon on every `*.interrogationes.stml`,
+reader 0 errors, no empty question/answer, and a bad file in a
+throwaway git tree gives exit 1 with both errors NAMED (born red by a
+plant: an anchorless answer in lib/xar.interrogationes.stml). Anchors
+are still not resolved - slice 3.
+
+**U5b slice 3 (2026-10-16): gate `interrogationes`** (`tools/
+interrogationes_fumus.sh`, praeiudicium, ~8 s; Fran: the census
+expectation waits until more libraries have questions). Dead answer =
+red, NAMED as `path:line kind value - reason`:
+- `symbolum`: one `silva/nexus.sh -renovare`, then ONE pass over
+  build/nexus.tsv for every anchored symbol (per-symbol nexus.sh calls
+  would cost ~1.75 s each). Alive only if a `sedes` lies in a file whose
+  role is caput/fons AND provenance manu - asked of `bin/fabrica quid`,
+  no path list. A copy in a fixture or the amalgam keeps a deleted
+  symbol forever and would hide the death ("sedes solum extra fontem
+  manu scriptum" names those copies).
+- `via`: exists in the tree. `imperium`: first word with `/` =
+  executable file under the root; bare word = on PATH.
+Also red: any reader error (exit 1 of `quid -interrogationes`); exit 2
+(cannot judge) when bin/fabrica is missing, the nexus table is broken,
+or there are no questions at all (a gate that judges nothing is dead).
+`tegit` includes `include/*`: a header rename owes the gate. Born red
+by five plants (renamed symbol, fixture-only symbol, dead path, missing
+script, command not on PATH), each naming its own cause. Gotcha: the
+gate-declaration reader (lib/portae.c via portae-declaratae) sees only
+TRACKED files - a new, untracked gate script reads as "sine
+annotatione" until `git add -N`.
+
+**U5b slice 4 (2026-10-16, Fran: plus a generated docs/faq.html linked
+from docs/index.html):** all in `bin/fabrica quid -interrogationes`
+(tools/fabrica_interrogationes.c, an aedilis corpus of bin/fabrica):
+- `-quaere "TEXT"`: word overlap, question 3 / symbol 2 / answer 1 per
+  query word (counted once, best place); English stop words dropped;
+  identifiers also split on `_`; match = equal, or a common prefix of
+  >= 4 that covers the shorter word but its last 2 letters
+  (pointer/pointers, compare/comparing). Exit 1 = nothing matched, 2 =
+  only stop words. Honest overlap, not semantics: "allocation fails"
+  does not find "fatal".
+- `-symbolum X`: the reverse lookup (the questions naming X ARE its docs).
+- `-html VIA`: one deterministic page; refuses (exit 1, writes nothing)
+  while any question file has an error. Fabrica action
+  `interrogationes_pagina` (aedificatio.stml, `lectiones="verum"`):
+  inputs = lib/*.interrogationes.stml, the NAMES of include/ (stems =
+  owners), unitates.stml, the script, bin/fabrica by provenance + its
+  manifest; what filum reads is supplied by the read book. Correctness
+  does not hang on the key: generata regenerates under -plenus and
+  compares bytes (plant: an edited question -> `STALUM docs/faq.html`).
+  docs/index.html links it under Bibliothecae.
+- API coverage = `tools/interrogationes_fumus.sh -tegmen [include/X.h]`
+  (needs the nexus table, so it lives beside the gate): today piscina
+  11/17, xar 8/33 functions anchored, the rest named.
+Gate unitates VIII also pins -quaere, -symbolum, -html (line-2 marker,
+HTML escaping) and the refusal on a bad file, in a throwaway git tree.
+U5b is complete; open: more libraries' questions (then the census
+expectation), and whether legati should answer the same query.
 
 ## VIII. Open questions (for Fran)
 
@@ -734,3 +824,124 @@ agents) - a seed corpus only if Fran moves entries over.
   lookup, apparatus with inheritance) and the genus lists of six code
   models; METAMODULUS contract rules and how a NEW model is admitted
   were not - read `natura/METAMODULUS.md` before adding genera (U3).
+
+## VII½. U5 exploration: gates x unit kinds (2026-10-16, measured)
+
+Fran: units should carry POLICY by kind (e.g. an app's gates deferred
+to the merge); dig into the current behaviour first. Data:
+`bin/fabrica portae tactus -omnes` (14,842 file->gate debts, 12 s),
+`portae declaratae` (tier, kind, cursor), `quid -machina` on all
+10,694 tracked files, gate seconds from the 10-16 fusio run.
+
+1. C debts are ALREADY derived from aedilis include closures (finer
+   than units): xar.h owes 52 gates because ~50 gates compile something
+   that includes it. Units must not replace this.
+2. 5,711 debts rest ONLY on hand `tegit` globs - mostly a unit's
+   directories listed by hand (`crusta/fontes/* crusta/grammatica/*
+   ...`), or language globs (`*.sh` for vexilla).
+3. Coverage of hand-written domestic code (fons caput scriptum
+   probatio, not archived): libraries 907/907; subsystems 974/1072;
+   apps 78/89. 106 files in NO gate: every `SUB/instrumenta/*.c` front
+   end (crusta oratio md html gesta briar: arbor, computus, census...),
+   46 in tools/ (some installed: stml.c norma.c praeco.c
+   canon_coquere.c), app entry glue (apps/scriba/scriba.c,
+   apps/terminale/*.c, apps/vicus/vicus_terminalis.c,
+   apps/quaestio/quaestio.c, apps/mensor/mensor_ui.c,
+   saltuarius/instrumenta/principalia/saltuarius.c). Nothing compiles
+   them after a library API change.
+4. Cost per one-file change (median): library 3 gates (commit 31 s,
+   merge 131 s); subsystem 2 (10 s / 33 s); app 1 (3 s / 0). Apps are
+   ALREADY cheap leaves - deferring app gates buys nothing; the app
+   problem is coverage (logic lives in libraries, which root tests cover:
+   probatio_pictor_* x22, probatio_vicus_* x22; the entry glue is
+   uncovered).
+5. Libraries by header-change debt: 92 owe 0-3 gates, 155 owe 4-10, 27
+   owe 11-30, 23 FOUNDATION owe all 47 (xar chorda piscina stml latina
+   utf8 tabula_dispersa internamentum ...: ~305 s commit + ~1,530 s
+   merge).
+6. RUNNER-ONLY debts: a gate owed only because its runner (bin/fabrica,
+   bin/compilator, bin/mensor) links the changed file. Foundation: 5 of
+   52 (58 s). A house-tool-internal library (unitates.h, linked only by
+   bin/fabrica): 12 of 16 gates, 528 s - css html md materia toml
+   saltuarius silva ... are owed because they RUN through bin/fabrica,
+   not because they test unitates. A broken runner fails loudly (exit 2,
+   nothing ran), so these could be paid by the runner's own gate.
+7. Tiers (`gradus="fusio"`) are declared per gate for COST (silva,
+   oratio, pythonica, aedilis, credo, fabrica-fumus, ...), never derived
+   from what the gate covers.
+8. `nominat` (a test names a path in a string): 50 debts with no other
+   reason, e.g. probatio_unitates.c naming vendor/unitas.stml in its
+   in-memory world - the false-dependency question …WPMFNX.
+
+**U5 (a) built (2026-10-16): `bin/fabrica portae relatio [-machina]
+-portae TSV [-tempora VIA]`** (tools/fabrica_relatio.c) - the join above
+in C, rerunnable as before/after for every policy change (~23 s on the
+live tree): I kinds x coverage x median cost (commit/merge tier), II
+library header debts in bands + FOUNDATIONS (all automatic gates but 5),
+III uncovered hand-written domestic code per unit, IV per gate the debts
+standing ONLY on text (tegit/nominat) or ONLY on infrastructure.
+To say "only on text" without parsing reason strings, lib/portae.c now
+TYPES every reason: `PortaeRatioGenus` on each exemplar (CURSOR TEGIT
+EFFECTUS SUITA NOMINAT CURRIT CURRIT_ALIENUM INSTRUMENTUM IGNOTA) and
+two masks on each touch (`directa`, `clausurae`). CURRIT_ALIENUM = a
+hand `currit=` naming a program another gate OWNS (instrumentum=): the
+converted suites' `currit="tools/fabrica.c"` (fabrica-fumus owns
+bin/fabrica). Finding: non-annotation calls of another gate's
+instrument were already dropped ("possessor hereditat"); the
+infrastructure debts are exactly these deliberate annotations, paid
+through the runner's whole include closure - the policy question for
+(c) is whether they should be owed for the runner's OWN unit only.
+Blind gates (IGNOTA) are owed but never count as coverage (the mini
+world caught this: without crusta's command table every file "was
+covered"). Gate portae-declaratae III pins exact answers in a
+throwaway git tree; probatio_portae pins every kind and both masks
+(plant: no ALIENUM -> red at the credo assertion).
+
+**U5 (b) built (2026-10-16, Fran: merge tier; thistle compiled AND
+test region run): gate `instrumenta`** (tools/instrumenta_fumus.sh,
+`gradus="fusio"`, ~42 s warm, 2-4 min after a foundation header change).
+Every domestic hand-written program is BUILT, never run: the files come
+from a new judge `instrumenta` in unitates.stml (domestica, viva/vetusta,
+fons/scriptum, manu, c89/thistle) - vendor, research, archive, fixtures
+(briar's `adversa`, which must fail) and generated code drop out by
+policy; C entries = files with `principale(`/`main(`.
+- C: the CANONICAL recipe - `bin/aedilis F --exitus D` then `sh
+  D/struere.sh`. New aedilis option `--exitus DIR` (lib
+  `aedilis_scriptum_scribere_ad`; default output byte-identical): plain
+  aedilis writes build/aedilis/<basename>/, shared by 7 `arbor.c` and 8
+  `computus.c` and holding 20 manifests fabrica keys on - building
+  briar/instrumenta/fabrica.c would have overwritten bin/fabrica's own.
+- thistle: policy gained `<lingua thistle>` and `.thistle` in role
+  `scriptum` (fixtures stay `fixtura` by rule 1); the gate runs the
+  TREE's bin/briar `-f RADIX -struere`, then `-probatio` when the script
+  has a `munus="probatio"` region (author-declared safe to run), with a
+  temporary HOME so briar's cache (~/.rhubarb/briar) is never touched.
+- Probe before the gate: helper-built 100/148 (helper limits:
+  frameworks, basename collisions); canonical recipe 143/148. The 5:
+  tools/fons_merge.c REAL ROT (52 wrong `(signed char)` casts in an
+  `unsigned char` table - fixed, Fran); tools/natura_canones.c closure
+  gap (emissio source linked by hand only - `<aedilis corpus>` in
+  tools/natura_canones.h); tools/briar.c and tools/briar_spectator.c
+  annotated 1 of 5 and 0 of 2 of their generated capsules (`<aedilis
+  obiectum>` added; briar_struere.sh's own clang line and fabrica's
+  hand-listed capsule inputs still compensate - cleanup later);
+  apps/forum/forum.c needs a generated capsule -> named NOTA, not red
+  (the gate never runs fabrica sanare itself: fabrica's lock).
+- Result: 148 C + 4 thistle, 151 built, 4 test regions pass, 1 NOTA.
+  Born red twice: an undefined symbol linked from tools/xar_mensura.c
+  (a tool no other gate covers), and a thistle test assertion.
+
+**U5 (b) follow-up (2026-10-17, found by fusio_probare):** the gate was
+only half isolated. `--exitus` kept manifest, script and binary
+private, but the generated script still compiled into the SHARED object
+cache build/aedilis/obiecta - including provenance objects
+(`build__fabrica__provenientia__<tool>.o`) for tools whose installers
+are hand-written. Those installers correctly invalidate that object
+(tools/provenientia_scribere.sh `rm -f`) when provenance changes;
+before the gate nobody had created it, so the rm was a no-op. The
+merge's preflight heal of bin/briar deleted one: "scripsit extra
+vestigium: build/aedilis/obiecta/build__fabrica__provenientia__briar.o"
+- fabrica right, my gate wrong. Fix: aedilis `--obiecta DIR` (default
+byte-identical); the gate uses build/instrumenta_fumus/obiecta; the 14
+stray shared objects removed. Cold rerun green in 2 min with zero new
+objects in the shared cache.

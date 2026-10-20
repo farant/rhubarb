@@ -7,32 +7,23 @@
 #include "credo.h"
 #include <stdio.h>
 
-s32 principale(vacuum)
-{
-    Piscina* piscina;
-        b32  praeteritus;
-
-    /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("test_sectio", 1024 * 1024);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ==================================================
 	 * Probare macho_piscina et macho_datum (novi getters)
 	 * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* via = "probationes/fixa/simplex";
                      MachO* macho;
                    Piscina* macho_pisc;
                constans i8* datum;
-
-        imprimere("\n--- Probans macho_piscina et macho_datum ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -46,20 +37,26 @@ s32 principale(vacuum)
         datum = macho_datum(macho);
         CREDO_NON_NIHIL(datum);
     }
+}
 
 
     /* ==================================================
 	 * Probare sectio_invenire
 	 * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* via = "probationes/fixa/simplex";
                      MachO* macho;
                     Sectio* text;
                     Sectio* unwind;
                     Sectio* non_existens;
-
-        imprimere("\n--- Probans sectio_invenire ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -84,12 +81,20 @@ s32 principale(vacuum)
             piscina);
         CREDO_NIHIL(non_existens);
     }
+}
 
 
     /* ==================================================
 	 * Probare sectio attributa
 	 * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* via = "probationes/fixa/simplex";
                      MachO* macho;
@@ -100,8 +105,6 @@ s32 principale(vacuum)
             memoriae_index  addressa;
                        i32  ordinatio;
                        i32  vexilla;
-
-        imprimere("\n--- Probans sectio attributa ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -145,20 +148,26 @@ s32 principale(vacuum)
         vexilla = sectio_vexilla(text);
         imprimere("  Flags: 0x%x\n", vexilla);
     }
+}
 
 
     /* ==================================================
 	 * Probare sectio_datum (zero-copy)
 	 * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* via = "probationes/fixa/simplex";
                      MachO* macho;
                     Sectio* text;
                     chorda  data;
                constans i8* macho_buf;
-
-        imprimere("\n--- Probans sectio_datum (zero-copy) ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -178,12 +187,20 @@ s32 principale(vacuum)
         macho_buf = macho_datum(macho);
         CREDO_VERUM(data.datum >= macho_buf);
     }
+}
 
 
     /* ==================================================
 	 * Probare sectio helper functions
 	 * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* via = "probationes/fixa/simplex";
                      MachO* macho;
@@ -191,8 +208,6 @@ s32 principale(vacuum)
                        b32  est_inst;
                        b32  est_debug;
                        i32  genus;
-
-        imprimere("\n--- Probans sectio helper functions ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -215,12 +230,20 @@ s32 principale(vacuum)
         imprimere("  Section type: 0x%x\n", genus);
         CREDO_VERUM(genus == SECTIO_GENUS_REGULAR);
     }
+}
 
 
     /* ==================================================
 	 * Probare sectio_iterator
 	 * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* via = "probationes/fixa/simplex";
                      MachO* macho;
@@ -229,8 +252,6 @@ s32 principale(vacuum)
                        i32  numerus_sectiones;
                        b32  invenit_text;
                        b32  invenit_unwind;
-
-        imprimere("\n--- Probans sectio_iterator ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -274,20 +295,26 @@ s32 principale(vacuum)
         CREDO_VERUM(invenit_text);
         CREDO_VERUM(invenit_unwind);
     }
+}
 
 
     /* ==================================================
 	 * Probare cum_functione (plures sectiones)
 	 * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* via = "probationes/fixa/cum_functione";
                      MachO* macho;
             SectioIterator  iter;
                     Sectio* sectio;
                        i32  numerus_sectiones;
-
-        imprimere("\n--- Probans cum_functione (plures sectiones) ---\n");
 
         macho = macho_aperire(via, piscina);
         CREDO_NON_NIHIL(macho);
@@ -303,17 +330,23 @@ s32 principale(vacuum)
         imprimere("  Total sections: %d\n", numerus_sectiones);
         CREDO_VERUM(numerus_sectiones > ZEPHYRUM);
     }
+}
 
 
     /* ==================================================
 	 * Probare NIHIL handling
 	 * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Sectio* sectio;
         chorda  titulis;
-
-        imprimere("\n--- Probans NIHIL handling ---\n");
 
         /* sectio_invenire cum NIHIL */
         sectio = sectio_invenire(NIHIL, "__TEXT", "__text", piscina);
@@ -329,27 +362,26 @@ s32 principale(vacuum)
         /* sectio_est_instructiones cum NIHIL */
         CREDO_FALSUM(sectio_est_instructiones(NIHIL));
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "macho_piscina et macho_datum", _sectio_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "sectio_invenire", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sectio attributa", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sectio_datum (zero-copy)", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "sectio helper functions", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "sectio_iterator", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "cum_functione (plures sectiones)", _sectio_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "NIHIL handling", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* =================================================
-	 * Compendium
-	 * ================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    /* Destructio */
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("sectio", SECTIONES);
 }

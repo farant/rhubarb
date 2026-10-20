@@ -1,0 +1,55 @@
+<interrogationes unitas="internamentum">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I intern strings so I can compare them by pointer?
+    <responsum symbolum="chorda_internare chorda_internare_ex_literis internamentum_globale">chorda_internare
+      (or chorda_internare_ex_literis for a C string) returns a chorda*
+      to the canonical copy; interning the same bytes again through the
+      SAME interner returns the same pointer, so two interned names are
+      equal exactly when the pointers are equal.
+      chorda_internare_ex_literis looks the literal up before
+      allocating, so repeats cost nothing.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I intern the empty string?
+    <responsum symbolum="chorda_internare chorda_internare_ex_literis" via="lib/internamentum.worklog.md">No:
+      both functions return NIHIL for a zero-length chorda or "",
+      because the hash table refuses empty keys. This is a written
+      contract, not a bug: actio, insula and stml treat that NIHIL as
+      "empty name", and a 2026-09-22 attempt to change it broke them.
+      If "" must be a real value, keep your own canonical empty chorda
+      (json and componens do).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I choose between internamentum_globale and my own interner?
+    <responsum symbolum="internamentum_globale internamentum_creare">internamentum_globale
+      is a lazily created singleton with its own dynamic piscina
+      (64 KB to start) that is never freed; use it when several
+      libraries must share pointers. internamentum_creare(piscina)
+      makes a private one whose copies live and die with that piscina.
+      Pointers from two different interners never compare equal, even
+      for the same bytes.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I free the memory of interned strings with internamentum_vacare?
+    <responsum symbolum="internamentum_vacare tabula_dispersa_vacare piscina_destruere">No.
+      internamentum_vacare only empties the lookup table; the copies
+      stay in the piscina, so old pointers still read correctly but are
+      no longer canonical: interning the same bytes afterwards gives a
+      NEW pointer that does not equal the old one. Memory comes back
+      only when the interner's piscina is destroyed or reset.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can chorda_est_internata tell me whether my pointer is the canonical copy?
+    <responsum symbolum="chorda_est_internata chorda_internare">No:
+      it looks the BYTES up, so it is VERUM for any chorda with the same
+      content as an interned one, canonical or not. To get the
+      canonical pointer, intern the chorda again with chorda_internare
+      (no new copy is made when it is already present).</responsum>
+  </interrogatio>
+
+</interrogationes>

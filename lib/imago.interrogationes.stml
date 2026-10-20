@@ -1,0 +1,65 @@
+<interrogationes unitas="imago">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I load a PNG or JPEG file into pixels I can draw?
+    <responsum symbolum="imago_caricare_ex_file imago_caricare_ex_memoria ImagoFructus Imago" via="tools/icones_instrumentum.c">Call
+      imago_caricare_ex_file(via, piscina) (a NUL-terminated C path, not
+      a chorda) or imago_caricare_ex_memoria(datum, mensura, piscina) and
+      check fructus.successus before touching fructus.imago. The pixels
+      are always 4 bytes per pixel, R, G, B, A, not premultiplied, rows
+      top to bottom, whatever the file held (grey, palette and 16-bit
+      images are converted to 8-bit RGBA). They live in your piscina;
+      there is nothing to free.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get the width and height of an image without decoding it?
+    <responsum symbolum="imago_mensuras_ex_file imago_mensuras_ex_memoria" via="lib/imago.worklog.md">imago_mensuras_ex_file
+      or imago_mensuras_ex_memoria read only the header (stbi_info) and
+      allocate no pixels. They return FALSUM and set both outputs to 0
+      when the file is missing or the format unknown. Both output
+      pointers are written unconditionally, so they must not be
+      NIHIL.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find out why an image failed to load?
+    <responsum symbolum="ImagoFructus imago_caricare_ex_file">Read
+      fructus.error, a chorda (not NUL-terminated) copied into the
+      piscina you passed: stb_image's short English failure reason, or
+      "Argumenta invalida" for a NIHIL path, NIHIL data or zero length.
+      With a NIHIL piscina the error is an empty chorda, since there is
+      nowhere to copy the text. On success error is empty.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I include imago.h just to use the Imago type without pulling in the decoder?
+    <responsum symbolum="Imago" via="include/imago_typus.h">Include
+      imago_typus.h instead: it declares Imago alone. imago.h brings
+      lib/imago.c and vendor/stb_image.h into the link closure of every
+      program that includes it, which once dragged the decoder into
+      every app through vitrea. Writers (imago_png) and comparers
+      (imago_collatio) use the type header only.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a very large image make loading fail gracefully instead of exiting?
+    <responsum symbolum="imago_caricare_ex_file piscina_allocare">Only
+      if stb_image itself refuses it. The decoded buffer is malloc'd by
+      stb_image and then copied into your piscina with piscina_allocare,
+      which exits the process when it cannot get memory, so the
+      "Non possum allocare memoriam" branch never returns in practice.
+      Peak memory is about twice the RGBA size during the copy. Check
+      the size first with imago_mensuras_ex_file.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I save pixels as a PNG file?
+    <responsum symbolum="imago_png_scribere imago_png_codificare imago_ex_tabula">Not
+      with this library, which only decodes. imago_png_scribere and
+      imago_png_codificare write an Imago; imago_ex_tabula
+      (delineare_mandata.h) views a TabulaPixelorum as an Imago without
+      copying.</responsum>
+  </interrogatio>
+
+</interrogationes>

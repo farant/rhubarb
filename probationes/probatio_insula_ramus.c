@@ -18,14 +18,6 @@
 hic_manens Piscina*             piscina;
 hic_manens InternamentumChorda* intern;
 
-hic_manens character littera_a[]        = "a";
-hic_manens character littera_b[]        = "b";
-hic_manens character numerus_duo[]      = "2";
-hic_manens character numerus_tres[]     = "3";
-hic_manens character numerus_quattuor[] = "4";
-hic_manens character numerus_novem[]    = "9";
-hic_manens character non_numerus[]      = "abc";
-
 hic_manens constans character canon_libelli[] =
     "<canon dialectus=\"libellus\" versio=\"1\">"
     "<elementum nomen=\"libellus\" radix=\"verum\">"
@@ -97,7 +89,31 @@ valor_est (
     redde a ? chorda_aequalis_literis(*a, v) : FALSUM;
 }
 
-s32 principale (vacuum)
+/* piscina et intern (canon_ex) sectionis sunt: posita in parare,
+ * vacata in purgare */
+interior vacuum
+_parare (
+    CredoContextus* c)
+{
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+}
+
+interior vacuum
+_purgare (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    piscina  = NIHIL;
+    intern   = NIHIL;
+}
+
+/* gradus I-VII seriatim in uno repositorio: quisque statum prioris
+ * legit, ergo sectio una cum gradibus nominatis; valores mutatorum
+ * (ctx) locales - status nullus inter sectiones */
+interior vacuum
+_sectio_prima (
+    CredoContextus* ctx)
 {
     InsulaRepositorium* repo;
            InsulaRamus  radix;
@@ -105,14 +121,15 @@ s32 principale (vacuum)
            InsulaRamus  b;
            InsulaRamus  c;
                    i32  versio;
+             character  littera_a[]         = "a";
+             character  littera_b[]         = "b";
+             character  numerus_duo[]       = "2";
+             character  numerus_tres[]      = "3";
+             character  numerus_quattuor[]  = "4";
+             character  numerus_novem[]     = "9";
+             character  non_numerus[]       = "abc";
 
-    piscina = piscina_generare_dynamicum("probatio_insula_ramus",
-        XVI * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    (vacuum)ctx;
     repo = insula_repositorium_creare(piscina, intern,
         "<hospes activa=\"a\"><libellus id=\"a\""
         " n=\"1\"/><libellus id=\"b\" n=\"1\"/></hospes>");
@@ -122,7 +139,7 @@ s32 principale (vacuum)
     b      = insula_ramus(repo, "libellus", "b");
     c      = insula_ramus(repo, "libellus", "c");
 
-    imprimere("\n--- I: ramus radicis == API vetus ---\n");
+    CREDO_GRADUS("I: ramus radicis == API vetus");
     CREDO_VERUM(insula_ramus_nodus(&radix)
                 == insula_radix(repo));
     CREDO_VERUM(valor_est(insula_ramus_attributum(&radix, "activa"),
@@ -132,7 +149,7 @@ s32 principale (vacuum)
     CREDO_VERUM(valor_est(insula_attributum(repo,
         "activa"), "b"));
 
-    imprimere("\n--- II: ramus - lectio et scriptura relativae ---\n");
+    CREDO_GRADUS("II: ramus - lectio et scriptura relativae");
     CREDO_VERUM(valor_est(insula_ramus_attributum(&a,
         "n"), "1"));
     CREDO_VERUM(mutare_ramum(&a, n_ponere,
@@ -144,7 +161,7 @@ s32 principale (vacuum)
     /* radix ipsa n non accepit (mutator nodum rami accepit) */
     CREDO_NIHIL(insula_attributum(repo, "n"));
 
-    imprimere("\n--- III: ramus absens ---\n");
+    CREDO_GRADUS("III: ramus absens");
     CREDO_NIHIL(insula_ramus_nodus(&c));
     CREDO_NIHIL(insula_ramus_attributum(&c, "n"));
     versio = insula_versio(repo);
@@ -153,7 +170,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(insula_versio(repo), versio);
     CREDO_VERUM(insula_causa(repo).mensura > ZEPHYRUM);
 
-    imprimere("\n--- IV: domini per ramum ---\n");
+    CREDO_GRADUS("IV: domini per ramum");
     CREDO_VERUM(insula_ramus_dominum_ponere(&a, "n",
         "scriptor_a"));
     insula_scriptorem_ponere(repo, chorda_ex_literis("alius", piscina));
@@ -170,7 +187,7 @@ s32 principale (vacuum)
         numerus_tres));
     insula_scriptorem_ponere(repo, chorda_ex_literis("", piscina));
 
-    imprimere("\n--- V: canones per ramum; radix delegatos ignorat\n");
+    CREDO_GRADUS("V: canones per ramum; radix delegatos ignorat");
     insula_ramus_canonem_ponere(&a,
         canon_ex(canon_libelli));
     insula_ramus_canonem_ponere(&b,
@@ -196,7 +213,7 @@ s32 principale (vacuum)
     /* arbor vera libellos servat (visio canonis sola eos omittit) */
     CREDO_AEQUALIS_I32(stml_numerus_liberorum(insula_radix(repo)), II);
 
-    imprimere("\n--- VI: domini e plagula in ramum ---\n");
+    CREDO_GRADUS("VI: domini e plagula in ramum");
     {
         StmlResultus res;
 
@@ -209,7 +226,7 @@ s32 principale (vacuum)
             res.elementum_radix), I);
     }
 
-    imprimere("\n--- VII: ramum initiare (T1a) ---\n");
+    CREDO_GRADUS("VII: ramum initiare (T1a)");
     {
         InsulaRamus d;
                 i32 liberi;
@@ -250,13 +267,20 @@ s32 principale (vacuum)
             "a"));
     }
 
-    imprimere("\n--- VII: restitutio honesta ---\n");
+    CREDO_GRADUS("VII: restitutio honesta");
     CREDO_VERUM(insula_restituere(repo));
     CREDO_FALSUM(insula_mendacium(repo));
     CREDO_VERUM(valor_est(insula_ramus_attributum(&a,
         "n"), "4"));
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "rami insulae", _sectio_prima, _parare, _purgare, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("insula_ramus", SECTIONES);
 }

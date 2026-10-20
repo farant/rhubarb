@@ -1,0 +1,104 @@
+<interrogationes unitas="tabula_characterum">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I create a text grid and type a character into it the way an editor would?
+    <responsum symbolum="tabula_initiare tabula_inserere_characterem tabula_cellula" via="lib/vim.c">tabula_initiare(&amp;tabula,
+      piscina, latitudo, altitudo) allocates the cells (row-major) and
+      the per-line indentation array from the piscina; it has no return
+      value (piscina_allocare exits on failure). tabula_inserere_characterem(&amp;tabula,
+      linea, columna, c) is the typing operation: in blank space it
+      paints, at or on content it pushes the rest of the line right and
+      wraps the overflow onto the next line. Read and write raw cells
+      with the tabula_cellula(t, linea, columna) macro. The grid has no
+      cursor; lib/vim.c keeps one.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does an empty cell contain, a space or a NUL?
+    <responsum symbolum="tabula_initiare tabula_trahere_sinistram tabula_est_cellula_vacua tabula_invenire_finem_contenti" via="lib/scriba_documentum.worklog.md">Usually
+      a space: tabula_initiare, tabula_inserere_lineam and
+      tabula_delere_lineam fill with ' ' and set indentation to -1 (the
+      header's "initialized to '\0'" is wrong). But tabula_trahere_sinistram,
+      and so tabula_delere_characterem, writes '\0' into the last
+      column. tabula_est_cellula_vacua treats ' ', '\0', '\t' and
+      TAB_CONTINUATIO as blank; tabula_invenire_finem_contenti treats
+      only ' ' and '\0' as blank, so tabs count as content there.
+      Compare a cell with tabula_est_cellula_vacua, not with ' '.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the barrier (obex) and when does typing push text instead of overwriting?
+    <responsum symbolum="tabula_invenire_obicem tabula_inserere_characterem">The
+      obex is the first non-blank column at or after the given column
+      (tabula_invenire_obicem, -1 if none). tabula_inserere_characterem
+      only paints when there is no content to the right, or when at
+      least one blank cell lies between the column and the obex (the
+      whitespace "cushion" is used up). When the column is at the obex
+      or right before it, the rest of the line is pushed one cell right.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I treat a FALSUM from tabula_inserere_characterem as "nothing happened"?
+    <responsum symbolum="tabula_inserere_characterem tabula_tractare_overflow tabula_inserere_tab tabula_inserere_spatium tabula_est_plena tabula_inserere_lineam">No.
+      FALSUM means the page is full, but the grid has already changed:
+      the line was pushed and the new character painted before the
+      overflow was handled, and on the last line (or when
+      tabula_tractare_overflow cannot insert a line) the pushed-out
+      character is simply lost. The same holds for tabula_inserere_tab
+      and tabula_inserere_spatium. tabula_est_plena (content in the last
+      column of the last line) does not predict every failure: when the
+      overflow must open a new line before an indented line,
+      tabula_inserere_lineam refuses as soon as the last line has any
+      content at all. Keep a copy of the cells if you need to undo.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I insert and delete a tab without leaving half of it behind?
+    <responsum symbolum="tabula_inserere_tab tabula_delere_tab tabula_est_tab_continuatio TAB_CONTINUATIO">A
+      tab is two cells: '\t' followed by TAB_CONTINUATIO (0x01). Insert
+      it with tabula_inserere_tab (column at most latitudo - 2) and
+      remove it with tabula_delere_tab, which accepts either cell.
+      tabula_delere_characterem knows nothing about tabs and removes
+      only one of the two cells, so look at the cell first (for '\t'
+      or TAB_CONTINUATIO) as lib/vim.c's backspace does. Pushing text off the end of a line can
+      also drop the TAB_CONTINUATIO and leave a lone '\t'.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the indentatio array and who keeps it up to date?
+    <responsum symbolum="tabula_initiare tabula_inserere_lineam tabula_delere_lineam tabula_ex_literis_cum_dimensionibus" via="lib/vim.c">Sticky
+      indentation per line (s32, -1 = not set). The library only moves
+      it along with tabula_inserere_lineam / tabula_delere_lineam and
+      sets it in the tabula_ex_literis helpers (the first column that is
+      neither a space nor a tab). Typing never updates it: lib/vim.c sets it after a
+      successful tabula_inserere_characterem. tabula_tractare_overflow
+      decides indentation from the cells (tabula_invenire_initium_contenti),
+      not from this array.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I write a test that checks the grid against expected text?
+    <responsum symbolum="tabula_ex_literis tabula_ex_literis_cum_dimensionibus tabula_aequalis_literis tabula_asserere tabula_imprimere">Build
+      the start state with tabula_ex_literis (default LXVIII x LVI) or
+      tabula_ex_literis_cum_dimensionibus ('\n' = next line, '\t'
+      becomes the two-cell tab), act, then tabula_asserere(&amp;t,
+      piscina, expectatum, descriptio). It calls CREDO_VERUM and, on
+      failure, prints both grids with tabula_imprimere ('.' for '\0',
+      '_' for space, '&gt;' for tab). The comparison is strict for
+      characters you list (a ' ' you write does not match a '\0' cell)
+      and only requires blank cells, in the tabula_est_cellula_vacua
+      sense, after them.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I copy text in and out of a grid region without the push logic?
+    <responsum symbolum="tabula_scribere_ad_positionem tabula_legere_ad_positionem tabula_inserere_spatium" via="lib/concha.c">tabula_scribere_ad_positionem
+      overwrites cells from a NUL-terminated string and returns how many
+      it wrote (it stops at the line end; tabs are not expanded).
+      tabula_legere_ad_positionem copies longitudo cells into a buffer
+      that must hold longitudo + 1 bytes, NUL-terminated. To make room
+      first, tabula_inserere_spatium pushes the line right N times.
+      lib/concha.c's $date command uses all three.</responsum>
+  </interrogatio>
+
+</interrogationes>

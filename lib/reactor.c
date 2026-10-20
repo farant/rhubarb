@@ -1,14 +1,23 @@
 /* reactor.c - Implementatio Reactor (Event Loop)
  *
- * Utitur poll() pro I/O multiplexing.
+ * Utitur poll() pro I/O multiplexing. Labores cooperativi post fd et
+ * timers currunt (gradus unus per cyclum; labor in cyclo natus cyclo
+ * proximo primum). Signa per fistulam sui: tractator systematis octetum
+ * signi scribit, fd internum (non numeratum) in ansa legit et
+ * tractatores vocat - status staticus UNUS (fistula + possessor),
+ * quia signa processui toti pertinent (hospitium-v3-plan P4).
  */
 
 #include "postulata_posix.h"
 #include "reactor.h"
 
+#include <errno.h>
+#include <fcntl.h>
 #include <poll.h>
+#include <signal.h>
 #include <sys/time.h>
 #include <string.h>
+#include <unistd.h>
 
 /* Superficies poll.h olim hic ut blocus externa stabat (iudici
  * soli); 2026-07-27 in silva/fontes/systema_posix.h promota et
@@ -33,7 +42,24 @@ nomen structura {
     /* generatio auget in omni inscriptione et remotione: dispatchus
      * registrationem eandem agnoscit (http-vocatio II.0) */
                 i32 generatio;
+    /* fistula signorum: in reactor_numerus_fd non numeratur */
+                b32 internus;
 } ReactorFdEntry;
+
+/* Labor cooperativus */
+nomen structura {
+    ReactorLabor  labor;
+          vacuum* datum;
+             b32  activus;
+             i32  cyclus_natalis;   /* cyclus additionis */
+} ReactorLaborEntry;
+
+/* Signum registratum */
+nomen structura {
+                  integer  signum;
+    ReactorSigniTractator  tractator;
+                   vacuum* datum;
+} ReactorSignumEntry;
 
 /* Entry pro timer */
 nomen structura {
@@ -67,10 +93,23 @@ structura Reactor {
                   i32 timer_numerus;
        ReactorTimerId proximus_timer_id;
 
+    /* Labores (labor_numerus = summa aquae, ut timer_numerus) */
+    ReactorLaborEntry labores[REACTOR_LABOR_MAXIMA];
+                  i32 labor_numerus;
+                  i32 cyclus;          /* auget in omni reactor_poll */
+
+    /* Signa (solum si possessor) */
+    ReactorSignumEntry signa[REACTOR_SIGNA_MAXIMA];
+                   i32 signa_numerus;
+
     /* State */
     b32 currens;
     b32 sistere_petitum;
 };
+
+/* Signa processui toti pertinent: fistula una, possessor unus */
+hic_manens integer   _fistula_signorum[II] = { -I, -I };
+hic_manens Reactor*  _signorum_possessor   = NIHIL;
 
 
 /* ========================================================================
@@ -326,6 +365,102 @@ _processare_timers (
 
 
 /* ========================================================================
+ * FUNCTIONES INTERNAE - LABORES ET SIGNA
+ * ======================================================================== */
+
+/* Gradus unus cuiusque laboris non in hoc cyclo nati (labor in gradu
+ * alterius additus - fortasse in loco iam percurso - cyclo proximo) */
+interior i32
+_processare_labores (
+    Reactor* reactor)
+{
+    i32 i;
+    i32 numerus     = reactor->labor_numerus;
+    i32 processati  = 0;
+
+    per (i = 0; i < numerus; i++)
+    {
+        ReactorLaborEntry* l = &reactor->labores[i];
+
+        si (!l->activus || l->cyclus_natalis == reactor->cyclus)
+        {
+            perge;
+        }
+        si (l->labor(l->datum))
+        {
+            l->activus = FALSUM;
+        }
+        processati++;
+    }
+
+    redde processati;
+}
+
+/* Tractator systematis: octetum signi in fistulam, nihil aliud
+ * (async-signal-safe: write et errno solum) */
+interior vacuum
+_signum_excipere (
+    integer signum)
+{
+    integer servatum  = errno;
+         i8 octetus   = (i8)signum;
+
+    si (write(_fistula_signorum[I], &octetus, I) < 0)
+    {
+        /* fistula plena: signum iam pendet - confluit */
+    }
+    errno = servatum;
+}
+
+/* fd internum: octeti signorum lecti, tractatores in ansa vocati */
+interior vacuum
+_signa_legere (
+    integer  fd,
+        i32  eventus,
+     vacuum* data)
+{
+     Reactor* reactor = (Reactor*)data;
+          i8  capsa[XVI];
+     ssize_t  n;
+
+    (vacuum)eventus;
+    dum ((n = read(fd, capsa, magnitudo(capsa))) > 0)
+    {
+        i32 k;
+
+        per (k = 0; k < (i32)n; k++)
+        {
+            i32 j;
+
+            per (j = 0; j < reactor->signa_numerus; j++)
+            {
+                si (reactor->signa[j].signum == (integer)capsa[k])
+                {
+                    ReactorSignumEntry* e = &reactor->signa[j];
+
+                    e->tractator(e->datum);
+                }
+            }
+        }
+    }
+}
+
+/* fistula non-obstruens, clausa in exec */
+interior b32
+_fistulam_parare (
+    integer fd)
+{
+    integer vexilla = fcntl(fd, F_GETFL, 0);
+
+    si (vexilla < 0 || fcntl(fd, F_SETFL, vexilla | O_NONBLOCK) < 0)
+    {
+        redde FALSUM;
+    }
+    redde fcntl(fd, F_SETFD, FD_CLOEXEC) >= 0;
+}
+
+
+/* ========================================================================
  * FUNCTIONES PUBLICAE - LIFECYCLE
  * ======================================================================== */
 
@@ -353,11 +488,15 @@ reactor_creare (
     reactor->proximus_timer_id  = 0;
     reactor->currens            = FALSUM;
     reactor->sistere_petitum    = FALSUM;
+    reactor->labor_numerus      = 0;
+    reactor->cyclus             = 0;
+    reactor->signa_numerus      = 0;
 
     /* Initiare arrays */
     memset(reactor->fd_entries, 0, magnitudo(reactor->fd_entries));
     memset(reactor->poll_fds, 0, magnitudo(reactor->poll_fds));
     memset(reactor->timers, 0, magnitudo(reactor->timers));
+    memset(reactor->labores, 0, magnitudo(reactor->labores));
 
     redde reactor;
 }
@@ -371,9 +510,33 @@ reactor_destruere (
         redde;
     }
 
+    /* possessor signorum: tractatores ordinarii restituuntur, fistula
+     * clauditur - reactor alter postea signa capere potest */
+    si (_signorum_possessor == reactor)
+    {
+        i32 k;
+
+        per (k = 0; k < reactor->signa_numerus; k++)
+        {
+            structura sigaction sa;
+
+            memset(&sa, 0, magnitudo(sa));
+            sa.sa_handler = SIG_DFL;
+            (vacuum)sigemptyset(&sa.sa_mask);
+            (vacuum)sigaction(reactor->signa[k].signum, &sa, NIHIL);
+        }
+        (vacuum)close(_fistula_signorum[0]);
+        (vacuum)close(_fistula_signorum[I]);
+        _fistula_signorum[0]    = -I;
+        _fistula_signorum[I]    = -I;
+        _signorum_possessor     = NIHIL;
+        reactor->signa_numerus  = 0;
+    }
+
     reactor->currens        = FALSUM;
     reactor->fd_numerus     = 0;
     reactor->timer_numerus  = 0;
+    reactor->labor_numerus  = 0;
 }
 
 
@@ -436,6 +599,7 @@ reactor_adicere (
     reactor->fd_entries[index].callback  = callback;
     reactor->fd_entries[index].data      = data;
     reactor->fd_entries[index].activus   = VERUM;
+    reactor->fd_entries[index].internus  = FALSUM;
     reactor->fd_entries[index].generatio++;
 
     /* nulla rebuilatio hic: reactor_poll in initio omnis transitus
@@ -576,6 +740,132 @@ reactor_timer_cancellare (
 
 
 /* ========================================================================
+ * FUNCTIONES PUBLICAE - LABORES ET SIGNA
+ * ======================================================================== */
+
+b32
+reactor_laborem_adicere (
+         Reactor* reactor,
+    ReactorLabor  labor,
+          vacuum* datum)
+{
+    i32 index = REACTOR_NON_INVENIT;
+    i32 i;
+
+    si (!reactor || !labor)
+    {
+        redde FALSUM;
+    }
+    per (i = 0; i < reactor->labor_numerus; i++)
+    {
+        si (!reactor->labores[i].activus)
+        {
+            index = i;
+            frange;
+        }
+    }
+    si (index == REACTOR_NON_INVENIT)
+    {
+        si (reactor->labor_numerus >= REACTOR_LABOR_MAXIMA)
+        {
+            redde FALSUM;
+        }
+        index = reactor->labor_numerus;
+        reactor->labor_numerus++;
+    }
+    reactor->labores[index].labor           = labor;
+    reactor->labores[index].datum           = datum;
+    reactor->labores[index].activus         = VERUM;
+    reactor->labores[index].cyclus_natalis  = reactor->cyclus;
+    redde VERUM;
+}
+
+i32
+reactor_numerus_laborum (
+    Reactor* reactor)
+{
+    i32 numerus = 0;
+    i32 i;
+
+    si (!reactor)
+    {
+        redde 0;
+    }
+    per (i = 0; i < reactor->labor_numerus; i++)
+    {
+        si (reactor->labores[i].activus)
+        {
+            numerus++;
+        }
+    }
+    redde numerus;
+}
+
+b32
+reactor_signum_adicere (
+                  Reactor* reactor,
+                  integer  signum,
+    ReactorSigniTractator  tractator,
+                   vacuum* datum)
+{
+    structura sigaction sa;
+
+    si (!reactor || !tractator || signum <= 0)
+    {
+        redde FALSUM;
+    }
+    si (   _signorum_possessor != NIHIL
+        && _signorum_possessor != reactor)
+    {
+        redde FALSUM;
+    }
+    si (reactor->signa_numerus >= REACTOR_SIGNA_MAXIMA)
+    {
+        redde FALSUM;
+    }
+    si (_signorum_possessor == NIHIL)
+    {
+        i32 index;
+
+        si (pipe(_fistula_signorum) != 0)
+        {
+            _fistula_signorum[0] = -I;
+            _fistula_signorum[I] = -I;
+            redde FALSUM;
+        }
+        si (   !_fistulam_parare(_fistula_signorum[0])
+            || !_fistulam_parare(_fistula_signorum[I])
+            || !reactor_adicere(reactor, _fistula_signorum[0],
+                   (i32)REACTOR_LEGERE, _signa_legere, reactor))
+        {
+            (vacuum)close(_fistula_signorum[0]);
+            (vacuum)close(_fistula_signorum[I]);
+            _fistula_signorum[0] = -I;
+            _fistula_signorum[I] = -I;
+            redde FALSUM;
+        }
+        index = _invenire_fd_index(reactor, _fistula_signorum[0]);
+        reactor->fd_entries[index].internus = VERUM;
+        _signorum_possessor = reactor;
+    }
+
+    memset(&sa, 0, magnitudo(sa));
+    sa.sa_handler  = _signum_excipere;
+    sa.sa_flags    = SA_RESTART;
+    (vacuum)sigemptyset(&sa.sa_mask);
+    si (sigaction(signum, &sa, NIHIL) != 0)
+    {
+        redde FALSUM;
+    }
+    reactor->signa[reactor->signa_numerus].signum     = signum;
+    reactor->signa[reactor->signa_numerus].tractator  = tractator;
+    reactor->signa[reactor->signa_numerus].datum      = datum;
+    reactor->signa_numerus++;
+    redde VERUM;
+}
+
+
+/* ========================================================================
  * FUNCTIONES PUBLICAE - EVENT LOOP
  * ======================================================================== */
 
@@ -595,8 +885,14 @@ reactor_poll (
         redde 0;
     }
 
-    /* Calculare timeout cum timers */
+    reactor->cyclus++;
+
+    /* timeout ex timers; labor pendens = nulla exspectatio */
     timeout = _calculare_timer_timeout(reactor, timeout_ms);
+    si (reactor_numerus_laborum(reactor) > 0)
+    {
+        timeout = 0;
+    }
 
     /* Rebuilere poll_fds (in casu modificatus) */
     _rebuilere_poll_fds(reactor);
@@ -615,7 +911,8 @@ reactor_poll (
         /* timers ACTIVI, non timer_numerus (summa aquae, numquam
          * decrescit): olim post timerem primum poll() sine fossis
          * timeout totum dormiebat */
-        si (active_count == 0 && reactor_numerus_timer(reactor) == 0)
+        si (   active_count == 0 && reactor_numerus_timer(reactor) == 0
+            && reactor_numerus_laborum(reactor) == 0)
         {
             redde 0;
         }
@@ -654,8 +951,21 @@ reactor_poll (
         }
     }
 
+    /* poll() a signo interruptus (EINTR - SA_RESTART poll() NON
+     * restituit, nec Darwin nec Linux): fistula signorum hic hauritur,
+     * aliter signum cyclum integrum exspectaret */
+    si (   poll_result < 0 && errno == EINTR
+        && _signorum_possessor == reactor)
+    {
+        _signa_legere(_fistula_signorum[0], 0, reactor);
+        events_processati++;
+    }
+
     /* Processare timers */
     events_processati += _processare_timers(reactor);
+
+    /* Processare labores (gradus unus quisque) */
+    events_processati += _processare_labores(reactor);
 
     redde events_processati;
 }
@@ -718,7 +1028,8 @@ reactor_numerus_fd (
 
     per (i = 0; i < reactor->fd_numerus; i++)
     {
-        si (reactor->fd_entries[i].activus)
+        si (   reactor->fd_entries[i].activus
+            && !reactor->fd_entries[i].internus)
         {
             count++;
         }

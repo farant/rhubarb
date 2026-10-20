@@ -6,29 +6,18 @@
 #include "credo.h"
 #include <stdio.h>
 
-s32 principale (vacuum)
-{
-    Piscina* piscina;
-        b32  praeteritus;
-
-    /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("test_paginarium", 65536);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ==================================================
      * Probare paginarium_config_defectus
      * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         PaginariumConfig config;
-
-        imprimere("\n--- Probans paginarium_config_defectus ---\n");
 
         config = paginarium_config_defectus();
 
@@ -37,18 +26,24 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(config.limina_versus, LXXX);
         CREDO_AEQUALIS_I32(config.lineae_versus_probare, V);
     }
+}
 
 
     /* ==================================================
      * Probare textus vacuus
      * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           PaginariumConfig config;
         PaginariumResultus resultus;
                     chorda textus;
-
-        imprimere("\n--- Probans textus_vacuus ---\n");
 
         config           = paginarium_config_defectus();
         config.latitudo  = XL;
@@ -61,12 +56,20 @@ s32 principale (vacuum)
 
         CREDO_AEQUALIS_I32(resultus.numerus_paginarum, ZEPHYRUM);
     }
+}
 
 
     /* ==================================================
      * Probare prosa simplex - una linea
      * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           PaginariumConfig  config;
         PaginariumResultus  resultus;
@@ -74,8 +77,6 @@ s32 principale (vacuum)
            PaginariumLinea* linea;
                     chorda  textus;
                     chorda  reddita;
-
-        imprimere("\n--- Probans prosa_simplex ---\n");
 
         config           = paginarium_config_defectus();
         config.latitudo  = L;
@@ -100,12 +101,20 @@ s32 principale (vacuum)
         reddita = paginarium_linea_reddere(textus, linea, piscina);
         CREDO_CHORDA_AEQUALIS(reddita, textus);
     }
+}
 
 
     /* ==================================================
      * Probare prosa cum involutione (word wrap)
      * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           PaginariumConfig  config;
         PaginariumResultus  resultus;
@@ -113,8 +122,6 @@ s32 principale (vacuum)
            PaginariumLinea* linea;
                     chorda  textus;
                     chorda  reddita;
-
-        imprimere("\n--- Probans prosa_involutio ---\n");
 
         config           = paginarium_config_defectus();
         config.latitudo  = XX;
@@ -144,12 +151,20 @@ s32 principale (vacuum)
         /* Verificare quod linea non excedit latitudinem */
         CREDO_VERUM(reddita.mensura <= config.latitudo);
     }
+}
 
 
     /* ==================================================
      * Probare prosa cum \n singulum -> spatium
      * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           PaginariumConfig  config;
         PaginariumResultus  resultus;
@@ -157,8 +172,6 @@ s32 principale (vacuum)
            PaginariumLinea* linea;
                     chorda  textus;
                     chorda  reddita;
-
-        imprimere("\n--- Probans prosa_newline_singulum ---\n");
 
         config           = paginarium_config_defectus();
         config.latitudo  = L;
@@ -185,20 +198,26 @@ s32 principale (vacuum)
         /* Newline debet esse spatium */
         CREDO_VERUM(reddita.mensura > ZEPHYRUM);
     }
+}
 
 
     /* ==================================================
      * Probare versus purus (lineae breves)
      * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           PaginariumConfig  config;
         PaginariumResultus  resultus;
           PaginariumPagina* pagina;
            PaginariumLinea* linea;
                     chorda  textus;
-
-        imprimere("\n--- Probans versus_purus ---\n");
 
         config           = paginarium_config_defectus();
         config.latitudo  = L;
@@ -228,12 +247,20 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(paginarium_pagina_numerus_linearum(pagina),
             V);
     }
+}
 
 
     /* ==================================================
      * Probare paragraph break (2+ newlines)
      * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           PaginariumConfig  config;
         PaginariumResultus  resultus;
@@ -242,8 +269,6 @@ s32 principale (vacuum)
                     chorda  textus;
                        i32  i;
                        i32  numerus_vacuarum;
-
-        imprimere("\n--- Probans paragraph_break ---\n");
 
         config           = paginarium_config_defectus();
         config.latitudo  = LX;
@@ -276,12 +301,20 @@ s32 principale (vacuum)
         }
         CREDO_VERUM(numerus_vacuarum >= I);
     }
+}
 
 
     /* ==================================================
      * Probare mixed prosa/versus per paragraphum
      * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           PaginariumConfig  config;
         PaginariumResultus  resultus;
@@ -291,8 +324,6 @@ s32 principale (vacuum)
                        i32  i;
                        b32  invenit_prosa;
                        b32  invenit_versus;
-
-        imprimere("\n--- Probans mixed_prosa_versus ---\n");
 
         config           = paginarium_config_defectus();
         config.latitudo  = L;
@@ -341,19 +372,25 @@ s32 principale (vacuum)
         CREDO_VERUM(invenit_prosa);
         CREDO_VERUM(invenit_versus);
     }
+}
 
 
     /* ==================================================
      * Probare multiplex paginas
      * ================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           PaginariumConfig  config;
         PaginariumResultus  resultus;
           PaginariumPagina* pagina;
                     chorda  textus;
-
-        imprimere("\n--- Probans multiplex_paginas ---\n");
 
         config           = paginarium_config_defectus();
         config.latitudo  = XX;
@@ -384,12 +421,20 @@ s32 principale (vacuum)
         CREDO_VERUM(paginarium_pagina_numerus_linearum(pagina)
             <= config.altitudo);
     }
+}
 
 
     /* ==================================================
      * Probare linea reddere - versus preservat newlines
      * ================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           PaginariumConfig  config;
         PaginariumResultus  resultus;
@@ -398,8 +443,6 @@ s32 principale (vacuum)
                     chorda  textus;
                     chorda  reddita;
                     chorda  speratus;
-
-        imprimere("\n--- Probans linea_reddere_versus ---\n");
 
         config           = paginarium_config_defectus();
         config.latitudo  = L;
@@ -424,12 +467,20 @@ s32 principale (vacuum)
         speratus  = chorda_ex_literis("Rosa", piscina);
         CREDO_CHORDA_AEQUALIS(reddita, speratus);
     }
+}
 
 
     /* ==================================================
      * Probare linea vacua reddere
      * ================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           PaginariumConfig  config;
         PaginariumResultus  resultus;
@@ -438,8 +489,6 @@ s32 principale (vacuum)
                     chorda  textus;
                     chorda  reddita;
                        i32  i;
-
-        imprimere("\n--- Probans linea_vacua_reddere ---\n");
 
         config           = paginarium_config_defectus();
         config.latitudo  = LX;
@@ -472,20 +521,26 @@ s32 principale (vacuum)
             }
         }
     }
+}
 
 
     /* ==================================================
      * Probare obtinere index invalidus
      * ================================================== */
 
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           PaginariumConfig  config;
         PaginariumResultus  resultus;
           PaginariumPagina* pagina;
            PaginariumLinea* linea;
                     chorda  textus;
-
-        imprimere("\n--- Probans index_invalidus ---\n");
 
         config = paginarium_config_defectus();
         textus = chorda_ex_literis("Textus.", piscina);
@@ -503,12 +558,20 @@ s32 principale (vacuum)
         linea = paginarium_linea_obtinere(pagina, C);
         CREDO_NIHIL(linea);
     }
+}
 
 
     /* ==================================================
      * Probare word wrap in versus modo
      * ================================================== */
 
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           PaginariumConfig  config;
         PaginariumResultus  resultus;
@@ -517,8 +580,6 @@ s32 principale (vacuum)
                     chorda  textus;
                     chorda  reddita;
                        i32  i;
-
-        imprimere("\n--- Probans versus_word_wrap ---\n");
 
         config           = paginarium_config_defectus();
         config.latitudo  = XV;  /* Latitudo parva */
@@ -548,12 +609,20 @@ s32 principale (vacuum)
             }
         }
     }
+}
 
 
     /* ==================================================
      * Probare Pindar (Gutenberg 10717) - textus realis
      * ================================================== */
 
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           PaginariumConfig  config;
         PaginariumResultus  resultus;
@@ -562,8 +631,6 @@ s32 principale (vacuum)
                     chorda  textus;
                     chorda  reddita;
                        i32  i;
-
-        imprimere("\n--- Probans pindar_textus ---\n");
 
         config           = paginarium_config_defectus();
         config.latitudo  = LX;   /* 60 characteres - realisticus pro widget */
@@ -635,12 +702,20 @@ s32 principale (vacuum)
             }
         }
     }
+}
 
 
     /* ==================================================
      * Probare tres newlines -> una linea vacua
      * ================================================== */
 
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           PaginariumConfig  config;
         PaginariumResultus  resultus;
@@ -649,8 +724,6 @@ s32 principale (vacuum)
                     chorda  textus;
                        i32  i;
                        i32  numerus_vacuarum;
-
-        imprimere("\n--- Probans tres_newlines ---\n");
 
         config           = paginarium_config_defectus();
         config.latitudo  = LX;
@@ -682,12 +755,20 @@ s32 principale (vacuum)
         }
         CREDO_AEQUALIS_I32(numerus_vacuarum, I);
     }
+}
 
 
     /* ==================================================
      * Probare pindar plenum - cum poesia ante prosa
      * ================================================== */
 
+interior vacuum
+_sectio_decima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           PaginariumConfig  config;
         PaginariumResultus  resultus;
@@ -697,8 +778,6 @@ s32 principale (vacuum)
                     chorda  reddita;
                        i32  i;
                        i32  num_lineae;
-
-        imprimere("\n--- Probans pindar_plenum_67 ---\n");
 
         config           = paginarium_config_defectus();
         config.latitudo  = LXVII;   /* 67 characteres */
@@ -793,12 +872,20 @@ s32 principale (vacuum)
             }
         }
     }
+}
 
 
     /* ==================================================
      * Probare prosa gutenberg - lat 67, isolata
      * ================================================== */
 
+interior vacuum
+_sectio_decima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           PaginariumConfig  config;
         PaginariumResultus  resultus;
@@ -807,8 +894,6 @@ s32 principale (vacuum)
                     chorda  textus;
                     chorda  reddita;
                        i32  i;
-
-        imprimere("\n--- Probans prosa_gutenberg_67 ---\n");
 
         config           = paginarium_config_defectus();
         config.latitudo  = LXVII;   /* 67 characteres - exacte ut widget */
@@ -873,12 +958,20 @@ s32 principale (vacuum)
             }
         }
     }
+}
 
 
     /* ==================================================
      * Probare CRLF line endings (Windows)
      * ================================================== */
 
+interior vacuum
+_sectio_decima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           PaginariumConfig  config;
         PaginariumResultus  resultus;
@@ -887,8 +980,6 @@ s32 principale (vacuum)
                     chorda  textus;
                     chorda  reddita;
                        i32  i;
-
-        imprimere("\n--- Probans crlf_line_endings ---\n");
 
         config           = paginarium_config_defectus();
         config.latitudo  = LXVII;
@@ -928,12 +1019,20 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL(linea);
         CREDO_VERUM(linea->modus_versus == FALSUM);
     }
+}
 
 
     /* ==================================================
      * Probare CRLF paragraph breaks
      * ================================================== */
 
+interior vacuum
+_sectio_decima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           PaginariumConfig  config;
         PaginariumResultus  resultus;
@@ -942,8 +1041,6 @@ s32 principale (vacuum)
                     chorda  textus;
                        i32  numerus_vacuarum;
                        i32  i;
-
-        imprimere("\n--- Probans crlf_paragraph_break ---\n");
 
         config           = paginarium_config_defectus();
         config.latitudo  = LXVII;
@@ -989,27 +1086,46 @@ s32 principale (vacuum)
 
         CREDO_VERUM(numerus_vacuarum >= I);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "paginarium_config_defectus", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "textus_vacuus", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "prosa_simplex", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "prosa_involutio", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "prosa_newline_singulum", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "versus_purus", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "paragraph_break", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mixed_prosa_versus", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "multiplex_paginas", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "linea_reddere_versus", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "linea_vacua_reddere", _sectio_decima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "index_invalidus", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "versus_word_wrap", _sectio_decima_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "pindar_textus", _sectio_decima_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "tres_newlines", _sectio_decima_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "pindar_plenum_67", _sectio_decima_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "prosa_gutenberg_67", _sectio_decima_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "crlf_line_endings", _sectio_decima_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "crlf_paragraph_break", _sectio_decima_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* =================================================
-     * Compendium
-     * ================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    /* Destructio */
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("paginarium", SECTIONES);
 }

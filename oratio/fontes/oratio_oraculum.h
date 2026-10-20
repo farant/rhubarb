@@ -28,7 +28,7 @@
 #include "piscina.h"
 #include "xar.h"
 #include "oratio_registrum.h"
-#include "oratio_conllu.h"
+#include "conllu.h"
 #include "oratio_vocabularia.h"
 #include "oratio_resolutio.h"
 #include "tabula_dispersa.h"
@@ -582,7 +582,7 @@ oratio_oraculum_lis_columnae (
  * aliter prosa. Prima tabulae congruens vincit. */
 OratioForma
 oratio_oraculum_forma_sententiae (
-    constans OratioConlluSententia* s);
+    constans ConlluSententia* s);
 
 /* "via TAB LIS TAB <campi>" sine linea nova (T35 c) */
 chorda
@@ -639,7 +639,7 @@ oratio_oraculum_semina (
 s32
 oratio_oraculum_clausula_aurea (
                            Piscina* piscina,
-    constans OratioConlluSententia* sententia,
+          constans ConlluSententia* sententia,
                                i32  k,
                                b32* finita);
 

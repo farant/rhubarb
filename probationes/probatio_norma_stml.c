@@ -83,7 +83,6 @@ probatio_canon_infixus(Piscina* p)
 {
     chorda discus = filum_legere_totum("norma.canon", p);
 
-    imprimere("\n--- Probans canonem infixum ---\n");
     /* infixus == plagula: generatio non rancida */
     CREDO_CHORDA_AEQUALIS(norma_canon_textus(p), discus);
     CREDO_AEQUALIS_I32(_canon_vitia(
@@ -239,7 +238,6 @@ probatio_lector(Piscina* p)
         NormaCampus* secundus;
                 i32  i;
 
-    imprimere("\n--- Probans lectorem ---\n");
     l = norma_stml_legere(fons, _registrum, I, p);
     CREDO_VERUM(l.successus);
     CREDO_AEQUALIS_I32(xar_numerus(l.vitia), 0);
@@ -299,7 +297,6 @@ probatio_vitia_lectoris(Piscina* p)
     NormaStmlLectio  l;
     NormaStmlVitium* v;
 
-    imprimere("\n--- Probans vitia lectoris ---\n");
     CREDO_VERUM(_causa("<normae versio=\"1\"", NORMA_STML_FRACTUM,
         &visae, p));
     CREDO_VERUM(_causa(CAPUT "<nemo/>" CAUDA, NORMA_STML_CANON, &visae,
@@ -561,7 +558,6 @@ probatio_oraculum_primum(Piscina* p)
              chorda s3    = _scribe(l3.normae, p);
          NormaVisus ratio;
 
-    imprimere("\n--- Oraculum I: scribere(legere(x)) == x, bis ---\n");
     CREDO_VERUM(l1.successus && l2.successus && l3.successus);
     CREDO_CHORDA_AEQUALIS(s1, fixa);
     CREDO_CHORDA_AEQUALIS(s2, s1);
@@ -573,7 +569,7 @@ probatio_oraculum_primum(Piscina* p)
         norma_stml_quaerere(&l3, "usus")).campi, II))->valor);
     CREDO_VERUM(ratio.minimum_fluitans == 0.1);
     CREDO_VERUM(ratio.maximum_fluitans == 0.3);
-    imprimere("\n--- Oraculum V: plagula forma pulchra ---\n");
+    CREDO_GRADUS("Oraculum V: plagula forma pulchra");
     CREDO_VERUM(_formatum(fixa, p));
 }
 
@@ -583,7 +579,6 @@ probatio_oraculum_secundum(Piscina* p)
     Norma* corpus[II];
       i32  i;
 
-    imprimere("\n--- Oraculum II: aedificator -> scriptor -> lector ---\n");
     corpus[0] = _schema_simplex(p);
     corpus[I] = _schema_responsi(p);
     per (i = 0; i < II; i++)
@@ -622,7 +617,6 @@ probatio_scriptor_communis_et_recusationes(Piscina* p)
              chorda  s;
          NormaVisus  v;
 
-    imprimere("\n--- Probans scriptorem: communia, recusationes ---\n");
     norma_campus(usus, "n", norma_integer(p), VERUM);
     norma_campus(r, "a", usus, VERUM);
     norma_campus(r, "b", usus, FALSUM);
@@ -709,7 +703,6 @@ probatio_oraculum_tertium(Piscina* p)
                NormaVisus  a;
                NormaVisus  b;
 
-    imprimere("\n--- Oraculum III: emissor contra lectorem ---\n");
     gignentes[0].titulus  = "ex_functione";
     gignentes[0].functio  = fixa_norma_gignens_ex_functione;
     gignentes[0].datum    = NIHIL;
@@ -765,7 +758,6 @@ probatio_emissor_recusat(Piscina* p)
            chorda causa;
         character longus_textus[DCCC];
 
-    imprimere("\n--- Probans emissorem recusantem ---\n");
     nn.titulus  = chorda_ex_literis("a-b", p);
     nn.norma    = norma_textus(p);
     CREDO_AEQUALIS_I32(norma_ad_c(&nn, I, "x_", "x.h", "x.norma", p,
@@ -804,7 +796,6 @@ probatio_textus_fidelis(Piscina* p)
              chorda causa;
              chorda s;
 
-    imprimere("\n--- Probans textum fidelem ---\n");
     nn.titulus = chorda_ex_literis("x", p);
     nn.norma   = norma_descriptio(norma_electio(norma_textus(p),
         licita),
@@ -928,7 +919,6 @@ probatio_recensio_externa(Piscina* p)
               Norma* a;
               Norma* b;
 
-    imprimere("\n--- Probans recensionem externam ---\n");
     /* I. textus multilineae: aut idem redit aut recusatur */
     CREDO_VERUM(_textus_redit("Linea prima.\nLinea secunda.", p));
     CREDO_VERUM(_textus_redit("a\nb\nc", p));
@@ -1082,7 +1072,6 @@ probatio_commentarius(Piscina* p)
              chorda  causa;
              chorda  s;
 
-    imprimere("\n--- Probans commentarium scriptoris ---\n");
     norma_campus(o, "a", norma_integer(p), VERUM);
     norma_campus(o, "b", norma_textus(p), FALSUM);
     norma_campus(o, "t", norma_tabulatum(p, norma_integer(p)), VERUM);
@@ -1114,29 +1103,108 @@ probatio_commentarius(Piscina* p)
     CREDO_VERUM(chorda_continet(causa, chorda_ex_literis("--", p)));
 }
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    probatio_canon_infixus(c->piscina);
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    probatio_lector(c->piscina);
+}
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    probatio_vitia_lectoris(c->piscina);
+}
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    probatio_oraculum_primum(c->piscina);
+}
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    probatio_oraculum_secundum(c->piscina);
+}
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    probatio_scriptor_communis_et_recusationes(c->piscina);
+}
+
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    probatio_oraculum_tertium(c->piscina);
+}
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    probatio_emissor_recusat(c->piscina);
+}
+
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    probatio_textus_fidelis(c->piscina);
+}
+
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    probatio_recensio_externa(c->piscina);
+}
+
+/* norma-spec-4 B2.1 */
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    probatio_commentarius(c->piscina);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "canonem infixum", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lectorem", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "vitia lectoris", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Oraculum I: scribere(legere(x)) == x, bis", _sectio_quarta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Oraculum II: aedificator -> scriptor -> lector", _sectio_quinta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "scriptorem: communia, recusationes", _sectio_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Oraculum III: emissor contra lectorem", _sectio_septima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "emissorem recusantem", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "textum fidelem", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "recensionem externam", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "commentarium scriptoris", _sectio_decima_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
 s32
 principale (vacuum)
 {
-    Piscina* p = piscina_generare_dynamicum("probatio_norma_stml",
-        M * M);
-        b32 successus;
-
-    credo_aperire(p);
-    probatio_canon_infixus(p);
-    probatio_lector(p);
-    probatio_vitia_lectoris(p);
-    probatio_oraculum_primum(p);
-    probatio_oraculum_secundum(p);
-    probatio_scriptor_communis_et_recusationes(p);
-    probatio_oraculum_tertium(p);
-    probatio_emissor_recusat(p);
-    probatio_textus_fidelis(p);
-    probatio_recensio_externa(p);
-    /* norma-spec-4 B2.1 */
-    probatio_commentarius(p);
-    credo_imprimere_compendium();
-    successus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(p);
-    redde successus ? 0 : I;
+    redde credo_suitam_currere("norma_stml", SECTIONES);
 }

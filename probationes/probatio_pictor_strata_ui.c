@@ -40,9 +40,6 @@
 #define ORIGO_X VI
 #define ORIGO_Y VIII
 
-hic_manens Piscina*             piscina;
-hic_manens InternamentumChorda* intern;
-
 /* eventus muris ad punctum TABULAE (x, y) tempore t, modificantibus */
 interior vacuum
 mus (
@@ -103,7 +100,7 @@ ephemera_legere (
     chorda* a;
 
     a = insula_attributum(app->repo, titulus);
-    redde a ? *a : chorda_ex_literis("", piscina);
+    redde a ? *a : chorda_ex_literis("", app->piscina);
 }
 
 interior Componens*
@@ -112,13 +109,14 @@ nodus_arboris (
   constans character* id)
 {
     redde componens_invenire_per_id(dispensator_arbor(app->d),
-        chorda_ex_literis(id, piscina));
+        chorda_ex_literis(id, app->piscina));
 }
 
 /* datum acti 'ictus' ultimi in volumine */
 interior chorda
 actum_ultimum (
-    Volumen* vol)
+    Volumen* vol,
+    Piscina* piscina)
 {
              Xar* acta;
     VolumenActum* a;
@@ -266,20 +264,21 @@ titulus_est (
     redde c && chorda_aequalis_literis(c->titulus, titulus);
 }
 
-s32 principale (vacuum)
+/* scaena una: palette et strata eiusdem documenti per gradus I-VIII
+ * mutantur, ergo sectio una cum gradibus */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-              Volumen* vol;
-     PictorApplicatio  app;
-           ManusLudus* m;
-     PictorDocumentum* doc;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                 Volumen* vol;
+        PictorApplicatio  app;
+              ManusLudus* m;
+        PictorDocumentum* doc;
 
-    piscina = piscina_generare_dynamicum("probatio_pictor_strata_ui",
-        CXXVIII * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_pictor_strata_ui");
     CREDO_VERUM(pictor_applicatio_aedificare(&app, piscina, intern, vol,
@@ -288,7 +287,7 @@ s32 principale (vacuum)
     doc  = app.doc;
     dispensator_recomponere(app.d);
 
-    imprimere("\n--- I: quadratum, palette ---\n");
+    CREDO_GRADUS("I: quadratum, palette");
     CREDO_VERUM(titulus_est(&app, "quadratum.strata",
         "strata:stratum 1"));
     premere_quadratum(&app, m, "quadratum.strata");
@@ -299,7 +298,7 @@ s32 principale (vacuum)
     CREDO_VERUM(titulus_est(&app, "strata.novum", "strata:novum"));
     CREDO_VERUM(titulus_est(&app, "strata.deletum", "strata:deletum"));
 
-    imprimere("\n--- II: '+' ---\n");
+    CREDO_GRADUS("II: '+'");
     premere_in_palette(&app, m, "strata.novum");
     CREDO_AEQUALIS_I32(pictor_documentum_numerus_stratorum(doc), II);
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
@@ -316,18 +315,20 @@ s32 principale (vacuum)
     CREDO_VERUM(titulus_est(&app, "quadratum.strata",
         "strata:stratum 2"));
 
-    imprimere("\n--- III: ictus in strato currenti ---\n");
+    CREDO_GRADUS("III: ictus in strato currenti");
     CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"), "");
     premere(app.d, L, L, M, ZEPHYRUM);
-    CREDO_VERUM(chorda_continet(actum_ultimum(vol), chorda_ex_literis(
+    CREDO_VERUM(chorda_continet(actum_ultimum(vol, piscina),
+        chorda_ex_literis(
         "stratum=\"2\"", piscina)));
     CREDO_AEQUALIS_I32(pixelum(doc, L, L), palettae(ZEPHYRUM));
 
-    imprimere("\n--- IV: oculus ---\n");
+    CREDO_GRADUS("IV: oculus");
     premere_quadratum(&app, m, "quadratum.strata");
     premere_in_palette(&app, m, "oculus.2");
-    CREDO_VERUM(chorda_continet(actum_ultimum(vol), chorda_ex_literis(
+    CREDO_VERUM(chorda_continet(actum_ultimum(vol, piscina),
+        chorda_ex_literis(
         "actio=\"visibile\" id=\"2\" valor=\"0\"", piscina)));
     CREDO_VERUM(titulus_est(&app, "oculus.2", "oculus:0"));
     CREDO_AEQUALIS_I32(pixelum(doc, L, L),
@@ -337,19 +338,20 @@ s32 principale (vacuum)
     CREDO_VERUM(titulus_est(&app, "oculus.2", "oculus:1"));
     CREDO_AEQUALIS_I32(pixelum(doc, L, L), palettae(ZEPHYRUM));
 
-    imprimere("\n--- V: ordo electus ---\n");
+    CREDO_GRADUS("V: ordo electus");
     premere_in_palette(&app, m, "stratum.1");
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
         "stratum_activum"), "1");
     CREDO_VERUM(titulus_est(&app, "stratum.1", "stratum:1:electum"));
     CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
     premere(app.d, C, C, MM, ZEPHYRUM);
-    CREDO_FALSUM(chorda_continet(actum_ultimum(vol), chorda_ex_literis(
+    CREDO_FALSUM(chorda_continet(actum_ultimum(vol, piscina),
+        chorda_ex_literis(
         "stratum=", piscina)));
     CREDO_VERUM(titulus_est(&app, "quadratum.strata",
         "strata:stratum 1"));
 
-    imprimere("\n--- VI: '-' ---\n");
+    CREDO_GRADUS("VI: '-'");
     premere_quadratum(&app, m, "quadratum.strata");
     premere_in_palette(&app, m, "stratum.2");
     premere_in_palette(&app, m, "strata.deletum");
@@ -362,11 +364,11 @@ s32 principale (vacuum)
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"),
         "strata");
 
-    imprimere("\n--- VII: Esc claudit ---\n");
+    CREDO_GRADUS("VII: Esc claudit");
     CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"), "");
 
-    imprimere("\n--- VIII: ordo trahendo ---\n");
+    CREDO_GRADUS("VIII: ordo trahendo");
     {
         s64 finis;
 
@@ -395,7 +397,7 @@ s32 principale (vacuum)
                 + XXX);
         dispensator_recomponere(app.d);
         /* summo primo: 2, 1, 3 -> ab imo "3 1 2" */
-        CREDO_VERUM(chorda_continet(actum_ultimum(vol),
+        CREDO_VERUM(chorda_continet(actum_ultimum(vol, piscina),
             chorda_ex_literis(
             "actio=\"ordo\" ids=\"3 1 2\"", piscina)));
         CREDO_AEQUALIS_S32(pictor_documentum_stratum(doc, ZEPHYRUM)->id,
@@ -434,8 +436,16 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32(pictor_documentum_stratum(doc, II)->id, III);
     }
 
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "palette stratorum", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("pictor_strata_ui", SECTIONES);
 }

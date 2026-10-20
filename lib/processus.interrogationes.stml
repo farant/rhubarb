@@ -1,0 +1,19 @@
+<interrogationes unitas="processus">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I kill a child that uses too much memory?
+    <responsum symbolum="processus_exsequi_cum ProcessusOptiones PROCESSUS_ERROR_MEMORIA">memset
+      a ProcessusOptiones to zero, set memoria_maxima in bytes and call
+      processus_exsequi_cum. The child's footprint (compressed pages
+      included, not RSS) is read in the same loop that enforces
+      mora_maxima_ms, at most once every 20 ms, so a child that loops
+      without printing is caught too. Over the limit it gets SIGKILL and
+      the result has successus FALSUM, error PROCESSUS_ERROR_MEMORIA and
+      an error_descriptio naming the footprint seen; output captured so
+      far is kept. 0 means no limit. processus_incipere (the incremental
+      path) takes no options, so it has no memory limit. Always memset
+      the options: a field added later would otherwise be read as stack
+      garbage.</responsum>
+  </interrogatio>
+
+</interrogationes>

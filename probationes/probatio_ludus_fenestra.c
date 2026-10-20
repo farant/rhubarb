@@ -35,7 +35,12 @@ pulsus_probandus (
     redde p->reddere;
 }
 
-s32 principale (vacuum)
+/* scenarium unum: gradus fenestram eandem (repositorium, dispensator,
+ * tabula) ordine mutant - quadra, mandata, pulsus a gradu priore
+ * pendent - ergo una sectio cum gradibus nominatis */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                                     Piscina* piscina;
                         InternamentumChorda* intern;
@@ -50,13 +55,8 @@ s32 principale (vacuum)
                                         i32  n0;
                                         i32  n1;
 
-    piscina = piscina_generare_dynamicum("probatio_ludus_fenestra",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
     repo = insula_repositorium_creare(piscina, intern,
         "<insula/>");
@@ -74,10 +74,10 @@ s32 principale (vacuum)
                                t);
     CREDO_NON_NIHIL(lf);
 
-    imprimere("\n--- Mora: nulla ante quadrum primum ---\n");
+    CREDO_GRADUS("Mora: nulla ante quadrum primum");
     CREDO_AEQUALIS_S64(ludus_fenestra_mora(lf), ZEPHYRUM);
 
-    imprimere("\n--- Quadrum: pulsus, pingere, delineare ---\n");
+    CREDO_GRADUS("Quadrum: pulsus, pingere, delineare");
     n0 = toy.compositiones;
     ludus_quadrum(lf, M);
     CREDO_AEQUALIS_I32(lf->mensurae.quadra, I);
@@ -106,7 +106,7 @@ s32 principale (vacuum)
         CREDO_VERUM(lf->mensurae.ms_quadri_maximum >= ZEPHYRUM);
     n1 = mandata_numerus(lf->mandata);
 
-    imprimere("\n--- Eventus sine tempore stampatur; quadrum II ---\n");
+    CREDO_GRADUS("Eventus sine tempore stampatur; quadrum II");
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
     e.genus        = EVENTUS_MUS_DEPRESSUS;
     e.datum.mus.x  = XXXV;
@@ -119,7 +119,7 @@ s32 principale (vacuum)
     /* piscina quadri vacatur: mandata nova, non accumulata */
     CREDO_AEQUALIS_I32(mandata_numerus(lf->mandata), n1);
 
-    imprimere("\n--- vicus-latera S1c: pingendum ---\n");
+    CREDO_GRADUS("vicus-latera S1c: pingendum");
     {
         PulsusProbandus pp;
 
@@ -152,8 +152,7 @@ s32 principale (vacuum)
         CREDO_VERUM(ludus_fenestra_pingendum(lf, FALSUM, M + D));
     }
 
-    imprimere("\n--- 013 B3b: tabula ad fenestram (scala servata)"
-              " ---\n");
+    CREDO_GRADUS("013 B3b: tabula ad fenestram (scala servata)");
     {
         TabulaPixelorum* t2 = tabula_pixelorum_creare_nuda(piscina, CC,
             C);
@@ -181,8 +180,7 @@ s32 principale (vacuum)
             CCC - I, CC - I), VII);
     }
 
-    imprimere("\n--- 013 B3b: glutinum - eventus in pixela nostra"
-              " ---\n");
+    CREDO_GRADUS("013 B3b: glutinum - eventus in pixela nostra");
     {
         TabulaPixelorum* t3 = tabula_pixelorum_creare_nuda(piscina, CC,
             C);
@@ -219,8 +217,16 @@ s32 principale (vacuum)
         ludus_quadrum(lf_aptata, M + CCC);
         CREDO_VERUM(lf_aptata->mensurae.quadra >= I);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "quadrum unum sine fenestra", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("ludus_fenestra", SECTIONES);
 }

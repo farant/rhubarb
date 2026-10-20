@@ -33,9 +33,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-hic_manens Piscina*             piscina;
-hic_manens InternamentumChorda* intern;
-
 /* ictus UNUS in cellulam paginae sinistrae */
 interior vacuum
 ictus (
@@ -94,6 +91,7 @@ argumentum_est (
 interior b32
 nuntius_est (
                   Vicus* v,
+                Piscina* piscina,
      constans character* textus)
 {
      VicusLatus* l;
@@ -109,6 +107,7 @@ nuntius_est (
 interior b32
 index_continet (
                 Volumen* vol,
+                Piscina* piscina,
      constans character* textus)
 {
     chorda c;
@@ -124,6 +123,7 @@ index_continet (
 interior b32
 in_bibliotheca (
                 Volumen* vol,
+                Piscina* piscina,
      constans character* pictura)
 {
     Xar* l;
@@ -154,7 +154,9 @@ scribere (
     (vacuum)manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM);
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
              Volumen* vol;
              Volumen* vol_solus;
@@ -165,25 +167,21 @@ s32 principale (vacuum)
           ManusLudus* m;
     PictorDocumentum* x1;
           VicusLatus* latus_pictoris;
+             Piscina* piscina;
+ InternamentumChorda* intern;
 
-    piscina = piscina_generare_dynamicum("probatio_vicus_pictura",
-        CXXVIII * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
     (vacuum)setenv("SHELL", "/bin/sh", I);
     vol = volumen_temporarium(piscina, "probatio_vicus_pictura");
-    /* old-style suita: NECESSE extra sectionem non abrumpit */
+    /* nulla assertio ante: sectio VACUA, ergo non transit */
     si (   !pictor_documentum_creare(piscina, intern, vol, "x1", C, LX,
                LXIV)
         || !pictor_documentum_creare(piscina, intern, vol, "x2", LX, XL,
                LXIV))
     {
-        credo_imprimere_compendium();
-        redde I;
+        redde;
     }
     CREDO_VERUM(vicus_applicatio_aedificare(&app, piscina, intern, vol,
         CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
@@ -195,7 +193,7 @@ s32 principale (vacuum)
     scribere(m, III, "$pictor-next(a)");
     CREDO_VERUM(chorda_aequalis_literis(frons(v)->genus, "scriba"));
 
-    imprimere("\n--- I: next sine pictore - '2_...' communis ---\n");
+    CREDO_GRADUS("I: next sine pictore - '2_...' communis");
     {
         PictorDocumentum* documentum_tabulae;
                      i32  vivi;
@@ -228,7 +226,7 @@ s32 principale (vacuum)
             documentum_tabulae) > vivi);
     }
 
-    imprimere("\n--- II-IV: next - '3_...', x1, x2, circulo ---\n");
+    CREDO_GRADUS("II-IV: next - '3_...', x1, x2, circulo");
     iussum(&app, m, II, III);
     CREDO_VERUM(frons(v) == latus_pictoris);
     CREDO_VERUM(argumentum_est(v, "3_dextrum_pictor"));
@@ -238,8 +236,7 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL(x1);
     si (!x1)
     {
-        credo_imprimere_compendium();
-        redde I;
+        redde;
     }
     CREDO_VERUM(x1->latitudo == C && x1->altitudo == LX);
     iussum(&app, m, II, III);
@@ -249,13 +246,13 @@ s32 principale (vacuum)
     iussum(&app, m, II, III);
     CREDO_VERUM(argumentum_est(v, "2_dextrum_pictor"));
 
-    imprimere("\n--- V: prev circulo - x2 ---\n");
+    CREDO_GRADUS("V: prev circulo - x2");
     iussum(&app, m, II, XV);
     CREDO_VERUM(argumentum_est(v, "x2"));
     CREDO_VERUM(frons(v) == latus_pictoris);
 
-    imprimere("\n--- VI: dispositio et reapertura ---\n");
-    CREDO_VERUM(index_continet(vol,
+    CREDO_GRADUS("VI: dispositio et reapertura");
+    CREDO_VERUM(index_continet(vol, piscina,
         "id=\"3_dextrum_pictor\" argumentum=\"x2\""));
     CREDO_VERUM(vicus_applicatio_aedificare(&app_altera, piscina,
         intern, vol, CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
@@ -264,13 +261,14 @@ s32 principale (vacuum)
     CREDO_VERUM(pictura_frontis(app_altera.vicus)
         && pictura_frontis(app_altera.vicus)->latitudo == LX);
 
-    imprimere("\n--- VII: argumenta recusantur ---\n");
+    CREDO_GRADUS("VII: argumenta recusantur");
     ictus(m, III, III);
-    CREDO_VERUM(nuntius_est(v, "pictor-next: nulla argumenta"));
+    CREDO_VERUM(nuntius_est(v, piscina,
+        "pictor-next: nulla argumenta"));
     (vacuum)vicus_pulsare(v);
     CREDO_VERUM(argumentum_est(v, "x2"));
 
-    imprimere("\n--- VIII: memoria communis - tabula 2 ---\n");
+    CREDO_GRADUS("VIII: memoria communis - tabula 2");
     CREDO_VERUM(vicus_activam_ponere(v, "2"));
     dispensator_recomponere(app.d);
     scribere(m, II, "$pictor-next $pictor-prev");
@@ -281,7 +279,7 @@ s32 principale (vacuum)
     CREDO_VERUM(argumentum_est(v, "x1"));
     CREDO_VERUM(pictura_frontis(v) == x1);
 
-    imprimere("\n--- IX: nulla alia pictura ---\n");
+    CREDO_GRADUS("IX: nulla alia pictura");
     vol_solus = volumen_temporarium(piscina,
         "probatio_vicus_pictura_s");
     CREDO_VERUM(vicus_applicatio_aedificare(&app_sola, piscina, intern,
@@ -291,11 +289,11 @@ s32 principale (vacuum)
     dispensator_recomponere(app_sola.d);
     scribere(m, II, "$pictor-next");
     iussum(&app_sola, m, II, III);
-    CREDO_VERUM(nuntius_est(app_sola.vicus,
+    CREDO_VERUM(nuntius_est(app_sola.vicus, piscina,
         "pictor-next: nulla alia pictura"));
     CREDO_VERUM(argumentum_est(app_sola.vicus, ""));
 
-    imprimere("\n--- X: $pictor-new ---\n");
+    CREDO_GRADUS("X: $pictor-new");
     {
           ManusLudus* mn;
     PictorDocumentum* propria;
@@ -322,7 +320,7 @@ s32 principale (vacuum)
                     && nova->altitudo == propria->altitudo);
         CREDO_VERUM(nova && pictor_documentum_numerus_vivorum(nova)
             == ZEPHYRUM);
-        CREDO_VERUM(in_bibliotheca(vol, "pictura_1"));
+        CREDO_VERUM(in_bibliotheca(vol, piscina, "pictura_1"));
         iussum(&app, mn, V, III);
         CREDO_VERUM(argumentum_est(v, "pictura_2"));
         /* bibliotheca: 2_ 3_ pictura_1 pictura_2 x1 x2 */
@@ -331,7 +329,8 @@ s32 principale (vacuum)
         iussum(&app, mn, VI, XV);
         CREDO_VERUM(argumentum_est(v, "pictura_2"));
         ictus(mn, V, XV);
-        CREDO_VERUM(nuntius_est(v, "pictor-new: nulla argumenta"));
+        CREDO_VERUM(nuntius_est(v, piscina,
+            "pictor-new: nulla argumenta"));
         (vacuum)vicus_pulsare(v);
         CREDO_VERUM(argumentum_est(v, "pictura_2"));
         /* tabula 4 sine pictore */
@@ -344,15 +343,24 @@ s32 principale (vacuum)
         CREDO_VERUM(argumentum_est(v, "pictura_3"));
         /* pictura nova vere condita et ostensa (non pictura lateris
          * propria, aeque vacua) */
-        CREDO_VERUM(in_bibliotheca(vol, "pictura_3"));
+        CREDO_VERUM(in_bibliotheca(vol, piscina, "pictura_3"));
         CREDO_VERUM(pictura_frontis(v)
             && pictor_documentum_numerus_vivorum(pictura_frontis(v))
                == ZEPHYRUM);
     }
 
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
     volumen_claudere(vol_solus);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "$pictor-next / $pictor-prev", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("vicus_pictura", SECTIONES);
 }

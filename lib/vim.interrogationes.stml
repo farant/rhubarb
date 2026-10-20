@@ -1,0 +1,120 @@
+<interrogationes unitas="vim">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I drive a vim-style editor over a character sheet?
+    <responsum symbolum="vim_initiare vim_initiare_cum_contextu vim_tractare_clavem_cum_tempore TabulaCharacterum" via="lib/scriba_actiones.c">Make
+      a TabulaCharacterum, create the state with vim_initiare (or
+      vim_initiare_cum_contextu to attach a clipboard and undo stack),
+      then feed every key through vim_tractare_clavem_cum_tempore and
+      keep the VimStatus it returns. Printable keys are plain
+      characters; arrows, Enter, Tab, Escape and the rest are the
+      negative VIM_CLAVIS_* constants.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I treat vim_tractare_clavem as a pure function and keep the old status for my own undo?
+    <responsum symbolum="vim_tractare_clavem VimStatus">No.
+      Only the VimStatus struct is passed by value; the
+      TabulaCharacterum, the VimClipboard and the VimUndoAcervus it
+      points to are edited in place. An old copy of the status still
+      points at the already-changed sheet. Read status.mutatus after a
+      key to learn whether the sheet changed (yank never sets it).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does typing fd in insert mode leave insert mode?
+    <responsum symbolum="vim_tractare_clavem_cum_tempore vim_tractare_clavem">fd
+      is the house escape chord: an f followed by d within 0.3 s
+      (FD_TIMEOUT) deletes the f and returns to normal mode. Pass a real
+      clock in seconds to vim_tractare_clavem_cum_tempore. The plain
+      vim_tractare_clavem passes time 0.0 for every key, so with it ANY
+      f followed by d escapes, however slowly they were typed.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I share copy and paste between several editors?
+    <responsum symbolum="vim_clipboard_initiare vim_initiare_cum_contextu VimClipboard">Allocate
+      one VimClipboard, clear it with vim_clipboard_initiare and pass
+      the same pointer to every editor's vim_initiare_cum_contextu. dd,
+      yy, Y and visual d, x and y fill it; p and P paste below or above.
+      With a NIHIL clipboard those keys still delete but nothing is
+      saved or pasted. Caution (audit 2026-10-18, unfixed): yy then p
+      of a full-width 68-column line pastes only its first 67 columns.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can the clipboard hold long lines and big selections?
+    <responsum symbolum="VimClipboard vim_tractare_clavem">Only
+      up to its fixed size: VIM_CLIPBOARD_LINEAE_MAXIMAE (XXXII) lines
+      of at most 67 characters (VIM_CLIPBOARD_LINEA_MAXIMA LXVIII
+      minus a NUL), so the last column of a full 68-column line is not
+      copied (the same 67-column cut applies to dd's undo copy). A
+      visual y of more than 32 lines copies only the first 32, and a
+      visual d or x of more than 32 lines DELETES only the first 32 -
+      even with no clipboard attached. Copying is line-wise only: there
+      is no y{motion}.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I undo any edit with u?
+    <responsum symbolum="vim_undo_creare vim_undo_trudere vim_undo_tollere VimUndoAcervus">No:
+      only line operations, and only with an undo stack from
+      vim_undo_creare attached. In the code dd, visual d/x, p and P
+      push entries; character edits (x, insert, backspace), o, O, d$,
+      dG, J, &gt;&gt; and &lt;&lt; push nothing, although the header
+      also lists o, O and dG. So after an unrecorded edit, u undoes an
+      OLDER line operation instead.
+      Each line is its own entry, so undoing a three-line paste takes
+      three u. The stack is a ring of VIM_UNDO_MAGNITUDO (XXXII); older
+      entries are overwritten. There is no redo. Caution (audit
+      2026-10-18, unfixed): dd then u on a full-width 68-column line
+      restores only its first 67 columns.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what keys and modes does this vim support?
+    <responsum symbolum="vim_tractare_clavem vim_nomen_modi ModoVim">Three
+      modes (vim_nomen_modi gives NORMAL, INSERT, VISUAL). Normal: h j k
+      l, 0 $ ^, w b, g G (g alone goes to the top), i a A I o O, V
+      (line-wise visual), x, dd d$ dG, yy Y, J, p P, u, &gt;&gt;
+      &lt;&lt;; Escape in normal mode sets debet_claudere. Visual: j k
+      g G, d x y, &gt;&gt; &lt;&lt;, Escape. Insert: printable ASCII,
+      Backspace, Delete, Enter (splits the line with auto-indent), Tab,
+      arrows, Escape or fd.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does G go to, the last line of text or of the sheet?
+    <responsum symbolum="vim_tractare_clavem TabulaCharacterum" via="lib/vim.worklog.md">The
+      last line of the SHEET (tabula-&gt;altitudo - 1), which is usually
+      empty because the sheet has a fixed height. dG, in contrast,
+      deletes from the cursor to the last line that has content. w
+      also stops at the last line with content.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what happens when J joins a line that does not fit on the line above?
+    <responsum symbolum="vim_tractare_clavem" via="lib/vim.worklog.md">Only
+      whole words that fit move up; the rest stays on the lower line,
+      pulled left to that line's own indentation, so nothing past the
+      margin is lost. If not even the first word fits, nothing changes
+      and mutatus stays FALSUM. Backspace at column 0 in insert mode
+      joins the same way (fixed 2026-10-14; before that the overflow
+      was cut off).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I insert a block of text programmatically without auto-indent?
+    <responsum symbolum="vim_ponere_modum vim_tractare_clavem vim_tractare_clavem_cum_tempore VimStatus" via="lib/pagina.c">Set
+      the mode with vim_ponere_modum(status, MODO_VIM_INSERERE), set
+      status.sine_auto_indent = VERUM, send each character as a key and
+      VIM_CLAVIS_ENTER for each newline, then restore the flag and the
+      old mode (pagina_inserere_textum_crudus). Beware the fd escape:
+      with vim_tractare_clavem (time 0.0 for every key, as pagina does)
+      any f followed by d in the text leaves insert mode and the rest of
+      the text runs as normal-mode commands. Use
+      vim_tractare_clavem_cum_tempore with a time that grows by at least
+      0.3 s (FD_TIMEOUT) per key.</responsum>
+  </interrogatio>
+
+</interrogationes>

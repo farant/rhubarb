@@ -33,9 +33,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-hic_manens Piscina*             piscina;
-hic_manens InternamentumChorda* intern;
-
 interior ScribaMontatio*
 visus (
     Vicus* v,
@@ -77,8 +74,10 @@ continet (
  * vacuus si nodus abest */
 interior chorda
 index_paginae (
-              Vicus* v,
-     ScribaMontatio* sm)
+                  Vicus* v,
+         ScribaMontatio* sm,
+                Piscina* piscina,
+    InternamentumChorda* intern)
 {
     Componens* r;
     Componens* c;
@@ -110,7 +109,8 @@ paginam_mutare (
 interior chorda
 pagina_visus (
                 Volumen* vol,
-     constans character* id)
+     constans character* id,
+                Piscina* piscina)
 {
     chorda c;
        b32 inventum;
@@ -121,23 +121,24 @@ pagina_visus (
     redde inventum ? c : chorda_ex_literis("", piscina);
 }
 
-s32 principale (vacuum)
+/* scenarium unum: gradus applicationem eandem (documentum, paginae,
+ * volumen) ordine mutant - ergo una sectio cum gradibus nominatis */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-           Volumen* vol;
-   VicusApplicatio  app;
-   VicusApplicatio  app_altera;
-             Vicus* v;
-        ManusLudus* m;
-    ScribaMontatio* sin;
-    ScribaMontatio* dex;
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                Volumen* vol;
+        VicusApplicatio  app;
+        VicusApplicatio  app_altera;
+                  Vicus* v;
+             ManusLudus* m;
+         ScribaMontatio* sin;
+         ScribaMontatio* dex;
 
-    piscina = piscina_generare_dynamicum("probatio_vicus_paginae",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
     (vacuum)setenv("SHELL", "/bin/sh", I);
     vol = volumen_temporarium(piscina, "probatio_vicus_paginae");
@@ -150,15 +151,17 @@ s32 principale (vacuum)
     sin = visus(v, II, VICUS_SINISTRUM);
     dex = visus(v, II, VICUS_DEXTRUM);
 
-    imprimere("\n--- I: duo visus, documentum unum ---\n");
+    CREDO_GRADUS("I: duo visus, documentum unum");
     CREDO_NON_NIHIL(sin->liber);
     CREDO_VERUM(sin->liber == dex->liber);
     CREDO_VERUM(sin->actiones_ctx.doc == dex->actiones_ctx.doc);
     CREDO_VERUM(sin->doc == dex->doc);
-    CREDO_CHORDA_AEQUALIS_LITERIS(index_paginae(v, sin), "pagina 1/1");
-    CREDO_CHORDA_AEQUALIS_LITERIS(index_paginae(v, dex), "pagina 1/1");
+    CREDO_CHORDA_AEQUALIS_LITERIS(index_paginae(v, sin, piscina,
+        intern), "pagina 1/1");
+    CREDO_CHORDA_AEQUALIS_LITERIS(index_paginae(v, dex, piscina,
+        intern), "pagina 1/1");
 
-    imprimere("\n--- II: textus sinistri in dextro post ictum ---\n");
+    CREDO_GRADUS("II: textus sinistri in dextro post ictum");
     /* sine Esc: insertio in gestu sinistri pendet */
     CREDO_VERUM(manus_ludus_scribere(m, "iuno"));
     CREDO_FALSUM(laboris_est(dex, "uno"));
@@ -168,7 +171,7 @@ s32 principale (vacuum)
     /* commutatio effundit, focus reficit */
     CREDO_VERUM(laboris_est(dex, "uno"));
 
-    imprimere("\n--- III: mutatio dextri in sinistro per pulsum ---\n");
+    CREDO_GRADUS("III: mutatio dextri in sinistro per pulsum");
     CREDO_VERUM(manus_ludus_scribere(m, "iX"));
     CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
     CREDO_VERUM(continet(dex, 'X'));
@@ -178,7 +181,7 @@ s32 principale (vacuum)
     CREDO_VERUM(continet(sin, 'X'));
     CREDO_FALSUM(vicus_pulsare(v));
 
-    imprimere("\n--- IV: sinister scribens mutata dextri servat ---\n");
+    CREDO_GRADUS("IV: sinister scribens mutata dextri servat");
     /* dexter iterum committit (Y); ictus in sinistrum SINE pulsu:
      * focus ipse reficere debet, aliter Z super folium vetus Y
      * reverteret */
@@ -196,7 +199,7 @@ s32 principale (vacuum)
     CREDO_VERUM(continet(dex, 'Z'));
     CREDO_VERUM(continet(dex, 'Y'));
 
-    imprimere("\n--- V: Ctrl+Shift+Dexter - pagina nova '2' ---\n");
+    CREDO_GRADUS("V: Ctrl+Shift+Dexter - pagina nova '2'");
     paginam_mutare(app.d, CLAVIS_DEXTER, M * C);
     CREDO_VERUM(sin->actiones_ctx.doc != dex->actiones_ctx.doc);
     /* m->doc per pulsum (scriba_reficere) cum actionibus concordat */
@@ -206,21 +209,24 @@ s32 principale (vacuum)
     CREDO_VERUM(continet(dex, 'X'));
     CREDO_AEQUALIS_I32(scriba_liber_numerus(sin->liber), II);
     CREDO_CHORDA_AEQUALIS_LITERIS(pagina_visus(vol,
-        "3_sinistrum_scriba"),
+        "3_sinistrum_scriba", piscina),
         "2");
     /* index: sinister in pagina nova, dexter numerum novum (pulsus) */
-    CREDO_CHORDA_AEQUALIS_LITERIS(index_paginae(v, sin), "pagina 2/2");
-    CREDO_CHORDA_AEQUALIS_LITERIS(index_paginae(v, dex), "pagina 1/2");
+    CREDO_CHORDA_AEQUALIS_LITERIS(index_paginae(v, sin, piscina,
+        intern), "pagina 2/2");
+    CREDO_CHORDA_AEQUALIS_LITERIS(index_paginae(v, dex, piscina,
+        intern), "pagina 1/2");
     /* retro: pagina '1' iterum, documentum dextri idem */
     paginam_mutare(app.d, CLAVIS_SINISTER, M * C + I);
     CREDO_VERUM(sin->actiones_ctx.doc == dex->actiones_ctx.doc);
     CREDO_VERUM(continet(sin, 'X'));
     CREDO_VERUM(vicus_pulsare(v));
-    CREDO_CHORDA_AEQUALIS_LITERIS(index_paginae(v, sin), "pagina 1/2");
+    CREDO_CHORDA_AEQUALIS_LITERIS(index_paginae(v, sin, piscina,
+        intern), "pagina 1/2");
     /* ante primam: nihil */
     paginam_mutare(app.d, CLAVIS_SINISTER, M * C + II);
     CREDO_CHORDA_AEQUALIS_LITERIS(pagina_visus(vol,
-        "3_sinistrum_scriba"),
+        "3_sinistrum_scriba", piscina),
         "1");
     paginam_mutare(app.d, CLAVIS_DEXTER, M * C + III);
     /* imago sine fenestra (oculis inspicienda): "pagina 2/2" sinistra,
@@ -257,7 +263,7 @@ s32 principale (vacuum)
         CREDO_VERUM(diversi > ZEPHYRUM);
     }
 
-    imprimere("\n--- VI: commissio per quietem, scribere pergit ---\n");
+    CREDO_GRADUS("VI: commissio per quietem, scribere pergit");
     /* insertio commissa post quietem (SCRIBA_QUIES_MS) dum scribitur:
      * visus focatus non stalus fit (cursor_laboris post commissionem
      * suam) - pulsus litteras nondum commissas non delet */
@@ -270,7 +276,7 @@ s32 principale (vacuum)
     CREDO_VERUM(memcmp(scriba_documentum_tabula(sin->actiones_ctx.doc)
         ->cellulae, "abc", III) == ZEPHYRUM);
 
-    imprimere("\n--- VII: pagina visus per reaperturam servatur ---\n");
+    CREDO_GRADUS("VII: pagina visus per reaperturam servatur");
     CREDO_VERUM(vicus_applicatio_aedificare(&app_altera, piscina,
         intern, vol, CDLXXX,
         CDLXXX + VICUS_ALTITUDO_TABULARUM));
@@ -282,8 +288,17 @@ s32 principale (vacuum)
     CREDO_VERUM(continet(dex, 'X'));
     CREDO_FALSUM(continet(sin, 'X'));
 
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "visus scribae super paginas communes", _sectio_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("vicus_paginae", SECTIONES);
 }

@@ -83,31 +83,22 @@ _latitudo_bruta (
     redde optima;
 }
 
-s32
-principale (vacuum)
-{
-    Piscina* piscina;
-        b32  praeteritus;
-
-    piscina = piscina_generare_dynamicum("probatio_partitio", 65536);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ==================================================
      * PROBARE: partitio_ex_notis - numeratio canonica
      * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans i32  notae[IV] = { VII, III, VII, IX };
             Partitio* p;
 
-        imprimere("\n--- Probans partitio_ex_notis"
-            " (numeratio canonica) ---\n");
         p = partitio_ex_notis(piscina, IV, notae);
         CREDO_NON_NIHIL (p);
         si (p != NIHIL)
@@ -126,17 +117,24 @@ principale (vacuum)
             CREDO_AEQUALIS_I32 (p->primus[II], III);
         }
     }
+}
 
 
     /* ==================================================
      * PROBARE: partitio_ex_chordis
      * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           chorda  valores[IV];
         Partitio* p;
 
-        imprimere("\n--- Probans partitio_ex_chordis ---\n");
         valores[ZEPHYRUM]  = chorda_ex_literis("nom", piscina);
         valores[I]         = chorda_ex_literis("acc", piscina);
         valores[II]        = chorda_ex_literis("nom", piscina);
@@ -152,6 +150,7 @@ principale (vacuum)
             CREDO_AEQUALIS_I32 (p->grex[III], II);
         }
     }
+}
 
 
     /* ==================================================
@@ -164,6 +163,13 @@ principale (vacuum)
      *   congruentia maxima II (0-1, 1-4), unicae V - II = III
      * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans i32 n1[IV]      = { ZEPHYRUM, ZEPHYRUM, I, I };
         constans i32 n2[IV]      = { ZEPHYRUM, I, ZEPHYRUM, I };
@@ -177,7 +183,6 @@ principale (vacuum)
                        i32  i;
                        i32  j;
 
-        imprimere("\n--- Probans familiam manu computatam ---\n");
         partes[ZEPHYRUM]  = partitio_discreta(piscina, IV);
         partes[I]         = partitio_ex_notis(piscina, IV, n1);
         partes[II]        = partitio_ex_notis(piscina, IV, n2);
@@ -259,18 +264,25 @@ principale (vacuum)
             CREDO_AEQUALIS_I32 (_latitudo_bruta(r), III);
         }
     }
+}
 
 
     /* ==================================================
      * PROBARE: numeri ordinum inaequales - recusatio
      * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans i32  n1[IV] = { ZEPHYRUM, ZEPHYRUM, I, I };
             Partitio* a;
             Partitio* b;
 
-        imprimere("\n--- Probans recusationem inaequalium ---\n");
         a = partitio_ex_notis(piscina, IV, n1);
         b = partitio_una(piscina, III);
         CREDO_NON_NIHIL (a);
@@ -281,6 +293,7 @@ principale (vacuum)
         CREDO_NIHIL  (partitio_supremum(piscina, a, b));
         CREDO_NIHIL  (partitio_ex_notis(piscina, IV, NIHIL));
     }
+}
 
 
     /* ==================================================
@@ -291,6 +304,13 @@ principale (vacuum)
      * subtilior, latitudo Dilworth == vis bruta
      * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Sors s;
          i32 familia;
@@ -302,7 +322,6 @@ principale (vacuum)
          i32 violationes_latitudinis  = ZEPHYRUM;
 
         sors_seminare(&s, (i64)XLII, (i64)ZEPHYRUM);
-        imprimere("\n--- Probans leges super familias fortuitas ---\n");
         per (familia = ZEPHYRUM; familia < CC; familia++)
         {
              constans Partitio* partes[XII];
@@ -413,19 +432,24 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (violationes_reticuli, ZEPHYRUM);
         CREDO_AEQUALIS_I32 (violationes_latitudinis, ZEPHYRUM);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "partitio_ex_notis (numeratio canonica)", _sectio_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "partitio_ex_chordis", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "familiam manu computatam", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "recusationem inaequalium", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "leges super familias fortuitas", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ==================================================
-     * Compendium
-     * ================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    redde I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("partitio", SECTIONES);
 }

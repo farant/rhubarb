@@ -116,11 +116,23 @@
 #        RECENS - h contra b stalum iudicabatur); arcus DATORUM solum
 #        (k cum praecondicione g, sine ingressu eius = RECENS); post
 #        sanare c RECENS
-#   LX   progressus iudicis (colloquia T10d): 'iudicare -plenus' sub
+#   LX   consilium ante actum (consilium S4): arbor secundaria
+#        institutionem VETAT, principalis non iudicat
+#   LXI  consilium actum (consilium S5c1): 'consilium -agere' occisus
+#        in medio gradu -> '-resumere' actum non iterat; arbor mutata ->
+#        resumptio recusata; scriptura ~/.bin non proposita -> FRACTUM;
+#        gradus sine mandato -> nihil actum
+#   LXII memoria sectionis (credo memoria T3): linea SECTIO XIV camporum
+#        -> facta tria credo.* (octeti = KiB * MXXIV) cursui sectionis
+#        adhaerentia; linea XI camporum nullum
+#   LXIII tectum memoriae membri (credo memoria T6): FABRICA_MEMORIA_MB
+#        fugam occidit; sectio rupta nominata cum causa memoriae,
+#        sectio prior servata; membrum v1 'totum' cum eadem causa
+#   LXIV progressus iudicis (colloquia T10d): 'iudicare -plenus' sub
 #        MENSOR_PARENS fabrica.ambitus (actiones iudicandae) initio et
 #        fabrica.iudicata ultima = ambitus; electum 'c' = I (g per
 #        catenam non numeratur); sine MENSOR_PARENS nihil
-#   LXI  digestum lectores iudicis habet: actio cum ingressu
+#   LXV  digestum lectores iudicis habet: actio cum ingressu
 #        identitas_clang LXIV hex (olim 'sutura sine
 #        identitate clang', exitus 1 - bearssl_amalgama 2026-10-17)
 #
@@ -1044,7 +1056,179 @@ mkdir -p "$T/domus3/.rhubarb"
 lix_x=$(grep -c 'fabrica\.' "$T/domus3/.rhubarb/mensurae.diarium" 2>/dev/null)
 if [ "${lix_a:-0}" -ge 1 ] && [ "${lix_u:-0}" -ge 1 ] && [ "$lix_i" = "$lix_a" ] && [ "${lix_x:-0}" = "0" ]; then echo "  LIX  progressus: ambitus et undae initio, iudicata ultima = ambitus, radix aliena nihil OK"; else echo "  LIX  FRACTUM (ambitus '${lix_a}', undae '${lix_u}', iudicata ultima '${lix_i}', lineae alienae ${lix_x:-0})"; fracta=1; fi
 
-# LX (colloquia T10d): PROGRESSUS IUDICIS - porta iudicans tantum
+# LX (consilium S4): CONSILIUM ANTE ACTUM - in arbore secundaria ('.git'
+# plagula) sanatio cuius exitus extra arborem (~) iacet VETATUR ante
+# actum (regula 'arbor_secundaria', exitus 2, nihil scriptum in domo);
+# in arbore principali ('.git' directorium) consilium non iudicatur.
+# HOME temporarium: domus vera numquam tangitur.
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+printf 'unum\n' > "$T/r/a"
+printf 'mkdir -p "$HOME/.consilium_fumus"; cp a "$HOME/.consilium_fumus/x"\n' > "$T/r/inst.sh"
+printf '<aedificatio>\n  <actio titulus="inst" genus="institutio">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>inst.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="a"/>\n    <exitus via="~/.consilium_fumus/x" provenientia="regeneratio"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+mkdir -p "$T/domus_lx"
+printf 'gitdir: /nusquam\n' > "$T/r/.git"
+(cd "$T/r" && HOME="$T/domus_lx" "$F" sanare) > "$T/lx_s" 2>&1; rcs=$?
+scriptum_s=0; [ -e "$T/domus_lx/.consilium_fumus/x" ] && scriptum_s=1
+rm -f "$T/r/.git"; mkdir -p "$T/r/.git"
+(cd "$T/r" && HOME="$T/domus_lx" "$F" sanare) > "$T/lx_p" 2>&1; rcp=$?
+if [ "$rcs" -eq 2 ] && [ "$scriptum_s" -eq 0 ] \
+   && grep -q 'VETITUM: inst instituere ~/.consilium_fumus/x <- arbor_secundaria' "$T/lx_s" \
+   && ! grep -q 'arbor_secundaria' "$T/lx_p"; then echo "  LX   consilium ante actum: arbor secundaria institutionem VETAT (nihil actum), principalis non iudicat OK"; else echo "  LX   FRACTUM (secundaria rc=$rcs scriptum $scriptum_s, principalis rc=$rcp)"; sed 's/^/      [s] /' "$T/lx_s" | head -6; sed 's/^/      [p] /' "$T/lx_p" | head -4; fracta=1; fi
+
+# LXI (consilium S5c1): CONSILIUM ACTUM - 'consilium -agere' mandata
+# undis exsequitur, observata, cum diario. Exsecutor in medio gradu B
+# OCCISUS (kill -9 parentis) -> '-resumere': A (actum) non iteratur, B
+# (interruptus) et C aguntur. Arbor mutata (fons sequendus) post actum
+# ultimum -> resumptio recusata (1), nihil actum. Scriptura in ~/.bin
+# non proposita (HOME temporarium) -> FRACTUM nominatum (3). Gradus
+# sine mandato -> 1, nihil actum. Valores attributorum STML CRUDI:
+# '&&' scribitur ut est.
+radix '<fabrica titulus="t"/>'
+(cd "$T/r" && git init -q && printf 'build/\n' > .gitignore && printf 'fons\n' > fons.txt \
+    && git add -A && git -c user.email=f@f -c user.name=f commit -qm initium) > /dev/null 2>&1
+mkdir -p "$T/r/build" "$T/domus_lxi/.bin"
+cat > "$T/r/c.stml" <<'EOF'
+<consilium>
+  <gradus titulus="A">
+    <mandatum><argumentum valor="sh"/><argumentum valor="-c"/><argumentum valor="echo A >> build/cursus; echo a > build/a"/></mandatum>
+    <effectus verbum="scribere" res="build/a" classis="build"/>
+    <effectus verbum="scribere" res="build/cursus" classis="build"/>
+  </gradus>
+  <gradus titulus="B">
+    <mandatum><argumentum valor="sh"/><argumentum valor="-c"/><argumentum valor="echo B >> build/cursus; test -f build/occide && kill -9 $PPID; echo b > build/b"/></mandatum>
+    <effectus verbum="legere" res="build/a" classis="build"/>
+    <effectus verbum="inspicere" res="build/occide" classis="build"/>
+    <effectus verbum="scribere" res="build/b" classis="build"/>
+    <effectus verbum="scribere" res="build/cursus" classis="build"/>
+  </gradus>
+  <gradus titulus="C">
+    <mandatum><argumentum valor="sh"/><argumentum valor="-c"/><argumentum valor="echo C >> build/cursus; cat build/b > build/c"/></mandatum>
+    <effectus verbum="legere" res="build/b" classis="build"/>
+    <effectus verbum="scribere" res="build/c" classis="build"/>
+    <effectus verbum="scribere" res="build/cursus" classis="build"/>
+  </gradus>
+</consilium>
+EOF
+lxi () { (cd "$T/r" && HOME="$T/domus_lxi" "$F" consilium "$@") 2>&1; }
+touch "$T/r/build/occide"
+lxi -agere c.stml > "$T/lxi_1"; rc1=$?
+rm -f "$T/r/build/occide"
+lxi -agere -resumere c.stml > "$T/lxi_2"; rc2=$?
+cursus=$(tr '\n' ' ' < "$T/r/build/cursus")
+# arbor mutata post actum ultimum
+rm -f "$T/r/build/cursus"; touch "$T/r/build/occide"
+lxi -agere c.stml > /dev/null; rm -f "$T/r/build/occide"
+printf 'mutatum\n' >> "$T/r/fons.txt"
+lxi -agere -resumere c.stml > "$T/lxi_3"; rc3=$?
+cursus3=$(tr '\n' ' ' < "$T/r/build/cursus")
+# scriptura ~/.bin non proposita; gradus sine mandato
+cat > "$T/r/e.stml" <<'EOF'
+<consilium>
+  <gradus titulus="X">
+    <mandatum><argumentum valor="sh"/><argumentum valor="-c"/><argumentum valor="echo x > build/x; echo y > $HOME/.bin/x"/></mandatum>
+    <effectus verbum="scribere" res="build/x" classis="build"/>
+  </gradus>
+</consilium>
+EOF
+printf '<consilium>\n  <gradus titulus="nudus">\n    <effectus verbum="scribere" res="build/n" classis="build"/>\n  </gradus>\n</consilium>\n' > "$T/r/s.stml"
+lxi -agere e.stml > "$T/lxi_4"; rc4=$?
+lxi -agere s.stml > "$T/lxi_5"; rc5=$?
+if [ "$rc1" -ne 0 ] && [ "$rc2" -eq 0 ] && [ "$cursus" = "A B B C " ] \
+   && grep -q 'ex actis: actum ante' "$T/lxi_2" \
+   && [ "$rc3" -eq 1 ] && grep -q 'arbor mutata post ultimum actum' "$T/lxi_3" && [ "$cursus3" = "A B " ] \
+   && [ "$rc4" -eq 3 ] && grep -q 'scripsit extra propositum: ~/.bin/x' "$T/lxi_4" \
+   && [ "$rc5" -eq 1 ] && grep -q 'gradus sine mandato' "$T/lxi_5" && [ ! -e "$T/r/build/n" ]; then echo "  LXI  consilium actum: occisus -> resumptio (A non iteratum), arbor mutata recusata, ~/.bin non propositum FRACTUM, sine mandato nihil OK"; else echo "  LXI  FRACTUM (occisus rc=$rc1, resumptio rc=$rc2 cursus '$cursus', arbor mutata rc=$rc3 cursus '$cursus3', extra rc=$rc4, sine mandato rc=$rc5)"; for k in 1 2 3 4 5; do sed "s/^/      [$k] /" "$T/lxi_$k" | head -5; done; fracta=1; fi
+
+# LXII (credo memoria T3): MEMORIA SECTIONIS IN ANNALIBUS - membrum m
+# plagulam ipsum scribit: alpha XIV campos (arena 32768, vestigium
+# 33824, auctus 32800 KiB), beta XI (non mensa). Facta credo.* cursui
+# alpha adhaerent in octetis; beta nullum
+radix_c
+cat > "$T/r/t/probatio_m.c" <<'CEOF'
+#include <stdio.h>
+#include <stdlib.h>
+int main(void)
+{
+    const char* v = getenv("CREDO_VERDICTA");
+    FILE* f;
+    if (v == 0) { return 3; }
+    f = fopen(v, "w");
+    if (f == 0) { return 4; }
+    fprintf(f, "SECTIO\tprobatio_m\talpha\tTRANSIIT\t1\t1\t5\t\t\t\t\t32768\t33824\t32800\n");
+    fprintf(f, "SECTIO\tprobatio_m\tbeta\tTRANSIIT\t1\t1\t5\t\t\t\t\n");
+    fprintf(f, "SUITA\tprobatio_m\tTRANSIIT\t2\t2\t2\t0\t10\n");
+    fclose(f);
+    return 0;
+}
+CEOF
+(cd "$T/r" && MENSOR_PARENS=fumus-lxii MENSOR_COMMISSUM=commissum-lxii MENSOR_SESSIO=sessio-lxii \
+    "$F" probare -vis probationes_t) > "$T/lxii.e" 2>&1
+awk -F'\t' '$1 == "cursus" && $2 == "initium" { t[$3] = $6; p[$3] = $4 }
+    $1 != "cursus" && $4 ~ /^credo\./ { m[NR] = $3 "\t" $4 "\t" int($5) "\t" $6 "\t" $1 }
+    END { for (i in m) { split(m[i], c, "\t"); if (t[c[1]] ~ /^probationes_t\/probatio_m#/ && p[p[c[1]]] == "fumus-lxii")
+              print t[c[1]] "\t" c[2] "\t" c[3] "\t" c[4] "\t" c[5] } }' \
+    "$MENSOR_DIARIUM" 2>/dev/null | sort > "$T/lxii"
+printf 'probationes_t/probatio_m#alpha\tcredo.apex_auctus\t33587200\tocteti\tsessio-lxii\nprobationes_t/probatio_m#alpha\tcredo.arena_apex\t33554432\tocteti\tsessio-lxii\nprobationes_t/probatio_m#alpha\tcredo.vestigium\t34635776\tocteti\tsessio-lxii\n' > "$T/lxii.exp"
+if cmp -s "$T/lxii" "$T/lxii.exp"; then echo "  LXII memoria sectionis: XIV campi -> facta credo.* in octetis sub cursu sectionis, XI nihil OK"; else echo "  LXII FRACTUM"; sed 's/^/      lectum: /' "$T/lxii"; sed 's/^/      e: /' "$T/lxii.e" | tail -5; fracta=1; fi
+
+# LXIII (credo memoria T6): TECTUM MEMORIAE MEMBRI - FABRICA_MEMORIA_MB=64
+# in ambitu FABRICAE. f contractum credo scribit (alpha TRANSIIT, INCIPIT
+# beta) deinde memoriam tangit (XVI MiB per gradum in tabula universali -
+# malloc+memset sine usu clang -O2 delet, mensuratum - CCLVI summum, deinde
+# XX s dormit et 0 reddit - custos fractus = gradus lentus et rubrus,
+# non machina exhausta): FRACTA, 'sectio 'beta' RUIT', causa 'memoria
+# maxima excessa', alpha in plagula servata. g (v1, sine contractu)
+# idem facit: synthetica 'totum', eadem causa
+radix_c
+cat > "$T/r/t/probatio_f.c" <<'CEOF'
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+char* tenuti[16];
+int main(void)
+{
+    const char* v = getenv("CREDO_VERDICTA");
+    FILE* f;
+    int k;
+    if (v == 0) { return 3; }
+    f = fopen(v, "w");
+    if (f == 0) { return 4; }
+    fprintf(f, "SECTIONES\tprobatio_f\t2\n");
+    fprintf(f, "INCIPIT\tprobatio_f\talpha\n");
+    fprintf(f, "SECTIO\tprobatio_f\talpha\tTRANSIIT\t1\t1\t5\t\t\t\t\n");
+    fprintf(f, "INCIPIT\tprobatio_f\tbeta\n");
+    fflush(f);
+    for (k = 0; k < 16; k++) { tenuti[k] = malloc(16u << 20); if (tenuti[k]) memset(tenuti[k], 0x5a, 16u << 20); usleep(20000); }
+    sleep(20);
+    for (k = 0; k < 16; k++) { if (tenuti[k] && tenuti[k][k] != 0x5a) { return 5; } }
+    return 0;
+}
+CEOF
+cat > "$T/r/t/probatio_g.c" <<'CEOF'
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+char* tenuti[16];
+int main(void)
+{
+    int k;
+    for (k = 0; k < 16; k++) { tenuti[k] = malloc(16u << 20); if (tenuti[k]) memset(tenuti[k], 0x5a, 16u << 20); usleep(20000); }
+    sleep(20);
+    for (k = 0; k < 16; k++) { if (tenuti[k] && tenuti[k][k] != 0x5a) { return 5; } }
+    return 0;
+}
+CEOF
+t0=$(date +%s)
+(cd "$T/r" && FABRICA_MEMORIA_MB=64 "$F" probare -vis probationes_t probatio_f probatio_g) > "$T/lxiii" 2>&1
+t1=$(date +%s)
+if grep -q "probatio_f FRACTA.*sectio 'beta' RUIT; 0 non cursae; memoria maxima excessa (vestigium [0-9]* MiB > 64 MiB) - processus occisus" "$T/lxiii" \
+   && grep -q "^SECTIO	probatio_f	alpha	TRANSIIT" "$T/r/build/fabrica/area/probationes_t/probatio_f/credo.tsv" \
+   && grep -q "probatio_g FRACTA.*memoria maxima excessa (vestigium [0-9]* MiB > 64 MiB)" "$T/lxiii" \
+   && grep -q "^SECTIO	probatio_g	totum	FRACTA" "$T/r/build/fabrica/area/probationes_t/probatio_g/credo.tsv" \
+   && [ $((t1 - t0)) -lt 15 ]; then echo "  LXIII tectum memoriae membri: fuga occisa, sectio rupta cum causa memoriae nominata, alpha servata, v1 totum OK"; else echo "  LXIII FRACTUM ($((t1 - t0)) s)"; grep -E "probatio_[fg]" "$T/lxiii" | sed 's/^/      /' | head -6; fracta=1; fi
+
+# LXIV (colloquia T10d): PROGRESSUS IUDICIS - porta iudicans tantum
 # (generata = 'iudicare -plenus -omnia') nullum progressum scribebat
 # (progressum_notare in sanare solo); nunc actiones iudicatae ex
 # iudicandis. Mundus LVIII (g, h, k) iterum conditur.
@@ -1067,9 +1251,9 @@ lx_a=$(awk -F'\t' '$3 == "fumus-lx" && $4 == "fabrica.ambitus" { print $5 + 0 }'
 lx_i=$(awk -F'\t' '$3 == "fumus-lx" && $4 == "fabrica.iudicata" { print $5 + 0 }' "$MENSOR_DIARIUM" | tail -1)
 lx_ca=$(awk -F'\t' '$3 == "fumus-lx-c" && $4 == "fabrica.ambitus" { print $5 + 0 }' "$MENSOR_DIARIUM" | tail -1)
 lx_ci=$(awk -F'\t' '$3 == "fumus-lx-c" && $4 == "fabrica.iudicata" { print $5 + 0 }' "$MENSOR_DIARIUM" | tail -1)
-if [ "${lx_a:-x}" = "3" ] && [ "${lx_i:-x}" = "3" ] && [ "${lx_ca:-x}" = "1" ] && [ "${lx_ci:-x}" = "1" ] && [ "$lx_n0" = "$lx_n1" ]; then echo "  LX   progressus iudicis: ambitus 3, iudicata 3; electum c 1/1; sine parente nihil OK"; else echo "  LX   FRACTUM (omnia '${lx_a:-}'/'${lx_i:-}', c '${lx_ca:-}'/'${lx_ci:-}', sine parente lineae ${lx_n0} -> ${lx_n1})"; fracta=1; fi
+if [ "${lx_a:-x}" = "3" ] && [ "${lx_i:-x}" = "3" ] && [ "${lx_ca:-x}" = "1" ] && [ "${lx_ci:-x}" = "1" ] && [ "$lx_n0" = "$lx_n1" ]; then echo "  LXIV progressus iudicis: ambitus 3, iudicata 3; electum c 1/1; sine parente nihil OK"; else echo "  LXIV FRACTUM (omnia '${lx_a:-}'/'${lx_i:-}', c '${lx_ca:-}'/'${lx_ci:-}', sine parente lineae ${lx_n0} -> ${lx_n1})"; fracta=1; fi
 
-# LXI (2026-10-17): DIGESTUM CUM LECTORIBUS IUDICIS - 'bin/fabrica
+# LXV (2026-10-17): DIGESTUM CUM LECTORIBUS IUDICIS - 'bin/fabrica
 # digestum' suturam legentem SOLAM parabat: actio cum ingressu
 # identitas_clang (ambitus, species...) recusabatur, quamvis iudex eam
 # sigillaret. Mundus: generator unus cum ingressu identitas_clang
@@ -1078,8 +1262,8 @@ radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
 printf 'a\n' > "$T/r/a"
 printf '<aedificatio>\n  <actio titulus="gc" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="a"/>\n    <ingressus genus="identitas_clang" via="clang"/>\n    <exitus via="b" provenientia="regeneratio"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
 (cd "$T/r" && "$F" digestum gc) > "$T/lxi" 2>&1; rc=$?
-if [ "$rc" -eq 0 ] && grep -qE '^[0-9a-f]{64}$' "$T/lxi"; then echo "  LXI  digestum actionis cum identitate clang: LXIV hex OK"; else echo "  LXI  FRACTUM (rc=$rc)"; sed 's/^/      /' "$T/lxi" | head -3; fracta=1; fi
+if [ "$rc" -eq 0 ] && grep -qE '^[0-9a-f]{64}$' "$T/lxi"; then echo "  LXV  digestum actionis cum identitate clang: LXIV hex OK"; else echo "  LXV  FRACTUM (rc=$rc)"; sed 's/^/      /' "$T/lxi" | head -3; fracta=1; fi
 
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (LXI/LXI)"
+echo "fumus fabricae: sanum (LXV/LXV)"
 exit 0

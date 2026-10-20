@@ -1,0 +1,120 @@
+<interrogationes unitas="ludus_fenestra">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I run an app's dispatcher in a real window?
+    <responsum symbolum="ludus_fenestra_creare ludus_fenestra_currere fenestra_creare_tabulam_pixelorum fenestra_destruere" via="apps/pictor/pictor.c">Create
+      the window, make its pixel table with
+      fenestra_creare_tabulam_pixelorum, then call
+      ludus_fenestra_creare(piscina, d, figurae, thema, fons,
+      fons_ctx, tabula) and ludus_fenestra_currere(lf, fenestra,
+      ZEPHYRUM). creare returns NIHIL if piscina, d, figurae or tabula
+      is NIHIL. The loop runs until EVENTUS_CLAUDERE or the window
+      asks to close. It then calls dispensator_finire, prints one
+      timing line to stdout and returns ZEPHYRUM (I only when lf or
+      fenestra is NIHIL). Destroying the window is still your job, as
+      apps/pictor/pictor.c shows.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I render frames or take a screenshot without opening a window?
+    <responsum symbolum="tabula_pixelorum_creare_nuda ludus_fenestra_creare ludus_quadrum ludus_fenestra_imaginem_scribere" via="probationes/probatio_ludus_imago.c">Make
+      a bare table with tabula_pixelorum_creare_nuda, pass it to
+      ludus_fenestra_creare, call ludus_quadrum(lf, nunc) once per
+      frame, then ludus_fenestra_imaginem_scribere(lf, via) to write
+      the last frame as a PNG. That function returns FALSUM before
+      the first frame and when the write fails. The worklog records a
+      real-window PNG that was byte-identical to the headless one, so
+      headless frames are faithful screenshots. The apps expose this
+      as -imago with -fumus.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I keep lf->mandata or anything from the previous frame across ludus_quadrum calls?
+    <responsum symbolum="ludus_quadrum ludus_fenestra_imaginem_scribere piscina_vacare">No.
+      Each ludus_quadrum pulses the dispatcher, then calls
+      piscina_vacare on the per-frame piscina and builds a fresh
+      Mandata there, so lf-&gt;mandata and
+      everything allocated for the last frame (including the PNG
+      buffers of ludus_fenestra_imaginem_scribere) is valid only
+      until the next frame. Copy out anything you need first.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does the window loop sleep when idle, and does that delay input?
+    <responsum symbolum="ludus_fenestra_mora fenestra_expectare_eventus dispensator_pulsare" via="lib/ludus_fenestra.worklog.md">Until
+      2026-10-05 it polled without waiting, and an idle pictor window
+      pinned a CPU core. Now it blocks in fenestra_expectare_eventus
+      for ludus_fenestra_mora(lf): ZEPHYRUM before the first frame,
+      then the dispatcher's quies_ms. An arriving event wakes the
+      wait at once, so drags and strokes are not delayed. The quiet
+      flush still runs in each frame's dispensator_pulsare.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I keep a live app (a terminal, a clock) updating when no events arrive?
+    <responsum symbolum="ludus_fenestra_pulsum_ponere ludus_fenestra_pingendum LudusPulsator" via="apps/vicus/vicus.c">Install
+      a pulse with ludus_fenestra_pulsum_ponere(lf, fn, ctx); NIHIL
+      removes it. In the normal loop (quadra_maxima ZEPHYRUM) fn(ctx)
+      runs once per iteration, inside ludus_fenestra_pingendum, and
+      with a pulse every wait is XVI ms at most (also the first one,
+      which would otherwise be ZEPHYRUM). The loop draws only when
+      ludus_fenestra_pingendum says so: there were events, the pulse
+      returned VERUM, no frame has been drawn yet, or (after the
+      dispatcher alone is pulsed for its timers) the store version
+      differs from the one at the last drawn frame. So return VERUM
+      from the pulse whenever it changed something visible. Without a
+      pulse every iteration draws, as before.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does the frame skip compare the store version instead of counting recompositions?
+    <responsum symbolum="ludus_fenestra_pingendum insula_versio ludus_quadrum" via="lib/ludus_fenestra.worklog.md">The
+      dispatcher recomposes on EVERY event, including the empty
+      pulse (the staleness rule), so recompositions do not mean
+      anything changed. insula_versio goes up once per accepted write.
+      It is compared with versio_picta, which ludus_quadrum records,
+      rather than with the value before this pulse, because a click
+      handled in an earlier iteration may still be undrawn.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I use quadra_maxima for a smoke run of an idle app that installs a pulse?
+    <responsum symbolum="ludus_fenestra_currere ludus_fenestra_pingendum">Yes.
+      With quadra_maxima &gt; ZEPHYRUM the frame skip is bypassed and
+      every iteration draws, so the loop stops after exactly that
+      many frames. Before the 2026-10-08 fix an idle vicus -fumus drew
+      one frame and hung. Two consequences: in smoke mode
+      ludus_fenestra_pingendum is never called, so your pulse function
+      never runs (vicus -fumus does not poll its reactor); and with a
+      pulse each idle wait is at most XVI ms, while an app without one
+      waits the dispatcher's quies (300 ms in pictor) per idle frame,
+      which made pictor's 30-frame smoke run take about 9 s.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what coordinates does the dispatcher see for window resizes and the first size?
+    <responsum symbolum="ludus_fenestra_tractare tabula_pixelorum_ad_fenestram">Table
+      pixels, never window points. On EVENTUS_MUTARE_MAGNITUDINEM,
+      ludus_fenestra_tractare refits the table with
+      tabula_pixelorum_ad_fenestram (scale kept, buffer grown in the
+      piscina only when it gets bigger) and rewrites the event's size
+      to the table's before passing it on. The very first event or
+      frame first sends one synthetic MUTARE_MAGNITUDINEM with the
+      table's size. An event with tempus ZEPHYRUM is stamped with
+      nunc.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I destroy a LudusFenestra and free its frame memory?
+    <responsum symbolum="ludus_fenestra_creare piscina_generare_dynamicum piscina_destruere">Not
+      through the API: there is no destroy function. The struct lives
+      in your piscina, but ludus_fenestra_creare also makes its own
+      dynamic piscina for frames ("ludus_quadrum", LXIV * M initial),
+      and nothing ever destroys it. Destroying your piscina does not
+      release it. The field is public, so code that creates many (such
+      as tests) can call piscina_destruere(lf-&gt;piscina_quadri) itself
+      once it is done with lf; nothing in the tree does today. Apps
+      create one per process.</responsum>
+  </interrogatio>
+
+</interrogationes>

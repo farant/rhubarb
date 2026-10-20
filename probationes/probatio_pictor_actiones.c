@@ -52,7 +52,9 @@ numerare_puncta (
     redde stml_numerus_liberorum(res.elementum_radix);
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                 Piscina* piscina;
     InternamentumChorda* intern;
@@ -71,13 +73,8 @@ s32 principale (vacuum)
                   Canon* ephemera;
               character  nihil_instr[] = "nihil";
 
-    piscina = piscina_generare_dynamicum("probatio_pictor_actiones",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_pictor_actiones");
     doc = pictor_documentum_creare(piscina, intern, vol, "", CCCXX, CC,
@@ -114,7 +111,6 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(xar_numerus(actio_non_registratae(reg,
         dispensator_arbor(d), piscina)), ZEPHYRUM);          /* L10 */
 
-    imprimere("\n--- Ictus scriptus: UNUM <ictus>, III puncta ---\n");
     versio_ante      = insula_versio(repo);
     via[ZEPHYRUM].x  = X;
     via[ZEPHYRUM].y  = XX;
@@ -173,7 +169,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32((i32)px[III], CCLV);
     }
 
-    imprimere("\n--- Escape medio ictu: nihil paritur ---\n");
+    CREDO_GRADUS("Escape medio ictu: nihil paritur");
     /* premere in tabula = ictus puncti unius */
     manus_ludus_premere_ad(m, XL, XL);
         CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(doc), II);
@@ -200,7 +196,7 @@ s32 principale (vacuum)
     /* cursor immotus */
         CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(doc), II);
 
-    imprimere("\n--- 'p' instrumentum eligit (dominus = actio) ---\n");
+    CREDO_GRADUS("'p' instrumentum eligit (dominus = actio)");
     /* instrumentum aliud sub domino suo, deinde 'p' per manum */
     insula_scriptorem_ponere(repo,
         chorda_ex_literis("instrumentum.eligere", piscina));
@@ -226,7 +222,7 @@ s32 principale (vacuum)
     CREDO_MANUS_LUDUS_EXISTIT(m, "[actio=penicillus.ictus]");
     CREDO_VERUM(insula_restituere(repo));
 
-    imprimere("\n--- Captura: punctum in spatio TABULAE ---\n");
+    CREDO_GRADUS("Captura: punctum in spatio TABULAE");
     /* Franus 2026-10-08: tractus extra tabulam (super lineam status aut
      * latus alterum) ad marginem oppositum saliebat - punctum_locale
      * ad ictum GEOMETRICUM pertinet (linea status: y ~ 3), non ad
@@ -258,8 +254,17 @@ s32 principale (vacuum)
             piscina));
     }
 
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Ictus scriptus: UNUM <ictus>, III puncta", _sectio_prima, NIHIL,
+      NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("pictor_actiones", SECTIONES);
 }

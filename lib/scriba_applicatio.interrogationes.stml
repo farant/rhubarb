@@ -1,0 +1,93 @@
+<interrogationes unitas="scriba_applicatio">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I start the scriba editor as a standalone app with its own window or terminal?
+    <responsum symbolum="scriba_volumen_aperire scriba_applicatio_aedificare thema_initiare volumen_claudere" via="apps/scriba/scriba.c apps/scriba/scriba_terminalis.c">Call
+      thema_initiare yourself (the glue owns the theme), open the
+      volume with scriba_volumen_aperire(piscina, argc, argv, &amp;fumus),
+      then scriba_applicatio_aedificare(&amp;app, piscina, intern, vol,
+      latitudo, altitudo) with the surface size in our pixels. It
+      builds the repository, mount, dispatcher and gesture slot; the
+      main then only attaches its window or tty to app.d. Close the
+      volume with volumen_claudere at exit.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what do -fumus and -volumen do on the scriba command line?
+    <responsum symbolum="scriba_volumen_aperire volumen_temporarium volumen_aperire_aut_creare">scriba_volumen_aperire
+      scans argv: -fumus opens a temporary volume (volumen_temporarium
+      with prefix scriba_fumus, deleted on volumen_claudere) and sets
+      *fumus; -volumen PATH opens or creates that file; otherwise
+      scriba.volumen in the current directory. Unknown arguments are
+      ignored, and -volumen with no path after it is ignored too.
+      NIHIL means the volume could not be opened.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I embed a scriba editor as one pane inside another app?
+    <responsum symbolum="scriba_montare scriba_montare_in_ramo ScribaMontatio" via="lib/vicus_applicatio.c lib/membrum__charta.c">Mount
+      it into the host's InsulaRepositorium with scriba_montare(m, ...,
+      repo, id, latitudo, altitudo, liber, systemata): id NIHIL uses
+      the repository root, otherwise a child scriba element id is
+      created under the root if absent. scriba_montare_in_ramo mounts
+      under a parent branch instead (the calendar's day notes). Each
+      mount has its own action and figura registries; its document is
+      its own (in namespace id) when liber is NIHIL, else a page of the
+      shared book chosen by the plagula scriba/visus/ID. systemata
+      NIHIL means no persistence (tests).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I copy a ScribaMontatio or ScribaApplicatio struct by value?
+    <responsum symbolum="ScribaMontatio ScribaApplicatio scriba_montare">No.
+      The action and figura contexts live INSIDE the ScribaMontatio and
+      the registries point into them, so a copy leaves the registries
+      pointing at the original. Keep the struct where you mounted it.
+      ScribaApplicatio.doc, .actiones and .figurae are only aliases of
+      the montatio fields.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why is my nested scriba mount refused when its id contains a hyphen?
+    <responsum symbolum="scriba_montare_in_ramo" via="lib/scriba_applicatio.worklog.md">The
+      id becomes a canon nomen attribute on the branch, and the canon
+      refuses '-' (write c1_notae, not c1-notae). The id also keys the
+      page cursor plagula scriba/visus/ID and the saved state, so it
+      must be unique in the whole volume. A NIHIL or empty id is
+      refused with FALSUM.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what size is the sheet of a newly created scriba document?
+    <responsum symbolum="scriba_montare scriba_documentum_creare">It
+      follows the surface: the number of 6 x 8 cells in latitudo and
+      altitudo minus one cell of margin on each side and, vertically,
+      the status line, never less than 20 x 10. This applies only to a
+      mount without a liber; an existing document, or a page of a
+      book, keeps its own size. (The header's opening comment still says a
+      new sheet is 68 x 56; that is no longer what the code does.)</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I keep two views of the same book in sync when one of them edits a page?
+    <responsum symbolum="scriba_reficere" via="lib/vicus_applicatio.c">Call
+      scriba_reficere(m) on every pulse and BEFORE giving the view
+      focus. It runs pending work and deferred commands, follows page
+      navigation (m->doc catches up with the actions), refreshes the
+      page indicator, and, when the document's cursor differs from the
+      view's working cursor (another view committed), reloads the working sheet from the document. It returns VERUM
+      when the pane must be repainted.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I switch a mounted scriba view to a different book without remounting?
+    <responsum symbolum="scriba_librum_ponere insula_scriptorem_ponere" via="lib/membrum__charta.c">scriba_librum_ponere(m,
+      liber) shows the page named by the view's plagula if it exists in
+      the new book, else its first page; registries and contexts stay.
+      The scriba branch's owners only admit the writer pagina.clavis,
+      so it sets that writer for the call and restores the previous
+      one. FALSUM if liber is NIHIL or the view was never
+      mounted.</responsum>
+  </interrogatio>
+
+</interrogationes>

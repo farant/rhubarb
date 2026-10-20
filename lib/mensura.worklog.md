@@ -430,3 +430,35 @@ stage X had already purged, then "diary empty" (curare records itself
 after the fold), then a fold the preceding `legere` had already done;
 each vacuous, each rewritten. Plants IV red (trigger off, daily gate
 off, opt-out ignored, fold skipped).
+
+## 2026-10-19 - memory per section into the annals (credo memoria T3)
+
+credo's SECTIO line now ends in three KiB numbers (T2). Getting them
+into the annals: the `cursus` line format can't grow (shared diary, an
+old binary folding it rejects a wrong field count - the FACTA CURSUUM
+note in mensura.h), so they ride as ordinary mensurae with parens =
+the section's run id, like `cursus.custos`: `credo.arena_apex`,
+`credo.apex_auctus`, `credo.vestigium`, unit `octeti`. fabrica's
+`_sectiones_annalibus_inscribere` writes them only when the line had
+XIV fields (vestigium 0 = not measured), using the section run's own
+sessio and end moment.
+
+`cursus_quaerere_graves` groups by section title, keeps the MAXIMUM of
+each across runs (a ceiling cares about the worst run, not the median),
+and orders by pondus = max(arena_apex, apex_auctus) - the number T4's
+ceiling judges. `numerus` counts vestigium facts, one per measured run.
+mensor: `quaestio graves`, n defaults to XX (a full tree has thousands
+of sections), titulus= without '#' becomes praefixum=M# like
+`sectiones`. Human output in MiB with one decimal, -machina octets.
+
+Cost: three diary lines per measured section per run, on top of the two
+`cursus` lines it already had. Not measured against the retention
+policy yet.
+
+Tests: probatio_mensura_quaestio XV (maxima across runs, pondus by peak
+rise, filters, foreign facts and unknown parents ignored), fabrica
+fumus LXII (XIV line -> three facts in octets, XI line -> none), mensor
+fumus XVIII (CLI, both output forms). Plants: pondus without auctus,
+KiB x M instead of x MXXIV, MiB divisor M*MXXIV - each red on its own
+assertion. The multi-line planta anchor was refused (fewer tokens in
+the replacement than lines in the anchor); a one-token swap worked.

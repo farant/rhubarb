@@ -297,6 +297,13 @@
     <forma textus="symmetrici" casus="nominativus" numerus="pluralis" genus="masculinum"/>
     <forma textus="symmetrico" casus="ablativus" numerus="singularis" genus="masculinum"/>
   </vocabulum>
+  <vocabulum lemma="planaris" lingua="latina" classis="adiectivum" nota="Neolatina (planus): planaris, arbor dependentiae cuius arcus supra sententiam sine cruce ducuntur (Kuhlmann et Nivre 2006 Def. 4, 'planar'); sedes include/dependentia.h; WORDS caret">
+    <forma textus="planaris" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="planare" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="planares" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="planarem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="planari" casus="ablativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
   <vocabulum lemma="chiralis" lingua="latina" classis="adiectivum" nota="Neolatina (Gk. cheir, manus): chiralis, imagini suae speculari non congruens (nodus chiralis); sedes include/tabula_nodorum.h; WORDS caret">
     <forma textus="chiralis" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="chirales" casus="nominativus" numerus="pluralis" genus="masculinum"/>
@@ -602,6 +609,14 @@
   <vocabulum lemma="gitdir" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum - git: plagula .git arboris operis"/>
   <vocabulum lemma="sha256" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="hmac" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 2104; sigillum_hmac)"/>
+  <vocabulum lemma="ttl" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (DNS time-to-live; lib/oceanus.c)"/>
+  <vocabulum lemma="csrf" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (cross-site request forgery; lib/custodia.c)"/>
+  <vocabulum lemma="blake2b" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 7693; lib/blake2b.c)"/>
+  <vocabulum lemma="blake2" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 7693, familia BLAKE2)"/>
+  <vocabulum lemma="argon2id" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 9106; lib/argon2id.c)"/>
+  <vocabulum lemma="argon2" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 9106, familia Argon2)"/>
+  <vocabulum lemma="blamka" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (BlaMka, compressio G Argon2, RFC 9106 par. 3.6)"/>
+  <vocabulum lemma="phc" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (Password Hashing Competition, forma $argon2id$...)"/>
   <vocabulum lemma="stbi" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="macho" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="sqlite" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
@@ -609,6 +624,7 @@
   <vocabulum lemma="glr" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="xor" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="hex" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="ulp" lingua="anglica" classis="ignotum-permissum" nota="unit in the last place (IEEE 754): CREDO_F64_ULP, credo III 2026-10-19"/>
   <vocabulum lemma="utf16" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="crc32" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="fnv1a" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
@@ -1056,6 +1072,7 @@
   <vocabulum lemma="dlopen" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: bibliothecam dynamicam aperire"/>
   <vocabulum lemma="dlsym" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: symbolum titulo quaerere"/>
   <vocabulum lemma="execve" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX unistd.h: programma cum ambitu explicito exsequi; systema_posix.h 2026-10-05 pro oraculo effectuum (interpositio_macos.c)"/>
+  <vocabulum lemma="proc" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="libproc.h: proc_pid_rusage (usus processus per pid; lib/memoria_processus_macos.c, 2026-10-19)"/>
   <vocabulum lemma="access" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX unistd.h: accessum plagulae probare; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
 
   <!-- pseudoterminale (aemulator-plan B3, 2026-10-06): nomina POSIX/BSD
@@ -1100,6 +1117,7 @@
   <vocabulum lemma="conllu" lingua="anglica" classis="ignotum-permissum" nota="forma CoNLL-U (Universal Dependencies)"/>
   <vocabulum lemma="upos" lingua="anglica" classis="ignotum-permissum" nota="columna UPOS CoNLL-U (classis universalis)"/>
   <vocabulum lemma="misc" lingua="anglica" classis="ignotum-permissum" nota="columna MISC CoNLL-U (SpaceAfter=No)"/>
+  <vocabulum lemma="feats" lingua="anglica" classis="ignotum-permissum" nota="columna FEATS CoNLL-U (Case=Nom|Number=Sing; conllu_proprietas, lib/conllu.c)"/>
   <vocabulum lemma="circse" lingua="anglica" classis="nomen-proprium" contextus="ambo" nota="UD_Latin-CIRCSE (Seneca), thesaurus arborum venditus"/>
   <vocabulum lemma="llct" lingua="anglica" classis="nomen-proprium" contextus="ambo" nota="UD_Latin-LLCT (chartae mediaevales), thesaurus arborum venditus"/>
   <vocabulum lemma="ewt" lingua="anglica" classis="nomen-proprium" contextus="ambo" nota="UD_English-EWT (English Web Treebank), thesaurus arborum venditus (T16)"/>
@@ -1757,6 +1775,17 @@
     <forma textus="persistentis" casus="genitivus" numerus="singularis"/>
     <forma textus="persistentem" casus="accusativus" numerus="singularis"/>
     <forma textus="persistentes" casus="nominativus" numerus="pluralis"/>
+  </vocabulum>
+  <vocabulum lemma="multipartitus" lingua="latina" classis="adiectivum" nota="Latina sera (ut bipartitus, tripartitus): multipartitus, in partes multas divisus - multipart/form-data (lib/multipartita.c); WORDS caret">
+    <forma textus="multipartitus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="multipartita" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="multipartitum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="multipartiti" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="multipartitae" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="multipartito" casus="ablativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="redirigo" lingua="latina" classis="verbum" nota="vox domus (re + dirigere): petitionem alio dirigere (HTTP redirect, colloquium_redirigere); WORDS caret">
+    <forma textus="redirigere" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
   </vocabulum>
 
 </glossarium>

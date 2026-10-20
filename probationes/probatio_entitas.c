@@ -6,40 +6,24 @@
 #include "credo.h"
 #include <stdio.h>
 
-s32 principale(vacuum)
-{
-                Piscina* piscina;
-    InternamentumChorda* intern;
-                    b32  praeteritus;
-
-    /* Aperire piscinam et credonem */
-    piscina = piscina_generare_dynamicum("probatio_entitas", CDLVI);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    /* Creare internamentum pro chordas */
-    intern = internamentum_creare(piscina);
-    si (!intern)
-    {
-        imprimere("FRACTA: internamentum_creare\n");
-        redde I;
-    }
-
 
     /* ==================================================
      * Probare entitas_creare
      * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Entitas* entitas;
          chorda* id;
          chorda* genus;
-
-        imprimere("\n--- Probans entitas_creare ---\n");
 
         id     = chorda_internare_ex_literis(intern, "entity-1");
         genus  = chorda_internare_ex_literis(intern, "document");
@@ -54,12 +38,22 @@ s32 principale(vacuum)
             ZEPHYRUM);
         CREDO_AEQUALIS_I32(entitas_numerus_notarum(entitas), ZEPHYRUM);
     }
+}
 
 
     /* ==================================================
      * Probare proprietates
      * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Entitas* entitas;
          chorda* id;
@@ -69,8 +63,6 @@ s32 principale(vacuum)
          chorda* clavis_color;
          chorda* valor_color;
          chorda* resultus;
-
-        imprimere("\n--- Probans proprietates ---\n");
 
         id     = chorda_internare_ex_literis(intern, "entity-2");
         genus  = chorda_internare_ex_literis(intern, "file");
@@ -108,20 +100,28 @@ s32 principale(vacuum)
             chorda_internare_ex_literis(intern, "nonexistent"));
         CREDO_NIHIL(resultus);
     }
+}
 
 
     /* ==================================================
      * Probare renovatio proprietatis
      * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Entitas* entitas;
          chorda* clavis;
          chorda* valor1;
          chorda* valor2;
          chorda* resultus;
-
-        imprimere("\n--- Probans renovatio proprietatis ---\n");
 
         entitas = entitas_creare(
             piscina,
@@ -146,12 +146,22 @@ s32 principale(vacuum)
         resultus = entitas_proprietas_capere(entitas, clavis);
         CREDO_AEQUALIS_PTR(resultus, valor2);  /* Renovatus */
     }
+}
 
 
     /* ==================================================
      * Probare relationes
      * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Entitas* entitas;
          chorda* genus_continet;
@@ -159,8 +169,6 @@ s32 principale(vacuum)
          chorda* dest1;
          chorda* dest2;
          chorda* dest3;
-
-        imprimere("\n--- Probans relationes ---\n");
 
         entitas = entitas_creare(
             piscina,
@@ -186,20 +194,28 @@ s32 principale(vacuum)
 
         CREDO_AEQUALIS_I32(entitas_numerus_relationum(entitas), III);
     }
+}
 
 
     /* ==================================================
      * Probare entitas_relatio_addere_cum_id
      * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Entitas* entitas;
         Relatio* relatio;
          chorda* relatio_id;
          chorda* genus;
          chorda* dest_id;
-
-        imprimere("\n--- Probans entitas_relatio_addere_cum_id ---\n");
 
         entitas = entitas_creare(
             piscina,
@@ -239,12 +255,22 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(relatio);
         CREDO_AEQUALIS_I32(entitas_numerus_relationum(entitas), II);
     }
+}
 
 
     /* ==================================================
      * Probare relationes_generis_capere
      * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Entitas* entitas;
          chorda* genus_continet;
@@ -254,8 +280,6 @@ s32 principale(vacuum)
          chorda* dest3;
             Xar* filtratae;
         Relatio* relatio;
-
-        imprimere("\n--- Probans relationes_generis_capere ---\n");
 
         entitas = entitas_creare(
             piscina,
@@ -299,19 +323,27 @@ s32 principale(vacuum)
         relatio = (Relatio*)xar_obtinere(filtratae, ZEPHYRUM);
         CREDO_AEQUALIS_PTR(relatio->destinatio_id, dest3);
     }
+}
 
 
     /* ==================================================
      * Probare notae
      * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Entitas* entitas;
          chorda* nota1;
          chorda* nota2;
          chorda* nota3;
-
-        imprimere("\n--- Probans notae ---\n");
 
         entitas = entitas_creare(
             piscina,
@@ -339,17 +371,25 @@ s32 principale(vacuum)
             entitas,
             chorda_internare_ex_literis(intern, "#other")));
     }
+}
 
 
     /* ==================================================
      * Probare duplicatae notae
      * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Entitas* entitas;
          chorda* nota;
-
-        imprimere("\n--- Probans duplicatae notae ---\n");
 
         entitas = entitas_creare(
             piscina,
@@ -365,19 +405,27 @@ s32 principale(vacuum)
         /* Debet adhuc habere tantum unam */
         CREDO_AEQUALIS_I32(entitas_numerus_notarum(entitas), I);
     }
+}
 
 
     /* ==================================================
      * Probare nota cum praefixo
      * ================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Entitas* entitas;
          chorda* nota1;
          chorda* nota2;
          chorda* nota3;
-
-        imprimere("\n--- Probans nota cum praefixo ---\n");
 
         entitas = entitas_creare(
             piscina,
@@ -406,65 +454,67 @@ s32 principale(vacuum)
 
         /* Verificare praefixum vacuum */
         CREDO_VERUM(entitas_nota_cum_praefixo_habet(entitas, "#"));
+
+        /* entitas_imprimere (sine assertione, pro inspectione) */
+        {
+            Entitas* entitas;
+
+            entitas = entitas_creare(
+                piscina,
+                chorda_internare_ex_literis(intern, "demo-entity"),
+                chorda_internare_ex_literis(intern, "demo"));
+
+            entitas_proprietas_ponere(
+                entitas,
+                chorda_internare_ex_literis(intern, "name"),
+                chorda_internare_ex_literis(intern, "Demo Entity"));
+
+            entitas_proprietas_ponere(
+                entitas,
+                chorda_internare_ex_literis(intern, "version"),
+                chorda_internare_ex_literis(intern, "1.0"));
+
+            entitas_relatio_addere(
+                entitas,
+                piscina,
+                intern,
+                chorda_internare_ex_literis(intern, "contains"),
+                chorda_internare_ex_literis(intern, "child-1"));
+
+            entitas_nota_addere(
+                entitas,
+                chorda_internare_ex_literis(intern, "#important"));
+
+            entitas_nota_addere(
+                entitas,
+                chorda_internare_ex_literis(intern, "#project::demo"));
+
+            /* Imprimere pro inspectione */
+            entitas_imprimere(entitas);
+        }
     }
-
-
-    /* ==================================================
-     * Probare entitas_imprimere
-     * ================================================== */
-
-    {
-        Entitas* entitas;
-
-        imprimere("\n--- Probans entitas_imprimere ---\n");
-
-        entitas = entitas_creare(
-            piscina,
-            chorda_internare_ex_literis(intern, "demo-entity"),
-            chorda_internare_ex_literis(intern, "demo"));
-
-        entitas_proprietas_ponere(
-            entitas,
-            chorda_internare_ex_literis(intern, "name"),
-            chorda_internare_ex_literis(intern, "Demo Entity"));
-
-        entitas_proprietas_ponere(
-            entitas,
-            chorda_internare_ex_literis(intern, "version"),
-            chorda_internare_ex_literis(intern, "1.0"));
-
-        entitas_relatio_addere(
-            entitas,
-            piscina,
-            intern,
-            chorda_internare_ex_literis(intern, "contains"),
-            chorda_internare_ex_literis(intern, "child-1"));
-
-        entitas_nota_addere(
-            entitas,
-            chorda_internare_ex_literis(intern, "#important"));
-
-        entitas_nota_addere(
-            entitas,
-            chorda_internare_ex_literis(intern, "#project::demo"));
-
-        /* Imprimere pro inspectione */
-        entitas_imprimere(entitas);
-    }
+}
 
 
     /* ==================================================
      * Probare entitas complexa
      * ================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
           Entitas* entitas;
               i32  i;
            chorda* clavis;
            chorda* valor;
         character  buffer[XXXII];
-
-        imprimere("\n--- Probans entitas complexa ---\n");
 
         entitas = entitas_creare(
             piscina,
@@ -511,20 +561,28 @@ s32 principale(vacuum)
 
         CREDO_AEQUALIS_I32(entitas_numerus_notarum(entitas), V);
     }
+}
 
 
     /* ==================================================
      * Probare delere proprietates
      * ================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Entitas* entitas;
          chorda* clavis1;
          chorda* clavis2;
          chorda* clavis3;
          chorda* valor;
-
-        imprimere("\n--- Probans delere proprietates ---\n");
 
         entitas = entitas_creare(
             piscina,
@@ -567,12 +625,22 @@ s32 principale(vacuum)
         valor = entitas_proprietas_capere(entitas, clavis3);
         CREDO_NON_NIHIL(valor);
     }
+}
 
 
     /* ==================================================
      * Probare delere relationes
      * ================================================== */
 
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Entitas* entitas;
         Relatio* relatio1;
@@ -581,8 +649,6 @@ s32 principale(vacuum)
          chorda* id1;
          chorda* id2;
          chorda* id3;
-
-        imprimere("\n--- Probans delere relationes ---\n");
 
         entitas = entitas_creare(
             piscina,
@@ -646,19 +712,27 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(entitas_numerus_relationum(entitas),
             ZEPHYRUM);
     }
+}
 
 
     /* ==================================================
      * Probare delere notae
      * ================================================== */
 
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Entitas* entitas;
          chorda* nota1;
          chorda* nota2;
          chorda* nota3;
-
-        imprimere("\n--- Probans delere notae ---\n");
 
         entitas = entitas_creare(
             piscina,
@@ -695,17 +769,25 @@ s32 principale(vacuum)
         CREDO_VERUM(entitas_nota_delere(entitas, nota3));
         CREDO_AEQUALIS_I32(entitas_numerus_notarum(entitas), ZEPHYRUM);
     }
+}
 
 
     /* ==================================================
      * Probare entitas_titulum_capere
      * ================================================== */
 
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         Entitas* entitas;
          chorda* titulum;
-
-        imprimere("\n--- Probans entitas_titulum_capere ---\n");
 
         /* Casus 1: Entitas cum "name" proprietate */
         entitas = entitas_creare(
@@ -779,12 +861,22 @@ s32 principale(vacuum)
         titulum = entitas_titulum_capere(NIHIL);
         CREDO_NIHIL(titulum);
     }
+}
 
 
     /* ==================================================
      * Probare proprietates typificatae (typed accessors)
      * ================================================== */
 
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
            Entitas* entitas;
         Proprietas* prop;
@@ -792,8 +884,6 @@ s32 principale(vacuum)
                s64  val_s64;
                f64  val_f64;
                b32  val_b32;
-
-        imprimere("\n--- Probans proprietates typificatae ---\n");
 
         entitas = entitas_creare(
             piscina,
@@ -988,27 +1078,38 @@ s32 principale(vacuum)
             &val_s32));
         CREDO_AEQUALIS_S32(val_s32, 100);
     }
+}
 
 
-    /* ==================================================
-     * Compendium
-     * ================================================== */
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "entitas_creare", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "proprietates", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "renovatio proprietatis", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "relationes", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "entitas_relatio_addere_cum_id", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "relationes_generis_capere", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "notae", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "duplicatae notae", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nota cum praefixo", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "entitas complexa", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "delere proprietates", _sectio_decima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "delere relationes", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "delere notae", _sectio_decima_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "entitas_titulum_capere", _sectio_decima_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "proprietates typificatae", _sectio_decima_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    /* Purificatio */
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("entitas", SECTIONES);
 }
