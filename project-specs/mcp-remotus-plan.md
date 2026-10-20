@@ -182,6 +182,21 @@ with this plan.
   id; `admissio_concessiones` lists live grants only; `admissio_putare`
   also purges expired codes and tokens. Loopback = `127.0.0.1` and
   `localhost` (not `[::1]`).
+- **R15 (T6)** - the HTTP flow tests live in their own suite
+  `probationes/probatio_admissio_fluxus.c` (raw TCP client, P8);
+  `probatio_admissio.c` stays the library-level suite.
+- **R16 (T6)** - consent checkboxes are `s0..sN` (`colloquium_forma`
+  reads only the first value of a repeated key); nothing ticked ->
+  `access_denied`; no scope requested -> all app scopes;
+  `offline_access` has no checkbox and alone decides the refresh token;
+  unknown scope -> `invalid_scope`. Consent page `no-store` +
+  `X-Frame-Options: DENY`; POST needs Origin == issuer origin.
+- **R17 (T6)** - the code is burned before any other check; replay
+  revokes the grant made from it; token-endpoint client mismatch ->
+  `invalid_grant` (public clients, no client authentication, so no
+  `invalid_client`); login redirect is 303 to
+  `<via_intrandi>?redire=/oauth/authorize?...`; `redirect_uri` may be
+  omitted only when the client registered exactly one.
 
 ## Review focus
 

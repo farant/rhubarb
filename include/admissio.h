@@ -21,8 +21,17 @@
  *   VERIFICATOR: McpVerificator (mcp_servus_http) - tessera ->
  *   persona (usor, cliens, scopi).
  *
+ *   VIAE (admissio_montare): /.well-known/oauth-authorization-server,
+ *   POST /oauth/register, GET+POST /oauth/authorize (consensus:
+ *   cliens, hospes redirectionis, scopi notandi; Origo + CSRF in
+ *   POST), POST /oauth/token (form-urlencoded; authorization_code cum
+ *   PKCE S256, refresh_token cum rotatione; code iteratum aut
+ *   renovatio iterata concessionem totam necat). Cliens aut
+ *   redirectio mala = PAGINA erroris, numquam redirectio. Intratio
+ *   usoris applicationis est (functio 'intratus'): admissio numquam
+ *   tesseras verbi videt.
+ *
  * Tesserae codicesque numquam in actis, erroribus aut paginis.
- * (Pars II, T6: /oauth/authorize, consensus, /oauth/token.)
  */
 
 #ifndef ADMISSIO_H
@@ -33,6 +42,7 @@
 #include "chorda.h"
 #include "xar.h"
 #include "volumen.h"
+#include "hospitium.h"
 #include "mcp_servus.h"
 
 /* inscriptiones per IP intra LX secunda */
@@ -121,6 +131,21 @@ admissio_revocare (
 s32
 admissio_putare (
     Admissio* admissio);
+
+/* intratio applicationis: VERUM + usor + signum CSRF sessionis si
+ * sessio valida (colloquium legit, e.g. crustulum); FALSUM = non
+ * intratus (admissio ad via_intrandi?redire=... redirigit) */
+nomen b32 (*AdmissioIntratus)(vacuum* datum, HospitiumColloquium* col,
+    chorda* usor, chorda* csrf);
+
+/* viae OAuth in hospitio (vide supra); via_intrandi e.g. "/intrare" */
+b32
+admissio_montare (
+               Admissio* admissio,
+              Hospitium* hospitium,
+       AdmissioIntratus  intratus,
+                 vacuum* datum,
+     constans character* via_intrandi);
 
 #ifdef ADMISSIO_PROBATIO
 /* uncus probationis (T5): concessio + tesserae sine /oauth/token.

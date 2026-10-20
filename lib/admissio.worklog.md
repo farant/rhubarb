@@ -39,3 +39,42 @@ next `/mcp` call is 401. Listing returns live grants only.
 Bug: a count helper that always bound (text, number) was fed SQL with
 dummy `? = ?` padding - the third `?` stayed NULL, `0 = NULL` is never
 true, every client looked unknown. Two honest parameter shapes now.
+
+## 2026-10-20 - part II (mcp-remotus T6): authorize, consent, token
+
+`admissio_montare` puts five routes on the app's hospitium: the RFC 8414
+document, `/oauth/register`, GET+POST `/oauth/authorize`,
+`/oauth/token`.
+
+**Authorize** checks in a fixed order. `client_id` and `redirect_uri`
+first, and a failure there is an ERROR PAGE (400, no Location) - never
+a redirect to an unverified URI (open redirect). Redirects must match a
+registered URI exactly; loopback matches with the port ignored (RFC 8252
+7.3) but the path still exact. Everything after that (response_type,
+S256 + challenge length, resource == our audience, known scopes)
+redirects back with `error`, `state`, `iss`.
+
+**Consent page:** client name, the redirect HOST in `<strong>`, a
+"local program" warning when every registered URI is loopback, one
+checkbox per requested app scope named `s0..sN` (hospitium's
+`colloquium_forma` returns only the first value of a repeated key, so
+no `scope[]`), all parameters echoed as escaped hidden fields, CSRF
+from the app's session. `Cache-Control: no-store`, `X-Frame-Options:
+DENY` (it is a click-to-grant page). POST: Origin must equal the
+issuer's origin, then login (gone -> 303 to `/intrare?redire=...`, no
+code), then CSRF (constant-time), then the decision. Nothing ticked =
+`access_denied`. `offline_access` has no checkbox: carried if requested,
+and it alone decides whether a refresh token is issued.
+
+**Token:** form-urlencoded only. The code is BURNED before the other
+checks (a failed PKCE attempt consumes it); a replayed code revokes the
+grant it produced (`admissio_codices.concessio`). Refresh rotates: old
+row `usa = 1` + new pair in one transaction; presenting a rotated-out
+token kills the whole family (grant). Expiry is strict `<`: a refresh
+at its exact expiry second is refused. All responses `Cache-Control:
+no-store`, errors per RFC 6749 5.2.
+
+Test finding: with PKCE checking planted off, the suite SEGFAULTED
+instead of failing - the test's `_json` helper returned NULL for an
+absent field and `strcmp` died. A plant that crashes is still red, but
+it names nothing; `_json` now returns "".
