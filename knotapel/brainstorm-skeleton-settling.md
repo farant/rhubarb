@@ -2,7 +2,7 @@
 
 *Brainstorm, 2026-10-16, after D129 (sections IX–XI added later the
 same day; sections XIII–XIV on 2026-10-19, after D130; XV after
-D131). A conversation between Fran and
+D131; XVI on 2026-10-20). A conversation between Fran and
 Claude (Opus 5.5) that started from "what do you think of the last demos"
 and ran through handwired, ratio graphs, grammar compilation, LLMs and
 the nominalist/realist question. Recorded so a later session can pick
@@ -462,6 +462,12 @@ almost any data — world models, scenes, perception.
     many of them are labelled (findable by content). (N17; section XV)
 19. Umbra nodes in the slot library: pro-drop and empty slots as
     candidates. (N18; section XV)
+20. Ternary from scratch on the toy Latin world: does the skeleton
+    (agreement head) survive and the settling (calibrated uncertainty)
+    degrade? (N16 extension; section XVI)
+21. Dithered weights: quantise a graded network to ternary by error
+    diffusion, with the NEIGHBOURHOOD as the variable; fan-in as viewing
+    distance. (N20; section XVI)
 
 ## XIII. What D130 measured, read against these premises
 
@@ -709,6 +715,92 @@ with literature marked.*
   genitive), N16 (train against the compiled ideal), N17 (umbra width
   of D131's world), N18 (umbra nodes: pro-drop in the slot library).
 
+## XVI. Ternary weights, and dithering the weights
+
+*Added 2026-10-20, from two questions of Fran's: is the "opaque state
+machine" picture of weights right, and what of Microsoft's ternary
+networks - is {-1, 0, +1} fundamentally inadequate past some
+complexity? Then Fran's idea: a literal DITHERING of the weights.
+Literature marked recalled.*
+
+- **Weights as a state machine.** Accurate in part: at finite precision
+  a network IS a finite machine; autoregressive generation iterates it
+  (state = context, step = one forward pass); a ReLU network is a
+  switched linear system (activation pattern = mode), and iterated
+  ReLU / max-plus maps are the tropical automata of discrete-event
+  systems *(recalled)*. Misleading in part: the state is a VECTOR whose
+  geometry (nearness) carries generalisation; it is distributed
+  (features in superposition), not atomic; counting "states" (regions)
+  measures the presentation, not the function (D129); a transformer
+  does not iterate within a pass (a fixed-depth circuit) - it iterates
+  through a TAPE (the context); and opacity is partly a property of the
+  description (D128's braid network is opaque in raw coordinates,
+  transparent as a braid on Dynnikov coordinates). Better picture: a
+  piecewise-linear dynamical system with a tape, opaque mainly because
+  its natural coordinates are unknown. (For a transformer the state -
+  the text - is legible and the transition is opaque; for a classical
+  state machine it is the other way round.)
+- **Ternary networks** *(recalled; details uncertain)*: Microsoft's
+  BitNet (2023, weights +-1) and BitNet b1.58 (2024, weights {-1, 0,
+  +1}, log2 3 = 1.58 bits), TRAINED ternary from scratch (full-
+  precision shadow weights, ternarised in the forward pass with a
+  scale, a straight-through estimator for gradients), activations about
+  8-bit; claimed parity with full precision from about 3B parameters,
+  matrix products reduced to additions; later an open 2B model on about
+  4T tokens.
+- **No proof of a ceiling**, and in principle none: sums of ternary
+  weights approximate any weight, so expressivity is universal; the
+  trade is bits per weight against weights. The evidence is of a COST
+  *(recalled)*: knowledge storage near 2 bits per parameter (Allen-Zhu
+  and Li, knowledge-capacity scaling), so a 1.58-bit weight cannot hold
+  its share of facts; precision scaling laws (Kumar et al. 2024): low
+  precision acts as fewer effective parameters, and the penalty grows
+  with training data; small-scale replications mixed. Reading:
+  ternary is fine for COMPUTATION, costly for MEMORISATION.
+- **Skeleton and settling.** D128's braid networks have weights exactly
+  in {-1, 0, 1} and compute an exact invariant: the structure lives in
+  wiring and depth. The SKELETON (logic, exact relations, agreement
+  matching on 0/1 features) is naturally ternary; the SETTLING (graded
+  statistics, frequencies, the long tail) needs fine weights, or many
+  ternary ones summed. Hypothesis: that is why ternary models keep
+  reasoning-like structure and lose knowledge capacity.
+- **Dithering the weights (Fran).** In an error-diffused image (Floyd-
+  Steinberg, Atkinson) a pixel's value carries signal from its
+  neighbourhood: each pixel takes the residual error of the pixels
+  before it, so a grey level lives in the DENSITY of a pattern, not in
+  any one pixel. Weights in a trained network are channels for many
+  signals at once (superposition). A ternary network obtained by
+  error diffusion would make that literal: each synapse carries part of
+  its neighbours' graded values.
+  - **The correspondence.** The eye low-pass filters a dithered image;
+    a neuron SUMS its inputs. Fan-in plays viewing distance: the larger
+    it is, the better a ternary pattern stands in for graded weights.
+    A graded weight becomes a population code across synapses.
+  - **Prior art** *(recalled)*: error diffusion in weight space exists.
+    GPTQ (Frantar et al. 2022) quantises column by column and pushes
+    each column's error onto the not-yet-quantised weights, weighted by
+    the inputs' covariance (the Hessian) - Floyd-Steinberg with a
+    learned neighbourhood metric (lineage: Optimal Brain Surgeon / OBQ).
+    Sigma-delta and greedy path-following quantisation with error
+    feedback (Lybrand and Saab, GPFQ) carry provable error bounds.
+    Stochastic rounding is RANDOM dither (it decorrelates the error) and
+    is used in low-precision training.
+  - **What is open.** (a) WHICH neighbourhood: images have spatial
+    adjacency; weights have the input covariance (GPTQ), the output
+    side, or the function's own pieces (D129) - the natural-coordinates
+    question again. (b) Atkinson diffuses only 6/8 of the error, buying
+    crisp patterns with fidelity; in weights, diffusing LESS error may
+    favour sparse, skeleton-like structure (more zeros) at a cost in
+    statistics - a knob between skeleton and settling. (c) Prediction:
+    dithered ternary works where fan-in is large and the inputs smooth
+    (statistics), is unnecessary where the circuit is already ternary
+    (skeleton), and fails where one synapse matters and fan-in is small
+    (dithering a 16 x 16 icon).
+  - The house dithering library (`dithering.h`, Atkinson for the Aquinas
+    palette; `dithering_exemplaria.h`) is image-specific; a general
+    error-diffusion quantiser (levels, kernel, neighbourhood) would be a
+    new, small house library if N20 is built.
+
 ## AUDIENDA
 
 Not verified in this repo (all recalled from memory during the
@@ -750,3 +842,10 @@ conversation; check before relying on any):
   Levy (surprisal), Gibson (dependency locality), Xiao et al.
   (attention sinks), Darcet et al. (registers), Power et al. and Nanda
   et al. (grokking) - all recalled. The size estimates are guesses.
+- Section XVI (2026-10-20): BitNet and BitNet b1.58 (Microsoft
+  Research; dates, sizes, the 3B parity claim, the 2B / 4T model),
+  Allen-Zhu and Li (about 2 bits per parameter), Kumar et al. (precision
+  scaling laws), GPTQ (Frantar et al.), OBS / OBQ, Lybrand and Saab
+  (GPFQ, sigma-delta), stochastic rounding, Siegelmann and Sontag
+  (recurrent nets and Turing machines), max-plus discrete-event systems
+  - all recalled; check before any demo leans on them.

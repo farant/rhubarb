@@ -726,6 +726,13 @@ string's true analysis set is enumerated.
   (D129's lens).
 - **Needs a house trainer library** (plain gradient descent in C89,
   deterministic float). Substantial; it also serves N10's second half.
+- **Ternary sub-experiment** (added 2026-10-20, brainstorm XVI): also
+  train the same model TERNARY from scratch ({-1, 0, +1} weights with a
+  scale, BitNet b1.58-style, straight-through gradients). Prediction:
+  the agreement head (skeleton: 0/1 feature matching, natively ternary)
+  survives almost intact; calibrated uncertainty on displaced genitives
+  (settling: graded statistics) degrades first. The compiled ideal is
+  known, so which part breaks is measurable.
 
 **Register before the run:** the head-count knee, the agreement-head
 rank, and the genitive calibration predictions (brainstorm XV).
@@ -783,3 +790,51 @@ approval - now the standard step.*
 genitives wait through the same short distance (mostly one foreign
 word), and a unique label waits no longer than a shared one. Labels
 decide which head, not how far.*
+
+## 2026-10-20: weights - ternary, and dithered
+
+From brainstorm section XVI: is {-1, 0, +1} fundamentally inadequate?
+(No proof of a ceiling; the evidence is a cost in memorisation, not in
+computation.) And Fran's idea: DITHER the weights - an error-diffused
+ternary network, where each synapse carries part of its neighbours'
+graded values, as an Atkinson-dithered pixel carries its neighbourhood.
+
+| | ledger | proposal | depends on | settles or opens |
+|---|---|---|---|---|
+| N20 | …AH87TG | dithered weights: error diffusion into ternary | an exact graded network (no trainer needed for the first slice); possibly a house error-diffusion quantiser | which NEIGHBOURHOOD makes ternary weights faithful; fan-in as viewing distance; Atkinson's partial diffusion as a skeleton / settling knob |
+
+### N20. Dithered weights
+
+**Why.** Error diffusion turns a grey image into black and white whose
+local DENSITY carries the grey; a neuron's fan-in sums its inputs as the
+eye low-pass filters an image. So a graded layer might be represented by
+a ternary one whose weights carry each other's residual error. Prior art
+exists (GPTQ: column-wise quantisation with the error pushed onto the
+remaining weights by the input covariance; sigma-delta / GPFQ with error
+bounds; stochastic rounding as random dither - all recalled). What is
+open is the NEIGHBOURHOOD the error should flow along, and whether
+partial diffusion (Atkinson's 6/8) trades statistical fidelity for
+sparse, skeleton-like structure.
+
+**Design (first slice: exact, no trainer).**
+- A graded linear layer with a known exact target: e.g. a readout from
+  the toy Latin world's 0/1 features to exact reading probabilities
+  (enumerated, D131), or a graded compiled layer; exact rationals.
+- Ternarise it six ways: nearest rounding (no dither); stochastic
+  rounding (random dither, exact over all draws or many); error
+  diffusion along a fixed order (1-D, and 2-D Floyd-Steinberg on the
+  weight matrix); Atkinson (6/8 of the error); covariance-guided
+  (GPTQ-like, using the exact input distribution).
+- Measure exactly over the enumerated inputs: output error, the share of
+  zeros (sparsity), and how both scale with FAN-IN (sweep the layer's
+  input width).
+- Later slices: small ReLU networks on nervus (pieces against regions
+  after dithering - does dithering preserve the function's pieces?);
+  dither a trained toy Latin model (after N16's trainer); skeleton
+  circuits (already ternary) against statistical layers.
+
+**Register before the run** (a design review first): the prediction
+that error diffusion beats nearest rounding by a margin that grows with
+fan-in; that covariance-guided diffusion beats spatial orders; that
+Atkinson's partial diffusion gives more zeros and more error - with the
+effect sizes the test can see.
