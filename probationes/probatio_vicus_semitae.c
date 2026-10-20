@@ -512,6 +512,145 @@ _probare_pictorem_ignotum (
     }
 }
 
+/* frons dextra applicationis datae (NIHIL si non montata) */
+interior VicusLatus*
+frons_applicationis (
+    VicusApplicatio* app)
+{
+    VicusLatus* l;
+
+    l = vicus_latus(vicus_activa(app->vicus), VICUS_DEXTRUM);
+    redde (l && l->montata) ? l : NIHIL;
+}
+
+/* semitae R4d (VI-e): pictor - post Ctrl+O vicus novus (initium) in
+ * eodem volumine picturam restitutam ostendit, non argumentum */
+interior vacuum
+_probare_initium_pictoris (
+    CredoContextus* c)
+{
+              Mundus* x;
+     VicusApplicatio  altera;
+          VicusLatus* l;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x->volumen);
+    CREDO_NECESSE(pictor_documentum_creare(c->piscina,
+        internamentum_creare(c->piscina), x->volumen, "x1", C, LX, LXIV)
+        && pictor_documentum_creare(c->piscina, internamentum_creare(
+        c->piscina), x->volumen, "x2", LX, XL, LXIV));
+    CREDO_NECESSE(mundum_struere(x, c));
+    CREDO_VERUM(vicus_acervo_aperire(x->app.vicus, "pictor", "x1"));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    dispensator_recomponere(x->app.d);
+    CREDO_VERUM(vicus_acervo_mutare(x->app.vicus, "pictor", "x2"));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    dispensator_recomponere(x->app.d);
+    clavis(x, 'o', (i32)MOD_IMPERIUM);
+    CREDO_VERUM(pictura_frontis(x)
+        && pictura_frontis(x)->latitudo == C);
+    CREDO_CHORDA_AEQUALIS_LITERIS(frons(x)->argumentum, "x2");
+    CREDO_CHORDA_AEQUALIS_LITERIS(frons(x)->semita_servata,
+        "pictor/x1");
+    memset(&altera, ZEPHYRUM, magnitudo(altera));
+    CREDO_NECESSE(vicus_applicatio_aedificare(&altera, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CDLXXX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    (vacuum)vicus_pulsare(altera.vicus);
+    l = frons_applicationis(&altera);
+    CREDO_NECESSE(l && chorda_aequalis_literis(l->genus, "pictor"));
+    CREDO_VERUM(((PictorMontatio*)l->montatio)->doc->latitudo == C);
+    CREDO_CHORDA_AEQUALIS_LITERIS(l->argumentum, "x2");
+}
+
+/* semitae R4d (VI-e): calendarium - visus servatus, dies (transiens)
+ * ad hodie post initium (argumentum "calendarium/dies/2026-10-19"
+ * diem non restituit) */
+interior vacuum
+_probare_initium_calendarii (
+    CredoContextus* c)
+{
+              Mundus* x;
+     VicusApplicatio  altera;
+          VicusLatus* l;
+              chorda* a;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(mundum_struere(x, c));
+    CREDO_VERUM(vicus_acervo_aperire(x->app.vicus, "calendarium",
+        "calendarium/dies/2026-10-19"));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    dispensator_recomponere(x->app.d);
+    (vacuum)vicus_pulsare(x->app.vicus);
+    CREDO_VERUM(kalendarii_est(x, "dies_electus", "2026-10-19"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(frons(x)->semita_servata,
+        "calendarium/dies");
+    memset(&altera, ZEPHYRUM, magnitudo(altera));
+    CREDO_NECESSE(vicus_applicatio_aedificare(&altera, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CDLXXX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    (vacuum)vicus_pulsare(altera.vicus);
+    l = frons_applicationis(&altera);
+    CREDO_NECESSE(l
+        && chorda_aequalis_literis(l->genus, "calendarium"));
+    a = insula_ramus_attributum(&((KalendariumMontatio*)l->montatio)
+        ->ramus, "visus");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "dies"));
+    a = insula_ramus_attributum(&((KalendariumMontatio*)l->montatio)
+        ->ramus, "dies_electus");
+    CREDO_VERUM(!a || a->mensura == ZEPHYRUM);
+}
+
+/* semitae R4d: argumentum identitas manet - post navigationem in
+ * latere agendae Cmd+[ / Cmd+] idem latus invenit (non alterum) */
+interior vacuum
+_probare_cyclum_post_navigationem (
+    CredoContextus* c)
+{
+    Mundus* x;
+       i32  n;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(mundum_struere(x, c));
+    clavis(x, ']', (i32)MOD_SUPER);
+    clavis(x, ']', (i32)MOD_SUPER);
+    clavis(x, ']', (i32)MOD_SUPER);
+    CREDO_NECESSE(frons(x) && chorda_aequalis_literis(frons(x)->genus,
+        "calendarium"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(frons(x)->argumentum, "agenda");
+    CREDO_VERUM(kalendarium_argumentum_ponere(
+        (KalendariumMontatio*)frons(x)->montatio,
+        "calendarium?rubrica_filtrum=domus"));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    CREDO_VERUM(chorda_continet(frons(x)->semita_servata,
+        chorda_ex_literis("rubrica_filtrum=domus", c->piscina)));
+    n = (i32)xar_numerus(vicus_activa(x->app.vicus)->acervus);
+    clavis(x, '[', (i32)MOD_SUPER);
+    clavis(x, ']', (i32)MOD_SUPER);
+    CREDO_VERUM(kalendarii_est(x, "rubrica_filtrum", "domus"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(frons(x)->argumentum, "agenda");
+    CREDO_AEQUALIS_I32((i32)xar_numerus(vicus_activa(x->app.vicus)
+        ->acervus), n);
+}
+
+/* semitae R4d: initium sine navigatione nihil in volumine scribit -
+ * semita prima lateris sine argumento tacite notatur (pictor tabulae
+ * 2 in dispositione ordinaria) */
+interior vacuum
+_probare_initium_tacitum (
+    CredoContextus* c)
+{
+     Mundus* x;
+        s64  acta;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(mundum_struere(x, c));
+    acta = volumen_summa_actorum(x->volumen);
+    (vacuum)vicus_pulsare(x->app.vicus);
+    (vacuum)vicus_pulsare(x->app.vicus);
+    CREDO_AEQUALIS_S64(volumen_summa_actorum(x->volumen), acta);
+}
+
 /* latus sine semitis (scriba) Ctrl+O non capit: historia sanctorum
  * intacta */
 interior vacuum
@@ -553,6 +692,14 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "pictor", _probare_pictorem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "pictor_ignotus", _probare_pictorem_ignotum, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "initium_pictoris", _probare_initium_pictoris, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "initium_calendarii", _probare_initium_calendarii, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "cyclus", _probare_cyclum_post_navigationem, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "initium_tacitum", _probare_initium_tacitum, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

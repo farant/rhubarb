@@ -82,10 +82,12 @@
 
     <!-- semitae R4c: pictura ostensa (spatium in volumine); pictor
          scribit in montatione et cum pictura mutatur -->
-    <campus nomen="pictura" typus="textus" vita="transiens"
+    <campus nomen="pictura" typus="textus" vita="persistens"
             semita="ligatio" historia="impelle"
             nota="spatium picturae ostensae (id lateris aut pictura
-                  bibliothecae); absens = pictor sine vico (radix)"/>
+                  bibliothecae); persistens: post initium pictura
+                  ultima redit (semita servata); absens = pictor sine
+                  vico (radix)"/>
 
     <!-- transiens -->
     <campus nomen="palette" typus="nomen" vita="transiens"

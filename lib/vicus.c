@@ -222,6 +222,13 @@ latus_appendere (
         valorem_appendere(a, l->argumentum);
         chorda_aedificator_appendere_literis(a, "\"");
     }
+    /* semitae R4d: semita persistens (restitutio post initium) */
+    si (l->semita_servata.mensura > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(a, " semita=\"");
+        valorem_appendere(a, l->semita_servata);
+        chorda_aedificator_appendere_literis(a, "\"");
+    }
     chorda_aedificator_appendere_literis(a, "/>");
 }
 
@@ -937,6 +944,68 @@ historiam_notare (
     l->historia_cursor  = xar_numerus(l->historia) - I;
 }
 
+/* semitae R4d: semita servata (index) post montationem applicatur -
+ * pulsu primo lateris (historia nondum nata), deinde semitam_secuta */
+interior vacuum
+semitam_restituere (
+          Vicus* v,
+     VicusLatus* l)
+{
+     StmlNodus* semita;
+        chorda  vitium;
+
+    si (   !v->organa || !l || !l->montata || !l->facies.ramus
+        || l->historia || l->semita_servata.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    semita = semita_ex_uri(v->organa, v->organa_ctx, l->semita_servata,
+        v->scheda_semitarum, v->intern, &vitium);
+    si (   semita
+        && semita_applicare(v->organa, v->organa_ctx, l->facies.ramus,
+               semita, v->scheda_semitarum, &vitium)
+        && l->facies.semitam_secuta)
+    {
+        (vacuum)l->facies.semitam_secuta(l->facies.semitam_secuta_ctx);
+    }
+}
+
+/* semitae R4d: semita persistens post pulsum - mutata: servatur;
+ * VERUM si mutata (index scribendus). Computatio prima (servata
+ * vacua) lateris SINE argumento tacite notatur: initium sine argumento
+ * idem reddit (nec actum in volumine omni initio); cum argumento
+ * servatur (argumentum statum transientem ferre potest:
+ * "calendarium/dies/2026-10-19") */
+interior b32
+semitam_servare (
+          Vicus* v,
+     VicusLatus* l)
+{
+     StmlNodus* semita;
+        chorda  uri;
+           b32  prima;
+
+    si (!v->organa || !l || !l->montata || !l->facies.ramus)
+    {
+        redde FALSUM;
+    }
+    semita = semita_legere_persistentem(v->organa, v->organa_ctx,
+        l->facies.ramus, chorda_ut_cstr(l->genus, v->scheda_semitarum),
+        v->scheda_semitarum, v->intern);
+    uri = semita ? semita_ad_uri(v->organa, v->organa_ctx, semita,
+        v->scheda_semitarum) : chorda_nulla_vici();
+    si (   uri.mensura == ZEPHYRUM
+        || chorda_aequalis(uri, l->semita_servata))
+    {
+        redde FALSUM;
+    }
+    prima              = l->semita_servata.mensura == ZEPHYRUM
+                      && l->argumentum.mensura == ZEPHYRUM;
+    l->semita_servata  = internare(v, chorda_ut_cstr(uri,
+        v->scheda_semitarum));
+    redde !prima;
+}
+
 /* Ctrl+O (-I) / Ctrl+I (+I): locus historiae lateris focati
  * applicatur (semita plena: restitutio exacta); pulsus proximus eum
  * aequalem invenit et nihil notat. FALSUM si latus focatum semitas non
@@ -1543,6 +1612,9 @@ tabulam_legere (
                 latus_initiare(v, d, t->id, VICUS_DEXTRUM,
                     genus_nodi(m), attributum_nodi(m, "id"),
                     attributum_nodi(m, "argumentum"));
+                /* semitae R4d: applicatur pulsu primo (organa vici
+                 * post creationem ponuntur) */
+                d->semita_servata = attributum_nodi(m, "semita");
             }
         }
     }
@@ -3014,20 +3086,32 @@ vicus_pulsare (
             latus_pulsare(l, activa && l == d, &pingendum);
         }
     }
-    /* semitae R3: historia laterum (status post pulsum) */
+    /* semitae R3: historia laterum (status post pulsum); R4d: semita
+     * servata restituitur (pulsu primo) et servatur (index semel) */
     si (v->organa && v->scheda_semitarum)
     {
+        b32 servanda;
+
         piscina_vacare(v->scheda_semitarum);
+        servanda = FALSUM;
         per (i = ZEPHYRUM; i < xar_numerus(v->tabulae); i++)
         {
             t = (VicusTabula*)xar_obtinere(v->tabulae, i);
             historiam_notare(v, &t->sinistrum);
             per (k = ZEPHYRUM; k < xar_numerus(t->acervus); k++)
             {
-                historiam_notare(v,
-                    (VicusLatus*)xar_obtinere(t->acervus,
-                    k));
+                l = (VicusLatus*)xar_obtinere(t->acervus, k);
+                semitam_restituere(v, l);
+                si (semitam_servare(v, l))
+                {
+                    servanda = VERUM;
+                }
+                historiam_notare(v, l);
             }
+        }
+        si (servanda)
+        {
+            (vacuum)indicem_scribere(v);
         }
     }
     redde pingendum;

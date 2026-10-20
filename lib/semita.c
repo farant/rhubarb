@@ -114,6 +114,28 @@ _attributum (
     redde NIHIL;
 }
 
+/* attributum adest? (valor vacuus "" in STML lecto = valor NIHIL) */
+interior b32
+_adest (
+    constans StmlNodus* n,
+                chorda  titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; n && n->attributa && i < xar_numerus(
+        n->attributa); i++)
+    {
+        StmlAttributum* a = (StmlAttributum*)xar_obtinere(n->attributa,
+            i);
+
+        si (a->titulus && chorda_aequalis(*a->titulus, titulus))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 /* liber hereditarius: organum ligamen a parente fert */
 interior b32
 _hereditarius (
@@ -322,12 +344,14 @@ _applicare_nodum (
 {
                Xar* scripturae;
                b32  mutata;
+               b32  nominata;
                i32  i;
                i32  j;
     GrexScripturae  grex;
 
     scripturae  = xar_creare(piscina, (i32)magnitudo(Scriptura));
     mutata      = FALSUM;
+    nominata    = FALSUM;
     per (i = ZEPHYRUM; n->attributa && i < xar_numerus(n->attributa);
          i++)
     {
@@ -337,6 +361,10 @@ _applicare_nodum (
 
         a = (StmlAttributum*)xar_obtinere(n->attributa, i);
         k = organum_campus(o, *a->titulus);
+        si (k->semita == ORGANUM_SEMITA_LIGATIO)
+        {
+            nominata = VERUM;
+        }
         si (   k->semita == ORGANUM_SEMITA_LIGATIO
             && !_valores_aequales(k, insula_ramus_attributum(ramus,
                    chorda_ut_cstr(k->titulus, piscina)), a->valor))
@@ -348,6 +376,28 @@ _applicare_nodum (
         s->valor = a->valor ? chorda_ut_cstr(*a->valor,
             piscina) : "";
         s->scriptor = k->scriptor;
+    }
+    /* R4d: ligatio nominata TOTA - campi ligationis non nominati ad
+     * absens */
+    per (i = ZEPHYRUM; nominata && i < organum_numerus_camporum(o); i++)
+    {
+        constans OrganumCampus* k = organum_campus_index(o, i);
+                     Scriptura* s;
+
+        si (   k->semita != ORGANUM_SEMITA_LIGATIO
+            || _adest(n, k->titulus))
+        {
+            perge;
+        }
+        si (!_valores_aequales(k, insula_ramus_attributum(ramus,
+                chorda_ut_cstr(k->titulus, piscina)), NIHIL))
+        {
+            mutata = VERUM;
+        }
+        s            = (Scriptura*)xar_addere(scripturae);
+        s->titulus   = chorda_ut_cstr(k->titulus, piscina);
+        s->valor     = "";
+        s->scriptor  = k->scriptor;
     }
     /* ligatione mutata: status ambitus ligationis non datus: absens */
     per (i = ZEPHYRUM; mutata && i < organum_numerus_camporum(o); i++)
@@ -468,11 +518,14 @@ _legere (
                   chorda  titulus,
                      b32  liber,
                      b32  plena,
+                     b32  persistens,
                  Piscina* piscina,
      InternamentumChorda* intern)
 {
     StmlNodus* n;
           b32  hereditarius;
+          b32  nominata;
+          s32  prima;
           i32  i;
 
     n = stml_elementum_creare(piscina, intern, chorda_ut_cstr(titulus,
@@ -481,16 +534,23 @@ _legere (
     {
         redde NIHIL;
     }
-    hereditarius = liber && _hereditarius(o);
+    hereditarius  = liber && _hereditarius(o);
+    nominata      = FALSUM;
+    prima         = -I;
     per (i = ZEPHYRUM; i < organum_numerus_camporum(o); i++)
     {
         constans OrganumCampus* k = organum_campus_index(o, i);
                         chorda* a;
 
         si (   k->semita == ORGANUM_SEMITA_NULLA
-            || (hereditarius && k->semita == ORGANUM_SEMITA_LIGATIO))
+            || (hereditarius && k->semita == ORGANUM_SEMITA_LIGATIO)
+            || (persistens && k->vita != ORGANUM_VITA_PERSISTENS))
         {
             perge;
+        }
+        si (k->semita == ORGANUM_SEMITA_LIGATIO && prima < ZEPHYRUM)
+        {
+            prima = (s32)i;
         }
         a = insula_ramus_attributum(ramus, chorda_ut_cstr(k->titulus,
             piscina));
@@ -509,6 +569,21 @@ _legere (
         }
         (vacuum)stml_attributum_addere_chorda(n, piscina, intern,
             chorda_ut_cstr(k->titulus, piscina), *a);
+        si (k->semita == ORGANUM_SEMITA_LIGATIO)
+        {
+            nominata = VERUM;
+        }
+    }
+    /* R4d: radix ligationem semper nominat - omnibus ad absens campus
+     * primus ligationis (absens aut vacuus); persistens: solum si
+     * campus ligationis persistens ullus */
+    si (!liber && !plena && !nominata && prima >= ZEPHYRUM)
+    {
+        constans OrganumCampus* k = organum_campus_index(o, (i32)prima);
+
+        (vacuum)stml_attributum_addere_chorda(n, piscina, intern,
+            chorda_ut_cstr(k->titulus, piscina), k->habet_absens
+            ? k->absens : _vacua());
     }
     per (i = ZEPHYRUM; i < organum_numerus_montationum(o); i++)
     {
@@ -524,7 +599,7 @@ _legere (
             perge;
         }
         l = _legere(organa, ctx, lo, &lr, m->titulus, VERUM, plena,
-            piscina, intern);
+            persistens, piscina, intern);
         si (   l
             && (plena || (l->attributa && xar_numerus(l->attributa)
             > ZEPHYRUM) || _numerus_liberorum(l) > ZEPHYRUM))
@@ -552,7 +627,7 @@ semita_legere (
     }
     o = organa(ctx, chorda_ex_literis(genus, piscina));
     redde o ? _legere(organa, ctx, o, ramus, chorda_ex_literis(genus,
-        piscina), FALSUM, FALSUM, piscina, intern) : NIHIL;
+        piscina), FALSUM, FALSUM, FALSUM, piscina, intern) : NIHIL;
 }
 
 StmlNodus*
@@ -572,7 +647,27 @@ semita_legere_plenam (
     }
     o = organa(ctx, chorda_ex_literis(genus, piscina));
     redde o ? _legere(organa, ctx, o, ramus, chorda_ex_literis(genus,
-        piscina), FALSUM, VERUM, piscina, intern) : NIHIL;
+        piscina), FALSUM, VERUM, FALSUM, piscina, intern) : NIHIL;
+}
+
+StmlNodus*
+semita_legere_persistentem (
+            SemitaOrganum  organa,
+                   vacuum* ctx,
+     constans InsulaRamus* ramus,
+       constans character* genus,
+                  Piscina* piscina,
+      InternamentumChorda* intern)
+{
+    constans Organum* o;
+
+    si (!organa || !ramus || !genus)
+    {
+        redde NIHIL;
+    }
+    o = organa(ctx, chorda_ex_literis(genus, piscina));
+    redde o ? _legere(organa, ctx, o, ramus, chorda_ex_literis(genus,
+        piscina), FALSUM, FALSUM, VERUM, piscina, intern) : NIHIL;
 }
 
 
@@ -692,20 +787,32 @@ _viam_scribere (
 {
     i32 i;
     s32 ultima;
+    b32 nominata;
 
     _effugere(a, genus);
-    ultima = -I;
+    ultima    = -I;
+    nominata  = FALSUM;
     per (i = ZEPHYRUM; i < organum_numerus_camporum(o); i++)
     {
         constans OrganumCampus* k = organum_campus_index(o, i);
                         chorda* v;
 
         v = _attributum(n, k->titulus);
+        si (   k->semita == ORGANUM_SEMITA_LIGATIO
+            && _adest(n, k->titulus))
+        {
+            nominata = VERUM;
+        }
         si (   k->semita == ORGANUM_SEMITA_LIGATIO && v
             && v->mensura > ZEPHYRUM)
         {
             ultima = (s32)i;
         }
+    }
+    /* R4d: ligatio nominata, omnes vacui: "genus/" */
+    si (nominata && ultima < ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_character(a, '/');
     }
     per (i = ZEPHYRUM; ultima >= ZEPHYRUM && (s32)i <= ultima; i++)
     {
@@ -994,13 +1101,11 @@ semita_ex_uri (
                 genus, valor);
             redde NIHIL;
         }
-        si (valor.mensura > ZEPHYRUM)
-        {
-            (vacuum)stml_attributum_addere_chorda(radix, piscina,
-                intern,
-                chorda_ut_cstr(organum_campus_index(o, campus)->titulus,
-                piscina), valor);
-        }
+        /* R4d: segmentum vacuum quoque ligationem nominat (ad
+         * absens) */
+        (vacuum)stml_attributum_addere_chorda(radix, piscina, intern,
+            chorda_ut_cstr(organum_campus_index(o, campus)->titulus,
+            piscina), valor);
         campus++;
     }
     /* quaestio: clavis.punctata=valor */

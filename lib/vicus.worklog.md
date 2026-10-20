@@ -640,3 +640,20 @@ skip by type only.
   nondum accipit" message, not just "calendarium"). Not planted: the
   early "unchanged" exit (removing it replaces an equal entry -
   harmless) and the start/end bounds (removing them crashes).
+
+## 2026-10-20 — semitae R4d: saved route beside the argument (restart)
+
+- `l->argumentum` is IDENTITY (acervus reuse, Cmd+]/[ cycle match
+  genus+argument) - overwriting it with the route would open a second
+  agenda calendar. The persistent route lives in `semita_servata`,
+  saved in the index as `semita="..."`.
+- Restore is LAZY: panes mount inside vicus_creare, before
+  vicus_organa_ponere, so `semitam_restituere` runs on the pane's first
+  pulse (history still NIHIL), then `semitam_secuta`.
+- `semitam_servare` writes the index once per pulse when any pane's
+  persistent route changed. First computation for a pane WITHOUT an
+  argument is silent: writing it appended an act on every launch, and
+  probatio_vicus_iussa / _quaestio broke because scriba's "cursor" is a
+  VOLUME SEQ (they assume no other act lands between) - that was the
+  symptom; the cause was a pointless startup write. Direct guard:
+  probatio_vicus_semitae `initium_tacitum` (acta count unchanged).

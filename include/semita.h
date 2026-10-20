@@ -15,10 +15,12 @@
  *
  * URI: genus/ligatio.../?clavis.punctata=valor&... - via = ligatio
  * radicis ordine manifesti (ultimae vacuae omissae, media vacua =
- * absens); quaestio = status radicis, deinde liberorum (et ligatio
- * liberorum propria) ordine montationum, claves nominibus
- * montationum punctatae. Effugium: octeti extra A-Z a-z 0-9 - _ . ~
- * ut %XX (maiusculae). Valor vacuus = ad absens. */
+ * absens; R4d: via nulla - "genus", "genus?..." - ligationem non
+ * nominat, "genus/" nominat omnibus ad absens); quaestio = status
+ * radicis, deinde liberorum (et ligatio liberorum propria) ordine
+ * montationum, claves nominibus montationum punctatae. Effugium:
+ * octeti extra A-Z a-z 0-9 - _ . ~ ut %XX (maiusculae). Valor vacuus =
+ * ad absens. */
 
 #ifndef SEMITA_H
 #define SEMITA_H
@@ -41,9 +43,11 @@ nomen constans Organum* (*SemitaOrganum)(
 
 /* semitam applicare: arbor TOTA primum iudicatur (genera, montationes,
  * campi semitae, valores typis, liberi montati); vitium = nihil
- * scriptum, *vitium nominat elementum et attributum. Deinde: ligatio,
- * resetum campi ambitus ligationis si ligatio mutata est, status;
- * liberi post parentem. */
+ * scriptum, *vitium nominat elementum et attributum. R4d: nodus cum
+ * attributo ligationis ullo (etiam vacuo) ligationem TOTAM nominat -
+ * campi ligationis non nominati ad absens; nodus sine ullo
+ * ligationem servat. Deinde: ligatio, resetum campi ambitus
+ * ligationis si ligatio mutata est, status; liberi post parentem. */
 b32
 semita_applicare (
            SemitaOrganum  organa,
@@ -54,8 +58,10 @@ semita_applicare (
                   chorda* vitium);
 
 /* semita canonica status currentis: campi semitae soli, valores
- * absentes (= absens) omissi, ordine manifesti; liberi montati soli
- * (ramus praesens), ligatio hereditaria omissa, liberi vacui omissi */
+ * absentes (= absens) omissi, ordine manifesti; R4d: ligatio radicis
+ * semper nominata - omnibus ad absens campus primus ligationis
+ * scribitur (absens aut vacuus); liberi montati soli (ramus
+ * praesens), ligatio hereditaria omissa, liberi vacui omissi */
 StmlNodus*
 semita_legere (
             SemitaOrganum  organa,
@@ -70,6 +76,20 @@ semita_legere (
  * exacta (historia lateris); non canonica */
 StmlNodus*
 semita_legere_plenam (
+            SemitaOrganum  organa,
+                   vacuum* ctx,
+     constans InsulaRamus* ramus,
+       constans character* genus,
+                  Piscina* piscina,
+      InternamentumChorda* intern);
+
+/* semita PERSISTENS (semitae R4d, restitutio post initium): ut
+ * semita_legere, sed campi vitae transientis omissi. Ligatio nominata
+ * manet si campus ligationis persistens ullus est (calendarium/dies:
+ * dies_electus transiens omissus - applicata ad hodie redit); omnibus
+ * transientibus ligatio non nominatur (nomenclator: index) */
+StmlNodus*
+semita_legere_persistentem (
             SemitaOrganum  organa,
                    vacuum* ctx,
      constans InsulaRamus* ramus,

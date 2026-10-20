@@ -1399,11 +1399,11 @@ _probare_semitas (
 
     x = (Mundus*)c->datum;
     CREDO_NECESSE(contactus_parare(x, c->piscina));
-    CREDO_VERUM(semita_est(x, c->piscina, "nomenclator"));
+    CREDO_VERUM(semita_est(x, c->piscina, "nomenclator/"));
     CREDO_VERUM(nomenclator_argumentum_ponere(&x->m,
         "nomenclator?visus=rubricae&rubrica_filtrum=familia"));
     CREDO_VERUM(semita_est(x, c->piscina,
-        "nomenclator?visus=rubricae&rubrica_filtrum=familia"));
+        "nomenclator/?visus=rubricae&rubrica_filtrum=familia"));
     CREDO_VERUM(nomenclator_argumentum_ponere(&x->m,
         "nomenclator/1?campus_electus=2"));
     CREDO_VERUM(campus_est(x, "persona_aperta", "1"));
@@ -1418,12 +1418,12 @@ _probare_semitas (
     CREDO_VERUM(nomenclator_argumentum_ponere(&x->m, ""));
     CREDO_VERUM(campus_est(x, "persona_aperta", NIHIL));
     CREDO_VERUM(semita_est(x, c->piscina,
-        "nomenclator?visus=rubricae&rubrica_filtrum=familia"));
+        "nomenclator/?visus=rubricae&rubrica_filtrum=familia"));
     CREDO_VERUM(nomenclator_argumentum_ponere(&x->m,
         "nomenclator?visus=index&rubrica_filtrum=&quaestio=anna"
         "&persona_electa=1"));
     CREDO_VERUM(semita_est(x, c->piscina,
-        "nomenclator?quaestio=anna&persona_electa=1"));
+        "nomenclator/?quaestio=anna&persona_electa=1"));
     /* mala: nihil mutatur */
     CREDO_FALSUM(nomenclator_argumentum_ponere(&x->m,
         "nomenclator/99"));
@@ -1433,7 +1433,7 @@ _probare_semitas (
         "nomenclator?prompta=homo"));
     CREDO_FALSUM(nomenclator_argumentum_ponere(&x->m, "sancti/index"));
     CREDO_VERUM(semita_est(x, c->piscina,
-        "nomenclator?quaestio=anna&persona_electa=1"));
+        "nomenclator/?quaestio=anna&persona_electa=1"));
 }
 
 /* semitae R4b: semita a vico applicata (historia) personam mutat sine

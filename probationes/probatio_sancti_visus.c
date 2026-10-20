@@ -631,7 +631,7 @@ _sectio_semitae (
     w = mundus(c, CCLVI);
     CREDO_NECESSE_NON_NIHIL(w);
     CREDO_CHORDA_AEQUALIS_LITERIS(semita_currens(w, c->piscina),
-        "sancti");
+        "sancti/index");
     /* quaestio et ordo per semitam */
     CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m,
         "sancti/index?quaestio=ines&ordo=congruentia"));
@@ -639,7 +639,7 @@ _sectio_semitae (
     CREDO_VERUM(campus_est(w, "quaestio", "ines"));
     CREDO_VERUM(campus_est(w, "ordo", "congruentia"));
     CREDO_CHORDA_AEQUALIS_LITERIS(semita_currens(w, c->piscina),
-        "sancti?ordo=congruentia&quaestio=ines");
+        "sancti/index?ordo=congruentia&quaestio=ines");
     dispensator_recomponere(w->d);
     CREDO_VERUM(pictum(w, "Agnes of Rome", c->piscina));
     CREDO_VERUM(!pictum(w, "Thomas Aquinas", c->piscina));
@@ -681,7 +681,7 @@ _sectio_semitae (
     CREDO_VERUM(campus_est(w, "sanctus_apertus", NIHIL));
     CREDO_VERUM(!campus_est(w, "electus", NIHIL));
     CREDO_CHORDA_AEQUALIS_LITERIS(semita_currens(w, c->piscina),
-        "sancti");
+        "sancti/index");
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {

@@ -2137,8 +2137,8 @@ _probare_semitas (
 
     x = (Mundus*)c->datum;
     CREDO_NECESSE(mundum_struere(x, c->piscina, NIHIL));
-    /* initium: mensis, hodie - valores absentes omissi */
-    CREDO_VERUM(semita_est(x, c->piscina, "calendarium"));
+    /* initium: mensis, hodie - R4d: ligatio semper nominata */
+    CREDO_VERUM(semita_est(x, c->piscina, "calendarium/mensis"));
     CREDO_VERUM(kalendarium_argumentum_ponere(&x->m,
         "calendarium/dies/2026-10-19?res_electa=17"));
     CREDO_VERUM(campus_est(x, "visus", "dies"));
@@ -2157,14 +2157,13 @@ _probare_semitas (
     CREDO_VERUM(kalendarium_argumentum_ponere(&x->m, "2027-03"));
     CREDO_VERUM(semita_est(x, c->piscina,
         "calendarium/mensis/2027-03-01"));
-    /* cognomen agendae: dies servatur */
+    /* cognomen agendae: R4d ligatio tota - dies ad hodie */
     CREDO_VERUM(kalendarium_argumentum_ponere(&x->m, "agenda"));
-    CREDO_VERUM(semita_est(x, c->piscina,
-        "calendarium/agenda/2027-03-01"));
+    CREDO_VERUM(semita_est(x, c->piscina, "calendarium/agenda"));
     CREDO_VERUM(kalendarium_argumentum_ponere(&x->m,
         "calendarium/agenda?rubrica_filtrum=domus"));
     CREDO_VERUM(semita_est(x, c->piscina,
-        "calendarium/agenda/2027-03-01?rubrica_filtrum=domus"));
+        "calendarium/agenda?rubrica_filtrum=domus"));
     /* mala: nihil mutatur */
     CREDO_FALSUM(kalendarium_argumentum_ponere(&x->m,
         "calendarium/dies/2026-02-30"));
@@ -2174,7 +2173,7 @@ _probare_semitas (
         "calendarium/dies/2026-10-19?prompta=nova"));
     CREDO_FALSUM(kalendarium_argumentum_ponere(&x->m, "sancti/index"));
     CREDO_VERUM(semita_est(x, c->piscina,
-        "calendarium/agenda/2027-03-01?rubrica_filtrum=domus"));
+        "calendarium/agenda?rubrica_filtrum=domus"));
 }
 
 /* semitam applicare ut vicus (historia): scriptura directa, sine

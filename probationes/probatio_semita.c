@@ -65,12 +65,41 @@ hic_manens constans character manifestum_folii_liberi[] =
     " absens=\"0\" semita=\"status\" scriptor=\"folium_liber.agere\"/>"
     "</status></organum>";
 
+/* R4d: ligatio partim transiens (visus persistens, dies transiens) */
+hic_manens constans character manifestum_tabellae[] =
+    "<organum genus=\"tabella\" versio=\"1\">"
+    "<actiones><actio nomen=\"tabella.agere\"/></actiones>"
+    "<status>"
+    "<campus nomen=\"visus\" typus=\"electio\" vita=\"persistens\""
+    " absens=\"mensis\" semita=\"ligatio\" scriptor=\"tabella.agere\">"
+    "<optio>mensis</optio><optio>dies</optio></campus>"
+    "<campus nomen=\"dies\" typus=\"dies\" vita=\"transiens\""
+    " semita=\"ligatio\" scriptor=\"tabella.agere\"/>"
+    "<campus nomen=\"filtrum\" typus=\"textus\" vita=\"persistens\""
+    " semita=\"status\" scriptor=\"tabella.agere\"/>"
+    "<campus nomen=\"pagina\" typus=\"numerus\" vita=\"transiens\""
+    " semita=\"status\" scriptor=\"tabella.agere\"/>"
+    "</status></organum>";
+
+/* R4d: ligatio tota transiens (persona), status persistens (modus) */
+hic_manens constans character manifestum_catalogi[] =
+    "<organum genus=\"catalogus\" versio=\"1\">"
+    "<actiones><actio nomen=\"catalogus.agere\"/></actiones>"
+    "<status>"
+    "<campus nomen=\"modus\" typus=\"textus\" vita=\"persistens\""
+    " semita=\"status\" scriptor=\"catalogus.agere\"/>"
+    "<campus nomen=\"persona\" typus=\"numerus\" vita=\"transiens\""
+    " semita=\"ligatio\" scriptor=\"catalogus.agere\"/>"
+    "</status></organum>";
+
 nomen structura {
      InternamentumChorda* intern;
       InsulaRepositorium* repo;
                  Organum* proba;
                  Organum* folium;
                  Organum* folium_liber;
+                 Organum* tabella;
+                 Organum* catalogus;
              InsulaRamus  ramus;
              InsulaRamus  notae;
              InsulaRamus  alter;
@@ -95,6 +124,14 @@ organa (
     si (chorda_aequalis_literis(genus, "folium_liber"))
     {
         redde w->folium_liber;
+    }
+    si (chorda_aequalis_literis(genus, "tabella"))
+    {
+        redde w->tabella;
+    }
+    si (chorda_aequalis_literis(genus, "catalogus"))
+    {
+        redde w->catalogus;
     }
     redde NIHIL;
 }
@@ -135,7 +172,10 @@ mundus (
     w->folium  = manifestum(manifestum_folii, w, c->piscina);
     w->folium_liber  = manifestum(manifestum_folii_liberi, w,
         c->piscina);
-    si (!w->repo || !w->proba || !w->folium || !w->folium_liber)
+    w->tabella    = manifestum(manifestum_tabellae, w, c->piscina);
+    w->catalogus  = manifestum(manifestum_catalogi, w, c->piscina);
+    si (   !w->repo || !w->proba || !w->folium || !w->folium_liber
+        || !w->tabella || !w->catalogus)
     {
         redde NIHIL;
     }
@@ -270,11 +310,13 @@ _sectio_applicare (
 
     w = mundus(c, VERUM);
     CREDO_NECESSE_NON_NIHIL(w);
-    /* status ordinarius: semita vacua (nec attributa nec liberi) */
+    /* status ordinarius: ligatio sola nominata (R4d: campus primus ad
+     * absens), liberi nulli */
     s = semita_legere(organa, w, &w->ramus, "proba", c->piscina,
         w->intern);
     CREDO_NECESSE_NON_NIHIL(s);
-    CREDO_VERUM(!s->attributa || xar_numerus(s->attributa) == ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(semita_ad_uri(organa, w, s,
+        c->piscina), "proba/index");
     CREDO_VERUM(!s->liberi || xar_numerus(s->liberi) == ZEPHYRUM);
     /* ligatio hereditaria posita (a parente): legendo omittitur */
     CREDO_NECESSE(ponere_scriptore(&w->notae, "folium.agere", "liber",
@@ -329,17 +371,17 @@ _sectio_ambitus (
     CREDO_VERUM(applicare(w, "<proba visus=\"res\" res=\"alpha\""
         " ordo=\"dies\" pagina=\"5\"/>", c->piscina, &vitium));
     /* ligatio eadem: pagina servatur */
-    CREDO_VERUM(applicare(w, "<proba res=\"alpha\"/>", c->piscina,
-        &vitium));
+    CREDO_VERUM(applicare(w, "<proba visus=\"res\" res=\"alpha\"/>",
+        c->piscina, &vitium));
     CREDO_VERUM(campus_est(&w->ramus, "pagina", "5"));
     /* ligatio mutata: pagina ad absens, ordo servatur */
-    CREDO_VERUM(applicare(w, "<proba res=\"beta\"/>", c->piscina,
-        &vitium));
+    CREDO_VERUM(applicare(w, "<proba visus=\"res\" res=\"beta\"/>",
+        c->piscina, &vitium));
     CREDO_VERUM(campus_est(&w->ramus, "pagina", NIHIL));
     CREDO_VERUM(campus_est(&w->ramus, "ordo", "dies"));
     /* ligatio mutata sed pagina data: data vincit */
-    CREDO_VERUM(applicare(w, "<proba res=\"gamma\" pagina=\"7\"/>",
-        c->piscina, &vitium));
+    CREDO_VERUM(applicare(w, "<proba visus=\"res\" res=\"gamma\""
+        " pagina=\"7\"/>", c->piscina, &vitium));
     CREDO_VERUM(campus_est(&w->ramus, "pagina", "7"));
     /* valor vacuus = ad absens (clarus) */
     CREDO_VERUM(applicare(w, "<proba ordo=\"\"/>", c->piscina,
@@ -560,8 +602,156 @@ _sectio_plena (
         CREDO_VERUM(campus_est(&w->notae, "pagina", "0"));
         CREDO_CHORDA_AEQUALIS_LITERIS(semita_ad_uri(organa, w,
             semita_legere(organa, w, &w->ramus, "proba", c->piscina,
-            w->intern), c->piscina), "proba");
+            w->intern), c->piscina), "proba/index");
     }
+}
+
+/* R4d (V-a): ligatio TOTA nominatur - campus ligationis ullus (etiam
+ * vacuus) ceteros non nominatos ad absens mittit; nullus: ligatio
+ * servatur. URI: "genus/" nominat, "genus" et "genus?..." non */
+interior vacuum
+_sectio_ligatio_tota (
+    CredoContextus* c)
+{
+      Mundus* w;
+      chorda  vitium;
+   StmlNodus* s;
+
+    w = mundus(c, VERUM);
+    CREDO_NECESSE_NON_NIHIL(w);
+    CREDO_VERUM(applicare(w, "<proba visus=\"res\" res=\"alpha\""
+        " ordo=\"dies\" pagina=\"5\"/>", c->piscina, &vitium));
+    /* visus solum nominatus: res ad absens (ligatio mutata: pagina
+     * quoque), ordo (status) servatur */
+    CREDO_VERUM(applicare(w, "<proba visus=\"res\"/>", c->piscina,
+        &vitium));
+    CREDO_VERUM(campus_est(&w->ramus, "visus", "res"));
+    CREDO_VERUM(campus_est(&w->ramus, "res", NIHIL));
+    CREDO_VERUM(campus_est(&w->ramus, "pagina", NIHIL));
+    CREDO_VERUM(campus_est(&w->ramus, "ordo", "dies"));
+    /* res solum nominatus: visus ad absens (index) */
+    CREDO_VERUM(applicare(w, "<proba res=\"beta\" pagina=\"2\"/>",
+        c->piscina, &vitium));
+    CREDO_VERUM(campus_est(&w->ramus, "visus", NIHIL));
+    CREDO_VERUM(campus_est(&w->ramus, "res", "beta"));
+    /* ligatio non nominata: servatur, status ponitur */
+    CREDO_VERUM(applicare(w, "<proba ordo=\"nomen\"/>", c->piscina,
+        &vitium));
+    CREDO_VERUM(campus_est(&w->ramus, "res", "beta"));
+    CREDO_VERUM(campus_est(&w->ramus, "pagina", "2"));
+    CREDO_VERUM(campus_est(&w->ramus, "ordo", "nomen"));
+    /* nominata vacua: omnia ad absens */
+    CREDO_VERUM(applicare(w, "<proba visus=\"\"/>", c->piscina,
+        &vitium));
+    CREDO_VERUM(campus_est(&w->ramus, "visus", NIHIL));
+    CREDO_VERUM(campus_est(&w->ramus, "res", NIHIL));
+    /* URI: "proba/" nominat, "proba?..." servat */
+    CREDO_CHORDA_AEQUALIS_LITERIS(uri(w, "<proba visus=\"\"/>",
+        c->piscina), "proba/");
+    CREDO_CHORDA_AEQUALIS_LITERIS(uri(w, "<proba/>", c->piscina),
+        "proba");
+    CREDO_VERUM(applicare(w, "<proba visus=\"res\" res=\"gamma\"/>",
+        c->piscina, &vitium));
+    s = semita_ex_uri(organa, w, chorda_ex_literis("proba?ordo=dies",
+        c->piscina), c->piscina, w->intern, &vitium);
+    CREDO_NECESSE(s && semita_applicare(organa, w, &w->ramus, s,
+        c->piscina, &vitium));
+    CREDO_VERUM(campus_est(&w->ramus, "res", "gamma"));
+    s = semita_ex_uri(organa, w, chorda_ex_literis("proba/",
+        c->piscina),
+        c->piscina, w->intern, &vitium);
+    CREDO_NECESSE(s && semita_applicare(organa, w, &w->ramus, s,
+        c->piscina, &vitium));
+    CREDO_VERUM(campus_est(&w->ramus, "visus", NIHIL));
+    CREDO_VERUM(campus_est(&w->ramus, "res", NIHIL));
+    CREDO_VERUM(campus_est(&w->ramus, "ordo", "dies"));
+    /* canonica a statu X super statum Y: ligatio X reddita */
+    CREDO_VERUM(applicare(w, "<proba visus=\"res\" res=\"delta\"/>",
+        c->piscina, &vitium));
+    {
+        Mundus* novus;
+
+        novus = mundus(c, VERUM);
+        CREDO_NECESSE_NON_NIHIL(novus);
+        s = semita_legere(organa, novus, &novus->ramus, "proba",
+            c->piscina, novus->intern);
+        CREDO_VERUM(semita_applicare(organa, w, &w->ramus, s,
+            c->piscina,
+            &vitium));
+        CREDO_VERUM(campus_est(&w->ramus, "visus", "index"));
+        CREDO_VERUM(campus_est(&w->ramus, "res", NIHIL));
+    }
+}
+
+/* ramus generis fixturae paratus */
+interior b32
+ramum_parare (
+                  Mundus* w,
+             InsulaRamus* r,
+      constans character* genus,
+                 Piscina* p)
+{
+    *r = insula_ramus(w->repo, genus, "x1");
+    redde organum_ramum_parare(organa(w, chorda_ex_literis(genus, p)),
+        r,
+        NIHIL, NIHIL, NIHIL, p, w->intern);
+}
+
+/* URI semitae persistentis rami */
+interior chorda
+uri_persistens (
+                     Mundus* w,
+       constans InsulaRamus* r,
+         constans character* genus,
+                    Piscina* p)
+{
+    redde semita_ad_uri(organa, w, semita_legere_persistentem(organa, w,
+        r, genus, p, w->intern), p);
+}
+
+/* R4d (VI-e): semita persistens - campi transientes omissi; ligatio
+ * nominata si campus ligationis persistens ullus (applicata transientes
+ * ad absens mittit), aliter non nominata */
+interior vacuum
+_sectio_persistens (
+    CredoContextus* c)
+{
+         Mundus* w;
+    InsulaRamus  t;
+    InsulaRamus  k;
+         chorda  vitium;
+      StmlNodus* s;
+
+    w = mundus(c, FALSUM);
+    CREDO_NECESSE_NON_NIHIL(w);
+    CREDO_NECESSE(ramum_parare(w, &t, "tabella", c->piscina));
+    CREDO_NECESSE(ramum_parare(w, &k, "catalogus", c->piscina));
+    CREDO_CHORDA_AEQUALIS_LITERIS(uri_persistens(w, &t, "tabella",
+        c->piscina), "tabella/mensis");
+    CREDO_VERUM(semita_applicare(organa, w, &t, arbor("<tabella"
+        " visus=\"dies\" dies=\"2026-10-19\" filtrum=\"domus\""
+        " pagina=\"3\"/>", w, c->piscina), c->piscina, &vitium));
+    CREDO_CHORDA_AEQUALIS_LITERIS(uri_persistens(w, &t, "tabella",
+        c->piscina), "tabella/dies?filtrum=domus");
+    /* applicata: dies (transiens) ad absens - "hodie" */
+    s = semita_legere_persistentem(organa, w, &t, "tabella", c->piscina,
+        w->intern);
+    CREDO_VERUM(semita_applicare(organa, w, &t, s, c->piscina,
+        &vitium));
+    CREDO_VERUM(campus_est(&t, "visus", "dies"));
+    CREDO_VERUM(campus_est(&t, "dies", NIHIL));
+    CREDO_VERUM(campus_est(&t, "filtrum", "domus"));
+    /* ligatio tota transiens: non nominata */
+    CREDO_VERUM(semita_applicare(organa, w, &k, arbor("<catalogus"
+        " persona=\"7\" modus=\"rubricae\"/>", w, c->piscina),
+        c->piscina, &vitium));
+    CREDO_CHORDA_AEQUALIS_LITERIS(uri_persistens(w, &k, "catalogus",
+        c->piscina), "catalogus?modus=rubricae");
+    /* canonica (non persistens) ligationem transientem nominat */
+    CREDO_CHORDA_AEQUALIS_LITERIS(semita_ad_uri(organa, w,
+        semita_legere(
+        organa, w, &k, "catalogus", c->piscina, w->intern), c->piscina),
+        "catalogus/7?modus=rubricae");
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
@@ -572,6 +762,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "uri", _sectio_uri, NIHIL, NIHIL, NIHIL, NIHIL },
     { "lista", _sectio_lista, NIHIL, NIHIL, NIHIL, NIHIL },
     { "plena", _sectio_plena, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ligatio_tota", _sectio_ligatio_tota, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "persistens", _sectio_persistens, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

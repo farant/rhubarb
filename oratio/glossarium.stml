@@ -1752,5 +1752,11 @@
     <forma textus="stilizatae" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
     <forma textus="stilizatum" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
   </vocabulum>
+  <vocabulum lemma="persistens" lingua="latina" classis="adiectivum" nota="Latina (Cicero, Livius): participium praesens verbi persistere - vox domus: vita persistens (organum: status post initium restitutus), semita_legere_persistentem (semitae R4d); WORDS caret">
+    <forma textus="persistens" casus="nominativus" numerus="singularis"/>
+    <forma textus="persistentis" casus="genitivus" numerus="singularis"/>
+    <forma textus="persistentem" casus="accusativus" numerus="singularis"/>
+    <forma textus="persistentes" casus="nominativus" numerus="pluralis"/>
+  </vocabulum>
 
 </glossarium>

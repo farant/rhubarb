@@ -50,3 +50,19 @@ Full read for exact restore (vicus history): every routable field,
 value or absens or "" when unset; mounted children always. Not
 canonical. Test `plena`: a full read of a fresh world applied onto a
 changed one brings it back to all defaults (canonical route "proba").
+
+## 2026-10-20 — semitae R4d: binding named whole, persistent read (Fran approved)
+
+- V-a in `_applicare_nodum`: a node with ANY ligatio attribute names
+  the whole binding; unnamed ligatio fields get "" (-> absens) and count
+  toward `mutata` (so binding-scoped status resets follow). A node with
+  none keeps the binding.
+- Canonical read forces the binding at the ROOT only (first ligatio
+  field, absens or ""); children are not forced (would put
+  `child.f=` in every URI).
+- TRAP: STML text `visus=""` parses as an attribute with valor NIHIL.
+  `_attributum` returns the value (NIHIL), so presence needs `_adest`.
+  The empty-binding URI is `genus/`; `semita_ex_uri` now adds empty
+  path segments as attributes (names the binding).
+- `semita_legere_persistentem` = canonical minus vita transiens; the
+  binding is named only if some persistent ligatio field exists.

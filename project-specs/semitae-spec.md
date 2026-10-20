@@ -149,12 +149,109 @@ day from its parent, so only its `pagina` appears.
 - **Idempotent and total:** applying `semita_legere(x)` to state `x`
   changes nothing; any valid route is applicable from any state.
 
+## V-a. The binding is named whole (R4d, Fran 2026-10-20)
+
+A route **names the binding** when its node carries any `ligatio`
+attribute (even an empty one). Then every `ligatio` field it names is
+set, every `ligatio` field it does not name resets to `absens` (or is
+removed), and the binding-scoped `status` resets follow as before. A
+node with **no** `ligatio` attribute keeps the current binding and sets
+only the `status` it names - the "caller sets state on whatever is
+showing" form.
+
+| route | effect |
+|---|---|
+| `calendarium/dies` | day view, **today** (`dies_electus` reset) |
+| `calendarium?rubrica_filtrum=domus` | current view and day kept, filter set |
+| `sancti/index` | index, open saint closed |
+| `sancti` | pane brought forward, nothing changed |
+| `nomenclator/` | index (trailing `/` = binding named, all at defaults) |
+
+**Canonical reading** names the binding even when every binding field
+is at its default: the first segment is written (empty if it has no
+default). `calendarium/mensis` (was `calendarium`), `nomenclator/`.
+So a URI read from a state and applied anywhere reproduces that
+state's binding (closes the R1 AUDIENDA for bindings; `status` at
+default is still omitted and kept when absent). ROOT only (R4d): a
+child's binding is named in the canonical form only when it differs
+from its defaults - forcing it would put `child.field=` into every
+URI, and no pane routes a child yet. In STML text an empty attribute
+(`visus=""`) parses as an attribute WITHOUT a value; it still names the
+binding (semita checks presence, not value).
+
+## V-b. Aliases and symbolic values - resolve at the boundary (R4e)
+
+**Rule:** an alias is resolved ONCE, where intent enters (a command
+argument, `$via`, a link, the saved restart route). Everything
+downstream - the applied state, history, canonical URIs, projection
+keys (R5) - sees only concrete values. History never stores "today";
+a bookmark may.
+
+**Symbolic values per type.** A type may declare a few; the first is
+`dies`: `hodie`, `heri`, `cras`. `organum_valorem_iudicare` accepts
+them; `semita_resolvere` turns them concrete with a resolver the caller
+supplies (the calendar's clock port); `semita_applicare` REFUSES an
+unresolved symbolic value, so forgetting to resolve fails loudly.
+
+**Aliases in the manifest** (`<cognomina>`), data only:
+
+```xml
+<cognomina>
+  <cognomen nomen="agenda" semita="calendarium/agenda"/>   <!-- fixed -->
+  <cognomen typus="dies" semita="calendarium/dies/{}"/>    <!-- typed -->
+</cognomina>
+```
+
+A fixed alias matches the bare argument exactly; a typed alias matches
+a bare argument that is a valid value of the type (its symbolic values
+included) and substitutes it for `{}`; tried in manifest order; a URI
+argument (`<genus>`, `<genus>/...`, `<genus>?...`) is never an alias.
+Aliases that need computation stay code in the pane's argument
+function (calendar `YYYY-MM` -> today if inside that month; pictor
+create-on-unknown).
+
+| pane | aliases |
+|---|---|
+| sancti | `""` -> `sancti/index`; typus `nomen` -> `sancti/sanctus/{}` |
+| calendarium | `agenda`; typus `dies` -> `calendarium/dies/{}` (so `hodie`); `YYYY-MM` stays code |
+| nomenclator | `""` -> `nomenclator/`; typus `numerus` -> `nomenclator/{}` |
+| pictor | none declared; create-on-unknown stays code |
+
 ## VI. History (per pane)
 
 Each routable field declares `historia="impelle"` (push: view or
 binding changes) or `historia="substitue"` (replace: stepping a day,
 moving a selection, typing a filter); default `substitue`. A pane keeps
 its own back/forward list of canonical routes. Keys: OPEN (§IX).
+
+## VI-e. Restart: the saved argument is the route (R4d)
+
+Vicus saves each pane's argument and reopens with it. Until R4d that
+was the argument the pane was OPENED with - stale after navigation or
+history. Now, after any refresh in which a route-taking pane's
+**persistent route** changed (the canonical route with
+`vita="transiens"` fields dropped), vicus stores it BESIDE the pane's
+argument (index attribute `semita`); a restart mounts the pane with its
+argument, then applies the saved route (then `semitam_secuta`). The
+argument stays the pane's IDENTITY (`vicus_acervo_aperire` reuse, the
+Cmd+]/[ cycle match genus + argument) - overwriting it would make the
+cycle open a second agenda calendar (found 2026-10-20 before coding).
+
+- `vita` keeps deciding what survives a restart: the calendar on day
+  view saves `calendarium/dies` and reopens on today; contacts saves
+  only its list mode and filter (`persona_aperta` is transient), so it
+  reopens on the index - a person opened by a link no longer comes
+  back after a restart while one opened by Enter didn't (now neither
+  does).
+- **Pictor's `pictura` becomes `vita="persistens"`** - the picture is
+  the pane's document, not a passing view; a restart reopens the last
+  picture shown.
+- The saved index is written only when the persistent route changes
+  (stepping days writes nothing). The FIRST computation for a pane
+  with no argument is recorded silently (reopening with no argument
+  gives the same state) - otherwise every launch appended an act;
+  a pane opened WITH an argument saves at once (the argument may carry
+  transient state: `calendarium/dies/2026-10-19`).
 
 ## VI-a. Actions declare their result route (POST-redirect-GET as contract)
 
@@ -344,6 +441,8 @@ accessors, R1.)
 | **R2** | Migrate the simplest pane: sancti (`visus`, `sanctus_apertus` ligatio; `ordo`, `quaestio` status). Its `argumentum_ponere` becomes "parse URI, apply route"; `$saints(x)` keeps working. |
 | **R3** | vicus: `vicus_acervo_mutare` accepts a route; `$genus/...` commands; per-pane history (§VI). |
 | **R4** | Calendar: montationes declared (`notae`), notes binding inherited; migrate its argument language; then nomenclator, pictor. The four hand parsers go away. |
+| **R4d** | V-a (binding named whole; canonical first segment) and VI-e (persistent route = saved argument; pictor `pictura` persistent). |
+| **R4e** | V-b (symbolic `dies` values + `semita_resolvere`; `<cognomina>` fixed and typed; the panes' hand aliases shrink to the computed ones). |
 | **R5** | Projections (separate spec, `proiectiones`): a route's URI list = the projection keys a view needs ("loaders"). |
 | **R6** | Action result routes (VI-a), relations registry + first answers (VI-b: sancti, calendar), host keys and "Go" menu. |
 | **R7** | Versions and renames (VI-c) - before the first manifest change that breaks a stored route. |

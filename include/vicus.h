@@ -163,6 +163,12 @@ nomen structura {
      * currens */
                     Xar* historia;
                     i32  historia_cursor;
+    /* semitae R4d: semita persistens lateris (URI, campi transientes
+     * omissi) - post pulsum mutata in indice servatur (attributum
+     * semita), in initio post montationem applicatur (deinde
+     * semitam_secuta); argumentum identitas manet (acervus, cyclus).
+     * Vacua = nulla */
+                 chorda semita_servata;
 } VicusLatus;
 
 nomen structura {
