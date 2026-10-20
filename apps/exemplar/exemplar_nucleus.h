@@ -30,6 +30,14 @@ nomen structura {
                    b32  acta_accessus;
                    i32  frenum_conatus;   /* 0 = V */
                Reactor* reactor;          /* NIHIL = proprius */
+    /* basis publica: "https://exemplar.golden.earth"; NIHIL =
+     * http://<hospes>:<portus> (mcp-remotus P10) */
+    constans character* basis;
+    /* sonda: acta petitionum /mcp, /.well-known/..., /oauth/... (capita
+     * redacta); scriptor NIHIL = stderr */
+                   b32 sonda;
+                vacuum (*sonda_scriptor)(vacuum* datum, chorda linea);
+                vacuum* sonda_datum;
 } ExemplarConfiguratio;
 
 nomen structura Exemplar Exemplar;

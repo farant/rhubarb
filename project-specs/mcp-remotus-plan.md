@@ -113,7 +113,13 @@ with this plan.
 
 ## Rulings made while executing
 
-(none yet)
+- **R1 (T1)** - the probe code is committed BEFORE the deploy (plan had
+  the commit as the last step): the binary on smaragda then matches a
+  gated commit. Findings from Claude's first connection go into a small
+  follow-up commit (worklog + spec AUDIENDA). `tools/dimittere.sh`
+  gained `-cum-unitate` (installs the unit, `.prior` + daemon-reload,
+  restored with the binary on a failed health check) since the unit
+  gains `-basis` and `-sonda`; the plan did not name this step.
 
 ## Review focus
 

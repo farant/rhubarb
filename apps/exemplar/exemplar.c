@@ -2,7 +2,7 @@
  *
  *   exemplar -data <dir> [-portus N] [-hospes 127.0.0.1]
  *            [-invitatio <codex> | -invitatio-via <filum>]
- *            [-procurator] [-acta]
+ *            [-procurator] [-acta] [-basis URL] [-sonda]
  *
  * -invitatio-via: codex ex filo (spatia finalia abiecta) - in
  * productione (systemd), ne codex in 'ps' aut in unitate appareat.
@@ -10,7 +10,11 @@
  * Principale tenue: argumenta, reactor UNUS (servus, labores
  * argon2id, signa), SIGTERM/SIGINT -> sistere molliter (X s), deinde
  * volumen clausum et exitus 0. -procurator: post nginx (X-Forwarded-*
- * creduntur ex 127.0.0.1). Nucleus in exemplar_nucleus.c. */
+ * creduntur ex 127.0.0.1). -basis: URL publica (auctoritas OAuth,
+ * resource MCP), e.g. https://exemplar.golden.earth - sine ea
+ * http://<hospes>:<portus>. -sonda: petitiones /mcp, /.well-known/...,
+ * /oauth/... ad stderr (capita secreta redacta; mcp-remotus T1).
+ * Nucleus in exemplar_nucleus.c, MCP/OAuth in exemplar_mcp.c. */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -42,7 +46,7 @@ _usus (vacuum)
 {
     fprintf(stderr, "usus: exemplar -data <dir> [-portus N] "
         "[-hospes H] [-invitatio C | -invitatio-via F] [-procurator] "
-        "[-acta]\n");
+        "[-acta] [-basis URL] [-sonda]\n");
     redde II;
 }
 
@@ -92,6 +96,15 @@ principale (
         alioquin si (strcmp(argv[k], "-acta") == ZEPHYRUM)
         {
             cfg.acta_accessus = VERUM;
+        }
+        alioquin si (   strcmp(argv[k], "-basis") == ZEPHYRUM
+                     && k + I < argc)
+        {
+            cfg.basis = argv[++k];
+        }
+        alioquin si (strcmp(argv[k], "-sonda") == ZEPHYRUM)
+        {
+            cfg.sonda = VERUM;
         }
         alioquin
         {

@@ -27,3 +27,36 @@
 - **Test speed:** client and server share a thread; keep the client's
   recv timeout tiny and pump many cycles per wait, or argon2id (one
   step per cycle) makes each login take seconds.
+
+## 2026-10-19 - mcp-remotus T1: the probe
+
+exemplar grows MCP/OAuth routes in a second file `exemplar_mcp.c`
+(nucleus is 1522 lines); the shared structs moved to
+`exemplar_internum.h`; `exemplar_mcp.h` makes aedilis pick up the new
+`.c` (the test source list is the union of aedilis closures).
+
+**Routes now:** `POST /mcp` -> always 401 with `WWW-Authenticate: Bearer
+resource_metadata="<basis>/.well-known/oauth-protected-resource",
+scope="notae:legere notae:scribere"` (nothing issues tokens yet); both
+protected-resource paths (RFC 9728, also `/mcp`-suffixed); the
+authorization-server document (RFC 8414); `POST /oauth/register` -> 503
+`temporarily_unavailable` (the probe stops Claude there on purpose). All
+JSON built with `json`, none hand-written.
+
+**`-basis URL`** (plan P10): `-hospes` is the LISTEN address (127.0.0.1
+behind nginx), so the public base for issuer and resource is its own
+flag; trailing `/` stripped; default `http://<hospes>:<port>`.
+
+**`-sonda`:** one line per request to the MCP/OAuth routes: method, URI,
+EVERY header (Authorization / Proxy-Authorization keep only the scheme,
+Cookie / Set-Cookie fully redacted), body up to 4 KB with non-printables
+as `\xHH` - never the body of `/oauth/token`. The writer is a callback in
+the config (default stderr), so the test captures lines in memory and
+asserts the test token text appears nowhere.
+
+`tools/dimittere.sh -cum-unitate` now also installs the app's systemd
+unit (prior kept as `.prior`, daemon-reload; restored together with
+the binary if health fails) - the unit gains `-basis` and `-sonda`.
+
+Gotcha: a comment containing the path `/.well-known/*` has `/*` inside a
+block comment -> `-Wcomment` error. Write `/.well-known/...`.

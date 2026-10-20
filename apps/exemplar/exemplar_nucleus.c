@@ -7,6 +7,8 @@
  * deleta. */
 #include "postulata_posix.h"
 #include "exemplar_nucleus.h"
+#include "exemplar_internum.h"
+#include "exemplar_mcp.h"
 #include "custodia.h"
 #include "crustula.h"
 #include "volumen.h"
@@ -22,71 +24,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
-#define EXEMPLAR_PETITIO_MAXIMA  (LXIV * MXXIV * MXXIV)
-#define EXEMPLAR_SESSIO_VITA_S   2592000      /* XXX dies */
-#define EXEMPLAR_OPERA           LXIV
-#define EXEMPLAR_NOMEN_MAXIMUM   XXXII
-#define EXEMPLAR_TEXTUS_MAXIMUS  (XVI * MXXIV)
-#define EXEMPLAR_VIA_MAXIMA      CCLVI
-
-
-/* ==================================================
- * STATUS
- * ================================================== */
-
-nomen structura {
-    chorda nomen_usoris;
-    chorda phc;
-} Usor;
-
-nomen structura {
-    chorda usor;
-       s64 expirat_ms;
-} Sessio;
-
-nomen structura {
-       s64 id;          /* seq acti nota.scripta */
-    chorda usor;
-    chorda textus;
-    chorda sigillum;    /* fili, vacua si nullum */
-    chorda titulus;
-    chorda mimen;
-       i64 mensura;
-       b32 deleta;
-} Nota;
-
-nomen enumeratio {
-    OPUS_LIBERUM = 0,
-    OPUS_INSCRIBERE,
-    OPUS_INTRARE
-} OpusGenus;
-
-nomen structura {
-             Exemplar* exemplar;
-            OpusGenus  genus;
-     HospitiumDilatum  d;
-            character  nomen_usoris[EXEMPLAR_NOMEN_MAXIMUM + I];
-                   i8  tessera[CUSTODIA_TESSERA_MAXIMA];
-                  i32  tn;
-            character  clavis_paris[LXXX];
-            character  clavis_usoris[LXXX];
-} Opus;
-
-structura Exemplar {
-                 Piscina* piscina;
-    ExemplarConfiguratio  cfg;
-                 Reactor* reactor;
-                     b32  reactor_proprius;
-               Hospitium* hospitium;
-                 Volumen* volumen;
-                Custodia* custodia;
-          TabulaDispersa* usores;      /* nomen -> Usor* */
-          TabulaDispersa* sessiones;   /* hex sigilli -> Sessio* */
-                     Xar* notae;       /* Nota */
-                    Opus  opera[EXEMPLAR_OPERA];
-               character  via_temporaria[EXEMPLAR_VIA_MAXIMA];
-};
 
 
 /* ==================================================
@@ -1485,6 +1422,29 @@ exemplar_creare (
         _filum_get, e);
     (vacuum)hospitium_praebere(e->hospitium, HTTP_GET, "/salus", _salus,
         e);
+    si (configuratio->basis)
+    {
+        si (strlen(configuratio->basis) >= EXEMPLAR_VIA_MAXIMA)
+        {
+            fprintf(stderr, "exemplar: basis nimis longa\n");
+            volumen_claudere(e->volumen);
+            redde NIHIL;
+        }
+        strcpy(e->basis, configuratio->basis);
+        /* auctoritas sine '/' finali (RFC 8414 issuer) */
+        dum (   strlen(e->basis) > ZEPHYRUM
+             && e->basis[strlen(e->basis) - I] == '/')
+        {
+            e->basis[strlen(e->basis) - I] = '\0';
+        }
+    }
+    alioquin
+    {
+        sprintf(e->basis, "http://%s:%u", configuratio->hospes
+            ? configuratio->hospes : "127.0.0.1",
+            (insignatus integer)hospitium_portus(e->hospitium));
+    }
+    exemplar_mcp_praebere(e);
     redde e;
 }
 

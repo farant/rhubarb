@@ -4,7 +4,9 @@
  * download, exire),
  * invitatio, CSRF, Origin, frenum, filum alienum = 404, restitutio ex
  * volumine (sessio superstat), salus, turba (salus ante intrationes
- * IV), secreta (acta signum crustuli et tesseram numquam continent).
+ * IV), secreta (acta signum crustuli et tesseram numquam continent);
+ * sonda MCP/OAuth (mcp-remotus T1): 401 cum WWW-Authenticate octetim,
+ * metadata RFC 9728/8414, acta sondae redacta, inscriptio 503.
  *
  * Cliens et servus in filo uno: cliens mora I ms recipit et servum XX
  * gressibus inter receptiones pumpat - labor argon2id gradum unum per
@@ -23,6 +25,7 @@
 #include "hospitium.h"
 #include "volumen.h"
 #include "exemplar_nucleus.h"
+#include "json.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -874,6 +877,289 @@ _sectio_secreta (CredoContextus* c)
     (vacuum)filum_arborem_delere(locus.via);
 }
 
+/* ---- sonda MCP/OAuth (mcp-remotus T1) ---- */
+
+#define SONDA_CAPSA (XVI * MXXIV)
+
+nomen structura {
+    character textus[SONDA_CAPSA];
+          s32 n;
+          s32 lineae;
+} Capta;
+
+interior vacuum
+_capere (
+    vacuum* datum,
+    chorda  linea)
+{
+    Capta* c = (Capta*)datum;
+
+    si (c->n + (s32)linea.mensura + II < SONDA_CAPSA)
+    {
+        memcpy(c->textus + c->n, linea.datum, linea.mensura);
+        c->n               += (s32)linea.mensura;
+        c->textus[c->n++]  = '\n';
+        c->textus[c->n]    = '\0';
+    }
+    c->lineae++;
+}
+
+interior Exemplar*
+_exemplar_cum_sonda (
+    CredoContextus* c,
+             Locus* locus,
+               b32  sonda,
+             Capta* capta)
+{
+    ExemplarConfiguratio cfg;
+                Exemplar* e;
+               character  n[MONETA_NANOID_PLAGULAE_MENSURA];
+
+    (vacuum)moneta_nanoid_plagulae(n);
+    sprintf(locus->via, "/tmp/exemplar_%s", n);
+    memset(&cfg, ZEPHYRUM, magnitudo(cfg));
+    memset(capta, ZEPHYRUM, magnitudo(*capta));
+    cfg.via_datorum     = locus->via;
+    cfg.invitatio       = INVITATIO;
+    cfg.sonda           = sonda;
+    cfg.sonda_scriptor  = _capere;
+    cfg.sonda_datum     = capta;
+    e                   = exemplar_creare(&cfg, c->piscina);
+    si (e)
+    {
+        sprintf(locus->origo, "Origin: http://127.0.0.1:%u\r\n",
+            (insignatus integer)hospitium_portus(
+                exemplar_hospitium(e)));
+    }
+    redde e;
+}
+
+/* basis ordinaria sine -basis: http://127.0.0.1:<portus> */
+interior constans character*
+_basis (
+    Exemplar* e,
+     Piscina* p)
+{
+    character* b = (character*)piscina_allocare(p, LXIV);
+
+    sprintf(b, "http://127.0.0.1:%u",
+        (insignatus integer)hospitium_portus(exemplar_hospitium(e)));
+    redde b;
+}
+
+#define INITIUM_RPC \
+    "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\"," \
+    "\"params\":{\"protocolVersion\":\"2025-06-18\"," \
+    "\"capabilities\":{},\"clientInfo\":{\"name\":\"probatio\"," \
+    "\"version\":\"0\"}}}"
+
+interior vacuum
+_sectio_sonda_401 (CredoContextus* c)
+{
+       Locus  locus;
+       Capta  capta;
+    Exemplar* e = _exemplar_cum_sonda(c, &locus, FALSUM, &capta);
+      Lector  l;
+   character  caput[CCLVI];
+
+    CREDO_NECESSE_NON_NIHIL(e);
+    sprintf(caput, "WWW-Authenticate: Bearer resource_metadata=\"%s"
+        "/.well-known/oauth-protected-resource\", scope=\"notae:legere "
+        "notae:scribere\"\r\n", _basis(e, c->piscina));
+    CREDO_VERUM(_rogare_et_legere(e, c->piscina, "POST /mcp",
+        "Content-Type: application/json\r\n", INITIUM_RPC, &l));
+    CREDO_AEQUALIS_I32(l.status, CDI);
+    CREDO_VERUM(_continet(&l, caput));
+    CREDO_VERUM(_rogare_et_legere(e, c->piscina, "POST /mcp",
+        "Content-Type: application/json\r\n"
+        "Authorization: Basic eDp5\r\n",
+        INITIUM_RPC, &l));
+    CREDO_AEQUALIS_I32(l.status, CDI);
+    CREDO_VERUM(_continet(&l, caput));
+    _finire(e, &locus);
+}
+
+interior b32
+_tabulatum_est (
+                    JsonValor* t,
+    constans character* constans* exspectata,
+                           i32  n)
+{
+    i32 i;
+
+    si (t == NIHIL || json_tabulatum_numerus(t) != n)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        si (!chorda_aequalis_literis(json_ad_chorda(
+            json_tabulatum_obtinere(t, i)), exspectata[i]))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior JsonValor*
+_json_corporis (
+     Lector* l,
+    Piscina* p)
+{
+    JsonResultus r = json_legere(chorda_ex_literis(_corpus(l), p), p);
+
+    redde r.successus ? r.radix : NIHIL;
+}
+
+interior vacuum
+_sectio_sonda_documenta (CredoContextus* c)
+{
+                 Locus  locus;
+                 Capta  capta;
+              Exemplar* e = _exemplar_cum_sonda(c, &locus, FALSUM,
+                  &capta);
+                Lector  l;
+                Lector  m;
+             JsonValor* j;
+    constans character* basis;
+             character  s[CCLVI];
+    constans character* scopi[II];
+    constans character* scopi_auctoritatis[III];
+    constans character* uni[I];
+
+    CREDO_NECESSE_NON_NIHIL(e);
+    basis = _basis(e, c->piscina);
+    scopi[ZEPHYRUM] = scopi_auctoritatis[ZEPHYRUM] = "notae:legere";
+    scopi[I] = scopi_auctoritatis[I] = "notae:scribere";
+    scopi_auctoritatis[II] = "offline_access";
+
+    CREDO_VERUM(_rogare_et_legere(e, c->piscina,
+        "GET /.well-known/oauth-protected-resource", NIHIL, NIHIL, &l));
+    CREDO_AEQUALIS_I32(l.status, CC);
+    j = _json_corporis(&l, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(j);
+    sprintf(s, "%s/mcp", basis);
+    CREDO_VERUM(chorda_aequalis_literis(json_capere_chorda(j,
+        "resource",
+        chorda_ex_literis("", c->piscina)), s));
+    uni[ZEPHYRUM] = basis;
+    CREDO_VERUM(_tabulatum_est(json_objectum_capere(j,
+        "authorization_servers"), uni, I));
+    CREDO_VERUM(_tabulatum_est(json_objectum_capere(j,
+        "scopes_supported"),
+        scopi, II));
+    uni[ZEPHYRUM] = "header";
+    CREDO_VERUM(_tabulatum_est(json_objectum_capere(j,
+        "bearer_methods_supported"), uni, I));
+    /* via cum suffixo /mcp: idem documentum */
+    CREDO_VERUM(_rogare_et_legere(e, c->piscina,
+        "GET /.well-known/oauth-protected-resource/mcp", NIHIL, NIHIL,
+        &m));
+    CREDO_AEQUALIS_I32(m.status, CC);
+    CREDO_VERUM(strcmp(_corpus(&l), _corpus(&m)) == ZEPHYRUM);
+
+    CREDO_VERUM(_rogare_et_legere(e, c->piscina,
+        "GET /.well-known/oauth-authorization-server", NIHIL, NIHIL,
+        &l));
+    CREDO_AEQUALIS_I32(l.status, CC);
+    j = _json_corporis(&l, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(j);
+    CREDO_VERUM(chorda_aequalis_literis(json_capere_chorda(j, "issuer",
+        chorda_ex_literis("", c->piscina)), basis));
+    sprintf(s, "%s/oauth/authorize", basis);
+    CREDO_VERUM(chorda_aequalis_literis(json_capere_chorda(j,
+        "authorization_endpoint", chorda_ex_literis("", c->piscina)),
+        s));
+    sprintf(s, "%s/oauth/token", basis);
+    CREDO_VERUM(chorda_aequalis_literis(json_capere_chorda(j,
+        "token_endpoint", chorda_ex_literis("", c->piscina)), s));
+    sprintf(s, "%s/oauth/register", basis);
+    CREDO_VERUM(chorda_aequalis_literis(json_capere_chorda(j,
+        "registration_endpoint", chorda_ex_literis("", c->piscina)),
+        s));
+    uni[ZEPHYRUM] = "S256";
+    CREDO_VERUM(_tabulatum_est(json_objectum_capere(j,
+        "code_challenge_methods_supported"), uni, I));
+    uni[ZEPHYRUM] = "none";
+    CREDO_VERUM(_tabulatum_est(json_objectum_capere(j,
+        "token_endpoint_auth_methods_supported"), uni, I));
+    uni[ZEPHYRUM] = "code";
+    CREDO_VERUM(_tabulatum_est(json_objectum_capere(j,
+        "response_types_supported"), uni, I));
+    {
+        constans character* g[II];
+
+        g[ZEPHYRUM]  = "authorization_code";
+        g[I]         = "refresh_token";
+        CREDO_VERUM(_tabulatum_est(json_objectum_capere(j,
+            "grant_types_supported"), g, II));
+    }
+    CREDO_VERUM(_tabulatum_est(json_objectum_capere(j,
+        "scopes_supported"),
+        scopi_auctoritatis, III));
+    CREDO_VERUM(json_ad_boolean(json_objectum_capere(j,
+        "authorization_response_iss_parameter_supported")));
+    _finire(e, &locus);
+}
+
+interior vacuum
+_sectio_sonda_acta (CredoContextus* c)
+{
+       Locus  locus;
+       Capta  capta;
+    Exemplar* e = _exemplar_cum_sonda(c, &locus, VERUM, &capta);
+      Lector  l;
+
+    CREDO_NECESSE_NON_NIHIL(e);
+    CREDO_VERUM(_rogare_et_legere(e, c->piscina, "POST /mcp",
+        "Content-Type: application/json\r\n"
+        "Authorization: Bearer SECRETUM-TESSERAE\r\n"
+        "Cookie: sid=SECRETUM-CRUSTULI\r\n"
+        "MCP-Protocol-Version: 2025-06-18\r\n"
+        "User-Agent: probatio-sondae/1\r\n", INITIUM_RPC, &l));
+    CREDO_AEQUALIS_I32(l.status, CDI);   /* tessera ignota */
+    CREDO_AEQUALIS_S32(capta.lineae, I);
+    CREDO_VERUM(strstr(capta.textus, "POST /mcp") != NIHIL);
+    CREDO_VERUM(strstr(capta.textus, "2025-06-18") != NIHIL);
+    CREDO_VERUM(strstr(capta.textus, "probatio-sondae/1") != NIHIL);
+    CREDO_VERUM(strstr(capta.textus, "clientInfo") != NIHIL);
+    CREDO_VERUM(strstr(capta.textus, "SECRETUM") == NIHIL);
+    /* via non MCP: nihil scriptum */
+    CREDO_VERUM(_rogare_et_legere(e, c->piscina, "GET /salus", NIHIL,
+        NIHIL, &l));
+    CREDO_AEQUALIS_S32(capta.lineae, I);
+    _finire(e, &locus);
+
+    /* sonda clausa: nihil omnino */
+    e = _exemplar_cum_sonda(c, &locus, FALSUM, &capta);
+    CREDO_NECESSE_NON_NIHIL(e);
+    CREDO_VERUM(_rogare_et_legere(e, c->piscina, "POST /mcp",
+        "Content-Type: application/json\r\n", INITIUM_RPC, &l));
+    CREDO_AEQUALIS_S32(capta.lineae, ZEPHYRUM);
+    _finire(e, &locus);
+}
+
+interior vacuum
+_sectio_sonda_register (CredoContextus* c)
+{
+       Locus  locus;
+       Capta  capta;
+    Exemplar* e = _exemplar_cum_sonda(c, &locus, VERUM, &capta);
+      Lector  l;
+
+    CREDO_NECESSE_NON_NIHIL(e);
+    CREDO_VERUM(_rogare_et_legere(e, c->piscina, "POST /oauth/register",
+        "Content-Type: application/json\r\n",
+        "{\"client_name\":\"Claude\",\"redirect_uris\":"
+        "[\"https://claude.ai/api/mcp/auth_callback\"]}", &l));
+    CREDO_AEQUALIS_I32(l.status, DIII);
+    CREDO_VERUM(_continet(&l, "\"temporarily_unavailable\""));
+    CREDO_AEQUALIS_S32(capta.lineae, I);
+    CREDO_VERUM(strstr(capta.textus, "auth_callback") != NIHIL);
+    _finire(e, &locus);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "iter", _sectio_iter, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sine_invitatione", _sectio_sine_invitatione, NIHIL, NIHIL, NIHIL,
@@ -886,6 +1172,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "salus", _sectio_salus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "turba", _sectio_turba, NIHIL, NIHIL, NIHIL, NIHIL },
     { "secreta", _sectio_secreta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sonda_401", _sectio_sonda_401, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sonda_documenta", _sectio_sonda_documenta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "sonda_acta", _sectio_sonda_acta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sonda_register", _sectio_sonda_register, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
