@@ -137,6 +137,19 @@ with this plan.
   formatted; touching it ran the formatter over the whole file
   (banners to 50, two ternaries reflowed, `c >= 0` dropped - `i8` is
   unsigned).
+- **R4 (T3)** - the plan's `mcp_respondere_json(v, JsonValor*
+  structura)`: `structura` is a latina.h macro; parameter is `valor`.
+- **R5 (T3)** - insufficient scope also carries a JSON-RPC error body
+  (stdio needs one): code `MCP_ERROR_SCOPUS` = -32003 (server range;
+  -32002 is taken by "nondum initiatum"), message `scopus deest: <s>`.
+  Scope is checked before arguments.
+- **R6 (T3)** - every tools/call takes a slot, not only deferred ones,
+  so "the 65th call" fails with -32603 before its handler runs and the
+  handle check is one code path. `reddere` is called exactly once per
+  body, notifications included. `required` omitted when empty;
+  `isError` always present (false on success). The persona's chordae
+  are copied into the request piscina (deferred calls outlive the
+  transport's copy).
 
 ## Review focus
 
