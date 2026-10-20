@@ -118,6 +118,7 @@ declare -a SOURCE_FILES=(
     "lib/html_lexema.c"
     "lib/http.c"
     "lib/http_vocatio.c"
+    "lib/ianua.c"
     "lib/icones.c"
     "lib/imago.c"
     "lib/imago_collatio.c"

@@ -134,6 +134,18 @@ this plan.
   chorda (datum NIHIL) for `auctor`/`nota`, which would have refused the
   CLI bootstrap invitation (P1, empty auctor). Normalized to "", pinned
   in section `creare`.
+- **T4: password change runs both jobs at once.** The plan had verify
+  then hash; that would hold the NEW password in ianua's slot while the
+  current one is checked. Now `credentialia_verificare(current)` and
+  `credentialia_digerere(new)` start together and the slot joins both
+  callbacks; a wrong current password discards the hash. Cost if wrong:
+  one wasted hash per failed attempt (bounded by frenum).
+- **T4: extra race test.** The planned `inscriptio_atomica` race (same
+  handle, two codes) fails at the first write and never exercises
+  rollback. Added the same-code / two-handles race, which does; it is
+  the one the commit-instead-of-rollback plant turns red.
+- **T4: CLI bootstrap test moves to T5** (`exemplar_invitare`, P1) - the
+  CLI is an app concern, not ianua's.
 - **T3: section names.** `expiratio`/`revocatio` are new words to the
   lint; the sections are `terminus` and `revocare`.
 
