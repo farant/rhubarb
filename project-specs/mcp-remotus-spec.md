@@ -378,17 +378,40 @@ nomen structura {
 - The budgeting app (C) and Lunch Money (D).
 - Session idle limit for web logins (hospitium v3 R23) - unchanged here.
 
+## VERIFIED by the probe (T1, 2026-10-20 03:44-03:45 UTC)
+
+Fran added the connector from the Claude desktop app; exemplar ran with
+`-sonda`. Two attempts, 39 s apart:
+
+- **Protocol: the initialize era.** `POST /mcp` with body
+  `{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"Anthropic","version":"1.0.0"}}}`
+  and header `mcp-protocol-version: 2025-11-25` already on the
+  initialize request. `Accept: application/json, text/event-stream`,
+  no Authorization, no Origin, no Cookie.
+- **Who calls:** `User-Agent: python-httpx/0.28.1` from 160.79.106.169
+  and 160.79.106.164 (inside 160.79.104.0/21) - the desktop app's
+  connector runs from Anthropic's servers, not the user's machine.
+- **Discovery order:** POST /mcp -> 401 -> GET
+  `/.well-known/oauth-protected-resource` (the URL in our
+  `resource_metadata`, not the `/mcp`-suffixed path) -> GET
+  `/.well-known/oauth-authorization-server` (RFC 8414 path; no OIDC
+  fallback tried). Both discovery GETs also carry
+  `mcp-protocol-version`.
+- **First attempt stopped after discovery** (no register call); the
+  second one registered. Observed, not explained.
+- **DCR body** (277 bytes, `Content-Type: application/json`):
+  `{"redirect_uris":["https://claude.ai/api/mcp/auth_callback"],"token_endpoint_auth_method":"none","grant_types":["authorization_code","refresh_token"],"response_types":["code"],"scope":"notae:legere notae:scribere offline_access","client_name":"Claude","application_type":"web"}`
+  - the scope is the AS document's `scopes_supported` (with
+  `offline_access`), not the PRM's; no `client_uri`, no `logo_uri`, no
+  `software_id`.
+- **nginx:** certbot's live config passes every `/.well-known/oauth-*`
+  path to the app (one `location /`); checked by curl from outside.
+
 ## AUDIENDA (not verified)
 
-- **Which protocol version and headers Claude actually sends** - the
-  probe (II.5 step 1) answers it; until then the initialize era is an
-  inference from Claude's docs citing 2025-11-25.
-- Whether Claude's connector includes `offline_access` and `resource`
-  exactly as documented, and whether it re-registers (DCR) on every
-  reconnect in practice - observed during the probe and first sign-in.
-- That the server-side certbot config on smaragda passes
-  `/.well-known/oauth-*` to the app (the repo's `exemplar.nginx` has
-  only `location /`; certbot edited the live file).
+- Whether `resource` arrives on authorize and token exactly as
+  documented, and whether Claude re-registers (DCR) on every reconnect
+  in practice - observed at first sign-in (T6/T9).
 - That Claude Code accepts an `http://localhost` MCP server with OAuth
   for the local end-to-end check (else a TLS terminator in front, or
   test against the deployed site).

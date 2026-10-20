@@ -60,3 +60,29 @@ the binary if health fails) - the unit gains `-basis` and `-sonda`.
 
 Gotcha: a comment containing the path `/.well-known/*` has `/*` inside a
 block comment -> `-Wcomment` error. Write `/.well-known/...`.
+
+## 2026-10-19 (20 UTC) - mcp-remotus T1: what Claude actually sent
+
+Deployed with `tools/dimittere.sh -agere -cum-unitate exemplar smaragda`
+(health good; nginx passes the well-known paths). Fran added the
+connector from the desktop app. Full findings in the spec, section
+"VERIFIED by the probe"; the short version for T3-T6:
+
+- **initialize era, 2025-11-25** - the gate passes, the plan stands.
+  `mcp-protocol-version` is sent on EVERY request, even initialize and
+  the discovery GETs - so the core must not reject an initialize that
+  carries it.
+- The caller is python-httpx from 160.79.106.x (Anthropic's servers),
+  even for the desktop app: no Origin, no cookies - exemplar's POST
+  Origin rule must not touch /mcp or /oauth/* (plan P3 confirmed).
+- It fetches the PRM at the exact `resource_metadata` URL (root path),
+  then the RFC 8414 document. The `/mcp`-suffixed PRM route stays for
+  other clients.
+- DCR asks for `scope: "notae:legere notae:scribere offline_access"`
+  (taken from the AS `scopes_supported`), `token_endpoint_auth_method:
+  none`, `application_type: web`, `client_name: Claude`, one redirect
+  URI `https://claude.ai/api/mcp/auth_callback`. T5's register must
+  accept `offline_access` in the requested scope and ignore
+  `application_type`.
+- The first of two attempts stopped after discovery without
+  registering; the second registered. Unexplained - watch for it at T9.
