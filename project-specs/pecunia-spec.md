@@ -1,7 +1,11 @@
 # pecunia - money as exact decimal amounts in C89 (spec)
 
-**Status: SPEC 2026-10-19** - written after brainstorming with Fran;
-awaiting his review, then a plan.
+**Status: IMPLETUM 2026-10-19** - plan `project-specs/pecunia-plan.md`
+T1-T7 (rulings P1-P9, R1-R9); commits T1 5d87bed5, T2 344c834d, T3
+b43d9408, T4 ce2f4e98, T5 cad05cf3, T6 ceaf7ec8, T7 close-out; suite
+`probatio_pecunia` 24 sections, green on macOS and under Linux musl +
+glibc (135129 assertions); ISO table 175 rows; rounding against a pinned
+Python `decimal` oracle (4880 cases). Not yet in main.
 
 *Fran 2026-10-19, right after hospitium v3 reached main (ff e8cad828),
 while scoping the remote MCP + OAuth arc (ledger desideratum

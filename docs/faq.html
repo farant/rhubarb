@@ -15,11 +15,31 @@
 
 <p>Each unit declares the questions it answers in <code>lib/S.interrogationes.stml</code> (canon <code>interrogationes.canon</code>). Every answer is anchored to a symbol, a path or a command, and the gate <code>interrogationes</code> turns red when an anchor dies. From the terminal: <code>bin/fabrica quid -interrogationes -quaere "how do I ..."</code>, or <code>-symbolum xar_addere</code> for the questions that name a symbol.</p>
 
-<p class="nota">10 questions in 2 units · possumne 4 · quomodo 4 · quid 1 · cur 1</p>
+<p class="nota">17 questions in 3 units · quomodo 9 · cur 2 · possumne 5 · quid 1</p>
 <ul>
+<li><a href="#pecunia">pecunia</a> <span class="nota">7</span></li>
 <li><a href="#piscina">piscina</a> <span class="nota">5</span></li>
 <li><a href="#xar">xar</a> <span class="nota">5</span></li>
 </ul>
+
+<h2 id="pecunia">pecunia</h2>
+<p class="nota"><a href="../include/pecunia.h"><code>include/pecunia.h</code></a> · <a href="../lib/pecunia.interrogationes.stml"><code>lib/pecunia.interrogationes.stml</code></a></p>
+<ol class="quaestiones">
+<li id="pecunia-1"><span class="status">quomodo</span>how do I split a bill so the cents add up?
+<div class="responsum">Use pecunia_dividere(total, n, PECUNIA_GRANUM_UNITAS, piscina, parts) for equal shares, or pecunia_partiri with an array of ratios for weighted ones. Both use largest remainder: the parts always sum to the total exactly (USD 10.00 / 3 = 3.34, 3.33, 3.33), ties go to the earlier part, and a zero ratio never gets a leftover cent. With PECUNIA_GRANUM_UNITAS the total must already be payable, otherwise PECUNIA_VITIUM_NON_SOLVIBILIS.<br><span class="nota">symbolum <code>pecunia_dividere</code> <code>pecunia_partiri</code></span></div></li>
+<li id="pecunia-2"><span class="status">quomodo</span>how do I store an amount in an event or a file?
+<div class="responsum">Write it with pecunia_ad_textum (&quot;USD -12.3400&quot;: upper-case code, one space, always four decimals) and read it back with pecunia_ex_textu, which accepts ONLY that exact form. Every value has one spelling, so equal text means equal value and diffs stay clean. Never store the display form from pecunia_formare.<br><span class="nota">symbolum <code>pecunia_ad_textum</code> <code>pecunia_ex_textu</code></span></div></li>
+<li id="pecunia-3"><span class="status">cur</span>why is an amount someone typed refused?
+<div class="responsum">pecunia_ex_ingressu is lenient only by fixed rules and returns a named PecuniaVitium - pass it to pecunia_vitium_titulus for a message. Group separators must sit in real positions (&quot;1,234.56&quot; yes, &quot;12,34&quot; no - that could mean 1234 or 12.34, and the library refuses rather than guesses), only one sign is allowed, at most four decimals, and a currency code in the text must match the expected currency.<br><span class="nota">symbolum <code>pecunia_ex_ingressu</code> <code>pecunia_vitium_titulus</code></span></div></li>
+<li id="pecunia-4"><span class="status">quomodo</span>how do I round an amount to cents (or to the currency's minor unit)?
+<div class="responsum">pecunia_ad_unitatem(amount, modus, &amp;result) rounds to the minor unit from the ISO table (USD 3.4590 -&gt; 3.46 with PECUNIA_PAR; JPY to whole yen). The mode is always explicit: PECUNIA_PAR (banker's), PECUNIA_DIMIDIUM_SURSUM (half away from zero), PECUNIA_VERSUS_NIHIL, PECUNIA_SOLUM, PECUNIA_TECTUM. pecunia_solvibilis tells you whether an amount is already a whole number of minor units.<br><span class="nota">symbolum <code>pecunia_ad_unitatem</code> <code>pecunia_solvibilis</code></span></div></li>
+<li id="pecunia-5"><span class="status">quomodo</span>how do I convert an amount to another currency?
+<div class="responsum">Pass the rate as an exact Fractio (units of the target per one unit of the source, greater than zero) to pecunia_convertere with a rounding mode. The product is exact and rounded once to four decimals; call pecunia_ad_unitatem afterwards for a payable amount. pecunia never fetches rates and never mixes currencies silently - adding USD to EUR is PECUNIA_VITIUM_MONETAE_DIVERSAE.<br><span class="nota">symbolum <code>pecunia_convertere</code></span></div></li>
+<li id="pecunia-6"><span class="status">quomodo</span>how do I read and write amounts in Lunch Money's API format?
+<div class="responsum">Lunch Money sends amounts as strings matching ^-?\d+(\.\d{1,4})?$ in any currency. pecunia_ex_numero(text, moneta, &amp;amount) reads exactly that (leading zeros allowed, five decimals refused as PECUNIA_VITIUM_DECIMALES); pecunia_numerus writes &quot;-12.3400&quot;. The currency comes separately, from pecunia_moneta_ex_codice, which accepts Lunch Money's lower-case codes.<br><span class="nota">symbolum <code>pecunia_ex_numero</code> <code>pecunia_numerus</code></span></div></li>
+<li id="pecunia-7"><span class="status">possumne</span>can I use crypto amounts such as BTC or ETH?
+<div class="responsum">No. Every amount is an s64 count of ten-thousandths (PECUNIA_SCALA), which covers all ISO currencies but not 18-decimal crypto units, so pecunia_moneta_ex_codice refuses BTC and ETH as PECUNIA_VITIUM_MONETA_IGNOTA. Withdrawn currencies (BGN, HRK...) and GGP/IMP/JEP are in the table, marked by status.<br><span class="nota">symbolum <code>pecunia_moneta_ex_codice</code> <code>PECUNIA_SCALA</code></span></div></li>
+</ol>
 
 <h2 id="piscina">piscina</h2>
 <p class="nota"><a href="../include/piscina.h"><code>include/piscina.h</code></a> · <a href="../lib/piscina.interrogationes.stml"><code>lib/piscina.interrogationes.stml</code></a></p>

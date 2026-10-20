@@ -229,3 +229,28 @@ Round trip: `ex_ingressu(formare(x)) == ad_unitatem(x, PAR)` for 2000
 random amounts, with the code and with `"$"` + accounting. Plants: group
 check disabled at the end (`12,34` read as 1234), second sign accepted
 (`--12`), display sign from the unrounded value (`USD -0.00`) - each red.
+
+## 2026-10-19 - T7: questions, Linux, close-out
+
+Seven typed questions in `lib/pecunia.interrogationes.stml` (split a
+bill, store an amount, why input is refused, round to cents, convert,
+Lunch Money's format, crypto - no); `bin/fabrica quid -interrogationes
+pecunia` reads them with 0 errors, `interrogationes_fumus` finds no dead
+anchors, `docs/faq.html` regenerated.
+
+Linux: `./tools/linux/probatio.sh -musl pecunia` and `-glibc pecunia`
+both green, 135129 assertions each. gcc flagged one maybe-uninitialized
+local in the TEST (`modus`, set via `CREDO_NECESSE(_modus(...))`) -
+clang follows that, gcc does not; initialized. The library compiled
+clean under gcc on the first try.
+
+Final checks: suite green (24 sections), generator `-probare` recens
+and `-fumus` sanum, `generata` gate sana (147 judged).
+
+**What a consumer should know (C, the budgeting app):** store amounts
+with `pecunia_ad_textum` only; show them with `pecunia_formare`; parse
+form fields with `pecunia_ex_ingressu` and show `pecunia_vitium_titulus`
+on refusal; split shared expenses with `pecunia_partiri` in
+`GRANUM_UNITAS`. For Lunch Money (D): `pecunia_ex_numero` on string
+amounts; balances that arrive as JSON numbers still need `json.h` to
+keep number text (spec IV).

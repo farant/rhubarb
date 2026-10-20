@@ -140,6 +140,20 @@ with this plan.
   "the same rounding routine" - the DECISION is shared (`_sursum`), the
   arithmetic is not, because the API has no piscina and the first draft
   allocated one per call.
+- **R7 (T6)** - display rounds to UNITS via `_unitates_rotundatae`
+  (extracted from `pecunia_ad_unitatem`) instead of calling
+  `ad_unitatem`: MAXIMA rounded up to cents overflows at scale 4, but
+  the display must not fail. Cost if wrong: none found - both share the
+  same rounding decision.
+- **R8 (T6)** - input also accepts spaces between marker and number
+  (`$ 12.34`), and an unknown three-letter code reports MONETA_IGNOTA
+  (the plan named only "a different known code -> MONETAE_DIVERSAE").
+  Cost if wrong: a stricter app must reject `$ 12.34` itself.
+- **R9 (T7)** - gcc (both Linux images) flagged `modus` in the oracle
+  loop as maybe-uninitialized (set through `CREDO_NECESSE(_modus(...))`,
+  which clang follows and gcc does not); initialized to `PECUNIA_PAR`.
+  The library itself compiled clean under gcc; 135129 assertions passed
+  on musl and on glibc.
 
 ## Review focus
 

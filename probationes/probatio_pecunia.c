@@ -520,7 +520,7 @@ _sectio_oraculum (CredoContextus* c)
               chorda linea;
                  s32 pos = ZEPHYRUM;
               chorda genus;
-        PecuniaModus modus;
+        PecuniaModus modus = PECUNIA_PAR;   /* gcc: _modus ponit */
                  b32 bene;
 
         si (t.datum[i] != '\n')
