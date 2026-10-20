@@ -169,6 +169,9 @@ declare -a RADIX_FONTES=(
     "vim"
     "tabula_characterum"
     "volumen"
+    # genera-datorum D2: identitas actuum (hora, machina)
+    "hora_hybrida"
+    "machina_posix"
     "filum"
     "sigillum"
     "lectiones"

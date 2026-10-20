@@ -203,12 +203,20 @@ volumen_plagulas_enumerare (
     Volumen* volumen,
     Piscina* piscina);
 
-/* actum lectum (chordae ex piscina vocantis) */
+/* actum lectum (chordae ex piscina vocantis). Identitas actus =
+ * (hora, machina) - D2: hora hybrida (hora_hybrida.h) = ordo EVENTUS,
+ * seq = ordo ADVENTUS in hoc volumine; machina = machina_identitas()
+ * scriptoris. Acta vetera (ante migrationem VII, aut a codice vetere
+ * scripta) in aperiendo supplentur: ordine seq, momentum suum per
+ * hora_hybrida_proxima, machina huius machinae. Sine identitate
+ * machinae acta non appenduntur (recusat, non degenerat). */
 nomen structura {
        s64 seq;
     chorda momentum;
     chorda genus;
     chorda datum;
+       s64 hora;
+    chorda machina;
 } VolumenActum;
 
 /* acta POST seq datum (exclusivum; 0 = omnia), ordine seq -

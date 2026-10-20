@@ -2,6 +2,8 @@
 
 #include "volumen.h"
 #include "scrinium.h"
+#include "hora_hybrida.h"
+#include "machina.h"
 #include "filum.h"
 #include "chorda_aedificator.h"
 #include "tabula_dispersa.h"
@@ -18,6 +20,9 @@ structura Volumen {
     /* Volumen scratch: via servatur ut claudere eam delere possit. */
                    b32  temporarium;
     constans character* via;
+
+    /* D2: identitas scriptoris actuum; vacua = appendere recusatur */
+                chorda machina;
 };
 
 /* migrationes solum-appende (lex scrinii: numquam mutandae, solum
@@ -58,15 +63,131 @@ interior constans character* constans MIGRATIONES_VOLUMINIS[] = {
     "INSERT OR IGNORE INTO praesentia (clavis, valor, momentum)"
     " SELECT p.via, m.contentum, p.momentum FROM plagulae p"
     " JOIN massae m ON m.sigillum = p.sigillum"
-    " WHERE p.via LIKE 'status/%' OR p.via = 'vicus/latera'"
+    " WHERE p.via LIKE 'status/%' OR p.via = 'vicus/latera'",
+
+    /* 2026-10-20 (genera-datorum D2): identitas actus = (hora,
+     * machina); acta vetera in aperiendo supplentur */
+    "ALTER TABLE acta ADD COLUMN hora INTEGER",
+    "ALTER TABLE acta ADD COLUMN machina TEXT",
+    "CREATE UNIQUE INDEX acta_hora ON acta (hora, machina)"
 };
 
-#define MIGRATIONES_VOLUMINIS_NUMERUS 6
+#define MIGRATIONES_VOLUMINIS_NUMERUS IX
 
 interior Volumen*
 _volumen_struere (
                Piscina* piscina,
     constans character* via);
+
+/* actum sine hora (ante migrationem VII aut a codice vetere): seq et
+ * millisecunda momenti eius */
+nomen structura {
+    s64 seq;
+    s64 momentum;
+} ActumSupplendum;
+
+/* acta sine hora signare, ordine seq: hora_hybrida_proxima supra
+ * horam maximam iam signatam (numquam retro), machina huius machinae.
+ * Ordines PRIMUM colliguntur, deinde mutantur (index acta_hora
+ * quaestionem ducit quam mutatio moveret). */
+interior b32
+_horas_supplere (
+    Volumen* vol)
+{
+    ScriniumEnuntiatum* e;
+               Piscina* scheda;
+                   Xar* supplenda;
+                   s64  ultimum;
+                   i32  i;
+                   b32  bene;
+
+    e = scrinium_praeparare(vol->scrinium,
+        "SELECT 1 FROM acta WHERE hora IS NULL LIMIT 1");
+    si (e == NIHIL)
+    {
+        redde FALSUM;
+    }
+    bene = scrinium_gradi(e) != SCRINIUM_ORDO;
+    scrinium_finire(e);
+    si (bene)
+    {
+        redde VERUM;   /* nihil supplendum */
+    }
+
+    scheda = piscina_generare_dynamicum("volumen_horae",
+        (memoriae_index)LXIV * (memoriae_index)M);
+    si (scheda == NIHIL)
+    {
+        redde FALSUM;
+    }
+    supplenda = xar_creare(scheda, (i32)magnitudo(ActumSupplendum));
+    e = scrinium_praeparare(vol->scrinium,
+        "SELECT seq, CAST(ROUND((julianday(momentum) - 2440587.5)"
+        " * 86400000) AS INTEGER) FROM acta WHERE hora IS NULL"
+        " ORDER BY seq");
+    si (supplenda == NIHIL || e == NIHIL)
+    {
+        piscina_destruere(scheda);
+        redde FALSUM;
+    }
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        ActumSupplendum* a = (ActumSupplendum*)xar_addere(supplenda);
+
+        si (a == NIHIL)
+        {
+            scrinium_finire(e);
+            piscina_destruere(scheda);
+            redde FALSUM;
+        }
+        a->seq       = scrinium_columna_numerus(e, 0);
+        a->momentum  = scrinium_columna_numerus(e, 1);
+    }
+    scrinium_finire(e);
+
+    e = scrinium_praeparare(vol->scrinium,
+        "SELECT COALESCE(MAX(hora), 0) FROM acta");
+    si (e == NIHIL || scrinium_gradi(e) != SCRINIUM_ORDO)
+    {
+        scrinium_finire(e);
+        piscina_destruere(scheda);
+        redde FALSUM;
+    }
+    ultimum = scrinium_columna_numerus(e, 0);
+    scrinium_finire(e);
+
+    si (!scrinium_incipere(vol->scrinium))
+    {
+        piscina_destruere(scheda);
+        redde FALSUM;
+    }
+    bene = VERUM;
+    per (i = ZEPHYRUM; bene && i < xar_numerus(supplenda); i++)
+    {
+        ActumSupplendum* a = (ActumSupplendum*)xar_obtinere(supplenda,
+            i);
+
+        ultimum = hora_hybrida_proxima(ultimum, (Momentum)a->momentum);
+        e = scrinium_praeparare(vol->scrinium,
+            "UPDATE acta SET hora = ?, machina = ? WHERE seq = ?");
+        bene = e != NIHIL;
+        si (bene)
+        {
+            scrinium_ligare_numerum(e, 1, ultimum);
+            scrinium_ligare_textum(e, 2, vol->machina);
+            scrinium_ligare_numerum(e, 3, a->seq);
+            bene = scrinium_gradi(e) == SCRINIUM_FACTUM;
+            scrinium_finire(e);
+        }
+    }
+    piscina_destruere(scheda);
+    si (!bene)
+    {
+        scrinium_revolvere(vol->scrinium);
+        redde FALSUM;
+    }
+    redde scrinium_committere(vol->scrinium);
+}
 
 interior Volumen*
 _volumen_struere (
@@ -111,6 +232,16 @@ _volumen_struere (
     si (!scrinium_migrare(vol->scrinium, MIGRATIONES_VOLUMINIS,
         MIGRATIONES_VOLUMINIS_NUMERUS))
     {
+        scrinium_claudere(vol->scrinium);
+        redde NIHIL;
+    }
+    /* sine machina acta legi possunt, non scribi nec suppleri */
+    vol->machina = machina_identitas(piscina);
+    si (   vol->machina.mensura > ZEPHYRUM
+        && !_horas_supplere(vol))
+    {
+        fprintf(stderr, "volumen: horae actorum suppleri non potuerunt:"
+            " %s\n", via);
         scrinium_claudere(vol->scrinium);
         redde NIHIL;
     }
@@ -287,15 +418,26 @@ volumen_actum_appendere (
                 chorda  genus_ch;
                integer  gradus;
 
+    si (volumen->machina.mensura == ZEPHYRUM)
+    {
+        volumen->erratum = "machina ignota: actum appendere recusatur";
+        redde 0;
+    }
     genus_ch = chorda_ex_literis(genus, volumen->piscina);
+    /* hora hybrida IN enuntiatione: max(physica, maxima + I) atomice
+     * etiam inter processus (hora_hybrida_proxima, forma SQL) */
     e = scrinium_praeparare(volumen->scrinium,
-        "INSERT INTO acta (genus, datum) VALUES (?, ?)");
+        "INSERT INTO acta (genus, datum, hora, machina) VALUES (?, ?,"
+        " MAX(?, (SELECT COALESCE(MAX(hora), -1) + 1 FROM acta)), ?)");
     si (e == NIHIL)
     {
         redde 0;
     }
     scrinium_ligare_textum(e, 1, genus_ch);
     scrinium_ligare_textum(e, 2, datum);
+    scrinium_ligare_numerum(e, 3, hora_hybrida_componere(
+        hora_hybrida_physica(), ZEPHYRUM));
+    scrinium_ligare_textum(e, 4, volumen->machina);
     gradus = scrinium_gradi(e);
     scrinium_finire(e);
     si (gradus != SCRINIUM_FACTUM)
@@ -729,7 +871,7 @@ volumen_acta_legere (
         redde NIHIL;
     }
     e = scrinium_praeparare(volumen->scrinium,
-        "SELECT seq, momentum, genus, datum FROM acta"
+        "SELECT seq, momentum, genus, datum, hora, machina FROM acta"
         " WHERE seq > ? ORDER BY seq");
     si (e == NIHIL)
     {
@@ -749,6 +891,8 @@ volumen_acta_legere (
         a->momentum  = scrinium_columna_textus(e, 1, piscina);
         a->genus     = scrinium_columna_textus(e, 2, piscina);
         a->datum     = scrinium_columna_textus(e, 3, piscina);
+        a->hora      = scrinium_columna_numerus(e, 4);
+        a->machina   = scrinium_columna_textus(e, 5, piscina);
     }
     scrinium_finire(e);
     redde ordo;
@@ -787,7 +931,7 @@ volumen_acta_generum_legere (
         redde NIHIL;
     }
     chorda_aedificator_appendere_literis(sql,
-        "SELECT seq, momentum, genus, datum FROM acta"
+        "SELECT seq, momentum, genus, datum, hora, machina FROM acta"
         " WHERE seq > ? AND genus IN (");
     per (i = ZEPHYRUM; i < n; i++)
     {
@@ -820,6 +964,8 @@ volumen_acta_generum_legere (
         a->momentum  = scrinium_columna_textus(e, 1, piscina);
         a->genus     = scrinium_columna_textus(e, 2, piscina);
         a->datum     = scrinium_columna_textus(e, 3, piscina);
+        a->hora      = scrinium_columna_numerus(e, 4);
+        a->machina   = scrinium_columna_textus(e, 5, piscina);
     }
     scrinium_finire(e);
     redde ordo;

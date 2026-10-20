@@ -6,6 +6,8 @@
 #include "chorda.h"
 #include "filum.h"
 #include "volumen.h"
+#include "hora_hybrida.h"
+#include "machina.h"
 #include "scrinium.h"
 #include "credo.h"
 #include "filum.h"
@@ -632,6 +634,145 @@ s32 principale (vacuum)
             chorda_ex_literis("status/x", piscina), piscina, &inventum);
         CREDO_VERUM(inventum);
         CREDO_CHORDA_AEQUALIS_LITERIS(relatum, "novum");
+        volumen_claudere(vol);
+        filum_delere(via_vetus);
+    }
+
+
+    /* ========================================================
+     * PROBARE: identitas actus (D2) - hora stricte crescens ordine
+     * seq etiam intra millisecundam, prope tempus parietis; machina
+     * = identitas huius machinae
+     * ======================================================== */
+
+    {
+              Volumen* vol;
+                  Xar* acta;
+         VolumenActum* a;
+               chorda  machina;
+                  i32  i;
+                  s64  prior;
+             Momentum  nunc;
+
+        imprimere("\n--- Probans horam actorum ---\n");
+
+        vol = volumen_temporarium(piscina, "probatio_volumen_hora");
+        CREDO_NECESSE_NON_NIHIL(vol);
+        per (i = ZEPHYRUM; i < L; i++)
+        {
+            CREDO_VERUM(volumen_actum_appendere(vol, "celere",
+                chorda_ex_literis("{}", piscina)) > ZEPHYRUM);
+        }
+        nunc     = hora_hybrida_physica();
+        machina  = machina_identitas(piscina);
+        CREDO_NECESSE(machina.mensura > ZEPHYRUM);
+        acta = volumen_acta_legere(vol, ZEPHYRUM, piscina);
+        CREDO_NECESSE_NON_NIHIL(acta);
+        CREDO_AEQUALIS_I32(xar_numerus(acta), (i32)LI);
+        prior = ZEPHYRUM;
+        per (i = ZEPHYRUM; i < xar_numerus(acta); i++)
+        {
+            a = (VolumenActum*)xar_obtinere(acta, i);
+            CREDO_VERUM(a->hora > prior);
+            CREDO_CHORDA_AEQUALIS(a->machina, machina);
+            CREDO_VERUM(hora_hybrida_momentum(a->hora) > nunc - LX * M);
+            CREDO_VERUM(hora_hybrida_momentum(a->hora) <= nunc);
+            prior = a->hora;
+        }
+        volumen_claudere(vol);
+    }
+
+
+    /* ========================================================
+     * PROBARE: migratio VII-IX - acta vetera supplentur ordine seq:
+     * millisecunda eadem et horologium retro saltans numeratorem
+     * augent; actum a codice vetere post migrationem scriptum (hora
+     * NIHIL) apertione sequenti suppletur
+     * ======================================================== */
+
+    {
+        constans character* via_vetus =
+            "build/probatio_volumen_horae.db";
+        constans character* constans veteres[IV] = {
+            "CREATE TABLE acta ("
+            " seq INTEGER PRIMARY KEY AUTOINCREMENT,"
+            " momentum TEXT NOT NULL"
+            "   DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),"
+            " genus TEXT NOT NULL,"
+            " datum TEXT NOT NULL)",
+            "CREATE TABLE massae ("
+            " sigillum TEXT PRIMARY KEY,"
+            " contentum BLOB NOT NULL)",
+            "CREATE TABLE plagulae ("
+            " via TEXT PRIMARY KEY,"
+            " sigillum TEXT NOT NULL REFERENCES massae(sigillum),"
+            " origo TEXT NOT NULL,"
+            " momentum TEXT NOT NULL"
+            "   DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')))",
+            "CREATE INDEX acta_genus ON acta (genus, seq)"
+        };
+            Scrinium* s;
+             Volumen* vol;
+                 Xar* acta;
+        VolumenActum* a;
+              chorda  machina;
+            Momentum  decima;
+
+        imprimere("\n--- Probans supplementum horarum ---\n");
+
+        decima   = (Momentum)1792490400 * M;   /* MMXXVI-X-XX X:00 */
+        machina  = machina_identitas(piscina);
+        si (filum_existit(via_vetus))
+        {
+            filum_delere(via_vetus);
+        }
+        s = scrinium_aperire(piscina, via_vetus);
+        CREDO_NECESSE_NON_NIHIL(s);
+        CREDO_VERUM(scrinium_migrare(s, veteres, IV));
+        CREDO_VERUM(scrinium_exsequi(s,
+            "INSERT INTO acta (momentum, genus, datum) VALUES"
+            " ('2026-10-20T10:00:00.000Z', 'a', '{}'),"
+            " ('2026-10-20T10:00:00.000Z', 'b', '{}'),"
+            " ('2026-10-20T09:59:59.000Z', 'c', '{}'),"
+            " ('2026-10-20T10:00:05.250Z', 'd', '{}')"));
+        scrinium_claudere(s);
+
+        vol = volumen_aperire(piscina, via_vetus);
+        CREDO_NECESSE_NON_NIHIL(vol);
+        acta = volumen_acta_legere(vol, ZEPHYRUM, piscina);
+        CREDO_NECESSE_NON_NIHIL(acta);
+        CREDO_AEQUALIS_I32(xar_numerus(acta), IV);
+        a = (VolumenActum*)xar_obtinere(acta, ZEPHYRUM);
+        CREDO_AEQUALIS_S64(a->hora, hora_hybrida_componere(decima,
+            ZEPHYRUM));
+        CREDO_CHORDA_AEQUALIS(a->machina, machina);
+        a = (VolumenActum*)xar_obtinere(acta, I);
+        CREDO_AEQUALIS_S64(a->hora, hora_hybrida_componere(decima, I));
+        /* horologium retro: millisecunda prior, numerator tamen */
+        a = (VolumenActum*)xar_obtinere(acta, II);
+        CREDO_AEQUALIS_S64(a->hora, hora_hybrida_componere(decima, II));
+        a = (VolumenActum*)xar_obtinere(acta, III);
+        CREDO_AEQUALIS_S64(a->hora, hora_hybrida_componere(decima
+            + V * M + CCL, ZEPHYRUM));
+        CREDO_CHORDA_AEQUALIS(a->machina, machina);
+        volumen_claudere(vol);
+
+        /* codex vetus post migrationem: hora et machina NIHIL */
+        s = scrinium_aperire(piscina, via_vetus);
+        CREDO_NECESSE_NON_NIHIL(s);
+        CREDO_VERUM(scrinium_exsequi(s,
+            "INSERT INTO acta (momentum, genus, datum) VALUES"
+            " ('2026-10-20T09:00:00.000Z', 'e', '{}')"));
+        scrinium_claudere(s);
+        vol = volumen_aperire(piscina, via_vetus);
+        CREDO_NECESSE_NON_NIHIL(vol);
+        acta = volumen_acta_legere(vol, ZEPHYRUM, piscina);
+        CREDO_NECESSE_NON_NIHIL(acta);
+        CREDO_AEQUALIS_I32(xar_numerus(acta), V);
+        a = (VolumenActum*)xar_obtinere(acta, IV);
+        CREDO_AEQUALIS_S64(a->hora, hora_hybrida_componere(decima
+            + V * M + CCL, I));
+        CREDO_CHORDA_AEQUALIS(a->machina, machina);
         volumen_claudere(vol);
         filum_delere(via_vetus);
     }

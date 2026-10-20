@@ -182,3 +182,29 @@ App state left the journal. On Fran's real volume 58 % of acts were
   are invisible to new code. Harmless, but not two-way.
 - Test for migration 6 builds an old-shape volume by running the four
   original statements through scrinium_migrare itself.
+
+## 2026-10-20 - act identity (genera-datorum D2)
+
+Acts gain `hora` (hybrid logical clock, `lib/hora_hybrida.c`) and
+`machina` (`machina_identitas()`, 16 hex of the hardware UUID's
+SHA-256). Migrations 7-9: two ALTER TABLE + UNIQUE index (hora,
+machina).
+
+- The clock state IS the table: the INSERT computes
+  `MAX(physical << 16, MAX(hora) + 1)` in one statement, so two
+  processes on one machine cannot mint the same stamp, restarts keep
+  the clock, and imported remote acts will push it forward for free.
+  The same rule lives in C as `hora_hybrida_proxima` (tests + backfill).
+- Backfill runs on EVERY open, not in a migration: SQL cannot express
+  "never decrease in seq order" nor know the machine id. Rows are
+  collected first, then updated (the update moves the index the select
+  walks). Side effect: acts appended by older code (main's vicus) on a
+  migrated volume come in with NULL hora and get stamped on the next
+  open by new code. Cost on a synthetic 35k-act volume: 128 ms once,
+  then 1 ms (the NULL check is an index probe).
+- Old acts are attributed to the machine that opens the volume - a
+  volume made elsewhere and copied over cannot be told apart.
+- Empty machine identity: volume opens and reads, appends refuse
+  ("machina ignota") - machina.h's refuse-don't-degrade rule.
+- Hand lists that name volumen's closure grew: ludus_tessera and
+  briar compile_probationes.sh (+ briar MUTATIONES line).
