@@ -300,7 +300,11 @@ measures it; a long run goes detached (python double fork + `setsid` +
    Part A checks; six-word hand sentences; plants. *Done 2026-10-20 (Task 1 notes below).*
 2. **T2:** measures, U2a / U2b / U1 decided, `oracle_d134.py`, rule
    checks; plants. *Done 2026-10-20 (Task 2 notes below).*
-3. **T3:** findings.md, claims.md (KC 61), ledger (N17), archive.sh.
+3. **T3:** findings.md, claims.md (KC 61), ledger (N17), archive.sh. *Done 2026-10-20:
+   findings.md, KC 61 (and the claims revision note), N17's entry in
+   demo-proposals.md and the ledger, a ledger question on the genitive
+   reversal; times now print only with D134_TEMPORA=1, so the live and
+   frozen runs can be byte-identical for archive.sh.*
 4. **T4:** independent review with its own oracle, then fixes.
 
 ## Design review (consiliarius-d134, 2026-10-20, before any data)

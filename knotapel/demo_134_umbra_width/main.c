@@ -56,7 +56,8 @@
  *   bash build/aedilis/main/struere.sh && ./build/aedilis/main/main
  * Quick mode for plants: D134_CELER=1 (exhaustive passes up to four
  * words; no six-word part); D134_QUINQUE=1 runs every five-word part
- * and stops before six words (about a minute).
+ * and stops before six words (about a minute); D134_TEMPORA=1 prints
+ * times.
  */
 
 #include "dependentia.h"
@@ -2067,6 +2068,18 @@ seconds (
     return (double)(clock() - t0) / (double)CLOCKS_PER_SEC;
 }
 
+/* times are printed only with D134_TEMPORA=1: archive.sh needs the live
+ * and the frozen run byte-identical */
+static int show_times = 0;
+
+static void
+tempus (
+    const char *what,
+    clock_t     t0)
+{
+    if (show_times) printf("  (%s: %.1f s)\n", what, seconds(t0));
+}
+
 /* ================================================================
  * Umbrae, width and depth; competition and retrieval (task 1)
  * ================================================================ */
@@ -4047,7 +4060,7 @@ part_measures_five (void)
         memset(acc[lv], 0, sizeof acc[lv]);
         measure_umbrae(lv, 0, gmaxw);
     }
-    printf("  (%.1f s)\n", seconds(t0));
+    tempus("pass", t0);
     for (n = 0; n <= MAXW; n++) cross_by_len[n] = meas[0].len_b_den[n];
     measure_checks(quick ? "up to four words" : "up to five words", 0,
         gmaxw, &ck_five, cross_by_len);
@@ -4107,7 +4120,7 @@ part_measures_six (
         lv4[lv] = &acc[lv][MAXW];
         sub4[lv] = &acc_sub[lv];
     }
-    printf("  (%.1f s)\n", seconds(t0));
+    tempus("pass", t0);
     for (n = 0; n <= MAXW; n++) cross_by_len[n] = 0;
     cross_by_len[MAXW] = cross6;
     measure_checks("six words", MAXW, MAXW, &ck_six, cross_by_len);
@@ -4154,7 +4167,7 @@ part_umbrae_five (void)
     for (n = 0; n <= gmaxw; n++) pairs += level_pairs[0][n];
     crossed = meas[0].b_den;
     umbra_pass(gmaxw, &ck_five);
-    printf("  (%.1f s)\n", seconds(t0));
+    tempus("pass", t0);
     umbra_checks(quick ? "up to four words" : "up to five words", &ck_five,
         pairs, crossed);
 }
@@ -4244,7 +4257,6 @@ part_six (void)
     int     lv, n, same_pop = 1, same_split = 1;
     long    tried, raw = 0, gcap = 0;
     clock_t t0;
-    double  t_gen;
     s64     proj[NLEVELS], cross[NLEVELS];
     char    msg[400];
 
@@ -4253,34 +4265,33 @@ part_six (void)
     gmaxw = MAXW;
     t0 = clock();
     generate();
-    t_gen = seconds(t0);
+    tempus("generator", t0);
     for (lv = 0; lv < NLEVELS; lv++) {
         raw += gen_entries[lv].n;
         gcap += gen_entries[lv].cap;
     }
-    printf("  generator: %ld abstract analyses up to %d words in %.1f s; "
-        "%ld placements before sorting, four levels (%.0f MB)\n",
-        gen_emitted, gmaxw, t_gen, raw, megabytes(gcap));
+    printf("  generator: %ld abstract analyses up to %d words; %ld "
+        "placements before sorting, four levels (%.0f MB)\n", gen_emitted,
+        gmaxw, raw, megabytes(gcap));
     for (lv = 0; lv < NLEVELS; lv++) {
-        long   gd, ad, i;
-        int    same;
-        double t_sort, t_an;
+        long gd, ad, i;
+        int  same;
 
         t0 = clock();
         gd = sort_unique(&gen_entries[lv]);
-        t_sort = seconds(t0);
+        tempus("generator sort", t0);
         tried = 0;
         t0 = clock();
         analyse_all_bags(lv, &tried);
         ad = sort_unique(&an_entries[lv]);
-        t_an = seconds(t0);
+        tempus("analyser", t0);
         same = gen_entries[lv].n == an_entries[lv].n;
         for (i = 0; same && i < gen_entries[lv].n; i++)
             if (entry_cmp(&gen_entries[lv].e[i], &an_entries[lv].e[i]) != 0)
                 same = 0;
-        printf("  %-17s generator sort %.1f s (%ld repeats); analyser %.1f s "
-            "over %ld bags, %ld analyses (%.0f MB)\n", level_name[lv], t_sort,
-            gd, t_an, tried, an_entries[lv].n, megabytes(an_entries[lv].cap));
+        printf("  %-17s generator: %ld repeats; analyser over %ld bags, %ld "
+            "analyses (%.0f MB)\n", level_name[lv], gd, tried,
+            an_entries[lv].n, megabytes(an_entries[lv].cap));
         snprintf(msg, sizeof msg, "%s: generated == analysed up to six words, "
             "%ld positioned analyses on canonical strings, readings included",
             level_name[lv], an_entries[lv].n);
@@ -4316,13 +4327,11 @@ part_six (void)
     printf("\n  six-word pairs, projective and crossed: the per-pair pass "
         "(orders, analyses carried, tree table)\n");
     for (lv = 0; lv < NLEVELS; lv++) {
-        double t_sw;
-
         t0 = clock();
         sweep_length(lv, MAXW, &proj[lv], &cross[lv]);
-        t_sw = seconds(t0);
-        printf("  %-17s projective %10lld  crossed %10lld  (%.1f s)\n",
-            level_name[lv], (long long)proj[lv], (long long)cross[lv], t_sw);
+        printf("  %-17s projective %10lld  crossed %10lld\n",
+            level_name[lv], (long long)proj[lv], (long long)cross[lv]);
+        tempus("sweep", t0);
         if (proj[lv] != proj[0] || cross[lv] != cross[0]
             || proj[lv] + cross[lv] != (s64)level_pairs[lv][MAXW])
             same_split = 0;
@@ -4337,7 +4346,7 @@ part_six (void)
         for (n = 0; n <= MAXW; n++) pairs += level_pairs[0][n];
         t0 = clock();
         umbra_pass(MAXW, &ck_six);
-        printf("  (%.1f s)\n", seconds(t0));
+        tempus("pass", t0);
         umbra_checks("up to six words", &ck_six, pairs, meas[0].b_den
             + cross[0]);
     }
@@ -4411,6 +4420,7 @@ int
 main (void)
 {
     quick = getenv("D134_CELER") != NULL;
+    show_times = getenv("D134_TEMPORA") != NULL;
     gmaxw = quick ? 4 : 5;
     printf("KNOTAPEL DEMO 134: umbra width of the toy world%s\n", quick
         ? " (QUICK MODE: up to four words, no six-word part)" : "");
