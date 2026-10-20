@@ -295,7 +295,7 @@ measures it; a long run goes detached (python double fork + `setsid` +
 0. **T0:** copy D131's world; reproduce D131's five-word totals; measure
    six-word feasibility (time and memory, generator vs analyser) and fix
    the oracle's six-word subset - counts only, no umbra, label or B
-   numbers.
+   numbers. *Done 2026-10-20 (Task 0 findings below).*
 1. **T1:** umbrae, width, depth, competition and retrieval labels;
    Part A checks; six-word hand sentences; plants.
 2. **T2:** measures, U2a / U2b / U1 decided, `oracle_d134.py`, rule
@@ -358,3 +358,73 @@ one floor for both tests.
    root umbra, optional right dependents as backward attachments; the
    nearness rule for competition.
 3. Folder `knotapel/demo_134_umbra_width/`.
+
+## Task 0 findings (2026-10-20)
+
+- **The copy reproduces D131 exactly.** `main.c` is D131's world (the
+  lexicon, Bennett against Whitaker, the four levels, generator against
+  analyser, tree table, word order, D131's nine hand sentences, Part B)
+  with every D131 pin carried over and green at five words: pairs by
+  length (384 / 55,296 / 6,696,960), A, A (reading), B, the
+  syncretic / unambiguous split and B (R_M) at every level, B by kind
+  (adjectives only / genitives only / both, each by form), by mildness,
+  by crossing count, the open cells behind A. New pin: **mean |F|
+  exactly**, as the sums of |F(s)| over projective and over crossed
+  pairs, from `oracle_partb.py` with one line added (each pair adds
+  `len(an)`): L0 3.79, L1 3.08, L2 67.22, L3 70.28 (as D131 printed).
+  Quick mode (`D134_CELER=1`, four words) pinned the same way.
+- **Changes to D131's code, each checked:** MAXW 6 (an analysis key is
+  3 + 10 x 6 = 63 bits, a bag code 45); permutations to 720; the tree
+  table to 7^6 codes, Cayley to n = 6 (8,477 trees in all) and the
+  projective / mild counts 728 / 5,652 at n = 6 pinned from D131's
+  `oracle_trees.py` run to n = 6 (0.2 s); D131's Q1 / Q2 rules and
+  verdicts dropped (D134 registers its own in T2); the size table
+  factored into `sizes()`. **Distinct orders:** D131 found them with a
+  list of the strings seen, n!^2 per bag - fine at five words, about
+  500,000 comparisons per bag at six. `first_order` keeps an order iff
+  equal tokens keep their canonical order (the lexicographically first
+  order of each string), and is checked against D131's list on every
+  order of every bag at every level at five words.
+- **Six words is feasible, exhaustively, in C.** The whole run (five
+  words with every pin, then six words counts only) is **83 s, peak
+  268 MB** (`/usr/bin/time -l`; 8 cores, 16 GB, one used).
+  Generator: 1,317,056 abstract analyses in 5.2 s, 9.9M placements
+  (192 MB) before sorting. Analyser: L0 1.9 s (10.4M bags tried), **L1
+  18.3 s (386M bags tried: every multiset of 100 forms)**, L2 2.4 s, L3
+  1.7 s. Generated == analysed at every level; the analyser never
+  yields an analysis twice.
+
+  | level | bags | strings | pairs 6 | max \|F\| |
+  |---|---|---|---|---|
+  | L0 | 261,113 | 148,605,241 | 809,533,440 | 144 |
+  | L1 | 316,608 | 195,484,032 | 809,533,440 | 24 |
+  | L2 | 18,720 | 6,378,488 | 809,533,440 | 1,460 |
+  | L3 | 9,404 | 2,329,376 | 809,533,440 | 1,460 |
+
+  (bags and strings up to six words). Pins: six-word pairs 809,533,440
+  and the largest L0 |F| 144 (D131 task 0's counts); the population is
+  the same at every level, length by length. The largest |F| (1,460)
+  is far inside the buffer (4,096).
+- **Six-word pairs: 149,385,216 projective, 660,148,224 crossed
+  (81.5%; 59.8% at five words)**, the same at every level. The per-pair
+  pass (every distinct order, analyses carried to it, the tree table)
+  takes 6.5-10.2 s per level over all 809.5M pairs; the same pass at
+  five words gives D131 task 0's 2,694,144 / 4,002,816 (a pin). So the
+  T1 / T2 measures run on **all** six-word pairs; their cost is this
+  pass times the work per pair (readers, umbrae, labels), estimated at
+  minutes, measured in T1.
+- **The oracle's six-word subset (fixed).** Key: the six-word bags at
+  **L1**, where every reading is its own form (checked: form index ==
+  reading index), so an L1 bag is a multiset of readings and selects
+  the same pairs at every level. Order: `bag_code` ascending (n in bits
+  0-2, the sorted reading indices r_i at bits 3 + 7i; reading index =
+  noun (lemma x 2 + number) x 5 + case, then adjective ((lemma x 3 +
+  gender) x 2 + number) x 5 + case + 40, then the verbs amat, amant,
+  dat, dant at 100-103 - the order of `oracle_partb.py`'s READINGS
+  list). **The bag of rank r is in the subset iff r mod 128 == 0:
+  2,250 of 288,000 bags, 6,670,440 pairs (0.82% of the six-word
+  pairs)** - about the size of the five-word population (6,752,640),
+  which D131's oracle covers in 138 s and 50 MB. The oracle in T2 must
+  reproduce the 2,250 bags and 6,670,440 pairs before any measure (a
+  pin). Every registered six-word number is computed by C on all pairs;
+  the oracle pins the subset's totals, stated as partial.
