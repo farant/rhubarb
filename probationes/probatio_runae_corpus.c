@@ -56,23 +56,15 @@ hic_manens constans LinguaScriptura LINGUAE[] = {
     { "ko", 0xAC00, 0xD7A3 }    /* syllabae Hangul */
 };
 
-s32
-principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-         b32  praeteritus;
-     Piscina* piscina;
-         i32  j;
+    Piscina* piscina;
+        i32  j;
 
-    piscina = piscina_generare_dynamicum("probatio_runae_corpus",
-        1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- Corpus Lapidis: %u linguae ---\n",
+    piscina = c->piscina;
+    imprimere("  %u linguae\n",
         (insignatus integer)(magnitudo(LINGUAE)
             / magnitudo(LINGUAE[0])));
     CREDO_AEQUALIS_I32 ((i32)(magnitudo(LINGUAE)
@@ -136,9 +128,16 @@ principale (vacuum)
         CREDO_VERUM (validum);
         CREDO_VERUM (in_scriptura >= RUNAE_SCRIPTURAE_MINIMAE);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Corpus Lapidis: linguae", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("runae_corpus", SECTIONES);
 }

@@ -51,28 +51,20 @@ _expandere_litteras (
     redde stml_expandere(res.radix, piscina, intern);
 }
 
-s32
-principale (
-    vacuum)
+    /* --- index sui ipsius: fluitans + PER textus (spec par. 3) --- */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                 Piscina* piscina;
     InternamentumChorda* intern;
 
-    piscina = piscina_generare_dynamicum("probatio_stml_exemplaria",
-                                         4194304);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
-
-    /* --- index sui ipsius: fluitans + PER textus (spec par. 3) --- */
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- index sui: fluitans + PER ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><sectio titulus=\"a\"/><sectio titulus=\"b\"/>"
             "<EXEMPLAR output=\"$s\"><sectio titulus=\"$t\"/>"
@@ -89,12 +81,22 @@ principale (
                 "<index><res>a</res><res>b</res></index></radix>");
         }
     }
+}
 
     /* --- captura nodi + splex silvae in PER --- */
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- captura nodi + splex ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><p><x n=\"1\"/></p>"
             "<EXEMPLAR output=\"$m\"><p $n/></EXEMPLAR>"
@@ -109,12 +111,22 @@ principale (
                 "<copia><p><x n=\"1\"/></p></copia></radix>");
         }
     }
+}
 
     /* --- subsequentia ordinata: A..C congruit, C..A non --- */
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- subsequentia ordinata ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><f><a/><b/><c/></f>"
             "<EXEMPLAR output=\"$m\"><f><a/><c/></f></EXEMPLAR>"
@@ -139,12 +151,22 @@ principale (
                 "<radix><f><a/><b/><c/></f></radix>");
         }
     }
+}
 
     /* --- '<*>' elementum quodlibet --- */
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- elementum quodlibet '<*>' ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><f><q/></f><g/>"
             "<EXEMPLAR output=\"$m\"><f><*/></f></EXEMPLAR>"
@@ -157,12 +179,22 @@ principale (
                 "<radix><f><q/></f><g/><n/></radix>");
         }
     }
+}
 
     /* --- captura iterata = aequalitas (regula V) --- */
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- captura iterata: aequalitas ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><par a=\"x\" b=\"x\"/><par a=\"x\" b=\"y\"/>"
             "<EXEMPLAR output=\"$m\"><par a=\"$v\" b=\"$v\"/>"
@@ -178,12 +210,22 @@ principale (
                 "<e>x</e></radix>");
         }
     }
+}
 
     /* --- captura iterata SUB TRANSPARENTIA (materia-sedes A3) --- */
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- captura iterata sub TRANSPARENTIA ---\n");
         /* attributa perspicua: valores diversi, nodi aequales */
         e = _expandere_litteras(piscina, intern,
             "<radix><p><x s=\"1\">a</x><y><x s=\"2\">a</x></y></p>"
@@ -229,14 +271,24 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- captura iterata: FORMA AUCTORIS neglecta (materia-sedes A3,
      * quaestio 01M2Q2BDH4) - dispositio, '</>', formae capturae,
      * indentatio multilineae; contentum manet --- */
+
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- captura iterata: forma auctoris ---\n");
         /* spatia inter nodos: liberum primum lineam novam possidet */
         e = _expandere_litteras(piscina, intern,
             "<radix><l>\n  <i>x</i>\n  <i>x</i>\n</l>"
@@ -342,12 +394,22 @@ principale (
                 "<radix><l><s!> </s><s!> </s></l><r/></radix>");
         }
     }
+}
 
     /* --- ancorata: radix scopi sola --- */
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- ancorata ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix r=\"1\"><sectio/>"
             "<EXEMPLAR ancorata output=\"$m\"><radix r=\"$v\"/>"
@@ -373,13 +435,23 @@ principale (
                 "<radix><sectio/></radix>");
         }
     }
+}
 
     /* --- cursus fratrum (incrementum XX, 2026-09-07): congruentia
      * una per initium liberorum, primus fixus, saltus post --- */
+
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- cursus fratrum ---\n");
         /* sine cursu: par UNUM avidum per parentem (inventum T17) */
         e = _expandere_litteras(piscina, intern,
             "<radix><s><w a=\"1\"/><w a=\"2\"/><w a=\"3\"/></s>"
@@ -534,6 +606,7 @@ principale (
         CREDO_VERUM (!e.successus);
         CREDO_VERUM (e.vitium == STML_EXPANSIO_EXEMPLAR_MALFORMATUM);
     }
+}
 
     /* --- retentatio (incrementum XXI, 2026-09-08): quaesitio
      * COMPLETA, primum a sinistra - liberum formae posterius cadens
@@ -543,10 +616,19 @@ principale (
      * exstat. OPTIO per EXEMPLAR quaesitio="completa" - defalta = lex
      * avida (mensurata 2026-09-08: quaesitio completa sub regulis
      * orationis litteralibus casum et ligationem deprimebat) --- */
+
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- retentatio ---\n");
         /* classicus: lectio prima c=1 cadit apud fratrem, lectio
          * secunda c=2 congruit - avidus nihil inveniebat */
         e = _expandere_litteras(piscina, intern,
@@ -706,13 +788,22 @@ principale (
         CREDO_VERUM (!e.successus);
         CREDO_VERUM (e.vitium == STML_EXPANSIO_EXEMPLAR_MALFORMATUM);
     }
-
+}
 
     /* --- modus: unum / optional / primum --- */
+
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- modus ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><s/><EXEMPLAR modus=\"unum\" output=\"$m\">"
             "<s/></EXEMPLAR>"
@@ -747,12 +838,22 @@ principale (
                 "<radix><s k=\"1\"/><s k=\"2\"/><n>1</n></radix>");
         }
     }
+}
 
     /* --- TRANSPARENTIA: caecitas mensurabilis (spec par. 2.7) --- */
+
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- TRANSPARENTIA ---\n");
         /* SINE declaratione: fluitans intra <meta> descendit */
         e = _expandere_litteras(piscina, intern,
             "<radix><t><meta><id>NULL</id></meta></t>"
@@ -780,12 +881,22 @@ principale (
                 "<radix><t><meta><id>NULL</id></meta></t></radix>");
         }
     }
+}
 
     /* --- visio contenti: fragmentum dissolvitur in liberis --- */
+
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- fragmentum dissolutum ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><f><#g><a/></#></f>"
             "<EXEMPLAR output=\"$m\"><f><a/></f></EXEMPLAR>"
@@ -798,12 +909,22 @@ principale (
                 "<radix><f><#g><a/></#></f><n/></radix>");
         }
     }
+}
 
     /* --- visio contenti: transclusio praeterita (identitas semel) --- */
+
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- transclusio praeterita ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><f><#g><a/></#><<#g>></f>"
             "<EXEMPLAR modus=\"unum\" output=\"$m\"><a/></EXEMPLAR>"
@@ -811,12 +932,22 @@ principale (
         /* definitio numerat, transclusio non - congruentia UNA */
         CREDO_VERUM (e.successus);
     }
+}
 
     /* --- catenatio de=: angustatio super relationem priorem --- */
+
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- catenatio de= ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><p><q k=\"1\"/></p><p><r/></p>"
             "<EXEMPLAR output=\"$pp\"><p/></EXEMPLAR>"
@@ -832,12 +963,22 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- lex stratorum: contentum INFRA non visum --- */
+
+interior vacuum
+_sectio_decima_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- strata: supra solum ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><EXEMPLAR output=\"$m\"><s/></EXEMPLAR>"
             "<PER congruentia=\"$m\"><n/></PER><s/></radix>");
@@ -849,12 +990,22 @@ principale (
                 "<radix><s/></radix>");
         }
     }
+}
 
     /* --- PER voca=: delegatio (pons = vocatio) --- */
+
+interior vacuum
+_sectio_decima_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- PER voca= ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><#@f t=\"@t\"><li>&@t;</li></#>"
             "<s v=\"a\"/><s v=\"b\"/>"
@@ -869,12 +1020,22 @@ principale (
                 "<li>a</li><li>b</li></radix>");
         }
     }
+}
 
     /* --- relatio vacua: legalis, PER nihil parit --- */
+
+interior vacuum
+_sectio_decima_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- relatio vacua ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><k/><EXEMPLAR output=\"$m\"><nusquam/>"
             "</EXEMPLAR>"
@@ -887,12 +1048,22 @@ principale (
                 "<radix><k/></radix>");
         }
     }
+}
 
     /* --- vitia XII, XIII, XIV, XV, XVIII, XIX --- */
+
+interior vacuum
+_sectio_decima_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- vitia ---\n");
         /* XII: sine output= */
         e = _expandere_litteras(piscina, intern,
             "<radix><EXEMPLAR><s/></EXEMPLAR></radix>");
@@ -946,12 +1117,22 @@ principale (
         CREDO_VERUM (e.vitium
                          == STML_EXPANSIO_TRANSPARENTIA_MALFORMATA);
     }
+}
 
     /* --- CATENA: catena basica == catenatio nominata --- */
+
+interior vacuum
+_sectio_vicesima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- CATENA: catena basica ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><p><q k=\"1\"/></p><p><r/></p>"
             "<CATENA output=\"$qq\">"
@@ -968,12 +1149,22 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- CATENA: de= involucri (lex eadem ac EXEMPLAR) --- */
+
+interior vacuum
+_sectio_vicesima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- CATENA: de= involucri ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><p><q k=\"1\"/></p><p><r/></p>"
             "<EXEMPLAR output=\"$pp\"><p/></EXEMPLAR>"
@@ -990,12 +1181,22 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- CATENA: saccharum '<(>' = ornamentum (ratificatio V) --- */
+
+interior vacuum
+_sectio_vicesima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- CATENA: '<(>' ornamentum ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><p><q k=\"1\"/></p><p><r/></p>"
             "<CATENA output=\"$qq\">"
@@ -1012,12 +1213,22 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- CATENA nidificata litteralis: PLANATUR --- */
+
+interior vacuum
+_sectio_vicesima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- CATENA nidificata: planatio ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><p><q k=\"1\"/></p><p><r/></p>"
             "<CATENA output=\"$qq\">"
@@ -1034,12 +1245,22 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- nexus ex templo: vocatio -> EXEMPLAR (portatio) --- */
+
+interior vacuum
+_sectio_vicesima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- CATENA: templum -> EXEMPLAR ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><#@gq><EXEMPLAR><q k=\"$k\"/></EXEMPLAR></#>"
             "<p><q k=\"1\"/></p><p><r/></p>"
@@ -1057,12 +1278,22 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- nexus ex templo: vocatio -> CATENA (planatio) --- */
+
+interior vacuum
+_sectio_vicesima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- CATENA: templum -> CATENA ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix>"
             "<#@gc><CATENA><EXEMPLAR><q k=\"$k\"/></EXEMPLAR>"
@@ -1082,12 +1313,22 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- nexus ex templo: silva graduum SPLICATUR --- */
+
+interior vacuum
+_sectio_vicesima_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- CATENA: templum -> silva graduum ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix>"
             "<#@gs><EXEMPLAR><p/></EXEMPLAR>"
@@ -1104,12 +1345,22 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- modus= gradui: primum truncat, unum medium clamat --- */
+
+interior vacuum
+_sectio_vicesima_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- CATENA: modus gradui ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><s k=\"1\"/><s k=\"2\"/>"
             "<CATENA output=\"$m\">"
@@ -1133,13 +1384,23 @@ principale (
         CREDO_VERUM (!e.successus);
         CREDO_VERUM (e.vitium == STML_EXPANSIO_UNUM_VIOLATUM);
     }
+}
 
     /* --- catena vacuans: gradus sine congruentiis -> relatio
      *     vacua propagatur, PER nihil parit --- */
+
+interior vacuum
+_sectio_vicesima_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- CATENA: vacuitas propagata ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><k/>"
             "<CATENA output=\"$m\">"
@@ -1155,12 +1416,22 @@ principale (
                 "<radix><k/></radix>");
         }
     }
+}
 
     /* --- vitia XX (CATENA malformata) + XII/XIV/XVIII --- */
+
+interior vacuum
+_sectio_vicesima_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- CATENA: vitia ---\n");
         /* XII: involucrum sine output= */
         e = _expandere_litteras(piscina, intern,
             "<radix><s/><CATENA><EXEMPLAR><s/></EXEMPLAR></CATENA>"
@@ -1243,12 +1514,22 @@ principale (
                          == STML_EXPANSIO_EXITUS_NON_CONSUMPTUS);
         CREDO_NON_NIHIL (e.radix_expansa);
     }
+}
 
     /* --- DIRIBITIO: custos verus -> bracchium applicatum --- */
+
+interior vacuum
+_sectio_tricesima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- DIRIBITIO: custos verus ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><k/><s v=\"1\"/>"
             "<DIRIBITIO output=\"$m\">"
@@ -1264,12 +1545,22 @@ principale (
                 "<radix><k/><s v=\"1\"/><n>1</n></radix>");
         }
     }
+}
 
     /* --- DIRIBITIO: custos falsus -> relatio vacua effluens --- */
+
+interior vacuum
+_sectio_tricesima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- DIRIBITIO: custos falsus ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><s v=\"1\"/>"
             "<DIRIBITIO output=\"$m\">"
@@ -1285,12 +1576,22 @@ principale (
                 "<radix><s v=\"1\"/></radix>");
         }
     }
+}
 
     /* --- DIRIBITIO: primum-congruens-vincit --- */
+
+interior vacuum
+_sectio_tricesima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- DIRIBITIO: primum vincit ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><k/><s v=\"1\"/><t v=\"2\"/>"
             "<DIRIBITIO output=\"$m\">"
@@ -1309,12 +1610,22 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- DIRIBITIO: ORDINARIUS = bracchium-semper --- */
+
+interior vacuum
+_sectio_tricesima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- DIRIBITIO: ORDINARIUS ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><s v=\"1\"/>"
             "<DIRIBITIO output=\"$m\">"
@@ -1332,13 +1643,23 @@ principale (
                 "<radix><s v=\"1\"/><n>1</n></radix>");
         }
     }
+}
 
     /* --- DIRIBITIO: bracchium relationem ORIGINALEM accipit
      *     (custos, non angustator - decretum) --- */
+
+interior vacuum
+_sectio_tricesima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- DIRIBITIO: relatio originalis ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><p><q/></p><p><r v=\"2\"/></p>"
             "<EXEMPLAR output=\"$pp\"><p/></EXEMPLAR>"
@@ -1358,12 +1679,22 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- DIRIBITIO: catena ut conditio et ut bracchium --- */
+
+interior vacuum
+_sectio_tricesima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- DIRIBITIO: catenae interius ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><f><g/></f><s v=\"1\"/>"
             "<DIRIBITIO output=\"$m\">"
@@ -1381,12 +1712,22 @@ principale (
                 "<radix><f><g/></f><s v=\"1\"/><n>1</n></radix>");
         }
     }
+}
 
     /* --- DIRIBITIO ut nexus catenae + diribitio in est --- */
+
+interior vacuum
+_sectio_tricesima_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- DIRIBITIO: nexus + est recursivum ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><k/><p><s v=\"1\"/></p>"
             "<CATENA output=\"$m\">"
@@ -1408,12 +1749,22 @@ principale (
                 "<radix><k/><p><s v=\"1\"/></p><n>1</n></radix>");
         }
     }
+}
 
     /* --- DIRIBITIO ex templo (nexus) + templum in est --- */
+
+interior vacuum
+_sectio_tricesima_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- DIRIBITIO: portatio templorum ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix>"
             "<#@cust><EXEMPLAR><k/></EXEMPLAR></#>"
@@ -1432,12 +1783,22 @@ principale (
                 "<radix><k/><s v=\"1\"/><n>1</n></radix>");
         }
     }
+}
 
     /* --- DIRIBITIO: conditio ancorata + modus in bracchio --- */
+
+interior vacuum
+_sectio_tricesima_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- DIRIBITIO: ancorata + modus bracchii ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix r=\"1\"><s k=\"1\"/><s k=\"2\"/>"
             "<DIRIBITIO output=\"$m\">"
@@ -1456,12 +1817,22 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- vitia XXI + XVIII --- */
+
+interior vacuum
+_sectio_tricesima_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- DIRIBITIO: vitia ---\n");
         /* XXI: liber non-bracchium */
         e = _expandere_litteras(piscina, intern,
             "<radix><s/><DIRIBITIO output=\"$m\"><alienum/>"
@@ -1570,13 +1941,23 @@ principale (
                          == STML_EXPANSIO_EXITUS_NON_CONSUMPTUS);
         CREDO_NON_NIHIL (e.radix_expansa);
     }
+}
 
     /* --- LEX EXTENSIONIS: capturae per catenam accumulantur,
      *     tabula PER omnia accumulata fert (decretum) --- */
+
+interior vacuum
+_sectio_quadragesima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- extensio: de= hereditat ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><p t=\"X\"><q k=\"1\"/></p>"
             "<EXEMPLAR output=\"$pp\"><p t=\"$t\"/></EXEMPLAR>"
@@ -1593,12 +1974,22 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- extensio per gradus CATENAE --- */
+
+interior vacuum
+_sectio_quadragesima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- extensio: catena hereditat ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><p t=\"X\"><q k=\"1\"/></p>"
             "<CATENA output=\"$qq\">"
@@ -1616,12 +2007,22 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- extensio per bracchium DIRIBITIONIS --- */
+
+interior vacuum
+_sectio_quadragesima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- extensio: bracchium hereditat ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><p t=\"X\"><q k=\"1\"/></p>"
             "<EXEMPLAR output=\"$pp\"><p t=\"$t\"/></EXEMPLAR>"
@@ -1640,12 +2041,22 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- XXII: collisio capturarum trans gradus --- */
+
+interior vacuum
+_sectio_quadragesima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- extensio: collisio XXII ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><p n=\"A\"><q n=\"B\"/></p>"
             "<EXEMPLAR output=\"$pp\"><p n=\"$n\"/></EXEMPLAR>"
@@ -1666,15 +2077,25 @@ principale (
         CREDO_VERUM (!e.successus);
         CREDO_VERUM (e.vitium == STML_EXPANSIO_CAPTURA_COLLISA);
     }
+}
 
 
     /* =============== SINE (antiiunctio, XXIII) =============== */
 
     /* --- SINE: filtrum fundamentale (servare in ZEPHYRO) --- */
+
+interior vacuum
+_sectio_quadragesima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- SINE: filtrum fundamentale ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><p t=\"A\"><q/></p><p t=\"B\"/>"
             "<CATENA output=\"$pp\">"
@@ -1691,14 +2112,24 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- SINE: PONS IPSE IUNCTIO EST (correlatio per ordinem) ---
      * probatio incorrelata ambos necaret (u adest utrobique);
      * pons '&@n;' solum ordinem primum necat */
+
+interior vacuum
+_sectio_quadragesima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- SINE: pons = iunctio ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><s><d n=\"x\"/><u n=\"x\"/></s>"
             "<s><d n=\"y\"/><u n=\"x\"/></s>"
@@ -1718,13 +2149,23 @@ principale (
                 "<mortuum>y</mortuum></radix>");
         }
     }
+}
 
     /* --- SINE medio catenae: filtrum purum (radix eadem,
      * capturae hereditatae per SINE fluunt) --- */
+
+interior vacuum
+_sectio_quadragesima_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- SINE: medio catenae ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><s><d n=\"x\"/><u n=\"x\"/></s>"
             "<s><d n=\"y\"/><m v=\"1\"/></s>"
@@ -1745,12 +2186,22 @@ principale (
                 "<x>y-1</x></radix>");
         }
     }
+}
 
     /* --- SINE: vacuitas propagata (relatio vacua influens) --- */
+
+interior vacuum
+_sectio_quadragesima_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- SINE: vacuitas propagata ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><a/>"
             "<CATENA output=\"$rr\">"
@@ -1766,12 +2217,22 @@ principale (
                 "<radix><a/></radix>");
         }
     }
+}
 
     /* --- SINE: '<(>' ornamentum (dissolutio fragmentorum) --- */
+
+interior vacuum
+_sectio_quadragesima_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- SINE: '<(>' ornamentum ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><p t=\"A\"><q/></p><p t=\"B\"/>"
             "<CATENA output=\"$pp\">"
@@ -1788,12 +2249,22 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- SINE ex templo portatum (vocatio -> nexus filtrans) --- */
+
+interior vacuum
+_sectio_quadragesima_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- SINE: portatio templorum ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><#@gf><SINE><q/></SINE></#>"
             "<p t=\"A\"><q/></p><p t=\"B\"/>"
@@ -1811,13 +2282,23 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- dualitas: catena SINE ferens ut conditio DIRIBITIONIS
      * ('si quid DEEST, bracchium hoc sume') --- */
+
+interior vacuum
+_sectio_quinquagesima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- SINE: conditio DIRIBITIONIS ---\n");
         /* usus deest -> conditio vera -> bracchium sumptum */
         e = _expandere_litteras(piscina, intern,
             "<radix><s t=\"S1\"><d n=\"x\"/></s>"
@@ -1862,12 +2343,22 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- XXIII: attributa machinae in SINE --- */
+
+interior vacuum
+_sectio_quinquagesima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- SINE: vitia attributorum XXIII ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><a/><CATENA output=\"$rr\">"
             "<EXEMPLAR><a/></EXEMPLAR>"
@@ -1900,12 +2391,22 @@ principale (
         CREDO_VERUM (!e.successus);
         CREDO_VERUM (e.vitium == STML_EXPANSIO_SINE_MALFORMATUM);
     }
+}
 
     /* --- XXIII: corpus malformatum --- */
+
+interior vacuum
+_sectio_quinquagesima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- SINE: vitia corporis XXIII ---\n");
         /* corpus vacuum */
         e = _expandere_litteras(piscina, intern,
             "<radix><a/><CATENA output=\"$rr\">"
@@ -1933,13 +2434,23 @@ principale (
         CREDO_VERUM (!e.successus);
         CREDO_VERUM (e.vitium == STML_EXPANSIO_SINE_MALFORMATUM);
     }
+}
 
     /* --- XXIII: fons NIHIL (absentia lata documenti = ianua
      * posterior, CLARE recusata) --- */
+
+interior vacuum
+_sectio_quinquagesima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- SINE: fons NIHIL XXIII ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><a/><CATENA output=\"$rr\">"
             "<SINE><q/></SINE></CATENA>"
@@ -1947,14 +2458,24 @@ principale (
         CREDO_VERUM (!e.successus);
         CREDO_VERUM (e.vitium == STML_EXPANSIO_SINE_MALFORMATUM);
     }
+}
 
     /* --- caecitas attributorum (TRANSPARENTIA attributa=): forma
      * splicata provenientiam fert (b=) quae littera fieret -
      * caecitate declarata usus invenitur, ordo necatur --- */
+
+interior vacuum
+_sectio_quinquagesima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- SINE: caecitas attributorum ---\n");
         /* sine caecitate: b="7" in forma = littera, usus b="9"
          * numquam congruit -> ordo servatur (situs falsus) */
         e = _expandere_litteras(piscina, intern,
@@ -2002,14 +2523,24 @@ principale (
         CREDO_VERUM (e.vitium
             == STML_EXPANSIO_TRANSPARENTIA_MALFORMATA);
     }
+}
 
     /* --- aliasa contenti resoluta (congruentia per
      * repraesentationem videt): usus solum per '<<#id>>' testatum
      * ordinem necat --- */
+
+interior vacuum
+_sectio_quinquagesima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- SINE: alias contenti resolutum ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><s><d n=\"x\"/>"
             "<#tok><signum n=\"x\"/></#>"
@@ -2030,14 +2561,24 @@ principale (
                 "<u><<#tok>></u></s></radix>");
         }
     }
+}
 
     /* --- SINE ut mandatum bracchii directum = XXI (lex vetus:
      * mandata pura EXEMPLAR/CATENA/DIRIBITIO sola; catena SINE
      * ferens via composita est) --- */
+
+interior vacuum
+_sectio_quinquagesima_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- SINE: bracchium directum XXI ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><a/>"
             "<EXEMPLAR output=\"$ss\"><a/></EXEMPLAR>"
@@ -2049,17 +2590,25 @@ principale (
         CREDO_VERUM (!e.successus);
         CREDO_VERUM (e.vitium == STML_EXPANSIO_DIRIBITIO_MALFORMATA);
     }
-
+}
 
     /* ===== UNIFORMITAS PONTIS (referentia = electio) ===== */
-
     /* --- gradus positivus correlatus: iunctio trans gradus ---
      * pons '&@n;' in gradu positivo = impletio per ordinem
      * (machina SINE signo positivo) --- */
+
+interior vacuum
+_sectio_quinquagesima_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- pons: gradus positivus ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><s><d n=\"x\"/><probatio de-quo=\"x\"/></s>"
             "<s><d n=\"y\"/><probatio de-quo=\"z\"/></s>"
@@ -2081,12 +2630,22 @@ principale (
                 "<iuncta>x</iuncta></radix>");
         }
     }
+}
 
     /* --- XIII: referentia sine ordinibus (scopus documenti) --- */
+
+interior vacuum
+_sectio_quinquagesima_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- pons: vitium sine ordinibus ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><a/>"
             "<EXEMPLAR output=\"$r\"><u n=\"&@n;\"/></EXEMPLAR>"
@@ -2095,17 +2654,25 @@ principale (
         CREDO_VERUM (e.vitium
             == STML_EXPANSIO_EXEMPLAR_MALFORMATUM);
     }
-
+}
 
     /* ========= ANGUSTANS (custos fit angustator) ========= */
-
     /* --- vigilia UNA VICE scripta: conditio filtrat, bracchium
      * angustans identitatem accipit (EXEMPLAR ancorata cum
      * stella = mandatum identitatis) --- */
+
+interior vacuum
+_sectio_quinquagesima_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- angustans: filtrum semel ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix>"
             "<punctum gradus=\"theorema\" index=\"4.1\">"
@@ -2134,13 +2701,23 @@ principale (
                 "<clamor>4.3</clamor></radix>");
         }
     }
+}
 
     /* --- vestigium angustationis (INDAGO): 'bracchium
      * angustatum' + relatio conditionis in numeris visa --- */
+
+interior vacuum
+_sectio_sexagesima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- angustans: vestigium INDAGO ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><INDAGO/>"
             "<punctum gradus=\"theorema\" index=\"4.1\">"
@@ -2176,12 +2753,22 @@ principale (
                 "<!--indago PER $v: ordines 1--></radix>");
         }
     }
+}
 
     /* --- XXI: ORDINARIUS angustans (nihil angustandum) --- */
+
+interior vacuum
+_sectio_sexagesima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- angustans: ORDINARIUS XXI ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><a/>"
             "<EXEMPLAR output=\"$ss\"><a/></EXEMPLAR>"
@@ -2194,17 +2781,25 @@ principale (
         CREDO_VERUM (e.vitium
             == STML_EXPANSIO_DIRIBITIO_MALFORMATA);
     }
-
+}
 
     /* ========= RETENTIO RADICIS 'radix="fontis"' ========= */
-
     /* --- pluralitas in scopo uno: ordo per declarationem, radix
      * scopi retenta - antiiunctio per-declarationem (forma codicis
      * 69 in parvo), deinde gradus ulterior ex radice retenta --- */
+
+interior vacuum
+_sectio_sexagesima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- retentio: pluralitas scopi ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><s><d n=\"x\"/><d n=\"y\"/><u n=\"x\"/>"
             "<m v=\"1\"/></s>"
@@ -2226,12 +2821,22 @@ principale (
                 "<x>y-1</x></radix>");
         }
     }
+}
 
     /* --- radix congruentiae ipsius per capturam claram --- */
+
+interior vacuum
+_sectio_sexagesima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- retentio: captura radicis propriae ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><s><d n=\"x\"/></s>"
             "<CATENA output=\"$mm\">"
@@ -2250,12 +2855,22 @@ principale (
                 "<cella><d n=\"x\"/></cella></radix>");
         }
     }
+}
 
     /* --- XIII: valor ignotus; fontis sine ordine intrante --- */
+
+interior vacuum
+_sectio_sexagesima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- retentio: vitia XIII ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><a/><CATENA output=\"$r\">"
             "<EXEMPLAR><a/></EXEMPLAR>"
@@ -2274,15 +2889,25 @@ principale (
         CREDO_VERUM (e.vitium
             == STML_EXPANSIO_EXEMPLAR_MALFORMATUM);
     }
+}
 
 
     /* ============ DESCENSUS '<**>' (axis, XXV) ============ */
 
     /* --- pertinentia: captura per profunditatem ignotam --- */
+
+interior vacuum
+_sectio_sexagesima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- descensus: pertinentia ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><x><m><n><b v=\"1\"/></n></m></x>"
             "<EXEMPLAR output=\"$r\"><x><**><b v=\"$v\"/></**>"
@@ -2297,12 +2922,22 @@ principale (
                 "<f>1</f></radix>");
         }
     }
+}
 
     /* --- sublatio: existentiale extra ordinem fratrum --- */
+
+interior vacuum
+_sectio_sexagesima_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- descensus: sublatio ordinis ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><x><alte><b/></alte><a/></x>"
             "<EXEMPLAR output=\"$r\"><x><a/><**><b/></**></x>"
@@ -2317,13 +2952,23 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- ligatio prima COMPATIBILIS: regula V per descensum
      * (iunctio sui profunda - probatio se citans) --- */
+
+interior vacuum
+_sectio_sexagesima_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- descensus: regula V compatibilis ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix>"
             "<punctum index=\"4\"><probatio ref=\"9\"/>"
@@ -2345,12 +2990,22 @@ principale (
                 "<se>4</se></radix>");
         }
     }
+}
 
     /* --- caecitas: descensus perspicua numquam intrat --- */
+
+interior vacuum
+_sectio_sexagesima_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- descensus: caecitas ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix>"
             "<TRANSPARENTIA tags=\"celatum\"/>"
@@ -2366,12 +3021,22 @@ principale (
                 "<radix><x><celatum><b/></celatum></x></radix>");
         }
     }
+}
 
     /* --- descensus in corpore SINE (absentia profunda) --- */
+
+interior vacuum
+_sectio_sexagesima_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- descensus: in SINE ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><s t=\"A\"><w><x><malum/></x></w></s>"
             "<s t=\"B\"><w><x/></w></s>"
@@ -2390,13 +3055,23 @@ principale (
                 "<n>B</n></radix>");
         }
     }
+}
 
     /* --- compositio positionalis: '<**>' intra '<*>' in sede
      * cursoris (descensus positionalis numquam primitivum) --- */
+
+interior vacuum
+_sectio_septuagesima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- descensus: compositio cursoris ---\n");
         /* p sub liberO POST a: congruit */
         e = _expandere_litteras(piscina, intern,
             "<radix><x><a/><w><d><p/></d></w><b/></x>"
@@ -2427,12 +3102,22 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- XXV: forma descensus mala (praeparatione, CLARE) --- */
+
+interior vacuum
+_sectio_septuagesima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- descensus: vitia XXV ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><a/><EXEMPLAR output=\"$r\"><x><**/></x>"
             "</EXEMPLAR><PER congruentia=\"$r\"><y/></PER>"
@@ -2467,15 +3152,25 @@ principale (
         CREDO_VERUM (e.vitium
             == STML_EXPANSIO_DESCENSUS_MALFORMATUS);
     }
+}
 
 
     /* =============== INDAGO (vestigatio, XXIV) =============== */
 
     /* --- lapis sepulcralis catenae + PER intra relatum --- */
+
+interior vacuum
+_sectio_septuagesima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- INDAGO: catena + PER ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><s><d/></s><s/>"
             "<INDAGO/>"
@@ -2497,13 +3192,23 @@ principale (
                 "</radix>");
         }
     }
+}
 
     /* --- lapis DIRIBITIONIS: praeteritum + ORDINARIUS + fabula
      * bracchii --- */
+
+interior vacuum
+_sectio_septuagesima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- INDAGO: diribitio ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><a/>"
             "<INDAGO/>"
@@ -2530,12 +3235,22 @@ principale (
                 "<!--indago PER $m: ordines 1--></radix>");
         }
     }
+}
 
     /* --- XXIV: INDAGO non nudum --- */
+
+interior vacuum
+_sectio_septuagesima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- INDAGO: vitia XXIV ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><INDAGO malum=\"1\"/><a/></radix>");
         CREDO_VERUM (!e.successus);
@@ -2546,6 +3261,7 @@ principale (
         CREDO_VERUM (!e.successus);
         CREDO_VERUM (e.vitium == STML_EXPANSIO_INDAGO_MALFORMATUM);
     }
+}
 
 
     /* ==================================================
@@ -2560,10 +3276,19 @@ principale (
      * ================================================== */
 
     /* --- proiectio scalaris (attributum + textus), via catenata --- */
+
+interior vacuum
+_sectio_septuagesima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- proiectio: scalaris + via catenata ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix>"
             "<#@f n=\"@n\"><h g=\"&@n.gradus;\">&@n.gradus;/&@n.inlinea.t;"
@@ -2585,12 +3310,22 @@ principale (
                 "<h g=\"2\">2/x</h></radix>");
         }
     }
+}
 
     /* --- proiectio silvae (splex), '!' octeti crudorum, vacuum --- */
+
+interior vacuum
+_sectio_septuagesima_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- proiectio: silva, '!', involucrum vacuum ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix>"
             "<#@f n=\"@n\"><p>&@n.inlinea;</p><q>&@n.crudum;</q>"
@@ -2616,13 +3351,23 @@ principale (
                 "<r>Hello w</r><s>[]</s></radix>");
         }
     }
+}
 
     /* --- '!' super structuram = vitium VII (chordificatio tacita
      * numquam) --- */
+
+interior vacuum
+_sectio_septuagesima_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- proiectio: '!' super structuram ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><#@f n=\"@n\"><r>&@n.inlinea!;</r></#>"
             "<textus><inlinea><t>x</t></inlinea></textus>"
@@ -2633,12 +3378,22 @@ principale (
         CREDO_AEQUALIS_I32 (e.vitium,
                             STML_EXPANSIO_ARGUMENTUM_ARBOREUM);
     }
+}
 
     /* --- XXVII ABSENS / XXVIII AMBIGUA (impletione) --- */
+
+interior vacuum
+_sectio_septuagesima_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- proiectio: vitia XXVII / XXVIII ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><#@f n=\"@n\"><r>&@n.nusquam;</r></#>"
             "<x><a/></x>"
@@ -2683,14 +3438,24 @@ principale (
         CREDO_AEQUALIS_I32 (e.vitium, STML_EXPANSIO_PROIECTIO_ABSENS);
         CREDO_CHORDA_AEQUALIS_LITERIS (e.loculus, "x");
     }
+}
 
     /* --- XXVI MALFORMATA (collectione, sine vocatione); forma
      * imperfecta '&@n!x;' littera manet --- */
+
+interior vacuum
+_sectio_septuagesima_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
                 StmlResultus ref;
 
-        imprimere("\n--- proiectio: vitium XXVI + littera ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><#@f n=\"@n\"><r>&@n..x;</r></#></radix>");
         CREDO_VERUM (!e.successus);
@@ -2730,16 +3495,26 @@ principale (
                 stml_scribere(ref.radix, piscina, FALSUM));
         }
     }
+}
 
     /* --- COMMUTATIO super proiectionem; involucrum vacuum = scalaris
      * vacuus PRAESENS (non-nihil congruit). 'est=""' scribi nequit:
      * grammatica basis valorem vacuum ut sepulcrum legit (attributum
      * nudum, valor NIHIL) - absentia in materia involucrum DEEST
      * (XXVII), bracchium exemplaris eam discernit (B1.4) --- */
+
+interior vacuum
+_sectio_octogesima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- proiectio: COMMUTATIO de=proiectio ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix>"
             "<#@f n=\"@n\">"
@@ -2763,13 +3538,23 @@ principale (
                 "</capitulum><h2/><cum>[]</cum></radix>");
         }
     }
+}
 
     /* --- proiectio ut argumentum bloci vocationis interioris
      * ('<@m=>&@n.inlinea;</>' silvam involucri fert) --- */
+
+interior vacuum
+_sectio_octogesima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- proiectio: transitus in argumentum bloci ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix>"
             "<#@g m=\"@m\"><w>&@m;</w></#>"
@@ -2788,6 +3573,7 @@ principale (
                 "<w><t>x</t></w></radix>");
         }
     }
+}
 
 
     /* ==================================================
@@ -2799,10 +3585,19 @@ principale (
      * ================================================== */
 
     /* --- delegatio: ansa liberorum in una linea --- */
+
+interior vacuum
+_sectio_octogesima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- PER silvae: delegatio voca= ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix>"
             "<#@item n=\"@n\"><li>&@n.t;</li></#>"
@@ -2824,13 +3619,23 @@ principale (
                 "<ul><li>a</li><li>b</li></ul></radix>");
         }
     }
+}
 
     /* --- forma corporis ut=: scopus exterior visibilis; textus et
      * commenta silvae ordines non sunt --- */
+
+interior vacuum
+_sectio_octogesima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- PER silvae: corpus ut= ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix>"
             "<#@list n=\"@n\"><ul><PER de=\"@n.elementa\" ut=\"e\">"
@@ -2851,12 +3656,22 @@ principale (
                 "<ul><li>a/L</li><li>b/L</li></ul></radix>");
         }
     }
+}
 
     /* --- silva vacua = ordines nulli; PER nidificata (ansa duplex) --- */
+
+interior vacuum
+_sectio_octogesima_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- PER silvae: vacua + nidificata ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix>"
             "<#@list n=\"@n\"><ul>[<PER de=\"@n.elementa\" ut=\"e\"><li/>"
@@ -2895,13 +3710,23 @@ principale (
                 "<ul><li><i>a</i><i>b</i></li></ul></radix>");
         }
     }
+}
 
     /* --- vitia: XXIX delegatio ambigua; XIII formae malae; collectio
      * (radix ignota, ordo localis, ut obumbrans, via mala) --- */
+
+interior vacuum
+_sectio_octogesima_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- PER silvae: vitia ---\n");
         /* XXIX: templum cum loculis requisitis duobus */
         e = _expandere_litteras(piscina, intern,
             "<radix><#@two a=\"@a\" b=\"@b\"><x/></#>"
@@ -2984,6 +3809,7 @@ principale (
         CREDO_AEQUALIS_I32 (e.vitium,
                             STML_EXPANSIO_PROIECTIO_MALFORMATA);
     }
+}
 
 
     /* ==================================================
@@ -2995,10 +3821,19 @@ principale (
      * ================================================== */
 
     /* --- dispensatio per tag: ordo ansae -> bracchium per genus --- */
+
+interior vacuum
+_sectio_octogesima_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- CASUS tag=: dispensatio ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix>"
             "<#@f n=\"@n\"><COMMUTATIO de=\"&@n;\">"
@@ -3019,13 +3854,23 @@ principale (
                 "<A/><B>x</B><Z/></radix>");
         }
     }
+}
 
     /* --- bracchia exemplaria: primum congruens vincit; capturae
      * valoris, nodi, textus ut argumenta; descensus; tag ultimus --- */
+
+interior vacuum
+_sectio_octogesima_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- CASUS <EST>: formae + capturae ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix>"
             "<#@f n=\"@n\"><COMMUTATIO de=\"&@n;\">"
@@ -3056,13 +3901,23 @@ principale (
                 "<tight/><h g=\"2\">x</h><tx>y</tx><dp/><loose/></radix>");
         }
     }
+}
 
     /* --- exemplar parametrizatum ('&@k;' in forma); scrutans
      * optionalis absens -> ORDINARIUS --- */
+
+interior vacuum
+_sectio_octogesima_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- CASUS <EST>: forma parametrizata + absens ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix>"
             "<#@f n=\"@n\" k=\"@k\"><COMMUTATIO de=\"&@n;\">"
@@ -3096,13 +3951,23 @@ principale (
                 "<radix><miss/></radix>");
         }
     }
+}
 
     /* --- vitia: XXX scalaris in positione arboris; IX formae malae
      * (collectione); XXII captura collisa; X nullum bracchium --- */
+
+interior vacuum
+_sectio_octogesima_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- CASUS exemplaria: vitia ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><#@f n=\"@n\"><COMMUTATIO de=\"&@n;\">"
             "<CASUS tag=\"p\"><hit/></CASUS></COMMUTATIO></#>"
@@ -3173,6 +4038,7 @@ principale (
         CREDO_VERUM (!e.successus);
         CREDO_AEQUALIS_I32 (e.vitium, STML_EXPANSIO_CASUS_NULLUS);
     }
+}
 
 
     /* ==================================================
@@ -3184,10 +4050,19 @@ principale (
      * ================================================== */
 
     /* --- dispensator sui vocans: lista nidificata spicae --- */
+
+interior vacuum
+_sectio_nonagesima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- vocatio sui: dispensator, lista nidificata ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix>"
             "<#@md-nodus n=\"@n\"><COMMUTATIO de=\"&@n;\">"
@@ -3231,13 +4106,23 @@ principale (
             }
         }
     }
+}
 
     /* --- vocatio sui explicita per proiectionem (descensus strictus);
      * terminatio per bracchium exemplare --- */
+
+interior vacuum
+_sectio_nonagesima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- vocatio sui: explicita, proiectio descendens ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix>"
             "<#@f n=\"@n\"><d><COMMUTATIO de=\"&@n;\">"
@@ -3257,13 +4142,23 @@ principale (
                 "</w><d><d><d><leaf/></d></d></d></radix>");
         }
     }
+}
 
     /* --- XXXI: argumentum idem, blocum recens, scalaria sola; recursio
      * mutua POSTERIUS manet --- */
+
+interior vacuum
+_sectio_nonagesima_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- vocatio sui: vitia XXXI / POSTERIUS ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><#@f n=\"@n\"><<#@f>><@n=>&@n;</></#>"
             "<<#@f>><@n=><x/></></radix>");
@@ -3310,14 +4205,24 @@ principale (
         CREDO_AEQUALIS_I32 (e.vitium,
                             STML_EXPANSIO_FRAGMENTUM_POSTERIUS);
     }
+}
 
     /* --- '!' super folium vacuum: octeti nulli (terminator materiae
      * intra lexemata cruda - B3.1 md); folium vacuum sine '!' silva
      * manet --- */
+
+interior vacuum
+_sectio_nonagesima_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
         StmlExpansioResultus e;
 
-        imprimere("\n--- proiectio: '!' folium vacuum ---\n");
         e = _expandere_litteras(piscina, intern,
             "<radix><#@f n=\"@n\"><r>&@n.crudum!;</r><s>&@n.crudum;</s></#>"
             "<x><crudum><t!>a</t><nl/><t!>b</t></crudum></x>"
@@ -3332,16 +4237,194 @@ principale (
                 "<r>ab</r><s><t!>a</t><nl/><t!>b</t></s></radix>");
         }
     }
+}
 
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "index sui: fluitans + PER", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "captura nodi + splex", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "subsequentia ordinata", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "elementum quodlibet '<*>'", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "captura iterata: aequalitas", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "captura iterata sub TRANSPARENTIA", _sectio_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "captura iterata: forma auctoris", _sectio_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "ancorata", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "cursus fratrum", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "retentatio", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "modus", _sectio_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "TRANSPARENTIA", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fragmentum dissolutum", _sectio_decima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "transclusio praeterita", _sectio_decima_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "catenatio de=", _sectio_decima_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "strata: supra solum", _sectio_decima_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "PER voca=", _sectio_decima_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "relatio vacua", _sectio_decima_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "vitia", _sectio_decima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "CATENA: catena basica", _sectio_vicesima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "CATENA: de= involucri", _sectio_vicesima_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "CATENA: '<(>' ornamentum", _sectio_vicesima_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "CATENA nidificata: planatio", _sectio_vicesima_tertia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "CATENA: templum -> EXEMPLAR", _sectio_vicesima_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "CATENA: templum -> CATENA", _sectio_vicesima_quinta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "CATENA: templum -> silva graduum", _sectio_vicesima_sexta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "CATENA: modus gradui", _sectio_vicesima_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "CATENA: vacuitas propagata", _sectio_vicesima_octava, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "CATENA: vitia", _sectio_vicesima_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "DIRIBITIO: custos verus", _sectio_tricesima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "DIRIBITIO: custos falsus", _sectio_tricesima_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "DIRIBITIO: primum vincit", _sectio_tricesima_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "DIRIBITIO: ORDINARIUS", _sectio_tricesima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "DIRIBITIO: relatio originalis", _sectio_tricesima_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "DIRIBITIO: catenae interius", _sectio_tricesima_quinta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "DIRIBITIO: nexus + est recursivum", _sectio_tricesima_sexta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "DIRIBITIO: portatio templorum", _sectio_tricesima_septima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "DIRIBITIO: ancorata + modus bracchii", _sectio_tricesima_octava,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "DIRIBITIO: vitia", _sectio_tricesima_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "extensio: de= hereditat", _sectio_quadragesima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "extensio: catena hereditat", _sectio_quadragesima_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "extensio: bracchium hereditat", _sectio_quadragesima_secunda,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "extensio: collisio XXII", _sectio_quadragesima_tertia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "SINE: filtrum fundamentale", _sectio_quadragesima_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "SINE: pons = iunctio", _sectio_quadragesima_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "SINE: medio catenae", _sectio_quadragesima_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "SINE: vacuitas propagata", _sectio_quadragesima_septima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "SINE: '<(>' ornamentum", _sectio_quadragesima_octava, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "SINE: portatio templorum", _sectio_quadragesima_nona, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "SINE: conditio DIRIBITIONIS", _sectio_quinquagesima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "SINE: vitia attributorum XXIII", _sectio_quinquagesima_prima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "SINE: vitia corporis XXIII", _sectio_quinquagesima_secunda,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "SINE: fons NIHIL XXIII", _sectio_quinquagesima_tertia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "SINE: caecitas attributorum", _sectio_quinquagesima_quarta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "SINE: alias contenti resolutum", _sectio_quinquagesima_quinta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "SINE: bracchium directum XXI", _sectio_quinquagesima_sexta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "pons: gradus positivus", _sectio_quinquagesima_septima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "pons: vitium sine ordinibus", _sectio_quinquagesima_octava,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "angustans: filtrum semel", _sectio_quinquagesima_nona, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "angustans: vestigium INDAGO", _sectio_sexagesima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "angustans: ORDINARIUS XXI", _sectio_sexagesima_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "retentio: pluralitas scopi", _sectio_sexagesima_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "retentio: captura radicis propriae", _sectio_sexagesima_tertia,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "retentio: vitia XIII", _sectio_sexagesima_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "descensus: pertinentia", _sectio_sexagesima_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "descensus: sublatio ordinis", _sectio_sexagesima_sexta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "descensus: regula V compatibilis", _sectio_sexagesima_septima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "descensus: caecitas", _sectio_sexagesima_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "descensus: in SINE", _sectio_sexagesima_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "descensus: compositio cursoris", _sectio_septuagesima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "descensus: vitia XXV", _sectio_septuagesima_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "INDAGO: catena + PER", _sectio_septuagesima_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "INDAGO: diribitio", _sectio_septuagesima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "INDAGO: vitia XXIV", _sectio_septuagesima_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "proiectio: scalaris + via catenata", _sectio_septuagesima_quinta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "proiectio: silva, '!', involucrum vacuum",
+        _sectio_septuagesima_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "proiectio: '!' super structuram", _sectio_septuagesima_septima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "proiectio: vitia XXVII / XXVIII", _sectio_septuagesima_octava,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "proiectio: vitium XXVI + littera", _sectio_septuagesima_nona,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "proiectio: COMMUTATIO de=proiectio", _sectio_octogesima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "proiectio: transitus in argumentum bloci",
+        _sectio_octogesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "PER silvae: delegatio voca=", _sectio_octogesima_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "PER silvae: corpus ut=", _sectio_octogesima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "PER silvae: vacua + nidificata", _sectio_octogesima_quarta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "PER silvae: vitia", _sectio_octogesima_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "CASUS tag=: dispensatio", _sectio_octogesima_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "CASUS <EST>: formae + capturae", _sectio_octogesima_septima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "CASUS <EST>: forma parametrizata + absens",
+        _sectio_octogesima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "CASUS exemplaria: vitia", _sectio_octogesima_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "vocatio sui: dispensator, lista nidificata", _sectio_nonagesima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "vocatio sui: explicita, proiectio descendens",
+        _sectio_nonagesima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "vocatio sui: vitia XXXI / POSTERIUS", _sectio_nonagesima_secunda,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "proiectio: '!' folium vacuum", _sectio_nonagesima_tertia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-        piscina_destruere(piscina);
-        si (praeteritus)
-        {
-            redde ZEPHYRUM;
-        }
-    }
-    redde I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("stml_exemplaria", SECTIONES);
 }

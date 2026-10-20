@@ -80,7 +80,9 @@ linea_ad_x_adest (
     redde FALSUM;
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                 Piscina* piscina;
     InternamentumChorda* intern;
@@ -95,15 +97,10 @@ s32 principale (vacuum)
                  vacuum* ctx;
                     i32  vocationes;
 
-    piscina = piscina_generare_dynamicum("probatio_figura", XVI * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
+    piscina     = c->piscina;
     intern      = internamentum_creare(piscina);
     vocationes  = ZEPHYRUM;
 
-    imprimere("\n--- Registrum ---\n");
     reg = figura_registrum_creare(piscina);
     CREDO_NON_NIHIL(reg);
     CREDO_VERUM(figura_registrare(reg, PARTES_BOTTONE, ZEPHYRUM,
@@ -145,8 +142,7 @@ s32 principale (vacuum)
     componens_addere_liberum(radix, pannus);
     componens_addere_liberum(pannus, b1);
 
-    imprimere("\n--- Pingere: coetus per componens, figura ante liberos"
-              " ---\n");
+    CREDO_GRADUS("Pingere: coetus per componens, figura ante liberos");
     m = mandata_creare(piscina, intern);
     pingere(radix, reg, ZEPHYRUM, m);
     CREDO_AEQUALIS_I32(vocationes, I);
@@ -185,7 +181,7 @@ s32 principale (vacuum)
     CREDO_VERUM(x->genus == MANDATUM_TEXTUS);
     CREDO_CHORDA_AEQUALIS_LITERIS(x->textus, "Ok");
 
-    imprimere("\n--- Thema alterum: figura alia ---\n");
+    CREDO_GRADUS("Thema alterum: figura alia");
     m = mandata_creare(piscina, intern);
     pingere(radix, reg, I, m);
     CREDO_AEQUALIS_I32(vocationes, I);              /* non vocata */
@@ -195,21 +191,27 @@ s32 principale (vacuum)
     CREDO_VERUM(x->genus == MANDATUM_RECTANGULUM);
     CREDO_FALSUM(x->impletum);
 
-    imprimere("\n--- Partes sine figura: coetus solus ---\n");
+    CREDO_GRADUS("Partes sine figura: coetus solus");
     m = mandata_creare(piscina, intern);
     pingere(radix, reg, II, m);
     CREDO_AEQUALIS_I32(mandata_numerus(m), III);
 
-    imprimere("\n--- Puritas: bis idem ---\n");
+    CREDO_GRADUS("Puritas: bis idem");
     m   = mandata_creare(piscina, intern);
     m2  = mandata_creare(piscina, intern);
     pingere(radix, reg, ZEPHYRUM, m);
     pingere(radix, reg, ZEPHYRUM, m2);
     CREDO_VERUM(mandata_aequalia(m, m2));
     CREDO_AEQUALIS_I32(vocationes, III);
+}
 
-    imprimere("\n");
-    imprimere("\n--- T2a: vacare et miscere (vicus) ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
          FiguraRegistrum* hospes;
          FiguraRegistrum* app;
@@ -234,6 +236,17 @@ s32 principale (vacuum)
         CREDO_VERUM(figura_registrare(hospes, PARTES_INDEX, ZEPHYRUM,
             figura_finium, NIHIL));
     }
+}
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
     /* figura_mensam_pingere: superficies per fines, exemplar foci
      * supra solum si focatum */
@@ -265,7 +278,13 @@ s32 principale (vacuum)
                     && y->color.valor == (i32)COLOR_BORDER);
         CREDO_VERUM(y->fines.y == III && y->fines.altitudo == XXX);
     }
+}
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     /* figura_color_thematis: genus thematis, valor = color datus */
     {
         ColorMandati cm;
@@ -274,6 +293,17 @@ s32 principale (vacuum)
         CREDO_VERUM(cm.genus == COLOR_MANDATI_THEMA);
         CREDO_AEQUALIS_I32((i32)cm.valor, (i32)COLOR_ACCENT_PRIMARY);
     }
+}
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
     /* instrumenta visus (V1): globulus, sagitta, segmentum, capsa,
      * ordo electus, fascia, umbra, campus, textus audax */
@@ -371,7 +401,23 @@ s32 principale (vacuum)
         y = (constans Mandatum*)xar_obtinere(v->elementa, I);
         CREDO_AEQUALIS_S32(y->fines.x, X + I);
     }
+}
 
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Registrum", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "T2a: vacare et miscere (vicus)", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "figura_mensam_pingere", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "figura_color_thematis", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "instrumenta visus (V1)", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("figura", SECTIONES);
 }

@@ -103,12 +103,21 @@ _vocare (
  * FUNCTIONES AUXILIARES
  * ======================================================================== */
 
+/* parare omnium sectionum: status plagulae ante quamque sectionem
+ * reponitur - numerator, via ultima, et capsae (router indices earum
+ * non constantes tenet) */
 interior vacuum
-reset_globals (vacuum)
+reset_globals (
+    CredoContextus* c)
 {
-    g_handler_vocatus     = 0;
-    g_ultima_via.datum    = NIHIL;
-    g_ultima_via.mensura  = 0;
+    (vacuum)c;
+    g_handler_vocatus             = 0;
+    g_ultima_via.datum            = NIHIL;
+    g_ultima_via.mensura          = 0;
+    g_capsa_simplex.tractator     = handler_simplex;
+    g_capsa_users.tractator       = handler_users;
+    g_capsa_user_by_id.tractator  = handler_user_by_id;
+    g_capsa_posts.tractator       = handler_posts;
 }
 
 interior chorda
@@ -124,13 +133,14 @@ chorda_test (
  * ======================================================================== */
 
 interior vacuum
-probatio_creare(Piscina* piscina)
+_sectio_prima (
+    CredoContextus* c)
 {
-    Router* router;
+    Piscina* piscina;
+     Router* router;
 
-    printf("--- Probans creare ---\n");
-
-    router = router_creare(piscina);
+    piscina  = c->piscina;
+    router   = router_creare(piscina);
     CREDO_NON_NIHIL(router);
     CREDO_VERUM(router_numerus_routarum(router) == 0);
 
@@ -143,14 +153,15 @@ probatio_creare(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_adicere_routas(Piscina* piscina)
+_sectio_secunda (
+    CredoContextus* c)
 {
-    Router* router;
-       b32  res;
+    Piscina* piscina;
+     Router* router;
+        b32  res;
 
-    printf("--- Probans adicere routas ---\n");
-
-    router = router_creare(piscina);
+    piscina  = c->piscina;
+    router   = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
     /* Adicere GET routes */
@@ -179,13 +190,14 @@ probatio_adicere_routas(Piscina* piscina)
 
 
 interior vacuum
-probatio_omnes_methodi(Piscina* piscina)
+_sectio_tertia (
+    CredoContextus* c)
 {
-    Router* router;
+    Piscina* piscina;
+     Router* router;
 
-    printf("--- Probans omnes methodi ---\n");
-
-    router = router_creare(piscina);
+    piscina  = c->piscina;
+    router   = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
     CREDO_VERUM(router_get(router, "/get", &g_capsa_simplex));
@@ -205,15 +217,15 @@ probatio_omnes_methodi(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_matching_exacta(Piscina* piscina)
+_sectio_quarta (
+    CredoContextus* c)
 {
+          Piscina* piscina;
            Router* router;
     RoutaResultus  res;
 
-    printf("--- Probans matching exacta ---\n");
-
-    reset_globals();
-    router = router_creare(piscina);
+    piscina  = c->piscina;
+    router   = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
     router_get(router, "/", &g_capsa_simplex);
@@ -247,14 +259,15 @@ probatio_matching_exacta(Piscina* piscina)
 
 
 interior vacuum
-probatio_non_matching(Piscina* piscina)
+_sectio_quinta (
+    CredoContextus* c)
 {
+          Piscina* piscina;
            Router* router;
     RoutaResultus  res;
 
-    printf("--- Probans non-matching ---\n");
-
-    router = router_creare(piscina);
+    piscina  = c->piscina;
+    router   = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
     router_get(router, "/users", &g_capsa_users);
@@ -279,16 +292,16 @@ probatio_non_matching(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_matching_pattern_simplex(Piscina* piscina)
+_sectio_sexta (
+    CredoContextus* c)
 {
+          Piscina* piscina;
            Router* router;
     RoutaResultus  res;
            chorda  id_valor;
 
-    printf("--- Probans matching pattern simplex ---\n");
-
-    reset_globals();
-    router = router_creare(piscina);
+    piscina  = c->piscina;
+    router   = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
     router_get(router, "/users/:id", &g_capsa_user_by_id);
@@ -310,16 +323,17 @@ probatio_matching_pattern_simplex(Piscina* piscina)
 
 
 interior vacuum
-probatio_matching_pattern_multiplex(Piscina* piscina)
+_sectio_septima (
+    CredoContextus* c)
 {
+          Piscina* piscina;
            Router* router;
     RoutaResultus  res;
            chorda  user_id;
            chorda  post_id;
 
-    printf("--- Probans matching pattern multiplex ---\n");
-
-    router = router_creare(piscina);
+    piscina  = c->piscina;
+    router   = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
     router_get(router, "/users/:user_id/posts/:post_id",
@@ -346,15 +360,15 @@ probatio_matching_pattern_multiplex(Piscina* piscina)
 
 
 interior vacuum
-probatio_matching_mixed(Piscina* piscina)
+_sectio_octava (
+    CredoContextus* c)
 {
+          Piscina* piscina;
            Router* router;
     RoutaResultus  res;
 
-    printf("--- Probans matching mixed (exact + pattern) ---\n");
-
-    reset_globals();
-    router = router_creare(piscina);
+    piscina  = c->piscina;
+    router   = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
     /* Exact ante pattern */
@@ -387,15 +401,16 @@ probatio_matching_mixed(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_param_obtinere_i32(Piscina* piscina)
+_sectio_nona (
+    CredoContextus* c)
 {
+          Piscina* piscina;
            Router* router;
     RoutaResultus  res;
               i32  id;
 
-    printf("--- Probans param_obtinere_i32 ---\n");
-
-    router = router_creare(piscina);
+    piscina  = c->piscina;
+    router   = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
     router_get(router, "/items/:id", &g_capsa_simplex);
@@ -418,16 +433,17 @@ probatio_param_obtinere_i32(Piscina* piscina)
 
 
 interior vacuum
-probatio_param_non_numericus(Piscina* piscina)
+_sectio_decima (
+    CredoContextus* c)
 {
+          Piscina* piscina;
            Router* router;
     RoutaResultus  res;
               i32  id;
            chorda  slug;
 
-    printf("--- Probans param non numericus ---\n");
-
-    router = router_creare(piscina);
+    piscina  = c->piscina;
+    router   = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
     router_get(router, "/articles/:slug", &g_capsa_simplex);
@@ -454,15 +470,16 @@ probatio_param_non_numericus(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_nullum_argumenta(Piscina* piscina)
+_sectio_decima_prima (
+    CredoContextus* c)
 {
+          Piscina* piscina;
            Router* router;
     RoutaResultus  res;
               b32  add_res;
            chorda  empty;
 
-    printf("--- Probans nullum argumenta ---\n");
-
+    piscina = c->piscina;
     /* Creare cum NIHIL piscina */
     router = router_creare(NIHIL);
     CREDO_NIHIL(router);
@@ -498,14 +515,15 @@ probatio_nullum_argumenta(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_trailing_slash(Piscina* piscina)
+_sectio_decima_secunda (
+    CredoContextus* c)
 {
+          Piscina* piscina;
            Router* router;
     RoutaResultus  res;
 
-    printf("--- Probans trailing slash ---\n");
-
-    router = router_creare(piscina);
+    piscina  = c->piscina;
+    router   = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
     router_get(router, "/users", &g_capsa_users);
@@ -530,17 +548,18 @@ probatio_trailing_slash(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_routa_capacitas(Piscina* piscina)
+_sectio_decima_tertia (
+    CredoContextus* c)
 {
+      Piscina* piscina;
        Router* router;
           b32  res;
           i32  i;
           i32  successus_count = 0;
     character  via_buffer[XXXII];
 
-    printf("--- Probans routa capacitas (CXXVIII max) ---\n");
-
-    router = router_creare(piscina);
+    piscina  = c->piscina;
+    router   = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
     /* Adicere CXXVIII routes */
@@ -569,15 +588,15 @@ probatio_routa_capacitas(Piscina* piscina)
 
 
 interior vacuum
-probatio_duplicata_routa(Piscina* piscina)
+_sectio_decima_quarta (
+    CredoContextus* c)
 {
+          Piscina* piscina;
            Router* router;
     RoutaResultus  res;
 
-    printf("--- Probans duplicata routa ---\n");
-
-    reset_globals();
-    router = router_creare(piscina);
+    piscina  = c->piscina;
+    router   = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
     /* Adicere eadem via bis */
@@ -602,16 +621,17 @@ probatio_duplicata_routa(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_via_longa(Piscina* piscina)
+_sectio_decima_quinta (
+    CredoContextus* c)
 {
+          Piscina* piscina;
            Router* router;
     RoutaResultus  res;
         character  via_longa[CCLVI];
               i32  i;
 
-    printf("--- Probans via longa ---\n");
-
-    router = router_creare(piscina);
+    piscina  = c->piscina;
+    router   = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
     /* Creare via longa */
@@ -635,15 +655,15 @@ probatio_via_longa(Piscina* piscina)
 
 
 interior vacuum
-probatio_via_radix(Piscina* piscina)
+_sectio_decima_sexta (
+    CredoContextus* c)
 {
+          Piscina* piscina;
            Router* router;
     RoutaResultus  res;
 
-    printf("--- Probans via radix (/) ---\n");
-
-    reset_globals();
-    router = router_creare(piscina);
+    piscina  = c->piscina;
+    router   = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
     CREDO_VERUM(router_get(router, "/", &g_capsa_simplex));
@@ -663,14 +683,15 @@ probatio_via_radix(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_larva_methodus_falsa(Piscina* piscina)
+_sectio_decima_septima (
+    CredoContextus* c)
 {
+          Piscina* piscina;
            Router* router;
     RoutaResultus  res;
 
-    printf("--- Probans larva: methodus falsa ---\n");
-
-    router = router_creare(piscina);
+    piscina  = c->piscina;
+    router   = router_creare(piscina);
     CREDO_NON_NIHIL(router);
     router_get(router, "/users", &g_capsa_users);
 
@@ -686,15 +707,16 @@ probatio_larva_methodus_falsa(Piscina* piscina)
 
 
 interior vacuum
-probatio_larva_multi_methodus(Piscina* piscina)
+_sectio_decima_octava (
+    CredoContextus* c)
 {
+          Piscina* piscina;
            Router* router;
     RoutaResultus  res;
               i32  larva_plena;
 
-    printf("--- Probans larva: completa post victoriam ---\n");
-
-    router = router_creare(piscina);
+    piscina  = c->piscina;
+    router   = router_creare(piscina);
     CREDO_NON_NIHIL(router);
     router_get(router, "/res", &g_capsa_users);
     router_post(router, "/res", &g_capsa_simplex);
@@ -716,17 +738,17 @@ probatio_larva_multi_methodus(Piscina* piscina)
 
 
 interior vacuum
-probatio_larva_exacta_et_pattern(Piscina* piscina)
+_sectio_decima_nona (
+    CredoContextus* c)
 {
+          Piscina* piscina;
            Router* router;
     RoutaResultus  res;
            chorda  x_valor;
            chorda  y_valor;
 
-    printf("--- Probans larva: exacta + pattern conferunt ---\n");
-
-    reset_globals();
-    router = router_creare(piscina);
+    piscina  = c->piscina;
+    router   = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
     /* exacta POST; pattern POST methodi falsae ANTE victorem registrata */
@@ -762,14 +784,15 @@ probatio_larva_exacta_et_pattern(Piscina* piscina)
 
 
 interior vacuum
-probatio_larva_omnino_absens(Piscina* piscina)
+_sectio_vicesima (
+    CredoContextus* c)
 {
+          Piscina* piscina;
            Router* router;
     RoutaResultus  res;
 
-    printf("--- Probans larva: via omnino absens ---\n");
-
-    router = router_creare(piscina);
+    piscina  = c->piscina;
+    router   = router_creare(piscina);
     CREDO_NON_NIHIL(router);
     router_get(router, "/users", &g_capsa_users);
 
@@ -785,14 +808,15 @@ probatio_larva_omnino_absens(Piscina* piscina)
 
 
 interior vacuum
-probatio_larva_head_literalis(Piscina* piscina)
+_sectio_vicesima_prima (
+    CredoContextus* c)
 {
+          Piscina* piscina;
            Router* router;
     RoutaResultus  res;
 
-    printf("--- Probans larva: HEAD literalis ---\n");
-
-    router = router_creare(piscina);
+    piscina  = c->piscina;
+    router   = router_creare(piscina);
     CREDO_NON_NIHIL(router);
     router_get(router, "/solum", &g_capsa_users);
 
@@ -808,59 +832,58 @@ probatio_larva_head_literalis(Piscina* piscina)
 }
 
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "creare", _sectio_prima, reset_globals, NIHIL, NIHIL, NIHIL },
+    { "adicere routas", _sectio_secunda, reset_globals, NIHIL, NIHIL,
+        NIHIL },
+    { "omnes methodi", _sectio_tertia, reset_globals, NIHIL, NIHIL,
+        NIHIL },
+    { "matching exacta", _sectio_quarta, reset_globals, NIHIL, NIHIL,
+        NIHIL },
+    { "non-matching", _sectio_quinta, reset_globals, NIHIL, NIHIL,
+        NIHIL },
+    { "matching pattern simplex", _sectio_sexta, reset_globals, NIHIL,
+        NIHIL, NIHIL },
+    { "matching pattern multiplex", _sectio_septima, reset_globals,
+        NIHIL, NIHIL, NIHIL },
+    { "matching mixed (exact + pattern)", _sectio_octava, reset_globals,
+        NIHIL, NIHIL, NIHIL },
+    { "param_obtinere_i32", _sectio_nona, reset_globals, NIHIL, NIHIL,
+        NIHIL },
+    { "param non numericus", _sectio_decima, reset_globals, NIHIL,
+        NIHIL, NIHIL },
+    { "nullum argumenta", _sectio_decima_prima, reset_globals, NIHIL,
+        NIHIL, NIHIL },
+    { "trailing slash", _sectio_decima_secunda, reset_globals, NIHIL,
+        NIHIL, NIHIL },
+    { "routa capacitas (CXXVIII max)", _sectio_decima_tertia,
+        reset_globals, NIHIL, NIHIL, NIHIL },
+    { "duplicata routa", _sectio_decima_quarta, reset_globals, NIHIL,
+        NIHIL, NIHIL },
+    { "via longa", _sectio_decima_quinta, reset_globals, NIHIL, NIHIL,
+        NIHIL },
+    { "via radix (/)", _sectio_decima_sexta, reset_globals, NIHIL,
+        NIHIL, NIHIL },
+    { "larva: methodus falsa", _sectio_decima_septima, reset_globals,
+        NIHIL, NIHIL, NIHIL },
+    { "larva: completa post victoriam", _sectio_decima_octava,
+        reset_globals, NIHIL, NIHIL, NIHIL },
+    { "larva: exacta + pattern conferunt", _sectio_decima_nona,
+        reset_globals, NIHIL, NIHIL, NIHIL },
+    { "larva: via omnino absens", _sectio_vicesima, reset_globals,
+        NIHIL, NIHIL, NIHIL },
+    { "larva: HEAD literalis", _sectio_vicesima_prima, reset_globals,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+
 /* ========================================================================
  * PRINCIPALE
  * ======================================================================== */
 
-integer
+s32
 principale (vacuum)
 {
-    Piscina* piscina;
-        b32  successus;
-
-    printf("\n");
-    printf("========================================\n");
-    printf("PROBATIONES ROUTER\n");
-    printf("========================================\n");
-    printf("\n");
-
-    piscina = piscina_generare_dynamicum("probatio_router",
-        CXXVIII * M);
-    credo_aperire(piscina);
-
-    probatio_creare(piscina);
-    probatio_adicere_routas(piscina);
-    probatio_omnes_methodi(piscina);
-    probatio_matching_exacta(piscina);
-    probatio_non_matching(piscina);
-    probatio_matching_pattern_simplex(piscina);
-    probatio_matching_pattern_multiplex(piscina);
-    probatio_matching_mixed(piscina);
-    probatio_param_obtinere_i32(piscina);
-    probatio_param_non_numericus(piscina);
-    probatio_nullum_argumenta(piscina);
-    probatio_trailing_slash(piscina);
-    probatio_routa_capacitas(piscina);
-    probatio_duplicata_routa(piscina);
-    probatio_via_longa(piscina);
-    probatio_via_radix(piscina);
-
-    /* Larva methodorum (405 + Allow materia pro hospitio) */
-    probatio_larva_methodus_falsa(piscina);
-    probatio_larva_multi_methodus(piscina);
-    probatio_larva_exacta_et_pattern(piscina);
-    probatio_larva_omnino_absens(piscina);
-    probatio_larva_head_literalis(piscina);
-
-    credo_imprimere_compendium();
-
-    printf("========================================\n");
-    printf("\n");
-
-    successus = credo_omnia_praeterierunt();
-
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    redde successus ? 0 : I;
+    redde credo_suitam_currere("router", SECTIONES);
 }

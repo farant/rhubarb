@@ -344,6 +344,24 @@ suturae_area_parare (
         && filum_directorium_creare_cum_parentibus(tmp);
 }
 
+/* tectum memoriae membri (credo memoria T6): FABRICA_MEMORIA_MB aut
+ * FABRICA_MEMORIA_ORDINARIA_MB, in octetis; 0 = nullum */
+interior i64
+_memoriam_maximam_legere (vacuum)
+{
+     constans character* valor = getenv("FABRICA_MEMORIA_MB");
+                    s64  mb;
+
+    mb = (valor != NIHIL && valor[ZEPHYRUM] != '\0')
+        ? (s64)strtol(valor, NIHIL, X)
+        : (s64)FABRICA_MEMORIA_ORDINARIA_MB;
+    si (mb <= (s64)ZEPHYRUM)
+    {
+        redde (i64)ZEPHYRUM;
+    }
+    redde (i64)mb * (i64)MXXIV * (i64)MXXIV;
+}
+
 b32
 suturae_in_area_currere (
                 vacuum* datum,
@@ -417,8 +435,10 @@ suturae_in_area_currere (
         piscina), piscina);
     vector[xar_numerus(ambitus) + I]  = NIHIL;
     /* cwd = radix (fabrica ipsa); ambitus exactus */
-    optiones.directorium  = NIHIL;
-    optiones.ambitus      = vector;
+    memset(&optiones, ZEPHYRUM, magnitudo(optiones));
+    optiones.directorium     = NIHIL;
+    optiones.ambitus         = vector;
+    optiones.memoria_maxima  = _memoriam_maximam_legere();
     (vacuum)filum_directorium_creare_cum_parentibus(chorda_ut_cstr(
         via_directorium(chorda_ex_literis(acta_via, piscina), piscina),
         piscina));

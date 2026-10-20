@@ -1,0 +1,107 @@
+<interrogationes unitas="organum">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I load and validate a widget manifest from its text?
+    <responsum symbolum="organum_legere organum_legere_genus">organum_legere(fons,
+      piscina, intern, &amp;vitia) parses the STML, judges it against
+      the embedded organum canon, then applies the loader rules. It
+      returns NIHIL if there is ANY vitium, and *vitia is always set to
+      a Xar of chorda messages (empty when the manifest is sound), each
+      prefixed 'linea N:' (only a broken embedded canon gives an
+      unprefixed message). Beware: today the loader formats several
+      messages with sprintf into fixed stack buffers, so an over-long
+      value (an absens of a few hundred bytes that does not fit its
+      typus) overflows the stack; keep manifest values short. Apps normally do not call it directly:
+      organum_legere_genus in organum_montatio reads the embedded
+      manifest plus the common base and prints the vitia.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can organum_legere read the manifest file for me?
+    <responsum symbolum="organum_legere organum_infixum_textus organum_legere_viam" via="lib/organa_infixa.c">No:
+      the loader never touches the disk; the caller passes the text.
+      Runtime manifests are embedded in lib/organa_infixa.c and come
+      from organum_infixum_textus(genus, piscina); organum_legere_viam
+      reads from disk for tests and tools. The organum canon itself is
+      embedded too, so the loader needs no file at all.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why are some manifest errors reported by the canon and others by the loader?
+    <responsum symbolum="organum_legere" via="organum.canon lib/organum.worklog.md">The
+      canon judges shape (closed vocabulary, choice lists, unique
+      names, scriptor citing a declared actio). Rules that involve
+      several attributes at once or split a value are the loader's,
+      because the canon dialect deliberately does not express them:
+      sedes="motus" needs rhythmus="mobilis" and vita="transiens",
+      typus="series" needs sedes="motus", orbatus needs referentia,
+      referentia must be 'ligamen/genus' with a declared ligamen,
+      absens must fit its typus, and optio appears only (and at least
+      once) under typus="electio". The loader rules run only when the
+      canon found nothing. Caution (audit 2026-10-18, unfixed): these
+      loader messages are sprintf'd without a bound into fixed stack
+      buffers (256 bytes for the absens and unknown-ligamen messages,
+      512 for the campus-title prefix), so a rule violation whose
+      absens, referentia or campus nomen is a few hundred bytes long
+      overflows the stack instead of being reported.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what do vita, rhythmus and sedes on a campus mean?
+    <responsum symbolum="OrganumCampus organum_campus" via="organum.canon project-specs/status-genera-census.md">They
+      classify one piece of widget state. vita (required): persistens
+      (saved), transiens (never reaches disk) or probatio (test-only
+      fields). rhythmus: discretus (discrete edits, the default) or
+      mobilis (kinetic, changes continuously during a gesture). sedes:
+      insula (an attribute of the widget's insula branch, the default)
+      or motus (in-flight gesture state kept in memory structs next to
+      Motus, never in the insula; the loader demands rhythmus mobilis
+      and vita transiens for it). Only sedes="insula" fields go into
+      the generated canon, starting values and owners table.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I look up one field of a loaded manifest and its default?
+    <responsum symbolum="organum_campus organum_campus_index organum_numerus_camporum">organum_campus(o,
+      titulus) returns the OrganumCampus or NIHIL; organum_campus_index
+      and organum_numerus_camporum walk them in manifest order (base
+      fields first after organum_basim_addere). All chorda members are
+      NOT NUL-terminated and an absent attribute is an empty chorda
+      (mensura 0, datum NIHIL); use habet_absens to tell absens=""
+      from no absens at all.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I merge the common base fields into a widget manifest?
+    <responsum symbolum="organum_basim_addere organum_legere_viam">organum_basim_addere(organum,
+      basis) puts the base campi BEFORE the widget's own and adds the
+      base actiones the widget does not already declare. It returns
+      FALSUM and adds nothing if any base campus title already exists
+      in the widget. Base ligamina and portae are not merged, and the
+      loader rules are not run again on the combined set.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get the insula canon and starting values generated from a manifest?
+    <responsum symbolum="organum_canonem_generare organum_initium organum_dominos_generare">organum_canonem_generare
+      builds a canon whose root element is the organum genus, one
+      attributum per sedes="insula" campus (electio options copied and
+      escaped); NIHIL with *causa set if canon_legere refuses it.
+      organum_initium returns the starting attributes as text, '
+      titulus="absens"' for each insula campus with an absens (leading
+      space, values not escaped). organum_dominos_generare builds the
+      &lt;domini&gt; owners table from campi with a scriptor.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the difference between ligamina, portae and actiones in a manifest?
+    <responsum symbolum="organum_ligamen_index organum_porta_index organum_actio_index">ligamina
+      are entities the widget shows (props; a="parens" means the
+      mounting parent supplies the value) and are what referentia
+      'ligamen/genus' points at. portae are the observed outside world,
+      never stored, with modus petitio or eventus. actiones are the
+      names a campus scriptor may cite; systema="verum" marks one the
+      system performs. Each has a numerus/index accessor pair.</responsum>
+  </interrogatio>
+
+</interrogationes>

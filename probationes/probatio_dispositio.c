@@ -294,24 +294,16 @@ _fixum (
     redde bona;
 }
 
-s32
-principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-                    b32  praeteritus;
                 Piscina* piscina;
     InternamentumChorda* intern;
 
-    piscina = piscina_generare_dynamicum("probatio_dispositio",
-        IV * M * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
-    imprimere("\n--- I. fixa D1 contra Clay ---\n");
     CREDO_VERUM (_fixum(piscina, intern, "d1_linea_fixa"));
     CREDO_VERUM (_fixum(piscina, intern, "d1_allineatio"));
     CREDO_VERUM (_fixum(piscina, intern, "d1_apta"));
@@ -319,9 +311,18 @@ principale (vacuum)
     CREDO_VERUM (_fixum(piscina, intern, "d1_minmax"));
     CREDO_VERUM (_fixum(piscina, intern, "d1_praecidere"));
     CREDO_VERUM (_fixum(piscina, intern, "d1_vacuum"));
+}
 
-    imprimere("\n--- II. fixa D2 (crescens, contractio) contra Clay"
-              " ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+
     CREDO_VERUM (_fixum(piscina, intern, "columna"));
     CREDO_VERUM (_fixum(piscina, intern, "tres_crescentes"));
     CREDO_VERUM (_fixum(piscina, intern, "d2_inaequales"));
@@ -329,12 +330,29 @@ principale (vacuum)
     CREDO_VERUM (_fixum(piscina, intern, "d2_contractio"));
     CREDO_VERUM (_fixum(piscina, intern, "d2_praecidere"));
     CREDO_VERUM (_fixum(piscina, intern, "d2_minimum"));
+}
 
-    imprimere("\n--- III. fixa D3 (textus) contra Clay ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+
     CREDO_VERUM (_fixum(piscina, intern, "d3_textus"));
     CREDO_VERUM (_fixum(piscina, intern, "d3_contractio"));
+}
 
-    imprimere("\n--- IV. forma, addere, vacare, computare bis ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         DispositioForma  f;
              Dispositio* d = dispositio_creare(piscina);
@@ -414,9 +432,22 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (p.y, LXIV);
         CREDO_AEQUALIS_S32 (p.altitudo, XXI);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. fixa D1 contra Clay", _sectio_prima, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "II. fixa D2 (crescens, contractio) contra Clay", _sectio_secunda,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III. fixa D3 (textus) contra Clay", _sectio_tertia, NIHIL, NIHIL,
+      NIHIL, NIHIL },
+    { "IV. forma, addere, vacare, computare bis", _sectio_quarta, NIHIL,
+      NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("dispositio", SECTIONES);
 }

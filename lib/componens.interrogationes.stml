@@ -1,0 +1,93 @@
+<interrogationes unitas="componens">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I build a component tree for a widget?
+    <responsum symbolum="componens_creare componens_ponere_fines componens_addere_liberum componens_ponere_actio componens_ponere_titulum">Create
+      each node with componens_creare(piscina, intern, id, partes),
+      give it bounds with componens_ponere_fines (in the PARENT's
+      coordinate space) and attach it with componens_addere_liberum.
+      componens_ponere_actio names the action it triggers and
+      componens_ponere_titulum sets its accessible label. A node is
+      logical only (id, action, kind, bounds, hit predicate, focus,
+      children); drawing is derived from the tree elsewhere.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why do the componens setters take a C string, and do I have to keep it alive?
+    <responsum symbolum="componens_ponere_actio internare_aut_vacua chorda_internare_ex_literis" via="lib/componens.worklog.md">No:
+      id, actio, titulus and spatium are interned through the node's
+      InternamentumChorda when set, so the node keeps its own canonical
+      copy. Aliasing the caller's literal would need a const cast that
+      -Wcast-qual refuses. Because the interner refuses "", an empty
+      string becomes a zero-length chorda over a static byte (not
+      NIHIL), so test these fields with chorda_vacua.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I pass NIHIL as the interner to componens_creare?
+    <responsum symbolum="componens_creare internare_aut_vacua chorda_internare_ex_literis internamentum_globale">You
+      can, but every string is then lost without a warning: the
+      setters go through chorda_internare_ex_literis, which returns
+      NIHIL when there is no interner, and that NIHIL is stored as an
+      empty chorda, so id, actio, titulus and spatium all come out
+      empty and componens_invenire_per_id cannot find a node by name.
+      Pass a real interner (internamentum_globale or your own); each
+      node keeps the one it was created with.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find a component by its id?
+    <responsum symbolum="componens_invenire_per_id componens_invenire_in_spatio">componens_invenire_per_id
+      searches depth first, parent before children, and returns the
+      first node whose id has the same bytes, or NIHIL. It ignores
+      spatia, so when the same app is mounted twice use
+      componens_invenire_in_spatio(arbor, spatium, id): it finds the
+      root of that spatium and searches inside it without entering
+      nested spatia (an empty spatium means the whole tree).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is a spatium on a component?
+    <responsum symbolum="componens_ponere_spatium componens_spatium componens_invenire_in_spatio">A
+      namespace for one mounted application (vicus side panes): the
+      host marks the root of each mount with componens_ponere_spatium,
+      and ids, actions and shapes inside resolve within it, so two
+      copies of the same app do not collide. componens_spatium returns
+      the nearest spatium walking up through the parents, or "" for the
+      host.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I round-trip a component tree through STML without losing anything?
+    <responsum symbolum="componens_scribere_stml componens_legere_stml componens_aequalis">Not
+      quite. componens_scribere_stml writes id, partes, actio, titulus,
+      bounds, praedicatum, focusabilis, sectio, translation, scala,
+      puncta and children, and componens_legere_stml reads them back,
+      but the claudit and spatium fields are not written, and
+      componens_aequalis does not compare them either, so their loss
+      is invisible. An unknown partes reads as PARTES_NULLUM and an
+      unknown praedicatum as PRAEDICATUM_RECTANGULUM.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I make a component hit-test as a polygon or a mask?
+    <responsum symbolum="componens_ponere_praedicatum componens_ponere_fines" via="lib/destinatio.c">Not
+      yet. PRAEDICATUM_POLYGONUM and PRAEDICATUM_MASCA are stored and
+      serialized, but the hit test in destinatio checks only the
+      rectangle in fines (plus sectio clipping, translation and scala).
+      PRAEDICATUM_PROPRIUS is what scriba and pictor use: the
+      rectangle is hit and the component resolves the local point
+      itself. There is no setter for the polygon; callers fill puncta
+      and numerus_punctorum directly.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I scroll or zoom the children of a component?
+    <responsum symbolum="componens_ponere_transformatio componens_ponere_sectio">componens_ponere_transformatio(c,
+      x, y, scala) sets a translation and an integer scale applied to
+      the children (a scala below I is raised to I), and
+      componens_ponere_sectio(c, VERUM) clips children to the node's
+      bounds, so points outside them never reach a child.</responsum>
+  </interrogatio>
+
+</interrogationes>

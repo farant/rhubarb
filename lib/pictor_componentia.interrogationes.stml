@@ -1,0 +1,99 @@
+<interrogationes unitas="pictor_componentia">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get pictor's component tree on screen; who calls pictor_componere?
+    <responsum symbolum="pictor_componere dispensator_creare pictor_montare PictorCompositio" via="lib/pictor_applicatio.c lib/vicus_applicatio.c">You
+      normally do not call it yourself: it has the dispensator's
+      componere shape, so pictor_montare fills a PictorCompositio and
+      pictor_applicatio passes pictor_componere and that compositio as
+      ctx to dispensator_creare (vicus does the same through its
+      VicusFacies). Each frame it reads the insula state and the Motus
+      and returns a fresh Componens tree in the piscina it is given.
+      Any of repo, piscina, intern or ctx NIHIL returns NIHIL.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I set up a PictorCompositio for a test or a new host?
+    <responsum symbolum="PictorCompositio pictor_componere" via="probationes/probatio_pictor_componentia.c">memset
+      the WHOLE struct to zero first (the header asks for it: ramus.repo
+      NIHIL means use the repository root), then set fenestra_latitudo
+      and fenestra_altitudo (the surface used until the state carries
+      superficies_latitudo and superficies_altitudo), cellula_latitudo
+      and cellula_altitudo (layout is in cells; 0 is treated as I),
+      status_lineae (the bar height in cells) and, if you want the
+      layers button and panel, doc.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what nodes does the pictor tree contain and what are they for?
+    <responsum symbolum="pictor_componere" via="probationes/pictor/pictor.arbor.stml">radix
+      (action instrumentum.eligere, where keys bubble) holds prospectus
+      (the clipped viewport with the pan and zoom transform), status
+      (the tool bar at the bottom, a fixed number of cell lines, which
+      holds the bar squares), the quadratum.strata button when a
+      document is set and no paste is pending, and the open
+      palette as the LAST child so it is drawn on top and hit first.
+      prospectus holds tabula, the canvas, one cell in from its edge so
+      the page border shows. Roles are data (ids, titles, actions), not
+      per-component types; the golden tree is pictor.arbor.stml.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does the canvas get its action name from the current tool instead of one handler that switches on the tool?
+    <responsum symbolum="pictor_actio_instrumenti pictor_componere" via="lib/pictor_componentia.worklog.md">The
+      action is chosen at compose time as a pure function of state:
+      pictor_actio_instrumenti maps penicillus, aspergillum, spongia
+      and linea to name.ictus and anything else to the empty string
+      (no action), so handlers never branch on the tool. During a
+      pending paste the canvas gets glutinatio.agere instead.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why is the stroke in progress copied into tabula.puncta instead of read from Motus when painting?
+    <responsum symbolum="pictor_componere" via="lib/pictor_componentia.worklog.md">So
+      that drawing and every figura read the tree alone (decision
+      2026-09-05), and the tree snapshot shows a stroke in flight. The
+      copy is made only while the mouse capture is tabula, otherwise a
+      layer-row drag in the layers panel would draw a stray line.
+      Previews that need more than points (spray seed and radius,
+      brush diameter and colour, eraser side) are written into the
+      canvas titulus as data.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how does a palette open, and how do its options know which state to change?
+    <responsum symbolum="pictor_componere" via="lib/pictor_componentia.worklog.md apps/pictor/organum.stml">The
+      bar squares (and quadratum.strata) carry action palette.aperire,
+      which sets the transient field palette (instrumentum, color_primus,
+      color_secundus, exemplar, magnitudo or strata). The composer then
+      adds a PARTES_DIALOGUS node with id palette just above that
+      square as the last root child. Each option of the first five is
+      an optio.genus.valor square whose action is the scriptor of the
+      attribute in apps/pictor/organum.stml (color_primus.ponere,
+      color_secundus.ponere, instrumentum.eligere, exemplar.ponere,
+      magnitudo.ponere); the current value is titled with :electum and
+      the option closes the palette on click. The strata panel is
+      different: oculus.id and stratum.id rows plus strata.novum and
+      strata.deletum, all with action strata.agere. During a pending
+      paste only the magnitudo palette can open, and the eraser's size
+      square has no action, so it opens nothing.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what squares does the pictor status bar show (the header comment lists only three)?
+    <responsum symbolum="pictor_componere" via="lib/pictor_componentia.worklog.md">Five
+      20 x 20 squares, a cell apart: quadratum.instrumentum,
+      quadratum.color_primus, quadratum.color_secundus,
+      quadratum.exemplar and quadratum.magnitudo (its title names the
+      current tool's size; for spongia it is the fixed side and has no
+      action). The status node's own title is the tool name, nihil when
+      none. With a document set, quadratum.strata (LXX wide, titled
+      strata:stratum id) sits at the right edge as a ROOT child, not a
+      status child. During a pending paste the squares are replaced by
+      glutinatio.A, glutinatio.B, glutinatio.confirmare and
+      glutinatio.abicere (all action glutinatio.agere) plus a
+      quadratum.magnitudo for the brush size. The header comment still
+      describes the three-square P1a bar.</responsum>
+  </interrogatio>
+
+</interrogationes>

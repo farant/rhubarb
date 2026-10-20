@@ -50,9 +50,11 @@ _unum (NormaIudicium j, NormaCausa causa, constans character* via)
 }
 
 interior vacuum
-probatio_genera(Piscina* p)
+_sectio_prima (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probans genera ---\n");
+    Piscina* p = c->piscina;
+
     CREDO_VERUM(_iud(norma_integer(p), "7", p).validum);
     _unum(_iud(norma_integer(p), "7.5", p), NORMA_CAUSA_GENUS, "$");
     _unum(_iud(norma_integer(p), "\"x\"", p), NORMA_CAUSA_GENUS, "$");
@@ -71,11 +73,12 @@ probatio_genera(Piscina* p)
 }
 
 interior vacuum
-probatio_fines_et_formae(Piscina* p)
+_sectio_secunda (
+    CredoContextus* c)
 {
-    constans character* constans licita[] = { "a", "b", NIHIL };
+    Piscina* p                             = c->piscina;
+    constans character* constans licita[]  = { "a", "b", NIHIL };
 
-    imprimere("\n--- Probans fines, electio, formae ---\n");
     _unum(_iud(norma_intra(norma_integer(p), I, X), "0", p),
         NORMA_CAUSA_MINIMUM, "$");
     _unum(_iud(norma_intra(norma_integer(p), I, X), "11", p),
@@ -124,15 +127,16 @@ probatio_fines_et_formae(Piscina* p)
 }
 
 interior vacuum
-probatio_objecta_et_viae(Piscina* p)
+_sectio_tertia (
+    CredoContextus* c)
 {
+          Piscina* p = c->piscina;
             Norma* o = norma_objectum(p);
             Norma* apertum;
             Norma* notandum;
             Norma* vacuum_o;
     NormaIudicium  j;
 
-    imprimere("\n--- Probans objecta, modi, viae ---\n");
     norma_campus(o, "id", norma_integer(p), VERUM);
     norma_campus(o, "n", norma_integer(p), FALSUM);
     CREDO_VERUM(_iud(o, "{\"id\":1}", p).validum);
@@ -165,15 +169,16 @@ probatio_objecta_et_viae(Piscina* p)
 }
 
 interior vacuum
-probatio_discrimen(Piscina* p)
+_sectio_quarta (
+    CredoContextus* c)
 {
+          Piscina* p        = c->piscina;
             Norma* textus   = norma_objectum(p);
             Norma* petitum  = norma_objectum(p);
             Norma* d        = norma_discrimen(p, "type");
             Norma* dn;
     NormaIudicium  j;
 
-    imprimere("\n--- Probans discrimen ---\n");
     norma_campus(textus, "text", norma_textus(p), VERUM);
     norma_campus(petitum, "id", norma_textus(p), VERUM);
     norma_variatio(d, "text", textus);
@@ -203,13 +208,14 @@ probatio_discrimen(Piscina* p)
 }
 
 interior vacuum
-probatio_limes(Piscina* p)
+_sectio_quinta (
+    CredoContextus* c)
 {
-    ChordaAedificator* aed = chorda_aedificator_creare(p, M * VIII);
+              Piscina* p    = c->piscina;
+    ChordaAedificator* aed  = chorda_aedificator_creare(p, M * VIII);
         NormaIudicium  j;
                   i32  i;
 
-    imprimere("\n--- Probans limes CCLVI ---\n");
     chorda_aedificator_appendere_character(aed, '[');
     per (i = 0; i < M; i++)
     {
@@ -226,13 +232,14 @@ probatio_limes(Piscina* p)
 }
 
 interior vacuum
-probatio_pravitas_et_visus(Piscina* p)
+_sectio_sexta (
+    CredoContextus* c)
 {
+       Piscina* p = c->piscina;
          Norma* o = norma_objectum(p);
          Norma* n;
     NormaVisus  v;
 
-    imprimere("\n--- Probans pravitas et visus ---\n");
     norma_campus(o, "a", NIHIL, VERUM);
     _unum(_iud(o, "{}", p), NORMA_CAUSA_SCHEMA_PRAVA, "$");
     _unum(_iud(norma_intra(norma_integer(p), V, I), "3", p),
@@ -275,14 +282,15 @@ _js (
 }
 
 interior vacuum
-probatio_json_schema(Piscina* p)
+_sectio_septima (
+    CredoContextus* c)
 {
-    constans character* constans licita[] = { "a", "b", NIHIL };
+    Piscina* p                             = c->piscina;
+    constans character* constans licita[]  = { "a", "b", NIHIL };
     Norma* o;
     Norma* d;
     Norma* t;
 
-    imprimere("\n--- Probans exportatio JSON Schema ---\n");
     CREDO_CHORDA_AEQUALIS_LITERIS(_js(norma_descriptio(
         norma_intra(norma_integer(p), 0, MMXLVIII), "n"), p),
         "{\"type\":\"integer\",\"description\":\"n\",\"minimum\":0,\"maximum\":2048}");
@@ -324,12 +332,13 @@ probatio_json_schema(Piscina* p)
 
 /* norma-plan-3 A1: titulus gignentis sine functione */
 interior vacuum
-probatio_gignens_titulus(Piscina* p)
+_sectio_octava (
+    CredoContextus* c)
 {
+       Piscina* p = c->piscina;
          Norma* n = norma_gignens_titulus(norma_textus(p), "sententia");
     NormaVisus  v = norma_visus(n);
 
-    imprimere("\n--- Probans gignens_titulus ---\n");
     CREDO_CHORDA_AEQUALIS_LITERIS(v.gignens_titulus, "sententia");
     CREDO_NIHIL(v.gignens);
     CREDO_AEQUALIS_I32(norma_visus(norma_textus(p)).gignens_titulus.mensura,
@@ -342,28 +351,26 @@ probatio_gignens_titulus(Piscina* p)
         NIHIL)).gignens_titulus.mensura, 0);
 }
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    /* N2 */
+    { "genera", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fines, electio, formae", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "objecta, modi, viae", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "discrimen", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "limes CCLVI", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "pravitas et visus", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    /* N3 */
+    { "exportatio JSON Schema", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    /* norma-plan-3 A1 */
+    { "gignens_titulus", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
 s32
 principale (vacuum)
 {
-    Piscina* p = piscina_generare_dynamicum("probatio_norma", M * M);
-        b32  successus;
-
-    credo_aperire(p);
-    /* N2 */
-    probatio_genera(p);
-    probatio_fines_et_formae(p);
-    probatio_objecta_et_viae(p);
-    probatio_discrimen(p);
-    probatio_limes(p);
-    probatio_pravitas_et_visus(p);
-    /* N3 */
-    probatio_json_schema(p);
-    /* norma-plan-3 A1 */
-    probatio_gignens_titulus(p);
-    credo_imprimere_compendium();
-    successus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(p);
-    redde successus ? 0 : I;
+    redde credo_suitam_currere("norma", SECTIONES);
 }

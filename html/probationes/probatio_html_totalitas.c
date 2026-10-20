@@ -59,9 +59,14 @@ hic_manens constans character* CORPUS[] = {
     "probationes/fixa/html/laboratorium_index_2026-08-18.html",
     "probationes/fixa/html/villa_index_2026-08-18.html",
     "briar/facies/facies.html",
-    "briar/probationes/fixa/facies/salve.html",
-    "briar/probationes/fixa/facies/circulus.html",
-    "briar/probationes/fixa/facies/fragmenta.html",
+    /* aurea briar CONGELATA (2026-10-19): aurea viva cum clausura
+     * credo mutabantur, semina mutationum moverunt et vitium rotundationis
+     * html (parcum, sonda probationes/fixa/sondae_auditus/html_rotunda.c)
+     * patefecerunt - initus probationis congelari debet, vitium suo
+     * parco reparatur */
+    "probationes/fixa/html/briar_facies_salve_2026-10-19.html",
+    "probationes/fixa/html/briar_facies_circulus_2026-10-19.html",
+    "probationes/fixa/html/briar_facies_fragmenta_2026-10-19.html",
     "apps/villa/assets/index.html",
     "apps/mensor/assets/index.html",
     "tools/silex_assets/index.html",

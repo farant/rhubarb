@@ -57,6 +57,8 @@ declare -a RADIX_FONTES=(
     "chorda_aedificator"
     "numerus_romanus"
     "xar"
+    "dependentia"   # conllu.h includit (D130, 2026-10-17)
+    "conllu"        # lector CoNLL-U, ex oratio/fontes translatus
     "friatio"
     "tabula_dispersa"
     "internamentum"
@@ -71,6 +73,7 @@ declare -a RADIX_FONTES=(
     "utf8"
     "canon"
     "credo"
+    "memoria_processus_macos"   # credo memoria T2 (2026-10-19)
     "lectiones"   # materia_coctor lectiones crudas notat (fabrica spec 3 T3)
     "partitio"
     "partitio_aestimatio"

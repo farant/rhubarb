@@ -405,8 +405,6 @@ probatio_methodus_nomen(Piscina* piscina)
 {
     (vacuum)piscina;
 
-    printf("--- Probans methodus nomen ---\n");
-
     CREDO_VERUM(strcmp(http_methodus_nomen(HTTP_GET), "GET") == 0);
     CREDO_VERUM(strcmp(http_methodus_nomen(HTTP_POST), "POST") == 0);
     CREDO_VERUM(strcmp(http_methodus_nomen(HTTP_PUT), "PUT") == 0);
@@ -429,8 +427,6 @@ probatio_error_descriptio(Piscina* piscina)
     constans character* desc;
 
     (vacuum)piscina;
-
-    printf("--- Probans error descriptio ---\n");
 
     desc = http_error_descriptio(HTTP_OK);
     CREDO_NON_NIHIL(desc);
@@ -456,8 +452,6 @@ interior vacuum
 probatio_petitio_creare(Piscina* piscina)
 {
     HttpPetitio* pet;
-
-    printf("--- Probans petitio creare ---\n");
 
     /* HTTPS URL */
     pet = http_petitio_creare(piscina, HTTP_GET,
@@ -501,7 +495,7 @@ probatio_get_localis(Piscina* piscina, i32 portus)
     HttpResultus  res;
        character  url[CXXVIII];
 
-    printf("--- Probans GET (fixtura localis) ---\n");
+    CREDO_GRADUS("GET (fixtura localis)");
 
     pet = http_petitio_creare(piscina, HTTP_GET,
                               _url_fixturae(url, portus, "/get"));
@@ -532,7 +526,7 @@ probatio_post_localis(Piscina* piscina, i32 portus)
              character  url[CXXVIII];
     constans character* corpus = "{\"name\": \"test\", \"value\": 42}";
 
-    printf("--- Probans POST echo (fixtura localis) ---\n");
+    CREDO_GRADUS("POST echo (fixtura localis)");
 
     pet = http_petitio_creare(piscina, HTTP_POST,
                               _url_fixturae(url, portus, "/post"));
@@ -568,7 +562,7 @@ probatio_headers(Piscina* piscina, i32 portus)
        character  url[CXXVIII];
           chorda  content_type;
 
-    printf("--- Probans headers (fixtura localis) ---\n");
+    CREDO_GRADUS("headers (fixtura localis)");
 
     pet = http_petitio_creare(piscina, HTTP_GET,
                               _url_fixturae(url, portus, "/headers"));
@@ -604,7 +598,7 @@ probatio_status_codes(Piscina* piscina, i32 portus)
     HttpResultus  res;
        character  url[CXXVIII];
 
-    printf("--- Probans status codes (fixtura localis) ---\n");
+    CREDO_GRADUS("status codes (fixtura localis)");
 
     /* 404 Not Found per /status/:codex */
     pet = http_petitio_creare(piscina, HTTP_GET,
@@ -646,8 +640,6 @@ probatio_connexio_invalida(Piscina* piscina)
      HttpPetitio* pet;
     HttpResultus  res;
 
-    printf("--- Probans connexio invalida ---\n");
-
     pet = http_petitio_creare(piscina, HTTP_GET,
                               "https://non.existens.hospes.example/path");
     CREDO_NON_NIHIL(pet);
@@ -682,8 +674,6 @@ probatio_responsum_minusculum(Piscina* piscina)
        character  url[CXXVIII];
      HttpPetitio* pet;
     HttpResultus  res;
-
-    printf("--- Probans responsum minusculum (scansio intra fines) ---\n");
 
     portus = _fixturam_pravam_incipere(&pid, FIXTURA_PRAVA_MINUSCULUM);
     CREDO_VERUM(portus > 0);
@@ -720,8 +710,6 @@ probatio_truncatum_eof(Piscina* piscina)
      HttpPetitio* pet;
     HttpResultus  res;
 
-    printf("--- Probans truncationem cum EOF mundo ---\n");
-
     portus = _fixturam_pravam_incipere(&pid, FIXTURA_PRAVA_TRUNCATUM);
     CREDO_VERUM(portus > 0);
 
@@ -755,8 +743,6 @@ probatio_tempus_receptionis(Piscina* piscina)
      HttpPetitio* pet;
     HttpResultus  res;
 
-    printf("--- Probans tempus receptionis (hospes dormiens) ---\n");
-
     portus = _fixturam_pravam_incipere(&pid, FIXTURA_PRAVA_DORMIENS);
     CREDO_VERUM(portus > 0);
 
@@ -785,8 +771,6 @@ probatio_caput_ingens(Piscina* piscina)
        character  url[CXXVIII];
      HttpPetitio* pet;
     HttpResultus  res;
-
-    printf("--- Probans Content-Length involutivum (saturatio) ---\n");
 
     portus = _fixturam_pravam_incipere(&pid,
         FIXTURA_PRAVA_CAPUT_INGENS);
@@ -844,8 +828,6 @@ interior vacuum
 probatio_chunked(Piscina* piscina)
 {
     HttpResultus res;
-
-    printf("--- Probans chunked (integrum, truncatum, ingens) ---\n");
 
     res = _petere_a_fixtura(piscina, FIXTURA_CHUNKED_INTEGRUM,
         HTTP_GET);
@@ -947,8 +929,6 @@ probatio_rivus (
          HttpPetitio* pet;
      HttpVecturaRivi  v;
 
-    printf("--- Probans http_exsequi_rivus ---\n");
-
     initium  = _ms_nunc_probationis();
     res      = _rivum_a_fixtura(piscina, FIXTURA_RIVUS, &r);
     finis    = _ms_nunc_probationis();
@@ -1010,8 +990,6 @@ probatio_head_sine_corpore(Piscina* piscina)
 {
     HttpResultus res;
 
-    printf("--- Probans HEAD (Content-Length sine corpore) ---\n");
-
     res = _petere_a_fixtura(piscina, FIXTURA_CAPUT_SOLUM, HTTP_HEAD);
     CREDO_VERUM(res.successus);
     si (res.successus)
@@ -1027,8 +1005,6 @@ interior vacuum
 probatio_corpus_magnum(Piscina* piscina)
 {
     HttpResultus res;
-
-    printf("--- Probans corpus magnum (CC milia octetorum) ---\n");
 
     res = _petere_a_fixtura(piscina, FIXTURA_CORPUS_MAGNUM, HTTP_GET);
     CREDO_VERUM(res.successus);
@@ -1065,8 +1041,6 @@ probatio_petitio_visus(Piscina* piscina)
          HttpPetitio* pet;
     HttpPetitioVisus  v;
 
-    printf("--- Probans http_petitio_visus ---\n");
-
     pet = http_petitio_creare(piscina, HTTP_POST,
         "https://api.example.com:8443/v1/messages?beta=1");
     CREDO_NON_NIHIL(pet);
@@ -1097,8 +1071,6 @@ probatio_petitio_visus(Piscina* piscina)
     printf("\n");
 }
 
-hic_manens i32 _vectura_ficta_vocata = 0;
-
 interior HttpResultus
 _vectura_ficta (
     HttpPetitio* petitio,
@@ -1109,7 +1081,8 @@ _vectura_ficta (
     HttpResponsum* resp;
 
     (vacuum)petitio;
-    _vectura_ficta_vocata += *(i32*)datum;
+    /* datum = numerator vocantis (localis, non status plagulae) */
+    *(i32*)datum += VII;
     resp = (HttpResponsum*)piscina_allocare(piscina,
         (i64)magnitudo(HttpResponsum));
     memset(resp, 0, magnitudo(*resp));
@@ -1128,9 +1101,9 @@ probatio_vectura(Piscina* piscina, i32 portus)
      HttpPetitio* pet;
     HttpResultus  res;
        character  url[CCLVI];
-             i32  incrementum = VII;
+             i32  _vectura_ficta_vocata = 0;
 
-    printf("--- Probans HttpVectura ---\n");
+    CREDO_GRADUS("HttpVectura");
 
     /* ordinaria = http_exsequi verum, contra fixturam localem */
     pet = http_petitio_creare(piscina, HTTP_GET,
@@ -1146,7 +1119,7 @@ probatio_vectura(Piscina* piscina, i32 portus)
 
     /* ficta: functio vocatur cum datis suis, responsum eius redditur */
     v.exsequi  = _vectura_ficta;
-    v.datum    = &incrementum;
+    v.datum    = &_vectura_ficta_vocata;
     res        = http_vectura_exsequi(v, pet, piscina);
     CREDO_VERUM(res.successus);
     CREDO_AEQUALIS_I32(_vectura_ficta_vocata, VII);
@@ -1162,29 +1135,48 @@ probatio_vectura(Piscina* piscina, i32 portus)
 }
 
 
-integer
-principale(vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    Piscina* piscina;
-        b32  successus;
-      pid_t  fixtura_pid = 0;
-        i32  portus;
-
-    printf("\n");
-    printf("========================================\n");
-    printf("PROBATIONES HTTP (fixtura localis)\n");
-    printf("========================================\n");
-    printf("\n");
-
-    piscina = piscina_generare_dynamicum("probatio_http", CXXVIII * M);
-    credo_aperire(piscina);
-
     /* Probationes locales (nulla connexio) */
-    probatio_methodus_nomen(piscina);
-    probatio_error_descriptio(piscina);
-    probatio_petitio_creare(piscina);
-    probatio_petitio_visus(piscina);
-    probatio_connexio_invalida(piscina);
+    probatio_methodus_nomen(c->piscina);
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    probatio_error_descriptio(c->piscina);
+}
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    probatio_petitio_creare(c->piscina);
+}
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    probatio_petitio_visus(c->piscina);
+}
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    probatio_connexio_invalida(c->piscina);
+}
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    pid_t fixtura_pid = 0;
+      i32 portus;
 
     /* Fixtura: hospitium filiatum, portus auto */
     portus = _fixturam_incipere(&fixtura_pid);
@@ -1194,34 +1186,103 @@ principale(vacuum)
 
     si (portus > 0)
     {
-        probatio_get_localis(piscina, portus);
-        probatio_post_localis(piscina, portus);
-        probatio_headers(piscina, portus);
-        probatio_status_codes(piscina, portus);
-        probatio_vectura(piscina, portus);
+        probatio_get_localis(c->piscina, portus);
+        probatio_post_localis(c->piscina, portus);
+        probatio_headers(c->piscina, portus);
+        probatio_status_codes(c->piscina, portus);
+        probatio_vectura(c->piscina, portus);
     }
 
     _fixturam_terminare(fixtura_pid);
+}
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
     /* semitae erroris (fixturae pravae propriae, una connexio) */
-    probatio_responsum_minusculum(piscina);
-    probatio_truncatum_eof(piscina);
-    probatio_tempus_receptionis(piscina);
-    probatio_caput_ingens(piscina);
-    probatio_chunked(piscina);
-    probatio_head_sine_corpore(piscina);
-    probatio_corpus_magnum(piscina);
-    probatio_rivus(piscina);
+    probatio_responsum_minusculum(c->piscina);
+}
 
-    credo_imprimere_compendium();
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    probatio_truncatum_eof(c->piscina);
+}
 
-    printf("========================================\n");
-    printf("\n");
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    probatio_tempus_receptionis(c->piscina);
+}
 
-    successus = credo_omnia_praeterierunt();
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    probatio_caput_ingens(c->piscina);
+}
 
-    credo_claudere();
-    piscina_destruere(piscina);
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    probatio_chunked(c->piscina);
+}
 
-    redde successus ? 0 : I;
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    probatio_head_sine_corpore(c->piscina);
+}
+
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    probatio_corpus_magnum(c->piscina);
+}
+
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+    probatio_rivus(c->piscina);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "methodus nomen", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "error descriptio", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "petitio creare", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "http_petitio_visus", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "connexio invalida", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "GET (fixtura localis)", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "responsum minusculum (scansio intra fines)", _sectio_septima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "truncationem cum EOF mundo", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "tempus receptionis (hospes dormiens)", _sectio_nona, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "Content-Length involutivum (saturatio)", _sectio_decima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "chunked (integrum, truncatum, ingens)", _sectio_decima_prima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "HEAD (Content-Length sine corpore)", _sectio_decima_secunda,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "corpus magnum (CC milia octetorum)", _sectio_decima_tertia,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "http_exsequi_rivus", _sectio_decima_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("http", SECTIONES);
 }

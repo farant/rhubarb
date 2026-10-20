@@ -249,6 +249,28 @@ cursus_quaerere_currentes (
      constans CursusFiltrum* filtrum,   /* arbor, ramus */
                     Piscina* piscina);
 
+/* GRAVES (credo memoria T3): per titulum sectionis - cursus filtrati
+ * quibus facta memoriae credo adhaerent (mensura.h, MENSURA_CREDO) -
+ * maxima trans cursus, octeti. Pondus = maior arenae apicis et apicis
+ * aucti: quod tectum sectionis (T4) iudicat. Ordine ponderis
+ * descendentis; aequalitas ordine titulorum; filtrum->numerus =
+ * ordines maximi. Cursus sine factis absunt. */
+nomen structura {
+    chorda titulus;
+       i32 numerus;          /* cursus mensi */
+       s64 arena_apex;
+       s64 apex_auctus;
+       s64 vestigium;
+       s64 pondus;
+} CursusGravis;
+
+Xar*
+cursus_quaerere_graves (
+       constans CursusIndex* index,
+               constans Xar* mensurae,   /* Xar de Mensura */
+     constans CursusFiltrum* filtrum,
+                    Piscina* piscina);
+
 /* VITA CUSTODIS (colloquia T10a; olim in tools/mensor.c): iudicium
  * vocatoris (processus_vivus) - hic solum nomen et forma */
 nomen enumeratio {

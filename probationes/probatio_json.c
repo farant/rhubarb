@@ -14,11 +14,13 @@
  * ======================================================================== */
 
 interior vacuum
-probatio_nullum(Piscina* piscina)
+_sectio_prima (
+    CredoContextus* c)
 {
-    JsonResultus res;
+         Piscina* piscina;
+    JsonResultus  res;
 
-    imprimere("--- Probans nullum ---\n");
+    piscina = c->piscina;
 
     res = json_legere_literis("null", piscina);
     CREDO_VERUM(res.successus);
@@ -28,11 +30,13 @@ probatio_nullum(Piscina* piscina)
 }
 
 interior vacuum
-probatio_boolean(Piscina* piscina)
+_sectio_secunda (
+    CredoContextus* c)
 {
-    JsonResultus res;
+         Piscina* piscina;
+    JsonResultus  res;
 
-    imprimere("--- Probans boolean ---\n");
+    piscina = c->piscina;
 
     res = json_legere_literis("true", piscina);
     CREDO_VERUM(res.successus);
@@ -46,11 +50,13 @@ probatio_boolean(Piscina* piscina)
 }
 
 interior vacuum
-probatio_integer(Piscina* piscina)
+_sectio_tertia (
+    CredoContextus* c)
 {
-    JsonResultus res;
+         Piscina* piscina;
+    JsonResultus  res;
 
-    imprimere("--- Probans integer ---\n");
+    piscina = c->piscina;
 
     res = json_legere_literis("42", piscina);
     CREDO_VERUM(res.successus);
@@ -72,12 +78,14 @@ probatio_integer(Piscina* piscina)
 }
 
 interior vacuum
-probatio_fluitans(Piscina* piscina)
+_sectio_quarta (
+    CredoContextus* c)
 {
-    JsonResultus res;
-             f64 val;
+         Piscina* piscina;
+    JsonResultus  res;
+             f64  val;
 
-    imprimere("--- Probans fluitans ---\n");
+    piscina = c->piscina;
 
     res = json_legere_literis("3.14", piscina);
     CREDO_VERUM(res.successus);
@@ -101,12 +109,14 @@ probatio_fluitans(Piscina* piscina)
 }
 
 interior vacuum
-probatio_chorda(Piscina* piscina)
+_sectio_quinta (
+    CredoContextus* c)
 {
-    JsonResultus res;
-          chorda val;
+         Piscina* piscina;
+    JsonResultus  res;
+          chorda  val;
 
-    imprimere("--- Probans chorda ---\n");
+    piscina = c->piscina;
 
     res = json_legere_literis("\"hello\"", piscina);
     CREDO_VERUM(res.successus);
@@ -128,12 +138,14 @@ probatio_chorda(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_escapes(Piscina* piscina)
+_sectio_sexta (
+    CredoContextus* c)
 {
-    JsonResultus res;
-          chorda val;
+         Piscina* piscina;
+    JsonResultus  res;
+          chorda  val;
 
-    imprimere("--- Probans escapes ---\n");
+    piscina = c->piscina;
 
     /* Quote escape */
     res = json_legere_literis("\"hello\\\"world\"", piscina);
@@ -176,12 +188,14 @@ probatio_escapes(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_tabulatum(Piscina* piscina)
+_sectio_septima (
+    CredoContextus* c)
 {
+         Piscina* piscina;
     JsonResultus  res;
        JsonValor* elem;
 
-    imprimere("--- Probans tabulatum ---\n");
+    piscina = c->piscina;
 
     /* Empty array */
     res = json_legere_literis("[]", piscina);
@@ -224,13 +238,15 @@ probatio_tabulatum(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_objectum(Piscina* piscina)
+_sectio_octava (
+    CredoContextus* c)
 {
+         Piscina* piscina;
     JsonResultus  res;
        JsonValor* val;
           chorda  str_val;
 
-    imprimere("--- Probans objectum ---\n");
+    piscina = c->piscina;
 
     /* Empty object */
     res = json_legere_literis("{}", piscina);
@@ -274,11 +290,13 @@ probatio_objectum(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_whitespace(Piscina* piscina)
+_sectio_nona (
+    CredoContextus* c)
 {
-    JsonResultus res;
+         Piscina* piscina;
+    JsonResultus  res;
 
-    imprimere("--- Probans whitespace ---\n");
+    piscina = c->piscina;
 
     res = json_legere_literis("  {  \"key\"  :  \"value\"  }  ",
         piscina);
@@ -299,11 +317,13 @@ probatio_whitespace(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_errores(Piscina* piscina)
+_sectio_decima (
+    CredoContextus* c)
 {
-    JsonResultus res;
+         Piscina* piscina;
+    JsonResultus  res;
 
-    imprimere("--- Probans errores ---\n");
+    piscina = c->piscina;
 
     /* Unterminated string */
     res = json_legere_literis("\"hello", piscina);
@@ -332,14 +352,16 @@ probatio_errores(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_builder(Piscina* piscina)
+_sectio_decima_prima (
+    CredoContextus* c)
 {
+      Piscina* piscina;
     JsonValor* obj;
     JsonValor* arr;
     JsonValor* nested;
        chorda  output;
 
-    imprimere("--- Probans builder ---\n");
+    piscina = c->piscina;
 
     /* Build simple object */
     obj = json_objectum_creare(piscina);
@@ -401,12 +423,14 @@ probatio_builder(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_serialization(Piscina* piscina)
+_sectio_decima_secunda (
+    CredoContextus* c)
 {
+      Piscina* piscina;
     JsonValor* val;
        chorda  output;
 
-    imprimere("--- Probans serialization ---\n");
+    piscina = c->piscina;
 
     /* Null */
     val     = json_nullum_creare(piscina);
@@ -526,8 +550,10 @@ _json_aequales (
 }
 
 interior vacuum
-probatio_round_trip(Piscina* piscina)
+_sectio_decima_tertia (
+    CredoContextus* c)
 {
+    Piscina* piscina;
     /* forma COMPACTA canonica: scriptura eam byte pro byte reddere
      * debet. Omnia genera, effugia, vacua, imbricata, unicode. */
     constans character* original =
@@ -541,7 +567,7 @@ probatio_round_trip(Piscina* piscina)
                 chorda serialized;
                 chorda pulchrum;
 
-    imprimere("--- Probans round trip ---\n");
+    piscina = c->piscina;
 
     /* Parse original */
     res1 = json_legere_literis(original, piscina);
@@ -579,13 +605,15 @@ probatio_round_trip(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_pretty_print(Piscina* piscina)
+_sectio_decima_quarta (
+    CredoContextus* c)
 {
+      Piscina* piscina;
     JsonValor* obj;
     JsonValor* arr;
        chorda  output;
 
-    imprimere("--- Probans pretty print ---\n");
+    piscina = c->piscina;
 
     obj = json_objectum_creare(piscina);
     json_objectum_ponere(obj, "name",
@@ -626,15 +654,17 @@ probatio_pretty_print(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_iterator(Piscina* piscina)
+_sectio_decima_quinta (
+    CredoContextus* c)
 {
+                 Piscina* piscina;
             JsonResultus  res;
     JsonObjectumIterator  iter;
                   chorda  clavis;
                JsonValor* valor;
                      i32  count = 0;
 
-    imprimere("--- Probans iterator ---\n");
+    piscina = c->piscina;
 
     res = json_legere_literis("{\"a\": 1, \"b\": 2, \"c\": 3}",
         piscina);
@@ -662,8 +692,10 @@ probatio_iterator(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_clavis_vacua(Piscina* piscina)
+_sectio_decima_sexta (
+    CredoContextus* c)
 {
+                 Piscina* piscina;
             JsonResultus  res;
     JsonObjectumIterator  iter;
                   chorda  clavis;
@@ -672,7 +704,7 @@ probatio_clavis_vacua(Piscina* piscina)
                JsonValor* obj;
                   chorda  output;
 
-    imprimere("--- Probans clavem vacuam ---\n");
+    piscina = c->piscina;
 
     vacua.datum    = NIHIL;
     vacua.mensura  = 0;
@@ -751,12 +783,14 @@ _nidum_facere (
 }
 
 interior vacuum
-probatio_profunditas(Piscina* piscina)
+_sectio_decima_septima (
+    CredoContextus* c)
 {
-    JsonResultus res;
-          chorda textus;
+         Piscina* piscina;
+    JsonResultus  res;
+          chorda  textus;
 
-    imprimere("--- Probans profunditatem ---\n");
+    piscina = c->piscina;
 
     /* ad limitem ipsum: licet */
     res = json_legere(_nidum_facere(piscina, JSON_PROFUNDITAS_MAXIMA,
@@ -831,12 +865,14 @@ _cauda_refutata (
 }
 
 interior vacuum
-probatio_cauda(Piscina* piscina)
+_sectio_decima_octava (
+    CredoContextus* c)
 {
-    JsonResultus res;
-          chorda cum_nullo;
+         Piscina* piscina;
+    JsonResultus  res;
+          chorda  cum_nullo;
 
-    imprimere("--- Probans caudam ---\n");
+    piscina = c->piscina;
 
     _cauda_refutata(piscina, "{\"a\":1} garbage", I, IX);
     _cauda_refutata(piscina, "1 2", I, III);
@@ -919,18 +955,20 @@ _fluitans_scriptus (
 }
 
 interior vacuum
-probatio_numeri(Piscina* piscina)
+_sectio_decima_nona (
+    CredoContextus* c)
 {
-    JsonResultus res;
-             s64 maximus;
-             s64 minimus;
-          chorda output;
-             f64 infinitum;
-             f64 non_numerus;
-             i32 i;
-             f64 redeuntes[VII];
+         Piscina* piscina;
+    JsonResultus  res;
+             s64  maximus;
+             s64  minimus;
+          chorda  output;
+             f64  infinitum;
+             f64  non_numerus;
+             i32  i;
+             f64  redeuntes[VII];
 
-    imprimere("--- Probans numeros ---\n");
+    piscina = c->piscina;
 
     /* limites s64 ipsi: exacti */
     maximus  = (s64)(((i64)I << LXIII) - I);
@@ -1054,12 +1092,14 @@ _chorda_octeti (
 }
 
 interior vacuum
-probatio_chordae_strictae(Piscina* piscina)
+_sectio_vicesima (
+    CredoContextus* c)
 {
-    JsonResultus res;
-          chorda output;
+         Piscina* piscina;
+    JsonResultus  res;
+          chorda  output;
 
-    imprimere("--- Probans chordas strictas ---\n");
+    piscina = c->piscina;
 
     /* par surrogatum -> UTF-8 IV octetorum (U+1F600) */
     _chorda_octeti(piscina, "\"\\uD83D\\uDE00\"", "\xF0\x9F\x98\x80",
@@ -1115,11 +1155,13 @@ probatio_chordae_strictae(Piscina* piscina)
 }
 
 interior vacuum
-probatio_claves_duplicatae(Piscina* piscina)
+_sectio_vicesima_prima (
+    CredoContextus* c)
 {
-    JsonResultus res;
+         Piscina* piscina;
+    JsonResultus  res;
 
-    imprimere("--- Probans claves duplicatas ---\n");
+    piscina = c->piscina;
 
     /* locus = clavis duplicata ipsa */
     _chorda_refutata(piscina, "{\"a\":1,\"a\":2}", "Clavis duplicata",
@@ -1148,11 +1190,13 @@ probatio_claves_duplicatae(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_utf8(Piscina* piscina)
+_sectio_vicesima_secunda (
+    CredoContextus* c)
 {
-    JsonResultus res;
+         Piscina* piscina;
+    JsonResultus  res;
 
-    imprimere("--- Probans UTF-8 ---\n");
+    piscina = c->piscina;
 
     /* validi: II, III, IV octeti, limites */
     _chorda_octeti(piscina, "\"caf\xC3\xA9\"", "caf\xC3\xA9", V);
@@ -1202,7 +1246,6 @@ probatio_capere_et_via(Piscina* piscina)
           chorda  vacua = chorda_ex_literis("-", piscina);
           chorda  c;
 
-    imprimere("--- Probans json_capere_* et json_via ---\n");
     res = json_legere_literis("{\"seq\":7,\"t\":\"sententia\","
         "\"n\":null,\"f\":1.5,\"b\":true,\"s\":\"12\","
         "\"a\":{\"b\":[10,{\"c\":\"x\"}],\"0\":\"clavis\"}}", piscina);
@@ -1254,48 +1297,49 @@ probatio_capere_et_via(Piscina* piscina)
  * PRINCIPALE
  * ======================================================================== */
 
-int
-main (void)
+interior vacuum
+_sectio_vicesima_tertia (
+    CredoContextus* c)
 {
-    Piscina* piscina;
+    probatio_capere_et_via(c->piscina);
+}
 
-    imprimere("\n========================================\n");
-    imprimere("PROBATIONES JSON\n");
-    imprimere("========================================\n\n");
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "nullum", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "boolean", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "integer", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fluitans", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "chorda", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "escapes", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "tabulatum", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "objectum", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "whitespace", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "errores", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "builder", _sectio_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "serialization", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "round trip", _sectio_decima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "pretty print", _sectio_decima_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "iterator", _sectio_decima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "clavem vacuam", _sectio_decima_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "profunditatem", _sectio_decima_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "caudam", _sectio_decima_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "numeros", _sectio_decima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "chordas strictas", _sectio_vicesima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "claves duplicatas", _sectio_vicesima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "UTF-8", _sectio_vicesima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "json_capere_* et json_via", _sectio_vicesima_tertia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    piscina = piscina_generare_dynamicum("probatio_json", CDLVI);
-    credo_aperire(piscina);
-
-    probatio_nullum(piscina);
-    probatio_boolean(piscina);
-    probatio_integer(piscina);
-    probatio_fluitans(piscina);
-    probatio_chorda(piscina);
-    probatio_escapes(piscina);
-    probatio_tabulatum(piscina);
-    probatio_objectum(piscina);
-    probatio_whitespace(piscina);
-    probatio_errores(piscina);
-    probatio_builder(piscina);
-    probatio_serialization(piscina);
-    probatio_round_trip(piscina);
-    probatio_pretty_print(piscina);
-    probatio_iterator(piscina);
-    probatio_clavis_vacua(piscina);
-    probatio_profunditas(piscina);
-    probatio_cauda(piscina);
-    probatio_numeri(piscina);
-    probatio_chordae_strictae(piscina);
-    probatio_claves_duplicatae(piscina);
-    probatio_utf8(piscina);
-    probatio_capere_et_via(piscina);
-
-    credo_imprimere_compendium();
-
-    {
-        b32 omnia = credo_omnia_praeterierunt();
-        piscina_destruere(piscina);
-        imprimere("========================================\n\n");
-        return omnia ? 0 : 1;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("json", SECTIONES);
 }

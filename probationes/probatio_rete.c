@@ -58,38 +58,35 @@ _forma_ipv4_valida (
         ? VERUM : FALSUM;
 }
 
-s32
-principale (vacuum)
-{
-    Piscina* piscina;
-        b32  praeteritus;
-
-    piscina = piscina_generare_dynamicum("probatio_rete", 65536);
-    si (piscina == NIHIL)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
     /* ---- argumenta mala ---- */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         ReteInterfacies unum;
 
-        imprimere("\n--- Probans fines ---\n");
         CREDO_AEQUALIS_I32(rete_addressus_locales(NIHIL, X),
             ZEPHYRUM);
         CREDO_AEQUALIS_I32(rete_addressus_locales(&unum, ZEPHYRUM),
             ZEPHYRUM);
     }
+}
 
     /* ---- invariantia fructus ---- */
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         ReteInterfacies tabulatum[16];
                     i32 numerus;
                     i32 i;
 
-        imprimere("\n--- Probans invariantia ---\n");
         memset(tabulatum, ZEPHYRUM, magnitudo(tabulatum));
         numerus = rete_addressus_locales(tabulatum, XVI);
 
@@ -131,14 +128,18 @@ principale (vacuum)
             }
         }
     }
+}
 
-    /* probatio ipsa numerum non poscit: machina sine reticulo
-     * ZEPHYRUM legitime reddit, et id NON est fractura */
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
+/* probatio ipsa numerum non poscit: machina sine reticulo
+ * ZEPHYRUM legitime reddit, et id NON est fractura */
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "fines", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "invariantia", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("rete", SECTIONES);
 }

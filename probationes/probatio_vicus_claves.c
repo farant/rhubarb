@@ -28,9 +28,6 @@
 #include <stdio.h>
 #include <string.h>
 
-hic_manens Piscina*             piscina;
-hic_manens InternamentumChorda* intern;
-
 interior b32
 scribam_montare (
                  vacuum* sedes,
@@ -157,8 +154,10 @@ color (
 /* pixelum lineae tabularum ultra titulos */
 interior i32
 pixelum_lineae (
-          Vicus* v,
-    Dispensator* d)
+                   Vicus* v,
+             Dispensator* d,
+                 Piscina* piscina,
+     InternamentumChorda* intern)
 {
             Mandata* md;
     TabulaPixelorum* t;
@@ -171,22 +170,23 @@ pixelum_lineae (
     redde tabula_pixelorum_obtinere_pixelum(t, CCC, IV);
 }
 
-s32 principale (vacuum)
+/* scaena una: vicus idem per gradus I-VI mutatur (insertio trans
+ * commutationem perstat), ergo sectio una cum gradibus */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-           Volumen* vol;
-             Vicus* v;
-       Dispensator* d;
-        ManusLudus* m;
-    ScribaMontatio* s1;
-    ScribaMontatio* s2;
+            Volumen* vol;
+              Vicus* v;
+        Dispensator* d;
+         ManusLudus* m;
+     ScribaMontatio* s1;
+     ScribaMontatio* s2;
+            Piscina* piscina;
+InternamentumChorda* intern;
 
-    piscina = piscina_generare_dynamicum("probatio_vicus_praefixum",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_vicus_praefixum");
 
@@ -215,16 +215,17 @@ s32 principale (vacuum)
     CREDO_FALSUM(color(COLOR_ACCENT_PRIMARY)
         == color(COLOR_BACKGROUND));
 
-    imprimere("\n--- I: Cmd+2 - tabula secunda; nihil effluit ---\n");
+    CREDO_GRADUS("I: Cmd+2 - tabula secunda; nihil effluit");
     CREDO_VERUM(manus_ludus_scribere(m, "iab"));
     CREDO_VERUM(tabulam(m, '2'));
     CREDO_VERUM(activa_est(v, "p1"));
     CREDO_VERUM(linea_est(scriba_documentum_tabula(s1->doc), ZEPHYRUM,
         "ab"));
     /* linea tabularum numquam tincta (praefixum nullum) */
-    CREDO_AEQUALIS_I32(pixelum_lineae(v, d), color(COLOR_BACKGROUND));
+    CREDO_AEQUALIS_I32(pixelum_lineae(v, d, piscina, intern),
+        color(COLOR_BACKGROUND));
 
-    imprimere("\n--- II: Cmd+1 - redit; insertio perstat ---\n");
+    CREDO_GRADUS("II: Cmd+1 - redit; insertio perstat");
     CREDO_VERUM(tabulam(m, '1'));
     CREDO_VERUM(activa_est(v, "s1"));
     CREDO_VERUM(manus_ludus_scribere(m, "c"));
@@ -233,13 +234,13 @@ s32 principale (vacuum)
     CREDO_VERUM(linea_est(scriba_documentum_tabula(s1->doc), ZEPHYRUM,
         "abc"));
 
-    imprimere("\n--- III: numerus sine tabula - nihil ---\n");
+    CREDO_GRADUS("III: numerus sine tabula - nihil");
     CREDO_VERUM(tabulam(m, '0'));
     CREDO_VERUM(activa_est(v, "s2"));
     CREDO_VERUM(tabulam(m, '9'));
     CREDO_VERUM(activa_est(v, "s2"));
 
-    imprimere("\n--- IV: Ctrl-A ad latus focatum, non hospitis ---\n");
+    CREDO_GRADUS("IV: Ctrl-A ad latus focatum, non hospitis");
     /* olim praefixum: 'n' tabulam mutabat et devorabatur */
     CREDO_VERUM(manus_ludus_scribere(m, "i"));
     CREDO_VERUM(manus_ludus_clavem(m, 'a', MOD_IMPERIUM));
@@ -251,7 +252,7 @@ s32 principale (vacuum)
     CREDO_NIHIL(insula_attributum(v->repo,
         "praefixum"));
 
-    imprimere("\n--- VI: ictus in tabulam ---\n");
+    CREDO_GRADUS("VI: ictus in tabulam");
     {
         Componens* c;
 
@@ -270,8 +271,17 @@ s32 principale (vacuum)
     CREDO_VERUM(activa_est(v, "s1"));
     CREDO_FALSUM(insula_mendacium(v->repo));
 
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "commutatio tabularum per claves et ictum", _sectio_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("vicus_claves", SECTIONES);
 }

@@ -20,13 +20,12 @@
  * ======================================================================== */
 
 interior vacuum
-probatio_optiones_default(Piscina* piscina)
+_sectio_prima (
+    CredoContextus* c)
 {
     TlsOptiones opt;
 
-    (vacuum)piscina;
-
-    printf("--- Probans optiones default ---\n");
+    (vacuum)c;
 
     opt = tls_optiones_default();
 
@@ -42,13 +41,12 @@ probatio_optiones_default(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_error_descriptio(Piscina* piscina)
+_sectio_secunda (
+    CredoContextus* c)
 {
     constans character* desc;
 
-    (vacuum)piscina;
-
-    printf("--- Probans error descriptio ---\n");
+    (vacuum)c;
 
     desc = tls_error_descriptio(TLS_OK);
     CREDO_NON_NIHIL(desc);
@@ -71,11 +69,13 @@ probatio_error_descriptio(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_connexio_invalida(Piscina* piscina)
+_sectio_quarta (
+    CredoContextus* c)
 {
-    TlsResultus res;
+           TlsResultus  res;
+               Piscina* piscina;
 
-    printf("--- Probans connexio invalida ---\n");
+    piscina = c->piscina;
 
     /* DNS fallita - hospes non existens */
     res = tls_connectere("non.existens.hospes.example", CDXL + III,
@@ -101,15 +101,17 @@ probatio_connexio_invalida(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_connexio_https(Piscina* piscina)
+_sectio_quinta (
+    CredoContextus* c)
 {
            TlsResultus  res;
     constans character* petitio;
                     i8  buffer[IV * MXXIV];
                    s32  n;
                    b32  misit;
+               Piscina* piscina;
 
-    printf("--- Probans connexio HTTPS (httpbin.org:443) ---\n");
+    piscina = c->piscina;
 
     /* Connectere ad httpbin.org:443 */
     res = tls_connectere("httpbin.org", CDXL + III, piscina);
@@ -200,7 +202,8 @@ probatio_connexio_https(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_mittere_recipere(Piscina* piscina)
+_sectio_sexta (
+    CredoContextus* c)
 {
            TlsResultus  res;
     constans character* petitio;
@@ -208,8 +211,9 @@ probatio_mittere_recipere(Piscina* piscina)
                     i8* totum;
                    i32  totalis;
                    s32  n;
+               Piscina* piscina;
 
-    printf("--- Probans mittere/recipere (LXIV KB integri) ---\n");
+    piscina = c->piscina;
 
     res = tls_connectere("httpbin.org", CDXL + III, piscina);
     si (!res.successus)
@@ -299,12 +303,14 @@ probatio_mittere_recipere(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_nullum_argumenta(Piscina* piscina)
+_sectio_tertia (
+    CredoContextus* c)
 {
-            s32 n;
-    TlsResultus res;
+                   s32  n;
+           TlsResultus  res;
+               Piscina* piscina;
 
-    printf("--- Probans nullum argumenta ---\n");
+    piscina = c->piscina;
 
     /* tls_connectere cum NIHIL hospes */
     res = tls_connectere(NIHIL, CDXL + III, piscina);
@@ -340,15 +346,17 @@ probatio_nullum_argumenta(Piscina* piscina)
 
 
 interior vacuum
-probatio_connectere_cum_optionibus(Piscina* piscina)
+_sectio_septima (
+    CredoContextus* c)
 {
            TlsOptiones  opt;
            TlsResultus  res;
     constans character* petitio;
                     i8  buffer[IV * MXXIV];
                    s32  n;
+               Piscina* piscina;
 
-    printf("--- Probans connectere cum optionibus ---\n");
+    piscina = c->piscina;
 
     /* Optiones cum verificare_certificatum = VERUM (default) */
     opt = tls_optiones_default();
@@ -415,42 +423,26 @@ probatio_optiones_timeout(Piscina* piscina)
  * PRINCIPALE
  * ======================================================================== */
 
-integer
+hic_manens constans CredoSectio SECTIONES[] = {
+    /* Probationes locales (non requirunt rete) */
+    { "optiones default", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "error descriptio", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nullum argumenta", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    /* Probationes rete (requirunt connexionem) */
+    { "connexio invalida", _sectio_quarta, NIHIL, NIHIL, "rete",
+        NIHIL },
+    { "connexio HTTPS (httpbin.org:443)", _sectio_quinta, NIHIL, NIHIL,
+        "rete", NIHIL },
+    { "mittere/recipere (LXIV KB integri)", _sectio_sexta, NIHIL, NIHIL,
+        "rete", NIHIL },
+    { "connectere cum optionibus", _sectio_septima, NIHIL, NIHIL,
+        "rete", NIHIL },
+    /* probatio_optiones_timeout -- slow, waits for network timeout */
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
 principale (vacuum)
 {
-    Piscina* piscina;
-        b32  successus;
-
-    printf("\n");
-    printf("========================================\n");
-    printf("PROBATIONES TLS\n");
-    printf("========================================\n");
-    printf("\n");
-
-    piscina = piscina_generare_dynamicum("probatio_tls", LXIV * M);
-    credo_aperire(piscina);
-
-    /* Probationes locales (non requirunt rete) */
-    probatio_optiones_default(piscina);
-    probatio_error_descriptio(piscina);
-    probatio_nullum_argumenta(piscina);
-
-    /* Probationes rete (requirunt connexionem) */
-    probatio_connexio_invalida(piscina);
-    probatio_connexio_https(piscina);
-    probatio_mittere_recipere(piscina);
-    probatio_connectere_cum_optionibus(piscina);
-    /* probatio_optiones_timeout(piscina); -- slow, waits for network timeout */
-
-    credo_imprimere_compendium();
-
-    printf("========================================\n");
-    printf("\n");
-
-    successus = credo_omnia_praeterierunt();
-
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    redde successus ? 0 : I;
+    redde credo_suitam_currere("tls", SECTIONES);
 }

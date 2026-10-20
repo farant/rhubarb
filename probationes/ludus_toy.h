@@ -209,6 +209,7 @@ toy_numerare (
     {
         redde FALSUM;
     }
+    /* <tolera codex="CREDO_STATUS_NON_PURGATUS" (>toy_attr_* tituli attributorum sunt, numquam scripti: ctx vacuum* (insula_mutare) non constans, ergo character[] non literae - lectio sola */
     insula_mutare(r, toy_incrementare, toy_attr_numerus);
     redde VERUM;
 }
@@ -251,8 +252,8 @@ toy_ictus (
             tp.titulus = "puncta";
             tp.valor   = xar_numerus(motus->ictus_pendens);
             insula_mutare(r, toy_ponere_numerum, &tp);
-            insula_mutare(r, toy_incrementare,
-                toy_attr_ictus_numerus);
+            /* <tolera codex="CREDO_STATUS_NON_PURGATUS" (>idem: titulus attributi, lectio sola */
+            insula_mutare(r, toy_incrementare, toy_attr_ictus_numerus);
             mutare_motum(motus, toy_puncta_vacare, NIHIL, e->tempus);
             /* ictus finitus insulam ephemerarum NON tangit */
             motus->sordida = FALSUM;
@@ -292,6 +293,7 @@ toy_fugere (
         casus EVENTUS_CLAVIS_DEPRESSUS:
             si (e->datum.clavis.clavis == CLAVIS_EFFUGIUM)
             {
+                /* <tolera codex="CREDO_STATUS_NON_PURGATUS" (>idem: titulus attributi, lectio sola */
                 insula_mutare(r, toy_ponere_verum, toy_attr_fuga);
                 redde VERUM;
             }

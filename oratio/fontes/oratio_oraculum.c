@@ -1688,7 +1688,7 @@ _auxiliaris_aut_copula (
 interior b32
 _clausulas_aureas (
                            Piscina*  piscina,
-    constans OratioConlluSententia*  s,
+          constans ConlluSententia*  s,
                                s32** clausulae,
                                b32** finitae)
 {
@@ -1703,8 +1703,8 @@ _clausulas_aureas (
 
     per (k = ZEPHYRUM; k < n; k++)
     {
-        constans OratioConlluLexema* t =
-            (constans OratioConlluLexema*)xar_obtinere(s->lexemata, k);
+        constans ConlluLexema* t =
+            (constans ConlluLexema*)xar_obtinere(s->lexemata, k);
 
         si (!t->ranga && (s32)t->a > id_maximus)
         {
@@ -1733,8 +1733,8 @@ _clausulas_aureas (
     }
     per (k = ZEPHYRUM; k < n; k++)
     {
-        constans OratioConlluLexema* t =
-            (constans OratioConlluLexema*)xar_obtinere(s->lexemata, k);
+        constans ConlluLexema* t =
+            (constans ConlluLexema*)xar_obtinere(s->lexemata, k);
 
         caput[k]   = (s32)-I;
         radix[k]   = FALSUM;
@@ -1747,8 +1747,8 @@ _clausulas_aureas (
     }
     per (k = ZEPHYRUM; k < n; k++)
     {
-        constans OratioConlluLexema* t =
-            (constans OratioConlluLexema*)xar_obtinere(s->lexemata, k);
+        constans ConlluLexema* t =
+            (constans ConlluLexema*)xar_obtinere(s->lexemata, k);
         s32 h;
 
         si (t->ranga)
@@ -1774,8 +1774,8 @@ _clausulas_aureas (
     /* praedicatum cum aux/cop finito: radix finita */
     per (k = ZEPHYRUM; k < n; k++)
     {
-        constans OratioConlluLexema* t =
-            (constans OratioConlluLexema*)xar_obtinere(s->lexemata, k);
+        constans ConlluLexema* t =
+            (constans ConlluLexema*)xar_obtinere(s->lexemata, k);
 
                 si (   !t->ranga && caput[k] >= ZEPHYRUM
                     && _auxiliaris_aut_copula(t->deprel)
@@ -1787,8 +1787,8 @@ _clausulas_aureas (
     }
     per (k = ZEPHYRUM; k < n; k++)
     {
-        constans OratioConlluLexema* t =
-            (constans OratioConlluLexema*)xar_obtinere(s->lexemata, k);
+        constans ConlluLexema* t =
+            (constans ConlluLexema*)xar_obtinere(s->lexemata, k);
         s32 p       = (s32)k;
         i32 gradus  = ZEPHYRUM;
 
@@ -1812,7 +1812,7 @@ _clausulas_aureas (
 s32
 oratio_oraculum_clausula_aurea (
                            Piscina* piscina,
-    constans OratioConlluSententia* sententia,
+          constans ConlluSententia* sententia,
                                i32  k,
                                b32* finita)
 {
@@ -2071,8 +2071,8 @@ oratio_oraculum_semina (
     }
     per (i = ZEPHYRUM; i < xar_numerus(sententiae); i++)
     {
-        constans OratioConlluSententia* s =
-            (constans OratioConlluSententia*)xar_obtinere(sententiae,
+        constans ConlluSententia* s =
+            (constans ConlluSententia*)xar_obtinere(sententiae,
             i);
         Piscina* scratch = piscina_generare_dynamicum(
             "oraculum_semina", 4194304);
@@ -2093,8 +2093,8 @@ oratio_oraculum_semina (
         n = xar_numerus(s->lexemata);
         per (k = ZEPHYRUM; k < n; k++)
         {
-            constans OratioConlluLexema* t =
-                (constans OratioConlluLexema*)xar_obtinere(s->lexemata,
+            constans ConlluLexema* t =
+                (constans ConlluLexema*)xar_obtinere(s->lexemata,
                 k);
                         s32 prior  = (s32)-I;   /* non PUNCT non CCONJ */
             s32 praecedens         = (s32)-I;   /* non PUNCT */
@@ -2109,8 +2109,8 @@ oratio_oraculum_semina (
             }
             per (j = (s32)k - (s32)I; j >= ZEPHYRUM; j--)
             {
-                constans OratioConlluLexema* u =
-                    (constans OratioConlluLexema*)xar_obtinere(
+                constans ConlluLexema* u =
+                    (constans ConlluLexema*)xar_obtinere(
                     s->lexemata, (i32)j);
 
                 si (u->ranga || _literis(u->upos, "PUNCT"))
@@ -2129,8 +2129,8 @@ oratio_oraculum_semina (
             }
             per (j = (s32)k + (s32)I; j < (s32)n; j++)
             {
-                constans OratioConlluLexema* u =
-                    (constans OratioConlluLexema*)xar_obtinere(
+                constans ConlluLexema* u =
+                    (constans ConlluLexema*)xar_obtinere(
                     s->lexemata, (i32)j);
 
                 si (!u->ranga && !_literis(u->upos, "PUNCT"))
@@ -2178,8 +2178,8 @@ oratio_oraculum_semina (
 
                 per (j = (s32)k - (s32)I; j >= ZEPHYRUM; j--)
                 {
-                    constans OratioConlluLexema* u =
-                        (constans OratioConlluLexema*)xar_obtinere(
+                    constans ConlluLexema* u =
+                        (constans ConlluLexema*)xar_obtinere(
                         s->lexemata, (i32)j);
 
                     si (   _literis(u->upos, "SCONJ")
@@ -2196,8 +2196,8 @@ oratio_oraculum_semina (
                 }
                 per (j = (s32)k + (s32)I; j < (s32)n; j++)
                 {
-                    constans OratioConlluLexema* u =
-                        (constans OratioConlluLexema*)xar_obtinere(
+                    constans ConlluLexema* u =
+                        (constans ConlluLexema*)xar_obtinere(
                         s->lexemata, (i32)j);
 
                     si (   _literis(u->upos, "SCONJ")
@@ -2580,7 +2580,7 @@ interior vacuum
 _litem_notare (
                            Piscina* piscina,
               OratioOraculumCensus* census,
-    constans OratioConlluSententia* s,
+          constans ConlluSententia* s,
                                Xar* elementa,
                       constans s32* caput,
                                i32  dependens_a,
@@ -2630,8 +2630,8 @@ _litem_notare (
     l->victa   = _chordam_condere(piscina, victa);
     si (d->lexema >= ZEPHYRUM && d->lexema < (s32)n)
     {
-        constans OratioConlluLexema* t =
-            (constans OratioConlluLexema*)xar_obtinere(s->lexemata,
+        constans ConlluLexema* t =
+            (constans ConlluLexema*)xar_obtinere(s->lexemata,
             (i32)d->lexema);
 
         l->dependens  = _chordam_condere(piscina, t->forma);
@@ -2641,8 +2641,8 @@ _litem_notare (
     }
     si (h->lexema >= ZEPHYRUM && h->lexema < (s32)n)
     {
-        constans OratioConlluLexema* t =
-            (constans OratioConlluLexema*)xar_obtinere(s->lexemata,
+        constans ConlluLexema* t =
+            (constans ConlluLexema*)xar_obtinere(s->lexemata,
             (i32)h->lexema);
 
         l->caput = _chordam_condere(piscina, t->forma);
@@ -3097,7 +3097,7 @@ _elementum_nodi (
 interior b32
 _lectio_non_falsa (
               constans Elementum* dependens,
-     constans OratioConlluLexema* t,
+           constans ConlluLexema* t,
                              s32  relatio,
            constans MateriaNodus* analysis)
 {
@@ -3123,7 +3123,7 @@ interior b32
 _decretum_iudicare (
                            Piscina* piscina,
               OratioOraculumCensus* census,
-    constans OratioConlluSententia* s,
+          constans ConlluSententia* s,
                       constans Xar* elementa,
                       constans s32* caput,
            constans OratioDecretum* d,
@@ -3135,16 +3135,16 @@ _decretum_iudicare (
          constans Elementum* dependens = ed >= ZEPHYRUM
              ? (constans Elementum*)xar_obtinere(elementa,
              (i32)ed) : NIHIL;
-                        s32  electio = (s32)ORATIO_ELECTIO_IGNOTUM;
-                        s32  eh = _elementum_nodi(elementa, d->caput);
-    constans OratioConlluLexema* t = NIHIL;
+                        s32   electio = (s32)ORATIO_ELECTIO_IGNOTUM;
+                        s32   eh = _elementum_nodi(elementa, d->caput);
+      constans ConlluLexema*  t = NIHIL;
      OratioOraculumDecretum*  r;
      OratioOraculumDecretum** cella;
 
     si (   dependens != NIHIL && dependens->lexema >= ZEPHYRUM
         && dependens->lexema < (s32)xar_numerus(s->lexemata))
     {
-        t = (constans OratioConlluLexema*)xar_obtinere(s->lexemata,
+        t = (constans ConlluLexema*)xar_obtinere(s->lexemata,
             (i32)dependens->lexema);
     }
     si (t != NIHIL && caput[dependens->lexema] >= ZEPHYRUM)
@@ -3229,7 +3229,7 @@ _decretum_iudicare (
             && h->lexema < (s32)xar_numerus(s->lexemata))
         {
             r->caput = _chordam_condere(piscina,
-                ((constans OratioConlluLexema*)xar_obtinere(s->lexemata,
+                ((constans ConlluLexema*)xar_obtinere(s->lexemata,
                     (i32)h->lexema))->forma);
         }
     }
@@ -3255,7 +3255,7 @@ _ligationes_iudicare (
                            Piscina* piscina,
                            Piscina* scratch,
               OratioOraculumCensus* census,
-    constans OratioConlluSententia* s,
+          constans ConlluSententia* s,
                                Xar* elementa,
                       constans Xar* decreta,
                                s32  dialectus,
@@ -3276,8 +3276,8 @@ _ligationes_iudicare (
 
     per (k = ZEPHYRUM; k < n; k++)
     {
-        constans OratioConlluLexema* t =
-            (constans OratioConlluLexema*)xar_obtinere(s->lexemata, k);
+        constans ConlluLexema* t =
+            (constans ConlluLexema*)xar_obtinere(s->lexemata, k);
 
         si (!t->ranga && (s32)t->a > id_maximus)
         {
@@ -3322,8 +3322,8 @@ _ligationes_iudicare (
     }
     per (k = ZEPHYRUM; k < n; k++)
     {
-        constans OratioConlluLexema* t =
-            (constans OratioConlluLexema*)xar_obtinere(s->lexemata, k);
+        constans ConlluLexema* t =
+            (constans ConlluLexema*)xar_obtinere(s->lexemata, k);
 
         caput[k]      = (s32)-I;
         elementum[k]  = (s32)-I;
@@ -3334,8 +3334,8 @@ _ligationes_iudicare (
     }
     per (k = ZEPHYRUM; k < n; k++)
     {
-        constans OratioConlluLexema* t =
-            (constans OratioConlluLexema*)xar_obtinere(s->lexemata, k);
+        constans ConlluLexema* t =
+            (constans ConlluLexema*)xar_obtinere(s->lexemata, k);
         s32 h = t->ranga ? ZEPHYRUM : _numerus_chordae(t->head);
 
         si (h > ZEPHYRUM && h <= id_maximus)
@@ -3370,8 +3370,8 @@ _ligationes_iudicare (
     /* arcus aurei: lexema alignatum non interpunctum, caput alignatum */
     per (k = ZEPHYRUM; k < n; k++)
     {
-        constans OratioConlluLexema* t =
-            (constans OratioConlluLexema*)xar_obtinere(s->lexemata, k);
+        constans ConlluLexema* t =
+            (constans ConlluLexema*)xar_obtinere(s->lexemata, k);
 
         si (   !t->ranga && !_literis(t->upos, "PUNCT")
             && elementum[k]        >= ZEPHYRUM && caput[k] >= ZEPHYRUM
@@ -3719,8 +3719,8 @@ _ligationes_iudicare (
                     si (   dependens_e->lexema >= ZEPHYRUM
                         && dependens_e->lexema < (s32)n)
                     {
-                        constans OratioConlluLexema* t =
-                            (constans OratioConlluLexema*)xar_obtinere(
+                        constans ConlluLexema* t =
+                            (constans ConlluLexema*)xar_obtinere(
                             s->lexemata, (i32)dependens_e->lexema);
 
                         casus_aureus_d = _casus_aureus(t->feats);
@@ -3815,7 +3815,7 @@ _verbum_iudicare (
                             Xar* elementa,
                             i32  e0,
                             i32  e1,
-    constans OratioConlluLexema* verbum,
+    constans ConlluLexema* verbum,
                             b32  primum,
                             Xar* paria,
                             s32  clausula_aurea)
@@ -4142,7 +4142,7 @@ interior vacuum
 _sententiam_ostendere (
                            Piscina* piscina,
               OratioOraculumCensus* census,
-    constans OratioConlluSententia* s,
+          constans ConlluSententia* s,
                             chorda  textus,
                                Xar* paria,
                       constans s32* maior,
@@ -4219,7 +4219,7 @@ _sententiam_ostendere (
         v->radix.mensura  = ZEPHYRUM;
         si (p->aurea >= ZEPHYRUM && (i32)p->aurea < nl)
         {
-            v->radix = _copia(piscina, ((constans OratioConlluLexema*)
+            v->radix = _copia(piscina, ((constans ConlluLexema*)
                 xar_obtinere(s->lexemata, (i32)p->aurea))->forma);
         }
     }
@@ -4231,7 +4231,7 @@ _clausulas_iudicare (
                            Piscina* scratch,
                            Piscina* piscina,
               OratioOraculumCensus* census,
-    constans OratioConlluSententia* s,
+          constans ConlluSententia* s,
              constans MateriaNodus* sententia,
                             chorda  textus,
                                Xar* paria,
@@ -4357,7 +4357,7 @@ _clausulas_iudicare (
             radix.mensura  = ZEPHYRUM;
             si (p->aurea >= ZEPHYRUM && (i32)p->aurea < nl)
             {
-                radix = ((constans OratioConlluLexema*)xar_obtinere(
+                radix = ((constans ConlluLexema*)xar_obtinere(
                     s->lexemata, (i32)p->aurea))->forma;
             }
             _erratum_clausulae_notare(piscina, census, p->causa,
@@ -4406,7 +4406,7 @@ hic_manens constans FormaThesauri FORMAE_THESAURORUM[] = {
 
 OratioForma
 oratio_oraculum_forma_sententiae (
-    constans OratioConlluSententia* s)
+    constans ConlluSententia* s)
 {
     i32 n = (i32)(magnitudo(FORMAE_THESAURORUM)
         / magnitudo(FORMAE_THESAURORUM[0]));
@@ -4434,7 +4434,7 @@ interior b32
 _sententiam_iudicare (
                            Piscina* piscina,
         constans OratioVocabularia* vocabularia,
-    constans OratioConlluSententia* s,
+          constans ConlluSententia* s,
               OratioOraculumCensus* census,
                 constans Resolutio* resolutio)
 {
@@ -4462,7 +4462,7 @@ _sententiam_iudicare (
         redde FALSUM;
     }
     census->sententiae  = census->sententiae + I;
-    textus              = oratio_conllu_textus(scratch, s);
+    textus              = conllu_textus(scratch, s);
     doc = textus.datum != NIHIL
         ? oratio_arbor_parsare(scratch,
         (constans character*)textus.datum,
@@ -4531,8 +4531,8 @@ _sententiam_iudicare (
     n = xar_numerus(s->lexemata);
     per (k = ZEPHYRUM; k < n; k++)
     {
-        constans OratioConlluLexema* t =
-            (constans OratioConlluLexema*)xar_obtinere(s->lexemata, k);
+        constans ConlluLexema* t =
+            (constans ConlluLexema*)xar_obtinere(s->lexemata, k);
         s32 ga;
         s32 gb;
         i32 e0;
@@ -4551,8 +4551,8 @@ _sententiam_iudicare (
             /* forma in textu absens: verba inalignata, cursor manet */
             per (w = ZEPHYRUM; w <= verba_rangae; w++)
             {
-                constans OratioConlluLexema* v =
-                    (constans OratioConlluLexema*)
+                constans ConlluLexema* v =
+                    (constans ConlluLexema*)
                     xar_obtinere(s->lexemata, k + (t->ranga ? w
                         + I : ZEPHYRUM));
 
@@ -4607,8 +4607,8 @@ _sententiam_iudicare (
              * ante (prima contra elementa omnia, ceterae 'ranga') */
             per (w = ZEPHYRUM; w < verba_rangae && k + I + w < n; w++)
             {
-                constans OratioConlluLexema* pars =
-                    (constans OratioConlluLexema*)xar_obtinere(
+                constans ConlluLexema* pars =
+                    (constans ConlluLexema*)xar_obtinere(
                     s->lexemata, k + I + w);
                                 s32 ep = _elementum_formae(textus,
                                     elementa, e0, e1,
@@ -4714,8 +4714,8 @@ _linguam_documenti_censere (
     (vacuum)piscina;
     per (i = ZEPHYRUM; i < xar_numerus(sententiae); i++)
     {
-        constans OratioConlluSententia* s =
-            (constans OratioConlluSententia*)xar_obtinere(sententiae,
+        constans ConlluSententia* s =
+            (constans ConlluSententia*)xar_obtinere(sententiae,
             i);
         Piscina* scratch = piscina_generare_dynamicum(
             "oraculum_census_linguae", 16777216);
@@ -4727,7 +4727,7 @@ _linguam_documenti_censere (
         {
             redde ZEPHYRUM;
         }
-        textus = oratio_conllu_textus(scratch, s);
+        textus = conllu_textus(scratch, s);
         doc = textus.datum != NIHIL
             ? oratio_arbor_parsare(scratch,
             (constans character*)textus.datum, textus.mensura)
@@ -4793,7 +4793,7 @@ oratio_oraculum_iudicare_resolutum (
     per (i = ZEPHYRUM; i < xar_numerus(sententiae); i++)
     {
         si (!_sententiam_iudicare(piscina, vocabularia,
-                (constans OratioConlluSententia*)xar_obtinere(sententiae,
+                (constans ConlluSententia*)xar_obtinere(sententiae,
                 i),
                 census, programma != NIHIL ? &resolutio : NIHIL))
         {

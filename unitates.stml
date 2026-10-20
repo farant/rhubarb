@@ -92,6 +92,12 @@
          linguae="stml"
          descriptio="canon_examen in plagulas .stml/.canon modo scriptas (.claude/hooks/canon-custos.sh)"/>
 
+  <iudex titulus="vexilla_scriptorum"
+         curae="domestica remissa aliena" vitae="viva vetusta"
+         munera="scriptum probatio" provenientiae="manu generatum"
+         linguae="sh"
+         descriptio="ratchet radicum manu (tools/vexilla_fumus.sh VI contra tools/radices_manu.tsv): omne scriptum concha praeter fixturas et archivata (archivum/ congelatum: radices manu suae temporis sunt, numquam tangendae)"/>
+
   <iudex titulus="prosa_anglica"
          curae="domestica remissa" vitae="viva vetusta"
          munera="documentum" provenientiae="manu"
@@ -120,7 +126,6 @@
 
   <!-- familiae: radices quarum bibliothecae RADIX_* unitates liberae
        sunt (tres liberi aut plures, partibus exclusis; census 10-15) -->
-  <familia radix="arbor"/>
   <familia radix="eventus"/>
   <familia radix="fabrica"/>
   <familia radix="fons"/>

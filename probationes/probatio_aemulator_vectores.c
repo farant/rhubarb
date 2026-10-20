@@ -1145,7 +1145,7 @@ verus_modus (
 
 interior StmlNodus*
 exemplum_titulo (
-                   Xar* exempla,
+          constans Xar* exempla,
     constans character* titulus)
 {
     StmlNodus* e;
@@ -1162,29 +1162,37 @@ exemplum_titulo (
     redde NIHIL;
 }
 
-s32 principale (vacuum)
-{
-       StmlResultus  res;
-                Xar* exempla;
-          StmlNodus* e;
-          Probandum  fictus;
-          Probandum  verus;
-             chorda  octeti;
-                b32  absens;
-                b32  transiit;
-                i32  i;
-                i32  aliena;
-                i32  viridia;
-                i32  debita;
-                i32  absentia;
 
-    piscina = piscina_generare_dynamicum("probatio_aemulator_vectores",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+/* ==================================================
+ * Fixura suitae: vectores semel lecti (exempla -> c->suita);
+ * sectiones LEGUNT. piscina et intern (auxiliis lecta) a quoque
+ * contextu ponuntur, post quemque reponuntur; octetus_vacuus et
+ * fictus_sedes (sedes per monstratorem effusae) item (examen XCII).
+ * ================================================== */
+
+interior vacuum
+_statum_reponere (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    piscina                   = NIHIL;
+    intern                    = NIHIL;
+    octetus_vacuus[ZEPHYRUM]  = ZEPHYRUM;
+    fictus_sedes              = ZEPHYRUM;
+}
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+    StmlResultus  res;
+             Xar* exempla;
+       StmlNodus* e;
+             i32  i;
+             i32  aliena;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
 
     res = stml_legere_ex_literis(chorda_ut_cstr(filum_legere_totum(
         "probationes/fixa/aemulator/vectores.stml", piscina), piscina),
@@ -1192,8 +1200,8 @@ s32 principale (vacuum)
     CREDO_VERUM(res.successus);
     si (!res.successus)
     {
-        credo_imprimere_compendium();
-        redde I;
+        /* parare suitae fractum: nulla sectio currit */
+        redde;
     }
     exempla = stml_invenire_omnes_liberos(res.elementum_radix, "casus",
         piscina);
@@ -1211,15 +1219,39 @@ s32 principale (vacuum)
         literae(res.elementum_radix, "pin"),
         (integer)(xar_numerus(exempla) - aliena));
     CREDO_VERUM(xar_numerus(exempla) > XXX);
+    c->datum = exempla;
+}
 
-    imprimere("\n--- 0: vectores sani sine nucleo ---\n");
+/* 0: vectores sani sine nucleo */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    constans Xar* exempla;
+             i32  i;
+
+    piscina = c->piscina;
+    exempla = (constans Xar*)c->suita;
     per (i = ZEPHYRUM; i < xar_numerus(exempla); i++)
     {
         CREDO_VERUM(exemplum_validare(
             *(StmlNodus**)xar_obtinere(exempla, i)));
     }
+}
 
-    imprimere("\n--- I: iterator contra nucleum fictum ---\n");
+/* I: iterator contra nucleum fictum */
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    constans Xar* exempla;
+       StmlNodus* e;
+       Probandum  fictus;
+          chorda  octeti;
+             b32  absens;
+
+    piscina = c->piscina;
+    exempla = (constans Xar*)c->suita;
     CREDO_VERUM(effugia_solvere(chorda_ex_literis(
         "A\\x1B[\\n\\\\", piscina), &octeti));
     CREDO_VERUM(chorda_aequalis_literis(octeti, "A\033[\n\\"));
@@ -1278,8 +1310,25 @@ s32 principale (vacuum)
     {
         CREDO_FALSUM(exemplum_currere(&fictus, e, FALSUM, &absens));
     }
+}
 
-    imprimere("\n--- II: vectores contra nucleum ---\n");
+/* II: vectores contra nucleum verum (debita per nomen) */
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    constans Xar* exempla;
+       StmlNodus* e;
+       Probandum  verus;
+             b32  absens;
+             b32  transiit;
+             i32  i;
+             i32  viridia;
+             i32  debita;
+             i32  absentia;
+
+    piscina                = c->piscina;
+    exempla                = (constans Xar*)c->suita;
     verus.creare           = verus_creare;
     verus.scribere         = verus_scribere;
     verus.textus           = verus_textus;
@@ -1335,8 +1384,21 @@ s32 principale (vacuum)
     imprimere("vectores: %d viridia, %d debita, %d sine nucleo\n",
         (integer)viridia,
         (integer)debita, (integer)absentia);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "0: vectores sani sine nucleo", _sectio_prima, NIHIL,
+      _statum_reponere, NIHIL, NIHIL },
+    { "I: iterator contra nucleum fictum", _sectio_secunda, NIHIL,
+      _statum_reponere, NIHIL, NIHIL },
+    { "II: vectores contra nucleum", _sectio_tertia, NIHIL,
+      _statum_reponere, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("aemulator_vectores", SECTIONES,
+        _suitam_parare, _statum_reponere);
 }

@@ -25,9 +25,6 @@
 #include <stdio.h>
 #include <string.h>
 
-hic_manens Piscina*             piscina;
-hic_manens InternamentumChorda* intern;
-
 interior b32
 scribam_montare (
                  vacuum* sedes,
@@ -190,23 +187,24 @@ focus_est (
     redde chorda_aequalis_literis(dispensator_focus(d), id);
 }
 
-s32 principale (vacuum)
+/* scenarium unum: gradus I-VI mundum eundem (vicus, dispensator)
+ * ordine mutant, ergo una sectio cum gradibus nominatis */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-           Volumen* vol;
-             Vicus* v;
-       Dispensator* d;
-        ManusLudus* m;
-             Motus* motus;
-    ScribaMontatio* sm;
-    PictorMontatio* pm;
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                Volumen* vol;
+                  Vicus* v;
+            Dispensator* d;
+             ManusLudus* m;
+                  Motus* motus;
+         ScribaMontatio* sm;
+         PictorMontatio* pm;
 
-    piscina = piscina_generare_dynamicum("probatio_vicus_commutatio",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_vicus_commutatio");
 
@@ -233,12 +231,12 @@ s32 principale (vacuum)
     motus  = dispensator_motus(d);
     vicus_dispensatorem_ligare(v, d);
 
-    imprimere("\n--- I: ligatio - focus ex ramo activo ---\n");
+    CREDO_GRADUS("I: ligatio - focus ex ramo activo");
     CREDO_VERUM(focus_est(d, "pagina"));
     CREDO_NIHIL(insula_attributum(v->repo, "focus"));
     CREDO_VERUM(motus->gestus.status == (vacuum*)&sm->actiones_ctx);
 
-    imprimere("\n--- II: commutatio insertionem effundit ---\n");
+    CREDO_GRADUS("II: commutatio insertionem effundit");
     CREDO_VERUM(manus_ludus_scribere(m, "isalve"));
     /* quies scribae (M ms) non elapsa: textus in gestu solum */
     CREDO_VERUM(linea_est(scriba_documentum_tabula(sm->doc), ZEPHYRUM,
@@ -250,7 +248,7 @@ s32 principale (vacuum)
     CREDO_VERUM(focus_est(d, "tabula"));
     CREDO_NIHIL(motus->gestus.status);
 
-    imprimere("\n--- III: effusio pan/zoom in ramum activum ---\n");
+    CREDO_GRADUS("III: effusio pan/zoom in ramum activum");
     /* ictus finitus sordidam tollit; quies MEDIO ictu (mus tentus)
      * effusionem facit - in ramum pictoris, non radicem vici */
     dispensator_recomponere(d);
@@ -266,7 +264,7 @@ s32 principale (vacuum)
     murem_mittere(d, m, EVENTUS_MUS_LIBERATUS, XV, C * M + M + XX);
     CREDO_VERUM(pictor_documentum_cursor(pm->doc) > ZEPHYRUM);
 
-    imprimere("\n--- IV: reditus - focus et gestus scribae ---\n");
+    CREDO_GRADUS("IV: reditus - focus et gestus scribae");
     CREDO_VERUM(vicus_activam_ponere(v, "s1"));
     dispensator_recomponere(d);
     CREDO_VERUM(focus_est(d, "pagina"));
@@ -275,7 +273,7 @@ s32 principale (vacuum)
         "p1_sinistrum_pictor", "focus"),
         "tabula"));
 
-    imprimere("\n--- V: focus in ramum, non radicem ---\n");
+    CREDO_GRADUS("V: focus in ramum, non radicem");
     dispensator_focus_ponere(d, chorda_ex_literis("status", piscina));
     CREDO_VERUM(valor_est(rami_attributum(v, "scriba",
         "s1_sinistrum_scriba", "focus"),
@@ -283,7 +281,7 @@ s32 principale (vacuum)
     CREDO_NIHIL(insula_attributum(v->repo, "focus"));
     dispensator_focus_ponere(d, chorda_ex_literis("pagina", piscina));
 
-    imprimere("\n--- VI: captura et ictus pendens abiciuntur ---\n");
+    CREDO_GRADUS("VI: captura et ictus pendens abiciuntur");
     CREDO_VERUM(vicus_activam_ponere(v, "p1"));
     dispensator_recomponere(d);
     murem_mittere(d, m, EVENTUS_MUS_DEPRESSUS, V, CC * M);
@@ -294,8 +292,17 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(xar_numerus(motus->ictus_pendens), ZEPHYRUM);
     CREDO_FALSUM(insula_mendacium(v->repo));
 
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "commutatio rami activi (scenarium I-VI)", _sectio_prima, NIHIL,
+      NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("vicus_commutatio", SECTIONES);
 }

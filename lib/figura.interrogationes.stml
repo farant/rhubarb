@@ -1,0 +1,97 @@
+<interrogationes unitas="figura">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I make a widget draw itself?
+    <responsum symbolum="figura_registrare pingere FiguraFn">Register a
+      FiguraFn for the widget's partes and a thema with
+      figura_registrare, then call pingere on the logical tree. pingere
+      opens one coetus per componens (fines, sectio, translatio, scala,
+      provenientia = the componens id), calls the registered figura,
+      then walks the children, so a parent always paints UNDER its
+      children. The figura draws in the componens' own space: the
+      origin is the top-left corner of its fines. figura_registrare
+      returns FALSUM for a NIHIL fn or an already registered (partes,
+      thema) pair; a componens with no figura still gets its coetus and
+      its children are still painted.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the thema argument of figura_registrare and pingere, and does it pick the colours?
+    <responsum symbolum="pingere figura_color_thematis color_ex_mandato thema_color">It
+      is only a key: an i32 that chooses which set of registered
+      figurae draws the tree (probatio_figura registers figura_finium
+      under thema I next to its thema ZEPHYRUM figura). The figura also
+      receives it, but nothing here turns it into colours. A figura
+      names colours as ColorMandati, normally through
+      figura_color_thematis (genus COLOR_MANDATI_THEMA), and the
+      rasterizer resolves them later in color_ex_mandato through
+      thema_color, which reads the single process-wide semantic map of
+      thema.h.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a widget inside a mounted pane use figurae registered in the host registry?
+    <responsum symbolum="figura_invenire_in_spatio figura_registrum_miscere_in_spatio componens_spatium">No.
+      Lookup is strict per spatium: pingere uses the componens'
+      effective spatium (the nearest ancestor that sets one, see
+      componens_spatium), and figura_invenire_in_spatio only matches
+      entries of that exact spatium, with no fallback to the host
+      spatium. Merge the pane's own registry into the host with
+      figura_registrum_miscere_in_spatio. Entries that already carry a
+      spatium (nested panes) keep theirs. The spatium chorda is stored
+      as given, not copied, so it must live as long as the registry
+      (pass an interned one).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I merge two figure registries that both define the same (partes, thema)?
+    <responsum symbolum="figura_registrum_miscere figura_registrum_miscere_in_spatio figura_registrum_vacare">No.
+      Merging is all or nothing: if any entry of the source collides
+      with an entry already in the target (same partes, thema and
+      spatium), the merge returns FALSUM and adds nothing. Collisions
+      among entries of the source itself are not checked. To rebuild a
+      registry from scratch, figura_registrum_vacare empties it and
+      keeps its memory.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why do the figura helpers copy text into the Mandata piscina before drawing it?
+    <responsum symbolum="mandata_textus chorda_transcribere figura_textum_audacem figura_globulum_pingere">mandata_textus
+      stores the chorda you pass by reference, it does not copy the
+      bytes. If the text lives in a temporary buffer, the command list
+      points at stale memory by the time it is rasterized. Every text
+      helper here (figura_globulum_pingere, figura_segmentum_pingere,
+      figura_textum_audacem) first copies the text with
+      chorda_transcribere into md-&gt;piscina. Do the same when you call
+      mandata_textus yourself.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I draw a standard button, checkbox or segmented control in the house style?
+    <responsum symbolum="figura_globulum_pingere figura_sagittam_pingere figura_segmentum_pingere figura_capsam_pingere">Use
+      the V1 helpers: figura_globulum_pingere (button),
+      figura_sagittam_pingere (arrow button, directio -1 left, +1
+      right), figura_segmentum_pingere (one segment, positio
+      FIGURA_SEGMENTUM_PRIMUM, _MEDIUM or _ULTIMUM) and
+      figura_capsam_pingere(md, x, y, factum) (a IX by IX checkbox at
+      x, y, ticked when factum). For the first three, status is a mask
+      of FIGURA_ELECTUM (filled with COLOR_SELECTION), FIGURA_UMBRA and
+      FIGURA_OBSCURUM (dim text). With FIGURA_UMBRA the body shrinks
+      by II pixels (a segment only in height, except _ULTIMUM) and the
+      shadow stays inside the given fines, so nothing is painted
+      outside the component. Text is centred assuming a 6x8 glyph per
+      byte of the chorda.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I paint a pane background with the focus indicator?
+    <responsum symbolum="figura_mensam_pingere motus_ramus_focatus FIGURA_EXEMPLAR_FOCI">Call
+      figura_mensam_pingere(md, fines, focatum): it fills the fines with
+      COLOR_SUPERFICIES and, when focatum is VERUM, lays the
+      FIGURA_EXEMPLAR_FOCI pattern in COLOR_BORDER over it (surface
+      first, pattern second). It takes a plain b32 so the figura stays
+      pure; decide focus with motus_ramus_focatus before
+      painting.</responsum>
+  </interrogatio>
+
+</interrogationes>

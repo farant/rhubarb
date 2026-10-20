@@ -458,21 +458,14 @@ _praemultiplicata_aequalia (
     redde VERUM;
 }
 
-s32
-principale (vacuum)
+/* ---- I1: nucleus PURUS ---- */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
     Piscina* piscina;
-        b32  praeteritus;
 
-    piscina = piscina_generare_dynamicum("probatio_icones", 16777216);
-    si (piscina == NIHIL)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    /* ---- I1: nucleus PURUS ---- */
+    piscina = c->piscina;
     {
                Icones  petitio;
         IconesFructus  fructus;
@@ -481,8 +474,6 @@ principale (vacuum)
                 Imago  fons;
            IconesPars* a;
            IconesPars* b;
-
-        imprimere("\n--- I1: nucleus purus ---\n");
 
         fons = _fingere(CCLVI, piscina);
         CREDO_NON_NIHIL(fons.pixela);
@@ -550,8 +541,16 @@ principale (vacuum)
         CREDO_FALSUM(filum_directorium_existit("AppIcon.iconset"));
         CREDO_FALSUM(filum_existit("icon_16x16.png"));
     }
+}
 
-    /* ---- I3: continens .icns PURUS ---- */
+/* ---- I3: continens .icns PURUS ---- */
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                Icones petitio;
         IconesFructus fructus;
@@ -566,8 +565,6 @@ principale (vacuum)
                   i32 longitudo;
                   i32 numerus;
                   i32 i;
-
-        imprimere("\n--- I3: continens .icns purus ---\n");
 
         fons = _fingere(LXIV, piscina);
         CREDO_NON_NIHIL(fons.pixela);
@@ -694,8 +691,16 @@ principale (vacuum)
                 &png_maior.imago));
         }
     }
+}
 
-    /* ---- I3 b: ARGB OCTETIM pinnatum ---- */
+/* ---- I3 b: ARGB OCTETIM pinnatum ---- */
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                         Icones  petitio;
                  IconesFructus  fructus;
@@ -719,8 +724,6 @@ principale (vacuum)
             (i8)CCLV, (i8)L,       (i8)(CCLV - IV), (i8)L,
             (i8)CCLV, (i8)XXV,     (i8)(CCLV - IV), (i8)XXV
         };
-
-        imprimere("\n--- I3 b: ARGB octetim pinnatum ---\n");
 
         /* Regula (verificata Pythone super onera Apple): cursus maximus
          * CXXX -> imperium 0x80 + (CXXX - III) = CCLV; CCLVI = CXXX +
@@ -797,8 +800,16 @@ principale (vacuum)
                     && memcmp(p->onus_icns.datum, DIMIDIA, (size_t)XX)
                        == ZEPHYRUM);
     }
+}
 
-    /* ---- I6: scriptores in area virgine NIDIFICATA ---- */
+/* ---- I6: scriptores in area virgine NIDIFICATA ---- */
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                Icones petitio;
         IconesFructus fructus;
@@ -810,8 +821,6 @@ principale (vacuum)
                 Imago fons;
             character via[CCLVI];
                   i32 i;
-
-        imprimere("\n--- I6: scriptores ---\n");
 
         _aream_purgare();
         CREDO_FALSUM(filum_directorium_existit(VIA_AREAE));
@@ -889,8 +898,16 @@ principale (vacuum)
 
         _aream_purgare();
     }
+}
 
-    /* ---- I5: recusationes, quaeque statu SUO et sede SUA ---- */
+/* ---- I5: recusationes, quaeque statu SUO et sede SUA ---- */
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                Icones bona;
                Icones p;
@@ -904,8 +921,6 @@ principale (vacuum)
                 Imago fons;
                 Imago parva;
                 Imago mala;
-
-        imprimere("\n--- I5: recusationes ---\n");
 
         vacua.datum    = NIHIL;
         vacua.mensura  = ZEPHYRUM;
@@ -1158,8 +1173,16 @@ principale (vacuum)
 
         _recusatam_purgare();
     }
+}
 
-    /* ---- I7: qualitas contra sips CONGELATUM, interior ---- */
+/* ---- I7: qualitas contra sips CONGELATUM, interior ---- */
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
          ImagoFructus  fons;
          ImagoFructus  sips;
@@ -1173,8 +1196,6 @@ principale (vacuum)
                   i32  diversa;
                   i32  media;
                   i32  intus;
-
-        imprimere("\n--- I7: qualitas contra sips congelatum ---\n");
 
         /* Fixa et oraculum: probationes/fixa/icones/generare.py. Exitus
          * sips fontis SOLIUS functio est, ergo congelari licet: codex
@@ -1240,8 +1261,16 @@ principale (vacuum)
             CREDO_MAIOR_I32(media, LIMES_MEDIA);
         }
     }
+}
 
-    /* ---- I8: dimensiones EXACTAE et recisio CENTRALIS ---- */
+/* ---- I8: dimensiones EXACTAE et recisio CENTRALIS ---- */
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                Icones  petitio;
         IconesFructus  fructus;
@@ -1257,8 +1286,6 @@ principale (vacuum)
                   i32  rubra;
                   i32  caerulea;
                   i32  numerus;
-
-        imprimere("\n--- I8: dimensiones exactae, recisio ---\n");
 
         /* Fons C x C: latus NON potestas binaria. Olim creator 'intra
          * limites' truncabat (M -> XV; C -> XV, XXXI, LXIII), et fixa
@@ -1344,12 +1371,25 @@ principale (vacuum)
         /* gemellus POSITIVUS: imago vacua 'rubrum nullum' daret */
         CREDO_AEQUALIS_I32(caerulea, (i32)(LXIV * LXIV));
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I1: nucleus purus", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "I3: continens .icns purus", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "I3 b: ARGB octetim pinnatum", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "I6: scriptores", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "I5: recusationes", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "I7: qualitas contra sips congelatum", _sectio_sexta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "I8: dimensiones exactae, recisio", _sectio_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("icones", SECTIONES);
 }

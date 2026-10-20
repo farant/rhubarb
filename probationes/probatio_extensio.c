@@ -28,7 +28,6 @@
 #include <string.h>
 
 hic_manens Piscina* piscina;
-hic_manens s32 signum_mora;
 
 interior Polynomium
 _p (
@@ -155,21 +154,24 @@ _unum_est (
         && fractio_aequalis(q, fractio_ex_s64(I));
 }
 
-s32 principale (vacuum)
+/* piscina auxiliorum: sectionis propria (parare eam reponit) */
+interior vacuum
+_parare (
+    CredoContextus* c)
 {
-    piscina = piscina_generare_dynamicum("probatio_extensio", 1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
+    piscina = c->piscina;
+}
 
 
     /* ==================================================
      * CORPORA QUADRATICA
      * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
            Extensio* k5            = extensio_quadratica(V, piscina);
            Extensio* k_minus_unum  = extensio_quadratica(-I, piscina);
@@ -178,7 +180,6 @@ s32 principale (vacuum)
         Algebraicus  x;
             Fractio  q = fractio_ex_s64(ZEPHYRUM);
 
-        imprimere("\n--- Corpora quadratica ---\n");
         CREDO_NON_NIHIL (k5);
         CREDO_NON_NIHIL (k_minus_unum);
         CREDO_VERUM (polynomium_aequalis(extensio_polynomium(k5),
@@ -247,14 +248,19 @@ s32 principale (vacuum)
             chorda_ex_literis("b + 1",
             piscina), piscina, &x));
     }
+}
 
 
     /* ==================================================
      * CORPORA COSINUS
      * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Corpora cosinus ---\n");
         CREDO_VERUM (polynomium_aequalis(extensio_polynomium(
             extensio_cosinus(I, piscina)), _p("t - 2")));
         CREDO_VERUM (polynomium_aequalis(extensio_polynomium(
@@ -359,12 +365,18 @@ s32 principale (vacuum)
                 && fractio_aequalis(q, fractio_ex_s64(-I)));
         }
     }
+}
 
 
     /* ==================================================
      * IDENTITATES ET ORACULA F64
      * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         hic_manens constans s64 quadratica[] = { II, III, V, VII, -I,
             -III,
@@ -385,7 +397,6 @@ s32 principale (vacuum)
          i32 numerus_corporum          = VII + XI;
          i32 c;
 
-        imprimere("\n--- Identitates (elementa fortuita) ---\n");
         sors_seminare(&s, CXXIII, I);
         per (c = ZEPHYRUM; c < numerus_corporum; c++)
         {
@@ -591,12 +602,18 @@ s32 principale (vacuum)
         CREDO_VERUM (rationales_bene);
         CREDO_VERUM (exponentes_negativi_bene);
     }
+}
 
 
     /* ==================================================
      * REFUTATIONES ET CORPORA MIXTA
      * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
            Extensio* k2 = extensio_quadratica(II, piscina);
            Extensio* k3 = extensio_quadratica(III, piscina);
@@ -605,7 +622,6 @@ s32 principale (vacuum)
         Algebraicus  x;
             Fractio  q = fractio_ex_s64(ZEPHYRUM);
 
-        imprimere("\n--- Refutationes ---\n");
         CREDO_FALSUM (algebraicus_aequalis(a2, a3));
         CREDO_FALSUM (algebraicus_est_validum(algebraicus_adde(a2, a3,
             piscina)));
@@ -625,12 +641,18 @@ s32 principale (vacuum)
             piscina),
             chorda_ex_literis("a^-1", piscina), piscina, &x));
     }
+}
 
 
     /* ==================================================
      * MATRIX SUPER Q(sqrt 5)
      * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
                Extensio* k5      = extensio_quadratica(V,
                    piscina);
@@ -643,7 +665,6 @@ s32 principale (vacuum)
                     i32  j;
                     i32  gradus = ZEPHYRUM;
 
-        imprimere("\n--- Matrix super Q(sqrt 5) ---\n");
         CREDO_VERUM (corpus->corpus);
         /* Vandermonde nodis 1, phi, phi^2, 1/phi: det = prod_{i<j}
          * (x_j - x_i) */
@@ -699,12 +720,18 @@ s32 principale (vacuum)
             CREDO_FALSUM (matrix_determinans(m, piscina, &det));
         }
     }
+}
 
 
     /* ==================================================
      * RECENSIO E1: LACUNAE CLAUSAE
      * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
            Extensio* k5   = extensio_quadratica(V, piscina);
            Extensio* k_i  = extensio_quadratica(-I, piscina);
@@ -712,7 +739,6 @@ s32 principale (vacuum)
         Algebraicus  x;
             Fractio  q = fractio_ex_s64(ZEPHYRUM);
 
-        imprimere("\n--- Recensio E1 ---\n");
         /* F1: -2^63 refutatur sine negatione indefinita; fines -2^31 */
         CREDO_NIHIL (extensio_quadratica(-(s64)0x7FFFFFFFFFFFFFFFL - I,
             piscina));
@@ -810,18 +836,23 @@ s32 principale (vacuum)
             CREDO_FALSUM (aequales);
         }
     }
+}
 
 
     /* ==================================================
      * ORDO: STURM, RADICES, SIGNUM
      * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
                 i32 n       = ZEPHYRUM;
                 s32 signum  = ZEPHYRUM;
         Algebraicus x;
 
-        imprimere("\n--- Radices reales (Sturm) ---\n");
         CREDO_VERUM (extensio_radices_reales(_p("t^2 - 2"), piscina, &n)
             && n == II);
         CREDO_VERUM (extensio_radices_reales(_p("t^2 + 1"), piscina, &n)
@@ -861,7 +892,7 @@ s32 principale (vacuum)
             CREDO_VERUM (psi_bene);
         }
 
-        imprimere("\n--- extensio_ex_polynomio ---\n");
+        CREDO_GRADUS("extensio_ex_polynomio");
         CREDO_NIHIL (extensio_ex_polynomio(_p("2t^2 - 1"), ZEPHYRUM,
             piscina));
         CREDO_NIHIL (extensio_ex_polynomio(_p("t^2 - 4"), -I, piscina));
@@ -939,7 +970,13 @@ s32 principale (vacuum)
                 piscina, &signum) && signum == I);
         }
     }
+}
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         /* Pell: (1 + sqrt 2)^k = p + q sqrt 2, p - q sqrt 2 = (1 -
          * sqrt 2)^k: signum (-1)^k, |.| ~ 0.414^k (k = 100: 1e-38) */
@@ -952,7 +989,6 @@ s32 principale (vacuum)
                 s32  signum      = ZEPHYRUM;
                 s32  e;
 
-        imprimere("\n--- Signum prope nullum ---\n");
         per (e = I; e <= C; e++)
         {
             PiscinaNotatio nota = piscina_notare(piscina);
@@ -997,7 +1033,13 @@ s32 principale (vacuum)
         CREDO_VERUM (pell_bene);
         CREDO_VERUM (aurei_bene);
     }
+}
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         /* signum fortuitum contra f64 ad radicem notam */
         hic_manens constans character* polynomia[] = { "t^2 - 2",
@@ -1015,7 +1057,6 @@ s32 principale (vacuum)
          i32 probata               = ZEPHYRUM;
          i32 c;
 
-        imprimere("\n--- Signum fortuitum (oraculum f64) ---\n");
         sors_seminare(&s, CCCXXI, II);
         per (c = ZEPHYRUM; c < VI; c++)
         {
@@ -1062,12 +1103,18 @@ s32 principale (vacuum)
         CREDO_VERUM (compara_inversa_bene);
         CREDO_MAIOR_I32 (probata, CCC);
     }
+}
 
 
     /* ==================================================
      * RECENSIO II (E2b): FORMA CENTRATA, PROFUNDITAS, SUMPTUS
      * ================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         /* T1/N12: signa prope nullum in gradu 3 (via generalis, non
          * forma clausa gradus 2), radice NEGATIVA et coefficientibus
@@ -1089,7 +1136,6 @@ s32 principale (vacuum)
         i32 probata      = ZEPHYRUM;
         i32 c;
 
-        imprimere("\n--- Recensio II: gradus 3, prope nullum ---\n");
         per (c = ZEPHYRUM; c < IV; c++)
         {
             Extensio* k = extensio_ex_polynomio(_p(polynomia[c]),
@@ -1158,7 +1204,13 @@ s32 principale (vacuum)
         CREDO_VERUM (sordes_bene);
         CREDO_MAIOR_I32 (probata, C);
     }
+}
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         /* N03/M1: Mignotte t^5 - 2(a t - 1)^2 (Eisenstein ad 2), a =
          * 10^6: radices r0 < 1/a < r1 ~1e-21 distantes; profunditas ex
@@ -1172,7 +1224,6 @@ s32 principale (vacuum)
                s32  signum    = ZEPHYRUM;
                i32  n         = ZEPHYRUM;
 
-        imprimere("\n--- Recensio II: Mignotte ---\n");
         linea = _p("1000000t - 1");
         (vacuum)polynomium_multiplica(linea, linea, piscina,
             &quadratum);
@@ -1194,7 +1245,13 @@ s32 principale (vacuum)
             piscina), algebraicus_ex_fractione(k1, inversum, piscina),
             piscina, &signum) && signum == I);
     }
+}
 
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         /* N20: altus cum denominatore; N30: radix integra (t - r)(t^2
          * - 2), r = 2..40, semper refutatur */
@@ -1204,7 +1261,6 @@ s32 principale (vacuum)
                 b32  integrae_bene  = VERUM;
                 s64  r;
 
-        imprimere("\n--- Recensio II: denominator, integrae ---\n");
         CREDO_VERUM (algebraicus_ex_chorda(k5, chorda_ex_literis(
             "(a^20 + 1)/2", piscina), piscina, &x)
             && algebraicus_est_rationalis(x, piscina, &q)
@@ -1231,7 +1287,13 @@ s32 principale (vacuum)
         }
         CREDO_VERUM (integrae_bene);
     }
+}
 
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         /* M2, M3, H1: sumptus sub mora (processus filius) */
            Extensio* k2 = extensio_quadratica(II, piscina);
@@ -1244,7 +1306,6 @@ s32 principale (vacuum)
           character* cursor;
                 i32  j;
 
-        imprimere("\n--- Recensio II: sumptus ---\n");
         /* H1: (1 - sqrt 2)^1000 > 0, forma clausa (olim FALSUM post
          * MM bisectiones) */
         (vacuum)algebraicus_potentia(_a(k2, "1 - a"), M, piscina,
@@ -1278,7 +1339,13 @@ s32 principale (vacuum)
         CREDO_NON_PENDET ((vacuum)algebraicus_ex_chorda(k5,
             chorda_ex_literis(textus, piscina), piscina, &x), MM);
     }
+}
 
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         /* E17/E28 (N12), recensio III C5 (radius 1 in D: signa falsa
          * ubi |alpha| >> 1 - radices -9, -7, 2, 17): limes derivatae D.
@@ -1310,7 +1377,6 @@ s32 principale (vacuum)
         b32 constantia_bene = VERUM;
         i32 c;
 
-        imprimere("\n--- Recensio II: limes derivatae (N12) ---\n");
         per (c = ZEPHYRUM; c < X; c++)
         {
             Extensio* k = extensio_ex_polynomio(_p(polynomia[c]),
@@ -1365,6 +1431,7 @@ s32 principale (vacuum)
            Extensio* k27 = extensio_cosinus(XXVII, piscina);
         Algebraicus  differentia;
         Algebraicus  potentia;
+                s32  signum_mora = ZEPHYRUM;
 
         differentia = algebraicus_subtrahe(algebraicus_generator(k27,
             piscina), _a(k27, "19/10"), piscina);
@@ -1393,6 +1460,7 @@ s32 principale (vacuum)
         /* i^200000 + 1 = 2 */
         CREDO_VERUM (_textus_est(x, "2"));
     }
+}
 
 
     /* ==================================================
@@ -1401,6 +1469,11 @@ s32 principale (vacuum)
      * 2cos(2pi/7) per Newton in Decimal super t^3 + t^2 - 2t - 1
      * ================================================== */
 
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Extensio* k2 = extensio_quadratica(II, piscina);
         Extensio* k3 = extensio_quadratica(III, piscina);
@@ -1412,7 +1485,6 @@ s32 principale (vacuum)
            Extensio* k_minus_unum = extensio_quadratica(-I, piscina);
         Algebraicus  x;
 
-        imprimere("\n--- Ostensio (digiti certi) ---\n");
         CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(_a(k2,
             "a"), L, piscina),
             "1.41421356237309504880168872420969807856967187537695");
@@ -1594,7 +1666,13 @@ s32 principale (vacuum)
         }
         CREDO_VERUM (ostensio_bene);
     }
+}
 
+interior vacuum
+_sectio_decima_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         /* anulus: signum ordinatis, NIHIL sine ordine, alienum
          * refutatum */
@@ -1604,7 +1682,6 @@ s32 principale (vacuum)
             "a");
         s32 s = ZEPHYRUM;
 
-        imprimere("\n--- Anulus: signum ---\n");
         CREDO_VERUM (extensio_anulus(k2)->signum(extensio_anulus(k2),
             &x,
             piscina, &s) && s == -I);
@@ -1613,12 +1690,18 @@ s32 principale (vacuum)
         CREDO_NIHIL (extensio_anulus(extensio_quadratica(-I,
             piscina))->signum);
     }
+}
 
 
     /* ==================================================
      * CORPORA ABELIANA: conductor, cosinus, radices, immersio
      * ================================================== */
 
+interior vacuum
+_sectio_decima_septima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
            Extensio* k120            = extensio_cosinus(CXX, piscina);
            Extensio* k5              = extensio_quadratica(V, piscina);
@@ -1636,7 +1719,6 @@ s32 principale (vacuum)
                 s32 signum = ZEPHYRUM;
                 i32 j;
 
-        imprimere("\n--- Corpora abeliana ---\n");
         /* conductores */
         CREDO_AEQUALIS_I32 (extensio_conductor(k5), V);
         CREDO_AEQUALIS_I32 (extensio_conductor(extensio_quadratica(II,
@@ -1943,13 +2025,46 @@ s32 principale (vacuum)
         CREDO_FALSUM (algebraicus_immergere(_a(extensio_cosinus(VII,
             piscina), "a"), k120, piscina, &x));
     }
+}
 
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Corpora quadratica", _sectio_prima, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "Corpora cosinus", _sectio_secunda, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "Identitates (elementa fortuita)", _sectio_tertia, _parare, NIHIL,
+        NIHIL, NIHIL },
+    { "Refutationes", _sectio_quarta, _parare, NIHIL, NIHIL, NIHIL },
+    { "Matrix super Q(sqrt 5)", _sectio_quinta, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "Recensio E1", _sectio_sexta, _parare, NIHIL, NIHIL, NIHIL },
+    { "Radices reales (Sturm)", _sectio_septima, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "Signum prope nullum", _sectio_octava, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "Signum fortuitum (oraculum f64)", _sectio_nona, _parare, NIHIL,
+        NIHIL, NIHIL },
+    { "Recensio II: gradus 3, prope nullum", _sectio_decima, _parare,
+        NIHIL, NIHIL, NIHIL },
+    { "Recensio II: Mignotte", _sectio_decima_prima, _parare, NIHIL,
+        NIHIL, NIHIL },
+    { "Recensio II: denominator, integrae", _sectio_decima_secunda,
+        _parare, NIHIL, NIHIL, NIHIL },
+    { "Recensio II: sumptus", _sectio_decima_tertia, _parare, NIHIL,
+        NIHIL, NIHIL },
+    { "Recensio II: limes derivatae (N12)", _sectio_decima_quarta,
+        _parare, NIHIL, NIHIL, NIHIL },
+    { "Ostensio (digiti certi)", _sectio_decima_quinta, _parare, NIHIL,
+        NIHIL, NIHIL },
+    { "Anulus: signum", _sectio_decima_sexta, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "Corpora abeliana", _sectio_decima_septima, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-        credo_claudere();
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("extensio", SECTIONES);
 }

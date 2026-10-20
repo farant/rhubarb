@@ -1,0 +1,76 @@
+<interrogationes unitas="lectiones">
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the lectiones read ledger and when does it record anything?
+    <responsum symbolum="lectiones_notare LectioGenus" via="lib/fabrica.worklog.md">It
+      is the list of what a process read, looked for, found, listed,
+      wrote and asked the environment, which fabrica uses to decide
+      whether a generated file is stale. Each event appends one line,
+      a letter, a tab and the path (L read, A absent, X exists, D
+      directory listed, S written, E environment), with one write() in
+      O_APPEND mode so parallel children never split lines. Nothing at
+      all happens unless the environment variable FABRICA_LECTIONES is
+      set to a non-empty file name; the path is written as given, so a
+      relative path stays relative.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I open or stat a file so the build layer sees the dependency?
+    <responsum symbolum="filum_legere_totum filum_existit filum_scriptor_aperire lectiones_fopen lectiones_stat">New
+      code should go through filum (filum_legere_totum, filum_existit,
+      filum_scriptor_aperire), which records its reads and writes
+      itself. lectiones_fopen and lectiones_stat are stopgaps for the
+      raw stdio and stat calls that remain. lectiones_fopen records L
+      or A for a read mode ('r' or 'rb' without '+'), and S for any
+      other mode but only when the open succeeded; lectiones_stat
+      records X or A. Paths under /dev/ are never recorded.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I read a secret such as an API key with lectiones_ambitus?
+    <responsum symbolum="lectiones_ambitus lectiones_notare" via="include/fabrica_interna.h">No.
+      lectiones_ambitus writes the value itself into the ledger file
+      (E, tab, name, tab, value), so whenever the ledger is on (for a
+      generator, fabrica points it at a file under
+      build/fabrica/lectiones/) the secret lands on disk in plain
+      text. Read secrets with plain getenv. There is a second cost
+      for generators: a generator trace that holds any E line is not
+      stored, so the generator gets no cached verdict for that
+      run.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does lectiones use raw open and write instead of filum?
+    <responsum symbolum="lectiones_notare filum_existit via_existit" via="lib/filum.c">lectiones
+      is the channel itself: filum, via_existit and iter_directoria
+      call lectiones_notare, so recording through filum would recurse
+      and record the ledger as a read. The descriptor is kept open per
+      process while FABRICA_LECTIONES names the same file, is
+      inherited by forked children, and is closed as soon as a call
+      finds the variable unset, so a ledger deleted and recreated
+      while the variable was off is not written through a stale
+      inode (one recreated while it stays set still would be).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can lectiones_fopen or lectiones_stat take a NIHIL path or mode safely?
+    <responsum symbolum="lectiones_fopen lectiones_stat">No.
+      Both call fopen (or stat) first and test for NIHIL only
+      afterwards, so the test guards the recording, not the call: a
+      NIHIL modus or via reaches fopen directly, which is undefined
+      behaviour. Check your arguments before calling.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can any path or environment value be recorded in the ledger?
+    <responsum symbolum="lectiones_notare lectiones_ambitus">Not
+      every one. Lines are written raw, with no escaping, so a path or
+      an environment value containing a newline splits into two
+      ledger lines and the second may be read back as a bogus event.
+      A line that would pass the IV * MXXIV byte buffer is silently
+      not recorded (lectiones_ambitus: name plus value of 4094 bytes
+      or more), and so is everything while FABRICA_LECTIONES itself
+      names a path of 4096 bytes or more.</responsum>
+  </interrogatio>
+
+</interrogationes>

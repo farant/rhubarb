@@ -1,0 +1,164 @@
+<interrogationes unitas="insula">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I change a value in the insula state tree?
+    <responsum symbolum="insula_mutare mutare_ramum insula_attributum_ponere InsulaMutator">Write
+      an InsulaMutator and pass it to insula_mutare (whole tree) or
+      mutare_ramum (one branch); inside it call
+      insula_attributum_ponere(nodus, piscina, intern, titulus, valor)
+      with the piscina and intern the mutator was given. The mutator
+      runs on a DUPLICATE (the live tree written to text and parsed
+      into the other piscina); owners and canons judge it, and only
+      then does it replace the live tree, so a write is all or
+      nothing. Use insula_attributum_ponere rather than
+      stml_attributum_addere: the latter always appends, and
+      stml_attributum_capere would keep returning the old
+      value.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I change the tree through the pointer insula_radix gives me?
+    <responsum symbolum="insula_radix insula_restituere insula_mendacium insula_causa">No.
+      insula_radix and insula_ramus_nodus are for reading only. The
+      gate keeps the text of the last honest write;
+      insula_restituere serializes the live tree, compares, and on a
+      mismatch sets insula_mendacium, puts "mendacium: insula extra
+      portam mutata" in insula_causa and rebuilds the tree from the
+      honest text, discarding your change. mendacium is decided anew by
+      each restituere, not sticky. Only restituere checks: the next
+      gate write copies the live tree as it stands, so an out-of-gate
+      change that reaches it first is carried into the new honest
+      text unjudged.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I keep a StmlNodus pointer from the insula across writes?
+    <responsum symbolum="insula_radix insula_mutare insula_restituere insula_attributum">Not
+      safely. The tree lives in one of two alternating piscinas, and
+      every write attempt (even a refused one) and every
+      insula_restituere starts by emptying the piscina that is NOT
+      live. A refused write leaves your pointer valid; an accepted
+      write or a restituere moves the live tree to the other piscina,
+      so your pointer then reads the stale old copy, and the next
+      attempt or restituere empties it. Look nodes up again after
+      each write. Attribute values are different: the chorda* from
+      insula_attributum points into the interner and outlives the
+      swap.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find out why a write was refused?
+    <responsum symbolum="insula_causa mutare_ramum insula_mutare">Read
+      insula_causa(repo) right after a FALSUM return. It names the
+      reason: an owner refusal ("dominus: X possidetur a ..."), a canon
+      refusal with the canon's first vitium, "ramus abest" for a
+      missing branch, or "mutatio extra ramum" when a branch mutator
+      touched nodes outside its subtree. A successful write does NOT
+      clear it, so a non-empty causa alone does not mean the last
+      write failed.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does every insula write serialize and re-parse the whole tree?
+    <responsum symbolum="insula_mutare insula_restituere" via="lib/insula.worklog.md">The
+      round trip through text IS the rehydration discipline: a tree
+      that cannot survive being written and read back cannot be
+      written at all, and the mutator working on a copy is what makes
+      a refused write leave the live tree untouched. The worklog
+      measured the cost (S8d, S8e): at size the time goes to owner and
+      canon judging and to persistence, not to the copy.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I give an app or widget its own part of the tree?
+    <responsum symbolum="insula_ramus insula_ramus_liberi insula_ramum_initiare mutare_ramum insula_ramus_ex_via">A
+      branch: insula_ramus(repo, elementum, id) names the root's child
+      &lt;elementum id="id"/&gt;, and insula_ramus_liberi(&amp;parens, e,
+      id) a child of another branch, at any depth. The path
+      ("a:1/b:2") is interned, so a branch is a cheap value to copy.
+      insula_ramum_initiare(&amp;ramus, stml) adds the element under its
+      parent if it is absent (the parent must exist), and mutare_ramum
+      hands the mutator the branch's node in the duplicate and refuses
+      changes outside it. insula_ramus_ex_via goes back from a path
+      string to a branch.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can insula_ramum_initiare create the branch from any element I pass?
+    <responsum symbolum="insula_ramum_initiare insula_ramus_nodus">Only
+      if the element's name and id match the branch. The function
+      appends whatever element the STML holds and does not check it
+      against the branch's elementum and id, so
+      &lt;b id="2"/&gt; for branch "a:1" returns VERUM while
+      insula_ramus_nodus stays NIHIL, and each later call appends
+      another &lt;b/&gt;. A malformed STML string also commits an
+      empty write (versio goes up) before returning FALSUM.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I make an attribute writable only by one action or system?
+    <responsum symbolum="insula_dominum_ponere insula_ramus_dominum_ponere insula_dominos_legere insula_scriptorem_ponere">Register
+      an owner with insula_dominum_ponere (root) or
+      insula_ramus_dominum_ponere (branch), or read a
+      &lt;domini&gt;&lt;dominus attributum scriptor systemata/&gt;&lt;/domini&gt;
+      table with insula_dominos_legere. A write that adds, changes or
+      removes that attribute is refused unless the current scriptor
+      (insula_scriptorem_ponere, set around the call; empty =
+      anonymous) is the owner or one of the systemata. The usual idiom
+      saves repo-&gt;scriptor, sets it, writes, and restores it. Register
+      owners AFTER insula_ramum_initiare, or the anonymous initial
+      write is refused.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I validate the tree's shape on every write?
+    <responsum symbolum="insula_ponere_canonem insula_ramus_canonem_ponere canon_iudicare">insula_ponere_canonem
+      sets (and replaces) the root canon; insula_ramus_canonem_ponere
+      gives a branch its own canon. Each canon judges its node minus
+      descendant branches that have their own canon, and a write is
+      judged by the nearest canon above its path plus the canons below
+      it. Set a branch canon BEFORE initiating the branch. Note that
+      insula_ramus_canonem_ponere appends: calling it again for the
+      same branch does not replace the first canon, which keeps
+      winning for writes through that branch, while a root write is
+      judged by both.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I set an attribute to the empty string?
+    <responsum symbolum="insula_attributum_ponere insula_attributum_tollere chorda_internare_ex_literis stml_scribere">No.
+      Values are interned and chorda_internare_ex_literis returns NIHIL
+      for "", so the attribute is stored with a NIHIL value and
+      insula_attributum reads NIHIL, as if absent. Worse, the STML
+      writer emits a NIHIL value as a bare attribute name, which the
+      parser reads as "true", so after the next round trip (the next
+      gate write or insula_restituere) the attribute reads "true".
+      Remove it with insula_attributum_tollere instead (swap-remove;
+      attribute order is not meaningful).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I persist or log every change to the tree?
+    <responsum symbolum="insula_ponere_actarium InsulaActarius insula_scribere insula_versio">Register
+      an InsulaActarius with insula_ponere_actarium: it is called after
+      every successful write with the new root and the written path
+      (empty = root, so anything may have changed). Nothing outside
+      that path changed, so it may skip other parts.
+      insula_scribere(repo, piscina) gives the whole tree as pretty
+      STML in your piscina, and insula_versio counts accepted writes.
+      An accepted write counts even if it changed nothing:
+      InsulaMutator returns vacuum and cannot cancel, so decide before
+      calling the gate.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I free an InsulaRepositorium when I am done with it?
+    <responsum symbolum="insula_repositorium_creare piscina_generare_dynamicum">No.
+      insula_repositorium_creare makes two private dynamic piscinas
+      (insula_a and insula_b, XVI * M bytes initially) for the
+      alternating trees, and there is no function that destroys them.
+      It also returns NIHIL for malformed source STML, so the reason
+      it set in causa cannot be read.</responsum>
+  </interrogatio>
+
+</interrogationes>

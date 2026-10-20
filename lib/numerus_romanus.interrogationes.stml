@@ -1,0 +1,94 @@
+<interrogationes unitas="numerus_romanus">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I check whether a word like XIV or xii is a roman numeral and get its value?
+    <responsum symbolum="numerus_romanus_legere">numerus_romanus_legere(s,
+      &amp;valor) returns VERUM and stores the sum when s is a numeral;
+      pass NIHIL for valor to only test. An empty chorda is FALSUM.
+      All upper case or all lower case is accepted (the case is taken
+      from the first character), mixed case such as Xii is not.
+      capitula and paginatio use it to tell chapter and preface page
+      labels from ordinary words. Caution (audit 2026-10-18, unfixed):
+      non-canonical forms with an additive letter before a subtractive
+      pair of the same place, such as VIX, VIV, LXC, DCD and MMMDCM
+      (4400, above 3999), still return VERUM with their summed value.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does numerus_romanus_legere reject DID, CIVIC and MIMIC when every letter is in IVXLCDM?
+    <responsum symbolum="numerus_romanus_legere" via="include/numerus_romanus.h">On
+      purpose: a loose all-letters-are-numerals rule would read English
+      words (DID, MILD, CIVIC, VIM, DIM, LIVID, MIMIC) as numbers in a
+      chapter index or a page label. The reader only allows the
+      subtractive pairs IV IX XL XC CD CM, at most three repeats, no
+      repeated V L D, and each group must start with a letter smaller
+      than the one that started the group before. MIX is still
+      accepted, because 1009 really is MIX. The check is per letter,
+      not per value: it never checks the larger letter of a subtractive
+      pair against the group before, so non-canonical forms such as VIX
+      (14), VIV (9), LXC (140) and even MMMDCM (4400, above MMMCMXCIX)
+      also pass. Lower-case vix is therefore read as 14.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I turn an integer into its roman numeral?
+    <responsum symbolum="numerus_romanus_scribere">numerus_romanus_scribere(n,
+      piscina) gives the canonical upper-case subtractive form (106 -&gt;
+      CVI, 3999 -&gt; MMMCMXCIX) in the piscina. It only covers 1 to
+      3999: 0, n &gt; 3999 and a NIHIL piscina return an empty chorda
+      (datum NIHIL, mensura 0), so test mensura before using it. Like
+      every chorda the result is not NUL-terminated.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I write a number above 3999 (or zero) as a latina.h expression in generated C or a message?
+    <responsum symbolum="numerus_romanus_exprimere" via="tools/latina_numeri.c">numerus_romanus_exprimere(n,
+      &amp;compositum, piscina) works for any i64 n &gt;= 0: 0 gives
+      ZEPHYRUM, up to 3999 the numeral, a multiple of 1024 that is not
+      a round thousand gives IV * MXXIV, everything else groups of
+      thousands such as V * M + CCLXXX. A term too big for int is
+      prefixed (i64). compositum is set to VERUM when the result
+      contains an operator, so the caller can add parentheses where
+      precedence needs them (x / (IV * MXXIV)). Caution (audit
+      2026-10-18, unfixed): the (i64) prefix is missing or misplaced
+      when the sum of thousand groups exceeds int, so n = 2147483649
+      gives MMCXLVII * M * M + CDLXXXIII * M + DCXLIX (int overflow,
+      clang -Werror rejects it) and n = 2199023256576 gives (i64)(MMCXLVII
+      * M * M + CDLXXXIII * M + DCXLIX) * MXXIV, whose inner sum
+      overflows before the cast.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I pass a negative number to numerus_romanus_exprimere?
+    <responsum symbolum="numerus_romanus_exprimere numerus_romanus_scribere">No,
+      and nothing warns you. A negative n takes the n &lt;= 3999 branch
+      and is cast to i32, which is unsigned in this house, so
+      numerus_romanus_scribere sees a value above 3999 and the result
+      is an empty chorda with compositum FALSUM (only an n below about
+      minus four billion could wrap round to a small value and print a
+      numeral). There is no minus-sign form: write the sign yourself
+      and pass the magnitude.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does 128000 come out as CXXVIII * M and not CXXV * MXXIV?
+    <responsum symbolum="numerus_romanus_exprimere" via="lib/numerus_romanus.worklog.md">The
+      binary form is chosen only for a multiple of 1024 that is NOT
+      also a round thousand; round thousands always stay thousands.
+      The tie-break was decided when the function was written
+      (worklog 2026-09-26), so 4096 is IV * MXXIV but 128000 is
+      CXXVIII * M.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what are the roman numeral macros like CVI and MXXIV, and where do they come from?
+    <responsum symbolum="numerus_romanus_scribere" via="include/latina.h tools/latina_numeri.c">latina.h
+      defines every numeral from ZEPHYRUM to MMMCMXCIX as a macro for
+      its value, so the house writes constants as XXIV or IV * MXXIV
+      instead of digits. That section is GENERATED by
+      tools/latina_numeri.c from numerus_romanus_scribere, and the
+      generata gate checks it. Because every numeral is a macro, no
+      identifier may be spelled like one.</responsum>
+  </interrogatio>
+
+</interrogationes>

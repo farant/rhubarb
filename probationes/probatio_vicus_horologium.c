@@ -29,9 +29,6 @@
 #include <stdio.h>
 #include <string.h>
 
-hic_manens Piscina*             piscina;
-hic_manens InternamentumChorda* intern;
-
 /* horologium fictum: tempus ex probatione */
 interior vacuum
 horologium_fictum (
@@ -132,7 +129,7 @@ textus_x (
          i32  i;
 
     dispensator_recomponere(d);
-    md = mandata_creare(piscina, intern);
+    md = mandata_creare(v->piscina, v->intern);
     pingere(dispensator_arbor(d), vicus_figurae(v), ZEPHYRUM, md);
     per (i = ZEPHYRUM; i < mandata_numerus(md); i++)
     {
@@ -159,7 +156,7 @@ horae_textus (
          i32  n;
 
     dispensator_recomponere(d);
-    md = mandata_creare(piscina, intern);
+    md = mandata_creare(v->piscina, v->intern);
     pingere(dispensator_arbor(d), vicus_figurae(v), ZEPHYRUM, md);
     n = ZEPHYRUM;
     per (i = ZEPHYRUM; i < mandata_numerus(md); i++)
@@ -167,7 +164,7 @@ horae_textus (
         x = mandata_obtinere(md, i);
         si (   x->genus == MANDATUM_TEXTUS && x->textus.mensura > II
             && chorda_continet(x->textus, chorda_ex_literis(":",
-                   piscina))
+                   v->piscina))
             && x->textus.datum[x->textus.mensura - I] == 'M')
         {
             n++;
@@ -176,28 +173,29 @@ horae_textus (
     redde n;
 }
 
-s32 principale (vacuum)
+/* sectio una: scaena continua - quisque gradus statum prioris
+ * (vicus, horologium fictum, pila) heredat */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-         Volumen* vol;
-           Vicus* v;
-     Dispensator* d;
-     VicusTempus  ficta;
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                Volumen* vol;
+                  Vicus* v;
+            Dispensator* d;
+            VicusTempus  ficta;
 
-    piscina = piscina_generare_dynamicum("probatio_vicus_horologium",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
     vol  = volumen_temporarium(piscina, "probatio_vicus_horologium");
     v    = vicus_creare(piscina, intern, vol, CDLXXX, CDLXXX);
     CREDO_NON_NIHIL(v);
     si (!v)
     {
-        credo_imprimere_compendium();
-        redde I;
+        volumen_claudere(vol);
+        redde;
     }
     CREDO_VERUM(vicus_genus_addere(v, "quietus", I, quietum_montare,
         quietum_describere, NIHIL));
@@ -210,14 +208,14 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL(d);
     si (!d)
     {
-        credo_imprimere_compendium();
-        redde I;
+        volumen_claudere(vol);
+        redde;
     }
 
-    imprimere("\n--- I: sine horologio ---\n");
+    CREDO_GRADUS("I: sine horologio");
     CREDO_AEQUALIS_I32(horae_textus(d, v), ZEPHYRUM);
 
-    imprimere("\n--- II: 19:52 -> 7:52 PM ad dextrum ---\n");
+    CREDO_GRADUS("II: 19:52 -> 7:52 PM ad dextrum");
     /* Veneris, IX Octobris MMXXVI */
     ficta.annus            = MMXXVI;
     ficta.mensis           = X;
@@ -230,7 +228,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_S32(textus_x(d, v, "7:52 PM"), CDXXXII);
     CREDO_AEQUALIS_I32(horae_textus(d, v), I);
 
-    imprimere("\n--- III: media nox et meridies ---\n");
+    CREDO_GRADUS("III: media nox et meridies");
     ficta.hora     = ZEPHYRUM;
     ficta.minutum  = V;
     CREDO_VERUM(vicus_pulsare(v));
@@ -240,14 +238,14 @@ s32 principale (vacuum)
     CREDO_VERUM(vicus_pulsare(v));
     CREDO_VERUM(textus_x(d, v, "12:00 PM") > ZEPHYRUM);
 
-    imprimere("\n--- IV: pulsus solum cum minutum mutatur ---\n");
+    CREDO_GRADUS("IV: pulsus solum cum minutum mutatur");
     CREDO_FALSUM(vicus_pulsare(v));
     ficta.minutum = I;
     CREDO_VERUM(vicus_pulsare(v));
     CREDO_FALSUM(vicus_pulsare(v));
     CREDO_VERUM(textus_x(d, v, "12:01 PM") > ZEPHYRUM);
 
-    imprimere("\n--- V: ictus - dies, iterum hora ---\n");
+    CREDO_GRADUS("V: ictus - dies, iterum hora");
     ictus_lineae(d, CDLXX);
     /* CDLXXX - VI - XXV x VI = CCCXXIV */
     CREDO_AEQUALIS_S32(textus_x(d, v, "Friday, October 9th, 2026"),
@@ -257,7 +255,7 @@ s32 principale (vacuum)
     ictus_lineae(d, CCCXXX);
     CREDO_VERUM(textus_x(d, v, "12:01 PM") > ZEPHYRUM);
 
-    imprimere("\n--- VI: ordinalia ---\n");
+    CREDO_GRADUS("VI: ordinalia");
     {
         hic_manens constans s32 dies[IX] = {
             I, II, III, XI, XII, XIII, XXI, XXII, XXXI
@@ -282,14 +280,14 @@ s32 principale (vacuum)
         (vacuum)vicus_pulsare(v);
     }
 
-    imprimere("\n--- VII: ictus in tabula aut spatio vacuo non ---\n");
+    CREDO_GRADUS("VII: ictus in tabula aut spatio vacuo non");
     ictus_lineae(d, IX);
     CREDO_VERUM(textus_x(d, v, "Friday, October 9th, 2026") > ZEPHYRUM);
     /* spatium lineae vacuum ad sinistrum textus (CCCXXIV) */
     ictus_lineae(d, CC);
     CREDO_VERUM(textus_x(d, v, "Friday, October 9th, 2026") > ZEPHYRUM);
 
-    imprimere("\n--- VIII: dies mutatus, hora eadem ---\n");
+    CREDO_GRADUS("VIII: dies mutatus, hora eadem");
     CREDO_FALSUM(vicus_pulsare(v));
     ficta.dies             = X;
     ficta.dies_hebdomadis  = VI;
@@ -297,7 +295,7 @@ s32 principale (vacuum)
     CREDO_VERUM(textus_x(d, v, "Saturday, October 10th, 2026")
         > ZEPHYRUM);
 
-    imprimere("\n--- IX: pila ---\n");
+    CREDO_GRADUS("IX: pila");
     {
         PilaFicta pf;
 
@@ -338,7 +336,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32(textus_x(d, v, "12:04 PM"), CDXXVI);
     }
 
-    imprimere("\n--- X (S7a): lectiones in insula radicis ---\n");
+    CREDO_GRADUS("X (S7a): lectiones in insula radicis");
     {
         PilaFicta  pf;
            chorda* a;
@@ -403,8 +401,18 @@ s32 principale (vacuum)
         CREDO_VERUM(textus_x(d, v, "12:05 PM") > ZEPHYRUM);
     }
 
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "horologium in linea tabularum (S4)", _sectio_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("vicus_horologium", SECTIONES);
 }

@@ -1,4 +1,2 @@
 # exspectata_musl.txt - fracturae EXSPECTATAE portae Linux (musl)
-lib/arbor2_glr_tabula.c	parser legatus congelatus (referentia) - extra scopum portae
-lib/arbor_syntaxis.c	parser legatus congelatus (referentia) - extra scopum portae
 lib/imago.c	stb_image venditum in capite - interna classis D

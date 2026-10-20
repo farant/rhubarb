@@ -184,3 +184,53 @@ Executed (§8 step 3, the separable slice only):
 Still parked (01M0FT8AE7VP): arbor v1/v2 engines + 13 suites, the 4
 orphaned consumers, `fixa/arbor_index/`, and the decretum decision for
 the remaining 7 pinned sites.
+
+## 10. Executio perfecta — 2026-10-19
+
+Prompted by the library audit (2026-10-18): `probatio_arbor_syntaxis`
+reached 49 GB (compressed footprint), and Fran decided arbor is not
+worth fixing: "tag arbor as sort of archived or legacy", earlier parser
+attempts as "read only historical reference", and "any lapifex stuff
+that is only being used by arbor2 can go with arbor2".
+
+Moved (`git mv`, 97 pure renames): arbor v1 + arbor2 engines and their
+15 suites (`probatio_compound` included), `lapifex_c89` +
+`lapifex_c89_grammatica` + `lapifex_glr` (+ `probatio_lapifex_glr`),
+`fixa/arbor_index/`, the orphaned consumers (`lint/lint_probatio.c` +
+`run_lint.sh`, `tools/glr_{debug,quaestio}.c` + root `.sh`),
+`ARBOR2_MAP.txt`, `scripts/validate_glr_counts.sh`, and the officina
+stdout goldens of every archived suite. The archive's own note is
+`archivum/CLAUDE.md` (contents, the lapifex split, holding bars, frozen
+residue, defects known at archiving).
+
+The pin (§7.6) was resolved by a new decree, 01M5APKK3WMT, which
+supersedes 01KXSAK5K7HW. Archiving is now the form of visible frozen
+residue: the 7 code-58 sites are listed in `archivum/CLAUDE.md`, and
+census 58 in the live tree is 0.
+
+Gate data rewritten, not left stale: rows for moved files leave the
+formatter exclusions (repointed to `archivum/`, as in §9), the ambiguity
+census (`pinna.tsv`), the Linux expectations, the examen debt ratchet,
+`radices_manu.tsv`, `compile_library.sh` and officina's stdout
+exclusions. The `arbor` familia leaves `unitates.stml` (its stem is
+gone).
+
+Two consumers did not yet honour `vita="archivata"` ("nullae regulae,
+nullae portae"), and the move surfaced both:
+- `unitates_interrogationes` read and judged the archived FAQ files.
+  It now skips units `_extra_usum` (the helper the census already
+  used), with a regression test in `probatio_unitates` (red before the
+  fix).
+- `tools/vexilla_fumus.sh` VI swept every `*.sh`. Its scope now comes
+  from a judge, `vexilla_scriptorum` in `unitates.stml`, whose scope is
+  exactly the old sweep minus the 4 archived scripts.
+
+The bibliothecae pages of the 16 archived headers are kept, so links
+keep working. `pagina_bibliothecae.py` renders them with `archivum/`
+paths and an "Archived" note, and lists them in their own section of the
+index, outside the live counts.
+
+Not done here (U5c): owed-gate computation (`portae_debitae`) still
+treats `archivum/*.sh` and `archivum/**/*.interrogationes.stml` as
+triggering their pattern gates. The rule table "archivata → nihil" is
+the proposal in decree 01M5AN5B3JY3.

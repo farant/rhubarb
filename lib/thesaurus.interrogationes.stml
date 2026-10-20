@@ -1,0 +1,101 @@
+<interrogationes unitas="thesaurus">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I cache a computed result by its inputs and get it back next run?
+    <responsum symbolum="thesaurus_aperire thesaurus_ponere thesaurus_actio_ponere thesaurus_actio_capere thesaurus_via thesaurus_generationem_notare" via="lib/compilator.c lib/aedilis_silva.c">Hash
+      your inputs into a Sigillum key. On a miss, store the output
+      bytes with thesaurus_ponere (it writes their content sigillum to
+      sigillum_out), put those sigilla in a Xar of Sigillum and record
+      key -&gt; outputs with thesaurus_actio_ponere. On the next run
+      thesaurus_actio_capere(key) returns that Xar, and thesaurus_via
+      gives each blob's file path. On a hit AND on a miss also call
+      thesaurus_generationem_notare(key), or the next purge deletes the
+      entry. compilator and aedilis_silva do exactly this.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I read the bytes of a stored blob?
+    <responsum symbolum="thesaurus_via chorda_ut_cstr filum_legere_totum">There
+      is no read call: thesaurus_via returns the blob's path as a chorda
+      (not NUL-terminated), then read it yourself with
+      filum_legere_totum(chorda_ut_cstr(via, p), p) or link it into
+      place. thesaurus_via returns FALSUM when the blob is absent, and
+      also when a sampled verification finds the bytes do not match
+      their sigillum: it deletes the bad blob and you must
+      recompute.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I control how often reads are verified against the content hash?
+    <responsum symbolum="thesaurus_verificationem_ponere THESAURUS_VERIFICATIO_RATIO thesaurus_via">thesaurus_verificationem_ponere(t,
+      N) re-hashes one thesaurus_via call in N (the counter is per
+      handle, not per blob). The default is THESAURUS_VERIFICATIO_RATIO
+      (XVI); I verifies every read (fabrica -plenus) and ZEPHYRUM turns
+      verification off. A verification reads the whole blob into the
+      piscina you passed to thesaurus_via.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can two processes write the same blob or action at the same time?
+    <responsum symbolum="thesaurus_ponere thesaurus_actio_ponere">Yes.
+      Every write goes to a temporary name in the same directory
+      (.temporarium.pid.n) and is then renamed into place, so a reader
+      never sees half a file and two writers of the same bytes do not
+      conflict. A blob that already exists is never rewritten (its name
+      is its content), and an action whose file already holds the same
+      bytes is not rewritten either.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is a generation and why must I set THESAURUS_GENERATIO?
+    <responsum symbolum="thesaurus_generationem_notare thesaurus_purgare" via="lib/thesaurus.worklog.md">A
+      generation is one orchestrating run (one bin/fabrica invocation
+      or one gate run), not one process. thesaurus_generationem_notare
+      appends the key to generationes/NAME.lst, where NAME comes from
+      the THESAURUS_GENERATIO environment variable (it must start with
+      a UTC time so name order is time order; only [A-Za-z0-9_-], at
+      most 120 characters). With the variable unset or malformed
+      nothing is recorded, so that process's keys are not protected
+      from the next purge. Caution (audit 2026-10-18, unfixed): the two
+      limits do not add up - thesaurus_aperire accepts a radix of up to
+      383 characters, and once radix plus THESAURUS_GENERATIO exceed 493
+      characters (e.g. a 383-character radix with a 120-character name)
+      the first thesaurus_generationem_notare sprintfs the list path
+      past the 512-byte generatio field, off the end of the Thesaurus
+      struct into the next allocation in its piscina.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a purge delete a blob I stored but never referenced from an action?
+    <responsum symbolum="thesaurus_purgare thesaurus_generationem_notare thesaurus_actio_ponere">Yes.
+      thesaurus_purgare keeps only the newest generationes_servandae
+      generation lists, the actions whose keys appear in them, and the
+      blobs those actions name; every other action and blob is
+      deleted, along with leftover temporary files. With verificare it
+      also re-hashes every kept blob and deletes broken ones. So: put
+      the blob, record the action, AND note the key in a
+      generation.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I run thesaurus_purgare while builds are writing to the store?
+    <responsum symbolum="thesaurus_purgare" imperium="bin/fabrica purgare">No.
+      A purge between a writer's thesaurus_ponere and its
+      thesaurus_actio_ponere can delete the fresh blob. It only ever
+      costs a cache miss, never a wrong result, but callers should run
+      it under their own lock: bin/fabrica purgare takes the fabrica
+      lock.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I keep one Thesaurus handle open for a long-running process?
+    <responsum symbolum="thesaurus_aperire thesaurus_actio_ponere thesaurus_purgare">Yes,
+      but watch the memory: thesaurus_actio_ponere and thesaurus_purgare
+      allocate from the piscina given to thesaurus_aperire (they have no
+      piscina parameter), and nothing is ever returned. Each
+      action write leaves a buffer plus a read of the old action file
+      there, and a verifying purge reads every kept blob into it. Open
+      the store in a piscina you can throw away.</responsum>
+  </interrogatio>
+
+</interrogationes>

@@ -11,13 +11,15 @@
  * Probationes: Characteres Literales
  * ================================================== */
 
-hic_manens vacuum
-probare_literales(Piscina* piscina)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
+            Piscina* piscina;
            Exemplar* ex;
     ExemplarFructus  f;
 
-    imprimere("\n--- Probans characteres literales ---\n");
+    piscina = c->piscina;
 
     /* Congruentia exacta */
     ex = exemplar_compilare(chorda_ex_literis("hello", piscina), NIHIL,
@@ -44,12 +46,14 @@ probare_literales(Piscina* piscina)
  * Probationes: Punctum (.)
  * ================================================== */
 
-hic_manens vacuum
-probare_punctum(Piscina* piscina)
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
 {
+     Piscina* piscina;
     Exemplar* ex;
 
-    imprimere("\n--- Probans punctum (.) ---\n");
+    piscina = c->piscina;
 
     ex = exemplar_compilare(chorda_ex_literis("a.c", piscina), NIHIL,
         piscina);
@@ -76,12 +80,14 @@ probare_punctum(Piscina* piscina)
  * Probationes: Asteriscus (*)
  * ================================================== */
 
-hic_manens vacuum
-probare_asteriscus(Piscina* piscina)
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
 {
+     Piscina* piscina;
     Exemplar* ex;
 
-    imprimere("\n--- Probans asteriscum (*) ---\n");
+    piscina = c->piscina;
 
     ex = exemplar_compilare(chorda_ex_literis("ab*c", piscina), NIHIL,
         piscina);
@@ -116,12 +122,14 @@ probare_asteriscus(Piscina* piscina)
  * Probationes: Plus (+)
  * ================================================== */
 
-hic_manens vacuum
-probare_plus(Piscina* piscina)
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
 {
+     Piscina* piscina;
     Exemplar* ex;
 
-    imprimere("\n--- Probans plus (+) ---\n");
+    piscina = c->piscina;
 
     ex = exemplar_compilare(chorda_ex_literis("ab+c", piscina), NIHIL,
         piscina);
@@ -142,12 +150,14 @@ probare_plus(Piscina* piscina)
  * Probationes: Quaestionis (?)
  * ================================================== */
 
-hic_manens vacuum
-probare_quaestionis(Piscina* piscina)
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
 {
+     Piscina* piscina;
     Exemplar* ex;
 
-    imprimere("\n--- Probans quaestionis (?) ---\n");
+    piscina = c->piscina;
 
     ex = exemplar_compilare(chorda_ex_literis("colou?r", piscina),
         NIHIL, piscina);
@@ -166,12 +176,14 @@ probare_quaestionis(Piscina* piscina)
  * Probationes: Classes Characterum
  * ================================================== */
 
-hic_manens vacuum
-probare_classes(Piscina* piscina)
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
 {
+     Piscina* piscina;
     Exemplar* ex;
 
-    imprimere("\n--- Probans classes characterum ---\n");
+    piscina = c->piscina;
 
     /* Classis simplex */
     ex = exemplar_compilare(chorda_ex_literis("[aeiou]", piscina),
@@ -223,12 +235,14 @@ probare_classes(Piscina* piscina)
  * Probationes: Classis Negata
  * ================================================== */
 
-hic_manens vacuum
-probare_classis_negata(Piscina* piscina)
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
 {
+     Piscina* piscina;
     Exemplar* ex;
 
-    imprimere("\n--- Probans classem negatam ---\n");
+    piscina = c->piscina;
 
     ex = exemplar_compilare(chorda_ex_literis("[^0-9]", piscina), NIHIL,
         piscina);
@@ -247,13 +261,15 @@ probare_classis_negata(Piscina* piscina)
  * Probationes: Ancorae
  * ================================================== */
 
-hic_manens vacuum
-probare_ancorae(Piscina* piscina)
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
 {
+            Piscina* piscina;
            Exemplar* ex;
     ExemplarFructus  f;
 
-    imprimere("\n--- Probans ancoras ---\n");
+    piscina = c->piscina;
 
     /* Ancora initii */
     ex = exemplar_compilare(chorda_ex_literis("^hello", piscina), NIHIL,
@@ -302,12 +318,14 @@ probare_ancorae(Piscina* piscina)
  * Probationes: Effugium
  * ================================================== */
 
-hic_manens vacuum
-probare_effugium(Piscina* piscina)
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
 {
+     Piscina* piscina;
     Exemplar* ex;
 
-    imprimere("\n--- Probans effugium ---\n");
+    piscina = c->piscina;
 
     /* Effugere punctum */
     ex = exemplar_compilare(chorda_ex_literis("a\\.b", piscina), NIHIL,
@@ -341,13 +359,15 @@ probare_effugium(Piscina* piscina)
  * Probationes: Exemplaria Complexa
  * ================================================== */
 
-hic_manens vacuum
-probare_complexa(Piscina* piscina)
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
 {
+            Piscina* piscina;
            Exemplar* ex;
     ExemplarFructus  f;
 
-    imprimere("\n--- Probans exemplaria complexa ---\n");
+    piscina = c->piscina;
 
     /* Annus: [0-9][0-9][0-9][0-9] */
     ex = exemplar_compilare(chorda_ex_literis("[0-9][0-9][0-9][0-9]",
@@ -399,14 +419,16 @@ probare_complexa(Piscina* piscina)
  * Probationes: Invenire Omnes
  * ================================================== */
 
-hic_manens vacuum
-probare_invenire_omnes(Piscina* piscina)
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
 {
+            Piscina* piscina;
            Exemplar* ex;
     ExemplarFructus* fructus;
                 i32  numerus;
 
-    imprimere("\n--- Probans invenire omnes ---\n");
+    piscina = c->piscina;
 
     ex = exemplar_compilare(chorda_ex_literis("[0-9]+", piscina), NIHIL,
         piscina);
@@ -430,13 +452,15 @@ probare_invenire_omnes(Piscina* piscina)
  * Probationes: Errores Compilationis
  * ================================================== */
 
-hic_manens vacuum
-probare_errores(Piscina* piscina)
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
 {
+           Piscina* piscina;
           Exemplar* ex;
     ExemplarStatus  status;
 
-    imprimere("\n--- Probans errores compilationis ---\n");
+    piscina = c->piscina;
 
     /* Classis non clausa */
     ex = exemplar_compilare(chorda_ex_literis("[abc", piscina), &status,
@@ -469,10 +493,13 @@ probare_errores(Piscina* piscina)
  * Probationes: Functio Commoda
  * ================================================== */
 
-hic_manens vacuum
-probare_commoda(Piscina* piscina)
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
 {
-    imprimere("\n--- Probans functionem commodam ---\n");
+    Piscina* piscina;
+
+    piscina = c->piscina;
 
     CREDO_VERUM(exemplar_congruit_literis("[0-9]+",
         chorda_ex_literis("test123", piscina), piscina));
@@ -486,17 +513,42 @@ probare_commoda(Piscina* piscina)
  * Probationes: Status Descriptio
  * ================================================== */
 
-hic_manens vacuum
-probare_status_descriptio(Piscina* piscina)
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
 {
-    (vacuum)piscina;
-
-    imprimere("\n--- Probans status descriptio ---\n");
+    (vacuum)c;
 
     CREDO_NON_NIHIL(exemplar_status_descriptio(EXEMPLAR_OK));
     CREDO_NON_NIHIL(exemplar_status_descriptio(EXEMPLAR_ERROR_SYNTAXIS));
     CREDO_NON_NIHIL(exemplar_status_descriptio(EXEMPLAR_ERROR_CLASSIS_NON_CLAUSA));
 }
+
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "characteres literales", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "punctum (.)", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "asteriscum (*)", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "plus (+)", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "quaestionis (?)", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "classes characterum", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "classem negatam", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ancoras", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "effugium", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "exemplaria complexa", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "invenire omnes", _sectio_decima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "errores compilationis", _sectio_decima_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "functionem commodam", _sectio_decima_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "status descriptio", _sectio_decima_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
 
 /* ==================================================
@@ -506,39 +558,5 @@ probare_status_descriptio(Piscina* piscina)
 s32
 principale (vacuum)
 {
-    Piscina* piscina;
-        b32  praeteritus;
-
-    piscina = piscina_generare_dynamicum("probatio_exemplar", 65536);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde 1;
-    }
-
-    credo_aperire(piscina);
-
-    probare_literales(piscina);
-    probare_punctum(piscina);
-    probare_asteriscus(piscina);
-    probare_plus(piscina);
-    probare_quaestionis(piscina);
-    probare_classes(piscina);
-    probare_classis_negata(piscina);
-    probare_ancorae(piscina);
-    probare_effugium(piscina);
-    probare_complexa(piscina);
-    probare_invenire_omnes(piscina);
-    probare_errores(piscina);
-    probare_commoda(piscina);
-    probare_status_descriptio(piscina);
-
-    credo_imprimere_compendium();
-    /* verdictum ANTE clausuram: sessio clausa = totalis ZEPHYRUM =
-     * NIHIL PROBATUM */
-    praeteritus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    redde praeteritus ? ZEPHYRUM : I;
+    redde credo_suitam_currere("exemplar", SECTIONES);
 }

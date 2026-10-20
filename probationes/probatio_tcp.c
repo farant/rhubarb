@@ -19,21 +19,18 @@
  * ======================================================================== */
 
 interior vacuum
-probatio_optiones_default(Piscina* piscina)
+_sectio_prima (
+    CredoContextus* c)
 {
     TcpOptiones opt;
 
-    (vacuum)piscina;
-
-    printf("--- Probans optiones default ---\n");
+    (vacuum)c;
 
     opt = tcp_optiones_default();
 
     CREDO_VERUM(opt.timeout_ms > 0);
     CREDO_VERUM(opt.nodelay);
     CREDO_FALSUM(opt.keepalive);
-
-    printf("\n");
 }
 
 
@@ -42,13 +39,12 @@ probatio_optiones_default(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_error_descriptio(Piscina* piscina)
+_sectio_secunda (
+    CredoContextus* c)
 {
     constans character* desc;
 
-    (vacuum)piscina;
-
-    printf("--- Probans error descriptio ---\n");
+    (vacuum)c;
 
     desc = tcp_error_descriptio(TCP_OK);
     CREDO_NON_NIHIL(desc);
@@ -61,8 +57,40 @@ probatio_error_descriptio(Piscina* piscina)
 
     desc = tcp_error_descriptio(TCP_ERROR_TIMEOUT);
     CREDO_NON_NIHIL(desc);
+}
 
-    printf("\n");
+
+/* ========================================================================
+ * PROBATIONES - NULLUM ARGUMENTA
+ * ======================================================================== */
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    s32 n;
+
+    (vacuum)c;
+
+    /* tcp_mittere cum NIHIL */
+    n = tcp_mittere(NIHIL, (constans i8*)"test", IV);
+    CREDO_AEQUALIS_S32(n, -1);
+
+    /* tcp_recipere cum NIHIL */
+    {
+        i8 buffer[CXXVIII];
+        n = tcp_recipere(NIHIL, buffer, CXXVIII);
+        CREDO_AEQUALIS_S32(n, -1);
+    }
+
+    /* tcp_claudere cum NIHIL - non debet crash */
+    tcp_claudere(NIHIL);
+
+    /* tcp_est_valida cum NIHIL */
+    CREDO_FALSUM(tcp_est_valida(NIHIL));
+
+    /* tcp_obtinere_fd cum NIHIL */
+    CREDO_AEQUALIS_S32(tcp_obtinere_fd(NIHIL), -1);
 }
 
 
@@ -71,11 +99,13 @@ probatio_error_descriptio(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_connexio_invalida(Piscina* piscina)
+_sectio_quarta (
+    CredoContextus* c)
 {
-    TcpResultus res;
+           TcpResultus  res;
+               Piscina* piscina;
 
-    printf("--- Probans connexio invalida ---\n");
+    piscina = c->piscina;
 
     /* DNS fallita - hospes non existens */
     res = tcp_connectere("non.existens.hospes.example", LXXX, piscina);
@@ -90,8 +120,6 @@ probatio_connexio_invalida(Piscina* piscina)
             res.error_descriptio.datum);
     }
     printf("\n");
-
-    printf("\n");
 }
 
 
@@ -100,15 +128,17 @@ probatio_connexio_invalida(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_connexio_http(Piscina* piscina)
+_sectio_quinta (
+    CredoContextus* c)
 {
            TcpResultus  res;
     constans character* petitio;
                     i8  buffer[IV * MXXIV];
                    s32  n;
                    b32  misit;
+               Piscina* piscina;
 
-    printf("--- Probans connexio HTTP (httpbin.org:80) ---\n");
+    piscina = c->piscina;
 
     /* Connectere ad httpbin.org:80 */
     res = tcp_connectere("httpbin.org", LXXX, piscina);
@@ -163,8 +193,6 @@ probatio_connexio_http(Piscina* piscina)
     /* Claudere */
     tcp_claudere(res.connexio);
     CREDO_FALSUM(tcp_est_valida(res.connexio));
-
-    printf("\n");
 }
 
 
@@ -173,15 +201,17 @@ probatio_connexio_http(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_mittere_recipere(Piscina* piscina)
+_sectio_sexta (
+    CredoContextus* c)
 {
            TcpResultus  res;
     constans character* petitio;
                     i8  buffer[IV * MXXIV];
                    s32  totalis;
                    s32  n;
+               Piscina* piscina;
 
-    printf("--- Probans mittere/recipere ---\n");
+    piscina = c->piscina;
 
     res = tcp_connectere("httpbin.org", LXXX, piscina);
     si (!res.successus)
@@ -216,46 +246,22 @@ probatio_mittere_recipere(Piscina* piscina)
     CREDO_MAIOR_S32(totalis, 0);
 
     tcp_claudere(res.connexio);
-
-    printf("\n");
 }
 
 
-/* ========================================================================
- * PROBATIONES - NULLUM ARGUMENTA
- * ======================================================================== */
-
-interior vacuum
-probatio_nullum_argumenta(Piscina* piscina)
-{
-    s32 n;
-
-    (vacuum)piscina;
-
-    printf("--- Probans nullum argumenta ---\n");
-
-    /* tcp_mittere cum NIHIL */
-    n = tcp_mittere(NIHIL, (constans i8*)"test", IV);
-    CREDO_AEQUALIS_S32(n, -1);
-
-    /* tcp_recipere cum NIHIL */
-    {
-        i8 buffer[CXXVIII];
-        n = tcp_recipere(NIHIL, buffer, CXXVIII);
-        CREDO_AEQUALIS_S32(n, -1);
-    }
-
-    /* tcp_claudere cum NIHIL - non debet crash */
-    tcp_claudere(NIHIL);
-
-    /* tcp_est_valida cum NIHIL */
-    CREDO_FALSUM(tcp_est_valida(NIHIL));
-
-    /* tcp_obtinere_fd cum NIHIL */
-    CREDO_AEQUALIS_S32(tcp_obtinere_fd(NIHIL), -1);
-
-    printf("\n");
-}
+hic_manens constans CredoSectio SECTIONES[] = {
+    /* Probationes locales (non requirunt rete) */
+    { "optiones default", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "error descriptio", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nullum argumenta", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    /* Probationes rete (requirunt connexionem) */
+    { "connexio invalida", _sectio_quarta, NIHIL, NIHIL, "rete",
+        NIHIL },
+    { "connexio HTTP (httpbin.org:80)", _sectio_quinta, NIHIL, NIHIL,
+        "rete", NIHIL },
+    { "mittere/recipere", _sectio_sexta, NIHIL, NIHIL, "rete", NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
 
 /* ========================================================================
@@ -265,37 +271,5 @@ probatio_nullum_argumenta(Piscina* piscina)
 integer
 principale (vacuum)
 {
-    Piscina* piscina;
-        b32  successus;
-
-    printf("\n");
-    printf("========================================\n");
-    printf("PROBATIONES TCP\n");
-    printf("========================================\n");
-    printf("\n");
-
-    piscina = piscina_generare_dynamicum("probatio_tcp", LXIV * M);
-    credo_aperire(piscina);
-
-    /* Probationes locales (non requirunt rete) */
-    probatio_optiones_default(piscina);
-    probatio_error_descriptio(piscina);
-    probatio_nullum_argumenta(piscina);
-
-    /* Probationes rete (requirunt connexionem) */
-    probatio_connexio_invalida(piscina);
-    probatio_connexio_http(piscina);
-    probatio_mittere_recipere(piscina);
-
-    credo_imprimere_compendium();
-
-    printf("========================================\n");
-    printf("\n");
-
-    successus = credo_omnia_praeterierunt();
-
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    redde successus ? 0 : I;
+    redde credo_suitam_currere("tcp", SECTIONES);
 }

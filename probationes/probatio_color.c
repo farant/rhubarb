@@ -6,32 +6,29 @@
 #include "thema.h"
 #include <stdio.h>
 
-s32 principale (vacuum)
-{
-    Piscina* piscina;
-        b32  praeteritus;
 
-    /* Aperire piscinam et credonem */
-    piscina = piscina_generare_dynamicum("probatio_color", CDLVI);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+    (vacuum)c;
 
     /* Initiare thema pro palette tests */
     thema_initiare();
+}
 
 
-    /* ==================================================
-     * Probare color_ex_rgb
-     * ================================================== */
+/* ==================================================
+ * Probare color_ex_rgb
+ * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Color color;
-
-        imprimere("\n--- Probans color_ex_rgb ---\n");
 
         color = color_ex_rgb(CCLV, ZEPHYRUM, ZEPHYRUM);  /* Red */
         CREDO_AEQUALIS_I32(color.r, CCLV);
@@ -49,16 +46,20 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(color.g, ZEPHYRUM);
         CREDO_AEQUALIS_I32(color.b, CCLV);
     }
+}
 
 
-    /* ==================================================
-     * Probare color_ex_rgba
-     * ================================================== */
+/* ==================================================
+ * Probare color_ex_rgba
+ * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Color color;
-
-        imprimere("\n--- Probans color_ex_rgba ---\n");
 
         color = color_ex_rgba(CCLV, CXXVIII, LXIV, XXXII);
         CREDO_AEQUALIS_I32(color.r, CCLV);
@@ -66,16 +67,20 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(color.b, LXIV);
         CREDO_AEQUALIS_I32(color.a, XXXII);
     }
+}
 
 
-    /* ==================================================
-     * Probare color_ex_palette
-     * ================================================== */
+/* ==================================================
+ * Probare color_ex_palette
+ * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Color color;
-
-        imprimere("\n--- Probans color_ex_palette ---\n");
 
         /* Test black (palette index 0) */
         color = color_ex_palette(ZEPHYRUM);
@@ -90,17 +95,21 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(color.g, CCXLII);   /* 0x3C -> 242 */
         CREDO_AEQUALIS_I32(color.b, CCXXXIV);   /* 0x3A -> 234 */
     }
+}
 
 
-    /* ==================================================
-     * Probare color_ad_pixelum et color_ex_pixelum (round trip)
-     * ================================================== */
+/* ==================================================
+ * Probare color_ad_pixelum et color_ex_pixelum (round trip)
+ * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Color color1, color2;
         i32 pixel;
-
-        imprimere("\n--- Probans color_ad_pixelum / color_ex_pixelum ---\n");
 
         /* Create a color, convert to pixel, convert back */
         color1  = color_ex_rgba(CCLV, CXXVIII, LXIV, CCLV);
@@ -125,16 +134,20 @@ s32 principale (vacuum)
         color2  = color_ex_pixelum(pixel);
         CREDO_VERUM(color_aequalis(color1, color2));
     }
+}
 
 
-    /* ==================================================
-     * Probare color_interpolate
-     * ================================================== */
+/* ==================================================
+ * Probare color_interpolate
+ * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Color black, white, gray;
-
-        imprimere("\n--- Probans color_interpolate ---\n");
 
         black = color_ex_rgb(ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
         white = color_ex_rgb(CCLV, CCLV, CCLV);
@@ -157,17 +170,21 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(gray.g, CXXVII);
         CREDO_AEQUALIS_I32(gray.b, CXXVII);
     }
+}
 
 
-    /* ==================================================
-     * Probare color_ad_cinereum
-     * ================================================== */
+/* ==================================================
+ * Probare color_ad_cinereum
+ * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Color color;
            i8 gray;
-
-        imprimere("\n--- Probans color_ad_cinereum ---\n");
 
         /* Black -> 0 */
         color  = color_ex_rgb(ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
@@ -194,16 +211,20 @@ s32 principale (vacuum)
         gray   = color_ad_cinereum(color);
         CREDO_AEQUALIS_I32(gray, XXVIII);  /* 255 * 0.11 ≈ 28 */
     }
+}
 
 
-    /* ==================================================
-     * Probare color_aequalis
-     * ================================================== */
+/* ==================================================
+ * Probare color_aequalis
+ * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Color color1, color2;
-
-        imprimere("\n--- Probans color_aequalis ---\n");
 
         color1 = color_ex_rgb(CCLV, CXXVIII, LXIV);
         color2 = color_ex_rgb(CCLV, CXXVIII, LXIV);
@@ -217,15 +238,19 @@ s32 principale (vacuum)
         color2 = color_ex_rgba(CCLV, ZEPHYRUM, ZEPHYRUM, CXXVIII);
         CREDO_FALSUM(color_aequalis(color1, color2));
     }
+}
 
 
-    /* ==================================================
-     * Probare colores praedefinitos
-     * ================================================== */
+/* ==================================================
+ * Probare colores praedefinitos
+ * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
-        imprimere("\n--- Probans colores praedefinitos ---\n");
-
         /* Test predefined colors */
         CREDO_AEQUALIS_I32(COLOR_NIGER.r, ZEPHYRUM);
         CREDO_AEQUALIS_I32(COLOR_NIGER.g, ZEPHYRUM);
@@ -247,16 +272,20 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(COLOR_CAERULEUS.g, ZEPHYRUM);
         CREDO_AEQUALIS_I32(COLOR_CAERULEUS.b, CCLV);
     }
+}
 
 
-    /* ==================================================
-     * Probare accessor functions
-     * ================================================== */
+/* ==================================================
+ * Probare accessor functions
+ * ================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Color color;
-
-        imprimere("\n--- Probans accessor functions ---\n");
 
         color = color_ex_rgba(CCLV, CXXVIII, LXIV, XXXII);
         CREDO_AEQUALIS_I32(color_obtinere_r(color), CCLV);
@@ -264,19 +293,23 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(color_obtinere_b(color), LXIV);
         CREDO_AEQUALIS_I32(color_obtinere_a(color), XXXII);
     }
+}
 
 
-    /* ==================================================
-     * Probare spatia colorum (lux linearis, OKLab)
-     * ================================================== */
+/* ==================================================
+ * Probare spatia colorum (lux linearis, OKLab)
+ * ================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         f64 lin[III], lab[III], retro[III];
         f64 nigrum[III]  = {0.0, 0.0, 0.0};
         f64 album[III]   = {1.0, 1.0, 1.0};
         s32 i;
-
-        imprimere("\n--- Probans spatia colorum ---\n");
 
         /* curva sRGB: extrema, medium, et reditus */
         CREDO_F64_PROXIMUS(color_srgb_ad_linearem(0.0), 0.0, 1e-12);
@@ -346,27 +379,27 @@ s32 principale (vacuum)
             1e-4);
         CREDO_F64_PROXIMUS(color_oklab_distantia(lab, lab), 0.0, 1e-12);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "color_ex_rgb", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "color_ex_rgba", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "color_ex_palette", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "color_ad_pixelum / color_ex_pixelum", _sectio_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "color_interpolate", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "color_ad_cinereum", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "color_aequalis", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "colores praedefinitos", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "accessor functions", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "spatia colorum", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ==================================================
-     * Compendium
-     * ================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    /* Destructio */
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("color", SECTIONES,
+        _suitam_parare, NIHIL);
 }

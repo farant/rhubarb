@@ -34,6 +34,18 @@ nomen structura {
               ToyStatus  toy;
 } Sessio;
 
+/* Fixura suitae: sessiones A (terminalis) et D (fenestra) semel
+ * notantur (notata, status -> c->suita); sectiones LEGUNT solum,
+ * sessiones suas creant. */
+nomen structura {
+    Sessio  t;
+    Sessio  f;
+       Xar* notata_t;
+       Xar* notata_f;
+    chorda  status_t;
+    chorda  status_f;
+} Mundus;
+
 /* terminalis: fines ad cellulas + linea capitis; fenestra: pixela */
 interior vacuum
 sessio_creare (
@@ -154,35 +166,23 @@ _murem (
     redde e;
 }
 
-s32 principale (vacuum)
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
                 Piscina* piscina;
     InternamentumChorda* intern;
-                 Sessio  t;
-                 Sessio  f;
-                 Sessio  b;
-                    Xar* notata_t;
-                    Xar* notata_f;
-                    Xar* div;
-                 chorda  status_t;
-                 chorda  status_f;
-              Transitus  tr;
+                 Mundus* o;
                     i32  i;
 
-    piscina = piscina_generare_dynamicum("probatio_iteratio_transversa",
-        LXIV * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    o        = (Mundus*)piscina_allocare(piscina, magnitudo(Mundus));
 
-    imprimere("\n--- A. sessio terminalis notata ---\n");
-    sessio_creare(&t, piscina, intern, VERUM, VERUM);
-    notata_t = xar_creare(piscina, (i32)magnitudo(EventusNotatum));
-    dispensator_notarium_ponere(t.d, notata_t);
+    /* A. sessio terminalis notata */
+    sessio_creare(&o->t, piscina, intern, VERUM, VERUM);
+    o->notata_t = xar_creare(piscina, (i32)magnitudo(EventusNotatum));
+    dispensator_notarium_ponere(o->t.d, o->notata_t);
     {
         /* b1 ad marginem (columna 2: x 9 - intra b1 terminalis [6,60),
          * extra b1 fenestrae [10,60)); super, tractus in tabula; ESC */
@@ -203,41 +203,21 @@ s32 principale (vacuum)
             (i32)strlen(octeti));
         dum (rivus_eventum(r, tempus, &e))
         {
-            dispensator_tractare(t.d, &e);
+            dispensator_tractare(o->t.d, &e);
             tempus += X;
         }
         rivus_moram(r, tempus);
         dum (rivus_eventum(r, tempus, &e))
         {
-            dispensator_tractare(t.d, &e);
+            dispensator_tractare(o->t.d, &e);
         }
     }
-    status_t = status(&t, piscina);
-    CREDO_NON_NIHIL(insula_attributum(t.repo,
-        "numerus"));
-    CREDO_NON_NIHIL(insula_attributum(t.repo, "fuga"));
-    CREDO_CHORDA_AEQUALIS_LITERIS(*insula_attributum(t.repo, "puncta"),
-        "3");
+    o->status_t = status(&o->t, piscina);
 
-    imprimere("\n--- B. semantica in fenestra: status idem ---\n");
-    sessio_creare(&b, piscina, intern, FALSUM, FALSUM);
-    div = xar_creare(piscina, (i32)magnitudo(ManusDivergentia));
-    /* b1 pressus et liberatus: positio cruda (9) in fenestra radix */
-    CREDO_AEQUALIS_I32(manus_ludus_iterare(b.m, notata_t,
-        MANUS_ITERATIO_SEMANTICA, div), II);
-    CREDO_VERUM(chorda_aequalis(status(&b, piscina), status_t));
-
-    imprimere("\n--- C. cruda in fenestra: b1 amissus ---\n");
-    sessio_creare(&b, piscina, intern, FALSUM, FALSUM);
-    (vacuum)manus_ludus_iterare(b.m, notata_t, MANUS_ITERATIO_CRUDA,
-        NIHIL);
-    CREDO_NIHIL(insula_attributum(b.repo, "numerus"));
-    CREDO_FALSUM(chorda_aequalis(status(&b, piscina), status_t));
-
-    imprimere("\n--- D. sessio fenestrae notata (pixela) ---\n");
-    sessio_creare(&f, piscina, intern, FALSUM, FALSUM);
-    notata_f = xar_creare(piscina, (i32)magnitudo(EventusNotatum));
-    dispensator_notarium_ponere(f.d, notata_f);
+    /* D. sessio fenestrae notata (pixela) */
+    sessio_creare(&o->f, piscina, intern, FALSUM, FALSUM);
+    o->notata_f = xar_creare(piscina, (i32)magnitudo(EventusNotatum));
+    dispensator_notarium_ponere(o->f.d, o->notata_f);
     {
         Eventus ev[IX];
 
@@ -267,38 +247,154 @@ s32 principale (vacuum)
         ev[8].datum.clavis.actio     = EVENTUS_ACTIO_SOLUTA;
         per (i = ZEPHYRUM; i < IX; i++)
         {
-            dispensator_tractare(f.d, &ev[i]);
+            dispensator_tractare(o->f.d, &ev[i]);
         }
     }
-    status_f = status(&f, piscina);
-    CREDO_NON_NIHIL(insula_attributum(f.repo,
-        "numerus"));
+    o->status_f  = status(&o->f, piscina);
+    c->datum     = o;
+}
 
-    imprimere("\n--- E. per terminalem, ad cellulas: idem ---\n");
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    constans Mundus* o = (constans Mundus*)c->suita;
+
+    CREDO_NON_NIHIL(insula_attributum(o->t.repo,
+        "numerus"));
+    CREDO_NON_NIHIL(insula_attributum(o->t.repo, "fuga"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(*insula_attributum(o->t.repo,
+        "puncta"), "3");
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+         constans Mundus* o = (constans Mundus*)c->suita;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                  Sessio  b;
+                     Xar* div;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    sessio_creare(&b, piscina, intern, FALSUM, FALSUM);
+    div = xar_creare(piscina, (i32)magnitudo(ManusDivergentia));
+    /* b1 pressus et liberatus: positio cruda (9) in fenestra radix */
+    CREDO_AEQUALIS_I32(manus_ludus_iterare(b.m, o->notata_t,
+        MANUS_ITERATIO_SEMANTICA, div), II);
+    CREDO_VERUM(chorda_aequalis(status(&b, piscina), o->status_t));
+}
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+         constans Mundus* o = (constans Mundus*)c->suita;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                  Sessio  b;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    sessio_creare(&b, piscina, intern, FALSUM, FALSUM);
+    (vacuum)manus_ludus_iterare(b.m, o->notata_t, MANUS_ITERATIO_CRUDA,
+        NIHIL);
+    CREDO_NIHIL(insula_attributum(b.repo, "numerus"));
+    CREDO_FALSUM(chorda_aequalis(status(&b, piscina), o->status_t));
+}
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    constans Mundus* o = (constans Mundus*)c->suita;
+
+    CREDO_NON_NIHIL(insula_attributum(o->f.repo,
+        "numerus"));
+}
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+         constans Mundus* o = (constans Mundus*)c->suita;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                  Sessio  b;
+               Transitus  tr;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     sessio_creare(&b, piscina, intern, VERUM, VERUM);
     _transitum_creare(&tr, piscina, CELLULA_LATITUDO);
-    (vacuum)manus_ludus_iterare_per(b.m, notata_f,
+    (vacuum)manus_ludus_iterare_per(b.m, o->notata_f,
         MANUS_ITERATIO_SEMANTICA, NIHIL, _transire, &tr);
-    CREDO_VERUM(chorda_aequalis(status(&b, piscina), status_f));
+    CREDO_VERUM(chorda_aequalis(status(&b, piscina), o->status_f));
     CREDO_NON_NIHIL(insula_attributum(b.repo,
         "numerus"));
+}
 
-    imprimere("\n--- F. NON ad cellulas: margo amissus ---\n");
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+         constans Mundus* o = (constans Mundus*)c->suita;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                  Sessio  b;
+               Transitus  tr;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     /* x 10 -> cellula 1 -> centrum 9: extra b1 [10,60) */
     sessio_creare(&b, piscina, intern, VERUM, FALSUM);
     _transitum_creare(&tr, piscina, CELLULA_LATITUDO);
-    (vacuum)manus_ludus_iterare_per(b.m, notata_f,
+    (vacuum)manus_ludus_iterare_per(b.m, o->notata_f,
         MANUS_ITERATIO_SEMANTICA, NIHIL, _transire, &tr);
     CREDO_NIHIL(insula_attributum(b.repo, "numerus"));
-    CREDO_FALSUM(chorda_aequalis(status(&b, piscina), status_f));
+    CREDO_FALSUM(chorda_aequalis(status(&b, piscina), o->status_f));
+}
 
-    imprimere("\n--- G. traditio NIHIL = iterare ---\n");
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+         constans Mundus* o = (constans Mundus*)c->suita;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                  Sessio  b;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     sessio_creare(&b, piscina, intern, FALSUM, FALSUM);
-    CREDO_AEQUALIS_I32(manus_ludus_iterare_per(b.m, notata_t,
+    CREDO_AEQUALIS_I32(manus_ludus_iterare_per(b.m, o->notata_t,
         MANUS_ITERATIO_SEMANTICA, NIHIL, NIHIL, NIHIL), II);
-    CREDO_VERUM(chorda_aequalis(status(&b, piscina), status_t));
+    CREDO_VERUM(chorda_aequalis(status(&b, piscina), o->status_t));
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "A. sessio terminalis notata", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "B. semantica in fenestra: status idem", _sectio_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "C. cruda in fenestra: b1 amissus", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "D. sessio fenestrae notata (pixela)", _sectio_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "E. per terminalem, ad cellulas: idem", _sectio_quinta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "F. NON ad cellulas: margo amissus", _sectio_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "G. traditio NIHIL = iterare", _sectio_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("iteratio_transversa", SECTIONES,
+        _suitam_parare, NIHIL);
 }

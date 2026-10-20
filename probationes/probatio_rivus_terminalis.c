@@ -32,7 +32,12 @@ _octeti_aequales (
                    == ZEPHYRUM);
 }
 
-s32 principale (vacuum)
+/* gradus 0-IX seriatim in uno rivo: quisque statum rivi a priore
+ * relictum legit (facultates consumptae, indicator, modi) - ergo sectio
+ * una (gradus impressi ut olim) */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
             Piscina* piscina;
     RivusTerminalis* r;
@@ -42,15 +47,8 @@ s32 principale (vacuum)
                  i8  modi[RIVUS_MODI_MAXIMUM];
                 i32  numerus;
 
-    piscina = piscina_generare_dynamicum("probatio_rivus_terminalis",
-        M * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    r = rivus_creare(piscina, X, XX);
+    piscina  = c->piscina;
+    r        = rivus_creare(piscina, X, XX);
     CREDO_NON_NIHIL (r);
 
     imprimere("\n--- 0. facultates PRIMAE (spec Q4) ---\n");
@@ -269,8 +267,16 @@ s32 principale (vacuum)
     CREDO_VERUM (rivus_eventum(novus, M, &e));
     CREDO_VERUM (e.genus == EVENTUS_DEPOSITIO && e.datum.depositio.x
         == ZEPHYRUM && e.datum.depositio.y == ZEPHYRUM);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "rivus fontis terminalis", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("rivus_terminalis", SECTIONES);
 }

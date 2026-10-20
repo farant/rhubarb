@@ -538,11 +538,8 @@ probare_genus_contains_relationes(EntitasRepositorium* repo)
 
 interior vacuum
 currere_probationes_backend (
-    EntitasRepositorium* repo,
-     constans character* nomen_backend)
+    EntitasRepositorium* repo)
 {
-    imprimere("\n=== Backend: %s ===\n", nomen_backend);
-
     probare_entitas_creare(repo);
     probare_entitas_scaffoldare(repo);
     probare_proprietas_ponere(repo);
@@ -573,8 +570,6 @@ probare_replay(Piscina* piscina)
     EntitasRepositorium* repo;
                  chorda* valor;
                     Xar* relatae;
-
-    imprimere("\n=== Probare Replay (Nuntium) ===\n");
 
     /* Delere file antiquum */
     unlink(VIA_PROBATIO);
@@ -670,8 +665,6 @@ probare_replay(Piscina* piscina)
 interior vacuum
 probare_continuare_post_replay(Piscina* piscina)
 {
-    imprimere("\n=== Probare Continuare Post Replay ===\n");
-
     /* Delere file antiquum */
     unlink(VIA_PROBATIO);
 
@@ -783,8 +776,6 @@ probare_lectio_eventorum(Piscina* piscina)
                     Xar* eventus;
                 Eventum* e;
                     i32  numerus;
-
-    imprimere("\n=== Probare Lectio Eventorum ===\n");
 
     /* Creare repo */
     pers = persistentia_memoria_creare(piscina);
@@ -926,8 +917,6 @@ probare_validation(Piscina* piscina)
                     s32  valor_s32;
                     b32  validum;
 
-    imprimere("\n=== Probare Validation ===\n");
-
     /* Creare repo */
     pers = persistentia_memoria_creare(piscina);
     CREDO_NON_NIHIL(pers);
@@ -1067,8 +1056,6 @@ probare_genus_automaticum(Piscina* piscina)
                  chorda* genus_name;
                  chorda* name_prop;
 
-    imprimere("\n=== Probare Genus Automaticum ===\n");
-
     /* Creare repo */
     pers = persistentia_memoria_creare(piscina);
     CREDO_NON_NIHIL(pers);
@@ -1131,65 +1118,83 @@ probare_genus_automaticum(Piscina* piscina)
  * Principale
  * ================================================== */
 
-s32 principale(vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-                Piscina* piscina;
     EntitasRepositorium* repo;
-                    b32  praeteritus;
 
-    /* Initiare */
-    piscina = piscina_generare_dynamicum("probatio_repo", M * II);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-
-    credo_aperire(piscina);
-
-    /* === Backend: Memoria === */
-    repo = _creare_repo_memoria(piscina);
+    repo = _creare_repo_memoria(c->piscina);
     CREDO_NON_NIHIL(repo);
-    currere_probationes_backend(repo, "Memoria");
+    currere_probationes_backend(repo);
+}
 
-    /* === Backend: Nuntium === */
-    repo = _creare_repo_nuntium(piscina);
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    EntitasRepositorium* repo;
+
+    repo = _creare_repo_nuntium(c->piscina);
     CREDO_NON_NIHIL(repo);
-    currere_probationes_backend(repo, "Nuntium");
-
-    /* === Probare Replay === */
-    probare_replay(piscina);
-
-    /* === Probare Continuare Post Replay === */
-    probare_continuare_post_replay(piscina);
-
-    /* === Probare Lectio Eventorum === */
-    probare_lectio_eventorum(piscina);
-
-    /* === Probare Validation === */
-    probare_validation(piscina);
-
-    /* === Probare Genus Automaticum === */
-    probare_genus_automaticum(piscina);
+    currere_probationes_backend(repo);
 
     /* Cleanup file */
     unlink(VIA_PROBATIO);
+}
 
-    /* Compendium */
-    imprimere("\n");
-    credo_imprimere_compendium();
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    probare_replay(c->piscina);
+}
 
-    praeteritus = credo_omnia_praeterierunt();
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    probare_continuare_post_replay(c->piscina);
+}
 
-    credo_claudere();
-    piscina_destruere(piscina);
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    probare_lectio_eventorum(c->piscina);
+}
 
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    probare_validation(c->piscina);
+}
+
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    probare_genus_automaticum(c->piscina);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Backend: Memoria", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Backend: Nuntium", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Probare Replay (Nuntium)", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Probare Continuare Post Replay", _sectio_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Probare Lectio Eventorum", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Probare Validation", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Probare Genus Automaticum", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("entitas_repositorium", SECTIONES);
 }

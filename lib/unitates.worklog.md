@@ -175,3 +175,16 @@ no plagulae+nomina kind; NAMES of a directory = `genus="directorium"`.
 The reader's git ls-files enumeration is invisible to the read book, so
 the action declares the files it depends on by name and leans on the
 generata gate's byte comparison for the rest.
+
+## 2026-10-19 - interrogationes skip archivata units
+
+The arbor/arbor2/lapifex_c89 archive move put 9 `*.interrogationes.stml`
+files under `archivum/lib/`. `unitates_interrogationes` assigned them
+munus interrogationes and read and judged them like live ones. Their
+`via` anchors still say `lib/...`, so `docs/faq.html` refused with 6
+vitia. An archivata unit has "nullae regulae, nullae portae", so the
+collector now skips any unit `_extra_usum` reports (own or inherited
+vita archivata, the same helper `unitates_census` uses to skip
+exspectationes). The regression test in `_sectio_interrogationes` adds
+an archivata `archivum/` holding `INTERROGATIONES_MALAE`: before the fix
+the counts went from V/XI to more; after it they stay V/XI.

@@ -20,7 +20,7 @@
 #include "postulata_posix.h"   /* T38 c: setenv (ORATIO_DECRETOR) */
 #include "latina.h"
 #include "credo.h"
-#include "oratio_conllu.h"
+#include "conllu.h"
 #include "oratio_resolutio.h"
 #include "internamentum.h"
 #include "oratio_oraculum.h"
@@ -356,14 +356,6 @@ _aequalis (
                 == ZEPHYRUM));
 }
 
-interior constans OratioConlluLexema*
-_lexema (
-    constans OratioConlluSententia* s,
-                               i32  k)
-{
-    redde (constans OratioConlluLexema*)xar_obtinere(s->lexemata, k);
-}
-
 interior i32
 _permille (
     i32 a,
@@ -440,7 +432,7 @@ _thesaurus_arborum (
                    character  via[1024];
                       chorda  fons;
                          Xar* sententiae;
-    OratioVocabulariumVitium  vitium;
+                ConlluVitium  vitium = { ZEPHYRUM, NIHIL };
         OratioOraculumCensus  census;
                      clock_t  ante;
                          i32  tecta_permille;
@@ -453,7 +445,7 @@ _thesaurus_arborum (
         piscina_destruere(p);
         redde;
     }
-    sententiae = oratio_conllu_legere(p, fons, &vitium);
+    sententiae = conllu_legere(p, fons, &vitium);
     CREDO_NON_NIHIL (sententiae);
     si (sententiae == NIHIL)
     {
@@ -1398,6 +1390,7 @@ principale (vacuum)
        constans character* radix;
         OratioVocabularia  vocabularia;
  OratioVocabulariumVitium  vitium;
+             ConlluVitium  vitium_conllu = { ZEPHYRUM, NIHIL };
       InternamentumChorda* intern;
           OratioProgramma* programma;
 
@@ -1434,9 +1427,9 @@ principale (vacuum)
         redde I;
     }
 
-    imprimere("\n--- I. Lector CoNLL-U ---\n");
+    imprimere("\n--- I. Forma sententiae (lector: probatio_conllu) ---\n");
     {
-        Xar* s = oratio_conllu_legere(piscina, _l(
+        Xar* s = conllu_legere(piscina, _l(
             "# sent_id = a-1\n"
             "# text = Puella rosam amat.\n"
             "1\tPuella\tpuella\tNOUN\t_\tCase=Nom\t3\tnsubj\t_\t_\n"
@@ -1452,10 +1445,10 @@ principale (vacuum)
             "1\tpronum\tpronus\tADJ\t_\t_\t3\tadvcl\t_\t_\r\n"
             "2\tque\tque\tCCONJ\t_\t_\t3\tcc\t_\t_\r\n"
             "3\tabstulit\taufero\tVERB\t_\t_\t0\troot\t_\tSpaceAfter=No\r\n"
-            "4\t.\t.\tPUNCT\t_\t_\t3\tpunct\t_\t_\r\n"), &vitium);
-        constans OratioConlluSententia* a;
-        constans OratioConlluSententia* b;
-                                chorda  textus;
+            "4\t.\t.\tPUNCT\t_\t_\t3\tpunct\t_\t_\r\n"),
+            &vitium_conllu);
+        constans ConlluSententia* a;
+        constans ConlluSententia* b;
 
         CREDO_NON_NIHIL (s);
         CREDO_AEQUALIS_I32 (s ? xar_numerus(s) : ZEPHYRUM, (i32)II);
@@ -1464,37 +1457,8 @@ principale (vacuum)
             credo_imprimere_compendium();
             redde I;
         }
-        a = (constans OratioConlluSententia*)xar_obtinere(s, ZEPHYRUM);
-        b = (constans OratioConlluSententia*)xar_obtinere(s, I);
-        CREDO_VERUM (_aequalis(a->id, "a-1"));
-        CREDO_VERUM (_aequalis(a->textus, "Puella rosam amat."));
-        CREDO_AEQUALIS_I32 (xar_numerus(a->lexemata), (i32)IV);   /* 3.1 omissus */
-        CREDO_VERUM (_aequalis(_lexema(a, ZEPHYRUM)->forma, "Puella"));
-        CREDO_VERUM (_aequalis(_lexema(a, ZEPHYRUM)->lemma, "puella"));
-        CREDO_VERUM (_aequalis(_lexema(a, ZEPHYRUM)->upos, "NOUN"));
-        CREDO_VERUM (_aequalis(_lexema(a, ZEPHYRUM)->feats,
-            "Case=Nom"));
-        CREDO_VERUM (_aequalis(_lexema(a, ZEPHYRUM)->deprel, "nsubj"));
-        CREDO_AEQUALIS_I32 (_lexema(a, ZEPHYRUM)->a, I);
-        CREDO_FALSUM (_lexema(a, ZEPHYRUM)->ranga);
-        CREDO_VERUM (_lexema(a, ZEPHYRUM)->spatium_post);
-        CREDO_FALSUM (_lexema(a, (i32)II)->spatium_post);
-        CREDO_AEQUALIS_I32 (_lexema(a, (i32)III)->linea, (i32)VII);
-        textus = oratio_conllu_textus(piscina, a);
-        CREDO_VERUM (_aequalis(textus, "Puella rosam amat."));
-        /* b: sine '# text', CRLF, ranga */
-        CREDO_VERUM (_aequalis(b->id, "a-2"));
-        CREDO_AEQUALIS_I32 (b->textus.mensura, ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (xar_numerus(b->lexemata), (i32)V);
-        CREDO_VERUM (_lexema(b, ZEPHYRUM)->ranga);
-        CREDO_AEQUALIS_I32 (_lexema(b, ZEPHYRUM)->a, I);
-        CREDO_AEQUALIS_I32 (_lexema(b, ZEPHYRUM)->b, (i32)II);
-        CREDO_VERUM (_aequalis(_lexema(b, ZEPHYRUM)->forma,
-            "pronumque"));
-        CREDO_VERUM (_aequalis(_lexema(b, ZEPHYRUM)->upos, "_"));
-        CREDO_VERUM (_aequalis(_lexema(b, I)->forma, "pronum"));
-        textus = oratio_conllu_textus(piscina, b);
-        CREDO_VERUM (_aequalis(textus, "pronumque abstulit."));
+        a = (constans ConlluSententia*)xar_obtinere(s, ZEPHYRUM);
+        b = (constans ConlluSententia*)xar_obtinere(s, I);
         /* T38 a: '# newdoc id' sententiis sequentibus datur, prioribus
          * non; forma DECLARATA per identitatem (FORMAE_THESAURORUM) */
         CREDO_AEQUALIS_I32 (a->documentum.mensura, ZEPHYRUM);
@@ -1504,7 +1468,7 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 ((s32)oratio_oraculum_forma_sententiae(b),
             (s32)ORATIO_FORMA_VERSUS);
         {
-            OratioConlluSententia t;
+            ConlluSententia t;
 
             memset(&t, ZEPHYRUM, magnitudo(t));
             t.id = _l("Latin_Tacitus_Ger_prose-192");
@@ -1529,38 +1493,16 @@ principale (vacuum)
             CREDO_AEQUALIS_S32 ((s32)oratio_oraculum_forma_sententiae(&t),
                 (s32)ORATIO_FORMA_PROSA);
         }
-        CREDO_VERUM (oratio_conllu_spatium_post(_l("_")));
-        CREDO_FALSUM (oratio_conllu_spatium_post(_l("SpaceAfter=No")));
-        CREDO_FALSUM (oratio_conllu_spatium_post(_l("X=1|SpaceAfter=No|Y=2")));
-        CREDO_VERUM (oratio_conllu_spatium_post(_l("NoSpaceAfter=No")));
-        /* vitia cum linea */
-        CREDO_NIHIL (oratio_conllu_legere(piscina, _l(
-            "1\tx\tx\tNOUN\t_\t_\t0\troot\t_\n"), &vitium));
-        CREDO_AEQUALIS_I32 (vitium.linea, I);
-        CREDO_VERUM (strcmp(vitium.causa, "campi non X") == ZEPHYRUM);
-        CREDO_NIHIL (oratio_conllu_legere(piscina, _l(
-            "# c\n1\tx\tx\tNOUN\t_\t_\t0\troot\t_\t_\n"
-            "y\tx\tx\tNOUN\t_\t_\t0\troot\t_\t_\n"), &vitium));
-        CREDO_AEQUALIS_I32 (vitium.linea, (i32)III);
-        CREDO_VERUM (strcmp(vitium.causa, "ID non numerus")
-            == ZEPHYRUM);
-        CREDO_NIHIL (oratio_conllu_legere(piscina, _l(
-            "3-2\tx\t_\t_\t_\t_\t_\t_\t_\t_\n"), &vitium));
-        CREDO_VERUM (strcmp(vitium.causa, "ranga mala") == ZEPHYRUM);
-        /* fons vacuus: sententiae nullae, non vitium */
-        s = oratio_conllu_legere(piscina, _l("\n\n# c\n\n"), &vitium);
-        CREDO_NON_NIHIL (s);
-        CREDO_AEQUALIS_I32 (s ? xar_numerus(s) : (i32)-I, ZEPHYRUM);
     }
 
     imprimere("\n--- II. Oraculum inlineare ---\n");
     {
-        Xar* s = oratio_conllu_legere(piscina, _l(
+        Xar* s = conllu_legere(piscina, _l(
             "# text = Puella rosam amat.\n"
             "1\tPuella\tpuella\tNOUN\t_\t_\t3\tnsubj\t_\t_\n"
             "2\trosam\trosa\tNOUN\t_\t_\t3\tobj\t_\t_\n"
             "3\tamat\tamo\tVERB\t_\t_\t0\troot\t_\tSpaceAfter=No\n"
-            "4\t.\t.\tPUNCT\t_\t_\t3\tpunct\t_\t_\n"), &vitium);
+            "4\t.\t.\tPUNCT\t_\t_\t3\tpunct\t_\t_\n"), &vitium_conllu);
         OratioOraculumCensus c;
 
         CREDO_NON_NIHIL (s);
@@ -1604,13 +1546,14 @@ principale (vacuum)
         {
             OratioOraculumCensus cd;
 
-            s = oratio_conllu_legere(piscina, _l(
+            s = conllu_legere(piscina, _l(
                 "# sent_id = proba-decretoris-1\n"
                 "# text = Puella bellum videt.\n"
                 "1\tPuella\tpuella\tNOUN\t_\tCase=Nom|Gender=Fem|Number=Sing\t3\tnsubj\t_\t_\n"
                 "2\tbellum\tbellum\tNOUN\t_\tCase=Acc|Gender=Neut|Number=Sing\t3\tobj\t_\t_\n"
                 "3\tvidet\tvideo\tVERB\t_\tNumber=Sing|Person=3\t0\troot\t_\tSpaceAfter=No\n"
-                "4\t.\t.\tPUNCT\t_\t_\t3\tpunct\t_\t_\n"), &vitium);
+                "4\t.\t.\tPUNCT\t_\t_\t3\tpunct\t_\t_\n"),
+                &vitium_conllu);
             CREDO_NON_NIHIL (s);
             oratio_oraculum_census_vacare(&cd);
             setenv("ORATIO_DECRETOR", "1", I);   /* ordinarium OFF */
@@ -1651,7 +1594,7 @@ principale (vacuum)
         }
 
         /* ranga, ignotum, inalignatum, UPOS extra tabulam */
-        s = oratio_conllu_legere(piscina, _l(
+        s = conllu_legere(piscina, _l(
             "# text = pronumque abstulit xyzzy\n"
             "1-2\tpronumque\t_\t_\t_\t_\t_\t_\t_\t_\n"
             "1\tpronum\tpronus\tADJ\t_\t_\t3\tadvcl\t_\t_\n"
@@ -1659,7 +1602,8 @@ principale (vacuum)
             "3\tabstulit\taufero\tVERB\t_\t_\t0\troot\t_\t_\n"
             "4\txyzzy\txyzzy\tNOUN\t_\t_\t3\tobj\t_\t_\n"
             "5\tzzz\tzzz\tADV\t_\t_\t3\tadvmod\t_\t_\n"
-            "6\tabstulit\taufero\tFOO\t_\t_\t3\tdep\t_\t_\n"), &vitium);
+            "6\tabstulit\taufero\tFOO\t_\t_\t3\tdep\t_\t_\n"),
+            &vitium_conllu);
         CREDO_NON_NIHIL (s);
         oratio_oraculum_census_vacare(&c);
         CREDO_VERUM (oratio_oraculum_iudicare(piscina, &vocabularia, s,

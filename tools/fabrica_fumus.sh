@@ -122,6 +122,12 @@
 #        in medio gradu -> '-resumere' actum non iterat; arbor mutata ->
 #        resumptio recusata; scriptura ~/.bin non proposita -> FRACTUM;
 #        gradus sine mandato -> nihil actum
+#   LXII memoria sectionis (credo memoria T3): linea SECTIO XIV camporum
+#        -> facta tria credo.* (octeti = KiB * MXXIV) cursui sectionis
+#        adhaerentia; linea XI camporum nullum
+#   LXIII tectum memoriae membri (credo memoria T6): FABRICA_MEMORIA_MB
+#        fugam occidit; sectio rupta nominata cum causa memoriae,
+#        sectio prior servata; membrum v1 'totum' cum eadem causa
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # <porta titulus="fabrica-fumus" gradus="fusio" instrumentum="bin/fabrica" tegit="*/aedificatio.stml aedificatio.canon fabrica.canon tools/fabrica_struere.sh"/>
@@ -1126,6 +1132,95 @@ if [ "$rc1" -ne 0 ] && [ "$rc2" -eq 0 ] && [ "$cursus" = "A B B C " ] \
    && [ "$rc4" -eq 3 ] && grep -q 'scripsit extra propositum: ~/.bin/x' "$T/lxi_4" \
    && [ "$rc5" -eq 1 ] && grep -q 'gradus sine mandato' "$T/lxi_5" && [ ! -e "$T/r/build/n" ]; then echo "  LXI  consilium actum: occisus -> resumptio (A non iteratum), arbor mutata recusata, ~/.bin non propositum FRACTUM, sine mandato nihil OK"; else echo "  LXI  FRACTUM (occisus rc=$rc1, resumptio rc=$rc2 cursus '$cursus', arbor mutata rc=$rc3 cursus '$cursus3', extra rc=$rc4, sine mandato rc=$rc5)"; for k in 1 2 3 4 5; do sed "s/^/      [$k] /" "$T/lxi_$k" | head -5; done; fracta=1; fi
 
+# LXII (credo memoria T3): MEMORIA SECTIONIS IN ANNALIBUS - membrum m
+# plagulam ipsum scribit: alpha XIV campos (arena 32768, vestigium
+# 33824, auctus 32800 KiB), beta XI (non mensa). Facta credo.* cursui
+# alpha adhaerent in octetis; beta nullum
+radix_c
+cat > "$T/r/t/probatio_m.c" <<'CEOF'
+#include <stdio.h>
+#include <stdlib.h>
+int main(void)
+{
+    const char* v = getenv("CREDO_VERDICTA");
+    FILE* f;
+    if (v == 0) { return 3; }
+    f = fopen(v, "w");
+    if (f == 0) { return 4; }
+    fprintf(f, "SECTIO\tprobatio_m\talpha\tTRANSIIT\t1\t1\t5\t\t\t\t\t32768\t33824\t32800\n");
+    fprintf(f, "SECTIO\tprobatio_m\tbeta\tTRANSIIT\t1\t1\t5\t\t\t\t\n");
+    fprintf(f, "SUITA\tprobatio_m\tTRANSIIT\t2\t2\t2\t0\t10\n");
+    fclose(f);
+    return 0;
+}
+CEOF
+(cd "$T/r" && MENSOR_PARENS=fumus-lxii MENSOR_COMMISSUM=commissum-lxii MENSOR_SESSIO=sessio-lxii \
+    "$F" probare -vis probationes_t) > "$T/lxii.e" 2>&1
+awk -F'\t' '$1 == "cursus" && $2 == "initium" { t[$3] = $6; p[$3] = $4 }
+    $1 != "cursus" && $4 ~ /^credo\./ { m[NR] = $3 "\t" $4 "\t" int($5) "\t" $6 "\t" $1 }
+    END { for (i in m) { split(m[i], c, "\t"); if (t[c[1]] ~ /^probationes_t\/probatio_m#/ && p[p[c[1]]] == "fumus-lxii")
+              print t[c[1]] "\t" c[2] "\t" c[3] "\t" c[4] "\t" c[5] } }' \
+    "$MENSOR_DIARIUM" 2>/dev/null | sort > "$T/lxii"
+printf 'probationes_t/probatio_m#alpha\tcredo.apex_auctus\t33587200\tocteti\tsessio-lxii\nprobationes_t/probatio_m#alpha\tcredo.arena_apex\t33554432\tocteti\tsessio-lxii\nprobationes_t/probatio_m#alpha\tcredo.vestigium\t34635776\tocteti\tsessio-lxii\n' > "$T/lxii.exp"
+if cmp -s "$T/lxii" "$T/lxii.exp"; then echo "  LXII memoria sectionis: XIV campi -> facta credo.* in octetis sub cursu sectionis, XI nihil OK"; else echo "  LXII FRACTUM"; sed 's/^/      lectum: /' "$T/lxii"; sed 's/^/      e: /' "$T/lxii.e" | tail -5; fracta=1; fi
+
+# LXIII (credo memoria T6): TECTUM MEMORIAE MEMBRI - FABRICA_MEMORIA_MB=64
+# in ambitu FABRICAE. f contractum credo scribit (alpha TRANSIIT, INCIPIT
+# beta) deinde memoriam tangit (XVI MiB per gradum in tabula universali -
+# malloc+memset sine usu clang -O2 delet, mensuratum - CCLVI summum, deinde
+# XX s dormit et 0 reddit - custos fractus = gradus lentus et rubrus,
+# non machina exhausta): FRACTA, 'sectio 'beta' RUIT', causa 'memoria
+# maxima excessa', alpha in plagula servata. g (v1, sine contractu)
+# idem facit: synthetica 'totum', eadem causa
+radix_c
+cat > "$T/r/t/probatio_f.c" <<'CEOF'
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+char* tenuti[16];
+int main(void)
+{
+    const char* v = getenv("CREDO_VERDICTA");
+    FILE* f;
+    int k;
+    if (v == 0) { return 3; }
+    f = fopen(v, "w");
+    if (f == 0) { return 4; }
+    fprintf(f, "SECTIONES\tprobatio_f\t2\n");
+    fprintf(f, "INCIPIT\tprobatio_f\talpha\n");
+    fprintf(f, "SECTIO\tprobatio_f\talpha\tTRANSIIT\t1\t1\t5\t\t\t\t\n");
+    fprintf(f, "INCIPIT\tprobatio_f\tbeta\n");
+    fflush(f);
+    for (k = 0; k < 16; k++) { tenuti[k] = malloc(16u << 20); if (tenuti[k]) memset(tenuti[k], 0x5a, 16u << 20); usleep(20000); }
+    sleep(20);
+    for (k = 0; k < 16; k++) { if (tenuti[k] && tenuti[k][k] != 0x5a) { return 5; } }
+    return 0;
+}
+CEOF
+cat > "$T/r/t/probatio_g.c" <<'CEOF'
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+char* tenuti[16];
+int main(void)
+{
+    int k;
+    for (k = 0; k < 16; k++) { tenuti[k] = malloc(16u << 20); if (tenuti[k]) memset(tenuti[k], 0x5a, 16u << 20); usleep(20000); }
+    sleep(20);
+    for (k = 0; k < 16; k++) { if (tenuti[k] && tenuti[k][k] != 0x5a) { return 5; } }
+    return 0;
+}
+CEOF
+t0=$(date +%s)
+(cd "$T/r" && FABRICA_MEMORIA_MB=64 "$F" probare -vis probationes_t probatio_f probatio_g) > "$T/lxiii" 2>&1
+t1=$(date +%s)
+if grep -q "probatio_f FRACTA.*sectio 'beta' RUIT; 0 non cursae; memoria maxima excessa (vestigium [0-9]* MiB > 64 MiB) - processus occisus" "$T/lxiii" \
+   && grep -q "^SECTIO	probatio_f	alpha	TRANSIIT" "$T/r/build/fabrica/area/probationes_t/probatio_f/credo.tsv" \
+   && grep -q "probatio_g FRACTA.*memoria maxima excessa (vestigium [0-9]* MiB > 64 MiB)" "$T/lxiii" \
+   && grep -q "^SECTIO	probatio_g	totum	FRACTA" "$T/r/build/fabrica/area/probationes_t/probatio_g/credo.tsv" \
+   && [ $((t1 - t0)) -lt 15 ]; then echo "  LXIII tectum memoriae membri: fuga occisa, sectio rupta cum causa memoriae nominata, alpha servata, v1 totum OK"; else echo "  LXIII FRACTUM ($((t1 - t0)) s)"; grep -E "probatio_[fg]" "$T/lxiii" | sed 's/^/      /' | head -6; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (LXI/LXI)"
+echo "fumus fabricae: sanum (LXIII/LXIII)"
 exit 0

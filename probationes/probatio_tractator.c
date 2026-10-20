@@ -11,16 +11,11 @@
  * Tractatores pro probatione
  * ================================================== */
 
-hic_manens i32 g_tractator_a_vocatus = ZEPHYRUM;
-hic_manens i32 g_tractator_b_vocatus = ZEPHYRUM;
-hic_manens i32 g_fallback_vocatus    = ZEPHYRUM;
-
 interior b32
 tractator_a (
     ContextusTractandi* ctx)
 {
     (vacuum)ctx;
-    g_tractator_a_vocatus++;
     redde VERUM;
 }
 
@@ -29,7 +24,6 @@ tractator_b (
     ContextusTractandi* ctx)
 {
     (vacuum)ctx;
-    g_tractator_b_vocatus++;
     redde VERUM;
 }
 
@@ -38,44 +32,30 @@ tractator_fallback (
     ContextusTractandi* ctx)
 {
     (vacuum)ctx;
-    g_fallback_vocatus++;
     redde VERUM;
 }
-
-s32 principale(vacuum)
-{
-                Piscina* piscina;
-    InternamentumChorda* intern;
-                    b32  praeteritus;
-
-
-    /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("test_tractator", MMM * XVI);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-
-    intern = internamentum_creare(piscina);
-    si (!intern)
-    {
-        imprimere("FRACTA: internamentum_creare\n");
-        piscina_destruere(piscina);
-        redde I;
-    }
-
-    credo_aperire(piscina);
 
 
     /* ==================================================
      * Probare registrum_tractatoris_creare
      * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (!intern)
+    {
+        imprimere("FRACTA: internamentum_creare\n");
+        redde;
+    }
     {
         RegistrumTractatoris* reg;
-
-        imprimere("\n--- Probans registrum_tractatoris_creare ---\n");
 
         reg = registrum_tractatoris_creare(piscina, intern);
         CREDO_NON_NIHIL(reg);
@@ -93,16 +73,29 @@ s32 principale(vacuum)
         reg = registrum_tractatoris_creare(piscina, NIHIL);
         CREDO_NIHIL(reg);
     }
+}
 
 
     /* ==================================================
      * Probare registrum_tractatoris_registrare
      * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (!intern)
+    {
+        imprimere("FRACTA: internamentum_creare\n");
+        redde;
+    }
     {
         RegistrumTractatoris* reg;
-
-        imprimere("\n--- Probans registrum_tractatoris_registrare ---\n");
 
         reg = registrum_tractatoris_creare(piscina, intern);
         CREDO_NON_NIHIL(reg);
@@ -132,16 +125,29 @@ s32 principale(vacuum)
         CREDO_FALSUM(registrum_tractatoris_registrare(reg, "Page",
             "test", NIHIL));
     }
+}
 
 
     /* ==================================================
      * Probare registrum_tractatoris_habet
      * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (!intern)
+    {
+        imprimere("FRACTA: internamentum_creare\n");
+        redde;
+    }
     {
         RegistrumTractatoris* reg;
-
-        imprimere("\n--- Probans registrum_tractatoris_habet ---\n");
 
         reg = registrum_tractatoris_creare(piscina, intern);
         CREDO_NON_NIHIL(reg);
@@ -161,17 +167,30 @@ s32 principale(vacuum)
         /* Genus nuntii non existens */
         CREDO_FALSUM(registrum_tractatoris_habet(reg, "Page", "close"));
     }
+}
 
 
     /* ==================================================
      * Probare registrum_tractatoris_invenire_literis
      * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (!intern)
+    {
+        imprimere("FRACTA: internamentum_creare\n");
+        redde;
+    }
     {
         RegistrumTractatoris* reg;
             FunctioTractandi  functio;
-
-        imprimere("\n--- Probans registrum_tractatoris_invenire_literis ---\n");
 
         reg = registrum_tractatoris_creare(piscina, intern);
         CREDO_NON_NIHIL(reg);
@@ -200,12 +219,27 @@ s32 principale(vacuum)
             "open");
         CREDO_NIHIL((vacuum*)functio);
     }
+}
 
 
     /* ==================================================
      * Probare registrum_tractatoris_invenire (cum chorda*)
      * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (!intern)
+    {
+        imprimere("FRACTA: internamentum_creare\n");
+        redde;
+    }
     {
         RegistrumTractatoris* reg;
             FunctioTractandi  functio;
@@ -213,8 +247,6 @@ s32 principale(vacuum)
                       chorda  genus_nun_chorda;
                       chorda* genus_ent;
                       chorda* genus_nun;
-
-        imprimere("\n--- Probans registrum_tractatoris_invenire ---\n");
 
         reg = registrum_tractatoris_creare(piscina, intern);
         CREDO_NON_NIHIL(reg);
@@ -235,17 +267,30 @@ s32 principale(vacuum)
             genus_nun);
         CREDO_VERUM(functio == tractator_a);
     }
+}
 
 
     /* ==================================================
      * Probare fallback tractator
      * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (!intern)
+    {
+        imprimere("FRACTA: internamentum_creare\n");
+        redde;
+    }
     {
         RegistrumTractatoris* reg;
             FunctioTractandi  functio;
-
-        imprimere("\n--- Probans fallback tractator ---\n");
 
         reg = registrum_tractatoris_creare(piscina, intern);
         CREDO_NON_NIHIL(reg);
@@ -273,19 +318,32 @@ s32 principale(vacuum)
             "test");
         CREDO_NIHIL((vacuum*)functio);
     }
+}
 
 
     /* ==================================================
      * Probare multos tractatores
      * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (!intern)
+    {
+        imprimere("FRACTA: internamentum_creare\n");
+        redde;
+    }
     {
         RegistrumTractatoris* reg;
                          i32  i;
                    character  genus_buffer[XXXII];
                    character  nuntius_buffer[XXXII];
-
-        imprimere("\n--- Probans multos tractatores ---\n");
 
         reg = registrum_tractatoris_creare(piscina, intern);
         CREDO_NON_NIHIL(reg);
@@ -312,17 +370,30 @@ s32 principale(vacuum)
                 nuntius_buffer));
         }
     }
+}
 
 
     /* ==================================================
      * Probare overwrite tractator
      * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    si (!intern)
+    {
+        imprimere("FRACTA: internamentum_creare\n");
+        redde;
+    }
     {
         RegistrumTractatoris* reg;
             FunctioTractandi  functio;
-
-        imprimere("\n--- Probans overwrite tractator ---\n");
 
         reg = registrum_tractatoris_creare(piscina, intern);
         CREDO_NON_NIHIL(reg);
@@ -343,27 +414,29 @@ s32 principale(vacuum)
             "update");
         CREDO_VERUM(functio == tractator_b);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "registrum_tractatoris_creare", _sectio_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "registrum_tractatoris_registrare", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "registrum_tractatoris_habet", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "registrum_tractatoris_invenire_literis", _sectio_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "registrum_tractatoris_invenire", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "fallback tractator", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "multos tractatores", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "overwrite tractator", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ==================================================
-     * Compendium
-     * ================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    /* Destructio */
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("tractator", SECTIONES);
 }

@@ -1,0 +1,117 @@
+<interrogationes unitas="iter_directoria">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I list the entries of one directory?
+    <responsum symbolum="directorium_iterator_aperire directorium_iterator_proximum directorium_iterator_claudere chorda_transcribere">Open
+      it with directorium_iterator_aperire(via, piscina) (NIHIL if it
+      cannot be opened), loop on directorium_iterator_proximum until it
+      returns NIHIL, then call directorium_iterator_claudere. "." and
+      ".." are skipped; the order is whatever readdir gives, not
+      sorted. The returned entry, and its titulus, live in a buffer
+      inside the iterator that the next call overwrites, so copy a name
+      you keep with chorda_transcribere.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I walk a directory tree recursively and visit only the files I want?
+    <responsum symbolum="directorium_ambulare directorium_filtrum_omnia DirectoriumFiltrum DirectoriumAmbulatorFunctio">Start
+      from directorium_filtrum_omnia(), set the fields you need
+      (genera_accepta and genera_numerus, exemplar such as "*.c",
+      profunditas_max, includere_occultos) and call
+      directorium_ambulare(via, &amp;filtrum, functio, ctx, piscina).
+      The callback gets the full path (via_iungere of parent and name)
+      and the entry. The pattern is tested on regular files only (a
+      directory always passes it), and genera_accepta decides what
+      reaches the callback but never stops the walk from descending
+      into directories.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I pass directorium_filtrum_omnia() and NIHIL interchangeably as the filter?
+    <responsum symbolum="directorium_filtrum_omnia directorium_ambulare">No.
+      A NIHIL filter accepts everything, hidden names included, and
+      descends into hidden directories. directorium_filtrum_omnia()
+      sets includere_occultos to FALSUM, so names starting with '.' are
+      neither reported nor descended into. Set includere_occultos to
+      VERUM when you really want everything.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I limit how deep directorium_ambulare goes?
+    <responsum symbolum="directorium_ambulare DirectoriumFiltrum">Yes,
+      with profunditas_max: 0 means no limit (still capped at
+      DIRECTORIUM_PROFUNDITAS_MAXIMA, C levels), and N visits the
+      starting directory plus N levels below it (profunditas_max = I
+      gives the top level and the contents of its subdirectories).
+      Do not use -1, which the header documents as "no recursion": the
+      check runs before the starting directory is read, so the walk
+      visits nothing and returns 0.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I stop a directory walk early and tell that apart from an error?
+    <responsum symbolum="directorium_ambulare DirectoriumAmbulatorFunctio">Return
+      a non-zero value from the callback; directorium_ambulare stops,
+      closes its open iterators and returns that same value unchanged
+      (not -1 as the header suggests). It returns -1 when an argument
+      is NIHIL or a directory cannot be opened. So stop with a value
+      other than -1, say I, if you need to tell the two
+      apart.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does my whole walk fail when one subdirectory is unreadable?
+    <responsum symbolum="directorium_ambulare directorium_iterator_aperire">Each
+      level opens its directory with directorium_iterator_aperire and
+      returns -1 if that fails, and the parent treats any non-zero
+      result from a subdirectory as a reason to stop. One subdirectory
+      without read permission therefore ends the walk with -1 after
+      only part of the tree has been visited, and the caller gets the
+      same -1 as for a bad argument. A filter cannot route around it:
+      genera_accepta and exemplar never stop the descent (only a
+      hidden name with includere_occultos FALSUM does), and a callback
+      that returns non-zero on that directory ends the whole walk. To
+      skip unreadable directories, walk level by level with
+      directorium_iterator_aperire yourself.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what genus does a symbolic link get, and are link cycles a danger?
+    <responsum symbolum="directorium_iterator_proximum IntroitusGenus">The
+      entry's type comes from stat, which follows links: a link to a
+      file is INTROITUS_FILUM, a link to a directory is
+      INTROITUS_DIRECTORIUM (and the walk descends into it), and a
+      broken link is INTROITUS_IGNOTUS. So INTROITUS_ALIUS covers
+      devices, sockets and pipes, not links, despite its comment. A
+      link cycle is stopped only by the DIRECTORIUM_PROFUNDITAS_MAXIMA
+      cap of C levels. mensura is the target's st_size for every
+      genus, directories included (a directory reports its stat size,
+      not the 0 the header promises). An entry whose full path would
+      reach 1024 bytes is not stat'ed and comes back
+      INTROITUS_IGNOTUS.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why use iter_directoria instead of calling opendir and readdir myself?
+    <responsum symbolum="directorium_iterator_aperire directorium_existit lectiones_notare">It
+      records what it reads in the lectiones log for fabrica: a 'D'
+      line when a directory is enumerated, 'A' when it is missing, and
+      'X' from directorium_existit, so a build step's inputs include the
+      directories it listed. Raw opendir is invisible to that log. The
+      per-entry stat is not recorded; the 'D' line covers names, but a
+      file that becomes a directory under the same name is a known
+      gap.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I walk a very large tree in a small piscina?
+    <responsum symbolum="directorium_ambulare via_iungere directorium_iterator_aperire">Only
+      if the piscina can grow: nothing is released during the walk.
+      Every entry's full path is built with via_iungere in the given
+      piscina, and every directory visited allocates its iterator there
+      too, so memory grows with the number of entries in the tree.
+      For a huge tree, use a dedicated piscina and destroy it after the
+      walk.</responsum>
+  </interrogatio>
+
+</interrogationes>

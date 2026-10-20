@@ -74,6 +74,7 @@ declare -a RADIX_FONTES=(
     "imago"
     "imago_opus"
     "credo"
+    "memoria_processus_macos"   # credo memoria T2 (2026-10-19)
     # tessellatio T5 (musivum): clausura lib/tessellatio per aedilis
     # mensa 2026-10-01 - sine Cocoa (tabula_pixelorum.h, T4a)
     "color"

@@ -1,0 +1,173 @@
+<interrogationes unitas="chorda">
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I pass chorda.datum to printf, strcmp or fopen?
+    <responsum symbolum="chorda_ut_cstr chorda_aequalis_literis">No:
+      a chorda is mensura plus datum with NO terminating NUL, so C
+      string functions read past the end. chorda_ut_cstr copies the
+      bytes plus a NUL into the piscina; for printing without a copy
+      use printf("%.*s", (int)s.mensura, s.datum). chorda_ut_cstr
+      returns NIHIL (not "") when datum is NIHIL, which is how many
+      functions here represent an empty result, so check before
+      handing it to printf.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I make a chorda from a C string literal, and does it copy?
+    <responsum symbolum="chorda_ex_literis chorda_ex_buffer chorda_aequalis_literis">chorda_ex_literis
+      copies the bytes into the piscina (an empty literal gives
+      {0, NIHIL}, because piscina_allocare of zero bytes returns
+      NIHIL). chorda_ex_buffer wraps an existing i8 buffer without
+      copying, but takes a non-const pointer, so a literal needs a
+      cast that -Wcast-qual refuses; several files keep a private
+      _chorda_ex_cstr view helper for that. To merely compare against a
+      literal, chorda_aequalis_literis needs no chorda at all.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what counts as an empty chorda, and why do {0, NIHIL} and {0, pointer} behave differently?
+    <responsum symbolum="chorda_vacua chorda_continet chorda_incipit chorda_invenire chorda_ut_cstr">Both
+      have mensura 0, and chorda_vacua is VERUM for either, so test
+      emptiness with it rather than with datum == NIHIL. The search
+      functions do not treat them alike: with a NIHIL-datum needle
+      chorda_continet and chorda_incipit say FALSUM and chorda_invenire
+      finds nothing, while a zero-length needle with a real pointer
+      matches at once (chorda_invenire then returns the whole
+      haystack). chorda_ut_cstr gives NIHIL for the first and "" for
+      the second.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I keep a slice or a trimmed chorda after the original buffer is gone?
+    <responsum symbolum="chorda_sectio chorda_praecidere chorda_praecidi_laterale chorda_fissio chorda_transcribere">No:
+      chorda_sectio, chorda_praecidere (and _sinistram, _dextram),
+      chorda_invenire and the elements from chorda_fissio all point
+      into the original bytes. chorda_praecidi_laterale also returns a
+      view even though it takes a piscina (and returns empty if that
+      piscina is NIHIL). Copy with chorda_transcribere into a piscina
+      that lives long enough.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find a substring and get the text after it?
+    <responsum symbolum="chorda_invenire chorda_invenire_index chorda_sectio chorda_continet chorda_invenire_ultimum_index">chorda_invenire
+      returns only the MATCHED slice (mensura = needle length), not the
+      rest of the string the way strstr does. For the rest, take
+      chorda_invenire_index (an s32, -1 when absent) and cut with
+      chorda_sectio(s, index + acus.mensura, s.mensura). For a plain
+      yes/no use chorda_continet; the _ultimum variants search from the
+      end.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I split a string on a delimiter and join the pieces back?
+    <responsum symbolum="chorda_fissio chorda_fissio_chorda chorda_iungere">chorda_fissio
+      splits on one character, chorda_fissio_chorda on a multi-byte
+      delimiter; both return a chorda_fissio_fructus (elementa,
+      numerus) whose elements are views into the input. Empty fields
+      are kept: "a,,b," gives four elements, the last one empty. An
+      empty input gives zero elements, and an empty delimiter to
+      chorda_fissio_chorda gives the whole input as one element.
+      chorda_iungere joins an array with a separator into a new
+      chorda. Caution (audit 2026-10-18, unfixed): chorda_fissio_chorda
+      reads past the end of the input and crashes whenever the
+      delimiter is longer than the input ("a" split on "abc"), and
+      chorda_fissio never matches a delimiter byte of 0x80 or above
+      (0xFF, 0xC3) because character is signed on arm64 macOS, so such
+      an input comes back as one element.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I parse an integer or a float out of a chorda safely?
+    <responsum symbolum="chorda_ut_s32 chorda_ut_i32 chorda_ut_s64 chorda_ut_f64">Use
+      chorda_ut_s32, chorda_ut_i32, chorda_ut_s64 or chorda_ut_f64:
+      each returns b32 and writes the result only on success. The whole
+      chorda must be the number, so "12x", an embedded NUL byte, an
+      empty chorda and out-of-range values are refused. Small
+      differences: _s32 and _i32 go through strtol/strtoul and accept
+      leading whitespace, _s64 is hand-written and accepts only an
+      optional sign and digits, and _i32 refuses a leading '-'. For a
+      number at the front of a longer text, cut it out with
+      chorda_sectio first. Caution (audit 2026-10-18, unfixed): _i32
+      checks for '-' only at the first byte, so after leading
+      whitespace a minus is accepted and wrapped modulo 2^64: " -0"
+      gives VERUM 0 and "\t-18446744069414584321" gives VERUM
+      4294967295, while "-0" is refused.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I turn a number into a chorda?
+    <responsum symbolum="chorda_ex_s32 chorda_ex_s64 chorda_ex_f64 chorda_ex_f64_exacta chorda_aedificator_appendere_s32">chorda_ex_s32
+      and chorda_ex_s64 write decimal integers. chorda_ex_f64(n,
+      praecisio, piscina) writes fixed decimals and returns an EMPTY
+      chorda when praecisio is above L or the text would not fit its
+      CXXXII-byte buffer (1e300 at six places does not), so large
+      values vanish silently. chorda_ex_f64_exacta writes %.17g, which
+      reads back to the same double. Inside a larger text, append with
+      the chorda_aedificator functions instead.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I compare chordae for equality or for sorting?
+    <responsum symbolum="chorda_aequalis chorda_aequalis_literis chorda_aequalis_case_insensitivus chorda_comparare">chorda_aequalis
+      compares length then bytes; chorda_aequalis_literis compares with
+      a C string without allocating; chorda_aequalis_case_insensitivus
+      folds through tolower, byte by byte, so only ASCII letters fold.
+      For ordering, chorda_comparare is memcmp over the common prefix,
+      then the shorter string first; it returns memcmp's own value
+      when the bytes differ, so test its sign rather than comparing
+      with -1 or 1.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I convert an identifier between snake_case, camelCase, PascalCase and kebab-case?
+    <responsum symbolum="chorda_serpens chorda_camelus chorda_pascalis chorda_kebab chorda_pascalis_serpens">Use
+      chorda_serpens, chorda_camelus, chorda_pascalis, chorda_kebab or
+      chorda_pascalis_serpens. All split the input into words the same
+      way: any non-alphanumeric byte separates, a lower-to-upper step
+      starts a word, a letter after a digit starts a word, and a run of
+      capitals followed by a lowercase letter gives its last capital to
+      the next word, so "XMLParser"
+      becomes xml_parser and "abc123def" becomes abc123_def. Case is
+      changed with toupper and tolower, so this is ASCII only.
+      Caution (audit 2026-10-18, unfixed): non-ASCII letters are not
+      kept but dropped as separators, so UTF-8 "café au lait" becomes
+      caf_au_lait, CafAuLait and caf-au-lait (chorda_kebab slugs for
+      "Café" and "Caf" collide).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I use chorda_ex_bytes_legibilis for binary (KiB, MiB) sizes?
+    <responsum symbolum="chorda_ex_bytes_legibilis">No:
+      it divides by M, which is 1000, so the units are decimal: 1000
+      bytes gives "1.0 KB" and 1023 bytes is also "1.0 KB", not "1023
+      B". The header's examples 1024 and 1048576 only look binary
+      because they round to the same text, and its 1073741824 example
+      is wrong: that value prints "1.1 GB". Values under one hundred
+      get one decimal place, larger values none.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I hash a chorda, and is the hash stable across runs?
+    <responsum symbolum="chorda_friare tabula_dispersa_creare_chorda">chorda_friare
+      is 32-bit FNV-1a over the bytes (i32, unsigned) with no seed, so
+      the same bytes give the same hash in every run and on every
+      machine. For a string-keyed map use tabula_dispersa rather than
+      hashing by hand.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I replace every occurrence of a substring?
+    <responsum symbolum="chorda_substituere chorda_numerare_occurrentia">chorda_substituere(s,
+      antiquum, novum, piscina) scans left to right and replaces
+      non-overlapping matches into a new chorda (chorda_numerare_occurrentia
+      counts the same way: "aaaa" holds two "aa"). An empty antiquum
+      returns a plain copy; a result that comes out empty is
+      {0, NIHIL}. Caution (audit 2026-10-18, unfixed): the result
+      length is never checked against i32, so a growing replacement
+      whose result exceeds 4 GiB (65536 'a' with antiquum "a" and a
+      65537-byte novum) wraps, allocates too little and writes past
+      the buffer.</responsum>
+  </interrogatio>
+
+</interrogationes>

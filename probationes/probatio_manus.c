@@ -904,6 +904,8 @@ _agere_capere (
  * INTRA sessionem principalem: prima captura eam clausit et sequens
  * assertum 'credo nunquam aperitum' clamavit.) */
 nomen structura {
+    /* fracturae captae (_capere), deinde actiones */
+    Captura falsum, pendens, culpa;
     Actio premere_ok, premere_no, scribere_ok;
     Actio textualis_ok, textualis_no;
     Actio collector, existit_ok, existit_no;
@@ -1000,139 +1002,172 @@ _continet (
 }
 
 
+/* Capturae (PHASIS I) - in principale ANTE suitam factae, quia
+ * _capere et _agere_capere sessionem credo GLOBALEM aperiunt et
+ * claudunt: intra sectionem (aut parare_suitae) sessionem cursoris
+ * delerent. Scribuntur in principale SOLO; fixura suitae eas in
+ * c->suita ponit, sectiones per constans LEGUNT, numquam mutant. */
+
+hic_manens Omnia capturae;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+    c->datum = &capturae;
+}
+
+interior vacuum
+_suitam_purgare (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    /* QUID HAEC PROBATIO NON PROBAT - impressum, non solum
+     * commentatum: probatio quae limites suos tacet fidem parit quam
+     * non meruit, et haec suita SPONTE currit dum fumus MANU. Qui
+     * viride hic videt scire debet quid adhuc non probatum sit. */
+    imprimere("\n  NOTA: haec structuram et fistulas probat - JS in"
+              " pictore VERO agere\n"
+              "        NON probatur. Id sola probatio fumi potest:\n"
+              "        cd ../silicetum/laboratorium && ./fumus.sh\n"
+              "        (fenestram aperit; a nullo cursore sponte"
+              " curritur)\n");
+}
+
+
 /* ========================================================================
- * principale
+ * PHASIS II: de capturis interrogare (sectiones)
  * ======================================================================== */
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    Piscina* piscina;
-    Captura  falsum;
-    Captura  pendens;
-    Captura  culpa;
-      Omnia  o;
-        b32  praeteritus;
+    constans Omnia* o = (constans Omnia*)c->suita;
 
-    /* Prolis mors dum scribimus probationem occidere non debet. */
-    (vacuum)signal(SIGPIPE, SIG_IGN);
-
-
-    /* ========================================================
-     * PHASIS I: fracturas capere (ANTE sessionem principalem)
-     * ======================================================== */
-
-    falsum   = _capere(SCEN_FALSUM,  ".nusquam");
-    pendens  = _capere(SCEN_PENDENS, ".nusquam");
-    culpa    = _capere(SCEN_CULPA,   ".nusquam");
-    _omnia_capere(&o);
-
-
-    /* ========================================================
-     * PHASIS II: de capturis interrogare
-     * ======================================================== */
-
-    piscina = piscina_generare_dynamicum("probatio_manus", CXXVIII * M);
-    si (!piscina)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- Pagina terminum tetigit (ok:false) ---\n");
-    {
-        CREDO_VERUM (falsum.manus_aperta);
-        CREDO_VERUM (falsum.notatum);
-        CREDO_VERUM (falsum.manus_fracta);
+        CREDO_VERUM (o->falsum.manus_aperta);
+        CREDO_VERUM (o->falsum.notatum);
+        CREDO_VERUM (o->falsum.manus_fracta);
 
         /* Nuntius AMBO latera nominet - hoc est totum pretium. */
-        CREDO_VERUM (_continet(falsum.genus, "credo_manus_existit"));
-        CREDO_VERUM (_continet(falsum.exspectatum, "I aut plura"));
-        CREDO_CHORDAE_AEQUALES (falsum.visum, "0");
+        CREDO_VERUM (_continet(o->falsum.genus, "credo_manus_existit"));
+        CREDO_VERUM (_continet(o->falsum.exspectatum, "I aut plura"));
+        CREDO_CHORDAE_AEQUALES (o->falsum.visum, "0");
 
         /* Manus fracta TACET: duo vocamina, unum assertum. */
-        CREDO_AEQUALIS_I32 ((i32)falsum.totalis, I);
+        CREDO_AEQUALIS_I32 ((i32)o->falsum.totalis, I);
     }
+}
 
-    imprimere("\n--- Applicatio haeret (semper pendens) ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    constans Omnia* o = (constans Omnia*)c->suita;
+
     {
-        CREDO_VERUM (pendens.manus_aperta);
-        CREDO_VERUM (pendens.manus_fracta);
+        CREDO_VERUM (o->pendens.manus_aperta);
+        CREDO_VERUM (o->pendens.manus_fracta);
 
         /* CARDO HUIUS PROBATIONIS: eadem assertio, alia causa -
          * et nuntii DISTINGUI debent. Aliter probatio fracta
          * narrare non potest utrum facies tua fracta sit an
          * applicatio omnino mortua. */
-        CREDO_VERUM (_continet(pendens.causa, "non respondit"));
-        CREDO_FALSUM (_continet(pendens.causa, "assertum fractum"));
-        CREDO_FALSUM (_continet(falsum.causa, "non respondit"));
+        CREDO_VERUM (_continet(o->pendens.causa, "non respondit"));
+        CREDO_FALSUM (_continet(o->pendens.causa, "assertum fractum"));
+        CREDO_FALSUM (_continet(o->falsum.causa, "non respondit"));
     }
+}
 
-    imprimere("\n--- JS iactavit (culpa) ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    constans Omnia* o = (constans Omnia*)c->suita;
+
     {
-        CREDO_VERUM (culpa.manus_fracta);
-        CREDO_VERUM (_continet(culpa.causa, "Can't find variable"));
+        CREDO_VERUM (o->culpa.manus_fracta);
+        CREDO_VERUM (_continet(o->culpa.causa, "Can't find variable"));
     }
+}
 
-    imprimere("\n--- JS re vera missum ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    constans Omnia* o = (constans Omnia*)c->suita;
+
     {
         /* Ex CAPTURA, non ex plagula: capturae posteriores eam
          * superscribunt. Custos regressionis - si quis moram in C
          * reduxerit, haec rumpuntur, et debent. Mora IN PAGINA fit. */
-        CREDO_VERUM (_continet(falsum.js, "new Promise"));
-        CREDO_VERUM (_continet(falsum.js, "setTimeout"));
-        CREDO_VERUM (_continet(falsum.js, "Date.now()"));
-        CREDO_VERUM (_continet(falsum.js, ".nusquam"));
+        CREDO_VERUM (_continet(o->falsum.js, "new Promise"));
+        CREDO_VERUM (_continet(o->falsum.js, "setTimeout"));
+        CREDO_VERUM (_continet(o->falsum.js, "Date.now()"));
+        CREDO_VERUM (_continet(o->falsum.js, ".nusquam"));
     }
+}
 
-    imprimere("\n--- Actiones: valor, fractura, causa ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    constans Omnia* o = (constans Omnia*)c->suita;
+
     {
-        CREDO_VERUM  (o.premere_ok.fructus);
-        CREDO_FALSUM (o.premere_ok.fracta);
+        CREDO_VERUM  (o->premere_ok.fructus);
+        CREDO_FALSUM (o->premere_ok.fracta);
 
         /* Recusatio: valor FALSUM, manus fracta, et causa PICTORIS
          * intacta usque ad nuntium - non 'falsum' nudum. */
-        CREDO_FALSUM (o.premere_no.fructus);
-        CREDO_VERUM  (o.premere_no.fracta);
-        CREDO_VERUM  (_continet(o.premere_no.causa, "manus_premere"));
-        CREDO_VERUM  (_continet(o.premere_no.causa, "#pyxis"));
-        CREDO_VERUM  (_continet(o.premere_no.causa,
+        CREDO_FALSUM (o->premere_no.fructus);
+        CREDO_VERUM  (o->premere_no.fracta);
+        CREDO_VERUM  (_continet(o->premere_no.causa, "manus_premere"));
+        CREDO_VERUM  (_continet(o->premere_no.causa, "#pyxis"));
+        CREDO_VERUM  (_continet(o->premere_no.causa,
             "impeditum (disabled)"));
 
-        CREDO_VERUM  (o.scribere_ok.fructus);
-        CREDO_VERUM  (o.textualis_ok.fructus);
-        CREDO_FALSUM (o.textualis_no.fructus);
+        CREDO_VERUM  (o->scribere_ok.fructus);
+        CREDO_VERUM  (o->textualis_ok.fructus);
+        CREDO_FALSUM (o->textualis_no.fructus);
         /* Petitio textualis textum QUAESITUM nominet, non selectorem
          * (qui non exstat). */
-        CREDO_VERUM  (_continet(o.textualis_no.causa,
+        CREDO_VERUM  (_continet(o->textualis_no.causa,
             "premere_textum"));
-        CREDO_VERUM  (_continet(o.textualis_no.causa, "condere"));
+        CREDO_VERUM  (_continet(o->textualis_no.causa, "condere"));
 
-        imprimere("  causa recusationis: '%s'\n", o.premere_no.causa);
+        imprimere("  causa recusationis: '%s'\n", o->premere_no.causa);
     }
+}
 
-    imprimere("\n--- Forma JS geniti (custos regressionis) ---\n");
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    constans Omnia* o = (constans Omnia*)c->suita;
+
     {
         /* Collector post aperire iniectus - tres fontes, omnes. */
-        CREDO_VERUM (_continet(o.collector.js, "__manus_errores"));
-        CREDO_VERUM (_continet(o.collector.js, "unhandledrejection"));
-        CREDO_VERUM (_continet(o.collector.js, "console.error"));
+        CREDO_VERUM (_continet(o->collector.js, "__manus_errores"));
+        CREDO_VERUM (_continet(o->collector.js, "unhandledrejection"));
+        CREDO_VERUM (_continet(o->collector.js, "console.error"));
 
         /* PORTA AGIBILITATIS in actionibus. Si quis 'act(' tulerit,
          * pyxides impeditae et obtectae silentio succedant iterum -
          * duo viridia mendacia hodie mensurata. */
-        CREDO_VERUM (_continet(o.premere_ok.js, "var c=act(e)"));
-        CREDO_VERUM (_continet(o.premere_ok.js, "e.click()"));
-        CREDO_VERUM (_continet(o.scribere_ok.js, "var c=act(e)"));
-        CREDO_VERUM (_continet(o.scribere_ok.js, "e.value="));
+        CREDO_VERUM (_continet(o->premere_ok.js, "var c=act(e)"));
+        CREDO_VERUM (_continet(o->premere_ok.js, "e.click()"));
+        CREDO_VERUM (_continet(o->scribere_ok.js, "var c=act(e)"));
+        CREDO_VERUM (_continet(o->scribere_ok.js, "e.value="));
         /* Eventus manu immissi: sine iis facies reactiva nihil sentit. */
-        CREDO_VERUM (_continet(o.scribere_ok.js, "dispatchEvent"));
-        CREDO_VERUM (_continet(o.scribere_ok.js, "'input'"));
+        CREDO_VERUM (_continet(o->scribere_ok.js, "dispatchEvent"));
+        CREDO_VERUM (_continet(o->scribere_ok.js, "'input'"));
 
         /* Petitio textualis per qt() it (elementum IMUM), non per
          * querySelector. */
-        CREDO_VERUM (_continet(o.textualis_ok.js, "var e=qt("));
-        CREDO_VERUM (_continet(o.textualis_ok.js, "var c=act(e)"));
+        CREDO_VERUM (_continet(o->textualis_ok.js, "var e=qt("));
+        CREDO_VERUM (_continet(o->textualis_ok.js, "var c=act(e)"));
 
         /* _tx: VALOR SOLIS CAMPIS. MENSURATUM in laboratorio
          * 2026-08-14: '<button>' '.value' habet (vacuam), ergo _tx
@@ -1144,15 +1179,15 @@ s32 principale (vacuum)
          * DOM verus hic abest (haec probatio PROTOCOLLUM probat),
          * ergo quod EMITTITUR figitur; probatio viva in fumo
          * seminis et laboratorii currit. */
-        CREDO_VERUM (_continet(o.textualis_ok.js,
+        CREDO_VERUM (_continet(o->textualis_ok.js,
             "g==='INPUT'||g==='TEXTAREA'"));
         /* SELECT ramum SUUM habet: textus optionis, non valor. */
-        CREDO_VERUM (_continet(o.textualis_ok.js, "g==='SELECT'"));
-        CREDO_VERUM (_continet(o.textualis_ok.js,
+        CREDO_VERUM (_continet(o->textualis_ok.js, "g==='SELECT'"));
+        CREDO_VERUM (_continet(o->textualis_ok.js,
             "o?String(o.text):''"));
         /* Ramus vetus - valorem SINE custodia praeferens - abesse
          * DEBET. Sine assertione negativa utrumque adesse posset. */
-        CREDO_FALSUM (_continet(o.textualis_ok.js,
+        CREDO_FALSUM (_continet(o->textualis_ok.js,
             "function _tx(e){if(e.value!==undefined"));
 
         /* manus_textus formam SUAM NON iam fert: forma una _tx est
@@ -1160,26 +1195,26 @@ s32 principale (vacuum)
          * '<li>.value' ut '0' legit dum instrumentum textum daret).
          * Assertum et instrumentum idem videre DEBENT - id ipsum
          * hic figitur. */
-        CREDO_VERUM  (_continet(o.textus.js, "visum:_tx(e)"));
-        CREDO_FALSUM (_continet(o.textus.js,
+        CREDO_VERUM  (_continet(o->textus.js, "visum:_tx(e)"));
+        CREDO_FALSUM (_continet(o->textus.js,
             "};if(e.value!==undefined"));
 
         /* VISIBILITAS: sondae et asserta per qn(), non per
          * querySelectorAll crudum. */
-        CREDO_VERUM  (_continet(o.existit_ok.js, "var n=qn("));
-        CREDO_FALSUM (_continet(o.existit_ok.js,
+        CREDO_VERUM  (_continet(o->existit_ok.js, "var n=qn("));
+        CREDO_FALSUM (_continet(o->existit_ok.js,
             "document.querySelectorAll(\""));
 
         /* ABEST_OMNINO CONTRA: crudum consulto - solum hoc assertum
          * de DOM ipso loquitur, non de eo quod usor videt. */
-        CREDO_VERUM (_continet(o.omnino.js,
+        CREDO_VERUM (_continet(o->omnino.js,
             "document.querySelectorAll("));
 
-        CREDO_VERUM (_continet(o.paginae.js, "var n=qtn("));
+        CREDO_VERUM (_continet(o->paginae.js, "var n=qtn("));
 
         /* Mora IN PAGINA manet: gyrus C nihil de condicione scit. */
-        CREDO_VERUM (_continet(o.premere_ok.js, "new Promise"));
-        CREDO_VERUM (_continet(o.premere_ok.js, "setTimeout"));
+        CREDO_VERUM (_continet(o->premere_ok.js, "new Promise"));
+        CREDO_VERUM (_continet(o->premere_ok.js, "setTimeout"));
 
         /* SCRIBERE: assignatio PROBANDA.
          *
@@ -1192,21 +1227,21 @@ s32 principale (vacuum)
          * MORES ipsi HINC NON probantur (simulacrum paginam non
          * habet); probatio VIVA contra applicationem currentem eos
          * iudicavit. Haec custodia est ne forma redeat. */
-        CREDO_VERUM (_continet(o.scribere_ok.js,
+        CREDO_VERUM (_continet(o->scribere_ok.js,
             "e.tagName==='SELECT'"));
-        CREDO_VERUM (_continet(o.scribere_ok.js,
+        CREDO_VERUM (_continet(o->scribere_ok.js,
             "e.selectedIndex=o.index"));
-        CREDO_VERUM (_continet(o.scribere_ok.js,
+        CREDO_VERUM (_continet(o->scribere_ok.js,
             "nulla optio congruit"));
-        CREDO_VERUM (_continet(o.scribere_ok.js, "valorem non habet"));
-        CREDO_VERUM (_continet(o.scribere_ok.js, "valor non mansit"));
+        CREDO_VERUM (_continet(o->scribere_ok.js, "valorem non habet"));
+        CREDO_VERUM (_continet(o->scribere_ok.js, "valor non mansit"));
         /* SUPERFICIES SCRIBENDI SOLAE - _fscr, idem iudicium quo
          * premere focat. MENSURATUM 2026-08-17: pyxis '.value' habet,
          * ergo 'scribere <pyxis>' exitum 0 dabat et valor in
          * proprietatem invisibilem ibat - viride mendax in latere
          * SCRIBENDI, familia eadem quae '<li>.value' in _tx. */
-        CREDO_VERUM (_continet(o.scribere_ok.js, "function _fscr(e)"));
-        CREDO_VERUM (_continet(o.scribere_ok.js,
+        CREDO_VERUM (_continet(o->scribere_ok.js, "function _fscr(e)"));
+        CREDO_VERUM (_continet(o->scribere_ok.js,
             "superficies scribendi non est"));
 
         /* TEXTUS: innerText, NON textContent.
@@ -1215,8 +1250,8 @@ s32 principale (vacuum)
          * octetorum) - textContent enim quae usor videre NON POTEST
          * quoque legit, quod legem 'VISIBILE, NON PRAESENS' huius
          * bibliothecae frangebat. */
-        CREDO_VERUM  (_continet(o.textus.js, "innerText"));
-        CREDO_VERUM  (_continet(o.textus.js, "g==='SELECT'"));
+        CREDO_VERUM  (_continet(o->textus.js, "innerText"));
+        CREDO_VERUM  (_continet(o->textus.js, "g==='SELECT'"));
 
         /* SPATIA COACTA in petitione textuali.
          *
@@ -1224,172 +1259,214 @@ s32 principale (vacuum)
          * in schermo idem esset - pagina enim DUO spatia scribit et
          * navigatrum ea in unum cogit. Petitio quod usor LEGIT
          * describere debet, non quod fons scribit. */
-        CREDO_VERUM (_continet(o.textualis_ok.js, "function _nz("));
-        CREDO_VERUM (_continet(o.textualis_ok.js,
+        CREDO_VERUM (_continet(o->textualis_ok.js, "function _nz("));
+        CREDO_VERUM (_continet(o->textualis_ok.js,
             "_nz(_tx(e)).indexOf(q)"));
 
         /* ABSENTIA suum nuntium habet, distinctum ab agibilitate:
          * 'nihil hoc fert' et 'adest sed premi non potest' duo
          * vitia sunt et olim unum nomen ferebant. */
-        CREDO_VERUM (_continet(o.textualis_ok.js, "hunc textum fert"));
-        CREDO_VERUM (_continet(o.premere_ok.js,
+        CREDO_VERUM (_continet(o->textualis_ok.js, "hunc textum fert"));
+        CREDO_VERUM (_continet(o->premere_ok.js,
             "huic selectori congruit"));
 
         /* ICTUS SVG: HTMLElement solus '.click()' habet. Sine hac
          * semita elementa picturae - virgae flammae, puncta
          * tendentiae - omnino premi non poterant. */
-        CREDO_VERUM (_continet(o.premere_ok.js,
+        CREDO_VERUM (_continet(o->premere_ok.js,
             "typeof e.click==='function'"));
-        CREDO_VERUM (_continet(o.premere_ok.js,
+        CREDO_VERUM (_continet(o->premere_ok.js,
             "new MouseEvent('click'"));
 
         /* Volvere: SPECTANDI causa, ergo porta agibilitatis ABEST
          * consulto - ad pyxidem impeditam volvere legitimum est. */
-        CREDO_VERUM  (_continet(o.volvere_ad.js, "scrollIntoView"));
-        CREDO_FALSUM (_continet(o.volvere_ad.js, "var c=act(e)"));
-        CREDO_VERUM  (_continet(o.volvere.js,
+        CREDO_VERUM  (_continet(o->volvere_ad.js, "scrollIntoView"));
+        CREDO_FALSUM (_continet(o->volvere_ad.js, "var c=act(e)"));
+        CREDO_VERUM  (_continet(o->volvere.js,
             "window.scrollBy(0,200)"));
     }
+}
 
-    imprimere("\n--- Volvere ---\n");
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    constans Omnia* o = (constans Omnia*)c->suita;
+
     {
-        CREDO_VERUM (o.volvere.fructus);
-        CREDO_VERUM (o.volvere_ad.fructus);
-        CREDO_FALSUM (o.volvere.fracta);
+        CREDO_VERUM (o->volvere.fructus);
+        CREDO_VERUM (o->volvere_ad.fructus);
+        CREDO_FALSUM (o->volvere.fracta);
     }
+}
 
-    imprimere("\n--- Exspectatio: interrogationes quoque morantur ---\n");
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    constans Omnia* o = (constans Omnia*)c->suita;
+
     {
         /* ASYMMETRIA quam haec claudit: actiones IAM morabantur
          * (per _agere cum promisso), interrogationes NON. Scriptum
          * crustae ergo agere poterat sed non legere, et ad somnum
          * retrudebatur - quod haec bibliotheca vetat. */
-        CREDO_VERUM  (o.exsp.fructus);
-        CREDO_FALSUM (o.exsp.fracta);
+        CREDO_VERUM  (o->exsp.fructus);
+        CREDO_FALSUM (o->exsp.fracta);
 
         /* Mora IN PAGINA, non hic: unum iter retis, et condiciones
          * TRANSEUNTES non elabuntur. */
-        CREDO_VERUM (_continet(o.exsp.js, "new Promise"));
-        CREDO_VERUM (_continet(o.exsp.js, "var n=qn("));
+        CREDO_VERUM (_continet(o->exsp.js, "new Promise"));
+        CREDO_VERUM (_continet(o->exsp.js, "var n=qn("));
 
         /* Terminus transiens: FALSUM, manus fracta, causa NOMINATA -
          * et numerus visus quoque, nam 'nihil apparuit' et 'tria
          * manserunt' diversa sunt. */
-        CREDO_FALSUM (o.exsp_no.fructus);
-        CREDO_VERUM  (o.exsp_no.fracta);
-        CREDO_VERUM  (_continet(o.exsp_no.causa,
+        CREDO_FALSUM (o->exsp_no.fructus);
+        CREDO_VERUM  (o->exsp_no.fracta);
+        CREDO_VERUM  (_continet(o->exsp_no.causa,
             "nihil VISIBILE congruit"));
-        CREDO_VERUM  (_continet(o.exsp_no.causa, "visa:"));
+        CREDO_VERUM  (_continet(o->exsp_no.causa, "visa:"));
 
         /* ABSENTIA aliud verbum in causa habet: 'adhuc adest'. */
-        CREDO_FALSUM (o.abest_exsp.fructus);
-        CREDO_VERUM  (_continet(o.abest_exsp.causa, "adhuc adest"));
-        CREDO_VERUM  (_continet(o.abest_exsp.js, "n===0"));
+        CREDO_FALSUM (o->abest_exsp.fructus);
+        CREDO_VERUM  (_continet(o->abest_exsp.causa, "adhuc adest"));
+        CREDO_VERUM  (_continet(o->abest_exsp.js, "n===0"));
     }
+}
 
-    imprimere("\n--- Lectio: contentum structuratum ---\n");
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    constans Omnia* o = (constans Omnia*)c->suita;
+
     {
         /* Ordines longitudinis DIVERSAE: numerus columnarum ex
          * filiis visibilibus venit, ergo per ordinem variat.
          * Parsura quae longitudinem fixam praesumeret hic frangeret. */
-        CREDO_AEQUALIS_I32 (o.legere.numerus, (i32)II);
-        CREDO_FALSUM (o.legere.fracta);
-        imprimere("  primus: '%s'\n", o.legere.primus);
-        CREDO_VERUM (_continet(o.legere.primus,
+        CREDO_AEQUALIS_I32 (o->legere.numerus, (i32)II);
+        CREDO_FALSUM (o->legere.fracta);
+        imprimere("  primus: '%s'\n", o->legere.primus);
+        CREDO_VERUM (_continet(o->legere.primus,
             "3:totum|179.1s|187.6s"));
-        CREDO_VERUM (_continet(o.legere.primus, "1:solum"));
+        CREDO_VERUM (_continet(o->legere.primus, "1:solum"));
 
         /* Lectio EANDEM legem visibilitatis et EANDEM coactionem
          * spatiorum adhibet quam petitio textualis - una definitio
          * eius quod usor legit, non duae. */
-        CREDO_VERUM (_continet(o.legere.js, "function v(e)"));
-        CREDO_VERUM (_continet(o.legere.js, "_nz(_tx(ch[j]))"));
+        CREDO_VERUM (_continet(o->legere.js, "function v(e)"));
+        CREDO_VERUM (_continet(o->legere.js, "_nz(_tx(ch[j]))"));
 
         /* PETITIO TEXTUALIS VACUA: chorda vacua omnibus congrueret
          * et corpus premeret exitu ZEPHYRO. Bis hodie viridem
          * vacuum ita peperi. */
-        CREDO_FALSUM (o.textum_vacuum.fructus);
-        CREDO_VERUM  (o.textum_vacuum.fracta);
-        CREDO_VERUM  (_continet(o.textum_vacuum.causa, "VACUA"));
+        CREDO_FALSUM (o->textum_vacuum.fructus);
+        CREDO_VERUM  (o->textum_vacuum.fracta);
+        CREDO_VERUM  (_continet(o->textum_vacuum.causa, "VACUA"));
     }
+}
 
-    imprimere("\n--- Asserta cetera + formae _MORA ---\n");
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    constans Omnia* o = (constans Omnia*)c->suita;
+
     {
-        CREDO_VERUM (o.abest.fructus);
-        CREDO_VERUM (o.omnino.fructus);
-        CREDO_VERUM (o.paginae.fructus);
+        CREDO_VERUM (o->abest.fructus);
+        CREDO_VERUM (o->omnino.fructus);
+        CREDO_VERUM (o->paginae.fructus);
         /* Formae _MORA: usque ad hunc diem A NULLA probatione
          * vocatae - semita numquam cursa. */
-        CREDO_VERUM (o.n_mora.fructus);
-        CREDO_VERUM (o.t_mora.fructus);
-        CREDO_VERUM (o.x_mora.fructus);
-        CREDO_VERUM (_continet(o.n_mora.js, "var n=qn("));
+        CREDO_VERUM (o->n_mora.fructus);
+        CREDO_VERUM (o->t_mora.fructus);
+        CREDO_VERUM (o->x_mora.fructus);
+        CREDO_VERUM (_continet(o->n_mora.js, "var n=qn("));
 
         /* Assertum fallens manum frangit (differentia a sonda). */
-        CREDO_FALSUM (o.abest_no.fructus);
-        CREDO_VERUM  (o.abest_no.fracta);
+        CREDO_FALSUM (o->abest_no.fructus);
+        CREDO_VERUM  (o->abest_no.fracta);
     }
+}
 
-    imprimere("\n--- Sondae TACENT, asserta CLAMANT ---\n");
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    constans Omnia* o = (constans Omnia*)c->suita;
+
     {
         /* Sonda condicionem falsam reddit et manum INTACTAM linquit -
          * interrogatio est, non assertum. */
-        CREDO_FALSUM (o.existit_no.fructus);
-        CREDO_FALSUM (o.existit_no.fracta);
+        CREDO_FALSUM (o->existit_no.fructus);
+        CREDO_FALSUM (o->existit_no.fracta);
 
-        CREDO_VERUM (o.numerus.fructus);
-        CREDO_VERUM (o.textus.fructus);
+        CREDO_VERUM (o->numerus.fructus);
+        CREDO_VERUM (o->textus.fructus);
     }
+}
 
-    imprimere("\n--- manus_errores: parsura 'N|primus' ---\n");
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    constans Omnia* o = (constans Omnia*)c->suita;
+
     {
         /* Chirurgia chordarum manu scripta circa '|' - pars
          * fragilissima bibliothecae, et usque ad hunc diem sine
          * ulla probatione automatica. Si haec parsura frangatur,
          * CREDO_MANUS_SINE_ERRORIBUS nullos errores in aeternum
          * nuntiet: viride quod nihil significat. */
-        CREDO_AEQUALIS_I32 (o.cum_err.numerus, (i32)III);
-        CREDO_VERUM (_continet(o.cum_err.primus,
+        CREDO_AEQUALIS_I32 (o->cum_err.numerus, (i32)III);
+        CREDO_VERUM (_continet(o->cum_err.primus,
             "exceptio: ReferenceError"));
 
         /* '-1' = collector abest. Numerus NEGATIVUS ad ZEPHYRUM
          * cadat, ne error fictus nuntietur. */
-        CREDO_AEQUALIS_I32 (o.sine_c.numerus, (i32)ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (o->sine_c.numerus, (i32)ZEPHYRUM);
 
         /* Interrogatio manum non frangit utrolibet modo. */
-        CREDO_FALSUM (o.cum_err.fracta);
-        CREDO_FALSUM (o.sine_c.fracta);
+        CREDO_FALSUM (o->cum_err.fracta);
+        CREDO_FALSUM (o->sine_c.fracta);
 
         imprimere("  errores: %d, primus '%s'\n",
-                  (integer)o.cum_err.numerus, o.cum_err.primus);
+                  (integer)o->cum_err.numerus, o->cum_err.primus);
     }
+}
 
-    imprimere("\n--- Affordantiae: parsura et recusatio ---\n");
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    constans Omnia* o = (constans Omnia*)c->suita;
+
     {
         /* Quod hic probatur SEMITA C est: tabulatum JSON -> structurae.
          * An JS ipse elementa recte inveniat HINC NON APPARET - id
          * probatio fumi contra applicationem VIVAM iudicat (eadem lex
          * quae huic plagulae praeest). */
-        CREDO_AEQUALIS_I32 (o.afford.numerus, (i32)II);
-        CREDO_FALSUM (o.afford.fracta);
+        CREDO_AEQUALIS_I32 (o->afford.numerus, (i32)II);
+        CREDO_FALSUM (o->afford.fracta);
 
-        imprimere("  primus: '%s'\n", o.afford.primus);
+        imprimere("  primus: '%s'\n", o->afford.primus);
 
         /* Omnis campus primi, uno asserto. */
-        CREDO_VERUM (_continet(o.afford.primus,
+        CREDO_VERUM (_continet(o->afford.primus,
             "1|#b1|Salve|||8,10,32x15"));
 
         /* Secundus: impedimentum PERVENIT, et x NEGATIVUM negativum
          * MANET. Si quis campos loci in i32 (insignatum) verteret, -V
          * hic numerus immanis fieret - assertum quod decipulam domus
          * ipsam custodit. */
-        CREDO_VERUM (_continet(o.afford.primus, "2:2|impedita|-5"));
+        CREDO_VERUM (_continet(o->afford.primus, "2:2|impedita|-5"));
 
         /* JS missum eandem legem visibilitatis fert quam actiones -
          * si quis enumerationem a v() separaret, index affordantias
          * ferret quas premere recusaret. */
-        CREDO_VERUM (_continet(o.afford.js, "function v(e)"));
-        CREDO_VERUM (_continet(o.afford.js, "getBoundingClientRect"));
+        CREDO_VERUM (_continet(o->afford.js, "function v(e)"));
+        CREDO_VERUM (_continet(o->afford.js, "getBoundingClientRect"));
 
         /* Iudicium impedimenti PROPRIUM est (_imp), non act().
          *
@@ -1398,184 +1475,225 @@ s32 principale (vacuum)
          * DEFINIT (visus eum trahit), ergo textus adest etiamsi
          * enumeratio eum numquam vocet. Praesentia litterarum non
          * est mos vocandi; ergo quid enumeratio VOCET asserimus. */
-        CREDO_VERUM (_continet(o.afford.js, "impedimentum:_imp(e,rc)"));
+        CREDO_VERUM (_continet(o->afford.js,
+            "impedimentum:_imp(e,rc)"));
 
         /* Responsum quod tabulatum non est: manus FRANGITUR. Index
          * vacuus 'nihil adest' mentiretur - genus defectus quod haec
          * domus semper clamosum facit. */
-        CREDO_AEQUALIS_I32 (o.afford_pravus.numerus, ZEPHYRUM);
-        CREDO_VERUM (o.afford_pravus.fracta);
-        CREDO_VERUM (_continet(o.afford_pravus.causa, "tabulatum"));
+        CREDO_AEQUALIS_I32 (o->afford_pravus.numerus, ZEPHYRUM);
+        CREDO_VERUM (o->afford_pravus.fracta);
+        CREDO_VERUM (_continet(o->afford_pravus.causa, "tabulatum"));
     }
+}
 
-    imprimere("\n--- focus: quid clavem accipiat ---\n");
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+    constans Omnia* o = (constans Omnia*)c->suita;
+
     {
-        imprimere("  primus: '%s'\n", o.focus.primus);
-        CREDO_VERUM (o.focus.fructus);
-        CREDO_FALSUM (o.focus.fracta);
-        CREDO_VERUM (_continet(o.focus.primus, "1|#i1|scribe|input"));
+        imprimere("  primus: '%s'\n", o->focus.primus);
+        CREDO_VERUM (o->focus.fructus);
+        CREDO_FALSUM (o->focus.fracta);
+        CREDO_VERUM (_continet(o->focus.primus, "1|#i1|scribe|input"));
 
         /* SELECTOR EIUSDEM FORMAE quam affordantiae dant: nomen ab
          * uno instrumento acceptum alteri utile esse DEBET. Functio
          * una (MANUS_JS_SEMITA) hoc praestat, et hoc assertum eam
          * seorsum manere custodit. */
-        CREDO_VERUM (_continet(o.focus.js, "function _via(e)"));
-        CREDO_VERUM (_continet(o.focus.js, "function _lab(e)"));
-        CREDO_VERUM (_continet(o.focus.js, "document.activeElement"));
+        CREDO_VERUM (_continet(o->focus.js, "function _via(e)"));
+        CREDO_VERUM (_continet(o->focus.js, "function _lab(e)"));
+        CREDO_VERUM (_continet(o->focus.js, "document.activeElement"));
         /* CORPUS excluditur - aliter 'focus' semper aliquid diceret */
-        CREDO_VERUM (_continet(o.focus.js, "document.body"));
+        CREDO_VERUM (_continet(o->focus.js, "document.body"));
 
         /* NIHIL focum tenens: habet FALSUM, et manus NON fracta -
          * 'nemo focum tenet' responsum legitimum est, non defectus. */
-        CREDO_FALSUM (o.focus_nihil.fructus);
-        CREDO_FALSUM (o.focus_nihil.fracta);
-        CREDO_VERUM (_continet(o.focus_nihil.primus, "0|||"));
+        CREDO_FALSUM (o->focus_nihil.fructus);
+        CREDO_FALSUM (o->focus_nihil.fracta);
+        CREDO_VERUM (_continet(o->focus_nihil.primus, "0|||"));
 
         /* Assertum: exspectat (per gyrum paginae), transit, frangit */
-        CREDO_VERUM  (o.focus_ass.fructus);
-        CREDO_FALSUM (o.focus_ass.fracta);
-        CREDO_VERUM (_continet(o.focus_ass.js, "new Promise"));
-        CREDO_FALSUM (o.focus_ass_no.fructus);
+        CREDO_VERUM  (o->focus_ass.fructus);
+        CREDO_FALSUM (o->focus_ass.fracta);
+        CREDO_VERUM (_continet(o->focus_ass.js, "new Promise"));
+        CREDO_FALSUM (o->focus_ass_no.fructus);
 
         /* PONERE: focum petere, non clicum fingere. Nulla custodia
          * generis (regimen focari licite potest); sed RELECTIO
          * obligatoria - '.focus()' in elemento non focabili tacet. */
-        CREDO_VERUM  (o.focus_pone.fructus);
-        CREDO_FALSUM (o.focus_pone.fracta);
-        CREDO_VERUM (_continet(o.focus_pone.js,
+        CREDO_VERUM  (o->focus_pone.fructus);
+        CREDO_FALSUM (o->focus_pone.fracta);
+        CREDO_VERUM (_continet(o->focus_pone.js,
                                "document.activeElement!==e"));
-        CREDO_VERUM (_continet(o.focus_pone.js, "tabindex deest"));
+        CREDO_VERUM (_continet(o->focus_pone.js, "tabindex deest"));
         /* Custodia contra regressum: si quis hic custodiam generis
          * (_fscr) adderet, verbum regimina focare RECUSARET et
          * ordinem Tab probare impossibile fieret. */
-        CREDO_FALSUM (_continet(o.focus_pone.js, "_fscr"));
+        CREDO_FALSUM (_continet(o->focus_pone.js, "_fscr"));
 
-        CREDO_FALSUM (o.focus_pone_no.fructus);
-        CREDO_VERUM  (o.focus_pone_no.fracta);
+        CREDO_FALSUM (o->focus_pone_no.fructus);
+        CREDO_VERUM  (o->focus_pone_no.fracta);
     }
+}
 
-    imprimere("\n--- volvere INTRA elementum ---\n");
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+    constans Omnia* o = (constans Omnia*)c->suita;
+
     {
         /* VITIUM QUOD HOC VERBUM PEPERIT (MENSURATUM 2026-08-15):
          * 'volvere 500' contra indicem virtualem VERUM reddidit et
          * nihil movit - 'window.scrollBy' paginam volvit, et pagina
          * non volvebatur. Nullum signum. Ergo verbum novum, et haec
          * asserta custodiunt ne quis ad 'window' redeat. */
-        CREDO_VERUM  (o.volv_in.fructus);
-        CREDO_FALSUM (o.volv_in.fracta);
-        CREDO_VERUM (_continet(o.volv_in.js,
+        CREDO_VERUM  (o->volv_in.fructus);
+        CREDO_FALSUM (o->volv_in.fracta);
+        CREDO_VERUM (_continet(o->volv_in.js,
             "e.scrollTop=e.scrollTop+"));
-        CREDO_FALSUM (_continet(o.volv_in.js, "window.scrollBy"));
+        CREDO_FALSUM (_continet(o->volv_in.js, "window.scrollBy"));
 
         /* IMMOBILE RECUSATUR, et numeri in causa apparent - aliter
          * 'selector pravus' et 'iam in fine' idem viderentur. */
-        CREDO_VERUM (_continet(o.volv_in.js,
+        CREDO_VERUM (_continet(o->volv_in.js,
             "scrollHeight<=e.clientHeight"));
-        CREDO_VERUM (_continet(o.volv_in.js, "non volvitur"));
-        CREDO_FALSUM (o.volv_in_no.fructus);
-        CREDO_VERUM  (o.volv_in_no.fracta);
+        CREDO_VERUM (_continet(o->volv_in.js, "non volvitur"));
+        CREDO_FALSUM (o->volv_in_no.fructus);
+        CREDO_VERUM  (o->volv_in_no.fracta);
 
         /* Lectio positionis: 'factum' scaenarium 'ok:true,visum:
          * "factum"' reddit, quod cifris caret - ergo ZEPHYRUM, non
          * numerus fictus. Parsura manu scripta hoc ferre DEBET. */
-        CREDO_VERUM (o.volutio.fructus);
-        CREDO_AEQUALIS_I32 (o.volutio.numerus, ZEPHYRUM);
-        CREDO_VERUM (_continet(o.volutio.js, "e.scrollTop"));
+        CREDO_VERUM (o->volutio.fructus);
+        CREDO_AEQUALIS_I32 (o->volutio.numerus, ZEPHYRUM);
+        CREDO_VERUM (_continet(o->volutio.js, "e.scrollTop"));
     }
+}
 
-    imprimere("\n--- premere: focat sicut clicus VERUS ---\n");
+interior vacuum
+_sectio_decima_sexta (
+    CredoContextus* c)
+{
+    constans Omnia* o = (constans Omnia*)c->suita;
+
     {
         /* MENSURATUM eventibus NATIVIS (vide caput MANUS_JS_FOCARE):
          * campus/textarea/contenteditable focantur, pyxis/nexus/
          * capsula/radius non. Praedicatum id in pagina iudicat;
          * haec asserta custodiunt ne quis id silenter mutet. */
-        CREDO_VERUM (_continet(o.premere_ok.js, "function _fscr(e)"));
-        CREDO_VERUM (_continet(o.premere_ok.js, "y==='checkbox'"));
-        CREDO_VERUM (_continet(o.premere_ok.js, "e.isContentEditable"));
+        CREDO_VERUM (_continet(o->premere_ok.js, "function _fscr(e)"));
+        CREDO_VERUM (_continet(o->premere_ok.js, "y==='checkbox'"));
+        CREDO_VERUM (_continet(o->premere_ok.js,
+            "e.isContentEditable"));
 
         /* ORDO REFERT: focus ANTE 'click'. Clicus verus in mousedown
          * focat, eventum in mouseup mittit - ergo auditor qui
          * activeElement legit elementum IAM focatum videt. Si ordo
          * verteretur, probatio nihil sentiret sed applicatio vera
          * differret. */
-        CREDO_VERUM (strstr(o.premere_ok.js, "_fscr(e)")
-                     < strstr(o.premere_ok.js, "e.click()"));
+        CREDO_VERUM (strstr(o->premere_ok.js, "_fscr(e)")
+                     < strstr(o->premere_ok.js, "e.click()"));
 
         /* EADEM ACTIO in premere-textum: forma UNA est, non duae. */
-        CREDO_VERUM (_continet(o.textualis_ok.js, "function _fscr(e)"));
+        CREDO_VERUM (_continet(o->textualis_ok.js,
+            "function _fscr(e)"));
     }
+}
 
-    imprimere("\n--- magnitudo: FACTA, non petita ---\n");
+interior vacuum
+_sectio_decima_septima (
+    CredoContextus* c)
+{
+    constans Omnia* o = (constans Omnia*)c->suita;
+
     {
-        imprimere("  facta: '%s'\n", o.amplitudo.primus);
-        CREDO_VERUM  (o.amplitudo.fructus);
-        CREDO_FALSUM (o.amplitudo.fracta);
+        imprimere("  facta: '%s'\n", o->amplitudo.primus);
+        CREDO_VERUM  (o->amplitudo.fructus);
+        CREDO_FALSUM (o->amplitudo.fracta);
 
         /* CARDO: CCCXX x DCCC petita sunt; simulacrum CCCXX x D
          * respondet. Si manus petitionem SUAM repeteret (facillimus
          * error) hic 'CCCXX,DCCC' staret et probatio dispositionis
          * in fenestra alia curreret quam credit. */
-        CREDO_VERUM (_continet(o.amplitudo.primus, "320,500"));
+        CREDO_VERUM (_continet(o->amplitudo.primus, "320,500"));
 
         /* App sine magnitudinatore: CDIV -> causa NOMINAT quid
          * desit et quomodo id ponatur. */
-        CREDO_FALSUM (o.amplitudo_absens.fructus);
-        CREDO_VERUM  (o.amplitudo_absens.fracta);
-        CREDO_VERUM  (_continet(o.amplitudo_absens.causa,
+        CREDO_FALSUM (o->amplitudo_absens.fructus);
+        CREDO_VERUM  (o->amplitudo_absens.fracta);
+        CREDO_VERUM  (_continet(o->amplitudo_absens.causa,
                                 "magnitudinatorem non praebuit"));
     }
+}
 
-    imprimere("\n--- Superficies reliqua ---\n");
+interior vacuum
+_sectio_decima_octava (
+    CredoContextus* c)
+{
+    constans Omnia* o = (constans Omnia*)c->suita;
+
     {
-        CREDO_VERUM (o.existit_ass.fructus);
-        CREDO_VERUM (o.abest_mora.fructus);
-        CREDO_VERUM (o.numerus_ass.fructus);
-        CREDO_VERUM (o.textus_ass.fructus);
-        CREDO_VERUM (o.textus_cont.fructus);
-        CREDO_VERUM (o.textum_abest.fructus);
+        CREDO_VERUM (o->existit_ass.fructus);
+        CREDO_VERUM (o->abest_mora.fructus);
+        CREDO_VERUM (o->numerus_ass.fructus);
+        CREDO_VERUM (o->textus_ass.fructus);
+        CREDO_VERUM (o->textus_cont.fructus);
+        CREDO_VERUM (o->textum_abest.fructus);
 
         /* aestimare valorem CRUDUM reddit (JSON), non verdictum. */
-        CREDO_VERUM (o.aestimare.fructus);
-        CREDO_VERUM (_continet(o.aestimare.js, "1+1"));
+        CREDO_VERUM (o->aestimare.fructus);
+        CREDO_VERUM (_continet(o->aestimare.js, "1+1"));
 
-        CREDO_VERUM  (o.imago.fructus);
-        CREDO_FALSUM (o.imago.fracta);
+        CREDO_VERUM  (o->imago.fructus);
+        CREDO_FALSUM (o->imago.fracta);
 
         /* Imago culpae: actio fallit, manus frangitur, et causa
          * ORIGINALIS manet - captura eam non superscribit neque in
          * se recurrit. */
-        CREDO_FALSUM (o.imago_culpae.fructus);
-        CREDO_VERUM  (o.imago_culpae.fracta);
-        CREDO_VERUM  (_continet(o.imago_culpae.causa, "impeditum"));
+        CREDO_FALSUM (o->imago_culpae.fructus);
+        CREDO_VERUM  (o->imago_culpae.fracta);
+        CREDO_VERUM  (_continet(o->imago_culpae.causa, "impeditum"));
 
         /* Purgatio: acervum PAGINAE mutat in loco ('length=0'), non
          * reponit - custodes enim ad illum acervum ligati sunt. */
-        CREDO_VERUM (o.purgare.fructus);
-        CREDO_VERUM (_continet(o.purgare.js, "__manus_errores"));
-        CREDO_VERUM (_continet(o.purgare.js, "a.length=0"));
-        CREDO_FALSUM (o.purgare.fracta);
+        CREDO_VERUM (o->purgare.fructus);
+        CREDO_VERUM (_continet(o->purgare.js, "__manus_errores"));
+        CREDO_VERUM (_continet(o->purgare.js, "a.length=0"));
+        CREDO_FALSUM (o->purgare.fracta);
 
         /* Formae _MORA quae hodie desiderabantur (TEXTUS_CONTINET,
          * TEXTUM_ABEST, ABEST_OMNINO gemellos non habebant). */
-        CREDO_VERUM (o.cont_mora.fructus);
-        CREDO_VERUM (o.txt_abest_mora.fructus);
-        CREDO_VERUM (o.omnino_mora.fructus);
+        CREDO_VERUM (o->cont_mora.fructus);
+        CREDO_VERUM (o->txt_abest_mora.fructus);
+        CREDO_VERUM (o->omnino_mora.fructus);
 
         /* TERMINUS SECTIONIS. Applicatio VIVA: actio fefellit, manus
          * fracta est, reficere SUCCEDIT et manum integram linquit -
          * sectio sequens ergo re vera currit. */
-        CREDO_AEQUALIS_I32 (o.reficere_vivax.numerus, (i32)I);
-        CREDO_VERUM  (o.reficere_vivax.fructus);
-        CREDO_FALSUM (o.reficere_vivax.fracta);
+        CREDO_AEQUALIS_I32 (o->reficere_vivax.numerus, (i32)I);
+        CREDO_VERUM  (o->reficere_vivax.fructus);
+        CREDO_FALSUM (o->reficere_vivax.fracta);
 
         /* Applicatio MORTUA: reficere RECUSAT et manus fracta manet.
          * Sine hac distinctione probatio cadaver per omnes sectiones
          * interrogaret, terminum plenum quaeque urens. */
-        CREDO_FALSUM (o.reficere_mortua.fructus);
-        CREDO_VERUM  (o.reficere_mortua.fracta);
+        CREDO_FALSUM (o->reficere_mortua.fructus);
+        CREDO_VERUM  (o->reficere_mortua.fracta);
     }
+}
 
-    imprimere("\n--- Semita felix (pulsus plus quam unus) ---\n");
+interior vacuum
+_sectio_decima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+
     {
           i32  portus = 0;
           s32  proles = _simulacrum_incipere(SCEN_VERUM, &portus);
@@ -1594,8 +1712,16 @@ s32 principale (vacuum)
         }
         _simulacrum_finire(proles);
     }
+}
 
-    imprimere("\n--- Applicatio mortua: manus NIHIL, non manus muta ---\n");
+interior vacuum
+_sectio_vicesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+
     {
           i32  portus = 0;
           s32  proles = _simulacrum_incipere(SCEN_VERUM, &portus);
@@ -1609,21 +1735,71 @@ s32 principale (vacuum)
         m = manus_aperire(piscina, "127.0.0.1", portus);
         CREDO_NIHIL (m);
     }
+}
 
-    /* QUID HAEC PROBATIO NON PROBAT - impressum, non solum
-     * commentatum: probatio quae limites suos tacet fidem parit quam
-     * non meruit, et haec suita SPONTE currit dum fumus MANU. Qui
-     * viride hic videt scire debet quid adhuc non probatum sit. */
-    imprimere("\n  NOTA: haec structuram et fistulas probat - JS in"
-              " pictore VERO agere\n"
-              "        NON probatur. Id sola probatio fumi potest:\n"
-              "        cd ../silicetum/laboratorium && ./fumus.sh\n"
-              "        (fenestram aperit; a nullo cursore sponte"
-              " curritur)\n");
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Pagina terminum tetigit (ok:false)", _sectio_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Applicatio haeret (semper pendens)", _sectio_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "JS iactavit (culpa)", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "JS re vera missum", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Actiones: valor, fractura, causa", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Forma JS geniti (custos regressionis)", _sectio_sexta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "Volvere", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Exspectatio: interrogationes quoque morantur", _sectio_octava,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Lectio: contentum structuratum", _sectio_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Asserta cetera + formae _MORA", _sectio_decima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Sondae TACENT, asserta CLAMANT", _sectio_decima_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "manus_errores: parsura 'N|primus'", _sectio_decima_secunda,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Affordantiae: parsura et recusatio", _sectio_decima_tertia,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "focus: quid clavem accipiat", _sectio_decima_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "volvere INTRA elementum", _sectio_decima_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "premere: focat sicut clicus VERUS", _sectio_decima_sexta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "magnitudo: FACTA, non petita", _sectio_decima_septima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "Superficies reliqua", _sectio_decima_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Semita felix (pulsus plus quam unus)", _sectio_decima_nona,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Applicatio mortua: manus NIHIL, non manus muta",
+        _sectio_vicesima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    imprimere("\n");
-    credo_imprimere_compendium();
 
-    praeteritus = credo_omnia_praeterierunt();
-    redde praeteritus ? ZEPHYRUM : I;
+/* ========================================================================
+ * principale
+ * ======================================================================== */
+
+s32
+principale (vacuum)
+{
+    /* Prolis mors dum scribimus probationem occidere non debet. */
+    (vacuum)signal(SIGPIPE, SIG_IGN);
+
+
+    /* ========================================================
+     * PHASIS I: fracturas capere (ANTE sessionem principalem)
+     * ======================================================== */
+
+    capturae.falsum   = _capere(SCEN_FALSUM,  ".nusquam");
+    capturae.pendens  = _capere(SCEN_PENDENS, ".nusquam");
+    capturae.culpa    = _capere(SCEN_CULPA,   ".nusquam");
+    _omnia_capere(&capturae);
+
+    redde credo_suitam_currere_cum("manus", SECTIONES, _suitam_parare,
+        _suitam_purgare);
 }

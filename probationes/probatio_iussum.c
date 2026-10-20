@@ -22,26 +22,17 @@
 
 #define LATITUDO XX
 
-hic_manens Piscina*          piscina;
-hic_manens TabulaCharacterum tabula;
+/* linea 0 = textus, ceterae cellulae '\0'. ponere et ad tabulam et
+ * piscinam SECTIONIS (variabiles locales 'tabula', 'piscina') tangunt -
+ * nullus status communis inter sectiones. */
+#define ponere(textus) fac { \
+        memset(tabula.cellulae, ZEPHYRUM, (memoriae_index)LATITUDO); \
+        memcpy(tabula.cellulae, (textus), strlen(textus)); \
+    } dum (ZEPHYRUM)
 
-/* linea 0 = textus, ceterae cellulae '\0' */
-interior vacuum
-ponere (
-    constans character* textus)
-{
-    memset(tabula.cellulae, ZEPHYRUM, (memoriae_index)LATITUDO);
-    memcpy(tabula.cellulae, textus, strlen(textus));
-}
-
-interior b32
-ad (
-       s32  columna,
-    Iussum* i)
-{
-    redde iussum_ad_locum(&tabula, ZEPHYRUM, columna, NIHIL, NIHIL,
-        piscina, i);
-}
+#define ad(columna, i) \
+    iussum_ad_locum(&tabula, ZEPHYRUM, (columna), NIHIL, NIHIL, \
+        piscina, (i))
 
 /* verba nota: 'dies' et 'scriba' solum */
 interior b32
@@ -84,26 +75,21 @@ falsum_iussum (
 {
     (vacuum)iussum;
     (vacuum)ctx;
-    (vacuum)p;
-    effectus->error = chorda_ex_literis("nihil", piscina);
+    effectus->error = chorda_ex_literis("nihil", p);
     redde FALSUM;
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    Iussum i;
-       s32 c;
+               Piscina* piscina;
+     TabulaCharacterum  tabula;
+                Iussum  i;
 
-    piscina = piscina_generare_dynamicum("probatio_iussum", LXIV * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
+    piscina = c->piscina;
     tabula_initiare(&tabula, piscina, LATITUDO, I);
 
-    imprimere("\n--- I: iussum simplex, fines ---\n");
     ponere("vide $terminale x");
     CREDO_FALSUM(ad(IV, &i));
     CREDO_VERUM(ad(V, &i));
@@ -121,8 +107,19 @@ s32 principale (vacuum)
     ponere("abcdefghijklmn $dies");
     CREDO_VERUM(ad(XIX, &i));
     CREDO_AEQUALIS_S32(i.finis, XX);
+}
 
-    imprimere("\n--- II: argumenta ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+               Piscina* piscina;
+     TabulaCharacterum  tabula;
+                Iussum  i;
+
+    piscina = c->piscina;
+    tabula_initiare(&tabula, piscina, LATITUDO, I);
+
     ponere("$scriba( notae , b )");
     CREDO_VERUM(ad(X, &i));
     CREDO_CHORDA_AEQUALIS_LITERIS(i.verbum, "scriba");
@@ -150,8 +147,19 @@ s32 principale (vacuum)
     CREDO_VERUM(ad(ZEPHYRUM, &i));
     CREDO_CHORDA_AEQUALIS_LITERIS(i.verbum, "mensis_2");
     CREDO_CHORDA_AEQUALIS_LITERIS(i.argumenta[I], "8");
+}
 
-    imprimere("\n--- III: non iussa ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+               Piscina* piscina;
+     TabulaCharacterum  tabula;
+                Iussum  i;
+
+    piscina = c->piscina;
+    tabula_initiare(&tabula, piscina, LATITUDO, I);
+
     ponere("a$b");
     CREDO_FALSUM(ad(I, &i));
     ponere("x_$dies");
@@ -175,8 +183,19 @@ s32 principale (vacuum)
     CREDO_CHORDA_AEQUALIS_LITERIS(i.verbum, "dies");
     CREDO_FALSUM(ad(ZEPHYRUM, &i));
     CREDO_FALSUM(ad(VI, &i));
+}
 
-    imprimere("\n--- IV: verba ignota prosa manent ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+               Piscina* piscina;
+     TabulaCharacterum  tabula;
+                Iussum  i;
+
+    piscina = c->piscina;
+    tabula_initiare(&tabula, piscina, LATITUDO, I);
+
     ponere("$foo $dies");
     CREDO_FALSUM(iussum_ad_locum(&tabula, ZEPHYRUM, I, notum, NIHIL,
         piscina, &i));
@@ -194,39 +213,76 @@ s32 principale (vacuum)
         piscina, &i));
     CREDO_CHORDA_AEQUALIS_LITERIS(i.verbum, "scriba");
     CREDO_AEQUALIS_S32(i.initium, VI);
+}
 
-    imprimere("\n--- V: proximum per lineam ---\n");
-    ponere("$a $b(x) zz $c");
-    c = ZEPHYRUM;
-    CREDO_VERUM(iussum_proximum(&tabula, ZEPHYRUM, c, NIHIL, NIHIL,
-        piscina, &i));
-    CREDO_CHORDA_AEQUALIS_LITERIS(i.verbum, "a");
-    c = i.finis;
-    CREDO_VERUM(iussum_proximum(&tabula, ZEPHYRUM, c, NIHIL, NIHIL,
-        piscina, &i));
-    CREDO_CHORDA_AEQUALIS_LITERIS(i.verbum, "b");
-    CREDO_AEQUALIS_S32(i.finis, VIII);
-    c = i.finis;
-    CREDO_VERUM(iussum_proximum(&tabula, ZEPHYRUM, c, NIHIL, NIHIL,
-        piscina, &i));
-    CREDO_CHORDA_AEQUALIS_LITERIS(i.verbum, "c");
-    CREDO_AEQUALIS_S32(i.initium, XII);
-    c = i.finis;
-    CREDO_FALSUM(iussum_proximum(&tabula, ZEPHYRUM, c, NIHIL, NIHIL,
-        piscina, &i));
-    /* ad locum post iussum primum: secundum invenit */
-    CREDO_VERUM(ad(V, &i));
-    CREDO_CHORDA_AEQUALIS_LITERIS(i.verbum, "b");
-    CREDO_FALSUM(ad(IX, &i));
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+               Piscina* piscina;
+     TabulaCharacterum  tabula;
+                Iussum  i;
 
-    imprimere("\n--- VI: exitus copia ---\n");
+    piscina = c->piscina;
+    tabula_initiare(&tabula, piscina, LATITUDO, I);
+
+    {
+        s32 c;
+
+        ponere("$a $b(x) zz $c");
+        c = ZEPHYRUM;
+        CREDO_VERUM(iussum_proximum(&tabula, ZEPHYRUM, c, NIHIL, NIHIL,
+            piscina, &i));
+        CREDO_CHORDA_AEQUALIS_LITERIS(i.verbum, "a");
+        c = i.finis;
+        CREDO_VERUM(iussum_proximum(&tabula, ZEPHYRUM, c, NIHIL, NIHIL,
+            piscina, &i));
+        CREDO_CHORDA_AEQUALIS_LITERIS(i.verbum, "b");
+        CREDO_AEQUALIS_S32(i.finis, VIII);
+        c = i.finis;
+        CREDO_VERUM(iussum_proximum(&tabula, ZEPHYRUM, c, NIHIL, NIHIL,
+            piscina, &i));
+        CREDO_CHORDA_AEQUALIS_LITERIS(i.verbum, "c");
+        CREDO_AEQUALIS_S32(i.initium, XII);
+        c = i.finis;
+        CREDO_FALSUM(iussum_proximum(&tabula, ZEPHYRUM, c, NIHIL, NIHIL,
+            piscina, &i));
+        /* ad locum post iussum primum: secundum invenit */
+        CREDO_VERUM(ad(V, &i));
+        CREDO_CHORDA_AEQUALIS_LITERIS(i.verbum, "b");
+        CREDO_FALSUM(ad(IX, &i));
+    }
+}
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+               Piscina* piscina;
+     TabulaCharacterum  tabula;
+                Iussum  i;
+
+    piscina = c->piscina;
+    tabula_initiare(&tabula, piscina, LATITUDO, I);
+
     ponere("$dies(x)");
     CREDO_VERUM(ad(ZEPHYRUM, &i));
     ponere("$zzzz(y)");
     CREDO_CHORDA_AEQUALIS_LITERIS(i.verbum, "dies");
     CREDO_CHORDA_AEQUALIS_LITERIS(i.argumenta[ZEPHYRUM], "x");
+}
 
-    imprimere("\n--- VII: argumenta mala ---\n");
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+               Piscina* piscina;
+     TabulaCharacterum  tabula;
+                Iussum  i;
+
+    piscina = c->piscina;
+    tabula_initiare(&tabula, piscina, LATITUDO, I);
+
     ponere("$dies");
     CREDO_FALSUM(iussum_ad_locum(NIHIL, ZEPHYRUM, ZEPHYRUM, NIHIL,
         NIHIL,
@@ -243,8 +299,19 @@ s32 principale (vacuum)
         NIHIL, NIHIL, &i));
     CREDO_FALSUM(iussum_proximum(&tabula, ZEPHYRUM, ZEPHYRUM, NIHIL,
         NIHIL, piscina, NIHIL));
+}
 
-    imprimere("\n--- VIII: registrum (S3b) ---\n");
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+               Piscina* piscina;
+     TabulaCharacterum  tabula;
+                Iussum  i;
+
+    piscina = c->piscina;
+    tabula_initiare(&tabula, piscina, LATITUDO, I);
+
     {
         IussumRegistrum* r;
          IussumEffectus  eff;
@@ -318,8 +385,18 @@ s32 principale (vacuum)
         CREDO_FALSUM(iussum_currere(r, NIHIL, piscina, &eff));
         CREDO_FALSUM(iussum_currere(r, &i, piscina, NIHIL));
     }
+}
 
-    imprimere("\n--- IX: nexus '#verbum' (S3d) ---\n");
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+              Piscina* piscina;
+    TabulaCharacterum  tabula;
+
+    piscina = c->piscina;
+    tabula_initiare(&tabula, piscina, LATITUDO, I);
+
     {
         Iussum x;
 
@@ -375,8 +452,19 @@ s32 principale (vacuum)
             piscina,
             &x));
     }
+}
 
-    imprimere("\n--- X: '-' intra verbum (S3e) ---\n");
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+               Piscina* piscina;
+     TabulaCharacterum  tabula;
+                Iussum  i;
+
+    piscina = c->piscina;
+    tabula_initiare(&tabula, piscina, LATITUDO, I);
+
     ponere("$pictor-next x");
     CREDO_VERUM(ad(ZEPHYRUM, &i));
     CREDO_CHORDA_AEQUALIS_LITERIS(i.verbum, "pictor-next");
@@ -405,8 +493,16 @@ s32 principale (vacuum)
     ponere("$dies(1)");
     CREDO_VERUM(ad(ZEPHYRUM, &i));
     CREDO_FALSUM(i.corpus);
+}
 
-    imprimere("\n--- XI: corpus '$verbum<>...</>' (Franus 2026-10-13) ---\n");
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+
     {
         TabulaCharacterum m;
                    Iussum x;
@@ -510,8 +606,33 @@ s32 principale (vacuum)
 #undef AD
 #undef LINEAE
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: iussum simplex, fines", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "II: argumenta", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III: non iussa", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IV: verba ignota prosa manent", _sectio_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "V: proximum per lineam", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "VI: exitus copia", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VII: argumenta mala", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "VIII: registrum (S3b)", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "IX: nexus '#verbum' (S3d)", _sectio_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "X: '-' intra verbum (S3e)", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "XI: corpus '$verbum<>...</>' (Franus 2026-10-13)",
+        _sectio_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("iussum", SECTIONES);
 }

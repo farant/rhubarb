@@ -14,11 +14,14 @@
 <p class="subtitulus"></p>
 
 <p>arbor2&#x27;s macro expansion engine: expansion in LAYERS (layer 0 the source tokens, layer N after N expansion passes) over SEGMENTS (ranges where the set of macros does not change, cut at #define and #undef), with full provenance. It also records the typedefs it discovers, because the GLR parser needs to know which names are probably types. The design answers the arbor-v2 brainstorm&#x27;s question of how to parse C whose macros and typedefs may come from files the parser cannot see. January 2026.</p>
+<p class="nota">Archived: a frozen predecessor in <code>archivum/</code>, kept as
+read-only historical reference. It is not built, tested or formatted;
+see <a href="../../archivum/CLAUDE.md"><code>archivum/CLAUDE.md</code></a>.</p>
 
 <table>
 <tbody>
-<tr><td>Header</td><td><a href="../../include/arbor2_expandere.h"><code>include/arbor2_expandere.h</code></a></td></tr>
-<tr><td>Implementation</td><td><a href="../../lib/arbor2_expandere.c"><code>lib/arbor2_expandere.c</code></a></td></tr>
+<tr><td>Header</td><td><a href="../../archivum/include/arbor2_expandere.h"><code>archivum/include/arbor2_expandere.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../archivum/lib/arbor2_expandere.c"><code>archivum/lib/arbor2_expandere.c</code></a></td></tr>
 <tr><td>Last change</td><td>2026-10-06 e0f3c24e</td></tr>
 <tr><td>Group</td><td><a href="greges.html#parsatores">Parsers: the C89 lineage</a></td></tr>
 </tbody>

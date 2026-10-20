@@ -1,0 +1,112 @@
+<interrogationes unitas="entitas">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I create an entity and set and read its properties?
+    <responsum symbolum="entitas_creare entitas_proprietas_ponere entitas_proprietas_capere chorda_internare">entitas_creare(piscina,
+      id, genus) with chorda* that are already interned, then
+      entitas_proprietas_ponere(e, clavis, valor) (an existing key is
+      overwritten and its parse cache reset) and
+      entitas_proprietas_capere(e, clavis), which returns the stored
+      chorda* or NIHIL. Lookup is a linear scan. The returned value
+      is a chorda, so it is NOT NUL-terminated.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does entitas_proprietas_capere return NIHIL for a key I know is set?
+    <responsum symbolum="entitas_proprietas_capere entitas_nota_habet chorda_internare chorda_internare_ex_literis">Keys,
+      tags, relation ids and relation kinds are compared by POINTER,
+      not by content: the library assumes every chorda* came from the
+      same InternamentumChorda. A key built with chorda_ex_literis, or
+      interned in a different table, never matches. Intern it with
+      chorda_internare or chorda_internare_ex_literis in the table that
+      interned the stored key. Only entitas_titulum_capere and
+      entitas_nota_cum_praefixo_habet compare by content.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I read a property as a number, boolean or timestamp?
+    <responsum symbolum="entitas_proprietas_capere_s32 entitas_proprietas_capere_s64 entitas_proprietas_capere_f64 entitas_proprietas_capere_b32 entitas_proprietas_capere_tempus">Use
+      the typed accessors: they parse the text on demand, cache the
+      result in the Proprietas, and return FALSUM if the key is
+      missing or the text does not parse. b32 accepts true, false, 1,
+      0, verum and falsum (exact case). tempus accepts only a raw
+      millisecond integer (no ISO 8601 yet). Known limits: the s32 and
+      f64 parsers copy at most 63 and 127 bytes before strtol/strtod,
+      so a longer text is judged on its first bytes only; the s64
+      parser rejects the most negative s64, -9223372036854775808, as
+      overflow.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I store binary data in an entity property?
+    <responsum symbolum="entitas_proprietas_ponere_blobum entitas_proprietas_capere_blobum entitas_proprietas_capere">Yes:
+      entitas_proprietas_ponere_blobum gzips the bytes with flatura
+      into the piscina you pass, and entitas_proprietas_capere_blobum
+      inflates them into a piscina. entitas_proprietas_capere on that
+      key returns the COMPRESSED bytes. Empty data (mensura 0) is
+      refused. The blob mark is stored in the same typus_literalis
+      field the parse cache uses: setting the key again with
+      entitas_proprietas_ponere, or calling
+      proprietas_parsare_ut_typum(prop, TYPUS_CHORDA or TYPUS_NIHIL)
+      on it, overwrites the mark, and capere_blobum then returns
+      FALSUM.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I add a relation to another entity and list relations of one kind?
+    <responsum symbolum="entitas_relatio_addere entitas_relatio_addere_cum_id entitas_relationes_generis_capere Relatio">entitas_relatio_addere
+      gives the relation a fresh UUIDv7 id (interned);
+      entitas_relatio_addere_cum_id takes an existing id when
+      replaying events. entitas_relationes_generis_capere returns a
+      NEW Xar of Relatio VALUES (copies, read with
+      (Relatio*)xar_obtinere), and an empty Xar when none match -
+      despite its header comment, which says Xar of Relatio* and NIHIL
+      when none.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I rely on the order of properties, relations or tags after a delete?
+    <responsum symbolum="entitas_proprietas_delere entitas_relatio_delere entitas_nota_delere">No.
+      All three deletes are swap-and-pop: the last element is copied
+      into the deleted slot and the Xar is truncated. Order is
+      insertion order only until the first delete. A Proprietas* or
+      Relatio* you held to the deleted slot now sees the moved
+      element, and one to the old last element points past
+      xar_numerus. Adding never moves elements (Xar segments are
+      stable).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I check whether an entity has any tag in a namespace like "#project::"?
+    <responsum symbolum="entitas_nota_cum_praefixo_habet entitas_nota_addere entitas_nota_habet">entitas_nota_cum_praefixo_habet(e,
+      "#project::") compares the bytes of every tag against a C
+      string prefix, so it needs no interning. entitas_nota_habet
+      tests one exact tag by pointer, and entitas_nota_addere does
+      nothing (and returns VERUM) if that pointer is already
+      there.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get a display name for an entity?
+    <responsum symbolum="entitas_titulum_capere">entitas_titulum_capere
+      returns the value of the property "name", else "title", else the
+      entity id. These two keys are matched by CONTENT, unlike every
+      other lookup. It returns the stored chorda* itself, not a
+      copy.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I see which type a property was last parsed as, or parse it by a type name?
+    <responsum symbolum="entitas_proprietas_capere_plena Proprietas proprietas_parsare_ut_typum typus_literalis_ex_chorda">entitas_proprietas_capere_plena
+      returns the Proprietas* itself: typus_literalis and
+      parsitus_validus tell what the cache holds (TYPUS_NIHIL and
+      FALSUM after a fresh entitas_proprietas_ponere; TYPUS_BLOBUM
+      for a blob). To parse by name, map the text with
+      typus_literalis_ex_chorda ("chorda", "s32", "s64", "f64", "b32",
+      "tempus", and also "blobum", which the header omits; anything
+      else gives TYPUS_NIHIL) and call proprietas_parsare_ut_typum.
+      It caches on success and returns FALSUM on a parse failure, and
+      also for TYPUS_BLOBUM, which it does not handle.</responsum>
+  </interrogatio>
+
+</interrogationes>

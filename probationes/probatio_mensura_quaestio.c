@@ -5,7 +5,8 @@
  * per commissum (III), frigida ultimo transiens cum arbore et ramo
  * (IV), scripta numquam cursa (V), filtra historiae (VI), tentamina
  * commissionis cum culpa (VII, Franus 10-13), octeti per titulum
- * (VIII), tituli similes cum quaestio vacua (XII).
+ * (VIII), tituli similes cum quaestio vacua (XII), sectiones memoria
+ * gravissimae (XV, credo memoria T3).
  * Quaestio VI (corpus fracti ultimi) per CLI in mensor fumus probatur.
  */
 #include "latina.h"
@@ -958,6 +959,130 @@ _sectio_linea (
         "\t0\t0\t0\t0\t0\t\t\tsuperfluum", c->piscina), &l));
 }
 
+#define UNITAS_MEMORIAE ((i32)MXXIV * (i32)MXXIV)   /* MiB */
+
+interior constans CursusGravis*
+_gravis (
+    constans Xar* graves,
+             i32  k)
+{
+    redde (constans CursusGravis*)xar_obtinere(graves, k);
+}
+
+/* XV. graves (credo memoria T3): per titulum sectionis maxima trans
+ * cursus (a#gravis bis: arena 32 -> 48), numerus = cursus mensi; pondus
+ * = maior arenae et aucti (b#auctus per auctum primus); sectio sine
+ * factis abest; facta alia et parentes ignoti neglecti; filtra arboris,
+ * praefixi, numeri */
+interior vacuum
+_sectio_graves (
+    CredoContextus* c)
+{
+                       Xar* omnes = _omnes(c->piscina);
+                       Xar* mensurae = xar_creare(c->piscina,
+                           (i32)magnitudo(Mensura));
+               CursusIndex* index;
+             CursusFiltrum  f = _filtrum();
+                       Xar* graves;
+     constans CursusGravis* g;
+                    Cursus* alienus;
+
+    (vacuum)_cursus(omnes, "S1", "", "probationes_radicis/a#gravis", X,
+        I, CURSUS_TRANSIIT, "", c->piscina);
+    (vacuum)_cursus(omnes, "S2", "", "probationes_radicis/a#gravis", XX,
+        I, CURSUS_TRANSIIT, "", c->piscina);
+    (vacuum)_cursus(omnes, "S3", "", "probationes_radicis/a#levis", XXX,
+        I, CURSUS_TRANSIIT, "", c->piscina);
+    (vacuum)_cursus(omnes, "S4", "", "probationes_radicis/b#auctus", XL,
+        I, CURSUS_FRACTUS, "", c->piscina);
+    (vacuum)_cursus(omnes, "S5", "", "probationes_radicis/a#sine", L, I,
+        CURSUS_TRANSIIT, "", c->piscina);
+    alienus = _cursus(omnes, "S6", "", "probationes_radicis/c#alienus",
+        LX, I, CURSUS_TRANSIIT, "", c->piscina);
+    alienus->initium.arbor = chorda_ex_literis("/alibi", c->piscina);
+
+    _factum(mensurae, "S1", MENSURA_ARENA_APEX, XXXII * UNITAS_MEMORIAE,
+        c->piscina);
+    _factum(mensurae, "S1", MENSURA_APEX_AUCTUS, UNITAS_MEMORIAE,
+        c->piscina);
+    _factum(mensurae, "S1", MENSURA_VESTIGIUM, XL * UNITAS_MEMORIAE,
+        c->piscina);
+    _factum(mensurae, "S1", MENSURA_CUSTOS, CMXCIX, c->piscina);
+    _factum(mensurae, "S2", MENSURA_ARENA_APEX,
+        XLVIII * UNITAS_MEMORIAE,
+        c->piscina);
+    _factum(mensurae, "S2", MENSURA_APEX_AUCTUS, ZEPHYRUM, c->piscina);
+    _factum(mensurae, "S2", MENSURA_VESTIGIUM, L * UNITAS_MEMORIAE,
+        c->piscina);
+    _factum(mensurae, "S3", MENSURA_ARENA_APEX, ZEPHYRUM, c->piscina);
+    _factum(mensurae, "S3", MENSURA_APEX_AUCTUS, ZEPHYRUM, c->piscina);
+    _factum(mensurae, "S3", MENSURA_VESTIGIUM, II * UNITAS_MEMORIAE,
+        c->piscina);
+    _factum(mensurae, "S4", MENSURA_ARENA_APEX, UNITAS_MEMORIAE,
+        c->piscina);
+    _factum(mensurae, "S4", MENSURA_APEX_AUCTUS, LXIV * UNITAS_MEMORIAE,
+        c->piscina);
+    _factum(mensurae, "S4", MENSURA_VESTIGIUM, LXX * UNITAS_MEMORIAE,
+        c->piscina);
+    _factum(mensurae, "S6", MENSURA_ARENA_APEX,
+        CMXCIX * UNITAS_MEMORIAE,
+        c->piscina);
+    _factum(mensurae, "S6", MENSURA_VESTIGIUM, M * UNITAS_MEMORIAE,
+        c->piscina);
+    _factum(mensurae, "Z", MENSURA_ARENA_APEX, CMXCIX * UNITAS_MEMORIAE,
+        c->piscina);
+
+    index = cursus_indicem_struere(omnes, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(index);
+    f.arbor  = chorda_ex_literis("/arbor", c->piscina);
+    graves   = cursus_quaerere_graves(index, mensurae, &f, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(graves);
+    CREDO_NECESSE(xar_numerus(graves) == III);
+    g = _gravis(graves, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(g->titulus,
+        "probationes_radicis/b#auctus");
+    CREDO_AEQUALIS_S64(g->pondus, (s64)LXIV * (s64)UNITAS_MEMORIAE);
+    CREDO_AEQUALIS_S64(g->arena_apex, (s64)UNITAS_MEMORIAE);
+    CREDO_AEQUALIS_I32(g->numerus, I);
+    g = _gravis(graves, I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(g->titulus,
+        "probationes_radicis/a#gravis");
+    CREDO_AEQUALIS_S64(g->arena_apex,
+        (s64)XLVIII * (s64)UNITAS_MEMORIAE);
+    CREDO_AEQUALIS_S64(g->apex_auctus, (s64)UNITAS_MEMORIAE);
+    CREDO_AEQUALIS_S64(g->vestigium, (s64)L * (s64)UNITAS_MEMORIAE);
+    CREDO_AEQUALIS_S64(g->pondus, (s64)XLVIII * (s64)UNITAS_MEMORIAE);
+    CREDO_AEQUALIS_I32(g->numerus, II);
+    g = _gravis(graves, II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(g->titulus,
+        "probationes_radicis/a#levis");
+    CREDO_AEQUALIS_S64(g->pondus, (s64)ZEPHYRUM);
+    CREDO_AEQUALIS_S64(g->vestigium, (s64)II * (s64)UNITAS_MEMORIAE);
+
+    /* praefixum membri et numerus */
+    f.praefixum = chorda_ex_literis("probationes_radicis/a#",
+        c->piscina);
+    f.numerus = I;
+    graves = cursus_quaerere_graves(index, mensurae, &f, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(graves);
+    CREDO_AEQUALIS_I32(xar_numerus(graves), I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(_gravis(graves, ZEPHYRUM)->titulus,
+        "probationes_radicis/a#gravis");
+
+    /* sine filtro: alienus (CMXCIX MiB) primus */
+    graves = cursus_quaerere_graves(index, mensurae, NIHIL, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(graves);
+    CREDO_AEQUALIS_I32(xar_numerus(graves), IV);
+    CREDO_CHORDA_AEQUALIS_LITERIS(_gravis(graves, ZEPHYRUM)->titulus,
+        "probationes_radicis/c#alienus");
+    /* mensurae NIHIL: vacuum, non NIHIL; index NIHIL: NIHIL */
+    graves = cursus_quaerere_graves(index, NIHIL, NIHIL, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(graves);
+    CREDO_AEQUALIS_I32(xar_numerus(graves), ZEPHYRUM);
+    CREDO_NIHIL(cursus_quaerere_graves(NIHIL, mensurae, NIHIL,
+        c->piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I quo tempus ivit", _sectio_filii, NIHIL, NIHIL, NIHIL, NIHIL },
     { "II regenerationes iudicis", _sectio_iudicia, NIHIL, NIHIL, NIHIL,
@@ -986,6 +1111,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "XIII currentes", _sectio_currentes, NIHIL, NIHIL, NIHIL, NIHIL },
     { "XIV linea currentis", _sectio_linea, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "XV graves", _sectio_graves, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

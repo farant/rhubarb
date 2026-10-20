@@ -41,36 +41,48 @@
 #include "filum.h"
 #include <stdio.h>
 
-s32
-principale(
-    vacuum)
+/* Fixura suitae: documentum SEMEL legitur (ind -> c->suita);
+ * sectiones LEGUNT solum. Lectio ipsa in sectione prima asseritur;
+ * sectio secunda documentum et canonem EODEM internamento proprio
+ * legit (ut suita vetus). */
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
                 Piscina* piscina;
     InternamentumChorda* intern;
-        PlantaIndividua* ind;
                  chorda  fons;
                  chorda  causa;
-                    b32  praeteritus;
 
-    piscina = piscina_generare_dynamicum("probatio_planta_lectio",
-                                         1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
+    piscina        = c->piscina;
     intern         = internamentum_creare(piscina);
     causa.datum    = NIHIL;
     causa.mensura  = ZEPHYRUM;
+    fons           = filum_legere_totum("natura/exempla/hortus.census",
+        piscina);
+    c->datum       = planta_individua_legere(fons, piscina, intern,
+        &causa);
+}
 
 
     /* ========================================================
      * PROBARE: documentum verum per lectorem generatum
      * ======================================================== */
 
-    imprimere("\n--- Probans planta_individua_legere ---\n");
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+        PlantaIndividua* ind;
+                 chorda  fons;
+                 chorda  causa;
+
+    piscina        = c->piscina;
+    intern         = internamentum_creare(piscina);
+    causa.datum    = NIHIL;
+    causa.mensura  = ZEPHYRUM;
 
     fons = filum_legere_totum("natura/exempla/hortus.census",
                               piscina);
@@ -79,13 +91,31 @@ principale(
     ind = planta_individua_legere(fons, piscina, intern, &causa);
     CREDO_NON_NIHIL (ind);
     CREDO_CHORDA_VACUA (causa);
+}
 
-    si (!ind)
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+        PlantaIndividua* ind;
+                 chorda  fons;
+                 chorda  causa;
+
+    piscina        = c->piscina;
+    intern         = internamentum_creare(piscina);
+    causa.datum    = NIHIL;
+    causa.mensura  = ZEPHYRUM;
+    fons           = filum_legere_totum("natura/exempla/hortus.census",
+        piscina);
+    ind            = planta_individua_legere(fons, piscina, intern,
+        &causa);
+    /* lectio fracta: sectio nihil asserit (VACUA) */
+    si (c->suita == NIHIL || ind == NIHIL)
     {
-        imprimere("FRACTA: radix legi nequit\n");
-        credo_imprimere_compendium();
-        credo_claudere();
-        redde I;
+        redde;
     }
 
 
@@ -109,8 +139,6 @@ principale(
         chorda  canon_causa;
            Xar* vitia;
 
-        imprimere("\n--- Probans fixum contra canonem ---\n");
-
         canon_fons = filum_legere_totum(
                          "natura/cocta/individua.canon", piscina);
         CREDO_MAIOR_I32 (canon_fons.mensura, (i32)ZEPHYRUM);
@@ -130,13 +158,27 @@ principale(
     }
 
 
+}
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    constans PlantaIndividua* ind;
+
+    ind = (constans PlantaIndividua*)c->suita;
+    /* lectio fixurae fracta: sectio nihil asserit (VACUA) */
+    si (ind == NIHIL)
+    {
+        redde;
+    }
+
+
     /* ========================================================
      * PROBARE: dispositio per genus (kebab -> campus)
      * ======================================================== */
 
     {
-        imprimere("\n--- Probans dispositionem per genus ---\n");
-
         CREDO_AEQUALIS_I32 (xar_numerus(ind->rosa_canina), (i32)I);
         CREDO_AEQUALIS_I32 (xar_numerus(ind->granny_smith),
                             (i32)I);
@@ -157,17 +199,30 @@ principale(
                             (i32)ZEPHYRUM);
     }
 
+}
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    constans PlantaIndividua* ind;
+
+    ind = (constans PlantaIndividua*)c->suita;
+    /* lectio fixurae fracta: sectio nihil asserit (VACUA) */
+    si (ind == NIHIL)
+    {
+        redde;
+    }
+
     /* Porta: sequentia omnis ind->rosa_canina[0] et
      * ind->granny_smith[0] petit. Sacco vacuo xar_obtinere NIHIL
      * reddit, et probatio ruina (139) caderet loco rubri legibilis
-     * - quod mensuratum est dum vitia ficta plantantur. */
+     * - quod mensuratum est dum vitia ficta plantantur. Sectio
+     * sine assertione = VACUA (fracta). */
     si (   xar_numerus(ind->rosa_canina)  != (i32)I
         || xar_numerus(ind->granny_smith) != (i32)I)
     {
-        imprimere("FRACTA: sacci generum vacui - cetera omissa\n");
-        credo_imprimere_compendium();
-        credo_claudere();
-        redde I;
+        redde;
     }
 
 
@@ -177,8 +232,6 @@ principale(
 
     {
         PlantaRosaCanina* r;
-
-        imprimere("\n--- Probans <rosa-canina> ---\n");
 
         r = *(PlantaRosaCanina**)xar_obtinere(ind->rosa_canina,
                                               ZEPHYRUM);
@@ -243,6 +296,27 @@ principale(
     }
 
 
+}
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    constans PlantaIndividua* ind;
+
+    ind = (constans PlantaIndividua*)c->suita;
+    /* lectio fixurae fracta: sectio nihil asserit (VACUA) */
+    si (ind == NIHIL)
+    {
+        redde;
+    }
+    si (   xar_numerus(ind->rosa_canina)  != (i32)I
+        || xar_numerus(ind->granny_smith) != (i32)I)
+    {
+        redde;
+    }
+
+
     /* ========================================================
      * PROBARE: historia/eventum - elementum bis adstrictum
      * ======================================================== */
@@ -250,8 +324,6 @@ principale(
     {
              PlantaRosaCanina* r;
         PlantaHistoriaEventum* ev;
-
-        imprimere("\n--- Probans <historia>/<eventum> ---\n");
 
         r = *(PlantaRosaCanina**)xar_obtinere(ind->rosa_canina,
                                               ZEPHYRUM);
@@ -275,14 +347,33 @@ principale(
     }
 
 
+}
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    constans PlantaIndividua* ind;
+
+    ind = (constans PlantaIndividua*)c->suita;
+    /* lectio fixurae fracta: sectio nihil asserit (VACUA) */
+    si (ind == NIHIL)
+    {
+        redde;
+    }
+    si (   xar_numerus(ind->rosa_canina)  != (i32)I
+        || xar_numerus(ind->granny_smith) != (i32)I)
+    {
+        redde;
+    }
+
+
     /* ========================================================
      * PROBARE: granny-smith - ordinarius DIVERSUS per genus
      * ======================================================== */
 
     {
         PlantaGrannySmith* g;
-
-        imprimere("\n--- Probans <granny-smith> ---\n");
 
         g = *(PlantaGrannySmith**)xar_obtinere(ind->granny_smith,
                                                ZEPHYRUM);
@@ -307,20 +398,25 @@ principale(
         CREDO_NIHIL (g->radix);
         CREDO_NIHIL (g->historia);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "planta_individua_legere", _sectio_prima, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "fixum contra canonem", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "dispositionem per genus", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "<rosa-canina>", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "<historia>/<eventum>", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "<granny-smith>", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-    credo_claudere();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("planta_lectio", SECTIONES,
+        _suitam_parare, NIHIL);
 }

@@ -46,8 +46,10 @@ tractator_render (
 }
 
 interior vacuum
-resettere_contadores (vacuum)
+resettere_contadores (
+    CredoContextus* c)
 {
+    (vacuum)c;
     g_tractati_tick    = ZEPHYRUM;
     g_tractati_update  = ZEPHYRUM;
     g_tractati_render  = ZEPHYRUM;
@@ -74,42 +76,23 @@ _creare_repo (
 }
 
 
-s32 principale(vacuum)
-{
-                Piscina* piscina;
-    InternamentumChorda* intern;
-                    b32  praeteritus;
-
-
-    /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("test_cursus", MMM * LXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-
-    intern = internamentum_creare(piscina);
-    si (!intern)
-    {
-        imprimere("FRACTA: internamentum_creare\n");
-        piscina_destruere(piscina);
-        redde I;
-    }
-
-    credo_aperire(piscina);
-
-
     /* ==================================================
      * Probare cursus_creare
      * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
              CursusNuntiorum* cursus;
         RegistrumTractatoris* tractator;
          EntitasRepositorium* repo;
-
-        imprimere("\n--- Probans cursus_creare ---\n");
 
         tractator  = registrum_tractatoris_creare(piscina, intern);
         repo       = _creare_repo(piscina);
@@ -137,20 +120,28 @@ s32 principale(vacuum)
         cursus = cursus_creare(piscina, tractator, repo, NIHIL);
         CREDO_NIHIL(cursus);
     }
+}
 
 
     /* ==================================================
      * Probare cursus_mittere et capsa pigra
      * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
              CursusNuntiorum* cursus;
         RegistrumTractatoris* tractator;
          EntitasRepositorium* repo;
                      Entitas* entitas;
                       chorda* entitas_id;
-
-        imprimere("\n--- Probans cursus_mittere ---\n");
 
         tractator  = registrum_tractatoris_creare(piscina, intern);
         repo       = _creare_repo(piscina);
@@ -183,12 +174,22 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(cursus_numerus_pendentium_entitatis(cursus,
             entitas_id), II);
     }
+}
 
 
     /* ==================================================
      * Probare cursus_processare
      * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
              CursusNuntiorum* cursus;
         RegistrumTractatoris* tractator;
@@ -196,10 +197,6 @@ s32 principale(vacuum)
                      Entitas* entitas;
                       chorda* entitas_id;
                          i32  tractati;
-
-        imprimere("\n--- Probans cursus_processare ---\n");
-
-        resettere_contadores();
 
         tractator  = registrum_tractatoris_creare(piscina, intern);
         repo       = _creare_repo(piscina);
@@ -236,12 +233,22 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(g_tractati_tick, II);
         CREDO_AEQUALIS_I32(g_tractati_update, I);
     }
+}
 
 
     /* ==================================================
      * Probare limite processandi
      * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
              CursusNuntiorum* cursus;
         RegistrumTractatoris* tractator;
@@ -250,10 +257,6 @@ s32 principale(vacuum)
                       chorda* entitas_id;
                          i32  tractati;
                          i32  i;
-
-        imprimere("\n--- Probans limite processandi ---\n");
-
-        resettere_contadores();
 
         tractator  = registrum_tractatoris_creare(piscina, intern);
         repo       = _creare_repo(piscina);
@@ -288,12 +291,22 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(cursus_numerus_pendentium(cursus), ZEPHYRUM);
         CREDO_AEQUALIS_I32(g_tractati_tick, X);
     }
+}
 
 
     /* ==================================================
      * Probare multas entitates
      * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
              CursusNuntiorum* cursus;
         RegistrumTractatoris* tractator;
@@ -303,10 +316,6 @@ s32 principale(vacuum)
                       chorda* id1;
                       chorda* id2;
                          i32  tractati;
-
-        imprimere("\n--- Probans multas entitates ---\n");
-
-        resettere_contadores();
 
         tractator  = registrum_tractatoris_creare(piscina, intern);
         repo       = _creare_repo(piscina);
@@ -347,12 +356,22 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(g_tractati_tick, II);
         CREDO_AEQUALIS_I32(g_tractati_render, II);
     }
+}
 
 
     /* ==================================================
      * Probare cursus_processare_entitatem
      * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
              CursusNuntiorum* cursus;
         RegistrumTractatoris* tractator;
@@ -362,10 +381,6 @@ s32 principale(vacuum)
                       chorda* id1;
                       chorda* id2;
                          i32  tractati;
-
-        imprimere("\n--- Probans cursus_processare_entitatem ---\n");
-
-        resettere_contadores();
 
         tractator  = registrum_tractatoris_creare(piscina, intern);
         repo       = _creare_repo(piscina);
@@ -405,20 +420,28 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(tractati, I);
         CREDO_AEQUALIS_I32(g_tractati_tick, III);
     }
+}
 
 
     /* ==================================================
      * Probare cursus_vacare
      * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
              CursusNuntiorum* cursus;
         RegistrumTractatoris* tractator;
          EntitasRepositorium* repo;
                      Entitas* entitas;
                       chorda* entitas_id;
-
-        imprimere("\n--- Probans cursus_vacare ---\n");
 
         tractator  = registrum_tractatoris_creare(piscina, intern);
         repo       = _creare_repo(piscina);
@@ -441,19 +464,27 @@ s32 principale(vacuum)
         cursus_vacare(cursus);
         CREDO_AEQUALIS_I32(cursus_numerus_pendentium(cursus), ZEPHYRUM);
     }
+}
 
 
     /* ==================================================
      * Probare cursus_ponere_datum
      * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     {
              CursusNuntiorum* cursus;
         RegistrumTractatoris* tractator;
          EntitasRepositorium* repo;
                          i32  datum_custom;
-
-        imprimere("\n--- Probans cursus_ponere_datum ---\n");
 
         tractator  = registrum_tractatoris_creare(piscina, intern);
         repo       = _creare_repo(piscina);
@@ -465,27 +496,27 @@ s32 principale(vacuum)
 
         CREDO_VERUM(cursus->datum_custom == &datum_custom);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "cursus_creare", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "cursus_mittere", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "cursus_processare", _sectio_tertia, resettere_contadores, NIHIL,
+        NIHIL, NIHIL },
+    { "limite processandi", _sectio_quarta, resettere_contadores, NIHIL,
+        NIHIL, NIHIL },
+    { "multas entitates", _sectio_quinta, resettere_contadores, NIHIL,
+        NIHIL, NIHIL },
+    { "cursus_processare_entitatem", _sectio_sexta,
+        resettere_contadores, NIHIL, NIHIL, NIHIL },
+    { "cursus_vacare", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "cursus_ponere_datum", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ==================================================
-     * Compendium
-     * ================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    /* Destructio */
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("cursus", SECTIONES);
 }

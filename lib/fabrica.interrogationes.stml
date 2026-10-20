@@ -1,0 +1,182 @@
+<interrogationes unitas="fabrica">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I check whether generated files and installed binaries are up to date?
+    <responsum imperium="bin/fabrica iudicare -plenus" symbolum="fabrica_iudicare FabricaStatus">Run
+      bin/fabrica iudicare (quick) or bin/fabrica iudicare -plenus
+      (full) from the repository root, optionally naming artifacts.
+      Each artifact gets RECENS, STALUM, IGNOTUM, NON IUDICATUM or
+      FORTASSE with a cause. Exit 0 = all fine, 1 = something STALUM,
+      IGNOTUM or FORTASSE, 2 = nothing judged (an unknown flag,
+      declarations missing or broken, or no artifact matched).
+      Quick mode skips regeneration unless the action is
+      celer="verum", so many generated files say NON IUDICATUM; that is
+      a chosen mode, not a failure, and does not affect the exit code.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does fabrica mean by "stale", and does it ever look at mtimes?
+    <responsum symbolum="fabrica_iudicare fabrica_actionem_sigillare fabrica_ingressus_sigillare">Never
+      mtimes and never "the file exists". An artifact is stale when it
+      is not what its declared inputs produce TODAY. The input digest
+      is, per input in path order, "path NUL sha256(bytes)". A manifest
+      contributes the files it lists, not itself (it carries
+      timestamps). A directory contributes its sorted name list under
+      "path/" so it cannot collide with a file of the same path. The
+      build/fabrica/provenientia/ directory is left out
+      (fabrica_actionem_sigillare).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what are the provenientia strategies (regeneratio, relatio, ignota, verdictum)?
+    <responsum symbolum="fabrica_strategia_invenire FabricaStrategia">How
+      freshness is decided per output. regeneratio: re-run the generator
+      into an empty scratch directory and compare the bytes with the
+      committed file. relatio: ask the installed binary for -provenientia
+      and compare its "ingressus HEX" line with today's input digest.
+      ignota: never judged, only realized as a precondition (cannot be
+      a composite part or another action's input). verdictum: a gate's
+      verdict file plus its recorded read trace, never re-run by the
+      judge. fabrica_strategia_invenire looks them up by name.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I declare a new generated file so fabrica judges and heals it?
+    <responsum via="aedificatio.stml aedificatio.canon fabrica.stml" symbolum="fabrica_declarationes_legere_cum_sutura fabrica_subsystemata_legere">Add
+      an &lt;actio titulus genus="generator"&gt; to the subsystem's
+      aedificatio.stml (subsystems are listed in fabrica.stml) with a
+      &lt;mandatum&gt; of &lt;verbum! (&gt; lines (ONE argument per line,
+      because a raw capture eats to end of line), &lt;ingressus genus
+      via&gt; for each input, and &lt;exitus via provenientia="regeneratio"/&gt;.
+      Titles must be unique across all subsystems (scratch directories
+      are per title). The reader refuses unknown kinds, missing title,
+      input or output, with "via:linea" in the cause.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why must my generator write into FABRICA_SCRIPTURA, and why is that directory emptied first?
+    <responsum symbolum="fabrica_iudicare FabricaSutura" via="lib/fabrica.worklog.md tools/fabrica_sutura.c">Under
+      judgment the generator runs with FABRICA_SCRIPTURA set to
+      build/fabrica/scriptura/TITULUS and must write its output there
+      (at the exitus 'scriptura' path, default = the output path), not
+      over the committed file. The seam empties it before every run: a
+      mute generator (exit 0, writes nothing) would otherwise be
+      compared with the previous run's leftovers and wrongly judged
+      RECENS. Nothing written there = IGNOTUM "generator nihil
+      scripsit" (worklog T1).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find out why an artifact is STALUM or IGNOTUM?
+    <responsum imperium="bin/fabrica causae" symbolum="FabricaIudicium fabrica_iudicare" via="tools/fabrica.c lib/fabrica.worklog.md">Read
+      the cause printed next to it (FabricaIudicium.causa): "regeneratio
+      differt (lineae differentes: N)", "ingressus mutati post
+      institutionem", "ingressus mutatus: a, b, c +N" (N as a
+      Roman numeral) or "lectio transitus mutata: X" for gate verdicts, "generator fractus: ...",
+      "ingressus build/ sine domino: X". FORTASSE means the artifact
+      itself matches but something above it is stale; its cause names
+      the upstream root ("supra: TITULUS STATUS (cause)"). FORTASSE is
+      added by bin/fabrica's chain pass (_iudicare_catenam in
+      tools/fabrica.c, worklog 2026-10-15), not by fabrica_iudicare,
+      which judges an artifact against its direct inputs only; a library
+      caller of fabrica_iudicare never sees it. bin/fabrica causae
+      [titulus] shows why actions were run.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I rebuild everything that is stale, in the right order?
+    <responsum imperium="bin/fabrica sanare -siccum" symbolum="fabrica_sanare FabricaEventus fabrica_acta_via">bin/fabrica
+      sanare [artifact...] walks the dependency order over the selected
+      artifacts and everything above them: judge now, run the action in
+      place, judge again (SANATUM or FRACTUM; a dependent of a broken
+      action is OMISSUM). -siccum only reports (AGENDUM, FORTASSE). The
+      log of each run is build/fabrica/acta/TITULUS.log
+      (fabrica_acta_via). An action that writes outside its declared
+      vestigium is FRACTUM with "scripsit extra vestigium: ...". Gate
+      actions (genus iudicium) are never part of a sweep: a plain
+      bin/fabrica sanare skips them, they run only when named.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I test code that uses fabrica without touching the disk or running processes?
+    <responsum symbolum="fabrica_suturam_parare FabricaSutura" via="probationes/fabrica_mundus_fictus.c tools/fabrica_sutura.c">The
+      library touches disk and processes only through a FabricaSutura.
+      Call fabrica_suturam_parare first (it sets EVERY member to NIHIL),
+      then fill in what you provide; most members are optional and
+      documented "NIHIL licet". probationes/fabrica_mundus_fictus.c is
+      the in-memory world used by the tests; tools/fabrica_sutura.c is
+      the real one. Skipping fabrica_suturam_parare on a stack sutura
+      once left a garbage pointer in a newly added member (Bus error).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what are memorabilis and lectiones, and how do they let the judge skip a regeneration?
+    <responsum symbolum="fabrica_liber_via fabrica_iudicare">Both
+      apply to regeneratio outputs, in quick mode too (they are checked
+      before the quick-mode skip). lectiones="verum": the
+      generator runs with FABRICA_LECTIONES (fabrica_liber_via:
+      build/fabrica/lectiones/TITULUS.tsv) and records what it read;
+      if every recorded read still has the same digest, the output is
+      RECENS without running. memorabilis="verum": a stored
+      verification under a key of input digest plus argv is reused. Both
+      are written only after a regeneration that matched. Under
+      -plenus with auditus set (iudicare -audit) a hit is regenerated
+      anyway, and a mismatch is reported as AUDITUM DISCORS.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a generator with lectiones="verum" read files outside the tree and still be traced?
+    <responsum symbolum="fabrica_iudicare fabrica_liber_via">Not
+      for generators: when the read log is turned into a trace, paths
+      under the tree root are made relative, and the remaining absolute
+      paths (plus reads of the scratch directory, the read logs and the
+      object store) are dropped, so a change to a file outside the tree
+      never invalidates the trace. Declare such a file as an ingressus.
+      Gate verdicts (verdictum) are stricter: absolute reads are kept
+      except system and temporary roots, and reading a file under build/
+      that no declared action produces makes the trace unusable (IGNOTUM
+      "ingressus build/ sine domino").</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is a compositum and how is its verdict computed?
+    <responsum symbolum="fabrica_composita_legere fabrica_compositum_explicare fabrica_iudicia_coniungere fabrica_compositum_verdictum">A
+      named flat list of parts (an artifact, all outputs of an action,
+      or another composite) declared with &lt;compositum&gt; and
+      &lt;pars&gt; elements; no expressions. fabrica_compositum_explicare
+      flattens it (cycles, unknown parts and parts whose strategy is
+      never judged are refused), and the verdict is
+      the worst part: RECENS &lt; NON_IUDICATUM &lt; SUPRA &lt; IGNOTUM &lt;
+      STALUM (fabrica_iudicia_coniungere), naming up to III of the worst
+      artifacts and then "+N".</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is a gradus member, the "actio/membrum" names I see in verdicts?
+    <responsum imperium="bin/fabrica probare -vis" symbolum="fabrica_gradus_explicare FabricaGradus fabrica_area_via fabrica_gradus_composita">A
+      gradus kind (probationes_c) expands one declared action into one
+      synthetic action per member, titled "ACTIO/MEMBRUM", each with
+      its own area build/fabrica/area/ACTIO/MEMBRUM/ (fabrica_area_via),
+      a recorded read trace and a verdict file. The parent becomes a
+      composite of its members (fabrica_gradus_composita), so a single
+      changed test re-runs only that member. bin/fabrica probare
+      COMPOSITUM [FILTRUM...] runs the stale members and reuses fresh
+      ones; -vis re-runs every selected member.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why was a test member killed with "memoria maxima excessa"?
+    <responsum symbolum="fabrica_sectiones_legere" via="tools/fabrica_sutura.h">fabrica
+      runs every gradus member (link and run) with a whole-process
+      memory cap: FABRICA_MEMORIA_MB from fabrica's own environment (not
+      the member's), default FABRICA_MEMORIA_ORDINARIA_MB = 16 GiB, 0 =
+      none. Over it the member gets SIGKILL with exit 137, and the cause
+      names the footprint seen. For a sectioned credo suite the
+      verdict also names the section that was running ("sectio 'X'
+      RUIT"), and the sections before it keep their verdicts. The cap
+      only stops runaways. A heavy section that finishes is judged by
+      credo's own per-section ceiling (256 MiB, or 1024 with signum
+      gravis).</responsum>
+  </interrogatio>
+
+</interrogationes>

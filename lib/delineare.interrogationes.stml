@@ -1,0 +1,100 @@
+<interrogationes unitas="delineare">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I draw lines, rectangles and circles into a pixel buffer?
+    <responsum symbolum="delineare_creare_contextum tabula_pixelorum_creare_nuda fenestra_creare_tabulam_pixelorum delineare_rectangulum_plenum delineare_circulum">Make
+      a TabulaPixelorum (fenestra_creare_tabulam_pixelorum for a window,
+      tabula_pixelorum_creare_nuda without one), wrap it with
+      delineare_creare_contextum(piscina, tabula), and call the
+      primitives with a Color struct (color_ex_rgb), not a packed
+      pixel. The RGB(...) macro in the header's example yields a packed
+      i32 and does not fit the Color parameters. Nothing is shown until
+      you present the table (fenestra_praesentare_pixela). Caution
+      (audit 2026-10-18, unfixed): the outline delineare_rectangulum
+      with altitudo 1 at y = 0 hangs, because its side edges run to
+      y + altitudo - 2, which wraps to UINT_MAX in unsigned i32.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I pass negative coordinates, for a shape partly off the left or top edge?
+    <responsum symbolum="delineare_lineam delineare_lineam_horizontalem delineare_lineam_verticalem delineare_rectangulum_plenum delineare_circulum_plenum delineare_gradientum_radialem_dithered delineare_mandata" via="lib/delineare_mandata.worklog.md">Not
+      safely. Coordinates are i32, which is unsigned, so -5 arrives as
+      about 4e9. Outlines of circles and ellipses survive (off-table
+      pixels are skipped). delineare_rectangulum_plenum silently drops
+      the whole rectangle, visible part included, and the radial
+      gradients draw nothing once the circle crosses the top or left
+      edge. The rest can hang: delineare_lineam (so triangles and
+      polygons) picks its direction with an unsigned compare and never
+      reaches its end, and rectangle outlines and the other filled
+      shapes draw through delineare_lineam_horizontalem or
+      _verticalem, which loop from the smaller value up to the wrapped
+      one - billions of steps, forever when an end is exactly -1. Clip
+      to the table yourself, or emit Mandata and rasterize with
+      delineare_mandata, which clips in signed space.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I restrict drawing to a rectangle (clipping)?
+    <responsum symbolum="delineare_ponere_praecisionem delineare_tollere_praecisionem delineare_vacare delineare_restituere_contextum">delineare_ponere_praecisionem(ctx,
+      x, y, latitudo, altitudo) - x and y are s32 - and
+      delineare_tollere_praecisionem to clear it. A negative x or y is
+      raised to 0 but the width or height is NOT reduced by the same
+      amount, so a clip at x = -5, width 10 covers columns 0 to 9 rather
+      than 0 to 4. delineare_vacare ignores the clip and fills the whole
+      table; delineare_restituere_contextum resets clip, mode and
+      pattern.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I fill with a classic Mac pattern or draw in XOR mode?
+    <responsum symbolum="delineare_ponere_modum delineare_ponere_exemplar delineare_ponere_exemplar_internum delineare_ponere_offset_exemplaris exemplar_obtinere">Set
+      MODUS_EXEMPLAR with delineare_ponere_modum, then the 8x8 bitmap
+      with delineare_ponere_exemplar (8 bytes, one per row, high bit =
+      leftmost pixel) or a built-in one with
+      delineare_ponere_exemplar_internum (ids below EXEMPLAR_NUMERUS;
+      others are ignored). Set bits get the colour, clear bits are left
+      alone; the pattern is anchored at the offset from
+      delineare_ponere_offset_exemplaris. MODUS_XOR XORs the whole
+      packed pixel, alpha included, so XOR with an opaque colour over an
+      opaque pixel leaves alpha 0.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I fill a rounded rectangle with delineare_rectangulum_rotundum_plenum and get the same footprint as a plain filled rectangle?
+    <responsum symbolum="delineare_rectangulum_rotundum_plenum delineare_rectangulum_rotundum delineare_rectangulum_plenum">No.
+      With a radius above 0 it is meant to sit inside the border drawn
+      by delineare_rectangulum_rotundum: the leftmost and rightmost
+      columns stay empty, so draw the outline as well. With radius 0 it calls
+      delineare_rectangulum_plenum and fills everything. The radius is
+      capped at half the width and half the height.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I draw a dithered gradient limited to a palette?
+    <responsum symbolum="delineare_gradientum_linearem_dithered_cum_palette delineare_gradientum_radialem_dithered_cum_palette delineare_gradientum_linearem_dithered">The
+      _cum_palette functions take an AlgorithusDithering and a Color
+      array (NIHIL = pure black and white). They work in grey: both end
+      colours and every palette entry are reduced to BT.601 luma, so a
+      colour palette is matched by brightness only. The radial version
+      always dithers with Bayer (8x8 when asked, otherwise 4x4), whatever
+      algorithm you pass. The plain _dithered functions quantize each RGB
+      channel to 0 or 255 with Floyd-Steinberg. Today only brightening
+      gradients work: the shared interpolation runs in unsigned i32, so
+      when the end value is below the start every pixel past the first
+      clamps to full brightness. DITHERING_ATKINSON also drops its
+      two-rows-down neighbour and spreads 5/8 of the error, not
+      Atkinson's 6/8.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I draw gradients every frame without the context's piscina growing?
+    <responsum symbolum="delineare_gradientum_linearem_dithered delineare_creare_contextum piscina_notare piscina_reficere">Not
+      on its own: the Floyd-Steinberg and Atkinson paths allocate their
+      error rows from the piscina given to delineare_creare_contextum on
+      every call and never release them. Bracket the drawing with
+      piscina_notare and piscina_reficere on that piscina, or give the
+      context a per-frame piscina. Bayer paths allocate
+      nothing.</responsum>
+  </interrogatio>
+
+</interrogationes>

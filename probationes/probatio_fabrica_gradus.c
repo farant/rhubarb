@@ -1616,6 +1616,46 @@ _probare_sectiones (
         CREDO_VERUM(chorda_aequalis_literis(s->fractura,
             "t/probatio_a.c:12 AEQUALIS_I32 x == y [gradus VI: "
             "nuntius]"));
+        /* Ic (credo memoria T2): XIV campi = + memoria KiB (arena,
+         * vestigium, apex auctus); X/XI memoria 0; memoria deformis
+         * (X cifrae) et XII campi recusantur */
+        mundi_ponere(discus, "x.tsv",
+            "SECTIO\tfs\talpha\tTRANSIIT\t3\t3\t5\t\t\t\t\t32768"
+            "\t33824\t32800\n"
+            "SECTIO\tfs\tbeta\tFRACTA\t1\t2\t4\tt/probatio_a.c:12"
+            "\tAEQUALIS_I32\tx == y\tVI: nuntius\t0\t1056\t0\n");
+        CREDO_NECESSE(fabrica_sectiones_legere(sutura, "x.tsv", piscina,
+            &sectiones, &causa));
+        CREDO_NECESSE(xar_numerus(sectiones.sectiones) == II);
+        s = (FabricaSectio*)xar_obtinere(sectiones.sectiones, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(s->arena_apex_kib, 32768);
+        CREDO_AEQUALIS_I32(s->vestigium_kib, 33824);
+        CREDO_AEQUALIS_I32(s->apex_auctus_kib, 32800);
+        CREDO_AEQUALIS_I32(s->fractura.mensura, ZEPHYRUM);
+        s = (FabricaSectio*)xar_obtinere(sectiones.sectiones, I);
+        CREDO_AEQUALIS_I32(s->vestigium_kib, 1056);
+        CREDO_VERUM(chorda_aequalis_literis(s->fractura,
+            "t/probatio_a.c:12 AEQUALIS_I32 x == y [gradus VI: "
+            "nuntius]"));
+        mundi_ponere(discus, "x.tsv",
+            "SECTIO\tfs\talpha\tTRANSIIT\t3\t3\t5\t\t\t\n");
+        CREDO_NECESSE(fabrica_sectiones_legere(sutura, "x.tsv", piscina,
+            &sectiones, &causa));
+        s = (FabricaSectio*)xar_obtinere(sectiones.sectiones, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(s->arena_apex_kib, ZEPHYRUM);
+        mundi_ponere(discus, "x.tsv",
+            "SECTIO\tfs\talpha\tTRANSIIT\t3\t3\t5\t\t\t\t\t1234567890"
+            "\t1\t1\n");
+        CREDO_FALSUM(fabrica_sectiones_legere(sutura, "x.tsv", piscina,
+            &sectiones, &causa));
+        CREDO_VERUM(mundi_continet(causa, "memoria sectionis deformis",
+            piscina));
+        mundi_ponere(discus, "x.tsv",
+            "SECTIO\tfs\talpha\tTRANSIIT\t3\t3\t5\t\t\t\t\t1\n");
+        CREDO_FALSUM(fabrica_sectiones_legere(sutura, "x.tsv", piscina,
+            &sectiones, &causa));
+        CREDO_VERUM(mundi_continet(causa, "linea SECTIO deformis",
+            piscina));
         mundi_ponere(discus, "x.tsv",
             "SECTIO\tfs\talpha\tTRANSIIT\t3\t3\t5\t\t\t\n");
         CREDO_VERUM(fabrica_sectiones_legere(sutura, "x.tsv", piscina,

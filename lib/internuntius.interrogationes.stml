@@ -1,0 +1,115 @@
+<interrogationes unitas="internuntius">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I expose a C function that page JavaScript can call?
+    <responsum symbolum="internuntius_creare internuntius_praebere InternuntiusTractator internuntius_tractare">Create
+      the bridge once with internuntius_creare(piscina, missor, datum),
+      register each method with internuntius_praebere(inx, "titulus",
+      tractator, datum), and feed every incoming message to
+      internuntius_tractare(inx, nuntium, piscina_vocationis). The
+      message is JSON {"id": 7, "methodus": "...", "argumenta": {...}};
+      the reply {"id": 7, "fructus": ...} or {"id": 7, "culpa":
+      {"nuntius": "..."}} goes out through the missor.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how does a handler report an error instead of a result?
+    <responsum symbolum="InternuntiusTractator internuntius_tractare">Set
+      *culpa_exitus to a non-empty chorda and return NIHIL (the return
+      value is ignored once culpa has length > 0); the caller gets
+      {"culpa": {"nuntius": ...}} and the culpae counter goes up.
+      Returning NIHIL with culpa left empty is a SUCCESS whose fructus is
+      JSON null. argumenta is NIHIL when the message had no "argumenta"
+      key, so the handler must check it.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what is the piscina_vocationis and what lives in it?
+    <responsum symbolum="internuntius_tractare internuntius_eventum_mittere internuntius_creare">The
+      per-call arena: the parsed message tree, everything the handler
+      builds for its result, and the serialized reply all live there,
+      and the caller marks and resets it. The long-lived piscina given
+      to internuntius_creare holds only the bridge and its method
+      registry (method names are copied into it). Allocate the
+      handler's result in the piscina argument it receives, never in a
+      static.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can my missor keep the textus it is given?
+    <responsum symbolum="InternuntiusMissor chorda_transcribere vitrea_missor" via="lib/vitrea_servus.c lib/vitrea_macos.m">Only
+      by copying it. The text lives in the per-call piscina and is valid
+      only during the missor call; it is a chorda (length + bytes, not
+      NUL-terminated). lib/vitrea_servus.c copies it with
+      chorda_transcribere into its request piscina; the WebKit missor
+      (vitrea_missor in lib/vitrea_macos.m) escapes and evaluates it at
+      once.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I register the same method name twice, for example to override a handler?
+    <responsum symbolum="internuntius_praebere">No:
+      internuntius_praebere returns FALSUM for a duplicate name (and for
+      an empty name or a NIHIL handler). The registry is meant as code
+      written once, so a duplicate is treated as a wiring error. There
+      is no unregister. Most callers cast the result to (vacuum), so a
+      refused duplicate goes unnoticed; check it when names are
+      computed.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can the request id be a string, as in JSON-RPC?
+    <responsum symbolum="internuntius_tractare json_est_integer">No.
+      Only a JSON integer id is recognized (json_est_integer). A string,
+      float or null id is treated as no id: the call is still handled
+      and a reply is still sent, but without "id", so the JS side cannot
+      route it. Malformed JSON or a non-object message gets an error
+      reply with no id.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I push an event from C to the page without a request?
+    <responsum symbolum="internuntius_eventum_mittere">internuntius_eventum_mittere(inx,
+      "titulus", datum, piscina_vocationis) sends {"eventus": titulus,
+      "datum": datum} through the same missor (datum NIHIL becomes
+      null) and counts it in eventus_missi.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does the praebitor callback take an InternuntiusModus parameter?
+    <responsum symbolum="InternuntiusPraebitor InternuntiusModus" via="lib/vitrea_servus.c apps/forum/forum.c">So
+      that the same registration function serves both the local window
+      (INTERNUNTIUS_MODUS_LOCALIS, full trust) and a socket transport
+      (INTERNUNTIUS_MODUS_PUBLICUS, where test-harness methods must be
+      left out). It is a parameter rather than a config field on
+      purpose: the provider sees the mode in its signature and cannot
+      forget to check it. lib/vitrea_servus.c calls it with
+      INTERNUNTIUS_MODUS_PUBLICUS; apps/forum/forum.c is a provider that
+      registers some methods only when modus is
+      INTERNUNTIUS_MODUS_LOCALIS.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I put arbitrary text safely inside a JavaScript string literal?
+    <responsum symbolum="internuntius_effugere_js vitrea_missor" via="lib/vitrea_macos.m lib/speculum.c">internuntius_effugere_js(textus,
+      piscina) escapes backslash, double quote, control bytes (\n \r \t
+      short, others \uXXXX), '&lt;' (so '&lt;/script' cannot close an
+      inline script) and U+2028/U+2029, which are legal in JSON but not
+      in a raw JS literal. It does not add the surrounding quotes; you
+      write those yourself (vitrea_missor wraps the result in
+      internuntius._accipere("...")). Returns an empty chorda if
+      piscina is NIHIL.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I list the registered methods or see how many calls failed?
+    <responsum symbolum="internuntius_methodi internuntius_fructus InternuntiusFructus">internuntius_methodi(inx,
+      piscina) returns a new Xar of chorda (method names, in
+      registration order; the names themselves stay in the bridge's
+      piscina). internuntius_fructus(inx) returns the counters by value:
+      vocationes_tractatae (successful dispatches), culpae (error
+      replies sent, including malformed messages and unknown methods)
+      and eventus_missi. A NIHIL inx gives all zeros.</responsum>
+  </interrogatio>
+
+</interrogationes>

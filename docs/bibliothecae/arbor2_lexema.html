@@ -14,11 +14,14 @@
 <p class="subtitulus"></p>
 
 <p>arbor2&#x27;s C89 lexer, forked from arbor v1&#x27;s: newlines become explicit tokens instead of trivia (the preprocessor is line-oriented, so the parser needs to see them), line continuations are tracked, and from phase 2.6 trivia are no longer a blob but explicit tokens of their own (spaces, tabs, continuations, block and line comments) attached before and after each token. January 2026.</p>
+<p class="nota">Archived: a frozen predecessor in <code>archivum/</code>, kept as
+read-only historical reference. It is not built, tested or formatted;
+see <a href="../../archivum/CLAUDE.md"><code>archivum/CLAUDE.md</code></a>.</p>
 
 <table>
 <tbody>
-<tr><td>Header</td><td><a href="../../include/arbor2_lexema.h"><code>include/arbor2_lexema.h</code></a></td></tr>
-<tr><td>Implementation</td><td><a href="../../lib/arbor2_lexema.c"><code>lib/arbor2_lexema.c</code></a></td></tr>
+<tr><td>Header</td><td><a href="../../archivum/include/arbor2_lexema.h"><code>archivum/include/arbor2_lexema.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../archivum/lib/arbor2_lexema.c"><code>archivum/lib/arbor2_lexema.c</code></a></td></tr>
 <tr><td>Last change</td><td>2026-08-19 f683e78a</td></tr>
 <tr><td>Group</td><td><a href="greges.html#parsatores">Parsers: the C89 lineage</a></td></tr>
 </tbody>

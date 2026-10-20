@@ -1,0 +1,188 @@
+<interrogationes unitas="filum">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I read a whole file into memory?
+    <responsum symbolum="filum_legere_totum filum_error_recens">filum_legere_totum(via,
+      piscina) returns a chorda allocated in the piscina, NOT
+      NUL-terminated. On failure it returns mensura 0 and datum NIHIL,
+      and filum_error_recens() names the step that failed ('stat
+      fracta', 'fopen fracta', 'fread fracta - non omnia legere'). An
+      EMPTY file also comes back as mensura 0 and datum NIHIL, and
+      today it even goes down the failure path (piscina_allocare of 0
+      bytes returns NIHIL): filum_error_recens() says 'piscina_allocare
+      fracta' and the read is not recorded in the lectiones ledger. So
+      test filum_existit first when 'absent' and 'empty' must be told
+      apart. The length is stored as i32, so a file of 4 GiB or more is
+      reported with a truncated mensura. Caution (audit 2026-10-18,
+      unfixed): on a FIFO with no writer both filum_existit and
+      filum_legere_totum block indefinitely inside fopen (filum_status
+      returns at once on the same path).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why should I call filum instead of fopen, stat or open directly?
+    <responsum symbolum="filum_legere_totum lectiones_notare" via="project-specs/canalis-lectionum-spec.md silva/probationes/fixa/examinis/canalis_debita.tsv">Nearly
+      every filum call records what it read, probed or wrote in the lectiones
+      ledger (L, A, X, S lines), which is how fabrica learns a program's
+      real inputs and outputs. (Gaps today: filum_copiare does not record
+      its SOURCE, and an empty file read with filum_legere_totum is not
+      recorded.) A new raw fopen, freopen, open, opendir,
+      stat, lstat or access call is examen code 96 (CANALIS_PRAETERITUS)
+      and is refused at commit unless it carries a tolera with a reason;
+      files listed in canalis_debita.tsv predate the rule, and that list
+      only shrinks.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I read a file line by line?
+    <responsum symbolum="filum_lector_aperire filum_lector_lineam_proximam filum_lector_numerus_versus filum_lector_claudere">Open
+      with filum_lector_aperire(via, piscina), loop while
+      filum_lector_lineam_proximam(lector, &amp;linea) is VERUM, and
+      close with filum_lector_claudere (it closes the FILE; the lector
+      itself stays in the piscina). Each line is copied into the
+      piscina without its trailing '\n' and any trailing '\r'; lines
+      longer than the 4096-byte buffer are joined. An empty line
+      returns VERUM with mensura 0 and datum NIHIL, so loop on the
+      return value, not on datum. filum_lector_numerus_versus gives the
+      1-based number of the line just read. Known bug: a '\r' that
+      fgets leaves as the last byte of a full buffer is taken as a line
+      end, so a CRLF straddling the 4095-byte boundary yields an extra
+      empty line and shifts the count by one. Caution (audit 2026-10-18,
+      unfixed): a lone interior '\r' on that same boundary (4094 'A' +
+      "\rX\n") is deleted and splits the line in two, and calling
+      filum_lector_lineam_proximam after filum_lector_claudere crashes
+      (SEGV in fgets) instead of returning FALSUM.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can the line reader handle NUL bytes inside a line?
+    <responsum symbolum="filum_lector_lineam_proximam filum_legere_totum">No.
+      It reads with fgets and measures with strlen, so everything after
+      an embedded NUL in that buffer is silently dropped. For binary or
+      untrusted data read the whole file with filum_legere_totum and
+      split the chorda yourself. Caution (audit 2026-10-18, unfixed): the
+      short strlen is also taken as 'line complete', so 10 'A' + NUL +
+      5000 'B' + "\nZ\n" comes back as three lines [10] [916] [Z]: the
+      part of the line beyond the first fgets chunk becomes an extra
+      line and numerus_versus is off.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I write or replace a file in one call?
+    <responsum symbolum="filum_scribere filum_scribere_literis filum_appendere filum_appendere_literis">filum_scribere(via,
+      chorda) creates or truncates the file and writes the bytes;
+      filum_scribere_literis does the same for a C string. filum_appendere
+      and filum_appendere_literis add to the end (creating the file if
+      needed). All return FALSUM with filum_error_recens set on failure.
+      A chorda with datum NIHIL is refused, even when mensura is 0, so
+      writing an empty chorda from some APIs (json_ad_chorda, an empty
+      line from filum_lector) leaves the old file in place; use
+      filum_scribere_literis(via, "") to empty a file. Success is
+      judged from fwrite only: the fclose result is ignored, so an
+      error that surfaces when stdio flushes at close (disk full) still
+      returns VERUM.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I append a log line that is really on disk before I continue?
+    <responsum symbolum="filum_appendere_firmiter filum_scriptor_sync">filum_appendere_firmiter
+      opens with O_APPEND|O_CREAT (mode 0644), does ONE write, then
+      fsync, then close, and returns FALSUM if any of them fails. With
+      O_APPEND every write lands at the current end of file, so records
+      that several processes write this way are not interleaved (the
+      header cites PIPE_BUF 4096, but that is Linux's figure and a pipe
+      rule; macOS defines PIPE_BUF as 512). An empty chorda (even with
+      datum NIHIL) creates the file and still fsyncs.
+      filum_scriptor_sync is only fflush: it reaches the kernel, not
+      the disk. Not available under _WIN32.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I write a file piece by piece?
+    <responsum symbolum="filum_scriptor_aperire filum_scriptor_scribere filum_scriptor_lineam_scribere filum_scriptor_sync filum_scriptor_claudere">Open
+      a FilumScriptor with filum_scriptor_aperire(via,
+      FILUM_MODUS_CREARE or FILUM_MODUS_APPENDERE, piscina), call
+      filum_scriptor_scribere / _scribere_literis /
+      _lineam_scribere (adds '\n'), and always
+      filum_scriptor_claudere at the end: the writer wraps a stdio FILE,
+      so unflushed bytes are written at close and the handle leaks if
+      you forget it. claudere returns nothing, so a flush error at
+      close is lost: call filum_scriptor_sync first (FALSUM if fflush
+      fails) when you must know the bytes left the process. Unlike
+      filum_scribere, an empty chorda here is a no-op success.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I create a nested directory path like mkdir -p?
+    <responsum symbolum="filum_directorium_creare_cum_parentibus filum_directorium_creare_si_necesse filum_directorium_creare filum_directorium_creare_cum_modo">filum_directorium_creare_cum_parentibus
+      creates every missing segment (mode 0755) and is idempotent. The
+      other three creators make ONE level only: filum_directorium_creare
+      fails if the directory exists, _si_necesse succeeds if it already
+      exists (also under a concurrent creator), and _cum_modo sets the
+      given mode and chmods an existing directory to it too (use it for
+      0700 secrets). _cum_parentibus does not roll back: segments
+      created before a failure stay.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I delete a whole directory tree safely, without following symlinks?
+    <responsum symbolum="filum_arborem_delere filum_delere">Yes:
+      filum_arborem_delere is rm -r with lstat, so a symbolic link is
+      removed as a link and its target is never touched. It refuses
+      NIHIL, "" and the filesystem root by identity (so "//" and
+      "/tmp/.." too), and an absent path is VERUM. filum_delere is
+      remove(): one file or one EMPTY directory. POSIX
+      only. Caution (audit 2026-10-18, unfixed): a symlink to a directory
+      spelled with a trailing slash ('nexus/') or as 'nexus/.' IS
+      followed, because lstat resolves through it: the target's contents
+      are deleted, and with 'nexus/' the target directory itself is
+      removed and VERUM returned.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can filum_copiare keep the executable bit when copying a binary?
+    <responsum symbolum="filum_copiare filum_modum_ponere filum_status">No:
+      it is a plain byte copy through fopen "wb", so a new destination
+      gets the default mode (0666 minus the umask, typically 0644) and
+      an existing one keeps its own mode. Call filum_modum_ponere(via,
+      0755) afterwards, and check with filum_status, whose
+      potest_exsequi reports the user +x bit. Also note that a read
+      error on the source ends the copy like end of file and still
+      returns VERUM. Caution (audit 2026-10-18, unfixed): when source and
+      destination are the same file (same path, 'd/./b.txt', a hardlink
+      or a symlink to the source) the source is truncated to 0 bytes and
+      VERUM is returned, and a directory as via_fons truncates the
+      destination and returns VERUM with filum_error_recens
+      NIHIL.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I hold an exclusive lock across read, check and append between processes?
+    <responsum symbolum="filum_seram_capere filum_seram_liberare">filum_seram_capere(via,
+      mora_ms, piscina) takes an flock on the lock file (created if
+      absent, never deleted), retrying every 10 ms until mora_ms runs
+      out (0 = try once); NIHIL means busy or unopenable. Hold it for
+      the whole read-check-append sequence and release with
+      filum_seram_liberare (NIHIL-tolerant, repeatable). The kernel
+      drops it when the process dies, and the descriptor is FD_CLOEXEC,
+      so programs started with exec (processus_exsequi) do not inherit
+      it. Two captures in the same process also exclude each other. It
+      neither sets nor clears filum_error_recens.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what does filum_error_recens return, and when is it reliable?
+    <responsum symbolum="filum_error_recens filum_existit filum_mensura filum_seram_capere">A
+      static, process-global message (not thread-safe, do not free) for
+      the last failure, or NIHIL. Most functions clear it on entry and
+      set it on failure, but filum_existit, filum_mensura,
+      filum_directorium_existit and filum_seram_capere never touch it,
+      so after those it may still describe an older error. Read it
+      immediately after the call that returned FALSUM. Caution (audit
+      2026-10-18, unfixed): filum_legere_totum sets it to
+      'piscina_allocare fracta' on an empty file or /dev/null although
+      nothing failed, and leaves it NIHIL when a file of 4 GiB or more
+      comes back silently truncated.</responsum>
+  </interrogatio>
+
+</interrogationes>

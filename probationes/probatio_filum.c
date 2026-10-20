@@ -10,33 +10,24 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-s32 principale (vacuum)
-{
-    Piscina* piscina;
-        b32  praeteritus;
-
-    /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("test_filum", 8192);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ==================================================
 	 * Probare filum_scribere_literis et filum_legere_totum
 	 * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* test_via = "/tmp/test_rhubarb_filum.txt";
         constans character* test_contentum =
             "salve munde\nhoc est probatio\n";
                     chorda legere_contentum;
                     chorda speratus;
-
-        imprimere("\n--- Probans filum_scribere et filum_legere_totum ---\n");
 
         /* Scribere */
         CREDO_VERUM(filum_scribere_literis(test_via, test_contentum));
@@ -53,16 +44,20 @@ s32 principale (vacuum)
         /* Purgare */
         filum_delere(test_via);
     }
+}
 
 
     /* ==================================================
 	 * Probare filum_existit
 	 * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         constans character* test_via = "/tmp/test_rhubarb_existit.txt";
-
-        imprimere("\n--- Probans filum_existit ---\n");
 
         /* Non existit ante creationem */
         filum_delere(test_via); /* Purga si existit */
@@ -76,19 +71,23 @@ s32 principale (vacuum)
         CREDO_VERUM(filum_delere(test_via));
         CREDO_FALSUM(filum_existit(test_via));
     }
+}
 
 
     /* ==================================================
 	 * Probare filum_mensura
 	 * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         constans character* test_via =
             "/tmp/test_rhubarb_mensura.txt";
         constans character* contentum = "12345678";
             memoriae_index  mensura;
-
-        imprimere("\n--- Probans filum_mensura ---\n");
 
         filum_scribere_literis(test_via, contentum);
         mensura = filum_mensura(test_via);
@@ -97,12 +96,20 @@ s32 principale (vacuum)
 
         filum_delere(test_via);
     }
+}
 
 
     /* ==================================================
 	 * Probare filum_lector_aperire et lineam_proximam
 	 * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* test_via = "/tmp/test_rhubarb_lines.txt";
         constans character* contentum =
@@ -110,8 +117,6 @@ s32 principale (vacuum)
                FilumLector* lector;
                     chorda  linea;
                     chorda  speratus1, speratus2, speratus3;
-
-        imprimere("\n--- Probans filum_lector lineam_proximam ---\n");
 
         /* Crea filum cum tribus lineis */
         filum_scribere_literis(test_via, contentum);
@@ -147,20 +152,26 @@ s32 principale (vacuum)
         filum_lector_claudere(lector);
         filum_delere(test_via);
     }
+}
 
 
     /* ==================================================
 	 * Probare filum_appendere
 	 * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* test_via = "/tmp/test_rhubarb_append.txt";
                     chorda  contentum_initial;
                     chorda  contentum_append;
                     chorda  contentum_final;
                     chorda  speratus;
-
-        imprimere("\n--- Probans filum_appendere ---\n");
 
         /* Scribe initial */
         contentum_initial = chorda_ex_literis("prima ", piscina);
@@ -177,18 +188,22 @@ s32 principale (vacuum)
 
         filum_delere(test_via);
     }
+}
 
 
     /* ==================================================
 	 * Probare filum_movere
 	 * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         constans character* via_vetus  = "/tmp/test_rhubarb_vetus.txt";
         constans character* via_nova   = "/tmp/test_rhubarb_nova.txt";
         constans character* contentum  = "probatio movere";
-
-        imprimere("\n--- Probans filum_movere ---\n");
 
         /* Crea filum */
         filum_scribere_literis(via_vetus, contentum);
@@ -202,12 +217,20 @@ s32 principale (vacuum)
         /* Purga */
         filum_delere(via_nova);
     }
+}
 
 
     /* ==================================================
 	 * Probare filum_copiare
 	 * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* via_fons = "/tmp/test_rhubarb_fons.txt";
         constans character* via_dest =
@@ -215,8 +238,6 @@ s32 principale (vacuum)
         constans character* contentum = "probatio copiare contentum";
                     chorda  legere_fons;
                     chorda  legere_dest;
-
-        imprimere("\n--- Probans filum_copiare ---\n");
 
         /* Crea fons */
         filum_scribere_literis(via_fons, contentum);
@@ -237,18 +258,22 @@ s32 principale (vacuum)
         filum_delere(via_fons);
         filum_delere(via_dest);
     }
+}
 
 
     /* ==================================================
 	 * Probare filum_status
 	 * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         constans character* test_via   = "/tmp/test_rhubarb_status.txt";
         constans character* contentum  = "probatio status";
                FilumStatus  status;
-
-        imprimere("\n--- Probans filum_status ---\n");
 
         /* Crea filum */
         filum_scribere_literis(test_via, contentum);
@@ -264,17 +289,23 @@ s32 principale (vacuum)
         /* Purga */
         filum_delere(test_via);
     }
+}
 
 
     /* ==================================================
 	 * Probare tractatio fili vacui
 	 * ================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* test_via = "/tmp/test_rhubarb_vacuum.txt";
                     chorda  contentum;
-
-        imprimere("\n--- Probans filum vacuum ---\n");
 
         /* Crea filum vacuum */
         filum_scribere_literis(test_via, "");
@@ -288,16 +319,22 @@ s32 principale (vacuum)
 
         filum_delere(test_via);
     }
+}
 
 
     /* ==================================================
 	 * Probare NIHIL handling
 	 * ================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda result;
-
-        imprimere("\n--- Probans NIHIL handling ---\n");
 
         result = filum_legere_totum(NIHIL, piscina);
         CREDO_AEQUALIS_I32(result.mensura, ZEPHYRUM);
@@ -306,18 +343,24 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32((i32)filum_mensura(NIHIL), ZEPHYRUM);
         CREDO_FALSUM(filum_scribere_literis(NIHIL, "probatio"));
     }
+}
 
 
     /* ==================================================
 	 * Probare filum_error_recens
 	 * ================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* error;
                     chorda  result;
                     chorda  contentum;
-
-        imprimere("\n--- Probans filum_error_recens ---\n");
 
         /* Error post lectio fili non existentis */
         result =
@@ -337,12 +380,20 @@ s32 principale (vacuum)
         /* Purgare */
         filum_delere("/tmp/test_rhubarb_error.txt");
     }
+}
 
 
     /* ==================================================
 	 * Probare binary data cum nullis embedded
 	 * ================================================== */
 
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* test_via = "/tmp/test_rhubarb_binary.txt";
                         i8  binary_data[] = {0x00, 0x01, (i8)0xFF,
@@ -350,8 +401,6 @@ s32 principale (vacuum)
                     0x7F};
                     chorda contentum;
                     chorda legere;
-
-        imprimere("\n--- Probans binary data cum nullis embedded ---\n");
 
         contentum.datum    = binary_data;
         contentum.mensura  = V;
@@ -364,19 +413,25 @@ s32 principale (vacuum)
 
         filum_delere(test_via);
     }
+}
 
 
     /* ==================================================
 	 * Probare filum_appendere_literis
 	 * ================================================== */
 
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* test_via =
             "/tmp/test_rhubarb_append_literis.txt";
                     chorda contentum_final;
                     chorda speratus;
-
-        imprimere("\n--- Probans filum_appendere_literis ---\n");
 
         /* Scribe initial */
         CREDO_VERUM(filum_scribere_literis(test_via, "prima "));
@@ -391,19 +446,25 @@ s32 principale (vacuum)
 
         filum_delere(test_via);
     }
+}
 
 
     /* ==================================================
 	 * Probare overwrite behavior
 	 * ================================================== */
 
+interior vacuum
+_sectio_decima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* test_via =
             "/tmp/test_rhubarb_superscribere.txt";
                     chorda result;
                     chorda speratus;
-
-        imprimere("\n--- Probans superscribere ---\n");
 
         /* Scribe contentum longum */
         CREDO_VERUM(filum_scribere_literis(test_via,
@@ -420,12 +481,20 @@ s32 principale (vacuum)
 
         filum_delere(test_via);
     }
+}
 
 
     /* ==================================================
 	 * Probare lineas vacuas in filo
 	 * ================================================== */
 
+interior vacuum
+_sectio_decima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* test_via =
             "/tmp/test_rhubarb_lineas_vacuas.txt";
@@ -434,8 +503,6 @@ s32 principale (vacuum)
                     chorda  linea;
                     chorda  speratus_prima;
                     chorda  speratus_tertia;
-
-        imprimere("\n--- Probans lineas vacuas in filo ---\n");
 
         filum_scribere_literis(test_via, contentum);
         lector = filum_lector_aperire(test_via, piscina);
@@ -459,12 +526,20 @@ s32 principale (vacuum)
         filum_lector_claudere(lector);
         filum_delere(test_via);
     }
+}
 
 
     /* ==================================================
 	 * Probare fines linearum diversos
 	 * ================================================== */
 
+interior vacuum
+_sectio_decima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* test_via =
             "/tmp/test_rhubarb_fines_linearum.txt";
@@ -475,13 +550,11 @@ s32 principale (vacuum)
                     chorda  speratus_unix;
                     chorda  speratus_mac;
 
-        imprimere("\n--- Probans fines linearum diversos ---\n");
-
         f = lectiones_fopen(test_via, "wb");
         si (!f)
         {
             imprimere("FRACTA: fopen\n");
-            redde I;
+            redde;
         }
         fprintf(f, "linea windows\r\n");
         fprintf(f, "linea unix\n");
@@ -511,12 +584,20 @@ s32 principale (vacuum)
         filum_lector_claudere(lector);
         filum_delere(test_via);
     }
+}
 
 
     /* ==================================================
 	 * Probare filum sine newline finali (multi-linea)
 	 * ================================================== */
 
+interior vacuum
+_sectio_decima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* test_via =
             "/tmp/test_rhubarb_sine_newline_finali.txt";
@@ -526,13 +607,11 @@ s32 principale (vacuum)
                     chorda  speratus1;
                     chorda  speratus2;
 
-        imprimere("\n--- Probans filum sine newline finali (multi-linea) ---\n");
-
         f = lectiones_fopen(test_via, "w");
         si (!f)
         {
             imprimere("FRACTA: fopen\n");
-            redde I;
+            redde;
         }
         fprintf(f, "linea1\n");
         fprintf(f, "linea2");  /* sine newline */
@@ -558,17 +637,23 @@ s32 principale (vacuum)
         filum_lector_claudere(lector);
         filum_delere(test_via);
     }
+}
 
 
     /* ==================================================
 	 * Probare aperire filum non existens
 	 * ================================================== */
 
+interior vacuum
+_sectio_decima_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                FilumLector* lector;
         constans character* error;
-
-        imprimere("\n--- Probans aperire filum non existens ---\n");
 
         lector = filum_lector_aperire("/nonexistent/rhubarb/via.txt",
             piscina);
@@ -577,20 +662,26 @@ s32 principale (vacuum)
         error = filum_error_recens();
         CREDO_NON_NIHIL(error);
     }
+}
 
 
     /* ==================================================
 	 * Probare comportamentum post EOF
 	 * ================================================== */
 
+interior vacuum
+_sectio_decima_nona (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* test_via =
             "/tmp/test_rhubarb_comportamentum_eof.txt";
         constans character* contentum = "linea sola\n";
                FilumLector* lector;
                     chorda  linea;
-
-        imprimere("\n--- Probans comportamentum post EOF ---\n");
 
         filum_scribere_literis(test_via, contentum);
         lector = filum_lector_aperire(test_via, piscina);
@@ -613,12 +704,20 @@ s32 principale (vacuum)
         filum_lector_claudere(lector);
         filum_delere(test_via);
     }
+}
 
 
     /* ==================================================
 	 * Probare limites longitudinis linearum - 4096 byte buffer
 	 * ================================================== */
 
+interior vacuum
+_sectio_vicesima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* test_via =
             "/tmp/test_rhubarb_lineas_longas.txt";
@@ -627,14 +726,12 @@ s32 principale (vacuum)
                        i32  i;
                  character* buffer_longus;
 
-        imprimere("\n--- Probans limites longitudinis linearum (4096 buffer) ---\n");
-
         /* Genera lineam 4095 bytes longam (sine newline) - ex piscina */
         buffer_longus = (character*)piscina_allocare(piscina, 5001);
         si (!buffer_longus)
         {
             imprimere("FRACTA: piscina_allocare\n");
-            redde I;
+            redde;
         }
 
         /* Probatio 1: Linea 4095 bytes (debet capere exacte cum terminatore nullo) */
@@ -690,7 +787,7 @@ s32 principale (vacuum)
             si (!f)
             {
                 imprimere("FRACTA: fopen\n");
-                redde I;
+                redde;
             }
 
             /* Prima linea: brevis */
@@ -737,20 +834,26 @@ s32 principale (vacuum)
         imprimere("        ChordaAedificator crescit dynamice pro lineis longis\n");
         imprimere("        (buffer_longus ex piscina, liberabitur cum piscina_destruere)\n");
     }
+}
 
 
     /* ==================================================
 	 * Probare FilumScriptor - scriptio continua
 	 * ================================================== */
 
+interior vacuum
+_sectio_vicesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           constans character* test_via =
               "/tmp/test_rhubarb_scriptor.txt";
                FilumScriptor* scriptor;
                       chorda  contentum;
                       chorda  speratus;
-
-        imprimere("\n--- Probans FilumScriptor basicum ---\n");
 
         /* Aperire in modus creare */
         scriptor = filum_scriptor_aperire(test_via, FILUM_MODUS_CREARE,
@@ -773,20 +876,26 @@ s32 principale (vacuum)
 
         filum_delere(test_via);
     }
+}
 
 
     /* ==================================================
 	 * Probare FilumScriptor - modus appendere
 	 * ================================================== */
 
+interior vacuum
+_sectio_vicesima_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* test_via =
             "/tmp/test_rhubarb_scriptor_append.txt";
                FilumScriptor* scriptor;
                       chorda  contentum;
                       chorda  speratus;
-
-        imprimere("\n--- Probans FilumScriptor modus appendere ---\n");
 
         /* Prima scriptio - creare */
         scriptor = filum_scriptor_aperire(test_via, FILUM_MODUS_CREARE,
@@ -811,12 +920,20 @@ s32 principale (vacuum)
 
         filum_delere(test_via);
     }
+}
 
 
     /* ==================================================
 	 * Probare FilumScriptor - lineam_scribere
 	 * ================================================== */
 
+interior vacuum
+_sectio_vicesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* test_via =
             "/tmp/test_rhubarb_scriptor_lineas.txt";
@@ -824,8 +941,6 @@ s32 principale (vacuum)
                  FilumLector* lector;
                       chorda  linea;
                       chorda speratus1, speratus2, speratus3;
-
-        imprimere("\n--- Probans FilumScriptor lineam_scribere ---\n");
 
         /* Scribere tres lineas */
         scriptor = filum_scriptor_aperire(test_via, FILUM_MODUS_CREARE,
@@ -863,12 +978,20 @@ s32 principale (vacuum)
         filum_lector_claudere(lector);
         filum_delere(test_via);
     }
+}
 
 
     /* ==================================================
 	 * Probare FilumScriptor - scribere chorda
 	 * ================================================== */
 
+interior vacuum
+_sectio_vicesima_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* test_via =
             "/tmp/test_rhubarb_scriptor_chorda.txt";
@@ -876,8 +999,6 @@ s32 principale (vacuum)
                       chorda contentum1, contentum2;
                       chorda legere;
                       chorda speratus;
-
-        imprimere("\n--- Probans FilumScriptor scribere chorda ---\n");
 
         scriptor = filum_scriptor_aperire(test_via, FILUM_MODUS_CREARE,
             piscina);
@@ -897,18 +1018,24 @@ s32 principale (vacuum)
 
         filum_delere(test_via);
     }
+}
 
 
     /* ==================================================
 	 * Probare FilumScriptor - sync
 	 * ================================================== */
 
+interior vacuum
+_sectio_vicesima_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
          constans character* test_via =
              "/tmp/test_rhubarb_scriptor_sync.txt";
               FilumScriptor* scriptor;
-
-        imprimere("\n--- Probans FilumScriptor sync ---\n");
 
         scriptor = filum_scriptor_aperire(test_via, FILUM_MODUS_CREARE,
             piscina);
@@ -923,16 +1050,22 @@ s32 principale (vacuum)
         filum_scriptor_claudere(scriptor);
         filum_delere(test_via);
     }
+}
 
 
     /* ==================================================
 	 * Probare FilumScriptor - NIHIL handling
 	 * ================================================== */
 
+interior vacuum
+_sectio_vicesima_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         FilumScriptor* scriptor;
-
-        imprimere("\n--- Probans FilumScriptor NIHIL handling ---\n");
 
         /* Aperire cum NIHIL via */
         scriptor = filum_scriptor_aperire(NIHIL, FILUM_MODUS_CREARE,
@@ -947,12 +1080,20 @@ s32 principale (vacuum)
         /* Claudere NIHIL debet esse tutum */
         filum_scriptor_claudere(NIHIL);
     }
+}
 
 
     /* ==================================================
 	 * Probare FilumScriptor - multas lineas (event log simulation)
 	 * ================================================== */
 
+interior vacuum
+_sectio_vicesima_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* test_via =
             "/tmp/test_rhubarb_scriptor_eventlog.txt";
@@ -961,8 +1102,6 @@ s32 principale (vacuum)
                       chorda  linea;
                          i32  i;
                          i32  numerus_lineas;
-
-        imprimere("\n--- Probans FilumScriptor event log simulation ---\n");
 
         scriptor = filum_scriptor_aperire(test_via, FILUM_MODUS_CREARE,
             piscina);
@@ -994,17 +1133,21 @@ s32 principale (vacuum)
         filum_lector_claudere(lector);
         filum_delere(test_via);
     }
-
+}
 
     /* ---- modus: ponere, et bit exsequendi in statu ---- */
+
+interior vacuum
+_sectio_vicesima_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         constans character* via_modi =
             "/tmp/probatio_filum_modus.txt";
         constans character* via_copiae =
             "/tmp/probatio_filum_copia.txt";
                 FilumStatus st;
-
-        imprimere("\n--- Probans filum_modum_ponere ---\n");
 
         /* STATUS DETERMINATUS: fopen("w") modum NON restituit, ergo
          * plagula ex cursu interrupto cum 0755 relicta assertionem
@@ -1041,9 +1184,15 @@ s32 principale (vacuum)
         filum_delere(via_copiae);
         filum_delere(via_modi);
     }
-
+}
 
     /* ---- directoria nidificata: semita tota uno actu ---- */
+
+interior vacuum
+_sectio_vicesima_nona (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         constans character* radix_areae =
             "/tmp/probatio_filum_semita";
@@ -1055,8 +1204,6 @@ s32 principale (vacuum)
             "/tmp/probatio_filum_semita/a/b/c";
         constans character* via_fili =
             "/tmp/probatio_filum_semita/a/b/c/opus.txt";
-
-        imprimere("\n--- Probans directoria cum parentibus ---\n");
 
         /* STATUS DETERMINATUS: arborem cursus prioris tollere,
          * altissima primum - aliter 'creavit' nihil probat, quia
@@ -1106,12 +1253,18 @@ s32 principale (vacuum)
         CREDO_VERUM(filum_delere(radix_areae));
         CREDO_FALSUM(filum_directorium_existit(radix_areae));
     }
+}
 
 
     /* ==================================================
      * Probare filum_arborem_delere (nexum NON sequitur)
      * ================================================== */
 
+interior vacuum
+_sectio_tricesima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         constans character* radix   = "/tmp/test_rhubarb_arbor";
         constans character* aliena  = "/tmp/test_rhubarb_arbor_aliena";
@@ -1119,8 +1272,6 @@ s32 principale (vacuum)
             "/tmp/test_rhubarb_arbor_aliena/testis.txt";
         constans character* planum =
             "/tmp/test_rhubarb_arbor_filum.txt";
-
-        imprimere("\n--- Probans filum_arborem_delere ---\n");
 
         /* reliquiae cursus prioris, a fundo sursum */
         (vacuum)filum_delere(
@@ -1170,12 +1321,20 @@ s32 principale (vacuum)
         (vacuum)filum_delere(testis);
         (vacuum)filum_delere(aliena);
     }
+}
 
 
     /* ==================================================
      * Probans filum_seram_capere (lapide feature-requests/020)
      * ================================================== */
 
+interior vacuum
+_sectio_tricesima_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         /* in build/ arboris, non /tmp: arbores duae simul probantes
          * eandem seram contenderent */
@@ -1185,7 +1344,6 @@ s32 principale (vacuum)
                      pid_t  filius;
                    integer  status;
 
-        imprimere("\n--- Probans filum_seram_capere ---\n");
         (vacuum)filum_delere(via);
 
         a = filum_seram_capere(via, ZEPHYRUM, piscina);
@@ -1223,20 +1381,24 @@ s32 principale (vacuum)
         filum_seram_liberare(NIHIL);
         (vacuum)filum_delere(via);
     }
+}
 
 
     /* ==================================================
      * Probare cum_parentibus sub CONCURSU (fabrica plan 2 T3)
      * ================================================== */
 
+interior vacuum
+_sectio_tricesima_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         constans character* radix = "/tmp/test_rhubarb_concursus";
                      pid_t  filii[II];
                        i32  f;
                        s32  status;
                        s32  fracta;
-
-        imprimere("\n--- Probans cum_parentibus sub concursu ---\n");
 
         /* CAUSA: creare_si_necesse stat() deinde mkdir() - alter
          * processus inter ea creare potest; mkdir EEXIST tum
@@ -1278,18 +1440,25 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32(fracta, ZEPHYRUM);
         (vacuum)filum_arborem_delere(radix);
     }
+}
 
 
     /* ==================================================
 	 * Probare filum_appendere_firmiter (vates-plan-2 T1)
 	 * ================================================== */
 
+interior vacuum
+_sectio_tricesima_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* test_via =
             "/tmp/test_rhubarb_appendere_firmiter.txt";
                     chorda lectum;
 
-        imprimere("\n--- Probans filum_appendere_firmiter ---\n");
         filum_delere(test_via);
 
         /* creat si abest, deinde appendit - ordo servatur */
@@ -1313,27 +1482,72 @@ s32 principale (vacuum)
 
         filum_delere(test_via);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "filum_scribere et filum_legere_totum", _sectio_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "filum_existit", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "filum_mensura", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "filum_lector lineam_proximam", _sectio_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "filum_appendere", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "filum_movere", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "filum_copiare", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "filum_status", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "filum vacuum", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "NIHIL handling", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "filum_error_recens", _sectio_decima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "binary data cum nullis embedded", _sectio_decima_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "filum_appendere_literis", _sectio_decima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "superscribere", _sectio_decima_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "lineas vacuas in filo", _sectio_decima_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "fines linearum diversos", _sectio_decima_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "filum sine newline finali (multi-linea)", _sectio_decima_septima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "aperire filum non existens", _sectio_decima_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "comportamentum post EOF", _sectio_decima_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "limites longitudinis linearum (4096 buffer)", _sectio_vicesima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "FilumScriptor basicum", _sectio_vicesima_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "FilumScriptor modus appendere", _sectio_vicesima_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "FilumScriptor lineam_scribere", _sectio_vicesima_tertia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "FilumScriptor scribere chorda", _sectio_vicesima_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "FilumScriptor sync", _sectio_vicesima_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "FilumScriptor NIHIL handling", _sectio_vicesima_sexta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "FilumScriptor event log simulation", _sectio_vicesima_septima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "filum_modum_ponere", _sectio_vicesima_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "directoria cum parentibus", _sectio_vicesima_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "filum_arborem_delere", _sectio_tricesima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "filum_seram_capere", _sectio_tricesima_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "cum_parentibus sub concursu", _sectio_tricesima_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "filum_appendere_firmiter", _sectio_tricesima_tertia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ==================================================
-	 * Compendium
-	 * ================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    /* Destructio */
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("filum", SECTIONES);
 }

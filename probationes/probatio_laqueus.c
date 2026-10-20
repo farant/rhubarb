@@ -410,21 +410,16 @@ _speculum_jones (
     redde polynomium_ad_chordam(s, 't', piscina);
 }
 
-s32 principale (vacuum)
-{
-    piscina = piscina_generare_dynamicum("probatio_laqueus", 1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ==================================================
      * TEXTUS ET SIMPLICITAS
      * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
                    Laqueus  l;
                    Laqueus  custos;
@@ -438,7 +433,6 @@ s32 principale (vacuum)
         i32 k;
         b32 bene = VERUM;
 
-        imprimere("\n--- Probans textum et simplicitatem ---\n");
         custos  = _ex_textu("[(0, 0, 0), (1, 0, 0), (0, 1, 0)]");
         l       = _ex_textu("[(0, 0, 0), (1/2, 0, 0), (0, 1, -3)]");
         CREDO_CHORDA_AEQUALIS_LITERIS (laqueus_ad_chordam(l, piscina),
@@ -497,12 +491,18 @@ s32 principale (vacuum)
             "[(0, 0, 0), (10, 0, 0), (0, 10, 0); (5, 0, -5), "
             "(5, 0, 5), (5, 5, 5)]"), piscina));
     }
+}
 
 
     /* ==================================================
      * GENERICITAS ET CATENAE
      * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
          Diagramma d;
         Polynomium u;
@@ -516,7 +516,6 @@ s32 principale (vacuum)
         Laqueus disiuncti = _ex_textu("[(0, 0, 0), (10, 0, 0), "
             "(10, 10, 0); (50, 0, 0), (60, 0, 0), (60, 10, 0)]");
 
-        imprimere("\n--- Probans genericitatem et catenas ---\n");
         /* proiectio secundum latus quadrati: non generica */
         CREDO_FALSUM (laqueus_diagramma(quadratum, situs_punctum(I,
             ZEPHYRUM,
@@ -621,12 +620,18 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32 (visa, I);
         }
     }
+}
 
 
     /* ==================================================
      * DIRECTIONES ET MEMORIA
      * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         /* polygonum simplex XIII verticum, segmentum parallelum cuique
          * directioni seriei fixae (recensio laqueus-I, B): series
@@ -651,7 +656,6 @@ s32 principale (vacuum)
           memoriae_index usus_directus;
           memoriae_index usus_trifolii;
 
-        imprimere("\n--- Probans directiones et memoriam ---\n");
         CREDO_VERUM (laqueus_simplex(adversus, piscina));
         CREDO_FALSUM (laqueus_diagramma(adversus,
             situs_punctum(ZEPHYRUM,
@@ -731,12 +735,18 @@ s32 principale (vacuum)
                 piscina), "1");
         }
     }
+}
 
 
     /* ==================================================
      * VALORES NOTI ET INVARIANTIA
      * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         nomen structura {
             constans character* titulus;
@@ -763,7 +773,6 @@ s32 principale (vacuum)
         };
         i32 k;
 
-        imprimere("\n--- Probans valores notos et invariantiam ---\n");
         per (k = ZEPHYRUM; k < (i32)(magnitudo(noti) / magnitudo(noti[
             ZEPHYRUM])); k++)
         {
@@ -859,12 +868,18 @@ s32 principale (vacuum)
             CREDO_VERUM (bene);
         }
     }
+}
 
 
     /* ==================================================
      * MOTUS TRIANGULI
      * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         Laqueus hopf = _ex_textu("[(0, 0, 0), (20, 0, 0), (20, 20, 0), "
             "(0, 20, 0); (10, 10, -10), (10, 10, 10), (30, 10, 10), "
@@ -884,7 +899,6 @@ s32 principale (vacuum)
             i32 refutati  = ZEPHYRUM;
             i32 k;
 
-        imprimere("\n--- Probans motus trianguli ---\n");
         /* triangulum (0,0,0)-(20,0,0)-(10,20,0) componentem alteram in
          * (10,10,0) transfigit: illegitimus; extrorsum legitimus */
         CREDO_FALSUM (laqueus_motus_addere(hopf, ZEPHYRUM,
@@ -1047,12 +1061,18 @@ s32 principale (vacuum)
             }
         }
     }
+}
 
 
     /* ==================================================
      * SIMPLIFICATIO, DIAGRAMMA MINIMUM, SPECULUM, DETERMINANS
      * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         nomen structura {
             constans character* titulus;
@@ -1082,8 +1102,6 @@ s32 principale (vacuum)
         };
         i32 k;
 
-        imprimere("\n--- Probans simplificationem, diagramma minimum, "
-            "speculum, determinans ---\n");
         per (k = ZEPHYRUM; k < V; k++)
         {
             Laqueus l = _ex_tabula(exempla[k].tabula,
@@ -1188,7 +1206,6 @@ s32 principale (vacuum)
                 laqueus_numerus(s), diagramma_numerus(dg),
                 diagramma_numerus(dm), (unsigned long)usus);
         }
-    }
     {
         Laqueus hopf =
             _ex_textu("[(0, 0, 0), (20, 0, 0), (20, 20, 0), "
@@ -1248,12 +1265,19 @@ s32 principale (vacuum)
         imprimere("  catena Hopf simplificata: vertices %u\n",
             laqueus_numerus(s));
     }
+    }
+}
 
 
     /* ==================================================
      * CODEX PD (KnotTheory / KnotInfo)
      * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         /* codices et polynomia ex KnotInfo (database_knotinfo
          * 2026.10.5), in formam laqueus conversa: oraculum externum
@@ -1310,7 +1334,6 @@ s32 principale (vacuum)
                      Polynomium q;
                             i32 k;
 
-        imprimere("\n--- Probans codicem PD ---\n");
         per (k = ZEPHYRUM; k < V; k++)
         {
             CREDO_VERUM (laqueus_jones_ex_pd(exempla_pd[k].pd,
@@ -1371,12 +1394,18 @@ s32 principale (vacuum)
                     &j2) && polynomium_aequalis(j1, j2));
         }
     }
+}
 
 
     /* ==================================================
      * SIMPLIFICATIO CODICIS PD (Reidemeister I, II)
      * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         /* trifolium (KnotInfo) cum ansa addita in osse 6: positiva et
          * negativa; reductio = codex KnotInfo ipse */
@@ -1447,7 +1476,6 @@ s32 principale (vacuum)
         Polynomium  q        = polynomium_nullum();
         Polynomium  r        = polynomium_nullum();
 
-        imprimere("\n--- Probans simplificationem codicis PD ---\n");
         /* validatio: os semel intrans, semel exiens */
         CREDO_FALSUM (laqueus_uncinus_ex_pd(pd_orientatio_falsa, II,
             piscina, &q));
@@ -1599,13 +1627,43 @@ s32 principale (vacuum)
          */
         CREDO_MAIOR_I32 (reducti, III);
     }
+}
 
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "textum et simplicitatem", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "genericitatem et catenas", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "directiones et memoriam", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "valores notos et invariantiam", _sectio_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "motus trianguli", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "simplificationem, diagramma minimum, speculum, determinans",
+        _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "codicem PD", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "simplificationem codicis PD", _sectio_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    /* piscina plagulae (functiones auxiliares eam legunt): una pro
+     * omnibus sectionibus, hic creata et destructa - sectiones eam non
+     * scribunt */
+    piscina = piscina_generare_dynamicum("probatio_laqueus", 1048576);
+    si (!piscina)
     {
-        b32 praeteritus = credo_omnia_praeterierunt();
-
-        credo_claudere();
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
+        imprimere("FRACTA: piscina_generatio\n");
+        redde I;
     }
+    si (credo_suitam_currere("laqueus", SECTIONES) != ZEPHYRUM)
+    {
+        piscina_destruere(piscina);
+        redde I;
+    }
+    piscina_destruere(piscina);
+    redde ZEPHYRUM;
 }

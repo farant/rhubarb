@@ -39,8 +39,10 @@ tractator_update (
 }
 
 interior vacuum
-resettere_contadores (vacuum)
+resettere_contadores (
+    CredoContextus* c)
 {
+    (vacuum)c;
     g_tick_contador    = ZEPHYRUM;
     g_update_contador  = ZEPHYRUM;
 }
@@ -66,46 +68,24 @@ _creare_repo (
 }
 
 
-s32 principale(vacuum)
-{
-                Piscina* piscina;
-    InternamentumChorda* intern;
-                    b32  praeteritus;
-
-
-    /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("test_tempestivum",
-        MMM * LXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-
-    /* IMPORTANT: Usare internamentum_globale quia entitas_repositorium
-     * usare internamentum_globale pro genus internatis */
-    intern = internamentum_globale();
-    si (!intern)
-    {
-        imprimere("FRACTA: internamentum_globale\n");
-        piscina_destruere(piscina);
-        redde I;
-    }
-
-    credo_aperire(piscina);
-
-
     /* ==================================================
      * Probare administrator_tempestivi_creare
      * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_globale();
     {
         AdministratorTempestivi* admin;
            RegistrumTractatoris* tractator;
             EntitasRepositorium* repo;
                 CursusNuntiorum* cursus;
-
-        imprimere("\n--- Probans administrator_tempestivi_creare ---\n");
 
         tractator  = registrum_tractatoris_creare(piscina, intern);
         repo       = _creare_repo(piscina);
@@ -139,12 +119,22 @@ s32 principale(vacuum)
             NIHIL);
         CREDO_NIHIL(admin);
     }
+}
 
 
     /* ==================================================
      * Probare tempestivum_creare
      * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_globale();
     {
         AdministratorTempestivi* admin;
            RegistrumTractatoris* tractator;
@@ -152,8 +142,6 @@ s32 principale(vacuum)
                 CursusNuntiorum* cursus;
                         Entitas* widget;
                         Entitas* tempestivum;
-
-        imprimere("\n--- Probans tempestivum_creare ---\n");
 
         tractator  = registrum_tractatoris_creare(piscina, intern);
         repo       = _creare_repo(piscina);
@@ -200,12 +188,22 @@ s32 principale(vacuum)
             VERUM);
         CREDO_NIHIL(tempestivum);
     }
+}
 
 
     /* ==================================================
      * Probare tempestivum_creare_cum_delay
      * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_globale();
     {
         AdministratorTempestivi* admin;
            RegistrumTractatoris* tractator;
@@ -213,8 +211,6 @@ s32 principale(vacuum)
                 CursusNuntiorum* cursus;
                         Entitas* widget;
                         Entitas* tempestivum;
-
-        imprimere("\n--- Probans tempestivum_creare_cum_delay ---\n");
 
         tractator  = registrum_tractatoris_creare(piscina, intern);
         repo       = _creare_repo(piscina);
@@ -233,12 +229,22 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(tempestivum);
         CREDO_VERUM(tempestivum_est_activum(admin, tempestivum->id));
     }
+}
 
 
     /* ==================================================
      * Probare tempestivum_pausare et resumere
      * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_globale();
     {
         AdministratorTempestivi* admin;
            RegistrumTractatoris* tractator;
@@ -247,8 +253,6 @@ s32 principale(vacuum)
                         Entitas* widget;
                         Entitas* tempestivum;
                          chorda* temp_id;
-
-        imprimere("\n--- Probans tempestivum_pausare et resumere ---\n");
 
         tractator  = registrum_tractatoris_creare(piscina, intern);
         repo       = _creare_repo(piscina);
@@ -287,12 +291,22 @@ s32 principale(vacuum)
         CREDO_FALSUM(tempestivum_resumere(NIHIL, temp_id));
         CREDO_FALSUM(tempestivum_resumere(admin, NIHIL));
     }
+}
 
 
     /* ==================================================
      * Probare tempestivum_annullare
      * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_globale();
     {
         AdministratorTempestivi* admin;
            RegistrumTractatoris* tractator;
@@ -301,8 +315,6 @@ s32 principale(vacuum)
                         Entitas* widget;
                         Entitas* tempestivum;
                          chorda* temp_id;
-
-        imprimere("\n--- Probans tempestivum_annullare ---\n");
 
         tractator  = registrum_tractatoris_creare(piscina, intern);
         repo       = _creare_repo(piscina);
@@ -332,12 +344,22 @@ s32 principale(vacuum)
         CREDO_FALSUM(tempestivum_annullare(NIHIL, temp_id));
         CREDO_FALSUM(tempestivum_annullare(admin, NIHIL));
     }
+}
 
 
     /* ==================================================
      * Probare tempestivum_pro_destinatione
      * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_globale();
     {
         AdministratorTempestivi* admin;
            RegistrumTractatoris* tractator;
@@ -346,8 +368,6 @@ s32 principale(vacuum)
                         Entitas* widget1;
                         Entitas* widget2;
                             Xar* tempestiva;
-
-        imprimere("\n--- Probans tempestivum_pro_destinatione ---\n");
 
         tractator  = registrum_tractatoris_creare(piscina, intern);
         repo       = _creare_repo(piscina);
@@ -388,12 +408,22 @@ s32 principale(vacuum)
         tempestiva = tempestivum_pro_destinatione(admin, NIHIL);
         CREDO_NIHIL(tempestiva);
     }
+}
 
 
     /* ==================================================
      * Probare tempestivum_processare (cum brevi intervallo)
      * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_globale();
     {
         AdministratorTempestivi* admin;
            RegistrumTractatoris* tractator;
@@ -401,10 +431,6 @@ s32 principale(vacuum)
                 CursusNuntiorum* cursus;
                         Entitas* widget;
                             i32  missi;
-
-        imprimere("\n--- Probans tempestivum_processare ---\n");
-
-        resettere_contadores();
 
         tractator  = registrum_tractatoris_creare(piscina, intern);
         repo       = _creare_repo(piscina);
@@ -442,12 +468,22 @@ s32 principale(vacuum)
         cursus_processare(cursus, M);
         CREDO_AEQUALIS_I32(g_tick_contador, I);
     }
+}
 
 
     /* ==================================================
      * Probare tempestivum repetens
      * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_globale();
     {
         AdministratorTempestivi* admin;
            RegistrumTractatoris* tractator;
@@ -456,10 +492,6 @@ s32 principale(vacuum)
                         Entitas* widget;
                         Entitas* tempestivum;
                             i32  missi;
-
-        imprimere("\n--- Probans tempestivum repetens ---\n");
-
-        resettere_contadores();
 
         tractator  = registrum_tractatoris_creare(piscina, intern);
         repo       = _creare_repo(piscina);
@@ -501,12 +533,22 @@ s32 principale(vacuum)
         cursus_processare(cursus, M);
         CREDO_AEQUALIS_I32(g_tick_contador, II);
     }
+}
 
 
     /* ==================================================
      * Probare tempestivum non repetens
      * ================================================== */
 
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_globale();
     {
         AdministratorTempestivi* admin;
            RegistrumTractatoris* tractator;
@@ -515,10 +557,6 @@ s32 principale(vacuum)
                         Entitas* widget;
                         Entitas* tempestivum;
                             i32  missi;
-
-        imprimere("\n--- Probans tempestivum non repetens ---\n");
-
-        resettere_contadores();
 
         tractator  = registrum_tractatoris_creare(piscina, intern);
         repo       = _creare_repo(piscina);
@@ -560,12 +598,22 @@ s32 principale(vacuum)
         cursus_processare(cursus, M);
         CREDO_AEQUALIS_I32(g_update_contador, I);
     }
+}
 
 
     /* ==================================================
      * Probare multa tempestiva
      * ================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_globale();
     {
         AdministratorTempestivi* admin;
            RegistrumTractatoris* tractator;
@@ -574,10 +622,6 @@ s32 principale(vacuum)
                         Entitas* widget1;
                         Entitas* widget2;
                             i32  missi;
-
-        imprimere("\n--- Probans multa tempestiva ---\n");
-
-        resettere_contadores();
 
         tractator  = registrum_tractatoris_creare(piscina, intern);
         repo       = _creare_repo(piscina);
@@ -621,6 +665,7 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(g_tick_contador, II);
         CREDO_AEQUALIS_I32(g_update_contador, I);
     }
+}
 
 
     /* ==================================================
@@ -628,6 +673,15 @@ s32 principale(vacuum)
      * temporis pumpae obstructivae - vitrea Phasis B')
      * ================================================== */
 
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_globale();
     {
         AdministratorTempestivi* admin;
            RegistrumTractatoris* tractator;
@@ -637,8 +691,6 @@ s32 principale(vacuum)
                         Entitas* lentum;
                         Entitas* celere;
                             s64  meta;
-
-        imprimere("\n--- Probans tempestivum_proxima_meta_ms ---\n");
 
         tractator  = registrum_tractatoris_creare(piscina, intern);
         repo       = _creare_repo(piscina);
@@ -684,27 +736,47 @@ s32 principale(vacuum)
         meta = tempestivum_proxima_meta_ms(admin);
         CREDO_VERUM(meta == (s64)(-I));
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "administrator_tempestivi_creare", _sectio_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "tempestivum_creare", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "tempestivum_creare_cum_delay", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "tempestivum_pausare et resumere", _sectio_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "tempestivum_annullare", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "tempestivum_pro_destinatione", _sectio_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "tempestivum_processare", _sectio_septima, resettere_contadores,
+        NIHIL, NIHIL,
+        NIHIL },
+    { "tempestivum repetens", _sectio_octava, resettere_contadores,
+        NIHIL, NIHIL,
+        NIHIL },
+    { "tempestivum non repetens", _sectio_nona, resettere_contadores,
+        NIHIL, NIHIL,
+        NIHIL },
+    { "multa tempestiva", _sectio_decima, resettere_contadores, NIHIL,
+        NIHIL, NIHIL },
+    { "tempestivum_proxima_meta_ms", _sectio_decima_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ==================================================
-     * Compendium
-     * ================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    /* Destructio */
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
+s32
+principale (vacuum)
+{
+    /* IMPORTANT: Usare internamentum_globale quia entitas_repositorium
+     * usare internamentum_globale pro genus internatis */
+    si (!internamentum_globale())
     {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
+        imprimere("FRACTA: internamentum_globale\n");
         redde I;
     }
+
+    redde credo_suitam_currere("tempestivum", SECTIONES);
 }

@@ -34,12 +34,13 @@ _c (
 }
 
 interior vacuum
-probatio_corpus_minimum(Piscina* piscina)
+_sectio_prima (
+    CredoContextus* c)
 {
+         Piscina* piscina = c->piscina;
     VatesPetitio* p;
     VatesNuntius* n;
 
-    imprimere("\n--- Probans corpus minimum (octeti exacti) ---\n");
     p = vates_petitio_creare(piscina, _c("claude-opus-5-5", piscina));
     vates_systema_addere(p, _c("Sis brevis.", piscina), VERUM);
     n = vates_nuntium_addere(p, VATES_USOR);
@@ -53,15 +54,16 @@ probatio_corpus_minimum(Piscina* piscina)
 }
 
 interior vacuum
-probatio_corpus_plenum(Piscina* piscina)
+_sectio_secunda (
+    CredoContextus* c)
 {
+              Piscina* piscina = c->piscina;
          VatesPetitio* p;
          VatesNuntius* n;
           VatesBlocus* b;
     VatesInstrumentum  t;
                chorda  primum;
 
-    imprimere("\n--- Probans corpus plenum + determinismus + unicode ---\n");
     p = vates_petitio_creare(piscina, _c("claude-sonnet-5-5", piscina));
     vates_petitio_maxima_ponere(p, MM);
     vates_petitio_conatum_ponere(p, _c("high", piscina));
@@ -103,14 +105,15 @@ probatio_corpus_plenum(Piscina* piscina)
 }
 
 interior vacuum
-probatio_opaca(Piscina* piscina)
+_sectio_tertia (
+    CredoContextus* c)
 {
+         Piscina* piscina = c->piscina;
     VatesPetitio* p;
     VatesNuntius* n;
      VatesBlocus* b;
           chorda  corpus;
 
-    imprimere("\n--- Probans OPACUM: verbatim, alienum omissum ---\n");
     p = vates_petitio_creare(piscina, _c("claude-opus-5-5", piscina));
     n = vates_nuntium_addere(p, VATES_ASSISTENS);
     b = vates_textum_addere(n, _c("", piscina));
@@ -147,13 +150,14 @@ _blocus (
 }
 
 interior vacuum
-probatio_legere(Piscina* piscina)
+_sectio_quarta (
+    CredoContextus* c)
 {
+           Piscina* piscina = c->piscina;
     VatesResponsum* r;
       VatesPetitio* p;
       VatesNuntius* n;
 
-    imprimere("\n--- Probans vates_anthropic_legere ---\n");
 
     /* textus + usus cum cache_creation */
     r = vates_anthropic_legere(CC, _c(
@@ -381,12 +385,13 @@ _lineae (
 }
 
 interior vacuum
-probatio_provisores(Piscina* piscina)
+_sectio_quinta (
+    CredoContextus* c)
 {
-    VatesOptiones  o = vates_optiones_ordinariae();
+          Piscina* piscina  = c->piscina;
+    VatesOptiones  o        = vates_optiones_ordinariae();
             Vates* v;
 
-    imprimere("\n--- Probans vates_aperire per nomen ---\n");
     v = vates_aperire(piscina, _c("anthropic", piscina), _c("k",
         piscina), &o);
     CREDO_NON_NIHIL(v);
@@ -400,9 +405,11 @@ probatio_provisores(Piscina* piscina)
 }
 
 interior vacuum
-probatio_fictus_et_rationarium(Piscina* piscina)
+_sectio_sexta (
+    CredoContextus* c)
 {
-     VatesOptiones  o = vates_optiones_ordinariae();
+           Piscina* piscina  = c->piscina;
+     VatesOptiones  o        = vates_optiones_ordinariae();
       VatesPretium  pretium;
          VatesUsus  u;
              Vates* v;
@@ -411,7 +418,6 @@ probatio_fictus_et_rationarium(Piscina* piscina)
          character  via[CCLVI];
             chorda  linea;
 
-    imprimere("\n--- Probans fictus + pretium + rationarium ---\n");
     sprintf(via, "/tmp/probatio_vates_rationarium_%ld.jsonl",
         (longus)getpid());
     (vacuum)unlink(via);
@@ -453,15 +459,16 @@ probatio_fictus_et_rationarium(Piscina* piscina)
 }
 
 interior vacuum
-probatio_iterationes(Piscina* piscina)
+_sectio_septima (
+    CredoContextus* c)
 {
-     VatesOptiones  o = vates_optiones_ordinariae();
+           Piscina* piscina  = c->piscina;
+     VatesOptiones  o        = vates_optiones_ordinariae();
          VatesUsus  u;
              Vates* v;
     VatesResponsum* r;
          character  via[CCLVI];
 
-    imprimere("\n--- Probans iterationes ---\n");
     sprintf(via, "/tmp/probatio_vates_iter_%ld.jsonl",
         (longus)getpid());
     (vacuum)unlink(via);
@@ -514,17 +521,18 @@ probatio_iterationes(Piscina* piscina)
 }
 
 interior vacuum
-probatio_limes(Piscina* piscina)
+_sectio_octava (
+    CredoContextus* c)
 {
-     VatesOptiones  o = vates_optiones_ordinariae();
-             Vates* v = vates_fictus_aperire(piscina, &o);
+           Piscina* piscina  = c->piscina;
+     VatesOptiones  o        = vates_optiones_ordinariae();
+             Vates* v        = vates_fictus_aperire(piscina, &o);
       VatesPetitio* p = vates_petitio_creare(piscina, _c("m",
           piscina));
       VatesNuntius* n = vates_nuntium_addere(p, VATES_USOR);
     VatesResponsum* r;
                i32  i;
 
-    imprimere("\n--- Probans limes punctorum cache ---\n");
     vates_petitio_caudam_signare(p, VERUM);
     per (i = 0; i < IV; i++)
     {
@@ -537,16 +545,17 @@ probatio_limes(Piscina* piscina)
 }
 
 interior vacuum
-probatio_tempus_et_mora_iterandi(Piscina* piscina)
+_sectio_nona (
+    CredoContextus* c)
 {
-     VatesOptiones  o = vates_optiones_ordinariae();
+           Piscina* piscina  = c->piscina;
+     VatesOptiones  o        = vates_optiones_ordinariae();
      ScriptorVatis  s;
           Scriptum  scripta[II];
              Vates* v;
     VatesResponsum* r;
             time_t  initium;
 
-    imprimere("\n--- Probans retry-after hostile + TEMPUS semel ---\n");
     scripta[0].status = CDXXIX;
     scripta[0].corpus =
         "{\"type\":\"error\",\"error\":{\"type\":\"rate_limit_error\",\"message\":\"z\"}}";
@@ -579,9 +588,11 @@ probatio_tempus_et_mora_iterandi(Piscina* piscina)
 }
 
 interior vacuum
-probatio_clavis_non_effunditur(Piscina* piscina)
+_sectio_decima (
+    CredoContextus* c)
 {
-     VatesOptiones  o = vates_optiones_ordinariae();
+           Piscina* piscina  = c->piscina;
+     VatesOptiones  o        = vates_optiones_ordinariae();
      ScriptorVatis  s;
           Scriptum  scripta[II];
              Vates* v;
@@ -593,7 +604,6 @@ probatio_clavis_non_effunditur(Piscina* piscina)
             chorda  clavis = _c("CLAVIS_SECRETA_PROBATIONIS",
                 piscina);
 
-    imprimere("\n--- Probans clavis numquam effunditur ---\n");
     sprintf(via_rationarii, "/tmp/probatio_vates_clavis_%ld.jsonl",
         (longus)getpid());
     sprintf(via_herbarii, "/tmp/probatio_vates_herb_%ld",
@@ -662,9 +672,11 @@ probatio_clavis_non_effunditur(Piscina* piscina)
 }
 
 interior vacuum
-probatio_novitas_pressa(Piscina* piscina)
+_sectio_decima_prima (
+    CredoContextus* c)
 {
-     VatesOptiones  o = vates_optiones_ordinariae();
+           Piscina* piscina  = c->piscina;
+     VatesOptiones  o        = vates_optiones_ordinariae();
              Vates* v;
     VatesResponsum* r;
          character  via_herbarii[CCLVI];
@@ -673,7 +685,6 @@ probatio_novitas_pressa(Piscina* piscina)
                i32  i;
                b32  inventa = FALSUM;
 
-    imprimere("\n--- Probans novitas in herbarium premitur ---\n");
     sprintf(via_herbarii, "/tmp/probatio_vates_novitas_%ld",
         (longus)getpid());
     o.herbarium_via  = via_herbarii;
@@ -711,14 +722,15 @@ probatio_novitas_pressa(Piscina* piscina)
 
 
 interior vacuum
-probatio_specimina_commissa(Piscina* piscina)
+_sectio_decima_secunda (
+    CredoContextus* c)
 {
-    Xar* s = herbarium_enumerare(piscina,
-        "probationes/fixa/vates/herbarium");
+    Piscina* piscina = c->piscina;
+        Xar* s = herbarium_enumerare(piscina,
+            "probationes/fixa/vates/herbarium");
     HttpVectura reddens;
             i32 i;
 
-    imprimere("\n--- Probans specimina commissa (exitus NOMINATUS) ---\n");
     /* praesentia > 0, non numerus fixus: semina crescunt */
     CREDO_MAIOR_I32(xar_numerus(s), 0);
     reddens = herbarium_reddens(piscina, s);
@@ -750,9 +762,11 @@ probatio_specimina_commissa(Piscina* piscina)
 
 
 interior vacuum
-probatio_forma_viva(Piscina* piscina)
+_sectio_decima_tertia (
+    CredoContextus* c)
 {
-     VatesOptiones  o = vates_optiones_ordinariae();
+           Piscina* piscina  = c->piscina;
+     VatesOptiones  o        = vates_optiones_ordinariae();
              Vates* v;
     VatesResponsum* r;
          character  via_herbarii[CCLVI];
@@ -760,7 +774,6 @@ probatio_forma_viva(Piscina* piscina)
 
     /* corpus VERUM ex fumo vivo T7 (2026-10-08): 'container' et
      * 'diagnostics' in summo noti esse debent - nulla novitas */
-    imprimere("\n--- Probans forma viva API: nulla novitas ---\n");
     sprintf(via_herbarii, "/tmp/probatio_vates_forma_%ld",
         (longus)getpid());
     o.herbarium_via  = via_herbarii;
@@ -793,15 +806,16 @@ probatio_forma_viva(Piscina* piscina)
  * api.anthropic.com-exempla, bin/norma inferre): web_search,
  * code_execution, caller, usage.server_tool_use - nulla novitas */
 interior vacuum
-probatio_forma_instrumentorum_servi(Piscina* piscina)
+_sectio_decima_quarta (
+    CredoContextus* c)
 {
-     VatesOptiones  o = vates_optiones_ordinariae();
+           Piscina* piscina  = c->piscina;
+     VatesOptiones  o        = vates_optiones_ordinariae();
              Vates* v;
     VatesResponsum* r;
          character  via_herbarii[CCLVI];
          character  via[DXII];
 
-    imprimere("\n--- Probans instrumenta servi: nulla novitas ---\n");
     sprintf(via_herbarii, "/tmp/probatio_vates_servi_%ld",
         (longus)getpid());
     o.herbarium_via  = via_herbarii;
@@ -845,13 +859,14 @@ probatio_forma_instrumentorum_servi(Piscina* piscina)
  * remotum 2026-10-09: schema nunc crescit (instrumenta servi), et
  * aequalitas C generati cum .norma porta 'generata' iudicat */
 interior vacuum
-probatio_forma_ex_norma(Piscina* p)
+_sectio_decima_quinta (
+    CredoContextus* c)
 {
-          chorda fons = filum_legere_totum("lib/vates_responsum.norma",
+         Piscina* p = c->piscina;
+          chorda  fons = filum_legere_totum("lib/vates_responsum.norma",
               p);
     StmlResultus r = stml_legere(fons, p, internamentum_creare(p));
 
-    imprimere("\n--- Probans formam responsi ex .norma ---\n");
     CREDO_NON_NIHIL(vates_norma_responsum(p));
     CREDO_VERUM(r.successus);
     CREDO_CHORDA_AEQUALIS(stml_scribere(r.radix, p, VERUM), fons);
@@ -860,8 +875,6 @@ probatio_forma_ex_norma(Piscina* p)
 }
 
 /* ---- herbarium-spec-2 H2: custos ante usum ---- */
-
-hic_manens character _sedes_temporaria[CCLVI];
 
 /* specimina et index directorii <radix>/<hospes> delere */
 interior vacuum
@@ -936,14 +949,17 @@ _casus (
 }
 
 interior vacuum
-probatio_custos_ante_usum(Piscina* piscina)
+_sectio_decima_sexta (
+    CredoContextus* c)
 {
-        character  acervus[DXII];
-        character  nunquam[CCLVI];
-    VatesOptiones  o = vates_optiones_ordinariae();
-            Vates* v;
+               Piscina* piscina = c->piscina;
+    constans character* _sedes_temporaria =
+        (constans character*)c->suita;
+             character  acervus[DXII];
+             character  nunquam[CCLVI];
+         VatesOptiones  o = vates_optiones_ordinariae();
+                 Vates* v;
 
-    imprimere("\n--- Probans custodem ante usum ---\n");
     sprintf(acervus, "%s/fictus", _sedes_temporaria);
     /* inexspectata: omnia in disco, errores vatis immutati */
     CREDO_VERUM(_casus(CC, "non est JSON", piscina)
@@ -1031,51 +1047,74 @@ probatio_custos_ante_usum(Piscina* piscina)
     (vacuum)setenv("RHUBARB_HERBARIUM", _sedes_temporaria, I);
 }
 
-s32
-principale (vacuum)
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-     Piscina* piscina;
-         b32  successus;
+    character* _sedes_temporaria;
 
-    piscina = piscina_generare_dynamicum("probatio_vates", M * M);
-    credo_aperire(piscina);
+    _sedes_temporaria = (character*)piscina_allocare(c->piscina,
+        CCLVI);
     /* herbarium-spec-2: captura nunc ORDINARIA - probationes numquam in
      * ~/.rhubarb/herbarium veram scribunt: sedes temporaria per ambitum */
     sprintf(_sedes_temporaria, "/tmp/probatio_vates_sedes_%ld",
         (longus)getpid());
     (vacuum)mkdir(_sedes_temporaria, 0755);
     (vacuum)setenv("RHUBARB_HERBARIUM", _sedes_temporaria, I);
+    c->datum = _sedes_temporaria;
+}
 
-    /* T3 */
-    probatio_corpus_minimum(piscina);
-    probatio_corpus_plenum(piscina);
-    probatio_opaca(piscina);
-    /* T4 */
-    probatio_legere(piscina);
-    /* T5 */
-    probatio_provisores(piscina);
-    probatio_fictus_et_rationarium(piscina);
-    probatio_iterationes(piscina);
-    probatio_limes(piscina);
-    probatio_tempus_et_mora_iterandi(piscina);
-    probatio_clavis_non_effunditur(piscina);
-    probatio_novitas_pressa(piscina);
-    /* T6 */
-    probatio_specimina_commissa(piscina);
-    /* T7b */
-    probatio_forma_viva(piscina);
-    probatio_forma_instrumentorum_servi(piscina);
-    /* norma-plan-3 A6 */
-    probatio_forma_ex_norma(piscina);
-    /* herbarium-spec-2 H2 */
-    probatio_custos_ante_usum(piscina);
-    _acervum_purgare(_sedes_temporaria, "fictus", piscina);
-    _acervum_purgare(_sedes_temporaria, "api.anthropic.com", piscina);
+interior vacuum
+_suitam_purgare (
+    CredoContextus* c)
+{
+    constans character* _sedes_temporaria =
+        (constans character*)c->datum;
+
+    _acervum_purgare(_sedes_temporaria, "fictus", c->piscina);
+    _acervum_purgare(_sedes_temporaria, "api.anthropic.com",
+        c->piscina);
     (vacuum)rmdir(_sedes_temporaria);
+}
 
-    credo_imprimere_compendium();
-    successus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
-    redde successus ? 0 : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "corpus minimum (octeti exacti)", _sectio_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "corpus plenum + determinismus + unicode", _sectio_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "OPACUM: verbatim, alienum omissum", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "vates_anthropic_legere", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "vates_aperire per nomen", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fictus + pretium + rationarium", _sectio_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "iterationes", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "limes punctorum cache", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "retry-after hostile + TEMPUS semel", _sectio_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "clavis numquam effunditur", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "novitas in herbarium premitur", _sectio_decima_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "specimina commissa (exitus NOMINATUS)", _sectio_decima_secunda,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "forma viva API: nulla novitas", _sectio_decima_tertia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "instrumenta servi: nulla novitas", _sectio_decima_quarta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "formam responsi ex .norma", _sectio_decima_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "custodem ante usum", _sectio_decima_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("vates", SECTIONES, _suitam_parare,
+        _suitam_purgare);
 }

@@ -34,36 +34,15 @@ _metiri (
         lat, alt);
 }
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-          Piscina* piscina;
-          Modulus  m;
-          Modulus  magnus;
-          Modulus  fractus;
-    ModulusMensor  fontis;
-    ModulusMensor  runarum;
-    ModulusMensor  simplex;
-              s32  lat;
-              s32  alt;
-              s32  columnae;
-              s32  lineae;
+    Modulus m;
+    Modulus fractus;
 
-    piscina = piscina_generare_dynamicum("probatio_modulus", LXV * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    m       = modulus_creare(VI, VIII, DCXL, CDLXXX);
-    magnus  = modulus_creare(VIII, XVI, DCXL, CDLXXX);
-    fontis = _mensor(MODULUS_MENSOR_FONTIS,
-        RUNAE_POLITICA_GRAPHEMATUM);
-    runarum  = _mensor(MODULUS_MENSOR_RUNARUM,
-        RUNAE_POLITICA_GRAPHEMATUM);
-    simplex  = _mensor(MODULUS_MENSOR_RUNARUM, RUNAE_POLITICA_SIMPLEX);
-
-    imprimere("\n--- I. creare: fines degradant ---\n");
+    (vacuum)c;
+    m = modulus_creare(VI, VIII, DCXL, CDLXXX);
     CREDO_AEQUALIS_S32(m.cellula_latitudo, VI);
     CREDO_AEQUALIS_S32(m.cellula_altitudo, VIII);
     CREDO_AEQUALIS_S32(m.schirmus_x.numerator, I);
@@ -73,8 +52,16 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_S32(fractus.cellula_altitudo, I);
     CREDO_AEQUALIS_S32(fractus.extensio_latitudo, ZEPHYRUM);
     CREDO_AEQUALIS_S32(fractus.extensio_altitudo, X);
+}
 
-    imprimere("\n--- II. columna / linea: pavimentum ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Modulus m;
+
+    (vacuum)c;
+    m = modulus_creare(VI, VIII, DCXL, CDLXXX);
     CREDO_AEQUALIS_S32(modulus_columna(&m, ZEPHYRUM), ZEPHYRUM);
     CREDO_AEQUALIS_S32(modulus_columna(&m, V), ZEPHYRUM);
     CREDO_AEQUALIS_S32(modulus_columna(&m, VI), I);
@@ -85,8 +72,17 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_S32(modulus_linea(&m, VII), ZEPHYRUM);
     CREDO_AEQUALIS_S32(modulus_linea(&m, VIII), I);
     CREDO_AEQUALIS_S32(modulus_linea(&m, -I), -I);
+}
 
-    imprimere("\n--- III. proxima: dimidium sursum ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Modulus m;
+    Modulus fractus;
+
+    (vacuum)c;
+    m = modulus_creare(VI, VIII, DCXL, CDLXXX);
     CREDO_AEQUALIS_S32(modulus_columna_proxima(&m, ZEPHYRUM), ZEPHYRUM);
     CREDO_AEQUALIS_S32(modulus_columna_proxima(&m, II), ZEPHYRUM);
     CREDO_AEQUALIS_S32(modulus_columna_proxima(&m, III), I);
@@ -101,16 +97,50 @@ s32 principale (vacuum)
     fractus = modulus_creare(V, V, ZEPHYRUM, ZEPHYRUM);
     CREDO_AEQUALIS_S32(modulus_columna_proxima(&fractus, II), ZEPHYRUM);
     CREDO_AEQUALIS_S32(modulus_columna_proxima(&fractus, III), I);
+}
 
-    imprimere("\n--- IV. extensio in cellulis ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Modulus m;
+    Modulus magnus;
+        s32 columnae;
+        s32 lineae;
+
+    (vacuum)c;
+    m       = modulus_creare(VI, VIII, DCXL, CDLXXX);
+    magnus  = modulus_creare(VIII, XVI, DCXL, CDLXXX);
     modulus_extensio_cellularum(&m, &columnae, &lineae);
     CREDO_AEQUALIS_S32(columnae, CVI);   /* 640 / 6 = 106,67 */
     CREDO_AEQUALIS_S32(lineae, LX);
     modulus_extensio_cellularum(&magnus, &columnae, &lineae);
     CREDO_AEQUALIS_S32(columnae, LXXX);
     CREDO_AEQUALIS_S32(lineae, XXX);
+}
 
-    imprimere("\n--- V. textus: mensura per scopum ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+          Piscina* piscina;
+          Modulus  m;
+          Modulus  magnus;
+    ModulusMensor  fontis;
+    ModulusMensor  runarum;
+    ModulusMensor  simplex;
+              s32  lat;
+              s32  alt;
+
+    piscina  = c->piscina;
+    m        = modulus_creare(VI, VIII, DCXL, CDLXXX);
+    magnus   = modulus_creare(VIII, XVI, DCXL, CDLXXX);
+    fontis = _mensor(MODULUS_MENSOR_FONTIS,
+        RUNAE_POLITICA_GRAPHEMATUM);
+    runarum  = _mensor(MODULUS_MENSOR_RUNARUM,
+        RUNAE_POLITICA_GRAPHEMATUM);
+    simplex  = _mensor(MODULUS_MENSOR_RUNARUM, RUNAE_POLITICA_SIMPLEX);
+
     _metiri(&m, fontis, "", piscina, &lat, &alt);
     CREDO_AEQUALIS_S32(lat, ZEPHYRUM);
     CREDO_AEQUALIS_S32(alt, ZEPHYRUM);
@@ -154,7 +184,24 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_S32(lat, XVIII);
     CREDO_AEQUALIS_S32(alt, XVI);
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. creare: fines degradant", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "II. columna / linea: pavimentum", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "III. proxima: dimidium sursum", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "IV. extensio in cellulis", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "V. textus: mensura per scopum", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("modulus", SECTIONES);
 }

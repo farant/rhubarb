@@ -21,29 +21,21 @@ _ch (
     redde c;
 }
 
-s32 principale (vacuum)
+
+/* ==================================================
+ * PROBARE: aperire in memoria + circuitus fundamentalis
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-        b32  praeteritus;
     Piscina* piscina;
 
-    piscina = piscina_generare_dynamicum("probatio_scrinium", 65536);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ========================================================
-     * PROBARE: aperire in memoria + circuitus fundamentalis
-     * ======================================================== */
-
+    piscina = c->piscina;
     {
                   Scrinium* s;
         ScriniumEnuntiatum* e;
-
-        imprimere("\n--- Probans circuitum fundamentalem ---\n");
 
         s = scrinium_aperire(piscina, ":memory:");
         CREDO_NON_NIHIL (s);
@@ -112,12 +104,20 @@ s32 principale (vacuum)
         CREDO_VERUM (scrinium_ultimum_id(s) > (s64)ZEPHYRUM);
         scrinium_claudere(s);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: migrationes solum-appende (idempotentes)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: migrationes solum-appende (idempotentes)
+ * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         hic_manens constans character* constans MIGRATIONES_II[] = {
             "CREATE TABLE a (x INTEGER)",
@@ -130,8 +130,6 @@ s32 principale (vacuum)
         };
                   Scrinium* s;
         ScriniumEnuntiatum* e;
-
-        imprimere("\n--- Probans migrationes ---\n");
 
         s = scrinium_aperire(piscina, ":memory:");
         CREDO_NON_NIHIL (s);
@@ -152,17 +150,23 @@ s32 principale (vacuum)
             "INSERT INTO a (x, z) VALUES (1, 2)"));
         scrinium_claudere(s);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: FTS5 (vexillum vendicationis probatur)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: FTS5 (vexillum vendicationis probatur)
+ * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                   Scrinium* s;
         ScriniumEnuntiatum* e;
-
-        imprimere("\n--- Probans FTS5 ---\n");
 
         s = scrinium_aperire(piscina, ":memory:");
         CREDO_NON_NIHIL (s);
@@ -196,18 +200,24 @@ s32 principale (vacuum)
         scrinium_finire(e);
         scrinium_claudere(s);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: plagula vera + WAL + persistentia
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: plagula vera + WAL + persistentia
+ * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* via = "build/probatio_scrinium.db";
                   Scrinium* s;
         ScriniumEnuntiatum* e;
-
-        imprimere("\n--- Probans persistentiam WAL ---\n");
 
         remove(via);
         remove("build/probatio_scrinium.db-wal");
@@ -249,18 +259,22 @@ s32 principale (vacuum)
         remove("build/probatio_scrinium.db-wal");
         remove("build/probatio_scrinium.db-shm");
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: ULID (mensura, litterae, monotonia)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: ULID (mensura, litterae, monotonia)
+ * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         character a[SCRINIUM_ULID_MENSURA];
         character b[SCRINIUM_ULID_MENSURA];
           integer k;
-
-        imprimere("\n--- Probans ULID ---\n");
 
         scrinium_ulid(a);
         scrinium_ulid(b);
@@ -293,18 +307,20 @@ s32 principale (vacuum)
             CREDO_VERUM (omnes_crescentes);
         }
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "circuitum fundamentalem", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "migrationes", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "FTS5", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "persistentiam WAL", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ULID", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("scrinium", SECTIONES);
 }

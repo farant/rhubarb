@@ -1,0 +1,102 @@
+<interrogationes unitas="reactor">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get called back when a socket is readable or writable?
+    <responsum symbolum="reactor_creare reactor_adicere ReactorCallback reactor_modificare">Create
+      a reactor with reactor_creare(piscina) and register the fd with
+      reactor_adicere(r, fd, REACTOR_LEGERE, callback, data). The
+      callback receives the fd, an event bitmask and your data.
+      REACTOR_ERROR and REACTOR_CLAUSUM (POLLERR, POLLHUP) can appear in
+      the mask even though you only ask for LEGERE and SCRIBERE.
+      Calling reactor_adicere again for a registered fd replaces its
+      events, callback and data; reactor_modificare changes only the
+      events, for example to add REACTOR_SCRIBERE while output is
+      pending.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I run something after a delay, or every N milliseconds?
+    <responsum symbolum="reactor_timer_adicere reactor_timer_cancellare ReactorTimerCallback">reactor_timer_adicere(r,
+      ms, repetere, callback, data) returns a ReactorTimerId, or
+      REACTOR_TIMER_ERROR (all CXXVIII slots in use, or NIHIL
+      callback). Compare against REACTOR_TIMER_ERROR, not "&lt; 0": the
+      id is an unsigned i32. A one-shot timer is switched off before
+      its callback runs, so the callback may add a new timer. A
+      repeating timer is rescheduled from the moment it is processed,
+      so lateness accumulates instead of being caught up. Cancel with
+      reactor_timer_cancellare.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a callback add or remove fds and timers while the reactor is dispatching?
+    <responsum symbolum="reactor_poll reactor_removere reactor_adicere reactor_timer_adicere" via="lib/reactor.worklog.md">Yes,
+      that is supported (http-vocatio T1). Each pass dispatches from a
+      snapshot taken at its start, and every registration carries a
+      generation number: an fd removed during the pass, or a slot
+      reused by a new registration, is skipped for the rest of that
+      pass, and an fd or timer added during the pass is first served
+      on the next pass, so a callback that keeps adding 0 ms timers
+      cannot keep reactor_poll from returning.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I drive the reactor from my own loop instead of reactor_currere?
+    <responsum symbolum="reactor_poll reactor_currere reactor_sistere">Call
+      reactor_poll(r, timeout_ms) repeatedly (-1 waits without limit,
+      0 does not block). It shortens the wait to the next timer
+      deadline, runs the ready fd callbacks and the expired timers,
+      and returns how many it ran. reactor_currere is just that loop
+      with a M ms (one second) cap per pass, until a callback calls
+      reactor_sistere. reactor_currere clears the stop request when
+      it starts, so a reactor_sistere called before reactor_currere is
+      forgotten.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I leave reactor_currere running while nothing is registered?
+    <responsum symbolum="reactor_currere reactor_poll reactor_numerus_fd reactor_numerus_timer">No.
+      With no active fd and no active timer reactor_poll returns 0
+      at once, without calling poll() or sleeping. reactor_currere then
+      spins at full CPU, and since no callback can run, nothing can
+      call reactor_sistere. A loop around reactor_poll has the same
+      problem: check reactor_numerus_fd and reactor_numerus_timer and
+      stop when both are zero.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I close an fd first and remove it from the reactor later?
+    <responsum symbolum="reactor_removere">No:
+      call reactor_removere before close. A closed fd that is still
+      registered makes poll() report POLLNVAL, which the reactor does
+      not translate, so your callback is called with an event mask of
+      0 on every pass and poll() never blocks. If the fd number is
+      reused by a new socket, the old registration fires for
+      it.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what are the reactor's limits and how much memory does one take?
+    <responsum symbolum="reactor_creare reactor_adicere reactor_timer_adicere">At
+      most REACTOR_FD_MAXIMA (M) fds registered at the same time and
+      REACTOR_TIMER_MAXIMA (CXXVIII) active timers; freed slots are
+      reused, so the limit is on concurrent registrations, not on the
+      total ever made. reactor_adicere and reactor_timer_adicere fail
+      past it. All tables are fixed arrays inside the Reactor struct,
+      so reactor_creare takes one allocation of several tens of
+      kilobytes from the piscina.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can reactor_destruere close my sockets or free the reactor's memory?
+    <responsum symbolum="reactor_destruere reactor_numerus_timer reactor_timer_adicere">No.
+      It only clears the running flag and sets the fd and timer
+      high-water marks to zero. It closes no fd (that stays your job),
+      and the memory belongs to the piscina it was created from. It
+      does not stop a reactor_currere in progress (that loop watches
+      only the reactor_sistere request), and it leaves every timer
+      slot active, so reactor_numerus_timer still counts them and
+      reactor_timer_adicere still finds those slots taken: do not
+      reuse a reactor after destroying it.</responsum>
+  </interrogatio>
+
+</interrogationes>

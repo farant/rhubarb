@@ -1049,11 +1049,10 @@ interior constans VectorRestitutionis vectores_restitutionis[] = {
         "88724660867959299883562741996321928960" },
 };
 
-interior Piscina* piscina;
-
 interior Magnus
 _magnus (
-    constans character* textus)
+    constans character* textus,
+               Piscina* piscina)
 {
     Magnus m = magnus_ex_s64(ZEPHYRUM);
 
@@ -1063,344 +1062,354 @@ _magnus (
     redde m;
 }
 
-s32 principale (vacuum)
+
+/* ==================================================
+ * VECTORES ORACULI
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    piscina = piscina_generare_dynamicum("probatio_congruentia", 65536);
-    si (!piscina)
+    Piscina* piscina = c->piscina;
+
+    i32 k;
+    b32 bene;
+
+    bene = VERUM;
+    per (k = ZEPHYRUM; k < (i32)(magnitudo(vectores_s64)
+        / magnitudo(vectores_s64[ZEPHYRUM])); k++)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        constans VectorS64* v = &vectores_s64[k];
+
+        si (congruentia_ex_s64(v->x, v->n) != v->residuum)
+        {
+            imprimere("  s64 %u\n", k);
+            bene = FALSUM;
+        }
     }
-    credo_aperire(piscina);
+    CREDO_VERUM (bene);
 
-
-    /* ==================================================
-     * VECTORES ORACULI
-     * ================================================== */
-
+    bene = VERUM;
+    per (k = ZEPHYRUM; k < (i32)(magnitudo(vectores_magni)
+        / magnitudo(vectores_magni[ZEPHYRUM])); k++)
     {
-        i32 k;
-        b32 bene;
+        constans VectorMagni* v = &vectores_magni[k];
 
-        imprimere("\n--- Probans vectores oraculi ---\n");
-        bene = VERUM;
-        per (k = ZEPHYRUM; k < (i32)(magnitudo(vectores_s64)
-            / magnitudo(vectores_s64[ZEPHYRUM])); k++)
+        si (congruentia_ex_magno(_magnus(v->x, piscina), v->n)
+            != v->residuum)
         {
-            constans VectorS64* v = &vectores_s64[k];
-
-            si (congruentia_ex_s64(v->x, v->n) != v->residuum)
-            {
-                imprimere("  s64 %u\n", k);
-                bene = FALSUM;
-            }
+            imprimere("  magnus %u: %s mod %u\n", k, v->x, v->n);
+            bene = FALSUM;
         }
-        CREDO_VERUM (bene);
-
-        bene = VERUM;
-        per (k = ZEPHYRUM; k < (i32)(magnitudo(vectores_magni)
-            / magnitudo(vectores_magni[ZEPHYRUM])); k++)
-        {
-            constans VectorMagni* v = &vectores_magni[k];
-
-            si (congruentia_ex_magno(_magnus(v->x), v->n)
-                != v->residuum)
-            {
-                imprimere("  magnus %u: %s mod %u\n", k, v->x, v->n);
-                bene = FALSUM;
-            }
-        }
-        CREDO_VERUM (bene);
-
-        bene = VERUM;
-        per (k = ZEPHYRUM; k < (i32)(magnitudo(vectores_arithmetici)
-            / magnitudo(vectores_arithmetici[ZEPHYRUM])); k++)
-        {
-            constans VectorArithmeticus* v = &vectores_arithmetici[k];
-                                    i32  inversa =
-                                        XLII;
-                                    b32 r;
-
-            r = congruentia_inversa(v->a, v->n, &inversa);
-
-            si (   congruentia_adde(v->a, v->b, v->n) != v->summa
-                || congruentia_subtrahe(v->a, v->b, v->n)
-                    != v->differentia
-                || congruentia_multiplica(v->a, v->b, v->n)
-                    != v->productum
-                || congruentia_potentia(v->a, v->e, v->n) != v->potentia
-                || r != v->invertibilis
-                || (r ? inversa != v->inversa : inversa != XLII)
-                || congruentia_symmetrica(v->a, v->n) != v->symmetrica)
-            {
-                imprimere("  arithmeticus %u: a %u b %u n %u\n", k,
-                    v->a,
-                    v->b, v->n);
-                bene = FALSUM;
-            }
-        }
-        CREDO_VERUM (bene);
-
-        bene = VERUM;
-        per (k = ZEPHYRUM; k < (i32)(magnitudo(vectores_primi)
-            / magnitudo(vectores_primi[ZEPHYRUM])); k++)
-        {
-            si (congruentia_est_primus(vectores_primi[k].n)
-                != vectores_primi[k].primus)
-            {
-                imprimere("  primus %u: %u\n", k, vectores_primi[k].n);
-                bene = FALSUM;
-            }
-        }
-        CREDO_VERUM (bene);
-
-        bene = VERUM;
-        per (k = ZEPHYRUM; k < (i32)(magnitudo(vectores_infra)
-            / magnitudo(vectores_infra[ZEPHYRUM])); k++)
-        {
-            si (congruentia_primus_infra(vectores_infra[k].limes)
-                != vectores_infra[k].primus)
-            {
-                imprimere("  infra %u: %u\n", k,
-                    vectores_infra[k].limes);
-                bene = FALSUM;
-            }
-        }
-        CREDO_VERUM (bene);
-
-        bene = VERUM;
-        per (k = ZEPHYRUM; k < (i32)(magnitudo(vectores_restitutionis)
-            / magnitudo(vectores_restitutionis[ZEPHYRUM])); k++)
-        {
-            constans VectorRestitutionis* v =
-                &vectores_restitutionis[k];
-                                  Magnus x = magnus_ex_s64(XLII);
-                                     b32 r;
-
-            r = congruentia_restitue(v->residua, v->moduli, v->numerus,
-                v->symmetricus, piscina, &x);
-
-            si (v->x[ZEPHYRUM] == '-' && v->x[I] == '\0'
-                ? (r || !magnus_aequalis(x, magnus_ex_s64(XLII)))
-                : (!r || !magnus_aequalis(x, _magnus(v->x))))
-            {
-                imprimere("  restitutio %u\n", k);
-                bene = FALSUM;
-            }
-        }
-        CREDO_VERUM (bene);
     }
+    CREDO_VERUM (bene);
 
-
-    /* ==================================================
-     * CRIBRUM: omnis n < 2^20 contra Miller-Rabin
-     * ================================================== */
-
+    bene = VERUM;
+    per (k = ZEPHYRUM; k < (i32)(magnitudo(vectores_arithmetici)
+        / magnitudo(vectores_arithmetici[ZEPHYRUM])); k++)
     {
-        i32  limes = (i32)I << XX;
-         i8* compositus = (i8*)piscina_allocare(piscina,
-             (memoriae_index)limes);
-        i32 i;
-        i32 j;
-        b32 bene              = VERUM;
-        i32 numerus_primorum  = ZEPHYRUM;
+        constans VectorArithmeticus* v = &vectores_arithmetici[k];
+                                i32  inversa =
+                                    XLII;
+                                b32 r;
 
-        imprimere("\n--- Probans primalitatem contra cribrum "
-            "(2^20) ---\n");
-        per (i = ZEPHYRUM; i < limes; i++)
-        {
-            compositus[i] = (i8)(i < II ? I : ZEPHYRUM);
-        }
-        per (i = II; i * i < limes; i++)
-        {
-            si (!compositus[i])
-            {
-                per (j = i * i; j < limes; j += i)
-                {
-                    compositus[j] = I;
-                }
-            }
-        }
-        per (i = ZEPHYRUM; i < limes; i++)
-        {
-            b32 primus = !compositus[i];
+        r = congruentia_inversa(v->a, v->n, &inversa);
 
-            si (primus)
-            {
-                numerus_primorum++;
-            }
-            si (congruentia_est_primus(i) != primus && bene)
-            {
-                imprimere("  primalitas %u\n", i);
-                bene = FALSUM;
-            }
+        si (   congruentia_adde(v->a, v->b, v->n)     != v->summa
+            || congruentia_subtrahe(v->a, v->b, v->n)
+                != v->differentia
+            || congruentia_multiplica(v->a, v->b, v->n)
+                != v->productum
+            || congruentia_potentia(v->a, v->e, v->n) != v->potentia
+            || r                                      != v->invertibilis
+            || (r ? inversa != v->inversa : inversa != XLII)
+            || congruentia_symmetrica(v->a, v->n)     != v->symmetrica)
+        {
+            imprimere("  arithmeticus %u: a %u b %u n %u\n", k,
+                v->a,
+                v->b, v->n);
+            bene = FALSUM;
         }
-        CREDO_VERUM (bene);
-        /* pi(2^20) = 82025 */
-        CREDO_AEQUALIS_I32 (numerus_primorum, LXXXII * M + XXV);
     }
+    CREDO_VERUM (bene);
 
-
-    /* ==================================================
-     * LEGES
-     * ================================================== */
-
+    bene = VERUM;
+    per (k = ZEPHYRUM; k < (i32)(magnitudo(vectores_primi)
+        / magnitudo(vectores_primi[ZEPHYRUM])); k++)
     {
-        Sors s;
-         i32 k;
-         b32 bene = VERUM;
-         i32 primi[VIII];
-
-        imprimere("\n--- Probans leges ---\n");
-        sors_seminare(&s, 2026ULL, I);
-        primi[ZEPHYRUM] = congruentia_primus_infra(0xFFFFFFFFU);
-        per (k = I; k < VIII; k++)
+        si (congruentia_est_primus(vectores_primi[k].n)
+            != vectores_primi[k].primus)
         {
-            primi[k] = congruentia_primus_infra(primi[k - I]);
+            imprimere("  primus %u: %u\n", k, vectores_primi[k].n);
+            bene = FALSUM;
         }
-        CREDO_AEQUALIS_I32 (primi[ZEPHYRUM], 0xFFFFFFFBU);
-
-        per (k = ZEPHYRUM; k < D; k++)
-        {
-            i32 p        = primi[(i32)sors_intra(&s, VIII)];
-            i32 a        = (i32)sors_intra(&s, p - I) + I;
-            i32 n        = (i32)sors_intra(&s, 0xFFFFFFF0U) + II;
-            i32 b        = (i32)sors_intra(&s, n);
-            i32 inversa  = ZEPHYRUM;
-
-            /* Fermat: a^(p-1) = 1; a a^-1 = 1; a^-1 = a^(p-2) */
-            si (   congruentia_potentia(a, (i64)(p - I), p) != I
-                || !congruentia_inversa(a, p, &inversa)
-                || congruentia_multiplica(a, inversa, p) != I
-                || inversa != congruentia_potentia(a, (i64)(p - II), p))
-            {
-                bene = FALSUM;
-            }
-            /* modulus compositus: inversa sse mdc 1; (a + b) - b = a */
-            si (congruentia_subtrahe(congruentia_adde(b, b, n), b, n)
-                != b)
-            {
-                bene = FALSUM;
-            }
-            si (   congruentia_inversa(b, n, &inversa)
-                && congruentia_multiplica(b, inversa, n) != I % n)
-            {
-                bene = FALSUM;
-            }
-        }
-        CREDO_VERUM (bene);
-
-        /* reconstructio itus et reditus: x magnus signatus, moduli
-         * primi < 2^32 donec M > 2|x| */
-        bene = VERUM;
-        per (k = ZEPHYRUM; k < CC; k++)
-        {
-            character alveus[LXXX];
-                  i32 digiti = (i32)sors_inter(&s, I, LX);
-                  i32 i;
-                  i32 residua[VIII];
-               Magnus x;
-               Magnus y        = magnus_ex_s64(ZEPHYRUM);
-                  i32 numerus  = (digiti * X) / XCIII + II;
-
-            alveus[ZEPHYRUM] = sors_intra(&s, II) ? '-' : '+';
-            per (i = I; i <= digiti; i++)
-            {
-                alveus[i] = (character)('0' + sors_intra(&s, X));
-            }
-            alveus[I] = (character)('1' + sors_intra(&s, IX));
-            (vacuum)magnus_ex_chorda(chorda_ex_buffer((i8*)alveus + (
-                alveus[ZEPHYRUM] == '+' ? I : ZEPHYRUM), digiti + (
-                alveus[ZEPHYRUM] == '+' ? ZEPHYRUM : I)), piscina, &x);
-            si (numerus > VIII)
-            {
-                numerus = VIII;
-            }
-            per (i = ZEPHYRUM; i < numerus; i++)
-            {
-                residua[i] = congruentia_ex_magno(x, primi[i]);
-            }
-            si (   !congruentia_restitue(residua, primi, numerus, VERUM,
-                    piscina, &y)
-                || !magnus_aequalis(x, y))
-            {
-                imprimere("  reditus %u: %u digiti\n", k, digiti);
-                bene = FALSUM;
-            }
-        }
-        CREDO_VERUM (bene);
     }
+    CREDO_VERUM (bene);
 
-
-    /* ==================================================
-     * REFUTATIONES
-     * ================================================== */
-
+    bene = VERUM;
+    per (k = ZEPHYRUM; k < (i32)(magnitudo(vectores_infra)
+        / magnitudo(vectores_infra[ZEPHYRUM])); k++)
     {
-           i32 inversa = XLII;
-           i32 residua[II];
-           i32 moduli[II];
-        Magnus x = magnus_ex_s64(XLII);
-
-        imprimere("\n--- Probans refutationes ---\n");
-        CREDO_FALSUM (congruentia_inversa(V, I, &inversa));
-        CREDO_FALSUM (congruentia_inversa(ZEPHYRUM, VII, &inversa));
-        CREDO_FALSUM (congruentia_inversa(VI, IX, &inversa));
-        CREDO_AEQUALIS_I32 (inversa, XLII);
-        residua[ZEPHYRUM]  = III;
-        residua[I]         = I;
-        moduli[ZEPHYRUM]   = III;     /* residuum == modulus */
-        moduli[I]          = VII;
-        CREDO_FALSUM (congruentia_restitue(residua, moduli, II, FALSUM,
-            piscina, &x));
-        residua[ZEPHYRUM]  = ZEPHYRUM;
-        moduli[ZEPHYRUM]   = I;       /* modulus < 2 */
-        CREDO_FALSUM (congruentia_restitue(residua, moduli, II, FALSUM,
-            piscina, &x));
-        moduli[ZEPHYRUM]   = XIV;     /* non coprimi cum VII */
-        CREDO_FALSUM (congruentia_restitue(residua, moduli, II, FALSUM,
-            piscina, &x));
-        CREDO_VERUM (magnus_aequalis(x, magnus_ex_s64(XLII)));
-        CREDO_VERUM (congruentia_restitue(residua, moduli, ZEPHYRUM,
-            FALSUM, piscina, &x));
-        CREDO_VERUM (magnus_aequalis(x, magnus_ex_s64(ZEPHYRUM)));
-        CREDO_AEQUALIS_I32 (congruentia_primus_infra(II), ZEPHYRUM);
-        /* limes symmetricus: x = M/2 manet +M/2 (-M/2 < x <= M/2) -
-         * recensio congruentia-I: mutans '>=' superstes erat */
-        residua[ZEPHYRUM]  = III;
-        moduli[ZEPHYRUM]   = VI;
-        CREDO_VERUM (congruentia_restitue(residua, moduli, I, VERUM,
-            piscina, &x));
-        CREDO_VERUM (magnus_aequalis(x, magnus_ex_s64(III)));
-        residua[ZEPHYRUM]  = I;    /* x = 3: 3 mod 2 = 1, 3 mod 3 = 0 */
-        moduli[ZEPHYRUM]   = II;
-        residua[I]         = ZEPHYRUM;
-        moduli[I]          = III;
-        CREDO_VERUM (congruentia_restitue(residua, moduli, II, VERUM,
-            piscina, &x));
-        CREDO_VERUM (magnus_aequalis(x, magnus_ex_s64(III)));
-        residua[ZEPHYRUM]  = ZEPHYRUM;   /* x = 4 > 3: -2 */
-        residua[I]         = I;
-        CREDO_VERUM (congruentia_restitue(residua, moduli, II, VERUM,
-            piscina, &x));
-        CREDO_VERUM (magnus_aequalis(x, magnus_ex_s64(-II)));
-        /* modulus 1: omnis potentia 0 (etiam 0^0) */
-        CREDO_AEQUALIS_I32 (congruentia_potentia(V, ZEPHYRUM, I),
-            ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (congruentia_potentia(ZEPHYRUM, ZEPHYRUM,
-            VII),
-            I);
-        CREDO_AEQUALIS_I32 (congruentia_ex_magno(magnus_ex_s64(-VII),
-            X),
-            III);
+        si (congruentia_primus_infra(vectores_infra[k].limes)
+            != vectores_infra[k].primus)
+        {
+            imprimere("  infra %u: %u\n", k,
+                vectores_infra[k].limes);
+            bene = FALSUM;
+        }
     }
+    CREDO_VERUM (bene);
 
-    credo_imprimere_compendium();
+    bene = VERUM;
+    per (k = ZEPHYRUM; k < (i32)(magnitudo(vectores_restitutionis)
+        / magnitudo(vectores_restitutionis[ZEPHYRUM])); k++)
     {
-        b32 praeteritus = credo_omnia_praeterierunt();
+        constans VectorRestitutionis* v =
+            &vectores_restitutionis[k];
+                              Magnus x = magnus_ex_s64(XLII);
+                                 b32 r;
 
-        credo_claudere();
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
+        r = congruentia_restitue(v->residua, v->moduli, v->numerus,
+            v->symmetricus, piscina, &x);
+
+        si (v->x[ZEPHYRUM] == '-' && v->x[I] == '\0'
+            ? (r || !magnus_aequalis(x, magnus_ex_s64(XLII)))
+            : (!r || !magnus_aequalis(x, _magnus(v->x, piscina))))
+        {
+            imprimere("  restitutio %u\n", k);
+            bene = FALSUM;
+        }
     }
+    CREDO_VERUM (bene);
+}
+
+
+/* ==================================================
+ * CRIBRUM: omnis n < 2^20 contra Miller-Rabin
+ * ================================================== */
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
+    i32  limes = (i32)I << XX;
+     i8* compositus = (i8*)piscina_allocare(piscina,
+         (memoriae_index)limes);
+    i32 i;
+    i32 j;
+    b32 bene              = VERUM;
+    i32 numerus_primorum  = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < limes; i++)
+    {
+        compositus[i] = (i8)(i < II ? I : ZEPHYRUM);
+    }
+    per (i = II; i * i < limes; i++)
+    {
+        si (!compositus[i])
+        {
+            per (j = i * i; j < limes; j += i)
+            {
+                compositus[j] = I;
+            }
+        }
+    }
+    per (i = ZEPHYRUM; i < limes; i++)
+    {
+        b32 primus = !compositus[i];
+
+        si (primus)
+        {
+            numerus_primorum++;
+        }
+        si (congruentia_est_primus(i) != primus && bene)
+        {
+            imprimere("  primalitas %u\n", i);
+            bene = FALSUM;
+        }
+    }
+    CREDO_VERUM (bene);
+    /* pi(2^20) = 82025 */
+    CREDO_AEQUALIS_I32 (numerus_primorum, LXXXII * M + XXV);
+}
+
+
+/* ==================================================
+ * LEGES
+ * ================================================== */
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
+    Sors s;
+     i32 k;
+     b32 bene = VERUM;
+     i32 primi[VIII];
+
+    sors_seminare(&s, 2026ULL, I);
+    primi[ZEPHYRUM] = congruentia_primus_infra(0xFFFFFFFFU);
+    per (k = I; k < VIII; k++)
+    {
+        primi[k] = congruentia_primus_infra(primi[k - I]);
+    }
+    CREDO_AEQUALIS_I32 (primi[ZEPHYRUM], 0xFFFFFFFBU);
+
+    per (k = ZEPHYRUM; k < D; k++)
+    {
+        i32 p        = primi[(i32)sors_intra(&s, VIII)];
+        i32 a        = (i32)sors_intra(&s, p - I) + I;
+        i32 n        = (i32)sors_intra(&s, 0xFFFFFFF0U) + II;
+        i32 b        = (i32)sors_intra(&s, n);
+        i32 inversa  = ZEPHYRUM;
+
+        /* Fermat: a^(p-1) = 1; a a^-1 = 1; a^-1 = a^(p-2) */
+        si (   congruentia_potentia(a, (i64)(p - I), p) != I
+            || !congruentia_inversa(a, p, &inversa)
+            || congruentia_multiplica(a, inversa, p) != I
+            || inversa != congruentia_potentia(a, (i64)(p - II), p))
+        {
+            bene = FALSUM;
+        }
+        /* modulus compositus: inversa sse mdc 1; (a + b) - b = a */
+        si (congruentia_subtrahe(congruentia_adde(b, b, n), b, n)
+            != b)
+        {
+            bene = FALSUM;
+        }
+        si (   congruentia_inversa(b, n, &inversa)
+            && congruentia_multiplica(b, inversa, n) != I % n)
+        {
+            bene = FALSUM;
+        }
+    }
+    CREDO_VERUM (bene);
+
+    /* reconstructio itus et reditus: x magnus signatus, moduli
+     * primi < 2^32 donec M > 2|x| */
+    bene = VERUM;
+    per (k = ZEPHYRUM; k < CC; k++)
+    {
+        character alveus[LXXX];
+              i32 digiti = (i32)sors_inter(&s, I, LX);
+              i32 i;
+              i32 residua[VIII];
+           Magnus x;
+           Magnus y        = magnus_ex_s64(ZEPHYRUM);
+              i32 numerus  = (digiti * X) / XCIII + II;
+
+        alveus[ZEPHYRUM] = sors_intra(&s, II) ? '-' : '+';
+        per (i = I; i <= digiti; i++)
+        {
+            alveus[i] = (character)('0' + sors_intra(&s, X));
+        }
+        alveus[I] = (character)('1' + sors_intra(&s, IX));
+        (vacuum)magnus_ex_chorda(chorda_ex_buffer((i8*)alveus + (
+            alveus[ZEPHYRUM] == '+' ? I : ZEPHYRUM), digiti + (
+            alveus[ZEPHYRUM] == '+' ? ZEPHYRUM : I)), piscina, &x);
+        si (numerus > VIII)
+        {
+            numerus = VIII;
+        }
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            residua[i] = congruentia_ex_magno(x, primi[i]);
+        }
+        si (   !congruentia_restitue(residua, primi, numerus, VERUM,
+                piscina, &y)
+            || !magnus_aequalis(x, y))
+        {
+            imprimere("  reditus %u: %u digiti\n", k, digiti);
+            bene = FALSUM;
+        }
+    }
+    CREDO_VERUM (bene);
+}
+
+
+/* ==================================================
+ * REFUTATIONES
+ * ================================================== */
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
+       i32 inversa = XLII;
+       i32 residua[II];
+       i32 moduli[II];
+    Magnus x = magnus_ex_s64(XLII);
+
+    CREDO_FALSUM (congruentia_inversa(V, I, &inversa));
+    CREDO_FALSUM (congruentia_inversa(ZEPHYRUM, VII, &inversa));
+    CREDO_FALSUM (congruentia_inversa(VI, IX, &inversa));
+    CREDO_AEQUALIS_I32 (inversa, XLII);
+    residua[ZEPHYRUM]  = III;
+    residua[I]         = I;
+    moduli[ZEPHYRUM]   = III;     /* residuum == modulus */
+    moduli[I]          = VII;
+    CREDO_FALSUM (congruentia_restitue(residua, moduli, II, FALSUM,
+        piscina, &x));
+    residua[ZEPHYRUM]  = ZEPHYRUM;
+    moduli[ZEPHYRUM]   = I;       /* modulus < 2 */
+    CREDO_FALSUM (congruentia_restitue(residua, moduli, II, FALSUM,
+        piscina, &x));
+    moduli[ZEPHYRUM]   = XIV;     /* non coprimi cum VII */
+    CREDO_FALSUM (congruentia_restitue(residua, moduli, II, FALSUM,
+        piscina, &x));
+    CREDO_VERUM (magnus_aequalis(x, magnus_ex_s64(XLII)));
+    CREDO_VERUM (congruentia_restitue(residua, moduli, ZEPHYRUM,
+        FALSUM, piscina, &x));
+    CREDO_VERUM (magnus_aequalis(x, magnus_ex_s64(ZEPHYRUM)));
+    CREDO_AEQUALIS_I32 (congruentia_primus_infra(II), ZEPHYRUM);
+    /* limes symmetricus: x = M/2 manet +M/2 (-M/2 < x <= M/2) -
+     * recensio congruentia-I: mutans '>=' superstes erat */
+    residua[ZEPHYRUM]  = III;
+    moduli[ZEPHYRUM]   = VI;
+    CREDO_VERUM (congruentia_restitue(residua, moduli, I, VERUM,
+        piscina, &x));
+    CREDO_VERUM (magnus_aequalis(x, magnus_ex_s64(III)));
+    residua[ZEPHYRUM]  = I;    /* x = 3: 3 mod 2 = 1, 3 mod 3 = 0 */
+    moduli[ZEPHYRUM]   = II;
+    residua[I]         = ZEPHYRUM;
+    moduli[I]          = III;
+    CREDO_VERUM (congruentia_restitue(residua, moduli, II, VERUM,
+        piscina, &x));
+    CREDO_VERUM (magnus_aequalis(x, magnus_ex_s64(III)));
+    residua[ZEPHYRUM]  = ZEPHYRUM;   /* x = 4 > 3: -2 */
+    residua[I]         = I;
+    CREDO_VERUM (congruentia_restitue(residua, moduli, II, VERUM,
+        piscina, &x));
+    CREDO_VERUM (magnus_aequalis(x, magnus_ex_s64(-II)));
+    /* modulus 1: omnis potentia 0 (etiam 0^0) */
+    CREDO_AEQUALIS_I32 (congruentia_potentia(V, ZEPHYRUM, I),
+        ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (congruentia_potentia(ZEPHYRUM, ZEPHYRUM,
+        VII),
+        I);
+    CREDO_AEQUALIS_I32 (congruentia_ex_magno(magnus_ex_s64(-VII),
+        X),
+        III);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "vectores oraculi", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "primalitatem contra cribrum (2^20)", _sectio_secunda, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "leges", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "refutationes", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("congruentia", SECTIONES);
 }

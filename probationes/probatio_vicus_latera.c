@@ -189,7 +189,19 @@ spatium_est (
     redde chorda_aequalis_literis(c, textus);
 }
 
-s32 principale (vacuum)
+/* auxilia piscinam (et principale intern) ex statu plagulae legunt:
+ * parare eos ponit (examen XCII: status in parare repositus) */
+interior vacuum
+_sectio_prima_parare (
+    CredoContextus* c)
+{
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+}
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
            Volumen* vol;
    VicusApplicatio  app;
@@ -200,13 +212,7 @@ s32 principale (vacuum)
             chorda  index;
                b32  inventum;
 
-    piscina = piscina_generare_dynamicum("probatio_vicus_latera",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    (vacuum)c;
     thema_initiare();
     (vacuum)setenv("SHELL", "/bin/sh", I);
     vol = volumen_temporarium(piscina, "probatio_vicus_latera");
@@ -216,14 +222,14 @@ s32 principale (vacuum)
     m      = manus_ludus_creare(piscina, app.d);
     motus  = dispensator_motus(app.d);
 
-    imprimere("\n--- 0: terminale focum in apertura capit ---\n");
+    CREDO_GRADUS("0: terminale focum in apertura capit");
     /* Franus: 'tmux a' statim post aperturam ad concham */
     CREDO_AEQUALIS_I32(vicus_tabula(v, ZEPHYRUM)->focus, VICUS_DEXTRUM);
     CREDO_AEQUALIS_I32(vicus_tabula(v, II)->focus, VICUS_SINISTRUM);
     CREDO_VERUM(spatium_est(motus->spatium,
         "terminale:1_dextrum_terminale"));
 
-    imprimere("\n--- I: scriba | scriba - claves ad sinistrum ---\n");
+    CREDO_GRADUS("I: scriba | scriba - claves ad sinistrum");
     CREDO_VERUM(vicus_activam_ponere(v, "3"));
     dispensator_recomponere(app.d);
     CREDO_VERUM(spatium_est(motus->spatium,
@@ -232,7 +238,7 @@ s32 principale (vacuum)
     CREDO_VERUM(manus_ludus_scribere(m, "iuno"));
     CREDO_FALSUM(linea_prima(scriba(v, VICUS_SINISTRUM), "uno"));
 
-    imprimere("\n--- II: ictus in dextrum - focus solum ---\n");
+    CREDO_GRADUS("II: ictus in dextrum - focus solum");
     /* latus dextrum ab x CCXL; pagina a cellula I lateris */
     CREDO_VERUM(manus_ludus_premere_ad(m, CCLV, XX));
     CREDO_VERUM(vicus_latus_focatum(v)
@@ -251,7 +257,7 @@ s32 principale (vacuum)
         == vicus_latus(vicus_activa(v), VICUS_SINISTRUM));
     CREDO_VERUM(linea_prima(scriba(v, VICUS_DEXTRUM), "abcdef"));
 
-    imprimere("\n--- III: ictus primus focat, secundus agit ---\n");
+    CREDO_GRADUS("III: ictus primus focat, secundus agit");
     /* probatio in pictore (ictus pictus visibilis), tabula 2 =
      * scriba | pictor */
     CREDO_VERUM(vicus_activam_ponere(v, "2"));
@@ -275,7 +281,7 @@ s32 principale (vacuum)
     CREDO_VERUM(vicus_activam_ponere(v, "3"));
     dispensator_recomponere(app.d);
 
-    imprimere("\n--- IV: super cum spatio suo ---\n");
+    CREDO_GRADUS("IV: super cum spatio suo");
     CREDO_VERUM(manus_ludus_movere(m, XV, XX));
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_super(app.d), "pagina");
     CREDO_VERUM(spatium_est(app.d->super_spatium,
@@ -285,7 +291,7 @@ s32 principale (vacuum)
     CREDO_VERUM(spatium_est(app.d->super_spatium,
         "scriba:3_dextrum_scriba"));
 
-    imprimere("\n--- V: Cmd+0 = tabula decima ---\n");
+    CREDO_GRADUS("V: Cmd+0 = tabula decima");
     CREDO_VERUM(manus_ludus_clavem(m, '0', MOD_SUPER));
     CREDO_CHORDA_AEQUALIS_LITERIS(v->activa, "10");
     CREDO_VERUM(manus_ludus_clavem(m, '1', MOD_SUPER));
@@ -302,7 +308,7 @@ s32 principale (vacuum)
     CREDO_CHORDA_AEQUALIS_LITERIS(v->activa, "1");
     CREDO_FALSUM(insula_mendacium(v->repo));
 
-    imprimere("\n--- VI: ictus cursorem ponit (S3a) ---\n");
+    CREDO_GRADUS("VI: ictus cursorem ponit (S3a)");
     CREDO_VERUM(vicus_activam_ponere(v, "3"));
     dispensator_recomponere(app.d);
     CREDO_VERUM(vicus_latus_focatum(v)
@@ -361,7 +367,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_S32(cursor_linea(v, VICUS_SINISTRUM), I);
     CREDO_AEQUALIS_S32(cursor_columna(v, VICUS_SINISTRUM), I);
 
-    imprimere("\n--- VII: indicium foci - exemplar in margine ---\n");
+    CREDO_GRADUS("VII: indicium foci - exemplar in margine");
     /* linea marginis summa (y T+1..T+6, intra lineam marginis): puncta
      * colore marginis solum in latere focato */
     CREDO_VERUM(vicus_latus_focatum(v)
@@ -372,8 +378,17 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(puncta_marginis(&app, I, CCXXX), ZEPHYRUM);
     CREDO_VERUM(puncta_marginis(&app, CCL, CDLXX) > ZEPHYRUM);
 
-    imprimere("\n");
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "0: terminale focum in apertura capit", _sectio_prima,
+        _sectio_prima_parare, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("vicus_latera", SECTIONES);
 }

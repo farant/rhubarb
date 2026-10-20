@@ -1,0 +1,127 @@
+<interrogationes unitas="matrix">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I build a matrix of integers, rationals or Laurent polynomials?
+    <responsum symbolum="matrix_ex_chorda matrix_nulla matrix_identitas matrix_pone ANULUS_INTEGRORUM ANULUS_RATIONALIUM ANULUS_POLYNOMIORUM anulus_residuorum">Pick
+      a ring descriptor (&amp;ANULUS_INTEGRORUM for Z with Magnus
+      elements, &amp;ANULUS_RATIONALIUM for Q with Fractio,
+      &amp;ANULUS_POLYNOMIORUM for Z[t, t^-1] with Polynomium, or
+      anulus_residuorum(n, piscina) for Z/n with i32 residues) and either
+      parse text with matrix_ex_chorda, e.g. [t - 1, 1; -t, t - 1]
+      (commas between entries, semicolons between rows, [] is 0 x 0),
+      or start from matrix_nulla / matrix_identitas and fill it with
+      matrix_pone. matrix_ad_chordam prints the same format back.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I change an entry of a matrix after I have used it in a computation?
+    <responsum symbolum="matrix_pone matrix_elementum">Do
+      not: the contract is build then freeze. matrix_pone is meant only
+      while you are constructing a matrix; every operation returns a NEW
+      matrix and never changes its arguments. matrix_pone copies the
+      element struct (it does not deep-copy a Magnus or Polynomium),
+      and an index out of range silently does nothing. Read entries
+      with matrix_elementum, which returns a pointer to the ring's
+      element type, or NIHIL out of range.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I compute a determinant, for example an Alexander polynomial?
+    <responsum symbolum="matrix_determinans matrix_transposita matrix_subtrahe matrix_multiplica">matrix_determinans(m,
+      piscina, &amp;valor) writes an element of the ring (a Magnus, a
+      Fractio or a Polynomium you declare) and returns FALSUM if the
+      matrix is not square or the ring is not an integral domain (Z/n
+      with n composite: integrum is FALSUM); 0 x 0
+      gives 1. It is fraction-free Bareiss elimination, so it works
+      exactly over Z and Z[t, t^-1] without fractions. The worklog builds
+      det(V - t V^T) from a Seifert matrix with transpose, multiply and
+      subtract.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I find out why a matrix operation returned FALSUM?
+    <responsum symbolum="matrix_adde matrix_multiplica matrix_determinans matrix_forma_hermite">Every
+      b32 function returns FALSUM, and leaves its output untouched, when
+      dimensions or rings do not match (rings are compared by descriptor
+      address), when an element operation refuses (a Polynomium
+      exponent out of range, an inexact division), or when the ring
+      lacks what the algorithm needs (no integrum for determinant, rank
+      and kernel; no Euclidean hooks for Hermite and Smith). There is no
+      error code; check those three things.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I destroy the piscina of the input matrix after computing a result from it?
+    <responsum symbolum="matrix_determinans matrix_nucleus matrix_multiplica matrix_transposita matrix_adde matrix_subtrahe">Only
+      for some results. Determinant, kernel, product and the normal
+      forms are always deep-copied into the piscina you pass, so they
+      own their memory. matrix_transposita, matrix_adde,
+      matrix_subtrahe and matrix_pone copy element structs and may
+      SHARE storage with the arguments, so those results stay valid
+      only while the arguments' piscinae live.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what kind of basis does matrix_nucleus return, and when do I need matrix_reticulum_nuclei instead?
+    <responsum symbolum="matrix_nucleus matrix_reticulum_nuclei">matrix_nucleus
+      gives columns spanning the kernel over the fraction field, with
+      entries in the ring (they are minors, so their size is bounded),
+      but over Z they are not primitive and not a lattice basis: for
+      [2, 4] it gives (-4, 2). matrix_reticulum_nuclei (Euclidean rings,
+      Z today) gives a basis of the integer kernel lattice, (-2, 1) up
+      to sign, so every integer solution is an integer combination of
+      its columns. Both have columns minus rank columns.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get the Smith or Hermite normal form with the transformation matrices?
+    <responsum symbolum="matrix_forma_smith matrix_forma_hermite">matrix_forma_hermite(a,
+      piscina, &amp;h, &amp;u) gives H = U A by row operations (positive
+      pivots, entries above reduced, zero rows last);
+      matrix_forma_smith(a, piscina, &amp;d, &amp;u, &amp;v) gives
+      D = U A V with each d_i dividing the next. Pass NIHIL for u or v
+      when you do not need the certificate; it saves time and memory.
+      Only rings with divisor_communis, divide_cum_residuo and
+      compara_normam work, which today means Z; Q and Z[t, t^-1] return
+      FALSUM.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why can the determinant or rank of a Z[t, t^-1] matrix return FALSUM when the answer is well defined?
+    <responsum symbolum="matrix_determinans matrix_gradus" via="include/matrix.h lib/matrix.worklog.md">Elimination
+      makes intermediate exponents grow: the rank of [t^(2^29), 1; 1,
+      t^(2^29)] needs t^(2^30), which is past Polynomium's exponent
+      bound, so the element operation refuses and the whole call
+      returns FALSUM with the output untouched. Huge sparse exponents
+      also need Polynomium's dense memory. This is documented and
+      pinned by a test, not a bug to work around.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does matrix create its own scratch piscinae, and how do I measure them?
+    <responsum symbolum="matrix_apex_officinarum matrix_determinans matrix_multiplica" via="lib/matrix.worklog.md">Elimination
+      produces many intermediate values; they live in four internal
+      scratch piscinae (two alternating, one per-entry temporary, one
+      stable) that are rolled back as the work proceeds, so only the
+      result is deep-copied into your piscina. Determinant, rank and
+      kernel skip the scratch when the matrix has at most XXV entries
+      AND every entry is stored inline (anulus-&gt;parvum: a Polynomium
+      only when it is zero); multiplication uses the same rule with at
+      most CXXV element products. Hermite, Smith and the kernel lattice
+      always use scratch. A 2 x 2 determinant cost 0.5 us with four
+      piscinae against 0.007 us without (worklog A2).
+      matrix_apex_officinarum reports the peak scratch bytes of the last
+      multiplication, elimination or normal form (0 when that call
+      took the small path).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can a matrix with zero rows or zero columns round-trip through text?
+    <responsum symbolum="matrix_ad_chordam matrix_ex_chorda">No:
+      any matrix with a zero dimension (r x 0 or 0 x c) prints as [],
+      and [] reads back as 0 x 0, so the dimensions are lost. Keep the
+      dimensions separately if you serialize such a matrix, for example
+      an empty kernel.</responsum>
+  </interrogatio>
+
+</interrogationes>

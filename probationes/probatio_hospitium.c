@@ -80,15 +80,12 @@ _commercium (
  * TRACTATORES
  * ======================================================================== */
 
-hic_manens i32 g_tractator_vocatus = 0;
-
 interior vacuum
 _tractator_salve (
     HospitiumColloquium* colloquium)
 {
     chorda corpus = chorda_ex_literis("salve munde",
                                       colloquium_piscina(colloquium));
-    g_tractator_vocatus++;
     colloquium_respondere(colloquium, CC, "text/plain", corpus);
 }
 
@@ -120,13 +117,15 @@ _tractator_datum (
  * ======================================================================== */
 
 interior vacuum
-probatio_creare_destruere(Piscina* piscina)
+_sectio_prima (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
     HospitiumConfiguratio  cfg;
                 Hospitium* h;
          HospitiumFructus  fr;
 
-    printf("--- Probans creare et destruere ---\n");
+    piscina = c->piscina;
 
     memset(&cfg, 0, magnitudo(cfg));
     h = hospitium_creare(piscina, &cfg);
@@ -139,7 +138,6 @@ probatio_creare_destruere(Piscina* piscina)
 
     hospitium_destruere(h);
     printf("  Portus auto-selectus, fructus vacui\n");
-    printf("\n");
 }
 
 
@@ -148,8 +146,10 @@ probatio_creare_destruere(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_gyrus_simplex(Piscina* piscina)
+_sectio_secunda (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
     HospitiumConfiguratio  cfg;
                 Hospitium* h;
               TcpConnexio* cliens;
@@ -157,7 +157,7 @@ probatio_gyrus_simplex(Piscina* piscina)
                       s32  n;
          HospitiumFructus  fr;
 
-    printf("--- Probans gyrum simplicem ---\n");
+    piscina = c->piscina;
 
     memset(&cfg, 0, magnitudo(cfg));
     h = hospitium_creare(piscina, &cfg);
@@ -187,7 +187,6 @@ probatio_gyrus_simplex(Piscina* piscina)
     tcp_claudere(cliens);
     hospitium_destruere(h);
     printf("  Gyrus completus: 200 + corpus + framing\n");
-    printf("\n");
 }
 
 
@@ -196,8 +195,10 @@ probatio_gyrus_simplex(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_keep_alive(Piscina* piscina)
+_sectio_tertia (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
     HospitiumConfiguratio  cfg;
                 Hospitium* h;
               TcpConnexio* cliens;
@@ -205,7 +206,7 @@ probatio_keep_alive(Piscina* piscina)
                       s32  n;
          HospitiumFructus  fr;
 
-    printf("--- Probans keep-alive (II petitiones, I connexio) ---\n");
+    piscina = c->piscina;
 
     memset(&cfg, 0, magnitudo(cfg));
     h = hospitium_creare(piscina, &cfg);
@@ -241,7 +242,6 @@ probatio_keep_alive(Piscina* piscina)
     tcp_claudere(cliens);
     hospitium_destruere(h);
     printf("  II petitiones per I connexionem\n");
-    printf("\n");
 }
 
 
@@ -250,15 +250,17 @@ probatio_keep_alive(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_ignotum_et_non_permissum(Piscina* piscina)
+_sectio_quarta (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
     HospitiumConfiguratio  cfg;
                 Hospitium* h;
               TcpConnexio* cliens;
                 character  buffer[IV * MXXIV];
                       s32  n;
 
-    printf("--- Probans CDIV et CDV + Allow ---\n");
+    piscina = c->piscina;
 
     memset(&cfg, 0, magnitudo(cfg));
     h = hospitium_creare(piscina, &cfg);
@@ -292,7 +294,6 @@ probatio_ignotum_et_non_permissum(Piscina* piscina)
 
     hospitium_destruere(h);
     printf("  CDIV + CDV cum Allow recte\n");
-    printf("\n");
 }
 
 
@@ -301,8 +302,10 @@ probatio_ignotum_et_non_permissum(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_custos_trans_filum(Piscina* piscina)
+_sectio_quinta (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
     HospitiumConfiguratio  cfg;
                 Hospitium* h;
               TcpConnexio* cliens;
@@ -310,7 +313,7 @@ probatio_custos_trans_filum(Piscina* piscina)
                       s32  n;
          HospitiumFructus  fr;
 
-    printf("--- Probans custodem trans filum (versio mala) ---\n");
+    piscina = c->piscina;
 
     memset(&cfg, 0, magnitudo(cfg));
     h = hospitium_creare(piscina, &cfg);
@@ -337,7 +340,6 @@ probatio_custos_trans_filum(Piscina* piscina)
     tcp_claudere(cliens);
     hospitium_destruere(h);
     printf("  Custos: 400 + close + EOF\n");
-    printf("\n");
 }
 
 
@@ -346,15 +348,17 @@ probatio_custos_trans_filum(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_caput_sine_corpore(Piscina* piscina)
+_sectio_sexta (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
     HospitiumConfiguratio  cfg;
                 Hospitium* h;
               TcpConnexio* cliens;
                 character  buffer[IV * MXXIV];
                       s32  n;
 
-    printf("--- Probans HEAD = GET sine corpore ---\n");
+    piscina = c->piscina;
 
     memset(&cfg, 0, magnitudo(cfg));
     h = hospitium_creare(piscina, &cfg);
@@ -380,7 +384,6 @@ probatio_caput_sine_corpore(Piscina* piscina)
     tcp_claudere(cliens);
     hospitium_destruere(h);
     printf("  HEAD: capita cum CL vero, sine corpore\n");
-    printf("\n");
 }
 
 
@@ -389,8 +392,10 @@ probatio_caput_sine_corpore(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_reliquiae_clausura(Piscina* piscina)
+_sectio_septima (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
     HospitiumConfiguratio  cfg;
                 Hospitium* h;
               TcpConnexio* cliens;
@@ -398,7 +403,7 @@ probatio_reliquiae_clausura(Piscina* piscina)
                       s32  n;
          HospitiumFructus  fr;
 
-    printf("--- Probans reliquias -> clausuram honestam ---\n");
+    piscina = c->piscina;
 
     memset(&cfg, 0, magnitudo(cfg));
     h = hospitium_creare(piscina, &cfg);
@@ -430,7 +435,6 @@ probatio_reliquiae_clausura(Piscina* piscina)
     tcp_claudere(cliens);
     hospitium_destruere(h);
     printf("  Reliquiae: responsum I + close + EOF\n");
-    printf("\n");
 }
 
 
@@ -439,8 +443,10 @@ probatio_reliquiae_clausura(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_datum_et_caput(Piscina* piscina)
+_sectio_octava (
+    CredoContextus* c)
 {
+                          Piscina* piscina;
             HospitiumConfiguratio  cfg;
                         Hospitium* h;
                       TcpConnexio* cliens;
@@ -448,7 +454,7 @@ probatio_datum_et_caput(Piscina* piscina)
                               s32  n;
     hic_manens constans character* datum_probationis = "datum-arcanum";
 
-    printf("--- Probans datum registratum + caput proprium ---\n");
+    piscina = c->piscina;
 
     memset(&cfg, 0, magnitudo(cfg));
     h = hospitium_creare(piscina, &cfg);
@@ -470,7 +476,6 @@ probatio_datum_et_caput(Piscina* piscina)
     tcp_claudere(cliens);
     hospitium_destruere(h);
     printf("  Datum + caput proprium per filum\n");
-    printf("\n");
 }
 
 
@@ -479,15 +484,17 @@ probatio_datum_et_caput(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_directorium(Piscina* piscina)
+_sectio_nona (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
     HospitiumConfiguratio  cfg;
                 Hospitium* h;
               TcpConnexio* cliens;
                 character  buffer[IV * MXXIV];
                       s32  n;
 
-    printf("--- Probans directorium staticum ---\n");
+    piscina = c->piscina;
 
     /* figere directorium probationis */
     CREDO_VERUM(filum_directorium_creare_si_necesse(STATICA_RADIX));
@@ -558,7 +565,6 @@ probatio_directorium(Piscina* piscina)
     tcp_claudere(cliens);
     hospitium_destruere(h);
     printf("  Statica: MIME + index + pagina indicis + traversalis recusata\n");
-    printf("\n");
 }
 
 
@@ -567,15 +573,17 @@ probatio_directorium(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_acao(Piscina* piscina)
+_sectio_decima (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
     HospitiumConfiguratio  cfg;
                 Hospitium* h;
               TcpConnexio* cliens;
                 character  buffer[IV * MXXIV];
                       s32  n;
 
-    printf("--- Probans ACAO in omni responso ---\n");
+    piscina = c->piscina;
 
     memset(&cfg, 0, magnitudo(cfg));
     cfg.acao  = VERUM;
@@ -607,7 +615,6 @@ probatio_acao(Piscina* piscina)
     tcp_claudere(cliens);
     hospitium_destruere(h);
     printf("  ACAO in responso tractatoris et in CDIV\n");
-    printf("\n");
 }
 
 
@@ -616,8 +623,10 @@ probatio_acao(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_plenitudo(Piscina* piscina)
+_sectio_decima_prima (
+    CredoContextus* c)
 {
+                  Piscina* piscina;
     HospitiumConfiguratio  cfg;
                 Hospitium* h;
               TcpConnexio* cliens_a;
@@ -626,7 +635,7 @@ probatio_plenitudo(Piscina* piscina)
                       s32  n;
          HospitiumFructus  fr;
 
-    printf("--- Probans plenitudinem -> DIII ---\n");
+    piscina = c->piscina;
 
     memset(&cfg, 0, magnitudo(cfg));
     cfg.connexiones_maximae  = I;
@@ -665,7 +674,6 @@ probatio_plenitudo(Piscina* piscina)
     tcp_claudere(cliens_b);
     hospitium_destruere(h);
     printf("  Plenitudo: DIII visibile, sedes prima intacta\n");
-    printf("\n");
 }
 
 
@@ -673,42 +681,33 @@ probatio_plenitudo(Piscina* piscina)
  * PRINCIPALE
  * ======================================================================== */
 
-integer
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "creare et destruere", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "gyrum simplicem", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "keep-alive (II petitiones, I connexio)", _sectio_tertia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "CDIV et CDV + Allow", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "custodem trans filum (versio mala)", _sectio_quinta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "HEAD = GET sine corpore", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "reliquias -> clausuram honestam", _sectio_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "datum registratum + caput proprium", _sectio_octava, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "directorium staticum", _sectio_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "ACAO in omni responso", _sectio_decima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "plenitudinem -> DIII", _sectio_decima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
 principale (vacuum)
 {
-    Piscina* piscina;
-        b32  successus;
-
-    printf("\n");
-    printf("========================================\n");
-    printf("PROBATIONES HOSPITIUM\n");
-    printf("========================================\n");
-    printf("\n");
-
-    piscina = piscina_generare_dynamicum("probatio_hospitium", M * M);
-    credo_aperire(piscina);
-
-    probatio_creare_destruere(piscina);
-    probatio_gyrus_simplex(piscina);
-    probatio_keep_alive(piscina);
-    probatio_ignotum_et_non_permissum(piscina);
-    probatio_custos_trans_filum(piscina);
-    probatio_caput_sine_corpore(piscina);
-    probatio_reliquiae_clausura(piscina);
-    probatio_datum_et_caput(piscina);
-    probatio_directorium(piscina);
-    probatio_acao(piscina);
-    probatio_plenitudo(piscina);
-
-    credo_imprimere_compendium();
-
-    printf("========================================\n");
-    printf("\n");
-
-    successus = credo_omnia_praeterierunt();
-
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    redde successus ? 0 : I;
+    redde credo_suitam_currere("hospitium", SECTIONES);
 }

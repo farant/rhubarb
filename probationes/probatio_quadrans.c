@@ -261,22 +261,14 @@ _aurum_legere (
     fclose(f);
 }
 
-s32
-principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-         b32  praeteritus;
-     Piscina* piscina;
-         i32  bita;
+    Piscina* piscina;
+        i32  bita;
 
-    piscina = piscina_generare_dynamicum("probatio_quadrans", 1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- I. Glyphi mixti (nigrum/album) ---\n");
+    piscina = c->piscina;
     per (bita = I; bita < XV; bita++)
     {
         i32 k;
@@ -297,12 +289,26 @@ principale (vacuum)
             _cella(c, FIGURAE[bita], ZEPHYRUM, 0xFFFFFF, causa);
         }
     }
+}
 
-    imprimere("\n--- II. Uniformis ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     _cella(_bloccus(piscina, 0x336699, 0x336699, 0x336699, 0x336699,
         QUADRANS_EXTREMA), 0x20, 0x336699, 0x336699, "uniformis");
+}
 
-    imprimere("\n--- III. Extrema contra media ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     /* 0, 10, 200, 255 griseum: par (TL, BR); TR obscuro propior, BL
      * claro -> bita 12 (superius) */
     _cella(_bloccus(piscina, ZEPHYRUM, 0x0A0A0A, 0xC8C8C8, 0xFFFFFF,
@@ -310,8 +316,15 @@ principale (vacuum)
     /* media: (0+10)/2 = 5; (200+255)/2 = 227,5 -> 228 (sursum) */
     _cella(_bloccus(piscina, ZEPHYRUM, 0x0A0A0A, 0xC8C8C8, 0xFFFFFF,
         QUADRANS_MEDIA), 0x2580, 0x050505, 0xE4E4E4, "media");
+}
 
-    imprimere("\n--- IV. Aequalitates ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     /* distantiae aequales: par primum (TL, TR) -> bita 10 */
     _cella(_bloccus(piscina, ZEPHYRUM, 0xFFFFFF, ZEPHYRUM, 0xFFFFFF,
         QUADRANS_EXTREMA), 0x258C, ZEPHYRUM, 0xFFFFFF,
@@ -330,8 +343,15 @@ principale (vacuum)
     _cella(_bloccus(piscina, 0x0026EF, 0xD10000, 0xD10000, 0x0026EF,
         QUADRANS_EXTREMA), 0x259A, 0x0026EF, 0xD10000,
         "par primum inter aequales (diagonalis)");
+}
 
-    imprimere("\n--- V. Alpha, regiones, mensurae ---\n");
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                 Imago im  = _imago(piscina, III, III);
      QuadransOptiones o   = quadrans_optiones_ordinariae();
@@ -391,8 +411,15 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (lat, ZEPHYRUM);
         CREDO_AEQUALIS_I32 (alt, ZEPHYRUM);
     }
+}
 
-    imprimere("\n--- VI. Error reconstructionis ---\n");
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                    Imago im  = _imago(piscina, II, II);
         QuadransOptiones o   = quadrans_optiones_ordinariae();
@@ -425,8 +452,15 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (quadrans_error(&im, ZEPHYRUM, ZEPHYRUM,
             ZEPHYRUM, ZEPHYRUM, &o, &c), ZEPHYRUM);
     }
+}
 
-    imprimere("\n--- VII. Mensura D2 (EXTREMA contra MEDIA) ---\n");
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         hic_manens constans character* constans TITULI[] = {
             "assumptio", "christus_sculptus", "gradiens", "tabula",
@@ -533,8 +567,15 @@ principale (vacuum)
             imprimere("  aurum scriptum: %s\n", AURUM_VIA);
         }
     }
+}
 
-    imprimere("\n--- VIII. DIMIDIUM ---\n");
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                 Imago im  = _imago(piscina, I, III);
      QuadransOptiones o   = quadrans_optiones_ordinariae();
@@ -638,8 +679,13 @@ principale (vacuum)
             fclose(aurum);
         }
     }
+}
 
-    imprimere("\n--- IX. Aptatio (intra XL x X cellulas) ---\n");
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    (vacuum)c;
     /* quadratum: sub-pixelum quadrantis 1:2 altum -> 40x20 (20x10
      * cellulae, in scrinio quadratae) */
     _mensura(C, C, QUADRANS_QUADRANTES, L, XL, XX, "quadratum");
@@ -654,9 +700,29 @@ principale (vacuum)
     _mensura(C, C, QUADRANS_QUADRANTES, C, XX, XX, "cellula quadrata");
     _mensura(ZEPHYRUM, C, QUADRANS_QUADRANTES, L, ZEPHYRUM, ZEPHYRUM,
         "vacuum");
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. Glyphi mixti (nigrum/album)", _sectio_prima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "II. Uniformis", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III. Extrema contra media", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "IV. Aequalitates", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "V. Alpha, regiones, mensurae", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "VI. Error reconstructionis", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "VII. Mensura D2 (EXTREMA contra MEDIA)", _sectio_septima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "VIII. DIMIDIUM", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IX. Aptatio (intra XL x X cellulas)", _sectio_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("quadrans", SECTIONES);
 }

@@ -2403,6 +2403,11 @@ unitates_interrogationes (
         {
             perge;
         }
+        /* archivata extra usum: nec legitur nec iudicatur */
+        si (_extra_usum(r.unitas))
+        {
+            perge;
+        }
         si (!unitates->sutura->plagulam_legere(unitates->sutura->datum,
                 via, piscina, &textus))
         {

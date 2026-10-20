@@ -10,27 +10,27 @@
 #include "credo.h"
 #include <stdio.h>
 
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    Piscina* piscina;
-        s32  x;
-        s32  y;
-        i32  n;
-
-    piscina = piscina_generare_dynamicum("probatio_exemplaria", M * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- I: obtinere ---\n");
+    (vacuum)c;
     CREDO_NON_NIHIL(exemplar_obtinere(EXEMPLAR_SOLIDUS));
     CREDO_NON_NIHIL(exemplar_obtinere(EXEMPLAR_NUMERUS - I));
     CREDO_NIHIL(exemplar_obtinere(EXEMPLAR_NUMERUS));
     CREDO_AEQUALIS_I32((i32)(insignatus character)
         exemplar_obtinere(EXEMPLAR_TESSELLATUM)[ZEPHYRUM], 0xAA);
+}
 
-    imprimere("\n--- II: ordo bitorum ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    s32 x;
+    s32 y;
+    i32 n;
+
+    (vacuum)c;
     n = ZEPHYRUM;
     per (y = ZEPHYRUM; y < VIII; y++)
     {
@@ -65,8 +65,13 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(n, I);
     CREDO_VERUM(exemplar_punctum(EXEMPLAR_CINEREUM_LEVE, ZEPHYRUM,
         ZEPHYRUM));
+}
 
-    imprimere("\n--- III: tegendo ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     CREDO_VERUM(exemplar_punctum(EXEMPLAR_CINEREUM_LEVE, VIII, XVI));
     CREDO_VERUM(exemplar_punctum(EXEMPLAR_CINEREUM_LEVE, -VIII, -VIII));
     CREDO_FALSUM(exemplar_punctum(EXEMPLAR_CINEREUM_LEVE, -I,
@@ -76,12 +81,27 @@ s32 principale (vacuum)
         ZEPHYRUM));
     CREDO_FALSUM(exemplar_punctum(EXEMPLAR_LINEAE_VERTICALES, -I,
         ZEPHYRUM));
+}
 
-    imprimere("\n--- IV: id invalidum ---\n");
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    (vacuum)c;
     CREDO_FALSUM(exemplar_punctum(EXEMPLAR_NUMERUS, ZEPHYRUM,
         ZEPHYRUM));
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: obtinere", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "II: ordo bitorum", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III: tegendo", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IV: id invalidum", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("exemplaria", SECTIONES);
 }

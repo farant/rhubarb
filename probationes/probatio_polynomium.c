@@ -2669,21 +2669,18 @@ interior constans VectorTextus vectores_textus[] = {
         "0" },
 };
 
-interior Piscina* piscina;
-interior b32      canonica_omnia  = VERUM;
-interior b32      lectio_integra  = VERUM;
-
 /* forma canonica: nullum = imus 0; aliter extrema non nulla; exponentes
  * intra fines */
 interior Polynomium
 _c (
+    b32* canonica_omnia,
     Polynomium p)
 {
     si (p.numerus == ZEPHYRUM)
     {
         si (p.imus != ZEPHYRUM)
         {
-            canonica_omnia = FALSUM;
+            *canonica_omnia = FALSUM;
         }
         redde p;
     }
@@ -2693,13 +2690,16 @@ _c (
         || (s64)p.imus + (s64)p.numerus - I
             > (s64)POLYNOMIUM_EXPONENS_MAXIMUS)
     {
-        canonica_omnia = FALSUM;
+        *canonica_omnia = FALSUM;
     }
     redde p;
 }
 
 interior Polynomium
 _p (
+               Piscina* piscina,
+                   b32* canonica_omnia,
+                   b32* lectio_integra,
     constans character* textus)
 {
     Polynomium p = polynomium_nullum();
@@ -2708,13 +2708,14 @@ _p (
         piscina, &p))
     {
         imprimere("  lectio fracta: \"%s\"\n", textus);
-        lectio_integra = FALSUM;
+        *lectio_integra = FALSUM;
     }
-    redde _c(p);
+    redde _c(canonica_omnia, p);
 }
 
 interior b32
 _textus_est (
+                Piscina* piscina,
              Polynomium  p,
      constans character* litterae)
 {
@@ -2725,41 +2726,48 @@ _textus_est (
 
 interior Polynomium
 _multiplica (
-    Polynomium a,
-    Polynomium b)
+       Piscina* piscina,
+           b32* canonica_omnia,
+    Polynomium  a,
+    Polynomium  b)
 {
     Polynomium r = polynomium_nullum();
 
     si (!polynomium_multiplica(a, b, piscina, &r))
     {
-        canonica_omnia = FALSUM;
+        *canonica_omnia = FALSUM;
     }
-    redde _c(r);
+    redde _c(canonica_omnia, r);
 }
 
 interior Polynomium
 _monomium (
-    s64 c,
-    s32 exponens)
+    Piscina* piscina,
+        b32* canonica_omnia,
+        s64  c,
+        s32  exponens)
 {
     Polynomium r = polynomium_nullum();
 
     (vacuum)polynomium_monomium(magnus_ex_s64(c), exponens, piscina,
         &r);
-    redde _c(r);
+    redde _c(canonica_omnia, r);
 }
 
 /* sententia: polynomium non tactum (custos post recusationem) */
 interior Polynomium
 _custos (
-    vacuum)
+    Piscina* piscina,
+        b32* canonica_omnia)
 {
-    redde _monomium(VII, XIII);
+    redde _monomium(piscina, canonica_omnia, VII, XIII);
 }
 
 interior Polynomium
 _fortuitum (
-    Sors* s)
+    Piscina* piscina,
+        b32* canonica_omnia,
+       Sors* s)
 {
     Polynomium p        = polynomium_nullum();
            i32 termini  = (i32)sors_intra(s, VI);
@@ -2780,7 +2788,7 @@ _fortuitum (
 
             (vacuum)polynomium_monomium(c, (s32)sors_inter(s, -IV, IV),
                 piscina, &m);
-            p = _c(polynomium_adde(p, m, piscina));
+            p = _c(canonica_omnia, polynomium_adde(p, m, piscina));
         }
     }
     redde p;
@@ -2788,7 +2796,8 @@ _fortuitum (
 
 interior Fractio
 _fractio_fortuita (
-    Sors* s)
+    Piscina* piscina,
+       Sors* s)
 {
     Fractio x          = fractio_ex_s64(I);
         s64 numerator  = sors_inter(s, -IX, IX);
@@ -2817,8 +2826,9 @@ _unitas (
 /* numerus digitorum datorum, signo fortuito, primo digito non nullo */
 interior Magnus
 _magnum_fortuitum (
-     Sors* s,
-      i32  digiti)
+    Piscina* piscina,
+       Sors* s,
+        i32  digiti)
 {
     character alveus[CCLVI];
           i32 k;
@@ -2840,10 +2850,12 @@ _magnum_fortuitum (
  * internus nullus (extrema non nulla) */
 interior Polynomium
 _polynomium_magnum (
-     Sors* s,
-      i32  termini,
-      i32  digiti,
-      i32  lacuna)
+    Piscina* piscina,
+        b32* canonica_omnia,
+       Sors* s,
+        i32  termini,
+        i32  digiti,
+        i32  lacuna)
 {
         Magnus c[LXIV];
     Polynomium p = polynomium_nullum();
@@ -2853,22 +2865,24 @@ _polynomium_magnum (
     {
         c[k] = (lacuna > ZEPHYRUM && k > ZEPHYRUM && k + I < termini
             && k % lacuna == ZEPHYRUM) ? magnus_ex_s64(ZEPHYRUM)
-            : _magnum_fortuitum(s, digiti);
+            : _magnum_fortuitum(piscina, s, digiti);
     }
     si (!polynomium_ex_coefficientibus(c, k, (s32)sors_inter(s, -V, V),
         piscina, &p))
     {
-        canonica_omnia = FALSUM;
+        *canonica_omnia = FALSUM;
     }
-    redde _c(p);
+    redde _c(canonica_omnia, p);
 }
 
 /* productum per terminos (multiplica_scalari, translata, adde): via
  * sine officinis, contra quam multiplica comparatur */
 interior Polynomium
 _productum_per_terminos (
-    Polynomium a,
-    Polynomium b)
+       Piscina* piscina,
+           b32* canonica_omnia,
+    Polynomium  a,
+    Polynomium  b)
 {
     Polynomium r = polynomium_nullum();
            i32 i;
@@ -2881,9 +2895,9 @@ _productum_per_terminos (
             a.coefficientes[i], piscina), (s32)((s64)a.imus + (s64)i),
             piscina, &terminus))
         {
-            canonica_omnia = FALSUM;
+            *canonica_omnia = FALSUM;
         }
-        r = _c(polynomium_adde(r, terminus, piscina));
+        r = _c(canonica_omnia, polynomium_adde(r, terminus, piscina));
     }
     redde r;
 }
@@ -2891,15 +2905,17 @@ _productum_per_terminos (
 /* leges anuli et substitutionum unius casus */
 interior b32
 _casum_probare (
-    Sors* s)
+    Piscina* piscina,
+        b32* canonica_omnia,
+       Sors* s)
 {
-    Polynomium a     = _fortuitum(s);
-    Polynomium b     = _fortuitum(s);
-    Polynomium c     = _fortuitum(s);
-    Polynomium unum  = _monomium(I, ZEPHYRUM);
+    Polynomium a     = _fortuitum(piscina, canonica_omnia, s);
+    Polynomium b     = _fortuitum(piscina, canonica_omnia, s);
+    Polynomium c     = _fortuitum(piscina, canonica_omnia, s);
+    Polynomium unum  = _monomium(piscina, canonica_omnia, I, ZEPHYRUM);
     Polynomium r;
     Polynomium q;
-       Fractio x      = _fractio_fortuita(s);
+       Fractio x      = _fractio_fortuita(piscina, s);
        Fractio va;
        Fractio vb;
        Fractio vr;
@@ -2923,35 +2939,46 @@ _casum_probare (
     }
 
     /* oraculum falsificabile: a != a + 1, a != a t (a non nullum) */
-    si (polynomium_aequalis(a, _c(polynomium_adde(a, unum, piscina))))
+    si (polynomium_aequalis(a, _c(canonica_omnia, polynomium_adde(a,
+        unum, piscina))))
     {
         redde FALSUM;
     }
     si (   !polynomium_est_nullum(a)
-        && polynomium_aequalis(a, _multiplica(a, _monomium(I, I))))
+        && polynomium_aequalis(a, _multiplica(piscina, canonica_omnia,
+        a, _monomium(piscina, canonica_omnia, I, I))))
     {
         redde FALSUM;
     }
 
     /* anulus */
-    si (   !polynomium_aequalis(_c(polynomium_adde(a, b, piscina)),
-            _c(polynomium_adde(b, a, piscina)))
-        || !polynomium_aequalis(_c(polynomium_subtrahe(_c(
+    si (   !polynomium_aequalis(_c(canonica_omnia, polynomium_adde(a, b,
+        piscina)),
+            _c(canonica_omnia, polynomium_adde(b, a, piscina)))
+        || !polynomium_aequalis(_c(canonica_omnia,
+        polynomium_subtrahe(_c(canonica_omnia,
             polynomium_adde(a, b, piscina)), b, piscina)), a)
-        || !polynomium_aequalis(_multiplica(a, b), _multiplica(b, a))
-        || !polynomium_aequalis(_multiplica(_multiplica(a, b), c),
-            _multiplica(a, _multiplica(b, c)))
-        || !polynomium_aequalis(_multiplica(a, _c(polynomium_adde(b, c,
-            piscina))), _c(polynomium_adde(_multiplica(a, b),
-            _multiplica(a, c), piscina)))
-        || !polynomium_aequalis(_c(polynomium_adde(a,
-        _c(polynomium_nega(a,
+        || !polynomium_aequalis(_multiplica(piscina, canonica_omnia, a,
+        b), _multiplica(piscina, canonica_omnia, b, a))
+        || !polynomium_aequalis(_multiplica(piscina, canonica_omnia,
+        _multiplica(piscina, canonica_omnia, a, b), c),
+            _multiplica(piscina, canonica_omnia, a, _multiplica(piscina,
+            canonica_omnia, b, c)))
+        || !polynomium_aequalis(_multiplica(piscina, canonica_omnia, a,
+        _c(canonica_omnia, polynomium_adde(b, c,
+            piscina))), _c(canonica_omnia,
+            polynomium_adde(_multiplica(piscina, canonica_omnia, a, b),
+            _multiplica(piscina, canonica_omnia, a, c), piscina)))
+        || !polynomium_aequalis(_c(canonica_omnia, polynomium_adde(a,
+        _c(canonica_omnia, polynomium_nega(a,
             piscina)), piscina)), polynomium_nullum()))
     {
         redde FALSUM;
     }
     si (   !polynomium_potentia(a, III, piscina, &r)
-        || !polynomium_aequalis(_c(r), _multiplica(_multiplica(a, a),
+        || !polynomium_aequalis(_c(canonica_omnia, r),
+        _multiplica(piscina, canonica_omnia, _multiplica(piscina,
+        canonica_omnia, a, a),
         a)))
     {
         redde FALSUM;
@@ -2961,18 +2988,21 @@ _casum_probare (
      * unitatem */
     si (!polynomium_est_nullum(b))
     {
-        q = _custos();
-        si (   !polynomium_divide_exacte(_multiplica(a, b), b, piscina,
+        q = _custos(piscina, canonica_omnia);
+        si (   !polynomium_divide_exacte(_multiplica(piscina,
+            canonica_omnia, a, b), b, piscina,
             &q)
-            || !polynomium_aequalis(_c(q), a))
+            || !polynomium_aequalis(_c(canonica_omnia, q), a))
         {
             redde FALSUM;
         }
-        q = _custos();
-        r = _c(polynomium_adde(_multiplica(a, b), unum, piscina));
+        q = _custos(piscina, canonica_omnia);
+        r = _c(canonica_omnia, polynomium_adde(_multiplica(piscina,
+            canonica_omnia, a, b), unum, piscina));
         si (   !_unitas(b)
             && (polynomium_divide_exacte(r, b, piscina, &q)
-                || !polynomium_aequalis(q, _custos())))
+                || !polynomium_aequalis(q, _custos(piscina,
+                canonica_omnia))))
         {
             redde FALSUM;
         }
@@ -2981,10 +3011,12 @@ _casum_probare (
     /* valor homomorphismus (x non nullum) */
     si (   !polynomium_valor(a, x, piscina, &va)
         || !polynomium_valor(b, x, piscina, &vb)
-        || !polynomium_valor(_c(polynomium_adde(a, b, piscina)), x,
+        || !polynomium_valor(_c(canonica_omnia, polynomium_adde(a, b,
+        piscina)), x,
             piscina, &vr)
         || !fractio_aequalis(vr, fractio_adde(va, vb, piscina))
-        || !polynomium_valor(_multiplica(a, b), x, piscina, &vr)
+        || !polynomium_valor(_multiplica(piscina, canonica_omnia, a, b),
+        x, piscina, &vr)
         || !fractio_aequalis(vr, fractio_multiplica(va, vb, piscina)))
     {
         redde FALSUM;
@@ -2993,8 +3025,8 @@ _casum_probare (
     /* substitutiones: contrahe(dilata(a, k), k) = a; speculum
      * involutio; a(t^k)(x) = a(x^k); translata inversa et = t^k a */
     si (   !polynomium_dilata(a, k, piscina, &r)
-        || !polynomium_contrahe(_c(r), k, piscina, &q)
-        || !polynomium_aequalis(_c(q), a))
+        || !polynomium_contrahe(_c(canonica_omnia, r), k, piscina, &q)
+        || !polynomium_aequalis(_c(canonica_omnia, q), a))
     {
         redde FALSUM;
     }
@@ -3010,15 +3042,17 @@ _casum_probare (
         }
     }
     si (   !polynomium_dilata(a, -I, piscina, &r)
-        || !polynomium_dilata(_c(r), -I, piscina, &q)
-        || !polynomium_aequalis(_c(q), a))
+        || !polynomium_dilata(_c(canonica_omnia, r), -I, piscina, &q)
+        || !polynomium_aequalis(_c(canonica_omnia, q), a))
     {
         redde FALSUM;
     }
     si (   !polynomium_translata(a, k, piscina, &r)
-        || !polynomium_aequalis(_c(r), _multiplica(a, _monomium(I, k)))
+        || !polynomium_aequalis(_c(canonica_omnia, r),
+        _multiplica(piscina, canonica_omnia, a, _monomium(piscina,
+        canonica_omnia, I, k)))
         || !polynomium_translata(r, -k, piscina, &q)
-        || !polynomium_aequalis(_c(q), a))
+        || !polynomium_aequalis(_c(canonica_omnia, q), a))
     {
         redde FALSUM;
     }
@@ -3030,11 +3064,12 @@ _casum_probare (
         Polynomium n2;
 
         si (   !polynomium_normale(a, piscina, &n1)
-            || !polynomium_normale(_c(n1), piscina, &n2)
-            || !polynomium_aequalis(_c(n2), n1)
-            || !polynomium_normale(_multiplica(a, _monomium(-I, III)),
+            || !polynomium_normale(_c(canonica_omnia, n1), piscina, &n2)
+            || !polynomium_aequalis(_c(canonica_omnia, n2), n1)
+            || !polynomium_normale(_multiplica(piscina, canonica_omnia,
+            a, _monomium(piscina, canonica_omnia, -I, III)),
                 piscina, &n2)
-            || !polynomium_aequalis(_c(n2), n1)
+            || !polynomium_aequalis(_c(canonica_omnia, n2), n1)
             || polynomium_gradus_imus(n1) != ZEPHYRUM
             || magnus_signum(polynomium_coefficiens(n1, ZEPHYRUM))
                 <= ZEPHYRUM)
@@ -3066,7 +3101,7 @@ _casum_probare (
                 redde FALSUM;
             }
         }
-        si (!magnus_aequalis(polynomium_contentum(_c(
+        si (!magnus_aequalis(polynomium_contentum(_c(canonica_omnia,
             polynomium_multiplica_scalari(a, magnus_ex_s64(-VI),
                 piscina)), piscina), magnus_multiplica(g,
                 magnus_ex_s64(VI),
@@ -3078,27 +3113,25 @@ _casum_probare (
     redde VERUM;
 }
 
-s32 principale (vacuum)
-{
-    piscina = piscina_generare_dynamicum("probatio_polynomium", 65536);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
 
     /* ==================================================
      * CASUS MANU FACTI
      * ================================================== */
 
-    {
-        Polynomium p       = _p("3t^2 - t + 1 - 2t^-1");
-        Polynomium nullum  = polynomium_nullum();
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+     Piscina* piscina         = c->piscina;
+         b32  canonica_omnia  = VERUM;
+         b32  lectio_integra  = VERUM;
 
-        imprimere("\n--- Probans lectionem et scripturam ---\n");
-        CREDO_VERUM (_textus_est(p, "3t^2 - t + 1 - 2t^-1"));
+    {
+        Polynomium p = _p(piscina, &canonica_omnia,
+            &lectio_integra, "3t^2 - t + 1 - 2t^-1");
+        Polynomium nullum = polynomium_nullum();
+
+        CREDO_VERUM (_textus_est(piscina, p, "3t^2 - t + 1 - 2t^-1"));
         CREDO_AEQUALIS_S32 (polynomium_gradus_imus(p), -I);
         CREDO_AEQUALIS_S32 (polynomium_gradus_summus(p), II);
         CREDO_VERUM (magnus_aequalis(polynomium_coefficiens(p, II),
@@ -3111,14 +3144,19 @@ s32 principale (vacuum)
             magnus_ex_s64(ZEPHYRUM)));
 
         CREDO_VERUM (polynomium_est_nullum(nullum));
-        CREDO_VERUM (_textus_est(nullum, "0"));
+        CREDO_VERUM (_textus_est(piscina, nullum, "0"));
         CREDO_AEQUALIS_S32 (polynomium_gradus_imus(nullum), ZEPHYRUM);
         CREDO_AEQUALIS_S32 (polynomium_gradus_summus(nullum), ZEPHYRUM);
-        CREDO_VERUM (polynomium_est_nullum(_p("t - t")));
-        CREDO_VERUM (polynomium_est_nullum(_p("0t^3")));
-        CREDO_VERUM (_textus_est(_p("-1"), "-1"));
-        CREDO_VERUM (_textus_est(_p("t^1 + 1t^0"), "t + 1"));
-        CREDO_VERUM (_textus_est(_p("-t^-1"), "-t^-1"));
+        CREDO_VERUM (polynomium_est_nullum(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t - t")));
+        CREDO_VERUM (polynomium_est_nullum(_p(piscina, &canonica_omnia,
+            &lectio_integra, "0t^3")));
+        CREDO_VERUM (_textus_est(piscina, _p(piscina, &canonica_omnia,
+            &lectio_integra, "-1"), "-1"));
+        CREDO_VERUM (_textus_est(piscina, _p(piscina, &canonica_omnia,
+            &lectio_integra, "t^1 + 1t^0"), "t + 1"));
+        CREDO_VERUM (_textus_est(piscina, _p(piscina, &canonica_omnia,
+            &lectio_integra, "-t^-1"), "-t^-1"));
 
         /* littera alia */
         {
@@ -3128,9 +3166,19 @@ s32 principale (vacuum)
                 "A^5 - A^-3", piscina), 'A', piscina, &a));
             CREDO_CHORDA_AEQUALIS_LITERIS (polynomium_ad_chordam(a, 'A',
                 piscina), "A^5 - A^-3");
-            CREDO_VERUM (_textus_est(a, "t^5 - t^-3"));
+            CREDO_VERUM (_textus_est(piscina, a, "t^5 - t^-3"));
         }
     }
+}
+
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+     Piscina* piscina         = c->piscina;
+         b32  canonica_omnia  = VERUM;
+         b32  lectio_integra  = VERUM;
 
     {
         constans character* mala[] = {
@@ -3141,16 +3189,16 @@ s32 principale (vacuum)
           i32 k;
           b32 bene = VERUM;
 
-        imprimere("\n--- Probans textus malformatos ---\n");
         per (k = ZEPHYRUM; k < (i32)(magnitudo(mala) / magnitudo(mala[
             ZEPHYRUM])); k++)
         {
-            Polynomium p = _custos();
+            Polynomium p = _custos(piscina, &canonica_omnia);
 
             si (   polynomium_ex_chorda(chorda_ex_literis(mala[k],
                 piscina),
                     't', piscina, &p)
-                || !polynomium_aequalis(p, _custos()))
+                || !polynomium_aequalis(p, _custos(piscina,
+                &canonica_omnia)))
             {
                 imprimere("  acceptum: \"%s\"\n", mala[k]);
                 bene = FALSUM;
@@ -3158,7 +3206,7 @@ s32 principale (vacuum)
         }
         CREDO_VERUM (bene);
         {
-            Polynomium p = _custos();
+            Polynomium p = _custos(piscina, &canonica_omnia);
 
             CREDO_FALSUM (polynomium_ex_chorda(chorda_ex_literis("1",
                 piscina), '1', piscina, &p));
@@ -3170,152 +3218,224 @@ s32 principale (vacuum)
                 piscina), ' ', piscina, &p));
             CREDO_FALSUM (polynomium_ex_chorda(chorda_ex_buffer(NIHIL,
                 ZEPHYRUM), 't', piscina, &p));
-            CREDO_VERUM (polynomium_aequalis(p, _custos()));
+            CREDO_VERUM (polynomium_aequalis(p, _custos(piscina,
+                &canonica_omnia)));
         }
         /* singuli: t^M - t^-M densum 2^31 coefficientes haberet */
-        CREDO_VERUM (_textus_est(_p("t^1073741823"), "t^1073741823"));
-        CREDO_VERUM (_textus_est(_p("-t^-1073741823"),
+        CREDO_VERUM (_textus_est(piscina, _p(piscina, &canonica_omnia,
+            &lectio_integra, "t^1073741823"), "t^1073741823"));
+        CREDO_VERUM (_textus_est(piscina, _p(piscina, &canonica_omnia,
+            &lectio_integra, "-t^-1073741823"),
             "-t^-1073741823"));
     }
+}
+
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+     Piscina* piscina         = c->piscina;
+         b32  canonica_omnia  = VERUM;
+         b32  lectio_integra  = VERUM;
 
     {
-        imprimere("\n--- Probans aequalitatem falsificabilem ---\n");
-        CREDO_FALSUM (polynomium_aequalis(_p("t"), _p("t^2")));
-        CREDO_FALSUM (polynomium_aequalis(_p("t"), _p("2t")));
-        CREDO_FALSUM (polynomium_aequalis(_p("t + 1"), _p("t")));
-        CREDO_FALSUM (polynomium_aequalis(_p("t"), _p("-t")));
-        CREDO_FALSUM (polynomium_aequalis(_p("t^-1"), _p("t")));
-        CREDO_FALSUM (polynomium_aequalis(_p("t + 2"), _p("t + 3")));
-        CREDO_VERUM (polynomium_aequalis(_p("2 + t"), _p("t + 1 + 1")));
+        CREDO_FALSUM (polynomium_aequalis(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t"), _p(piscina, &canonica_omnia,
+            &lectio_integra, "t^2")));
+        CREDO_FALSUM (polynomium_aequalis(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t"), _p(piscina, &canonica_omnia,
+            &lectio_integra, "2t")));
+        CREDO_FALSUM (polynomium_aequalis(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t + 1"), _p(piscina, &canonica_omnia,
+            &lectio_integra, "t")));
+        CREDO_FALSUM (polynomium_aequalis(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t"), _p(piscina, &canonica_omnia,
+            &lectio_integra, "-t")));
+        CREDO_FALSUM (polynomium_aequalis(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t^-1"), _p(piscina, &canonica_omnia,
+            &lectio_integra, "t")));
+        CREDO_FALSUM (polynomium_aequalis(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t + 2"), _p(piscina, &canonica_omnia,
+            &lectio_integra, "t + 3")));
+        CREDO_VERUM (polynomium_aequalis(_p(piscina, &canonica_omnia,
+            &lectio_integra, "2 + t"), _p(piscina, &canonica_omnia,
+            &lectio_integra, "t + 1 + 1")));
     }
+}
 
 
     /* ==================================================
      * VALORES NODORUM NOTI
      * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+     Piscina* piscina         = c->piscina;
+         b32  canonica_omnia  = VERUM;
+         b32  lectio_integra  = VERUM;
+
     {
         Polynomium uncinus = polynomium_nullum();
         Polynomium f;
-        Polynomium jones = _custos();
+        Polynomium jones = _custos(piscina, &canonica_omnia);
         Polynomium speculum;
         Polynomium normale;
 
-        imprimere("\n--- Probans valores nodorum ---\n");
         /* trifolium dextrum: <K> = -A^5 - A^-3 + A^-7, scriptura 3;
          * f = (-A^3)^-3 <K>; V(t) = f(A = t^(-1/4)) */
         CREDO_VERUM (polynomium_ex_chorda(chorda_ex_literis(
             "-A^5 - A^-3 + A^-7", piscina), 'A', piscina, &uncinus));
-        f = _multiplica(_monomium(-I, -IX), uncinus);
+        f = _multiplica(piscina, &canonica_omnia, _monomium(piscina,
+            &canonica_omnia, -I, -IX), uncinus);
         CREDO_CHORDA_AEQUALIS_LITERIS (polynomium_ad_chordam(f, 'A',
             piscina), "A^-4 + A^-12 - A^-16");
         CREDO_VERUM (polynomium_contrahe(f, -IV, piscina, &jones));
-        CREDO_VERUM (_textus_est(jones, "-t^4 + t^3 + t"));
+        CREDO_VERUM (_textus_est(piscina, jones, "-t^4 + t^3 + t"));
         /* trifolium chirale: speculum non idem */
         CREDO_VERUM (polynomium_dilata(jones, -I, piscina, &speculum));
-        CREDO_VERUM (_textus_est(speculum, "t^-1 + t^-3 - t^-4"));
+        CREDO_VERUM (_textus_est(piscina, speculum,
+            "t^-1 + t^-3 - t^-4"));
         CREDO_FALSUM (polynomium_aequalis(speculum, jones));
         /* contrahe recusat ubi exponens per k non divisibilis */
-        jones = _custos();
+        jones = _custos(piscina, &canonica_omnia);
         CREDO_FALSUM (polynomium_contrahe(uncinus, -IV, piscina,
             &jones));
-        CREDO_VERUM (polynomium_aequalis(jones, _custos()));
+        CREDO_VERUM (polynomium_aequalis(jones, _custos(piscina,
+            &canonica_omnia)));
 
         /* figura octonaria amphichiralis */
-        jones = _p("t^2 - t + 1 - t^-1 + t^-2");
+        jones = _p(piscina, &canonica_omnia, &lectio_integra,
+            "t^2 - t + 1 - t^-1 + t^-2");
         CREDO_VERUM (polynomium_dilata(jones, -I, piscina, &speculum));
         CREDO_VERUM (polynomium_aequalis(speculum, jones));
 
         /* Alexander ad +-t^k */
-        CREDO_VERUM (polynomium_normale(_p("-t + 3 - t^-1"), piscina,
+        CREDO_VERUM (polynomium_normale(_p(piscina, &canonica_omnia,
+            &lectio_integra, "-t + 3 - t^-1"), piscina,
             &normale));
-        CREDO_VERUM (_textus_est(normale, "t^2 - 3t + 1"));
-        CREDO_VERUM (polynomium_normale(_p("t - 1 + t^-1"), piscina,
+        CREDO_VERUM (_textus_est(piscina, normale, "t^2 - 3t + 1"));
+        CREDO_VERUM (polynomium_normale(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t - 1 + t^-1"), piscina,
             &normale));
-        CREDO_VERUM (_textus_est(normale, "t^2 - t + 1"));
+        CREDO_VERUM (_textus_est(piscina, normale, "t^2 - t + 1"));
     }
+}
 
 
     /* ==================================================
      * DIVISIO, VALOR, CONTENTUM, POTENTIA
      * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+     Piscina* piscina         = c->piscina;
+         b32  canonica_omnia  = VERUM;
+         b32  lectio_integra  = VERUM;
+
     {
-        Polynomium q = _custos();
+        Polynomium q = _custos(piscina, &canonica_omnia);
            Fractio v = fractio_ex_s64(ZEPHYRUM);
 
-        imprimere("\n--- Probans divisionem et valorem ---\n");
-        CREDO_FALSUM (polynomium_divide_exacte(_p("t"),
+        CREDO_FALSUM (polynomium_divide_exacte(_p(piscina,
+            &canonica_omnia, &lectio_integra, "t"),
             polynomium_nullum(),
             piscina, &q));
-        CREDO_FALSUM (polynomium_divide_exacte(_p("t + 1"),
-            _p("2t + 2"),
+        CREDO_FALSUM (polynomium_divide_exacte(_p(piscina,
+            &canonica_omnia, &lectio_integra, "t + 1"),
+            _p(piscina, &canonica_omnia, &lectio_integra, "2t + 2"),
             piscina, &q));
-        CREDO_FALSUM (polynomium_divide_exacte(_p("t^2 + 1"),
-            _p("t + 1"),
+        CREDO_FALSUM (polynomium_divide_exacte(_p(piscina,
+            &canonica_omnia, &lectio_integra, "t^2 + 1"),
+            _p(piscina, &canonica_omnia, &lectio_integra, "t + 1"),
             piscina, &q));
-        CREDO_FALSUM (polynomium_divide_exacte(_p("t + 1"),
-            _p("t^2 + 1"),
+        CREDO_FALSUM (polynomium_divide_exacte(_p(piscina,
+            &canonica_omnia, &lectio_integra, "t + 1"),
+            _p(piscina, &canonica_omnia, &lectio_integra, "t^2 + 1"),
             piscina, &q));
-        CREDO_VERUM (polynomium_aequalis(q, _custos()));
-        CREDO_VERUM (polynomium_divide_exacte(_p("t^2 - 1"),
-            _p("t - 1"),
+        CREDO_VERUM (polynomium_aequalis(q, _custos(piscina,
+            &canonica_omnia)));
+        CREDO_VERUM (polynomium_divide_exacte(_p(piscina,
+            &canonica_omnia, &lectio_integra, "t^2 - 1"),
+            _p(piscina, &canonica_omnia, &lectio_integra, "t - 1"),
             piscina, &q));
-        CREDO_VERUM (_textus_est(q, "t + 1"));
-        CREDO_VERUM (polynomium_divide_exacte(_p("t^2 - t^-2"),
-            _p("t - t^-1"), piscina, &q));
-        CREDO_VERUM (_textus_est(q, "t + t^-1"));
-        CREDO_VERUM (polynomium_divide_exacte(_p("3t^5"), _p("t^-2"),
+        CREDO_VERUM (_textus_est(piscina, q, "t + 1"));
+        CREDO_VERUM (polynomium_divide_exacte(_p(piscina,
+            &canonica_omnia, &lectio_integra, "t^2 - t^-2"),
+            _p(piscina, &canonica_omnia, &lectio_integra, "t - t^-1"),
             piscina, &q));
-        CREDO_VERUM (_textus_est(q, "3t^7"));
+        CREDO_VERUM (_textus_est(piscina, q, "t + t^-1"));
+        CREDO_VERUM (polynomium_divide_exacte(_p(piscina,
+            &canonica_omnia, &lectio_integra, "3t^5"), _p(piscina,
+            &canonica_omnia, &lectio_integra, "t^-2"),
+            piscina, &q));
+        CREDO_VERUM (_textus_est(piscina, q, "3t^7"));
         CREDO_VERUM (polynomium_divide_exacte(polynomium_nullum(),
-            _p("t + 1"), piscina, &q));
+            _p(piscina, &canonica_omnia, &lectio_integra, "t + 1"),
+            piscina, &q));
         CREDO_VERUM (polynomium_est_nullum(q));
 
         v = fractio_ex_s64(VII);
-        CREDO_FALSUM (polynomium_valor(_p("t^-1"), fractio_ex_s64(
+        CREDO_FALSUM (polynomium_valor(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t^-1"), fractio_ex_s64(
             ZEPHYRUM), piscina, &v));
         CREDO_VERUM (fractio_aequalis(v, fractio_ex_s64(VII)));
-        CREDO_VERUM (polynomium_valor(_p("t^-1"), fractio_ex_s64(II),
+        CREDO_VERUM (polynomium_valor(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t^-1"), fractio_ex_s64(II),
             piscina, &v));
         CREDO_CHORDA_AEQUALIS_LITERIS (fractio_ad_chordam(v, piscina),
             "1/2");
-        CREDO_VERUM (polynomium_valor(_p("t^2 + 5"), fractio_ex_s64(
+        CREDO_VERUM (polynomium_valor(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t^2 + 5"), fractio_ex_s64(
             ZEPHYRUM), piscina, &v));
         CREDO_CHORDA_AEQUALIS_LITERIS (fractio_ad_chordam(v, piscina),
             "5");
 
-        CREDO_VERUM (magnus_aequalis(polynomium_contentum(_p("-6t + 4"),
+        CREDO_VERUM (magnus_aequalis(polynomium_contentum(_p(piscina,
+            &canonica_omnia, &lectio_integra, "-6t + 4"),
             piscina), magnus_ex_s64(II)));
         CREDO_VERUM (magnus_aequalis(polynomium_contentum(
             polynomium_nullum(), piscina), magnus_ex_s64(ZEPHYRUM)));
 
         CREDO_VERUM (polynomium_potentia(polynomium_nullum(), ZEPHYRUM,
             piscina, &q));
-        CREDO_VERUM (_textus_est(q, "1"));
+        CREDO_VERUM (_textus_est(piscina, q, "1"));
         CREDO_VERUM (polynomium_potentia(polynomium_nullum(), III,
             piscina, &q));
         CREDO_VERUM (polynomium_est_nullum(q));
-        CREDO_VERUM (polynomium_potentia(_p("t + 1"), V, piscina, &q));
+        CREDO_VERUM (polynomium_potentia(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t + 1"), V, piscina, &q));
         CREDO_AEQUALIS_I32 ((i32)polynomium_apex_officinarum(),
             ZEPHYRUM);
-        CREDO_VERUM (_textus_est(q,
+        CREDO_VERUM (_textus_est(piscina, q,
             "t^5 + 5t^4 + 10t^3 + 10t^2 + 5t + 1"));
     }
+}
 
 
     /* ==================================================
      * FINES EXPONENTIUM: recusatio, exitus non tactus
      * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+     Piscina* piscina         = c->piscina;
+         b32  canonica_omnia  = VERUM;
+         b32  lectio_integra  = VERUM;
+
     {
                s32 maximus   = POLYNOMIUM_EXPONENS_MAXIMUS;
                s32 dimidius  = (s32)0x20000000L;   /* 2^29 */
-        Polynomium r         = _custos();
+        Polynomium r         = _custos(piscina, &canonica_omnia);
         Polynomium summus;
         Polynomium imus;
 
-        imprimere("\n--- Probans fines exponentium ---\n");
         CREDO_VERUM (polynomium_monomium(magnus_ex_s64(I), maximus,
             piscina, &summus));
         CREDO_VERUM (polynomium_monomium(magnus_ex_s64(I), -maximus,
@@ -3325,28 +3445,39 @@ s32 principale (vacuum)
         CREDO_FALSUM (polynomium_monomium(magnus_ex_s64(I), -maximus
             - I,
             piscina, &r));
-        CREDO_FALSUM (polynomium_multiplica(_monomium(I, dimidius),
-            _monomium(I, dimidius), piscina, &r));
-        CREDO_FALSUM (polynomium_multiplica(_monomium(I, -dimidius),
-            _monomium(I, -dimidius - I), piscina, &r));
-        CREDO_FALSUM (polynomium_potentia(_monomium(I, II),
+        CREDO_FALSUM (polynomium_multiplica(_monomium(piscina,
+            &canonica_omnia, I, dimidius),
+            _monomium(piscina, &canonica_omnia, I, dimidius), piscina,
+            &r));
+        CREDO_FALSUM (polynomium_multiplica(_monomium(piscina,
+            &canonica_omnia, I, -dimidius),
+            _monomium(piscina, &canonica_omnia, I, -dimidius - I),
+            piscina, &r));
+        CREDO_FALSUM (polynomium_potentia(_monomium(piscina,
+            &canonica_omnia, I, II),
             (i32)dimidius,
             piscina, &r));
-        CREDO_FALSUM (polynomium_potentia(_p("t + 1"), 0x80000000UL,
+        CREDO_FALSUM (polynomium_potentia(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t + 1"), 0x80000000UL,
             piscina, &r));
         CREDO_FALSUM (polynomium_translata(summus, I, piscina, &r));
         CREDO_FALSUM (polynomium_translata(imus, -I, piscina, &r));
-        CREDO_FALSUM (polynomium_dilata(_monomium(I, dimidius), II,
+        CREDO_FALSUM (polynomium_dilata(_monomium(piscina,
+            &canonica_omnia, I, dimidius), II,
             piscina, &r));
-        CREDO_FALSUM (polynomium_dilata(_monomium(I, -dimidius), -II,
+        CREDO_FALSUM (polynomium_dilata(_monomium(piscina,
+            &canonica_omnia, I, -dimidius), -II,
             piscina, &r));
-        CREDO_FALSUM (polynomium_dilata(_p("t"), ZEPHYRUM, piscina,
+        CREDO_FALSUM (polynomium_dilata(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t"), ZEPHYRUM, piscina,
             &r));
-        CREDO_FALSUM (polynomium_contrahe(_p("t"), ZEPHYRUM, piscina,
+        CREDO_FALSUM (polynomium_contrahe(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t"), ZEPHYRUM, piscina,
             &r));
         CREDO_FALSUM (polynomium_divide_exacte(summus, imus, piscina,
             &r));
-        CREDO_VERUM (polynomium_aequalis(r, _custos()));
+        CREDO_VERUM (polynomium_aequalis(r, _custos(piscina,
+            &canonica_omnia)));
         {
             Magnus c[III];
 
@@ -3356,7 +3487,8 @@ s32 principale (vacuum)
             CREDO_FALSUM (polynomium_ex_coefficientibus(c, III, maximus
                 - I,
                 piscina, &r));
-            CREDO_VERUM (polynomium_aequalis(r, _custos()));
+            CREDO_VERUM (polynomium_aequalis(r, _custos(piscina,
+                &canonica_omnia)));
             /* zephyra extrema non numerantur */
             c[II] = magnus_ex_s64(ZEPHYRUM);
             CREDO_VERUM (polynomium_ex_coefficientibus(c, III, maximus
@@ -3366,19 +3498,24 @@ s32 principale (vacuum)
         }
 
         /* in finibus: acceptum */
-        CREDO_VERUM (polynomium_multiplica(_monomium(I, dimidius),
-            _monomium(I, dimidius - I), piscina, &r));
+        CREDO_VERUM (polynomium_multiplica(_monomium(piscina,
+            &canonica_omnia, I, dimidius),
+            _monomium(piscina, &canonica_omnia, I, dimidius - I),
+            piscina, &r));
         CREDO_VERUM (polynomium_aequalis(r, summus));
-        CREDO_VERUM (polynomium_potentia(_p("t"), (i32)maximus, piscina,
+        CREDO_VERUM (polynomium_potentia(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t"), (i32)maximus, piscina,
             &r));
         CREDO_VERUM (polynomium_aequalis(r, summus));
         CREDO_VERUM (polynomium_dilata(summus, -I, piscina, &r));
         CREDO_VERUM (polynomium_aequalis(r, imus));
-        CREDO_VERUM (polynomium_contrahe(_p("t^-6 + t^9"), -III,
+        CREDO_VERUM (polynomium_contrahe(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t^-6 + t^9"), -III,
             piscina,
             &r));
-        CREDO_VERUM (_textus_est(r, "t^2 + t^-3"));
+        CREDO_VERUM (_textus_est(piscina, r, "t^2 + t^-3"));
     }
+}
 
 
     /* ==================================================
@@ -3386,30 +3523,46 @@ s32 principale (vacuum)
      * amplitudo lectionis, tabulae
      * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+     Piscina* piscina         = c->piscina;
+         b32  canonica_omnia  = VERUM;
+         b32  lectio_integra  = VERUM;
+
     {
                s32 maximus = POLYNOMIUM_EXPONENS_MAXIMUS;
-        Polynomium summi   = _c(polynomium_adde(_monomium(I, maximus
+        Polynomium summi   = _c(&canonica_omnia,
+            polynomium_adde(_monomium(piscina, &canonica_omnia, I,
+            maximus
             - I),
-            _monomium(I, maximus), piscina));
-        Polynomium infimi     = _c(polynomium_adde(_monomium(I,
+            _monomium(piscina, &canonica_omnia, I, maximus), piscina));
+        Polynomium infimi     = _c(&canonica_omnia,
+            polynomium_adde(_monomium(piscina, &canonica_omnia, I,
             -maximus),
-            _monomium(I, -maximus + I), piscina));
-        Polynomium r       = _custos();
+            _monomium(piscina, &canonica_omnia, I, -maximus + I),
+            piscina));
+        Polynomium r       = _custos(piscina, &canonica_omnia);
 
-        imprimere("\n--- Probans recensionem polynomium-I ---\n");
         /* binomia in finibus: utraque probatio finium necessaria
          * (monomia imus = summus habent) */
         CREDO_FALSUM (polynomium_translata(summi, I, piscina, &r));
         CREDO_FALSUM (polynomium_translata(infimi, -I, piscina, &r));
-        CREDO_FALSUM (polynomium_multiplica(summi, _monomium(I, I),
+        CREDO_FALSUM (polynomium_multiplica(summi, _monomium(piscina,
+            &canonica_omnia, I, I),
             piscina, &r));
-        CREDO_FALSUM (polynomium_multiplica(infimi, _monomium(I, -I),
+        CREDO_FALSUM (polynomium_multiplica(infimi, _monomium(piscina,
+            &canonica_omnia, I, -I),
             piscina, &r));
-        CREDO_FALSUM (polynomium_divide_exacte(infimi, _monomium(I, I),
+        CREDO_FALSUM (polynomium_divide_exacte(infimi,
+            _monomium(piscina, &canonica_omnia, I, I),
             piscina, &r));
-        CREDO_FALSUM (polynomium_divide_exacte(summi, _monomium(I, -I),
+        CREDO_FALSUM (polynomium_divide_exacte(summi, _monomium(piscina,
+            &canonica_omnia, I, -I),
             piscina, &r));
-        CREDO_VERUM (polynomium_aequalis(r, _custos()));
+        CREDO_VERUM (polynomium_aequalis(r, _custos(piscina,
+            &canonica_omnia)));
         {
             Magnus c[II];
 
@@ -3417,20 +3570,27 @@ s32 principale (vacuum)
             c[I]         = magnus_ex_s64(I);
             CREDO_FALSUM (polynomium_ex_coefficientibus(c, II, -maximus
                 - I, piscina, &r));
-            CREDO_VERUM (polynomium_aequalis(r, _custos()));
+            CREDO_VERUM (polynomium_aequalis(r, _custos(piscina,
+                &canonica_omnia)));
         }
         /* coefficiens uno ultra extrema: nullus */
-        CREDO_VERUM (magnus_aequalis(polynomium_coefficiens(_p(
+        CREDO_VERUM (magnus_aequalis(polynomium_coefficiens(_p(piscina,
+            &canonica_omnia, &lectio_integra,
             "3t^2 - t + 1 - 2t^-1"), III), magnus_ex_s64(ZEPHYRUM)));
-        CREDO_VERUM (magnus_aequalis(polynomium_coefficiens(_p(
+        CREDO_VERUM (magnus_aequalis(polynomium_coefficiens(_p(piscina,
+            &canonica_omnia, &lectio_integra,
             "3t^2 - t + 1 - 2t^-1"), -II), magnus_ex_s64(ZEPHYRUM)));
 
         /* tabulae ut spatia */
-        CREDO_VERUM (polynomium_aequalis(_p("\t3t"), _p("3t")));
-        CREDO_VERUM (polynomium_aequalis(_p("t +\t1"), _p("t + 1")));
+        CREDO_VERUM (polynomium_aequalis(_p(piscina, &canonica_omnia,
+            &lectio_integra, "\t3t"), _p(piscina, &canonica_omnia,
+            &lectio_integra, "3t")));
+        CREDO_VERUM (polynomium_aequalis(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t +\t1"), _p(piscina, &canonica_omnia,
+            &lectio_integra, "t + 1")));
 
         /* littera ASCII tantum: alia refutatur, etiam byte >= 0x80 */
-        r = _custos();
+        r = _custos(piscina, &canonica_omnia);
         CREDO_FALSUM (polynomium_ex_chorda(chorda_ex_literis("3t",
             piscina),
             (character)0xE9, piscina, &r));
@@ -3441,25 +3601,28 @@ s32 principale (vacuum)
          * acciperetur */
         CREDO_FALSUM (polynomium_ex_chorda(chorda_ex_literis("3\xE9^2",
             piscina), (character)0xE9, piscina, &r));
-        CREDO_VERUM (polynomium_aequalis(r, _custos()));
+        CREDO_VERUM (polynomium_aequalis(r, _custos(piscina,
+            &canonica_omnia)));
         CREDO_VERUM (polynomium_ex_chorda(chorda_ex_literis("q^2 - Z",
             piscina), 'q', piscina, &r) == FALSUM);
         CREDO_VERUM (polynomium_ex_chorda(chorda_ex_literis("Z^2 - Z",
             piscina), 'Z', piscina, &r));
-        CREDO_VERUM (_textus_est(r, "t^2 - t"));
+        CREDO_VERUM (_textus_est(piscina, r, "t^2 - t"));
 
         /* amplitudo lectionis: 2^20 accepta, 2^20 + 1 refutata */
         CREDO_VERUM (polynomium_ex_chorda(chorda_ex_literis(
             "t^1048575 + 1", piscina), 't', piscina, &r));
         CREDO_AEQUALIS_S32 (polynomium_gradus_summus(r), (s32)0xFFFFFL);
-        r = _custos();
+        r = _custos(piscina, &canonica_omnia);
         CREDO_FALSUM (polynomium_ex_chorda(chorda_ex_literis(
             "t^1048576 + 1", piscina), 't', piscina, &r));
         CREDO_FALSUM (polynomium_ex_chorda(chorda_ex_literis(
             "t^1073741823 + t^-1073741823", piscina), 't', piscina,
             &r));
-        CREDO_VERUM (polynomium_aequalis(r, _custos()));
+        CREDO_VERUM (polynomium_aequalis(r, _custos(piscina,
+            &canonica_omnia)));
     }
+}
 
 
     /* ==================================================
@@ -3471,6 +3634,13 @@ s32 principale (vacuum)
      * = x ipse, qui in officina reficienda vivere potest.
      * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+     Piscina* piscina         = c->piscina;
+         b32  canonica_omnia  = VERUM;
+
     {
               Sors  s;
         Polynomium  a;
@@ -3479,13 +3649,14 @@ s32 principale (vacuum)
         Polynomium  q          = polynomium_nullum();
            Piscina* vocans;
 
-        imprimere("\n--- Probans officinas (memoria vocantis) ---\n");
         sors_seminare(&s, 2026ULL, IV);
         /* officinae solum si opera multa ET coefficiens magnus:
          * pauci termini magni et multi termini parvi in piscina
          * vocantis (apex nullus) */
-        a = _polynomium_magnum(&s, VII, C, ZEPHYRUM);
-        b = _polynomium_magnum(&s, IX, C, ZEPHYRUM);
+        a = _polynomium_magnum(piscina, &canonica_omnia, &s, VII, C,
+            ZEPHYRUM);
+        b = _polynomium_magnum(piscina, &canonica_omnia, &s, IX, C,
+            ZEPHYRUM);
         CREDO_VERUM (polynomium_multiplica(a, b, piscina, &productum));
         CREDO_AEQUALIS_I32 ((i32)polynomium_apex_officinarum(),
             ZEPHYRUM);
@@ -3493,14 +3664,16 @@ s32 principale (vacuum)
             &q));
         CREDO_AEQUALIS_I32 ((i32)polynomium_apex_officinarum(),
             ZEPHYRUM);
-        a = _polynomium_magnum(&s, XL, IV, ZEPHYRUM);
-        b = _polynomium_magnum(&s, XL, IV, ZEPHYRUM);
+        a = _polynomium_magnum(piscina, &canonica_omnia, &s, XL, IV,
+            ZEPHYRUM);
+        b = _polynomium_magnum(piscina, &canonica_omnia, &s, XL, IV,
+            ZEPHYRUM);
         CREDO_VERUM (polynomium_multiplica(a, b, piscina, &productum));
         CREDO_AEQUALIS_I32 ((i32)polynomium_apex_officinarum(),
             ZEPHYRUM);
         CREDO_VERUM (polynomium_divide_exacte(productum, b, piscina,
             &q));
-        CREDO_VERUM (polynomium_aequalis(_c(q), a));
+        CREDO_VERUM (polynomium_aequalis(_c(&canonica_omnia, q), a));
         CREDO_AEQUALIS_I32 ((i32)polynomium_apex_officinarum(),
             ZEPHYRUM);
         /* coefficientes 2^31 - 1: producta in via celeri, sed summa
@@ -3527,13 +3700,16 @@ s32 principale (vacuum)
                 ZEPHYRUM);
             CREDO_MINOR_I32 ((i32)piscina_summa_usus(vocans_parvum),
                 XVI * M);
-            CREDO_VERUM (polynomium_aequalis(_c(productum),
-                _productum_per_terminos(a, a)));
+            CREDO_VERUM (polynomium_aequalis(_c(&canonica_omnia,
+                productum),
+                _productum_per_terminos(piscina, &canonica_omnia, a,
+                a)));
             piscina_destruere(vocans_parvum);
         }
 
-        a = _polynomium_magnum(&s, L, C, ZEPHYRUM);
-        b = _polynomium_magnum(&s, L, C, III);
+        a = _polynomium_magnum(piscina, &canonica_omnia, &s, L, C,
+            ZEPHYRUM);
+        b = _polynomium_magnum(piscina, &canonica_omnia, &s, L, C, III);
 
         vocans = piscina_generare_dynamicum("probatio_vocans",
             (memoriae_index)4096);
@@ -3543,8 +3719,8 @@ s32 principale (vacuum)
             (unsigned long)polynomium_apex_officinarum());
         CREDO_MAIOR_I32 ((i32)polynomium_apex_officinarum(), ZEPHYRUM);
         CREDO_MINOR_I32 ((i32)polynomium_apex_officinarum(), XVI * M);
-        CREDO_VERUM (polynomium_aequalis(_c(productum),
-            _productum_per_terminos(a, b)));
+        CREDO_VERUM (polynomium_aequalis(_c(&canonica_omnia, productum),
+            _productum_per_terminos(piscina, &canonica_omnia, a, b)));
 
         {
             Piscina* vocans_alter = piscina_generare_dynamicum(
@@ -3560,26 +3736,39 @@ s32 principale (vacuum)
                 ZEPHYRUM);
             CREDO_MINOR_I32 ((i32)polynomium_apex_officinarum(),
                 XVI * M);
-            CREDO_VERUM (polynomium_aequalis(_c(q), a));
+            CREDO_VERUM (polynomium_aequalis(_c(&canonica_omnia, q),
+                a));
             CREDO_VERUM (polynomium_divide_exacte(productum, a,
                 vocans_alter, &q));
-            CREDO_VERUM (polynomium_aequalis(_c(q), b));
-            q = _custos();
-            CREDO_FALSUM (polynomium_divide_exacte(_c(polynomium_adde(
-                productum, _monomium(I, ZEPHYRUM), piscina)), b,
+            CREDO_VERUM (polynomium_aequalis(_c(&canonica_omnia, q),
+                b));
+            q = _custos(piscina, &canonica_omnia);
+            CREDO_FALSUM (polynomium_divide_exacte(_c(&canonica_omnia,
+                polynomium_adde(
+                productum, _monomium(piscina, &canonica_omnia, I,
+                ZEPHYRUM), piscina)), b,
                 vocans_alter, &q));
-            CREDO_VERUM (polynomium_aequalis(q, _custos()));
+            CREDO_VERUM (polynomium_aequalis(q, _custos(piscina,
+                &canonica_omnia)));
             piscina_destruere(vocans_alter);
         }
         piscina_destruere(vocans);
     }
+}
+
+
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+     Piscina* piscina         = c->piscina;
+         b32  canonica_omnia  = VERUM;
 
     {
         Sors s;
          i32 k;
          b32 bene = VERUM;
 
-        imprimere("\n--- Probans polynomia magna (XXX casus) ---\n");
         sors_seminare(&s, 2026ULL, V);
         per (k = ZEPHYRUM; k < XXX; k++)
         {
@@ -3591,18 +3780,21 @@ s32 principale (vacuum)
                        i32 termini    = (i32)sors_inter(&s, VIII, XL);
                        i32 digiti     = (i32)sors_inter(&s, I, LX);
 
-            a        = _polynomium_magnum(&s, termini, digiti,
+            a        = _polynomium_magnum(piscina, &canonica_omnia, &s,
+                termini, digiti,
                 (i32)sors_intra(&s, IV));
             termini  = (i32)sors_inter(&s, VIII, XL);
             digiti   = (i32)sors_inter(&s, I, LX);
-            b        = _polynomium_magnum(&s, termini, digiti,
+            b        = _polynomium_magnum(piscina, &canonica_omnia, &s,
+                termini, digiti,
                 (i32)sors_intra(&s, IV));
 
             si (   !polynomium_multiplica(a, b, piscina, &productum)
-                || !polynomium_aequalis(_c(productum),
-                    _productum_per_terminos(a, b))
+                || !polynomium_aequalis(_c(&canonica_omnia, productum),
+                    _productum_per_terminos(piscina, &canonica_omnia, a,
+                    b))
                 || !polynomium_divide_exacte(productum, b, piscina, &q)
-                || !polynomium_aequalis(_c(q), a))
+                || !polynomium_aequalis(_c(&canonica_omnia, q), a))
             {
                 si (bene)
                 {
@@ -3614,31 +3806,45 @@ s32 principale (vacuum)
         }
         CREDO_VERUM (bene);
     }
+}
 
 
     /* ==================================================
      * VECTORES ORACULI PYTHONIS
      * ================================================== */
 
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+     Piscina* piscina         = c->piscina;
+         b32  canonica_omnia  = VERUM;
+         b32  lectio_integra  = VERUM;
+
     {
         i32 k;
         b32 bene;
-
-        imprimere("\n--- Probans vectores oraculi ---\n");
 
         bene = VERUM;
         per (k = ZEPHYRUM; k < (i32)(magnitudo(vectores_arithmetici)
             / magnitudo(vectores_arithmetici[ZEPHYRUM])); k++)
         {
             constans VectorArithmeticus* v = &vectores_arithmetici[k];
-                             Polynomium  a = _p(v->a);
-                             Polynomium  b = _p(v->b);
+                             Polynomium  a = _p(piscina,
+                                 &canonica_omnia, &lectio_integra,
+                                 v->a);
+                             Polynomium b = _p(piscina,
+                                 &canonica_omnia, &lectio_integra,
+                                 v->b);
 
-            si (   !_textus_est(_c(polynomium_adde(a, b, piscina)),
+            si (   !_textus_est(piscina, _c(&canonica_omnia,
+                polynomium_adde(a, b, piscina)),
                     v->summa)
-                || !_textus_est(_c(polynomium_subtrahe(a, b, piscina)),
+                || !_textus_est(piscina, _c(&canonica_omnia,
+                polynomium_subtrahe(a, b, piscina)),
                     v->differentia)
-                || !_textus_est(_multiplica(a, b), v->productum))
+                || !_textus_est(piscina, _multiplica(piscina,
+                &canonica_omnia, a, b), v->productum))
             {
                 imprimere("  arithmeticus %u: %s | %s\n", k, v->a,
                     v->b);
@@ -3652,16 +3858,23 @@ s32 principale (vacuum)
             / magnitudo(vectores_divisionis[ZEPHYRUM])); k++)
         {
             constans VectorDivisionis* v = &vectores_divisionis[k];
-                           Polynomium  q = _custos();
-                                  b32  r;
+                           Polynomium  q = _custos(piscina,
+                               &canonica_omnia);
+                                  b32 r;
 
-            r = polynomium_divide_exacte(_p(v->dividendus),
-                _p(v->divisor),
+            r = polynomium_divide_exacte(_p(piscina, &canonica_omnia,
+                &lectio_integra, v->dividendus),
+                _p(piscina, &canonica_omnia, &lectio_integra,
+                v->divisor),
                 piscina, &q);
 
             si (v->quotiens[ZEPHYRUM] == '-' && v->quotiens[I] == '\0'
-                ? (r || !polynomium_aequalis(q, _custos()))
-                : (!r || !_textus_est(_c(q), v->quotiens)))
+                ? (r
+                    || !polynomium_aequalis(q, _custos(piscina,
+                    &canonica_omnia)))
+                : (!r
+                    || !_textus_est(piscina, _c(&canonica_omnia, q),
+                    v->quotiens)))
             {
                 imprimere("  divisio %u: %s / %s\n", k, v->dividendus,
                     v->divisor);
@@ -3678,8 +3891,10 @@ s32 principale (vacuum)
                           Polynomium  r   =
                               polynomium_nullum();
 
-            si (   !polynomium_potentia(_p(v->p), v->n, piscina, &r)
-                || !_textus_est(_c(r), v->potentia))
+            si (   !polynomium_potentia(_p(piscina, &canonica_omnia,
+                &lectio_integra, v->p), v->n, piscina, &r)
+                || !_textus_est(piscina, _c(&canonica_omnia, r),
+                v->potentia))
             {
                 imprimere("  potentia %u: (%s)^%u\n", k, v->p, v->n);
                 bene = FALSUM;
@@ -3702,12 +3917,16 @@ s32 principale (vacuum)
                 piscina, &x);
             si (v->valor[ZEPHYRUM] == '-' && v->valor[I] == '\0')
             {
-                bene_casus = !polynomium_valor(_p(v->p), x, piscina, &r)
+                bene_casus = !polynomium_valor(_p(piscina,
+                    &canonica_omnia, &lectio_integra, v->p), x, piscina,
+                    &r)
                     && fractio_aequalis(r, fractio_ex_s64(VII));
             }
             alioquin
             {
-                bene_casus = polynomium_valor(_p(v->p), x, piscina, &r)
+                bene_casus = polynomium_valor(_p(piscina,
+                    &canonica_omnia, &lectio_integra, v->p), x, piscina,
+                    &r)
                     && chorda_aequalis_literis(fractio_ad_chordam(r,
                         piscina), v->valor);
             }
@@ -3725,17 +3944,23 @@ s32 principale (vacuum)
         {
             constans VectorSubstitutionis* v =
                 &vectores_substitutionis[k];
-            Polynomium p   = _p(v->p);
-            Polynomium d   = _custos();
-            Polynomium c   = _custos();
+            Polynomium p = _p(piscina, &canonica_omnia,
+                &lectio_integra, v->p);
+            Polynomium d   = _custos(piscina, &canonica_omnia);
+            Polynomium c   = _custos(piscina, &canonica_omnia);
                    b32 rc  = polynomium_contrahe(p, v->k, piscina, &c);
 
             si (   !polynomium_dilata(p, v->k, piscina, &d)
-                || !_textus_est(_c(d), v->dilatum)
+                || !_textus_est(piscina, _c(&canonica_omnia, d),
+                v->dilatum)
                 || (v->contractum[ZEPHYRUM] == '-'
                     && v->contractum[I] == '\0'
-                    ? (rc || !polynomium_aequalis(c, _custos()))
-                    : (!rc || !_textus_est(_c(c), v->contractum))))
+                    ? (rc
+                        || !polynomium_aequalis(c, _custos(piscina,
+                        &canonica_omnia)))
+                    : (!rc
+                        || !_textus_est(piscina, _c(&canonica_omnia, c),
+                        v->contractum))))
             {
                 imprimere("  substitutio %u: %s k=%d\n", k, v->p, v->k);
                 bene = FALSUM;
@@ -3748,14 +3973,17 @@ s32 principale (vacuum)
             / magnitudo(vectores_normalis[ZEPHYRUM])); k++)
         {
             constans VectorNormalis* v = &vectores_normalis[k];
-                         Polynomium  p = _p(v->p);
-                         Polynomium  n = _custos();
+                         Polynomium  p = _p(piscina, &canonica_omnia,
+                             &lectio_integra, v->p);
+                         Polynomium n = _custos(piscina,
+                             &canonica_omnia);
 
             si (   !chorda_aequalis_literis(magnus_ad_chordam(
                     polynomium_contentum(p, piscina), piscina),
                     v->contentum)
                 || !polynomium_normale(p, piscina, &n)
-                || !_textus_est(_c(n), v->normale))
+                || !_textus_est(piscina, _c(&canonica_omnia, n),
+                v->normale))
             {
                 imprimere("  normale %u: %s\n", k, v->p);
                 bene = FALSUM;
@@ -3769,7 +3997,8 @@ s32 principale (vacuum)
         {
             constans VectorTextus* v = &vectores_textus[k];
 
-            si (!_textus_est(_p(v->textus), v->canonicus))
+            si (!_textus_est(piscina, _p(piscina, &canonica_omnia,
+                &lectio_integra, v->textus), v->canonicus))
             {
                 imprimere("  textus %u: \"%s\"\n", k, v->textus);
                 bene = FALSUM;
@@ -3777,11 +4006,20 @@ s32 principale (vacuum)
         }
         CREDO_VERUM (bene);
     }
+}
 
 
     /* ==================================================
      * LEGES super polynomia fortuita
      * ================================================== */
+
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+     Piscina* piscina         = c->piscina;
+         b32  canonica_omnia  = VERUM;
+         b32  lectio_integra  = VERUM;
 
     {
         Sors s;
@@ -3789,13 +4027,12 @@ s32 principale (vacuum)
          b32 bene          = VERUM;
          i32 casus_primus  = 0xFFFFFFFFU;
 
-        imprimere("\n--- Probans leges (D casus) ---\n");
         sors_seminare(&s, 2026ULL, I);
         per (k = ZEPHYRUM; k < D; k++)
         {
             PiscinaNotatio nota = piscina_notare(piscina);
 
-            si (!_casum_probare(&s) && bene)
+            si (!_casum_probare(piscina, &canonica_omnia, &s) && bene)
             {
                 bene          = FALSUM;
                 casus_primus  = k;
@@ -3811,47 +4048,68 @@ s32 principale (vacuum)
 
     CREDO_VERUM (lectio_integra);
     CREDO_VERUM (canonica_omnia);
+}
 
 
     /* ==================================================
      * INVERSUM et SYMMETRIA
      * ================================================== */
 
+interior vacuum
+_sectio_decima_secunda (
+    CredoContextus* c)
+{
+     Piscina* piscina         = c->piscina;
+         b32  canonica_omnia  = VERUM;
+         b32  lectio_integra  = VERUM;
+
     {
         Sors s;
          i32 k;
 
-        imprimere("\n--- Probans inversum et symmetriam ---\n");
-        CREDO_VERUM (_textus_est(polynomium_inversum(
-            _p("-t^4 + t^3 + t"), piscina), "t^-1 + t^-3 - t^-4"));
-        CREDO_VERUM (_textus_est(polynomium_inversum(_p("t^2 - 3t + 1"),
+        CREDO_VERUM (_textus_est(piscina, polynomium_inversum(
+            _p(piscina, &canonica_omnia, &lectio_integra,
+            "-t^4 + t^3 + t"), piscina), "t^-1 + t^-3 - t^-4"));
+        CREDO_VERUM (_textus_est(piscina,
+            polynomium_inversum(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t^2 - 3t + 1"),
             piscina), "1 - 3t^-1 + t^-2"));
-        CREDO_VERUM (_textus_est(polynomium_inversum(
+        CREDO_VERUM (_textus_est(piscina, polynomium_inversum(
             polynomium_nullum(), piscina), "0"));
-        CREDO_VERUM (polynomium_est_symmetricum(_p("t^2 - 3t + 1")));
-        CREDO_VERUM (polynomium_est_symmetricum(_p("2t^2 - 3t + 2")));
-        CREDO_VERUM (polynomium_est_symmetricum(_p(
+        CREDO_VERUM (polynomium_est_symmetricum(_p(piscina,
+            &canonica_omnia, &lectio_integra, "t^2 - 3t + 1")));
+        CREDO_VERUM (polynomium_est_symmetricum(_p(piscina,
+            &canonica_omnia, &lectio_integra, "2t^2 - 3t + 2")));
+        CREDO_VERUM (polynomium_est_symmetricum(_p(piscina,
+            &canonica_omnia, &lectio_integra,
             "t^2 - t + 1 - t^-1 + t^-2")));
-        CREDO_VERUM (polynomium_est_symmetricum(_p("t^2 + 1")));
-        CREDO_VERUM (polynomium_est_symmetricum(_p("5t^3")));
+        CREDO_VERUM (polynomium_est_symmetricum(_p(piscina,
+            &canonica_omnia, &lectio_integra, "t^2 + 1")));
+        CREDO_VERUM (polynomium_est_symmetricum(_p(piscina,
+            &canonica_omnia, &lectio_integra, "5t^3")));
         CREDO_VERUM (polynomium_est_symmetricum(polynomium_nullum()));
-        CREDO_FALSUM (polynomium_est_symmetricum(_p("-t^4 + t^3 + t")));
-        CREDO_FALSUM (polynomium_est_symmetricum(_p("t + 2")));
+        CREDO_FALSUM (polynomium_est_symmetricum(_p(piscina,
+            &canonica_omnia, &lectio_integra, "-t^4 + t^3 + t")));
+        CREDO_FALSUM (polynomium_est_symmetricum(_p(piscina,
+            &canonica_omnia, &lectio_integra, "t + 2")));
         /* signum: -t^2 + 1 non symmetricum (coefficientes -1, 0, 1) */
-        CREDO_FALSUM (polynomium_est_symmetricum(_p("t^2 - 1")));
+        CREDO_FALSUM (polynomium_est_symmetricum(_p(piscina,
+            &canonica_omnia, &lectio_integra, "t^2 - 1")));
         sors_seminare(&s, 2026ULL, IX);
         per (k = ZEPHYRUM; k < CCC; k++)
         {
-            Polynomium p    = _fortuitum(&s);
-            Polynomium inv  = _c(polynomium_inversum(p, piscina));
+            Polynomium p = _fortuitum(piscina, &canonica_omnia, &s);
+            Polynomium inv = _c(&canonica_omnia, polynomium_inversum(p,
+                piscina));
             Polynomium q;
-               Fractio x    = _fractio_fortuita(&s);
+               Fractio x    = _fractio_fortuita(piscina, &s);
                Fractio x_1;
                Fractio v1;
                Fractio v2;
 
             /* involutio */
-            CREDO_VERUM (polynomium_aequalis(_c(polynomium_inversum(inv,
+            CREDO_VERUM (polynomium_aequalis(_c(&canonica_omnia,
+                polynomium_inversum(inv,
                 piscina)), p));
             /* p(1/t) ad x = p ad 1/x */
             (vacuum)fractio_inversa(x, piscina, &x_1);
@@ -3859,9 +4117,10 @@ s32 principale (vacuum)
                 && polynomium_valor(p, x_1, piscina, &v2)
                 && fractio_aequalis(v1, v2));
             /* p(t) p(1/t) et p + p(1/t) symmetrica */
-            CREDO_VERUM (polynomium_est_symmetricum(_multiplica(p,
+            CREDO_VERUM (polynomium_est_symmetricum(_multiplica(piscina,
+                &canonica_omnia, p,
                 inv)));
-            CREDO_VERUM (polynomium_est_symmetricum(_c(
+            CREDO_VERUM (polynomium_est_symmetricum(_c(&canonica_omnia,
                 polynomium_adde(p, inv, piscina))));
             /* characterismus alter: symmetricum sse p = t^(imus+summus)
              * p(1/t) */
@@ -3871,73 +4130,126 @@ s32 principale (vacuum)
                     polynomium_gradus_imus(p)
                     + polynomium_gradus_summus(p), piscina, &q));
                 CREDO_VERUM (polynomium_est_symmetricum(p)
-                    == polynomium_aequalis(p, _c(q)));
+                    == polynomium_aequalis(p, _c(&canonica_omnia, q)));
             }
         }
     }
+}
 
 
     /* ==================================================
      * DERIVATA, DIVISOR COMMUNIS, PARS LIBERA, TAYLOR
      * ================================================== */
 
+interior vacuum
+_sectio_decima_tertia (
+    CredoContextus* c)
+{
+     Piscina* piscina         = c->piscina;
+         b32  canonica_omnia  = VERUM;
+         b32  lectio_integra  = VERUM;
+
     {
         Polynomium q = polynomium_nullum();
         Polynomium g = polynomium_nullum();
 
-        imprimere("\n--- Probans derivatam, divisorem, partem liberam, "
-            "Taylor ---\n");
         /* derivata: Laurent quoque */
-        CREDO_VERUM (polynomium_derivata(_p("3t^4 - 2t + 7"), piscina,
+        CREDO_VERUM (polynomium_derivata(_p(piscina, &canonica_omnia,
+            &lectio_integra, "3t^4 - 2t + 7"), piscina,
             &q));
-        CREDO_VERUM (polynomium_aequalis(_c(q), _p("12t^3 - 2")));
-        CREDO_VERUM (polynomium_derivata(_p("t^-2 + 5"), piscina, &q));
-        CREDO_VERUM (polynomium_aequalis(_c(q), _p("-2t^-3")));
-        CREDO_VERUM (polynomium_derivata(_p("9"), piscina, &q));
+        CREDO_VERUM (polynomium_aequalis(_c(&canonica_omnia, q),
+            _p(piscina, &canonica_omnia, &lectio_integra,
+            "12t^3 - 2")));
+        CREDO_VERUM (polynomium_derivata(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t^-2 + 5"), piscina, &q));
+        CREDO_VERUM (polynomium_aequalis(_c(&canonica_omnia, q),
+            _p(piscina, &canonica_omnia, &lectio_integra, "-2t^-3")));
+        CREDO_VERUM (polynomium_derivata(_p(piscina, &canonica_omnia,
+            &lectio_integra, "9"), piscina, &q));
         CREDO_VERUM (polynomium_est_nullum(q));
 
         /* divisor communis: factores noti, contentum et signum
          * abiciuntur, forma primitiva coefficiente summo > 0 */
         CREDO_VERUM (polynomium_divisor_communis(
-            _multiplica(_p("6t^2 - 12"), _p("t + 3")),
-            _multiplica(_p("-4t^2 + 8"), _p("t - 5")), piscina, &g));
-        CREDO_VERUM (polynomium_aequalis(_c(g), _p("t^2 - 2")));
-        CREDO_VERUM (polynomium_divisor_communis(_p("t^3 - t"),
-            _p("t^2 + t"), piscina, &g));
-        CREDO_VERUM (polynomium_aequalis(_c(g), _p("t^2 + t")));
-        CREDO_VERUM (polynomium_divisor_communis(_p("t^2 + 1"),
-            _p("t^2 + 2"), piscina, &g));
-        CREDO_VERUM (polynomium_aequalis(_c(g), _p("1")));
-        CREDO_VERUM (polynomium_divisor_communis(_p("-4t + 2"), _p("0"),
+            _multiplica(piscina, &canonica_omnia, _p(piscina,
+            &canonica_omnia, &lectio_integra, "6t^2 - 12"), _p(piscina,
+            &canonica_omnia, &lectio_integra, "t + 3")),
+            _multiplica(piscina, &canonica_omnia, _p(piscina,
+            &canonica_omnia, &lectio_integra, "-4t^2 + 8"), _p(piscina,
+            &canonica_omnia, &lectio_integra, "t - 5")), piscina, &g));
+        CREDO_VERUM (polynomium_aequalis(_c(&canonica_omnia, g),
+            _p(piscina, &canonica_omnia, &lectio_integra, "t^2 - 2")));
+        CREDO_VERUM (polynomium_divisor_communis(_p(piscina,
+            &canonica_omnia, &lectio_integra, "t^3 - t"),
+            _p(piscina, &canonica_omnia, &lectio_integra, "t^2 + t"),
             piscina, &g));
-        CREDO_VERUM (polynomium_aequalis(_c(g), _p("2t - 1")));
-        CREDO_VERUM (polynomium_divisor_communis(_p("0"), _p("0"),
+        CREDO_VERUM (polynomium_aequalis(_c(&canonica_omnia, g),
+            _p(piscina, &canonica_omnia, &lectio_integra, "t^2 + t")));
+        CREDO_VERUM (polynomium_divisor_communis(_p(piscina,
+            &canonica_omnia, &lectio_integra, "t^2 + 1"),
+            _p(piscina, &canonica_omnia, &lectio_integra, "t^2 + 2"),
+            piscina, &g));
+        CREDO_VERUM (polynomium_aequalis(_c(&canonica_omnia, g),
+            _p(piscina, &canonica_omnia, &lectio_integra, "1")));
+        CREDO_VERUM (polynomium_divisor_communis(_p(piscina,
+            &canonica_omnia, &lectio_integra, "-4t + 2"), _p(piscina,
+            &canonica_omnia, &lectio_integra, "0"),
+            piscina, &g));
+        CREDO_VERUM (polynomium_aequalis(_c(&canonica_omnia, g),
+            _p(piscina, &canonica_omnia, &lectio_integra, "2t - 1")));
+        CREDO_VERUM (polynomium_divisor_communis(_p(piscina,
+            &canonica_omnia, &lectio_integra, "0"), _p(piscina,
+            &canonica_omnia, &lectio_integra, "0"),
             piscina,
             &g));
         CREDO_VERUM (polynomium_est_nullum(g));
-        CREDO_FALSUM (polynomium_divisor_communis(_p("t^-1 + 1"),
-            _p("t + 1"), piscina, &g));
+        CREDO_FALSUM (polynomium_divisor_communis(_p(piscina,
+            &canonica_omnia, &lectio_integra, "t^-1 + 1"),
+            _p(piscina, &canonica_omnia, &lectio_integra, "t + 1"),
+            piscina, &g));
         /* gradus altior: (t^5 - 3t + 1)(t^4 + t + 7) et (t^5 - 3t + 1)
          * (2t^3 - 9) */
         CREDO_VERUM (polynomium_divisor_communis(
-            _multiplica(_p("t^5 - 3t + 1"), _p("t^4 + t + 7")),
-            _multiplica(_p("t^5 - 3t + 1"), _p("2t^3 - 9")), piscina,
+            _multiplica(piscina, &canonica_omnia, _p(piscina,
+            &canonica_omnia, &lectio_integra, "t^5 - 3t + 1"),
+            _p(piscina, &canonica_omnia, &lectio_integra,
+            "t^4 + t + 7")),
+            _multiplica(piscina, &canonica_omnia, _p(piscina,
+            &canonica_omnia, &lectio_integra, "t^5 - 3t + 1"),
+            _p(piscina, &canonica_omnia, &lectio_integra, "2t^3 - 9")),
+            piscina,
             &g));
-        CREDO_VERUM (polynomium_aequalis(_c(g), _p("t^5 - 3t + 1")));
+        CREDO_VERUM (polynomium_aequalis(_c(&canonica_omnia, g),
+            _p(piscina, &canonica_omnia, &lectio_integra,
+            "t^5 - 3t + 1")));
 
         /* pars libera: radices multiplices simplices fiunt */
-        CREDO_VERUM (polynomium_pars_libera(_multiplica(_multiplica(
-            _p("t - 1"), _p("t - 1")),
-            _multiplica(_multiplica(_p("2t + 3"),
-            _p("2t + 3")), _p("2t + 3"))), piscina, &q));
-        CREDO_VERUM (polynomium_aequalis(_c(q), _p("2t^2 + t - 3")));
-        CREDO_VERUM (polynomium_pars_libera(_p("-3t^2 + 6"), piscina,
+        CREDO_VERUM (polynomium_pars_libera(_multiplica(piscina,
+            &canonica_omnia, _multiplica(piscina, &canonica_omnia,
+            _p(piscina, &canonica_omnia, &lectio_integra, "t - 1"),
+            _p(piscina, &canonica_omnia, &lectio_integra, "t - 1")),
+            _multiplica(piscina, &canonica_omnia, _multiplica(piscina,
+            &canonica_omnia, _p(piscina, &canonica_omnia,
+            &lectio_integra, "2t + 3"),
+            _p(piscina, &canonica_omnia, &lectio_integra, "2t + 3")),
+            _p(piscina, &canonica_omnia, &lectio_integra, "2t + 3"))),
+            piscina, &q));
+        CREDO_VERUM (polynomium_aequalis(_c(&canonica_omnia, q),
+            _p(piscina, &canonica_omnia, &lectio_integra,
+            "2t^2 + t - 3")));
+        CREDO_VERUM (polynomium_pars_libera(_p(piscina, &canonica_omnia,
+            &lectio_integra, "-3t^2 + 6"), piscina,
             &q));
-        CREDO_VERUM (polynomium_aequalis(_c(q), _p("t^2 - 2")));
-        CREDO_VERUM (polynomium_pars_libera(_p("t^4"), piscina, &q));
-        CREDO_VERUM (polynomium_aequalis(_c(q), _p("t")));
-        CREDO_VERUM (polynomium_pars_libera(_p("-7"), piscina, &q));
-        CREDO_VERUM (polynomium_aequalis(_c(q), _p("1")));
+        CREDO_VERUM (polynomium_aequalis(_c(&canonica_omnia, q),
+            _p(piscina, &canonica_omnia, &lectio_integra, "t^2 - 2")));
+        CREDO_VERUM (polynomium_pars_libera(_p(piscina, &canonica_omnia,
+            &lectio_integra, "t^4"), piscina, &q));
+        CREDO_VERUM (polynomium_aequalis(_c(&canonica_omnia, q),
+            _p(piscina, &canonica_omnia, &lectio_integra, "t")));
+        CREDO_VERUM (polynomium_pars_libera(_p(piscina, &canonica_omnia,
+            &lectio_integra, "-7"), piscina, &q));
+        CREDO_VERUM (polynomium_aequalis(_c(&canonica_omnia, q),
+            _p(piscina, &canonica_omnia, &lectio_integra, "1")));
 
         /* Taylor: p(t + c) contra valorem, et inversa (c, -c) */
         {
@@ -3948,7 +4260,8 @@ s32 principale (vacuum)
 
             per (i = ZEPHYRUM; i < IV; i++)
             {
-                Polynomium p = _p(textus[i]);
+                Polynomium p = _p(piscina, &canonica_omnia,
+                    &lectio_integra, textus[i]);
 
                 per (c = -III; c <= III; c++)
                 {
@@ -3963,28 +4276,56 @@ s32 principale (vacuum)
                         piscina, &q));
                     x_translatum = fractio_adde(x,
                         fractio_ex_s64((s64)c), piscina);
-                    CREDO_VERUM (polynomium_valor(_c(q), x, piscina,
+                    CREDO_VERUM (polynomium_valor(_c(&canonica_omnia,
+                        q), x, piscina,
                         &v1)
                         && polynomium_valor(p, x_translatum, piscina,
                         &v2)
                         && fractio_aequalis(v1, v2));
                     CREDO_VERUM (polynomium_translatum(q,
                         magnus_ex_s64((s64)-c), piscina, &r));
-                    CREDO_VERUM (polynomium_aequalis(_c(r), p));
+                    CREDO_VERUM (polynomium_aequalis(_c(&canonica_omnia,
+                        r), p));
                 }
             }
-            CREDO_FALSUM (polynomium_translatum(_p("t^-1"),
+            CREDO_FALSUM (polynomium_translatum(_p(piscina,
+                &canonica_omnia, &lectio_integra, "t^-1"),
                 magnus_ex_s64(I),
                 piscina, &q));
         }
     }
+}
 
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
 
-        credo_claudere();
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
-    }
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "lectionem et scripturam", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "textus malformatos", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "aequalitatem falsificabilem", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "valores nodorum", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "divisionem et valorem", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fines exponentium", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "recensionem polynomium-I", _sectio_septima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "officinas (memoria vocantis)", _sectio_octava, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "polynomia magna (XXX casus)", _sectio_nona, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "vectores oraculi", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "leges (D casus)", _sectio_decima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "inversum et symmetriam", _sectio_decima_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "derivatam, divisorem, partem liberam, Taylor",
+        _sectio_decima_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("polynomium", SECTIONES);
 }

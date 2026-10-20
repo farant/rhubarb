@@ -85,7 +85,6 @@ probatio_epistula_scribere (Piscina* piscina)
          character  receptum[LXIV];
     memoriae_index  m;
 
-    imprimere("--- Probans epistulam scribere ---\n");
     CREDO_VERUM(pl != NIHIL);
     tabellarius_epistulam_scribere(pl, corpus);
     rewind(pl);
@@ -104,7 +103,6 @@ probatio_epistula_legere (Piscina* piscina)
        b32 finitus = FALSUM;
     chorda corpus;
 
-    imprimere("--- Probans epistulam legere ---\n");
     CREDO_VERUM(pl != NIHIL);
 
     corpus = tabellarius_epistulam_legere(pl, piscina, &finitus);
@@ -135,7 +133,6 @@ probatio_epistula_tolerantia (Piscina* piscina)
        b32 finitus = FALSUM;
     chorda corpus;
 
-    imprimere("--- Probans tolerantiam capitum ---\n");
     CREDO_VERUM(pl != NIHIL);
     corpus = tabellarius_epistulam_legere(pl, piscina, &finitus);
     CREDO_VERUM(!finitus);
@@ -149,8 +146,6 @@ probatio_epistula_prava (Piscina* piscina)
        b32 finitus;
     chorda corpus;
     FILE* pl;
-
-    imprimere("--- Probans epistulas pravas ---\n");
 
     /* caput sine content-length */
     pl = _fluxus_ex_literis("Nusquam: 3\r\n\r\nabc");
@@ -182,8 +177,6 @@ probatio_epistula_prava (Piscina* piscina)
 interior vacuum
 probatio_linea (Piscina* piscina)
 {
-    imprimere("--- Probans framing lineis ---\n");
-
     /* legere: lineae plures, '\r' detractum, vacuae praetermissae,
      * EOF finitus */
     {
@@ -282,7 +275,6 @@ probatio_nuntius_petitio (Piscina* piscina)
     TabellariusNuntius n = tabellarius_nuntium_legere(corpus,
         piscina);
 
-    imprimere("--- Probans petitionem ---\n");
     CREDO_VERUM(n.genus == TABELLARIUS_PETITIO);
     CREDO_VERUM(_aequalis(n.methodus, "initialize"));
     CREDO_VERUM(n.id != NIHIL);
@@ -302,7 +294,6 @@ probatio_nuntius_nuntiatio (Piscina* piscina)
     TabellariusNuntius n = tabellarius_nuntium_legere(corpus,
         piscina);
 
-    imprimere("--- Probans nuntiationem ---\n");
     CREDO_VERUM(n.genus == TABELLARIUS_NUNTIATIO);
     CREDO_VERUM(_aequalis(n.methodus, "initialized"));
     CREDO_VERUM(n.id == NIHIL);
@@ -318,7 +309,6 @@ probatio_nuntius_id_chorda (Piscina* piscina)
     TabellariusNuntius n = tabellarius_nuntium_legere(corpus,
         piscina);
 
-    imprimere("--- Probans id chordam ---\n");
     CREDO_VERUM(n.genus == TABELLARIUS_PETITIO);
     CREDO_VERUM(n.id != NIHIL);
     CREDO_VERUM(json_est_chorda(n.id));
@@ -329,8 +319,6 @@ interior vacuum
 probatio_nuntius_pravum (Piscina* piscina)
 {
     TabellariusNuntius n;
-
-    imprimere("--- Probans nuntios pravos ---\n");
 
     /* fascis (tabulatum) - LSP numquam */
     n = tabellarius_nuntium_legere(
@@ -366,8 +354,6 @@ probatio_fabri (Piscina* piscina)
 {
        chorda  corpus;
     JsonValor* id_septem = json_integer_creare(piscina, VII);
-
-    imprimere("--- Probans fabros ---\n");
 
     /* responsum cum resultato nullo */
     corpus = tabellarius_responsum(piscina, id_septem, NIHIL);
@@ -418,7 +404,6 @@ probatio_circulus (Piscina* piscina)
                 chorda  corpus;
     TabellariusNuntius  n;
 
-    imprimere("--- Probans circulum plenum ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
 
     corpus = tabellarius_epistulam_legere(intra, piscina, &finitus);
@@ -446,43 +431,102 @@ probatio_circulus (Piscina* piscina)
 
 /* ================================================== */
 
-integer
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    probatio_epistula_scribere(c->piscina);
+}
+
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    probatio_epistula_legere(c->piscina);
+}
+
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    probatio_epistula_tolerantia(c->piscina);
+}
+
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    probatio_epistula_prava(c->piscina);
+}
+
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    probatio_linea(c->piscina);
+}
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    probatio_nuntius_petitio(c->piscina);
+}
+
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    probatio_nuntius_nuntiatio(c->piscina);
+}
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    probatio_nuntius_id_chorda(c->piscina);
+}
+
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    probatio_nuntius_pravum(c->piscina);
+}
+
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    probatio_fabri(c->piscina);
+}
+
+interior vacuum
+_sectio_decima_prima (
+    CredoContextus* c)
+{
+    probatio_circulus(c->piscina);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "epistulam scribere", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "epistulam legere", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "tolerantiam capitum", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "epistulas pravas", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "framing lineis", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "petitionem", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nuntiationem", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "id chordam", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nuntios pravos", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fabros", _sectio_decima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "circulum plenum", _sectio_decima_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
 principale (vacuum)
 {
-    Piscina* piscina;
-
-    imprimere("\n========================================\n");
-    imprimere("PROBATIO TABELLARIUS\n");
-    imprimere("========================================\n\n");
-
-    piscina = piscina_generare_dynamicum("probatio_tabellarius",
-        CDLVI);
-    si (piscina == NIHIL)
-    {
-        imprimere("piscina generari non potuit\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    probatio_epistula_scribere(piscina);
-    probatio_epistula_legere(piscina);
-    probatio_epistula_tolerantia(piscina);
-    probatio_epistula_prava(piscina);
-    probatio_linea(piscina);
-    probatio_nuntius_petitio(piscina);
-    probatio_nuntius_nuntiatio(piscina);
-    probatio_nuntius_id_chorda(piscina);
-    probatio_nuntius_pravum(piscina);
-    probatio_fabri(piscina);
-    probatio_circulus(piscina);
-
-    credo_imprimere_compendium();
-
-    {
-        b32 omnia = credo_omnia_praeterierunt();
-
-        piscina_destruere(piscina);
-        imprimere("========================================\n\n");
-        redde omnia ? ZEPHYRUM : I;
-    }
+    redde credo_suitam_currere("tabellarius", SECTIONES);
 }

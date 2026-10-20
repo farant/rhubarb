@@ -106,6 +106,67 @@ ranked by how much it bears on KC 47.
   dominance assumption; 56.1.3 gives the per-class range and the
   tie-break; 56.3.1 is one random draw ([exact-search]); 56.4.2 says
   lambda^2 for angles.
+- **D130 (2026-10-17).** Appended Part XI (57): Latin dependency
+  trees as tangles, the first claims about language. Its two house
+  libraries (dependentia, conllu) were reviewed independently before
+  the demo (T1a: zero mismatches against the reviewer's oracle on all
+  trees of <= 7 words and nine treebanks). The demo's own review is
+  task T4, after these nodes were written.
+- **D130 review (T4, 2026-10-17).** The reviewer's own oracle matched
+  every number in 57 for all seven treebanks (zero mismatches), and
+  found that P2's operand had been changed after registration and the
+  change misdescribed (H1). Marked [falls] with corrected children:
+  57.3.3 and 57.3.3.1 (falling ratio = normalisation, not locality),
+  57.5.1, 57.5.2, 57.5.3. Appended: 57.1.1 (the operand history),
+  57.3.1.1-2, 57.3.3.2-3, 57.4.1.1 (Perseus by work), 57.5.1.1,
+  57.5.2.2, 57.5.3.1, 57.5.4.1, 57.7.1. No address removed or
+  renumbered.
+
+- **D131 (2026-10-19).** Appended 58 to Part XI: a toy Latin world
+  testing whether morphology pays for crossing. Both registered
+  predictions failed (58.3.1, 58.4.2); the descriptive split by what
+  is displaced (58.4.3-4) was made after the run and is graded so.
+  The demo's own review is task T4, after these nodes were written.
+
+- **D131 review (T4, 2026-10-19).** The reviewer's own oracle matched
+  every number in 58 (zero mismatches); no rule changed after
+  registration. Marked [falls] with corrected children: 58.4.2 (the
+  pooled reversal is a Simpson's paradox, 58.4.2.1) and
+  58.4.5.obj.1.1 (58.4.5.obj.1.2). Appended: 58.3.1.1.1, 58.3.1.2
+  (Q1's failure a near-tie that flips with length), 58.4.3.1,
+  58.4.4.1, 58.4.5.1. Corrected in place: the header (verb forms,
+  one clause, the review), 58.2's evidence, 58.3.1.1's source, and
+  58.4.5's citation (57.5.4, not 57.5.4.1). No address removed or
+  renumbered.
+
+- **D132 (2026-10-19).** Appended 59 to Part XI: displaced genitives
+  in real Latin are positionally safe above chance (registered G1 and
+  G2 hold). The demo's own review is task T4, after these nodes were
+  written.
+
+- **D132 review (T4, 2026-10-19).** The reviewer's own oracle matched
+  every number in 59 (zero mismatches); no rule changed; no H finding.
+  Marked [falls] with corrected children: 59.3.1 (59.3.1.1: the excess
+  is mostly distance), 59.3.obj.2.1 (59.3.obj.2.2), 59.5.2 (59.5.2.1).
+  Appended: 59.3.1.1, 59.3.2.1, 59.3.obj.1.2, 59.3.obj.2.2, 59.4.1,
+  59.4.2, 59.5.2.1, 59.6.1, 59.7, 59.8. Corrected in place: the header
+  (grades), 59.3.3 (precision, grade), 59.3.obj.1.1 (resolved). No
+  address removed or renumbered.
+
+- **D133 (2026-10-19).** Appended 60 to Part XI: labels do not buy
+  distance (registered L1, L1u, L3 all fail). The first knotapel plan
+  with a design review before any data. The demo's own review is task
+  T4, after these nodes were written.
+
+- **D133 review (T4, 2026-10-19).** The reviewer's third exact method
+  (Kronecker substitution) reproduced every pinned number; no wrong
+  verdict; no H. Marked [falls] with corrected children: 60.2.1
+  (60.2.1.1: bounded, with power), 60.3.1 (60.3.1.1: L3 tested a
+  globally unique label, not the gap case), 60.4 (60.4.1: ITTB and the
+  percentile sensitivity). Appended: 60.5.obj.1.2 (the power answer),
+  60.6 to 60.6.2 (a same-label noun in the gap: 3 against 92.7).
+  Corrected in place: the header's grades, 60.2.2 (1.32, pinned),
+  60.5.obj.1.1 (answered). No address removed or renumbered.
 
 ## Part I. Definitions
 
@@ -1278,4 +1339,485 @@ ranked by how much it bears on KC 47.
         classes)
 56.5. Do the same laws hold on B_4? [open] (needs exact counts in
       d >= 3; ledger ...QK7A9)
+```
+
+## Part XI. Language: dependency trees
+
+```text
+57. Does Latin syntax look like a tangle: a mostly planar skeleton
+    of nested dependencies, with few and small crossings where word
+    order separates words that belong together? (D130, proposal N9;
+    the picture is knotapel/brainstorm-skeleton-settling.md IV, XI.
+    Grades: [exact] counts are over gold UD trees; the repo treebanks
+    CIRCSE, LLCT, EWT are re-derived by D130's own independent Python
+    oracles, and all seven treebanks by the T4 review's own oracle,
+    zero mismatches)
+57.1. Two arcs CROSS when their endpoints interleave strictly; a tree
+      is PLANAR when no two real arcs cross (Kuhlmann and Nivre 2006,
+      Def. 4, root arc not added), PROJECTIVE when every yield is an
+      interval (Def. 3); an arc is NON-PROJECTIVE when a word strictly
+      inside its span is not dominated by its head; a tree is MILD
+      when its gap degree is <= 1 and it is well-nested (Defs. 6-8).
+      [definition]
+57.1.1. P2 (57.5) was REGISTERED on a different operand: "arcs in at
+        least one crossing", root arc included (plan 1c4c1b0c). Task 0
+        renamed that sentence "non-planar arcs", leaving P2's term
+        undefined; the per-arc notion of 57.1 was adopted after a review
+        reported the term undefined, which Claude passed on to Fran as
+        "never defined" - false. P2 is decided on the registered
+        operand, the per-arc one reported beside it. [definition] (D130
+        plan.md; found by the T4 review)
+57.2. Under a uniformly random order of a tree's words, two arcs with
+      four distinct endpoints cross with probability exactly 1/3, so
+      the expected crossings are (disjoint arc pairs) / 3. [proved]
+      (of the 24 relative orders of four endpoints, 8 nest, 8 sit
+      side by side, 8 cross; D130 checks the sum over ALL n! orders
+      on 2,194 real trees of <= 7 words, lib dependentia on every
+      tree of <= 5 words)
+57.2.1. Projective => planar => well-nested. [proved] (K&N p. 511;
+        D130 checks it on every tree, both columns)
+57.3. Is crossing rare in Latin?
+57.3.1. Yes, against random order: observed / expected crossings is
+        0.0065 (LLCT) to 0.1022 (Perseus) in six Latin treebanks, all
+        below the registered 1/4; English 0.0010, below every Latin
+        one. Registered P1 holds. [exact] (D130 Part B, without
+        punctuation)
+57.3.1.1. The ratio is POOLED over each treebank, so long sentences
+          dominate (in LLCT the 51+-word bin holds 84% of the pairs).
+          The unweighted mean of per-tree ratios is 0.2745 in CIRCSE,
+          above 1/4, and its 1-10-word sentences reach 0.3235; the
+          other Latin means are 0.0148 to 0.1541. [exact] (D130 Part B
+          and verdicts; T4)
+57.3.1.2. Uniform random order ignores the pressure toward short
+          dependencies, so the margin is weak evidence of crossing
+          avoidance as such. [interpretation]
+57.3.2. But crossed sentences are common: 40.9% (UDante) to 72.9%
+        (PROIEL) of Latin trees are projective, against 98.5% in
+        English. [exact] (D130 Part B)
+57.3.3. Observed / expected falls with sentence length in every Latin
+        treebank (CIRCSE 0.32 for 1-10 words to 0.03 for 51+; LLCT
+        rises once, 0.012 to 0.038, then falls). [falls] (contradicts
+        itself: see 57.3.3.2)
+57.3.3.1. So the skeleton is planar at large scale and the crossings
+          live inside phrases. [falls] (see 57.3.3.3)
+57.3.3.2. Pooled observed / expected falls with length in five Latin
+          treebanks; LLCT rises once (0.012 to 0.038) before falling.
+          [exact] (D130 Part B; T4)
+57.3.3.3. The fall is the null's normalisation: the pairs that could
+          cross grow like n^2 (CIRCSE 6.2 per tree for 1-10 words,
+          2,432 for 51+), while crossings per word RISE with length
+          (CIRCSE 0.117 to 0.310, Perseus 0.080 to 0.296, PROIEL 0.029
+          to 0.101, LLCT 0.007 to 0.059). Locality was not measured.
+          [exact] (D130 Part B; T4)
+57.4. Is the non-projectivity mild?
+57.4.1. Yes in prose: 95.96% (UDante) to 98.57% (ITTB) of trees are
+        mild in LLCT, PROIEL, ITTB and UDante; registered P3 holds.
+        Verse is less so: CIRCSE 88.13%, Perseus (not split by genre)
+        94.04%, both without prediction. [exact] (D130 Part D)
+57.4.1.1. Perseus splits by the work code of its sent_id: its prose
+          (Petronius) is 97.99% mild and enters P3, which still holds;
+          its verse (Ovid, Phaedrus, Vergil) is 88.52%, like CIRCSE.
+          57.4.1's "verse is less so" wrongly counted all of Perseus as
+          verse. [exact] (D130 Part D; T4)
+57.5. Are the crossings agreement, as in hyperbaton?
+57.5.1. In literary Latin, yes: in CIRCSE, Perseus, PROIEL, ITTB and
+        UDante the share of non-projective arcs agreeing in Case,
+        Gender and Number is 1.80x to 3.29x the share among all arcs,
+        and amod + det are 18% to 55% of non-projective arcs against
+        8% to 15% of all arcs. [falls] (the figures are exact for the
+        per-arc operand only; see 57.5.1.1)
+57.5.1.1. Under the registered operand (57.1.1) only CIRCSE (x1.613)
+          and Perseus (x1.614) pass; PROIEL x1.046, ITTB x0.967, UDante
+          x0.851 fail, and the amod + det half fails in UDante. Under
+          the per-arc operand the figures of 57.5.1 hold, the PROIEL
+          and UDante passes narrowly (bootstrap lower bounds 1.52,
+          1.55). So: the verse-heavy treebanks agree under both
+          readings; beyond them it depends on which arcs are counted.
+          [exact] (D130 verdicts; T4)
+57.5.2. In the charters, no: in LLCT agreement among non-projective
+        arcs is 0.93x the baseline and amod + det are rarer among
+        them (10.7% against 17.3%); its non-projective arcs are obl
+        26.7%, advmod 11.2%, obj 9.2%, advcl 8.2%. Registered P2
+        (every Latin treebank) falls on LLCT alone. [falls] (true of
+        the per-arc operand only; see 57.5.2.2)
+57.5.2.1. Why do the charters cross? [open] (formulaic order is a
+          guess; not examined)
+57.5.2.2. P2 falls under both operands: under the registered one in
+          LLCT, PROIEL, ITTB and UDante, under the per-arc one in LLCT
+          alone. The LLCT failure is robust (per-arc x0.931, bootstrap
+          [0.81, 1.06]; each file alone; x1.091 with punctuation kept).
+          [exact] (D130 verdicts; T4)
+57.5.3. So agreement-driven crossing is a property of the literary
+        register, not of Latin as such. [falls] (see 57.5.3.1)
+57.5.3.1. Not established: "literary" was the complement of LLCT,
+          chosen after the run; under the registered operand Aquinas,
+          Dante and PROIEL fail too; and the charter side is one
+          treebank from one annotation team whose relation profile
+          looks convention-driven (det 11.7% of its arcs against 3.7%
+          to 5.0% elsewhere). Register and convention cannot be
+          separated here. [interpretation]
+57.5.4. Counting arcs in ANY crossing (non-planar) instead of
+        non-projective arcs dilutes the agreement signal (CIRCSE
+        33.1% against 64.6%): a crossed projective partner seldom
+        agrees. [exact] (D130 Part C)
+57.5.4.1. Crossed but projective arcs agree in all three features only
+          1.2% (ITTB) to 6.8% (CIRCSE) of the time, which is why the
+          registered and per-arc operands differ about 2x. [exact]
+          (T4)
+57.6. How large are the tangles?
+57.6.1. Small: in the six Latin treebanks 37% to 67% of crossing
+        components (two or more arcs, connected by crossings) are a
+        single crossing pair, components average 1.7 to 3.6
+        crossings, and components of 9 or more arcs are at most 5.0%.
+        [exact] (D130 Part D)
+57.7. Does genre order the density? Yes: crossings per word CIRCSE
+      (verse) 0.1885 > Perseus 0.1433 > PROIEL 0.0533 > LLCT 0.0502;
+      registered P4 holds, with a narrow PROIEL / LLCT step. [exact]
+      (D130 Part B)
+57.7.1. The PROIEL > LLCT step is not robust: it reverses with
+        punctuation kept (LLCT 0.0551 > PROIEL 0.0533), PROIEL's test
+        split is 58% Vulgate, which alone (0.0276) is below LLCT, and a
+        sentence bootstrap puts PROIEL above LLCT in 77% of resamples.
+        [exact] (D130 Part B; T4, bootstrap and work split)
+57.8. Can a sentence be given a canonical braid or tangle word whose
+      crossings are the sentence's? [open] (D130 measures what such
+      an encoding must carry: 57.6.1; proposal N14)
+58. Does morphology pay for crossing: do agreement endings let a
+    reader reconnect a displaced word, so that a grammar with endings
+    can afford crossings? (D131, proposal N14 slice 1; brainstorm
+    XIII, XIV. A toy Latin world, exhaustive up to five words: four
+    nouns, two adjectives, four verb forms of two lemmas, real endings
+    from Bennett's New Latin Grammar checked against Whitaker's
+    INFLECTS.LAT; one clause only. Grades: [exact] counts are pinned
+    from D131's independent Python oracle, oracle_partb.py, and all
+    re-derived by the T4 review's own oracle, zero mismatches)
+58.1. A PAIR is a string with one of its analyses (a head and a
+      reading per position); each analysis yields one string per
+      morphology level, so the 6,752,640 pairs are the same at every
+      level. Levels: L1 every reading its own form; L0 Latin's real
+      paradigms; L2 one form per gender and number; L3 as L2 with
+      invariant adjectives. R_P reads the projective analyses of a
+      string if any exist, else all of them. A displaced word is the
+      dependent of a non-projective arc (57.1). [definition]
+58.2. In this world every non-projective arc is NP-internal: an
+      adjective's or a genitive's, never a verb dependent's. [proved]
+      (the root word dominates every word; D131 counts displaced verb
+      dependents directly on every crossed pair, 0 - since T4. Crossings
+      themselves need not be NP-internal: in "bonum puella dominum
+      amat" the adjective's arc crosses the subject's)
+58.3. Does licensing crossings cost Latin more ambiguity than ideal
+      endings would?
+58.3.1. No. Attachment cells open under all analyses but forced under
+        the projective ones, over projective pairs: L1 6.49%, L0
+        6.45%, L2 7.29%, L3 7.31% (numerators 884,736, 878,568,
+        993,296, 996,352 over 13,631,616 cells). Registered Q1 FAILS
+        on A(L1) <= A(L0); its other clauses hold. [exact] (D131
+        Part B)
+58.3.1.1. The measure is a difference, and syncretism opens cells
+          under the projective reading too: open under all analyses
+          L0 2,209,476 against L1 1,953,792, under the projective ones
+          1,330,908 against 1,069,056. [exact] (D131 Part B; computed
+          and pinned since the T4 fixes, first seen in a T2 probe)
+58.3.1.1.1. But that does not decide the sign: up to four words the
+            same pattern holds (open under all analyses 13,464 against
+            12,288, under the projective ones 5,256 against 4,096) and
+            A(L0) is the larger. [exact] (D131 Part B, quick-mode pins;
+            T4 review M1)
+58.3.1.2. The failure is a near-tie that flips with length: 6,168 of
+          13,631,616 cells (0.045 percentage points) at five words;
+          up to four words A(L1) <= A(L0) holds (8,192 against 8,208)
+          and Q1 holds on every clause. The total ambiguity (open cells
+          under all analyses) is ordered L1 < L0 < L2 < L3 at both
+          lengths. [exact] (D131 Part B; T4 review M1)
+58.4. Do endings protect a nesting-first reader from garden paths on
+      crossed sentences?
+58.4.1. Yes, as a whole: R_P misreads L1 57.08%, L0 60.24%, L2 86.38%,
+        L3 95.90% of the 4,018,176 crossed pairs. Latin sits near the
+        ideal. [exact] (D131 Part B)
+58.4.2. But not through the displaced word's own syncretism: at L0 a
+        syncretic displaced word gives 45.54% garden paths, unambiguous
+        ones 70.63%. Registered Q2 FAILS on that clause; B(L0) < B(L2)
+        holds. [exact] (D131 Part B) [falls: the numbers and the
+        verdict stand, the reading "not through syncretism" does not;
+        see 58.4.2.1]
+58.4.2.1. The pooled reversal is a Simpson's paradox: within each kind
+          of displacement (58.4.3, 58.4.4.1) a syncretic displaced word
+          gives MORE garden paths - adjectives only 7.28% against
+          1.13%, genitives only 77.44% against 74.01%, both 19.79%
+          against 12.83% - but genitive-only pairs, the garden-path-
+          prone kind, are 52.2% of the syncretic side and 95.2% of the
+          unambiguous side. [exact] (D131 Part B, descriptive; T4
+          review M2, three-way split from the T4 fixes)
+58.4.3. Displaced ADJECTIVES are what endings pay for: crossed pairs
+        displacing only adjectives (663,552) are misread 0% at L1,
+        6.49% at L0 (syncretic 7.28%, unambiguous 1.13%), 35.70% at L2,
+        78.86% at L3. [exact] (D131 Part B, descriptive: the split was
+        made after the run)
+58.4.3.1. The 0% at L1 is structural to a five-word world: beside an
+          adjective there is room for at most one noun besides the
+          verb's arguments, so no two nouns share case, gender and
+          number. Six words would allow two. [proved] (counting slots;
+          T4 review M6)
+58.4.4. Displaced GENITIVES are not: crossed pairs displacing a
+        genitive (3,354,624) are misread 68.38% at L1, 70.87% at L0,
+        96.40% at L2, 99.27% at L3; they are 96.4% of Q2's
+        "unambiguous" side at L0. [exact] (D131 Part B, descriptive)
+58.4.4.1. Separating the pairs that displace both (245,760; a choice,
+          made in the T4 fixes): genitives only (3,108,864) are misread
+          72.99% at L1, 74.97% at L0, 100% at L2 and L3; both, 10.00%,
+          18.98%, 50.92%, 90.00%. [exact] (D131 Part B, descriptive)
+58.4.5. Agreement says which word a word goes with; a case ending
+        alone says only its role. An adjective carries agreement with
+        its noun, a genitive carries none, so endings can reconnect a
+        displaced adjective and cannot place a displaced genitive.
+        [interpretation] (fits 57.5.4 in verse: there non-projective
+        arcs usually agree, and their crossed projective partners
+        seldom do, 57.5.4.1)
+58.4.5.1. It does not reach D130's prose: under the registered operand
+          most Latin treebanks fail P2 (57.5.1, 57.5.3 [falls]), and the
+          charters' non-projective arcs are mostly verb dependents
+          (57.5.2), which this one-clause world cannot displace (58.2).
+          [interpretation] (T4 review M4)
+58.4.5.obj.1. Objection: the split of 58.4.3-4 was chosen after the
+              registered split failed, so it may be the one cut that
+              tells the hoped-for story.
+58.4.5.obj.1.1. Reply: the split is forced by the grammar (58.2: an
+                NP-internal crossing displaces an adjective or a
+                genitive, nothing else), not chosen among many; but as
+                a prediction it is untested until a new world (other
+                lemmas, six words) is registered against it. [falls:
+                overstated; see 58.4.5.obj.1.2]
+58.4.5.obj.1.2. Reply: the two KINDS are forced (58.2), but where
+                pairs that displace both go is a choice, and they
+                behave unlike either (58.4.4.1); the three-way split is
+                reported so no cut is hidden. As a prediction it is
+                untested until a new world (six words) is registered
+                against it. (T4 review M3)
+58.5. Can a nesting-first reader, with any endings, place a displaced
+      genitive without statistics or order preference? [open] (slice 2
+      of N14: the exact settler, brainstorm XIV)
+59. How does real Latin make a displaced genitive recoverable, when its
+    ending cannot name its head (58.4.4)? (D132, proposal N15; six
+    Latin UD treebanks as D130, headline without punctuation. Grades:
+    [exact] counts over gold trees, pinned from D132's independent
+    oracle, oracle_d132.py, and re-derived by the T4 review's own
+    oracle, zero mismatches; [checked] here = the T4 review's scripts,
+    not a committed demo)
+59.1. A genitive arc is nmod with Case=Gen on the dependent; it is
+      DISPLACED when per-arc non-projective (57.1). A candidate host is
+      a NOUN or PROPN other than the true head, outside the genitive's
+      subtree; a NESTED ALTERNATIVE is one whose arc to the genitive
+      would be projective with the genitive re-hung under it; a
+      displaced genitive with none is SAFE. The positional null moves
+      the genitive alone through every position of its sentence; its
+      share is the safe fraction of the placements that stay displaced,
+      and E sums the shares. [definition]
+59.2. Displaced genitives are few: 80 of 477 genitive arcs in CIRCSE,
+      5 of 2,382 in LLCT, 44 of 458 in PROIEL, 42 of 255 in Perseus, 71
+      of 1,098 in ITTB, 31 of 438 in UDante. [exact] (D132 Part B)
+59.3. Are displaced genitives placed safely more often than chance?
+59.3.1. Yes. Safe against the null's expectation: CIRCSE 45.00% vs
+        35.27%, LLCT 60.00% vs 10.94%, PROIEL 65.91% vs 54.58%, Perseus
+        64.29% vs 45.28%, ITTB 66.20% vs 45.38%, UDante 74.19% vs
+        50.54%. Registered G1 (S > E in at least five of six) HOLDS in
+        six of six. [exact] (D132 Part B) [falls: the "Yes" overstates;
+        see 59.3.1.1]
+59.3.1.1. Than the registered positional null: S > E in six of six,
+          registered G1 HOLDS. But G1 is a sign rule chance meets with
+          P 0.075 (six of six: 0.009), and against a null that keeps the
+          genitive no farther from its head than observed the margins
+          shrink to 2-7 points (LLCT 30) with tails 0.11-0.29
+          (59.3.obj.1.2): the excess over the registered null is mostly
+          DISTANCE - displaced genitives are short, and short is safe.
+          [exact] (D132 Part B, the stricter null pinned since the T4
+          fixes; the rules' null rates [checked])
+59.3.2. Most displaced genitives are safe: registered G2 (S / N >= 1/2
+        in at least five of six) HOLDS in five of six; CIRCSE (Seneca,
+        verse) fails at 45.00%. [exact] (D132 Part B)
+59.3.2.1. It turns on one LLCT genitive (S = 3 of N = 5; one fewer and
+          G2 holds in four of six), and LLCT's five are about four
+          instances of one charter formula. Without the genitives that
+          have no candidate host at all (59.7), G2 still holds in five
+          of six. [exact] (D132 Part B; T4 review M4)
+59.3.3. Under the null, each treebank's safe count alone is unlikely:
+        P(null >= S) is 0.0278 (CIRCSE), 0.0084 (LLCT), 0.0368
+        (PROIEL), 0.0033 (Perseus), 1.2e-6 (ITTB), 0.0016 (UDante).
+        [exact, under the independence model] (D132 Part B;
+        descriptive, added after the verdicts)
+59.3.obj.1. Objection: moving one word through every position makes
+            orders no Latin writer would produce, so the null is easy to
+            beat.
+59.3.obj.1.1. Reply: the null holds everything but the genitive's
+              position fixed, so it isolates where the genitive sits;
+              but a stricter null (moving whole subtrees, or only to
+              positions attested for genitives) is not run, and the
+              margin could shrink under it. [open] (resolved by
+              59.3.obj.1.2)
+59.3.obj.1.2. Reply (T4): two stricter nulls were run. Moving the whole
+              subtree changes almost nothing (E / N CIRCSE 35.31%,
+              ITTB 45.44%, ...). Keeping the genitive no farther from
+              its head than observed raises E / N to 42.69% (CIRCSE),
+              29.52% (LLCT), 60.80% (PROIEL), 57.75% (Perseus), 62.49%
+              (ITTB), 68.55% (UDante): S > E survives in six of six,
+              with tails 0.11-0.29 (Perseus verse 0.047). The objection
+              stands in substance: most of the margin is distance.
+              [exact] (D132 Part B, pinned since the T4 fixes)
+59.3.obj.2. Objection: genitives are not independent - one author, one
+            text, often one sentence - so the tails overstate.
+59.3.obj.2.1. Reply: granted for 59.3.3, which is descriptive; the
+              registered G1 and G2 compare exact counts and make no
+              independence claim. [falls: evasive - the inferential
+              "more than chance" rested on 59.3.3; see 59.3.obj.2.2]
+59.3.obj.2.2. Reply: granted. G1 alone is weak evidence (59.3.1.1);
+              the tails carry the inference and assume independence,
+              which several sentences with two or more displaced
+              genitives and LLCT's repeated formula strain. (T4 review
+              M1)
+59.4. The unsafe displaced genitives mostly have one competitor: 86 of
+      108 have exactly one nested alternative host, 18 two, 4 three.
+      [exact] (D132 Part B)
+59.4.1. The nearest alternative is adjacent in 57 of the 108, two words
+        away in 20, three in 10, four in 4, five to nine in 12, ten or
+        more in 5. [exact] (D132 Part B, pinned since the T4 fixes)
+59.4.2. Not every alternative is a plausible misreading: in 19 of the
+        108 it is the sentence's root (a nominal predicate, a nested
+        alternative wherever the genitive sits), in 35 only ancestors
+        of the genitive are alternatives. "Unsafe" over-counts; with
+        PRON, ADJ and DET hosts excluded, "safe" may over-count.
+        [checked] (T4 review L2)
+59.5. Agreement and position divide the work. [interpretation]
+59.5.1. Displaced adjectives are safe by agreement in 93.6-100% of
+        cases, but in 70-82% of them (LLCT 1.5%) no other agreeing noun
+        exists at all; ignoring agreement, prose treebanks (PROIEL,
+        ITTB, UDante) also place them positionally safe far above
+        chance, verse near chance, the charters never. [exact] (D132
+        Part B, reported, not registered)
+59.5.2. So a displaced word is recoverable through a head label
+        (agreement, 58.4.5) or through positional safety; Latin writers
+        use positional safety where morphology cannot pay (genitives),
+        verse takes the most risk, and the charters avoid displacing
+        genitives altogether. [interpretation] (rests on small N; 59.2)
+        [falls: positional safety is not distinguished from short
+        displacement (59.3.1.1), and "verse takes the most risk" rests on
+        CIRCSE alone; see 59.5.2.1]
+59.5.2.1. So a displaced word is recoverable through a head label
+          (agreement, 58.4.5) or, for genitives, by short displacement
+          that leaves few other nouns in reach of a nested reading,
+          often with a verb in between (59.6.1); whether writers choose
+          the safe placement beyond that is not shown. CIRCSE takes the
+          most risk (45% safe); verse displaces genitives more often
+          (Perseus verse 26.1%, prose 5.1%); the charters avoid
+          displacing them (0.2%). [interpretation] (T4 review M2, M5)
+59.6. What blocks the nested alternatives - the verb standing between
+      the genitive and the other nouns, as in the plan's hand sentences,
+      or something else? [open]
+59.6.1. Partly a verb: of the 131 safe genitives with candidate hosts,
+        a VERB or AUX is among the blocking words of every alternative
+        in 93; the root blocks every alternative in 41. Only 6 of the
+        273 displaced genitives are displaced solely by covering the
+        root. [checked] (T4 review N1)
+59.7. Some safe genitives are trivially safe: 34 of the 165 have no
+      candidate host at all (CIRCSE 5, LLCT 0, PROIEL 9, Perseus 3, ITTB
+      15, UDante 2). [exact] (D132 Part B, pinned since the T4 fixes)
+59.8. "Safe" is a property of one attachment, not of D131's R_P, which
+      keeps analyses projective as WHOLE trees: 84 of the 165 safe
+      genitives sit in gold trees with another non-projective arc, and
+      of the 108 unsafe ones only 33 have an alternative making the
+      whole re-hung tree projective. With non-crossing alternatives
+      instead of per-arc projective ones, S would be 42 / 3 / 29 / 25 /
+      42 / 22 (CIRCSE passing G2). [checked] (T4 review M3)
+60. Do labels buy distance: can a displaced word that carries agreement
+    (a head label) wait through more foreign material than one that
+    does not? (D133, proposal N19; the six Latin treebanks of 57-59,
+    headline without punctuation; the first plan reviewed before any
+    data. Grades: [exact] counts and exact p-values over gold trees,
+    pinned from D133's independent oracle, oracle_d133.py, and
+    re-derived by the T4 review's third exact method; [checked] here =
+    the T4 review's scripts, simulation or Monte Carlo, not pinned)
+60.1. F, the foreign words of an arc, are the words strictly inside its
+      span that its head does not dominate (the witnesses of its
+      non-projectivity, 57.1). The exact test permutes group labels
+      within strata (treebank, Perseus split by genre; direction;
+      sentence length <= 10, 11-20, > 20) and compares the group's
+      total of min(F, 10) with its exact permutation distribution.
+      Populations: genitives (nmod, Case=Gen, noun head, relatives
+      excluded) and adjectives (amod ADJ with Case, Gender, Number, noun
+      head). [definition]
+60.2. Do displaced adjectives wait longer than displaced genitives?
+60.2.1. No. Their total min(F, 10) is 1,151 against an expected
+        1,143.26, p = 0.2086; registered L1 FAILS (its per-treebank
+        clause, four of five, holds - a clause chance alone meets with
+        P 0.183). On dependent-first arcs only, p = 0.3991 (L1u FAILS).
+        [exact] (D133 Part B) [falls: "No." overstates; see 60.2.1.1]
+60.2.1.1. Not measurably: the registered tests fail, and they would
+          have passed with probability 0.93 (L1) / 0.65 (L1u) at a shift
+          of +0.2 foreign words per arc; the 95% interval for the shift
+          is [-0.065, +0.170] (L1). Effects of 0.1 or less are not
+          excluded. Per treebank ITTB runs the other way (p 0.003),
+          because 115 of its 131 displaced arcs are particle splits.
+          [checked] (T4 review M3; the particle-split counts pinned)
+60.2.2. Both kinds are displaced short: mean min(F, 10) 1.43 for
+        adjectives (69.5% at one foreign word); genitives similar.
+        [exact] (D133 Part B for the adjectives; the genitives' 1.32 -
+        corrected from 1.33 in T4 - and 78.6%, pinned since the T4
+        fixes)
+60.3. Does a unique label (no other agreeing noun) let an adjective wait
+      longer than a shared one?
+60.3.1. No. 787 against an expected 788.80, p = 0.6104; registered L3
+        FAILS. [exact] (D133 Part B) [falls: the test is weaker than the
+        question; see 60.3.1.1]
+60.3.1.1. A GLOBALLY unique label does not wait longer than a shared
+          one (L3 FAILS). But 190 of the 201 shared-label adjectives have
+          every agreeing competitor outside the arc's span, so L3 did not
+          test the discriminating case - a competitor INSIDE the gap -
+          which almost never occurs (60.6). [exact] (D133 Part B; the
+          190 of 201 [checked], T4 review M2)
+60.4. Every sensitivity agrees: one arc per sentence (L1 p 0.2142, L3
+      0.1852), function-word-only arcs removed (0.2752, 0.5932), raw
+      distance (0.9715, 0.4988), Perseus as one stratum (0.2083,
+      0.5680). [exact] (D133 Part B) [falls: true of these four pooled
+      variants only; see 60.4.1]
+60.4.1. The four pooled variants above agree. Two do not: per treebank,
+        ITTB is reversed (60.2.1.1); and the plan's percentile
+        sensitivity, not run by the demo, gives L3 p 0.022 (distance
+        percentile) and 0.030 (F percentile), a sentence-length artefact
+        that vanishes with exact sentence-length strata (p 0.71, 0.60).
+        [checked] (T4 review M1)
+60.5. So labels tell a reader which head a displaced word belongs to
+      (58.4.3) but do not let it travel farther; Latin displaces
+      everything short, and D132's short genitives (59.3.1.1) are that
+      general shortness, not a constraint on unlabelled words.
+      [interpretation] (dependency length minimisation would predict
+      it, recalled)
+60.5.obj.1. Objection: a null result on short displacements says little;
+            the test may lack the power to see a modest effect.
+60.5.obj.1.1. Reply: partly granted. The design was hardened before any
+              data (relatives excluded, particle splits flagged, strata
+              by direction and length, the foreign-word operand), and
+              every variant agrees, but no power analysis was registered,
+              and long-distance or cross-clause displacement - where a
+              label might matter most - is rare in these treebanks.
+              [open] (answered by 60.5.obj.1.2)
+60.5.obj.1.2. Reply (T4): by simulation on the real strata, the tests
+              pass with probability 0.44 / 0.93 / 1.00 (L1), 0.29 /
+              0.65 / 0.93 (L1u), 0.36 / 0.89 / 1.00 (L3) at shifts of
+              +0.1 / +0.2 / +0.3 foreign words per arc. So effects of
+              about +0.17 or more are excluded, 0.1 is not; L1u is the
+              weakest. Long displacement remains rare here. [checked]
+              (T4 review M3)
+60.6. Does a displaced adjective carry its label past a same-label noun?
+60.6.1. Almost never: an agreeing competitor noun is among the foreign
+        words of 3 of 804 displaced adjectives (CIRCSE 1, LLCT 1,
+        Perseus 1), where the move-alone null expects 92.7 (CIRCSE
+        55.80, LLCT 14.88, PROIEL 1.23, Perseus 11.26, ITTB 5.36, UDante
+        4.20). [exact] (D133 Part B, pinned since the T4 fixes;
+        descriptive, found after the verdicts)
+60.6.1.1. Annotators who attach an ambiguous adjective to the nearest
+          agreeing noun would produce the same pattern, so 60.6.1 is
+          partly circular; as reader-relevant evidence it is the
+          measurable form of "labels tell which head" (58.4.5, 60.5).
+          [interpretation]
+60.6.2. Would a registered test of the gap case, on data whose
+        annotation does not follow nearest agreement, confirm it?
+        [open] (a successor demo)
 ```

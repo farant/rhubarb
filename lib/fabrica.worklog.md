@@ -3218,3 +3218,32 @@ stale (sanare heals upstream in order). Not yet: delete `praevia` + regex in
 `_porta_per_fabricam` (follow-up). Over-reporting narrowing ideas (per-exitus
 edges, cache-resolved FORTASSE in quick mode, hypothetical judgment against
 scratch output in plenus, measure first) are on the park.
+
+## 2026-10-20 - memory cap on gradus members (credo memoria T6)
+
+`suturae_in_area_currere` is the only runner for gradus members
+(probationes_c link + run, and the gradus driver in fabrica_sanare).
+Actions go through `_agere` / `_agere_simul`, so a cap set here is
+scoped to members. `FABRICA_MEMORIA_MB` is read from fabrica's own
+environment, never put into the member's (its exact environment is part
+of its key), so changing the cap doesn't invalidate receipts. Default
+16 GiB per Fran (decree …S3B): six silva corpus suites really reach
+7.6 GB (park 01M5CQYDD841).
+
+Naming the section came free. `suturae_actum_complere` used to return
+FALSUM for every unsuccessful result ("didn't start"), so
+`_probationes_c_agere` returned before `_sectiones_explicare`. A kill
+never got its section named, and a timeout still doesn't (left as is).
+For MEMORIA only, it now returns VERUM with exit 137 and the kill
+message as the cause. The explainer then finds the INCIPIT without
+SECTIO and prepends "sectio 'X' RUIT; N non cursae". A v1 member gets
+the synthetic 'totum' FRACTA with the same cause.
+
+Debugging note: the first LXIII run wasn't killed at all, and both
+fixtures ran their whole 20 s. A temporary trace in `_memoriam_custodire`
+showed the guard reading every ~100 ms as designed, but the footprints
+were 1 MiB: clang -O2 had deleted `malloc` + `memset` of buffers nothing
+read. Runaway fixtures keep their buffers in a global array and read
+them back. (The same trace showed probatio_memoria_processus' 64 MiB
+bursts slipping between 100 ms reads, which is fine for a runaway
+guard; exact peaks are credo's job.)

@@ -1,0 +1,126 @@
+<interrogationes unitas="flatura">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I gzip a buffer and get it back?
+    <responsum symbolum="flatura_gzip_deflare flatura_gzip_inflare flatura_status_nuntium">flatura_gzip_deflare(datum,
+      mensura, FLATURA_COMPRESSIO_ORDINARIA, piscina) and
+      flatura_gzip_inflare(datum, mensura, piscina). Both return a
+      FlaturaFructus by value: check status == FLATURA_STATUS_OK before
+      using datum and mensura; on failure datum is NIHIL and
+      flatura_status_nuntium names the status. The output is allocated
+      in the piscina you pass and lives as long as it does. Output bytes
+      are binary, not a NUL-terminated string.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I inflate zlib data (PNG, git objects) rather than gzip?
+    <responsum symbolum="flatura_inflare flatura_deflare" via="lib/git.c lib/imago_png.c">There
+      is no zlib wrapper here. Check and skip the 2-byte zlib header
+      yourself (a preset dictionary, FDICT, cannot be handled), call
+      flatura_inflare on the raw DEFLATE data, and check the Adler-32 in
+      the last 4 bytes yourself: _zlib_inflare in lib/git.c does all
+      three, and lib/imago_png.c is the writing side (flatura_deflare
+      plus header and Adler-32). flatura_inflare stops at the final
+      block and ignores bytes after it, but it does not tell you how
+      many input bytes it consumed, so the Adler-32 can only be found
+      when the stream ends exactly at the end of your buffer.
+      Caution (audit 2026-10-18, unfixed): on zlib data from another
+      encoder where a stored block follows a dynamic-Huffman block,
+      flatura_inflare can drop a byte of the stored block's LEN/NLEN
+      and fail a valid PNG or git object with FLATURA_STATUS_FRACTA_DATUM
+      (see the untrusted-sources answer below).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I stream data through flatura, or tell truncated input from corrupt input?
+    <responsum symbolum="flatura_inflare flatura_gzip_inflare">No.
+      Each call takes the whole input and produces the whole output in
+      one go. FLATURA_STATUS_INCOMPLETUS and FLATURA_STATUS_FRACTA_ALLOCATIO
+      exist in the enum but are never returned (only
+      flatura_status_nuntium names them): input that ends early comes
+      back as an ordinary error, usually FLATURA_STATUS_FRACTA_DATUM
+      (FLATURA_STATUS_FRACTA_DISTANTIA if it ends inside a distance
+      code), exactly like garbage, and an allocation failure exits the
+      process inside piscina_allocare. lib/git.c waits for INCOMPLETUS
+      to grow its pack window, so that growth never happens.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I limit how much a decompression may produce?
+    <responsum symbolum="flatura_inflare piscina_allocare piscina_generare_certae_magnitudinis">No:
+      there is no output limit parameter. The output buffer starts at IV
+      * MXXIV bytes and doubles, each old buffer staying in the arena,
+      so a decompression bomb grows the piscina until piscina_allocare
+      gives up and exits the process. A piscina from
+      piscina_generare_certae_magnitudinis caps it, but the process
+      still exits instead of getting an error.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does flatura compress worse than gzip -9 even at level 9?
+    <responsum symbolum="flatura_deflare">flatura_deflare
+      always writes a single block with the FIXED Huffman code (no
+      dynamic Huffman tables). The level only changes how far the LZ77
+      search follows the hash chain: VIII candidates for level 1,
+      CXXVIII for levels 2 to 8, IV * MXXIV for 9 and up.
+      FLATURA_COMPRESSIO_NULLA writes stored blocks of at most 65535
+      bytes.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I size an output buffer with flatura_maxima_magnitudo_compressa?
+    <responsum symbolum="flatura_maxima_magnitudo_compressa flatura_deflare">Only
+      for FLATURA_COMPRESSIO_NULLA. The bound assumes stored blocks (5
+      bytes per 65535 plus 18 for gzip framing), but the compressing
+      levels use the fixed Huffman code, where bytes 144 to 255 cost 9
+      bits each, so incompressible input can exceed the bound by up to
+      about an eighth of its size (1000 such bytes gzip to 1145 against
+      a bound of 1023). Even with NULLA, empty input breaks it: the
+      bound for 0 bytes is 18, but the empty stored block makes a
+      23-byte gzip file. You never need it for flatura itself, which
+      allocates its own output.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I compute a CRC-32 over data that arrives in pieces?
+    <responsum symbolum="flatura_crc32_continuare flatura_crc32" via="lib/imago_png.c">Start
+      with 0xFFFFFFFF, pass it through flatura_crc32_continuare for each
+      piece, and XOR the final value with 0xFFFFFFFF. flatura_crc32 does
+      all three for one buffer, so its result is already finalized: do
+      not feed it back into flatura_crc32_continuare. It is the IEEE
+      802.3 CRC used by gzip and PNG.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can flatura_gzip_inflare read multi-member gzip files or files with trailing bytes?
+    <responsum symbolum="flatura_gzip_inflare">No.
+      It reads the CRC-32 and size from the LAST 8 bytes of the buffer
+      and inflates only the first member, so a second member or any
+      padding after the trailer makes the check fail with
+      FLATURA_STATUS_GZIP_FRACTA. The header's optional name, comment
+      and extra fields are skipped; the header CRC (FHCRC) is skipped,
+      not checked. Input shorter than 18 bytes is refused.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I trust flatura_inflare on deflate data from other encoders or from untrusted sources?
+    <responsum symbolum="flatura_inflare">Only
+      with care. A back-reference distance is not checked against the
+      bytes produced so far, so corrupt input that points before the
+      start of the output still returns FLATURA_STATUS_OK with bytes
+      from the unwritten window instead of FLATURA_STATUS_FRACTA_DISTANTIA.
+      The extra-bit reads of the 16/17/18 repeat codes in a dynamic
+      header are not checked for end of input. And a stored block
+      discards the whole bit buffer to reach a byte boundary, which is
+      only right when fewer than 8 bits are buffered. After a fixed
+      block that always holds; after a dynamic-Huffman block whose
+      end-of-block code is at least 4 bits shorter than its longest
+      literal/length code, a whole byte of LEN/NLEN is dropped and a
+      VALID stream fails with FLATURA_STATUS_FRACTA_DATUM. zlib rarely
+      emits that shape (its end-of-block code is usually among the
+      longest), but a hand-built stream that zlib itself decodes
+      fails. flatura's own output never mixes the two (one fixed
+      block, or only stored blocks).</responsum>
+  </interrogatio>
+
+</interrogationes>

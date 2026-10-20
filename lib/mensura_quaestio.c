@@ -1284,6 +1284,138 @@ cursus_quaerere_lentescentes (
 
 
 /* ==================================================
+ * GRAVES (credo memoria T3)
+ * ================================================== */
+
+interior integer
+_gravis_descendens (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    constans CursusGravis* x = (constans CursusGravis*)a;
+    constans CursusGravis* y = (constans CursusGravis*)b;
+
+    si (x->pondus != y->pondus)
+    {
+        redde (x->pondus < y->pondus) ? I : -I;
+    }
+    redde (integer)chorda_comparare(x->titulus, y->titulus);
+}
+
+Xar*
+cursus_quaerere_graves (
+       constans CursusIndex* index,
+               constans Xar* mensurae,
+     constans CursusFiltrum* filtrum,
+                    Piscina* piscina)
+{
+    TabulaDispersa* per_titulum;
+               Xar* greges;
+               Xar* ordines;
+      CursusGravis* tabula;
+            chorda  praefixum;
+               i32  k;
+
+    si (index == NIHIL || piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    praefixum    = chorda_ex_literis(MENSURA_CREDO, piscina);
+    per_titulum  = tabula_dispersa_creare_chorda(piscina, (i32)CXXVIII);
+    greges       = xar_creare(piscina, (i32)magnitudo(CursusGravis*));
+    ordines      = xar_creare(piscina, (i32)magnitudo(CursusGravis));
+    si (per_titulum == NIHIL || greges == NIHIL || ordines == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (k = ZEPHYRUM; mensurae != NIHIL && k < xar_numerus(mensurae);
+         k++)
+    {
+        constans Mensura* m = (constans Mensura*)xar_obtinere(mensurae,
+            k);
+          constans Cursus* c;
+             CursusGravis* g;
+                   vacuum* locus = NIHIL;
+                      s64  octeti;
+
+        si (!chorda_incipit(m->titulus, praefixum))
+        {
+            perge;
+        }
+        c = cursus_invenire(index, m->parens);
+        si (c == NIHIL || !_congruit(c, filtrum))
+        {
+            perge;
+        }
+        si (tabula_dispersa_invenire(per_titulum, c->initium.titulus,
+                &locus))
+        {
+            g = (CursusGravis*)locus;
+        }
+        alioquin
+        {
+            g = (CursusGravis*)piscina_allocare(piscina,
+                magnitudo(CursusGravis));
+            si (g == NIHIL)
+            {
+                redde NIHIL;
+            }
+            memset(g, ZEPHYRUM, magnitudo(CursusGravis));
+            g->titulus                           = c->initium.titulus;
+            *(CursusGravis**)xar_addere(greges)  = g;
+            (vacuum)tabula_dispersa_inserere(per_titulum,
+                c->initium.titulus, g);
+        }
+        octeti = (s64)m->valor;
+        si (chorda_aequalis_literis(m->titulus, MENSURA_ARENA_APEX))
+        {
+            g->arena_apex = (octeti > g->arena_apex) ? octeti
+                : g->arena_apex;
+        }
+        alioquin si (chorda_aequalis_literis(m->titulus,
+                     MENSURA_APEX_AUCTUS))
+        {
+            g->apex_auctus = (octeti > g->apex_auctus) ? octeti
+                : g->apex_auctus;
+        }
+        alioquin si (chorda_aequalis_literis(m->titulus,
+                     MENSURA_VESTIGIUM))
+        {
+            /* factum unum per cursum mensum: numerus hinc */
+            g->vestigium = (octeti > g->vestigium) ? octeti
+                : g->vestigium;
+            g->numerus++;
+        }
+    }
+    tabula = (CursusGravis*)piscina_allocare(piscina, (memoriae_index)(
+        xar_numerus(greges) + I) * magnitudo(CursusGravis));
+    si (tabula == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(greges); k++)
+    {
+        tabula[k]         = **(CursusGravis**)xar_obtinere(greges, k);
+        tabula[k].pondus  = (tabula[k].arena_apex
+            > tabula[k].apex_auctus)
+            ? tabula[k].arena_apex : tabula[k].apex_auctus;
+    }
+    qsort(tabula, (size_t)xar_numerus(greges), magnitudo(CursusGravis),
+        _gravis_descendens);
+    per (k = ZEPHYRUM; k < xar_numerus(greges); k++)
+    {
+        si (   filtrum != NIHIL && filtrum->numerus > ZEPHYRUM
+            && k       >= (i32)filtrum->numerus)
+        {
+            frange;
+        }
+        *(CursusGravis*)xar_addere(ordines) = tabula[k];
+    }
+    redde ordines;
+}
+
+
+/* ==================================================
  * CURRENTES (colloquia T8d)
  * ================================================== */
 

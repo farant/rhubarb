@@ -4431,8 +4431,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _statum_purgare, NIHIL, NIHIL },
     { "puncta refutationes", _probare_puncta_refutationes, NIHIL,
         _statum_purgare, NIHIL, NIHIL },
+    /* gravis (credo memoria T4): CCCLXXXIX MiB arenae, 2026-10-20 */
     { "cellae phasis contra oraculum", _probare_cellas_phasis, NIHIL,
-        _statum_purgare, NIHIL, NIHIL },
+        _statum_purgare, "gravis", NIHIL },
     { "cellae phasis manu", _probare_cellas_phasis_manu, NIHIL,
         _statum_purgare, NIHIL, NIHIL },
     { "iudicium contra D119", _probare_iudicium_d119, NIHIL,

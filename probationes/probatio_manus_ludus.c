@@ -12,7 +12,12 @@
 #include <stdio.h>
 #include <string.h>
 
-s32 principale (vacuum)
+/* scenarium unum: gradus mundum eundem (repositorium, dispensator,
+ * manus) ordine mutant - focus, puncta, tempus a gradu priore pendent -
+ * ergo una sectio cum gradibus nominatis */
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
                 Piscina* piscina;
     InternamentumChorda* intern;
@@ -28,13 +33,8 @@ s32 principale (vacuum)
               Componens* filius;
                   Fines  f;
 
-    piscina = piscina_generare_dynamicum("probatio_manus_ludus",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     repo = insula_repositorium_creare(piscina, intern,
         "<insula/>");
     reg = actio_registrum_creare(piscina, intern);
@@ -47,7 +47,7 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL(m);
     CREDO_VERUM(chorda_vacua(manus_ludus_causa(m)));
 
-    imprimere("\n--- Selectores ---\n");
+    CREDO_GRADUS("Selectores");
     CREDO_MANUS_LUDUS_EXISTIT(m, "#b1");
     CREDO_MANUS_LUDUS_EXISTIT(m, "#radix");
     CREDO_MANUS_LUDUS_EXISTIT(m, "[partes=tabula]");
@@ -65,7 +65,7 @@ s32 principale (vacuum)
     CREDO_MANUS_LUDUS_ABEST(m, "[partes=tabula");
     CREDO_MANUS_LUDUS_ABEST(m, "[color=ruber]");
 
-    imprimere("\n--- ad_schirmum ---\n");
+    CREDO_GRADUS("ad_schirmum");
     p.x = ZEPHYRUM;
     p.y = ZEPHYRUM;
     p = manus_ludus_ad_schirmum(m, manus_ludus_invenire(m, "#tabula"),
@@ -99,7 +99,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_S32(p.x, LXXX);
     CREDO_AEQUALIS_S32(p.y, LX);
 
-    imprimere("\n--- premere ---\n");
+    CREDO_GRADUS("premere");
     CREDO_VERUM(manus_ludus_premere(m, "[titulus=Numerare]"));
     a = insula_attributum(repo, "numerus");
     CREDO_NON_NIHIL(a);
@@ -109,11 +109,11 @@ s32 principale (vacuum)
     CREDO_VERUM(manus_ludus_premere_ad(m, V, XC));
     CREDO_MANUS_LUDUS_FOCUS(m, "b1");
 
-    imprimere("\n--- movere: super derivatur ---\n");
+    CREDO_GRADUS("movere: super derivatur");
     CREDO_VERUM(manus_ludus_movere(m, CXX, L));
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_super(d), "tabula");
 
-    imprimere("\n--- trahere in tabula ---\n");
+    CREDO_GRADUS("trahere in tabula");
     via[ZEPHYRUM].x  = V;
     via[ZEPHYRUM].y  = V;
     via[I].x         = X;
@@ -128,7 +128,7 @@ s32 principale (vacuum)
     CREDO_VERUM(chorda_vacua(dispensator_motus(d)->captura));
     CREDO_FALSUM(manus_ludus_trahere(m, "#tabula", via, ZEPHYRUM));
 
-    imprimere("\n--- clavem ---\n");
+    CREDO_GRADUS("clavem");
     CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
     a = insula_attributum(repo, "fuga");
     CREDO_NON_NIHIL(a);
@@ -140,7 +140,7 @@ s32 principale (vacuum)
         MOD_SHIFT | MOD_SHIFT_SINISTER));
     CREDO_MANUS_LUDUS_FOCUS(m, "tabula");
 
-    imprimere("\n--- scribere: clavis + textus eodem tempore ---\n");
+    CREDO_GRADUS("scribere: clavis + textus eodem tempore");
     {
                      Xar* notata;
         constans Eventus* e0;
@@ -166,7 +166,7 @@ s32 principale (vacuum)
             III))->eventus.genus, (i32)EVENTUS_CLAVIS_DEPRESSUS);
     }
 
-    imprimere("\n--- exspectare movet tempus (quies) ---\n");
+    CREDO_GRADUS("exspectare movet tempus (quies)");
     dispensator_motus(d)->pan.x                      = III;
     dispensator_motus(d)->sordida                    = VERUM;
     dispensator_motus(d)->tempus_ultimae_mutationis  = m->tempus;
@@ -178,7 +178,7 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "3");
 
-    imprimere("\n--- botton ut fons verus (insula-rami T4) ---\n");
+    CREDO_GRADUS("botton ut fons verus (insula-rami T4)");
     /* ictus et tractus bottonem sinistrum ferunt, motus nudus nullum -
      * codificator terminalis pressionem sine bottone abicit */
     {
@@ -202,11 +202,19 @@ s32 principale (vacuum)
         }
     }
 
-    imprimere("\n--- selector malus nominat causam ---\n");
+    CREDO_GRADUS("selector malus nominat causam");
     CREDO_FALSUM(manus_ludus_premere(m, "#nemo"));
     CREDO_CHORDA_NON_VACUA(manus_ludus_causa(m));
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "manus super applicationem ludicram (scenarium)", _sectio_prima,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("manus_ludus", SECTIONES);
 }

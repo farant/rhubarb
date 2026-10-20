@@ -55,7 +55,11 @@ nomen enumeratio {
                                   * exitus 127 processus veri (ssh 127
                                   * = imperium REMOTUM deest) */
     PROCESSUS_ERROR_TEMPUS,      /* mora excessa - processus occisus */
-    PROCESSUS_ERROR_IO           /* lectio/exspectatio fracta */
+    PROCESSUS_ERROR_IO,          /* lectio/exspectatio fracta */
+    PROCESSUS_ERROR_MEMORIA      /* vestigium infantis supra
+                                  * ProcessusOptiones.memoria_maxima -
+                                  * processus occisus (credo memoria
+                                  * T5; in FINE ne numeri moveantur) */
 } ProcessusError;
 
 nomen structura {
@@ -107,10 +111,20 @@ processus_exsequi (
  *               infantis (nihil hereditatur); NIHIL = hereditas.
  *               Quaestio PATH (execvp) hoc ambitu utitur - PATH
  *               absens = semita ordinaria systematis.
- * Parens numquam mutatur (omnia in infante post furcam). */
+ * memoria_maxima: octeti; vestigium infantis (memoria_processus.h:
+ *               compressa inclusa, non RSS) supra eum = SIGKILL +
+ *               PROCESSUS_ERROR_MEMORIA, effusio partialis servata.
+ *               ZEPHYRUM = sine tecto. Custoditur in ansa eadem ac
+ *               terminus temporis (lectio una per XX ms ad summum),
+ *               ergo fuga etiam sine effusione occiditur. Solum
+ *               processus_exsequi_cum: semita incrementalis
+ *               (processus_incipere) optiones non accipit.
+ * Parens numquam mutatur (omnia in infante post furcam).
+ * MEMSET ante usum: campus novus aliter purgamentum acervi legit. */
 nomen structura {
     constans character* directorium;
     constans character* constans* ambitus;
+                    i64 memoria_maxima;
 } ProcessusOptiones;
 
 /* processus_exsequi cum optionibus (NIHIL = processus_exsequi) */

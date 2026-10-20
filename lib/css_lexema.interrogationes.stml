@@ -1,0 +1,83 @@
+<interrogationes unitas="css_lexema">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I tokenize a CSS source and walk the tokens?
+    <responsum symbolum="css_lexare CssLexema xar_obtinere css_lexema_genus_nomen">css_lexare(piscina,
+      fons, mensura) returns a Xar of CssLexema stored BY VALUE, so
+      xar_obtinere(lexemata, k) gives a CssLexema* directly. The last
+      token is always CSS_LEX_FINIS with an empty valor and offset ==
+      mensura, so a loop can stop on the kind instead of counting.
+      css_lexema_genus_nomen gives a printable kind name for
+      debugging.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I free or reuse the source buffer after css_lexare returns?
+    <responsum symbolum="css_lexare CssLexema">No. Nothing is copied:
+      every valor points into fons (a view, not NUL-terminated), so
+      the buffer must outlive the tokens. Never write through a valor
+      either; the cast away from const is only there because chorda
+      holds an i8*.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I get the original text back from the tokens?
+    <responsum symbolum="css_lexemata_emittere css_lexare">css_lexemata_emittere(piscina,
+      lexemata) concatenates every valor. Because the lexer is total
+      and keeps whitespace and comments as tokens, the result equals
+      the input byte for byte for ANY input, including invalid CSS and
+      NUL bytes. The tests use it as the fidelity oracle.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="cur">
+    <quaestio! (>why does the lexer emit whitespace and comment tokens when the CSS spec discards comments?
+    <responsum symbolum="css_lexare" via="include/css_lexema.h css/fontes/css_arbor.c">For byte
+      fidelity and so tools can query comments. CSS_LEX_SPATIA,
+      CSS_LEX_COMMENTARIUM and CSS_LEX_COMMENTARIUM_IMPERFECTUM stay
+      in the stream; a consumer that wants spec behaviour filters them
+      out. css_arbor_parsare (css/fontes) keeps them too: between
+      rules it attaches them as trivia to the neighbouring token,
+      while inside preludes and declaration values every space and
+      comment stays a content leaf of its own (moving a comment
+      between two kept values onto a token would reorder
+      bytes).</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what are the IMPERFECTA token kinds?
+    <responsum symbolum="css_lexare">Tokens that are cut short or
+      malformed.
+      CSS_LEX_CHORDA_IMPERFECTA is a string ended by a raw newline
+      (the newline is NOT consumed, it starts the next token) or by
+      end of input. CSS_LEX_URL_IMPERFECTA is a bad url( or one open
+      at EOF. CSS_LEX_COMMENTARIUM_IMPERFECTUM is a comment open at
+      EOF. For a string or url left open at EOF the spec returns a
+      valid token plus a parse error; this lexer names the problem in
+      the token kind instead. Here newline means \n, \r or \f. No
+      input makes the lexer fail.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="possumne">
+    <quaestio! (>can I get the decoded value of an escaped identifier or string?
+    <responsum symbolum="css_lexare" via="css/fontes/css_arbor.c">Not from this library: escapes are
+      understood only far enough to find token boundaries, and valor
+      stays verbatim (\41 stays three bytes, plus the one whitespace
+      byte after a hex escape, which belongs to it). The header assigns
+      decoding to the tree stage, but nothing in css/fontes decodes
+      escapes yet either: css_arbor_parsare keeps valores
+      verbatim. One consequence: url(
+      is recognised by its raw three bytes (any case), so an escaped spelling such as u\72l(
+      lexes as CSS_LEX_FUNCTIO, not CSS_LEX_URL.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quid">
+    <quaestio! (>what units are the linea and columna of a CssLexema in?
+    <responsum symbolum="css_lexare CssLexema">Both are 1-based and count
+      BYTES, not characters: a multi-byte UTF-8 letter advances
+      columna by its byte length. offset is the 0-based byte offset.
+      Only \n starts a new line in this count, although the lexer
+      itself treats \r and \f as newlines inside strings, so a file
+      with bare \r line ends reports everything on line 1.</responsum>
+  </interrogatio>
+
+</interrogationes>

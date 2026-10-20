@@ -675,6 +675,15 @@ suturae_actum_complere (
     si (!resultus.successus)
     {
         actum_out->cauda = resultus.error_descriptio;
+        /* MEMORIA (credo memoria T6): infans CUCURRIT et occisus est -
+         * exitus SIGKILL ut ruina, ut lector plagulae sectionem ruptam
+         * (INCIPIT sine SECTIO) nominet; causa = descriptio occisionis.
+         * Solum tectum membri (in_area_currere) hoc parit. */
+        si (resultus.error == PROCESSUS_ERROR_MEMORIA)
+        {
+            actum_out->codex = (s32)(CXXVIII + IX);
+            redde VERUM;
+        }
         redde FALSUM;
     }
     actum_out->codex = (resultus.signum != 0)

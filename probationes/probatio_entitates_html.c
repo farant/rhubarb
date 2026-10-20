@@ -59,17 +59,11 @@ _decoctio_probare (
     CREDO_AEQUALIS_S32 (post, post_exspectatus);
 }
 
-integer
-principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    Piscina* piscina;
-        b32  praeteritus;
-
-    piscina = piscina_generare_dynamicum("probatio_entitates_html",
-        65536);
-    credo_aperire(piscina);
-
-    imprimere("\n--- I. tabula generata ---\n");
+    (vacuum)c;
     {
         i32 i;
         i32 inordinatae      = ZEPHYRUM;
@@ -108,8 +102,13 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (veteres, (i32)106);
         CREDO_AEQUALIS_I32 (titulus_maximus, XXXII);
     }
+}
 
-    imprimere("\n--- II. quaestio ---\n");
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         constans EntitasHtml* e;
 
@@ -148,8 +147,13 @@ principale (vacuum)
         /* clavis mensurata: 'amp;x' cum mensura IV = 'amp;' */
         CREDO_NON_NIHIL (entitates_html_quaerere("amp;x", IV));
     }
+}
 
-    imprimere("\n--- III. decoctor ---\n");
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     _decoctio_probare("&amp;", FALSUM, "&", V);
     _decoctio_probare("&amp", FALSUM, "&", IV);
     _decoctio_probare("&ampx", FALSUM, "&", IV);
@@ -180,9 +184,17 @@ principale (vacuum)
     _decoctio_probare("&foo;", FALSUM, NIHIL, ZEPHYRUM);
     _decoctio_probare("&", FALSUM, NIHIL, ZEPHYRUM);
     _decoctio_probare("x", FALSUM, NIHIL, ZEPHYRUM);
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. tabula generata", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "II. quaestio", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III. decoctor", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+integer
+principale (vacuum)
+{
+    redde credo_suitam_currere("entitates_html", SECTIONES);
 }

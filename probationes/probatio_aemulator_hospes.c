@@ -36,6 +36,23 @@ nomen structura {
                 i32  capti;
 } Obstinatus;
 
+/* piscina auxiliorum: sectionis propria (parare eam ponit, purgare
+ * vacat) */
+interior vacuum
+_parare (
+    CredoContextus* c)
+{
+    piscina = c->piscina;
+}
+
+interior vacuum
+_purgare (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    piscina = NIHIL;
+}
+
 interior s32
 obstinatus_legere (
     vacuum* datum,
@@ -295,11 +312,12 @@ exspectare_textum (
 }
 
 interior vacuum
-configurationem_probare (vacuum)
+_sectio_prima (
+    CredoContextus* c)
 {
     AemulatorHospesConfiguratio cfg;
 
-    imprimere("\n--- I: configuratio ---\n");
+    (vacuum)c;
     aemulator_hospes_configuratio_initiare(&cfg);
     CREDO_AEQUALIS_I32(cfg.aemulator.latitudo, LXXX);
     CREDO_AEQUALIS_I32(cfg.aemulator.altitudo, XXIV);
@@ -309,7 +327,8 @@ configurationem_probare (vacuum)
 }
 
 interior vacuum
-memoriam_probare (vacuum)
+_sectio_secunda (
+    CredoContextus* c)
 {
                 Pseudoterminale* pt;
                 AemulatorHospes* h;
@@ -321,7 +340,7 @@ memoriam_probare (vacuum)
                             i32  lat;
                             i32  alt;
 
-    imprimere("\n--- II: pons memoriae ---\n");
+    (vacuum)c;
     /* magnitudo nuclei ad infantem in creatione */
     pt = pseudoterminale_memoriae_creare(piscina,
         (constans i8*)"salve\x1B[6n", IX, V);
@@ -403,7 +422,8 @@ memoriam_probare (vacuum)
 }
 
 interior vacuum
-obstinatum_probare (vacuum)
+_sectio_tertia (
+    CredoContextus* c)
 {
                      Obstinatus  o;
                 Pseudoterminale* pt;
@@ -415,7 +435,7 @@ obstinatum_probare (vacuum)
                  memoriae_index  usus;
                             i32  i;
 
-    imprimere("\n--- III: infans obstinatus ---\n");
+    (vacuum)c;
     /* reservatum: cauda LXIV, initus LX ad summum; responsum in
      * reservato manet donec infans accipit */
     pt  = obstinatum_creare(&o);
@@ -525,7 +545,8 @@ obstinatum_probare (vacuum)
 }
 
 interior vacuum
-concham_probare (vacuum)
+_sectio_quarta (
+    CredoContextus* c)
 {
                 Pseudoterminale* pt;
                 AemulatorHospes* h;
@@ -539,7 +560,7 @@ concham_probare (vacuum)
     constans character* mutata[]   = { "/bin/sh", "-c",
         "printf parata; read x; stty size", NIHIL };
 
-    imprimere("\n--- IV: concha vera ---\n");
+    (vacuum)c;
     pseudoterminale_configuratio_initiare(&cfg);
 
     /* effusio in schirmum; exitus */
@@ -576,19 +597,21 @@ concham_probare (vacuum)
     aemulator_hospes_claudere(h);
 }
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I: configuratio", _sectio_prima, _parare, _purgare, NIHIL,
+        NIHIL },
+    { "II: pons memoriae", _sectio_secunda, _parare, _purgare, NIHIL,
+        NIHIL },
+    { "III: infans obstinatus", _sectio_tertia, _parare, _purgare,
+        NIHIL,
+        NIHIL },
+    { "IV: concha vera", _sectio_quarta, _parare, _purgare, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
 s32
 principale (vacuum)
 {
-    piscina = piscina_generare_dynamicum("probatio_aemulator_hospes",
-        CCLVI * MXXIV);
-    credo_aperire(piscina);
-
-    configurationem_probare();
-    memoriam_probare();
-    obstinatum_probare();
-    concham_probare();
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+    redde credo_suitam_currere("aemulator_hospes", SECTIONES);
 }

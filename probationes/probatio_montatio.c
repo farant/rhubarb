@@ -23,9 +23,6 @@
 #include <stdio.h>
 #include <string.h>
 
-hic_manens Piscina*             piscina;
-hic_manens InternamentumChorda* intern;
-
 interior b32
 valor_est (
                 chorda* a,
@@ -37,6 +34,7 @@ valor_est (
 interior b32
 plagula_exstat (
                Volumen* vol,
+               Piscina* piscina,
     constans character* via)
 {
     b32 inventum;
@@ -58,31 +56,30 @@ modum_ponere (
                              (constans character*)ctx);
 }
 
-hic_manens character modus_visualis[] = "visualis";
-hic_manens character modus_malus[]    = "xyz";
-
-s32 principale (vacuum)
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
+               Piscina* piscina;
+   InternamentumChorda* intern;
                Volumen* vol;
     InsulaRepositorium* repo;
         PictorMontatio  pm;
         ScribaMontatio  m1;
         ScribaMontatio  m2;
              Componens* arbor;
+             character  modus_visualis[]  = "visualis";
+             character  modus_malus[]     = "xyz";
 
-    piscina = piscina_generare_dynamicum("probatio_montatio", LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
     thema_initiare();
     vol  = volumen_temporarium(piscina, "probatio_montatio");
     repo = insula_repositorium_creare(piscina, intern,
         "<schirmata focus=\"pagina\"/>");
     CREDO_NON_NIHIL(repo);
 
-    imprimere("\n--- I: montare - elementa, documenta in spatiis\n");
+    CREDO_GRADUS("I: montare - elementa, documenta in spatiis");
     CREDO_VERUM(pictor_montare(&pm, piscina, intern, vol, repo, "p1",
         CDLXXX, CDLXXX, NIHIL));
     CREDO_VERUM(scriba_montare(&m1, piscina, intern, vol,
@@ -108,17 +105,17 @@ s32 principale (vacuum)
         "altitudo"), "57"));
     CREDO_VERUM(valor_est(insula_ramus_attributum(&m2.ramus, "modus"),
         "normalis"));
-    CREDO_VERUM(plagula_exstat(vol, "p1/documentum"));
+    CREDO_VERUM(plagula_exstat(vol, piscina, "p1/documentum"));
     /* sine libro (documentum proprium): nullus index paginae */
     CREDO_NIHIL(insula_ramus_attributum(&m1.ramus,
         "pagina_positio"));
-    CREDO_VERUM(plagula_exstat(vol, "s1/documentum"));
-    CREDO_VERUM(plagula_exstat(vol, "s2/documentum"));
-    CREDO_FALSUM(plagula_exstat(vol, "documentum"));
+    CREDO_VERUM(plagula_exstat(vol, piscina, "s1/documentum"));
+    CREDO_VERUM(plagula_exstat(vol, piscina, "s2/documentum"));
+    CREDO_FALSUM(plagula_exstat(vol, piscina, "documentum"));
     /* radix statum applicationum non fert */
     CREDO_NIHIL(insula_attributum(repo, "modus"));
 
-    imprimere("\n--- II: canones et domini in ramis ---\n");
+    CREDO_GRADUS("II: canones et domini in ramis");
     insula_scriptorem_ponere(repo, chorda_ex_literis("pagina.clavis",
         piscina));
     CREDO_FALSUM(mutare_ramum(&m1.ramus,
@@ -135,7 +132,7 @@ s32 principale (vacuum)
     CREDO_VERUM(valor_est(insula_ramus_attributum(&m2.ramus, "modus"),
         "normalis"));
 
-    imprimere("\n--- III: componere ex ramo ---\n");
+    CREDO_GRADUS("III: componere ex ramo");
     arbor = scriba_componere(repo, NIHIL, piscina, intern,
         &m1.compositio);
     CREDO_NON_NIHIL(arbor);
@@ -145,7 +142,7 @@ s32 principale (vacuum)
             chorda_ex_literis("pagina", piscina))->titulus, "visualis");
     }
 
-    imprimere("\n--- IV: remontatio super idem volumen ---\n");
+    CREDO_GRADUS("IV: remontatio super idem volumen");
     {
         InsulaRepositorium* repo2;
             ScribaMontatio  r1;
@@ -173,7 +170,7 @@ s32 principale (vacuum)
             LXXVIII);
     }
 
-    imprimere("\n--- V: superficies parva - documenta minima ---\n");
+    CREDO_GRADUS("V: superficies parva - documenta minima");
     {
         InsulaRepositorium* repo_parvum;
             ScribaMontatio  sp;
@@ -197,8 +194,7 @@ s32 principale (vacuum)
             "altitudo"), "64"));
     }
 
-    imprimere("\n");
-    imprimere("\n--- VI: scriba nidificata (A6c) ---\n");
+    CREDO_GRADUS("VI: scriba nidificata (A6c)");
     {
         InsulaRepositorium* rn;
                InsulaRamus  parens;
@@ -256,7 +252,17 @@ s32 principale (vacuum)
         }
     }
 
-    credo_imprimere_compendium();
     volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "pictor et duae scribae in repositorio uno", _sectio_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("montatio", SECTIONES);
 }
