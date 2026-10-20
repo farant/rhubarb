@@ -588,3 +588,33 @@ every hand-written dependency list that names "credo" needed
 tessera, credo_fumus struere, venenum BASIS; gesta regenerated).
 Measured in credo_fumus XV: a 32 MiB section reads 32768 / 33824 / 32800,
 the light section after it 0 / 1056 / 0.
+
+## 2026-10-20 - memory ceiling per section (credo memoria T4)
+
+Defaults come from the T3 measurement (`mensor quaestio graves` after a
+forced run of the root suites and the seven subsystem composites):
+3116 sections, the heaviest normal one is 135 MiB, and two are over 256
+(probatio_cellae phasis 389, pictor_imago IV 317). Fran chose ordinary
+256 / gravis 1024, with those two tagged `gravis`.
+
+The check sits between `purgare` and `_credo_sectionem_summare`, which
+is why the memory readings moved before the summary: the failure is
+recorded with `_credo_notare_plenum` while the section's notations are
+still open, so the summary, exit code and SECTIO fracture all pick it
+up with no new path. filum = suite title, versus = section number, so
+the line reads `at <suite>:<n>`. The message names whichever of arena
+peak / peak rise is larger: in the fumus fixture the rise (32800 KiB)
+beat the arena (32768), and my first regex wrongly required "arenae".
+
+Semantics chosen where the spec was ambiguous: `CREDO_MEMORIA_MB`
+replaces only the ordinary ceiling (0 disables it); gravis always uses
+GRAVIS. strtol garbage reads as 0 = off.
+
+Rename slip: a regex rename `vestigium_kib -> vestigium` with
+lookbehind `[\w.>]` protected `summa.vestigium_kib` but not the struct
+field's own declaration. The compile caught it. For locals next to
+same-named members, rename by sites, not by pattern.
+
+The subsystem suites (133) are all v1 (SYNTHETICA), so they're
+invisible here; whole-process `/usr/bin/time -l` shows six silva corpus
+suites at 4.1-7.6 GB (park 01M5CQYDD841) - relevant for T6, not T4.

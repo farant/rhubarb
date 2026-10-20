@@ -891,7 +891,10 @@ nomen structura CredoSectio {
     constans character* signa;             /* (II) verba spatio separata
                                             * ex vocabulario CLAUSO:
                                             * lentus rete fenestra
-                                            * repositorium; ignotum ->
+                                            * repositorium gravis
+                                            * (tectum memoriae
+                                            * CREDO_MEMORIA_GRAVIS_MB);
+                                            * ignotum ->
                                             * suita FRACTA nominans.
                                             * CREDO_SIGNA_OMITTE="rete"
                                             * -> sectio OMISSA (in
@@ -907,6 +910,18 @@ nomen structura CredoSectio {
                                             * tools/credo_fracturae_
                                             * notae.py */
 } CredoSectio;
+
+/* TECTUM MEMORIAE (credo memoria T4): sectione finita pondus = maior
+ * apicis arenae et incrementi apicis vitae; pondus > tectum = fractura
+ * nominata 'credo_memoria' (sectio FRACTA, suita I). Tectum: signum
+ * 'gravis' -> CREDO_MEMORIA_GRAVIS_MB; ceterae CREDO_MEMORIA_MB ex
+ * ambitu si ponitur (0 = sine tecto), aliter ORDINARIA. Valores ex
+ * mensura 2026-10-20 (mensor quaestio graves, MMMCXVI sectiones):
+ * sectio normalis gravissima CXXXV MiB, duae supra CCLVI signum
+ * gravis ferunt. Fugam intra sectionem NON sistit (credo solum in
+ * fine imperium habet) - id custos cursoris est (spec C2). */
+#define CREDO_MEMORIA_ORDINARIA_MB  CCLVI
+#define CREDO_MEMORIA_GRAVIS_MB     MXXIV
 
 /* Suitam currere: sectiones ordine usque ad titulum NIHIL. Ambitus:
  *   CREDO_SECTIO=<titulus>  sectio sola (ceterae non currunt, non
@@ -924,6 +939,9 @@ nomen structura CredoSectio {
  *                           ordinarium. "tabula"/vacuum = ordo tabulae;
  *                           valor alius = I, nihil cursum, nominatum
  *   CREDO_VERDICTA=<via>    plagula verdictorum (TSV) scribitur
+ *   CREDO_MEMORIA_MB=<n>    tectum memoriae sectionum ordinariarum
+ *                           (credo memoria T4; 0 = nullum); signum
+ *                           gravis CREDO_MEMORIA_GRAVIS_MB servat
  * Plagula: linea per sectionem STATIM post eam (effluxa), deinde linea
  * SUITA - linea SUITA absens = suita ruit (sectiones priores tamen
  * notae). Campi tabulatione separati; '\t' '\n' '\\' in valoribus

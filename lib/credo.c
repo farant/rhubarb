@@ -1958,7 +1958,7 @@ _credo_ordinem_parare (
  * annotatio 'facultas') et 'lentus'. Verbum ignotum = vitium scribae,
  * non signum novum tacitum */
 hic_manens constans character* constans _credo_signa_nota[] = {
-    "lentus", "rete", "fenestra", "repositorium", NIHIL
+    "lentus", "rete", "fenestra", "repositorium", "gravis", NIHIL
 };
 
 interior b32
@@ -2060,6 +2060,61 @@ _credo_signum_commune (
         p += n;
     }
     redde FALSUM;
+}
+
+/* TECTUM MEMORIAE (credo memoria T4; credo.h): pondus sectionis =
+ * maior apicis arenae et incrementi apicis vitae, contra tectum eius.
+ * Supra = fractura 'credo_memoria' nominata (filum = suita, versus =
+ * sedes sectionis), ANTE summam notata: sectio FRACTA, suita I,
+ * plagula fracturam fert. Effusio humana nihil dicit nisi frangitur
+ * (aurea officinae intacta). */
+interior vacuum
+_credo_memoriam_iudicare (
+    constans CredoSectio* sectio,
+      constans character* suita,
+                     i32  sedes,
+                     i64  arena,
+                     i64  auctus)
+{
+     constans character* ambitus = getenv("CREDO_MEMORIA_MB");
+                    s64  tectum_mb;
+                    s64  pondus;
+                    s64  decimae;
+                    b32  gravis;
+              character  signum[XXXII];
+              character  expressio[CCLVI];
+              character  receptus[LXIV];
+              character  speratus[LXIV];
+
+    gravis = _credo_signum_commune(sectio->signa, "gravis", signum);
+    si (gravis)
+    {
+        tectum_mb = (s64)CREDO_MEMORIA_GRAVIS_MB;
+    }
+    alioquin si (ambitus != NIHIL && ambitus[ZEPHYRUM] != '\0')
+    {
+        tectum_mb = (s64)strtol(ambitus, NIHIL, X);
+    }
+    alioquin
+    {
+        tectum_mb = (s64)CREDO_MEMORIA_ORDINARIA_MB;
+    }
+    pondus = (s64)(arena > auctus ? arena : auctus);
+    si (tectum_mb <= (s64)ZEPHYRUM || pondus <= tectum_mb * (s64)MXXIV)
+    {
+        redde;
+    }
+    decimae = pondus * (s64)X / (s64)MXXIV;
+    sprintf(expressio, "sectio '%.120s' %s %ld.%ld MiB > tectum %ld MiB"
+        " (signum gravis %s)", sectio->titulus, arena >= auctus
+        ? "apex arenae" : "apex auctus", (longus)(decimae / X),
+        (longus)(decimae % X), (longus)tectum_mb, gravis ? "adest"
+        : "abest");
+    sprintf(receptus, "%ld.%ld MiB", (longus)(decimae / X),
+        (longus)(decimae % X));
+    sprintf(speratus, "<= %ld MiB", (longus)tectum_mb);
+    _credo_notare_plenum("credo_memoria", expressio, receptus, speratus,
+        NIHIL, suita, (s32)sedes, FALSUM);
 }
 
 /* suita recusata ante cursum (filtrum, signum ignotum): SUITA FRACTA
@@ -2327,6 +2382,9 @@ credo_suitam_currere_cum (
                          f64  initium;
             MemoriaProcessus  memoria_ante;
             MemoriaProcessus  memoria_post;
+                         i64  arena;       /* KiB */
+                         i64  vestigium;   /* KiB */
+                         i64  auctus;      /* KiB */
 
         /* i = sedes in tabula (area '<suita>.<i+1>.<pid>' stabilis) */
         i       = ordo[k];
@@ -2399,21 +2457,29 @@ credo_suitam_currere_cum (
             sectio->purgare(&contextus);
         }
         _credo_aream_delere(&_credo_area_sectionis);
-        summa = _credo_sectionem_summare(ante, aborta);
         /* memoria (credo memoria T2): apex arenae ante destructionem;
          * vestigium et apex vitae post purgare - apex numquam
-         * reficitur, ergo solum INCREMENTUM sectioni tribuitur */
-        summa.arena_apex_kib = (i64)piscina_summa_apex_usus(
-            contextus.piscina) / (i64)MXXIV;
+         * reficitur, ergo solum INCREMENTUM sectioni tribuitur. ANTE
+         * summam: tectum (T4) fracturam notat quam summa numerat */
+        arena      = (i64)piscina_summa_apex_usus(contextus.piscina)
+            / (i64)MXXIV;
+        vestigium  = (i64)ZEPHYRUM;
+        auctus     = (i64)ZEPHYRUM;
         si (memoria_processus_legere(ZEPHYRUM, &memoria_post))
         {
-            summa.vestigium_kib = memoria_post.vestigium / (i64)MXXIV;
-            summa.apex_auctus_kib = memoria_post.vestigium_apex
+            vestigium = memoria_post.vestigium / (i64)MXXIV;
+            auctus = memoria_post.vestigium_apex
                 > memoria_ante.vestigium_apex
                 ? (memoria_post.vestigium_apex
                     - memoria_ante.vestigium_apex) / (i64)MXXIV
                 : (i64)ZEPHYRUM;
         }
+        _credo_memoriam_iudicare(sectio, titulus_suitae, i + I,
+            arena, auctus);
+        summa                  = _credo_sectionem_summare(ante, aborta);
+        summa.arena_apex_kib   = arena;
+        summa.vestigium_kib    = vestigium;
+        summa.apex_auctus_kib  = auctus;
         piscina_destruere(contextus.piscina);
         cursae++;
         /* FRACTURA EXSPECTATA (credo II): fracta -> NOTA_FRACTA (suita

@@ -126,6 +126,36 @@ or peak rise exceeds its ceiling, a named failure is recorded:
 This catches sections that are heavy but finish. Runaways are C2's job.
 Note the shared-vocabulary wish 01M5B81737BF when adding the word.
 
+*FACTUM 2026-10-20.* The measurement that set the defaults: a forced
+run of every root suite plus the seven subsystem composites (`mensor
+quaestio graves`). That gave 3116 sections in 338 suites. The heaviest
+normal section is 135 MiB (pictor_glutinatio); two outliers are over
+256 MiB (probatio_cellae "cellae phasis contra oraculum" 389 MiB,
+probatio_pictor_imago "IV: sine porta…" 317 MiB) and now carry
+`gravis`. With Fran's choice, `CREDO_MEMORIA_ORDINARIA_MB` = CCLVI and
+`CREDO_MEMORIA_GRAVIS_MB` = MXXIV.
+
+Rules as built:
+- weight = max(arena peak, peak rise), checked after `purgare` and
+  before the section summary. Going over is recorded as a normal
+  failure, `credo_memoria` at `<suite>:<section number>`, so the
+  section is FRACTA, the suite exits 1 and the SECTIO line carries the
+  fracture.
+- `CREDO_MEMORIA_MB` replaces only the ordinary ceiling (0 turns it
+  off); `gravis` sections always use GRAVIS.
+- Human output is unchanged unless a ceiling breaks.
+
+Test: credo_fumus XVI, with two plants (check never fires; signum
+ignored).
+
+**Subsystem suites aren't covered yet:** all 133 are still credo v1
+(SYNTHETICA `totum`, no memory fields), so the per-section ceiling
+can't see them until the subsystem migration. Whole-process footprint
+(`/usr/bin/time -l`) shows six silva corpus suites at 4.1–7.6 GB (park
+01M5CQYDD841). **This changes T6:** a runner cap of GRAVIS (1 GiB)
+would kill them. T6 needs its own measured default, or the silva
+memory fixed first, and that's a decision for Fran.
+
 ## IV. C2 — custos cursoris (runner guard)  PROPOSITUM
 
 **T5. `processus` gains a memory ceiling, next to its time limit.**

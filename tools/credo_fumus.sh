@@ -1153,6 +1153,60 @@ CREDO_VERDICTA="$T/memoria.tsv" "$T/memoria" > "$T/memoria.out" 2>&1; rcm=$?
 awk -F'\t' '$1 == "SECTIO" && $3 == "levis" && NF == 14 && $12 < 1024 && $13 > 0 && $14 < 4096' "$T/memoria.tsv" | grep -q .; credo $? "XV levis: apex arenae < I MiB, apex auctus parvus (apex vitae non reficitur: levis gravem non hereditat) ($(awk -F'\t' '$1 == "SECTIO" && $3 == "levis" {print $12, $13, $14}' "$T/memoria.tsv"))"
 ! grep -q -E 'KiB|memoria|vestigium' "$T/memoria.out"; credo $? "XV effusio humana sine memoria (aurea officinae immutata)"
 
+# XVI (credo memoria T4, 2026-10-20): TECTUM MEMORIAE - sectio 'magna'
+# (XXXII MiB) sub CREDO_MEMORIA_MB=16 FRACTA nominata 'credo_memoria'
+# (plagula et effusio), suita I; 'magna gravis' (signum gravis) tectum
+# MXXIV MiB servat; ordinarium (CCLVI) et 0 nihil frangunt;
+# CREDO_SIGNA_OMITTE=gravis verbum novit
+cat > "$T/tectum.c" <<'FONS'
+#include "credo.h"
+#include <string.h>
+
+interior vacuum _magna (CredoContextus* c)
+{
+    i8* alveus;
+
+    alveus = (i8*)piscina_allocare(c->piscina,
+        (memoriae_index)XXXII * MXXIV * MXXIV);
+    CREDO_NECESSE_NON_NIHIL(alveus);
+    memset(alveus, 0x5a, (memoriae_index)XXXII * MXXIV * MXXIV);
+    CREDO_VERUM(alveus[MXXIV] == 0x5a);
+}
+
+interior vacuum _parva (CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_VERUM(I == I);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "magna", _magna, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "magna gravis", _magna, NIHIL, NIHIL, "gravis", NIHIL },
+    { "parva", _parva, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("tectum", SECTIONES);
+}
+FONS
+struere tectum.c tectum || cat "$T/tectum.err"
+CREDO_MEMORIA_MB=16 CREDO_VERDICTA="$T/tectum1.tsv" "$T/tectum" > "$T/tectum1.out" 2>&1; rt1=$?
+exitus_t () { awk -F'\t' -v t="$2" '$1 == "SECTIO" && $3 == t { print $4 }' "$1"; }
+[ "$rt1" -eq 1 ] && [ "$(exitus_t "$T/tectum1.tsv" magna)" = FRACTA ] \
+  && awk -F'\t' '$1 == "SECTIO" && $3 == "magna" && $9 == "credo_memoria" && $10 ~ /^sectio .magna. apex (arenae|auctus) 32\.[0-9] MiB > tectum 16 MiB \(signum gravis abest\)$/' "$T/tectum1.tsv" | grep -q . \
+  && [ "$(exitus_t "$T/tectum1.tsv" 'magna gravis')" = TRANSIIT ] && [ "$(exitus_t "$T/tectum1.tsv" parva)" = TRANSIIT ] \
+  && grep -qE "FRACTA \(credo_memoria\): sectio 'magna' apex (arenae|auctus) 32\.[0-9] MiB > tectum 16 MiB" "$T/tectum1.out"
+credo $? "XVI tectum 16: magna FRACTA nominata (credo_memoria, plagula + effusio), magna gravis et parva transeunt, rc 1 (rc $rt1: $(awk -F'\t' '$1 == "SECTIO" && $3 == "magna" {print $4, $9, $10}' "$T/tectum1.tsv"))"
+"$T/tectum" > "$T/tectum2.out" 2>&1; rt2=$?
+CREDO_MEMORIA_MB=0 "$T/tectum" > "$T/tectum3.out" 2>&1; rt3=$?
+CREDO_SIGNA_OMITTE=gravis CREDO_VERDICTA="$T/tectum4.tsv" "$T/tectum" > "$T/tectum4.out" 2>&1; rt4=$?
+[ "$rt2" -eq 0 ] && [ "$rt3" -eq 0 ] && [ "$rt4" -eq 0 ] && [ "$(exitus_t "$T/tectum4.tsv" 'magna gravis')" = OMISSA ] \
+  && ! grep -q credo_memoria "$T/tectum2.out"
+credo $? "XVI ordinarium CCLVI et 0 nihil frangunt; CREDO_SIGNA_OMITTE=gravis OMISSA (rc $rt2 $rt3 $rt4)"
+
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus credo: sanum"; exit 0; fi
 echo "fumus credo: FRACTUM ($fracta)"; exit 1

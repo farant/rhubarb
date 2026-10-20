@@ -116,6 +116,21 @@
   </interrogatio>
 
   <interrogatio genus="quomodo">
+    <quaestio! (>why did a section fail with credo_memoria, and how do I let a heavy section through?
+    <responsum symbolum="credo_suitam_currere CREDO_MEMORIA_ORDINARIA_MB CREDO_MEMORIA_GRAVIS_MB">After
+      each section credo compares the larger of its arena peak and the
+      rise in the process's lifetime peak against a ceiling:
+      CREDO_MEMORIA_ORDINARIA_MB (256) normally, CREDO_MEMORIA_GRAVIS_MB
+      (1024) for a section whose signa include "gravis". Going over is
+      an ordinary failure named credo_memoria, so the section is FRACTA
+      and the suite exits 1. If the section really needs the memory,
+      add "gravis" to its signa field; CREDO_SIGNA_OMITTE=gravis then
+      skips such sections. CREDO_MEMORIA_MB=N replaces the ordinary
+      ceiling for one run (0 turns it off). The check runs only when a
+      section ends, so it can't stop a runaway loop.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
     <quaestio! (>how do I stop a section early when a precondition fails instead of crashing on NIHIL?
     <responsum symbolum="_credo_necesse credo_suitam_currere">CREDO_NECESSE(x)
       or CREDO_NECESSE_NON_NIHIL(p): it records the assertion and, if

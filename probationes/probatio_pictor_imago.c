@@ -739,8 +739,9 @@ _sectio_secunda (
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I: aptare (contain)", _sectio_prima, _parare, NIHIL, NIHIL,
         NIHIL },
+    /* gravis (credo memoria T4): CCCXVII MiB arenae, 2026-10-20 */
     { "IV: sine porta, porta vacua - nihil", _sectio_secunda, _parare,
-        NIHIL, NIHIL, NIHIL },
+        NIHIL, "gravis", NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
