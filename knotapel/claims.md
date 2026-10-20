@@ -158,6 +158,16 @@ ranked by how much it bears on KC 47.
   with a design review before any data. The demo's own review is task
   T4, after these nodes were written.
 
+- **D133 review (T4, 2026-10-19).** The reviewer's third exact method
+  (Kronecker substitution) reproduced every pinned number; no wrong
+  verdict; no H. Marked [falls] with corrected children: 60.2.1
+  (60.2.1.1: bounded, with power), 60.3.1 (60.3.1.1: L3 tested a
+  globally unique label, not the gap case), 60.4 (60.4.1: ITTB and the
+  percentile sensitivity). Appended: 60.5.obj.1.2 (the power answer),
+  60.6 to 60.6.2 (a same-label noun in the gap: 3 against 92.7).
+  Corrected in place: the header's grades, 60.2.2 (1.32, pinned),
+  60.5.obj.1.1 (answered). No address removed or renumbered.
+
 ## Part I. Definitions
 
 ```text
@@ -1721,8 +1731,9 @@ ranked by how much it bears on KC 47.
     does not? (D133, proposal N19; the six Latin treebanks of 57-59,
     headline without punctuation; the first plan reviewed before any
     data. Grades: [exact] counts and exact p-values over gold trees,
-    pinned from D133's independent oracle, oracle_d133.py; the demo's
-    own review is T4)
+    pinned from D133's independent oracle, oracle_d133.py, and
+    re-derived by the T4 review's third exact method; [checked] here =
+    the T4 review's scripts, simulation or Monte Carlo, not pinned)
 60.1. F, the foreign words of an arc, are the words strictly inside its
       span that its head does not dominate (the witnesses of its
       non-projectivity, 57.1). The exact test permutes group labels
@@ -1737,19 +1748,41 @@ ranked by how much it bears on KC 47.
         1,143.26, p = 0.2086; registered L1 FAILS (its per-treebank
         clause, four of five, holds - a clause chance alone meets with
         P 0.183). On dependent-first arcs only, p = 0.3991 (L1u FAILS).
-        [exact] (D133 Part B)
+        [exact] (D133 Part B) [falls: "No." overstates; see 60.2.1.1]
+60.2.1.1. Not measurably: the registered tests fail, and they would
+          have passed with probability 0.93 (L1) / 0.65 (L1u) at a shift
+          of +0.2 foreign words per arc; the 95% interval for the shift
+          is [-0.065, +0.170] (L1). Effects of 0.1 or less are not
+          excluded. Per treebank ITTB runs the other way (p 0.003),
+          because 115 of its 131 displaced arcs are particle splits.
+          [checked] (T4 review M3; the particle-split counts pinned)
 60.2.2. Both kinds are displaced short: mean min(F, 10) 1.43 for
         adjectives (69.5% at one foreign word); genitives similar.
-        [exact] (D133 Part B for the adjectives; the genitives' 1.33 and
-        78.6% from the oracle's items, not pinned)
+        [exact] (D133 Part B for the adjectives; the genitives' 1.32 -
+        corrected from 1.33 in T4 - and 78.6%, pinned since the T4
+        fixes)
 60.3. Does a unique label (no other agreeing noun) let an adjective wait
       longer than a shared one?
 60.3.1. No. 787 against an expected 788.80, p = 0.6104; registered L3
-        FAILS. [exact] (D133 Part B)
+        FAILS. [exact] (D133 Part B) [falls: the test is weaker than the
+        question; see 60.3.1.1]
+60.3.1.1. A GLOBALLY unique label does not wait longer than a shared
+          one (L3 FAILS). But 190 of the 201 shared-label adjectives have
+          every agreeing competitor outside the arc's span, so L3 did not
+          test the discriminating case - a competitor INSIDE the gap -
+          which almost never occurs (60.6). [exact] (D133 Part B; the
+          190 of 201 [checked], T4 review M2)
 60.4. Every sensitivity agrees: one arc per sentence (L1 p 0.2142, L3
       0.1852), function-word-only arcs removed (0.2752, 0.5932), raw
       distance (0.9715, 0.4988), Perseus as one stratum (0.2083,
-      0.5680). [exact] (D133 Part B)
+      0.5680). [exact] (D133 Part B) [falls: true of these four pooled
+      variants only; see 60.4.1]
+60.4.1. The four pooled variants above agree. Two do not: per treebank,
+        ITTB is reversed (60.2.1.1); and the plan's percentile
+        sensitivity, not run by the demo, gives L3 p 0.022 (distance
+        percentile) and 0.030 (F percentile), a sentence-length artefact
+        that vanishes with exact sentence-length strata (p 0.71, 0.60).
+        [checked] (T4 review M1)
 60.5. So labels tell a reader which head a displaced word belongs to
       (58.4.3) but do not let it travel farther; Latin displaces
       everything short, and D132's short genitives (59.3.1.1) are that
@@ -1764,5 +1797,27 @@ ranked by how much it bears on KC 47.
               every variant agrees, but no power analysis was registered,
               and long-distance or cross-clause displacement - where a
               label might matter most - is rare in these treebanks.
-              [open]
+              [open] (answered by 60.5.obj.1.2)
+60.5.obj.1.2. Reply (T4): by simulation on the real strata, the tests
+              pass with probability 0.44 / 0.93 / 1.00 (L1), 0.29 /
+              0.65 / 0.93 (L1u), 0.36 / 0.89 / 1.00 (L3) at shifts of
+              +0.1 / +0.2 / +0.3 foreign words per arc. So effects of
+              about +0.17 or more are excluded, 0.1 is not; L1u is the
+              weakest. Long displacement remains rare here. [checked]
+              (T4 review M3)
+60.6. Does a displaced adjective carry its label past a same-label noun?
+60.6.1. Almost never: an agreeing competitor noun is among the foreign
+        words of 3 of 804 displaced adjectives (CIRCSE 1, LLCT 1,
+        Perseus 1), where the move-alone null expects 92.7 (CIRCSE
+        55.80, LLCT 14.88, PROIEL 1.23, Perseus 11.26, ITTB 5.36, UDante
+        4.20). [exact] (D133 Part B, pinned since the T4 fixes;
+        descriptive, found after the verdicts)
+60.6.1.1. Annotators who attach an ambiguous adjective to the nearest
+          agreeing noun would produce the same pattern, so 60.6.1 is
+          partly circular; as reader-relevant evidence it is the
+          measurable form of "labels tell which head" (58.4.5, 60.5).
+          [interpretation]
+60.6.2. Would a registered test of the gap case, on data whose
+        annotation does not follow nearest agreement, confirm it?
+        [open] (a successor demo)
 ```

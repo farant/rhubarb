@@ -178,7 +178,9 @@ agreement-filtered verdict.
   distance 3, NOT displaced - coordination stretches nested distances.
 
 These are T1's hand-tree checks (distance, F, direction, flags, verdicts,
-null shares).
+null shares). [T4: as built they check geometry, verdicts and null
+shares on hand-written masks; the population, agreement and
+function-word code is covered by the oracle pins, not by these.]
 
 ## Checks
 
@@ -258,8 +260,9 @@ why L3 is the test the findings will lean on.
    excess (N, S, exact E_near) and the percentile sums. Checks 34 full,
    29 quick.
    - Plants: 7 red (relatives kept; agreement on the first value only;
-     length bins; direction; F capped at 9; the first-arc flag; Perseus
-     verse as prose). Two were re-planted as one-line edits (the plant
+     length bins; direction; F capped at 9 [T4: red through the
+     raw-distance sensitivity only - the cap is idle on F, whose largest
+     value is 6]; the first-arc flag; Perseus verse as prose). Two were re-planted as one-line edits (the plant
      tool keeps line counts); two needed the full data. One survives,
      IDLE ON THIS DATA: the particle lemma list in the function-word
      flag, because those particles always carry UPOS PART, CCONJ or ADV
@@ -276,6 +279,30 @@ why L3 is the test the findings will lean on.
      print was fixed (sign apart) before freezing; no check or verdict
      used it.
 4. **T4:** independent review, then fixes.
+   *T4 review 2026-10-19 (recensor-d133):* a third exact method
+   (Kronecker substitution) reproduced every pinned number in both
+   modes; no wrong verdict; no H. M 3, L 5, N 8, all acted on (findings
+   "Review"); Fran approved the list.
+   - **M3** the null bounded: power by simulation (0.93 at +0.2 for L1,
+     0.65 for L1u, 0.89 for L3) and test-inversion intervals (L1
+     [-0.065, +0.170]); ITTB reversed (p 0.003) by its particle splits.
+   - **M2** L3's "shared" group almost never holds a competitor in the
+     gap; the gap count (3 of 804 against 92.7 expected) is now computed
+     in main.c and pinned - the label's measurable work, with an
+     annotation caveat.
+   - **M1** the percentile sensitivity listed above was not run as a
+     test (the demo printed means of a DISTANCE percentile); the review's
+     Monte Carlo gives L3 p 0.02-0.03, a sentence-length artefact (exact
+     length strata: 0.71, 0.60). Reported from the review.
+   - **L** the genitives' mean 1.32 (and the F sums) pinned; points from
+     the exact difference; the cap and the hand trees' scope annotated
+     above; ITTB's function-word-only arcs pinned per treebank.
+   - KC 60: 60.2.1, 60.3.1, 60.4 [falls] with children; 60.5.obj.1.2
+     (power); 60.6 (the gap). Checks 35 full, 30 quick; 3 new plants
+     red. Snapshot re-frozen.
+   - Lessons for the next design review: test the case the hypothesis
+     turns on (here a competitor IN the gap, not anywhere in the
+     sentence), and register the effect size the test can see (power).
 
 ## Open for Fran
 

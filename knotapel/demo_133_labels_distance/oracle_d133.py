@@ -152,6 +152,29 @@ def null_shares(heads, host, g, obs):
     return k, m, kn, mn, less, equal
 
 
+def gap_shares(heads, g, comp):
+    """g moved alone (sentence rebuilt): displaced placements m, and k of
+    them with a competitor (comp, 1-based set) among the arc's foreign
+    words (T4 review M2)"""
+    n = len(heads)
+    others = [w for w in range(1, n + 1) if w != g]
+    k = m = 0
+    for p in range(n):
+        order = others[:p] + [g] + others[p:]
+        newpos = {w: i + 1 for i, w in enumerate(order)}
+        nh = [0] * n
+        for w in range(1, n + 1):
+            nh[newpos[w] - 1] = 0 if heads[w - 1] == 0 else newpos[heads[w - 1]]
+        ng = newpos[g]
+        if not nonproj(nh, ng):
+            continue
+        m += 1
+        hh = nh[ng - 1]
+        lo, hi = min(ng, hh), max(ng, hh)
+        k += any(lo < newpos[c] < hi and hh not in ancestors(nh, newpos[c]) for c in comp)
+    return k, m
+
+
 def is_fw(w):
     return w['upos'] in ('PART', 'CCONJ', 'ADV') or w['lemma'] in PARTICLES
 
@@ -292,17 +315,22 @@ def main():
                 anc_h_desc = {x for x in range(lo + 1, hi) if h not in ancestors(heads, x)}
                 fw = all(is_fw(kept[x - 1]) for x in anc_h_desc)
                 unique = None
+                gap_obs = gk = gm = 0
                 if kind == 0:
                     sub = descendants(heads, g)
-                    unique = not any(noun[c - 1] and c != h and c not in sub
-                                     and all(meets(kept[c - 1], w, k) for k in ('Case', 'Gender', 'Number'))
-                                     for c in range(1, n + 1))
+                    comp = {c for c in range(1, n + 1)
+                            if noun[c - 1] and c != h and c not in sub
+                            and all(meets(kept[c - 1], w, k) for k in ('Case', 'Gender', 'Number'))}
+                    unique = not comp
+                    gap_obs = any(c in anc_h_desc for c in comp)
+                    gk, gm = gap_shares(heads, g, comp)
                 safe = n_alternatives(heads, g, noun) == 0
                 k, m, kn, mn, less, equal = null_shares(heads, noun, g, dist)
                 items.append(dict(kind=kind, bank=bank, b7=b7, dep_first=g < h,
                                   lenbin=lenbin, f=f, dist=dist, unique=unique,
                                   fw=fw, first=first[kind], safe=safe, kn=kn,
-                                  mn=mn, less=less, equal=equal, m=m))
+                                  mn=mn, less=less, equal=equal, m=m,
+                                  gap_obs=gap_obs, gk=gk, gm=gm))
                 first[kind] = False
 
     for b in sorted(present):
@@ -359,6 +387,17 @@ def main():
                 dist = nd
             print('  chance4_e6=%d' % round(sum(dist[4:], Fraction(0)) * 10**6))
 
+    for b in sorted(present):
+        sel = [it for it in items if it['bank'] == b]
+        adj = [it for it in sel if it['kind'] == 0]
+        gen = [it for it in sel if it['kind'] == 1]
+        ge = sum((Fraction(it['gk'], it['gm']) for it in adj), Fraction(0))
+        print('t4 %s gap %d %d %s fw %d %d %d %d fsum %d %d %d %d f1 %d %d'
+              % (BANKS[b], sum(it['gap_obs'] for it in adj), len(adj), ge,
+                 sum(it['fw'] for it in adj), len(adj), sum(it['fw'] for it in gen), len(gen),
+                 sum(min(it['f'], FCAP) for it in adj), len(adj),
+                 sum(min(it['f'], FCAP) for it in gen), len(gen),
+                 sum(it['f'] == 1 for it in adj), sum(it['f'] == 1 for it in gen)))
     for b in sorted(present):
         for kind in (0, 1):
             sel = [it for it in items if it['bank'] == b and it['kind'] == kind]

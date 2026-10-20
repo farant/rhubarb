@@ -307,6 +307,45 @@ null_share (
     }
 }
 
+/* g moved alone: *m displaced placements; *k of them with a competitor
+ * (comp[c]) strictly inside the arc's span and not dominated by the head
+ * - a same-label noun among the foreign words (T4 review M2) */
+static void
+gap_share (
+    const Sent          *s,
+    int                  g,
+    const unsigned char *comp,
+    int                  *m,
+    int                  *k)
+{
+    static int others[MAXN], pos[MAXN];
+    int        no = 0, p, i, c, h = s->head[g] - 1;
+
+    for (i = 0; i < s->n; i++)
+        if (i != g) others[no++] = i;
+    *m = *k = 0;
+    for (p = 0; p < s->n; p++) {
+        int q = 0, lo, hi, hit = 0;
+
+        for (i = 0; i < s->n; i++) {
+            if (i == p) {
+                pos[g] = i;
+                continue;
+            }
+            pos[others[q++]] = i;
+        }
+        if (!arc_displaced(s, pos, h, g, 0)) continue;
+        (*m)++;
+        lo = pos[g] < pos[h] ? pos[g] : pos[h];
+        hi = pos[g] < pos[h] ? pos[h] : pos[g];
+        for (c = 0; c < s->n; c++)
+            if (comp[c] && pos[c] > lo && pos[c] < hi
+                && !s->dom[h * s->n + c])
+                hit = 1;
+        *k += hit;
+    }
+}
+
 /* ================================================================
  * Items: every displaced arc of the registered populations
  * ================================================================ */
@@ -323,6 +362,10 @@ typedef struct {
     int  safe;          /* every-noun hosts */
     int  kn, mn;        /* distance-limited null share, every-noun hosts */
     int  pl, pe, pm;    /* percentile counts: less, equal, of */
+    int  gap_obs;       /* adjectives: an agreeing competitor noun among the
+                           arc's foreign words (T4 review) */
+    int  gk, gm;        /* ... the move-alone null: placements with one, of
+                           the displaced placements */
 } Item;
 
 static Item *items = NULL;
@@ -453,6 +496,7 @@ is_function_word (
 
 static Sent          sent;
 static unsigned char nounmask[MAXN];
+static unsigned char compmask[MAXN];
 static int           idpos[MAXN];
 static int           first_seen[2];
 
@@ -562,13 +606,18 @@ analyse (
             first_seen[kind] = 1;
             if (kind == 0) {
                 int other = 0;
-                for (c = 0; c < n; c++)
-                    if (nounmask[c] && c != h && !sent.dom[g * n + c]
+                for (c = 0; c < n; c++) {
+                    compmask[c] = (unsigned char)(nounmask[c] && c != h
+                        && !sent.dom[g * n + c]
                         && feat_meet(w[c], w[g], "Case")
                         && feat_meet(w[c], w[g], "Gender")
-                        && feat_meet(w[c], w[g], "Number"))
-                        other = 1;
+                        && feat_meet(w[c], w[g], "Number"));
+                    if (compmask[c]) other = 1;
+                }
                 it.unique = !other;
+                for (c = lo + 1; c < hi; c++)
+                    if (compmask[c] && !sent.dom[h * n + c]) it.gap_obs = 1;
+                gap_share(&sent, g, compmask, &it.gm, &it.gk);
                 st->adj_disp++;
             } else {
                 st->gen_disp++;
@@ -1421,6 +1470,28 @@ static const char *const opct_s[N_BANKS][3] = {
       "239313405679/109412503200" }
 };
 
+/* oracle_d133.py, the T4 descriptives per treebank: displaced adjectives
+ * with a same-label noun among their foreign words (observed, of N), then
+ * function-word-only arcs (adjectives, genitives) and the genitive count,
+ * sum of min(F, 10) (adjectives, genitives), arcs at F = 1 (adjectives,
+ * genitives); the null's expected gap counts as exact fractions */
+static const long ot4[N_BANKS][9] = {
+    { 1, 434, 38, 15, 77, 644, 108, 283, 54 },
+    { 1, 68, 1, 2, 5, 72, 5, 65, 5 },
+    { 0, 28, 10, 12, 26, 46, 35, 16, 22 },
+    { 1, 168, 10, 0, 39, 273, 54, 99, 28 },
+    { 0, 72, 68, 47, 59, 73, 72, 71, 53 },
+    { 0, 34, 8, 8, 28, 43, 36, 25, 22 }
+};
+static const char *const ot4_gap_e[N_BANKS] = {
+    "144998191007188089966929/2598690081257635226400",
+    "226120648616771/15196624581600",
+    "70211/56980",
+    "4768288453681/423470829600",
+    "164094779/30630600",
+    "51898511839/12365124720"
+};
+
 static Result  res_l1, res_l1u, res_l3, sens[8];
 static Fractio chance4;
 
@@ -1538,6 +1609,39 @@ pinned_checks (void)
     check("the excess beyond distance (N, S, exact E_near) and the "
         "percentile sums, per treebank and kind == oracle_d133.py (a pin)",
         ok);
+    ok = 1;
+    for (b = 0; b < N_BANKS; b++) {
+        long    v[9], j;
+        Fractio ge = fractio_ex_s64(0), t;
+
+        if (!bank_present[b]) continue;
+        for (j = 0; j < 9; j++) v[j] = 0;
+        for (j = 0; j < n_items; j++) {
+            const Item *it = &items[j];
+            if (it->bank != b) continue;
+            if (it->kind == 0) {
+                v[0] += it->gap_obs;
+                v[1]++;
+                v[2] += it->fw;
+                v[5] += it->f > FCAP ? FCAP : it->f;
+                v[7] += it->f == 1;
+                if (!fractio_ex_s64_s64((s64)it->gk, (s64)it->gm, fpool, &t))
+                    fatal("fractio");
+                ge = fractio_adde(ge, t, fpool);
+            } else {
+                v[3] += it->fw;
+                v[4]++;
+                v[6] += it->f > FCAP ? FCAP : it->f;
+                v[8] += it->f == 1;
+            }
+        }
+        for (j = 0; j < 9; j++)
+            if (v[j] != ot4[b][j]) ok = 0;
+        if (!fraction_is(ge, ot4_gap_e[b])) ok = 0;
+    }
+    check("the T4 descriptives (same-label noun in the gap: observed and "
+        "the null's exact expectation; function-word-only arcs; F sums and "
+        "arcs at F = 1) == oracle_d133.py (a pin)", ok);
 }
 
 static void
@@ -1715,7 +1819,17 @@ part_b (void)
             if (nn == 0) continue;
             pct(s1, 32, ss, nn);
             e4 = scaled(e, 10000, (s64)nn);
-            pts = (s64)((ss * 20000 + nn) / (2 * nn)) - e4;
+            {
+                /* points from the exact difference S/N - E/N, rounded
+                 * once (T4 review L5) */
+                Fractio sn, diff;
+                if (!fractio_ex_s64_s64((s64)ss, (s64)nn, fpool, &sn))
+                    fatal("fractio");
+                if (!fractio_ex_s64_s64(1, (s64)nn, fpool, &t)) fatal("fr");
+                diff = fractio_subtrahe(sn, fractio_multiplica(e, t, fpool),
+                    fpool);
+                pts = scaled(diff, 10000, 1);
+            }
             /* odds ratio S/(N-S) : E/(N-E), exact, shown rounded */
             if (ss == nn || ss == 0
                 || fractio_compara(e, fractio_ex_s64((s64)nn), fpool) == 0
@@ -1777,7 +1891,7 @@ part_b (void)
             static const char *const gname[3] = { "adj unique", "adj shared",
                 "gen" };
 
-            printf(";  mean percentile");
+            printf(";  mean DISTANCE percentile");
             for (grp = 0; grp < 3; grp++) {
                 Fractio sum = fractio_ex_s64(0), t;
                 long    cnt = 0, i;
@@ -1806,6 +1920,41 @@ part_b (void)
             }
         }
         printf("\n");
+    }
+
+    printf("\n--- descriptive (T4 review): a same-label noun in the gap; "
+        "particle splits; F ---\n");
+    printf("  displaced adjectives with an agreeing competitor noun among "
+        "their foreign words,\n  observed vs the move-alone null's "
+        "expectation; function-word-only arcs (adj, gen);\n  sum of "
+        "min(F, 10) and arcs at F = 1 (adj, gen)\n");
+    for (b = 0; b < N_BANKS; b++) {
+        long    na = 0, gobs = 0, fwk[2] = { 0, 0 }, fs[2] = { 0, 0 },
+                f1[2] = { 0, 0 }, nk[2] = { 0, 0 }, i;
+        Fractio ge = fractio_ex_s64(0), t;
+        s64     g2;
+
+        if (!bank_present[b]) continue;
+        for (i = 0; i < n_items; i++) {
+            const Item *it = &items[i];
+            if (it->bank != b) continue;
+            nk[it->kind]++;
+            fwk[it->kind] += it->fw;
+            fs[it->kind] += it->f > FCAP ? FCAP : it->f;
+            f1[it->kind] += it->f == 1;
+            if (it->kind != 0) continue;
+            na++;
+            gobs += it->gap_obs;
+            if (!fractio_ex_s64_s64((s64)it->gk, (s64)it->gm, fpool, &t))
+                fatal("fractio");
+            ge = fractio_adde(ge, t, fpool);
+        }
+        g2 = scaled(ge, 100, 1);
+        printf("  %-8s gap: %ld of %ld vs %lld.%02lld;  function-word-only "
+            "%ld/%ld, %ld/%ld;  F sum %ld/%ld, %ld/%ld; at 1 %ld, %ld\n",
+            bank_names[b], gobs, na, (long long)(g2 / 100),
+            (long long)(g2 % 100), fwk[0], nk[0], fwk[1], nk[1], fs[0],
+            nk[0], fs[1], nk[1], f1[0], f1[1]);
     }
 
     printf("\n--- pins ---\n");
