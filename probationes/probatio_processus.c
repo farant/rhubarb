@@ -774,6 +774,7 @@ _sectio_vicesima_secunda (
 
         argumenta[0] = "/bin/pwd";
         argumenta[I] = NIHIL;
+        memset(&optiones, ZEPHYRUM, magnitudo(optiones));
         optiones.directorium = "/usr/bin";
         optiones.ambitus = NIHIL;
         r = processus_exsequi_cum(argumenta, &optiones, 5000, piscina);
@@ -797,11 +798,12 @@ _sectio_vicesima_tertia (
           ProcessusOptiones  optiones;
           ProcessusResultus  r;
 
-        argumenta[0] = "/usr/bin/env";
-        argumenta[I] = NIHIL;
-        ambitus[0] = "A=1";
-        ambitus[I] = "PATH=/usr/bin:/bin";
-        ambitus[II] = NIHIL;
+        argumenta[0]  = "/usr/bin/env";
+        argumenta[I]  = NIHIL;
+        ambitus[0]    = "A=1";
+        ambitus[I]    = "PATH=/usr/bin:/bin";
+        ambitus[II]   = NIHIL;
+        memset(&optiones, ZEPHYRUM, magnitudo(optiones));
         optiones.directorium = NIHIL;
         optiones.ambitus = ambitus;
         r = processus_exsequi_cum(argumenta, &optiones, 5000, piscina);
@@ -827,10 +829,11 @@ _sectio_vicesima_quarta (
           ProcessusOptiones  optiones;
           ProcessusResultus  r;
 
-        argumenta[0] = "env";
-        argumenta[I] = NIHIL;
-        ambitus[0] = "PATH=/usr/bin";
-        ambitus[I] = NIHIL;
+        argumenta[0]  = "env";
+        argumenta[I]  = NIHIL;
+        ambitus[0]    = "PATH=/usr/bin";
+        ambitus[I]    = NIHIL;
+        memset(&optiones, ZEPHYRUM, magnitudo(optiones));
         optiones.directorium = NIHIL;
         optiones.ambitus = ambitus;
         r = processus_exsequi_cum(argumenta, &optiones, 5000, piscina);
@@ -859,6 +862,7 @@ _sectio_vicesima_quinta (
 
         argumenta[0] = "/bin/pwd";
         argumenta[I] = NIHIL;
+        memset(&optiones, ZEPHYRUM, magnitudo(optiones));
         optiones.directorium = "/nusquam_directorium";
         optiones.ambitus = NIHIL;
         r = processus_exsequi_cum(argumenta, &optiones, 5000, piscina);
@@ -996,6 +1000,60 @@ _sectio_vicesima_octava (
     }
 }
 
+/* XXIX. tectum memoriae (credo memoria T5): dd cum alveo CCLVI MiB
+ * (bs=256m, count=400: ~V s natura) sub tecto LXIV MiB occisus MEMORIA
+ * multo ante finem, descriptio vestigium nominat; dd parvus (VIII MiB)
+ * sub eodem tecto intactus; tectum ZEPHYRUM nihil custodit */
+interior vacuum
+_sectio_vicesima_nona (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    constans character* magnus[VI];
+    constans character* parvus[VI];
+     ProcessusOptiones  optiones;
+     ProcessusResultus  r;
+
+    magnus[0]    = "/bin/dd";
+    magnus[I]    = "if=/dev/zero";
+    magnus[II]   = "of=/dev/null";
+    magnus[III]  = "bs=256m";
+    magnus[IV]   = "count=400";
+    magnus[V]    = NIHIL;
+    parvus[0]    = "/bin/dd";
+    parvus[I]    = "if=/dev/zero";
+    parvus[II]   = "of=/dev/null";
+    parvus[III]  = "bs=8m";
+    parvus[IV]   = "count=1";
+    parvus[V]    = NIHIL;
+    memset(&optiones, ZEPHYRUM, magnitudo(optiones));
+    optiones.memoria_maxima = (i64)LXIV * (i64)MXXIV * (i64)MXXIV;
+
+    r = processus_exsequi_cum(magnus, &optiones, LX * M, piscina);
+    CREDO_FALSUM (r.successus);
+    CREDO_AEQUALIS_I32 ((i32)r.error, (i32)PROCESSUS_ERROR_MEMORIA);
+    CREDO_MINOR_I32 ((i32)r.mora_ms, (i32)MM);
+    CREDO_VERUM (strstr(_litterae_ex(piscina, r.error_descriptio),
+        "memoria maxima excessa (vestigium ") != NIHIL);
+    CREDO_VERUM (strstr(_litterae_ex(piscina, r.error_descriptio),
+        "> 64 MiB) - processus occisus") != NIHIL);
+    CREDO_LITERAE_AEQUALES (processus_error_nomen(
+        PROCESSUS_ERROR_MEMORIA), "memoria excessa");
+
+    r = processus_exsequi_cum(parvus, &optiones, LX * M, piscina);
+    CREDO_VERUM (r.successus);
+    CREDO_AEQUALIS_I32 ((i32)r.error, (i32)PROCESSUS_OK);
+    CREDO_AEQUALIS_I32 (r.codex_exitus, ZEPHYRUM);
+
+    /* tectum nullum: dd magnus (count=4, breviter) perficit */
+    magnus[IV] = "count=4";
+    optiones.memoria_maxima = (i64)ZEPHYRUM;
+    r = processus_exsequi_cum(magnus, &optiones, LX * M, piscina);
+    CREDO_VERUM (r.successus);
+    CREDO_AEQUALIS_I32 ((i32)r.error, (i32)PROCESSUS_OK);
+    CREDO_AEQUALIS_I32 (r.codex_exitus, ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I. exsecutio simplex", _sectio_prima, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -1052,6 +1110,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "XXVIII. vivus", _sectio_vicesima_octava, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "XXIX. tectum memoriae", _sectio_vicesima_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

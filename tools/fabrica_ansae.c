@@ -417,6 +417,7 @@ suturae_in_area_currere (
         piscina), piscina);
     vector[xar_numerus(ambitus) + I]  = NIHIL;
     /* cwd = radix (fabrica ipsa); ambitus exactus */
+    memset(&optiones, ZEPHYRUM, magnitudo(optiones));
     optiones.directorium  = NIHIL;
     optiones.ambitus      = vector;
     (vacuum)filum_directorium_creare_cum_parentibus(chorda_ut_cstr(

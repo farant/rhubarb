@@ -15,7 +15,7 @@
 
 <p>Each unit declares the questions it answers in <code>lib/S.interrogationes.stml</code> (canon <code>interrogationes.canon</code>). Every answer is anchored to a symbol, a path or a command, and the gate <code>interrogationes</code> turns red when an anchor dies. From the terminal: <code>bin/fabrica quid -interrogationes -quaere "how do I ..."</code>, or <code>-symbolum xar_addere</code> for the questions that name a symbol.</p>
 
-<p class="nota">817 questions in 95 units · quomodo 364 · possumne 231 · quid 131 · cur 91</p>
+<p class="nota">818 questions in 96 units · quomodo 365 · possumne 231 · quid 131 · cur 91</p>
 <ul>
 <li><a href="#actio">actio</a> <span class="nota">6</span></li>
 <li><a href="#aedilis">aedilis</a> <span class="nota">11</span></li>
@@ -77,6 +77,7 @@
 <li><a href="#piscina">piscina</a> <span class="nota">5</span></li>
 <li><a href="#polynomium">polynomium</a> <span class="nota">11</span></li>
 <li><a href="#praeconium">praeconium</a> <span class="nota">6</span></li>
+<li><a href="#processus">processus</a> <span class="nota">1</span></li>
 <li><a href="#provenientia">provenientia</a> <span class="nota">5</span></li>
 <li><a href="#pseudoterminale">pseudoterminale</a> <span class="nota">11</span></li>
 <li><a href="#quadrans">quadrans</a> <span class="nota">8</span></li>
@@ -1456,6 +1457,13 @@
 <div class="responsum">They depend on hook_event_name: Notification gives notification_type and message; PreToolUse, PostToolUse, PostToolUseFailure and PermissionRequest give tool_name and the first non-empty of tool_input description, command, file_path, pattern, url; UserPromptSubmit puts the prompt in nuntius; Stop and SubagentStop the last_assistant_message; StopFailure the error; SessionStart sets genus to trigger (or the older source); SessionEnd to reason. servitor is only the socket part of TMUX (before the first comma).<br><span class="nota">symbolum <code>PraeconiumEventus</code> <code>praeconium_ex_hamo</code> · via <a href="../lib/praeconium.worklog.md"><code>lib/praeconium.worklog.md</code></a></span></div></li>
 <li id="praeconium-6"><span class="status">possumne</span>can I keep the chorda fields of an event after resetting the piscina I read it with?
 <div class="responsum">No. Every chorda in a PraeconiumEventus points into JSON values allocated in the piscina you passed; resetting it (colloquia_visus calls piscina_vacare on its scratch piscina every tick) leaves them dangling. Copy what you keep. They are chorda, not NUL-terminated: use chorda_ut_cstr before printf or strcmp. Missing fields are empty chorda (datum NIHIL).<br><span class="nota">symbolum <code>praeconium_ex_hamo</code> <code>praeconium_caudam_legere</code> <code>praeconium_legere_ab</code> <code>chorda_ut_cstr</code></span></div></li>
+</ol>
+
+<h2 id="processus">processus</h2>
+<p class="nota"><a href="../include/processus.h"><code>include/processus.h</code></a> · <a href="../lib/processus.interrogationes.stml"><code>lib/processus.interrogationes.stml</code></a></p>
+<ol class="quaestiones">
+<li id="processus-1"><span class="status">quomodo</span>how do I kill a child that uses too much memory?
+<div class="responsum">memset a ProcessusOptiones to zero, set memoria_maxima in bytes and call processus_exsequi_cum. The child's footprint (compressed pages included, not RSS) is read in the same loop that enforces mora_maxima_ms, at most once every 20 ms, so a child that loops without printing is caught too. Over the limit it gets SIGKILL and the result has successus FALSUM, error PROCESSUS_ERROR_MEMORIA and an error_descriptio naming the footprint seen; output captured so far is kept. 0 means no limit. processus_incipere (the incremental path) takes no options, so it has no memory limit. Always memset the options: a field added later would otherwise be read as stack garbage.<br><span class="nota">symbolum <code>processus_exsequi_cum</code> <code>ProcessusOptiones</code> <code>PROCESSUS_ERROR_MEMORIA</code></span></div></li>
 </ol>
 
 <h2 id="provenientia">provenientia</h2>

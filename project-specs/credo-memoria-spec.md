@@ -176,6 +176,37 @@ Tests in `probatio_processus`:
 
 Plant: skip the poll, and the suite goes red.
 
+*FACTUM 2026-10-20.* As specified. The check is `_memoriam_custodire`,
+read at most every 20 ms. It sits next to the time limit in
+`_ansam_pulsare`, in the no-pipes check in `_perficere`, and in the
+WNOHANG reap loop, which now also runs when only a memory limit is set.
+`memoria_excessa` sits alongside `tempus_excessum` in every terminal
+condition. The existing `memoria_fracta` means OUR piscina is exhausted;
+the names say which is which. Message: "memoria maxima excessa
+(vestigium N MiB > M MiB) - processus occisus".
+
+The caller audit found 5 real callers, not 6. Only mensura_contextus
+memset its options. fabrica_ansae.c and four probatio_processus
+sections set fields by hand, and all now memset. processus now links
+memoria_processus: four aedilis-generated source lists were regenerated
+(officina legatus/sonda, gesta tabularium/tabulariumd). The hand lists
+already had it from T2.
+
+The incremental `processus_incipere` takes no options and so has no
+limit. fabrica's member runner uses `processus_exsequi_cum`, which is
+enough for T6.
+
+Test: probatio_processus XXIX. `/bin/dd bs=256m count=400` (about 5 s
+on its own) under a 64 MiB limit is killed with MEMORIA; the section
+took 179 ms in total. A small dd passes, and a limit of 0 doesn't check
+at all. Plants (red): the comparison scaled ×M, and the option ignored
+at start.
+
+**T6 value (Fran, 2026-10-20):** the runner's cap is its own
+`FABRICA_MEMORIA_MB`, default 16 GiB, NOT `CREDO_MEMORIA_GRAVIS_MB`.
+The six silva corpus suites reach 7.6 GB (park 01M5CQYDD841); lower the
+cap once they're fixed.
+
 **T6. fabrica runs probationes members with the ceiling.**
 - **The value.** The runner can't tell which section is running, so its
   limit is the highest any section may use: `CREDO_MEMORIA_GRAVIS_MB`
