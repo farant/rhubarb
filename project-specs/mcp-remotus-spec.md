@@ -407,12 +407,19 @@ Fran added the connector from the Claude desktop app; exemplar ran with
 - **nginx:** certbot's live config passes every `/.well-known/oauth-*`
   path to the app (one `location /`); checked by curl from outside.
 
+## VERIFIED with Claude Code (T8, 2026-10-20, local)
+
+- Claude Code 2.1.303 is **dual-era**: it probes `server/discover` with
+  `mcp-protocol-version: 2026-07-28` first; our 401 starts OAuth; after
+  sign-in our 400 `-32022` (data.supported) makes it fall back to
+  `initialize` 2025-11-25. Plain `http://localhost` OAuth is accepted.
+- DCR from Claude Code: `client_name "Claude Code (<name>)"`, redirect
+  `http://localhost:<random>/callback`; authorize carries `resource`
+  (RFC 8707) and `prompt=consent`.
+
 ## AUDIENDA (not verified)
 
 - Whether `resource` arrives on authorize and token exactly as
   documented, and whether Claude re-registers (DCR) on every reconnect
   in practice - observed at first sign-in (T6/T9).
-- That Claude Code accepts an `http://localhost` MCP server with OAuth
-  for the local end-to-end check (else a TLS terminator in front, or
-  test against the deployed site).
 - Exact line numbers in section I are from e8cad828 and drift.

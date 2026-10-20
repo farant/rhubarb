@@ -122,3 +122,43 @@ Found by the Linux build, not by clang: `lib/base64.c` (T2) had
 `(I << bits) - I` - an `int` into `i32` arithmetic, which gcc's
 `-Wsign-conversion` rejects. Always build Linux before calling a C
 task done.
+
+## 2026-10-20 - mcp-remotus T8: Claude Code end to end, Linux, fumus
+
+**Claude Code 2.1.303 against a local exemplar** (`http://127.0.0.1:3010`,
+`-sonda`; Fran ran `claude mcp add --transport http exemplar-loc ...`
+from /tmp, `/mcp`, signed in in Firefox, added a note). It WORKED, and
+the sonda shows a DUAL-ERA client:
+
+1. First request: `POST /mcp` `server/discover` with
+   `mcp-protocol-version: 2026-07-28` and `_meta`
+   (`io.modelcontextprotocol/protocolVersion`, `.../clientInfo`) - no
+   token -> our 401 -> OAuth starts.
+2. Discovery: both documents (UA `claude-code`, then `Bun/1.4.4`).
+   DCR: `client_name "Claude Code (exemplar-loc)"`, redirect
+   `http://localhost:53734/callback` (random port - loopback rule hit).
+3. Authorize: `resource=http://127.0.0.1:3010/mcp` (RFC 8707, as
+   expected) and `prompt=consent` (ignored - we always show consent).
+   Consent POST from Firefox with Origin `http://127.0.0.1:3010`.
+   Token exchange (body redacted in the sonda).
+4. With the token: `server/discover` again -> our 400 `-32022`
+   Unsupported protocol version (data.supported = our three) -> it FELL
+   BACK to `initialize` `2025-11-25`. The T4 design (official 2026
+   error shape) is exactly what made the fallback work.
+5. `notifications/initialized` 202, `GET /mcp` (SSE attempt) 405,
+   `tools/list`, `tools/call notam_addere` with an emoji - stored and
+   logged `usor=fran cliens=7B3B...`.
+
+So the spec's AUDIENDA "does Claude Code accept OAuth on plain
+http://localhost" is answered: yes.
+
+**Linux:** `tools/linux/probatio.sh -musl` and `-glibc` with base64url,
+mcp_servus, mcp_servus_http, admissio, admissio_fluxus,
+exemplar_applicatio: 6/6 each. Static build `build/linux/exemplar` OK
+(T7 fixed the gcc sign-conversion it found).
+
+**`tools/exemplar_mcp_fumus.sh <basis>`** - live smoke, never signs in:
+exact 401 header, both PRM paths + the AS document agree on resource
+and issuer, `GET /mcp` 405, a throwaway registration 201 (pruned after a
+day). Local run: all six BENE; a dead port and a host that mismatches
+the issuer (`localhost` vs `127.0.0.1`) both exit 1.
