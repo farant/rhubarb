@@ -10,11 +10,15 @@ analytics, logs, code, secrets, job queue); Claude proposed the axes
 and the additions marked + in §IV; Fran: "those are all good
 additions."*
 
-*Status: the TREE is agreed (Fran, 2026-10-20). The AXES (§III), the
-DECISION TABLE (§VI) and the consequences (§VII) are PROPOSED - each
-default is a decision for Fran before code relies on it. Next: the
-projections spec (`proiectiones`) builds on §VI ("derived" is the
-category projections live in).*
+*Status: the TREE is agreed (Fran, 2026-10-20). Approach agreed the
+same day: capabilities are built (on PULL) and categories are
+compositions of them (§VIII-a); sync to an S3-compatible store is a
+target the design must not block (§VIII-b); ordering by hybrid logical
+clock and time-ordered ids (§VIII-c). The AXES (§III), the DECISION
+TABLE (§VI), the consequences (§VII) and the recommendations in
+§VIII-b/c are PROPOSED - each default is a decision for Fran before
+code relies on it. Next: the projections spec (`proiectiones`) builds
+on §VI ("derived" is the category projections live in).*
 
 *Discipline note: the PULL rule holds. A category earns code when a
 consumer needs its decision (a store, a backup rule, a search index),
@@ -94,6 +98,7 @@ do with it.*
 | **secretum** | normal / personal / secret | who may see it, and where may it go? |
 | **quaestio** | id / relation / text / time range | how is it queried? |
 | **auctor** | user / app / system / external | who writes it? |
+| **concursus** | commutes / last-writer-wins per field / per-element set / rebase or CRDT / manual | how do concurrent edits from two devices merge? (§VIII-b) |
 
 (Latin axis names are placeholders until code needs identifiers.)
 
@@ -231,6 +236,126 @@ carry a category name; the library checks declared behaviour against
 it (e.g. a projection whose source is derived data is refused; a
 field marked `secret` can never be journaled or indexed).
 
+## VIII-a. Capabilities and composition (approach agreed 2026-10-20)
+
+The axes DESCRIBE data; CAPABILITIES are the mechanisms that implement
+them. Capabilities are built one at a time when a consumer pulls them,
+each with its API decided header-first; a category is a declaration
+that COMPOSES capabilities plus the CONSTRAINTS between them (secret
+forbids journal and index; derived may not be the source of another
+derived table; view state forbids journal) - the same split as
+organum's canon (form) and loader rules (cross-attribute laws). The
+category registry is written once two or three capabilities exist,
+never before.
+
+| capability | does | status (2026-10-20) |
+|---|---|---|
+| journal | append-only truth, ordered by `seq` | built: `volumen` `acta` |
+| blob store | content-addressed bytes, dedup | built: `massae` |
+| names | path -> blob, mutable pointer | built: `plagulae` |
+| history | replay, checkpoints, undo / redo, branches | built: `historia` |
+| schema / migrations | per volume; per derived table | volume: built; derived tables: missing |
+| typing / validation | values against declared types | built: canon, organum types |
+| id minting | unique ids without coordination | built: `moneta` (ULID monotonic, nanoid, secure random - `include/moneta.h`); NOT used by agenda / personae (`max + 1`) |
+| snapshot store | last-writer-wins, NOT journaled | missing (conservatio writes through the journal - the 58 %) |
+| coalescing | keep only the latest per key | missing |
+| derived tables | projections: declared, catch-up by seq, rebuildable | partial: `historia` in memory, the `acta(genus, seq)` index; the rest = semitae R5 |
+| full-text index | text search | missing as a capability; vendored `sqlite3.c` contains FTS5 and the silex build enables it (`include/silex.h:149`) |
+| retention / expiry / rollup | | missing |
+| secret store | never journaled, indexed or logged | rules only (examen code 96, never through `lectiones`) |
+| redaction | personal data out of logs | missing |
+| provenance | source, version, citation | conventions only (`FONTES.md`, pinned commits) |
+| audit / actor | who wrote this | missing (acts carry a time, no actor) |
+| remote object store | S3-compatible client | missing (own TLS 1.3 client and SHA-256 exist; SigV4 needs HMAC-SHA256 + HTTP) |
+| outbox / sync state | queued uploads, per-remote cursors | missing |
+| encryption | client-side, before upload | missing |
+| global act identity | act id independent of local seq | missing (§VIII-c) |
+| leases / queue | jobs, retries, dead letters | missing (`processus` has async processes, no queue) |
+
+First pulls proposed: the SNAPSHOT STORE (view state out of the
+journal) and DERIVED TABLES (projections, starting with the week and
+month views); FULL-TEXT next.
+
+## VIII-b. Sync, multiple devices, offline (Fran 2026-10-20 - target)
+
+Fran: all your data in a single file (federated documents possibly
+later), but several clients (desktop, mobile) and backups - an
+S3-compatible client library, data continuously syncing to the cloud
+both as backup and for multi-device access, with an offline mode;
+"one of those things that should be easy to support if you are
+building on the libraries."
+
+- **Local-first.** The local volume is primary; sync is a background
+  job with an outbox (job-queue category: leases, retries). Offline is
+  the default state, not a mode.
+- **The journal is the unit of sync.** Acts never change, so a range
+  ships as one immutable object (`journal/<device>/<from>-<to>`):
+  idempotent uploads, nothing overwritten remotely.
+- **Blobs sync by hash.** `massae` is content-addressed: the object key
+  is the hash - dedup, upload-once, integrity built in.
+- **The categories decide what syncs (§VI):** truth (journal, blobs,
+  preferences) syncs; derived (projections, `plagulae`, checkpoints)
+  never - each device rebuilds; view state is per device; secrets
+  never use this channel.
+- **Merging follows the `concursus` axis (§III).** Commuting events
+  (analytics, logs, independent journals) and last-writer-wins fields
+  (record fields) merge by order alone (§VIII-c); per-element sets
+  (tags, phone lists) merge elementwise; DOCUMENTS (positional edits:
+  scriba line diffs, pictor stroke order) need their base (§VIII-c)
+  and a rebase, stable element ids (CRDT-style) or a person.
+  `historia`'s branches (`<ramus ab=...>`) already model divergence
+  locally: two devices editing one page = two branches from a common
+  point.
+- **Encryption on the client, before upload.** The provider sees
+  ciphertext only; the keys are secrets. Content addressing of
+  PLAINTEXT tells the provider which blobs are equal - hash with a
+  per-user key.
+- **Federation (later):** documents as separate volumes referencing
+  each other; sync stays per volume; cross-volume references need the
+  stable global ids of §VIII-c.
+
+## VIII-c. Ordering and identity (PROPOSED)
+
+- **Order by a hybrid logical clock (HLC):** `(physical ms, logical
+  counter, device)`. Raw timestamps collide in one millisecond, skew
+  between devices and jump backwards; the HLC stays close to wall time
+  (human-meaningful, range-queryable), never runs backwards on a
+  device, is pushed past any remote event received (causality), and
+  the device breaks the last ties - a TOTAL order, the same on every
+  device. Merging two logs = union sorted by HLC. Events stamped too
+  far in the future are refused (one broken clock cannot poison the
+  order).
+- **Ids are time-ordered (ULID / UUIDv7 layout: 48 bits of ms + ~74
+  random bits)** - unique without coordination and sorted by creation,
+  which SQLite's B-tree indexes like. Random ids (UUIDv4, nanoid) are
+  as unique but scatter index pages and carry no order: nanoid stays
+  for short tokens, never for record keys. The house already mints
+  ULIDs (`moneta_ulid`, Crockford base32, 26 characters, monotonic
+  within a millisecond) for the ledger and code annotations - one id
+  space, one mint: reuse it.
+- **An act's id can BE `(hlc, device)`**, printed in the same base32
+  form; no separate id needed.
+- **Two clocks, two jobs.** Local `seq` stays exactly what it is: the
+  ARRIVAL order and the cursor projections catch up by ("what have I
+  not processed"). The HLC is the EVENT order a projection DECIDES by
+  (last-writer-wins compares the HLC stored per field, never the
+  arrival order) - a remote event can arrive after newer local ones.
+- **Documents record their base:** each event names the state it was
+  made against (a parent id, like git); two events with the same
+  parent are a fork. Cheap to record now, expensive to guess later.
+- **Ids in routes:** `nomenclator/7` becomes `nomenclator/01JC9X...`;
+  a short suffix accepted as an alias (the ledger's habit) fits the
+  R4e typed aliases.
+
+Recommendation, in order of how fast they get more expensive:
+1. Acts gain `hlc` and `device` beside the local `seq` (a volume
+   migration; existing acts get an HLC synthesized from their time and
+   seq).
+2. Entities move from `max + 1` to `moneta_ulid` (agenda, personae)
+   before more data accumulates.
+3. Document events carry their base once multi-device editing is
+   real (or sooner, since recording it is cheap).
+
 ## IX. Open questions for Fran
 
 1. View state out of the journal (§VII.1): yes? And then: where do
@@ -244,6 +369,10 @@ field marked `secret` can never be journaled or indexed).
    carries them).
 5. Which consumer pulls first? Candidates: the view-state move (the
    58 %), or the projections spec using `derived`.
+6. Act identity (§VIII-c, rec. 1) and entity ids (rec. 2): when? Both
+   get more expensive with every day of data.
+7. The `concursus` value per category (§III, §VIII-b), especially for
+   documents: rebase, stable element ids, or ask the person?
 
 ## X. AUDIENDA
 
@@ -256,3 +385,10 @@ field marked `secret` can never be journaled or indexed).
   the decision table.
 - The table's defaults are proposals written in one sitting; none is
   measured or decided.
+- FTS5: present in `vendor/sqlite3.c` and enabled for silex
+  (`include/silex.h:149`); whether the apps' builds enable it is NOT
+  checked.
+- Analytics retention: whether mensura already rolls up or expires
+  anything is NOT checked.
+- No S3 provider, SigV4 detail or HTTP client path was examined; the
+  sync section is a target, not a design.
