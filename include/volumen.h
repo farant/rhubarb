@@ -109,12 +109,36 @@ constans character*
 volumen_error (
     constans Volumen* volumen);
 
+/* identitas actus trans machinas (D2): hora ZEPHYRUM = nulla */
+nomen structura {
+       s64 hora;
+    chorda machina;
+} VolumenIdentitas;
+
 /* actum in caudam appendere (datum = JSON); seq redditum, 0 = vitium */
 s64
 volumen_actum_appendere (
                Volumen* volumen,
     constans character* genus,
                 chorda  datum);
+
+/* ut volumen_actum_appendere, sed actum BASIM suam nominat: statum
+ * contra quem factum est (genera-datorum VIII-c, D2b). Acta duo
+ * eiusdem basis = furca (revocatione locali aut machinis duabus). */
+s64
+volumen_actum_super_appendere (
+                 Volumen* volumen,
+      constans character* genus,
+                  chorda  datum,
+        VolumenIdentitas  basis);
+
+/* identitas actus per seq; FALSUM si seq ignotum */
+b32
+volumen_actum_identitas (
+             Volumen* volumen,
+                 s64  seq,
+             Piscina* piscina,
+    VolumenIdentitas* exitus);
 
 /* plagulam condere: transactione una - massa (sigillo dedup) +
  * actum 'plagula-condita' + manifestum (upsert per viam).
@@ -209,14 +233,16 @@ volumen_plagulas_enumerare (
  * scriptoris. Acta vetera (ante migrationem VII, aut a codice vetere
  * scripta) in aperiendo supplentur: ordine seq, momentum suum per
  * hora_hybrida_proxima, machina huius machinae. Sine identitate
- * machinae acta non appenduntur (recusat, non degenerat). */
+ * machinae acta non appenduntur (recusat, non degenerat).
+ * basis (D2b): actum contra quem factum est - hora ZEPHYRUM = sine
+ * basi (acta non documentorum, actum primum, acta ante D2b). */
 nomen structura {
-       s64 seq;
-    chorda momentum;
-    chorda genus;
-    chorda datum;
-       s64 hora;
-    chorda machina;
+                 s64 seq;
+              chorda momentum;
+              chorda genus;
+              chorda datum;
+    VolumenIdentitas identitas;
+    VolumenIdentitas basis;
 } VolumenActum;
 
 /* acta POST seq datum (exclusivum; 0 = omnia), ordine seq -

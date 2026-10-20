@@ -30,6 +30,11 @@
  *   uno - genus actorum, notae (ramus, coniunctio) et claves
  *   checkpointorum praefixum 'spatium/' ferunt; historia sua sola
  *   legit. Spatium vacuum = nomina nuda (octeti veteres).
+ * - BASIS (D2b): actum documenti identitatem actus ad cursorem
+ *   nominat (volumen_actum_super_appendere) - statum contra quem
+ *   factum est; post revocationem basis prior est. Notae (ramus,
+ *   coniunctio, cursor) basim non ferunt. Furca = acta duo eiusdem
+ *   basis, inter machinas quoque; ramus ab="seq" localis manet.
  *
  * Historia volumen non describit: manifestum documenti (dimensiones,
  * intervallum) res clientis est. */

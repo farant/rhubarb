@@ -673,11 +673,80 @@ s32 principale (vacuum)
         per (i = ZEPHYRUM; i < xar_numerus(acta); i++)
         {
             a = (VolumenActum*)xar_obtinere(acta, i);
-            CREDO_VERUM(a->hora > prior);
-            CREDO_CHORDA_AEQUALIS(a->machina, machina);
-            CREDO_VERUM(hora_hybrida_momentum(a->hora) > nunc - LX * M);
-            CREDO_VERUM(hora_hybrida_momentum(a->hora) <= nunc);
-            prior = a->hora;
+            CREDO_VERUM(a->identitas.hora > prior);
+            CREDO_CHORDA_AEQUALIS(a->identitas.machina, machina);
+            CREDO_VERUM(hora_hybrida_momentum(a->identitas.hora) > nunc
+                - LX * M);
+            CREDO_VERUM(hora_hybrida_momentum(a->identitas.hora)
+                <= nunc);
+            prior = a->identitas.hora;
+        }
+        volumen_claudere(vol);
+    }
+
+
+    /* ========================================================
+     * PROBARE: basis actus (D2b) - super_appendere basim servat,
+     * appendere simplex sine basi; identitas per seq lectori aequalis
+     * ======================================================== */
+
+    {
+                 Volumen* vol;
+                     Xar* acta;
+            VolumenActum* a;
+        VolumenIdentitas  prima;
+        VolumenIdentitas  iterum;
+                     s64  seq_primum;
+                     s64  seq_secundum;
+
+        imprimere("\n--- Probans basim actuum ---\n");
+
+        vol = volumen_temporarium(piscina, "probatio_volumen_basis");
+        CREDO_NECESSE_NON_NIHIL(vol);
+        seq_primum = volumen_actum_appendere(vol, "d/mutatio",
+            chorda_ex_literis("primum", piscina));
+        CREDO_NECESSE(seq_primum > ZEPHYRUM);
+        CREDO_NECESSE(volumen_actum_identitas(vol, seq_primum, piscina,
+            &prima));
+        CREDO_VERUM(prima.hora > ZEPHYRUM);
+        CREDO_CHORDA_AEQUALIS(prima.machina,
+            machina_identitas(piscina));
+        seq_secundum = volumen_actum_super_appendere(vol, "d/mutatio",
+            chorda_ex_literis("secundum", piscina), prima);
+        CREDO_NECESSE(seq_secundum > seq_primum);
+        /* seq ignotum */
+        CREDO_FALSUM(volumen_actum_identitas(vol, seq_secundum + C,
+            piscina, &iterum));
+        /* actum non ultimum: identitas SUA, non posterioris */
+        CREDO_NECESSE(volumen_actum_identitas(vol, seq_primum, piscina,
+            &iterum));
+        CREDO_AEQUALIS_S64(iterum.hora, prima.hora);
+
+        acta = volumen_acta_legere(vol, seq_primum - I, piscina);
+        CREDO_NECESSE_NON_NIHIL(acta);
+        CREDO_NECESSE(xar_numerus(acta) == II);
+        a = (VolumenActum*)xar_obtinere(acta, ZEPHYRUM);
+        CREDO_AEQUALIS_S64(a->identitas.hora, prima.hora);
+        CREDO_AEQUALIS_S64(a->basis.hora, (s64)ZEPHYRUM);
+        a = (VolumenActum*)xar_obtinere(acta, I);
+        CREDO_AEQUALIS_S64(a->basis.hora, prima.hora);
+        CREDO_CHORDA_AEQUALIS(a->basis.machina, prima.machina);
+        CREDO_NECESSE(volumen_actum_identitas(vol, seq_secundum,
+            piscina,
+            &iterum));
+        CREDO_AEQUALIS_S64(iterum.hora, a->identitas.hora);
+        CREDO_CHORDA_AEQUALIS(iterum.machina, a->identitas.machina);
+        /* lector generum basim quoque fert */
+        {
+            constans character* genera[II];
+
+            genera[ZEPHYRUM]  = "d/mutatio";
+            genera[I]         = NIHIL;
+            acta = volumen_acta_generum_legere(vol, seq_primum, genera,
+                piscina);
+            CREDO_NECESSE(acta && xar_numerus(acta) == I);
+            CREDO_AEQUALIS_S64(((VolumenActum*)xar_obtinere(acta,
+                ZEPHYRUM))->basis.hora, prima.hora);
         }
         volumen_claudere(vol);
     }
@@ -743,18 +812,24 @@ s32 principale (vacuum)
         CREDO_NECESSE_NON_NIHIL(acta);
         CREDO_AEQUALIS_I32(xar_numerus(acta), IV);
         a = (VolumenActum*)xar_obtinere(acta, ZEPHYRUM);
-        CREDO_AEQUALIS_S64(a->hora, hora_hybrida_componere(decima,
+        CREDO_AEQUALIS_S64(a->identitas.hora,
+            hora_hybrida_componere(decima,
             ZEPHYRUM));
-        CREDO_CHORDA_AEQUALIS(a->machina, machina);
+        /* acta ante D2b: basis ignota */
+        CREDO_AEQUALIS_S64(a->basis.hora, (s64)ZEPHYRUM);
+        CREDO_CHORDA_AEQUALIS(a->identitas.machina, machina);
         a = (VolumenActum*)xar_obtinere(acta, I);
-        CREDO_AEQUALIS_S64(a->hora, hora_hybrida_componere(decima, I));
+        CREDO_AEQUALIS_S64(a->identitas.hora,
+            hora_hybrida_componere(decima, I));
         /* horologium retro: millisecunda prior, numerator tamen */
         a = (VolumenActum*)xar_obtinere(acta, II);
-        CREDO_AEQUALIS_S64(a->hora, hora_hybrida_componere(decima, II));
+        CREDO_AEQUALIS_S64(a->identitas.hora,
+            hora_hybrida_componere(decima, II));
         a = (VolumenActum*)xar_obtinere(acta, III);
-        CREDO_AEQUALIS_S64(a->hora, hora_hybrida_componere(decima
+        CREDO_AEQUALIS_S64(a->identitas.hora,
+            hora_hybrida_componere(decima
             + V * M + CCL, ZEPHYRUM));
-        CREDO_CHORDA_AEQUALIS(a->machina, machina);
+        CREDO_CHORDA_AEQUALIS(a->identitas.machina, machina);
         volumen_claudere(vol);
 
         /* codex vetus post migrationem: hora et machina NIHIL */
@@ -770,9 +845,10 @@ s32 principale (vacuum)
         CREDO_NECESSE_NON_NIHIL(acta);
         CREDO_AEQUALIS_I32(xar_numerus(acta), V);
         a = (VolumenActum*)xar_obtinere(acta, IV);
-        CREDO_AEQUALIS_S64(a->hora, hora_hybrida_componere(decima
+        CREDO_AEQUALIS_S64(a->identitas.hora,
+            hora_hybrida_componere(decima
             + V * M + CCL, I));
-        CREDO_CHORDA_AEQUALIS(a->machina, machina);
+        CREDO_CHORDA_AEQUALIS(a->identitas.machina, machina);
         volumen_claudere(vol);
         filum_delere(via_vetus);
     }

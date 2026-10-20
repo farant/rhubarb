@@ -151,3 +151,19 @@ already ignored the rest, so behaviour is identical; cost per open on
 a real 87 MB volume ~33 ms -> <1 ms. Plants 3 red (ramus,
 coniunctio, cursor missing from the list). Detail:
 lib/volumen.worklog.md.
+
+## 2026-10-20 - documents record their base (genera-datorum D2b)
+
+Content acts are appended with `volumen_actum_super_appendere`, base =
+identity of the act at the cursor (empty document = no base). After an
+undo the cursor is earlier, so the next act shares its base with the
+undone one: a fork, by the same test whether it happens locally or
+across machines. Notes (ramus, coniunctio, cursor) carry no base; the
+`<ramus ab="seq"/>` notes stay as the local view and keep driving
+undo/redo.
+
+The lookup reads into the document's long-lived piscina; done naively
+every act would leave a 16-char machine string there. It is copied to a
+stack buffer and the piscina rewound (notare/reficere). No test pins
+that (allocation counts per act are not isolable here) - say so if it
+ever matters.

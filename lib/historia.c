@@ -598,12 +598,37 @@ actum_appendere (
       chorda  actum,
          b32  coniunctum)
 {
-       s64 seq;
-    chorda ramus;
+                 s64 seq;
+              chorda ramus;
+    VolumenIdentitas basis;
+           character machina_basis[LXIV];
+      PiscinaNotatio nota;
 
     si (!h || chorda_vacua(actum))
     {
         redde ZEPHYRUM;
+    }
+    /* D2b: basis = actum ad cursorem (statum contra quem fit); ANTE
+     * notas, quae cursorem non movent sed seq sumunt */
+    basis.hora             = ZEPHYRUM;
+    basis.machina.datum    = NIHIL;
+    basis.machina.mensura  = ZEPHYRUM;
+    si (h->cursor > ZEPHYRUM)
+    {
+        /* lectio in piscinam documenti, statim reficitur: actum
+         * quodque aliter chordam machinae in ea relinqueret */
+        nota = piscina_notare(h->piscina);
+        si (   !volumen_actum_identitas(h->volumen, h->cursor,
+                h->piscina, &basis)
+            || basis.machina.mensura >= (i32)magnitudo(machina_basis))
+        {
+            piscina_reficere(h->piscina, nota);
+            redde ZEPHYRUM;
+        }
+        memcpy(machina_basis, basis.machina.datum,
+            (size_t)basis.machina.mensura);
+        basis.machina.datum = (i8*)machina_basis;
+        piscina_reficere(h->piscina, nota);
     }
     si (h->cursor < h->finis)
     {
@@ -624,7 +649,8 @@ actum_appendere (
         volumen_actum_appendere(h->volumen, h->genus_coniunctionis,
             chorda_ex_literis("<coniunctio/>", h->piscina));
     }
-    seq = volumen_actum_appendere(h->volumen, h->genus, actum);
+    seq = volumen_actum_super_appendere(h->volumen, h->genus, actum,
+        basis);
     si (seq <= ZEPHYRUM)
     {
         redde ZEPHYRUM;

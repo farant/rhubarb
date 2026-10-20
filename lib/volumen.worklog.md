@@ -208,3 +208,16 @@ machina).
   ("machina ignota") - machina.h's refuse-don't-degrade rule.
 - Hand lists that name volumen's closure grew: ludus_tessera and
   briar compile_probationes.sh (+ briar MUTATIONES line).
+
+## 2026-10-20 - act base (genera-datorum D2b)
+
+Migrations 10-11: `basis_hora`, `basis_machina` (NULL = no base or
+unknown; old acts stay NULL - no reconstruction from ramus notes).
+`volumen_actum_super_appendere` takes a `VolumenIdentitas`; the plain
+append is now a wrapper with an empty base. `volumen_actum_identitas`
+= PK lookup by seq. `VolumenActum`'s D2 fields moved under
+`identitas`, next to `basis`.
+
+A plant that made the identity lookup return the LAST act >= seq
+stayed green: every lookup in the test happened to target the newest
+act. Tightened with a lookup of the first act after the second exists.
