@@ -15,7 +15,7 @@
 
 <p>Each unit declares the questions it answers in <code>lib/S.interrogationes.stml</code> (canon <code>interrogationes.canon</code>). Every answer is anchored to a symbol, a path or a command, and the gate <code>interrogationes</code> turns red when an anchor dies. From the terminal: <code>bin/fabrica quid -interrogationes -quaere "how do I ..."</code>, or <code>-symbolum xar_addere</code> for the questions that name a symbol.</p>
 
-<p class="nota">814 questions in 94 units · quomodo 361 · possumne 231 · quid 131 · cur 91</p>
+<p class="nota">815 questions in 94 units · quomodo 362 · possumne 231 · quid 131 · cur 91</p>
 <ul>
 <li><a href="#actio">actio</a> <span class="nota">6</span></li>
 <li><a href="#aedilis">aedilis</a> <span class="nota">11</span></li>
@@ -27,7 +27,7 @@
 <li><a href="#chorda_aedificator">chorda_aedificator</a> <span class="nota">8</span></li>
 <li><a href="#color">color</a> <span class="nota">7</span></li>
 <li><a href="#componens">componens</a> <span class="nota">8</span></li>
-<li><a href="#credo">credo</a> <span class="nota">13</span></li>
+<li><a href="#credo">credo</a> <span class="nota">14</span></li>
 <li><a href="#css_lexema">css_lexema</a> <span class="nota">7</span></li>
 <li><a href="#delineare">delineare</a> <span class="nota">7</span></li>
 <li><a href="#delineare_mandata">delineare_mandata</a> <span class="nota">9</span></li>
@@ -368,17 +368,19 @@
 <div class="responsum">Yes, since credo III (2026-10-19): every _I32 helper prints with %u, so a value at or above 2^31 no longer shows as negative (before that the equality and inequality helpers used %d). For 64 bits there are full families: CREDO_*_S64 (signed) and CREDO_*_I64 (unsigned), each with AEQUALIS, INAEQUALITAS, MAIOR, MINOR and the AUT_AEQUALIS forms; a memoriae_index goes into the _I64 forms without a cast.<br><span class="nota">symbolum <code>_credo_notare_integrum_i32</code> <code>_credo_notare_integrum_inaequalitas_i32</code> <code>_credo_notare_i64</code></span></div></li>
 <li id="credo-7"><span class="status">quomodo</span>which assertion should I use for strings, byte buffers and floats?
 <div class="responsum">Chordas: CREDO_CHORDA_AEQUALIS, _CONTINET, _INCIPIT, _TERMINATUR, and CREDO_CHORDA_AEQUALIS_LITERIS against a C literal. Two C strings: CREDO_LITERAE_AEQUALES (NIHIL-safe; CREDO_CHORDAE_AEQUALES takes C strings too, despite its name, and is kept for old suites). Raw bytes: CREDO_OCTETI_AEQUALES(a, b, n), which names the first differing offset in hex. Floats: CREDO_F64_PROXIMUS and CREDO_F32_PROXIMUS for an absolute epsilon; CREDO_F64_RELATIVE(a, b, r) when magnitudes are very large or very small (|a-b| &lt;= r * max(|a|, |b|)); CREDO_F64_ULP(a, b, n) for &quot;within n representable doubles&quot; (-0.0 equals 0.0, NaN never equals anything). Prefer these over CREDO_VERUM(strcmp(...) == 0): a failing CREDO_VERUM can only print its expression, these print both values.<br><span class="nota">symbolum <code>_credo_notare_chordae</code> <code>_credo_notare_literae</code> <code>_credo_notare_octeti</code> <code>_credo_notare_f64_relative</code> <code>_credo_notare_f64_ulp</code></span></div></li>
-<li id="credo-8"><span class="status">quomodo</span>how do I stop a section early when a precondition fails instead of crashing on NIHIL?
+<li id="credo-8"><span class="status">quomodo</span>how do I see how much memory each section used?
+<div class="responsum">Run the suite with CREDO_VERDICTA=file (fabrica always does): every SECTIO line ends with three numbers in KiB - the peak use of the section's own piscina, the process footprint when the section ended, and how much the process's lifetime peak rose while it ran (the footprint counts compressed pages, which RSS hides). The lifetime peak never resets, so a light section after a heavy one shows a rise of 0, not the heavy one's peak. Nothing is printed to the human output: officina compares stdout with golden files.<br><span class="nota">symbolum <code>credo_suitam_currere</code> <code>memoria_processus_legere</code></span></div></li>
+<li id="credo-9"><span class="status">quomodo</span>how do I stop a section early when a precondition fails instead of crashing on NIHIL?
 <div class="responsum">CREDO_NECESSE(x) or CREDO_NECESSE_NON_NIHIL(p): it records the assertion and, if it failed, longjmps out of the section (marked ABORTA; purgare still runs). Outside a section it behaves like CREDO_VERUM. For a bail-out site with no expression (fixture missing, file not opened), CREDO_CULPA(&quot;reason&quot;) records an unconditional failure so the summary and exit code agree; it does not jump, so you still return yourself.<br><span class="nota">symbolum <code>_credo_necesse</code> <code>credo_suitam_currere</code></span></div></li>
-<li id="credo-9"><span class="status">quomodo</span>how do I test that code crashes, or does not crash or hang?
+<li id="credo-10"><span class="status">quomodo</span>how do I test that code crashes, or does not crash or hang?
 <div class="responsum">CREDO_NON_RUIT(expr), CREDO_NON_PENDET(expr, mora_ms) and CREDO_RUIT_CUM(expr, SIGSEGV) (or _INTRA with a deadline) run expr in a forked child; the parent waits, kills it with SIGKILL past the deadline (default CREDO_MORA_ORDINARIA_MS, 5000), and judges how it ended. They are statement macros on purpose: as a function argument, expr would be evaluated, and crash, in the parent. Assertions made inside the child are NOT counted by the parent.<br><span class="nota">symbolum <code>credo_processus_incipere</code> <code>credo_processus_iudicare</code> <code>credo_processus_filium_finire</code></span></div></li>
-<li id="credo-10"><span class="status">possumne</span>can CREDO_NON_RUIT catch a call that exits with an error code?
+<li id="credo-11"><span class="status">possumne</span>can CREDO_NON_RUIT catch a call that exits with an error code?
 <div class="responsum">No. With no expected signal the check passes whenever the child exited normally, whatever its exit status, so exit(I) inside the expression (for example a fatal piscina_allocare) or a failed CREDO_NECESSE in the child (which calls _exit(I)) still passes. Also the deadline counts 1 ms sleep iterations, not wall time, so real waits run long (the worklog measured about 25%).<br><span class="nota">symbolum <code>credo_processus_iudicare</code> <code>_credo_necesse</code></span></div></li>
-<li id="credo-11"><span class="status">quomodo</span>how do I give a test a scratch directory that is cleaned up?
+<li id="credo-12"><span class="status">quomodo</span>how do I give a test a scratch directory that is cleaned up?
 <div class="responsum">credo_area(c) inside a v2 section returns TMPDIR/suite.n.pid (n = the row's position in the table, from 1; in parare_suitae/purgare_suitae it is TMPDIR/suite.suita.pid), created on the first call; the whole tree is deleted after purgare, even after NECESSE or when a CREDO_NON_RUIT child created it. It returns NIHIL outside a running context or if the directory cannot be made.<br><span class="nota">symbolum <code>credo_area</code> <code>CredoContextus</code></span></div></li>
-<li id="credo-12"><span class="status">quomodo</span>how do I share an expensive fixture across sections or skip slow ones?
+<li id="credo-13"><span class="status">quomodo</span>how do I share an expensive fixture across sections or skip slow ones?
 <div class="responsum">credo_suitam_currere_cum(suita, sectiones, parare_suitae, purgare_suitae) runs parare_suitae once (its datum reaches every section as c-&gt;suita, read-only) and purgare_suitae always; if the fixture fails no section runs. Tag rows with signa from the closed set &quot;lentus rete fenestra repositorium&quot; and CREDO_SIGNA_OMITTE=&quot;rete&quot; reports them OMISSA; an unknown word fails the suite. CREDO_ORDO=mixtus shuffles the sections (seed printed) to find hidden shared state.<br><span class="nota">symbolum <code>credo_suitam_currere_cum</code> <code>CredoSectio</code> <code>CredoContextus</code></span></div></li>
-<li id="credo-13"><span class="status">quomodo</span>how do I mark a section as a known failure without turning the suite red?
+<li id="credo-14"><span class="status">quomodo</span>how do I mark a section as a known failure without turning the suite red?
 <div class="responsum">Write the reason in the row's exspectata_fracta field (an empty string is refused before anything runs). A failing or aborted section is then NOTA_FRACTA and counts as passing; if it starts passing it becomes INOPINATA and fails the suite, telling you to delete the line. CREDO_GRADUS(&quot;step&quot;) names the step inside a section so the first failure says which one.<br><span class="nota">symbolum <code>CredoSectio</code> <code>credo_suitam_currere</code></span></div></li>
 </ol>
 

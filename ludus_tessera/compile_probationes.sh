@@ -60,6 +60,7 @@ declare -a RADIX_FONTES=(
     "chorda"
     "chorda_aedificator"
     "credo"
+    "memoria_processus_macos"   # credo memoria T2 (2026-10-19)
     "xar"
     "utf8"
     "runae"

@@ -1,6 +1,7 @@
 /* credo.c */
 #include "postulata_posix.h"
 #include "credo.h"
+#include "memoria_processus.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1563,6 +1564,12 @@ nomen structura {
          memoriae_index  praeteriti;
          memoriae_index  totales;
            CredoNotatio* fractura;   /* prima; NIHIL si nulla */
+    /* memoria sectionis (credo memoria T2) in KiB - campi XII-XIV
+     * plagulae; zephyrum ubi non mensurata (omissa, parare suitae) */
+                    i64 arena_apex_kib;    /* apex usus piscinae */
+                    i64 vestigium_kib;     /* vestigium in fine */
+                    i64 apex_auctus_kib;   /* incrementum apicis
+                                             * vitae processus */
 } CredoSectionisSumma;
 
 interior CredoSectionisSumma
@@ -1573,9 +1580,12 @@ _credo_sectionem_summare (
     CredoSectionisSumma  summa;
            CredoNotatio* n;
 
-    summa.praeteriti  = ZEPHYRUM;
-    summa.totales     = ZEPHYRUM;
-    summa.fractura    = NIHIL;
+    summa.praeteriti       = ZEPHYRUM;
+    summa.totales          = ZEPHYRUM;
+    summa.fractura         = NIHIL;
+    summa.arena_apex_kib   = (i64)ZEPHYRUM;
+    summa.vestigium_kib    = (i64)ZEPHYRUM;
+    summa.apex_auctus_kib  = (i64)ZEPHYRUM;
     per (n = (ante != NIHIL) ? ante->sequens : _credo_primus; n
         != NIHIL;
          n = n->sequens)
@@ -1643,6 +1653,9 @@ _credo_sectionem_scribere (
     {
         fputs("\t\t\t", plagula);
     }
+    /* campi XII-XIV (credo memoria T2): memoria sectionis in KiB */
+    fprintf(plagula, "\t%llu\t%llu\t%llu", summa.arena_apex_kib,
+        summa.vestigium_kib, summa.apex_auctus_kib);
     fputc('\n', plagula);
     (vacuum)fflush(plagula);
 }
@@ -2312,6 +2325,8 @@ credo_suitam_currere_cum (
          CredoSectionisSumma  summa;
                          b32  aborta;
                          f64  initium;
+            MemoriaProcessus  memoria_ante;
+            MemoriaProcessus  memoria_post;
 
         /* i = sedes in tabula (area '<suita>.<i+1>.<pid>' stabilis) */
         i       = ordo[k];
@@ -2332,10 +2347,13 @@ credo_suitam_currere_cum (
             omissae++;
             si (plagula != NIHIL)
             {
-                summa.exitus      = "OMISSA";
-                summa.praeteriti  = ZEPHYRUM;
-                summa.totales     = ZEPHYRUM;
-                summa.fractura    = NIHIL;
+                summa.exitus           = "OMISSA";
+                summa.praeteriti       = ZEPHYRUM;
+                summa.totales          = ZEPHYRUM;
+                summa.fractura         = NIHIL;
+                summa.arena_apex_kib   = (i64)ZEPHYRUM;
+                summa.vestigium_kib    = (i64)ZEPHYRUM;
+                summa.apex_auctus_kib  = (i64)ZEPHYRUM;
                 _credo_sectionem_scribere(plagula, titulus_suitae,
                     sectio->titulus, summa, 0.0);
             }
@@ -2370,8 +2388,9 @@ credo_suitam_currere_cum (
         sprintf(signum, "%lu", (insignatus longus)(i + I));
         _credo_aream_ponere(&_credo_area_sectionis, &contextus,
             titulus_suitae, signum);
-        ante           = _credo_nunc;
-        initium        = _credo_ms_nunc();
+        ante     = _credo_nunc;
+        initium  = _credo_ms_nunc();
+        (vacuum)memoria_processus_legere(ZEPHYRUM, &memoria_ante);
         _credo_gradus  = NIHIL;
         aborta         = _credo_sectionem_agere(sectio, &contextus);
         _credo_gradus  = NIHIL;
@@ -2381,6 +2400,20 @@ credo_suitam_currere_cum (
         }
         _credo_aream_delere(&_credo_area_sectionis);
         summa = _credo_sectionem_summare(ante, aborta);
+        /* memoria (credo memoria T2): apex arenae ante destructionem;
+         * vestigium et apex vitae post purgare - apex numquam
+         * reficitur, ergo solum INCREMENTUM sectioni tribuitur */
+        summa.arena_apex_kib = (i64)piscina_summa_apex_usus(
+            contextus.piscina) / (i64)MXXIV;
+        si (memoria_processus_legere(ZEPHYRUM, &memoria_post))
+        {
+            summa.vestigium_kib = memoria_post.vestigium / (i64)MXXIV;
+            summa.apex_auctus_kib = memoria_post.vestigium_apex
+                > memoria_ante.vestigium_apex
+                ? (memoria_post.vestigium_apex
+                    - memoria_ante.vestigium_apex) / (i64)MXXIV
+                : (i64)ZEPHYRUM;
+        }
         piscina_destruere(contextus.piscina);
         cursae++;
         /* FRACTURA EXSPECTATA (credo II): fracta -> NOTA_FRACTA (suita

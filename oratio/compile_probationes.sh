@@ -71,6 +71,7 @@ declare -a RADIX_FONTES=(
     "utf8"
     "canon"
     "credo"
+    "memoria_processus_macos"   # credo memoria T2 (2026-10-19)
     "lectiones"   # materia_coctor lectiones crudas notat (fabrica spec 3 T3)
     "partitio"
     "partitio_aestimatio"

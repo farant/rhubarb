@@ -174,6 +174,12 @@ nomen structura {
                          * (non deterministicum); cursus solum */
     chorda fractura;    /* "filum:versus genus expressio"; vacua si
                          * transiit */
+    /* credo memoria T2 (campi XII-XIV, KiB): apex piscinae sectionis,
+     * vestigium in fine, incrementum apicis vitae; 0 si plagula X/XI
+     * (credo prior) - cursus solum, numquam in verdicto sigillato */
+       i32 arena_apex_kib;
+       i32 vestigium_kib;
+       i32 apex_auctus_kib;
 } FabricaSectio;
 
 nomen structura {

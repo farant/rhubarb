@@ -86,6 +86,7 @@ declare -a RADIX_FONTES=(
     "similitudo"
     "canon"
     "credo"
+    "memoria_processus_macos"   # credo memoria T2 (2026-10-19)
     # clausura silicis (bin/aedilis lib/silex.c --partes, 2026-09-05):
     # nexus regiones C per silvam parsat capitibus e FONTE silicis
     "filum"

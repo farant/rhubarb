@@ -7,7 +7,8 @@
 #        NECESSE in adiutore (purgare tamen, sequentia non), VACUA,
 #        titulus cum tabulatione effugitus, NECESSE in filio
 #        CREDO_NON_RUIT (filius exit, suita reliqua SEMEL), exitus I
-#   II   plagula: SECTIO X campi, SUITA VIII campi, linea per sectionem
+#   II   plagula: SECTIO XIV campi (credo memoria T2: + memoria KiB),
+#        SUITA VIII campi, linea per sectionem
 #   III  suita sana: exitus 0, SUITA TRANSIIT, compendium ut olim
 #   IV   filtrum CREDO_SECTIO: sectio sola; ignotum -> I, nominatum
 #   V    sine CREDO_VERDICTA: nulla plagula
@@ -53,6 +54,7 @@ fracta=0
 credo () { if [ "$1" -eq 0 ]; then echo "  ok   $2"; else echo "  FRACTUM $2"; fracta=$((fracta + 1)); fi; }
 struere () {   # $1 = fons in $T, $2 = binarium
     clang "${VEXILLA_C89[@]}" -Iinclude "$T/$1" lib/credo.c lib/piscina.c \
+        lib/memoria_processus_macos.c \
         lib/chorda.c lib/chorda_aedificator.c -o "$T/$2" > "$T/$2.err" 2>&1
 }
 
@@ -671,9 +673,9 @@ grep -q "^SECTIO	mixta	cum\\\\ttabulatione	TRANSIIT	" "$V"; credo $? "I titulus 
 [ "$(grep -c 'POST FILIUM$' "$T/o_mixta")" -eq 1 ] && [ "$(grep -c -- '--- Probans ultima ---' "$T/o_mixta")" -eq 1 ]; credo $? "I NECESSE in filio: filius exit, suita reliqua SEMEL (non in filio)"
 linea filius | grep -q "	TRANSIIT	1	1	"; credo $? "I filius: CREDO_NON_RUIT transiit (filius normaliter exiit)"
 grep -q "^SUITA	mixta	FRACTA	4	7	8	10	" "$V"; credo $? "I SUITA FRACTA 4/7 sectiones, 8/10 assertiones"
-mali=$(awk -F'\t' '($1 == "SECTIO" && NF != 11) || ($1 == "SUITA" && NF != 8) || ($1 == "INCIPIT" && NF != 3) || ($1 == "SECTIONES" && NF != 3) || ($1 != "SECTIO" && $1 != "SUITA" && $1 != "INCIPIT" && $1 != "SECTIONES")' "$V" | wc -l | tr -d ' ')
+mali=$(awk -F'\t' '($1 == "SECTIO" && NF != 14) || ($1 == "SUITA" && NF != 8) || ($1 == "INCIPIT" && NF != 3) || ($1 == "SECTIONES" && NF != 3) || ($1 != "SECTIO" && $1 != "SUITA" && $1 != "INCIPIT" && $1 != "SECTIONES")' "$V" | wc -l | tr -d ' ')
 [ "$mali" -eq 0 ] && [ "$(grep -c '^SECTIO	' "$V")" -eq 7 ] && [ "$(grep -c '^INCIPIT	' "$V")" -eq 7 ] \
-    && [ "$(head -1 "$V")" = "SECTIONES	mixta	7" ]; credo $? "II campi: SECTIO XI (gradus, credo II), SUITA VIII, INCIPIT III per sectionem, SECTIONES III primum, VII lineae SECTIO ($mali malae)"
+    && [ "$(head -1 "$V")" = "SECTIONES	mixta	7" ]; credo $? "II campi: SECTIO XIV (gradus credo II + memoria), SUITA VIII, INCIPIT III per sectionem, SECTIONES III primum, VII lineae SECTIO ($mali malae)"
 grep -q -- '--- Probans fracta ---' "$T/o_mixta" && grep -q ' FRACTA (credo_aequalis): I == II at ' "$T/o_mixta" \
     && grep -q '^=== SECTIONES: ' "$T/o_mixta" && grep -q '^Totalis:' "$T/o_mixta" && grep -q '^Conditio: FRACTA$' "$T/o_mixta"; credo $? "I effusio humana ut olim (Probans, FRACTA at, compendium)"
 
@@ -712,7 +714,7 @@ V="$T/v_om.tsv"
 [ "$rc" -eq 0 ] && grep -q "^SECTIO	signata	localis	TRANSIIT	1	1	" "$V" \
     && grep -q "^SECTIO	signata	retis	OMISSA	0	0	" "$V" && grep -q "^SECTIO	signata	lenta	OMISSA	0	0	" "$V" \
     && grep -q "^SUITA	signata	TRANSIIT	1	1	" "$V"; credo $? "VII CREDO_SIGNA_OMITTE=rete: II OMISSA in plagula, suita transit cursa I (erat $rc)"
-mali=$(awk -F'\t' '($1 == "SECTIO" && NF != 11) || ($1 == "SUITA" && NF != 8)' "$V" | wc -l | tr -d ' ')
+mali=$(awk -F'\t' '($1 == "SECTIO" && NF != 14) || ($1 == "SUITA" && NF != 8)' "$V" | wc -l | tr -d ' ')
 [ "$mali" -eq 0 ]; credo $? "VII lineae OMISSA campos XI ferunt ($mali malae)"
 grep -q "OMISSA retis (signum rete)" "$T/o_om" && grep -q "OMISSA lenta (signum rete)" "$T/o_om" \
     && ! grep -q -- '--- Probans retis ---' "$T/o_om"; credo $? "VII omissa in effusione nominatae, non cursae"
@@ -771,7 +773,7 @@ CREDO_VERDICTA="$T/v_sf.tsv" "$T/suita_fracta" > "$T/o_sf" 2>&1; rc=$?
 CREDO_VERDICTA="$T/v_gr.tsv" "$T/gradus" > "$T/o_gr" 2>&1; rc=$?
 V="$T/v_gr.tsv"
 [ "$rc" -eq 1 ] && awk -F'\t' '$1 == "SECTIO" && $3 == "scaena" && $4 == "FRACTA" && $5 == 1 && $6 == 3 && $10 == "I == II" && $11 == "II: secundus"' "$V" | grep -q .; credo $? "X fractura prima gradum suum fert (campus XI) (erat $rc)"
-awk -F'\t' '$1 == "SECTIO" && ($3 == "sine_gradu" || $3 == "post") && NF == 11 && $11 == ""' "$V" | wc -l | grep -q '^ *2$'; credo $? "X sine gradu campus vacuus; gradus sectionis prioris non manet"
+awk -F'\t' '$1 == "SECTIO" && ($3 == "sine_gradu" || $3 == "post") && NF == 14 && $11 == ""' "$V" | wc -l | grep -q '^ *2$'; credo $? "X sine gradu campus vacuus; gradus sectionis prioris non manet"
 grep -q ' FRACTA (credo_aequalis): I == II at .*gradus.c:[0-9]* (in gradu II: secundus)$' "$T/o_gr" \
     && grep -q -- '-- gradus I: primus --' "$T/o_gr" && grep -q -- '-- gradus III: tertius --' "$T/o_gr"; credo $? "X effusio: gradus nominati, fractura 'in gradu'"
 
@@ -1107,6 +1109,49 @@ habet '  Differentia: 0.1 (ε 0.01)' && habet '  Differentia: 0.5 (ε 0.25)'; cr
 habet '  Speratus: 1001 (relative 0.0001)' && habet '  Differentia: |a-b| 1, limes 0.1001'; credo $? "XIV F64 RELATIVE: limes r*max nominatus"
 habet '  Speratus: 0.29999999999999999 (0 ULP)' && habet '  Receptus: 0.30000000000000004' && habet '  Differentia: 1 ULP'; credo $? "XIV F64 ULP: distantia in ULP"
 habet '  Differentia: NaN - numquam aequalis'; credo $? "XIV F64 ULP: NaN numquam aequalis"
+
+# XV (credo memoria T2, 2026-10-19): MEMORIA PER SECTIONEM - campi XII-XIV
+# plagulae (KiB): apex arenae (piscina sectionis), vestigium in fine,
+# incrementum apicis vitae processus. Sectio gravis XXXII MiB in piscina
+# sua tangit; levis nihil. Effusio humana immutata (aurea officinae).
+cat > "$T/memoria.c" <<'FONS'
+#include "credo.h"
+#include <string.h>
+
+interior vacuum _gravis (CredoContextus* c)
+{
+    i8* alveus;
+
+    alveus = (i8*)piscina_allocare(c->piscina,
+        (memoriae_index)XXXII * MXXIV * MXXIV);
+    CREDO_NECESSE_NON_NIHIL(alveus);
+    memset(alveus, 0x5a, (memoriae_index)XXXII * MXXIV * MXXIV);
+    CREDO_VERUM(alveus[MXXIV] == 0x5a);
+}
+
+interior vacuum _levis (CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_VERUM(I == I);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "gravis", _gravis, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "levis", _levis, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("memoria", SECTIONES);
+}
+FONS
+struere memoria.c memoria || cat "$T/memoria.err"
+CREDO_VERDICTA="$T/memoria.tsv" "$T/memoria" > "$T/memoria.out" 2>&1; rcm=$?
+[ "$rcm" -eq 0 ] && awk -F'\t' '$1 == "SECTIO" && $3 == "gravis" && NF == 14 && $12 >= 32768 && $13 > 0 && $14 >= 30000' "$T/memoria.tsv" | grep -q .; credo $? "XV gravis: apex arenae >= XXXII MiB, vestigium > 0, apex auctus >= XXX MiB (rc $rcm: $(awk -F'\t' '$1 == "SECTIO" && $3 == "gravis" {print $12, $13, $14}' "$T/memoria.tsv"))"
+awk -F'\t' '$1 == "SECTIO" && $3 == "levis" && NF == 14 && $12 < 1024 && $13 > 0 && $14 < 4096' "$T/memoria.tsv" | grep -q .; credo $? "XV levis: apex arenae < I MiB, apex auctus parvus (apex vitae non reficitur: levis gravem non hereditat) ($(awk -F'\t' '$1 == "SECTIO" && $3 == "levis" {print $12, $13, $14}' "$T/memoria.tsv"))"
+! grep -q -E 'KiB|memoria|vestigium' "$T/memoria.out"; credo $? "XV effusio humana sine memoria (aurea officinae immutata)"
 
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus credo: sanum"; exit 0; fi

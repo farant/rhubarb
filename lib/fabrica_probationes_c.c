@@ -452,7 +452,7 @@ fabrica_sectiones_legere (
     per (i = ZEPHYRUM; i <= contentum.mensura; i++)
     {
         chorda versus;
-        chorda campi[XII];
+        chorda campi[XV];
            i32 n;
 
         si (i < contentum.mensura && contentum.datum[i] != '\n')
@@ -466,7 +466,7 @@ fabrica_sectiones_legere (
         {
             perge;
         }
-        n = _campos_findere(versus, campi, XI);
+        n = _campos_findere(versus, campi, XIV);
         si (chorda_aequalis_literis(campi[ZEPHYRUM], "SYNTHETICA"))
         {
             sectiones_out->synthetica = VERUM;
@@ -497,12 +497,15 @@ fabrica_sectiones_legere (
         {
             FabricaSectio* sectio;
 
-            /* X campi (credo I) aut XI (credo II: + gradus) */
-            si (n != X && n != XI)
+            /* X campi (credo I), XI (credo II: + gradus) aut XIV
+             * (credo memoria T2: + arena, vestigium, apex auctus,
+             * KiB) */
+            si (n != X && n != XI && n != XIV)
             {
                 *causa_out = _lineam_recusare(via, linea,
                     "linea SECTIO "
-                    "deformis (campi X aut XI exspectati)", piscina);
+                    "deformis (campi X, XI aut XIV exspectati)",
+                    piscina);
                 redde FALSUM;
             }
             sectio =
@@ -527,6 +530,22 @@ fabrica_sectiones_legere (
                     "sectionis deformis", piscina);
                 redde FALSUM;
             }
+            sectio->arena_apex_kib   = ZEPHYRUM;
+            sectio->vestigium_kib    = ZEPHYRUM;
+            sectio->apex_auctus_kib  = ZEPHYRUM;
+            si (   n == XIV
+                && (   !_numerum_legere(campi[XI],
+                           &sectio->arena_apex_kib)
+                    || !_numerum_legere(campi[XII],
+                           &sectio->vestigium_kib)
+                    || !_numerum_legere(campi[XIII],
+                           &sectio->apex_auctus_kib)))
+            {
+                *causa_out = _lineam_recusare(via, linea, "memoria "
+                    "sectionis deformis (KiB, IX cifrae ad summum)",
+                    piscina);
+                redde FALSUM;
+            }
             sectio->fractura = chorda_ex_literis("", piscina);
             si (campi[VII].mensura > ZEPHYRUM)
             {
@@ -537,7 +556,7 @@ fabrica_sectiones_legere (
                     " "), piscina);
                 sectio->fractura = chorda_concatenare(sectio->fractura,
                     _campum_solvere(campi[IX], piscina), piscina);
-                si (n == XI && campi[X].mensura > ZEPHYRUM)
+                si (n >= XI && campi[X].mensura > ZEPHYRUM)
                 {
                     sectio->fractura = chorda_concatenare(
                         sectio->fractura, fabricae_iungere(piscina,

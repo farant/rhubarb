@@ -931,6 +931,10 @@ nomen structura CredoSectio {
  *   SECTIO  suita  titulus  exitus  praeteriti  totales  ms
  *           filum:versus  genus  expressio  gradus  (fractura prima;
  *           vacua si transiit; gradus = CREDO_GRADUS currens, credo II)
+ *           arena_kib  vestigium_kib  apex_auctus_kib  (credo memoria
+ *           T2: apex usus piscinae sectionis, vestigium processus in
+ *           fine, incrementum apicis vitae dum sectio currit - KiB;
+ *           0 si omissa; effusio humana NIHIL de memoria dicit)
  *   SUITA   suita  exitus  transeuntes  sectiones  praeteriti  totales
  *           ms
  *   ORDO    suita  mixtus  semen          (credo II; ante sectiones,

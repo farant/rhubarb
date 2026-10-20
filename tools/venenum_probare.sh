@@ -36,7 +36,8 @@ T=$(mktemp -d); trap 'rm -rf "$T"' EXIT
 # sprintf domus legitimum est (cyclotomia, extensio)
 SANITAS=("-g" "-O1" "-fsanitize=address,undefined" "-fno-sanitize-recover=all"
     "-Wno-deprecated-declarations")
-BASIS=(lib/piscina.c lib/chorda.c lib/chorda_aedificator.c lib/credo.c lib/sors.c)
+BASIS=(lib/piscina.c lib/chorda.c lib/chorda_aedificator.c lib/credo.c lib/sors.c
+    lib/memoria_processus_macos.c)
 
 # I. specimen
 cat > "$T/specimen.c" <<'FONS'

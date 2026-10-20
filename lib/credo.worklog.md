@@ -567,3 +567,24 @@ lexicon) renamed `CREDO_ALVEUS_EFFUSIONIS` rather than glossed; `ulp` got
 an `ignotum-permissum` glossary entry (not a word in either corpus).
 Test: tools/credo_fumus.sh stage XIV (red first: rc 99 before the
 macros existed), 16 named failures + 21 passing forms.
+
+## 2026-10-19 - credo memoria T2: memory per section
+
+project-specs/credo-memoria-spec.md par. III. Each section's SECTIO line
+gains three KiB fields (XII-XIV): arena peak (`piscina_summa_apex_usus`
+of the section's own piscina, read before `piscina_destruere`), process
+footprint at section end, and the rise of the lifetime peak while the
+section ran (via `memoria_processus_legere(ZEPHYRUM, ...)` before
+`_credo_sectionem_agere` and after `purgare`). KiB, not octets, because
+fabrica's `_numerum_legere` accepts at most nine digits (49 GB in octets
+is eleven; nine digits of KiB is ~950 GB). The fabrica reader now accepts
+X | XI | XIV fields in the SAME commit - before, any other count made the
+whole member "deformis".
+
+Gotchas: the OMISSA path reuses the previous section's `summa`, so it
+zeroes the memory fields itself; credo now links `memoria_processus`, so
+every hand-written dependency list that names "credo" needed
+"memoria_processus_macos" too (briar, ludus_tessera, officina, oratio,
+tessera, credo_fumus struere, venenum BASIS; gesta regenerated).
+Measured in credo_fumus XV: a 32 MiB section reads 32768 / 33824 / 32800,
+the light section after it 0 / 1056 / 0.

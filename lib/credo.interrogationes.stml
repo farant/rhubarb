@@ -100,6 +100,19 @@
   </interrogatio>
 
   <interrogatio genus="quomodo">
+    <quaestio! (>how do I see how much memory each section used?
+    <responsum symbolum="credo_suitam_currere memoria_processus_legere">Run
+      the suite with CREDO_VERDICTA=file (fabrica always does): every
+      SECTIO line ends with three numbers in KiB - the peak use of the
+      section's own piscina, the process footprint when the section
+      ended, and how much the process's lifetime peak rose while it ran
+      (the footprint counts compressed pages, which RSS hides). The
+      lifetime peak never resets, so a light section after a heavy one
+      shows a rise of 0, not the heavy one's peak. Nothing is printed to
+      the human output: officina compares stdout with golden files.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
     <quaestio! (>how do I stop a section early when a precondition fails instead of crashing on NIHIL?
     <responsum symbolum="_credo_necesse credo_suitam_currere">CREDO_NECESSE(x)
       or CREDO_NECESSE_NON_NIHIL(p): it records the assertion and, if
