@@ -2057,6 +2057,758 @@ part_measures (void)
     }
 }
 
+static double
+seconds (
+    clock_t t0)
+{
+    return (double)(clock() - t0) / (double)CLOCKS_PER_SEC;
+}
+
+/* ================================================================
+ * Umbrae, width and depth; competition and retrieval (task 1)
+ * ================================================================ */
+
+enum { U_DANGLING, U_SLOT, U_ROOT };
+
+typedef struct {
+    int type;
+    int from, to;           /* opened at word from (0: boundary 0, the
+                               root umbra), closed at word to; open at
+                               the boundaries t with from <= t < to */
+    int word;               /* the dependent; the verb for the root */
+} Umbra;
+
+typedef struct {
+    int   nu, nback, width;
+    Umbra u[MAXW + 1];
+    int   depth[MAXW + 1];      /* by the left-to-right sweep */
+    int   umbra_of[MAXW + 1];   /* word (1-based) -> its arc's umbra; the
+                                   verb -> the root umbra; -1: a backward
+                                   attachment */
+} Umbrae;
+
+static int
+relation_of (
+    const Analysis *a,
+    int             d)
+{
+    const Reading *x = &readings[a->rd[d - 1]];
+    int            h = a->head[d - 1];
+
+    if (h == 0) return R_ROOT;
+    if (x->kind == K_ADJ) return R_AMOD;
+    if (readings[a->rd[h - 1]].kind == K_NOUN) return R_NMOD;
+    if (x->cas == NOM) return R_NSUBJ;
+    if (x->cas == ACC) return R_OBJ;
+    if (x->cas == DAT) return R_IOBJ;
+    return R_OBL;
+}
+
+/* required relations: nsubj, obj, and iobj (which only dat / dant take) */
+static int
+required (
+    int r)
+{
+    return r == R_NSUBJ || r == R_OBJ || r == R_IOBJ;
+}
+
+/* the umbrae of a pair: heads and readings only, no level */
+static void
+build_umbrae (
+    const Analysis *a,
+    int             n,
+    Umbrae         *u)
+{
+    int d, t, j, k, i, c, m;
+    int open[MAXW + 1], nopen = 0;
+
+    u->nu = u->nback = u->width = 0;
+    for (d = 1; d <= n; d++) {
+        int    h = a->head[d - 1];
+        Umbra *x = &u->u[u->nu];
+
+        if (h == 0) {
+            x->type = U_ROOT; x->from = 0; x->to = d;
+        } else if (d < h) {
+            x->type = U_DANGLING; x->from = d; x->to = h;
+        } else if (required(relation_of(a, d))) {
+            x->type = U_SLOT; x->from = h; x->to = d;
+        } else {
+            u->umbra_of[d] = -1;     /* backward attachment */
+            u->nback++;
+            continue;
+        }
+        x->word = d;
+        u->depth[u->nu] = -1;
+        u->umbra_of[d] = u->nu++;
+    }
+    for (t = 0; t < n; t++) {
+        c = 0;
+        for (k = 0; k < u->nu; k++)
+            if (u->u[k].from <= t && t < u->u[k].to) c++;
+        if (c > u->width) u->width = c;
+    }
+    /* depth by a sweep: when word j closes an umbra, count the umbrae
+     * still open that were opened after it and outlive j */
+    for (k = 0; k < u->nu; k++)
+        if (u->u[k].from == 0) open[nopen++] = k;
+    for (j = 1; j <= n; j++) {
+        for (k = 0; k < nopen; k++) {
+            const Umbra *x = &u->u[open[k]];
+
+            if (x->to != j) continue;
+            c = 0;
+            for (i = 0; i < nopen; i++) {
+                const Umbra *y = &u->u[open[i]];
+                if (y->from > x->from && y->to > j) c++;
+            }
+            u->depth[open[k]] = c;
+        }
+        m = 0;
+        for (k = 0; k < nopen; k++)
+            if (u->u[open[k]].to != j) open[m++] = open[k];
+        nopen = m;
+        for (k = 0; k < u->nu; k++)
+            if (u->u[k].from == j) open[nopen++] = k;
+    }
+}
+
+/* depth, second route: the umbra arcs opened strictly inside umbra k's
+ * span that outlive it (the arcs that cross it, later-opened) */
+static int
+depth_pairwise (
+    const Umbrae *u,
+    int           k)
+{
+    int i, c = 0;
+
+    for (i = 0; i < u->nu; i++)
+        if (u->u[k].from < u->u[i].from && u->u[i].from < u->u[k].to
+            && u->u[i].to > u->u[k].to)
+            c++;
+    return c;
+}
+
+/* compatibility: some reading of form x and some reading of form y
+ * satisfy relation r, x the dependent, y the head (local: no global
+ * constraint) */
+static unsigned char comp_rel[NLEVELS][R_AMOD + 1][MAXF][MAXF];
+static unsigned char comp_any[NLEVELS][MAXF][MAXF];
+
+static int
+rel_ok (
+    const Reading *x,
+    const Reading *y,
+    int            r)
+{
+    if (r == R_AMOD)
+        return x->kind == K_ADJ && y->kind == K_NOUN && x->cas == y->cas
+            && x->gender == y->gender && x->number == y->number;
+    if (x->kind != K_NOUN) return 0;
+    if (r == R_NMOD) return x->cas == GEN && y->kind == K_NOUN;
+    if (y->kind != K_VERB) return 0;
+    if (r == R_NSUBJ) return x->cas == NOM && x->number == y->number;
+    if (r == R_OBJ) return x->cas == ACC;
+    if (r == R_IOBJ) return x->cas == DAT && verbs[y->lemma].ditrans;
+    if (r == R_OBL) return x->cas == ABL;
+    return 0;
+}
+
+static void
+build_comp (void)
+{
+    int lv, fx, fy, i, j, r;
+
+    memset(comp_rel, 0, sizeof comp_rel);
+    memset(comp_any, 0, sizeof comp_any);
+    for (lv = 0; lv < NLEVELS; lv++)
+        for (fx = 0; fx < n_forms[lv]; fx++)
+            for (fy = 0; fy < n_forms[lv]; fy++)
+                for (i = 0; i < form_nr[lv][fx]; i++)
+                    for (j = 0; j < form_nr[lv][fy]; j++)
+                        for (r = R_NSUBJ; r <= R_AMOD; r++)
+                            if (rel_ok(&readings[form_rd[lv][fx][i]],
+                                    &readings[form_rd[lv][fy][j]], r)) {
+                                comp_rel[lv][r][fx][fy] = 1;
+                                comp_any[lv][fx][fy] = 1;
+                            }
+}
+
+/* w in d's subtree (w == d included), by walking up from w */
+static int
+descends (
+    const Analysis *a,
+    int             w,
+    int             d)
+{
+    int steps = 0;
+
+    while (w != 0 && steps++ <= MAXW) {
+        if (w == d) return 1;
+        w = a->head[w - 1];
+    }
+    return 0;
+}
+
+/* yields as bitmasks (bit k = word k + 1), second route for subtrees and
+ * for the displaced arcs */
+static void
+yields (
+    const Analysis *a,
+    int             n,
+    int            *yl)
+{
+    int d, pass;
+
+    for (d = 1; d <= n; d++) yl[d] = 1 << (d - 1);
+    for (pass = 0; pass < n; pass++)
+        for (d = 1; d <= n; d++)
+            if (a->head[d - 1] != 0) yl[a->head[d - 1]] |= yl[d];
+}
+
+typedef struct {
+    int nd;
+    int word[MAXW];             /* displaced dependents, 1-based, in order */
+    int dep_first[MAXW];
+    int competed[MAXW], retrieved[MAXW];
+    int competed_rel[MAXW], retrieved_rel[MAXW];   /* own relation only */
+    int competed_blind[MAXW];   /* any noun as near: morphology-blind */
+} Labels;
+
+/* competition and retrieval of the displaced arcs (mask: bit d - 1) at
+ * level lv */
+static void
+label_arcs (
+    int             lv,
+    const Analysis *a,
+    int             n,
+    int             mask,
+    const Umbrae   *u,
+    Labels         *lb)
+{
+    int f[MAXW], k, d;
+
+    for (k = 0; k < n; k++) f[k] = form_of[lv][a->rd[k]];
+    lb->nd = 0;
+    for (d = 1; d <= n; d++) {
+        int h, r, dist, w, c = 0, cr = 0, cb = 0, ret = 1, retr = 1;
+
+        if (!(mask & (1 << (d - 1)))) continue;
+        h = a->head[d - 1];
+        r = relation_of(a, d);
+        dist = h > d ? h - d : d - h;
+        for (w = 1; w <= n; w++) {
+            if (w == d || w == h || (w > d ? w - d : d - w) > dist) continue;
+            if (descends(a, w, d)) continue;
+            if (comp_any[lv][f[d - 1]][f[w - 1]]) c = 1;
+            if (comp_rel[lv][r][f[d - 1]][f[w - 1]]) cr = 1;
+            if (form_kind(lv, f[w - 1]) == K_NOUN) cb = 1;
+        }
+        if (d < h) {
+            /* h arrives: the dangling umbrae open at boundary h - 1 that
+             * could depend on h, beyond the ones h closes */
+            for (k = 0; k < u->nu; k++) {
+                const Umbra *x = &u->u[k];
+
+                if (x->type != U_DANGLING || x->from > h - 1 || x->to <= h - 1
+                    || x->to == h)
+                    continue;
+                if (comp_any[lv][f[x->word - 1]][f[h - 1]]) ret = 0;
+                if (comp_rel[lv][r][f[x->word - 1]][f[h - 1]]) retr = 0;
+            }
+        } else {
+            /* d arrives: the earlier words it could depend on, beyond h */
+            for (w = 1; w < d; w++) {
+                if (w == h) continue;
+                if (comp_any[lv][f[d - 1]][f[w - 1]]) ret = 0;
+                if (comp_rel[lv][r][f[d - 1]][f[w - 1]]) retr = 0;
+            }
+        }
+        lb->word[lb->nd] = d;
+        lb->dep_first[lb->nd] = d < h;
+        lb->competed[lb->nd] = c;
+        lb->competed_rel[lb->nd] = cr;
+        lb->competed_blind[lb->nd] = cb;
+        lb->retrieved[lb->nd] = ret;
+        lb->retrieved_rel[lb->nd] = retr;
+        lb->nd++;
+    }
+}
+
+/* the checks of one pass over the pairs */
+typedef struct {
+    s64 pairs, crossed, disp, disp_df;
+    s64 bad_count;       /* umbrae + backward attachments != arcs + 1 */
+    s64 bad_depth;       /* sweep depth != pairwise depth */
+    s64 bad_proj;        /* projective pair with an umbra of depth > 0 */
+    s64 bad_rel;         /* a displaced arc neither amod nor nmod */
+    s64 bad_disp;        /* displaced set != the yield route's */
+    s64 bad_mono;        /* L0 RETRIEVED but L1 not, or L0 CLEAR but L1 not */
+    s64 bad_tc;          /* the true partner not compatible (T in C, h in C) */
+    s64 bad_sub;         /* competition by subtree walk != by yields */
+    s64 bad_rt;          /* a root umbra missing or not the verb's */
+} UChecks;
+
+/* competition of one displaced arc again, the subtree excluded by yields */
+static int
+competed_by_yields (
+    int             lv,
+    const Analysis *a,
+    int             n,
+    const int      *yl,
+    int             d)
+{
+    int h = a->head[d - 1];
+    int dist = h > d ? h - d : d - h;
+    int fd = form_of[lv][a->rd[d - 1]];
+    int w;
+
+    for (w = 1; w <= n; w++) {
+        if (w == d || w == h || (w > d ? w - d : d - w) > dist) continue;
+        if (yl[d] & (1 << (w - 1))) continue;
+        if (comp_any[lv][fd][form_of[lv][a->rd[w - 1]]]) return 1;
+    }
+    return 0;
+}
+
+/* one pair: umbrae, the displaced arcs, labels at every level, checks */
+static void
+check_pair (
+    const Analysis *a,
+    int             n,
+    UChecks        *ck)
+{
+    Umbrae u;
+    Labels lb[NLEVELS];
+    int    ix = tree_index(a->head, n), mask = t_npmask[n][ix], mask2 = 0;
+    int    yl[MAXW + 1], k, d, lv, i, roots = 0;
+
+    build_umbrae(a, n, &u);
+    ck->pairs++;
+    if (!t_proj[n][ix]) ck->crossed++;
+    if (u.nu + u.nback != n) ck->bad_count++;
+    for (k = 0; k < u.nu; k++) {
+        if (u.depth[k] != depth_pairwise(&u, k)) ck->bad_depth++;
+        if (t_proj[n][ix] && u.depth[k] != 0) ck->bad_proj++;
+        if (u.u[k].type == U_ROOT) {
+            roots++;
+            if (a->head[u.u[k].word - 1] != 0
+                || readings[a->rd[u.u[k].word - 1]].kind != K_VERB)
+                ck->bad_rt++;
+        }
+    }
+    if (roots != 1) ck->bad_rt++;
+    yields(a, n, yl);
+    for (d = 1; d <= n; d++) {
+        int h = a->head[d - 1], lo, hi, w;
+
+        if (h == 0) continue;
+        lo = h < d ? h : d;
+        hi = h < d ? d : h;
+        for (w = lo + 1; w < hi; w++)
+            if (!(yl[h] & (1 << (w - 1)))) mask2 |= 1 << (d - 1);
+        if ((mask & (1 << (d - 1))) && relation_of(a, d) != R_AMOD
+            && relation_of(a, d) != R_NMOD)
+            ck->bad_rel++;
+    }
+    if (mask2 != mask) ck->bad_disp++;
+    for (lv = 0; lv < NLEVELS; lv++) {
+        label_arcs(lv, a, n, mask, &u, &lb[lv]);
+        for (i = 0; i < lb[lv].nd; i++) {
+            int h, w;
+
+            d = lb[lv].word[i];
+            h = a->head[d - 1];
+            if (competed_by_yields(lv, a, n, yl, d) != lb[lv].competed[i])
+                ck->bad_sub++;
+            if (lb[lv].dep_first[i]) {
+                for (w = 1; w < h; w++)
+                    if (a->head[w - 1] == h && !comp_any[lv][form_of[lv][
+                        a->rd[w - 1]]][form_of[lv][a->rd[h - 1]]])
+                        ck->bad_tc++;
+            } else if (!comp_any[lv][form_of[lv][a->rd[d - 1]]][
+                    form_of[lv][a->rd[h - 1]]]) {
+                ck->bad_tc++;
+            }
+        }
+    }
+    for (i = 0; i < lb[0].nd; i++) {
+        ck->disp++;
+        ck->disp_df += lb[0].dep_first[i];
+        if ((lb[0].retrieved[i] && !lb[1].retrieved[i])
+            || (!lb[0].competed[i] && lb[1].competed[i])
+            || (lb[0].retrieved_rel[i] && !lb[1].retrieved_rel[i])
+            || (!lb[0].competed_rel[i] && lb[1].competed_rel[i]))
+            ck->bad_mono++;
+    }
+}
+
+/* every pair, once, by the L1 bags (multisets of readings): the labels of
+ * one pair at all four levels side by side */
+static void
+umbra_pass (
+    int      maxlen,
+    UChecks *ck)
+{
+    long i = 0;
+
+    memset(ck, 0, sizeof *ck);
+    while (i < an_entries[1].n) {
+        long     j = i, s;
+        int      bag[MAXW], nb, p, k, a, nc;
+        Analysis canon[MAXA];
+
+        while (j < an_entries[1].n && an_entries[1].e[j].bag
+            == an_entries[1].e[i].bag)
+            j++;
+        decode_bag(an_entries[1].e[i].bag, bag, &nb);
+        if (nb > maxlen) {
+            i = j;
+            continue;
+        }
+        nc = (int)(j - i);
+        for (s = i; s < j; s++)
+            decode_key(an_entries[1].e[s].key, &canon[s - i], nb);
+        for (p = 0; p < nperms[nb]; p++) {
+            const int *sig = perms[nb][p];
+            int        inv[MAXW];
+
+            if (!first_order(bag, sig, nb)) continue;
+            for (k = 0; k < nb; k++) inv[sig[k]] = k;
+            for (a = 0; a < nc; a++) {
+                for (k = 0; k < nb; k++) {
+                    int h = canon[a].head[k];
+                    mapped[a].head[inv[k]] = h == 0 ? 0 : inv[h - 1] + 1;
+                    mapped[a].rd[inv[k]] = canon[a].rd[k];
+                }
+                check_pair(&mapped[a], nb, ck);
+            }
+        }
+        i = j;
+    }
+}
+
+static void
+umbra_checks (
+    const char    *where,
+    const UChecks *ck,
+    s64            pairs,
+    s64            crossed)
+{
+    char msg[400];
+
+    printf("  %s: %lld pairs, %lld crossed, %lld displaced arcs (%lld "
+        "dependent first)\n", where, (long long)ck->pairs,
+        (long long)ck->crossed, (long long)ck->disp, (long long)ck->disp_df);
+    snprintf(msg, sizeof msg, "%s: the pass meets every pair once (%lld) and "
+        "every crossed pair (%lld)", where, (long long)pairs,
+        (long long)crossed);
+    check(msg, ck->pairs == pairs && ck->crossed == crossed);
+    snprintf(msg, sizeof msg, "%s: umbrae (root included) + backward "
+        "attachments == arcs + 1, every pair; one root umbra, closed at the "
+        "verb", where);
+    check(msg, ck->bad_count == 0 && ck->bad_rt == 0);
+    snprintf(msg, sizeof msg, "%s: depth by the sweep == depth by crossing "
+        "later-opened umbra arcs, every umbra", where);
+    check(msg, ck->bad_depth == 0);
+    snprintf(msg, sizeof msg, "%s: a projective pair (root arc included) has "
+        "depth 0 everywhere", where);
+    check(msg, ck->bad_proj == 0);
+    snprintf(msg, sizeof msg, "%s: displaced arcs are amod or nmod only "
+        "(KC 58.2), and the per-arc set (tree table) == the yield route's",
+        where);
+    check(msg, ck->bad_rel == 0 && ck->bad_disp == 0);
+    snprintf(msg, sizeof msg, "%s: no competitor lies in d's own subtree "
+        "(competition with the subtree by walking up == by yields), every "
+        "displaced arc at every level", where);
+    check(msg, ck->bad_sub == 0);
+    snprintf(msg, sizeof msg, "%s: the true partner is always a candidate "
+        "(T in C dependent first, h in C head first), every level", where);
+    check(msg, ck->bad_tc == 0);
+    snprintf(msg, sizeof msg, "%s: exactly half the displaced arcs are "
+        "dependent first (reversing a string keeps the pair, its displaced "
+        "arcs and their kind, and swaps the two directions)", where);
+    check(msg, 2 * ck->disp_df == ck->disp);
+    snprintf(msg, sizeof msg, "%s: per arc, RETRIEVED at L0 => at L1 and "
+        "CLEAR at L0 => at L1, the relation-specific variants too (L1 "
+        "readings are a subset)", where);
+    check(msg, ck->bad_mono == 0);
+}
+
+/* hand-worked sentences of plan.md: width, depths, labels, R_P */
+typedef struct {
+    const char *title;
+    int         lv, n;
+    int         rd[MAXW], head[MAXW];
+    const char *text;
+    int         width, root_depth, max_depth;
+    int         nd;                 /* displaced arcs, in word order: */
+    int         dword[MAXW];        /* the dependent */
+    int         ddepth[MAXW];       /* its umbra's depth, -1: backward */
+    int         dcomp[MAXW], dretr[MAXW];
+    int         misread;            /* truth outside R_P(s) */
+} HandU;
+
+#define NHANDU 32
+static HandU handu[NHANDU];
+static int   n_handu = 0;
+
+static HandU *
+hand_new (
+    const char *title,
+    int         lv,
+    const char *text,
+    int         width,
+    int         root_depth,
+    int         max_depth,
+    int         misread)
+{
+    HandU *x = &handu[n_handu++];
+
+    memset(x, 0, sizeof *x);
+    x->title = title;
+    x->lv = lv;
+    x->text = text;
+    x->width = width;
+    x->root_depth = root_depth;
+    x->max_depth = max_depth;
+    x->misread = misread;
+    return x;
+}
+
+static void
+hand_word (
+    HandU *x,
+    int    rd,
+    int    head)
+{
+    x->rd[x->n] = rd;
+    x->head[x->n] = head;
+    x->n++;
+}
+
+static void
+hand_disp (
+    HandU *x,
+    int    word,
+    int    depth,
+    int    competed,
+    int    retrieved)
+{
+    x->dword[x->nd] = word;
+    x->ddepth[x->nd] = depth;
+    x->dcomp[x->nd] = competed;
+    x->dretr[x->nd] = retrieved;
+    x->nd++;
+}
+
+static void
+hand_sentences_umbrae (void)
+{
+    HandU *x;
+
+    n_handu = 0;
+    /* 1: projective; also at L3 */
+    x = hand_new("1. puella dominum amat", 0, "puella dominum amat", 3, 0, 0,
+        0);
+    hand_word(x, rd_noun(0, NOM, SG), 3);
+    hand_word(x, rd_noun(1, ACC, SG), 3);
+    hand_word(x, rd_verb(0), 0);
+    handu[n_handu] = *x;
+    x = &handu[n_handu++];
+    x->title = "1. at L3 (puella dominus amat)";
+    x->lv = 3;
+    x->text = "puella dominus amat";
+    x->misread = 0;
+    /* 2: bonum -> dominum, gender keeps puella out */
+    x = hand_new("2. bonum puella dominum amat", 0,
+        "bonum puella dominum amat", 3, 0, 1, 0);
+    hand_word(x, rd_adj(0, MASC, ACC, SG), 3);
+    hand_word(x, rd_noun(0, NOM, SG), 4);
+    hand_word(x, rd_noun(1, ACC, SG), 4);
+    hand_word(x, rd_verb(0), 0);
+    hand_disp(x, 1, 1, 0, 1);
+    /* 3: D131's garden path */
+    x = hand_new("3. bona puella dona amat", 0, "bona puella dona amat", 3, 0,
+        1, 1);
+    hand_word(x, rd_adj(0, NEUT, ACC, PL), 3);
+    hand_word(x, rd_noun(0, NOM, SG), 4);
+    hand_word(x, rd_noun(2, ACC, PL), 4);
+    hand_word(x, rd_verb(0), 0);
+    hand_disp(x, 1, 1, 1, 1);
+    /* 4: crossed via the root arc */
+    x = hand_new("4. regis puella amat dominum", 0,
+        "regis puella amat dominum", 3, 1, 1, 1);
+    hand_word(x, rd_noun(3, GEN, SG), 4);
+    hand_word(x, rd_noun(0, NOM, SG), 3);
+    hand_word(x, rd_verb(0), 0);
+    hand_word(x, rd_noun(1, ACC, SG), 3);
+    hand_disp(x, 1, 0, 1, 1);
+    /* 5: the golden line */
+    x = hand_new("5. bona bonum amat puella dominum", 0,
+        "bona bonum amat puella dominum", 4, 2, 2, 0);
+    hand_word(x, rd_adj(0, FEM, NOM, SG), 4);
+    hand_word(x, rd_adj(0, MASC, ACC, SG), 5);
+    hand_word(x, rd_verb(0), 0);
+    hand_word(x, rd_noun(0, NOM, SG), 3);
+    hand_word(x, rd_noun(1, ACC, SG), 3);
+    hand_disp(x, 1, 2, 0, 1);
+    hand_disp(x, 2, 0, 0, 1);
+    /* 6: competed, not misread (P empty) */
+    x = hand_new("6. bona amat puella dona", 0, "bona amat puella dona", 3, 1,
+        1, 0);
+    hand_word(x, rd_adj(0, NEUT, ACC, PL), 4);
+    hand_word(x, rd_verb(0), 0);
+    hand_word(x, rd_noun(0, NOM, SG), 2);
+    hand_word(x, rd_noun(2, ACC, PL), 2);
+    hand_disp(x, 1, 0, 1, 1);
+    /* 7: regis -> dominum, puella nearer */
+    x = hand_new("7. puella regis amat dominum", 0,
+        "puella regis amat dominum", 3, 1, 1, 1);
+    hand_word(x, rd_noun(0, NOM, SG), 3);
+    hand_word(x, rd_noun(3, GEN, SG), 4);
+    hand_word(x, rd_verb(0), 0);
+    hand_word(x, rd_noun(1, ACC, SG), 3);
+    hand_disp(x, 2, 0, 1, 1);
+    /* 8: head first; regis a backward attachment */
+    x = hand_new("8. dominum amat regis puella", 0,
+        "dominum amat regis puella", 2, 0, 0, 1);
+    hand_word(x, rd_noun(1, ACC, SG), 2);
+    hand_word(x, rd_verb(0), 0);
+    hand_word(x, rd_noun(3, GEN, SG), 1);
+    hand_word(x, rd_noun(0, NOM, SG), 2);
+    hand_disp(x, 3, -1, 1, 1);
+    /* 11: the competitor rule skips d's own subtree (re-check L1):
+     * puellarum depends on regis and is nearer than dominum, but would
+     * close a cycle; puella is too far, amat a verb: CLEAR. puella and
+     * dominum both come earlier and could take regis: INTERFERED. Every
+     * analysis crosses the root arc */
+    x = hand_new("11. puella dominum amat regis puellarum", 0,
+        "puella dominum amat regis puellarum", 3, 0, 0, 0);
+    hand_word(x, rd_noun(0, NOM, SG), 3);
+    hand_word(x, rd_noun(1, ACC, SG), 3);
+    hand_word(x, rd_verb(0), 0);
+    hand_word(x, rd_noun(3, GEN, SG), 2);
+    hand_word(x, rd_noun(0, GEN, PL), 4);
+    hand_disp(x, 4, -1, 0, 0);
+    /* six words (the analyser and the tree table take any length up to
+     * MAXW, quick mode included), retrieval failing with competition clear. 9: dependent
+     * first - when dominum arrives, the open subject puellae (nom pl) has
+     * a genitive reading that could depend on it; puella is feminine, so
+     * no nearer word can take bonum; one analysis, so R_P reads it */
+    x = hand_new("9. bonum puellae dominum amant rege forti (six words)", 0,
+        "bonum puellae dominum amant rege forti", 3, 0, 1, 0);
+    hand_word(x, rd_adj(0, MASC, ACC, SG), 3);
+    hand_word(x, rd_noun(0, NOM, PL), 4);
+    hand_word(x, rd_noun(1, ACC, SG), 4);
+    hand_word(x, rd_verb(1), 0);
+    hand_word(x, rd_noun(3, ABL, SG), 4);
+    hand_word(x, rd_adj(1, MASC, ABL, SG), 5);
+    hand_disp(x, 1, 1, 0, 0);
+    /* 10: head first - rege, puella and dominum all come before regis and
+     * could take it; none but dominum is as near (amat is a verb, fortis
+     * in regis's own subtree); every analysis crosses the root arc, so P
+     * is empty */
+    x = hand_new("10. rege puella dominum amat regis fortis (six words)", 0,
+        "rege puella dominum amat regis fortis", 4, 0, 0, 0);
+    hand_word(x, rd_noun(3, ABL, SG), 4);
+    hand_word(x, rd_noun(0, NOM, SG), 4);
+    hand_word(x, rd_noun(1, ACC, SG), 4);
+    hand_word(x, rd_verb(0), 0);
+    hand_word(x, rd_noun(3, GEN, SG), 3);
+    hand_word(x, rd_adj(1, MASC, GEN, SG), 5);
+    hand_disp(x, 5, -1, 0, 0);
+}
+
+static void
+part_hand_umbrae (void)
+{
+    int k, i;
+
+    printf("\n--- hand-worked sentences: umbrae and labels ---\n");
+    hand_sentences_umbrae();
+    for (k = 0; k < n_handu; k++) {
+        const HandU *x = &handu[k];
+        int          str[MAXW], na, t = -1, ok, mask, rootd = -1, maxd = 0;
+        char         text[200], msg[600], lab[200];
+        Analysis     truth;
+        Readers      r;
+        Umbrae       u;
+        Labels       lb;
+
+        text[0] = '\0';
+        for (i = 0; i < x->n; i++) {
+            str[i] = form_of[x->lv][x->rd[i]];
+            truth.head[i] = x->head[i];
+            truth.rd[i] = x->rd[i];
+            if (i > 0) strcat(text, " ");
+            strcat(text, form_text[x->lv][str[i]]);
+        }
+        na = analyse(x->lv, str, x->n, abuf, MAXA);
+        for (i = 0; i < na; i++)
+            if (analysis_key(&abuf[i], x->n) == analysis_key(&truth, x->n))
+                t = i;
+        if (t < 0) {
+            snprintf(msg, sizeof msg, "%s: the truth is an analysis of %s",
+                x->title, text);
+            check(msg, 0);
+            continue;
+        }
+        read_with(abuf, na, x->n, &r);
+        build_umbrae(&truth, x->n, &u);
+        for (i = 0; i < u.nu; i++) {
+            if (u.u[i].type == U_ROOT) rootd = u.depth[i];
+            if (u.depth[i] > maxd) maxd = u.depth[i];
+        }
+        mask = t_npmask[x->n][tree_index(truth.head, x->n)];
+        label_arcs(x->lv, &truth, x->n, mask, &u, &lb);
+        ok = strcmp(text, x->text) == 0 && u.width == x->width
+            && rootd == x->root_depth && maxd == x->max_depth
+            && lb.nd == x->nd && (!r.in_rp[t]) == x->misread;
+        lab[0] = '\0';
+        for (i = 0; i < lb.nd; i++) {
+            int  d = lb.word[i];
+            int  dd = u.umbra_of[d] < 0 ? -1 : u.depth[u.umbra_of[d]];
+            char one[80];
+
+            if (i >= x->nd || d != x->dword[i] || dd != x->ddepth[i]
+                || lb.competed[i] != x->dcomp[i]
+                || lb.retrieved[i] != x->dretr[i])
+                ok = 0;
+            snprintf(one, sizeof one, "%s%s -> %s, %s, depth %d, %s, %s",
+                i ? "; " : "", form_text[x->lv][str[d - 1]],
+                form_text[x->lv][str[truth.head[d - 1] - 1]],
+                lb.dep_first[i] ? "dependent first" : "head first", dd,
+                lb.competed[i] ? "COMPETED" : "CLEAR",
+                lb.retrieved[i] ? "RETRIEVED" : "INTERFERED");
+            strcat(lab, one);
+        }
+        snprintf(msg, sizeof msg, "%s: width %d, root depth %d, max depth %d; "
+            "%s; %s by R_P", x->title, u.width, rootd, maxd,
+            lb.nd ? lab : "no displaced arc", r.in_rp[t] ? "read"
+            : "MISREAD");
+        check(msg, ok);
+    }
+}
+
+static void
+part_umbrae_five (void)
+{
+    UChecks ck;
+    clock_t t0 = clock();
+    s64     pairs = 0, crossed = 0;
+    int     n;
+
+    printf("\n--- umbrae, width, depth and labels: every pair up to %d words "
+        "(checks only) ---\n", gmaxw);
+    for (n = 0; n <= gmaxw; n++) pairs += level_pairs[0][n];
+    crossed = meas[0].b_den;
+    umbra_pass(gmaxw, &ck);
+    printf("  (%.1f s)\n", seconds(t0));
+    umbra_checks(quick ? "up to four words" : "up to five words", &ck, pairs,
+        crossed);
+}
+
 /* ================================================================
  * Six words: feasibility (task 0; counts only)
  * ================================================================ */
@@ -2066,13 +2818,6 @@ part_measures (void)
  * and selects the same pairs at every level. In bag_code order, the bag
  * of rank r is in the subset iff r % SUBSET_K == 0. */
 #define SUBSET_K 128
-
-static double
-seconds (
-    clock_t t0)
-{
-    return (double)(clock() - t0) / (double)CLOCKS_PER_SEC;
-}
 
 static double
 megabytes (
@@ -2235,6 +2980,19 @@ part_six (void)
     check("six words: projective + crossed == the six-word pairs, and the "
         "split is the same at every level", same_split);
     {
+        UChecks ck;
+        s64     pairs = 0;
+
+        printf("\n  umbrae, width, depth and labels: every pair up to six "
+            "words (checks only)\n");
+        for (n = 0; n <= MAXW; n++) pairs += level_pairs[0][n];
+        t0 = clock();
+        umbra_pass(MAXW, &ck);
+        printf("  (%.1f s)\n", seconds(t0));
+        umbra_checks("up to six words", &ck, pairs, meas[0].b_den
+            + cross[0]);
+    }
+    {
         s64 p5, c5;
 
         sweep_length(0, 5, &p5, &c5);
@@ -2303,6 +3061,7 @@ main (void)
     printf("KNOTAPEL DEMO 134: umbra width of the toy world%s\n", quick
         ? " (QUICK MODE: up to four words, no six-word part)" : "");
     build_world();
+    build_comp();
     build_perms();
     part_paradigms();
     part_trees();
@@ -2310,6 +3069,8 @@ main (void)
     part_order();
     part_hand();
     part_measures();
+    part_hand_umbrae();
+    part_umbrae_five();
     if (!quick) part_six();
     printf("\n=== %d pass, %d fail ===\n", n_pass, n_fail);
     return n_fail == 0 ? 0 : 1;

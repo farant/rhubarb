@@ -297,7 +297,7 @@ measures it; a long run goes detached (python double fork + `setsid` +
    the oracle's six-word subset - counts only, no umbra, label or B
    numbers. *Done 2026-10-20 (Task 0 findings below).*
 1. **T1:** umbrae, width, depth, competition and retrieval labels;
-   Part A checks; six-word hand sentences; plants.
+   Part A checks; six-word hand sentences; plants. *Done 2026-10-20 (Task 1 notes below).*
 2. **T2:** measures, U2a / U2b / U1 decided, `oracle_d134.py`, rule
    checks; plants.
 3. **T3:** findings.md, claims.md (KC 61), ledger (N17), archive.sh.
@@ -428,3 +428,70 @@ one floor for both tests.
   reproduce the 2,250 bags and 6,670,440 pairs before any measure (a
   pin). Every registered six-word number is computed by C on all pairs;
   the oracle pins the subset's totals, stated as partial.
+
+## Task 1 notes (2026-10-20)
+
+- **Implemented as defined above**, in `main.c` after Part B:
+  `build_umbrae` (dangling, slot, root; backward attachments counted;
+  width over the boundaries; depth by a left-to-right sweep),
+  `build_comp` (comp(r, x, y) per level from the readings, x a NOUN for
+  every relation but amod), `label_arcs` (COMPETED / CLEAR, RETRIEVED /
+  INTERFERED, plus the relation-specific and morphology-blind variants
+  for T2). One pass meets every pair once, by the L1 bags (multisets of
+  readings), so a pair's labels at L0, L1, L2 and L3 sit side by side
+  and the per-arc theorem L0 => L1 is checked arc by arc. The pass
+  prints checks and counts only: no label share, width or depth
+  distribution, and no B (T2).
+- **Checks, all green at four, five and six words** (six: 816,286,080
+  pairs up to six words, 664,166,400 crossed, 1,016,804,352 displaced
+  arcs, 403-464 s for the pass at four levels; whole run 8-10
+  minutes, under 290 MB; final run 90 checks, 0 failures):
+  umbrae + backward attachments == arcs + 1 and one root umbra closed at
+  the verb; depth by the sweep == depth by pairwise crossing of
+  later-opened umbra arcs; projective => depth 0; displaced arcs amod /
+  nmod only, and the tree table's per-arc set == a yield route's;
+  competition with the subtree excluded by walking up == by yields; the
+  true partner is always a candidate (T in C, h in C); per arc,
+  RETRIEVED at L0 => at L1 and CLEAR at L0 => at L1 (variants too).
+  New, a theorem: **exactly half the displaced arcs are dependent
+  first** - reversing a string keeps the pair (word order is free), its
+  displaced arcs (checked on the tree table) and their kind, and swaps
+  the directions. Deferred to T2, where P(s) and the per-level passes
+  live: "covered => competed", and width / depth the same at every level
+  (here true by construction: `build_umbrae` takes no level).
+- **Hand sentences:** 1-8 exactly as worked in this plan, first run.
+  Six words, retrieval failing with competition clear: **9** *bonum
+  puellae dominum amant rege forti* (dependent first: when *dominum*
+  arrives, the open subject *puellae*, nom. pl., has a genitive reading
+  that could depend on it; *puellae* is feminine, so no nearer word can
+  take *bonum*; one analysis, read) and **10** *rege puella dominum amat
+  regis fortis* (head first: *rege*, *puella*, *dominum* all could take
+  *regis*; only *dominum* is as near; every analysis crosses the root
+  arc, read). **11** *puella dominum amat regis puellarum* (five words)
+  pins re-check L1: *puellarum* hangs on *regis* and is nearer than
+  *dominum*, but would close a cycle, so CLEAR.
+- **Noticed while working 9 (existence, not a count):** retrieval can
+  fail by a SUBJECT. The first declension's *-ae* is nom. pl. and gen.
+  sg., so an open plural subject is a genitive candidate for every noun
+  that arrives before the verb (already at four words: *bonum puellae
+  dominum amant*). The review's "retrieval can hardly fail at five
+  words" was about two nouns of one case, gender and number beside an
+  adjective; this is a second route, through case syncretism of the
+  candidate rather than of the displaced word.
+- **Open for Fran (a reading of the registered definition, no data
+  seen):** re-check L1 took d's own subtree out of COMPETITION (a
+  descendant would close a cycle); the RETRIEVAL candidates, as
+  registered, keep it - C is a match on endings, made when the later
+  word arrives, before its own attachment is known (cue-based retrieval
+  matches features, not trees). So a word in the subtree can be a
+  retrieval candidate (a genitive of a head-first genitive, placed
+  before it). Implemented as registered; proposed for T2: report how many
+  INTERFERED labels rest only on a subtree candidate, descriptive,
+  without changing U2b.
+- **Plants (silva.planta, all red):** v1's literal comp (sentence 5
+  turns COMPETED), the sweep counting same-word openings, the root
+  umbra never open, optional head-first arcs made slots, T not set
+  aside, head-first h counted against itself, the yield route's wrong
+  yield, width counting the closing boundary, the subtree exclusion
+  dropped (green at four words until sentence 11 was added - a plant
+  found the gap).
