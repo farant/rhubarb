@@ -1207,6 +1207,68 @@ CREDO_SIGNA_OMITTE=gravis CREDO_VERDICTA="$T/tectum4.tsv" "$T/tectum" > "$T/tect
   && ! grep -q credo_memoria "$T/tectum2.out"
 credo $? "XVI ordinarium CCLVI et 0 nihil frangunt; CREDO_SIGNA_OMITTE=gravis OMISSA (rc $rt2 $rt3 $rt4)"
 
+# XVII (credo memoria T4, 2026-10-20, porta venenum): SUB ASAN tectum
+# arenam SOLAM iudicat - quarantina ASan (CCLVI MB) et umbra in vestigio
+# sunt, incrementum apicis sectionis non est (plexus: auctus 268.9 MiB
+# cum quarantina, 38.7 sine; arena 37.3 utrimque). Quarantina ipsa in
+# fixa reproduci nequit (paginae otiosae uniformes comprimuntur: auctus
+# ~1 MiB, mensuratum), ergo 'quarantina' incrementum EXTRA arenam
+# fabricat: LXIV MiB malloc forma non uniformi, arena nulla - sub tecto 16
+# transit; 'magna' XXXII MiB in piscina: FRACTA apex arenae etiam sub ASan
+cat > "$T/asan.c" <<'FONS'
+#include "credo.h"
+#include <stdlib.h>
+#include <string.h>
+
+interior vacuum _quarantina (CredoContextus* c)
+{
+    memoriae_index  k;
+         character* b;
+
+    (vacuum)c;
+    b = (character*)malloc((memoriae_index)LXIV * MXXIV * MXXIV);
+    CREDO_NECESSE_NON_NIHIL(b);
+    per (k = ZEPHYRUM; k < (memoriae_index)LXIV * MXXIV * MXXIV; k++)
+    {
+        b[k] = (character)((k * XXXI) ^ (k >> VIII));
+    }
+    CREDO_VERUM(b[MXXIV] == (character)((MXXIV * XXXI) ^ (MXXIV >> VIII)));
+    free(b);
+}
+
+interior vacuum _magna (CredoContextus* c)
+{
+    i8* alveus;
+
+    alveus = (i8*)piscina_allocare(c->piscina,
+        (memoriae_index)XXXII * MXXIV * MXXIV);
+    CREDO_NECESSE_NON_NIHIL(alveus);
+    memset(alveus, 0x5a, (memoriae_index)XXXII * MXXIV * MXXIV);
+    CREDO_VERUM(alveus[MXXIV] == 0x5a);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "quarantina", _quarantina, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "magna", _magna, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("asan", SECTIONES);
+}
+FONS
+clang "${VEXILLA_C89[@]}" -Iinclude -g -O1 -fsanitize=address -Wno-deprecated-declarations \
+    "$T/asan.c" lib/credo.c lib/piscina.c lib/memoria_processus_macos.c \
+    lib/chorda.c lib/chorda_aedificator.c -o "$T/asan" > "$T/asan.err" 2>&1 || cat "$T/asan.err"
+CREDO_MEMORIA_MB=16 CREDO_VERDICTA="$T/asan.tsv" "$T/asan" > "$T/asan.out" 2>&1; ra=$?
+[ "$ra" -eq 1 ] && [ "$(exitus_t "$T/asan.tsv" quarantina)" = TRANSIIT ] \
+  && awk -F'\t' '$1 == "SECTIO" && $3 == "quarantina" && $14 > 65536' "$T/asan.tsv" | grep -q . \
+  && [ "$(exitus_t "$T/asan.tsv" magna)" = FRACTA ] \
+  && grep -qE "FRACTA \(credo_memoria\): sectio 'magna' apex arenae 32\.[0-9] MiB > tectum 16 MiB" "$T/asan.out"
+credo $? "XVII sub ASan: quarantina (auctus $(awk -F'\t' '$1 == "SECTIO" && $3 == "quarantina" {print $14}' "$T/asan.tsv") KiB, arena 0) transit, magna FRACTA apex arenae (rc $ra)"
+
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus credo: sanum"; exit 0; fi
 echo "fumus credo: FRACTUM ($fracta)"; exit 1

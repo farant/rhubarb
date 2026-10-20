@@ -148,6 +148,23 @@ Rules as built:
 Test: credo_fumus XVI, with two plants (check never fires; signum
 ignored).
 
+*Correction 2026-10-20 (found by the merge check, gate venenum).* Under
+AddressSanitizer the peak rise isn't the section's own: ASan keeps freed
+memory in a quarantine (256 MB by default) and adds shadow memory, both
+counted in the process footprint. probatio_plexus "partitio contra
+Artin" under ASan has a 37.3 MiB arena either way, but its rise is
+268.9 MiB with the quarantine and 38.7 MiB without, so it failed a
+ceiling it doesn't really approach. When credo is compiled under ASan
+(`__SANITIZE_ADDRESS__` or clang's `__has_feature(address_sanitizer)`),
+the ceiling now judges the arena peak only; all three numbers are still
+written. Turning off the quarantine in venenum was rejected (it blunts
+use-after-free detection), and so was disabling the ceiling there (it
+loses the arena check). Test: credo_fumus XVII, built with
+-fsanitize=address. A 64 MiB malloc outside the arena passes; a 32 MiB
+arena section still fails. The quarantine itself can't be reproduced in
+a fixture, because idle uniform pages compress to about 1 MiB. Plant:
+exemption removed, red.
+
 **Subsystem suites aren't covered yet:** all 133 are still credo v1
 (SYNTHETICA `totum`, no memory fields), so the per-section ceiling
 can't see them until the subsystem migration. Whole-process footprint

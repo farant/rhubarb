@@ -2062,6 +2062,21 @@ _credo_signum_commune (
     redde FALSUM;
 }
 
+/* SUB ASAN (mensuratum 2026-10-20, fusio quintae, porta venenum):
+ * quarantina AddressSanitizer (CCLVI MB ordinarie) et memoria umbrae in
+ * vestigio processus sunt - incrementum apicis sub sanitatore sectionis
+ * NON est. probatio_plexus 'partitio contra Artin': arena 37.3 MiB
+ * utrimque, auctus 268.9 MiB cum quarantina, 38.7 sine. Ergo sub ASan
+ * tectum arenam SOLAM iudicat (plagula numeros omnes tamen fert); id
+ * tempore compilationis scitur. */
+#if defined(__SANITIZE_ADDRESS__)
+#define CREDO_SUB_ASAN
+#elif defined(__has_feature)
+#if __has_feature(address_sanitizer)
+#define CREDO_SUB_ASAN
+#endif
+#endif
+
 /* TECTUM MEMORIAE (credo memoria T4; credo.h): pondus sectionis =
  * maior apicis arenae et incrementi apicis vitae, contra tectum eius.
  * Supra = fractura 'credo_memoria' nominata (filum = suita, versus =
@@ -2099,14 +2114,22 @@ _credo_memoriam_iudicare (
     {
         tectum_mb = (s64)CREDO_MEMORIA_ORDINARIA_MB;
     }
-    pondus = (s64)(arena > auctus ? arena : auctus);
+    pondus = (s64)arena;
+#ifndef CREDO_SUB_ASAN
+    si (auctus > arena)
+    {
+        pondus = (s64)auctus;
+    }
+#else
+    (vacuum)auctus;
+#endif
     si (tectum_mb <= (s64)ZEPHYRUM || pondus <= tectum_mb * (s64)MXXIV)
     {
         redde;
     }
     decimae = pondus * (s64)X / (s64)MXXIV;
     sprintf(expressio, "sectio '%.120s' %s %ld.%ld MiB > tectum %ld MiB"
-        " (signum gravis %s)", sectio->titulus, arena >= auctus
+        " (signum gravis %s)", sectio->titulus, pondus == (s64)arena
         ? "apex arenae" : "apex auctus", (longus)(decimae / X),
         (longus)(decimae % X), (longus)tectum_mb, gravis ? "adest"
         : "abest");

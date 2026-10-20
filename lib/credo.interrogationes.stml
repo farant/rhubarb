@@ -127,7 +127,10 @@
       add "gravis" to its signa field; CREDO_SIGNA_OMITTE=gravis then
       skips such sections. CREDO_MEMORIA_MB=N replaces the ordinary
       ceiling for one run (0 turns it off). The check runs only when a
-      section ends, so it can't stop a runaway loop.</responsum>
+      section ends, so it can't stop a runaway loop. When credo is
+      compiled under AddressSanitizer only the arena peak is judged:
+      ASan's quarantine (256 MB by default) and shadow memory sit in the
+      process footprint, so the rise there isn't the section's.</responsum>
   </interrogatio>
 
   <interrogatio genus="quomodo">

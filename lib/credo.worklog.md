@@ -618,3 +618,29 @@ same-named members, rename by sites, not by pattern.
 The subsystem suites (133) are all v1 (SYNTHETICA), so they're
 invisible here; whole-process `/usr/bin/time -l` shows six silva corpus
 suites at 4.1-7.6 GB (park 01M5CQYDD841) - relevant for T6, not T4.
+
+## 2026-10-20 - the ceiling under AddressSanitizer
+
+The quinta merge check went 42/43; venenum was red: probatio_plexus
+"partitio contra Artin" had a 269 MiB peak rise against 256 MiB. In the
+plain root run the same section is 37 MiB. Same binary, two runs: arena
+37.3 MiB both times; rise 268.9 MiB with ASan's default quarantine, 38.7
+MiB with `ASAN_OPTIONS=quarantine_size_mb=0`. ASan's quarantine and
+shadow memory are in the process footprint, so "how much the process
+peak rose" isn't a property of the section under a sanitizer. My T4
+design didn't consider that.
+
+Fix: compile-time `CREDO_SUB_ASAN` (`__SANITIZE_ADDRESS__`, or
+`__has_feature(address_sanitizer)` behind `defined(__has_feature)` so
+non-clang compilers and silva's model skip it), and under it the weight
+is the arena peak alone. The parameter then goes unused, which
+-Werror rejects, so the ASan branch has `(vacuum)auctus;`. The first
+ASan fixture build caught this, and venenum's build would have failed
+on it the same way.
+
+Fixture lesson: a fixture can't produce a quarantine-sized rise. 16 MiB
+blocks bypassed the quarantine (rise 0), and 4096 × 32 KiB freed blocks
+gave about 1 MiB, presumably because idle uniform pages get compressed.
+The stage instead makes the rise outside the arena directly (64 MiB
+malloc, non-uniform fill, held for the section), which tests what
+matters: under ASan, the rise isn't judged.
