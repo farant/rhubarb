@@ -208,11 +208,14 @@ included) and substitutes it for `{}`; tried in manifest order; a URI
 argument (`<genus>`, `<genus>/...`, `<genus>?...`) is never an alias.
 Aliases that need computation stay code in the pane's argument
 function (calendar `YYYY-MM` -> today if inside that month; pictor
-create-on-unknown).
+create-on-unknown). A typed alias never matches the EMPTY argument
+(only a neutral `<cognomen semita=.../>` does). A computed alias that
+overlaps a type is tried FIRST: `dies` accepts the shape `2026-10`, so
+the calendar checks `YYYY-MM` before the manifest's aliases (R4e).
 
 | pane | aliases |
 |---|---|
-| sancti | `""` -> `sancti/index`; typus `nomen` -> `sancti/sanctus/{}` |
+| sancti | `""` -> `sancti/index`; typus `textus` -> `sancti/sanctus/{}` (R4e: ids carry hyphens, `nomen` refuses them) |
 | calendarium | `agenda`; typus `dies` -> `calendarium/dies/{}` (so `hodie`); `YYYY-MM` stays code |
 | nomenclator | `""` -> `nomenclator/`; typus `numerus` -> `nomenclator/{}` |
 | pictor | none declared; create-on-unknown stays code |

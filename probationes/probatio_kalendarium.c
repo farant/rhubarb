@@ -2164,6 +2164,20 @@ _probare_semitas (
         "calendarium/agenda?rubrica_filtrum=domus"));
     CREDO_VERUM(semita_est(x, c->piscina,
         "calendarium/agenda?rubrica_filtrum=domus"));
+    /* semitae R4e: valores symbolici ad limen resoluti (hodie fixa
+     * 2026-10-14) - cognomen typatum et URI */
+    CREDO_VERUM(kalendarium_argumentum_ponere(&x->m, "hodie"));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "calendarium/dies/2026-10-14?rubrica_filtrum=domus"));
+    CREDO_VERUM(kalendarium_argumentum_ponere(&x->m, "cras"));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "calendarium/dies/2026-10-15?rubrica_filtrum=domus"));
+    CREDO_VERUM(kalendarium_argumentum_ponere(&x->m,
+        "calendarium/mensis/heri"));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "calendarium/mensis/2026-10-13?rubrica_filtrum=domus"));
+    CREDO_VERUM(kalendarium_argumentum_ponere(&x->m,
+        "calendarium/agenda?rubrica_filtrum=domus"));
     /* mala: nihil mutatur */
     CREDO_FALSUM(kalendarium_argumentum_ponere(&x->m,
         "calendarium/dies/2026-02-30"));

@@ -66,3 +66,17 @@ changed one brings it back to all defaults (canonical route "proba").
   path segments as attributes (names the binding).
 - `semita_legere_persistentem` = canonical minus vita transiens; the
   binding is named only if some persistent ligatio field exists.
+
+## 2026-10-20 — semitae R4e: cognomina + symbolic values (Fran approved)
+
+- `semita_ex_argumento`: URI of the genus first, else the manifest's
+  `<cognomina>` in order - fixed (exact), typed (`organum_typum_iudicare`,
+  never the empty argument, `{}` replaced by the ESCAPED argument), neutral
+  (empty argument only); NIHIL = none matched (the pane tries its computed
+  aliases, or refuses).
+- Symbolic values (`dies`: hodie/heri/cras) pass `organum_valorem_iudicare`,
+  so URIs and typed aliases carry them; `_iudicare` refuses them only when
+  APPLYING (ramus given). `semita_resolvere` swaps the attribute's valor
+  pointer for the resolver's concrete value; children by montatio.
+- Order trap: `est_dies` accepts `2026-10` (length 7), so the calendar's
+  computed `YYYY-MM` alias must run before the manifest's typed `dies`.

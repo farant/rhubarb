@@ -63,6 +63,13 @@
             scriptor="sancti.agere"/>
   </status>
 
+  <!-- semitae R4e: argumentum nudum -> semita (id sancti textus est:
+       lineolae nomini non licent) -->
+  <cognomina>
+    <cognomen semita="sancti/index"/>
+    <cognomen typus="textus" semita="sancti/sanctus/{}"/>
+  </cognomina>
+
   <basis genus="organum_commune"/>
   <montationes/>
 </organum>

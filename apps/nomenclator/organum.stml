@@ -71,6 +71,12 @@
             nota="res menu illuminata; absens = nulla"/>
   </status>
 
+  <!-- semitae R4e: argumentum nudum -> semita -->
+  <cognomina>
+    <cognomen semita="nomenclator/"/>
+    <cognomen typus="numerus" semita="nomenclator/{}"/>
+  </cognomina>
+
   <basis genus="organum_commune"/>
   <montationes/>
 </organum>

@@ -2891,35 +2891,6 @@ organa_nomenclatoris (
     redde ((NomenclatorFigurae*)m->figurae_ctx)->organum;
 }
 
-/* argumentum ut semita: URI ("nomenclator", "nomenclator/...",
- * "nomenclator?...") aut cognomen - "<id>" -> persona aperta, "" ->
- * index (persona_aperta sublata). NIHIL si malum. */
-interior StmlNodus*
-semita_argumenti (
-    NomenclatorMontatio* m,
-     constans character* argumentum,
-                 chorda* vitium)
-{
-     StmlNodus* n;
-           i32  l;
-
-    l = (i32)strlen(argumentum);
-    si (   strncmp(argumentum, "nomenclator", XI) == ZEPHYRUM
-        && (l == XI || argumentum[XI] == '/' || argumentum[XI] == '?'))
-    {
-        redde semita_ex_uri(organa_nomenclatoris, m, chorda_ex_literis(
-            argumentum, m->piscina), m->piscina, m->intern, vitium);
-    }
-    n = stml_elementum_creare(m->piscina, m->intern, "nomenclator");
-    si (   !n
-        || !stml_attributum_addere(n, m->piscina, m->intern,
-               "persona_aperta", argumentum))
-    {
-        redde NIHIL;
-    }
-    redde n;
-}
-
 b32
 nomenclator_argumentum_ponere (
      NomenclatorMontatio* m,
@@ -2934,7 +2905,9 @@ nomenclator_argumentum_ponere (
     {
         redde FALSUM;
     }
-    semita = semita_argumenti(m, argumentum ? argumentum : "", &vitium);
+    /* semitae R4e: URI aut cognomen manifesti ("" index, "<id>") */
+    semita = semita_ex_argumento(organa_nomenclatoris, m, "nomenclator",
+        argumentum ? argumentum : "", m->piscina, m->intern, &vitium);
     si (!semita)
     {
         redde FALSUM;

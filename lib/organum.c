@@ -15,6 +15,7 @@ structura Organum {
        Xar* actiones;     /* Xar de OrganumActio */
        Xar* portae;       /* Xar de OrganumPorta */
        Xar* montationes;  /* Xar de OrganumMontatio (semitae R0) */
+       Xar* cognomina;    /* Xar de OrganumCognomen (semitae R4e) */
 };
 
 
@@ -71,6 +72,24 @@ vitium_addere (
     sprintf(buffer, "linea %d: campus '%.*s': %s",
         (integer)(nodus ? nodus->linea : ZEPHYRUM),
         (integer)titulus.mensura, (constans character*)titulus.datum,
+        nuntius);
+    *(chorda*)xar_addere(vitia) = chorda_ex_literis(buffer, piscina);
+}
+
+/* semitae R4e: vitium cognominis (semita nominatur) */
+interior vacuum
+vitium_cognominis (
+                   Xar* vitia,
+               Piscina* piscina,
+             StmlNodus* nodus,
+                chorda  semita,
+    constans character* nuntius)
+{
+    character buffer[DXII];
+
+    sprintf(buffer, "linea %d: cognomen '%.*s': %s",
+        (integer)(nodus ? nodus->linea : ZEPHYRUM),
+        (integer)semita.mensura, (constans character*)semita.datum,
         nuntius);
     *(chorda*)xar_addere(vitia) = chorda_ex_literis(buffer, piscina);
 }
@@ -172,6 +191,32 @@ est_dies (
         }
     }
     redde VERUM;
+}
+
+/* semitae R4e: valores symbolici typi dies (ad limen resolvuntur) */
+hic_manens constans character* constans symbola_diei[] = {
+    "hodie", "heri", "cras", NIHIL
+};
+
+interior b32
+symbolum_typi (
+    chorda typus,
+    chorda valor)
+{
+    i32 i;
+
+    si (!chorda_aequalis_literis(typus, "dies"))
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; symbola_diei[i]; i++)
+    {
+        si (chorda_aequalis_literis(valor, symbola_diei[i]))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
 }
 
 /* valor typo campi congruit? (electio: inter optiones) - absens
@@ -505,6 +550,7 @@ organum_legere (
     o->portae    = xar_creare(piscina, (i32)magnitudo(OrganumPorta));
     o->montationes = xar_creare(piscina,
         (i32)magnitudo(OrganumMontatio));
+    o->cognomina = xar_creare(piscina, (i32)magnitudo(OrganumCognomen));
 
     sectio  = stml_invenire_liberum(radix, "ligamina");
     l       = sectio ? liberi(sectio, "ligamen", piscina) : NIHIL;
@@ -547,6 +593,49 @@ organum_legere (
         m           = (OrganumMontatio*)xar_addere(o->montationes);
         m->titulus  = attributum(liberum_ad(l, i), "nomen");
         m->genus    = attributum(liberum_ad(l, i), "genus");
+    }
+    /* semitae R4e: cognomina; leges: fixum et typatum non simul,
+     * typatum cum "{}", "{}" solum typato, semita generis proprii */
+    sectio  = stml_invenire_liberum(radix, "cognomina");
+    l       = sectio ? liberi(sectio, "cognomen", piscina) : NIHIL;
+    per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
+    {
+         OrganumCognomen* g;
+               StmlNodus* n;
+                     b32  locus;
+
+        n           = liberum_ad(l, i);
+        g           = (OrganumCognomen*)xar_addere(o->cognomina);
+        g->titulus  = attributum(n, "nomen");
+        g->typus    = attributum(n, "typus");
+        g->semita   = attributum(n, "semita");
+        locus       = chorda_continet(g->semita, chorda_ex_literis("{}",
+            piscina));
+        si (   g->titulus.mensura > ZEPHYRUM
+            && g->typus.mensura > ZEPHYRUM)
+        {
+            vitium_cognominis(v, piscina, n, g->semita,
+                "cognomen fixum et typatum simul");
+        }
+        si (g->typus.mensura > ZEPHYRUM && !locus)
+        {
+            vitium_cognominis(v, piscina, n, g->semita,
+                "cognomen typatum sine {}");
+        }
+        si (g->typus.mensura == ZEPHYRUM && locus)
+        {
+            vitium_cognominis(v, piscina, n, g->semita, "{} sine typo");
+        }
+        si (   g->semita.mensura < o->genus.mensura
+            || memcmp(g->semita.datum, o->genus.datum,
+                   (size_t)o->genus.mensura) != ZEPHYRUM
+            || (   g->semita.mensura > o->genus.mensura
+                && g->semita.datum[o->genus.mensura] != '/'
+                && g->semita.datum[o->genus.mensura] != '?'))
+        {
+            vitium_cognominis(v, piscina, n, g->semita,
+                "cognomen alieni generis");
+        }
     }
     sectio  = stml_invenire_liberum(radix, "status");
     l       = sectio ? liberi(sectio, "campus", piscina) : NIHIL;
@@ -776,6 +865,58 @@ organum_montatio (
     redde NIHIL;
 }
 
+i32
+organum_numerus_cognominum (
+    constans Organum* organum)
+{
+    redde (organum && organum->cognomina)
+        ? xar_numerus(organum->cognomina) : ZEPHYRUM;
+}
+
+constans OrganumCognomen*
+organum_cognomen_index (
+     constans Organum* organum,
+                  i32  index)
+{
+    si (   !organum || !organum->cognomina
+        || index >= xar_numerus(organum->cognomina))
+    {
+        redde NIHIL;
+    }
+    redde (constans OrganumCognomen*)xar_obtinere(organum->cognomina,
+        index);
+}
+
+b32
+organum_typum_iudicare (
+      chorda  typus,
+      chorda  valor,
+     Piscina* piscina)
+{
+    OrganumCampus k;
+
+    si (   chorda_aequalis_literis(typus, "electio")
+        || chorda_aequalis_literis(typus, "series"))
+    {
+        redde FALSUM;
+    }
+    si (symbolum_typi(typus, valor))
+    {
+        redde VERUM;
+    }
+    memset(&k, ZEPHYRUM, magnitudo(k));
+    k.typus = typus;
+    redde valor_validum(&k, valor, NIHIL, piscina);
+}
+
+b32
+organum_valor_symbolicus (
+    constans OrganumCampus* campus,
+                    chorda  valor)
+{
+    redde campus && symbolum_typi(campus->typus, valor);
+}
+
 b32
 organum_valorem_iudicare (
      constans OrganumCampus* campus,
@@ -785,6 +926,11 @@ organum_valorem_iudicare (
     si (!campus)
     {
         redde FALSUM;
+    }
+    /* semitae R4e: valor symbolicus typi (resolvendus ad limen) */
+    si (symbolum_typi(campus->typus, valor))
+    {
+        redde VERUM;
     }
     redde valor_validum(campus, valor, campus->nodus ? liberi(
         campus->nodus, "optio", piscina) : NIHIL, piscina);

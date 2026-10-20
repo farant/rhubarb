@@ -997,6 +997,111 @@ _probare_montationes (
     CREDO_NIHIL(organum_montatio_index(o, ZEPHYRUM));
 }
 
+/* semitae R4e: cognomina (fixum, typatum, neutrum) legibilia; leges
+ * oneratoris; typus solus; valores symbolici typi dies */
+interior vacuum
+_probare_cognomina (
+    CredoContextus* c)
+{
+         InternamentumChorda* in;
+                         Xar* vitia;
+                     Organum* o;
+    constans OrganumCognomen* g;
+      constans OrganumCampus* dies;
+      constans OrganumCampus* numerus;
+
+    in = internamentum_creare(c->piscina);
+    o  = legere_literas(c->piscina, in,
+        "<organum genus=\"probatio\" versio=\"1\">"
+        "<status><campus nomen=\"d\" typus=\"dies\""
+        " vita=\"transiens\" semita=\"ligatio\"/>"
+        "<campus nomen=\"n\" typus=\"numerus\""
+        " vita=\"persistens\"/></status>"
+        "<cognomina>"
+        "<cognomen nomen=\"agenda\" semita=\"probatio/x\"/>"
+        "<cognomen typus=\"dies\" semita=\"probatio/{}\"/>"
+        "<cognomen semita=\"probatio/\"/>"
+        "</cognomina></organum>", &vitia);
+    vitia_imprimere(vitia);
+    CREDO_NECESSE_NON_NIHIL(o);
+    CREDO_AEQUALIS_I32(organum_numerus_cognominum(o), III);
+    g = organum_cognomen_index(o, ZEPHYRUM);
+    CREDO_NECESSE_NON_NIHIL(g);
+    CREDO_CHORDA_AEQUALIS_LITERIS(g->titulus, "agenda");
+    CREDO_AEQUALIS_I32(g->typus.mensura, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(g->semita, "probatio/x");
+    g = organum_cognomen_index(o, I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(g->typus, "dies");
+    CREDO_AEQUALIS_I32(g->titulus.mensura, ZEPHYRUM);
+    g = organum_cognomen_index(o, II);
+    CREDO_AEQUALIS_I32(g->titulus.mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(g->typus.mensura, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(g->semita, "probatio/");
+    CREDO_NIHIL(organum_cognomen_index(o, III));
+
+    /* leges oneratoris */
+    CREDO_NIHIL(legere_literas(c->piscina, in,
+        "<organum genus=\"probatio\" versio=\"1\"><status/>"
+        "<cognomina><cognomen nomen=\"a\" typus=\"numerus\""
+        " semita=\"probatio/{}\"/></cognomina></organum>", &vitia));
+    CREDO_VERUM(vitia_continent(vitia, "fixum et typatum", c->piscina));
+    CREDO_NIHIL(legere_literas(c->piscina, in,
+        "<organum genus=\"probatio\" versio=\"1\"><status/>"
+        "<cognomina><cognomen typus=\"numerus\""
+        " semita=\"probatio/x\"/></cognomina></organum>", &vitia));
+    CREDO_VERUM(vitia_continent(vitia, "typatum sine {}", c->piscina));
+    CREDO_NIHIL(legere_literas(c->piscina, in,
+        "<organum genus=\"probatio\" versio=\"1\"><status/>"
+        "<cognomina><cognomen nomen=\"a\""
+        " semita=\"probatio/{}\"/></cognomina></organum>", &vitia));
+    CREDO_VERUM(vitia_continent(vitia, "{} sine typo", c->piscina));
+    CREDO_NIHIL(legere_literas(c->piscina, in,
+        "<organum genus=\"probatio\" versio=\"1\"><status/>"
+        "<cognomina><cognomen nomen=\"a\""
+        " semita=\"sancti/index\"/></cognomina></organum>", &vitia));
+    CREDO_VERUM(vitia_continent(vitia, "alieni generis", c->piscina));
+    /* canon: typus electio non admittitur */
+    CREDO_NIHIL(legere_literas(c->piscina, in,
+        "<organum genus=\"probatio\" versio=\"1\"><status/>"
+        "<cognomina><cognomen typus=\"electio\""
+        " semita=\"probatio/{}\"/></cognomina></organum>", &vitia));
+    CREDO_VERUM(vitia_continent(vitia, "typus", c->piscina));
+
+    /* typus solus */
+    CREDO_VERUM(organum_typum_iudicare(chorda_ex_literis("numerus",
+        c->piscina), chorda_ex_literis("7", c->piscina), c->piscina));
+    CREDO_FALSUM(organum_typum_iudicare(chorda_ex_literis("numerus",
+        c->piscina), chorda_ex_literis("x", c->piscina), c->piscina));
+    CREDO_VERUM(organum_typum_iudicare(chorda_ex_literis("dies",
+        c->piscina), chorda_ex_literis("hodie", c->piscina),
+        c->piscina));
+    CREDO_FALSUM(organum_typum_iudicare(chorda_ex_literis("electio",
+        c->piscina), chorda_ex_literis("x", c->piscina), c->piscina));
+    CREDO_FALSUM(organum_typum_iudicare(chorda_ex_literis("series",
+        c->piscina), chorda_ex_literis("x", c->piscina), c->piscina));
+
+    /* valores symbolici: dies solum */
+    dies     = organum_campus(o, chorda_ex_literis("d", c->piscina));
+    numerus  = organum_campus(o, chorda_ex_literis("n", c->piscina));
+    CREDO_NECESSE(dies && numerus);
+    CREDO_VERUM(organum_valor_symbolicus(dies,
+        chorda_ex_literis("hodie",
+        c->piscina)));
+    CREDO_VERUM(organum_valor_symbolicus(dies, chorda_ex_literis("heri",
+        c->piscina)));
+    CREDO_VERUM(organum_valor_symbolicus(dies, chorda_ex_literis("cras",
+        c->piscina)));
+    CREDO_FALSUM(organum_valor_symbolicus(dies, chorda_ex_literis(
+        "2026-10-19", c->piscina)));
+    CREDO_FALSUM(organum_valor_symbolicus(numerus, chorda_ex_literis(
+        "hodie", c->piscina)));
+    CREDO_VERUM(organum_valorem_iudicare(dies, chorda_ex_literis("cras",
+        c->piscina), c->piscina));
+    CREDO_FALSUM(organum_valorem_iudicare(dies,
+        chorda_ex_literis("nunc",
+        c->piscina), c->piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "pictor",            _probare_pictorem,
       NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1018,6 +1123,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "semita",            _probare_semitam,
         NIHIL, NIHIL, NIHIL, NIHIL },
+    { "cognomina",         _probare_cognomina,
+      NIHIL, NIHIL, NIHIL, NIHIL },
     { "montationes",       _probare_montationes,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

@@ -213,6 +213,15 @@ _iudicare (
                 "<%.*s> %.*s: valor typo campi non congruit", _nomen(n),
                 *a->titulus);
         }
+        /* R4e: applicatio (ramus datus) symbolicum non resolutum
+         * recusat - ad limen resolvendum (semita_resolvere) */
+        si (ramus && a->valor && organum_valor_symbolicus(k, *a->valor))
+        {
+            redde _vitium(vitium, piscina,
+                "<%.*s> %.*s: valor symbolicus non resolutus",
+                _nomen(n),
+                *a->titulus);
+        }
     }
     per (i = ZEPHYRUM; i < _numerus_liberorum(n); i++)
     {
@@ -1223,4 +1232,196 @@ semita_ex_uri (
         redde NIHIL;
     }
     redde radix;
+}
+
+
+/* ==================================================
+ * Cognomina et valores symbolici (R4e)
+ * ================================================== */
+
+/* semita cognominis typati: "{}" -> argumentum effugitum */
+interior chorda
+_substituere (
+      chorda  semita,
+      chorda  argumentum,
+     Piscina* piscina)
+{
+    ChordaAedificator* a;
+                  i32  i;
+
+    a = chorda_aedificator_creare(piscina, (memoriae_index)LXIV);
+    per (i = ZEPHYRUM; a && i < semita.mensura; i++)
+    {
+        si (   i + I < semita.mensura && semita.datum[i] == '{'
+            && semita.datum[i + I] == '}')
+        {
+            _effugere(a, argumentum);
+            i++;
+            perge;
+        }
+        chorda_aedificator_appendere_character(a,
+            (character)semita.datum[i]);
+    }
+    redde a ? chorda_aedificator_finire(a) : _vacua();
+}
+
+StmlNodus*
+semita_ex_argumento (
+            SemitaOrganum  organa,
+                   vacuum* ctx,
+       constans character* genus,
+       constans character* argumentum,
+                  Piscina* piscina,
+      InternamentumChorda* intern,
+                   chorda* vitium)
+{
+    constans Organum* o;
+              chorda  g;
+              chorda  arg;
+                 i32  i;
+
+    si (!organa || !genus)
+    {
+        redde NIHIL;
+    }
+    g    = chorda_ex_literis(genus, piscina);
+    arg  = chorda_ex_literis(argumentum ? argumentum : "", piscina);
+    /* URI generis: semita directe */
+    si (   arg.mensura                                   >= g.mensura
+        && memcmp(arg.datum, g.datum, (size_t)g.mensura) == ZEPHYRUM
+        && (   arg.mensura == g.mensura || arg.datum[g.mensura] == '/'
+            || arg.datum[g.mensura] == '?'))
+    {
+        redde semita_ex_uri(organa, ctx, arg, piscina, intern, vitium);
+    }
+    o = organa(ctx, g);
+    si (!o)
+    {
+        _vitium(vitium, piscina, "genus ignotum: %.*s%.*s", g,
+            _vacua());
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < organum_numerus_cognominum(o); i++)
+    {
+        constans OrganumCognomen* c = organum_cognomen_index(o, i);
+
+        si (c->titulus.mensura > ZEPHYRUM)
+        {
+            si (chorda_aequalis(c->titulus, arg))
+            {
+                redde semita_ex_uri(organa, ctx, c->semita, piscina,
+                    intern, vitium);
+            }
+            perge;
+        }
+        si (c->typus.mensura > ZEPHYRUM)
+        {
+            si (   arg.mensura == ZEPHYRUM
+                || !organum_typum_iudicare(c->typus, arg, piscina))
+            {
+                perge;
+            }
+            redde semita_ex_uri(organa, ctx, _substituere(c->semita,
+                arg,
+                piscina), piscina, intern, vitium);
+        }
+        si (arg.mensura == ZEPHYRUM)
+        {
+            redde semita_ex_uri(organa, ctx, c->semita, piscina, intern,
+                vitium);
+        }
+    }
+    _vitium(vitium, piscina, "%.*s: argumentum sine cognomine: %.*s", g,
+        arg);
+    redde NIHIL;
+}
+
+interior b32
+_resolvere_nodum (
+           SemitaOrganum  organa,
+                  vacuum* ctx,
+        constans Organum* o,
+               StmlNodus* n,
+             SemitaValor  resolutor,
+                  vacuum* resolutor_ctx,
+                 Piscina* piscina,
+                  chorda* vitium)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; n->attributa && i < xar_numerus(n->attributa);
+         i++)
+    {
+                 StmlAttributum* a;
+         constans OrganumCampus* k;
+                         chorda  concretus;
+                         chorda* novus;
+
+        a = (StmlAttributum*)xar_obtinere(n->attributa, i);
+        k = a->titulus ? organum_campus(o, *a->titulus) : NIHIL;
+        si (!k || !a->valor || !organum_valor_symbolicus(k, *a->valor))
+        {
+            perge;
+        }
+        si (   !resolutor
+            || !resolutor(resolutor_ctx, k, *a->valor, piscina,
+                   &concretus))
+        {
+            redde _vitium(vitium, piscina,
+                "<%.*s> %.*s: valor symbolicus non resolutus",
+                _nomen(n),
+                *a->titulus);
+        }
+        novus = (chorda*)piscina_allocare(piscina,
+            (memoriae_index)magnitudo(chorda));
+        si (!novus)
+        {
+            redde FALSUM;
+        }
+        *novus    = concretus;
+        a->valor  = novus;
+    }
+    per (i = ZEPHYRUM; i < _numerus_liberorum(n); i++)
+    {
+                       StmlNodus* l;
+        constans OrganumMontatio* m;
+                constans Organum* lo;
+
+        l   = _liberum(n, i);
+        m   = l ? organum_montatio(o, _nomen(l)) : NIHIL;
+        lo  = m ? organa(ctx, m->genus) : NIHIL;
+        si (   lo
+            && !_resolvere_nodum(organa, ctx, lo, l, resolutor,
+                   resolutor_ctx, piscina, vitium))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+b32
+semita_resolvere (
+            SemitaOrganum  organa,
+                   vacuum* ctx,
+                StmlNodus* semita,
+              SemitaValor  resolutor,
+                   vacuum* resolutor_ctx,
+                  Piscina* piscina,
+                   chorda* vitium)
+{
+    constans Organum* o;
+
+    si (!organa || !semita)
+    {
+        redde FALSUM;
+    }
+    o = organa(ctx, _nomen(semita));
+    si (!o)
+    {
+        redde _vitium(vitium, piscina, "genus ignotum: %.*s%.*s",
+            _nomen(semita), _vacua());
+    }
+    redde _resolvere_nodum(organa, ctx, o, semita, resolutor,
+        resolutor_ctx, piscina, vitium);
 }

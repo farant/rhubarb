@@ -41,13 +41,24 @@ nomen constans Organum* (*SemitaOrganum)(
      vacuum* ctx,
       chorda genus);
 
+/* valor symbolicus -> concretus (resolutor vocantis: horologium);
+ * FALSUM si resolvi non potest */
+nomen b32 (*SemitaValor)(
+                  vacuum* ctx,
+    constans OrganumCampus* campus,
+                  chorda  valor,
+                 Piscina* piscina,
+                  chorda* concretus);
+
 /* semitam applicare: arbor TOTA primum iudicatur (genera, montationes,
  * campi semitae, valores typis, liberi montati); vitium = nihil
  * scriptum, *vitium nominat elementum et attributum. R4d: nodus cum
  * attributo ligationis ullo (etiam vacuo) ligationem TOTAM nominat -
  * campi ligationis non nominati ad absens; nodus sine ullo
  * ligationem servat. Deinde: ligatio, resetum campi ambitus
- * ligationis si ligatio mutata est, status; liberi post parentem. */
+ * ligationis si ligatio mutata est, status; liberi post parentem.
+ * R4e: valor symbolicus non resolutus recusatur (vitium nominat
+ * campum). */
 b32
 semita_applicare (
            SemitaOrganum  organa,
@@ -126,5 +137,32 @@ semita_ad_uri_lista (
                  vacuum* ctx,
      constans StmlNodus* semita,
                 Piscina* piscina);
+
+/* argumentum -> semita (semitae R4e): URI generis ("genus",
+ * "genus/...", "genus?...") aut cognomen manifesti (fixum, typatum,
+ * neutrum) ordine manifesti; NIHIL si nullum congruit (vocans
+ * cognomina computata sua tentat) aut URI malum (*vitium) */
+StmlNodus*
+semita_ex_argumento (
+            SemitaOrganum  organa,
+                   vacuum* ctx,
+       constans character* genus,
+       constans character* argumentum,
+                  Piscina* piscina,
+      InternamentumChorda* intern,
+                   chorda* vitium);
+
+/* valores symbolicos in concretos mutare - AD LIMEN (historia, claves
+ * proiectionum semper concreta); FALSUM si resolutor deest aut
+ * deficit (*vitium nominat campum) */
+b32
+semita_resolvere (
+            SemitaOrganum  organa,
+                   vacuum* ctx,
+                StmlNodus* semita,
+              SemitaValor  resolutor,
+                   vacuum* resolutor_ctx,
+                  Piscina* piscina,
+                   chorda* vitium);
 
 #endif /* SEMITA_H */

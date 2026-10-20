@@ -17,6 +17,8 @@
  *     transiens licet - restitutio post initium et semita res
  *     diversae)
  *   - ambitus, historia -> semita; ambitus -> semita status
+ *   - cognomen: fixum et typatum non simul; typatum cum "{}", "{}"
+ *     solum typato; semita generis proprii (semitae R4e)
  *
  * Onerator plagulam numquam legit: fons a vocante, basis a vocante
  * addita (organum_basim_addere). */
@@ -112,6 +114,14 @@ nomen structura {
     chorda genus;       /* genus organi liberi */
 } OrganumMontatio;
 
+/* cognomen argumenti (semitae R4e): fixum (titulus), typatum (typus;
+ * "{}" in semita = argumentum) aut neutrum (argumentum vacuum) */
+nomen structura {
+    chorda titulus;     /* vacua = non fixum */
+    chorda typus;       /* vacua = non typatum */
+    chorda semita;      /* URI, "{}" si typatum */
+} OrganumCognomen;
+
 nomen structura Organum Organum;   /* opacum */
 
 
@@ -201,6 +211,30 @@ constans OrganumMontatio*
 organum_montatio (
      constans Organum* organum,
                chorda  titulus);
+
+i32
+organum_numerus_cognominum (
+    constans Organum* organum);
+
+constans OrganumCognomen*
+organum_cognomen_index (
+     constans Organum* organum,
+                  i32  index);
+
+/* valor typo solo congruit? (cognomen typatum; electio non) */
+b32
+organum_typum_iudicare (
+      chorda  typus,
+      chorda  valor,
+     Piscina* piscina);
+
+/* valor symbolicus campi? (semitae R4e - typus dies: hodie, heri,
+ * cras). organum_valorem_iudicare eos accipit; semita_applicare
+ * recusat nisi resoluti (semita_resolvere) */
+b32
+organum_valor_symbolicus (
+    constans OrganumCampus* campus,
+                    chorda  valor);
 
 /* valor typo campi congruit? (numerus, veritas, nomen, dies, electio
  * inter optiones; textus quilibet) */

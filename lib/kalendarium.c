@@ -4072,57 +4072,77 @@ organa_calendarii (
     redde ((KalendariumFigurae*)m->figurae_ctx)->organum;
 }
 
-/* argumentum ut semita: URI ("calendarium", "calendarium/...",
- * "calendarium?...") aut cognomen - "agenda" -> visus agenda,
- * "YYYY-MM-DD" (P6c) -> visus dies in eo die, "YYYY-MM" -> visus mensis
- * (dies: hodie si in mense, aliter prima). NIHIL si malum. */
+/* semitae R4e: resolutor valorum symbolicorum (dies: hodie, heri,
+ * cras) ex porta horologii; ctx = KalendariumMontatio* */
+interior b32
+diem_symbolicum_resolvere (
+                    vacuum* ctx,
+    constans OrganumCampus* campus,
+                    chorda  valor,
+                   Piscina* piscina,
+                    chorda* concretus)
+{
+    KalendariumMontatio* m = (KalendariumMontatio*)ctx;
+                    s32  gradus;
+
+    (vacuum)campus;
+    si (chorda_aequalis_literis(valor, "hodie"))
+    {
+        gradus = ZEPHYRUM;
+    }
+    alioquin si (chorda_aequalis_literis(valor, "heri"))
+    {
+        gradus = -I;
+    }
+    alioquin si (chorda_aequalis_literis(valor, "cras"))
+    {
+        gradus = I;
+    }
+    alioquin
+    {
+        redde FALSUM;
+    }
+    *concretus = fasti_formare_diem(fasti_addere_dies(hodie(m), gradus),
+        FASTI_FORMA_ISO, piscina);
+    redde concretus->mensura > ZEPHYRUM;
+}
+
+/* argumentum ut semita: cognomen computatum "YYYY-MM" (visus mensis;
+ * dies: hodie si in mense, aliter prima) ANTE cognomina manifesti
+ * (typus dies formam "YYYY-MM" quoque accipit), deinde URI aut
+ * cognomen (semita_ex_argumento); valores symbolici ad limen
+ * resolvuntur. NIHIL si malum. */
 interior StmlNodus*
 semita_argumenti (
     KalendariumMontatio* m,
      constans character* argumentum,
                  chorda* vitium)
 {
-              StmlNodus* n;
-     constans character* visus;
-     constans character* iso;
-                    i32  l;
-                    s32  annus;
-                    s32  mensis;
-                   Dies  d;
+     StmlNodus* n;
+           s32  annus;
+           s32  mensis;
 
-    l = (i32)strlen(argumentum);
-    si (   strncmp(argumentum, "calendarium", XI) == ZEPHYRUM
-        && (l == XI || argumentum[XI] == '/' || argumentum[XI] == '?'))
+    si (mensem_legere(argumentum, &annus, &mensis))
     {
-        redde semita_ex_uri(organa_calendarii, m, chorda_ex_literis(
-            argumentum, m->piscina), m->piscina, m->intern, vitium);
+        n = stml_elementum_creare(m->piscina, m->intern, "calendarium");
+        si (   !n
+            || !stml_attributum_addere(n, m->piscina, m->intern,
+            "visus",
+                   "mensis")
+            || !stml_attributum_addere(n, m->piscina, m->intern,
+                   "dies_electus", chorda_ut_cstr(fasti_formare_diem(
+                   dies_argumenti(m, annus, mensis), FASTI_FORMA_ISO,
+                   m->piscina), m->piscina)))
+        {
+            redde NIHIL;
+        }
+        redde n;
     }
-    iso = NIHIL;
-    si (strcmp(argumentum, "agenda") == ZEPHYRUM)
-    {
-        visus = "agenda";
-    }
-    alioquin si (diem_legere(argumentum, &d))
-    {
-        visus  = "dies";
-        iso    = argumentum;
-    }
-    alioquin si (mensem_legere(argumentum, &annus, &mensis))
-    {
-        visus  = "mensis";
-        iso    = chorda_ut_cstr(fasti_formare_diem(dies_argumenti(m,
-            annus, mensis), FASTI_FORMA_ISO, m->piscina), m->piscina);
-    }
-    alioquin
-    {
-        redde NIHIL;
-    }
-    n = stml_elementum_creare(m->piscina, m->intern, "calendarium");
-    si (   !n
-        || !stml_attributum_addere(n, m->piscina, m->intern, "visus",
-               visus)
-        || (iso && !stml_attributum_addere(n, m->piscina, m->intern,
-               "dies_electus", iso)))
+    n = semita_ex_argumento(organa_calendarii, m, "calendarium",
+        argumentum, m->piscina, m->intern, vitium);
+    si (   n
+        && !semita_resolvere(organa_calendarii, m, n,
+               diem_symbolicum_resolvere, m, m->piscina, vitium))
     {
         redde NIHIL;
     }

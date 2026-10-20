@@ -41,6 +41,12 @@ hic_manens constans character manifestum_probae[] =
     "</status>"
     "<montationes><montatio nomen=\"notae\" genus=\"folium\"/>"
     "<montatio nomen=\"alter\" genus=\"folium_liber\"/></montationes>"
+    "<cognomina>"
+    "<cognomen nomen=\"7\" semita=\"proba/res/septem\"/>"
+    "<cognomen semita=\"proba/\"/>"
+    "<cognomen typus=\"numerus\" semita=\"proba/res/{}\"/>"
+    "<cognomen typus=\"textus\" semita=\"proba/index/{}\"/>"
+    "</cognomina>"
     "</organum>";
 
 hic_manens constans character manifestum_folii[] =
@@ -79,7 +85,9 @@ hic_manens constans character manifestum_tabellae[] =
     " semita=\"status\" scriptor=\"tabella.agere\"/>"
     "<campus nomen=\"pagina\" typus=\"numerus\" vita=\"transiens\""
     " semita=\"status\" scriptor=\"tabella.agere\"/>"
-    "</status></organum>";
+    "</status>"
+    "<cognomina><cognomen typus=\"dies\" semita=\"tabella/dies/{}\"/>"
+    "</cognomina></organum>";
 
 /* R4d: ligatio tota transiens (persona), status persistens (modus) */
 hic_manens constans character manifestum_catalogi[] =
@@ -90,7 +98,9 @@ hic_manens constans character manifestum_catalogi[] =
     " semita=\"status\" scriptor=\"catalogus.agere\"/>"
     "<campus nomen=\"persona\" typus=\"numerus\" vita=\"transiens\""
     " semita=\"ligatio\" scriptor=\"catalogus.agere\"/>"
-    "</status></organum>";
+    "</status>"
+    "<cognomina><cognomen typus=\"textus\""
+    " semita=\"catalogus?modus={}\"/></cognomina></organum>";
 
 nomen structura {
      InternamentumChorda* intern;
@@ -754,6 +764,127 @@ _sectio_persistens (
         "catalogus/7?modus=rubricae");
 }
 
+/* URI argumenti (vacua si NIHIL) */
+interior chorda
+uri_argumenti (
+                 Mundus* w,
+     constans character* genus,
+     constans character* argumentum,
+                Piscina* p)
+{
+     StmlNodus* s;
+        chorda  vitium;
+
+    s = semita_ex_argumento(organa, w, genus, argumentum, p, w->intern,
+        &vitium);
+    redde s ? semita_ad_uri(organa, w, s, p) : chorda_ex_literis("", p);
+}
+
+/* resolutor probationis: hodie 2026-10-20, heri 2026-10-19; cras
+ * recusatur; vocationes numerantur (ctx = i32*) */
+interior b32
+resolutor_probationis (
+                    vacuum* ctx,
+    constans OrganumCampus* campus,
+                    chorda  valor,
+                   Piscina* piscina,
+                    chorda* concretus)
+{
+    (vacuum)campus;
+    (*(i32*)ctx)++;
+    si (chorda_aequalis_literis(valor, "hodie"))
+    {
+        *concretus = chorda_ex_literis("2026-10-20", piscina);
+        redde VERUM;
+    }
+    si (chorda_aequalis_literis(valor, "heri"))
+    {
+        *concretus = chorda_ex_literis("2026-10-19", piscina);
+        redde VERUM;
+    }
+    redde FALSUM;
+}
+
+/* R4e (V-b): argumentum -> semita per cognomina manifesti (ordine:
+ * fixum, neutrum, typata), URI generis directe; valores symbolici ad
+ * limen resolvuntur, non resoluti recusantur */
+interior vacuum
+_sectio_cognomina (
+    CredoContextus* c)
+{
+         Mundus* w;
+    InsulaRamus  t;
+         chorda  vitium;
+      StmlNodus* s;
+            i32  vocationes;
+
+    w = mundus(c, FALSUM);
+    CREDO_NECESSE_NON_NIHIL(w);
+    /* fixum ante typatum */
+    CREDO_CHORDA_AEQUALIS_LITERIS(uri_argumenti(w, "proba", "7",
+        c->piscina), "proba/res/septem");
+    CREDO_CHORDA_AEQUALIS_LITERIS(uri_argumenti(w, "proba", "8",
+        c->piscina), "proba/res/8");
+    /* neutrum = argumentum vacuum */
+    CREDO_CHORDA_AEQUALIS_LITERIS(uri_argumenti(w, "proba", "",
+        c->piscina), "proba/");
+    /* typatum textus: effugium substituti */
+    CREDO_CHORDA_AEQUALIS_LITERIS(uri_argumenti(w, "proba", "a b/c",
+        c->piscina), "proba/index/a%20b%2Fc");
+    /* URI generis directe (non cognomen) */
+    CREDO_CHORDA_AEQUALIS_LITERIS(uri_argumenti(w, "proba",
+        "proba?ordo=dies", c->piscina), "proba?ordo=dies");
+    CREDO_NIHIL(semita_ex_argumento(organa, w, "proba", "proba/res/a/b",
+        c->piscina, w->intern, &vitium));
+    CREDO_CHORDA_CONTINET(vitium, chorda_ex_literis("superfluum",
+        c->piscina));
+    /* nullum congruit: NIHIL (vocans computata sua tentat) */
+    CREDO_NIHIL(semita_ex_argumento(organa, w, "tabella", "x",
+        c->piscina, w->intern, &vitium));
+    /* typatum argumentum vacuum numquam accipit (etiam textus) */
+    CREDO_CHORDA_AEQUALIS_LITERIS(uri_argumenti(w, "catalogus", "x",
+        c->piscina), "catalogus?modus=x");
+    CREDO_NIHIL(semita_ex_argumento(organa, w, "catalogus", "",
+        c->piscina, w->intern, &vitium));
+    /* symbolicus: typatum dies accipit; applicare non resolutum
+     * recusat */
+    CREDO_NECESSE(ramum_parare(w, &t, "tabella", c->piscina));
+    s = semita_ex_argumento(organa, w, "tabella", "hodie", c->piscina,
+        w->intern, &vitium);
+    CREDO_NECESSE_NON_NIHIL(s);
+    CREDO_FALSUM(semita_applicare(organa, w, &t, s, c->piscina,
+        &vitium));
+    CREDO_CHORDA_CONTINET(vitium, chorda_ex_literis("symbolicus",
+        c->piscina));
+    CREDO_VERUM(campus_est(&t, "dies", NIHIL));
+    /* resolutor deest: FALSUM */
+    CREDO_FALSUM(semita_resolvere(organa, w, s, NIHIL, NIHIL,
+        c->piscina,
+        &vitium));
+    vocationes = ZEPHYRUM;
+    CREDO_VERUM(semita_resolvere(organa, w, s, resolutor_probationis,
+        &vocationes, c->piscina, &vitium));
+    CREDO_AEQUALIS_I32(vocationes, I);
+    CREDO_VERUM(semita_applicare(organa, w, &t, s, c->piscina,
+        &vitium));
+    CREDO_VERUM(campus_est(&t, "dies", "2026-10-20"));
+    /* resolutor recusat (cras): FALSUM, vitium nominat campum */
+    s = semita_ex_argumento(organa, w, "tabella", "cras", c->piscina,
+        w->intern, &vitium);
+    CREDO_NECESSE_NON_NIHIL(s);
+    CREDO_FALSUM(semita_resolvere(organa, w, s, resolutor_probationis,
+        &vocationes, c->piscina, &vitium));
+    CREDO_CHORDA_CONTINET(vitium, chorda_ex_literis("dies",
+        c->piscina));
+    /* concretus: resolutor non vocatur */
+    vocationes = ZEPHYRUM;
+    s = semita_ex_argumento(organa, w, "tabella", "2026-10-01",
+        c->piscina, w->intern, &vitium);
+    CREDO_NECESSE(s && semita_resolvere(organa, w, s,
+        resolutor_probationis, &vocationes, c->piscina, &vitium));
+    CREDO_AEQUALIS_I32(vocationes, ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "applicare", _sectio_applicare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ambitus", _sectio_ambitus, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -765,6 +896,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "ligatio_tota", _sectio_ligatio_tota, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "persistens", _sectio_persistens, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "cognomina", _sectio_cognomina, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

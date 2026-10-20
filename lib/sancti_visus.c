@@ -2110,39 +2110,6 @@ _organa (
     redde ((SanctorumFigurae*)m->figurae_ctx)->organum;
 }
 
-/* argumentum ut semita: URI ("sancti/...", "sancti?..."), vacuum =
- * index, aliter id nudum (alias <sancti visus="sanctus"
- * sanctus_apertus="id"/>) */
-interior StmlNodus*
-_semita_argumenti (
-     SanctorumMontatio* m,
-    constans character* argumentum,
-                chorda* vitium)
-{
-       StmlNodus* n;
-             i32  l;
-
-    l = (i32)strlen(argumentum);
-    si (   l == ZEPHYRUM
-        || (strncmp(argumentum, "sancti", VI) == ZEPHYRUM
-        && (l == VI || argumentum[VI] == '/' || argumentum[VI] == '?')))
-    {
-        redde semita_ex_uri(_organa, m, chorda_ex_literis(l == ZEPHYRUM
-            ? "sancti/index" : argumentum, m->piscina), m->piscina,
-            m->intern, vitium);
-    }
-    n = stml_elementum_creare(m->piscina, m->intern, "sancti");
-    si (   !n
-        || !stml_attributum_addere(n, m->piscina, m->intern, "visus",
-               "sanctus")
-        || !stml_attributum_addere(n, m->piscina, m->intern,
-               "sanctus_apertus", argumentum))
-    {
-        redde NIHIL;
-    }
-    redde n;
-}
-
 b32
 sancti_visus_argumentum_ponere (
        SanctorumMontatio* m,
@@ -2159,8 +2126,9 @@ sancti_visus_argumentum_ponere (
     {
         redde FALSUM;
     }
-    semita = _semita_argumenti(m, argumentum ? argumentum : "",
-        &vitium);
+    /* semitae R4e: URI aut cognomen manifesti ("" index, "<id>") */
+    semita = semita_ex_argumento(_organa, m, "sancti", argumentum
+        ? argumentum : "", m->piscina, m->intern, &vitium);
     si (!semita)
     {
         redde FALSUM;

@@ -81,6 +81,13 @@
                   mensis mutatus, menu apertum)"/>
   </status>
 
+  <!-- semitae R4e: argumentum nudum -> semita ("YYYY-MM" computatum in
+       kalendarium.c, ante cognomina) -->
+  <cognomina>
+    <cognomen nomen="agenda" semita="calendarium/agenda"/>
+    <cognomen typus="dies" semita="calendarium/dies/{}"/>
+  </cognomina>
+
   <basis genus="organum_commune"/>
   <montationes/>
 </organum>
