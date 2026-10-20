@@ -2,6 +2,7 @@
  * include/pecunia.h; spec project-specs/pecunia-spec.md) */
 #include "pecunia.h"
 #include "pecunia_monetae.h"
+#include "chorda_aedificator.h"
 #include <string.h>
 
 hic_manens constans character* VITIA_TITULI[] = {
@@ -569,7 +570,7 @@ pecunia_partiri (
     {
         redde PECUNIA_VITIUM_NON_SOLVIBILIS;
     }
-    /* magnitudo in Magno: |MINIMA| s64 non capit */
+    /* amplitudo in Magno: |MINIMA| s64 non capit */
     si (!magnus_divide(magnus_absolutum(magnus_ex_s64(totum.quantitas),
         piscina), magnus_ex_s64(magnitudo_grani), piscina, &grana,
         NIHIL))
@@ -617,7 +618,7 @@ pecunia_partiri (
         }
         donati[optimus] = VERUM;
     }
-    /* signum in Magno restituitur ANTE conversionem: magnitudo partis
+    /* signum in Magno restituitur ANTE conversionem: amplitudo partis
      * unicae ex MINIMA (2^63) s64 non capit, pars signata semper capit
      * (signum totius, |pars| <= |totum|). Prius omnes computantur,
      * deinde exitus scribuntur - intacti si quid deficit. */
@@ -681,4 +682,267 @@ pecunia_dividere (
         rationes[i] = I;
     }
     redde pecunia_partiri(totum, rationes, n, granum, piscina, exitus);
+}
+
+
+/* ==================================================
+ * Textus
+ * ================================================== */
+
+/* amplitudo |MINIMA| = 2^63 in i64 (insignatum) capit */
+#define PECUNIA_MAGNITUDO_MINIMAE ((i64)PECUNIA_QUANTITAS_MAXIMA + I)
+
+/* quantitas: signum, pars integra, '.', IV decimales. Amplitudo ut
+ * i64 sumitur (MINIMA sine superfluxu); nihil numquam signum fert. */
+interior vacuum
+_quantitatem_scribere (
+    ChordaAedificator* a,
+                  s64  quantitas)
+{
+          i64 amplitudo;
+          i64 integra;
+          i64 fracta;
+    character cifrae[XXIV];
+          s32 k = ZEPHYRUM;
+          s32 j;
+
+    si (quantitas < ZEPHYRUM)
+    {
+        amplitudo = (i64)(-(quantitas + I)) + I;
+        chorda_aedificator_appendere_character(a, '-');
+    }
+    alioquin
+    {
+        amplitudo = (i64)quantitas;
+    }
+    integra  = amplitudo / (i64)PECUNIA_SCALA;
+    fracta   = amplitudo % (i64)PECUNIA_SCALA;
+    fac
+    {
+        cifrae[k++]  = (character)('0' + (s32)(integra % X));
+        integra      /= X;
+    } dum (integra > ZEPHYRUM);
+    per (j = k - I; j >= ZEPHYRUM; j--)
+    {
+        chorda_aedificator_appendere_character(a, cifrae[j]);
+    }
+    chorda_aedificator_appendere_character(a, '.');
+    chorda_aedificator_appendere_character(a,
+        (character)('0' + (s32)(fracta / M)));
+    chorda_aedificator_appendere_character(a,
+        (character)('0' + (s32)(fracta / C % X)));
+    chorda_aedificator_appendere_character(a,
+        (character)('0' + (s32)(fracta / X % X)));
+    chorda_aedificator_appendere_character(a,
+        (character)('0' + (s32)(fracta % X)));
+}
+
+chorda
+pecunia_ad_textum (
+     Pecunia  a,
+     Piscina* piscina)
+{
+    ChordaAedificator* aed = chorda_aedificator_creare(piscina, XXXII);
+
+    chorda_aedificator_appendere_literis(aed, a.moneta.codex);
+    chorda_aedificator_appendere_character(aed, ' ');
+    _quantitatem_scribere(aed, a.quantitas);
+    redde chorda_aedificator_finire(aed);
+}
+
+chorda
+pecunia_numerus (
+     Pecunia  a,
+     Piscina* piscina)
+{
+    ChordaAedificator* aed = chorda_aedificator_creare(piscina, XXIV);
+
+    _quantitatem_scribere(aed, a.quantitas);
+    redde chorda_aedificator_finire(aed);
+}
+
+interior b32
+_cifra (
+    character c)
+{
+    redde c >= '0' && c <= '9';
+}
+
+/* Quantitas ex textu[initium..mensura). canonica: pars integra sine
+ * zephyris ducentibus, IV decimales exacte, "-0.0000" vetitum;
+ * aliter forma Lunch Money (zephyra ducentia, 0..IV decimales post
+ * '.' qui saltem unam cifram postulat). FORMA prius tota iudicatur,
+ * deinde valor (superfluxus contra spatium reliquum). */
+interior PecuniaVitium
+_quantitatem_legere (
+    chorda  textus,
+       s32  initium,
+       b32  canonica,
+      s64* exitus)
+{
+    s32 i          = initium;
+    s32 n          = (s32)textus.mensura;
+    b32 negativum  = FALSUM;
+    s32 integra_initium;
+    s32 integra_finis;
+    s32 fracta_initium  = -I;
+    s32 fracta_numerus  = ZEPHYRUM;
+    i64 integra         = ZEPHYRUM;
+    i64 fracta          = ZEPHYRUM;
+    i64 amplitudo;
+    s32 k;
+
+    si (i < n && textus.datum[i] == '-')
+    {
+        negativum = VERUM;
+        i++;
+    }
+    integra_initium = i;
+    dum (i < n && _cifra((character)textus.datum[i]))
+    {
+        i++;
+    }
+    integra_finis = i;
+    si (integra_finis == integra_initium)
+    {
+        redde PECUNIA_VITIUM_FORMA;
+    }
+    si (i < n && textus.datum[i] == '.')
+    {
+        i++;
+        fracta_initium = i;
+        dum (i < n && _cifra((character)textus.datum[i]))
+        {
+            i++;
+        }
+        fracta_numerus = i - fracta_initium;
+        si (fracta_numerus == ZEPHYRUM)
+        {
+            redde PECUNIA_VITIUM_FORMA;
+        }
+    }
+    si (i != n)
+    {
+        redde PECUNIA_VITIUM_FORMA;
+    }
+    si (canonica)
+    {
+        si (   fracta_numerus != IV
+            || (textus.datum[integra_initium] == '0'
+                && integra_finis - integra_initium > I))
+        {
+            redde PECUNIA_VITIUM_FORMA;
+        }
+    }
+    alioquin si (fracta_numerus > IV)
+    {
+        redde PECUNIA_VITIUM_DECIMALES;
+    }
+
+    /* valor: pars integra <= 2^63 / 10^4 (= 922337203685477) */
+    per (k = integra_initium; k < integra_finis; k++)
+    {
+        integra = integra * X + (i64)(textus.datum[k] - '0');
+        si (integra > PECUNIA_MAGNITUDO_MINIMAE / (i64)PECUNIA_SCALA)
+        {
+            redde PECUNIA_VITIUM_SUPERFLUXUS;
+        }
+    }
+    per (k = ZEPHYRUM; k < IV; k++)
+    {
+        fracta = fracta * X;
+        si (k < fracta_numerus)
+        {
+            fracta += (i64)(textus.datum[fracta_initium + k] - '0');
+        }
+    }
+    amplitudo = integra * (i64)PECUNIA_SCALA + fracta;
+    si (negativum && canonica && amplitudo == ZEPHYRUM)
+    {
+        redde PECUNIA_VITIUM_FORMA;           /* "-0.0000" */
+    }
+    si (amplitudo > (negativum ? PECUNIA_MAGNITUDO_MINIMAE
+                               : (i64)PECUNIA_QUANTITAS_MAXIMA))
+    {
+        redde PECUNIA_VITIUM_SUPERFLUXUS;
+    }
+    si (!negativum)
+    {
+        *exitus = (s64)amplitudo;
+    }
+    alioquin si (amplitudo == PECUNIA_MAGNITUDO_MINIMAE)
+    {
+        *exitus = PECUNIA_QUANTITAS_MINIMA;
+    }
+    alioquin
+    {
+        *exitus = -(s64)amplitudo;
+    }
+    redde PECUNIA_BENE;
+}
+
+PecuniaVitium
+pecunia_ex_textu (
+      chorda  textus,
+     Pecunia* exitus)
+{
+    PecuniaMoneta m;
+    PecuniaVitium v;
+              s64 q;
+              s32 i;
+
+    /* "CCC " + saltem "0.0000" */
+    si (   textus.datum      == NIHIL || textus.mensura < X
+        || textus.datum[III] != ' ')
+    {
+        redde PECUNIA_VITIUM_FORMA;
+    }
+    per (i = ZEPHYRUM; i < III; i++)
+    {
+        si (textus.datum[i] < 'A' || textus.datum[i] > 'Z')
+        {
+            redde PECUNIA_VITIUM_FORMA;     /* canonica: majusculae */
+        }
+    }
+    v = _quantitatem_legere(textus, IV, VERUM, &q);
+    si (v != PECUNIA_BENE)
+    {
+        redde v;
+    }
+    v = pecunia_moneta_ex_codice(chorda_sectio(textus, ZEPHYRUM, III),
+        &m);
+    si (v != PECUNIA_BENE)
+    {
+        redde v;
+    }
+    exitus->quantitas  = q;
+    exitus->moneta     = m;
+    redde PECUNIA_BENE;
+}
+
+PecuniaVitium
+pecunia_ex_numero (
+           chorda  textus,
+    PecuniaMoneta  m,
+          Pecunia* exitus)
+{
+    PecuniaVitium v;
+              s64 q;
+
+    si (pecunia_moneta_exponens(m) < ZEPHYRUM)
+    {
+        redde PECUNIA_VITIUM_MONETA_IGNOTA;
+    }
+    si (textus.datum == NIHIL)
+    {
+        redde PECUNIA_VITIUM_FORMA;
+    }
+    v = _quantitatem_legere(textus, ZEPHYRUM, FALSUM, &q);
+    si (v != PECUNIA_BENE)
+    {
+        redde v;
+    }
+    exitus->quantitas  = q;
+    exitus->moneta     = m;
+    redde PECUNIA_BENE;
 }

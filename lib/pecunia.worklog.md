@@ -155,3 +155,36 @@ Property check: 3000 random cases (USD/JPY/KWD/CLF, n 1..12, ratios
 opposite sign, are payable under UNITAS; equal splits differ by at most
 one grain. Plants: leftover to the last parts, ties to the higher index,
 sign not restored - each red in `exempla`.
+
+## 2026-10-19 - T5: canonical text and bare decimals
+
+**Canonical form `USD -12.3400`:** upper-case code, one space, optional
+`-`, integer part without leading zeros (but `0` itself), exactly four
+decimals, no grouping, no `+`, zero never signed. The reader accepts
+ONLY that, so text equality is value equality - clean event logs and
+diffs. The reader checks the code is three upper-case letters BEFORE
+lookup (`usd 12.3400` is FORMA, not a currency question), then reads
+the quantity, then looks the code up (XAU -> SINE_UNITATE, ABC ->
+IGNOTA).
+
+**Bare decimal = Lunch Money's pattern** `^-?\d+(\.\d{1,4})?$`: leading
+zeros allowed (even 46 of them - accumulation stays 0 until the first
+non-zero digit, so no false overflow), `12.` and `.5` refused, five
+decimals -> DECIMALES (named, so a form can say why).
+
+**Shape first, value second.** `_quantitatem_legere` scans the whole
+text and refuses bad shape (FORMA / DECIMALES) before computing; the
+value is accumulated in `i64` (unsigned 64-bit), the integer part
+capped at 2^63 / 10^4 per digit, then compared with 2^63 (negative) or
+2^63 - 1 (positive). Writers take the magnitude as `i64` too:
+`-(q + 1) + 1` gets |MINIMA| = 2^63 without overflow.
+
+**Bitten again by a latina.h macro:** a local named `magnitudo` - that is
+`sizeof`. examen flagged it ("magnitudo macrum latina.h est"); renamed
+`amplitudo`. And a local `usd` was a new word for the Latin lint ->
+`nummus`.
+
+Round trip over 5000 random s64 values (full range, USD and JPY): both
+`ex_textu(ad_textum(x)) == x` and `ex_numero(numerus(x)) == x`. Plants:
+`-0.0000` accepted, a leading zero accepted, the positive bound
+loosened by one (`...5808` would wrap to MINIMA) - each red.

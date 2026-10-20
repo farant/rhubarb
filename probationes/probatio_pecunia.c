@@ -7,7 +7,8 @@
  * (probationes/fixa/pecunia/rotundatio.txt, sha256 infra; scriptum a
  * tools/pecunia_rotundatio_oraculum.py), solvibilis, cambium;
  * partitio (T4): residuum maximum, paria ad indicem minorem, summa
- * EXACTA, granum scalae aut unitatis. */
+ * EXACTA, granum scalae aut unitatis; forma canonica stricta et
+ * numerus nudus (T5), margines s64, circuitus. */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -887,6 +888,217 @@ _sectio_partitio_proprietates (CredoContextus* c)
     }
 }
 
+interior vacuum
+_textus_est (
+             chorda  t,
+    constans character* exspectatum)
+{
+    si (!chorda_aequalis_literis(t, exspectatum))
+    {
+        imprimere("  textus: '%.*s' pro '%s'\n", (integer)t.mensura,
+            t.datum, exspectatum);
+    }
+    CREDO_VERUM(chorda_aequalis_literis(t, exspectatum));
+}
+
+/* lectio canonica recusata cum vitio nominato, exitus intactus */
+interior vacuum
+_canonica_mala (
+    constans character* textus,
+         PecuniaVitium  exspectatum,
+              Piscina* p)
+{
+    Pecunia y = _signum_intactum();
+
+    CREDO_AEQUALIS_S32((s32)pecunia_ex_textu(_c(textus, p), &y),
+        (s32)exspectatum);
+    CREDO_VERUM(_intactum(y));
+}
+
+interior vacuum
+_numerus_malus (
+    constans character* textus,
+         PecuniaVitium  exspectatum,
+              Piscina* p)
+{
+    Pecunia y = _signum_intactum();
+
+    CREDO_AEQUALIS_S32((s32)pecunia_ex_numero(_c(textus, p),
+        _moneta("USD", p), &y), (s32)exspectatum);
+    CREDO_VERUM(_intactum(y));
+}
+
+interior vacuum
+_sectio_canonica (CredoContextus* c)
+{
+    Piscina* p = c->piscina;
+    Pecunia  x;
+
+    _textus_est(pecunia_ad_textum(_p(CXXIII * M + CD, "USD", p), p),
+        "USD 12.3400");
+    _textus_est(pecunia_ad_textum(_p(-(s64)(V * M), "USD", p), p),
+        "USD -0.5000");
+    _textus_est(pecunia_ad_textum(_p(ZEPHYRUM, "USD", p), p),
+        "USD 0.0000");
+    _textus_est(pecunia_ad_textum(_p(L * M, "JPY", p), p),
+        "JPY 5.0000");
+    _textus_est(pecunia_ad_textum(_p(I, "CLF", p), p), "CLF 0.0001");
+
+    CREDO_AEQUALIS_S32((s32)pecunia_ex_textu(_c("USD 12.3400", p), &x),
+        (s32)PECUNIA_BENE);
+    CREDO_AEQUALIS_S64(x.quantitas, (s64)(CXXIII * M + CD));
+    CREDO_VERUM(memcmp(x.moneta.codex, "USD", IV) == ZEPHYRUM);
+    CREDO_AEQUALIS_S32((s32)pecunia_ex_textu(_c("USD -0.5000", p), &x),
+        (s32)PECUNIA_BENE);
+    CREDO_AEQUALIS_S64(x.quantitas, -(s64)(V * M));
+    CREDO_AEQUALIS_S32((s32)pecunia_ex_textu(_c("USD 0.0000", p), &x),
+        (s32)PECUNIA_BENE);
+    CREDO_AEQUALIS_S64(x.quantitas, (s64)ZEPHYRUM);
+
+    _canonica_mala("usd 12.3400", PECUNIA_VITIUM_FORMA, p);
+    _canonica_mala("USD 12.34", PECUNIA_VITIUM_FORMA, p);
+    _canonica_mala("USD 12.34000", PECUNIA_VITIUM_FORMA, p);
+    _canonica_mala("USD  12.3400", PECUNIA_VITIUM_FORMA, p);
+    _canonica_mala("USD +12.3400", PECUNIA_VITIUM_FORMA, p);
+    _canonica_mala("USD 012.3400", PECUNIA_VITIUM_FORMA, p);
+    _canonica_mala("USD -0.0000", PECUNIA_VITIUM_FORMA, p);
+    _canonica_mala("USD 12.3400 ", PECUNIA_VITIUM_FORMA, p);
+    _canonica_mala(" USD 12.3400", PECUNIA_VITIUM_FORMA, p);
+    _canonica_mala("USD 1e5", PECUNIA_VITIUM_FORMA, p);
+    _canonica_mala("USD 12", PECUNIA_VITIUM_FORMA, p);
+    _canonica_mala("USD -", PECUNIA_VITIUM_FORMA, p);
+    _canonica_mala("USD", PECUNIA_VITIUM_FORMA, p);
+    _canonica_mala("", PECUNIA_VITIUM_FORMA, p);
+    _canonica_mala("US 12.3400", PECUNIA_VITIUM_FORMA, p);
+    _canonica_mala("XAU 1.0000", PECUNIA_VITIUM_MONETA_SINE_UNITATE, p);
+    _canonica_mala("ABC 1.0000", PECUNIA_VITIUM_MONETA_IGNOTA, p);
+}
+
+interior vacuum
+_sectio_extrema (CredoContextus* c)
+{
+    Piscina* p = c->piscina;
+    Pecunia  x;
+
+    _textus_est(pecunia_ad_textum(_p(MAXIMA, "USD", p), p),
+        "USD 922337203685477.5807");
+    _textus_est(pecunia_ad_textum(_p(MINIMA, "USD", p), p),
+        "USD -922337203685477.5808");
+    _textus_est(pecunia_numerus(_p(MAXIMA, "USD", p), p),
+        "922337203685477.5807");
+    _textus_est(pecunia_numerus(_p(MINIMA, "USD", p), p),
+        "-922337203685477.5808");
+
+    CREDO_AEQUALIS_S32((s32)pecunia_ex_textu(_c(
+        "USD 922337203685477.5807", p), &x), (s32)PECUNIA_BENE);
+    CREDO_AEQUALIS_S64(x.quantitas, MAXIMA);
+    CREDO_AEQUALIS_S32((s32)pecunia_ex_textu(_c(
+        "USD -922337203685477.5808", p), &x), (s32)PECUNIA_BENE);
+    CREDO_AEQUALIS_S64(x.quantitas, MINIMA);
+    _canonica_mala("USD 922337203685477.5808",
+        PECUNIA_VITIUM_SUPERFLUXUS, p);
+    _canonica_mala("USD -922337203685477.5809",
+        PECUNIA_VITIUM_SUPERFLUXUS, p);
+    _canonica_mala("USD 99999999999999999999.0000",
+        PECUNIA_VITIUM_SUPERFLUXUS, p);
+
+    CREDO_AEQUALIS_S32((s32)pecunia_ex_numero(_c("922337203685477.5807",
+        p), _moneta("USD", p), &x), (s32)PECUNIA_BENE);
+    CREDO_AEQUALIS_S64(x.quantitas, MAXIMA);
+    CREDO_AEQUALIS_S32((s32)pecunia_ex_numero(_c(
+        "-922337203685477.5808", p), _moneta("USD", p), &x),
+        (s32)PECUNIA_BENE);
+    CREDO_AEQUALIS_S64(x.quantitas, MINIMA);
+    _numerus_malus("922337203685477.5808", PECUNIA_VITIUM_SUPERFLUXUS,
+        p);
+    _numerus_malus("922337203685478", PECUNIA_VITIUM_SUPERFLUXUS, p);
+    /* zephyra ducentia (forma Lunch Money licet) sine pondere, etiam
+     * longissima: superfluxum non faciunt */
+    CREDO_AEQUALIS_S32((s32)pecunia_ex_numero(_c(
+        "0000000000000000000000000000000000000000000001", p),
+        _moneta("USD", p), &x), (s32)PECUNIA_BENE);
+    CREDO_AEQUALIS_S64(x.quantitas, (s64)(X * M));
+}
+
+interior vacuum
+_sectio_numeri (CredoContextus* c)
+{
+          Piscina* p = c->piscina;
+          Pecunia  x;
+    PecuniaMoneta  nummus = _moneta("USD", p);
+
+    CREDO_AEQUALIS_S32((s32)pecunia_ex_numero(_c("12", p), nummus, &x),
+        (s32)PECUNIA_BENE);
+    CREDO_AEQUALIS_S64(x.quantitas, (s64)(CXX * M));
+    CREDO_VERUM(memcmp(x.moneta.codex, "USD", IV) == ZEPHYRUM);
+    CREDO_AEQUALIS_S32((s32)pecunia_ex_numero(_c("12.3", p), nummus,
+        &x),
+        (s32)PECUNIA_BENE);
+    CREDO_AEQUALIS_S64(x.quantitas, (s64)(CXXIII * M));
+    CREDO_AEQUALIS_S32((s32)pecunia_ex_numero(_c("-12.3456", p), nummus,
+        &x),
+        (s32)PECUNIA_BENE);
+    CREDO_AEQUALIS_S64(x.quantitas, -(s64)(CXXIII * M + CDLVI));
+    CREDO_AEQUALIS_S32((s32)pecunia_ex_numero(_c("-0", p), nummus, &x),
+        (s32)PECUNIA_BENE);
+    CREDO_AEQUALIS_S64(x.quantitas, (s64)ZEPHYRUM);
+    CREDO_AEQUALIS_S32((s32)pecunia_ex_numero(_c("0.0001", p), nummus,
+        &x),
+        (s32)PECUNIA_BENE);
+    CREDO_AEQUALIS_S64(x.quantitas, (s64)I);
+    CREDO_AEQUALIS_S32((s32)pecunia_ex_numero(_c("007", p), nummus, &x),
+        (s32)PECUNIA_BENE);
+    CREDO_AEQUALIS_S64(x.quantitas, (s64)(LXX * M));
+
+    _numerus_malus("12.34567", PECUNIA_VITIUM_DECIMALES, p);
+    _numerus_malus("+12", PECUNIA_VITIUM_FORMA, p);
+    _numerus_malus(".5", PECUNIA_VITIUM_FORMA, p);
+    _numerus_malus("12.", PECUNIA_VITIUM_FORMA, p);
+    _numerus_malus("1,234.00", PECUNIA_VITIUM_FORMA, p);
+    _numerus_malus(" 12", PECUNIA_VITIUM_FORMA, p);
+    _numerus_malus("12 ", PECUNIA_VITIUM_FORMA, p);
+    _numerus_malus("", PECUNIA_VITIUM_FORMA, p);
+    _numerus_malus("-", PECUNIA_VITIUM_FORMA, p);
+    _numerus_malus("--1", PECUNIA_VITIUM_FORMA, p);
+    _numerus_malus("1e5", PECUNIA_VITIUM_FORMA, p);
+    _numerus_malus("12.3.4", PECUNIA_VITIUM_FORMA, p);
+    /* moneta non ex pecunia_moneta_ex_codice */
+    {
+        Pecunia y = _signum_intactum();
+
+        CREDO_AEQUALIS_S32((s32)pecunia_ex_numero(_c("1", p),
+            _moneta("ZZZ", p), &y), (s32)PECUNIA_VITIUM_MONETA_IGNOTA);
+        CREDO_VERUM(_intactum(y));
+    }
+
+    _textus_est(pecunia_numerus(_p(-(s64)(V * M), "USD", p), p),
+        "-0.5000");
+    _textus_est(pecunia_numerus(_p(ZEPHYRUM, "USD", p), p), "0.0000");
+}
+
+interior vacuum
+_sectio_circuitus (CredoContextus* c)
+{
+    Piscina* p = c->piscina;
+       Sors  s;
+        s32  i;
+
+    sors_seminare(&s, (i64)0xC1C, ZEPHYRUM);
+    per (i = ZEPHYRUM; i < V * M; i++)
+    {
+        Pecunia a = _p((s64)sors_proximum(&s), i % II ? "USD" : "JPY",
+            p);
+        Pecunia b;
+
+        CREDO_NECESSE(pecunia_ex_textu(pecunia_ad_textum(a, p), &b)
+            == PECUNIA_BENE);
+        CREDO_VERUM(pecunia_aequalis(a, b));
+        CREDO_NECESSE(pecunia_ex_numero(pecunia_numerus(a, p), a.moneta,
+            &b) == PECUNIA_BENE);
+        CREDO_VERUM(pecunia_aequalis(a, b));
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "tabula", _sectio_tabula, NIHIL, NIHIL, NIHIL, NIHIL },
     { "codices", _sectio_codices, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -903,6 +1115,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "degeneres", _sectio_degeneres, NIHIL, NIHIL, NIHIL, NIHIL },
     { "partitio_proprietates", _sectio_partitio_proprietates, NIHIL,
         NIHIL, NIHIL, NIHIL },
+    { "canonica", _sectio_canonica, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "extrema", _sectio_extrema, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "numeri", _sectio_numeri, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "circuitus", _sectio_circuitus, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

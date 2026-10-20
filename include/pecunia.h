@@ -250,4 +250,40 @@ pecunia_dividere (
            Piscina* piscina,
            Pecunia* exitus);
 
+
+/* ==================================================
+ * Textus: forma canonica et numerus nudus
+ * ================================================== */
+
+/* Forma canonica (repositorium, eventus): "USD -12.3400" - codex
+ * majusculis, spatium unum, '-' optionale, pars integra sine zephyris
+ * ducentibus ('0' ipsum), semper IV decimales, nullus coetus, nullum
+ * '+'; nihil = "USD 0.0000" (numquam "-0.0000"). Una scriptura per
+ * valorem. */
+chorda
+pecunia_ad_textum (
+     Pecunia  a,
+     Piscina* piscina);
+
+/* SOLAM formam canonicam accipit (FORMA aliter): lectio(scriptio(x))
+ * == x et scriptio(lectio(t)) == t. */
+PecuniaVitium
+pecunia_ex_textu (
+      chorda  textus,
+     Pecunia* exitus);
+
+/* numerus nudus (APIs, Lunch Money): "-12.3400" */
+chorda
+pecunia_numerus (
+     Pecunia  a,
+     Piscina* piscina);
+
+/* ^-?[0-9]+(\.[0-9]{1,4})?$ exacte (forma Lunch Money): zephyra
+ * ducentia licent; plus quam IV decimales -> DECIMALES */
+PecuniaVitium
+pecunia_ex_numero (
+           chorda  textus,
+    PecuniaMoneta  m,
+          Pecunia* exitus);
+
 #endif /* PECUNIA_H */
