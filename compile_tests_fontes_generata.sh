@@ -129,6 +129,7 @@ declare -a SOURCE_FILES=(
     "lib/internamentum.c"
     "lib/internuntius.c"
     "lib/interpres_terminalis.c"
+    "lib/invitationes.c"
     "lib/iter_directoria.c"
     "lib/iussum.c"
     "lib/js_lexema.c"

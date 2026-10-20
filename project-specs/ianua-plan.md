@@ -124,6 +124,18 @@ this plan.
   rollback (P3) removes the partial row. Replaced by "normalization does
   not lower-case" (`nomina` red). Cost if wrong: none - the guard is a
   fast path, the constraints are the safety, and both are exercised.
+- **T3: Linux detour (Fran chose "real Linux body").** After merging main
+  (bf073999) every Linux test link failed: credo calls
+  `memoria_processus_legere`, which had only a macOS body. Added
+  `lib/memoria_processus_posix.c` (/proc/<pid>/status) + a glibc fix in
+  its existing suite, as its own commit 045b7159 before T3. Cost if
+  wrong: none for ianua; the body reaches main with quarta.
+- **T3: empty author/note accepted.** The first draft refused an empty
+  chorda (datum NIHIL) for `auctor`/`nota`, which would have refused the
+  CLI bootstrap invitation (P1, empty auctor). Normalized to "", pinned
+  in section `creare`.
+- **T3: section names.** `expiratio`/`revocatio` are new words to the
+  lint; the sections are `terminus` and `revocare`.
 
 ## Review focus
 
