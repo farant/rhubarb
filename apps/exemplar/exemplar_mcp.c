@@ -288,7 +288,7 @@ _nota_personae (
         Nota* n = (Nota*)xar_obtinere(e->notae, k);
 
         si (   n->id == id && !n->deleta
-            && chorda_aequalis(n->usor, mcp_vocatio_persona(v)->usor))
+            && chorda_aequalis(n->civis, mcp_vocatio_persona(v)->usor))
         {
             redde n;
         }
@@ -346,7 +346,7 @@ _notas_enumerare (
         Nota* n = (Nota*)xar_obtinere(e->notae, (i32)k);
 
         si (   n->deleta
-            || !chorda_aequalis(n->usor, mcp_vocatio_persona(v)->usor))
+            || !chorda_aequalis(n->civis, mcp_vocatio_persona(v)->usor))
         {
             perge;
         }
@@ -472,16 +472,6 @@ hic_manens constans McpInstrumentum INSTRUMENTA[] = {
  * MONTATIO
  * ================================================== */
 
-interior b32
-_intratus_admissionis (
-                 vacuum* datum,
-    HospitiumColloquium* col,
-                 chorda* usor,
-                 chorda* csrf)
-{
-    redde exemplar_intratus_usor((Exemplar*)datum, col, usor, csrf);
-}
-
 /* clientes non usi et tesserae expiratae: semel in hora */
 interior vacuum
 _putare (
@@ -540,7 +530,7 @@ exemplar_mcp_praebere (
         _putare,
         e);
     redde admissio_montare(e->admissio, e->hospitium,
-               _intratus_admissionis, e, "/intrare")
+               ianua_admissionis_intratus, e->ianua, "/intrare")
         && mcp_servus_http_montare(e->hospitium, e->mcp,
         &optiones_vecturae,
         e->piscina);

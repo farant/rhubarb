@@ -1,11 +1,13 @@
 /* exemplar.c - applicatio probans hospitii v3 (exemplar.golden.earth)
  *
  *   exemplar -data <dir> [-portus N] [-hospes 127.0.0.1]
- *            [-invitatio <codex> | -invitatio-via <filum>]
  *            [-procurator] [-acta] [-basis URL] [-sonda]
+ *   exemplar -data <dir> -invitare "<nota>" [-basis URL]
  *
- * -invitatio-via: codex ex filo (spatia finalia abiecta) - in
- * productione (systemd), ne codex in 'ps' aut in unitate appareat.
+ * -invitare (ianua P1): invitatio una (VII dies) ex linea mandatorum,
+ * servo SISTENTE (sera data/sera; currens -> exitus II). Codex et
+ * nexus ad stdout SOLUM - numquam ad acta aut stderr. Invitationes
+ * ceterae per paginam /invitationes.
  *
  * Principale tenue: argumenta, reactor UNUS (servus, labores
  * argon2id, signa), SIGTERM/SIGINT -> sistere molliter (X s), deinde
@@ -45,8 +47,8 @@ interior s32
 _usus (vacuum)
 {
     fprintf(stderr, "usus: exemplar -data <dir> [-portus N] "
-        "[-hospes H] [-invitatio C | -invitatio-via F] [-procurator] "
-        "[-acta] [-basis URL] [-sonda]\n");
+        "[-hospes H] [-procurator] [-acta] [-basis URL] [-sonda]\n"
+        "       exemplar -data <dir> -invitare NOTA [-basis URL]\n");
     redde II;
 }
 
@@ -60,7 +62,7 @@ principale (
                  Reactor* r;
                 Exemplar* e;
                  integer  k;
-      constans character* via_invitationis = NIHIL;
+      constans character* nota_invitationis = NIHIL;
 
     memset(&cfg, ZEPHYRUM, magnitudo(cfg));
     per (k = I; k < argc; k++)
@@ -79,15 +81,10 @@ principale (
         {
             cfg.hospes = argv[++k];
         }
-        alioquin si (   strcmp(argv[k], "-invitatio") == ZEPHYRUM
+        alioquin si (   strcmp(argv[k], "-invitare") == ZEPHYRUM
                      && k + I < argc)
         {
-            cfg.invitatio = argv[++k];
-        }
-        alioquin si (   strcmp(argv[k], "-invitatio-via") == ZEPHYRUM
-                     && k + I < argc)
-        {
-            via_invitationis = argv[++k];
+            nota_invitationis = argv[++k];
         }
         alioquin si (strcmp(argv[k], "-procurator") == ZEPHYRUM)
         {
@@ -117,30 +114,45 @@ principale (
     }
 
     p = piscina_generare_dynamicum("exemplar", LXIV * MXXIV);
-    r = p ? reactor_creare(p) : NIHIL;
-    si (!r)
+    si (!p)
     {
         redde I;
     }
-    si (via_invitationis)
+    si (nota_invitationis)
     {
-        chorda c = filum_legere_totum(via_invitationis, p);
+        chorda codex;
+           s32 exitus = exemplar_invitare(cfg.via_datorum,
+                            nota_invitationis, &codex, p);
 
-        dum (   c.mensura > 0 && (c.datum[c.mensura - I] == '\n'
-             || c.datum[c.mensura - I] == '\r'
-             || c.datum[c.mensura - I] == ' '))
+        si (exitus == II)
         {
-            c.mensura--;
+            fprintf(stderr, "exemplar: servus currit - siste prius "
+                "(sera %s/sera)\n", cfg.via_datorum);
         }
-        si (c.mensura == 0)
+        alioquin si (exitus == ZEPHYRUM)
         {
-            fprintf(stderr, "exemplar: invitatio %s legi nequit - "
-                "inscriptio clausa\n", via_invitationis);
+            /* stdout SOLUM: codex numquam in actis */
+            printf("codex: %.*s\n", (integer)codex.mensura,
+                (constans character*)codex.datum);
+            si (cfg.basis)
+            {
+                printf("nexus: %s/inscribere?invitatio=%.*s\n",
+                    cfg.basis,
+                    (integer)codex.mensura,
+                    (constans character*)codex.datum);
+            }
         }
         alioquin
         {
-            cfg.invitatio = chorda_ut_cstr(c, p);
+            fprintf(stderr, "exemplar: invitatio creari nequit\n");
         }
+        piscina_destruere(p);
+        redde exitus;
+    }
+    r = reactor_creare(p);
+    si (!r)
+    {
+        redde I;
     }
     cfg.reactor  = r;
     e            = exemplar_creare(&cfg, p);
@@ -152,10 +164,10 @@ principale (
     }
     (vacuum)reactor_signum_adicere(r, SIGTERM, _sistere, e);
     (vacuum)reactor_signum_adicere(r, SIGINT, _sistere, e);
-    fprintf(stderr, "exemplar: http://%s:%u (data %s, inscriptio %s)\n",
+    fprintf(stderr, "exemplar: http://%s:%u (data %s)\n",
         cfg.hospes ? cfg.hospes : "127.0.0.1",
         (insignatus integer)hospitium_portus(exemplar_hospitium(e)),
-        cfg.via_datorum, cfg.invitatio ? "aperta" : "clausa");
+        cfg.via_datorum);
 
     dum (hospitium_gressus(exemplar_hospitium(e), M))
     {

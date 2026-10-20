@@ -1,15 +1,19 @@
-/* exemplar_nucleus.h - applicatio probans hospitii v3: inscriptio
- * (codice invitationis), sessiones, notae cum filis, salus
+/* exemplar_nucleus.h - applicatio probans hospitii v3: rationes per
+ * ianuam (cives, invitationes per personam, sessiones), notae cum
+ * filis, salus
  *
  * Status totus in volumine UNO (data/exemplar.volumen, durabilitas
- * plena): acta usor.creatus, tessera.mutata, sessio.creata (SIGILLUM
- * signi, numquam signum), sessio.deleta, filum.receptum, nota.scripta,
- * nota.deleta; massae = fila. Ad initium status in memoria ex actis
- * replicatur. Secretum servi data/secretum (0600, extra volumen),
- * fila temporaria data/tmp (0700, idem systema filorum).
+ * plena): tabulae ianuae (cives, credentialia, invitationes,
+ * ianua_sessiones) et admissionis; acta notarum (nota.scripta cum
+ * civi, nota.deleta, filum.receptum) ad initium in memoria replicantur;
+ * massae = fila. Volumen ante ianuam (usor.creatus, tessera.mutata cum
+ * phc) SEMEL migratur (ianua T5). Secretum servi data/secretum (0600,
+ * extra volumen), fila temporaria data/tmp (0700), sera scriptoris
+ * unius data/sera (ianua P1).
  *
- * Viae: GET / | GET,POST /inscribere | GET,POST /intrare | POST /exire
- * | GET,POST /notae | POST /notae/:id/delere | GET /fila/:sigillum |
+ * Viae ianuae: GET,POST /intrare | GET,POST /inscribere | POST /exire
+ * | GET,POST /tessera | GET,POST /invitationes. Exemplaris: GET / |
+ * GET,POST /notae | POST /notae/:id/delere | GET /fila/:sigillum |
  * GET /salus. Omnis POST: Origin congruens; post sessionem etiam CSRF.
  * Textus usoris omnis per unum auxilium HTML evaditur. Fila: attachment
  * + nosniff, dominus solus (alienus = 404). */
@@ -20,12 +24,12 @@
 #include "piscina.h"
 #include "reactor.h"
 #include "hospitium.h"
+#include "chorda.h"
 
 nomen structura {
     constans character* via_datorum;      /* --data (creatur 0700) */
     constans character* hospes;           /* NIHIL = 127.0.0.1 */
                    i32  portus;           /* 0 = auto */
-    constans character* invitatio;        /* NIHIL = clausa */
                    b32  procurator_fidus; /* VERUM post nginx */
                    b32  acta_accessus;
                    i32  frenum_conatus;   /* 0 = V */
@@ -42,8 +46,8 @@ nomen structura {
 
 nomen structura Exemplar Exemplar;
 
-/* NIHIL si data, volumen, secretum aut servus deficiunt (causa ad
- * stderr) */
+/* NIHIL si data, sera (alius processus currit), volumen, secretum,
+ * migratio aut servus deficiunt (causa ad stderr) */
 Exemplar*
 exemplar_creare (
     constans ExemplarConfiguratio* configuratio,
@@ -57,9 +61,29 @@ Reactor*
 exemplar_reactor (
     Exemplar* exemplar);
 
-/* servus destruitur, volumen (checkpoint) clauditur */
+/* servus destruitur, volumen (checkpoint) clauditur, sera liberatur */
 vacuum
 exemplar_claudere (
     Exemplar* exemplar);
+
+/* CLI (ianua P1): seram data/sera capit - servus currens -> II;
+ * volumen aperit, invitationem (auctor vacuus, VII dies) creat; codex
+ * in piscina, SEMEL - vocator ad stdout scribit, numquam ad acta.
+ * 0 bene | I error | II servus currit */
+s32
+exemplar_invitare (
+     constans character* via_datorum,
+     constans character* nota,
+                 chorda* codex_exitus,
+                Piscina* piscina);
+
+#ifdef EXEMPLAR_PROBATIO
+/* uncus probationis: invitatio in exemplare currente (auctor vacuus) */
+b32
+exemplar_invitationem_probationis (
+    Exemplar* e,
+      chorda* codex_exitus,
+     Piscina* piscina);
+#endif
 
 #endif /* EXEMPLAR_NUCLEUS_H */

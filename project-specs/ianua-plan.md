@@ -146,6 +146,13 @@ this plan.
   the one the commit-instead-of-rollback plant turns red.
 - **T4: CLI bootstrap test moves to T5** (`exemplar_invitare`, P1) - the
   CLI is an app concern, not ianua's.
+- **T5: Claude Code e2e moves to T6.** The local OAuth round trip needs
+  a browser; the curl e2e covered CLI invite (stopped / running),
+  sign-up, sign-in, notes, /mcp 401. T6 step 4 (Claude still connected
+  after the deploy) is the real check of the re-keyed grant.
+- **T5: two admissio event assertions changed** from `"usor":"fran"` to
+  the person's ULID - grants are keyed by ULID now; events written
+  before the migration keep the handle.
 - **T3: section names.** `expiratio`/`revocatio` are new words to the
   lint; the sections are `terminus` and `revocare`.
 

@@ -183,3 +183,52 @@ in 4-11 ms on the droplet.
 Not yet observed: Amanda's own connection, a live revoke + re-add, and
 the first refresh after the access token's hour (look for
 `POST /oauth/token` with a refresh body, then 200s on `/mcp`).
+
+## 2026-10-20 - accounts through ianua (ianua T5)
+
+exemplar's account layer is gone: `Usor`/`Sessio`/`Opus`, the account
+routes, the async hashing slots, the shared `cfg.invitatio` secret and
+the `usor.*`/`tessera.*`/`sessio.*` replay. exemplar_nucleus.c 1719 ->
+1408 lines (and the 1408 now include the migration, the CLI invite and
+a test hook). ianua is mounted with exemplar's page frame (`pagina`
+callback), `via_post_intrationem` /notae, invitations required.
+
+- Notes carry `civis` (ULID). Old `nota.scripta` events carry `usor`
+  (a handle); replay maps them through `exemplar_nomina_vetera`, filled
+  once by the migration. The log is never rewritten (plan P7).
+- MIGRATION `_cives_migrare`, at the END of exemplar_creare (after
+  admissio created its tables, before replay), ONE transaction: latest
+  PHC per handle from `usor.creatus`/`tessera.mutata` -> `cives_creare`
+  + `credentialia_tesseram_ponere`; the map row; `admissio_concessiones`
+  and `admissio_codices` `usor` re-keyed handle -> ULID (P8); event
+  `exemplar.migratio {cives: {handle: ULID}}`; marker row in
+  `exemplar_migrationes`. Any failure -> rollback, "exemplar: migratio
+  civium fracta: <reason>" on stderr, exemplar refuses to start. A
+  fresh volumen writes only the marker.
+- Old `sessio.creata` events are ignored: everyone signs in once (P12).
+- admissio `concessio.*` events written BEFORE the migration still say
+  `"usor":"fran"` (history); new ones carry the ULID. Two suite
+  assertions changed accordingly (`_usor_civis` reads the ULID).
+- SINGLE WRITER (P1): `data/sera` via `filum_seram_capere` at start; a
+  second server or `exemplar -invitare` while running is refused.
+  `exemplar -data D -invitare "<nota>" [-basis URL]` prints the code (and
+  link with -basis) on stdout only. `-invitatio`/`-invitatio-via`
+  removed; exemplar.service updated (P14 - deploy with -cum-unitate).
+- Every failure path of exemplar_creare goes through `_creatio_fracta`
+  (destroys the hospitium, closes the volumen, releases the lock) - the
+  migratio_fracta test relies on the lock being free for the retry.
+
+Tests: probatio_exemplar_applicatio 342/342 (5 new sections: migratio,
+migratio_iterata, migratio_fracta, sera, mcp_nota_civis; every sign-up
+now uses a fresh code via `exemplar_invitationem_probationis`). Plants
+red then green: migration commits instead of rolling back
+(migratio_fracta: fran exists after a refused start); replay ignores
+the map (migratio: fran's old note gone); lock not taken (sera). Linux
+musl + glibc green (7 suites); static build OK (build/linux/exemplar,
+2.0 MB).
+
+Local end to end (scratch data, port 3011): CLI invite while stopped ->
+code; while running -> exit 2 "servus currit"; link -> form; sign-up 303;
+reused code 403; sign-in as "Fran" -> /notae "salve, Fran"; /mcp 401
+exact; clean SIGTERM. Claude Code OAuth round trip not repeated locally
+(needs a browser) - covered by T6's live check.

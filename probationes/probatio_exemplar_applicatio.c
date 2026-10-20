@@ -13,6 +13,8 @@
  * gyrum agit (~MCC gradus per hash), mora longior probationem
  * minutis extenderet (675 s cum XX ms). */
 #include "postulata_posix.h"
+#define EXEMPLAR_PROBATIO
+#define ADMISSIO_PROBATIO
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -25,6 +27,10 @@
 #include "hospitium.h"
 #include "volumen.h"
 #include "exemplar_nucleus.h"
+#include "custodia.h"
+#include "cives.h"
+#include "admissio.h"
+#include "scrinium.h"
 #include "json.h"
 #include "url.h"
 #include "xar.h"
@@ -32,7 +38,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define INVITATIO    "clavis-invitationis"
 #define LIMES        "LimesExemplaris"
 #define CAPITA_N     (VIII * MXXIV)
 #define MAGNUM       (II * MXXIV * MXXIV)
@@ -322,7 +327,6 @@ _exemplar (
     }
     memset(&cfg, ZEPHYRUM, magnitudo(cfg));
     cfg.via_datorum     = locus->via;
-    cfg.invitatio       = INVITATIO;
     cfg.frenum_conatus  = frenum;
     e                   = exemplar_creare(&cfg, c->piscina);
     si (e)
@@ -341,6 +345,21 @@ _finire (
 {
     exemplar_claudere(e);
     (vacuum)filum_arborem_delere(locus->via);
+}
+
+/* invitatio nova per uncum probationis (codex SEMEL) */
+interior constans character*
+_invitatio (
+    Exemplar* e,
+     Piscina* p)
+{
+    chorda codex;
+
+    si (!exemplar_invitationem_probationis(e, &codex, p))
+    {
+        redde "nulla";
+    }
+    redde chorda_ut_cstr(codex, p);
 }
 
 /* capita cum Origin, Cookie et typo */
@@ -510,8 +529,8 @@ _ana (
 {
     i32 status;
 
-    si (!_inscribere(e, p, locus, "ana", "tessera-anae-bona", INVITATIO,
-        &status) || status != CCCIII)
+    si (   !_inscribere(e, p, locus, "ana", "tessera-anae-bona",
+        _invitatio(e, p), &status) || status != CCCIII)
     {
         redde "";
     }
@@ -534,7 +553,7 @@ _sectio_iter (CredoContextus* c)
 
     CREDO_NECESSE_NON_NIHIL(e);
     CREDO_VERUM(_inscribere(e, c->piscina, &locus, "ana",
-        "tessera-anae-bona", INVITATIO, &status));
+        "tessera-anae-bona", _invitatio(e, c->piscina), &status));
     CREDO_AEQUALIS_I32(status, CCCIII);
     sid = _intrare(e, c->piscina, &locus, "ana", "tessera-anae-bona",
         &status);
@@ -608,7 +627,7 @@ _sectio_sine_invitatione (CredoContextus* c)
     CREDO_AEQUALIS_I32(status, CDIII);
     /* tessera brevis: 400 */
     CREDO_VERUM(_inscribere(e, c->piscina, &locus, "ana", "brevis",
-        INVITATIO, &status));
+        _invitatio(e, c->piscina), &status));
     CREDO_AEQUALIS_I32(status, CD);
     _finire(e, &locus);
 }
@@ -626,7 +645,7 @@ _sectio_csrf (CredoContextus* c)
     CREDO_NECESSE_NON_NIHIL(e);
     sid_a = _ana(e, c->piscina, &locus);
     CREDO_VERUM(_inscribere(e, c->piscina, &locus, "bea",
-        "tessera-beae-bona", INVITATIO, &status));
+        "tessera-beae-bona", _invitatio(e, c->piscina), &status));
     sid_b = _intrare(e, c->piscina, &locus, "bea", "tessera-beae-bona",
         &status);
     csrf_b = _csrf_paginae(e, c->piscina, &locus, sid_b);
@@ -674,7 +693,7 @@ _sectio_frenum (CredoContextus* c)
 
     CREDO_NECESSE_NON_NIHIL(e);
     CREDO_VERUM(_inscribere(e, c->piscina, &locus, "ana",
-        "tessera-anae-bona", INVITATIO, &status));
+        "tessera-anae-bona", _invitatio(e, c->piscina), &status));
     per (k = ZEPHYRUM; k < VI; k++)
     {
         a = tempus_nunc();
@@ -716,7 +735,7 @@ _sectio_alienus (CredoContextus* c)
     via_fili = _extrahere(&l, "href=\"/fila/", '"', c->piscina);
     CREDO_AEQUALIS_I32((i32)strlen(via_fili), LXIV);
     CREDO_VERUM(_inscribere(e, c->piscina, &locus, "bea",
-        "tessera-beae-bona", INVITATIO, &status));
+        "tessera-beae-bona", _invitatio(e, c->piscina), &status));
     sid_b = _intrare(e, c->piscina, &locus, "bea", "tessera-beae-bona",
         &status);
     sprintf(linea, "GET /fila/%s", via_fili);
@@ -807,7 +826,7 @@ _sectio_turba (CredoContextus* c)
 
     CREDO_NECESSE_NON_NIHIL(e);
     CREDO_VERUM(_inscribere(e, c->piscina, &locus, "ana",
-        "tessera-anae-bona", INVITATIO, &status));
+        "tessera-anae-bona", _invitatio(e, c->piscina), &status));
     per (i = ZEPHYRUM; i < IV; i++)
     {
         CREDO_VERUM(_rogare(e, c->piscina, "POST /intrare", _capita(
@@ -922,7 +941,6 @@ _exemplar_cum_sonda (
     memset(&cfg, ZEPHYRUM, magnitudo(cfg));
     memset(capta, ZEPHYRUM, magnitudo(*capta));
     cfg.via_datorum     = locus->via;
-    cfg.invitatio       = INVITATIO;
     cfg.sonda           = sonda;
     cfg.sonda_scriptor  = _capere;
     cfg.sonda_datum     = capta;
@@ -1203,8 +1221,8 @@ _usor_novus (
 {
     i32 status;
 
-    si (   !_inscribere(e, p, locus, nomen_usoris, TESSERA, INVITATIO,
-               &status) || status != CCCIII)
+    si (   !_inscribere(e, p, locus, nomen_usoris, TESSERA,
+               _invitatio(e, p), &status) || status != CCCIII)
     {
         redde "";
     }
@@ -1409,6 +1427,37 @@ _actum_est (
     redde inventum;
 }
 
+/* fragmentum "usor":"<ULID civis>" (ianua T5: concessiones per ULID) */
+interior constans character*
+_usor_civis (
+                 Locus* locus,
+               Piscina* p,
+    constans character* nomen_usoris)
+{
+               character  via[CCLVI];
+                 Volumen* v;
+                   Cives* cv;
+                   Civis  x;
+               character* f = (character*)piscina_allocare(p, LXIV);
+
+    sprintf(via, "%s/exemplar.volumen", locus->via);
+    v   = volumen_aperire(p, via);
+    cv  = v ? cives_aperire(v, NIHIL, p) : NIHIL;
+    strcpy(f, "\"usor\":\"?\"");
+    si (   cv
+        && cives_per_nomen(cv, chorda_ex_literis(nomen_usoris, p), &x,
+        p))
+    {
+        sprintf(f, "\"usor\":\"%.*s\"", (integer)x.id.mensura,
+            (constans character*)x.id.datum);
+    }
+    si (v)
+    {
+        volumen_claudere(v);
+    }
+    redde f;
+}
+
 interior vacuum
 _sectio_instrumenta (CredoContextus* c)
 {
@@ -1435,7 +1484,7 @@ _sectio_instrumenta (CredoContextus* c)
         "\"titulus_clientis\":\"Claude\"",
         "\"scopi\":\"notae:legere notae:scribere offline_access\""));
     CREDO_VERUM(_actum_est(&locus, p, "concessio.creata",
-        "\"usor\":\"fran\"", NIHIL));
+        _usor_civis(&locus, p, "fran"), NIHIL));
     /* notam_addere: actum via claude cum cliente */
     id = _id_novum(e, p, accessus, "\"prima nota\"");
     CREDO_MAIOR_S32((s32)id, ZEPHYRUM);
@@ -1571,7 +1620,7 @@ _sectio_revocare (CredoContextus* c)
         FORMA_U), corpus, &l));
     CREDO_AEQUALIS_I32(l.status, CCCIII);
     CREDO_VERUM(_actum_est(&locus, p, "concessio.revocata",
-        "\"usor\":\"fran\"", NIHIL));
+        _usor_civis(&locus, p, "fran"), NIHIL));
     /* petitio proxima Franisci: 401; renovatio: invalid_grant */
     CREDO_VERUM(_instrumentum(e, p, accessus_f, "notas_enumerare", "{}",
         &l));
@@ -1627,7 +1676,8 @@ _sectio_redire (CredoContextus* c)
     constans character* sid;
 
     CREDO_NECESSE_NON_NIHIL(e);
-    CREDO_VERUM(_inscribere(e, p, &locus, "fran", TESSERA, INVITATIO,
+    CREDO_VERUM(_inscribere(e, p, &locus, "fran", TESSERA, _invitatio(e,
+        c->piscina),
         &status));
     cliens   = _clientem_inscribere(e, p);
     reditus  = (character*)piscina_allocare(p, MMXLVIII);
@@ -1734,6 +1784,379 @@ _sectio_paginae (CredoContextus* c)
     _finire(e, &locus);
 }
 
+/* ---- migratio civium (ianua T5) ---- */
+
+nomen structura {
+          i32  venit;
+       chorda  phc;
+      Piscina* p;
+} HashCaptum;
+
+interior vacuum
+_hash_captum (
+    vacuum* datum,
+    chorda  phc)
+{
+    HashCaptum* h = (HashCaptum*)datum;
+
+    h->phc.mensura  = phc.mensura;
+    h->phc.datum    = (i8*)piscina_allocare(h->p, (i64)phc.mensura + I);
+    memcpy(h->phc.datum, phc.datum, (size_t)phc.mensura);
+    h->venit++;
+}
+
+/* phc argon2id (parametri ordinarii, ut exemplar) */
+interior chorda
+_phc (
+        CredoContextus* c,
+    constans character* tessera)
+{
+     CustodiaConfiguratio  cfg;
+                  Reactor* r = reactor_creare(c->piscina);
+                 Custodia* custos;
+               HashCaptum  h;
+                      i32  k;
+
+    memset(&cfg, ZEPHYRUM, magnitudo(cfg));
+    memset(cfg.secretum, V, CUSTODIA_SECRETUM);
+    memset(&h, ZEPHYRUM, magnitudo(h));
+    h.p     = c->piscina;
+    custos  = custodia_creare(&cfg, r, c->piscina);
+    si (   custos
+        && custodia_tesseram_digerere(custos, chorda_ex_literis(tessera,
+        c->piscina), _hash_captum, &h))
+    {
+        per (k = ZEPHYRUM; k < C * M && h.venit == ZEPHYRUM; k++)
+        {
+            reactor_poll(r, I);
+        }
+    }
+    reactor_destruere(r);
+    redde h.phc;
+}
+
+interior vacuum
+_actum_vetus (
+               Volumen* v,
+    constans character* genus,
+    constans character* forma,
+    constans character* a,
+    constans character* b,
+               Piscina* p)
+{
+    character* d = (character*)piscina_allocare(p, (i64)(strlen(forma)
+        + strlen(a) + strlen(b) + XVI));
+
+    sprintf(d, forma, a, b);
+    (vacuum)volumen_actum_appendere(v, genus, chorda_ex_literis(d, p));
+}
+
+hic_manens constans character* constans SCOPI_VETERES[] = {
+    "notae:legere", "notae:scribere", NIHIL
+};
+
+/* volumen ANTE ianuam: usores per acta cum phc, notae per nomen,
+ * concessio Claudii pro "fran"; conflictus: civis "amanda" iam est */
+interior b32
+_volumen_vetus (
+    CredoContextus* c,
+             Locus* locus,
+               b32  conflictus)
+{
+             Piscina* p = c->piscina;
+           character  n[MONETA_NANOID_PLAGULAE_MENSURA];
+           character  via[CCLVI];
+             Volumen* v;
+    AdmissioOptiones  o;
+            Admissio* a;
+              chorda  responsum;
+              chorda  cliens;
+              chorda  accessus;
+              chorda  renovatio;
+        JsonResultus  r;
+
+    (vacuum)moneta_nanoid_plagulae(n);
+    sprintf(locus->via, "/tmp/exemplar_%s", n);
+    sprintf(via, "%s/exemplar.volumen", locus->via);
+    si (   !filum_directorium_creare_cum_modo(locus->via, 0700)
+        || !(v = volumen_aperire_aut_creare(p, via)))
+    {
+        redde FALSUM;
+    }
+    _actum_vetus(v, "usor.creatus", "{\"usor\":\"%s\",\"phc\":\"%s\"}",
+        "fran", chorda_ut_cstr(_phc(c, "tessera-vetus"), p), p);
+    _actum_vetus(v, "tessera.mutata",
+        "{\"usor\":\"%s\",\"phc\":\"%s\"}",
+        "fran", chorda_ut_cstr(_phc(c, TESSERA), p), p);
+    _actum_vetus(v, "usor.creatus", "{\"usor\":\"%s\",\"phc\":\"%s\"}",
+        "amanda", chorda_ut_cstr(_phc(c, "tessera-amandae"), p), p);
+    _actum_vetus(v, "nota.scripta",
+        "{\"usor\":\"%s\",\"textus\":\"%s\","
+        "\"via\":\"retis\",\"sigillum\":\"\"}", "fran",
+        "nota franisci vetus", p);
+    _actum_vetus(v, "nota.scripta",
+        "{\"usor\":\"%s\",\"textus\":\"%s\","
+        "\"via\":\"retis\",\"sigillum\":\"\"}", "amanda",
+        "nota amandae vetus", p);
+    _actum_vetus(v, "sessio.creata",
+        "{\"sigillum\":\"%s\",\"usor\":\"%s\","
+        "\"expirat\":9999999999999}", "00ff", "fran", p);
+    memset(&o, ZEPHYRUM, magnitudo(o));
+    o.auctoritas  = "http://127.0.0.1";
+    o.audientia   = "http://127.0.0.1/mcp";
+    o.scopi       = SCOPI_VETERES;
+    a             = admissio_creare(v, &o, p);
+    si (   !a || admissio_inscribere(a, chorda_ex_literis(
+            "{\"redirect_uris\":[\"https://claude.ai/api/mcp/auth_callback\"],"
+            "\"client_name\":\"Claude\",\"token_endpoint_auth_method\":"
+            "\"none\"}", p), chorda_ex_literis("127.0.0.1", p),
+            &responsum,
+            p) != CCI)
+    {
+        volumen_claudere(v);
+        redde FALSUM;
+    }
+    r       = json_legere(responsum, p);
+    cliens  = json_capere_chorda(r.radix, "client_id",
+        chorda_ex_literis("",
+        p));
+    si (!admissio_concessionem_creare_probationis(a, chorda_ex_literis(
+        "fran", p), cliens,
+        chorda_ex_literis("notae:legere notae:scribere",
+        p), &accessus, &renovatio, p))
+    {
+        volumen_claudere(v);
+        redde FALSUM;
+    }
+    si (conflictus)
+    {
+         Cives* cv = cives_aperire(v, NIHIL, p);
+        chorda  id;
+
+        si (   !cv || !volumen_transactionem_incipere(v)
+            || !cives_creare(cv, chorda_ex_literis("amanda", p),
+                   chorda_ex_literis("Alia", p), &id, p)
+            || !volumen_transactionem_committere(v))
+        {
+            volumen_claudere(v);
+            redde FALSUM;
+        }
+    }
+    (vacuum)scrinium_exsequi(volumen_scrinium(v),
+        "PRAGMA wal_checkpoint(TRUNCATE)");
+    volumen_claudere(v);
+    redde VERUM;
+}
+
+interior i32
+_acta_generis (
+               Volumen* v,
+    constans character* genus,
+               Piscina* p)
+{
+    Xar* acta  = volumen_acta_legere(v, ZEPHYRUM, p);
+    i32  n     = ZEPHYRUM;
+    i32  k;
+
+    per (k = ZEPHYRUM; acta && k < xar_numerus(acta); k++)
+    {
+        si (chorda_aequalis_literis(((VolumenActum*)xar_obtinere(acta,
+            k))->genus, genus))
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
+interior Volumen*
+_volumen_loci (
+    CredoContextus* c,
+             Locus* locus)
+{
+    character via[CCLVI];
+
+    sprintf(via, "%s/exemplar.volumen", locus->via);
+    redde volumen_aperire(c->piscina, via);
+}
+
+interior vacuum
+_sectio_migratio (CredoContextus* c)
+{
+                 Locus  locus;
+               Piscina* p = c->piscina;
+              Exemplar* e;
+    constans character* sid;
+                Lector  l;
+                   i32  status;
+
+    CREDO_NECESSE(_volumen_vetus(c, &locus, FALSUM));
+    e = _exemplar(c, &locus, ZEPHYRUM, FALSUM);
+    CREDO_NECESSE_NON_NIHIL(e);
+    /* tessera ULTIMA (tessera.mutata) valet, vetus non */
+    sid = _intrare(e, p, &locus, "fran", TESSERA, &status);
+    CREDO_AEQUALIS_I32(status, CCCIII);
+    (vacuum)_intrare(e, p, &locus, "fran", "tessera-vetus", &status);
+    CREDO_AEQUALIS_I32(status, CDIII);
+    (vacuum)_intrare(e, p, &locus, "amanda", "tessera-amandae",
+        &status);
+    CREDO_AEQUALIS_I32(status, CCCIII);
+    /* notae per mappam nominum veterum */
+    CREDO_VERUM(_rogare_et_legere(e, p, "GET /notae", _capita(p, &locus,
+        sid, NIHIL), NIHIL, &l));
+    CREDO_AEQUALIS_I32(l.status, CC);
+    CREDO_VERUM(_continet(&l, "nota franisci vetus"));
+    CREDO_FALSUM(_continet(&l, "nota amandae vetus"));
+    /* concessio Claudii re-clavata */
+    CREDO_VERUM(_rogare_et_legere(e, p, "GET /applicationes", _capita(p,
+        &locus, sid, NIHIL), NIHIL, &l));
+    CREDO_AEQUALIS_I32(l.status, CC);
+    CREDO_VERUM(_continet(&l, "Claude"));
+    _finire(e, &locus);
+}
+
+interior vacuum
+_sectio_migratio_iterata (CredoContextus* c)
+{
+                 Locus  locus;
+               Piscina* p = c->piscina;
+              Exemplar* e;
+               Volumen* v;
+    constans character* sid;
+                Lector  l;
+                   i32  status;
+
+    CREDO_NECESSE(_volumen_vetus(c, &locus, FALSUM));
+    e = _exemplar(c, &locus, ZEPHYRUM, FALSUM);
+    CREDO_NECESSE_NON_NIHIL(e);
+    exemplar_claudere(e);
+    e = _exemplar(c, &locus, ZEPHYRUM, FALSUM);
+    CREDO_NECESSE_NON_NIHIL(e);
+    sid = _intrare(e, p, &locus, "fran", TESSERA, &status);
+    CREDO_AEQUALIS_I32(status, CCCIII);
+    CREDO_VERUM(_rogare_et_legere(e, p, "GET /notae", _capita(p, &locus,
+        sid, NIHIL), NIHIL, &l));
+    CREDO_VERUM(_continet(&l, "nota franisci vetus"));
+    exemplar_claudere(e);
+    v = _volumen_loci(c, &locus);
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_AEQUALIS_I32(_acta_generis(v, "exemplar.migratio", p), I);
+    CREDO_AEQUALIS_I32(_acta_generis(v, "civis.creatus", p), II);
+    volumen_claudere(v);
+    (vacuum)filum_arborem_delere(locus.via);
+}
+
+interior vacuum
+_sectio_migratio_fracta (CredoContextus* c)
+{
+                 Locus  locus;
+               Piscina* p = c->piscina;
+              Exemplar* e;
+               Volumen* v;
+                 Cives* cv;
+                 Civis  x;
+                   i32  status;
+
+    CREDO_NECESSE(_volumen_vetus(c, &locus, VERUM));
+    e = _exemplar(c, &locus, ZEPHYRUM, FALSUM);
+    CREDO_NIHIL(e);
+    /* nihil mutatum: fran non civis, nulla migratio, nullum actum */
+    v = _volumen_loci(c, &locus);
+    CREDO_NECESSE_NON_NIHIL(v);
+    cv = cives_aperire(v, NIHIL, p);
+    CREDO_NECESSE_NON_NIHIL(cv);
+    CREDO_FALSUM(cives_per_nomen(cv, chorda_ex_literis("fran", p), &x,
+        p));
+    CREDO_AEQUALIS_I32(_acta_generis(v, "exemplar.migratio", p),
+        ZEPHYRUM);
+    CREDO_NECESSE(scrinium_exsequi(volumen_scrinium(v),
+        "DELETE FROM cives WHERE nomen_usoris = 'amanda'"));
+    CREDO_NECESSE(scrinium_exsequi(volumen_scrinium(v),
+        "DELETE FROM cives_nomina WHERE nomen_usoris = 'amanda'"));
+    volumen_claudere(v);
+    /* conflictu sublato: migratio procedit (sera liberata erat) */
+    e = _exemplar(c, &locus, ZEPHYRUM, FALSUM);
+    CREDO_NECESSE_NON_NIHIL(e);
+    (vacuum)_intrare(e, p, &locus, "amanda", "tessera-amandae",
+        &status);
+    CREDO_AEQUALIS_I32(status, CCCIII);
+    _finire(e, &locus);
+}
+
+interior vacuum
+_sectio_sera (CredoContextus* c)
+{
+       Locus  locus;
+     Piscina* p = c->piscina;
+    Exemplar* e;
+    Exemplar* alter;
+      chorda  codex;
+         i32  status;
+
+    e = _exemplar(c, &locus, ZEPHYRUM, VERUM);
+    CREDO_NECESSE_NON_NIHIL(e);
+    alter = _exemplar(c, &locus, ZEPHYRUM, FALSUM);
+    CREDO_NIHIL(alter);
+    CREDO_AEQUALIS_S32(exemplar_invitare(locus.via, "prima", &codex, p),
+        II);
+    exemplar_claudere(e);
+    CREDO_AEQUALIS_S32(exemplar_invitare(locus.via, "prima", &codex, p),
+        ZEPHYRUM);
+    CREDO_AEQUALIS_I32(codex.mensura, XXII);
+    e = _exemplar(c, &locus, ZEPHYRUM, FALSUM);
+    CREDO_NECESSE_NON_NIHIL(e);
+    CREDO_VERUM(_inscribere(e, p, &locus, "fran", TESSERA,
+        chorda_ut_cstr(codex, p), &status));
+    CREDO_AEQUALIS_I32(status, CCCIII);
+    _finire(e, &locus);
+}
+
+interior vacuum
+_sectio_mcp_nota_civis (CredoContextus* c)
+{
+                 Locus  locus;
+               Piscina* p = c->piscina;
+              Exemplar* e = _exemplar(c, &locus, ZEPHYRUM, VERUM);
+    constans character* cliens;
+    constans character* accessus;
+    constans character* renovatio;
+               Volumen* v;
+                   Xar* acta;
+                   i32  k;
+                   i32  inventae = ZEPHYRUM;
+
+    CREDO_NECESSE_NON_NIHIL(e);
+    CREDO_NECESSE(_connectere(e, p, &locus, _usor_novus(e, p, &locus,
+        "fran"), &cliens, &accessus, &renovatio));
+    CREDO_NECESSE(_id_novum(e, p, accessus, "\"per claudium\"")
+        > ZEPHYRUM);
+    exemplar_claudere(e);
+    v = _volumen_loci(c, &locus);
+    CREDO_NECESSE_NON_NIHIL(v);
+    acta = volumen_acta_legere(v, ZEPHYRUM, p);
+    per (k = ZEPHYRUM; acta && k < xar_numerus(acta); k++)
+    {
+        VolumenActum* a = (VolumenActum*)xar_obtinere(acta, k);
+        JsonResultus  r;
+
+        si (!chorda_aequalis_literis(a->genus, "nota.scripta"))
+        {
+            perge;
+        }
+        r = json_legere(a->datum, p);
+        CREDO_NECESSE(r.successus);
+        CREDO_AEQUALIS_I32(json_capere_chorda(r.radix, "civis",
+            chorda_ex_literis("", p)).mensura, XXVI);
+        CREDO_FALSUM(json_objectum_habet(r.radix, "usor"));
+        CREDO_CHORDA_AEQUALIS_LITERIS(json_capere_chorda(r.radix, "via",
+            chorda_ex_literis("", p)), "claude");
+        inventae++;
+    }
+    CREDO_AEQUALIS_I32(inventae, I);
+    volumen_claudere(v);
+    (vacuum)filum_arborem_delere(locus.via);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "iter", _sectio_iter, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sine_invitatione", _sectio_sine_invitatione, NIHIL, NIHIL, NIHIL,
@@ -1760,6 +2183,14 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "textus_varius", _sectio_textus_varius, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "paginae", _sectio_paginae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "migratio", _sectio_migratio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "migratio_iterata", _sectio_migratio_iterata, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "migratio_fracta", _sectio_migratio_fracta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "sera", _sectio_sera, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mcp_nota_civis", _sectio_mcp_nota_civis, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
