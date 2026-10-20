@@ -64,6 +64,11 @@ nomen structura {
                            vacuum* verificatoris_datum;
                   McpActaScriptor  acta;         /* NIHIL = stderr */
                            vacuum* acta_datum;
+    /* speculator (NIHIL licet): vocatur in initio omnis viae montatae
+     * - e.g. sonda applicationis quae petitiones crudas notat */
+                           vacuum  (*speculator)(vacuum* datum,
+                                       HospitiumColloquium* colloquium);
+                           vacuum* speculatoris_datum;
 } McpHttpOptiones;
 
 /* via (POST; GET/DELETE 405) + duae viae PRM. Optiones et chordae

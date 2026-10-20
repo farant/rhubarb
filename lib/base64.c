@@ -429,7 +429,7 @@ base64url_decodificare (
     }
     /* bits reliqui (II aut IV) nulli esse debent - aliter "Zh" et "Zg"
      * idem octetum darent */
-    si (acervus & ((I << bits) - I))
+    si (acervus & (((i32)I << bits) - (i32)I))
     {
         redde resultatus;
     }

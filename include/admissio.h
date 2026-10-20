@@ -138,6 +138,15 @@ admissio_putare (
 nomen b32 (*AdmissioIntratus)(vacuum* datum, HospitiumColloquium* col,
     chorda* usor, chorda* csrf);
 
+/* speculator viarum (vocatur in initio omnis viae OAuth, e.g. sonda
+ * applicationis); NIHIL = nullus */
+vacuum
+admissio_speculatorem_ponere (
+                Admissio* admissio,
+                  vacuum  (*speculator)(vacuum* datum,
+                              HospitiumColloquium* colloquium),
+                  vacuum* datum);
+
 /* viae OAuth in hospitio (vide supra); via_intrandi e.g. "/intrare" */
 b32
 admissio_montare (

@@ -86,3 +86,39 @@ connector from the desktop app. Full findings in the spec, section
   `application_type`.
 - The first of two attempts stopped after discovery without
   registering; the second registered. Unexplained - watch for it at T9.
+
+## 2026-10-20 - mcp-remotus T7: exemplar is the third MCP server
+
+T1's static discovery documents, the always-401 `/mcp` and the 503
+register are GONE; the libraries own those routes now:
+`mcp_servus_http_montare` (with `admissio_verificator`) and
+`admissio_montare` (login through exemplar's own session:
+`exemplar_intratus_usor` returns user + the page CSRF). The sonda
+survives through the libraries' new `speculator` hooks - it is still
+the raw-request capture; bodies of `/oauth/token` AND of the consent
+POST (it carries the CSRF token) are redacted.
+
+**Tools** (`exemplar_mcp.c`): `notas_enumerare` (`pagina`, 20 per
+page, newest first, `{pagina, paginae, notae}`), `notam_legere` (text
++ attachment name/mime/size), `notam_addere`, `notam_delere`
+(destructiveHint). Only the token user's notes: a foreign or deleted id
+gives the SAME tool error "nota non inventa" - nothing leaks. MCP notes
+are written by `exemplar_notam_scribere` with `via: "claude"` and the
+client id; web notes now carry `via: "retis"`.
+
+**`/applicationes`** (in the nucleus - it needs the page helpers):
+client name, scopes, created, last used, revoke (Origin + CSRF). The
+next `/mcp` call of the revoked grant is 401, its refresh
+`invalid_grant`; other people's grants untouched (`revocare` section).
+
+**`/intrare?redire=`**: only local paths (`/x`; never `//x`, `/\x`,
+control chars) are kept - in a hidden field on the login page, then in
+the deferred login `Opus`, then as the 303 target. Anything else lands
+on `/notae`.
+
+`admissio_putare` runs at start and hourly (reactor timer).
+
+Found by the Linux build, not by clang: `lib/base64.c` (T2) had
+`(I << bits) - I` - an `int` into `i32` arithmetic, which gcc's
+`-Wsign-conversion` rejects. Always build Linux before calling a C
+task done.

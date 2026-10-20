@@ -49,6 +49,7 @@ nomen structura {
             i32  vocationes;
          chorda  acta[ACTA_N];
             i32  numerus_actorum;
+            i32  speculata;
         Piscina* piscina;
 } Status;
 
@@ -386,6 +387,15 @@ _verificator (
 }
 
 interior vacuum
+_speculator (
+                 vacuum* datum,
+    HospitiumColloquium* colloquium)
+{
+    (vacuum)colloquium;
+    ((Status*)datum)->speculata++;
+}
+
+interior vacuum
 _acta (
      vacuum* datum,
      chorda  linea)
@@ -438,6 +448,8 @@ _hospitium (
     o.verificatoris_datum  = st;
     o.acta                 = _acta;
     o.acta_datum           = st;
+    o.speculator           = _speculator;
+    o.speculatoris_datum   = st;
     si (!s || !mcp_servus_http_montare(h, s, &o, c->piscina))
     {
         hospitium_destruere(h);
@@ -625,6 +637,8 @@ _sectio_documentum (CredoContextus* c)
     CREDO_AEQUALIS_I32(l.status, CC);
     CREDO_FALSUM(_continet(&l, "sessio-clientis"));
     CREDO_FALSUM(_continet(&l, "Mcp-Session-Id"));
+    /* speculator: omnis via montata semel (PRM II + POST) */
+    CREDO_AEQUALIS_I32(st.speculata, III);
     hospitium_destruere(h);
 }
 

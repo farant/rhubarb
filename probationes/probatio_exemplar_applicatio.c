@@ -26,6 +26,8 @@
 #include "volumen.h"
 #include "exemplar_nucleus.h"
 #include "json.h"
+#include "url.h"
+#include "xar.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1153,10 +1155,569 @@ _sectio_sonda_register (CredoContextus* c)
         "Content-Type: application/json\r\n",
         "{\"client_name\":\"Claude\",\"redirect_uris\":"
         "[\"https://claude.ai/api/mcp/auth_callback\"]}", &l));
-    CREDO_AEQUALIS_I32(l.status, DIII);
-    CREDO_VERUM(_continet(&l, "\"temporarily_unavailable\""));
+    CREDO_AEQUALIS_I32(l.status, CCI);
+    CREDO_VERUM(_continet(&l, "\"client_id\""));
     CREDO_AEQUALIS_S32(capta.lineae, I);
     CREDO_VERUM(strstr(capta.textus, "auth_callback") != NIHIL);
+    _finire(e, &locus);
+}
+
+
+/* ==================================================
+ * SERVUS MCP TERTIUS (mcp-remotus T7)
+ * ================================================== */
+
+#define CALLBACK    "https://claude.ai/api/mcp/auth_callback"
+#define VERIFICATOR "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk"
+#define PROVOCATIO  "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM"
+#define TESSERA     "tessera-bona-longa"
+
+interior constans character*
+_codificare (
+    constans character* s,
+               Piscina* p)
+{
+    redde chorda_ut_cstr(url_codificare(chorda_ex_literis(s, p), p), p);
+}
+
+/* usor inscriptus et intratus: signum sid aut "" */
+interior constans character*
+_usor_novus (
+              Exemplar* e,
+               Piscina* p,
+                 Locus* locus,
+    constans character* nomen_usoris)
+{
+    i32 status;
+
+    si (   !_inscribere(e, p, locus, nomen_usoris, TESSERA, INVITATIO,
+               &status) || status != CCCIII)
+    {
+        redde "";
+    }
+    redde _intrare(e, p, locus, nomen_usoris, TESSERA, &status);
+}
+
+/* parametra authorize pro cliente */
+interior character*
+_quaestio_auctorizandi (
+              Exemplar* e,
+               Piscina* p,
+    constans character* cliens)
+{
+    character* q = (character*)piscina_allocare(p, MMXLVIII);
+    character  audientia[CXXVIII];
+
+    sprintf(audientia, "%s/mcp", _basis(e, p));
+    sprintf(q, "response_type=code&client_id=%s&redirect_uri=%s"
+        "&code_challenge=%s&code_challenge_method=S256&scope=%s"
+        "&state=st&resource=%s", cliens, _codificare(CALLBACK, p),
+        PROVOCATIO,
+        _codificare("notae:legere notae:scribere offline_access", p),
+        _codificare(audientia, p));
+    redde q;
+}
+
+interior constans character*
+_clientem_inscribere (
+     Exemplar* e,
+      Piscina* p)
+{
+    Lector l;
+
+    si (   !_rogare_et_legere(e, p, "POST /oauth/register",
+               "Content-Type: application/json\r\n",
+               "{\"redirect_uris\":[\"" CALLBACK "\"],\"client_name\":"
+               "\"Claude\",\"token_endpoint_auth_method\":\"none\"}",
+               &l)
+        || l.status != CCI)
+    {
+        redde "";
+    }
+    redde _extrahere(&l, "\"client_id\":\"", '"', p);
+}
+
+/* signum intrandi totum OAuth: cliens, accessus, renovatio */
+interior b32
+_connectere (
+              Exemplar*  e,
+               Piscina*  p,
+                 Locus*  locus,
+    constans character*  sid,
+    constans character** cliens,
+    constans character** accessus,
+    constans character** renovatio)
+{
+                Lector  l;
+             character* q;
+             character* linea;
+             character* corpus;
+    constans character* csrf;
+    constans character* codex;
+             character  audientia[CXXVIII];
+
+    *cliens = _clientem_inscribere(e, p);
+    si (!**cliens)
+    {
+        redde FALSUM;
+    }
+    q       = _quaestio_auctorizandi(e, p, *cliens);
+    linea   = (character*)piscina_allocare(p, IV * MXXIV);
+    corpus  = (character*)piscina_allocare(p, IV * MXXIV);
+    sprintf(linea, "GET /oauth/authorize?%s", q);
+    si (   !_rogare_et_legere(e, p, linea, _capita(p, locus, sid,
+        NIHIL),
+               NIHIL, &l) || l.status != CC)
+    {
+        redde FALSUM;
+    }
+    csrf = _extrahere(&l, "name=\"csrf\" value=\"", '"', p);
+    sprintf(corpus, "%s&s0=1&s1=1&csrf=%s&decisio=permittere", q, csrf);
+    si (   !_rogare_et_legere(e, p, "POST /oauth/authorize",
+               _capita(p, locus, sid, FORMA_U), corpus, &l)
+        || l.status != CCCII)
+    {
+        redde FALSUM;
+    }
+    codex = _extrahere(&l, "code=", '&', p);
+    sprintf(audientia, "%s/mcp", _basis(e, p));
+    sprintf(corpus,
+        "grant_type=authorization_code&code=%s&redirect_uri=%s"
+        "&client_id=%s&code_verifier=%s&resource=%s", codex,
+        _codificare(CALLBACK, p), *cliens, VERIFICATOR,
+        _codificare(audientia, p));
+    si (   !_rogare_et_legere(e, p, "POST /oauth/token",
+               FORMA_U "\r\n", corpus, &l) || l.status != CC)
+    {
+        redde FALSUM;
+    }
+    *accessus   = _extrahere(&l, "\"access_token\":\"", '"', p);
+    *renovatio  = _extrahere(&l, "\"refresh_token\":\"", '"', p);
+    redde **accessus && **renovatio;
+}
+
+/* tools/call per POST /mcp */
+interior b32
+_instrumentum (
+               Exemplar* e,
+                Piscina* p,
+     constans character* accessus,
+     constans character* titulus,
+     constans character* argumenta,
+                 Lector* l)
+{
+    character  capita[CCLVI];
+    character* corpus = (character*)piscina_allocare(p,
+        (memoriae_index)strlen(argumenta) + CCLVI);
+
+    sprintf(capita, "Content-Type: application/json\r\n"
+        "Authorization: Bearer %s\r\n", accessus);
+    sprintf(corpus, "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":"
+        "\"tools/call\",\"params\":{\"name\":\"%s\",\"arguments\":%s}}",
+        titulus, argumenta);
+    redde _rogare_et_legere(e, p, "POST /mcp", capita, corpus, l);
+}
+
+interior JsonValor*
+_resultatum (
+     Lector* l,
+    Piscina* p)
+{
+    redde json_via(_json_corporis(l, p), "result");
+}
+
+interior b32
+_vitium (
+     Lector* l,
+    Piscina* p)
+{
+    redde json_ad_boolean(json_via(_json_corporis(l, p),
+        "result.isError"));
+}
+
+interior s64
+_id_novum (
+              Exemplar* e,
+               Piscina* p,
+    constans character* accessus,
+    constans character* textus_json)
+{
+         Lector  l;
+      character* arg = (character*)piscina_allocare(p,
+          (memoriae_index)strlen(textus_json) + XXXII);
+
+    sprintf(arg, "{\"textus\":%s}", textus_json);
+    si (   !_instrumentum(e, p, accessus, "notam_addere", arg, &l)
+        || l.status != CC || _vitium(&l, p))
+    {
+        redde ZEPHYRUM;
+    }
+    redde json_ad_integer(json_via(_resultatum(&l, p),
+        "structuredContent.id"));
+}
+
+/* actum generis cum fragmentis (volumen lectum per connexionem
+ * alteram - WAL lectores tolerat) */
+interior b32
+_actum_est (
+                 Locus* locus,
+               Piscina* p,
+    constans character* genus,
+    constans character* fragmentum_a,
+    constans character* fragmentum_b)
+{
+    character  via[CCLVI];
+      Volumen* v;
+          Xar* acta;
+          i32  k;
+          b32  inventum = FALSUM;
+
+    sprintf(via, "%s/exemplar.volumen", locus->via);
+    v = volumen_aperire(p, via);
+    si (!v)
+    {
+        redde FALSUM;
+    }
+    acta = volumen_acta_legere(v, ZEPHYRUM, p);
+    per (k = ZEPHYRUM; acta && k < xar_numerus(acta); k++)
+    {
+        VolumenActum* a = (VolumenActum*)xar_obtinere(acta, k);
+
+        si (   chorda_aequalis_literis(a->genus, genus)
+            && (!fragmentum_a || chorda_continet(a->datum,
+                   chorda_ex_literis(fragmentum_a, p)))
+            && (!fragmentum_b || chorda_continet(a->datum,
+                   chorda_ex_literis(fragmentum_b, p))))
+        {
+            inventum = VERUM;
+        }
+    }
+    volumen_claudere(v);
+    redde inventum;
+}
+
+interior vacuum
+_sectio_instrumenta (CredoContextus* c)
+{
+                 Locus  locus;
+              Exemplar* e = _exemplar(c, &locus, ZEPHYRUM, VERUM);
+               Piscina* p = c->piscina;
+    constans character* sid;
+    constans character* cliens;
+    constans character* accessus;
+    constans character* renovatio;
+                Lector  l;
+             JsonValor* r;
+                   s64  id;
+                   s64  id_fili;
+             character  arg[CXXVIII];
+             character  frag[CXXVIII];
+
+    CREDO_NECESSE_NON_NIHIL(e);
+    sid = _usor_novus(e, p, &locus, "fran");
+    CREDO_NECESSE(strlen(sid) > ZEPHYRUM);
+    CREDO_NECESSE(_connectere(e, p, &locus, sid, &cliens, &accessus,
+        &renovatio));
+    CREDO_VERUM(_actum_est(&locus, p, "concessio.creata",
+        "\"titulus_clientis\":\"Claude\"",
+        "\"scopi\":\"notae:legere notae:scribere offline_access\""));
+    CREDO_VERUM(_actum_est(&locus, p, "concessio.creata",
+        "\"usor\":\"fran\"", NIHIL));
+    /* notam_addere: actum via claude cum cliente */
+    id = _id_novum(e, p, accessus, "\"prima nota\"");
+    CREDO_MAIOR_S32((s32)id, ZEPHYRUM);
+    sprintf(frag, "\"cliens\":\"%s\"", cliens);
+    CREDO_VERUM(_actum_est(&locus, p, "nota.scripta",
+        "\"via\":\"claude\"",
+        frag));
+    /* nota per paginam cum filo */
+    CREDO_AEQUALIS_I32(_notam_mittere(e, p, &locus, sid,
+        _csrf_paginae(e, p,
+        &locus, sid), "cum filo", (constans i8*)"octeti", VI, NIHIL),
+        CCCIII);
+    /* notas_enumerare: recentissima prima */
+    CREDO_VERUM(_instrumentum(e, p, accessus, "notas_enumerare", "{}",
+        &l));
+    CREDO_AEQUALIS_I32(l.status, CC);
+    r = _resultatum(&l, p);
+    CREDO_CHORDA_AEQUALIS_LITERIS(json_ad_chorda(json_via(r,
+        "structuredContent.notae.0.textus")), "cum filo");
+    CREDO_CHORDA_AEQUALIS_LITERIS(json_ad_chorda(json_via(r,
+        "structuredContent.notae.1.textus")), "prima nota");
+    CREDO_AEQUALIS_S32((s32)json_ad_integer(json_via(r,
+        "structuredContent.pagina")), I);
+    id_fili = json_ad_integer(json_via(r,
+        "structuredContent.notae.0.id"));
+    /* notam_legere: textus + nomen et mensura fili */
+    sprintf(arg, "{\"id\":%ld}", (longus)id_fili);
+    CREDO_VERUM(_instrumentum(e, p, accessus, "notam_legere", arg, &l));
+    r = _resultatum(&l, p);
+    CREDO_FALSUM(_vitium(&l, p));
+    CREDO_CHORDA_AEQUALIS_LITERIS(json_ad_chorda(json_via(r,
+        "structuredContent.textus")), "cum filo");
+    CREDO_AEQUALIS_S32((s32)json_ad_integer(json_via(r,
+        "structuredContent.filum.mensura")), VI);
+    CREDO_VERUM(json_ad_chorda(json_via(r,
+        "structuredContent.filum.titulus")).mensura > ZEPHYRUM);
+    /* notam_delere */
+    sprintf(arg, "{\"id\":%ld}", (longus)id);
+    CREDO_VERUM(_instrumentum(e, p, accessus, "notam_delere", arg, &l));
+    CREDO_FALSUM(_vitium(&l, p));
+    CREDO_VERUM(_instrumentum(e, p, accessus, "notam_legere", arg, &l));
+    CREDO_VERUM(_vitium(&l, p));
+    CREDO_VERUM(_continet(&l, "nota non inventa"));
+    _finire(e, &locus);
+}
+
+interior vacuum
+_sectio_alieni (CredoContextus* c)
+{
+                 Locus  locus;
+              Exemplar* e = _exemplar(c, &locus, ZEPHYRUM, VERUM);
+               Piscina* p = c->piscina;
+    constans character* cliens;
+    constans character* accessus_f;
+    constans character* accessus_a;
+    constans character* renovatio;
+                Lector  l;
+                   s64  id;
+             character  arg[CXXVIII];
+
+    CREDO_NECESSE_NON_NIHIL(e);
+    CREDO_NECESSE(_connectere(e, p, &locus, _usor_novus(e, p, &locus,
+        "fran"), &cliens, &accessus_f, &renovatio));
+    CREDO_NECESSE(_connectere(e, p, &locus, _usor_novus(e, p, &locus,
+        "amanda"), &cliens, &accessus_a, &renovatio));
+    id = _id_novum(e, p, accessus_f, "\"secretum franisci\"");
+    CREDO_MAIOR_S32((s32)id, ZEPHYRUM);
+    sprintf(arg, "{\"id\":%ld}", (longus)id);
+    CREDO_VERUM(_instrumentum(e, p, accessus_a, "notam_legere", arg,
+        &l));
+    CREDO_VERUM(_vitium(&l, p));
+    CREDO_VERUM(_continet(&l, "nota non inventa"));
+    CREDO_FALSUM(_continet(&l, "secretum franisci"));
+    CREDO_VERUM(_instrumentum(e, p, accessus_a, "notas_enumerare", "{}",
+        &l));
+    CREDO_FALSUM(_continet(&l, "secretum franisci"));
+    CREDO_AEQUALIS_I32(json_tabulatum_numerus(json_via(_resultatum(&l,
+        p),
+        "structuredContent.notae")), ZEPHYRUM);
+    CREDO_VERUM(_instrumentum(e, p, accessus_a, "notam_delere", arg,
+        &l));
+    CREDO_VERUM(_vitium(&l, p));
+    CREDO_VERUM(_instrumentum(e, p, accessus_f, "notam_legere", arg,
+        &l));
+    CREDO_FALSUM(_vitium(&l, p));
+    CREDO_VERUM(_continet(&l, "secretum franisci"));
+    _finire(e, &locus);
+}
+
+/* Review focus 3: revocatio in /applicationes dum Claude laborat */
+interior vacuum
+_sectio_revocare (CredoContextus* c)
+{
+                 Locus  locus;
+              Exemplar* e = _exemplar(c, &locus, ZEPHYRUM, VERUM);
+               Piscina* p = c->piscina;
+    constans character* sid;
+    constans character* cliens_f;
+    constans character* cliens_a;
+    constans character* accessus_f;
+    constans character* accessus_a;
+    constans character* renovatio_f;
+    constans character* renovatio_a;
+    constans character* concessio;
+    constans character* csrf;
+                Lector  l;
+             character  linea[CCLVI];
+             character  corpus[CCCLXXXIV];
+
+    CREDO_NECESSE_NON_NIHIL(e);
+    sid = _usor_novus(e, p, &locus, "fran");
+    CREDO_NECESSE(_connectere(e, p, &locus, sid, &cliens_f, &accessus_f,
+        &renovatio_f));
+    CREDO_NECESSE(_connectere(e, p, &locus, _usor_novus(e, p, &locus,
+        "amanda"), &cliens_a, &accessus_a, &renovatio_a));
+    CREDO_VERUM(_rogare_et_legere(e, p, "GET /applicationes", _capita(p,
+        &locus, sid, NIHIL), NIHIL, &l));
+    CREDO_AEQUALIS_I32(l.status, CC);
+    CREDO_VERUM(_continet(&l, "Claude"));
+    concessio  = _extrahere(&l, "action=\"/applicationes/", '/', p);
+    csrf       = _extrahere(&l, "name=\"csrf\" value=\"", '"', p);
+    CREDO_NECESSE(strlen(concessio) > ZEPHYRUM);
+    /* CSRF absens: 403, concessio viva */
+    sprintf(linea, "POST /applicationes/%s/revocare", concessio);
+    CREDO_VERUM(_rogare_et_legere(e, p, linea, _capita(p, &locus, sid,
+        FORMA_U), "csrf=vetus", &l));
+    CREDO_AEQUALIS_I32(l.status, CDIII);
+    CREDO_VERUM(_instrumentum(e, p, accessus_f, "notas_enumerare", "{}",
+        &l));
+    CREDO_AEQUALIS_I32(l.status, CC);
+    sprintf(corpus, "csrf=%s", csrf);
+    CREDO_VERUM(_rogare_et_legere(e, p, linea, _capita(p, &locus, sid,
+        FORMA_U), corpus, &l));
+    CREDO_AEQUALIS_I32(l.status, CCCIII);
+    CREDO_VERUM(_actum_est(&locus, p, "concessio.revocata",
+        "\"usor\":\"fran\"", NIHIL));
+    /* petitio proxima Franisci: 401; renovatio: invalid_grant */
+    CREDO_VERUM(_instrumentum(e, p, accessus_f, "notas_enumerare", "{}",
+        &l));
+    CREDO_AEQUALIS_I32(l.status, CDI);
+    sprintf(corpus, "grant_type=refresh_token&refresh_token=%s"
+        "&client_id=%s", renovatio_f, cliens_f);
+    CREDO_VERUM(_rogare_et_legere(e, p, "POST /oauth/token",
+        FORMA_U "\r\n",
+        corpus, &l));
+    CREDO_AEQUALIS_I32(l.status, CD);
+    CREDO_VERUM(_continet(&l, "invalid_grant"));
+    /* Amanda intacta */
+    CREDO_VERUM(_instrumentum(e, p, accessus_a, "notas_enumerare", "{}",
+        &l));
+    CREDO_AEQUALIS_I32(l.status, CC);
+    CREDO_FALSUM(_vitium(&l, p));
+    _finire(e, &locus);
+}
+
+/* POST /intrare cum redire; Location */
+interior constans character*
+_intrare_redire (
+              Exemplar* e,
+               Piscina* p,
+                 Locus* locus,
+    constans character* redire)
+{
+       Lector l;
+    character corpus[MMXLVIII];
+
+    sprintf(corpus, "nomen=fran&tessera=" TESSERA "&redire=%s",
+        _codificare(redire, p));
+    si (   !_rogare_et_legere(e, p, "POST /intrare", _capita(p, locus,
+               NIHIL, FORMA_U), corpus, &l) || l.status != CCCIII)
+    {
+        redde "";
+    }
+    redde _extrahere(&l, "Location: ", '\r', p);
+}
+
+interior vacuum
+_sectio_redire (CredoContextus* c)
+{
+                 Locus  locus;
+              Exemplar* e = _exemplar(c, &locus, ZEPHYRUM, VERUM);
+               Piscina* p = c->piscina;
+                Lector  l;
+                   i32  status;
+    constans character* cliens;
+             character* reditus;
+             character* linea;
+    constans character* locus_novus;
+    constans character* sid;
+
+    CREDO_NECESSE_NON_NIHIL(e);
+    CREDO_VERUM(_inscribere(e, p, &locus, "fran", TESSERA, INVITATIO,
+        &status));
+    cliens   = _clientem_inscribere(e, p);
+    reditus  = (character*)piscina_allocare(p, MMXLVIII);
+    linea    = (character*)piscina_allocare(p, IV * MXXIV);
+    sprintf(reditus, "/oauth/authorize?%s", _quaestio_auctorizandi(e, p,
+        cliens));
+    /* pagina intrandi campum redire servat */
+    sprintf(linea, "GET /intrare?redire=%s", _codificare(reditus, p));
+    CREDO_VERUM(_rogare_et_legere(e, p, linea, NIHIL, NIHIL, &l));
+    CREDO_AEQUALIS_I32(l.status, CC);
+    CREDO_VERUM(_continet(&l,
+        "name=\"redire\" value=\"/oauth/authorize?"));
+    locus_novus = _intrare_redire(e, p, &locus, reditus);
+    CREDO_VERUM(strcmp(locus_novus, reditus) == ZEPHYRUM);
+    /* ad paginam consensus pervenit */
+    sid = _intrare(e, p, &locus, "fran", TESSERA, &status);
+    sprintf(linea, "GET %s", locus_novus);
+    CREDO_VERUM(_rogare_et_legere(e, p, linea, _capita(p, &locus, sid,
+        NIHIL), NIHIL, &l));
+    CREDO_AEQUALIS_I32(l.status, CC);
+    CREDO_VERUM(_continet(&l, "Permissio"));
+    /* redirectiones alienae: /notae */
+    CREDO_VERUM(strcmp(_intrare_redire(e, p, &locus,
+        "https://evil.example/"), "/notae") == ZEPHYRUM);
+    CREDO_VERUM(strcmp(_intrare_redire(e, p, &locus, "//evil.example"),
+        "/notae") == ZEPHYRUM);
+    CREDO_VERUM(strcmp(_intrare_redire(e, p, &locus, "/\\evil.example"),
+        "/notae") == ZEPHYRUM);
+    _finire(e, &locus);
+}
+
+interior vacuum
+_sectio_textus_varius (CredoContextus* c)
+{
+                 Locus  locus;
+              Exemplar* e = _exemplar(c, &locus, ZEPHYRUM, VERUM);
+               Piscina* p = c->piscina;
+    constans character* cliens;
+    constans character* accessus;
+    constans character* renovatio;
+    constans character* textus = "Gr\xc3\xbc\xc3\x9f" "e \xe2\x80\x93 "
+        "\xe6\xb5\x8b\xe8\xaf\x95";
+             character json[CXXVIII];
+             character arg[LXIV];
+                Lector l;
+                   s64 id;
+
+    CREDO_NECESSE_NON_NIHIL(e);
+    CREDO_NECESSE(_connectere(e, p, &locus, _usor_novus(e, p, &locus,
+        "fran"), &cliens, &accessus, &renovatio));
+    sprintf(json, "\"%s\"", textus);
+    id = _id_novum(e, p, accessus, json);
+    CREDO_MAIOR_S32((s32)id, ZEPHYRUM);
+    sprintf(arg, "{\"id\":%ld}", (longus)id);
+    CREDO_VERUM(_instrumentum(e, p, accessus, "notam_legere", arg, &l));
+    CREDO_CHORDA_AEQUALIS_LITERIS(json_ad_chorda(json_via(
+        _resultatum(&l, p), "structuredContent.textus")), textus);
+    _finire(e, &locus);
+}
+
+interior vacuum
+_sectio_paginae (CredoContextus* c)
+{
+                 Locus  locus;
+              Exemplar* e = _exemplar(c, &locus, ZEPHYRUM, VERUM);
+               Piscina* p = c->piscina;
+    constans character* cliens;
+    constans character* accessus;
+    constans character* renovatio;
+             character  json[XXXII];
+             character  arg[XXXII];
+                Lector  l;
+                   i32  k;
+                   i32  numeri[IV];
+
+    CREDO_NECESSE_NON_NIHIL(e);
+    CREDO_NECESSE(_connectere(e, p, &locus, _usor_novus(e, p, &locus,
+        "fran"), &cliens, &accessus, &renovatio));
+    per (k = I; k <= XLV; k++)
+    {
+        sprintf(json, "\"nota %u\"", (insignatus integer)k);
+        CREDO_NECESSE(_id_novum(e, p, accessus, json) > ZEPHYRUM);
+    }
+    per (k = ZEPHYRUM; k < IV; k++)
+    {
+        sprintf(arg, "{\"pagina\":%u}", (insignatus integer)(k + I));
+        CREDO_VERUM(_instrumentum(e, p, accessus, "notas_enumerare",
+            arg,
+            &l));
+        numeri[k] = json_tabulatum_numerus(json_via(_resultatum(&l, p),
+            "structuredContent.notae"));
+        si (k == ZEPHYRUM)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS(json_ad_chorda(json_via(
+                _resultatum(&l, p),
+                "structuredContent.notae.0.textus")),
+                "nota 45");
+        }
+    }
+    CREDO_AEQUALIS_I32(numeri[ZEPHYRUM], XX);
+    CREDO_AEQUALIS_I32(numeri[I], XX);
+    CREDO_AEQUALIS_I32(numeri[II], V);
+    CREDO_AEQUALIS_I32(numeri[III], ZEPHYRUM);
     _finire(e, &locus);
 }
 
@@ -1178,6 +1739,14 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "sonda_acta", _sectio_sonda_acta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sonda_register", _sectio_sonda_register, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "instrumenta", _sectio_instrumenta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "alieni", _sectio_alieni, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "revocare", _sectio_revocare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "redire", _sectio_redire, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "textus_varius", _sectio_textus_varius, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "paginae", _sectio_paginae, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

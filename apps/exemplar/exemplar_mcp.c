@@ -1,24 +1,30 @@
 /* exemplar_mcp.c - viae MCP et OAuth exemplaris (vide exemplar_mcp.h)
  *
- * T1 (sonda): documenta inventionis ex json aedificata (nullae
- * chordae JSON manu scriptae), POST /mcp semper 401 (nulla tessera
- * adhuc emittitur), /oauth/register 503. Sonda petitionem unam lineam
- * unam scribit: methodus, uri, OMNIA capita (Authorization et
- * Proxy-Authorization schema solum, Cookie et Set-Cookie redacta),
- * corpus usque ad IV KB effugiis tutum - corpus /oauth/token numquam.
+ * T7: servus MCP tertius. Quattuor instrumenta notarum (notas
+ * personae SOLUM, per usorem tesserae); acta MCP via "claude" cum
+ * cliente. admissio (OAuth 2.1) in volumine exemplaris, intratio per
+ * sessionem exemplaris; mcp_servus_http cum admissio_verificator.
+ *
+ * Sonda (T1): petitionem unam lineam unam scribit: methodus, uri,
+ * OMNIA capita (Authorization et Proxy-Authorization schema solum,
+ * Cookie et Set-Cookie redacta), corpus usque ad IV KB effugiis tutum
+ * - corpora /oauth/token et POST /oauth/authorize numquam. Nunc per
+ * speculatores bibliothecarum
+ * vocatur.
  */
 #include "postulata_posix.h"
 #include "exemplar_mcp.h"
 #include "json.h"
 #include "chorda_aedificator.h"
 #include "http.h"
+#include "mcp_servus_http.h"
 
 #include <stdio.h>
 #include <string.h>
 
 #define SONDA_CORPUS_MAXIMUM (IV * MXXIV)
 
-hic_manens constans character* SCOPI[] = {
+hic_manens constans character* constans SCOPI[] = {
     "notae:legere", "notae:scribere", NIHIL
 };
 
@@ -144,7 +150,11 @@ _sonda (
             _tutum_appendere(a, v, CCLVI);
         }
     }
-    si (chorda_aequalis_literis(r->via, "/oauth/token"))
+    /* corpora cum secretis: token (codex, tessera renovationis),
+     * consensus (signum CSRF) */
+    si (   chorda_aequalis_literis(r->via, "/oauth/token")
+        || (   chorda_aequalis_literis(r->via, "/oauth/authorize")
+            && r->methodus == HTTP_POST))
     {
         chorda_aedificator_appendere_literis(a,
             " | corpus: [redactum]");
@@ -171,185 +181,298 @@ _sonda (
 }
 
 
+/* speculator bibliothecarum: sonda */
+interior vacuum
+_speculator (
+                 vacuum* datum,
+    HospitiumColloquium* col)
+{
+    _sonda((Exemplar*)datum, col);
+}
+
+
 /* ==================================================
- * DOCUMENTA INVENTIONIS
+ * INSTRUMENTA NOTARUM
  * ================================================== */
 
-interior JsonValor*
-_tabulatum (
-    constans character* constans* valores,
-                       Piscina* p)
-{
-    JsonValor* t = json_tabulatum_creare(p);
-          s32  i;
+#define NOTAE_PER_PAGINAM XX
 
-    per (i = ZEPHYRUM; valores[i] != NIHIL; i++)
+interior Exemplar*
+_e (
+    McpVocatio* v)
+{
+    redde (Exemplar*)mcp_vocatio_datum(v);
+}
+
+/* nota viva personae; NIHIL si ignota aut aliena (idem responsum:
+ * nihil de notis alienis proditur) */
+interior Nota*
+_nota_personae (
+    McpVocatio* v,
+           s64  id)
+{
+     Exemplar* e = _e(v);
+          i32  k;
+
+    per (k = ZEPHYRUM; k < xar_numerus(e->notae); k++)
     {
-        json_tabulatum_addere(t, json_chorda_creare_literis(p,
-            valores[i]));
+        Nota* n = (Nota*)xar_obtinere(e->notae, k);
+
+        si (   n->id == id && !n->deleta
+            && chorda_aequalis(n->usor, mcp_vocatio_persona(v)->usor))
+        {
+            redde n;
+        }
     }
-    redde t;
+    redde NIHIL;
 }
 
 interior JsonValor*
-_basis_cum (
-               Exemplar* e,
-     constans character* via,
-                Piscina* p)
+_nota_json (
+       Nota* n,
+    Piscina* p)
 {
-    character s[EXEMPLAR_VIA_MAXIMA + LXIV];
+    JsonValor* o = json_objectum_creare(p);
 
-    sprintf(s, "%s%s", e->basis, via);
-    redde json_chorda_creare_literis(p, s);
+    json_objectum_ponere(o, "id", json_integer_creare(p, n->id));
+    json_objectum_ponere(o, "textus", json_chorda_creare(p, n->textus));
+    si (n->sigillum.mensura > ZEPHYRUM)
+    {
+        JsonValor* f = json_objectum_creare(p);
+
+        json_objectum_ponere(f, "titulus", json_chorda_creare(p,
+            n->titulus));
+        json_objectum_ponere(f, "mimen", json_chorda_creare(p,
+            n->mimen));
+        json_objectum_ponere(f, "mensura", json_integer_creare(p,
+            (s64)n->mensura));
+        json_objectum_ponere(o, "filum", f);
+    }
+    redde o;
 }
 
 interior vacuum
-_json_respondere (
-    HospitiumColloquium* col,
-                    i32  status,
-              JsonValor* o)
+_notas_enumerare (
+    McpVocatio* v)
 {
-    colloquium_caput_addere(col, "Cache-Control", "no-store");
-    colloquium_respondere(col, status, "application/json",
-        json_scribere(o, colloquium_piscina(col)));
+       Exemplar* e       = _e(v);
+        Piscina* p       = mcp_vocatio_piscina(v);
+            s64  pagina  = I;
+      JsonValor* r       = json_objectum_creare(p);
+      JsonValor* t       = json_tabulatum_creare(p);
+            s32  k;
+            s64  numerus = ZEPHYRUM;
+            s64  initium;
+
+    (vacuum)mcp_argumentum_integer(v, "pagina", &pagina);
+    si (pagina < I)
+    {
+        mcp_respondere_vitium(v, chorda_ex_literis("pagina >= 1", p));
+        redde;
+    }
+    initium = (pagina - I) * NOTAE_PER_PAGINAM;
+    /* recentissimae primae */
+    per (k = (s32)xar_numerus(e->notae) - I; k >= ZEPHYRUM; k--)
+    {
+        Nota* n = (Nota*)xar_obtinere(e->notae, (i32)k);
+
+        si (   n->deleta
+            || !chorda_aequalis(n->usor, mcp_vocatio_persona(v)->usor))
+        {
+            perge;
+        }
+        si (numerus >= initium && numerus < initium + NOTAE_PER_PAGINAM)
+        {
+            json_tabulatum_addere(t, _nota_json(n, p));
+        }
+        numerus++;
+    }
+    json_objectum_ponere(r, "pagina", json_integer_creare(p, pagina));
+    json_objectum_ponere(r, "paginae", json_integer_creare(p,
+        (numerus + NOTAE_PER_PAGINAM - I) / NOTAE_PER_PAGINAM));
+    json_objectum_ponere(r, "notae", t);
+    mcp_respondere_json(v, r);
 }
 
-/* RFC 9728: documentum resource protecti */
 interior vacuum
-_documentum_protectum (
-    HospitiumColloquium* col)
+_notam_legere (
+    McpVocatio* v)
 {
-              Exemplar* e = (Exemplar*)colloquium_datum(col);
-               Piscina* p = colloquium_piscina(col);
-             JsonValor* o = json_objectum_creare(p);
-    constans character* auctoritates[II];
-    constans character* modi[II];
+     s64  id = ZEPHYRUM;
+    Nota* n;
 
-    _sonda(e, col);
-    auctoritates[ZEPHYRUM]  = e->basis;
-    auctoritates[I]         = NIHIL;
-    modi[ZEPHYRUM]          = "header";
-    modi[I]                 = NIHIL;
-    json_objectum_ponere(o, "resource", _basis_cum(e, "/mcp", p));
-    json_objectum_ponere(o, "authorization_servers",
-        _tabulatum(auctoritates, p));
-    json_objectum_ponere(o, "scopes_supported", _tabulatum(SCOPI, p));
-    json_objectum_ponere(o, "bearer_methods_supported",
-        _tabulatum(modi, p));
-    _json_respondere(col, CC, o);
+    (vacuum)mcp_argumentum_integer(v, "id", &id);
+    n = _nota_personae(v, id);
+    si (!n)
+    {
+        mcp_respondere_vitium(v, chorda_ex_literis("nota non inventa",
+            mcp_vocatio_piscina(v)));
+        redde;
+    }
+    mcp_respondere_json(v, _nota_json(n, mcp_vocatio_piscina(v)));
 }
 
-/* RFC 8414: documentum auctoritatis (T5 a bibliotheca admissio) */
 interior vacuum
-_auctoritas (
-    HospitiumColloquium* col)
+_notam_addere (
+    McpVocatio* v)
 {
-              Exemplar* e = (Exemplar*)colloquium_datum(col);
-               Piscina* p = colloquium_piscina(col);
-             JsonValor* o = json_objectum_creare(p);
-    constans character* s256[II];
-    constans character* nullus[II];
-    constans character* codex[II];
-    constans character* genera[III];
-    constans character* scopi[IV];
+                Piscina* p = mcp_vocatio_piscina(v);
+                 chorda  textus;
+                    s64  id;
+              JsonValor* r;
+    constans McpPersona* q = mcp_vocatio_persona(v);
 
-    _sonda(e, col);
-    s256[ZEPHYRUM]    = "S256";
-    s256[I]           = NIHIL;
-    nullus[ZEPHYRUM]  = "none";
-    nullus[I]         = NIHIL;
-    codex[ZEPHYRUM]   = "code";
-    codex[I]          = NIHIL;
-    genera[ZEPHYRUM]  = "authorization_code";
-    genera[I]         = "refresh_token";
-    genera[II]        = NIHIL;
-    scopi[ZEPHYRUM]   = SCOPI[ZEPHYRUM];
-    scopi[I]          = SCOPI[I];
-    scopi[II]         = "offline_access";
-    scopi[III]        = NIHIL;
-    json_objectum_ponere(o, "issuer", json_chorda_creare_literis(p,
-        e->basis));
-    json_objectum_ponere(o, "authorization_endpoint",
-        _basis_cum(e, "/oauth/authorize", p));
-    json_objectum_ponere(o, "token_endpoint",
-        _basis_cum(e, "/oauth/token", p));
-    json_objectum_ponere(o, "registration_endpoint",
-        _basis_cum(e, "/oauth/register", p));
-    json_objectum_ponere(o, "response_types_supported",
-        _tabulatum(codex,
-        p));
-    json_objectum_ponere(o, "grant_types_supported", _tabulatum(genera,
-        p));
-    json_objectum_ponere(o, "code_challenge_methods_supported",
-        _tabulatum(s256, p));
-    json_objectum_ponere(o, "token_endpoint_auth_methods_supported",
-        _tabulatum(nullus, p));
-    json_objectum_ponere(o, "scopes_supported", _tabulatum(scopi, p));
-    json_objectum_ponere(o,
-        "authorization_response_iss_parameter_supported",
-        json_boolean_creare(p, VERUM));
-    _json_respondere(col, CC, o);
+    (vacuum)mcp_argumentum_chorda(v, "textus", &textus);
+    si (   textus.mensura == ZEPHYRUM
+        || textus.mensura > EXEMPLAR_TEXTUS_MAXIMUS)
+    {
+        mcp_respondere_vitium(v, chorda_ex_literis(
+            "textus: I-XVI KB requiritur", p));
+        redde;
+    }
+    id = exemplar_notam_scribere(_e(v), q->usor, textus, q->cliens, p);
+    si (id == ZEPHYRUM)
+    {
+        mcp_respondere_vitium(v, chorda_ex_literis(
+            "volumen scribi nequit", p));
+        redde;
+    }
+    r = json_objectum_creare(p);
+    json_objectum_ponere(r, "id", json_integer_creare(p, id));
+    mcp_respondere_json(v, r);
 }
+
+interior vacuum
+_notam_delere (
+    McpVocatio* v)
+{
+       Piscina* p   = mcp_vocatio_piscina(v);
+           s64  id  = ZEPHYRUM;
+     JsonValor* r;
+
+    (vacuum)mcp_argumentum_integer(v, "id", &id);
+    si (   !_nota_personae(v, id)
+        || !exemplar_notam_delere(_e(v), mcp_vocatio_persona(v)->usor,
+        id,
+               p))
+    {
+        mcp_respondere_vitium(v, chorda_ex_literis("nota non inventa",
+            p));
+        redde;
+    }
+    r = json_objectum_creare(p);
+    json_objectum_ponere(r, "id", json_integer_creare(p, id));
+    json_objectum_ponere(r, "deleta", json_boolean_creare(p, VERUM));
+    mcp_respondere_json(v, r);
+}
+
+hic_manens constans McpArgumentum ARG_PAGINAE[] = {
+    { "pagina", "pagina (1 = recentissimae XX)", MCP_INTEGER, FALSUM,
+        NIHIL }
+};
+
+hic_manens constans McpArgumentum ARG_ID[] = {
+    { "id", "numerus notae (ex notas_enumerare)", MCP_INTEGER, VERUM,
+        NIHIL }
+};
+
+hic_manens constans McpArgumentum ARG_TEXTUS[] = {
+    { "textus", "textus notae (usque ad XVI KB)", MCP_CHORDA, VERUM,
+        NIHIL }
+};
+
+hic_manens constans McpInstrumentum INSTRUMENTA[] = {
+    { "notas_enumerare",
+        "Notas personae enumerat, recentissimas primas,"
+        " XX per paginam.", ARG_PAGINAE, I, "notae:legere", VERUM,
+            FALSUM,
+        _notas_enumerare },
+    { "notam_legere", "Notam unam legit: textus et nomina mensuraeque "
+        "filorum adiunctorum.", ARG_ID, I, "notae:legere", VERUM,
+            FALSUM,
+        _notam_legere },
+    { "notam_addere", "Notam novam personae addit.", ARG_TEXTUS, I,
+        "notae:scribere", FALSUM, FALSUM, _notam_addere },
+    { "notam_delere", "Notam personae delet (non revocabile).", ARG_ID,
+        I,
+        "notae:scribere", FALSUM, VERUM, _notam_delere }
+};
 
 
 /* ==================================================
- * MCP ET OAUTH (sonda)
+ * MONTATIO
  * ================================================== */
 
-/* POST /mcp: tessera nulla adhuc emittitur - semper 401 cum indice
- * documenti (Claudius signum SOLUM in 401 incipit) */
-interior vacuum
-_mcp_post (
-    HospitiumColloquium* col)
+interior b32
+_intratus_admissionis (
+                 vacuum* datum,
+    HospitiumColloquium* col,
+                 chorda* usor,
+                 chorda* csrf)
 {
-     Exemplar* e = (Exemplar*)colloquium_datum(col);
-      Piscina* p = colloquium_piscina(col);
-    JsonValor* o = json_objectum_creare(p);
-    character  caput[EXEMPLAR_VIA_MAXIMA + CXXVIII];
-
-    _sonda(e, col);
-    sprintf(caput, "Bearer resource_metadata=\"%s/.well-known/"
-        "oauth-protected-resource\", scope=\"%s %s\"", e->basis,
-        SCOPI[ZEPHYRUM], SCOPI[I]);
-    colloquium_caput_addere(col, "WWW-Authenticate", caput);
-    json_objectum_ponere(o, "error", json_chorda_creare_literis(p,
-        "invalid_token"));
-    _json_respondere(col, CDI, o);
+    redde exemplar_intratus_usor((Exemplar*)datum, col, usor, csrf);
 }
 
-/* POST /oauth/register: sonda Claudium hic sistit (T5 eam implet) */
+/* clientes non usi et tesserae expiratae: semel in hora */
 interior vacuum
-_inscriptio_interim (
-    HospitiumColloquium* col)
+_putare (
+    vacuum* datum)
 {
-     Exemplar* e = (Exemplar*)colloquium_datum(col);
-      Piscina* p = colloquium_piscina(col);
-    JsonValor* o = json_objectum_creare(p);
+    Exemplar* e = (Exemplar*)datum;
 
-    _sonda(e, col);
-    json_objectum_ponere(o, "error", json_chorda_creare_literis(p,
-        "temporarily_unavailable"));
-    json_objectum_ponere(o, "error_description",
-        json_chorda_creare_literis(p, "sonda: inscriptio nondum"));
-    _json_respondere(col, DIII, o);
+    (vacuum)admissio_putare(e->admissio);
 }
 
-vacuum
+b32
 exemplar_mcp_praebere (
     Exemplar* e)
 {
-    (vacuum)hospitium_praebere(e->hospitium, HTTP_POST, "/mcp",
-        _mcp_post, e);
-    (vacuum)hospitium_praebere(e->hospitium, HTTP_GET,
-        "/.well-known/oauth-protected-resource", _documentum_protectum,
+     McpConfiguratio mc;
+    AdmissioOptiones optiones_admissionis;
+     McpHttpOptiones optiones_vecturae;
+           character audientia[EXEMPLAR_VIA_MAXIMA + VIII];
+
+    sprintf(audientia, "%s/mcp", e->basis);
+    memset(&mc, ZEPHYRUM, magnitudo(mc));
+    mc.titulus  = "exemplar";
+    mc.versio   = "1";
+    mc.instructiones  =
+        "Notae personae quae Claudium adhibet (Franisci aut "
+        "Amandae): enumerare, legere, addere, delere. Quaeque "
+        "persona suas solum videt.";
+    mc.instrumenta  = INSTRUMENTA;
+    mc.numerus      = IV;
+    mc.datum        = e;
+    e->mcp          = mcp_servus_creare(&mc, e->piscina);
+    memset(&optiones_admissionis, ZEPHYRUM,
+        magnitudo(optiones_admissionis));
+    optiones_admissionis.auctoritas  = e->basis;
+    optiones_admissionis.audientia   = audientia;
+    optiones_admissionis.scopi       = SCOPI;
+    e->admissio = admissio_creare(e->volumen, &optiones_admissionis,
+        e->piscina);
+    si (!e->mcp || !e->admissio)
+    {
+        redde FALSUM;
+    }
+    admissio_speculatorem_ponere(e->admissio, _speculator, e);
+    memset(&optiones_vecturae, ZEPHYRUM, magnitudo(optiones_vecturae));
+    optiones_vecturae.via         = "/mcp";
+    optiones_vecturae.audientia   = audientia;
+    optiones_vecturae.auctoritas  = e->basis;
+    optiones_vecturae.scopi =
+        "notae:legere notae:scribere";
+    optiones_vecturae.verificator          = admissio_verificator;
+    optiones_vecturae.verificatoris_datum  = e->admissio;
+    optiones_vecturae.speculator           = _speculator;
+    optiones_vecturae.speculatoris_datum   = e;
+    (vacuum)admissio_putare(e->admissio);
+    (vacuum)reactor_timer_adicere(e->reactor, LX * LX * M, VERUM,
+        _putare,
         e);
-    (vacuum)hospitium_praebere(e->hospitium, HTTP_GET,
-        "/.well-known/oauth-protected-resource/mcp",
-        _documentum_protectum,
-        e);
-    (vacuum)hospitium_praebere(e->hospitium, HTTP_GET,
-        "/.well-known/oauth-authorization-server", _auctoritas, e);
-    (vacuum)hospitium_praebere(e->hospitium, HTTP_POST,
-        "/oauth/register",
-        _inscriptio_interim, e);
+    redde admissio_montare(e->admissio, e->hospitium,
+               _intratus_admissionis, e, "/intrare")
+        && mcp_servus_http_montare(e->hospitium, e->mcp,
+        &optiones_vecturae,
+        e->piscina);
 }

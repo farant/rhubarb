@@ -451,6 +451,53 @@ _intratus (
         && _usor(e, exitus->sessio->usor) != NIHIL;
 }
 
+b32
+exemplar_intratus_usor (
+               Exemplar* e,
+    HospitiumColloquium* col,
+                 chorda* usor,
+                 chorda* csrf)
+{
+    Intratus i;
+
+    si (!e || !_intratus(e, col, &i))
+    {
+        redde FALSUM;
+    }
+    *usor  = i.sessio->usor;
+    *csrf  = custodia_csrf(e->custodia, &i.sigillum,
+        colloquium_piscina(col));
+    redde VERUM;
+}
+
+/* redire tutum: via LOCALIS solum ("/x", numquam "//x" aut "/\\x"),
+ * sine signis moderantibus - nulla redirectio aperta */
+interior b32
+_redire_tutum (
+    chorda r)
+{
+    i32 i;
+
+    si (   !r.datum || r.mensura < I
+        || r.mensura         >= EXEMPLAR_REDIRE_MAXIMUM
+        || r.datum[ZEPHYRUM] != '/')
+    {
+        redde FALSUM;
+    }
+    si (r.mensura > I && (r.datum[I] == '/' || r.datum[I] == '\\'))
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < r.mensura; i++)
+    {
+        si (r.datum[i] < 0x20 || r.datum[i] == 0x7F)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
 /* Origin == schema://Host (methodi non tutae) */
 interior b32
 _origo_bona (
@@ -741,7 +788,8 @@ _verificatio_facta (
             {
                 (vacuum)_crustulum_ponere(col, s.signum,
                     (s64)EXEMPLAR_SESSIO_VITA_S);
-                colloquium_redirigere(col, CCCIII, "/notae");
+                colloquium_redirigere(col, CCCIII, o->redire[ZEPHYRUM]
+                    ? o->redire : "/notae");
             }
         }
         memset(&s, 0, magnitudo(s));
@@ -837,6 +885,15 @@ _intrare_post (
     }
     strcpy(o->clavis_paris, clavis_paris);
     strcpy(o->clavis_usoris, clavis_usoris);
+    {
+        chorda r = colloquium_forma(col, "redire");
+
+        si (_redire_tutum(r))
+        {
+            memcpy(o->redire, r.datum, (size_t)r.mensura);
+            o->redire[r.mensura] = '\0';
+        }
+    }
     si (mora_a > 0 || mora_b > 0)
     {
         /* mora DIFFERTUR (timer), numquam obstat */
@@ -886,10 +943,19 @@ interior vacuum
 _intrare_get (
     HospitiumColloquium* col)
 {
-    ChordaAedificator* a = _paginam_incipere(col, "Intrare");
+    ChordaAedificator* a       = _paginam_incipere(col, "Intrare");
+               chorda  redire  = colloquium_quaestio(col, "redire");
 
     chorda_aedificator_appendere_literis(a,
-        "<form method=\"post\" action=\"/intrare\">"
+        "<form method=\"post\" action=\"/intrare\">");
+    si (_redire_tutum(redire))
+    {
+        chorda_aedificator_appendere_literis(a,
+            "<input type=\"hidden\" name=\"redire\" value=\"");
+        _evadere(a, redire);
+        chorda_aedificator_appendere_literis(a, "\">");
+    }
+    chorda_aedificator_appendere_literis(a, ""
         "<label>nomen <input name=\"nomen\" required></label>"
         "<label>tessera <input type=\"password\" name=\"tessera\" "
         "required></label><button>intrare</button></form>"
@@ -996,6 +1062,7 @@ _notae_get (
             "<button>delere</button></form></div>");
     }
     chorda_aedificator_appendere_literis(a,
+        "<p><a href=\"/applicationes\">applicationes connexae</a></p>"
         "<form method=\"post\" action=\"/exire\">");
     _csrf_campus(a, csrf);
     chorda_aedificator_appendere_literis(a,
@@ -1062,6 +1129,7 @@ _notae_post (HospitiumColloquium* col)
     a = json_objectum_creare(p);
     _ponere(a, "usor", i.sessio->usor, p);
     _ponere(a, "textus", textus, p);
+    _ponere(a, "via", chorda_ex_literis("retis", p), p);
     si (filum)
     {
          JsonValor* f    = json_objectum_creare(p);
@@ -1158,18 +1226,12 @@ _nota_delere (
         _errare(col, CDIV, "nota ignota");
         redde;
     }
+    si (!exemplar_notam_delere(e, i.sessio->usor, id,
+            colloquium_piscina(col)))
     {
-          Piscina* p = colloquium_piscina(col);
-        JsonValor* a = json_objectum_creare(p);
-
-        json_objectum_ponere(a, "id", json_integer_creare(p, id));
-        si (_actum(e, "nota.deleta", a, p) == 0)
-        {
-            _errare(col, D, "volumen scribi nequit");
-            redde;
-        }
+        _errare(col, D, "volumen scribi nequit");
+        redde;
     }
-    n->deleta = VERUM;
     colloquium_redirigere(col, CCCIII, "/notae");
 }
 
@@ -1272,6 +1334,172 @@ _filum_get (
     fons.datum     = l;
     colloquium_respondere_fontem(col, CC, "application/octet-stream",
         fons);
+}
+
+s64
+exemplar_notam_scribere (
+    Exemplar* e,
+       chorda  usor,
+       chorda  textus,
+       chorda  cliens,
+     Piscina* p)
+{
+    JsonValor* a;
+          s64  id;
+         Nota* n;
+
+    si (   !e || textus.mensura == 0
+        || textus.mensura > EXEMPLAR_TEXTUS_MAXIMUS)
+    {
+        redde 0;
+    }
+    a = json_objectum_creare(p);
+    _ponere(a, "usor", usor, p);
+    _ponere(a, "textus", textus, p);
+    _ponere(a, "via", chorda_ex_literis("claude", p), p);
+    _ponere(a, "cliens", cliens, p);
+    id = _actum(e, "nota.scripta", a, p);
+    si (id == 0)
+    {
+        redde 0;
+    }
+    n = (Nota*)xar_addere(e->notae);
+    memset(n, 0, magnitudo(*n));
+    n->id        = id;
+    n->usor      = _copia(usor, e->piscina);
+    n->textus    = _copia(textus, e->piscina);
+    n->sigillum  = _copia(chorda_ex_literis("", p), e->piscina);
+    redde id;
+}
+
+b32
+exemplar_notam_delere (
+     Exemplar* e,
+       chorda  usor,
+          s64  id,
+      Piscina* p)
+{
+         Nota* n = e ? _nota(e, id) : NIHIL;
+    JsonValor* a;
+
+    si (!n || n->deleta || !chorda_aequalis(n->usor, usor))
+    {
+        redde FALSUM;
+    }
+    a = json_objectum_creare(p);
+    json_objectum_ponere(a, "id", json_integer_creare(p, id));
+    si (_actum(e, "nota.deleta", a, p) == 0)
+    {
+        redde FALSUM;
+    }
+    n->deleta = VERUM;
+    redde VERUM;
+}
+
+/* momentum (ms) ut "AAAA-MM-DD HH:MM UTC" */
+interior vacuum
+_momentum_scribere (
+    character* exitus,
+          s64  ms)
+{
+         time_t t    = (time_t)(ms / M);
+    structura tm* g  = gmtime(&t);
+
+    si (!g)
+    {
+        strcpy(exitus, "?");
+        redde;
+    }
+    sprintf(exitus, "%04d-%02d-%02d %02d:%02d UTC", g->tm_year + MCM,
+        g->tm_mon + I, g->tm_mday, g->tm_hour, g->tm_min);
+}
+
+/* /applicationes: connexiones personae (Claude etc.), revocare */
+interior vacuum
+_applicationes_get (
+    HospitiumColloquium* col)
+{
+             Exemplar* e = (Exemplar*)colloquium_datum(col);
+             Intratus  i;
+    ChordaAedificator* a;
+               chorda  csrf;
+                  Xar* lista;
+                  i32  k;
+
+    si (!_intratus(e, col, &i))
+    {
+        colloquium_redirigere(col, CCCIII,
+            "/intrare?redire=%2Fapplicationes");
+        redde;
+    }
+    csrf   = custodia_csrf(e->custodia, &i.sigillum,
+        colloquium_piscina(col));
+    lista  = e->admissio ? admissio_concessiones(e->admissio,
+        i.sessio->usor, colloquium_piscina(col)) : NIHIL;
+    a = _paginam_incipere(col, "Applicationes");
+    si (!lista || xar_numerus(lista) == 0)
+    {
+        chorda_aedificator_appendere_literis(a,
+            "<p>nullae applicationes connexae</p>");
+    }
+    per (k = 0; lista && k < xar_numerus(lista); k++)
+    {
+        AdmissioConcessio* g = (AdmissioConcessio*)xar_obtinere(lista,
+            k);
+                character m[LXIV];
+
+        chorda_aedificator_appendere_literis(a,
+            "<div class=\"nota\"><p><b>");
+        _evadere(a, g->titulus_clientis.mensura
+            > 0 ? g->titulus_clientis
+            : g->cliens);
+        chorda_aedificator_appendere_literis(a, "</b></p><p>scopi: ");
+        _evadere(a, g->scopi);
+        chorda_aedificator_appendere_literis(a, "</p><p>creata: ");
+        _momentum_scribere(m, g->creata_ms);
+        chorda_aedificator_appendere_literis(a, m);
+        chorda_aedificator_appendere_literis(a,
+            " &middot; usus ultimus: ");
+        _momentum_scribere(m, g->usus_ultimus_ms);
+        chorda_aedificator_appendere_literis(a, m);
+        chorda_aedificator_appendere_literis(a,
+            "</p><form method=\"post\" action=\"/applicationes/");
+        _evadere(a, g->id);
+        chorda_aedificator_appendere_literis(a, "/revocare\">");
+        _csrf_campus(a, csrf);
+        chorda_aedificator_appendere_literis(a,
+            "<button>revocare</button></form></div>");
+    }
+    chorda_aedificator_appendere_literis(a,
+        "<p><a href=\"/notae\">notae</a></p>");
+    _paginam_mittere(col, CC, a);
+}
+
+interior vacuum
+_applicationem_revocare (
+    HospitiumColloquium* col)
+{
+    Exemplar* e = (Exemplar*)colloquium_datum(col);
+    Intratus  i;
+
+    si (!_origo_bona(col))
+    {
+        _errare(col, CDIII, "origo aliena");
+        redde;
+    }
+    si (!_intratus(e, col, &i) || !_csrf_bonum(e, col, &i))
+    {
+        _errare(col, CDIII, "intrare necesse");
+        redde;
+    }
+    si (   !e->admissio
+        || !admissio_revocare(e->admissio, i.sessio->usor,
+               colloquium_param(col, "id")))
+    {
+        _errare(col, CDIV, "applicatio ignota");
+        redde;
+    }
+    colloquium_redirigere(col, CCCIII, "/applicationes");
 }
 
 interior vacuum
@@ -1444,7 +1672,16 @@ exemplar_creare (
             ? configuratio->hospes : "127.0.0.1",
             (insignatus integer)hospitium_portus(e->hospitium));
     }
-    exemplar_mcp_praebere(e);
+    (vacuum)hospitium_praebere(e->hospitium, HTTP_GET, "/applicationes",
+        _applicationes_get, e);
+    (vacuum)hospitium_praebere(e->hospitium, HTTP_POST,
+        "/applicationes/:id/revocare", _applicationem_revocare, e);
+    si (!exemplar_mcp_praebere(e))
+    {
+        fprintf(stderr, "exemplar: servus MCP aut admissio deficit\n");
+        volumen_claudere(e->volumen);
+        redde NIHIL;
+    }
     redde e;
 }
 

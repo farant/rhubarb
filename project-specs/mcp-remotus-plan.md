@@ -197,6 +197,19 @@ with this plan.
   `invalid_client`); login redirect is 303 to
   `<via_intrandi>?redire=/oauth/authorize?...`; `redirect_uri` may be
   omitted only when the client registered exactly one.
+- **R18 (T7)** - both libraries gained an optional `speculator`
+  callback (`McpHttpOptiones.speculator`, `admissio_speculatorem_
+  ponere`), called at the top of every mounted route: exemplar's sonda
+  must still see raw requests now that the libraries own the paths.
+  The sonda also redacts the consent POST body (CSRF token).
+- **R19 (T7)** - `concessio.creata` carries `titulus_clientis` and
+  `scopi` (the test reads them); `/applicationes` lives in the nucleus
+  (page helpers); tool descriptions are Latin (house rule; Claude reads
+  them); the MCP access log goes to stderr = the journal. Two test
+  sections renamed for the lint: `revocatio_viva` -> `revocare`,
+  `textus_unicode` -> `textus_varius`.
+- **R20 (T7)** - the Linux build caught a gcc `-Wsign-conversion` in T2's
+  `lib/base64.c` (`(I << bits) - I`); fixed in this commit.
 
 ## Review focus
 

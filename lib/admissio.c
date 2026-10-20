@@ -46,7 +46,15 @@ structura Admissio {
                vacuum* datum_intratus;
             character* via_intrandi;
             character* origo;           /* origo auctoritatis */
+                vacuum  (*speculator)(vacuum* datum,
+                            HospitiumColloquium* colloquium);
+                vacuum* speculatoris_datum;
 };
+
+interior vacuum
+_speculari (
+               Admissio* a,
+    HospitiumColloquium* c);
 
 hic_manens constans character* constans SCHEMA[] = {
     "CREATE TABLE IF NOT EXISTS admissio_versio"
@@ -231,6 +239,7 @@ _actum (
                  chorda  concessio,
                  chorda  usor,
                  chorda  cliens,
+                 chorda  scopi,
                 Piscina* p)
 {
     JsonValor* d = json_objectum_creare(p);
@@ -239,6 +248,25 @@ _actum (
         concessio));
     json_objectum_ponere(d, "usor", json_chorda_creare(p, usor));
     json_objectum_ponere(d, "cliens", json_chorda_creare(p, cliens));
+    /* creata: nomen clientis et scopi (vestigium legibile) */
+    si (scopi.datum)
+    {
+        ScriniumEnuntiatum* e = scrinium_praeparare(a->scrinium,
+            "SELECT titulus FROM admissio_clientes WHERE id = ?");
+
+        si (e)
+        {
+            scrinium_ligare_textum(e, I, cliens);
+            si (scrinium_gradi(e) == SCRINIUM_ORDO)
+            {
+                json_objectum_ponere(d, "titulus_clientis",
+                    json_chorda_creare(p, scrinium_columna_textus(e,
+                        ZEPHYRUM, p)));
+            }
+            scrinium_finire(e);
+        }
+        json_objectum_ponere(d, "scopi", json_chorda_creare(p, scopi));
+    }
     (vacuum)volumen_actum_appendere(a->volumen, genus, json_scribere(d,
         p));
 }
@@ -769,7 +797,7 @@ _concessionem_creare (
     {
         redde FALSUM;
     }
-    _actum(a, "concessio.creata", id, usor, cliens, p);
+    _actum(a, "concessio.creata", id, usor, cliens, scopi, p);
     si (id_exitus)
     {
         *id_exitus = id;
@@ -955,7 +983,8 @@ _concessionem_necare (
     {
         redde FALSUM;
     }
-    _actum(a, "concessio.revocata", concessio, usor, cliens, p);
+    _actum(a, "concessio.revocata", concessio, usor, cliens,
+        chorda_ex_buffer(NIHIL, ZEPHYRUM), p);
     redde VERUM;
 }
 
@@ -1644,6 +1673,7 @@ _auctorizare_get (
        chorda  usor;
        chorda  csrf;
 
+    _speculari(a, c);
     si (_petitionem_iudicare(c, a, FALSUM, &q) != IUDICIUM_BENE)
     {
         redde;
@@ -1711,6 +1741,7 @@ _auctorizare_post (
                     i32  k;
                     i32  electi = ZEPHYRUM;
 
+    _speculari(a, c);
     si (_petitionem_iudicare(c, a, VERUM, &q) != IUDICIUM_BENE)
     {
         redde;
@@ -2130,6 +2161,7 @@ _token (
        chorda  typus  = colloquium_caput(c, "Content-Type");
        chorda  genus;
 
+    _speculari(a, c);
     si (   !typus.datum
         || !_incipit(typus, "application/x-www-form-urlencoded"))
     {
@@ -2164,6 +2196,7 @@ _inscribere_via (
        chorda  responsum;
           s32  status;
 
+    _speculari(a, c);
     status = admissio_inscribere(a, colloquium_petitio(c)->corpus,
         colloquium_cliens(c), &responsum, colloquium_piscina(c));
     colloquium_caput_addere(c, "Cache-Control", "no-store");
@@ -2177,9 +2210,35 @@ _documentum_via (
 {
     Admissio* a = (Admissio*)colloquium_datum(c);
 
+    _speculari(a, c);
     colloquium_respondere(c, CC, "application/json",
         admissio_documentum(a,
         colloquium_piscina(c)));
+}
+
+vacuum
+admissio_speculatorem_ponere (
+                Admissio* admissio,
+                  vacuum  (*speculator)(vacuum* datum,
+                              HospitiumColloquium* colloquium),
+                  vacuum* datum)
+{
+    si (admissio)
+    {
+        admissio->speculator          = speculator;
+        admissio->speculatoris_datum  = datum;
+    }
+}
+
+interior vacuum
+_speculari (
+               Admissio* a,
+    HospitiumColloquium* c)
+{
+    si (a && a->speculator)
+    {
+        a->speculator(a->speculatoris_datum, c);
+    }
 }
 
 b32

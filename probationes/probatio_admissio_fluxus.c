@@ -332,7 +332,17 @@ nomen structura {
     Hospitium* h;
      Admissio* a;
       Volumen* v;
+          i32  speculata;
 } Fixura;
+
+interior vacuum
+_speculator (
+                 vacuum* datum,
+    HospitiumColloquium* colloquium)
+{
+    (vacuum)colloquium;
+    ((Fixura*)datum)->speculata++;
+}
 
 interior b32
 _fixura (
@@ -356,8 +366,12 @@ _fixura (
     o.scopi       = SCOPI;
     o.nunc_ms     = _nunc;
     f->a          = admissio_creare(f->v, &o, c->piscina);
-    redde f->a
-        && admissio_montare(f->a, f->h, _intratus, NIHIL, "/intrare");
+    si (!f->a)
+    {
+        redde FALSUM;
+    }
+    admissio_speculatorem_ponere(f->a, _speculator, f);
+    redde admissio_montare(f->a, f->h, _intratus, NIHIL, "/intrare");
 }
 
 interior vacuum
@@ -565,6 +579,7 @@ _sectio_fluxus (CredoContextus* c)
     CREDO_VERUM(_continet(&l, "\"issuer\":\"" AUCTORITAS "\""));
     cliens = _inscribere(c, &f, CALLBACK);
     CREDO_NECESSE(strlen(cliens) > X);
+    CREDO_AEQUALIS_I32(f.speculata, II);   /* documentum + register */
     /* pagina consensus */
     parametra = _parametra(c, cliens, CALLBACK, OMNES, "S256",
         AUDIENTIA);

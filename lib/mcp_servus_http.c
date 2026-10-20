@@ -186,6 +186,17 @@ _json_respondere (
         chorda_transcribere(corpus, colloquium_piscina(c)));
 }
 
+interior vacuum
+_speculari (
+                McpHttp* m,
+    HospitiumColloquium* c)
+{
+    si (m->o.speculator)
+    {
+        m->o.speculator(m->o.speculatoris_datum, c);
+    }
+}
+
 /* responsum ante nucleum (401, 400, 403 origo, 413, 415) + actum */
 interior vacuum
 _refutare (
@@ -403,6 +414,7 @@ _post (
                             i32  k;
                             b32  nota = FALSUM;
 
+    _speculari(m, c);
     si (origo.datum && !_origo_licet(m, origo))
     {
         _refutare(c, m, CDIII, "{\"error\":\"origo vetita\"}", "origo",
@@ -501,6 +513,7 @@ interior vacuum
 _non_licet (
     HospitiumColloquium* c)
 {
+    _speculari((McpHttp*)colloquium_datum(c), c);
     colloquium_caput_addere(c, "Allow", "POST");
     colloquium_respondere(c, CDV, "application/json",
         chorda_ex_literis("{\"error\":\"POST solum\"}",
@@ -513,6 +526,7 @@ _documentum_protectum (
 {
     McpHttp* m = (McpHttp*)colloquium_datum(c);
 
+    _speculari(m, c);
     _json_respondere(c, CC, m->documentum);
 }
 
