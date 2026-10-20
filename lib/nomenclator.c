@@ -19,6 +19,7 @@
 #include "fasti_fontes.h"
 #include "similitudo.h"
 #include "scriba_documentum.h"   /* scriba_effugere / scriba_solvere */
+#include "semita.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -41,6 +42,7 @@ nomen structura {
                     s32  latitudo_montationis;
                     s32  altitudo_montationis;
                  Charta  notae;   /* P5b: liber "persona/<id>" */
+       constans Organum* organum; /* semitae R4b: semita_legere */
 } NomenclatorFigurae;
 
 
@@ -2429,6 +2431,9 @@ figuras_registrare (
     {
         redde FALSUM;
     }
+    /* semitae R4b: zephyrum - notae.montata (librum_aptare) valida
+     * etiam ante charta_montare (piscina non purgat) */
+    memset(contextus, ZEPHYRUM, magnitudo(NomenclatorFigurae));
     contextus->m                     = m;
     contextus->scheda                = piscina_generare_dynamicum(
         "nomenclator_scheda", XVI * M);
@@ -2869,32 +2874,96 @@ nomenclator_portam_diei_ponere (
     }
 }
 
+/* semitae R4b: SemitaOrganum lateris - manifestum suum (liberi
+ * nulli); ctx = NomenclatorMontatio* */
+interior constans Organum*
+organa_nomenclatoris (
+     vacuum* ctx,
+     chorda  genus)
+{
+    NomenclatorMontatio* m = (NomenclatorMontatio*)ctx;
+
+    si (   !m || !m->figurae_ctx
+        || !chorda_aequalis_literis(genus, "nomenclator"))
+    {
+        redde NIHIL;
+    }
+    redde ((NomenclatorFigurae*)m->figurae_ctx)->organum;
+}
+
+/* argumentum ut semita: URI ("nomenclator", "nomenclator/...",
+ * "nomenclator?...") aut cognomen - "<id>" -> persona aperta, "" ->
+ * index (persona_aperta sublata). NIHIL si malum. */
+interior StmlNodus*
+semita_argumenti (
+    NomenclatorMontatio* m,
+     constans character* argumentum,
+                 chorda* vitium)
+{
+     StmlNodus* n;
+           i32  l;
+
+    l = (i32)strlen(argumentum);
+    si (   strncmp(argumentum, "nomenclator", XI) == ZEPHYRUM
+        && (l == XI || argumentum[XI] == '/' || argumentum[XI] == '?'))
+    {
+        redde semita_ex_uri(organa_nomenclatoris, m, chorda_ex_literis(
+            argumentum, m->piscina), m->piscina, m->intern, vitium);
+    }
+    n = stml_elementum_creare(m->piscina, m->intern, "nomenclator");
+    si (   !n
+        || !stml_attributum_addere(n, m->piscina, m->intern,
+               "persona_aperta", argumentum))
+    {
+        redde NIHIL;
+    }
+    redde n;
+}
+
 b32
 nomenclator_argumentum_ponere (
      NomenclatorMontatio* m,
       constans character* argumentum)
 {
-    character numerus[XVI];
-          s32 id;
+     StmlNodus* semita;
+        chorda* aperta;
+        chorda  vitium;
+           s32  id;
 
     si (!m)
     {
         redde FALSUM;
     }
-    si (!argumentum || argumentum[ZEPHYRUM] == '\0')
-    {
-        redde campos_scribere(m, "persona_aperta", "", "campus_electus",
-            "");
-    }
-    si (   !chorda_ut_s32(chorda_ex_literis(argumentum, m->piscina),
-        &id)
-        || id <= ZEPHYRUM || !personae_persona(m->documentum, id))
+    semita = semita_argumenti(m, argumentum ? argumentum : "", &vitium);
+    si (!semita)
     {
         redde FALSUM;
     }
-    sprintf(numerus, "%d", (integer)id);
-    si (!campos_scribere(m, "persona_aperta", numerus, "campus_electus",
-            ""))
+    /* persona ignota: recusatur ante scripturam (typus numerus formam
+     * solam iudicat) */
+    aperta = stml_attributum_capere(semita, "persona_aperta");
+    si (   aperta && aperta->mensura > ZEPHYRUM
+        && (   !chorda_ut_s32(*aperta, &id) || id <= ZEPHYRUM
+            || !personae_persona(m->documentum, id)))
+    {
+        redde FALSUM;
+    }
+    si (!semita_applicare(organa_nomenclatoris, m, &m->ramus, semita,
+            m->piscina, &vitium))
+    {
+        redde FALSUM;
+    }
+    librum_aptare(m, NIHIL);
+    redde VERUM;
+}
+
+b32
+nomenclator_semitam_secuta (
+    vacuum* ctx)
+{
+    NomenclatorMontatio* m = (NomenclatorMontatio*)ctx;
+
+    si (!m)
     {
         redde FALSUM;
     }
@@ -2999,6 +3068,7 @@ nomenclator_montare (
     {
         redde FALSUM;
     }
+    ((NomenclatorFigurae*)m->figurae_ctx)->organum = organum;
     /* P5b: notae - liber personae apertae, aliter electae (index:
      * liber paratus ad Enter), aliter "persona/0" (index vacuus) */
     ctx      = (NomenclatorFigurae*)m->figurae_ctx;

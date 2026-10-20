@@ -19,6 +19,8 @@
 #include "vicus_applicatio.h"
 #include "sancti_visus.h"
 #include "kalendarium.h"
+#include "nomenclator.h"
+#include "personae.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -341,6 +343,77 @@ _probare_calendarium (
     CREDO_AEQUALIS_I32(x->vocationes_secutae, II);
 }
 
+/* attributum rami nomenclatoris frontalis = valor (NIHIL absens) */
+interior b32
+nomenclatoris_est (
+                 Mundus* x,
+     constans character* titulus,
+     constans character* valor)
+{
+    VicusLatus* l;
+        chorda* a;
+
+    l = frons(x);
+    si (   !l || !l->montata || !chorda_aequalis_literis(l->genus,
+            "nomenclator"))
+    {
+        redde FALSUM;
+    }
+    a = insula_ramus_attributum(&((NomenclatorMontatio*)l->montatio)
+        ->ramus, titulus);
+    si (valor == NIHIL)
+    {
+        redde !a || a->mensura == ZEPHYRUM;
+    }
+    redde a && chorda_aequalis_literis(*a, valor);
+}
+
+/* semitae R4b: nomenclator - persona aperta (impelle), Esc ad indicem
+ * (impelle), Ctrl+O personam restituit et iterum indicem; hospes post
+ * gradum vocatur */
+interior vacuum
+_probare_nomenclatorem (
+    CredoContextus* c)
+{
+                Mundus* x;
+    PersonaeDocumentum* doc;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x->volumen);
+    doc = personae_aperire(c->piscina, internamentum_creare(c->piscina),
+        x->volumen, "personae", ZEPHYRUM);
+    CREDO_NECESSE(doc && personae_hominem_creare(doc,
+        chorda_ex_literis("Anna", c->piscina),
+        chorda_ex_literis("Rossi", c->piscina)) == I);
+    CREDO_NECESSE(mundum_struere(x, c));
+    CREDO_VERUM(vicus_acervo_aperire(x->app.vicus, "nomenclator",
+        NIHIL));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    dispensator_recomponere(x->app.d);
+    (vacuum)vicus_pulsare(x->app.vicus);
+    CREDO_VERUM(nomenclatoris_est(x, "persona_aperta", NIHIL));
+    CREDO_AEQUALIS_I32(historia_numerus(x), I);
+    CREDO_VERUM(frons(x)->facies.semitam_secuta
+        == nomenclator_semitam_secuta);
+    frons(x)->facies.semitam_secuta      = secuta_numerare;
+    frons(x)->facies.semitam_secuta_ctx  = x;
+    CREDO_VERUM(vicus_acervo_mutare(x->app.vicus, "nomenclator",
+        "nomenclator/1"));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    dispensator_recomponere(x->app.d);
+    CREDO_VERUM(nomenclatoris_est(x, "persona_aperta", "1"));
+    CREDO_AEQUALIS_I32(historia_numerus(x), II);
+    clavis(x, (character)XXVII, ZEPHYRUM);
+    CREDO_VERUM(nomenclatoris_est(x, "persona_aperta", NIHIL));
+    CREDO_AEQUALIS_I32(historia_numerus(x), III);
+    clavis(x, 'o', (i32)MOD_IMPERIUM);
+    CREDO_VERUM(nomenclatoris_est(x, "persona_aperta", "1"));
+    CREDO_AEQUALIS_I32(x->vocationes_secutae, I);
+    clavis(x, 'o', (i32)MOD_IMPERIUM);
+    CREDO_VERUM(nomenclatoris_est(x, "persona_aperta", NIHIL));
+    CREDO_AEQUALIS_I32(x->vocationes_secutae, II);
+}
+
 /* latus sine semitis (scriba) Ctrl+O non capit: historia sanctorum
  * intacta */
 interior vacuum
@@ -376,6 +449,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "transitus", _probare_transitum, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "calendarium", _probare_calendarium, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "nomenclator", _probare_nomenclatorem, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

@@ -21,6 +21,8 @@
 #include "scriba_liber.h"
 #include "scriba_documentum.h"
 #include "tabula_characterum.h"
+#include "semita.h"
+#include "organum_montatio.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -35,6 +37,7 @@ nomen structura {
                       b32  sine_notis;   /* P5b: sine volumine */
                      Dies  dies_aperta;  /* P6c: porta diei notat */
                       s32  aperitiones;
+         constans Organum* organum;     /* semitae R4b */
 } Mundus;
 
 interior vacuum
@@ -1322,6 +1325,155 @@ _probare_argumentum (
     CREDO_VERUM(campus_est(x, "persona_aperta", NIHIL));
 }
 
+/* semitae R4b: organum nomenclatoris pro semita_legere; ctx =
+ * Mundus* */
+interior constans Organum*
+organa_nomenclatoris (
+     vacuum* ctx,
+     chorda  genus)
+{
+    redde chorda_aequalis_literis(genus, "nomenclator")
+        ? ((Mundus*)ctx)->organum : NIHIL;
+}
+
+interior vacuum
+organum_parare (
+     Mundus* x,
+    Piscina* p)
+{
+    si (!x->organum)
+    {
+        x->organum = organum_legere_genus(p, x->intern, "nomenclator",
+            "probatio");
+    }
+}
+
+/* semita currens lateris ut URI aequat exspectatam? */
+interior b32
+semita_est (
+                 Mundus* x,
+                Piscina* p,
+     constans character* exspectata)
+{
+    chorda uri;
+
+    organum_parare(x, p);
+    uri = semita_ad_uri(organa_nomenclatoris, x, semita_legere(
+        organa_nomenclatoris, x, &x->m.ramus, "nomenclator", p,
+        x->intern), p);
+    si (!chorda_aequalis_literis(uri, exspectata))
+    {
+        imprimere("semita: '%.*s', exspectata '%s'\n", (int)uri.mensura,
+            (constans character*)uri.datum, exspectata);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+/* semitam applicare ut vicus (historia): scriptura directa, sine
+ * argumento */
+interior b32
+semitam_applicare (
+                 Mundus* x,
+                Piscina* p,
+     constans character* uri)
+{
+     StmlNodus* semita;
+        chorda  vitium;
+
+    organum_parare(x, p);
+    semita = semita_ex_uri(organa_nomenclatoris, x, chorda_ex_literis(
+        uri, p), p, x->intern, &vitium);
+    redde semita && semita_applicare(organa_nomenclatoris, x,
+        &x->m.ramus, semita, p, &vitium);
+}
+
+/* semitae R4b: argumentum = URI semitae aut cognomen ("<id>", "",
+ * NIHIL); semita canonica legitur; persona mutata campus_electus
+ * resettitur, quaestio et filtrum servantur; mala nihil mutant */
+interior vacuum
+_probare_semitas (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    CREDO_VERUM(semita_est(x, c->piscina, "nomenclator"));
+    CREDO_VERUM(nomenclator_argumentum_ponere(&x->m,
+        "nomenclator?visus=rubricae&rubrica_filtrum=familia"));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "nomenclator?visus=rubricae&rubrica_filtrum=familia"));
+    CREDO_VERUM(nomenclator_argumentum_ponere(&x->m,
+        "nomenclator/1?campus_electus=2"));
+    CREDO_VERUM(campus_est(x, "persona_aperta", "1"));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "nomenclator/1?visus=rubricae&rubrica_filtrum=familia"
+        "&campus_electus=2"));
+    /* cognomen: persona alia - campus_electus resettitur */
+    CREDO_VERUM(nomenclator_argumentum_ponere(&x->m, "3"));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "nomenclator/3?visus=rubricae&rubrica_filtrum=familia"));
+    /* "" ad indicem: filtrum servatur */
+    CREDO_VERUM(nomenclator_argumentum_ponere(&x->m, ""));
+    CREDO_VERUM(campus_est(x, "persona_aperta", NIHIL));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "nomenclator?visus=rubricae&rubrica_filtrum=familia"));
+    CREDO_VERUM(nomenclator_argumentum_ponere(&x->m,
+        "nomenclator?visus=index&rubrica_filtrum=&quaestio=anna"
+        "&persona_electa=1"));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "nomenclator?quaestio=anna&persona_electa=1"));
+    /* mala: nihil mutatur */
+    CREDO_FALSUM(nomenclator_argumentum_ponere(&x->m,
+        "nomenclator/99"));
+    CREDO_FALSUM(nomenclator_argumentum_ponere(&x->m,
+        "nomenclator/abc"));
+    CREDO_FALSUM(nomenclator_argumentum_ponere(&x->m,
+        "nomenclator?prompta=homo"));
+    CREDO_FALSUM(nomenclator_argumentum_ponere(&x->m, "sancti/index"));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "nomenclator?quaestio=anna&persona_electa=1"));
+}
+
+/* semitae R4b: semita a vico applicata (historia) personam mutat sine
+ * argumento - liber notarum sequitur solum post
+ * nomenclator_semitam_secuta */
+interior vacuum
+_probare_semitam_secutam (
+    CredoContextus* c)
+{
+      Mundus* x;
+       Fines  totum;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(librum_parare(x, "persona/1", "quinque", c->piscina));
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    totum.x         = ZEPHYRUM;
+    totum.y         = ZEPHYRUM;
+    totum.latitudo  = CCCLX;
+    totum.altitudo  = CCCXX;
+    CREDO_VERUM(nomenclator_argumentum_ponere(&x->m, "1"));
+    dispensator_recomponere(x->d);
+    CREDO_VERUM(textus_in(reddere(x, c->piscina), totum, "quinque",
+        -I));
+    CREDO_NECESSE(semitam_applicare(x, c->piscina, "nomenclator/3"));
+    CREDO_VERUM(campus_est(x, "persona_aperta", "3"));
+    dispensator_recomponere(x->d);
+    CREDO_VERUM(textus_in(reddere(x, c->piscina), totum, "quinque",
+        -I));
+    CREDO_VERUM(nomenclator_semitam_secuta(&x->m));
+    dispensator_recomponere(x->d);
+    CREDO_FALSUM(textus_in(reddere(x, c->piscina), totum, "quinque",
+        -I));
+    CREDO_NECESSE(semitam_applicare(x, c->piscina, "nomenclator/1"));
+    CREDO_VERUM(nomenclator_semitam_secuta(&x->m));
+    dispensator_recomponere(x->d);
+    CREDO_VERUM(textus_in(reddere(x, c->piscina), totum, "quinque",
+        -I));
+    CREDO_FALSUM(nomenclator_semitam_secuta(NIHIL));
+}
+
 /* P6c: natalis personae I ponere (annus 0 = sine anno) */
 interior b32
 natalem_ponere (
@@ -1716,6 +1868,10 @@ _probare_titulos_electos (
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
+    { "semitae", _probare_semitas, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
+    { "semita_secuta", _probare_semitam_secutam, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
     { "montatio", _probare_montationem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "ordo", _probare_ordinem, mundum_parare, mundum_purgare, NIHIL,

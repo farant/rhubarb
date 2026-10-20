@@ -95,14 +95,22 @@ nomenclator_portam_diei_ponere (
     NomenclatorDiemAperire  porta,
                     vacuum* ctx);
 
-/* P6b: argumentum lateris (vicus_acervo_mutare / montatio): "<id>"
- * personam aperit (visus personae, campus primus); "" aut NIHIL ad
- * indicem; FALSUM si id malum aut persona ignota (status non
- * mutatur) */
+/* argumentum lateris (vicus_acervo_mutare / montatio; semitae R4b):
+ * semita nomenclatoris - URI ("nomenclator/7",
+ * "nomenclator?quaestio=anna") aut cognomen: "<id>" ->
+ * nomenclator/<id>, "" aut NIHIL -> index (persona_aperta sublata).
+ * FALSUM si semita mala aut persona ignota (status non mutatur) */
 b32
 nomenclator_argumentum_ponere (
      NomenclatorMontatio* m,
       constans character* argumentum);
+
+/* semitae R4b (facies.semitam_secuta): post semitam a vico applicatam
+ * (historia) liber notarum personam apertam sequitur; FALSUM si
+ * latus nullum */
+b32
+nomenclator_semitam_secuta (
+    vacuum* ctx);
 
 /* persona electa: campus persona_electa si viva, aliter prima indicis;
  * 0 si nulla */

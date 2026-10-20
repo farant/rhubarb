@@ -1829,6 +1829,11 @@ nomenclatorem_describere (
     /* P6b: "<id>" personam aperit (natalis ex calendario) */
     f->argumentum_ponere      = nomenclatoris_argumentum_ponere;
     f->argumentum_ponere_ctx  = m;
+    /* semitae R4b: historia lateris et $via; liber notarum personam
+     * sequitur post semitam a vico applicatam */
+    f->ramus               = &m->ramus;
+    f->semitam_secuta      = nomenclator_semitam_secuta;
+    f->semitam_secuta_ctx  = m;
 }
 
 /* P6: fons dierum calendarii - natales ex documento personarum
