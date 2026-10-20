@@ -1,0 +1,20 @@
+<interrogationes unitas="mensura_quaestio">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>which test sections use the most memory?
+    <responsum symbolum="cursus_quaerere_graves CursusGravis" imperium="bin/mensor quaestio">bin/mensor
+      quaestio graves [n=N] [titulus=MEMBRUM] [-machina]. Every section
+      that fabrica ran with a current credo leaves three facts on its
+      own run, in octets: credo.arena_apex (peak use of the section's
+      piscina), credo.apex_auctus (how much the process's lifetime peak
+      rose while it ran) and credo.vestigium (footprint at its end).
+      cursus_quaerere_graves takes the maximum of each across runs per
+      section title and orders by the larger of the first two, the
+      number a section's memory ceiling judges. titulus= without '#'
+      means the sections of that member; n defaults to XX in mensor.
+      Sections run outside fabrica, or by a credo older than the
+      fourteen-field SECTIO line, have no facts and do not
+      appear.</responsum>
+  </interrogatio>
+
+</interrogationes>

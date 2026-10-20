@@ -109,7 +109,10 @@
       (the footprint counts compressed pages, which RSS hides). The
       lifetime peak never resets, so a light section after a heavy one
       shows a rise of 0, not the heavy one's peak. Nothing is printed to
-      the human output: officina compares stdout with golden files.</responsum>
+      the human output: officina compares stdout with golden files.
+      fabrica copies the three numbers into the annals as facts on each
+      section's run; bin/mensor quaestio graves lists the heaviest
+      sections across the tree.</responsum>
   </interrogatio>
 
   <interrogatio genus="quomodo">

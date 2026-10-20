@@ -101,6 +101,19 @@ the heaviest sections across the tree, by arena peak and by peak rise.
 measured): the default goes comfortably above today's heaviest normal
 section, and `gravis` is about 4× that.
 
+*FACTUM 2026-10-19 (code; measurement follows).* The `cursus` line
+format can't grow: the diary is shared by every tree, and an older
+binary rejects a line with the wrong field count when folding
+(`mensura.h`, FACTA CURSUUM). So the numbers go in as ordinary
+mensurae attached to each section's run: `credo.arena_apex`,
+`credo.apex_auctus`, `credo.vestigium`, unit `octeti` (KiB × 1024).
+They're written only when the SECTIO line has XIV fields.
+`cursus_quaerere_graves` (lib/mensura_quaestio) takes per-title maxima
+across runs and orders by the larger of arena peak and peak rise, the
+value T4's ceiling will judge. `bin/mensor quaestio graves [n=XX]
+[titulus=MEMBRUM] [-machina]`. Tests: probatio_mensura_quaestio XV,
+fabrica fumus LXII, mensor_cursus fumus XVIII, each with a plant.
+
 **T4. Soft ceiling at section end.** If a finished section's arena peak
 or peak rise exceeds its ceiling, a named failure is recorded:
 ```
@@ -196,14 +209,17 @@ a scratch comparison):**
   (`proc_reset_footprint_interval`) is private SPI**, absent from
   `libproc.h`. Not used.
 
+**Settled by T3:** mensor's run schema can't hold three more numbers
+(the `cursus` line is frozen for old binaries), but it doesn't need
+to: run facts are mensurae with `parens` = run id, the same pattern as
+`cursus.custos` and `fabrica.ambitus`.
+
 **Still open:**
 
 - What a `proc_pid_rusage` call costs per poll (expected microseconds;
   not measured).
 - The meaning of `piscina_summa_apex_usus`: peak of **used** bytes, not
   allocated blocks. Read its body before T2.
-- Whether mensor's span schema can hold three more numbers without a
-  schema change (T3).
 - The default ceiling values, which T3 measures first.
 - The Linux path (`/proc/<pid>/status` gives RSS peak, not footprint).
   Later.

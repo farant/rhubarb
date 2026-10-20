@@ -568,6 +568,32 @@ suturae_eventus_titulus (
  * causa sanati vacua 'NOT NULL' frangebat (1b T7) */
 hic_manens character TEXTUS_VACUUS[I] = { '\0' };
 
+/* MEMORIA SECTIONIS (credo memoria T3): factum unum cursui sectionis
+ * adhaerens (mensura.h, MENSURA_CREDO); KiB plagulae -> octeti, ut
+ * unitas "octeti" sola in annalibus sit. Sessio et momentum cursus
+ * sectionis. */
+interior vacuum
+_memoriam_sectionis_scribere (
+                   Memoria* memoria,
+        constans character* diarium,
+    constans CursusInitium* sectio,
+        constans character* titulus,
+                       i32  quantitas,   /* KiB */
+                       s64  momentum)
+{
+    Mensura m;
+
+    memset(&m, ZEPHYRUM, magnitudo(m));
+    m.sessio    = sectio->sessio;
+    m.id        = mensura_id_novum(memoria->piscina);
+    m.parens    = sectio->id;
+    m.titulus   = chorda_ex_literis(titulus, memoria->piscina);
+    m.valor     = (duplex)quantitas * (duplex)MXXIV;
+    m.unitas    = chorda_ex_literis("octeti", memoria->piscina);
+    m.momentum  = momentum;
+    (vacuum)mensura_annotare(diarium, &m, memoria->piscina);
+}
+
 /* SECTIONES IN ANNALIBUS (analytica T3b): membrum quod cucurrit
  * plagulam credo <area>/credo.tsv habet (CREDO_VERDICTA; lector idem ac
  * 'probare'); sectio quaeque = cursus FILIUS cursus membri, titulus
@@ -576,7 +602,8 @@ hic_manens character TEXTUS_VACUUS[I] = { '\0' };
  * sectio fracta, nota = exitus p/t + fractura. Plagula synthetica
  * ('totum' a fabrica pro suita classica) nihil addit - membrum ipsum
  * iam notatum est. credo ipse nihil scit: ambitus membri hermeticus
- * manet (parens in clave membri esset). */
+ * manet (parens in clave membri esset). Memoria (credo memoria T3):
+ * linea XIV camporum facta tria credo.* cursui sectionis addit. */
 interior vacuum
 _sectiones_annalibus_inscribere (
                    Memoria* memoria,
@@ -650,6 +677,17 @@ _sectiones_annalibus_inscribere (
             memoria->piscina);
         (vacuum)mensura_cursum_finire(diarium, &finis,
             memoria->piscina);
+        /* vestigium nullum = sectio non mensa (X/XI campi) */
+        si (s->vestigium_kib > ZEPHYRUM)
+        {
+            _memoriam_sectionis_scribere(memoria, diarium, &initium,
+                MENSURA_ARENA_APEX, s->arena_apex_kib, finis.momentum);
+            _memoriam_sectionis_scribere(memoria, diarium, &initium,
+                MENSURA_APEX_AUCTUS, s->apex_auctus_kib,
+                finis.momentum);
+            _memoriam_sectionis_scribere(memoria, diarium, &initium,
+                MENSURA_VESTIGIUM, s->vestigium_kib, finis.momentum);
+        }
     }
 }
 

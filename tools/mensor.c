@@ -1985,6 +1985,52 @@ _currentes_imprimere (
     redde ZEPHYRUM;
 }
 
+/* GRAVES (credo memoria T3): homini MiB cum decima, machinae octeti */
+interior vacuum
+_graves_imprimere (
+    constans Xar* ordines,
+             b32  machina)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; ordines != NIHIL
+        && k < xar_numerus(ordines); k++)
+    {
+        constans CursusGravis* g =
+            (constans CursusGravis*)xar_obtinere(ordines, k);
+                           s64 decimae[IV];
+                           i32 j;
+
+        si (machina)
+        {
+            imprimere("GRAVIS\t%.*s\t%d\t%ld\t%ld\t%ld\n",
+                (integer)g->titulus.mensura,
+                (constans character*)g->titulus.datum,
+                (integer)g->numerus, (longus)g->arena_apex,
+                (longus)g->apex_auctus, (longus)g->vestigium);
+            perge;
+        }
+        decimae[ZEPHYRUM]  = g->pondus;
+        decimae[I]         = g->arena_apex;
+        decimae[II]        = g->apex_auctus;
+        decimae[III]       = g->vestigium;
+        per (j = ZEPHYRUM; j < IV; j++)
+        {
+            decimae[j] = decimae[j] * (s64)X
+                / ((s64)MXXIV * (s64)MXXIV);
+        }
+        imprimere("%6ld.%ld MiB  arena %6ld.%ld  auctus %6ld.%ld"
+            "  vestigium %6ld.%ld  n=%-3d %.*s\n",
+            (longus)(decimae[ZEPHYRUM] / X),
+            (longus)(decimae[ZEPHYRUM] % X),
+            (longus)(decimae[I] / X), (longus)(decimae[I] % X),
+            (longus)(decimae[II] / X), (longus)(decimae[II] % X),
+            (longus)(decimae[III] / X), (longus)(decimae[III] % X),
+            (integer)g->numerus, (integer)g->titulus.mensura,
+            (constans character*)g->titulus.datum);
+    }
+}
+
 interior vacuum
 _quaestionum_usum_imprimere (
     FILE* f)
@@ -2002,6 +2048,8 @@ _quaestionum_usum_imprimere (
         "  summa         per titulum: numerus, ms, parentes\n"
         "  statistica    per titulum: n, mediana, max, fracti\n"
         "                (fluctuatne X?)\n"
+        "  graves        sectiones memoria gravissimae (apex arenae,\n"
+        "                apex auctus; n=XX nisi datum)\n"
         "  iudicia       regenerationes iudicis fabricae\n"
         "  commissiones  commissiones cum portis suis\n"
         "  currentes     quid NUNC currit (cursus aperti, custos vivus)\n"
@@ -2463,6 +2511,27 @@ _quaestio (
                     (constans character*)s->titulus.datum);
             }
         }
+    }
+    alioquin si (strcmp(nomen_q, "graves") == ZEPHYRUM)
+    {
+        /* 'graves titulus=M' (sine '#') = sectiones membri M */
+        si (   par.filtrum.titulus.mensura > ZEPHYRUM
+            && memchr(par.filtrum.titulus.datum, '#',
+                (size_t)par.filtrum.titulus.mensura) == NIHIL)
+        {
+            par.filtrum.praefixum =
+                chorda_concatenare(par.filtrum.titulus,
+                chorda_ex_literis("#", piscina), piscina);
+            par.filtrum.titulus = chorda_ex_literis("", piscina);
+        }
+        si (par.filtrum.numerus == ZEPHYRUM)
+        {
+            par.filtrum.numerus = XX;
+        }
+        ordines = cursus_quaerere_graves(index,
+            mensura_mensuras_legere(volumen, chorda_ex_literis(
+            MENSURA_CREDO, piscina), piscina), &par.filtrum, piscina);
+        _graves_imprimere(ordines, machina);
     }
     alioquin si (strcmp(nomen_q, "lentescentes") == ZEPHYRUM)
     {
@@ -3196,7 +3265,7 @@ _usus (vacuum)
         "  mensor quaestio <nomen> par=valor ... [-machina]"
         "   (historia ultimum fracta acta tendentia filii\n"
         "      summa iudicia commissiones statistica sectiones"
-        " lentescentes numquam discus)\n"
+        " graves lentescentes numquam discus)\n"
         "  mensor purgare [-siccum] [-machina] [-regula via]"
         "   (diurna)\n\n"
         "  Ambitus: MENSOR_SESSIO MENSOR_PARENS MENSOR_DIARIUM"

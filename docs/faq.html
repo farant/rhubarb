@@ -15,7 +15,7 @@
 
 <p>Each unit declares the questions it answers in <code>lib/S.interrogationes.stml</code> (canon <code>interrogationes.canon</code>). Every answer is anchored to a symbol, a path or a command, and the gate <code>interrogationes</code> turns red when an anchor dies. From the terminal: <code>bin/fabrica quid -interrogationes -quaere "how do I ..."</code>, or <code>-symbolum xar_addere</code> for the questions that name a symbol.</p>
 
-<p class="nota">815 questions in 94 units · quomodo 362 · possumne 231 · quid 131 · cur 91</p>
+<p class="nota">816 questions in 95 units · quomodo 363 · possumne 231 · quid 131 · cur 91</p>
 <ul>
 <li><a href="#actio">actio</a> <span class="nota">6</span></li>
 <li><a href="#aedilis">aedilis</a> <span class="nota">11</span></li>
@@ -64,6 +64,7 @@
 <li><a href="#manus_ludus">manus_ludus</a> <span class="nota">8</span></li>
 <li><a href="#matrix">matrix</a> <span class="nota">10</span></li>
 <li><a href="#mensura">mensura</a> <span class="nota">10</span></li>
+<li><a href="#mensura_quaestio">mensura_quaestio</a> <span class="nota">1</span></li>
 <li><a href="#modulus">modulus</a> <span class="nota">6</span></li>
 <li><a href="#motus">motus</a> <span class="nota">8</span></li>
 <li><a href="#norma">norma</a> <span class="nota">12</span></li>
@@ -369,7 +370,7 @@
 <li id="credo-7"><span class="status">quomodo</span>which assertion should I use for strings, byte buffers and floats?
 <div class="responsum">Chordas: CREDO_CHORDA_AEQUALIS, _CONTINET, _INCIPIT, _TERMINATUR, and CREDO_CHORDA_AEQUALIS_LITERIS against a C literal. Two C strings: CREDO_LITERAE_AEQUALES (NIHIL-safe; CREDO_CHORDAE_AEQUALES takes C strings too, despite its name, and is kept for old suites). Raw bytes: CREDO_OCTETI_AEQUALES(a, b, n), which names the first differing offset in hex. Floats: CREDO_F64_PROXIMUS and CREDO_F32_PROXIMUS for an absolute epsilon; CREDO_F64_RELATIVE(a, b, r) when magnitudes are very large or very small (|a-b| &lt;= r * max(|a|, |b|)); CREDO_F64_ULP(a, b, n) for &quot;within n representable doubles&quot; (-0.0 equals 0.0, NaN never equals anything). Prefer these over CREDO_VERUM(strcmp(...) == 0): a failing CREDO_VERUM can only print its expression, these print both values.<br><span class="nota">symbolum <code>_credo_notare_chordae</code> <code>_credo_notare_literae</code> <code>_credo_notare_octeti</code> <code>_credo_notare_f64_relative</code> <code>_credo_notare_f64_ulp</code></span></div></li>
 <li id="credo-8"><span class="status">quomodo</span>how do I see how much memory each section used?
-<div class="responsum">Run the suite with CREDO_VERDICTA=file (fabrica always does): every SECTIO line ends with three numbers in KiB - the peak use of the section's own piscina, the process footprint when the section ended, and how much the process's lifetime peak rose while it ran (the footprint counts compressed pages, which RSS hides). The lifetime peak never resets, so a light section after a heavy one shows a rise of 0, not the heavy one's peak. Nothing is printed to the human output: officina compares stdout with golden files.<br><span class="nota">symbolum <code>credo_suitam_currere</code> <code>memoria_processus_legere</code></span></div></li>
+<div class="responsum">Run the suite with CREDO_VERDICTA=file (fabrica always does): every SECTIO line ends with three numbers in KiB - the peak use of the section's own piscina, the process footprint when the section ended, and how much the process's lifetime peak rose while it ran (the footprint counts compressed pages, which RSS hides). The lifetime peak never resets, so a light section after a heavy one shows a rise of 0, not the heavy one's peak. Nothing is printed to the human output: officina compares stdout with golden files. fabrica copies the three numbers into the annals as facts on each section's run; bin/mensor quaestio graves lists the heaviest sections across the tree.<br><span class="nota">symbolum <code>credo_suitam_currere</code> <code>memoria_processus_legere</code></span></div></li>
 <li id="credo-9"><span class="status">quomodo</span>how do I stop a section early when a precondition fails instead of crashing on NIHIL?
 <div class="responsum">CREDO_NECESSE(x) or CREDO_NECESSE_NON_NIHIL(p): it records the assertion and, if it failed, longjmps out of the section (marked ABORTA; purgare still runs). Outside a section it behaves like CREDO_VERUM. For a bail-out site with no expression (fixture missing, file not opened), CREDO_CULPA(&quot;reason&quot;) records an unconditional failure so the summary and exit code agree; it does not jump, so you still return yourself.<br><span class="nota">symbolum <code>_credo_necesse</code> <code>credo_suitam_currere</code></span></div></li>
 <li id="credo-10"><span class="status">quomodo</span>how do I test that code crashes, or does not crash or hang?
@@ -1198,6 +1199,13 @@
 <div class="responsum">mensura_mensuras_legere(volumen, praefixum, piscina) returns a Xar of Mensura whose titulus starts with the prefix (an empty prefix gives all), in stored order; NIHIL if the volume cannot be read. It reads every event in the volume each call. For questions about runs (history, failures, trends) use the named queries of bin/mensor quaestio.<br><span class="nota">symbolum <code>mensura_mensuras_legere</code> <code>mensura_cursus_legere</code> · imperium <code>bin/mensor quaestio</code></span></div></li>
 <li id="mensura-10"><span class="status">cur</span>why is momentum an s64 and not an unsigned type?
 <div class="responsum">The clock is gettimeofday, which is not monotonic: NTP can step it back, so the difference of two readings can be negative. A signed type shows that; an unsigned one would wrap it to a huge positive number and make a branch silently never run. For a run's duration CursusFinis carries duratio_ms from a monotonic clock.<br><span class="nota">symbolum <code>mensura_momentum_nunc</code></span></div></li>
+</ol>
+
+<h2 id="mensura_quaestio">mensura_quaestio</h2>
+<p class="nota"><a href="../include/mensura_quaestio.h"><code>include/mensura_quaestio.h</code></a> · <a href="../lib/mensura_quaestio.interrogationes.stml"><code>lib/mensura_quaestio.interrogationes.stml</code></a></p>
+<ol class="quaestiones">
+<li id="mensura_quaestio-1"><span class="status">quomodo</span>which test sections use the most memory?
+<div class="responsum">bin/mensor quaestio graves [n=N] [titulus=MEMBRUM] [-machina]. Every section that fabrica ran with a current credo leaves three facts on its own run, in octets: credo.arena_apex (peak use of the section's piscina), credo.apex_auctus (how much the process's lifetime peak rose while it ran) and credo.vestigium (footprint at its end). cursus_quaerere_graves takes the maximum of each across runs per section title and orders by the larger of the first two, the number a section's memory ceiling judges. titulus= without '#' means the sections of that member; n defaults to XX in mensor. Sections run outside fabrica, or by a credo older than the fourteen-field SECTIO line, have no facts and do not appear.<br><span class="nota">symbolum <code>cursus_quaerere_graves</code> <code>CursusGravis</code> · imperium <code>bin/mensor quaestio</code></span></div></li>
 </ol>
 
 <h2 id="modulus">modulus</h2>

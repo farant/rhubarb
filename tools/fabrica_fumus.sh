@@ -122,6 +122,9 @@
 #        in medio gradu -> '-resumere' actum non iterat; arbor mutata ->
 #        resumptio recusata; scriptura ~/.bin non proposita -> FRACTUM;
 #        gradus sine mandato -> nihil actum
+#   LXII memoria sectionis (credo memoria T3): linea SECTIO XIV camporum
+#        -> facta tria credo.* (octeti = KiB * MXXIV) cursui sectionis
+#        adhaerentia; linea XI camporum nullum
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # <porta titulus="fabrica-fumus" gradus="fusio" instrumentum="bin/fabrica" tegit="*/aedificatio.stml aedificatio.canon fabrica.canon tools/fabrica_struere.sh"/>
@@ -1126,6 +1129,38 @@ if [ "$rc1" -ne 0 ] && [ "$rc2" -eq 0 ] && [ "$cursus" = "A B B C " ] \
    && [ "$rc4" -eq 3 ] && grep -q 'scripsit extra propositum: ~/.bin/x' "$T/lxi_4" \
    && [ "$rc5" -eq 1 ] && grep -q 'gradus sine mandato' "$T/lxi_5" && [ ! -e "$T/r/build/n" ]; then echo "  LXI  consilium actum: occisus -> resumptio (A non iteratum), arbor mutata recusata, ~/.bin non propositum FRACTUM, sine mandato nihil OK"; else echo "  LXI  FRACTUM (occisus rc=$rc1, resumptio rc=$rc2 cursus '$cursus', arbor mutata rc=$rc3 cursus '$cursus3', extra rc=$rc4, sine mandato rc=$rc5)"; for k in 1 2 3 4 5; do sed "s/^/      [$k] /" "$T/lxi_$k" | head -5; done; fracta=1; fi
 
+# LXII (credo memoria T3): MEMORIA SECTIONIS IN ANNALIBUS - membrum m
+# plagulam ipsum scribit: alpha XIV campos (arena 32768, vestigium
+# 33824, auctus 32800 KiB), beta XI (non mensa). Facta credo.* cursui
+# alpha adhaerent in octetis; beta nullum
+radix_c
+cat > "$T/r/t/probatio_m.c" <<'CEOF'
+#include <stdio.h>
+#include <stdlib.h>
+int main(void)
+{
+    const char* v = getenv("CREDO_VERDICTA");
+    FILE* f;
+    if (v == 0) { return 3; }
+    f = fopen(v, "w");
+    if (f == 0) { return 4; }
+    fprintf(f, "SECTIO\tprobatio_m\talpha\tTRANSIIT\t1\t1\t5\t\t\t\t\t32768\t33824\t32800\n");
+    fprintf(f, "SECTIO\tprobatio_m\tbeta\tTRANSIIT\t1\t1\t5\t\t\t\t\n");
+    fprintf(f, "SUITA\tprobatio_m\tTRANSIIT\t2\t2\t2\t0\t10\n");
+    fclose(f);
+    return 0;
+}
+CEOF
+(cd "$T/r" && MENSOR_PARENS=fumus-lxii MENSOR_COMMISSUM=commissum-lxii MENSOR_SESSIO=sessio-lxii \
+    "$F" probare -vis probationes_t) > "$T/lxii.e" 2>&1
+awk -F'\t' '$1 == "cursus" && $2 == "initium" { t[$3] = $6; p[$3] = $4 }
+    $1 != "cursus" && $4 ~ /^credo\./ { m[NR] = $3 "\t" $4 "\t" int($5) "\t" $6 "\t" $1 }
+    END { for (i in m) { split(m[i], c, "\t"); if (t[c[1]] ~ /^probationes_t\/probatio_m#/ && p[p[c[1]]] == "fumus-lxii")
+              print t[c[1]] "\t" c[2] "\t" c[3] "\t" c[4] "\t" c[5] } }' \
+    "$MENSOR_DIARIUM" 2>/dev/null | sort > "$T/lxii"
+printf 'probationes_t/probatio_m#alpha\tcredo.apex_auctus\t33587200\tocteti\tsessio-lxii\nprobationes_t/probatio_m#alpha\tcredo.arena_apex\t33554432\tocteti\tsessio-lxii\nprobationes_t/probatio_m#alpha\tcredo.vestigium\t34635776\tocteti\tsessio-lxii\n' > "$T/lxii.exp"
+if cmp -s "$T/lxii" "$T/lxii.exp"; then echo "  LXII memoria sectionis: XIV campi -> facta credo.* in octetis sub cursu sectionis, XI nihil OK"; else echo "  LXII FRACTUM"; sed 's/^/      lectum: /' "$T/lxii"; sed 's/^/      e: /' "$T/lxii.e" | tail -5; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (LXI/LXI)"
+echo "fumus fabricae: sanum (LXII/LXII)"
 exit 0
