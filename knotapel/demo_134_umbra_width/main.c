@@ -55,10 +55,13 @@
  *   ./bin/aedilis knotapel/demo_134_umbra_width/main.c &&
  *   bash build/aedilis/main/struere.sh && ./build/aedilis/main/main
  * Quick mode for plants: D134_CELER=1 (exhaustive passes up to four
- * words; no six-word part).
+ * words; no six-word part); D134_QUINQUE=1 runs every five-word part
+ * and stops before six words (about a minute).
  */
 
 #include "dependentia.h"
+#include "fractio.h"
+#include "magnus.h"
 #include "filum.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -2273,6 +2276,8 @@ typedef struct {
     int competed[MAXW], retrieved[MAXW];
     int competed_rel[MAXW], retrieved_rel[MAXW];   /* own relation only */
     int competed_blind[MAXW];   /* any noun as near: morphology-blind */
+    int retrieved_ns[MAXW];     /* candidates that would close a cycle
+                                   set aside (descriptive) */
 } Labels;
 
 /* competition and retrieval of the displaced arcs (mask: bit d - 1) at
@@ -2292,6 +2297,7 @@ label_arcs (
     lb->nd = 0;
     for (d = 1; d <= n; d++) {
         int h, r, dist, w, c = 0, cr = 0, cb = 0, ret = 1, retr = 1;
+        int rns = 1;
 
         if (!(mask & (1 << (d - 1)))) continue;
         h = a->head[d - 1];
@@ -2313,14 +2319,20 @@ label_arcs (
                 if (x->type != U_DANGLING || x->from > h - 1 || x->to <= h - 1
                     || x->to == h)
                     continue;
-                if (comp_any[lv][f[x->word - 1]][f[h - 1]]) ret = 0;
+                if (comp_any[lv][f[x->word - 1]][f[h - 1]]) {
+                    ret = 0;
+                    if (!descends(a, h, x->word)) rns = 0;
+                }
                 if (comp_rel[lv][r][f[x->word - 1]][f[h - 1]]) retr = 0;
             }
         } else {
             /* d arrives: the earlier words it could depend on, beyond h */
             for (w = 1; w < d; w++) {
                 if (w == h) continue;
-                if (comp_any[lv][f[d - 1]][f[w - 1]]) ret = 0;
+                if (comp_any[lv][f[d - 1]][f[w - 1]]) {
+                    ret = 0;
+                    if (!descends(a, w, d)) rns = 0;
+                }
                 if (comp_rel[lv][r][f[d - 1]][f[w - 1]]) retr = 0;
             }
         }
@@ -2331,6 +2343,7 @@ label_arcs (
         lb->competed_blind[lb->nd] = cb;
         lb->retrieved[lb->nd] = ret;
         lb->retrieved_rel[lb->nd] = retr;
+        lb->retrieved_ns[lb->nd] = rns;
         lb->nd++;
     }
 }
@@ -2347,6 +2360,9 @@ typedef struct {
     s64 bad_tc;          /* the true partner not compatible (T in C, h in C) */
     s64 bad_sub;         /* competition by subtree walk != by yields */
     s64 bad_rt;          /* a root umbra missing or not the verb's */
+    s64 lab[NLEVELS][MAXW + 1][4];   /* by level and length: displaced
+                                        arcs, RETRIEVED, CLEAR, and
+                                        INTERFERED only by a cycle */
 } UChecks;
 
 /* competition of one displaced arc again, the subtree excluded by yields */
@@ -2416,6 +2432,11 @@ check_pair (
         label_arcs(lv, a, n, mask, &u, &lb[lv]);
         for (i = 0; i < lb[lv].nd; i++) {
             int h, w;
+
+            ck->lab[lv][n][0]++;
+            ck->lab[lv][n][1] += lb[lv].retrieved[i];
+            ck->lab[lv][n][2] += !lb[lv].competed[i];
+            ck->lab[lv][n][3] += !lb[lv].retrieved[i] && lb[lv].retrieved_ns[i];
 
             d = lb[lv].word[i];
             h = a->head[d - 1];
@@ -2546,6 +2567,10 @@ typedef struct {
     int         dword[MAXW];        /* the dependent */
     int         ddepth[MAXW];       /* its umbra's depth, -1: backward */
     int         dcomp[MAXW], dretr[MAXW];
+    int         dns[MAXW];          /* RETRIEVED with cycle-closing
+                                       candidates set aside (checked if
+                                       has_ns) */
+    int         has_ns;
     int         misread;            /* truth outside R_P(s) */
 } HandU;
 
@@ -2599,6 +2624,7 @@ hand_disp (
     x->ddepth[x->nd] = depth;
     x->dcomp[x->nd] = competed;
     x->dretr[x->nd] = retrieved;
+    x->dns[x->nd] = retrieved;
     x->nd++;
 }
 
@@ -2691,6 +2717,20 @@ hand_sentences_umbrae (void)
     hand_word(x, rd_noun(3, GEN, SG), 2);
     hand_word(x, rd_noun(0, GEN, PL), 4);
     hand_disp(x, 4, -1, 0, 0);
+    /* 12: INTERFERED only through a cycle - when regis arrives, the open
+     * subject puellae (nom pl; gen sg reading) could depend on it, but
+     * regis hangs on puellae; fortis (gen sg f) also fits puellae, nearer:
+     * COMPETED; every analysis has fortis cross puellae's arc: read */
+    x = hand_new("12. fortis puellae regis amant dominum", 0,
+        "fortis puellae regis amant dominum", 3, 0, 1, 0);
+    hand_word(x, rd_adj(1, MASC, GEN, SG), 3);
+    hand_word(x, rd_noun(0, NOM, PL), 4);
+    hand_word(x, rd_noun(3, GEN, SG), 2);
+    hand_word(x, rd_verb(1), 0);
+    hand_word(x, rd_noun(1, ACC, SG), 4);
+    hand_disp(x, 1, 1, 1, 0);
+    x->dns[0] = 1;
+    x->has_ns = 1;
     /* six words (the analyser and the tree table take any length up to
      * MAXW, quick mode included), retrieval failing with competition clear. 9: dependent
      * first - when dominum arrives, the open subject puellae (nom pl) has
@@ -2730,7 +2770,7 @@ part_hand_umbrae (void)
     for (k = 0; k < n_handu; k++) {
         const HandU *x = &handu[k];
         int          str[MAXW], na, t = -1, ok, mask, rootd = -1, maxd = 0;
-        char         text[200], msg[600], lab[200];
+        char         text[200], msg[1000], lab[600];
         Analysis     truth;
         Readers      r;
         Umbrae       u;
@@ -2769,18 +2809,21 @@ part_hand_umbrae (void)
         for (i = 0; i < lb.nd; i++) {
             int  d = lb.word[i];
             int  dd = u.umbra_of[d] < 0 ? -1 : u.depth[u.umbra_of[d]];
-            char one[80];
+            char one[200];
 
             if (i >= x->nd || d != x->dword[i] || dd != x->ddepth[i]
                 || lb.competed[i] != x->dcomp[i]
-                || lb.retrieved[i] != x->dretr[i])
+                || lb.retrieved[i] != x->dretr[i]
+                || (x->has_ns && lb.retrieved_ns[i] != x->dns[i]))
                 ok = 0;
-            snprintf(one, sizeof one, "%s%s -> %s, %s, depth %d, %s, %s",
+            snprintf(one, sizeof one, "%s%s -> %s, %s, depth %d, %s, %s%s",
                 i ? "; " : "", form_text[x->lv][str[d - 1]],
                 form_text[x->lv][str[truth.head[d - 1] - 1]],
                 lb.dep_first[i] ? "dependent first" : "head first", dd,
                 lb.competed[i] ? "COMPETED" : "CLEAR",
-                lb.retrieved[i] ? "RETRIEVED" : "INTERFERED");
+                lb.retrieved[i] ? "RETRIEVED" : "INTERFERED",
+                x->has_ns ? (lb.retrieved_ns[i] ? " (RETRIEVED without "
+                "the cycle)" : " (INTERFERED without the cycle)") : "");
             strcat(lab, one);
         }
         snprintf(msg, sizeof msg, "%s: width %d, root depth %d, max depth %d; "
@@ -2791,10 +2834,1317 @@ part_hand_umbrae (void)
     }
 }
 
+/* ================================================================
+ * Measures (task 2): B in the competition x retrieval 2 x 2 by
+ * stratum; width and depth; the shares of displaced arcs RETRIEVED
+ * and CLEAR; the registered rules
+ * ================================================================ */
+
+#define NSTRATA 9                 /* kind x direction */
+#define MAXSEL  4096
+#define NV_FULL 1125              /* pinned totals, every level with B */
+#define NV_SUB  837               /* pinned totals, B at L0 and L1 only */
+
+enum { POP_ALL, POP_F2, NPOP };   /* crossed pairs; those with |F| >= 2 */
+enum { RT_NEAR, RT_FLIP, RT_FAR, RT_OTHER, NROUTES };
+enum { V_HOLDS, V_FAILS, V_UNDECIDED };
+
+static const char *const kind_name[3] = {
+    "adjectives only", "genitives only", "both"
+};
+static const char *const dir_name[3] = {
+    "dependent first", "head first", "mixed"
+};
+static const char *const verdict_name[3] = { "HOLDS", "FAILS", "UNDECIDED" };
+static const char *const route_name[NROUTES] = {
+    "as near, outside d's subtree", "as near, inside it (reversed)",
+    "farther", "displaced words kept"
+};
+
+typedef struct {
+    /* crossed pairs: [population][stratum][competed][interfered]
+     * [pairs, misread by R_P] */
+    s64 cell[NPOP][NSTRATA][2][2][2];
+    s64 cell_rel[NPOP][NSTRATA][2][2][2];   /* relation-specific labels */
+    s64 blind[NPOP][NSTRATA][2][2];         /* [blind-competed][pairs,
+                                               misread] */
+    s64 route[NSTRATA][2][NROUTES];         /* misread pairs [competed]
+                                               by route */
+    s64 covered_clear;                      /* covered from outside d's
+                                               subtree but CLEAR (0, a
+                                               theorem) */
+    /* displaced arcs [adjective, genitive][dependent first, head first]
+     * [arcs, RETRIEVED, CLEAR, RETRIEVED by own relation, CLEAR by own
+     * relation, INTERFERED only by candidates that close a cycle] */
+    s64 arcs[2][2][6];
+    /* pairs by width, umbrae by depth [stratum; NSTRATA = projective] */
+    s64 width[NSTRATA + 1][MAXW + 2];
+    s64 depth[NSTRATA + 1][MAXW + 2];
+    s64 utype[3], back;
+} Acc;
+
+#define ACC_WORDS ((int)(sizeof(Acc) / sizeof(s64)))
+
+static Acc acc[NLEVELS][MAXW + 1];        /* by level and exact length */
+static Acc acc_sub[NLEVELS];              /* six words, the oracle's subset */
+static i64 sel_codes[MAXSEL];             /* the subset's L1 bag codes */
+static int n_sel = 0;
+static UChecks ck_five, ck_six;
+
+static int
+subset_has (
+    i64 code)
+{
+    int lo = 0, hi = n_sel - 1;
+
+    while (lo <= hi) {
+        int mid = (lo + hi) / 2;
+
+        if (sel_codes[mid] == code) return 1;
+        if (sel_codes[mid] < code) lo = mid + 1;
+        else hi = mid - 1;
+    }
+    return 0;
+}
+
+/* the L1 bag of an analysis: its readings, sorted (L1 form = reading) */
+static i64
+reading_code (
+    const Analysis *a,
+    int             n)
+{
+    int r[MAXW], k;
+
+    for (k = 0; k < n; k++) r[k] = a->rd[k];
+    qsort(r, (size_t)n, sizeof(int), int_cmp);
+    return bag_code(r, n);
+}
+
+static int
+stratum_of (
+    const Analysis *a,
+    const Labels   *lb)
+{
+    int i, nadj = 0, ngen = 0, ndf = 0, kind, dir;
+
+    for (i = 0; i < lb->nd; i++) {
+        if (readings[a->rd[lb->word[i] - 1]].kind == K_ADJ) nadj++;
+        else ngen++;
+        ndf += lb->dep_first[i];
+    }
+    kind = ngen == 0 ? 0 : nadj == 0 ? 1 : 2;
+    dir = ndf == lb->nd ? 0 : ndf == 0 ? 1 : 2;
+    return kind * 3 + dir;
+}
+
+/* how R_P's projective alternatives move the displaced words: some P
+ * analysis puts a displaced dependent on another word at least as near
+ * as its true head, outside its own subtree (NEAR) or inside it (FLIP:
+ * the dependency reversed - a competitor the competition rule cannot
+ * see, since attaching there in the TRUE tree would close a cycle; NEAR
+ * and FLIP together are "covered"), only farther (FAR), or none moves a
+ * displaced dependent (OTHER: another arc or a role changes). hp[d] =
+ * the heads d takes across P(s), as a bitmask */
+static int
+route_of (
+    const Analysis *a,
+    int             n,
+    const Labels   *lb,
+    const int      *hp)
+{
+    int i, w, flip = 0, far = 0;
+
+    for (i = 0; i < lb->nd; i++) {
+        int d = lb->word[i], h = a->head[d - 1];
+        int dist = h > d ? h - d : d - h;
+
+        for (w = 1; w <= n; w++) {
+            if (w == h || !(hp[d] & (1 << w))) continue;
+            if ((w > d ? w - d : d - w) > dist) far = 1;
+            else if (descends(a, w, d)) flip = 1;
+            else return RT_NEAR;
+        }
+    }
+    return flip ? RT_FLIP : far ? RT_FAR : RT_OTHER;
+}
+
+static void
+acc_pair (
+    Acc            *A,
+    const Analysis *a,
+    const Umbrae   *u,
+    int             proj,
+    const Labels   *lb,
+    int             nf,
+    int             misread,
+    int             route)
+{
+    int s = NSTRATA, k, i, pp, c = 0, it = 0, cr = 0, ir = 0, cb = 0;
+
+    if (!proj) {
+        if (lb->nd == 0) fatal("a crossed pair without a displaced arc");
+        s = stratum_of(a, lb);
+    }
+    A->width[s][u->width]++;
+    for (k = 0; k < u->nu; k++) {
+        A->depth[s][u->depth[k]]++;
+        A->utype[u->u[k].type]++;
+    }
+    A->back += u->nback;
+    if (proj) return;
+    for (i = 0; i < lb->nd; i++) {
+        s64 *x = A->arcs[readings[a->rd[lb->word[i] - 1]].kind == K_ADJ ? 0
+            : 1][lb->dep_first[i] ? 0 : 1];
+
+        x[0]++;
+        x[1] += lb->retrieved[i];
+        x[2] += !lb->competed[i];
+        x[3] += lb->retrieved_rel[i];
+        x[4] += !lb->competed_rel[i];
+        x[5] += !lb->retrieved[i] && lb->retrieved_ns[i];
+        c |= lb->competed[i];
+        it |= !lb->retrieved[i];
+        cr |= lb->competed_rel[i];
+        ir |= !lb->retrieved_rel[i];
+        cb |= lb->competed_blind[i];
+    }
+    for (pp = 0; pp < NPOP; pp++) {
+        if (pp == POP_F2 && nf < 2) continue;
+        A->cell[pp][s][c][it][0]++;
+        A->cell[pp][s][c][it][1] += misread;
+        A->cell_rel[pp][s][cr][ir][0]++;
+        A->cell_rel[pp][s][cr][ir][1] += misread;
+        A->blind[pp][s][cb][0]++;
+        A->blind[pp][s][cb][1] += misread;
+    }
+    if (misread) {
+        A->route[s][c][route]++;
+        if (route == RT_NEAR && !c) A->covered_clear++;
+    }
+}
+
+/* every pair of lo..hi words at level lv, by that level's own bags (so
+ * F(s) and P(s) are the string's own) */
+static void
+measure_umbrae (
+    int lv,
+    int lo,
+    int hi)
+{
+    static unsigned char sel[MAXA];
+    long                 i = 0;
+
+    while (i < an_entries[lv].n) {
+        long     j = i, s;
+        int      bag[MAXW], nb, p, k, a, nc;
+        Analysis canon[MAXA];
+
+        while (j < an_entries[lv].n && an_entries[lv].e[j].bag
+            == an_entries[lv].e[i].bag)
+            j++;
+        decode_bag(an_entries[lv].e[i].bag, bag, &nb);
+        if (nb < lo || nb > hi) {
+            i = j;
+            continue;
+        }
+        nc = (int)(j - i);
+        for (s = i; s < j; s++)
+            decode_key(an_entries[lv].e[s].key, &canon[s - i], nb);
+        for (a = 0; a < nc; a++)
+            sel[a] = (unsigned char)(nb == MAXW && n_sel > 0
+                && subset_has(reading_code(&canon[a], nb)));
+        for (p = 0; p < nperms[nb]; p++) {
+            const int *sig = perms[nb][p];
+            int        inv[MAXW], hp[MAXW + 1], d;
+
+            if (!first_order(bag, sig, nb)) continue;
+            for (k = 0; k < nb; k++) inv[sig[k]] = k;
+            for (a = 0; a < nc; a++)
+                for (k = 0; k < nb; k++) {
+                    int h = canon[a].head[k];
+                    mapped[a].head[inv[k]] = h == 0 ? 0 : inv[h - 1] + 1;
+                    mapped[a].rd[inv[k]] = canon[a].rd[k];
+                }
+            read_with(mapped, nc, nb, &rdr);
+            for (d = 0; d <= nb; d++) hp[d] = 0;
+            for (a = 0; a < nc; a++)
+                if (rdr.in_p[a])
+                    for (d = 1; d <= nb; d++)
+                        hp[d] |= 1 << mapped[a].head[d - 1];
+            for (a = 0; a < nc; a++) {
+                Umbrae u;
+                Labels lb;
+                int    ix = tree_index(mapped[a].head, nb);
+                int    proj = t_proj[nb][ix], mis = 0, route = RT_OTHER;
+
+                build_umbrae(&mapped[a], nb, &u);
+                lb.nd = 0;
+                if (!proj) {
+                    label_arcs(lv, &mapped[a], nb, t_npmask[nb][ix], &u, &lb);
+                    mis = rdr.np > 0;
+                    if (mis) route = route_of(&mapped[a], nb, &lb, hp);
+                }
+                acc_pair(&acc[lv][nb], &mapped[a], &u, proj, &lb, nc, mis,
+                    route);
+                if (sel[a])
+                    acc_pair(&acc_sub[lv], &mapped[a], &u, proj, &lb, nc, mis,
+                        route);
+            }
+        }
+        i = j;
+    }
+}
+
+static void
+acc_add (
+    Acc       *dst,
+    const Acc *src)
+{
+    s64       *x = (s64 *)dst;
+    const s64 *y = (const s64 *)src;
+    int        k;
+
+    for (k = 0; k < ACC_WORDS; k++) x[k] += y[k];
+}
+
+/* the pinned totals in one fixed order (oracle_d134.py prints the same):
+ * B cells at the first nb levels; at L0 the relation-specific cells, the
+ * blind split, the routes and covered-but-CLEAR; the arc labels at every
+ * level; at L0 width, depth, umbra types and backward attachments */
+static int
+flatten (
+    const Acc *const *lv4,
+    int               nb,
+    s64              *out)
+{
+    int m = 0, lv, pp, s, c, i, k, r;
+
+    for (lv = 0; lv < nb; lv++)
+        for (pp = 0; pp < NPOP; pp++)
+            for (s = 0; s < NSTRATA; s++)
+                for (c = 0; c < 2; c++)
+                    for (i = 0; i < 2; i++)
+                        for (k = 0; k < 2; k++)
+                            out[m++] = lv4[lv]->cell[pp][s][c][i][k];
+    for (pp = 0; pp < NPOP; pp++)
+        for (s = 0; s < NSTRATA; s++)
+            for (c = 0; c < 2; c++)
+                for (i = 0; i < 2; i++)
+                    for (k = 0; k < 2; k++)
+                        out[m++] = lv4[0]->cell_rel[pp][s][c][i][k];
+    for (pp = 0; pp < NPOP; pp++)
+        for (s = 0; s < NSTRATA; s++)
+            for (c = 0; c < 2; c++)
+                for (k = 0; k < 2; k++)
+                    out[m++] = lv4[0]->blind[pp][s][c][k];
+    for (s = 0; s < NSTRATA; s++)
+        for (c = 0; c < 2; c++)
+            for (r = 0; r < NROUTES; r++)
+                out[m++] = lv4[0]->route[s][c][r];
+    out[m++] = lv4[0]->covered_clear;
+    for (lv = 0; lv < NLEVELS; lv++)
+        for (k = 0; k < 2; k++)
+            for (i = 0; i < 2; i++)
+                for (r = 0; r < 6; r++)
+                    out[m++] = lv4[lv]->arcs[k][i][r];
+    for (s = 0; s <= NSTRATA; s++)
+        for (k = 0; k < MAXW + 2; k++)
+            out[m++] = lv4[0]->width[s][k];
+    for (s = 0; s <= NSTRATA; s++)
+        for (k = 0; k < MAXW + 2; k++)
+            out[m++] = lv4[0]->depth[s][k];
+    for (k = 0; k < 3; k++) out[m++] = lv4[0]->utype[k];
+    out[m++] = lv4[0]->back;
+    return m;
+}
+
+/* the registered rules' inputs back from a pinned vector: L0 cells, the
+ * arc labels at every level */
+static void
+unflatten (
+    const s64 *v,
+    int        nb,
+    Acc       *lv4)
+{
+    int m = 0, lv, pp, s, c, i, k, r;
+
+    for (lv = 0; lv < NLEVELS; lv++) memset(&lv4[lv], 0, sizeof(Acc));
+    for (lv = 0; lv < nb; lv++)
+        for (pp = 0; pp < NPOP; pp++)
+            for (s = 0; s < NSTRATA; s++)
+                for (c = 0; c < 2; c++)
+                    for (i = 0; i < 2; i++)
+                        for (k = 0; k < 2; k++)
+                            lv4[lv].cell[pp][s][c][i][k] = v[m++];
+    m += 2 * NSTRATA * 8 + 2 * NSTRATA * 4 + NSTRATA * 2 * NROUTES + 1;
+    for (lv = 0; lv < NLEVELS; lv++)
+        for (k = 0; k < 2; k++)
+            for (i = 0; i < 2; i++)
+                for (r = 0; r < 6; r++)
+                    lv4[lv].arcs[k][i][r] = v[m++];
+}
+
+/* ---------------- the registered rules ---------------- */
+
+/* a group is testable with >= 1,000 pairs and >= 2% of the set it is
+ * compared within */
+static int
+testable (
+    s64 n,
+    s64 within)
+{
+    return n >= 1000 && 50 * n >= within;
+}
+
+static Fractio
+share (
+    s64      num,
+    s64      den,
+    Piscina *p)
+{
+    Fractio f = fractio_ex_s64(0);
+
+    if (den > 0) (void)fractio_ex_s64_s64(num, den, p, &f);
+    return f;
+}
+
+/* sign of (an/ad - bn/bd) - k/100, exactly; absolute gap if ab */
+static int
+gap_cmp (
+    s64      an,
+    s64      ad,
+    s64      bn,
+    s64      bd,
+    s64      k,
+    int      ab,
+    Piscina *p)
+{
+    Fractio g = fractio_subtrahe(share(an, ad, p), share(bn, bd, p), p);
+    Fractio t = fractio_ex_s64(0);
+
+    if (ab) g = fractio_absolutum(g, p);
+    (void)fractio_ex_s64_s64(k, 100, p, &t);
+    return (int)fractio_compara(g, t, p);
+}
+
+/* U2a: per stratum g = { misread competed, competed, misread clear,
+ * clear, stratum }; in every stratum where both groups are testable
+ * B(competed) - B(clear) >= 10 points; three such strata or UNDECIDED */
+static int
+u2a_rule (
+    s64 const (*g)[5],
+    int        ns,
+    int       *ntest,
+    Piscina   *p)
+{
+    int s, fail = 0;
+
+    *ntest = 0;
+    for (s = 0; s < ns; s++) {
+        if (!testable(g[s][1], g[s][4]) || !testable(g[s][3], g[s][4]))
+            continue;
+        (*ntest)++;
+        if (gap_cmp(g[s][0], g[s][1], g[s][2], g[s][3], 10, 0, p) < 0)
+            fail = 1;
+    }
+    if (*ntest < 3) return V_UNDECIDED;
+    return fail ? V_FAILS : V_HOLDS;
+}
+
+/* U2b: per cell g = { misread interfered, interfered, misread retrieved,
+ * retrieved, cell }; a cell COUNTS if both groups are testable and
+ * B(retrieved) is in [10%, 90%]; every counting cell |B(interfered) -
+ * B(retrieved)| <= 5 points; two counting cells or UNDECIDED */
+static int
+counting_cell (
+    const s64 *g)
+{
+    return testable(g[1], g[4]) && testable(g[3], g[4])
+        && 10 * g[2] >= g[3] && 10 * g[2] <= 9 * g[3];
+}
+
+static int
+u2b_rule (
+    s64 const (*g)[5],
+    int        ncells,
+    int       *ncount,
+    Piscina   *p)
+{
+    int c, fail = 0;
+
+    *ncount = 0;
+    for (c = 0; c < ncells; c++) {
+        if (!counting_cell(g[c])) continue;
+        (*ncount)++;
+        if (gap_cmp(g[c][0], g[c][1], g[c][2], g[c][3], 5, 1, p) > 0)
+            fail = 1;
+    }
+    if (*ncount < 2) return V_UNDECIDED;
+    return fail ? V_FAILS : V_HOLDS;
+}
+
+/* U1 over N displaced adjective arcs, r_L of them RETRIEVED at L (one
+ * denominator): I(L0) - I(L2) >= 2 (I(L1) - I(L0)) and I(L0) - I(L2) >=
+ * 5 points */
+static int
+u1_rule (
+    s64 r0,
+    s64 r1,
+    s64 r2,
+    s64 n)
+{
+    if (n == 0) return V_UNDECIDED;
+    return r0 - r2 >= 2 * (r1 - r0) && 20 * (r0 - r2) >= n ? V_HOLDS
+        : V_FAILS;
+}
+
+/* the rules' inputs from per-level totals (registered population: L0,
+ * |F| >= 2) */
+static void
+rule_inputs (
+    const Acc *const *lv4,
+    s64             (*ga)[5],
+    s64             (*gb)[5],
+    s64              *u1)
+{
+    const Acc *A = lv4[0];
+    int        s, c, i, kd, lv;
+
+    for (s = 0; s < NSTRATA; s++) {
+        for (i = 0; i < 5; i++) ga[s][i] = 0;
+        for (i = 0; i < 2; i++) {
+            ga[s][0] += A->cell[POP_F2][s][1][i][1];
+            ga[s][1] += A->cell[POP_F2][s][1][i][0];
+            ga[s][2] += A->cell[POP_F2][s][0][i][1];
+            ga[s][3] += A->cell[POP_F2][s][0][i][0];
+        }
+        ga[s][4] = ga[s][1] + ga[s][3];
+    }
+    /* U2b: dependent-first strata (dir 0), COMPETED then CLEAR */
+    for (kd = 0; kd < 3; kd++)
+        for (c = 0; c < 2; c++) {
+            s64 *g = gb[kd * 2 + c];
+            int  cc = 1 - c;
+
+            s = kd * 3;
+            g[0] = A->cell[POP_F2][s][cc][1][1];
+            g[1] = A->cell[POP_F2][s][cc][1][0];
+            g[2] = A->cell[POP_F2][s][cc][0][1];
+            g[3] = A->cell[POP_F2][s][cc][0][0];
+            g[4] = g[1] + g[3];
+        }
+    /* U1: adjective arcs, both directions, RETRIEVED at L0, L1, L2 */
+    u1[3] = lv4[0]->arcs[0][0][0] + lv4[0]->arcs[0][1][0];
+    for (lv = 0; lv < 3; lv++)
+        u1[lv] = lv4[lv]->arcs[0][0][1] + lv4[lv]->arcs[0][1][1];
+}
+
+static void
+decide (
+    const Acc *const *lv4,
+    int              *v,
+    Piscina          *p)
+{
+    s64 ga[NSTRATA][5], gb[6][5], u1[4];
+    int nt, ncount;
+
+    rule_inputs(lv4, ga, gb, u1);
+    v[0] = u2a_rule((s64 const (*)[5])ga, NSTRATA, &nt, p);
+    v[1] = u2b_rule((s64 const (*)[5])gb, 6, &ncount, p);
+    v[2] = u1_rule(u1[0], u1[1], u1[2], u1[3]);
+}
+
+static void
+rules_check (void)
+{
+    Piscina  *p = piscina_generare_dynamicum("d134_regulae", 1 << 16);
+    s64       a[3][5], b[3][5];
+    int       nt, k;
+
+    printf("\n--- the registered rules on constructed totals ---\n");
+    check("testable: 1,000 of 50,000 (exactly 2%) yes; 999 of 10,000 no; "
+        "1,000 of 50,001 no", testable(1000, 50000) && !testable(999, 10000)
+        && !testable(1000, 50001));
+    for (k = 0; k < 3; k++) {
+        a[k][0] = 300; a[k][1] = 1000; a[k][2] = 200; a[k][3] = 1000;
+        a[k][4] = 2000;
+    }
+    check("U2a: three testable strata, each gap exactly 10 points, HOLDS",
+        u2a_rule((s64 const (*)[5])a, 3, &nt, p) == V_HOLDS && nt == 3);
+    a[2][2] = 201;
+    check("U2a: one stratum at 9.9 points FAILS", u2a_rule((s64 const (*)[5])a,
+        3, &nt, p) == V_FAILS);
+    a[2][2] = 200;
+    a[1][1] = 999;
+    check("U2a: a group of 999 pairs is not testable: two strata, UNDECIDED "
+        "(even with a failing one)", u2a_rule((s64 const (*)[5])a, 3, &nt, p)
+        == V_UNDECIDED && nt == 2);
+    a[1][1] = 1000;
+    a[0][0] = 1100; a[0][1] = 2000; a[0][2] = 450; a[0][3] = 1000;
+    a[0][4] = 3000;
+    check("U2a: 55% of 2,000 against 45% of 1,000 is exactly 10 points, "
+        "HOLDS; 1,099 of 2,000 FAILS", u2a_rule((s64 const (*)[5])a, 3, &nt, p)
+        == V_HOLDS && (a[0][0] = 1099, u2a_rule((s64 const (*)[5])a, 3, &nt, p)
+        == V_FAILS));
+    for (k = 0; k < 3; k++) {
+        b[k][0] = 150; b[k][1] = 1000; b[k][2] = 100; b[k][3] = 1000;
+        b[k][4] = 2000;
+    }
+    check("U2b: B(retrieved) exactly 10%, gap exactly 5 points, three "
+        "counting cells, HOLDS", u2b_rule((s64 const (*)[5])b, 3, &nt, p)
+        == V_HOLDS && nt == 3);
+    b[1][0] = 151;
+    check("U2b: one counting cell at 5.1 points FAILS",
+        u2b_rule((s64 const (*)[5])b, 3, &nt, p) == V_FAILS);
+    b[1][0] = 49;
+    check("U2b: the gap is absolute (4.9% against 10%: 5.1 points) FAILS",
+        u2b_rule((s64 const (*)[5])b, 3, &nt, p) == V_FAILS);
+    b[1][0] = 150;
+    b[0][2] = 99; b[1][2] = 99;
+    check("U2b: B(retrieved) 9.9% does not count: one counting cell, "
+        "UNDECIDED", u2b_rule((s64 const (*)[5])b, 3, &nt, p) == V_UNDECIDED
+        && nt == 1);
+    b[0][2] = 900; b[0][0] = 950; b[1][2] = 901; b[1][0] = 951;
+    check("U2b: B(retrieved) exactly 90% counts, 90.1% does not",
+        counting_cell(b[0]) && !counting_cell(b[1]));
+    check("U1: 550, 600, 450 of 1,000 (both clauses at equality but the "
+        "floor) HOLDS; 451 at L2 FAILS", u1_rule(550, 600, 450, 1000)
+        == V_HOLDS && u1_rule(550, 600, 451, 1000) == V_FAILS);
+    check("U1: a gap of exactly 5 points (100 of 2,000) HOLDS, 99 FAILS; no "
+        "arcs UNDECIDED", u1_rule(550, 550, 450, 2000) == V_HOLDS
+        && u1_rule(550, 550, 451, 2000) == V_FAILS
+        && u1_rule(0, 0, 0, 0) == V_UNDECIDED);
+    {
+        static Acc t[NLEVELS];
+        const Acc *t4[NLEVELS];
+        s64        ga[NSTRATA][5], gb[6][5], u1[4];
+        int        s2, c2, i2, k2, lv, kd, ok = 1;
+
+        memset(t, 0, sizeof t);
+        for (s2 = 0; s2 < NSTRATA; s2++)
+            for (c2 = 0; c2 < 2; c2++)
+                for (i2 = 0; i2 < 2; i2++)
+                    for (k2 = 0; k2 < 2; k2++) {
+                        t[0].cell[POP_F2][s2][c2][i2][k2] = 1000 * s2
+                            + 100 * c2 + 10 * i2 + k2 + 1;
+                        t[0].cell[POP_ALL][s2][c2][i2][k2] = 7;
+                    }
+        for (lv = 0; lv < NLEVELS; lv++) {
+            t[lv].arcs[0][0][0] = 50;
+            t[lv].arcs[0][1][0] = 30;
+            t[lv].arcs[0][0][1] = 10 + lv;
+            t[lv].arcs[0][1][1] = 20 + lv;
+            t[lv].arcs[1][0][0] = t[lv].arcs[1][1][0] = 999;
+            t[lv].arcs[1][0][1] = t[lv].arcs[1][1][1] = 777;
+            t4[lv] = &t[lv];
+        }
+        rule_inputs(t4, ga, gb, u1);
+        for (s2 = 0; s2 < NSTRATA; s2++) {
+            const s64 (*x)[2][2] = t[0].cell[POP_F2][s2];
+
+            if (ga[s2][0] != x[1][0][1] + x[1][1][1]
+                || ga[s2][1] != x[1][0][0] + x[1][1][0]
+                || ga[s2][2] != x[0][0][1] + x[0][1][1]
+                || ga[s2][3] != x[0][0][0] + x[0][1][0]
+                || ga[s2][4] != ga[s2][1] + ga[s2][3])
+                ok = 0;
+        }
+        for (kd = 0; kd < 3; kd++)
+            for (c2 = 0; c2 < 2; c2++) {
+                const s64 (*x)[2] = t[0].cell[POP_F2][kd * 3][1 - c2];
+                const s64 *g = gb[kd * 2 + c2];
+
+                if (g[0] != x[1][1] || g[1] != x[1][0] || g[2] != x[0][1]
+                    || g[3] != x[0][0] || g[4] != g[1] + g[3])
+                    ok = 0;
+            }
+        if (u1[3] != 80 || u1[0] != 30 || u1[1] != 32 || u1[2] != 34)
+            ok = 0;
+        check("rule inputs from constructed totals: U2a sums each stratum's "
+            "competed and clear cells (|F| >= 2), U2b reads the "
+            "dependent-first strata (competed, then clear), U1 the "
+            "adjective arcs at L0, L1, L2", ok);
+    }
+    piscina_destruere(p);
+}
+
+/* oracle_d134.py's totals in flatten's order (generated by the oracle,
+ * pasted): [up to five words, up to four words (quick mode)], and the
+ * six-word subset (B at L0 and L1) */
+static const s64 oracle_full[2][NV_FULL] = {
+    { /* python3 -I oracle_d134.py 5 */
+      278558, 114, 8272, 115, 38430, 19447, 2932, 1574, 274428, 224, 12402, 5,
+      9632, 5844, 31730, 15177, 5695, 0, 201, 0, 681, 386, 591, 202, 88960,
+      768, 0, 0, 1191936, 985408, 93312, 69632, 0, 0, 88960, 768, 74624,
+      67648, 1210624, 987392, 0, 0, 0, 0, 14336, 384, 346112, 218624, 11812,
+      0, 208, 52, 34636, 5042, 14784, 7391, 0, 0, 12020, 52, 6280, 572, 43140,
+      11861, 5728, 0, 6024, 0, 58732, 13506, 52396, 8164, 85152, 114, 2138,
+      115, 33196, 19447, 2294, 1574, 76568, 224, 10722, 5, 7964, 5844, 27526,
+      15177, 136, 0, 20, 0, 646, 386, 574, 202, 88960, 768, 0, 0, 1191936,
+      985408, 93312, 69632, 0, 0, 88960, 768, 74624, 67648, 1210624, 987392,
+      0, 0, 0, 0, 14336, 384, 346112, 218624, 11812, 0, 208, 52, 34636, 5042,
+      14784, 7391, 0, 0, 12020, 52, 6280, 572, 43140, 11861, 5728, 0, 6024, 0,
+      58732, 13506, 52396, 8164, 328192, 0, 0, 0, 0, 0, 0, 0, 328192, 0, 0, 0,
+      0, 0, 0, 0, 7168, 0, 0, 0, 0, 0, 0, 0, 103424, 0, 0, 0, 1221632,
+      1003520, 49152, 24576, 0, 0, 103424, 0, 87040, 78848, 1183744, 949248,
+      0, 0, 0, 0, 16384, 0, 344064, 212992, 16384, 0, 0, 0, 32768, 0, 12288,
+      6144, 0, 0, 16384, 0, 8192, 0, 36864, 6144, 8192, 0, 8192, 0, 69632,
+      12288, 36864, 0, 86016, 0, 0, 0, 0, 0, 0, 0, 86016, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 103424, 0, 0, 0, 1221632, 1003520, 49152, 24576,
+      0, 0, 103424, 0, 87040, 78848, 1183744, 949248, 0, 0, 0, 0, 16384, 0,
+      344064, 212992, 16384, 0, 0, 0, 32768, 0, 12288, 6144, 0, 0, 16384, 0,
+      8192, 0, 36864, 6144, 8192, 0, 8192, 0, 69632, 12288, 36864, 0, 167648,
+      16044, 45596, 17186, 88952, 60784, 25996, 23778, 183736, 28788, 29508,
+      4442, 24520, 21424, 90428, 63138, 3580, 0, 1444, 0, 860, 660, 1284, 620,
+      0, 0, 0, 0, 1033216, 1033216, 340992, 340992, 0, 0, 0, 0, 0, 0, 1374208,
+      1374208, 0, 0, 0, 0, 0, 0, 360448, 360448, 1124, 0, 1124, 1002, 37116,
+      15896, 22076, 14766, 0, 0, 2248, 1002, 0, 0, 59192, 30662, 0, 0, 0, 0,
+      33928, 13832, 88952, 47984, 159220, 16044, 44008, 17186, 88952, 60784,
+      25996, 23778, 173720, 28788, 29508, 4442, 24520, 21424, 90428, 63138,
+      1140, 0, 468, 0, 860, 660, 1284, 620, 0, 0, 0, 0, 1033216, 1033216,
+      340992, 340992, 0, 0, 0, 0, 0, 0, 1374208, 1374208, 0, 0, 0, 0, 0, 0,
+      360448, 360448, 1124, 0, 1124, 1002, 37116, 15896, 22076, 14766, 0, 0,
+      2248, 1002, 0, 0, 59192, 30662, 0, 0, 0, 0, 33928, 13832, 88952, 47984,
+      23296, 0, 0, 0, 231424, 187136, 73472, 71936, 0, 0, 23296, 0, 19200,
+      19200, 285696, 239872, 0, 0, 0, 0, 2560, 2560, 4608, 2560, 0, 0, 0, 0,
+      1033216, 1033216, 340992, 340992, 0, 0, 0, 0, 0, 0, 1374208, 1374208, 0,
+      0, 0, 0, 0, 0, 360448, 360448, 0, 0, 0, 0, 30720, 26624, 30720, 28672,
+      0, 0, 0, 0, 0, 0, 61440, 55296, 0, 0, 0, 0, 6144, 6144, 116736, 104448,
+      23296, 0, 0, 0, 231424, 187136, 73472, 71936, 0, 0, 23296, 0, 19200,
+      19200, 285696, 239872, 0, 0, 0, 0, 2560, 2560, 4608, 2560, 0, 0, 0, 0,
+      1033216, 1033216, 340992, 340992, 0, 0, 0, 0, 0, 0, 1374208, 1374208, 0,
+      0, 0, 0, 0, 0, 360448, 360448, 0, 0, 0, 0, 30720, 26624, 30720, 28672,
+      0, 0, 0, 0, 0, 0, 61440, 55296, 0, 0, 0, 0, 6144, 6144, 116736, 104448,
+      286830, 229, 0, 0, 40930, 20823, 432, 198, 274428, 224, 12402, 5, 9632,
+      5844, 31730, 15177, 5876, 0, 20, 0, 716, 404, 556, 184, 103424, 8528, 0,
+      0, 1177472, 977648, 93312, 69632, 0, 0, 103424, 8528, 87040, 79296,
+      1183744, 967984, 0, 0, 0, 0, 16384, 512, 344064, 218496, 12924, 156, 0,
+      0, 47748, 11925, 768, 404, 0, 0, 12924, 156, 6982, 669, 41534, 11660,
+      6294, 52, 6706, 52, 59958, 14370, 49922, 7196, 87290, 229, 0, 0, 35070,
+      20823, 420, 198, 76568, 224, 10722, 5, 7964, 5844, 27526, 15177, 136, 0,
+      20, 0, 680, 404, 540, 184, 103424, 8528, 0, 0, 1177472, 977648, 93312,
+      69632, 0, 0, 103424, 8528, 87040, 79296, 1183744, 967984, 0, 0, 0, 0,
+      16384, 512, 344064, 218496, 12924, 156, 0, 0, 47748, 11925, 768, 404, 0,
+      0, 12924, 156, 6982, 669, 41534, 11660, 6294, 52, 6706, 52, 59958,
+      14370, 49922, 7196, 23296, 0, 304896, 21250, 23296, 0, 304896, 21250, 0,
+      0, 7168, 588, 103424, 8528, 1270784, 1047280, 103424, 8528, 1270784,
+      1047280, 0, 0, 360448, 219008, 0, 0, 61440, 12485, 0, 0, 61440, 12485,
+      0, 0, 122880, 21670, 10548, 0, 112232, 21250, 10548, 0, 112232, 21250,
+      0, 0, 1376, 588, 103424, 8528, 1270784, 1047280, 103424, 8528, 1270784,
+      1047280, 0, 0, 360448, 219008, 0, 0, 61440, 12485, 0, 0, 61440, 12485,
+      0, 0, 122880, 21670, 0, 0, 0, 229, 21018, 0, 0, 3, 0, 0, 0, 229, 21018,
+      0, 0, 3, 0, 0, 0, 0, 588, 0, 0, 0, 0, 768, 0, 0, 1054080, 768, 192, 0,
+      0, 768, 0, 0, 1054080, 768, 192, 0, 0, 0, 0, 0, 219008, 0, 0, 0, 0, 0,
+      52, 0, 12381, 0, 52, 0, 0, 0, 52, 0, 12381, 0, 52, 0, 0, 0, 0, 0, 21534,
+      0, 136, 0, 0, 465408, 438512, 398630, 464976, 398630, 1536, 465408,
+      398630, 398630, 398630, 398630, 0, 1923072, 1814208, 139648, 1815936,
+      160768, 6144, 1923072, 118144, 139648, 136192, 160768, 21504, 465408,
+      453120, 465408, 465408, 465408, 0, 465408, 465408, 465408, 465408,
+      465408, 0, 1923072, 1873920, 160768, 1873920, 160768, 0, 1923072,
+      136192, 160768, 136192, 160768, 24576, 465408, 358352, 301128, 464592,
+      301128, 4096, 465408, 301128, 301128, 301128, 301128, 0, 1923072,
+      1484608, 4096, 1487872, 160768, 16384, 1923072, 4096, 4096, 136192,
+      160768, 0, 465408, 356096, 31488, 462336, 31488, 4096, 465408, 31488,
+      31488, 31488, 31488, 0, 1923072, 1475584, 4096, 1487872, 160768, 16384,
+      1923072, 4096, 4096, 136192, 160768, 0, 0, 0, 12288, 190976, 124928, 0,
+      0, 0, 0, 0, 115968, 138496, 73728, 0, 0, 0, 0, 0, 1024, 6144, 0, 0, 0,
+      0, 0, 0, 49152, 833536, 491520, 0, 0, 0, 0, 0, 496640, 572416, 305152,
+      0, 0, 0, 0, 0, 32768, 262144, 65536, 0, 0, 0, 0, 0, 0, 12288, 49152, 0,
+      0, 0, 0, 0, 26624, 34816, 0, 0, 0, 0, 0, 0, 12288, 94208, 16384, 0, 0,
+      0, 0, 0, 903680, 1110912, 572416, 147456, 0, 0, 1039872, 448512, 30208,
+      0, 0, 0, 0, 0, 1216000, 0, 0, 0, 0, 0, 0, 0, 20992, 7680, 0, 0, 0, 0, 0,
+      0, 4321280, 1908736, 139264, 0, 0, 0, 0, 0, 5060608, 0, 0, 0, 0, 0, 0,
+      0, 950272, 483328, 8192, 0, 0, 0, 0, 0, 184320, 75776, 47104, 0, 0, 0,
+      0, 0, 184320, 0, 0, 0, 0, 0, 0, 0, 331776, 157696, 2048, 0, 0, 0, 0, 0,
+      11538048, 0, 0, 0, 0, 0, 0, 0, 13477248, 7926144, 6752640, 5551104, },
+    { /* python3 -I oracle_d134.py 4 */
+      1330, 0, 26, 0, 174, 130, 6, 6, 1320, 0, 36, 0, 36, 34, 144, 102, 0, 0,
+      0, 0, 0, 0, 0, 0, 896, 0, 0, 0, 5120, 4096, 128, 128, 0, 0, 896, 0, 896,
+      896, 4352, 3328, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 70, 0, 0, 0, 164, 130, 6, 6,
+      36, 0, 34, 0, 34, 34, 136, 102, 0, 0, 0, 0, 0, 0, 0, 0, 896, 0, 0, 0,
+      5120, 4096, 128, 128, 0, 0, 896, 0, 896, 896, 4352, 3328, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 1536, 0, 0, 0, 0, 0, 0, 0, 1536, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 1024, 0, 0, 0, 5120, 4096, 0, 0, 0, 0, 1024, 0, 1024,
+      1024, 4096, 3072, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1024, 0, 0, 0, 5120, 4096, 0,
+      0, 0, 0, 1024, 0, 1024, 1024, 4096, 3072, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1008,
+      0, 188, 0, 272, 204, 68, 68, 1128, 0, 68, 0, 68, 68, 272, 204, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 5120, 5120, 1024, 1024, 0, 0, 0, 0, 0, 0,
+      6144, 6144, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 388, 0, 64, 0, 272, 204, 68, 68,
+      384, 0, 68, 0, 68, 68, 272, 204, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      5120, 5120, 1024, 1024, 0, 0, 0, 0, 0, 0, 6144, 6144, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 256, 0, 0, 0, 1024, 768, 256, 256, 0, 0, 256, 0, 256, 256, 1024,
+      768, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5120, 5120, 1024, 1024, 0, 0,
+      0, 0, 0, 0, 6144, 6144, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 0, 0, 0, 1024, 768,
+      256, 256, 0, 0, 256, 0, 256, 256, 1024, 768, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 5120, 5120, 1024, 1024, 0, 0, 0, 0, 0, 0, 6144, 6144, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 1356, 0, 0, 0, 180, 136, 0, 0, 1320, 0, 36, 0, 36, 34,
+      144, 102, 0, 0, 0, 0, 0, 0, 0, 0, 1024, 64, 0, 0, 4992, 4032, 128, 128,
+      0, 0, 1024, 64, 1024, 1024, 4096, 3136, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 70, 0, 0,
+      0, 170, 136, 0, 0, 36, 0, 34, 0, 34, 34, 136, 102, 0, 0, 0, 0, 0, 0, 0,
+      0, 1024, 64, 0, 0, 4992, 4032, 128, 128, 0, 0, 1024, 64, 1024, 1024,
+      4096, 3136, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 0, 1280, 136, 256, 0, 1280,
+      136, 0, 0, 0, 0, 1024, 64, 5120, 4160, 1024, 64, 5120, 4160, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 0, 200, 136, 40, 0, 200, 136, 0,
+      0, 0, 0, 1024, 64, 5120, 4160, 1024, 64, 5120, 4160, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 0, 0, 0, 0, 0, 0, 0, 136,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4224, 0, 0, 0, 0, 0, 0, 0,
+      4224, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1536, 1504, 1356, 1536, 1356,
+      0, 1536, 1356, 1356, 1356, 1356, 0, 6144, 6016, 896, 6016, 1024, 0,
+      6144, 896, 896, 1024, 1024, 0, 1536, 1536, 1536, 1536, 1536, 0, 1536,
+      1536, 1536, 1536, 1536, 0, 6144, 6144, 1024, 6144, 1024, 0, 6144, 1024,
+      1024, 1024, 1024, 0, 1536, 1280, 1196, 1536, 1196, 0, 1536, 1196, 1196,
+      1196, 1196, 0, 6144, 5120, 0, 5120, 1024, 0, 6144, 0, 0, 1024, 1024, 0,
+      1536, 1280, 256, 1536, 256, 0, 1536, 256, 256, 256, 256, 0, 6144, 5120,
+      0, 5120, 1024, 0, 6144, 0, 0, 1024, 1024, 0, 0, 0, 0, 1536, 0, 0, 0, 0,
+      0, 0, 768, 768, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6144, 0, 0,
+      0, 0, 0, 0, 3072, 3072, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18432,
+      15744, 6144, 0, 0, 0, 4096, 2048, 0, 0, 0, 0, 0, 0, 4608, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16384, 8192, 0, 0, 0, 0, 0, 0, 18432, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 147072, 0, 0, 0, 0, 0, 0, 0,
+      83328, 61824, 55680, 21504, },
+};
+static const s64 oracle_sub[NV_SUB] = {
+    /* python3 -I oracle_d134.py 6 sub */
+    211161, 1361, 10732, 1419, 56316, 23514, 6647, 2961, 201369, 2646, 20524,
+    134, 14151, 7300, 48812, 19175, 12771, 0, 1529, 0, 3467, 402, 3437, 360,
+    48659, 2773, 44, 27, 1120567, 941710, 240782, 179060, 1773, 1773, 46930,
+    1027, 33013, 30155, 1328336, 1090615, 0, 0, 0, 0, 18970, 3747, 1167054,
+    779641, 17646, 8, 557, 74, 110346, 11883, 65971, 21635, 172, 0, 18031, 82,
+    6157, 331, 170160, 33187, 8471, 6, 9391, 6, 158455, 23032, 324131, 56772,
+    165127, 1361, 8932, 1419, 52582, 23514, 5767, 2961, 155063, 2646, 18996,
+    134, 12877, 7300, 45472, 19175, 4442, 0, 762, 0, 2039, 402, 2313, 360,
+    48659, 2773, 44, 27, 1120567, 941710, 240782, 179060, 1773, 1773, 46930,
+    1027, 33013, 30155, 1328336, 1090615, 0, 0, 0, 0, 18970, 3747, 1167054,
+    779641, 17646, 8, 557, 74, 110346, 11883, 65971, 21635, 172, 0, 18031, 82,
+    6157, 331, 170160, 33187, 8471, 6, 9391, 6, 158455, 23032, 324131, 56772,
+    280204, 768, 1536, 768, 2804, 1088, 312, 156, 280124, 1536, 1616, 0, 612,
+    356, 2504, 888, 21204, 0, 0, 0, 0, 0, 0, 0, 58370, 2106, 0, 0, 1166430,
+    963562, 185252, 115554, 2106, 2106, 56264, 0, 39722, 36184, 1311960,
+    1042932, 0, 0, 0, 0, 22532, 3186, 1163492, 737970, 25722, 0, 128, 0,
+    112802, 780, 55868, 15208, 272, 0, 25578, 0, 8662, 0, 160008, 15988,
+    13314, 0, 13338, 0, 201978, 20238, 271818, 21026, 169692, 768, 1536, 768,
+    2804, 1088, 312, 156, 169612, 1536, 1616, 0, 612, 356, 2504, 888, 6368, 0,
+    0, 0, 0, 0, 0, 0, 58370, 2106, 0, 0, 1166430, 963562, 185252, 115554,
+    2106, 2106, 56264, 0, 39722, 36184, 1311960, 1042932, 0, 0, 0, 0, 22532,
+    3186, 1163492, 737970, 25722, 0, 128, 0, 112802, 780, 55868, 15208, 272,
+    0, 25578, 0, 8662, 0, 160008, 15988, 13314, 0, 13338, 0, 201978, 20238,
+    271818, 21026, 221857, 2774, 36, 6, 61987, 26267, 976, 208, 201369, 2646,
+    20524, 134, 14151, 7300, 48812, 19175, 13451, 0, 849, 0, 3898, 438, 3006,
+    324, 58370, 8899, 0, 0, 1111010, 935704, 240672, 178967, 2106, 2106,
+    56264, 6793, 39722, 36481, 1311960, 1078190, 0, 0, 0, 0, 22532, 4623,
+    1163492, 778765, 20043, 203, 0, 0, 162424, 30092, 12053, 3305, 189, 0,
+    19854, 203, 7105, 431, 167372, 32966, 9620, 81, 10804, 85, 163468, 24329,
+    316556, 55321, 174023, 2774, 36, 6, 57613, 26267, 736, 208, 155063, 2646,
+    18996, 134, 12877, 7300, 45472, 19175, 4683, 0, 521, 0, 2292, 438, 2060,
+    324, 58370, 8899, 0, 0, 1111010, 935704, 240672, 178967, 2106, 2106,
+    56264, 6793, 39722, 36481, 1311960, 1078190, 0, 0, 0, 0, 22532, 4623,
+    1163492, 778765, 20043, 203, 0, 0, 162424, 30092, 12053, 3305, 189, 0,
+    19854, 203, 7105, 431, 167372, 32966, 9620, 81, 10804, 85, 163468, 24329,
+    316556, 55321, 11303, 10, 273553, 29245, 11303, 10, 273553, 29245, 0, 0,
+    21204, 762, 58370, 8899, 1351682, 1114671, 58370, 8899, 1351682, 1114671,
+    0, 0, 1186024, 783388, 0, 0, 194520, 33600, 0, 0, 194520, 33600, 0, 0,
+    500448, 79816, 9593, 10, 222815, 29245, 9593, 10, 222815, 29245, 0, 0,
+    9556, 762, 58370, 8899, 1351682, 1114671, 58370, 8899, 1351682, 1114671,
+    0, 0, 1186024, 783388, 0, 0, 194520, 33600, 0, 0, 194520, 33600, 0, 0,
+    500448, 79816, 0, 0, 119, 2661, 26314, 0, 10, 151, 0, 0, 119, 2661, 26314,
+    0, 10, 151, 0, 0, 0, 0, 762, 0, 0, 0, 0, 2566, 230, 4, 1118101, 2062, 605,
+    2, 0, 2566, 230, 4, 1118101, 2062, 605, 2, 0, 0, 0, 0, 783388, 0, 0, 0, 0,
+    16, 66, 0, 32839, 429, 250, 0, 0, 16, 66, 0, 32839, 429, 250, 0, 0, 12, 0,
+    0, 78376, 886, 490, 52, 0, 786636, 682660, 614575, 785017, 614575, 10376,
+    786636, 610256, 614575, 610256, 614575, 0, 3463992, 3035359, 148803,
+    3042124, 175198, 44592, 3463992, 109927, 148803, 129032, 175198, 36152,
+    786636, 718092, 772470, 786636, 772470, 6160, 786636, 771960, 772470,
+    771960, 772470, 0, 3463992, 3175808, 175198, 3175808, 175198, 25040,
+    3463992, 129032, 175198, 129032, 175198, 42974, 786636, 552938, 416194,
+    782686, 416194, 13334, 786636, 409194, 416194, 409194, 416194, 0, 3463992,
+    2445389, 11056, 2462176, 175198, 56286, 3463992, 10360, 11056, 129032,
+    175198, 696, 786636, 544885, 27392, 771929, 27392, 13190, 786636, 27351,
+    27392, 27351, 27392, 0, 3463992, 2408732, 11056, 2462176, 175198, 55638,
+    3463992, 10360, 11056, 129032, 175198, 696, 0, 0, 10838, 117990, 123172,
+    32856, 0, 0, 0, 0, 74271, 115060, 74855, 20670, 0, 0, 0, 0, 1376, 11507,
+    8321, 0, 0, 0, 0, 0, 48258, 594644, 626474, 140676, 0, 0, 0, 0, 379402,
+    550842, 377204, 102604, 0, 0, 0, 0, 78404, 574616, 475348, 57656, 0, 0, 0,
+    0, 0, 27928, 122940, 43652, 0, 0, 0, 0, 59832, 82190, 52498, 0, 0, 0, 0,
+    0, 32776, 249566, 199374, 18732, 0, 0, 0, 0, 291103, 483051, 276202,
+    116512, 17040, 0, 1038018, 392363, 44257, 4348, 0, 0, 0, 0, 1222550, 0, 0,
+    0, 0, 0, 0, 0, 72472, 25689, 1649, 0, 0, 0, 0, 0, 5021268, 2064398,
+    280714, 32204, 0, 0, 0, 0, 5967976, 0, 0, 0, 0, 0, 0, 0, 3685792, 1671566,
+    150218, 7624, 0, 0, 0, 0, 635904, 288438, 161462, 11590, 0, 0, 0, 0,
+    719238, 0, 0, 0, 0, 0, 0, 0, 1565796, 662940, 85480, 1736, 0, 0, 0, 0,
+    5652450, 0, 0, 0, 0, 0, 0, 0, 16676100, 8121600, 6670440, 8554500,
+};
+
+/* ---------------- printing ---------------- */
+
+static void
+bfmt (
+    char *buf,
+    int   size,
+    s64   mis,
+    s64   n)
+{
+    char t[32];
+
+    pct(t, 32, mis, n);
+    snprintf(buf, (size_t)size, "%s of %lld", t, (long long)n);
+}
+
+/* an exact difference of two shares in points, rounded to hundredths */
+static void
+gap_fmt (
+    char    *buf,
+    int      size,
+    s64      an,
+    s64      ad,
+    s64      bn,
+    s64      bd,
+    Piscina *p)
+{
+    Fractio g = fractio_subtrahe(share(an, ad, p), share(bn, bd, p), p);
+    s64     h = 0, m;
+
+    g = fractio_multiplica(g, fractio_ex_s64(10000), p);
+    (void)magnus_ad_s64(fractio_rotunda(g, p), &h);
+    m = h < 0 ? -h : h;
+    snprintf(buf, (size_t)size, "%s%lld.%02lld", h < 0 ? "-" : "+",
+        (long long)(m / 100), (long long)(m % 100));
+}
+
+static void
+stratum_label (
+    char *buf,
+    int   size,
+    int   s)
+{
+    if (s == NSTRATA) snprintf(buf, (size_t)size, "projective");
+    else snprintf(buf, (size_t)size, "%s, %s", kind_name[s / 3],
+        dir_name[s % 3]);
+}
+
+static void
+print_dist (
+    const Acc  *A,
+    const char *title)
+{
+    int  s, k;
+    char lab[64];
+
+    printf("\n  %s: pairs by WIDTH (umbrae open at once)\n  %-33s", title,
+        "");
+    for (k = 1; k <= MAXW; k++) printf(" %11d", k);
+    printf("\n");
+    for (s = NSTRATA; s >= 0; s--) {
+        stratum_label(lab, 64, s);
+        printf("  %-33s", lab);
+        for (k = 1; k <= MAXW; k++)
+            printf(" %11lld", (long long)A->width[s][k]);
+        printf("\n");
+    }
+    printf("  %s: umbrae by DEPTH (later-opened umbrae that outlive it)\n"
+        "  %-33s", title, "");
+    for (k = 0; k < MAXW; k++) printf(" %11d", k);
+    printf("\n");
+    for (s = NSTRATA; s >= 0; s--) {
+        stratum_label(lab, 64, s);
+        printf("  %-33s", lab);
+        for (k = 0; k < MAXW; k++)
+            printf(" %11lld", (long long)A->depth[s][k]);
+        printf("\n");
+    }
+    printf("  umbrae: %lld dangling, %lld slot, %lld root; %lld backward "
+        "attachments\n", (long long)A->utype[U_DANGLING],
+        (long long)A->utype[U_SLOT], (long long)A->utype[U_ROOT],
+        (long long)A->back);
+}
+
+/* the 2 x 2 per stratum: COMPETED / CLEAR x INTERFERED / RETRIEVED */
+static void
+print_cells (
+    const Acc  *A,
+    int         rel,
+    const char *title)
+{
+    int  s, c, i;
+    char lab[64], b[48];
+
+    printf("\n  %s (crossed pairs, |F| >= 2): B in each cell\n  %-33s %22s "
+        "%22s %22s %22s\n", title, "", "competed+interfered",
+        "competed+retrieved", "clear+interfered", "clear+retrieved");
+    for (s = 0; s < NSTRATA; s++) {
+        stratum_label(lab, 64, s);
+        printf("  %-33s", lab);
+        for (c = 1; c >= 0; c--)
+            for (i = 1; i >= 0; i--) {
+                const s64 *x = rel ? A->cell_rel[POP_F2][s][c][i]
+                    : A->cell[POP_F2][s][c][i];
+
+                bfmt(b, 48, x[1], x[0]);
+                printf(" %22s", b);
+            }
+        printf("\n");
+    }
+}
+
+static void
+print_l0_extra (
+    const Acc *A)
+{
+    int  s, c, r;
+    char lab[64], b1[48], b2[48], b3[48], b4[48];
+    s64  mis = 0, rt[NROUTES], rtc[NROUTES];
+
+    printf("\n  competition, real against MORPHOLOGY-BLIND (any noun as near "
+        "as the head), L0, |F| >= 2\n  %-33s %22s %22s %22s %22s\n", "",
+        "competed", "clear", "blind: competed", "blind: clear");
+    for (s = 0; s < NSTRATA; s++) {
+        s64 cm = 0, cn = 0, lm = 0, ln = 0;
+        int i;
+
+        for (i = 0; i < 2; i++) {
+            cm += A->cell[POP_F2][s][1][i][1];
+            cn += A->cell[POP_F2][s][1][i][0];
+            lm += A->cell[POP_F2][s][0][i][1];
+            ln += A->cell[POP_F2][s][0][i][0];
+        }
+        stratum_label(lab, 64, s);
+        bfmt(b1, 48, cm, cn);
+        bfmt(b2, 48, lm, ln);
+        bfmt(b3, 48, A->blind[POP_F2][s][1][1], A->blind[POP_F2][s][1][0]);
+        bfmt(b4, 48, A->blind[POP_F2][s][0][1], A->blind[POP_F2][s][0][0]);
+        printf("  %-33s %22s %22s %22s %22s\n", lab, b1, b2, b3, b4);
+    }
+    for (r = 0; r < NROUTES; r++) rt[r] = rtc[r] = 0;
+    for (s = 0; s < NSTRATA; s++)
+        for (c = 0; c < 2; c++)
+            for (r = 0; r < NROUTES; r++) {
+                rt[r] += A->route[s][c][r];
+                if (!c) rtc[r] += A->route[s][c][r];
+                mis += A->route[s][c][r];
+            }
+    pct(b1, 48, rt[RT_NEAR] + rt[RT_FLIP], mis);
+    pct(b2, 48, rt[RT_FLIP], mis);
+    printf("\n  MECHANISM COVERAGE (L0): of %lld misread pairs, %s have an "
+        "analysis in P(s) that puts a displaced word on a word at least as "
+        "near as its head (%s through a reversed dependency)\n",
+        (long long)mis, b1, b2);
+    printf("  misread pairs by route (all; CLEAR only):");
+    for (r = 0; r < NROUTES; r++)
+        printf("  %s %lld; %lld", route_name[r], (long long)rt[r],
+            (long long)rtc[r]);
+    printf("\n  covered from outside d's subtree but CLEAR: %lld\n",
+        (long long)A->covered_clear);
+}
+
+static void
+print_arcs (
+    const Acc *const *lv4,
+    const char       *title)
+{
+    int  lv, k, i, r;
+    char b[5][32];
+    static const char *const an[2] = { "adjective", "genitive" };
+
+    printf("\n  %s: displaced arcs, share RETRIEVED, share CLEAR, the same by "
+        "own relation, INTERFERED only through a cycle\n", title);
+    for (lv = 0; lv < NLEVELS; lv++)
+        for (k = 0; k <= 2; k++)
+            for (i = 0; i <= 2; i++) {
+                s64 x[6];
+
+                if ((k == 2) != (i == 2)) continue;
+                for (r = 0; r < 6; r++) {
+                    int kk, ii;
+
+                    x[r] = 0;
+                    for (kk = 0; kk < 2; kk++)
+                        for (ii = 0; ii < 2; ii++)
+                            if ((k == 2 || kk == k) && (i == 2 || ii == i))
+                                x[r] += lv4[lv]->arcs[kk][ii][r];
+                }
+                for (r = 1; r <= 4; r++) pct(b[r], 32, x[r], x[0]);
+                printf("  %-17s %-10s %-16s %10lld arcs: %8s %8s; own "
+                    "relation %8s %8s; cycle-only %lld\n", level_name[lv],
+                    k == 2 ? "all" : an[k], i == 2 ? "" : dir_name[i],
+                    (long long)x[0], b[1], b[2], b[3], b[4], (long long)x[5]);
+            }
+}
+
+/* the registered tests with their tables; verdicts into v[3] */
+static void
+print_registered (
+    const Acc *const *lv4,
+    int              *v,
+    Piscina          *p)
+{
+    s64  ga[NSTRATA][5], gb[6][5], u1[4];
+    int  s, c, nt, ncount;
+    char lab[64], b1[48], b2[48], g[32], i0[32], i1[32], i2[32];
+
+    rule_inputs(lv4, ga, gb, u1);
+    printf("\n  U2a (EXPECTED; a positive control, partly implied by the "
+        "definitions): B(competed) - B(clear) >= 10 points\n");
+    for (s = 0; s < NSTRATA; s++) {
+        int t = testable(ga[s][1], ga[s][4]) && testable(ga[s][3], ga[s][4]);
+
+        stratum_label(lab, 64, s);
+        bfmt(b1, 48, ga[s][0], ga[s][1]);
+        bfmt(b2, 48, ga[s][2], ga[s][3]);
+        gap_fmt(g, 32, ga[s][0], ga[s][1], ga[s][2], ga[s][3], p);
+        printf("  %-33s competed %24s  clear %24s  gap %8s  %s\n", lab, b1,
+            b2, g, t ? "testable" : "not testable");
+    }
+    v[0] = u2a_rule((s64 const (*)[5])ga, NSTRATA, &nt, p);
+    printf("  U2a %s (%d testable strata)\n", verdict_name[v[0]], nt);
+    printf("\n  U2b (retrieval adds nothing; dependent-first strata): "
+        "|B(interfered) - B(retrieved)| <= 5 points where B(retrieved) is "
+        "in [10%%, 90%%]\n");
+    for (c = 0; c < 6; c++) {
+        const s64 *x = gb[c];
+
+        bfmt(b1, 48, x[0], x[1]);
+        bfmt(b2, 48, x[2], x[3]);
+        gap_fmt(g, 32, x[0], x[1], x[2], x[3], p);
+        printf("  %-16s %-9s interfered %24s  retrieved %24s  gap %8s  %s\n",
+            kind_name[c / 2], c % 2 ? "CLEAR" : "COMPETED", b1, b2, g,
+            counting_cell(x) ? "COUNTS" : !testable(x[1], x[4])
+            || !testable(x[3], x[4]) ? "not testable"
+            : "outside [10%, 90%]");
+    }
+    v[1] = u2b_rule((s64 const (*)[5])gb, 6, &ncount, p);
+    printf("  U2b %s (%d counting cells)\n", verdict_name[v[1]], ncount);
+    pct(i0, 32, u1[0], u1[3]);
+    pct(i1, 32, u1[1], u1[3]);
+    pct(i2, 32, u1[2], u1[3]);
+    gap_fmt(g, 32, u1[0], u1[3], u1[2], u1[3], p);
+    v[2] = u1_rule(u1[0], u1[1], u1[2], u1[3]);
+    printf("\n  U1 (Latin keeps most of the ideal's retrieval; %lld displaced "
+        "adjective arcs): I(L1) %s, I(L0) %s, I(L2) %s; I(L0) - I(L2) %s "
+        "points against 2 (I(L1) - I(L0)) and the 5-point floor\n",
+        (long long)u1[3], i1, i0, i2, g);
+    printf("  U1 %s\n", verdict_name[v[2]]);
+}
+
+/* ---------------- the parts ---------------- */
+
+static int
+check_vector (
+    const char *title,
+    const s64  *got,
+    const s64  *want,
+    int         n)
+{
+    int k, ok = 1, first = -1;
+
+    for (k = 0; k < n; k++)
+        if (got[k] != want[k]) {
+            if (first < 0) first = k;
+            ok = 0;
+        }
+    if (getenv("D134_VECTOR") != NULL)
+        for (k = 0; k < n; k++)
+            printf("VECTOR %s %d %lld\n", title, k, (long long)got[k]);
+    if (!ok)
+        printf("  (%s: first difference at %d: %lld, the oracle %lld)\n",
+            title, first, (long long)got[first], (long long)want[first]);
+    return ok;
+}
+
+/* populations, labels against task 1's pass, width and depth at every
+ * level, covered => competed; lengths lo..hi */
+static void
+measure_checks (
+    const char    *where,
+    int            lo,
+    int            hi,
+    const UChecks *ck,
+    const s64     *cross_by_len)
+{
+    int  lv, n, s, c, i, k;
+    int  pop_ok = 1, f2_ok = 1, lab_ok = 1, wd_ok = 1, cov_ok = 1;
+    char msg[400];
+
+    for (lv = 0; lv < NLEVELS; lv++)
+        for (n = lo; n <= hi; n++) {
+            const Acc *A = &acc[lv][n];
+            s64        pairs = 0, mis = 0, mis2 = 0, x[4] = { 0, 0, 0, 0 };
+
+            for (s = 0; s < NSTRATA; s++)
+                for (c = 0; c < 2; c++)
+                    for (i = 0; i < 2; i++) {
+                        pairs += A->cell[POP_ALL][s][c][i][0];
+                        mis += A->cell[POP_ALL][s][c][i][1];
+                        mis2 += A->cell[POP_F2][s][c][i][1];
+                    }
+            if (pairs != cross_by_len[n]) pop_ok = 0;
+            if (n <= 5 && mis != meas[lv].len_b_num[n]) pop_ok = 0;
+            if (mis2 != mis) f2_ok = 0;
+            for (k = 0; k < 2; k++)
+                for (i = 0; i < 2; i++) {
+                    x[0] += A->arcs[k][i][0];
+                    x[1] += A->arcs[k][i][1];
+                    x[2] += A->arcs[k][i][2];
+                    x[3] += A->arcs[k][i][5];
+                }
+            for (k = 0; k < 4; k++)
+                if (x[k] != ck->lab[lv][n][k]) lab_ok = 0;
+            if (memcmp(A->width, acc[0][n].width, sizeof A->width) != 0
+                || memcmp(A->depth, acc[0][n].depth, sizeof A->depth) != 0
+                || memcmp(A->utype, acc[0][n].utype, sizeof A->utype) != 0
+                || A->back != acc[0][n].back)
+                wd_ok = 0;
+            if (A->covered_clear != 0) cov_ok = 0;
+        }
+    snprintf(msg, sizeof msg, "%s: the 2 x 2 cells hold every crossed pair at "
+        "every level%s", where, hi <= 5 ? ", and their misreads are D131's B "
+        "by length" : "");
+    check(msg, pop_ok);
+    snprintf(msg, sizeof msg, "%s: every misread pair has |F| >= 2 (the "
+        "registered population loses none)", where);
+    check(msg, f2_ok);
+    snprintf(msg, sizeof msg, "%s: arc labels by the per-level pass (each "
+        "level's own bags) == task 1's pass (by L1 bags), level by level, "
+        "length by length", where);
+    check(msg, lab_ok);
+    snprintf(msg, sizeof msg, "%s: width, depth, umbra types and backward "
+        "attachments the same at every level, length by length", where);
+    check(msg, wd_ok);
+    snprintf(msg, sizeof msg, "%s: covered => competed, restated (re-check "
+        "M1 meets L1): no misread pair whose P(s) moves a displaced word to a "
+        "word as near as its head, OUTSIDE its own subtree, is CLEAR", where);
+    check(msg, cov_ok);
+}
+
+static void
+part_measures_five (void)
+{
+    static Acc pool[NLEVELS];
+    const Acc *lv4[NLEVELS];
+    s64        v[NV_FULL], cross_by_len[MAXW + 1];
+    Acc        orc[NLEVELS];
+    const Acc *olv4[NLEVELS];
+    Piscina   *p = piscina_generare_dynamicum("d134_quinque", 1 << 20);
+    int        lv, n, nv, vc[3], vo[3];
+    clock_t    t0 = clock();
+    char       title[64];
+
+    printf("\n--- measures (task 2): up to %d words, DESCRIPTIVE ---\n",
+        gmaxw);
+    for (lv = 0; lv < NLEVELS; lv++) {
+        memset(acc[lv], 0, sizeof acc[lv]);
+        measure_umbrae(lv, 0, gmaxw);
+    }
+    printf("  (%.1f s)\n", seconds(t0));
+    for (n = 0; n <= MAXW; n++) cross_by_len[n] = meas[0].len_b_den[n];
+    measure_checks(quick ? "up to four words" : "up to five words", 0,
+        gmaxw, &ck_five, cross_by_len);
+    for (lv = 0; lv < NLEVELS; lv++) {
+        memset(&pool[lv], 0, sizeof pool[lv]);
+        for (n = 0; n <= gmaxw; n++) acc_add(&pool[lv], &acc[lv][n]);
+        lv4[lv] = &pool[lv];
+    }
+    nv = flatten(lv4, NLEVELS, v);
+    if (nv != NV_FULL) fatal("vector size");
+    check(quick ? "every total up to four words == oracle_d134.py's "
+        "(independent; a pin, 1,125 numbers)" : "every total up to five words "
+        "== oracle_d134.py's (independent, exhaustive; a pin, 1,125 numbers)",
+        check_vector(quick ? "four" : "five", v, oracle_full[quick ? 1 : 0],
+            NV_FULL));
+    unflatten(oracle_full[quick ? 1 : 0], NLEVELS, orc);
+    for (lv = 0; lv < NLEVELS; lv++) olv4[lv] = &orc[lv];
+    decide(lv4, vc, p);
+    decide(olv4, vo, p);
+    check("the rules applied to the oracle's totals give the same three "
+        "answers (wiring)", vc[0] == vo[0] && vc[1] == vo[1]
+        && vc[2] == vo[2]);
+    snprintf(title, sizeof title, "up to %d words", gmaxw);
+    print_dist(lv4[0], title);
+    for (lv = 0; lv < NLEVELS; lv++) {
+        char t2[96];
+
+        snprintf(t2, sizeof t2, "%s, %s", title, level_name[lv]);
+        print_cells(lv4[lv], 0, t2);
+    }
+    print_cells(lv4[0], 1, "L0, labels by OWN RELATION");
+    print_l0_extra(lv4[0]);
+    print_arcs(lv4, title);
+    printf("\n  the registered rules applied at %s - DESCRIPTIVE (registered "
+        "at six words):\n", title);
+    print_registered(lv4, vc, p);
+    piscina_destruere(p);
+}
+
+static void
+part_measures_six (
+    s64 cross6)
+{
+    const Acc *lv4[NLEVELS], *sub4[NLEVELS], *olv4[NLEVELS];
+    Acc        orc[NLEVELS];
+    s64        v[NV_SUB], cross_by_len[MAXW + 1];
+    Piscina   *p = piscina_generare_dynamicum("d134_sex", 1 << 20);
+    int        lv, n, nv, vc[3], vs[3], vo[3];
+    clock_t    t0 = clock();
+
+    printf("\n--- measures (task 2): six-word pairs - the REGISTERED "
+        "verdicts ---\n");
+    for (lv = 0; lv < NLEVELS; lv++) {
+        memset(&acc[lv][MAXW], 0, sizeof acc[lv][MAXW]);
+        memset(&acc_sub[lv], 0, sizeof acc_sub[lv]);
+        measure_umbrae(lv, MAXW, MAXW);
+        lv4[lv] = &acc[lv][MAXW];
+        sub4[lv] = &acc_sub[lv];
+    }
+    printf("  (%.1f s)\n", seconds(t0));
+    for (n = 0; n <= MAXW; n++) cross_by_len[n] = 0;
+    cross_by_len[MAXW] = cross6;
+    measure_checks("six words", MAXW, MAXW, &ck_six, cross_by_len);
+    nv = flatten(sub4, 2, v);
+    if (nv != NV_SUB) fatal("vector size");
+    check("the oracle's subset (2,250 L1 bags): every total == "
+        "oracle_d134.py's (independent; B at L0 and L1, labels at every "
+        "level; a pin, 837 numbers - PARTIAL)", check_vector("six-subset", v,
+            oracle_sub, NV_SUB));
+    unflatten(oracle_sub, 2, orc);
+    for (lv = 0; lv < NLEVELS; lv++) olv4[lv] = &orc[lv];
+    decide(sub4, vs, p);
+    decide(olv4, vo, p);
+    check("the rules applied to the oracle's subset totals give the same "
+        "three answers as to the demo's subset totals (wiring)", vs[0] == vo[0]
+        && vs[1] == vo[1] && vs[2] == vo[2]);
+    print_dist(lv4[0], "six words");
+    for (lv = 0; lv < NLEVELS; lv++) {
+        char t2[96];
+
+        snprintf(t2, sizeof t2, "six words, %s", level_name[lv]);
+        print_cells(lv4[lv], 0, t2);
+    }
+    print_cells(lv4[0], 1, "six words, L0, labels by OWN RELATION");
+    print_l0_extra(lv4[0]);
+    print_arcs(lv4, "six words");
+    printf("\n--- verdicts (registered, six-word pairs, L0, |F| >= 2) ---\n");
+    print_registered(lv4, vc, p);
+    printf("\n  (the oracle's subset gives U2a %s, U2b %s, U1 %s - partial, "
+        "for wiring only)\n", verdict_name[vs[0]], verdict_name[vs[1]],
+        verdict_name[vs[2]]);
+    piscina_destruere(p);
+}
+
 static void
 part_umbrae_five (void)
 {
-    UChecks ck;
     clock_t t0 = clock();
     s64     pairs = 0, crossed = 0;
     int     n;
@@ -2803,10 +4153,10 @@ part_umbrae_five (void)
         "(checks only) ---\n", gmaxw);
     for (n = 0; n <= gmaxw; n++) pairs += level_pairs[0][n];
     crossed = meas[0].b_den;
-    umbra_pass(gmaxw, &ck);
+    umbra_pass(gmaxw, &ck_five);
     printf("  (%.1f s)\n", seconds(t0));
-    umbra_checks(quick ? "up to four words" : "up to five words", &ck, pairs,
-        crossed);
+    umbra_checks(quick ? "up to four words" : "up to five words", &ck_five,
+        pairs, crossed);
 }
 
 /* ================================================================
@@ -2980,16 +4330,15 @@ part_six (void)
     check("six words: projective + crossed == the six-word pairs, and the "
         "split is the same at every level", same_split);
     {
-        UChecks ck;
-        s64     pairs = 0;
+        s64 pairs = 0;
 
         printf("\n  umbrae, width, depth and labels: every pair up to six "
             "words (checks only)\n");
         for (n = 0; n <= MAXW; n++) pairs += level_pairs[0][n];
         t0 = clock();
-        umbra_pass(MAXW, &ck);
+        umbra_pass(MAXW, &ck_six);
         printf("  (%.1f s)\n", seconds(t0));
-        umbra_checks("up to six words", &ck, pairs, meas[0].b_den
+        umbra_checks("up to six words", &ck_six, pairs, meas[0].b_den
             + cross[0]);
     }
     {
@@ -3031,6 +4380,10 @@ part_six (void)
             if (nb == MAXW) {
                 pr = (s64)multinomial(bag, nb) * (s64)(j - i);
                 pairs6 += pr;
+                if (rank % SUBSET_K == 0) {
+                    if (n_sel == MAXSEL) fatal("subset too large");
+                    sel_codes[n_sel++] = an_entries[1].e[i].bag;
+                }
                 for (kk = 0; kk < 5; kk++)
                     if (rank % ks[kk] == 0) {
                         sel_bags[kk]++;
@@ -3051,6 +4404,7 @@ part_six (void)
         check("the six-word L1 bags hold every six-word pair", pairs6
             == (s64)level_pairs[1][MAXW]);
     }
+    part_measures_six(cross[0]);
 }
 
 int
@@ -3071,7 +4425,9 @@ main (void)
     part_measures();
     part_hand_umbrae();
     part_umbrae_five();
-    if (!quick) part_six();
+    part_measures_five();
+    rules_check();
+    if (!quick && getenv("D134_QUINQUE") == NULL) part_six();
     printf("\n=== %d pass, %d fail ===\n", n_pass, n_fail);
     return n_fail == 0 ? 0 : 1;
 }

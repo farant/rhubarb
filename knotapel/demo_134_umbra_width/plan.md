@@ -299,7 +299,7 @@ measures it; a long run goes detached (python double fork + `setsid` +
 1. **T1:** umbrae, width, depth, competition and retrieval labels;
    Part A checks; six-word hand sentences; plants. *Done 2026-10-20 (Task 1 notes below).*
 2. **T2:** measures, U2a / U2b / U1 decided, `oracle_d134.py`, rule
-   checks; plants.
+   checks; plants. *Done 2026-10-20 (Task 2 notes below).*
 3. **T3:** findings.md, claims.md (KC 61), ledger (N17), archive.sh.
 4. **T4:** independent review with its own oracle, then fixes.
 
@@ -495,3 +495,107 @@ one floor for both tests.
   yield, width counting the closing boundary, the subtree exclusion
   dropped (green at four words until sentence 11 was added - a plant
   found the gap).
+
+## Task 2 notes (2026-10-20)
+
+- **Readings fixed before any T2 number was printed:** "six words" =
+  the pairs of exactly six words (the world nobody has seen; the
+  oracle's subset is six-word bags too); "five words" = every pair up
+  to five words (D131's world; descriptive). U1 is read over the
+  displaced adjective arcs of ALL crossed six-word pairs (the plan says
+  "of crossed pairs"; I(L) involves no misreading); U2a and U2b over the
+  registered population (L0 crossed pairs with |F| >= 2). Retrieval as
+  registered (the subtree kept in C; Fran left it so), with the
+  cycle-free variant counted beside it.
+- **Implemented:** one pass per level over that level's own bags, so
+  F(s) and P(s) are the string's own (`measure_umbrae`); per pair the
+  labels at that level, the stratum (kind x direction), B (R_P misreads
+  it), the misread ROUTE, the relation-specific and morphology-blind
+  labels; the rules (`u2a_rule`, `u2b_rule`, `u1_rule`, `testable`)
+  exact, gaps as rationals (house `fractio`), on constructed totals at
+  every threshold, and `rule_inputs` checked on constructed totals (a
+  wrong stratum would otherwise pass: reversal makes the dependent- and
+  head-first strata the same size, and the wiring check reads both
+  sides through the same function). Five-word mode `D134_QUINQUE=1`
+  (28 s) for plants that four words cannot see.
+- **`oracle_d134.py`** (independent: D131's oracle for the world -
+  tree-first analyses, projectivity by yields, displaced arcs by
+  domination; its own relations, comp, umbrae by counting spans and
+  pairwise crossings, labels, routes, strata, subset key). It prints
+  its totals as C arrays in `flatten`'s order, pasted as the pins:
+  **1,125 totals up to five words (exhaustive, 382 s), 1,125 up to four
+  (quick mode), 837 on the six-word subset (2,250 L1 bags, 6,670,440
+  pairs; B at L0 and L1 only - PARTIAL; 397 s, 470 MB). Every number
+  agreed on the first comparison**, before and after the route split
+  below. The rules applied to the oracle's totals give the demo's
+  answers (wiring), at five words and on the subset.
+- **Found: re-check M1's "covered => competed" is false as stated.**
+  Both C and the oracle count misread pairs whose P(s) puts a displaced
+  word on a word as near as its head and are CLEAR: 1,536 up to five
+  words. Every one is a REVERSED dependency (*domini dominorum amant
+  domini dominos*: the truth hangs *domini* on *dominorum*, the
+  alternative *dominorum* on *domini*): the nearer word lies in d's own
+  subtree, which re-check L1 took out of competition. The two review
+  fixes meet. Restated and checked (0 exceptions at every level, five
+  and six words): covered from OUTSIDE d's subtree => COMPETED. The
+  route is split: as near outside the subtree / as near inside it
+  (reversed) / farther / displaced words kept. Up to five words, L0:
+  of 2,420,352 misread pairs, 2,416,088 as near outside (0 CLEAR),
+  3,072 reversed (1,536 CLEAR), 728 farther (104 CLEAR), 464 kept (458
+  CLEAR); coverage 99.95%. Six-word pairs, L0: of 386,865,852
+  misread pairs, 384,998,214 as near outside (0 CLEAR), 1,127,084
+  reversed (560,472 CLEAR), 289,938 farther (87,944 CLEAR), 450,616
+  kept (423,370 CLEAR); coverage 99.81%. So B(clear) comes mostly from
+  reversed dependencies and from role changes that keep every displaced
+  word on its head.
+- **Registered verdicts, six-word pairs, L0, |F| >= 2:**
+  - **U2a HOLDS** (8 testable strata): B(competed) - B(clear) from
+    +16.04 (both, mixed) to +77.26 points (genitives only). Expected, a
+    positive control, partly implied by the definitions - not read as
+    a mechanism. Disclosed: competition and B are reversal-invariant
+    (nearness is symmetric, P(s) reverses with s), so each
+    dependent-first stratum and its head-first mirror carry the SAME
+    numbers; the 8 testable strata are 5 independent groups, still
+    more than the 3 required.
+  - **U2b FAILS** (2 counting cells). Adjectives, COMPETED:
+    interfered 49.75% of 609,988 against retrieved 45.89% of 6,436,919,
+    +3.86 points (within 5). Genitives, COMPETED: interfered 73.83% of
+    27,986,240 against retrieved 84.13% of 136,687,296, **-10.30
+    points: interfered genitive arcs are misread LESS** - retrieval
+    adds something, against the direction interference predicts. The
+    other four cells: B(retrieved) outside [10%, 90%] (three) or a group
+    under 2% (genitives CLEAR: 7,424 interfered).
+  - **U1 FAILS** (193,351,680 displaced adjective arcs): I(L1) 94.86%,
+    I(L0) 83.45%, I(L2) 62.72%; I(L0) - I(L2) = 20.73 points, under
+    2 (I(L1) - I(L0)) = 22.82; the 5-point floor holds. Latin keeps
+    64.5% of the ideal's retrieval advantage over case-stripped, not
+    the two thirds registered.
+  - Up to five words (descriptive): U2a HOLDS (7 strata), U2b FAILS
+    (3 counting cells), U1 HOLDS.
+- **Seen in the tables (for T3, not decided here):** head-first
+  genitive arcs are almost never RETRIEVED (3.21% at L0: an earlier
+  noun nearly always also fits), dependent-first ones mostly are
+  (88.37%); the cycle-only INTERFERED arcs are few (9,875,520 of
+  the 1,012,027,392 displaced arcs of six-word pairs at L0) but not zero, so
+  the registered reading (subtree kept) and the cycle-free one differ
+  slightly; L1 is not perfect retrieval for adjectives (91.64%
+  dependent first): an open genitive noun can still take the arriving
+  noun.
+- **Checks green** at four, five and six words: the 2 x 2 cells hold
+  every crossed pair, their misreads are D131's B by length (to five);
+  every misread pair has |F| >= 2; arc labels by the per-level pass ==
+  task 1's pass, level by level and length by length; width, depth,
+  umbra types and backward attachments the same at every level; the
+  restated covered => competed; hand sentence 12 (*fortis puellae regis
+  amant dominum*: INTERFERED only through a cycle) pins the cycle-free
+  variant.
+- **Plants (silva.planta, 14, all red):** U2a at 9 points; testable at
+  1%; U2b's 90% bound open; U2b's gap signed; U1's floor strict; U2b
+  read from the head-first strata; U1 from genitive arcs; routes
+  strictly nearer only; the population |F| >= 3; misread judged by M;
+  routes read from M; blind competition counting any nominal; the cycle
+  never set aside; directions swapped in the strata. Three needed five
+  words (four words has no tie, no M-only route, no nearer adjective).
+- **Size and time:** the final full run (every part, five and six
+  words) is 1,281 s, peak 245 MB: **118 checks, 0 failures**; the
+  six-word measure pass, four levels, about 12 minutes.
