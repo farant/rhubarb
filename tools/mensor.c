@@ -39,6 +39,7 @@
 #include "tabula_dispersa.h"
 #include "iter_directoria.h"
 #include "mensura_quaestio.h"
+#include "memoria_processus.h"
 #include "internamentum.h"
 #include "stml.h"
 #include "filum.h"
@@ -3247,6 +3248,52 @@ _purgare (
     redde ZEPHYRUM;
 }
 
+/* MEMORIA (credo memoria T7): vestigium processus alieni - lector UNUS
+ * custodiarum omnium (credo T4, processus T5, sonda). Exitus 0 lectum,
+ * I legi nequit (pid absens, alienus), 2 usus. */
+interior integer
+_memoria (
+      integer   argc,
+    character** argv)
+{
+    MemoriaProcessus  m;
+                 b32  machina = _vexillum(argc, argv, "-machina");
+           character* finis;
+              longus  pid;
+
+    si (argc < III || argv[II][ZEPHYRUM] == '-')
+    {
+        fprintf(stderr, "usus: mensor memoria PID [-machina]\n");
+        redde 2;
+    }
+    pid = strtol(argv[II], &finis, X);
+    si (*finis != '\0' || pid <= 0)
+    {
+        fprintf(stderr, "mensor memoria: pid '%s' non numerus\n",
+            argv[II]);
+        redde 2;
+    }
+    si (!memoria_processus_legere((s32)pid, &m))
+    {
+        fprintf(stderr, "mensor memoria: pid %ld legi nequit\n", pid);
+        redde I;
+    }
+    si (machina)
+    {
+        imprimere("MEMORIA\t%ld\t%ld\t%ld\t%ld\n", pid,
+            (longus)m.vestigium, (longus)m.vestigium_apex,
+            (longus)m.residens);
+    }
+    alioquin
+    {
+        imprimere("vestigium %ld MiB  apex %ld MiB  residens %ld MiB\n",
+            (longus)(m.vestigium / ((i64)MXXIV * (i64)MXXIV)),
+            (longus)(m.vestigium_apex / ((i64)MXXIV * (i64)MXXIV)),
+            (longus)(m.residens / ((i64)MXXIV * (i64)MXXIV)));
+    }
+    redde ZEPHYRUM;
+}
+
 
 /* ============================================================ */
 
@@ -3267,7 +3314,9 @@ _usus (vacuum)
         "      summa iudicia commissiones statistica sectiones"
         " graves lentescentes numquam discus)\n"
         "  mensor purgare [-siccum] [-machina] [-regula via]"
-        "   (diurna)\n\n"
+        "   (diurna)\n"
+        "  mensor memoria PID [-machina]   vestigium processus"
+        " (compressa inclusa)\n\n"
         "  Ambitus: MENSOR_SESSIO MENSOR_PARENS MENSOR_DIARIUM"
         " MENSOR_VOLUMEN\n");
 }
@@ -3364,6 +3413,10 @@ main (
     alioquin si (strcmp(argv[I], "cursus") == 0)
     {
         codex = _cursus(piscina, argc, argv);
+    }
+    alioquin si (strcmp(argv[I], "memoria") == 0)
+    {
+        codex = _memoria(argc, argv);
     }
     alioquin
     {

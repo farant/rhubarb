@@ -15,7 +15,7 @@
 
 <p>Each unit declares the questions it answers in <code>lib/S.interrogationes.stml</code> (canon <code>interrogationes.canon</code>). Every answer is anchored to a symbol, a path or a command, and the gate <code>interrogationes</code> turns red when an anchor dies. From the terminal: <code>bin/fabrica quid -interrogationes -quaere "how do I ..."</code>, or <code>-symbolum xar_addere</code> for the questions that name a symbol.</p>
 
-<p class="nota">818 questions in 96 units · quomodo 365 · possumne 231 · quid 131 · cur 91</p>
+<p class="nota">819 questions in 96 units · quomodo 365 · possumne 231 · quid 131 · cur 92</p>
 <ul>
 <li><a href="#actio">actio</a> <span class="nota">6</span></li>
 <li><a href="#aedilis">aedilis</a> <span class="nota">11</span></li>
@@ -37,7 +37,7 @@
 <li><a href="#entitas">entitas</a> <span class="nota">9</span></li>
 <li><a href="#eventus_stml">eventus_stml</a> <span class="nota">9</span></li>
 <li><a href="#exemplaria">exemplaria</a> <span class="nota">5</span></li>
-<li><a href="#fabrica">fabrica</a> <span class="nota">12</span></li>
+<li><a href="#fabrica">fabrica</a> <span class="nota">13</span></li>
 <li><a href="#fasti">fasti</a> <span class="nota">9</span></li>
 <li><a href="#figura">figura</a> <span class="nota">7</span></li>
 <li><a href="#filum">filum</a> <span class="nota">12</span></li>
@@ -612,6 +612,8 @@
 <div class="responsum">A named flat list of parts (an artifact, all outputs of an action, or another composite) declared with &lt;compositum&gt; and &lt;pars&gt; elements; no expressions. fabrica_compositum_explicare flattens it (cycles, unknown parts and parts whose strategy is never judged are refused), and the verdict is the worst part: RECENS &lt; NON_IUDICATUM &lt; SUPRA &lt; IGNOTUM &lt; STALUM (fabrica_iudicia_coniungere), naming up to III of the worst artifacts and then &quot;+N&quot;.<br><span class="nota">symbolum <code>fabrica_composita_legere</code> <code>fabrica_compositum_explicare</code> <code>fabrica_iudicia_coniungere</code> <code>fabrica_compositum_verdictum</code></span></div></li>
 <li id="fabrica-12"><span class="status">quid</span>what is a gradus member, the &quot;actio/membrum&quot; names I see in verdicts?
 <div class="responsum">A gradus kind (probationes_c) expands one declared action into one synthetic action per member, titled &quot;ACTIO/MEMBRUM&quot;, each with its own area build/fabrica/area/ACTIO/MEMBRUM/ (fabrica_area_via), a recorded read trace and a verdict file. The parent becomes a composite of its members (fabrica_gradus_composita), so a single changed test re-runs only that member. bin/fabrica probare COMPOSITUM [FILTRUM...] runs the stale members and reuses fresh ones; -vis re-runs every selected member.<br><span class="nota">symbolum <code>fabrica_gradus_explicare</code> <code>FabricaGradus</code> <code>fabrica_area_via</code> <code>fabrica_gradus_composita</code> · imperium <code>bin/fabrica probare -vis</code></span></div></li>
+<li id="fabrica-13"><span class="status">cur</span>why was a test member killed with &quot;memoria maxima excessa&quot;?
+<div class="responsum">fabrica runs every gradus member (link and run) with a whole-process memory cap: FABRICA_MEMORIA_MB from fabrica's own environment (not the member's), default FABRICA_MEMORIA_ORDINARIA_MB = 16 GiB, 0 = none. Over it the member gets SIGKILL with exit 137, and the cause names the footprint seen. For a sectioned credo suite the verdict also names the section that was running (&quot;sectio 'X' RUIT&quot;), and the sections before it keep their verdicts. The cap only stops runaways. A heavy section that finishes is judged by credo's own per-section ceiling (256 MiB, or 1024 with signum gravis).<br><span class="nota">symbolum <code>fabrica_sectiones_legere</code> · via <a href="../tools/fabrica_sutura.h"><code>tools/fabrica_sutura.h</code></a></span></div></li>
 </ol>
 
 <h2 id="fasti">fasti</h2>

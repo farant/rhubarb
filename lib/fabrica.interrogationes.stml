@@ -164,4 +164,19 @@
       ones; -vis re-runs every selected member.</responsum>
   </interrogatio>
 
+  <interrogatio genus="cur">
+    <quaestio! (>why was a test member killed with "memoria maxima excessa"?
+    <responsum symbolum="fabrica_sectiones_legere" via="tools/fabrica_sutura.h">fabrica
+      runs every gradus member (link and run) with a whole-process
+      memory cap: FABRICA_MEMORIA_MB from fabrica's own environment (not
+      the member's), default FABRICA_MEMORIA_ORDINARIA_MB = 16 GiB, 0 =
+      none. Over it the member gets SIGKILL with exit 137, and the cause
+      names the footprint seen. For a sectioned credo suite the
+      verdict also names the section that was running ("sectio 'X'
+      RUIT"), and the sections before it keep their verdicts. The cap
+      only stops runaways. A heavy section that finishes is judged by
+      credo's own per-section ceiling (256 MiB, or 1024 with signum
+      gravis).</responsum>
+  </interrogatio>
+
 </interrogationes>

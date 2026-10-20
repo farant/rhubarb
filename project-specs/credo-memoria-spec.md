@@ -226,6 +226,38 @@ first section's verdict must survive.
 call to the same reader (a small `bin/` helper, or sonda runs its probe
 via `processus`). One mechanism for every guard.
 
+*T6 + T7 FACTUM 2026-10-20.*
+
+**T6.** `suturae_in_area_currere` (gradus members, link and run) sets
+`memoria_maxima` from `FABRICA_MEMORIA_MB` in fabrica's environment,
+defaulting to `FABRICA_MEMORIA_ORDINARIA_MB` = 16 GiB (decree …S3B).
+On `PROCESSUS_ERROR_MEMORIA`, `suturae_actum_complere` reports "ran and
+was killed" (exit 137, cause = the kill description) instead of
+"didn't start", so `_sectiones_explicare` runs as normal and names the
+broken section through the existing INCIPIT-without-SECTIO path:
+`FRACTA - exitus 137: sectio 'beta' RUIT; 0 non cursae; memoria maxima
+excessa (vestigium 97 MiB > 64 MiB) - processus occisus`. That says
+the same as the spec's line without a new format. Actions and
+timeouts are unchanged; only capped runs can produce MEMORIA. Test:
+fabrica fumus LXIII, with two plants (cap zeroed; mapping skipped).
+
+One fixture trap: an unused `malloc` + `memset` is removed entirely by
+clang -O2. The first runaway fixture never touched a byte and ran its
+whole 20 s. Fixtures now keep their buffers in a global array.
+
+**T7.** `bin/mensor memoria PID [-machina]` (MEMORIA pid vestigium apex
+residens, in bytes; exit 1 if unreadable). sonda reads it instead of
+parsing `top`, and refuses to run without `bin/mensor` (exit 2, like
+aedilis). New gate `tools/sonda_fumus.sh` (sonda had no test): a small
+probe passes; a 256 MiB probe under `SONDA_MEMORIA_MB=64` is killed in
+about 1 s, naming the footprint. Born red against the old top-based
+message; plant (mensor always "unreadable") red. Known weakness: if
+`bin/mensor` itself breaks, sonda's guard goes quiet, since a failed
+read looks like a probe that has already exited.
+
+**C2 complete.** C3 stays PULL: build it only when C1/C2 leave a gap
+that someone names.
+
 ## V. C3 — furca per sectionem  APERTUM (PULL)
 
 `CREDO_ISOLATIO=furca` would run each section in a forked child, reusing
