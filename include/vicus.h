@@ -38,6 +38,7 @@
 #include "dispensator.h"
 #include "delineare_mandata.h"
 #include "organum_montatio.h"
+#include "semita.h"
 
 /* tabulae fixae (vicus-latera decisio IX): index ordinarius tot
  * dat; vicus plures non legit */
@@ -119,6 +120,9 @@ nomen structura {
                  b32  (*argumentum_ponere)(vacuum* ctx,
                           constans character* argumentum);
               vacuum* argumentum_ponere_ctx;
+    /* semitae R3: ramus lateris (semita.h) - historia lateris et
+     * $via; NIHIL = latus sine semitis */
+    constans InsulaRamus* ramus;
 } VicusFacies;
 
 nomen vacuum (*VicusDescriptor)(
@@ -149,6 +153,11 @@ nomen structura {
                     b32  finita;         /* concha exiit: titulus
                                           * "[exitus]", non iam
                                           * pulsatur */
+    /* semitae R3 (vicus privatum): historia lateris - semitae plenae
+     * ut textus STML (cum signo camporum 'impelle'); cursor = locus
+     * currens */
+                    Xar* historia;
+                    i32  historia_cursor;
 } VicusLatus;
 
 nomen structura {
@@ -215,6 +224,9 @@ nomen structura {
                     Xar* cyclus;      /* T4f: latera cycli (genus,
                                        * argumentum; privatum); NIHIL
                                        * aut vacuus = nullus */
+          SemitaOrganum  organa;      /* semitae R3: NIHIL = nullae */
+                 vacuum* organa_ctx;
+                Piscina* scheda_semitarum;   /* per pulsum vacatur */
 } Vicus;
 
 /* T4a (colloquia-plan): systema hospitis - in omni vicus_pulsare
@@ -488,6 +500,15 @@ vicus_acervo_aperire (
                   Vicus* v,
      constans character* genus,
      constans character* argumentum);
+
+/* semitae R3: organa (genus -> manifestum) pro semitis laterum;
+ * applicatio ponit (organa infixa, cache). NIHIL = nullae (historia
+ * nulla) */
+vacuum
+vicus_organa_ponere (
+              Vicus* v,
+      SemitaOrganum  organa,
+             vacuum* ctx);
 
 chorda
 vicus_causa (

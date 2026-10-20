@@ -13,8 +13,9 @@ of URIs.*
 *Status: design decided with Fran (§IX). R0 DONE 2026-10-19 (canon
 attributes, loader rules, montationes accessors - lib/organum.worklog.md).
 R1 DONE 2026-10-19 (lib/semita.c, lib/semita.worklog.md). R2 DONE
-2026-10-19 (sancti on routes - lib/sancti_visus.worklog.md). Next R3
-(vicus: routes, per-pane history).*
+2026-10-19 (sancti on routes - lib/sancti_visus.worklog.md). R3 DONE
+2026-10-19 ($via, per-pane history Ctrl+O/Ctrl+I, semita_legere_plenam -
+lib/vicus.worklog.md). Next R4 (calendar, nomenclator, pictor).*
 
 ## I. Doctrine (decided with Fran, 2026-10-19)
 

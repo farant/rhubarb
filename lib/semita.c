@@ -458,6 +458,7 @@ semita_applicare (
  * Lectio
  * ================================================== */
 
+/* plena: campi omnes (absentes expliciti), liberi montati omnes */
 interior StmlNodus*
 _legere (
            SemitaOrganum  organa,
@@ -466,6 +467,7 @@ _legere (
     constans InsulaRamus* ramus,
                   chorda  titulus,
                      b32  liber,
+                     b32  plena,
                  Piscina* piscina,
      InternamentumChorda* intern)
 {
@@ -492,6 +494,14 @@ _legere (
         }
         a = insula_ramus_attributum(ramus, chorda_ut_cstr(k->titulus,
             piscina));
+        si (plena)
+        {
+            (vacuum)stml_attributum_addere_chorda(n, piscina, intern,
+                chorda_ut_cstr(k->titulus, piscina), (a && a->mensura
+                > ZEPHYRUM) ? *a : k->habet_absens ? k->absens
+                : _vacua());
+            perge;
+        }
         si (   !a || a->mensura == ZEPHYRUM
             || (k->habet_absens && chorda_aequalis(*a, k->absens)))
         {
@@ -513,11 +523,11 @@ _legere (
         {
             perge;
         }
-        l = _legere(organa, ctx, lo, &lr, m->titulus, VERUM, piscina,
-            intern);
+        l = _legere(organa, ctx, lo, &lr, m->titulus, VERUM, plena,
+            piscina, intern);
         si (   l
-            && ((l->attributa && xar_numerus(l->attributa) > ZEPHYRUM)
-            || _numerus_liberorum(l) > ZEPHYRUM))
+            && (plena || (l->attributa && xar_numerus(l->attributa)
+            > ZEPHYRUM) || _numerus_liberorum(l) > ZEPHYRUM))
         {
             (vacuum)stml_liberum_addere(n, l);
         }
@@ -542,7 +552,27 @@ semita_legere (
     }
     o = organa(ctx, chorda_ex_literis(genus, piscina));
     redde o ? _legere(organa, ctx, o, ramus, chorda_ex_literis(genus,
-        piscina), FALSUM, piscina, intern) : NIHIL;
+        piscina), FALSUM, FALSUM, piscina, intern) : NIHIL;
+}
+
+StmlNodus*
+semita_legere_plenam (
+            SemitaOrganum  organa,
+                   vacuum* ctx,
+     constans InsulaRamus* ramus,
+       constans character* genus,
+                  Piscina* piscina,
+      InternamentumChorda* intern)
+{
+    constans Organum* o;
+
+    si (!organa || !ramus || !genus)
+    {
+        redde NIHIL;
+    }
+    o = organa(ctx, chorda_ex_literis(genus, piscina));
+    redde o ? _legere(organa, ctx, o, ramus, chorda_ex_literis(genus,
+        piscina), FALSUM, VERUM, piscina, intern) : NIHIL;
 }
 
 

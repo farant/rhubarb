@@ -856,6 +856,164 @@ aperiens_fixum_registrare (
     redde iussum_registrare(r, verbum, FALSUM, aperire_iussum, ca);
 }
 
+/* semitae R3: organa vici (genus -> manifestum infixum cum basi),
+ * cache per genus; SemitaOrganum vici et $via */
+nomen structura {
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                    Xar* genera;      /* chorda */
+                    Xar* organa;      /* constans Organum* */
+} ContextusOrganorum;
+
+interior constans Organum*
+organa_vici (
+     vacuum* ctx,
+     chorda  genus)
+{
+    ContextusOrganorum* co;
+      constans Organum* o;
+                   i32  i;
+
+    co = (ContextusOrganorum*)ctx;
+    si (!co || genus.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(co->genera); i++)
+    {
+        si (chorda_aequalis(*(chorda*)xar_obtinere(co->genera, i),
+            genus))
+        {
+            redde *(constans Organum**)xar_obtinere(co->organa, i);
+        }
+    }
+    o = organum_legere_genus(co->piscina, co->intern, chorda_ut_cstr(
+        genus, co->piscina), "vicus");
+    si (o)
+    {
+        *(chorda*)xar_addere(co->genera) = chorda_transcribere(genus,
+            co->piscina);
+        *(constans Organum**)xar_addere(co->organa) = o;
+    }
+    redde o;
+}
+
+/* genus campos semitae habet? */
+interior b32
+semitas_accipit (
+    constans Organum* o)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; o && i < organum_numerus_camporum(o); i++)
+    {
+        si (organum_campus_index(o, i)->semita != ORGANUM_SEMITA_NULLA)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+nomen structura {
+                 Vicus* vicus;
+    ContextusOrganorum* organa;
+} ContextusViae;
+
+/* $via(uri): latus generis in frontem cum semita (vicus_acervo_mutare
+ * - argumentum lateris = URI). Iudicium ante petitionem: genus
+ * ignotum, genus sine semitis, semita mala - nuntius. */
+interior b32
+via_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* piscina,
+     IussumEffectus* effectus)
+{
+    constans ContextusViae* cv;
+                    chorda  uri;
+                    chorda  genus;
+                    chorda  vitium;
+          constans Organum* o;
+                       i32  i;
+
+    cv = (constans ContextusViae*)ctx;
+    si (iussum->numerus_argumentorum != I)
+    {
+        effectus->error =
+            chorda_ex_literis("via: unum argumentum (semita)",
+            piscina);
+        redde VERUM;
+    }
+    uri    = iussum->argumenta[ZEPHYRUM];
+    genus  = uri;
+    per (i = ZEPHYRUM; i < uri.mensura; i++)
+    {
+        si (uri.datum[i] == '/' || uri.datum[i] == '?')
+        {
+            genus.mensura = i;
+            frange;
+        }
+    }
+    o = organa_vici(cv->organa, genus);
+    si (!o)
+    {
+        effectus->error = chorda_concatenare(chorda_ex_literis(
+            "via: genus ignotum: ", piscina), genus, piscina);
+        redde VERUM;
+    }
+    si (!semitas_accipit(o))
+    {
+        effectus->error = chorda_concatenare(genus, chorda_ex_literis(
+            ": semitas nondum accipit", piscina), piscina);
+        redde VERUM;
+    }
+    si (!semita_ex_uri(organa_vici, cv->organa, uri, piscina,
+            cv->organa->intern, &vitium))
+    {
+        effectus->error = chorda_concatenare(chorda_ex_literis("via: ",
+            piscina), vitium, piscina);
+        redde VERUM;
+    }
+    si (!vicus_acervo_mutare(cv->vicus, chorda_ut_cstr(genus, piscina),
+            chorda_ut_cstr(uri, piscina)))
+    {
+        effectus->error = chorda_concatenare(genus, chorda_ex_literis(
+            ": aperiri non potest", piscina), piscina);
+    }
+    redde VERUM;
+}
+
+/* organa vici ponere (historia laterum) et $via registrare */
+interior b32
+via_registrare (
+        IussumRegistrum* r,
+                  Vicus* v,
+                Piscina* piscina,
+    InternamentumChorda* intern)
+{
+    ContextusOrganorum* co;
+         ContextusViae* cv;
+
+    co = (ContextusOrganorum*)piscina_allocare(piscina,
+        magnitudo(ContextusOrganorum));
+    cv = (ContextusViae*)piscina_allocare(piscina,
+        magnitudo(ContextusViae));
+    si (!co || !cv)
+    {
+        redde FALSUM;
+    }
+    co->piscina  = piscina;
+    co->intern   = intern;
+    co->genera   = xar_creare(piscina, (i32)magnitudo(chorda));
+    co->organa   = xar_creare(piscina, (i32)magnitudo(Organum*));
+    cv->vicus    = v;
+    cv->organa   = co;
+    vicus_organa_ponere(v, organa_vici, co);
+    redde co->genera && co->organa
+        && iussum_registrare(r, "via", FALSUM, via_iussum, cv);
+}
+
 interior b32
 scribam_montare (
                  vacuum* sedes,
@@ -2668,6 +2826,8 @@ sanctos_describere (
     f->componere_ctx          = m;
     f->argumentum_ponere      = sanctorum_argumentum_ponere;
     f->argumentum_ponere_ctx  = m;
+    /* semitae R3: historia lateris et $via */
+    f->ramus                  = &m->ramus;
     /* Esc quod index non consumpsit (quaestio nulla): latus prius */
     f->effugium_redit         = VERUM;
 }
@@ -2827,6 +2987,7 @@ ContextusNomenclatoris* cn;
         || !sanctorum
         || !aperiens_fixum_registrare(cs->iussa, app->vicus, "saints",
                "sancti", NIHIL, piscina)
+        || !via_registrare(cs->iussa, app->vicus, piscina, intern)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-next", I,
                piscina)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-prev", -I,

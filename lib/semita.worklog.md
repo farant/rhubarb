@@ -43,3 +43,10 @@ a genus -> organum callback, `organum_valorem_iudicare` in organum.h).
   a branch writes base fields, refused otherwise ("attributum extra
   canonem").
 - Plants 18 red (one test added first: duplicate child in a route).
+
+## 2026-10-19 — R3: semita_legere_plenam
+
+Full read for exact restore (vicus history): every routable field,
+value or absens or "" when unset; mounted children always. Not
+canonical. Test `plena`: a full read of a fresh world applied onto a
+changed one brings it back to all defaults (canonical route "proba").

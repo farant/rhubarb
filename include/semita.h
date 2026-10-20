@@ -65,6 +65,18 @@ semita_legere (
                   Piscina* piscina,
       InternamentumChorda* intern);
 
+/* semita PLENA status currentis: ut semita_legere, sed campi semitae
+ * OMNES (valores absentes expliciti: absens aut "") - restitutio
+ * exacta (historia lateris); non canonica */
+StmlNodus*
+semita_legere_plenam (
+            SemitaOrganum  organa,
+                   vacuum* ctx,
+     constans InsulaRamus* ramus,
+       constans character* genus,
+                  Piscina* piscina,
+      InternamentumChorda* intern);
+
 /* URI canonicum: genus/ligatio.../?clavis.punctata=valor&... ; vacua si
  * semita mala */
 chorda

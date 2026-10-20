@@ -507,6 +507,63 @@ _sectio_lista (
     CREDO_AEQUALIS_I32(xar_numerus(l), I);
 }
 
+/* plena (R3, historia): campi semitae OMNES, absentes expliciti;
+ * restitutio exacta etiam ubi canonica "serva" significaret */
+interior vacuum
+_sectio_plena (
+    CredoContextus* c)
+{
+      Mundus* w;
+      chorda  vitium;
+   StmlNodus* plena;
+
+    w = mundus(c, VERUM);
+    CREDO_NECESSE_NON_NIHIL(w);
+    /* status ordinarius: plena omnia nominat, canonica nihil */
+    plena = semita_legere_plenam(organa, w, &w->ramus, "proba",
+        c->piscina, w->intern);
+    CREDO_NECESSE_NON_NIHIL(plena);
+    CREDO_CHORDA_AEQUALIS_LITERIS(semita_ad_uri(organa, w, plena,
+        c->piscina), "proba/index?ordo=nomen&pagina=0&notae.pagina=0"
+        "&alter.pagina=0");
+    /* restitutio exacta: plena status X super statum Y = X */
+    CREDO_VERUM(applicare(w, "<proba visus=\"res\" res=\"alpha\""
+        " ordo=\"dies\" pagina=\"3\"><notae pagina=\"4\"/></proba>",
+        c->piscina, &vitium));
+    plena = semita_legere_plenam(organa, w, &w->ramus, "proba",
+        c->piscina, w->intern);
+    CREDO_VERUM(applicare(w, "<proba visus=\"index\" res=\"beta\""
+        " ordo=\"nomen\"><notae pagina=\"9\"/></proba>", c->piscina,
+        &vitium));
+    CREDO_VERUM(semita_applicare(organa, w, &w->ramus, plena,
+        c->piscina,
+        &vitium));
+    CREDO_VERUM(campus_est(&w->ramus, "visus", "res"));
+    CREDO_VERUM(campus_est(&w->ramus, "res", "alpha"));
+    CREDO_VERUM(campus_est(&w->ramus, "ordo", "dies"));
+    CREDO_VERUM(campus_est(&w->ramus, "pagina", "3"));
+    CREDO_VERUM(campus_est(&w->notae, "pagina", "4"));
+    /* et retro ad ordinarium: plena mundi novi (omnia absentia,
+     * scripta) super statum mutatum */
+    {
+        Mundus* novus;
+
+        novus = mundus(c, VERUM);
+        CREDO_NECESSE_NON_NIHIL(novus);
+        plena = semita_legere_plenam(organa, novus, &novus->ramus,
+            "proba", c->piscina, novus->intern);
+        CREDO_VERUM(semita_applicare(organa, w, &w->ramus, plena,
+            c->piscina, &vitium));
+        CREDO_VERUM(campus_est(&w->ramus, "visus", "index"));
+        CREDO_VERUM(campus_est(&w->ramus, "res", NIHIL));
+        CREDO_VERUM(campus_est(&w->ramus, "ordo", "nomen"));
+        CREDO_VERUM(campus_est(&w->notae, "pagina", "0"));
+        CREDO_CHORDA_AEQUALIS_LITERIS(semita_ad_uri(organa, w,
+            semita_legere(organa, w, &w->ramus, "proba", c->piscina,
+            w->intern), c->piscina), "proba");
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "applicare", _sectio_applicare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ambitus", _sectio_ambitus, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -514,6 +571,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "uri", _sectio_uri, NIHIL, NIHIL, NIHIL, NIHIL },
     { "lista", _sectio_lista, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "plena", _sectio_plena, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
