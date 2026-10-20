@@ -78,3 +78,15 @@ Test finding: with PKCE checking planted off, the suite SEGFAULTED
 instead of failing - the test's `_json` helper returned NULL for an
 absent field and `strcmp` died. A plant that crashes is still red, but
 it names nothing; `_json` now returns "".
+
+## 2026-10-20 - whole-branch review fixes
+
+- `redirect_uri` on the code exchange and `client_id` on refresh are
+  OPTIONAL (OAuth 2.1 4.1.3 / 4.3.1), compared when present. Claude
+  Code sends both; the hosted client is unverified on refresh, and a
+  missing `client_id` answered `invalid_request` would have broken the
+  connector every hour (Claude only re-auths on `invalid_grant`).
+- Every OAuth refusal now writes one line: `admissio via= error=
+  causa="..." cliens=<sanitised>` (written BEFORE responding - the
+  colloquium piscina is recycled after). Never code, token, verifier or
+  CSRF; tested by scanning the captured lines for each.

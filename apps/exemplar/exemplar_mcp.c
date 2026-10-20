@@ -8,7 +8,9 @@
  * Sonda (T1): petitionem unam lineam unam scribit: methodus, uri,
  * OMNIA capita (Authorization et Proxy-Authorization schema solum,
  * Cookie et Set-Cookie redacta), corpus usque ad IV KB effugiis tutum
- * - corpora /oauth/token et POST /oauth/authorize numquam. Nunc per
+ * - corpora /oauth/token et POST /oauth/authorize numquam, corpora
+ * /mcp ut compendium solum (methodus, versio, cliens, instrumentum;
+ * numquam argumenta). Nunc per
  * speculatores bibliothecarum
  * vocatur.
  */
@@ -98,6 +100,65 @@ _tutum_appendere (
     }
 }
 
+/* compendium corporis JSON-RPC: methodus, id, versio protocolli,
+ * cliens (initialize), instrumentum (tools/call) - nihil aliud */
+interior vacuum
+_compendium_mcp (
+    ChordaAedificator* a,
+               chorda  corpus,
+              Piscina* p)
+{
+    JsonResultus  r = json_legere(corpus, p);
+       JsonValor* params;
+       JsonValor* v;
+       character  n[XXXII];
+
+    si (!r.successus || !json_est_objectum(r.radix))
+    {
+        sprintf(n, "[non objectum, %u octeti]",
+            (insignatus integer)corpus.mensura);
+        chorda_aedificator_appendere_literis(a, n);
+        redde;
+    }
+    params = json_objectum_capere(r.radix, "params");
+    chorda_aedificator_appendere_literis(a, "methodus=");
+    _tutum_appendere(a, json_ad_chorda(json_objectum_capere(r.radix,
+        "method")), LXIV);
+    v = json_objectum_capere(r.radix, "id");
+    si (v)
+    {
+        chorda_aedificator_appendere_literis(a, " id=");
+        _tutum_appendere(a, json_scribere(v, p), XXXII);
+    }
+    v = json_objectum_capere(params, "protocolVersion");
+    si (!v)
+    {
+        v = json_objectum_capere(json_objectum_capere(params, "_meta"),
+            "io.modelcontextprotocol/protocolVersion");
+    }
+    si (json_est_chorda(v))
+    {
+        chorda_aedificator_appendere_literis(a, " versio=");
+        _tutum_appendere(a, json_ad_chorda(v), XXXII);
+    }
+    v = json_objectum_capere(params, "clientInfo");
+    si (json_est_objectum(v))
+    {
+        chorda_aedificator_appendere_literis(a, " cliens=");
+        _tutum_appendere(a, json_ad_chorda(json_objectum_capere(v,
+            "name")), LXIV);
+        chorda_aedificator_appendere_literis(a, "/");
+        _tutum_appendere(a, json_ad_chorda(json_objectum_capere(v,
+            "version")), XXXII);
+    }
+    v = json_objectum_capere(params, "name");
+    si (json_est_chorda(v))
+    {
+        chorda_aedificator_appendere_literis(a, " instrumentum=");
+        _tutum_appendere(a, json_ad_chorda(v), LXIV);
+    }
+}
+
 interior vacuum
 _sonda (
                Exemplar* e,
@@ -162,6 +223,14 @@ _sonda (
     alioquin si (r->corpus_via != NIHIL)
     {
         chorda_aedificator_appendere_literis(a, " | corpus: [in filo]");
+    }
+    alioquin si (   r->corpus.mensura > ZEPHYRUM
+                 && chorda_aequalis_literis(r->via, "/mcp"))
+    {
+        /* /mcp: COMPENDIUM solum - argumenta instrumentorum textum
+         * notarum ferunt, numquam in actis */
+        chorda_aedificator_appendere_literis(a, " | corpus: ");
+        _compendium_mcp(a, r->corpus, colloquium_piscina(col));
     }
     alioquin si (r->corpus.mensura > ZEPHYRUM)
     {

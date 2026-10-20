@@ -1125,12 +1125,25 @@ _sectio_sonda_acta (CredoContextus* c)
     CREDO_VERUM(strstr(capta.textus, "POST /mcp") != NIHIL);
     CREDO_VERUM(strstr(capta.textus, "2025-06-18") != NIHIL);
     CREDO_VERUM(strstr(capta.textus, "probatio-sondae/1") != NIHIL);
-    CREDO_VERUM(strstr(capta.textus, "clientInfo") != NIHIL);
+    /* corpus /mcp ut compendium: methodus, versio, cliens - numquam
+     * argumenta (textus notarum) */
+    CREDO_VERUM(strstr(capta.textus, "methodus=initialize") != NIHIL);
+    CREDO_VERUM(strstr(capta.textus, "cliens=probatio/0") != NIHIL);
     CREDO_VERUM(strstr(capta.textus, "SECRETUM") == NIHIL);
+    CREDO_VERUM(_rogare_et_legere(e, c->piscina, "POST /mcp",
+        "Content-Type: application/json\r\n"
+        "Authorization: Bearer SECRETUM-TESSERAE\r\n",
+        "{\"jsonrpc\":\"2.0\",\"id\":9,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"notam_addere\",\"arguments\":"
+        "{\"textus\":\"TEXTUS-PRIVATUS\"}}}", &l));
+    CREDO_AEQUALIS_S32(capta.lineae, II);
+    CREDO_VERUM(strstr(capta.textus, "instrumentum=notam_addere")
+        != NIHIL);
+    CREDO_VERUM(strstr(capta.textus, "TEXTUS-PRIVATUS") == NIHIL);
     /* via non MCP: nihil scriptum */
     CREDO_VERUM(_rogare_et_legere(e, c->piscina, "GET /salus", NIHIL,
         NIHIL, &l));
-    CREDO_AEQUALIS_S32(capta.lineae, I);
+    CREDO_AEQUALIS_S32(capta.lineae, II);
     _finire(e, &locus);
 
     /* sonda clausa: nihil omnino */

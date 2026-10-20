@@ -211,6 +211,64 @@ with this plan.
 - **R20 (T7)** - the Linux build caught a gcc `-Wsign-conversion` in T2's
   `lib/base64.c` (`(I << bits) - I`); fixed in this commit.
 
+## Whole-branch review (2026-10-20, fresh reviewer, e3259969^..09a88e65)
+
+Verdict "ready with fixes", no Critical. Fix pass (each RED -> GREEN):
+
+- **Final: fixed** token endpoint stricter than OAuth 2.1 - `redirect_uri`
+  on exchange and `client_id` on refresh are now optional, compared when
+  present (a refresh without `client_id` from the hosted client would
+  have broken the connector hourly) - `admissio_fluxus/parametra_omissa`
+  RED->GREEN.
+- **Final: fixed** OAuth refusals undiagnosable - one line per refusal
+  (`admissio via= error= causa= cliens=`, client id sanitised, never a
+  secret), writer `admissio_acta_ponere` (stderr = journal) -
+  `admissio_fluxus/refutationes_actae` RED->GREEN (also asserts code,
+  refresh token, verifier and CSRF absent).
+- **Final: fixed** `-sonda` on in production logged `/mcp` bodies (note
+  text) - the sonda now writes a SUMMARY for `/mcp` (method, id, version,
+  client, tool name; never arguments) - `exemplar_applicatio/sonda_acta`
+  RED->GREEN.
+- **Final: Ruling:** `-sonda` stays in the unit against P4's "default off"
+  until the refresh path is observed (T9), now safe because of the
+  summary; then it comes off - cost if wrong: header lines (no secrets)
+  in the journal a little longer.
+- **Final: Ruling:** refresh rotation keeps NO grace window (spec II.3
+  strict theft detection) - a lost refresh response forces one re-login;
+  cost if wrong: an occasional extra sign-in.
+- **Final: Ruling (declined-to-judge lines):** old access token valid to
+  its own expiry after refresh (standard); a wrong-verifier attempt burns
+  the code (R17); 401 body `invalid_token` without a token (header is
+  what Claude reads); 64 MB exemplar upload spool before `/mcp`'s 413
+  (pre-existing); `familia` = `concessio` (schema slack) - all stand.
+- **Final: minor (deferred):** consent POST checks Origin after the
+  parameters (no code issued, target registered).
+- **Final: minor (deferred):** open DCR lets anyone bounce a logged-out
+  visitor to their registered URI with `error=` - move the redirect-error
+  checks after the login check.
+- **Final: minor (deferred):** grants never expire; `/applicationes`
+  accumulates dead "Claude" grants (one per fresh connection); prune
+  grants with no live tokens, and let client pruning ignore revoked
+  grants.
+- **Final: minor (deferred):** DCR has no cap on `redirect_uris` count /
+  body size (cap at 8 URIs / 8 KB).
+- **Final: minor (deferred):** `offline_access` granted without a line on
+  the consent page.
+- **Final: minor (deferred):** a deferred MCP call never answered keeps
+  its slot and piscina (no consumer defers in B) - core deadline or
+  `mcp_dilatum_abicere`.
+- **Final: minor (deferred):** 429 without `Retry-After`.
+- **Final: minor (deferred):** unsupported-version access line drops the
+  already-verified user/client.
+- **Final: minor (deferred):** `notas_enumerare` `pagina` huge -> signed
+  overflow in `(pagina - 1) * 20`; clamp.
+- **Final: minor (deferred):** one SQLite write per `/mcp` call
+  (`usus_ultimus_ms`); throttle to 60 s.
+- **Final: minor (deferred):** absent `response_type` answers
+  `unsupported_response_type`, RFC says `invalid_request`.
+- **Final: minor (deferred):** default `basis` built with an unbounded
+  `sprintf` from `-hospes` (operator-controlled).
+
 ## Review focus
 
 Inputs no task's spec-derived tests would otherwise reach, most likely to

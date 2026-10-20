@@ -147,6 +147,14 @@ admissio_speculatorem_ponere (
                               HospitiumColloquium* colloquium),
                   vacuum* datum);
 
+/* acta refutationum OAuth (linea una: via, error, causa, cliens -
+ * numquam codex, tessera, verificator, CSRF); NIHIL = stderr */
+vacuum
+admissio_acta_ponere (
+    Admissio* admissio,
+       vacuum  (*scriptor)(vacuum* datum, chorda linea),
+       vacuum* datum);
+
 /* viae OAuth in hospitio (vide supra); via_intrandi e.g. "/intrare" */
 b32
 admissio_montare (

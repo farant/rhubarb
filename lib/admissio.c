@@ -28,6 +28,7 @@
 #include "sigillum.h"
 #include "url.h"
 
+#include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
 
@@ -49,6 +50,8 @@ structura Admissio {
                 vacuum  (*speculator)(vacuum* datum,
                             HospitiumColloquium* colloquium);
                 vacuum* speculatoris_datum;
+                vacuum  (*acta)(vacuum* datum, chorda linea);
+                vacuum* acta_datum;
 };
 
 interior vacuum
@@ -1187,6 +1190,72 @@ _html (
     }
 }
 
+/* identitas clientis ex petitione (signa tuta solum, <= LXIV) aut "-"
+ * - cliens ab hoste scribi potest, ergo in actis purgatus */
+interior chorda
+_cliens_tutus (
+    HospitiumColloquium* c,
+                Piscina* p)
+{
+    chorda v = colloquium_quaestio(c, "client_id");
+       i32 i;
+
+    si (!v.datum)
+    {
+        v = colloquium_forma(c, "client_id");
+    }
+    si (!v.datum || v.mensura == ZEPHYRUM || v.mensura > LXIV)
+    {
+        redde _ch("-");
+    }
+    per (i = ZEPHYRUM; i < v.mensura; i++)
+    {
+        i8 k = v.datum[i];
+
+        si (!((k >= 'A' && k <= 'Z') || (k >= 'a' && k <= 'z')
+              || (k >= '0' && k <= '9') || k == '-' || k == '_'))
+        {
+            redde _ch("?");
+        }
+    }
+    redde chorda_transcribere(v, p);
+}
+
+/* linea una per refutationem OAuth, ANTE responsum (piscina colloquii
+ * post responsum reficitur). Numquam codex, tessera, verificator,
+ * CSRF: solum via, error, causa (nostra), cliens purgatus. */
+interior vacuum
+_refutationem_notare (
+    HospitiumColloquium* c,
+     constans character* via,
+     constans character* error,
+     constans character* causa)
+{
+                Admissio* a = (Admissio*)colloquium_datum(c);
+                 Piscina* p = colloquium_piscina(c);
+       ChordaAedificator* t = chorda_aedificator_creare(p, CCLVI);
+                  chorda  linea;
+
+    chorda_aedificator_appendere_literis(t, "admissio via=");
+    chorda_aedificator_appendere_literis(t, via);
+    chorda_aedificator_appendere_literis(t, " error=");
+    chorda_aedificator_appendere_literis(t, error);
+    chorda_aedificator_appendere_literis(t, " causa=\"");
+    chorda_aedificator_appendere_literis(t, causa);
+    chorda_aedificator_appendere_literis(t, "\" cliens=");
+    chorda_aedificator_appendere_chorda(t, _cliens_tutus(c, p));
+    linea = chorda_aedificator_finire(t);
+    si (a && a->acta)
+    {
+        a->acta(a->acta_datum, linea);
+    }
+    alioquin
+    {
+        fprintf(stderr, "%.*s\n", (integer)linea.mensura,
+            (constans character*)linea.datum);
+    }
+}
+
 interior vacuum
 _pagina_erroris (
     HospitiumColloquium* c,
@@ -1203,6 +1272,7 @@ _pagina_erroris (
         "<body><h1>Admissio recusata</h1><p>");
     _html(a, _ch(nuntius));
     chorda_aedificator_appendere_literis(a, "</p></body></html>");
+    _refutationem_notare(c, "/oauth/authorize", "pagina", nuntius);
     colloquium_caput_addere(c, "Cache-Control", "no-store");
     colloquium_respondere(c, status, "text/html; charset=utf-8",
         chorda_aedificator_finire(a));
@@ -1244,6 +1314,12 @@ _redirigere_clientem (
     chorda_aedificator_appendere_literis(t, "&iss=");
     chorda_aedificator_appendere_chorda(t, url_codificare(_ch(
         a->o.auctoritas), p));
+    si (strcmp(clavis, "error") == ZEPHYRUM)
+    {
+        _refutationem_notare(c, "/oauth/authorize",
+            chorda_ut_cstr(valor,
+            p), "redirectio cum errore");
+    }
     colloquium_caput_addere(c, "Cache-Control", "no-store");
     colloquium_redirigere(c, CCCII, chorda_ut_cstr(
         chorda_aedificator_finire(t), p));
@@ -1830,6 +1906,7 @@ _token_error (
      constans character* codex,
      constans character* descriptio)
 {
+    _refutationem_notare(c, "/oauth/token", codex, descriptio);
     _token_respondere(c, CD, _error(colloquium_piscina(c), codex,
         descriptio));
 }
@@ -1941,8 +2018,9 @@ _permutare (
                 chorda  renovatio;
               Sigillum  s;
 
-    si (   !codex.datum || !cliens.datum || !redirectio.datum
-        || !verificator.datum)
+    /* redirect_uri optionale (OAuth 2.1 4.1.3): codex iam redirectioni
+     * ligatus est; si adest, congruere debet */
+    si (!codex.datum || !cliens.datum || !verificator.datum)
     {
         _token_error(c, "invalid_request", "parametra desunt");
         redde;
@@ -2002,7 +2080,8 @@ _permutare (
         redde;
     }
     si (   !chorda_aequalis(cliens, r_cliens)
-        || !chorda_aequalis(redirectio, r_redirectio))
+        || (redirectio.datum
+            && !chorda_aequalis(redirectio, r_redirectio)))
     {
         _token_error(c, "invalid_grant",
             "cliens aut redirectio aliena");
@@ -2065,7 +2144,9 @@ _renovare (
                    s64  nunc = _nunc(a);
                    b32  bene;
 
-    si (!tessera.datum || !cliens.datum)
+    /* client_id optionale (OAuth 2.1 4.3.1): tessera concessionem et
+     * clientem iam nominat; si adest, congruere debet */
+    si (!tessera.datum)
     {
         _token_error(c, "invalid_request", "parametra desunt");
         redde;
@@ -2115,7 +2196,7 @@ _renovare (
             "tessera renovationis expirata");
         redde;
     }
-    si (!chorda_aequalis(cliens, r_cliens))
+    si (cliens.datum && !chorda_aequalis(cliens, r_cliens))
     {
         _token_error(c, "invalid_grant", "cliens alienus");
         redde;
@@ -2214,6 +2295,19 @@ _documentum_via (
     colloquium_respondere(c, CC, "application/json",
         admissio_documentum(a,
         colloquium_piscina(c)));
+}
+
+vacuum
+admissio_acta_ponere (
+    Admissio* admissio,
+       vacuum  (*scriptor)(vacuum* datum, chorda linea),
+       vacuum* datum)
+{
+    si (admissio)
+    {
+        admissio->acta        = scriptor;
+        admissio->acta_datum  = datum;
+    }
 }
 
 vacuum

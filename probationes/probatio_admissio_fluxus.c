@@ -333,6 +333,9 @@ nomen structura {
      Admissio* a;
       Volumen* v;
           i32  speculata;
+    character  acta[VIII * MXXIV];   /* lineae refutationum */
+          i32  n_actorum;
+          i32  lineae;
 } Fixura;
 
 interior vacuum
@@ -342,6 +345,24 @@ _speculator (
 {
     (vacuum)colloquium;
     ((Fixura*)datum)->speculata++;
+}
+
+interior vacuum
+_acta_capere (
+     vacuum* datum,
+     chorda  linea)
+{
+    Fixura* f = (Fixura*)datum;
+
+    si (f->n_actorum + linea.mensura + II < (i32)magnitudo(f->acta))
+    {
+        memcpy(f->acta + f->n_actorum, linea.datum,
+            (size_t)linea.mensura);
+        f->n_actorum             += linea.mensura;
+        f->acta[f->n_actorum++]  = '\n';
+        f->acta[f->n_actorum]    = '\0';
+    }
+    f->lineae++;
 }
 
 interior b32
@@ -371,6 +392,7 @@ _fixura (
         redde FALSUM;
     }
     admissio_speculatorem_ponere(f->a, _speculator, f);
+    admissio_acta_ponere(f->a, _acta_capere, f);
     redde admissio_montare(f->a, f->h, _intratus, NIHIL, "/intrare");
 }
 
@@ -935,6 +957,94 @@ _sectio_forma (CredoContextus* c)
     _fixuram_solvere(&f);
 }
 
+/* OAuth 2.1 4.1.3 / 4.3.1: redirect_uri in permutatione et client_id
+ * in renovatione OPTIONALIA - si adsunt, congruere debent */
+interior vacuum
+_sectio_parametra_omissa (CredoContextus* c)
+{
+                Fixura  f;
+                Lector  l;
+    constans character* cliens;
+    constans character* codex;
+    constans character* renovatio;
+             character  corpus[MMXLVIII];
+
+    CREDO_NECESSE(_fixura(c, &f));
+    cliens = _inscribere(c, &f, CALLBACK);
+    /* permutatio sine redirect_uri: bene */
+    codex = _codicem(c, &f, cliens, OMNES, AMBO);
+    sprintf(corpus, "grant_type=authorization_code&code=%s&client_id=%s"
+        "&code_verifier=%s", codex, cliens, VERIFICATOR);
+    CREDO_VERUM(_token(c, &f, corpus, &l));
+    CREDO_AEQUALIS_I32(l.status, CC);
+    renovatio = _json(&l, "refresh_token", c->piscina);
+    CREDO_AEQUALIS_I32((i32)strlen(renovatio), XLIII);
+    /* renovatio sine client_id: bene */
+    sprintf(corpus, "grant_type=refresh_token&refresh_token=%s",
+        renovatio);
+    CREDO_VERUM(_token(c, &f, corpus, &l));
+    CREDO_AEQUALIS_I32(l.status, CC);
+    renovatio = _json(&l, "refresh_token", c->piscina);
+    /* client_id alienum: invalid_grant */
+    CREDO_VERUM(_renovare(c, &f, "alienus", renovatio, &l));
+    CREDO_AEQUALIS_I32(l.status, CD);
+    CREDO_VERUM(strcmp(_json(&l, "error", c->piscina), "invalid_grant")
+        == ZEPHYRUM);
+    /* redirect_uri aliena (adest): invalid_grant */
+    codex = _codicem(c, &f, cliens, OMNES, AMBO);
+    sprintf(corpus, "grant_type=authorization_code&code=%s&client_id=%s"
+        "&code_verifier=%s&redirect_uri=%s", codex, cliens, VERIFICATOR,
+        _codificare("https://claude.ai/aliud", c->piscina));
+    CREDO_VERUM(_token(c, &f, corpus, &l));
+    CREDO_AEQUALIS_I32(l.status, CD);
+    CREDO_VERUM(strcmp(_json(&l, "error", c->piscina), "invalid_grant")
+        == ZEPHYRUM);
+    _fixuram_solvere(&f);
+}
+
+/* refutationes OAuth in actis (causa legibilis), secreta numquam */
+interior vacuum
+_sectio_refutationes_actae (CredoContextus* c)
+{
+                Fixura  f;
+                Lector  l;
+    constans character* cliens;
+    constans character* codex;
+    constans character* renovatio;
+             character  corpus[MMXLVIII];
+
+    CREDO_NECESSE(_fixura(c, &f));
+    cliens  = _inscribere(c, &f, CALLBACK);
+    codex   = _codicem(c, &f, cliens, OMNES, AMBO);
+    CREDO_VERUM(_permutare(c, &f, cliens, codex, VERIFICATOR, AUDIENTIA,
+        &l));
+    renovatio = _json(&l, "refresh_token", c->piscina);
+    CREDO_AEQUALIS_I32(f.lineae, ZEPHYRUM);   /* successus tacet */
+    /* code iteratum, PKCE falsum, renovatio ignota, pagina erroris */
+    CREDO_VERUM(_permutare(c, &f, cliens, codex, VERIFICATOR, AUDIENTIA,
+        &l));
+    CREDO_VERUM(_permutare(c, &f, cliens, _codicem(c, &f, cliens, OMNES,
+        AMBO), "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXX", AUDIENTIA,
+        &l));
+    sprintf(corpus, "grant_type=refresh_token&refresh_token=%sX",
+        renovatio);
+    CREDO_VERUM(_token(c, &f, corpus, &l));
+    CREDO_VERUM(_get(c, &f, _parametra(c, "ignotus", CALLBACK, OMNES,
+        "S256", AUDIENTIA), SESSIO, &l));
+    CREDO_AEQUALIS_I32(f.lineae, IV);
+    CREDO_VERUM(strstr(f.acta, "via=/oauth/token") != NIHIL);
+    CREDO_VERUM(strstr(f.acta, "error=invalid_grant") != NIHIL);
+    CREDO_VERUM(strstr(f.acta, "via=/oauth/authorize") != NIHIL);
+    CREDO_VERUM(strstr(f.acta, cliens) != NIHIL);
+    /* secreta nusquam */
+    CREDO_VERUM(strstr(f.acta, codex) == NIHIL);
+    CREDO_VERUM(strstr(f.acta, renovatio) == NIHIL);
+    CREDO_VERUM(strstr(f.acta, VERIFICATOR) == NIHIL);
+    CREDO_VERUM(strstr(f.acta, "dBjftJeZ4CVP") == NIHIL);
+    CREDO_VERUM(strstr(f.acta, CSRF) == NIHIL);
+    _fixuram_solvere(&f);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "fluxus", _sectio_fluxus, _horologium_parare, NIHIL, NIHIL,
         NIHIL },
@@ -948,6 +1058,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "scopi_electi", _sectio_scopi_electi, _horologium_parare, NIHIL,
         NIHIL, NIHIL },
     { "forma", _sectio_forma, _horologium_parare, NIHIL, NIHIL, NIHIL },
+    { "parametra_omissa", _sectio_parametra_omissa,
+        _horologium_parare, NIHIL, NIHIL, NIHIL },
+    { "refutationes_actae", _sectio_refutationes_actae,
+        _horologium_parare, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
