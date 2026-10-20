@@ -1,6 +1,6 @@
-/* oratio_conllu.c - Vide oratio_conllu.h. */
+/* conllu.c - Vide conllu.h. */
 
-#include "oratio_conllu.h"
+#include "conllu.h"
 #include <string.h>
 
 interior chorda
@@ -17,16 +17,14 @@ _chorda (
 
 interior vacuum
 _vitium (
-    OratioVocabulariumVitium* v,
-                         i32  linea,
-          constans character* causa)
+          ConlluVitium* v,
+                   i32  linea,
+    constans character* causa)
 {
     si (v != NIHIL)
     {
-        v->plagula  = "conllu";
-        v->linea    = linea;
-        v->offset   = (s32)-I;
-        v->causa    = causa;
+        v->linea = linea;
+        v->causa = causa;
     }
 }
 
@@ -66,8 +64,22 @@ _numerus (
     redde VERUM;
 }
 
+/* HEAD: numerus decimalis (IX cifrae ad summum); -1 aliter */
+interior s32
+_caput (
+    chorda c)
+{
+    i32 v;
+
+    si (c.mensura > (i32)IX || !_numerus(c, &v))
+    {
+        redde (s32)-I;
+    }
+    redde (s32)v;
+}
+
 b32
-oratio_conllu_spatium_post (
+conllu_spatium_post (
     chorda misc)
 {
                    i32  i;
@@ -115,14 +127,14 @@ _campi (
 }
 
 Xar*
-oratio_conllu_legere (
-                     Piscina* piscina,
-                      chorda  fons,
-    OratioVocabulariumVitium* vitium)
+conllu_legere (
+         Piscina* piscina,
+          chorda  fons,
+    ConlluVitium* vitium)
 {
     Xar* sententiae = xar_creare(piscina,
-        (i32)magnitudo(OratioConlluSententia));
-    OratioConlluSententia* s       = NIHIL;
+        (i32)magnitudo(ConlluSententia));
+          ConlluSententia* s       = NIHIL;
                       i32  cursor  = ZEPHYRUM;
                       i32  linea   = ZEPHYRUM;
     /* T38 a: '# newdoc id' ultimum visum - documentum sententiarum
@@ -131,6 +143,7 @@ oratio_conllu_legere (
 
     si (sententiae == NIHIL)
     {
+        _vitium(vitium, ZEPHYRUM, "memoria");
         redde NIHIL;
     }
     dum (cursor < fons.mensura)
@@ -162,18 +175,20 @@ oratio_conllu_legere (
         }
         si (s == NIHIL)
         {
-            s = (OratioConlluSententia*)xar_addere(sententiae);
+            s = (ConlluSententia*)xar_addere(sententiae);
             si (s == NIHIL)
             {
+                _vitium(vitium, linea, "memoria");
                 redde NIHIL;
             }
             memset(s, ZEPHYRUM, magnitudo(*s));
             s->lexemata = xar_creare(piscina,
-                (i32)magnitudo(OratioConlluLexema));
+                (i32)magnitudo(ConlluLexema));
             s->linea       = linea;
             s->documentum  = documentum;   /* T38 a */
             si (s->lexemata == NIHIL)
             {
+                _vitium(vitium, linea, "memoria");
                 redde NIHIL;
             }
         }
@@ -200,7 +215,7 @@ oratio_conllu_legere (
         }
         {
                         chorda  campi[10];
-            OratioConlluLexema* t;
+                  ConlluLexema* t;
                            i32  k;
                            i32  na;
                            i32  nb;
@@ -239,9 +254,10 @@ oratio_conllu_legere (
                     redde NIHIL;
                 }
             }
-            t = (OratioConlluLexema*)xar_addere(s->lexemata);
+            t = (ConlluLexema*)xar_addere(s->lexemata);
             si (t == NIHIL)
             {
+                _vitium(vitium, linea, "memoria");
                 redde NIHIL;
             }
             t->a             = na;
@@ -256,8 +272,9 @@ oratio_conllu_legere (
             t->deprel        = campi[VII];
             t->deps          = campi[VIII];
             t->misc          = campi[IX];
-            t->spatium_post  = oratio_conllu_spatium_post(campi[IX]);
+            t->spatium_post  = conllu_spatium_post(campi[IX]);
             t->linea         = linea;
+            t->caput         = _caput(campi[VI]);
         }
     }
     si (s != NIHIL && xar_numerus(s->lexemata) == ZEPHYRUM)
@@ -268,9 +285,9 @@ oratio_conllu_legere (
 }
 
 chorda
-oratio_conllu_textus (
-                           Piscina* piscina,
-    constans OratioConlluSententia* sententia)
+conllu_textus (
+                     Piscina* piscina,
+    constans ConlluSententia* sententia)
 {
        i32 n        = xar_numerus(sententia->lexemata);
        i32 mensura  = ZEPHYRUM;
@@ -294,8 +311,8 @@ oratio_conllu_textus (
     }
     per (k = ZEPHYRUM; k < n; k++)
     {
-        constans OratioConlluLexema* t =
-            (constans OratioConlluLexema*)xar_obtinere(sententia->lexemata,
+        constans ConlluLexema* t =
+            (constans ConlluLexema*)xar_obtinere(sententia->lexemata,
             k);
 
         mensura = mensura + t->forma.mensura + I;
@@ -309,8 +326,8 @@ oratio_conllu_textus (
     c.mensura = ZEPHYRUM;
     per (k = ZEPHYRUM; k < n; k++)
     {
-        constans OratioConlluLexema* t =
-            (constans OratioConlluLexema*)xar_obtinere(sententia->lexemata,
+        constans ConlluLexema* t =
+            (constans ConlluLexema*)xar_obtinere(sententia->lexemata,
             k);
 
         si (intra_rangam > ZEPHYRUM)
@@ -333,4 +350,94 @@ oratio_conllu_textus (
     }
     c.datum[c.mensura] = ZEPHYRUM;
     redde c;
+}
+
+chorda
+conllu_proprietas (
+                chorda  feats,
+    constans character* clavis)
+{
+    i32 l = (i32)strlen(clavis);
+    i32 i = ZEPHYRUM;
+
+    /* paria 'Clavis=Valor' lineis '|' divisa */
+    dum (i < feats.mensura)
+    {
+        i32 a = i;
+
+        dum (i < feats.mensura && feats.datum[i] != '|')
+        {
+            i = i + I;
+        }
+        si (   i - a > l
+            && memcmp(feats.datum + a, clavis, (size_t)l) == ZEPHYRUM
+            && feats.datum[a + l]                         == '=')
+        {
+            redde _chorda(feats.datum + a + l + I, i - a - l - I);
+        }
+        i = i + I;   /* '|' */
+    }
+    redde _chorda(NIHIL, ZEPHYRUM);
+}
+
+b32
+conllu_arbor (
+                     Piscina* piscina,
+    constans ConlluSententia* sententia,
+                 ConlluArbor* exitus)
+{
+                      i32   n        = ZEPHYRUM;
+                      i32   numerus  = xar_numerus(sententia->lexemata);
+                      i32   k;
+                      i32*  capita;
+    constans ConlluLexema** verba;
+
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        constans ConlluLexema* t =
+            (constans ConlluLexema*)xar_obtinere(sententia->lexemata,
+            k);
+
+        si (!t->ranga)
+        {
+            n = n + I;
+        }
+    }
+    capita = (i32*)piscina_conari_allocare(piscina,
+        (memoriae_index)(n > ZEPHYRUM ? n : I) * magnitudo(i32));
+    verba = (constans ConlluLexema**)piscina_conari_allocare(piscina,
+        (memoriae_index)(n > ZEPHYRUM ? n : I)
+        * magnitudo(constans ConlluLexema*));
+    si (capita == NIHIL || verba == NIHIL)
+    {
+        redde FALSUM;
+    }
+    n = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        constans ConlluLexema* t =
+            (constans ConlluLexema*)xar_obtinere(sententia->lexemata,
+            k);
+
+        si (t->ranga)
+        {
+            perge;
+        }
+        si (t->a != n + I)
+        {
+            redde FALSUM;   /* ID non consecutivi */
+        }
+        verba[n]  = t;
+        n         = n + I;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        /* caput non numeratum: extra 0..n, ut validatio id reiciat */
+        capita[k] = verba[k]->caput < ZEPHYRUM ? n + I
+            : (i32)verba[k]->caput;
+    }
+    exitus->arbor.numerus  = n;
+    exitus->arbor.capita   = capita;
+    exitus->verba          = verba;
+    redde VERUM;
 }

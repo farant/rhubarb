@@ -189,7 +189,8 @@ oracle. `oratio/probationes/fixa/ud/` = CIRCSE test + LLCT dev/test
 (CC BY-SA, licences + READMEs + FONTES.md; NC treebanks via
 `./oratio/oraculum.sh -petere`, reported only, never vendored).
 `oratio_conllu` (reader: ranges, empty nodes skipped, `# text` or
-reconstruction) and `oratio_oraculum` (sentence parsed + annotated,
+reconstruction; since 2026-10-17 the house library `include/conllu.h`,
+moved for knotapel D130, with tree measures in `dependentia.h`) and `oratio_oraculum` (sentence parsed + annotated,
 elements by byte extent, gold forms located in the text, ranges judged
 per word; TECTUM = coverage PINNED only rising in permille per file,
 PRIMARIUM + LEMMA reported, `-exempla` prints the uncovered). Mapping

@@ -64,7 +64,7 @@
  */
 
 #include "latina.h"
-#include "oratio_conllu.h"
+#include "conllu.h"
 #include "oratio_oraculum.h"
 #include "oratio_registrum.h"
 #include "oratio_vocabularia.h"
@@ -1164,6 +1164,8 @@ principale (
                               character  via[1024];
                       OratioVocabularia  vocabularia;
                OratioVocabulariumVitium  vitium;
+                           ConlluVitium  vitium_conllu = { ZEPHYRUM,
+                               NIHIL };
                                     b32  machina        = FALSUM;
                                     b32  exempla        = FALSUM;
                                     b32  discrepantiae  = FALSUM;
@@ -1440,12 +1442,12 @@ principale (
                 fprintf(stderr, "oraculum: plagula absens: %s\n", via);
                 redde II;
             }
-            sententiae = oratio_conllu_legere(p, fons, &vitium);
+            sententiae = conllu_legere(p, fons, &vitium_conllu);
             si (sententiae == NIHIL)
             {
                 fprintf(stderr, "oraculum: %s: linea %d: %s\n", plagula,
-                    (integer)vitium.linea,
-                    vitium.causa ? vitium.causa : "?");
+                    (integer)vitium_conllu.linea,
+                    vitium_conllu.causa ? vitium_conllu.causa : "?");
                 redde II;
             }
                         /* T20a: census aureus seminum - sine parsura, ante iudicium */
