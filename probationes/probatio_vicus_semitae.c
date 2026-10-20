@@ -21,6 +21,8 @@
 #include "kalendarium.h"
 #include "nomenclator.h"
 #include "personae.h"
+#include "pictor_documentum.h"
+#include "pictor_applicatio.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -414,6 +416,102 @@ _probare_nomenclatorem (
     CREDO_AEQUALIS_I32(x->vocationes_secutae, II);
 }
 
+/* documentum pictoris frontalis (NIHIL si frons non pictor) */
+interior PictorDocumentum*
+pictura_frontis (
+    Mundus* x)
+{
+    VicusLatus* l;
+
+    l = frons(x);
+    si (   !l || !l->montata || !chorda_aequalis_literis(l->genus,
+            "pictor"))
+    {
+        redde NIHIL;
+    }
+    redde ((PictorMontatio*)l->montatio)->doc;
+}
+
+/* semitae R4c: pictor - pictura mutata (impelle), Ctrl+O picturam
+ * priorem et documentum eius restituit (hospes verus);
+ * $pictor-next a pictura restituta pergit (campus pictura, non
+ * argumentum stalum) */
+interior vacuum
+_probare_pictorem (
+    CredoContextus* c)
+{
+               Mundus* x;
+     PictorDocumentum* x1;
+     PictorDocumentum* x2;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x->volumen);
+    x1 = pictor_documentum_creare(c->piscina, internamentum_creare(
+        c->piscina), x->volumen, "x1", C, LX, LXIV);
+    x2 = pictor_documentum_creare(c->piscina, internamentum_creare(
+        c->piscina), x->volumen, "x2", LX, XL, LXIV);
+    CREDO_NECESSE(x1 && x2);
+    CREDO_NECESSE(mundum_struere(x, c));
+    CREDO_VERUM(vicus_acervo_aperire(x->app.vicus, "pictor", "x1"));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    dispensator_recomponere(x->app.d);
+    (vacuum)vicus_pulsare(x->app.vicus);
+    CREDO_VERUM(pictura_frontis(x)
+        && pictura_frontis(x)->latitudo == C);
+    CREDO_AEQUALIS_I32(historia_numerus(x), I);
+    CREDO_VERUM(frons(x)->facies.semitam_secuta
+        == pictor_semitam_secuta);
+    CREDO_VERUM(vicus_acervo_mutare(x->app.vicus, "pictor", "x2"));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    dispensator_recomponere(x->app.d);
+    CREDO_VERUM(pictura_frontis(x)
+        && pictura_frontis(x)->latitudo == LX);
+    CREDO_AEQUALIS_I32(historia_numerus(x), II);
+    clavis(x, 'o', (i32)MOD_IMPERIUM);
+    CREDO_VERUM(pictura_frontis(x)
+        && pictura_frontis(x)->latitudo == C);
+    /* $pictor-next ex x1: x2 (argumentum stalum "x2" circulum
+     * reciperet) */
+    ictus(x, VI, ZEPHYRUM);   /* focus: pagina sinistra */
+    ictus(x, II, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(x->m, "i$pictor-next"));
+    CREDO_VERUM(manus_ludus_clavem(x->m, (character)XXVII, ZEPHYRUM));
+    ictus(x, II, III);
+    (vacuum)vicus_pulsare(x->app.vicus);
+    dispensator_recomponere(x->app.d);
+    CREDO_VERUM(pictura_frontis(x) && pictura_frontis(x)->latitudo == LX
+        && pictura_frontis(x)->altitudo == XL);
+}
+
+/* semitae R4c: montatio cum pictura ignota picturam lateris ipsius
+ * ostendit, numquam condit (solum argumentum mutatum, $pictor-new) */
+interior vacuum
+_probare_pictorem_ignotum (
+    CredoContextus* c)
+{
+     Mundus* x;
+        Xar* l;
+     chorda* pictura;
+        i32  i;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(mundum_struere(x, c));
+    CREDO_VERUM(vicus_acervo_aperire(x->app.vicus, "pictor", "nemo"));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(pictura_frontis(x) != NIHIL);
+    pictura = insula_ramus_attributum(&((PictorMontatio*)frons(x)
+        ->montatio)->ramus, "pictura");
+    CREDO_VERUM(pictura && chorda_aequalis(*pictura, frons(x)->id));
+    l = pictor_documenta_enumerare(x->volumen, c->piscina);
+    per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
+    {
+        CREDO_FALSUM(chorda_aequalis_literis(*(chorda*)xar_obtinere(l,
+            i),
+            "nemo"));
+    }
+}
+
 /* latus sine semitis (scriba) Ctrl+O non capit: historia sanctorum
  * intacta */
 interior vacuum
@@ -451,6 +549,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "calendarium", _probare_calendarium, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "nomenclator", _probare_nomenclatorem, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "pictor", _probare_pictorem, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
+    { "pictor_ignotus", _probare_pictorem_ignotum, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

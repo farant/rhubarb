@@ -1206,11 +1206,12 @@ pictorem_montare (
             m->documenta = cp->documenta;
         }
     }
-    /* S3e: argumentum picturam bibliothecae nominans ostenditur;
-     * aliter (S3c, identitas sola) pictura lateris ipsius */
+    /* S3e: argumentum (semita aut picturam bibliothecae nominans)
+     * ostenditur; aliter (S3c, identitas sola) pictura lateris ipsius;
+     * semitae R4c: montatio non condit */
     si (argumentum && argumentum[ZEPHYRUM])
     {
-        (vacuum)pictor_picturam_ponere(m, argumentum);
+        (vacuum)pictor_argumentum_ponere(m, argumentum, FALSUM);
     }
     redde VERUM;
 }
@@ -1222,8 +1223,8 @@ pictoris_argumentum_ponere (
      constans character* argumentum)
 {
     /* S3f: pictura ignota ($pictor-new) conditur */
-    redde pictor_picturam_ponere((PictorMontatio*)ctx, argumentum)
-        || pictor_picturam_condere((PictorMontatio*)ctx, argumentum);
+    redde pictor_argumentum_ponere((PictorMontatio*)ctx, argumentum,
+        VERUM);
 }
 
 interior vacuum
@@ -1242,16 +1243,31 @@ pictorem_describere (
     f->fons_ctx               = &m->figurae_ctx;
     f->argumentum_ponere      = pictoris_argumentum_ponere;
     f->argumentum_ponere_ctx  = m;
+    /* semitae R4c: historia lateris et $via; documentum campum
+     * pictura sequitur post semitam a vico applicatam */
+    f->ramus               = &m->ramus;
+    f->semitam_secuta      = pictor_semitam_secuta;
+    f->semitam_secuta_ctx  = m;
 }
 
-/* S3e: pictura lateris pictoris: argumentum si picturam bibliothecae
+/* S3e: pictura lateris pictoris: semitae R4c - campus pictura (verus
+ * etiam post historiam); aliter argumentum si picturam bibliothecae
  * nominat, aliter id lateris */
 interior chorda
 pictura_lateris (
        constans VicusLatus* l,
               constans Xar* bibliotheca)
 {
-    i32 i;
+     chorda* pictura;
+        i32  i;
+
+    pictura = l->montata ? insula_ramus_attributum(
+        &((constans PictorMontatio*)l->montatio)->ramus, "pictura")
+        : NIHIL;
+    si (pictura && pictura->mensura > ZEPHYRUM)
+    {
+        redde *pictura;
+    }
 
     per (i = ZEPHYRUM; !chorda_vacua(l->argumentum)
                        && i < xar_numerus(bibliotheca); i++)
