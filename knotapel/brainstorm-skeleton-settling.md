@@ -468,6 +468,17 @@ almost any data — world models, scenes, perception.
 21. Dithered weights: quantise a graded network to ternary by error
     diffusion, with the NEIGHBOURHOOD as the variable; fan-in as viewing
     distance. (N20; section XVI)
+22. Priority costs precision: compile the toy Latin rule list into
+    threshold units; how weight precision, width and depth grow with
+    the exception tail, and what ternary must pay. (N21; section XVII)
+23. The rule spectrum: exact Walsh-Fourier degree profile of the toy
+    classifiers; does degree (or support) predict what quantisation
+    kills? (N22; section XVII)
+24. The slot state as a hologram: bind the toy world's role-filler
+    pairs into one +-1 vector; exact capacity and crosstalk, and the
+    umbra as an unfilled role. (N23; section XVII)
+25. Not yet a demo: are a rule set's exceptions crossing-like (local
+    relations, factorable) or table-like (packed)? (section XVII)
 
 ## XIII. What D130 measured, read against these premises
 
@@ -801,6 +812,124 @@ Literature marked recalled.*
     error-diffusion quantiser (levels, kernel, neighbourhood) would be a
     new, small house library if N20 is built.
 
+## XVII. From discrete rules to a dense classifier
+
+*Added 2026-10-20, from Fran: weights are in large part classifiers;
+accuracy comes from general rules, then special cases, then more special
+cases, and the long tail somehow collapses into one dense "classifier
+state". How do you take a large set of discrete rules and "optimise"
+them into a dense algorithm, and where do knots and dithering come in?
+Then: is this like a hyperdimensional Fourier decomposition, each weight
+carrying many waves? Literature marked recalled.*
+
+- **The shape of the rule set.** General rule, exceptions, exceptions
+  to the exceptions is a DECISION LIST: test the most specific case
+  first, fall through to the general. Linguistics names the ordering:
+  the Elsewhere Condition (Kiparsky), Panini's principle that the
+  specific rule beats the general *(recalled)*. Bennett's grammar is
+  written this way; so are D131's endings.
+- **Three ways rules become dense weights.** They are different
+  mechanisms, and probably live in different parts of a network.
+  1. **Priority becomes magnitude.** Every decision list is computed
+     by one linear threshold unit whose weights shrink geometrically
+     down the list, each rule outweighing all rules below it together
+     *(recalled; standard)*. Smolensky and Legendre made the same move
+     for grammar: Optimality Theory's strict ranking is Harmonic
+     Grammar's weighting with exponentially separated weights
+     *(recalled)*.
+  2. **The tail is packed, not compiled.** In high dimension far more
+     NEARLY orthogonal directions fit than there are dimensions; rare
+     features can share neurons because they seldom fire together, and
+     their crosstalk is mostly invisible (Elhage et al., toy models of
+     superposition *(recalled)*). MLP layers appear to store much of the
+     factual tail as key-value lookups (Geva et al. *(recalled)*). So
+     the dense state is part algorithm, part hash table in
+     superposition - the skeleton and the settling again (section VIII).
+  3. **Real compression is factoring.** Latin nouns are not 5
+     declensions x 6 cases x 2 numbers = 60 rules; they factor into a
+     class lookup, a shared case/number system and a few irregulars. A
+     good dense classifier is near the shortest description of the rule
+     set (MDL). Training can find factorings the grammar does not state;
+     the grammar can list as exceptions what are disguised regularities.
+- **The rule list is the zero-temperature shadow.** This is "one
+  grammar, two semirings" (section XIV): the rule list is the tropical
+  limit of the dense classifier. Compiling rules into weights INVERTS
+  that limit, and the inverse is not unique: many dense states cast the
+  same rule shadow. Training picks one; error diffusion (section XVI)
+  would pick another. Which one is chosen is where the settling lives.
+- **Priority costs precision.** Geometric weights need many bits; a
+  ternary weight cannot say "this exception outweighs the sum of
+  everything below it". A low-precision network must buy magnitude
+  with WIDTH (the same input repeated over many synapses: unary
+  magnitude, fan-in as viewing distance again) or DEPTH (a later layer
+  vetoes an earlier one). Some threshold functions need exponentially
+  large integer weights in a single unit *(recalled: Hastad; Muroga)*.
+  Conjecture: this is the mechanism under "ternary is fine for
+  computation, costly for memorisation" (section XVI) - an exception
+  tail is a priority tail, and priority is what low precision cannot
+  carry cheaply.
+- **Superposition and dithering are one trick.** Dithering tolerates
+  local error because the eye averages it away; superposition tolerates
+  crosstalk because features are sparse. Both put error where it will
+  not be seen. Error diffusion chooses WHERE deterministically;
+  superposition relies on statistics (rarity).
+- **Where knots come in.** The Kauffman bracket sums over all 2^n
+  smoothings of a diagram and collapses that exponential state set into
+  a few polynomial coefficients - not by listing states but through
+  shared LOCAL relations (the skein relation, the loop value). That is
+  factoring (mechanism 3) in its cleanest form. Open question: are a
+  rule set's exceptions crossing-like (local, evaluable by relations)
+  or table-like (irreducible, packed in superposition)?
+- **The Fourier picture (Fran), where it is literal.** A classifier on
+  yes/no features is a function on the hypercube {-1, +1}^n, which has
+  its own Fourier transform (Walsh-Hadamard): the waves are parities of
+  feature subsets, every output is a sum over all of them, and each
+  coefficient has a DEGREE, the number of features it couples.
+  - General rules are low-degree; an exception (a specific conjunction)
+    is a spike, local in feature space and smeared over many
+    high-degree waves - the uncertainty principle again.
+  - Simple circuits (AC0, decision lists among them) concentrate their
+    spectrum on low degrees (Linial, Mansour and Nisan *(recalled)*).
+  - Noise attacks the high-degree part first (noise sensitivity;
+    O'Donnell's book *(recalled)*). JPEG quantises high frequencies
+    coarsely because the eye does not miss them. Prediction: weight
+    quantisation is coarse JPEG for rules - general rules survive,
+    deep exceptions blur first.
+  - Conjecture: the skeleton has a spectral definition - the
+    low-degree part of the spectrum.
+  - Grokking already showed a network choosing Fourier features (the
+    modular-addition circuits, section IX *(recalled)*).
+- **Hyperdimensional computing is a real field** *(recalled)*:
+  Kanerva's hyperdimensional computing; Plate's holographic reduced
+  representations bind role and filler by circular convolution, which
+  the Fourier transform turns into elementwise products. "Every
+  component carries a little of every concept" is designed in there: a
+  hologram, any patch of which holds a blurred copy of the whole. A
+  slot-filler state (section XI: the Sudoku as a set of role-filler
+  bindings) can be written as ONE such vector; its capacity and
+  crosstalk are combinatorial and exact for +-1 vectors.
+- **Where the Fourier picture misleads.**
+  - Fourier waves are a fixed orthogonal basis; learned features are
+    overcomplete and non-orthogonal. The better analogue is sparse
+    coding / compressed sensing: an overcomplete dictionary, few
+    elements per input. Superposition works for compressed sensing's
+    reason - sparsity recovers more signals than measurements.
+  - The non-linearity changes WHICH decomposition applies: a ReLU gates
+    features per input, so the network is a different linear
+    decomposition in each region (section XVI, the switched system).
+  - "Each weight is a sample of the sum" is a little off. A sample IS
+    the sum; a weight is shared hardware the sum passes through. The
+    hologram fits better: a weight is a patch of the plate, and the
+    input selects which image is read out.
+  - DEGREE DEPENDS ON THE FEATURES. With a one-hot lemma feature, an
+    irregular noun is a low-degree but rarely-active coefficient; with
+    bit-coded lemmas it is high-degree. Two separate properties -
+    degree (coupling) and support (frequency) - may predict quantisation
+    damage differently, and a demo must keep them apart. The spectrum
+    also depends on the input measure: the uniform cube is not the
+    world's distribution (p-biased and non-product measures are
+    messier).
+
 ## AUDIENDA
 
 Not verified in this repo (all recalled from memory during the
@@ -849,3 +978,11 @@ conversation; check before relying on any):
   (GPFQ, sigma-delta), stochastic rounding, Siegelmann and Sontag
   (recurrent nets and Turing machines), max-plus discrete-event systems
   - all recalled; check before any demo leans on them.
+- Section XVII (2026-10-20): decision lists as linear threshold
+  functions, Hastad and Muroga on threshold weights, the Elsewhere
+  Condition (Kiparsky), Smolensky and Legendre (OT as the limit of
+  Harmonic Grammar), Elhage et al. (superposition), Geva et al. (MLPs
+  as key-value memories), Linial-Mansour-Nisan, O'Donnell (noise
+  sensitivity), Kanerva, Plate (HRR) - all recalled. The Walsh-Hadamard
+  transform and the Kauffman state sum are standard; "the skeleton is
+  the low-degree spectrum" is a conjecture of ours.

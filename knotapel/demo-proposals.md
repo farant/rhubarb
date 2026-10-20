@@ -838,3 +838,122 @@ that error diffusion beats nearest rounding by a margin that grows with
 fan-in; that covariance-guided diffusion beats spatial orders; that
 Atkinson's partial diffusion gives more zeros and more error - with the
 effect sizes the test can see.
+
+## 2026-10-20: rules into weights - precision, spectrum, hologram
+
+Fran's question (brainstorm XVII): how does a large set of discrete
+rules - general rule, exceptions, exceptions to the exceptions - get
+"optimised" into a dense classifier, and is a weight like a point of a
+hyperdimensional Fourier decomposition, carrying many waves at once?
+Three proposals, each exact and needing no trainer. They share one test
+world: the toy Latin world (D131) extended with a real Bennett exception
+chain. Every one gets a design review before registration.
+
+| | ledger | proposal | depends on | settles or opens |
+|---|---|---|---|---|
+| N21 | …DXTVZX | priority costs precision: rule lists into threshold units | the shared exception chain; exact rational LP / exhaustive search | whether weight precision tracks nesting depth or tail length; what ternary pays (width or depth) |
+| N22 | …XYDKJ1 | the rule spectrum: exact Walsh-Fourier degree profile | N21's classifiers, D131's readers; a house exact Walsh-Hadamard transform | whether degree or support predicts what quantisation kills; a spectral definition of the skeleton |
+| N23 | …9ZWZFZ | the slot state as a hologram | D131's world; +-1 vector arithmetic (exact) | capacity of one-vector slot states; whether a hologram can detect an umbra (unfilled role) |
+
+**The shared world: one real exception chain.** Third-declension
+endings carry a genuinely NESTED rule list (Bennett, to be checked
+against the text and Whitaker before use): genitive plural in -um;
+except i-stems in -ium (parisyllabic nouns, nominatives in -ns / -rs,
+monosyllables in two consonants, neuters in -e / -al / -ar); except
+nouns that look like i-stems but take -um (canis, iuvenis, senex,
+pater ...); likewise the ablative singular in -e / -i. Features are 0/1
+(class markers, phonological properties, one-hot lemmas for the named
+exceptions); the target is a binary decision per noun. A FLAT tail
+(many lemma one-hots overriding one rule) is built alongside as the
+control: same number of exceptions, nesting depth one.
+
+### N21. Priority costs precision
+
+**Why.** A decision list is one threshold unit with geometrically
+shrinking weights (recalled), so the ORDER of rules becomes the SIZE of
+weights. If that is how exceptions are stored, a low-precision network
+must pay for an exception tail in width or depth - a mechanism for
+"ternary is fine for computation, costly for memorisation" (XVI).
+
+**Design.**
+- Rule lists of nesting depth k = 1 .. K (the real chain, truncated
+  and, past the real depth, extended synthetically) and flat tails of
+  the same length.
+- Exactly, for each list: the minimal integer weight magnitude (and
+  bits) of a single threshold unit realising it (exhaustive or an exact
+  rational LP/ILP on fractio for these sizes); against the canonical
+  geometric compilation.
+- With weights restricted to {-1, 0, +1}: the minimal width of one
+  hidden layer, and the minimal depth, that realise it (exhaustive over
+  small circuits).
+- Later slice: dither the exact graded unit into ternary by N20's
+  methods and see which rules of the list flip first.
+
+**Register before the run.** That required precision tracks NESTING
+DEPTH, not tail length (flat tails stay cheap; nested chains cost about
+a bit or more per level); that ternary pays nesting in width (unary
+magnitude) or depth (one layer per level of veto). Effect sizes and the
+synthetic extension's construction fixed in the plan.
+
+### N22. The rule spectrum
+
+**Why.** A Boolean classifier has an exact Walsh-Fourier spectrum;
+general rules sit at low degree, exceptions are spikes spread over high
+degrees, and noise attacks high degrees first (recalled). If so, the
+spectrum PREDICTS what quantisation kills, and "the skeleton" gets a
+spectral definition: the low-degree part.
+
+**Design.**
+- Exact spectra (fractio) of N21's classifiers and of D131's readers'
+  decisions over their enumerated feature spaces, under the uniform
+  measure AND under the world's own measure (an exact orthogonal basis
+  for that measure, by Gram-Schmidt over rationals).
+- Report per classifier: the degree profile (weight at degree 1, 2, 3,
+  ...) and, separately, each coefficient's SUPPORT (how often it is
+  active in the world) - degree and support are different properties
+  and the encoding moves an exception between them (one-hot lemma: low
+  degree, low support; bit-coded lemma: high degree).
+- Perturb: the exact noise operator (coefficient x rho^|S|, exact
+  noise stability) and N20's ternarisations of a graded realisation;
+  which rules flip, against their degree and their support.
+- House library: a fast Walsh-Hadamard transform over exact numbers
+  (fractio / magnus) is general; it goes in include/ + lib/ with its
+  own suite, not in the demo.
+
+**Register before the run.** Which of degree or support better predicts
+the flipped rules (a stated rank correlation and threshold); that the
+nested chain of N21 has heavier high-degree mass than the flat tail.
+
+### N23. The slot state as a hologram
+
+**Why.** Hyperdimensional computing and holographic reduced
+representations (Kanerva, Plate; recalled) put a whole role-filler
+structure into one vector, every component carrying a little of every
+binding - Fran's "each weight carries many waves" built on purpose. The
+toy world's slot state (XI) and its umbrae (XV, unfilled roles) can be
+written this way, exactly.
+
+**Design.**
+- +-1 vectors of dimension d; bind role and filler by elementwise
+  product (exact for +-1), bundle bindings by sum, read a role by dot
+  product with its key.
+- Two codebooks: ORTHOGONAL (Hadamard rows: zero crosstalk while the
+  bound pairs are distinct rows, then a cliff - note that Sylvester
+  rows form a GROUP under elementwise product, so two bindings can land
+  on the same row; the plan must handle it) and RANDOM (binomial
+  crosstalk, graceful) - the ordered-dither / random-dither contrast of
+  XVI, in vector form.
+- Over the toy world's sentences, exactly: decoding error per role as
+  the number of bindings grows (binomial tails, exact for random codes;
+  exact enumeration for Hadamard); and the UMBRA test - reading an
+  unfilled role returns pure crosstalk; how well the readout magnitude
+  separates filled from unfilled (exact error rates), i.e. can the
+  hologram KNOW what is missing?
+- Structured fillers (words that share agreement features) give
+  correlated crosstalk; measure how that changes capacity.
+
+**Register before the run.** The capacity at which random codes
+overtake orthogonal ones (exact, no claim needed beyond the
+computation); the prediction that umbra detection degrades with the
+number of filled roles at a rate fixed in the plan; that agreement-
+sharing fillers cost capacity (a stated effect size).
