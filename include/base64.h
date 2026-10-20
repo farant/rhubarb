@@ -16,9 +16,9 @@
 #include "chorda.h"
 
 
-/* ========================================================================
+/* ==================================================
  * TYPI
- * ======================================================================== */
+ * ================================================== */
 
 /* Fructus decodificationis */
 nomen structura {
@@ -27,9 +27,9 @@ nomen structura {
 } Base64Fructus;
 
 
-/* ========================================================================
+/* ==================================================
  * FUNCTIONES - CODIFICATIO
- * ======================================================================== */
+ * ================================================== */
 
 /* Codificare data binaria ad Base64 chorda
  *
@@ -46,9 +46,9 @@ base64_codificare (
         Piscina* piscina);
 
 
-/* ========================================================================
+/* ==================================================
  * FUNCTIONES - DECODIFICATIO
- * ======================================================================== */
+ * ================================================== */
 
 /* Decodificare Base64 chorda ad data binaria
  *
@@ -64,9 +64,9 @@ base64_decodificare (
     Piscina* piscina);
 
 
-/* ========================================================================
+/* ==================================================
  * FUNCTIONES - UTILITAS
- * ======================================================================== */
+ * ================================================== */
 
 /* Calculare longitudo output pro codificatio
  *
@@ -87,6 +87,43 @@ base64_longitudo_codificata (
 i32
 base64_longitudo_decodificata (
     chorda codificata);
+
+
+/* ==================================================
+ * BASE64URL (RFC 4648 sectio 5) - '-' '_' pro '+' '/', SINE '='
+ *
+ * Forma signorum (sessiones, CSRF, PKCE, OAuth): unaquaeque series
+ * octetorum UNAM scripturam habet - decodificatio refutat '=', '+',
+ * '/', longitudinem % IV == I, et bits reliquos non nullos.
+ * ================================================== */
+
+/* ceil(IV * mensura / III): XXXII octeti -> XLIII signa */
+i32
+base64url_longitudo_codificata (
+    i32 mensura);
+
+/* sine piscina, sine NUL: scribit base64url_longitudo_codificata
+ * (mensura) signa in exitum et numerum reddit; capacitas minor -> 0,
+ * nihil scriptum */
+i32
+base64url_scribere (
+    constans i8* datum,
+            i32  mensura,
+      character* exitus,
+            i32  capacitas);
+
+/* mensura 0 -> chorda vacua */
+chorda
+base64url_codificare (
+    constans i8* datum,
+            i32  mensura,
+        Piscina* piscina);
+
+/* "" -> datum non NIHIL, mensura 0; forma mala -> datum NIHIL */
+Base64Fructus
+base64url_decodificare (
+     chorda  codificata,
+    Piscina* piscina);
 
 
 #endif /* BASE64_H */

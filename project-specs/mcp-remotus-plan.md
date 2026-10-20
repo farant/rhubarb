@@ -120,6 +120,23 @@ with this plan.
   gained `-cum-unitate` (installs the unit, `.prior` + daemon-reload,
   restored with the binary on a failed health check) since the unit
   gains `-basis` and `-sonda`; the plan did not name this step.
+- **R2 (T2)** - custodia cannot call `base64url_codificare`: it encodes
+  into the fixed `CustodiaSessio.signum[XLIV]` and into stack buffers on
+  the CSRF verify path, with no piscina. `base64.h` gains a fourth,
+  piscina-free primitive `base64url_scribere(datum, mensura, exitus,
+  capacitas)` (no NUL; capacity short -> 0, nothing written) plus
+  `base64url_longitudo_codificata`; `base64url_codificare` is built on
+  it and custodia's `_signa_tuta` shrinks to a two-line wrapper adding
+  the NUL. CSRF output pinned BEFORE the switch (`csrf_fixum`, value
+  from Python's hmac + base64) and unchanged after.
+- **R3 (T2)** - the decoder also refuses non-zero leftover bits ("Zh"
+  and "Zg" would both decode to `f`), so every byte string has exactly
+  one base64url spelling - matters when a decoded value is compared or
+  hashed. `""` decodes to a non-NIHIL empty result (not an error), so
+  the 0-length round trip holds. The old `base64.c` was never
+  formatted; touching it ran the formatter over the whole file
+  (banners to 50, two ternaries reflowed, `c >= 0` dropped - `i8` is
+  unsigned).
 
 ## Review focus
 
