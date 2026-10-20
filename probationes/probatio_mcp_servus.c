@@ -33,6 +33,8 @@ nomen structura {
         McpReditusGenus  genus;
                  chorda  corpus;
      constans character* scopus;
+     constans character* instrumentum;
+     constans character* exitus;
              McpDilatum  dilata[LXV];
                     i32  numerus_dilatorum;
                 Piscina* piscina;
@@ -164,7 +166,9 @@ _reddere (
     st->genus   = r->genus;
     st->corpus  = r->corpus.mensura > ZEPHYRUM
         ? chorda_transcribere(r->corpus, st->piscina) : r->corpus;
-    st->scopus  = r->scopus_requisitus;
+    st->scopus        = r->scopus_requisitus;
+    st->instrumentum  = r->instrumentum;
+    st->exitus        = r->exitus;
 }
 
 interior McpServus*
@@ -599,6 +603,52 @@ _sectio_stdio (CredoContextus* c)
     }
 }
 
+interior b32
+_par (
+    constans character* a,
+    constans character* b)
+{
+    redde (a == NIHIL
+        || b == NIHIL) ? a == b : strcmp(a, b) == ZEPHYRUM;
+}
+
+/* instrumentum et exitus in reditu (acta vecturae ea legunt) */
+interior vacuum
+_sectio_exitus (CredoContextus* c)
+{
+        Status  st;
+     McpServus* s = _servus(c, &st);
+    McpPersona  q = _persona("notae:legere", c->piscina);
+
+    CREDO_NECESSE_NON_NIHIL(s);
+    (vacuum)_petere(c, s, &st, VOCATIO("legere", "{\"id\":1}"), &q,
+        FALSUM);
+    CREDO_VERUM(_par(st.instrumentum, "legere"));
+    CREDO_VERUM(_par(st.exitus, "bene"));
+    (vacuum)_petere(c, s, &st, VOCATIO("legere", "{}"), &q, FALSUM);
+    CREDO_VERUM(_par(st.instrumentum, "legere"));
+    CREDO_VERUM(_par(st.exitus, "error"));
+    (vacuum)_petere(c, s, &st, VOCATIO("ignotum", "{}"), &q, FALSUM);
+    CREDO_VERUM(_par(st.instrumentum, NIHIL));
+    CREDO_VERUM(_par(st.exitus, "error"));
+    (vacuum)_petere(c, s, &st, VOCATIO("scribere",
+        "{\"textus\":\"a\"}"),
+        &q, FALSUM);
+    CREDO_VERUM(_par(st.instrumentum, "scribere"));
+    CREDO_VERUM(_par(st.exitus, "scopus"));
+    (vacuum)_petere(c, s, &st,
+        "{\"jsonrpc\":\"2.0\",\"id\":3,\"method\":\"ping\"}", &q,
+        FALSUM);
+    CREDO_VERUM(_par(st.instrumentum, NIHIL));
+    CREDO_VERUM(_par(st.exitus, "bene"));
+    (vacuum)_petere(c, s, &st,
+        "{\"jsonrpc\":\"2.0\",\"method\":\"notifications/x\"}", &q,
+        FALSUM);
+    CREDO_VERUM(_par(st.exitus, "nuntiatio"));
+    (vacuum)_petere(c, s, &st, "{nope", &q, FALSUM);
+    CREDO_VERUM(_par(st.exitus, "pravum"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "index", _sectio_index, NIHIL, NIHIL, NIHIL, NIHIL },
     { "argumenta", _sectio_argumenta, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -609,6 +659,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "rpc", _sectio_rpc, NIHIL, NIHIL, NIHIL, NIHIL },
     { "initium", _sectio_initium, NIHIL, NIHIL, NIHIL, NIHIL },
     { "stdio", _sectio_stdio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "exitus", _sectio_exitus, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

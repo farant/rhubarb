@@ -43,3 +43,42 @@ replies are not reported (the loop may be gone).
 Gotcha: `structura` is a latina.h macro (`struct`) - the plan's own
 signature `mcp_respondere_json(v, JsonValor* structura)` failed to
 parse; the parameter is `valor`.
+
+## 2026-10-20 - HTTP transport (mcp-remotus T4)
+
+`lib/mcp_servus_http.c` mounts POST `<via>` (+ GET/DELETE -> 405
+`Allow: POST`) and both PRM paths on a hospitium.
+
+**Memory: each call gets its OWN piscina.** The colloquium's piscina is
+recycled the moment the connection ends - a deferred call living there
+would write into the next request's memory after the client hangs up.
+So the body is copied into a fresh piscina, the core allocates there,
+and the reply body is copied into the colloquium piscina just before
+`colloquium_respondere`. Sync: destroyed after `mcp_servus_tractare`;
+deferred: `_reddere` destroys it after answering (or after seeing the
+client gone via `dilatum_colloquium` -> NIHIL, logged as status=0).
+
+**Bug found by the acta test:** the 401 log line came out EMPTY - it was
+built in the colloquium piscina AFTER `colloquium_respondere`, which had
+already recycled it. Rule: log first, respond last.
+
+**Check order** in POST: Origin -> `?access_token=` (400) -> Bearer +
+verifier (401) -> size (413; hospitium's own cap may be bigger, e.g.
+exemplar uploads, so we check `corpus_via`/length ourselves) ->
+Content-Type (415, `; charset` allowed) -> MCP-Protocol-Version.
+
+**Unsupported version** body follows the official 2026-07-28 lifecycle
+page: `{"code":-32022,"message":"Unsupported protocol version",
+"data":{"supported":[ours],"requested":"..."}}`, request id echoed, HTTP
+400. A dual-era client reads that as "modern server, retry with a
+supported version"; we only speak the initialize era.
+
+**PRM URL** is derived from the ORIGIN of the audience URL
+(`https://h/mcp` -> `https://h/.well-known/...`), not from the issuer.
+
+**Access line** per request: `mcp status=N usor= cliens= instrumentum=
+exitus= ms=` - core now reports `instrumentum`/`exitus` in McpReditus.
+Tokens never appear (planted: token-as-usor turns `acta` red).
+
+Gotcha: BSD sed has no `\b` - `sed 's/\bFOO\b/BAR/g'` silently changes
+nothing. Use python `re`.

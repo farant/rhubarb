@@ -117,6 +117,11 @@ nomen structura {
         McpReditusGenus  genus;
                  chorda  corpus;   /* in piscina petitionis */
      constans character* scopus_requisitus;   /* SCOPUS solum */
+    /* pro actis vecturae: titulus instrumenti (tools/call; aliter
+     * NIHIL) et exitus: "bene", "vitium" (isError), "error" (JSON-RPC),
+     * "scopus", "pravum", "nuntiatio" */
+     constans character* instrumentum;
+     constans character* exitus;
 } McpReditus;
 
 nomen vacuum (*McpReddere)(vacuum* datum, constans McpReditus* r);

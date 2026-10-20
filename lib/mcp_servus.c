@@ -66,13 +66,17 @@ _reddere (
                  vacuum* datum,
         McpReditusGenus  genus,
                  chorda  corpus,
-     constans character* scopus)
+     constans character* scopus,
+     constans character* instrumentum,
+     constans character* exitus)
 {
     McpReditus r;
 
     r.genus              = genus;
     r.corpus             = corpus;
     r.scopus_requisitus  = scopus;
+    r.instrumentum       = instrumentum;
+    r.exitus             = exitus;
     si (reddere)
     {
         reddere(datum, &r);
@@ -86,11 +90,12 @@ _errorem_reddere (
                 Piscina* p,
               JsonValor* id,
                  longus  codex,
-                 chorda  nuntius)
+                 chorda  nuntius,
+     constans character* instrumentum)
 {
     _reddere(reddere, datum, MCP_REDITUS_RESPONSUM,
         tabellarius_errorem(p, id, codex, chorda_ut_cstr(nuntius, p)),
-        NIHIL);
+        NIHIL, instrumentum, "error");
 }
 
 interior chorda
@@ -406,9 +411,10 @@ _scopum_habet (
  * potest */
 interior vacuum
 _finire (
-         McpVocatio* v,
-    McpReditusGenus  genus,
-             chorda  corpus)
+            McpVocatio* v,
+       McpReditusGenus  genus,
+                chorda  corpus,
+    constans character* exitus)
 {
     McpReddere  reddere  = v->reddere;
         vacuum* datum    = v->datum_reddendi;
@@ -416,7 +422,8 @@ _finire (
     v->responsa  = VERUM;
     v->activa    = FALSUM;
     v->servus->generationes[v->locus]++;
-    _reddere(reddere, datum, genus, corpus, NIHIL);
+    _reddere(reddere, datum, genus, corpus, NIHIL,
+        v->instrumentum->titulus, exitus);
 }
 
 interior b32
@@ -451,7 +458,7 @@ _resultatum (
     json_objectum_ponere(resultatum, "isError", json_boolean_creare(p,
         vitium));
     _finire(v, MCP_REDITUS_RESPONSUM, tabellarius_responsum(p, v->id,
-        resultatum));
+        resultatum), vitium ? "vitium" : "bene");
 }
 
 vacuum
@@ -673,7 +680,7 @@ _initialize (
     }
     s->initiatum = VERUM;
     _reddere(reddere, datum, MCP_REDITUS_RESPONSUM,
-        tabellarius_responsum(p, id, resultatum), NIHIL);
+        tabellarius_responsum(p, id, resultatum), NIHIL, NIHIL, "bene");
 }
 
 interior b32
@@ -698,7 +705,7 @@ _vocare (
     {
         _errorem_reddere(reddere, datum, p, id,
             TABELLARIUS_ERROR_PARAMETRA_INVALIDA,
-            _literae("params desunt"));
+            _literae("params desunt"), NIHIL);
         redde VERUM;
     }
     titulus = json_ad_chorda(json_objectum_capere(params, "name"));
@@ -713,7 +720,7 @@ _vocare (
     {
         _errorem_reddere(reddere, datum, p, id,
             TABELLARIUS_ERROR_PARAMETRA_INVALIDA,
-            _nuntius(p, "instrumentum ignotum: ", titulus, ""));
+            _nuntius(p, "instrumentum ignotum: ", titulus, ""), NIHIL);
         redde VERUM;
     }
     /* scopus ANTE argumenta: sine scopo nihil de argumentis dicitur */
@@ -722,7 +729,8 @@ _vocare (
         _reddere(reddere, datum, MCP_REDITUS_SCOPUS,
             tabellarius_errorem(p, id, MCP_ERROR_SCOPUS,
                 chorda_ut_cstr(_nuntius(p, "scopus deest: ",
-                    _literae(m->scopus), ""), p)), m->scopus);
+                    _literae(m->scopus), ""), p)), m->scopus,
+                    m->titulus, "scopus");
         redde VERUM;
     }
     argumenta = json_objectum_capere(params, "arguments");
@@ -734,14 +742,14 @@ _vocare (
     {
         _errorem_reddere(reddere, datum, p, id,
             TABELLARIUS_ERROR_PARAMETRA_INVALIDA,
-            _literae("arguments objectum esse debet"));
+            _literae("arguments objectum esse debet"), m->titulus);
         redde VERUM;
     }
     causa = _argumenta_iudicare(m, argumenta, p);
     si (causa.mensura > ZEPHYRUM)
     {
         _errorem_reddere(reddere, datum, p, id,
-            TABELLARIUS_ERROR_PARAMETRA_INVALIDA, causa);
+            TABELLARIUS_ERROR_PARAMETRA_INVALIDA, causa, m->titulus);
         redde VERUM;
     }
     per (i = ZEPHYRUM; i < MCP_VOCATIONES_MAXIMAE; i++)
@@ -756,7 +764,7 @@ _vocare (
     {
         _errorem_reddere(reddere, datum, p, id,
             TABELLARIUS_ERROR_INTERNUS,
-            _literae("nimis multae vocationes pendentes"));
+            _literae("nimis multae vocationes pendentes"), m->titulus);
         redde VERUM;
     }
     v = &s->loci[locus];
@@ -786,7 +794,8 @@ _vocare (
         redde FALSUM;
     }
     _finire(v, MCP_REDITUS_RESPONSUM, tabellarius_errorem(p, id,
-        TABELLARIUS_ERROR_INTERNUS, "tractator nihil respondit"));
+        TABELLARIUS_ERROR_INTERNUS, "tractator nihil respondit"),
+        "error");
     redde VERUM;
 }
 
@@ -847,7 +856,7 @@ mcp_servus_tractare (
             _reddere(reddere, datum_reddendi, MCP_REDITUS_PRAVUM,
                 tabellarius_errorem(piscina, NIHIL,
                     TABELLARIUS_ERROR_ANALYSIS, "analysis fracta"),
-                NIHIL);
+                NIHIL, NIHIL, "pravum");
         }
         alioquin
         {
@@ -856,7 +865,7 @@ mcp_servus_tractare (
                     TABELLARIUS_ERROR_PETITIO_INVALIDA,
                     json_est_tabulatum(n.radix)
                         ? "fasces non admittuntur"
-                        : "petitio invalida"), NIHIL);
+                        : "petitio invalida"), NIHIL, NIHIL, "pravum");
         }
         redde VERUM;
     }
@@ -864,7 +873,7 @@ mcp_servus_tractare (
     {
         /* nuntiationes et responsa (numquam petimus): omissa */
         _reddere(reddere, datum_reddendi, MCP_REDITUS_NUNTIATIO, vacua,
-            NIHIL);
+            NIHIL, NIHIL, "nuntiatio");
         redde VERUM;
     }
     si (_est(n.methodus, "initialize"))
@@ -877,7 +886,7 @@ mcp_servus_tractare (
     {
         _reddere(reddere, datum_reddendi, MCP_REDITUS_RESPONSUM,
             tabellarius_responsum(piscina, n.id,
-                json_objectum_creare(piscina)), NIHIL);
+                json_objectum_creare(piscina)), NIHIL, NIHIL, "bene");
         redde VERUM;
     }
     si (initium_postulatum && !servus->initiatum)
@@ -885,14 +894,14 @@ mcp_servus_tractare (
         _reddere(reddere, datum_reddendi, MCP_REDITUS_RESPONSUM,
             tabellarius_errorem(piscina, n.id,
                 TABELLARIUS_ERROR_NONDUM_INITIATUM, "nondum initiatum"),
-            NIHIL);
+            NIHIL, NIHIL, "error");
         redde VERUM;
     }
     si (_est(n.methodus, "tools/list"))
     {
         _reddere(reddere, datum_reddendi, MCP_REDITUS_RESPONSUM,
             tabellarius_responsum(piscina, n.id, _index(servus,
-                piscina)), NIHIL);
+                piscina)), NIHIL, NIHIL, "bene");
         redde VERUM;
     }
     si (_est(n.methodus, "tools/call"))
@@ -903,7 +912,7 @@ mcp_servus_tractare (
     _reddere(reddere, datum_reddendi, MCP_REDITUS_RESPONSUM,
         tabellarius_errorem(piscina, n.id,
         TABELLARIUS_ERROR_METHODUS_IGNOTA,
-            "methodus ignota"), NIHIL);
+            "methodus ignota"), NIHIL, NIHIL, "error");
     redde VERUM;
 }
 

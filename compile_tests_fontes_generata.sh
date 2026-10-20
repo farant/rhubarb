@@ -163,6 +163,7 @@ declare -a SOURCE_FILES=(
     "lib/manus_ludus.c"
     "lib/matrix.c"
     "lib/mcp_servus.c"
+    "lib/mcp_servus_http.c"
     "lib/membrum__album.c"
     "lib/membrum__charta.c"
     "lib/membrum__elenchi.c"

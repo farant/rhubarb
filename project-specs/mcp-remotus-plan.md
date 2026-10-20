@@ -150,6 +150,24 @@ with this plan.
   `isError` always present (false on success). The persona's chordae
   are copied into the request piscina (deferred calls outlive the
   transport's copy).
+- **R7 (T4)** - `mcp_servus_http_montare` takes a `Piscina*` (hospitium
+  exposes none; options, PRM body and header strings are copied there).
+- **R8 (T4)** - `McpHttpOptiones.sonda` became an access-log writer
+  (`acta` callback + `acta_datum`, NIHIL = stderr): one line per request
+  `mcp status= usor= cliens= instrumentum= exitus= ms=`. exemplar keeps
+  its own `-sonda` for raw request capture.
+- **R9 (T4)** - `McpReditus` gains `instrumentum` and `exitus` (bene /
+  vitium / error / scopus / pravum / nuntiatio) so the transport can log
+  the tool and outcome without re-parsing; pinned by T3 section
+  `exitus` + a plant.
+- **R10 (T4)** - `resource` (plan field and verifier parameter) is
+  `audientia` - "resource" is real English and may not enter the
+  glossary; the JSON key stays `"resource"`.
+- **R11 (T4)** - each HTTP call runs in its own piscina (the
+  colloquium's is recycled when the client leaves); access line written
+  BEFORE responding. Unsupported-version body = official 2026-07-28
+  shape (-32022, data.supported/requested). PRM URL from the audience's
+  origin.
 
 ## Review focus
 
