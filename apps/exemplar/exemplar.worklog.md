@@ -162,3 +162,24 @@ exact 401 header, both PRM paths + the AS document agree on resource
 and issuer, `GET /mcp` 405, a throwaway registration 201 (pruned after a
 day). Local run: all six BENE; a dead port and a host that mismatches
 the issuer (`localhost` vs `127.0.0.1`) both exit 1.
+
+## 2026-10-20 - mcp-remotus T9: live
+
+Deployed with `tools/dimittere.sh -agere exemplar smaragda` (binary
+only - the unit was already T1's, checked identical). Before it, the
+service was STOPPED and `/var/lib/exemplar/exemplar.volumen` copied to
+`exemplar.volumen.ante-T9` (stop first = checkpointed, no WAL to copy;
+backup stays until the slice is closed). Health `{"status":"ok","acta":6}`
+- old events kept; admissio's tables were created on first start.
+`tools/exemplar_mcp_fumus.sh https://exemplar.golden.earth`: six BENE.
+
+Live, from the journal: claude.ai behaves like Claude Code - it probes
+the 2026 era first (`server/discover`), gets our 400 `-32022`
+(`exitus=versio`), falls back to `initialize` 2025-11-25. Fran: two
+sign-ins (6 registrations total incl. fumus), `notas_enumerare` and
+`notam_addere` from Claude, `/applicationes` viewed. Tool calls answer
+in 4-11 ms on the droplet.
+
+Not yet observed: Amanda's own connection, a live revoke + re-add, and
+the first refresh after the access token's hour (look for
+`POST /oauth/token` with a refresh body, then 200s on `/mcp`).

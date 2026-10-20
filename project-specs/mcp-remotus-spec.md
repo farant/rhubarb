@@ -1,7 +1,18 @@
 # mcp remotus - a remote MCP server Claude signs in to (spec)
 
-**Status: SPEC 2026-10-19** - written after brainstorming with Fran;
-awaiting his review, then a plan.
+**Status: IMPLETUM 2026-10-20** - plan `project-specs/mcp-remotus-plan.md`
+T1-T9 (rulings P1-P10, R1-R20); commits T1 e3259969 (+ findings
+f03a01b9), T2 a72825f9, T3 43b84290 (+ fb36562a), T4 6f211a88, T5
+47be03ce, T6 e0ec16fb, T7 ea60a1f8, T8 09a88e65, whole-branch review
+fixes 13ad45f3, T9 close-out. LIVE at
+`https://exemplar.golden.earth/mcp` (deployed 2026-10-20, fumus green):
+Fran connected (two sign-ins), listed and added notes, saw the grant on
+`/applicationes`; Claude Code verified locally. Suites base64url, mcp_servus,
+mcp_servus_http, admissio, admissio_fluxus, exemplar_applicatio green
+on macOS and under Linux musl + glibc. Still to observe live: Amanda's
+own connection, a live revoke + re-add, and the refresh path after the
+first hour (sonda).
+Not yet in main.
 
 *Fran 2026-10-19, after hospitium v3 reached main (ff e8cad828): "start
 looking up information about the lunch money api and see what kinds of
