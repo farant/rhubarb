@@ -1,6 +1,10 @@
 # ianua - house accounts as general components (spec)
 
-**Status: SCRIPTUM 2026-10-20** - awaiting Fran's review; no plan yet.
+**Status: SCRIPTUM 2026-10-20** - approved by Fran; plan
+`project-specs/ianua-plan.md` (T1-T6). The four AUDIENDA items are
+settled there: concurrent CLI write -> P1 (single-writer lock, stop /
+invite / start), admissio re-keying -> P8, note authors -> P7, frenum
+keys -> P6.
 Ledger: desideratum ...MK0 (`01M5CZKPHXDYCB0VQ8W315ZMK0`, piece #1 of
 its seven components); design question ...XWG (domus vs per-app) stays
 open and is NOT decided here - this spec builds what both answers need.
