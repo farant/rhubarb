@@ -103,7 +103,7 @@ suspensus / deletus), `creatus_ms`.
 
 API (shape; exact signatures in the plan): `cives_aperire(Volumen*)`,
 `cives_creare(c, nomen_usoris, titulus, &id)`, `cives_per_id`,
-`cives_per_nomen`, `cives_renominare` (handle change keeps the id),
+`cives_per_nomen`, `cives_nomen_mutare` (handle change keeps the id),
 `cives_statum_ponere`, `cives_delere` (tombstone: status deletus; the
 handle stays reserved and is never reissued, so old log lines that name
 it never point at a new person).

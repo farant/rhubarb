@@ -118,7 +118,12 @@ this plan.
 
 ## Rulings made while executing
 
-(none yet)
+- **T1: plant swapped.** The planned plant "event written before the
+  uniqueness check" cannot go red by design: with the guard removed,
+  the UNIQUE / PRIMARY KEY constraints still refuse and the caller's
+  rollback (P3) removes the partial row. Replaced by "normalization does
+  not lower-case" (`nomina` red). Cost if wrong: none - the guard is a
+  fast path, the constraints are the safety, and both are exercised.
 
 ## Review focus
 
@@ -188,7 +193,7 @@ b32 cives_per_id (Cives* c, chorda id, Civis* exitus, Piscina* p);
 /* handle PRAESENS solum */
 b32 cives_per_nomen (Cives* c, chorda nomen_usoris, Civis* exitus,
     Piscina* p);
-b32 cives_renominare (Cives* c, chorda id, chorda nomen_novum);
+b32 cives_nomen_mutare (Cives* c, chorda id, chorda nomen_novum);
 b32 cives_statum_ponere (Cives* c, chorda id, CivisStatus status);
 b32 cives_delere (Cives* c, chorda id);   /* status DELETUS */
 ```
