@@ -4,6 +4,7 @@
 #include "oratio_partes_en.h"
 #include "oratio_lexicon.h"
 #include "oratio_lexema.h"
+#include "internamentum.h"
 #include "materia_arbor.h"
 #include "tabula_dispersa.h"
 #include "xar.h"
@@ -120,23 +121,81 @@ oratio_partes_textus_vocabuli (
     redde c;
 }
 
-/* lexema derivatum in locum TOKEN ponere (valor copiatur) */
+/* LEXEMATA DERIVATA COMMUNICATA (2026-10-21): textus derivatus
+ * (lemma, nativum, sensus, compendia) per documentum INTERNATUR - copia
+ * una (cicero: VIII milia textuum distincta ex CDXLI milibus
+ * lexematum); lexema (valor + sedes originis) per VOCABULUM
+ * communicatur, quia lectiones omnes vocabuli originem eandem ferunt
+ * (CDXLI -> CXXXVII milia). Lexemata post creationem numquam mutantur
+ * neque per identitatem comparantur (verificatum 2026-10-21), ergo
+ * communicatio tuta. Thesaurus per originem: origo nova eum vacuat. */
+#define DERIVATA_PER_VOCABULUM XXXII
+
+nomen structura {
+      InternamentumChorda* intern;   /* in piscina arboris */
+    constans MateriaToken* origo;    /* vocabulum thesauri currentis */
+                      i32  numerus;
+          constans chorda* valores[DERIVATA_PER_VOCABULUM];
+             MateriaToken* lexemata[DERIVATA_PER_VOCABULUM];
+} OratioDerivata;
+
+/* lexema derivatum in locum TOKEN ponere; derivata NIHIL = valor
+ * copiatur (via publica sine contextu documenti) */
 interior b32
 _derivatum_ponere (
                   Piscina* piscina,
+           OratioDerivata* derivata,
              MateriaNodus* nodus,
                       i32  locus,
                    chorda  valor,
     constans MateriaToken* origo)
 {
-    MateriaToken* t;
+    MateriaToken* t = NIHIL;
 
     si (valor.mensura == ZEPHYRUM)
     {
         redde VERUM;   /* absens */
     }
-    t = oratio_lexema_derivatum(piscina, (s32)ORATIO_LEX_DERIVATUM,
-        _copia(piscina, valor), origo);
+    si (derivata == NIHIL)
+    {
+        t = oratio_lexema_derivatum(piscina, (s32)ORATIO_LEX_DERIVATUM,
+            valor, origo);
+    }
+    alioquin
+    {
+        constans chorda* internatum = chorda_internare(derivata->intern,
+            valor);
+                     i32 k;
+
+        si (internatum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (derivata->origo != origo)
+        {
+            derivata->origo    = origo;
+            derivata->numerus  = ZEPHYRUM;
+        }
+        per (k = ZEPHYRUM; k < derivata->numerus && t == NIHIL; k++)
+        {
+            si (derivata->valores[k] == internatum)
+            {
+                t = derivata->lexemata[k];
+            }
+        }
+        si (t == NIHIL)
+        {
+            t = oratio_lexema_derivatum_possessum(piscina,
+                (s32)ORATIO_LEX_DERIVATUM, *internatum, origo);
+            si (   t != NIHIL
+                && derivata->numerus < DERIVATA_PER_VOCABULUM)
+            {
+                derivata->valores[derivata->numerus] = internatum;
+                derivata->lexemata[derivata->numerus] = t;
+                derivata->numerus = derivata->numerus + I;
+            }
+        }
+    }
     si (t == NIHIL)
     {
         redde FALSUM;
@@ -428,9 +487,10 @@ _umbras_ponere (
     redde VERUM;
 }
 
-MateriaNodus*
-oratio_partes_nodum_struere (
+interior MateriaNodus*
+_nodum_struere (
                       Piscina* piscina,
+               OratioDerivata* derivata,
     constans OratioDescriptio* d,
         constans MateriaToken* origo)
 {
@@ -448,7 +508,7 @@ oratio_partes_nodum_struere (
     {
         redde NIHIL;
     }
-    si (   !_derivatum_ponere(piscina, nodus,
+    si (   !_derivatum_ponere(piscina, derivata, nodus,
         (i32)ORATIO_ANALYSIS_LEMMA,
             d->lemma, origo)
         || (   !d->lingua_ignota
@@ -458,10 +518,10 @@ oratio_partes_nodum_struere (
 
         || !materia_nodus_ponere(nodus, (i32)ORATIO_ANALYSIS_FONS,
             materia_valor_index((s32)d->fons), MATERIA_LOCUS_INDEX)
-        || !_derivatum_ponere(piscina, nodus,
+        || !_derivatum_ponere(piscina, derivata, nodus,
         (i32)ORATIO_ANALYSIS_NATIVUM,
             d->nativum, origo)
-        || !_derivatum_ponere(piscina, nodus,
+        || !_derivatum_ponere(piscina, derivata, nodus,
         (i32)ORATIO_ANALYSIS_SENSUS,
             d->sensus, origo))
     {
@@ -491,6 +551,15 @@ oratio_partes_nodum_struere (
         redde NIHIL;
     }
     redde nodus;
+}
+
+MateriaNodus*
+oratio_partes_nodum_struere (
+                      Piscina* piscina,
+    constans OratioDescriptio* d,
+        constans MateriaToken* origo)
+{
+    redde _nodum_struere(piscina, NIHIL, d, origo);
 }
 
 
@@ -844,10 +913,11 @@ _orthographia_notae_activa (
     redde activa;
 }
 
-b32
-oratio_partes_vocabulum_annotare (
+interior b32
+_vocabulum_annotare (
                            Piscina* piscina,
                            Piscina* scratch,
+                    OratioDerivata* derivata,
         constans OratioVocabularia* vocabularia,
                       MateriaNodus* vocabulum,
                 OratioPartesCensus* census,
@@ -1003,7 +1073,7 @@ oratio_partes_vocabulum_annotare (
     }
         per (k = ZEPHYRUM; k < xar_numerus(analyses); k++)
         {
-        si (!oratio_partes_la_describere(piscina, vocabularia->la,
+        si (!oratio_partes_la_describere(scratch, vocabularia->la,
                 (constans OratioAnalysis*)xar_obtinere(analyses, k),
                 descriptiones))
         {
@@ -1026,7 +1096,7 @@ oratio_partes_vocabulum_annotare (
                 (constans OratioAnalysisEn*)xar_obtinere(analyses_en,
                 k);
 
-            si (!oratio_partes_en_describere(piscina, vocabularia->en,
+            si (!oratio_partes_en_describere(scratch, vocabularia->en,
                 a,
                     descriptiones))
             {
@@ -1035,7 +1105,7 @@ oratio_partes_vocabulum_annotare (
         }
     }
     si (   vocabularia->en != NIHIL
-        && !oratio_partes_en_secundariae(piscina, textus,
+        && !oratio_partes_en_secundariae(scratch, textus,
         descriptiones))
     {
         redde FALSUM;
@@ -1095,7 +1165,7 @@ oratio_partes_vocabulum_annotare (
             {
                 redde FALSUM;
             }
-                        oratio_partes_la_capitalis(piscina, textus, d);
+                        oratio_partes_la_capitalis(scratch, textus, d);
             si (anglicum)
             {
                 d->lingua = ORATIO_LINGUA_ANGLICA;
@@ -1115,7 +1185,7 @@ oratio_partes_vocabulum_annotare (
         {
             redde FALSUM;
         }
-        oratio_partes_la_ignotum(piscina, textus, d);
+        oratio_partes_la_ignotum(scratch, textus, d);
         ignotum_additum = VERUM;
     }
     /* T30 b: ordo frequentiae intra greges classis et linguae */
@@ -1128,7 +1198,7 @@ oratio_partes_vocabulum_annotare (
     {
         constans OratioDescriptio* d =
             (constans OratioDescriptio*)xar_obtinere(descriptiones, k);
-        MateriaNodus* nodus = oratio_partes_nodum_struere(piscina, d,
+        MateriaNodus* nodus = _nodum_struere(piscina, derivata, d,
             origo);
 
         si (   nodus == NIHIL
@@ -1209,7 +1279,7 @@ oratio_partes_vocabulum_annotare (
             } u;
 
             u.c = buffer;
-            si (!_derivatum_ponere(piscina, vocabulum,
+            si (!_derivatum_ponere(piscina, derivata, vocabulum,
                     (i32)ORATIO_VOCABULUM_CLASSES, _chorda(u.m, n),
                     origo))
             {
@@ -1232,7 +1302,7 @@ oratio_partes_vocabulum_annotare (
                 } u;
 
                 u.c = buffer;
-                si (!_derivatum_ponere(piscina, vocabulum,
+                si (!_derivatum_ponere(piscina, derivata, vocabulum,
                         (i32)ORATIO_VOCABULUM_LINGUAE, _chorda(u.m, n),
                         origo))
                 {
@@ -1248,6 +1318,19 @@ oratio_partes_vocabulum_annotare (
     redde VERUM;
 }
 
+b32
+oratio_partes_vocabulum_annotare (
+                           Piscina* piscina,
+                           Piscina* scratch,
+        constans OratioVocabularia* vocabularia,
+                      MateriaNodus* vocabulum,
+                OratioPartesCensus* census,
+                   OratioDialectus  dialectus)
+{
+    redde _vocabulum_annotare(piscina, scratch, NIHIL, vocabularia,
+        vocabulum, census, dialectus);
+}
+
 /* encliticum annotare (T21): lectio una (descriptio TACKON), compendia
  * classis et linguae, census ut vocabulum annotatum */
 interior b32
@@ -1258,8 +1341,7 @@ _encliticum_annotare (
         constans MateriaToken* origo,
            OratioPartesCensus* census)
 {
-    MateriaNodus* nodus = oratio_partes_nodum_struere(piscina, d,
-        origo);
+    MateriaNodus* nodus = _nodum_struere(piscina, NIHIL, d, origo);
     constans character* classis = oratio_classis_titulus(d->classis);
     unio {
         constans character* c;
@@ -1277,7 +1359,7 @@ _encliticum_annotare (
     u.c            = classis;
     valor.datum    = u.m;
     valor.mensura  = (i32)strlen(classis);
-    si (!_derivatum_ponere(piscina, vocabulum,
+    si (!_derivatum_ponere(piscina, NIHIL, vocabulum,
             (i32)ORATIO_VOCABULUM_CLASSES, valor, origo))
     {
         redde FALSUM;
@@ -1287,7 +1369,7 @@ _encliticum_annotare (
         u.c            = ORATIO_TITULI_LINGUARUM[d->lingua];
         valor.datum    = u.m;
         valor.mensura  = (i32)strlen(u.c);
-        si (!_derivatum_ponere(piscina, vocabulum,
+        si (!_derivatum_ponere(piscina, NIHIL, vocabulum,
                 (i32)ORATIO_VOCABULUM_LINGUAE, valor, origo))
         {
             redde FALSUM;
@@ -1459,6 +1541,7 @@ interior b32
 _annotare (
                            Piscina* piscina,
                            Piscina* scratch,
+                    OratioDerivata* derivata,
         constans OratioVocabularia* vocabularia,
                       MateriaNodus* n,
                 OratioPartesCensus* census,
@@ -1472,9 +1555,13 @@ _annotare (
     }
     si (n->genus == (s32)ORATIO_GENUS_VOCABULUM)
     {
-        redde oratio_partes_vocabulum_annotare(piscina, scratch,
-            vocabularia,
-            n, census, dialectus);
+        PiscinaNotatio nota = piscina_notare(scratch);
+                   b32 sanum;
+
+        sanum = _vocabulum_annotare(piscina, scratch, derivata,
+            vocabularia, n, census, dialectus);
+        piscina_reficere(scratch, nota);
+        redde sanum;
     }
     per (i = ZEPHYRUM; i < n->numerus_locorum; i++)
     {
@@ -1482,7 +1569,7 @@ _annotare (
 
         si (v->genus == MATERIA_VALOR_NODUS)
         {
-            si (!_annotare(piscina, scratch, vocabularia,
+            si (!_annotare(piscina, scratch, derivata, vocabularia,
                 v->datum.nodus,
                 census, dialectus))
             {
@@ -1512,7 +1599,7 @@ _annotare (
                 {
                     redde FALSUM;
                 }
-                si (!_annotare(piscina, scratch, vocabularia,
+                si (!_annotare(piscina, scratch, derivata, vocabularia,
                         e->datum.nodus, census, dialectus))
                 {
                     redde FALSUM;
@@ -1755,12 +1842,22 @@ oratio_partes_annotare_dialecto (
                 OratioPartesCensus* census,
                    OratioDialectus  dialectus)
 {
-    Piscina* scratch = piscina_generare_dynamicum("partes_annotatio",
-        67108864);
-    b32 sanum;
+           Piscina* scratch = piscina_generare_dynamicum(
+               "partes_annotatio", 67108864);
+               b32 sanum;
+    OratioDerivata derivata;
 
     si (scratch == NIHIL)
     {
+        redde FALSUM;
+    }
+    /* internamentum in piscina ARBORIS: textus lexematis superstat */
+    derivata.intern   = internamentum_creare(piscina);
+    derivata.origo    = NIHIL;
+    derivata.numerus  = ZEPHYRUM;
+    si (derivata.intern == NIHIL)
+    {
+        piscina_destruere(scratch);
         redde FALSUM;
     }
     si (census != NIHIL)
@@ -1785,8 +1882,8 @@ oratio_partes_annotare_dialecto (
     {
         census->dialectus = (s32)dialectus;
     }
-    sanum = _annotare(piscina, scratch, vocabularia, radix, census,
-        dialectus);
+    sanum = _annotare(piscina, scratch, &derivata, vocabularia, radix,
+        census, dialectus);
     piscina_destruere(scratch);
     /* nodi novi patres accipiunt (lex materiae: comparator patres confert) */
     si (sanum)

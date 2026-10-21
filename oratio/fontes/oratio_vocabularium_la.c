@@ -38,7 +38,17 @@ structura OratioVocabulariumLa {
         Xar* tackones;                   /* s32: additamenta TACKON basi X */
     OratioVocabulariumCensus census;
     constans OratioGlossarium* glossarium;   /* T9: fons primus, NIHIL = nullum */
+    /* flexiones clave I per partem effectivam stirpis (ordine tabulae;
+     * PACK = PACK + PRON, ut _congruit): lemma gregem suum solum
+     * ambulat, non tabulam totam (vide _primas_indicare) */
+     constans OratioFlexio** primae[ORATIO_PARS_NUMERUS_PARTIUM];
+                       s32   primae_n[ORATIO_PARS_NUMERUS_PARTIUM];
 };
+
+interior b32
+_primas_indicare (
+                 Piscina* piscina,
+    OratioVocabulariumLa* voc);
 
 
 /* ==================================================
@@ -474,6 +484,10 @@ oratio_vocabularium_la_onerare (
             }
             *locus = i;
         }
+    }
+    si (!_primas_indicare(piscina, voc))
+    {
+        redde NIHIL;
     }
     redde voc;
 }
@@ -1423,6 +1437,78 @@ _flexio_prima_est (
     }
 }
 
+/* flexio in gregem partis p stirpis cadit? (pars effectiva
+ * aequalis; stirps PACK flexiones PRON quoque accipit - eadem lex ac
+ * _congruit) */
+interior b32
+_flexio_in_grege (
+    constans OratioFlexio* fl,
+                      s32  p)
+{
+    OratioPars ep = _pars_effectiva(fl->pars);
+
+    redde (b32)(fl->clavis == I
+        && (   (s32)ep == p
+            || (p == (s32)ORATIO_PARS_PACK && ep == ORATIO_PARS_PRON)));
+}
+
+/* INDEX LEMMATUM (2026-10-21): lemma (forma dictionarii) functio
+ * stirpis CLASSIS est, et _congruit parte primum reicit - ergo
+ * flexiones clave I per partem semel indicantur, ordine tabulae
+ * servato (prima congruens eadem). Olim lemma quodque tabulam totam
+ * (MDCCXCVII flexiones per xar_obtinere) ambulabat: LXX% temporis
+ * annotationis (cicero 791 -> 272 ms; lemmata stirpium omnium XXXIX
+ * milium eadem). */
+interior b32
+_primas_indicare (
+                 Piscina* piscina,
+    OratioVocabulariumLa* voc)
+{
+    s32 n = (s32)xar_numerus(voc->flexiones);
+    s32 p;
+    s32 i;
+
+    per (p = ZEPHYRUM; p < (s32)ORATIO_PARS_NUMERUS_PARTIUM; p++)
+    {
+        s32 numerus = ZEPHYRUM;
+
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            si (_flexio_in_grege(oratio_vocabularium_la_flexio(voc, i),
+                p))
+            {
+                numerus = numerus + I;
+            }
+        }
+        voc->primae_n[p]  = ZEPHYRUM;
+        voc->primae[p]    = NIHIL;
+        si (numerus == ZEPHYRUM)
+        {
+            perge;
+        }
+        voc->primae[p] = (constans OratioFlexio**)piscina_allocare(
+            piscina, (memoriae_index)numerus
+                * (memoriae_index)magnitudo(OratioFlexio*));
+        si (voc->primae[p] == NIHIL)
+        {
+            redde FALSUM;
+        }
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            constans OratioFlexio* fl =
+                oratio_vocabularium_la_flexio(voc,
+                i);
+
+            si (_flexio_in_grege(fl, p))
+            {
+                voc->primae[p][voc->primae_n[p]] = fl;
+                voc->primae_n[p] = voc->primae_n[p] + I;
+            }
+        }
+    }
+    redde VERUM;
+}
+
 chorda
 oratio_vocabularium_la_lemma (
                           Piscina* piscina,
@@ -1436,13 +1522,15 @@ oratio_vocabularium_la_lemma (
                       i32  i;
                        i8* datum;
 
-    per (i = ZEPHYRUM; i < xar_numerus(voc->flexiones); i++)
+    per (i = ZEPHYRUM;
+         (s32)st->pars >= ZEPHYRUM
+             && (s32)st->pars < (s32)ORATIO_PARS_NUMERUS_PARTIUM
+             && (s32)i < voc->primae_n[st->pars];
+         i++)
     {
-        constans OratioFlexio* fl = oratio_vocabularium_la_flexio(voc,
-            (s32)i);
+        constans OratioFlexio* fl = voc->primae[st->pars][i];
 
-        si (   fl->clavis == I && _congruit(st, I, fl)
-            && _flexio_prima_est(st, fl))
+        si (_congruit(st, I, fl) && _flexio_prima_est(st, fl))
         {
             finis = fl->finis;
             frange;
