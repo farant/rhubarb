@@ -86,22 +86,16 @@ _lineas_numerare (
     redde n;
 }
 
-s32
-principale (vacuum)
+/* Sectio UNA: probatio scaenica - blocci statum priorum ex proposito
+ * continuant; gradus (CREDO_GRADUS) fracturam nominant. */
+interior vacuum
+_scaenam_probare (
+    CredoContextus* c)
 {
-    Piscina* piscina;
-        b32  praeteritus;
-    integer  portus_int = 0;
-    integer  k;
+            Piscina* piscina     = c->piscina;
+            integer  portus_int  = 0;
+            integer  k;
 
-    piscina = piscina_generare_dynamicum("probatio_fori",
-        16777216);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
     _purgare();
 
     /* aedificationes + genitus daemonis portu auto */
@@ -220,14 +214,16 @@ principale (vacuum)
     }
 
     (vacuum)system("kill $(cat " VIA_PID ") 2>/dev/null");
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "proxy fori: daemon verus portu auto", _scaenam_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    redde I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("fori", SECTIONES);
 }
