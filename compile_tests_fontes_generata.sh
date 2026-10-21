@@ -246,6 +246,7 @@ declare -a SOURCE_FILES=(
     "lib/silex.c"
     "lib/similitudo.c"
     "lib/situs.c"
+    "lib/sonitus.c"
     "lib/sonus.c"
     "lib/sors.c"
     "lib/specimen.c"
