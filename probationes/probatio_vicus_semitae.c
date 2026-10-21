@@ -377,16 +377,20 @@ interior vacuum
 _probare_nomenclatorem (
     CredoContextus* c)
 {
-                Mundus* x;
-    PersonaeDocumentum* doc;
+                 Mundus* x;
+     PersonaeDocumentum* doc;
+                    i32  numerator;
 
     x = (Mundus*)c->datum;
     CREDO_NECESSE(x->volumen);
     doc = personae_aperire(c->piscina, internamentum_creare(c->piscina),
         x->volumen, "personae", ZEPHYRUM);
-    CREDO_NECESSE(doc && personae_hominem_creare(doc,
-        chorda_ex_literis("Anna", c->piscina),
-        chorda_ex_literis("Rossi", c->piscina)) == I);
+    numerator = ZEPHYRUM;
+    personae_monetam_ponere(doc, moneta_numerator, &numerator);
+    CREDO_NECESSE(doc
+        && chorda_aequalis_literis(personae_hominem_creare(
+        doc, chorda_ex_literis("Anna", c->piscina), chorda_ex_literis(
+        "Rossi", c->piscina)), "1"));
     CREDO_NECESSE(mundum_struere(x, c));
     CREDO_VERUM(vicus_acervo_aperire(x->app.vicus, "nomenclator",
         NIHIL));

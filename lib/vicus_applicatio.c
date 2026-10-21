@@ -1887,15 +1887,19 @@ natalem_aperire (
     constans FastiIntroitus* introitus)
 {
     ContextusNomenclatoris* cn;
-                 character  numerus[XVI];
+                 character  id[XXXII];
 
     cn = (ContextusNomenclatoris*)ctx;
-    si (!cn || !introitus || introitus->referentia <= ZEPHYRUM)
+    si (   !cn || !introitus
+        || introitus->referentia.mensura == ZEPHYRUM
+        || introitus->referentia.mensura >= (i32)magnitudo(id))
     {
         redde FALSUM;
     }
-    sprintf(numerus, "%d", (integer)introitus->referentia);
-    redde vicus_acervo_mutare(cn->vicus, "nomenclator", numerus);
+    memcpy(id, introitus->referentia.datum,
+        (memoriae_index)introitus->referentia.mensura);
+    id[introitus->referentia.mensura] = '\0';
+    redde vicus_acervo_mutare(cn->vicus, "nomenclator", id);
 }
 
 /* folium paginae novae (S2b): lateris sinistri cellulae (dimidium
@@ -2756,7 +2760,7 @@ sanctos_legere (
                 t->dies        = dies[k];
                 t->genus       = chorda_ex_literis("sanctus", piscina);
                 t->titulus     = titulus;
-                t->referentia  = (s32)i;
+                t->referentia  = s->id;
             }
         }
     }
@@ -2772,22 +2776,18 @@ sanctum_aperire (
     constans FastiIntroitus* introitus)
 {
     ContextusSanctorum* cs;
-      constans Sanctus* s;
              character  id[CXXVIII];
 
     cs = (ContextusSanctorum*)ctx;
-    si (!cs || !introitus || introitus->referentia < ZEPHYRUM)
+    si (   !cs || !introitus
+        || introitus->referentia.mensura == ZEPHYRUM
+        || introitus->referentia.mensura >= (i32)magnitudo(id))
     {
         redde FALSUM;
     }
-    s = sancti_ad_indicem(corpus_sanctorum(cs),
-        (i32)introitus->referentia);
-    si (!s || s->id.mensura >= (i32)magnitudo(id))
-    {
-        redde FALSUM;
-    }
-    memcpy(id, s->id.datum, (memoriae_index)s->id.mensura);
-    id[s->id.mensura] = '\0';
+    memcpy(id, introitus->referentia.datum,
+        (memoriae_index)introitus->referentia.mensura);
+    id[introitus->referentia.mensura] = '\0';
     redde vicus_acervo_mutare(cs->vicus, "sancti", id);
 }
 

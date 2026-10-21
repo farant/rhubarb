@@ -67,6 +67,88 @@ attributum_s32 (
     redde praestitutum;
 }
 
+/* D3: intus personae ordinalibus creationis (Persona.ordo = res albi)
+ * designantur; id textus solum in limine (status, acta, liber).
+ * Persona viva ordinis; NIHIL si nulla */
+interior constans Persona*
+persona_ordinis (
+    constans NomenclatorMontatio* m,
+                             s32  ordo)
+{
+    constans Persona* q;
+                 i32  i;
+
+    per (i = ZEPHYRUM; ordo > ZEPHYRUM && m->documentum
+        && i < personae_numerus(m->documentum); i++)
+    {
+        q = personae_index(m->documentum, i);
+        si (q && (s32)q->ordo == ordo)
+        {
+            redde q;
+        }
+    }
+    redde NIHIL;
+}
+
+/* ordinalis personae vivae cuius id = textus; 0 si nulla */
+interior s32
+ordo_personae (
+    constans NomenclatorMontatio* m,
+                          chorda  id)
+{
+    constans Persona* q;
+
+    q = m->documentum ? personae_persona(m->documentum, id) : NIHIL;
+    redde q ? (s32)q->ordo : ZEPHYRUM;
+}
+
+/* id personae ordinis (in intern documenti); vacua si nulla */
+interior chorda
+id_personae (
+    constans NomenclatorMontatio* m,
+                             s32  ordo)
+{
+    constans Persona* q;
+              chorda  vacua;
+
+    q = persona_ordinis(m, ordo);
+    si (q)
+    {
+        redde q->id;
+    }
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    redde vacua;
+}
+
+/* id personae ordinis ut literae in effusio (>= XXXII octeti); ""
+ * si nulla */
+interior constans character*
+id_textus (
+    constans NomenclatorMontatio* m,
+                             s32  ordo,
+                       character* effusio)
+{
+    chorda id;
+
+    id = id_personae(m, ordo);
+    memcpy(effusio, id.datum, (size_t)id.mensura);
+    effusio[id.mensura] = '\0';
+    redde effusio;
+}
+
+/* campus status (id textus) ut ordinalis; 0 si absens aut ignota */
+interior s32
+attributum_ordo (
+    constans NomenclatorMontatio* m,
+              constans character* titulus)
+{
+    chorda* a;
+
+    a = insula_ramus_attributum(&m->ramus, titulus);
+    redde a ? ordo_personae(m, *a) : ZEPHYRUM;
+}
+
 nomen structura {
     constans character* titulus;
     constans character* valor;
@@ -291,7 +373,7 @@ ordines (
      constans Persona* q;
             character  littera;
             character  prior;
-            character  id[XXIV];
+            character  id[XLVIII];
                   i32  i;
 
     l = album_creare(p, capacitas(m));
@@ -339,9 +421,10 @@ ordines (
             per (k = ZEPHYRUM; k < n; k++)
             {
                 q = candidati[fructus[k].index];
-                sprintf(id, "p%d", (integer)q->id);
+                sprintf(id, "p%.*s", (integer)q->id.mensura,
+                    (constans character*)q->id.datum);
                 (vacuum)album_addere(l, id, ALBUM_RES, NOMENCLATOR_ORDO,
-                    q->id);
+                    (s32)q->ordo);
             }
             redde l;
         }
@@ -374,9 +457,10 @@ ordines (
                         NOMENCLATOR_ORDO, ZEPHYRUM);
                     titulus = VERUM;
                 }
-                sprintf(id, "p%d-%d", (integer)q->id, (integer)k);
+                sprintf(id, "p%.*s-%d", (integer)q->id.mensura,
+                    (constans character*)q->id.datum, (integer)k);
                 (vacuum)album_addere(l, id, ALBUM_RES, NOMENCLATOR_ORDO,
-                    q->id);
+                    (s32)q->ordo);
             }
         }
         redde l;
@@ -397,8 +481,10 @@ ordines (
                 ZEPHYRUM);
             prior = littera;
         }
-        sprintf(id, "p%d", (integer)q->id);
-        (vacuum)album_addere(l, id, ALBUM_RES, NOMENCLATOR_ORDO, q->id);
+        sprintf(id, "p%.*s", (integer)q->id.mensura,
+            (constans character*)q->id.datum);
+        (vacuum)album_addere(l, id, ALBUM_RES, NOMENCLATOR_ORDO,
+            (s32)q->ordo);
     }
     redde l;
 }
@@ -412,7 +498,7 @@ pagina_currens (
         ZEPHYRUM));
 }
 
-/* id rei ordinis (RES) aut 0 */
+/* ordinalis rei ordinis (RES) aut 0 */
 interior s32
 res_ordinis (
     constans AlbumOrdo* o)
@@ -420,8 +506,10 @@ res_ordinis (
     redde (o && o->genus == ALBUM_RES) ? o->res : ZEPHYRUM;
 }
 
-s32
-nomenclator_persona_electa (
+/* persona electa ut ordinalis (vide nomenclator_persona_electa); 0 si
+ * nulla */
+interior s32
+electa_ordo (
     constans NomenclatorMontatio* m)
 {
        Album* l;
@@ -432,7 +520,7 @@ nomenclator_persona_electa (
     {
         redde ZEPHYRUM;
     }
-    id = attributum_s32(&m->ramus, "persona_electa", ZEPHYRUM);
+    id = attributum_ordo(m, "persona_electa");
     p  = m->figurae_ctx ? ((NomenclatorFigurae*)m->figurae_ctx)->scheda
                         : m->piscina;
     /* P4: sub quaestione electa inter fructus esse debet (dum typatur
@@ -440,8 +528,7 @@ nomenclator_persona_electa (
     {
         character quaestio[PROMPTA_MAXIMA];
 
-        si (   id > ZEPHYRUM && personae_persona(m->documentum, id)
-            && quaestio_currens(m, quaestio) > ZEPHYRUM)
+        si (id > ZEPHYRUM && quaestio_currens(m, quaestio) > ZEPHYRUM)
         {
             l = ordines(m, p);
             redde (l
@@ -449,7 +536,7 @@ nomenclator_persona_electa (
                 : (l ? album_res_prima(l, ZEPHYRUM) : ZEPHYRUM);
         }
     }
-    si (id > ZEPHYRUM && personae_persona(m->documentum, id))
+    si (id > ZEPHYRUM)
     {
         redde id;
     }
@@ -458,7 +545,14 @@ nomenclator_persona_electa (
     redde l ? album_res_prima(l, ZEPHYRUM) : ZEPHYRUM;
 }
 
-/* electio: persona_electa et pagina eius */
+chorda
+nomenclator_persona_electa (
+    constans NomenclatorMontatio* m)
+{
+    redde id_personae(m, electa_ordo(m));
+}
+
+/* electio: persona_electa (id ordinis) et pagina eius */
 interior b32
 electionem_scribere (
     NomenclatorMontatio* m,
@@ -467,27 +561,23 @@ electionem_scribere (
 {
      Album* l;
        s32  k;
- character  numerus[XVI];
+ character  numerus[XXXII];
  character  pagina[XVI];
 
     l = ordines(m, p);
     k = l ? album_pagina_rei(l, id, pagina_currens(m, l)) : -I;
-    sprintf(numerus, "%d", (integer)id);
+    (vacuum)id_textus(m, id, numerus);
     sprintf(pagina, "%d", (integer)(k < ZEPHYRUM ? ZEPHYRUM : k));
     redde campos_scribere(m, "persona_electa", numerus, "pagina",
         k > ZEPHYRUM ? pagina : "");
 }
 
-/* P5a: persona in visu singulari (viva) aut 0 */
+/* P5a: persona in visu singulari (viva, ordinalis) aut 0 */
 interior s32
 persona_aperta (
     constans NomenclatorMontatio* m)
 {
-    s32 id;
-
-    id = attributum_s32(&m->ramus, "persona_aperta", ZEPHYRUM);
-    redde (id > ZEPHYRUM && m->documentum
-           && personae_persona(m->documentum, id)) ? id : ZEPHYRUM;
+    redde attributum_ordo(m, "persona_aperta");
 }
 
 /* P5a: ordines visus personae */
@@ -580,7 +670,7 @@ filtrum_ponere (
 {
        Album* l;
          s32  id;
-   character  numerus[XVI];
+   character  numerus[XXXII];
 
     si (!campos_scribere(m, "rubrica_filtrum", valor, "pagina", ""))
     {
@@ -588,9 +678,8 @@ filtrum_ponere (
     }
     l   = ordines(m, p);
     id  = l ? album_res_prima(l, ZEPHYRUM) : ZEPHYRUM;
-    sprintf(numerus, "%d", (integer)id);
-    redde campos_scribere(m, "persona_electa", id > ZEPHYRUM ? numerus
-        : "", NIHIL, NIHIL);
+    redde campos_scribere(m, "persona_electa", id_textus(m, id,
+        numerus), NIHIL, NIHIL);
 }
 
 /* P4: quaestionem ponere (textus solutus; vacuus tollit); pagina
@@ -603,7 +692,7 @@ quaestionem_ponere (
 {
        Album* l;
          s32  id;
-   character  numerus[XVI];
+   character  numerus[XXXII];
       chorda  effugitus;
 
     effugitus = textus.mensura > ZEPHYRUM ? scriba_effugere(
@@ -616,9 +705,8 @@ quaestionem_ponere (
     }
     l   = ordines(m, p);
     id  = l ? album_res_prima(l, ZEPHYRUM) : ZEPHYRUM;
-    sprintf(numerus, "%d", (integer)id);
-    redde campos_scribere(m, "persona_electa", id > ZEPHYRUM ? numerus
-        : "", NIHIL, NIHIL);
+    redde campos_scribere(m, "persona_electa", id_textus(m, id,
+        numerus), NIHIL, NIHIL);
 }
 
 /* P3: visum ponere; electa manet, pagina eam sequitur */
@@ -630,7 +718,7 @@ visum_ponere (
 {
     s32 electa;
 
-    electa = nomenclator_persona_electa(m);
+    electa = electa_ordo(m);
     si (!campos_scribere(m, "visus", visus, "pagina", ""))
     {
         redde FALSUM;
@@ -638,13 +726,14 @@ visum_ponere (
     redde electa > ZEPHYRUM ? electionem_scribere(m, electa, p) : VERUM;
 }
 
-/* id rei ex ordine "p<id>" aut "p<id>-<k>"; 0 si alius */
+/* ordinalis personae ex ordine "p<id>" aut "p<id>-<k>"; 0 si alius
+ * aut ignota */
 interior s32
 id_ordinis (
-    chorda id)
+    constans NomenclatorMontatio* m,
+                          chorda  id)
 {
     chorda n;
-       s32 v;
 
     si (id.mensura < II || id.datum[ZEPHYRUM] != 'p')
     {
@@ -657,7 +746,7 @@ id_ordinis (
     {
         n.mensura++;
     }
-    redde chorda_ut_s32(n, &v) ? v : ZEPHYRUM;
+    redde ordo_personae(m, n);
 }
 
 /* index gregis ex titulo "g<k>"; -1 si alius */
@@ -754,7 +843,7 @@ paginam_vertere (
 {
           s32 k;
           s32 id;
-    character numerus[XVI];
+    character numerus[XXXII];
     character pagina[XVI];
 
     k = pagina_currens(cp->m, cp->l) + gradus;
@@ -764,9 +853,8 @@ paginam_vertere (
     }
     id = album_res_prima(cp->l, k);
     sprintf(pagina, "%d", (integer)k);
-    sprintf(numerus, "%d", (integer)id);
     redde campos_scribere(cp->m, "pagina", pagina, "persona_electa",
-        id > ZEPHYRUM ? numerus : "");
+        id_textus(cp->m, id, numerus));
 }
 
 interior b32
@@ -795,8 +883,7 @@ natalis_aperibilis (
 {
     constans Persona* q;
 
-    q = persona_aperta(m) > ZEPHYRUM ? personae_persona(m->documentum,
-        persona_aperta(m)) : NIHIL;
+    q = persona_ordinis(m, persona_aperta(m));
     redde q && q->natalis_positus && m->dies_aperire && m->hodie;
 }
 
@@ -818,9 +905,8 @@ fac_ad_natalem (
     {
         redde FALSUM;
     }
-    q = personae_persona(cp->m->documentum,
-        persona_aperta(cp->m));
-    ultima = fasti_addere_annos(hodie, I);
+    q       = persona_ordinis(cp->m, persona_aperta(cp->m));
+    ultima  = fasti_addere_annos(hodie, I);
     n       = fasti_annuum_expandere(q->natalis.mensis, q->natalis.dies,
         hodie, ultima, dies, II);
     si (n < I)
@@ -990,7 +1076,8 @@ fac_delere (
             successor = id;
         }
     }
-    si (personae_delere(cp->m->documentum, cp->electa) <= ZEPHYRUM)
+    si (personae_delere(cp->m->documentum, id_personae(cp->m,
+            cp->electa)) <= ZEPHYRUM)
     {
         redde FALSUM;
     }
@@ -1031,11 +1118,10 @@ fac_aperire (
     vacuum* ctx)
 {
     ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
-             character  numerus[XVI];
+             character  numerus[XXXII];
 
-    sprintf(numerus, "%d", (integer)cp->electa);
-    redde campos_scribere(cp->m, "persona_aperta", numerus,
-        "campus_electus", "");
+    redde campos_scribere(cp->m, "persona_aperta", id_textus(cp->m,
+        cp->electa, numerus), "campus_electus", "");
 }
 
 interior b32
@@ -1058,7 +1144,7 @@ campum_movere (
                  s32  k;
            character  numerus[XVI];
 
-    q      = personae_persona(cp->m->documentum, cp->electa);
+    q      = persona_ordinis(cp->m, cp->electa);
     campi  = campos_struere(q, cp->p);
     si (!campi)
     {
@@ -1125,7 +1211,7 @@ fac_campum_edere (
                 chorda  valor;
     constans character* genus;
 
-    q      = personae_persona(cp->m->documentum, cp->electa);
+    q      = persona_ordinis(cp->m, cp->electa);
     campi  = campos_struere(q, cp->p);
     si (!q || !campi || xar_numerus(campi) == ZEPHYRUM)
     {
@@ -1173,8 +1259,8 @@ genus_ponere (
     ContextusPraecepti* cp,
           PersonaGenus  genus)
 {
-    redde personae_genus_ponere(cp->m->documentum, cp->electa, genus)
-        > ZEPHYRUM;
+    redde personae_genus_ponere(cp->m->documentum, id_personae(cp->m,
+        cp->electa), genus) > ZEPHYRUM;
 }
 
 interior b32
@@ -1184,7 +1270,7 @@ fac_genus_alternare (
     ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
       constans Persona* q;
 
-    q = personae_persona(cp->m->documentum, cp->electa);
+    q = persona_ordinis(cp->m, cp->electa);
     redde q && genus_ponere(cp, q->genus == PERSONA_HOMO
         ? PERSONA_SOCIETAS : PERSONA_HOMO);
 }
@@ -1256,7 +1342,7 @@ contextum_parare (
     cp->p = p;
     cp->l = ordines(m, p);
     cp->electa  = persona_aperta(m) > ZEPHYRUM ? persona_aperta(m)
-                : nomenclator_persona_electa(m);
+                : electa_ordo(m);
 }
 
 /* hospes menu: tabulae, visus, requisita, contextus paratus */
@@ -1444,18 +1530,18 @@ campum_committere (
      constans Persona* q;
                   Xar* campi;
        CampusPersonae* campus;
-                  s32  id;
+               chorda  id;
                  Dies  d;
                chorda  praenomen;
                chorda  cognomen;
 
-    id     = persona_aperta(m);
-    q      = personae_persona(m->documentum, id);
+    q      = persona_ordinis(m, persona_aperta(m));
     campi  = campos_struere(q, p);
     si (!q || !campi)
     {
         redde -I;
     }
+    id = q->id;
     campus = (CampusPersonae*)xar_obtinere(campi, (i32)campus_electus(m,
         (s32)xar_numerus(campi)));
     si (chorda_aequalis_literis(genus, "nomen"))
@@ -1513,7 +1599,7 @@ promptam_committere (
 {
     chorda praenomen;
     chorda cognomen;
-       s32 id;
+    chorda id;
        i32 i;
 
     /* P5a: campi personae apertae */
@@ -1585,12 +1671,12 @@ promptam_committere (
         id = personae_hominem_creare(m->documentum, praenomen,
             cognomen);
     }
-    si (id <= ZEPHYRUM)
+    si (id.mensura == ZEPHYRUM)
     {
         redde FALSUM;
     }
     (vacuum)prompta_claudere(&m->ramus, actio_nomenclatoris, p);
-    redde electionem_scribere(m, id, p);
+    redde electionem_scribere(m, ordo_personae(m, id), p);
 }
 
 /* <actio/> nomenclator.agere: claves per tabulam praeceptorum; ictus
@@ -1679,14 +1765,14 @@ agere (
     /* P5a: ictus duplex in ordine indicis personam aperit */
     si (   ev->genus            == EVENTUS_MUS_DUPLEX && nodus
         && ev->datum.mus.botton == MUS_SINISTER
-        && nodus->partes        == PARTES_ITEM && id_ordinis(nodus->id)
+        && nodus->partes        == PARTES_ITEM
+        && id_ordinis(m, nodus->id)
         > ZEPHYRUM && persona_aperta(m) == ZEPHYRUM)
     {
-        character numerus[XVI];
+        character numerus[XXXII];
 
-        sprintf(numerus, "%d", (integer)id_ordinis(nodus->id));
-        redde campos_scribere(m, "persona_aperta", numerus,
-            "campus_electus", "");
+        redde campos_scribere(m, "persona_aperta", id_textus(m,
+            id_ordinis(m, nodus->id), numerus), "campus_electus", "");
     }
     si (   ev->genus            != EVENTUS_MUS_DEPRESSUS
         || ev->datum.mus.botton != MUS_SINISTER || !nodus)
@@ -1728,7 +1814,7 @@ agere (
         redde FALSUM;
     }
     id = nodus->partes
-        == PARTES_ITEM ? id_ordinis(nodus->id) : ZEPHYRUM;
+        == PARTES_ITEM ? id_ordinis(m, nodus->id) : ZEPHYRUM;
     si (id > ZEPHYRUM)
     {
         redde electionem_scribere(m, id, privatum->scheda);
@@ -1866,7 +1952,7 @@ ordinem_pingere (
               Punctum  a;
               Punctum  b;
 
-    q = personae_persona(m->documentum, id);
+    q = persona_ordinis(m, id);
     si (!q)
     {
         redde;
@@ -1931,7 +2017,7 @@ titulum_promptae (
     }
     si (chorda_aequalis_literis(genus, "nomen"))
     {
-        q = personae_persona(m->documentum, persona_aperta(m));
+        q = persona_ordinis(m, persona_aperta(m));
         redde (q && q->genus == PERSONA_SOCIETAS) ? "business:"
             : "name:";
     }
@@ -2074,7 +2160,7 @@ personam_pingere (
                   s32  k;
                   i32  i;
 
-    q      = personae_persona(m->documentum, persona_aperta(m));
+    q      = persona_ordinis(m, persona_aperta(m));
     campi  = campos_struere(q, md->piscina);
     si (!q || !campi)
     {
@@ -2203,7 +2289,7 @@ figura_tabulae (
         redde;
     }
     l       = ordines(m, md->piscina);
-    electa  = nomenclator_persona_electa(m);
+    electa  = electa_ordo(m);
     k       = pagina_currens(m, l);
     n       = album_paginae(l);
     per (i = ZEPHYRUM; i < componens_numerus_liberorum(c); i++)
@@ -2381,7 +2467,7 @@ figura_tabulae (
         }
         alioquin si (f->partes == PARTES_ITEM && f->id.mensura > I)
         {
-            id = id_ordinis(f->id);
+            id = id_ordinis(m, f->id);
             si (id > ZEPHYRUM)
             {
                 ordinem_pingere(m, md, f, id, electa);
@@ -2540,7 +2626,7 @@ personam_disponere (
                   i32  i;
             character  id[XVI];
 
-    q      = personae_persona(m->documentum, persona_aperta(m));
+    q      = persona_ordinis(m, persona_aperta(m));
     campi  = campos_struere(q, piscina);
     barra  = locum_addere(dp, radix_d, DISPOSITIO_LINEA,
         DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, III);
@@ -2833,10 +2919,14 @@ notarum_locus (
 /* P5b: clavis libri personae: "persona/<id>" (buffer XXXII) */
 interior vacuum
 clavis_libri (
-          s32  id,
-    character* clavis)
+    constans NomenclatorMontatio* m,
+                             s32  id,
+                       character* clavis)
 {
-    sprintf(clavis, "persona/%d", (integer)id);
+    character numerus[XXXII];
+
+    sprintf(clavis, "persona/%s", id > ZEPHYRUM ? id_textus(m, id,
+        numerus) : "0");
 }
 
 /* P5b: liber personam apertam sequitur (index librum servat); gestus
@@ -2847,7 +2937,7 @@ librum_aptare (
                   Motus* motus)
 {
     NomenclatorFigurae* ctx;
-             character  clavis[XXXII];
+             character  clavis[XLVIII];
                    s32  lat;
                    s32  alt;
 
@@ -2856,7 +2946,7 @@ librum_aptare (
     {
         redde;
     }
-    clavis_libri(persona_aperta(m), clavis);
+    clavis_libri(m, persona_aperta(m), clavis);
     notarum_locus(m, &lat, &alt);
     (vacuum)charta_clavem_ponere(&ctx->notae, motus, clavis, lat, alt);
 }
@@ -2899,7 +2989,6 @@ nomenclator_argumentum_ponere (
      StmlNodus* semita;
         chorda* aperta;
         chorda  vitium;
-           s32  id;
 
     si (!m)
     {
@@ -2912,12 +3001,11 @@ nomenclator_argumentum_ponere (
     {
         redde FALSUM;
     }
-    /* persona ignota: recusatur ante scripturam (typus numerus formam
+    /* persona ignota: recusatur ante scripturam (typus nomen formam
      * solam iudicat) */
     aperta = stml_attributum_capere(semita, "persona_aperta");
     si (   aperta && aperta->mensura > ZEPHYRUM
-        && (   !chorda_ut_s32(*aperta, &id) || id <= ZEPHYRUM
-            || !personae_persona(m->documentum, id)))
+        && !personae_persona(m->documentum, *aperta))
     {
         redde FALSUM;
     }
@@ -3004,7 +3092,7 @@ nomenclator_montare (
                Organum* organum;
     NomenclatorFigurae* ctx;
              character  titulus[LXIV];
-             character  clavis[XXXII];
+             character  clavis[XLVIII];
                    s32  lat;
                    s32  alt;
                    s32  persona;
@@ -3046,9 +3134,9 @@ nomenclator_montare (
      * liber paratus ad Enter), aliter "persona/0" (index vacuus) */
     ctx      = (NomenclatorFigurae*)m->figurae_ctx;
     persona  = persona_aperta(m) > ZEPHYRUM ? persona_aperta(m)
-             : nomenclator_persona_electa(m);
+             : electa_ordo(m);
     sprintf(titulus, "%s_notae", id ? id : "nomenclator");
-    clavis_libri(persona, clavis);
+    clavis_libri(m, persona, clavis);
     notarum_locus(m, &lat, &alt);
     redde charta_montare(&ctx->notae, piscina, intern, volumen,
         &m->ramus, m->actiones, m->figurae, titulus, clavis, lat, alt,

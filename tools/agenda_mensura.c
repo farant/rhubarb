@@ -43,7 +43,7 @@ ordinem_metiri (
                  duplex  per_actum;
                  duplex  aperire;
                     i32  i;
-                    s32  id;
+                 chorda  id;
                    Dies  d;
 
     p    = piscina_generare_dynamicum("agenda_mensura", CCLVI * M);
@@ -70,7 +70,8 @@ ordinem_metiri (
     initium = clock();
     per (i = ZEPHYRUM; i < MUTATIONES; i++)
     {
-        (vacuum)agenda_titulum_ponere(doc, (s32)(I + i % n),
+        (vacuum)agenda_titulum_ponere(doc, agenda_res_index(doc, i % n)
+            ->id,
             chorda_ex_literis((i & I) ? "titulus a" : "titulus b", p));
     }
     per_actum  = tempus_transactum(initium) * 1.0e3 / MUTATIONES;

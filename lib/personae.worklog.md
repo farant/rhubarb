@@ -35,3 +35,14 @@ contact still accepting acts; unstable order - all red (the order plant
 only after a tie case was added: the first fixture had no equal keys).
 Not observable (documented): the writer also drops empty list values,
 but the reader drops them too, so only the stored text would differ.
+
+## 2026-10-20 - genera-datorum D3: ids are ULIDs (text), not max + 1
+
+Same change as agenda (see lib/agenda.worklog.md, same date): chorda
+ids from a mint hook (`personae_monetam_ponere`, default
+`moneta_ulid`), old decimal ids valid as text, duplicate / malformed
+minted ids refused, `proximum` gone from the canonical state.
+`Persona.ordo` = creation ordinal; `personae_ordinatae` breaks equal
+keys by creation order. `FastiIntroitus.referentia` is now the id
+text (chorda) - vicus' saints source puts the saint's own id there,
+so `sanctum_aperire` no longer looks the saint up by index.

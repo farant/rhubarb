@@ -96,7 +96,7 @@ nomenclator_portam_diei_ponere (
                     vacuum* ctx);
 
 /* argumentum lateris (vicus_acervo_mutare / montatio; semitae R4b):
- * semita nomenclatoris - URI ("nomenclator/7",
+ * semita nomenclatoris - URI ("nomenclator/7", "nomenclator/01JC9X...",
  * "nomenclator?quaestio=anna") aut cognomen: "<id>" ->
  * nomenclator/<id>, "" aut NIHIL -> index (persona_aperta sublata).
  * FALSUM si semita mala aut persona ignota (status non mutatur) */
@@ -113,8 +113,8 @@ nomenclator_semitam_secuta (
     vacuum* ctx);
 
 /* persona electa: campus persona_electa si viva, aliter prima indicis;
- * 0 si nulla */
-s32
+ * chorda vacua si nulla (id in intern documenti) */
+chorda
 nomenclator_persona_electa (
     constans NomenclatorMontatio* m);
 

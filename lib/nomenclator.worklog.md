@@ -297,3 +297,19 @@ carry their geometry in `puncta`, not `fines`.
   person after a history step.
 - NomenclatorFigurae is now memset to zero on allocation - the same
   latent garbage-`notae.montata` read that crashed the calendar in R4a.
+
+## 2026-10-20 - D3: ordinals inside, id text at the edges
+
+Persons are designated internally by creation ordinal (`Persona.ordo`
+= album `res`, `cp->electa`, `persona_aperta()`); id text only crosses
+the edges: status fields (`persona_electa`, `persona_aperta`, now
+`typus="nomen"` in the manifest - numerus refused ULIDs), row ids
+`p<id>`, the notes book `persona/<id>`, mutation calls. Helpers
+persona_ordinis / ordo_personae / id_personae / id_textus /
+attributum_ordo. `nomenclator_persona_electa` returns the id chorda.
+
+Bug found by the vicus suite: the row-id buffer was `id[XXIV]` -
+"p" + 26-char ULID overflowed (fortify trap, exit 133). Row-id and
+book-key buffers are XLVIII now. After a manifest edit,
+`tools/organa_infigere.sh` must regenerate lib/organa_infixa.c, or the
+running app still validates against the old embedded manifest.

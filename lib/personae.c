@@ -27,8 +27,9 @@ structura PersonaeDocumentum {
                 Piscina* status;
                 Piscina* scheda;
                 Piscina* acta;
-                    Xar* recorda;    /* Recordum, ordine id */
-                    s32  proximum;
+                    Xar* recorda;    /* Recordum, ordine creationis */
+             MonetaFons  fons;       /* NIHIL = moneta_ulid */
+                 vacuum* fons_ctx;
 };
 
 
@@ -39,16 +40,16 @@ structura PersonaeDocumentum {
 interior Recordum*
 recordum (
     constans PersonaeDocumentum* doc,
-                            s32  id)
+                         chorda  id)
 {
     Recordum* r;
          i32  i;
 
-    per (i = ZEPHYRUM; doc->recorda
+    per (i = ZEPHYRUM; doc->recorda && id.mensura > ZEPHYRUM
         && i < xar_numerus(doc->recorda); i++)
     {
         r = (Recordum*)xar_obtinere(doc->recorda, i);
-        si (r->persona.id == id)
+        si (chorda_aequalis(r->persona.id, id))
         {
             redde r;
         }
@@ -59,7 +60,7 @@ recordum (
 interior Recordum*
 vivum (
     constans PersonaeDocumentum* doc,
-                            s32  id)
+                         chorda  id)
 {
     Recordum* r;
 
@@ -253,7 +254,7 @@ elementum_personae (
                 Piscina* p,
     InternamentumChorda* in,
      constans character* actio,
-                    s32  id)
+                 chorda  id)
 {
     StmlNodus* n;
 
@@ -266,23 +267,48 @@ elementum_personae (
     {
         (vacuum)stml_attributum_addere(n, p, in, "actio", actio);
     }
-    attributum_ponere(n, p, in, "id", chorda_ex_s32(id, p));
+    attributum_ponere(n, p, in, "id", id);
     redde n;
 }
 
-interior s32
+/* id validum (D3): signa [0-9A-Z], I..XXVI - ULID aut decimale vetus */
+interior b32
+id_validum (
+    chorda id)
+{
+    i32 i;
+
+    si (id.mensura < I || id.mensura > XXVI)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < id.mensura; i++)
+    {
+        si (!(   (id.datum[i] >= '0' && id.datum[i] <= '9')
+              || (id.datum[i] >= 'A' && id.datum[i] <= 'Z')))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* id attributi in intern documenti; chorda vacua si abest aut malum */
+interior chorda
 attributum_id (
-    StmlNodus* n)
+    PersonaeDocumentum* doc,
+             StmlNodus* n)
 {
     chorda* a;
-       s32  v;
+    chorda* t;
 
     a = stml_attributum_capere(n, "id");
-    si (a && chorda_ut_s32(*a, &v))
+    si (!a || !id_validum(*a))
     {
-        redde v;
+        redde vacua();
     }
-    redde ZEPHYRUM;
+    t = chorda_internare(doc->intern, *a);
+    redde t ? *t : vacua();
 }
 
 interior constans character*
@@ -321,14 +347,13 @@ statum_vacare (
     PersonaeDocumentum* doc)
 {
     piscina_vacare(doc->status);
-    doc->recorda   = xar_creare(doc->status, (i32)magnitudo(Recordum));
-    doc->proximum  = I;
+    doc->recorda = xar_creare(doc->status, (i32)magnitudo(Recordum));
 }
 
 interior Recordum*
 recordum_addere (
     PersonaeDocumentum* doc,
-                   s32  id,
+                chorda  id,
           PersonaGenus  genus)
 {
     Recordum* r;
@@ -336,6 +361,7 @@ recordum_addere (
     r = (Recordum*)xar_addere(doc->recorda);
     memset(r, ZEPHYRUM, magnitudo(Recordum));
     r->persona.id         = id;
+    r->persona.ordo       = (i32)xar_numerus(doc->recorda);
     r->persona.genus      = genus;
     r->persona.praenomen  = vacua();
     r->persona.cognomen   = vacua();
@@ -346,10 +372,6 @@ recordum_addere (
         (i32)magnitudo(chorda));
     r->persona.epistulae  = xar_creare(doc->status,
         (i32)magnitudo(chorda));
-    si (id >= doc->proximum)
-    {
-        doc->proximum = id + I;
-    }
     redde r;
 }
 
@@ -441,7 +463,7 @@ proiectio_applicare (
                 chorda* actio;
                 chorda* t;
               Recordum* r;
-                   s32  id;
+                chorda  id;
           PersonaGenus  genus;
                   Dies  d;
                 chorda  pn;
@@ -458,8 +480,8 @@ proiectio_applicare (
         redde;
     }
     actio  = stml_attributum_capere(n, "actio");
-    id     = attributum_id(n);
-    si (!actio || id <= ZEPHYRUM)
+    id     = attributum_id(doc, n);
+    si (!actio || id.mensura == ZEPHYRUM)
     {
         redde;
     }
@@ -537,7 +559,7 @@ proiectio_applicare (
     }
 }
 
-/* status canonicus: <personae proximum><persona id genus [rubricae]
+/* status canonicus: <personae><persona id genus [rubricae]
  * [natalis]><@praenomen/><@cognomen/><@titulus/><telephonum><@valor/>
  * </telephonum>..<epistula><@valor/></epistula>..</persona>..
  * </personae>; deletae absunt */
@@ -554,8 +576,6 @@ proiectio_codificare (
 
     doc    = (PersonaeDocumentum*)ctx;
     radix  = stml_elementum_creare(piscina, doc->intern, "personae");
-    attributum_ponere(radix, piscina, doc->intern, "proximum",
-        chorda_ex_s32(doc->proximum, piscina));
     per (i = ZEPHYRUM; i < xar_numerus(doc->recorda); i++)
     {
         r = (Recordum*)xar_obtinere(doc->recorda, i);
@@ -618,7 +638,7 @@ proiectio_decodificare (
              StmlNodus* e;
               Recordum* r;
                 chorda* t;
-                   s32  proximum;
+                chorda  id;
           PersonaGenus  genus;
                    i32  i;
                   Dies  d;
@@ -633,11 +653,8 @@ proiectio_decodificare (
     {
         redde FALSUM;
     }
-    t = stml_attributum_capere(radix, "proximum");
-    si (!t || !chorda_ut_s32(*t, &proximum) || proximum < I)
-    {
-        redde FALSUM;
-    }
+    /* attributum 'proximum' checkpointorum veterum (ante D3)
+     * ignoratur */
     statum_vacare(doc);
     per (i = ZEPHYRUM; i < stml_numerus_liberorum(radix); i++)
     {
@@ -647,14 +664,14 @@ proiectio_decodificare (
         {
             perge;
         }
-        si (   attributum_id(e) <= ZEPHYRUM
+        id = attributum_id(doc, e);
+        si (   id.mensura == ZEPHYRUM
             || !genus_legere(stml_attributum_capere(e, "genus"),
             &genus))
         {
             redde FALSUM;
         }
-        r                     = recordum_addere(doc, attributum_id(e),
-            genus);
+        r                     = recordum_addere(doc, id, genus);
         r->persona.praenomen  = nomen_legere(doc, e, "praenomen");
         r->persona.cognomen   = nomen_legere(doc, e, "cognomen");
         r->persona.titulus    = nomen_legere(doc, e, "titulus");
@@ -676,7 +693,6 @@ proiectio_decodificare (
         r->persona.telephona = indicem_legere(doc, e, "telephonum");
         r->persona.epistulae = indicem_legere(doc, e, "epistula");
     }
-    doc->proximum = proximum;
     redde VERUM;
 }
 
@@ -765,7 +781,7 @@ interior StmlNodus*
 actum_personae (
     PersonaeDocumentum* doc,
     constans character* actio,
-                   s32  id)
+                chorda  id)
 {
     si (!doc || !vivum(doc, id))
     {
@@ -775,7 +791,35 @@ actum_personae (
     redde elementum_personae(doc->acta, doc->intern, actio, id);
 }
 
-interior s32
+/* id novum ex fonte monetae (D3); NIHIL si malum aut iam praesens
+ * (etiam deletum) */
+interior chorda*
+id_cudere (
+    PersonaeDocumentum* doc)
+{
+    character effusio[MONETA_ULID_MENSURA];
+       chorda cusum;
+
+    effusio[ZEPHYRUM] = '\0';
+    si (doc->fons)
+    {
+        doc->fons(doc->fons_ctx, effusio);
+    }
+    alioquin
+    {
+        moneta_ulid(effusio);
+    }
+    effusio[MONETA_ULID_MENSURA - I]  = '\0';
+    cusum                             = chorda_ex_literis(effusio,
+        doc->acta);
+    si (!id_validum(cusum) || recordum(doc, cusum))
+    {
+        redde NIHIL;
+    }
+    redde chorda_internare(doc->intern, cusum);
+}
+
+interior chorda
 personam_creare (
     PersonaeDocumentum* doc,
           PersonaGenus  genus,
@@ -784,24 +828,41 @@ personam_creare (
                 chorda  titulus)
 {
     StmlNodus* n;
-          s32  id;
+       chorda* id;
 
     piscina_vacare(doc->acta);
-    id  = doc->proximum;
-    n   = elementum_personae(doc->acta, doc->intern, "nova", id);
+    id = id_cudere(doc);
+    si (!id)
+    {
+        redde vacua();
+    }
+    n = elementum_personae(doc->acta, doc->intern, "nova", *id);
     si (!n)
     {
-        redde ZEPHYRUM;
+        redde vacua();
     }
     (vacuum)stml_attributum_addere(n, doc->acta, doc->intern, "genus",
         genus_nomen(genus));
     nomen_addere(n, doc->acta, doc->intern, "praenomen", praenomen);
     nomen_addere(n, doc->acta, doc->intern, "cognomen", cognomen);
     nomen_addere(n, doc->acta, doc->intern, "titulus", titulus);
-    redde actum_mittere(doc, n) > ZEPHYRUM ? id : ZEPHYRUM;
+    redde actum_mittere(doc, n) > ZEPHYRUM ? *id : vacua();
 }
 
-s32
+vacuum
+personae_monetam_ponere (
+    PersonaeDocumentum* doc,
+            MonetaFons  fons,
+                vacuum* ctx)
+{
+    si (doc)
+    {
+        doc->fons      = fons;
+        doc->fons_ctx  = ctx;
+    }
+}
+
+chorda
 personae_hominem_creare (
     PersonaeDocumentum* doc,
                 chorda  praenomen,
@@ -809,20 +870,20 @@ personae_hominem_creare (
 {
     si (!doc || !(plenus(praenomen) || plenus(cognomen)))
     {
-        redde ZEPHYRUM;
+        redde vacua();
     }
     redde personam_creare(doc, PERSONA_HOMO, praenomen, cognomen,
         vacua());
 }
 
-s32
+chorda
 personae_societatem_creare (
     PersonaeDocumentum* doc,
                 chorda  titulus)
 {
     si (!doc || !plenus(titulus))
     {
-        redde ZEPHYRUM;
+        redde vacua();
     }
     redde personam_creare(doc, PERSONA_SOCIETAS, vacua(), vacua(),
         titulus);
@@ -831,7 +892,7 @@ personae_societatem_creare (
 s64
 personae_nomen_ponere (
     PersonaeDocumentum* doc,
-                   s32  id,
+                chorda  id,
                 chorda  praenomen,
                 chorda  cognomen)
 {
@@ -854,7 +915,7 @@ personae_nomen_ponere (
 s64
 personae_titulum_ponere (
     PersonaeDocumentum* doc,
-                   s32  id,
+                chorda  id,
                 chorda  titulus)
 {
     StmlNodus* n;
@@ -875,7 +936,7 @@ personae_titulum_ponere (
 s64
 personae_genus_ponere (
     PersonaeDocumentum* doc,
-                   s32  id,
+                chorda  id,
           PersonaGenus  genus)
 {
     StmlNodus* n;
@@ -897,7 +958,7 @@ personae_genus_ponere (
 s64
 personae_rubricas_ponere (
     PersonaeDocumentum* doc,
-                   s32  id,
+                chorda  id,
                 chorda  rubricae)
 {
     StmlNodus* n;
@@ -921,7 +982,7 @@ personae_rubricas_ponere (
 s64
 personae_telephona_ponere (
     PersonaeDocumentum* doc,
-                   s32  id,
+                chorda  id,
           constans Xar* telephona)
 {
     StmlNodus* n;
@@ -938,7 +999,7 @@ personae_telephona_ponere (
 s64
 personae_epistulas_ponere (
     PersonaeDocumentum* doc,
-                   s32  id,
+                chorda  id,
           constans Xar* epistulae)
 {
     StmlNodus* n;
@@ -955,7 +1016,7 @@ personae_epistulas_ponere (
 s64
 personae_natalem_ponere (
     PersonaeDocumentum* doc,
-                   s32  id,
+                chorda  id,
          constans Dies* natalis)
 {
     StmlNodus* n;
@@ -976,7 +1037,7 @@ personae_natalem_ponere (
 s64
 personae_delere (
     PersonaeDocumentum* doc,
-                   s32  id)
+                chorda  id)
 {
     redde actum_mittere(doc, actum_personae(doc, "deleta", id));
 }
@@ -1074,7 +1135,7 @@ personae_index (
 constans Persona*
 personae_persona (
     constans PersonaeDocumentum* doc,
-                            s32  id)
+                         chorda  id)
 {
     Recordum* r;
 
@@ -1311,7 +1372,7 @@ personae_ordinatae (
         }
         k.p       = &r->persona;
         k.clavis  = persona_clavis(&r->persona, piscina);
-        /* insertio stabilis (ordo id inter claves aequales) */
+        /* insertio stabilis (ordo creationis inter claves aequales) */
         (vacuum)xar_addere(claves);
         j = xar_numerus(claves) - I;
         dum (   j > ZEPHYRUM

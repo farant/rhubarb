@@ -380,23 +380,26 @@ _probare_natales (
               ManusLudus* m;
       PersonaeDocumentum* doc;
                     Dies  d;
-                     s32  id;
+                  chorda  id;
+                     i32  numerator;
 
     x = (Mundus*)c->datum;
     CREDO_NECESSE(x && x->volumen);
     doc = personae_aperire(c->piscina, internamentum_creare(c->piscina),
         x->volumen, "personae", ZEPHYRUM);
     CREDO_NECESSE_NON_NIHIL(doc);
+    numerator = ZEPHYRUM;
+    personae_monetam_ponere(doc, moneta_numerator, &numerator);
     id = personae_hominem_creare(doc, chorda_ex_literis("Anna",
         c->piscina), chorda_ex_literis("Rossi", c->piscina));
     d  = fasti_dies(MCMLXXXVI, X, XIV);
-    CREDO_NECESSE(id > ZEPHYRUM && personae_natalem_ponere(doc, id, &d)
-        > ZEPHYRUM);
+    CREDO_NECESSE(id.mensura > ZEPHYRUM && personae_natalem_ponere(doc,
+        id, &d) > ZEPHYRUM);
     id = personae_hominem_creare(doc, chorda_ex_literis("Luca",
         c->piscina), chorda_ex_literis("Bianchi", c->piscina));
     d  = fasti_dies(ZEPHYRUM, X, XX);
-    CREDO_NECESSE(id == II && personae_natalem_ponere(doc, id, &d)
-        > ZEPHYRUM);
+    CREDO_NECESSE(chorda_aequalis_literis(id, "2")
+        && personae_natalem_ponere(doc, id, &d) > ZEPHYRUM);
     CREDO_NECESSE(vicus_applicatio_aedificare(&x->app, c->piscina,
         internamentum_creare(c->piscina), x->volumen, CDLXXX,
         CDLXXX + VICUS_ALTITUDO_TABULARUM));

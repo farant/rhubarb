@@ -918,3 +918,12 @@ p6d_2026-10-31.png (two birthdays, flipped).
   `./tools/organa_infigere.sh` (organum_legere_genus reads
   lib/organa_infixa.c, not the disk) - the first red run said
   "attributum non in semita: visus" for exactly this reason.
+
+## 2026-10-20 - D3: text ids
+
+`res_electa` holds id text (manifest `typus="nomen"`); row ids
+`r<id>`, `r<id>-<k>`, `q<id>` carry the ULID (`frustum_identitatis`
+cuts the text up to '-'; ULIDs never contain '-'). Album `res` =
+`AgendaRes.ordo` (creation ordinal); `res_ordinis` maps it back for
+paging. Group order ties break by ordinal (= old id order for old
+data). Row-id buffer XXXII -> XLVIII.

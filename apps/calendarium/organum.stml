@@ -34,10 +34,11 @@
             scriptor="calendarium.agere" semita="ligatio"
             nota="YYYY-MM-DD; absens = hodie (semita
                   'calendarium/dies' = dies hodierna semper)"/>
-    <campus nomen="res_electa" typus="numerus" vita="transiens"
+    <campus nomen="res_electa" typus="nomen" vita="transiens"
             scriptor="calendarium.agere"
             semita="status" ambitus="ligatio"
-            nota="id rei electae in visu diei; absens = prima"/>
+            nota="id rei electae (ULID aut decimale vetus) in visu
+                  diei; absens = prima"/>
     <campus nomen="prompta" typus="electio" vita="transiens"
             absens="nulla" scriptor="calendarium.agere">
       <optio>nulla</optio>

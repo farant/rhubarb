@@ -28,9 +28,10 @@
             nota="P4: quaestio nebulosa in nominibus (effugitus ut
                   prompta_textus); absens = nulla - index ordine
                   similitudinis, filtro rubricae intra"/>
-    <campus nomen="persona_electa" typus="numerus" vita="transiens"
+    <campus nomen="persona_electa" typus="nomen" vita="transiens"
             scriptor="nomenclator.agere" semita="status"
-            nota="id personae electae; absens = prima paginae"/>
+            nota="id personae electae (ULID aut decimale vetus);
+                  absens = prima paginae"/>
     <campus nomen="pagina" typus="numerus" vita="transiens"
             scriptor="nomenclator.agere" semita="status"
             nota="pagina indicis (0 = prima); persona electa paginam
@@ -54,10 +55,10 @@
                   irrepraesentabilis"/>
     <campus nomen="prompta_cursor" typus="numerus" vita="transiens"
             scriptor="nomenclator.agere"/>
-    <campus nomen="persona_aperta" typus="numerus" vita="transiens"
+    <campus nomen="persona_aperta" typus="nomen" vita="transiens"
             scriptor="nomenclator.agere"
             semita="ligatio" historia="impelle"
-            nota="persona in visu singulari (P5); absens = index"/>
+            nota="id personae in visu singulari (P5); absens = index"/>
     <campus nomen="campus_electus" typus="numerus" vita="transiens"
             scriptor="nomenclator.agere"
             semita="status" ambitus="ligatio"
@@ -74,7 +75,7 @@
   <!-- semitae R4e: argumentum nudum -> semita -->
   <cognomina>
     <cognomen semita="nomenclator/"/>
-    <cognomen typus="numerus" semita="nomenclator/{}"/>
+    <cognomen typus="nomen" semita="nomenclator/{}"/>
   </cognomina>
 
   <basis genus="organum_commune"/>

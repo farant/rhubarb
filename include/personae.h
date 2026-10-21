@@ -6,8 +6,8 @@
  * Horologium numquam legitur: aetas ex die "hodie" a vocante data.
  *
  * Acta (dies ISO; natalis sine anno "--MM-DD"):
- *   <persona actio="nova" id="7" genus="homo"><@praenomen=>Anna</>
- *     <@cognomen=>Rossi</></persona>
+ *   <persona actio="nova" id="01JC9XQ4..." genus="homo">
+ *     <@praenomen=>Anna</><@cognomen=>Rossi</></persona>
  *   <persona actio="nova" id="8" genus="societas"><@titulus=>...</>
  *     </persona>
  *   <persona actio="nomen" id="7"><@praenomen=>..</><@cognomen=>..</>
@@ -22,9 +22,15 @@
  *   <persona actio="natalis" id="7" dies="1986-03-02"/>  dies absens =
  *                                                        nullus
  *   <persona actio="deleta" id="7"/>
- * Id = maximum + 1 (numquam iteratur); persona deleta actum nullum
- * accipit. Nomina et valores (telephona, epistulae) forma elementi
- * attributi semper scribuntur ('"' repraesentabilis).
+ * Id (D3) = ULID ex fonte monetae (personae_monetam_ponere; ordinarie
+ * moneta_ulid): unicum sine coordinatione. Ids veteres decimales
+ * ("7", maximum + 1 ante D3) ut textus valent - acta vetera non
+ * mutantur, migratio nulla. Id = signa [0-9A-Z], I..XXVI; id iam
+ * praesens (etiam deletum) recusatur, ergo numquam iteratur. Persona
+ * deleta actum nullum accipit. Ordo personarum = ordo CREATIONIS
+ * (actorum "nova"), non ordo id ("9" > "17" ut textus). Nomina et
+ * valores (telephona, epistulae) forma elementi attributi semper
+ * scribuntur ('"' repraesentabilis).
  *
  * Genus mutatum nomina non mutat: nomen ostensum et clavis ordinis ex
  * genere currenti, nomine altero si hoc vacuum (homo sine nominibus ->
@@ -43,6 +49,7 @@
 #include "volumen.h"
 #include "historia.h"
 #include "fasti.h"
+#include "moneta.h"
 
 nomen enumeratio {
     PERSONA_HOMO = ZEPHYRUM,
@@ -50,7 +57,11 @@ nomen enumeratio {
 } PersonaGenus;
 
 nomen structura {
-             s32  id;
+    /* id in intern documenti: valet dum intern vivit. ordo =
+     * ordinalis creationis (I, II, ...; deletae numerantur) - valet
+     * dum proiectio vivit; non identitas */
+          chorda  id;
+             i32  ordo;
     PersonaGenus  genus;
           chorda  praenomen;         /* homo */
           chorda  cognomen;
@@ -73,15 +84,22 @@ personae_aperire (
      constans character* spatium,
                     i32  intervallum);
 
-/* persona nova; redde id (> 0) aut 0 si recusata (nomen totum
- * vacuum) */
-s32
+/* fons monetae (moneta.h); NIHIL = moneta_ulid */
+vacuum
+personae_monetam_ponere (
+    PersonaeDocumentum* doc,
+            MonetaFons  fons,
+                vacuum* ctx);
+
+/* persona nova; redde id (in intern documenti) aut chorda vacua si
+ * recusata (nomen totum vacuum, id cusum malum aut iam praesens) */
+chorda
 personae_hominem_creare (
     PersonaeDocumentum* doc,
                 chorda  praenomen,
                 chorda  cognomen);
 
-s32
+chorda
 personae_societatem_creare (
     PersonaeDocumentum* doc,
                 chorda  titulus);
@@ -91,53 +109,53 @@ personae_societatem_creare (
 s64
 personae_nomen_ponere (
     PersonaeDocumentum* doc,
-                   s32  id,
+                chorda  id,
                 chorda  praenomen,
                 chorda  cognomen);
 
 s64
 personae_titulum_ponere (
     PersonaeDocumentum* doc,
-                   s32  id,
+                chorda  id,
                 chorda  titulus);
 
 s64
 personae_genus_ponere (
     PersonaeDocumentum* doc,
-                   s32  id,
+                chorda  id,
           PersonaGenus  genus);
 
 /* rubricae spatiis separatae ("a b"); copia tota substituitur */
 s64
 personae_rubricas_ponere (
     PersonaeDocumentum* doc,
-                   s32  id,
+                chorda  id,
                 chorda  rubricae);
 
 /* index totus (Xar de chorda; vacua omittuntur; NIHIL = vacuus) */
 s64
 personae_telephona_ponere (
     PersonaeDocumentum* doc,
-                   s32  id,
+                chorda  id,
           constans Xar* telephona);
 
 s64
 personae_epistulas_ponere (
     PersonaeDocumentum* doc,
-                   s32  id,
+                chorda  id,
           constans Xar* epistulae);
 
 /* natalis NIHIL = nullus; annus 0 = sine anno (29 II licet) */
 s64
 personae_natalem_ponere (
     PersonaeDocumentum* doc,
-                   s32  id,
+                chorda  id,
          constans Dies* natalis);
 
 s64
 personae_delere (
     PersonaeDocumentum* doc,
-                   s32  id);
+                chorda  id);
 
 b32
 personae_revocare (
@@ -160,7 +178,7 @@ Historia*
 personae_historia (
     PersonaeDocumentum* doc);
 
-/* proiectio: personae vivae ordine id; indicia valent usque ad
+/* proiectio: personae vivae ordine creationis; indicia valent usque ad
  * mutationem proximam */
 i32
 personae_numerus (
@@ -175,7 +193,7 @@ personae_index (
 constans Persona*
 personae_persona (
     constans PersonaeDocumentum* doc,
-                            s32  id);
+                         chorda  id);
 
 /* nomen ostensum: homo "Anna Rossi", societas titulus (vide supra) */
 chorda
@@ -212,7 +230,7 @@ personae_fasti_legere (
          Xar* exitus,
      Piscina* piscina);
 
-/* personae vivae ordine clavis (deinde id) - Xar de (constans
+/* personae vivae ordine clavis (deinde creationis) - Xar de (constans
  * Persona*) in piscina vocantis */
 Xar*
 personae_ordinatae (
