@@ -970,3 +970,44 @@ Converter fix (credo_convertere_scaenam.py), from tessera's report:
 Still open: credo_convertere.py requires "Probans" in titles, so the
 roman-numbered "--- I. x ---" form (oratio, ludus_tessera) is refused;
 the agents converted those by hand.
+
+## 2026-10-21 — step 3 leftovers: gravis where the memory IS the test, and a file that grew with the repo
+
+Fran approved `gravis` for four MEMORIA suites (md_stml, oratio_stml,
+officina renovatio, officina legatus) and the const change for
+oratio_vocabula. All five are now v2 and BONUM (counts == HEAD, mixed
+order sound).
+
+**gravis goes on EVERY section that can run first, not just the one that
+tripped.** renovatio and legatus run `legatus_currere` in-process, and it
+loads the whole nexus index. The cost shows up in `apex_auctus` (lifetime
+peak growth), which rises only once per process. So whichever section runs
+first pays it: in table order that was 'renovare recentem'; under
+CREDO_ORDO=mixtus another section paid. A signum on the first table row
+alone would pass in table order and fail at random under mixed order. The
+rule: if the cost is process-wide (an index, a cache, RSS high water),
+mark every section that touches it, and say why in the source comment.
+
+**oratio_vocabula IV was not "a big corpus", it was one 172 MB read.**
+The section read build/nexus.tsv whole into its piscina: 209 MiB of
+arena, 268 MiB of peak growth. That file grows with the tree, so the
+section would have crossed any ceiling eventually. The fix: stream it
+through a 16 MiB buffer (`filum_octeti_*`), line-aligned chunks into both
+vocabularies. `oratio_vocabula_symbola` keeps nothing from its input:
+verb, path and identifier are all copied. The result is 19 MiB arena and
+122 MiB peak growth, and it now stays flat as the repo grows. Assertion
+count is unchanged: each chunk's result is ANDed and asserted once per
+vocabulary, as in HEAD. The vocabulary + glossary + Moby moved into a
+suite fixture, possible only because `oratio_vocabula_creare(_anglice)`
+now takes const tables. The two Moby load assertions moved from VI to
+parare_suitae.
+
+The lint tool (oratio/instrumenta/vocabula.c, run on every commit) reads
+nexus.tsv the same whole-file way. Parked rather than fixed: the right
+fix is a streaming entry point in oratio_vocabula that both share
+(library API).
+
+The ceiling also caught an agent's coinage: the md_stml draft had
+`_casus_inlineos_probare`, and the live-tree lint inside oratio_vocabula
+IV b flagged it as IGNOTA NOVA. HEAD went red on the same tree, because
+the suite reads the live index. Renamed `_casus_intra_lineam_probare`.

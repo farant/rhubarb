@@ -79,8 +79,8 @@ nomen structura OratioVocabula OratioVocabula;
 /* voc: tabula Latina onerata (glossarium appensum si placet). */
 OratioVocabula*
 oratio_vocabula_creare (
-                 Piscina* piscina,
-    OratioVocabulariumLa* voc);
+                          Piscina* piscina,
+    constans OratioVocabulariumLa* voc);
 
 /* Contextus ANGLICUS (prosa markdown): glossarium (entria anglice
  * licita) primum, Moby (en) deinde, tabula Latina tertia -> status
@@ -88,9 +88,9 @@ oratio_vocabula_creare (
  * Latina cum glossario appenso. */
 OratioVocabula*
 oratio_vocabula_creare_anglice (
-                 Piscina* piscina,
-    OratioVocabulariumLa* voc,
-    OratioVocabulariumEn* en);
+                          Piscina* piscina,
+    constans OratioVocabulariumLa* voc,
+    constans OratioVocabulariumEn* en);
 
 /* Verbum unum (ut est; minusculatur) cum sede addere. */
 b32
