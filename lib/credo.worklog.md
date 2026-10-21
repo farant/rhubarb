@@ -878,3 +878,57 @@ structura (scaenam) differs by one blank line after the declarations,
 because the committed file predates that fix; the new output is the
 house style. Refusals are named (exit 1, nothing written) where the
 scratch versions asserted.
+
+## 2026-10-21 — step 3 batch 1 (agents) and converter fixes
+
+Four agents (html, materia, md, gesta), one subsystem each in its own
+worktree. 46 of 49 suites converted and BONUM; 3 MEMORIA pulled out for
+hands-on work:
+- gesta tabularium: arena 294.5 MiB, one world through 55 headings;
+- html html_md: arena 259 MiB, "porta: initus md per html";
+- md md_stml: footprint +308 MiB, corpus STML circuit (a twin of toml_stml).
+Two more hidden order dependences were found and fixed: materia pictor
+(block II read block I's aurum_mensura) and md census ('cumulationem'
+continues block 1).
+
+Setup trap: the agent worktrees were cut from the main checkout at
+91907748, not from quinta, so 81 commits were missing (tools, checker,
+examen 94). The html agent caught it. All four moved their clean
+branches forward with `git reset --keep 8d1a7b31` before any edit.
+Future briefs: check the base first.
+
+Converter bugs the agents found, now fixed (refuse rather than drop
+anything silently):
+- credo_convertere_sectiones.py:
+  - Two-line titles ("..." "---\n") were missed. Worse, "remove the
+    first title" then deleted the first single-line STEP title (html
+    arbor O7b/O7c). The counts didn't show it; a title audit did.
+    Titles are now joined across literals.
+  - A main prelude (radix_viae, a variable reached through a macro)
+    was dropped while the tool reported success. Now: a prelude or tail
+    holding anything beyond the known boilerplate is REFUSED, naming
+    the lines. Known: piscina setup, credo_aperire, the ratum lines
+    with LEXICON, radix via RHUBARB_RADIX, opus with -opus, nexus with
+    -nexus; on the tail side, compendium, destruction, redde.
+  - `(vacuum)c` is decided from the final generated text.
+  - Title removal no longer leaves two blank lines.
+  - A shadowing local `c` needs `-c=NAME` (a name that fits its type),
+    or the tool refuses. It no longer renames to `compositus` blindly.
+- credo_convertere_scaenam.py:
+  - Every "FRACTA: piscina..." guard variant is stripped.
+  - A tail with statements after the compendium (frigida's _purgare)
+    is refused; such cleanup belongs in a purgare slot, by hand.
+  - No blank line before the closing brace.
+  - `-c=NAME`, as above.
+Regression: toml coctum reproduces byte for byte. toml registrum and
+saltuarius nexus differ only where the committed files carry the old
+double-blank bug. md lexema v1 is refused, naming its radix_viae
+prelude. html arbor v1 converts with 48 CREDO_GRADUS and 0 hand-printed
+titles left.
+
+Also reported, not fixed here: the post-edit EXAMEN hook says REICE in
+agent worktrees, because its path (with the .claude/worktrees/ prefix)
+doesn't match the canalis_debita keys; ./silva/examen.sh says ACCIPE.
+The scratchpad is shared between agents (two overwrote each other's
+helper scripts). The worktree sandbox blocks bash arguments containing
+'|' or 'git'.

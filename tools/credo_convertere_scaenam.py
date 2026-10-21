@@ -23,8 +23,12 @@ POST CONVERSIONEM SEMPER: ./silva/formator.sh -scribere VIA, deinde
 ./tools/credo_conversionem_probare.py VIA et VOCABULA_VIAE_ADDITAE=VIA
 ./oratio/vocabula.sh -nova.
 
+RECUSAT (exitus I, nihil scriptum): cauda post compendium aliud quam
+compendium/destructionem/redde continens (_purgare() frigidae: in
+purgare transfer manu); 'c' localis parametrum umbrans sine -c=NOMEN.
+
 Usus (ex radice):
-  ./tools/credo_convertere_scaenam.py VIA SUITA TITULUS_SECTIONIS
+  ./tools/credo_convertere_scaenam.py [-c=NOMEN] VIA SUITA TITULUS_SECTIONIS
 Exitus: 0 conversa | 1 recusata (causa nominata, nihil scriptum) | 2 usus
 """
 import re
@@ -32,6 +36,16 @@ import sys
 
 TITULUS = re.compile(
     r'\n( *)imprimere\("\\n--- ((?:[^"\\]|\\.)*?)"((?:\s*"(?:[^"\\]|\\.)*")*)\);\n')
+
+
+CHORDA = re.compile(r'("(?:[^"\\]|\\.)*")')
+CAUDA_NOTA = [
+    r'^\s*$', r'^\s*imprimere\("\\n"\);$', r'^\s*credo_imprimere_compendium\(\);$',
+    r'^\s*praeteritus = credo_omnia_praeterierunt\(\);$',
+    r'^\s*piscina_destruere\(piscina\);$', r'^\s*redde praeteritus \? ZEPHYRUM : I;$',
+    r'^\s*si \(praeteritus\)$', r'^\s*alioquin$', r'^\s*[{}]$',
+    r'^\s*redde (ZEPHYRUM|I);$',
+]
 
 
 class Recusatio(Exception):
@@ -44,7 +58,7 @@ def _gradus(m):
     return '\n%sCREDO_GRADUS ("%s");\n' % (m.group(1), pars)
 
 
-def convertere(via, suita, titulus):
+def convertere(via, suita, titulus, c_novum=None):
     fons = open(via).read()
     if 'credo_suitam_currere' in fons:
         raise Recusatio('iam v2')
@@ -64,24 +78,43 @@ def convertere(via, suita, titulus):
     reliquum = interius[m.end():]
     reliquum = re.sub(r'    piscina = piscina_generare_dynamicum\([^;]*\);\n', '',
                       reliquum, flags=re.S)
+    # custodia piscinae, quaevis forma nuntii ('FRACTA: piscina...')
     reliquum = re.sub(
-        r'    si \(!piscina\)\n    \{\n        imprimere\("FRACTA: piscina_generatio\\n"\);\n'
+        r'    si \(!piscina\)\n    \{\n        imprimere\("FRACTA: piscina[^"]*"\);\n'
         r'        redde I;\n    \}\n', '', reliquum)
     reliquum = reliquum.replace('    credo_aperire(piscina);\n', '')
     cauda = re.search(r'\n *(imprimere\("\\n"\);\n *)?credo_imprimere_compendium\(\);.*$',
                       reliquum, re.S)
     if not cauda:
         raise Recusatio('cauda (credo_imprimere_compendium) non inventa')
+    reliqua_caudae = [l for l in re.sub(r'/\*.*?\*/', '', reliquum[cauda.start():],
+                                         flags=re.S).split('\n')
+                      if not any(re.match(n, l) for n in CAUDA_NOTA)]
+    if reliqua_caudae:
+        raise Recusatio('cauda post compendium continet (manu: purgare sectionis '
+                        'aut suitae): %s' % ' | '.join(l.strip() for l in reliqua_caudae[:4]))
     reliquum = reliquum[:cauda.start()] + '\n'
     reliquum = TITULUS.sub(_gradus, reliquum)
     if '"\\n---' in reliquum:
         raise Recusatio('titulus formae ignotae relictus')
+    sine_chordis = CHORDA.sub('""', re.sub(r'/\*.*?\*/', '', reliquum + declarationes,
+                                         flags=re.S))
+    if re.search(r'(?<![\w>.])c\b(?!\s*\()', sine_chordis):
+        if c_novum is None:
+            raise Recusatio("localis 'c' parametrum sectionis umbrat - da -c=NOMEN "
+                            "(nomen typo aptum)")
+        def _renominare(textus):
+            return ''.join(x if x.startswith('"') else re.sub(
+                r'(?<![\w>.\'])\bc\b(?=\s*[-;,)=.\[]|->)', c_novum, x)
+                for x in CHORDA.split(textus))
+        reliquum = _renominare(reliquum)
+        declarationes = _renominare(declarationes)
     nuda = re.sub(r'/\*.*?\*/', '', reliquum + declarationes, flags=re.S)
     utitur_piscina = re.search(r'\bpiscina\b', nuda) is not None
     piscina = '            Piscina* piscina = c->piscina;' if utitur_piscina else ''
     reliquum = re.sub(r'\bredde I;', 'redde;   /* sine assertione: sectio VACUA */',
                       reliquum)
-    reliquum = '\n' + reliquum.lstrip('\n')
+    reliquum = '\n' + reliquum.strip('\n') + '\n'
     if not utitur_piscina:
         reliquum = '\n    (vacuum)c;' + reliquum
     novum = caput.rstrip('\n') + '''
@@ -112,11 +145,15 @@ principale (vacuum)
 
 
 def main(argumenta):
+    c_novum = None
+    if argumenta and argumenta[0].startswith('-c='):
+        c_novum = argumenta[0][3:]
+        argumenta = argumenta[1:]
     if len(argumenta) != 3:
         sys.stderr.write(__doc__)
         return 2
     try:
-        convertere(argumenta[0], argumenta[1], argumenta[2])
+        convertere(argumenta[0], argumenta[1], argumenta[2], c_novum)
     except Recusatio as e:
         print('recusata: %s - %s' % (argumenta[0], e))
         return 1

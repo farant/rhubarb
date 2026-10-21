@@ -11,7 +11,8 @@ quisque sectio fit, titulo et nomine functionis datis. Intra bloccum:
   - titulus primus 'imprimere("\\n--- X ---\\n")' tollitur (credo
     titulum sectionis imprimit; examen 95), sequentes -> CREDO_GRADUS
   - '&ratum' -> monstrator constans in fixuram
-  - 'c' localis (umbra parametri) -> 'compositus' (chordae intactae)
+  - 'c' localis (umbra parametri) -> nomen per -c=NOMEN (chordae
+    intactae); sine optione RECUSATUR
   - declarationes sectionis ex usu: ratum, piscina (= c->piscina),
     opus, radix (RHUBARB_RADIX), nexus; nihil horum -> (vacuum)c
 
@@ -24,6 +25,15 @@ OPTIONES:
     (creata et destructa intra sectionem) ubi bloccus 'opus' adhibet.
   -nexus: sectiones quae 'nexus' adhibent nexum saltuarii suum creant;
     parare_suitae creationem semel asserit (CREDO_NON_NIHIL).
+  -c=NOMEN: 'c' localis (umbra parametri sectionis) -> NOMEN, typo
+    aptum (consilium, circuitus, cella...).
+
+RECUSAT (exitus I, nihil scriptum) si praeludium aut cauda principalis
+lineas praeter notas continet (piscina et custodia eius,
+credo_aperire, ratum cum LEXICON, radix RHUBARB_RADIX, opus cum -opus,
+nexus cum -nexus; compendium, destructio, redde) - nihil tacite
+omittitur (agentes gradus III: radix_viae, 'sani' per macrum, _purgare
+post compendium perdita). Tituli bilineares ('...' '---\\n') iuncti.
 
 QUAE NON TRACTAT (manu, vide lib/credo.worklog.md 2026-10-21):
   status inter blocos (numeratores, statica scripta, fixa disci),
@@ -49,8 +59,41 @@ VEXILLUM_BLOCCUS = re.compile(
 RATUM_FACERE = re.compile(
     r'\n *CREDO_VERUM \(materia_lexicon_ratum_facere\(&ratum, &[A-Z_]+,\n? *&iudicium\)\);\n'
     r'(?: *CREDO_AEQUALIS_S32 \(iudicium\.vitium, \(s32\)MATERIA_LEX_SANUM\);\n)?')
-TITULUS = re.compile(r'\n( *)imprimere\("\\n--- (.*?) ---\\n"\);\n')
+TITULUS = re.compile(
+    r'\n( *)imprimere\("\\n--- ((?:[^"\\]|\\.)*?)"((?:\s*"(?:[^"\\]|\\.)*")*)\);\n')
 CHORDA = re.compile(r'("(?:[^"\\]|\\.)*")')
+# praeludium et cauda principalis: lineae NOTAE solae - aliter RECUSATUR,
+# nihil tacite omittitur (agentes gradus III: radix_viae, 'sani' per
+# macrum adhibitum, _purgare post compendium perdita)
+PRAELUDIUM_NOTUM = [
+    r'^\s*$', r'^\s*b32\s+praeteritus;$', r'^\s*Piscina\*\s+piscina;$',
+    r'^\s*MateriaLexiconRatum\s+ratum;$', r'^\s*MateriaLexIudicium\s+iudicium;$',
+    r'^\s*credo_aperire\(piscina\);$',
+]
+CAUDA_NOTA = [
+    r'^\s*$', r'^\s*imprimere\("\\n"\);$', r'^\s*credo_imprimere_compendium\(\);$',
+    r'^\s*praeteritus = credo_omnia_praeterierunt\(\);$',
+    r'^\s*piscina_destruere\(piscina\);$', r'^\s*redde praeteritus \? ZEPHYRUM : I;$',
+    r'^\s*si \(praeteritus\)$', r'^\s*alioquin$', r'^\s*[{}]$',
+    r'^\s*redde (ZEPHYRUM|I);$',
+]
+
+
+def _titulus_iunctus(m):
+    """titulus ex litteris (etiam bilinearibus) iunctus, sine '---'"""
+    pars = m.group(2) + ''.join(re.findall(r'"((?:[^"\\]|\\.)*)"', m.group(3)))
+    return re.sub(r'\s*---\\n$', '', pars).replace('Probans ', '')
+
+
+def _ignota(textus, nota):
+    """lineae textus quae nullam formam notam habent (piscina creata et
+    custodia eius, commentaria remota)"""
+    textus = re.sub(r'piscina = piscina_generare_dynamicum\([^;]*\);', '',
+                    textus, flags=re.S)
+    textus = re.sub(r'si \(!piscina\)\s*\{\s*imprimere\("FRACTA: piscina[^"]*"\);'
+                    r'\s*redde I;\s*\}', '', textus, flags=re.S)
+    textus = re.sub(r'/\*.*?\*/', '', textus, flags=re.S)
+    return [l for l in textus.split('\n') if not any(re.match(n, l) for n in nota)]
 
 
 class Recusatio(Exception):
@@ -78,7 +121,7 @@ def _sine_chordis(textus):
 
 
 def convertere(via, suita, lexicon, opus_titulus, opus_mensura,
-               nexus_mundus, paria):
+               nexus_mundus, paria, c_novum):
     fons = open(via).read()
     if 'credo_suitam_currere' in fons:
         raise Recusatio('iam v2')
@@ -91,6 +134,33 @@ def convertere(via, suita, lexicon, opus_titulus, opus_mensura,
     blocci = VEXILLUM_BLOCCUS.findall(corpus)
     if len(blocci) != len(paria):
         raise Recusatio('blocci %d, paria data %d' % (len(blocci), len(paria)))
+    praeludium = corpus[corpus.index('{\n') + 2:corpus.index('    /* ====')]
+    if lexicon != '-':
+        praeludium = RATUM_FACERE.sub('\n', praeludium)
+    nota = list(PRAELUDIUM_NOTUM)
+    nota.append(r'^\s*constans character\*\s+radix = lectiones_ambitus\("RHUBARB_RADIX"\);$')
+    if opus_titulus is not None:
+        nota += [r'^\s*Piscina\*\s+opus;$', r'^\s*opus\s*=\s*piscina_generare_dynamicum\([^;]*\);$',
+                 r'^\s*piscina_destruere\(opus\);$']
+        praeludium = re.sub(r'opus\s*=\s*piscina_generare_dynamicum\([^;]*\);', '', praeludium, flags=re.S)
+        praeludium = re.sub(r'si \(!piscina \|\| !opus\)\s*\{\s*imprimere\("FRACTA: piscina[^"]*"\);'
+                            r'\s*redde I;\s*\}', '', praeludium, flags=re.S)
+    if nexus_mundus:
+        nota += [r'^\s*SaltuariusNexus\*\s+nexus;$', r'^\s*nexus = saltuarius_nexus_creare\(piscina\);$',
+                 r'^\s*CREDO_NON_NIHIL \(nexus\);$']
+    ignota = _ignota(praeludium, nota)
+    if ignota:
+        raise Recusatio('praeludium non vacuum (manu: fixura, functio aut '
+                        'declaratio per sectionem): %s'
+                        % ' | '.join(l.strip() for l in ignota[:4]))
+    ultimus = corpus.rindex(blocci[-1][1]) + len(blocci[-1][1])
+    nota_caudae = list(CAUDA_NOTA)
+    if opus_titulus is not None:
+        nota_caudae.append(r'^\s*piscina_destruere\(opus\);$')
+    ignota = _ignota(corpus[ultimus:], nota_caudae)
+    if ignota:
+        raise Recusatio('cauda post bloccum ultimum (manu: purgare_suitae aut '
+                        'sectio): %s' % ' | '.join(l.strip() for l in ignota[:4]))
     exitus = [caput.rstrip('\n')]
 
     if lexicon != '-':
@@ -150,17 +220,23 @@ _suitam_parare (
         def _titulum(m):
             if primus[0]:
                 primus[0] = False
-                return '\n'
-            return '\n%sCREDO_GRADUS ("%s");\n' % (
-                m.group(1), m.group(2).replace('Probans ', ''))
+                return '\n@@TITULUS_SUBLATUS@@\n'
+            return '\n%sCREDO_GRADUS ("%s");\n' % (m.group(1), _titulus_iunctus(m))
         bloccus = TITULUS.sub(_titulum, bloccus)
+        # titulus sublatus inter lineas vacuas: una vacua manet (nulla
+        # duplex); ceterae lineae vacuae fontis intactae
+        bloccus = bloccus.replace('\n\n@@TITULUS_SUBLATUS@@\n\n', '\n\n')
+        bloccus = bloccus.replace('\n@@TITULUS_SUBLATUS@@\n', '\n')
         bloccus = re.sub(r'\{\n\n', '{\n', bloccus, count=1)
         bloccus = bloccus.replace('&ratum', 'ratum')
         if re.search(r'(?<![\w>.])c\b(?!\s*\()', _sine_chordis(bloccus)):
+            if c_novum is None:
+                raise Recusatio("localis 'c' parametrum sectionis umbrat in '%s' - "
+                                "da -c=NOMEN (nomen typo aptum)" % functio)
             partes = CHORDA.split(bloccus)
             bloccus = ''.join(
                 x if x.startswith('"') else re.sub(
-                    r'(?<![\w>.\'])\bc\b(?=\s*[-;,)=.\[]|->)', 'compositus', x)
+                    r'(?<![\w>.\'])\bc\b(?=\s*[-;,)=.\[]|->)', c_novum, x)
                 for x in partes)
         nuda = _sine_commentis(bloccus)
         utitur_ratum = re.search(r'\bratum\b', nuda) is not None
@@ -207,8 +283,8 @@ _suitam_parare (
         redde;
     }''' % (opus_titulus, opus_mensura)
             bloccus = bloccus + '\n    piscina_destruere(opus);'
-        if not (utitur_piscina or utitur_ratum
-                or re.search(r'(?<![\w>.])c\b', _sine_commentis(bloccus))):
+        if not re.search(r'(?<![\w>.])c\b', _sine_chordis(
+                '\n'.join(declarationes) + custodiae + bloccus)):
             declarationes.append('    (vacuum)c;')
         exitus.append('\n\n' + _vexillum(vex) + '''
 
@@ -246,12 +322,14 @@ def main(argumenta):
         return 2
     via, suita, lexicon = argumenta[0], argumenta[1], argumenta[2]
     reliqua = argumenta[3:]
-    opus_titulus, opus_mensura, nexus_mundus = None, None, False
+    opus_titulus, opus_mensura, nexus_mundus, c_novum = None, None, False, None
     while reliqua and reliqua[0].startswith('-'):
         if reliqua[0].startswith('-opus='):
             opus_titulus, opus_mensura = reliqua[0][6:].split(',')
         elif reliqua[0] == '-nexus':
             nexus_mundus = True
+        elif reliqua[0].startswith('-c='):
+            c_novum = reliqua[0][3:]
         else:
             sys.stderr.write('optio ignota: %s\n' % reliqua[0])
             return 2
@@ -264,7 +342,7 @@ def main(argumenta):
         paria.append(a.split('|', 1))
     try:
         n = convertere(via, suita, lexicon, opus_titulus, opus_mensura,
-                       nexus_mundus, paria)
+                       nexus_mundus, paria, c_novum)
     except Recusatio as e:
         print('recusata: %s - %s' % (via, e))
         return 1
