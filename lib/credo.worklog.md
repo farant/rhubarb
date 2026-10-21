@@ -1011,3 +1011,35 @@ The ceiling also caught an agent's coinage: the md_stml draft had
 `_casus_inlineos_probare`, and the live-tree lint inside oratio_vocabula
 IV b flagged it as IGNOTA NOVA. HEAD went red on the same tree, because
 the suite reads the live index. Renamed `_casus_intra_lineam_probare`.
+
+## 2026-10-21 — briar amalgama and crusta effectus: accumulation, plus a latent chorda bug
+
+Both hit MEMORIA in step 3 because of the html_md / tabularium pattern:
+a loop over real inputs allocating everything into the one section
+piscina.
+- crusta effectus X/XI derives + judges every house `.sh`. A per-script
+  `opus` pool, destroyed each iteration, takes peak growth from 1370 to
+  36 MiB.
+- briar amalgama "corpus verum" fabricates + amalgamates three real
+  fixtures. A per-fixture pool takes it from 321 to 128 MiB.
+  `silex_fons_disci` keeps no cache; it reads into the caller's piscina,
+  which is what made the per-fixture pool sufficient.
+
+The effectus draft also had sections come back VACUA at random (XIII,
+XIX, XX on different runs). The world setup copies
+crusta/effectus_mandata.stml into the section's fake tree as
+`filum_legere_totum(...).datum` cast to a C string, but a chorda is NOT
+null-terminated. HEAD did this once, on fresh zeroed pages, so it always
+worked. Per section in a reused arena, the bytes after the file were
+leftover data, and the STML table sometimes parsed as garbage. Fix:
+`chorda_ut_cstr`. The world-setup failure now prints its cause; it had
+been a silent VACUA. Takeaway: rebuilding a world per section is where
+latent "works on fresh memory" bugs surface. A VACUA section that comes
+and goes points at uninitialised or unterminated data before it points
+at order dependence.
+
+Own slip worth recording: in the amalgama loop I renamed `piscina` ->
+`opus` with a blanket replace, and it hit two string literals the test
+asserts on (`_allocare_interna_piscina`, `#undef _credo_piscina`). The
+checker caught it (MALUM, 6 failed asserts). Same trap as the converter's
+`c` rename: never substitute identifiers without skipping literals.
