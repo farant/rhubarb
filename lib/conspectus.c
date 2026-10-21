@@ -62,6 +62,13 @@ structura Declaratio {
                 b32  opera_posita;
     ConspectusOpera  opera;
                 Xar* introitus;       /* Introitus* */
+    /* D5 (indagatio) */
+                b32  quaerenda;
+             chorda  genus_quaerendi;  /* <quaerendum genus> */
+ConspectusEnumerare  enumerare;
+             vacuum* enumerare_ctx;
+  ConspectusAuditor  auditor;
+             vacuum* auditor_ctx;
 };
 
 structura Introitus {
@@ -251,6 +258,11 @@ clavem_irritare (
        vacuum* valor;
     character  buffer[CCLVI];
 
+    /* D5: auditor clavem omnem audit, in cache aut non */
+    si (d->auditor)
+    {
+        d->auditor(d->auditor_ctx, clavis);
+    }
     si (d->titulus.mensura + clavis.mensura + II
         > (i32)magnitudo(buffer))
     {
@@ -272,6 +284,11 @@ declarationem_irritare (
 {
     i32 i;
 
+    /* D5: clavis vacua = omnes */
+    si (d->auditor)
+    {
+        d->auditor(d->auditor_ctx, vacua());
+    }
     per (i = ZEPHYRUM; i < xar_numerus(d->introitus); i++)
     {
         introitum_irritare(*(Introitus**)xar_obtinere(d->introitus, i));
@@ -674,6 +691,15 @@ conspectus_declarare (
             d->versio = d->versio * X + (s32)(versio.datum[i] - '0');
         }
     }
+    {
+        StmlNodus* q = stml_invenire_liberum(radix, "quaerendum");
+
+        si (q)
+        {
+            d->quaerenda        = VERUM;
+            d->genus_quaerendi  = attributum(q, "genus");
+        }
+    }
     si (declaratio_quaerere(r, d->titulus))
     {
         sprintf(buffer, "conspectus '%.*s' bis declaratus",
@@ -798,6 +824,106 @@ conspectus_opera_ponere (
 }
 
 b32
+conspectus_enumerationem_ponere (
+     ConspectusRegistrum* repertorium,
+      constans character* titulus,
+     ConspectusEnumerare  enumerare,
+                  vacuum* ctx)
+{
+    Declaratio* d;
+
+    si (!repertorium || !titulus || !enumerare)
+    {
+        redde FALSUM;
+    }
+    d = declaratio_quaerere(repertorium, chorda_ex_literis(titulus,
+        repertorium->tempus));
+    si (!d)
+    {
+        redde FALSUM;
+    }
+    d->enumerare      = enumerare;
+    d->enumerare_ctx  = ctx;
+    redde VERUM;
+}
+
+b32
+conspectus_auditorem_ponere (
+     ConspectusRegistrum* repertorium,
+      constans character* titulus,
+       ConspectusAuditor  auditor,
+                  vacuum* ctx)
+{
+    Declaratio* d;
+
+    si (!repertorium || !titulus)
+    {
+        redde FALSUM;
+    }
+    d = declaratio_quaerere(repertorium, chorda_ex_literis(titulus,
+        repertorium->tempus));
+    si (!d)
+    {
+        redde FALSUM;
+    }
+    d->auditor      = auditor;
+    d->auditor_ctx  = auditor ? ctx : NIHIL;
+    redde VERUM;
+}
+
+Xar*
+conspectus_quaerenda (
+    ConspectusRegistrum* repertorium,
+                Piscina* piscina)
+{
+    Xar* q;
+    i32  i;
+
+    si (!repertorium || !piscina)
+    {
+        redde NIHIL;
+    }
+    q = xar_creare(piscina, (i32)magnitudo(ConspectusQuaerendum));
+    per (i = ZEPHYRUM; q && i < xar_numerus(repertorium->declarationes);
+         i++)
+    {
+        Declaratio* d = *(Declaratio**)xar_obtinere(
+            repertorium->declarationes, i);
+        ConspectusQuaerendum* e;
+
+        si (!d->quaerenda)
+        {
+            perge;
+        }
+        e           = (ConspectusQuaerendum*)xar_addere(q);
+        e->titulus  = chorda_transcribere(d->titulus, piscina);
+        e->genus    = chorda_transcribere(d->genus_quaerendi, piscina);
+    }
+    redde q;
+}
+
+Xar*
+conspectus_enumerare (
+    ConspectusRegistrum* repertorium,
+     constans character* titulus,
+                Piscina* piscina)
+{
+    Declaratio* d;
+
+    si (!repertorium || !titulus || !piscina)
+    {
+        redde NIHIL;
+    }
+    d = declaratio_quaerere(repertorium, chorda_ex_literis(titulus,
+        repertorium->tempus));
+    si (!d || !d->quaerenda || !d->enumerare)
+    {
+        redde NIHIL;
+    }
+    redde d->enumerare(d->enumerare_ctx, repertorium, piscina);
+}
+
+b32
 conspectus_per_rem_ponere (
      ConspectusRegistrum* repertorium,
       constans character* titulus,
@@ -887,6 +1013,14 @@ conspectus_parare (
         si (!d->opera_posita)
         {
             sprintf(buffer, "conspectus '%.*s': opera C absentia",
+                (integer)d->titulus.mensura,
+                (constans character*)d->titulus.datum);
+            vitium_addere(v, r->piscina, buffer);
+        }
+        si (d->quaerenda && !d->enumerare)
+        {
+            sprintf(buffer, "conspectus '%.*s' quaerendus: enumeratio "
+                "absens (conspectus_enumerationem_ponere)",
                 (integer)d->titulus.mensura,
                 (constans character*)d->titulus.datum);
             vitium_addere(v, r->piscina, buffer);

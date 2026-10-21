@@ -19,6 +19,7 @@
     <attributum nomen="versio" genus="numerus" necessarium="verum"/>
     <liberum nomen="clavis" minimum="1" maximum="1"/>
     <liberum nomen="fons"/>
+    <liberum nomen="quaerendum" maximum="1"/>
   </elementum>
 
   <!-- clavis: typus organi (organum_typum_iudicare) -->
@@ -36,6 +37,12 @@
     </attributum>
     <attributum nomen="spatium"    genus="textus"/>
     <attributum nomen="pura"       genus="nomen"/>
+  </elementum>
+
+  <!-- quaerendum (D5, indagatio): declaratio quaerenda; genus =
+       titulus gregis in fructibus ("Agenda") -->
+  <elementum nomen="quaerendum">
+    <attributum nomen="genus" genus="textus" necessarium="verum"/>
   </elementum>
 
 </canon>

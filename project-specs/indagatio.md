@@ -135,6 +135,16 @@ semita) instead of a free view model, plus ONE new hook,
 path), because the index needs keys nobody has read yet. Route
 template fields other than `{clavis}` are filled by `computare`.
 
+*Amended at S1 (header approved by Fran 2026-10-21):* the declaration
+carries ONLY the label (`<quaerendum genus="Agenda"/>`); `computare`
+returns `IndagatioConspectus` = the ROWS of one key (several allowed:
+a day notebook keys on the date - a spatium key cannot contain '/' -
+and its rows are the pages, each "page n of x"), each row with its
+full route. `enumerare` is set on the conspectus registry
+(`conspectus_enumerationem_ponere`; parare refuses a searchable
+declaration without it); indagatio finds every searchable kind in the
+registry itself, so adding a kind touches nothing in the host.
+
 ## V. Keeping the index current
 
 - **What is new in conspectus:** today only CACHED entries go stale.

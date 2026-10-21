@@ -147,3 +147,25 @@ destroy no-op, entries kept, per-rem memory kept, scratch kept (300
 registries: +192 KiB green, bound 1 MiB); kalendarium - setter ignores
 the registry. Not plantable without a test accessor: "vicus does not
 hand its registry to the pane" (output identical by construction).
+
+## 2026-10-21 — D5 S1: searchable declarations, observer, enumerare
+
+`<quaerendum genus="..."/>` (canon, at most once) marks a declaration
+searchable; `conspectus_enumerationem_ponere` (parare refuses a
+searchable one without it), `conspectus_quaerenda`,
+`conspectus_enumerare`, and a per-declaration observer
+(`conspectus_auditorem_ponere`) called from the TWO places every stale
+key already passes through: `clavem_irritare` (spatium, per-rem) and
+`declarationem_irritare` (omnia -> empty key). It hears keys nobody
+has read (the cache lookup comes after). Plants red: observer only
+when the declaration has cache entries; never for keys; never for
+"all"; parare without the enumerare check; quaerenda listing every
+declaration.
+
+**D4c's memory phase D was FLAKY** (300 registries after 20 warm-up,
+bound 1 MiB): four clean runs gave 0, 1056, 1024, 1552 KiB. Allocator
+noise stays ~1.5 MiB whatever the count; leaks grow with it. Now 2000
+registries x 3 reads after 100 warm-up: clean 320-1104 KiB; plants
+destroy-noop 33 MiB, entries 19, scratch 8.2, per-rem 6.1; bound 3 MiB.
+Lesson: calibrate a footprint bound with the plants' SIZES, not just
+their colour, and run the clean case five times first.

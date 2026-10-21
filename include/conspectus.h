@@ -166,6 +166,54 @@ conspectus_documentum_ligare (
      constans character* spatium,
                  vacuum* documentum);
 
+/* D5 (indagatio): declaratio QUAERENDA (<quaerendum genus=".."/>)
+ * claves suas OMNES enumerat - aedificatio prima indicis et fons
+ * 'omnia'. Xar de chorda in piscina data. parare declarationem
+ * quaerendam sine enumeratione recusat, nominatim. */
+nomen Xar* (*ConspectusEnumerare)(vacuum* ctx,
+    ConspectusRegistrum* repertorium, Piscina* piscina);
+
+b32
+conspectus_enumerationem_ponere (
+     ConspectusRegistrum* repertorium,
+      constans character* titulus,
+     ConspectusEnumerare  enumerare,
+                  vacuum* ctx);
+
+/* D5: auditor declarationis unius - in renovatione vocatur cum OMNI
+ * clave quam fons eius irritat, in cache aut non; clavis vacua =
+ * omnes (fons 'omnia'). Clavis brevis vitae: auditor copiat.
+ * Lectiones intra computare (dependentiae) auditorem non vocant.
+ * Unus per declarationem; NIHIL tollit. */
+nomen vacuum (*ConspectusAuditor)(vacuum* ctx, chorda clavis);
+
+b32
+conspectus_auditorem_ponere (
+     ConspectusRegistrum* repertorium,
+      constans character* titulus,
+       ConspectusAuditor  auditor,
+                  vacuum* ctx);
+
+nomen structura {
+    chorda titulus;   /* nomen declarationis ("agenda-textus") */
+    chorda genus;     /* <quaerendum genus>: titulus gregis */
+} ConspectusQuaerendum;
+
+/* declarationes quaerendae, ordine declarationis: Xar de
+ * ConspectusQuaerendum (vacuum si nulla) */
+Xar*
+conspectus_quaerenda (
+    ConspectusRegistrum* repertorium,
+                Piscina* piscina);
+
+/* claves omnes declarationis quaerendae (enumerare eius); NIHIL si
+ * nomen ignotum aut non quaerendum */
+Xar*
+conspectus_enumerare (
+    ConspectusRegistrum* repertorium,
+     constans character* titulus,
+                Piscina* piscina);
+
 /* omnia iudicare ante usum: declarationes cum operibus, per-rem cum
  * functionibus et documento ligato. FALSUM et *vitia nominata si
  * deest quid; post VERUM lectio licet. */

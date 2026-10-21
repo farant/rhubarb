@@ -99,6 +99,16 @@ diem (
     redde clavis_diei(fasti_dies(MMXXVI, X, dies), piscina);
 }
 
+interior chorda
+vacua_probationis (vacuum)
+{
+    chorda c;
+
+    c.datum    = NIHIL;
+    c.mensura  = ZEPHYRUM;
+    redde c;
+}
+
 
 /* ==================================================
  * Conspectus 'dies'
@@ -1185,7 +1195,7 @@ lectiones_sine_actis (
     }
 }
 
-/* D4c: registra n creare, dies XI legere, destruere - piscina
+/* D4c: registra n creare, dies III legere, destruere - piscina
  * vocatoris propria et destructa, ergo sola memoria quam registrum
  * ipsum possidet (tempus, introitus, res memoratae) restare potest */
 interior vacuum
@@ -1207,7 +1217,7 @@ registra_iterare (
             redde;
         }
         r = registrum_plenum(m, q, ZEPHYRUM);
-        per (d = X; r && d <= XX; d++)
+        per (d = X; r && d <= XII; d++)
         {
             (vacuum)conspectus_legere(r, "dies", diem(d, q));
         }
@@ -1288,14 +1298,326 @@ _probare_memoriam (
     piscina_destruere(propria);
 
     /* D (D4c): registra creata et destructa - arenae quas registrum
-     * possidet redduntur. Calefactio prius. */
-    registra_iterare(m, XX);
+     * possidet redduntur. Calefactio prius. Mensuratum 2026-10-21 (MM
+     * registra, dies III): sanum 320-1104 KiB (strepitus allocatoris,
+     * non crescit cum numero; CCC registra post XX calefactionis
+     * 0-1552 KiB - limes I MiB ibi FLUCTUABAT); plantae: destruere
+     * nihil 33 MiB, introitus 19 MiB, tempus 8.2 MiB, memoria per-rem
+     * 6.1 MiB (damnum cum numero crescit). Limes III MiB inter
+     * utrumque. */
+    registra_iterare(m, C);
     v1 = vestigium();
-    registra_iterare(m, CCC);
+    registra_iterare(m, MM);
     v2 = vestigium();
     v2 = v2 > v1 ? v2 - v1 : ZEPHYRUM;
     imprimere("memoria: D %ld KiB\n", (longus)(v2 / MXXIV));
-    CREDO_MINOR_I64(v2, (i64)(MXXIV * MXXIV));
+    CREDO_MINOR_I64(v2, (i64)(III * MXXIV * MXXIV));
+}
+
+
+/* ==================================================
+ * D5 (indagatio): declarationes quaerendae, enumeratio, auditor
+ * ================================================== */
+
+hic_manens constans character* constans DECLARATIO_RERUM =
+    "<conspectus nomen=\"res\" versio=\"1\">\n"
+    "  <clavis typus=\"textus\"/>\n"
+    "  <fons documentum=\"agenda\" irritat=\"per-rem\"/>\n"
+    "  <quaerendum genus=\"Agenda\"/>\n"
+    "</conspectus>\n";
+
+hic_manens constans character* constans DECLARATIO_LIBRI =
+    "<conspectus nomen=\"liber\" versio=\"1\">\n"
+    "  <clavis typus=\"dies\"/>\n"
+    "  <fons spatium=\"dies/{clavis}\"/>\n"
+    "  <quaerendum genus=\"Libri\"/>\n"
+    "</conspectus>\n";
+
+hic_manens constans character* constans DECLARATIO_HOMINUM =
+    "<conspectus nomen=\"homines\" versio=\"1\">\n"
+    "  <clavis typus=\"textus\"/>\n"
+    "  <fons documentum=\"personae\" irritat=\"omnia\"/>\n"
+    "  <quaerendum genus=\"Personae\"/>\n"
+    "</conspectus>\n";
+
+/* per-rem 'res': clavis rei = id eius */
+interior vacuum
+res_claves (
+             vacuum* ctx,
+    constans vacuum* documentum,
+                i32  index,
+                Xar* claves,
+            Piscina* piscina)
+{
+    (vacuum)ctx;
+    *(chorda*)xar_addere(claves) = chorda_transcribere(
+        agenda_res_index((constans AgendaDocumentum*)documentum,
+        index)->id, piscina);
+}
+
+interior Xar*
+res_enumerare (
+                 vacuum* ctx,
+    ConspectusRegistrum* repertorium,
+                Piscina* piscina)
+{
+    Mundus* m;
+       Xar* claves;
+       i32  i;
+
+    (vacuum)repertorium;
+    m       = (Mundus*)ctx;
+    claves  = xar_creare(piscina, (i32)magnitudo(chorda));
+    per (i = ZEPHYRUM; i < agenda_numerus_rerum(m->agenda); i++)
+    {
+        *(chorda*)xar_addere(claves) = chorda_transcribere(
+            agenda_res_index(m->agenda, i)->id, piscina);
+    }
+    redde claves;
+}
+
+interior Xar*
+libros_enumerare (
+                 vacuum* ctx,
+    ConspectusRegistrum* repertorium,
+                Piscina* piscina)
+{
+    Xar* claves;
+
+    (vacuum)ctx;
+    (vacuum)repertorium;
+    claves = xar_creare(piscina, (i32)magnitudo(chorda));
+    *(chorda*)xar_addere(claves) = diem(XIX, piscina);
+    redde claves;
+}
+
+interior Xar*
+homines_enumerare (
+                 vacuum* ctx,
+    ConspectusRegistrum* repertorium,
+                Piscina* piscina)
+{
+    Mundus* m;
+       Xar* claves;
+       i32  i;
+
+    (vacuum)repertorium;
+    m       = (Mundus*)ctx;
+    claves  = xar_creare(piscina, (i32)magnitudo(chorda));
+    per (i = ZEPHYRUM; i < personae_numerus(m->personae); i++)
+    {
+        *(chorda*)xar_addere(claves) = chorda_transcribere(
+            personae_index(m->personae, i)->id, piscina);
+    }
+    redde claves;
+}
+
+/* auditor probationis: claves auditas copiat ("" = omnes) */
+nomen structura {
+    Piscina* piscina;
+        Xar* claves;     /* chorda */
+} Auditio;
+
+interior vacuum
+audire (
+    vacuum* ctx,
+    chorda  clavis)
+{
+    Auditio* a = (Auditio*)ctx;
+
+    *(chorda*)xar_addere(a->claves) = chorda_transcribere(clavis,
+        a->piscina);
+}
+
+interior b32
+auditum (
+    Auditio* a,
+     chorda  clavis)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(a->claves); i++)
+    {
+        si (chorda_aequalis(*(chorda*)xar_obtinere(a->claves, i),
+                clavis))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* registrum cum dies (non quaerendus) et res, liber, homines */
+interior ConspectusRegistrum*
+registrum_quaerendum (
+      Mundus* m,
+     Piscina* piscina,
+         b32  cum_enumeratione)
+{
+    ConspectusRegistrum* r;
+                    Xar* vitia;
+
+    r = conspectus_registrum_creare(piscina, m->intern, m->volumen,
+        ZEPHYRUM);
+    si (   !r || !declarare(r, DECLARATIO_DIEI, piscina)
+        || !declarare(r, DECLARATIO_RERUM, piscina)
+        || !declarare(r, DECLARATIO_LIBRI, piscina)
+        || !declarare(r, DECLARATIO_HOMINUM, piscina))
+    {
+        redde NIHIL;
+    }
+    (vacuum)conspectus_opera_ponere(r, "dies", opera(dies_computare,
+        dies_codificare, m));
+    (vacuum)conspectus_opera_ponere(r, "res", opera(sanctus_computare,
+        numerum_codificare, m));
+    (vacuum)conspectus_opera_ponere(r, "liber", opera(sanctus_computare,
+        numerum_codificare, m));
+    (vacuum)conspectus_opera_ponere(r, "homines", opera(
+        sanctus_computare, numerum_codificare, m));
+    (vacuum)conspectus_per_rem_ponere(r, "dies", "agenda",
+        per_rem_agendae());
+    {
+        ConspectusPerRem p = per_rem_agendae();
+
+        p.claves = res_claves;
+        (vacuum)conspectus_per_rem_ponere(r, "res", "agenda", p);
+    }
+    (vacuum)conspectus_documentum_ligare(r, "agenda", m->agenda);
+    (vacuum)conspectus_documentum_ligare(r, "personae", m->personae);
+    si (cum_enumeratione)
+    {
+        (vacuum)conspectus_enumerationem_ponere(r, "res", res_enumerare,
+            m);
+        (vacuum)conspectus_enumerationem_ponere(r, "liber",
+            libros_enumerare, m);
+        (vacuum)conspectus_enumerationem_ponere(r, "homines",
+            homines_enumerare, m);
+    }
+    redde conspectus_parare(r, &vitia) ? r : NIHIL;
+}
+
+interior vacuum
+_probare_quaerenda (
+    CredoContextus* c)
+{
+                 Mundus* m;
+    ConspectusRegistrum* r;
+                    Xar* vitia;
+                    Xar* q;
+                    Xar* claves;
+                 chorda  alpha;
+                 chorda  beta;
+                Auditio  res_a;
+                Auditio  liber_a;
+                Auditio  homines_a;
+                Auditio  dies_a;
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->volumen);
+
+    /* canon: genus necessarium, quaerendum semel */
+    r = conspectus_registrum_creare(c->piscina, m->intern, m->volumen,
+        ZEPHYRUM);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_FALSUM(conspectus_declarare(r, lit(
+        "<conspectus nomen=\"q1\" versio=\"1\"><clavis typus=\"dies\"/>"
+        "<quaerendum/></conspectus>", c->piscina), &vitia));
+    CREDO_MAIOR_I32(xar_numerus(vitia), ZEPHYRUM);
+    CREDO_FALSUM(conspectus_declarare(r, lit(
+        "<conspectus nomen=\"q2\" versio=\"1\"><clavis typus=\"dies\"/>"
+        "<quaerendum genus=\"A\"/><quaerendum genus=\"B\"/>"
+        "</conspectus>", c->piscina), &vitia));
+    CREDO_MAIOR_I32(xar_numerus(vitia), ZEPHYRUM);
+
+    /* parare: quaerendum sine enumeratione recusatur, nominatim */
+    alpha  = rem_creare_die(m, "alpha", XIV, c->piscina);
+    beta   = rem_creare_die(m, "beta", XV, c->piscina);
+    CREDO_NIHIL(registrum_quaerendum(m, c->piscina, FALSUM));
+    r = conspectus_registrum_creare(c->piscina, m->intern, m->volumen,
+        ZEPHYRUM);
+    CREDO_NECESSE(declarare(r, DECLARATIO_LIBRI, c->piscina));
+    (vacuum)conspectus_opera_ponere(r, "liber", opera(sanctus_computare,
+        numerum_codificare, m));
+    CREDO_FALSUM(conspectus_parare(r, &vitia));
+    CREDO_NECESSE(xar_numerus(vitia) > ZEPHYRUM);
+    CREDO_CHORDA_CONTINET(*(chorda*)xar_obtinere(vitia, ZEPHYRUM),
+        lit("enumer", c->piscina));
+
+    r = registrum_quaerendum(m, c->piscina, VERUM);
+    CREDO_NECESSE_NON_NIHIL(r);
+
+    /* quaerenda: ordine declarationis, 'dies' non */
+    q = conspectus_quaerenda(r, c->piscina);
+    CREDO_NECESSE(q && xar_numerus(q) == III);
+    CREDO_CHORDA_AEQUALIS_LITERIS(((ConspectusQuaerendum*)xar_obtinere(
+        q, ZEPHYRUM))->titulus, "res");
+    CREDO_CHORDA_AEQUALIS_LITERIS(((ConspectusQuaerendum*)xar_obtinere(
+        q, ZEPHYRUM))->genus, "Agenda");
+    CREDO_CHORDA_AEQUALIS_LITERIS(((ConspectusQuaerendum*)xar_obtinere(
+        q, I))->titulus, "liber");
+    CREDO_CHORDA_AEQUALIS_LITERIS(((ConspectusQuaerendum*)xar_obtinere(
+        q, II))->genus, "Personae");
+
+    /* enumerare */
+    claves = conspectus_enumerare(r, "res", c->piscina);
+    CREDO_NECESSE(claves && xar_numerus(claves) == II);
+    CREDO_CHORDA_AEQUALIS(*(chorda*)xar_obtinere(claves, ZEPHYRUM),
+        alpha);
+    CREDO_NIHIL(conspectus_enumerare(r, "dies", c->piscina));
+    CREDO_NIHIL(conspectus_enumerare(r, "ignotum", c->piscina));
+
+    /* auditor: claves NUMQUAM lectae quoque audiuntur */
+    res_a.piscina      = c->piscina;
+    res_a.claves       = xar_creare(c->piscina, (i32)magnitudo(chorda));
+    liber_a.piscina    = c->piscina;
+    liber_a.claves     = xar_creare(c->piscina, (i32)magnitudo(chorda));
+    homines_a.piscina  = c->piscina;
+    homines_a.claves   = xar_creare(c->piscina, (i32)magnitudo(chorda));
+    dies_a.piscina     = c->piscina;
+    dies_a.claves      = xar_creare(c->piscina, (i32)magnitudo(chorda));
+    CREDO_NECESSE(conspectus_auditorem_ponere(r, "res", audire,
+        &res_a));
+    CREDO_NECESSE(conspectus_auditorem_ponere(r, "liber", audire,
+        &liber_a));
+    CREDO_NECESSE(conspectus_auditorem_ponere(r, "homines", audire,
+        &homines_a));
+    CREDO_NECESSE(conspectus_auditorem_ponere(r, "dies", audire,
+        &dies_a));
+    CREDO_FALSUM(conspectus_auditorem_ponere(r, "ignotum", audire,
+        &dies_a));
+
+    (vacuum)agenda_titulum_ponere(m->agenda, beta, lit("beta nova",
+        c->piscina));
+    (vacuum)conspectus_renovare(r);
+    CREDO_VERUM(auditum(&res_a, beta));
+    CREDO_FALSUM(auditum(&res_a, alpha));
+    CREDO_AEQUALIS_I32(xar_numerus(liber_a.claves), ZEPHYRUM);
+    CREDO_AEQUALIS_I32(xar_numerus(homines_a.claves), ZEPHYRUM);
+    /* 'dies' (per-rem, claves dies) suas audit, non ids */
+    CREDO_VERUM(auditum(&dies_a, diem(XV, c->piscina)));
+    CREDO_FALSUM(auditum(&dies_a, beta));
+
+    /* spatium: clavis ex spatio */
+    (vacuum)volumen_actum_appendere(m->volumen, "dies/2026-10-19/nota",
+        lit("x", c->piscina));
+    (vacuum)conspectus_renovare(r);
+    CREDO_VERUM(auditum(&liber_a, diem(XIX, c->piscina)));
+
+    /* omnia: clavis vacua */
+    (vacuum)personae_hominem_creare(m->personae, lit("Anna",
+        c->piscina),
+        lit("Rossi", c->piscina));
+    (vacuum)conspectus_renovare(r);
+    CREDO_VERUM(auditum(&homines_a, vacua_probationis()));
+
+    /* auditor sublatus: nihil */
+    CREDO_NECESSE(conspectus_auditorem_ponere(r, "res", NIHIL, NIHIL));
+    xar_vacare(res_a.claves);
+    (vacuum)agenda_titulum_ponere(m->agenda, alpha, lit("alpha nova",
+        c->piscina));
+    (vacuum)conspectus_renovare(r);
+    CREDO_AEQUALIS_I32(xar_numerus(res_a.claves), ZEPHYRUM);
+    conspectus_registrum_destruere(r);
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
@@ -1320,6 +1642,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "tectum",       _probare_tectum,         mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "memoria",      _probare_memoriam,       mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "quaerenda",    _probare_quaerenda,      mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
