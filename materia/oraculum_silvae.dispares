@@ -9,3 +9,13 @@
 # Mensura natalis (2026-09-24): textus STML silvae et materiae OCTETIM
 # idem (shim -stml: CCCXCIX/CCCXCIX, circuitus bis, comparator) -
 # columna 'stml' ergo manet, non in comparatorem demittitur.
+
+# 2026-10-21 (a1b658d4, …YR99SJ1): stringificatio per STML - argumentum
+# CHORDA nunc transclusio (lamina et <stringificatio> lexema IDEM) et
+# <stringificatio> invocationem + <extentum> fert. Documentum PIGNORIS
+# vitium vetus fert (argumentum bis scriptum): lectio viva eius arborem
+# aliam struit et comparator vivus derivationem labentem videt (pignus
+# 'aequales' caecum erat - plagula 304/305). Octeti/emissio non differunt.
+lib/sonitus.c	stml	a1b658d4 (…YR99SJ1): <stringificatio> invocationem et extentum fert, argumentum transclusum
+lib/sonitus.c	lectio	a1b658d4 (…YR99SJ1): documentum pignoris argumentum bis fert - lector vivus id per membra extentorum aliter derivat
+lib/sonitus.c	comparator	a1b658d4 (…YR99SJ1): comparator vivus lapsum documenti pignoris videt (lexema/offset); pignus caecus erat

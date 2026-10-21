@@ -284,7 +284,7 @@ two ways:
   back to `primus`. Old documents without the child read as before.
 
 Adversarial cases 24 → 32. The pin is flipped to VERUM (otherwise it
-would say SANATUM), plus seven shapes: inside an expansion, next to a
+would say SANATUM), plus eight shapes: inside an expansion, next to a
 bare argument, two invocations, a multi-token argument, CHORDA as the
 FIRST token, inside another macro's argument, through an intermediate
 macro, and an empty argument. Five were red before the fix (the pin
@@ -312,3 +312,12 @@ so the membership table costs nothing measurable. silva 56/56.
 Housekeeping: after the edit, `silva.porta` refused with "iudex ipse
 non recens" (bin/fabrica links silva). `./tools/fabrica_struere.sh`
 heals it (builds into bin/ only) and regenerates the amalgam.
+
+Correction (same day, merge to main): the new shapes are EIGHT, not
+seven. a1b658d4's commit message says "VII formae" but lists eight.
+The merge's fusio then found two pins that moved with this fix:
+`silva/m3_probare.sh` `adversarii fixum` 24 -> 32, and three NAMED
+divergences in `materia/oraculum_silvae.dispares` for lib/sonitus.c.
+The pinned silva's document carries the old double-written argument,
+so the live reader derives it differently and the live comparator sees
+the drift that the pinned one was blind to. Bytes do not differ.
