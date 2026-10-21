@@ -1,0 +1,36 @@
+<sanctus id="rose-philippine-duchesne" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Rose Philippine Duchesne</nomen>
+  <nomen lingua="en" fontes="ce">Philippine-Rose Duchesne</nomen>
+  <ortus annus="1769" mensis="8" dies="29" locus="Grenoble, France" fontes="ce"/>
+  <obitus annus="1852" locus="St. Charles, Missouri" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1988" mensis="7" dies="3" papa="John Paul II" fontes="hom"/>
+  <festum calendarium="usa" mensis="11" dies="18" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us">virgin</munus>
+  <munus fontes="ce hom">religious</munus>
+  <munus fontes="ce hom">missionary</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Philippine Duchesne was born at Grenoble on 29 August 1769, the daughter of the lawyer Pierre-François Duchesne. Educated by the Visitation nuns, she entered their order and saw it dispersed in the Reign of Terror; she then tried in vain to restore the convent of Sainte-Marie-d'en-Haut near Grenoble, and in 1804 accepted Mother Barat's offer to receive her community into the Society of the Sacred Heart. From childhood she had dreamed of carrying the faith to the heathen in distant lands.</paragraphus>
+    <paragraphus fontes="ce hom">In 1818 she set out for America with four companions. Bishop Dubourg welcomed her at New Orleans, whence she sailed up the Mississippi to St. Louis and settled her small community at St. Charles, founding the first American houses of her society; others followed at Florissant, Grand Côteau, New Orleans, St. Louis and St. Michael, amid cold, hunger, illness and opposition. John Paul II recalled that her whole life was shaped by love of Christ in the Eucharist, before whom she spent long hours, and that she gave her last thirty-four years to poor children and needy families in the Middle West. Old and broken, she went at last to work among the Potawatomi at Sugar Creek, though the language barrier hindered her. She died at St. Charles in 1852 and was canonized by John Paul II on 3 July 1988.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Philippine-Rose Duchesne" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Philippine-Rose_Duchesne">
+    <excerptum>Founder in America of the first houses of the society of the Sacred Heart, born at Grenoble, France, 29 August, 1769; died at St. Charles, Missouri, 18 October, 1852.</excerptum>
+    <excerptum>She was the daughter of Pierr-Francois Duchesne, an eminent lawyer.</excerptum>
+    <excerptum>She was educated by the visitation Nuns, entered that order, saw its dispersion during the Reign of Terror, vainly attempted the re-establishment of the convent of Ste-Marie-d'en-Haunt, near Grenoble, and finally, in 1804, accepted the offer of Mother Barat to receive her community into the Society of the Sacred Heart.</excerptum>
+    <excerptum>From early childhood the dream of Philippine had been the apostolate of souls: heathen in distant lands, the neglected and poor at home.</excerptum>
+    <excerptum>In 1818 Mother Duchesne set out with four companions for the missions of America. Bishop Dubourg welcomed her to New Orleans, whence she sailed up the Mississippi to St. Louis, finally settling her little colony at St. Charles.</excerptum>
+    <excerptum>Cold, hunger, and illness; opposition, ingratitude, and calumny</excerptum>
+    <excerptum>Other foundations followed, at Florissant, Grand Côteau, New Orleans, St. Louis, St. Michael</excerptum>
+    <excerptum>She yearned to teach the poor Indians, and old and broken as she was, she went to labour among the Pottowatomies at Sugar Creek</excerptum>
+    <excerptum>but Providence led her back to St. Charles, where she died.</excerptum>
+  </fons>
+  <fons id="hom" opus="sedes" locus="Omelia di Giovanni Paolo II, canonizzazione di Simón de Rojas e Rose Philippine Duchesne, 3 luglio 1988" url="https://www.vatican.va/content/john-paul-ii/it/homilies/1988/documents/hf_jp-ii_hom_19880703_santi-rojas-duchesne.html">
+    <excerptum>3 luglio 1988, Canonizzazione di Simón de Rojas e Rose Philippine Duchesne</excerptum>
+    <excerptum>Rose Philippine abbandonò la sicurezza della sua cultura e lingua e si mise a servire la Chiesa di Cristo nel nuovo mondo.</excerptum>
+    <excerptum>Tutta la vita di Rose-Philippine fu trasformata e illuminata dall’amore per Cristo nell’Eucaristia. Durante le lunghe ore trascorse davanti al santissimo, ella imparò a vivere sempre alla presenza di Dio.</excerptum>
+    <excerptum>Rose-Philippine Duchesne si sentì spinta in modo irresistibile verso i bambini poveri, le famiglie indigenti. Per aiutarle ed educarli spese generosamente gli ultimi trentaquattro anni della sua vita, in quella regione del Middle West.</excerptum>
+    <excerptum>Fece anche un fecondo tentativo di apostolato tra gli indiani. Ostacolata dalla barriera della lingua</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="18 November">
+    <excerptum>Saint Rose Philippine Duchesne, Virgin</excerptum>
+  </fons>
+</sanctus>

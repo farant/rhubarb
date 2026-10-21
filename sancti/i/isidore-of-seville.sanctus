@@ -1,0 +1,43 @@
+<sanctus id="isidore-of-seville" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Isidore of Seville</nomen>
+  <ortus annus="560" circa="verum" locus="Cartagena, Spain" fontes="ce bu"/>
+  <obitus annus="636" mensis="4" dies="4" locus="Seville" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="4" dies="4" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="4" dies="4" fontes="mr"/>
+  <munus fontes="us mr ce">bishop</munus>
+  <munus fontes="us ce">doctor of the Church</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Isidore was born at Cartagena about 560, the son of Severianus and Theodora, in a family of saints: his elder brother Leander preceded him as archbishop of Seville, his brother Fulgentius was a bishop, and his sister Florentina a nun. Educated in the cathedral school of Seville, he mastered Latin, Greek and Hebrew. He helped Leander in converting the Visigoths from Arianism and succeeded him in the see of Seville.</paragraphus>
+    <paragraphus fontes="ce mr bu">As bishop he worked to unite the peoples of the Hispano-Gothic kingdom through religion and learning. He presided over the Second Council of Seville in 619 and, though far advanced in years, over the Fourth Council of Toledo in 633, which ordered every bishop to found a seminary in his cathedral city. His Etymologies gathered the learning of his age into a single encyclopedia and remained a standard textbook through most of the Middle Ages. He died on 4 April 636. The Eighth Council of Toledo praised him as an extraordinary doctor, the most learned man of the latter ages.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="4 April">
+    <excerptum>At Seville, in Spain, St. Isidore, a bishop eminent for sanctity and learning, who shed lustre on his country by his zeal for the Catholic faith, and the observance .of ecclesiastical discipline.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v04 April 4 St. Isidore, Bishop of Seville">
+    <excerptum>The city of Carthagena was the place of his birth, which his parents, Severian and Theodora, persons of the first quality in the kingdom</excerptum>
+    <excerptum>Leander and Fulgentius, bishops, and his sister Florentina are also honoured among the saints.</excerptum>
+    <excerptum>assisted his brother, Leander, archbishop of Seville, in the conversion of the Visigoths from the. Arian heresy.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Isidore of Seville" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Isidore_of_Seville">
+    <excerptum>Born at Cartagena, Spain, about 560; died 4 April, 636.</excerptum>
+    <excerptum>Isidore was the son of Severianus and Theodora. His elder brother Leander was his immediate predecessor in the Metropolitan See of Seville; whilst a younger brother St. Fulgentius presided over the Bishopric of Astigi. His sister Florentina was a nun</excerptum>
+    <excerptum>Isidore received his elementary education in the Cathedral school of Seville.</excerptum>
+    <excerptum>mastered Latin, Greek, and Hebrew.</excerptum>
+    <excerptum>On the death of Leander, Isidore succeeded to the See of Seville.</excerptum>
+    <excerptum>St. Isidore set himself to the task of welding into a homogeneous nation the various peoples who made up the Hispano-Gothic kingdom. To this end he availed himself of all the resources of religion and education.</excerptum>
+    <excerptum>Isidore presided over the Second Council of Seville, begun 13 November, 619</excerptum>
+    <excerptum>But it was the Fourth National Council of Toledo that afforded him the opportunity of being of the greatest service to his county.</excerptum>
+    <excerptum>St. Isidore, though far advanced in years, presided over its deliberations</excerptum>
+    <excerptum>a decree was promulgated commanding all bishops to establish seminaries in their Cathedral Cities</excerptum>
+    <excerptum>At this council, begun 5 December, 633, all the bishops of Spain were in attendance.</excerptum>
+    <excerptum>He was the first Christian writer to essay the task of compiling for his co-religionists a summa of universal knowledge.</excerptum>
+    <excerptum>It is a vast storehouse in which is gathered, systematized, and condensed, all the learning possessed by his time.</excerptum>
+    <excerptum>Throughout the greater part of the Middle Ages it was the textbook most in use in educational institutions.</excerptum>
+    <excerptum>The most important and by far the best-known of all his writings is the "Etymologiae"</excerptum>
+    <excerptum>The Eighth Council of Toledo (653) recorded its admiration of his character in these glowing terms: "The extraordinary doctor, the latest ornament of the Catholic Church, the most learned man of the latter ages, always to be named with reverence, Isidore</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="4 April">
+    <excerptum>Saint Isidore, Bishop and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

@@ -1,0 +1,34 @@
+<sanctus id="peter-chanel" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Peter Chanel</nomen>
+  <nomen lingua="it" fontes="sd">Pietro-Luigi-Maria Chanel</nomen>
+  <ortus annus="1802" locus="Cuet, Diocese of Belley, France" fontes="ce"/>
+  <obitus annus="1841" mensis="4" dies="28" locus="Futuna" martyrium="verum" fontes="ce sd"/>
+  <beatificatio annus="1889" mensis="11" dies="17" papa="Leo XIII" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1954" mensis="6" dies="12" papa="Pius XII" fontes="sd"/>
+  <festum calendarium="generale" mensis="4" dies="28" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="ce us">priest</munus>
+  <munus fontes="ce">religious</munus>
+  <munus fontes="ce">missionary</munus>
+  <munus fontes="ce sd us">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce sd">Peter Chanel was born at Cuet in the diocese of Belley, France; the Catholic Encyclopedia gives the year as 1802. Ordained priest in 1827, he worked for some years in parish ministry, but letters from missionaries moved him to give his life to the missions. He joined the Society of Mary in 1831, and Pius XII later recalled the four years he spent there in the education of youth. In 1836 he sailed for Oceania, and in November 1837 he landed on the island of Futuna, where no Christian missionary had been before.</paragraphus>
+    <paragraphus fontes="ce sd">His work met great difficulties and was beginning to bear fruit when Niuluki, king and also high priest of the island, enraged by the conversion of his son and daughter, had one of his ministers gather enemies of Christianity, and Peter was killed on 28 April 1841, without a word of complaint. His death won what he had worked for, the conversion of Futuna, and a rich harvest followed at once. He was the first to shed his blood for the faith in Oceania. Pius IX declared him Venerable in 1857, Leo XIII beatified him on 17 November 1889, and Pius XII canonized him on 12 June 1954.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Bl. Peter-Louis-Marie Chanel" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Bl._Peter-Louis-Marie_Chanel">
+    <excerptum>Born at Cuet, Diocese of Belley, France, 1802; died at Futuna, 28 April, 1841. He was ordained priest in 1827, and engaged in the parochial ministry for a few years</excerptum>
+    <excerptum>the reading of letters of missionaries in far-away lands inflamed his heart with zeal, and he resolved to devote his life to the Apostolate. In 1831 he joined the Society of Mary, and in 1836 he embarked for Oceania.</excerptum>
+    <excerptum>He was assigned by his bishop to the Island of Futuna, and landed in Nov., 1837. No Christian missionary had ever set foot there, and the difficulties Peter encountered amidst those savage tribes were almost incredible.</excerptum>
+    <excerptum>he was beginning to see the results of his efforts, when Niuluki, king and also pontiff of the island, already jealous of the progress of the new religion, was exasperated by the conversion of his son and daughter.</excerptum>
+    <excerptum>At his instigation, one of the ministers gathered some of the enemies of Christianity and Peter was cruelly assassinated without uttering a word of complaint.</excerptum>
+    <excerptum>Through his death, the venerable martyr obtained what he had so ardently desired and earnestly worked for, the conversion of Futuna.</excerptum>
+    <excerptum>Peter was declared Venerable by Pius IX in 1857, and beatified by Leo XIII on 17 November, 1889.</excerptum>
+  </fons>
+  <fons id="sd" opus="sedes" locus="Pius XII, discorso per la canonizzazione, 12 giugno 1954" url="https://www.vatican.va/content/pius-xii/it/speeches/1954/documents/hf_p-xii_spe_19540612_canonizzazione.html">
+    <excerptum>IN OCCASIONE DELLA CANONIZZAZIONE DEI SANTI: PIETRO CHANEL, GASPARE DEL BUFALO, GIUSEPPE PIGNATELLI, DOMENICO SAVIO E MARIA CROCIFISSA DI ROSA* Piazza San Pietro - Domenica, 12 giugno 1954</excerptum>
+    <excerptum>A Pietro-Luigi-Maria Chanel toccò l'onore di essere il primo a versare il sangue per la fede in Oceania. Aveva appena compiuto il sacrificio della sua vita nell'isola di Futuna, fino allora indocile alla grazia, che immantinente si levò una messe ricca al di là di ogni previsione.</excerptum>
+    <excerptum>Per quattro anni egli si consacrò con una insigne dedizione, una grande pazienza, una vigilanza umile e premurosa, alla educazione della gioventù.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="28 April">
+    <excerptum>Saint Peter Chanel, Priest and Martyr</excerptum>
+  </fons>
+</sanctus>

@@ -1,0 +1,41 @@
+<sanctus id="mark-the-evangelist" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Mark the Evangelist</nomen>
+  <nomen lingua="la" principale="verum" fontes="ce">Marcus</nomen>
+  <nomen lingua="el" fontes="ce">Markos</nomen>
+  <nomen lingua="en" fontes="ce">John Mark</nomen>
+  <obitus saeculum="1" locus="Alexandria" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="4" dies="25" gradus="festum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="4" dies="25" fontes="mr"/>
+  <munus fontes="mr ce us">evangelist</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Mark is taken to be the John Mark of Acts and the cousin of Barnabas named by St. Paul, and probably also the Mark whom St. Peter calls his son. His mother's house in Jerusalem was a meeting-place of the first Christians, and Peter went there on his release from prison. Mark went with Barnabas and Saul to Antioch and on Paul's first journey, but turned back at Perga; Paul refused to take him again, and he sailed with Barnabas to Cyprus. About ten years later he appears in Rome with Paul and with Peter. Papias, writing not later than 130, says he was Peter's interpreter and wrote down Peter's teaching accurately, though not in order.</paragraphus>
+    <paragraphus fontes="ce mr">A widespread, if somewhat late, tradition makes him the founder of the Church of Alexandria; the Martyrology says he founded it after writing his gospel at the request of the faithful of Rome. The date of his death is uncertain; St. Jerome put it in the eighth year of Nero (62-63), probably only by inference. The later Acts of Mark make him a martyr, dragged through the streets of Alexandria, but there is no evidence of his martyrdom earlier than the fourth century. His body was later taken from Alexandria to Venice. He is represented by a lion, and his feast is kept on 25 April.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="25 April">
+    <excerptum>AT Alexandria, the birthday of blessed Mark, evangelist, disciple and interpreter of the apostle St. Peter. He wrote his gospel at the request of the faithful of Rome, and taking it with him, proceeded to Egypt and founded a church at Alexandria, where he was the first to announce Christ.</excerptum>
+    <excerptum>Afterwards, being arrested for the faith, he was bound, dragged over stones and endured great afflictions.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Mark" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Mark">
+    <excerptum>(Greek Markos, Latin Marcus).</excerptum>
+    <excerptum>It is assumed in this article that the individual referred to in Acts as John Mark (xii, 12, 25; xv, 37), John (xiii, 5, 13), Mark (xv, 39), is identical with the Mark mentioned by St. Paul</excerptum>
+    <excerptum>the fact that Mark of the Pauline Epistles was the cousin (ho anepsios) of Barnabas</excerptum>
+    <excerptum>the probability that the Mark, whom St. Peter calls his son (I Peter, v, 13), is no other than the son of Mary</excerptum>
+    <excerptum>it was to her house that Peter turned on his release from prison</excerptum>
+    <excerptum>the house was a meeting-place for the brethren</excerptum>
+    <excerptum>Barnabas and Saul had completed their ministration in Jerusalem, they took Mark with them on their return to Antioch</excerptum>
+    <excerptum>When Paul and Barnabas resolved to push on from Perga into central Asia Minor, Mark, departed from them</excerptum>
+    <excerptum>St. Paul, who refused on account of it to take Mark with him on the second Apostolic journey. This refusal led to the separation of Paul and Barnabas, and the latter, taking Mark with him, sailed to Cyprus</excerptum>
+    <excerptum>till he appears some ten years afterwards as the fellow-worker of St. Paul, and in the company of St. Peter, at Rome.</excerptum>
+    <excerptum>Papias (Eusebius, "Hist. eccl.", III, xxxix) asserts not later than A.D. 130, on the authority of an "elder", that Mark had been the interpreter (hermeneutes) of Peter, and wrote down accurately, though not in order, the teaching of Peter</excerptum>
+    <excerptum>A widespread, if somewhat late, tradition represents St. Mark as the founder of the Church of Alexandria.</excerptum>
+    <excerptum>The date of Mark's death is uncertain. St. Jerome ("De Vir. Illustr.", viii) assigns it to the eighth year of Nero (62-63)</excerptum>
+    <excerptum>but this is probably only an inference from the statement of Eusebius</excerptum>
+    <excerptum>the "Acts" of Mark give the saint the glory of martyrdom, and say that he died while being dragged through the streets of Alexandria; so too the Paschal Chronicle. But we have no evidence earlier than the fourth century that the saint was martyred.</excerptum>
+    <excerptum>for the removal of his body from Alexandria to Venice and his cultus there</excerptum>
+    <excerptum>In Christian literature and art St. Mark is symbolically represented by a lion. The Latin and Greek Churches celebrate his feast on 25 April</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="25 April">
+    <excerptum>Saint Mark, Evangelist</excerptum>
+  </fons>
+</sanctus>

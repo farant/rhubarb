@@ -1,0 +1,11 @@
+<sanctus id="charles-lwanga-and-companions" versio="1" genus="coetus" status="sanctus">
+  <nomen lingua="en" principale="verum">Charles Lwanga and Companions</nomen>
+  <obitus annus="1886" saeculum="19" martyrium="verum" locus="Namugongo" fontes="x"/>
+  <canonizatio modus="formalis" annus="1964" papa="Paul VI" fontes="x"/>
+  <festum calendarium="generale" mensis="6" dies="3" gradus="memoria" fontes="x"/>
+  <socius ad="charles-lwanga">Charles Lwanga</socius>
+  <socius>Matthias Mulumba</socius>
+  <fons id="x" opus="sedes" locus="fixtura">
+    <excerptum>fixtura probationis</excerptum>
+  </fons>
+</sanctus>

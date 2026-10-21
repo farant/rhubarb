@@ -21,6 +21,8 @@
 #include "scriba_liber.h"
 #include "scriba_documentum.h"
 #include "tabula_characterum.h"
+#include "semita.h"
+#include "organum_montatio.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -35,7 +37,18 @@ nomen structura {
                       b32  sine_notis;   /* P5b: sine volumine */
                      Dies  dies_aperta;  /* P6c: porta diei notat */
                       s32  aperitiones;
+         constans Organum* organum;     /* semitae R4b */
+                      i32  numerator;   /* moneta_numerator: "1", "2" */
 } Mundus;
+
+/* id numeratoris (moneta_numerator): n -> "n" */
+interior chorda
+id_ex (
+         s32  n,
+     Piscina* p)
+{
+    redde chorda_ex_s32(n, p);
+}
 
 interior vacuum
 mundum_parare (
@@ -53,6 +66,8 @@ mundum_parare (
     {
         x->documentum = personae_aperire(c->piscina, x->intern,
             x->volumen, "personae", ZEPHYRUM);
+        personae_monetam_ponere(x->documentum, moneta_numerator,
+            &x->numerator);
     }
     c->datum = x;
 }
@@ -149,10 +164,10 @@ contactus_parare (
     (vacuum)personae_hominem_creare(x->documentum, lit("Andrea", p),
         lit("Conti", p));
     (vacuum)personae_societatem_creare(x->documentum, lit("3M", p));
-    (vacuum)personae_rubricas_ponere(x->documentum, I, lit(
+    (vacuum)personae_rubricas_ponere(x->documentum, id_ex(I, p), lit(
         "roma familia", p));
-    (vacuum)personae_rubricas_ponere(x->documentum, III, lit("amici",
-        p));
+    (vacuum)personae_rubricas_ponere(x->documentum, id_ex(III, p), lit(
+        "amici", p));
     redde montare(x, p);
 }
 
@@ -483,7 +498,7 @@ personam_aperire (
 interior b32
 persona_est (
                  Mundus* x,
-                    s32  id,
+                 chorda  id,
      constans character* exspectata)
 {
     constans Persona* q;
@@ -503,7 +518,8 @@ persona_est (
         ? (constans character*)q->titulus.datum : "");
     si (strcmp(visa, exspectata) != ZEPHYRUM)
     {
-        imprimere("  persona %d: '%s'\n", (integer)id, visa);
+        imprimere("  persona %.*s: '%s'\n", (integer)id.mensura,
+            (constans character*)id.datum, visa);
         redde FALSUM;
     }
     redde VERUM;
@@ -521,7 +537,8 @@ _probare_montationem (
     CREDO_NECESSE(contactus_parare(x, c->piscina));
     CREDO_NON_NIHIL(x->m.ramus.repo);
     CREDO_VERUM(x->m.documentum == x->documentum);
-    CREDO_AEQUALIS_S32(nomenclator_persona_electa(&x->m), V);
+    CREDO_CHORDA_AEQUALIS_LITERIS(nomenclator_persona_electa(&x->m),
+        "5");
     CREDO_VERUM(adest(x, "nomenclator", c->piscina));
 }
 
@@ -557,7 +574,8 @@ _probare_claves (
     clavis(x, 'j');
     clavis(x, 'j');
     clavis(x, 'j');
-    CREDO_AEQUALIS_S32(nomenclator_persona_electa(&x->m), I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(nomenclator_persona_electa(&x->m),
+        "1");
 }
 
 /* paginae: XX "R..." - pagina I lR + XV, pagina II "lR-c" + V; ]
@@ -661,13 +679,14 @@ _probare_novum_hominem (
     CREDO_VERUM(campus_est(x, "prompta", "homo"));
     typare(x, "Maria Grazia Verdi");
     reditus(x);
-    CREDO_VERUM(persona_est(x, VI, "Maria Grazia|Verdi|"));
+    CREDO_VERUM(persona_est(x, id_ex(VI, c->piscina),
+        "Maria Grazia|Verdi|"));
     CREDO_FALSUM(campus_est(x, "prompta", "homo"));
     CREDO_VERUM(campus_est(x, "persona_electa", "6"));
     clavis(x, 'n');
     typare(x, "Cher");
     reditus(x);
-    CREDO_VERUM(persona_est(x, VII, "Cher||"));
+    CREDO_VERUM(persona_est(x, id_ex(VII, c->piscina), "Cher||"));
     /* vacuum: recusatum, prompta manet; Esc claudit */
     clavis(x, 'n');
     reditus(x);
@@ -693,9 +712,11 @@ _probare_novam_societatem (
     CREDO_VERUM(campus_est(x, "prompta", "societas"));
     typare(x, "Acme");
     reditus(x);
-    CREDO_VERUM(persona_est(x, VI, "||Acme"));
-    CREDO_NECESSE_NON_NIHIL(personae_persona(x->documentum, VI));
-    CREDO_VERUM(personae_persona(x->documentum, VI)->genus
+    CREDO_VERUM(persona_est(x, id_ex(VI, c->piscina), "||Acme"));
+    CREDO_NECESSE_NON_NIHIL(personae_persona(x->documentum, id_ex(VI,
+        c->piscina)));
+    CREDO_VERUM(personae_persona(x->documentum, id_ex(VI,
+        c->piscina))->genus
         == PERSONA_SOCIETAS);
     CREDO_VERUM(campus_est(x, "persona_electa", "6"));
     /* XX "Rossi*" (paginae II): "Zeta Zulu" in pagina II electa */
@@ -726,17 +747,18 @@ _probare_deletionem (
     /* ordo: 5 2 3 4 1 */
     CREDO_NECESSE(ictus_in(x, "p2", c->piscina));
     clavis(x, 'X');
-    CREDO_NIHIL(personae_persona(x->documentum, II));
+    CREDO_NIHIL(personae_persona(x->documentum, id_ex(II, c->piscina)));
     CREDO_VERUM(campus_est(x, "persona_electa", "3"));
     CREDO_NECESSE(ictus_in(x, "p1", c->piscina));
     clavis(x, 'X');
-    CREDO_NIHIL(personae_persona(x->documentum, I));
+    CREDO_NIHIL(personae_persona(x->documentum, id_ex(I, c->piscina)));
     CREDO_VERUM(campus_est(x, "persona_electa", "4"));
     clavis(x, 'u');
-    CREDO_NON_NIHIL(personae_persona(x->documentum, I));
+    CREDO_NON_NIHIL(personae_persona(x->documentum, id_ex(I,
+        c->piscina)));
     clavis_specialis(x, (clavis_t)'r', ZEPHYRUM, 'r',
         (i32)MOD_IMPERIUM);
-    CREDO_NIHIL(personae_persona(x->documentum, I));
+    CREDO_NIHIL(personae_persona(x->documentum, id_ex(I, c->piscina)));
 }
 
 /* prompta picta: titulus "name:" in componente prompta */
@@ -982,7 +1004,7 @@ _probare_campos (
     CREDO_VERUM(campus_est(x, "prompta", "telephonum"));
     typare(x, "+39 06 123");
     reditus(x);
-    q = personae_persona(x->documentum, I);
+    q = personae_persona(x->documentum, id_ex(I, c->piscina));
     CREDO_NECESSE_NON_NIHIL(q);
     CREDO_VERUM(index_est(q->telephona, "+39 06 123"));
     /* f1 phone, f2 + phone: alterum */
@@ -990,7 +1012,7 @@ _probare_campos (
     reditus(x);
     typare(x, "333");
     reditus(x);
-    q = personae_persona(x->documentum, I);
+    q = personae_persona(x->documentum, id_ex(I, c->piscina));
     CREDO_VERUM(index_est(q->telephona, "+39 06 123|333"));
     /* f1 phone, f2 phone novum (electum), f3 + phone: f1 vacuum ->
      * deletum */
@@ -999,7 +1021,7 @@ _probare_campos (
     reditus(x);
     retro(x, X);
     reditus(x);
-    q = personae_persona(x->documentum, I);
+    q = personae_persona(x->documentum, id_ex(I, c->piscina));
     CREDO_VERUM(index_est(q->telephona, "333"));
     /* f0 nomen, f1 333, f2 + phone, f3 + email */
     clavis(x, 'j');
@@ -1008,7 +1030,7 @@ _probare_campos (
     CREDO_VERUM(campus_est(x, "prompta", "epistula"));
     typare(x, "anna@example.org");
     reditus(x);
-    q = personae_persona(x->documentum, I);
+    q = personae_persona(x->documentum, id_ex(I, c->piscina));
     CREDO_VERUM(index_est(q->epistulae, "anna@example.org"));
     /* f3 email (electa), f4 + email, f5 tags */
     clavis(x, 'j');
@@ -1017,7 +1039,7 @@ _probare_campos (
     CREDO_VERUM(campus_est(x, "prompta", "rubricae"));
     typare(x, " amici");
     reditus(x);
-    q = personae_persona(x->documentum, I);
+    q = personae_persona(x->documentum, id_ex(I, c->piscina));
     CREDO_VERUM(index_est(q->rubricae, "amici|familia|roma"));
     /* nomen: "Anna Rossi" -> "Anna Bianchi" */
     clavis(x, 'k');
@@ -1033,7 +1055,7 @@ _probare_campos (
     retro(x, V);
     typare(x, "Bianchi");
     reditus(x);
-    CREDO_VERUM(persona_est(x, I, "Anna|Bianchi|"));
+    CREDO_VERUM(persona_est(x, id_ex(I, c->piscina), "Anna|Bianchi|"));
 }
 
 /* P5a: natalis - "1986-03-02" (aetas XL die 14 X 2026), "03-02" sine
@@ -1058,7 +1080,7 @@ _probare_natalem (
     CREDO_VERUM(campus_est(x, "prompta", "natalis"));
     typare(x, "1986-03-02");
     reditus(x);
-    q = personae_persona(x->documentum, I);
+    q = personae_persona(x->documentum, id_ex(I, c->piscina));
     CREDO_VERUM(q && q->natalis_positus && q->natalis.annus == MCMLXXXVI
         && q->natalis.mensis == III && q->natalis.dies == II);
     md = reddere(x, c->piscina);
@@ -1070,7 +1092,7 @@ _probare_natalem (
     retro(x, X);
     typare(x, "03-02");
     reditus(x);
-    q = personae_persona(x->documentum, I);
+    q = personae_persona(x->documentum, id_ex(I, c->piscina));
     CREDO_VERUM(q && q->natalis_positus
         && q->natalis.annus == ZEPHYRUM);
     md = reddere(x, c->piscina);
@@ -1080,7 +1102,7 @@ _probare_natalem (
     retro(x, V);
     typare(x, "--12-25");
     reditus(x);
-    q = personae_persona(x->documentum, I);
+    q = personae_persona(x->documentum, id_ex(I, c->piscina));
     CREDO_VERUM(q && q->natalis.mensis == XII
         && q->natalis.dies == XXV);
     /* malum: prompta manet */
@@ -1092,7 +1114,7 @@ _probare_natalem (
     /* vacuum: tollit */
     retro(x, V);
     reditus(x);
-    q = personae_persona(x->documentum, I);
+    q = personae_persona(x->documentum, id_ex(I, c->piscina));
     CREDO_VERUM(q && !q->natalis_positus);
 }
 
@@ -1119,13 +1141,15 @@ _probare_personam_aliam (
     CREDO_VERUM(textus_in(md, fines_componentis(x, "f3", c->piscina),
         "#familia #roma", -I));
     clavis(x, 't');
-    CREDO_VERUM(personae_persona(x->documentum, I)->genus
+    CREDO_VERUM(personae_persona(x->documentum, id_ex(I,
+        c->piscina))->genus
         == PERSONA_SOCIETAS);
     CREDO_NECESSE(ictus_in(x, "genus-homo", c->piscina));
-    CREDO_VERUM(personae_persona(x->documentum, I)->genus
+    CREDO_VERUM(personae_persona(x->documentum, id_ex(I,
+        c->piscina))->genus
         == PERSONA_HOMO);
     clavis(x, 'X');
-    CREDO_NIHIL(personae_persona(x->documentum, I));
+    CREDO_NIHIL(personae_persona(x->documentum, id_ex(I, c->piscina)));
     CREDO_VERUM(campus_est(x, "persona_aperta", NIHIL));
 }
 
@@ -1253,8 +1277,9 @@ _probare_focum_notarum (
     clavis(x, 'X');
     clavis(x, 't');
     CREDO_VERUM(campus_est(x, "campus_electus", NIHIL));
-    CREDO_VERUM(persona_est(x, I, "Anna|Rossi|"));
-    CREDO_VERUM(personae_persona(x->documentum, I)->genus
+    CREDO_VERUM(persona_est(x, id_ex(I, c->piscina), "Anna|Rossi|"));
+    CREDO_VERUM(personae_persona(x->documentum, id_ex(I,
+        c->piscina))->genus
         == PERSONA_HOMO);
     (vacuum)motus_gestum_effundere(motus, x->repo);
     CREDO_VERUM(littera_in_libro(x, "persona/1", 'x', c->piscina));
@@ -1322,6 +1347,155 @@ _probare_argumentum (
     CREDO_VERUM(campus_est(x, "persona_aperta", NIHIL));
 }
 
+/* semitae R4b: organum nomenclatoris pro semita_legere; ctx =
+ * Mundus* */
+interior constans Organum*
+organa_nomenclatoris (
+     vacuum* ctx,
+     chorda  genus)
+{
+    redde chorda_aequalis_literis(genus, "nomenclator")
+        ? ((Mundus*)ctx)->organum : NIHIL;
+}
+
+interior vacuum
+organum_parare (
+     Mundus* x,
+    Piscina* p)
+{
+    si (!x->organum)
+    {
+        x->organum = organum_legere_genus(p, x->intern, "nomenclator",
+            "probatio");
+    }
+}
+
+/* semita currens lateris ut URI aequat exspectatam? */
+interior b32
+semita_est (
+                 Mundus* x,
+                Piscina* p,
+     constans character* exspectata)
+{
+    chorda uri;
+
+    organum_parare(x, p);
+    uri = semita_ad_uri(organa_nomenclatoris, x, semita_legere(
+        organa_nomenclatoris, x, &x->m.ramus, "nomenclator", p,
+        x->intern), p);
+    si (!chorda_aequalis_literis(uri, exspectata))
+    {
+        imprimere("semita: '%.*s', exspectata '%s'\n", (int)uri.mensura,
+            (constans character*)uri.datum, exspectata);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+/* semitam applicare ut vicus (historia): scriptura directa, sine
+ * argumento */
+interior b32
+semitam_applicare (
+                 Mundus* x,
+                Piscina* p,
+     constans character* uri)
+{
+     StmlNodus* semita;
+        chorda  vitium;
+
+    organum_parare(x, p);
+    semita = semita_ex_uri(organa_nomenclatoris, x, chorda_ex_literis(
+        uri, p), p, x->intern, &vitium);
+    redde semita && semita_applicare(organa_nomenclatoris, x,
+        &x->m.ramus, semita, p, &vitium);
+}
+
+/* semitae R4b: argumentum = URI semitae aut cognomen ("<id>", "",
+ * NIHIL); semita canonica legitur; persona mutata campus_electus
+ * resettitur, quaestio et filtrum servantur; mala nihil mutant */
+interior vacuum
+_probare_semitas (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    CREDO_VERUM(semita_est(x, c->piscina, "nomenclator/"));
+    CREDO_VERUM(nomenclator_argumentum_ponere(&x->m,
+        "nomenclator?visus=rubricae&rubrica_filtrum=familia"));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "nomenclator/?visus=rubricae&rubrica_filtrum=familia"));
+    CREDO_VERUM(nomenclator_argumentum_ponere(&x->m,
+        "nomenclator/1?campus_electus=2"));
+    CREDO_VERUM(campus_est(x, "persona_aperta", "1"));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "nomenclator/1?visus=rubricae&rubrica_filtrum=familia"
+        "&campus_electus=2"));
+    /* cognomen: persona alia - campus_electus resettitur */
+    CREDO_VERUM(nomenclator_argumentum_ponere(&x->m, "3"));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "nomenclator/3?visus=rubricae&rubrica_filtrum=familia"));
+    /* "" ad indicem: filtrum servatur */
+    CREDO_VERUM(nomenclator_argumentum_ponere(&x->m, ""));
+    CREDO_VERUM(campus_est(x, "persona_aperta", NIHIL));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "nomenclator/?visus=rubricae&rubrica_filtrum=familia"));
+    CREDO_VERUM(nomenclator_argumentum_ponere(&x->m,
+        "nomenclator?visus=index&rubrica_filtrum=&quaestio=anna"
+        "&persona_electa=1"));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "nomenclator/?quaestio=anna&persona_electa=1"));
+    /* mala: nihil mutatur */
+    CREDO_FALSUM(nomenclator_argumentum_ponere(&x->m,
+        "nomenclator/99"));
+    CREDO_FALSUM(nomenclator_argumentum_ponere(&x->m,
+        "nomenclator/abc"));
+    CREDO_FALSUM(nomenclator_argumentum_ponere(&x->m,
+        "nomenclator?prompta=homo"));
+    CREDO_FALSUM(nomenclator_argumentum_ponere(&x->m, "sancti/index"));
+    CREDO_VERUM(semita_est(x, c->piscina,
+        "nomenclator/?quaestio=anna&persona_electa=1"));
+}
+
+/* semitae R4b: semita a vico applicata (historia) personam mutat sine
+ * argumento - liber notarum sequitur solum post
+ * nomenclator_semitam_secuta */
+interior vacuum
+_probare_semitam_secutam (
+    CredoContextus* c)
+{
+      Mundus* x;
+       Fines  totum;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(librum_parare(x, "persona/1", "quinque", c->piscina));
+    CREDO_NECESSE(contactus_parare(x, c->piscina));
+    totum.x         = ZEPHYRUM;
+    totum.y         = ZEPHYRUM;
+    totum.latitudo  = CCCLX;
+    totum.altitudo  = CCCXX;
+    CREDO_VERUM(nomenclator_argumentum_ponere(&x->m, "1"));
+    dispensator_recomponere(x->d);
+    CREDO_VERUM(textus_in(reddere(x, c->piscina), totum, "quinque",
+        -I));
+    CREDO_NECESSE(semitam_applicare(x, c->piscina, "nomenclator/3"));
+    CREDO_VERUM(campus_est(x, "persona_aperta", "3"));
+    dispensator_recomponere(x->d);
+    CREDO_VERUM(textus_in(reddere(x, c->piscina), totum, "quinque",
+        -I));
+    CREDO_VERUM(nomenclator_semitam_secuta(&x->m));
+    dispensator_recomponere(x->d);
+    CREDO_FALSUM(textus_in(reddere(x, c->piscina), totum, "quinque",
+        -I));
+    CREDO_NECESSE(semitam_applicare(x, c->piscina, "nomenclator/1"));
+    CREDO_VERUM(nomenclator_semitam_secuta(&x->m));
+    dispensator_recomponere(x->d);
+    CREDO_VERUM(textus_in(reddere(x, c->piscina), totum, "quinque",
+        -I));
+    CREDO_FALSUM(nomenclator_semitam_secuta(NIHIL));
+}
+
 /* P6c: natalis personae I ponere (annus 0 = sine anno) */
 interior b32
 natalem_ponere (
@@ -1333,7 +1507,8 @@ natalem_ponere (
     Dies d;
 
     d = fasti_dies(annus, mensis, dies);
-    redde personae_natalem_ponere(x->documentum, I, &d) > ZEPHYRUM;
+    redde personae_natalem_ponere(x->documentum,
+        *chorda_internare_ex_literis(x->intern, "1"), &d) > ZEPHYRUM;
 }
 
 interior b32
@@ -1427,16 +1602,19 @@ _probare_quaestionem_vivam (
     CREDO_NECESSE(contactus_parare(x, c->piscina));
     /* electa extra fructus (Banca): sub quaestione prima fructuum */
     clavis(x, 'j');
-    CREDO_AEQUALIS_S32(nomenclator_persona_electa(&x->m), II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(nomenclator_persona_electa(&x->m),
+        "2");
     clavis(x, '/');
     CREDO_VERUM(campus_est(x, "prompta", "quaestio"));
     typare(x, "ross");
     CREDO_VERUM(ordines_sunt(x, "p1"));
-    CREDO_AEQUALIS_S32(nomenclator_persona_electa(&x->m), I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(nomenclator_persona_electa(&x->m),
+        "1");
     retro(x, IV);
     typare(x, "ar");
     CREDO_VERUM(ordines_sunt(x, "p1 p4"));
-    CREDO_AEQUALIS_S32(nomenclator_persona_electa(&x->m), I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(nomenclator_persona_electa(&x->m),
+        "1");
     effugium(x);
     CREDO_FALSUM(campus_est(x, "prompta", "quaestio"));
     CREDO_VERUM(campus_est(x, "quaestio", NIHIL));
@@ -1557,7 +1735,8 @@ natalis_est (
 {
     constans Persona* q;
 
-    q = personae_persona(x->documentum, I);
+    q = personae_persona(x->documentum, *chorda_internare_ex_literis(
+        x->intern, "1"));
     si (   !q || !q->natalis_positus || q->natalis.annus != annus
         || q->natalis.mensis != mensis || q->natalis.dies != dies)
     {
@@ -1716,6 +1895,10 @@ _probare_titulos_electos (
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
+    { "semitae", _probare_semitas, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
+    { "semita_secuta", _probare_semitam_secutam, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
     { "montatio", _probare_montationem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "ordo", _probare_ordinem, mundum_parare, mundum_purgare, NIHIL,

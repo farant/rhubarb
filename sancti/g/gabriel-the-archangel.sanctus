@@ -1,0 +1,28 @@
+<sanctus id="gabriel-the-archangel" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Gabriel the Archangel</nomen>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="9" dies="29" gradus="festum" fontes="us"/>
+  <munus fontes="us ce">archangel</munus>
+  <patrocinium fontes="pat">messengers</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">Gabriel, whose name is rendered "Fortitudo Dei", the strength of God, is one of the three archangels named in the Bible, and only four of his appearances are recorded. In Daniel he explains the vision of the horned ram and later communicates the prophecy of the "seventy weeks" before the coming of Christ. In the New Testament he foretells to Zachary the birth of the Precursor and to Mary the birth of the Saviour, so that he is above all the angel of the Incarnation and of consolation.</paragraphus>
+    <paragraphus fontes="ce pat us">Christian tradition makes Gabriel the angel of mercy and Michael the angel of judgment, though Jewish tradition reversed the roles; tradition also supposes that it was he who appeared to Joseph and to the shepherds and who strengthened the Lord in the garden. His words "I am Gabriel, who stand before God" led some to place him among the highest choirs, but this is generally taken to mean that he is the highest of God's messengers. The 1916 Martyrology lists him as patron of messengers, "bearer of glad tidings". He is now honoured together with Michael and Raphael on 29 September.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Gabriel" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Gabriel">
+    <excerptum>Gabriel, "Fortitudo Dei", one of the three archangels mentioned in the Bible. Only four appearances of Gabriel are recorded</excerptum>
+    <excerptum>In Dan., viii, he explains the vision of the horned ram</excerptum>
+    <excerptum>(b) In chapter ix, after Daniel had prayed for Israel, we read that "the man Gabriel</excerptum>
+    <excerptum>he communicated to him the mysterious prophecy of the "seventy weeks" of years which should elapse before the coming of Christ.</excerptum>
+    <excerptum>In N. T. he foretells to Zachary the birth of the Precursor, and (d) to Mary that of the Savior. Thus he is throughout the angel of the Incarnation and of Consolation</excerptum>
+    <excerptum>in Christian for tradition Gabriel is ever the angel of mercy while Michael is rather the angel of judgment.</excerptum>
+    <excerptum>The Jews indeed seem to have dwelt particularly upon this feature in Gabriel's character, and he is regarded by them as the angel of judgment, while Michael is called the angel of mercy.</excerptum>
+    <excerptum>it is not unreasonable to suppose with Christian tradition that it is he who appeared to St. Joseph and to the shepherds, and also that it was he who "strengthened" Our Lord in the garden</excerptum>
+    <excerptum>St. Gabriel's own words, "I am Gabriel, who stand before God" (Luke, i, 19), have led some to think that these angels must belong to the highest rank; but this is generally explained as refer-ring to their rank as the highest of God's messengers</excerptum>
+  </fons>
+  <fons id="pat" opus="mr1916" locus="Patron Saints of Trade and of Professions">
+    <excerptum>Messengers — St. Gabriel, "bearer of glad tidings": March 18.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="29 September">
+    <excerptum>Saints Michael, Gabriel and Raphael, Archangels</excerptum>
+  </fons>
+</sanctus>

@@ -1,0 +1,39 @@
+<sanctus id="titus" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Titus</nomen>
+  <nomen lingua="la" principale="verum">Titus</nomen>
+  <obitus locus="Crete" fontes="mr bu"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="1" dies="26" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="1" dies="4" nota="dies natalis" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="2" dies="6" nota="festum" fontes="mr2"/>
+  <munus fontes="mr us">bishop</munus>
+  <descriptio>
+    <paragraphus fontes="bu">Titus was born a Gentile and seems to have been converted by Saint Paul, who calls him his son in Christ and employed him as secretary and interpreter. Paul refused to have him circumcised, not wishing to lend support to those who held that the ceremonial law of Moses still bound Christians. Towards the end of the year 56 Paul sent him from Ephesus to Corinth to heal the divisions in that church, and later a second time to prepare its alms for the poor of Jerusalem.</paragraphus>
+    <paragraphus fontes="mr bu">Paul made him bishop of the island of Crete and addressed to him the canonical epistle that bears his name, which Butler dates to the autumn of 64; in 65 he was sent to preach in Dalmatia. He returned to Crete and died there at a great age, some say in his ninety-fourth year, and was buried in the church he had served. His body was kept at Gortyna until the city was destroyed by the Saracens; only his head was saved and taken to Venice.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="4 January">
+    <excerptum>In Crete, the birthday of St. Titus, who was consecrated bishop of that island by the apostle St. Paul.</excerptum>
+    <excerptum>he reached the end of his blessed life, and was buried in the church of which he had been made a worthy minister by the holy apostle.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="6 February">
+    <excerptum>Festival of St. Titus, bishop and confessor.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v01 Jan. 4 St. Titus, Disciple of St. Paul, B.">
+    <excerptum>was born a Gentile, and seems to have been converted by St. Paul, who calls him his son in Christ.</excerptum>
+    <excerptum>for we find him employed as his secretary and interpreter</excerptum>
+    <excerptum>Though the apostle had consented to the circumcision of sa cP ee in order to render his ministry acceptable among the J ews, he would not-allow the same in Titus</excerptum>
+    <excerptum>he would not-allow the same in Titus, apprehensive of giving thereby a sanction to the error of certain false brethren, who contended, that the ceremonial institutes of the Mosaic law were, not abolished by the law of grace.</excerptum>
+    <excerptum>Towards the close of the year 56, St. Paul sent Titus from Ephesus to Corinth, with full commission to remedy the several subjects of scandal, as also to allay the dissentions in that church.</excerptum>
+    <excerptum>He was sent the same year by the apostle a second time to Corinth, to prepare the alms that church designed for the poor</excerptum>
+    <excerptum>he ordained his beloved disciple Titus bishop of that island</excerptum>
+    <excerptum>St. Paul sent these instructions to Titus, in the canonical epistle addressed to him, when on his journey to Nicopolis, in autumn, in the year 64.</excerptum>
+    <excerptum>In the year 65, we find him sent by St.Paul to preach in Dalmatia.</excerptum>
+    <excerptum>returned to Crete, and settled.the faith in that, and the adjacent little island.</excerptum>
+    <excerptum>he finished a laborious and holy life by a happy death in Crete, in a very advanced old age, some affirm in the ninety-fourth year of his age.</excerptum>
+    <excerptum>The body of St. Titus was kept with great veneration in the cathedral of Gortyna</excerptum>
+    <excerptum>This city being destroyed by the Saracens m 823, these relicks could never since be discovered: only the head of our saint was conveyed safe to Venice</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="26 January">
+    <excerptum>Saints Timothy and Titus, Bishops</excerptum>
+  </fons>
+</sanctus>

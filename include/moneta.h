@@ -105,4 +105,21 @@ moneta_nanoid_alphabeto (
                    i32  longitudo,
     constans character* alphabetum);
 
+/* Fons monetae (genera-datorum D3): identitatem novam NUL-terminatam
+ * in effusio (>= MONETA_ULID_MENSURA octeti) scribit. Documenta
+ * (agenda, personae) fontem a vocante accipiunt - NIHIL = moneta_ulid.
+ * Porta monetae ut porta horologii: replicatio ex actis semper eadem,
+ * creatio sola fontem legit. */
+nomen vacuum (*MonetaFons)(
+       vacuum* ctx,
+    character* effusio);
+
+/* Fons praevisibilis pro probationibus: ctx = i32* (ultimum cusum,
+ * initio 0); scribit "1", "2", ... Numquam in usu vero - documentum
+ * reapertum ids iteraret (documenta id praesens recusant). */
+vacuum
+moneta_numerator (
+       vacuum* ctx,
+    character* effusio);
+
 #endif /* MONETA_H */

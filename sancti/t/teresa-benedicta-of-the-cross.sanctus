@@ -1,0 +1,46 @@
+<sanctus id="teresa-benedicta-of-the-cross" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Teresa Benedicta of the Cross</nomen>
+  <nomen lingua="de" fontes="ho sa">Edith Stein</nomen>
+  <ortus annus="1891" locus="Breslau" fontes="sa"/>
+  <obitus annus="1942" mensis="8" dies="9" locus="Auschwitz" martyrium="verum" fontes="ga ho"/>
+  <canonizatio modus="formalis" annus="1998" mensis="10" dies="11" papa="John Paul II" fontes="ho"/>
+  <beatificatio annus="1987" mensis="5" dies="1" papa="John Paul II" fontes="ho"/>
+  <festum calendarium="generale" mensis="8" dies="9" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us">virgin</munus>
+  <munus fontes="us ho">martyr</munus>
+  <munus fontes="sa">religious</munus>
+  <patrocinium fontes="sa">Europe</patrocinium>
+  <descriptio>
+    <paragraphus fontes="sa ho">Edith Stein was born in 1891 into a Jewish family of Breslau, then in German territory. Raised religiously by her Jewish mother, she stopped praying at fourteen and gave herself to philosophy, taking up the study of phenomenology. Her searching led her, through Teresa of Avila and the other great mystics and through Thomist thought, to baptism and then to the contemplative life of the Carmelite Order, where she took the religious name Teresa Benedicta of the Cross. She also worked to promote the social standing of women.</paragraphus>
+    <paragraphus fontes="ho ga sa">Because she was Jewish, she was taken with her sister Rosa and other Catholic Jews from the Netherlands to Auschwitz, where she died in the gas chambers. On 6 August 1942, at the monastery of Echt, she told her sisters she was ready for anything; she died three days later, which places her death on 9 August, her feast. John Paul II beatified her at Cologne on 1 May 1987, canonized her in Rome on 11 October 1998, and in 1999 declared her a Co-Patroness of Europe.</paragraphus>
+  </descriptio>
+  <fons id="ho" opus="sedes" locus="John Paul II, canonization homily, 11 October 1998" url="https://www.vatican.va/content/john-paul-ii/en/homilies/1998/documents/hf_jp-ii_hom_11101998_stein.html">
+    <excerptum>HOMILY OF JOHN PAUL II FOR THE CANONIZATION OF EDITH STEIN Sunday, 11 October 1998</excerptum>
+    <excerptum>Teresa Benedicta of the Cross, who has been solemnly enrolled among the saints today.</excerptum>
+    <excerptum>On 1 May 1987, during my Pastoral Visit to Germany, I had the joy of beatifying this generous witness to the faith in the city of Cologne.</excerptum>
+    <excerptum>Because she was Jewish, Edith Stein was taken with her sister Rosa and many other Catholic Jews from the Netherlands to the concentration camp in Auschwitz, where she died with them in the gas chambers.</excerptum>
+    <excerptum>Although Edith Stein had been brought up religiously by her Jewish mother, at the age of 14 she “had consciously and deliberately stopped praying”.</excerptum>
+    <excerptum>She traveled the arduous path of philosophy with passionate enthusiasm.</excerptum>
+    <excerptum>A young woman in search of the truth has become a saint and martyr through the silent workings of divine grace</excerptum>
+    <excerptum>Today, 11 years later, here in Rome, in St Peter's Square, I am able solemnly to present this eminent daughter of Israel and faithful daughter of the Church as a saint to the whole world.</excerptum>
+  </fons>
+  <fons id="sa" opus="sedes" locus="John Paul II, Spes aedificandi, 1 October 1999" url="https://www.vatican.va/content/john-paul-ii/en/motu_proprio/documents/hf_jp-ii_motu-proprio_01101999_co-patronesses-europe.html">
+    <excerptum>Edith was born in 1891 to a Jewish family of Breslau, which was then in German territory.</excerptum>
+    <excerptum>having chosen to undertake the study of phenomenology</excerptum>
+    <excerptum>she came face to face, on the one hand, with the testimony of Christian spiritual experience given by Teresa of Avila and the other great mystics</excerptum>
+    <excerptum>with the ancient tradition of Christian thought as consolidated in Thomistic philosophy. This path brought her first to Baptism and then to the choice of a contemplative life in the Carmelite Order.</excerptum>
+    <excerptum>Particularly significant for her time was her struggle to promote the social status of women</excerptum>
+    <excerptum>I establish and declare Saint Bridget of Sweden, Saint Catherine of Siena and Saint Teresa Benedicta of the Cross heavenly Co-Patronesses of all of Europe before God</excerptum>
+    <excerptum>a proclamation of the Gospel of the Cross, with which she identified herself by the very choice of her name in religion.</excerptum>
+    <excerptum>Spes Aedificandi - Proclamation of the Co-Patronesses of Europe (October 1, 1999)</excerptum>
+  </fons>
+  <fons id="ga" opus="sedes" locus="Benedict XVI, General Audience, 13 August 2008" url="https://www.vatican.va/content/benedict-xvi/en/audiences/2008/documents/hf_ben-xvi_aud_20080813.html">
+    <excerptum>Teresa Benedicta of the Cross, Edith Stein, whose feast we celebrated on 9 August</excerptum>
+    <excerptum>Both ended their earthly life with martyrdom in the concentration camp of Auschwitz.</excerptum>
+    <excerptum>an offer that culminated in his death in the starvation bunker on 14 August 1941.</excerptum>
+    <excerptum>On 6 August the following year, three days before her tragic end, Edith Stein approaching some Sisters in the monastery of Echt, in the Netherlands, said to them: "I am ready for anything.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="9 August">
+    <excerptum>Saint Teresa Benedicta of the Cross, Virgin and Martyr</excerptum>
+  </fons>
+</sanctus>

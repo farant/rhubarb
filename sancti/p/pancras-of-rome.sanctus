@@ -1,0 +1,32 @@
+<sanctus id="pancras-of-rome" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Pancras of Rome</nomen>
+  <nomen lingua="la" principale="verum" fontes="mr ce">Pancratius</nomen>
+  <obitus locus="Rome" martyrium="verum" fontes="mr ce bu"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="5" dies="12" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="5" dies="12" fontes="mr"/>
+  <munus fontes="us mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Pancras (Pancratius) is a Roman martyr whose name appears in the old Roman lists of the fifth century; his body rested in a catacomb on the Via Aurelia. A fuller copy of the notice gives, for 12 May at Rome, his natal day on the Aurelian Way at the second milestone. A church was built over his grave in the fourth century and still stands, somewhat altered.</paragraphus>
+    <paragraphus fontes="mr bu ce">The Martyrology and Butler say he was beheaded at fourteen years of age under Diocletian, Butler giving the year 304. The Catholic Encyclopedia, however, regards the legend of his martyrdom as late and historically unreliable, and says only that he probably died in the persecution of Valerian (257-58) or that of Diocletian (304-06). Gregory of Tours called him the Avenger of Perjuries, saying that false oaths sworn before his relics were visibly punished, and Butler notes that churches bearing his name abound in Italy, England, France and Spain.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="12 May">
+    <excerptum>on the Aurelian road, the holy martyr Pancratius, who, at fourteen years of age, endured martyrdom by decapitation under Diocletian.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="Sts. Nereus and Achilleus, Domitilla and Pancratius" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Sts._Nereus_and_Achilleus,_Domitilla_and_Pancratius">
+    <excerptum>The old Roman lists, of the fifth century, and which passed over into the Martyrologium Hiernoymianum</excerptum>
+    <excerptum>in the same calendar was found the name of St. Pancratius, whose body rested in a catacomb on the Via Aurelia.</excerptum>
+    <excerptum>The notice in the more complete version given by the Berne Codex, runs as follows</excerptum>
+    <excerptum>On 12 May at Rome in the cemetery of Praetextatus [an evident error for Domitilla] the natal day of Nereus and Achilleus, and the natal day of St. Pancratius, on the Aurelian Way at the second milestone</excerptum>
+    <excerptum>The church which was erected in the fourth century over the grave of St. Pancratius, stands today in somewhat altered style.</excerptum>
+    <excerptum>The legend describing the martyrdom of the saint is of later origin, and not reliable historically; it is probable that he was put to death in the persecution of Valerian (257-58) or in that of Diocletian (304-06).</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v05 May 12 St. Pancras, M.">
+    <excerptum>He is said to have suffered at Rome in the fourteenth year of his age. Having been beheaded for the faith, which he had gloriously confessed under Dioclesian in the year 304</excerptum>
+    <excerptum>St. Gregory of Tours calle him the Avenger of Perjuries, and says that God by a perpetual miracle visibly punished false oaths made before his relicks.</excerptum>
+    <excerptum>Italy, England, France, Spain, &amp;c. abound “with charches which bear his name.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="12 May">
+    <excerptum>Saint Pancras, Martyr</excerptum>
+  </fons>
+</sanctus>

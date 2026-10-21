@@ -1,0 +1,42 @@
+<sanctus id="jane-frances-de-chantal" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Jane Frances de Chantal</nomen>
+  <nomen lingua="en" fontes="mr">Jane Frances Fremiot de Chantal</nomen>
+  <ortus annus="1572" mensis="1" dies="28" locus="Dijon" fontes="ce"/>
+  <obitus annus="1641" mensis="12" dies="13" locus="Moulins" fontes="ce mr"/>
+  <beatificatio annus="1751" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1767" papa="Clement XIII" fontes="ce mr"/>
+  <festum calendarium="generale" mensis="8" dies="12" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="8" dies="21" fontes="mr2"/>
+  <festum calendarium="martyrologium" mensis="12" dies="13" fontes="mr"/>
+  <munus fontes="us">religious</munus>
+  <munus fontes="mr mr2">foundress</munus>
+  <munus fontes="ce">widow</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Jane Frances was born at Dijon in 1572, the daughter of the president of the Parliament of Burgundy. In 1592 she married the Baron de Chantal and restored order and prosperity to his household at Bourbilly. When he was accidentally killed while out shooting in 1601, she was left a widow at twenty-eight with four children and took a vow of chastity. For seven years she bore patiently a hard life in the house of her father-in-law. In Lent 1604, visiting her father at Dijon while St. Francis de Sales was preaching there, she placed herself under his guidance.</paragraphus>
+    <paragraphus fontes="ce mr">With him she founded the Congregation of the Visitation, canonically established at Annecy on 6 June 1610, to receive young girls and widows who lacked the desire or strength for the austere practices of the orders of the time. The order had eighty-six houses when she died at the Visitation convent of Moulins on 13 December 1641. Her last years were marked by interior trials. She was beatified in 1751 and canonized in 1767, and the Martyrology names Clement XIII as the pope who placed her among the saints.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Jane Frances de Chantal" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Jane_Frances_de_Chantal">
+    <excerptum>Born at Dijon, France, 28 January, 1572; died at the Visitation Convent Moulins, 13 December, 1641.</excerptum>
+    <excerptum>Her father was president of the Parliament of Burgundy</excerptum>
+    <excerptum>In 1592 she married Baron de Chantal, and lived in the feudal castle of Bourbilly. She restored order in the household, which was on the brink of ruin, and brought back prosperity.</excerptum>
+    <excerptum>Baron de Chantal was accidently killed by a harquebus while out shooting in 1601. Left a widow at twenty-eight, with four children, the broken-hearted baroness took a vow of chastity.</excerptum>
+    <excerptum>she was obliged to go and live at Monthelon in the home of her father-in-law, who was ruled over by an arrogant and wicked servant. This was real servitude, which she bore patiently and gently for seven years.</excerptum>
+    <excerptum>During Lent, 1604, she visited her father at Dijon, where St. Francis de Sales was preaching at the Sainte Chapelle.</excerptum>
+    <excerptum>She recognized in him the mysterious director who had been shown her, and placed herself under his guidance.</excerptum>
+    <excerptum>The Congregation of the Visitation was canonically established at Annecy on Trinity Sunday, 6 June, 1610. Its aim was to receive, with a view to their spiritual advancement, young girls and even widows who had not the desire or strength to subject themselves to the austere ascetical practices in force in all the religious orders at that time.</excerptum>
+    <excerptum>The two holy founders saw their undertaking prosper.</excerptum>
+    <excerptum>the order already counted thirteen houses; there were eight-six when St. Jane Frances died</excerptum>
+    <excerptum>To family troubles God added interior crosses which, particularly during the last nine years of her life, kept her in agony of soul</excerptum>
+    <excerptum>She was beatified in 1751, canonized in 1767, and 21 August was appointed as her feast day.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="13 December">
+    <excerptum>At Moulins, in France, the birthday of St. Jane Frances Fremiot de Chantal, foundress of the nuns of the Visitation of St. Mary</excerptum>
+    <excerptum>She was placed among the saints by Clement XIII.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="21 August">
+    <excerptum>Frances Fremiot de Chantal, foundress of the Order of Nuns of the Visitation of St. Mary, who is commemorated on the 13th of December.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="12 August">
+    <excerptum>Saint Jane Frances de Chantal, Religious</excerptum>
+  </fons>
+</sanctus>

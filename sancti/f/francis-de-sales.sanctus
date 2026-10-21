@@ -1,0 +1,51 @@
+<sanctus id="francis-de-sales" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Francis de Sales</nomen>
+  <nomen lingua="en" fontes="mr1">Francis of Sales</nomen>
+  <ortus annus="1567" mensis="8" dies="21" locus="Thorens, Duchy of Savoy" fontes="ce"/>
+  <obitus annus="1622" mensis="12" dies="28" locus="Lyons" fontes="ce mr1"/>
+  <beatificatio annus="1661" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1665" papa="Alexander VII" fontes="ce mr1"/>
+  <festum calendarium="generale" mensis="1" dies="24" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="1" dies="29" fontes="mr2"/>
+  <festum calendarium="martyrologium" mensis="12" dies="28" fontes="mr1"/>
+  <munus fontes="us ce mr1">bishop</munus>
+  <munus fontes="us ce mr2">doctor of the Church</munus>
+  <patrocinium fontes="mr3">journalists</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">Francis was born at Thorens in the Duchy of Savoy on 21 August 1567, the eldest son of an old Savoyard noble family. He studied with the Jesuits at the college of Clermont in Paris and then law at Padua, but refused the career his father had planned and chose the Church, receiving holy orders in 1593 as Provost of the Chapter of Geneva. From 1594, at the risk of his life, he preached in the Chablais, where Geneva had imposed the Reformed faith, and a large part of its people returned to the Catholic Church.</paragraphus>
+    <paragraphus fontes="ce mr1">Consecrated Bishop of Geneva, with his see at Annecy, in 1602, he catechized, visited his mountain parishes, reformed religious houses, wrote countless letters of direction and, with St. Jane Frances de Chantal, founded the Visitation in 1607. He died at Lyons on 28 December 1622 and his body was brought back to Annecy. He was beatified in 1661 and canonized by Alexander VII in 1665; Pius IX proclaimed him Doctor of the Church in 1877.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Francis de Sales" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Francis_de_Sales">
+    <excerptum>Bishop of Geneva, Doctor of the Universal Church; born at Thorens, in the Duchy of Savoy, 21 August, 1567; died at Lyons, 28 December, 1622.</excerptum>
+    <excerptum>belonged to old Savoyard aristocratic families. The future saint was the eldest of six brothers.</excerptum>
+    <excerptum>His father intended him for the magistracy</excerptum>
+    <excerptum>From 1583 till 1588 he studied rhetoric and humanities at the college of Clermont, Paris, under the care of the Jesuits.</excerptum>
+    <excerptum>In 1588 he studied law at Padua</excerptum>
+    <excerptum>but Francis declared his intention of embracing the ecclesiastical life.</excerptum>
+    <excerptum>obtained for Francis, on his own initiative, the position of Provost of the Chapter of Geneva</excerptum>
+    <excerptum>Francis received Holy Orders (1593).</excerptum>
+    <excerptum>In the following year (1594) he volunteered to evangelize Le Chablais, where the Genevans had imposed the Reformed Faith</excerptum>
+    <excerptum>Risking his life, he journeyed through the entire district, preaching constantly</excerptum>
+    <excerptum>A large part of the inhabitants of Le Chablais returned to the true fold (1597 and 1598).</excerptum>
+    <excerptum>From the time of the Reformation the seat of the Bishopric of Geneva had been fixed at Annecy.</excerptum>
+    <excerptum>On the death of Claude de Granier, Francis was consecrated Bishop of Geneva (1602). His first step was to institute catechetical instructions for the faithful, both young and old.</excerptum>
+    <excerptum>He carefully visited the parishes scattered through the rugged mountains of his diocese. He reformed the religious communities.</excerptum>
+    <excerptum>He wrote innumerable letters (mainly letters of direction)</excerptum>
+    <excerptum>Together with St. Jane Frances de Chantal, he founded (1607) the Institute of the Visitation of the Blessed Virgin</excerptum>
+    <excerptum>With much difficulty his body was brought back to Annecy, but his heart was left at Lyons.</excerptum>
+    <excerptum>St. Francis de Sales was beatified in 1661, and canonized by Alexander VII in 1665; he was proclaimed Doctor of the Universal Church by Pope Pius IX, in 1877.</excerptum>
+  </fons>
+  <fons id="mr1" opus="mr1916" locus="28 December">
+    <excerptum>At Lyons, in France, the birthday of St. Francis of</excerptum>
+    <excerptum>Sales, bishop of Geneva, ranked among the saints by Alexander VII., because of his most ardent zeal for the conversion of heretics. His festival, by order of the same Pontiff, is kept on the 29th of January, when his sacred body was translated from Lyons to Annecy.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="29 January">
+    <excerptum>At Lyons, in France, St. Francis of Sales, bishop of Geneva, confessor and Doctor of the Church, who is mentioned on the 28th of December.</excerptum>
+  </fons>
+  <fons id="mr3" opus="mr1916" locus="Patron saints of trades and professions (front matter)">
+    <excerptum>Journalists — St. Frances de Sales : January 29.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="24 January">
+    <excerptum>Saint Francis de Sales, Bishop and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

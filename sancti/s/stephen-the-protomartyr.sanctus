@@ -1,0 +1,38 @@
+<sanctus id="stephen-the-protomartyr" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Stephen the Protomartyr</nomen>
+  <nomen lingua="el" fontes="ce">Stephanos</nomen>
+  <obitus locus="outside Jerusalem" martyrium="verum" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="12" dies="26" gradus="festum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="12" dies="26" fontes="mr"/>
+  <munus fontes="ce">deacon</munus>
+  <munus fontes="us ce mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Stephen was one of the first deacons and the first Christian martyr. The Acts of the Apostles, the only first-hand source for his life, name him first among the seven men whom the Apostles ordained to care for the poorer members of the community. Little else is known of his earlier life: his Greek name suggests that he was a Hellenist, a Jew born abroad whose native tongue was Greek, and he seems to have preached chiefly among the Hellenist Jews. Acts describes him as full of faith and of the Holy Ghost, and no one could withstand his wisdom.</paragraphus>
+    <paragraphus fontes="ce mr">Opponents from the synagogues, defeated in debate, brought false witnesses who accused him of blasphemy against Moses and God, and he was taken before the Sanhedrin. His defence ended by charging his hearers with betraying and murdering the Just One; when he declared that he saw the heavens opened and the Son of Man at the right hand of God, they drove him out of the city and stoned him, while the witnesses laid their garments at the feet of Saul. He died praying, "Lord, lay not this sin to their charge." The Martyrology places his death shortly after the Ascension. In 415 a priest named Lucian learned by revelation that his body lay at Caphar Gamala, and the relics were exhumed.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Stephen (1)" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Stephen_(1)">
+    <excerptum>One of the first deacons and the first Christian martyr; feast on 26 December.</excerptum>
+    <excerptum>seven men were selected and specially ordained by the Apostles to take care of the temporal relief of the poorer members. Of these seven, Stephen, is the first mentioned and the best known.</excerptum>
+    <excerptum>Stephen's life previous to this appointment remains for us almost entirely in the dark. His name is Greek and suggests he was a Hellenist, i.e., one of those Jews who had been born in some foreign land and whose native tongue was Greek</excerptum>
+    <excerptum>the name Stephanos was only a Greek equivalent for the Aramaic Kelil</excerptum>
+    <excerptum>shows that he usually preached among the Hellenist Jews.</excerptum>
+    <excerptum>He was "a man full of faith, and of the Holy Ghost" (vi, 5)</excerptum>
+    <excerptum>his uncommon oratorical powers and unimpeachable logic no one was able to resist</excerptum>
+    <excerptum>The conflict broke out when the cavillers of the synagogues</excerptum>
+    <excerptum>who had challenged Stephen to a dispute, came out completely discomfited</excerptum>
+    <excerptum>his able defence before the Sanhedrin</excerptum>
+    <excerptum>wounded pride so inflamed their hatred that they suborned false witnesses to testify that "they had heard him speak words of blasphemy against Moses and against God"</excerptum>
+    <excerptum>the concluding indictment for having betrayed and murdered the Just One whose coming the Prophets had foretold, provoked the rage of an audience made up not of judges, but of foes.</excerptum>
+    <excerptum>"Behold, I see the heavens opened, and the Son of man standing on the right hand of God" (vii, 55), they ran violently upon him (vii, 56) and cast him out of the city to stone him to death.</excerptum>
+    <excerptum>"Lord, lay not this sin to their charge" (vii, 59). Meanwhile the witnesses, whose hands must be first on the person condemned by their testimony (Deut., xvii, 7), were laying down their garments at the feet of Saul</excerptum>
+    <excerptum>until (415) a certain priest named Lucian learned by revelation that the sacred body was in Caphar Gamala, some distance to the north of Jerusalem. The relics were then exhumed</excerptum>
+    <excerptum>The only first hand source of information on the life and death of St. Stephen is the Acts of the Apostles</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="26 December">
+    <excerptum>At Jerusalem, the birthday of St. Stephen, the first martyr, who was stoned to death by the Jews shortly after the Ascension of our Lord.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="26 December">
+    <excerptum>Saint Stephen, The First Martyr</excerptum>
+  </fons>
+</sanctus>

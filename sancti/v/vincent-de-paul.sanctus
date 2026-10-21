@@ -1,0 +1,51 @@
+<sanctus id="vincent-de-paul" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Vincent de Paul</nomen>
+  <nomen lingua="en" fontes="bu">Vincent of Paul</nomen>
+  <ortus annus="1580" locus="Pouy, Gascony" fontes="ce bu"/>
+  <obitus annus="1660" mensis="9" dies="27" locus="Paris" fontes="ce mr27"/>
+  <beatificatio annus="1729" mensis="8" dies="13" papa="Benedict XIII" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1737" mensis="6" dies="16" papa="Clement XII" fontes="ce"/>
+  <festum calendarium="generale" mensis="9" dies="27" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="7" dies="19" fontes="mr"/>
+  <munus fontes="us mr27">priest</munus>
+  <munus fontes="mr27 ce">founder</munus>
+  <patrocinium fontes="mr">charitable organizations</patrocinium>
+  <patrocinium fontes="ce">Sisters of Charity</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce bu">Vincent was born of a peasant family at Pouy in Gascony in 1580, though some authorities give 1576. He studied at Dax and Toulouse and was ordained in 1600. Returning by sea from Marseilles in 1605, he was captured by Turkish pirates and sold as a slave at Tunis, escaping in 1607 with his master, a renegade whom he converted. After a time as almoner to Queen Marguerite of Valois and as parish priest of Clichy, he entered the service of the Gondi family in 1612 to educate their children. He began preaching missions to the peasants on their estates, and at Chatillon-les-Dombes founded the first conference of charity for the relief of the poor.</paragraphus>
+    <paragraphus fontes="ce mr27">Named royal almoner of the galleys, he cared for the convicts of Paris and Marseilles. He founded the Congregation of Priests of the Mission to evangelize country people, began in 1628 the retreats for candidates for Holy Orders from which the French seminaries grew, and with Mlle Legras gathered the Daughters of Charity to serve the poor; he also grouped the Ladies of Charity, cared for foundlings and raised aid for provinces laid waste in the Thirty Years War. He died at Paris on 27 September 1660, was beatified by Benedict XIII in 1729 and canonized by Clement XII on 16 June 1737. Leo XIII made him patron of all charitable organizations owing their origin to him.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="19 July">
+    <excerptum>VINCENT DE PAUL, confessor, who slept in the Lord on the 27th of September. Leo XIII. declared him heavenly patron before the throne of God of all charitable organizations throughout the Catholic world owing in any manner their origin to him.</excerptum>
+  </fons>
+  <fons id="mr27" opus="mr1916" locus="27 September">
+    <excerptum>At Paris, St. Vincent de Paul, priest, and founder of the Congregation of the Mission and of the Daughters of Charity, an apostolic man and a father to the poor. His feast is celebrated on the 19th of July.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Vincent de Paul" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Vincent_de_Paul">
+    <excerptum>Born at Pouy, Gascony, France, in 1580, though some authorities have said 1576; died at Paris, 27 September, 1660. Born of a peasant family, he made his humanities studies at Dax</excerptum>
+    <excerptum>were made at Toulouse where he graduated in theology. Ordained in 1600</excerptum>
+    <excerptum>Brought to Marseilles for an inheritance, he was returning by sea in 1605 when Turkish pirates captured him and took him to Tunis. He was sold as a slave, but escaped in 1607 with his master, a renegade whom he converted.</excerptum>
+    <excerptum>he became alminer to the Queen Marguerite of Valois</excerptum>
+    <excerptum>he took charge of the parish of Clichy near Paris, but several months later (1612) he entered the services of the Gondi, an illustrious French family, to educate the children of Philippe-Emmanuel de Gondi.</excerptum>
+    <excerptum>With her assistance he began giving missions on her estates</excerptum>
+    <excerptum>had himself appointed curé of Chatillon-les-Dombes (Bresse), where he converted several Protestants and founded the first conference of charity for the assistance of the poor.</excerptum>
+    <excerptum>he began visiting the galley convicts of Paris, speaking kind words to them</excerptum>
+    <excerptum>Soon appointed by Louis XIII royal almoner of the galleys, Vincent profited by this title to visit the galleys of Marseilles</excerptum>
+    <excerptum>decided Vincent to found his religious institute of priests vowed to the evangelization of country people—the Congregation of Priests of the Mission</excerptum>
+    <excerptum>The general assembly of the French clergy expressed the wish that candidates for Holy Orders should only be admitted after some days of recollection and retreat.</excerptum>
+    <excerptum>Vincent undertook to attempt at Beauvais (September, 1628) the first of these retreats.</excerptum>
+    <excerptum>Their chief service was that they gave rise to the seminaries as these prevailed later in France.</excerptum>
+    <excerptum>In recruiting, forming, and directing these servants of the poor, Vincent found able assistance in Mlle Legras. When their number increased he grouped then into a community under her direction</excerptum>
+    <excerptum>Besides the Daughters of Charity Vincent de Paul secured for the poor the services of the Ladies of Charity</excerptum>
+    <excerptum>that of the care of foundlings was one of the most important.</excerptum>
+    <excerptum>St. Vincent's charity was not restricted to Paris, but reached to all the provinces desolated by misery. In that period of the Thirty Years War known as the French period Lorraine, Trois-Evechés, Franche-Comté, and Champagne underwent for nearly a quarter of a century all the horrors and scourges</excerptum>
+    <excerptum>Vincent made urgent appeals to the Ladies of Charity; it has been estimated that at his reiterated requests he secured 12,000 livres</excerptum>
+    <excerptum>On 13 August, 1729, Vincent was declared Blessed by Benedict XIII, and canonized by Clement XII on 16 June, 1737. In 1885 Leo XIII gave him as patron to the sisters of Charity.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v07 July 19 St. Vincent of Paul, C.">
+    <excerptum>One of these instruments of the divine mercy was St. Vincent of Paul. He was a native of Poui, a village near Acgs in Gascony</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="27 September">
+    <excerptum>Saint Vincent de Paul, Priest</excerptum>
+  </fons>
+</sanctus>

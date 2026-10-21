@@ -117,9 +117,9 @@ vicum_parare (
             "<latus genus=\"pictor\"/></acervus></tabula>");
     }
     chorda_aedificator_appendere_literis(a, "</tabulae>");
-    si (!volumen_plagulam_condere(m->volumen, chorda_ex_literis(
+    si (!volumen_praesens_ponere(m->volumen, chorda_ex_literis(
             "vicus/latera", m->piscina),
-            chorda_aedificator_finire(a), "insula_mensura"))
+            chorda_aedificator_finire(a)))
     {
         redde FALSUM;
     }

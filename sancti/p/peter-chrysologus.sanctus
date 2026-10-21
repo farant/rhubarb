@@ -1,0 +1,44 @@
+<sanctus id="peter-chrysologus" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Peter Chrysologus</nomen>
+  <ortus annus="406" locus="Imola" fontes="ce"/>
+  <obitus annus="450" locus="Imola" fontes="ce bu"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="7" dies="30" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="12" dies="2" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="12" dies="4" fontes="mr2"/>
+  <munus fontes="us mr2 ce">bishop</munus>
+  <munus fontes="us mr2">doctor of the Church</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Peter was born at Imola in 406. Cornelius, bishop of Imola, baptized and educated him and ordained him deacon, and Butler adds that he lived for a time as a monk. In 433, by the Catholic Encyclopedia's date, he became bishop of Ravenna; Butler tells how Pope Sixtus III set aside the election already made and chose Peter, who had come to Rome as Cornelius's deacon. At Ravenna he worked to root out the remains of pagan superstition, fed his people constantly with the word of God, and enjoyed the patronage of the Empress Galla Placidia and the confidence of Leo the Great. His preaching won him the surname Chrysologus, meaning that his words were of gold.</paragraphus>
+    <paragraphus fontes="ce bu mr mr2">A collection of 176 of his homilies was made by Felix, a later bishop of Ravenna; they are short, mostly explain Scripture, and treat the Incarnation, the Creed and the Blessed Virgin. When the Monophysite Eutyches sought his support after being condemned in 448, Peter refused and urged him not to dispute the mystery of the Incarnation. Forewarned of his death, he returned to Imola, where he died in 450, probably on 2 December according to Butler. The Martyrology names him at Imola on 2 December and keeps his feast on 4 December as bishop, confessor and doctor of the Church.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Peter Chrysologus" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Peter_Chrysologus">
+    <excerptum>Born at Imola, 406; died there, 450.</excerptum>
+    <excerptum>He was baptised, educated, and ordained deacon by Cornelius, Bishop of Imola, and was elevated to the Bishopric of Ravenna in 433.</excerptum>
+    <excerptum>His piety and zeal won for him universal admiration, and his oratory merited for him the name Chrysologus. He shared the confidence of Leo the Great and enjoyed the patronage of the Empress Galla Placidia.</excerptum>
+    <excerptum>After his condemnation by the Synod of Constantinople (448), the Monophysite Eutyches endeavoured to win the support of Peter, but without success.</excerptum>
+    <excerptum>A collection of his homilies, numbering 176, was made by Felix, Bishop of Ravenna (707-17).</excerptum>
+    <excerptum>They are in a great measure explanatory of Biblical texts and are brief and concise. He has explained beautifully the mystery of the Incarnation, the heresies of Arius and Eutyches, the Apostles' Creed, and he dedicated a series of homilies to the Blessed Virgin</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v12 Dec. 4 St. Peter Chrysologus, C., Archbishop of Ravenna">
+    <excerptum>he embraced a monastic state, and had served God in it with great fervour and simplicity for some time, when he was placed in the archiepiscopal see of Ravenna.</excerptum>
+    <excerptum>Cornelius took with him his deacon Peter, and the pope (who, according to the historian of Ravenna, had been commanded so to do by a vision the foregoing night) refused to ratify the election already made, and proposed Peter as the person designed by heaven for that post</excerptum>
+    <excerptum>to obtain the confirmation of pope Sixtus III.</excerptum>
+    <excerptum>When he entered on his charge, he found large remains of pagan superstition in his diocess</excerptum>
+    <excerptum>but the total extirpation of the former, and the reformation of the latter, were the fruit of the holy pastor’s zealous labours.</excerptum>
+    <excerptum>He employed an extensive charity and unwearied vigilance in favour of his flock, which he fed assiduously with the bread of life, the word of God.</excerptum>
+    <excerptum>his reputation as a preacher ran so high as to procure him the surname of Chrysologus, which is as much as to say, that his speeches were of gold, or excellent.</excerptum>
+    <excerptum>that the mystery of the incarnation, though inexplicable, is delivered to us by the divine law, and to be believed in the simplicity of faith. He therefore exhorted him to acquiesce, not to dispute</excerptum>
+    <excerptum>The saint being forewarned of his approaching death, returned to Imola, his own country</excerptum>
+    <excerptum>Peter died at Imola, probably on the second of December 450, and was buried there in St. Cassian’s church.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="2 December">
+    <excerptum>At Imola, St. Peter Chrysologus, bishop of Ravenna, celebrated for his learning and sanctity.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="4 December">
+    <excerptum>PETER CHRYSOLOGUS, bishop, confessor, and doctor of the church, who is mentioned on the 2d of this month.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="30 July">
+    <excerptum>Saint Peter Chrysologus, Bishop and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

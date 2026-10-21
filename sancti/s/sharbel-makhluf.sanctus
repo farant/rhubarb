@@ -1,0 +1,35 @@
+<sanctus id="sharbel-makhluf" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Sharbel Makhlūf</nomen>
+  <nomen lingua="fr" fontes="hom">Charbel Makhlouf</nomen>
+  <nomen lingua="alia" fontes="hom">Youssef</nomen>
+  <obitus annus="1898" mensis="12" dies="24" locus="hermitage of Saints Peter and Paul, Annaya, Lebanon" fontes="hom"/>
+  <beatificatio annus="1965" mensis="12" dies="5" papa="Paul VI" fontes="hom"/>
+  <canonizatio modus="formalis" annus="1977" mensis="10" dies="9" papa="Paul VI" fontes="hom"/>
+  <festum calendarium="generale" mensis="7" dies="24" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us hom">priest</munus>
+  <munus fontes="hom">monk</munus>
+  <munus fontes="hom">hermit</munus>
+  <descriptio>
+    <paragraphus fontes="hom">Sharbel Makhlūf, baptized Youssef, was a monk of the Lebanese Maronite Order. Paul VI, who canonized him, described the Christian home that formed him: a family of modest, hard-working peasants of robust faith, uncles who had become hermits, and a devout mother given to constant fasting. At twenty-three he left his village of Gégà-Kafra and his family, never to return. As Brother Sharbel he was formed under the rule of the Lebanese Maronite Order of Saint Anthony at the monastery of Our Lady of Mayfouk and then at the more remote Saint Maron of Annaya; after theological studies at Saint Cyprian of Kfifane he was ordained priest in 1859.</paragraphus>
+    <paragraphus fontes="hom">He then lived sixteen years in community among the monks of Annaya and twenty-three years in complete solitude at the hermitage of Saints Peter and Paul belonging to that monastery, in strict poverty, one frugal meal a day and hard manual labour, devoted to the fervent celebration of Mass and to penance and intercession for sinners. Even in his lifetime his countrymen, Christian or not, came to him as a physician of souls and bodies. He died on Christmas Eve 1898, aged seventy. Paul VI beatified him on 5 December 1965, at the close of the Second Vatican Council, and canonized him on 9 October 1977, extending his cult to the whole Church.</paragraphus>
+  </descriptio>
+  <fons id="hom" opus="sedes" locus="Homily of Paul VI, canonization of Charbel Makhlouf, 9 October 1977" url="https://www.vatican.va/content/paul-vi/fr/homilies/1977/documents/hf_p-vi_hom_19771009.html">
+    <excerptum>Nous l’avions déjà honoré en le déclarant bienheureux le 5 décembre 1965, au moment de la clôture du Concile Vatican II.</excerptum>
+    <excerptum>Aujourd’hui, en le canonisant et en étendant son culte à l’ensemble de l’Eglise, Nous donnons en exemple, au monde entier, ce valeureux moine, gloire de l’ordre libanais maronite</excerptum>
+    <excerptum>Nos regards se tournent aussi là où il a vécu, vers le cher pays du Liban</excerptum>
+    <excerptum>CANONISATION DE CHARBEL MAKHLUOF HOMÉLIE DU PAPE PAUL VI Dimanche, 9 octobre 1977</excerptum>
+    <excerptum>à quel point le milieu chrétien de son enfance a enraciné dans la foi le jeune Youssef - c’était son nom de baptème -</excerptum>
+    <excerptum>famille de paysans modestes, travailleurs, unis; animés d’une foi robuste</excerptum>
+    <excerptum>oncles voués à la vie érémitique, et surtout mère admirable, pieuse et mortifiée jusqu’au jeûne continuel.</excerptum>
+    <excerptum>A vingt-trois ans, notre futur saint quitte en effet son village de Gégà-Kafra et sa famille pour ne plus jamais y revenir.</excerptum>
+    <excerptum>pour le novice devenu Frère Charbel, commence une formation monastique rigoureuse, selon la règle de l’ordre libanais maronite de Saint Antoine, au monastère de Notre-Dame de Mayfouk, puis à celui plus retiré de Saint-Maron d’Annaya</excerptum>
+    <excerptum>il suit des études théologiques à Saint-Cyprien de Kfifane, reçoit l’ordination sacerdotale en 1859; il mènera ensuite seize ans de vie communautaire parmi les moines d’Annaya et vingt-trois ans de vie complètement solitaire dans l’ermitage des Saints Pierre et Paul dépendant d’Annaya.</excerptum>
+    <excerptum>C’est là qu’il remet son âme à Dieu la veille de Noël 1898, à soixante-dix ans.</excerptum>
+    <excerptum>d’abord la plus stricte pauvreté pour ce qui est du logement, du vêtement, de l’unique et frugal repas journalier des durs travaux manuels dans le rude climat de la montagne</excerptum>
+    <excerptum>la participation personnelle au sacrifice du Christ par une célébration fervente de la messe et par sa pénitence rigoureuse jointe à l’intercession pour les pécheurs.</excerptum>
+    <excerptum>Dès le vivant de Charbel Makhlouf, sa sainteté rayonnait, ses compatriotes, chrétiens ou non, le vénéraient, accouraient à lui comme au médecin des âmes et des corps.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="24 July">
+    <excerptum>Saint Sharbel Makhlūf, Priest</excerptum>
+  </fons>
+</sanctus>

@@ -1,0 +1,204 @@
+<!--
+  sancti.canon - canon dialecti SANCTORUM (plagulae .sanctus)
+  Consilium: project-specs/sancti-plan.md par. II.
+
+  QUID CANON TENET: vocabularium clausum; genera attributorum; fines
+  numerorum (annus, mensis, dies, saeculum); electiones (status, genus,
+  modus, calendarium, gradus, lingua); cardinalitas liberorum.
+
+  QUID LECTOR TENET (lib/sancti.c), CONSULTO: id = nomen plagulae;
+  ids unici per corpus; 'fontes' (ids fontium spatiis separati) ad
+  <fons> eiusdem plagulae referunt; dies mensi congruit (31 IV non
+  est); natus ante obitum; nomen principale anglicum unum.
+  Excerpta verbatim in fonte esse: tools/sancti_excerpta.py (speculum
+  extra repositorium - non porta).
+-->
+<canon dialectus="sanctorum" versio="1">
+
+  <elementum nomen="sanctus" radix="verum">
+    <attributum nomen="id" genus="compositum" necessarium="verum"
+      nota="slug anglicum kebab, = nomen plagulae sine .sanctus"/>
+    <attributum nomen="versio" genus="numerus" necessarium="verum"
+      minimum="1" maximum="1"/>
+    <attributum nomen="genus" genus="electio" necessarium="verum"
+      nota="persona; coetus = martyres aut socii sub titulo uno">
+      <optio>persona</optio>
+      <optio>coetus</optio>
+    </attributum>
+    <attributum nomen="status" genus="electio" necessarium="verum">
+      <optio>sanctus</optio>
+      <optio>beatus</optio>
+      <optio>venerabilis</optio>
+      <optio>servus-dei</optio>
+    </attributum>
+    <liberum nomen="nomen" minimum="1"/>
+    <liberum nomen="ortus" maximum="1"/>
+    <liberum nomen="obitus" maximum="1"/>
+    <liberum nomen="canonizatio" maximum="1"/>
+    <liberum nomen="beatificatio" maximum="1"/>
+    <liberum nomen="festum"/>
+    <liberum nomen="munus"/>
+    <liberum nomen="patrocinium"/>
+    <liberum nomen="socius"/>
+    <liberum nomen="descriptio" maximum="1"/>
+    <liberum nomen="fons" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="nomen" textus="verum">
+    <attributum nomen="lingua" genus="electio" necessarium="verum">
+      <optio>en</optio>
+      <optio>la</optio>
+      <optio>it</optio>
+      <optio>fr</optio>
+      <optio>es</optio>
+      <optio>de</optio>
+      <optio>pt</optio>
+      <optio>el</optio>
+      <optio>alia</optio>
+    </attributum>
+    <attributum nomen="principale" genus="veritas"
+      nota="unum anglicum principale (titulus bibliothecae)"/>
+    <attributum nomen="fontes" genus="textus"/>
+  </elementum>
+
+  <!-- DIES INCERTI: annus solus, mensis et dies si noti; circa = fere;
+       saeculum solum si annus ignotus (IV = saeculum quartum).
+       calendarium julianum ubi fons diem ante reformationem dat -->
+  <elementum nomen="ortus">
+    <attributum nomen="annus" genus="numerus" minimum="-100"
+      maximum="2100"/>
+    <attributum nomen="mensis" genus="numerus" minimum="1"
+      maximum="12"/>
+    <attributum nomen="dies" genus="numerus" minimum="1" maximum="31"/>
+    <attributum nomen="saeculum" genus="numerus" minimum="-1"
+      maximum="21"/>
+    <attributum nomen="circa" genus="veritas"/>
+    <attributum nomen="calendarium" genus="electio">
+      <optio>julianum</optio>
+      <optio>gregorianum</optio>
+    </attributum>
+    <attributum nomen="locus" genus="textus"/>
+    <attributum nomen="fontes" genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="obitus">
+    <attributum nomen="annus" genus="numerus" minimum="-100"
+      maximum="2100"/>
+    <attributum nomen="mensis" genus="numerus" minimum="1"
+      maximum="12"/>
+    <attributum nomen="dies" genus="numerus" minimum="1" maximum="31"/>
+    <attributum nomen="saeculum" genus="numerus" minimum="-1"
+      maximum="21"/>
+    <attributum nomen="circa" genus="veritas"/>
+    <attributum nomen="calendarium" genus="electio">
+      <optio>julianum</optio>
+      <optio>gregorianum</optio>
+    </attributum>
+    <attributum nomen="locus" genus="textus"/>
+    <attributum nomen="martyrium" genus="veritas"/>
+    <attributum nomen="fontes" genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <!-- modus: formalis (decretum pontificis post 1588 aut ante cum
+       bulla), aequipollens (cultus confirmatus sine processu),
+       ante-congregationem (cultus antiquus) -->
+  <elementum nomen="canonizatio">
+    <attributum nomen="modus" genus="electio" necessarium="verum">
+      <optio>formalis</optio>
+      <optio>aequipollens</optio>
+      <optio>ante-congregationem</optio>
+    </attributum>
+    <attributum nomen="annus" genus="numerus" minimum="900"
+      maximum="2100"/>
+    <attributum nomen="mensis" genus="numerus" minimum="1"
+      maximum="12"/>
+    <attributum nomen="dies" genus="numerus" minimum="1" maximum="31"/>
+    <attributum nomen="papa" genus="textus"/>
+    <attributum nomen="fontes" genus="textus"/>
+  </elementum>
+
+  <elementum nomen="beatificatio">
+    <attributum nomen="annus" genus="numerus" minimum="900"
+      maximum="2100"/>
+    <attributum nomen="mensis" genus="numerus" minimum="1"
+      maximum="12"/>
+    <attributum nomen="dies" genus="numerus" minimum="1" maximum="31"/>
+    <attributum nomen="papa" genus="textus"/>
+    <attributum nomen="fontes" genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <!-- calendarium: generale = Calendarium Romanum Generale (1969 et
+       additiones); usa = proprium Civitatum Foederatarum (USCCB);
+       martyrologium = Martyrologium Romanum (editio fontis);
+       generale-1962 = calendarium MCMLXII; alia = proprium aliud
+       (nota dicit quod) -->
+  <elementum nomen="festum">
+    <attributum nomen="calendarium" genus="electio"
+      necessarium="verum">
+      <optio>generale</optio>
+      <optio>usa</optio>
+      <optio>martyrologium</optio>
+      <optio>generale-1962</optio>
+      <optio>alia</optio>
+    </attributum>
+    <attributum nomen="mensis" genus="numerus" necessarium="verum"
+      minimum="1" maximum="12"/>
+    <attributum nomen="dies" genus="numerus" necessarium="verum"
+      minimum="1" maximum="31"/>
+    <attributum nomen="gradus" genus="electio">
+      <optio>sollemnitas</optio>
+      <optio>festum</optio>
+      <optio>memoria</optio>
+      <optio>memoria-ad-libitum</optio>
+      <optio>commemoratio</optio>
+    </attributum>
+    <attributum nomen="nota" genus="textus"/>
+    <attributum nomen="fontes" genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <!-- munus: titulus vitae (martyr, episcopus, doctor ecclesiae,
+       virgo, papa, abbas, presbyter, religiosus...) - textus anglicus
+       brevis -->
+  <elementum nomen="munus" textus="verum">
+    <attributum nomen="fontes" genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="patrocinium" textus="verum">
+    <attributum nomen="fontes" genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <!-- coetus: socius = membrum nominatum (id alterius plagulae si
+       exstat) -->
+  <elementum nomen="socius" textus="verum">
+    <attributum nomen="ad" genus="compositum"/>
+    <attributum nomen="fontes" genus="textus"/>
+  </elementum>
+
+  <elementum nomen="descriptio">
+    <liberum nomen="paragraphus" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="paragraphus" textus="verum">
+    <attributum nomen="fontes" genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <!-- opus: mr1916 butler1812 ce1913 sedes usccb2026 (plan par. I.2);
+       locus = ubi in opere (dies martyrologii, volumen:pagina,
+       titulus articuli); url si pagina retis -->
+  <elementum nomen="fons">
+    <attributum nomen="id" genus="compositum" necessarium="verum"/>
+    <attributum nomen="opus" genus="electio" necessarium="verum">
+      <optio>mr1916</optio>
+      <optio>butler1812</optio>
+      <optio>ce1913</optio>
+      <optio>sedes</optio>
+      <optio>usccb2026</optio>
+    </attributum>
+    <attributum nomen="locus" genus="textus" necessarium="verum"/>
+    <attributum nomen="url" genus="textus"/>
+    <liberum nomen="excerptum" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="excerptum" textus="verum"/>
+
+</canon>

@@ -1,0 +1,33 @@
+<sanctus id="andrew-dung-lac-and-companions" versio="1" genus="coetus" status="sanctus">
+  <nomen lingua="en" principale="verum">Andrew Dũng-Lạc and Companions</nomen>
+  <nomen lingua="it" fontes="hom">martiri vietnamiti</nomen>
+  <obitus locus="Vietnam" martyrium="verum" fontes="hom"/>
+  <canonizatio modus="formalis" annus="1988" mensis="6" dies="19" papa="John Paul II" fontes="hom"/>
+  <festum calendarium="generale" mensis="11" dies="24" gradus="memoria" fontes="us"/>
+  <munus fontes="us hom">martyr</munus>
+  <socius fontes="hom us">Andrew Dũng-Lạc</socius>
+  <socius fontes="hom">Vincent Liem</socius>
+  <socius fontes="hom">Agnes Le Thi Thành</socius>
+  <descriptio>
+    <paragraphus fontes="hom">From 1533, when Christian preaching began in Southeast Asia, the Church in Vietnam suffered several persecutions over three centuries; thousands of Christians were martyred, and many more died in the mountains, forests and unhealthy lands to which they were exiled. On 19 June 1988 John Paul II canonized 117 of them: eight bishops, fifty priests and fifty-nine lay people, among them Agnes Le Thi Thành, a mother of six. Ninety-six were Vietnamese, the first of them the Dominican Vincent Liem, martyred in 1773. Many of the bishops and priests were Dominicans of the Province of the Holy Rosary or members of the Paris Foreign Missions, and bishops and faithful from Spain, France and the Philippines came to the canonization to remember the many missionaries from their countries.</paragraphus>
+    <paragraphus fontes="hom">Andrew Dũng-Lạc was born to very poor pagan parents and entrusted as a child to a catechist. Ordained priest in 1823, he served as pastor and missionary in several places. Ransomed from prison more than once by the faithful, he longed for martyrdom, saying that whoever dies for the faith goes up to heaven, and he was beheaded at Hanoi on 21 December 1839. The Pope praised the martyrs for holding the Christian religion to be the one thing they could not abandon, while declaring their loyalty to the country's authorities.</paragraphus>
+  </descriptio>
+  <fons id="hom" opus="sedes" locus="Omelia di Giovanni Paolo II, canonizzazione di 117 martiri vietnamiti, 19 giugno 1988" url="https://www.vatican.va/content/john-paul-ii/it/homilies/1988/documents/hf_jp-ii_hom_19880619_martiri.html">
+    <excerptum>19 giugno 1988, Canonizzazione di 117 martiri vietnamiti</excerptum>
+    <excerptum>Dal 1533, cioè dall’inizio della predicazione cristiana nel sud-est asiatico, la Chiesa in Vietnam ha subito, nel corso di tre secoli, diverse persecuzioni</excerptum>
+    <excerptum>Ci furono migliaia di cristiani mandati al martirio, e moltissimi sono coloro che sono morti sulle montagne, nelle foreste, nei territori insalubri dove erano stati esiliati.</excerptum>
+    <excerptum>Sono 117, tra cui otto vescovi, cinquanta sacerdoti, cinquantanove laici, e tra di essi troviamo una donna, Agnese Le Thi Thành, madre di sei bambini.</excerptum>
+    <excerptum>come quella del padre Vincent Liem, domenicano, mandato al martirio nel 1773; è il primo di 96 martiri di nazionalità vietnamita.</excerptum>
+    <excerptum>Invio inoltre un saluto ai padri domenicani della provincia del santo Rosario, fondata 400 anni fa, e all’Istituto delle Missioni Estere di Parigi; a queste due famiglie religiose appartengono molti tra i vescovi e i sacerdoti che oggi veneriamo come martiri</excerptum>
+    <excerptum>Desidero anche salutare i cari fratelli nell’episcopato provenienti assieme a gruppi di fedeli della Spagna, dalla Francia e dalle Filippine</excerptum>
+    <excerptum>Sono qui per ricordare i numerosi fratelli missionari originari delle loro nazioni.</excerptum>
+    <excerptum>Andrè Dung-Lac, i cui genitori, pagani, erano poverissimi; affidato dall’infanzia ad un catechista, diventa prete nel 1823, e fu parroco e missionario in diverse località del Paese.</excerptum>
+    <excerptum>Salvato dalla prigione più di una volta, grazie ai riscatti generosamente pagati dai fedeli, desiderava ardentemente il martirio. “Chi muore per la fede” diceva “sale in cielo</excerptum>
+    <excerptum>subì il martirio della decapitazione ad Hanoi il 21 dicembre 1839.</excerptum>
+    <excerptum>essi affermarono la propria libertà di credo, sostenendo con umile coraggio che la religione cristiana era l’unica cosa che non potevano abbandonare</excerptum>
+    <excerptum>Inoltre proclamarono con forza la loro volontà di essere leali nei confronti delle autorità del Paese</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="24 November">
+    <excerptum>Saint Andrew Dũng-Lạc, Priest, and Companions, Martyrs</excerptum>
+  </fons>
+</sanctus>

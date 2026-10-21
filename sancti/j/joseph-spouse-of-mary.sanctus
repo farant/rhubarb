@@ -1,0 +1,50 @@
+<sanctus id="joseph-spouse-of-mary" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Joseph, Spouse of Mary</nomen>
+  <nomen lingua="en" fontes="us2">Joseph the Worker</nomen>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="3" dies="19" gradus="sollemnitas" fontes="us"/>
+  <festum calendarium="generale" mensis="5" dies="1" gradus="memoria-ad-libitum" nota="Saint Joseph the Worker" fontes="us2"/>
+  <festum calendarium="martyrologium" mensis="3" dies="19" fontes="mr"/>
+  <munus fontes="us ce mr">spouse of the Blessed Virgin Mary</munus>
+  <munus fontes="ce">foster-father of Jesus</munus>
+  <munus fontes="ce">carpenter</munus>
+  <patrocinium fontes="mr ce">the Universal Church</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce bu">Joseph was the spouse of the Virgin Mary and the foster-father of Jesus. Almost all that is reliably known of him comes from the first chapters of the Gospels of Matthew and Luke; the later legends about him are without authority. He was of the house of David, probably born at Bethlehem, and was settled at Nazareth as a craftsman, which tradition understands as carpenter. Finding Mary with child, he resolved as a just man to put her away privately, until an angel in a dream told him that what was conceived in her was of the Holy Spirit, and he took her as his wife.</paragraphus>
+    <paragraphus fontes="ce mr">He went with Mary to Bethlehem for the census, was warned by an angel to flee with the child and his mother into Egypt, and later settled again at Nazareth, living the humble life of a working man. The Gospels last mention him when the twelve-year-old Jesus was found in the Temple; he probably died before the public ministry, but when is not known. Public devotion to him was slow to win recognition; his feast on 19 March entered the Roman Calendar under Sixtus IV, and in 1870 Pius IX declared him Patron of the Universal Church.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="19 March">
+    <excerptum>TN Judea, the birthday of St. Joseph, spouse of the Most Blessed Virgin Mary. Pius IX., yielding to the desires and prayers of the whole Catholic world, declared him Patron of the Universal Church.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v03 March 19 Saint Joseph">
+    <excerptum>The history of his life hath not been written by men; but his principal actions are recorded by the Holy Ghost himself.</excerptum>
+    <excerptum>But being a just man, as the scripture calls him</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Joseph" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Joseph">
+    <excerptum>Spouse of the Blessed Virgin Mary and foster-father of Our Lord Jesus Christ.</excerptum>
+    <excerptum>The chief sources of information on the life of St. Joseph are the first chapters of our first and third Gospels; they are practically also the only reliable sources</excerptum>
+    <excerptum>These dreams, as St. Jerome styles them, from which many a Christian artist has drawn his inspiration (see, for instance, Raphael's "Espousals of the Virgin"), are void of authority</excerptum>
+    <excerptum>Bethlehem, the city of David and his descendants, appears to have been the birth-place of Joseph.</excerptum>
+    <excerptum>Joseph was settled at Nazareth.</excerptum>
+    <excerptum>St. Joseph, indeed, was a tekton, as we learn from Matthew 13:55, and Mark 6:3. The word means both mechanic in general and carpenter in particular</excerptum>
+    <excerptum>and tradition has accepted this interpretation</excerptum>
+    <excerptum>his delicate feelings forbade him to defame his affianced, and he resolved "to put her away privately</excerptum>
+    <excerptum>Joseph, son of David, fear not to take unto thee Mary thy wife, for that which is conceived in her, is of the Holy Ghost.</excerptum>
+    <excerptum>the time came for Joseph and Mary to go to Bethlehem, to be enrolled, according to the decree issued by Caesar Augustus</excerptum>
+    <excerptum>Arise, and take the child and his mother, and fly into Egypt</excerptum>
+    <excerptum>the Holy Family settled again at Nazareth. St. Joseph's was henceforth the simple and uneventful life of an humble Jew, supporting himself and his family by his work</excerptum>
+    <excerptum>The only noteworthy incident recorded by the Gospel is the loss of, and anxious quest for, Jesus, then twelve years of old</excerptum>
+    <excerptum>This is the last we hear of St. Joseph in the sacred writings</excerptum>
+    <excerptum>we may well suppose that Jesus's foster-father died before the beginning of Savior's public life.</excerptum>
+    <excerptum>In truth we do not know when St. Joseph died</excerptum>
+    <excerptum>it is not a little surprising that the cult of St. Joseph was so slow in winning recognition.</excerptum>
+    <excerptum>and in December, 1870, according to the wishes of the bishops and of all the faithful, he solemnly declared the Holy Patriarch Joseph, patron of the Catholic Church</excerptum>
+    <excerptum>Only under the pontificate of Sixtus IV (1471-84), were the efforts of these holy men rewarded by Roman Calendar (19 March).</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="19 March">
+    <excerptum>SAINT JOSEPH, SPOUSE OF THE BLESSED VIRGIN MARY</excerptum>
+  </fons>
+  <fons id="us2" opus="usccb2026" locus="1 May">
+    <excerptum>Saint Joseph the Worker</excerptum>
+  </fons>
+</sanctus>

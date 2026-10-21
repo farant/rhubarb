@@ -1,0 +1,39 @@
+<sanctus id="wenceslaus" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Wenceslaus</nomen>
+  <nomen lingua="en" fontes="mr bu">Wenceslas</nomen>
+  <nomen lingua="alia" fontes="ce">Vaclav</nomen>
+  <ortus annus="903" circa="verum" fontes="ce"/>
+  <obitus annus="935" mensis="9" dies="28" locus="Alt-Bunzlau" martyrium="verum" fontes="ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="9" dies="28" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="9" dies="28" fontes="mr"/>
+  <munus fontes="mr ce">martyr</munus>
+  <munus fontes="mr ce">duke of Bohemia</munus>
+  <patrocinium fontes="ce">Bohemia</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce bu">Wenceslaus, duke of Bohemia, was born probably in 903, the son of Duke Wratislaw, a Christian, and of Dragomir, a pagan. He was brought up in the faith by his grandmother Ludmilla and was schooled at Budweis. After his father's death his mother ruled as regent and set herself against Christianity, and at the people's urging Wenceslaus took the government into his own hands. He placed his duchy under German protection, brought in German priests and favoured the Latin rite. He had taken a vow of virginity, and Butler records his devotion: he prayed by night in the churches and thought it a happiness to sow the corn and gather the grapes for the Mass with his own hands.</paragraphus>
+    <paragraphus fontes="ce bu mr">At his mother's instigation he was murdered by his brother Boleslaw, for religious and national motives. Butler tells that he was invited to a feast for the birth of Boleslaw's son and was struck down when he went to the church at midnight to pray; the Martyrology says he was murdered in his brother's house. The Catholic Encyclopedia gives the date as 28 September 935 at Alt-Bunzlau, Butler as 938. Three years later Boleslaw, repenting, had the body translated to the church of St. Vitus in Prague. He is honoured as patron of Bohemia.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="28 September">
+    <excerptum>TN Bohemia, St. Wenceslas, duke of Bohemia and martyr, renowned for holiness and miracles. Being murdered in his brother's house, he went triumphantly to heaven.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Wenceslaus" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Wenceslaus">
+    <excerptum>(Also Vaclav, Vaceslav.) Duke, martyr, and patron of Bohemia, born probably 903; died at Alt-Bunzlau, 28 September, 935.</excerptum>
+    <excerptum>His parents were Duke Wratislaw, a Christian, and Dragomir, a heathen. He received a good Christian education from his grandmother (St. Ludmilla) and at Budweis.</excerptum>
+    <excerptum>After the death of Wratislaw, Dragomir, acting as regent, opposed Christianity, and Wenceslaus, being urged by the people, took the reins of government.</excerptum>
+    <excerptum>He placed his duchy under the protection of Germany, introduced German priests, and favoured the Latin rite instead of the old Slavic</excerptum>
+    <excerptum>Wenceslaus had taken the vow of virginity and was known for his virtues.</excerptum>
+    <excerptum>For religious and national motives, and at the instigation of Dragomir, Wenceslaus was murdered by his brother Boleslaw.</excerptum>
+    <excerptum>three years later Boleslaw, having repented of his deed, ordered its translation to the Church of St. Vitus in Prague.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v09 Sept. 28 St. Wenceslas, Duke of Bohemia, Martyr">
+    <excerptum>he usually rose at midnight, and went to pray in the churches, or even in the porches</excerptum>
+    <excerptum>that he thought it a great happiness to sow the corn, gather. the grapes, aha idk the wine with his own hands which were to be made use of at mass.</excerptum>
+    <excerptum>A son being born to Boleslas, that prince and his mother invited the good duke to favour them with his company at the rejoicings on that occasion.</excerptum>
+    <excerptum>At midnight he went to offer his customary prayers in the church. Boleslas, at the instigation of Drahomira, followed him thither, and, when his attendants had wounded him, he dispatched him with his own hand</excerptum>
+    <excerptum>The martyrdom of the holy duke happened on the twenty-eighth of September in 938.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="28 September">
+    <excerptum>Saint Wenceslaus, Martyr</excerptum>
+  </fons>
+</sanctus>

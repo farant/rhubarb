@@ -66,3 +66,13 @@ before the move, split the question. `<answered>` (X) is shorter than
 the command, so the line can never grow. Nothing parses the head; the
 old marker stays in pages already answered. Placement itself is now
 robust in scriba_actiones (`clausuram_quaerere`) - see its worklog.
+
+## 2026-10-19 — semitae R3: shared manifest resolver, $via
+
+`organa_vici` (ContextusOrganorum): embedded manifests via
+organum_legere_genus, cached per genus; given to vicus with
+`vicus_organa_ponere`. `$via(uri)` checks before asking vicus: genus
+known, genus has routable fields ("<genus>: semitas nondum accipit"),
+`semita_ex_uri` valid (its error verbatim) - then
+`vicus_acervo_mutare(genus, uri)`; the pane's `argumentum_ponere`
+applies it. The saints pane sets `f->ramus` (history).

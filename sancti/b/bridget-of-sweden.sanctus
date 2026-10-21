@@ -1,0 +1,50 @@
+<sanctus id="bridget-of-sweden" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Bridget of Sweden</nomen>
+  <nomen lingua="alia" fontes="ce">Birgitta</nomen>
+  <ortus annus="1303" locus="Finsta, Uppland" fontes="jp ce"/>
+  <obitus annus="1373" mensis="7" dies="23" locus="Rome" fontes="ce mr8"/>
+  <canonizatio modus="formalis" annus="1391" mensis="10" dies="7" papa="Boniface IX" fontes="ce"/>
+  <festum calendarium="generale" mensis="7" dies="23" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="10" dies="8" fontes="mr8"/>
+  <festum calendarium="martyrologium" mensis="7" dies="23" nota="her departure from this life; the Martyrology refers her feast to 8 October" fontes="mr23"/>
+  <munus fontes="us">religious</munus>
+  <munus fontes="mr8 mr23">widow</munus>
+  <munus fontes="ce jp">founder</munus>
+  <patrocinium fontes="jp">Europe</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce jp">Bridget (Birgitta), whom the Catholic Encyclopedia calls the most celebrated saint of the Northern kingdoms, was born of an aristocratic family in Uppland in 1303 (the Encyclopedia says about 1303), the daughter of Birger Persson, governor and provincial judge of Uppland. In 1316, at thirteen, she married Ulf Gudmarsson; they had eight children, among them St. Catherine of Sweden, and together they founded a small hospital where they cared for the sick. She was later at the court of King Magnus Eriksson. In the early 1340s she and Ulf went on pilgrimage to Santiago de Compostela, and he died in 1344 at the Cistercian monastery of Alvastra.</paragraphus>
+    <paragraphus fontes="ce jp mr8">As a widow she gave herself entirely to religion and asceticism. She believed Christ appeared to her and wrote down the revelations she received; John Paul II noted that the Church recognized her holiness without ever pronouncing on her individual revelations. She founded the Order of St. Saviour (the Brigittines), with its chief house at Vadstena, went to Rome in 1349, and stayed there for the rest of her life apart from pilgrimages, among them one to the Holy Land; Urban V confirmed her Rule in 1370, and she urged the return of the papacy from Avignon. She died at Rome on 23 July 1373, and her body was taken to Vadstena. Boniface IX canonized her on 7 October 1391, and John Paul II named her a co-patroness of Europe in 1999.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Bridget of Sweden" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Bridget_of_Sweden">
+    <excerptum>(Also Birgitta). The most celebrated saint of the Northern kingdoms, born about 1303; died 23 July, 1373.</excerptum>
+    <excerptum>She was the daughter of Birger Persson, governor and provincial judge (Lagman) of Uppland</excerptum>
+    <excerptum>In 1316, at the age of thirteen, she was united in marriage to Ulf Gudmarsson, who was then eighteen.</excerptum>
+    <excerptum>the happy marriage was blessed with eight children, among them St. Catherine of Sweden.</excerptum>
+    <excerptum>She was later at the court of King Magnus Eriksson, over whom she gradually acquired great influence.</excerptum>
+    <excerptum>Early in the forties (1341-43) in company with her husband she made a pilgrimage to Santiago de Compostella.</excerptum>
+    <excerptum>Shortly afterwards, however, he died (1344) in the Cistercian monastery of Alvastrâ in East Gothland.</excerptum>
+    <excerptum>Bridget now devoted herself entirely to practices of religion and asceticism, and to religious undertakings.</excerptum>
+    <excerptum>She believed that Christ Himself appeared to her, and she wrote down the revelations she then received</excerptum>
+    <excerptum>St. Bridget now founded a new religious congregation, the Brigittines, or Order of St. Saviour, whose chief monastery, at Vadstena</excerptum>
+    <excerptum>she journeyed to Rome in 1349, and remained there until her death, except while absent on pilgrimages, among them one to the Holy Land in 1373.</excerptum>
+    <excerptum>In August, 1370, Pope Urban V confirmed the Rule of her congregation.</excerptum>
+    <excerptum>urging the removal of the Holy See from Avignon back to Rome.</excerptum>
+    <excerptum>The year following her death her remains were conveyed to the monastery at Vadstena. She was canonized, 7 October, 1391, by Boniface IX.</excerptum>
+  </fons>
+  <fons id="jp" opus="sedes" locus="John Paul II, Spes aedificandi, 1 October 1999" url="https://www.vatican.va/content/john-paul-ii/en/motu_proprio/documents/hf_jp-ii_motu-proprio_01101999_co-patronesses-europe.html">
+    <excerptum>Bridget, was born of an aristocratic family in 1303 at Finsta, in the Swedish region of Uppland. She is known above all as a mystic and the foundress of the Order of the Most Holy Saviour.</excerptum>
+    <excerptum>she and her husband Ulf enjoyed a married life in which conjugal love was joined to intense prayer, the study of Sacred Scripture, mortification and charitable works. Together they founded a small hospital, where they often attended the sick.</excerptum>
+    <excerptum>the Church, which recognized Bridget's holiness without ever pronouncing on her individual revelations</excerptum>
+    <excerptum>I establish and declare Saint Bridget of Sweden, Saint Catherine of Siena and Saint Teresa Benedicta of the Cross heavenly Co-Patronesses of all of Europe</excerptum>
+    <excerptum>Given in Rome, at Saint Peter's, on the first day of October in the year 1999</excerptum>
+  </fons>
+  <fons id="mr8" opus="mr1916" locus="8 October">
+    <excerptum>Bridget, widow, who, after visiting many holy places by the inspiration of the Holy Spirit, died at Rome on the 23d of July. Her body was taken to Sweden on the 7th of this month.</excerptum>
+  </fons>
+  <fons id="mr23" opus="mr1916" locus="23 July">
+    <excerptum>In the same city, the departure from this life of St. Bridget, widow, whose sacred body was taken to Sweden on the 7th of October. Her feast is celebrated on the 8th of that month.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="23 July">
+    <excerptum>Saint Bridget, Religious</excerptum>
+  </fons>
+</sanctus>

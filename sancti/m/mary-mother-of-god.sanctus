@@ -1,0 +1,144 @@
+<sanctus id="mary-mother-of-god" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Mary, Mother of God</nomen>
+  <nomen lingua="en" fontes="ce">Blessed Virgin Mary</nomen>
+  <nomen lingua="el" fontes="ce">Theotokos</nomen>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="1" dies="1" gradus="sollemnitas" fontes="us0101"/>
+  <festum calendarium="generale" mensis="2" dies="11" gradus="memoria-ad-libitum" fontes="us0211"/>
+  <festum calendarium="generale" mensis="5" dies="13" gradus="memoria-ad-libitum" fontes="us0513"/>
+  <festum calendarium="generale" mensis="5" dies="31" gradus="festum" fontes="us0531"/>
+  <festum calendarium="generale" mensis="7" dies="16" gradus="memoria-ad-libitum" fontes="us0716"/>
+  <festum calendarium="generale" mensis="8" dies="15" gradus="sollemnitas" fontes="us0815"/>
+  <festum calendarium="generale" mensis="8" dies="22" gradus="memoria" fontes="us0822"/>
+  <festum calendarium="generale" mensis="9" dies="8" gradus="festum" fontes="us0908"/>
+  <festum calendarium="generale" mensis="9" dies="12" gradus="memoria-ad-libitum" fontes="us0912"/>
+  <festum calendarium="generale" mensis="9" dies="15" gradus="memoria" fontes="us0915"/>
+  <festum calendarium="generale" mensis="10" dies="7" gradus="memoria" fontes="us1007"/>
+  <festum calendarium="generale" mensis="11" dies="21" gradus="memoria" fontes="us1121"/>
+  <festum calendarium="generale" mensis="12" dies="8" gradus="sollemnitas" fontes="us1208"/>
+  <festum calendarium="generale" mensis="12" dies="10" gradus="memoria-ad-libitum" fontes="us1210"/>
+  <festum calendarium="usa" mensis="12" dies="12" gradus="festum" fontes="us1212"/>
+  <festum calendarium="martyrologium" mensis="2" dies="2" nota="Purification of the Blessed Virgin Mary" fontes="mr0202"/>
+  <festum calendarium="martyrologium" mensis="2" dies="11" nota="Apparition at Lourdes" fontes="mr0211"/>
+  <festum calendarium="martyrologium" mensis="3" dies="25" nota="Annunciation" fontes="mr0325"/>
+  <festum calendarium="martyrologium" mensis="7" dies="2" nota="Visitation" fontes="mr0702"/>
+  <festum calendarium="martyrologium" mensis="7" dies="16" nota="Our Lady of Mount Carmel" fontes="mr0716"/>
+  <festum calendarium="martyrologium" mensis="8" dies="15" nota="Assumption" fontes="mr0815"/>
+  <festum calendarium="martyrologium" mensis="9" dies="8" nota="Nativity" fontes="mr0908"/>
+  <festum calendarium="martyrologium" mensis="9" dies="12" nota="Most Holy Name of Mary" fontes="mr0912"/>
+  <festum calendarium="martyrologium" mensis="9" dies="15" nota="Seven Dolors" fontes="mr0915"/>
+  <festum calendarium="martyrologium" mensis="10" dies="7" nota="Most Holy Rosary" fontes="mr1007"/>
+  <festum calendarium="martyrologium" mensis="11" dies="21" nota="Presentation" fontes="mr1121"/>
+  <festum calendarium="martyrologium" mensis="12" dies="8" nota="Immaculate Conception" fontes="mr1208"/>
+  <festum calendarium="martyrologium" mensis="12" dies="10" nota="Translation of the Holy House of Loreto" fontes="mr1210"/>
+  <munus fontes="ce us0101">Mother of God</munus>
+  <munus fontes="mr0908 mr1208">virgin</munus>
+  <patrocinium fontes="us1208">United States of America (as the Immaculate Conception)</patrocinium>
+  <patrocinium fontes="mrpatr">aeronauts (as Our Lady of Loreto)</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">The Blessed Virgin Mary is the mother of Jesus Christ, the Mother of God. The Gospels say surprisingly little about her. St. Luke places her at Nazareth in Galilee at the Annunciation, a virgin espoused to Joseph, and the Catholic Encyclopedia reads his words as direct testimony to her descent from David. The names of her parents, Joachim and Anna, come from a tradition based on the Protoevangelium of James, an apocryphal gospel of the late second century. With Joseph she went from Nazareth to Bethlehem for the enrolment ordered by Caesar Augustus, and she stood by the cross of her Son. When Nestorius denied her the title Mother of God, the Council of Ephesus proclaimed her Theotokos in the true sense of the word.</paragraphus>
+    <paragraphus fontes="ce mr1208">Where she lived after Pentecost is not certain. By the early fifth century there was a fairly general tradition that she died in Jerusalem and was buried in Gethsemani, which rests on a firmer basis than the report of her death at Ephesus; there is no certain tradition of the year. The feast of her Assumption is most probably the oldest of her feasts. The Martyrology records that on 8 December Pius IX solemnly declared that she had been preserved by a special privilege of God from the stain of original sin.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Bl. Virgin Mary" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Bl._Virgin_Mary">
+    <excerptum>The Blessed Virgin Mary is the mother of Jesus Christ, the mother of God.</excerptum>
+    <excerptum>The reader of the Gospels is at first surprised to find so little about Mary</excerptum>
+    <excerptum>According to Luke 1:26, Mary lived in Nazareth, a city in Galilee, at the time of the Annunciation.</excerptum>
+    <excerptum>to a virgin espoused to a man whose name was Joseph, of the house of David" (Luke 1:26-27); the last clause "of the house of David" does not refer to Joseph, but to the virgin</excerptum>
+    <excerptum>thus we have a direct inspired testimony to Mary's Davidic descent.</excerptum>
+    <excerptum>a tradition founded upon the report of the Protoevangelium of James, an apocryphal Gospel which dates from the end of the second century. According to this document the parents of Mary are Joachim and Anna.</excerptum>
+    <excerptum>explains how Joseph and Mary journeyed from Nazareth to Bethlehem in obedience to a decree of Caesar Augustus which prescribed a general enrolment.</excerptum>
+    <excerptum>While Jesus was hanging on the cross, "there stood by the cross of Jesus, his mother, and his mother's sister, Mary Cleophas, and Mary Magdalen.</excerptum>
+    <excerptum>The contention of Nestorius denying to Mary the title "Mother of God" [75] was followed by the teaching of the Council of Ephesus proclaiming Mary to be Theotokos in the true sense of the word.</excerptum>
+    <excerptum>It has been seen that we have no absolute certainty as to the place in which Mary lived after the day of Pentecost.</excerptum>
+    <excerptum>we may conclude that about the beginning of the fifth century there existed a fairly general tradition that Mary had died in Jerusalem, and had been buried in Gethsemani. This tradition appears to rest on a more solid basis than the report that Our Lady died and was buried in or near Ephesus.</excerptum>
+    <excerptum>There is no certain tradition as to the year of Mary's death.</excerptum>
+    <excerptum>The feast of the Assumption is most probably the oldest among all the feasts of Mary properly so called.</excerptum>
+  </fons>
+  <fons id="mr0202" opus="mr1916" locus="2 February">
+    <excerptum>Purification of the Blessed Virgin Mary, called by the Greeks Hypapante (meeting) of the Lord.</excerptum>
+  </fons>
+  <fons id="mr0211" opus="mr1916" locus="11 February">
+    <excerptum>Lourdes, in France, the apparition of the Blessed Virgin Mary Immaculate.</excerptum>
+  </fons>
+  <fons id="mr0325" opus="mr1916" locus="25 March">
+    <excerptum>Annunciation of the most Blessed Virgin Mary, Mother of God.</excerptum>
+  </fons>
+  <fons id="mr0702" opus="mr1916" locus="2 July">
+    <excerptum>Visitation of the Blessed Virgin Mary to Elizabeth.</excerptum>
+  </fons>
+  <fons id="mr0716" opus="mr1916" locus="16 July">
+    <excerptum>festival of the Blessed Virgin Mary of Mount Carmel.</excerptum>
+  </fons>
+  <fons id="mr0815" opus="mr1916" locus="15 August">
+    <excerptum>Assumption of the most holy Virgin Mary, Mother of God.</excerptum>
+  </fons>
+  <fons id="mr0908" opus="mr1916" locus="8 September">
+    <excerptum>Nativity of the most Blessed and ever Virgin Mary, Mother of God.</excerptum>
+  </fons>
+  <fons id="mr0912" opus="mr1916" locus="12 September">
+    <excerptum>feast of the most holy Name of the Blessed Virgin Mary, celebrated by order of the Sovereign Pontiff, Innocent XI., on account of the signal victory gained over the Turks, at Vienna in Austria, through her protection.</excerptum>
+  </fons>
+  <fons id="mr0915" opus="mr1916" locus="15 September">
+    <excerptum>Octave of the Nativity and the Feast of the Seven Dolors of the Blessed Virgin Mary.</excerptum>
+  </fons>
+  <fons id="mr1007" opus="mr1916" locus="7 October">
+    <excerptum>feast of the Most Holy Rosary of the Blessed Virgin Mary, and the commemoration of Our Lady of Victory, which the sovereign Pontiff, blessed Pius V., on account of the great naval victory gained by the Christians on this day, ordered to be kept annually.</excerptum>
+  </fons>
+  <fons id="mr1121" opus="mr1916" locus="21 November">
+    <excerptum>the temple at Jerusalem, the Presentation of the Blessed Virgin Mary, Mother of God.</excerptum>
+  </fons>
+  <fons id="mr1208" opus="mr1916" locus="8 December">
+    <excerptum>Immaculate Conception of the glorious and ever Virgin Mary, Mother of God. On this day Pius IX. solemnly declared her to have been preserved by a special privilege of God free from the stain of original sin.</excerptum>
+  </fons>
+  <fons id="mr1210" opus="mr1916" locus="10 December">
+    <excerptum>At Loretto, in the March of Ancona, the Translation of the holy house of Mary, Mother of God, in which the Word was made flesh.</excerptum>
+  </fons>
+  <fons id="mrpatr" opus="mr1916" locus="Patron saints of trades and professions (front matter)">
+    <excerptum>PATRON SAINTS OF TRADE; AND OF PROFESSIONS Aeronauts-Our Lady of Loreto.</excerptum>
+  </fons>
+  <fons id="us0101" opus="usccb2026" locus="1 January">
+    <excerptum>SOLEMNITY OF MARY, THE HOLY MOTHER OF GOD</excerptum>
+  </fons>
+  <fons id="us0211" opus="usccb2026" locus="11 February">
+    <excerptum>Our Lady of Lourdes</excerptum>
+  </fons>
+  <fons id="us0513" opus="usccb2026" locus="13 May">
+    <excerptum>Our Lady of Fatima</excerptum>
+  </fons>
+  <fons id="us0531" opus="usccb2026" locus="31 May">
+    <excerptum>The Visitation of the Blessed Virgin Mary</excerptum>
+  </fons>
+  <fons id="us0716" opus="usccb2026" locus="16 July">
+    <excerptum>Our Lady of Mount Carmel</excerptum>
+  </fons>
+  <fons id="us0815" opus="usccb2026" locus="15 August">
+    <excerptum>THE ASSUMPTION OF THE BLESSED VIRGIN MARY</excerptum>
+  </fons>
+  <fons id="us0822" opus="usccb2026" locus="22 August">
+    <excerptum>The Queenship of the Blessed Virgin Mary</excerptum>
+  </fons>
+  <fons id="us0908" opus="usccb2026" locus="8 September">
+    <excerptum>The Nativity of the Blessed Virgin Mary</excerptum>
+  </fons>
+  <fons id="us0912" opus="usccb2026" locus="12 September">
+    <excerptum>The Most Holy Name of Mary</excerptum>
+  </fons>
+  <fons id="us0915" opus="usccb2026" locus="15 September">
+    <excerptum>Our Lady of Sorrows</excerptum>
+  </fons>
+  <fons id="us1007" opus="usccb2026" locus="7 October">
+    <excerptum>Our Lady of the Rosary</excerptum>
+  </fons>
+  <fons id="us1121" opus="usccb2026" locus="21 November">
+    <excerptum>The Presentation of the Blessed Virgin Mary</excerptum>
+  </fons>
+  <fons id="us1208" opus="usccb2026" locus="8 December">
+    <excerptum>THE IMMACULATE CONCEPTION OF THE BLESSED VIRGIN MARY (Patronal Feastday of the United States of America)</excerptum>
+  </fons>
+  <fons id="us1210" opus="usccb2026" locus="10 December">
+    <excerptum>Our Lady of Loreto</excerptum>
+  </fons>
+  <fons id="us1212" opus="usccb2026" locus="12 December">
+    <excerptum>Our Lady of Guadalupe</excerptum>
+  </fons>
+</sanctus>

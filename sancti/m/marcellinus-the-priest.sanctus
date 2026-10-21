@@ -1,0 +1,36 @@
+<sanctus id="marcellinus-the-priest" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Marcellinus the Priest</nomen>
+  <nomen lingua="la" principale="verum" fontes="bu">Marcellinus</nomen>
+  <obitus annus="304" circa="verum" locus="Rome" martyrium="verum" fontes="mr bu"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="6" dies="2" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="6" dies="2" fontes="mr"/>
+  <munus fontes="mr bu">priest</munus>
+  <munus fontes="mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="mr bu">Marcellinus was a priest of the Roman clergy who suffered together with Peter, an exorcist. The Martyrology says the two instructed many prisoners in the faith and, under Diocletian, were chained, tortured and beheaded by order of the judge Serenus. Butler places their condemnation in that persecution, about the year 304.</paragraphus>
+    <paragraphus fontes="mr bu">According to the account Butler repeats, they were led in secret into a thicket so that Christians would not learn where they lay, cleared the ground for their own grave, and were beheaded there; the Martyrology calls the place the Black Forest, afterwards renamed the White Forest in their honour. Pope Damasus, who said he learned the story as a child from the executioner himself, wrote an epitaph in verse for their tomb near that of St. Tiburtius. In 827 Pope Gregory IV sent their bodies to Eginhard, who brought them to Germany.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="2 June">
+    <excerptum>A T Rome, the birthday of the holy martyr Marcellinus, priest, and Peter, exorcist, who instructed in the faith many persons detained in prison.</excerptum>
+    <excerptum>Under Diocletian, they were loaded with chains, and, after enduring many torments, were beheaded by the</excerptum>
+    <excerptum>judge Serenus, in a place which was then called the Black Forest, but which was in their honor afterwards known as the White Forest.</excerptum>
+    <excerptum>Their bodies were buried in a crypt near St. Tiburtius, and pope St. Damasus composed for their tomb an epitaph in verse.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v06 June 2 SS. Marcellinus and Peter">
+    <excerptum>was a priest, and Peter an exorcist, both of the clergy of. Rome, and eminent for their zeal and piety.</excerptum>
+    <excerptum>In the persecution of Dioclesian, about the year 304, they were condemned to die for their faith</excerptum>
+    <excerptum>by a secret order of the judge, the executioner led them into a forest, that the holy men being executed privately, no Christians might be acquainted ath the place of their sepulchre.</excerptum>
+    <excerptum>When he had brought them into a thicket overgrown with thorns and briars</excerptum>
+    <excerptum>After they were beheaded, their bodies were buried in the same place.</excerptum>
+    <excerptum>The saints cheerfully fell to work themselves, grubbed up the brambles, and cleared a spot fit for their sepulchre.</excerptum>
+    <excerptum>Pope Damasus assures us, that, when a child, he learned all these particulars from the month of the executioner himself</excerptum>
+    <excerptum>This great man, in 827, sent his secretary to Raitte. to procure fund pope Gregory IV. some relicks of martyrs</excerptum>
+    <excerptum>Diss. de Basilicis SS. Marcellini &amp; Petri</excerptum>
+    <excerptum>Not long after the bodies of SS. Marcellinus and Peter were translated into Germany on the following occasion.</excerptum>
+    <excerptum>The pope sent him the bodies of SS. Marcellinus and Peter, which Eginhard translated to Strasburg.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="2 June">
+    <excerptum>Saints Marcellinus and Peter, Martyrs</excerptum>
+  </fons>
+</sanctus>

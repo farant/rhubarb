@@ -1,0 +1,40 @@
+<sanctus id="paulinus-of-nola" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Paulinus of Nola</nomen>
+  <nomen lingua="la" fontes="ce">Pontius Meropius Anicius Paulinus</nomen>
+  <ortus annus="354" circa="verum" locus="Bordeaux" fontes="ce"/>
+  <obitus annus="431" mensis="6" dies="22" locus="Nola" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="6" dies="22" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="6" dies="22" fontes="mr"/>
+  <munus fontes="ce mr us">bishop</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Paulinus was born at Bordeaux about 354 to a distinguished family of Aquitaine and was educated by the poet Ausonius. He served as governor of Campania but found no happiness in public life. He married a Christian Spanish lady, Therasia, and was baptized by Bishop Delphinus of Bordeaux. After the death of their only child, eight days after birth, the couple withdrew from the world and about 390 went to Spain, where at Christmas 394 or 395 the people of Barcelona obliged him to be ordained.</paragraphus>
+    <paragraphus fontes="ce mr">Devoted to St. Felix, buried at Nola in Campania, he settled there in 395 with Therasia, gave most of his possessions to the poor, and led a strict monastic life; he built a hospital beside the church of St. Felix and gave generously to the building of basilicas. About 409 he was chosen Bishop of Nola and governed for twenty years. Forty-nine of his letters and thirty-three poems survive, among them a hymn he wrote each year for the feast of St. Felix. The Martyrology says he made himself poor for Christ and even became a slave to free a widow's son carried off to Africa by the Vandals. He died on 22 June 431, and in 1908 Pius X had his body restored to Nola.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Paulinus, Bishop of Nola" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Paulinus,_Bishop_of_Nola">
+    <excerptum>(Pontius Meropius Anicius Paulinus). Born at Bordeaux about 354; died 22 June, 431. He sprang from a distinguished family of Aquitania and his education was entrusted to the poet Ausonius.</excerptum>
+    <excerptum>He became governor of the Province of Campania, but he soon realized that he could not find in public life the happiness he sought.</excerptum>
+    <excerptum>He married a Spanish lady, a Christian named Therasia.</excerptum>
+    <excerptum>Bishop Delphinus of Bordeaux</excerptum>
+    <excerptum>He and his brother were baptized at the same time by Delphinus.</excerptum>
+    <excerptum>When Paulinus lost his only child eight days after birth</excerptum>
+    <excerptum>he and his wife decided to withdraw from the world, and to enter the monastic life. They went to Spain about 390.</excerptum>
+    <excerptum>At Christmas, 394, or 395, the inhabitants of Barcelona obliged him to be ordained</excerptum>
+    <excerptum>Having had a special devotion to St. Felix, who was buried at Nola in Campania</excerptum>
+    <excerptum>beside it he erected a hospital. He decided to settle down there with Therasia; and he distributed the largest part of his possessions among the poor.</excerptum>
+    <excerptum>In 395 he removed to Nola, where he led a rigorous, ascetic, and monastic life, at the same time contributing generously to the Church, the aqueduct at Nola, and the construction of basilicas in Nola, Fondi, etc.</excerptum>
+    <excerptum>About 409 Paulinus was chosen Bishop of Nola. For twenty years he discharged his duties in a most praiseworthy manner.</excerptum>
+    <excerptum>Forty-nine letters to friends have been preserved</excerptum>
+    <excerptum>Thirty-three poems are also extant. After 395 he composed annually a hymn for the feast of St. Felix</excerptum>
+    <excerptum>His body was first interred in the cathedral of Nola</excerptum>
+    <excerptum>finally in compliance with the regulation of Pius X of 18 Sept., 1908</excerptum>
+    <excerptum>was restored to the cathedral of Nola.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="22 June">
+    <excerptum>At Nola, in Campania, the birthday of blessed Paulinus, bishop and confessor, who, although a most noble and wealthy man, made himself poor and humble for Christ</excerptum>
+    <excerptum>became a slave to liberate a widow's son, who had been carried to Africa by the Vandals, when they devastated Campania.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="22 June">
+    <excerptum>Saint Paulinus of Nola, Bishop</excerptum>
+  </fons>
+</sanctus>

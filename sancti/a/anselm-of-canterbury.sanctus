@@ -1,0 +1,48 @@
+<sanctus id="anselm-of-canterbury" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Anselm of Canterbury</nomen>
+  <ortus annus="1033" circa="verum" locus="Aosta" fontes="ce bu"/>
+  <obitus annus="1109" mensis="4" dies="21" locus="Canterbury" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="4" dies="21" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="4" dies="21" fontes="mr"/>
+  <munus fontes="mr ce">bishop</munus>
+  <munus fontes="ce">abbot</munus>
+  <munus fontes="mr ce">doctor of the Church</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Anselm was born at Aosta in 1033 or 1034. He left home after harsh treatment by his father, spent nearly three years in Burgundy and France, and came to the Abbey of Bec in Normandy, then made famous by the learning of Lanfranc, whose closest disciple he became. He took the habit there in 1060, served as prior and teacher, wrote the Monologium and the Proslogium, and in 1078 was elected abbot on the death of the founder, Herluin. The Proslogium contains his chief achievement in philosophy, the argument for God's existence from the idea of "that than which nothing greater can be thought".</paragraphus>
+    <paragraphus fontes="ce mr">After Lanfranc's death King William Rufus kept the see of Canterbury vacant for four years; in 1093 the king, fallen ill and repentant, named Anselm archbishop. The king's repentance did not last, and fresh trouble with him in 1097 took Anselm to Rome; during this stay in Italy he finished Cur Deus Homo. Under Henry I the dispute turned on the investiture of bishops, and Anselm went to Rome once more. A council in London in 1107 settled the question, the king giving up the investiture of bishops and abbots. Anselm spent his last two years in peace and died on 21 April 1109. Clement XI declared him a Doctor of the Church in 1720.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="21 April">
+    <excerptum>A T Canterbury, in England, St. Anselm, bishop and Doctor of the Church, who was renowned for sanctity and learning.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Anselm (1)" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Anselm_(1)">
+    <excerptum>Anselm, Saint, Archbishop of Canterbury, Doctor of the Church, b. at Aosta, a Burgundian town on the confines of Lombardy, 1033–34; d. 21 April, 1109.</excerptum>
+    <excerptum>At this time his father treated him with great harshness; so much so that he resolved to leave his home.</excerptum>
+    <excerptum>After passing nearly three years in Burgundy and France, he came into Normandy and tarried for a while at Avranches before finding his home at the Abbey of Bec, then made illustrious by Lanfranc's learning.</excerptum>
+    <excerptum>Anselm profited so well by the lessons of this master that he became his most familiar disciple</excerptum>
+    <excerptum>This prelate decided in favour of the monastic life, and Anselm became a monk in the Abbey of Bec. This was in 1060.</excerptum>
+    <excerptum>To the duties of prior he added those of teacher.</excerptum>
+    <excerptum>he composed some of his philosophical and theological works, notably, the "Monologium" and the "Proslogium".</excerptum>
+    <excerptum>in 1078, on the death of Herluin, founder and first Abbot of Bec Anselm was elected to succeed him.</excerptum>
+    <excerptum>Anselm's chief achievement in philosophy was the ontological argument for the existence of God put forth in his "Proslogium". Starting from the notion that God is "that than which nothing greater can be thought"</excerptum>
+    <excerptum>When Lanfranc died, William Rufus kept the See of Canterbury vacant for four years</excerptum>
+    <excerptum>The King fell ill early in the new year (1093), and on his sick-bed he was moved to repentance. The prelates and barons urged on him the necessity of electing an archbishop. Yielding to the manifest desire of all he named Anselm</excerptum>
+    <excerptum>The King's repentance passed away with his sickness and Anselm soon saw signs of trouble.</excerptum>
+    <excerptum>Fresh trouble arose in 1097. On returning from his ineffectual Welsh campaign William brought a charge against the Archbishop</excerptum>
+    <excerptum>Anselm declined and asked leave to go to Rome.</excerptum>
+    <excerptum>On his arrival in Rome he was treated with great honour by the Pope.</excerptum>
+    <excerptum>Henry persisted in his resolution to compel Anselm to accept investiture at his hands.</excerptum>
+    <excerptum>During his stay in Italy Anselm enjoyed the hospitality of the Abbot of Telese, and passed the summer in a mountain village belonging to this monastery. Here he finished his work, "Cur Deus Homo", which he had begun in England.</excerptum>
+    <excerptum>With this understanding he once more betook himself to Rome.</excerptum>
+    <excerptum>At length, in a council held in London in 1107, the question found a solution. The King relinquished the claim to invest bishops and abbots</excerptum>
+    <excerptum>Anselm was allowed to end his days in peace. In the two years that remained he continued his pastoral labours</excerptum>
+    <excerptum>he has been declared a Doctor of the Church by Clement XI, 1720</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v04 April 21 St. Anselm, B. C.">
+    <excerptum>St. Anselm was born of noble parents, at Aoust, in Piedmont,</excerptum>
+    <excerptum>about the year 1033. His pious mother took care to give him an early tincture of piety</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="21 April">
+    <excerptum>Saint Anselm, Bishop and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

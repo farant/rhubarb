@@ -1,6 +1,7 @@
 /* conservatio.h - SYSTEMA PERSISTENTIAE (status-plan S3): campi vita
  * persistens ramorum registratorum in volumine applicationis servantur
- * (plagula "status/<clavis>") et ad montationem restituuntur.
+ * (praesentia, clavis "status/<clavis>" - extra acta, D1) et ad
+ * montationem restituuntur.
  *
  * Systema actarium repositorii possidet: post omnem scripturam per
  * portam successam, ramus quisque SUB VIA SCRIPTA (S8e; radix = omnes)
@@ -8,7 +9,7 @@
  * mobiles semel per quietem, quia motus insulam solum in quiete
  * tangit).
  *
- * Forma plagulae (versio 2, C2 - insula una: campi ut attributa):
+ * Forma valoris (versio 2, C2 - insula una: campi ut attributa):
  *   <status versio="2" genus="pictor" instrumentum="linea" zoom="2"/>
  * Versio 1 (<status><durabilis/><ephemera/></status>) legitur et
  * MIGRATUR (ambae fusae, ephemera vincit); ignota praeteritur.

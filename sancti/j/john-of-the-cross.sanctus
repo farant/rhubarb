@@ -1,0 +1,45 @@
+<sanctus id="john-of-the-cross" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">John of the Cross</nomen>
+  <nomen lingua="en" fontes="ce">John de Yepes</nomen>
+  <ortus annus="1542" mensis="6" dies="24" locus="Hontoveros, Old Castile" fontes="ce"/>
+  <obitus annus="1591" mensis="12" dies="14" locus="Ubeda, Andalusia" fontes="ce mr"/>
+  <beatificatio annus="1675" mensis="1" dies="25" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1726" mensis="12" dies="27" fontes="ce"/>
+  <festum calendarium="generale" mensis="12" dies="14" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="12" dies="14" nota="the Martyrology adds that his feast was then kept on 24 November" fontes="mr"/>
+  <munus fontes="us ce">priest</munus>
+  <munus fontes="us">doctor of the Church</munus>
+  <munus fontes="ce mr">religious</munus>
+  <descriptio>
+    <paragraphus fontes="ce">John de Yepes was born at Hontoveros in Old Castile on 24 June 1542, the youngest child of poor silk weavers of Toledo. As a youth he was taken into the service of the hospital of Medina, where for seven years he waited on the poorest of the poor while attending a Jesuit school. He took the Carmelite habit at Medina in 1563 and was ordained priest in 1567. On the point of joining the Carthusians, he met St. Teresa, who persuaded him to help her bring the primitive rule to the friars; on 28 November 1568 he began the reform with two companions and took the name John of the Cross.</paragraphus>
+    <paragraphus fontes="ce mr">When he refused his provincial's order to return to Medina, he was seized on the night of 3 December 1577 and held for over nine months in a narrow cell at Toledo, where he wrote some of his finest poetry, before escaping in August 1578. He later founded and governed houses of the reform, but was deprived of his offices and died at Ubeda on 14 December 1591. His writings include "The Ascent of Mount Carmel", "The Dark Night of the Soul", the "Spiritual Canticle" and "The Living Flame of Love". He was beatified in 1675 and canonized on 27 December 1726.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. John of the Cross" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._John_of_the_Cross">
+    <excerptum>Founder (with St. Teresa) of the Discalced Carmelites, doctor of mystic theology, b. at Hontoveros, Old Castile, 24 June, 1542; d. at Ubeda, Andalusia, 14 Dec., 1591.</excerptum>
+    <excerptum>John de Yepes, youngest child of Gonzalo de Yepes and Catherine Alvarez, poor silk weavers of Toledo</excerptum>
+    <excerptum>Thereupon the governor of the hospital of Medina took him into his service, and</excerptum>
+    <excerptum>for seven years John divided his time between waiting on the poorest of the poor, and frequenting a school established by the Jesuits.</excerptum>
+    <excerptum>The Carmelites having founded a house at Medina, he there received the habit on 24 February, 1563, and took the name of John of St. Matthias.</excerptum>
+    <excerptum>was ordained priest in 1567</excerptum>
+    <excerptum>But, shrinking from the responsibilities of the priesthood, he determined to join the Carthusians.</excerptum>
+    <excerptum>he made the acquaintance of St. Teresa, who had come to Medina to found a convent of nuns, and who persuaded him to remain in the Carmelite Order and to assist her in the establishment of a monastery of friars carrying out the primitive rule.</excerptum>
+    <excerptum>He was joined by two companions, an ex-prior and a lay brother, with whom he inaugurated the reform among friars, 28 Nov., 1568.</excerptum>
+    <excerptum>John of the Cross, as he now called himself, became the first master of novices</excerptum>
+    <excerptum>St. John was ordered by his provincial to return to the house of his profession (Medina), and, on his refusing to do so</excerptum>
+    <excerptum>he was taken prisoner in the night of 3 December, 1577, and carried off to Toledo, where he suffered for more than nine months close imprisonment in a narrow, stifling cell</excerptum>
+    <excerptum>some of his exquisite poetry dates from that period. He made good his escape in a miraculous manner, August, 1578.</excerptum>
+    <excerptum>he was chiefly occupied with the foundation and government of monasteries at Baeza, Granada, Cordova, Segovia, and elsewhere</excerptum>
+    <excerptum>drew upon himself the displeasure of the superior, who deprived him of his offices and relegated him to one of the poorest monasteries</excerptum>
+    <excerptum>The beatification took place onb 25 Jan., 1675, the translation of his body on 21 May of the same year, and the canonization on 27 Dec., 1726.</excerptum>
+    <excerptum>"The Ascent of Mount Carmel", an explanation of some verses beginning: "In a dark night with anxious love inflamed".</excerptum>
+    <excerptum>"The Dark Night of the Soul", another explanation of the same verses</excerptum>
+    <excerptum>An explanation of the "Spiritual Canticle", (a paraphrase of the Canticle of Canticles)</excerptum>
+    <excerptum>An explanation of a poem beginning: "O Living Flame of Love", written about 1584</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="14 December">
+    <excerptum>At Ubeda, in Spain, St. John of the Cross, confessor, companion of St. Theresa in reforming the Carmelites. His feast is kept on the 24th of November.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="14 December">
+    <excerptum>Saint John of the Cross, Priest and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

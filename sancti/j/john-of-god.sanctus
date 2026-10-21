@@ -1,0 +1,45 @@
+<sanctus id="john-of-god" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">John of God</nomen>
+  <ortus annus="1495" mensis="3" dies="8" locus="Montemor o Novo, Portugal" fontes="ce bu"/>
+  <obitus annus="1550" mensis="3" dies="8" locus="Granada" fontes="ce bu"/>
+  <beatificatio annus="1638" mensis="9" dies="21" papa="Urban VIII" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1690" mensis="10" dies="16" papa="Alexander VIII" fontes="ce bu"/>
+  <festum calendarium="generale" mensis="3" dies="8" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="3" dies="8" fontes="mr"/>
+  <munus fontes="us">religious</munus>
+  <patrocinium fontes="ce mr">hospitals</patrocinium>
+  <patrocinium fontes="mr">the sick</patrocinium>
+  <patrocinium fontes="ce">the dying</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce bu">John was born in Portugal in 1495 to poor but devout parents. As a boy he was left in the care of a chief shepherd at Oropeza in Spain, and as a young man he served as a soldier in the armies of Charles V, including a campaign against the Turks. Later he worked as a shepherd near Seville, went to Africa in the service of an exiled Portuguese family, and on his confessor's advice returned to Gibraltar, where he went about selling religious books and pictures before settling at Granada.</paragraphus>
+    <paragraphus fontes="ce bu mr">At Granada the preaching of John of Avila moved him to give away everything and to beg God's mercy in the streets so wildly that he was taken for a madman and confined, until John of Avila directed him to a more useful penance. He then rented a house for the sick poor and served them himself, begging by night for their needs; from this work grew the Order of the Brothers Hospitallers. He died at Granada on 8 March 1550, after an illness brought on by trying to save a young man from drowning. He was beatified by Urban VIII (in 1638 according to the Catholic Encyclopedia, 1630 according to Butler) and canonized by Alexander VIII in 1690, and Leo XIII named him patron of hospitals, of the infirm and of the dying.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="8 March">
+    <excerptum>At Granada, in Spain, St. John of God, founder of the Order of the Brothers Hospitallers, celebrated for his mercy to the poor, and his contempt of self. Pope Leo XIII. declared him heavenly patron of hospitals and the infirm.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v03 March 8 St. John of God, C.">
+    <excerptum>was born in Portugal, in 1495. His parents were of the lowest rank in the country, but devout and charitable.</excerptum>
+    <excerptum>He was thereupon taken up and put into a madhouse on supposition of his being disordered in his senses</excerptum>
+    <excerptum>Soon after he hired a house to harbour poor sick persons in, whom he served and provided for</excerptum>
+    <excerptum>The saint expired on his knees, before the altar, on the eighth of March, in 1550, being exactly fifty-five years old.</excerptum>
+    <excerptum>beatified by Urban VIII. in 1630, and canonized by Alexander VIII. in 1690.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. John of God" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._John_of_God">
+    <excerptum>Born at Montemor o Novo, Portugal, 8 March, 1495, of devout Christian parents; died at Granada, 8 March, 1550.</excerptum>
+    <excerptum>A Spanish priest whom he followed to Oropeza, Spain, in his ninth year left him in charge of the chief shepherd of the place</excerptum>
+    <excerptum>John took service for a time in the army of Charles V, and on the renewal of the proposal he enlisted in a regiment on its way to Austria to do battle with the Turks.</excerptum>
+    <excerptum>then a shepherd at Seville and still later at Gibraltar</excerptum>
+    <excerptum>He accompanied to Africa a Portuguese family just expelled from the country</excerptum>
+    <excerptum>On the advice of his confessor he soon returned to Gilbratar</excerptum>
+    <excerptum>selling religious books and pictures, with practically no margin of profit</excerptum>
+    <excerptum>he was so deeply impressed by the preaching of Blessed John of Avila that he distributed his worldly goods and went through the streets of the city, beating his breast and calling on God for mercy.</excerptum>
+    <excerptum>he was dealt with as a madman, until the zealous preacher obliged him to desist from his lamentations and take some other method of atoning for his past life.</excerptum>
+    <excerptum>he gave himself up to the service of the sick and poor, renting a house in which to care for them</excerptum>
+    <excerptum>soliciting by night the needful supplies, and by day attending scrupulously to the needs of his patients</excerptum>
+    <excerptum>His last illness had resulted from an heroic but futile effort to save a young man from drowning.</excerptum>
+    <excerptum>He was beatified by Urban VIII, 21 September, 1638, and canonized by Alexander VIII, 16 October, 1690. Pope Leo XIII made St. John of God patron of hospitals and the dying.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="8 March">
+    <excerptum>Saint John of God, Religious</excerptum>
+  </fons>
+</sanctus>

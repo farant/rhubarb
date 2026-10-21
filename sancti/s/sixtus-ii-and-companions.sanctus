@@ -1,0 +1,50 @@
+<sanctus id="sixtus-ii-and-companions" versio="1" genus="coetus" status="sanctus">
+  <nomen lingua="en" principale="verum">Sixtus II and Companions</nomen>
+  <nomen lingua="la" principale="verum" fontes="ce mr">Xystus II</nomen>
+  <obitus annus="258" mensis="8" dies="6" locus="Rome" martyrium="verum" fontes="ce bu mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="8" dies="7" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="8" dies="6" fontes="mr"/>
+  <munus fontes="us ce mr">pope</munus>
+  <munus fontes="ce">deacon</munus>
+  <munus fontes="us ce mr">martyr</munus>
+  <socius fontes="ce bu mr">Sixtus II</socius>
+  <socius fontes="ce mr">Januarius</socius>
+  <socius fontes="ce mr">Vincent</socius>
+  <socius fontes="ce mr">Magnus</socius>
+  <socius fontes="ce mr">Stephen</socius>
+  <socius fontes="ce bu mr">Felicissimus</socius>
+  <socius fontes="ce bu mr">Agapitus</socius>
+  <socius fontes="bu mr">Quartus</socius>
+  <descriptio>
+    <paragraphus fontes="ce bu">Sixtus (Xystus) II was elected bishop of Rome on 31 August 257. His origin is unknown: the Liber Pontificalis and Butler make him a Greek, which the Catholic Encyclopedia thinks a mistake. Called by Pontius a good and peaceful priest, he was more conciliatory than his predecessor Stephen and restored friendly relations with the Churches of Africa and Asia Minor in the dispute over rebaptizing heretics, while keeping the Roman usage of not rebaptizing them.</paragraphus>
+    <paragraphus fontes="ce bu mr">In August 258 an edict of the Emperor Valerian ordered bishops, priests and deacons to be put to death at once. On 6 August, while Sixtus sat addressing his flock in the cemetery of Praetextatus on the Appian Way, soldiers seized him; it is uncertain whether he was beheaded on the spot or first tried, the latter being thought more probable; the Martyrology and Butler instead place his death in the cemetery of Callistus. Four deacons, Januarius, Vincent, Magnus and Stephen, were beheaded with him, and two more, Felicissimus and Agapitus, suffered the same day; the Martyrology calls the first four subdeacons and adds a Quartus, mentioned by St. Cyprian. Sixtus was buried in the papal crypt of St. Callistus. The story of his meeting with St. Lawrence is probably legend.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Pope St. Sixtus II" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Pope_St._Sixtus_II">
+    <excerptum>(XYSTUS). Elected 31 Aug., 257, martyred at Rome, 6 Aug., 258. His origin is unknown. The "Liber Pontificalis" says that he was a Greek by birth, but this is probably a mistake</excerptum>
+    <excerptum>a sharp dispute had arisen between Rome and the African and Asiatic Churches, concerning the rebaptism of heretics, which had threatened to end in a complete rupture between Rome and the Churches of Africa and Asia Minor</excerptum>
+    <excerptum>Sixtus II, whom Pontius (Vita Cyprian, cap. xiv) styles a good and peaceful priest (bonus et pacificus sacerdos), was more conciliatory than St. Stephen and restored friendly relations with these Churches, though, like his predecessor, he upheld the Roman usage of not rebaptizing heretics.</excerptum>
+    <excerptum>But during the first days of August, 258, the emperor issued a new and far more cruel edict against the Christians</excerptum>
+    <excerptum>Valerian issued his first edict of persecution</excerptum>
+    <excerptum>It ordered bishops, priests, and deacons to be summarily put to death</excerptum>
+    <excerptum>he assembled his flock on 6 August at one of the less-known cemeteries, that of Prætextatus, on the left side of the Appian Way</excerptum>
+    <excerptum>While seated on his chair in the act of addressing his flock he was suddenly apprehended by a band of soldiers. There is some doubt whether he was beheaded forthwith, or was first brought before a tribunal to receive his sentence and then led back to the cemetery for execution. The latter opinion seems to be the more probable.</excerptum>
+    <excerptum>The pathetic meeting between St. Sixtus II and St. Lawrence, as the former was being led to execution</excerptum>
+    <excerptum>is probably a mere legend. Entirely contrary to truth is the statement of Prudentius (ibid., lines 23-26) that Sixtus II suffered martyrdom on the cross</excerptum>
+    <excerptum>Four deacons, Januarius, Vincentius, Magnus, and Stephanus, were apprehended with Sixtus and beheaded with him at the same cemetery. Two other deacons, Felicissimus and Agapitus, suffered martyrdom on the same day.</excerptum>
+    <excerptum>The remains of Sixtus were transferred by the Christians to the papal crypt in the neighbouring cemetery of St. Callistus.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v08 Aug. 6 St. Xystus, or Sixtus II, Pope and Martyr">
+    <excerptum>He was a Grecian by birth. deacon of the Roman church under St. Stephen, and upon his demise, in 257, was chosen pope</excerptum>
+    <excerptum>You are to understand that Xystus (bishop of Rome) suffered in a cemetery upon the sixth day of August, and with him Quartus.</excerptum>
+    <excerptum>for the Liberian Calendar assures us, that he ‘was beheaded in the cemetery of Calixtus</excerptum>
+    <excerptum>four deacons suffered at Rome, Preetextatus, Felicissimus, and’ Agapitus, with their bishop</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="6 August">
+    <excerptum>in the cemetery of Callistus, the birthday of blessed Xystus II., pope and martyr, who received the crown of martyrdom in the persecution of Valerian, by being put to the sword.</excerptum>
+    <excerptum>Also, the holy martyrs Felicissimus and Agapitus, deacons of blessed Xystus; Januarius, Magnus, Vincent, and Stephen, subdeacons, all of whom were beheaded with him, and buried in the cemetery of Praetextatus. With them suffered also blessed Quartus, as is related by St. Cyprian.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="7 August">
+    <excerptum>Saint Sixtus II, Pope, and Companions, Martyrs</excerptum>
+  </fons>
+</sanctus>

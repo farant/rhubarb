@@ -19,6 +19,7 @@
 #include "internamentum.h"
 #include "volumen.h"
 #include "scriba_documentum.h"
+#include "xar.h"
 
 nomen structura ScribaLiber ScribaLiber;
 
@@ -82,5 +83,19 @@ ScribaDocumentum*
 scriba_liber_paginam_condere (
     ScribaLiber* l,
          chorda  titulus);
+
+/* lineae textus libri in spatio dato (e.g. "dies/2026-10-19"),
+ * LECTIO SOLA: liber absens = nullae lineae, nihil scribitur (index
+ * non creatur - scriba_liber_aperire_in_spatio paginam "1" scriberet).
+ * Paginae ordine indicis; lineae vacuae (aut spatiis solis) omissae;
+ * maximum = lineae summae (0 = omnes). Xar de chorda in exitus. */
+b32
+scriba_liber_lineas_legere (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* praefixum,
+                    i32  maximum,
+                    Xar* exitus);
 
 #endif /* SCRIBA_LIBER_H */

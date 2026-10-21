@@ -1,0 +1,42 @@
+<sanctus id="pius-v" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Pius V</nomen>
+  <nomen lingua="it" fontes="ce">Michele Ghisleri</nomen>
+  <ortus annus="1504" mensis="1" dies="17" locus="Bosco, near Alessandria" fontes="ce"/>
+  <obitus annus="1572" mensis="5" dies="1" locus="Rome" fontes="ce mr"/>
+  <beatificatio annus="1672" papa="Clement X" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1712" papa="Clement XI" fontes="ce"/>
+  <festum calendarium="generale" mensis="4" dies="30" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="5" dies="5" fontes="mr"/>
+  <munus fontes="mr ce us">pope</munus>
+  <munus fontes="mr ce">religious</munus>
+  <munus fontes="ce">bishop</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Michele Ghisleri was born at Bosco near Alessandria on 17 January 1504, of a poor but noble family. Taken in by the Dominicans of Voghera, he entered the order, was ordained in 1528, taught theology and philosophy for sixteen years, and served as master of novices and prior, living a life of fasting, penance and long prayer. Paul IV made him Bishop of Sutri in 1556; he became inquisitor, then cardinal and inquisitor general, and in 1559 Bishop of Mondovì. He was elected pope on 7 January 1566, against his own tears and entreaties.</paragraphus>
+    <paragraphus fontes="ce mr">As pope he kept the virtues he had shown as a religious and a bishop, visited the sick in the hospitals, banished luxury from his court, and with St. Charles Borromeo worked to reform the clergy, enforcing the discipline of the Council of Trent. The struggle against the Protestants and the Turks seems to have been the chief concern of his reign: he excommunicated Elizabeth of England and worked to unite the Christian powers against the Turks; after the victory of Lepanto on 7 October 1571 he instituted the feast of the Rosary and added "Help of Christians" to the Litany of Loreto. He died on 1 May 1572, was beatified by Clement X in 1672 and canonized by Clement XI in 1712.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="5 May">
+    <excerptum>A T Rome, pope St. Pius V., of the Order of Preachers, who labored zealously and successfully for the re-establishment of ecclesiastical discipline, the extirpation of heresies, the destruction of the enemies of the Christian name</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="Pope St. Pius V" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Pope_St._Pius_V">
+    <excerptum>(MICHELE GHISLERI). Born at Bosco, near Alexandria, Lombardy, 17 Jan., 1504 elected 7 Jan., 1566; died 1 May, 1572.</excerptum>
+    <excerptum>Being of a poor though noble family his lot would have been to follow a trade, but he was taken in by the Dominicans of Voghera</excerptum>
+    <excerptum>He entered the order, was ordained in 1528, and taught theology and philosophy for sixteen years. In the meantime he was master of novices and was on several occasions elected prior</excerptum>
+    <excerptum>He fasted, did penance, passed long hours of the night in meditation and prayer</excerptum>
+    <excerptum>In 1556 he was made Bishop of Sutri by Paul IV. His zeal against heresy caused him to be selected as inquisitor of the faith in Milan and Lombardy</excerptum>
+    <excerptum>made him a cardinal and named him inquisitor general for all Christendom. In 1559 he was transferred to Mondovi</excerptum>
+    <excerptum>On the death of Pius IV, he was, despite his tears and entreaties, elected pope</excerptum>
+    <excerptum>As pontiff he practiced the virtues he had displayed as a monk and a bishop.</excerptum>
+    <excerptum>In his charity he visited the hospitals, and sat by the bedside of the sick</excerptum>
+    <excerptum>He was very austere and banished luxury from his court, raised the standard of morality, laboured with his intimate friend, St. Charles Borromeo, to reform the clergy</excerptum>
+    <excerptum>He enforced the observance of the discipline of the Council of Trent</excerptum>
+    <excerptum>But the great thought and the constant preoccupation of his pontificate seems to have been the struggle against the Protestants and the Turks.</excerptum>
+    <excerptum>In England, finally, he excommunicated Elizabeth</excerptum>
+    <excerptum>He worked incessantly to unite the Christian princes against the hereditary enemy, the Turks.</excerptum>
+    <excerptum>On the day of the Battle of Lepanto, 7 Oct., 1571, he was working with the cardinals</excerptum>
+    <excerptum>In memory of this triumph he instituted for the first Sunday of October the feast of the Rosary, and added to the Litany of Loreto the supplication "Help of Christians".</excerptum>
+    <excerptum>He was beatified by Clement X in 1672, and canonized by Clement XI in 1712.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="30 April">
+    <excerptum>Saint Pius V, Pope</excerptum>
+  </fons>
+</sanctus>

@@ -1,0 +1,45 @@
+<sanctus id="teresa-of-avila" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Teresa of Ávila</nomen>
+  <nomen lingua="en" fontes="us">Teresa of Jesus</nomen>
+  <nomen lingua="es" fontes="ce">Teresa Sanchez Cepeda Davila y Ahumada</nomen>
+  <nomen lingua="la" fontes="ce">Theresia</nomen>
+  <ortus annus="1515" mensis="3" dies="28" locus="Avila, Old Castile" fontes="ce"/>
+  <obitus annus="1582" mensis="10" dies="4" calendarium="julianum" locus="Alba de Tormes" fontes="ce"/>
+  <beatificatio annus="1614" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1622" papa="Gregory XV" fontes="ce"/>
+  <festum calendarium="generale" mensis="10" dies="15" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="10" dies="15" fontes="mr"/>
+  <munus fontes="us mr">virgin</munus>
+  <munus fontes="ce">religious</munus>
+  <munus fontes="us">doctor of the Church</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Teresa was born at Avila in Old Castile on 28 March 1515. Reading the letters of St. Jerome moved her toward religious life, and in November 1535 she left her father's house without his knowledge to enter the Carmelite convent of the Incarnation at Avila. Soon after her profession she fell gravely ill, and her health remained permanently impaired. In these years she took up mental prayer and began to receive what she described as intellectual visions and locutions; some saintly laymen she consulted took them for the work of the evil spirit, until St. Francis Borgia, St. Peter of Alcantara and others discerned in them the work of God. The Catholic Encyclopedia compares her account of her inner life, in her Life, Relations and Interior Castle, only with Augustine's Confessions.</paragraphus>
+    <paragraphus fontes="ce mr">In 1562 she founded at Avila the convent of St. Joseph for Discalced Carmelite nuns under the primitive rule, and with the approval of the Carmelite general she went on to found many more convents, nearly all of them in the face of violent opposition. With St. John of the Cross she carried the reform to the friars from 1568; after four years of persecution the province of Discalced Carmelites was established in 1580. She died at Alba de Tormes on 4 October 1582; because of the reform of the calendar, the next day was reckoned 15 October. She was beatified in 1614 and canonized by Gregory XV in 1622, with her feast fixed on 15 October.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Teresa of Jesus" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Teresa_of_Jesus">
+    <excerptum>Teresa Sanchez Cepeda Davila y Ahumada, born at Avila, Old Castile, 28 March, 1515; died at Alba de Tormes, 4 Oct., 1582.</excerptum>
+    <excerptum>an uncle who made her acquainted with the Letters of St. Jerome, which determined her to adopt the religious life</excerptum>
+    <excerptum>Unable to obtain her father's consent she left his house unknown to him on Nov., 1535, to enter the Carmelite Convent of the Incarnation at Avila</excerptum>
+    <excerptum>After her profession in the following year she became very seriously ill</excerptum>
+    <excerptum>her health remained permanently impaired. During these years of suffering she began the practice of mental prayer</excerptum>
+    <excerptum>Meanwhile God had begun to visit her with "intellectual visions and locutions"</excerptum>
+    <excerptum>but also to some saintly laymen, who, never suspecting that the account she gave them of her sins was greatly exaggerated, believed these manifestations to be the work of the evil spirit.</excerptum>
+    <excerptum>It was reserved to St. Francis Borgia and St. Peter of Alcantara, and afterwards to a number of Dominicans (particularly Pedro Ibañez and Domingo Bañez), Jesuits, and other religious and secular priests, to discern the work of God</excerptum>
+    <excerptum>in the "Relations", and in the "Interior Castle", forms one of the most remarkable spiritual biographies with which only the "Confessions of St. Augustine" can bear comparison.</excerptum>
+    <excerptum>St. Teresa founded the convent of Discalced Carmelite Nuns of the Primitive Rule of St. Joseph at Avila (24 Aug., 1562)</excerptum>
+    <excerptum>the General of the Carmelites, John-Baptist Rubeo (Rossi), who not only approved of what she had done but granted leave for the foundation of other convents of friars as well as nuns.</excerptum>
+    <excerptum>nearly all of which were established in spite of violent opposition</excerptum>
+    <excerptum>St. John of the Cross (q.v.), she established her reform among the friars (28 Nov., 1568)</excerptum>
+    <excerptum>a fearful storm burst over St. Teresa and her work, lasting four years and threatening to annihilate the nascent reform.</excerptum>
+    <excerptum>the province of Discalced Carmelites, with the support of Philip II, was approved and canonically established on 22 June, 1580.</excerptum>
+    <excerptum>passed away on 4 Oct., 1582, the following day, owing to the reform of the calendar, being reckoned as 15 October.</excerptum>
+    <excerptum>She was beatified in 1614, and canonized in 1622 by Gregory XV, the feast being fixed on 15 October.</excerptum>
+    <excerptum>it should be written Theresia in German and Latin</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="15 October">
+    <excerptum>A T Avila, in Spain, St. Theresa, virgin, mother and mistress of the Carmelite Brothers and Sisters of the Strict Observance.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="15 October">
+    <excerptum>Saint Teresa of Jesus, Virgin and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

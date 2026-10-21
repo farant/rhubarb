@@ -1,0 +1,43 @@
+<sanctus id="blaise" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Blaise</nomen>
+  <nomen lingua="la" principale="verum">Blasius</nomen>
+  <nomen lingua="alia" fontes="bu">Blase</nomen>
+  <obitus annus="316" circa="verum" locus="Sebaste, Armenia" martyrium="verum" fontes="ce bu mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="2" dies="3" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="2" dies="3" fontes="mr"/>
+  <munus fontes="ce bu us">bishop</munus>
+  <munus fontes="mr us">martyr</munus>
+  <patrocinium fontes="bu">Ragusa</patrocinium>
+  <patrocinium fontes="bu">wool-combers</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce bu">All accounts agree that Blaise was bishop of Sebaste in Armenia, and most place his martyrdom under Licinius, about 316; the Catholic Encyclopedia thinks it may be accepted that he was a bishop martyred early in the fourth century, but holds the details of his Acts to be purely legendary, and Butler likewise gives the Greek acts little authority. The two also disagree on his place in the martyrology of Jerome: Butler names him there, while the Catholic Encyclopedia says he is missing from its oldest recension.</paragraphus>
+    <paragraphus fontes="mr ce">The Martyrology, following the legend, relates that after working many miracles he was scourged, hung on a tree and torn with iron combs, thrown into a lake from which he came out unharmed, and at last beheaded with two boys. The legend also tells that in prison he cured a boy choking on a fishbone.</paragraphus>
+    <paragraphus fontes="ce bu">He became one of the most popular saints of the Middle Ages and one of the group known as the Fourteen Holy Martyrs. In many places on his feast the blessing of Saint Blaise is given against ailments of the throat, with two blessed candles held crossed over the heads of the faithful or touched to their throats. Ragusa counts him its principal patron, and the wool-combers took him as patron of their trade.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="3 February">
+    <excerptum>T Sebaste, in Armenia, in the time of the governor Agricolaus, the passion of St. Blasius, bishop and martyr, who after working many miracles, was scourged a long time, and suspended on a tree where he was lacerated with iron combs.</excerptum>
+    <excerptum>He was then imprisoned in a dark dungeon, thrown into a lake from which he came out safe, and finally, by order of the same judge, he and two boys were beheaded.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v02 Feb. 3 Saint Blase, Bishop and Martyr">
+    <excerptum>that Saint Blase, the bishop of Sebaste, honourably received his relics</excerptum>
+    <excerptum>The four modern different Greelc acts of this Saint are of small authority.</excerptum>
+    <excerptum>He was bishop of Sebaste in Armenia, and was crowned with martyrdom in the persecution of Licinius, in 316, by the command of Agricolans, governor of Cappadocia and the lesser Armenia.</excerptum>
+    <excerptum>He is mentioned in the ancient Western Martyrologies which bear the name of St. Jerom.</excerptum>
+    <excerptum>In the holy wars his relics were dispersed over the West, and his veneration was propagated by many miraculous cures</excerptum>
+    <excerptum>cially of sore throats. He is the principal patron of the commonwealth of Ragusa.</excerptum>
+    <excerptum>given occasion to the wool-combers to choose him the titular patron of their profession</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Blaise" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Blaise">
+    <excerptum>All the statements agree that St. Blasius was Bishop of Sebaste in Armenia and most of the acounts place his martyrdom in the reign of Licinius (about 316).</excerptum>
+    <excerptum>It can perhaps be assumed that St. Blasius was a bishop and that he suffered martyrdom at the beginning of the fourth century. All the particulars concerning his life and martyrdom which are found in the Acts are purely legendary and have no claim to historical worth.</excerptum>
+    <excerptum>In the oldest known recension of the so-called martyrology of St. Jerome the name of St. Blasius does not appear</excerptum>
+    <excerptum>while in prison he performed a wonderful cure of a boy who had a fishbone in his throat and who was in danger of choking to death.</excerptum>
+    <excerptum>so that Blasius became one of the most popular saints of the Middle Ages.</excerptum>
+    <excerptum>He was also one of the Fourteen Holy Martyrs. In many places on the day of his feast the blessing of St. Blasius is given: two candles are consecrated, generally by a prayer, these are then held in a crossed position by a priest over the heads of the faithful or the people are touched on the throat with them.</excerptum>
+    <excerptum>May God at the intercession of St. Blasius preserve you from throat troubles and every other evil</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="3 February">
+    <excerptum>Saint Blaise, Bishop and Martyr</excerptum>
+  </fons>
+</sanctus>

@@ -299,3 +299,32 @@ moneta_nanoid_plagulae (
                                   MONETA_NANOID_PLAGULAE_LONGITUDO,
                                   MONETA_NANOID_PLAGULAE_ALPHABETUM);
 }
+
+vacuum
+moneta_numerator (
+       vacuum* ctx,
+    character* effusio)
+{
+          i32* ultimum;
+          i32  v;
+          i32  n;
+          i32  i;
+    character  t;
+
+    ultimum   = (i32*)ctx;
+    *ultimum  += 1;
+    v         = *ultimum;
+    n         = 0;
+    fac
+    {
+        effusio[n++]  = (character)('0' + (integer)(v % 10));
+        v             /= 10;
+    } dum (v > 0);
+    effusio[n] = '\0';
+    per (i = 0; i < n / 2; i++)
+    {
+        t                   = effusio[i];
+        effusio[i]          = effusio[n - 1 - i];
+        effusio[n - 1 - i]  = t;
+    }
+}

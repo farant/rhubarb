@@ -1,0 +1,40 @@
+<sanctus id="cyril-of-jerusalem" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Cyril of Jerusalem</nomen>
+  <ortus annus="315" circa="verum" locus="at or near Jerusalem" fontes="ce bu"/>
+  <obitus annus="386" mensis="3" dies="18" circa="verum" fontes="ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="3" dies="18" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="3" dies="18" fontes="mr"/>
+  <munus fontes="us ce mr">bishop</munus>
+  <munus fontes="us ce mr">doctor of the Church</munus>
+  <descriptio>
+    <paragraphus fontes="bu ce">Cyril was born at or near Jerusalem about 315 and was deeply versed in the Scriptures. Ordained priest by Bishop Maximus, he was given charge of preaching and of instructing catechumens for baptism; his catechetical lectures, delivered about 347 or 348, survive and are among the most precious remains of Christian antiquity: instructions given in Lent to those preparing for baptism, and mystagogical instructions given to the newly baptized in Easter week. He became bishop of Jerusalem about the end of 350, although Jerome and Socrates give conflicting accounts of how he obtained the see.</paragraphus>
+    <paragraphus fontes="ce mr">His episcopate was troubled by the Arian quarrels. Acacius of Caesarea had him exiled in 357 on a charge of selling church goods during a famine; he was driven out again in 360 and once more under Valens, remaining in exile until 378. He attended the Council of Constantinople in 381 and there formally accepted the homoousion. The Martyrology praises him as a bishop and doctor often exiled for the faith, whose orthodoxy a general council attested. He died probably on 18 March 386.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="18 March">
+    <excerptum>At Jerusalem, St. Cyril, bishop and doctor, who suffered many injuries from the Arians for the faith. Often exiled from his church, he at length rested in peace with a great reputation for sanctity.</excerptum>
+    <excerptum>A magnificent testimony of the purity of his faith is given by a general Council, in a letter to pope Damasus.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v03 March 18 Saint Cyril, Confessor, Archbishop of Jerusalem">
+    <excerptum>was born at or near the city of Jerusalem, about the year 315. So perfectly was he versed in the holy scriptures</excerptum>
+    <excerptum>Maximus, bishop of Jerusalem, ordained him, priest about the year 345, and soon after appointed him his preacher to the people, likewise his catechist to instruct and prepare the catechumens for baptism</excerptum>
+    <excerptum>we have only the course of his catechetical sermons for the year 348, or 347.</excerptum>
+    <excerptum>He succeeded Maximus in the see of Jerusalem about the end of the year 350.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Cyril of Jerusalem" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Cyril_of_Jerusalem">
+    <excerptum>Bishop of Jerusalem and Doctor of the Church, born about 315; died probably 18 March, 386.</excerptum>
+    <excerptum>Cyril himself gives us the date of his "Catecheses" as fully seventy years after the Emperor Probus, that is about 347</excerptum>
+    <excerptum>Cyril had been ordained priest by St. Maximus, his predecessor, after whose death the episcopate was promised to Cyril by the metropolitan, Acacius of Caesarea</excerptum>
+    <excerptum>So says St. Jerome; but Socrates relates that Acacius drove out St. Maximus and substituted St. Cyril.</excerptum>
+    <excerptum>in 357 Acacius caused Cyril to be exiled on the charge of selling church furniture during a famine.</excerptum>
+    <excerptum>in 360, Cyril and other moderates were again driven out, and only returned at the accession of Julian in 361.</excerptum>
+    <excerptum>In 367 a decree of Valens banished all the bishops who had been restored by Julian, and Cyril remained in exile until the death of the persecutor in 378.</excerptum>
+    <excerptum>St. Cyril attended the great Council of Constantinople in 381</excerptum>
+    <excerptum>St. Cyril then formally accepted the homoousion</excerptum>
+    <excerptum>The catechetical lectures are among the most precious remains of Christian antiquity.</excerptum>
+    <excerptum>eighteen instructions delivered in Lent to those who were preparing for baptism, and five "mystagogical" instructions given during Easter week to the same persons after their baptism.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="18 March">
+    <excerptum>Saint Cyril of Jerusalem, Bishop and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

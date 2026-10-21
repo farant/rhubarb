@@ -280,3 +280,36 @@ distinct from its value, which is COLOR_TEXT). The list's business mark
 (rhombus) on the selected row is COLOR_TEXT, like the list's tags
 already were (calendar convention). Test helper note: Mandata polygons
 carry their geometry in `puncta`, not `fines`.
+
+## 2026-10-20 — semitae R4b: contacts on routes (Fran approved the text)
+
+- The one binding is `persona_aperta` (ligatio impelle): the person
+  view overrides `visus`, which is only the LIST mode (index |
+  rubricae). Everything else is status with ambitus organum (kept), so
+  open person -> Esc gives back the search, tag filter and selection;
+  only `campus_electus` resets with the person (ambitus ligatio).
+  Routes: `nomenclator`, `nomenclator/7?campus_electus=3`,
+  `nomenclator?visus=rubricae&rubrica_filtrum=familia`.
+- Old argument = alias: "<id>" -> persona_aperta, "" / NIHIL ->
+  persona_aperta="" (tollere). Unknown person refused before the write
+  (typus numerus checks form only).
+- `nomenclator_semitam_secuta` (facies hook): notes book follows the
+  person after a history step.
+- NomenclatorFigurae is now memset to zero on allocation - the same
+  latent garbage-`notae.montata` read that crashed the calendar in R4a.
+
+## 2026-10-20 - D3: ordinals inside, id text at the edges
+
+Persons are designated internally by creation ordinal (`Persona.ordo`
+= album `res`, `cp->electa`, `persona_aperta()`); id text only crosses
+the edges: status fields (`persona_electa`, `persona_aperta`, now
+`typus="nomen"` in the manifest - numerus refused ULIDs), row ids
+`p<id>`, the notes book `persona/<id>`, mutation calls. Helpers
+persona_ordinis / ordo_personae / id_personae / id_textus /
+attributum_ordo. `nomenclator_persona_electa` returns the id chorda.
+
+Bug found by the vicus suite: the row-id buffer was `id[XXIV]` -
+"p" + 26-char ULID overflowed (fortify trap, exit 133). Row-id and
+book-key buffers are XLVIII now. After a manifest edit,
+`tools/organa_infigere.sh` must regenerate lib/organa_infixa.c, or the
+running app still validates against the old embedded manifest.

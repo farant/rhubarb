@@ -1,0 +1,43 @@
+<sanctus id="jerome" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Jerome</nomen>
+  <nomen lingua="la" principale="verum" fontes="bu">Hieronymus</nomen>
+  <ortus annus="340" circa="verum" locus="Stridon" fontes="ce bu"/>
+  <obitus annus="420" mensis="9" dies="30" locus="Bethlehem" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="9" dies="30" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="9" dies="30" fontes="mr"/>
+  <munus fontes="us mr ce">priest</munus>
+  <munus fontes="us mr">doctor of the Church</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Jerome was born at Stridon, on the borders of Dalmatia and Pannonia, about 340-342; the Catholic Encyclopedia gives this date, while Butler cites the chronicle of Prosper, which makes him die in 420 aged ninety-one and so be born in 329. He went to Rome about 360, was baptized there, studied theology at Trier, and about 373 set out for the East. From 374 to 379 he lived as an ascetic in the desert of Chalcis, was ordained priest at Antioch, and at Constantinople formed a friendship with Gregory of Nazianzus. From 382 to 385 he was again in Rome, close to Pope Damasus, but after the pope's death his harsh criticisms had made him enemies and he had to leave. In 386 he settled at Bethlehem, in a monastery near the convent founded by Paula and Eustochium.</paragraphus>
+    <paragraphus fontes="ce mr bu">There he gave himself to asceticism and study. He revised the Latin Gospels and Psalter and between 390 and 405 translated the Old Testament from the Hebrew; his biblical knowledge ranks him first among the ancient exegetes, and Butler calls him in many respects the most learned of the Latin Fathers. He was drawn into controversy with Rufinus over Origen and with the Pelagians. He died at Bethlehem on 30 September 420 and was buried near the manger of the Lord; his body was later taken to Rome, to the basilica of St. Mary Major.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="30 September">
+    <excerptum>TN Bethlehem of Juda, the decease of St. Jerome, priest and Doctor of the Church, who, excelling in all kinds of learning, imitated the life of the most approved monks</excerptum>
+    <excerptum>he rested in peace, and was buried near the manger of our Lord. His body was afterwards conveyed to Rome, and deposited in the basilica of St. Mary the Greater.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Jerome" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Jerome">
+    <excerptum>Born at Stridon, a town on the confines of Dalmatia and Pannonia, about the year 340-2; died at Bethlehem, 30 September, 420.</excerptum>
+    <excerptum>He went to Rome, probably about 360, where he was baptized, and became interested in ecclesiastical matters. From Rome he went to Trier, famous for its schools, and there began his theological studies.</excerptum>
+    <excerptum>towards 373 he set out on a journey to the East.</excerptum>
+    <excerptum>From 374-9 Jerome led an ascetical life in the desert of Chalcis, south-west of Antioch. Ordained priest at Antioch, he went to Constantinople (380-81), where a friendship sprang up between him and St. Gregory of Nazianzus.</excerptum>
+    <excerptum>From 382 to August 385 he made another sojourn in Rome, not far from Pope Damasus.</excerptum>
+    <excerptum>When the latter died (11 December, 384) his position became a very difficult one.</excerptum>
+    <excerptum>His harsh criticisms had made him bitter enemies, who tried to ruin him. After a few months he was compelled to leave Rome.</excerptum>
+    <excerptum>By way of Antioch and Alexandria he reached Bethlehem, in 386. He settled there in a monastery near a convent founded by two Roman ladies, Paula and Eustochium</excerptum>
+    <excerptum>Henceforth he led a life of asceticism and study; but even then he was troubled by controversies which will be mentioned later, one with Rufinus and the other with the Pelagians.</excerptum>
+    <excerptum>In 384 we have the correction of the Latin version of the Four Gospels</excerptum>
+    <excerptum>in 384, a first revision of the Latin Psalms according to the accepted text of the Septuagint (Roman Psalter)</excerptum>
+    <excerptum>Between 390 and 405, St. Jerome gave all his attention to the translation of the Old Testament according to the Hebrew</excerptum>
+    <excerptum>the Biblical knowledge of St. Jerome makes him rank first among ancient exegetes.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v09 Sept. 30 St. Jerom, Priest, Doctor of the Church">
+    <excerptum>Dolci de rebus : gestis S. Hieronymi</excerptum>
+    <excerptum>who is allowed to have been, in many respects, the most learned of all the Latin fathers</excerptum>
+    <excerptum>but at Stridonium, now Sdrigni, a small town upon the confines of Pannonia, Dalmatia, and Italy</excerptum>
+    <excerptum>St, Prosper tells us, in his Chronicle, that this great doctor died in 420, lived ninety-one years, and consequently. was born in 329</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="30 September">
+    <excerptum>Saint Jerome, Priest and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

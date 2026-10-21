@@ -1,0 +1,30 @@
+<sanctus id="rita-of-cascia" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Rita of Cascia</nomen>
+  <ortus annus="1386" locus="Rocca Porena, Diocese of Spoleto" fontes="ce"/>
+  <obitus annus="1456" locus="Augustinian convent of Cascia" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1900" mensis="5" dies="24" fontes="ce"/>
+  <festum calendarium="generale" mensis="5" dies="22" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="5" dies="22" fontes="mr"/>
+  <munus fontes="us mr ce">religious</munus>
+  <munus fontes="mr ce">widow</munus>
+  <munus fontes="mr">Augustinian nun</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Rita was born at Rocca Porena in the diocese of Spoleto in 1386, the daughter of elderly parents so known for charity that they were called the Peacemakers of Jesus Christ. She wished to become a nun but, obeying her parents, married at twelve a man described as extremely cruel and ill-tempered, and for eighteen years was a model wife and mother. When her husband was murdered she tried in vain to dissuade her twin sons from revenge and prayed that they be kept from the crime; both died, reconciled to God.</paragraphus>
+    <paragraphus fontes="ce mr">As a widow she was at first refused by the Augustinian convent at Cascia, but after repeated entreaties, and by divine intervention as her biography relates, she was admitted, took the habit and made her profession. She became known for her mortifications and for the power of her prayers, and died at Cascia in 1456. Urban VIII permitted her Mass and Office in 1637; so many miracles were credited to her intercession that in Spain she was called the saint of the impossible. She was solemnly canonized on 24 May 1900. She is shown holding roses, sometimes with a wound in her forehead.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="22 May">
+    <excerptum>At Cassia, in Umbria, blessed Rita, a widow, and nun of the Order of Augustinians, who after being disengaged from her earthly marriage, loved only Christ, her eternal spouse.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Rita of Cascia" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Rita_of_Cascia">
+    <excerptum>Born at Rocca Porena in the Diocese of Spoleto, 1386; died at the Augustinian convent of Cascia, 1456. Feast, 22 May. Represented as holding roses, or roses and figs, and sometimes with a wound in her forehead.</excerptum>
+    <excerptum>she was the daughter of parents advanced in years and distinguished for charity which merited them the surname of "Peacemakers of Jesus Christ".</excerptum>
+    <excerptum>Rita's great desire was to become a nun, but, in obedience to the will of her parents, she, at the age of twelve, married a man extremely cruel and ill-tempered. For eighteen years she was a model wife and mother.</excerptum>
+    <excerptum>When her husband was murdered she tried in vain to dissuade her twin sons from attempting to take revenge; she appealed to Heaven to prevent such a crime on their part, and they were taken away by death, reconciled to God.</excerptum>
+    <excerptum>She applied for admission to the Augustinian convent at Cascia, but, being a widow, was refused. By continued entreaties, and, as is related, by Divine intervention, she gained admission, received the habit of the order and in due time her profession.</excerptum>
+    <excerptum>As a religious she was an example for all, excelled in mortifications, and was widely known for the efficacy of her prayers.</excerptum>
+    <excerptum>Urban VIII, in 1637, permitted her Mass and Office. On account of the many miracles reported to have been wrought at her intercession she received in Spain the title of La Santa de los impossibiles. She was solemnly canonized 24 May, 1900.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="22 May">
+    <excerptum>Saint Rita of Cascia, Religious</excerptum>
+  </fons>
+</sanctus>

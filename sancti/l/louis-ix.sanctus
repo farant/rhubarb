@@ -1,0 +1,39 @@
+<sanctus id="louis-ix" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Louis IX</nomen>
+  <ortus annus="1215" mensis="4" dies="25" locus="Poissy" fontes="ce"/>
+  <obitus annus="1270" mensis="8" dies="25" locus="near Tunis" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1297" papa="Boniface VIII" fontes="ce"/>
+  <festum calendarium="generale" mensis="8" dies="25" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="8" dies="25" fontes="mr"/>
+  <munus fontes="ce mr">king</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Louis, King of France, son of Louis VIII and Blanche of Castile, was born at Poissy on 25 April 1215. He became king at eleven, under the regency of his mother, who kept great influence over the government long after his minority, and at nineteen he married Marguerite of Provence, by whom he had eleven children. He twice took the cross, leading crusades in 1248 and 1270. Between them he sought lasting peace: by the Treaty of Paris of 1258 he settled with the King of England, and Christendom accepted him as an arbiter; by the Dit d'Amiens of 1264 he decided for Henry III of England against his barons.</paragraphus>
+    <paragraphus fontes="ce mr">He lived by his mother's words that she would rather see him dead than guilty of a mortal sin, and spent long hours in prayer, fasting and penance. He loved justice, and in his reign the king's court became a regular court of justice. He was renowned for charity, feeding over a hundred poor daily and founding hospitals, among them the Quinze-Vingt for three hundred blind men; the Sainte Chapelle was built in his reign. He died near Tunis on 25 August 1270 and was canonized by Boniface VIII at Orvieto in 1297.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Louis IX" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Louis_IX">
+    <excerptum>King of France, son of Louis VIII and Blanche of Castile, born at Poissy, 25 April, 1215; died near Tunis, 25 August, 1270.</excerptum>
+    <excerptum>He was eleven years of age when the death of Louis VIII made him king, and nineteen when he married Marguerite of Provence by whom he had eleven children.</excerptum>
+    <excerptum>The regency of Blanche of Castile (1226-1234) was marked by the victorious struggle of the Crown</excerptum>
+    <excerptum>The influence of Blanche de Castile over the government extended far beyond St. Louis's minority.</excerptum>
+    <excerptum>On the two crusades of St. Louis [1248-1249 and 1270] see CRUSADES.</excerptum>
+    <excerptum>The Treaty of Paris (28 May, 1258) which St. Louis concluded with the King of England after five years' parley</excerptum>
+    <excerptum>In 1263, St. Louis was chosen as arbitrator in a difference which separated Henry III and the English barons</excerptum>
+    <excerptum>by the Dit d'Amiens (24 January, 1264) he declared himself for Henry III against the barons</excerptum>
+    <excerptum>Treaties and arbitrations prove St. Louis to have been above all a lover of peace</excerptum>
+    <excerptum>entire Christendom willingly looked upon him as an international judiciary</excerptum>
+    <excerptum>St. Louis led an exemplary life, bearing constantly in mind his mother's words: "I would rather see you dead at my feet than guilty of a mortal sin." His biographers have told us of the long hours he spent in prayer, fasting, and penance</excerptum>
+    <excerptum>The French king was a great lover of justice.</excerptum>
+    <excerptum>It was during his reign that the "court of the king" (curia regis) was organized into a regular court of justice</excerptum>
+    <excerptum>The Sainte Chappelle, an architectural gem, was constructed in his reign</excerptum>
+    <excerptum>He was renowned for his charity.</excerptum>
+    <excerptum>daily fed over one hundred poor. He founded many hospitals and houses</excerptum>
+    <excerptum>the Quinze-Vingt for 300 blind men (1254)</excerptum>
+    <excerptum>St. Louis's canonization was proclaimed at Orvieto in 1297, by Boniface VIII.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="25 August">
+    <excerptum>Paris, St. Louis, confessor, king of France, illustrious by the holiness of his life and the fame of his miracles.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="25 August">
+    <excerptum>Saint Louis</excerptum>
+  </fons>
+</sanctus>

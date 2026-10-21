@@ -1,0 +1,44 @@
+<sanctus id="hedwig-of-silesia" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Hedwig of Silesia</nomen>
+  <ortus annus="1174" circa="verum" locus="castle of Andechs" fontes="ce"/>
+  <obitus annus="1243" mensis="10" locus="Trebnitz" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1267" mensis="3" dies="26" papa="Clement IV" fontes="ce mr"/>
+  <festum calendarium="generale" mensis="10" dies="16" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="10" dies="15" nota="her death; the entry says Innocent XI permitted her feast on the 17th" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="10" dies="17" nota="feast" fontes="mr17"/>
+  <munus fontes="us">religious</munus>
+  <munus fontes="mr17">widow</munus>
+  <munus fontes="ce mr mr17">duchess</munus>
+  <patrocinium fontes="ce">Silesia</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">Hedwig was born about 1174 at the castle of Andechs, one of the eight children of Berthold IV, Count of Andechs. Educated at the monastery of Kitzingen, she was married at twelve to Henry I of Silesia, who became Duke of Silesia in 1202. She took a large part in her husband's government and supported monasteries, old and new; at her request the duke founded and endowed the convent of Cistercian nuns at Trebnitz (1202), the first house of religious women in Silesia. She also cared for leper women in the hospital at Neumarkt. Of her seven children, only her daughter Gertrude, later abbess of Trebnitz, outlived her; her son Duke Henry II fell fighting the Tatars at Wahlstatt in 1241.</paragraphus>
+    <paragraphus fontes="ce mr mr17">In 1209 she and her husband took a vow of chastity before the Bishop of Breslau. After Henry's death in 1238 she lived at Trebnitz and took the grey habit of the Cistercians, but did not enter the order, so that she could keep the right to spend her income on charity. She practised severe mortification and served the sick and the poor, and was thought a saint in her lifetime. She died at Trebnitz on 12 or 15 October 1243; the Catholic Encyclopedia leaves the day open, the Martyrology gives the 15th. Clement IV canonized her on 26 March 1267, and she is honoured as patroness of Silesia.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Hedwig" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Hedwig">
+    <excerptum>Duchess of Silesia, b. about 1174, at the castle of Andechs; d. at Trebnitz, 12 or 15 October, 1243. She was one of eight children born to Berthold IV, Count of Andechs</excerptum>
+    <excerptum>Hedwig was educated at the monastery of Kitzingen, and, according to an old biography, at the age of twelve (1186), was married to Henry I of Silesia (b. 1168), who in 1202 succeeded his father Boleslaw as Duke of Silesia.</excerptum>
+    <excerptum>Hedwig now took a prominent part in the beneficent administration of her husband.</excerptum>
+    <excerptum>In particular she gave her support to new monastic foundations and assisted those already in existence.</excerptum>
+    <excerptum>Hedwig tended with disinterested charity the leper women in the hospital at Neumarkt.</excerptum>
+    <excerptum>At the instance of his saintly wife, the duke then founded at his own expense, and on ground donated by himself the convent of the Cistercian nuns at Trebnitz (1202), and generously endowed it. This was the first house of religious women in Silesia.</excerptum>
+    <excerptum>For some years after her marriage, Hedwig resided chiefly at Breslau. She had seven children.</excerptum>
+    <excerptum>she and her husband led a virgin life (1209), and pronounced a vow of chastity before the Bishop of Breslau.</excerptum>
+    <excerptum>Hedwig spent much of her time at the Abbey of Trebnitz, where, on the death of her husband (1238), she took up her permanent abode</excerptum>
+    <excerptum>Of Hedwig's children, only Gertrude survived her; Duke Henry II fell at Wahlstatt (1241) in a battle against the Tatars.</excerptum>
+    <excerptum>Gertrude entered the Abbey of Trebnitz (before 1212), where she later became abbess.</excerptum>
+    <excerptum>Hedwig took the grey habit of the Cistercians, but was not received into the order as a religious, that she might retain the right to spend her revenues in charities.</excerptum>
+    <excerptum>The duchess practised severe mortification, endured all trials with the greatest resignation, with self-denying charity cared for the sick and supported the poor</excerptum>
+    <excerptum>Her piety and gentleness won for her even during life the reputation of a saint.</excerptum>
+    <excerptum>was canonized by Clement IV, 26 March, 1267</excerptum>
+    <excerptum>Her feast is celebrated 17 October; she in honoured as the patroness of Silesia.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="15 October">
+    <excerptum>At Cracow, St. Hedwiges, duchess of Poland, who devoted herself to the service of the poor, and was renowned for miracles. She was inscribed among the saints by pope Clement IV., and Innocent XI. permitted her feast to be celebrated on the 17th of this month.</excerptum>
+  </fons>
+  <fons id="mr17" opus="mr1916" locus="17 October">
+    <excerptum>feast of St. Hedwiges, widow, duchess of Poland, who went to her rest in the Lord on the 15th of this month.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="16 October">
+    <excerptum>Saint Hedwig, Religious</excerptum>
+  </fons>
+</sanctus>

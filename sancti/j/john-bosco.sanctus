@@ -1,0 +1,44 @@
+<sanctus id="john-bosco" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">John Bosco</nomen>
+  <nomen lingua="it" fontes="gl">Giovanni Bosco</nomen>
+  <ortus annus="1815" mensis="8" dies="16" locus="Becchi, Murialdo, near Castelnuovo d'Asti" fontes="gl"/>
+  <obitus annus="1888" mensis="1" dies="31" fontes="gl"/>
+  <canonizatio modus="formalis" annus="1934" mensis="4" dies="1" papa="Pius XI" fontes="gl acs"/>
+  <beatificatio annus="1929" mensis="6" dies="2" papa="Pius XI" fontes="gl"/>
+  <festum calendarium="generale" mensis="1" dies="31" gradus="memoria" fontes="us"/>
+  <munus fontes="us gl">priest</munus>
+  <munus fontes="gl">founder</munus>
+  <descriptio>
+    <paragraphus fontes="gl">John Bosco was born on 16 August 1815 at Becchi, a hamlet of Murialdo near Castelnuovo d'Asti, to the peasant couple Francesco Bosco and Margherita Occhiena. His father died before he was three, and he was raised by his mother. He studied at Chieri, working hard to support himself, entered the archdiocesan seminary there in October 1835 on the advice of Joseph Cafasso, and was ordained priest on 5 June 1841. He then spent three years studying moral theology at the Convitto of Saint Francis of Assisi in Turin.</paragraphus>
+    <paragraphus fontes="gl">Drawing in the boys he met in the streets, taverns, courtyards and workshops with kindness and games, he began the Salesian Oratory, which, after being driven from place to place, settled in the then empty field of Valdocco. There he founded the mother house of his institute. Pius IX approved its rules in 1874, establishing the Society of Saint Francis de Sales; Bosco added an institute of sisters, the Daughters of Mary Help of Christians, and an association of Cooperators. His educational method, which he called the preventive system, aimed to prevent faults rather than punish them.</paragraphus>
+    <paragraphus fontes="gl acs">He died at dawn on 31 January 1888. Pius XI, who had known him in his youth, beatified him on 2 June 1929 and canonized him on Easter Sunday, 1 April 1934.</paragraphus>
+  </descriptio>
+  <fons id="gl" opus="sedes" locus="Pius XI, Geminata laetitia (decretal letter of canonization, 1 April 1934)" url="https://www.vatican.va/content/pius-xi/it/letters/documents/hf_p-xi_lett_19340401_geminata-laetitia.html">
+    <excerptum>Egli nacque in Murialdo, piccolo borgo campestre, e propriamente nella frazione detta volgarmente dei Becchi, vicino a Castelnuovo di Asti, il 16 agosto 1815 da Francesco e Margherita Occhiena di condizione contadini</excerptum>
+    <excerptum>A tre anni non ancor compiuti rimasto orfano di padre, trascorse la puerizia e l’adolescenza sotto la tutela e la prudente disciplina della amatissima sua madre</excerptum>
+    <excerptum>Con grande impegno seguì gli studi ginnasiali in Chieri dove, per le misere condizioni di famiglia, dovette, per tirare avanti la vita, sobbarcarsi a faticosi lavori.</excerptum>
+    <excerptum>Per consiglio specialmente e con l’aiuto di Giuseppe Cafasso, sacerdote di preclara santità</excerptum>
+    <excerptum>entrò nel seminario arcivescovile di Chieri nell’ottobre del 1835, dove, compiuti gli studi di filosofia e di teologia, il 5 giugno 1841 fu consacrato sacerdote.</excerptum>
+    <excerptum>per tre anni attese nel Convitto di San Francesco d’Assisi in Torino allo studio della teologia morale</excerptum>
+    <excerptum>tutti i ragazzi che incontrava per le vie, nelle osterie, nei cortili e nelle officine, benevolmente li accostava e li traeva a sé con soavissima carità, li ricreava con svariati giochi e divertimenti</excerptum>
+    <excerptum>in modo che numerosissimi accorrevano, d’ogni parte, a lui come padre amatissimo: e così nacque l’Oratorio Salesiano.</excerptum>
+    <excerptum>dapprima cacciato di luogo in luogo, da tutti deriso, povero e quasi profugo, riparò poi con i suoi ragazzi in quel prato suburbano e allora deserto, detto volgarmente Valdocco, dove finalmente in seguito poté, coll’aiuto della Divina Provvidenza, fondare la Casa Madre del suo futuro Istituto</excerptum>
+    <excerptum>All’uopo scrisse le Regole o Costituzioni, adatte massimamente ai nuovi tempi, le quali presentate al giudizio della Sede Apostolica, osservate le consuete norme, nel 1874 furono approvate dal nostro già ricordato Predecessore Pio IX, e così fu canonicamente costituita la Pia Società di San Francesco di Sales.</excerptum>
+    <excerptum>Don Bosco a questa Società aggiunse un Istituto di Sacre Vergini che chiamò Figlie di Maria Ausiliatrice.</excerptum>
+    <excerptum>Né s’ha da passare sotto silenzio l’istituzione dei Cooperatori</excerptum>
+    <excerptum>metodo ch’egli stesso chiamò: sistema preventivo; metodo veramente nuovo, come già dicemmo, secondo il quale l’animo del giovanetto viene educato più col prevenirne le mancanze che col punirle.</excerptum>
+    <excerptum>sull’alba del 31 gennaio 1888 con placidissima morte se ne volò alla patria celeste.</excerptum>
+    <excerptum>non solo con l’aspetto e con la parola confortò la Nostra giovinezza</excerptum>
+    <excerptum>il 19 marzo 1929 Noi stessi solennemente decretammo</excerptum>
+    <excerptum>Pubblicato poi il 21 aprile dello stesso anno il cosiddetto decreto del "Tuto", con Nostra lettera Apostolica in data 2 giugno decretammo gli onori dei Beati allo stesso Venerabile Giovanni Bosco</excerptum>
+    <excerptum>Quanto poi al Beato Giovanni Bosco, per la sua iscrizione al catalogo dei Santi scegliemmo questo giorno cioè il primo del mese di aprile, solennità della Risurrezione di Nostro Signor Gesù Cristo.</excerptum>
+    <excerptum>Dato a Roma, presso San Pietro, l’anno del Signore 1934, nel giorno primo di Aprile, domenica della Risurrezione di N. S. Gesù Cristo</excerptum>
+    <excerptum>decretiamo che il Beato Giovanni Bosco è santo, e lo ascriviamo nel catalogo dei Santi</excerptum>
+  </fons>
+  <fons id="acs" opus="sedes" locus="Pius XI, Ad catholici sacerdotii 77" url="https://www.vatican.va/content/pius-xi/en/encyclicals/documents/hf_p-xi_enc_19351220_ad-catholici-sacerdotii.html">
+    <excerptum>One has only to think of those three splendid saints whom We Ourselves had the consolation of canonizing - St. John Mary Vianney, St. Joseph Benedict Cottolengo and St. John Bosco</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="31 January">
+    <excerptum>Saint John Bosco, Priest</excerptum>
+  </fons>
+</sanctus>

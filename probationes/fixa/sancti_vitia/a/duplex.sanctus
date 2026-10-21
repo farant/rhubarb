@@ -1,0 +1,6 @@
+<sanctus id="duplex" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Duplex Primus</nomen>
+  <fons id="x" opus="sedes" locus="fixtura">
+    <excerptum>fixtura probationis</excerptum>
+  </fons>
+</sanctus>

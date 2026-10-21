@@ -26,3 +26,22 @@ were constants; they are now fields of ScribaLiber filled by an internal
 '<prefix>/paginae/<name>' - the calendar's day book is
 "dies/2026-10-14". Test VIII: day page text is separate from the shared
 page '1' and from another day. Plant: prefix ignored -> red.
+
+## 2026-10-19 — scriba_liber_lineas_legere (calendar week view)
+
+Read-only lines of a day book. The trap it exists for: opening a book
+(`scriba_liber_aperire_in_spatio`) WRITES page "1" when the index is
+absent, and `scriba_liber_pagina` CREATES a missing page document - a
+week view opening seven books the normal way would litter every day
+you scroll past. The reader checks the index plagula exists, parses it
+with the same helper `librum_aperire` now uses (`nomina_legere`), and
+opens page documents with `scriba_documentum_aperire` only. Line text
+follows libro_paginarum's serialization: cells up to the end of
+content, `\0` / tab continuation / tab shown as spaces; lines of
+spaces only are dropped.
+Probed (2026-10-19): a reopened page never contains `\0` cells - the
+projection writes spaces - so the `\0` mapping is a guard only (a NUL
+byte must never reach the text). Tabs DO survive (`\t` + continuation
+cell) and a tab-only line becomes spaces-only, which is the case the
+"spaces only = blank" check really catches (plain spaces never count
+as content in `tabula_invenire_finem_contenti`). Both are tested.

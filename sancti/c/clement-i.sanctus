@@ -1,0 +1,48 @@
+<sanctus id="clement-i" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Clement I</nomen>
+  <nomen lingua="en" fontes="ce">Clement of Rome</nomen>
+  <nomen lingua="la" principale="verum" fontes="ce">Clemens Romanus</nomen>
+  <obitus annus="99" circa="verum" locus="Chersonesus" martyrium="verum" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="11" dies="23" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="11" dies="23" fontes="mr"/>
+  <munus fontes="us ce mr">pope</munus>
+  <munus fontes="us mr">martyr</munus>
+  <munus fontes="ce">apostolic father</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu mr">Clement of Rome is the first successor of St. Peter of whom anything definite is known, and the first of the Apostolic Fathers. Accounts of his place differ: most Latins in Jerome's day made him Peter's immediate successor, Jerome in one place rightly counts him the fourth pope, and the Martyrology the third after Peter. Irenaeus says that he had seen the apostles and conversed with them, and Tertullian that Peter ordained him. Butler makes him a Roman of Jewish descent, as some modern critics infer from his constant use of the Old Testament, and dates his accession to 89 or rather 91.</paragraphus>
+    <paragraphus fontes="ce bu">His one genuine writing is the letter sent in the name of the Roman Church to Corinth, where a few violent men had risen against the church's rulers, to restore peace and unity. Butler notes that it was ranked next to the canonical Scriptures and read in the churches.</paragraphus>
+    <paragraphus fontes="ce mr">Nothing certain is known of his life and death; about 160 his death was believed to be in 99. The Martyrology says Trajan banished him to the Chersonesus and had him thrown into the sea with an anchor; the Catholic Encyclopedia judges this story no older than the fourth century. About 868 St. Cyril brought bones believed to be his from the Crimea to Rome, where they were laid in the basilica of St. Clement. Rufinus, about 400, is the first to call him a martyr; some critics suspect confusion with the martyred consul of the same name.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Pope St. Clement I" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Pope_St._Clement_I">
+    <excerptum>Pope Clement I (called CLEMENS ROMANUS to distinguish him from the Alexandrian), is the first of the successors of St. Peter of whom anything definite is known, and he is the first of the "Apostolic Fathers".</excerptum>
+    <excerptum>He has left one genuine writing, a letter to the Church of Corinth</excerptum>
+    <excerptum>St. Jerome himself in several other places follows this opinion, but here he correctly states that Clement was the fourth pope.</excerptum>
+    <excerptum>Irenaeus (III, iii) tells us that Clement "saw the blessed Apostles and conversed with them</excerptum>
+    <excerptum>St. Jerome tells us that in his time "most of the Latins" held that Clement was the immediate successor of the Apostle</excerptum>
+    <excerptum>According to Tertullian, writing c. 199, the Roman Church claimed that Clement was ordained by St. Peter</excerptum>
+    <excerptum>The continual use of the Old Testament in his Epistle has suggested to Lightfoot, Funk, Nestle, and others that he was of Jewish origin.</excerptum>
+    <excerptum>We may take it, therefore, that about 160 the death of St. Clement was believed to have been in 99.</excerptum>
+    <excerptum>Of the life and death of St, Clement nothing is known.</excerptum>
+    <excerptum>Trajan, in consequence, orders Clement to be thrown into the sea with an iron anchor.</excerptum>
+    <excerptum>This story is not older than the fourth century.</excerptum>
+    <excerptum>About 868 St. Cyril, when in the Crimea on the way to evangelize the Chazars, dug up some bones in a mound (not in a tomb under the sea), and also an anchor. These were believed to be the relics of St. Clement.</excerptum>
+    <excerptum>They were carried by St. Cyril to Rome, and deposited by Adrian II with those of St. Ignatius of Antioch in the high altar of the basilica of St. Clement in Rome.</excerptum>
+    <excerptum>St. Clement is first mentioned as a martyr by Rufinus (c. 400).</excerptum>
+    <excerptum>Modern critics think it possible that his martyrdom was suggested by a confusion with his namesake, the martyred consul. But the lack of tradition that he was buried in Rome is in favour of his having died in exile.</excerptum>
+    <excerptum>The Church of Corinth had been led by a few violent spirits into a sedition against its rulers.</excerptum>
+    <excerptum>a letter was sent in the name of the Church of Rome by St. Clement to restore peace and unity.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v11 Nov. 23 St. Clement, Pope, M.">
+    <excerptum>the son of Faustinus, a Roman by birth, was of Jewish extraction</excerptum>
+    <excerptum>Upon his demise, in 89, or rather-in 91, St. Clement was placed in the apostolic chair.</excerptum>
+    <excerptum>It was placed in rank next to the canonical books of the holy scriptures, and with them read in the churches.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="23 November">
+    <excerptum>held the sovereign Pontificate the third after the blessed apostle Peter.</excerptum>
+    <excerptum>In the persecution of Trajan, he was banished to Chersonesus, where, being precipitated into the sea with an anchor tied to his neck, he was crowned with martyrdom.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="23 November">
+    <excerptum>Saint Clement I, Pope and Martyr</excerptum>
+  </fons>
+</sanctus>

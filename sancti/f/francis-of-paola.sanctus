@@ -1,0 +1,49 @@
+<sanctus id="francis-of-paola" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Francis of Paola</nomen>
+  <nomen lingua="en" fontes="ce bu mr">Francis of Paula</nomen>
+  <ortus annus="1416" locus="Paula (Paola), Calabria" fontes="ce bu"/>
+  <obitus annus="1507" mensis="4" dies="2" locus="Plessis-les-Tours, France" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1519" papa="Leo X" fontes="bu ce mr"/>
+  <festum calendarium="generale" mensis="4" dies="2" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="4" dies="2" fontes="mr"/>
+  <munus fontes="us ce">hermit</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Francis was born about 1416 at Paola in Calabria to parents who had long prayed for a child through the intercession of Francis of Assisi. At thirteen he spent a year in a Franciscan friary to fulfil a vow his parents had made for his healing. Afterwards he lived as a hermit, first on his father's land and then in a cave by the sea. In 1435 two companions joined him, and so the new order began; its rule was very severe, with perpetual abstinence and great poverty, and its mark was humility, so that its members were called Minims, the least of all religious.</paragraphus>
+    <paragraphus fontes="ce bu mr">Famed for miracles and prophecy, he rebuked the King of Naples for his misdeeds. At the Pope's command he went to France to the dying Louis XI, and he remained there, kept near the court by Charles VIII and then by Louis XII, who would not let him return to Italy. He died at Plessis on Good Friday, 2 April 1507 according to the Catholic Encyclopedia (Butler gives 1508), while the Passion according to John was read to him. Leo X canonized him, in 1519 according to Butler. In 1562 the Huguenots burned his body.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="2 April">
+    <excerptum>FRANCIS of Paula, founder of the Order of Minims. As he was renowned for virtues and miracles, he was inscribed among the Saints by Leo X.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v04 April 2 Saint Francis of Paula, Confessor, Founder of the Order of Minims">
+    <excerptum>This saint was born about the year 1416, at Paula, a small city, near the Tyrrhenian sea, in Calabria</excerptum>
+    <excerptum>He died on the 2nd of April, in 1508, being ninety-one years old.</excerptum>
+    <excerptum>He was canonized by Leo X. in 1519.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Francis of Paula" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Francis_of_Paula">
+    <excerptum>Founder of the Order of Minims; b. in 1416, at Paula, in Calabria, Italy; d. 2 April, 1507, at Plessis, France.</excerptum>
+    <excerptum>especially commending themselves to the intercession of St. Francis of Assisi</excerptum>
+    <excerptum>made a vow that their son should pass an entire year in the "little habit" of St Francis in one of the convents of his order</excerptum>
+    <excerptum>The child was immediately cured.</excerptum>
+    <excerptum>at the age of thirteen, being admonished by a vision of a Franciscan friar, he entered a convent of the Franciscan Order in order to fulfil the vow made by his parents.</excerptum>
+    <excerptum>Returning to Paula he selected a retired spot on his father's estate, and there lived in solitude; but later on he found a more retired dwelling in a cave on the sea coast.</excerptum>
+    <excerptum>In 1435 two companions joined him in his retreat</excerptum>
+    <excerptum>in this way the new order was begun.</excerptum>
+    <excerptum>They observed perpetual abstinence and lived in great poverty, but the distinguishing mark of the order was humility.</excerptum>
+    <excerptum>they should be styled Minims, the least of all religious.</excerptum>
+    <excerptum>to assume the title of Hermits of St. Francis</excerptum>
+    <excerptum>Their devotion was increased by the many miracles which the saint wrought in answer to their prayers.</excerptum>
+    <excerptum>He had an extraordinary gift of prophecy</excerptum>
+    <excerptum>He rebuked the King of Naples for his ill-doing and in consequence suffered much persecution.</excerptum>
+    <excerptum>When Louis XI was in his last illness he sent an embassy to Calabria to beg the saint to visit him.</excerptum>
+    <excerptum>Francis refused to come nor could he be prevailed upon until the pope ordered him to go. He then went to the king at Plessis-les-Tours and was with him at his death.</excerptum>
+    <excerptum>Charles VIII, Louis's successor, much admired the saint and during his reign kept him near the court and frequently consulted him.</excerptum>
+    <excerptum>The regard in which Charles VIII held the saint was shared by Louis XII, who succeeded to the throne in 1498.</excerptum>
+    <excerptum>Francis was now anxious to return to Italy, but the king would not permit him</excerptum>
+    <excerptum>The next day, Good Friday, he again called them together and gave them his last instructions</excerptum>
+    <excerptum>asked to have the Passion according to St. John read out to him, and whilst this was being read, his soul passed away.</excerptum>
+    <excerptum>In 1562 the Huguenots broke open his tomb and found his body incorrupt. They dragged it forth and burnt it</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="2 April">
+    <excerptum>Saint Francis of Paola, Hermit</excerptum>
+  </fons>
+</sanctus>

@@ -1,0 +1,44 @@
+<sanctus id="kateri-tekakwitha" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Kateri Tekakwitha</nomen>
+  <nomen lingua="en" fontes="ce">Catherine Tegakwitha</nomen>
+  <nomen lingua="it" fontes="jp">Caterina Tekakwitha</nomen>
+  <ortus annus="1656" fontes="ce bx"/>
+  <obitus annus="1680" mensis="4" dies="17" locus="Caughnawaga, Canada" fontes="ce"/>
+  <beatificatio annus="1980" mensis="6" dies="22" papa="John Paul II" fontes="jp"/>
+  <canonizatio modus="formalis" annus="2012" mensis="10" dies="21" papa="Benedict XVI" fontes="bx"/>
+  <festum calendarium="usa" mensis="7" dies="14" gradus="memoria" fontes="us"/>
+  <munus fontes="us ce">virgin</munus>
+  <patrocinium fontes="bx">Canada</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce bx">Kateri (Catherine) Tekakwitha, called the "Lily of the Mohawks", was born in 1656 in what is now New York State, at Ossernenon or at Gandaouge according to different authorities, to a Mohawk father and a Christian Algonquin mother. When she was about four, her parents and brother died of smallpox, which left her face marked and her eyesight impaired; she was raised by her aunts and an uncle who became chief of the Turtle clan. She first heard of Christianity from Jesuit missionaries who stayed in her uncle's lodge in 1667, and she resisted every effort to make her marry.</paragraphus>
+    <paragraphus fontes="ce bx jp">She was baptized by Father Jacques de Lamberville; the Catholic Encyclopedia puts this at eighteen, the papal homilies at twenty. Facing harsh opposition at home, she escaped with the help of Christian Indians to Caughnawaga on the St. Lawrence; the 2012 homily speaks of her refuge as the Saint Francis Xavier Mission near Montreal. There, on 25 March 1679, with her spiritual director's consent, she made a vow of perpetual virginity, as far as is known the first among the North American Indians. She died at Caughnawaga on 17 April 1680, aged twenty-four, and devotion to her began at once among her people. John Paul II beatified her on 22 June 1980, and Benedict XVI canonized her on 21 October 2012 as the first native American saint.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Catherine Tegakwitha (Tekakwitha, Takwitha)" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Catherine_Tegakwitha_(Tekakwitha,_Takwitha)">
+    <excerptum>Known as the "Lily of the Mohawks", and the "Genevieve of New France" an Indian virgin of the Mohawk tribe, born according to some authorities at the Turtle Castle of Ossernenon, according to others at the village of Gandaouge, in 1656; died at Caughnawaga, Canada, 17 April, 1680.</excerptum>
+    <excerptum>Her mother was a Christian Algonquin who had been captured by the Iroquois</excerptum>
+    <excerptum>When Tekakwitha was about four years old, her parents and brother died of small-pox, and the child was adopted by her aunts and a uncle who had become chief of the Turtle clan.</excerptum>
+    <excerptum>Although small-pox had marked her face and seriously impaired her eyesight</excerptum>
+    <excerptum>In 1667 the Jesuit missionaries Fremin, Bruyas, and Pierron</excerptum>
+    <excerptum>spent three days in the lodge of Tekakwitha's uncle. From them she received her first knowledge of Christianity</excerptum>
+    <excerptum>for she firmly and often, with great risk to herself, resisted all efforts to induce her to marry.</excerptum>
+    <excerptum>When she was eighteen, Father Jacques de Lamberville arrived to take charge of the mission which included the Turtle clan, and from him, at her earnest request, Tekakwitha received baptism.</excerptum>
+    <excerptum>Thenceforth she practised her religion unflinchingly in the face of almost unbearable opposition</excerptum>
+    <excerptum>she was assisted by some Christian Indians to escape to Caughnawaga on the St. Laurence.</excerptum>
+    <excerptum>Upon her death devotion to her began immediately to be manifested by her people.</excerptum>
+  </fons>
+  <fons id="bx" opus="sedes" locus="Benedict XVI, Homily at the canonization of seven blesseds, 21 October 2012" url="https://www.vatican.va/content/benedict-xvi/en/homilies/2012/documents/hf_ben-xvi_hom_20121021_canonizzazioni.html">
+    <excerptum>21 October 2012: Holy Mass and Canonization of the Blesseds James Berthieu, Pedro Calungsod, John Baptist Piamarta, Carmen Sallés y Barangueras, Marianne Cope, Kateri Tekakwitha, Anna Schäffer</excerptum>
+    <excerptum>Kateri Tekakwitha was born in today’s New York state in 1656 to a Mohawk father and a Christian Algonquin mother who gave to her a sense of the living God. She was baptized at twenty years of age and, to escape persecution, she took refuge in Saint Francis Xavier Mission near Montreal.</excerptum>
+    <excerptum>although renouncing their religious convictions until her death at the age of twenty-four.</excerptum>
+    <excerptum>Saint Kateri, Protectress of Canada and the first native American saint</excerptum>
+  </fons>
+  <fons id="jp" opus="sedes" locus="John Paul II, Homily for five beatifications, 22 June 1980" url="https://www.vatican.va/content/john-paul-ii/it/homilies/1980/documents/hf_jp-ii_hom_19800622_proclamazione-beati.html">
+    <excerptum>e una giovane vergine pellerossa, Caterina Tekakwitha.</excerptum>
+    <excerptum>San Pietro, 22 giugno 1980</excerptum>
+    <excerptum>At the age of twenty she receives Baptism.</excerptum>
+    <excerptum>on 25 March 1679, at the age of twenty-three, with the consent of her spiritual director, Kateri takes a vow of perpetual virginity, as far as we know the first time that this was done among the North American Indians.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="14 July">
+    <excerptum>Saint Kateri Tekakwitha, Virgin</excerptum>
+  </fons>
+</sanctus>

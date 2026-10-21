@@ -1,0 +1,51 @@
+<sanctus id="mary-magdalene-de-pazzi" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Mary Magdalene de' Pazzi</nomen>
+  <nomen lingua="it" fontes="ce">Maria Maddalena</nomen>
+  <nomen lingua="it" fontes="ce">Caterina</nomen>
+  <ortus annus="1566" mensis="4" dies="2" locus="Florence" fontes="ce bu"/>
+  <obitus annus="1607" mensis="5" dies="25" locus="Florence" fontes="ce bu mr"/>
+  <beatificatio annus="1626" papa="Urban VIII" fontes="ce bu"/>
+  <canonizatio modus="formalis" annus="1669" mensis="4" dies="28" papa="Clement IX" fontes="ce bu"/>
+  <festum calendarium="generale" mensis="5" dies="25" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="5" dies="25" nota="elogium; it says her feast is kept on 27 May" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="5" dies="29" nota="notice of her feast" fontes="mr29"/>
+  <munus fontes="us mr ce">virgin</munus>
+  <munus fontes="mr ce">Carmelite nun</munus>
+  <munus fontes="ce">mystic</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Caterina de' Pazzi was born in Florence on 2 April 1566 into two noble families, the Pazzi and the Buondelmonti. As a child she was drawn above all to the Blessed Sacrament; she made her First Communion at ten and soon after vowed her virginity to God. In December 1582 she entered the Carmelite convent of Santa Maria degli Angeli, chosen because its rule allowed daily Communion. She received the habit and the name Maria Maddalena in 1583, and was professed on 29 May 1584 while so ill that she was not expected to live.</paragraphus>
+    <paragraphus fontes="ce bu mr">From her clothing to her death her life was a series of raptures and ecstasies, during which she uttered maxims on divine love that her sisters wrote down without her knowledge; she wrote none of them herself. She passed through five years of severe interior desolation and temptation (1585-90), served as novice mistress for six years, and in 1604 took a leading office in the house, superior according to the Catholic Encyclopedia and sub-prioress according to Butler. She died on 25 May 1607 after nearly three years of painful illness. She was beatified by Urban VIII in 1626 and canonized by Clement IX in 1669.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="25 May">
+    <excerptum>At Florence, St. Mary Magdalen, virgin, of the Order of the Carmelites, illustrious by the holiness of her life. Her feast is kept on the 27th of May.</excerptum>
+  </fons>
+  <fons id="mr29" opus="mr1916" locus="29 May">
+    <excerptum>HE feast of St. Mary Magdalen, Carmelite nun, whose birthday is on the 25th of this month.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Mary Magdalen de' Pazzi" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Mary_Magdalen_de'_Pazzi">
+    <excerptum>Carmelite Virgin, born 2 April, 1566; died 25 May, 1607.</excerptum>
+    <excerptum>She came of two noble families, her father being Camillo Geri de' Pazzi and her mother a Buondelmonti. She was baptized, and named Caterina, in the great baptistery.</excerptum>
+    <excerptum>But above all other spiritual characteristics was Caterina's intense attraction towards the Blessed Sacrament</excerptum>
+    <excerptum>She made her own First Communion at the age of ten, and shortly afterwards vowed her virginity to God.</excerptum>
+    <excerptum>she finally entered in December, 1582, the Carmelite convent of Santa Maria degl' Angeli</excerptum>
+    <excerptum>Her chief reason for choosing this convent was the rule there followed of daily Communion.</excerptum>
+    <excerptum>Caterina was clothed in 1583, when she took the name of Maria Maddalena; and on 29 May, 1584, being then so ill that they feared she would not recover, she was professed.</excerptum>
+    <excerptum>novice mistress (which post she held for six years), and finally, in 1604, superior. For five years (1585-90) God allowed her to be tried by terrible inward desolation and temptations</excerptum>
+    <excerptum>From the time of her clothing with the religious habit till her death the saint's life was one series of raptures and ecstasies</excerptum>
+    <excerptum>it was whilst in her states of rapture that St. Mary Magdalen de' Pazzi gave utterance to those wonderful maxims of Divine Love</excerptum>
+    <excerptum>These utterances have been preserved to us by the saint's companions, who (unknown to her) took them down from her lips as she poured them forth.</excerptum>
+    <excerptum>These maxims of the saint are sometimes described as her "Works", although she wrote down none of them herself.</excerptum>
+    <excerptum>she died after an illness of nearly three years' duration and of indescribable painfulness</excerptum>
+    <excerptum>the process for her beatification was begun in 1610 under Paul V, and finished under Urban VIII in 1626. She was not, however, canonized till sixty-two years after her death, when Clement IX raised her to the altars in 28 April, 1669.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v05 May 25 St. Mary Magdalen of Pazzi, V.">
+    <excerptum>Tue family of the Pazzi was one of the most illustrious in the republic of Florence</excerptum>
+    <excerptum>She was born in that city in 1566, and in honour of St. Catharine of Sienna received her name in baptism.</excerptum>
+    <excerptum>in October 1604 she was chosen sub-prioress.</excerptum>
+    <excerptum>She expired soon after receiving the holy sacrament by way of viaticum, on the twenty-fifth of May 1607</excerptum>
+    <excerptum>The saint was beatified by Urban VIII. in the year 1626, and canonized by Clement IX. in 1669.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="25 May">
+    <excerptum>Saint Mary Magdalene de' Pazzi, Virgin</excerptum>
+  </fons>
+</sanctus>

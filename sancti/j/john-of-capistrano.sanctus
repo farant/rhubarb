@@ -1,0 +1,52 @@
+<sanctus id="john-of-capistrano" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">John of Capistrano</nomen>
+  <nomen lingua="en" fontes="ce bu">John Capistran</nomen>
+  <ortus annus="1385" locus="Capistrano, Diocese of Sulmona" fontes="ce"/>
+  <obitus annus="1456" mensis="10" dies="23" locus="Willech or Vilak, near Sirmich" fontes="ce bu"/>
+  <canonizatio modus="formalis" annus="1690" papa="Alexander VIII" fontes="bu"/>
+  <festum calendarium="generale" mensis="10" dies="23" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="10" dies="23" fontes="mr"/>
+  <munus fontes="us ce">priest</munus>
+  <munus fontes="ce mr">religious</munus>
+  <munus fontes="ce">preacher</munus>
+  <descriptio>
+    <paragraphus fontes="ce">John was born at Capistrano, in the diocese of Sulmona, in 1385, and studied law at Perugia, where in 1412 the King of Naples made him governor; he set himself against corruption and bribery. Sent in 1416 to propose peace to the Malatesta, he was thrown into prison, where he began to think more seriously about his soul and resolved to leave the world. His marriage being unconsummated, he obtained a dispensation and entered the Franciscans on 4 October 1416. St. Bernardine of Siena taught him theology, and after his ordination in 1425 he preached across Italy to enormous crowds, once to 126,000 people at Brescia, spreading devotion to the Holy Name of Jesus and helping Bernardine reform the Franciscan Order.</paragraphus>
+    <paragraphus fontes="ce bu mr">He served the Holy See as legate and nuncio, opposing the antipope Felix V and preaching against the Hussites through the Empire and Poland. After the fall of Constantinople he preached the crusade, and he went with Hunyady on the crusade; at the battle of Belgrade, when the Turks broke into the town, he rallied the Christians cross in hand; the Martyrology credits his prayers with forcing them to raise the siege. He died at Vilak, near Sirmich, on 23 October 1456, aged seventy-one. Butler says Alexander VIII canonized him in 1690 and Benedict XIII published the bull in 1724; the Catholic Encyclopedia gives only the later date.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. John Capistran" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._John_Capistran">
+    <excerptum>Born at Capistrano, in the Diocese of Sulmona, Italy, 1385; died 23 October, 1456.</excerptum>
+    <excerptum>sent him to study law at Perugia</excerptum>
+    <excerptum>In 1412 he was appointed governor of Perugia by Ladislaus, King of Naples</excerptum>
+    <excerptum>As governor he set himself against civic corruption and bribery.</excerptum>
+    <excerptum>John was sent as ambassador to propose peace to the Malatesta, who however cast him into prison.</excerptum>
+    <excerptum>It was during this imprisonment that he began to think more seriously about his soul.</excerptum>
+    <excerptum>He decided eventually to give up the world and become a Franciscan Friar</excerptum>
+    <excerptum>as the marriage was not consummated he obtained a dispensation to enter religion, which he did 4 October, 1416.</excerptum>
+    <excerptum>After he had taken his vows he came under the influence of St. Bernardine of Siena, who taught him theology</excerptum>
+    <excerptum>But his apostolic life began in 1425, after he had received the priesthood.</excerptum>
+    <excerptum>He traversed the whole of Italy; and so great were the crowds who came to listen to him that he often had to preach in the public squares.</excerptum>
+    <excerptum>At Brescia on one occasion he preached to a crowd of one hundred and twenty-six thousand people</excerptum>
+    <excerptum>Like St. Bernardine of Siena he greatly propagated devotion to the Holy Name of Jesus</excerptum>
+    <excerptum>he was actively engaged in assisting St. Bernardine in the reform of the Franciscan Order.</excerptum>
+    <excerptum>In 1439 he was sent as legate to Milan and Burgundy, to oppose the claims of the antipope Felix V</excerptum>
+    <excerptum>in 1451 he went at the request of the emperor as Apostolic nuncio to Austria.</excerptum>
+    <excerptum>John visited all parts of the empire, preaching and combatting the heresy of the Hussites; he also visited Poland at the request of Casimir IV.</excerptum>
+    <excerptum>When the crusade was actually in operation John accompanied the famous Hunyady throughout the campaign: he was present at the battle of Belgrade</excerptum>
+    <excerptum>He was beatified in 1694, and canonized in 1724.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v10 Oct. 23 St. John Capistran; or, of Capistran, C.">
+    <excerptum>Mahomet II. having taken Constantinople by assault, on the twenty-sixth of May 1453, pope Nicholas V. sent a commission to St. John to exhort the Christian princes to take up arms</excerptum>
+    <excerptum>Thus at length they got into the town, and the Christians gave way before them.</excerptum>
+    <excerptum>All things were despaired of, when St. John appearing in the foremost rank, with his cross in his hand, encouraged the soldiers to conquer or die martyrs</excerptum>
+    <excerptum>Whilst he lay sick in his convent at Willech or Vilak, near Sirmich</excerptum>
+    <excerptum>In this posture he calmly expired on the twenty-third of October, in 1456, being seventy-one years old.</excerptum>
+    <excerptum>The saint was canonized by Alexander VIII. in 1690, and Benedict XIII. published the bull of his canonization in 1724.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="23 October">
+    <excerptum>Near Villack, in Hungary, St. John of Capistran, confessor, of the Order of Minorites, illustrious by the sanctity of his life, and his zeal for the propagation of the Catholic faith. By his prayers and</excerptum>
+    <excerptum>miracles, he routed a most powerful army of Turks and forced them to raise the seige of Belgrade.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="23 October">
+    <excerptum>Saint John of Capistrano, Priest</excerptum>
+  </fons>
+</sanctus>
