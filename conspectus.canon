@@ -1,0 +1,41 @@
+<!--
+  conspectus.canon - canon dialecti CONSPECTUS (declaratio exemplaris
+  visus derivati ex actis voluminis)
+  Specificatio: project-specs/proiectiones.md (R5, D4a).
+
+  Declaratio una per plagulam, iuxta C functionis
+  (lib/conspectus_<nomen>.stml + .c). Hic canon formam iudicat; leges
+  quas canon consulto non tenet (fons documentum irritat poscit,
+  spatium '{clavis}' semel continet, fons genere uno) oneratoris sunt
+  (conspectus_declarare), non canonis.
+
+  Infixus in lib/conspectus_canon.c per tools/conspectus_canon_infigere.sh
+  (GENERATUM): registrum sine plagula vivit.
+-->
+<canon dialectus="conspectus" versio="1">
+
+  <elementum nomen="conspectus" radix="verum">
+    <attributum nomen="nomen"  genus="nomen"   necessarium="verum"/>
+    <attributum nomen="versio" genus="numerus" necessarium="verum"/>
+    <liberum nomen="clavis" minimum="1" maximum="1"/>
+    <liberum nomen="fons"/>
+  </elementum>
+
+  <!-- clavis: typus organi (organum_typum_iudicare) -->
+  <elementum nomen="clavis">
+    <attributum nomen="typus" genus="nomen" necessarium="verum"/>
+  </elementum>
+
+  <!-- fons: documentum (spatium documenti in memoria ligati) cum
+       irritat; spatium cum '{clavis}'; pura (functio clavis solius) -->
+  <elementum nomen="fons">
+    <attributum nomen="documentum" genus="textus"/>
+    <attributum nomen="irritat"    genus="electio">
+      <optio>omnia</optio>
+      <optio>per-rem</optio>
+    </attributum>
+    <attributum nomen="spatium"    genus="textus"/>
+    <attributum nomen="pura"       genus="nomen"/>
+  </elementum>
+
+</canon>

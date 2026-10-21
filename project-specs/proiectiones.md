@@ -121,7 +121,7 @@ Source kinds (how an act on the source invalidates):
 | kind | stale after an act | code needed |
 |---|---|---|
 | `documentum` + `omnia` | every cached key of the projection | none |
-| `documentum` + `per-rem` | old ∪ new keys of the items (§V) | one helper: item -> keys it touches |
+| `documentum` + `per-rem` | old ∪ new keys of the changed items (§V) | item -> keys it touches, and item -> fingerprint |
 | `spatium` | the key named by the space (`dies/2026-10-19` -> key `2026-10-19`) | none |
 | `pura` | never (a function of the key alone) | none |
 
@@ -225,14 +225,23 @@ What becomes easier:
 - **Lazy recompute = debouncing.** An act only marks addresses stale;
   recomputation happens on the next read. Typing in a notebook (many
   acts per second) recomputes the day once per paint.
-- **Notification** through the historia observers (§II). Undo, redo
-  and branches need no special case: the document's state changes and
-  the observer fires.
-- **`per-rem` by diffing.** After each act on the source document,
-  the library recomputes every item's keys with the helper and
-  compares them with the keys it remembered; changed items stale old
-  ∪ new. O(items) per act, no API change in the documents, correct
-  across undo/redo/branches because it compares RESULTS instead of
+- **Notification by a seq cursor** (*amended at D4a, Fran
+  2026-10-21; was: historia observers*). The registry keeps the volume
+  seq it has seen; before answering a read it fetches the acts after it
+  and maps each act's genus - or a plagula act's `via` - onto the
+  sources by SPACE prefix (`agenda/...`, `dies/2026-10-19/...`).
+  Observers only see the `Historia` instances the registry was handed:
+  a day's notebook edited in a scriba pane goes through that pane's own
+  instance. The cursor sees every writer (any pane, any process); undo
+  and redo arrive as `<space>/cursor` acts, so they need no special
+  case. A document source is therefore named by its space.
+- **`per-rem` by diffing.** After acts on the source document, the
+  library recomputes every item's keys AND its fingerprint
+  (`vestigium`, e.g. the item's canonical encoding) and compares them
+  with what it remembered (keys + a 64-bit hash); a changed item stales
+  old ∪ new. *Amended at D4a:* keys alone miss content edits - a
+  rename changes no keys. O(items) per catch-up, correct across
+  undo/redo/branches because it compares RESULTS instead of
   interpreting events. If a measurement shows it is slow, documents
   may report the ids an act touched; neither `f` nor the declaration
   changes.

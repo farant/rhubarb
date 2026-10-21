@@ -532,6 +532,16 @@
     <ingressus genus="fasciculus" via="organum.canon"/>
     <exitus via="lib/organum_canon.c" provenientia="regeneratio"/>
   </actio>
+  <!-- canon conspectus infixus (proiectiones D4a, mos organum_canon):
+       conspectus.canon -> lib/conspectus_canon.c -->
+  <actio titulus="conspectus_canon" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/conspectus_canon_infigere.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/conspectus_canon_infigere.sh"/>
+    <ingressus genus="fasciculus" via="conspectus.canon"/>
+    <exitus via="lib/conspectus_canon.c" provenientia="regeneratio"/>
+  </actio>
   <!-- manifesta organorum infixa (status-plan S7c-1, mos organum_canon):
        apps/<genus>/organum.stml + basis -> lib/organa_infixa.c;
        applicationes (etiam ~/.bin) sine arbore legunt -->
