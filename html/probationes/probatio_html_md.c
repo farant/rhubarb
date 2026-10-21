@@ -148,7 +148,7 @@ hic_manens s32
 _canone_iudicare (
                 Piscina* piscina,
     InternamentumChorda* intern,
-                  Canon* canon,
+         constans Canon* canon,
                  chorda  textus)
 {
     StmlResultus  res;
@@ -172,7 +172,7 @@ hic_manens s32
 _html_probare (
                             Piscina* piscina,
                 InternamentumChorda* intern,
-                              Canon* canon,
+                     constans Canon* canon,
      constans MateriaArborConsilium* consilium,
                  constans character* titulus,
                              chorda  html)
@@ -234,91 +234,132 @@ _html_probare (
     redde (s32)_genus_numerare(radix, (s32)HTML_GENUS_ELEMENTUM_MALUM);
 }
 
-integer
-principale (vacuum)
+/* FIXURA SUITAE: internamentum, lexicon, consilium, canon html et
+ * programma md semel lecta; sectiones LEGUNT (internatio in
+ * internamentum fixurae sola licet, decretum 2026-10-19). */
+nomen structura {
+      InternamentumChorda* intern;
+                    Canon* canon;
+                   chorda  programma;
+      MateriaLexiconRatum  ratum;
+    MateriaArborConsilium  consilium;
+} FixuraCanonis;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                Piscina* piscina;
-    InternamentumChorda* intern;
-     constans character* radix_viae;
-                  Canon* canon;
-                 chorda  programma;
-    MateriaLexiconRatum  ratum;
-     MateriaLexIudicium  iudicium;
-  MateriaArborConsilium  consilium;
-                    b32  praeteritus;
-                    i32  i;
-                    i32  redditi      = ZEPHYRUM;
-                    i32  octeti_html  = ZEPHYRUM;
+         FixuraCanonis* f;
+    constans character* radix_viae = getenv("RHUBARB_RADIX");
+    MateriaLexIudicium  iudicium;
+             character  via[DXII];
+             character* textus;
+                   i32  mensura = ZEPHYRUM;
+                chorda  fons;
+                chorda  causa;
 
-    piscina = piscina_generare_dynamicum("probatio_html_md",
-        (memoriae_index)64 * M * M);
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
-
-    radix_viae = getenv("RHUBARB_RADIX");
-    si (radix_viae == NIHIL)
-    { radix_viae = ".";
+    f = (FixuraCanonis*)piscina_allocare(c->piscina,
+        magnitudo(FixuraCanonis));
+    si (f == NIHIL)
+    {
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    si (!materia_lexicon_ratum_facere(&ratum, &HTML_LEXICON, &iudicium))
+    si (radix_viae == NIHIL)
+    {
+        radix_viae = ".";
+    }
+    f->intern = internamentum_creare(c->piscina);
+    si (!materia_lexicon_ratum_facere(&f->ratum, &HTML_LEXICON,
+        &iudicium))
     {
         imprimere("LEXICON HTML RECUSATUM\n");
-        redde I;
+        redde;
     }
-    materia_arbor_consilium_nudum(&consilium, &HTML_REGISTRUM, &ratum,
-        "html");
+    materia_arbor_consilium_nudum(&f->consilium, &HTML_REGISTRUM,
+        &f->ratum, "html");
 
     /* canon et programma md */
+    sprintf(via, "%s/html/grammatica/html.canon", radix_viae);
+    textus = _plagulam_legere(c->piscina, via, &mensura);
+    CREDO_NON_NIHIL (textus);
+    fons.datum     = (i8*)textus;
+    fons.mensura   = mensura;
+    causa.datum    = NIHIL;
+    causa.mensura  = ZEPHYRUM;
+    f->canon = textus ? canon_legere(fons, c->piscina, f->intern,
+        &causa)
+                      : NIHIL;
+    CREDO_NON_NIHIL (f->canon);
+
+    sprintf(via, "%s/md/html/md-html.stml", radix_viae);
+    textus = _plagulam_legere(c->piscina, via, &mensura);
+    CREDO_NON_NIHIL (textus);
+    f->programma.datum    = (i8*)textus;
+    f->programma.mensura  = mensura;
+    si (f->canon == NIHIL || textus == NIHIL)
     {
-        character  via[DXII];
-        character* textus;
-              i32  mensura = ZEPHYRUM;
-           chorda  fons;
-           chorda  causa;
-
-        sprintf(via, "%s/html/grammatica/html.canon", radix_viae);
-        textus = _plagulam_legere(piscina, via, &mensura);
-        CREDO_NON_NIHIL (textus);
-        fons.datum     = (i8*)textus;
-        fons.mensura   = mensura;
-        causa.datum    = NIHIL;
-        causa.mensura  = ZEPHYRUM;
-        canon = textus ? canon_legere(fons, piscina, intern, &causa)
-                       : NIHIL;
-        CREDO_NON_NIHIL (canon);
-
-        sprintf(via, "%s/md/html/md-html.stml", radix_viae);
-        textus = _plagulam_legere(piscina, via, &mensura);
-        CREDO_NON_NIHIL (textus);
-        programma.datum    = (i8*)textus;
-        programma.mensura  = mensura;
-        si (canon == NIHIL || textus == NIHIL)
-        {
-            credo_imprimere_compendium();
-            redde I;
-        }
+        redde;
     }
+    c->datum = f;
+}
 
 
-    /* ==================================================
-     * TESTIS POSITIVUS: numerator mala videt
-     * ================================================== */
+/* ==================================================
+ * TESTIS POSITIVUS: numerator mala videt
+ * ================================================== */
 
+interior vacuum
+_testem_probare (
+    CredoContextus* c)
+{
+    constans FixuraCanonis* f =
+        (constans FixuraCanonis*)c->suita;
+                        chorda html;
+
+    si (f == NIHIL)
     {
-        chorda html;
-
-        imprimere("\n--- Testis positivus: malum unum ---\n");
-        html = chorda_ex_literis("<p>a</b></p>", piscina);
-        CREDO_AEQUALIS_S32 (_html_probare(piscina, intern, canon,
-            &consilium, "testis", html), (s32)I);
+        redde;
     }
+    html = chorda_ex_literis("<p>a</b></p>", c->piscina);
+    CREDO_AEQUALIS_S32 (_html_probare(c->piscina, f->intern, f->canon,
+        &f->consilium, "testis", html), (s32)I);
+}
 
 
-    /* ==================================================
-     * PORTA: html ab md redditum per parsatorem html
-     * ================================================== */
+/* ==================================================
+ * PORTA: html ab md redditum per parsatorem html. Piscina 'opus' per
+ * initum VACATUR (olim piscina una totum corpus cumulabat: CCLIX MiB
+ * > tectum CCLVI, migratio credo v2 2026-10-21) - nihil initus ultra
+ * iterationem suam vivit praeter numeros et internamentum fixurae.
+ * ================================================== */
 
-    imprimere("\n--- PORTA: initus md %d per html ---\n",
-        (integer)NUMERUS_INITUUM);
+interior vacuum
+_portam_probare (
+    CredoContextus* c)
+{
+    constans FixuraCanonis* f =
+        (constans FixuraCanonis*)c->suita;
+            constans character* radix_viae = getenv("RHUBARB_RADIX");
+                       Piscina* opus;
+                           i32  i;
+                           i32  redditi      = ZEPHYRUM;
+                           i32  octeti_html  = ZEPHYRUM;
+
+    si (f == NIHIL)
+    {
+        redde;
+    }
+    si (radix_viae == NIHIL)
+    {
+        radix_viae = ".";
+    }
+    opus = piscina_generare_dynamicum("probatio_html_md_opus",
+        (memoriae_index)IV * M * M);
+    si (opus == NIHIL)
+    {
+        redde;
+    }
+    imprimere("  initus md %d\n", (integer)NUMERUS_INITUUM);
     per (i = ZEPHYRUM; i < NUMERUS_INITUUM; i++)
     {
              character  via[DXII];
@@ -327,16 +368,17 @@ principale (vacuum)
         MdHtmlResultus  r;
                    s32  mala;
 
+        piscina_vacare(opus);
         sprintf(via, "%s/%s", radix_viae, INITUS[i]);
-        textus = _plagulam_legere(piscina, via, &mensura);
+        textus = _plagulam_legere(opus, via, &mensura);
         si (textus == NIHIL)
         {
             imprimere("  ABEST: %s\n", INITUS[i]);
             CREDO_CULPA ("initus abest");
             perge;
         }
-        r = md_html_reddere(piscina, intern, textus, mensura,
-            programma);
+        r = md_html_reddere(opus, f->intern, textus, mensura,
+            f->programma);
         si (!r.successus)
         {
             imprimere("  %s: md redditio fracta: %.*s\n", INITUS[i],
@@ -350,21 +392,31 @@ principale (vacuum)
         redditi      = redditi + I;
         octeti_html  = octeti_html + r.html.mensura;
 
-        mala = _html_probare(piscina, intern, canon, &consilium,
+        mala = _html_probare(opus, f->intern, f->canon, &f->consilium,
             INITUS[i], r.html);
         imprimere("  %-40s md %6d -> html %6d octeti  mala %d\n",
             INITUS[i], (integer)mensura, (integer)r.html.mensura,
             (integer)mala);
         CREDO_AEQUALIS_S32 (mala, MALA_EXSPECTATA[i]);
     }
+    piscina_destruere(opus);
 
     /* se metiens */
     CREDO_AEQUALIS_I32 (redditi, NUMERUS_INITUUM);
     CREDO_MAIOR_I32 (octeti_html, ZEPHYRUM);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "testis positivus: malum unum", _testem_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "porta: initus md per html", _portam_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("html_md", SECTIONES, _suitam_parare,
+        NIHIL);
 }

@@ -327,15 +327,21 @@ _proprietas_publicata (
     redde FALSUM;
 }
 
-/* lineam mittere, responsum totum (litterae) recipere */
+/* lineam mittere, responsum totum (litterae) recipere. Nuntius in
+ * piscina SUA tractatur (contractus tabularium_tractare: pn effimera,
+ * vocantis) et post nuntium destruitur; responsum solum in pn
+ * (piscina vocantis) copiatur - olim piscina suitae ipsa pn erat et DXIX
+ * nuntiorum scripturas cumulabat (CCXCIV MiB > tectum CCLVI, migratio
+ * credo v2 2026-10-21). */
 interior constans character*
 _mitte (
             Tabularium* t,
                Piscina* pn,
     constans character* linea)
 {
-      FILE* effusio = tmpfile();
-    chorda  corpus;
+       FILE* effusio = tmpfile();
+    Piscina* nuntii;
+     chorda  corpus;
     unio { constans character* l; i8* m; } u;
          long  mensura;
     character* fructus;
@@ -344,10 +350,18 @@ _mitte (
     {
         redde "";
     }
+    nuntii = piscina_generare_dynamicum("probatio_tab_nuntius",
+        1048576);
+    si (nuntii == NIHIL)
+    {
+        fclose(effusio);
+        redde "";
+    }
     u.l             = linea;
     corpus.datum    = u.m;
     corpus.mensura  = (i32)strlen(linea);
-    (vacuum)tabularium_tractare(t, pn, corpus, effusio);
+    (vacuum)tabularium_tractare(t, nuntii, corpus, effusio);
+    piscina_destruere(nuntii);
     fseek(effusio, 0L, SEEK_END);
     mensura = ftell(effusio);
     fseek(effusio, 0L, SEEK_SET);
@@ -418,23 +432,17 @@ _res_id_ex_responso (
     quaternio[i] = '\0';
 }
 
-s32
-principale (vacuum)
+/* Sectio UNA: probatio scaenica - blocci statum priorum ex proposito
+ * continuant; gradus (CREDO_GRADUS) fracturam nominant. */
+interior vacuum
+_scaenam_probare (
+    CredoContextus* c)
 {
-                   Piscina* piscina;
+                   Piscina* piscina = c->piscina;
                 Tabularium* t;
     TabulariumConfiguratio  cfg;
-                       b32  praeteritus;
         constans character* r;
 
-    piscina = piscina_generare_dynamicum("probatio_tab",
-        134217728);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
     _purgare();
 
     cfg.radix             = ".";
@@ -455,16 +463,18 @@ principale (vacuum)
     CREDO_NON_NIHIL (t);
     si (t == NIHIL)
     {
-        redde I;
+        redde;   /* sine assertione: sectio VACUA */
     }
 
     /* I. ante initialize: instrumenta recusantur */
+    CREDO_GRADUS ("I. ante initialize");
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":1,"
         "\"method\":\"tools/list\"}");
     CREDO_VERUM (strstr(r, "-32002") != NIHIL);
 
     /* II. initialize: doctrina (contractus scribae) in
      * instructions cadit; genera seminantur */
+    CREDO_GRADUS ("II. initialize");
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":2,"
         "\"method\":\"initialize\",\"params\":{"
         "\"protocolVersion\":\"2025-06-18\"}}");
@@ -493,6 +503,7 @@ principale (vacuum)
     CREDO_VERUM (strstr(r, "CONTRACTUS SCRIBAE") != NIHIL);
 
     /* III. tools/list: quinque instrumenta */
+    CREDO_GRADUS ("III. tools/list");
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":4,"
         "\"method\":\"tools/list\"}");
     CREDO_VERUM (strstr(r, "\"addere\"") != NIHIL);
@@ -511,6 +522,7 @@ principale (vacuum)
 
     /* IV. addere: quaestio cum tags et ancoris (una resoluta, una
      * inresoluta - fixtura nexus_specimen.tsv) */
+    CREDO_GRADUS ("IV. addere");
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":5,"
         "\"method\":\"tools/call\",\"params\":{\"name\":"
         "\"addere\",\"arguments\":{\"genus\":\"quaestio\","
@@ -529,6 +541,7 @@ principale (vacuum)
     /* V. res per titulum: ancora resoluta -> lib/chorda.c:42
      * (sedes PRIMA vicit, non lib/copia.c); inresoluta -> CAUTIO +
      * simillima (chorda_secare propinquum) */
+    CREDO_GRADUS ("V. res per titulum");
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":6,"
         "\"method\":\"tools/call\",\"params\":{\"name\":\"res\","
         "\"arguments\":{\"res\":\"Parsura lenta\"}}}");
@@ -538,6 +551,7 @@ principale (vacuum)
     CREDO_VERUM (strstr(r, "annales") != NIHIL);
 
     /* VI. gerere: status + nota; violatio machinae notatur */
+    CREDO_GRADUS ("VI. gerere");
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":7,"
         "\"method\":\"tools/call\",\"params\":{\"name\":"
         "\"gerere\",\"arguments\":{\"res\":\"Parsura lenta\","
@@ -586,6 +600,7 @@ principale (vacuum)
     CREDO_VERUM (strstr(r, "iterum in messe") != NIHIL);
 
     /* VII. quaerere: prosa, praefixum, tag */
+    CREDO_GRADUS ("VII. quaerere");
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":9,"
         "\"method\":\"tools/call\",\"params\":{\"name\":"
         "\"quaerere\",\"arguments\":{\"textus\":\"praeparatore\""
@@ -649,6 +664,7 @@ principale (vacuum)
 
     /* VIII. res ignota -> simillima ex titulis rerum (typus
      * deletionis - lex subsequentiae similitudinis) */
+    CREDO_GRADUS ("VIII. res ignota -> simillima ex titulis rerum");
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":12,"
         "\"method\":\"tools/call\",\"params\":{\"name\":\"res\","
         "\"arguments\":{\"res\":\"Parsura lnta\"}}}");
@@ -656,6 +672,7 @@ principale (vacuum)
     CREDO_VERUM (strstr(r, "Parsura lenta") != NIHIL);
 
     /* IX. census: genera seminata + tags + vocabularium */
+    CREDO_GRADUS ("IX. census");
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":13,"
         "\"method\":\"tools/call\",\"params\":{\"name\":"
         "\"census\",\"arguments\":{}}}");
@@ -680,6 +697,7 @@ principale (vacuum)
 
     /* X. nexus inter res (saccharum K2: res vinculi propria -
      * creatio + membra duo; grammatica gerere eadem, G15) */
+    CREDO_GRADUS ("X. nexus inter res");
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":14,"
         "\"method\":\"tools/call\",\"params\":{\"name\":"
         "\"addere\",\"arguments\":{\"genus\":\"parcum\","
@@ -794,6 +812,7 @@ principale (vacuum)
     /* XII. tituli duplicati: addere monet, resolutio ambigua
      * candidatos nominat, res_id discernit (quaestio 'Tituli
      * duplicati: acies tacita' - sanatio) */
+    CREDO_GRADUS ("XII. tituli duplicati");
     {
         /* duplicatum "Cache calida" (parcum iam clausum supra sed
          * ordo res manet - titulus idem, res altera) */
@@ -831,6 +850,7 @@ principale (vacuum)
      * generibus VIVIS (tags = tabulatum) - valor chorda querelam
      * parit; census insalubres numerat; res querelam ostendit;
      * sanatio ambas purgat */
+    CREDO_GRADUS ("XIII. salus in superficiebus");
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":40,"
         "\"method\":\"tools/call\",\"params\":{\"name\":"
         "\"gerere\",\"arguments\":{\"res\":\"Parsura lenta\","
@@ -861,6 +881,7 @@ principale (vacuum)
     /* XIV. semen v2 idempotens (G14): initialize alterum NIHIL
      * scribit - tabula content-deterministica octetim aequalis
      * manet (caput = seq eventi ultimi) */
+    CREDO_GRADUS ("XIV. semen v2 idempotens");
     {
         constans character* tabula_ante = _plagula_litterae(
             piscina, VIA_TB);
@@ -895,15 +916,18 @@ principale (vacuum)
     }
 
 
-    /* ========================================================
+    /* ==================================================
      * K3 CHUNK C (aureae G20-G23)
-     * ======================================================== */
+     * ================================================== */
+
+    CREDO_GRADUS ("K3 CHUNK C");
 
     /* XVI. G20: semen v3 - genera K3 praesentia; fusio v2 in
      * genera TABULAE terminata (E2-B2): quaestio attributa tabulae
      * fert, opus/actio/processus EA NON ferunt (idempotentia iam
      * in XIV probata - tabula octetim aequalis post initialize
      * alterum CUM seminibus v3) */
+    CREDO_GRADUS ("XVI. G20");
     {
         GestaMundus* sonda = gesta_aperire(piscina, VIA_DB,
             VIA_AN);
@@ -914,33 +938,34 @@ principale (vacuum)
             /* chorda non NUL-terminata - copiae NUL-terminatae
              * pro strstr */
             {
-                chorda c = gesta_genus_datum(sonda, "quaestio",
+                chorda datum_generis = gesta_genus_datum(sonda,
+                    "quaestio",
                     piscina);
                 character* buf = (character*)piscina_allocare(
-                    piscina, (memoriae_index)c.mensura + I);
+                    piscina, (memoriae_index)datum_generis.mensura + I);
 
-                CREDO_VERUM (c.mensura > ZEPHYRUM);
-                si (buf != NIHIL && c.mensura > ZEPHYRUM)
+                CREDO_VERUM (datum_generis.mensura > ZEPHYRUM);
+                si (buf != NIHIL && datum_generis.mensura > ZEPHYRUM)
                 {
-                    memcpy(buf, c.datum,
-                        (memoriae_index)c.mensura);
-                    buf[c.mensura] = '\0';
+                    memcpy(buf, datum_generis.datum,
+                        (memoriae_index)datum_generis.mensura);
+                    buf[datum_generis.mensura] = '\0';
                     CREDO_VERUM (strstr(buf, "\"ancorae\"")
                         != NIHIL);
                 }
             }
             {
-                chorda c = gesta_genus_datum(sonda,
+                chorda datum_generis = gesta_genus_datum(sonda,
                     "claudere-cum-decreto", piscina);
                 character* buf = (character*)piscina_allocare(
-                    piscina, (memoriae_index)c.mensura + I);
+                    piscina, (memoriae_index)datum_generis.mensura + I);
 
-                CREDO_VERUM (c.mensura > ZEPHYRUM);
-                si (buf != NIHIL && c.mensura > ZEPHYRUM)
+                CREDO_VERUM (datum_generis.mensura > ZEPHYRUM);
+                si (buf != NIHIL && datum_generis.mensura > ZEPHYRUM)
                 {
-                    memcpy(buf, c.datum,
-                        (memoriae_index)c.mensura);
-                    buf[c.mensura] = '\0';
+                    memcpy(buf, datum_generis.datum,
+                        (memoriae_index)datum_generis.mensura);
+                    buf[datum_generis.mensura] = '\0';
                     CREDO_VERUM (strstr(buf,
                         "\"species\":\"actio\"") != NIHIL);
                     CREDO_VERUM (strstr(buf, "\"ancorae\"")
@@ -948,17 +973,17 @@ principale (vacuum)
                 }
             }
             {
-                chorda c = gesta_genus_datum(sonda,
+                chorda datum_generis = gesta_genus_datum(sonda,
                     "ritus-signaculi", piscina);
                 character* buf = (character*)piscina_allocare(
-                    piscina, (memoriae_index)c.mensura + I);
+                    piscina, (memoriae_index)datum_generis.mensura + I);
 
-                CREDO_VERUM (c.mensura > ZEPHYRUM);
-                si (buf != NIHIL && c.mensura > ZEPHYRUM)
+                CREDO_VERUM (datum_generis.mensura > ZEPHYRUM);
+                si (buf != NIHIL && datum_generis.mensura > ZEPHYRUM)
                 {
-                    memcpy(buf, c.datum,
-                        (memoriae_index)c.mensura);
-                    buf[c.mensura] = '\0';
+                    memcpy(buf, datum_generis.datum,
+                        (memoriae_index)datum_generis.mensura);
+                    buf[datum_generis.mensura] = '\0';
                     CREDO_VERUM (strstr(buf,
                         "\"species\":\"processus\"") != NIHIL);
                     CREDO_VERUM (strstr(buf, "\"ancorae\"")
@@ -966,17 +991,17 @@ principale (vacuum)
                 }
             }
             {
-                chorda c = gesta_genus_datum(sonda, "opus",
+                chorda datum_generis = gesta_genus_datum(sonda, "opus",
                     piscina);
                 character* buf = (character*)piscina_allocare(
-                    piscina, (memoriae_index)c.mensura + I);
+                    piscina, (memoriae_index)datum_generis.mensura + I);
 
-                CREDO_VERUM (c.mensura > ZEPHYRUM);
-                si (buf != NIHIL && c.mensura > ZEPHYRUM)
+                CREDO_VERUM (datum_generis.mensura > ZEPHYRUM);
+                si (buf != NIHIL && datum_generis.mensura > ZEPHYRUM)
                 {
-                    memcpy(buf, c.datum,
-                        (memoriae_index)c.mensura);
-                    buf[c.mensura] = '\0';
+                    memcpy(buf, datum_generis.datum,
+                        (memoriae_index)datum_generis.mensura);
+                    buf[datum_generis.mensura] = '\0';
                     CREDO_VERUM (strstr(buf, "\"assignatum\"")
                         != NIHIL);
                     /* OLIM hic: 'ancorae ABSUNT' ut custos E2-B2.
@@ -1011,6 +1036,7 @@ principale (vacuum)
 
     /* XVII. G21: agere - receptum princeps felix (ligamina PER
      * TITULUM soluta) + recusata causam nominat */
+    CREDO_GRADUS ("XVII. G21");
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":70,"
         "\"method\":\"tools/call\",\"params\":{\"name\":"
         "\"addere\",\"arguments\":{\"genus\":\"parcum\","
@@ -1057,6 +1083,7 @@ principale (vacuum)
 
     /* XVIII. G22: affordantiae in res (actiones: linea) - tractum
      * affert, quaestio non */
+    CREDO_GRADUS ("XVIII. G22");
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":75,"
         "\"method\":\"tools/call\",\"params\":{\"name\":"
         "\"addere\",\"arguments\":{\"genus\":\"parcum\","
@@ -1085,6 +1112,7 @@ principale (vacuum)
      * consilii generatur (in-cursu sequentia: spec NONDUM);
      * tabula instantiam + opus ostendit; perfectio operis per
      * gerere provectionem SPONTE ciet */
+    CREDO_GRADUS ("XIX. G23");
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":80,"
         "\"method\":\"tools/call\",\"params\":{\"name\":"
         "\"addere\",\"arguments\":{\"genus\":\"parcum\","
@@ -1126,6 +1154,7 @@ principale (vacuum)
      * censu; fontes superantes -> CAUTIO; binarium motum ->
      * promotio + CAUTIO glutinosa. Semantica profunda in
      * probatio_vigilia (unitas); hic = integratio superficierum. */
+    CREDO_GRADUS ("XV. vigilia");
     {
                     Tabularium* t3;
         TabulariumConfiguratio  cfg3 = cfg;
@@ -1225,6 +1254,7 @@ principale (vacuum)
 
     /* XI. nuntiatio tacite omissa; ping ante omnia licitum;
      * analysis fracta -> -32700 */
+    CREDO_GRADUS ("XI. nuntiatio tacite omissa");
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"method\":"
         "\"notifications/initialized\"}");
     CREDO_AEQUALIS_I32 ((i32)strlen(r), ZEPHYRUM);
@@ -1237,6 +1267,7 @@ principale (vacuum)
     /* XX. G17 (K4): instrumentum ramus - vita completa via MCP;
      * parametrum ramus in addere/gerere/res; lex res_id in ramo
      * (E2-B1); truncus caecus usque ad fusionem */
+    CREDO_GRADUS ("XX. G17");
     {
         character rid[GESTA_RES_ID_MENSURA];
 
@@ -1369,6 +1400,7 @@ principale (vacuum)
 
     /* XXI. G18 (K4): census 'rami activi'; tabula sectio RAMI
      * (activi soli); semen v4 genus ramus praesens */
+    CREDO_GRADUS ("XXI. G18");
     {
         constans character* tb;
 
@@ -1398,20 +1430,22 @@ principale (vacuum)
             CREDO_NON_NIHIL (sonda);
             si (sonda != NIHIL)
             {
-                chorda c = gesta_genus_datum(sonda, "ramus",
+                chorda datum_generis = gesta_genus_datum(sonda, "ramus",
                     piscina);
 
-                CREDO_VERUM (c.mensura > ZEPHYRUM);
+                CREDO_VERUM (datum_generis.mensura > ZEPHYRUM);
                 gesta_claudere(sonda);
             }
         }
     }
 
 
-    /* ================================================
+    /* ==================================================
      * praefixum ULID inambiguum (ergonomia 2026-07-17):
      * recessus ultimus post id exactum + titulum
-     * ================================================ */
+     * ================================================== */
+
+    CREDO_GRADUS ("praefixum ULID inambiguum");
 
     {
                  character  id_a[27];
@@ -1428,7 +1462,7 @@ principale (vacuum)
         CREDO_NON_NIHIL (p);
         si (p == NIHIL)
         {
-            redde I;
+            redde;   /* sine assertione: sectio VACUA */
         }
         memcpy(id_a, p + VII, XXVI);
         id_a[XXVI] = '\0';
@@ -1462,7 +1496,7 @@ principale (vacuum)
         CREDO_NON_NIHIL (p);
         si (p == NIHIL)
         {
-            redde I;
+            redde;   /* sine assertione: sectio VACUA */
         }
         memcpy(id_b, p + IV, XXVI);
         id_b[XXVI] = '\0';
@@ -1528,9 +1562,11 @@ principale (vacuum)
     }
 
 
-    /* ================================================
+    /* ==================================================
      * XXII. K4.2 ergonomia: origo + similia + breviter
-     * ================================================ */
+     * ================================================== */
+
+    CREDO_GRADUS ("XXII. K4.2 ergonomia");
 
     {
         /* schemata nova in tools/list */
@@ -1629,6 +1665,8 @@ principale (vacuum)
      * sine statu dabat - 'estne impediens adhuc apertum?' sine
      * apertione altera sciri non poterat.
      * ================================================== */
+
+    CREDO_GRADUS ("XXII bis. breviarium VINCULA monstrat");
 
     {
         character nuntius[DXII];
@@ -1758,6 +1796,8 @@ principale (vacuum)
      * impedimentum tribus orthographiis duabus directionibus
      * scriptum - visus PARATA super id aedificari non poterat.
      * ================================================== */
+
+    CREDO_GRADUS ("XXII ter. VERBA NEXUS CANONICA");
 
     {
         /* semen: genus nexus verba canonica ut DATUM fert */
@@ -1969,6 +2009,8 @@ principale (vacuum)
      * scientiae a catena operum non polluatur.
      * ================================================== */
 
+    CREDO_GRADUS ("XXII quater. OPERA PLANORUM");
+
     {
         /* semen v8: declaratio in annalibus, semel */
         {
@@ -2033,11 +2075,13 @@ principale (vacuum)
     }
 
 
-    /* ================================================
+    /* ==================================================
      * XXIII. proiectio entitatum (per rem, per tag) - vita
      * completa: creatio cum duobus tags, nota, mutatio status,
      * retag (folder vetus purgatur, novum apparet)
-     * ================================================ */
+     * ================================================== */
+
+    CREDO_GRADUS ("XXIII. proiectio entitatum");
 
     {
         constans character* md;
@@ -2097,7 +2141,7 @@ principale (vacuum)
     }
 
 
-    /* ================================================
+    /* ==================================================
      * XXIIIb. _sine_tag saccharum: ens sine argumento 'tags' - nulla
      * clavis 'tags' in dato, ergo n_tags == 0 in
      * _entitatem_reconciliare - plagula cadit in folder _sine_tag.
@@ -2105,6 +2149,8 @@ principale (vacuum)
      * quia _sine_tag iam multas res antecedentes fert (parca/notae
      * sine tag + vincula nexus/denexus post review fix 1) - ordo
      * iteratoris non certus, "prima" plagula alia esse potest */
+
+    CREDO_GRADUS ("XXIIIb. _sine_tag saccharum");
 
     {
         (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":204,"
@@ -2116,7 +2162,7 @@ principale (vacuum)
     }
 
 
-    /* ================================================
+    /* ==================================================
      * XXIIIc. reconciliatio omnium (transitus plenus): actus 'ramus
      * creare' _entitates_reconciliare_omnes ciet (purgatio +
      * rescriptio directorii totius). "Probatio Entitatum Alpha" -
@@ -2124,6 +2170,8 @@ principale (vacuum)
      * plagulam suam POST transitum RETINET: hoc probat rescriptionem
      * plenam ex scrinio, non modo scripturam incrementalem (iam
      * probatam in XXIII per singula actus) */
+
+    CREDO_GRADUS ("XXIIIc. reconciliatio omnium");
 
     {
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":205,"
@@ -2136,12 +2184,14 @@ principale (vacuum)
     }
 
 
-    /* ================================================
+    /* ==================================================
      * XXIIId (review fix 2): _titulum_ad_slug numquam summam XL
      * (40) octetorum slug superat - etiam cum lineola pendens +
      * character alphanumericus in eodem gradu incidunt (ante
      * fixuram: XXXIX alnum + confinium + alnum unum = slug XLI
      * octetorum, pactum documentatum violans) */
+
+    CREDO_GRADUS ("XXIIId. _titulum_ad_slug");
 
     {
         DirectoriumIterator* it;
@@ -2183,12 +2233,14 @@ principale (vacuum)
     }
 
 
-    /* ================================================
+    /* ==================================================
      * XXIIIe. nexus inter duas entitates -> ## Nexus in plagula
      * socii redditur ut LIGAMEN RELATIVUM markdown (non modo
      * textus planus): "](../<tag>/<genus>-..." (spec: semita
      * relativa _entitatem_semita_relativa, tabularium.c:1550)
-     * ================================================ */
+     * ================================================== */
+
+    CREDO_GRADUS ("XXIIIe. nexus inter duas entitates");
 
     {
         constans character* md;
@@ -2221,12 +2273,14 @@ principale (vacuum)
     }
 
 
-    /* ================================================
+    /* ==================================================
      * XXIIIf. remotio: clavis 'corpus' delet EX DATO REI (non rem
      * ipsam - nullum actus totam entitatem delet in instrumentis
      * expositis) -> plagula ipsa manet (titulus adhuc invenitur),
      * corpus solum evanescit
-     * ================================================ */
+     * ================================================== */
+
+    CREDO_GRADUS ("XXIIIf. remotio");
 
     {
         constans character* md;
@@ -2252,7 +2306,7 @@ principale (vacuum)
     }
 
 
-    /* ================================================
+    /* ==================================================
      * XXIIIg. puritas trunci in proiectione: res nata in ramo et
      * fusa (XX: 'cogitatio ramalis' cum nota 'adnotatio ramalis'
      * scripta IN RAMO, deinde fundere) fert eventus BIS in
@@ -2260,7 +2314,9 @@ principale (vacuum)
      * res_id eodem. Sine filtro branch_id='' quaeque linea Status/
      * Notae bis redderetur (insectum repertum in recensione
      * 2026-07-20 - artefactum generatum ipsum id monstravit).
-     * ================================================ */
+     * ================================================== */
+
+    CREDO_GRADUS ("XXIIIg. puritas trunci in proiectione");
 
     {
         constans character* md = _plagula_cum_continente(piscina,
@@ -2288,7 +2344,7 @@ principale (vacuum)
     }
 
 
-    /* ================================================
+    /* ==================================================
      * XXIIIh. DETERMINISMUS OCTETORUM (spec gesta-entitates,
      * sectio Testing): reconciliatio BIS facta octeta PARIA
      * relinquit - nullae rescripturae spuriae.
@@ -2309,7 +2365,9 @@ principale (vacuum)
      * ergo via redditionis MAXIME implicata (eventus duplices,
      * filtrum trunci XXIIIg supra). Si quid non-deterministicum
      * usquam irrepit, hic primum apparebit.
-     * ================================================ */
+     * ================================================== */
+
+    CREDO_GRADUS ("XXIIIh. DETERMINISMUS OCTETORUM");
 
     {
         constans character* ante;
@@ -2408,6 +2466,7 @@ principale (vacuum)
 
     /* XVI. F0 FORUM: genera fori seminata + custos CCXL +
      * signatura (spec-v2 par III) */
+    CREDO_GRADUS ("XVI. F0 FORUM");
     {
         character arti[GESTA_RES_ID_MENSURA];
         character pipi[GESTA_RES_ID_MENSURA];
@@ -2626,13 +2685,15 @@ principale (vacuum)
     }
 
 
-    /* ========================================================
+    /* ==================================================
      * XVII. GENERA PER APP DEFINITA (G0): registrum dynamicum ex
      * entibus definitionis, iudicium camporum (iudicat-non-
      * obstat), cardinalitas unum, emendatio additiva sola,
      * ab_lecto discriminat (entia = data, definitiones =
      * epistulae)
-     * ======================================================== */
+     * ================================================== */
+
+    CREDO_GRADUS ("XVII. GENERA PER APP DEFINITA");
 
     {
         character def_auctor[GESTA_RES_ID_MENSURA];
@@ -2681,17 +2742,17 @@ principale (vacuum)
             CREDO_NON_NIHIL (sonda);
             si (sonda != NIHIL)
             {
-                chorda c = gesta_genus_datum(sonda, "liber",
+                chorda datum_generis = gesta_genus_datum(sonda, "liber",
                     piscina);
                 character* buf = (character*)piscina_allocare(
-                    piscina, (memoriae_index)c.mensura + I);
+                    piscina, (memoriae_index)datum_generis.mensura + I);
 
-                CREDO_VERUM (c.mensura > ZEPHYRUM);
-                si (buf != NIHIL && c.mensura > ZEPHYRUM)
+                CREDO_VERUM (datum_generis.mensura > ZEPHYRUM);
+                si (buf != NIHIL && datum_generis.mensura > ZEPHYRUM)
                 {
-                    memcpy(buf, c.datum,
-                        (memoriae_index)c.mensura);
-                    buf[c.mensura] = '\0';
+                    memcpy(buf, datum_generis.datum,
+                        (memoriae_index)datum_generis.mensura);
+                    buf[datum_generis.mensura] = '\0';
                     CREDO_VERUM (strstr(buf, "\"campi\"")
                         != NIHIL);
                     CREDO_VERUM (strstr(buf, "\"annus\"")
@@ -2804,7 +2865,7 @@ principale (vacuum)
             " Iulius Caesar\\\"") != NIHIL);
 
 
-        /* ================================================
+        /* ==================================================
          * 'sine_campis' + 'res' in legere (01KYCMQMED): lista
          * tacere potest, apertio complet.
          *
@@ -2815,7 +2876,7 @@ principale (vacuum)
          * NOMINATA est et vocatoris electio; et vocator viam ad
          * campum recipiendum habere DEBET, alioquin sartura datum
          * simpliciter perdit - inde 'res'.
-         * ================================================ */
+         * ================================================== */
 
         {
             constans character* s;
@@ -2938,17 +2999,18 @@ principale (vacuum)
             CREDO_NON_NIHIL (sonda);
             si (sonda != NIHIL)
             {
-                chorda c = gesta_genus_datum(sonda, "quaestio",
+                chorda datum_generis = gesta_genus_datum(sonda,
+                    "quaestio",
                     piscina);
                 character* buf = (character*)piscina_allocare(
-                    piscina, (memoriae_index)c.mensura + I);
+                    piscina, (memoriae_index)datum_generis.mensura + I);
 
-                CREDO_VERUM (c.mensura > ZEPHYRUM);
-                si (buf != NIHIL && c.mensura > ZEPHYRUM)
+                CREDO_VERUM (datum_generis.mensura > ZEPHYRUM);
+                si (buf != NIHIL && datum_generis.mensura > ZEPHYRUM)
                 {
-                    memcpy(buf, c.datum,
-                        (memoriae_index)c.mensura);
-                    buf[c.mensura] = '\0';
+                    memcpy(buf, datum_generis.datum,
+                        (memoriae_index)datum_generis.mensura);
+                    buf[datum_generis.mensura] = '\0';
                     CREDO_VERUM (strstr(buf, "\"machina\"")
                         != NIHIL);
                     CREDO_VERUM (strstr(buf, "\"campi\"")
@@ -3002,6 +3064,7 @@ principale (vacuum)
      * articulis - lineae '<# (>' / '<(>' res gignunt, stampantur
      * praefixo ULID mintae fortuitae; genus natum tacite; editio
      * titulum renovat; deletio orphanam signat. */
+    CREDO_GRADUS ("XXII. captura fragmentorum");
     {
         character articulus_id[GESTA_RES_ID_MENSURA];
         character stampa[XXVII];
@@ -3175,6 +3238,7 @@ principale (vacuum)
      * tectum CC per res OMNES generis partitur - capitula omnium
      * librorum uno pretio, et truncatio ut 'liber hic pauca capitula
      * habet' legitur. */
+    CREDO_GRADUS ("XV bis. legere");
     {
         character liber_a[GESTA_RES_ID_MENSURA];
         character liber_b[GESTA_RES_ID_MENSURA];
@@ -3303,6 +3367,7 @@ principale (vacuum)
      * 'xii' et '12' paginae DIVERSAE sunt - integer solus eas
      * exprimere nequit. Machina hoc iudicat, ne designatio prava
      * per MCP intret quam applicatio numquam scriberet. */
+    CREDO_GRADUS ("XV ter. TYPUS 'pagina'");
     {
         character imperium[PROBATIO_SEMITA_MENSURA];
         character ens_id[GESTA_RES_ID_MENSURA];
@@ -3384,6 +3449,7 @@ principale (vacuum)
      * successus = renovandum (stdio: exec in currere; daemon:
      * exitus). Stipulae pro launchero - semantica launcheri veri
      * in fumo vivo probatur. */
+    CREDO_GRADUS ("XVI. renovatio sui");
     {
                     Tabularium* tr;
         TabulariumConfiguratio  cfgr = cfg;
@@ -3490,6 +3556,8 @@ principale (vacuum)
      * res solitaria (extra graphum); res extra scopum cuius impediens
      * clausum est.
      * ================================================== */
+
+    CREDO_GRADUS ("XXXI. VISUS PARATA");
 
     {
         constans character* sectio;
@@ -3823,6 +3891,8 @@ principale (vacuum)
      * compactionem) quo contextus carissimus est.
      * ================================================== */
 
+    CREDO_GRADUS ("XXXII. CENSUS");
+
     {
         constans character* nomina[VI];
                        i32  numeri_visus[VI];
@@ -3921,6 +3991,8 @@ principale (vacuum)
      * proximi ex MACHINA generis, scriptura valida, et 'vis' ut
      * lex 'scribe, ne obsta' ingenii CONSULTO invocari possit.
      * ================================================== */
+
+    CREDO_GRADUS ("XXXIII. RECUSATIONES STATUS ET MUTATIONIS");
 
     {
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":420,"
@@ -4045,6 +4117,8 @@ principale (vacuum)
      * una in propositum arborem dabat, catenam non.
      * ================================================== */
 
+    CREDO_GRADUS ("XXXIV. BREVIARIUM");
+
     {
         /* effectus absens: nulla linea. NB responsum textus JSON
          * est: linea nova ut '\\n' (characteres duo) advenit -
@@ -4136,6 +4210,8 @@ principale (vacuum)
      * opera; 'Pa extra scopum' EXTRA. Verbum commune in corpore
      * ubique ponitur ut FTS omnes inveniat sine scopo.
      * ================================================== */
+
+    CREDO_GRADUS ("XXXV. QUAERERE 'intra'");
 
     {
         constans character* tituli[] = { "Pa propositum",
@@ -4239,6 +4315,8 @@ principale (vacuum)
      * Et parca aperta sine vinculo ullo (LXVIII) visui invisibilia
      * erant - 'visa, non fixa' nunc numerantur.
      * ================================================== */
+
+    CREDO_GRADUS ("XXXVI. QUAESTIONES CONSILII");
 
     {
         /* propositum fictum + quaestio consilii quae id impedit +
@@ -4371,6 +4449,8 @@ principale (vacuum)
      * ordine.
      * ================================================== */
 
+    CREDO_GRADUS ("XXXVII. VISUS PARATA UT RELATIO COTIDIANA");
+
     {
         constans character* locus;
 
@@ -4489,6 +4569,8 @@ principale (vacuum)
      * EXPRESSUM inter quaestiones manet; opus/parcum hereditant.
      * ================================================== */
 
+    CREDO_GRADUS ("XXXVIII. IMPEDIMENTUM PARENTIS NON HEREDITAT");
+
     {
         constans character* locus;
 
@@ -4587,6 +4669,8 @@ principale (vacuum)
      * collocatio in regione NON fixat ('parca visa, non fixa').
      * ================================================== */
 
+    CREDO_GRADUS ("XXXIX. GENUS 'REGIO'");
+
     {
         constans character* locus;
                        s64  visa_ante;
@@ -4602,15 +4686,17 @@ principale (vacuum)
             CREDO_NON_NIHIL (sonda);
             si (sonda != NIHIL)
             {
-                chorda c = gesta_genus_datum(sonda, "regio", piscina);
+                chorda datum_generis = gesta_genus_datum(sonda, "regio",
+                    piscina);
                 character* buf = (character*)piscina_allocare(
-                    piscina, (memoriae_index)c.mensura + I);
+                    piscina, (memoriae_index)datum_generis.mensura + I);
 
-                CREDO_VERUM (c.mensura > ZEPHYRUM);
-                si (buf != NIHIL && c.mensura > ZEPHYRUM)
+                CREDO_VERUM (datum_generis.mensura > ZEPHYRUM);
+                si (buf != NIHIL && datum_generis.mensura > ZEPHYRUM)
                 {
-                    memcpy(buf, c.datum, (memoriae_index)c.mensura);
-                    buf[c.mensura] = '\0';
+                    memcpy(buf, datum_generis.datum,
+                        (memoriae_index)datum_generis.mensura);
+                    buf[datum_generis.mensura] = '\0';
                     CREDO_VERUM (strstr(buf, "\"corpus\"") != NIHIL);
                     CREDO_VERUM (strstr(buf, "status_initialis")
                         == NIHIL);
@@ -4790,6 +4876,8 @@ principale (vacuum)
      * decisae N, apertae M'. Fixtura: Rg textus > Rg fontes > Rg
      * parsator sfnt > Rg opus tabulae cmap (ex XXXIX).
      * ================================================== */
+
+    CREDO_GRADUS ("XL. STAGE II MAPPAE");
 
     {
         constans character* locus;
@@ -4971,6 +5059,8 @@ principale (vacuum)
      * Rg horizon vacuus (sine corpore, sine re); visio Rv intra Rg
      * textus.
      * ================================================== */
+
+    CREDO_GRADUS ("XLI. INSTRUMENTUM 'MAPPA'");
 
     {
         constans character* locus;
@@ -5827,6 +5917,8 @@ principale (vacuum)
      * proximum file'. Fixtura ex XXXIX-XLI.
      * ================================================== */
 
+    CREDO_GRADUS ("XLII. FRONS REGIONIS");
+
     {
         constans character* locus;
         constans character* finis_lineae;
@@ -6082,6 +6174,8 @@ principale (vacuum)
      * regione = domus totius (non 'sine regione' flagatum).
      * ================================================== */
 
+    CREDO_GRADUS ("XLIII. PRINCIPIA");
+
     {
         constans character* locus;
 
@@ -6169,6 +6263,8 @@ principale (vacuum)
      * Pr programmata sine regione.
      * ================================================== */
 
+    CREDO_GRADUS ("XLIV. FORMA PLENA");
+
     {
         constans character* locus;
         constans character* filia;
@@ -6220,14 +6316,16 @@ principale (vacuum)
         CREDO_VERUM (strstr(r, "<visio (> Rv volo") != NIHIL);
         CREDO_VERUM (strstr(r, "Pr programmata") == NIHIL);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "servus MCP per tractare: mundus unus", _scaenam_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    redde I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("tabularium", SECTIONES);
 }
