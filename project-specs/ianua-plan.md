@@ -155,6 +155,17 @@ this plan.
   before the migration keep the handle.
 - **T3: section names.** `expiratio`/`revocatio` are new words to the
   lint; the sections are `terminus` and `revocare`.
+- **T6: refusal text.** Step 3 expected "invitatio necessaria" on a
+  code-less `/inscribere`; the page says "invitatio non valet" (one
+  message for missing, unknown, used, expired and revoked - no oracle
+  telling which). Checked for that text instead.
+- **T6: migration count was (1), not (2).** The old log held one
+  distinct handle (`usor.creatus` / `tessera.mutata`), so one person was
+  made. A grep of the live volumen to name the handle was refused as a
+  production read and not retried; Fran confirmed sign-in and the live
+  checks ("looks good to me"). Amanda, if she had no account, joins by
+  invitation like anyone else. Cost if wrong: none - a missing person
+  would have made the transaction roll back ("fracta"), not shrink.
 
 ## Review focus
 

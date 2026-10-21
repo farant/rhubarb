@@ -232,3 +232,24 @@ code; while running -> exit 2 "servus currit"; link -> form; sign-up 303;
 reused code 403; sign-in as "Fran" -> /notae "salve, Fran"; /mcp 401
 exact; clean SIGTERM. Claude Code OAuth round trip not repeated locally
 (needs a browser) - covered by T6's live check.
+
+## 2026-10-20 - ianua T6: live on exemplar.golden.earth
+
+Deploy: service stopped (clean WAL checkpoint - no -wal/-shm left), backup
+`/var/lib/exemplar/exemplar.volumen.ante-ianua` (same size as live), then
+`tools/dimittere.sh -agere -cum-unitate exemplar smaragda` (old binary and
+unit kept as `.prior`). `/salus` {"status":"ok","acta":11}; journal
+`exemplar: migratio civium facta (1)` - one distinct handle in the old
+log, so one person; no "fracta". `exemplar_mcp_fumus` 6/6 BENE;
+code-less `/inscribere` -> "invitatio non valet"; `/intrare` 200. Fran's
+live checks (web sign-in + notes, Claude still connected through the
+re-keyed grant, password change, invitations page): "looks good to me".
+
+Rollback if ever needed: stop; restore `.ante-ianua`, `exemplar.prior`,
+`exemplar.service.prior`; daemon-reload; start. dimittere's own rollback
+restores binary + unit only, never the volumen - after a migration ran,
+the volumen backup is part of the rollback.
+
+Left on the server for Fran to decide: the old `/var/lib/exemplar/
+invitatio` file (nothing reads it since P14) and the backups
+`.ante-T9`, `.ante-recensio`, `.ante-ianua`.

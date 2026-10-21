@@ -1,7 +1,11 @@
 # ianua - house accounts as general components (spec)
 
-**Status: SCRIPTUM 2026-10-20** - approved by Fran; plan
-`project-specs/ianua-plan.md` (T1-T6). The four AUDIENDA items are
+**Status: IMPLETUM 2026-10-20** - plan `project-specs/ianua-plan.md`
+T1-T6 (rulings P1-P14 + rulings while executing); commits T1 bad851bb,
+T2 f4b81adb, T3 fccfba68 (+ Linux body 045b7159), T4 f393bbe8, T5
+4de84295, T6 close-out. LIVE at `https://exemplar.golden.earth`
+(deployed 2026-10-20: migration "facta (1)", fumus green, Fran's live
+checks good). Approved by Fran; the four AUDIENDA items are
 settled there: concurrent CLI write -> P1 (single-writer lock, stop /
 invite / start), admissio re-keying -> P8, note authors -> P7, frenum
 keys -> P6.
