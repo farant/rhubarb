@@ -34,32 +34,19 @@ _uncus_fictus (
     sedes->est_fons     = FALSUM;
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: valores et congruentia
+ * ================================================== */
+
+interior vacuum
+_valores_probare (
+    CredoContextus* c)
 {
-        b32  praeteritus;
-    Piscina* piscina;
-     chorda  valor;
-
-    piscina = piscina_generare_dynamicum("probatio_materia_nodus",
-        32768);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    valor = chorda_ex_literis("x", piscina);
-
-
-    /* ========================================================
-     * PROBARE: valores et congruentia
-     * ======================================================== */
+    Piscina* piscina = c->piscina;
 
     {
         MateriaValor v;
-
-        imprimere("\n--- Probans valores ---\n");
 
         v = materia_valor_nihil();
         CREDO_AEQUALIS_S32 ((s32)v.genus, (s32)MATERIA_VALOR_NIHIL);
@@ -94,18 +81,23 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 ((s32)materia_valor_lista(NIHIL).genus,
             (s32)MATERIA_VALOR_NIHIL);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: prospectus FURCA-TUTUS
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: prospectus FURCA-TUTUS
+ * ================================================== */
+
+interior vacuum
+_prospectum_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaValor basis;
         MateriaValor furca_a;
         MateriaValor furca_b;
-
-        imprimere("\n--- Probans prospectum furca-tutum ---\n");
 
         basis = materia_valor_lista_nova(piscina);
         basis = materia_valor_lista_appendere(piscina, basis,
@@ -163,17 +155,22 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(
             materia_valor_index(ZEPHYRUM)), ZEPHYRUM);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: nodus - custodiae PLANTATAE
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: nodus - custodiae PLANTATAE
+ * ================================================== */
+
+interior vacuum
+_custodias_nodi_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaNodus* n;
         MateriaNodus* filius;
-
-        imprimere("\n--- Probans nodum (custodiae) ---\n");
 
         n = materia_nodus_creare(piscina, (s32)4, (i32)III);
         CREDO_NON_NIHIL (n);
@@ -209,11 +206,19 @@ principale (vacuum)
         CREDO_FALSUM (materia_nodus_ponere(NIHIL, ZEPHYRUM,
             materia_valor_nihil(), MATERIA_LOCUS_NODUS));
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: appendere et liberi
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: appendere et liberi
+ * ================================================== */
+
+interior vacuum
+_liberos_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina  = c->piscina;
+     chorda  valor    = chorda_ex_literis("x", piscina);
 
     {
         MateriaNodus* n;
@@ -221,8 +226,6 @@ principale (vacuum)
         MateriaNodus* b;
         MateriaToken* t;
                  Xar* liberi;
-
-        imprimere("\n--- Probans appendere et liberos ---\n");
 
         n = materia_nodus_creare(piscina, ZEPHYRUM, (i32)II);
         a = materia_nodus_creare(piscina, (s32)I, ZEPHYRUM);
@@ -261,19 +264,25 @@ principale (vacuum)
         CREDO_NON_NIHIL (liberi);
         CREDO_AEQUALIS_I32 (xar_numerus(liberi), ZEPHYRUM);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: uncus sedis
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: uncus sedis
+ * ================================================== */
+
+interior vacuum
+_uncum_sedis_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina  = c->piscina;
+     chorda  valor    = chorda_ex_literis("x", piscina);
 
     {
              MateriaToken* t;
              MateriaSedes  sedes;
         MateriaOrigoUncus  uncus;
                       s32  fictum = (s32)1234;
-
-        imprimere("\n--- Probans uncum sedis ---\n");
 
         t = materia_token_creare(piscina, &FORMA, ZEPHYRUM, valor,
             (s32)77, (i32)5, (i32)9, (s32)2);
@@ -313,11 +322,18 @@ principale (vacuum)
 
         materia_sedes_tokeni(&uncus, t, NIHIL);   /* non ruat */
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: verba mutationis - permutare, reponere (gradus V)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: verba mutationis - permutare, reponere (gradus V)
+ * ================================================== */
+
+interior vacuum
+_verba_mutationis_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaNodus* pater;
@@ -325,8 +341,6 @@ principale (vacuum)
         MateriaValor  vetus;
                  i32  ordo[III];
                  i32  k;
-
-        imprimere("\n--- Probans verba mutationis (permutare, reponere) ---\n");
 
         pater = materia_nodus_creare(piscina, (s32)7, (i32)II);
         CREDO_NON_NIHIL (pater);
@@ -393,12 +407,19 @@ principale (vacuum)
             materia_valor_index((s32)1), MATERIA_LOCUS_INDEX));
         CREDO_AEQUALIS_S32 (pater->loci[I].datum.index, (s32)6);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: REFERENTIA (2026-09-10) - valor non possidens; verba
-     * ponentia patrem filii POSSESSI figunt, scopi referentiae non
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: REFERENTIA (2026-09-10) - valor non possidens; verba
+ * ponentia patrem filii POSSESSI figunt, scopi referentiae non
+ * ================================================== */
+
+interior vacuum
+_referentiam_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaNodus* pater;
@@ -408,8 +429,6 @@ principale (vacuum)
         MateriaNodus* filius_c;
                  Xar* liberi;
                  i32  ordo[II];
-
-        imprimere("\n--- Probans referentiam et patrem fixum ---\n");
 
         /* congruentia: REFERENTIA sola cum REFERENTIA */
         CREDO_VERUM  (materia_valor_congruit(
@@ -485,18 +504,27 @@ principale (vacuum)
             CREDO_AEQUALIS_PTR (filius_d->pater, pater);
         }
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "valores et congruentia", _valores_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "prospectus furca-tutus", _prospectum_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "nodus: custodiae plantatae", _custodias_nodi_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "appendere et liberi", _liberos_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "uncus sedis", _uncum_sedis_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "verba mutationis: permutare, reponere",
+        _verba_mutationis_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "referentia et pater fixus", _referentiam_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("materia_nodus", SECTIONES);
 }

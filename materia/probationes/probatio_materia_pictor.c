@@ -85,101 +85,141 @@ _continet (
     redde FALSUM;
 }
 
-integer
-principale (
-    vacuum)
+/* Diagnosticum ex './tools/diagnostica.sh -machina' eiusdem plagulae
+ * - sine assertione; sectio quaeque suum aedificat (III codicem mutat,
+ * ergo status communis nullus). */
+interior vacuum
+_diagnosticum_parare (
+    MateriaDiagnosticum* d,
+     MateriaSedesRelata* relata)
 {
-                     b32  praeteritus;
-                 Piscina* piscina;
+    memset(d, ZEPHYRUM, magnitudo(*d));
+    d->gravitas               = (s32)MATERIA_GRAVITAS_ERRATUM;
+    d->codex                  = "grex/tok_clausura";
+    d->causa                  = "'}' exspectata";
+    d->nota                   = "hic exspectatur";
+    d->tractus.linea          = (i32)II;
+    d->tractus.columna        = (i32)I;
+    d->tractus.linea_finis    = (i32)II;
+    d->tractus.columna_finis  = (i32)I;
+    d->tractus.initium        = (s32)17;
+    d->tractus.finis          = (s32)17;
+    d->tractus.est_fons       = VERUM;
+    memset(relata, ZEPHYRUM, magnitudo(*relata));
+    relata->tractus.linea          = (i32)I;
+    relata->tractus.columna        = (i32)IX;
+    relata->tractus.linea_finis    = (i32)II;
+    relata->tractus.columna_finis  = (i32)I;
+    relata->tractus.initium        = (s32)8;
+    relata->tractus.finis          = (s32)17;
+    relata->tractus.est_fons       = VERUM;
+    relata->nota                   = "hic coepit";
+    d->relata                      = relata;
+    d->numerus_relatorum           = (i32)I;
+}
+
+
+/* ==================================================
+ * PROBARE: OCTETIM idem ac instrumentum vivum
+ * ================================================== */
+
+interior vacuum
+_aurum_conferre (
+    CredoContextus* c)
+{
+                 Piscina* piscina = c->piscina;
      MateriaDiagnosticum  d;
       MateriaSedesRelata  relata[I];
                character* aurum;
                      i32  aurum_mensura = ZEPHYRUM;
+                  chorda  t;
 
-    piscina = piscina_generare_dynamicum("probatio_pictor", 262144);
-    si (piscina == NIHIL)
+    _diagnosticum_parare(&d, relata);
+    aurum = _aurum_legere(piscina, &aurum_mensura);
+    CREDO_NON_NIHIL (aurum);
+    CREDO_VERUM (aurum_mensura > ZEPHYRUM);
+    t = materia_pictor_scribere(piscina, &d, "g.sh", "crusta",
+            FONS, (i32)strlen(FONS), VERUM);
+    CREDO_AEQUALIS_I32 (t.mensura, aurum_mensura);
+    si (t.mensura == aurum_mensura)
     {
-        imprimere("FRACTA: piscina\n");
-        redde I;
+        CREDO_VERUM (memcmp(t.datum, aurum,
+            (memoriae_index)aurum_mensura) == ZEPHYRUM);
     }
-    credo_aperire(piscina);
-
-    /* ex './tools/diagnostica.sh -machina' eiusdem plagulae */
-    memset(&d, ZEPHYRUM, magnitudo(d));
-    d.gravitas               = (s32)MATERIA_GRAVITAS_ERRATUM;
-    d.codex                  = "grex/tok_clausura";
-    d.causa                  = "'}' exspectata";
-    d.nota                   = "hic exspectatur";
-    d.tractus.linea          = (i32)II;
-    d.tractus.columna        = (i32)I;
-    d.tractus.linea_finis    = (i32)II;
-    d.tractus.columna_finis  = (i32)I;
-    d.tractus.initium        = (s32)17;
-    d.tractus.finis          = (s32)17;
-    d.tractus.est_fons       = VERUM;
-    memset(relata, ZEPHYRUM, magnitudo(relata));
-    relata[ZEPHYRUM].tractus.linea          = (i32)I;
-    relata[ZEPHYRUM].tractus.columna        = (i32)IX;
-    relata[ZEPHYRUM].tractus.linea_finis    = (i32)II;
-    relata[ZEPHYRUM].tractus.columna_finis  = (i32)I;
-    relata[ZEPHYRUM].tractus.initium        = (s32)8;
-    relata[ZEPHYRUM].tractus.finis          = (s32)17;
-    relata[ZEPHYRUM].tractus.est_fons       = VERUM;
-    relata[ZEPHYRUM].nota                   = "hic coepit";
-    d.relata                                = relata;
-    d.numerus_relatorum                     = (i32)I;
-
+    alioquin
     {
-        chorda t;
-
-        imprimere("\n--- I. OCTETIM idem ac instrumentum vivum ---\n");
-        aurum = _aurum_legere(piscina, &aurum_mensura);
-        CREDO_NON_NIHIL (aurum);
-        CREDO_VERUM (aurum_mensura > ZEPHYRUM);
-        t = materia_pictor_scribere(piscina, &d, "g.sh", "crusta",
-                FONS, (i32)strlen(FONS), VERUM);
-        CREDO_AEQUALIS_I32 (t.mensura, aurum_mensura);
-        si (t.mensura == aurum_mensura)
-        {
-            CREDO_VERUM (memcmp(t.datum, aurum,
-                (memoriae_index)aurum_mensura) == ZEPHYRUM);
-        }
-        alioquin
-        {
-            imprimere("  FACTUM: [%.*s]\n", (integer)t.mensura,
-                (constans character*)t.datum);
-        }
+        imprimere("  FACTUM: [%.*s]\n", (integer)t.mensura,
+            (constans character*)t.datum);
     }
+}
 
+
+/* ==================================================
+ * PROBARE: sine excerpto - caput solum
+ * ================================================== */
+
+interior vacuum
+_sine_excerpto_probare (
+    CredoContextus* c)
+{
+                 Piscina* piscina = c->piscina;
+     MateriaDiagnosticum  d;
+      MateriaSedesRelata  relata[I];
+                     i32  aurum_mensura = ZEPHYRUM;
+                  chorda  t;
+
+    _diagnosticum_parare(&d, relata);
+    /* mensura auri sine assertione relecta (prima eam asserit) */
+    si (_aurum_legere(piscina, &aurum_mensura) == NIHIL)
     {
-        chorda t;
-
-        imprimere("\n--- II. Sine excerpto: caput solum ---\n");
-        t = materia_pictor_scribere(piscina, &d, "g.sh", "crusta",
-                FONS, (i32)strlen(FONS), FALSUM);
-        /* caput + causa = lineae DUAE; excerptum abest */
-        CREDO_VERUM (t.mensura > ZEPHYRUM);
-        CREDO_VERUM (t.mensura < aurum_mensura);
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
     }
+    t = materia_pictor_scribere(piscina, &d, "g.sh", "crusta",
+            FONS, (i32)strlen(FONS), FALSUM);
+    /* caput + causa = lineae DUAE; excerptum abest */
+    CREDO_VERUM (t.mensura > ZEPHYRUM);
+    CREDO_VERUM (t.mensura < aurum_mensura);
+}
 
-    {
-        chorda t;
 
-        imprimere("\n--- III. Codex cum ':' praefixum NON sumit ---\n");
-        d.codex = "materia:ordo-octetorum";
-        t = materia_pictor_scribere(piscina, &d, "g.sh", "crusta",
-                FONS, (i32)strlen(FONS), FALSUM);
-        CREDO_VERUM (t.mensura > ZEPHYRUM);
-        /* 'crusta:materia:...' esset si praefixum caeco modo additum */
-        CREDO_VERUM (memchr(t.datum, (integer)'[',
-            (memoriae_index)t.mensura) != NIHIL);
-        CREDO_FALSUM (_continet(t, "crusta:materia:"));
-        d.codex = "grex/tok_clausura";
-    }
+/* ==================================================
+ * PROBARE: codex cum ':' praefixum NON sumit
+ * ================================================== */
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+interior vacuum
+_praefixum_codicis_probare (
+    CredoContextus* c)
+{
+                 Piscina* piscina = c->piscina;
+     MateriaDiagnosticum  d;
+      MateriaSedesRelata  relata[I];
+                  chorda  t;
+
+    _diagnosticum_parare(&d, relata);
+    d.codex = "materia:ordo-octetorum";
+    t = materia_pictor_scribere(piscina, &d, "g.sh", "crusta",
+            FONS, (i32)strlen(FONS), FALSUM);
+    CREDO_VERUM (t.mensura > ZEPHYRUM);
+    /* 'crusta:materia:...' esset si praefixum caeco modo additum */
+    CREDO_VERUM (memchr(t.datum, (integer)'[',
+        (memoriae_index)t.mensura) != NIHIL);
+    CREDO_FALSUM (_continet(t, "crusta:materia:"));
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "octetim idem ac instrumentum vivum", _aurum_conferre, NIHIL,
+        NIHIL,
+        NIHIL, NIHIL },
+    { "sine excerpto: caput solum", _sine_excerpto_probare, NIHIL,
+        NIHIL,
+        NIHIL, NIHIL },
+    { "codex cum ':' praefixum non sumit", _praefixum_codicis_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("materia_pictor", SECTIONES);
 }
