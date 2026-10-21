@@ -719,3 +719,47 @@ pass with 0 hits and 0 IRRITUM.
 
 Plants: disabling the collector turns exactly the 4 firing cases red;
 disabling the type exception turns exactly the interner case red.
+
+## 2026-10-21 — conversion checker for the subsystem migration (tools/credo_conversionem_probare.py)
+
+Step 1's other half. The audit's verifier (scratchpad, 10-17) built a
+private copy of a root suite with `sonda.sh -domus`. Subsystem suites
+need their subsystem's include and link lists, so this checker builds
+both versions through the subsystem's own runner. To get the HEAD
+numbers, it puts the HEAD text in the file, builds and runs it, then
+restores the converted text in a `finally` (plain write + utime, never
+`cp -p`).
+
+It runs the built binary itself from the root, with RHUBARB_RADIX and
+CREDO_VERDICTA set: `<sub>/build/<suite>` for direct runners,
+`build/fabrica/area/probationes_<sub>/<suite>/<suite>` for composites,
+`build/probationes/<suite>` for root, choosing whichever was built after
+the run started. Reasons:
+- the runners filter by substring (`probatio_gesta` builds 3 suites,
+  `probatio_silva_arbor` 5), so their output can't be attributed;
+- fabrica passes an env allowlist (`<ambitus>`), so CREDO_ORDO never
+  reaches a composite member.
+v1 binaries don't write CREDO_VERDICTA (only credo_suitam_currere does),
+so v1 numbers come from the compendium. "Totalis:" is taken from its
+LAST occurrence anywhere on the line, since progress dots share lines.
+
+Policy built in: **a conversion keeps the counts.** The static CREDO_*
+count and the run's Totalis/Praeteriti must equal HEAD's. Splitting a
+loop into per-item sections changes Totalis, so restructuring goes in a
+separate commit after the conversion. That way the checker proves
+nothing was lost. A memory hit (SECTIO failure genus credo_memoria) has
+its own verdict, MEMORIA: the suite is pulled out for hands-on work and
+never handed to an agent (Fran 10-20).
+
+css pilot finding: credo_convertere refuses all 10 css suites. Most
+build a lexicon `ratum` before their blocks (fixture needed), and
+corpus/computus/canon have no '--- Probans ---' titles. css is hand
+conversion. First one: probatio_css_corpus, one section (one loop
+with tallies), BONUM 7>7 assertions, 24>24 Totalis, 3 mixed seeds.
+
+Plants on the converted suite, each through silva.planta, red then
+green after revert:
+- drop an assertion: MALUM 7->6, 24->23.
+- two sections sharing a static: mixed order breaks on seeds 1,3,4,8
+  of 8, and examen independently rejects it (92).
+- 300 MiB in the section's piscina: MEMORIA, the section is named.
