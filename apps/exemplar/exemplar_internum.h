@@ -20,6 +20,7 @@
 #include "admissio.h"
 #include "filum.h"
 #include "ianua.h"
+#include "mcp_servus_canalis.h"
 #include "exemplar_nucleus.h"
 
 #define EXEMPLAR_PETITIO_MAXIMA  (LXIV * MXXIV * MXXIV)
@@ -62,6 +63,10 @@ structura Exemplar {
     /* servus MCP et admissio OAuth (exemplar_mcp.c, mcp-remotus T7) */
                 McpServus* mcp;
                  Admissio* admissio;
+    /* administratio per canalem localem (exemplar_administratio.c,
+     * canalis T4): servus alter, numquam in /mcp */
+                McpServus* administratio;
+               McpCanalis* canalis;
 };
 
 

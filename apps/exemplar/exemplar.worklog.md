@@ -253,3 +253,52 @@ the volumen backup is part of the rollback.
 Left on the server for Fran to decide: the old `/var/lib/exemplar/
 invitatio` file (nothing reads it since P14) and the backups
 `.ante-T9`, `.ante-recensio`, `.ante-ianua`.
+
+## 2026-10-21 - canalis T4: admin channel
+
+Second McpServus (`exemplar_administratio.c`, seven tools, scope
+`administratio`) served at `<data>/canalis/servus` through
+mcp_servus_canalis; opened after the lock and the migration (the lock is
+what makes removing a stale socket safe), closed first in
+`exemplar_claudere` and `_creatio_fracta`. A channel that cannot open is
+fatal ("exemplar: canalis fractus: ..."), like a failed migration.
+
+- `-invitare` asks the running server first (`mcp_canalis_vocare
+  "invitare"`, JSON reply -> codex); 2 (nobody listening) falls back to
+  the lock path; exit 2 now means "lock held but channel did not answer"
+  (message changed accordingly). `-administrare` = `exemplar_administrare`
+  (public nucleus function, so exemplar.c keeps including only the
+  public header) = `mcp_canalis_pons(<data>/canalis/servus, 0, 1)`.
+- **Suspension found an admissio defect:** `_concessionem_necare` opened
+  its own sqlite transaction (scrinium_incipere), so revoking a grant
+  inside the suspension transaction failed ("suspensio servari nequit").
+  Fixed in admissio (joins the caller's transaction, new
+  `volumen_in_transactione`), not by splitting suspension.
+- **Grant revocation is load-bearing.** Plant "skip the revocation
+  loop": the web session dies (ianua checks CIVIS_ACTIVUS) but the
+  bearer token still gets 200 on /mcp - the OAuth path does not consult
+  the civis status. Suspension therefore must revoke grants (it does,
+  same transaction). Worth remembering for admissio userinfo (MK0 #3).
+- `sera` section: the old expectation "-invitare while running -> 2" is
+  obsolete (it now goes through the channel; the in-process server is not
+  pumped during the blocking call, so it would time out). The section now
+  removes the socket file first - a real "lock held, nobody answering"
+  case -> 2.
+- Test harness: `_administrare` is a non-blocking channel client that
+  pumps the in-process server (P5). A first red run hung forever in
+  `read()` on a pipe: the parent kept the write end open after fork, so
+  EOF never came when the child exited without writing - parents now
+  close their write ends immediately.
+- Local e2e (port 3011, /tmp data - scratchpad path would exceed
+  sun_path): dir 0700 / socket 0600; -invitare while running -> code on
+  stdout, nothing in the server log; -administrare session: initialize,
+  tools/list (7 tools), status; SIGTERM -> socket removed; -invitare
+  stopped -> lock path; -administrare stopped -> exit 2.
+- Tests 37/37 (12 new sections + sera updated); plants red: grant loop
+  skipped (suspensio), channel failure ignored (canalis_fractus +
+  canalis_longus), admin table as the /mcp servus (mcp_separatum, by
+  hand - needs an include, silva.planta takes one edit). Linux musl +
+  glibc: exemplar_applicatio 472/472, mcp_servus_canalis, canalis,
+  admissio green; volumen's suite cannot run in the read-only container
+  (build/probatio_volumen.db relative path - environmental, like filum's
+  lock test).

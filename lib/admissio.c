@@ -952,8 +952,12 @@ _concessionem_necare (
     ScriniumEnuntiatum* u;
     ScriniumEnuntiatum* d;
                    b32  bene;
+                   b32  propria;
 
-    si (!scrinium_incipere(a->scrinium))
+    /* transactio vocatoris iungitur (suspensio, canalis T4): sqlite
+     * nidificationem vetat; aliter propria */
+    propria = !volumen_in_transactione(a->volumen);
+    si (propria && !scrinium_incipere(a->scrinium))
     {
         redde FALSUM;
     }
@@ -979,10 +983,13 @@ _concessionem_necare (
     }
     si (!bene)
     {
-        (vacuum)scrinium_revolvere(a->scrinium);
+        si (propria)
+        {
+            (vacuum)scrinium_revolvere(a->scrinium);
+        }
         redde FALSUM;
     }
-    si (!scrinium_committere(a->scrinium))
+    si (propria && !scrinium_committere(a->scrinium))
     {
         redde FALSUM;
     }

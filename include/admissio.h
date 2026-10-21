@@ -119,7 +119,9 @@ admissio_concessiones (
       Piscina* piscina);
 
 /* concessionem et omnes eius tesseras necat (petitione proxima
- * effectum); FALSUM si non usoris aut iam revocata */
+ * effectum); FALSUM si non usoris aut iam revocata. Transactionem
+ * vocatoris (volumen_transactionem_incipere) iungit si tenetur - tunc
+ * revolutio vocatoris revocationem quoque revolvit (canalis T4) */
 b32
 admissio_revocare (
      Admissio* admissio,

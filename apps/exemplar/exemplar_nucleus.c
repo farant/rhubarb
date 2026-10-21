@@ -11,6 +11,7 @@
 #include "exemplar_nucleus.h"
 #include "exemplar_internum.h"
 #include "exemplar_mcp.h"
+#include "exemplar_administratio.h"
 #include "custodia.h"
 #include "crustula.h"
 #include "volumen.h"
@@ -1129,6 +1130,7 @@ interior Exemplar*
 _creatio_fracta (
     Exemplar* e)
 {
+    mcp_canalis_claudere(e->canalis);
     si (e->hospitium)
     {
         hospitium_destruere(e->hospitium);
@@ -1297,6 +1299,26 @@ exemplar_creare (
     {
         redde _creatio_fracta(e);
     }
+    /* canalis administrationis (canalis T4): sera iam tenetur, ergo
+     * socket vetus deleri tuto potest; defectus = servus non incipit */
+    {
+        chorda error = chorda_ex_literis("via canalis nimis longa",
+            piscina);
+
+        e->administratio = exemplar_administrationem_creare(e, piscina);
+        e->canalis = e->administratio
+            && _via(via, configuratio->via_datorum,
+            EXEMPLAR_VIA_CANALIS)
+            ? mcp_canalis_praebere(e->administratio, e->reactor, via,
+                  &error, piscina) : NIHIL;
+        si (!e->canalis)
+        {
+            fprintf(stderr, "exemplar: canalis fractus: %.*s\n",
+                (integer)error.mensura,
+                (constans character*)error.datum);
+            redde _creatio_fracta(e);
+        }
+    }
     _replicare(e);
     redde e;
 }
@@ -1323,6 +1345,7 @@ exemplar_claudere (
     {
         redde;
     }
+    mcp_canalis_claudere(exemplar->canalis);
     hospitium_destruere(exemplar->hospitium);
     /* WAL in plagulam principalem: copia (cp) post clausuram integra */
     (vacuum)scrinium_exsequi(volumen_scrinium(exemplar->volumen),
@@ -1353,6 +1376,31 @@ exemplar_invitare (
     si (!via_datorum || !codex_exitus || !piscina)
     {
         redde I;
+    }
+    /* servus currens per canalem (canalis P9); II = nemo audit -> via
+     * serae infra (sera arbitratur) */
+    si (_via(via, via_datorum, EXEMPLAR_VIA_CANALIS))
+    {
+         JsonValor* a = json_objectum_creare(piscina);
+            chorda  textus;
+               s32  r;
+
+        json_objectum_ponere(a, "nota", json_chorda_creare_literis(
+            piscina, nota ? nota : ""));
+        r = mcp_canalis_vocare(via, "invitare", a, &textus, piscina);
+        si (r == ZEPHYRUM)
+        {
+            JsonResultus j = json_legere(textus, piscina);
+
+            *codex_exitus = j.successus ? json_capere_chorda(j.radix,
+                "codex", chorda_ex_literis("", piscina))
+                : chorda_ex_literis("", piscina);
+            redde codex_exitus->mensura > ZEPHYRUM ? ZEPHYRUM : I;
+        }
+        si (r != II)
+        {
+            redde I;
+        }
     }
     si (   !filum_directorium_creare_cum_modo(via_datorum, 0700)
         || !_via(via, via_datorum, "sera"))
@@ -1389,6 +1437,19 @@ exemplar_invitare (
     }
     filum_seram_liberare(sera);
     redde bene ? ZEPHYRUM : I;
+}
+
+s32
+exemplar_administrare (
+    constans character* via_datorum)
+{
+    character via[EXEMPLAR_VIA_MAXIMA];
+
+    si (!via_datorum || !_via(via, via_datorum, EXEMPLAR_VIA_CANALIS))
+    {
+        redde II;
+    }
+    redde mcp_canalis_pons(via, ZEPHYRUM, I);
 }
 
 b32

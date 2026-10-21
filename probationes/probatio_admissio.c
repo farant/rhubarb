@@ -431,6 +431,59 @@ _sectio_tesserae (CredoContextus* c)
     volumen_claudere(v);
 }
 
+/* revocatio intra transactionem VOCATORIS (canalis T4, suspensio):
+ * eam iungit - revoluta nihil revocat, commissa revocat, actum unum */
+interior vacuum
+_sectio_revocare_in_transactione (CredoContextus* c)
+{
+              Volumen* v;
+             Admissio* a = _admissio(c, &v);
+               chorda  responsum;
+               chorda  id;
+               chorda  accessus;
+               chorda  renovatio;
+           McpPersona  q;
+    AdmissioConcessio* g;
+                  Xar* acta;
+                  i32  revocata = ZEPHYRUM;
+                  i32  k;
+
+    CREDO_NECESSE_NON_NIHIL(a);
+    CREDO_AEQUALIS_S32(_inscribere(c, a, CLAUDE, "160.79.106.1",
+        &responsum, &id), CCI);
+    CREDO_NECESSE(admissio_concessionem_creare_probationis(a, _c("fran",
+        c->piscina), id, _c("notae:legere", c->piscina), &accessus,
+        &renovatio, c->piscina));
+    g = (AdmissioConcessio*)xar_obtinere(admissio_concessiones(a,
+        _c("fran", c->piscina), c->piscina), ZEPHYRUM);
+    CREDO_NECESSE_NON_NIHIL(g);
+    /* revoluta: concessio viva manet */
+    CREDO_NECESSE(volumen_transactionem_incipere(v));
+    CREDO_VERUM(admissio_revocare(a, _c("fran", c->piscina), g->id));
+    CREDO_NECESSE(volumen_transactionem_revolvere(v));
+    memset(&q, ZEPHYRUM, magnitudo(q));
+    CREDO_VERUM(admissio_verificator(a, accessus, _c(AUDIENTIA,
+        c->piscina), &q, c->piscina));
+    /* commissa: revocata */
+    CREDO_NECESSE(volumen_transactionem_incipere(v));
+    CREDO_VERUM(admissio_revocare(a, _c("fran", c->piscina), g->id));
+    CREDO_NECESSE(volumen_transactionem_committere(v));
+    CREDO_FALSUM(admissio_verificator(a, accessus, _c(AUDIENTIA,
+        c->piscina), &q, c->piscina));
+    acta = volumen_acta_legere(v, ZEPHYRUM, c->piscina);
+    per (k = ZEPHYRUM; acta && k < xar_numerus(acta); k++)
+    {
+        si (chorda_aequalis_literis(((VolumenActum*)xar_obtinere(acta,
+            k))
+                ->genus, "concessio.revocata"))
+        {
+            revocata++;
+        }
+    }
+    CREDO_AEQUALIS_I32(revocata, I);
+    volumen_claudere(v);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "documentum", _sectio_documentum, _horologium_parare, NIHIL,
         NIHIL,
@@ -442,6 +495,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "tesserae", _sectio_tesserae, _horologium_parare, NIHIL, NIHIL,
         NIHIL },
+    { "revocare_in_transactione", _sectio_revocare_in_transactione,
+        _horologium_parare, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -90,3 +90,17 @@ it names nothing; `_json` now returns "".
   causa="..." cliens=<sanitised>` (written BEFORE responding - the
   colloquium piscina is recycled after). Never code, token, verifier or
   CSRF; tested by scanning the captured lines for each.
+
+## 2026-10-21 - revocation joins the caller's transaction (canalis T4)
+
+`_concessionem_necare` did its own `scrinium_incipere`/`committere`;
+inside exemplar's suspension transaction the nested BEGIN failed, so a
+suspension could never revoke grants. Now: `propria =
+!volumen_in_transactione(a->volumen)` - own transaction only when the
+caller holds none (the /applicationes revoke page path is unchanged);
+otherwise the caller's commit or rollback decides, and the
+`concessio.revocata` event is part of it. Section
+`revocare_in_transactione`: rolled back -> grant alive; committed ->
+revoked, one event. Note: the bearer verifier does not consult the civis
+status - a suspended person's tokens stay valid unless their grants are
+revoked (see exemplar.worklog.md).

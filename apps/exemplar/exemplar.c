@@ -3,11 +3,15 @@
  *   exemplar -data <dir> [-portus N] [-hospes 127.0.0.1]
  *            [-procurator] [-acta] [-basis URL] [-sonda]
  *   exemplar -data <dir> -invitare "<nota>" [-basis URL]
+ *   exemplar -data <dir> -administrare
  *
- * -invitare (ianua P1): invitatio una (VII dies) ex linea mandatorum,
- * servo SISTENTE (sera data/sera; currens -> exitus II). Codex et
- * nexus ad stdout SOLUM - numquam ad acta aut stderr. Invitationes
- * ceterae per paginam /invitationes.
+ * -invitare: invitatio una (VII dies) ex linea mandatorum - servo
+ * currente per canalem administrationis (<data>/canalis/servus,
+ * canalis T4), servo sistente per seram data/sera (ianua P1). Codex et
+ * nexus ad stdout SOLUM - numquam ad acta aut stderr.
+ * -administrare: pons stdio <-> canalis servi currentis (MCP; Claude
+ * Code per 'ssh ... sudo -u exemplar ... -administrare'); uid idem
+ * solum admittitur. Nullus servus -> exitus II.
  *
  * Principale tenue: argumenta, reactor UNUS (servus, labores
  * argon2id, signa), SIGTERM/SIGINT -> sistere molliter (X s), deinde
@@ -48,7 +52,8 @@ _usus (vacuum)
 {
     fprintf(stderr, "usus: exemplar -data <dir> [-portus N] "
         "[-hospes H] [-procurator] [-acta] [-basis URL] [-sonda]\n"
-        "       exemplar -data <dir> -invitare NOTA [-basis URL]\n");
+        "       exemplar -data <dir> -invitare NOTA [-basis URL]\n"
+        "       exemplar -data <dir> -administrare\n");
     redde II;
 }
 
@@ -62,7 +67,8 @@ principale (
                  Reactor* r;
                 Exemplar* e;
                  integer  k;
-      constans character* nota_invitationis = NIHIL;
+      constans character* nota_invitationis  = NIHIL;
+                     b32  administrare       = FALSUM;
 
     memset(&cfg, ZEPHYRUM, magnitudo(cfg));
     per (k = I; k < argc; k++)
@@ -85,6 +91,10 @@ principale (
                      && k + I < argc)
         {
             nota_invitationis = argv[++k];
+        }
+        alioquin si (strcmp(argv[k], "-administrare") == ZEPHYRUM)
+        {
+            administrare = VERUM;
         }
         alioquin si (strcmp(argv[k], "-procurator") == ZEPHYRUM)
         {
@@ -112,6 +122,17 @@ principale (
     {
         redde _usus();
     }
+    si (administrare)
+    {
+        s32 exitus = exemplar_administrare(cfg.via_datorum);
+
+        si (exitus == II)
+        {
+            fprintf(stderr, "exemplar: nullus servus currit (canalis "
+                "%s/canalis/servus)\n", cfg.via_datorum);
+        }
+        redde exitus;
+    }
 
     p = piscina_generare_dynamicum("exemplar", LXIV * MXXIV);
     si (!p)
@@ -126,8 +147,8 @@ principale (
 
         si (exitus == II)
         {
-            fprintf(stderr, "exemplar: servus currit - siste prius "
-                "(sera %s/sera)\n", cfg.via_datorum);
+            fprintf(stderr, "exemplar: servus currit sed canalis non "
+                "respondit (sera %s/sera tenetur)\n", cfg.via_datorum);
         }
         alioquin si (exitus == ZEPHYRUM)
         {

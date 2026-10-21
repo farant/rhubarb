@@ -167,6 +167,22 @@ this plan.
   order; all-invitations newest-first) - the fixed test clock makes ties
   the normal case.
 
+- **T4: admissio joins the caller's transaction.** `admissio_revocare`
+  opened its own sqlite transaction, so P10's one-transaction suspension
+  failed. New `volumen_in_transactione`; admissio's revoke path opens its
+  own transaction only when the caller holds none. Cost if wrong: none
+  for /applicationes (same path); suspension stays atomic.
+- **T4: grant revocation is load-bearing** (plant evidence): without it
+  the bearer token still answers 200 after suspension - /mcp does not
+  check the civis status.
+- **T4: `exemplar_administrare` in the nucleus** (public header) rather
+  than mcp_servus_canalis in exemplar.c; `-invitare` exit 2 message now
+  says "lock held but the channel did not answer".
+- **T4: `sera` section updated** - "-invitare while running -> 2" is
+  obsolete; the section removes the socket to produce lock-held-no-answer.
+- **T4: /mcp plant run by hand** (needs an include + a swap; silva.planta
+  takes one edit).
+
 ## Review focus
 
 Inputs the spec implies but no test of the spec's list exercises; each

@@ -531,6 +531,13 @@ volumen_transactionem_revolvere (
     redde scrinium_revolvere(volumen->scrinium);
 }
 
+b32
+volumen_in_transactione (
+    Volumen* volumen)
+{
+    redde volumen && volumen->in_transactione;
+}
+
 chorda
 volumen_plagulam_promere (
     Volumen* volumen,

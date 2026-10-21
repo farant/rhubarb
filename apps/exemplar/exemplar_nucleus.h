@@ -66,16 +66,24 @@ vacuum
 exemplar_claudere (
     Exemplar* exemplar);
 
-/* CLI (ianua P1): seram data/sera capit - servus currens -> II;
- * volumen aperit, invitationem (auctor vacuus, VII dies) creat; codex
+/* CLI: servus currens per canalem (canalis P9: instrumentum
+ * 'invitare'); nemo audit -> seram data/sera capit (ianua P1),
+ * volumen aperit, invitationem (auctor vacuus, VII dies) creat. Codex
  * in piscina, SEMEL - vocator ad stdout scribit, numquam ad acta.
- * 0 bene | I error | II servus currit */
+ * 0 bene | I error | II sera tenetur sed canalis non respondit */
 s32
 exemplar_invitare (
      constans character* via_datorum,
      constans character* nota,
                  chorda* codex_exitus,
                 Piscina* piscina);
+
+/* pons stdio <-> canalis administrationis servi currentis (canalis T4:
+ * 'exemplar -data D -administrare', Claude Code per ssh). 0 finis
+ * ordinatus | I scriptura fracta | II nullus servus currit */
+s32
+exemplar_administrare (
+    constans character* via_datorum);
 
 #ifdef EXEMPLAR_PROBATIO
 /* uncus probationis: invitatio in exemplare currente (auctor vacuus) */

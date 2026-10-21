@@ -171,6 +171,13 @@ b32
 volumen_transactionem_revolvere (
     Volumen* volumen);
 
+/* vocatorne transactionem tenet? (bibliothecae quae transactionem
+ * propriam aliter aperirent eam iungunt - admissio_revocare, canalis
+ * T4). NIHIL -> FALSUM */
+b32
+volumen_in_transactione (
+    Volumen* volumen);
+
 /* contentum plagulae ex manifesto + massis; *inventum FALSUM si via
  * ignota (chorda vacua legitima est - plagula vacua) */
 chorda
