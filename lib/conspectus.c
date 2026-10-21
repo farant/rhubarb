@@ -195,6 +195,27 @@ documentum_ligatum (
     redde NIHIL;
 }
 
+/* piscina temporaria NOVA post opus magnum (acta lecta, differentia):
+ * piscina_vacare omnes alveos memset - capacitas semel aucta (acta
+ * multa simul) omnem lectionem posteriorem gravaret (mensuratum D4b:
+ * ~XXX us per lectionem post V milia actorum). Via brevis (nihil
+ * novum) piscinam parvam tantum vacat. */
+interior vacuum
+tempus_renovare (
+    ConspectusRegistrum* r)
+{
+    Piscina* nova;
+
+    nova = piscina_generare_dynamicum("conspectus_tempus", IV * MXXIV);
+    si (!nova)
+    {
+        piscina_vacare(r->tempus);
+        redde;
+    }
+    piscina_destruere(r->tempus);
+    r->tempus = nova;
+}
+
 /* seq maximum voluminis (0 si vacuum) */
 interior s64
 seq_ultimum (
@@ -598,7 +619,10 @@ conspectus_declarare (
     {
         *vitia = v;
     }
-    lectum = stml_legere(fons, r->piscina, r->intern);
+    /* fons copiatur: attributa in eum spectare possunt, vocans textum
+     * brevis vitae dare licet (declaratio infixa, D4b) */
+    fons    = chorda_transcribere(fons, r->piscina);
+    lectum  = stml_legere(fons, r->piscina, r->intern);
     si (!lectum.successus || !lectum.elementum_radix)
     {
         sprintf(buffer, "linea %d: STML non legitur: %.*s",
@@ -899,7 +923,7 @@ conspectus_parare (
     }
     r->cursor   = seq_ultimum(r->volumen);
     r->paratum  = VERUM;
-    piscina_vacare(r->tempus);
+    tempus_renovare(r);
     redde VERUM;
 }
 
@@ -922,6 +946,13 @@ conspectus_renovare (
     si (!r || !r->paratum)
     {
         redde r ? r->cursor : ZEPHYRUM;
+    }
+    /* nihil novum (casus frequentissimus: lectiones multae per
+     * picturam) - quaestio una indicata, sine lectione actorum */
+    si (seq_ultimum(r->volumen) <= r->cursor)
+    {
+        piscina_vacare(r->tempus);
+        redde r->cursor;
     }
     acta = volumen_acta_legere(r->volumen, r->cursor, r->tempus);
     per (i = ZEPHYRUM; acta && i < xar_numerus(acta); i++)
@@ -993,7 +1024,7 @@ conspectus_renovare (
             }
         }
     }
-    piscina_vacare(r->tempus);
+    tempus_renovare(r);
     redde r->cursor;
 }
 

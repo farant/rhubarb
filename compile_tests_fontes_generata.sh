@@ -53,6 +53,8 @@ declare -a SOURCE_FILES=(
     "lib/consilium.c"
     "lib/conspectus.c"
     "lib/conspectus_canon.c"
+    "lib/conspectus_dies.c"
+    "lib/conspectus_infixa.c"
     "lib/copia_terminalis.c"
     "lib/credo.c"
     "lib/crustula.c"

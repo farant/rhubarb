@@ -160,15 +160,21 @@ dies_computare (
             r->titulus, piscina);
     }
     v->personae = personae_numerus(m->personae);
-    sprintf(praefixum, "dies/%.*s/%%", (integer)clavis.mensura,
+    /* intervallum [praefixum/, praefixum0) per indicem acta(genus, seq)
+     * - LIKE omnia acta perscrutabatur (probatio X milia computationum
+     * super acta crescentia: VII s) */
+    sprintf(praefixum, "dies/%.*s/", (integer)clavis.mensura,
         (constans character*)clavis.datum);
     e = scrinium_praeparare(volumen_scrinium(m->volumen),
-        "SELECT count(*) FROM acta WHERE genus LIKE ?1");
+        "SELECT count(*) FROM acta WHERE genus >= ?1 AND genus < ?2");
     si (e)
     {
-        (vacuum)scrinium_ligare_textum(e, I,
-            chorda_ex_literis(praefixum,
-            piscina));
+        chorda infima   = chorda_ex_literis(praefixum, piscina);
+        chorda suprema  = chorda_transcribere(infima, piscina);
+
+        suprema.datum[suprema.mensura - I] = '0';   /* '/' + I */
+        (vacuum)scrinium_ligare_textum(e, I, infima);
+        (vacuum)scrinium_ligare_textum(e, II, suprema);
         si (scrinium_gradi(e) == SCRINIUM_ORDO)
         {
             v->acta_spatii = (i32)scrinium_columna_numerus(e, ZEPHYRUM);
@@ -1155,6 +1161,30 @@ titulos_mutare (
     }
 }
 
+/* lectiones n sine actis; clavis in piscina propria vacata (probatio
+ * ipsa non crescit) */
+interior vacuum
+lectiones_sine_actis (
+    ConspectusRegistrum* r,
+                    i32  n,
+                Piscina* piscina)
+{
+    Piscina* p;
+        i32  i;
+
+    (vacuum)piscina;
+    p = piscina_generare_dynamicum("probatio_lectiones", MXXIV);
+    per (i = ZEPHYRUM; p && i < n; i++)
+    {
+        (vacuum)conspectus_legere(r, "dies", diem(XIV, p));
+        piscina_vacare(p);
+    }
+    si (p)
+    {
+        piscina_destruere(p);
+    }
+}
+
 interior i64
 vestigium (vacuum)
 {
@@ -1202,6 +1232,20 @@ _probare_memoriam (
     v2 = v2 > v1 ? v2 - v1 : ZEPHYRUM;   /* i64 insignatum */
     imprimere("memoria: B2 %ld KiB\n", (longus)(v2 / MXXIV));
     CREDO_MINOR_I64(v2, (i64)(IV * MXXIV * MXXIV));
+
+    /* C (D4b): lectiones multae SINE actis - via brevis renovationis
+     * (nihil novum) piscinam temporariam quoque vacare debet */
+    v1 = vestigium();
+    lectiones_sine_actis(r, (i32)(D * M), c->piscina);
+    v2 = vestigium();
+    v2 = v2 > v1 ? v2 - v1 : ZEPHYRUM;
+    imprimere("memoria: C %ld KiB\n", (longus)(v2 / MXXIV));
+    /* mensuratum 2026-10-21 (D milia lectionum): 0 KiB; piscina
+     * temporaria non vacata (planta) ~XIX octeti per lectionem = IX
+     * MiB. L milia non sufficiebant: alvei post vacationem manent,
+     * damnum ~I MiB intra capacitatem priorem latebat (planta
+     * viridis) */
+    CREDO_MINOR_I64(v2, (i64)(MXXIV * MXXIV));
 
     CREDO_MAIOR_AUT_AEQUALIS_S64(volumen_summa_actorum(m->volumen)
         - acta_ante, (s64)(XV * M));

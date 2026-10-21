@@ -124,6 +124,10 @@ declare -a RADIX_FONTES=(
     "personae"         # nomenclator-plan P1b: documentum contactuum
     "nomenclator"      # nomenclator-plan P2: index contactuum in vico
     "kalendarium"      # agenda-plan A2: calendarium in vico
+    "conspectus"       # proiectiones D4a: exemplaria visus (calendarium)
+    "conspectus_canon" # proiectiones D4a: canon declarationis infixus
+    "conspectus_dies"  # proiectiones D4b: conspectus diei
+    "conspectus_infixa" # proiectiones D4b: declarationes infixae
     "elenchus"         # agenda-plan M2b: menu contextuale (calendarium)
     "membrum__album"   # nomenclator-plan U1: index paginatus (calendarium)
     "membrum__praecepta" # nomenclator-plan U2: tabula praeceptorum
