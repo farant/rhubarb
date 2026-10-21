@@ -1245,3 +1245,21 @@ under the sub-region), priors before visions, one level deeper than
 the region, before the sub-regions. House-wide priors and visions —
 no region — come first at depth zero, only in the unscoped map. The
 cold path gets `-mappa-plena`; both forms stay names-only otherwise.
+
+## 2026-10-21 — stack overflow: `classes[VII]` vs eight ParatiClassis values
+
+ASan on probatio_tabularium (credo v2 memory work, park …S7G) found a
+stack-buffer-overflow in `_classes_scopi_computare`. `ParatiClassis`
+grew an eighth value, PARATUM_DORMIENS (parks placed in a region but
+not fixed, 01M35650Z4), while the per-class arrays stayed `[VII]`.
+The census path happened to guard with `classis < VII`; the mappa
+frontier path did `classes[n->classis]++` unguarded, so any region
+with a dormant park wrote one i32 past the array. The plain build
+was silent, because the clobbered slot was dead stack.
+
+Fix: a terminator `PARATUM_NUMERUS` sizes every per-class array, and
+`NOMINA` is sized `[PARATUM_DORMIENS]`. The frontier line still stops
+before dormientia, because the region numbers already name them
+(`parca N (dormientia M)`), so the output is unchanged. Lesson: an
+enum indexing an array carries its own count; a Roman-numeral size
+copied at each site rots silently the day the enum grows.
