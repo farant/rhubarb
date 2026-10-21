@@ -763,3 +763,55 @@ green after revert:
 - two sections sharing a static: mixed order breaks on seeds 1,3,4,8
   of 8, and examen independently rejects it (92).
 - 300 MiB in the section's piscina: MEMORIA, the section is named.
+
+## 2026-10-21 — css pilot done: 10 suites, 43 sections, all BONUM (briefing for step 3)
+
+All 10 css suites converted by hand. credo_convertere refused every
+one. Every result was BONUM under tools/credo_conversionem_probare.py:
+equal assertion count and Totalis, k/k sections, 3 mixed seeds, examen
+ACCIPE. Sections per suite: corpus 1, computus 2, registrum 5,
+diagnostica 3, stml 3, totalitas 1, selector 8, adaptare 10, canon 2,
+arbor 8. The checker takes ~20-35 s per suite.
+
+Patterns, roughly in order of frequency:
+- **Prelude before the blocks** (lexicon `ratum`, `consilium`, canon
+  loading, interner): becomes the fixture in `parare_suitae`, with
+  `c->datum = f` set only on success. Sections read it as
+  `constans FixuraX* f = c->suita`. The prelude's assertions move with
+  it and still count toward Totalis. If only ONE block uses the prelude
+  value (arbor: ratum only in the STML block), that section builds it
+  itself and there's no fixture.
+- **Guarding the fixture allocation:** a plain `si (f == NIHIL) redde;`
+  in parare, and `si (c->suita == NIHIL) redde;` in sections. That
+  gives VACUA sections and the suite FRACTA. NOT CREDO_NECESSE: it's
+  counted (the checker caught 13->14 on computus).
+- **File-scope statics written between blocks:** examen 92 flags them
+  in sections.
+  - Counters (stml SEDES_ELEMENTA): become per-section locals passed
+    by pointer.
+  - Configuration (totalitas RADIX_VIAE): becomes a function.
+  - Globals read by helpers (selector canon/intern/consilium): go into
+    the fixture, passed to helpers as `constans FixuraX*`.
+- **Aggregate assertions across blocks** ("cases >= CC", "documenta >
+  VI"): the blocks they span stay ONE section (totalitas, canon's
+  iudicium). Splitting is a separate commit that decides where the
+  floor lives. stml's "elementa > 0" moved into the corpus section
+  instead (stricter, same count).
+- **Several '--- Probans ---' titles in one block:** the first becomes
+  the section title (better: the banner's words), the rest become
+  `CREDO_GRADUS ("...")`. Not counted, and examen 95 flags hand-printed
+  titles.
+- **A block-local `c`** (MateriaNodus* c, MateriaArborConsilium c)
+  shadows the section's parameter: rename it (compositus, consilium).
+- **C89:** declarations go before the NIHIL guard (-Wdeclaration-after-
+  statement). A section that doesn't use piscina/ratum mustn't declare
+  them (-Wunused-variable, -Wunused-but-set-variable). Detecting
+  variables by word match catches comments too ("spatia significantia").
+- **Helper signatures:** a fixture member passed to a non-const helper
+  parameter trips 94-deep. canon's `_documentum_iudicare` took
+  `Canon*` and now takes `constans Canon*`.
+- **Before commissio:** run `VOCABULA_VIAE_ADDITAE=... ./oratio/
+  vocabula.sh -nova`. New section names hit unknown words 5 times
+  (rancorem, inlineos, adaptationis, derivae, nidificationem). The
+  formator wraps table rows badly after a rename, so write those rows
+  by hand. Banners are exactly 50 '='.
