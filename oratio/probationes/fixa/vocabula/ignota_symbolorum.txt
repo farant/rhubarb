@@ -1887,6 +1887,7 @@ sf
 sg
 sh
 shallow
+shared
 shas
 shift
 shifted

@@ -122,6 +122,7 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(RTLD_LAZY == 0x1 && RTLD_NOW == 0x2);"
     echo "IUNGO_ASSERTA(RTLD_LOCAL == 0x4 && RTLD_GLOBAL == 0x8);"
     echo "IUNGO_ASSERTA(MAP_PRIVATE == 0x0002 && MAP_ANON == 0x1000);"
+    echo "IUNGO_ASSERTA(MAP_SHARED == 0x0001);"   # sonus S3a 2026-10-21
     echo "IUNGO_ASSERTA(sizeof(struct termios) == 72);"
     while read -r campus off mensura; do
         echo "IUNGO_ASSERTA(OFF(termios, $campus) == $off);"

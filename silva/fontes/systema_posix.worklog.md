@@ -115,3 +115,12 @@ a compiler without `__atomic` fails loudly at the use site anyway.
 Side gap found: silva has no `#error` directive (an active one reports
 "lexema '#' quod grammatica hic non accipit"); inactive ones are
 skipped correctly. Filed, not fixed.
+
+## 2026-10-21 - MAP_SHARED (sonus S3a, circulus stress test)
+
+`probationes/probatio_circulus.c` runs the SPSC ring's writer and reader
+in two processes over `mmap(MAP_SHARED | MAP_ANON)` + `fork` (the house
+has no threads). `MAP_SHARED` was absent from the sys/mman.h section:
+added `0x0001` (Darwin; Linux too). auspex asserts it - CONSENTIT;
+hand plant 0x0003 -> TU nostrum DISSENTIT, restored. Tolerated-copy
+gains `shared` (system name, same cause as store/release).

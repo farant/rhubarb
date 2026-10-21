@@ -474,6 +474,7 @@ int            closedir(DIR* dir);
 /* <sectio caput="sys/mman.h"/> sys/mman.h (valores Darwin) */
 #define PROT_READ   0x01
 #define PROT_WRITE  0x02
+#define MAP_SHARED  0x0001   /* circulus: probatio duorum processuum (sonus S3a) */
 #define MAP_PRIVATE 0x0002
 #define MAP_ANON    0x1000
 #define MAP_FAILED  ((void*)-1)
