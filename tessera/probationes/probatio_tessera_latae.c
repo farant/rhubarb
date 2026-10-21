@@ -56,30 +56,24 @@ _cella_est (
     redde VERUM;
 }
 
-s32
-principale (vacuum)
+/* Sectio UNA: probatio scaenica - blocci statum priorum ex proposito
+ * continuant; gradus (CREDO_GRADUS) fracturam nominant. */
+interior vacuum
+_scaenam_probare (
+    CredoContextus* c)
 {
-                    b32  praeteritus;
-                Piscina* piscina;
+            Piscina* piscina = c->piscina;
     TesseraPonsMemoriae* pm;
             TesseraOpus* opus;
           TesseraStilus  nat;
 
-    piscina = piscina_generare_dynamicum("probatio_tessera_latae",
-        33554432);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
     nat   = tessera_stilus_nativus();
     pm    = tessera_pons_memoriae_creare(piscina, VIII, III);
     opus  = tessera_aperire(piscina, &pm->pons);
     CREDO_NON_NIHIL (opus);
 
     /* Cellulae "a中b" */
-    imprimere("\n--- Cellulae a中b ---\n");
+    CREDO_GRADUS ("Cellulae a中b");
     tessera_scribere_literis(opus, ZEPHYRUM, ZEPHYRUM,
         "a" LITTERA_SINICA "b", nat);
     CREDO_VERUM (_cella_est(opus, ZEPHYRUM, ZEPHYRUM, (i32)'a',
@@ -94,7 +88,7 @@ principale (vacuum)
     {
         chorda captum;
 
-        imprimere("\n--- Quadrum primum (aureum) ---\n");
+        CREDO_GRADUS ("Quadrum primum (aureum)");
         CREDO_VERUM (tessera_praesentare(opus));
         captum = tessera_pons_memoriae_captum(pm);
         CREDO_CHORDA_AEQUALIS_LITERIS (captum,
@@ -104,7 +98,7 @@ principale (vacuum)
 
     /* Quadrum immutatum: nihil */
     {
-        imprimere("\n--- Quadrum immutatum ---\n");
+        CREDO_GRADUS ("Quadrum immutatum");
         tessera_pons_memoriae_purgare(pm);
         CREDO_VERUM (tessera_praesentare(opus));
         CREDO_AEQUALIS_I32 (tessera_pons_memoriae_captum(pm).mensura,
@@ -115,7 +109,7 @@ principale (vacuum)
     {
         chorda captum;
 
-        imprimere("\n--- Super continuationem ---\n");
+        CREDO_GRADUS ("Super continuationem");
         tessera_pons_memoriae_purgare(pm);
         tessera_cellulam_ponere(opus, II, ZEPHYRUM, (i32)'x', nat);
         CREDO_VERUM (_cella_est(opus, I, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM));
@@ -128,7 +122,7 @@ principale (vacuum)
     }
 
     /* Scriptio super initium: continuatio vacuatur */
-    imprimere("\n--- Super initium ---\n");
+    CREDO_GRADUS ("Super initium");
     tessera_scribere_literis(opus, I, I, LITTERA_SINICA, nat);
     CREDO_VERUM (_cella_est(opus, I, I, SIGNUM_SINICUM,
         TESSERA_ORNAMENTUM_LATUM));
@@ -137,20 +131,20 @@ principale (vacuum)
     CREDO_VERUM (_cella_est(opus, II, I, ZEPHYRUM, ZEPHYRUM));
 
     /* Columna ultima: spatium, numquam scissa */
-    imprimere("\n--- Columna ultima ---\n");
+    CREDO_GRADUS ("Columna ultima");
     tessera_scribere_literis(opus, VI, II, "a" LITTERA_SINICA, nat);
     CREDO_VERUM (_cella_est(opus, VI, II, (i32)'a', ZEPHYRUM));
     CREDO_VERUM (_cella_est(opus, VII, II, ZEPHYRUM, ZEPHYRUM));
 
     /* tessera_replere super dimidium */
-    imprimere("\n--- Replere super dimidium ---\n");
+    CREDO_GRADUS ("Replere super dimidium");
     tessera_scribere_literis(opus, III, I, LITTERA_SINICA, nat);
     tessera_replere(opus, IV, I, I, I, (i32)'z', nat);
     CREDO_VERUM (_cella_est(opus, III, I, ZEPHYRUM, ZEPHYRUM));
     CREDO_VERUM (_cella_est(opus, IV, I, (i32)'z', ZEPHYRUM));
 
     /* Latum super latum translatum */
-    imprimere("\n--- Latum super latum ---\n");
+    CREDO_GRADUS ("Latum super latum");
     tessera_scribere_literis(opus, ZEPHYRUM, II, LITTERA_SINICA, nat);
     tessera_scribere_literis(opus, I, II, LITTERA_SINICA, nat);
     CREDO_VERUM (_cella_est(opus, ZEPHYRUM, II, ZEPHYRUM, ZEPHYRUM));
@@ -161,22 +155,29 @@ principale (vacuum)
 
     /* Signum componens: ab U5b graphema unum (latitudo I) - 'q' in
      * columna proxima (U5 signum omittebat) */
-    imprimere("\n--- Signum componens ---\n");
+    CREDO_GRADUS ("Signum componens");
     tessera_scribere_literis(opus, IV, ZEPHYRUM, "e\xCC\x81q", nat);
     CREDO_VERUM (_cella(opus, IV, ZEPHYRUM).ornamenta
         & TESSERA_ORNAMENTUM_GRAPHEMA);
     CREDO_VERUM (_cella_est(opus, V, ZEPHYRUM, (i32)'q', ZEPHYRUM));
 
     /* Vexilla latitudinis ex stilo vocantis ablata */
-    imprimere("\n--- Stilus sine vexillis ---\n");
+    CREDO_GRADUS ("Stilus sine vexillis");
     tessera_cellulam_ponere(opus, VI, ZEPHYRUM, (i32)'w',
         tessera_stilus(TESSERA_COLOR_NATIVUS, TESSERA_COLOR_NATIVUS,
             TESSERA_ORNAMENTUM_CRASSUM | 0xC0));
     CREDO_AEQUALIS_I32 (_cella(opus, VI, ZEPHYRUM).ornamenta,
         TESSERA_ORNAMENTUM_CRASSUM);
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "cellulae latae in opere uno", _scaenam_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("tessera_latae", SECTIONES);
 }

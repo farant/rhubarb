@@ -24,9 +24,9 @@
 #define MARCA_LONGITUDO VI
 
 
-/* ================================================================
+/* ==================================================
  * Initum: INITIUM + numerus x octetus + TERMINUS + post
- * ================================================================ */
+ * ================================================== */
 
 interior i8*
 _initum_parare (
@@ -77,10 +77,10 @@ _corpus_uniforme (
 }
 
 
-/* ================================================================
+/* ==================================================
  * Pons particularum: octeti in particulis fixis; mora quaque
  * lectione notatur
- * ================================================================ */
+ * ================================================== */
 
 nomen structura {
     TesseraPons  pons;
@@ -161,42 +161,66 @@ _particulas_status (
 }
 
 
-s32
-principale (vacuum)
+/* ==================================================
+ * Mundus probationis: pons memoriae + lector. Sectio quaeque suum
+ * aedificat (initum et status lectoris mutantur - status nullus
+ * communis); creatio semel ASSERITUR in parare_suitae.
+ * ================================================== */
+
+/* FALSUM = creatio fracta */
+interior b32
+_mundum_parare (
+                Piscina*  piscina,
+    TesseraPonsMemoriae** pm,
+          TesseraLector** lector)
 {
-                 b32  praeteritus;
-             Piscina* piscina;
-    TesseraPonsMemoriae* pm;
-       TesseraLector* lector;
-       TesseraEventum ev;
-                  i8* initum;
-                 i32  mensura;
-
-    piscina = piscina_generare_dynamicum("probatio_tessera_glutinum",
-        16777216);
-    si (!piscina)
+    *pm = tessera_pons_memoriae_creare(piscina, LXXX, XXIV);
+    si (*pm == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde FALSUM;
     }
-    credo_aperire(piscina);
+    *lector = tessera_lector_creare(piscina, &(*pm)->pons);
+    redde *lector != NIHIL;
+}
 
-    pm      = tessera_pons_memoriae_creare(piscina, LXXX, XXIV);
-    lector  = tessera_lector_creare(piscina, &pm->pons);
+/* creatio mundi semel asserta (ut olim ante blocos) */
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+    TesseraPonsMemoriae* pm;
+          TesseraLector* lector;
+
+    pm      = tessera_pons_memoriae_creare(c->piscina, LXXX, XXIV);
+    lector  = tessera_lector_creare(c->piscina, &pm->pons);
     CREDO_NON_NIHIL (pm);
     CREDO_NON_NIHIL (lector);
+}
 
 
-    /* ========================================================
-     * PROBARE: C milia octetorum - capacitas, truncatio, clavis post
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: C milia octetorum - capacitas, truncatio, clavis post
+ * ================================================== */
 
+interior vacuum
+_milia_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+    TesseraPonsMemoriae* pm;
+          TesseraLector* lector;
+          TesseraEventum ev;
+                     i8* initum;
+                     i32 mensura;
+
+    si (!_mundum_parare(piscina, &pm, &lector))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     {
              memoriae_index usus_ante;
              memoriae_index usus_post;
         TesseraEventumGenus genus;
-
-        imprimere("\n--- Probans glutinum C milium ---\n");
 
         initum = _initum_parare(piscina, C * M, (i8)'x', VERUM, "z",
             &mensura);
@@ -221,15 +245,29 @@ principale (vacuum)
             (i32)TESSERA_EVENTUM_CLAVIS);
         CREDO_AEQUALIS_S32 (ev.runa, (s32)'z');
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: limes exactus et limes + I
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: limes exactus et limes + I
+ * ================================================== */
 
+interior vacuum
+_limitem_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+    TesseraPonsMemoriae* pm;
+          TesseraLector* lector;
+          TesseraEventum ev;
+                     i8* initum;
+                     i32 mensura;
+
+    si (!_mundum_parare(piscina, &pm, &lector))
     {
-        imprimere("\n--- Probans limitem capacitatis ---\n");
-
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    {
         initum = _initum_parare(piscina,
             (i32)TESSERA_GLUTINUM_CAPACITAS,
             (i8)'e', VERUM, "", &mensura);
@@ -253,18 +291,26 @@ principale (vacuum)
         CREDO_VERUM (ev.glutinum_truncatum);
         CREDO_VERUM (_corpus_uniforme(ev.glutinum, (i8)'f'));
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: M particulae VI octetorum; mora glutini
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: M particulae VI octetorum; mora glutini
+ * ================================================== */
+
+interior vacuum
+_particulas_probare (
+    CredoContextus* c)
+{
+           Piscina* piscina = c->piscina;
+    TesseraEventum  ev;
+                i8* initum;
+               i32  mensura;
 
     {
         PonsParticularum pp;
          TesseraLector* lector_particularum;
                     i32 k;
-
-        imprimere("\n--- Probans M particulas ---\n");
 
         memset(&pp, ZEPHYRUM, magnitudo(pp));
         mensura = MARCA_LONGITUDO + VI * M + MARCA_LONGITUDO;
@@ -305,17 +351,31 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (pp.lectiones_aliae, I);
         CREDO_AEQUALIS_I32 (pp.lectiones_glutini, MI);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: MB unum - tempus
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: MB unum - tempus
+ * ================================================== */
 
+interior vacuum
+_tempus_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+    TesseraPonsMemoriae* pm;
+          TesseraLector* lector;
+          TesseraEventum ev;
+                     i8* initum;
+                     i32 mensura;
+
+    si (!_mundum_parare(piscina, &pm, &lector))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     {
         clock_t initium_temporis;
         clock_t finis_temporis;
-
-        imprimere("\n--- Probans MB unum (tempus) ---\n");
 
         initum = _initum_parare(piscina, MXXIV * MXXIV,
             (i8)'y', VERUM, "q", &mensura);
@@ -336,9 +396,20 @@ principale (vacuum)
             (duplex)(finis_temporis - initium_temporis) * 1000.0
                 / (duplex)CLOCKS_PER_SEC);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "glutinum C milium", _milia_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "limitem capacitatis", _limitem_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "M particulas", _particulas_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "MB unum (tempus)", _tempus_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("tessera_glutinum", SECTIONES,
+        _suitam_parare, NIHIL);
 }

@@ -335,26 +335,33 @@ _linea_exspectata (
     redde n;
 }
 
-s32
-principale (vacuum)
+/* Alveus lectionis (CORPUS_MAXIMUM): sectiones II et III in eum
+ * fasciculos legunt (mutatur), ergo sectio quaeque suum allocat sine
+ * assertione; allocatio semel ASSERITUR in parare_suitae (ut olim ante
+ * blocos). */
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                    b32  praeteritus;
-                Piscina* piscina;
-                     i8* alveus;
-                    i32  k;
+    i8* alveus;
 
-    piscina = piscina_generare_dynamicum("probatio_tessera_folium",
-        67108864);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    alveus = (i8*)piscina_allocare(piscina, CORPUS_MAXIMUM);
+    alveus = (i8*)piscina_allocare(c->piscina, CORPUS_MAXIMUM);
     CREDO_NON_NIHIL (alveus);
+}
 
-    imprimere("\n--- I. Casus ---\n");
+
+/* ==================================================
+ * PROBARE: I. Casus parvi - spatium, CJK, Thai (limes), unitas
+ * latior quam latitudo, paragraphi vacui, CR LF, latitudo
+ * nulla
+ * ================================================== */
+
+interior vacuum
+_casus_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     {
         hic_manens constans i32 SPATIUM[]    = { VI, X };
         hic_manens constans i32 SINICA[]     = { IV, IV, II };
@@ -399,8 +406,26 @@ principale (vacuum)
             chorda_ex_literis("ab", piscina), ZEPHYRUM,
             RUNAE_POLITICA_GRAPHEMATUM, &inv));
     }
+}
 
-    imprimere("\n--- II. Invarianta per corpus ---\n");
+
+/* ==================================================
+ * PROBARE: II. Invarianta per corpus (XXXV linguae x
+ * politicae II x latitudines XL et XVII)
+ * ================================================== */
+
+interior vacuum
+_corpus_probare (
+    CredoContextus* c)
+{
+     Piscina* piscina  = c->piscina;
+          i8* alveus   = (i8*)piscina_allocare(piscina, CORPUS_MAXIMUM);
+         i32  k;
+
+    si (alveus == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     {
         hic_manens constans i32 LATITUDINES[]  = { XL, XVII };
                             i32 fracturae      =
@@ -453,8 +478,26 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (involutiones, (i32)CXL);
         CREDO_AEQUALIS_I32 (fracturae, ZEPHYRUM);
     }
+}
 
-    imprimere("\n--- III. Pictura et aurea ---\n");
+
+/* ==================================================
+ * PROBARE: III. Pictura - ordo quisque relectus == linea sua;
+ * aurea paginae primae ja, hi, yo ad XL x X
+ * ================================================== */
+
+interior vacuum
+_picturam_probare (
+    CredoContextus* c)
+{
+     Piscina* piscina  = c->piscina;
+          i8* alveus   = (i8*)piscina_allocare(piscina, CORPUS_MAXIMUM);
+         i32  k;
+
+    si (alveus == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     /* imperium (tabula) pingitur ut spatium */
     {
         TesseraPonsMemoriae* pm = tessera_pons_memoriae_creare(piscina,
@@ -572,9 +615,20 @@ principale (vacuum)
             }
         }
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. Casus", _casus_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "II. Invarianta per corpus", _corpus_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "III. Pictura et aurea", _picturam_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("tessera_folium", SECTIONES,
+        _suitam_parare, NIHIL);
 }
