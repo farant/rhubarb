@@ -932,3 +932,41 @@ doesn't match the canalis_debita keys; ./silva/examen.sh says ACCIPE.
 The scratchpad is shared between agents (two overwrote each other's
 helper scripts). The worktree sandbox blocks bash arguments containing
 '|' or 'git'.
+
+## 2026-10-21 — step 3 batch 2: oratio, crusta, officina, briar, tessera, ludus_tessera
+
+Six agents. Converted and BONUM:
+- oratio 16/19, crusta 19/20, officina 13/15;
+- briar 19/20, tessera 15/15, ludus_tessera 8/8.
+Each was re-verified in quinta before its commit.
+
+Hidden order dependences and shared state found and fixed:
+- officina compendium ('ordinem' used block 1's declarations);
+- officina puncta (the instruction count came from fundamentum);
+- briar plagulae (block 4 changed block 1's `membra` in place);
+- oratio resolutio (a `hic_manens` text buffer written from two
+  sections; examen 92 caught it).
+
+MEMORIA, pulled out:
+- STML circuit: oratio_stml (+831 MiB), md_stml (+308).
+- In-process legati index: officina renovatio (+405), legatus (RSS 708).
+- Accumulation candidates: crusta effectus (+1370, every house .sh in
+  one piscina), briar amalgama (+321), oratio_partes (+390).
+- oratio_vocabula (268): a shared vocabulary fixture is blocked by the
+  non-const `oratio_vocabula_creare`.
+Done by hand earlier (ac76e355): html_md and gesta tabularium, both
+accumulation (a piscina never reset, or the suite piscina handed to an
+API as its ephemeral per-message one).
+
+Converter fix (credo_convertere_scaenam.py), from tessera's report:
+- A print starting "\n--- " became a CREDO_GRADUS even when it was
+  data output ("\n--- intrati:" before a number loop, tessera modi).
+  That silently changed the output; the counts can't see it, a literal
+  audit can.
+- Now only text that ends in "---\n" and has no '%' is a title. A
+  title still left behind is refused.
+- The block-scoped tail `{ b32 praeteritus = ...; }` (most oratio
+  suites) is accepted.
+Still open: credo_convertere.py requires "Probans" in titles, so the
+roman-numbered "--- I. x ---" form (oratio, ludus_tessera) is refused;
+the agents converted those by hand.

@@ -41,7 +41,7 @@ TITULUS = re.compile(
 CHORDA = re.compile(r'("(?:[^"\\]|\\.)*")')
 CAUDA_NOTA = [
     r'^\s*$', r'^\s*imprimere\("\\n"\);$', r'^\s*credo_imprimere_compendium\(\);$',
-    r'^\s*praeteritus = credo_omnia_praeterierunt\(\);$',
+    r'^\s*(b32\s+)?praeteritus = credo_omnia_praeterierunt\(\);$',
     r'^\s*piscina_destruere\(piscina\);$', r'^\s*redde praeteritus \? ZEPHYRUM : I;$',
     r'^\s*si \(praeteritus\)$', r'^\s*alioquin$', r'^\s*[{}]$',
     r'^\s*redde (ZEPHYRUM|I);$',
@@ -53,7 +53,12 @@ class Recusatio(Exception):
 
 
 def _gradus(m):
+    """titulus solum si textus iunctus '---\\n' finit; aliter impressio
+    datorum (e.g. '\\n--- intrati:' ante ansam numerorum, tessera modi)
+    intacta manet - output tacite mutatum alioquin"""
     pars = m.group(2) + ''.join(re.findall(r'"((?:[^"\\]|\\.)*)"', m.group(3)))
+    if not re.search(r'---\\n$', pars) or '%' in pars:
+        return m.group(0)
     pars = re.sub(r'\s*---\\n$', '', pars).replace('Probans ', '')
     return '\n%sCREDO_GRADUS ("%s");\n' % (m.group(1), pars)
 
@@ -95,7 +100,7 @@ def convertere(via, suita, titulus, c_novum=None):
                         'aut suitae): %s' % ' | '.join(l.strip() for l in reliqua_caudae[:4]))
     reliquum = reliquum[:cauda.start()] + '\n'
     reliquum = TITULUS.sub(_gradus, reliquum)
-    if '"\\n---' in reliquum:
+    if re.search(r'imprimere\("\\\\n--- [^"%]*---\\\\n"\);', reliquum):
         raise Recusatio('titulus formae ignotae relictus')
     sine_chordis = CHORDA.sub('""', re.sub(r'/\*.*?\*/', '', reliquum + declarationes,
                                          flags=re.S))
