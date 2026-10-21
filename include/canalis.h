@@ -48,7 +48,8 @@ nomen structura {
  * numquam tacite artatur. In via: socket -> deletur; aliud (filum,
  * directorium) -> recusatur et intactum manet. Via longior sun_path
  * (CIV octeti macOS, CVIII Linux, NUL numerato) -> recusatur, limes
- * nominatur, numquam truncatur. Socket 0600 (sine umask), non-blocans. */
+ * nominatur, numquam truncatur. Socket 0600 (sine umask),
+ * non-blocans. */
 CanalisResultus
 canalis_audire (
     constans character* via,

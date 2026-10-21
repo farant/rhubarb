@@ -95,3 +95,12 @@ unistd.h identity sectio. auspex asserts values, sizeof 106 and offsets
 sun_path[103] -> TU nostrum DISSENTIT (assertum_185), restored ->
 CERTIFICATAE. The Linux-only branch (`struct ucred`, SO_PEERCRED) is not
 modelled: examen judges the Darwin preprocessing.
+
+## 2026-10-21 - shutdown/SHUT_* and MSG_NOSIGNAL (canalis T2)
+
+`mcp_canalis_pons` half-closes with `shutdown(s, SHUT_WR)`; added
+`shutdown` + SHUT_RD/WR/RDWR (0/1/2) to the sys/socket.h sectio. And
+`tcp_mittere` now sends with MSG_NOSIGNAL on Darwin as well (SO_NOSIGPIPE
+is not honoured on a socket accepted after its peer closed): added
+`MSG_NOSIGNAL 0x80000` (Darwin SDK value). auspex asserts both - planted
+SHUT_WR 2 -> DISSENTIT, restored -> CERTIFICATAE.

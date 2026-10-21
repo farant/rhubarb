@@ -359,7 +359,54 @@ _sectio_nosigpipe (
         close(par[I]);
         r1 = tcp_mittere(t, (constans i8*)"x", I);
         r2 = tcp_mittere(t, (constans i8*)"x", I);
-        _exit((r1 < ZEPHYRUM && r2 < ZEPHYRUM) ? ZEPHYRUM : I);
+        si (!(r1 < ZEPHYRUM && r2 < ZEPHYRUM))
+        {
+            _exit(I);
+        }
+        /* casus alter (canalis T2, inventus in 'fuga'): par connectit,
+         * scribit, CLAUDIT ante acceptionem - Darwin socket sic
+         * acceptum SO_NOSIGPIPE NON observat (signum XIII);
+         * MSG_NOSIGNAL observat */
+        {
+                  Locus l;
+        CanalisResultus a;
+            TcpResultus cl;
+            TcpResultus sv;
+                    i32 k;
+
+            sprintf(l.directorium, "/tmp/canalis-%ld-nosigpipe",
+                (signatus longus)getppid());
+            sprintf(l.via, "%s/servus", l.directorium);
+            (vacuum)filum_arborem_delere(l.directorium);
+            a   = canalis_audire(l.via, c->piscina);
+            cl  = canalis_connectere(l.via, c->piscina);
+            si (   !a.successus || !cl.successus
+                || !tcp_mittere_omnia(cl.connexio,
+                (constans i8*)"abc\n",
+                       IV))
+            {
+                _exit(II);
+            }
+            tcp_claudere(cl.connexio);
+            _dormire_ms(X);
+            sv.successus = FALSUM;
+            per (k = ZEPHYRUM; k < C && !sv.successus; k++)
+            {
+                sv = canalis_accipere(a.auditor, c->piscina);
+                si (!sv.successus)
+                {
+                    _dormire_ms(I);
+                }
+            }
+            si (!sv.successus)
+            {
+                _exit(II);
+            }
+            r1 = tcp_mittere(sv.connexio, (constans i8*)"x", I);
+            canalis_claudere(a.auditor);
+            (vacuum)filum_arborem_delere(l.directorium);
+        }
+        _exit(r1 < ZEPHYRUM ? ZEPHYRUM : III);
     }
     CREDO_NECESSE(waitpid((pid_t)pid, &status, ZEPHYRUM) == (pid_t)pid);
     CREDO_VERUM(WIFEXITED(status));

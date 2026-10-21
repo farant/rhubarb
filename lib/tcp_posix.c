@@ -593,13 +593,11 @@ tcp_mittere (
 
     fac
     {
-#ifdef __linux__
-        /* par SO_NOSIGPIPE Darwinis: SIGPIPE hic per vexillum
-         * missionis vetatur */
+        /* MSG_NOSIGNAL UTRIMQUE: Linux SO_NOSIGPIPE nescit, et Darwin
+         * socket AF_UNIX acceptum postquam par iam clausit SO_NOSIGPIPE
+         * non observat (signum XIII - canalis T2, probatio_canalis
+         * nosigpipe casus alter); SO_NOSIGPIPE manet ut custos alter */
         n = send(connexio->fd, data, (size_t)mensura, MSG_NOSIGNAL);
-#else
-        n = send(connexio->fd, data, (size_t)mensura, 0);
-#endif
     } dum (n < 0 && errno == EINTR);   /* hygiene POSIX */
 
     si (n < 0)

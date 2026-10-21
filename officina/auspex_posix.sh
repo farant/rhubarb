@@ -199,6 +199,8 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(EINPROGRESS == 36);"
     # canalis T1 (2026-10-21): AF_UNIX, sockaddr_un, S_ISSOCK, ECONNABORTED
     echo "IUNGO_ASSERTA(AF_UNIX == 1 && ECONNABORTED == 53);"
+    echo "IUNGO_ASSERTA(SHUT_RD == 0 && SHUT_WR == 1 && SHUT_RDWR == 2);"
+    echo "IUNGO_ASSERTA(MSG_NOSIGNAL == 0x80000);"
     echo "IUNGO_ASSERTA(S_IFSOCK == 0140000 && S_ISSOCK(0140600) && !S_ISSOCK(0100644));"
     echo "IUNGO_ASSERTA(sizeof(struct sockaddr_un) == 106);"
     echo "IUNGO_ASSERTA(OFF(sockaddr_un, sun_family) == 1 && OFF(sockaddr_un, sun_path) == 2);"

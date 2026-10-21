@@ -140,6 +140,24 @@ this plan.
   lock in build/); older than this task; the new filum section and
   canalis/tcp are green on musl and glibc.
 
+- **T2: MSG_NOSIGNAL in `tcp_mittere` on every platform.** Darwin
+  ignores SO_NOSIGPIPE on a socket accepted after its peer closed
+  (signal 13 killed the test server in `fuga`). Fix in lib/tcp_posix.c,
+  pinned by a second case in probatio_canalis `nosigpipe` (red before).
+  Cost if wrong: none - Linux already sent with it.
+- **T2: half-close semantics** (pons shuts its write side and waits):
+  EOF stops reading only; close when nothing is owed. Not in the plan's
+  step 3 text; required by the `pons` section.
+- **T2: extra section `locus_iteratus`** - the plan's generation-check
+  plant cannot go red on `fuga` (the slot is not reused while the reply
+  is pending); the new section closes a connection with a reply pending
+  (over-long line) and reuses its slot.
+- **T2: servus-wide `initiatum`** accepted (mcp_servus tracks initialize
+  per servus, not per connection) - documented in the header, no
+  transport-side method sniffing.
+- **T2: both pons sections wait with a deadline** - a broken pons must
+  fail the suite, not hang it (the first pons_finis plant hung 19 min).
+
 ## Review focus
 
 Inputs the spec implies but no test of the spec's list exercises; each

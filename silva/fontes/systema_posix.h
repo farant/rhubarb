@@ -325,6 +325,10 @@ int select(int numerus, fd_set* legendi, fd_set* scribendi,
  * Darwin solum - Linux nomen nescit (sonda 2026-08-03); via Linux =
  * MSG_NOSIGNAL per send aut SIGPIPE ignorare. Codex 86 usum flagat. */
 #define SO_NOSIGPIPE 0x1022
+/* send() sine SIGPIPE - Darwin quoque (SDK 0x80000). Necessarium: socket
+ * AF_UNIX acceptum POSTQUAM par iam clausit SO_NOSIGPIPE NON observat
+ * (signum XIII; canalis T2, sonda 2026-10-21) */
+#define MSG_NOSIGNAL 0x80000
 #define IPPROTO_TCP  6
 #define TCP_NODELAY  0x01
 
@@ -384,6 +388,12 @@ ssize_t send(int fossa, const void* buffer, size_t mensura,
 ssize_t recv(int fossa, void* buffer, size_t mensura, int vexilla);
 /* par fossarum connexarum (probatio_canalis: nosigpipe) */
 int socketpair(int genus, int forma, int protocollum, int* fossae);
+/* latus unum claudere (mcp_canalis_pons: EOF intrae -> SHUT_WR,
+ * responsa adhuc leguntur; canalis T2) */
+#define SHUT_RD   0
+#define SHUT_WR   1
+#define SHUT_RDWR 2
+int shutdown(int fossa, int quomodo);
 
 /* <sectio caput="sys/un.h"/> sys/un.h - inscriptio AF_UNIX (forma
  * Darwin: sun_len, sun_family, sun_path[104]; canalis T1) */

@@ -144,3 +144,14 @@ channel hands every AF_UNIX connection out through tcp_ex_fossa.
 probatio_canalis `nosigpipe` (forked child writes twice to a closed
 socketpair end) dies by signal with the call removed (plant red), exits
 0 with it.
+
+## 2026-10-21 - tcp_mittere: MSG_NOSIGNAL on Darwin too (canalis T2)
+
+SO_NOSIGPIPE is not enough on Darwin: a socket accepted AFTER its AF_UNIX
+peer had already closed raises SIGPIPE on send even with the option set
+(probe: close-then-accept -> signal 13; with MSG_NOSIGNAL -> -1 EPIPE).
+The Darwin SDK has had MSG_NOSIGNAL (0x80000) for years, so tcp_mittere
+now passes it on every platform; `_ponere_nosigpipe` stays as a second
+guard. probatio_canalis `nosigpipe` gained the close-before-accept case
+(red before the change, green after). Found by mcp_servus_canalis
+`fuga` (server child died of signal 13).
