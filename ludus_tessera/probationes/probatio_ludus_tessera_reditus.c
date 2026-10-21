@@ -44,9 +44,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-hic_manens Piscina*             piscina;
-hic_manens InternamentumChorda* intern;
-
 nomen structura {
     TesseraPonsMemoriae* pm;
             TesseraOpus* opus;
@@ -55,8 +52,9 @@ nomen structura {
 
 interior Reditus
 reditum_creare (
-    i32 latitudo,
-    i32 altitudo)
+     Piscina* piscina,
+         i32  latitudo,
+         i32  altitudo)
 {
                   Reditus r;
     AemulatorConfiguratio cfg;
@@ -275,31 +273,18 @@ stilus_fortuitus (
         sors_intra(s, (i32)TESSERA_ORNAMENTA_STILI + I));
 }
 
-s32
-principale (vacuum)
+/* Sectiones: I et II UNA (II mutationem magnitudinis super quadra I
+ * picta probat - conferre frontem totam confert); III et IV mundos suos
+ * aedificant. */
+interior vacuum
+_manu_probare (
+    CredoContextus* c)
 {
-         b32 praeteritus;
-     Reditus r;
-        Sors s;
-         i32 i;
-         i32 k;
-         i32 latitudo_unitatis;
-   character contextus[LXIV];
+    Piscina* piscina = c->piscina;
+    Reditus  r;
 
-    piscina =
-        piscina_generare_dynamicum("probatio_ludus_tessera_reditus",
-        XVI * M * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
     thema_initiare();
-
-    imprimere("\n--- I. quadra manu picta ---\n");
-    r = reditum_creare(XL, XII);
+    r = reditum_creare(piscina, XL, XII);
     CREDO_NON_NIHIL(r.aem);
     tessera_scribere_literis(r.opus, ZEPHYRUM, ZEPHYRUM, "salve munde",
         tessera_stilus_nativus());
@@ -334,7 +319,7 @@ principale (vacuum)
     CREDO_VERUM(conferre(&r, "I idem"));
     CREDO_AEQUALIS_I32(aemulator_ignota(r.aem), ZEPHYRUM);
 
-    imprimere("\n--- II. mutatio magnitudinis ---\n");
+    CREDO_GRADUS ("II. mutatio magnitudinis");
     tessera_pons_memoriae_amplitudo(r.pm, XXX, X);
     CREDO_VERUM(tessera_magnitudinem_renovare(r.opus));
     CREDO_VERUM(aemulator_amplitudo(r.aem, XXX, X));
@@ -351,10 +336,23 @@ principale (vacuum)
     CREDO_VERUM(quadrum(&r));
     CREDO_VERUM(conferre(&r, "II maior"));
     CREDO_AEQUALIS_I32(aemulator_ignota(r.aem), ZEPHYRUM);
+}
 
-    imprimere("\n--- III. quadra fortuita (semen 0x5EED) ---\n");
+interior vacuum
+_fortuita_probare (
+    CredoContextus* c)
+{
+     Piscina* piscina = c->piscina;
+     Reditus  r;
+        Sors  s;
+         i32  i;
+         i32  k;
+         i32  latitudo_unitatis;
+   character  contextus[LXIV];
+
+    thema_initiare();
     sors_seminare(&s, 0x5EED, I);
-    r = reditum_creare(XXXII, XII);
+    r = reditum_creare(piscina, XXXII, XII);
     per (i = ZEPHYRUM; i < LX; i++)
     {
         per (k = ZEPHYRUM; k < XL; k++)
@@ -396,8 +394,17 @@ principale (vacuum)
         }
     }
     CREDO_AEQUALIS_I32(aemulator_ignota(r.aem), ZEPHYRUM);
+}
 
-    imprimere("\n--- IV. applicatio vera (vicus) ---\n");
+interior vacuum
+_applicationem_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_creare(piscina);
+                Reditus  r;
+
+    thema_initiare();
     {
          VicusApplicatio app;
             LudusTessera* lt;
@@ -456,9 +463,21 @@ principale (vacuum)
          * cumulantur; volumen_temporarium post C deficit) */
         volumen_claudere(app.volumen);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. quadra manu picta", _manu_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "III. quadra fortuita (semen 0x5EED)", _fortuita_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "IV. applicatio vera (vicus)", _applicationem_probare, NIHIL,
+        NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("ludus_tessera_reditus", SECTIONES);
 }
