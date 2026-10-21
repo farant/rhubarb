@@ -45,7 +45,15 @@ hic_manens constans character* CAUSAE[] = {
     "emissio a fonte dispar"
 };
 
-hic_manens constans character* RADIX_VIAE = ".";
+/* radix ex ambitu, ad usum computata - functio, non staticum scriptum
+ * (sectiones statum communem non scribunt) */
+interior constans character*
+_radix_viae (vacuum)
+{
+    constans character* radix_viae = getenv("RHUBARB_RADIX");
+
+    redde radix_viae != NIHIL ? radix_viae : ".";
+}
 
 interior character*
 _plagulam_legere (
@@ -130,7 +138,8 @@ _fractum_scribere (
     character via[DXII];
     FILE* f;
 
-    sprintf(via, "%s/oratio/build/totalitas_fractum.txt", RADIX_VIAE);
+    sprintf(via, "%s/oratio/build/totalitas_fractum.txt",
+        _radix_viae());
     f = fopen(via, "wb");
     si (f == NIHIL)
     {
@@ -254,31 +263,25 @@ _nidos_probare (
     }
 }
 
-integer
-principale (vacuum)
+/* CLASSES CASUUM: fortuiti, corpus mutatum et truncatum, nidificatio -
+ * sectio UNA, quia pavimentum summae (casus > CL) classes omnes
+ * numerat; divisio commissione sua (pavimentum ubi habitet) */
+interior vacuum
+_classes_probare (
+    CredoContextus* c)
 {
-               Piscina* piscina;
-    constans character* radix_viae;
-                   b32  praeteritus;
-                   i32  numerus_corporis;
-                   i32  plagulae_lectae  = ZEPHYRUM;
-                   i32  casus_fortuiti   = ZEPHYRUM;
-                   i32  casus_mutati     = ZEPHYRUM;
-                   i32  casus_truncati   = ZEPHYRUM;
-                   i32  casus_nidorum    = ZEPHYRUM;
-                   i32  i;
+     Piscina* piscina = c->piscina;
+         i32  numerus_corporis;
+         i32  plagulae_lectae  = ZEPHYRUM;
+         i32  casus_fortuiti   = ZEPHYRUM;
+         i32  casus_mutati     = ZEPHYRUM;
+         i32  casus_truncati   = ZEPHYRUM;
+         i32  casus_nidorum    = ZEPHYRUM;
+         i32  i;
 
-    piscina = piscina_generare_dynamicum("probatio_oratio_totalitas",
-        1048576);
-    credo_aperire(piscina);
-    radix_viae = getenv("RHUBARB_RADIX");
-    si (radix_viae != NIHIL)
-    {
-        RADIX_VIAE = radix_viae;
-    }
     numerus_corporis = (i32)(magnitudo(CORPUS) / magnitudo(CORPUS[0]));
 
-    imprimere("\n--- Probans octetos fortuitos ---\n");
+    CREDO_GRADUS ("octetos fortuitos");
     per (i = I; i <= XXXII; i++)
     {
               Sors  s;
@@ -298,7 +301,7 @@ principale (vacuum)
     }
     imprimere("  casus %d\n", (integer)casus_fortuiti);
 
-    imprimere("\n--- Probans corpus mutatum et truncatum ---\n");
+    CREDO_GRADUS ("corpus mutatum et truncatum");
     per (i = ZEPHYRUM; i < numerus_corporis; i++)
     {
         character  via[DXII];
@@ -308,7 +311,7 @@ principale (vacuum)
               i32  semen;
               i32  gradus;
 
-        sprintf(via, "%s/%s", RADIX_VIAE, CORPUS[i]);
+        sprintf(via, "%s/%s", _radix_viae(), CORPUS[i]);
         textus = _plagulam_legere(piscina, via, &mensura);
         si (textus == NIHIL)
         {
@@ -353,7 +356,7 @@ principale (vacuum)
         (integer)casus_mutati, (integer)casus_truncati);
     CREDO_AEQUALIS_I32 (plagulae_lectae, IV);
 
-    imprimere("\n--- Probans nidificationem ---\n");
+    CREDO_GRADUS ("nidificationem");
     {
         i32 numerus_formarum = (i32)(magnitudo(FORMAE)
             / magnitudo(FORMAE[0]));
@@ -366,41 +369,52 @@ principale (vacuum)
         imprimere("  casus %d\n", (integer)casus_nidorum);
     }
 
-    imprimere("\n--- Probans profunditatem ingentem (L milia) ---\n");
-    {
-                                  i32  mensura = ZEPHYRUM;
-                            character* fons;
-        hic_manens constans FormaNidi  VERBA = { "verba", "a ", "", "",
-            "\n" };
-        hic_manens constans FormaNidi PARAGRAPHI = { "paragraphi",
-            "a\n\n", "", "", "" };
-        hic_manens constans FormaNidi PUNCTA = { "puncta", ".", "", "",
-            "\n" };
-
-        fons = _nidum_struere(piscina, &FORMAE[ZEPHYRUM], (i32)50000,
-            VERUM, &mensura);
-        CREDO_NON_RUIT (_totum(fons, mensura));
-        fons = _nidum_struere(piscina, &VERBA, (i32)50000, VERUM,
-            &mensura);
-        CREDO_NON_RUIT (_totum(fons, mensura));
-        fons = _nidum_struere(piscina, &PARAGRAPHI, (i32)50000, VERUM,
-            &mensura);
-        CREDO_NON_RUIT (_totum(fons, mensura));
-        fons = _nidum_struere(piscina, &PUNCTA, (i32)50000, VERUM,
-            &mensura);
-        CREDO_NON_RUIT (_totum(fons, mensura));
-    }
-
     CREDO_MAIOR_I32 (casus_fortuiti,  ZEPHYRUM);
     CREDO_MAIOR_I32 (casus_mutati,    ZEPHYRUM);
     CREDO_MAIOR_I32 (casus_truncati,  ZEPHYRUM);
     CREDO_MAIOR_I32 (casus_nidorum,   ZEPHYRUM);
     CREDO_MAIOR_I32 (casus_fortuiti + casus_mutati + casus_truncati
         + casus_nidorum, (i32)CL);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+interior vacuum
+_profunditatem_probare (
+    CredoContextus* c)
+{
+                          Piscina* piscina = c->piscina;
+                              i32  mensura = ZEPHYRUM;
+                        character* fons;
+    hic_manens constans FormaNidi  VERBA = { "verba", "a ", "", "",
+        "\n" };
+    hic_manens constans FormaNidi PARAGRAPHI = { "paragraphi",
+        "a\n\n", "", "", "" };
+    hic_manens constans FormaNidi PUNCTA = { "puncta", ".", "", "",
+        "\n" };
+
+    fons = _nidum_struere(piscina, &FORMAE[ZEPHYRUM], (i32)50000,
+        VERUM, &mensura);
+    CREDO_NON_RUIT (_totum(fons, mensura));
+    fons = _nidum_struere(piscina, &VERBA, (i32)50000, VERUM,
+        &mensura);
+    CREDO_NON_RUIT (_totum(fons, mensura));
+    fons = _nidum_struere(piscina, &PARAGRAPHI, (i32)50000, VERUM,
+        &mensura);
+    CREDO_NON_RUIT (_totum(fons, mensura));
+    fons = _nidum_struere(piscina, &PUNCTA, (i32)50000, VERUM,
+        &mensura);
+    CREDO_NON_RUIT (_totum(fons, mensura));
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "octetos fortuitos, corpus mutatum et truncatum, nidificationem",
+        _classes_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "profunditatem ingentem (L milia)", _profunditatem_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("oratio_totalitas", SECTIONES);
 }

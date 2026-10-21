@@ -485,23 +485,13 @@ _iudicia_legere (
     redde purum;
 }
 
-s32
-principale (vacuum)
+interior vacuum
+_tabulam_regularum_probare (
+    CredoContextus* c)
 {
-               Piscina* piscina;
-    constans character* radix_viae;
-                   i32  i;
+    i32 i;
+    (vacuum)c;
 
-    piscina = piscina_generare_dynamicum("probatio_oratio_forma",
-        8388608);
-    credo_aperire(piscina);
-    radix_viae = getenv("RHUBARB_RADIX");
-    si (radix_viae == NIHIL)
-    {
-        radix_viae = ".";
-    }
-
-    imprimere("\n--- I. Tabula regularum ---\n");
     {
                       OratioIndicia  indicia;
         constans OratioRegulaFormae* regula = NIHIL;
@@ -510,21 +500,23 @@ principale (vacuum)
         per (i = ZEPHYRUM; i < ORATIO_REGULAE_FORMAE_NUMERUS; i++)
         {
             constans OratioRegulaFormae* r = &ORATIO_REGULAE_FORMAE[i];
-                                    i32  c;
+                                    i32  condicio;
                                     b32  terminata = FALSUM;
 
             CREDO_NON_NIHIL (r->titulus);
             CREDO_MINOR_S32 ((s32)r->forma,
                 (s32)ORATIO_FORMA_NUMERUS_FORMARUM);
             CREDO_VERUM (r->forma != ORATIO_FORMA_PROSA);   /* prosa = ordinaria */
-            per (c = ZEPHYRUM; c < (i32)ORATIO_CONDICIONES_MAXIMAE; c++)
+            per (condicio = ZEPHYRUM; condicio
+                < (i32)ORATIO_CONDICIONES_MAXIMAE; condicio++)
             {
-                si (r->condiciones[c].indicium == ORATIO_INDICIUM_NIHIL)
+                si (r->condiciones[condicio].indicium
+                    == ORATIO_INDICIUM_NIHIL)
                 {
                     terminata = VERUM;
                     frange;
                 }
-                CREDO_MINOR_S32 ((s32)r->condiciones[c].indicium,
+                CREDO_MINOR_S32 ((s32)r->condiciones[condicio].indicium,
                     (s32)ORATIO_INDICIUM_NUMERUS_INDICIORUM);
             }
             CREDO_VERUM (terminata);
@@ -558,8 +550,15 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 ((s32)oratio_forma_paragraphi(NIHIL),
             (s32)ORATIO_FORMA_PROSA);
     }
+}
 
-    imprimere("\n--- II. Casus inlineares ---\n");
+interior vacuum
+_casus_inlineares_probare (
+    CredoContextus* c)
+{
+    i32 i;
+    (vacuum)c;
+
     per (i = ZEPHYRUM; i < (i32)(magnitudo(CASUS)
         / magnitudo(CASUS[0]));
         i++)
@@ -610,8 +609,21 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (indicia.columnatae_pct, (i32)100);
         piscina_destruere(p);
     }
+}
 
-    imprimere("\n--- III. Census formarum super fixturas ---\n");
+interior vacuum
+_censum_fixturarum_probare (
+    CredoContextus* c)
+{
+    constans character* radix_viae;
+                   i32  i;
+    (vacuum)c;
+
+    radix_viae = getenv("RHUBARB_RADIX");
+    si (radix_viae == NIHIL)
+    {
+        radix_viae = ".";
+    }
     per (i = ZEPHYRUM; i < (i32)(magnitudo(FIXTURAE)
         / magnitudo(FIXTURAE[0])); i++)
     {
@@ -620,10 +632,10 @@ principale (vacuum)
               33554432);
         character* textus;
               i32  mensura = ZEPHYRUM;
-           Census  c;
+           Census  census;
      MateriaNodus* doc;
 
-        memset(&c, ZEPHYRUM, magnitudo(c));
+        memset(&census, ZEPHYRUM, magnitudo(census));
         sprintf(via, "%s/%s", radix_viae, FIXTURAE[i]);
         textus = _plagulam_legere(p, via, &mensura);
         CREDO_NON_NIHIL (textus);
@@ -633,28 +645,41 @@ principale (vacuum)
             CREDO_NON_NIHIL (doc);
             si (doc != NIHIL)
             {
-                _censere(doc, &c, FIXTURAE[i], textus, p);
-                _censum_imprimere(FIXTURAE[i], &c);
+                _censere(doc, &census, FIXTURAE[i], textus, p);
+                _censum_imprimere(FIXTURAE[i], &census);
                 si (strstr(FIXTURAE[i], "propertius") != NIHIL)
                 {
-                    CREDO_VERUM (c.formae[ORATIO_FORMA_VERSUS]
-                        > c.formae[ORATIO_FORMA_PROSA]);
-                    CREDO_VERUM (c.sententiae >= (s64)200);
+                    CREDO_VERUM (census.formae[ORATIO_FORMA_VERSUS]
+                        > census.formae[ORATIO_FORMA_PROSA]);
+                    CREDO_VERUM (census.sententiae >= (s64)200);
                 }
                 alioquin si (strstr(FIXTURAE[i], "trinity") == NIHIL)
                 {
-                    CREDO_VERUM (c.formae[ORATIO_FORMA_PROSA]
-                        > c.formae[ORATIO_FORMA_VERSUS]);
-                    CREDO_VERUM (c.formae[ORATIO_FORMA_PROSA]
-                        + c.formae[ORATIO_FORMA_TITULUS]
-                        >= c.paragraphi * (s64)IV / (s64)V);
+                    CREDO_VERUM (census.formae[ORATIO_FORMA_PROSA]
+                        > census.formae[ORATIO_FORMA_VERSUS]);
+                    CREDO_VERUM (census.formae[ORATIO_FORMA_PROSA]
+                        + census.formae[ORATIO_FORMA_TITULUS]
+                        >= census.paragraphi * (s64)IV / (s64)V);
                 }
             }
         }
         piscina_destruere(p);
     }
+}
 
-    imprimere("\n--- IV. Iudicia manu facta (fixa/iudicia) ---\n");
+interior vacuum
+_iudicia_probare (
+    CredoContextus* c)
+{
+    constans character* radix_viae;
+                   i32  i;
+    (vacuum)c;
+
+    radix_viae = getenv("RHUBARB_RADIX");
+    si (radix_viae == NIHIL)
+    {
+        radix_viae = ".";
+    }
     per (i = ZEPHYRUM; i < (i32)(magnitudo(IUDICIA)
         / magnitudo(IUDICIA[0])); i++)
     {
@@ -773,8 +798,20 @@ principale (vacuum)
         CREDO_VERUM (congruentia >= IUDICIA[i].pinna);
         piscina_destruere(p);
     }
+}
 
-    imprimere("\n--- V. Census super paragraphos md (specimen quinta quaeque) ---\n");
+interior vacuum
+_censum_md_probare (
+    CredoContextus* c)
+{
+    constans character* radix_viae;
+    (vacuum)c;
+
+    radix_viae = getenv("RHUBARB_RADIX");
+    si (radix_viae == NIHIL)
+    {
+        radix_viae = ".";
+    }
     {
         character via[DXII];
         FILE* lista;
@@ -846,7 +883,14 @@ principale (vacuum)
      * distichon (XIV verba, casus II fixturae) + prosa XXI verborum -> prosa;
      * + prosa VII verborum -> versus; paria (XIV + XIV) -> prosa
      * (ambiguitas ad prosam); NIHIL -> prosa cum numeris nullis */
-    imprimere("\n--- VI. Forma documenti (T38 a) ---\n");
+}
+
+interior vacuum
+_formam_documenti_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     {
         constans character* stropha =
             "Odi et amo. quare id faciam, fortasse requiris.\n"
@@ -908,14 +952,26 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (in_versu, ZEPHYRUM);
         CREDO_AEQUALIS_I32 (omnia, ZEPHYRUM);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. Tabula regularum", _tabulam_regularum_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "II. Casus inlineares", _casus_inlineares_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "III. Census formarum super fixturas", _censum_fixturarum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IV. Iudicia manu facta (fixa/iudicia)", _iudicia_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "V. Census super paragraphos md (specimen quinta quaeque)",
+        _censum_md_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VI. Forma documenti (T38 a)", _formam_documenti_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-        credo_claudere();
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("oratio_forma", SECTIONES);
 }
