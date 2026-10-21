@@ -115,8 +115,8 @@ insula_radix (
 /* Attributum radicis; NIHIL si abest. Pointer in internamentum. */
 chorda*
 insula_attributum (
-    InsulaRepositorium* repo,
-    constans character* titulus);
+    constans InsulaRepositorium* repo,
+             constans character* titulus);
 
 i32
 insula_versio (

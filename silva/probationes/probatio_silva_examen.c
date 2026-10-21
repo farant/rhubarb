@@ -2369,6 +2369,100 @@ s32 principale (vacuum)
         " { 0, 0, 0, 0, 0, 0 } };\n" CREDO_PRINCIPALE,
         (s32)EXAMEN_CODEX_CREDO_SUITA_MUTATA, ZEPHYRUM);
 
+    /* 94 profundum (gradus I migrationis subsystematum): fixura per
+     * membra monstratoria - 'constans T*' membra monstratoria (Xar*,
+     * int*) mutabilia relinquit. Provenientia per stirpem fluxus
+     * datorum. */
+#define CREDO_FIXURA \
+    "typedef struct { int* p; char* s; int n; } T;\n" \
+    "typedef struct { int* p; char* s; int n; T* t; } S;\n" \
+    "static void ad(int* q) { *q = 1; }\n" \
+    "static int lege(const int* q) { return *q; }\n"
+#define CREDO_TABULA \
+    "static const CredoSectio S_[] = { { \"a\", a, 0, 0, 0, 0 }," \
+    " { 0, 0, 0, 0, 0, 0 } };\n" \
+    "int main(void) { return credo_suitam_currere(\"s\", S_); }\n"
+    /* membrum ad parametrum non constantem */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM CREDO_FIXURA
+        "static void a(CredoContextus* c) {"
+        " const S* o = (const S*)c->suita; ad(o->p);"
+        " _credo_notare(1); }\n" CREDO_TABULA,
+        (s32)EXAMEN_CODEX_CREDO_SUITA_MUTATA, I);
+    /* per aliam variabilem (stirps per definitionem fluit) */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM CREDO_FIXURA
+        "static void a(CredoContextus* c) {"
+        " const S* o = (const S*)c->suita; int* q = o->p; ad(q);"
+        " _credo_notare(1); }\n" CREDO_TABULA,
+        (s32)EXAMEN_CODEX_CREDO_SUITA_MUTATA, I);
+    /* per monstratorem membri derivatum (t = o->t; t->p) */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM CREDO_FIXURA
+        "static void a(CredoContextus* c) {"
+        " const S* o = (const S*)c->suita; T* t = o->t; ad(t->p);"
+        " _credo_notare(1); }\n" CREDO_TABULA,
+        (s32)EXAMEN_CODEX_CREDO_SUITA_MUTATA, I);
+    /* scriptiones per catenam: o->p[0] = ..., *o->p = ... */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM CREDO_FIXURA
+        "static void a(CredoContextus* c) {"
+        " const S* o = (const S*)c->suita; o->p[0] = 1; *o->p = 2;"
+        " _credo_notare(1); }\n" CREDO_TABULA,
+        (s32)EXAMEN_CODEX_CREDO_SUITA_MUTATA, II);
+    /* tacet: parametrum constans */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM CREDO_FIXURA
+        "static void a(CredoContextus* c) {"
+        " const S* o = (const S*)c->suita;"
+        " _credo_notare(lege(o->p) == 1); }\n" CREDO_TABULA,
+        (s32)EXAMEN_CODEX_CREDO_SUITA_MUTATA, ZEPHYRUM);
+    /* tacet: EXCEPTIO decreta - internamentum fixurae (typus
+     * InternamentumChorda*) quovis vocato traditum */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM CREDO_FIXURA
+        "typedef struct InternamentumChorda InternamentumChorda;\n"
+        "typedef struct { InternamentumChorda* intern; int* p; } U;\n"
+        "void canon(InternamentumChorda* i, const char* s);\n"
+        "static void a(CredoContextus* c) {"
+        " const U* o = (const U*)c->suita;"
+        " canon(o->intern, \"x\"); _credo_notare(1); }\n"
+        CREDO_TABULA,
+        (s32)EXAMEN_CODEX_CREDO_SUITA_MUTATA, ZEPHYRUM);
+    /* exceptio TYPO, non titulo: vocatum internamentum_* cum int*
+     * fixurae accusatur */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM CREDO_FIXURA
+        "static void internamentum_falsum(int* t) { *t = 0; }\n"
+        "static void a(CredoContextus* c) {"
+        " const S* o = (const S*)c->suita;"
+        " internamentum_falsum(o->p); _credo_notare(1); }\n"
+        CREDO_TABULA,
+        (s32)EXAMEN_CODEX_CREDO_SUITA_MUTATA, I);
+    /* tacet: cauda variadica (printf("%s", o->s)) */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM CREDO_FIXURA
+        "static void a(CredoContextus* c) {"
+        " const S* o = (const S*)c->suita; printf(\"%s\", o->s);"
+        " _credo_notare(1); }\n" CREDO_TABULA,
+        (s32)EXAMEN_CODEX_CREDO_SUITA_MUTATA, ZEPHYRUM);
+    /* tacet: copia scalaris localis scripta */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM CREDO_FIXURA
+        "static void a(CredoContextus* c) {"
+        " const S* o = (const S*)c->suita; int n = o->n; n++;"
+        " _credo_notare(n > 0); }\n" CREDO_TABULA,
+        (s32)EXAMEN_CODEX_CREDO_SUITA_MUTATA, ZEPHYRUM);
+    /* tacet: iunctio dissentiens (AMISSA) - stratum silet, numquam
+     * mentitur */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM CREDO_FIXURA
+        "static void a(CredoContextus* c) {"
+        " const S* o = (const S*)c->suita; int x = 0; int* q = &x;"
+        " if (c->datum) { q = o->p; } ad(q); _credo_notare(1); }\n"
+        CREDO_TABULA,
+        (s32)EXAMEN_CODEX_CREDO_SUITA_MUTATA, ZEPHYRUM);
+    /* tacet (LIMES v1, pinnatus): fixura adiutori per parametrum
+     * tradita non sequitur - intra functionem solum */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM CREDO_FIXURA
+        "static void adiutor(const S* o) { ad(o->p); }\n"
+        "static void a(CredoContextus* c) {"
+        " adiutor((const S*)c->suita); _credo_notare(1); }\n"
+        CREDO_TABULA,
+        (s32)EXAMEN_CODEX_CREDO_SUITA_MUTATA, ZEPHYRUM);
+#undef CREDO_FIXURA
+#undef CREDO_TABULA
+
     /* 95 (domesticum): titulus '--- ... ---' manu impressus in
      * sectione - credo titulum ipse imprimit; gradus = CREDO_GRADUS */
     _codicem_probare(piscina, CREDO_PRAELUDIUM

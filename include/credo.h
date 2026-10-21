@@ -1010,19 +1010,21 @@ credo_area (
  * ordine liberae manent quia statum suitae non mutant.
  *
  * LECTIO SOLA, EXCEPTIO UNA (decretum Frani 2026-10-19): sectiones in
- * internamentum FIXURAE internare licet (internamentum_* super
- * tabulam quam parare_suitae creavit). Chordae internatae per
+ * internamentum FIXURAE internare licet (InternamentumChorda* quod
+ * parare_suitae creavit, quovis vocato traditum). Chordae internatae per
  * monstratorem comparantur, ergo internamentum proprium sectionis
  * identitatem cum nominibus fixurae tacite frangeret; et internatio
  * ordine libera est (textus idem -> chorda eadem, quaecumque sectio
  * prima internat). Ubi comparatio per contentum fit, internamentum
  * proprium sectionis (in c->piscina) ordinarium manet. Cetera mutatio
  * fixurae vetita.
- * CAUTIO: examen 94 gradum primum solum iudicat (c->suita assignatum
- * aut ad monstratorem non constantem conversum). Membra monstratoria
- * fixurae (Xar*, Piscina*, ...) per 'constans T*' lecta mutabilia
- * manent et examen ea non videt - CREDO_ORDO=mixtus dependentiam
- * ordinis prodit. */
+ * Examen 94 c->suita ipsum (gradus primus) ET membra monstratoria
+ * fixurae (Xar*, Piscina*, ... per 'constans T*' lecta) intra
+ * sectionem iudicat: scriptio per ea aut traditio ad parametrum non
+ * constans accusatur. LIMES: fixura adiutori per parametrum tradita
+ * non sequitur; mutatio celata intra bibliothecam (arena possessoris
+ * crescens) per vocatum solum videtur - CREDO_ORDO=mixtus
+ * dependentiam ordinis prodit. */
 s32
 credo_suitam_currere_cum (
       constans character* titulus_suitae,

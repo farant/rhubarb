@@ -566,8 +566,10 @@ nomen enumeratio {
      * 94 = c->suita mutatum: assignatum, aut conversum/initiatum/
      *      assignatum ad monstratorem NON constantem (sectiones
      *      statum suitae legunt, numquam mutant - credo II Q3;
-     *      gradus primus solum; internatio in internamentum fixurae
-     *      excepta, decretum 2026-10-19);
+     *      ITEM membra monstratoria fixurae scripta aut ad
+     *      parametrum non constans tradita (94 profundum, fluxus
+     *      datorum); InternamentumChorda* fixurae exceptum,
+     *      decretum 2026-10-19);
      * 95 = titulus '--- ... ---' manu impressus in clausura sectionis
      *      (DOMESTICUM, monitum): credo titulum ipse imprimit,
      *      gradus = CREDO_GRADUS. */

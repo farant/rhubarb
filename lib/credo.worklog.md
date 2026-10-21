@@ -672,3 +672,50 @@ to non-const pointer parameters, unless the callee is internamentum_*.
 Its false-positive rate depends on how const-correct the house APIs are.
 That has to be measured on the root fixture suites before deciding how
 strict to make it.
+
+## 2026-10-20 — examen 94 now follows the fixture's pointer members ("94 profundum")
+
+Step 1 (b) of the subsystem migration. Code 94 used to stop at `c->suita`
+itself. It now also follows pointer members through dataflow provenance.
+Same pattern as code 82: `c->suita` is the root (FLUXUS_STIRPS_PRIMA),
+carried through locals, `->`/`.`/`[]`/`*`/`&`/casts; a join where paths
+disagree is AMISSA and silent, and so is an escaped variable. At each
+use of a fixture-rooted local the chain is followed up to its outermost
+expression, which is flagged if it is:
+- a write through a dereference (`o->p[0] = 1`, `*o->p = 2`, `++`), or
+- a mutable pointer passed to a prototyped non-const parameter.
+Unknown, K&R and variadic callees stay silent. Limit (pinned by a test):
+a helper that receives the fixture as a parameter isn't followed, so the
+rule works within one function only.
+
+The decree's exception is keyed on the ARGUMENT TYPE, not the callee's
+name. Passing the fixture's `InternamentumChorda*` anywhere is allowed:
+canon_legere(..., intern) and stml_legere(..., intern) intern too. The
+first draft keyed on `internamentum_*` and flagged ~20 legitimate sites.
+
+Measured over all 344 v2 suites: 80 hits in 5 suites, then 58 after
+the type-keyed exception. All of them are call arguments; there were no
+direct writes. Classification:
+- Pure reads behind a non-const API:
+  - `insula_attributum` now takes `constans InsulaRepositorium*` (Fran
+    OK'd it; the body is unchanged because const is shallow:
+    `repo->radix` stays `StmlNodus*`).
+  - Three test helpers in probatio_natura_canones.c went const.
+  - `_documentum_iudicare` (forwards `Canon*` into
+    canon_iudicare → nodum_iudicare) and `_titulo_colligere` (its Xar
+    consumer calls stml_attributum_capere) can't go const without
+    library changes. They are tolerated, park 01M5DWFJ3YVRT9HSBRYKEA7J8D.
+- Real hidden mutation:
+  - git read functions allocate scratch in `repositorium->piscina`;
+  - pictor_imago_fons allocates in `pf->doc->piscina`.
+  So every section reading a git object grows the fixture's arena. The
+  tests stay deterministic, which is why nothing failed. 30 sites are
+  tolerated in probatio_git.c and probatio_pictor_figurae.c, park
+  01M5DWCWHCV4Q1Q8Z8767WTA47 (library fix: scratch memory into the
+  caller's piscina).
+A tolerated site that stops firing turns IRRITUM, so once a library is
+fixed the tolerations have to be removed. After that, all 344 suites
+pass with 0 hits and 0 IRRITUM.
+
+Plants: disabling the collector turns exactly the 4 firing cases red;
+disabling the type exception turns exactly the interner case red.
