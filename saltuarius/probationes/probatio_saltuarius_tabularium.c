@@ -27,31 +27,21 @@ _introitus (
     redde intr;
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: impletio - ordinatio + filtrum punctatorum
+ * ================================================== */
+
+interior vacuum
+_implere_probare (
+    CredoContextus* c)
 {
-        b32  praeteritus;
-    Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_salt_tab",
-        1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ========================================================
-     * PROBARE: impletio - ordinatio + filtrum punctatorum
-     * ======================================================== */
+    Piscina* piscina = c->piscina;
 
     {
         SaltuariusTabularium* tab;
         DirectoriumIntroitus  fontes[VI];
 
-        imprimere("\n--- Probans impletionem (ordinatio) ---\n");
 
         fontes[ZEPHYRUM] = _introitus("zeta.c", INTROITUS_FILUM,
             piscina);
@@ -89,7 +79,7 @@ principale (vacuum)
          * PROBARE: motus clausus + selectum
          * ==================================================== */
 
-        imprimere("\n--- Probans motum (clausum) ---\n");
+        CREDO_GRADUS ("motum (clausum)");
 
         saltuarius_tabularium_movere(tab, II);
         CREDO_AEQUALIS_S32 (tab->selectio, II);
@@ -115,7 +105,7 @@ principale (vacuum)
          * PROBARE: saltus f<littera> - cyclicus, insensibilis
          * ==================================================== */
 
-        imprimere("\n--- Probans saltum ad litteram ---\n");
+        CREDO_GRADUS ("saltum ad litteram");
 
         saltuarius_tabularium_primum(tab);
         CREDO_VERUM (saltuarius_tabularium_saltare(tab, (s32)'b'));
@@ -139,7 +129,7 @@ principale (vacuum)
          * PROBARE: volumen aptatum (fenestra III alta)
          * ==================================================== */
 
-        imprimere("\n--- Probans volumen ---\n");
+        CREDO_GRADUS ("volumen");
 
         saltuarius_tabularium_ultimum(tab);   /* selectio IV */
         saltuarius_tabularium_aptare(tab, III);
@@ -152,17 +142,23 @@ principale (vacuum)
         saltuarius_tabularium_aptare(tab, III);
         CREDO_AEQUALIS_S32 (tab->volumen, ZEPHYRUM);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: tabularium vacuum (omnia punctata)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: tabularium vacuum (omnia punctata)
+ * ================================================== */
+
+interior vacuum
+_vacuum_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         SaltuariusTabularium* tab;
         DirectoriumIntroitus  fontes[II];
 
-        imprimere("\n--- Probans vacuum ---\n");
 
         fontes[ZEPHYRUM] = _introitus(".a", INTROITUS_FILUM,
             piscina);
@@ -182,9 +178,18 @@ principale (vacuum)
         saltuarius_tabularium_aptare(tab, X);
         CREDO_AEQUALIS_S32 (tab->volumen, ZEPHYRUM);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "impletio, motus, saltus, volumen", _implere_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "tabularium vacuum (omnia punctata)", _vacuum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("saltuarius_tabularium", SECTIONES);
 }

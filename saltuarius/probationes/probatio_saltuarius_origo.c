@@ -15,48 +15,80 @@
 #include <stdio.h>
 #include <string.h>
 
-s32
-principale (vacuum)
-{
-                   b32  praeteritus;
-               Piscina* piscina;
-       SaltuariusNexus* nexus;
-       SaltuariusLiber* liber;
-       SaltuariusOrigo* origo;
-    constans character* FONS = "#define G(x) ((x)+(x))\nG(2);\n";
+hic_manens constans character* FONS = "#define G(x) ((x)+(x))\nG(2);\n";
 
-    piscina = piscina_generare_dynamicum("probatio_salt_origo",
-        8388608);
-    si (!piscina)
+/* Mundus probationis: nexus (silva parata), liber 'probe.c', origo.
+ * Sectiones quaeque suum aedificant (liber et origo mutantur - status
+ * nullus communis); creatio semel ASSERITUR in parare_suitae, mundo
+ * proprio et non communicato. FALSUM = creatio fracta. */
+interior b32
+_mundum_parare (
+            Piscina*  piscina,
+    SaltuariusNexus** nexus,
+    SaltuariusLiber** liber,
+    SaltuariusOrigo** origo)
+{
+    *nexus = saltuarius_nexus_creare(piscina);
+    si (   *nexus == NIHIL
+        || saltuarius_nexus_silvam_parare(*nexus, NIHIL, ZEPHYRUM)
+               != ZEPHYRUM)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde FALSUM;
     }
-    credo_aperire(piscina);
-    nexus = saltuarius_nexus_creare(piscina);
+    *liber = saltuarius_liber_aperire(piscina, *nexus,
+        chorda_ex_literis("probe.c", piscina),
+        chorda_ex_literis(FONS, piscina));
+    *origo = saltuarius_origo_creare(piscina);
+    redde *liber != NIHIL && (*liber)->parsura != NIHIL
+        && *origo != NIHIL;
+}
+
+/* creatio mundi semel asserta (ut olim ante blocos) */
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+    SaltuariusNexus* nexus;
+    SaltuariusLiber* liber;
+    SaltuariusOrigo* origo;
+
+    nexus = saltuarius_nexus_creare(c->piscina);
     CREDO_NON_NIHIL (nexus);
     CREDO_AEQUALIS_S32 (
         saltuarius_nexus_silvam_parare(nexus, NIHIL, ZEPHYRUM),
         ZEPHYRUM);
-    liber = saltuarius_liber_aperire(piscina, nexus,
-        chorda_ex_literis("probe.c", piscina),
-        chorda_ex_literis(FONS, piscina));
+    liber = saltuarius_liber_aperire(c->piscina, nexus,
+        chorda_ex_literis("probe.c", c->piscina),
+        chorda_ex_literis(FONS, c->piscina));
     CREDO_NON_NIHIL (liber);
     CREDO_NON_NIHIL (liber->parsura);
-    origo = saltuarius_origo_creare(piscina);
+    origo = saltuarius_origo_creare(c->piscina);
     CREDO_NON_NIHIL (origo);
+}
 
 
-    /* ========================================================
-     * PROBARE: catena DEORSUM (stratum I, cursor in expanso)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: catena DEORSUM (stratum I, cursor in expanso)
+ * ================================================== */
 
+interior vacuum
+_deorsum_probare (
+    CredoContextus* c)
+{
+           Piscina* piscina = c->piscina;
+    SaltuariusNexus* nexus;
+    SaltuariusLiber* liber;
+    SaltuariusOrigo* origo;
+
+    si (!_mundum_parare(piscina, &nexus, &liber, &origo))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     {
         constans SaltuariusStratum* stratum;
                 constans character* textus_literis;
                 constans character* plus_situs;
 
-        imprimere("\n--- Probans catenam deorsum ---\n");
 
         saltuarius_liber_stratum_transferre(liber, nexus, I);
         stratum = saltuarius_liber_stratum(liber, nexus);
@@ -111,16 +143,29 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (origo->selectio,
             (s32)origo->numerus - I);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: quaestio PRORSUM (stratum 0, cursor in G)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: quaestio PRORSUM (stratum 0, cursor in G)
+ * ================================================== */
 
+interior vacuum
+_prorsum_probare (
+    CredoContextus* c)
+{
+           Piscina* piscina = c->piscina;
+    SaltuariusNexus* nexus;
+    SaltuariusLiber* liber;
+    SaltuariusOrigo* origo;
+
+    si (!_mundum_parare(piscina, &nexus, &liber, &origo))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     {
         constans character* g_situs = strstr(FONS, "G(2)");
 
-        imprimere("\n--- Probans quaestionem prorsum ---\n");
 
         saltuarius_liber_stratum_transferre(liber, nexus,
             ZEPHYRUM);
@@ -138,17 +183,30 @@ principale (vacuum)
             nexus));
         CREDO_FALSUM (origo->apertum);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: vestigium identitatis trans strata
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: vestigium identitatis trans strata
+ * ================================================== */
 
+interior vacuum
+_vestigium_probare (
+    CredoContextus* c)
+{
+           Piscina* piscina = c->piscina;
+    SaltuariusNexus* nexus;
+    SaltuariusLiber* liber;
+    SaltuariusOrigo* origo;
+
+    si (!_mundum_parare(piscina, &nexus, &liber, &origo))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     {
         constans character* g_situs = strstr(FONS, "G(2)");
                        s32  offset;
 
-        imprimere("\n--- Probans vestigium identitatis ---\n");
 
         /* 0 -> I: cursor in G -> in expansione eius */
         saltuarius_liber_stratum_ponere(liber, ZEPHYRUM);
@@ -173,9 +231,21 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)liber->textus.datum[offset],
             (i32)'G');
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "catena deorsum (stratum I, cursor in expanso)",
+        _deorsum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "quaestio prorsum (stratum 0, cursor in G)",
+        _prorsum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "vestigium identitatis trans strata",
+        _vestigium_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("saltuarius_origo", SECTIONES,
+        _suitam_parare, NIHIL);
 }

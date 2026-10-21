@@ -815,3 +815,49 @@ Patterns, roughly in order of frequency:
   (rancorem, inlineos, adaptationis, derivae, nidificationem). The
   formator wraps table rows badly after a rename, so write those rows
   by hand. Banners are exactly 50 '='.
+
+## 2026-10-21 — toml and saltuarius done; step 2 complete
+
+toml (13) and saltuarius (13) are v2. Every suite is BONUM under the
+checker (same counts as HEAD, k/k sections, 3 mixed seeds). Step 2 is
+finished: css 10 + toml 13 + saltuarius 13 = 36 suites converted by
+hand or semi-mechanically. Only toml_api and saltuarius_res converted
+with credo_convertere.
+
+New patterns beyond the css list above:
+- **The prelude builds a mutable world** (nexus, liber, origo):
+  `parare_suitae` asserts its creation once on a throwaway instance,
+  and each section builds its own through a non-asserting helper
+  (`_mundum_parare`). A fixture can't hold it, because examen 94
+  forbids sections mutating fixture state.
+- **A later block depends on an earlier block's state on purpose**
+  (bibl LRU: "a b iam insunt"): the section rebuilds that state with
+  non-asserting calls. Counts are equal, and mixed order proves it.
+- **Scenario suites** (quaestio, claves, visum, columnae, limes,
+  structura): an interactive session where every block continues the
+  last. These are ONE section, with the sub-titles as CREDO_GRADUS.
+  Replaying the session per section would be verbose and fragile.
+- **Disk fixture at a fixed /tmp path** (salve, with a cross-block
+  file): moved into `credo_area(c)` in parare_suitae. The path is
+  private to the run and deleted after purgare. It used to be shared
+  across concurrent runs.
+- **Static counters that only label failures** (toml arbor): removed;
+  the failure message names the case's source text.
+- **A hidden order dependence found by the checker** (saltuarius
+  liber): 'iunctio' only parsed because 'strata' had prepared silva on
+  the SHARED nexus earlier. In v2, mixed order breaks it on every seed.
+  The section now prepares silva on its own nexus.
+
+Tooling (scratchpad, session-local; promote for step 3):
+- conv_sectiones.py: banner + block, optional ratum fixture, -opus,
+  -nexus.
+- conv_unus.py: whole main into one section.
+Bug found in my own tool: renaming a shadowing local `c` also hit a
+string literal ("/a/b/c.txt" -> "/a/b/compositus.txt"), and the
+checker caught it as a failed assertion. The rename now skips string
+literals. An audit of literals added or removed, across all 36
+conversions against 7f1c85c5, found only intended changes and one
+lost print, restored (toml canon "canon ABEST").
+
+Memory: toml_stml was the only MEMORIA hit. It was handled hands-on
+(xar's growable segment table, fac4fc74).

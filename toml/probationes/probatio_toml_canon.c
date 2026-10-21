@@ -343,6 +343,7 @@ _suitam_parare (
     CREDO_MAIOR_I32 (fx->fons_canonis.mensura, ZEPHYRUM);
     si (fx->fons_canonis.mensura == ZEPHYRUM)
     {
+        imprimere("  canon ABEST\n");
         redde;
     }
     causa.datum    = NIHIL;

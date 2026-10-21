@@ -11,30 +11,20 @@
 #include "saltuarius_res.h"
 #include <stdio.h>
 
-s32
-principale (vacuum)
+
+    /* ==================================================
+     * PROBARE: creatio + navigatio viae
+     * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-        b32  praeteritus;
     Piscina* piscina;
 
-    piscina = piscina_generare_dynamicum("probatio_salt_res",
-        1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ========================================================
-     * PROBARE: creatio + navigatio viae
-     * ======================================================== */
-
+    piscina = c->piscina;
     {
         SaltuariusRes* res;
-
-        imprimere("\n--- Probans creationem et vias ---\n");
 
         res = saltuarius_res_creare(piscina, "/a/b");
         CREDO_NON_NIHIL (res);
@@ -62,16 +52,22 @@ principale (vacuum)
         saltuarius_res_ascendere(res);
         CREDO_CHORDA_AEQUALIS_LITERIS (res->via_currens, "/");
     }
+}
 
 
-    /* ========================================================
+    /* ==================================================
      * PROBARE: nuntius transitorius
-     * ======================================================== */
+     * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         SaltuariusRes* res;
-
-        imprimere("\n--- Probans nuntium transitorium ---\n");
 
         res = saltuarius_res_creare(piscina, "/x");
         CREDO_AEQUALIS_S32 (res->nuntius_aetas, ZEPHYRUM);
@@ -91,9 +87,17 @@ principale (vacuum)
         CREDO_FALSUM (saltuarius_res_nuntius_senescere(res));
         CREDO_AEQUALIS_S32 (res->nuntius_aetas, ZEPHYRUM);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "creationem et vias", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nuntium transitorium", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("saltuarius_res", SECTIONES);
 }

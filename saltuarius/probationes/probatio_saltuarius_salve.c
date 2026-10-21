@@ -29,27 +29,54 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define FIXUM "/tmp/saltuarius_salve_fixum"
 
-s32
-principale (vacuum)
+/* FIXURA SUITAE: arbor ficta in area suitae (credo_area: propria
+ * cursus, post purgare deleta - olim /tmp fixum, cursibus simul
+ * communis); sectiones (b) et (c) eam LEGUNT. */
+nomen structura {
+    character via[DXII];
+} FixuraArboris;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-        b32  praeteritus;
-    Piscina* piscina;
+          FixuraArboris* fx;
+     constans character* area = credo_area(c);
+              character  mandatum[MXXIV];
+              character  via[DXII];
+                   FILE* f;
 
-    piscina = piscina_generare_dynamicum("probatio_salt_salve",
-        1048576);
-    si (!piscina)
+    fx = (FixuraArboris*)piscina_allocare(c->piscina,
+        magnitudo(FixuraArboris));
+    si (fx == NIHIL || area == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    credo_aperire(piscina);
+    sprintf(fx->via, "%s/arbor", area);
+    sprintf(mandatum, "mkdir -p %s/subdir", fx->via);
+    (vacuum)system(mandatum);
+    sprintf(via, "%s/plaga.txt", fx->via);
+    f = fopen(via, "wb");
+    CREDO_NON_NIHIL (f);
+    si (f != NIHIL)
+    {
+        fputs("salve silva\n", f);
+        fclose(f);
+    }
+    c->datum = fx;
+}
 
 
-    /* ========================================================
-     * PROBARE: (a) amalgama tesserae - hospes secundus verus
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: (a) amalgama tesserae - hospes secundus verus
+ * ================================================== */
+
+interior vacuum
+_amalgama_probare (
+    CredoContextus* c)
+{
+    (vacuum)c;
 
     {
         TesseraPiscina* tp;
@@ -58,8 +85,6 @@ principale (vacuum)
         TesseraCellula cella;
         TesseraChorda captum;
         chorda visus;
-
-        imprimere("\n--- Probans amalgama tesserae (hospes II) ---\n");
 
         tp = tessera_piscina_generare_dynamicum("salve_tessera",
             8388608);
@@ -106,32 +131,32 @@ principale (vacuum)
 
         tessera_piscina_destruere(tp);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: (b) iter_directoria in arbore ficta
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: (b) iter_directoria in arbore ficta
+ * ================================================== */
 
+interior vacuum
+_iter_probare (
+    CredoContextus* c)
+{
+    constans FixuraArboris* fx = (constans FixuraArboris*)c->suita;
+                   Piscina* piscina = c->piscina;
+
+    si (fx == NIHIL)
+    {
+        redde;
+    }
     {
          DirectoriumIterator* iter;
         DirectoriumIntroitus* intr;
                          b32  subdir_inventum  = FALSUM;
                          b32  plaga_inventa    = FALSUM;
                          i32  numerus          = ZEPHYRUM;
-        FILE* f;
 
-        imprimere("\n--- Probans iter_directoria (arbor ficta) ---\n");
-
-        (vacuum)system("rm -rf " FIXUM " && mkdir -p " FIXUM "/subdir");
-        f = fopen(FIXUM "/plaga.txt", "wb");
-        CREDO_NON_NIHIL (f);
-        si (f != NIHIL)
-        {
-            fputs("salve silva\n", f);
-            fclose(f);
-        }
-
-        iter = directorium_iterator_aperire(FIXUM, piscina);
+        iter = directorium_iterator_aperire(fx->via, piscina);
         CREDO_NON_NIHIL (iter);
         dum ((intr = directorium_iterator_proximum(iter)) != NIHIL)
         {
@@ -152,36 +177,54 @@ principale (vacuum)
         CREDO_VERUM (subdir_inventum);
         CREDO_VERUM (plaga_inventa);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: (c) filum_legere_totum circuitus
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: (c) filum_legere_totum circuitus
+ * ================================================== */
 
+interior vacuum
+_filum_probare (
+    CredoContextus* c)
+{
+    constans FixuraArboris* fx = (constans FixuraArboris*)c->suita;
+                   Piscina* piscina = c->piscina;
+                 character  via[DXII];
+
+    si (fx == NIHIL)
+    {
+        redde;
+    }
     {
         chorda contentum;
 
-        imprimere("\n--- Probans filum (circuitus) ---\n");
-
-        contentum = filum_legere_totum(FIXUM "/plaga.txt", piscina);
+        sprintf(via, "%s/plaga.txt", fx->via);
+        contentum = filum_legere_totum(via, piscina);
         CREDO_AEQUALIS_I32 (contentum.mensura, XII);
         CREDO_CHORDA_AEQUALIS_LITERIS (contentum, "salve silva\n");
 
-        contentum = filum_legere_totum(FIXUM "/abest.txt", piscina);
+        sprintf(via, "%s/abest.txt", fx->via);
+        contentum = filum_legere_totum(via, piscina);
         CREDO_AEQUALIS_I32 (contentum.mensura, ZEPHYRUM);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: (d) via formae
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: (d) via formae
+ * ================================================== */
+
+interior vacuum
+_viam_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         chorda nomen_fili;
         chorda iuncta;
         chorda partes[II];
-
-        imprimere("\n--- Probans viam (formae) ---\n");
 
         nomen_fili = via_nomen(
             chorda_ex_literis("/a/b/c.txt", piscina), piscina);
@@ -192,11 +235,18 @@ principale (vacuum)
         iuncta            = via_iungere(partes, II, piscina);
         CREDO_CHORDA_AEQUALIS_LITERIS (iuncta, "silva/fontes");
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: (e) utf8 sectio runarum (truncatio praevisus)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: (e) utf8 sectio runarum (truncatio praevisus)
+ * ================================================== */
+
+interior vacuum
+_utf8_probare (
+    CredoContextus* c)
+{
+    (vacuum)c;
 
     {
         /* "a" + U+2500 + "b" = V octeti, III runae */
@@ -205,8 +255,6 @@ principale (vacuum)
         constans i8* cursor;
         constans i8* finis;
                 i32  runae;
-
-        imprimere("\n--- Probans utf8 (sectio runarum) ---\n");
 
         finis   = LINEA + V;
         cursor  = LINEA;
@@ -222,20 +270,26 @@ principale (vacuum)
             (constans vacuum*)(LINEA + IV));
         CREDO_AEQUALIS_S32 (utf8_numerare_runas(LINEA, V), III);
     }
+}
 
-    (vacuum)system("rm -rf " FIXUM);
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "(a) amalgama tesserae - hospes secundus verus",
+        _amalgama_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(b) iter_directoria in arbore ficta", _iter_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(c) filum_legere_totum circuitus", _filum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(d) via formae", _viam_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(e) utf8 sectio runarum", _utf8_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("saltuarius_salve", SECTIONES,
+        _suitam_parare, NIHIL);
 }
