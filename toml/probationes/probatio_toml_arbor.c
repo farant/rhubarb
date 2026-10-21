@@ -19,8 +19,6 @@
 #include <stdio.h>
 #include <string.h>
 
-hic_manens i32 casus_numerus = ZEPHYRUM;
-
 interior constans character*
 _copia (
                Piscina* piscina,
@@ -74,7 +72,6 @@ _casus (
     MateriaScripturaConsilium  consilium;
                           b32  idem;
 
-    casus_numerus++;
     radix = toml_arbor_parsare(piscina, fons, mensura, relatio);
     CREDO_NON_NIHIL (radix);
     si (radix == NIHIL)
@@ -90,8 +87,7 @@ _casus (
                 == ZEPHYRUM);
     si (!idem)
     {
-        imprimere("    casus %d: emissio '%.*s'\n",
-            (integer)casus_numerus,
+        imprimere("    casus '%s': emissio '%.*s'\n", litterae,
             (integer)emissa.textus.mensura,
             (constans character*)emissa.textus.datum);
     }
@@ -218,31 +214,22 @@ _partes (
         : _numerus(clavis, (i32)TOML_CLAVIS_PARTES);
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: documenta, capita, paria, valores
+ * ================================================== */
+
+interior vacuum
+_documenta_probare (
+    CredoContextus* c)
 {
-         b32  praeteritus;
-     Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_toml_arbor", 262144);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ==================================================
-     * PROBARE: documenta, capita, paria, valores
-     * ================================================== */
+    Piscina* piscina = c->piscina;
 
     {
         MateriaNodus* d;
         MateriaNodus* p;
          TomlParsura  r;
 
-        imprimere("\n--- Probans structuram ---\n");
 
         d = _casus(piscina, "a = 1\n", &r);
         CREDO_AEQUALIS_I32 (_numerus(d, (i32)TOML_DOCUMENTUM_LIBERI),
@@ -305,18 +292,24 @@ principale (vacuum)
         CREDO_VERUM (_genus(_valor(_d(d, XII)), TOML_GENUS_CHORDA));
         CREDO_VERUM (r.sana);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: series et tabulae compactae
-     * ================================================== */
+/* ==================================================
+ * PROBARE: series et tabulae compactae
+ * ================================================== */
+
+interior vacuum
+_series_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaNodus* d;
         MateriaNodus* s;
          TomlParsura  r;
 
-        imprimere("\n--- Probans series et tabulas compactas ---\n");
 
         d = _casus(piscina, "a = [1, [2, 3], {x = 1}]\n", &r);
         s = _valor(_d(d, ZEPHYRUM));
@@ -364,18 +357,24 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (_numerus(_valor(_d(d, ZEPHYRUM)),
             (i32)TOML_INCLUSA_LIBERI), III);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: ligator (regula toml) et initium_lineae
-     * ================================================== */
+/* ==================================================
+ * PROBARE: ligator (regula toml) et initium_lineae
+ * ================================================== */
+
+interior vacuum
+_ligatorem_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaNodus* d;
         MateriaToken* t;
          TomlParsura  r;
 
-        imprimere("\n--- Probans ligatorem ---\n");
 
         /* initium documenti: omnia ANTE */
         d = _casus(piscina, "# c\na = 1\n", &r);
@@ -430,18 +429,24 @@ principale (vacuum)
             ZEPHYRUM), (i32)TOML_CLAVIS_PARTES, ZEPHYRUM);
         CREDO_VERUM ((t->vexilla & MATERIA_TOKEN_INITIUM_LINEAE) != 0);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: mala, recuperatio, absentiae, clausurae
-     * ================================================== */
+/* ==================================================
+ * PROBARE: mala, recuperatio, absentiae, clausurae
+ * ================================================== */
+
+interior vacuum
+_mala_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaNodus* d;
          TomlParsura  r;
                  i32  i;
 
-        imprimere("\n--- Probans mala et recuperationem ---\n");
 
         d = _casus(piscina, "a = \nb = 2\n", &r);
         CREDO_AEQUALIS_I32 (_numerus(d, (i32)TOML_DOCUMENTUM_LIBERI),
@@ -525,11 +530,18 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (r.clausurae_absentes, IV);
         CREDO_AEQUALIS_I32 (r.profunditas_maxima, VI);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: CRLF et BOM (lex octetorum; sanitas eadem)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: CRLF et BOM (lex octetorum; sanitas eadem)
+ * ================================================== */
+
+interior vacuum
+_crlf_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         constans character* FONTES[] = {
@@ -542,7 +554,6 @@ principale (vacuum)
         };
         i32 i;
 
-        imprimere("\n--- Probans CRLF et BOM ---\n");
         per (i = ZEPHYRUM; i < (i32)(magnitudo(FONTES)
              / magnitudo(FONTES[0])); i++)
         {
@@ -562,10 +573,24 @@ principale (vacuum)
             CREDO_AEQUALIS_I32 (r.mala, I);
         }
     }
+}
 
-    imprimere("\n  casus: %d\n", (integer)casus_numerus);
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "documenta, capita, paria, valores", _documenta_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "series et tabulae compactae", _series_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ligator et initium_lineae", _ligatorem_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mala, recuperatio, absentiae, clausurae", _mala_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "CRLF et BOM", _crlf_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("toml_arbor", SECTIONES);
 }
