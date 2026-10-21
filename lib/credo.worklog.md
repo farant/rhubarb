@@ -861,3 +861,20 @@ lost print, restored (toml canon "canon ABEST").
 
 Memory: toml_stml was the only MEMORIA hit. It was handled hands-on
 (xar's growable segment table, fac4fc74).
+
+## 2026-10-21 — converters promoted to tools/ (step 3 prerequisite)
+
+The scratchpad converters are now house tools, so step 3 agents in
+their own worktrees can use them (Fran's OK, 10-21):
+- `tools/credo_convertere_sectiones.py`: banner + block -> sections.
+  Optional ratum fixture (LEXICON), `-opus=T,N`, `-nexus`.
+- `tools/credo_convertere_scaenam.py`: scenario suite -> ONE section.
+Each header lists what the tool doesn't handle (the manual patterns in
+the 10-21 entries above) and the after-steps: formator, the checker,
+the Latin lint. Regression: re-running on the v1 text of toml
+registrum (fixture), toml coctum (-opus) and saltuarius nexus (-nexus)
+reproduces the committed conversions byte for byte. saltuarius
+structura (scaenam) differs by one blank line after the declarations,
+because the committed file predates that fix; the new output is the
+house style. Refusals are named (exit 1, nothing written) where the
+scratch versions asserted.
