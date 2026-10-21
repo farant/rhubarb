@@ -188,3 +188,19 @@ vita archivata, the same helper `unitates_census` uses to skip
 exspectationes). The regression test in `_sectio_interrogationes` adds
 an archivata `archivum/` holding `INTERROGATIONES_MALAE`: before the fix
 the counts went from V/XI to more; after it they stay V/XI.
+
+## 2026-10-21 - indoles: the DATA marker as a second signature
+
+New property `indoles` (codex / data) beside provenientia, both decided
+by `_signa_legere` from the SAME signature line (one read). `DATA` must be
+a whole word (`_verbum_integrum`: neighbours not letter/digit/'_'),
+because unlike GENERATUM the bare word is plausible in prose headers
+("TABULA_DATA", "DATABASE"); checked first that no tracked file has a
+whole-word DATA in lines 1-2. Judge list `indoles` is required like the
+others (unitates.canon note: absence never means all) - all nine judges
+gained `indoles="codex data"`; the lazy-read rule now asks "does the judge
+admit ALL provenances AND all natures?" (`_omnes_admittit`). Test section
+`indoles` uses its own world, not MUNDUS: new lib/*.c files there would
+become library units and move the census section's pinned output; that
+world must still include include/imago.h because POLITICA declares
+familia imago (unitates refuses a family without its library).

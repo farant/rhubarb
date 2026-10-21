@@ -5,7 +5,7 @@
  * Usus (ex radice repositorii):
  *   bin/fabrica quid [-machina] VIA...
  *       unitas intima (cum catena), cura, vita, munus, provenientia,
- *       lingua - quisque valor cum regula quae eum decrevit
+ *       indoles, lingua - quisque valor cum regula quae eum decrevit
  *   bin/fabrica quid -iudex TITULUS [-machina] VIA...
  *       iudicatne iudex (unitates.stml <iudex>) viam? causa si non
  *   bin/fabrica quid -omnes [-machina]
@@ -136,6 +136,7 @@ _responsum_imprimere (
     _proprietatem_imprimere(r->via, "munus", r->munus, machina);
     _proprietatem_imprimere(r->via, "provenientia", r->provenientia,
         machina);
+    _proprietatem_imprimere(r->via, "indoles", r->indoles, machina);
     _proprietatem_imprimere(r->via, "lingua", r->lingua, machina);
 }
 

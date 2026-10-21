@@ -122,6 +122,16 @@ Unit attributes:
 - **provenientia** (provenance): manu / generatum. Truth = the
   `GENERATUM` marker + fabrica's declared action (generata gate T7b
   already enforces "every GENERATUM file has a generator").
+- **indoles** (nature, added 2026-10-21): codex / data. Truth = the
+  `DATA` marker, the whole word, in the same signature line as
+  `GENERATUM` (line 1, or line 2 after a declaration the format
+  requires). It is orthogonal to provenance: data can be hand-written
+  (lib/biblia_dr.c) and generated files can be code (cooked readers).
+  A data file is a table of initializers and literals with no logic a
+  code judge should analyse. Judges list `indoles` like every other
+  list (required; "codex data" = both). First consumer: `corpus_silvae`
+  (silva's corpus gates: lib/biblia_dr.c and lib/tabula_nodorum_data.c
+  were 58% of lib/'s bytes and ~4 GB per file in the STML round trip).
 - **lingua** (language): c89, objc, c99-glue (oracula), sh, python, js,
   ts, stml, md, ... Derived from the extension; exceptions declared
   (oracula's .c is C99 glue - the C89 formatter must not read it).
@@ -945,3 +955,20 @@ vestigium: build/aedilis/obiecta/build__fabrica__provenientia__briar.o"
 byte-identical); the gate uses build/instrumenta_fumus/obiecta; the 14
 stray shared objects removed. Cold rerun green in 2 min with zero new
 objects in the shared cache.
+
+## 2026-10-21 - indoles (DATA marker)
+
+Fran: a file can be "data-heavy, skip it for things like silva" without
+being generated; `biblia_dr.c`'s original generator input (an SQLite
+database) is not in the repo, so marking it `GENERATUM` would trip the
+generata gate. So a second axis: `UnitatisResponsum.indoles` read by
+`_signa_legere` (the provenance reader, now one read for both markers),
+whole-word match so DATABASE / TABULA_DATA / DATAE never qualify.
+Judges carry `indoles=` as a REQUIRED list (canon: absence never means
+"all"); every existing judge got `indoles="codex data"` (no behavior
+change), and a judge that admits all provenances and all natures still
+never reads the file. Marked: tabula_nodorum_data.c via its generator
+(`GENERATUM DATA:`), biblia_dr.c by hand after splitting its accessors
+and the hand-written book lookup into lib/biblia.c - the data file is
+now tables plus a one-line getter. aedilis already treats >1 MB sources
+as "data-ut-fons" by size; it could read indoles instead (not done).

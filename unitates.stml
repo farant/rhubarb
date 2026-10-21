@@ -60,55 +60,64 @@
        quisque cum probatione congruentiae contra indicem veterem) -->
   <iudex titulus="lint_latinus"
          curae="domestica" vitae="viva vetusta"
-         munera="fons caput probatio amalgama" provenientiae="manu generatum"
+         munera="fons caput probatio amalgama" provenientiae="manu generatum" indoles="codex data"
          linguae="c89 objc"
          descriptio="lint Latinus identificatorum: ambitus (oratio vocabula, pinna portae oratio) et ansa commissionis (lint_latinus.sh, silva.commissio) - generata iudicantur (Franus 2026-10-15: nomina generatoris alibi non iudicantur), fixturae non"/>
 
   <iudex titulus="formator_commissionis"
          curae="domestica" vitae="viva vetusta"
-         munera="fons caput probatio" provenientiae="manu"
+         munera="fons caput probatio" provenientiae="manu" indoles="codex data"
          linguae="c89"
          descriptio="formator ante iudicium commissionis (tools/formare_viae.sh, silva.commissio et uncus) - generata numquam (veritas eorum generator est), amalgama numquam, vendor numquam (Franus 2026-10-15: olim lineae mutatae)"/>
 
   <iudex titulus="examen_commissionis"
          curae="domestica" vitae="viva vetusta"
-         munera="fons probatio assets" provenientiae="manu generatum"
+         munera="fons probatio assets" provenientiae="manu generatum" indoles="codex data"
          linguae="c89 objc"
          descriptio="examen C89 (et censor .m) super plagulas commissionis (tools/unci-git/pre-commit; capita per includentes)"/>
   <iudex titulus="diagnostica_materiae"
          curae="domestica" vitae="viva vetusta"
-         munera="fons probatio scriptum declaratio" provenientiae="manu generatum"
+         munera="fons probatio scriptum declaratio" provenientiae="manu generatum" indoles="codex data"
          linguae="sh css"
          descriptio="diagnostica crustae et css super plagulas commissionis (tools/unci-git/pre-commit -> tools/diagnostica.sh)"/>
 
   <iudex titulus="censor_latinae"
          curae="domestica" vitae="viva vetusta"
-         munera="fons caput probatio assets" provenientiae="manu generatum"
+         munera="fons caput probatio assets" provenientiae="manu generatum" indoles="codex data"
          linguae="c89"
          descriptio="censor latinae: macra latina.h in positione nominis (.claude/hooks/censor-custos.sh)"/>
   <iudex titulus="canon_custos"
          curae="domestica" vitae="viva vetusta"
-         munera="declaratio interrogationes" provenientiae="manu generatum"
+         munera="declaratio interrogationes" provenientiae="manu generatum" indoles="codex data"
          linguae="stml"
          descriptio="canon_examen in plagulas .stml/.canon modo scriptas (.claude/hooks/canon-custos.sh)"/>
 
   <iudex titulus="vexilla_scriptorum"
          curae="domestica remissa aliena" vitae="viva vetusta"
-         munera="scriptum probatio" provenientiae="manu generatum"
+         munera="scriptum probatio" provenientiae="manu generatum" indoles="codex data"
          linguae="sh"
          descriptio="ratchet radicum manu (tools/vexilla_fumus.sh VI contra tools/radices_manu.tsv): omne scriptum concha praeter fixturas et archivata (archivum/ congelatum: radices manu suae temporis sunt, numquam tangendae)"/>
 
   <iudex titulus="prosa_anglica"
          curae="domestica remissa" vitae="viva vetusta"
-         munera="documentum" provenientiae="manu"
+         munera="documentum" provenientiae="manu" indoles="codex data"
          linguae="md"
          descriptio="lint prosae Anglicae super markdown (oratio vocabula -prosa) - knotapel Anglice scriptum INCLUSUM (remissa), generata et fixturae non"/>
 
   <iudex titulus="instrumenta"
          curae="domestica" vitae="viva vetusta"
-         munera="fons scriptum" provenientiae="manu"
+         munera="fons scriptum" provenientiae="manu" indoles="codex data"
          linguae="c89 thistle"
          descriptio="porta instrumentorum (unitates-codicis U5 b): omnis introitus programmatis domesticus manu scriptus aedificatur - C per recipe aedilis (--exitus, numquam curritur), thistle per briar -struere et regio probationis per -probatio; fixturae (adversa) non"/>
+
+  <!-- indoles: SIGNUM DATORUM (verbum 'DATA' in linea signorum, ut
+       GENERATUM) -> data; aliter codex. Franus 2026-10-21: tabulae
+       datorum (biblia, nodi) iudicibus codicis non pertinent -->
+  <iudex titulus="corpus_silvae"
+         curae="domestica" vitae="viva vetusta"
+         munera="fons" provenientiae="manu generatum" indoles="codex"
+         linguae="c89"
+         descriptio="corpus verum portarum corporis silvae (lint, circuitus, canon super lib/): codex domus, manu aut generatus - tabulae datorum non (biblia_dr, tabula_nodorum_data: LVIII% octetorum lib, ~IV GB per plagulam in circuitu STML, nihil logicae probant)"/>
 
   <bibliothecae capita="include" fontes="lib" probationes="probationes"
                 praefixum="probatio_"
