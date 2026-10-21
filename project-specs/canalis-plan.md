@@ -121,6 +121,25 @@ this plan.
   current handle via `cives_per_id`; "" -> `administratio`; unknown id
   -> the id itself.
 
+## Rulings made while executing
+
+- **T1: FilumStatus grew `modus` + `est_socket`.** `filum_status`
+  reported neither permission bits nor a socket type, and a raw `stat`
+  in canalis would violate examen code 96. Two fields added at the end
+  (no caller initializes the struct), pinned by a new filum section.
+  Cost if wrong: the filum.h gate fan-out on this commit, nothing else.
+- **T1: silva's system-header model extended** (sockaddr_un, AF_UNIX,
+  ECONNABORTED, getpeereid, geteuid, socketpair, S_ISSOCK) and certified
+  by `officina/auspex_posix.sh` (plant red, restored green) - the tool
+  gap is closed in the tool, not by an exemption.
+- **T1: presence checks use `filum_status`, not `filum_existit`**
+  (fopen-based; a socket never "exists" by it - two first-draft
+  assertions were vacuous).
+- **T1: Linux filum failures are environmental.** 7 assertions of
+  `filum_seram_capere` fail in the container (tree mounted read-only,
+  lock in build/); older than this task; the new filum section and
+  canalis/tcp are green on musl and glibc.
+
 ## Review focus
 
 Inputs the spec implies but no test of the spec's list exercises; each

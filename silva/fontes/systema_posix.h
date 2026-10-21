@@ -125,9 +125,11 @@ struct stat {
 #define S_IFMT  0170000
 #define S_IFDIR 0040000
 #define S_IFREG 0100000
+#define S_IFSOCK 0140000  /* filum_status est_socket (canalis T1) */
 
 #define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
+#define S_ISSOCK(m) (((m) & S_IFMT) == S_IFSOCK)
 
 #define S_IRUSR 0400
 #define S_IWUSR 0200
@@ -311,6 +313,7 @@ int select(int numerus, fd_set* legendi, fd_set* scribendi,
 #define EWOULDBLOCK 35
 #define EISCONN     56
 #define EINPROGRESS 36   /* connect non-blocans pergit (http-vocatio T3) */
+#define ECONNABORTED 53  /* accept: par ante acceptionem abiit (canalis T1) */
 
 /* <sectio caput="sys/socket.h,netinet/in.h,netinet/tcp.h"/>
  * sys/socket.h + netinet/in.h + netinet/tcp.h (valores Darwin) */
@@ -333,6 +336,7 @@ int setsockopt(int fossa, int gradus, int titulus, const void* valor,
 /* promotio ex blocis tcp_posix (01KYB2Z7XA, 2026-07-27) -
  * transcriptio verbatim, formae Darwin certificatae */
 #define AF_UNSPEC   0
+#define AF_UNIX     1    /* canalis localis (canalis T1) */
 #define AF_INET     2
 #define AF_INET6    30   /* Darwin (Linux 10) - familia IPv6, nomina.h */
 #define SOCK_STREAM 1
@@ -378,6 +382,16 @@ int getpeername(int fossa, struct sockaddr* titulus,
 ssize_t send(int fossa, const void* buffer, size_t mensura,
              int vexilla);
 ssize_t recv(int fossa, void* buffer, size_t mensura, int vexilla);
+/* par fossarum connexarum (probatio_canalis: nosigpipe) */
+int socketpair(int genus, int forma, int protocollum, int* fossae);
+
+/* <sectio caput="sys/un.h"/> sys/un.h - inscriptio AF_UNIX (forma
+ * Darwin: sun_len, sun_family, sun_path[104]; canalis T1) */
+struct sockaddr_un {
+    unsigned char sun_len;
+    unsigned char sun_family;
+    char          sun_path[104];
+};
 
 /* <sectio caput="arpa/inet.h"/> arpa/inet.h */
 const char* inet_ntop(int genus, const void* fons, char* destinatio,
@@ -595,6 +609,10 @@ int uname(struct utsname* nomina);
 
 /* <sectio caput="unistd.h"/> unistd.h - identitas processus */
 pid_t getpid(void);
+/* uid effectivus; uid paris socketi AF_UNIX (Darwin/BSD; Linux
+ * SO_PEERCRED) - canalis T1 */
+uid_t geteuid(void);
+int   getpeereid(int fossa, uid_t* uid, gid_t* gid);
 /* custos cursus (colloquia T8b, tools/mensor.c): vocans incipere */
 pid_t getppid(void);
 

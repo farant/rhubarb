@@ -552,6 +552,9 @@ tcp_ex_fossa (
     {
         redde NIHIL;
     }
+    /* ut omnes constructores: sine eo scriptio ad parem clausum
+     * processum Darwin necat (canalis T1) */
+    _ponere_nosigpipe(fossa);
     conn = _connexionem_creare(fossa, piscina);
     si (conn)
     {

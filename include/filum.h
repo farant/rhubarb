@@ -313,6 +313,9 @@ nomen structura {
                b32 potest_legere;   /* Legibile? */
                b32 potest_scribere; /* Scribabile? */
                b32 potest_exsequi;  /* Exsequibile? (bit +x usoris) */
+           integer modus;           /* bits permissionum (st_mode &
+                                     * 07777) - canalis T1 */
+               b32 est_socket;      /* socket (AF_UNIX)? */
 } FilumStatus;
 
 /* Cape statum/informationem fili

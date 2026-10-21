@@ -133,3 +133,14 @@ goes red. Blocking variant connects untimed like
 tcp_connectere_cum_optionibus and then applies the options (socket
 timeouts); stepped variant is tcp_incipere's EINPROGRESS dance. On any
 failure the old connection is left as it was.
+
+## 2026-10-21 - tcp_ex_fossa now sets SO_NOSIGPIPE (canalis T1)
+
+Every other constructor called `_ponere_nosigpipe`; `tcp_ex_fossa` (wrap
+an fd from elsewhere) did not, so on macOS a write to a peer that had hung
+up raised SIGPIPE and killed the process (Linux was safe: tcp_mittere
+sends with MSG_NOSIGNAL). Found while reading for the canalis spec; the
+channel hands every AF_UNIX connection out through tcp_ex_fossa.
+probatio_canalis `nosigpipe` (forked child writes twice to a closed
+socketpair end) dies by signal with the call removed (plant red), exits
+0 with it.

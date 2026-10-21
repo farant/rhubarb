@@ -32,6 +32,7 @@ declare -a SOURCE_FILES=(
     "lib/blake2b.c"
     "lib/calendario_visus.c"
     "lib/calendarium_liturgicum.c"
+    "lib/canalis_posix.c"
     "lib/canon.c"
     "lib/capitula.c"
     "lib/capsula.c"

@@ -81,3 +81,17 @@ auspex asserts size AND signedness of all eight (real TU includes
 TU nostrum DISSENTIT, restored. (silva.planta could not run this plant:
 its preflight compiles the header ALONE and systema_posix.h needs the
 systema_c89.h prelude - expected, not a bug.)
+
+## 2026-10-21 - AF_UNIX surface (canalis T1)
+
+`lib/canalis_posix.c` compiled clean under clang but examen REICE'd it:
+`struct sockaddr_un`, `AF_UNIX`, `ECONNABORTED`, `getpeereid`, `geteuid`,
+`socketpair`, `S_ISSOCK` unknown. Added (Darwin forms): S_IFSOCK 0140000 +
+S_ISSOCK in sys/stat.h; ECONNABORTED 53 in errno.h; AF_UNIX 1 and
+socketpair in sys/socket.h; a new `sys/un.h` sectio with `sockaddr_un
+{sun_len, sun_family, sun_path[104]}`; geteuid + getpeereid in the
+unistd.h identity sectio. auspex asserts values, sizeof 106 and offsets
+(real TU now includes <sys/un.h>) - CONSENTIT both TUs; hand plant
+sun_path[103] -> TU nostrum DISSENTIT (assertum_185), restored ->
+CERTIFICATAE. The Linux-only branch (`struct ucred`, SO_PEERCRED) is not
+modelled: examen judges the Darwin preprocessing.

@@ -252,3 +252,21 @@ absent directory). Plants: O_APPEND -> O_TRUNC red at :1301/:1307; open
 failure returning VERUM red at :1312. NOT provable by a test: the fsync
 itself (would need a crash) - the claim rests on reading the code.
 silva's amalgam regenerated: no diff (it does not embed this part).
+
+## 2026-10-21 - FilumStatus.modus + est_socket (canalis T1)
+
+canalis must refuse a parent directory with any group/other bit and must
+tell a stale socket from a regular file, and examen code 96 forbids a raw
+`stat` outside filum - so `FilumStatus` grew two fields at the END
+(`integer modus` = st_mode & 07777, `b32 est_socket` = S_ISSOCK; Windows:
+& 0777, FALSUM). No caller builds a FilumStatus by initializer, so the
+addition is source-compatible. Section "status modus et socket": file
+0640, directory 0700, a bound AF_UNIX socket -> est_socket, neither file
+nor directory. Note `filum_existit` (fopen "r") reports a socket as
+absent - use `filum_status` to ask "is anything there".
+
+Linux: filum_seram_capere's 7 assertions fail under
+tools/linux/probatio.sh because the container mounts the tree READ-ONLY
+and the lock file lives in build/ (by design: two trees must not share a
+/tmp lock). Environmental, older than this change; the new section passes
+on musl and glibc.

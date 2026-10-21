@@ -197,6 +197,12 @@ emittere_asserta() {
     # filum_arborem_delere (2026-09-14): lstat ENOENT = nihil delendum
     echo "IUNGO_ASSERTA(ENOENT == 2);"
     echo "IUNGO_ASSERTA(EINPROGRESS == 36);"
+    # canalis T1 (2026-10-21): AF_UNIX, sockaddr_un, S_ISSOCK, ECONNABORTED
+    echo "IUNGO_ASSERTA(AF_UNIX == 1 && ECONNABORTED == 53);"
+    echo "IUNGO_ASSERTA(S_IFSOCK == 0140000 && S_ISSOCK(0140600) && !S_ISSOCK(0100644));"
+    echo "IUNGO_ASSERTA(sizeof(struct sockaddr_un) == 106);"
+    echo "IUNGO_ASSERTA(OFF(sockaddr_un, sun_family) == 1 && OFF(sockaddr_un, sun_path) == 2);"
+    echo "IUNGO_ASSERTA(sizeof(((struct sockaddr_un*)0)->sun_path) == 104);"
     echo "IUNGO_ASSERTA(EINTR == 4 && EAGAIN == 35 && EISCONN == 56);"
     # analytica T2 (2026-10-13): horologium monotonum + usus prolis
     echo "IUNGO_ASSERTA(CLOCK_REALTIME == 0 && CLOCK_MONOTONIC == 6);"
@@ -226,6 +232,7 @@ PRAEAMBULUM='#define IUNGO2(a,b) a##b
     echo "#include <sys/stat.h>"
     echo "#include <sys/time.h>"
     echo "#include <sys/socket.h>"
+    echo "#include <sys/un.h>"
     echo "#include <sys/wait.h>"
     echo "#include <netinet/in.h>"
     echo "#include <netinet/tcp.h>"
