@@ -1079,6 +1079,68 @@ _sectio_sine_secretis (CredoContextus* c)
     _mundum_claudere(&m);
 }
 
+/* sessiones omnes civis deletae (numerus), aliorum intactae; actum
+ * sessio.deleta pro quaque; transactio revoluta nihil delet; iterum
+ * -> 0 (canalis T3) */
+interior vacuum
+_sectio_sessiones_civis (CredoContextus* c)
+{
+               Piscina* p = c->piscina;
+                Mundus  m;
+                 Civis  civis;
+    constans character* sid_a;
+    constans character* sid_b;
+    constans character* amanda;
+                   i32  status;
+                   s32  n;
+                   Xar* acta;
+                   i32  deletae = ZEPHYRUM;
+                   i32  k;
+
+    CREDO_NECESSE(_mundus(c, &m, FALSUM));
+    sid_a   = _civis(&m, p, "fran");
+    sid_b   = _intrare(&m, p, "fran", TESSERA, &status);
+    amanda  = _civis(&m, p, "amanda");
+    CREDO_NECESSE(   sid_a[ZEPHYRUM] != '\0'
+        && sid_b[ZEPHYRUM] != '\0'
+                  && amanda[ZEPHYRUM] != '\0');
+    CREDO_NECESSE(cives_per_nomen(ianua_cives(m.ia), _c("fran", p),
+        &civis,
+        p));
+    /* revoluta: sessiones manent */
+    CREDO_NECESSE(volumen_transactionem_incipere(m.v));
+    CREDO_AEQUALIS_S32(ianua_sessiones_civis_delere(m.ia, civis.id),
+        II);
+    CREDO_NECESSE(volumen_transactionem_revolvere(m.v));
+    CREDO_AEQUALIS_I32(_tessera_get(&m, p, sid_a), CC);
+    /* commissa */
+    CREDO_NECESSE(volumen_transactionem_incipere(m.v));
+    n = ianua_sessiones_civis_delere(m.ia, civis.id);
+    CREDO_NECESSE(volumen_transactionem_committere(m.v));
+    CREDO_AEQUALIS_S32(n, II);
+    CREDO_AEQUALIS_I32(_tessera_get(&m, p, sid_a), CCCIII);
+    CREDO_AEQUALIS_I32(_tessera_get(&m, p, sid_b), CCCIII);
+    CREDO_AEQUALIS_I32(_tessera_get(&m, p, amanda), CC);
+    acta = volumen_acta_legere(m.v, ZEPHYRUM, p);
+    CREDO_NECESSE_NON_NIHIL(acta);
+    per (k = ZEPHYRUM; k < xar_numerus(acta); k++)
+    {
+        si (chorda_aequalis_literis(((VolumenActum*)xar_obtinere(acta,
+            k))
+                ->genus, "sessio.deleta"))
+        {
+            deletae++;
+        }
+    }
+    CREDO_AEQUALIS_I32(deletae, II);
+    /* iterum: nihil */
+    CREDO_NECESSE(volumen_transactionem_incipere(m.v));
+    CREDO_AEQUALIS_S32(ianua_sessiones_civis_delere(m.ia, civis.id),
+        ZEPHYRUM);
+    CREDO_NECESSE(volumen_transactionem_committere(m.v));
+    _mundum_claudere(&m);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "inscriptio", _sectio_inscriptio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "inscriptio_atomica", _sectio_inscriptio_atomica, NIHIL, NIHIL,
@@ -1101,6 +1163,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "admissio_adapter", _sectio_admissio_adapter, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "sine_secretis", _sectio_sine_secretis, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "sessiones_civis", _sectio_sessiones_civis, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

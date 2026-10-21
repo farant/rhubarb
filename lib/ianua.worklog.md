@@ -46,3 +46,15 @@ same-code race (two persons survive); other sessions kept on password
 change -> tessera_mutata; `//` accepted as redire -> redire; status not
 checked in `_intratus` -> suspensus; form shown for a dead invitation ->
 invitatio_mortua. Green on macOS, Linux musl + glibc.
+
+## 2026-10-21 - ianua_sessiones_civis_delere (canalis T3)
+
+Suspension (canalis T4) must end a person's web sessions now. The
+password change already deleted "all but this one"; that loop is now one
+helper, `_sessiones_civis_delere(ia, civis, praeter, p)` (praeter with
+datum NIHIL = no exception), and both callers use it - each session goes
+through `_sessionem_delere`, so each still writes `sessio.deleta {sigillum
+= SHA-256 hex}` (never the token). Correction to canalis plan P10, which
+said sessions were not evented. tessera_mutata (the regression check for
+the refactor) stays green. Plant: the no-exception SELECT without `WHERE
+civis` -> red (count 3, amanda's cookie dead).

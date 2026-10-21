@@ -474,6 +474,59 @@ _sessionem_delere (
     redde _actum(ia, "sessio.deleta", d, p);
 }
 
+/* INTRA TRANSACTIONEM: sessiones civis omnes delere (praeter 'praeter'
+ * si datum habet - tessera mutata sessionem praesentem servat), quaeque
+ * cum actu sessio.deleta; numerus deletarum aut -I */
+interior s32
+_sessiones_civis_delere (
+      Ianua* ia,
+     chorda  civis,
+     chorda  praeter,
+    Piscina* p)
+{
+    ScriniumEnuntiatum* e;
+                   Xar* sigilla;
+                   i32  k;
+                   s32  n = ZEPHYRUM;
+
+    sigilla = xar_creare(p, (i32)magnitudo(chorda));
+    e = sigilla ? scrinium_praeparare(ia->scrinium, praeter.datum
+        ? "SELECT sigillum FROM ianua_sessiones WHERE civis = ?"
+          " AND sigillum != ?"
+        : "SELECT sigillum FROM ianua_sessiones WHERE civis = ?") : NIHIL;
+    si (!e)
+    {
+        redde -I;
+    }
+    scrinium_ligare_textum(e, I, civis);
+    si (praeter.datum)
+    {
+        scrinium_ligare_textum(e, II, praeter);
+    }
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        chorda* x = (chorda*)xar_addere(sigilla);
+
+        si (!x)
+        {
+            scrinium_finire(e);
+            redde -I;
+        }
+        *x = scrinium_columna_textus(e, ZEPHYRUM, p);
+    }
+    scrinium_finire(e);
+    per (k = ZEPHYRUM; k < xar_numerus(sigilla); k++)
+    {
+        si (!_sessionem_delere(ia, *(chorda*)xar_obtinere(sigilla, k),
+            p))
+        {
+            redde -I;
+        }
+        n++;
+    }
+    redde n;
+}
+
 /* sessio nova (transactione propria); signum in effusionem */
 interior b32
 _sessionem_creare (
@@ -1001,9 +1054,6 @@ _tessera_finire (
                     Ianua* ia   = o->ianua;
       HospitiumColloquium* col  = dilatum_colloquium(o->d);
                   Piscina* p;
-       ScriniumEnuntiatum* e;
-                      Xar* aliae;
-                      i32  k;
                       b32  bene = FALSUM;
 
     si (!o->verificatio_facta || !o->hash_factum)
@@ -1028,43 +1078,17 @@ _tessera_finire (
         _opus_liberare(o);
         redde;
     }
-    p      = piscina_generare_dynamicum("ianua_tessera", MMXLVIII);
-    aliae  = p ? xar_creare(p, (i32)magnitudo(chorda)) : NIHIL;
-    e      = aliae ? scrinium_praeparare(ia->scrinium, "SELECT sigillum"
-        " FROM ianua_sessiones WHERE civis = ? AND sigillum != ?") : NIHIL;
-    si (e)
+    p = piscina_generare_dynamicum("ianua_tessera", MMXLVIII);
+    si (p && volumen_transactionem_incipere(ia->volumen))
     {
-        scrinium_ligare_textum(e, I, _ch(o->civis));
-        scrinium_ligare_textum(e, II, _ch(o->sigillum));
-        dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+        bene =    credentialia_tesseram_ponere(ia->credentialia,
+                      _ch(o->civis), _ch(o->phc))
+               && _sessiones_civis_delere(ia, _ch(o->civis),
+                      _ch(o->sigillum), p) >= ZEPHYRUM;
+        si (!bene || !volumen_transactionem_committere(ia->volumen))
         {
-            chorda* s = (chorda*)xar_addere(aliae);
-
-            si (s)
-            {
-                *s = scrinium_columna_textus(e, ZEPHYRUM, p);
-            }
-        }
-        scrinium_finire(e);
-        si (volumen_transactionem_incipere(ia->volumen))
-        {
-            bene = credentialia_tesseram_ponere(ia->credentialia,
-                _ch(o->civis), _ch(o->phc));
-            per (k = ZEPHYRUM; bene && k < xar_numerus(aliae); k++)
-            {
-                bene = _sessionem_delere(ia,
-                    *(chorda*)xar_obtinere(aliae,
-                    k), p);
-            }
-            si (bene && volumen_transactionem_committere(ia->volumen))
-            {
-                bene = VERUM;
-            }
-            alioquin
-            {
-                (vacuum)volumen_transactionem_revolvere(ia->volumen);
-                bene = FALSUM;
-            }
+            (vacuum)volumen_transactionem_revolvere(ia->volumen);
+            bene = FALSUM;
         }
     }
     si (col)
@@ -1602,4 +1626,29 @@ ianua_admissionis_intratus (
     }
     *usor = civis.id;
     redde VERUM;
+}
+
+s32
+ianua_sessiones_civis_delere (
+     Ianua* ianua,
+    chorda  civis)
+{
+     Piscina* p;
+      chorda  nulla;
+         s32  n;
+
+    si (!ianua || !civis.datum)
+    {
+        redde -I;
+    }
+    p = piscina_generare_dynamicum("ianua_sessiones_civis", MMXLVIII);
+    si (!p)
+    {
+        redde -I;
+    }
+    nulla.datum    = NIHIL;
+    nulla.mensura  = ZEPHYRUM;
+    n              = _sessiones_civis_delere(ianua, civis, nulla, p);
+    piscina_destruere(p);
+    redde n;
 }

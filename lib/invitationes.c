@@ -364,10 +364,12 @@ invitationes_consumere (
     redde bene;
 }
 
-b32
-invitationes_revocare (
+/* revocatio communis: auctor NIHIL-datum = quaelibet (administratio);
+ * eadem scriptura, idem actum */
+interior b32
+_revocare (
     Invitationes* invitationes,
-          chorda  auctor,
+          chorda* auctor,
           chorda  id)
 {
     ScriniumEnuntiatum* e;
@@ -375,20 +377,25 @@ invitationes_revocare (
              JsonValor* d;
                    b32  bene;
 
-    si (!invitationes || !auctor.datum || !id.datum)
+    si (!invitationes || !id.datum)
     {
         redde FALSUM;
     }
-    e = scrinium_praeparare(invitationes->scrinium,
-        "UPDATE invitationes SET revocata_ms = ? WHERE id = ?"
-        " AND auctor = ? AND revocata_ms = 0");
+    e = scrinium_praeparare(invitationes->scrinium, auctor
+        ? "UPDATE invitationes SET revocata_ms = ? WHERE id = ?"
+          " AND revocata_ms = 0 AND auctor = ?"
+        : "UPDATE invitationes SET revocata_ms = ? WHERE id = ?"
+          " AND revocata_ms = 0");
     si (!e)
     {
         redde FALSUM;
     }
     scrinium_ligare_numerum(e, I, _nunc(invitationes));
     scrinium_ligare_textum(e, II, id);
-    scrinium_ligare_textum(e, III, auctor);
+    si (auctor)
+    {
+        scrinium_ligare_textum(e, III, *auctor);
+    }
     bene = scrinium_gradi(e) == SCRINIUM_FACTUM;
     scrinium_finire(e);
     si (!bene || _mutatae(invitationes) != I)
@@ -405,6 +412,27 @@ invitationes_revocare (
     bene = _actum(invitationes, "invitatio.revocata", d, p);
     piscina_destruere(p);
     redde bene;
+}
+
+b32
+invitationes_revocare (
+    Invitationes* invitationes,
+          chorda  auctor,
+          chorda  id)
+{
+    si (!auctor.datum)
+    {
+        redde FALSUM;
+    }
+    redde _revocare(invitationes, &auctor, id);
+}
+
+b32
+invitationes_revocare_quamlibet (
+    Invitationes* invitationes,
+          chorda  id)
+{
+    redde _revocare(invitationes, NIHIL, id);
 }
 
 Xar*
@@ -433,6 +461,40 @@ invitationes_enumerare (
         redde NIHIL;
     }
     scrinium_ligare_textum(e, I, auctor);
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        Invitatio* x = (Invitatio*)xar_addere(l);
+
+        si (!x)
+        {
+            frange;
+        }
+        _legere(e, x, piscina);
+    }
+    scrinium_finire(e);
+    redde l;
+}
+
+Xar*
+invitationes_omnes_enumerare (
+    Invitationes* invitationes,
+         Piscina* piscina)
+{
+                   Xar* l;
+    ScriniumEnuntiatum* e;
+
+    si (!invitationes || !piscina)
+    {
+        redde NIHIL;
+    }
+    l = xar_creare(piscina, (i32)magnitudo(Invitatio));
+    e = l ? scrinium_praeparare(invitationes->scrinium,
+        "SELECT " COLUMNAE " FROM invitationes"
+        " ORDER BY creata_ms DESC, rowid DESC") : NIHIL;
+    si (!e)
+    {
+        redde NIHIL;
+    }
     dum (scrinium_gradi(e) == SCRINIUM_ORDO)
     {
         Invitatio* x = (Invitatio*)xar_addere(l);

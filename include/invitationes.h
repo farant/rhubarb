@@ -99,4 +99,19 @@ invitationes_enumerare (
           chorda  auctor,
          Piscina* piscina);
 
+/* omnium auctorum (administratio), novissimae primum - eodem ms ultima
+ * inscripta prima; tabula vacua si nullae (canalis T3) */
+Xar*
+invitationes_omnes_enumerare (
+    Invitationes* invitationes,
+         Piscina* piscina);
+
+/* INTRA TRANSACTIONEM: quamlibet, auctoris non refert (administratio);
+ * FALSUM si ignota aut iam revocata; actum idem ac
+ * invitationes_revocare (canalis T3) */
+b32
+invitationes_revocare_quamlibet (
+    Invitationes* invitationes,
+          chorda  id);
+
 #endif /* INVITATIONES_H */

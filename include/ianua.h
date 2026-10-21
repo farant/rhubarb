@@ -96,6 +96,14 @@ Invitationes*
 ianua_invitationes (
     Ianua* ianua);
 
+/* INTRA TRANSACTIONEM: sessiones civis OMNES deletae (administratio:
+ * suspensio), quaeque cum actu sessio.deleta ut in tessera mutata;
+ * aliorum intactae. Numerus deletarum aut -I si error (canalis T3) */
+s32
+ianua_sessiones_civis_delere (
+     Ianua* ianua,
+    chorda  civis);
+
 /* sessio valida et civis ACTIVUS: civis (piscina colloquii) + signum
  * CSRF; csrf NIHIL licet */
 b32

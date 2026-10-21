@@ -16,6 +16,7 @@
 #include "volumen.h"
 #include "xar.h"
 #include "invitationes.h"
+#include <stdio.h>
 #include <string.h>
 
 #define PRIMUS   "01PRIMUSAAAAAAAAAAAAAAAAAA"
@@ -438,6 +439,114 @@ _sectio_enumerare (CredoContextus* c)
     volumen_claudere(v);
 }
 
+/* omnium auctorum, novissimae primum (eodem ms: ultima inscripta
+ * prima); per auctorem manet per auctorem (canalis T3) */
+interior vacuum
+_sectio_omnes (CredoContextus* c)
+{
+         Piscina* p = c->piscina;
+         Volumen* v;
+    Invitationes* inv = _invitationes(c, &v);
+          chorda  codex;
+          chorda  id;
+             Xar* l;
+
+    CREDO_NECESSE_NON_NIHIL(inv);
+    l = invitationes_omnes_enumerare(inv, p);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_AEQUALIS_I32(xar_numerus(l), ZEPHYRUM);
+    CREDO_VERUM(_creare(v, inv, "", "administratio", ZEPHYRUM, ZEPHYRUM,
+        &codex, &id, p));
+    g_nunc += M;
+    CREDO_VERUM(_creare(v, inv, PRIMUS, "primi", ZEPHYRUM, ZEPHYRUM,
+        &codex, &id, p));
+    CREDO_VERUM(_creare(v, inv, SECUNDUS, "secundi", ZEPHYRUM, ZEPHYRUM,
+        &codex, &id, p));
+    l = invitationes_omnes_enumerare(inv, p);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_AEQUALIS_I32(xar_numerus(l), III);
+    CREDO_CHORDA_AEQUALIS_LITERIS(((Invitatio*)xar_obtinere(l,
+        ZEPHYRUM))->nota, "secundi");
+    CREDO_CHORDA_AEQUALIS(((Invitatio*)xar_obtinere(l, ZEPHYRUM))->id,
+        id);
+    CREDO_CHORDA_AEQUALIS_LITERIS(((Invitatio*)xar_obtinere(l,
+        I))->nota,
+        "primi");
+    CREDO_CHORDA_AEQUALIS_LITERIS(((Invitatio*)xar_obtinere(l,
+        II))->nota,
+        "administratio");
+    CREDO_CHORDA_AEQUALIS_LITERIS(((Invitatio*)xar_obtinere(l, II))
+        ->auctor, "");
+    l = invitationes_enumerare(inv, _c(PRIMUS, p), p);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_AEQUALIS_I32(xar_numerus(l), I);
+    volumen_claudere(v);
+}
+
+interior b32
+_quamlibet (
+         Volumen* v,
+    Invitationes* inv,
+          chorda  id,
+             b32  committere)
+{
+    b32 bene;
+
+    si (!volumen_transactionem_incipere(v))
+    {
+        redde FALSUM;
+    }
+    bene = invitationes_revocare_quamlibet(inv, id);
+    si (bene && committere)
+    {
+        redde volumen_transactionem_committere(v);
+    }
+    (vacuum)volumen_transactionem_revolvere(v);
+    redde bene && !committere;
+}
+
+/* administratio revocat quamlibet (auctoris non refert); actum idem
+ * ac invitationes_revocare; iterum / ignota -> FALSUM; transactio
+ * revoluta nihil mutat (canalis T3) */
+interior vacuum
+_sectio_quamlibet (CredoContextus* c)
+{
+         Piscina* p = c->piscina;
+         Volumen* v;
+    Invitationes* inv = _invitationes(c, &v);
+          chorda  codex;
+          chorda  id;
+          chorda  codex_b;
+          chorda  id_b;
+       Invitatio  x;
+             Xar* acta;
+    VolumenActum* ultimum;
+       character  exspectatum[LXIV];
+
+    CREDO_NECESSE_NON_NIHIL(inv);
+    CREDO_VERUM(_creare(v, inv, SECUNDUS, "", ZEPHYRUM, ZEPHYRUM,
+        &codex,
+        &id, p));
+    CREDO_VERUM(_quamlibet(v, inv, id, VERUM));
+    CREDO_FALSUM(invitationes_inspicere(inv, codex, &x, p));
+    acta = volumen_acta_legere(v, ZEPHYRUM, p);
+    CREDO_NECESSE_NON_NIHIL(acta);
+    ultimum = (VolumenActum*)xar_obtinere(acta, xar_numerus(acta) - I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(ultimum->genus, "invitatio.revocata");
+    sprintf(exspectatum, "{\"id\":\"%.*s\"}", (integer)id.mensura,
+        (constans character*)id.datum);
+    CREDO_CHORDA_AEQUALIS_LITERIS(ultimum->datum, exspectatum);
+    CREDO_FALSUM(_quamlibet(v, inv, id, VERUM));
+    CREDO_FALSUM(_quamlibet(v, inv, _c(TERTIUS, p), VERUM));
+    /* revoluta: invitatio manet valida */
+    CREDO_VERUM(_creare(v, inv, PRIMUS, "", ZEPHYRUM, ZEPHYRUM,
+        &codex_b,
+        &id_b, p));
+    CREDO_VERUM(_quamlibet(v, inv, id_b, FALSUM));
+    CREDO_VERUM(invitationes_inspicere(inv, codex_b, &x, p));
+    volumen_claudere(v);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "creare", _sectio_creare, _horologium_parare, NIHIL, NIHIL,
         NIHIL },
@@ -451,6 +560,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "codex_occultus", _sectio_codex_occultus, _horologium_parare,
         NIHIL, NIHIL, NIHIL },
     { "enumerare", _sectio_enumerare, _horologium_parare, NIHIL, NIHIL,
+        NIHIL },
+    { "omnes", _sectio_omnes, _horologium_parare, NIHIL, NIHIL, NIHIL },
+    { "quamlibet", _sectio_quamlibet, _horologium_parare, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

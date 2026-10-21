@@ -130,6 +130,20 @@ _actum (
         > ZEPHYRUM;
 }
 
+/* ordo SELECT id, nomen_usoris, titulus, status, creatus_ms */
+interior vacuum
+_ordinem_legere (
+    ScriniumEnuntiatum* e,
+                 Civis* x,
+               Piscina* p)
+{
+    x->id            = scrinium_columna_textus(e, ZEPHYRUM, p);
+    x->nomen_usoris  = scrinium_columna_textus(e, I, p);
+    x->titulus       = scrinium_columna_textus(e, II, p);
+    x->status        = (CivisStatus)scrinium_columna_numerus(e, III);
+    x->creatus_ms    = scrinium_columna_numerus(e, IV);
+}
+
 interior b32
 _legere (
                   Cives* c,
@@ -148,13 +162,8 @@ _legere (
     scrinium_ligare_textum(e, I, clavis);
     si (scrinium_gradi(e) == SCRINIUM_ORDO)
     {
-        x->id            = scrinium_columna_textus(e, ZEPHYRUM, p);
-        x->nomen_usoris  = scrinium_columna_textus(e, I, p);
-        x->titulus       = scrinium_columna_textus(e, II, p);
-        x->status = (CivisStatus)scrinium_columna_numerus(e,
-            III);
-        x->creatus_ms  = scrinium_columna_numerus(e, IV);
-        inventum       = VERUM;
+        _ordinem_legere(e, x, p);
+        inventum = VERUM;
     }
     scrinium_finire(e);
     redde inventum;
@@ -429,4 +438,39 @@ cives_delere (
     chorda  id)
 {
     redde _statum_scribere(cives, id, CIVIS_DELETUS, "civis.deletus");
+}
+
+Xar*
+cives_enumerare (
+      Cives* cives,
+    Piscina* piscina)
+{
+                   Xar* l;
+    ScriniumEnuntiatum* e;
+
+    si (!cives || !piscina)
+    {
+        redde NIHIL;
+    }
+    l = xar_creare(piscina, (i32)magnitudo(Civis));
+    e = l ? scrinium_praeparare(cives->scrinium,
+        "SELECT id, nomen_usoris,"
+        " titulus, status, creatus_ms FROM cives ORDER BY creatus_ms,"
+        " rowid") : NIHIL;
+    si (!e)
+    {
+        redde NIHIL;
+    }
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        Civis* x = (Civis*)xar_addere(l);
+
+        si (!x)
+        {
+            frange;
+        }
+        _ordinem_legere(e, x, piscina);
+    }
+    scrinium_finire(e);
+    redde l;
 }

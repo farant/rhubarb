@@ -33,6 +33,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "volumen.h"
+#include "xar.h"
 
 #define CIVES_NOMEN_MAXIMUM XXXII
 #define CIVES_ID_MENSURA    XXVI       /* ULID */
@@ -117,5 +118,13 @@ b32
 cives_delere (
      Cives* cives,
     chorda  id);
+
+/* omnes (etiam suspensi et deleti), ordine creationis - eodem ms
+ * ordine inscriptionis (rowid). Xar de Civis in piscina; tabula
+ * vacua, non NIHIL, si nemo; NIHIL solum si error (canalis T3) */
+Xar*
+cives_enumerare (
+      Cives* cives,
+    Piscina* piscina);
 
 #endif /* CIVES_H */

@@ -33,3 +33,12 @@ nomina red. The plan's "event before the uniqueness check" plant was
 replaced: with the guard removed, the database constraints (UNIQUE /
 PRIMARY KEY) still refuse and the caller's rollback removes the partial
 row - the guard is a fast path, not the safety (plan ruling T1).
+
+## 2026-10-21 - cives_enumerare (canalis T3)
+
+Admin view of everyone (suspended and deleted too), creation order. The
+test clock is fixed, so several people share one `creatus_ms`; ULIDs made
+in the same ms need not sort by creation, so the tiebreak is `rowid`
+(insertion order), not `id`. Plant "ORDER BY nomen_usoris" -> red (alpha
+before beta). The five-column row fill is now one helper
+(`_ordinem_legere`) shared with `_legere`.

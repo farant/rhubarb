@@ -38,3 +38,13 @@ Linux: first run BLOCKED after the main merge bf073999 - credo now calls
 test link failed (not an invitationes defect). Fixed by Fran's choice
 in 045b7159 (lib/memoria_processus_posix.c); then invitationes green on
 musl + glibc.
+
+## 2026-10-21 - omnium enumeratio + revocatio quaelibet (canalis T3)
+
+`invitationes_omnes_enumerare` (every author, newest first, same-ms
+tiebreak `rowid DESC`) and `invitationes_revocare_quamlibet` (the admin
+may revoke anyone's). Both revoke paths go through one static `_revocare`
+whose author is a pointer: NIHIL = no author clause. Same UPDATE guard
+(`revocata_ms = 0`, then `changes() == 1`), same `invitatio.revocata
+{id}` event - the test compares the event datum byte for byte. Plants:
+quamlibet with an author clause -> red; tiebreak ASC -> red.

@@ -158,6 +158,15 @@ this plan.
 - **T2: both pons sections wait with a deadline** - a broken pons must
   fail the suite, not hang it (the first pons_finis plant hung 19 min).
 
+- **T3: P10 corrected - sessions ARE evented.** `_sessionem_delere`
+  writes `sessio.deleta {sigillum}` (SHA-256 hex). `ianua_sessiones_
+  civis_delere` deletes each session through it (same events as the
+  password change, which now shares the helper `_sessiones_civis_delere`).
+  T4's suspension therefore leaves one `sessio.deleta` per session.
+- **T3: same-ms tiebreaks use `rowid`**, not the ULID id (cives creation
+  order; all-invitations newest-first) - the fixed test clock makes ties
+  the normal case.
+
 ## Review focus
 
 Inputs the spec implies but no test of the spec's list exercises; each

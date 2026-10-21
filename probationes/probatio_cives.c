@@ -359,6 +359,50 @@ _sectio_revolutio (CredoContextus* c)
     volumen_claudere(v);
 }
 
+/* omnes, ordine creationis (eodem ms: ordine inscriptionis), etiam
+ * suspensi et deleti; volumen vacuum -> tabula vacua, non NIHIL
+ * (canalis T3) */
+interior vacuum
+_sectio_enumerare (
+    CredoContextus* c)
+{
+     Piscina* p = c->piscina;
+     Volumen* v;
+       Cives* cv = _cives(c, &v);
+      chorda  a;
+      chorda  b;
+      chorda  g;
+         Xar* l;
+       Civis* x;
+
+    CREDO_NECESSE_NON_NIHIL(cv);
+    l = cives_enumerare(cv, p);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_AEQUALIS_I32(xar_numerus(l), ZEPHYRUM);
+    CREDO_VERUM(_creare(v, cv, "beta", "Beta", &b, p));
+    CREDO_VERUM(_creare(v, cv, "alpha", "Alpha", &a, p));
+    CREDO_VERUM(_creare(v, cv, "gamma", "Gamma", &g, p));
+    CREDO_NECESSE(volumen_transactionem_incipere(v));
+    CREDO_VERUM(cives_statum_ponere(cv, a, CIVIS_SUSPENSUS));
+    CREDO_VERUM(cives_delere(cv, g));
+    CREDO_NECESSE(volumen_transactionem_committere(v));
+    l = cives_enumerare(cv, p);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_AEQUALIS_I32(xar_numerus(l), III);
+    x = (Civis*)xar_obtinere(l, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(x->nomen_usoris, "beta");
+    CREDO_CHORDA_AEQUALIS(x->id, b);
+    CREDO_AEQUALIS_S32((s32)x->status, (s32)CIVIS_ACTIVUS);
+    x = (Civis*)xar_obtinere(l, I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(x->nomen_usoris, "alpha");
+    CREDO_CHORDA_AEQUALIS_LITERIS(x->titulus, "Alpha");
+    CREDO_AEQUALIS_S32((s32)x->status, (s32)CIVIS_SUSPENSUS);
+    x = (Civis*)xar_obtinere(l, II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(x->nomen_usoris, "gamma");
+    CREDO_AEQUALIS_S32((s32)x->status, (s32)CIVIS_DELETUS);
+    volumen_claudere(v);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "nomina", _sectio_nomina, NIHIL, NIHIL, NIHIL, NIHIL },
     { "creare", _sectio_creare, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -368,6 +412,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "acta", _sectio_acta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "restitutio", _sectio_restitutio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "revolutio", _sectio_revolutio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "enumerare", _sectio_enumerare, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
