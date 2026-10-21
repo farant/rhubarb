@@ -96,11 +96,13 @@ _columnas (
     v[10]  = (insignatus longus)c->allocationes_arboris;
 }
 
-integer
-principale (vacuum)
+/* Sectio UNA: probatio scaenica - blocci statum priorum ex proposito
+ * continuant; gradus (CREDO_GRADUS) fracturam nominant. */
+interior vacuum
+_scaenam_probare (
+    CredoContextus* c)
 {
-                   b32  praeteritus;
-               Piscina* piscina;
+               Piscina* piscina = c->piscina;
     constans character* radix;
                    b32  scribere;
              character  via_auri[VIA_MAXIMA];
@@ -111,14 +113,6 @@ principale (vacuum)
      insignatus longus  facta[NUMERUS_CORPORIS][COLUMNAE];
                    b32  metita[NUMERUS_CORPORIS];
 
-    piscina = piscina_generare_dynamicum("probatio_crusta_computus",
-        IV * MXXIV * XVI);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
     radix = getenv("RHUBARB_RADIX");
     si (radix == NIHIL)
     {
@@ -128,10 +122,10 @@ principale (vacuum)
     sprintf(via_auri, "%s/crusta/probationes/fixa/computus/basis.tsv",
         radix);
 
-    imprimere("\n--- I. mensura corporis (fixa et domus) ---\n");
+    CREDO_GRADUS ("I. mensura corporis (fixa et domus)");
     per (i = ZEPHYRUM; i < NUMERUS_CORPORIS; i++)
     {
-        CrustaComputus  c;
+        CrustaComputus  computus;
                     i8* fons;
                    i32  mensura;
 
@@ -145,32 +139,38 @@ principale (vacuum)
         }
         (vacuum)crusta_computus_metiri((constans character*)fons,
             mensura,
-            &c);
-        _columnas(&c, facta[i]);
+            &computus);
+        _columnas(&computus, facta[i]);
         metita[i] = VERUM;
         imprimere("  %-40s nodi %5u lex %5u stml %6u  dati %5.2f MB"
                   "  alloc %lu  pars %.2f ms  emit %.2f  stml %.2f/%.2f"
                   "  conf %.2f\n",
-            CORPUS[i], (insignatus)c.nodi, (insignatus)c.lexemata,
-            (insignatus)c.octeti_stml,
-            (duplex)c.usus / (1024.0 * 1024.0),
-            (insignatus longus)c.allocationes, c.ms_parsandi,
-            c.ms_emittendi, c.ms_arbor_scribendi, c.ms_arbor_legendi,
-            c.ms_comparandi);
+            CORPUS[i], (insignatus)computus.nodi,
+            (insignatus)computus.lexemata,
+            (insignatus)computus.octeti_stml,
+            (duplex)computus.usus / (1024.0 * 1024.0),
+            (insignatus longus)computus.allocationes,
+            computus.ms_parsandi,
+            computus.ms_emittendi, computus.ms_arbor_scribendi,
+            computus.ms_arbor_legendi,
+            computus.ms_comparandi);
         /* proprietates, semper: circuitus totus sanus; commissa = usus
          * + otiosa; apex usum commissum non superat; allocationes nodos
          * superant (Xar per nodum) */
-        CREDO_VERUM (c.successus);
-        CREDO_VERUM (c.commissa == c.usus + c.otiosa);
-        CREDO_VERUM (c.apex <= c.commissa);
-        CREDO_VERUM (c.alvei >= I);
-        CREDO_VERUM (c.allocationes > (memoriae_index)c.nodi);
-        CREDO_VERUM (c.lexemata >= I && c.octeti_stml > ZEPHYRUM);
+        CREDO_VERUM (computus.successus);
+        CREDO_VERUM (computus.commissa == computus.usus
+            + computus.otiosa);
+        CREDO_VERUM (computus.apex <= computus.commissa);
+        CREDO_VERUM (computus.alvei >= I);
+        CREDO_VERUM (computus.allocationes
+            > (memoriae_index)computus.nodi);
+        CREDO_VERUM (computus.lexemata >= I
+            && computus.octeti_stml > ZEPHYRUM);
     }
 
     si (scribere)
     {
-        imprimere("\n--- AURUM SCRIBITUR - AUDI causam ---\n");
+        CREDO_GRADUS ("AURUM SCRIBITUR - AUDI causam");
         aurum = fopen(via_auri, "w");
         CREDO_NON_NIHIL (aurum);
         si (aurum != NIHIL)
@@ -199,7 +199,8 @@ principale (vacuum)
         }
     }
 
-    imprimere("\n--- II. collatio cum auro (%s) ---\n", via_auri);
+    CREDO_GRADUS ("II. collatio cum auro");
+    imprimere("  aurum: %s\n", via_auri);
     aurum = fopen(via_auri, "r");
     si (aurum == NIHIL)
     {
@@ -268,10 +269,16 @@ principale (vacuum)
         /* aurum plagulas OMNES corporis ferat */
         CREDO_AEQUALIS_I32 ((i32)lectae, (i32)NUMERUS_CORPORIS);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "computus contra aurum", _scaenam_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("crusta_computus", SECTIONES);
 }

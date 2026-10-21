@@ -90,11 +90,13 @@ _clavis_est (
             == ZEPHYRUM;
 }
 
-s32
-principale (vacuum)
+/* Sectio UNA: casus omnes contra aurum, numeri aggregati (pares,
+ * dispares, orbi) in fine asserti. */
+interior vacuum
+_casus_comparare (
+    CredoContextus* c)
 {
-                   b32  praeteritus;
-               Piscina* piscina;
+               Piscina* piscina   = c->piscina;
     constans character* radix     = getenv("RHUBARB_RADIX");
     constans character* omnia     = getenv("ORACULUM_OMNIA");
     constans character* exemplum  = getenv("ORACULUM_EXEMPLUM");
@@ -111,20 +113,10 @@ principale (vacuum)
                    i32  k;
                    i32  j;
 
-    piscina = piscina_generare_dynamicum("probatio_crusta_oraculum",
-        4194304);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
     si (radix == NIHIL)
     {
         radix = ".";
     }
-
-    imprimere("\n--- Probans casus contra aurum declare -f ---\n");
 
     collectio = crusta_oraculum_casus(piscina, radix, &causa);
     fons = crusta_oraculum_legere(piscina, radix,
@@ -134,19 +126,18 @@ principale (vacuum)
         CREDO_CULPA (collectio == NIHIL ? "casus oraculi non lecti"
             : "aurum expectata.txt absens - ./crusta/oraculum.sh "
               "-scribere");
-        credo_imprimere_compendium();
-        redde I;
+        redde;
     }
     aurum = crusta_exempla_legere(piscina, fons, mensura);
     CREDO_NON_NIHIL (aurum);
     si (aurum == NIHIL)
     {
-        redde I;
+        redde;
     }
 
     per (k = ZEPHYRUM; k < xar_numerus(collectio); k++)
     {
-        constans CrustaCasusOraculi* c =
+        constans CrustaCasusOraculi* probandum =
             (constans CrustaCasusOraculi*)xar_obtinere(collectio, k);
                               chorda exspectatum;
                               chorda involutum;
@@ -155,14 +146,15 @@ principale (vacuum)
                        CrustaParsura  relatio;
                                  b32  par;
 
-        exspectatum = crusta_oraculum_aurum(aurum, c->clavis,
+        exspectatum = crusta_oraculum_aurum(aurum, probandum->clavis,
             "EXSPECTATUM");
         si (exspectatum.datum == NIHIL)
         {
             sine_auro++;
             perge;
         }
-        involutum = crusta_oraculum_involvere(piscina, c->datum);
+        involutum = crusta_oraculum_involvere(piscina,
+            probandum->datum);
         arbor     = crusta_arbor_parsare(piscina,
             (constans character*)involutum.datum, involutum.mensura,
             &CRUSTA_BASH, &relatio);
@@ -195,17 +187,18 @@ principale (vacuum)
              * (01M2PN1VYH: backslash ante lineam novam). */
             si (omnia != NIHIL && coctum.datum != NIHIL)
             {
-                _differentiam_imprimere(c->clavis, exspectatum, coctum);
+                _differentiam_imprimere(probandum->clavis, exspectatum,
+                    coctum);
             }
             alioquin
             {
                 imprimere("    dispar: %.*s\n",
-                    (integer)c->clavis.mensura,
-                    (constans character*)c->clavis.datum);
+                    (integer)probandum->clavis.mensura,
+                    (constans character*)probandum->clavis.datum);
             }
             nominati++;
         }
-        si (_clavis_est(c->clavis, exemplum))
+        si (_clavis_est(probandum->clavis, exemplum))
         {
             imprimere("=== %s (sana %d, mala %d)\n--- fons:\n%.*s--- "
                 "exspectatum:\n%.*s--- habitum:\n%.*s===\n", exemplum,
@@ -229,13 +222,13 @@ principale (vacuum)
 
         per (k = ZEPHYRUM; k < xar_numerus(collectio) && !inventa; k++)
         {
-            constans CrustaCasusOraculi* c =
+            constans CrustaCasusOraculi* probandum =
                 (constans CrustaCasusOraculi*)xar_obtinere(collectio,
                 k);
 
-            si (   c->clavis.mensura == e->titulus.mensura
-                && memcmp(c->clavis.datum, e->titulus.datum,
-                    (size_t)c->clavis.mensura) == ZEPHYRUM)
+            si (   probandum->clavis.mensura == e->titulus.mensura
+                && memcmp(probandum->clavis.datum, e->titulus.datum,
+                    (size_t)probandum->clavis.mensura) == ZEPHYRUM)
             {
                 inventa = VERUM;
             }
@@ -267,10 +260,16 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (nominati, dispares);
     CREDO_AEQUALIS_I32 (orbi, ZEPHYRUM);
     CREDO_VERUM (pares >= (i32)PINNA_PARIUM);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "casus contra aurum declare -f", _casus_comparare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("crusta_oraculum", SECTIONES);
 }

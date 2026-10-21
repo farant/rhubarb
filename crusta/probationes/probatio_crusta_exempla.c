@@ -75,35 +75,26 @@ _exemplum (
     redde (constans CrustaExemplum*)xar_obtinere(exempla, index);
 }
 
-s32
-principale (vacuum)
+interior constans character*
+_radix_viae (vacuum)
 {
-                        b32  praeteritus;
-                    Piscina* piscina;
-         constans character* radix;
+    constans character* radix = getenv("RHUBARB_RADIX");
+
+    redde radix != NIHIL ? radix : ".";
+}
+
+
+/* ==================================================
+ * PROBARE: contractus lectoris (plagula synthetica)
+ * ================================================== */
+
+interior vacuum
+_contractum_probare (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
                         Xar* exempla;
     constans CrustaExemplum* e;
-
-    piscina = piscina_generare_dynamicum("probatio_crusta_exempla",
-        1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    radix = getenv("RHUBARB_RADIX");
-    si (radix == NIHIL)
-    {
-        radix = ".";
-    }
-
-
-    /* ==================================================
-     * PROBARE: contractus lectoris (plagula synthetica)
-     * ================================================== */
-
-    imprimere("\n--- Probans contractum lectoris ---\n");
 
     {
         constans character* fons =
@@ -181,13 +172,21 @@ principale (vacuum)
         CREDO_NON_NIHIL (exempla);
         CREDO_AEQUALIS_I32 (xar_numerus(exempla), ZEPHYRUM);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: fixa domus
-     * ================================================== */
+/* ==================================================
+ * PROBARE: fixa domus
+ * ================================================== */
 
-    imprimere("\n--- Probans fixa domus ---\n");
+interior vacuum
+_fixa_probare (
+    CredoContextus* c)
+{
+                    Piscina* piscina  = c->piscina;
+         constans character* radix    = _radix_viae();
+                        Xar* exempla;
+    constans CrustaExemplum* e;
 
     {
                        i32  mensura;
@@ -249,13 +248,19 @@ principale (vacuum)
         CREDO_VERUM (_chorda_est(e->titulus, "nidus-cc"));
         CREDO_MAIOR_I32 (e->datum.mensura, (i32)DC);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: manifestum FreeBSD (FONTES.md pinnatum)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: manifestum FreeBSD (FONTES.md pinnatum)
+ * ================================================== */
 
-    imprimere("\n--- Probans manifestum FreeBSD ---\n");
+interior vacuum
+_manifestum_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina  = c->piscina;
+    constans character* radix    = _radix_viae();
 
     {
         i32 plagulae  = ZEPHYRUM;
@@ -286,10 +291,19 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (plagulae, (i32)LXXXIX);
         CREDO_AEQUALIS_I32 (octeti, (i32)17297);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "contractum lectoris", _contractum_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fixa domus", _fixa_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "manifestum FreeBSD", _manifestum_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("crusta_exempla", SECTIONES);
 }

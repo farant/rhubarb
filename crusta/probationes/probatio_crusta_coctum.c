@@ -651,30 +651,18 @@ _coquere (
     redde crusta_coctum_scribere(piscina, radix);
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: casus contra 'declare -f' bash 5.2.15
+ * ================================================== */
+
+interior vacuum
+_casus_probare (
+    CredoContextus* c)
 {
-         b32  praeteritus;
-     Piscina* piscina;
-         i32  numerus;
-         i32  k;
-      chorda  c;
-
-    piscina = piscina_generare_dynamicum("probatio_crusta_coctum",
-        1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ==================================================
-     * PROBARE: casus contra 'declare -f' bash 5.2.15
-     * ================================================== */
-
-    imprimere("\n--- Probans casus contra declare -f ---\n");
+    Piscina* piscina = c->piscina;
+        i32  numerus;
+        i32  k;
 
     numerus = (i32)(magnitudo(CASUS) / magnitudo(CASUS[ZEPHYRUM]));
     per (k = ZEPHYRUM; k < numerus; k++)
@@ -684,34 +672,40 @@ principale (vacuum)
     imprimere("    casus %d\n", (integer)numerus);
     CREDO_AEQUALIS_I32 (numerus, (i32)CASUS_NUMERUS);
     CREDO_VERUM (numerus >= (i32)XII);
+}
 
 
-    /* ==================================================
-     * PROBARE: contractus (radix NIHIL, programma vacuum, radix
-     * programmatis)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: contractus (radix NIHIL, programma vacuum, radix
+ * programmatis)
+ * ================================================== */
 
-    imprimere("\n--- Probans contractum ---\n");
+interior vacuum
+_contractum_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+     chorda  scriptum;
 
-    c = crusta_coctum_scribere(piscina, NIHIL);
-    CREDO_NON_NIHIL (c.datum);
-    CREDO_AEQUALIS_I32 (c.mensura, ZEPHYRUM);
+    scriptum = crusta_coctum_scribere(piscina, NIHIL);
+    CREDO_NON_NIHIL (scriptum.datum);
+    CREDO_AEQUALIS_I32 (scriptum.mensura, ZEPHYRUM);
 
-    c = _coquere(piscina, "");
-    CREDO_NON_NIHIL (c.datum);
-    CREDO_AEQUALIS_I32 (c.mensura, ZEPHYRUM);
+    scriptum = _coquere(piscina, "");
+    CREDO_NON_NIHIL (scriptum.datum);
+    CREDO_AEQUALIS_I32 (scriptum.mensura, ZEPHYRUM);
 
-    c = _coquere(piscina, "# solum commentum\n\n");
-    CREDO_NON_NIHIL (c.datum);
-    CREDO_AEQUALIS_I32 (c.mensura, ZEPHYRUM);
+    scriptum = _coquere(piscina, "# solum commentum\n\n");
+    CREDO_NON_NIHIL (scriptum.datum);
+    CREDO_AEQUALIS_I32 (scriptum.mensura, ZEPHYRUM);
 
     /* programma: modus functionis gradu zephyro, '\n' finalis */
-    c = _coquere(piscina, "a;b\n\nc &");
-    CREDO_CHORDA_AEQUALIS_LITERIS (c, "a;\nb;\nc &\n");
+    scriptum = _coquere(piscina, "a;b\n\nc &");
+    CREDO_CHORDA_AEQUALIS_LITERIS (scriptum, "a;\nb;\nc &\n");
 
     /* functio in radice: forma 'declare -f' etiam cum 'function' */
-    c = _coquere(piscina, "function g { :; }");
-    CREDO_CHORDA_AEQUALIS_LITERIS (c, "g () \n{ \n    :\n}\n");
+    scriptum = _coquere(piscina, "function g { :; }");
+    CREDO_CHORDA_AEQUALIS_LITERIS (scriptum, "g () \n{ \n    :\n}\n");
 
     /* nodus sententiae sine programmate */
     {
@@ -729,14 +723,21 @@ principale (vacuum)
             sententia = materia_valor_lista_obtinere(
                 radix->loci[CRUSTA_PROGRAMMA_LIBERI],
                 ZEPHYRUM)->datum.nodus;
-            c = crusta_coctum_scribere(piscina, sententia);
-            CREDO_CHORDA_AEQUALIS_LITERIS (c, "a | b\n");
+            scriptum = crusta_coctum_scribere(piscina, sententia);
+            CREDO_CHORDA_AEQUALIS_LITERIS (scriptum, "a | b\n");
         }
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "casus contra declare -f",
+        _casus_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "contractum", _contractum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("crusta_coctum", SECTIONES);
 }

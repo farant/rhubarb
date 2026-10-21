@@ -234,41 +234,30 @@ _eadem_via (
     redde strcmp(a, b) == ZEPHYRUM;
 }
 
-s32
-principale (vacuum)
+interior constans character*
+_radix_viae (vacuum)
 {
-                   b32  praeteritus;
-               Piscina* piscina;
-    constans character* radix;
+    constans character* radix = getenv("RHUBARB_RADIX");
+
+    redde radix != NIHIL ? radix : ".";
+}
+
+
+/* ==================================================
+ * PROBARE: corpus domus (lista a cursore scripta)
+ * ================================================== */
+
+interior vacuum
+_domum_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina  = c->piscina;
+    constans character* radix    = _radix_viae();
     constans character* lista;
                    i32  mensura;
                  Summa  summa;
-                 Summa  fixa;
-                   i32  i;
 
-    piscina = piscina_generare_dynamicum("probatio_crusta_corpus",
-        1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    radix = getenv("RHUBARB_RADIX");
-    si (radix == NIHIL)
-    {
-        radix = ".";
-    }
     memset(&summa, ZEPHYRUM, magnitudo(summa));
-    memset(&fixa, ZEPHYRUM, magnitudo(fixa));
-
-
-    /* ==================================================
-     * PROBARE: corpus domus (lista a cursore scripta)
-     * ================================================== */
-
-    imprimere("\n--- Probans corpus domus ---\n");
-
     lista = _plagulam_legere(piscina, radix, "build/crusta_corpus.lst",
         &mensura);
     si (lista == NIHIL)
@@ -319,14 +308,23 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (summa.dispar, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (summa.tegumentum_fractum, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (summa.idem, summa.plagulae);
+}
 
 
-    /* ==================================================
-     * PROBARE: fixa et FreeBSD
-     * ================================================== */
+/* ==================================================
+ * PROBARE: fixa et FreeBSD
+ * ================================================== */
 
-    imprimere("\n--- Probans fixa et casus FreeBSD ---\n");
+interior vacuum
+_fixa_probare (
+    CredoContextus* c)
+{
+    constans character* radix = _radix_viae();
+                 Summa  fixa;
+                   i32  i;
 
+    (vacuum)c;
+    memset(&fixa, ZEPHYRUM, magnitudo(fixa));
     _plagula(radix, "probationes/fixa/crusta/pathologiae.sh", &fixa,
         FALSUM);
     _plagula(radix, "probationes/fixa/crusta/adversarius.sh", &fixa,
@@ -346,10 +344,17 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (fixa.emissio_fracta, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (fixa.dispar, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (fixa.tegumentum_fractum, ZEPHYRUM);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "corpus domus", _domum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fixa et casus FreeBSD", _fixa_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("crusta_corpus", SECTIONES);
 }

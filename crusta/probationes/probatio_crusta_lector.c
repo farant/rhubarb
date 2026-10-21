@@ -22,10 +22,9 @@ nomen structura {
                  Xar* lexemata;    /* MateriaToken* */
   constans character* fons;
                  i32  mensura;
+                 i32  casus_numerus;   /* trans casus sectionis */
+                 i32  octeti_tecti;    /* (_incipere non reficit) */
 } Cursus;
-
-hic_manens i32 casus_numerus = ZEPHYRUM;
-hic_manens i32 octeti_tecti  = ZEPHYRUM;
 
 interior constans character*
 _copia (
@@ -52,7 +51,7 @@ _incipere (
     c->lexemata  = xar_creare(piscina, (i32)magnitudo(MateriaToken*));
     CREDO_VERUM (crusta_lector_incipere(&c->lector, piscina, c->fons,
         c->mensura, &CRUSTA_BASH));
-    casus_numerus++;
+    c->casus_numerus++;
 }
 
 interior vacuum
@@ -87,7 +86,8 @@ _pulsare (
         || memcmp(t->valor.datum, textus, (size_t)n) != ZEPHYRUM)
     {
         imprimere("    casus %d: exspectatum genus %d '%s', receptum "
-            "genus %d '%.*s'\n", (integer)casus_numerus, (integer)genus,
+            "genus %d '%.*s'\n", (integer)c->casus_numerus,
+            (integer)genus,
             textus, (integer)t->genus, (integer)t->valor.mensura,
             (constans character*)t->valor.datum);
     }
@@ -122,7 +122,7 @@ _finire (
         {
             idem = FALSUM;
             imprimere("    casus %d: tegumentum ruptum ad offset %d "
-                "(lexema %d)\n", (integer)casus_numerus,
+                "(lexema %d)\n", (integer)c->casus_numerus,
                 (integer)offset,
                 (integer)i);
             frange;
@@ -131,7 +131,7 @@ _finire (
     }
     CREDO_VERUM (idem);
     CREDO_AEQUALIS_I32 (offset, c->mensura);
-    octeti_tecti += offset;
+    c->octeti_tecti += offset;
 }
 
 /* pulsus per modum: involucra _pulsare, nomina modorum */
@@ -306,418 +306,412 @@ _heredoc_litterale (
     redde _pulsare(c, CRUSTA_MODUS_HEREDOC_LITTERALE, genus, textus);
 }
 
+/* Sectio UNA: pinna 'casus > XL' casus OMNIUM blocorum numerat
+ * (assertio aggregata) - divisio numeros mutaret; gradus
+ * (CREDO_GRADUS) fracturam nominant. */
+interior vacuum
+_casus_probare (
+    CredoContextus* c)
+{
+            Piscina* piscina = c->piscina;
+             Cursus  cursus;
 
-                       s32
-    principale (vacuum)
-    {
-        b32  praeteritus;
-    Piscina* piscina;
-     Cursus  c;
-
-    piscina =
-        piscina_generare_dynamicum("probatio_crusta_lector",
-        262144);
-    si (!piscina)
-    {
-    imprimere("FRACTA: piscina_generatio\n");
-    redde I;
-    }
-    credo_aperire(piscina);
+    memset(&cursus, ZEPHYRUM, magnitudo(cursus));
 
 
     /* ==================================================
      * PROBARE: verba reservata et assignationes positionales
      * ================================================== */
 
-    imprimere("\n--- Probans positionem ---\n");
+    CREDO_GRADUS ("positionem");
 
-    _incipere(&c, piscina, "if true; then :; fi");
-    _initium(&c, CRUSTA_LEX_RESERVATUM, "if");
-    _initium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "true");
-    _verba(&c, CRUSTA_LEX_SEPARATOR, ";");
-    _initium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _initium(&c, CRUSTA_LEX_RESERVATUM, "then");
-    _initium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, ":");
-    _verba(&c, CRUSTA_LEX_SEPARATOR, ";");
-    _initium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _initium(&c, CRUSTA_LEX_RESERVATUM, "fi");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _incipere(&cursus, piscina, "if true; then :; fi");
+    _initium(&cursus, CRUSTA_LEX_RESERVATUM, "if");
+    _initium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "true");
+    _verba(&cursus, CRUSTA_LEX_SEPARATOR, ";");
+    _initium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _initium(&cursus, CRUSTA_LEX_RESERVATUM, "then");
+    _initium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, ":");
+    _verba(&cursus, CRUSTA_LEX_SEPARATOR, ";");
+    _initium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _initium(&cursus, CRUSTA_LEX_RESERVATUM, "fi");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
-    _incipere(&c, piscina, "echo if");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "echo");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "if");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _incipere(&cursus, piscina, "echo if");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "echo");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "if");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
-    _incipere(&c, piscina, "x=if");
-    _initium(&c, CRUSTA_LEX_ASSIGNATIO_TITULUS, "x");
-    _initium(&c, CRUSTA_LEX_ASSIGNATIO_OPERATOR, "=");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "if");
-    _finire(&c, CRUSTA_MODUS_INITIUM);
+    _incipere(&cursus, piscina, "x=if");
+    _initium(&cursus, CRUSTA_LEX_ASSIGNATIO_TITULUS, "x");
+    _initium(&cursus, CRUSTA_LEX_ASSIGNATIO_OPERATOR, "=");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "if");
+    _finire(&cursus, CRUSTA_MODUS_INITIUM);
 
-    _incipere(&c, piscina, "a[1]+=v");
-    _initium(&c, CRUSTA_LEX_ASSIGNATIO_TITULUS, "a");
-    _initium(&c, CRUSTA_LEX_SUBSCRIPTUM, "[1]");
-    _initium(&c, CRUSTA_LEX_ASSIGNATIO_OPERATOR,
+    _incipere(&cursus, piscina, "a[1]+=v");
+    _initium(&cursus, CRUSTA_LEX_ASSIGNATIO_TITULUS, "a");
+    _initium(&cursus, CRUSTA_LEX_SUBSCRIPTUM, "[1]");
+    _initium(&cursus, CRUSTA_LEX_ASSIGNATIO_OPERATOR,
         "+=");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "v");
-    _finire(&c, CRUSTA_MODUS_INITIUM);
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "v");
+    _finire(&cursus, CRUSTA_MODUS_INITIUM);
 
-    _incipere(&c, piscina, "A=1 if");
-    _initium(&c, CRUSTA_LEX_ASSIGNATIO_TITULUS, "A");
-    _initium(&c, CRUSTA_LEX_ASSIGNATIO_OPERATOR, "=");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "1");
-    _initium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _initium(&c, CRUSTA_LEX_RESERVATUM, "if");
-    _finire(&c, CRUSTA_MODUS_INITIUM);
+    _incipere(&cursus, piscina, "A=1 if");
+    _initium(&cursus, CRUSTA_LEX_ASSIGNATIO_TITULUS, "A");
+    _initium(&cursus, CRUSTA_LEX_ASSIGNATIO_OPERATOR, "=");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "1");
+    _initium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _initium(&cursus, CRUSTA_LEX_RESERVATUM, "if");
+    _finire(&cursus, CRUSTA_MODUS_INITIUM);
 
     /* in VERBA nec reservata nec assignationes */
-    _incipere(&c, piscina, "cmd a=b {");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "cmd");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "a=b");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "{");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _incipere(&cursus, piscina, "cmd a=b {");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "cmd");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "a=b");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "{");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
     /* aedificator: assignationes post verbum */
-    _incipere(&c, piscina, "x=(1 [2]=y)");
-    _assignationes(&c, CRUSTA_LEX_ASSIGNATIO_TITULUS, "x");
-    _assignationes(&c, CRUSTA_LEX_ASSIGNATIO_OPERATOR, "=");
-    _assignationes(&c, CRUSTA_LEX_PARENTHESIS, "(");
-    _tabulatum(&c, CRUSTA_LEX_LITTERALIS, "1");
-    _tabulatum(&c, CRUSTA_LEX_SPATIUM, " ");
-    _tabulatum(&c, CRUSTA_LEX_SUBSCRIPTUM, "[2]");
-    _tabulatum(&c, CRUSTA_LEX_ASSIGNATIO_OPERATOR, "=");
-    _tabulatum(&c, CRUSTA_LEX_LITTERALIS, "y");
-    _tabulatum(&c, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
+    _incipere(&cursus, piscina, "x=(1 [2]=y)");
+    _assignationes(&cursus, CRUSTA_LEX_ASSIGNATIO_TITULUS, "x");
+    _assignationes(&cursus, CRUSTA_LEX_ASSIGNATIO_OPERATOR, "=");
+    _assignationes(&cursus, CRUSTA_LEX_PARENTHESIS, "(");
+    _tabulatum(&cursus, CRUSTA_LEX_LITTERALIS, "1");
+    _tabulatum(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _tabulatum(&cursus, CRUSTA_LEX_SUBSCRIPTUM, "[2]");
+    _tabulatum(&cursus, CRUSTA_LEX_ASSIGNATIO_OPERATOR, "=");
+    _tabulatum(&cursus, CRUSTA_LEX_LITTERALIS, "y");
+    _tabulatum(&cursus, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
         ")");
-    _finire(&c, CRUSTA_MODUS_ASSIGNATIONES);
+    _finire(&cursus, CRUSTA_MODUS_ASSIGNATIONES);
 
     /* { } [[ ]] ! reservata; {fd} verbum; !x verbum */
-    _incipere(&c, piscina, "{ ! [[ x ]] {fd} !x }");
-    _initium(&c, CRUSTA_LEX_RESERVATUM, "{");
-    _initium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _initium(&c, CRUSTA_LEX_RESERVATUM, "!");
-    _initium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _initium(&c, CRUSTA_LEX_RESERVATUM, "[[");
-    _iudicium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _iudicium(&c, CRUSTA_LEX_LITTERALIS, "x");
-    _iudicium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _iudicium(&c, CRUSTA_LEX_IUDICIUM_CLAUSURA, "]]");
-    _initium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "{fd}");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "!x");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _initium(&c, CRUSTA_LEX_RESERVATUM, "}");
-    _finire(&c, CRUSTA_MODUS_INITIUM);
+    _incipere(&cursus, piscina, "{ ! [[ x ]] {fd} !x }");
+    _initium(&cursus, CRUSTA_LEX_RESERVATUM, "{");
+    _initium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _initium(&cursus, CRUSTA_LEX_RESERVATUM, "!");
+    _initium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _initium(&cursus, CRUSTA_LEX_RESERVATUM, "[[");
+    _iudicium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _iudicium(&cursus, CRUSTA_LEX_LITTERALIS, "x");
+    _iudicium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _iudicium(&cursus, CRUSTA_LEX_IUDICIUM_CLAUSURA, "]]");
+    _initium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "{fd}");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "!x");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _initium(&cursus, CRUSTA_LEX_RESERVATUM, "}");
+    _finire(&cursus, CRUSTA_MODUS_INITIUM);
 
 
     /* ==================================================
      * PROBARE: linea nova per modum (C6), trivia, continuatio
      * ================================================== */
 
-    imprimere("\n--- Probans lineam novam per modum ---\n");
+    CREDO_GRADUS ("lineam novam per modum");
 
-    _incipere(&c, piscina, "a\n");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "a");
-    _verba(&c, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
-    _finire(&c, CRUSTA_MODUS_INITIUM);
+    _incipere(&cursus, piscina, "a\n");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "a");
+    _verba(&cursus, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
+    _finire(&cursus, CRUSTA_MODUS_INITIUM);
 
-    _incipere(&c, piscina, "a\n");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "a");
-    _initium(&c, CRUSTA_LEX_LINEA, "\n");
-    _finire(&c, CRUSTA_MODUS_INITIUM);
+    _incipere(&cursus, piscina, "a\n");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "a");
+    _initium(&cursus, CRUSTA_LEX_LINEA, "\n");
+    _finire(&cursus, CRUSTA_MODUS_INITIUM);
 
     /* '\r' octetus ordinarius (bash idem): verbum 'a\r', linea '\n' */
-    _incipere(&c, piscina, "a\r\n");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "a\r");
-    _verba(&c, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
-    _finire(&c, CRUSTA_MODUS_INITIUM);
+    _incipere(&cursus, piscina, "a\r\n");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "a\r");
+    _verba(&cursus, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
+    _finire(&cursus, CRUSTA_MODUS_INITIUM);
 
-    _incipere(&c, piscina,
+    _incipere(&cursus, piscina,
         "a # c\n#!/bin/bash\n  b");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "a");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_COMMENTUM, "# c");
-    _verba(&c, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
-    _initium(&c, CRUSTA_LEX_COMMENTUM, "#!/bin/bash");
-    _initium(&c, CRUSTA_LEX_LINEA, "\n");
-    _initium(&c, CRUSTA_LEX_SPATIUM, "  ");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "b");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "a");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_COMMENTUM, "# c");
+    _verba(&cursus, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
+    _initium(&cursus, CRUSTA_LEX_COMMENTUM, "#!/bin/bash");
+    _initium(&cursus, CRUSTA_LEX_LINEA, "\n");
+    _initium(&cursus, CRUSTA_LEX_SPATIUM, "  ");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "b");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
     /* commentum solum initio verbi: a#b verbum */
-    _incipere(&c, piscina, "a#b");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "a#b");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _incipere(&cursus, piscina, "a#b");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "a#b");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
-    _incipere(&c, piscina, "ab\\\ncd");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "ab");
-    _initium(&c, CRUSTA_LEX_CONTINUATIO, "\\\n");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "cd");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _incipere(&cursus, piscina, "ab\\\ncd");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "ab");
+    _initium(&cursus, CRUSTA_LEX_CONTINUATIO, "\\\n");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "cd");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
-    _incipere(&c, piscina, "a \\\n b");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "a");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_LAMINA, "\\\n");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "b");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _incipere(&cursus, piscina, "a \\\n b");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "a");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_LAMINA, "\\\n");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "b");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
     /* effugia: paria, impar ante octetum, retroversum in fine */
-    _incipere(&c, piscina, "a\\ b \\\\x \\");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "a");
-    _initium(&c, CRUSTA_LEX_EFFUGIUM, "\\ ");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "b");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_EFFUGIUM, "\\\\");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "x");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "\\");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _incipere(&cursus, piscina, "a\\ b \\\\x \\");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "a");
+    _initium(&cursus, CRUSTA_LEX_EFFUGIUM, "\\ ");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "b");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_EFFUGIUM, "\\\\");
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "x");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "\\");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
 
     /* ==================================================
      * PROBARE: operatores, separatores, glutinatio fd
      * ================================================== */
 
-    imprimere("\n--- Probans operatores et fd ---\n");
+    CREDO_GRADUS ("operatores et fd");
 
-    _incipere(&c, piscina,
+    _incipere(&cursus, piscina,
         "a && b || c | d |& e & f ; g ;; h ;& i ;;& j");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "a");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_ET, "&&");
-    _initium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "b");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_AUT, "||");
-    _initium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "c");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_PIPA, "|");
-    _initium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "d");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_PIPA_ERRORIS, "|&");
-    _initium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "e");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_SEPARATOR, "&");
-    _initium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "f");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_SEPARATOR, ";");
-    _initium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "g");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_TERMINATOR_OPTIONIS,
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "a");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_ET, "&&");
+    _initium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "b");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_AUT, "||");
+    _initium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "c");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_PIPA, "|");
+    _initium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "d");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_PIPA_ERRORIS, "|&");
+    _initium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "e");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_SEPARATOR, "&");
+    _initium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "f");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_SEPARATOR, ";");
+    _initium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "g");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_TERMINATOR_OPTIONIS,
         ";;");
-    _exemplar(&c, CRUSTA_LEX_SPATIUM, " ");
-    _exemplar(&c, CRUSTA_LEX_LITTERALIS, "h");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_TERMINATOR_OPTIONIS,
+    _exemplar(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _exemplar(&cursus, CRUSTA_LEX_LITTERALIS, "h");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_TERMINATOR_OPTIONIS,
         ";&");
-    _exemplar(&c, CRUSTA_LEX_SPATIUM, " ");
-    _exemplar(&c, CRUSTA_LEX_LITTERALIS, "i");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_TERMINATOR_OPTIONIS,
+    _exemplar(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _exemplar(&cursus, CRUSTA_LEX_LITTERALIS, "i");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_TERMINATOR_OPTIONIS,
         ";;&");
-    _exemplar(&c, CRUSTA_LEX_SPATIUM, " ");
-    _exemplar(&c, CRUSTA_LEX_LITTERALIS, "j");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _exemplar(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _exemplar(&cursus, CRUSTA_LEX_LITTERALIS, "j");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
-    _incipere(&c, piscina,
+    _incipere(&cursus, piscina,
         "2>f 2 >f x2>f {fd}>f &>>f <<<w <<-E >|f <&-");
-    _initium(&c, CRUSTA_LEX_REDIRECTIO_FD, "2");
-    _initium(&c, CRUSTA_LEX_REDIRECTIO_OPERATOR, ">");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "f");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "2");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_REDIRECTIO_OPERATOR, ">");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "f");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "x2");
-    _verba(&c, CRUSTA_LEX_REDIRECTIO_OPERATOR, ">");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "f");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_REDIRECTIO_FD, "{fd}");
-    _verba(&c, CRUSTA_LEX_REDIRECTIO_OPERATOR, ">");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "f");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_REDIRECTIO_OPERATOR,
+    _initium(&cursus, CRUSTA_LEX_REDIRECTIO_FD, "2");
+    _initium(&cursus, CRUSTA_LEX_REDIRECTIO_OPERATOR, ">");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "f");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "2");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_REDIRECTIO_OPERATOR, ">");
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "f");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "x2");
+    _verba(&cursus, CRUSTA_LEX_REDIRECTIO_OPERATOR, ">");
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "f");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_REDIRECTIO_FD, "{fd}");
+    _verba(&cursus, CRUSTA_LEX_REDIRECTIO_OPERATOR, ">");
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "f");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_REDIRECTIO_OPERATOR,
         "&>>");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "f");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_REDIRECTIO_OPERATOR,
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "f");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_REDIRECTIO_OPERATOR,
         "<<<");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "w");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_REDIRECTIO_OPERATOR,
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "w");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_REDIRECTIO_OPERATOR,
         "<<-");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "E");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_REDIRECTIO_OPERATOR,
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "E");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_REDIRECTIO_OPERATOR,
         ">|");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "f");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_REDIRECTIO_OPERATOR,
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "f");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_REDIRECTIO_OPERATOR,
         "<&");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "-");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "-");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
-    _incipere(&c, piscina,
+    _incipere(&cursus, piscina,
         "(( a )) ( b ) <(c) >(d)");
-    _initium(&c, CRUSTA_LEX_ARITHMETICA_APERTURA,
+    _initium(&cursus, CRUSTA_LEX_ARITHMETICA_APERTURA,
         "((");
-    _arithmetica_summa(&c, CRUSTA_LEX_SPATIUM, " ");
-    _arithmetica_summa(&c, CRUSTA_LEX_VARIABILIS, "a");
-    _arithmetica_summa(&c, CRUSTA_LEX_SPATIUM, " ");
-    _arithmetica_summa(&c, CRUSTA_LEX_ARITHMETICA_CLAUSURA,
+    _arithmetica_summa(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_VARIABILIS, "a");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_ARITHMETICA_CLAUSURA,
         "))");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _initium(&c, CRUSTA_LEX_PARENTHESIS, "(");
-    _initium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "b");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _initium(&cursus, CRUSTA_LEX_PARENTHESIS, "(");
+    _initium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "b");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
         ")");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_PROCESSUS_APERTURA, "<(");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "c");
-    _verba(&c, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_PROCESSUS_APERTURA, "<(");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "c");
+    _verba(&cursus, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
         ")");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_PROCESSUS_APERTURA, ">(");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "d");
-    _verba(&c, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_PROCESSUS_APERTURA, ">(");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "d");
+    _verba(&cursus, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
         ")");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
 
     /* ==================================================
      * PROBARE: partes verbi
      * ================================================== */
 
-    imprimere("\n--- Probans partes verbi ---\n");
+    CREDO_GRADUS ("partes verbi");
 
-    _incipere(&c, piscina, "\"a$b${c}$(d)\\$\"");
-    _initium(&c, CRUSTA_LEX_GEMINA_APERTURA, "\"");
-    _gemina(&c, CRUSTA_LEX_LITTERALIS, "a");
-    _gemina(&c, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
-    _gemina(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "b");
-    _gemina(&c, CRUSTA_LEX_EXPANSIO_APERTURA, "${");
-    _expansio(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "c");
-    _expansio(&c, CRUSTA_LEX_EXPANSIO_CLAUSURA, "}");
-    _gemina(&c, CRUSTA_LEX_SUBSTITUTIO_APERTURA,
+    _incipere(&cursus, piscina, "\"a$b${c}$(d)\\$\"");
+    _initium(&cursus, CRUSTA_LEX_GEMINA_APERTURA, "\"");
+    _gemina(&cursus, CRUSTA_LEX_LITTERALIS, "a");
+    _gemina(&cursus, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
+    _gemina(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "b");
+    _gemina(&cursus, CRUSTA_LEX_EXPANSIO_APERTURA, "${");
+    _expansio(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "c");
+    _expansio(&cursus, CRUSTA_LEX_EXPANSIO_CLAUSURA, "}");
+    _gemina(&cursus, CRUSTA_LEX_SUBSTITUTIO_APERTURA,
         "$(");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "d");
-    _verba(&c, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "d");
+    _verba(&cursus, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
         ")");
-    _gemina(&c, CRUSTA_LEX_EFFUGIUM, "\\$");
-    _gemina(&c, CRUSTA_LEX_GEMINA_CLAUSURA, "\"");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _gemina(&cursus, CRUSTA_LEX_EFFUGIUM, "\\$");
+    _gemina(&cursus, CRUSTA_LEX_GEMINA_CLAUSURA, "\"");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
     /* intra gemina: retroversum ante x litterale, par effugium, " */
-    _incipere(&c, piscina, "\"\\x\\\\y\\\"\"");
-    _initium(&c, CRUSTA_LEX_GEMINA_APERTURA, "\"");
-    _gemina(&c, CRUSTA_LEX_LITTERALIS, "\\");
-    _gemina(&c, CRUSTA_LEX_LITTERALIS, "x");
-    _gemina(&c, CRUSTA_LEX_EFFUGIUM, "\\\\");
-    _gemina(&c, CRUSTA_LEX_LITTERALIS, "y");
-    _gemina(&c, CRUSTA_LEX_EFFUGIUM, "\\\"");
-    _gemina(&c, CRUSTA_LEX_GEMINA_CLAUSURA, "\"");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _incipere(&cursus, piscina, "\"\\x\\\\y\\\"\"");
+    _initium(&cursus, CRUSTA_LEX_GEMINA_APERTURA, "\"");
+    _gemina(&cursus, CRUSTA_LEX_LITTERALIS, "\\");
+    _gemina(&cursus, CRUSTA_LEX_LITTERALIS, "x");
+    _gemina(&cursus, CRUSTA_LEX_EFFUGIUM, "\\\\");
+    _gemina(&cursus, CRUSTA_LEX_LITTERALIS, "y");
+    _gemina(&cursus, CRUSTA_LEX_EFFUGIUM, "\\\"");
+    _gemina(&cursus, CRUSTA_LEX_GEMINA_CLAUSURA, "\"");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
-    _incipere(&c, piscina,
+    _incipere(&cursus, piscina,
         "'a b'x$'\\t'$\"s\" ~/x a~b");
-    _initium(&c, CRUSTA_LEX_SIMPLEX, "'a b'");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "x");
-    _initium(&c, CRUSTA_LEX_EFFUGIA, "$'\\t'");
-    _initium(&c, CRUSTA_LEX_VERSA_APERTURA, "$\"");
-    _gemina(&c, CRUSTA_LEX_LITTERALIS, "s");
-    _gemina(&c, CRUSTA_LEX_GEMINA_CLAUSURA, "\"");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_DOMUS, "~");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "/x");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "a~b");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _initium(&cursus, CRUSTA_LEX_SIMPLEX, "'a b'");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "x");
+    _initium(&cursus, CRUSTA_LEX_EFFUGIA, "$'\\t'");
+    _initium(&cursus, CRUSTA_LEX_VERSA_APERTURA, "$\"");
+    _gemina(&cursus, CRUSTA_LEX_LITTERALIS, "s");
+    _gemina(&cursus, CRUSTA_LEX_GEMINA_CLAUSURA, "\"");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_DOMUS, "~");
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "/x");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "a~b");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
     /* ~ initio verbi et post = ; post : litteralis (deviatio) */
-    _incipere(&c, piscina, "P=~/a:~b");
-    _initium(&c, CRUSTA_LEX_ASSIGNATIO_TITULUS, "P");
-    _initium(&c, CRUSTA_LEX_ASSIGNATIO_OPERATOR, "=");
-    _initium(&c, CRUSTA_LEX_DOMUS, "~");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "/a:~b");
-    _finire(&c, CRUSTA_MODUS_INITIUM);
+    _incipere(&cursus, piscina, "P=~/a:~b");
+    _initium(&cursus, CRUSTA_LEX_ASSIGNATIO_TITULUS, "P");
+    _initium(&cursus, CRUSTA_LEX_ASSIGNATIO_OPERATOR, "=");
+    _initium(&cursus, CRUSTA_LEX_DOMUS, "~");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "/a:~b");
+    _finire(&cursus, CRUSTA_MODUS_INITIUM);
 
     /* $'...' cum apice effugito; simplex ad EOF apertus */
-    _incipere(&c, piscina, "$'a\\'b' 'x");
-    _initium(&c, CRUSTA_LEX_EFFUGIA, "$'a\\'b'");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_SIMPLEX, "'x");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _incipere(&cursus, piscina, "$'a\\'b' 'x");
+    _initium(&cursus, CRUSTA_LEX_EFFUGIA, "$'a\\'b'");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_SIMPLEX, "'x");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
-    _incipere(&c, piscina,
+    _incipere(&cursus, piscina,
         "$10 $@ $# $? $- $$ $! $0 $ x $$$y");
-    _initium(&c, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
-    _initium(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "1");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "0");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
-    _verba(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "@");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
-    _verba(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "#");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
-    _verba(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "?");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
-    _verba(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "-");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
-    _verba(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "$");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
-    _verba(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "!");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
-    _verba(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "0");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "$");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "x");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
-    _verba(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "$");
-    _verba(&c, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
-    _verba(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "y");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _initium(&cursus, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
+    _initium(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "1");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "0");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
+    _verba(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "@");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
+    _verba(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "#");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
+    _verba(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "?");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
+    _verba(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "-");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
+    _verba(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "$");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
+    _verba(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "!");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
+    _verba(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "0");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "$");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "x");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
+    _verba(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "$");
+    _verba(&cursus, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
+    _verba(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "y");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
     /* verbum unum trium partium: adiacentia per offset */
     {
     MateriaToken* a;
     MateriaToken* b;
 
-    _incipere(&c, piscina, "a$(b)c");
-    a = _initium(&c, CRUSTA_LEX_LITTERALIS, "a");
-    _initium(&c, CRUSTA_LEX_SUBSTITUTIO_APERTURA,
+    _incipere(&cursus, piscina, "a$(b)c");
+    a = _initium(&cursus, CRUSTA_LEX_LITTERALIS, "a");
+    _initium(&cursus, CRUSTA_LEX_SUBSTITUTIO_APERTURA,
         "$(");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "b");
-    _verba(&c, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "b");
+    _verba(&cursus, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
         ")");
-    b = _verba(&c, CRUSTA_LEX_LITTERALIS, "c");
+    b = _verba(&cursus, CRUSTA_LEX_LITTERALIS, "c");
     CREDO_AEQUALIS_S32 (b->byte_offset,
         a->byte_offset + (s32)V);
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
     }
 
 
@@ -725,302 +719,302 @@ _heredoc_litterale (
      * PROBARE: expansio ${ }
      * ================================================== */
 
-    imprimere("\n--- Probans expansionem ---\n");
+    CREDO_GRADUS ("expansionem");
 
-    _incipere(&c, piscina,
+    _incipere(&cursus, piscina,
         "${#x}${#}${!x[@]}${x:-d}");
-    _initium(&c, CRUSTA_LEX_EXPANSIO_APERTURA, "${");
-    _expansio(&c, CRUSTA_LEX_EXPANSIO_PRAEFIXUM, "#");
-    _expansio(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "x");
-    _expansio(&c, CRUSTA_LEX_EXPANSIO_CLAUSURA, "}");
-    _verba(&c, CRUSTA_LEX_EXPANSIO_APERTURA, "${");
-    _expansio(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "#");
-    _expansio(&c, CRUSTA_LEX_EXPANSIO_CLAUSURA, "}");
-    _verba(&c, CRUSTA_LEX_EXPANSIO_APERTURA, "${");
-    _expansio(&c, CRUSTA_LEX_EXPANSIO_PRAEFIXUM, "!");
-    _expansio(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "x");
-    _expansio(&c, CRUSTA_LEX_SUBSCRIPTUM, "[@]");
-    _expansio(&c, CRUSTA_LEX_EXPANSIO_CLAUSURA, "}");
-    _verba(&c, CRUSTA_LEX_EXPANSIO_APERTURA, "${");
-    _expansio(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "x");
-    _expansio(&c, CRUSTA_LEX_EXPANSIO_OPERATOR, ":-");
-    _expansio_verbum(&c, CRUSTA_LEX_LITTERALIS, "d");
-    _expansio_verbum(&c, CRUSTA_LEX_EXPANSIO_CLAUSURA, "}");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _initium(&cursus, CRUSTA_LEX_EXPANSIO_APERTURA, "${");
+    _expansio(&cursus, CRUSTA_LEX_EXPANSIO_PRAEFIXUM, "#");
+    _expansio(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "x");
+    _expansio(&cursus, CRUSTA_LEX_EXPANSIO_CLAUSURA, "}");
+    _verba(&cursus, CRUSTA_LEX_EXPANSIO_APERTURA, "${");
+    _expansio(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "#");
+    _expansio(&cursus, CRUSTA_LEX_EXPANSIO_CLAUSURA, "}");
+    _verba(&cursus, CRUSTA_LEX_EXPANSIO_APERTURA, "${");
+    _expansio(&cursus, CRUSTA_LEX_EXPANSIO_PRAEFIXUM, "!");
+    _expansio(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "x");
+    _expansio(&cursus, CRUSTA_LEX_SUBSCRIPTUM, "[@]");
+    _expansio(&cursus, CRUSTA_LEX_EXPANSIO_CLAUSURA, "}");
+    _verba(&cursus, CRUSTA_LEX_EXPANSIO_APERTURA, "${");
+    _expansio(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "x");
+    _expansio(&cursus, CRUSTA_LEX_EXPANSIO_OPERATOR, ":-");
+    _expansio_verbum(&cursus, CRUSTA_LEX_LITTERALIS, "d");
+    _expansio_verbum(&cursus, CRUSTA_LEX_EXPANSIO_CLAUSURA, "}");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
-    _incipere(&c, piscina,
+    _incipere(&cursus, piscina,
         "${x//a/b}${x:1:2}${x@Q}${x^^}${x:-a b;}");
-    _initium(&c, CRUSTA_LEX_EXPANSIO_APERTURA, "${");
-    _expansio(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "x");
-    _expansio(&c, CRUSTA_LEX_EXPANSIO_OPERATOR, "//");
-    _expansio_exemplar(&c, CRUSTA_LEX_LITTERALIS, "a");
-    _expansio_exemplar(&c, CRUSTA_LEX_EXPANSIO_OPERATOR, "/");
-    _expansio_verbum(&c, CRUSTA_LEX_LITTERALIS, "b");
-    _expansio_verbum(&c, CRUSTA_LEX_EXPANSIO_CLAUSURA, "}");
-    _verba(&c, CRUSTA_LEX_EXPANSIO_APERTURA, "${");
-    _expansio(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "x");
-    _expansio(&c, CRUSTA_LEX_EXPANSIO_OPERATOR, ":");
-    _expansio_sectio(&c, CRUSTA_LEX_LITTERALIS, "1");
-    _expansio_sectio(&c, CRUSTA_LEX_EXPANSIO_OPERATOR, ":");
-    _expansio_sectio(&c, CRUSTA_LEX_LITTERALIS, "2");
-    _expansio_sectio(&c, CRUSTA_LEX_EXPANSIO_CLAUSURA, "}");
-    _verba(&c, CRUSTA_LEX_EXPANSIO_APERTURA, "${");
-    _expansio(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "x");
-    _expansio(&c, CRUSTA_LEX_EXPANSIO_OPERATOR, "@");
-    _expansio_verbum(&c, CRUSTA_LEX_LITTERALIS, "Q");
-    _expansio_verbum(&c, CRUSTA_LEX_EXPANSIO_CLAUSURA, "}");
-    _verba(&c, CRUSTA_LEX_EXPANSIO_APERTURA, "${");
-    _expansio(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "x");
-    _expansio(&c, CRUSTA_LEX_EXPANSIO_OPERATOR, "^^");
-    _expansio_verbum(&c, CRUSTA_LEX_EXPANSIO_CLAUSURA, "}");
-    _verba(&c, CRUSTA_LEX_EXPANSIO_APERTURA, "${");
-    _expansio(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "x");
-    _expansio(&c, CRUSTA_LEX_EXPANSIO_OPERATOR, ":-");
-    _expansio_verbum(&c, CRUSTA_LEX_LITTERALIS, "a b;");
-    _expansio_verbum(&c, CRUSTA_LEX_EXPANSIO_CLAUSURA, "}");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _initium(&cursus, CRUSTA_LEX_EXPANSIO_APERTURA, "${");
+    _expansio(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "x");
+    _expansio(&cursus, CRUSTA_LEX_EXPANSIO_OPERATOR, "//");
+    _expansio_exemplar(&cursus, CRUSTA_LEX_LITTERALIS, "a");
+    _expansio_exemplar(&cursus, CRUSTA_LEX_EXPANSIO_OPERATOR, "/");
+    _expansio_verbum(&cursus, CRUSTA_LEX_LITTERALIS, "b");
+    _expansio_verbum(&cursus, CRUSTA_LEX_EXPANSIO_CLAUSURA, "}");
+    _verba(&cursus, CRUSTA_LEX_EXPANSIO_APERTURA, "${");
+    _expansio(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "x");
+    _expansio(&cursus, CRUSTA_LEX_EXPANSIO_OPERATOR, ":");
+    _expansio_sectio(&cursus, CRUSTA_LEX_LITTERALIS, "1");
+    _expansio_sectio(&cursus, CRUSTA_LEX_EXPANSIO_OPERATOR, ":");
+    _expansio_sectio(&cursus, CRUSTA_LEX_LITTERALIS, "2");
+    _expansio_sectio(&cursus, CRUSTA_LEX_EXPANSIO_CLAUSURA, "}");
+    _verba(&cursus, CRUSTA_LEX_EXPANSIO_APERTURA, "${");
+    _expansio(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "x");
+    _expansio(&cursus, CRUSTA_LEX_EXPANSIO_OPERATOR, "@");
+    _expansio_verbum(&cursus, CRUSTA_LEX_LITTERALIS, "Q");
+    _expansio_verbum(&cursus, CRUSTA_LEX_EXPANSIO_CLAUSURA, "}");
+    _verba(&cursus, CRUSTA_LEX_EXPANSIO_APERTURA, "${");
+    _expansio(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "x");
+    _expansio(&cursus, CRUSTA_LEX_EXPANSIO_OPERATOR, "^^");
+    _expansio_verbum(&cursus, CRUSTA_LEX_EXPANSIO_CLAUSURA, "}");
+    _verba(&cursus, CRUSTA_LEX_EXPANSIO_APERTURA, "${");
+    _expansio(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "x");
+    _expansio(&cursus, CRUSTA_LEX_EXPANSIO_OPERATOR, ":-");
+    _expansio_verbum(&cursus, CRUSTA_LEX_LITTERALIS, "a b;");
+    _expansio_verbum(&cursus, CRUSTA_LEX_EXPANSIO_CLAUSURA, "}");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
 
     /* ==================================================
      * PROBARE: modi exemplaris, in verbis, post titulum
      * ================================================== */
 
-    imprimere("\n--- Probans exemplar, in verbis, post titulum ---\n");
+    CREDO_GRADUS ("exemplar, in verbis, post titulum");
 
-    _incipere(&c, piscina, "(a|b) x");
-    _exemplar(&c, CRUSTA_LEX_PARENTHESIS, "(");
-    _exemplar(&c, CRUSTA_LEX_LITTERALIS, "a");
-    _exemplar(&c, CRUSTA_LEX_PIPA, "|");
-    _exemplar(&c, CRUSTA_LEX_LITTERALIS, "b");
-    _exemplar(&c, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
+    _incipere(&cursus, piscina, "(a|b) x");
+    _exemplar(&cursus, CRUSTA_LEX_PARENTHESIS, "(");
+    _exemplar(&cursus, CRUSTA_LEX_LITTERALIS, "a");
+    _exemplar(&cursus, CRUSTA_LEX_PIPA, "|");
+    _exemplar(&cursus, CRUSTA_LEX_LITTERALIS, "b");
+    _exemplar(&cursus, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
         ")");
-    _initium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "x");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _initium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "x");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
-    _incipere(&c, piscina, "esac if)");
-    _exemplar(&c, CRUSTA_LEX_RESERVATUM, "esac");
-    _exemplar(&c, CRUSTA_LEX_SPATIUM, " ");
-    _exemplar(&c, CRUSTA_LEX_LITTERALIS, "if");
-    _exemplar(&c, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
+    _incipere(&cursus, piscina, "esac if)");
+    _exemplar(&cursus, CRUSTA_LEX_RESERVATUM, "esac");
+    _exemplar(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _exemplar(&cursus, CRUSTA_LEX_LITTERALIS, "if");
+    _exemplar(&cursus, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
         ")");
-    _finire(&c, CRUSTA_MODUS_INITIUM);
+    _finire(&cursus, CRUSTA_MODUS_INITIUM);
 
-    _incipere(&c, piscina, "a b\n");
-    _in_verbis(&c, CRUSTA_LEX_LITTERALIS, "a");
-    _in_verbis(&c, CRUSTA_LEX_SPATIUM, " ");
-    _in_verbis(&c, CRUSTA_LEX_LITTERALIS, "b");
-    _in_verbis(&c, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
-    _finire(&c, CRUSTA_MODUS_INITIUM);
+    _incipere(&cursus, piscina, "a b\n");
+    _in_verbis(&cursus, CRUSTA_LEX_LITTERALIS, "a");
+    _in_verbis(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _in_verbis(&cursus, CRUSTA_LEX_LITTERALIS, "b");
+    _in_verbis(&cursus, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
+    _finire(&cursus, CRUSTA_MODUS_INITIUM);
 
-    _incipere(&c, piscina, "x\nin ((");
-    _post_titulum(&c, CRUSTA_LEX_LITTERALIS, "x");
-    _post_titulum(&c, CRUSTA_LEX_LINEA, "\n");
-    _post_titulum(&c, CRUSTA_LEX_RESERVATUM, "in");
-    _post_titulum(&c, CRUSTA_LEX_SPATIUM, " ");
-    _post_titulum(&c, CRUSTA_LEX_ARITHMETICA_APERTURA,
+    _incipere(&cursus, piscina, "x\nin ((");
+    _post_titulum(&cursus, CRUSTA_LEX_LITTERALIS, "x");
+    _post_titulum(&cursus, CRUSTA_LEX_LINEA, "\n");
+    _post_titulum(&cursus, CRUSTA_LEX_RESERVATUM, "in");
+    _post_titulum(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _post_titulum(&cursus, CRUSTA_LEX_ARITHMETICA_APERTURA,
         "((");
-    _finire(&c, CRUSTA_MODUS_ARITHMETICA_SUMMA);
+    _finire(&cursus, CRUSTA_MODUS_ARITHMETICA_SUMMA);
 
     /* post clausuram compositi: '}' 'fi' reservata, linea nova
      * terminat, 'x=1' verbum nudum, '((' non arithmetica */
-    _incipere(&c, piscina, "} fi\nx=1 ((");
-    _post_compositum(&c, CRUSTA_LEX_RESERVATUM, "}");
-    _post_compositum(&c, CRUSTA_LEX_SPATIUM, " ");
-    _post_compositum(&c, CRUSTA_LEX_RESERVATUM, "fi");
-    _post_compositum(&c, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
-    _post_compositum(&c, CRUSTA_LEX_LITTERALIS, "x=1");
-    _post_compositum(&c, CRUSTA_LEX_SPATIUM, " ");
-    _post_compositum(&c, CRUSTA_LEX_PARENTHESIS, "(");
-    _post_compositum(&c, CRUSTA_LEX_PARENTHESIS, "(");
-    _finire(&c, CRUSTA_MODUS_POST_COMPOSITUM);
+    _incipere(&cursus, piscina, "} fi\nx=1 ((");
+    _post_compositum(&cursus, CRUSTA_LEX_RESERVATUM, "}");
+    _post_compositum(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _post_compositum(&cursus, CRUSTA_LEX_RESERVATUM, "fi");
+    _post_compositum(&cursus, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
+    _post_compositum(&cursus, CRUSTA_LEX_LITTERALIS, "x=1");
+    _post_compositum(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _post_compositum(&cursus, CRUSTA_LEX_PARENTHESIS, "(");
+    _post_compositum(&cursus, CRUSTA_LEX_PARENTHESIS, "(");
+    _finire(&cursus, CRUSTA_MODUS_POST_COMPOSITUM);
 
 
     /* ==================================================
      * PROBARE: arithmetica
      * ================================================== */
 
-    imprimere("\n--- Probans arithmeticam ---\n");
+    CREDO_GRADUS ("arithmeticam");
 
-    _incipere(&c, piscina, "1 + 0x1f*(2)))");
-    _arithmetica_summa(&c, CRUSTA_LEX_NUMERUS, "1");
-    _arithmetica_summa(&c, CRUSTA_LEX_SPATIUM, " ");
-    _arithmetica_summa(&c, CRUSTA_LEX_ARITHMETICA_OPERATOR,
+    _incipere(&cursus, piscina, "1 + 0x1f*(2)))");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_NUMERUS, "1");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_ARITHMETICA_OPERATOR,
         "+");
-    _arithmetica_summa(&c, CRUSTA_LEX_SPATIUM, " ");
-    _arithmetica_summa(&c, CRUSTA_LEX_NUMERUS, "0x1f");
-    _arithmetica_summa(&c, CRUSTA_LEX_ARITHMETICA_OPERATOR,
+    _arithmetica_summa(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_NUMERUS, "0x1f");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_ARITHMETICA_OPERATOR,
         "*");
-    _arithmetica_summa(&c, CRUSTA_LEX_PARENTHESIS, "(");
-    _arithmetica_intra(&c, CRUSTA_LEX_NUMERUS, "2");
-    _arithmetica_intra(&c, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
+    _arithmetica_summa(&cursus, CRUSTA_LEX_PARENTHESIS, "(");
+    _arithmetica_intra(&cursus, CRUSTA_LEX_NUMERUS, "2");
+    _arithmetica_intra(&cursus, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
         ")");
-    _arithmetica_summa(&c, CRUSTA_LEX_ARITHMETICA_CLAUSURA,
+    _arithmetica_summa(&cursus, CRUSTA_LEX_ARITHMETICA_CLAUSURA,
         "))");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
     /* )) intra parenthesim: duae clausurae singulae */
-    _incipere(&c, piscina, "))");
-    _arithmetica_intra(&c, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
+    _incipere(&cursus, piscina, "))");
+    _arithmetica_intra(&cursus, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
         ")");
-    _arithmetica_intra(&c, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
+    _arithmetica_intra(&cursus, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
         ")");
-    _finire(&c, CRUSTA_MODUS_ARITHMETICA_INTRA);
+    _finire(&cursus, CRUSTA_MODUS_ARITHMETICA_INTRA);
 
-    _incipere(&c, piscina,
+    _incipere(&cursus, piscina,
         "16#ff a[i]++ x<<=2 2**3 a?b:c 1,2;$y\n");
-    _arithmetica_summa(&c, CRUSTA_LEX_NUMERUS, "16#ff");
-    _arithmetica_summa(&c, CRUSTA_LEX_SPATIUM, " ");
-    _arithmetica_summa(&c, CRUSTA_LEX_VARIABILIS, "a");
-    _arithmetica_summa(&c, CRUSTA_LEX_SUBSCRIPTUM, "[i]");
-    _arithmetica_summa(&c, CRUSTA_LEX_ARITHMETICA_OPERATOR,
+    _arithmetica_summa(&cursus, CRUSTA_LEX_NUMERUS, "16#ff");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_VARIABILIS, "a");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_SUBSCRIPTUM, "[i]");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_ARITHMETICA_OPERATOR,
         "++");
-    _arithmetica_summa(&c, CRUSTA_LEX_SPATIUM, " ");
-    _arithmetica_summa(&c, CRUSTA_LEX_VARIABILIS, "x");
-    _arithmetica_summa(&c, CRUSTA_LEX_ARITHMETICA_OPERATOR,
+    _arithmetica_summa(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_VARIABILIS, "x");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_ARITHMETICA_OPERATOR,
         "<<=");
-    _arithmetica_summa(&c, CRUSTA_LEX_NUMERUS, "2");
-    _arithmetica_summa(&c, CRUSTA_LEX_SPATIUM, " ");
-    _arithmetica_summa(&c, CRUSTA_LEX_NUMERUS, "2");
-    _arithmetica_summa(&c, CRUSTA_LEX_ARITHMETICA_OPERATOR,
+    _arithmetica_summa(&cursus, CRUSTA_LEX_NUMERUS, "2");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_NUMERUS, "2");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_ARITHMETICA_OPERATOR,
         "**");
-    _arithmetica_summa(&c, CRUSTA_LEX_NUMERUS, "3");
-    _arithmetica_summa(&c, CRUSTA_LEX_SPATIUM, " ");
-    _arithmetica_summa(&c, CRUSTA_LEX_VARIABILIS, "a");
-    _arithmetica_summa(&c, CRUSTA_LEX_ARITHMETICA_OPERATOR,
+    _arithmetica_summa(&cursus, CRUSTA_LEX_NUMERUS, "3");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_VARIABILIS, "a");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_ARITHMETICA_OPERATOR,
         "?");
-    _arithmetica_summa(&c, CRUSTA_LEX_VARIABILIS, "b");
-    _arithmetica_summa(&c, CRUSTA_LEX_ARITHMETICA_OPERATOR,
+    _arithmetica_summa(&cursus, CRUSTA_LEX_VARIABILIS, "b");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_ARITHMETICA_OPERATOR,
         ":");
-    _arithmetica_summa(&c, CRUSTA_LEX_VARIABILIS, "c");
-    _arithmetica_summa(&c, CRUSTA_LEX_SPATIUM, " ");
-    _arithmetica_summa(&c, CRUSTA_LEX_NUMERUS, "1");
-    _arithmetica_summa(&c, CRUSTA_LEX_ARITHMETICA_OPERATOR,
+    _arithmetica_summa(&cursus, CRUSTA_LEX_VARIABILIS, "c");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_NUMERUS, "1");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_ARITHMETICA_OPERATOR,
         ",");
-    _arithmetica_summa(&c, CRUSTA_LEX_NUMERUS, "2");
-    _arithmetica_summa(&c, CRUSTA_LEX_ARITHMETICA_SEPARATOR,
+    _arithmetica_summa(&cursus, CRUSTA_LEX_NUMERUS, "2");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_ARITHMETICA_SEPARATOR,
         ";");
-    _arithmetica_summa(&c, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
-    _arithmetica_summa(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "y");
-    _arithmetica_summa(&c, CRUSTA_LEX_LINEA, "\n");
-    _finire(&c, CRUSTA_MODUS_ARITHMETICA_SUMMA);
+    _arithmetica_summa(&cursus, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "y");
+    _arithmetica_summa(&cursus, CRUSTA_LEX_LINEA, "\n");
+    _finire(&cursus, CRUSTA_MODUS_ARITHMETICA_SUMMA);
 
 
     /* ==================================================
      * PROBARE: iudicium et regula
      * ================================================== */
 
-    imprimere("\n--- Probans iudicium et regulam ---\n");
+    CREDO_GRADUS ("iudicium et regulam");
 
-    _incipere(&c, piscina,
+    _incipere(&cursus, piscina,
         "-f $x && ( a == b* ) ]]");
-    _iudicium(&c, CRUSTA_LEX_IUDICIUM_OPERATOR, "-f");
-    _iudicium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _iudicium(&c, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
-    _iudicium(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "x");
-    _iudicium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _iudicium(&c, CRUSTA_LEX_IUDICIUM_OPERATOR, "&&");
-    _iudicium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _iudicium(&c, CRUSTA_LEX_PARENTHESIS, "(");
-    _iudicium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _iudicium(&c, CRUSTA_LEX_LITTERALIS, "a");
-    _iudicium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _iudicium(&c, CRUSTA_LEX_IUDICIUM_OPERATOR, "==");
-    _iudicium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _iudicium(&c, CRUSTA_LEX_LITTERALIS, "b*");
-    _iudicium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _iudicium(&c, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
+    _iudicium(&cursus, CRUSTA_LEX_IUDICIUM_OPERATOR, "-f");
+    _iudicium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _iudicium(&cursus, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
+    _iudicium(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "x");
+    _iudicium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _iudicium(&cursus, CRUSTA_LEX_IUDICIUM_OPERATOR, "&&");
+    _iudicium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _iudicium(&cursus, CRUSTA_LEX_PARENTHESIS, "(");
+    _iudicium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _iudicium(&cursus, CRUSTA_LEX_LITTERALIS, "a");
+    _iudicium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _iudicium(&cursus, CRUSTA_LEX_IUDICIUM_OPERATOR, "==");
+    _iudicium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _iudicium(&cursus, CRUSTA_LEX_LITTERALIS, "b*");
+    _iudicium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _iudicium(&cursus, CRUSTA_LEX_PARENTHESIS_CLAUSURA,
         ")");
-    _iudicium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _iudicium(&c, CRUSTA_LEX_IUDICIUM_CLAUSURA, "]]");
-    _finire(&c, CRUSTA_MODUS_INITIUM);
+    _iudicium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _iudicium(&cursus, CRUSTA_LEX_IUDICIUM_CLAUSURA, "]]");
+    _finire(&cursus, CRUSTA_MODUS_INITIUM);
 
     /* a=b verbum unum; ! et < operatores soli; ]] non verbi */
-    _incipere(&c, piscina, "a=b ! < x]]");
-    _iudicium(&c, CRUSTA_LEX_LITTERALIS, "a=b");
-    _iudicium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _iudicium(&c, CRUSTA_LEX_IUDICIUM_OPERATOR, "!");
-    _iudicium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _iudicium(&c, CRUSTA_LEX_IUDICIUM_OPERATOR, "<");
-    _iudicium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _iudicium(&c, CRUSTA_LEX_LITTERALIS, "x]]");
-    _finire(&c, CRUSTA_MODUS_IUDICIUM);
+    _incipere(&cursus, piscina, "a=b ! < x]]");
+    _iudicium(&cursus, CRUSTA_LEX_LITTERALIS, "a=b");
+    _iudicium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _iudicium(&cursus, CRUSTA_LEX_IUDICIUM_OPERATOR, "!");
+    _iudicium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _iudicium(&cursus, CRUSTA_LEX_IUDICIUM_OPERATOR, "<");
+    _iudicium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _iudicium(&cursus, CRUSTA_LEX_LITTERALIS, "x]]");
+    _finire(&cursus, CRUSTA_MODUS_IUDICIUM);
 
-    _incipere(&c, piscina, "^a(b c)+$ ]]");
-    _regula(&c, CRUSTA_LEX_REGULA, "^a(b c)+$");
-    _regula(&c, CRUSTA_LEX_SPATIUM, " ");
-    _regula(&c, CRUSTA_LEX_IUDICIUM_CLAUSURA, "]]");
-    _finire(&c, CRUSTA_MODUS_INITIUM);
+    _incipere(&cursus, piscina, "^a(b c)+$ ]]");
+    _regula(&cursus, CRUSTA_LEX_REGULA, "^a(b c)+$");
+    _regula(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _regula(&cursus, CRUSTA_LEX_IUDICIUM_CLAUSURA, "]]");
+    _finire(&cursus, CRUSTA_MODUS_INITIUM);
 
-    _incipere(&c, piscina, "a|b'c d'$v && ]]");
-    _regula(&c, CRUSTA_LEX_REGULA, "a|b");
-    _regula(&c, CRUSTA_LEX_SIMPLEX, "'c d'");
-    _regula(&c, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
-    _regula(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "v");
-    _regula(&c, CRUSTA_LEX_SPATIUM, " ");
-    _regula(&c, CRUSTA_LEX_IUDICIUM_OPERATOR, "&&");
-    _iudicium(&c, CRUSTA_LEX_SPATIUM, " ");
-    _iudicium(&c, CRUSTA_LEX_IUDICIUM_CLAUSURA, "]]");
-    _finire(&c, CRUSTA_MODUS_INITIUM);
+    _incipere(&cursus, piscina, "a|b'c d'$v && ]]");
+    _regula(&cursus, CRUSTA_LEX_REGULA, "a|b");
+    _regula(&cursus, CRUSTA_LEX_SIMPLEX, "'c d'");
+    _regula(&cursus, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
+    _regula(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "v");
+    _regula(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _regula(&cursus, CRUSTA_LEX_IUDICIUM_OPERATOR, "&&");
+    _iudicium(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _iudicium(&cursus, CRUSTA_LEX_IUDICIUM_CLAUSURA, "]]");
+    _finire(&cursus, CRUSTA_MODUS_INITIUM);
 
 
     /* ==================================================
      * PROBARE: regiones backtick cum profunditate
      * ================================================== */
 
-    imprimere("\n--- Probans regiones backtick ---\n");
+    CREDO_GRADUS ("regiones backtick");
 
     {
     s32 finis;
 
         /* `a \`b\` c` : clausura profunditatis I = backtick nudus
          * ultimus; profunditatis II ab intra = '\`' */
-    _incipere(&c, piscina, "`a \\`b\\` c`");
-    finis = crusta_lector_gravem_quaerere(&c.lector,
+    _incipere(&cursus, piscina, "`a \\`b\\` c`");
+    finis = crusta_lector_gravem_quaerere(&cursus.lector,
         (s32)I,
         (i32)I);
     CREDO_AEQUALIS_S32 (finis, (s32)X);
-    finis = crusta_lector_gravem_quaerere(&c.lector,
+    finis = crusta_lector_gravem_quaerere(&cursus.lector,
         (s32)V,
         (i32)II);
     CREDO_AEQUALIS_S32 (finis, (s32)VI);
-    CREDO_AEQUALIS_S32 (crusta_lector_gravem_quaerere(&c.lector,
+    CREDO_AEQUALIS_S32 (crusta_lector_gravem_quaerere(&cursus.lector,
         (s32)XII, (i32)I), (s32)-I);
 
-    _initium(&c, CRUSTA_LEX_GRAVIS, "`");
-    CREDO_VERUM (crusta_lector_regionem_aperire(&c.lector,
+    _initium(&cursus, CRUSTA_LEX_GRAVIS, "`");
+    CREDO_VERUM (crusta_lector_regionem_aperire(&cursus.lector,
         (s32)X,
         (i32)I));
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "a");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_GRAVIS, "\\`");
-    CREDO_VERUM (crusta_lector_regionem_aperire(&c.lector,
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "a");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_GRAVIS, "\\`");
+    CREDO_VERUM (crusta_lector_regionem_aperire(&cursus.lector,
         (s32)VI,
         (i32)II));
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "b");
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "b");
     {
     MateriaToken* f =
-        crusta_lector_proximum(&c.lector, CRUSTA_MODUS_VERBA);
+        crusta_lector_proximum(&cursus.lector, CRUSTA_MODUS_VERBA);
 
     CREDO_AEQUALIS_S32 (f->genus, CRUSTA_LEX_FINIS);
     CREDO_AEQUALIS_I32 (crusta_lector_cauda(f)->gravis,
         (i32)II);
     }
-    crusta_lector_regionem_claudere(&c.lector);
-    _verba(&c, CRUSTA_LEX_GRAVIS, "\\`");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "c");
+    crusta_lector_regionem_claudere(&cursus.lector);
+    _verba(&cursus, CRUSTA_LEX_GRAVIS, "\\`");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "c");
     {
     MateriaToken* f =
-        crusta_lector_proximum(&c.lector, CRUSTA_MODUS_VERBA);
+        crusta_lector_proximum(&cursus.lector, CRUSTA_MODUS_VERBA);
 
     CREDO_AEQUALIS_S32 (f->genus, CRUSTA_LEX_FINIS);
     CREDO_AEQUALIS_I32 (crusta_lector_cauda(f)->gravis,
         (i32)I);
     }
-    crusta_lector_regionem_claudere(&c.lector);
-    _verba(&c, CRUSTA_LEX_GRAVIS, "`");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    crusta_lector_regionem_claudere(&cursus.lector);
+    _verba(&cursus, CRUSTA_LEX_GRAVIS, "`");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
     }
 
     /* intra profunditatem I: '\$x' sigillum duorum octetorum, '\\$'
@@ -1028,32 +1022,32 @@ _heredoc_litterale (
     {
     MateriaToken* t;
 
-    _incipere(&c, piscina,
+    _incipere(&cursus, piscina,
         "`\\$x \\\\$y \\\\\\\\$z`");
-    _initium(&c, CRUSTA_LEX_GRAVIS, "`");
-    CREDO_VERUM (crusta_lector_regionem_aperire(&c.lector,
-        (s32)(c.mensura - I), (i32)I));
-    t = _initium(&c, CRUSTA_LEX_PARAMETRUM_SIGILLUM,
+    _initium(&cursus, CRUSTA_LEX_GRAVIS, "`");
+    CREDO_VERUM (crusta_lector_regionem_aperire(&cursus.lector,
+        (s32)(cursus.mensura - I), (i32)I));
+    t = _initium(&cursus, CRUSTA_LEX_PARAMETRUM_SIGILLUM,
         "\\$");
     CREDO_AEQUALIS_I32 (crusta_lector_cauda(t)->gravis,
         (i32)I);
-    _initium(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "x");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_EFFUGIUM, "\\\\$");
-    _verba(&c, CRUSTA_LEX_LITTERALIS, "y");
-    _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    _verba(&c, CRUSTA_LEX_EFFUGIUM, "\\\\\\\\");
-    _verba(&c, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
-    _verba(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "z");
+    _initium(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "x");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_EFFUGIUM, "\\\\$");
+    _verba(&cursus, CRUSTA_LEX_LITTERALIS, "y");
+    _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    _verba(&cursus, CRUSTA_LEX_EFFUGIUM, "\\\\\\\\");
+    _verba(&cursus, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
+    _verba(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "z");
     {
     MateriaToken* f =
-        crusta_lector_proximum(&c.lector, CRUSTA_MODUS_VERBA);
+        crusta_lector_proximum(&cursus.lector, CRUSTA_MODUS_VERBA);
 
     CREDO_AEQUALIS_S32 (f->genus, CRUSTA_LEX_FINIS);
     }
-    crusta_lector_regionem_claudere(&c.lector);
-    _verba(&c, CRUSTA_LEX_GRAVIS, "`");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    crusta_lector_regionem_claudere(&cursus.lector);
+    _verba(&cursus, CRUSTA_LEX_GRAVIS, "`");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
     }
 
 
@@ -1061,136 +1055,136 @@ _heredoc_litterale (
      * PROBARE: heredoc - queue, regio, delimitator, finis
      * ================================================== */
 
-    imprimere("\n--- Probans heredoc ---\n");
+    CREDO_GRADUS ("heredoc");
 
     {
     CrustaHeredocPetitio p;
     MateriaToken* t;
 
-    _incipere(&c, piscina, "x\nl1\n$v\nA\nrest");
-    CREDO_FALSUM (crusta_lector_heredoca_pendent(&c.lector));
-    CREDO_VERUM (crusta_lector_heredoc_petere(&c.lector,
+    _incipere(&cursus, piscina, "x\nl1\n$v\nA\nrest");
+    CREDO_FALSUM (crusta_lector_heredoca_pendent(&cursus.lector));
+    CREDO_VERUM (crusta_lector_heredoc_petere(&cursus.lector,
         chorda_ex_literis("A", piscina), FALSUM,
         FALSUM));
-    CREDO_VERUM (crusta_lector_heredoca_pendent(&c.lector));
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "x");
-    _verba(&c, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
-    CREDO_VERUM (crusta_lector_heredoc_aperire(&c.lector,
+    CREDO_VERUM (crusta_lector_heredoca_pendent(&cursus.lector));
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "x");
+    _verba(&cursus, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
+    CREDO_VERUM (crusta_lector_heredoc_aperire(&cursus.lector,
         &p));
     CREDO_FALSUM (p.citatus);
-    CREDO_FALSUM (crusta_lector_heredoca_pendent(&c.lector));
-    _heredoc(&c, CRUSTA_LEX_LITTERALIS, "l1\n");
-    _heredoc(&c, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
-    _heredoc(&c, CRUSTA_LEX_PARAMETRUM_TITULUS, "v");
-    _heredoc(&c, CRUSTA_LEX_LITTERALIS, "\n");
-    t = crusta_lector_proximum(&c.lector, CRUSTA_MODUS_HEREDOC);
+    CREDO_FALSUM (crusta_lector_heredoca_pendent(&cursus.lector));
+    _heredoc(&cursus, CRUSTA_LEX_LITTERALIS, "l1\n");
+    _heredoc(&cursus, CRUSTA_LEX_PARAMETRUM_SIGILLUM, "$");
+    _heredoc(&cursus, CRUSTA_LEX_PARAMETRUM_TITULUS, "v");
+    _heredoc(&cursus, CRUSTA_LEX_LITTERALIS, "\n");
+    t = crusta_lector_proximum(&cursus.lector, CRUSTA_MODUS_HEREDOC);
     CREDO_AEQUALIS_S32 (t->genus, CRUSTA_LEX_FINIS);
-    t = crusta_lector_heredoc_delimitator(&c.lector);
+    t = crusta_lector_heredoc_delimitator(&cursus.lector);
     CREDO_NON_NIHIL (t);
     CREDO_AEQUALIS_S32 (t->genus,
         CRUSTA_LEX_HEREDOC_DELIMITATOR);
     CREDO_AEQUALIS_I32 (t->valor.mensura, (i32)I);
-    _addere(&c, t);
-    t = crusta_lector_heredoc_finis(&c.lector);
+    _addere(&cursus, t);
+    t = crusta_lector_heredoc_finis(&cursus.lector);
     CREDO_NON_NIHIL (t);
     CREDO_AEQUALIS_S32 (t->genus,
         CRUSTA_LEX_SEPARATOR_LINEAE);
-    _addere(&c, t);
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "rest");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _addere(&cursus, t);
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "rest");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
         /* delimitator citatus: corpus litterale unum */
-    _incipere(&c, piscina, "x\nl1\n$v\nA\n");
-    CREDO_VERUM (crusta_lector_heredoc_petere(&c.lector,
+    _incipere(&cursus, piscina, "x\nl1\n$v\nA\n");
+    CREDO_VERUM (crusta_lector_heredoc_petere(&cursus.lector,
         chorda_ex_literis("A", piscina), VERUM,
         FALSUM));
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "x");
-    _verba(&c, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
-    CREDO_VERUM (crusta_lector_heredoc_aperire(&c.lector,
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "x");
+    _verba(&cursus, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
+    CREDO_VERUM (crusta_lector_heredoc_aperire(&cursus.lector,
         &p));
     CREDO_VERUM (p.citatus);
-    _heredoc_litterale(&c, CRUSTA_LEX_LITTERALIS, "l1\n$v\n");
-    t = crusta_lector_proximum(&c.lector,
+    _heredoc_litterale(&cursus, CRUSTA_LEX_LITTERALIS, "l1\n$v\n");
+    t = crusta_lector_proximum(&cursus.lector,
         CRUSTA_MODUS_HEREDOC_LITTERALE);
     CREDO_AEQUALIS_S32 (t->genus, CRUSTA_LEX_FINIS);
-    _addere(&c,
-        crusta_lector_heredoc_delimitator(&c.lector));
-    _addere(&c,
-        crusta_lector_heredoc_finis(&c.lector));
-    _finire(&c, CRUSTA_MODUS_INITIUM);
+    _addere(&cursus,
+        crusta_lector_heredoc_delimitator(&cursus.lector));
+    _addere(&cursus,
+        crusta_lector_heredoc_finis(&cursus.lector));
+    _finire(&cursus, CRUSTA_MODUS_INITIUM);
 
         /* <<- : tabulae exutae in comparatione, servatae in lexemate */
-    _incipere(&c, piscina, "x\n\tb\n\t\tA\nz");
-    CREDO_VERUM (crusta_lector_heredoc_petere(&c.lector,
+    _incipere(&cursus, piscina, "x\n\tb\n\t\tA\nz");
+    CREDO_VERUM (crusta_lector_heredoc_petere(&cursus.lector,
         chorda_ex_literis("A", piscina), FALSUM,
         VERUM));
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "x");
-    _verba(&c, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
-    CREDO_VERUM (crusta_lector_heredoc_aperire(&c.lector,
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "x");
+    _verba(&cursus, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
+    CREDO_VERUM (crusta_lector_heredoc_aperire(&cursus.lector,
         &p));
-    _heredoc(&c, CRUSTA_LEX_LITTERALIS, "\tb\n");
-    t = crusta_lector_proximum(&c.lector, CRUSTA_MODUS_HEREDOC);
+    _heredoc(&cursus, CRUSTA_LEX_LITTERALIS, "\tb\n");
+    t = crusta_lector_proximum(&cursus.lector, CRUSTA_MODUS_HEREDOC);
     CREDO_AEQUALIS_S32 (t->genus, CRUSTA_LEX_FINIS);
-    t = crusta_lector_heredoc_delimitator(&c.lector);
+    t = crusta_lector_heredoc_delimitator(&cursus.lector);
     CREDO_AEQUALIS_I32 (t->valor.mensura, (i32)III);
-    _addere(&c, t);
-    _addere(&c,
-        crusta_lector_heredoc_finis(&c.lector));
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "z");
-    _finire(&c, CRUSTA_MODUS_VERBA);
+    _addere(&cursus, t);
+    _addere(&cursus,
+        crusta_lector_heredoc_finis(&cursus.lector));
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "z");
+    _finire(&cursus, CRUSTA_MODUS_VERBA);
 
         /* delimitator absens: corpus ad EOF, ambo NIHIL */
-    _incipere(&c, piscina, "x\nbody\n");
-    CREDO_VERUM (crusta_lector_heredoc_petere(&c.lector,
+    _incipere(&cursus, piscina, "x\nbody\n");
+    CREDO_VERUM (crusta_lector_heredoc_petere(&cursus.lector,
         chorda_ex_literis("A", piscina), FALSUM,
         FALSUM));
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "x");
-    _verba(&c, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
-    CREDO_VERUM (crusta_lector_heredoc_aperire(&c.lector,
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "x");
+    _verba(&cursus, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
+    CREDO_VERUM (crusta_lector_heredoc_aperire(&cursus.lector,
         &p));
-    _heredoc(&c, CRUSTA_LEX_LITTERALIS, "body\n");
-    t = crusta_lector_proximum(&c.lector, CRUSTA_MODUS_HEREDOC);
+    _heredoc(&cursus, CRUSTA_LEX_LITTERALIS, "body\n");
+    t = crusta_lector_proximum(&cursus.lector, CRUSTA_MODUS_HEREDOC);
     CREDO_AEQUALIS_S32 (t->genus, CRUSTA_LEX_FINIS);
-    CREDO_NIHIL (crusta_lector_heredoc_delimitator(&c.lector));
-    CREDO_NIHIL (crusta_lector_heredoc_finis(&c.lector));
-    _finire(&c, CRUSTA_MODUS_INITIUM);
+    CREDO_NIHIL (crusta_lector_heredoc_delimitator(&cursus.lector));
+    CREDO_NIHIL (crusta_lector_heredoc_finis(&cursus.lector));
+    _finire(&cursus, CRUSTA_MODUS_INITIUM);
 
         /* petitiones duae ordine */
-    _incipere(&c, piscina, "x\n1\nA\n2\nB\n");
-    CREDO_VERUM (crusta_lector_heredoc_petere(&c.lector,
+    _incipere(&cursus, piscina, "x\n1\nA\n2\nB\n");
+    CREDO_VERUM (crusta_lector_heredoc_petere(&cursus.lector,
         chorda_ex_literis("A", piscina), FALSUM,
         FALSUM));
-    CREDO_VERUM (crusta_lector_heredoc_petere(&c.lector,
+    CREDO_VERUM (crusta_lector_heredoc_petere(&cursus.lector,
         chorda_ex_literis("B", piscina), VERUM,
         FALSUM));
-    _initium(&c, CRUSTA_LEX_LITTERALIS, "x");
-    _verba(&c, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
-    CREDO_VERUM (crusta_lector_heredoc_aperire(&c.lector,
+    _initium(&cursus, CRUSTA_LEX_LITTERALIS, "x");
+    _verba(&cursus, CRUSTA_LEX_SEPARATOR_LINEAE, "\n");
+    CREDO_VERUM (crusta_lector_heredoc_aperire(&cursus.lector,
         &p));
     CREDO_FALSUM (p.citatus);
-    _heredoc(&c, CRUSTA_LEX_LITTERALIS, "1\n");
-    t = crusta_lector_proximum(&c.lector, CRUSTA_MODUS_HEREDOC);
+    _heredoc(&cursus, CRUSTA_LEX_LITTERALIS, "1\n");
+    t = crusta_lector_proximum(&cursus.lector, CRUSTA_MODUS_HEREDOC);
     CREDO_AEQUALIS_S32 (t->genus, CRUSTA_LEX_FINIS);
-    _addere(&c,
-        crusta_lector_heredoc_delimitator(&c.lector));
-    _addere(&c,
-        crusta_lector_heredoc_finis(&c.lector));
-    CREDO_VERUM (crusta_lector_heredoca_pendent(&c.lector));
-    CREDO_VERUM (crusta_lector_heredoc_aperire(&c.lector,
+    _addere(&cursus,
+        crusta_lector_heredoc_delimitator(&cursus.lector));
+    _addere(&cursus,
+        crusta_lector_heredoc_finis(&cursus.lector));
+    CREDO_VERUM (crusta_lector_heredoca_pendent(&cursus.lector));
+    CREDO_VERUM (crusta_lector_heredoc_aperire(&cursus.lector,
         &p));
     CREDO_VERUM (p.citatus);
-    _heredoc_litterale(&c, CRUSTA_LEX_LITTERALIS, "2\n");
-    t = crusta_lector_proximum(&c.lector,
+    _heredoc_litterale(&cursus, CRUSTA_LEX_LITTERALIS, "2\n");
+    t = crusta_lector_proximum(&cursus.lector,
         CRUSTA_MODUS_HEREDOC_LITTERALE);
     CREDO_AEQUALIS_S32 (t->genus, CRUSTA_LEX_FINIS);
-    _addere(&c,
-        crusta_lector_heredoc_delimitator(&c.lector));
-    _addere(&c,
-        crusta_lector_heredoc_finis(&c.lector));
-    CREDO_FALSUM (crusta_lector_heredoca_pendent(&c.lector));
-    CREDO_FALSUM (crusta_lector_heredoc_aperire(&c.lector,
+    _addere(&cursus,
+        crusta_lector_heredoc_delimitator(&cursus.lector));
+    _addere(&cursus,
+        crusta_lector_heredoc_finis(&cursus.lector));
+    CREDO_FALSUM (crusta_lector_heredoca_pendent(&cursus.lector));
+    CREDO_FALSUM (crusta_lector_heredoc_aperire(&cursus.lector,
         &p));
-    _finire(&c, CRUSTA_MODUS_INITIUM);
+    _finire(&cursus, CRUSTA_MODUS_INITIUM);
     }
 
 
@@ -1198,58 +1192,65 @@ _heredoc_litterale (
      * PROBARE: positiones et situs reponendus
      * ================================================== */
 
-    imprimere("\n--- Probans positiones ---\n");
+    CREDO_GRADUS ("positiones");
 
     {
     MateriaToken* t;
     CrustaSitus  s;
 
-    _incipere(&c, piscina, "ab\ncd ef\n\ng");
-    t = _initium(&c, CRUSTA_LEX_LITTERALIS, "ab");
+    _incipere(&cursus, piscina, "ab\ncd ef\n\ng");
+    t = _initium(&cursus, CRUSTA_LEX_LITTERALIS, "ab");
     CREDO_AEQUALIS_I32 (t->linea, (i32)I);
     CREDO_AEQUALIS_I32 (t->columna, (i32)I);
-    s = crusta_lector_situs(&c.lector);
-    t = _verba(&c, CRUSTA_LEX_SEPARATOR_LINEAE,
+    s = crusta_lector_situs(&cursus.lector);
+    t = _verba(&cursus, CRUSTA_LEX_SEPARATOR_LINEAE,
         "\n");
     CREDO_AEQUALIS_I32 (t->linea, (i32)I);
     CREDO_AEQUALIS_I32 (t->columna, (i32)III);
-    t = _initium(&c, CRUSTA_LEX_LITTERALIS, "cd");
+    t = _initium(&cursus, CRUSTA_LEX_LITTERALIS, "cd");
     CREDO_AEQUALIS_I32 (t->linea, (i32)II);
     CREDO_AEQUALIS_I32 (t->columna, (i32)I);
-    t = _verba(&c, CRUSTA_LEX_SPATIUM, " ");
-    t = _verba(&c, CRUSTA_LEX_LITTERALIS, "ef");
+    t = _verba(&cursus, CRUSTA_LEX_SPATIUM, " ");
+    t = _verba(&cursus, CRUSTA_LEX_LITTERALIS, "ef");
     CREDO_AEQUALIS_I32 (t->linea, (i32)II);
     CREDO_AEQUALIS_I32 (t->columna, (i32)IV);
-    t = _verba(&c, CRUSTA_LEX_SEPARATOR_LINEAE,
+    t = _verba(&cursus, CRUSTA_LEX_SEPARATOR_LINEAE,
         "\n");
     CREDO_AEQUALIS_I32 (t->columna, (i32)VI);
-    t = _initium(&c, CRUSTA_LEX_LINEA, "\n");
+    t = _initium(&cursus, CRUSTA_LEX_LINEA, "\n");
     CREDO_AEQUALIS_I32 (t->linea, (i32)III);
     CREDO_AEQUALIS_I32 (t->columna, (i32)I);
-    t = _initium(&c, CRUSTA_LEX_LITTERALIS, "g");
+    t = _initium(&cursus, CRUSTA_LEX_LITTERALIS, "g");
         CREDO_AEQUALIS_I32 (t->linea, (i32)IV);
         CREDO_AEQUALIS_S32 (t->byte_offset, (s32)X);
-        _finire(&c, CRUSTA_MODUS_VERBA);
+        _finire(&cursus, CRUSTA_MODUS_VERBA);
 
         /* reponere: eadem lexemata iterum */
-        crusta_lector_situm_reponere(&c.lector, s);
-        t = crusta_lector_proximum(&c.lector, CRUSTA_MODUS_VERBA);
+        crusta_lector_situm_reponere(&cursus.lector, s);
+        t = crusta_lector_proximum(&cursus.lector, CRUSTA_MODUS_VERBA);
         CREDO_AEQUALIS_S32 (t->genus, CRUSTA_LEX_SEPARATOR_LINEAE);
         CREDO_AEQUALIS_S32 (t->byte_offset, (s32)II);
-        t = crusta_lector_proximum(&c.lector, CRUSTA_MODUS_INITIUM);
+        t = crusta_lector_proximum(&cursus.lector,
+            CRUSTA_MODUS_INITIUM);
         CREDO_AEQUALIS_S32 (t->genus, CRUSTA_LEX_LITTERALIS);
         CREDO_AEQUALIS_I32 (t->linea, (i32)II);
     }
 
 
     imprimere("\n    casus %d, octeti tecti %d\n",
-        (integer)casus_numerus,
-        (integer)octeti_tecti);
-    CREDO_MAIOR_I32 (casus_numerus, (i32)XL);
+        (integer)cursus.casus_numerus,
+        (integer)cursus.octeti_tecti);
+    CREDO_MAIOR_I32 (cursus.casus_numerus, (i32)XL);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "lector: casus per modos", _casus_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("crusta_lector", SECTIONES);
 }
