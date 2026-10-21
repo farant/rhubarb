@@ -67,8 +67,8 @@ typedef struct OfficinaChorda {
 } OfficinaChorda;
 
 /* PELLUCIDA - campi ordine EXACTO include/xar.h (definitio haec
- * sola in TU amalgamato); tabula segmentorum post caput allocata
- * (2026-09-02), sine titulo */
+ * sola in TU amalgamato); segmenta duo prima in capite inscripta,
+ * tabula plena pigre (2026-10-21, TABULA CRESCENS), sine titulo */
 typedef struct OfficinaXar {
     unsigned int  numerus_elementorum;
     unsigned int  magnitudo_elementi;
@@ -76,9 +76,12 @@ typedef struct OfficinaXar {
     unsigned int  numerus_segmentorum;
     unsigned int  capacitas_totalis;
     unsigned int  vexilla;
-    unsigned int  segmenta_maxima;   /* mensura tabulae (XXIV | LXIV) */
+    unsigned int  segmenta_maxima;   /* fines tabulae (XXIV | LXIV) */
+    unsigned int  mensura_tabulae;   /* tabula currens: 2, deinde fines */
     OfficinaPiscina* piscina;
-    void**        segmenta;          /* tabula post caput, una allocatione */
+    void**        segmenta;          /* -> segmenta_inlinea, aut tabula
+                                      * plena (segmento tertio petito) */
+    void*         segmenta_inlinea[2];
 } OfficinaXar;
 
 unsigned int officina_xar_numerus(const OfficinaXar* xar);
@@ -5189,6 +5192,12 @@ officina_tabula_friare_fnv1a (
 #define XAR_MAXIMUS_SEGMENTORUM     LXIV    /* tabula magna (xar_creare_magnum) */
 #define XAR_PRIMUS_SEGMENTUM        IV      /* elementa in primo segmento */
 
+/* TABULA CRESCENS (2026-10-21): segmenta duo prima in capite INSCRIPTA;
+ * tabula plena (segmenta_maxima) ex piscina solum cum segmentum
+ * tertium petitur. Proiectio STML plagulae toml LXX K: XCVI M Xar,
+ * LIII M vacua, capita (CCXL octeti) LXV% arenae - nunc LXIV octeti. */
+#define XAR_SEGMENTA_INLINEA        II
+
 /* Vexilla */
 #define XAR_VEXILLUM_ORDINARIUS     ZEPHYRUM    /* Ordinarius: memoria ad zephyrum */
 #define XAR_VEXILLUM_SINE_ZEPHYRUM  I           /* Non zephyrum facere memoriam in allocatio */
@@ -7305,6 +7314,42 @@ _refusio_segmentorum (
         xar->segmenta_maxima, xar->numerus_elementorum);
 }
 
+/* Segmentum k legere: NIHIL ultra tabulam currentem (segmenta duo
+ * prima inscripta; tabula plena pigre - TABULA CRESCENS, xar.h) */
+interior vacuum*
+_segmentum (
+    constans OfficinaXar* xar,
+             i32  k)
+{
+    redde k < xar->mensura_tabulae ? xar->segmenta[k] : NIHIL;
+}
+
+/* Tabulam plenam (segmenta_maxima) ex piscina facere, segmentis
+ * inscriptis translatis - semel, cum segmentum ultra INLINEA petitur.
+ * FALSUM = allocatio fracta (fines ipsos vocans iam probavit). */
+interior b32
+_tabulam_crescere (
+    OfficinaXar* xar)
+{
+      vacuum** tabula;
+         i32   i;
+
+    tabula = (vacuum**)officina_piscina_allocare_ordinatum(xar->piscina,
+        (memoriae_index)xar->segmenta_maxima * magnitudo(vacuum*),
+        VIII);
+    si (!tabula)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar->segmenta_maxima; i++)
+    {
+        tabula[i] = i < xar->mensura_tabulae ? xar->segmenta[i] : NIHIL;
+    }
+    xar->segmenta         = tabula;
+    xar->mensura_tabulae  = xar->segmenta_maxima;
+    redde VERUM;
+}
+
 /* Allocare Segmentum
  * "Partem allocare"
  *
@@ -7323,6 +7368,12 @@ allocare_segmentum (
     {
         _refusio_segmentorum(xar);
         redde FALSUM;  /* Nimis multa segmenta! */
+    }
+
+    si (   index_segmenti >= xar->mensura_tabulae
+        && !_tabulam_crescere(xar))
+    {
+        redde FALSUM;  /* Allocatio tabulae fracta */
     }
 
     si (xar->segmenta[index_segmenti])
@@ -7361,8 +7412,8 @@ allocare_segmentum (
     redde VERUM;
 }
 
-/* Genesis: caput + tabula segmentorum UNA allocatione (tabula post
- * caput), mensura tabulae data. */
+/* Genesis: caput solum, segmenta duo prima in eo inscripta; tabula
+ * plena (segmenta_maxima, fines) pigre ex piscina - TABULA CRESCENS. */
 interior OfficinaXar*
 _creare (
     OfficinaPiscina* piscina,
@@ -7379,9 +7430,8 @@ _creare (
     {
         redde NIHIL;
     }
-    mensura = magnitudo(OfficinaXar)
-            + (memoriae_index)segmenta_maxima * magnitudo(vacuum*);
-    xar = (OfficinaXar*)officina_piscina_allocare_ordinatum(piscina, mensura, VIII);
+    mensura  = magnitudo(OfficinaXar);
+    xar      = (OfficinaXar*)officina_piscina_allocare_ordinatum(piscina, mensura, VIII);
     si (!xar)
     {
         redde NIHIL;
@@ -7394,11 +7444,12 @@ _creare (
     xar->capacitas_totalis    = ZEPHYRUM;
     xar->vexilla              = vexilla;
     xar->segmenta_maxima      = segmenta_maxima;
+    xar->mensura_tabulae      = XAR_SEGMENTA_INLINEA;
     xar->piscina              = piscina;
-    xar->segmenta             = (vacuum**)(xar + I);
-    per (i = ZEPHYRUM; i < segmenta_maxima; i++)
+    xar->segmenta             = xar->segmenta_inlinea;
+    per (i = ZEPHYRUM; i < XAR_SEGMENTA_INLINEA; i++)
     {
-        xar->segmenta[i] = NIHIL;
+        xar->segmenta_inlinea[i] = NIHIL;
     }
     redde xar;
 }
@@ -7533,7 +7584,7 @@ officina_xar_locare (
         locatio->index_segmenti      = index_segmenti;
         locatio->offset_in_segmento  = index_adiustus;
         locatio->magnitudo_segmenti  = magnitudo_segmenti;
-        locatio->basis_segmenti      = xar->segmenta[index_segmenti];
+        locatio->basis_segmenti      = _segmentum(xar, index_segmenti);
         redde VERUM;
     }
 
@@ -7563,7 +7614,7 @@ officina_xar_locare (
     locatio->index_segmenti      = index_segmenti;
     locatio->offset_in_segmento  = index_adiustus;
     locatio->magnitudo_segmenti  = magnitudo_segmenti;
-    locatio->basis_segmenti      = xar->segmenta[index_segmenti];
+    locatio->basis_segmenti      = _segmentum(xar, index_segmenti);
 
     redde VERUM;
 }
@@ -7647,7 +7698,7 @@ officina_xar_addere (
     }
 
     /* Assecurare segmentum existit */
-    si (!xar->segmenta[locatio.index_segmenti])
+    si (!_segmentum(xar, locatio.index_segmenti))
     {
         si (!allocare_segmentum(xar, locatio.index_segmenti))
         {

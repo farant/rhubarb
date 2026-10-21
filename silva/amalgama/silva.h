@@ -48,9 +48,12 @@ typedef struct SilvaXar {
     unsigned int  numerus_segmentorum;
     unsigned int  capacitas_totalis;
     unsigned int  vexilla;
-    unsigned int  segmenta_maxima;   /* mensura tabulae (XXIV | LXIV) */
+    unsigned int  segmenta_maxima;   /* fines tabulae (XXIV | LXIV) */
+    unsigned int  mensura_tabulae;   /* tabula currens: 2, deinde fines */
     SilvaPiscina* piscina;
-    void**        segmenta;          /* tabula post caput, una allocatione */
+    void**        segmenta;          /* -> segmenta_inlinea, aut tabula
+                                      * plena (segmento tertio petito) */
+    void*         segmenta_inlinea[2];
 } SilvaXar;
 
 /* Vacare: cursor ad initium, ALVEI RETENTI (nullum unmap) - reusus
