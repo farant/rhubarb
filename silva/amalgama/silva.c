@@ -87213,6 +87213,9 @@ interior b32
 _chorda_par_literis (
                 SilvaChorda  s,
     constans character* litterae);
+interior b32
+_nomen_reservatum (
+    SilvaChorda titulus);
 interior vacuum
 _intervalla_computare (
                SilvaSemantica* sem,
@@ -90318,7 +90321,7 @@ _symbolum_registrare (
             post_limitem = (constans character*)titulus.datum
                 > sem->limes_posix_datum;
         }
-        si (post_limitem)
+        si (post_limitem && !_nomen_reservatum(copia))
         {
             (vacuum)silva_tabula_dispersa_inserere(sem->posix_nomina,
                 copia, NIHIL);
@@ -94013,7 +94016,8 @@ _portabilitatem_examinare (
             {
                 perge;
             }
-            si (e->def->linea_def <= sem->limes_posix_linea)
+            si (   e->def->linea_def <= sem->limes_posix_linea
+                || _nomen_reservatum(*e->def->titulus))
             {
                 perge;
             }
@@ -101727,6 +101731,18 @@ _chorda_par_literis (
 
     redde s.mensura == m
         && memcmp(s.datum, litterae, (memoriae_index)m) == ZEPHYRUM;
+}
+
+/* nomen implementationi reservatum ('__' initio, C89 7.1.3):
+ * praedefinita et builtin compilatoris (__ATOMIC_ACQUIRE,
+ * __atomic_load_n), numquam nomina POSIX quae glibc celat - ergo
+ * codex 85 ea non censet (sonus spec X.7, 2026-10-21) */
+interior b32
+_nomen_reservatum (
+    SilvaChorda titulus)
+{
+    redde titulus.mensura >= II && titulus.datum != NIHIL
+        && titulus.datum[ZEPHYRUM] == '_' && titulus.datum[I] == '_';
 }
 
 /* lectores C sine limite: larva positionum argumentorum quae

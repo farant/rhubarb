@@ -449,6 +449,118 @@ s32 principale (vacuum)
         }
     }
 
+
+    /* ========================================================
+     * X. Nomina implementationis ('__', C89 7.1.3) post limitem NON
+     * POSIX sunt: atomica compilatoris (sectio postulata_atomica.h,
+     * sonus spec X.7, 2026-10-21) postulata_posix.h non poscunt -
+     * glibc nomina reservata numquam celat. Calibratio: nomen
+     * POSIX ordinarium in eadem plagula adhuc flagrat.
+     * ======================================================== */
+
+    imprimere("--- X: nomina reservata non POSIX ---\n");
+    {
+        constans character* systema =
+            "int ante_limitem_p(int f);\n"
+            "/* " SILVA_LIMES_POSIX_TITULUS " - probatio */\n"
+            "#define __ATOMIC_PROBATIO 2\n"
+            "unsigned int __atomic_probatio(int ordo);\n"
+            "int furca_probatio(void);\n";
+        constans character* reservata =
+            "unsigned int probare(void);\n"
+            "unsigned int probare(void)\n"
+            "{\n"
+            "    return __atomic_probatio(__ATOMIC_PROBATIO);\n"
+            "}\n";
+        constans character* mixta =
+            "unsigned int probare(void);\n"
+            "unsigned int probare(void)\n"
+            "{\n"
+            "    return __atomic_probatio(__ATOMIC_PROBATIO)\n"
+            "        + (unsigned int)furca_probatio();\n"
+            "}\n";
+        SilvaSemantica* sem = _iudicare(piscina, systema, reservata);
+
+        CREDO_NON_NIHIL (sem);
+        si (sem != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (_numerus_codicis(sem,
+                (s32)EXAMEN_CODEX_POSTULATA_DESUNT), ZEPHYRUM);
+        }
+        sem = _iudicare(piscina, systema, mixta);
+        CREDO_NON_NIHIL (sem);
+        si (sem != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (_numerus_codicis(sem,
+                (s32)EXAMEN_CODEX_POSTULATA_DESUNT), I);
+            CREDO_VERUM (_causa_continet(sem,
+                (s32)EXAMEN_CODEX_POSTULATA_DESUNT, "furca_probatio"));
+            CREDO_VERUM (!_causa_continet(sem,
+                (s32)EXAMEN_CODEX_POSTULATA_DESUNT, "__atomic"));
+        }
+    }
+
+    /* MACRA per lexicon contextus (via examinis vera: definitiones
+     * lexici 'systema_c89.h' post lineam limitis; parsura systematis
+     * sola eas non videt - macra ante semanticam expanduntur).
+     * Calibratio: macrum ordinarium post limitem flagrat. */
+    imprimere("--- XI: macra reservata per lexicon ---\n");
+    {
+        constans character* lexicon =
+            "int ante_limitem_p(int f);\n"
+            "/* " SILVA_LIMES_POSIX_TITULUS " - probatio */\n"
+            "#define __ATOMIC_PROBATIO 2\n"
+            "#define SO_PROBATIO_M 7\n";
+        constans character* reservata =
+            "int probare(void);\n"
+            "int probare(void) { return __ATOMIC_PROBATIO; }\n";
+        constans character* ordinaria =
+            "int probare(void);\n"
+            "int probare(void) { return SO_PROBATIO_M; }\n";
+        constans character* fontes[II];
+                       i32  k;
+
+        fontes[ZEPHYRUM]  = reservata;
+        fontes[I]         = ordinaria;
+        per (k = ZEPHYRUM; k < II; k++)
+        {
+             SilvaContextus* ctx      = silva_contextus_creare(piscina);
+               SilvaParsura* parsura  = NIHIL;
+             SilvaSemantica* sem      = NIHIL;
+
+            CREDO_NON_NIHIL (ctx);
+            si (ctx == NIHIL)
+            {
+                perge;
+            }
+            CREDO_VERUM (silva_contextus_lexicon_addere(ctx,
+                "systema_c89.h", lexicon, (i32)strlen(lexicon)));
+            parsura = silva_c89_parsare_cum_contextu(piscina, ctx,
+                "usor_m.c", fontes[k], (i32)strlen(fontes[k]), NIHIL);
+            CREDO_NON_NIHIL (parsura);
+            /* ut examen: lexicon idem ET parsura systematis */
+            si (parsura != NIHIL)
+            {
+                SilvaParsura* systema = _parsare(piscina,
+                    "systema_c89.h",
+                                                 lexicon);
+
+                si (systema != NIHIL)
+                {
+                    sem = silva_c89_semantica_analysare_cum_systemate(
+                        piscina, parsura, systema);
+                }
+            }
+            CREDO_NON_NIHIL (sem);
+            si (sem != NIHIL)
+            {
+                CREDO_AEQUALIS_I32 (_numerus_codicis(sem,
+                    (s32)EXAMEN_CODEX_POSTULATA_DESUNT),
+                    k == ZEPHYRUM ? ZEPHYRUM : I);
+            }
+        }
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

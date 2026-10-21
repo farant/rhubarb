@@ -212,6 +212,10 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(sizeof(struct rusage_info_v4) == 296);"
     echo "IUNGO_ASSERTA(OFF(rusage_info_v4, ri_resident_size) == 64 && OFF(rusage_info_v4, ri_phys_footprint) == 72);"
     echo "IUNGO_ASSERTA(OFF(rusage_info_v4, ri_lifetime_max_phys_footprint) == 240);"
+    # sonus S3 (2026-10-21): ordo memoriae __atomic (sectio
+    # postulata_atomica.h); in TU nostro redefinitio nostra praedefinitum
+    # clang AEQUALE esse debet (aliter -Werror 'macro redefined')
+    echo "IUNGO_ASSERTA(__ATOMIC_ACQUIRE == 2 && __ATOMIC_RELEASE == 3);"
 }
 
 PRAEAMBULUM='#define IUNGO2(a,b) a##b

@@ -103,7 +103,14 @@ _in_lista_nominum (
 
 /* nomina ex lineis '#include <...>' colligere, commatibus iuncta.
  * Inclusiones '"locales"' CONSULTO praetermittuntur: eae per
- * ambulationem capitum repositorii iam resolvuntur. */
+ * ambulationem capitum repositorii iam resolvuntur - PRAETER capita
+ * POSTULATORUM ('#include "postulata_X.h"'): caput domus quod
+ * postulatum compilatoris nominat (postulata_atomica.h: __atomic
+ * clang/gcc) sectionem lexici evocat sicut caput systematis, ut
+ * plagula SOLA quae id includit superficiem videat (sonus spec X.7,
+ * 2026-10-21). */
+#define SILVA_LEXICON_POSTULATA "postulata_"
+
 hic_manens i32
 _inclusa_colligere (
     constans character* fons,
@@ -116,8 +123,9 @@ _inclusa_colligere (
 
     dum (i + IX < mensura)
     {
-        i32 j;
-        i32 initium;
+              i32 j;
+              i32 initium;
+        character claudens;
 
         si (strncmp(fons + i, "#include", VIII) != ZEPHYRUM)
         {
@@ -126,15 +134,24 @@ _inclusa_colligere (
         }
         j = i + VIII;
         dum (j < mensura && (fons[j] == ' ' || fons[j] == '\t')) j++;
-        si (j >= mensura || fons[j] != '<')
+        si (j >= mensura || (fons[j] != '<' && fons[j] != '"'))
         {
             i = (j > i) ? j : i + I;
             perge;
         }
+        claudens = fons[j] == '<' ? '>' : '"';
         j++;
         initium = j;
-        dum (j < mensura && fons[j] != '>' && fons[j] != '\n') j++;
-        si (j < mensura && fons[j] == '>' && j > initium)
+        si (   claudens == '"'
+            && (initium + X > mensura
+                || strncmp(fons + initium, SILVA_LEXICON_POSTULATA, X)
+                       != ZEPHYRUM))
+        {
+            i = j;
+            perge;
+        }
+        dum (j < mensura && fons[j] != claudens && fons[j] != '\n') j++;
+        si (j < mensura && fons[j] == claudens && j > initium)
         {
             i32 n = j - initium;
 

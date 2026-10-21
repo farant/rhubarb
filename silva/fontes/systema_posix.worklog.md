@@ -81,3 +81,37 @@ auspex asserts size AND signedness of all eight (real TU includes
 TU nostrum DISSENTIT, restored. (silva.planta could not run this plant:
 its preflight compiles the header ALONE and systema_posix.h needs the
 systema_c89.h prelude - expected, not a bug.)
+
+## 2026-10-21 - postulata_atomica.h: compiler atomics as a REQUIRED surface (sonus S3, sexta)
+
+The sound system's SPSC ring needs two ordered operations (store-release
+/ load-acquire) that C89 cannot express; clang/gcc `__atomic_store_n` /
+`__atomic_load_n` pass the full house flag set (sonus spec X.7). examen
+rejected them: `__ATOMIC_*` unknown identifiers, builtins as implicit
+calls. Fran chose (10-20) a REQUIREMENT HEADER over an exemption:
+
+- `include/postulata_atomica.h` - a pure marker (exemplar
+  postulata_posix.h). A file that uses `__atomic` includes it DIRECTLY.
+- new section `caput="postulata_atomica.h"` here: `__ATOMIC_ACQUIRE 2`,
+  `__ATOMIC_RELEASE 3`, and the two builtins typed for `unsigned int`
+  ONLY (atomics on another type = "monstratores incompatibiles"). The
+  prototypes sit under `#ifndef __clang__`: auspex compiles this file
+  with clang, and clang refuses to redeclare a builtin; silva defines no
+  `__clang__`, so it sees them.
+- the section matcher (silva/instrumenta/silva_lexicon.c) now also
+  collects QUOTED includes whose name starts `postulata_` - all other
+  quoted includes stay skipped (repository header walk resolves them).
+- auspex asserts `__ATOMIC_ACQUIRE == 2 && __ATOMIC_RELEASE == 3`. In TU
+  nostrum our `#define` REDEFINES clang's predefinition: identical =
+  silent, different = `-Wmacro-redefined` under -Werror. Hand plant
+  RELEASE 4 -> DISSENTIT twice (redefinition + assertum), restored.
+- end to end: file with the header ACCIPE (0 findings); without it
+  REICE; atomics on s64 REICE.
+
+First draft put `#if !defined(__ATOMIC_ACQUIRE) #error` in the header:
+examen judging the HEADER ALONE does not include itself, so the section
+is not evoked and the #error branch is active in silva's view. Dropped:
+a compiler without `__atomic` fails loudly at the use site anyway.
+Side gap found: silva has no `#error` directive (an active one reports
+"lexema '#' quod grammatica hic non accipit"); inactive ones are
+skipped correctly. Filed, not fixed.

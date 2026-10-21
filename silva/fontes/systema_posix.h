@@ -705,3 +705,25 @@ struct rusage_info_v4 {
  * ================================================== */
 
 int proc_pid_rusage(int pid, int flavor, rusage_info_t* buffer);
+
+
+/* ==================================================
+ * <sectio caput="postulata_atomica.h"/>
+ * atomica compilatoris (clang/gcc __atomic) - SOLUM plagulis quae
+ * include/postulata_atomica.h citatum includunt (sonus spec X.7,
+ * 2026-10-21; regula 'postulata_' in silva_lexicon.c). Valores ordinis
+ * memoriae clang/gcc PRAEDEFINITI: auspex_posix certificat (redefinitio
+ * aequalis sub clang tacet, alia -Werror DISSENTIT). Functiones typo
+ * 'unsigned int' SOLO: atomica aliorum typorum examen recusat (atomus
+ * i32 solum praebet). Sub clang (TU nostrum auspicis) declarationes
+ * celantur - builtin redeclarari nequit.
+ * ================================================== */
+
+#define __ATOMIC_ACQUIRE 2
+#define __ATOMIC_RELEASE 3
+#ifndef __clang__
+unsigned int __atomic_load_n(const volatile unsigned int* locus,
+    int ordo);
+void __atomic_store_n(volatile unsigned int* locus, unsigned int valor,
+                      int ordo);
+#endif
