@@ -248,6 +248,7 @@ declare -a SOURCE_FILES=(
     "lib/situs.c"
     "lib/sonitus.c"
     "lib/sonus.c"
+    "lib/sonus_wav.c"
     "lib/sors.c"
     "lib/specimen.c"
     "lib/speculum.c"

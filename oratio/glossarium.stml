@@ -903,6 +903,7 @@
   <vocabulum lemma="fts" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="full-text search (SQLite)"/>
   <vocabulum lemma="tsv" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="tab-separated values"/>
   <vocabulum lemma="utf" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="unicode transformation format"/>
+  <vocabulum lemma="wav" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="forma plagulae soni RIFF/WAVE (sonus_wav)"/>
   <vocabulum lemma="dof" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="degrees of freedom"/>
   <vocabulum lemma="trm" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="abbreviatio knotapel"/>
   <vocabulum lemma="chebyshev" lingua="anglica" classis="nomen-proprium" contextus="anglicus" nota="Pafnuty Chebyshev"/>
