@@ -377,7 +377,7 @@ stml_invenire_omnes_liberos (
  */
 chorda*
 stml_attributum_capere (
-             StmlNodus* nodus,
+    constans StmlNodus* nodus,
     constans character* titulus);
 
 /* Verificare si nodus habet attributum
@@ -386,7 +386,7 @@ stml_attributum_capere (
  */
 b32
 stml_attributum_habet (
-             StmlNodus* nodus,
+    constans StmlNodus* nodus,
     constans character* titulus);
 
 /* Capere textum internum - octeti interiores EXACTI

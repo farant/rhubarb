@@ -592,3 +592,20 @@ What remains in that test is the per-rule per-node loops themselves
 and the write-then-read of the parsura document; the accessor
 plumbing (xar_obtinere/xar_numerus/stml_liberum_ad_indicem) is still
 a quarter of the samples and is a library-wide question, not canon's.
+
+## 2026-10-20 — canon_iudicare takes constans Canon*
+
+The judging path (canon_iudicare, _expansum, _distributum, and the
+statics nodum_iudicare, elementum_quaerere, _elementum_quaerere_vi,
+_attributum_declaratum, _clavigerum_stellae,
+_augmenta_cusasque_colligere, _augmentum_iudicare) now takes
+`constans Canon*`. It never wrote to the canon: every write to `c->`
+is in construction (canon_legere), and judging never touches
+`c->piscina` or `c->intern`. So unlike git it doesn't grow the owner's
+arena. Const is shallow (`c->elementa` stays `TabulaDispersa*`), so no
+body changed. On the stml side, stml_attributum_capere/_habet take
+`constans StmlNodus*`. Why it came up: examen 94 profundum
+(lib/credo.worklog.md 10-20) flagged 17 calls in
+probatio_natura_canones that passed the suite fixture's canon into these
+read-only APIs. Those sites were tolerated, and the tolerations are now
+removed (park 01M5DWFJ3YVRT9HSBRYKEA7J8D).

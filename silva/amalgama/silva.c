@@ -2273,12 +2273,12 @@ silva_stml_invenire_liberum (
         const char* titulus);
 SilvaChorda*
 silva_stml_attributum_capere (
-    SilvaStmlNodus* nodus,
-        const char* titulus);
+    const SilvaStmlNodus* nodus,
+              const char* titulus);
 int
 silva_stml_attributum_habet (
-    SilvaStmlNodus* nodus,
-        const char* titulus);
+    const SilvaStmlNodus* nodus,
+              const char* titulus);
 SilvaChorda
 silva_stml_textus_internus (
     SilvaStmlNodus* nodus,
@@ -7594,7 +7594,7 @@ silva_stml_invenire_liberum (
  */
 SilvaChorda*
 silva_stml_attributum_capere (
-             SilvaStmlNodus* nodus,
+    constans SilvaStmlNodus* nodus,
     constans character* titulus);
 
 /* Verificare si nodus habet attributum
@@ -7603,7 +7603,7 @@ silva_stml_attributum_capere (
  */
 b32
 silva_stml_attributum_habet (
-             SilvaStmlNodus* nodus,
+    constans SilvaStmlNodus* nodus,
     constans character* titulus);
 
 /* Capere textum internum - octeti interiores EXACTI
@@ -21561,7 +21561,7 @@ silva_stml_invenire_liberum (
 
 SilvaChorda*
 silva_stml_attributum_capere (
-             SilvaStmlNodus* nodus,
+    constans SilvaStmlNodus* nodus,
     constans character* titulus)
 {
                i32  i;
@@ -21636,7 +21636,7 @@ silva_stml_attributum_capere (
 
 b32
 silva_stml_attributum_habet (
-             SilvaStmlNodus* nodus,
+    constans SilvaStmlNodus* nodus,
     constans character* titulus)
 {
     redde silva_stml_attributum_capere(nodus, titulus) != NIHIL;

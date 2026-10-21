@@ -4742,7 +4742,7 @@ stml_invenire_omnes_liberos (
 
 chorda*
 stml_attributum_capere (
-             StmlNodus* nodus,
+    constans StmlNodus* nodus,
     constans character* titulus)
 {
                i32  i;
@@ -4817,7 +4817,7 @@ stml_attributum_capere (
 
 b32
 stml_attributum_habet (
-             StmlNodus* nodus,
+    constans StmlNodus* nodus,
     constans character* titulus)
 {
     redde stml_attributum_capere(nodus, titulus) != NIHIL;

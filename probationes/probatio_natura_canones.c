@@ -399,7 +399,7 @@ _declarationem_invenire(
 /* Omnes nodos tituli dati in Xar colligere (transitus profundus). */
 interior vacuum
 _titulo_colligere(
-    StmlNodus*           n,
+    constans StmlNodus*  n,
     constans character*  titulus,
     Xar*                 ex)
 {
@@ -413,7 +413,7 @@ _titulo_colligere(
     si (n->genus == STML_NODUS_ELEMENTUM && n->titulus &&
         chorda_aequalis_literis(*n->titulus, titulus))
     {
-        *(StmlNodus**)xar_addere(ex) = n;
+        *(constans StmlNodus**)xar_addere(ex) = n;
     }
 
     si (n->liberi)
@@ -695,7 +695,7 @@ _generatorem_currere(
  * tacita maneret. */
 interior b32
 _documentum_iudicare(
-    Canon*                canon,
+    constans Canon*       canon,
     constans character*   documentum,
     CanonVitiumGenus      quaesitum,
     i32*                  generis_ex,
@@ -1135,13 +1135,11 @@ _sectio_tertia (
     CREDO_MAIOR_I32 (xar_numerus(monolithus->citationes),
                      (i32)ZEPHYRUM);
 
-    /* <tolera codex="CREDO_SUITA_MUTATA" (>canon_iudicare(Canon*) per nodum_iudicare non constans - monolithus lectio sola; parcum 01M5DWFJ3YVRT9HSBRYKEA7J8D */
     CREDO_VERUM (_documentum_iudicare(monolithus, DOC_RESOLVENS,
         CANON_CITATIO_IRRITA, &irrita, &omnia, piscina, intern));
     CREDO_AEQUALIS_I32 (irrita, (i32)ZEPHYRUM);
     CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
 
-    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: canon_iudicare non constans (parcum ...EA7J8D) */
     CREDO_VERUM (_documentum_iudicare(monolithus, DOC_PENDENS,
         CANON_CITATIO_IRRITA, &irrita, &omnia, piscina, intern));
     CREDO_AEQUALIS_I32 (irrita, (i32)I);
@@ -1151,14 +1149,12 @@ _sectio_tertia (
      * sub titulo SUBGENERIS fert - indicem ad= probat (forma
      * titulo solo rueret); pendens ruere DEBET - ante
      * clausuram citatio nulla erat et utraque transibat. */
-    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: canon_iudicare non constans (parcum ...EA7J8D) */
     CREDO_VERUM (_documentum_iudicare(monolithus,
         DOC_CLAUSURA_RESOLVENS, CANON_CITATIO_IRRITA, &irrita,
         &omnia, piscina, intern));
     CREDO_AEQUALIS_I32 (irrita, (i32)ZEPHYRUM);
     CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
 
-    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: canon_iudicare non constans (parcum ...EA7J8D) */
     CREDO_VERUM (_documentum_iudicare(monolithus,
         DOC_CLAUSURA_PENDENS, CANON_CITATIO_IRRITA, &irrita,
         &omnia, piscina, intern));
@@ -1187,7 +1183,6 @@ _sectio_quarta (
     CREDO_MAIOR_I32 (xar_numerus(monolithus->unicitates),
                      (i32)ZEPHYRUM);
 
-    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: canon_iudicare non constans (parcum ...EA7J8D) */
     CREDO_VERUM (_documentum_iudicare(monolithus,
         DOC_GEMINUM_TRANS, CANON_NOMEN_BIS, &bis, &omnia,
         piscina, intern));
@@ -1196,7 +1191,6 @@ _sectio_quarta (
 
     /* forma facilior, quam spatium per elementum quoque
      * caperet - ideo sola non sufficeret */
-    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: canon_iudicare non constans (parcum ...EA7J8D) */
     CREDO_VERUM (_documentum_iudicare(monolithus,
         DOC_GEMINUM_IDEM, CANON_NOMEN_BIS, &bis, &omnia,
         piscina, intern));
@@ -1204,7 +1198,6 @@ _sectio_quarta (
 
     /* et NON clamat ubi nomina distincta sunt (documentum
      * resolvens supra duo nomina diversa fert) */
-    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: canon_iudicare non constans (parcum ...EA7J8D) */
     CREDO_VERUM (_documentum_iudicare(monolithus, DOC_RESOLVENS,
         CANON_NOMEN_BIS, &bis, &omnia, piscina, intern));
     CREDO_AEQUALIS_I32 (bis, (i32)ZEPHYRUM);
@@ -1299,22 +1292,21 @@ _sectio_sexta (
     i32  i;
 
     citationes = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
-    /* <tolera codex="CREDO_SUITA_MUTATA" (>nodi collecti ad stml_attributum_capere(StmlNodus*) non constans eunt - lectio sola; parcum ...EA7J8D */
     _titulo_colligere(monolithus_radix, "citatio", citationes);
     CREDO_MAIOR_I32 (xar_numerus(citationes), (i32)ZEPHYRUM);
 
     malae = ZEPHYRUM;
     per (i = ZEPHYRUM; i < xar_numerus(citationes); i++)
     {
-        StmlNodus* c;
-        StmlNodus* petitum;
-        StmlNodus* citans;
-        chorda*    ad;
-        chorda*    super;
-        chorda*    attributum;
-        s32        virgula;
+        constans StmlNodus* c;
+        StmlNodus*          petitum;
+        StmlNodus*          citans;
+        chorda*             ad;
+        chorda*             super;
+        chorda*             attributum;
+        s32                 virgula;
 
-        c          = *(StmlNodus**)xar_obtinere(citationes, i);
+        c          = *(constans StmlNodus**)xar_obtinere(citationes, i);
         ad         = stml_attributum_capere(c, "ad");
         super      = stml_attributum_capere(c, "super");
         attributum = stml_attributum_capere(c, "attributum");
@@ -1471,27 +1463,23 @@ _sectio_septima (
     i32 vocab;
     i32 omnia;
 
-    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: canon_iudicare non constans (parcum ...EA7J8D) */
     CREDO_VERUM (_documentum_iudicare(monolithus, DOC_GENUS_REF,
         CANON_VOCABULUM_IGNOTUM, &vocab, &omnia,
         piscina, intern));
     CREDO_AEQUALIS_I32 (vocab, (i32)ZEPHYRUM);
     CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
 
-    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: canon_iudicare non constans (parcum ...EA7J8D) */
     CREDO_VERUM (_documentum_iudicare(monolithus,
         DOC_GENUS_IGNOTUM, CANON_VOCABULUM_IGNOTUM, &vocab,
         &omnia, piscina, intern));
     CREDO_AEQUALIS_I32 (vocab, (i32)I);
     CREDO_AEQUALIS_I32 (omnia, (i32)I);
 
-    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: canon_iudicare non constans (parcum ...EA7J8D) */
     CREDO_VERUM (_documentum_iudicare(monolithus, DOC_INSCRIPTUS,
         CANON_CITATIO_IRRITA, &irrita, &omnia, piscina, intern));
     CREDO_AEQUALIS_I32 (irrita, (i32)ZEPHYRUM);
     CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
 
-    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: canon_iudicare non constans (parcum ...EA7J8D) */
     CREDO_VERUM (_documentum_iudicare(monolithus,
         DOC_NON_INSCRIPTUS, CANON_CITATIO_IRRITA, &irrita,
         &omnia, piscina, intern));
@@ -1499,7 +1487,6 @@ _sectio_septima (
     CREDO_AEQUALIS_I32 (omnia, (i32)I);
 
     /* librarium W1: clavis mundi sine inscriptione SOLVIT */
-    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: canon_iudicare non constans (parcum ...EA7J8D) */
     CREDO_VERUM (_documentum_iudicare(monolithus,
         DOC_CLAVIS_MUNDI, CANON_CITATIO_IRRITA, &irrita,
         &omnia, piscina, intern));
@@ -1562,7 +1549,6 @@ _sectio_octava (
      * unum) - sub utroque canone */
     CREDO_VERUM (_documentum_iudicare(planta, DOC_PURUS,
         CANON_VALOR_MALUS, &mala, &omnia_m, piscina, intern));
-    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: canon_iudicare non constans (parcum ...EA7J8D) */
     CREDO_VERUM (_documentum_iudicare(monolithus, DOC_PURUS,
         CANON_VALOR_MALUS, &mala, &omnia_t, piscina, intern));
     CREDO_AEQUALIS_I32 (omnia_m, omnia_t);
@@ -1572,7 +1558,6 @@ _sectio_octava (
         DOC_PURUS_VITIOSUS, CANON_VALOR_MALUS, &mala,
         &omnia_m, piscina, intern));
     CREDO_AEQUALIS_I32 (mala, (i32)I);
-    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: canon_iudicare non constans (parcum ...EA7J8D) */
     CREDO_VERUM (_documentum_iudicare(monolithus,
         DOC_PURUS_VITIOSUS, CANON_VALOR_MALUS, &mala,
         &omnia_t, piscina, intern));
@@ -1604,7 +1589,6 @@ _sectio_nona (
     /* foramen impostoris mortuum: tag individui IGNOTUM est
      * (ante: <carl-linnaeus nomen="#impostor"/> licitum erat -
      * tag Linnaeum dicebat, identitas aliud, nemo clamabat) */
-    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: canon_iudicare non constans (parcum ...EA7J8D) */
     CREDO_VERUM (_documentum_iudicare(monolithus,
         "<individua>\n"
         "  <carl-linnaeus nomen=\"&impostor;\"/>\n"
@@ -1639,7 +1623,6 @@ _sectio_nona (
             chorda_ex_literis("<auctor ad=\"&dennis_ritchie;\"",
                               piscina)) >= ZEPHYRUM);
 
-        /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: canon_iudicare non constans (parcum ...EA7J8D) */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             chorda_ut_cstr(semina, piscina),
             CANON_ELEMENTUM_IGNOTUM, &ignota, &omnia,

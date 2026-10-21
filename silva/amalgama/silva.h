@@ -2259,12 +2259,12 @@ silva_stml_invenire_liberum (
         const char* titulus);
 SilvaChorda*
 silva_stml_attributum_capere (
-    SilvaStmlNodus* nodus,
-        const char* titulus);
+    const SilvaStmlNodus* nodus,
+              const char* titulus);
 int
 silva_stml_attributum_habet (
-    SilvaStmlNodus* nodus,
-        const char* titulus);
+    const SilvaStmlNodus* nodus,
+              const char* titulus);
 SilvaChorda
 silva_stml_textus_internus (
     SilvaStmlNodus* nodus,
