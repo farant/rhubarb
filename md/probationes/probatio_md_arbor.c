@@ -317,37 +317,21 @@ _indentata_numerare (
 
 #define PARSA(lit) _circuitus(piscina, (lit), (i32)strlen(lit), &sani)
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: capitula ATX (par. 4.2)
+ * ================================================== */
+
+interior vacuum
+_capitula_probare (
+    CredoContextus* c)
 {
-                   b32  praeteritus;
-               Piscina* piscina;
-                   b32  sani;
-    constans character* radix_viae;
-
-    piscina = piscina_generare_dynamicum("probatio_md_arbor", 1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    radix_viae = getenv("RHUBARB_RADIX");
-    si (radix_viae == NIHIL)
-    {
-        radix_viae = ".";
-    }
-
-
-    /* ========================================================
-     * PROBARE: capitula ATX (par. 4.2)
-     * ======================================================== */
+    Piscina* piscina = c->piscina;
+        b32  sani;
 
     {
         MateriaNodus* d;
-        MateriaNodus* c;
-
-        imprimere("\n--- Probans capitula ATX ---\n");
+        MateriaNodus* capitulum;
 
         d = PARSA("# Titulus\n");
         CREDO_NON_NIHIL (d);
@@ -355,47 +339,54 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
         CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
             (s32)MD_GENUS_CAPITULUM);
-        c = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
-        CREDO_AEQUALIS_S32 (_index(c, (i32)MD_CAPITULUM_GRADUS),
+        capitulum = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_index(capitulum, (i32)MD_CAPITULUM_GRADUS),
             (s32)I);
-        CREDO_VERUM (_adest(c, (i32)MD_CAPITULUM_MARCA));
-        CREDO_FALSUM (_adest(c, (i32)MD_CAPITULUM_CLAUSUM));
-        CREDO_FALSUM (_adest(c, (i32)MD_CAPITULUM_SUBDUCTIO));
-        CREDO_VERUM (_adest(c, (i32)MD_CAPITULUM_FINIS));
-        CREDO_AEQUALIS_I32 (_numerus(c->loci[MD_CAPITULUM_INLINEA].datum.nodus,
+        CREDO_VERUM (_adest(capitulum, (i32)MD_CAPITULUM_MARCA));
+        CREDO_FALSUM (_adest(capitulum, (i32)MD_CAPITULUM_CLAUSUM));
+        CREDO_FALSUM (_adest(capitulum, (i32)MD_CAPITULUM_SUBDUCTIO));
+        CREDO_VERUM (_adest(capitulum, (i32)MD_CAPITULUM_FINIS));
+        CREDO_AEQUALIS_I32 (_numerus(capitulum->loci[MD_CAPITULUM_INLINEA].datum.nodus,
             (i32)MD_INLINEA_LIBERI), I);
         CREDO_VERUM (_adest(d, (i32)MD_DOCUMENTUM_FINIS));
 
         d = PARSA("## foo ##\n#\n   ### x\n####### y\n");
         CREDO_VERUM (sani);
         CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), IV);
-        c = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
-        CREDO_AEQUALIS_S32 (_index(c, (i32)MD_CAPITULUM_GRADUS),
+        capitulum = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_index(capitulum, (i32)MD_CAPITULUM_GRADUS),
             (s32)II);
-        CREDO_VERUM (_adest(c, (i32)MD_CAPITULUM_CLAUSUM));
-        c = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, I);   /* '#' solus */
-        CREDO_AEQUALIS_S32 (c->genus, (s32)MD_GENUS_CAPITULUM);
-        CREDO_AEQUALIS_I32 (_numerus(c->loci[MD_CAPITULUM_INLINEA].datum.nodus,
+        CREDO_VERUM (_adest(capitulum, (i32)MD_CAPITULUM_CLAUSUM));
+        capitulum = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, I);   /* '#' solus */
+        CREDO_AEQUALIS_S32 (capitulum->genus, (s32)MD_GENUS_CAPITULUM);
+        CREDO_AEQUALIS_I32 (_numerus(capitulum->loci[MD_CAPITULUM_INLINEA].datum.nodus,
             (i32)MD_INLINEA_LIBERI), ZEPHYRUM);
-        c = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, II);  /* indentatum III */
-        CREDO_AEQUALIS_S32 (c->genus, (s32)MD_GENUS_CAPITULUM);
-        CREDO_AEQUALIS_I32 (_numerus(c, (i32)MD_CAPITULUM_PRAEFIXA), I);
+        capitulum = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, II);  /* indentatum III */
+        CREDO_AEQUALIS_S32 (capitulum->genus, (s32)MD_GENUS_CAPITULUM);
+        CREDO_AEQUALIS_I32 (_numerus(capitulum,
+            (i32)MD_CAPITULUM_PRAEFIXA), I);
         CREDO_AEQUALIS_S32 (_genus_bloci(d, III),
             (s32)MD_GENUS_PARAGRAPHUS);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: paragraphi, lineae vacuae, continuatio (par. 4.8)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: paragraphi, lineae vacuae, continuatio (par. 4.8)
+ * ================================================== */
+
+interior vacuum
+_paragraphos_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  sani;
 
     {
         MateriaNodus* d;
         MateriaNodus* par;
         MateriaNodus* inl;
         MateriaNodus* fr;
-
-        imprimere("\n--- Probans paragraphos ---\n");
 
         d = PARSA("Para one\ncontinued\n\nSecond\n");
         CREDO_VERUM (sani);
@@ -447,43 +438,49 @@ principale (vacuum)
         CREDO_VERUM (sani);
         CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: setext, divisio (par. 4.3, 4.1)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: setext, divisio (par. 4.3, 4.1)
+ * ================================================== */
+
+interior vacuum
+_subductiones_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  sani;
 
     {
         MateriaNodus* d;
-        MateriaNodus* c;
-
-        imprimere("\n--- Probans setext et divisiones ---\n");
+        MateriaNodus* capitulum;
 
         d = PARSA("Setext\n===\n");
         CREDO_VERUM (sani);
         CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
-        c = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
-        CREDO_AEQUALIS_S32 (c->genus, (s32)MD_GENUS_CAPITULUM);
-        CREDO_AEQUALIS_S32 (_index(c, (i32)MD_CAPITULUM_GRADUS),
+        capitulum = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (capitulum->genus, (s32)MD_GENUS_CAPITULUM);
+        CREDO_AEQUALIS_S32 (_index(capitulum, (i32)MD_CAPITULUM_GRADUS),
             (s32)I);
-        CREDO_FALSUM (_adest(c, (i32)MD_CAPITULUM_MARCA));
-        CREDO_VERUM (_adest(c, (i32)MD_CAPITULUM_SUBDUCTIO));
-        CREDO_VERUM (_adest(c, (i32)MD_CAPITULUM_FINIS));
+        CREDO_FALSUM (_adest(capitulum, (i32)MD_CAPITULUM_MARCA));
+        CREDO_VERUM (_adest(capitulum, (i32)MD_CAPITULUM_SUBDUCTIO));
+        CREDO_VERUM (_adest(capitulum, (i32)MD_CAPITULUM_FINIS));
 
         /* setext vincit divisionem */
         d = PARSA("Foo\n---\n");
         CREDO_VERUM (sani);
         CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
-        c = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
-        CREDO_AEQUALIS_S32 (c->genus, (s32)MD_GENUS_CAPITULUM);
-        CREDO_AEQUALIS_S32 (_index(c, (i32)MD_CAPITULUM_GRADUS),
+        capitulum = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (capitulum->genus, (s32)MD_GENUS_CAPITULUM);
+        CREDO_AEQUALIS_S32 (_index(capitulum, (i32)MD_CAPITULUM_GRADUS),
             (s32)II);
 
         /* multi-linea setext: inlinea III liberi */
         d = PARSA("Foo\nBar\n===\n");
         CREDO_VERUM (sani);
-        c = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (_numerus(c->loci[MD_CAPITULUM_INLINEA].datum.nodus,
+        capitulum = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(capitulum->loci[MD_CAPITULUM_INLINEA].datum.nodus,
             (i32)MD_INLINEA_LIBERI), III);
 
         d = PARSA("---\n");
@@ -499,17 +496,23 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
             (s32)MD_GENUS_SAEPTUM);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: saepta (par. 4.4, 4.5)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: saepta (par. 4.4, 4.5)
+ * ================================================== */
+
+interior vacuum
+_saepta_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  sani;
 
     {
         MateriaNodus* d;
         MateriaNodus* s;
-
-        imprimere("\n--- Probans saepta ---\n");
 
         d = PARSA("```c\nint x;\n```\n");
         CREDO_VERUM (sani);
@@ -565,17 +568,23 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), II);
         CREDO_AEQUALIS_S32 (_genus_bloci(d, I), (s32)MD_GENUS_SAEPTUM);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: bloci html (par. 4.6)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: bloci html (par. 4.6)
+ * ================================================== */
+
+interior vacuum
+_html_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  sani;
 
     {
         MateriaNodus* d;
         MateriaNodus* h;
-
-        imprimere("\n--- Probans blocos html ---\n");
 
         d = PARSA("<div>\nx\n</div>\n\npara\n");
         CREDO_VERUM (sani);
@@ -623,16 +632,22 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
             (s32)MD_GENUS_PARAGRAPHUS);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: praefatio
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: praefatio
+ * ================================================== */
+
+interior vacuum
+_praefationem_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  sani;
 
     {
         MateriaNodus* d;
-
-        imprimere("\n--- Probans praefationem ---\n");
 
         d = PARSA("---\nname: x\n\ndescription: y\n---\nbody\n");
         CREDO_VERUM (sani);
@@ -652,11 +667,19 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (_genus_bloci(d, I),
             (s32)MD_GENUS_PARAGRAPHUS);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: continentia (par. 5) - listae, citationes, laxitas
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: continentia (par. 5) - listae, citationes, laxitas
+ * ================================================== */
+
+interior vacuum
+_continentia_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  sani;
 
     {
         MateriaNodus* d;
@@ -664,8 +687,6 @@ principale (vacuum)
         MateriaNodus* e;
         MateriaNodus* q;
         MateriaNodus* par;
-
-        imprimere("\n--- Probans continentia ---\n");
 
         /* lista stricta: paragraphi nudi */
         d = PARSA("- a\n- b\n");
@@ -860,19 +881,25 @@ principale (vacuum)
             (i32)MD_SAEPTUM_CLAUSUM));
         CREDO_AEQUALIS_S32 (_genus_bloci(d, I), (s32)MD_GENUS_SAEPTUM);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: tabulae GFM (par. 4.10)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: tabulae GFM (par. 4.10)
+ * ================================================== */
+
+interior vacuum
+_tabulas_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  sani;
 
     {
         MateriaNodus* d;
         MateriaNodus* t;
         MateriaNodus* o;
-        MateriaNodus* c;
-
-        imprimere("\n--- Probans tabulas ---\n");
+        MateriaNodus* cella;
 
         d = PARSA("| a | b |\n| --- | :-: |\n| 1 | 2 |\n");
         CREDO_VERUM (sani);
@@ -886,24 +913,24 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (_numerus(o, (i32)MD_ORDO_CELLAE), II);
         CREDO_VERUM (_adest(o, (i32)MD_ORDO_CLAUSUM));
         CREDO_VERUM (_adest(o, (i32)MD_ORDO_FINIS));
-        c = _elementum(o, (i32)MD_ORDO_CELLAE, I);
-        CREDO_AEQUALIS_S32 (_index(c, (i32)MD_CELLA_ORDINATIO),
+        cella = _elementum(o, (i32)MD_ORDO_CELLAE, I);
+        CREDO_AEQUALIS_S32 (_index(cella, (i32)MD_CELLA_ORDINATIO),
             (s32)MD_ORDINATIO_MEDIA);
-        CREDO_VERUM (_adest(c, (i32)MD_CELLA_APERTUM));
-        CREDO_AEQUALIS_I32 (_numerus(c->loci[MD_CELLA_INLINEA].datum.nodus,
+        CREDO_VERUM (_adest(cella, (i32)MD_CELLA_APERTUM));
+        CREDO_AEQUALIS_I32 (_numerus(cella->loci[MD_CELLA_INLINEA].datum.nodus,
             (i32)MD_INLINEA_LIBERI), I);
-        c = _elementum(o, (i32)MD_ORDO_CELLAE, ZEPHYRUM);
-        CREDO_AEQUALIS_S32 (_index(c, (i32)MD_CELLA_ORDINATIO),
+        cella = _elementum(o, (i32)MD_ORDO_CELLAE, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_index(cella, (i32)MD_CELLA_ORDINATIO),
             (s32)MD_ORDINATIO_NULLA);
 
         /* sine pipis ducentibus/finalibus; vacua tabulam claudit */
         d = PARSA("a | b\n--|--\n1 | 2\n\npost\n");
         CREDO_VERUM (sani);
         CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), III);
-        t = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
-        o = t->loci[MD_TABULA_CAPUT].datum.nodus;
-        c = _elementum(o, (i32)MD_ORDO_CELLAE, ZEPHYRUM);
-        CREDO_FALSUM (_adest(c, (i32)MD_CELLA_APERTUM));
+        t      = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        o      = t->loci[MD_TABULA_CAPUT].datum.nodus;
+        cella  = _elementum(o, (i32)MD_ORDO_CELLAE, ZEPHYRUM);
+        CREDO_FALSUM (_adest(cella, (i32)MD_CELLA_APERTUM));
         CREDO_FALSUM (_adest(o, (i32)MD_ORDO_CLAUSUM));
         CREDO_AEQUALIS_S32 (_genus_bloci(d, II),
             (s32)MD_GENUS_PARAGRAPHUS);
@@ -929,9 +956,9 @@ principale (vacuum)
         t = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
         o = _elementum(t, (i32)MD_TABULA_ORDINES, ZEPHYRUM);
         CREDO_AEQUALIS_I32 (_numerus(o, (i32)MD_ORDO_CELLAE), II);
-        c = _elementum(o, (i32)MD_ORDO_CELLAE, I);
-        CREDO_FALSUM (_adest(c, (i32)MD_CELLA_APERTUM));
-        CREDO_AEQUALIS_I32 (_numerus(c->loci[MD_CELLA_INLINEA].datum.nodus,
+        cella = _elementum(o, (i32)MD_ORDO_CELLAE, I);
+        CREDO_FALSUM (_adest(cella, (i32)MD_CELLA_APERTUM));
+        CREDO_AEQUALIS_I32 (_numerus(cella->loci[MD_CELLA_INLINEA].datum.nodus,
             (i32)MD_INLINEA_LIBERI), ZEPHYRUM);
 
         /* initium blocci alterius tabulam claudit; pipa effugita; numeri dispares */
@@ -968,17 +995,23 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (_numerus(t->loci[MD_TABULA_CAPUT].datum.nodus,
             (i32)MD_ORDO_PRAEFIXA), I);   /* marca listae */
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: definitiones nexuum (par. 4.7) + lexemata derivata
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: definitiones nexuum (par. 4.7) + lexemata derivata
+ * ================================================== */
+
+interior vacuum
+_definitiones_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  sani;
 
     {
         MateriaNodus* d;
         MateriaNodus* def;
-
-        imprimere("\n--- Probans definitiones nexuum ---\n");
 
         d = PARSA("[foo]: /url \"title\"\n\n[foo]\n");
         CREDO_VERUM (sani);
@@ -1078,12 +1111,24 @@ principale (vacuum)
             (i32)MD_DEFINITIO_LINEAE, ZEPHYRUM),
             (i32)MD_LINEA_PRAEFIXA), I);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: corpus totum - octeti et praesentia
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: corpus totum - octeti et praesentia
+ * ================================================== */
 
+interior vacuum
+_corpus_probare (
+    CredoContextus* c)
+{
+    constans character* radix_viae = getenv("RHUBARB_RADIX");
+
+    (vacuum)c;
+    si (radix_viae == NIHIL)
+    {
+        radix_viae = ".";
+    }
     {
         character via[DXII];
              FILE* lista;
@@ -1103,8 +1148,6 @@ principale (vacuum)
               i32 citationes = ZEPHYRUM;
               i32 tabulae = ZEPHYRUM;
               i32 definitiones = ZEPHYRUM;
-
-        imprimere("\n--- PORTA CORPORIS: parsura + emissio, omnes plagulae ---\n");
 
         sprintf(via, "%s/md/build/corpus_md.txt", radix_viae);
         lista = fopen(via, "r");
@@ -1206,16 +1249,21 @@ principale (vacuum)
             CREDO_MAIOR_I32 (tabulae, (i32)200);
         }
     }
+}
 
 
-    imprimere("\n");
+/* ==================================================
+ * PROBARE: lexemata derivata B2.1 - saeptum.valor / lingua,
+ * fractura-mollis.valor (canalis semanticus pro html: templum
+ * spatium album fingere nequit, terminator octetos non fert)
+ * ================================================== */
 
-
-    /* ========================================================
-     * PROBARE: lexemata derivata B2.1 - saeptum.valor / lingua,
-     * fractura-mollis.valor (canalis semanticus pro html: templum
-     * spatium album fingere nequit, terminator octetos non fert)
-     * ======================================================== */
+interior vacuum
+_derivata_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  sani;
 
     {
         MateriaNodus* d;
@@ -1223,7 +1271,6 @@ principale (vacuum)
         MateriaNodus* p;
         MateriaNodus* fr;
 
-        imprimere("\n--- Probans derivata saepti et fracturae ---\n");
         d = PARSA("```c title\nint x;\n  y\n```\n");
         CREDO_VERUM (sani);
         s = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
@@ -1268,11 +1315,19 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (fr->genus, (s32)MD_GENUS_FRACTURA_MOLLIS);
         CREDO_VERUM (_valor_aequalis(fr, (i32)MD_MOLLIS_VALOR, "\n"));
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: regulae B3.3 (ex oraculo CommonMark)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: regulae B3.3 (ex oraculo CommonMark)
+ * ================================================== */
+
+interior vacuum
+_regulas_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  sani;
 
     {
         MateriaNodus* d;
@@ -1280,7 +1335,6 @@ principale (vacuum)
         MateriaNodus* e;
         MateriaNodus* s;
 
-        imprimere("\n--- Probans regulas B3.3 ---\n");
         /* codex intra elementum: indentatio continentis non contentum */
         d = PARSA("- a\n- ```\n  b\n  ```\n- c\n");
         CREDO_VERUM (sani);
@@ -1328,9 +1382,31 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (_genus_bloci(d, I),
             (s32)MD_GENUS_CAPITULUM);
     }
-    credo_imprimere_compendium();
+}
 
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "capitula ATX", _capitula_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "paragraphos", _paragraphos_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "setext et divisiones", _subductiones_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "saepta", _saepta_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "blocos html", _html_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "praefationem", _praefationem_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "continentia", _continentia_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "tabulas", _tabulas_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "definitiones nexuum", _definitiones_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "PORTA CORPORIS: parsura + emissio, omnes plagulae",
+        _corpus_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "derivata saepti et fracturae", _derivata_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "regulas B3.3", _regulas_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("md_arbor", SECTIONES);
 }

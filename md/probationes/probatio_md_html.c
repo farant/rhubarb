@@ -116,48 +116,84 @@ _ostende (
     }
 }
 
-s32
-principale (
-    vacuum)
-{
-                Piscina* piscina;
+/* FIXURA SUITAE: internamentum et programma md-html semel lecta
+ * (parare_suitae; assertio programmatis ibi); sectiones ea LEGUNT -
+ * internatio in internamentum fixurae sola licet (decretum
+ * 2026-10-19). */
+nomen structura {
     InternamentumChorda* intern;
-     constans character* radix_viae;
-              character  via[4096];
                  chorda  programma;
+} FixuraHtml;
 
-    piscina = piscina_generare_dynamicum("probatio_md_html", 67108864);
-    si (!piscina)
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+              FixuraHtml* f;
+      constans character* radix_viae;
+               character  via[4096];
+
+    f = (FixuraHtml*)piscina_allocare(c->piscina,
+        magnitudo(FixuraHtml));
+    si (f == NIHIL)
     {
-        imprimere("FRACTA: piscina\n");
-        redde I;
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    credo_aperire(piscina);
-    intern      = internamentum_creare(piscina);
+    f->intern   = internamentum_creare(c->piscina);
     radix_viae  = getenv("RHUBARB_RADIX");
     si (radix_viae == NIHIL)
     {
         radix_viae = ".";
     }
     sprintf(via, "%s/md/html/md-html.stml", radix_viae);
-    programma = _plagulam_legere(piscina, via);
-    CREDO_VERUM (programma.datum != NIHIL);
-    si (programma.datum == NIHIL)
+    f->programma = _plagulam_legere(c->piscina, via);
+    CREDO_VERUM (f->programma.datum != NIHIL);
+    si (f->programma.datum == NIHIL)
     {
         imprimere("FRACTA: programma absens: %s\n", via);
-        credo_imprimere_compendium();
-        redde I;
+        redde;
     }
+    c->datum = f;
+}
 
-    imprimere("\n--- exempla spicae: octetim ---\n");
+interior vacuum
+_exempla_spicae_probare (
+    CredoContextus* c)
+{
+    constans FixuraHtml* f        = (constans FixuraHtml*)c->suita;
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern;
+                 chorda  programma;
+
+    si (f == NIHIL)
+    {
+        redde;
+    }
+    intern     = f->intern;
+    programma  = f->programma;
     _pinna(piscina, intern, programma, "## Hello *w*\n",
         "<h2>Hello <em>w</em></h2>");
     _pinna(piscina, intern, programma, "- one\n  - nested\n- two\n",
         "<ul><li>one<ul><li>nested</li></ul></li><li>two</li></ul>");
     _pinna(piscina, intern, programma, "[a][x]\n\n[x]: /u \"t\"\n",
         "<p><a href=\"/u\" title=\"t\">a</a></p>");
+}
 
-    imprimere("\n--- genera cetera: octetim (post inspectionem) ---\n");
+interior vacuum
+_genera_cetera_probare (
+    CredoContextus* c)
+{
+    constans FixuraHtml* f        = (constans FixuraHtml*)c->suita;
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern;
+                 chorda  programma;
+
+    si (f == NIHIL)
+    {
+        redde;
+    }
+    intern     = f->intern;
+    programma  = f->programma;
     _pinna(piscina, intern, programma, "```c\nint x;\n```\n",
         "<pre><code class=\"language-c\">int x;\n</code></pre>");
     _pinna(piscina, intern, programma, "    ind\n",
@@ -192,16 +228,20 @@ principale (
      * (terminator octetos in proiectione non fert) - impressum, non
      * pinnatum */
     _ostende(piscina, intern, programma, "a <b\nclass=\"c\">d</b>\n");
+}
 
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "exempla spicae: octetim", _exempla_spicae_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "genera cetera: octetim (post inspectionem)",
+        _genera_cetera_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-        piscina_destruere(piscina);
-        si (praeteritus)
-        {
-            redde ZEPHYRUM;
-        }
-    }
-    redde I;
+s32
+principale (
+    vacuum)
+{
+    redde credo_suitam_currere_cum("md_html", SECTIONES,
+        _suitam_parare, NIHIL);
 }

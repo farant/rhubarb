@@ -186,27 +186,16 @@ _index (
 
 #define P(lit) _parsa(piscina, (lit), &sani)
 
-s32
-principale (vacuum)
+interior vacuum
+_textum_probare (
+    CredoContextus* c)
 {
-       b32  praeteritus;
-   Piscina* piscina;
-       b32  sani;
+    Piscina* piscina = c->piscina;
+        b32  sani;
     MateriaNodus* d;
     MateriaNodus* in;
     MateriaNodus* n;
-    MateriaNodus* m;
 
-    piscina = piscina_generare_dynamicum("probatio_md_inlinea",
-        1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- Probans textum, effugia, entia ---\n");
     d = P("plain text\n"); CREDO_VERUM (sani); in = _inl(d);
     CREDO_AEQUALIS_I32 (_numerus(in, (i32)MD_INLINEA_LIBERI), I);
     n = _liber(in, ZEPHYRUM);
@@ -226,8 +215,19 @@ principale (vacuum)
     n                                          = _liber(in, ZEPHYRUM);
     CREDO_VERUM (_cruda_aequalia(n, (i32)MD_TEXTUS_CRUDUM, "foo   "));
     CREDO_VERUM (_lexema_aequalis(n, (i32)MD_TEXTUS_VALOR, "foo"));
+}
 
-    imprimere("\n--- Probans emphasin (par. 6.2) ---\n");
+interior vacuum
+_emphasin_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  sani;
+    MateriaNodus* d;
+    MateriaNodus* in;
+    MateriaNodus* n;
+    MateriaNodus* m;
+
     d = P("*foo bar*\n"); CREDO_VERUM (sani); in = _inl(d);
     CREDO_AEQUALIS_I32 (_numerus(in, (i32)MD_INLINEA_LIBERI), I);
     n = _liber(in, ZEPHYRUM);
@@ -274,14 +274,33 @@ principale (vacuum)
         (s32)MD_GENUS_FRACTURA_MOLLIS);
     d = P("**\n"); CREDO_VERUM (sani); in = _inl(d);
     CREDO_AEQUALIS_S32 (_genus(in, ZEPHYRUM), (s32)MD_GENUS_TEXTUS);
+}
 
-    imprimere("\n--- Probans deletionem (GFM) ---\n");
+interior vacuum
+_deletionem_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  sani;
+    MateriaNodus* d;
+    MateriaNodus* in;
+
     d = P("~~del~~ ~x~ ~~~no~~~\n"); CREDO_VERUM (sani); in = _inl(d);
     CREDO_AEQUALIS_S32 (_genus(in, ZEPHYRUM), (s32)MD_GENUS_DELETIO);
     CREDO_AEQUALIS_S32 (_genus(in, II), (s32)MD_GENUS_DELETIO);
     CREDO_AEQUALIS_I32 (_numerus(in, (i32)MD_INLINEA_LIBERI), IV);   /* del, ' ', del, ' ~~~no~~~' */
+}
 
-    imprimere("\n--- Probans verbatim (par. 6.1) ---\n");
+interior vacuum
+_verbatim_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  sani;
+    MateriaNodus* d;
+    MateriaNodus* in;
+    MateriaNodus* n;
+
     d = P("`code`\n"); CREDO_VERUM (sani); in  = _inl(d);
     n                                          = _liber(in, ZEPHYRUM);
     CREDO_AEQUALIS_S32 (n->genus, (s32)MD_GENUS_VERBATIM);
@@ -304,8 +323,18 @@ principale (vacuum)
     CREDO_AEQUALIS_S32 (_genus(in, ZEPHYRUM), (s32)MD_GENUS_TEXTUS);
     d = P("*foo`*`\n"); CREDO_VERUM (sani); in = _inl(d);   /* verbatim vincit */
     CREDO_AEQUALIS_S32 (_genus(in, I), (s32)MD_GENUS_VERBATIM);
+}
 
-    imprimere("\n--- Probans nexus (par. 6.3) ---\n");
+interior vacuum
+_nexus_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  sani;
+    MateriaNodus* d;
+    MateriaNodus* in;
+    MateriaNodus* n;
+
     d = P("[a](/u \"t\")\n"); CREDO_VERUM (sani); in = _inl(d);
     n = _liber(in, ZEPHYRUM);
     CREDO_AEQUALIS_S32 (n->genus, (s32)MD_GENUS_NEXUS);
@@ -348,8 +377,18 @@ principale (vacuum)
     CREDO_AEQUALIS_S32 (n->genus, (s32)MD_GENUS_IMAGO);
     CREDO_VERUM (_lexema_aequalis(n, (i32)MD_NEXUS_APERTUM, "!["));
     CREDO_VERUM (_lexema_aequalis(n, (i32)MD_NEXUS_URL, "/p.png"));
+}
 
-    imprimere("\n--- Probans nexus referentes ---\n");
+interior vacuum
+_nexus_referentes_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  sani;
+    MateriaNodus* d;
+    MateriaNodus* in;
+    MateriaNodus* n;
+
     d = P("[foo] [Foo][] [bar][foo] [nope]\n\n[FOO]: /url \"t\"\n");
     CREDO_VERUM (sani); in  = _inl(d);
     n                       = _liber(in, ZEPHYRUM);
@@ -371,8 +410,18 @@ principale (vacuum)
     CREDO_VERUM (_cruda_aequalia(_liber(in, V), (i32)MD_TEXTUS_CRUDUM,
         " [nope]"));
     CREDO_AEQUALIS_I32 (_numerus(in, (i32)MD_INLINEA_LIBERI), VI);
+}
 
-    imprimere("\n--- Probans autonexus ---\n");
+interior vacuum
+_autonexus_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  sani;
+    MateriaNodus* d;
+    MateriaNodus* in;
+    MateriaNodus* n;
+
     d = P("<http://x.y/z> <a@b.co> www.x.com/p. http://q.r/s) ftp\n");
     CREDO_VERUM (sani); in  = _inl(d);
     n                       = _liber(in, ZEPHYRUM);
@@ -394,8 +443,18 @@ principale (vacuum)
     CREDO_AEQUALIS_S32 (n->genus, (s32)MD_GENUS_NEXUS);
     CREDO_VERUM (_lexema_aequalis(n, (i32)MD_NEXUS_URL,
         "http://q.r/s"));
+}
 
-    imprimere("\n--- Probans fracturas (par. 6.7, 6.8) ---\n");
+interior vacuum
+_fracturas_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  sani;
+    MateriaNodus* d;
+    MateriaNodus* in;
+    MateriaNodus* n;
+
     d = P("a  \nb\\\nc\nd\n"); CREDO_VERUM (sani); in = _inl(d);
     CREDO_AEQUALIS_I32 (_numerus(in, (i32)MD_INLINEA_LIBERI), VII);
     n = _liber(in, I);
@@ -415,8 +474,17 @@ principale (vacuum)
     n   = _liber(in, I);
     CREDO_AEQUALIS_S32 (n->genus, (s32)MD_GENUS_FRACTURA_DURA);
     CREDO_AEQUALIS_I32 (_numerus(n, (i32)MD_DURA_PRAEFIXA), I);
+}
 
-    imprimere("\n--- Probans html inlineum (par. 6.6) ---\n");
+interior vacuum
+_html_inlineum_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  sani;
+    MateriaNodus* d;
+    MateriaNodus* in;
+
     d = P("<b class=\"x\">y</b> <!-- c --> <?p?> a<b\n");
     CREDO_VERUM (sani); in = _inl(d);
     CREDO_AEQUALIS_S32 (_genus(in, ZEPHYRUM),
@@ -427,8 +495,18 @@ principale (vacuum)
     CREDO_AEQUALIS_S32 (_genus(in, IV), (s32)MD_GENUS_HTML_INLINEUM);
     CREDO_AEQUALIS_S32 (_genus(in, VI), (s32)MD_GENUS_HTML_INLINEUM);
     CREDO_AEQUALIS_S32 (_genus(in, VII), (s32)MD_GENUS_TEXTUS);   /* ' a<b' litterae */
+}
 
-    imprimere("\n--- Probans capitula et cellas ---\n");
+interior vacuum
+_capitula_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  sani;
+    MateriaNodus* d;
+    MateriaNodus* in;
+    MateriaNodus* n;
+
     d = P("# *t* `c`\n"); CREDO_VERUM (sani); in = _inl(d);
     CREDO_AEQUALIS_S32 (_genus(in, ZEPHYRUM), (s32)MD_GENUS_EMPHASIS);
     CREDO_AEQUALIS_S32 (_genus(in, II), (s32)MD_GENUS_VERBATIM);
@@ -438,9 +516,18 @@ principale (vacuum)
     n   = _elementum(n, (i32)MD_ORDO_CELLAE, ZEPHYRUM);
     in  = n->loci[MD_CELLA_INLINEA].datum.nodus;
     CREDO_AEQUALIS_S32 (_genus(in, ZEPHYRUM), (s32)MD_GENUS_EMPHASIS);
+}
 
-    imprimere("\n");
-    imprimere("\n--- Probans derivata B2.1: alt imaginis, fractura dura ---\n");
+interior vacuum
+_derivata_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  sani;
+    MateriaNodus* d;
+    MateriaNodus* in;
+    MateriaNodus* n;
+
     d = P("![alt *t* `c` [l](/u) ![in](/x)](/i.png \"ti\")\n");
     CREDO_VERUM (sani); in  = _inl(d);
     n                       = _liber(in, ZEPHYRUM);
@@ -458,9 +545,34 @@ principale (vacuum)
     d = P("![x &amp; y](/i)\n"); CREDO_VERUM (sani); in = _inl(d);
     CREDO_VERUM (_lexema_aequalis(_liber(in, ZEPHYRUM),
         (i32)MD_NEXUS_ALT, "x & y"));
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "textum, effugia, entia", _textum_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "emphasin (par. 6.2)", _emphasin_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "deletionem (GFM)", _deletionem_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "verbatim (par. 6.1)", _verbatim_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "nexus (par. 6.3)", _nexus_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nexus referentes", _nexus_referentes_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "autonexus", _autonexus_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fracturas (par. 6.7, 6.8)", _fracturas_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "html inlineum (par. 6.6)", _html_inlineum_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "capitula et cellas", _capitula_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "derivata B2.1: alt imaginis, fractura dura", _derivata_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("md_inlinea", SECTIONES);
 }
