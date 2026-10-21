@@ -23,6 +23,7 @@
 #include "materia_lexicon.h"
 #include "silva_lexicon_c89.h"
 #include "excerptum.h"
+#include "tabula_dispersa.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -41,6 +42,13 @@ structura SilvaFrons {
           MateriaArborFrons  frons_silvae;
           MateriaOrigoUncus  uncus_silvae;
                         Xar* extenta_lecta;  /* SilvaExtentumInvocationis */
+
+    /* Membra extentorum (vide _silvae_extentum_membri): lexema ->
+     * extentum maximum quod id continet; pigra, signo aquae per
+     * fontem (extenta lecta crescunt dum legitur) */
+             TabulaDispersa* membra;
+                        Xar* membra_fontes[II];
+                        i32  membra_indicata[II];
 };
 
 hic_manens b32
@@ -134,6 +142,100 @@ _silvae_extentum (
         }
     }
     redde NIHIL;
+}
+
+/* Extentum per MEMBRUM: quod lexema intra laminam [nomen..')'] fert,
+ * lamina[0] (invocatio ipsa) inclusa - argumentum VACUUM ('S()')
+ * primum = invocationem facit (silva_expandere.c _stringificare).
+ *
+ * CUR: radix lexematis CHORDA ('#a') argumentum use-site est, non
+ * invocatio - identitas eam numquam invenit. Silva per continentiam
+ * OCTETORUM quaerit (silva_extentum_continens), sed in lectione
+ * octeti nondum positi sunt: derivatio ipsa eos ponit, et hoc
+ * extentum ad id petit. Membrum idem in utroque latere idem
+ * obiectum est (transclusio - _silvae_origo_numerare), ergo
+ * identitas membri sufficit.
+ *
+ * Plura extenta membrum ferre possunt (invocatio intra argumentum
+ * alterius): MAXIMUM vincit, quia derivatio laminam a cursore ponit
+ * - interior primum posita octetos exterioris occuparet. */
+hic_manens constans SilvaExtentumInvocationis*
+_silvae_extentum_membri (
+             SilvaFrons* frons,
+    constans SilvaToken* membrum)
+{
+        Xar* fontes[II];
+     vacuum* inventum;
+     chorda  clavis;
+        i32  f;
+        i32  j;
+
+    si (frons == NIHIL || membrum == NIHIL)
+    { redde NIHIL;
+    }
+    fontes[0] = (frons->expansio != NIHIL) ? frons->expansio->extenta
+                                           : NIHIL;
+    fontes[I] = (frons->extenta_lecta != fontes[0])
+              ? frons->extenta_lecta : NIHIL;
+    si (frons->membra == NIHIL)
+    {
+        frons->membra = tabula_dispersa_creare_chorda(frons->piscina,
+            LXIV);
+        si (frons->membra == NIHIL)
+        { redde NIHIL;
+        }
+    }
+    per (f = ZEPHYRUM; f < (i32)II; f++)
+    {
+        si (fontes[f] != frons->membra_fontes[f])
+        {
+            frons->membra_fontes[f]    = fontes[f];
+            frons->membra_indicata[f]  = ZEPHYRUM;
+        }
+        dum (   fontes[f] != NIHIL
+             && frons->membra_indicata[f] < xar_numerus(fontes[f]))
+        {
+            SilvaExtentumInvocationis* e =
+                (SilvaExtentumInvocationis*)xar_obtinere(fontes[f],
+                    frons->membra_indicata[f]);
+
+            frons->membra_indicata[f]++;
+            si (e == NIHIL || e->vacua || e->lamina == NIHIL)
+            { perge;
+            }
+            per (j = ZEPHYRUM; j < xar_numerus(e->lamina); j++)
+            {
+                SilvaToken** cella;
+
+                cella = (SilvaToken**)xar_obtinere(e->lamina, j);
+                clavis.datum = (i8*)cella;
+                clavis.mensura = (i32)magnitudo(SilvaToken*);
+                si (   tabula_dispersa_invenire(frons->membra, clavis,
+                           &inventum)
+                    && xar_numerus(((SilvaExtentumInvocationis*)
+                           inventum)->lamina)
+                       >= xar_numerus(e->lamina))
+                { perge;
+                }
+                /* clavis per referentiam servatur: cella stabilis */
+                cella = (SilvaToken**)piscina_allocare(frons->piscina,
+                    magnitudo(SilvaToken*));
+                si (cella == NIHIL)
+                { redde NIHIL;
+                }
+                *cella = *(SilvaToken**)xar_obtinere(e->lamina, j);
+                clavis.datum = (i8*)cella;
+                si (!tabula_dispersa_inserere(frons->membra, clavis,
+                        (vacuum*)e))
+                { redde NIHIL;
+                }
+            }
+        }
+    }
+    clavis.datum    = (i8*)&membrum;
+    clavis.mensura  = (i32)magnitudo(membrum);
+    redde tabula_dispersa_invenire(frons->membra, clavis, &inventum)
+        ? (constans SilvaExtentumInvocationis*)inventum : NIHIL;
 }
 
 /* Radix strati 0 lexematis DERIVATI per catenam originis (primus
@@ -235,12 +337,22 @@ _silvae_sedes_quaerere (
     sedes->fons_index   = radix->fons_index;
 }
 
+/* Per identitatem, dein per membrum (sicut silva_scribere.c
+ * _extentum_unci: identitas, dein continentia) */
 hic_manens Xar*
 _silvae_extentum_quaerere (
                    vacuum* datum,
     constans MateriaToken* radix)
 {
-    redde _silvae_extentum((SilvaFrons*)datum, radix);
+                                   Xar* lamina;
+    constans SilvaExtentumInvocationis* e;
+
+    lamina = _silvae_extentum((SilvaFrons*)datum, radix);
+    si (lamina != NIHIL)
+    { redde lamina;
+    }
+    e = _silvae_extentum_membri((SilvaFrons*)datum, radix);
+    redde (e != NIHIL) ? e->lamina : NIHIL;
 }
 
 /* ---------- scriptura ---------- */
@@ -254,7 +366,6 @@ _silvae_origo_numerare (
 {
     SilvaOrigo* o = silva_token_origo(lexema);
 
-    (vacuum)datum;
     commutatio (o->genus)
     {
     casus SILVA_ORIGO_EXPANSIO:
@@ -275,7 +386,23 @@ _silvae_origo_numerare (
         frange;
     casus SILVA_ORIGO_CHORDA:
         si (o->datum.stringificatio.primus != NIHIL)
-        { numerare(ctx, o->datum.stringificatio.primus);
+        {
+            constans SilvaExtentumInvocationis* e;
+
+            numerare(ctx, o->datum.stringificatio.primus);
+            /* Argumentum intra extentum: ibi QUOQUE scribitur, et
+             * invocatio bis (liberum secundum + lamina[0]). Usus > I
+             * = transclusio, ergo lector OBIECTUM IDEM reddit - sine
+             * eo membrum laminae et primus duo lexemata fiunt, et
+             * argumentum bis emittitur (lib/sonitus.c). */
+            e = _silvae_extentum_membri((SilvaFrons*)datum,
+                o->datum.stringificatio.primus);
+            si (e != NIHIL && e->invocatio != NIHIL)
+            {
+                numerare(ctx, o->datum.stringificatio.primus);
+                numerare(ctx, e->invocatio);
+                numerare(ctx, e->invocatio);
+            }
         }
         frange;
     ordinarius:
@@ -483,6 +610,34 @@ _silvae_liberos_ornare (
                    "invocatio in originem addi non potuit", &scriptum))
         { redde FALSUM;
         }
+        /* INVOCATIO + EXTENTUM (liberum secundum, sicut tertium
+         * pastae): argumentum octetos invocationis non tegit, et
+         * '#define S(a) #a' nullum aliud lexema gignit quod extentum
+         * scribat. Semel per invocationem, sicut EXPANSIO. */
+        si (o->datum.stringificatio.primus != NIHIL)
+        {
+            constans SilvaExtentumInvocationis* e;
+
+            e = _silvae_extentum_membri(frons,
+                o->datum.stringificatio.primus);
+            si (e != NIHIL && e->invocatio != NIHIL)
+            {
+                /* argumentum vacuum: primum IPSUM invocatio est,
+                 * liberum secundum nullum */
+                si (   e->invocatio != o->datum.stringificatio.primus
+                    && !_silvae_catenam_addere(st, elem, e->invocatio,
+                        "invocatio stringificationis addi non potuit",
+                        &scriptum))
+                { redde FALSUM;
+                }
+                si (   scriptum->genus != STML_NODUS_TRANSCLUSIO
+                    && xar_numerus(e->lamina) > I
+                    && !_extentum_ornare(st, elem, e->lamina))
+                {
+                    redde FALSUM;
+                }
+            }
+        }
         frange;
     ordinarius:
         frange;
@@ -676,8 +831,14 @@ _silvae_liberum_legere (
             && n_lib->titulus != NIHIL
             && chorda_aequalis_literis(*n_lib->titulus, "extentum"))
         {
+            /* invocatio: pastae tertium, stringificationis
+             * secundum (primum = argumentum; argumento vacuo primum
+             * ipsum), ceteris primum */
             si (!_silvae_extentum_legere(frons, lector, n_lib,
-                     (genus == SILVA_ORIGO_PASTA) ? tertius : primus))
+                     (genus == SILVA_ORIGO_PASTA)  ? tertius
+                   : (   genus == SILVA_ORIGO_CHORDA
+                      && secundus != NIHIL)        ? secundus
+                                                   : primus))
             {
                 redde (s32)MATERIA_LECTIO_FRACTUM;
             }
