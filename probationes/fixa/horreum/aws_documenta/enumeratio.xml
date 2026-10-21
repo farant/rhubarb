@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+  <Name>situla</Name>
+  <Prefix>dir/</Prefix>
+  <KeyCount>3</KeyCount>
+  <MaxKeys>3</MaxKeys>
+  <Delimiter>/</Delimiter>
+  <IsTruncated>true</IsTruncated>
+  <NextContinuationToken>1ueGcxLPRx1Tr/XYExHnhbYLgveDs2J/wm36Hy4vbOwM=</NextContinuationToken>
+  <Contents>
+    <Key>dir/a.txt</Key>
+    <LastModified>2026-10-21T14:09:00.000Z</LastModified>
+    <ETag>&quot;0cc175b9c0f1b6a831c399e269772661&quot;</ETag>
+    <Size>1</Size>
+    <StorageClass>STANDARD</StorageClass>
+  </Contents>
+  <Contents>
+    <Key>dir/a&amp;b&lt;c&gt;&quot;d&apos;</Key>
+    <LastModified>2026-10-21T14:09:01Z</LastModified>
+    <ETag>"d41d8cd98f00b204e9800998ecf8427e"</ETag>
+    <Size>0</Size>
+    <StorageClass>STANDARD</StorageClass>
+  </Contents>
+  <Contents>
+    <Key>dir/&#x1234;&#13;x</Key>
+    <LastModified>2026-10-21T14:09:02.123Z</LastModified>
+    <ETag>"9b2cf535f27731c974343645a3985328-3"</ETag>
+    <Size>11534336</Size>
+    <StorageClass>STANDARD</StorageClass>
+  </Contents>
+  <CommonPrefixes>
+    <Prefix>dir/sub/</Prefix>
+  </CommonPrefixes>
+  <CommonPrefixes>
+    <Prefix>dir/alia/</Prefix>
+  </CommonPrefixes>
+</ListBucketResult>

@@ -188,6 +188,22 @@ this plan.
 - **T1: literals via `chorda_ex_literis`** (`(i8*)"..."` is a
   -Wcast-qual error).
 
+- **T2: `horreum_responsum_legere` takes `tempus_signandi`.** The
+  RequestTimeTooSkewed offset is server `Date` - signing time; only the
+  executor knows the latter, and DO/R2 may not echo AWS's
+  RequestTime/ServerTime body fields. Cost if wrong: one argument.
+- **T2: P15 - numeric XML references decoded by horreum** (`xml.h`
+  leaves `&#x1234;` raw).
+- **T2: profile -> `tabella`** (`horreum_ex_tabella`; the plan's
+  `horreum_ex_profilo` / "profilum" are not Latin). File content and
+  `~/.rhubarb/horreum/<titulus>.clavis` unchanged.
+- **T2: unknown profile keys are named only if `[a-z_]{1,16}`**, else
+  "linea N" - a positional file must never echo its secret.
+- **T2: `terminus` checked before `regio`** (generic without terminus
+  names the missing endpoint).
+- **T2: conditions/checksums refused (MALUM) on copy and multipart
+  start** rather than silently ignored.
+
 ## Review focus
 
 1. **Object keys with awkward characters** (space, `+`, `%`, `?`, `#`,

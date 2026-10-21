@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Error>
+  <Code>RequestTimeTooSkewed</Code>
+  <Message>The difference between the request time and the current time is too large.</Message>
+  <RequestTime>20150830T123600Z</RequestTime>
+  <ServerTime>2015-08-30T12:56:00Z</ServerTime>
+  <MaxAllowedSkewMilliseconds>900000</MaxAllowedSkewMilliseconds>
+  <RequestId>SKEW123</RequestId>
+</Error>

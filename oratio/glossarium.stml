@@ -616,6 +616,12 @@
   <vocabulum lemma="hmac" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 2104; sigillum_hmac)"/>
   <vocabulum lemma="md5" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 1321; friatio md5_*)"/>
   <vocabulum lemma="aws" lingua="anglica" classis="ignotum-permissum" nota="nomen proprium (Amazon Web Services; signatura_aws SigV4)"/>
+  <vocabulum lemma="etag" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (HTTP ETag; horreum)"/>
+  <vocabulum lemma="acl" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (S3 access control list; horreum)"/>
+  <vocabulum lemma="checksum" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (x-amz-checksum-*; horreum)"/>
+  <vocabulum lemma="mib" lingua="anglica" classis="ignotum-permissum" nota="unitas (mebibyte, MXXIV * MXXIV; horreum)"/>
+  <vocabulum lemma="amz" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (praefixum x-amz-; horreum)"/>
+  <vocabulum lemma="praesignare" lingua="latina" classis="verbum" nota="praesigno, -are (ante signare; Plinius) - URL praesignata S3 (horreum)"><forma textus="praesignare"/></vocabulum>
   <vocabulum lemma="ttl" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (DNS time-to-live; lib/oceanus.c)"/>
   <vocabulum lemma="csrf" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (cross-site request forgery; lib/custodia.c)"/>
   <vocabulum lemma="blake2b" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (RFC 7693; lib/blake2b.c)"/>
