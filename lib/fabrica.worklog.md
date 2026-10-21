@@ -3247,3 +3247,24 @@ read. Runaway fixtures keep their buffers in a global array and read
 them back. (The same trace showed probatio_memoria_processus' 64 MiB
 bursts slipping between 100 ms reads, which is fine for a runaway
 guard; exact peaks are credo's job.)
+
+## 2026-10-21 - bearssl_amalgama is memorabilis (the radix gate's hidden 62%)
+
+`mensor quaestio filii` on a radix gate run with 360/361 members served
+from cache (e208438a, 125 s) showed `bearssl_amalgama` IUDICIUM at 77.8 s,
+62% of the gate. `mensor quaestio iudicia` ranks it first of all judges:
+558 regenerations, 42.8M ms (~12 h). It was added for TLS T1 (10-15)
+without `memorabilis`, so every full judgement re-ran the clang
+`-ast-dump=json` pass over vendor/bearssl.
+
+Inputs checked complete: tools/bearssl_amalgamare.py reads only
+vendor/bearssl/src and inc (both declared `plagulae`), plus python and
+clang identity. Not declared: SDK headers clang reads - same exposure as
+the other clang-backed actions.
+
+Measured with `bin/fabrica iudicare -plenus vendor/bearssl_amalgama.c`:
+- before: 60.5 s
+- first run after: 60.8 s (regenerates, writes memoria)
+- second: 4.7 s (fabrica's fixed startup is ~3.7 s; hashing ~0.5 s)
+- plant (line appended to tools/bearssl_amalgamare.sh): 58.9 s, regenerated
+- restored (cp + touch): 4.2 s, memory hit again

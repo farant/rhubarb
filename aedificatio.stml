@@ -463,8 +463,14 @@
   </actio>
   <!-- BearSSL amalgama (tls-bearssl-plan T1, R1): oraculum clang
        (nomina interiora per -ast-dump=json), ergo identitas clang et
-       python ingressus -->
-  <actio titulus="bearssl_amalgama" genus="generator">
+       python ingressus.
+       MEMORABILIS (2026-10-21): fontes vendor/bearssl pinnati, ingressus
+       omnes declarati (tools/bearssl_amalgamare.py solum src/ et inc/
+       legit) - sine memoria omnis porta radicis ~60-80 s regenerabat
+       (62% portae radicis cum membris servatis; 558 cursus, ~12 h).
+       Capita SDK quae clang legit non declarantur, ut in ceteris
+       actionibus clang; identitas clang mutationem instrumenti capit. -->
+  <actio titulus="bearssl_amalgama" genus="generator" memorabilis="verum">
     <mandatum>
       <verbum! (>./tools/bearssl_amalgamare.sh
     </mandatum>
