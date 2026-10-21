@@ -744,11 +744,27 @@ _sectio_vicesima_tertia (
         DiesHora dh, dh_round;
         s64 timestamp;
 
-        /* Unix epoch */
-        dh.dies    = fasti_dies(MCMX + LXX, I, I);
+        /* Unix epoch: 1970 = MCMLXX (olim "MCMX + LXX" = 1980 hic et in
+         * lib/fasti.c - probatio tautologica; parcum ...YWRXRC) */
+        dh.dies    = fasti_dies(MCMLXX, I, I);
         dh.hora    = fasti_hora(ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
         timestamp  = fasti_ad_unix(dh);
         CREDO_AEQUALIS_S64(timestamp, ZEPHYRUM);
+
+        /* valores independentes (date -u -r N) */
+        dh_round = fasti_ex_unix((MomentumSec)ZEPHYRUM);
+        CREDO_AEQUALIS_S32(dh_round.dies.annus, MCMLXX);
+        CREDO_AEQUALIS_S32(dh_round.dies.mensis, I);
+        CREDO_AEQUALIS_S32(dh_round.dies.dies, I);
+        dh.dies = fasti_dies(MMXXIV, III, XV);
+        dh.hora = fasti_hora(XII, ZEPHYRUM, ZEPHYRUM);
+        CREDO_AEQUALIS_S64(fasti_ad_unix(dh), 1710504000LL);
+        dh_round = fasti_ex_unix((MomentumSec)1440938160LL);
+        CREDO_AEQUALIS_S32(dh_round.dies.annus, MMXV);
+        CREDO_AEQUALIS_S32(dh_round.dies.mensis, VIII);
+        CREDO_AEQUALIS_S32(dh_round.dies.dies, XXX);
+        CREDO_AEQUALIS_S32(dh_round.hora.hora, XII);
+        CREDO_AEQUALIS_S32(dh_round.hora.minutum, XXXVI);
 
         /* Round-trip */
         dh.dies    = fasti_dies(MMXXIV, III, XV);

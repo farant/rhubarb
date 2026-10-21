@@ -172,6 +172,22 @@ this plan.
   the big-endian digest, only when listed; `If-Match` on ranged GETs and
   the MD5 check of a single-part ETag (32 hex, no `-`) are horreum's own.
 
+## Rulings made while executing
+
+- **T1: fasti's Unix epoch fixed (1980 -> 1970).** `lib/fasti.c` built
+  it as `MCMX + LXX`; `signatura_aws_dies` exposed it (2025 for a 2015
+  vector). Audit parcum ...YWRXRC (epoch part only; its two other items
+  stay open). Test made independent of the code's own epoch. Callers
+  were only signatura_aws + tests. Cost if wrong: none found - nothing
+  stored a fasti unix value.
+- **T1: 9 vector exclusions, not 8** - three session-token vectors
+  (`get-vanilla-with-session-token` too). Recorded per vector in
+  `index.tsv`.
+- **T1: test compares signed queries as decoded pairs** (the vector
+  file writes `ሴ` raw on the request line).
+- **T1: literals via `chorda_ex_literis`** (`(i8*)"..."` is a
+  -Wcast-qual error).
+
 ## Review focus
 
 1. **Object keys with awkward characters** (space, `+`, `%`, `?`, `#`,

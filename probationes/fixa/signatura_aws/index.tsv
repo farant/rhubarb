@@ -1,0 +1,38 @@
+get-header-key-duplicate	curre
+get-header-value-multiline	curre
+get-header-value-order	curre
+get-header-value-trim	curre
+get-relative-normalized	exclude	normalizatio: S3 viam numquam normalizat (horreum-plan P4)
+get-relative-relative-normalized	exclude	normalizatio: S3 viam numquam normalizat (horreum-plan P4)
+get-relative-relative-unnormalized	curre
+get-relative-unnormalized	curre
+get-slash-dot-slash-normalized	exclude	normalizatio: S3 viam numquam normalizat (horreum-plan P4)
+get-slash-dot-slash-unnormalized	curre
+get-slash-normalized	exclude	normalizatio: S3 viam numquam normalizat (horreum-plan P4)
+get-slash-pointless-dot-normalized	exclude	normalizatio: S3 viam numquam normalizat (horreum-plan P4)
+get-slash-pointless-dot-unnormalized	curre
+get-slash-unnormalized	curre
+get-slashes-normalized	exclude	normalizatio: S3 viam numquam normalizat (horreum-plan P4)
+get-slashes-unnormalized	curre
+get-space-normalized	curre
+get-space-unnormalized	curre
+get-unreserved	curre
+get-utf8	curre
+get-vanilla	curre
+get-vanilla-empty-query-key	curre
+get-vanilla-query	curre
+get-vanilla-query-order-encoded	curre
+get-vanilla-query-order-key-case	curre
+get-vanilla-query-unreserved	curre
+get-vanilla-utf8-query	curre
+get-vanilla-with-session-token	exclude	signum sessionis (X-Amz-Security-Token): nullus usus (horreum-plan P4)
+post-header-key-case	curre
+post-header-key-sort	curre
+post-header-value-case	curre
+post-sts-header-after	exclude	signum sessionis (X-Amz-Security-Token): nullus usus (horreum-plan P4)
+post-sts-header-before	exclude	signum sessionis (X-Amz-Security-Token): nullus usus (horreum-plan P4)
+post-vanilla	curre
+post-vanilla-empty-query-value	curre
+post-vanilla-query	curre
+post-x-www-form-urlencoded	curre
+post-x-www-form-urlencoded-parameters	curre

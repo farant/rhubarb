@@ -7082,6 +7082,18 @@ silva_friatio_fnv1a_literis (
 #define SHA256_DIGEST_MENSURA   XXXII  /* 32 bytes */
 #define SHA256_BLOCK_MENSURA    LXIV   /* 64 bytes */
 
+
+/* ==================================================
+ * MD5 (RFC 1321)
+ *
+ * NON secura (collisiones notae) - numquam pro securitate!
+ * Producit 128 bits (16 bytes) digest
+ * Usus: Content-MD5 S3 (DeleteObjects), ETag partis unius
+ *       (horreum-spec II.5)
+ * ================================================== */
+
+#define MD5_DIGEST_MENSURA   XVI   /* 16 bytes */
+
 #endif /* FRIATIO_H */
 
 /* ================= ex include/tabula_dispersa.h ================= */

@@ -85,3 +85,21 @@ year 0 (digits); 14 September 2026 in the liturgical form. Born red:
 | FP2 "DCCCC" for "CM" | 2 | 2 (1999, 3999) |
 | FP3 3999 excluded from the range | 1 | 1 |
 | FP4 year 0 admitted | 1 | 1 — nothing written where the year should be |
+
+## 2026-10-21 - Unix epoch was 1980 (`MCMX + LXX`), fixed (horreum T1)
+
+`fasti_ad_unix` / `fasti_ex_unix` built the epoch as
+`fasti_dies(MCMX + LXX, I, I)` = 1910 + 70 = **1980**. The pair was
+self-consistent, so every round-trip test passed, and the test itself
+built its epoch the same wrong way (tautology). Found when
+`signatura_aws_dies(1440938160)` printed 2025-08-29 instead of the
+AWS vector's 2015-08-30; the audit had already filed it (parcum
+...YWRXRC, together with two other fasti items that stay open:
+`fasti_ad_iso(fasti_nunc())` local time stamped 'Z', and
+`scribere_diem` without bounds). Fix: `MCMLXX` in both functions; the
+test now checks independent values (`date -u -r`): 0 -> 1970-01-01,
+2024-03-15T12:00:00Z -> 1710504000, 1440938160 -> 2015-08-30 12:36.
+Callers at the time (grep): only signatura_aws and fasti's own tests +
+two audit probes, so no stored timestamp depended on the wrong epoch.
+Lesson: a constant written as Roman arithmetic deserves an
+independent-value test - round trips forgive a shifted origin.

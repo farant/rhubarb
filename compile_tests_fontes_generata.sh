@@ -256,6 +256,7 @@ declare -a SOURCE_FILES=(
     "lib/series_terminalis.c"
     "lib/servitium.c"
     "lib/sigillum.c"
+    "lib/signatura_aws.c"
     "lib/silex.c"
     "lib/similitudo.c"
     "lib/situs.c"
