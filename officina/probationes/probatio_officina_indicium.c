@@ -19,8 +19,10 @@
 
 #define VIA_FIXTURAE   "officina/probationes/fixa/indicium_exemplum.c"
 #define VIA_PARSURAE   "indicium_exemplum.c"
-#define VIA_PLAGULAE_A "officina/build/probatio_indicium_a.indicium"
-#define VIA_PLAGULAE_B "officina/build/probatio_indicium_b.indicium"
+/* plagulae scriptae in credo_area sectionis (propria cursus; olim
+ * officina/build/ fixa, cursibus concurrentibus communis) */
+#define TITULUS_PLAGULAE_A "a.indicium"
+#define TITULUS_PLAGULAE_B "b.indicium"
 
 #define LINEA_DEFINITIONIS 4
 #define LINEA_PLANA        12
@@ -51,19 +53,17 @@ _viam_plenam (
 }
 
 interior chorda
-_plagulam_legere (
+_plagulam_plenam_legere (
                Piscina* piscina,
-    constans character* via_partis)
+    constans character* via)
 {
-    character via[CCLVI];
     FILE* plagula;
     chorda fructus;
     long longitudo;
 
     fructus.datum    = NIHIL;
     fructus.mensura  = ZEPHYRUM;
-    _viam_plenam(via_partis, via);
-    plagula = fopen(via, "rb");
+    plagula          = fopen(via, "rb");
     si (plagula == NIHIL)
     {
         redde fructus;
@@ -88,6 +88,17 @@ _plagulam_legere (
     }
     fclose(plagula);
     redde fructus;
+}
+
+interior chorda
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via_partis)
+{
+    character via[CCLVI];
+
+    _viam_plenam(via_partis, via);
+    redde _plagulam_plenam_legere(piscina, via);
 }
 
 interior b32
@@ -115,35 +126,16 @@ _variabilem_invenire (
     redde FALSUM;
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: magnitudines in disco (deriva ABI figitur)
+ * ================================================== */
+
+interior vacuum
+_magnitudines_probare (
+    CredoContextus* c)
 {
-    Piscina* piscina;
-    SilvaPiscina* piscina_silvae;
-    b32 successus;
-
-    imprimere("\n========================================\n");
-    imprimere("PROBATIONES OFFICINA INDICIUM\n");
-    imprimere("========================================\n");
-
-    piscina = piscina_generare_dynamicum("probatio_indicium",
-        LXIV * M * M);
-    si (piscina == NIHIL)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    piscina_silvae = silva_piscina_generare_dynamicum(
-        "probatio_indicium_silva", 33554432);
-    si (piscina_silvae == NIHIL)
-    {
-        imprimere("FRACTA: piscina silvae\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    /* --- magnitudines in disco (deriva ABI figitur) --- */
-    imprimere("\n--- Probans magnitudines formarum ---\n");
+    (vacuum)c;
     CREDO_AEQUALIS_I32 ((i32)magnitudo(IndiciumCaput), XVI);
     CREDO_AEQUALIS_I32 ((i32)magnitudo(IndiciumSectio), VIII);
     CREDO_AEQUALIS_I32 ((i32)magnitudo(IndiciumVia), XVI);
@@ -152,7 +144,25 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 ((i32)magnitudo(IndiciumLinea), XVI);
     CREDO_AEQUALIS_I32 ((i32)magnitudo(IndiciumSitus), VIII);
     CREDO_AEQUALIS_I32 ((i32)magnitudo(IndiciumVariabile), XVI);
+}
 
+
+/* ==================================================
+ * PROBARE: circuitus - coque -> scribe -> reclude -> quaere
+ * (scaena: gradus quisque statum priorum continuat)
+ * ================================================== */
+
+interior vacuum
+_circuitum_probare (
+    CredoContextus* c)
+{
+         Piscina* piscina         = c->piscina;
+    SilvaPiscina* piscina_silvae  = (SilvaPiscina*)c->datum;
+
+    si (piscina_silvae == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     /* --- coquere: parse -> demissio -> collige -> necte --- */
     {
         chorda fons = _plagulam_legere(piscina, VIA_FIXTURAE);
@@ -167,8 +177,12 @@ principale (vacuum)
         s32 functio_index;
         character via_a[CCLVI];
         character via_b[CCLVI];
+        constans character* area = credo_area(c);
 
-        imprimere("\n--- Probans coctionem fixturae ---\n");
+        si (area == NIHIL)
+        {
+            redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+        }
         CREDO_VERUM (fons.mensura > ZEPHYRUM);
         parsura = silva_c89_parsare(piscina_silvae, VIA_PARSURAE,
             (constans character*)fons.datum, (insignatus integer)
@@ -184,7 +198,7 @@ principale (vacuum)
         CREDO_NON_NIHIL (modulus);
         si (modulus == NIHIL)
         {
-            redde I;
+            redde;   /* NON_NIHIL supra fractum: sectio FRACTA */
         }
 
         scriptor = indicium_scriptor_creare(piscina);
@@ -202,14 +216,14 @@ principale (vacuum)
         CREDO_NON_NIHIL (machinula);
 
         /* --- scribere (bis - determinismus) --- */
-        imprimere("\n--- Probans scripturam + determinismum ---\n");
-        _viam_plenam(VIA_PLAGULAE_A, via_a);
-        _viam_plenam(VIA_PLAGULAE_B, via_b);
+        CREDO_GRADUS ("scripturam + determinismum");
+        sprintf(via_a, "%s/%s", area, TITULUS_PLAGULAE_A);
+        sprintf(via_b, "%s/%s", area, TITULUS_PLAGULAE_B);
         CREDO_VERUM (indicium_scribere(scriptor, conexio, via_a));
         CREDO_VERUM (indicium_scribere(scriptor, conexio, via_b));
         {
-            chorda a = _plagulam_legere(piscina, VIA_PLAGULAE_A);
-            chorda b = _plagulam_legere(piscina, VIA_PLAGULAE_B);
+            chorda a = _plagulam_plenam_legere(piscina, via_a);
+            chorda b = _plagulam_plenam_legere(piscina, via_b);
 
             CREDO_VERUM (a.mensura > ZEPHYRUM);
             CREDO_AEQUALIS_I32 ((i32)a.mensura, (i32)b.mensura);
@@ -218,19 +232,19 @@ principale (vacuum)
         }
 
         /* --- recludere + quaerere --- */
-        imprimere("\n--- Probans lectorem ---\n");
+        CREDO_GRADUS ("lectorem");
         lector = indicium_aperire(piscina, via_a);
         CREDO_NON_NIHIL (lector);
         si (lector == NIHIL)
         {
-            redde I;
+            redde;   /* NON_NIHIL supra fractum: sectio FRACTA */
         }
         functio_index = indicium_functionem_quaerere(lector,
             _ch("computare"));
         CREDO_VERUM (functio_index >= ZEPHYRUM);
 
         /* probatio FIGENS: ambulatio collectionis == congelatio */
-        imprimere("\n--- Probans pactum ambulationis ---\n");
+        CREDO_GRADUS ("pactum ambulationis");
         {
             constans IndiciumFunctio* ifu = indicium_functio(
                 lector, (i32)functio_index);
@@ -243,7 +257,7 @@ principale (vacuum)
         }
 
         /* retro + prorsum: linea plana (12) */
-        imprimere("\n--- Probans lineam planam ---\n");
+        CREDO_GRADUS ("lineam planam");
         {
             constans IndiciumSitus* situs = NIHIL;
             i32 numerus = indicium_situs_de_linea(lector,
@@ -266,7 +280,7 @@ principale (vacuum)
         }
 
         /* retro + prorsum: acies macronis acervata (15 <- 4) */
-        imprimere("\n--- Probans aciem macronis ---\n");
+        CREDO_GRADUS ("aciem macronis");
         {
             constans IndiciumSitus* situs = NIHIL;
             i32 numerus = indicium_situs_de_linea(lector,
@@ -303,7 +317,7 @@ principale (vacuum)
         }
 
         /* variabilia: nomina + tags + typi scripti */
-        imprimere("\n--- Probans variabilia ---\n");
+        CREDO_GRADUS ("variabilia");
         {
             constans IndiciumVariabile* acies = NIHIL;
             i32 numerus = indicium_variabilia_functionis(lector,
@@ -358,34 +372,67 @@ principale (vacuum)
         }
 
         /* magica corrupta -> reiecta */
-        imprimere("\n--- Probans reiectionem magicae ---\n");
+        CREDO_GRADUS ("reiectionem magicae");
         {
-            chorda octeti = _plagulam_legere(piscina,
-                VIA_PLAGULAE_B);
-            character via_corrupta[CCLVI];
+            chorda octeti = _plagulam_plenam_legere(piscina, via_b);
             FILE* plagula;
 
             CREDO_VERUM (octeti.mensura > ZEPHYRUM);
-            octeti.datum[ZEPHYRUM] = (i8)'X';
-            _viam_plenam(VIA_PLAGULAE_B, via_corrupta);
-            plagula = fopen(via_corrupta, "wb");
+            octeti.datum[ZEPHYRUM]  = (i8)'X';
+            plagula                 = fopen(via_b, "wb");
             CREDO_NON_NIHIL (plagula);
             si (plagula != NIHIL)
             {
                 (vacuum)fwrite(octeti.datum, I,
                     (memoriae_index)octeti.mensura, plagula);
                 fclose(plagula);
-                CREDO_VERUM (indicium_aperire(piscina,
-                    via_corrupta) == NIHIL);
+                CREDO_VERUM (indicium_aperire(piscina, via_b)
+                    == NIHIL);
             }
         }
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+/* piscina silvae sectionis circuitus (olim ante blocos) */
+interior vacuum
+_silvam_parare (
+    CredoContextus* c)
+{
+    c->datum = silva_piscina_generare_dynamicum(
+        "probatio_indicium_silva", 33554432);
+    si (c->datum == NIHIL)
+    {
+        imprimere("FRACTA: piscina silvae\n");
+    }
+}
+
+interior vacuum
+_silvam_purgare (
+    CredoContextus* c)
+{
+    si (c->datum != NIHIL)
+    {
+        silva_piscina_destruere((SilvaPiscina*)c->datum);
+    }
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "magnitudines formarum", _magnitudines_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "coctionem fixturae", _circuitum_probare, _silvam_parare,
+        _silvam_purgare, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    s32 exitus;
+
+    imprimere("\n========================================\n");
+    imprimere("PROBATIONES OFFICINA INDICIUM\n");
     imprimere("========================================\n");
-    successus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
-    redde successus ? ZEPHYRUM : I;
+    exitus = credo_suitam_currere("officina_indicium", SECTIONES);
+    imprimere("========================================\n");
+    redde exitus;
 }

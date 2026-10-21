@@ -110,26 +110,18 @@ _functionem_minimam (
     medulla_emittere(functio, bloccus, &instructio);
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: nexus duorum modulorum - totum iter
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
     Piscina* piscina;
-        b32  praeteritus;
 
-    piscina = piscina_generare_dynamicum("probatio_conexio",
-        16777216);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ========================================================
-     * PROBARE: nexus duorum modulorum - totum iter
-     * ======================================================== */
-
+    piscina = c->piscina;
     {
                  Regio* regio    = regio_generare(piscina);
                Conexio* conexio  = conexio_creare(piscina, regio);
@@ -140,7 +132,6 @@ principale (vacuum)
                    s32  sym_adiutor_b;
                     i8  addendum_octeti[8];
 
-        imprimere("\n--- Probans nexum duorum modulorum ---\n");
         CREDO_NON_NIHIL (regio);
         CREDO_NON_NIHIL (conexio);
 
@@ -307,12 +298,20 @@ principale (vacuum)
 
         regio_destruere(regio);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: definitio duplex - fractura honesta
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: definitio duplex - fractura honesta
+ * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                  Regio* regio    = regio_generare(piscina);
                Conexio* conexio  = conexio_creare(piscina, regio);
@@ -321,7 +320,6 @@ principale (vacuum)
         MedullaModulus* modulus_b = medulla_modulum_creare(piscina,
             _ch("b.c"));
 
-        imprimere("\n--- Probans definitionem duplicem ---\n");
         _functionem_minimam(modulus_a, "f");
         _functionem_minimam(modulus_b, "f");
 
@@ -331,12 +329,20 @@ principale (vacuum)
 
         regio_destruere(regio);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: via lectoris - textus -> modulus -> nexus
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: via lectoris - textus -> modulus -> nexus
+ * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                      Regio* regio    = regio_generare(piscina);
                    Conexio* conexio  = conexio_creare(piscina, regio);
@@ -360,7 +366,6 @@ principale (vacuum)
             "@finis:\n"
             "    redde %s\n";
 
-        imprimere("\n--- Probans viam lectoris ---\n");
         modulus = medulla_textum_legere(piscina, _ch(textus),
             &linea_erroris);
         CREDO_NON_NIHIL (modulus);
@@ -380,13 +385,21 @@ principale (vacuum)
 
         regio_destruere(regio);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: fixturae machinulae - onerantur + nectuntur
-     * (exsecutio ad M2b; hic vectis M2a: ONERATUR)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: fixturae machinulae - onerantur + nectuntur
+ * (exsecutio ad M2b; hic vectis M2a: ONERATUR)
+ * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* fixturae[] = {
             "officina/probationes/fixa/machinula/arithmetica.medulla",
@@ -402,7 +415,6 @@ principale (vacuum)
         i32 numerus_fixturarum = IX;
         i32 i;
 
-        imprimere("\n--- Probans fixturas machinulae (oneratio) ---\n");
         per (i = ZEPHYRUM; i < numerus_fixturarum; i += I)
         {
             chorda textus = _plagulam_legere(piscina, fixturae[i]);
@@ -436,14 +448,21 @@ principale (vacuum)
             regio_destruere(regio);
         }
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "nexum duorum modulorum", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "definitionem duplicem", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "viam lectoris", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fixturas machinulae (oneratio)", _sectio_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    redde I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("officina_conexio", SECTIONES);
 }

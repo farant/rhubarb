@@ -38,9 +38,13 @@
 /* sedes profunditatis 0 cum repositione (sectio IV) */
 #define SEDES_MAXIMAE  XVI
 
-hic_manens character  repositio_titulus[SEDES_MAXIMAE][XXXII];
-hic_manens character  repositio_valor[SEDES_MAXIMAE][XVI];
-hic_manens i32        sedes_numerus = ZEPHYRUM;
+/* receptor per datum scribit: status sectionis IV proprius (olim
+ * statica plagulae - examen 92 in sectione v2) */
+nomen structura {
+    character titulus[SEDES_MAXIMAE][XXXII];
+    character valor[SEDES_MAXIMAE][XVI];
+          i32 numerus;
+} SedesTabula;
 
 interior vacuum
 _sedem_recipere (
@@ -54,38 +58,40 @@ _sedem_recipere (
       insignatus integer  profunditas,
       constans character* repositio)
 {
-    (vacuum)datum;
+    SedesTabula* tabula = (SedesTabula*)datum;
+
     (vacuum)genus;
     (vacuum)via;
     (vacuum)linea;
     (vacuum)columna;
     si (   strcmp(species, "sedes") != ZEPHYRUM
         || profunditas              != ZEPHYRUM
-        || sedes_numerus            >= SEDES_MAXIMAE
+        || tabula->numerus          >= SEDES_MAXIMAE
         || titulus->mensura         >= XXXII
         || strlen(repositio)        >= XVI)
     {
         redde;
     }
-    memcpy(repositio_titulus[sedes_numerus], titulus->datum,
+    memcpy(tabula->titulus[tabula->numerus], titulus->datum,
         (memoriae_index)titulus->mensura);
-    repositio_titulus[sedes_numerus][titulus->mensura] = '\0';
-    strcpy(repositio_valor[sedes_numerus], repositio);
-    sedes_numerus++;
+    tabula->titulus[tabula->numerus][titulus->mensura] = '\0';
+    strcpy(tabula->valor[tabula->numerus], repositio);
+    tabula->numerus++;
 }
 
 /* repositio sedis nominatae (prima); NIHIL si nulla */
 interior constans character*
 _repositio (
-    constans character* titulus)
+     constans SedesTabula* tabula,
+       constans character* titulus)
 {
     i32 k;
 
-    per (k = ZEPHYRUM; k < sedes_numerus; k++)
+    per (k = ZEPHYRUM; k < tabula->numerus; k++)
     {
-        si (strcmp(repositio_titulus[k], titulus) == ZEPHYRUM)
+        si (strcmp(tabula->titulus[k], titulus) == ZEPHYRUM)
         {
-            redde repositio_valor[k];
+            redde tabula->valor[k];
         }
     }
     redde NIHIL;
@@ -95,16 +101,17 @@ _repositio (
  * singulae sedes sunt) */
 interior i32
 _sedes_cum (
-    constans character* titulus,
-    constans character* valor)
+     constans SedesTabula* tabula,
+       constans character* titulus,
+       constans character* valor)
 {
     i32 k;
     i32 n = ZEPHYRUM;
 
-    per (k = ZEPHYRUM; k < sedes_numerus; k++)
+    per (k = ZEPHYRUM; k < tabula->numerus; k++)
     {
-        si (   strcmp(repositio_titulus[k], titulus) == ZEPHYRUM
-            && strcmp(repositio_valor[k], valor)     == ZEPHYRUM)
+        si (   strcmp(tabula->titulus[k], titulus) == ZEPHYRUM
+            && strcmp(tabula->valor[k], valor)     == ZEPHYRUM)
         {
             n++;
         }
@@ -217,19 +224,24 @@ _primum_basename (
     redde NIHIL;
 }
 
-s32
-principale (vacuum)
+/* praeludium v1: piscina asserta (assertio ut olim numeratur) */
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-    Piscina* piscina;
-        b32  praeteritus;
+    CREDO_NON_NIHIL (c->piscina);
+}
 
-    imprimere("=== probatio_officina_capita ===\n");
-    piscina = piscina_generare_dynamicum("probatio_capita", 4194304);
-        credo_aperire(piscina);
-    CREDO_NON_NIHIL (piscina);
 
-    /* I. gradus */
-    imprimere("\n--- I. gradus ---\n");
+/* ==================================================
+ * PROBARE: I. gradus capitum
+ * ================================================== */
+
+interior vacuum
+_gradus_probare (
+    CredoContextus* c)
+{
+    (vacuum)c;
     CREDO_AEQUALIS_I32 (
         nexus_ordines_capitis_gradus("include/latina.h"), ZEPHYRUM);
     CREDO_AEQUALIS_I32 (
@@ -255,9 +267,19 @@ principale (vacuum)
         nexus_ordines_capitis_gradus("./fixa/x.h"), II);
     CREDO_AEQUALIS_I32 (nexus_ordines_capitis_gradus(NIHIL), I);
     CREDO_AEQUALIS_I32 (nexus_ordines_capitis_gradus(""), I);
+}
 
-    /* II. comparator: gradus, deinde ordo canonicus */
-    imprimere("\n--- II. comparator ---\n");
+
+/* ==================================================
+ * PROBARE: II. comparator: gradus, deinde ordo canonicus
+ * ================================================== */
+
+interior vacuum
+_comparatorem_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     {
         constans character* fixtura =
             "briar/probationes/fixa/amalgama/fabrica/include/latina.h";
@@ -295,10 +317,19 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (
             nexus_ordines_capita_comparare(&aliud, &aliud), ZEPHYRUM);
     }
+}
 
-    /* III. arbor vera: primum latina.h / postulata_posix.h ordine
-     * comparatoris sub include/ */
-    imprimere("\n--- III. arbor vera ---\n");
+
+/* ==================================================
+ * PROBARE: III. arbor vera (RHUBARB_RADIX)
+ * ================================================== */
+
+interior vacuum
+_arborem_veram_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     {
         Xar* capita = xar_creare(piscina,
             (i32)magnitudo(constans character*));
@@ -320,9 +351,19 @@ principale (vacuum)
             (int)xar_numerus(capita), primum != NIHIL
                 ? _primum_basename(capita, "latina.h") : "(nihil)");
     }
+}
 
-    /* IV. repositio declarationum (columna VIII nexus.tsv) */
-    imprimere("\n--- IV. repositio declarationum ---\n");
+
+/* ==================================================
+ * PROBARE: IV. repositio declarationum (columna VIII nexus.tsv)
+ * ================================================== */
+
+interior vacuum
+_declarationes_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     {
         constans character* fons =
             "extern char **alibi;\n"
@@ -333,6 +374,7 @@ principale (vacuum)
             "extern int functio_alibi(void);\n"
             "int specimen(void) { return proprius + publicus"
             " + posterius + functio_alibi() + (alibi != 0); }\n";
+                    SedesTabula tabula;
         PraeparatorConfiguratio cfg;
                     Praeparatio praeparatio;
                    SilvaPiscina* effimera;
@@ -340,6 +382,7 @@ principale (vacuum)
                  SilvaSemantica* sem;
                        Piscina*  piscina_ordinum;
 
+        tabula.numerus = ZEPHYRUM;
         memset(&cfg, ZEPHYRUM, magnitudo(PraeparatorConfiguratio));
         cfg.radix = NIHIL;   /* sine systemate: fons sibi sufficit */
         CREDO_VERUM (praeparator_praeparare(&praeparatio, piscina, &cfg)
@@ -360,38 +403,64 @@ principale (vacuum)
             && piscina_ordinum != NIHIL)
         {
             nexus_ordines_fundere(parsura, sem, piscina_ordinum,
-                _sedem_recipere, NIHIL);
+                _sedem_recipere, &tabula);
         }
         imprimere("  sedes %d: alibi %s, proprius %s, publicus %s,"
-            " specimen %s\n", (integer)sedes_numerus,
-            _repositio("alibi") ? _repositio("alibi") : "(nihil)",
-            _repositio("proprius") ? _repositio("proprius") : "(nihil)",
-            _repositio("publicus") ? _repositio("publicus") : "(nihil)",
-            _repositio("specimen") ? _repositio("specimen") : "(nihil)");
-        CREDO_VERUM (_repositio("alibi") != NIHIL
-            && strcmp(_repositio("alibi"), "externus") == ZEPHYRUM);
-        CREDO_VERUM (_repositio("proprius") != NIHIL
-            && strcmp(_repositio("proprius"), "staticus") == ZEPHYRUM);
-        CREDO_VERUM (_repositio("publicus") != NIHIL
-            && strcmp(_repositio("publicus"), "-") == ZEPHYRUM);
-        CREDO_VERUM (_repositio("specimen") != NIHIL
-            && strcmp(_repositio("specimen"), "-") == ZEPHYRUM);
+            " specimen %s\n", (integer)tabula.numerus,
+            _repositio(&tabula, "alibi")
+                ? _repositio(&tabula, "alibi") : "(nihil)",
+            _repositio(&tabula, "proprius")
+                ? _repositio(&tabula, "proprius") : "(nihil)",
+            _repositio(&tabula, "publicus")
+                ? _repositio(&tabula, "publicus") : "(nihil)",
+            _repositio(&tabula, "specimen")
+                ? _repositio(&tabula, "specimen") : "(nihil)");
+        CREDO_VERUM (_repositio(&tabula, "alibi") != NIHIL
+            && strcmp(_repositio(&tabula, "alibi"), "externus")
+                == ZEPHYRUM);
+        CREDO_VERUM (_repositio(&tabula, "proprius") != NIHIL
+            && strcmp(_repositio(&tabula, "proprius"), "staticus")
+                == ZEPHYRUM);
+        CREDO_VERUM (_repositio(&tabula, "publicus") != NIHIL
+            && strcmp(_repositio(&tabula, "publicus"), "-")
+                == ZEPHYRUM);
+        CREDO_VERUM (_repositio(&tabula, "specimen") != NIHIL
+            && strcmp(_repositio(&tabula, "specimen"), "-")
+                == ZEPHYRUM);
         /* extern deinde definitio in eadem TU: sedes duae, declaratio
          * externa et definitio simplex (haec manet statica in tabula
          * corpus_infixum si nullum caput eam fert) */
-        CREDO_AEQUALIS_I32 (_sedes_cum("posterius", "externus"), I);
-        CREDO_AEQUALIS_I32 (_sedes_cum("posterius", "-"), I);
+        CREDO_AEQUALIS_I32 (_sedes_cum(&tabula, "posterius",
+            "externus"), I);
+        CREDO_AEQUALIS_I32 (_sedes_cum(&tabula, "posterius", "-"),
+            I);
         /* prototypus functionis extern: externus (non statica) */
-        CREDO_AEQUALIS_I32 (_sedes_cum("functio_alibi", "externus"), I);
-        CREDO_AEQUALIS_I32 (_sedes_cum("functio_alibi", "-"), ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_sedes_cum(&tabula, "functio_alibi",
+            "externus"), I);
+        CREDO_AEQUALIS_I32 (_sedes_cum(&tabula, "functio_alibi",
+            "-"), ZEPHYRUM);
         si (effimera != NIHIL) silva_piscina_destruere(effimera);
         si (piscina_ordinum
             != NIHIL) piscina_destruere(piscina_ordinum);
         praeparator_destruere(&praeparatio);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. gradus", _gradus_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "II. comparator", _comparatorem_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "III. arbor vera", _arborem_veram_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "IV. repositio declarationum", _declarationes_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    imprimere("=== probatio_officina_capita ===\n");
+    redde credo_suitam_currere_cum("officina_capita", SECTIONES,
+        _suitam_parare, NIHIL);
 }
