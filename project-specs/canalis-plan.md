@@ -183,6 +183,11 @@ this plan.
 - **T4: /mcp plant run by hand** (needs an include + a swap; silva.planta
   takes one edit).
 
+- **T5: Restart=on-failure already in the unit** - the SIGKILL step needed
+  no manual start; the restarted server replaced the stale socket itself.
+- **T5: invitation ids read through a server-side filter** - only the
+  test invitation's id left smaragda, not the other invitations' notes.
+
 ## Review focus
 
 Inputs the spec implies but no test of the spec's list exercises; each

@@ -302,3 +302,23 @@ fatal ("exemplar: canalis fractus: ..."), like a failed migration.
   admissio green; volumen's suite cannot run in the read-only container
   (build/probatio_volumen.db relative path - environmental, like filum's
   lock test).
+
+## 2026-10-21 - canalis T5: live on exemplar.golden.earth
+
+Service stopped, backup `/var/lib/exemplar/exemplar.volumen.ante-canalis`
+(clean - no -wal/-shm), `tools/dimittere.sh -agere exemplar smaragda`
+(binary only, unit unchanged; old binary `.prior`). /salus ok; journal
+clean, no "canalis fractus"; `canalis/` 0700 and `canalis/servus` 0600,
+owner exemplar; exemplar_mcp_fumus all BENE. Live channel as exemplar via
+`sudo -n -u exemplar`: -invitare while running -> exit 0 (code redacted
+on smaragda by sed before it left); -administrare session: status
+(1 active, 1 live invitation = the test one), invitationes_enumerare
+filtered on the server to the test invitation's id, revoked -> 0 live.
+Stale socket: `systemctl kill -s KILL` left the socket file; Restart=
+on-failure brought the service back in 2 s and audire replaced it;
+channel answered again. Fran added `exemplar-admin` to Claude Code
+(ssh + sudo -n -u exemplar -administrare): status and cives_enumerare
+worked ("mcp server seemed like it all worked").
+
+Rollback if ever needed: stop; restore `/opt/exemplar/exemplar.prior`;
+start (no migration ran - `.ante-canalis` only as belt and braces).

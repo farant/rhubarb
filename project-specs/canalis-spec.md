@@ -1,8 +1,13 @@
 # canalis - an admin channel to the running server (spec)
 
-**Status: SCRIPTUM 2026-10-20** - approved by Fran in conversation
-(sections II.1-II.3 one by one); plan to follow
-(`project-specs/canalis-plan.md`).
+**Status: IMPLETUM 2026-10-21** - plan `project-specs/canalis-plan.md`
+T1-T5 (rulings P1-P13 + rulings while executing); commits spec
+59030f92, plan 3b214f02, T1 acc64fa5, T2 c97e0391, T3 0b2a4b4a, T4
+f06a216b, T5 close-out. LIVE on exemplar.golden.earth (deployed
+2026-10-21): `sudo -u exemplar ... -invitare` through the running
+server, `-administrare` bridge, Claude Code `exemplar-admin` over ssh
+checked by Fran ("mcp server seemed like it all worked"). Approved by
+Fran in conversation (sections II.1-II.3 one by one).
 Ledger: desideratum ...ZN (`01M5DA62V8PX50XP29G4E3G6ZN`); related
 parked LEGATUSD (`01KXJ2HZCPE2D2SX773M44GWMH`, a socket daemon for the
 house tools - NOT this spec, but it can stand on `canalis` later).

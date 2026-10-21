@@ -74,6 +74,10 @@ this plan.
   terminal only - never the journal, never a file. Resolves spec
   AUDIENDA 1. Cost if wrong: a minute of downtime per CLI invitation;
   routine invitations use the web page.
+  **Retired 2026-10-21 by canalis** (`project-specs/canalis-spec.md`):
+  `-invitare` now asks the running server over the admin channel; the
+  lock stays (it makes stale-socket removal safe and decides the
+  fallback when nobody answers).
 - **P2 - schemas via `CREATE TABLE IF NOT EXISTS`**, no use of
   `scrinium_migrare` (its counter is shared with volumen's own
   migrations - admissio's precedent, lib/admissio.c header). A later
