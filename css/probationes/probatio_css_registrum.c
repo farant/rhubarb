@@ -54,36 +54,50 @@ hic_manens constans character* GENERA_EXSPECTATA[] = {
     "pseudo-elementum", "selector-malus"
 };
 
-s32
-principale (vacuum)
+
+/* FIXURA SUITAE: ratum lexici semel factum (parare_suitae; assertiones
+ * eius ibi); sectiones id per monstratorem constantem LEGUNT. */
+nomen structura {
+    MateriaLexiconRatum ratum;
+} FixuraRegistri;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                b32  praeteritus;
-            Piscina* piscina;
-MateriaLexiconRatum  ratum;
- MateriaLexIudicium  iudicium;
+        FixuraRegistri* f;
+    MateriaLexIudicium  iudicium;
 
-    piscina = piscina_generare_dynamicum("probatio_css_registrum",
-        32768);
-    si (!piscina)
+    f = (FixuraRegistri*)piscina_allocare(c->piscina,
+        magnitudo(FixuraRegistri));
+    si (f == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    credo_aperire(piscina);
+    c->datum = f;
+    CREDO_VERUM (materia_lexicon_ratum_facere(&f->ratum, &CSS_LEXICON,
+        &iudicium));
+    CREDO_AEQUALIS_S32 (iudicium.vitium, (s32)MATERIA_LEX_SANUM);
+}
 
 
-    /* ========================================================
-     * PROBARE: lexicon portam transit, et ORDINEM servat
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: lexicon portam transit, et ORDINEM servat
+ * ================================================== */
 
+interior vacuum
+_lexicon_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraRegistri*)c->suita)->ratum;
     {
         i32 i;
-
-        imprimere("\n--- Probans lexicon CSS ---\n");
-
-        CREDO_VERUM (materia_lexicon_ratum_facere(&ratum, &CSS_LEXICON,
-            &iudicium));
-        CREDO_AEQUALIS_S32 (iudicium.vitium, (s32)MATERIA_LEX_SANUM);
 
         /* Numerus generum lexico == numerus lexatoris */
         CREDO_AEQUALIS_I32 (CSS_LEXICON.numerus_generum,
@@ -95,7 +109,7 @@ MateriaLexiconRatum  ratum;
         /* ORDO per titulos - permutatio capitur */
         per (i = ZEPHYRUM; i < (i32)CSS_LEX_NUMERUS_GENERUM; i++)
         {
-            constans character* t = materia_lexicon_titulus(&ratum,
+            constans character* t = materia_lexicon_titulus(ratum,
                 (s32)i);
 
             CREDO_NON_NIHIL (t);
@@ -103,77 +117,92 @@ MateriaLexiconRatum  ratum;
         }
 
         /* Sedes notae - erratum transcriptionis grossum caperent */
-        CREDO_AEQUALIS_S32 ((s32)materia_lexicon_species(&ratum,
+        CREDO_AEQUALIS_S32 ((s32)materia_lexicon_species(ratum,
             (s32)CSS_LEX_BRACE_APERTA), (s32)MATERIA_LEX_FIXUM);
-        CREDO_VERUM (strcmp(materia_lexicon_orthographia(&ratum,
+        CREDO_VERUM (strcmp(materia_lexicon_orthographia(ratum,
             (s32)CSS_LEX_BRACE_APERTA), "{") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(materia_lexicon_orthographia(&ratum,
+        CREDO_VERUM (strcmp(materia_lexicon_orthographia(ratum,
             (s32)CSS_LEX_CDO), "<!--") == ZEPHYRUM);
-        CREDO_VERUM (materia_lexicon_textum_fert(&ratum,
+        CREDO_VERUM (materia_lexicon_textum_fert(ratum,
             (s32)CSS_LEX_IDENTIFICATOR));
-        CREDO_FALSUM (materia_lexicon_textum_fert(&ratum,
+        CREDO_FALSUM (materia_lexicon_textum_fert(ratum,
             (s32)CSS_LEX_COLON));
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: CSS munere LINEA CARET - et id RECTUM est
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: CSS munere LINEA CARET - et id RECTUM est
+ * ================================================== */
 
+interior vacuum
+_lineam_abesse_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraRegistri*)c->suita)->ratum;
     {
         i32 postulata;
 
-        imprimere("\n--- Probans absentiam muneris LINEA ---\n");
-
         /* SPATIA CSS spatia+tabulas+lineas novas absorbet, ergo
          * VERBATIM/SPATIUM est, non REPETITUM/SPATIUM ut C89. */
-        CREDO_AEQUALIS_S32 ((s32)materia_lexicon_species(&ratum,
+        CREDO_AEQUALIS_S32 ((s32)materia_lexicon_species(ratum,
             (s32)CSS_LEX_SPATIA), (s32)MATERIA_LEX_VERBATIM);
-        CREDO_AEQUALIS_S32 ((s32)materia_lexicon_munus(&ratum,
+        CREDO_AEQUALIS_S32 ((s32)materia_lexicon_munus(ratum,
             (s32)CSS_LEX_SPATIA), (s32)MATERIA_MUNUS_SPATIUM);
-        CREDO_VERUM (materia_lexicon_trivium_est(&ratum,
+        CREDO_VERUM (materia_lexicon_trivium_est(ratum,
             (s32)CSS_LEX_SPATIA));
 
         /* Munera quae CSS FERT */
-        CREDO_VERUM (materia_lexicon_munus_habet(&ratum,
+        CREDO_VERUM (materia_lexicon_munus_habet(ratum,
             MATERIA_MUNUS_SPATIUM));
-        CREDO_VERUM (materia_lexicon_munus_habet(&ratum,
+        CREDO_VERUM (materia_lexicon_munus_habet(ratum,
             MATERIA_MUNUS_COMMENTUM));
-        CREDO_VERUM (materia_lexicon_munus_habet(&ratum,
+        CREDO_VERUM (materia_lexicon_munus_habet(ratum,
             MATERIA_MUNUS_FINIS));
 
         /* Et quae NON */
-        CREDO_FALSUM (materia_lexicon_munus_habet(&ratum,
+        CREDO_FALSUM (materia_lexicon_munus_habet(ratum,
             MATERIA_MUNUS_LINEA));
-        CREDO_FALSUM (materia_lexicon_munus_habet(&ratum,
+        CREDO_FALSUM (materia_lexicon_munus_habet(ratum,
             MATERIA_MUNUS_LAMINA));
 
         /* Capacitas linea-sensitiva (inventor blocci commentorum
          * COMMENTUM + LINEA poscit) RECUSATUR. Politica B agit. */
         postulata = MATERIA_MUNUS_VEXILLUM(MATERIA_MUNUS_COMMENTUM)
                   | MATERIA_MUNUS_VEXILLUM(MATERIA_MUNUS_LINEA);
-        CREDO_FALSUM (materia_lexicon_munera_habet(&ratum, postulata));
+        CREDO_FALSUM (materia_lexicon_munera_habet(ratum, postulata));
 
         /* Sed capacitas quae COMMENTUM solum poscit LICET */
-        CREDO_VERUM (materia_lexicon_munera_habet(&ratum,
+        CREDO_VERUM (materia_lexicon_munera_habet(ratum,
             MATERIA_MUNUS_VEXILLUM(MATERIA_MUNUS_COMMENTUM)));
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: porta rancoris tabularum coctarum (2026-09-15)
-     * css_registrum_coctum.{h,c} ex css.registrum.stml GENERATAE -
-     * redditio in memoria contra plagulas commissas OCTETIM (output,
-     * numquam tempora): declaratio mutata sine ./materia/coquere.sh
-     * -scribere, aut plagula generata manu tacta, hic rubet cum linea
-     * prima divergente. Numeri declarationis == tabula viva.
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: porta rancoris tabularum coctarum (2026-09-15)
+ * css_registrum_coctum.{h,c} ex css.registrum.stml GENERATAE -
+ * redditio in memoria contra plagulas commissas OCTETIM (output,
+ * numquam tempora): declaratio mutata sine ./materia/coquere.sh
+ * -scribere, aut plagula generata manu tacta, hic rubet cum linea
+ * prima divergente. Numeri declarationis == tabula viva.
+ * ================================================== */
 
+interior vacuum
+_tabulas_coctas_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
     {
         constans character* radix = getenv("RHUBARB_RADIX");
              MateriaRancor  rancor;
 
-        imprimere("\n--- Probans rancorem tabularum coctarum ---\n");
         si (!materia_registrum_recens(piscina, radix
             != NIHIL ? radix : ".",
                 "css/grammatica/css.registrum.stml", &rancor))
@@ -199,17 +228,21 @@ MateriaLexiconRatum  ratum;
                 CSS_REGISTRUM.numerus_generum);
         }
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: registrum - ordo et CONTIGUITAS locorum
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: registrum - ordo et CONTIGUITAS locorum
+ * ================================================== */
 
+interior vacuum
+_registrum_probare (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         i32 i;
         i32 exspectatus_offset;
-
-        imprimere("\n--- Probans registrum nodorum ---\n");
 
         CREDO_AEQUALIS_I32 (CSS_REGISTRUM.numerus_generum,
             (i32)CSS_GENUS_NUMERUS_GENERUM);
@@ -253,14 +286,27 @@ MateriaLexiconRatum  ratum;
                 (s32)MATERIA_LOCUS_NUMERUS_SPECIERUM);
         }
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: circuitus per materiam (arbor CSS minima)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: circuitus per materiam (arbor CSS minima)
+ * ================================================== */
 
+interior vacuum
+_circuitum_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        MateriaArborConsilium c;
+        redde;
+    }
+    ratum = &((constans FixuraRegistri*)c->suita)->ratum;
+    {
+        MateriaArborConsilium consilium;
                  MateriaNodus* plagula;
                  MateriaNodus* regula;
                  MateriaNodus* saeptum;
@@ -268,8 +314,6 @@ MateriaLexiconRatum  ratum;
         MateriaArborScriptura  s2;
                  MateriaNodus* lecta;
            MateriaArborVitium  vitium;
-
-        imprimere("\n--- Probans circuitum CSS per materiam ---\n");
 
         /* 'a{}' - arbor minima quae genera tria exercet */
         saeptum = materia_nodus_creare(piscina, (s32)CSS_GENUS_SAEPTUM,
@@ -315,30 +359,45 @@ MateriaLexiconRatum  ratum;
         CREDO_VERUM (materia_nodus_appendere(piscina, plagula, ZEPHYRUM,
             materia_valor_nodus(regula), MATERIA_LOCUS_LISTA_NODUS));
 
-        materia_arbor_consilium_nudum(&c, &CSS_REGISTRUM, &ratum,
+        materia_arbor_consilium_nudum(&consilium, &CSS_REGISTRUM, ratum,
             "css");
-        s1 = materia_arbor_scribere_nodum(piscina, plagula, &c);
+        s1 = materia_arbor_scribere_nodum(piscina, plagula, &consilium);
         CREDO_VERUM (s1.successus);
         CREDO_NON_NIHIL (strstr((character*)s1.textus.datum,
             "grammatica=\"css\""));
 
-        lecta = materia_arbor_legere(piscina, NIHIL, s1.textus, &c,
-            &vitium);
+        lecta = materia_arbor_legere(piscina, NIHIL, s1.textus,
+            &consilium, &vitium);
         CREDO_NON_NIHIL (lecta);
         CREDO_NIHIL (vitium.causa);
         CREDO_AEQUALIS_S32 (lecta->genus, (s32)CSS_GENUS_PLAGULA);
 
-        s2 = materia_arbor_scribere_nodum(piscina, lecta, &c);
+        s2 = materia_arbor_scribere_nodum(piscina, lecta, &consilium);
         CREDO_VERUM (s2.successus);
         CREDO_AEQUALIS_I32 (s2.textus.mensura, s1.textus.mensura);
         CREDO_VERUM (memcmp(s1.textus.datum, s2.textus.datum,
             (size_t)s1.textus.mensura) == ZEPHYRUM);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "lexicon CSS: portam transit, ordinem servat", _lexicon_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "CSS munere LINEA caret", _lineam_abesse_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "rancor tabularum coctarum", _tabulas_coctas_probare, NIHIL,
+        NIHIL,
+        NIHIL, NIHIL },
+    { "registrum: ordo et contiguitas locorum", _registrum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "circuitus CSS per materiam", _circuitum_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("css_registrum", SECTIONES,
+        _suitam_parare, NIHIL);
 }

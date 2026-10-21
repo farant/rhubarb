@@ -167,6 +167,11 @@ def _iudicare(via, ordines):
             os.utime(os.path.join(RADIX, via), None)
         if ante is not None and ante['codex'] != 0:
             nota.append('ANTE exitus %s' % ante['codex'])
+    elif vetus is not None:
+        # nihil conversum: viride sine collatione numerorum mentiretur
+        nota.append('ANTE nulla: HEAD idem, numeri non collati')
+    else:
+        nota.append('ANTE nulla: plagula nova in HEAD absens')
 
     # III: versio nova per ianuam
     rc1, binarium1, effusio1 = _struere(ianua, binaria)

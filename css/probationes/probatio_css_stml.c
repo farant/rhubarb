@@ -36,11 +36,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* VISIO SEDIUM (materia-sedes A2): elementa verificata per corpus -
- * porta quae nihil verificavit mortua est */
-hic_manens i32 SEDES_ELEMENTA = ZEPHYRUM;
-hic_manens i32 SEDES_DERIVATA = ZEPHYRUM;
-
 hic_manens constans character* CORPUS[] = {
     "probationes/fixa/css/componentia_2026-08-18.css",
     "probationes/fixa/css/thema_2026-08-18.css",
@@ -93,13 +88,18 @@ _plagulam_legere (
 }
 
 /* Circuitus plenus super fontem unum. VERUM = omnia sana; causa
- * imprimitur ante FALSUM ut rubor nominatus sit. */
+ * imprimitur ante FALSUM ut rubor nominatus sit. VISIO SEDIUM
+ * (materia-sedes A2): elementa verificata in *elementa / *derivata
+ * sectionis vocantis numerantur - porta quae nihil verificavit
+ * mortua est. */
 interior b32
 _circuitum_probare (
                            Piscina* piscina,
     constans MateriaArborConsilium* consilium,
                 constans character* fons,
-                               i32  mensura)
+                               i32  mensura,
+                               i32* elementa,
+                               i32* derivata)
 {
                MateriaNodus* radix;
                MateriaNodus* lecta;
@@ -133,8 +133,8 @@ _circuitum_probare (
                 sedes.causa ? sedes.causa : "-", (integer)sedes.index);
         }
         CREDO_VERUM (sedes.sana);
-        SEDES_ELEMENTA += sedes.elementa;
-        SEDES_DERIVATA += sedes.derivata;
+        *elementa += sedes.elementa;
+        *derivata += sedes.derivata;
     }
 
     /* Compressio MORTUA pro CSS (spec par. III): praesentia
@@ -218,173 +218,216 @@ _circuitum_probare (
     redde VERUM;
 }
 
-integer
-principale (vacuum)
+/* FIXURA SUITAE: lexicon et consilium arboris semel facta; sectiones
+ * ea per monstratorem constantem LEGUNT. */
+nomen structura {
+      MateriaLexiconRatum ratum;
+    MateriaArborConsilium consilium;
+} FixuraStml;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                    Piscina* piscina;
-         constans character* radix_viae;
-        MateriaLexiconRatum  ratum;
-         MateriaLexIudicium  iudicium;
-      MateriaArborConsilium  consilium;
-                        b32  praeteritus;
+            FixuraStml* f;
+    MateriaLexIudicium  iudicium;
 
-    piscina = piscina_generare_dynamicum("probatio_css_stml",
-        4194304);
-    credo_aperire(piscina);
-
-    si (!materia_lexicon_ratum_facere(&ratum, &CSS_LEXICON, &iudicium))
+    f = (FixuraStml*)piscina_allocare(c->piscina,
+        magnitudo(FixuraStml));
+    si (f == NIHIL)
+    {
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
+    }
+    si (!materia_lexicon_ratum_facere(&f->ratum, &CSS_LEXICON,
+        &iudicium))
     {
         imprimere("LEXICON CSS RECUSATUM\n");
-        redde I;
+        redde;
     }
-    materia_arbor_consilium_nudum(&consilium, &CSS_REGISTRUM, &ratum,
-        "css");
+    materia_arbor_consilium_nudum(&f->consilium, &CSS_REGISTRUM,
+        &f->ratum, "css");
+    c->datum = f;
+}
 
 
-    /* ========================================================
-     * CASUS INLINEI: quaeque forma nodi per proiectionem
-     * ======================================================== */
+/* ==================================================
+ * CASUS INLINEI: quaeque forma nodi per proiectionem
+ * ================================================== */
 
+interior vacuum
+_casus_breves_probare (
+    CredoContextus* c)
+{
+    hic_manens constans character* CASUS[] = {
+        "a{color:red}",
+        "a , b > c { color : red ; }",
+        "a{margin:1px /* c */ 2px}",
+        "a{color:red ! important ;}",
+        "@media screen{a{color:red}}",
+        "@import url(a.css);",
+        "@page{@top-left{}}",
+        "}a{}",
+        "<!--a{}-->",
+        "a{color red}",
+        "a{b:\"unterminated"
+    };
+    constans FixuraStml* f = (constans FixuraStml*)c->suita;
+                    i32  numerus = (i32)(magnitudo(CASUS)
+                                 / magnitudo(CASUS[0]));
+                    i32 elementa = ZEPHYRUM;
+                    i32 derivata = ZEPHYRUM;
+                    i32 i;
+
+    si (f == NIHIL)
     {
-        hic_manens constans character* CASUS[] = {
-            "a{color:red}",
-            "a , b > c { color : red ; }",
-            "a{margin:1px /* c */ 2px}",
-            "a{color:red ! important ;}",
-            "@media screen{a{color:red}}",
-            "@import url(a.css);",
-            "@page{@top-left{}}",
-            "}a{}",
-            "<!--a{}-->",
-            "a{color red}",
-            "a{b:\"unterminated"
-        };
-        i32 numerus = (i32)(magnitudo(CASUS) / magnitudo(CASUS[0]));
-        i32 i;
-
-        imprimere("\n--- Probans circuitum STML inlineum ---\n");
-
-        per (i = ZEPHYRUM; i < numerus; i++)
-        {
-            CREDO_VERUM (_circuitum_probare(piscina, &consilium,
-                CASUS[i], (i32)strlen(CASUS[i])));
-        }
+        redde;
     }
-
-
-    /* ========================================================
-     * DISCRIMEN ORACULORUM: migratio dominii MENSURATA
-     * ======================================================== */
-
+    per (i = ZEPHYRUM; i < numerus; i++)
     {
-        /* Trivium ex 'post' prioris in 'ante' sequentis motum:
-         * octeti IDEM manent (emissio ordinem fontis servat),
-         * arbor MUTATA est. Haec est classis tota ob quam
-         * comparator B1 portatus est - hic mensuratur, non
-         * asseritur. */
-                     MateriaNodus* a;
-                     MateriaNodus* b;
-                     MateriaToken* cauda_b;
-                     MateriaToken* trivium;
-                 MateriaScriptura  ea;
-                 MateriaScriptura  eb;
-        MateriaScripturaConsilium  cs;
-          MateriaArborDifferentia  d;
-
-        imprimere("\n--- Probans discrimen oraculorum ---\n");
-
-        a = css_arbor_parsare(piscina, "a{} ", IV);
-        b = css_arbor_parsare(piscina, "a{} ", IV);
-        CREDO_NON_NIHIL (a);
-        CREDO_NON_NIHIL (b);
-
-        /* In 'a{} ' spatium caudale ad '}' ut POST ligatur (divisio
-         * sine linea nova omnia PRIORI dat - MENSURATUM: versio
-         * prima huius probationis contrarium credidit et rubuit).
-         * Migratio: ex '}'.post in cauda.ante. */
-        cauda_b = b->loci[CSS_PLAGULA_CAUDA].datum.token;
-        CREDO_AEQUALIS_I32 (cauda_b->numerus_ante, ZEPHYRUM);
-        {
-            MateriaNodus* regula = materia_valor_lista_obtinere(
-                b->loci[CSS_PLAGULA_REGULAE], ZEPHYRUM)->datum.nodus;
-            MateriaNodus* corpus =
-                regula->loci[CSS_REGULA_CORPUS].datum.nodus;
-            MateriaToken* clausum = corpus
-                ->loci[CSS_SAEPTUM_TOK_CLAUSUM].datum.token;
-
-            CREDO_AEQUALIS_I32 (clausum->numerus_post, I);
-            trivium                = clausum->spatia_post[ZEPHYRUM];
-            clausum->numerus_post  = ZEPHYRUM;
-            CREDO_VERUM (materia_token_trivia_ante_ponere(cauda_b,
-                piscina, &trivium, (i32)I));
-        }
-
-        /* Octeti: IDEM - migratio ordinem fontis servat */
-        materia_scriptura_consilium_nudum(&cs, &CSS_REGISTRUM);
-        ea = materia_scribere_nodum(piscina, a, &cs);
-        eb = materia_scribere_nodum(piscina, b, &cs);
-        CREDO_VERUM (ea.successus);
-        CREDO_VERUM (eb.successus);
-        CREDO_AEQUALIS_I32 (ea.textus.mensura, eb.textus.mensura);
-        CREDO_VERUM (memcmp(ea.textus.datum, eb.textus.datum,
-            (size_t)ea.textus.mensura) == ZEPHYRUM);
-
-        /* Arbor: DISPAR - solus comparator id videt */
-        CREDO_FALSUM (materia_arbor_aequalis(a, b,
-            MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
-        CREDO_NON_NIHIL (d.campus);
+        CREDO_VERUM (_circuitum_probare(c->piscina, &f->consilium,
+            CASUS[i], (i32)strlen(CASUS[i]), &elementa, &derivata));
     }
+}
 
 
-    /* ========================================================
-     * CORPUS TOTUM per circuitum, se metiens
-     * ======================================================== */
+/* ==================================================
+ * DISCRIMEN ORACULORUM: migratio dominii MENSURATA
+ * ================================================== */
 
+interior vacuum
+_discrimen_oraculorum (
+    CredoContextus* c)
+{
+    /* Trivium ex 'post' prioris in 'ante' sequentis motum:
+     * octeti IDEM manent (emissio ordinem fontis servat),
+     * arbor MUTATA est. Haec est classis tota ob quam
+     * comparator B1 portatus est - hic mensuratur, non
+     * asseritur. */
+                     Piscina* piscina = c->piscina;
+                 MateriaNodus* a;
+                 MateriaNodus* b;
+                 MateriaToken* cauda_b;
+                 MateriaToken* trivium;
+             MateriaScriptura  ea;
+             MateriaScriptura  eb;
+    MateriaScripturaConsilium  cs;
+      MateriaArborDifferentia  d;
+
+    a = css_arbor_parsare(piscina, "a{} ", IV);
+    b = css_arbor_parsare(piscina, "a{} ", IV);
+    CREDO_NON_NIHIL (a);
+    CREDO_NON_NIHIL (b);
+
+    /* In 'a{} ' spatium caudale ad '}' ut POST ligatur (divisio
+     * sine linea nova omnia PRIORI dat - MENSURATUM: versio
+     * prima huius probationis contrarium credidit et rubuit).
+     * Migratio: ex '}'.post in cauda.ante. */
+    cauda_b = b->loci[CSS_PLAGULA_CAUDA].datum.token;
+    CREDO_AEQUALIS_I32 (cauda_b->numerus_ante, ZEPHYRUM);
     {
-        i32 numerus = (i32)(magnitudo(CORPUS) / magnitudo(CORPUS[0]));
-        i32 i;
-        i32 circuitus_probati = ZEPHYRUM;
+        MateriaNodus* regula = materia_valor_lista_obtinere(
+            b->loci[CSS_PLAGULA_REGULAE], ZEPHYRUM)->datum.nodus;
+        MateriaNodus* corpus =
+            regula->loci[CSS_REGULA_CORPUS].datum.nodus;
+        MateriaToken* clausum = corpus
+            ->loci[CSS_SAEPTUM_TOK_CLAUSUM].datum.token;
 
-        imprimere("\n--- Probans circuitum STML super corpus ---\n");
-
-        radix_viae = getenv("RHUBARB_RADIX");
-        si (radix_viae == NIHIL)
-        {
-            radix_viae = ".";
-        }
-
-        per (i = ZEPHYRUM; i < numerus; i++)
-        {
-            character  via[DXII];
-            character* textus;
-                  i32  mensura = ZEPHYRUM;
-
-            sprintf(via, "%s/%s", radix_viae, CORPUS[i]);
-            textus = _plagulam_legere(piscina, via, &mensura);
-            si (textus == NIHIL)
-            {
-                imprimere("  ABEST: %s\n", CORPUS[i]);
-                perge;
-            }
-            imprimere("  %s (%d octeti)\n", CORPUS[i],
-                (integer)mensura);
-            CREDO_VERUM (_circuitum_probare(piscina, &consilium,
-                textus, mensura));
-            circuitus_probati = circuitus_probati + I;
-        }
-
-        /* Porta tegumentum SUUM metitur */
-        CREDO_AEQUALIS_I32 (circuitus_probati, VI);
+        CREDO_AEQUALIS_I32 (clausum->numerus_post, I);
+        trivium                = clausum->spatia_post[ZEPHYRUM];
+        clausum->numerus_post  = ZEPHYRUM;
+        CREDO_VERUM (materia_token_trivia_ante_ponere(cauda_b,
+            piscina, &trivium, (i32)I));
     }
 
+    /* Octeti: IDEM - migratio ordinem fontis servat */
+    materia_scriptura_consilium_nudum(&cs, &CSS_REGISTRUM);
+    ea = materia_scribere_nodum(piscina, a, &cs);
+    eb = materia_scribere_nodum(piscina, b, &cs);
+    CREDO_VERUM (ea.successus);
+    CREDO_VERUM (eb.successus);
+    CREDO_AEQUALIS_I32 (ea.textus.mensura, eb.textus.mensura);
+    CREDO_VERUM (memcmp(ea.textus.datum, eb.textus.datum,
+        (size_t)ea.textus.mensura) == ZEPHYRUM);
 
-    imprimere("\n");
-    imprimere("\n--- sedes (visio): %d elementa verificata, %d derivata"
-        " ---\n", (integer)SEDES_ELEMENTA, (integer)SEDES_DERIVATA);
-    CREDO_VERUM (SEDES_ELEMENTA > ZEPHYRUM);
-    credo_imprimere_compendium();
+    /* Arbor: DISPAR - solus comparator id videt */
+    CREDO_FALSUM (materia_arbor_aequalis(a, b,
+        MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
+    CREDO_NON_NIHIL (d.campus);
+}
 
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+
+/* ==================================================
+ * CORPUS TOTUM per circuitum, se metiens - et visio sedium:
+ * corpus elementa verificare DEBET (porta mortua aliter)
+ * ================================================== */
+
+interior vacuum
+_corpus_probare (
+    CredoContextus* c)
+{
+     constans FixuraStml* f = (constans FixuraStml*)c->suita;
+      constans character* radix_viae;
+                     i32  numerus = (i32)(magnitudo(CORPUS)
+                                 / magnitudo(CORPUS[0]));
+                    i32 i;
+                    i32 circuitus_probati  = ZEPHYRUM;
+                    i32 elementa           = ZEPHYRUM;
+                    i32 derivata           = ZEPHYRUM;
+
+    si (f == NIHIL)
+    {
+        redde;
+    }
+    radix_viae = getenv("RHUBARB_RADIX");
+    si (radix_viae == NIHIL)
+    {
+        radix_viae = ".";
+    }
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        character  via[DXII];
+        character* textus;
+              i32  mensura = ZEPHYRUM;
+
+        sprintf(via, "%s/%s", radix_viae, CORPUS[i]);
+        textus = _plagulam_legere(c->piscina, via, &mensura);
+        si (textus == NIHIL)
+        {
+            imprimere("  ABEST: %s\n", CORPUS[i]);
+            perge;
+        }
+        imprimere("  %s (%d octeti)\n", CORPUS[i],
+            (integer)mensura);
+        CREDO_VERUM (_circuitum_probare(c->piscina, &f->consilium,
+            textus, mensura, &elementa, &derivata));
+        circuitus_probati = circuitus_probati + I;
+    }
+
+    /* Porta tegumentum SUUM metitur */
+    CREDO_AEQUALIS_I32 (circuitus_probati, VI);
+
+    imprimere("  sedes (visio): %d elementa verificata, %d derivata\n",
+        (integer)elementa, (integer)derivata);
+    CREDO_VERUM (elementa > ZEPHYRUM);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "circuitus STML inlineus", _casus_breves_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "discrimen oraculorum", _discrimen_oraculorum, NIHIL, NIHIL,
+        NIHIL,
+        NIHIL },
+    { "circuitus STML super corpus", _corpus_probare, NIHIL, NIHIL,
+        NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("css_stml", SECTIONES,
+        _suitam_parare,
+        NIHIL);
 }
