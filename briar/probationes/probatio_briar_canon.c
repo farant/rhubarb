@@ -166,7 +166,7 @@ _regulam (
 interior s32
 _iudicare (
                            Piscina* piscina,
-                             Canon* canon,
+                    constans Canon* canon,
                InternamentumChorda* intern,
     constans MateriaArborConsilium* consilium,
                 constans character* titulus,
@@ -219,35 +219,38 @@ _iudicare (
     redde (s32)n;
 }
 
-s32
-principale (vacuum)
-{
-                      b32  praeteritus;
-                  Piscina* piscina;
-      InternamentumChorda* intern;
-                   chorda  fons_canonis;
-                   chorda  causa;
-                    Canon* canon;
-             StmlResultus  canon_res;
-            RegulaCanonis  regulae[REGULAE_MAXIMAE];
-                      i32  numerus_regularum = ZEPHYRUM;
-      MateriaLexiconRatum  ratum;
-       MateriaLexIudicium  iudicium;
-    MateriaArborConsilium  consilium;
-                      i32  i;
 
-    piscina = piscina_generare_dynamicum("probatio_briar_canon",
-        4194304);
-    si (!piscina)
+/* FIXURA SUITAE: internamentum, lexicon, consilium proiectionis et
+ * canon (cum fonte suo) semel facta in parare_suitae (assertiones
+ * eorum ibi); sectiones per monstratorem constantem LEGUNT - internatio
+ * in internamentum fixurae sola licet (decretum 2026-10-19). */
+nomen structura {
+      InternamentumChorda* intern;
+                    Canon* canon;
+                   chorda  fons_canonis;
+      MateriaLexiconRatum  ratum;
+    MateriaArborConsilium  consilium;
+} FixuraCanonis;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+         FixuraCanonis* f;
+               Piscina* piscina = c->piscina;
+                chorda  causa;
+    MateriaLexIudicium  iudicium;
+
+    f = (FixuraCanonis*)piscina_allocare(piscina,
+        magnitudo(FixuraCanonis));
+    si (f == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
-    CREDO_VERUM (materia_lexicon_ratum_facere(&ratum, &BRIAR_LEXICON,
+    f->intern = internamentum_creare(piscina);
+    CREDO_VERUM (materia_lexicon_ratum_facere(&f->ratum, &BRIAR_LEXICON,
         &iudicium));
-    briar_stml_consilium(&consilium, &ratum);
+    briar_stml_consilium(&f->consilium, &f->ratum);
 
     {
         character* textus;
@@ -259,26 +262,47 @@ principale (vacuum)
         si (textus == NIHIL)
         {
             CREDO_CULPA ("briar/grammatica/briar.canon absens");
-            credo_imprimere_compendium();
-            redde I;
+            redde;
         }
-        fons_canonis.datum    = (i8*)textus;
-        fons_canonis.mensura  = mensura;
+        f->fons_canonis.datum    = (i8*)textus;
+        f->fons_canonis.mensura  = mensura;
     }
-    causa.datum = NIHIL;
-    causa.mensura = ZEPHYRUM;
-    canon = canon_legere(fons_canonis, piscina, intern, &causa);
-    CREDO_NON_NIHIL (canon);
-    si (canon == NIHIL)
+    causa.datum    = NIHIL;
+    causa.mensura  = ZEPHYRUM;
+    f->canon = canon_legere(f->fons_canonis, piscina, f->intern,
+        &causa);
+    CREDO_NON_NIHIL (f->canon);
+    si (f->canon == NIHIL)
     {
         imprimere("  CAUSA: %.*s\n", (integer)causa.mensura,
             (constans character*)causa.datum);
-        credo_imprimere_compendium();
-        redde I;
+        redde;
     }
+    c->datum = f;
+}
 
-    imprimere("\n--- I. custos derivae ---\n");
-    canon_res = stml_legere(fons_canonis, piscina, intern);
+
+/* ==================================================
+ * PROBARE: I. custos derivae
+ * ================================================== */
+
+interior vacuum
+_custodem_probare (
+    CredoContextus* c)
+{
+    constans FixuraCanonis* f;
+                   Piscina* piscina = c->piscina;
+              StmlResultus  canon_res;
+             RegulaCanonis  regulae[REGULAE_MAXIMAE];
+                       i32  numerus_regularum = ZEPHYRUM;
+                       i32  i;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f          = (constans FixuraCanonis*)c->suita;
+    canon_res  = stml_legere(f->fons_canonis, piscina, f->intern);
     CREDO_VERUM (canon_res.successus
         && canon_res.elementum_radix != NIHIL);
     {
@@ -372,7 +396,8 @@ principale (vacuum)
             character  tag[64];
         RegulaCanonis* r;
 
-        _tagum_lexematis(materia_lexicon_titulus(&ratum, (s32)i), tag);
+        _tagum_lexematis(materia_lexicon_titulus(&f->ratum, (s32)i),
+            tag);
         r = _regulam(regulae, numerus_regularum, tag, "");
         si (r == NIHIL)
         {
@@ -397,8 +422,32 @@ principale (vacuum)
         }
         CREDO_VERUM (regulae[i].congruens);
     }
+}
 
-    imprimere("\n--- II. pinna sigilli ---\n");
+
+/* ==================================================
+ * PROBARE: II. pinna sigilli
+ * ================================================== */
+
+interior vacuum
+_pinnam_probare (
+    CredoContextus* c)
+{
+    constans FixuraCanonis* f;
+                   Piscina* piscina = c->piscina;
+              StmlResultus  canon_res;
+                       i32  i;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f          = (constans FixuraCanonis*)c->suita;
+    canon_res  = stml_legere(f->fons_canonis, piscina, f->intern);
+    si (!canon_res.successus || canon_res.elementum_radix == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     {
         chorda sigillum_vivum = materia_arbor_sigillum(piscina,
             &BRIAR_REGISTRUM);
@@ -472,8 +521,26 @@ principale (vacuum)
         }
         CREDO_VERUM (inventum);
     }
+}
 
-    imprimere("\n--- III. iudicium fixturarum ---\n");
+
+/* ==================================================
+ * PROBARE: III. iudicium fixturarum
+ * ================================================== */
+
+interior vacuum
+_fixas_iudicare (
+    CredoContextus* c)
+{
+    constans FixuraCanonis* f;
+                   Piscina* piscina = c->piscina;
+                       i32  i;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f = (constans FixuraCanonis*)c->suita;
     {
         i32 iudicata = ZEPHYRUM;
 
@@ -490,7 +557,8 @@ principale (vacuum)
             {
                 perge;
             }
-            vitia = _iudicare(piscina, canon, intern, &consilium,
+            vitia = _iudicare(piscina, f->canon, f->intern,
+                &f->consilium,
                 FIXA[i],
                 textus, mensura);
             CREDO_AEQUALIS_S32 (vitia, ZEPHYRUM);
@@ -498,10 +566,21 @@ principale (vacuum)
         }
         CREDO_AEQUALIS_I32 (iudicata, (i32)14);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. custos derivae", _custodem_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "II. pinna sigilli", _pinnam_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "III. iudicium fixturarum", _fixas_iudicare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("briar_canon", SECTIONES,
+        _suitam_parare, NIHIL);
 }

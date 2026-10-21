@@ -105,24 +105,21 @@ _res (
     redde (BriarNexusRes*)xar_obtinere(nexus, i);
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: salve_vitreum: octo partes, tria genera
+ * ================================================== */
+
+interior vacuum
+_vitreum_probare (
+    CredoContextus* c)
 {
-                  b32  praeteritus;
-              Piscina* piscina;
-  InternamentumChorda* intern;
+                Piscina* piscina = c->piscina;
+    InternamentumChorda* intern;
 
-    piscina = piscina_generare_dynamicum("probatio_briar_nexus",
-        8388608);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
+    /* internamentum sectionis proprium (olim unum principalis;
+     * nulla fixura communis) */
     intern = internamentum_creare(piscina);
-
-    imprimere("\n--- Probans salve_vitreum: octo partes, tria genera ---\n");
     {
            character* textus;
                  i32  mensura = ZEPHYRUM;
@@ -188,15 +185,30 @@ principale (vacuum)
         CREDO_VERUM (_chorda_est(briar_nexus_attributum(r, "methodus"),
             ""));
     }
+}
 
-    imprimere("\n--- Probans casus inlineares ---\n");
+
+/* ==================================================
+ * PROBARE: casus inlineares
+ * ================================================== */
+
+interior vacuum
+_inlineares_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+    InternamentumChorda* intern;
+
+    /* internamentum sectionis proprium (olim unum principalis;
+     * nulla fixura communis) */
+    intern = internamentum_creare(piscina);
     {
           MateriaNodus* doc;
                    Xar* nexus;
          BriarNexusRes* r;
     constans character* a = "<md!>\n# T\n</md>\n";
     constans character* b = "prosa\n<fenestra>\n<a>\n</fenestra>\n";
-    constans character* c = "<c!\\ methodus=\"m\">\n  x\n</c>\n";
+    constans character* dedens = "<c!\\ methodus=\"m\">\n  x\n</c>\n";
     constans character* d = "<c! a=\"x>\nx\n</c>\n";
 
         /* regio 'md' = prosa explicita, linea contenti II */
@@ -220,7 +232,8 @@ principale (vacuum)
         CREDO_CHORDA_NON_VACUA (r->causa);
 
         /* '\' dedens: attributa tamen leguntur */
-        doc    = briar_arbor_parsare(piscina, c, (i32)strlen(c));
+        doc = briar_arbor_parsare(piscina, dedens,
+            (i32)strlen(dedens));
         nexus  = briar_nexus_texere(piscina, doc, intern);
         r      = _res(nexus, ZEPHYRUM);
         CREDO_VERUM (_chorda_est(briar_nexus_attributum(r, "methodus"),
@@ -235,10 +248,18 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (r->linea_erroris, I);
         CREDO_VERUM (_chorda_est(briar_nexus_attributum(r, "a"), ""));
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "salve_vitreum: octo partes, tria genera", _vitreum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "casus inlineares", _inlineares_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("briar_nexus", SECTIONES);
 }

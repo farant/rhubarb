@@ -138,23 +138,18 @@ _forma (
     exitus[n] = '\0';
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: salve.thistle
+ * ================================================== */
+
+interior vacuum
+_salve_probare (
+    CredoContextus* c)
 {
-          b32  praeteritus;
-      Piscina* piscina;
+      Piscina* piscina = c->piscina;
     character  forma[64];
 
-    piscina = piscina_generare_dynamicum("probatio_briar_arbor",
-        4194304);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- Probans salve.thistle ---\n");
     {
         character* textus;
               i32  mensura = ZEPHYRUM;
@@ -196,8 +191,20 @@ principale (vacuum)
             (i32)BRIAR_DOCUMENTUM_FINIS));
         CREDO_VERUM (_emissio_idem(piscina, doc, textus, mensura));
     }
+}
 
-    imprimere("\n--- Probans salve_vitreum.thistle ---\n");
+
+/* ==================================================
+ * PROBARE: salve_vitreum.thistle
+ * ================================================== */
+
+interior vacuum
+_vitreum_probare (
+    CredoContextus* c)
+{
+      Piscina* piscina = c->piscina;
+    character  forma[64];
+
     {
         character* textus;
               i32  mensura = ZEPHYRUM;
@@ -225,8 +232,20 @@ principale (vacuum)
             chorda_ex_literis("```html\n<button", piscina));
         CREDO_VERUM (_emissio_idem(piscina, doc, textus, mensura));
     }
+}
 
-    imprimere("\n--- Probans casus inlineares ---\n");
+
+/* ==================================================
+ * PROBARE: casus inlineares
+ * ================================================== */
+
+interior vacuum
+_inlineares_probare (
+    CredoContextus* c)
+{
+      Piscina* piscina = c->piscina;
+    character  forma[64];
+
     {
         MateriaNodus* doc;
 
@@ -244,8 +263,20 @@ principale (vacuum)
             (i32)BRIAR_REGIO_CONTENTUM));
         CREDO_VERUM (_emissio_idem(piscina, doc, "<c!/>\nx\n", (i32)8));
     }
+}
 
-    imprimere("\n--- Probans adversa ---\n");
+
+/* ==================================================
+ * PROBARE: adversa
+ * ================================================== */
+
+interior vacuum
+_adversa_probare (
+    CredoContextus* c)
+{
+      Piscina* piscina = c->piscina;
+    character  forma[64];
+
     {
         character* textus;
               i32  mensura;
@@ -352,8 +383,19 @@ principale (vacuum)
         CREDO_VERUM (_valor_est(briar_lexema(briar_pars(doc, I),
             (i32)BRIAR_PROSA_TOK), "post\n"));
     }
+}
 
-    imprimere("\n--- Probans corpus fixturarum (emissio octetim) ---\n");
+
+/* ==================================================
+ * PROBARE: corpus fixturarum (emissio octetim)
+ * ================================================== */
+
+interior vacuum
+_corpus_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     {
         i32 i;
         i32 n = (i32)(magnitudo(FIXA) / magnitudo(FIXA[0]));
@@ -376,10 +418,22 @@ principale (vacuum)
             CREDO_VERUM (_emissio_idem(piscina, doc, textus, mensura));
         }
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "salve.thistle", _salve_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "salve_vitreum.thistle", _vitreum_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "casus inlineares", _inlineares_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "adversa", _adversa_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "corpus fixturarum (emissio octetim)", _corpus_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("briar_arbor", SECTIONES);
 }

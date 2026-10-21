@@ -53,131 +53,207 @@ _consilium (
         causa, linea);
 }
 
-s32
-principale (vacuum)
+/* via intra aream sectionis (credo_area): area + "/" + reliquum */
+interior constans character*
+_in_area (
+               Piscina* piscina,
+    constans character* area,
+    constans character* reliquum)
 {
-                    b32  praeteritus;
-                Piscina* piscina;
+    redde chorda_ut_cstr(chorda_concatenare(chorda_ex_literis(area,
+        piscina), chorda_ex_literis(reliquum, piscina), piscina),
+        piscina);
+}
+
+
+/* ==================================================
+ * PROBARE: consilium: salve_vitreum
+ * ================================================== */
+
+interior vacuum
+_vitreum_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
     InternamentumChorda* intern;
 
-    piscina = piscina_generare_dynamicum("probatio_briar_fasciculum",
-        (memoriae_index)4194304);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
+    /* internamentum sectionis proprium (olim unum principalis;
+     * nulla fixura communis) */
     intern = internamentum_creare(piscina);
-
-    imprimere("\n--- Probans consilium: salve_vitreum ---\n");
     {
-        BriarFasciculumConsilium c;
+        BriarFasciculumConsilium consilium;
                           chorda causa;
                              i32 linea;
 
         CREDO_VERUM(_consilium(piscina, intern,
-            "salve_vitreum.thistle", NIHIL, &c, &causa, &linea));
+            "salve_vitreum.thistle", NIHIL, &consilium, &causa,
+            &linea));
         /* '_' in '-': identitas characteres suos non habet */
-        CREDO_CHORDA_AEQUALIS_LITERIS(c.identitas,
+        CREDO_CHORDA_AEQUALIS_LITERIS(consilium.identitas,
             "org.rhubarb.briar.salve-vitreum");
-        CREDO_CHORDA_AEQUALIS_LITERIS(c.titulus, "salve");
-        CREDO_CHORDA_VACUA(c.versio);
-        CREDO_CHORDA_VACUA(c.via_icon);
-        CREDO_CHORDA_AEQUALIS_LITERIS(c.via_app,
+        CREDO_CHORDA_AEQUALIS_LITERIS(consilium.titulus, "salve");
+        CREDO_CHORDA_VACUA(consilium.versio);
+        CREDO_CHORDA_VACUA(consilium.via_icon);
+        CREDO_CHORDA_AEQUALIS_LITERIS(consilium.via_app,
             "briar/probationes/fixa/thistle/salve_vitreum.app");
-        CREDO_AEQUALIS_I32(c.linea_briar, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(consilium.linea_briar, ZEPHYRUM);
     }
+}
 
-    imprimere("\n--- Probans consilium: salve (sine fenestra) ---\n");
+
+/* ==================================================
+ * PROBARE: consilium: salve (sine fenestra)
+ * ================================================== */
+
+interior vacuum
+_salve_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+    InternamentumChorda* intern;
+
+    /* internamentum sectionis proprium (olim unum principalis;
+     * nulla fixura communis) */
+    intern = internamentum_creare(piscina);
     {
-        BriarFasciculumConsilium c;
+        BriarFasciculumConsilium consilium;
                           chorda causa;
                              i32 linea;
 
         CREDO_VERUM(_consilium(piscina, intern, "salve.thistle", NIHIL,
-            &c, &causa, &linea));
-        CREDO_CHORDA_AEQUALIS_LITERIS(c.identitas,
+            &consilium, &causa, &linea));
+        CREDO_CHORDA_AEQUALIS_LITERIS(consilium.identitas,
             "org.rhubarb.briar.salve");
         /* nomen e plagula, nulla fenestra */
-        CREDO_CHORDA_AEQUALIS_LITERIS(c.titulus, "salve");
+        CREDO_CHORDA_AEQUALIS_LITERIS(consilium.titulus, "salve");
     }
+}
 
-    imprimere("\n--- Probans consilium: briar vestitum ---\n");
+
+/* ==================================================
+ * PROBARE: consilium: briar vestitum
+ * ================================================== */
+
+interior vacuum
+_vestitum_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+    InternamentumChorda* intern;
+
+    /* internamentum sectionis proprium (olim unum principalis;
+     * nulla fixura communis) */
+    intern = internamentum_creare(piscina);
     {
-        BriarFasciculumConsilium c;
+        BriarFasciculumConsilium consilium;
                           chorda causa;
                              i32 linea;
 
         CREDO_VERUM(_consilium(piscina, intern, "app_vestitum.thistle",
-            NIHIL, &c, &causa, &linea));
-        CREDO_CHORDA_AEQUALIS_LITERIS(c.identitas,
+            NIHIL, &consilium, &causa, &linea));
+        CREDO_CHORDA_AEQUALIS_LITERIS(consilium.identitas,
             "org.exemplum.vestitum");
-        CREDO_CHORDA_AEQUALIS_LITERIS(c.titulus, "Vestitum");
-        CREDO_CHORDA_AEQUALIS_LITERIS(c.versio, "2.1");
+        CREDO_CHORDA_AEQUALIS_LITERIS(consilium.titulus, "Vestitum");
+        CREDO_CHORDA_AEQUALIS_LITERIS(consilium.versio, "2.1");
         /* icon attributi ad directorium PLAGULAE resolvitur */
-        CREDO_CHORDA_AEQUALIS_LITERIS(c.via_icon,
+        CREDO_CHORDA_AEQUALIS_LITERIS(consilium.via_icon,
             "briar/probationes/fixa/thistle/signa/vestitum.png");
-        CREDO_AEQUALIS_I32(c.linea_briar, VIII);
+        CREDO_AEQUALIS_I32(consilium.linea_briar, VIII);
 
         /* vexillum -icon attributum vincit, et intactum manet */
         CREDO_VERUM(_consilium(piscina, intern, "app_vestitum.thistle",
-            "alibi/icon.png", &c, &causa, &linea));
-        CREDO_CHORDA_AEQUALIS_LITERIS(c.via_icon, "alibi/icon.png");
-        CREDO_CHORDA_AEQUALIS_LITERIS(c.identitas,
+            "alibi/icon.png", &consilium, &causa, &linea));
+        CREDO_CHORDA_AEQUALIS_LITERIS(consilium.via_icon,
+            "alibi/icon.png");
+        CREDO_CHORDA_AEQUALIS_LITERIS(consilium.identitas,
             "org.exemplum.vestitum");
     }
+}
 
-    imprimere("\n--- Probans recusationes cum linea ---\n");
+
+/* ==================================================
+ * PROBARE: recusationes cum linea
+ * ================================================== */
+
+interior vacuum
+_recusationes_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+    InternamentumChorda* intern;
+
+    /* internamentum sectionis proprium (olim unum principalis;
+     * nulla fixura communis) */
+    intern = internamentum_creare(piscina);
     {
-        BriarFasciculumConsilium c;
+        BriarFasciculumConsilium consilium;
                           chorda causa;
                              i32 linea;
 
         CREDO_FALSUM(_consilium(piscina, intern,
-            "adversa/app_identitas_prava.thistle", NIHIL, &c, &causa,
+            "adversa/app_identitas_prava.thistle", NIHIL, &consilium,
+            &causa,
             &linea));
         CREDO_AEQUALIS_I32(linea, IV);
         CREDO_CHORDA_CONTINET(causa,
             chorda_ex_literis("vitium_malum", piscina));
 
         CREDO_FALSUM(_consilium(piscina, intern,
-            "adversa/app_briar_duplex.thistle", NIHIL, &c, &causa,
+            "adversa/app_briar_duplex.thistle", NIHIL, &consilium,
+            &causa,
             &linea));
         CREDO_AEQUALIS_I32(linea, VI);
         CREDO_CHORDA_CONTINET(causa,
             chorda_ex_literis("linea 4", piscina));
     }
+}
 
-    imprimere("\n--- Probans scriptorem ---\n");
+
+/* ==================================================
+ * PROBARE: scriptor
+ * ================================================== */
+
+interior vacuum
+_scriptorem_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+    InternamentumChorda* intern;
+     constans character* area;
+
+    /* area sectionis propria (credo_area; olim /tmp fixum, cursibus
+     * concurrentibus communis), post sectionem deleta */
+    area = credo_area(c);
+    si (area == NIHIL)
     {
-        constans character* area =
-            "/tmp/probatio_briar_fasciculum";
-        constans character* exsecutabile =
-            "/tmp/probatio_briar_fasciculum/bin/salve";
-        constans character* domus =
-            "/tmp/probatio_briar_fasciculum/domus";
-        constans character* app =
-            "/tmp/probatio_briar_fasciculum/Salve.app";
-        constans character* aliena =
-            "/tmp/probatio_briar_fasciculum/Alienum.app";
-        constans character* planum =
-            "/tmp/probatio_briar_fasciculum/Planum.app";
-        constans character* stala =
-            "/tmp/probatio_briar_fasciculum/Salve.app/Contents/"
-            "Resources/vetus.txt";
-        BriarFasciculumConsilium c;
-                      Fasciculum lectus;
-                FasciculumStatus status;
-                          chorda sedes;
-                          chorda causa;
-                          chorda icns;
-                           Imago imago;
-                             i32 k;
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    intern = internamentum_creare(piscina);
+    {
+              constans character* exsecutabile;
+              constans character* domus;
+              constans character* app;
+              constans character* aliena;
+              constans character* planum;
+              constans character* stala;
+        BriarFasciculumConsilium  consilium;
+                      Fasciculum  lectus;
+                FasciculumStatus  status;
+                          chorda  sedes;
+                          chorda  causa;
+                          chorda  icns;
+                           Imago  imago;
+                             i32  k;
 
-        (vacuum)filum_arborem_delere(area);
+        exsecutabile  = _in_area(piscina, area, "/bin/salve");
+        domus         = _in_area(piscina, area, "/domus");
+        app           = _in_area(piscina, area, "/Salve.app");
+        aliena        = _in_area(piscina, area, "/Alienum.app");
+        planum        = _in_area(piscina, area, "/Planum.app");
+        stala         = _in_area(piscina, area,
+            "/Salve.app/Contents/Resources/vetus.txt");
         CREDO_VERUM(filum_directorium_creare_cum_parentibus(
-            "/tmp/probatio_briar_fasciculum/bin"));
+            _in_area(piscina, area, "/bin")));
         CREDO_VERUM(filum_scribere_literis(exsecutabile,
             "#!/bin/sh\n"));
         CREDO_VERUM(filum_modum_ponere(exsecutabile, 0755));
@@ -192,15 +268,17 @@ principale (vacuum)
             imago.pixela[k] = (i8)0x7F;
         }
 
-        memset(&c, ZEPHYRUM, magnitudo(c));
-        c.identitas  = chorda_ex_literis("org.rhubarb.briar.salve",
+        memset(&consilium, ZEPHYRUM, magnitudo(consilium));
+        consilium.identitas  =
+            chorda_ex_literis("org.rhubarb.briar.salve",
             piscina);
-        c.titulus  = chorda_ex_literis("Salve", piscina);
-        c.versio   = chorda_ex_literis("2.1", piscina);
-        c.via_app  = chorda_ex_literis(app, piscina);
+        consilium.titulus  = chorda_ex_literis("Salve", piscina);
+        consilium.versio   = chorda_ex_literis("2.1", piscina);
+        consilium.via_app  = chorda_ex_literis(app, piscina);
 
         /* I. scriptio prima */
-        CREDO_VERUM(briar_fasciculum_scribere(piscina, &c, &imago,
+        CREDO_VERUM(briar_fasciculum_scribere(piscina, &consilium,
+            &imago,
             exsecutabile, domus, &causa));
         CREDO_CHORDA_VACUA(causa);
         CREDO_VERUM(fasciculum_legere(app, &lectus, &status, &sedes,
@@ -209,32 +287,35 @@ principale (vacuum)
             "org.rhubarb.briar.salve");
         CREDO_CHORDA_AEQUALIS_LITERIS(lectus.titulus, "Salve");
         CREDO_CHORDA_AEQUALIS_LITERIS(lectus.versio, "2.1");
-        CREDO_VERUM(filum_existit(
-            "/tmp/probatio_briar_fasciculum/Salve.app/Contents/MacOS/"
-            "salve"));
-        icns = filum_legere_totum(
-            "/tmp/probatio_briar_fasciculum/Salve.app/Contents/"
-            "Resources/salve.icns", piscina);
+        CREDO_VERUM(filum_existit(_in_area(piscina, area,
+            "/Salve.app/Contents/MacOS/salve")));
+        icns = filum_legere_totum(_in_area(piscina, area,
+            "/Salve.app/Contents/Resources/salve.icns"), piscina);
         CREDO_VERUM(icns.mensura > VIII);
         CREDO_VERUM(icns.mensura > VIII
             && memcmp(icns.datum, "icns", (size_t)IV) == ZEPHYRUM);
 
         /* II. PROPRIUS reponitur: plagula stala evanescit */
         CREDO_VERUM(filum_scribere_literis(stala, "vetus"));
-        CREDO_VERUM(briar_fasciculum_scribere(piscina, &c, &imago,
+        CREDO_VERUM(briar_fasciculum_scribere(piscina, &consilium,
+            &imago,
             exsecutabile, domus, &causa));
         CREDO_FALSUM(filum_existit(stala));
         CREDO_VERUM(fasciculum_legere(app, &lectus, &status, &sedes,
             piscina, intern));
 
         /* III. ALIENUS recusatur et intactus manet */
-        c.identitas  = chorda_ex_literis("org.aliud.alienum", piscina);
-        c.via_app    = chorda_ex_literis(aliena, piscina);
-        CREDO_VERUM(briar_fasciculum_scribere(piscina, &c, &imago,
-            exsecutabile, domus, &causa));
-        c.identitas  = chorda_ex_literis("org.rhubarb.briar.salve",
+        consilium.identitas = chorda_ex_literis("org.aliud.alienum",
             piscina);
-        CREDO_FALSUM(briar_fasciculum_scribere(piscina, &c, &imago,
+        consilium.via_app = chorda_ex_literis(aliena, piscina);
+        CREDO_VERUM(briar_fasciculum_scribere(piscina, &consilium,
+            &imago,
+            exsecutabile, domus, &causa));
+        consilium.identitas  =
+            chorda_ex_literis("org.rhubarb.briar.salve",
+            piscina);
+        CREDO_FALSUM(briar_fasciculum_scribere(piscina, &consilium,
+            &imago,
             exsecutabile, domus, &causa));
         CREDO_CHORDA_CONTINET(causa,
             chorda_ex_literis("alienus", piscina));
@@ -245,20 +326,32 @@ principale (vacuum)
 
         /* IV. plagula quae fasciculus non est: recusata, intacta */
         CREDO_VERUM(filum_scribere_literis(planum, "non fasciculus"));
-        c.via_app = chorda_ex_literis(planum, piscina);
-        CREDO_FALSUM(briar_fasciculum_scribere(piscina, &c, &imago,
+        consilium.via_app = chorda_ex_literis(planum, piscina);
+        CREDO_FALSUM(briar_fasciculum_scribere(piscina, &consilium,
+            &imago,
             exsecutabile, domus, &causa));
         CREDO_CHORDA_CONTINET(causa,
             chorda_ex_literis("neque fasciculus", piscina));
         CREDO_VERUM(filum_existit(planum)
             && !filum_directorium_existit(planum));
-
-        (vacuum)filum_arborem_delere(area);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "consilium: salve_vitreum", _vitreum_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "consilium: salve (sine fenestra)", _salve_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "consilium: briar vestitum", _vestitum_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "recusationes cum linea", _recusationes_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "scriptorem", _scriptorem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("briar_fasciculum", SECTIONES);
 }
