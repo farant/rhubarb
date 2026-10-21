@@ -5,6 +5,8 @@
 #include "scriba_applicatio.h"
 #include "terminale.h"
 #include "kalendarium.h"
+#include "conspectus_dies.h"
+#include "calendarium_liturgicum.h"
 #include "nomenclator.h"
 #include "iussum.h"
 #include "admonitiones_visus.h"
@@ -1622,6 +1624,11 @@ nomen structura {
        AgendaDocumentum* documentum;
             FastiFontes* fontes;     /* P6: natales nomenclatoris */
         StatusSystemata* systemata;
+    /* proiectiones D4c: registrum conspectuum UNUM per volumen vici,
+     * omnibus lateribus calendarii commune, cum agenda pigre creatum;
+     * fontes diei eius hic vivunt (vivant dum registrum) */
+             DiesFontes  diei;
+    ConspectusRegistrum* conspectus;
 } ContextusKalendarii;
 
 /* porta 'hodie' calendarii: horologium vici (fons ipse lectionis
@@ -1643,6 +1650,31 @@ hodie_vici (
     v->horologium(v->horologium_ctx, &t);
     *hodie = fasti_dies(t.annus, t.mensis, t.dies);
     redde fasti_dies_valida(*hodie);
+}
+
+/* registrum commune: conspectus 'dies' super agendam communem; NIHIL
+ * si deficit (latera tum f directe vocant) */
+interior vacuum
+conspectum_communem_parare (
+    ContextusKalendarii* ck)
+{
+    Xar* vitia;
+
+    ck->diei.agenda    = ck->documentum;
+    ck->diei.fontes    = ck->fontes;
+    ck->diei.liturgia  = calendarium_creare(ck->piscina);
+    ck->diei.volumen   = ck->volumen;
+    ck->diei.intern    = ck->intern;
+    ck->conspectus     = conspectus_registrum_creare(ck->piscina,
+        ck->intern, ck->volumen, ZEPHYRUM);
+    si (   ck->conspectus
+        && (   !conspectus_dies_registrare(ck->conspectus, &ck->diei,
+                   &vitia)
+            || !conspectus_parare(ck->conspectus, &vitia)))
+    {
+        conspectus_registrum_destruere(ck->conspectus);
+        ck->conspectus = NIHIL;
+    }
 }
 
 interior b32
@@ -1670,13 +1702,20 @@ kalendarium_montare_in_vico (
         ck->documentum = agenda_aperire(ck->piscina, ck->intern,
             ck->volumen, "agenda", ZEPHYRUM);
     }
-    redde kalendarium_montare((KalendariumMontatio*)sedes, piscina,
-        intern, repo, id, (argumentum && argumentum[ZEPHYRUM])
-        ? argumentum : NIHIL, ck->documentum, ck->fontes, volumen,
-        latitudo,
-        altitudo, hodie_vici,
-        ck->vicus,
-        ck->systemata);
+    si (ck->documentum && ck->volumen && !ck->conspectus)
+    {
+        conspectum_communem_parare(ck);
+    }
+    si (!kalendarium_montare((KalendariumMontatio*)sedes, piscina,
+            intern, repo, id, (argumentum && argumentum[ZEPHYRUM])
+            ? argumentum : NIHIL, ck->documentum, ck->fontes, volumen,
+            latitudo, altitudo, hodie_vici, ck->vicus, ck->systemata))
+    {
+        redde FALSUM;
+    }
+    kalendarium_conspectum_ponere((KalendariumMontatio*)sedes,
+        ck->conspectus);
+    redde VERUM;
 }
 
 interior b32

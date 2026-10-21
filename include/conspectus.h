@@ -127,6 +127,13 @@ conspectus_registrum_creare (
                 Volumen* volumen,
          memoriae_index  tectum);
 
+/* arenas registri reddere (tempus, memoria introituum); structura
+ * ipsa in piscina vocatoris manet. Post hoc registrum non legitur.
+ * NIHIL = nihil agit. */
+vacuum
+conspectus_registrum_destruere (
+    ConspectusRegistrum* r);
+
 /* declarationem legere (<conspectus> unum; plagula altera = vocatio
  * altera) et iudicare:
  * canon conspectus + leges (fons documentum irritat poscit; spatium

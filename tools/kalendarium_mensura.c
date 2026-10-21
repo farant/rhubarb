@@ -22,6 +22,9 @@
 #include "moneta.h"
 #include "insula.h"
 #include "kalendarium.h"
+#include "conspectus.h"
+#include "conspectus_dies.h"
+#include "calendarium_liturgicum.h"
 #include "dispensator.h"
 #include "figura.h"
 #include "mandatum.h"
@@ -123,6 +126,7 @@ montare (
      InternamentumChorda*  in,
                  Volumen*  vol,
         AgendaDocumentum*  doc,
+     ConspectusRegistrum*  repertorium,
       constans character*  argumentum)
 {
     InsulaRepositorium* repo;
@@ -133,6 +137,7 @@ montare (
     {
         redde FALSUM;
     }
+    kalendarium_conspectum_ponere(m, repertorium);
     *d = dispensator_creare(p, in, repo, m->actiones,
         kalendarium_componere, m, CCC);
     si (!*d)
@@ -166,6 +171,9 @@ principale (
                   duplex  libri;
                      Xar* lineae;
                character  praefixum[XXXII];
+              DiesFontes  fontes;
+     ConspectusRegistrum* r;
+                     Xar* vitia;
 
     mutationes = argc > I ? (i32)atoi(argv[I]) : (i32)L;
     thema_initiare();
@@ -196,9 +204,23 @@ principale (
             redde I;
         }
     }
-    si (   !montare(&hebdomas, &dh, p, in, vol, doc,
+    /* D4c: registrum commune ut in vico (unum per volumen) */
+    memset(&fontes, ZEPHYRUM, magnitudo(fontes));
+    fontes.agenda = doc;
+    fontes.liturgia = calendarium_creare(p);
+    fontes.volumen = vol;
+    fontes.intern = in;
+    r = conspectus_registrum_creare(p, in, vol, ZEPHYRUM);
+    si (   !r || !conspectus_dies_registrare(r, &fontes, &vitia)
+        || !conspectus_parare(r, &vitia))
+    {
+        imprimere("registrum fractum\n");
+        volumen_claudere(vol);
+        redde I;
+    }
+    si (   !montare(&hebdomas, &dh, p, in, vol, doc, r,
                "calendarium/hebdomas/2026-10-14")
-        || !montare(&mensis, &dm, p, in, vol, doc,
+        || !montare(&mensis, &dm, p, in, vol, doc, r,
                "calendarium/mensis/2026-10-14"))
     {
         imprimere("montatio fracta\n");
@@ -236,6 +258,7 @@ principale (
     imprimere("  libri VII soli: %.3f ms\n", libri);
     imprimere("mensis:   %.3f ms per picturam\n",
         picturas_metiri(&mensis, dm, p, in));
+    conspectus_registrum_destruere(r);
     volumen_claudere(vol);
     redde ZEPHYRUM;
 }

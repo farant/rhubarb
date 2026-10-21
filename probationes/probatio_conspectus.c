@@ -1185,6 +1185,37 @@ lectiones_sine_actis (
     }
 }
 
+/* D4c: registra n creare, dies XI legere, destruere - piscina
+ * vocatoris propria et destructa, ergo sola memoria quam registrum
+ * ipsum possidet (tempus, introitus, res memoratae) restare potest */
+interior vacuum
+registra_iterare (
+    Mundus* m,
+       i32  n)
+{
+     ConspectusRegistrum* r;
+                 Piscina* q;
+                     i32  i;
+                     s32  d;
+
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        q = piscina_generare_dynamicum("probatio_registra",
+            XVI * MXXIV);
+        si (!q)
+        {
+            redde;
+        }
+        r = registrum_plenum(m, q, ZEPHYRUM);
+        per (d = X; r && d <= XX; d++)
+        {
+            (vacuum)conspectus_legere(r, "dies", diem(d, q));
+        }
+        conspectus_registrum_destruere(r);
+        piscina_destruere(q);
+    }
+}
+
 interior i64
 vestigium (vacuum)
 {
@@ -1253,7 +1284,18 @@ _probare_memoriam (
     CREDO_MINOR_I64((i64)(piscina_summa_usus(propria) - post_primum),
         (i64)(LXIV * MXXIV));
     CREDO_MINOR_I64((i64)conspectus_summa_usus(r), (i64)(LXIV * MXXIV));
+    conspectus_registrum_destruere(r);
     piscina_destruere(propria);
+
+    /* D (D4c): registra creata et destructa - arenae quas registrum
+     * possidet redduntur. Calefactio prius. */
+    registra_iterare(m, XX);
+    v1 = vestigium();
+    registra_iterare(m, CCC);
+    v2 = vestigium();
+    v2 = v2 > v1 ? v2 - v1 : ZEPHYRUM;
+    imprimere("memoria: D %ld KiB\n", (longus)(v2 / MXXIV));
+    CREDO_MINOR_I64(v2, (i64)(MXXIV * MXXIV));
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {

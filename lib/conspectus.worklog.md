@@ -111,3 +111,39 @@ registered later would otherwise reset the cursor and skip acts).
 
 Not plantable: "kalendarium never creates the registry" - output is
 identical by construction (same f); only the benchmark sees it.
+
+## 2026-10-21 — D4c: one registry per volume, owned by the host
+
+**D4b broke its own header.** `conspectus.h` says "registrum unum per
+volumen, lateribus omnibus commune", but kalendarium created a registry
+per MOUNT: the calendar pane, the agenda pane (also a kalendarium) and
+any `_2` each caught up and diffed agenda on their own, and since the
+registry had no release, every mount leaked its malloc'd arenas
+(scratch, one per cached day, per-rem memory). Now the host owns it:
+vicus `ContextusKalendarii` creates one (lazily, with the shared agenda
+document) and hands it to every calendar pane via
+`kalendarium_conspectum_ponere`; kalendarium never creates one.
+`conspectus_registrum_destruere` frees what the registry owns.
+
+**Measured before choosing the counter** (month paint, 42 reads):
+prepare `max(seq)` per read 0.14 ms; keep the statement 0.07 ms; no
+check at all 0.03 ms. The statement must be finalized before the
+connection closes - `scrinium_claudere` uses `sqlite3_close`, which
+returns BUSY with a live statement and leaves the connection (and its
+memory) behind. So it lives in `volumen` (`volumen_seq_ultimum`,
+finalized in `volumen_claudere`), not in the registry. Also: the kept
+statement MUST be reset after the row is read - left mid-step it holds
+a read snapshot and returns DONE next time (plant "sine retexere" red).
+
+**Composition (spec §VI.1/3) parked, not built:** vicus repaints whole
+frames; in-process writes come with input events that already repaint;
+other processes' writes never reach an open agenda document (it folds
+once at open), so demand would recompute from stale state. Needs
+documents that follow the journal first.
+
+Plants (silva.planta, all red): volumen - no reset, close doesn't
+finalize (memory loop, 500 open/close cycles: +368 KiB green); conspectus -
+destroy no-op, entries kept, per-rem memory kept, scratch kept (300
+registries: +192 KiB green, bound 1 MiB); kalendarium - setter ignores
+the registry. Not plantable without a test accessor: "vicus does not
+hand its registry to the pane" (output identical by construction).

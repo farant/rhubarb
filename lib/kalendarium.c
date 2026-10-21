@@ -2589,37 +2589,22 @@ conspectum_diei (
     redde conspectus_dies_computare(&contextus->diei, dies, piscina);
 }
 
-/* D4b: fontes diei et registrum (cum volumine et agenda) */
+/* D4b: fontes diei (via directa sine registro); D4c: registrum
+ * ipsum ab hospite datur (kalendarium_conspectum_ponere) */
 interior vacuum
 conspectum_parare (
       KalendariumFigurae* contextus,
         AgendaDocumentum* documentum,
     constans FastiFontes* fontes,
                  Volumen* volumen,
-                 Piscina* piscina,
      InternamentumChorda* intern)
 {
-    Xar* vitia;
-
     contextus->diei.agenda    = documentum;
     contextus->diei.fontes    = fontes;
     contextus->diei.liturgia  = contextus->liturgia;
     contextus->diei.volumen   = volumen;
     contextus->diei.intern    = intern;
     contextus->conspectus     = NIHIL;
-    si (!volumen || !documentum)
-    {
-        redde;
-    }
-    contextus->conspectus = conspectus_registrum_creare(piscina, intern,
-        volumen, ZEPHYRUM);
-    si (   contextus->conspectus
-        && (   !conspectus_dies_registrare(contextus->conspectus,
-                   &contextus->diei, &vitia)
-            || !conspectus_parare(contextus->conspectus, &vitia)))
-    {
-        contextus->conspectus = NIHIL;
-    }
 }
 
 /* cellula una (in spatio tabulae; cellulae liberi tabulae in 0,0) */
@@ -3952,6 +3937,17 @@ librum_aptare (
     (vacuum)charta_clavem_ponere(&ctx->notae, motus, clavis, lat, alt);
 }
 
+vacuum
+kalendarium_conspectum_ponere (
+     KalendariumMontatio* m,
+     ConspectusRegistrum* repertorium)
+{
+    si (m && m->figurae_ctx)
+    {
+        ((KalendariumFigurae*)m->figurae_ctx)->conspectus = repertorium;
+    }
+}
+
 b32
 kalendarium_reficere (
     KalendariumMontatio* m)
@@ -4165,7 +4161,7 @@ kalendarium_montare (
         ((KalendariumFigurae*)m->figurae_ctx)->volumen  = volumen;
         ((KalendariumFigurae*)m->figurae_ctx)->organum  = organum;
         conspectum_parare((KalendariumFigurae*)m->figurae_ctx,
-            documentum, fontes, volumen, piscina, intern);
+            documentum, fontes, volumen, intern);
     }
     si (argumentum && !argumentum_applicare(m, argumentum))
     {

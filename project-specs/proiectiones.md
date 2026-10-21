@@ -272,6 +272,23 @@ Out of scope (overkill here, network-era tools): normalized entity
 caches (Relay/Apollo), query batching, prefetching neighbouring
 weeks, persisting before a measurement asks.
 
+*Amended at D4c (Fran 2026-10-21).* **Built:** 2 - one registry per
+volume, owned by the HOST (vicus `ContextusKalendarii`, beside the one
+shared agenda document) and handed to every calendar pane with
+`kalendarium_conspectum_ponere`; kalendarium never creates one (without
+it, `f` is called directly). `conspectus_registrum_destruere` returns
+the arenas the registry owns. **Not built, parked:** 1 and 3 (demand,
+selective repaint). vicus repaints whole frames, never one pane; every
+write made inside vicus arrives with an input event that already
+repaints; and a write from another process is invisible to an open
+agenda document (it folds its acts once, at open - `agenda_reficere`
+is redo), so a demand hit would recompute from a stale document.
+Prerequisite: documents that follow the journal. **Read check:**
+`volumen_seq_ultimum` (statement kept by the volume, finalized at
+close) - month paint 0.14 -> 0.07 ms; no check at all measures 0.03
+ms, so an in-memory change counter would save 0.04 ms per paint and is
+not built.
+
 ## VII. Testing
 
 - **Canonical encoding** per projection (STML text): verification
@@ -312,7 +329,7 @@ weeks, persisting before a measurement asks.
 | **R5** | this spec; the genera-datorum amendments (§VIII) |
 | **D4a** | the library `conspectus`: registry, STML declaration + canon, cache with an arena per address, LRU cap in bytes, `omnia` / `pura` / `spatium` / `per-rem` sources through historia observers, diff-based `per-rem`, recorded dependencies, verification mode. Tested against a FIXTURE projection only |
 | **D4b** | the `dies` projection; week columns and month cells read it; the assembly inside `diem_hebdomadis_pingere` (`lib/kalendarium.c:3293`) goes. Week paint measured BEFORE (baseline) and after. Fran's look in vicus |
-| **D4c** | composition (§VI), when a second consumer arrives |
+| **D4c** | one host-owned registry per volume shared by every calendar pane, `volumen_seq_ultimum`, `conspectus_registrum_destruere` (§VI amendment); demand and selective repaint parked until documents follow the journal |
 | **later, on PULL** | persistence in a sibling derived file (only when startup cost is measured); `@seq` "as of" routes (semitae §VI-d); D5 full-text on the same registry |
 
 ## X. Decisions (Fran, 2026-10-20)
@@ -358,8 +375,8 @@ weeks, persisting before a measurement asks.
   opens per paint) - D4b takes the baseline FIRST; if it is already
   negligible, D4b's case rests on one-place assembly and testability,
   not speed.
-- **Not verified:** that vicus can repaint ONE pane alone today
-  (§VI.3 assumes it can be made to); not needed before D4c.
+- **Answered at D4c:** vicus cannot repaint one pane alone - it
+  repaints whole frames (`vicus_pulsare` keeps one `pingendum`).
 - **Not verified:** that every agenda mutation reaches observers
   through historia (the diff-based `per-rem` relies on it); D4a tests
   it against agenda directly.

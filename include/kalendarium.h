@@ -120,6 +120,7 @@
 #include "fasti.h"
 #include "agenda.h"
 #include "fasti_fontes.h"
+#include "conspectus.h"
 #include "organum_montatio.h"
 
 /* porta 'hodie': VERUM et *hodie posita, aut FALSUM (nulla lectio -
@@ -165,6 +166,15 @@ kalendarium_montare (
         KalendariumHodie  hodie,
                   vacuum* hodie_ctx,
          StatusSystemata* systemata);
+
+/* proiectiones D4c: registrum commune (vicus: unum per volumen) in quo
+ * conspectus 'dies' iam registratus et paratus est, eodem agenda,
+ * fontibus et volumine quibus montatum est. NIHIL = sine cache (f
+ * directe vocatur). Kalendarium registrum proprium non creat. */
+vacuum
+kalendarium_conspectum_ponere (
+     KalendariumMontatio* m,
+     ConspectusRegistrum* repertorium);
 
 /* A6e: pulsus (vicus): notae diei refectae (indicium paginae post
  * navigationem in notis); VERUM si mutatum (pingendum) */

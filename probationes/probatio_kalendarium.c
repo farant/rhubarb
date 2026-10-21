@@ -15,6 +15,9 @@
 #include "fasti.h"
 #include "conservatio.h"
 #include "kalendarium.h"
+#include "conspectus.h"
+#include "conspectus_dies.h"
+#include "calendarium_liturgicum.h"
 #include "fasti_fontes.h"
 #include "fons.h"
 #include "agenda.h"
@@ -3490,6 +3493,65 @@ librum_scribere (
     redde scriba_documentum_committere(d, &folium) > ZEPHYRUM;
 }
 
+/* proiectiones D4c: registrum commune ab hospite datum (vicus: unum
+ * per volumen) - dies picti in EO computantur; kalendarium proprium
+ * non creat. Actum agendae diem stalum facit, pictura proxima
+ * recentem */
+interior vacuum
+_probare_conspectum_communem (
+    CredoContextus* c)
+{
+                  Mundus* x;
+     ConspectusRegistrum* r;
+              DiesFontes  fontes;
+                     Xar* vitia;
+                  chorda  id;
+                    Dies  d;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    CREDO_NECESSE(agendam_parare(x, c));
+    memset(&fontes, ZEPHYRUM, magnitudo(fontes));
+    fontes.agenda    = x->documentum;
+    fontes.liturgia  = calendarium_creare(c->piscina);
+    fontes.volumen   = x->volumen;
+    fontes.intern    = x->intern;
+    r = conspectus_registrum_creare(c->piscina, x->intern, x->volumen,
+        ZEPHYRUM);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_NECESSE(conspectus_dies_registrare(r, &fontes, &vitia));
+    CREDO_NECESSE(conspectus_parare(r, &vitia));
+    CREDO_AEQUALIS_I32((i32)conspectus_status(r, "dies",
+        chorda_ex_literis("2026-10-14", c->piscina)),
+        (i32)CONSPECTUS_ABSENS);
+
+    kalendarium_conspectum_ponere(&x->m, r);
+    dispensator_recomponere(x->d);
+    (vacuum)reddere(x, c->piscina);
+    /* mensis X pictus (cellulae a XXVII IX): dies in registro
+     * communi */
+    CREDO_AEQUALIS_I32((i32)conspectus_status(r, "dies",
+        chorda_ex_literis("2026-10-14", c->piscina)),
+        (i32)CONSPECTUS_RECENS);
+    CREDO_AEQUALIS_I32((i32)conspectus_status(r, "dies",
+        chorda_ex_literis("2026-10-01", c->piscina)),
+        (i32)CONSPECTUS_RECENS);
+
+    id = agenda_rem_creare(x->documentum, chorda_ex_literis("nova",
+        c->piscina));
+    d  = fasti_dies(MMXXVI, X, XIV);
+    (vacuum)agenda_diem_ponere(x->documentum, id, &d);
+    CREDO_AEQUALIS_I32((i32)conspectus_status(r, "dies",
+        chorda_ex_literis("2026-10-14", c->piscina)),
+        (i32)CONSPECTUS_STALUM);
+    dispensator_recomponere(x->d);
+    (vacuum)reddere(x, c->piscina);
+    CREDO_AEQUALIS_I32((i32)conspectus_status(r, "dies",
+        chorda_ex_literis("2026-10-14", c->piscina)),
+        (i32)CONSPECTUS_RECENS);
+    conspectus_registrum_destruere(r);
+}
+
 /* visus hebdomadis: hebdomas diei electi (dominica prima, XI-XVII X);
  * per diem: natales, res apertae (perfectae non), lineae libri diei
  * (vacuae omissae); "+n" si plures quam capiuntur; liber absens non
@@ -3790,6 +3852,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         mundum_purgare, NIHIL, NIHIL },
     { "titulus_solus", _probare_titulum_solum, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
+    { "conspectus_communis", _probare_conspectum_communem,
+        mundum_parare, mundum_purgare, NIHIL, NIHIL },
     { "hebdomas", _probare_hebdomadem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "fundus_hodie", _probare_fundum_hodie, mundum_parare,

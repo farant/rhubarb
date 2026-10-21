@@ -216,28 +216,6 @@ tempus_renovare (
     r->tempus = nova;
 }
 
-/* seq maximum voluminis (0 si vacuum) */
-interior s64
-seq_ultimum (
-    Volumen* volumen)
-{
-    ScriniumEnuntiatum* e;
-                   s64  seq;
-
-    seq = ZEPHYRUM;
-    e = scrinium_praeparare(volumen_scrinium(volumen),
-        "SELECT coalesce(max(seq), 0) FROM acta");
-    si (e)
-    {
-        si (scrinium_gradi(e) == SCRINIUM_ORDO)
-        {
-            seq = scrinium_columna_numerus(e, ZEPHYRUM);
-        }
-        scrinium_finire(e);
-    }
-    redde seq;
-}
-
 
 /* ==================================================
  * Irritatio
@@ -547,8 +525,50 @@ conspectus_registrum_creare (
     {
         redde NIHIL;
     }
-    r->cursor = seq_ultimum(volumen);
+    r->cursor = volumen_seq_ultimum(volumen);
     redde r;
+}
+
+interior vacuum
+introitum_liberare (
+    ConspectusRegistrum* r,
+              Introitus* e);
+
+vacuum
+conspectus_registrum_destruere (
+    ConspectusRegistrum* r)
+{
+    Declaratio* d;
+          Fons* f;
+           i32  i;
+           i32  k;
+
+    si (!r || !r->tempus)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(r->omnes); i++)
+    {
+        introitum_liberare(r, *(Introitus**)xar_obtinere(r->omnes, i));
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(r->declarationes); i++)
+    {
+        d = *(Declaratio**)xar_obtinere(r->declarationes, i);
+        per (k = ZEPHYRUM; k < xar_numerus(d->fontes); k++)
+        {
+            f = (Fons*)xar_obtinere(d->fontes, k);
+            si (f->memoria)
+            {
+                piscina_destruere(f->memoria);
+            }
+            f->memoria     = NIHIL;
+            f->res         = NIHIL;
+            f->ordo_rerum  = NIHIL;
+        }
+    }
+    piscina_destruere(r->tempus);
+    r->tempus   = NIHIL;
+    r->paratum  = FALSUM;
 }
 
 /* canon + leges oneratoris; vitia nominata */
@@ -839,7 +859,7 @@ conspectus_parare (
               character  buffer[DXII];
 
     r = repertorium;
-    si (!r)
+    si (!r || !r->tempus)
     {
         redde FALSUM;
     }
@@ -921,7 +941,7 @@ conspectus_parare (
             }
         }
     }
-    r->cursor   = seq_ultimum(r->volumen);
+    r->cursor   = volumen_seq_ultimum(r->volumen);
     r->paratum  = VERUM;
     tempus_renovare(r);
     redde VERUM;
@@ -949,7 +969,7 @@ conspectus_renovare (
     }
     /* nihil novum (casus frequentissimus: lectiones multae per
      * picturam) - quaestio una indicata, sine lectione actorum */
-    si (seq_ultimum(r->volumen) <= r->cursor)
+    si (volumen_seq_ultimum(r->volumen) <= r->cursor)
     {
         piscina_vacare(r->tempus);
         redde r->cursor;
