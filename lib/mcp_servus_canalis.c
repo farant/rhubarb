@@ -376,22 +376,28 @@ _legere (
 
     dum (!k->claudenda && !k->finis_lectionis)
     {
-        s32 n = tcp_recipere(k->tcp, frustum,
-                    (i32)magnitudo(frustum));
+        /* recv crudum, NON tcp_recipere: illud ad EOF connexionem
+         * 'clausam' signat et tcp_mittere deinde nihil mittit -
+         * responsa post dimidiam clausuram debita perirent (inventum
+         * recensionis canalis; probatio pons_dilatum, pons_magnum) */
+        ssize_t n = recv(k->fd, frustum, magnitudo(frustum), ZEPHYRUM);
 
-        si (n == TCP_ITERUM)
+        si (n < ZEPHYRUM)
         {
+            si (errno == EINTR)
+            {
+                perge;
+            }
+            si (errno != EAGAIN && errno != EWOULDBLOCK)
+            {
+                k->claudenda = VERUM;
+            }
             frange;
         }
         si (n == ZEPHYRUM)
         {
             /* dimidia clausura: residuum sine '\n' omittitur */
             k->finis_lectionis = VERUM;
-            frange;
-        }
-        si (n < ZEPHYRUM)
-        {
-            k->claudenda = VERUM;
             frange;
         }
         si (!_alveus_addere(&k->lectio, k->piscina, frustum, (i32)n))

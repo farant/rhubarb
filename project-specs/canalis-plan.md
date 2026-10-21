@@ -188,6 +188,44 @@ this plan.
 - **T5: invitation ids read through a server-side filter** - only the
   test invitation's id left smaragda, not the other invitations' notes.
 
+
+## Final review (2026-10-21, fresh reviewer on Opus, range d4975ead..2be71721)
+
+Verdict "with fixes": 0 Critical, 1 Important, 8 Minor. Report:
+`.superpowers/sdd/canalis-plan/review-report.md` (git-ignored).
+
+- Final: fixed half-close (Important 1) - `_legere` used tcp_recipere,
+  whose EOF marks the connection closed so owed replies were dropped /
+  truncated after the client's SHUT_WR - pons_dilatum + pons_magnum
+  RED->GREEN, mcp_servus_canalis 13/13, exemplar 38/38, Linux musl +
+  glibc green.
+- Final: Ruling: Minor 2 (unredeemed OAuth code after suspension) RE-GRADED
+  to Important - by effect it lets a suspended person mint a fresh 30-day
+  grant inside the code's 60 s life, breaking "cut access now" - fixed by
+  a civis-status check in exemplar's /mcp verifier - mcp_status_civis
+  RED->GREEN - cost if wrong: one extra cives lookup per /mcp request.
+- Final: minor (deferred): accept loop can spin at full CPU on EMFILE/ENFILE
+  (lib/mcp_servus_canalis.c `_accipere_cb`).
+- Final: minor (deferred): `admissio_concessiones` returns an empty list,
+  not NIHIL, when the query fails to prepare - now harmless for access
+  (status check), but suspension would report 0 grants revoked.
+- Final: minor (deferred): CLI collapses failures - `-invitare` always says
+  "invitatio creari nequit"; `-administrare` says "nullus servus currit"
+  even on EACCES (the likely forgot-sudo case).
+- Final: minor (deferred): `vocare`'s 30 s deadline does not cover the
+  blocking connect (a hung server with a full backlog blocks forever on
+  Linux); a non-EINTR poll error spins until the deadline.
+- Final: minor (deferred): `canalis_longus` does not assert the message
+  names the limit, and has no positive control.
+- Final: minor (deferred): `suspensio` never exercises the refresh token;
+  nothing pins "every admin tool has scope administratio" since P6.
+- Final: minor (deferred): misleading comment about events in
+  `suspensio_limites` (assertions are right).
+- Final: Ruling: reviewer's "admissio's other write paths still open their
+  own transaction" - noted in the admissio worklog; not changed (no caller
+  holds a transaction there) - cost if wrong: a future caller would hit the
+  same nested-BEGIN failure revocation had.
+
 ## Review focus
 
 Inputs the spec implies but no test of the spec's list exercises; each

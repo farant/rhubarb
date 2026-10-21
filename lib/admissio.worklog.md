@@ -104,3 +104,8 @@ otherwise the caller's commit or rollback decides, and the
 revoked, one event. Note: the bearer verifier does not consult the civis
 status - a suspended person's tokens stay valid unless their grants are
 revoked (see exemplar.worklog.md).
+
+Review note (2026-10-21): only the revocation path joins a caller's
+transaction; client registration, token issuance and refresh still open
+their own (`scrinium_incipere`). No caller holds a transaction there
+today - a future one would hit the same nested-BEGIN failure.

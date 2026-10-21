@@ -322,3 +322,16 @@ worked ("mcp server seemed like it all worked").
 
 Rollback if ever needed: stop; restore `/opt/exemplar/exemplar.prior`;
 start (no migration ran - `.ante-canalis` only as belt and braces).
+
+## 2026-10-21 - /mcp checks the civis status (whole-branch review)
+
+T4 noted that the bearer verifier ignores the civis status, so
+suspension relied entirely on revoking grants. The reviewer showed the
+gap: an OAuth code issued before suspension (60 s life) can still be
+redeemed afterwards and mints a fresh grant (refresh token 30 days). The
+/mcp verifier is now exemplar's `_verificator`: admissio_verificator AND
+`cives_per_id(persona.usor)` ACTIVUS. Section `mcp_status_civis`
+suspends through the volumen directly (grants untouched) -> bearer 401;
+restore -> 200 again. Red before; plant (status check made always-true)
+-> red. Also makes a silently empty `admissio_concessiones` list (prepare
+failure) harmless.

@@ -2828,6 +2828,53 @@ _sectio_canalis_longus (CredoContextus* c)
     (vacuum)filum_arborem_delere(locus.via);
 }
 
+/* /mcp statum civis consulit (inventum recensionis): civis suspensus
+ * SINE revocatione concessionum (codex OAuth serus, revocatio omissa)
+ * tessera bearer nihil potest; restitutus iterum potest */
+interior vacuum
+_sectio_mcp_status_civis (CredoContextus* c)
+{
+               Piscina* p = c->piscina;
+                 Locus  locus;
+              Exemplar* e = _exemplar(c, &locus, ZEPHYRUM, VERUM);
+                Lector  l;
+    constans character* sid;
+    constans character* cliens;
+    constans character* accessus;
+    constans character* renovatio;
+               Volumen* v;
+                 Cives* cv;
+                 Civis  x;
+
+    CREDO_NECESSE_NON_NIHIL(e);
+    sid = _usor_novus(e, p, &locus, "fran");
+    CREDO_NECESSE(_connectere(e, p, &locus, sid, &cliens, &accessus,
+        &renovatio));
+    CREDO_VERUM(_instrumentum(e, p, accessus, "notas_enumerare", "{}",
+        &l));
+    CREDO_AEQUALIS_I32(l.status, CC);
+    /* status per connexionem alteram: concessiones intactae */
+    v = _volumen_loci(c, &locus);
+    CREDO_NECESSE_NON_NIHIL(v);
+    cv = cives_aperire(v, NIHIL, p);
+    CREDO_NECESSE(cives_per_nomen(cv, chorda_ex_literis("fran", p), &x,
+        p));
+    CREDO_NECESSE(volumen_transactionem_incipere(v));
+    CREDO_NECESSE(cives_statum_ponere(cv, x.id, CIVIS_SUSPENSUS));
+    CREDO_NECESSE(volumen_transactionem_committere(v));
+    CREDO_VERUM(_instrumentum(e, p, accessus, "notas_enumerare", "{}",
+        &l));
+    CREDO_AEQUALIS_I32(l.status, CDI);
+    CREDO_NECESSE(volumen_transactionem_incipere(v));
+    CREDO_NECESSE(cives_statum_ponere(cv, x.id, CIVIS_ACTIVUS));
+    CREDO_NECESSE(volumen_transactionem_committere(v));
+    volumen_claudere(v);
+    CREDO_VERUM(_instrumentum(e, p, accessus, "notas_enumerare", "{}",
+        &l));
+    CREDO_AEQUALIS_I32(l.status, CC);
+    _finire(e, &locus);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "iter", _sectio_iter, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sine_invitatione", _sectio_sine_invitatione, NIHIL, NIHIL, NIHIL,
@@ -2886,6 +2933,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "canalis_fractus", _sectio_canalis_fractus, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "canalis_longus", _sectio_canalis_longus, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "mcp_status_civis", _sectio_mcp_status_civis, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

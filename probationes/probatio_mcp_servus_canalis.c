@@ -44,6 +44,10 @@
     "\"tools/call\",\"params\":{\"name\":\"tarde\",\"arguments\":" \
     "{\"ms\":500}}}\n"
 
+#define LINEA_MAGNUM "{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":" \
+    "\"tools/call\",\"params\":{\"name\":\"magnum\"," \
+    "\"arguments\":{}}}\n"
+
 #define ALVEUS_PONTIS (IV * MXXIV)
 
 /* ---- loci (canalis P4) ---- */
@@ -131,6 +135,25 @@ _frange (
         mcp_vocatio_piscina(v)));
 }
 
+/* responsum magnum (CC KB) - plus quam alveus socketi unus */
+#define MAGNITUDO_MAGNI (CC * M)
+
+interior vacuum
+_magnum (
+    McpVocatio* v)
+{
+    chorda t;
+
+    t.datum    = (i8*)piscina_allocare(mcp_vocatio_piscina(v),
+        (memoriae_index)MAGNITUDO_MAGNI);
+    t.mensura  = t.datum ? MAGNITUDO_MAGNI : ZEPHYRUM;
+    si (t.datum)
+    {
+        memset(t.datum, 'x', (memoriae_index)MAGNITUDO_MAGNI);
+    }
+    mcp_respondere_textum(v, t);
+}
+
 hic_manens constans McpArgumentum ARG_ECHO[] = {
     { "textus", "textus reddendus", MCP_CHORDA, VERUM, NIHIL }
 };
@@ -145,7 +168,9 @@ hic_manens constans McpInstrumentum INSTRUMENTA[] = {
     { "tarde", "post moram respondet", ARG_TARDE, I, "administratio",
         VERUM, FALSUM, _tarde },
     { "frange", "semper deficit", NIHIL, ZEPHYRUM, "administratio",
-        VERUM, FALSUM, _frange }
+        VERUM, FALSUM, _frange },
+    { "magnum", "CC KB reddit", NIHIL, ZEPHYRUM, "administratio", VERUM,
+        FALSUM, _magnum }
 };
 
 /* filius: servus in via usque ad signum; parens pid accipit */
@@ -175,7 +200,7 @@ _servus_filius (
         cfg.titulus      = "probatio";
         cfg.versio       = "1";
         cfg.instrumenta  = INSTRUMENTA;
-        cfg.numerus      = III;
+        cfg.numerus      = IV;
         cfg.datum        = r;
         s                = mcp_servus_creare(&cfg, p);
         si (!r || !s || !mcp_canalis_praebere(s, r, via, &error, p))
@@ -759,6 +784,83 @@ _sectio_pons_finis (
     _purgare(&l);
 }
 
+/* sessio per pontem cum intra STATIM clausa post lineas: responsa quae
+ * post dimidiam clausuram debentur (dilatum; magnum, ultra alveum
+ * socketi) tota perveniunt (inventum recensionis: tcp_recipere EOF
+ * connexionem 'clausam' signabat, tcp_mittere deinde nihil mittebat) */
+interior vacuum
+_pons_dimidius (
+        CredoContextus* c,
+    constans character* sectio,
+    constans character* linea,
+                   s32  minimum,
+    constans character* acus)
+{
+        Locus  l;
+          s32  pid;
+          s32  pons;
+      integer  in[II];
+      integer  ex[II];
+      integer  status = ZEPHYRUM;
+    character* alveus;
+          s32  n;
+          s32  k;
+          s32  lineae     = ZEPHYRUM;
+          s32  ultima     = ZEPHYRUM;
+          s32  capacitas  = MAGNITUDO_MAGNI + LXIV * MXXIV;
+
+    _locus(&l, sectio);
+    pid = _servus_filius(l.via);
+    CREDO_NECESSE(pid > ZEPHYRUM);
+    CREDO_NECESSE(_paratus(l.via, c->piscina));
+    CREDO_NECESSE(pipe(in) == ZEPHYRUM && pipe(ex) == ZEPHYRUM);
+    pons = _pons_filius(l.via, in[ZEPHYRUM], ex[I], in[I],
+        ex[ZEPHYRUM]);
+    CREDO_NECESSE(pons > ZEPHYRUM);
+    close(in[ZEPHYRUM]);
+    close(ex[I]);
+    CREDO_VERUM(write(in[I], LINEA_INITII, strlen(LINEA_INITII)) > 0);
+    CREDO_VERUM(write(in[I], LINEA_INITIATUM, strlen(LINEA_INITIATUM))
+        > 0);
+    CREDO_VERUM(write(in[I], linea, strlen(linea)) > 0);
+    close(in[I]);
+    alveus = (character*)piscina_allocare(c->piscina,
+        (memoriae_index)capacitas);
+    CREDO_NECESSE_NON_NIHIL(alveus);
+    n = _legere_lineas(ex[ZEPHYRUM], alveus, capacitas, II, MMM);
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        si (alveus[k] == '\n')
+        {
+            lineae++;
+            ultima = k;
+        }
+    }
+    CREDO_AEQUALIS_S32(lineae, II);
+    CREDO_MAIOR_AUT_AEQUALIS_S32(n, minimum);
+    CREDO_AEQUALIS_S32(ultima, n - I);
+    CREDO_VERUM(strstr(alveus, acus) != NIHIL);
+    close(ex[ZEPHYRUM]);
+    CREDO_VERUM(_exspectare_filium(pons, MM, &status));
+    _finire(pid);
+    _purgare(&l);
+}
+
+interior vacuum
+_sectio_pons_dilatum (
+    CredoContextus* c)
+{
+    _pons_dimidius(c, "pons_dilatum", LINEA_TARDE, ZEPHYRUM, "tarde");
+}
+
+interior vacuum
+_sectio_pons_magnum (
+    CredoContextus* c)
+{
+    _pons_dimidius(c, "pons_magnum", LINEA_MAGNUM, MAGNITUDO_MAGNI,
+        "xxxxxxxx\"");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "vocare", _sectio_vocare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "dilatum", _sectio_dilatum, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -773,6 +875,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "pons", _sectio_pons, NIHIL, NIHIL, NIHIL, NIHIL },
     { "pons_finis", _sectio_pons_finis, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "pons_dilatum", _sectio_pons_dilatum, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "pons_magnum", _sectio_pons_magnum, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

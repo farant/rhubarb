@@ -472,6 +472,29 @@ hic_manens constans McpInstrumentum INSTRUMENTA[] = {
  * MONTATIO
  * ================================================== */
 
+/* tessera bearer ab admissio verificata ET civis ACTIVUS (inventum
+ * recensionis canalis): suspensio per statum solum etiam valet - codex
+ * OAuth serus post suspensionem aut revocatio omissa concessionem novam
+ * sine accessu dant. Persona.usor = id civis (ianua T5) */
+interior b32
+_verificator (
+        vacuum* datum,
+        chorda  tessera,
+        chorda  audientia,
+    McpPersona* exitus,
+       Piscina* piscina)
+{
+     Exemplar* e = (Exemplar*)datum;
+        Civis  x;
+
+    redde    admissio_verificator(e->admissio, tessera, audientia,
+        exitus,
+                 piscina)
+          && cives_per_id(ianua_cives(e->ianua), exitus->usor, &x,
+          piscina)
+          && x.status == CIVIS_ACTIVUS;
+}
+
 /* clientes non usi et tesserae expiratae: semel in hora */
 interior vacuum
 _putare (
@@ -521,8 +544,8 @@ exemplar_mcp_praebere (
     optiones_vecturae.auctoritas  = e->basis;
     optiones_vecturae.scopi =
         "notae:legere notae:scribere";
-    optiones_vecturae.verificator          = admissio_verificator;
-    optiones_vecturae.verificatoris_datum  = e->admissio;
+    optiones_vecturae.verificator          = _verificator;
+    optiones_vecturae.verificatoris_datum  = e;
     optiones_vecturae.speculator           = _speculator;
     optiones_vecturae.speculatoris_datum   = e;
     (vacuum)admissio_putare(e->admissio);

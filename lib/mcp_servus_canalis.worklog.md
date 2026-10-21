@@ -38,3 +38,23 @@ write queue, EAGAIN -> write interest), plus two blocking clients:
   the first initialize, other connections are not forced to initialize
   (our clients always do). Noted in the header.
 - Linux musl + glibc: 87/87.
+
+## 2026-10-21 - CORRECTION: half-close did not work (whole-branch review)
+
+The T2 entry above claimed half-close semantics ("EOF stops reading only;
+what is owed is delivered"). It was false: `_legere` read with
+`tcp_recipere`, which on EOF sets `connexio->clausa`, after which
+`tcp_mittere` returns -1 without calling send(). So after a client's
+SHUT_WR (exactly what `pons` does at stdin EOF) a deferred reply was
+dropped and a reply larger than one socket buffer was cut at ~8 KiB -
+and pons still exited 0. The `pons` section passed only because its
+reply was small and synchronous (written before the EOF was read). The
+reviewer found it by reading tcp_posix.c and confirmed it with a probe.
+
+Fix: `_legere` reads with raw `recv` on the fd (EOF -> finis_lectionis
+only; the TcpConnexio stays open for writing). Pinned by `pons_dilatum`
+(tarde after stdin closed) and `pons_magnum` (CC KB reply after stdin
+closed) - both red before, green after; plant "back to tcp_recipere" ->
+red. Lesson: a half-close test needs a reply that is still OWED when the
+EOF arrives (deferred or larger than the socket buffer), not one already
+written.
