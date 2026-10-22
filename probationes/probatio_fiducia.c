@@ -16,7 +16,8 @@
 
 nomen structura {
     character fixa[DXII];
-    character ancora[DXII];
+    character ancora[MXXIV];    /* fixa + "/ca.der" (gcc
+                                 * -Wformat-overflow) */
 } Locus;
 
 interior vacuum
@@ -49,8 +50,9 @@ _legere (
 {
          constans Locus* l = (constans Locus*)c->suita;
     FiduciaCertificatum  fc;
-              character  via[DXII];
-                 chorda  der;
+              character  via[MXXIV];   /* fixa (DXII) + titulus: gcc
+                                        * -Wformat-overflow */
+                 chorda der;
 
     sprintf(via, "%s/%s.der", l->fixa, titulus);
     der         = filum_legere_totum(via, c->piscina);

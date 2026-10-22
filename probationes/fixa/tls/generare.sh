@@ -16,6 +16,15 @@
 #   ignotus.{pem,key}     ab CA ALIA (in fixis non servata)
 #   localhost_rsa.{pem,key}  ut localhost, clavis RSA-2048 (ECDHE_RSA;
 #                         tls-bearssl R12)
+#   serie_alta            series 0x8001 (DER: 00 80 01 - octetus 0x00
+#                         servatus; fiducia-linux T1)
+#   serie_longa           series XX octetorum
+#   ip_solum              SAN IP:127.0.0.1,IP:::1 sine DNS
+#   sine_san              CN=localhost, nulla extensio SAN
+#   geminus               clavis localhost.key ITERUM, series alia
+#                         (instar certificati transsignati)
+#   sha1                  folium sha1WithRSA/ecdsa-with-SHA1 signatum
+#   rsa_parva             folium RSA-1024
 #   <titulus>.der         omne folium etiam DER (fiducia_iudicare)
 #
 # CLAVES SOLUM PROBATIONIS - nihil verum signant.
@@ -23,7 +32,11 @@
 # Usus: probationes/fixa/tls/generare.sh <directorium>
 set -euo pipefail
 DEST="${1:?directorium destinationis}"
-OSSL="${OPENSSL:-/opt/homebrew/bin/openssl}"
+# openssl Homebrew in macOS, systematis in imaginibus Linux
+OSSL_ORDINARIUS=/opt/homebrew/bin/openssl
+[ -x "$OSSL_ORDINARIUS" ] || OSSL_ORDINARIUS="$(command -v openssl || true)"
+OSSL="${OPENSSL:-$OSSL_ORDINARIUS}"
+[ -n "$OSSL" ] || { echo "tls_fixa: openssl deest" >&2; exit 1; }
 T="$(mktemp -d "${TMPDIR:-/tmp}/tls_fixa.XXXXXX")"
 trap 'rm -rf "$T"' EXIT
 mkdir -p "$DEST"
@@ -80,6 +93,42 @@ hospes localhost "DNS:localhost,IP:127.0.0.1"
 hospes alienus   "DNS:alienus.invalid"
 hospes expiratus "DNS:localhost,IP:127.0.0.1" 20200101000000Z 20200102000000Z
 GENUS_CLAVIS=rsa hospes localhost_rsa "DNS:localhost,IP:127.0.0.1"
+
+# folia cum serie data aut digestione data (x509 -req: 'openssl ca'
+# seriem ex tabula sua sumit) - titulus SAN serie [md] [clavis_data]
+signare () {
+    local titulus="$1" san="$2" serie="$3" md="${4:-sha256}" clavis_data="${5:-}"
+    if [ -n "$clavis_data" ]; then
+        k="$clavis_data"
+    else
+        k="$DEST/$titulus.key"
+        if [ "${GENUS_CLAVIS:-}" = rsa1024 ]; then
+            "$OSSL" genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:1024 -out "$k" 2>/dev/null
+        else
+            clavis "$k"
+        fi
+    fi
+    if [ -n "$san" ]; then
+        "$OSSL" req -new -key "$k" -subj "/CN=$titulus" \
+            -addext "subjectAltName=$san" \
+            -addext "extendedKeyUsage=serverAuth" -out "$T/$titulus.csr"
+    else
+        "$OSSL" req -new -key "$k" -subj "/CN=localhost" \
+            -addext "extendedKeyUsage=serverAuth" -out "$T/$titulus.csr"
+    fi
+    "$OSSL" x509 -req -in "$T/$titulus.csr" -CA "$DEST/ca.pem" -CAkey "$T/ca.key" \
+        -set_serial "$serie" -days 365 "-$md" -copy_extensions copy \
+        -out "$DEST/$titulus.pem" 2>/dev/null
+    "$OSSL" x509 -in "$DEST/$titulus.pem" -outform DER -out "$DEST/$titulus.der"
+}
+
+signare serie_alta  "DNS:localhost" 0x8001
+signare serie_longa "DNS:localhost" 0x7F0102030405060708090A0B0C0D0E0F10111213
+signare ip_solum    "IP:127.0.0.1,IP:::1" 0x2001
+signare sine_san    "" 0x2002
+signare geminus     "DNS:localhost" 0x2003 sha256 "$DEST/localhost.key"
+signare sha1        "DNS:localhost" 0x2004 sha1
+GENUS_CLAVIS=rsa1024 signare rsa_parva "DNS:localhost" 0x2005
 
 # ignotus: CA alia (non servata)
 clavis "$T/alia.key"
