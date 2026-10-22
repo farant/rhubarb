@@ -434,3 +434,99 @@ cantus_legere (
     cantilena->longitudo  = _quadrum(&l, l.pulsus);
     redde VERUM;
 }
+
+
+    /* ==================================================
+     * IUSSA - cantilena -> iussa mixturae
+     *
+     * DUO GRADUS: colores omnes primum resolvuntur (in
+     * iussa[i].parametra servati), sedes tum demum capiuntur -
+     * praeparatum ignotum ergo nullam sedem consumit (rector
+     * sedem reddere non potest).
+     * ================================================== */
+
+constans SonitusParametra*
+cantus_praeparatum_sonitus (
+    chorda  titulus,
+    vacuum* contextus)
+{
+    character terminatus[LXIV];
+          i32 i;
+
+    (vacuum)contextus;
+    si (titulus.mensura == ZEPHYRUM || titulus.mensura > LXIII)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < titulus.mensura; i++)
+    {
+        terminatus[i] = (character)titulus.datum[i];
+    }
+    terminatus[titulus.mensura] = '\0';
+    redde sonitus_praeparatum(terminatus);
+}
+
+b32
+cantus_iussa_parare (
+          constans Cantilena* cantilena,
+        constans CantusForma* forma,
+               MixturaRector* rector,
+               MixturaIussum* iussa,
+                CantusVitium* vitium)
+{
+              CantusResolutor  resolutor;
+          constans CantusNota* nota;
+    constans SonitusParametra* color;
+             SonitusParametra  parametra;
+                          i32  i;
+
+    resolutor = forma->resolutor != NIHIL
+              ? forma->resolutor
+              : cantus_praeparatum_sonitus;
+
+    /* gradus I: colores - vitium hic nullam sedem capit */
+    per (i = ZEPHYRUM; i < cantilena->numerus; i++)
+    {
+        nota  = &cantilena->notae[i];
+        color = nota->praeparatum.mensura == ZEPHYRUM
+              ? forma->color
+              : resolutor(nota->praeparatum, forma->contextus);
+        si (color == NIHIL)
+        {
+            vitium->offset = nota->offset;
+            vitium->causa  = nota->praeparatum.mensura == ZEPHYRUM
+                           ? "color nullus: forma sine colore"
+                           : "praeparatum ignotum";
+            redde FALSUM;
+        }
+        iussa[i].parametra = *color;
+    }
+
+    /* gradus II: iussa et sedes */
+    per (i = ZEPHYRUM; i < cantilena->numerus; i++)
+    {
+        nota       = &cantilena->notae[i];
+        parametra  = iussa[i].parametra;   /* iussum_parare omnia delet */
+        mixtura_iussum_parare(&iussa[i], MIXTURA_IUSSUM_SONITUM,
+                              forma->momentum + nota->initium);
+        parametra.frequentia = sonus_notae_frequentia((f32)nota->nota);
+        si (forma->tenere)
+        {
+            /* porta per longitudinem scriptam: impetus intra eam */
+            parametra.mora = (f32)nota->longitudo
+                / (f32)SONUS_FREQUENTIA
+                           - parametra.impetus;
+            si (parametra.mora < 0.0f)
+            {
+                parametra.mora = 0.0f;
+            }
+        }
+        iussa[i].parametra  = parametra;
+        iussa[i].lucrum     = nota->lucrum * forma->lucrum;
+        iussa[i].grex       = forma->grex;
+        iussa[i].semen      = forma->semen + (i64)i;
+        iussa[i].ansa = mixtura_rector_capere(rector,
+            forma->prioritas);
+    }
+    redde VERUM;
+}

@@ -390,12 +390,329 @@ _sectio_vitia (
 }
 
 
+    /* ==================================================
+     * IUSSA - cantilena -> iussa mixturae
+     * ================================================== */
+
+#define MEDIUM 0.70710677f
+#define QUADRA_REDDENDA (XXXII * M)
+
+hic_manens f32 exitus[II * QUADRA_REDDENDA];
+hic_manens f32 exspectata[QUADRA_REDDENDA];
+hic_manens f32 tabula[QUADRA_REDDENDA];
+
+interior vacuum
+_parare_tabulas (
+    CredoContextus* c)
+{
+    i32 q;
+
+    (vacuum)c;
+    per (q = ZEPHYRUM; q < QUADRA_REDDENDA; q++)
+    {
+        exitus[II * q]      = 0.0f;
+        exitus[II * q + I]  = 0.0f;
+        exspectata[q]       = 0.0f;
+        tabula[q]           = 0.0f;
+    }
+}
+
+/* pulsus brevis sine varietate: 0.01 + 0.05 + 0.04 s = IV milia DCCC
+ * quadra, ergo octavae ad t120 (XII milia) non se tegunt */
+interior SonitusParametra
+_colorem_parare (
+    vacuum)
+{
+    SonitusParametra p = *sonitus_praeparatum("punctum");
+
+    p.impetus        = 0.01f;
+    p.mora           = 0.05f;
+    p.ictus          = 0.0f;
+    p.remissio       = 0.04f;
+    p.saltus         = 1.0f;
+    p.saltus_tempus  = 0.0f;
+    p.varietas       = 0.0f;
+    redde p;
+}
+
+interior vacuum
+_formam_parare (
+                  CantusForma* forma,
+    constans SonitusParametra* color)
+{
+    forma->color      = color;
+    forma->resolutor  = NIHIL;
+    forma->contextus  = NIHIL;
+    forma->tenere     = FALSUM;
+    forma->grex       = MIXTURA_GREX_INTERFACIES;
+    forma->lucrum     = 1.0f;
+    forma->prioritas  = I;
+    forma->semen      = XL;
+    forma->momentum   = ZEPHYRUM;
+}
+
+/* resolutor probationis: 'meum' -> color contextus */
+interior constans SonitusParametra*
+_resolutor_meus (
+    chorda  titulus,
+    vacuum* contextus)
+{
+    si (   titulus.mensura == IV && titulus.datum[ZEPHYRUM] == (i8)'m'
+        && titulus.datum[III] == (i8)'m')
+    {
+        redde (constans SonitusParametra*)contextus;
+    }
+    redde NIHIL;
+}
+
+interior vacuum
+_sectio_iussa (
+    CredoContextus* c)
+{
+         Cantilena  k;
+       CantusForma  forma;
+      CantusVitium  vitium;
+     MixturaIussum  iussa[II];
+  SonitusParametra  color  = _colorem_parare();
+     MixturaRector* r      = mixtura_rectorem_creare(c->piscina, IV);
+
+    si (!_legere(c, "v50 c d8", &k) || r == NIHIL)
+    {
+        redde;
+    }
+    _formam_parare(&forma, &color);
+    forma.lucrum     = 0.5f;
+    forma.prioritas  = II;
+    forma.momentum   = (s64)M;
+    CREDO_VERUM (cantus_iussa_parare(&k, &forma, r, iussa, &vitium));
+    CREDO_AEQUALIS_S32 ((s32)iussa[ZEPHYRUM].genus,
+                        (s32)MIXTURA_IUSSUM_SONITUM);
+    CREDO_AEQUALIS_S64 (iussa[ZEPHYRUM].momentum, (s64)M);
+    CREDO_AEQUALIS_S64 (iussa[I].momentum, (s64)(XXV * M));
+    CREDO_F32_PROXIMUS (iussa[ZEPHYRUM].lucrum, 0.25f, 0.0f);
+    CREDO_F32_PROXIMUS (iussa[I].lucrum, 0.25f, 0.0f);
+    CREDO_F32_PROXIMUS (iussa[ZEPHYRUM].positio, 0.0f, 0.0f);
+    CREDO_AEQUALIS_S32 ((s32)iussa[I].grex,
+        (s32)MIXTURA_GREX_INTERFACIES);
+    CREDO_AEQUALIS_I64 (iussa[ZEPHYRUM].semen, (i64)XL);
+    CREDO_AEQUALIS_I64 (iussa[I].semen, (i64)XLI);
+    CREDO_F32_PROXIMUS (iussa[ZEPHYRUM].parametra.frequentia,
+                        sonus_notae_frequentia(60.0f), 0.0f);
+    CREDO_F32_PROXIMUS (iussa[I].parametra.frequentia,
+                        sonus_notae_frequentia(62.0f), 0.0f);
+    /* cetera coloris intacta; tenere FALSUM: mora quoque */
+    CREDO_F32_PROXIMUS (iussa[I].parametra.mora, 0.05f, 0.0f);
+    CREDO_F32_PROXIMUS (iussa[I].parametra.remissio, 0.04f, 0.0f);
+    CREDO_F32_PROXIMUS (iussa[I].parametra.officium, color.officium,
+                        0.0f);
+    CREDO_FALSUM (mixtura_ansa_nulla(iussa[ZEPHYRUM].ansa));
+    CREDO_FALSUM (mixtura_ansa_nulla(iussa[I].ansa));
+    CREDO_VERUM (iussa[ZEPHYRUM].ansa.sedes != iussa[I].ansa.sedes);
+
+    /* tenere VERUM: mora = longitudo - impetus (0.5 - 0.01, 0.25 - 0.01) */
+    forma.tenere = VERUM;
+    CREDO_VERUM (cantus_iussa_parare(&k, &forma, r, iussa, &vitium));
+    CREDO_F32_PROXIMUS (iussa[ZEPHYRUM].parametra.mora, 0.49f, 1e-6f);
+    CREDO_F32_PROXIMUS (iussa[I].parametra.mora, 0.24f, 1e-6f);
+    CREDO_F32_PROXIMUS (iussa[I].parametra.impetus, 0.01f, 0.0f);
+    /* nota brevior impetu: mora 0, non negativa */
+    color.impetus = 0.05f;
+    si (_legere(c, "c64", &k))
+    {
+        CREDO_VERUM (cantus_iussa_parare(&k, &forma, r, iussa,
+            &vitium));
+        CREDO_F32_PROXIMUS (iussa[ZEPHYRUM].parametra.mora, 0.0f, 0.0f);
+    }
+}
+
+interior vacuum
+_sectio_praeparata (
+    CredoContextus* c)
+{
+            Cantilena k;
+          CantusForma forma;
+         CantusVitium vitium;
+        MixturaIussum iussa[III];
+     SonitusParametra color  = _colorem_parare();
+     SonitusParametra meum   = _colorem_parare();
+         MixturaRector* r    = mixtura_rectorem_creare(c->piscina, II);
+     constans SonitusParametra* punctum =
+         sonitus_praeparatum("punctum");
+           MixturaAnsa a;
+           MixturaAnsa b;
+
+    si (r == NIHIL || punctum == NIHIL)
+    {
+        CREDO_VERUM (FALSUM);
+        redde;
+    }
+    _formam_parare(&forma, &color);
+    /* resolutor ordinarius = sonitus_praeparatum per chordam */
+    CREDO_VERUM (cantus_praeparatum_sonitus(
+                     chorda_ex_literis("radius", c->piscina), NIHIL)
+                 == sonitus_praeparatum("radius"));
+    CREDO_VERUM (cantus_praeparatum_sonitus(
+                     chorda_ex_literis("radiu", c->piscina), NIHIL)
+                 == NIHIL);
+    CREDO_VERUM (cantus_praeparatum_sonitus(chorda_ex_literis(
+        "radius_radius_radius_radius_radius_radius_radius_radius_radius_r",
+        c->piscina), NIHIL) == NIHIL);
+    si (_legere(c, "c @punctum d", &k))
+    {
+        CREDO_VERUM (cantus_iussa_parare(&k, &forma, r, iussa,
+            &vitium));
+        CREDO_F32_PROXIMUS (iussa[ZEPHYRUM].parametra.mora, 0.05f,
+            0.0f);
+        CREDO_F32_PROXIMUS (iussa[I].parametra.mora, punctum->mora,
+            0.0f);
+        CREDO_F32_PROXIMUS (iussa[I].parametra.saltus, punctum->saltus,
+                            0.0f);
+        CREDO_F32_PROXIMUS (iussa[I].parametra.frequentia,
+                            sonus_notae_frequentia(62.0f), 0.0f);
+    }
+    /* resolutor vocantis cum contextu */
+    meum.remissio    = 0.123f;
+    forma.resolutor  = _resolutor_meus;
+    forma.contextus  = &meum;
+    si (_legere(c, "@meum c", &k))
+    {
+        CREDO_VERUM (cantus_iussa_parare(&k, &forma, r, iussa,
+            &vitium));
+        CREDO_F32_PROXIMUS (iussa[ZEPHYRUM].parametra.remissio, 0.123f,
+                            0.0f);
+    }
+    /* ignotum: FALSUM ad notam eius, NULLA sedes capta (rector recens
+     * duas sedes generatione I adhuc dat) */
+    r                = mixtura_rectorem_creare(c->piscina, II);
+    forma.resolutor  = NIHIL;
+    forma.contextus  = NIHIL;
+    si (r != NIHIL && _legere(c, "c @punctum d @ignotum e", &k))
+    {
+        vitium.offset = CMXCIX;
+        CREDO_FALSUM (cantus_iussa_parare(&k, &forma, r, iussa,
+            &vitium));
+        CREDO_AEQUALIS_I32 (vitium.offset, XXII);
+        CREDO_VERUM (vitium.causa != NIHIL);
+        a = mixtura_rector_capere(r, I);
+        b = mixtura_rector_capere(r, I);
+        CREDO_AEQUALIS_I32 (a.generatio, I);
+        CREDO_AEQUALIS_I32 (b.generatio, I);
+    }
+    /* color nullus et nota sine '@': vitium ad notam */
+    forma.color = NIHIL;
+    si (_legere(c, "@punctum c r c", &k) && _legere(c, "c", &k))
+    {
+        vitium.offset = CMXCIX;
+        CREDO_FALSUM (cantus_iussa_parare(&k, &forma, r, iussa,
+            &vitium));
+        CREDO_AEQUALIS_I32 (vitium.offset, ZEPHYRUM);
+    }
+}
+
+/* voces plenae prioritatis altioris: notae tacent, non vitium */
+interior vacuum
+_sectio_sedes (
+    CredoContextus* c)
+{
+         Cantilena  k;
+       CantusForma  forma;
+      CantusVitium  vitium;
+     MixturaIussum  iussa[II];
+  SonitusParametra  color  = _colorem_parare();
+     MixturaRector* r      = mixtura_rectorem_creare(c->piscina, I);
+
+    si (r == NIHIL || !_legere(c, "c d", &k))
+    {
+        redde;
+    }
+    (vacuum)mixtura_rector_capere(r, IX);
+    _formam_parare(&forma, &color);
+    CREDO_VERUM (cantus_iussa_parare(&k, &forma, r, iussa, &vitium));
+    CREDO_VERUM (mixtura_ansa_nulla(iussa[ZEPHYRUM].ansa));
+    CREDO_VERUM (mixtura_ansa_nulla(iussa[I].ansa));
+}
+
+/* per mixturam: quaeque nota ad quadrum suum exactum, octetim =
+ * sonitus_reddere(color ad altitudinem notae, semen + index) x
+ * positio media */
+interior vacuum
+_sectio_reddere (
+    CredoContextus* c)
+{
+         Cantilena  k;
+       CantusForma  forma;
+      CantusVitium  vitium;
+     MixturaIussum  iussa[II];
+      MixturaForma  forma_mixturae;
+  SonitusParametra  color = _colorem_parare();
+           Mixtura* m;
+     MixturaRector* r;
+               i32  j;
+               i32  q;
+               b32  pares = VERUM;
+
+    forma_mixturae.voces = IV;
+    forma_mixturae.iussa = VIII;
+    forma_mixturae.nuntii = VIII;
+    m = mixtura_creare(c->piscina, &forma_mixturae);
+    r = mixtura_rectorem_creare(c->piscina, IV);
+    si (m == NIHIL || r == NIHIL || !_legere(c, "t120 c8 r8 e8", &k))
+    {
+        CREDO_VERUM (FALSUM);
+        redde;
+    }
+    _formam_parare(&forma, &color);
+    forma.momentum = (s64)C;
+    CREDO_VERUM (cantus_iussa_parare(&k, &forma, r, iussa, &vitium));
+    per (j = ZEPHYRUM; j < k.numerus; j++)
+    {
+        SonitusParametra p = color;
+                     i32 n;
+                     i32 initium = (i32)(k.notae[j].initium + (s64)C);
+
+        p.frequentia = sonus_notae_frequentia((f32)k.notae[j].nota);
+        n = sonitus_reddere(&p, (i64)XL + (i64)j, tabula,
+                            QUADRA_REDDENDA - initium);
+        per (q = ZEPHYRUM; q < n; q++)
+        {
+            exspectata[initium + q] = tabula[q];
+        }
+        (vacuum)mixtura_iubere(m, &iussa[j]);
+    }
+    mixtura_reddere(m, exitus, QUADRA_REDDENDA);
+    per (q = ZEPHYRUM; q < QUADRA_REDDENDA; q++)
+    {
+        f32 e = exspectata[q] * MEDIUM;
+
+        si (exitus[II * q] != e || exitus[II * q + I] != e)
+        {
+            si (pares)
+            {
+                imprimere("  quadrum %d: %f != %f\n", (integer)q,
+                          (duplex)exitus[II * q], (duplex)e);
+            }
+            pares = FALSUM;
+        }
+    }
+    CREDO_VERUM (pares);
+    /* non silentium: utraque nota sonat */
+    CREDO_VERUM (exspectata[C + D] != 0.0f);
+    CREDO_VERUM (exspectata[XXIV * M + C + D] != 0.0f);
+    CREDO_VERUM (exspectata[C - I] == 0.0f);
+}
+
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "notae", _sectio_notae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "mensurae", _sectio_mensurae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tempus", _sectio_tempus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "mandata", _sectio_mandata, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia", _sectio_vitia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "iussa", _sectio_iussa, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "praeparata", _sectio_praeparata, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sedes", _sectio_sedes, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "reddere", _sectio_reddere, _parare_tabulas, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

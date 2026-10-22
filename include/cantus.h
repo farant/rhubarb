@@ -2,8 +2,8 @@
  *
  * Pars PRIMA bibliothecae cantus (spec sonus §V: 'notes in time ->
  * iussa'): textus brevis -> notae cum altitudine (MIDI), initio et
- * longitudine in QUADRIS (SONUS_FREQUENTIA). Purus: nihil sonat, nihil
- * de mixtura scit - vocans notas in iussa vertit (S4 gradus II).
+ * longitudine in QUADRIS (SONUS_FREQUENTIA); deinde notae -> iussa
+ * mixturae (sectio IUSSA infra). Purus: nihil sonat, nihil iubet.
  *
  * DIALECTUS - progenies MML ('Music Macro Language': PLAY in BASIC
  * MCMLXXXI, chiptune Iaponica); litterae magnae et parvae aequae,
@@ -35,7 +35,7 @@
  * labuntur. Mutatio 't' segmentum novum incipit.
  *
  * NOTA = longitudo SCRIPTA; quantum sonet (staccato, remissio)
- * timbrum vocantis decernit, non lector.
+ * color vocantis decernit, non lector.
  *
  * VITIA: lector FALSUM reddit cum offset octeti in textu et causa
  * Latina ('longitudo 3 non est potentia II') - nihil semi-lectum.
@@ -60,6 +60,7 @@
 #include "latina.h"
 #include "chorda.h"
 #include "piscina.h"
+#include "mixtura.h"
 
 nomen structura {
             i32 nota;           /* MIDI 0..127 (LX = C4) */
@@ -92,5 +93,65 @@ cantus_legere (
          Piscina* piscina,
        Cantilena* cantilena,
     CantusVitium* vitium);
+
+
+/* ================================================================
+ * IUSSA - cantilena -> iussa mixturae (S4 gradus II)
+ *
+ * Nota quaeque = UNUM iussum SONITUM: vox sua (caudae remissionis
+ * notam proximam tegere possunt), parametra coloris cum frequentia
+ * notae (sonus_notae_frequentia), momentum = forma->momentum +
+ * initium notae, lucrum = nota.lucrum x forma->lucrum, semen =
+ * forma->semen + index (varietas per notam, determinata).
+ *
+ * TENERE: VERUM = porta synthesis - nota per longitudinem scriptam
+ *   tenetur (mora = longitudo - impetus, >= 0), deinde remissio
+ *   coloris. FALSUM = color intactus (ictus: campana, chorda vellicata)
+ *   - sola altitudo et initium a nota.
+ *
+ * SEDES: rector sedem per notam capit cum forma->prioritas, OMNES
+ * statim (iussa praesentia futura ferunt). Ansa nulla (voces plenae
+ * prioritatis altioris) = ea nota tacet, ut quivis sonus mixturae -
+ * non vitium. Cantilenae longae (> voces) melius per tempus iubentur:
+ * sequentia cantus, S6.
+ *
+ * Pura: nihil iubet - vocans iussa ad auditus_iubere (vivum) aut
+ * mixtura_iubere (offline) mittit.
+ * ================================================================ */
+
+/* '@titulus' -> parametra; NIHIL = ignotum (vitium cum offset notae) */
+nomen constans SonitusParametra* (*CantusResolutor) (
+          chorda  titulus,
+          vacuum* contextus);
+
+/* resolutor ordinarius: sonitus_praeparatum (titulus <= LXIII octeti) */
+constans SonitusParametra*
+cantus_praeparatum_sonitus (
+    chorda  titulus,
+    vacuum* contextus);
+
+nomen structura {
+     constans SonitusParametra* color;     /* notae sine '@' */
+               CantusResolutor  resolutor;   /* NIHIL = ordinarius */
+                        vacuum* contextus;   /* resolutori */
+                           b32  tenere;
+                   MixturaGrex  grex;        /* INTERFACIES: nuntii */
+                           f32  lucrum;      /* totius cantilenae */
+                           i32  prioritas;
+                           i64  semen;
+                           s64  momentum;    /* quadrum initii (auditus:
+                                              * nunc + mora + margo) */
+} CantusForma;
+
+/* iussa[0..numerus) implet (vocans allocat cantilena->numerus).
+ * FALSUM: praeparatum ignotum - vitium.offset = nota eius; nulla sedes
+ * capta (praeparata omnia ANTE sedes resolvuntur) */
+b32
+cantus_iussa_parare (
+          constans Cantilena* cantilena,
+        constans CantusForma* forma,
+               MixturaRector* rector,
+               MixturaIussum* iussa,
+                CantusVitium* vitium);
 
 #endif /* CANTUS_H */

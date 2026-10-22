@@ -53,3 +53,43 @@ MIDI limit 128, double sharp, offset of the note's end instead of its
 start, t401 admitted. Two of the nine first failed on MY anchors (one
 ambiguous, one cut inside a string literal) - planta refused them
 instead of planting, as it should.
+
+## 2026-10-22 - S4 step 2: notes -> mixer commands (cantus_iussa_parare)
+
+One `MIXTURA_IUSSUM_SONITUM` per note, each on its own voice, so a
+release tail can overlap the next note. The note supplies pitch
+(`sonus_notae_frequentia`), start (`forma->momentum + initium`) and gain
+(`v` x `forma->lucrum`). The seed is `forma->semen + index`, so `varietas`
+differs per note but stays deterministic.
+
+**tenere replaces "mora = length - release".** The first idea was to
+squeeze the release into the written length. The step-2 design
+turned it into a flag on the form: VERUM is a synth gate (the note holds
+`longitudo - impetus`, clamped at 0, then the colour's own release tail),
+FALSUM leaves the colour untouched (bells, plucks: the note gives only
+pitch and onset). A 64th shorter than the attack gets mora 0, never a
+negative sustain.
+
+**Resolve every colour before claiming any voice.** `MixturaRector` has
+no release call; a voice only frees on VOX_FINITA. If `@ignotum` failed
+after the first two notes had claimed voices, those slots would stay
+busy forever on a rector nothing will play. So pass 1 resolves all colours
+into `iussa[i].parametra`, and pass 2 claims voices. Pass 2 must copy the
+parametra out before `mixtura_iussum_parare`, which zeroes the whole
+command. A null handle (all voices busy at higher priority) means that
+note stays silent, as for any mixer sound: not an error.
+
+`cantus_praeparatum_sonitus` copies the chorda (not NUL-terminated) into a
+64-byte buffer for `sonitus_praeparatum`; names over 63 bytes are unknown,
+never truncated into a match ("radiu" does not find "radius").
+
+**The render test is exact, not approximate:** "t120 c8 r8 e8" through a
+real mixtura must equal, sample for sample, a direct `sonitus_reddere` of
+each note placed at its frame times the centre-pan gain 0.70710677. That
+pins onset to the sample and silence everywhere else.
+
+Suite: 9 sections, green on the first implementation run. Plants 11/11
+red then green (mora sign, clamp, tenere ignored, seed index, momentum
+base, form gain, form group, pitch +1, caller resolver ignored, voices
+claimed before the error, colour used for '@'); one first draft did not
+compile (unused resolver) - planta refused it, redone in a compiling form.
