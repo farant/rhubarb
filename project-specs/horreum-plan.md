@@ -204,6 +204,26 @@ this plan.
 - **T2: conditions/checksums refused (MALUM) on copy and multipart
   start** rather than silently ignored.
 
+- **T3: executor state slot in horreum.h** (`horreum_sedem_ponere` /
+  `horreum_sedes`); `horreum_cliens_parare` takes the piscina holding
+  the state. `Horreum` is opaque to `horreum_cliens.c`. Cost if wrong:
+  one pointer field and one argument.
+- **T3: the clock offset persists** across calls in that state (a
+  second call signs with it first time). Cost if wrong: one field.
+- **T3: `horreum_delere_plura` gains `exitus_numerus`** (the planned
+  signature had no count).
+- **T3: CopyObject `200 + <Error>` read in the core reader**, so retry
+  policy applies (`200 InternalError` retried); ETag and time from the
+  `CopyObjectResult` body. New section `copiare_error_cc`.
+- **T3: the fake's HORA fault became a server clock**
+  (`simulacrum_horam_ponere`, 900 s window): a one-shot skewed reply
+  cannot catch "offset not applied on the retry".
+- **T3: moved to T4** with the tests that use them: the fake's
+  multipart model, TRUNCARE, `simulacrum_corpus_maximum`, exsequi's
+  NoSuchUpload-after-retry branch (d).
+- **T3: plant 5 added** (CopyObject body not read -> `iter` red at the
+  copy's ETag).
+
 ## Review focus
 
 1. **Object keys with awkward characters** (space, `+`, `%`, `?`, `#`,

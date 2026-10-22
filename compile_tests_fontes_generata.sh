@@ -117,6 +117,7 @@ declare -a SOURCE_FILES=(
     "lib/herbarium.c"
     "lib/historia.c"
     "lib/horreum.c"
+    "lib/horreum_cliens.c"
     "lib/hospitium.c"
     "lib/html_lexema.c"
     "lib/http.c"

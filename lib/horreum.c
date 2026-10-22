@@ -39,6 +39,7 @@ structura Horreum {
                HorreumStilus  stilus;
                    character  clavis_id[HORREUM_CAPSA_CLAVIS];
                    character  secretum[HORREUM_CAPSA_CLAVIS];
+                      vacuum* sedes;          /* executoris */
 };
 
 /* provisores: capacitates "creditum" (documenta) donec horreum probare
@@ -623,6 +624,24 @@ horreum_claudere (
     {
         memset(h, ZEPHYRUM, magnitudo(*h));
     }
+}
+
+vacuum
+horreum_sedem_ponere (
+    Horreum* h,
+     vacuum* sedes)
+{
+    si (h)
+    {
+        h->sedes = sedes;
+    }
+}
+
+vacuum*
+horreum_sedes (
+    Horreum* h)
+{
+    redde h ? h->sedes : NIHIL;
 }
 
 /* ===== tabella (P5) ===== */
@@ -2213,6 +2232,54 @@ _obiectum_ex_capitibus (
     }
 }
 
+/* CopyObject: 200 cum <Error> (S3 errorem post capita missa
+ * nuntiat) aut <CopyObjectResult> cum ETag et LastModified */
+interior b32
+_copiam_legere (
+    constans HttpResponsum* r,
+           HorreumObjectum* ob,
+              HorreumError* e,
+                   Piscina* p)
+{
+    HorreumError  ignotum;
+        XmlNodus* radix;
+
+    si (r->corpus.mensura == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    radix = _radix(r->corpus, NIHIL, &ignotum, p);
+    si (!radix || !radix->titulus)
+    {
+        redde VERUM;
+    }
+    si (chorda_aequalis_literis(*radix->titulus, "Error"))
+    {
+        si (ob)
+        {
+            memset(ob, ZEPHYRUM, magnitudo(*ob));
+        }
+        e->status      = r->status;
+        e->codex       = _textus(radix, "Code", p);
+        e->nuntius     = _textus(radix, "Message", p);
+        e->petitio_id  = _caput_responsi(r, "x-amz-request-id", p);
+        e->genus       = _genus_erroris(r->status, e->codex);
+        si (e->nuntius.mensura == ZEPHYRUM)
+        {
+            e->nuntius = _l("horreum: CopyObject 200 cum <Error>", p);
+        }
+        redde FALSUM;
+    }
+    si (   ob && chorda_aequalis_literis(*radix->titulus,
+            "CopyObjectResult"))
+    {
+        ob->etag     = _sine_virgulis(_textus(radix, "ETag", p));
+        ob->mutatum  = horreum_tempus_iso(_textus(radix, "LastModified",
+            p));
+    }
+    redde VERUM;
+}
+
 b32
 horreum_responsum_legere (
     constans HorreumOpus* o,
@@ -2265,7 +2332,8 @@ horreum_responsum_legere (
         {
             _obiectum_ex_capitibus(o, r, ob, p);
         }
-        redde VERUM;
+        redde o->genus != HORREUM_OPUS_COPIARE
+            || _copiam_legere(r, ob, e, p);
     }
     e->status      = r->status;
     e->petitio_id  = _caput_responsi(r, "x-amz-request-id", p);

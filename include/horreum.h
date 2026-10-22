@@ -246,6 +246,17 @@ vacuum
 horreum_claudere (
     Horreum* h);
 
+/* sedes executoris: horreum_cliens statum suum (optiones, sors,
+ * deviatio horologii) ibi servat; ceteri non tangunt. NIHIL initio */
+vacuum
+horreum_sedem_ponere (
+    Horreum* h,
+     vacuum* sedes);
+
+vacuum*
+horreum_sedes (
+    Horreum* h);
+
 b32
 horreum_opus_ponere (
                     Horreum* h,
@@ -407,7 +418,9 @@ horreum_praesignare (
 
 /* resultus -> VERUM (facta in obiectum) aut FALSUM (error typatus).
  * tempus_signandi = tempus quo petitio signata est (deviatio
- * horologii ex capite Date servi). obiectum NIHIL licet. */
+ * horologii ex capite Date servi). obiectum NIHIL licet. CopyObject:
+ * '200 + <Error>' error est (status CC); ETag et tempus ex corpore
+ * CopyObjectResult. */
 b32
 horreum_responsum_legere (
     constans HorreumOpus* opus,

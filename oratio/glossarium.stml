@@ -621,6 +621,7 @@
   <vocabulum lemma="checksum" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (x-amz-checksum-*; horreum)"/>
   <vocabulum lemma="mib" lingua="anglica" classis="ignotum-permissum" nota="unitas (mebibyte, MXXIV * MXXIV; horreum)"/>
   <vocabulum lemma="amz" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (praefixum x-amz-; horreum)"/>
+  <vocabulum lemma="partialis" lingua="latina" classis="adiectivum" nota="partialis, -e (Latinitas posterior: ex parte) - deletio plurium partialis (horreum)"><forma textus="partialis"/></vocabulum>
   <vocabulum lemma="praesignare" lingua="latina" classis="verbum" nota="praesigno, -are (ante signare; Plinius) - URL praesignata S3 (horreum)"><forma textus="praesignare"/></vocabulum>
   <vocabulum lemma="ttl" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (DNS time-to-live; lib/oceanus.c)"/>
   <vocabulum lemma="csrf" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (cross-site request forgery; lib/custodia.c)"/>
