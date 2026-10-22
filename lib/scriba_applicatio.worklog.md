@@ -103,3 +103,21 @@ owner rules would silently refuse otherwise - plant red).
 restart) the view switches to the field's page via
 scriba_paginam_ostendere. probatio_organum's pre-S6 owner snapshot gets
 one known addition (pagina -> pagina.clavis), 17 rules.
+
+## 2026-10-22 — companion books (comites P2)
+
+A mounted scriba view can switch to another BOOK by prefix
+(`scriba_librum_praefixi_ponere`; "" = its own home book); the host
+supplies a book lookup (`scriba_libros_ponere`, porta ScribaLibrorum).
+Field `liber` (status, impelle) carries the prefix, so routes keep their
+old form (`scriba/2`) and a companion page is `scriba/2?liber=comes%2F
+nomenclator%2F1`. The viewed-page key (`sa->visus`) is switched along:
+home book -> the view's `scriba/visus/<id>` (as before), companion ->
+`<prefix>/visus` inside the companion's own space - otherwise turning a
+companion page would overwrite the common book's remembered page.
+`scriba_semitam_secuta` reads `pagina` and `liber` BEFORE switching
+(the switch rewrites `pagina`), switches book, then shows the page.
+Clearing `liber` REMOVES the attribute: an empty STML value reads back
+as boolean "true" (plant red). Plants red: prefix always empty,
+companion page under the view's key, field not written, empty not
+removed, route's book ignored, no lookup set in vicus.

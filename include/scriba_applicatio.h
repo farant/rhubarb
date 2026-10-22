@@ -27,6 +27,11 @@
 #include "scriba_figurae.h"
 #include "organum_montatio.h"
 
+/* comites P2: porta librorum hospitis - praefixum -> liber (aperitur
+ * aut creatur semel; hospes tenet); vacuum -> liber montationis.
+ * NIHIL si aperiri nequit. */
+nomen ScribaLiber* (*ScribaLibrorum)(vacuum* ctx, chorda praefixum);
+
 /* MONTATIO (insula-rami-plan T1a): scriba in repositorio dato, ramo
  * <scriba id> (aut radice): documentum in spatio id, canones et
  * domini in ramo, contextus (ramus intus), registra propria. Contextus
@@ -43,6 +48,12 @@ nomen structura {
      * doc = pagina CURRENS - scriba_reficere eum cum actionibus
      * concordat post navigationem */
             ScribaLiber* liber;
+    /* comites P2: liber montationis (domus), porta librorum hospitis,
+     * clavis visus montationis (comes: '<praefixum>/visus') */
+             ScribaLiber* liber_domus;
+          ScribaLibrorum  libri;
+                  vacuum* libri_ctx;
+                  chorda  visus_domus;
 } ScribaMontatio;
 
 nomen structura {
@@ -114,6 +125,24 @@ b32
 scriba_paginam_ostendere (
     ScribaMontatio* m,
             chorda  titulus);
+
+/* portam ponere (vicus: latus sinistrum); NIHIL = campus 'liber'
+ * neglegitur */
+vacuum
+scriba_libros_ponere (
+     ScribaMontatio* m,
+     ScribaLibrorum  porta,
+             vacuum* ctx);
+
+/* comites P2: visum ad librum praefixi vertere (vacuum = liber
+ * montationis). Pagina: comes - pagina visa ultima EIUS libri
+ * (plagula '<praefixum>/visus'); liber montationis - plagula visus
+ * montationis (ut prius), ita pagina communis non perditur. Campus
+ * 'liber' scribitur. FALSUM si porta nulla aut liber aperiri nequit. */
+b32
+scriba_librum_praefixi_ponere (
+    ScribaMontatio* m,
+            chorda  praefixum);
 
 /* D5 S3c: post semitam a vico applicatam (campus 'pagina', semita
  * scriba/<pagina>): visus ad paginam eam vertitur

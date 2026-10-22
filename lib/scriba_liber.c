@@ -544,3 +544,20 @@ scriba_liber_paginam_legere (
         exitus);
     redde VERUM;
 }
+
+chorda
+scriba_liber_praefixum (
+    constans ScribaLiber* l)
+{
+      hic_manens constans character cauda[] = "/paginae";
+                             chorda c;
+
+    si (   !l || chorda_aequalis_literis(l->index, clavis_indicis)
+        || l->index.mensura < (i32)(magnitudo(cauda) - I))
+    {
+        redde chorda_vacua_libri();
+    }
+    c          = l->index;
+    c.mensura  = l->index.mensura - (i32)(magnitudo(cauda) - I);
+    redde c;
+}

@@ -583,6 +583,112 @@ _probare_sinistram (
         x->app.vicus), VICUS_SINISTRUM)->semita_servata, "scriba/3");
 }
 
+/* comites P2: liber visus sinistri (campus 'liber' status) */
+interior b32
+liber_sinistri_est (
+                 Mundus* x,
+     constans character* praefixum)
+{
+        VicusLatus* l;
+    ScribaMontatio* m;
+            chorda* a;
+
+    l = vicus_latus(vicus_activa(x->app.vicus), VICUS_SINISTRUM);
+    m = l ? (ScribaMontatio*)l->montatio : NIHIL;
+    si (!m || !m->liber)
+    {
+        redde FALSUM;
+    }
+    a = insula_ramus_attributum(&m->ramus, "liber");
+    redde chorda_aequalis_literis(scriba_liber_praefixum(m->liber),
+               praefixum)
+        && (praefixum[ZEPHYRUM] == '\0'
+            ? (!a || a->mensura == ZEPHYRUM)
+            : (a && chorda_aequalis_literis(*a, praefixum)));
+}
+
+interior b32
+librum_sinistri_ponere (
+                 Mundus* x,
+     constans character* praefixum,
+                Piscina* p)
+{
+    VicusLatus* l;
+           b32  ok;
+
+    l  = vicus_latus(vicus_activa(x->app.vicus), VICUS_SINISTRUM);
+    ok = l
+        && scriba_librum_praefixi_ponere((ScribaMontatio*)l->montatio,
+        chorda_ex_literis(praefixum, p));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    dispensator_recomponere(x->app.d);
+    redde ok;
+}
+
+/* comites P2: liber comes in latere sinistro - pagina sua cuique libro
+ * (communis non perditur), Ctrl+O per mutationem libri, reapertura in
+ * libro comite */
+interior vacuum
+_probare_librum_comitem (
+    CredoContextus* c)
+{
+             Mundus* x;
+    VicusApplicatio  altera;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(mundum_struere(x, c));
+    CREDO_VERUM(vicus_focum_ponere(x->app.vicus, VICUS_SINISTRUM));
+    dispensator_recomponere(x->app.d);
+    CREDO_VERUM(liber_sinistri_est(x, ""));
+    pagina_proxima(x);
+    CREDO_VERUM(pagina_sinistra_est(x, "2", c->piscina));
+
+    CREDO_GRADUS("liber comes: pagina prima, communis pagina 2 manet");
+    CREDO_VERUM(librum_sinistri_ponere(x, "comes/nomenclator/1",
+        c->piscina));
+    CREDO_VERUM(liber_sinistri_est(x, "comes/nomenclator/1"));
+    CREDO_VERUM(pagina_sinistra_est(x, "1", c->piscina));
+    CREDO_VERUM(librum_sinistri_ponere(x, "", c->piscina));
+    CREDO_VERUM(liber_sinistri_est(x, ""));
+    CREDO_VERUM(pagina_sinistra_est(x, "2", c->piscina));
+
+    CREDO_GRADUS("comes paginam suam servat");
+    CREDO_VERUM(librum_sinistri_ponere(x, "comes/nomenclator/1",
+        c->piscina));
+    pagina_proxima(x);
+    CREDO_VERUM(pagina_sinistra_est(x, "2", c->piscina));
+    CREDO_VERUM(librum_sinistri_ponere(x, "", c->piscina));
+    CREDO_VERUM(pagina_sinistra_est(x, "2", c->piscina));
+    pagina_proxima(x);
+    CREDO_VERUM(pagina_sinistra_est(x, "3", c->piscina));
+    CREDO_VERUM(librum_sinistri_ponere(x, "comes/nomenclator/1",
+        c->piscina));
+    CREDO_VERUM(pagina_sinistra_est(x, "2", c->piscina));
+    CREDO_VERUM(librum_sinistri_ponere(x, "", c->piscina));
+    CREDO_VERUM(pagina_sinistra_est(x, "3", c->piscina));
+
+    CREDO_GRADUS("Ctrl+O per mutationem libri");
+    clavis(x, 'o', (i32)MOD_IMPERIUM);
+    CREDO_VERUM(liber_sinistri_est(x, "comes/nomenclator/1"));
+    CREDO_VERUM(pagina_sinistra_est(x, "2", c->piscina));
+    clavis(x, 'i', (i32)MOD_IMPERIUM);
+    CREDO_VERUM(liber_sinistri_est(x, ""));
+    CREDO_VERUM(pagina_sinistra_est(x, "3", c->piscina));
+
+    CREDO_GRADUS("reapertura in libro comite");
+    CREDO_VERUM(librum_sinistri_ponere(x, "comes/nomenclator/1",
+        c->piscina));
+    memset(&altera, ZEPHYRUM, magnitudo(altera));
+    CREDO_NECESSE(vicus_applicatio_aedificare(&altera, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CDLXXX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    x->app = altera;
+    CREDO_VERUM(vicus_activam_ponere(x->app.vicus, "3"));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    CREDO_VERUM(liber_sinistri_est(x, "comes/nomenclator/1"));
+    CREDO_VERUM(pagina_sinistra_est(x, "2", c->piscina));
+}
+
 /* D5: C loci summum - antiquissimus abit */
 interior vacuum
 _probare_maximum (
@@ -1074,6 +1180,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         mundum_purgare, NIHIL, NIHIL },
     { "sinistra", _probare_sinistram, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
+    { "liber_comes", _probare_librum_comitem, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
     { "calendarium", _probare_calendarium, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "nomenclator", _probare_nomenclatorem, mundum_parare,

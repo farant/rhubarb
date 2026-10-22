@@ -336,9 +336,33 @@ _sectio_prima (
     volumen_claudere(vol);
 }
 
+/* comites P2: praefixum libri - communis vacuum, in spatio praefixum */
+interior vacuum
+_sectio_praefixum (
+    CredoContextus* c)
+{
+        Volumen* vol;
+    ScribaLiber* communis;
+    ScribaLiber* comes;
+
+    (vacuum)c;
+    vol = volumen_temporarium(piscina, "probatio_scriba_liber");
+    CREDO_NECESSE_NON_NIHIL(vol);
+    communis  = scriba_liber_aperire(piscina, intern, vol, XL, XX);
+    comes     = scriba_liber_aperire_in_spatio(piscina, intern, vol,
+        "comes/nomenclator/1", XL, XX);
+    CREDO_NECESSE(communis && comes);
+    CREDO_AEQUALIS_I32(scriba_liber_praefixum(communis).mensura,
+        ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(scriba_liber_praefixum(comes),
+        "comes/nomenclator/1");
+    volumen_claudere(vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "liber paginarum (scenarium I-IX)", _sectio_prima, _parare,
         NIHIL, NIHIL, NIHIL },
+    { "praefixum", _sectio_praefixum, _parare, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

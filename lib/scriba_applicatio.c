@@ -253,6 +253,9 @@ ad_ramum_montare (
     m->actiones_ctx.ramus = m->ramus;
     m->actiones_ctx.liber = liber;
     m->actiones_ctx.visus = visus;
+    /* comites P2: liber et visus montationis (domus) */
+    m->liber_domus = liber;
+    m->visus_domus = visus;
     scriba_actiones_registrare(m->actiones, &m->actiones_ctx);
     m->figurae         = figura_registrum_creare(piscina);
     m->figurae_ctx.sa  = &m->actiones_ctx;
@@ -380,6 +383,7 @@ scriba_semitam_secuta (
     ScribaMontatio* m;
             chorda* a;
             chorda  petita;
+            chorda  liber;
             chorda  currens;
                b32  inventum;
 
@@ -388,13 +392,26 @@ scriba_semitam_secuta (
     {
         redde FALSUM;
     }
-    a = insula_ramus_attributum(&m->ramus, "pagina");
-    si (!a || a->mensura == ZEPHYRUM)
+    /* copiae: mutationes infra ramum mutant */
+    a       = insula_ramus_attributum(&m->ramus, "pagina");
+    petita  = (a && a->mensura > ZEPHYRUM)
+            ? chorda_transcribere(*a, m->doc->piscina)
+            : chorda_ex_literis("", m->doc->piscina);
+    /* comites P2: liber primum (porta posita) */
+    a       = insula_ramus_attributum(&m->ramus, "liber");
+    liber   = (a && a->mensura > ZEPHYRUM)
+            ? chorda_transcribere(*a, m->doc->piscina)
+            : chorda_ex_literis("", m->doc->piscina);
+    si (   m->libri
+        && !chorda_aequalis(liber, scriba_liber_praefixum(m->liber))
+        && !scriba_librum_praefixi_ponere(m, liber))
     {
         redde FALSUM;
     }
-    /* copia: scriba_paginam_ostendere ramum mutat */
-    petita   = chorda_transcribere(*a, m->doc->piscina);
+    si (petita.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
     currens  = volumen_plagulam_promere(m->doc->volumen,
         m->actiones_ctx.visus, m->doc->piscina, &inventum);
     si (inventum && chorda_aequalis(currens, petita))
@@ -494,4 +511,73 @@ scriba_applicatio_aedificare (
     scriba_gestum_ponere(dispensator_motus(app->d),
                          &app->montatio.actiones_ctx);
     redde VERUM;
+}
+
+/* comites P2: campus 'liber' (praefixum; vacuum = liber domus) */
+interior vacuum
+libri_mutator (
+              StmlNodus* nodus,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    /* vacuum: campus tollitur (STML valorem vacuum ut veritatem
+     * legeret) */
+    si (((chorda*)ctx)->mensura == ZEPHYRUM)
+    {
+        insula_attributum_tollere(nodus, "liber");
+        redde;
+    }
+    insula_attributum_ponere(nodus, p, in, "liber",
+        chorda_ut_cstr(*(chorda*)ctx, p));
+}
+
+vacuum
+scriba_libros_ponere (
+     ScribaMontatio* m,
+     ScribaLibrorum  porta,
+             vacuum* ctx)
+{
+    si (m)
+    {
+        m->libri      = porta;
+        m->libri_ctx  = ctx;
+    }
+}
+
+b32
+scriba_librum_praefixi_ponere (
+    ScribaMontatio* m,
+            chorda  praefixum)
+{
+    ScribaLiber* liber;
+         chorda  prior;
+            b32  ok;
+
+    si (!m || !m->ramus.repo)
+    {
+        redde FALSUM;
+    }
+    liber = praefixum.mensura == ZEPHYRUM ? m->liber_domus
+          : m->libri ? m->libri(m->libri_ctx, praefixum) : NIHIL;
+    si (!liber)
+    {
+        redde FALSUM;
+    }
+    /* pagina visa: comes in libro suo, domus in plagula montationis */
+    m->actiones_ctx.visus = praefixum.mensura == ZEPHYRUM
+        ? m->visus_domus
+        : chorda_concatenare(chorda_transcribere(praefixum,
+              m->doc->piscina), chorda_ex_literis("/visus",
+              m->doc->piscina), m->doc->piscina);
+    si (liber != m->liber && !scriba_librum_ponere(m, liber))
+    {
+        redde FALSUM;
+    }
+    prior = m->ramus.repo->scriptor;
+    insula_scriptorem_ponere(m->ramus.repo, chorda_ex_literis(
+        "pagina.clavis", m->ramus.repo->piscina));
+    ok = mutare_ramum(&m->ramus, libri_mutator, &praefixum);
+    insula_scriptorem_ponere(m->ramus.repo, prior);
+    redde ok;
 }

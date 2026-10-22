@@ -71,6 +71,15 @@
             scriptor="pagina.clavis" semita="ligatio" historia="impelle"
             nota="nomen paginae visae libri"/>
 
+    <!-- comites P2: liber visus (praefixum spatii); absens = liber
+         montationis (vicus sinistrum: communis). Status, non ligatio:
+         semitae priores manent "scriba/2"; comes "scriba/2?liber=
+         comes%2Fnomenclator%2F1". historia impelle: liber mutatus
+         locus historiae lateris fit -->
+    <campus nomen="liber" typus="textus" vita="persistens"
+            scriptor="pagina.clavis" semita="status" historia="impelle"
+            nota="praefixum libri visi; vacuum = liber montationis"/>
+
     <!-- copiae libri (derivatae; scriba_applicatio scribit) -->
     <campus nomen="pagina_positio" typus="numerus" vita="transiens"
             nota="pagina visa 1..n (veritas: plagula scriba/visus/id)"/>

@@ -168,3 +168,12 @@ Suite `probatio_vicus_sonus` (7 sections, 123 asserts, fake port that
 counts calls; TMUX_TMPDIR in the credo area so systema 'terminalia'
 never sees Fran's server). Plants 13/13 red (12 C via silva.planta,
 plus organum `vita="transiens"` by hand -> persistens red).
+
+## 2026-10-22 — book lookup for scriba panes (comites P2)
+
+ContextusScribae keeps opened companion books in a TabulaDispersa
+(prefix -> ScribaLiber*), opened once with
+`scriba_liber_aperire_in_spatio` at the common book's page size; ""
+is the common book. Every scriba pane gets the lookup at mount. Not
+plantable: dropping the cache (a reopened book reads the same volume
+state; only cost and object identity change, not behaviour).

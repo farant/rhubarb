@@ -122,4 +122,11 @@ scriba_liber_paginam_legere (
                  chorda  titulus,
                     Xar* exitus);
 
+/* comites P2: praefixum libri ("comes/nomenclator/1"; liber in spatio
+ * aperto, scriba_liber_aperire_in_spatio); liber communis (index
+ * 'scriba/paginae'): vacuum */
+chorda
+scriba_liber_praefixum (
+    constans ScribaLiber* l);
+
 #endif /* SCRIBA_LIBER_H */

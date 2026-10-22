@@ -130,7 +130,7 @@ scriba book in the volume (pages, own viewed page)
 | Phase | Content |
 |---|---|
 | **P1** | Locus: derivation from a route (default + declared rounding + symbol resolution), view label; calendar declares its rounding. Tests on the route library and the calendar. DONE 2026-10-22: default `semita_locus` (binding fields of the current state); views override in CODE via `facies.locus` / `facies.locus_titulus` (the calendar's absent day means today and weeks start on Sunday - not expressible as manifest rounding). |
-| **P2** | Companion books: space per locus, per-book viewed page, book in scriba's route (left history). |
+| **P2** | Companion books: space per locus, per-book viewed page, book in scriba's route (left history). DONE 2026-10-22: scriba field `liber` (status, impelle; `scriba/2?liber=...`), `scriba_librum_praefixi_ponere`, host book lookup, per-book page `<prefix>/visus`. |
 | **P3** | Cmd+T, follow mode, bar - Fran's look. |
 | **P4** | Terminals: per pane, per tmux window when attached. |
 | **P5** | View relations slice: `quaestio` (Cmd+F) - the S4a work, if still wanted after P1 settles where declarations live. |

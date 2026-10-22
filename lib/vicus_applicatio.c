@@ -55,6 +55,13 @@
 nomen structura {
         ScribaLiber* liber;
     IussumRegistrum* iussa;
+    /* comites P2: libri comites aperti (praefixum -> ScribaLiber*) */
+      TabulaDispersa* libri;
+             Piscina* piscina;
+ InternamentumChorda* intern;
+             Volumen* volumen;
+                 i32  latitudo;
+                 i32  altitudo;
     /* status-plan S6b: systemata repositorii vici, communia cum
      * contextu pictoris (S7b: vicus_aperire ea creat) */
     StatusSystemata* systemata;
@@ -1038,6 +1045,43 @@ via_registrare (
         && iussum_registrare(r, "via", FALSUM, via_iussum, cv);
 }
 
+/* comites P2: porta librorum scribae - vacuum: communis; aliter
+ * liber in spatio praefixi, semel apertus (TabulaDispersa) */
+interior ScribaLiber*
+librum_scribae (
+     vacuum* ctx,
+     chorda  praefixum)
+{
+    ContextusScribae* cs;
+         ScribaLiber* l;
+              vacuum* inventum;
+              chorda  clavis;
+
+    cs = (ContextusScribae*)ctx;
+    si (!cs)
+    {
+        redde NIHIL;
+    }
+    si (praefixum.mensura == ZEPHYRUM)
+    {
+        redde cs->liber;
+    }
+    si (   cs->libri && tabula_dispersa_invenire(cs->libri, praefixum,
+            &inventum))
+    {
+        redde (ScribaLiber*)inventum;
+    }
+    clavis  = chorda_transcribere(praefixum, cs->piscina);
+    l       = scriba_liber_aperire_in_spatio(cs->piscina, cs->intern,
+        cs->volumen, chorda_ut_cstr(clavis, cs->piscina), cs->latitudo,
+        cs->altitudo);
+    si (l && cs->libri)
+    {
+        (vacuum)tabula_dispersa_inserere(cs->libri, clavis, l);
+    }
+    redde l;
+}
+
 interior b32
 scribam_montare (
                  vacuum* sedes,
@@ -1086,6 +1130,8 @@ scribam_montare (
         redde FALSUM;
     }
     m->actiones_ctx.iussa = cs->iussa;
+    /* comites P2: libri comites per portam */
+    scriba_libros_ponere(m, librum_scribae, cs);
     /* S7b: registrum vim unum applicationis - radix hospitis */
     m->actiones_ctx.ramus_capsae = insula_ramus_radix(repo);
     redde VERUM;
@@ -3498,6 +3544,13 @@ ContextusNomenclatoris* cn;
     cs->systemata = systemata;
     cs->liber = scriba_liber_aperire(piscina, intern, volumen,
         folii_columnae(latitudo), folii_lineae(altitudo));
+    /* comites P2: libri comites (porta librum_scribae) */
+    cs->libri     = tabula_dispersa_creare_chorda(piscina, XVI);
+    cs->piscina   = piscina;
+    cs->intern    = intern;
+    cs->volumen   = volumen;
+    cs->latitudo  = folii_columnae(latitudo);
+    cs->altitudo  = folii_lineae(altitudo);
     /* S3b: iussa omnium visuum scribae */
     cs->iussa = iussum_registrum_creare(piscina);
     si (   !app->vicus || !cs->liber || !cs->iussa
