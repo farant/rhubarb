@@ -521,6 +521,17 @@
     <ingressus genus="fasciculus" via="sancti.canon"/>
     <exitus via="lib/sancti_canon.c" provenientia="regeneratio"/>
   </actio>
+  <!-- liber cantilenarum infixus (sonus S4, mos sancti_canon):
+       cantuale.stml -> lib/cantuale_infixum.c, vicus et auditio
+       sine plagula libri vivunt -->
+  <actio titulus="cantuale_infixum" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/cantuale_infigere.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/cantuale_infigere.sh"/>
+    <ingressus genus="fasciculus" via="cantuale.stml"/>
+    <exitus via="lib/cantuale_infixum.c" provenientia="regeneratio"/>
+  </actio>
   <!-- canon organi infixus (status-plan S1, mos norma_canon):
        organum.canon -> lib/organum_canon.c, onerator manifestorum
        sine plagula vivit -->

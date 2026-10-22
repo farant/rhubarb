@@ -18,6 +18,11 @@
  *                                               WAV stereo (non sonat)
  *   auditio -cantus "..." 7                     semen
  *
+ *   auditio -cantuale                  cantilenae libri ordinarii
+ *   auditio -genus finis [semen]       cantilena generis sorte (semen
+ *                                      absens = horologium)
+ *   auditio -cantilena arpeggium       cantilena per titulum
+ *
  * Cantus: voces = notae (potentia II, >= XVI), quia cantus_iussa_parare
  * sedes OMNES statim capit - voces pauciores notas futuras surriperent.
  * Vivum: momentum = nunc + mora + margo; exit cum vox ultima finita
@@ -41,6 +46,7 @@
 #include "mixtura.h"
 #include "auditus.h"
 #include "cantus.h"
+#include "cantuale.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -379,20 +385,114 @@ _cantum_sonare (
     redde VERUM;
 }
 
+/* chorda -> litterae C in piscina */
+interior constans character*
+_litterae (
+     chorda  c,
+    Piscina* piscina)
+{
+    character* b = (character*)piscina_allocare(piscina,
+        (memoriae_index)c.mensura + I);
+
+    si (b != NIHIL)
+    {
+        memcpy(b, c.datum, (size_t)c.mensura);
+        b[c.mensura] = '\0';
+    }
+    redde b;
+}
+
+/* liber ordinarius: indicare = cantiones monstrat; aliter cantionem
+ * per genus (sorte) aut titulum eligit et textum eius in 'cantus'
+ * ponit. FALSUM: vitium monstratum */
+interior b32
+_ex_cantuali (
+                    b32   indicare,
+     constans character*  genus,
+     constans character*  titulus,
+                    i64   semen,
+                Piscina*  piscina,
+     constans character** cantus,
+                    b32*  intactus)
+{
+            Cantuale  liber;
+      CantualeVitium  vitium;
+     constans Cantio* c = NIHIL;
+                 i32  i;
+                 i32  g;
+
+    si (!cantuale_ordinarium(piscina, &liber, &vitium))
+    {
+        fprintf(stderr, "auditio: cantuale.stml '%.*s' %u: %s\n",
+                (integer)vitium.titulus.mensura,
+                (constans character*)vitium.titulus.datum,
+                vitium.offset, vitium.causa);
+        redde FALSUM;
+    }
+    si (indicare)
+    {
+        per (i = ZEPHYRUM; i < liber.numerus; i++)
+        {
+            c = &liber.cantiones[i];
+            imprimere("  %-14.*s", (integer)c->titulus.mensura,
+                      (constans character*)c->titulus.datum);
+            per (g = ZEPHYRUM; g < c->genera_numerus; g++)
+            {
+                imprimere("%s%.*s", g == ZEPHYRUM ? "" : " ",
+                          (integer)c->genera[g].mensura,
+                          (constans character*)c->genera[g].datum);
+            }
+            imprimere("%s\n      %.*s\n",
+                c->intactus ? "  (intactus)" : "",
+                      (integer)c->textus.mensura,
+                      (constans character*)c->textus.datum);
+        }
+        redde VERUM;
+    }
+    si (genus != NIHIL)
+    {
+        Sors sors;
+
+        sors_seminare(&sors, semen, ZEPHYRUM);
+        c = cantuale_eligere(&liber, chorda_ex_literis(genus, piscina),
+                             &sors, NIHIL);
+    }
+    alioquin
+    {
+        c = cantuale_invenire(&liber, chorda_ex_literis(titulus,
+            piscina));
+    }
+    si (c == NIHIL)
+    {
+        fprintf(stderr, "auditio: nulla cantilena '%s'\n",
+                genus != NIHIL ? genus : titulus);
+        redde FALSUM;
+    }
+    imprimere("cantilena: %.*s\n", (integer)c->titulus.mensura,
+              (constans character*)c->titulus.datum);
+    *cantus    = _litterae(c->textus, piscina);
+    *intactus  = *intactus || c->intactus;
+    redde *cantus != NIHIL;
+}
+
 integer
 principale (
       integer   argc,
     character** argv)
 {
                 Piscina* piscina;
-     constans character* titulus   = NIHIL;
-     constans character* via       = NIHIL;
-     constans character* cantus    = NIHIL;
-     constans character* color     = "tonus";
-                    b32  intactus  = FALSUM;
-                    i64  semen     = I;
-                    b32  omnes     = FALSUM;
-                    b32  bene      = VERUM;
+     constans character* titulus      = NIHIL;
+     constans character* via          = NIHIL;
+     constans character* cantus       = NIHIL;
+     constans character* color        = "tonus";
+     constans character* genus        = NIHIL;
+     constans character* cantilena    = NIHIL;
+                    b32  indicare     = FALSUM;
+                    b32  intactus     = FALSUM;
+                    i64  semen        = I;
+                    b32  semen_datum  = FALSUM;
+                    b32  omnes        = FALSUM;
+                    b32  bene         = VERUM;
                 integer  k;
 
     per (k = I; k < argc; k++)
@@ -420,26 +520,44 @@ principale (
         {
             intactus = VERUM;
         }
+        alioquin si (strcmp(argv[k], "-cantuale") == ZEPHYRUM)
+        {
+            indicare = VERUM;
+        }
+        alioquin si (   strcmp(argv[k], "-genus") == ZEPHYRUM
+                     && k + I < argc)
+        {
+            genus = argv[++k];
+        }
+        alioquin si (   strcmp(argv[k], "-cantilena") == ZEPHYRUM
+                     && k + I < argc)
+        {
+            cantilena = argv[++k];
+        }
         alioquin si (argv[k][ZEPHYRUM] == '-')
         {
             fprintf(stderr, "auditio: vexillum ignotum '%s'\n",
                 argv[k]);
             redde II;
         }
-        alioquin si (titulus == NIHIL && cantus == NIHIL)
+        alioquin si (   titulus == NIHIL && cantus == NIHIL
+                     && genus   == NIHIL && cantilena == NIHIL)
         {
             titulus = argv[k];
         }
         alioquin
         {
-            semen = (i64)strtoul(argv[k], NIHIL, X);
+            semen        = (i64)strtoul(argv[k], NIHIL, X);
+            semen_datum  = VERUM;
         }
     }
-    si (!omnes && titulus == NIHIL && cantus == NIHIL)
+    si (   !omnes && !indicare && titulus == NIHIL && cantus == NIHIL
+        && genus == NIHIL && cantilena == NIHIL)
     {
         imprimere("auditio: praeparata sonitus (auditio TITULUS [semen] "
                   "[-via x.wav] | -omnes | -cantus TEXTUS [-praeparatum T] "
-                  "[-intactus] [-via x.wav] [semen])\n");
+                  "[-intactus] [-via x.wav] [semen] | -cantuale | -genus G "
+                  "| -cantilena T)\n");
         _praeparata_monstrare();
         redde ZEPHYRUM;
     }
@@ -449,7 +567,24 @@ principale (
     {
         redde I;
     }
-    si (cantus != NIHIL)
+    si (indicare || genus != NIHIL || cantilena != NIHIL)
+    {
+        si (genus != NIHIL && !semen_datum)
+        {
+            semen = (i64)time(NIHIL);
+        }
+        bene = _ex_cantuali(indicare, genus, cantilena, semen, piscina,
+                            &cantus, &intactus);
+        si (indicare)
+        {
+            cantus = NIHIL;
+        }
+    }
+    si (!bene || indicare)
+    {
+        /* vitium iam monstratum, aut index scriptus */
+    }
+    alioquin si (cantus != NIHIL)
     {
         AuditioCantus a;
 

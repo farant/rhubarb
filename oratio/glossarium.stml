@@ -1789,4 +1789,9 @@
     <forma textus="redirigere" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
   </vocabulum>
 
+  <vocabulum lemma="cantuale" lingua="latina" classis="substantivum" nota="Latina media (cantuale, -is n.): liber cantuum chori - hic liber cantilenarum nominatarum (include/cantuale.h); WORDS caret">
+    <forma textus="cantuale" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="cantuali" casus="ablativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
+
 </glossarium>
