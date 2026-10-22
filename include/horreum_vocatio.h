@@ -60,6 +60,8 @@ nomen structura {
                                                 * prioris) */
     constans HttpVocatioOptiones* http;        /* NIHIL = ordinariae;
                                                 * copiatur */
+               HorreumObservator  observator;  /* NIHIL = nemo */
+                          vacuum* observatoris_datum;
 } HorreumVocatioOptiones;
 
 /* vocatio incipit; NIHIL solum si reactor, opus, finis aut piscina

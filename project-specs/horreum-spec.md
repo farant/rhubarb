@@ -5,7 +5,8 @@
 5a0f3e61 (MD5 + SigV4), T2 b7006108 (pure core), T3 780e65c6 (blocking
 layer + fake S3), T4 46e22e1b (multipart + file helpers), T5 1fbaed79
 (reactor layer), T6 (`bin/horreum`, `horreum probare`, capabilities
-probed live on DO Spaces and R2, real response fixtures). Not yet in
+probed live on DO Spaces and R2, real response fixtures) ef203a40;
+after-dogfooding addendum T7 (observer hook, II.5 end). Not yet in
 main. Spec written 2026-10-21 and approved in conversation section by
 section (units + names, API scope, provider profiles, errors + retries,
 tests). Follow-on: `inventarium` (the
@@ -265,6 +266,20 @@ Retries (policy in the core, executed by both layers):
   The same for a retried CompleteMultipartUpload that returns
   NoSuchUpload (HEAD, compare the expected ETag/size).
 - DeleteObjects: per-key results, never all-or-nothing.
+
+**Observation (T7, added 2026-10-22 after dogfooding).** horreum still
+never writes anything itself. Both executors take an optional
+`HorreumObservator` (`HorreumClientisOptiones` / `HorreumVocatioOptiones`
+/ `HorreumProbandi`: `observator` + `observatoris_datum`), called after
+EVERY attempt (retries and the iam_nostrum HEAD included) with the
+signed request and the raw response, or the transport error. The core
+`horreum_observationem_describere` turns one attempt into a readable
+transcript: `Authorization` and `X-Amz-Security-Token` values are
+`[TECTUM]`, binary bodies give only their size, text over IV KiB is cut.
+`bin/horreum -vestigium VIA` appends that transcript for any command.
+A trace is LOCAL debugging output: it keeps host names (R2's carries the
+account id) and raw bodies - never commit one; fixtures go through
+`horreum_responsum_purgare`.
 
 ### II.6 Credentials and profile files
 

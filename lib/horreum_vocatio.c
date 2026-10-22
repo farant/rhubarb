@@ -6,7 +6,9 @@
  * correctum: conatus novus statim; (b) 412 condicionale / (d)
  * NoSuchUpload Complete post iterationem: HEAD per vocationem FILIAM
  * (eadem machina, iterationes suas habet); (c) horreum_iterandum ->
- * timer, deinde conatus novus; ceterum finis.
+ * timer, deinde conatus novus; ceterum finis. Observator (si quis) post
+ * quemque finem http, ante lectionem; filia optiones (observatorem
+ * quoque) hereditat.
  *
  * Unum ex his pendet dum vocatio vivit: http (conatus), filia (HEAD),
  * timer (mora aut finis dilatus). Abrumpere omnia tollit; finis
@@ -32,6 +34,7 @@ structura HorreumVocatio {
                       Sors  sors;
                        b32  correctum;
                HttpVocatio* http;
+               HttpPetitio* petitio;        /* conatus currentis */
             HorreumVocatio* filia;
             ReactorTimerId  timer;
                        b32  timer_positum;
@@ -97,8 +100,10 @@ _conatum_incipere (
     {
         redde FALSUM;
     }
-    v->tempus  = tempus;
-    v->http    = http_vocare(v->reactor, pet, NIHIL, NIHIL, _http_finis,
+    v->tempus   = tempus;
+    v->petitio  = pet;
+    v->http     = http_vocare(v->reactor, pet, NIHIL, NIHIL,
+        _http_finis,
         v, v->http_data ? &v->http_optiones : NIHIL, v->piscina);
     si (!v->http)
     {
@@ -212,6 +217,28 @@ _inspicere (
     }
 }
 
+/* conatus observatori (si quis) ante lectionem */
+interior vacuum
+_observare (
+    constans HorreumVocatio* v,
+               HttpResultus  res)
+{
+    HorreumObservatio ob;
+
+    si (!v->optiones.observator)
+    {
+        redde;
+    }
+    ob.opus       = &v->opus;
+    ob.petitio    = v->petitio;
+    ob.responsum  = res.responsum;
+    ob.error_transportus  = res.responsum
+                            ? chorda_ex_buffer(NIHIL, ZEPHYRUM)
+                            : res.error_descriptio;
+    ob.conatus            = v->resultus.conatus;
+    v->optiones.observator(v->optiones.observatoris_datum, &ob);
+}
+
 interior vacuum
 _http_finis (
          vacuum* datum,
@@ -229,6 +256,7 @@ _http_finis (
         redde;
     }
     v->resultus.conatus++;
+    _observare(v, res);
     v->resultus.responsum = res.responsum;
     memset(&v->resultus.obiectum, ZEPHYRUM,
         magnitudo(v->resultus.obiectum));

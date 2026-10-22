@@ -62,6 +62,8 @@ nomen structura {
                  chorda  praefixum;   /* vacuum = "horreum-probatio/" */
                  chorda  id;          /* vacuum = ex tempore */
      constans character* responsa;    /* directorium; NIHIL = nulla */
+      HorreumObservator  observator;  /* conatus omnes; NIHIL = nemo */
+                 vacuum* observatoris_datum;
 } HorreumProbandi;
 
 /* FALSUM solum si probatio incipere nequit (situla nulla, directorium

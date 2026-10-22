@@ -315,6 +315,19 @@ this plan.
   and R2's `&quot;`-quoted Complete ETags read the same.
 - **T6: CLI flag stays `-profilum`** (the plan's interface; a string),
   identifiers use `tabella` per the T2 ruling.
+- **T7 (after dogfooding, Fran 2026-10-22 "if there are any changes or
+  improvements to horreum that you think would be helpful ... might be
+  worth going ahead"):** (a) the observer hook (spec II.5 end) - the
+  probe's response files only covered the steps given a file name and
+  hid headers; the hook sees every attempt in both layers and the probe
+  passes it through. The probe's anonymous/presigned requests go
+  straight to the vectura and are NOT observed (documented). (b) probe
+  causes always say what was compared: `_causa` never ends in an
+  empty "gradus: " (a request that succeeded before a failed comparison
+  says so), and the multipart step names counts/ETag/size. Red first:
+  fake switch `celare_onera` reproduced the live R2 "ListMultipartUploads:"
+  line. (c) `bin/horreum -vestigium VIA`. Checked live read-only (HEAD
+  of a missing key on both profiles): Authorization covered.
 
 ## Review focus
 

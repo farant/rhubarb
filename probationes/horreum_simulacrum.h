@@ -145,6 +145,8 @@ nomen structura {
     /* ut R2 (2026-10-22): ListMultipartUploads id ALIUM reddit
      * ("L-" + id); utrumque in uploadId valet */
                    b32 id_oneris_alienum;
+    /* ListMultipartUploads nihil reddit (causa nominata probatur) */
+                   b32 celare_onera;
 } Simulacrum;
 
 /* ===== auxilia ===== */
@@ -1629,7 +1631,7 @@ _sim_mp_pendentes (
     {
         SimulacrumOnus* o = &s->onera[i];
 
-        si (   !o->vivum
+        si (   !o->vivum || s->celare_onera
             || (   praefixum.mensura > ZEPHYRUM
                 && !chorda_incipit(o->clavis, praefixum)))
         {

@@ -1239,6 +1239,97 @@ _sectio_md5_etag (
     CREDO_VERUM(filum_arborem_delere(d));
 }
 
+/* ===== observator ===== */
+nomen structura {
+             Piscina* piscina;
+                 i32  numerus;
+    HorreumOpusGenus  genera[VIII];
+                 i32  status[VIII];        /* 0 = transportus */
+                 i32  conatus[VIII];
+                 b32  error_nominatus[VIII];
+                 b32  secretum_visum;
+} Observata;
+
+interior vacuum
+_observare (
+                        vacuum* datum,
+    constans HorreumObservatio* o)
+{
+    Observata* ob  = (Observata*)datum;
+       chorda  t   = horreum_observationem_describere(o, ob->piscina);
+
+    si (   chorda_continet(t, _l(SECRETUM, ob->piscina))
+        || chorda_continet(t, _l("Credential=", ob->piscina)))
+    {
+        ob->secretum_visum = VERUM;
+    }
+    si (ob->numerus < VIII)
+    {
+        ob->genera[ob->numerus]           = o->opus->genus;
+        ob->status[ob->numerus]           = o->responsum
+                                            ? o->responsum->status
+                                            : ZEPHYRUM;
+        ob->conatus[ob->numerus]          = o->conatus;
+        ob->error_nominatus[ob->numerus]  =
+            o->error_transportus.mensura > ZEPHYRUM;
+    }
+    ob->numerus++;
+}
+
+/* omnis conatus observatur: transportus perit, 412 post iterationem,
+ * HEAD iam_nostrum - et transcriptio secretum non continet */
+interior vacuum
+_sectio_observator (
+    CredoContextus* c)
+{
+                    Piscina* p = c->piscina;
+                 Horologium  horologium;
+                 Simulacrum* s       = _simulacrum(p);
+                    Horreum* h       = _horreum(s, &horologium,
+                        SECRETUM,
+                                           p);
+                     chorda situla  = _l(SIMULACRUM_SITULA, p);
+    HorreumClientisOptiones co;
+                  Observata ob;
+             HorreumPonendi ponendi;
+               HorreumError e;
+
+    memset(&ob, ZEPHYRUM, magnitudo(ob));
+    ob.piscina = p;
+    memset(&co, ZEPHYRUM, magnitudo(co));
+    co.vectura             = simulacrum_vectura(s);
+    co.nunc                = _nunc;
+    co.dormire             = _dormire;
+    co.datum               = &horologium;
+    co.semen               = VII;
+    co.observator          = _observare;
+    co.observatoris_datum  = &ob;
+    horreum_cliens_parare(h, &co, p);
+
+    memset(&ponendi, ZEPHYRUM, magnitudo(ponendi));
+    ponendi.solum_si_abest = VERUM;
+    simulacrum_vitium_addere(s, _vitium(
+        SIMULACRUM_VITIUM_SCRIBERE_ABRUMPERE, HTTP_PUT, "visa.txt",
+        ZEPHYRUM, NIHIL, ZEPHYRUM, I));
+    CREDO_VERUM(horreum_ponere(h, situla, _l("visa.txt", p), _l("salve",
+        p), &ponendi, NIHIL, &e, p));
+    CREDO_AEQUALIS_I32(ob.numerus, III);
+    CREDO_AEQUALIS_I32((i32)ob.genera[ZEPHYRUM],
+        (i32)HORREUM_OPUS_PONERE);
+    CREDO_AEQUALIS_I32(ob.status[ZEPHYRUM], ZEPHYRUM);
+    CREDO_VERUM(ob.error_nominatus[ZEPHYRUM]);
+    CREDO_AEQUALIS_I32(ob.conatus[ZEPHYRUM], I);
+    CREDO_AEQUALIS_I32((i32)ob.genera[I], (i32)HORREUM_OPUS_PONERE);
+    CREDO_AEQUALIS_I32(ob.status[I], CDXII);
+    CREDO_AEQUALIS_I32(ob.conatus[I], II);
+    CREDO_AEQUALIS_I32((i32)ob.genera[II],
+        (i32)HORREUM_OPUS_INSPICERE);
+    CREDO_AEQUALIS_I32(ob.status[II], CC);
+    CREDO_AEQUALIS_I32(ob.conatus[II], I);
+    CREDO_FALSUM(ob.secretum_visum);
+    simulacrum_claudere(s);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "iter", _sectio_iter, NIHIL, NIHIL, NIHIL, NIHIL },
     { "signatura_verificata", _sectio_signatura_verificata, NIHIL,
@@ -1281,6 +1372,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "capere_mensura_mala", _sectio_capere_mensura_mala, NIHIL, NIHIL,
         NIHIL, NIHIL },
     { "md5_etag", _sectio_md5_etag, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "observator", _sectio_observator, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

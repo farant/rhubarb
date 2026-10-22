@@ -12,6 +12,11 @@
  *   horreum -profilum P pendentes [PRAEFIXUM] [-abicere]
  *   horreum -profilum P probare [-praefixum P] [-responsa DIR]
  *
+ * -vestigium VIA (mandato cuivis): quisque conatus HTTP (iterationes et
+ * HEAD comprehensa) in VIA appenditur ut transcriptio
+ * (horreum_observationem_describere: Authorization tectum, corpus
+ * longum abbreviatum).
+ *
  * Numquam secretum scribit; URL praesignata solum a 'praesignare'.
  * Exitus: 0 bene; I operatio defecit (probare: gradus non-capacitatis
  * defecit aut aliquid relictum); II usus aut profilum. */
@@ -23,6 +28,7 @@
 #include "horreum.h"
 #include "horreum_cliens.h"
 #include "horreum_probatio.h"
+#include "filum.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,8 +50,35 @@ _usus (vacuum)
         "  praesignare GET|PUT CLAVIS [-secundae N]\n"
         "  pendentes [PRAEFIXUM] [-abicere]\n"
         "  probare [-praefixum P] [-responsa DIR]\n"
+        "-vestigium VIA: conatus omnes HTTP in VIA appenduntur\n"
         "profilum: titulus (~/.rhubarb/horreum/TITULUS.clavis) aut via\n");
 }
+
+nomen structura {
+     constans character* via;
+                    b32  defectus;
+} Vestigium;
+
+/* observator: transcriptio conatus in filum (piscina propria, ne
+ * piscina mandati per conatus crescat) */
+interior vacuum
+_vestigium_scribere (
+                        vacuum* datum,
+    constans HorreumObservatio* o)
+{
+    Vestigium* v = (Vestigium*)datum;
+      Piscina* q = piscina_generare_dynamicum("horreum_vestigium",
+                       (memoriae_index)(XVI * MXXIV));
+
+    si (!filum_appendere(v->via, horreum_observationem_describere(o,
+        q)))
+    {
+        v->defectus = VERUM;
+    }
+    piscina_destruere(q);
+}
+
+interior Vestigium vestigium;
 
 interior chorda
 _l (
@@ -315,6 +348,11 @@ _probare (
         o.praefixum = _l(praefixum, p);
     }
     o.responsa = _optio(argc, argv, IV, "-responsa");
+    si (vestigium.via)
+    {
+        o.observator          = _vestigium_scribere;
+        o.observatoris_datum  = &vestigium;
+    }
     si (!horreum_probare(h, &o, &r, &e, p))
     {
         redde _error("probare", &e);
@@ -468,10 +506,11 @@ principale (
       integer   argc,
     character** argv)
 {
-         Piscina* p;
-         Horreum* h;
-    HorreumError  e;
-             s32  exitus;
+                    Piscina* p;
+                    Horreum* h;
+               HorreumError  e;
+                        s32  exitus;
+    HorreumClientisOptiones  co;
 
     si (argc < IV || strcmp(argv[I], "-profilum") != ZEPHYRUM)
     {
@@ -487,8 +526,20 @@ principale (
         piscina_destruere(p);
         redde II;
     }
-    horreum_cliens_parare(h, NIHIL, p);
+    memset(&co, ZEPHYRUM, magnitudo(co));
+    vestigium.via = _optio(argc, argv, IV, "-vestigium");
+    si (vestigium.via)
+    {
+        co.observator          = _vestigium_scribere;
+        co.observatoris_datum  = &vestigium;
+    }
+    horreum_cliens_parare(h, &co, p);
     exitus = _mandatum(h, argc, argv, p);
+    si (vestigium.defectus)
+    {
+        fprintf(stderr, "horreum: vestigium %s scribi nequit\n",
+            vestigium.via);
+    }
     horreum_claudere(h);
     piscina_destruere(p);
     redde exitus;

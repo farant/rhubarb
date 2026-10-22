@@ -2710,3 +2710,137 @@ horreum_partis_mensura (
     }
     redde pars;
 }
+
+/* ===== observatio ===== */
+#define HORREUM_CORPUS_DESCRIPTUM (IV * MXXIV)
+
+/* capita quae credentias ferunt: valor numquam describitur */
+interior b32
+_caput_tegendum (
+      chorda  titulus,
+     Piscina* p)
+{
+    redde chorda_aequalis_case_insensitivus(titulus, _l("Authorization",
+              p))
+        || chorda_aequalis_case_insensitivus(titulus,
+              _l("X-Amz-Security-Token", p));
+}
+
+interior vacuum
+_capita_describere (
+          ChordaAedificator* a,
+                  character  signum,
+         constans HttpCaput* capita,
+                        i32  numerus,
+                    Piscina* p)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        chorda_aedificator_appendere_character(a, signum);
+        chorda_aedificator_appendere_character(a, ' ');
+        chorda_aedificator_appendere_chorda(a, capita[i].titulus);
+        chorda_aedificator_appendere_literis(a, ": ");
+        si (_caput_tegendum(capita[i].titulus, p))
+        {
+            chorda_aedificator_appendere_literis(a, "[TECTUM]");
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_chorda(a, capita[i].valor);
+        }
+        chorda_aedificator_appendere_character(a, '\n');
+    }
+    chorda_aedificator_appendere_character(a, signum);
+    chorda_aedificator_appendere_character(a, '\n');
+}
+
+/* textus (cum \t \n \r) ut est, ultra limitem abbreviatus; binarium
+ * solum mensura */
+interior vacuum
+_corpus_describere (
+    ChordaAedificator* a,
+               chorda  corpus)
+{
+    i32 i;
+    i32 n = corpus.mensura < (i32)HORREUM_CORPUS_DESCRIPTUM
+            ? corpus.mensura : (i32)HORREUM_CORPUS_DESCRIPTUM;
+
+    si (corpus.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < corpus.mensura; i++)
+    {
+        i8 c = corpus.datum[i];
+
+        si (   (c < (i8)' ' && c != (i8)'\t' && c != (i8)'\n'
+                && c != (i8)'\r')
+            || c == (i8)0x7F)
+        {
+            chorda_aedificator_appendere_literis(a,
+                "[corpus binarium: ");
+            chorda_aedificator_appendere_i32(a, corpus.mensura);
+            chorda_aedificator_appendere_literis(a, " octeti]\n");
+            redde;
+        }
+    }
+    chorda_aedificator_appendere_chorda(a, chorda_sectio(corpus,
+        ZEPHYRUM, n));
+    si (corpus.datum[n - I] != (i8)'\n')
+    {
+        chorda_aedificator_appendere_character(a, '\n');
+    }
+    si (n < corpus.mensura)
+    {
+        chorda_aedificator_appendere_literis(a, "[");
+        chorda_aedificator_appendere_i32(a, corpus.mensura - n);
+        chorda_aedificator_appendere_literis(a, " octeti omissi]\n");
+    }
+}
+
+chorda
+horreum_observationem_describere (
+    constans HorreumObservatio* o,
+                       Piscina* p)
+{
+    ChordaAedificator* a;
+     HttpPetitioVisus  v;
+
+    si (!o || !o->petitio || !p)
+    {
+        redde chorda_ex_buffer(NIHIL, ZEPHYRUM);
+    }
+    v = http_petitio_visus(o->petitio);
+    a = chorda_aedificator_creare(p, MXXIV);
+    chorda_aedificator_appendere_literis(a, "> ");
+    chorda_aedificator_appendere_literis(a,
+        http_methodus_nomen(v.methodus));
+    chorda_aedificator_appendere_character(a, ' ');
+    chorda_aedificator_appendere_chorda(a, v.via);
+    chorda_aedificator_appendere_literis(a, "  (conatus ");
+    chorda_aedificator_appendere_i32(a, o->conatus);
+    chorda_aedificator_appendere_literis(a, ")\n");
+    _capita_describere(a, '>', v.capita, v.capita_numerus, p);
+    _corpus_describere(a, v.corpus);
+    si (!o->responsum)
+    {
+        chorda_aedificator_appendere_literis(a,
+            "< defectus transportus: ");
+        chorda_aedificator_appendere_chorda(a, o->error_transportus);
+        chorda_aedificator_appendere_literis(a, "\n\n");
+        redde chorda_aedificator_finire(a);
+    }
+    chorda_aedificator_appendere_literis(a, "< ");
+    chorda_aedificator_appendere_i32(a, o->responsum->status);
+    chorda_aedificator_appendere_character(a, ' ');
+    chorda_aedificator_appendere_chorda(a,
+        o->responsum->status_descriptio);
+    chorda_aedificator_appendere_character(a, '\n');
+    _capita_describere(a, '<', o->responsum->capita,
+        o->responsum->capita_numerus, p);
+    _corpus_describere(a, o->responsum->corpus);
+    chorda_aedificator_appendere_character(a, '\n');
+    redde chorda_aedificator_finire(a);
+}

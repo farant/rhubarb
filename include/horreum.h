@@ -216,6 +216,23 @@ nomen structura {
               chorda  perficere_etag_expectatum;
 } HorreumOpus;
 
+/* observatio: executores (horreum_cliens, horreum_vocatio) observatorem
+ * post QUEMQUE conatum vocant (iterationes et HEAD iam_nostrum
+ * comprehensa), antequam responsum legitur. Omnia valent solum intra
+ * vocationem. horreum ipsum nihil scribit: vocans decernit quo eat
+ * (horreum_observationem_describere -> filum, stderr). */
+nomen structura {
+      constans HorreumOpus* opus;
+      constans HttpPetitio* petitio;            /* signata */
+    constans HttpResponsum* responsum;          /* NIHIL: transportus
+                                                  * defecit */
+                    chorda error_transportus;
+                       i32 conatus;            /* operis, 1.. */
+} HorreumObservatio;
+
+nomen vacuum (*HorreumObservator)(vacuum* datum,
+    constans HorreumObservatio* o);
+
 constans HorreumProvisor*
 horreum_provisor (
     constans character* titulus);
@@ -503,6 +520,15 @@ i64
 horreum_partis_mensura (
     i64 mensura_tota,
     i64 petita);
+
+/* transcriptio legibilis conatus unius: "> " linea petitionis, capita
+ * (Authorization et X-Amz-Security-Token TECTA), corpus; "< " status,
+ * capita, corpus responsi (aut defectus transportus). Corpus binarium
+ * solum mensura nominatur; textus ultra IV KiB abbreviatur. */
+chorda
+horreum_observationem_describere (
+    constans HorreumObservatio* o,
+                       Piscina* piscina);
 
 /* tempora (P7): ISO 8601 cum fractione; IMF-fixdate HTTP. 0 = malum */
 MomentumSec

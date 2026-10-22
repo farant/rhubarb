@@ -1315,6 +1315,89 @@ _sectio_responsa_vera (
     }
 }
 
+/* ===== observatio: transcriptio legibilis et tecta ===== */
+interior vacuum
+_sectio_observatio (
+    CredoContextus* c)
+{
+              Piscina* p = c->piscina;
+              Horreum* h = _horreum("generic", "https://hospes.invalid",
+                               "us-east-1", p);
+          HorreumOpus  o;
+         HorreumError  e;
+    HorreumObservatio  ob;
+        HttpResponsum  r;
+            HttpCaput  capita[II];
+          HttpPetitio* pet;
+               chorda  t;
+                   i8* magnum;
+                   i8  binarium[III];
+
+    CREDO_NECESSE_NON_NIHIL(h);
+    CREDO_VERUM(horreum_opus_ponere(h, _l("situla", p), _l("a/b.txt",
+        p),
+        _l("salve", p), NIHIL, &o, &e, p));
+    pet = _signare(h, &o, p);
+    CREDO_NECESSE_NON_NIHIL(pet);
+    http_petitio_caput_addere(pet, "X-Amz-Security-Token",
+        "SIGNUM-SECRETUM");
+    memset(&r, ZEPHYRUM, magnitudo(r));
+    r.status                  = CC;
+    r.status_descriptio       = _l("OK", p);
+    capita[ZEPHYRUM].titulus  = _l("x-amz-request-id", p);
+    capita[ZEPHYRUM].valor    = _l("RID-1", p);
+    capita[I].titulus         = _l("ETag", p);
+    capita[I].valor           = _l("\"abc\"", p);
+    r.capita                  = capita;
+    r.capita_numerus          = II;
+    r.corpus                  = _l("<Ok/>", p);
+    memset(&ob, ZEPHYRUM, magnitudo(ob));
+    ob.opus       = &o;
+    ob.petitio    = pet;
+    ob.responsum  = &r;
+    ob.conatus    = II;
+    t             = horreum_observationem_describere(&ob, p);
+    CREDO_CHORDA_INCIPIT(t, _l("> PUT /situla/a/b.txt", p));
+    CREDO_CHORDA_CONTINET(t, _l("(conatus 2)", p));
+    CREDO_CHORDA_CONTINET(t, _l("\n> Authorization: [TECTUM]\n", p));
+    CREDO_CHORDA_CONTINET(t, _l("\n> X-Amz-Security-Token: [TECTUM]\n",
+        p));
+    CREDO_FALSUM(chorda_continet(t, _l("Credential=", p)));
+    CREDO_FALSUM(chorda_continet(t, _l("Signature=", p)));
+    CREDO_FALSUM(chorda_continet(t, _l("AKIDEXAMPLE", p)));
+    CREDO_FALSUM(chorda_continet(t, _l("SIGNUM-SECRETUM", p)));
+    CREDO_FALSUM(chorda_continet(t, _l(SECRETUM, p)));
+    CREDO_CHORDA_CONTINET(t, _l("\n>\nsalve\n< 200 OK\n", p));
+    CREDO_CHORDA_CONTINET(t, _l("\n< x-amz-request-id: RID-1\n", p));
+    CREDO_CHORDA_CONTINET(t, _l("\n<\n<Ok/>\n", p));
+
+    /* corpus binarium: mensura sola */
+    binarium[ZEPHYRUM]  = ZEPHYRUM;
+    binarium[I]         = I;
+    binarium[II]        = II;
+    r.corpus            = chorda_ex_buffer(binarium, III);
+    t                   = horreum_observationem_describere(&ob, p);
+    CREDO_CHORDA_CONTINET(t, _l("\n<\n[corpus binarium: 3 octeti]\n",
+        p));
+
+    /* textus longus abbreviatur */
+    magnum = (i8*)piscina_allocare(p, (memoriae_index)(V * M));
+    memset(magnum, 'a', (memoriae_index)(V * M));
+    r.corpus  = chorda_ex_buffer(magnum, (i32)(V * M));
+    t         = horreum_observationem_describere(&ob, p);
+    CREDO_CHORDA_CONTINET(t, _l("[904 octeti omissi]", p));
+    CREDO_MINOR_I32((i32)t.mensura, (i32)(V * M));
+
+    /* transportus defecit */
+    ob.responsum          = NIHIL;
+    ob.error_transportus  = _l("connexio abrupta", p);
+    t                     = horreum_observationem_describere(&ob, p);
+    CREDO_CHORDA_CONTINET(t, _l("\n< defectus transportus: connexio "
+        "abrupta\n", p));
+    CREDO_CHORDA_VACUA(horreum_observationem_describere(NIHIL, p));
+    horreum_claudere(h);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "provisores", _sectio_provisores, NIHIL, NIHIL, NIHIL, NIHIL },
     { "stilus", _sectio_stilus, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1347,6 +1430,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "tabella_vitia", _sectio_tabella_vitia, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "observatio", _sectio_observatio, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

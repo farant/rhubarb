@@ -116,6 +116,31 @@ _onera_viva (
     redde FALSUM;
 }
 
+/* causa nulla vacua aut truncata ("gradus: " sine re) */
+interior b32
+_causae_plenae (
+    constans HorreumProbatio* r)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < r->numerus; i++)
+    {
+        chorda k = r->lineae[i].causa;
+            i8 u = k.mensura > ZEPHYRUM ? k.datum[k.mensura - I]
+                                         : (i8)' ';
+
+        si (u == (i8)' ' || u == (i8)':')
+        {
+            imprimere("  causa truncata: %s (%.*s)\n",
+                r->lineae[i].titulus, (integer)k.mensura,
+                (constans character*)k.datum);
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+
 /* ===== simulacrum_omnia: provisor honestus, omnia probata ===== */
 interior vacuum
 _sectio_simulacrum_omnia (
@@ -221,6 +246,7 @@ _sectio_simulacrum_neglegens (
     CREDO_VERUM(_verdictum(&r, "checksum_sha256", HORREUM_REFUTATUM));
     CREDO_VERUM(_verdictum(&r, "acl", HORREUM_REFUTATUM));
     CREDO_VERUM(_verdictum(&r, "iter", HORREUM_PROBATUM));
+    CREDO_VERUM(_causae_plenae(&r));
     CREDO_VERUM(_verdictum(&r, "multipars", HORREUM_PROBATUM));
     CREDO_VERUM(_verdictum(&r, "praesignare", HORREUM_PROBATUM));
     CREDO_VERUM(_verdictum(&r, "purgatio", HORREUM_PROBATUM));
@@ -230,6 +256,50 @@ _sectio_simulacrum_neglegens (
     CREDO_CHORDA_INCIPIT(r.praefixum, _l("horreum-probatio/", p));
     CREDO_AEQUALIS_S32(r.relicta, ZEPHYRUM);
     CREDO_AEQUALIS_I32(s->numerus, ZEPHYRUM);
+    simulacrum_claudere(s);
+    horreum_claudere(h);
+}
+
+interior vacuum
+_numerare (
+                        vacuum* datum,
+    constans HorreumObservatio* o)
+{
+    (vacuum)o;
+    (*(i32*)datum)++;
+}
+
+/* ===== causa_nominata: comparatio dicit quid comparavit ===== */
+interior vacuum
+_sectio_causa_nominata (
+    CredoContextus* c)
+{
+         Piscina* p = c->piscina;
+      Simulacrum* s = simulacrum_creare(_l(CLAVIS_ID, p), _l(SECRETUM,
+          p),
+                          _l("us-east-1", p), p);
+         Horreum* h = _horreum_do(p);
+ HorreumProbandi  o;
+ HorreumProbatio  r;
+    HorreumError  e;
+             i32  observata = ZEPHYRUM;
+
+    CREDO_NECESSE_NON_NIHIL(h);
+    s->celare_onera = VERUM;
+    memset(&o, ZEPHYRUM, magnitudo(o));
+    o.vectura             = simulacrum_vectura(s);
+    o.observator          = _numerare;
+    o.observatoris_datum  = &observata;
+    CREDO_VERUM(horreum_probare(h, &o, &r, &e, p));
+    CREDO_VERUM(_verdictum(&r, "multipars", HORREUM_REFUTATUM));
+    CREDO_CHORDA_CONTINET(_linea(&r, "multipars")->causa,
+        _l("ListMultipartUploads", p));
+    CREDO_CHORDA_CONTINET(_linea(&r, "multipars")->causa,
+        _l("0 onera", p));
+    CREDO_VERUM(_causae_plenae(&r));
+    /* observator per probationem traditur (praesignatae exceptae) */
+    CREDO_MAIOR_I32(observata, XX);
+    CREDO_MINOR_I32(observata, simulacrum_petitiones(s));
     simulacrum_claudere(s);
     horreum_claudere(h);
 }
@@ -291,6 +361,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "id_oneris_alienum", _sectio_id_oneris_alienum, NIHIL, NIHIL,
         NIHIL,
+        NIHIL },
+    { "causa_nominata", _sectio_causa_nominata, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "purgare", _sectio_purgare, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

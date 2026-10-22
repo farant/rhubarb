@@ -4,7 +4,8 @@
  * Gradus ordine fixo, quisque lineam unam reddit; nullus gradus alium
  * sistit (relatio tota semper). Opera per aedificatores nucleii et
  * horreum_exsequi (iterationes T3) ut responsa cruda servari possint;
- * praesignatae per vecturam ipsam sine Authorization. Purgatio ultima:
+ * praesignatae per vecturam ipsam sine Authorization (observatorem
+ * praetereunt - non per horreum_exsequi). Purgatio ultima:
  * enumeratio sub praefixo -> delere (plura, aut singula si plura
  * deficit), onera pendentia -> abicere, deinde numeratio relictorum. */
 #include "latina.h"
@@ -14,6 +15,7 @@
 #include "base64.h"
 #include "filum.h"
 
+#include <stdio.h>
 #include <string.h>
 #include <time.h>
 
@@ -68,29 +70,63 @@ _linea (
     pr->r->numerus++;
 }
 
-/* "gradus: codex (status) nuntius" */
+/* "gradus: codex (status) nuntius" - partes vacuae omittuntur; error
+ * nullus (petitio successit, comparatio sequens defecit) nominatur,
+ * numquam "gradus: " vacuum */
 interior chorda
 _causa (
                     Probans* pr,
          constans character* gradus,
       constans HorreumError* e)
 {
-    ChordaAedificator* a = chorda_aedificator_creare(pr->p, CXXVIII);
+     ChordaAedificator* a = chorda_aedificator_creare(pr->p, CXXVIII);
+                   b32  aliquid = FALSUM;
 
     chorda_aedificator_appendere_literis(a, gradus);
-    chorda_aedificator_appendere_literis(a, ": ");
+    chorda_aedificator_appendere_literis(a, ":");
     si (e->codex.mensura > ZEPHYRUM)
     {
-        chorda_aedificator_appendere_chorda(a, e->codex);
         chorda_aedificator_appendere_literis(a, " ");
+        chorda_aedificator_appendere_chorda(a, e->codex);
+        aliquid = VERUM;
     }
     si (e->status > ZEPHYRUM)
     {
-        chorda_aedificator_appendere_literis(a, "(");
+        chorda_aedificator_appendere_literis(a, " (");
         chorda_aedificator_appendere_i32(a, e->status);
-        chorda_aedificator_appendere_literis(a, ") ");
+        chorda_aedificator_appendere_literis(a, ")");
+        aliquid = VERUM;
     }
-    chorda_aedificator_appendere_chorda(a, e->nuntius);
+    si (e->nuntius.mensura > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(a, " ");
+        chorda_aedificator_appendere_chorda(a, e->nuntius);
+        aliquid = VERUM;
+    }
+    si (!aliquid)
+    {
+        chorda_aedificator_appendere_literis(a, e->genus == HORREUM_BENE
+            ? " petitio successit, exitus non congruit"
+            : " error sine descriptione");
+    }
+    redde chorda_aedificator_finire(a);
+}
+
+/* "ante N post" - comparatio numeri nominata */
+interior chorda
+_causa_numeri (
+                Probans* pr,
+     constans character* ante,
+                    i64  n,
+     constans character* post)
+{
+     ChordaAedificator* a = chorda_aedificator_creare(pr->p, CXXVIII);
+             character  numerus[XXXII];
+
+    sprintf(numerus, "%ld", (longus)n);
+    chorda_aedificator_appendere_literis(a, ante);
+    chorda_aedificator_appendere_literis(a, numerus);
+    chorda_aedificator_appendere_literis(a, post);
     redde chorda_aedificator_finire(a);
 }
 
@@ -806,35 +842,59 @@ HorreumOnusPendens* onera;
         || !_exsequi(pr, &o, &x, NIHIL, &e, "mp_partes.xml")
         || !horreum_partes_legere(x.responsum->corpus, &lectae,
         &numerus,
-            &e, p)
-        || numerus != III)
+            &e, p))
     {
         _linea(pr, "multipars", ZEPHYRUM, HORREUM_REFUTATUM, _causa(pr,
             "ListParts", &e));
         redde;
     }
-    si (   !_pendentes(pr, &onera, &numerus, &e, "mp_pendentes.xml")
-        || !_pendens(onera, numerus, clavis))
+    si (numerus != III)
+    {
+        _linea(pr, "multipars", ZEPHYRUM, HORREUM_REFUTATUM,
+            _causa_numeri(pr, "ListParts: 3 partes missae, ",
+            (i64)numerus, " redditae"));
+        redde;
+    }
+    si (!_pendentes(pr, &onera, &numerus, &e, "mp_pendentes.xml"))
     {
         _linea(pr, "multipars", ZEPHYRUM, HORREUM_REFUTATUM, _causa(pr,
             "ListMultipartUploads", &e));
         redde;
     }
+    si (!_pendens(onera, numerus, clavis))
+    {
+        _linea(pr, "multipars", ZEPHYRUM, HORREUM_REFUTATUM,
+            _causa_numeri(pr, "ListMultipartUploads: clavis oneris "
+            "non inventa inter ", (i64)numerus, " onera reddita"));
+        redde;
+    }
     si (   !horreum_opus_mp_perficere(pr->h, pr->situla, clavis, id,
         partes,
                 III, &o, &e, p)
-        || !_exsequi(pr, &o, NIHIL, &ob, &e, "mp_perficere.xml")
-        || !chorda_terminatur(ob.etag, _l("-3", p)))
+        || !_exsequi(pr, &o, NIHIL, &ob, &e, "mp_perficere.xml"))
     {
         _linea(pr, "multipars", ZEPHYRUM, HORREUM_REFUTATUM, _causa(pr,
             "CompleteMultipartUpload", &e));
         redde;
     }
-    si (   !_inspicere(pr, clavis, &ob, &e)
-        || ob.mensura != (i64)III * (i64)HORREUM_PARS_MINIMA)
+    si (!chorda_terminatur(ob.etag, _l("-3", p)))
+    {
+        _linea(pr, "multipars", ZEPHYRUM, HORREUM_REFUTATUM,
+            chorda_concatenare(_l(
+            "CompleteMultipartUpload: ETag sine -3: ", p), ob.etag, p));
+        redde;
+    }
+    si (!_inspicere(pr, clavis, &ob, &e))
     {
         _linea(pr, "multipars", ZEPHYRUM, HORREUM_REFUTATUM, _causa(pr,
             "HEAD post Complete", &e));
+        redde;
+    }
+    si (ob.mensura != (i64)III * (i64)HORREUM_PARS_MINIMA)
+    {
+        _linea(pr, "multipars", ZEPHYRUM, HORREUM_REFUTATUM,
+            _causa_numeri(pr, "HEAD post Complete: mensura ",
+            ob.mensura, " (expectata 15728640)"));
         redde;
     }
     /* abortus */
@@ -1155,6 +1215,11 @@ horreum_probare (
     horreum_omnia_permittere(h);
     memset(&co, ZEPHYRUM, magnitudo(co));
     co.vectura = pr.vectura;
+    si (o)
+    {
+        co.observator          = o->observator;
+        co.observatoris_datum  = o->observatoris_datum;
+    }
     horreum_cliens_parare(h, &co, p);
 
     _gradus_iter(&pr);

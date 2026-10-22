@@ -184,3 +184,36 @@
 - Smoke: `tools/horreum_fumus.sh <profile>` (put/get/inspect/list,
   presigned GET via curl, 17 MiB two-part upload, cleanup) - green on
   both. It never prints the presigned URL.
+
+## 2026-10-22 - T7: observer hook + probe causes (dogfooding)
+
+Fran asked whether the T6 response-body capture had helped. Honest
+answer: it diagnosed the R2 UploadId mismatch in one look and gave us
+the real fixtures, but it was wired by hand into the probe only, covered
+only the eight named steps, and saved no headers - DO's If-Match 412
+was found without it. Two improvements followed:
+
+- **Observer, not logging.** `HorreumObservator` in both executors'
+  options, called after every attempt before the response is read
+  (so a 412-after-retry shows the PUT, the retried PUT and the HEAD).
+  The vocatio stores the current attempt's `petitio` in the struct
+  because `http_vocatio_resultus` does not give it back; the child HEAD
+  inherits the options and so the observer. The transcript function
+  lives in the pure core (returns a chorda; the caller decides where it
+  goes). Redaction is by header name: Authorization,
+  X-Amz-Security-Token. The access key id lives only inside
+  Authorization (Credential=), so covering that header covers it.
+- **Probe causes.** The live R2 failure printed "ListMultipartUploads:"
+  and nothing else because the list call SUCCEEDED and the comparison
+  after it failed with a zeroed error. `_causa` now never ends after the
+  colon; the multipart step separates "call failed" from "comparison
+  failed" and names the count / ETag / size. New fake switch
+  `celare_onera` (list returns no uploads) is the red test; every probe
+  test now asserts `_causae_plenae`.
+- `bin/horreum -vestigium VIA` uses a throwaway piscina per attempt so
+  a long command's arena does not grow with the trace.
+- Live check (read-only HEAD of a missing key, both profiles): DO sends
+  an empty-bodied 404 with x-amz-request-id; R2 a 404 with CF-RAY and no
+  x-amz-* headers at all. The R2 Host line carries the account id:
+  traces are local only.
+

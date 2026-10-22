@@ -15,6 +15,9 @@
  * iterare; ceterum finis. (d) CompleteMultipartUpload NoSuchUpload
  * post iterationem: HEAD, ETag == expectatum -> iam_nostrum.
  *
+ * Observator (si quis) post quemque conatum, ante lectionem - HEAD
+ * iam_nostrum per horreum_exsequi currit, ergo et ipsum observatur.
+ *
  * Fila: pars una (aut frustum unum) in piscina propria, post missionem
  * destructa - memoria fili magnitudine non crescit. */
 #include "postulata_posix.h"
@@ -106,6 +109,31 @@ horreum_cliens_parare (
         (memoriae_index)magnitudo(HorreumCliens));
     _cliens_implere(c, o);
     horreum_sedem_ponere(h, c);
+}
+
+/* conatus observatori (si quis) ante lectionem */
+interior vacuum
+_observare (
+    constans HorreumCliens* c,
+      constans HorreumOpus* opus,
+      constans HttpPetitio* pet,
+              HttpResultus  res,
+                       i32  conatus)
+{
+    HorreumObservatio ob;
+
+    si (!c->optiones.observator)
+    {
+        redde;
+    }
+    ob.opus       = opus;
+    ob.petitio    = pet;
+    ob.responsum  = res.responsum;
+    ob.error_transportus  = res.responsum
+                            ? chorda_ex_buffer(NIHIL, ZEPHYRUM)
+                            : res.error_descriptio;
+    ob.conatus            = conatus;
+    c->optiones.observator(c->optiones.observatoris_datum, &ob);
 }
 
 /* obiectum fert x-amz-meta-sha256 == sigillum nostrum? */
@@ -240,6 +268,7 @@ horreum_exsequi (
         res            = http_vectura_exsequi(c->optiones.vectura, pet,
             p);
         x->conatus++;
+        _observare(c, opus, pet, res, x->conatus);
         x->responsum   = res.responsum;
         x->deviatio_s  = c->deviatio_s;
         si (horreum_responsum_legere(opus, res, tempus, ob, e, p))

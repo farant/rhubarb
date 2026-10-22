@@ -485,6 +485,70 @@ _sectio_duae_ianuae (
     _mundum_claudere(&m);
 }
 
+/* ===== observator: omnis conatus, filia HEAD comprehensa ===== */
+nomen structura {
+                 i32 numerus;
+    HorreumOpusGenus genera[VIII];
+                 i32 status[VIII];        /* 0 = transportus */
+                 i32 conatus[VIII];
+} Observata;
+
+interior vacuum
+_observare (
+                        vacuum* datum,
+    constans HorreumObservatio* o)
+{
+    Observata* ob = (Observata*)datum;
+
+    si (ob->numerus < VIII)
+    {
+        ob->genera[ob->numerus]   = o->opus->genus;
+        ob->status[ob->numerus]   = o->responsum ? o->responsum->status
+                                                 : ZEPHYRUM;
+        ob->conatus[ob->numerus]  = o->conatus;
+    }
+    ob->numerus++;
+}
+
+interior vacuum
+_sectio_observator (
+    CredoContextus* c)
+{
+           Piscina* p = c->piscina;
+            Mundus  m;
+            Testis  t;
+         Observata  ob;
+       HorreumOpus  o;
+      HorreumError  e;
+    HorreumPonendi  ponendi;
+
+    CREDO_NECESSE(_mundus(&m, p));
+    memset(&ob, ZEPHYRUM, magnitudo(ob));
+    m.optiones.observator          = _observare;
+    m.optiones.observatoris_datum  = &ob;
+    simulacrum_vitium_addere(m.simulacrum, _vitium(
+        SIMULACRUM_VITIUM_SCRIBERE_ABRUMPERE, HTTP_PUT, NIHIL, ZEPHYRUM,
+        NIHIL, I));
+    memset(&ponendi, ZEPHYRUM, magnitudo(ponendi));
+    ponendi.solum_si_abest = VERUM;
+    CREDO_VERUM(horreum_opus_ponere(m.horreum, m.situla, _l("v.txt", p),
+        _l("visum", p), &ponendi, &o, &e, p));
+    CREDO_NON_NIHIL(_vocare(&m, m.horreum, &o, &t, p));
+    CREDO_VERUM(_pulsare(&m, &t));
+    CREDO_VERUM(t.resultus.iam_nostrum);
+    CREDO_AEQUALIS_I32(ob.numerus, III);
+    CREDO_AEQUALIS_I32((i32)ob.genera[ZEPHYRUM],
+        (i32)HORREUM_OPUS_PONERE);
+    CREDO_AEQUALIS_I32(ob.status[ZEPHYRUM], ZEPHYRUM);
+    CREDO_AEQUALIS_I32(ob.conatus[ZEPHYRUM], I);
+    CREDO_AEQUALIS_I32(ob.status[I], CDXII);
+    CREDO_AEQUALIS_I32(ob.conatus[I], II);
+    CREDO_AEQUALIS_I32((i32)ob.genera[II],
+        (i32)HORREUM_OPUS_INSPICERE);
+    CREDO_AEQUALIS_I32(ob.status[II], CC);
+    _mundum_claudere(&m);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "iter", _sectio_iter, NIHIL, NIHIL, NIHIL, NIHIL },
     { "transitorium", _sectio_transitorium, NIHIL, NIHIL, NIHIL,
@@ -495,6 +559,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "finis_non_intra", _sectio_finis_non_intra, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "duae_ianuae", _sectio_duae_ianuae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "observator", _sectio_observator, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

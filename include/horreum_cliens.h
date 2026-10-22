@@ -37,6 +37,8 @@ nomen structura {
                   i32  mora_basis_ms;           /* 0 = CC */
                   i64  semen;                   /* sors; 0 = ex
                                                    * tempore */
+    HorreumObservator  observator;              /* NIHIL = nemo */
+               vacuum* observatoris_datum;
 } HorreumClientisOptiones;
 
 /* optiones (NIHIL = ordinariae) in sedem horrei; piscina sedem tenet
