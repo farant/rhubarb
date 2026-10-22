@@ -506,6 +506,178 @@ _sectio_voces (
 }
 
 
+    /* ==================================================
+     * CANERE: cantilena data - copiatur, iudicatur, exspectat ut
+     * occasio; piscina vocantis non crescit; destruere claudit
+     * ================================================== */
+
+interior b32
+_textus_est (
+       constans Cantio* cantio,
+    constans character* textus)
+{
+    redde cantio != NIHIL && chorda_aequalis_literis(cantio->textus,
+        textus);
+}
+
+interior vacuum
+_sectio_canere (
+    CredoContextus* c)
+{
+              Cantuale  liber;
+          ExitusFictus  f;
+    TintinnabuliExitus  exitus;
+         Tintinnabulum* t;
+        CantualeVitium  vitium;
+             character  alveus[CCLVI];
+                chorda  textus;
+                chorda  prima;
+                chorda  altera;
+        memoriae_index  usus;
+        memoriae_index  propria;
+                   i32  iussa;
+                   i32  k;
+
+    si (!_parare(c, &liber, &f, &exitus, &t))
+    {
+        redde;
+    }
+    CREDO_GRADUS ("quieta: statim, textus copiatus");
+    strcpy(alveus, "t120 g4");
+    textus.datum    = (i8*)alveus;
+    textus.mensura  = (i32)strlen(alveus);
+    CREDO_VERUM (tintinnabulum_canere(t, textus, FALSUM, &vitium));
+    CREDO_AEQUALIS_I32 (f.aperta, I);
+    CREDO_VERUM (tintinnabulum_sonat(t));
+    CREDO_AEQUALIS_I32 (f.iussa, I);
+    CREDO_VERUM (_textus_est(tintinnabulum_ultima(t), "t120 g4"));
+    CREDO_VERUM (tintinnabulum_ultima(t) != NIHIL
+        && tintinnabulum_ultima(t)->textus.datum != textus.datum);
+    CREDO_VERUM (tintinnabulum_ultima(t) != NIHIL
+        && !tintinnabulum_ultima(t)->intactus);
+
+    CREDO_GRADUS ("fracta: vitium, nihil mutatur");
+    vitium.offset = CMXCIX;
+    CREDO_FALSUM (tintinnabulum_canere(t, _ch(c, "c @nullum d"), FALSUM,
+                                       &vitium));
+    CREDO_AEQUALIS_S32 ((s32)vitium.offset, II);
+    CREDO_FALSUM (tintinnabulum_canere(t, _ch(c, "c @nullum d"), FALSUM,
+                                       NIHIL));
+    CREDO_AEQUALIS_I32 (f.iussa, I);
+    CREDO_VERUM (_textus_est(tintinnabulum_ultima(t), "t120 g4"));
+
+    CREDO_GRADUS ("sonans: data exspectat; alveus vocantis mutatus");
+    strcpy(alveus, "t120 a4");
+    textus.mensura = (i32)strlen(alveus);
+    CREDO_VERUM (tintinnabulum_canere(t, textus, VERUM, &vitium));
+    CREDO_AEQUALIS_I32 (f.iussa, I);
+    strcpy(alveus, "t120 b4");
+    _currere(t, &f, DCCC);
+    CREDO_AEQUALIS_I32 (f.iussa, II);
+    CREDO_VERUM (_textus_est(tintinnabulum_ultima(t), "t120 a4"));
+    CREDO_VERUM (tintinnabulum_ultima(t) != NIHIL
+        && tintinnabulum_ultima(t)->intactus);
+    _currere(t, &f, MD);
+    CREDO_FALSUM (tintinnabulum_sonat(t));
+
+    CREDO_GRADUS ("recentissima vincit: genus post datam");
+    CREDO_VERUM (tintinnabulum_pulsare(t, _ch(c, "finis")));
+    CREDO_VERUM (tintinnabulum_canere(t, _ch(c, "t120 c4"), FALSUM,
+                                      &vitium));
+    CREDO_VERUM (tintinnabulum_pulsare(t, _ch(c, "permissio")));
+    _currere(t, &f, DCCC);
+    CREDO_VERUM (_generis(tintinnabulum_ultima(t), c, "permissio"));
+    _currere(t, &f, MD);
+
+    CREDO_GRADUS ("recentissima vincit: data post genus");
+    CREDO_VERUM (tintinnabulum_pulsare(t, _ch(c, "finis")));
+    CREDO_VERUM (tintinnabulum_pulsare(t, _ch(c, "permissio")));
+    CREDO_VERUM (tintinnabulum_canere(t, _ch(c, "t120 d8"), FALSUM,
+                                      &vitium));
+    _currere(t, &f, DCCC);
+    CREDO_VERUM (_textus_est(tintinnabulum_ultima(t), "t120 d8"));
+    _currere(t, &f, MD);
+    CREDO_FALSUM (tintinnabulum_sonat(t));
+
+    CREDO_GRADUS ("limes: CC octeti licent, CCI non");
+    memset(alveus, ' ', CCI);
+    memcpy(alveus, "t240 c", VI);
+    textus.datum    = (i8*)alveus;
+    textus.mensura  = TINTINNABULUM_TEXTUS_MAXIMUS;
+    CREDO_VERUM (tintinnabulum_canere(t, textus, FALSUM, &vitium));
+    _currere(t, &f, MD);
+    textus.mensura  = TINTINNABULUM_TEXTUS_MAXIMUS + I;
+    iussa           = f.iussa;
+    CREDO_FALSUM (tintinnabulum_canere(t, textus, FALSUM, &vitium));
+    CREDO_AEQUALIS_I32 (f.iussa, iussa);
+
+    CREDO_GRADUS ("L cantilenae binae: sonant, piscina non crescit");
+    prima    = _ch(c, "t240 l32 c e g");
+    altera   = _ch(c, "t240 l32 e g");
+    iussa    = f.iussa;
+    usus     = piscina_summa_usus(c->piscina);
+    propria  = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < L; k++)
+    {
+        CREDO_VERUM (tintinnabulum_canere(t, prima, FALSUM, &vitium));
+        CREDO_VERUM (tintinnabulum_canere(t, altera, FALSUM, &vitium));
+        _currere(t, &f, DC);
+        si (k == II)
+        {
+            propria = tintinnabulum_memoria(t);
+        }
+    }
+    CREDO_AEQUALIS_I32 (f.iussa, iussa + L * V);
+    CREDO_AEQUALIS_I64 ((i64)piscina_summa_usus(c->piscina), (i64)usus);
+    /* piscinae propriae: sedes quaeque lectionem suam solam */
+    CREDO_VERUM (propria > ZEPHYRUM);
+    CREDO_AEQUALIS_I64 ((i64)tintinnabulum_memoria(t), (i64)propria);
+
+    CREDO_GRADUS ("destruere: exitus apertus clauditur");
+    CREDO_VERUM (tintinnabulum_apertum(t));
+    k = f.clausa;
+    tintinnabulum_destruere(t);
+    CREDO_AEQUALIS_I32 (f.clausa, k + I);
+    CREDO_FALSUM (f.apertum);
+}
+
+/* destruere clauso: nihil clauditur; canere recusatum (exitus) */
+interior vacuum
+_sectio_canere_clausum (
+    CredoContextus* c)
+{
+              Cantuale  liber;
+          ExitusFictus  f;
+    TintinnabuliExitus  exitus;
+         Tintinnabulum* t;
+
+    si (!_parare(c, &liber, &f, &exitus, &t))
+    {
+        redde;
+    }
+    f.recusare = VERUM;
+    CREDO_FALSUM (tintinnabulum_canere(t, _ch(c, "t120 c4"), FALSUM,
+                                       NIHIL));
+    CREDO_FALSUM (tintinnabulum_sonat(t));
+    f.recusare = FALSUM;
+    CREDO_VERUM (tintinnabulum_canere(t, _ch(c, "t120 c4"), FALSUM,
+                                      NIHIL));
+    (vacuum)_donec_tacet(t, &f, M);
+    _currere(t, &f, (s64)TINTINNABULUM_QUIES + C);
+    CREDO_FALSUM (tintinnabulum_apertum(t));
+    /* recusata bis: ultima (sonata) intacta - sedes non permutatae */
+    f.recusare = VERUM;
+    CREDO_FALSUM (tintinnabulum_canere(t, _ch(c, "t120 d4"), FALSUM,
+                                       NIHIL));
+    CREDO_FALSUM (tintinnabulum_canere(t, _ch(c, "t120 e4"), FALSUM,
+                                       NIHIL));
+    CREDO_VERUM (_textus_est(tintinnabulum_ultima(t), "t120 c4"));
+    f.recusare = FALSUM;
+    tintinnabulum_destruere(t);
+    CREDO_AEQUALIS_I32 (f.clausa, I);
+}
+
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "pulsare", _sectio_pulsare, _parare_agmen, NIHIL, NIHIL, NIHIL },
     { "exspectatio", _sectio_exspectatio, _parare_agmen, NIHIL, NIHIL,
@@ -515,6 +687,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "vitanda", _sectio_vitanda, _parare_agmen, NIHIL, NIHIL, NIHIL },
     { "recusat", _sectio_recusat, _parare_agmen, NIHIL, NIHIL, NIHIL },
     { "voces", _sectio_voces, _parare_agmen, NIHIL, NIHIL, NIHIL },
+    { "canere", _sectio_canere, _parare_agmen, NIHIL, NIHIL, NIHIL },
+    { "canere_clausum", _sectio_canere_clausum, _parare_agmen, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

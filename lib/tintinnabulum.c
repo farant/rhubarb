@@ -4,6 +4,13 @@
  * nuntiis VOX_FINITA numeratae). Quieta = sonantes 0. 'terminus' =
  * quadrum post quod voces finitae habentur etiam sine nuntio (nuntius
  * amissus exitum numquam clausum tenere non debet).
+ *
+ * CANTILENAE DATAE: tres sedes (CantioPropria), quaeque textum suum et
+ * piscinam suam habet; munera per indices permutantur - 'sonans'
+ * (ultima data sonata, quam t->ultima fortasse monstrat), 'exspectans'
+ * (si exspectat_propria), 'probanda' (libera: lectio nova hic, deinde
+ * permutatur). Probanda numquam sonans est, ergo lectio nova numquam
+ * cantilenam sonantem delet.
  */
 #include "tintinnabulum.h"
 #include "sonitus.h"
@@ -15,6 +22,14 @@
 #define TINTINNABULI_EVANESCENTIA CCXL
 /* genus exspectatum: octeti maximi */
 #define TINTINNABULI_GENUS      XXXII
+/* sedes cantilenarum datarum: sonans, exspectans, probanda */
+#define TINTINNABULI_SEDES      III
+
+nomen structura {
+    Piscina* piscina;     /* NIHIL donec primum adhibetur */
+         i8  textus[TINTINNABULUM_TEXTUS_MAXIMUS];
+     Cantio  cantio;
+} CantioPropria;
 
 structura Tintinnabulum {
           constans Cantuale* liber;
@@ -36,6 +51,11 @@ structura Tintinnabulum {
                          i32 genus_mensura;
                          s64 quies_ab;      /* ms: ex quo quieta */
              constans Cantio* ultima;
+                         b32 exspectat_propria;   /* data, non genus */
+               CantioPropria propriae[TINTINNABULI_SEDES];
+                         i32 sonans;
+                         i32 exspectans;
+                         i32 probanda;
 };
 
 Tintinnabulum*
@@ -65,9 +85,12 @@ tintinnabulum_creare (
     {
         redde NIHIL;
     }
-    t->liber   = liber;
-    t->exitus  = *exitus;
-    t->semen   = semen;
+    t->liber       = liber;
+    t->exitus      = *exitus;
+    t->semen       = semen;
+    t->sonans      = ZEPHYRUM;
+    t->exspectans  = I;
+    t->probanda    = II;
     sors_seminare(&t->sors, semen, ZEPHYRUM);
     redde t;
 }
@@ -98,19 +121,10 @@ _claudere (
     t->tacens   = FALSUM;
 }
 
-/* cantilenam generis eligit et iubet; exitum aperit si clausus */
 interior b32
-_incipere (
-    Tintinnabulum* t,
-           chorda  genus)
+_aperire (
+    Tintinnabulum* t)
 {
-                  CantusForma  forma;
-                 CantusVitium  vitium;
-              constans Cantio* cantio;
-                          s64  initium;
-                          s64  finis;
-                          i32  i;
-
     si (!t->apertum)
     {
         si (!t->exitus.aperire(t->exitus.ctx, t->mixtura))
@@ -119,8 +133,22 @@ _incipere (
         }
         t->apertum = VERUM;
     }
-    cantio = cantuale_eligere(t->liber, genus, &t->sors, t->ultima);
-    si (cantio == NIHIL)
+    redde VERUM;
+}
+
+/* cantionem iubet; exitum aperit si clausus */
+interior b32
+_sonare (
+      Tintinnabulum* t,
+    constans Cantio* cantio)
+{
+     CantusForma forma;
+    CantusVitium vitium;
+             s64 initium;
+             s64 finis;
+             i32 i;
+
+    si (!_aperire(t))
     {
         redde FALSUM;
     }
@@ -168,6 +196,30 @@ _incipere (
     redde VERUM;
 }
 
+/* cantilenam generis eligit (non ultimam) et sonat */
+interior b32
+_incipere (
+    Tintinnabulum* t,
+           chorda  genus)
+{
+    constans Cantio* cantio;
+
+    cantio = cantuale_eligere(t->liber, genus, &t->sors, t->ultima);
+    redde cantio != NIHIL && _sonare(t, cantio);
+}
+
+/* munera sedium permutare */
+interior vacuum
+_permutare (
+    i32* a,
+    i32* b)
+{
+    i32 k = *a;
+
+    *a = *b;
+    *b = k;
+}
+
 b32
 tintinnabulum_pulsare (
     Tintinnabulum* t,
@@ -187,11 +239,93 @@ tintinnabulum_pulsare (
         {
             t->genus[i] = genus.datum[i];
         }
-        t->genus_mensura  = genus.mensura;
-        t->exspectat      = VERUM;
+        t->genus_mensura      = genus.mensura;
+        t->exspectat          = VERUM;
+        t->exspectat_propria  = FALSUM;
         redde VERUM;
     }
     redde _incipere(t, genus);
+}
+
+b32
+tintinnabulum_canere (
+     Tintinnabulum* t,
+            chorda  textus,
+               b32  intactus,
+    CantualeVitium* vitium)
+{
+     CantualeVitium  proprium;
+      CantioPropria* p;
+             chorda  copia;
+
+    si (vitium == NIHIL)
+    {
+        vitium = &proprium;
+    }
+    vitium->titulus.datum    = NIHIL;
+    vitium->titulus.mensura  = ZEPHYRUM;
+    vitium->offset           = ZEPHYRUM;
+    si (textus.mensura > TINTINNABULUM_TEXTUS_MAXIMUS)
+    {
+        vitium->offset  = TINTINNABULUM_TEXTUS_MAXIMUS;
+        vitium->causa   = "textus longior quam CC octeti";
+        redde FALSUM;
+    }
+    p = &t->propriae[t->probanda];
+    si (p->piscina == NIHIL)
+    {
+        p->piscina = piscina_generare_dynamicum("tintinnabulum_cantio",
+            II * M);
+        si (p->piscina == NIHIL)
+        {
+            vitium->causa = "memoria deest";
+            redde FALSUM;
+        }
+    }
+    piscina_vacare(p->piscina);
+    memcpy(p->textus, textus.datum, (size_t)textus.mensura);
+    copia.datum    = p->textus;
+    copia.mensura  = textus.mensura;
+    si (!cantionem_legere(copia, intactus, p->piscina, &p->cantio,
+                          vitium))
+    {
+        redde FALSUM;
+    }
+    t->tacens = FALSUM;   /* sonus redit: exspectata non abicitur */
+    si (t->sonantes > ZEPHYRUM)
+    {
+        _permutare(&t->probanda, &t->exspectans);
+        t->exspectat          = VERUM;
+        t->exspectat_propria  = VERUM;
+        redde VERUM;
+    }
+    si (!_aperire(t))
+    {
+        redde FALSUM;
+    }
+    _permutare(&t->probanda, &t->sonans);
+    redde _sonare(t, &t->propriae[t->sonans].cantio);
+}
+
+vacuum
+tintinnabulum_destruere (
+    Tintinnabulum* t)
+{
+    i32 i;
+
+    si (t->apertum)
+    {
+        _claudere(t);
+    }
+    per (i = ZEPHYRUM; i < TINTINNABULI_SEDES; i++)
+    {
+        si (t->propriae[i].piscina != NIHIL)
+        {
+            piscina_destruere(t->propriae[i].piscina);
+            t->propriae[i].piscina = NIHIL;
+        }
+    }
+    t->exspectat = FALSUM;
 }
 
 b32
@@ -232,6 +366,15 @@ tintinnabulum_agere (
     {
         _claudere(t);
         redde FALSUM;
+    }
+    si (t->exspectat && t->exspectat_propria)
+    {
+        t->exspectat = FALSUM;
+        _permutare(&t->exspectans, &t->sonans);
+        si (_sonare(t, &t->propriae[t->sonans].cantio))
+        {
+            redde VERUM;
+        }
     }
     si (t->exspectat)
     {
@@ -282,6 +425,23 @@ tintinnabulum_tacere (
     t->tacens    = VERUM;
     t->terminus  = momentum + TINTINNABULI_EVANESCENTIA
                  + (s64)SONUS_FREQUENTIA;
+}
+
+memoriae_index
+tintinnabulum_memoria (
+    constans Tintinnabulum* t)
+{
+    memoriae_index n = ZEPHYRUM;
+               i32 i;
+
+    per (i = ZEPHYRUM; i < TINTINNABULI_SEDES; i++)
+    {
+        si (t->propriae[i].piscina != NIHIL)
+        {
+            n += piscina_summa_usus(t->propriae[i].piscina);
+        }
+    }
+    redde n;
 }
 
 b32

@@ -47,6 +47,9 @@
 /* quies ante exitum clausum, ms */
 #define TINTINNABULUM_QUIES (XXX * M)
 
+/* textus cantilenae datae: octeti maximi (= nuntius praeconii) */
+#define TINTINNABULUM_TEXTUS_MAXIMUS CC
+
 nomen structura {
       b32 (*aperire)        (vacuum* ctx, Mixtura* mixtura);
     vacuum (*claudere)      (vacuum* ctx);
@@ -79,6 +82,21 @@ tintinnabulum_pulsare (
     Tintinnabulum* t,
            chorda  genus);
 
+/* cantilena DATA (praeco cantus), non e libro: textus copiatur et
+ * iudicatur ut liber (cantionem_legere); deinde ut occasio - quieta
+ * statim, sonans exspectat (recentissima vincit: genus exspectatum
+ * quoque substituit, et vice versa). Lectio in piscinis PROPRIIS
+ * tintinnabuli (sonans, exspectans, probanda - permutantur, non
+ * copiantur): piscina vocantis per cantilenas non crescit. FALSUM:
+ * textus fractus aut > TINTINNABULUM_TEXTUS_MAXIMUS (vitium impletum
+ * si non NIHIL), aut exitus non apertus - nihil mutatur */
+b32
+tintinnabulum_canere (
+     Tintinnabulum* t,
+            chorda  textus,
+               b32  intactus,
+    CantualeVitium* vitium);
+
 /* omni pulsu hospitis: nuntios legit (sedes liberantur); cantilena
  * finita -> exspectata incipit; quies >= TINTINNABULUM_QUIES ->
  * exitus clauditur. VERUM dum sonat aut exspectat (hospes pulsum
@@ -103,7 +121,20 @@ b32
 tintinnabulum_apertum (
     constans Tintinnabulum* t);
 
-/* cantio sonans aut ultima sonata; NIHIL ante primam */
+/* octeti in piscinis propriis (cantilenae datae): per cantilenas non
+ * crescit - sedes quaeque solam lectionem suam tenet */
+memoriae_index
+tintinnabulum_memoria (
+    constans Tintinnabulum* t);
+
+/* exitum claudit (si apertus, statim) et piscinas proprias liberat;
+ * t deinde non adhibendum (memoria eius vocantis manet) */
+vacuum
+tintinnabulum_destruere (
+    Tintinnabulum* t);
+
+/* cantio sonans aut ultima sonata; NIHIL ante primam (cantilena data:
+ * valet donec cantilena data proxima incipit) */
 constans Cantio*
 tintinnabulum_ultima (
     constans Tintinnabulum* t);
