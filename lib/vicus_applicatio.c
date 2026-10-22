@@ -1182,6 +1182,11 @@ scribam_describere (
     f->pulsare_ctx       = m;
     f->ictus_primus      = scribae_ictus_primus;
     f->ictus_primus_ctx  = m;
+    /* D5 S3c: pagina = semita (scriba/<pagina>) - historia lateris,
+     * $via, restitutio */
+    f->ramus               = &m->ramus;
+    f->semitam_secuta      = scriba_semitam_secuta;
+    f->semitam_secuta_ctx  = m;
 }
 
 interior b32

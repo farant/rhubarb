@@ -89,3 +89,17 @@ dimensions follow. Writes go to the scriba branch, whose owners admit
 only `pagina.clavis` - the caller is calendarium.agere, so the writer
 is set to pagina.clavis for the call and restored (memory: domini refuse
 silently). Registries and contexts stay; nothing is remounted.
+
+## 2026-10-22 — page as route state (D5 S3c, scriba half)
+
+Manifest field `pagina` (textus, persistens, semita ligatio, historia
+impelle, writer pagina.clavis) + cognomen `scriba/{}`. Truth stays the
+plagula `scriba/visus/<id>`; `paginam_indicare` (called at mount and by
+scriba_reficere after every navigation - next/prev, #links, search,
+librum_ponere) now also writes the page NAME into the field, under the
+writer `pagina.clavis` (callers are the pulse or other actions; the
+owner rules would silently refuse otherwise - plant red).
+`scriba_semitam_secuta`: after vicus applies a route (Ctrl+O/I,
+restart) the view switches to the field's page via
+scriba_paginam_ostendere. probatio_organum's pre-S6 owner snapshot gets
+one known addition (pagina -> pagina.clavis), 17 rules.

@@ -695,3 +695,62 @@ skip by type only.
   ones leave focus where it was.
 - Plants (silva.planta): see vicus_applicatio worklog (one list for
   S3b).
+
+## 2026-10-22 — D5: one Ctrl+O timeline per tab (Fran)
+
+Fran, after S3b: Ctrl+O could not get back from search to the
+terminal underneath - history was per pane (R3) and changing the
+stack's front pane was recorded nowhere. Now VicusTabula holds the
+list (LocusTabulae: pane id, genus, argument, side, full route).
+
+- Recording (historiam_tabulae_notare, per tab per pulse): every pane's
+  state is read (so R4d's restore-once flag, now `historia_visa`, is
+  set for hidden panes too), but only VISIBLE panes (left, stack
+  front) make entries; an impelle change pushes, a substitue change
+  rewrites the current entry if it is that pane's; a new front id
+  pushes (front pane with its route); an empty list seeds the front.
+- Stepping is a PETITION (reordering/mounting inside event handling is
+  not allowed), the cursor moves at once so several presses before a
+  pulse add up. Applied: pane found BY ID first (pictor's argument is
+  identity and changes with $pictor-next - genus+argument would mount
+  a second pictor), else reopened by genus+argument; route applied,
+  semitam_secuta, focus to the entry's side; the pane's seen state and
+  the tab's front id are updated so the next pulse adds nothing.
+- Correction to what I told Fran: scriba does NOT consume Ctrl+O (the
+  old R3 code returned FALSUM for a route-less focused pane and the key
+  fell through). So Ctrl+O from the left scriba steps the tab - which
+  makes "notebook hit opened on the left, Ctrl+O back to the search"
+  work. The terminal does consume it.
+- Tests that open a pane before the first pulse miss the starting
+  entry (the first pulse records whatever is front then). The real app
+  pulses before any input; probatio_vicus_semitae's mundum_struere now
+  pulses once. Seeding earlier (in petitionem_applicare) would mark
+  panes seen before their saved route is restored - rejected.
+- Plants (silva.planta, vicus_semitae), all red: front change not
+  recorded, impelle replaces, substitue not refreshing the current
+  entry, futures kept, cap ignored, pane not brought forward, closed
+  pane not reopened, route not applied, focus not following, seen
+  state not set after a step, front id not set after a step, no
+  starting entry. Not planted: hidden-pane changes making entries
+  (no test drives a hidden pane), several presses before one pulse.
+
+## 2026-10-22 — two histories per tab, one per side (Fran)
+
+Fran wanted Ctrl+O in scriba to go back to the previous PAGE, which a
+single tab timeline cannot promise (a calendar step in between would
+win). Now `historia[II]` / `historia_cursor[II]`, indexed by
+VICUS_SINISTRUM / VICUS_DEXTRUM; Ctrl+O steps the focused side's list
+(`t->focus`). Left: route changes of the left pane (scriba page). Right:
+front changes and the front pane's route changes. Each side seeds its
+first entry from its current state. The left pane's saved route is now
+also saved/restored (semitam_servare/restituere for sinistrum) and read
+back from the index (`semita` on the left <latus> was written but never
+read). Earlier note's "Ctrl+O from scriba steps the tab" is superseded:
+from scriba it steps the left list.
+
+Plants (vicus_semitae), all red: left steps filed on the right, steps
+always on the right, left route never saved, no first left entry; in
+scriba: page field never written, route not followed, wrong writer for
+the field; vicus: scriba pane without `ramus`. The 12 single-timeline
+plants above were not re-run on this shape (their anchors changed);
+the same behaviours are covered by the same tests on the right side.

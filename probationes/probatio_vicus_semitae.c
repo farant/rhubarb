@@ -1,10 +1,14 @@
 /* probatio_vicus_semitae.c - semitae R3 in vico (project-specs/
  * semitae-spec.md): '$via(uri)' latus generis in frontem cum semita
- * fert (latus sine semitis et semita mala nuntium dant); historia
- * lateris (impelle novum, substitue currentem), Ctrl+O / Ctrl+I
- * restituunt EXACTE (semita plena), navigatio nova post reditum
- * futura tollit; latus sine semitis Ctrl+O non capit. Compositio vera
- * (vicus_applicatio), sancti ex fixura. */
+ * fert (latus sine semitis et semita mala nuntium dant). D5: historiae
+ * DUAE per tabulam (latus sinistrum, latus dextrum; Ctrl+O / Ctrl+I in
+ * latere focato): locus primus = status initialis; impelle novum,
+ * substitue currentem, frons acervi mutata novum (dextra); gradus
+ * restituunt EXACTE (semita plena) et latera in frontem reducunt
+ * (clausum iterum aperiunt); navigatio nova post reditum futura
+ * tollit; focus ictu mutatus nihil; C loci summum; scriba paginam in
+ * semita fert (scriba/<pagina>). Compositio vera (vicus_applicatio),
+ * sancti ex fixura. */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -23,6 +27,8 @@
 #include "personae.h"
 #include "pictor_documentum.h"
 #include "pictor_applicatio.h"
+#include "scriba_applicatio.h"
+#include "scriba_liber.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -77,7 +83,14 @@ mundum_struere (
         redde FALSUM;
     }
     x->m = manus_ludus_creare(c->piscina, x->app.d);
-    redde x->m && vicus_activam_ponere(x->app.vicus, "3");
+    si (!x->m || !vicus_activam_ponere(x->app.vicus, "3"))
+    {
+        redde FALSUM;
+    }
+    /* pulsus primus (ut applicatio): locus primus historiae = frons
+     * initialis */
+    (vacuum)vicus_pulsare(x->app.vicus);
+    redde VERUM;
 }
 
 /* ictus in cellulam paginae sinistrae (linea, columna) */
@@ -154,13 +167,89 @@ nuntius_continet (
     redde a && chorda_continet(*a, chorda_ex_literis(pars, p));
 }
 
+/* D5: historia tabulae activae, lateris dati */
+interior i32
+numerus_lateris (
+    Mundus* x,
+       i32  latus)
+{
+    VicusTabula* t = vicus_activa(x->app.vicus);
+
+    redde (t && t->historia[latus]) ? xar_numerus(t->historia[latus])
+                                    : ZEPHYRUM;
+}
+
 interior i32
 historia_numerus (
     Mundus* x)
 {
+    redde numerus_lateris(x, VICUS_DEXTRUM);
+}
+
+interior s32
+cursor_historiae (
+    Mundus* x)
+{
+    redde (s32)vicus_activa(x->app.vicus)->historia_cursor[
+        VICUS_DEXTRUM];
+}
+
+interior s32
+cursor_sinistrae (
+    Mundus* x)
+{
+    redde (s32)vicus_activa(x->app.vicus)->historia_cursor[
+        VICUS_SINISTRUM];
+}
+
+/* pagina scribae sinistrae (campus 'pagina' et documentum) */
+interior b32
+pagina_sinistra_est (
+                 Mundus* x,
+     constans character* titulus,
+                Piscina* p)
+{
+        VicusLatus* l;
+    ScribaMontatio* m;
+            chorda* a;
+
+    l = vicus_latus(vicus_activa(x->app.vicus), VICUS_SINISTRUM);
+    m = l ? (ScribaMontatio*)l->montatio : NIHIL;
+    si (!m || !m->liber)
+    {
+        redde FALSUM;
+    }
+    a = insula_ramus_attributum(&m->ramus, "pagina");
+    redde a && chorda_aequalis_literis(*a, titulus)
+        && m->doc == scriba_liber_pagina(m->liber,
+               chorda_ex_literis(titulus, p));
+}
+
+/* Ctrl+Shift+Dextra: pagina proxima scribae focatae (nova post
+ * ultimam) */
+interior vacuum
+pagina_proxima (
+    Mundus* x)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                      = EVENTUS_CLAVIS_DEPRESSUS;
+    e.datum.clavis.clavis        = CLAVIS_DEXTER;
+    e.datum.clavis.modificantes  = (i32)(MOD_IMPERIUM | MOD_SHIFT);
+    dispensator_tractare(x->app.d, &e);
+    (vacuum)vicus_pulsare(x->app.vicus);
+    dispensator_recomponere(x->app.d);
+}
+
+interior b32
+frons_generis (
+                 Mundus* x,
+     constans character* genus)
+{
     VicusLatus* l = frons(x);
 
-    redde (l && l->historia) ? xar_numerus(l->historia) : ZEPHYRUM;
+    redde l && l->montata && chorda_aequalis_literis(l->genus, genus);
 }
 
 /* $via: genus in frontem cum semita; latus sine semitis et semita
@@ -201,9 +290,10 @@ _probare_viam (
     CREDO_VERUM(nuntius_continet(x, "visus", c->piscina));
 }
 
-/* historia: impelle (index -> sanctus -> sanctus alius) novum,
- * substitue (pagina textus) currentem; Ctrl+O / Ctrl+I exacte;
- * navigatio post reditum futura tollit */
+/* historia: locus primus scriba (frons initialis), impelle (index ->
+ * sanctus -> sanctus alius) novum, substitue (pagina textus)
+ * currentem; Ctrl+O / Ctrl+I exacte; navigatio post reditum futura
+ * tollit; ad initium frons scriba (locus primus) */
 interior vacuum
 _probare_historiam (
     CredoContextus* c)
@@ -217,43 +307,40 @@ _probare_historiam (
     dispensator_recomponere(x->app.d);
     (vacuum)vicus_pulsare(x->app.vicus);
     CREDO_VERUM(sanctorum_est(x, "visus", "index"));
-    CREDO_AEQUALIS_I32(historia_numerus(x), I);
+    CREDO_AEQUALIS_I32(historia_numerus(x), II);
     /* s: ordo nomen - substitue (status, non impelle) */
     clavis(x, 's', ZEPHYRUM);
     CREDO_VERUM(sanctorum_est(x, "ordo", "nomen"));
-    CREDO_AEQUALIS_I32(historia_numerus(x), I);
+    CREDO_AEQUALIS_I32(historia_numerus(x), II);
     /* Enter: sanctus electus (agnes, primus nomine) - impelle */
     clavis(x, (character)XIII, ZEPHYRUM);
     CREDO_VERUM(sanctorum_est(x, "visus", "sanctus"));
     CREDO_VERUM(sanctorum_est(x, "sanctus_apertus", "agnes-of-rome"));
-    CREDO_AEQUALIS_I32(historia_numerus(x), II);
+    CREDO_AEQUALIS_I32(historia_numerus(x), III);
     /* j: sanctus proximus nomine (charles) - impelle */
     clavis(x, 'j', ZEPHYRUM);
     CREDO_VERUM(sanctorum_est(x, "sanctus_apertus",
         "charles-lwanga-and-companions"));
-    CREDO_AEQUALIS_I32(historia_numerus(x), III);
-    CREDO_AEQUALIS_I32(frons(x)->historia_cursor, II);
+    CREDO_AEQUALIS_I32(historia_numerus(x), IV);
+    CREDO_AEQUALIS_S32(cursor_historiae(x), III);
     /* Ctrl+O: agnes; iterum: index EXACTE (visus index, sanctus
      * apertus sublatus, ordo nomen servatus in introitu substituto) */
     clavis(x, 'o', (i32)MOD_IMPERIUM);
     CREDO_VERUM(sanctorum_est(x, "sanctus_apertus", "agnes-of-rome"));
-    CREDO_AEQUALIS_I32(frons(x)->historia_cursor, I);
-    CREDO_AEQUALIS_I32(historia_numerus(x), III);
+    CREDO_AEQUALIS_S32(cursor_historiae(x), II);
+    CREDO_AEQUALIS_I32(historia_numerus(x), IV);
     clavis(x, 'o', (i32)MOD_IMPERIUM);
     CREDO_VERUM(sanctorum_est(x, "visus", "index"));
     CREDO_VERUM(sanctorum_est(x, "sanctus_apertus", NIHIL));
     CREDO_VERUM(sanctorum_est(x, "ordo", "nomen"));
-    CREDO_AEQUALIS_I32(frons(x)->historia_cursor, ZEPHYRUM);
-    /* initium: nihil ultra */
-    clavis(x, 'o', (i32)MOD_IMPERIUM);
-    CREDO_AEQUALIS_I32(frons(x)->historia_cursor, ZEPHYRUM);
+    CREDO_AEQUALIS_S32(cursor_historiae(x), I);
     /* Ctrl+I: agnes, deinde charles */
     clavis(x, 'i', (i32)MOD_IMPERIUM);
     CREDO_VERUM(sanctorum_est(x, "sanctus_apertus", "agnes-of-rome"));
     clavis(x, 'i', (i32)MOD_IMPERIUM);
     CREDO_VERUM(sanctorum_est(x, "sanctus_apertus",
         "charles-lwanga-and-companions"));
-    CREDO_AEQUALIS_I32(frons(x)->historia_cursor, II);
+    CREDO_AEQUALIS_S32(cursor_historiae(x), III);
     /* reditus ad index, deinde navigatio nova: futura tolluntur */
     clavis(x, 'o', (i32)MOD_IMPERIUM);
     clavis(x, 'o', (i32)MOD_IMPERIUM);
@@ -262,10 +349,17 @@ _probare_historiam (
     clavis(x, 'j', ZEPHYRUM);
     clavis(x, (character)XIII, ZEPHYRUM);
     CREDO_VERUM(sanctorum_est(x, "sanctus_apertus", "thomas-aquinas"));
-    CREDO_AEQUALIS_I32(historia_numerus(x), II);
-    CREDO_AEQUALIS_I32(frons(x)->historia_cursor, I);
+    CREDO_AEQUALIS_I32(historia_numerus(x), III);
+    CREDO_AEQUALIS_S32(cursor_historiae(x), II);
     clavis(x, 'i', (i32)MOD_IMPERIUM);
-    CREDO_AEQUALIS_I32(frons(x)->historia_cursor, I);
+    CREDO_AEQUALIS_S32(cursor_historiae(x), II);
+    /* ad initium: frons scriba (locus primus), sancti manet */
+    clavis(x, 'o', (i32)MOD_IMPERIUM);
+    clavis(x, 'o', (i32)MOD_IMPERIUM);
+    CREDO_AEQUALIS_S32(cursor_historiae(x), ZEPHYRUM);
+    CREDO_VERUM(frons_generis(x, "scriba"));
+    CREDO_AEQUALIS_I32((i32)xar_numerus(vicus_activa(x->app.vicus)
+        ->acervus), II);
 }
 
 /* semitae R4: calendarium per $via; historia (visus impelle, dies
@@ -314,7 +408,7 @@ _probare_calendarium (
     (vacuum)vicus_pulsare(x->app.vicus);
     CREDO_VERUM(kalendarii_est(x, "visus", "dies"));
     CREDO_VERUM(kalendarii_est(x, "dies_electus", "2026-10-19"));
-    CREDO_AEQUALIS_I32(historia_numerus(x), I);
+    CREDO_AEQUALIS_I32(historia_numerus(x), II);
     CREDO_VERUM(frons(x)->facies.semitam_secuta
         == kalendarium_semitam_secuta);
     frons(x)->facies.semitam_secuta      = secuta_numerare;
@@ -323,12 +417,12 @@ _probare_calendarium (
     CREDO_VERUM(vicus_acervo_mutare(x->app.vicus, "calendarium",
         "calendarium/mensis/2026-10-19"));
     (vacuum)vicus_pulsare(x->app.vicus);
-    CREDO_AEQUALIS_I32(historia_numerus(x), II);
+    CREDO_AEQUALIS_I32(historia_numerus(x), III);
     /* dies mutatus: substitue */
     CREDO_VERUM(vicus_acervo_mutare(x->app.vicus, "calendarium",
         "calendarium/mensis/2026-10-25"));
     (vacuum)vicus_pulsare(x->app.vicus);
-    CREDO_AEQUALIS_I32(historia_numerus(x), II);
+    CREDO_AEQUALIS_I32(historia_numerus(x), III);
     CREDO_AEQUALIS_I32(x->vocationes_secutae, ZEPHYRUM);
     /* Ctrl+O: visus diei in XIX; hospes sequitur */
     clavis(x, 'o', (i32)MOD_IMPERIUM);
@@ -343,6 +437,173 @@ _probare_calendarium (
     /* in termino: nihil applicatum, hospes non vocatur */
     clavis(x, 'i', (i32)MOD_IMPERIUM);
     CREDO_AEQUALIS_I32(x->vocationes_secutae, II);
+}
+
+/* D5: linea temporis per latera - calendarium, sancti; Ctrl+O frontem
+ * priorem reducit (sancti in acervo manet), Ctrl+I iterum; Esc sanctos
+ * claudit (frons mutata: locus novus); Ctrl+O sanctos iterum aperit
+ * cum semita sua; focus ictu mutatus locum non facit */
+interior vacuum
+_probare_tabulam (
+    CredoContextus* c)
+{
+    Mundus* x;
+       i32  n;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(mundum_struere(x, c));
+    CREDO_VERUM(vicus_acervo_aperire(x->app.vicus, "calendarium",
+        "calendarium/dies/2026-10-19"));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    dispensator_recomponere(x->app.d);
+    CREDO_VERUM(vicus_acervo_aperire(x->app.vicus, "sancti", NIHIL));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    dispensator_recomponere(x->app.d);
+    clavis(x, (character)XIII, ZEPHYRUM);
+    CREDO_VERUM(sanctorum_est(x, "sanctus_apertus", "agnes-of-rome"));
+    /* scriba, calendarium, sancti index, agnes */
+    CREDO_AEQUALIS_I32(historia_numerus(x), IV);
+    CREDO_AEQUALIS_I32((i32)xar_numerus(vicus_activa(x->app.vicus)
+        ->acervus), III);
+
+    CREDO_GRADUS("Ctrl+O per latera: calendarium in frontem");
+    clavis(x, 'o', (i32)MOD_IMPERIUM);
+    clavis(x, 'o', (i32)MOD_IMPERIUM);
+    CREDO_NECESSE(frons_generis(x, "calendarium"));
+    CREDO_VERUM(kalendarii_est(x, "dies_electus", "2026-10-19"));
+    CREDO_AEQUALIS_S32(cursor_historiae(x), I);
+    CREDO_VERUM(vicus_latus_focatum(x->app.vicus) == frons(x));
+    /* acervus non tollitur: sancti manet */
+    CREDO_AEQUALIS_I32((i32)xar_numerus(vicus_activa(x->app.vicus)
+        ->acervus), III);
+    CREDO_AEQUALIS_I32(historia_numerus(x), IV);
+
+    CREDO_GRADUS("Ctrl+I: sancti iterum, agnes");
+    clavis(x, 'i', (i32)MOD_IMPERIUM);
+    CREDO_NECESSE(frons_generis(x, "sancti"));
+    CREDO_VERUM(sanctorum_est(x, "visus", "index"));
+    clavis(x, 'i', (i32)MOD_IMPERIUM);
+    CREDO_VERUM(sanctorum_est(x, "sanctus_apertus", "agnes-of-rome"));
+    CREDO_AEQUALIS_S32(cursor_historiae(x), III);
+
+    CREDO_GRADUS("focus ictu mutatus: nihil");
+    n = historia_numerus(x);
+    ictus(x, VI, ZEPHYRUM);
+    CREDO_VERUM(vicus_focum_ponere(x->app.vicus, VICUS_DEXTRUM));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    CREDO_AEQUALIS_I32(historia_numerus(x), n);
+
+    CREDO_GRADUS("Esc claudit (locus novus), Ctrl+O iterum aperit");
+    dispensator_recomponere(x->app.d);
+    /* Esc: sanctus -> index (impelle); Esc: latus tollitur (frons) */
+    clavis(x, (character)XXVII, ZEPHYRUM);
+    clavis(x, (character)XXVII, ZEPHYRUM);
+    CREDO_NECESSE(frons_generis(x, "calendarium"));
+    CREDO_AEQUALIS_I32((i32)xar_numerus(vicus_activa(x->app.vicus)
+        ->acervus), II);
+    CREDO_AEQUALIS_I32(historia_numerus(x), VI);
+    clavis(x, 'o', (i32)MOD_IMPERIUM);
+    CREDO_NECESSE(frons_generis(x, "sancti"));
+    CREDO_VERUM(sanctorum_est(x, "visus", "index"));
+    CREDO_AEQUALIS_I32((i32)xar_numerus(vicus_activa(x->app.vicus)
+        ->acervus), III);
+    CREDO_AEQUALIS_S32(cursor_historiae(x), IV);
+    clavis(x, 'o', (i32)MOD_IMPERIUM);
+    CREDO_VERUM(sanctorum_est(x, "sanctus_apertus", "agnes-of-rome"));
+    CREDO_AEQUALIS_S32(cursor_historiae(x), III);
+}
+
+/* D5: historia SINISTRA (scriba: pagina = semita scriba/<pagina>) -
+ * pagina proxima (nova) bis, Ctrl+O / Ctrl+I in latere sinistro,
+ * #nexus post reditum futura tollit; historia dextra intacta;
+ * reapertura paginam per semitam servatam */
+interior vacuum
+_probare_sinistram (
+    CredoContextus* c)
+{
+             Mundus* x;
+    VicusApplicatio  altera;
+                i32  dextra;
+                s32  cursor_dextrae;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(mundum_struere(x, c));
+    CREDO_VERUM(vicus_focum_ponere(x->app.vicus, VICUS_SINISTRUM));
+    dispensator_recomponere(x->app.d);
+    CREDO_VERUM(pagina_sinistra_est(x, "1", c->piscina));
+    CREDO_AEQUALIS_I32(numerus_lateris(x, VICUS_SINISTRUM), I);
+    dextra          = historia_numerus(x);
+    cursor_dextrae  = cursor_historiae(x);
+
+    CREDO_GRADUS("paginae proximae: loci sinistri");
+    pagina_proxima(x);
+    CREDO_VERUM(pagina_sinistra_est(x, "2", c->piscina));
+    pagina_proxima(x);
+    CREDO_VERUM(pagina_sinistra_est(x, "3", c->piscina));
+    CREDO_AEQUALIS_I32(numerus_lateris(x, VICUS_SINISTRUM), III);
+    CREDO_AEQUALIS_S32(cursor_sinistrae(x), II);
+
+    CREDO_GRADUS("Ctrl+O / Ctrl+I in scriba");
+    clavis(x, 'o', (i32)MOD_IMPERIUM);
+    CREDO_VERUM(pagina_sinistra_est(x, "2", c->piscina));
+    clavis(x, 'o', (i32)MOD_IMPERIUM);
+    CREDO_VERUM(pagina_sinistra_est(x, "1", c->piscina));
+    clavis(x, 'o', (i32)MOD_IMPERIUM);
+    CREDO_VERUM(pagina_sinistra_est(x, "1", c->piscina));
+    CREDO_AEQUALIS_S32(cursor_sinistrae(x), ZEPHYRUM);
+    clavis(x, 'i', (i32)MOD_IMPERIUM);
+    CREDO_VERUM(pagina_sinistra_est(x, "2", c->piscina));
+    CREDO_VERUM(vicus_latus_focatum(x->app.vicus)
+        == vicus_latus(vicus_activa(x->app.vicus), VICUS_SINISTRUM));
+    /* latus alterum intactum */
+    CREDO_AEQUALIS_I32(historia_numerus(x), dextra);
+    CREDO_AEQUALIS_S32(cursor_historiae(x), cursor_dextrae);
+
+    CREDO_GRADUS("#nexus post reditum: futura tolluntur");
+    clavis(x, 'o', (i32)MOD_IMPERIUM);
+    CREDO_VERUM(pagina_sinistra_est(x, "1", c->piscina));
+    ictus(x, VI, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(x->m, "i#3"));
+    CREDO_VERUM(manus_ludus_clavem(x->m, (character)XXVII, ZEPHYRUM));
+    ictus(x, VI, I);
+    CREDO_VERUM(pagina_sinistra_est(x, "3", c->piscina));
+    CREDO_AEQUALIS_I32(numerus_lateris(x, VICUS_SINISTRUM), II);
+    CREDO_AEQUALIS_S32(cursor_sinistrae(x), I);
+
+    CREDO_GRADUS("reapertura: pagina per semitam");
+    memset(&altera, ZEPHYRUM, magnitudo(altera));
+    CREDO_NECESSE(vicus_applicatio_aedificare(&altera, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CDLXXX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    x->app = altera;
+    CREDO_VERUM(vicus_activam_ponere(x->app.vicus, "3"));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    CREDO_VERUM(pagina_sinistra_est(x, "3", c->piscina));
+    CREDO_CHORDA_AEQUALIS_LITERIS(vicus_latus(vicus_activa(
+        x->app.vicus), VICUS_SINISTRUM)->semita_servata, "scriba/3");
+}
+
+/* D5: C loci summum - antiquissimus abit */
+interior vacuum
+_probare_maximum (
+    CredoContextus* c)
+{
+    Mundus* x;
+       i32  i;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(mundum_struere(x, c));
+    CREDO_VERUM(vicus_acervo_aperire(x->app.vicus, "calendarium",
+        "calendarium/dies/2026-10-19"));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    per (i = ZEPHYRUM; i < CX; i++)
+    {
+        (vacuum)vicus_acervo_mutare(x->app.vicus, "calendarium",
+            (i % II) ? "calendarium/mensis" : "calendarium/dies");
+        (vacuum)vicus_pulsare(x->app.vicus);
+    }
+    CREDO_AEQUALIS_I32(historia_numerus(x), C);
+    CREDO_AEQUALIS_S32(cursor_historiae(x), XCIX);
 }
 
 /* attributum rami nomenclatoris frontalis = valor (NIHIL absens) */
@@ -398,7 +659,7 @@ _probare_nomenclatorem (
     dispensator_recomponere(x->app.d);
     (vacuum)vicus_pulsare(x->app.vicus);
     CREDO_VERUM(nomenclatoris_est(x, "persona_aperta", NIHIL));
-    CREDO_AEQUALIS_I32(historia_numerus(x), I);
+    CREDO_AEQUALIS_I32(historia_numerus(x), II);
     CREDO_VERUM(frons(x)->facies.semitam_secuta
         == nomenclator_semitam_secuta);
     frons(x)->facies.semitam_secuta      = secuta_numerare;
@@ -408,10 +669,10 @@ _probare_nomenclatorem (
     (vacuum)vicus_pulsare(x->app.vicus);
     dispensator_recomponere(x->app.d);
     CREDO_VERUM(nomenclatoris_est(x, "persona_aperta", "1"));
-    CREDO_AEQUALIS_I32(historia_numerus(x), II);
+    CREDO_AEQUALIS_I32(historia_numerus(x), III);
     clavis(x, (character)XXVII, ZEPHYRUM);
     CREDO_VERUM(nomenclatoris_est(x, "persona_aperta", NIHIL));
-    CREDO_AEQUALIS_I32(historia_numerus(x), III);
+    CREDO_AEQUALIS_I32(historia_numerus(x), IV);
     clavis(x, 'o', (i32)MOD_IMPERIUM);
     CREDO_VERUM(nomenclatoris_est(x, "persona_aperta", "1"));
     CREDO_AEQUALIS_I32(x->vocationes_secutae, I);
@@ -462,7 +723,7 @@ _probare_pictorem (
     (vacuum)vicus_pulsare(x->app.vicus);
     CREDO_VERUM(pictura_frontis(x)
         && pictura_frontis(x)->latitudo == C);
-    CREDO_AEQUALIS_I32(historia_numerus(x), I);
+    CREDO_AEQUALIS_I32(historia_numerus(x), II);
     CREDO_VERUM(frons(x)->facies.semitam_secuta
         == pictor_semitam_secuta);
     CREDO_VERUM(vicus_acervo_mutare(x->app.vicus, "pictor", "x2"));
@@ -470,7 +731,7 @@ _probare_pictorem (
     dispensator_recomponere(x->app.d);
     CREDO_VERUM(pictura_frontis(x)
         && pictura_frontis(x)->latitudo == LX);
-    CREDO_AEQUALIS_I32(historia_numerus(x), II);
+    CREDO_AEQUALIS_I32(historia_numerus(x), III);
     clavis(x, 'o', (i32)MOD_IMPERIUM);
     CREDO_VERUM(pictura_frontis(x)
         && pictura_frontis(x)->latitudo == C);
@@ -655,8 +916,8 @@ _probare_initium_tacitum (
     CREDO_AEQUALIS_S64(volumen_summa_actorum(x->volumen), acta);
 }
 
-/* latus sine semitis (scriba) Ctrl+O non capit: historia sanctorum
- * intacta */
+/* D5: Ctrl+O in latere sinistro (scriba) historiam SINISTRAM
+ * gradatur - historia dextra (sancti) intacta */
 interior vacuum
 _probare_transitum (
     CredoContextus* c)
@@ -671,15 +932,15 @@ _probare_transitum (
     dispensator_recomponere(x->app.d);
     (vacuum)vicus_pulsare(x->app.vicus);
     clavis(x, (character)XIII, ZEPHYRUM);
-    CREDO_AEQUALIS_I32(historia_numerus(x), II);
-    cursor = (s32)frons(x)->historia_cursor;
+    CREDO_AEQUALIS_I32(historia_numerus(x), III);
+    cursor = cursor_historiae(x);
     /* focus in pagina sinistra (scriba) */
     ictus(x, VI, ZEPHYRUM);
     CREDO_VERUM(vicus_latus_focatum(x->app.vicus)
         == vicus_latus(vicus_activa(x->app.vicus), VICUS_SINISTRUM));
     clavis(x, 'o', (i32)MOD_IMPERIUM);
     CREDO_VERUM(sanctorum_est(x, "visus", "sanctus"));
-    CREDO_AEQUALIS_S32((s32)frons(x)->historia_cursor, cursor);
+    CREDO_AEQUALIS_S32(cursor_historiae(x), cursor);
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
@@ -688,6 +949,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "historia", _probare_historiam, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "transitus", _probare_transitum, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
+    { "tabula", _probare_tabulam, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "maximum", _probare_maximum, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "sinistra", _probare_sinistram, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "calendarium", _probare_calendarium, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },

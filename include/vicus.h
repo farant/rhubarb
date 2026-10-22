@@ -120,8 +120,8 @@ nomen structura {
                  b32  (*argumentum_ponere)(vacuum* ctx,
                           constans character* argumentum);
               vacuum* argumentum_ponere_ctx;
-    /* semitae R3: ramus lateris (semita.h) - historia lateris et
-     * $via; NIHIL = latus sine semitis */
+    /* semitae R3: ramus lateris (semita.h) - historia (tabulae, D5)
+     * et $via; NIHIL = latus sine semitis */
     constans InsulaRamus* ramus;
     /* semitae R4: post semitam a vico applicatam (historia) - latus
      * statum derivatum reconciliat (calendarium: liber notarum diei;
@@ -169,11 +169,13 @@ nomen structura {
                     b32  finita;         /* concha exiit: titulus
                                           * "[exitus]", non iam
                                           * pulsatur */
-    /* semitae R3 (vicus privatum): historia lateris - semitae plenae
-     * ut textus STML (cum signo camporum 'impelle'); cursor = locus
-     * currens */
-                    Xar* historia;
-                    i32  historia_cursor;
+    /* D5 (vicus privatum; olim historia lateris, R3 - nunc tabulae):
+     * status lateris pulsu ultimo visus - textus semitae plenae et
+     * signum camporum 'impelle' (mutatio = locus historiae tabulae);
+     * visa = semel computatus (R4d: semita servata ante restituitur) */
+                 chorda historia_textus;
+                 chorda historia_signum;
+                    b32 historia_visa;
     /* semitae R4d: semita persistens lateris (URI, campi transientes
      * omissi) - post pulsum mutata in indice servatur (attributum
      * semita), in initio post montationem applicatur (deinde
@@ -191,6 +193,20 @@ nomen structura {
            i32 focus;       /* VICUS_SINISTRUM aut VICUS_DEXTRUM */
            i32 focus_domus; /* T4f: focus cum latus cycli domum texit
                              * (ordinarium VICUS_DEXTRUM) */
+    /* D5 (Franus 2026-10-22): historiae TABULAE, una per latus
+     * (Ctrl+O / Ctrl+I in latere focato). Locus = latus (id, genus,
+     * argumentum) et semita eius plena (NIHIL: latus sine semitis).
+     * SINISTRA: campus 'historia impelle' lateris sinistri mutatus
+     * (scriba: pagina) locum novum facit. DEXTRA: idem pro fronte
+     * acervi, et frons mutata (aperitio, cyclus, Esc, $via, porta
+     * indagationis) locum novum facit. Signum aequale eiusdem
+     * lateris: locus substituitur (ut R3). Focus ictu mutatus locum
+     * non facit. Futura tolluntur, antiquissimus abit post C. Index
+     * VICUS_SINISTRUM / VICUS_DEXTRUM. Vicus privatum. */
+                    Xar* historia[II];
+                    i32  historia_cursor[II];
+                 chorda  historia_frons;   /* id frontis pulsu ultimo
+                                            * (privatum) */
 } VicusTabula;
 
 /* S4 (Franus 2026-10-09): horologium in linea tabularum, ad dextrum

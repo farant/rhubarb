@@ -621,8 +621,17 @@ _probare_scribam_vivam (
            chorda* a;
            chorda* vetus;
 
-        d      = *(StmlNodus**)xar_obtinere(domini->liberi, i);
-        a      = stml_attributum_capere(d, "attributum");
+        d = *(StmlNodus**)xar_obtinere(domini->liberi, i);
+        a = stml_attributum_capere(d, "attributum");
+        novi++;
+        /* D5 S3c: campus 'pagina' (semita scribae) post S6 additus -
+         * in imagine vetere deest */
+        si (chorda_aequalis_literis(*a, "pagina"))
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS(*stml_attributum_capere(d,
+                "scriptor"), "pagina.clavis");
+            perge;
+        }
         vetus  = scriptor_domini(ante, chorda_ut_cstr(*a, c->piscina));
         CREDO_NON_NIHIL(vetus);
         si (vetus)
@@ -630,7 +639,6 @@ _probare_scribam_vivam (
             CREDO_CHORDA_AEQUALIS(*vetus,
                 *stml_attributum_capere(d, "scriptor"));
         }
-        novi++;
     }
     veteres = ZEPHYRUM;
     per (i = ZEPHYRUM; i < xar_numerus(ante->liberi); i++)
@@ -648,8 +656,8 @@ _probare_scribam_vivam (
             c->piscina)));
         veteres++;
     }
-    CREDO_AEQUALIS_S32(novi, veteres);
-    CREDO_AEQUALIS_S32(novi, XVI);
+    CREDO_AEQUALIS_S32(novi, veteres + I);
+    CREDO_AEQUALIS_S32(novi, XVII);
 }
 
 

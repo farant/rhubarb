@@ -115,6 +115,14 @@ scriba_paginam_ostendere (
     ScribaMontatio* m,
             chorda  titulus);
 
+/* D5 S3c: post semitam a vico applicatam (campus 'pagina', semita
+ * scriba/<pagina>): visus ad paginam eam vertitur
+ * (scriba_paginam_ostendere). ctx = ScribaMontatio*. FALSUM si liber
+ * nullus aut pagina ignota. */
+b32
+scriba_semitam_secuta (
+    vacuum* ctx);
+
 /* Visus stalus reficitur (vicus-latera S2b): si alius visus paginam
  * commisit (cursor documenti != cursor_laboris), folium laboris ex
  * proiectione - visus sine gestu pendente solum (commissio in omni

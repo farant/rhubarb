@@ -227,6 +227,19 @@ binding changes) or `historia="substitue"` (replace: stepping a day,
 moving a selection, typing a filter); default `substitue`. A pane keeps
 its own back/forward list of canonical routes. Keys: OPEN (§IX).
 
+**Amended 2026-10-22 (Fran, genera-datorum D5): two lists per TAB,
+one per side - not per pane.** Per-pane lists could not go back across
+panes (terminal -> Cmd+Shift+F -> search -> Ctrl+O stayed in search).
+Ctrl+O / Ctrl+I step the FOCUSED side's list. LEFT: an `impelle`
+change of the left pane pushes (scriba's page is now route state,
+`scriba/<pagina>`: next/prev, #links, search hits all push). RIGHT: an
+`impelle` change of the stack's front pane pushes, and so does a change
+of the front pane itself (open, cycle, Esc, $via, a search hit).
+`substitue` replaces that pane's current entry; a focus click does
+nothing. A step brings the entry's pane to the front (reopens it if
+closed) and applies its route. The terminal consumes Ctrl+O itself.
+lib/vicus.worklog.md.
+
 ## VI-e. Restart: the saved argument is the route (R4d)
 
 Vicus saves each pane's argument and reopens with it. Until R4d that
@@ -453,7 +466,7 @@ accessors, R1.)
 ## IX. Decisions (Fran, 2026-10-19)
 
 1. **History keys:** Ctrl+O (back) / Ctrl+I (forward), per pane (vim's
-   jump list). Cmd+[ / Cmd+] stay the pane cycle.
+   jump list) - per SIDE of a tab since 2026-10-22 (§VI amendment). Cmd+[ / Cmd+] stay the pane cycle.
 2. **Commands stay:** `$saints(thomas-aquinas)` remains an English
    alias that compiles to the route `sancti/sanctus/thomas-aquinas`;
    `$genus/...` route commands are added beside them (R3).

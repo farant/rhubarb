@@ -8,8 +8,8 @@
  * Cmd+] / Cmd+[, porta Enter (dies,
  * persona, res, pagina libri communis in latere sinistro), Esc non
  * consumptum latus tollit, registrum commune (res et persona per
- * latera calendarii et nomenclatoris statim quaeruntur), reapertura
- * (q ex semita servata). */
+ * latera calendarii et nomenclatoris statim quaeruntur), Ctrl+O per
+ * latera (linea temporis tabulae), reapertura (q ex semita servata). */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -632,6 +632,12 @@ _sectio_porta (
         VICUS_SINISTRUM)->montatio;
     CREDO_VERUM(sm->doc == scriba_liber_pagina(sm->liber,
         lit("2", x->piscina)));
+    /* historia sinistra: Ctrl+O in scriba - pagina prior */
+    (vacuum)manus_ludus_clavem(x->m, 'o', MOD_IMPERIUM);
+    pulsare(x);
+    CREDO_VERUM(sm->doc == scriba_liber_pagina(sm->liber,
+        lit("1", x->piscina)));
+    CREDO_VERUM(frons_est(x, ID_INDAGATIONIS));
 }
 
 /* Esc gradibus: prompta, q, deinde latus tollitur (non consumptum) */
@@ -693,6 +699,48 @@ _sectio_communia (
     CREDO_AEQUALIS_I32(inventa(x, "Zeno"), I);
 }
 
+/* D5 linea temporis (Franus): terminale -> Cmd+Shift+F -> Ctrl+O
+ * terminale; quaestio -> Enter (dies) -> Ctrl+O quaestio cum q */
+interior vacuum
+_sectio_historia (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x && x->v);
+
+    CREDO_GRADUS("terminale, Cmd+Shift+F, Ctrl+O: terminale");
+    /* tabula 1 = scriba | terminale */
+    CREDO_VERUM(vicus_activam_ponere(x->v, "1"));
+    CREDO_VERUM(vicus_focum_ponere(x->v, VICUS_DEXTRUM));
+    pulsare(x);
+    advocare(x);
+    CREDO_VERUM(frons_est(x, "1_dextrum_indagatio"));
+    /* Esc: prompta clauditur (latus manet) */
+    clavis(x, (character)XXVII);
+    CREDO_VERUM(frons_est(x, "1_dextrum_indagatio"));
+    (vacuum)manus_ludus_clavem(x->m, 'o', MOD_IMPERIUM);
+    pulsare(x);
+    CREDO_VERUM(frons_est(x, "1_dextrum_terminale"));
+    CREDO_VERUM(focus_dexter(x));
+
+    CREDO_GRADUS("quaestio, Enter in die, Ctrl+O: quaestio cum q");
+    CREDO_VERUM(vicus_activam_ponere(x->v, "3"));
+    CREDO_VERUM(vicus_focum_ponere(x->v, VICUS_SINISTRUM));
+    pulsare(x);
+    quaerere(x, "crumble");
+    clavis(x, (character)XIII);
+    CREDO_NECESSE(genus_frontis(x, "calendarium"));
+    (vacuum)manus_ludus_clavem(x->m, 'o', MOD_IMPERIUM);
+    pulsare(x);
+    CREDO_VERUM(frons_est(x, ID_INDAGATIONIS));
+    CREDO_VERUM(campus_est(x, "q", "crumble"));
+    (vacuum)manus_ludus_clavem(x->m, 'i', MOD_IMPERIUM);
+    pulsare(x);
+    CREDO_VERUM(genus_frontis(x, "calendarium"));
+}
+
 /* reapertura: latus sine argumento, q ex semita servata */
 interior vacuum
 _sectio_restitutio (
@@ -727,6 +775,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "effugium", _sectio_effugium, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "communia", _sectio_communia, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
+    { "historia", _sectio_historia, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "reapertura", _sectio_restitutio, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
