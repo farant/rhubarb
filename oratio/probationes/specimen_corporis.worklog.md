@@ -23,3 +23,9 @@ So the stml round trip costs about 3.5–5 KB of peak per source byte and canon 
 **Not exercised by the corpus:** the no-blank-line and no-newline fallbacks. Every capped file today has a blank line before 128 KB.
 
 **Still open:** the per-byte cost itself (projection weight, park 01M5EGAWD5NT504BX9ZCR6JC37). The round trip holds two materia trees, the STML text (~810 B per source byte) and the reread STML tree.
+
+## 2026-10-22 — per-document interner in the canon corpus loops (md, oratio)
+
+The first fusio_probare after merging main went red on one gate: `probatio_md_canon`'s corpus section at 258.4 MiB against 256. That section judges ALL md files, not a sample, and main brought the corpus from 1,553 to 1,572 files. Cause: each document's STML was read with the FIXTURE's interner, so every distinct string of every document accumulated in one suite-wide table that is never freed. The per-document arena was destroyed, but its interned strings lived on. The fix is `internamentum_creare(p)` in the document's own arena. canon_iudicare compares strings by content (chorda_aequalis); interned pointer identity only matters in macro expansion, which wants the tree's OWN interner, which this is.
+
+md_canon: 258.4 → 102.9 MiB, 1572 files, 0 failures. oratio_canon (same pattern): sample 128 → 90 MiB, full corpus 168 → 89.8 MiB. The peak is now flat in corpus size.

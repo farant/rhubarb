@@ -725,7 +725,16 @@ _documenta_iudicare (
                     perge;
                 }
                 lectae = lectae + I;
-                vitia = _documentum_iudicare(p, fx->intern, fx->canon,
+                /* Internamentum PER PLAGULAM, in piscina eius (cum ea
+                 * liberatum) - non fixurae: chordae documentorum
+                 * omnium MDLXXII in tabula una suitae cumulabantur et
+                 * apex cum corpore crescebat (258.4 > CCLVI MiB post
+                 * fusionem main, 2026-10-22). canon_iudicare chordas
+                 * per contentum comparat, non per monstratorem
+                 * internatum (identitas solum in expansione, quae
+                 * internamentum ARBORIS ipsius poscit) - ergo tutum. */
+                vitia = _documentum_iudicare(p,
+                    internamentum_creare(p), fx->canon,
                     &fx->consilium, textus, mensura, linea);
                 si (vitia != ZEPHYRUM)
                 {

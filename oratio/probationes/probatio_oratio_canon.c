@@ -974,8 +974,11 @@ CREDO_GRADUS ("Iudicans corpus (plagulae md totae ut oratio)");
                 truncatae  = truncatae + I;
                 mensura    = _caput_plagulae(textus, mensura);
             }
-            vitia = _documentum_iudicare(p, fx->intern, fx->canon,
-                &fx->consilium,
+            /* internamentum PER PLAGULAM (ut probatio_md_canon,
+             * 2026-10-22): fixurae tabula chordas corporis totius
+             * cumulabat; canon_iudicare per contentum comparat */
+            vitia = _documentum_iudicare(p, internamentum_creare(p),
+                fx->canon, &fx->consilium,
                 textus, mensura, linea);
             si (vitia != ZEPHYRUM)
             {
