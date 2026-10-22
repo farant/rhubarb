@@ -179,7 +179,8 @@ _sectio_schema (
 
 
     /* ==================================================
-     * PRAEPARATA: VIII ex solario, nomina per titulum
+     * PRAEPARATA: VIII ex solario + tonus (domesticum), nomina per
+     * titulum
      * ================================================== */
 
 interior vacuum
@@ -190,8 +191,8 @@ _sectio_praeparata (
     b32 omnes = VERUM;
 
     (vacuum)c;
-    CREDO_AEQUALIS_I32 (sonitus_praeparatorum_numerus(), VIII);
-    per (k = ZEPHYRUM; k < VIII; k++)
+    CREDO_AEQUALIS_I32 (sonitus_praeparatorum_numerus(), IX);
+    per (k = ZEPHYRUM; k < IX; k++)
     {
         constans character* titulus = sonitus_praeparati_titulus(k);
 
@@ -201,7 +202,7 @@ _sectio_praeparata (
         }
     }
     CREDO_VERUM (omnes);
-    CREDO_VERUM (sonitus_praeparati_titulus(VIII) == NIHIL);
+    CREDO_VERUM (sonitus_praeparati_titulus(IX) == NIHIL);
     CREDO_VERUM (sonitus_praeparatum("nullum") == NIHIL);
     CREDO_VERUM (sonitus_praeparatum("radius") != NIHIL);
     CREDO_VERUM (sonitus_praeparatum("radius")
@@ -210,6 +211,27 @@ _sectio_praeparata (
     {
         CREDO_F32_PROXIMUS (sonitus_praeparatum("punctum")->frequentia,
                             880.0f, 0.0f);
+    }
+    /* tonus: vox cantus - altitudo FIXA (nec clivus nec saltus nec
+     * vibratus nec varietas), ut nota sonet quae scripta est */
+    {
+        constans SonitusParametra* t = sonitus_praeparatum("tonus");
+
+        CREDO_VERUM (t != NIHIL);
+        si (t != NIHIL)
+        {
+            CREDO_F32_PROXIMUS (t->forma, 0.0f, 0.0f);
+            CREDO_F32_PROXIMUS (t->frequentia, 440.0f, 0.0f);
+            CREDO_F32_PROXIMUS (t->clivus, 0.0f, 0.0f);
+            CREDO_F32_PROXIMUS (t->acceleratio, 0.0f, 0.0f);
+            CREDO_F32_PROXIMUS (t->vibratus, 0.0f, 0.0f);
+            CREDO_F32_PROXIMUS (t->saltus, 1.0f, 0.0f);
+            CREDO_F32_PROXIMUS (t->officium, 0.5f, 0.0f);
+            CREDO_F32_PROXIMUS (t->officium_clivus, 0.0f, 0.0f);
+            CREDO_F32_PROXIMUS (t->varietas, 0.0f, 0.0f);
+            CREDO_VERUM (t->impetus > 0.0f && t->impetus < 0.01f);
+            CREDO_VERUM (t->remissio > 0.0f);
+        }
     }
 }
 

@@ -50,7 +50,8 @@ hic_manens constans SonitusCampus CAMPI[XX] = {
 /* Praeparata solarii (synth.c, 'tuned by ear via synthtest') -
  * valores octetim portati, ordine camporum. Nomina Latina: blip
  * punctum, step passus, whoosh susurrus, thump fragor, wind ventus,
- * laser radius, crackle crepitus, water rivus. */
+ * laser radius, crackle crepitus, water rivus. Ultimum, tonus, NOSTRUM
+ * est (non solarii): vox cantus, altitudine fixa (cantus.h). */
 nomen structura {
      constans character* titulus;
        SonitusParametra  p;
@@ -85,7 +86,13 @@ hic_manens constans SonitusPraeparatum PRAEPARATA[] = {
      * et acuta summa abscisa, ut aqua mota sonet, non ventus */
     { "rivus",    { 4.0f, 0.0f,  2.0f,   0.0f, 0.0f,   900.0f, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f, 0.0f,  0.5f, 0.0f, 2600.0f, 520.0f,
-            0.0f, 0.0f, 0.30f, 0.0f } }
+            0.0f, 0.0f, 0.30f, 0.0f } },
+    /* vox cantus: pulsus dimidius purus, impetus brevis contra crepitum,
+     * altitudo FIXA - nota sonat quae scripta est; mora a cantu
+     * (tenere) ponitur */
+    { "tonus",    { 0.0f, 0.003f, 0.10f, 0.0f, 0.06f,  440.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f, 0.0f,  0.5f, 0.0f, 0.0f,    0.0f,
+            0.0f, 0.0f, 0.35f, 0.0f } }
 };
 
 #define SONITUS_PRAEPARATORUM \

@@ -93,3 +93,27 @@ red then green (mora sign, clamp, tenere ignored, seed index, momentum
 base, form gain, form group, pitch +1, caller resolver ignored, voices
 claimed before the error, colour used for '@'); one first draft did not
 compile (unused resolver) - planta refused it, redone in a compiling form.
+
+## 2026-10-22 - S4 step 3: `auditio -cantus` (first consumer)
+
+`tools/auditio.c` gained `-cantus TEXT [-praeparatum T] [-intactus]
+[-via x.wav] [seed]`: live through `auditus` by default, offline through
+`mixtura` into a stereo WAV with `-via`. Same commands either way.
+
+Lessons from the first consumer, for vicus (step 4):
+- **Voices = notes.** `cantus_iussa_parare` claims every voice at once.
+  At equal priority the rector steals the OLDEST voice, which is a note
+  that has not sounded yet. So the mixer gets voices = notes (power of
+  two, >= 16) and command/message rings to match (messages 2x voices).
+  A long-lived host (vicus) with a fixed mixer must queue melodies or
+  cap their length; that is the S6 sequencer's job.
+- **Prepare at momentum 0, shift when sending.** Commands are built
+  before the device opens; live adds `now + latency + 50 ms` to each
+  `momentum` when it sends. A resolution error therefore never opens
+  the device.
+- **End = last voice finished, not written length.** The exact end is
+  `max(momentum + sonitus_longitudo(parametra, semen))`; offline renders
+  exactly that many frames (the WAV for the arpeggio is 0.4767 s = the
+  printed tail end). Live waits for VOX_FINITA from every non-null voice,
+  with a hard cap of end + 1 s.
+- Errors print the text with a caret under the offending byte.

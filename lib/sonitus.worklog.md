@@ -53,3 +53,16 @@ three points (0.75 / 0.625 / 0.5 for ictus 0.5, amplitudo 0.5).
 **Known deviation from solarium**: noise RNG is sors (PCG32) not the LCG,
 and phase is the 32-bit integer accumulator - presets sound the same
 family but are not sample-identical to solarium's WAVs.
+
+## 2026-10-22 - preset `tonus` (ours, not solarium's)
+
+None of the eight solarium presets can carry a melody: `punctum` jumps
+up a fifth after 50 ms (`saltus 1.5`), `radius` sweeps down (`clivus -9`),
+the rest are noise. `tonus` is the house voice for `cantus` (S4): 50%
+pulse, 3 ms attack (no click), 60 ms release, and FIXED pitch (no slide,
+jump, vibrato or `varietas`), so the note that sounds is the note that was
+written. Its `mora` 0.10 only matters when it plays alone; `cantus` with
+`tenere` overwrites it with the written length. The suite asserts the
+fixed-pitch fields, not the timbre values, which stay free to retune
+by ear. Fran chose a preset here over a colour local to `auditio`, so
+`auditio`, vicus and a jingle Claude writes can all say `@tonus`.
