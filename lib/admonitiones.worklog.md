@@ -27,3 +27,13 @@ dir - the count is now CREDO_NECESSE before the element is read.
 Plants red: sort reversed, duplicates admitted, no copy, no eviction,
 Stop not cut to the first line, permission not recognised; legere_ab:
 half line read, rotation not detected.
+
+## 2026-10-22 - Admonitio.genus (sonus S4)
+
+`Admonitio` gained `genus`: the occasion as a cantuale tag ("permissio"
+for permission/input/elicitation, "finis" for Stop, "vitium" for
+StopFailure). `gradus` could not carry it: ATTENTIO covers both a
+permission prompt and a StopFailure, which want different jingles. The
+names are the cantuale tags on purpose, so the vicus sound system maps
+notification -> jingle with no table. `admonitiones_addere` copies it
+like every other chorda (the copy test caught the missing copy first).

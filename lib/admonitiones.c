@@ -77,6 +77,7 @@ admonitiones_addere (
     nova.fons        = copia(x->fons, a->piscina);
     nova.titulus     = copia(x->titulus, a->piscina);
     nova.corpus      = copia(x->corpus, a->piscina);
+    nova.genus       = copia(x->genus, a->piscina);
     nova.actio       = copia(x->actio, a->piscina);
     nova.argumentum  = copia(x->argumentum, a->piscina);
     /* addere in fine, deinde deorsum ad locum movere */
@@ -194,18 +195,21 @@ admonitio_ex_eventu (
         {
             redde FALSUM;
         }
-        x->gradus = ADMONITIO_ATTENTIO;
-        x->corpus = e->nuntius;
+        x->gradus  = ADMONITIO_ATTENTIO;
+        x->corpus  = e->nuntius;
+        x->genus   = chorda_ex_literis("permissio", piscina);
     }
     alioquin si (chorda_aequalis_literis(e->eventus, "Stop"))
     {
-        x->gradus = ADMONITIO_NUNTIUS;
-        x->corpus = linea_prima(e->nuntius);
+        x->gradus  = ADMONITIO_NUNTIUS;
+        x->corpus  = linea_prima(e->nuntius);
+        x->genus   = chorda_ex_literis("finis", piscina);
     }
     alioquin si (chorda_aequalis_literis(e->eventus, "StopFailure"))
     {
-        x->gradus = ADMONITIO_ATTENTIO;
-        x->corpus = e->nuntius;
+        x->gradus  = ADMONITIO_ATTENTIO;
+        x->corpus  = e->nuntius;
+        x->genus   = chorda_ex_literis("vitium", piscina);
     }
     alioquin
     {

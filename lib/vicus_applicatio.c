@@ -2014,6 +2014,131 @@ folii_lineae (
 
 
 /* ==================================================
+ * Sonus (sonus S4 gradus IV)
+ * ================================================== */
+
+/* porta (vicus_sonus.h; posita = applicatio dedit) et mutus pulsus
+ * prioris: tacere solum in transitu ad mutum */
+nomen structura {
+    VicusPortaSoni porta;
+               b32 posita;
+               b32 mutus_prior;
+} ContextusSoni;
+
+/* campus veritatis radicis; absens = FALSUM */
+interior b32
+veritas_radicis_vici (
+                 Vicus* v,
+    constans character* titulus)
+{
+    chorda* a;
+
+    a = insula_attributum(v->repo, titulus);
+    redde a && chorda_aequalis_literis(*a, "verum");
+}
+
+interior b32
+sonus_mutus (
+    Vicus* v)
+{
+    redde veritas_radicis_vici(v, "sonus_mutus")
+        || veritas_radicis_vici(v, "sonus_admonitionum_mutus");
+}
+
+/* admonitio nova: genus eius pulsatur nisi muta aut porta nulla
+ * (genus sine cantione: porta FALSUM reddit, nihil sonat) */
+interior vacuum
+sonum_admonitionis (
+     ContextusSoni* soni,
+             Vicus* v,
+            chorda  genus)
+{
+    si (!soni || !soni->posita || sonus_mutus(v))
+    {
+        redde;
+    }
+    (vacuum)soni->porta.pulsare(soni->porta.ctx, genus);
+}
+
+/* '$sound' -> sonus_mutus vertitur; '$sound(notifications)' ->
+ * sonus_admonitionum_mutus. Non consumens (bulla manet); status in
+ * nuntio. Sine porta quoque: campi persistentes sunt. */
+interior b32
+sonus_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* piscina,
+     IussumEffectus* effectus)
+{
+                  Vicus* v;
+     constans character* campus;
+     constans character* titulus;
+                    b32  mutus;
+
+    v = (Vicus*)ctx;
+    si (iussum->numerus_argumentorum > I)
+    {
+        effectus->error = chorda_ex_literis(
+            "sound: one argument at most (notifications)", piscina);
+        redde VERUM;
+    }
+    si (iussum->numerus_argumentorum == ZEPHYRUM)
+    {
+        campus   = "sonus_mutus";
+        titulus  = "sound";
+    }
+    alioquin si (chorda_aequalis_literis(iussum->argumenta[ZEPHYRUM],
+                 "notifications"))
+    {
+        campus   = "sonus_admonitionum_mutus";
+        titulus  = "notification sounds";
+    }
+    alioquin
+    {
+        effectus->error = chorda_concatenare(chorda_ex_literis(
+            "sound: unknown argument (notifications): ", piscina),
+            iussum->argumenta[ZEPHYRUM], piscina);
+        redde VERUM;
+    }
+    mutus = !veritas_radicis_vici(v, campus);
+    si (!vicus_radicem_scribere(v, "sonus.agere", campus,
+            mutus ? "verum" : "falsum"))
+    {
+        redde FALSUM;
+    }
+    effectus->nuntius = chorda_concatenare(chorda_ex_literis(titulus,
+        piscina), chorda_ex_literis(mutus ? " off" : " on", piscina),
+        piscina);
+    redde VERUM;
+}
+
+/* systema "sonus" (pulsus vici, post admonitiones): mutum factum
+ * (quovis scriptore) sonantem tacet SEMEL; deinde porta agit (exitus
+ * piger, exspectata). Nihil pingendum. */
+interior b32
+systema_soni (
+     Vicus* v,
+    vacuum* ctx)
+{
+    ContextusSoni* soni;
+              b32  mutus;
+
+    soni   = (ContextusSoni*)ctx;
+    mutus  = sonus_mutus(v);
+    si (soni->posita)
+    {
+        si (mutus && !soni->mutus_prior)
+        {
+            soni->porta.tacere(soni->porta.ctx);
+        }
+        soni->porta.agere(soni->porta.ctx);
+    }
+    soni->mutus_prior = mutus;
+    redde FALSUM;
+}
+
+
+/* ==================================================
  * Admonitiones (colloquia-plan T4a)
  * ================================================== */
 
@@ -2036,6 +2161,8 @@ nomen structura {
     /* T6: terminalia - inspectio ultima (s), scheda sua */
                  time_t  terminalia_ad;
                 Piscina* scheda_terminalium;
+    /* sonus S4: admonitio nova pulsat */
+          ContextusSoni* sonus;
 } ContextusAdmonitionum;
 
 interior s64
@@ -2200,6 +2327,7 @@ systema_admonitionum (
     vacuum* ctx)
 {
     ContextusAdmonitionum* ca;
+       constans Admonitio* nova;
                    chorda* a;
                    chorda  recentissima;
                       s64  lectae_ad;
@@ -2229,6 +2357,12 @@ systema_admonitionum (
             "admonitio_nova", chorda_ut_cstr(recentissima,
             ca->sequax.scheda));
         mutatum = VERUM;
+        /* sonus S4: recentissima sola - plures uno pulsu, sonus unus */
+        nova = admonitio(ca->index, ZEPHYRUM);
+        si (nova)
+        {
+            sonum_admonitionis(ca->sonus, v, nova->genus);
+        }
     }
     u = (s32)admonitiones_non_lectae(ca->index);
     si (u != ca->non_lectae)
@@ -2677,6 +2811,27 @@ vicus_applicatio_quaestionis_portam_ponere (
     }
     cq->porta   = *porta;
     cq->posita  = VERUM;
+}
+
+vacuum
+vicus_applicatio_soni_portam_ponere (
+            VicusApplicatio* app,
+    constans VicusPortaSoni* porta)
+{
+    ContextusSoni* soni;
+
+    si (!app || !app->soni)
+    {
+        redde;
+    }
+    soni = (ContextusSoni*)app->soni;
+    si (!porta || !porta->pulsare || !porta->agere || !porta->tacere)
+    {
+        soni->posita = FALSUM;
+        redde;
+    }
+    soni->porta   = *porta;
+    soni->posita  = VERUM;
 }
 
 vacuum
@@ -3150,6 +3305,7 @@ vicus_applicatio_aedificare (
 ContextusNomenclatoris* cn;
   ContextusQuaestionis* cq;
  ContextusAdmonitionum* cad;
+         ContextusSoni* soni;
     ContextusSanctorum* sanctorum;
  ContextusIndagationis* ci;
        StatusSystemata* systemata;
@@ -3263,6 +3419,18 @@ ContextusNomenclatoris* cn;
             "terminalia", XVI * M);
     }
     app->admonitionum = cad;
+    /* sonus S4: porta nulla donec applicatio ponit */
+    soni = (ContextusSoni*)piscina_allocare(piscina,
+        magnitudo(ContextusSoni));
+    si (soni)
+    {
+        memset(soni, ZEPHYRUM, magnitudo(ContextusSoni));
+    }
+    si (cad)
+    {
+        cad->sonus = soni;
+    }
+    app->soni = soni;
     cs = (ContextusScribae*)piscina_allocare(piscina,
         magnitudo(ContextusScribae));
     cs->systemata = systemata;
@@ -3276,6 +3444,9 @@ ContextusNomenclatoris* cn;
                quaestionem_iussum, cq)
         || !iussum_registrare(cs->iussa, "dies", VERUM, dies_iussum,
                NIHIL)
+        || !soni
+        || !iussum_registrare(cs->iussa, "sound", FALSUM, sonus_iussum,
+               app->vicus)
         || !aperiens_registrare(cs->iussa, app->vicus, "terminale",
                piscina)
         || !aperiens_registrare(cs->iussa, app->vicus, "scriba",
@@ -3358,6 +3529,8 @@ ContextusNomenclatoris* cn;
                systema_admonitionum, cad)
         || !vicus_systema_addere(app->vicus, "terminalia",
                systema_terminalium, cad)
+        || !vicus_systema_addere(app->vicus, "sonus", systema_soni,
+               soni)
         || !vicus_aperire(app->vicus, INDEX_ORDINARIUS)
         || !vicus_stratum_addere(app->vicus, "volantes"))
     {

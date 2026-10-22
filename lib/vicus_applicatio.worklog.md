@@ -129,3 +129,42 @@ missing, left never chosen, page ignored. `m->doc` not reassigned was
 GREEN in vicus (focusing calls scriba_reficere, which resyncs m->doc),
 so the direct test lives in probatio_montatio (page doc, saved view,
 unknown name refused) - red there.
+
+## 2026-10-22 - sonus S4 step 4b: notification sounds, $sound mutes
+
+vicus_applicatio knows sound only through a PORT (`include/vicus_sonus.h`,
+types only: pulsare(genus) / agere / tacere), same reasoning as the
+$question port (ruling R9): calling tintinnabulum directly would put
+mixtura/cantus/cantuale/sonitus (~7 libs) into ludus_tessera's hand list
+and CoreAudio into every vicus test binary, and grow this file's header
+closure (127 of CXCII). The real port is `lib/vicus_sonus_porta.c`, linked
+IN-PROCESS by apps/vicus/vicus.c and vicus_terminalis.c (not a sidecar).
+Fran (10-22): sound effects inside vicus later are fine - the port grows
+(e.g. `sonare(praeparatum)`), the shape stays.
+
+- `ContextusSoni` {porta, posita, mutus_prior}; `ContextusAdmonitionum.sonus`
+  points at it. `systema_admonitionum`, when `admonitiones_sequi` > 0,
+  pulses `admonitio(index, 0)->genus` - newest only, so N events in one
+  pulse ring once (tintinnabulum then queues one, latest wins).
+- system "sonus" (after "terminalia"): reads both mutes every pulse;
+  tacere ONLY on the transition to muted (any writer, not just the
+  button); agere every pulse, muted or not (the lazy device must still
+  close after its quiet period).
+- `$sound` / `$sound(notifications)`: non-consuming iussum, ctx = Vicus;
+  flips `sonus_mutus` / `sonus_admonitionum_mutus` (persistent, scriptor
+  `sonus.agere`, apps/vicus/organum.stml), status line "sound off/on",
+  "notification sounds off/on"; other argument -> "sound: unknown
+  argument (notifications): x". Works with no port (fields persist).
+- organum.stml is EMBEDDED: after editing it run `./tools/organa_infigere.sh`
+  (lib/organa_infixa.c, GENERATUM) - before that every write to the new
+  fields was refused by the domini and the suite read like logic bugs.
+- -fumus never sets the port: headless screenshot tests must not play a
+  jingle when a real notification lands in the live praeconium log.
+- An empty-genus guard in `sonum_admonitionis` survived its plant: no
+  path produces one (admonitio_ex_eventu always sets a genus) and the
+  port already answers FALSUM for a genus without a jingle - removed.
+
+Suite `probatio_vicus_sonus` (7 sections, 123 asserts, fake port that
+counts calls; TMUX_TMPDIR in the credo area so systema 'terminalia'
+never sees Fran's server). Plants 13/13 red (12 C via silva.planta,
+plus organum `vita="transiens"` by hand -> persistens red).

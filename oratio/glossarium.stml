@@ -903,6 +903,7 @@
   <vocabulum lemma="fts" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="full-text search (SQLite)"/>
   <vocabulum lemma="tsv" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="tab-separated values"/>
   <vocabulum lemma="utf" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="unicode transformation format"/>
+  <vocabulum lemma="wav" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="forma plagulae soni RIFF/WAVE (sonus_wav)"/>
   <vocabulum lemma="dof" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="degrees of freedom"/>
   <vocabulum lemma="trm" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="abbreviatio knotapel"/>
   <vocabulum lemma="chebyshev" lingua="anglica" classis="nomen-proprium" contextus="anglicus" nota="Pafnuty Chebyshev"/>
@@ -1786,6 +1787,11 @@
   </vocabulum>
   <vocabulum lemma="redirigo" lingua="latina" classis="verbum" nota="vox domus (re + dirigere): petitionem alio dirigere (HTTP redirect, colloquium_redirigere); WORDS caret">
     <forma textus="redirigere" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+  </vocabulum>
+
+  <vocabulum lemma="cantuale" lingua="latina" classis="substantivum" nota="Latina media (cantuale, -is n.): liber cantuum chori - hic liber cantilenarum nominatarum (include/cantuale.h); WORDS caret">
+    <forma textus="cantuale" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="cantuali" casus="ablativus" numerus="singularis" genus="neutrum"/>
   </vocabulum>
 
 </glossarium>
