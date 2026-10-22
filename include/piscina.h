@@ -81,6 +81,41 @@ piscina_conari_allocare_ordinatum (
 
 
 /* ===============================================
+ * Ampliatio - allocationem augere sine copia (2026-10-21)
+ *
+ * piscina_conari_ampliare: allocationem 'datum' (mensura_vetus
+ * octetorum EXACTE, ut allocata est) ad mensura_nova augere. Viae
+ * duae:
+ *   I.  allocatio ULTIMA alvei currentis et spatium suppetit: in
+ *       loco augetur - redde idem 'datum'.
+ *   II. allocatio SOLA alvei currentis (ab initio alvei usque ad
+ *       finem usus), piscina dynamica: alveus ipse per realloc
+ *       augetur - redde monstratorem fortasse MOTUM, contentis
+ *       servatis.
+ * Aliter NIHIL, allocatione intacta: vocans novam allocat et copiat,
+ * ut antea. Numerus allocationum non crescit (allocatio eadem est).
+ *
+ * CUR: aedificator chordae duplicando crescit, et arena buffera
+ * vetera numquam reddit - scriptura STML magna III.VI x textum
+ * consumebat (materia/fontes/materia_arbor.worklog.md 2026-10-21).
+ *
+ * CAUTIO viae II: monstratores in 'datum' veterem post motum
+ * PENDENT - memoria liberata est, non in arena servata. Solus
+ * possessor allocationis eos tenere debet (aedificator: spectatio
+ * valet solum usque ad mutationem proximam). Sub -DPISCINA_VENENUM=1
+ * via II SEMPER movet et buffer vetus veneno implet ante
+ * liberationem.
+ * =============================================== */
+
+vacuum*
+piscina_conari_ampliare (
+                         Piscina* piscina,
+                          vacuum* datum,
+                  memoriae_index  mensura_vetus,
+                  memoriae_index  mensura_nova);
+
+
+/* ===============================================
  * Cyclus Vitae
  * =============================================== */
 

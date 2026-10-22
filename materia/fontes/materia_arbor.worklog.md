@@ -430,3 +430,32 @@ no node (silva's directive laminas and the parsura's EOF token). Same
 comparison as inside a tree; nodes NIHIL, locus -I, index = trivium index
 when a trivium diverged. The node and token entries share
 `_comparatorem_initiare`.
+
+## 2026-10-21 — where the STML write cost goes (#6 investigation, nothing changed)
+
+Probe `build/sonda_partes/sonda_scriptura.c` (gitignored): hilarius,
+annotated by oratio_partes, 11,546 B of Latin. `materia_arbor_proicere_nodum`
+into one pool, `stml_scribere(..., VERUM)` into another.
+
+- **Tree:** 84 MiB for 296,634 StmlNodus (173,374 elements, 123,260
+  text/other), 297 B per node. `magnitudo(StmlNodus)` is 152, so the
+  structs alone are ~43 MiB (51%). Xar headers are 64 B each, created
+  eagerly by `stml_elementum_creare` for both `attributa` and `liberi`:
+  198,551 attribute lists hold only 72,931 attributes, so most are empty
+  (~8 MiB). Segments and the rest come to ~18 MiB.
+- **Serialization:** 9,347,112 B of text (810 B per source byte) from a
+  32 MiB pool, 3.6x the output. `chorda_aedificator`'s `_crescere`
+  allocates a doubled buffer and copies, and the arena keeps every old
+  buffer. piscina has no grow-in-place primitive.
+- 9.4 B of tree per output byte (the earlier 12.7 B figure included the
+  serializer).
+
+**Why a true direct writer is expensive:** the pretty writer's layout is
+subtree-dependent (`_spinam_pulchre_scribere` collapses single-child
+spines by line width, `_textum_refluere_conari` reflows, inline-vs-block
+looks at children). Writing STML straight from the materia tree
+byte-identically means a second implementation of those rules outside
+lib/stml.c, which must agree with the first forever. The client hooks
+(`attributa_ornare`, `liberos_ornare`, `nodum_ornare`) also take an
+`StmlNodus*`, and template compression substitutes elements after the
+tree is built.
