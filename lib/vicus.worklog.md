@@ -754,3 +754,17 @@ scriba: page field never written, route not followed, wrong writer for
 the field; vicus: scriba pane without `ramus`. The 12 single-timeline
 plants above were not re-run on this shape (their anchors changed);
 the same behaviours are covered by the same tests on the right side.
+
+## 2026-10-22 — locus of a pane (comites P1)
+
+`vicus_latus_locus` / `_titulus`: facies.locus if the pane supplies
+one (calendar), else `semita_locus` over its ramus, else the genus
+(notifications, sessions, terminal until P4). Title: facies hook, else
+the locus itself. Views supply titles through hooks in
+vicus_applicatio (search, notifications, sessions, picture) or their
+own headers (calendar, contacts, saints). The calendar computes its
+locus in code, not by manifest rounding: an absent day MEANS today
+(not a symbolic value a resolver could see), and week rounding needs
+the calendar's Sunday start. History entries renamed StatioHistoriae
+(was LocusTabulae). Plants red: facies.locus ignored, title hook
+ignored.

@@ -199,6 +199,23 @@ kalendarium_argumentum_ponere (
     KalendariumMontatio* m,
      constans character* argumentum);
 
+/* comites P1 (facies.locus, facies.locus_titulus; ctx =
+ * KalendariumMontatio*): locus visus - dies ad unitatem visus
+ * rotundatus (hebdomas a dominica), hodie concreta:
+ * "calendarium/dies/2026-10-19", ".../hebdomas/2026-10-18",
+ * ".../mensis/2026-10", ".../annus/2026", "calendarium/agenda";
+ * titulus "Mon 19 Oct 2026", "Week of 18 Oct 2026", "October 2026",
+ * "2026", "Agenda" */
+chorda
+kalendarium_locus (
+     vacuum* ctx,
+    Piscina* piscina);
+
+chorda
+kalendarium_locus_titulus (
+     vacuum* ctx,
+    Piscina* piscina);
+
 /* semitae R4 (facies.semitam_secuta): post semitam a vico applicatam
  * (historia) liber notarum diem electum sequitur; D5 S3c: pagina
  * notarum semitae (notae.pagina) praevalet paginae visae ultimae.

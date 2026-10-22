@@ -2159,3 +2159,21 @@ sancti_visus_argumentum_ponere (
     }
     redde _campum_scribere(m, "origo", "index");
 }
+
+chorda
+sancti_visus_locus_titulus (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+      SanctorumMontatio* m;
+       constans Sanctus* s;
+                 chorda* a;
+
+    m = (SanctorumMontatio*)ctx;
+    a = m ? insula_ramus_attributum(&m->ramus,
+        "sanctus_apertus") : NIHIL;
+    s = (a && a->mensura > ZEPHYRUM && m->corpus)
+        ? sancti_invenire(m->corpus, *a) : NIHIL;
+    redde s ? chorda_transcribere(s->titulus, piscina)
+            : chorda_ex_literis("Saints", piscina);
+}

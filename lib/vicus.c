@@ -858,7 +858,7 @@ nomen structura {
      StmlNodus* semita;
         chorda  textus;
         chorda  signum;
-} LocusTabulae;
+} StatioHistoriae;
 
 /* signum: valores camporum 'impelle' arboris semitae (liberi
  * nominatim) */
@@ -971,12 +971,12 @@ locum_addere (
                  chorda  textus,
                  chorda  signum)
 {
-    LocusTabulae* novus;
+    StatioHistoriae* novus;
 
     si (!t->historia[latus])
     {
         t->historia[latus] = xar_creare(v->piscina,
-            (i32)magnitudo(LocusTabulae));
+            (i32)magnitudo(StatioHistoriae));
         t->historia_cursor[latus] = ZEPHYRUM;
         si (!t->historia[latus])
         {
@@ -992,18 +992,18 @@ locum_addere (
         Xar* nova;
         i32  i;
 
-        nova = xar_creare(v->piscina, (i32)magnitudo(LocusTabulae));
+        nova = xar_creare(v->piscina, (i32)magnitudo(StatioHistoriae));
         per (i = I; nova && i < xar_numerus(t->historia[latus]); i++)
         {
-            *(LocusTabulae*)xar_addere(nova) =
-                *(LocusTabulae*)xar_obtinere(t->historia[latus], i);
+            *(StatioHistoriae*)xar_addere(nova) =
+                *(StatioHistoriae*)xar_obtinere(t->historia[latus], i);
         }
         si (nova)
         {
             t->historia[latus] = nova;
         }
     }
-    novus = (LocusTabulae*)xar_addere(t->historia[latus]);
+    novus = (StatioHistoriae*)xar_addere(t->historia[latus]);
     si (!novus)
     {
         redde;
@@ -1031,18 +1031,18 @@ historiam_tabulae_notare (
           Vicus* v,
     VicusTabula* t)
 {
-      VicusLatus* f;
-      VicusLatus* l;
-    LocusTabulae* currens;
-       StmlNodus* plena;
-          chorda  textus;
-          chorda  signum;
-             b32  frons_mutata;
-             b32  prima;
-             b32  impulsus;
-             i32  latus;
-             i32  k;
-             i32  n;
+         VicusLatus* f;
+         VicusLatus* l;
+    StatioHistoriae* currens;
+          StmlNodus* plena;
+             chorda  textus;
+             chorda  signum;
+                b32  frons_mutata;
+                b32  prima;
+                b32  impulsus;
+                i32  latus;
+                i32  k;
+                i32  n;
 
     f             = frons_acervi(t);
     frons_mutata  = f && f->montata
@@ -1074,7 +1074,7 @@ historiam_tabulae_notare (
         }
         currens = (   t->historia[latus]
                    && xar_numerus(t->historia[latus]) > ZEPHYRUM)
-                ? (LocusTabulae*)xar_obtinere(t->historia[latus],
+                ? (StatioHistoriae*)xar_obtinere(t->historia[latus],
                       t->historia_cursor[latus])
                 : NIHIL;
         si (!impulsus)
@@ -3027,19 +3027,19 @@ historiam_applicare (
                      Vicus* v,
     constans PetitioAcervi* p)
 {
-     VicusTabula* t;
-    LocusTabulae* locus;
-      VicusLatus* l;
-      VicusLatus* f;
-      VicusLatus  frons;
-   PetitioAcervi  q;
-       StmlNodus* plena;
-          chorda  textus;
-          chorda  signum;
-          chorda  vitium;
-             b32  activa;
-             i32  k;
-             i32  n;
+        VicusTabula* t;
+    StatioHistoriae* locus;
+         VicusLatus* l;
+         VicusLatus* f;
+         VicusLatus  frons;
+      PetitioAcervi  q;
+          StmlNodus* plena;
+             chorda  textus;
+             chorda  signum;
+             chorda  vitium;
+                b32  activa;
+                i32  k;
+                i32  n;
 
     t = tabula_invenire(v, p->tabula);
     si (   !t || !t->historia[p->latus] || p->locus < ZEPHYRUM
@@ -3047,7 +3047,7 @@ historiam_applicare (
     {
         redde FALSUM;
     }
-    locus   = (LocusTabulae*)xar_obtinere(t->historia[p->latus],
+    locus   = (StatioHistoriae*)xar_obtinere(t->historia[p->latus],
         p->locus);
     activa  = chorda_aequalis(t->id, v->activa);
     l       = &t->sinistrum;
@@ -3518,6 +3518,47 @@ vicus_organa_ponere (
         v->scheda_semitarum = piscina_generare_dynamicum(
             "vicus_semitae", LXIV * M);
     }
+}
+
+chorda
+vicus_latus_locus (
+                  Vicus* v,
+    constans VicusLatus* l,
+                Piscina* piscina)
+{
+    si (!v || !l || !l->montata)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    si (l->facies.locus)
+    {
+        redde l->facies.locus(l->facies.locus_ctx, piscina);
+    }
+    si (v->organa && l->facies.ramus)
+    {
+        redde semita_locus(v->organa, v->organa_ctx, l->facies.ramus,
+            chorda_ut_cstr(l->genus, piscina), piscina);
+    }
+    /* latus sine semitis: genus */
+    redde chorda_transcribere(l->genus, piscina);
+}
+
+chorda
+vicus_latus_locus_titulus (
+                  Vicus* v,
+    constans VicusLatus* l,
+                Piscina* piscina)
+{
+    si (!v || !l || !l->montata)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    si (l->facies.locus_titulus)
+    {
+        redde l->facies.locus_titulus(l->facies.locus_titulus_ctx,
+            piscina);
+    }
+    redde vicus_latus_locus(v, l, piscina);
 }
 
 chorda

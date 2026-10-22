@@ -4237,6 +4237,130 @@ kalendarium_argumentum_ponere (
     redde VERUM;
 }
 
+/* comites P1: visus currens (absens mensis) */
+interior constans character*
+visus_loci (
+    constans KalendariumMontatio* m)
+{
+    hic_manens constans character* constans visus[] = {
+        "dies", "hebdomas", "annus", "agenda" };
+    chorda* a;
+       i32  i;
+
+    a = insula_ramus_attributum(&m->ramus, "visus");
+    per (i = ZEPHYRUM; a && i < IV; i++)
+    {
+        si (chorda_aequalis_literis(*a, visus[i]))
+        {
+            redde visus[i];
+        }
+    }
+    redde "mensis";
+}
+
+chorda
+kalendarium_locus (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+       KalendariumMontatio* m;
+        constans character* visus;
+                      Dies  d;
+                 character  b[LXIV];
+
+    m = (KalendariumMontatio*)ctx;
+    si (!m)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    visus  = visus_loci(m);
+    d      = kalendarium_dies_electus(m);
+    si (strcmp(visus, "hebdomas") == ZEPHYRUM)
+    {
+        d = fasti_addere_dies(d, -fasti_dies_hebdomadis(d));
+    }
+    si (strcmp(visus, "agenda") == ZEPHYRUM)
+    {
+        sprintf(b, "calendarium/agenda");
+    }
+    alioquin si (strcmp(visus, "annus") == ZEPHYRUM)
+    {
+        sprintf(b, "calendarium/annus/%04d", (integer)d.annus);
+    }
+    alioquin si (strcmp(visus, "mensis") == ZEPHYRUM)
+    {
+        sprintf(b, "calendarium/mensis/%04d-%02d", (integer)d.annus,
+            (integer)d.mensis);
+    }
+    alioquin
+    {
+        sprintf(b, "calendarium/%s/%04d-%02d-%02d", visus,
+            (integer)d.annus, (integer)d.mensis, (integer)d.dies);
+    }
+    redde chorda_transcribere(chorda_ex_literis(b, piscina), piscina);
+}
+
+chorda
+kalendarium_locus_titulus (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+       KalendariumMontatio* m;
+        constans character* visus;
+                      Dies  d;
+                 character  b[LXIV];
+                    chorda  mensis;
+
+    m = (KalendariumMontatio*)ctx;
+    si (!m)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    visus  = visus_loci(m);
+    d      = kalendarium_dies_electus(m);
+    si (strcmp(visus, "agenda") == ZEPHYRUM)
+    {
+        redde chorda_ex_literis("Agenda", piscina);
+    }
+    si (strcmp(visus, "annus") == ZEPHYRUM)
+    {
+        sprintf(b, "%d", (integer)d.annus);
+        redde chorda_transcribere(chorda_ex_literis(b, piscina),
+            piscina);
+    }
+    si (strcmp(visus, "mensis") == ZEPHYRUM)
+    {
+        mensis = fasti_nomen_mensis(d.mensis, FALSUM,
+            FASTI_LINGUA_ANGLICA,
+            piscina);
+        sprintf(b, " %d", (integer)d.annus);
+        redde chorda_concatenare(mensis, chorda_ex_literis(b, piscina),
+            piscina);
+    }
+    si (strcmp(visus, "hebdomas") == ZEPHYRUM)
+    {
+        d = fasti_addere_dies(d, -fasti_dies_hebdomadis(d));
+        mensis = fasti_nomen_mensis(d.mensis, VERUM,
+            FASTI_LINGUA_ANGLICA,
+            piscina);
+        sprintf(b, "Week of %d %.*s %d", (integer)d.dies,
+            (int)mensis.mensura, (constans character*)mensis.datum,
+            (integer)d.annus);
+        redde chorda_transcribere(chorda_ex_literis(b, piscina),
+            piscina);
+    }
+    mensis = fasti_nomen_mensis(d.mensis, VERUM, FASTI_LINGUA_ANGLICA,
+        piscina);
+    sprintf(b, "%.*s %d %.*s %d", (int)fasti_nomen_diei_hebdomadis(
+        fasti_dies_hebdomadis(d), VERUM, FASTI_LINGUA_ANGLICA,
+        piscina).mensura,
+        (constans character*)fasti_nomen_diei_hebdomadis(
+        fasti_dies_hebdomadis(d), VERUM, FASTI_LINGUA_ANGLICA,
+        piscina).datum, (integer)d.dies, (int)mensis.mensura,
+        (constans character*)mensis.datum, (integer)d.annus);
+    redde chorda_transcribere(chorda_ex_literis(b, piscina), piscina);
+}
+
 b32
 kalendarium_semitam_secuta (
     vacuum* ctx)

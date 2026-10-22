@@ -84,4 +84,11 @@ sancti_visus_argumentum_ponere (
        SanctorumMontatio* m,
       constans character* argumentum);
 
+/* comites P1 (facies.locus_titulus; ctx = SanctorumMontatio*):
+ * titulus sancti aperti, index "Saints" */
+chorda
+sancti_visus_locus_titulus (
+     vacuum* ctx,
+    Piscina* piscina);
+
 #endif /* SANCTI_VISUS_H */

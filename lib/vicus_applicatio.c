@@ -1189,6 +1189,48 @@ scribam_describere (
     f->semitam_secuta_ctx  = m;
 }
 
+/* comites P1: tituli locorum laterum sine titulo proprio */
+interior chorda
+titulus_quaestionis (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    (vacuum)ctx;
+    redde chorda_ex_literis("Search", piscina);
+}
+
+interior chorda
+titulus_admonitionum (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    (vacuum)ctx;
+    redde chorda_ex_literis("Notifications", piscina);
+}
+
+interior chorda
+titulus_colloquiorum (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    (vacuum)ctx;
+    redde chorda_ex_literis("Sessions", piscina);
+}
+
+/* pictura lateris (campus 'pictura') */
+interior chorda
+titulus_picturae (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    chorda* a;
+
+    a = insula_ramus_attributum(&((PictorMontatio*)ctx)->ramus,
+        "pictura");
+    redde a ? chorda_transcribere(*a, piscina)
+            : chorda_ex_literis("Picture", piscina);
+}
+
 interior b32
 pictorem_montare (
                  vacuum* sedes,
@@ -1277,6 +1319,9 @@ pictorem_describere (
     f->ramus               = &m->ramus;
     f->semitam_secuta      = pictor_semitam_secuta;
     f->semitam_secuta_ctx  = m;
+    /* comites P1: titulus loci = pictura */
+    f->locus_titulus      = titulus_picturae;
+    f->locus_titulus_ctx  = montatio;
 }
 
 /* S3e: pictura lateris pictoris: semitae R4c - campus pictura (verus
@@ -1840,6 +1885,11 @@ kalendarium_describere (
     f->ramus               = &m->ramus;
     f->semitam_secuta      = kalendarium_semitam_secuta;
     f->semitam_secuta_ctx  = m;
+    /* comites P1: locus rotundatus ad unitatem visus */
+    f->locus              = kalendarium_locus;
+    f->locus_ctx          = m;
+    f->locus_titulus      = kalendarium_locus_titulus;
+    f->locus_titulus_ctx  = m;
 }
 
 /* P6c: porta diei nomenclatoris - latus calendarii in frontem acervi,
@@ -1944,6 +1994,9 @@ nomenclatorem_describere (
     f->ramus               = &m->ramus;
     f->semitam_secuta      = nomenclator_semitam_secuta;
     f->semitam_secuta_ctx  = m;
+    /* comites P1: titulus loci = nomen personae */
+    f->locus_titulus      = nomenclator_locus_titulus;
+    f->locus_titulus_ctx  = m;
 }
 
 /* P6: fons dierum calendarii - natales ex documento personarum
@@ -2421,6 +2474,8 @@ admonitiones_describere (
     f->componere_ctx  = m;
     /* T4d: Esc ad latus prius */
     f->effugium_redit = VERUM;
+    /* comites P1 */
+    f->locus_titulus  = titulus_admonitionum;
 }
 
 /* T4b: volantes (toasts) - stratum vici, index et porta communes */
@@ -2696,6 +2751,8 @@ colloquia_describere (
     f->pulsare_ctx    = m;
     /* T4d: Esc ad latus prius */
     f->effugium_redit = VERUM;
+    /* comites P1 */
+    f->locus_titulus  = titulus_colloquiorum;
 }
 
 /* T10b: mensor pro cursibus currentibus - RHUBARB_MENSOR (probationes,
@@ -3097,6 +3154,9 @@ sanctos_describere (
     f->ramus                  = &m->ramus;
     /* Esc quod index non consumpsit (quaestio nulla): latus prius */
     f->effugium_redit         = VERUM;
+    /* comites P1: titulus loci = sanctus apertus */
+    f->locus_titulus      = sancti_visus_locus_titulus;
+    f->locus_titulus_ctx  = m;
 }
 
 
@@ -3240,6 +3300,8 @@ indagationem_describere (
     f->argumentum_transiens  = VERUM;
     f->advocatum             = indagationem_advocare;
     f->advocatum_ctx         = m;
+    /* comites P1 */
+    f->locus_titulus  = titulus_quaestionis;
 }
 
 /* '$search': latus advocatur (prompta); '$search(verba)': ut $via,

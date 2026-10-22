@@ -944,3 +944,12 @@ notes page is a right-side history step (key test in
 probatio_vicus_kalendarium notae). Plants red: resolver without scriba,
 second application skipped, children not stripped at mount, page not
 shown.
+
+## 2026-10-22 — kalendarium_locus (comites P1)
+
+Locus rounded to the view's unit, today concrete: dies
+`calendarium/dies/2026-10-19`, hebdomas from Sunday
+`calendarium/hebdomas/2026-10-18`, mensis `calendarium/mensis/2026-10`,
+annus `calendarium/annus/2026`, agenda `calendarium/agenda`. Titles
+"Mon 19 Oct 2026", "Week of 18 Oct 2026", "October 2026", "2026",
+"Agenda". Plants red: week not rounded, month with day.

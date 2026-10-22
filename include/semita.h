@@ -167,4 +167,16 @@ semita_resolvere (
                   Piscina* piscina,
                    chorda* vitium);
 
+/* comites P1: LOCUS - quod visus ostendit, non quomodo (project-specs/
+ * comites.md): radix tantum, campi 'ligatio' status currentis (status
+ * et liberi omissi), forma URI ("nomenclator/1", "sancti/sanctus/x").
+ * Genus sine campis ligationis: genus solum ("indagatio"). */
+chorda
+semita_locus (
+            SemitaOrganum  organa,
+                   vacuum* ctx,
+     constans InsulaRamus* ramus,
+       constans character* genus,
+                  Piscina* piscina);
+
 #endif /* SEMITA_H */

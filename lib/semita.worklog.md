@@ -92,3 +92,19 @@ falls back to `<genus id="nomen"/>` (the old fixtures keep working).
 A pane's own SemitaOrganum must also answer for its children's genus
 (the calendar's resolver returned NIHIL for "scriba", so any route with
 `notae` was refused). Plant red: prefixed lookup skipped.
+
+## 2026-10-22 — semita_locus (comites P1)
+
+LOCUS = what a view shows: root genus + its `ligatio` fields from the
+CURRENT state (status and children dropped), escaped as in URIs,
+stopping at the last binding field that has a value or an absent
+value. Not `semita_ad_uri_lista`'s first URI: that one carries the
+root's status keys too. Note for tests: applying a route resets the
+binding fields it leaves out (`<proba res="x"/>` gives visus=index),
+so a locus test must name every binding field. Plants: status fields
+in the locus - green on the proba fixture (its status fields all come
+AFTER the binding ones, so the loop never reaches them), red in
+probatio_vicus_comites (contacts declare status fields between binding
+fields); escaping dropped red. Not plantable: the absent-value branch
+(organum_ramum_parare writes absent values at mount, so a mounted
+branch never lacks them).

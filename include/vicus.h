@@ -139,6 +139,15 @@ nomen structura {
      * NIHIL = nihil */
                  b32  (*advocatum)(vacuum* ctx);
               vacuum* advocatum_ctx;
+    /* comites P1: locus lateris; NIHIL = ordinarium (semita_locus;
+     * latus sine semitis: genus). Calendarium rotundat ad unitatem
+     * visus, hodie concreta. */
+               chorda  (*locus)(vacuum* ctx, Piscina* piscina);
+              vacuum* locus_ctx;
+    /* titulus loci humanus ("Anna Rossi", "Mon 19 Oct 2026");
+     * NIHIL = locus ipse */
+               chorda  (*locus_titulus)(vacuum* ctx, Piscina* piscina);
+              vacuum* locus_titulus_ctx;
 } VicusFacies;
 
 nomen vacuum (*VicusDescriptor)(
@@ -570,6 +579,20 @@ vicus_organa_ponere (
               Vicus* v,
       SemitaOrganum  organa,
              vacuum* ctx);
+
+/* comites P1: locus lateris (facies.locus aut ordinarium) et titulus
+ * eius; vacua si latus non montatum */
+chorda
+vicus_latus_locus (
+                  Vicus* v,
+    constans VicusLatus* l,
+                Piscina* piscina);
+
+chorda
+vicus_latus_locus_titulus (
+                  Vicus* v,
+    constans VicusLatus* l,
+                Piscina* piscina);
 
 chorda
 vicus_causa (

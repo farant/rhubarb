@@ -105,6 +105,13 @@ nomenclator_argumentum_ponere (
      NomenclatorMontatio* m,
       constans character* argumentum);
 
+/* comites P1 (facies.locus_titulus; ctx = NomenclatorMontatio*):
+ * nomen personae apertae ("Anna Rossi"), index "Contacts" */
+chorda
+nomenclator_locus_titulus (
+     vacuum* ctx,
+    Piscina* piscina);
+
 /* semitae R4b (facies.semitam_secuta): post semitam a vico applicatam
  * (historia) liber notarum personam apertam sequitur; D5 S3c: pagina
  * notarum semitae (notae.pagina) praevalet paginae visae ultimae.

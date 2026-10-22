@@ -3053,6 +3053,24 @@ nomenclator_argumentum_ponere (
     redde VERUM;
 }
 
+chorda
+nomenclator_locus_titulus (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+     NomenclatorMontatio* m;
+        constans Persona* p;
+                  chorda* a;
+
+    m = (NomenclatorMontatio*)ctx;
+    a = m ? insula_ramus_attributum(&m->ramus,
+        "persona_aperta") : NIHIL;
+    p = (a && a->mensura > ZEPHYRUM && m->documentum)
+        ? personae_persona(m->documentum, *a) : NIHIL;
+    redde p ? persona_nomen(p, piscina)
+            : chorda_ex_literis("Contacts", piscina);
+}
+
 b32
 nomenclator_semitam_secuta (
     vacuum* ctx)

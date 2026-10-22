@@ -3,7 +3,8 @@
  * scriptores plures), legere (forma canonica), recusationes nominatae
  * (nihil scriptum), URI utrimque (via, quaestio punctata, effugium),
  * lista URI (ligatio propria); D5 S3c: rami liberorum
- * "<id parentis>_nomen" (conventio vici). Fixtura: organa proba
+ * "<id parentis>_nomen" (conventio vici); comites P1: locus (ligatio
+ * radicis sola). Fixtura: organa proba
  * (radix), folium (liber, ligatio hereditaria), folium_liber (ligatio
  * propria). */
 #include "latina.h"
@@ -923,8 +924,37 @@ _sectio_liberi_praefixi (
         "&alter.dies=2026-10-19&alter.pagina=3");
 }
 
+/* comites P1: locus = ligatio radicis (absens nominatum), status et
+ * liberi omissi; genus ignotum: vacua */
+interior vacuum
+_sectio_locus (
+    CredoContextus* c)
+{
+    Mundus* w;
+    chorda  vitium;
+
+    w = mundus(c, VERUM);
+    CREDO_NECESSE_NON_NIHIL(w);
+    CREDO_CHORDA_AEQUALIS_LITERIS(semita_locus(organa, w, &w->ramus,
+        "proba", c->piscina), "proba/index");
+    CREDO_VERUM(applicare(w, "<proba visus=\"res\" res=\"alpha\""
+        " ordo=\"dies\" pagina=\"2\"><notae pagina=\"4\"/>"
+        "<alter dies=\"2026-10-19\" pagina=\"3\"/></proba>", c->piscina,
+        &vitium));
+    CREDO_CHORDA_AEQUALIS_LITERIS(semita_locus(organa, w, &w->ramus,
+        "proba", c->piscina), "proba/res/alpha");
+    /* valor effugitur ut in URI */
+    CREDO_VERUM(applicare(w, "<proba visus=\"res\" res=\"a b/c\"/>",
+        c->piscina, &vitium));
+    CREDO_CHORDA_AEQUALIS_LITERIS(semita_locus(organa, w, &w->ramus,
+        "proba", c->piscina), "proba/res/a%20b%2Fc");
+    CREDO_AEQUALIS_I32(semita_locus(organa, w, &w->ramus, "ignotum",
+        c->piscina).mensura, ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "applicare", _sectio_applicare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "locus", _sectio_locus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "liberi_praefixi", _sectio_liberi_praefixi, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "ambitus", _sectio_ambitus, NIHIL, NIHIL, NIHIL, NIHIL },
