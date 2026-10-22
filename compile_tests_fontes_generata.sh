@@ -106,6 +106,8 @@ declare -a SOURCE_FILES=(
     "lib/fenestra_textus.c"
     "lib/fictio.c"
     "lib/fiducia_der.c"
+    "lib/fiducia_diffisa.c"
+    "lib/fiducia_diffisa_tabula.c"
     "lib/figura.c"
     "lib/filum.c"
     "lib/flatura.c"

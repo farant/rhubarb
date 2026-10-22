@@ -201,6 +201,30 @@ _sectio_folium (
     CREDO_VERUM(dies >= CCCLXIV && dies <= CCCLXVI);
 }
 
+/* diffisa vera per fiducia_iudicare IPSAM (omnis platforma): intermedium
+ * eMudhra transsignatum (AAA Certificate Services) causam "clavis
+ * diffisa" fert, non iudicium systematis - indicium PRIMUM consulitur */
+interior vacuum
+_sectio_diffisa_vera (
+    CredoContextus* c)
+{
+    FiduciaCertificatum fc;
+                 chorda der = filum_legere_totum(
+                     "probationes/fixa/fiducia/emudhra/em_dv_g3b_aaa.der",
+                     c->piscina);
+                 chorda causa;
+
+    CREDO_NECESSE(der.mensura > ZEPHYRUM);
+    fc.octeti      = der.datum;
+    fc.mensura     = der.mensura;
+    causa.datum    = NIHIL;
+    causa.mensura  = ZEPHYRUM;
+    CREDO_FALSUM(fiducia_iudicare(&fc, I, "exemplum.invalid", NIHIL,
+        &causa, c->piscina));
+    CREDO_VERUM(_continet(causa, "clavis diffisa"));
+    CREDO_VERUM(_continet(causa, "2083382"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ancora", _sectio_ancora, NIHIL, NIHIL, NIHIL, NIHIL },
     { "alienus", _sectio_alienus, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -211,6 +235,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "ancora absens", _sectio_ancora_absens, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "folium", _sectio_folium, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "diffisa vera", _sectio_diffisa_vera, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -8,6 +8,7 @@
  * esset). Applicatio probans (exemplar) vocationes egressas non
  * facit, ergo nihil amittit. */
 #include "fiducia.h"
+#include "fiducia_diffisa.h"
 
 b32
 fiducia_iudicare (
@@ -18,10 +19,14 @@ fiducia_iudicare (
                           chorda* causa,
                          Piscina* piscina)
 {
-    (vacuum)catena;
-    (vacuum)numerus;
     (vacuum)hospes;
     (vacuum)ancora_via;
+    /* indicium diffisarum PRIMUM (fiducia-linux T2): causa propria */
+    si (!fiducia_diffisas_iudicare(catena, numerus, NIHIL, ZEPHYRUM,
+            causa, piscina))
+    {
+        redde FALSUM;
+    }
     si (causa && piscina)
     {
         *causa =

@@ -21,8 +21,10 @@
 #   serie_longa           series XX octetorum
 #   ip_solum              SAN IP:127.0.0.1,IP:::1 sine DNS
 #   sine_san              CN=localhost, nulla extensio SAN
-#   geminus               clavis localhost.key ITERUM, series alia
-#                         (instar certificati transsignati)
+#   geminus               subiectum (CN=localhost) et clavis
+#                         localhost.key IDEM, series alia - instar
+#                         certificati transsignati (subiectum+clavis
+#                         Mozillae eum quoque tangit)
 #   sha1                  folium sha1WithRSA/ecdsa-with-SHA1 signatum
 #   rsa_parva             folium RSA-1024
 #   <titulus>.der         omne folium etiam DER (fiducia_iudicare)
@@ -109,7 +111,7 @@ signare () {
         fi
     fi
     if [ -n "$san" ]; then
-        "$OSSL" req -new -key "$k" -subj "/CN=$titulus" \
+        "$OSSL" req -new -key "$k" -subj "/CN=${CN:-$titulus}" \
             -addext "subjectAltName=$san" \
             -addext "extendedKeyUsage=serverAuth" -out "$T/$titulus.csr"
     else
@@ -126,7 +128,7 @@ signare serie_alta  "DNS:localhost" 0x8001
 signare serie_longa "DNS:localhost" 0x7F0102030405060708090A0B0C0D0E0F10111213
 signare ip_solum    "IP:127.0.0.1,IP:::1" 0x2001
 signare sine_san    "" 0x2002
-signare geminus     "DNS:localhost" 0x2003 sha256 "$DEST/localhost.key"
+CN=localhost signare geminus "DNS:localhost" 0x2003 sha256 "$DEST/localhost.key"
 signare sha1        "DNS:localhost" 0x2004 sha1
 GENUS_CLAVIS=rsa1024 signare rsa_parva "DNS:localhost" 0x2005
 

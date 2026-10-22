@@ -4,7 +4,8 @@
  * ferente (SecPolicyCreateSSL), ancora SOLA si data,
  * SecTrustEvaluateWithError; causa ex CFError nominata. Ex tls_macos.m
  * translata: lectio ancorae, iudicium SecTrust (politia expressa),
- * _tempus_ex_valore, _proprietatem_capere.
+ * _tempus_ex_valore, _proprietatem_capere. Indicium diffisarum domus
+ * (fiducia_diffisa.h, fiducia-linux T2) ANTE SecTrust consulitur.
  *
  * NOTA: capita systematis ANTE latina.h ('character' macro cum
  * CoreFoundation confligit). */
@@ -13,6 +14,7 @@
 #include <string.h>
 
 #include "fiducia.h"
+#include "fiducia_diffisa.h"
 #include "filum.h"
 
 interior SecCertificateRef
@@ -109,6 +111,13 @@ fiducia_iudicare (
     si (catena == NIHIL || numerus == 0 || hospes == NIHIL)
     {
         *causa = chorda_ex_literis("fiducia: argumenta invalida", piscina);
+        redde FALSUM;
+    }
+    /* indicium diffisarum domus PRIMUM (fiducia-linux T2): diffisa
+     * causam suam fert, ante iudicium SecTrust */
+    si (!fiducia_diffisas_iudicare(catena, (i32)numerus, NIHIL, 0, causa,
+            piscina))
+    {
         redde FALSUM;
     }
     certa     = CFArrayCreateMutable(NULL, (CFIndex)numerus,

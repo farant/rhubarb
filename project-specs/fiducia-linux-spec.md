@@ -89,9 +89,10 @@ Decisions (Fran, 2026-10-22, in conversation):
 | unit | role |
 |---|---|
 | `include/fiducia.h` | API unchanged; comment updated (Linux implementation real, blocklist). |
-| `lib/fiducia.c` (new, portable; `<aedilis corpus>` in fiducia.h) | the blocklist check over the built-in table; called first by both platform files. |
-| `include/fiducia_diffisa.h` (new) | entry type + `fiducia_diffisam_invenire(catena, numerus, tabula, n)` taking the TABLE AS A PARAMETER (test seam) + the built-in table's extern and snapshot date. |
-| `lib/fiducia_diffisa.c` | GENERATED table (`GENERATUM` line 1; fabrica generator action; generata gate). |
+| `lib/fiducia_diffisa.c` (new, portable; corpus of `fiducia_diffisa.h`) | the blocklist check; called first by both platform files. (Not `lib/fiducia.c`: silex resolves `fiducia.h` to `lib/fiducia.c` BEFORE `_macos.m`, so that name would shadow the platform files - found in T2.) |
+| `include/fiducia_diffisa.h` (new) | entry type + `fiducia_diffisam_invenire` / `fiducia_diffisas_iudicare` taking the TABLE AS A PARAMETER (test seam). |
+| `include/fiducia_diffisa_tabula.h` (new) | the built-in table's externs and snapshot date (one header, one implementation). |
+| `lib/fiducia_diffisa_tabula.c` | GENERATED table (`GENERATUM` line 1; fabrica generator action; generata gate). |
 | `tools/fiducia_diffisa_generare.c` | generator: pinned OneCRL snapshot + hand list -> table. |
 | `probationes/fixa/fiducia/onecrl/<YYYY-MM-DD>/` | pinned snapshot + `SHA256SUMS`. |
 | `probationes/fixa/fiducia/diffisa.stml` | hand list: entries OneCRL lacks or we add ourselves; each with reason, date, source link. |
@@ -136,7 +137,7 @@ Entry kinds - Mozilla's two, exactly (checked against a real snapshot
 
 ### II.3 Judging a chain (fiducia_posix.c)
 
-Order: arguments -> blocklist (`lib/fiducia.c`) -> BearSSL validation
+Order: arguments -> blocklist (`lib/fiducia_diffisa.c`) -> BearSSL validation
 -> IP SAN check when the host is an IP literal.
 
 - **Blocklist first**, so a blocked key gets its own reason: "clavis
@@ -237,7 +238,7 @@ Order: arguments -> blocklist (`lib/fiducia.c`) -> BearSSL validation
    and IP SANs from DER - one portable reader for the blocklist and
    the IP check; new test fixtures; `openssl` in the Linux images.
 2. The blocklist: pinned OneCRL snapshot + hand list -> generated
-   table; `lib/fiducia.c`; both platforms call it first.
+   table; `lib/fiducia_diffisa.c`; both platforms call it first.
 3. `fiducia_posix.c`: bundle, BearSSL, SAN-only, IP SANs, reasons;
    both suites under Linux.
 4. Live checks from Linux (DO, R2, badssl, horreum HEAD); docs.

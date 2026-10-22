@@ -83,6 +83,29 @@ generator action + generata gate, Docker images for Linux.
   `SHA256SUMS` (provenance over size; public data). Fetched again in
   T2 with the same URL and checked against what this ruling recorded.
 
+## Rulings made while executing
+
+- **T1: `geminus` initially had its own subject (CN=geminus)** - fixed
+  in T2 to CN=localhost (same subject AND key, new serial), the true
+  cross-sign stand-in for Mozilla's subject+key entries.
+- **T1: probatio_fiducia had never compiled under gcc**
+  (-Wformat-overflow on 512-byte path buffers) - widened in T1.
+- **T2: real eMudhra certificates added as fixtures** (crt.sh, public
+  CA certificates; NOTICE) - the only way to test that
+  `fiducia_iudicare` itself consults the built-in table; replaces the
+  plan's T3 `diffisa_vera` idea.
+- **T2: generator rule tests are `-fumus`, run by hand** (pecunia
+  precedent), not a credo section - the generator is a build-time
+  tool; the generata gate guards its output.
+- **T2: no `lib/fiducia.c`** - silex resolves a header X.h to
+  `lib/X.c` BEFORE `X_macos.m` (probatio_silex "novum -vitrea" went red
+  at the first commit attempt: the vitrea project lost
+  fiducia_macos.m). So ONE implementation per header:
+  `fiducia_diffisa.h` -> `lib/fiducia_diffisa.c` (the check),
+  `fiducia_diffisa_tabula.h` -> `lib/fiducia_diffisa_tabula.c`
+  (generated), `fiducia.h` -> the platform files. Stale objects of the
+  old names deleted from build/ (99) before the commit.
+
 ## Review focus
 
 1. **Serial encoding edge cases** - serials with a leading 0x00 (high
