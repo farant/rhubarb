@@ -33,7 +33,8 @@
 nomen structura {
             character dir[DXII];       /* fasciculi servi */
             character fixa[DXII];      /* certificata generata */
-            character ancora[DXII];    /* ca.der */
+            character ancora[MXXIV];   /* ca.der (fixa + nomen: gcc
+                                    * -Wformat-overflow) */
 } Locus;
 
 nomen structura {
@@ -432,7 +433,14 @@ principale (vacuum)
     /* matrix (tls-bearssl R10, tls13 T8): sectiones EAEDEM sub vectura
      * quaque - differentia = inventum. tls13: servus ordinarius 1.3
      * pacisci; tls11 per descensum a BearSSL reicitur */
+    /* SecureTransport solius macOS (tls_securetransport_posix.c sutura
+     * sola): sub Linux matrix duas vecturas veras habet (fiducia-linux
+     * T3, prima cursus Linux) */
+#ifdef __APPLE__
     per (k = ZEPHYRUM; k < III; k++)
+#else
+    per (k = ZEPHYRUM; k < II; k++)
+#endif
     {
         s32 r;
 

@@ -52,4 +52,11 @@ fiducia_alterna_ip_continet (
                constans i8* ip,
                        i32  mensura);
 
+/* nomen commune (OID 2.5.4.3) subiecti: VERUM + titulus (contentum
+ * chordae, sine tag) in *titulus si adest */
+b32
+fiducia_nomen_commune (
+    constans FiduciaPartes* partes,
+             FiduciaSectio* titulus);
+
 #endif /* FIDUCIA_DER_H */

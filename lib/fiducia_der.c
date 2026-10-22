@@ -332,3 +332,75 @@ fiducia_alterna_ip_continet (
     }
     redde FALSUM;
 }
+
+/* Name ::= SEQUENCE OF RelativeDistinguishedName (SET OF
+ * AttributeTypeAndValue ::= SEQUENCE { type OID, value ANY }); CN =
+ * 55 04 03. Primum inventum redditur */
+b32
+fiducia_nomen_commune (
+    constans FiduciaPartes* partes,
+             FiduciaSectio* titulus)
+{
+             i32  tag;
+     constans i8* dn;
+             i32  n;
+             i32  totum;
+
+    si (   partes == NIHIL || titulus == NIHIL
+        || !_elementum(partes->subiectum.octeti,
+        partes->subiectum.mensura,
+            &tag, &dn, &n, &totum) || tag != TAG_SEQUENTIA)
+    {
+        redde FALSUM;
+    }
+    dum (n > ZEPHYRUM)
+    {
+         constans i8* gradus;
+                 i32  gradus_longitudo;
+                 i32  gradus_totum;
+
+        si (   !_elementum(dn, n, &tag, &gradus, &gradus_longitudo,
+            &gradus_totum) || tag != 0x31)
+        {
+            redde FALSUM;
+        }
+        dum (gradus_longitudo > ZEPHYRUM)
+        {
+             constans i8* par;
+                     i32  par_longitudo;
+                     i32  par_totum;
+             constans i8* ident;
+                     i32  ident_longitudo;
+                     i32  ident_totum;
+             constans i8* valoris;
+                     i32  valoris_longitudo;
+                     i32  valoris_totum;
+
+            si (   !_elementum(gradus, gradus_longitudo, &tag, &par,
+                &par_longitudo, &par_totum)
+                || tag != TAG_SEQUENTIA
+                || !_elementum(par, par_longitudo, &tag, &ident,
+                &ident_longitudo, &ident_totum)
+                || tag != TAG_IDENT
+                || !_elementum(par + ident_totum, par_longitudo
+                    - ident_totum, &tag, &valoris, &valoris_longitudo,
+                &valoris_totum))
+            {
+                redde FALSUM;
+            }
+            si (   ident_longitudo == III
+                && ident[ZEPHYRUM] == 0x55
+                && ident[I]        == 0x04 && ident[II] == 0x03)
+            {
+                titulus->octeti   = valoris;
+                titulus->mensura  = valoris_longitudo;
+                redde VERUM;
+            }
+            gradus            += par_totum;
+            gradus_longitudo  -= par_totum;
+        }
+        dn  += gradus_totum;
+        n   -= gradus_totum;
+    }
+    redde FALSUM;
+}

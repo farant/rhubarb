@@ -212,6 +212,37 @@ fiducia_iudicare (
     redde bene;
 }
 
+b32
+fiducia_fasciculum_describere (
+    constans character* via,
+                   i32* ancorae,
+                   i32* omissae,
+                chorda* via_usa,
+                chorda* causa,
+               Piscina* piscina)
+{
+    (vacuum)via;
+    si (ancorae)
+    {
+        *ancorae = 0;
+    }
+    si (omissae)
+    {
+        *omissae = 0;
+    }
+    si (via_usa)
+    {
+        via_usa->datum    = NIHIL;
+        via_usa->mensura  = 0;
+    }
+    si (causa && piscina)
+    {
+        *causa = chorda_ex_literis("fasciculus: solum POSIX (macOS: "
+            "SecTrust, repositorium systematis)", piscina);
+    }
+    redde FALSUM;
+}
+
 /* CFAbsoluteTime (secunda ab 2001-01-01) -> epocha unix.
  * Valores validitatis ex SecCertificateCopyValues ut CFNumber
  * (absolutum) plerumque veniunt, ut CFDate interdum - ambo

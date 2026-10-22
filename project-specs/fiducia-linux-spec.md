@@ -258,10 +258,9 @@ so the SAN-only rule is enforced by fiducia_posix itself.
   certificates after the anchor-signed one.
 - BearSSL's handling of a critical `nameConstraints` extension in an
   intermediate (refuse as unknown-critical, or enforce?).
-- Exact bundle paths on each target (checked on Alpine 3.20 and
-  Ubuntu 22.04 containers in task 3; the droplet's distribution).
-- Parse cost of a full bundle (believed a few ms; measured in task 3
-  to confirm the cache is worth its reload logic).
+- ~~Parse cost~~ answered T3: ~26-29 ms per full parse (Alpine 121,
+  Ubuntu 123 anchors) -> cached; warm ~2 ms. Paths checked on Alpine
+  3.20 and Ubuntu 22.04 (the droplet's distribution still to check, T4).
 - The article's claims (Sectigo AAA cross-signs; OneCRL and CRLSet
   blocks; NSS root removal) are as reported by Scott Helme,
   2026-10-20/21 - not checked against the Mozilla bug.

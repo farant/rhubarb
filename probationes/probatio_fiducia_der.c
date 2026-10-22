@@ -110,6 +110,17 @@ _sectio_partes (
     CREDO_VERUM(p.extensiones.mensura > ZEPHYRUM);
     CREDO_VERUM(p.habet_alterna);
 
+    {
+        FiduciaSectio cn;
+
+        CREDO_NECESSE(fiducia_nomen_commune(&p, &cn));
+        CREDO_AEQUALIS_I32(cn.mensura, IX);
+        CREDO_VERUM(memcmp(cn.octeti, "localhost", IX) == ZEPHYRUM);
+        CREDO_NECESSE(_partes(c, "ip_solum", &q));
+        CREDO_NECESSE(fiducia_nomen_commune(&q, &cn));
+        CREDO_VERUM(memcmp(cn.octeti, "ip_solum", VIII) == ZEPHYRUM);
+    }
+
     CREDO_NECESSE(_partes(c, "serie_alta", &q));
     CREDO_AEQUALIS_I32(q.series.mensura, III);
     CREDO_AEQUALIS_I32((i32)q.series.octeti[ZEPHYRUM], 0x00);

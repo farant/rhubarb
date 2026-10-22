@@ -106,6 +106,18 @@ generator action + generata gate, Docker images for Linux.
   (generated), `fiducia.h` -> the platform files. Stale objects of the
   old names deleted from build/ (99) before the commit.
 
+- **T3: no bundle mtime -> content-keyed cache.** filum_status lacks
+  mtime; the cache key is path + size + SHA-256 (re-read and hashed per
+  call, ~2 ms warm vs ~28 ms full parse, measured on both libcs).
+- **T3: the bundle diagnostic is `fiducia_fasciculum_describere(via,
+  &ancorae, &omissae, &via_usa, &causa, piscina)`** (plan named it
+  without `causa`); macOS returns FALSUM "solum POSIX".
+- **T3: `fiducia_nomen_commune` added to fiducia_der** for the leaf
+  summary's CN (needed a DN walk; one DER reader).
+- **T3: TLS test suites made Linux-capable** (buffers, openssl path,
+  SecureTransport leg macOS-only) - outside the plan's file list, needed
+  for its "probatio_tls_servus under Linux" step.
+
 ## Review focus
 
 1. **Serial encoding edge cases** - serials with a leading 0x00 (high
