@@ -1,0 +1,37 @@
+<sanctus id="felicity-of-carthage" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Felicity of Carthage</nomen>
+  <nomen lingua="la" principale="verum" fontes="mr ce">Felicitas</nomen>
+  <obitus annus="203" mensis="3" dies="7" locus="Carthage" martyrium="verum" fontes="ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="3" dies="7" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="3" dies="7" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="3" dies="6" nota="the 1916 Martyrology keeps the feast on 6 March and the birthday on 7 March" fontes="mr"/>
+  <munus fontes="us ce mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Felicitas was a slave at Carthage, arrested as a catechumen with her fellow slave Revocatus, with Saturninus and Secundulus, and with the young noblewoman Vibia Perpetua, under the edict of Septimius Severus that forbade conversion to Christianity. The catechumens were baptized before being taken to prison. When she was arrested she was with child, and as the day of the games drew near she feared that she would not be allowed to suffer with the others, because the law forbade the execution of pregnant women.</paragraphus>
+    <paragraphus fontes="ce bu mr">Her companions prayed with her, and two days before the games she gave birth to a daughter, whom a Christian woman took and raised as her own. Butler records her answer to a guard who asked how she would face the beasts if she cried out in labour: now she suffered herself, but then another would be in her who would suffer for her. On 7 March 203 she and Perpetua were exposed to a wild cow in the amphitheatre and then, with the other martyrs, put to the sword. The 1916 Martyrology places their death at Tuburbum in Mauritania rather than at Carthage.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="7 March">
+    <excerptum>At Tuburbum, in Mauritania (Barbary), in the reign of the emperor Severus, the birthday of the Saints Perpetua and Felicitas, whose festival is kept on the 6th of this month. St. Augustine relates that Felicitas, being with child, her execution was deferred, according to the laws, until after her delivery</excerptum>
+    <excerptum>fTIHE feast of the holy martyrs Perpetua and Felicitas, who received the glorious crown of martyrdom on the 7th of this month.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v03 March 7 SS. Perpetua and Felicitas, MM.">
+    <excerptum>Wherefore they unanimously joined in prayer to obtain of God that she might be delivered against the shows.</excerptum>
+    <excerptum>one of the guards asked her, if she could not bear the throes of child-birth without crying out, what she would do when exposed to the wild beasts.</excerptum>
+    <excerptum>It is I that suffer what I now suffer: but then there will be another in me that will suffer for me, because [shall suffer for him.</excerptum>
+    <excerptum>She was then delivered of a daughter, which a certain christian woman took care of, and brought up as her own child.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="Sts. Felicitas and Perpetua" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Sts._Felicitas_and_Perpetua">
+    <excerptum>Martyrs, suffered at Carthage, 7 March 203, together with three companions, Revocatus, Saturus, and Saturninus.</excerptum>
+    <excerptum>By a rescript of Septimus Severus (193-211) all imperial subjects were forbidden under severe penalties to become Christians.</excerptum>
+    <excerptum>Vibia Perpetua, a young married lady of noble birth; the slave Felicitas, and her fellow-slave Revocatus, also Saturninus and Secundulus.</excerptum>
+    <excerptum>After their arrest, and before they were led away to prison, the five catechumens were baptized.</excerptum>
+    <excerptum>Felicitas, who at the time of her incarceration was with child (in the eighth month), was apprehensive that she would not be permitted to suffer martyrdom at the same time as the others, since the law forbade the execution of pregnant women.</excerptum>
+    <excerptum>Happily, two days before the games she gave birth to a daughter, who was adopted by a Christian woman.</excerptum>
+    <excerptum>On 7 March, the five confessors were led into the amphitheatre.</excerptum>
+    <excerptum>a wild cow at the women. Wounded by the wild animals, they gave each other the kiss of peace and were then put to the sword.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="7 March">
+    <excerptum>Saints Perpetua and Felicity, Martyrs</excerptum>
+  </fons>
+</sanctus>

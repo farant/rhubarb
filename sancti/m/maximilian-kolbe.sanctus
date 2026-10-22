@@ -1,0 +1,52 @@
+<sanctus id="maximilian-kolbe" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Maximilian Kolbe</nomen>
+  <nomen lingua="en" fontes="ga">Maximilian Mary Kolbe</nomen>
+  <nomen lingua="it" fontes="ho be">Massimiliano Maria Kolbe</nomen>
+  <ortus annus="1894" mensis="1" dies="8" locus="Zduńska Wola, near Łódź" fontes="be"/>
+  <obitus annus="1941" mensis="8" dies="14" locus="Auschwitz" martyrium="verum" fontes="ga ho be"/>
+  <beatificatio annus="1971" mensis="10" dies="17" papa="Paul VI" fontes="be"/>
+  <canonizatio modus="formalis" annus="1982" mensis="10" dies="10" papa="John Paul II" fontes="ho"/>
+  <festum calendarium="generale" mensis="8" dies="14" gradus="memoria" fontes="us"/>
+  <munus fontes="us bz">priest</munus>
+  <munus fontes="us fr">martyr</munus>
+  <munus fontes="bz be">religious</munus>
+  <descriptio>
+    <paragraphus fontes="be bz">Maximilian Kolbe was born on 8 January 1894 at Zduńska Wola, near Łódź, to devout parents who were weavers. He entered the seminary of the Conventual Franciscans in 1907 and was sent to Rome for his studies; there, before his ordination, he founded the Militia of the Immaculata on 16 October 1917. Ordained a priest on 28 April 1918, he returned to Poland and began his Marian apostolate, above all through the monthly Knight of the Immaculata. In 1927 he founded Niepokalanów, the City of the Immaculata, and in 1930 went to Japan to found a similar house.</paragraphus>
+    <paragraphus fontes="be ho ga">Arrested by the Gestapo in 1939 and released, he was arrested again in 1941 and deported to Auschwitz. When prisoners were picked to die of hunger in reprisal for an escape, he offered himself in place of one of them, a father of a family, and was shut in the starvation bunker. After more than two weeks he was killed by an injection on 14 August 1941, the eve of the Assumption. Paul VI beatified him on 17 October 1971, and John Paul II canonized him on 10 October 1982.</paragraphus>
+  </descriptio>
+  <fons id="be" opus="sedes" locus="Paul VI, beatification homily, 17 October 1971" url="https://www.vatican.va/content/paul-vi/it/homilies/1971/documents/hf_p-vi_hom_19711017.html">
+    <excerptum>17 ottobre 1971: Solenne beatificazione di Padre Massimiliano Maria Kolbe</excerptum>
+    <excerptum>SOLENNE BEATIFICAZIONE DI PADRE MASSIMILIANO MARIA KOLBE OMELIA DI PAOLO VI Domenica, 17 ottobre 1971</excerptum>
+    <excerptum>Avendo offerta la vita al posto di uno sconosciuto condannato a morte, quale rappresaglia per la fuga d’un prigioniero, fu rinchiuso in un Bunker per morirvi di fame.</excerptum>
+    <excerptum>Il P. Massimiliano Kolbe nacque a Zdusnka Wola, vicino a Lodz, l’otto gennaio 1894. Entrato nel 1907 nel Seminario dei Frati Minori Conventuali, fu inviato a Roma per continuare gli studi ecclesiastici</excerptum>
+    <excerptum>Ordinato sacerdote il 28 aprile 1918 e tornato in Polonia cominciò il suo apostolato mariano, specialmente con la pubblicazione mensile Rycerz Niepokalanej (il Cavaliere della Immacolata)</excerptum>
+    <excerptum>Nel 1927 fondò la Niepokalanbw (Città dell’Immacolata), centro di vita religiosa e di diverse forme di apostolato. Nel 1930 partì per il Giappone, ove fondò un’altra simile istituzione.</excerptum>
+    <excerptum>Il 19 settembre 1939 fu arrestato dalla Gestapo</excerptum>
+    <excerptum>Rilasciato il giorno 8 dicembre 1939, tornò a Niepokalanow</excerptum>
+    <excerptum>Arrestato di nuovo nel 1941 fu rinchiuso nel carcere di Pawiak, a Varsavia, e poi deportato nel campo di concentramento di Oswiecim (Auschwitz).</excerptum>
+    <excerptum>Il 14 agosto 1941, vigilia dell’Assunta, finito da una iniezione di veleno</excerptum>
+    <excerptum>È lui che istituì la Milizia dell’Immacolata, qui a Roma, ancora prima d’essere ordinato Sacerdote, il 16 ottobre 1917.</excerptum>
+  </fons>
+  <fons id="ho" opus="sedes" locus="John Paul II, canonization homily, 10 October 1982" url="https://www.vatican.va/content/john-paul-ii/it/homilies/1982/documents/hf_jp-ii_hom_19821010_canonizzazione-kolbe.html">
+    <excerptum>10 ottobre 1982, Canonizzazione di Massimiliano Maria Kolbe</excerptum>
+    <excerptum>CANONIZZAZIONE DI MASSIMILIANO MARIA KOLBE OMELIA DI GIOVANNI PAOLO II Piazza San Pietro, 10 ottobre 1982</excerptum>
+    <excerptum>Da oggi la Chiesa desidera chiamare “santo” un uomo al quale è stato concesso di adempiere in maniera assolutamente letterale le suddette parole del Redentore.</excerptum>
+    <excerptum>quando per ordine del capo del campo si fecero mettere in fila i prigionieri destinati a morire di fame, quest’uomo, Massimiliano Maria Kolbe, si presentò spontaneamente, dichiarandosi pronto ad andare alla morte in sostituzione di uno di loro.</excerptum>
+    <excerptum>dopo oltre due settimane di tormenti a causa della fame, fu infine tolta la vita con un’iniezione mortale, il 14 agosto 1941.</excerptum>
+    <excerptum>dichiarando la disponibilità di andare alla morte al suo posto, perché era un padre di famiglia</excerptum>
+  </fons>
+  <fons id="ga" opus="sedes" locus="Benedict XVI, General Audience, 13 August 2008" url="https://www.vatican.va/content/benedict-xvi/en/audiences/2008/documents/hf_ben-xvi_aud_20080813.html">
+    <excerptum>Both ended their earthly life with martyrdom in the concentration camp of Auschwitz.</excerptum>
+    <excerptum>heroic proof of his love was the generous offering he made of himself in exchange for a fellow prisoner, an offer that culminated in his death in the starvation bunker on 14 August 1941.</excerptum>
+    <excerptum>Maximilian Mary Kolbe, whom we will commemorate tomorrow, on 14 August</excerptum>
+  </fons>
+  <fons id="bz" opus="sedes" locus="John Paul II, homily at Brzezinka, 7 June 1979" url="https://www.vatican.va/content/john-paul-ii/en/homilies/1979/documents/hf_jp-ii_hom_19790607_polonia-brzezinka.html">
+    <excerptum>Profession (as registered in the books of the concentration camp): Catholic priest. Vocation: a son of Saint Francis. Birth: a son of simple, hardworking devout parents, who were weavers near Łódź.</excerptum>
+  </fons>
+  <fons id="fr" opus="sedes" locus="Francis, Angelus, 14 August 2016" url="https://www.vatican.va/content/francesco/en/angelus/2016/documents/papa-francesco_angelus_20160814.html">
+    <excerptum>May we be sustained on our journey by the example of St Maximilian Kolbe, martyr of charity, whose feast day is today</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="14 August">
+    <excerptum>Saint Maximilian Kolbe, Priest and Martyr</excerptum>
+  </fons>
+</sanctus>

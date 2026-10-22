@@ -209,11 +209,11 @@ _probare_restitutionem (
     thema_initiare();
     vol = volumen_temporarium(c->piscina, "probatio_pictor_relatio");
     CREDO_NECESSE_NON_NIHIL(vol);
-    CREDO_NECESSE(volumen_plagulam_condere(vol, chorda_ex_literis(
+    CREDO_NECESSE(volumen_praesens_ponere(vol, chorda_ex_literis(
         "status/p1", c->piscina), chorda_ex_literis(
         "<status versio=\"1\" genus=\"pictor\"><durabilis/>"
         "<ephemera stratum_activum=\"7\" zoom=\"2\"/></status>",
-        c->piscina), "probatio"));
+        c->piscina)));
     CREDO_NECESSE(mundum_creare(&w, c->piscina, in, vol, VERUM));
     CREDO_NECESSE(pictor_montare(&m, c->piscina, in, vol, w.repo, "p1",
         CDLXXX, CDLXXX, &w.systemata));

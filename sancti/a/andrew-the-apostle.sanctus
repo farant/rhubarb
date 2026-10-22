@@ -1,0 +1,42 @@
+<sanctus id="andrew-the-apostle" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Andrew the Apostle</nomen>
+  <ortus locus="Bethsaida of Galilee" fontes="ce"/>
+  <obitus annus="60" mensis="11" dies="30" locus="Patrae, Achaia" martyrium="verum" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="11" dies="30" gradus="festum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="11" dies="30" fontes="mr"/>
+  <munus fontes="us ce">apostle</munus>
+  <munus fontes="ce mr">martyr</munus>
+  <patrocinium fontes="ce">Russia</patrocinium>
+  <patrocinium fontes="ce">Scotland</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">Andrew, son of Jonah or John, was born at Bethsaida in Galilee and was the brother of Simon Peter; both were fishermen. The fourth Gospel makes him a disciple of John the Baptist, whose testimony led him to follow Jesus; he at once recognized Jesus as the Messiah and brought his brother Peter to Him. Chosen one of the Twelve, he is always named among the first four. It was Andrew who pointed out the boy with five barley loaves and two fishes at the feeding of the five thousand, and to whom Philip turned when certain Greeks asked to see Jesus.</paragraphus>
+    <paragraphus fontes="ce mr">Where he preached afterwards is not certain: ancient writers name Scythia, Epirus, Achaia and Hellas, and the Martyrology says Thrace and Scythia. It is generally agreed that he was crucified at Patrae in Achaia by order of the governor Aegeas, bound rather than nailed to the cross; the Martyrology adds that he lived two days on it, teaching the people. The X-shaped cross called St. Andrew's is attested only from the fourteenth century. The Catholic Encyclopedia dates his death to 30 November 60, under Nero. His relics went to Constantinople about 357 and in the thirteenth century to Amalfi. Russia and Scotland honour him as chief patron.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Andrew (1)" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Andrew_(1)">
+    <excerptum>St. Andrew, the Apostle, son of Jonah, or John (Matt., xvi, 17; John, i, 42), was born in Bethsaida of Galilee (John, i, 44). He was brother of Simon Peter</excerptum>
+    <excerptum>Both were fishermen (Matt., iv, 18; Mark, i, 16), and at the beginning of Our Lord's public life occupied the same house at Capharnaum</excerptum>
+    <excerptum>From the fourth Gospel we learn that Andrew was a disciple of the Baptist, whose testimony first led him and John the Evangelist to follow Jesus</excerptum>
+    <excerptum>Andrew at once recognized Jesus as the Messias, and hastened to introduce Him to his brother, Peter</excerptum>
+    <excerptum>Finally Andrew was chosen to be one of the Twelve; and in the various lists of Apostles given in the New Testament</excerptum>
+    <excerptum>he is always numbered among the first four.</excerptum>
+    <excerptum>it was Andrew who said: "There is a boy here who has five barley loaves and two fishes: but what are these among so many?"</excerptum>
+    <excerptum>when, a few days before Our Lord's death, certain Greeks asked Philips that they might see Jesus, Philip referred the matter to Andrew as to one of greater authority</excerptum>
+    <excerptum>unfortunately we have no certainty as to the extent or place of his labours.</excerptum>
+    <excerptum>assigns Scythia as his mission field</excerptum>
+    <excerptum>mentions Epirus; St. Jerome (Ep. ad Marcell., P.L., XXII, col. 589) Achaia; and Theodoret (on Ps. cxvi, P.G., LXXX, col. 1805) Hellas.</excerptum>
+    <excerptum>It is generally agreed that he was crucified by order of the Roman Governor, Ægeas or Ægeates, at Patræ in Achaia, and that he was bound, not nailed, to the cross, in order to prolong his sufferings.</excerptum>
+    <excerptum>The cross on which he suffered is commonly held to have been the decussate cross, now known as St. Andrew's, though the evidence for this view seems to be no older than the fourteenth century.</excerptum>
+    <excerptum>His martyrdom took place during the reign of Nero, on 30 November, a.d. 60</excerptum>
+    <excerptum>St. Andrew's relics were translated from Patræ to Constantinople, and deposited in the church of the Apostles there, about A.D. 357.</excerptum>
+    <excerptum>When Constantinople was taken by the French, in the beginning of the thirteenth century, Cardinal Peter of Capua brought the relics to Italy and placed them in the cathedral of Amalfi</excerptum>
+    <excerptum>St. Andrew is honoured as their chief patron by Russia and Scotland.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="30 November">
+    <excerptum>At Patras, in Achaia, the birthday of the apostle St. Andrew, who preached the gospel of Christ in Thrace and Scythia.</excerptum>
+    <excerptum>being suspended on a cross, he lived two days on it, teaching the people.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="30 November">
+    <excerptum>Saint Andrew, Apostle</excerptum>
+  </fons>
+</sanctus>

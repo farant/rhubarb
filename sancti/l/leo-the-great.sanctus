@@ -1,0 +1,42 @@
+<sanctus id="leo-the-great" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Leo the Great</nomen>
+  <nomen lingua="en" fontes="ce">Leo I</nomen>
+  <obitus annus="461" mensis="11" dies="10" fontes="ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="11" dies="10" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="4" dies="11" fontes="mr"/>
+  <munus fontes="us ce mr">pope</munus>
+  <munus fontes="us ce">doctor of the Church</munus>
+  <descriptio>
+    <paragraphus fontes="ce">The place and date of Leo's birth are unknown; the Liber Pontificalis makes him a Tuscan. He first appears as a deacon of the Roman Church under Pope Celestine I, already known beyond Rome. While he was in Gaul on a mission of reconciliation for the emperor Valentinian III, Pope Sixtus III died, and Leo was chosen to succeed him; he was consecrated on 29 September 440 and governed the Church for twenty-one years. His chief aim was the unity of the Church: he acted against Pelagians in Aquileia, Manichaeans in Rome and Priscillianists in Spain, and strengthened the ties of the bishops of Gaul and Illyria with Rome.</paragraphus>
+    <paragraphus fontes="ce mr">In the Christological controversy his dogmatic letter to Flavian of Constantinople set out the union of the divine and human natures in the one Person of Christ; the Council of Chalcedon in 451 accepted it as the expression of the Catholic faith. In 452 he met Attila near Mantua and persuaded him to withdraw from Italy, and in 455 he obtained from the Vandal Genseric that the people of Rome be spared. Ninety-six genuine sermons and 143 of his letters survive. He died on 10 November 461 and was buried at St. Peter's. Benedict XIV declared him a Doctor of the Church in 1754; the Martyrology kept his feast on 11 April.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Pope St. Leo I (the Great)" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Pope_St._Leo_I_(the_Great)">
+    <excerptum>(Reigned 440-61). Place and date of birth unknown; died 10 November, 461.</excerptum>
+    <excerptum>According to the "Liber Pontificalis" (ed. Mommsen, I, 101 sqq., ed. Duchesne, I, 238 sqq.), Leo was a native of Tuscany and his father's name was Quintianus.</excerptum>
+    <excerptum>Our earliest certain historical information about Leo reveals him a deacon of the Roman Church under Pope Celestine I (422-32). Even during this period he was known outside of Rome</excerptum>
+    <excerptum>Leo was sent to Gaul by Emperor Valentinian III to settle a dispute and bring about a reconciliation</excerptum>
+    <excerptum>Sixtus III died on 19 August, 440, while Leo was in Gaul, and the latter was chosen his successor. Returning to Rome, Leo was consecrated on 29 September of the same year, and governed the Roman Church for the next twenty-one years.</excerptum>
+    <excerptum>Leo's chief aim was to sustain the unity of the Church.</excerptum>
+    <excerptum>in Aquileia priests, deacons, and clerics, who had been adherents of Pelagius, were admitted to communion without an explicit abjuration of their heresy.</excerptum>
+    <excerptum>This zealous pastor waged war even more strenuously against Manichæism</excerptum>
+    <excerptum>a lengthy letter to Turibius (ep. xv) in refutation of the errors of the Priscillianists.</excerptum>
+    <excerptum>for the creation of a centre for the Gallican episcopate in immediate union with Rome.</excerptum>
+    <excerptum>Another papal vicariate was that of the bishops of Thessalonica, whose jurisdiction extended over Illyria.</excerptum>
+    <excerptum>sent his sublime dogmatic letter to Flavian (ep. xxviii), concisely setting forth and confirming the doctrine of the Incarnation, and the union of the Divine and human natures in the one Person of Christ</excerptum>
+    <excerptum>This general council was held in Chalcedon in 451 under Marcian, the successor of Theodosius. It solemnly accepted Leo's dogmatical epistle to Flavian as an expression of the Catholic Faith concerning the Person of Christ.</excerptum>
+    <excerptum>went in 452 to Upper Italy, and met Attila at Mincio in the vicinity of Mantua, obtaining from him the promise that he would withdraw from Italy</excerptum>
+    <excerptum>When in 455 the city was captured by the Vandals under Genseric</excerptum>
+    <excerptum>Leo's intercession obtained a promise that the city should not be injured and that the lives of the inhabitants should be spared.</excerptum>
+    <excerptum>his sermons, of which ninety-six genuine examples have been preserved</excerptum>
+    <excerptum>Of his letters, which are of great importance for church history, 143 have come down to us</excerptum>
+    <excerptum>Leo died on 10 November, 461, and was buried in the vestibule of St. Peter's on the Vatican.</excerptum>
+    <excerptum>In 1754 Benedict XIV exalted him to the dignity of Doctor of the Church (doctor ecclesiæ). In the Latin Church the feast day of the great pope is held on 11 April</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="11 April">
+    <excerptum>A T Rome, St. Leo, pope and confessor, who was surnamed the Great on account of his extraordinary merits. He gave the seal of his authority to the holy council of Chalcedon, which was held in his time and which condemned Eutyches through his legates.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="10 November">
+    <excerptum>Saint Leo the Great, Pope and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

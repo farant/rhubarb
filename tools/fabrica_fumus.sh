@@ -128,6 +128,13 @@
 #   LXIII tectum memoriae membri (credo memoria T6): FABRICA_MEMORIA_MB
 #        fugam occidit; sectio rupta nominata cum causa memoriae,
 #        sectio prior servata; membrum v1 'totum' cum eadem causa
+#   LXIV progressus iudicis (colloquia T10d): 'iudicare -plenus' sub
+#        MENSOR_PARENS fabrica.ambitus (actiones iudicandae) initio et
+#        fabrica.iudicata ultima = ambitus; electum 'c' = I (g per
+#        catenam non numeratur); sine MENSOR_PARENS nihil
+#   LXV  digestum lectores iudicis habet: actio cum ingressu
+#        identitas_clang LXIV hex (olim 'sutura sine
+#        identitate clang', exitus 1 - bearssl_amalgama 2026-10-17)
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # <porta titulus="fabrica-fumus" gradus="fusio" instrumentum="bin/fabrica" tegit="*/aedificatio.stml aedificatio.canon fabrica.canon tools/fabrica_struere.sh"/>
@@ -1221,6 +1228,42 @@ if grep -q "probatio_f FRACTA.*sectio 'beta' RUIT; 0 non cursae; memoria maxima 
    && grep -q "^SECTIO	probatio_g	totum	FRACTA" "$T/r/build/fabrica/area/probationes_t/probatio_g/credo.tsv" \
    && [ $((t1 - t0)) -lt 15 ]; then echo "  LXIII tectum memoriae membri: fuga occisa, sectio rupta cum causa memoriae nominata, alpha servata, v1 totum OK"; else echo "  LXIII FRACTUM ($((t1 - t0)) s)"; grep -E "probatio_[fg]" "$T/lxiii" | sed 's/^/      /' | head -6; fracta=1; fi
 
+# LXIV (colloquia T10d): PROGRESSUS IUDICIS - porta iudicans tantum
+# (generata = 'iudicare -plenus -omnia') nullum progressum scribebat
+# (progressum_notare in sanare solo); nunc actiones iudicatae ex
+# iudicandis. Mundus LVIII (g, h, k) iterum conditur.
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+printf 'unum\n' > "$T/r/a"; printf 'e\n' > "$T/r/e"
+printf '<aedificatio>\n  <actio titulus="g" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_b.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="a"/>\n    <exitus via="b" provenientia="regeneratio"/>\n  </actio>\n  <actio titulus="h" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_c.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="b"/>\n    <exitus via="c" provenientia="regeneratio"/>\n  </actio>\n  <actio titulus="k" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_d.sh\n    </mandatum>\n    <praecondicio actio="g"/>\n    <ingressus genus="fasciculus" via="e"/>\n    <exitus via="d" provenientia="regeneratio"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+printf 'D="${FABRICA_SCRIPTURA:-.}"; printf "b:%%s" "$(cat a)" > "$D/b"\n' > "$T/r/gen_b.sh"
+printf 'D="${FABRICA_SCRIPTURA:-.}"; printf "c:%%s" "$(cat b)" > "$D/c"\n' > "$T/r/gen_c.sh"
+printf 'D="${FABRICA_SCRIPTURA:-.}"; printf "d:%%s" "$(cat e)" > "$D/d"\n' > "$T/r/gen_d.sh"
+(cd "$T/r" && "$F" sanare) > "$T/lx_s" 2>&1
+RP=$(cd "$T/r" && pwd -P)
+(cd "$T/r" && MENSOR_PARENS=fumus-lx MENSOR_SESSIO=sessio-lx MENSOR_ARBOR="$RP" \
+    "$F" iudicare -plenus -omnia) > "$T/lx_o" 2>&1
+(cd "$T/r" && MENSOR_PARENS=fumus-lx-c MENSOR_SESSIO=sessio-lx MENSOR_ARBOR="$RP" \
+    "$F" iudicare -plenus c) > "$T/lx_c" 2>&1
+lx_n0=$(grep -c 'fabrica\.' "$MENSOR_DIARIUM")
+(cd "$T/r" && MENSOR_ARBOR="$RP" "$F" iudicare -plenus -omnia) > "$T/lx_n" 2>&1
+lx_n1=$(grep -c 'fabrica\.' "$MENSOR_DIARIUM")
+lx_a=$(awk -F'\t' '$3 == "fumus-lx" && $4 == "fabrica.ambitus" { print $5 + 0 }' "$MENSOR_DIARIUM" | tail -1)
+lx_i=$(awk -F'\t' '$3 == "fumus-lx" && $4 == "fabrica.iudicata" { print $5 + 0 }' "$MENSOR_DIARIUM" | tail -1)
+lx_ca=$(awk -F'\t' '$3 == "fumus-lx-c" && $4 == "fabrica.ambitus" { print $5 + 0 }' "$MENSOR_DIARIUM" | tail -1)
+lx_ci=$(awk -F'\t' '$3 == "fumus-lx-c" && $4 == "fabrica.iudicata" { print $5 + 0 }' "$MENSOR_DIARIUM" | tail -1)
+if [ "${lx_a:-x}" = "3" ] && [ "${lx_i:-x}" = "3" ] && [ "${lx_ca:-x}" = "1" ] && [ "${lx_ci:-x}" = "1" ] && [ "$lx_n0" = "$lx_n1" ]; then echo "  LXIV progressus iudicis: ambitus 3, iudicata 3; electum c 1/1; sine parente nihil OK"; else echo "  LXIV FRACTUM (omnia '${lx_a:-}'/'${lx_i:-}', c '${lx_ca:-}'/'${lx_ci:-}', sine parente lineae ${lx_n0} -> ${lx_n1})"; fracta=1; fi
+
+# LXV (2026-10-17): DIGESTUM CUM LECTORIBUS IUDICIS - 'bin/fabrica
+# digestum' suturam legentem SOLAM parabat: actio cum ingressu
+# identitas_clang (ambitus, species...) recusabatur, quamvis iudex eam
+# sigillaret. Mundus: generator unus cum ingressu identitas_clang
+# expresso (ut bearssl_amalgama).
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+printf 'a\n' > "$T/r/a"
+printf '<aedificatio>\n  <actio titulus="gc" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="a"/>\n    <ingressus genus="identitas_clang" via="clang"/>\n    <exitus via="b" provenientia="regeneratio"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+(cd "$T/r" && "$F" digestum gc) > "$T/lxi" 2>&1; rc=$?
+if [ "$rc" -eq 0 ] && grep -qE '^[0-9a-f]{64}$' "$T/lxi"; then echo "  LXV  digestum actionis cum identitate clang: LXIV hex OK"; else echo "  LXV  FRACTUM (rc=$rc)"; sed 's/^/      /' "$T/lxi" | head -3; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (LXIII/LXIII)"
+echo "fumus fabricae: sanum (LXV/LXV)"
 exit 0

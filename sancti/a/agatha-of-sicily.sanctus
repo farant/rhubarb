@@ -1,0 +1,42 @@
+<sanctus id="agatha-of-sicily" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Agatha of Sicily</nomen>
+  <nomen lingua="la" principale="verum">Agatha</nomen>
+  <obitus annus="251" circa="verum" locus="Catania" martyrium="verum" fontes="mr bu ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="2" dies="5" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="2" dies="5" fontes="mr"/>
+  <munus fontes="mr us">virgin</munus>
+  <munus fontes="mr us ce">martyr</munus>
+  <patrocinium fontes="ce">Catania</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce bu">Agatha was one of the most venerated virgin martyrs of Christian antiquity, put to death for her faith at Catania in Sicily; both Catania and Palermo claim to be her birthplace. The Catholic Encyclopedia holds that only her martyrdom and her ancient cult are historically certain, and accepts as probably traditional the date in the persecution of Decius (250-253); Butler puts it in 251. Her name stands on 5 February in the Martyrologium Hieronymianum and the old calendar of Carthage, and in the canon of the Mass.</paragraphus>
+    <paragraphus fontes="mr bu ce">Her Acts, which the Catholic Encyclopedia judges to have no historical credibility, tell that Quintianus, a man of consular rank, sought her person and estate; when she refused him she was handed to an evil woman, then tortured and her breasts cut off, was healed in a vision of Saint Peter, and died in prison after further torments. Catania honours her as patron, and around Mount Etna she is invoked against eruptions, elsewhere against fire and lightning.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="5 February">
+    <excerptum>in the time of the emperor Decius and the judge Quinctian, the birthday of St. Agatha, virgin and martyr.</excerptum>
+    <excerptum>After being buffeted, imprisoned, tortured, racked, dragged over pieces of earthenware and burning coals, and having her breasts cut off, she consummated her sacrifice in prison while engaged in prayer.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v02 Feb. 5 St. Agatha, Virgin and Martyr">
+    <excerptum>The cities of Palermo and Catana m Sicily, dispute the honour of her birth</excerptum>
+    <excerptum>It is agreed that she received the crown of martyrdom at Catana, in the persecution of Decins, in the third consulship of that prince, in the year of our Lord 251.</excerptum>
+    <excerptum>She was of a rich and illustrious family, and having been</excerptum>
+    <excerptum>consecrated to God from her tender years</excerptum>
+    <excerptum>a man of consular dignity, bent on gratifying both his lust and avarice, imagined he should easily compass his wicked designs on Agatha's person and estate by means of tlie Emperor's edict against the Christians.</excerptum>
+    <excerptum>Her name is inserted in the canon of the mass, in the calendar of Carthage, as ancient as the year 530, and in all martyrologies of the Latins and Greeks.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Agatha" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Agatha">
+    <excerptum>one of the most highly venerated virgin martyrs of Christian antiquity, put to death for her steadfast profession of faith in Catania, Sicily.</excerptum>
+    <excerptum>we may accept, as probably based on ancient tradition, the evidence of her legendary life, composed at a later date, to the effect that her martyrdom occurred during the persecution of Decius (250–253). Historic certitude attaches merely to the fact of her martyrdom and the public veneration paid her in the Church since primitive times.</excerptum>
+    <excerptum>In the so-called Martyrologium Hieronymianum (ed. De Rossi and Duchesne, in Acta SS., Nov. II, 17) and in the ancient Martyrologium Carthaginiense dating from the fifth or sixth century</excerptum>
+    <excerptum>the name of St. Agatha is recorded on 5 February.</excerptum>
+    <excerptum>Neither of these recensions, however, can lay any claim to historical credibility</excerptum>
+    <excerptum>was persecuted by the Senator Quintianus with avowals of love. As his proposals were resolutely spurned by the pious Christian virgin, he committed her to the charge of an evil woman</excerptum>
+    <excerptum>Especially inhuman seemed his order to have her breasts cut off</excerptum>
+    <excerptum>But the holy virgin was consoled by a vision of St. Peter, who miraculously healed her.</excerptum>
+    <excerptum>Both Catania and Palermo claim the honour of being Agatha's birthplace.</excerptum>
+    <excerptum>Catania honours St. Agatha as her patron saint, and throughout the region around Mt. Etna she is invoked against the eruptions of the volcano, as elsewhere against fire and lightning.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="5 February">
+    <excerptum>Saint Agatha, Virgin and Martyr</excerptum>
+  </fons>
+</sanctus>

@@ -75,6 +75,20 @@
  * Argumentum "YYYY-MM": dies I eius mensis (aut hodie si in eo);
  * "agenda": visus agendae.
  *
+ * VISUS HEBDOMADIS (visus="hebdomas"; globulus "Week" inter Month et
+ * Day): hebdomas diei electi, dominica prima - radix > "titulus"
+ * ("Week of October 18, 2026") + dies VII (PARTES_ITEM, id = dies
+ * ISO, lineae altitudine aequa). In die: linea prima "Wed 14" (hodie
+ * inversus), quadratum coloris, celebratio principalis (memoria ad
+ * libitum aut maior); deinde natales (fontes dierum), res apertae
+ * diei ("[ ] titulus"; perfectae non), lineae libri diei
+ * (scriba_liber_lineas_legere - LECTIO SOLA, vacuae omissae; paginae
+ * ordine; indentatio communis notarum remota, relativa manet).
+ * Plures quam capiuntur: ultima linea "+n" ad dextrum. Electa fundo
+ * selectionis. CLAVES: j/k dies +1/-1, J/K hebdomas +1/-1, t
+ * hodie, Enter diem aperit (visus diei), Esc ad mensem; < > hebdomas.
+ * ICTUS diem eligit, DUPLEX aperit (ut cellula mensis).
+ *
  * FIGURAE (visus agendae, A4c): titulus = "Agenda: <n> open" (et
  * "#rubrica" sub filtro); titulus gregis "#rubrica" aut "(none)";
  * ordo = "[ ]" et titulus, dies ad dextrum ("Oct 14" aut "-"); res
@@ -165,13 +179,22 @@ kalendarium_gestum_ponere (
      Motus* motus,
     vacuum* ctx);
 
-/* argumentum novum (vicus_acervo_mutare): "YYYY-MM" -> dies electa;
- * "YYYY-MM-DD" (P6c) -> visus diei in eo die; "agenda". FALSUM si malum
- * (nihil mutatur). */
+/* argumentum novum (vicus_acervo_mutare; semitae R4): semita
+ * calendarii - URI ("calendarium/dies/2026-10-19") aut cognomen:
+ * "YYYY-MM" -> calendarium/mensis/<dies>, "YYYY-MM-DD" ->
+ * calendarium/dies/<dies>, "agenda" -> calendarium/agenda. FALSUM si
+ * malum (nihil mutatur). */
 b32
 kalendarium_argumentum_ponere (
     KalendariumMontatio* m,
      constans character* argumentum);
+
+/* semitae R4 (facies.semitam_secuta): post semitam a vico applicatam
+ * (historia) liber notarum diem electum sequitur; FALSUM si liber
+ * aptari non potuit */
+b32
+kalendarium_semitam_secuta (
+    vacuum* ctx);
 
 /* dies electa: campus dies_electus, absens = hodie */
 Dies

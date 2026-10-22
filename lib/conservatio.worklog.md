@@ -75,3 +75,11 @@ stml_scribere_sedibus), persistence ~41% - nearly all
 changed branch, every write - path lookups 5%, canon judging 1%.
 Moving the commit to quiet would cut ~40% at the price of losing the
 last writes before a crash (decision is Fran's).
+
+## 2026-10-20 - status into praesentia (D1)
+
+Writes and restores go through `volumen_praesens_*` (same keys,
+`status/<clavis>`). The parsimony test could no longer count acts
+(writes add none now), so it plants a sentinel value in praesentia and
+checks it survives a write that should be skipped - transient-only,
+same value, and the first transient write after a restore.

@@ -14,24 +14,26 @@
 
   <status>
     <campus nomen="visus" typus="electio" vita="persistens"
-            absens="index" scriptor="nomenclator.agere">
+            absens="index" scriptor="nomenclator.agere"
+            semita="status">
       <optio>index</optio>
       <optio>rubricae</optio>
     </campus>
     <campus nomen="rubrica_filtrum" typus="textus" vita="persistens"
-            scriptor="nomenclator.agere"
+            scriptor="nomenclator.agere" semita="status"
             nota="una rubrica (kebab); absens = omnes; valet in
                   visu utroque"/>
     <campus nomen="quaestio" typus="textus" vita="transiens"
-            scriptor="nomenclator.agere"
+            scriptor="nomenclator.agere" semita="status"
             nota="P4: quaestio nebulosa in nominibus (effugitus ut
                   prompta_textus); absens = nulla - index ordine
                   similitudinis, filtro rubricae intra"/>
-    <campus nomen="persona_electa" typus="numerus" vita="transiens"
-            scriptor="nomenclator.agere"
-            nota="id personae electae; absens = prima paginae"/>
+    <campus nomen="persona_electa" typus="nomen" vita="transiens"
+            scriptor="nomenclator.agere" semita="status"
+            nota="id personae electae (ULID aut decimale vetus);
+                  absens = prima paginae"/>
     <campus nomen="pagina" typus="numerus" vita="transiens"
-            scriptor="nomenclator.agere"
+            scriptor="nomenclator.agere" semita="status"
             nota="pagina indicis (0 = prima); persona electa paginam
                   sequitur"/>
     <campus nomen="prompta" typus="electio" vita="transiens"
@@ -53,11 +55,13 @@
                   irrepraesentabilis"/>
     <campus nomen="prompta_cursor" typus="numerus" vita="transiens"
             scriptor="nomenclator.agere"/>
-    <campus nomen="persona_aperta" typus="numerus" vita="transiens"
+    <campus nomen="persona_aperta" typus="nomen" vita="transiens"
             scriptor="nomenclator.agere"
-            nota="persona in visu singulari (P5); absens = index"/>
+            semita="ligatio" historia="impelle"
+            nota="id personae in visu singulari (P5); absens = index"/>
     <campus nomen="campus_electus" typus="numerus" vita="transiens"
             scriptor="nomenclator.agere"
+            semita="status" ambitus="ligatio"
             nota="ordo electus in visu personae; absens = primus"/>
     <campus nomen="elenchus" typus="textus" vita="transiens"
             aspectus="popover" scriptor="nomenclator.agere"
@@ -67,6 +71,12 @@
             scriptor="nomenclator.agere"
             nota="res menu illuminata; absens = nulla"/>
   </status>
+
+  <!-- semitae R4e: argumentum nudum -> semita -->
+  <cognomina>
+    <cognomen semita="nomenclator/"/>
+    <cognomen typus="nomen" semita="nomenclator/{}"/>
+  </cognomina>
 
   <basis genus="organum_commune"/>
   <montationes/>

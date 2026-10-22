@@ -1,0 +1,40 @@
+<sanctus id="james-the-less" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">James the Less</nomen>
+  <nomen lingua="en" fontes="bu ce">James the Just</nomen>
+  <obitus annus="62" locus="Jerusalem" martyrium="verum" fontes="bu mr ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="5" dies="3" gradus="festum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="5" dies="1" fontes="mr"/>
+  <munus fontes="mr ce us">apostle</munus>
+  <munus fontes="mr ce">bishop</munus>
+  <munus fontes="bu">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce">The New Testament names several men called James. The Catholic Encyclopedia holds it most probable, though not beyond doubt, that the apostle James son of Alphaeus is the same person as James the brother of the Lord, bishop of Jerusalem, and James son of Mary of Clopas. He was called to be an apostle with his brother Jude, and the risen Lord appeared to him. When Peter escaped from prison in 44 he sent word to James, who already held a marked pre-eminence in the Church of Jerusalem; at the Council of Jerusalem he declared, after Peter, that Gentile Christians were not bound to circumcision.</paragraphus>
+    <paragraphus fontes="ce bu mr">Hegesippus relates that he was called the Just, drank no wine, ate no meat and let no razor touch his head, and that he was put to death by the Jews; Josephus gives a somewhat different account. According to Butler, following Hegesippus, he was thrown down from the battlements of the temple, stoned, and finished with a fuller's club in the year 62, and was buried near the temple. The Martyrology gives a similar account, calling him the first bishop of Jerusalem, and keeps his feast together with that of Philip.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="1 May">
+    <excerptum>birthday of the blessed apostles Philip and James.</excerptum>
+    <excerptum>James, who is also called the brother of our Lord, was the first bishop of Jerusalem. Being hurled down from a pinnacle of the temple, he had his legs broken, and being then struck on the head with a dyer's staff, he expired, and was buried near the temple.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. James the Less" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._James_the_Less">
+    <excerptum>The identity of the Apostle James (2), the son of Alpheus and James (3), the brother of the Lord and Bishop of the Church of Jerusalem (Acts 15, 21), although contested by many critics and, perhaps, not quite beyond doubt, is at least most highly probable</excerptum>
+    <excerptum>James (4), the son of Mary of Clopas, the view that one and the same person is described in the New Testament in these three different ways, is by far the most probable.</excerptum>
+    <excerptum>James was called to the Apostolate with his brother Jude</excerptum>
+    <excerptum>St. Paul (I Corinthians 15:5-7) mentions that the Lord appeared to him before the Ascension.</excerptum>
+    <excerptum>When in the year 44 Peter escaped from prison, he desired that news of his release might be carried to James who held already a marked preeminence in the Church of Jerusalem</excerptum>
+    <excerptum>In the Council of Jerusalem (A.D. 51) he gives his sentence after St. Peter, declaring as Peter had done, that the Gentile Christians are not bound to circumcision</excerptum>
+    <excerptum>Hegesippus, a Jewish Christian, who lived about the middle of the second century, relates (and his narrative is highly probable) that James was called the "Just", that he drank no wine nor strong drink, nor ate animal food, that no razor touched his head</excerptum>
+    <excerptum>and lastly that he was put to death by the Jews. The account of his death given by Josephus is somewhat different.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v05 May 1 St. James the Less, Apostle">
+    <excerptum>He is also known by the title of James the Just, a denomination all agree, with Hegesippus and St. Clement of Alexandria, to have been given on account of his eminent sanctity.</excerptum>
+    <excerptum>And Hegesippus adds, that they carried hiro up to the battlements of the temple</excerptum>
+    <excerptum>in the hearing of a great multitude, which was then at Jerusalem on account of the passover</excerptum>
+    <excerptum>And going up to the battlements, they threw him headlong down to the ground, saying, "He must be stoned."</excerptum>
+    <excerptum>The rabble below received him with showers of stones, and at last a fuller gave him a blow on the head with his club, such as is used in dressing of cloths, after which he presently expired.</excerptum>
+    <excerptum>in the year of Christ 62, the seventh of Nero. He was buried near the temple, in the place in which he was martyred</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="3 May">
+    <excerptum>Saints Philip and James, Apostles</excerptum>
+  </fons>
+</sanctus>

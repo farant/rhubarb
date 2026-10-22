@@ -3219,6 +3219,40 @@ stale (sanare heals upstream in order). Not yet: delete `praevia` + regex in
 edges, cache-resolved FORTASSE in quick mode, hypothetical judgment against
 scratch output in plenus, measure first) are on the park.
 
+## 2026-10-17 - colloquia T10d: progress from `bin/fabrica iudicare`
+
+Judge-only gates (generata = `iudicare -plenus -omnia`) wrote no
+progress: `progressum_notare` was called from sanare only. A real
+generata run (139 s) spent ~131 s re-running 42 generators SERIALLY in
+`_iudicare_sententias` (bearssl_amalgama 59 s), so the count lives
+there: actions judged / actions to judge. One rule for "is this output
+judged" (`_exitus_iudicandus`, tools/fabrica.c) now serves both the
+sentence loop and the count, so they cannot drift. `_iudicare_ambitum`
+runs once before the prefetch: it computes per-action `numeranda` (and,
+under -tacta, `tangit`, so fabrica_actio_tacta is not called twice) and
+records `0/ambitus`; every action leaving the loop (including the stale
+judge's own, skipped there) records `iudicata/ambitus` through the
+existing throttled recorder. No waves: undae 0. The parallel prefetch
+(lectiones actions) runs before any count moves - the row sits at 0/N
+meanwhile, which is true.
+Fumus LX (g/h/k world of LVIII): -omnia 3/3, electum c 1/1 (g judged by
+the chain, not counted), no MENSOR_PARENS -> nothing. Hand plants 3/3
+red (no initial line, no per-action line, ambitus ignoring the
+selection). Unobservable in the fixture: the stale-judge branch.
+
+## 2026-10-17 - `bin/fabrica digestum` lacked the judge's input readers
+
+`_digestum` (tools/fabrica.c) prepared only the reading seam, so any
+action with an identitas_clang / ambitus / species / effectus /
+repositorium input was refused ("sutura sine identitate clang") although
+its comment promises "the same function as the judge". Now it calls
+`suturae_iudicii_parare` too. House digests (provenientia_scribere.sh
+uses digestum: compilator, manus, clonare, ...) checked byte-identical
+before/after. Fumus LXI (generator with an explicit identitas_clang
+input -> 64 hex); hand plant red. First LXI draft used radix_c's
+probationes_t and stayed GREEN under the plant - that action's key has
+no clang identity (the members carry it).
+
 ## 2026-10-20 - memory cap on gradus members (credo memoria T6)
 
 `suturae_in_area_currere` is the only runner for gradus members
@@ -3268,3 +3302,7 @@ Measured with `bin/fabrica iudicare -plenus vendor/bearssl_amalgama.c`:
 - second: 4.7 s (fabrica's fixed startup is ~3.7 s; hashing ~0.5 s)
 - plant (line appended to tools/bearssl_amalgamare.sh): 58.9 s, regenerated
 - restored (cp + touch): 4.2 s, memory hit again
+
+## 2026-10-22 — correction to the 2026-10-21 bearssl_amalgama entry
+
+The 10-21 entry, and the comment that went with it, claimed `bearssl_amalgama`'s inputs were all declared. They were not: `vendor/bearssl/src` has XII subdirectories, the generator walks them (`os.walk`), and a `plagulae` input covers depth 0 only. With `memorabilis="verum"`, an edit inside `src/ec/` (say) would have kept the memoized verdict. Main had made the same action memorabilis independently on 10-17, declaring each subdirectory plus the `src` directory (so a new subdirectory changes the key). Merging main into quinta (2026-10-22) took main's declaration and comment; only the 62%-of-radix measurement line survived from quinta. Lesson: "inputs fully declared" has to be checked against what the generator actually reads (here a recursive walk), not against the top-level path.

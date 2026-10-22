@@ -1,0 +1,46 @@
+<sanctus id="martin-de-porres" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Martin de Porres</nomen>
+  <nomen lingua="es" fontes="hom">Martín de Porres</nomen>
+  <canonizatio modus="formalis" annus="1962" mensis="5" dies="6" papa="John XXIII" fontes="hom con"/>
+  <festum calendarium="generale" mensis="11" dies="3" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us per">religious</munus>
+  <munus fontes="per fr">lay brother</munus>
+  <patrocinium fontes="hom">social institutions of Peru</patrocinium>
+  <patrocinium fontes="fr">hairdressers</patrocinium>
+  <descriptio>
+    <paragraphus fontes="per fr ce fa">Martin de Porres was a Peruvian of mixed race, a mulatto, as Pope Francis puts it. He was baptized in the same font as St. Rose of Lima, and the Catholic Encyclopedia counts him among the souls baptized or confirmed by St. Toribio, Archbishop of Lima. Because of his origins the Dominicans first accepted him only as a tertiary and then as a co-operator brother; he accepted this humbly. Having learned something of medicine first in a pharmacy and then as a barber-surgeon's apprentice, he devoted himself to the poor and the sick.</paragraphus>
+    <paragraphus fontes="hom per">John XXIII describes his love of Christ crucified, of the Eucharist, which he adored for hours, and of the Virgin Mary, and his care for the sick and for peasants and for the Black and mixed-race people who did the lowest work of the time, so that the people called him Martin of Charity. Novices and senior friars alike sought his advice, and he was called the angel of Lima. Pius XII named him patron of all the social institutions of Peru in 1945. John XXIII canonized him on 6 May 1962, and in 1966 Paul VI made him patron of hairdressers.</paragraphus>
+  </descriptio>
+  <fons id="hom" opus="sedes" locus="John XXIII, homily for the canonization of Blessed Martín de Porres, 6 May 1962" url="https://www.vatican.va/content/john-xxiii/es/homilies/1962/documents/hf_j-xxiii_hom_19620506_martino-porres.html">
+    <excerptum>6 de mayo de 1962: Canonización del beato Martín de Porres</excerptum>
+    <excerptum>Amó también con especial caridad al augusto Sacramento de la Eucaristía al que, con frecuencia escondido, adoraba durante muchas horas en el sagrario</excerptum>
+    <excerptum>Amó de una manera increíble a la Virgen María, y la tuvo siempre como una Madre querida.</excerptum>
+    <excerptum>asistía complaciente a los enfermos; proporcionaba comida, vestidos y medicinas a los débiles; favorecía con todas sus fuerzas a los campesinos, a los negros y a los mestizos que en aquel tiempo desempeñaban los más bajos oficios, de tal manera que fue llamado por la voz popular Martín de la Caridad.</excerptum>
+    <excerptum>Pío XII nombró a Martín de Porres Patrono de todas las instituciones sociales de la República del Perú (Cfr. Carta Apostólica del 10 de junio de 1945).</excerptum>
+  </fons>
+  <fons id="con" opus="sedes" locus="John XXIII, semi-public consistory for the canonization of Blessed Martín de Porres, 12 April 1962" url="https://www.vatican.va/content/john-xxiii/es/speeches/1962/documents/hf_j-xxiii_spe_19620412_de-porres.html">
+    <excerptum>que a este celestial beato lo contemos en el número de las santos con Nuestra Apostólica autoridad. Lo que haremos con sumo gusto: y determinamos esta solemne ceremonia para el día 6 del próximo mes de mayo.</excerptum>
+  </fons>
+  <fons id="per" opus="sedes" locus="John XXIII, address to pilgrims present at the canonization of Martín de Porres, 7 May 1962" url="https://www.vatican.va/content/john-xxiii/es/speeches/1962/documents/hf_j-xxiii_spe_19620507_pilgrims-porres.html">
+    <excerptum>Un humilde lego de la Orden de Predicadores, aquél que recibiera las aguas bautismales en la misma pila de Santa Rosa de Lima</excerptum>
+    <excerptum>En la vida de fray Martín hubo tres amores: Cristo crucificado, Nuestra Señora del Rosario, Santo Domingo.</excerptum>
+    <excerptum>Martín de Porres era el ángel de Lima: los novicios se le confiaban en sus dudas, los padres más graves pedíanle parecer</excerptum>
+    <excerptum>Que él bendiga al Perú, la patria que lo vio nacer</excerptum>
+  </fons>
+  <fons id="fr" opus="sedes" locus="Francis, address to hairstylists of the Committees of Saint Martin de Porres, 29 April 2019" url="https://www.vatican.va/content/francesco/en/speeches/2019/april/documents/papa-francesco_20190429_parrucchieri.html">
+    <excerptum>the Peruvian Martin de Porres. Of mixed race, he was accepted into the Order of the Dominican Fathers only as a tertiary and then as a co-operator brother. He accepted this condition, living an existence of the greatest humility, infused with love.</excerptum>
+    <excerptum>He devoted himself with self-denial to the poor and to the sick, providing health care for them, thanks to the notions he first learned in a pharmacy and then as a student of a barber-surgeon</excerptum>
+    <excerptum>whom Pope Saint Paul VI, in 1966, proclaimed patron of your trade</excerptum>
+    <excerptum>You represent the hairdressers, hairdressers and beauticians gathered in the Saint Martin de Porres Committee</excerptum>
+  </fons>
+  <fons id="fa" opus="sedes" locus="Francis, Angelus at Lima, 21 January 2018" url="https://www.vatican.va/content/francesco/en/angelus/2018/documents/papa-francesco_angelus-peru_20180121.html">
+    <excerptum>I think of Saint Martin de Porres.</excerptum>
+    <excerptum>Just as he was: a mulato. He had to face many hardships.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Toribio Alfonso Mogrovejo" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Toribio_Alfonso_Mogrovejo">
+    <excerptum>baptizing and confirming nearly one half million souls, among them St. Rose of Lima, St. Francis Solano, Blessed Martin of Porres, and Blessed Masias.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="3 November">
+    <excerptum>Saint Martin de Porres, Religious</excerptum>
+  </fons>
+</sanctus>

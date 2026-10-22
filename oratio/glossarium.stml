@@ -903,6 +903,7 @@
   <vocabulum lemma="fts" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="full-text search (SQLite)"/>
   <vocabulum lemma="tsv" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="tab-separated values"/>
   <vocabulum lemma="utf" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="unicode transformation format"/>
+  <vocabulum lemma="wav" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="forma plagulae soni RIFF/WAVE (sonus_wav)"/>
   <vocabulum lemma="dof" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="degrees of freedom"/>
   <vocabulum lemma="trm" lingua="anglica" classis="ignotum-permissum" contextus="anglicus" nota="abbreviatio knotapel"/>
   <vocabulum lemma="chebyshev" lingua="anglica" classis="nomen-proprium" contextus="anglicus" nota="Pafnuty Chebyshev"/>
@@ -1770,6 +1771,12 @@
     <forma textus="stilizatae" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
     <forma textus="stilizatum" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
   </vocabulum>
+  <vocabulum lemma="persistens" lingua="latina" classis="adiectivum" nota="Latina (Cicero, Livius): participium praesens verbi persistere - vox domus: vita persistens (organum: status post initium restitutus), semita_legere_persistentem (semitae R4d); WORDS caret">
+    <forma textus="persistens" casus="nominativus" numerus="singularis"/>
+    <forma textus="persistentis" casus="genitivus" numerus="singularis"/>
+    <forma textus="persistentem" casus="accusativus" numerus="singularis"/>
+    <forma textus="persistentes" casus="nominativus" numerus="pluralis"/>
+  </vocabulum>
   <vocabulum lemma="multipartitus" lingua="latina" classis="adiectivum" nota="Latina sera (ut bipartitus, tripartitus): multipartitus, in partes multas divisus - multipart/form-data (lib/multipartita.c); WORDS caret">
     <forma textus="multipartitus" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="multipartita" casus="nominativus" numerus="singularis" genus="femininum"/>
@@ -1780,6 +1787,11 @@
   </vocabulum>
   <vocabulum lemma="redirigo" lingua="latina" classis="verbum" nota="vox domus (re + dirigere): petitionem alio dirigere (HTTP redirect, colloquium_redirigere); WORDS caret">
     <forma textus="redirigere" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+  </vocabulum>
+
+  <vocabulum lemma="cantuale" lingua="latina" classis="substantivum" nota="Latina media (cantuale, -is n.): liber cantuum chori - hic liber cantilenarum nominatarum (include/cantuale.h); WORDS caret">
+    <forma textus="cantuale" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="cantuali" casus="ablativus" numerus="singularis" genus="neutrum"/>
   </vocabulum>
 
 </glossarium>

@@ -1,0 +1,42 @@
+<sanctus id="junipero-serra" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Junípero Serra</nomen>
+  <ortus annus="1713" mensis="11" dies="24" locus="Petra, Majorca" fontes="ce"/>
+  <obitus annus="1784" mensis="8" dies="28" locus="Monterey, California" fontes="ce"/>
+  <beatificatio annus="1988" mensis="9" dies="25" papa="John Paul II" fontes="jb"/>
+  <canonizatio modus="formalis" annus="2015" mensis="9" dies="23" papa="Francis" fontes="fr"/>
+  <festum calendarium="usa" mensis="7" dies="1" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us jb">priest</munus>
+  <munus fontes="ce jb">religious</munus>
+  <munus fontes="ce">missionary</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Junípero Serra was born at Petra on Majorca on 24 November 1713 and entered the Franciscan Order on 14 September 1730. He took a doctorate in theology at the Lullian University at Palma and held its Duns Scotus chair of philosophy until he joined the missionary college of San Fernando in Mexico in 1749. Walking from Vera Cruz to the capital he injured his leg, and it troubled him for the rest of his life. He spent nine years in the Sierra Gorda Indian missions, learned the language of the Pame Indians and translated the catechism into it, and then became known as a fervent preacher of missions in Mexico.</paragraphus>
+    <paragraphus fontes="ce fr">In 1767 he was made superior of the Franciscans sent to the missions of Lower California, and in 1769 he went with Portolá's expedition to Upper California, founding the first of its missions at San Diego on 16 July; eight more followed under his direction, among them San Carlos, San Gabriel, San Francisco and Santa Clara. He clashed with the military commander Pedro Fages and won his case before the viceroy in 1773-1774. In his last years he visited the missions again to confirm the baptized, and he died at Monterey on 28 August 1784. Pope Francis, canonizing him at Washington on 23 September 2015, praised his defence of the dignity of the native peoples and his motto "siempre adelante", keep moving forward.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Junípero Serra" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Junípero_Serra">
+    <excerptum>Born at Petra, Island of Majorca, 24 November, 1713; died at Monterey, California, 28 August, 1784.</excerptum>
+    <excerptum>On 14 September, 1730, he entered the Franciscan Order.</excerptum>
+    <excerptum>Later he received the degree of Doctor of Theology from the Lullian University at Palma, where he also occupied the Duns Scotus chair of philosophy until he joined the missionary college of San Fernando, Mexico (1749).</excerptum>
+    <excerptum>While traveling on foot from Vera Cruz to the capital, he injured his leg in such a way that he suffered from it throughout his life</excerptum>
+    <excerptum>At his own request he was assigned to the Sierra Gorda Indian Missions some thirty leagues north of Queretaro.</excerptum>
+    <excerptum>He served there for nine years, part of the time as superior, learned the language of the Pame Indians, and translated the catechism into their language.</excerptum>
+    <excerptum>Recalled to Mexico, he became famous as a most fervent and effective preacher of missions.</excerptum>
+    <excerptum>In 1767 he was appointed superior of a band of fifteen Franciscans for the Indian Missions of Lower California. Early in 1769 he accompanied Portolá's land expedition to Upper California.</excerptum>
+    <excerptum>He arrived at San Diego on 1 July, and on 16 July founded the first of the twenty-one California missions</excerptum>
+    <excerptum>Those established by Father Serra or during his administration were San Carlos (3 June, 1770); San Antonio (14 July, 1771); San Gabriel (8 September, 1771); San Luis Obispo (1 September, 1772); San Francisco de Asis (8 October, 1776); San Juan Capistrano (1 Nov. 1776); Santa Clara (12 January, 1777); San Buenaventura (31 March, 1782).</excerptum>
+    <excerptum>Difficulties with Pedro Fages, the military commander, compelled Father Serra in 1773 to lay the case before Viceroy Bucareli.</excerptum>
+    <excerptum>Everything save two minor points was decided in his favour; he then returned to California, late in 1774.</excerptum>
+    <excerptum>During the remaining three years of his life he once more visited the missions from San Diego to San Francisco, six hundred miles, in order to confirm all who had been baptized.</excerptum>
+  </fons>
+  <fons id="fr" opus="sedes" locus="Francis, Homily at the canonization of Junípero Serra, Washington, 23 September 2015" url="https://www.vatican.va/content/francesco/en/homilies/2015/documents/papa-francesco_20150923_usa-omelia-washington-dc.html">
+    <excerptum>Holy Mass and Canonization of Blessed Fr. Junipero Serra at the National Shrine of the Immaculate Conception (Washington, D.C., 23 September 2015)</excerptum>
+    <excerptum>Junípero sought to defend the dignity of the native community, to protect it from those who had mistreated and abused it.</excerptum>
+    <excerptum>Father Serra had a motto which inspired his life and work, not just a saying, but above all a reality which shaped the way he lived: siempre adelante! Keep moving forward!</excerptum>
+  </fons>
+  <fons id="jb" opus="sedes" locus="John Paul II, Homily for six beatifications, 25 September 1988" url="https://www.vatican.va/content/john-paul-ii/it/homilies/1988/documents/hf_jp-ii_hom_19880925_sei-beati.html">
+    <excerptum>JUNÍPERO SERRA, FRÉDÉRIC JANSSOONE E MARÍA JOSEFA NAVAL GIRBÉS OMELIA DI GIOVANNI PAOLO II Piazza San Pietro - Domenica, 25 settembre 1988</excerptum>
+    <excerptum>In fra Junipero Serra, sacerdote dei Frati Minori, troviamo un fulgido esempio di unità cristiana e spirito missionario.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="1 July">
+    <excerptum>Saint Junípero Serra, Priest</excerptum>
+  </fons>
+</sanctus>

@@ -1,0 +1,45 @@
+<sanctus id="elizabeth-of-hungary" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Elizabeth of Hungary</nomen>
+  <nomen lingua="en" fontes="ce">Elizabeth of Thuringia</nomen>
+  <ortus annus="1207" locus="Hungary, probably Pressburg" fontes="ce"/>
+  <obitus annus="1231" mensis="11" dies="17" locus="Marburg, Hesse" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1235" mensis="5" dies="28" papa="Gregory IX" fontes="ce"/>
+  <festum calendarium="generale" mensis="11" dies="17" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="11" dies="19" fontes="mr"/>
+  <munus fontes="us ce">religious</munus>
+  <munus fontes="mr">widow</munus>
+  <munus fontes="ce mr">Franciscan tertiary</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Elizabeth, also called Elizabeth of Thuringia, was born in Hungary, probably at Pressburg, in 1207, a daughter of King Andrew II. When she was four, a marriage was arranged for political reasons with the eldest son of Landgrave Hermann I of Thuringia, and she was taken to be brought up at the Thuringian court. He died in 1216, and she was betrothed to his brother Ludwig, whom she married in 1221, at fourteen. The marriage was a happy one; Ludwig protected her works of charity and penance, and they had three children.</paragraphus>
+    <paragraphus fontes="ce mr">In 1226, when floods, famine and plague struck Thuringia while Ludwig was in Italy, she gave alms throughout his lands, built a hospital of twenty-eight beds below the Wartburg and helped nine hundred poor a day. Ludwig died at Otranto in 1227 on his way to the crusade. Guided first by Franciscans and then, with great severity, by Conrad of Marburg, she renounced the world on Good Friday 1228 and took the habit of the Third Order of St. Francis, among the first tertiaries in Germany. At Marburg she built a hospital and gave herself wholly to the sick. Whether she was driven from the Wartburg or left it freely is disputed. She died at Marburg on 17 November 1231, aged twenty-four; the Martyrology keeps her on the 19th, a date the Catholic Encyclopedia corrects. Gregory IX canonized her at Pentecost 1235.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Elizabeth of Hungary" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Elizabeth_of_Hungary">
+    <excerptum>Elizabeth of Hungary, Saint, also called Saint ELIZABETH OF THURINGIA, b. in Hungary, probably at Pressburg, 1207; d. at Marburg, Hesse, November 17 (not November 19), 1231. She was a daughter of King Andrew II of Hungary</excerptum>
+    <excerptum>In 1211 a formal embassy was sent by Landgrave Hermann I of Thuringia to Hungary to arrange, as was customary in that age, a marriage between his eldest son Hermann and Elizabeth, who was then four years old.</excerptum>
+    <excerptum>This plan of a marriage was the result of political considerations</excerptum>
+    <excerptum>Not long after this the little girl was taken to the Thuringian court to be brought up with her future husband</excerptum>
+    <excerptum>On December 31, 1216, the oldest son of the landgrave, Hermann, whom Elizabeth was to marry, died; after this she was betrothed to Ludwig, the second son.</excerptum>
+    <excerptum>The same year (1221) Ludwig and Elizabeth were married, the groom being twenty-one years old and the bride fourteen. The marriage was in every regard a happy and exemplary one</excerptum>
+    <excerptum>He gave his protection to her acts of charity, penance, and her vigils</excerptum>
+    <excerptum>They had three children: Hermann II (1222-41), who died young</excerptum>
+    <excerptum>In the spring of 1226, when floods, famine, and the pest wrought havoc in Thuringia, Ludwig was in Italy</excerptum>
+    <excerptum>she built below the Wartburg a hospital with twenty-eight beds and visited the inmates daily to attend to their wants; at the same time she aided nine hundred poor daily.</excerptum>
+    <excerptum>The next year (1227) he started with the Emperor Frederick II on a crusade to Palestine but died, September 11 of the same year at Otranto, from the pest.</excerptum>
+    <excerptum>With the aid of Elizabeth the Franciscans in 1225 founded a monastery in Eisenach; Brother Rodeger, as his fellow-companion in the order, Jordanus, reports, instructed Elizabeth</excerptum>
+    <excerptum>After a while the post Brother Rodeger had filled was assumed by Master Conrad of Marburg</excerptum>
+    <excerptum>Conrad treated Elizabeth with inexorable severity, even using corporal means of correction</excerptum>
+    <excerptum>Up to 1888 it was believed, on account of the testimony of one of Elizabeth's servants in the process of canonization, that Elizabeth was driven from the Wartburg in the winter of 1227 by her brother-in-law</excerptum>
+    <excerptum>About 1888 various investigators (Börner, Mielke, Wenck, E. Michael, etc.) asserted that Elizabeth left the Wartburg voluntarily, the only compulsion being a moral one.</excerptum>
+    <excerptum>On Good Friday, 1228, in the Franciscan house at Eisenach Elizabeth formally renounced the world</excerptum>
+    <excerptum>she and her maids received from him the dress of the Third Order of St. Francis, thus being among the first tertiaries of Germany.</excerptum>
+    <excerptum>In the summer of 1228 she built the Franciscan hospital at Marburg and on its completion devoted herself entirely to the care of the sick</excerptum>
+    <excerptum>she passed away at the age of twenty-four</excerptum>
+    <excerptum>At Pentecost (May 28) of the year 1235, the solemn ceremony of canonization of the "greatest woman of the German Middle Ages" was celebrated by Gregory IX at Perugia</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="19 November">
+    <excerptum>At Marburg, in Germany, the demise of St. Elizabeth, widow, daughter of Andrew, king of Hungary, of the Third Order of St. Francis.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="17 November">
+    <excerptum>Saint Elizabeth of Hungary, Religious</excerptum>
+  </fons>
+</sanctus>

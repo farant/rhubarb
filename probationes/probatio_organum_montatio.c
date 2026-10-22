@@ -273,10 +273,10 @@ _probare_restitutionem (
     in   = internamentum_creare(c->piscina);
     vol  = volumen_temporarium(c->piscina, "probatio_organum_montatio");
     CREDO_NECESSE_NON_NIHIL(vol);
-    CREDO_NECESSE(volumen_plagulam_condere(vol, chorda_ex_literis(
+    CREDO_NECESSE(volumen_praesens_ponere(vol, chorda_ex_literis(
         "status/p1", c->piscina), chorda_ex_literis(
         "<status versio=\"2\" genus=\"pictor\" zoom=\"3\"/>",
-        c->piscina), "probatio") > ZEPHYRUM);
+        c->piscina)));
     o    = pictor(c->piscina, in);
     CREDO_NECESSE_NON_NIHIL(o);
     repo = insula_repositorium_creare(c->piscina, in, "<hospes/>");

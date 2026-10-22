@@ -238,3 +238,86 @@ now shared by both paths) and `_lexema_ante` (lifted out of
 Formatter note: `formator.sh -intra a b c` formats ONLY `a` — the rest
 are read as file paths ("plagula illegibilis: b"). Repeat the flag:
 `-intra a -intra b`.
+
+## 2026-10-21 — stringification through STML: the August limit, closed (…YR99SJ1)
+
+`lib/sonitus.c` (sonus S1b) was the first `lib/` file with a `#param`
+macro, and `probatio_silva_arbor_plagula` went 304/305: +166 bytes
+after the read-back. The cause was the limit T7b had pinned on
+2026-08-21 ("stringificatio", `debet_transire = FALSUM`, "extentum pro
+origine CHORDA non scribitur"). Nothing in the corpus had used it
+until now.
+
+**Two faces, one root.** The radix of a CHORDA token is the *use-site
+argument* (`stringificatio.primus`), not the invocation, so lookup by
+identity never finds its extent. Silva alone recovers it by byte
+containment (`silva_extentum_continens`). Our document lost that in
+two ways:
+
+| shape | what happened |
+|---|---|
+| `M(forma)` → `{ #c }` | `{` (EXPANSIO) wrote the extent with `forma` in it, and `<stringificatio>` wrote `forma` AGAIN as a separate element. The read-back gave two objects, so derivation positioned the second one at the cursor and emission printed it: `M(forma)forma` |
+| `S(salve)` → `#a` alone | nothing referenced the invocation at all, so no `<extentum>` was written: `S(salve)` → `salve` |
+
+**Fix, all in the writer and reader (silva's data model unchanged):**
+
+- `_silvae_extentum_membri`: token → the LARGEST extent whose lamina
+  holds it (by pointer), a lazy table with a watermark per source. The
+  read side cannot use byte containment, because derivation is what
+  sets the offsets, and this lookup is what derivation asks. The
+  largest extent wins because derivation lays a lamina down from the
+  cursor: an inner lamina positioned first would take the outer one's
+  bytes (`F(S(x))` with body `a + 0` puts the CHORDA first).
+- `_silvae_extentum_quaerere`: identity, then membership. This mirrors
+  `silva_scribere.c` `_extentum_unci` (identity, then containment). A
+  table and not a scan, because every object-like macro token (`si`,
+  `redde`) misses identity and would otherwise pay for it.
+- numerare (CHORDA): `primus` is counted once more for its appearance
+  in the lamina, and the invocation twice. usus > 1 means a
+  transclusion, and the reader returns THE SAME object for a
+  transclusion (`materia_arbor.c`: "Identitas res est").
+- `<stringificatio>` gains an optional second child, the invocation,
+  with `<extentum>` on its first occurrence. This is the same pattern
+  as PASTA's third operand. With an empty argument (`S()`), silva sets
+  `primus = invocatio`, so there is no second child and the extent
+  hangs off `primus`. The reader keys the extent on `secundus`, falling
+  back to `primus`. Old documents without the child read as before.
+
+Adversarial cases 24 → 32. The pin is flipped to VERUM (otherwise it
+would say SANATUM), plus eight shapes: inside an expansion, next to a
+bare argument, two invocations, a multi-token argument, CHORDA as the
+FIRST token, inside another macro's argument, through an intermediate
+macro, and an empty argument. Five were red before the fix (the pin
+and the first four shapes), with silva alone passing each one. The
+last four were written after the fix, so they were never red; the
+plant below is what shows they bite. The empty argument then failed
+twice more: lamina[0] was excluded from the index, and the second
+child was a transclusion, so the extent was never written. Both are
+fixed above.
+
+**Plants** (`silva.planta`, gate `silva` filtered to `silva_arbor_parsura`):
+each one red, then green after the revert:
+
+- membership fallback off in `_silvae_extentum_quaerere`: red
+- the extra `primus` count off in numerare: red
+- `<stringificatio>` writes no extent: red, on exactly the four shapes
+  where nothing else writes it (lone, multi-token argument, CHORDA
+  first, empty argument)
+
+Corpus: `probatio_silva_arbor_plagula` latinized **308/308 octetim per
+STML** (was 304/305 with sonitus.c divergent), plain 78/78. Gate time
+45.2 s, against 50.4 s for the last green run with three files fewer,
+so the membership table costs nothing measurable. silva 56/56.
+
+Housekeeping: after the edit, `silva.porta` refused with "iudex ipse
+non recens" (bin/fabrica links silva). `./tools/fabrica_struere.sh`
+heals it (builds into bin/ only) and regenerates the amalgam.
+
+Correction (same day, merge to main): the new shapes are EIGHT, not
+seven. a1b658d4's commit message says "VII formae" but lists eight.
+The merge's fusio then found two pins that moved with this fix:
+`silva/m3_probare.sh` `adversarii fixum` 24 -> 32, and three NAMED
+divergences in `materia/oraculum_silvae.dispares` for lib/sonitus.c.
+The pinned silva's document carries the old double-written argument,
+so the live reader derives it differently and the live comparator sees
+the drift that the pinned one was blind to. Bytes do not differ.

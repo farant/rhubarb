@@ -1,0 +1,50 @@
+# sonus worklog
+
+## 2026-10-20 — S1a: primitives born (sexta)
+
+Spec: `project-specs/sonus-spec.md` (S1). Fran approved the header shape
+in conversation ("that looks good to me"): one sample per call
+(`_proximum`), value structs in caller memory like `Sors`, 32-bit
+integer phase, levels (not bits) for the crusher, one-pole filter only.
+
+**Integer phase (DDS).** `phasis` is an `i32` where 2^32 = one cycle;
+unsigned wraparound is defined in C, so the phase never accumulates
+float error and needs no `floorf`. Frequency -> increment is ROUNDED
+(`+ 0.5`): truncation gives 440 Hz = 439.99998 cycles per second, which
+a wrap-count test cannot see (it allows ±1) - so the suite pins
+`incrementum == 39370534` for 440 Hz directly.
+
+**Narrow pulses quantize - do not count them at high frequency.** The
+first "duty 0 -> 0.01" check ran at 1000 Hz and failed: a 1% pulse is
+0.48 samples wide there, and the phase drifts only 16 units per cycle
+(48 x increment = 2^32 - 16), so EVERY cycle catches the same integer
+number of positive samples - 1000 or 0 depending on starting phase,
+never 480. At 100 Hz (4.8 samples) the same trap gives 500 or 400 (the
+test hit 400 because the phase carried over from the previous loop). At
+10 Hz (48 samples) the count is 480-490. This is real aliasing, not a
+test artifact: a very narrow pulse at a high pitch is mostly silence or
+a click train. Worth remembering when sonitus sweeps duty.
+
+**Envelope semantics (chosen, not inherited).** Attack and decay are
+fixed SLOPES (attack = 1/n per sample), so a retrigger from 0.25 reaches
+1 sooner than from 0. Release is a fixed TIME from the current value
+(valor/n), so release always lasts `remissio` seconds, even when the
+gate closes mid-attack. Both start from the current value: no click on
+retrigger. Times shorter than one sample jump at once.
+
+**Frequency 0 = silence** in every form (not the pulse's stuck +1 DC).
+
+**Noise** draws a new value from `sors` each time the top three phase
+bits change: eight values per cycle, so solarium's preset frequencies
+keep their meaning ("freq pitches the crunch").
+
+**Filter numbers in the suite are analytic**, not measured-then-pasted:
+|H| = a / |1 - (1-a)e^-jw| with a = 1 - e^(-2 pi fc/fs). At fc = 1000,
+fs = 48000: low-pass passes 0.995 at 100 Hz, 0.7075 at 1000, 0.107 at
+10000; high-pass 0.093 / 0.6617 / 0.931.
+
+**Determinism**: same parameters + same seed = bit-identical samples on
+the same binary and machine (the suite runs a whole chain twice). `sin`,
+`exp`, `pow` come from libm, so goldens across machines may differ in
+the last bits (spec §VI-g) - goldens, when they come, compare with a
+tolerance or are regenerated per machine.

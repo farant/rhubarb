@@ -1,0 +1,57 @@
+<sanctus id="ignatius-of-loyola" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Ignatius of Loyola</nomen>
+  <nomen lingua="es" fontes="ce">Iñigo</nomen>
+  <ortus annus="1491" locus="castle of Loyola, Guipuscoa" fontes="ce bu"/>
+  <obitus annus="1556" mensis="7" dies="31" locus="Rome" fontes="ce"/>
+  <beatificatio annus="1609" mensis="7" dies="27" papa="Paul V" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1622" mensis="5" dies="22" papa="Gregory XV" fontes="ce"/>
+  <festum calendarium="generale" mensis="7" dies="31" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="7" dies="31" fontes="mr"/>
+  <munus fontes="us ce">priest</munus>
+  <munus fontes="mr bu">founder of the Society of Jesus</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Ignatius was born in 1491 at the castle of Loyola in Guipuscoa, the youngest son of a noble family, and was baptized Iñigo; he took the name Ignatius later, in Rome. As a young man he was extravagant in dress and consumed by the desire for glory, and he later confessed himself a great sinner; then he entered the army. In 1521, at the French siege of Pampeluna, he was struck by a cannon ball that broke his leg. Carried to Loyola, through a painful convalescence he was given lives of Christ and the saints, and he was converted. At Montserrat he made a general confession and hung up his sword before Our Lady's altar; at Manresa, after a time of scruples, he began the notes that became the Spiritual Exercises.</paragraphus>
+    <paragraphus fontes="ce">After a pilgrimage to the Holy Land he spent eleven years in study, at Barcelona, Alcalá, Salamanca and Paris and was imprisoned by an inquisitor at Alcalá. At Paris he gathered the companions, Francis Xavier and Peter Faber among them, who vowed poverty and chastity with him at Montmartre on 15 August 1534. Once ordained priests, they offered themselves to Paul III, and the Society of Jesus was approved by the bull Regimini militantis Ecclesiae of 27 September 1540; Ignatius was elected its first general in 1541 and charged with drawing up its constitutions. He died at Rome on 31 July 1556, was beatified by Paul V in 1609 and canonized by Gregory XV on 22 May 1622.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Ignatius Loyola" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Ignatius_Loyola">
+    <excerptum>Born in 1491 at the castle of Loyola above Azpeitia in Guipuscoa; died at Rome, 31 July, 1556.</excerptum>
+    <excerptum>The saint was baptized Iñigo, after St. Enecus (Innicus), Abbot of Oña: the name Ignatius was assumed in later years, while he was residing in Rome.</excerptum>
+    <excerptum>He was brought up in the household of Juan Velásquez de Cuellar, contador mayor to Ferdinand and Isabella</excerptum>
+    <excerptum>He was affected and extravagant about his hair and dress, consumed with the desire of winning glory</excerptum>
+    <excerptum>The balance of evidence tends to show that his own subsequent humble confessions of having been a great sinner should not be treated as pious exaggerations.</excerptum>
+    <excerptum>Velásquez died and Ignatius took service in the army. The turning-point of his life came in 1521. While the French were besieging the citadel of Pampeluna, a cannon ball, passing between Ignatius' legs, tore open the left calf and broke the right shin</excerptum>
+    <excerptum>carried on a litter to Loyola, where his leg had to be rebroken and reset</excerptum>
+    <excerptum>he asked for the romances of chivalry, his favourite reading, but there were none in the castle, and instead they brought him the lives of Christ and of the saints</excerptum>
+    <excerptum>His conversion was now complete.</excerptum>
+    <excerptum>His first care was to make a general confession at the famous sanctuary of Montserrat</excerptum>
+    <excerptum>His sword and dagger he suspended at Our Lady's altar, and passed the night watching before them.</excerptum>
+    <excerptum>he was consumed with the most troublesome scruples.</excerptum>
+    <excerptum>At last, however, he triumphed over all obstacles, and then abounded in wonderful graces and visions. It was at this time, too, that he began to make notes of his spiritual experiences, notes which grew into the little book of "The Spiritual Exercises".</excerptum>
+    <excerptum>he commenced his long-meditated migration to the Holy Land.</excerptum>
+    <excerptum>Eventually he resolved to study, in order to be of greater help to others. To studies he therefore gave eleven years</excerptum>
+    <excerptum>Later he studied among school-boys at Barcelona, and early in 1526 he knew enough to proceed to his philosophy at the University of Alcalá.</excerptum>
+    <excerptum>at the end of 1527 he entered the University of Salamanca, whence, his trials continuing, he betook himself to Paris (June, 1528)</excerptum>
+    <excerptum>At Alcalá, a meddlesome inquisitor, Figueroa, harassed him constantly, and once automatically imprisoned him for two months.</excerptum>
+    <excerptum>They were (St.) Peter Faber, a Genevan Savoyard; (St.) Francis Xavier, of Navarre</excerptum>
+    <excerptum>On 15 August, 1534, they took the vows of poverty and chastity at Montmartre</excerptum>
+    <excerptum>They were eventually made priests on St. John Baptist's day. But Ignatius took eighteen months to prepare for his first Mass.</excerptum>
+    <excerptum>it was time to offer their services to the pope</excerptum>
+    <excerptum>Paul III having received the fathers favourably, all were summoned to Rome to work under the pope's eyes.</excerptum>
+    <excerptum>approved the "Formula" and the Bull "Regimini militantis Ecclesiae" (27 September, 1540), which embodies and sanctions it, was issued</excerptum>
+    <excerptum>In April, 1541, Ignatius was, in spite of his reluctance, elected the first general</excerptum>
+    <excerptum>THE CONSTITUTIONS OF THE SOCIETY Ignatius was commissioned in 1541 to draw them up, but he did not begin to do so until 1547</excerptum>
+    <excerptum>He was beatified by Paul V on 27 July, 1609, and canonized by Gregory XV on 22 May, 1622.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v07 July 31 St. Ignatius of Loyola, C., Founder of the Society of Jesus">
+    <excerptum>St. Ignatius was born in 1491, in the castle of Loyola, in Guipuscoa, a part of Biscay that reaches to the Pyrennean mountains.</excerptum>
+    <excerptum>His father, Don Bertram, was lord of Ognez and Loyola, head oi one of the most ancient and noble families of that country.</excerptum>
+    <excerptum>They had three daughters and eight sons. The youngest of all these was Inigo or Ignatius</excerptum>
+    <excerptum>ST. IGNATIUS OF LOYOLA, C. FOUNDER OF THE SOCIETY OF JESUS.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="31 July">
+    <excerptum>AT Rome, the birthday of St. Ignatius, confessor, founder of the Society of Jesus, renowned for sanctity and miracles</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="31 July">
+    <excerptum>Saint Ignatius of Loyola, Priest</excerptum>
+  </fons>
+</sanctus>

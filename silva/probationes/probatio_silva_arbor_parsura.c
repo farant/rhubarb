@@ -769,9 +769,36 @@ principale (vacuum)
 
             /* --- arma originis PASTA et CHORDA --- */
             { "stringificatio",
-              "#define S(a) #a\nconstans char* s = S(salve);\n", FALSUM,
-              "NOSTRUM: extentum pro origine CHORDA non scribitur "
-              "(silva sola TRANSIT - vide _extentum_continens)" },
+              "#define S(a) #a\nconstans char* s = S(salve);\n", VERUM,
+                  NIHIL },
+            /* lib/sonitus.c (sonus S1b): '#c' cum lexematibus corporis
+             * in eadem invocatione - extentum ab EXPANSIO scribitur,
+             * argumentum CHORDA tamen bis emittebatur */
+            { "stringificatio intra expansionem",
+              "#define M(c) { #c }\nconst char* x[] = M(forma);\n",
+                  VERUM, NIHIL },
+            { "stringificatio et argumentum nudum",
+              "#define M(c, n) { #c, n }\n"
+              "struct { const char* s; int n; } x = M(forma, 4);\n",
+                  VERUM, NIHIL },
+            { "stringificatio bis, invocationes duae",
+              "#define M(c) { #c }\nconst char* x[] = M(a);\n"
+              "const char* y[] = M(b);\n", VERUM, NIHIL },
+            { "stringificatio argumenti multi-lexematis",
+              "#define S(a) #a\nconst char* s = S(a + b);\n", VERUM,
+                  NIHIL },
+            { "stringificatio ante corpus (lexema primum)",
+              "#define M(c) #c, 1\n"
+              "struct { const char* s; int n; } x = { M(forma) };\n",
+                  VERUM, NIHIL },
+            { "stringificatio intra argumentum alterius",
+              "#define S(a) #a\n#define F(a) a + 0\n"
+              "const char* s = F(S(x));\n", VERUM, NIHIL },
+            { "stringificatio per macrum intermedium",
+              "#define S(a) #a\n#define F(a) S(a)\n"
+              "const char* s = F(salve);\n", VERUM, NIHIL },
+            { "stringificatio argumenti vacui",
+              "#define S(a) #a\nconst char* s = S();\n", VERUM, NIHIL },
             { "pasta",
               "#define P(a,b) a##b\nint ab = 0;\nint n = P(a,b);\n",
                   VERUM, NIHIL },
@@ -841,10 +868,12 @@ principale (vacuum)
         imprimere("  discrepantiae ab expectatione: %d / %d\n",
             (integer)fracti, (integer)NUMERUS_CASUUM);
 
-        /* LIMITES NOTI (III), quisque causa NOMINATA in tabula:
-         *   expansio vacua  - SILVA
-         *   stringificatio  - NOSTRUM (silva sola transit)
-         *   pasta           - SILVA, deferral nominatum
+        /* LIMITES NOTI: nulli. Tres nati (2026-08-21), omnes soluti:
+         *   expansio vacua  - SILVA, 2026-08-21 (<invocatio-vacua>)
+         *   pasta           - SILVA, 2026-08-21 (invocatio pastae)
+         *   stringificatio  - NOSTRUM, 2026-10-21 (lib/sonitus.c;
+         *                     membra extentorum, silva_frons.c)
+         * Limes novus: debet_transire FALSUM cum causa nominata.
          * Pinna DISCREPANTIAS numerat, non fracturas: sic et
          * regressus et SANATIO clamant. */
         CREDO_AEQUALIS_I32 (fracti, ZEPHYRUM);

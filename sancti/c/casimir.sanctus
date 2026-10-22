@@ -1,0 +1,44 @@
+<sanctus id="casimir" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Casimir</nomen>
+  <ortus annus="1458" mensis="10" dies="3" locus="Cracow" fontes="ce"/>
+  <obitus annus="1484" mensis="3" dies="4" locus="Grodno" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1522" papa="Adrian VI" fontes="ce"/>
+  <festum calendarium="generale" mensis="3" dies="4" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="3" dies="4" fontes="mr"/>
+  <munus fontes="ce bu">prince</munus>
+  <patrocinium fontes="ce bu">Poland</patrocinium>
+  <patrocinium fontes="ce">Lithuania</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce bu">Casimir was a prince of Poland, the second son of King Casimir IV and Queen Elizabeth of Austria, born at Cracow in 1458. He was educated by the Polish historian Dlugosz, a canon of Cracow, and was remarkable for piety from childhood. At thirteen he accepted the crown of Hungary offered by nobles discontented with King Matthias Corvinus, but the attempt failed and he returned to Poland. Later, while his father was in Lithuania, he governed Poland from 1481 to 1483 with prudence and justice. He refused a proposed marriage with a daughter of the Emperor Frederick III, preferring to remain single.</paragraphus>
+    <paragraphus fontes="ce bu mr">He was known for justice and chastity, for long prayer at night before the locked doors of churches, and for devotion to the Blessed Virgin; a Marian hymn was long attributed to him. Weakened by fasting, he died of a lung illness on 4 March 1484 at Grodno, according to the Catholic Encyclopedia; Butler gives 1482 and Vilna, where he was buried. The sources also differ on his canonization: the Martyrology and Butler credit Leo X, while the Catholic Encyclopedia says Leo X ordered the inquiry and Adrian VI canonized him in 1522. He is a patron of Poland and Lithuania.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="4 March">
+    <excerptum>AT Wilna, in Lithuania, blessed Casimir, son of king Casimir, whom the Roman Pontiff, Leo X., placed in the number of the Saints.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v03 March 4 St. Casimir, Prince of Poland">
+    <excerptum>He often went out in the night to pray before the church doors</excerptum>
+    <excerptum>he made a happy end at Vilna, the capital of Lithuania, on the fourth of (March, 1482</excerptum>
+    <excerptum>He was buried in the church of St. Sianislas.</excerptum>
+    <excerptum>He was canonized by pope Leo X. whose legate in Poland, Zachary Ferrier, wrote the saint’s life.</excerptum>
+    <excerptum>St. Casimir is the patron of PoJand, and several other places, and is proposed to youth as a particular pattern of purity.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Casimir" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Casimir">
+    <excerptum>Prince of Poland, born in the royal palace at Cracow, 3 October, 1458; died at the court of Grodno, 4 March, 1484.</excerptum>
+    <excerptum>the second son of King Casimir IV and Queen Elizabeth, an Austrian princess</excerptum>
+    <excerptum>The early training of the young princes was entrusted to Father Dlugosz, the Polish historian, a canon at Cracow</excerptum>
+    <excerptum>even then he was remarkable for his ardent piety. When Casimir was thirteen he was offered the throne of Hungary by a Hungarian faction who were discontented under King Matthias Corvinus.</excerptum>
+    <excerptum>He was unsuccessful, however, and returned a fugitive to Poland.</excerptum>
+    <excerptum>When in 1479 the king went to Lithuania to spend five years arranging affairs there, Casimir was placed in charge of Poland, and from 1481 to 1483 administered the State with great prudence and justice. About this time his father tried to arrange for him a marriage with the daughter of Frederick III, Emperor of Germany, but Casimir preferred to remain single.</excerptum>
+    <excerptum>he fell victim to a severe attack of lung trouble, which, weak as he was from fastings and mortifications, he could not withstand.</excerptum>
+    <excerptum>His remains were interred in the chapel of the Blessed Virgin in the cathedral of Vilna.</excerptum>
+    <excerptum>was noted particularly for his justice and chastity. Often at night he would kneel for hours before the locked doors of churches</excerptum>
+    <excerptum>He had a special devotion to the Blessed Virgin, and the hymn of St. Bernard of Clairvaux</excerptum>
+    <excerptum>was long attributed to him.</excerptum>
+    <excerptum>Pope Leo X appointed the papal legate Zaccaria Ferreri</excerptum>
+    <excerptum>in 1522 Casimir was canonized by Adrian VI.</excerptum>
+    <excerptum>St. Casimir is the patron of Poland Lithuania</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="4 March">
+    <excerptum>Saint Casimir</excerptum>
+  </fons>
+</sanctus>

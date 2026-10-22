@@ -1,0 +1,33 @@
+<sanctus id="marie-rose-durocher" versio="1" genus="persona" status="beatus">
+  <nomen lingua="en" principale="verum">Marie Rose Durocher</nomen>
+  <nomen lingua="fr" fontes="cs">Eulalie-Mélanie Durocher</nomen>
+  <nomen lingua="fr" fontes="hom">Marie-Rose Durocher</nomen>
+  <ortus annus="1811" mensis="10" dies="6" locus="Saint-Antoine-sur-Richelieu" fontes="cs"/>
+  <obitus annus="1849" mensis="10" dies="6" fontes="cs"/>
+  <beatificatio annus="1982" mensis="5" dies="23" papa="John Paul II" fontes="cs hom"/>
+  <festum calendarium="usa" mensis="10" dies="6" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us cs">virgin</munus>
+  <munus fontes="cs">religious</munus>
+  <munus fontes="cs">foundress</munus>
+  <descriptio>
+    <paragraphus fontes="cs hom">Eulalie-Mélanie Durocher was born at Saint-Antoine-sur-Richelieu in Canada on 6 October 1811, into a large family that gave many of its members to consecrated life. Her poor health kept her out of the only two women's congregations then in Quebec, and for thirteen years she served in her brother's presbytery, keeping the house, taking in sick priests and seminarians, directing the parish's works of charity and fostering Marian devotion among young women.</paragraphus>
+    <paragraphus fontes="cs hom">At the request of the Bishop of Montreal, encouraged by the Oblates of Mary Immaculate and following the example of the Brothers of the Christian Schools, she founded the Sisters of the Holy Names of Jesus and Mary to educate girls, especially in the poor rural districts around Montreal. In the last six years of her short life she set the work firmly on its way. She died on 6 October 1849, only thirty-eight years old; her congregation later spread to the United States and beyond. John Paul II beatified her on 23 May 1982, naming prayer and forgetfulness of self as her secret.</paragraphus>
+  </descriptio>
+  <fons id="cs" opus="sedes" locus="Dicastero delle Cause dei Santi, Marie-Rose Durocher" url="https://www.causesanti.va/it/santi-e-beati/marie-rose-durocher.html">
+    <excerptum>Vergine, religiosa, fondatrice delle Suore dei Santi Nomi di Gesù e Maria per la formazione umana e cristiana della gioventù femminile</excerptum>
+    <excerptum>Eulalie-Mélanie Durocher era nata a Saint-Antoine-sur-Richelieu (Canada) il 6 ottobre 1811 in una famiglia numerosa e ricca di anime consacrate.</excerptum>
+    <excerptum>Morì a soli trentotto anni il 6 ottobre 1849.</excerptum>
+    <excerptum>È diffusa in varie parti del mondo, oltre al Canada e agli Stati Uniti</excerptum>
+    <excerptum>Papa Giovanni Paolo II l’ha dichiarata beata il 23 maggio 1982.</excerptum>
+  </fons>
+  <fons id="hom" opus="sedes" locus="Homily of John Paul II, proclamation of five new blesseds, 23 May 1982" url="https://www.vatican.va/content/john-paul-ii/it/homilies/1982/documents/hf_jp-ii_hom_19820523_beati.html">
+    <excerptum>A la recherche de sa propre vocation dans l’Église et ne pouvant entrer, avec sa pauvre santé, dans les deux seules congrégations féminines qui existaient alors au Québec, elle sert durant treize ans au presbytère de son frère</excerptum>
+    <excerptum>préoccupée non seulement de bien tenir la maison, mais d’accueillir les prêtres et séminaristes malades, de diriger les œuvres charitables de la paroisse et de stimuler la piété mariale des jeunes filles.</excerptum>
+    <excerptum>C’est alors, à la demande de l’Évêque de Montréal, avec l’encouragement des Pères Oblats de Marie Immaculée et selon l’exemple des Frères des Écoles chrétiennes, qu’elle fonde une nouvelle congrégation</excerptum>
+    <excerptum>notamment dans les milieux pauvres des campagnes auprès de Montréal: les Sœurs des Saints Noms de Jésus et de Marie. Durant les six dernières années de sa brève existence, elle a suffisamment lancé son œuvre</excerptum>
+    <excerptum>Son secret résidait dans la prière et l’oubli de soi-même qui atteignait, selon l’estimation de son Évêque, une véritable sainteté.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="6 October">
+    <excerptum>Blessed Marie Rose Durocher, Virgin</excerptum>
+  </fons>
+</sanctus>

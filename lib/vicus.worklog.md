@@ -573,3 +573,87 @@ gate run said the vates_responsum generator "wrote nothing" while
 the generator's output was byte-identical and the gate passed alone
 right after - transient, likely bin/norma rebuilt mid-gate by a
 parallel gate. Not chased.
+
+## 2026-10-17 - T4f: Cmd+] / Cmd+[ cycle the right stack
+
+`vicus_cyclum_ponere` registers the cycle types (vicus_applicatio:
+admonitiones, colloquia); Cmd+] / Cmd+[ queue a PetitioAcervi with
+`gradus` +1/-1, applied in vicus_pulsare in order, so each step reads
+the real stack (two presses in one frame = two steps). Home = topmost
+non-cycle pane (none: the bottom one; a step to the home's own type is
+skipped). Going home truncates the cycle panes above it (like Esc) and
+restores `focus_domus`, which `petitionem_applicare` records whenever
+a request moves the front off home - so the badge and
+`$notifications` start a cycle too.
+
+Pre-existing bug found on the way: `petitionem_applicare` called
+`id_novum` AFTER `xar_addere`, and after a truncation (Esc, or the
+cycle going home) the reused slot still holds the old pane - so its id
+was "taken" and a reopened notifications pane became
+`3_dextrum_admonitiones_2` (fresh mount, new ramus). id now chosen
+before the slot is added.
+
+Plants (silva.planta, radix filtrum vicus_acervus): 7 red (focus not
+restored / not recorded, home type not skipped, direction inverted,
+home always the bottom, id after xar_addere, unknown type accepted).
+GREEN, unobservable: dropping the `destinare` route for Cmd+[ ] - the
+focused panes (scriba, pictor) pass the chord up unconsumed and the
+root handler sees it anyway; kept as the same guard Cmd+digits have.
+
+## 2026-10-17 - T4f: agenda in the cycle (entries = type + argument)
+
+Fran wanted the agenda as the last stop. `$agenda` is calendarium with
+argument "agenda", so a type-only cycle would open the plain calendar
+and count ANY calendar pane (a month view kept as home) as a cycle
+pane. Cycle entries are now `LatusCycli` (genus + argumentum, the S3c
+identity) everywhere: membership, the home skip, and the open request.
+Plants (4, all red): identity ignoring the argument, argument not
+passed to the open, `argumenta` ignored by vicus_cyclum_ponere, home
+skip by type only.
+
+## 2026-10-19 — semitae R3: per-pane history, $via (project-specs/semitae-spec.md)
+
+- `VicusFacies.ramus` = a pane opts into routes (history, `$via`). The
+  saints pane is the first; the others follow in R4.
+- Recording: at the end of every `vicus_pulsare`, each opted-in pane's
+  FULL route (`semita_legere_plenam`, defaults explicit - canonical
+  routes omit defaults and "absent = keep", so they cannot restore
+  "back to the list") is compared with the entry at the pane's cursor:
+  equal -> nothing; same `historia="impelle"` fields (a "signum" of
+  their values, children included) -> the entry is replaced; otherwise
+  forward entries are dropped and a new entry pushed (cap C, oldest
+  dropped). Reads go to `v->scheda_semitarum`, cleared every pulse;
+  only recorded entries are copied into the vicus arena.
+- Entries keep a DEEP COPY of the route tree (`stml_duplicare`) for
+  applying, plus its text for comparing. Found by the test: STML
+  writes an empty attribute value as a bare attribute and reads it
+  back as boolean "true", so a text round trip turns "explicitly
+  empty" (`quaestio=""`) into `quaestio="true"` - which the
+  pagina_textus number check then refused. Text is fine for
+  comparison (both sides lose the same way), not for applying.
+- Ctrl+O / Ctrl+I in `radicem_tractare`, i.e. only after the focused
+  pane did not consume the key; acts on the FOCUSED pane and only if
+  it opted in (scriba keeps vim's Ctrl+O, the terminal its keys).
+  Applying makes the next pulse find the cursor entry equal, so it
+  records nothing.
+- Plants 9 red (one test tightened first: the "calendarium: semitas
+  nondum accipit" message, not just "calendarium"). Not planted: the
+  early "unchanged" exit (removing it replaces an equal entry -
+  harmless) and the start/end bounds (removing them crashes).
+
+## 2026-10-20 — semitae R4d: saved route beside the argument (restart)
+
+- `l->argumentum` is IDENTITY (acervus reuse, Cmd+]/[ cycle match
+  genus+argument) - overwriting it with the route would open a second
+  agenda calendar. The persistent route lives in `semita_servata`,
+  saved in the index as `semita="..."`.
+- Restore is LAZY: panes mount inside vicus_creare, before
+  vicus_organa_ponere, so `semitam_restituere` runs on the pane's first
+  pulse (history still NIHIL), then `semitam_secuta`.
+- `semitam_servare` writes the index once per pulse when any pane's
+  persistent route changed. First computation for a pane WITHOUT an
+  argument is silent: writing it appended an act on every launch, and
+  probatio_vicus_iussa / _quaestio broke because scriba's "cursor" is a
+  VOLUME SEQ (they assume no other act lands between) - that was the
+  symptom; the cause was a pointless startup write. Direct guard:
+  probatio_vicus_semitae `initium_tacitum` (acta count unchanged).

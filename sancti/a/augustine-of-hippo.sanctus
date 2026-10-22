@@ -1,0 +1,60 @@
+<sanctus id="augustine-of-hippo" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Augustine of Hippo</nomen>
+  <nomen lingua="en" fontes="bu">Austin</nomen>
+  <ortus annus="354" mensis="11" dies="13" locus="Tagaste, Numidia" fontes="ce bu"/>
+  <obitus annus="430" mensis="8" dies="28" locus="Hippo" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="8" dies="28" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="8" dies="28" fontes="mr"/>
+  <munus fontes="us mr ce">bishop</munus>
+  <munus fontes="us mr">doctor of the Church</munus>
+  <munus fontes="ce">priest</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Augustine was born at Tagaste in Numidia on 13 November 354, the son of Patricius, a pagan who was baptized before his death, and of Monica. Enrolled as a catechumen, he put off baptism, and as a student at Carthage he fell into a sinful liaison that gave him a son in 372. In 373, the year Cicero's Hortensius turned him to philosophy, he joined the Manichaeans, an error that lasted nine years. He taught at Tagaste and then rhetoric at Carthage, went to Italy in 383, and won a professorship at Milan, where the preaching of Bishop Ambrose drew him back to the faith. He was baptized by Ambrose at Easter 387; that autumn Monica died at Ostia as they were about to sail for Africa.</paragraphus>
+    <paragraphus fontes="ce mr">Back in Africa, he was ordained priest by popular demand in 391 and founded a monastery. Made coadjutor to Bishop Valerius, he governed the See of Hippo for thirty-four years, living in community with his clergy. He defended the faith against the Manichaeans, the Donatists and the Pelagians, and has been called the Doctor of Grace. He died on 28 August 430, in the seventy-sixth year of his age, early in the Vandal siege of Hippo. The Martyrology adds that his relics were taken to Sardinia and later to Pavia.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="28 August">
+    <excerptum>A T HSppo Kegius, in Africa, the birthday of St.</excerptum>
+    <excerptum>Augustine, bishop and famous doctor of the Church. Converted and baptized by the blessed bishop Ambrose, he defended the Catholic faith with the greatest zeal against the Manicheans and other heretics</excerptum>
+    <excerptum>His relics, owing to the invasion of barbarians, were first brought from his own city into Sardinia, and afterwards taken by Luitprand, king</excerptum>
+    <excerptum>of the Lombards, to Pavia, where they were deposited with due honors.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="Life of St. Augustine of Hippo" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Life_of_St._Augustine_of_Hippo">
+    <excerptum>Augustine was born at Tagaste on 13 November, 354.</excerptum>
+    <excerptum>his father, Patricius, one of the curiales of the city, was still a pagan. However, the admirable virtues that made Monica the ideal of Christian mothers at length brought her husband the grace of baptism and of a holy death</excerptum>
+    <excerptum>His mother had him signed with the cross and enrolled among the catechumens.</excerptum>
+    <excerptum>he deferred receiving the sacrament</excerptum>
+    <excerptum>when he reached Carthage, towards the end of the year 370</excerptum>
+    <excerptum>he had formed a sinful liaison with the person who bore him a son (372)</excerptum>
+    <excerptum>In this same year, 373, Augustine and his friend Honoratus fell into the snares of the Manichæans.</excerptum>
+    <excerptum>In fact, in 373, an entirely new inclination manifested itself in his life, brought about by the reading Cicero's "Hortensius" whence he imbibed a love of the wisdom which Cicero so eloquently praises. Thenceforward Augustine looked upon rhetoric merely as a profession; his heart was in philosophy.</excerptum>
+    <excerptum>The illusion had lasted nine years.</excerptum>
+    <excerptum>Possidius tells us that he returned to Tagaste to "teach grammar."</excerptum>
+    <excerptum>Soon afterwards Augustine went to Carthage, where he continued to teach rhetoric.</excerptum>
+    <excerptum>In 383 Augustine, at the age of twenty-nine, yielded to the irresistible attraction which Italy had for him</excerptum>
+    <excerptum>he applied for a vacant professorship at Milan, obtained it</excerptum>
+    <excerptum>But the religious crisis of this great soul was only to be resolved in Italy, under the influence of Ambrose.</excerptum>
+    <excerptum>Having visited Bishop Ambrose, the fascination of that saint's kindness induced him to become a regular attendant at his preachings.</excerptum>
+    <excerptum>with Adeodatus and Alypius, took his place among the competentes, being baptized by Ambrose on Easter Day, or at least during Eastertide.</excerptum>
+    <excerptum>In the autumn of 387, he was about to embark at Ostia, when Monica was summoned from this life.</excerptum>
+    <excerptum>Alypius, and Evodius resolved to retire into solitude in Africa.</excerptum>
+    <excerptum>begged Valerius, the bishop, to raise him to the priesthood. In spite of his tears Augustine was obliged to yield to their entreaties, and was ordained in 391.</excerptum>
+    <excerptum>thus enabling him to establish a monastery</excerptum>
+    <excerptum>Enfeebled by old age, Valerius, Bishop of Hippo, obtained the authorization of Aurelius, Primate of Africa, to associate Augustine with himself as coadjutor.</excerptum>
+    <excerptum>He was then forty two, and was to occupy the See of Hippo for thirty-four years.</excerptum>
+    <excerptum>his episcopal residence became a monastery where he lived a community life with his clergy</excerptum>
+    <excerptum>and lastly struggled indefatigably against all errors.</excerptum>
+    <excerptum>B. The Donatist Controversy and the Theory of the Church</excerptum>
+    <excerptum>he deserves to be named the Doctor of the Church as well as the Doctor of Grace</excerptum>
+    <excerptum>C. The Pelagian Controversy and the Doctor of Grace</excerptum>
+    <excerptum>but not with Genseric, the Vandal king. Boniface, vanquished, sought refuge in Hippo, whither many bishops had already fled for protection and this well fortified city was to suffer the horrors of an eighteen months' siege.</excerptum>
+    <excerptum>but early in the siege he was stricken with what he realized to be a fatal illness, and, after three months of admirable patience and fervent prayer, departed from this land of exile on 28 August, 430, in the seventy-sixth year of his age.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v08 Aug. 28 St. Augustine, Bishop, C. and Doctor of the Church">
+    <excerptum>was born on the thirteenth of November in the year 354, at Tagaste, a small town of Numidia in Africa</excerptum>
+    <excerptum>For the name of the great St. Austin</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="28 August">
+    <excerptum>Saint Augustine, Bishop and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

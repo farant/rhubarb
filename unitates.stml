@@ -39,7 +39,7 @@
        interrogationes.canon, spec par. VII - U5b) -->
   <munus titulus="interrogationes" extensiones=".interrogationes.stml"/>
   <munus titulus="documentum"  extensiones=".md .html"/>
-  <munus titulus="declaratio"  extensiones=".stml .canon .genera .census .toml .registrum"/>
+  <munus titulus="declaratio"  extensiones=".stml .canon .genera .census .toml .registrum .sanctus"/>
   <munus titulus="scriptum"    extensiones=".sh .py .ts .js .thistle"/>
 
   <lingua titulus="c89"    extensiones=".c .h"/>
@@ -48,7 +48,7 @@
   <lingua titulus="python" extensiones=".py"/>
   <lingua titulus="ts"     extensiones=".ts"/>
   <lingua titulus="js"     extensiones=".js"/>
-  <lingua titulus="stml"   extensiones=".stml .canon .genera .census"/>
+  <lingua titulus="stml"   extensiones=".stml .canon .genera .census .sanctus"/>
   <lingua titulus="md"     extensiones=".md"/>
   <lingua titulus="toml"   extensiones=".toml"/>
   <lingua titulus="css"    extensiones=".css"/>

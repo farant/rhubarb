@@ -1,0 +1,38 @@
+<sanctus id="faustina-kowalska" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Faustina Kowalska</nomen>
+  <nomen lingua="en" fontes="hom">Mary Faustina Kowalska</nomen>
+  <nomen lingua="alia" fontes="cs">Helena Kowalska</nomen>
+  <ortus annus="1905" mensis="8" dies="25" locus="Głogowiec" fontes="cs"/>
+  <obitus annus="1938" mensis="10" dies="5" locus="Kraków" fontes="cs"/>
+  <beatificatio annus="1993" mensis="4" dies="18" papa="John Paul II" fontes="cs"/>
+  <canonizatio modus="formalis" annus="2000" mensis="4" dies="30" papa="John Paul II" fontes="hom"/>
+  <festum calendarium="generale" mensis="10" dies="5" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us cs">virgin</munus>
+  <munus fontes="cs hom">religious</munus>
+  <descriptio>
+    <paragraphus fontes="cs">Helena Kowalska was born on 25 August 1905 at Głogowiec in Poland, the third of ten children of a peasant family. She had barely three years of schooling, and as a girl went into service with well-to-do families to support herself and help her parents. She felt a religious vocation from the age of seven but lacked her parents' consent; prompted by a vision of the suffering Christ, she went to Warsaw and on 1 August 1925 entered the Sisters of Our Lady of Mercy. As Sister Maria Faustina she spent thirteen years in the congregation's houses, chiefly at Kraków, Vilnius and Płock, working as cook, gardener and portress, outwardly ordinary but hiding a rich mystical life centred on the mystery of Divine Mercy.</paragraphus>
+    <paragraphus fontes="cs hom">Worn out by illness and by sufferings she accepted as a sacrifice for sinners, she died at Kraków on 5 October 1938, aged thirty-three. John Paul II beatified her on 18 April 1993 and canonized her on 30 April 2000. In the canonization homily he recalled her vision of the two rays of light shining from the heart of Christ, which Jesus told her "represent blood and water", and declared that the Second Sunday of Easter would henceforth be called "Divine Mercy Sunday" throughout the Church. Her relics are kept in the Divine Mercy sanctuary at Kraków-Łagiewniki.</paragraphus>
+  </descriptio>
+  <fons id="cs" opus="sedes" locus="Dicastero delle Cause dei Santi, Maria Faustyna Kowalska" url="https://www.causesanti.va/it/santi-e-beati/maria-faustyna-kowalska.html">
+    <excerptum>Helena Kowalska, nacque il 25 agosto 1905, terza di dieci figli, da Marianna e Stanislao Kowalski, contadini del villaggio di Głogowiec.</excerptum>
+    <excerptum>Frequentò la scuola per appena tre anni scarsi. Ancora adolescente abbandonò la casa dei genitori e andò a servizio presso alcune famiglie benestanti di Aleksandrów, Łódź e Ostrówek, per mantenersi e per aiutare i genitori.</excerptum>
+    <excerptum>Fin dal settimo anno di vita sentiva nella sua anima la vocazione religiosa, ma non avendo il consenso dei genitori per entrare in convento</excerptum>
+    <excerptum>Sollecitata poi da una visione di Cristo sofferente, partì per Varsavia dove il 1 agosto del 1925 entrò nel convento delle Suore della Beata Vergine Maria della Misericordia.</excerptum>
+    <excerptum>Col nome di Suor Maria Faustina trascorse in convento tredici anni nelle diverse case della Congregazione, soprattutto a Cracovia, Vilno e Płock, lavorando come cuoca, giardiniera e portinaia.</excerptum>
+    <excerptum>All'esterno nessun segno faceva sospettare la sua vita mistica straordinariamente ricca.</excerptum>
+    <excerptum>la vita di questa umile figlia della Polonia è stata completamente legata alla storia del ventesimo secolo</excerptum>
+    <excerptum>Alla base della sua spiritualità si trova il mistero della Misericordia Divina</excerptum>
+    <excerptum>distrutta dalla malattia e dalle varie sofferenze che sopportava volentieri come sacrificio per i peccatori</excerptum>
+    <excerptum>morì a Cracovia il 5 ottobre 1938 all'età di appena 33 anni.</excerptum>
+    <excerptum>Fu beatificata da Giovanni Paolo II in piazza San Pietro a Roma, il 18 aprile 1993. Le reliquie di Suor Faustina si trovano nel santuario della Divina Misericordia a Cracovia-Łagiewniki.</excerptum>
+    <excerptum>Vergine delle Suore della Beata Vergine Maria della Misericordia, si adoperò molto per manifestare il mistero della divina misericordia</excerptum>
+  </fons>
+  <fons id="hom" opus="sedes" locus="Homily of John Paul II, canonization of Sr. Mary Faustina Kowalska, 30 April 2000" url="https://www.vatican.va/content/john-paul-ii/en/homilies/2000/documents/hf_jp-ii_hom_20000430_faustina.html">
+    <excerptum>MASS IN ST PETER'S SQUARE FOR THE CANONIZATION OF SR MARY FAUSTINA KOWALSKA Sunday, 30 April 2000</excerptum>
+    <excerptum>From that heart Sr Faustina Kowalska, the blessed whom from now on we will call a saint, will see two rays of light shining from that heart and illuminating the world: "The two rays", Jesus himself explained to her one day, "represent blood and water"</excerptum>
+    <excerptum>this Second Sunday of Easter, which from now on throughout the Church will be called "Divine Mercy Sunday".</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="5 October">
+    <excerptum>Saint Faustina Kowalska, Virgin</excerptum>
+  </fons>
+</sanctus>

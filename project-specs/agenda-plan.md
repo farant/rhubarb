@@ -284,6 +284,11 @@ State-model question to settle before A2 (A1 is content only).
   library - review in project-specs/liturgia-recensio/RECENSIO.md
   (US calendar; other calendars a later design question).
 - Later: recurring items.
+- **Week view** DONE 2026-10-19 (Fran: Sunday first, open todos only,
+  notes after todos): `visus="hebdomas"`, seven day blocks with the
+  celebration, birthdays, open todos and the day book's lines (read
+  through the new read-only `scriba_liber_lineas_legere`), "+n" on
+  overflow. Detail: lib/kalendarium.worklog.md.
 
 ## V. AUDIENDA
 

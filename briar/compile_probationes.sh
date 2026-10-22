@@ -104,6 +104,8 @@ declare -a RADIX_FONTES=(
     "moneta"
     "fasti"
     "volumen"
+    "hora_hybrida"   # volumen D2: identitas actuum
+    "machina_posix"
     "silex"
     # briar -app (spec par. 4.8): fasciculum et quae trahit
     # (bin/aedilis lib/fasciculum.c --partes, 2026-09-14)

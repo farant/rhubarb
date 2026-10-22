@@ -1,0 +1,52 @@
+<sanctus id="elizabeth-of-portugal" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Elizabeth of Portugal</nomen>
+  <nomen lingua="es" fontes="ce">Isabel</nomen>
+  <ortus annus="1271" fontes="ce bu"/>
+  <obitus annus="1336" mensis="7" dies="4" locus="Estremoz" fontes="bu ce"/>
+  <canonizatio modus="formalis" annus="1625" papa="Urban VIII" fontes="ce bu"/>
+  <festum calendarium="usa" mensis="7" dies="5" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="7" dies="4" nota="commemorated at Lisbon; the Martyrology refers her festival to 8 July" fontes="mr4"/>
+  <festum calendarium="martyrologium" mensis="7" dies="8" fontes="mr8"/>
+  <munus fontes="mr8 ce">queen</munus>
+  <munus fontes="mr8">widow</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Elizabeth, known in Portuguese history by the Spanish form of her name, Isabel, was born in 1271, a daughter of Peter III, King of Aragon, and was named after her great-aunt Elizabeth of Hungary. Raised piously, she lived strictly from childhood, saying the whole Divine Office daily and fasting. At twelve she was married to Denis (Diniz), King of Portugal, whose morals were bad and whose court was corrupt; she kept her religious practices, bore with him patiently, and gave all the time she could to the poor and the sick. Only late in his life, it is said, did her prayers win him to repentance.</paragraphus>
+    <paragraphus fontes="ce bu">She was remembered as a peacemaker. In 1323 she rode in person between the armies of her husband and their son Affonso, who had rebelled, and reconciled them. After Denis died in 1325 she retired to the convent of Poor Clares she had founded at Coimbra and took the Franciscan Tertiary habit. In 1336, old and weak, she hurried to Estremoz, where the armies of Affonso IV and the King of Castile were drawn up, stopped the fighting and had peace arranged, and then died there of a fever on 4 July 1336. She was buried at Coimbra, and Urban VIII canonized her in 1625.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Elizabeth of Portugal" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Elizabeth_of_Portugal">
+    <excerptum>Elizabeth of Portugal, Saint, Queen (sometimes known as The Peacemaker); b. in 1271; d. in 1336.</excerptum>
+    <excerptum>She was named after her great-aunt, the great Elizabeth of Hungary, but is known in Portuguese history by the Spanish form of that name, Isabel.</excerptum>
+    <excerptum>The daughter of Pedro III, King of Aragon</excerptum>
+    <excerptum>she was educated very piously, and led a life of strict regularity and self-denial from her childhood; she said the full Divine Office daily, fasted and did other penances, and gave up amusement.</excerptum>
+    <excerptum>Elizabeth was married very early to Diniz (Denis), King of Portugal</excerptum>
+    <excerptum>His morals, however, were extremely bad, and the court to which his young wife was brought consequently most corrupt.</excerptum>
+    <excerptum>Nevertheless, Elizabeth quietly pursued the regular religious practices of her maidenhood, whilst doing her best to win her husband's affections by gentleness and extraordinary forbearance.</excerptum>
+    <excerptum>Diniz does not appear to have reformed in morals till late in life, when we are told that the saint won him to repentance by her prayers and unfailing sweetness.</excerptum>
+    <excerptum>She was devoted to the poor and sick, and gave every moment she could spare to helping them</excerptum>
+    <excerptum>a son Affonso. The latter so greatly resented the favors shown to the king's illegitimate sons that he rebelled</excerptum>
+    <excerptum>in 1323 war was declared between him and his father. St. Elizabeth, however, rode in person between the opposing armies, and so reconciled her husband and son.</excerptum>
+    <excerptum>Diniz died in 1325, his son succeeding him as Affonso IV. St. Elizabeth then retired to a convent of Poor Clares which she had founded at Coimbra, where she took the Franciscan Tertiary habit</excerptum>
+    <excerptum>In 1336 Affonso IV marched his troops against the King of Castile</excerptum>
+    <excerptum>In spite of age and weakness, the holy queen dowager insisted on hurrying to Estremoz, where the two kings' armies were drawn up. She again stopped the fighting and caused terms of peace to be arranged.</excerptum>
+    <excerptum>But the exertion brought on her final illness; and as soon as her mission was fulfilled she died of a fever</excerptum>
+    <excerptum>St. Elizabeth was buried at Coimbra, and miracles followed her death. She was canonized by Urban VIII in 1625</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v07 Jul. 8 S. Elizabeth, Queen of Portugal">
+    <excerptum>Our saint was born in 1271, and received at the baptismal font by the name of Elizabeth, from her aunt St. Elizabeth of Hungary</excerptum>
+    <excerptum>At twelve years of age she was given in marriage to Dionysius king of Portugal.</excerptum>
+    <excerptum>from her childhood said every day the whole office of the breviary</excerptum>
+    <excerptum>She went to Estremoz, upon the frontiers of Portugal and Castille, where her son was; but she arrived ill of a violent fever</excerptum>
+    <excerptum>she gave up her happy ees to God on the fourth of July in the year 1336, of her age sixty-five.</excerptum>
+    <excerptum>She was canonized by Urban VIII. in 1625</excerptum>
+  </fons>
+  <fons id="mr4" opus="mr1916" locus="4 July">
+    <excerptum>vigilance, and the gift of miracles. — At Lisbon, St.</excerptum>
+    <excerptum>Elizabeth, widow, queen of Portugal, whose festival is celebrated on the 8th of this month, by order of Innocent XII.</excerptum>
+  </fons>
+  <fons id="mr8" opus="mr1916" locus="8 July">
+    <excerptum>T. ELIZABETH, widow, queen of Portugal. Being renowned for virtues and miracles, she was numbered among the saints by Urban VIII.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="5 July">
+    <excerptum>Saint Elizabeth of Portugal</excerptum>
+  </fons>
+</sanctus>

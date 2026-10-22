@@ -1,0 +1,45 @@
+<sanctus id="isidore-the-farmer" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Isidore the Farmer</nomen>
+  <nomen lingua="en" fontes="ce">Isidore the Labourer</nomen>
+  <nomen lingua="en" fontes="bu">Isidore of Madrid</nomen>
+  <nomen lingua="es" fontes="ce">Isidro</nomen>
+  <ortus annus="1070" circa="verum" locus="near Madrid" fontes="ce"/>
+  <obitus annus="1130" mensis="5" dies="15" locus="near Madrid" fontes="ce"/>
+  <beatificatio annus="1619" papa="Paul V" fontes="bu"/>
+  <canonizatio modus="formalis" annus="1622" mensis="3" dies="12" papa="Gregory XV" fontes="ce mr bu"/>
+  <festum calendarium="usa" mensis="5" dies="15" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="5" dies="10" fontes="mr"/>
+  <munus fontes="mr ce">labourer</munus>
+  <patrocinium fontes="ce">peasants and day-labourers</patrocinium>
+  <patrocinium fontes="ce bu">Madrid</patrocinium>
+  <patrocinium fontes="ce">Leon, Saragossa and Seville</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce bu">Isidore was a Spanish farm labourer, born of poor but devout parents near Madrid and named after St. Isidore of Seville. He worked all his life on the land of Juan de Vargas near Madrid, hearing Mass each morning before going to work; legend tells that his master, checking on complaints that he came late, found an angel ploughing in his place. He married Maria Torribia, herself venerated in Spain as a saint; their only son died young, and the couple afterwards lived in continence. Butler stresses that he relieved the poor only out of his own wages and treated his master's work as his duty to God.</paragraphus>
+    <paragraphus fontes="ce bu mr">The Catholic Encyclopedia dates his birth to about 1070 and his death to 15 May 1130; Butler gives 15 May 1170, when he was near sixty. Forty years after his death his body was moved into the church of St. Andrew. Paul V beatified him in 1619, and Gregory XV canonized him on 12 March 1622 together with Ignatius, Francis Xavier, Teresa and Philip Neri. He is venerated as patron of peasants and day-labourers and of Madrid and other Spanish cities.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="10 May">
+    <excerptum>At Madrid, St. Isidore, a laborer. Being renowned for miracles, pope Gregory XV. placed him in the number of the Saints at the same time with St. Ignatius, St. Francis, St. Theresa, and St. Philip.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Isidore the Labourer" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Isidore_the_Labourer">
+    <excerptum>A Spanish daylabourer; b. near Madrid, about the year 1070; d. 15 May, 1130, at the same place. He was in the service of a certain Juan de Vargas on a farm in the vicinity of Madrid.</excerptum>
+    <excerptum>Every morning before going to work he was accustomed to hear a Mass at one of the churches in Madrid.</excerptum>
+    <excerptum>One day his fellow-labourers complained to their master that Isidore was always late for work in the morning. Upon investigation, so runs the legend, the master found Isidore at prayer, while an angel was doing the ploughing for him.</excerptum>
+    <excerptum>He was married to Maria Torribia, a canonized saint, who is venerated in Spain as Maria della Cabeza</excerptum>
+    <excerptum>They had one son, who died in his youth.</excerptum>
+    <excerptum>Hereupon the parents made a vow of continence and lived in separate houses. Forty years after Isidore's death, his body was transferred from the cemetery to the church of St. Andrew.</excerptum>
+    <excerptum>He was canonized by Gregory XV, along with Sts. Ignatius, Francis Xavier, Teresa, and Philip Neri, on 12 March, 1622. St. Isidore is widely venerated as the patron of peasants and day-labourers. The cities of Madrid, Leon, Saragossa, and Seville also, honour him as their patron.</excerptum>
+    <excerptum>It served as the basis for LOPE DE VEGA's religious poem San Isidro (1599).</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v05 May 10 St. Isidore of Madrid, Labourer">
+    <excerptum>ST. ISIDORE OF MADRID, LABOURER, PATRON OF MADRID.</excerptum>
+    <excerptum>He was born at Madrid, of poor but very devout parents, and was christened Isidore from the name of their patron, St. Isidore of Seville.</excerptum>
+    <excerptum>St. Isidore continued always in the service of the same piaster.</excerptum>
+    <excerptum>much less did the good servant indulge his compassionate charity to’ the poor, by relieving them otherwise than out of his own salary.</excerptum>
+    <excerptum>that his duty to his master was his duty to God.</excerptum>
+    <excerptum>he expired on the fifteenth of May 1170, being near sixty years of age.</excerptum>
+    <excerptum>St. Isidore had been beatified a little before by Paul Vv. in 1619, at the solicitation of the same © king. His solemn canonization was performed, at the request of king Philip IV. on the twelfth of March, 1622</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="15 May">
+    <excerptum>Saint Isidore</excerptum>
+  </fons>
+</sanctus>

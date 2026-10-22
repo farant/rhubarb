@@ -1,0 +1,43 @@
+<sanctus id="callistus-i" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Callistus I</nomen>
+  <nomen lingua="la" fontes="ce">Callixtus</nomen>
+  <nomen lingua="la" fontes="ce">Calixtus</nomen>
+  <obitus annus="223" circa="verum" locus="Rome" martyrium="verum" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="10" dies="14" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="10" dies="14" fontes="mr"/>
+  <munus fontes="us mr">pope</munus>
+  <munus fontes="us mr ce">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Callistus was a Roman by birth, according to Butler, and succeeded Zephyrinus as bishop of Rome around 217 to 219; the sources agree on an episcopate of about five years. Most of what is known of him comes from his bitter enemies, Hippolytus and Tertullian. By their account he had been the slave of a Christian named Carpophorus, lost money entrusted to him, fled, and was later sent to the mines of Sardinia, from which he was released. Under Pope Zephyrinus he was put in charge of the Church's own cemetery, which still bears his name. The Catholic Encyclopedia judges that these hostile stories were answered by later scholars and that the Church sides with Callistus.</paragraphus>
+    <paragraphus fontes="ce mr bu">His opponents attacked an edict in which he granted Communion, after due penance, to those guilty of adultery and fornication. He is the earliest pope named in the fourth-century list of martyrs, which the Catholic Encyclopedia takes as good evidence of his martyrdom, although he lived in a time of peace under Alexander Severus. The Martyrology says that he was starved and scourged in prison, thrown from a window and cast into a well. The date is uncertain: the Catholic Encyclopedia gives about 223, while Butler gives 12 October 222. He was buried in the cemetery of Calepodius on the Aurelian Way, and his feast has long been kept on 14 October.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Pope Callistus I" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Pope_Callistus_I">
+    <excerptum>(Written by most Latins, Augustine, Optatus, etc. CALLIXTUS or CALIXTUS).</excerptum>
+    <excerptum>Martyr, died c. 223. His contemporary, Julius Africanus, gives the date of his accession as the first (or second?) year of Elagabalus, i.e., 218 or 219. Eusebius and the Liberian catalogue agree in giving him five years of episcopate.</excerptum>
+    <excerptum>he is the earliest pope found the fourth-century "Depositio Martirum", and this is good evidence that he was really a martyr, although he lived in a time of peace under Alexander Severus</excerptum>
+    <excerptum>He was buried in the cemetery of Calepodius on the Aurelian Way</excerptum>
+    <excerptum>and by the subsequent martyrologies on 14 October, on which day his feast is still kept.</excerptum>
+    <excerptum>Our chief knowledge of this pope is from his bitter enemies, Tertullian and the antipope who wrote the "Philosophumena", no doubt Hippolytus.</excerptum>
+    <excerptum>Callistus was the slave of Carpophorus, a Christian of the household of Caesar.</excerptum>
+    <excerptum>with which he started a bank in which brethren and widows lodged money, all of which Callistus lost. He took to flight.</excerptum>
+    <excerptum>and Callistus was sent to the mines in Sardinia.</excerptum>
+    <excerptum>Marcia sent a eunuch who was a priest (or "old man") to release the prisoners.</excerptum>
+    <excerptum>Callistus fell at his feet, and persuaded him to take him also.</excerptum>
+    <excerptum>When Zephyrinus became pope, Callistus was recalled and set over the cemetery belonging to the Church, not a private catacomb; it has ever since borne Callistus's name.</excerptum>
+    <excerptum>Döllinger and De Rossi have demolished this contemporary scandal.</excerptum>
+    <excerptum>in a famous edict he granted Communion after due penance to those who had committed adultery and fornication.</excerptum>
+    <excerptum>it is clear that the Catholic church sides with Callistus against the schismatic Hippolytus and the heretic Tertullian.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v10 Oct. 14 St. Calixtus or Callistus, Pope, Martyr">
+    <excerptum>a Roman by birth; succeeded St. Zephirin in the pontificate in 217 or 218</excerptum>
+    <excerptum>His apostolic labours were recompensed with the crown of martyrdom on the twelfth of October 222.</excerptum>
+    <excerptum>testifies that he was buried on the fourteenth of this month in the cemetery of Calepodius</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="14 October">
+    <excerptum>AT Rome, on the Aurelian road, the birthday of blessed Callistus, pope and martyr. By order of the emperor Alexander, after being a long time kept in prison without food, and daily scourged with rods, he was finally hurled from the window of the house in which he had been shut up, and cast into a well</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="14 October">
+    <excerptum>Saint Callistus I, Pope and Martyr</excerptum>
+  </fons>
+</sanctus>

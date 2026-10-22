@@ -101,6 +101,7 @@ _probare_latera (
                   Vicus* v;
     NomenclatorMontatio* prima;
     NomenclatorMontatio* altera;
+                 chorda  id;
 
     x = (Mundus*)c->datum;
     CREDO_NECESSE(aedificare(x, c));
@@ -119,12 +120,12 @@ _probare_latera (
     CREDO_NECESSE_NON_NIHIL(altera);
     CREDO_VERUM(altera != prima);
     CREDO_VERUM(altera->documentum == prima->documentum);
-    /* persona in documento communi: in utroque latere */
-    CREDO_VERUM(personae_hominem_creare(prima->documentum,
-        chorda_ex_literis("Anna", c->piscina),
-        chorda_ex_literis("Rossi",
-        c->piscina)) > ZEPHYRUM);
-    CREDO_AEQUALIS_S32(nomenclator_persona_electa(altera), I);
+    /* persona in documento communi: in utroque latere (D3: id ULID
+     * documenti vici) */
+    id = personae_hominem_creare(prima->documentum, chorda_ex_literis(
+        "Anna", c->piscina), chorda_ex_literis("Rossi", c->piscina));
+    CREDO_AEQUALIS_I32(id.mensura, XXVI);
+    CREDO_CHORDA_AEQUALIS(nomenclator_persona_electa(altera), id);
 }
 
 /* '$contacts' in pagina scribae: ictus in verbo latus nomenclatoris
@@ -177,7 +178,7 @@ _probare_novam (
     CREDO_NECESSE(manus_ludus_premere(m, "#nomenclator"));
     CREDO_VERUM(manus_ludus_scribere(m, "nAnna Rossi"));
     CREDO_VERUM(manus_ludus_clavem(m, (character)XIII, ZEPHYRUM));
-    q = personae_persona(n->documentum, I);
+    q = personae_index(n->documentum, ZEPHYRUM);
     CREDO_NECESSE_NON_NIHIL(q);
     CREDO_CHORDA_AEQUALIS_LITERIS(q->praenomen, "Anna");
     CREDO_CHORDA_AEQUALIS_LITERIS(q->cognomen, "Rossi");
@@ -201,6 +202,8 @@ _probare_notas (
        ScribaDocumentum* d;
                     i32  i;
                     b32  inventa;
+       constans Persona* q;
+              character  clavis[XLVIII];
 
     x = (Mundus*)c->datum;
     CREDO_NECESSE(aedificare(x, c));
@@ -225,9 +228,14 @@ _probare_notas (
     CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
     (vacuum)motus_gestum_effundere(dispensator_motus(x->app.d),
         x->app.vicus->repo);
+    /* D3: liber "persona/<ULID>" */
+    q = personae_index(nomenclator_frontalis(v)->documentum, ZEPHYRUM);
+    CREDO_NECESSE(q && q->id.mensura == XXVI);
+    sprintf(clavis, "persona/%.*s", (integer)q->id.mensura,
+        (constans character*)q->id.datum);
     l = scriba_liber_aperire_in_spatio(c->piscina,
-        internamentum_creare(c->piscina), x->volumen, "persona/1",
-        LXXII, XXX);
+        internamentum_creare(c->piscina), x->volumen, clavis, LXXII,
+        XXX);
     d = l ? scriba_liber_pagina(l, chorda_ex_literis("1", c->piscina))
           : NIHIL;
     CREDO_NECESSE_NON_NIHIL(d);
@@ -269,14 +277,18 @@ _probare_argumentum (
      PersonaeDocumentum* doc;
     NomenclatorMontatio* n;
                  chorda* a;
+                    i32  numerator;
 
     x = (Mundus*)c->datum;
     CREDO_NECESSE(x && x->volumen);
     doc = personae_aperire(c->piscina, internamentum_creare(c->piscina),
         x->volumen, "personae", ZEPHYRUM);
-    CREDO_NECESSE(doc && personae_hominem_creare(doc, chorda_ex_literis(
-        "Anna", c->piscina), chorda_ex_literis("Rossi", c->piscina))
-        == I);
+    numerator = ZEPHYRUM;
+    personae_monetam_ponere(doc, moneta_numerator, &numerator);
+    CREDO_NECESSE(doc
+        && chorda_aequalis_literis(personae_hominem_creare(
+        doc, chorda_ex_literis("Anna", c->piscina), chorda_ex_literis(
+        "Rossi", c->piscina)), "1"));
     CREDO_NECESSE(aedificare(x, c));
     v = x->app.vicus;
     CREDO_VERUM(vicus_acervo_aperire(v, "nomenclator", "1"));
@@ -302,16 +314,21 @@ _probare_ad_natalem (
       KalendariumMontatio* k;
                    chorda* a;
                      Dies  d;
+                      i32  numerator;
 
     x = (Mundus*)c->datum;
     CREDO_NECESSE(x && x->volumen);
     doc = personae_aperire(c->piscina, internamentum_creare(c->piscina),
         x->volumen, "personae", ZEPHYRUM);
-    CREDO_NECESSE(doc && personae_hominem_creare(doc, chorda_ex_literis(
-        "Anna", c->piscina), chorda_ex_literis("Rossi", c->piscina))
-        == I);
+    numerator = ZEPHYRUM;
+    personae_monetam_ponere(doc, moneta_numerator, &numerator);
+    CREDO_NECESSE(doc
+        && chorda_aequalis_literis(personae_hominem_creare(
+        doc, chorda_ex_literis("Anna", c->piscina), chorda_ex_literis(
+        "Rossi", c->piscina)), "1"));
     d = fasti_dies(MCMLXXXVI, XII, XXV);
-    CREDO_NECESSE(personae_natalem_ponere(doc, I, &d) > ZEPHYRUM);
+    CREDO_NECESSE(personae_natalem_ponere(doc, chorda_ex_literis("1",
+        c->piscina), &d) > ZEPHYRUM);
     CREDO_NECESSE(aedificare(x, c));
     v                 = x->app.vicus;
     x->tempus.annus   = MMXXVI;

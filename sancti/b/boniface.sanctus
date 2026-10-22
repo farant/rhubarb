@@ -1,0 +1,51 @@
+<sanctus id="boniface" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Boniface</nomen>
+  <nomen lingua="alia" fontes="ce">Winfrid</nomen>
+  <ortus saeculum="7" fontes="ce"/>
+  <obitus annus="755" mensis="6" dies="5" locus="Dokkum" martyrium="verum" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="6" dies="5" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="6" dies="5" fontes="mr"/>
+  <munus fontes="ce">monk</munus>
+  <munus fontes="ce mr us">bishop</munus>
+  <munus fontes="mr us">martyr</munus>
+  <patrocinium fontes="ce">brewers</patrocinium>
+  <patrocinium fontes="ce">tailors</patrocinium>
+  <patrocinium fontes="ce">file-cutters</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">Winfrid, called the Apostle of Germany, was a native of England, probably of the south-western part of Wessex; the year of his birth is uncertain. He became a Benedictine monk and was ordained priest at thirty. After a first attempt in Friesland in 716 he went to Rome, where on 15 May 719 Pope Gregory II gave him authority to preach the Gospel to the heathens of Germany. He spent three years in Friesland under the aged St. Willibrord and converted many in Thuringia and Hesse, and on 30 November 722 (or 723) the pope consecrated him a regional bishop with the name Boniface.</paragraphus>
+    <paragraphus fontes="ce">At Geismar he felled the oak sacred to Thor, and many were converted. Gregory III made him an archbishop. He founded monasteries such as Fritzlar, saw the erection of new dioceses confirmed by Pope Zachary in 742, and held synods; the abbey of Fulda was established under his supervision by St. Sturm. Zachary named him Archbishop of Mainz in 748 (or 747). In 754 he resigned Mainz to his disciple Lullus and took up again the conversion of the Frisians.</paragraphus>
+    <paragraphus fontes="ce mr">While waiting to confirm new converts at Dokkum he was killed by heathens with fifty-two companions (thirty-seven according to some), on 5 June 755 or 754; the Martyrology names Eobanus among them. His body was finally laid at Fulda. Pius IX extended his feast to the whole Church in 1874, and brewers, tailors and file-cutters have taken him as their patron.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Boniface" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Boniface">
+    <excerptum>(WINFRID, WYNFRITH). Apostle of Germany, date of birth unknown; martyred 5 June, 755 (754)</excerptum>
+    <excerptum>He was a native of England, though some authorities have claimed him for Ireland or Scotland. The place of his birth is not known, though it was probably the south-western part of Wessex.</excerptum>
+    <excerptum>It seems, however, safe to say that he was not born before 672 or 675, or as late as 680.</excerptum>
+    <excerptum>He made his profession as a member of the Benedictine Order and was placed in charge of the monastic school. At the age of thirty he was ordained priest.</excerptum>
+    <excerptum>In 716 he set out for the mission in Friesland.</excerptum>
+    <excerptum>Here he spent three years under the aged St. Willibrord, travelling about with tireless energy and preaching fearlessly as he went.</excerptum>
+    <excerptum>continued his journey to Thuringia, where he converted many. He then went into Hessia, where many more were brought into the fold of Christ.</excerptum>
+    <excerptum>on 15 May, 719, he gave him full authority to preach the Gospel to the heathens in Germany to the right of the Rhine</excerptum>
+    <excerptum>on 30 November, 722 (723), consecrated him a regional bishop, with the name Boniface.</excerptum>
+    <excerptum>Boniface felled the oak sacred to the thunder-god Thor, at Geismar, near Fritzlar.</excerptum>
+    <excerptum>The heathens were astonished that no thunderbolt from the hand of Thor destroyed the offender, and many were converted.</excerptum>
+    <excerptum>Another monastery he founded at Fritzlar near the River Eder, which was completed in 734.</excerptum>
+    <excerptum>Pope Zachary, 1 April, 742, confirmed the erection of the dioceses, sanctioned the holding of the synod</excerptum>
+    <excerptum>This he did by frequently holding synods and by enforcing the sacred canons.</excerptum>
+    <excerptum>especially at Fulda, which had been established under his supervision by St. Sturm</excerptum>
+    <excerptum>Gregory III congratulated him on his success and praised his zeal, in recognition sending him the pallium, and making him an archbishop, but still without a fixed see.</excerptum>
+    <excerptum>Pope Zachary, 1 May, 748 (747), appointed Boniface Archbishop of Mainz and Primate of Germany.</excerptum>
+    <excerptum>he took up the work he had dreamed of in early manhood, the conversion of the Frisians.</excerptum>
+    <excerptum>he in 754 resigned the Archdiocese of Mainz to his disciple Lullus</excerptum>
+    <excerptum>he ordered the new converts to assemble for confirmation at Dorkum on the River Borne. The heathens fell upon them and murdered Boniface and fifty-two companions (according to some, thirty-seven).</excerptum>
+    <excerptum>later, according to a wish expressed by the saint himself during his lifetime, to the Abbey of Fulda.</excerptum>
+    <excerptum>On 11 June, 1874, Pope Pius IX extended the celebration to the entire world. Brewers, tailors, and file-cutters have chosen St. Boniface as their patron</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="5 June">
+    <excerptum>BONIFACE, bishop of Mayence, who came from England to Rome, and was sent by Gregory II. to Germany to preach the faith of Christ to the people of that country.</excerptum>
+    <excerptum>Being finally put to the sword by the furious Gentiles, he consummated his martyrdom with Eobanus and some other servants of God.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="5 June">
+    <excerptum>Saint Boniface, Bishop and Martyr</excerptum>
+  </fons>
+</sanctus>

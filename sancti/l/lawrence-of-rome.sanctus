@@ -1,0 +1,33 @@
+<sanctus id="lawrence-of-rome" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Lawrence of Rome</nomen>
+  <obitus annus="258" mensis="8" dies="10" locus="Rome" martyrium="verum" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="8" dies="10" gradus="festum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="8" dies="10" fontes="mr"/>
+  <munus fontes="us ce mr">deacon</munus>
+  <munus fontes="us ce mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Lawrence was one of the deacons of the Roman Church and died in the persecution of Valerian. Early in August 258 the emperor ordered that bishops, priests and deacons be put to death at once; Pope Sixtus II was seized in a catacomb and executed on 6 August, and four days later, on 10 August, Lawrence, the last of the seven deacons, was also martyred. The calendar of 354 already keeps his anniversary on that day and names his grave on the Via Tiburtina. Since the fourth century he has been one of the most honoured martyrs of the Roman Church.</paragraphus>
+    <paragraphus fontes="ce mr">St. Ambrose relates that, when asked for the treasures of the Church, Lawrence brought forward the poor among whom he had divided them, and that he was burned on a gridiron; the Martyrology likewise says that, after imprisonment, scourging and hot metal plates, he was slowly consumed on an iron gridiron. The Catholic Encyclopedia cautions that these details rest on oral tradition and that the manner of death raises grave doubts, but holds that Lawrence was a real person whose martyrdom, place and date of burial are not in question. He is shown in art with the gridiron.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Lawrence (2)" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Lawrence_(2)">
+    <excerptum>Lawrence, Saint, martyr; d. 10 August, 258. St. Lawrence, one of the deacons of the Roman Church, was one of the victims of the persecution of Valerian in 258</excerptum>
+    <excerptum>At the beginning of the month of August, 258, the emperor issued an edict, commanding that all bishops, priests, and deacons should immediately be put to death</excerptum>
+    <excerptum>On 6 August Pope Sixtus II was apprehended in one of the catacombs, and executed forthwith</excerptum>
+    <excerptum>Four days later, on the 10th of August of that same year, Lawrence, the last of the seven deacons, also suffered a martyr's death.</excerptum>
+    <excerptum>according to the Almanac of Philocalus for the year 354, the inventory of which contains the principal feasts of the Roman martyrs of the middle of the fourth century; it also mentions the street where his grave is to be found, the Via Tiburtina</excerptum>
+    <excerptum>Since the fourth century St. Lawrence has been one of the most honoured martyrs of the Roman Church.</excerptum>
+    <excerptum>when St. Lawrence was asked for the treasures of the Church he brought forward the poor, among whom he had divided the treasure</excerptum>
+    <excerptum>The saintly Bishop of Milan also states that St. Lawrence was burned to death on a gird-iron</excerptum>
+    <excerptum>The manner of his execution—burning on a red-hot gridiron—also gives rise to grave doubts. The narrations of Ambrose and Prudentius are founded rather on oral tradition than on written accounts.</excerptum>
+    <excerptum>there can be no question that St. Lawrence was a real historical personage, nor any doubt as to the martyrdom of that venerated Roman deacon, the place of its occurrence, and the date of his burial.</excerptum>
+    <excerptum>He is pictured in art with the gridiron on which he is supposed to have been roasted to death.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="10 August">
+    <excerptum>Rome, on the Tiburtine road, the birthday of the blessed archdeacon Lawrence, a martyr during the persecution of Valerian.</excerptum>
+    <excerptum>After much suffering from imprisonment, from scourging with whips set with iron or lead, from hot metal plates, he at last completed his martyrdom by being slowly consumed on an iron instrument made in the form of a gridiron.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="10 August">
+    <excerptum>Saint Lawrence, Deacon and Martyr</excerptum>
+  </fons>
+</sanctus>

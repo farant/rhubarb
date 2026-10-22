@@ -25,6 +25,11 @@
 #   latinae 182 -> 181 (2026-09-29): lib/toml.c deletum in toml Q12
 #     (74642c4f) - cliens toml/fontes eum substituit; porta tunc non
 #     debita erat, ergo contractio hic primum visa.
+#   adversarii 24 -> 32 (2026-10-21, a1b658d4, …YR99SJ1): limes
+#     stringificationis solutus - pinna 'stringificatio' VERUM et VIII
+#     formae novae (intra expansionem, cum argumento nudo, bis,
+#     multi-lexematis, CHORDA primum, intra argumentum alterius, per
+#     macrum intermedium, argumentum vacuum).
 #   * 2026-09-25 (silva-migratio T10d): M1 subarbores OMNES generum
 #     probandorum confert, non IV per genus - shim (nodi supremi
 #     omnes) recessit. 281 -> 492, corpus idem, utroque oraculo.
@@ -58,7 +63,7 @@ subarbores fixum 492
 planae     fixum 78
 latinae    vivum 181
 hospes     fixum 40
-adversarii fixum 24
+adversarii fixum 32
 haruspex   vivum 279
 "
 

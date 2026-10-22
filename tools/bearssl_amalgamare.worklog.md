@@ -38,3 +38,21 @@ walk itself is ledgered as tool debt.
 FABRICA_SCRIPTURA honoured (inputs from the tree, outputs under the
 scratch root) - without it fabrica judged IGNOTUM "generator nihil
 scripsit".
+
+## 2026-10-17 - complete inputs, memorabilis (81 s off every plenus judge)
+
+The generata gate spent 81 of its 157 s regenerating this action: it was
+not `memorabilis`, so `iudicare -plenus` re-ran it every time. It could
+not simply be marked: its declared `plagulae vendor/bearssl/src` covers
+directory LEVEL 0 only (3 files), while `os.walk` reads 293 more in 12
+subdirectories - the input key ignored them (shown with `bin/fabrica
+digestum` before the fix: an edit in src/ssl/ and a new subdirectory
+left the key unchanged). Now each subdirectory is a `plagulae` input,
+`directorium vendor/bearssl/src` covers the names, and the action is
+`memorabilis="verum"`. Measured: judge 65 s -> 5 s ("memoria"); an edit
+in src/ssl/ -> STALUM (regenerated, differs). A NEW subdirectory would
+change the key only once and then hide its contents again, so the
+generator now refuses unless src's subdirectories are exactly the
+declared twelve (SUBDIRECTORIA) and src is one level deep - output
+byte-identical. A general fix is an `arbor` input kind (whole tree by
+suffix; FABRICA_LOCUS_ARBOR exists) - parked.

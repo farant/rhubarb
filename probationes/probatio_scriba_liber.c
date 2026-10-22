@@ -36,7 +36,7 @@ _parare (
     intern   = internamentum_creare(piscina);
 }
 
-/* SECTIO UNA (credo II): scaena gradibus I-VIII nominatis
+/* SECTIO UNA (credo II): scaena gradibus I-IX nominatis
  * (CREDO_GRADUS) - volumen et liber per gradus crescunt, ergo gradus
  * sectiones liberae esse non possunt */
 interior vacuum
@@ -196,11 +196,82 @@ _sectio_prima (
         CREDO_VERUM(dd && tabula_cellula(scriba_documentum_tabula(dd),
             ZEPHYRUM, ZEPHYRUM) != 'z');
     }
+
+    CREDO_GRADUS("IX: lineae libri, lectio sola");
+    {
+             ScribaLiber* ld;
+        ScribaDocumentum* dd;
+                     Xar* x;
+
+        /* liber absens: nullae lineae, nihil scriptum */
+        x = xar_creare(piscina, (i32)magnitudo(chorda));
+        CREDO_VERUM(scriba_liber_lineas_legere(piscina, intern, vol,
+            "dies/2026-10-20", ZEPHYRUM, x));
+        CREDO_AEQUALIS_I32(xar_numerus(x), ZEPHYRUM);
+        (vacuum)volumen_plagulam_promere(vol,
+            lit("dies/2026-10-20/paginae"), piscina, &inventum);
+        CREDO_FALSUM(inventum);
+        /* paginae duae; lineae vacuae et spatiorum solae omissae,
+         * spatia initialia servata; pagina tertia in indice sine
+         * documento non creatur */
+        ld = scriba_liber_aperire_in_spatio(piscina, intern, vol,
+            "dies/2026-10-21", XL, X);
+        dd = scriba_liber_pagina(ld, lit("1"));
+        CREDO_NECESSE_NON_NIHIL(dd);
+        tabula_ex_literis_cum_dimensionibus(&folium, piscina, XL, X,
+            "alpha\n\n   \n\t\n  beta");
+        CREDO_VERUM(scriba_documentum_committere(dd, &folium)
+            > ZEPHYRUM);
+        dd = scriba_liber_pagina(ld, scriba_liber_pagina_nova(ld));
+        CREDO_NECESSE_NON_NIHIL(dd);
+        tabula_ex_literis_cum_dimensionibus(&folium, piscina, XL, X,
+            "gamma");
+        CREDO_VERUM(scriba_documentum_committere(dd, &folium)
+            > ZEPHYRUM);
+        n = scriba_liber_pagina_nova(ld);
+        CREDO_CHORDA_AEQUALIS_LITERIS(n, "3");
+        x = xar_creare(piscina, (i32)magnitudo(chorda));
+        CREDO_VERUM(scriba_liber_lineas_legere(piscina, intern, vol,
+            "dies/2026-10-21", ZEPHYRUM, x));
+        CREDO_AEQUALIS_I32(xar_numerus(x), III);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(x,
+            ZEPHYRUM),
+            "alpha");
+        CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(x, I),
+            "  beta");
+        CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(x, II),
+            "gamma");
+        CREDO_VERUM(scriba_documentum_aperire(piscina, intern, vol,
+            "dies/2026-10-21/paginae/3") == NIHIL);
+        /* tabula ('\t' + continuatio, II cellulae) = spatia duo */
+        ld = scriba_liber_aperire_in_spatio(piscina, intern, vol,
+            "dies/2026-10-22", XL, X);
+        dd = scriba_liber_pagina(ld, lit("1"));
+        CREDO_NECESSE_NON_NIHIL(dd);
+        tabula_ex_literis_cum_dimensionibus(&folium, piscina, XL, X,
+            "a\tb");
+        CREDO_VERUM(scriba_documentum_committere(dd, &folium)
+            > ZEPHYRUM);
+        x = xar_creare(piscina, (i32)magnitudo(chorda));
+        CREDO_VERUM(scriba_liber_lineas_legere(piscina, intern, vol,
+            "dies/2026-10-22", ZEPHYRUM, x));
+        CREDO_AEQUALIS_I32(xar_numerus(x), I);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(x,
+            ZEPHYRUM),
+            "a  b");
+        /* maximum */
+        x = xar_creare(piscina, (i32)magnitudo(chorda));
+        CREDO_VERUM(scriba_liber_lineas_legere(piscina, intern, vol,
+            "dies/2026-10-21", II, x));
+        CREDO_AEQUALIS_I32(xar_numerus(x), II);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(x, I),
+            "  beta");
+    }
     volumen_claudere(vol);
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
-    { "liber paginarum (scenarium I-VIII)", _sectio_prima, _parare,
+    { "liber paginarum (scenarium I-IX)", _sectio_prima, _parare,
         NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

@@ -19,6 +19,12 @@ Leges chartae:
 
 ## inedita
 
+- corpus: `hora_hybrida` addita (hora logica hybrida, genera-datorum
+  D2); `volumen` nunc `machina` et `hora_hybrida` trahit - acta
+  identitatem (`hora`, `machina`) et basim ferunt (`VolumenActum`
+  campi `identitas`, `basis`; `volumen_actum_super_appendere`,
+  `volumen_actum_identitas`), volumina vetera in aperiendo migrantur
+  (VII-XI).
 - corpus: pictor - aspergillum (MacPaint): `PictorActiones` campos
   `tempora`, `semen` addit; `pictor_aspergillum_ictus`, `pictor_gutta`
   novae; actum `<ictus instrumentum="aspergillum" semen>` cum `t`

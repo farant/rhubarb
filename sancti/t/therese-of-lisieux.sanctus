@@ -1,0 +1,38 @@
+<sanctus id="therese-of-lisieux" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Thérèse of Lisieux</nomen>
+  <nomen lingua="en" fontes="us">Thérèse of the Child Jesus</nomen>
+  <nomen lingua="fr" fontes="cs">Thérèse Françoise Marie Martin</nomen>
+  <nomen lingua="it" fontes="cs">Teresa di Gesù Bambino</nomen>
+  <ortus annus="1873" mensis="1" dies="2" locus="Alençon" fontes="cs"/>
+  <obitus annus="1897" mensis="9" dies="30" fontes="cs"/>
+  <beatificatio annus="1923" mensis="4" dies="29" papa="Pius XI" fontes="cs"/>
+  <canonizatio modus="formalis" annus="1925" mensis="5" dies="17" papa="Pius XI" fontes="cs"/>
+  <festum calendarium="generale" mensis="10" dies="1" gradus="memoria" fontes="us"/>
+  <munus fontes="us cs">virgin</munus>
+  <munus fontes="cs">religious</munus>
+  <munus fontes="us cs">doctor of the Church</munus>
+  <patrocinium fontes="cs">missionaries</patrocinium>
+  <descriptio>
+    <paragraphus fontes="cs">Thérèse Martin was born at Alençon on 2 January 1873, the last of eight children of a devout family of jewellers. She lost her mother at four, and saw her sisters enter the Carmel one after another. At only fifteen she entered the Carmel of Lisieux herself, by special permission of Leo XIII, whom she had gone to Rome to implore, and in religion took the name Sister Thérèse of the Child Jesus and of the Holy Face. Her desire was to save souls and above all to pray for priests.</paragraphus>
+    <paragraphus fontes="cs">At her superior's suggestion she kept a journal of the stages of her inner life. Her teaching, the "little way" of spiritual childhood, grounds the love of God not in great deeds but in the small acts of every day. Misunderstood by her sisters in the Carmel, she accepted injustice, illness and suffering, offering everything for the needs of the Church, and John Paul II and Benedict XVI saw the heart of her spirituality in her openness to God's love and her answer to it even in the "night" of the spirit. She died of tuberculosis on 30 September 1897, aged twenty-four by the biography (the elogium on the same page says twenty-five), after nine years of religious life. Pius XI beatified her in 1923 and canonized her on 17 May 1925; she was declared patroness of missionaries, and John Paul II proclaimed her a Doctor of the Church on 19 October 1997.</paragraphus>
+  </descriptio>
+  <fons id="cs" opus="sedes" locus="Dicastero delle Cause dei Santi, Teresa di Gesù Bambino (di Lisieux)" url="https://www.causesanti.va/it/santi-e-beati/teresa-di-gesu-bambino-di-lisieux.html">
+    <excerptum>Beatificazione: - 29 aprile 1923 - Papa Pio XI Celebrazione Canonizzazione: - 17 maggio 1925 - Papa Pio XI - Basilica Vaticana</excerptum>
+    <excerptum>Cappella papale di Papa Giovanni Paolo II per la proclamazione di Santa Teresa di Lisieux Dottore della Chiesa 19 ottobre 1997</excerptum>
+    <excerptum>Religiosa, vergine e dottore della Chiesa: entrata ancora adolescente nel Carmelo di Lisieux in Francia</excerptum>
+    <excerptum>Thérèse Françoise Marie Martin nasce Alençon il 2 gennaio 1873 da una coppia di commercianti in oreficeria, molto credenti</excerptum>
+    <excerptum>Ultima di otto figli, tre dei quali morti bambini. Orfana di madre all’età di quattro anni, rivive il dramma dell’abbandono per il progressivo ingresso in Carmelo delle quattro sorelle</excerptum>
+    <excerptum>Entra a sua volta nel Carmelo di Lisieux a soli 15 anni, per uno speciale permesso di papa Leone XIII, che Teresa stessa era andata a supplicare, a Roma</excerptum>
+    <excerptum>Il desiderio della ragazza era “salvare le anime” e soprattutto “pregare in aiuto dei sacerdoti”. Suor Teresa di Gesù Bambino e del Volto Santo è il nome assunto al momento della professione dei voti.</excerptum>
+    <excerptum>Su suggerimento della superiora, inizia subito a tenere un diario sul quale annota le tappe della sua vita interiore.</excerptum>
+    <excerptum>chiamata anche “teologia della piccola via" o dell'infanzia spirituale, che fonda la pratica dell’amore per Dio non nelle grandi azioni, ma negli atti quotidiani pur apparentemente insignificanti.</excerptum>
+    <excerptum>Concluse la sua vita il 30 settembre, all’età di soli 25 anni</excerptum>
+    <excerptum>Non compresa dalle sorelle del Carmelo, Teresa dichiara di aver ricevuto “più spine che rose”, ma accetta con pazienza ingiustizie e persecuzioni come pure dolori e fatiche derivanti dalla malattia, offrendo tutto “per i bisogni della Chiesa”</excerptum>
+    <excerptum>Per Giovanni Paolo II e Benedetto XVI lo specifico della sua spiritualità è la totale apertura all’invasione dell’amore di Dio, la capacità di rispondere a questo amore anche nella “notte” dello spirito</excerptum>
+    <excerptum>e per questo dichiarata patrona dei missionari.</excerptum>
+    <excerptum>Dopo nove anni di vita religiosa, Teresa muore a soli 24 anni, il 30 settembre del 1897, a causa della tubercolosi</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="1 October">
+    <excerptum>Saint Thérèse of the Child Jesus, Virgin and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

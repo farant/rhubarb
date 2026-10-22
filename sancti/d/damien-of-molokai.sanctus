@@ -1,0 +1,40 @@
+<sanctus id="damien-of-molokai" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Damien of Molokai</nomen>
+  <nomen lingua="alia" fontes="sd">Jozef Damiaan De Veuster</nomen>
+  <nomen lingua="en" fontes="ce">Joseph de Veuster</nomen>
+  <ortus annus="1840" mensis="1" dies="3" locus="Tremeloo, Belgium" fontes="ce"/>
+  <obitus annus="1889" mensis="4" dies="15" locus="Molokai, Hawaii" fontes="ce"/>
+  <canonizatio modus="formalis" annus="2009" mensis="10" dies="11" papa="Benedict XVI" fontes="sd"/>
+  <festum calendarium="usa" mensis="5" dies="10" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="ce us">priest</munus>
+  <munus fontes="ce">religious</munus>
+  <munus fontes="ce">missionary</munus>
+  <descriptio>
+    <paragraphus fontes="ce sd">Joseph de Veuster was born at Tremeloo in Belgium on 3 January 1840, the son of a small farmer. After a Redemptorist mission in 1858 he decided to become a religious, entered the Congregation of the Sacred Hearts of Jesus and Mary at Louvain, took the name Damien, and was professed in 1860. Still in minor orders, he was sent to the Hawaiian Islands, arriving in March 1864, and was ordained priest at Honolulu that May. He worked in several districts of the island of Hawaii and built chapels with his own hands.</paragraphus>
+    <paragraphus fontes="ce sd">On 10 May 1873, at his own request and with his bishop's approval, he went to the government's leper settlement on Molokai as its resident priest; there were then about six hundred lepers. For years he alone brought them help, dressing their sores, helping them build their cottages, digging their graves and making their coffins. In 1885 he found that he had caught the disease himself, but kept on working until he became helpless; he died on 15 April 1889. Benedict XVI canonized him on 11 October 2009, describing him as having become "a leper with the lepers".</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Father Damien (Joseph de Veuster)" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Father_Damien_(Joseph_de_Veuster)">
+    <excerptum>Missionary priest, born at Tremeloo, Belgium, 3 January 1840; died at Molokai, Hawaii, 15 April 1889.</excerptum>
+    <excerptum>His father, a small farmer, sent him to a college at Braine-le-Comte</excerptum>
+    <excerptum>as a result of a mission given by the Redemptorists in 1858, Joseph decided to become a religious. He entered the novitiate of the Fathers of the Sacred Heart of Jesus and Mary at Louvain, and took in religion the name of Damien. He was admitted to the religious profession, 7 Oct. 1860.</excerptum>
+    <excerptum>Three years later, though still in minor orders, he was sent to the mission of the Hawaiian Islands, where he arrived, 19 March, 1864. Ordained priest at Honolulu 24 May of the same year</excerptum>
+    <excerptum>he was later given charge of various districts on the island of Hawaii</excerptum>
+    <excerptum>He was not only the missionary of the natives, but also constructed several chapels with his own hands</excerptum>
+    <excerptum>On the latter island there had grown up a leper settlement where the Government kept segregated all persons afflicted with the loathsome disease.</excerptum>
+    <excerptum>On 10 May, 1873, Father Damien, at his own request and with the sanction of his bishop, arrived at the settlement as its resident priest. There were then 600 lepers.</excerptum>
+    <excerptum>For a long time, however, Father Damien was the only one to bring them the succour they so greatly needed.</excerptum>
+    <excerptum>He dressed their ulcers, helped them erect their cottages, and went so far as to dig their graves and make their coffins.</excerptum>
+    <excerptum>After twelve years of this heroic service he discovered in himself the first symptoms of the disease. This was in 1885. He nevertheless continued his charitable ministrations</excerptum>
+    <excerptum>On 28 March, 1889, Father Damien became helpless and passed away shortly after</excerptum>
+  </fons>
+  <fons id="sd" opus="sedes" locus="Benedict XVI, homily for the canonization of five new saints, 11 October 2009" url="https://www.vatican.va/content/benedict-xvi/en/homilies/2009/documents/hf_ben-xvi_hom_20091011_canonizzazioni.html">
+    <excerptum>FOR THE CANONIZATION OF FIVE NEW SAINTS ZYGMUNT SZCZĘSNY FELIŃSKI (1822 – 1895) FRANCISCO COLL Y GUITART (1812 – 1875) JOZEF DAMIAAN DE VEUSTER (1840 – 1889)</excerptum>
+    <excerptum>HOMILY OF HIS HOLINESS BENEDICT XVI Vatican Basilica Sunday, 11 October 2009</excerptum>
+    <excerptum>Jozef De Veuster received the name of Damien in the Congregation of the Sacred Hearts of Jesus and Mary.</excerptum>
+    <excerptum>he chose to go to the Island of Molokai to serve the lepers who lived there, abandoned by all.</excerptum>
+    <excerptum>The servant of the Word consequently became a suffering servant, a leper with the lepers, for the last four years of his life.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="10 May">
+    <excerptum>Saint Damien de Veuster, Priest</excerptum>
+  </fons>
+</sanctus>

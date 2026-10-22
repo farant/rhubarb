@@ -1,0 +1,39 @@
+<sanctus id="thomas-the-apostle" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Thomas the Apostle</nomen>
+  <nomen lingua="el" fontes="ce">Didymus</nomen>
+  <obitus martyrium="verum" fontes="mr21"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="7" dies="3" gradus="festum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="12" dies="21" fontes="mr21"/>
+  <festum calendarium="martyrologium" mensis="7" dies="3" nota="translation of his relics from India to Edessa" fontes="mr3"/>
+  <munus fontes="us mr21">apostle</munus>
+  <munus fontes="mr21">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Little is recorded of Thomas, one of the Twelve, called Didymus, "the twin". The Gospel of John gives him a distinctive part: when Jesus announced that he would return to Judea to visit Lazarus he said, "Let us also go, that we may die with him"; in the discourse before the Last Supper he asked how they could know the way; and he refused to believe in the Resurrection until he could touch the wounds, then eight days later made his act of faith. According to the Catholic Encyclopedia this exhausts all certain knowledge of him.</paragraphus>
+    <paragraphus fontes="mr21 ce mr3">The Martyrology says he preached to the Parthians, Medes, Persians and Hyrcanians, reached India, and died pierced with lances by order of the king. The tradition that he preached in India was widespread, but the Catholic Encyclopedia finds no adequate support for the belief that he went as far south as Mylapore and was martyred there, though the local tradition is strong. His reputed relics were certainly at Edessa in the fourth century and were later taken to Ortona; the Martyrology keeps the translation to Edessa on 3 July.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Thomas the Apostle" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Thomas_the_Apostle">
+    <excerptum>Little is recorded of St. Thomas the Apostle, nevertheless thanks to the fourth Gospel his personality is clearer to us than that of some others of the Twelve.</excerptum>
+    <excerptum>"Thomas" who is called Didymus [the twin], said to his fellow disciples: "Let us also go, that we may die with him" (John 11:16).</excerptum>
+    <excerptum>First, when Jesus announced His intention of returning to Judea to visit Lazarus</excerptum>
+    <excerptum>Again it was St. Thomas who during the discourse before the Last Supper raised an objection: "Thomas saith to him: Lord, we know not whither thou goest; and how can we know the way?"</excerptum>
+    <excerptum>But more especially St. Thomas is remembered for his incredulity when the other Apostles announced Christ's Resurrection to him</excerptum>
+    <excerptum>and put my finger into the place of the nails, and put my hand into his side, I will not believe" (John 20:25); but eight days later he made his act of faith</excerptum>
+    <excerptum>This exhausts all our certain knowledge regarding the Apostle</excerptum>
+    <excerptum>though the tradition that St. Thomas preached in "India" was widely spread in both East and West</excerptum>
+    <excerptum>still it is difficult to discover any adequate support for the long-accepted belief that St. Thomas pushed his missionary journeys as far south as Mylapore, not far from Madras, and there suffered martyrdom.</excerptum>
+    <excerptum>the tradition that it was here that St. Thomas laid down his life is locally very strong.</excerptum>
+    <excerptum>the reputed relics of St. Thomas were certainly at Edessa in the fourth century, and there they remained until they were translated to Chios in 1258 and towards to Ortona.</excerptum>
+  </fons>
+  <fons id="mr21" opus="mr1916" locus="21 December">
+    <excerptum>T Calamina, the birthday of the blessed apostle Thomas, who preached the Gospel to the Parthians, the Medes, the Persians and Hyrcanians.</excerptum>
+    <excerptum>Having finally penetrated into India, and instructed those nations in the Christian religion, he died transpierced with lances by order of the king.</excerptum>
+    <excerptum>His remains were first taken to the city of Edessa and then to Ortona.</excerptum>
+  </fons>
+  <fons id="mr3" opus="mr1916" locus="3 July">
+    <excerptum>At Edessa, in Mesopotamia, the translation of the apostle St. Thomas from India. His relics were afterwards taken to Tortona.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="3 July">
+    <excerptum>Saint Thomas, Apostle</excerptum>
+  </fons>
+</sanctus>

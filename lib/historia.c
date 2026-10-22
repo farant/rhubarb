@@ -92,20 +92,28 @@ acta_viva (
          s64   ad,
          Xar** coniuncta)
 {
-             Xar* omnia;
-             Xar* viva;
-    VolumenActum* a;
-    VolumenActum* sedes;
-             i32  i;
-             i32  n;
-             i32  k;
-             s64  ab;
-    StmlResultus  res;
-             Xar* notae;
-             b32  pendens;
-             b32* nota;
+                   Xar* omnia;
+                   Xar* viva;
+          VolumenActum* a;
+          VolumenActum* sedes;
+                   i32  i;
+                   i32  n;
+                   i32  k;
+                   s64  ab;
+          StmlResultus  res;
+                   Xar* notae;
+                   b32  pendens;
+                   b32* nota;
+    constans character* genera[IV];
 
-    omnia    = volumen_acta_legere(h->volumen, post, h->piscina);
+    /* acta generum suorum sola (per indicem acta_genus): ceterorum
+     * documentorum et voluminis acta numquam leguntur */
+    genera[ZEPHYRUM]  = h->genus;
+    genera[I]         = h->genus_rami;
+    genera[II]        = h->genus_coniunctionis;
+    genera[III]       = NIHIL;
+    omnia    = volumen_acta_generum_legere(h->volumen, post, genera,
+        h->piscina);
     viva     = xar_creare(h->piscina, (i32)magnitudo(VolumenActum));
     notae    = xar_creare(h->piscina, (i32)magnitudo(b32));
     pendens  = FALSUM;
@@ -473,14 +481,22 @@ historia_aperire (
     /* R5: nota cursoris ultima, nisi actum, ramus aut coniunctio eam
      * secutum est (tum ad finem, ut olim) */
     {
-                  Xar* omnia;
-         VolumenActum* a;
-                  s64  notatus;
-                  i32  i;
-                  i32  k;
-         StmlResultus  res;
+                   Xar* omnia;
+          VolumenActum* a;
+                   s64  notatus;
+                   i32  i;
+                   i32  k;
+          StmlResultus  res;
+    constans character* genera[V];
 
-        omnia    = volumen_acta_legere(volumen, ZEPHYRUM, piscina);
+        genera[ZEPHYRUM]  = h->genus_cursoris;
+        genera[I]         = h->genus;
+        genera[II]        = h->genus_rami;
+        genera[III]       = h->genus_coniunctionis;
+        genera[IV]        = NIHIL;
+        omnia    = volumen_acta_generum_legere(volumen, ZEPHYRUM,
+            genera,
+            piscina);
         notatus  = -I;
         per (i = ZEPHYRUM; i < xar_numerus(omnia); i++)
         {
@@ -582,12 +598,37 @@ actum_appendere (
       chorda  actum,
          b32  coniunctum)
 {
-       s64 seq;
-    chorda ramus;
+                 s64 seq;
+              chorda ramus;
+    VolumenIdentitas basis;
+           character machina_basis[LXIV];
+      PiscinaNotatio nota;
 
     si (!h || chorda_vacua(actum))
     {
         redde ZEPHYRUM;
+    }
+    /* D2b: basis = actum ad cursorem (statum contra quem fit); ANTE
+     * notas, quae cursorem non movent sed seq sumunt */
+    basis.hora             = ZEPHYRUM;
+    basis.machina.datum    = NIHIL;
+    basis.machina.mensura  = ZEPHYRUM;
+    si (h->cursor > ZEPHYRUM)
+    {
+        /* lectio in piscinam documenti, statim reficitur: actum
+         * quodque aliter chordam machinae in ea relinqueret */
+        nota = piscina_notare(h->piscina);
+        si (   !volumen_actum_identitas(h->volumen, h->cursor,
+                h->piscina, &basis)
+            || basis.machina.mensura >= (i32)magnitudo(machina_basis))
+        {
+            piscina_reficere(h->piscina, nota);
+            redde ZEPHYRUM;
+        }
+        memcpy(machina_basis, basis.machina.datum,
+            (size_t)basis.machina.mensura);
+        basis.machina.datum = (i8*)machina_basis;
+        piscina_reficere(h->piscina, nota);
     }
     si (h->cursor < h->finis)
     {
@@ -608,7 +649,8 @@ actum_appendere (
         volumen_actum_appendere(h->volumen, h->genus_coniunctionis,
             chorda_ex_literis("<coniunctio/>", h->piscina));
     }
-    seq = volumen_actum_appendere(h->volumen, h->genus, actum);
+    seq = volumen_actum_super_appendere(h->volumen, h->genus, actum,
+        basis);
     si (seq <= ZEPHYRUM)
     {
         redde ZEPHYRUM;

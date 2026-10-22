@@ -87,6 +87,36 @@ runae_latitudo (
     redde (i32)(_valor(runa) & RUNAE_LATITUDO_MASCULA);
 }
 
+/* quaestio binaria in RUNAE_BASES (ordine runae) */
+s32
+runae_basis (
+    s32 runa)
+{
+    i32 infima;
+    i32 summa;
+
+    infima  = ZEPHYRUM;
+    summa   = (i32)RUNAE_BASES_NUMERUS;
+    dum (infima < summa)
+    {
+        i32 media = infima + (summa - infima) / II;
+
+        si (RUNAE_BASES[media][ZEPHYRUM] == runa)
+        {
+            redde RUNAE_BASES[media][I];
+        }
+        si (RUNAE_BASES[media][ZEPHYRUM] < runa)
+        {
+            infima = media + I;
+        }
+        alioquin
+        {
+            summa = media;
+        }
+    }
+    redde runa;
+}
+
 vacuum
 runae_rupturam_initiare (
     RunaeRuptura* ruptura)

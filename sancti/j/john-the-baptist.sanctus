@@ -1,0 +1,55 @@
+<sanctus id="john-the-baptist" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">John the Baptist</nomen>
+  <ortus saeculum="1" circa="verum" fontes="ce"/>
+  <obitus saeculum="1" martyrium="verum" fontes="ce mr2"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="6" dies="24" gradus="sollemnitas" nota="Nativity" fontes="us"/>
+  <festum calendarium="generale" mensis="8" dies="29" gradus="memoria" nota="Passion" fontes="us2"/>
+  <festum calendarium="martyrologium" mensis="6" dies="24" nota="Nativity" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="8" dies="29" nota="Beheading" fontes="mr2"/>
+  <munus fontes="ce">prophet</munus>
+  <munus fontes="mr ce">precursor</munus>
+  <munus fontes="mr2">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce mr">John was the son of the priest Zachary and of Elizabeth, a kinswoman of Mary; St. Luke, the fullest source, tells how an angel announced his birth to his aged father in the Temple. The Martyrology records that he was filled with the Holy Ghost while still in his mother's womb. Nothing certain can be said of the date of his birth beyond the Gospel's hint that he was born about six months before Christ. He lived in the desert until, in the fifteenth year of Tiberius, he began preaching penance through the country about the Jordan, clothed in camel's hair and living on locusts and wild honey, and baptizing, so that he was called the Baptist in his own lifetime. He baptized Jesus and pointed Him out as the Lamb of God.</paragraphus>
+    <paragraphus fontes="ce mr2">For rebuking Herod Antipas over his union with Herodias, his half-brother's wife, he was imprisoned, according to Josephus in the fortress of Machaerus, and at Herodias's demand, made through her dancing daughter, he was beheaded. The Catholic Encyclopedia warns that the liturgical date of his death, 29 August, can hardly be relied upon; the Martyrology explains that the commemoration falls on the day his head was found for the second time. His Nativity is one of the oldest, perhaps the oldest, feasts of a saint in both Greek and Latin liturgies.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. John the Baptist" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._John_the_Baptist">
+    <excerptum>Of these St. Luke is the most complete, giving as he does the wonderful circumstances accompanying the birth of the Precursor and items on his ministry and death.</excerptum>
+    <excerptum>Zachary, the father of John the Baptist, was a priest of the course of Abia</excerptum>
+    <excerptum>calls her the "cousin" (syggenis) of Mary.</excerptum>
+    <excerptum>a child born to an aged couple</excerptum>
+    <excerptum>And there appeared to him an angel of the Lord, standing on the right side of the altar of incense.</excerptum>
+    <excerptum>As to the date of the birth of John the Baptist, nothing can be said with certainty. The Gospel suggests that the Precursor was born about six months before Christ</excerptum>
+    <excerptum>"the child grew, and was strengthened in spirit; and was in the deserts, until the day of his manifestation to Israel"</excerptum>
+    <excerptum>"In the fifteenth year of the reign of Tiberius Caesar. . .the word of the Lord was made unto John, the son of Zachary, in the desert. And he came into all the country about the Jordan, preaching"</excerptum>
+    <excerptum>but in those "of camel's hair, and a leather girdle about his loins"</excerptum>
+    <excerptum>"was locusts and wild honey"</excerptum>
+    <excerptum>for the simple folk, he was truly a prophet</excerptum>
+    <excerptum>"Do penance: for the kingdom of heaven is at hand" (Matt., iii, 2), such was the burden of his teaching.</excerptum>
+    <excerptum>he was surnamed "the Baptist" (i. e. Baptizer) even during his lifetime</excerptum>
+    <excerptum>when Jesus came from Galilee to the Jordan, to be baptized by him.</excerptum>
+    <excerptum>Behold the Lamb of God, behold him who taketh away the sin of the world.</excerptum>
+    <excerptum>both Perea and Galilee made up the tetrarchy of Herod Antipas.</excerptum>
+    <excerptum>he fell in love with his niece Herodias, the wife of his half-brother Philip</excerptum>
+    <excerptum>John dared to rebuke the tetrarch for his evil deeds, especially his public adultery.</excerptum>
+    <excerptum>Josephus tell us quite another story, containing perhaps also an element of truth.</excerptum>
+    <excerptum>and he imprisoned him in the fortress of Machaerus</excerptum>
+    <excerptum>when the daughter of the same Herodias [Josephus gives her name: Salome] had come in, and had danced, and pleased Herod</excerptum>
+    <excerptum>But she said: The head of John the Baptist.</excerptum>
+    <excerptum>The date of John the Baptist's death, 29 August, assigned in the liturgical calendars can hardly be relied upon, because it is scarcely based upon trustworthy documents.</excerptum>
+    <excerptum>The commemoration of his Nativity is one of the oldest feasts, if not the oldest feast, introduced into both the Greek and Latin liturgies to honour a saint.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="24 June">
+    <excerptum>Nativity of St. John the Baptist, precursor of our Lord, son of Zachary and Elizabeth, who, while yet in his mother's womb, was filled with the Holy Ghost.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="29 August">
+    <excerptum>beheading of St. John the Baptist, who was put to death by Herod about the feast of Easter. However, the solemn commemoration takes place today, when his venerable head was found for the second time.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="24 June">
+    <excerptum>THE NATIVITY OF SAINT JOHN THE BAPTIST</excerptum>
+  </fons>
+  <fons id="us2" opus="usccb2026" locus="29 August">
+    <excerptum>The Passion of Saint John the Baptist</excerptum>
+  </fons>
+</sanctus>

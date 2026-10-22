@@ -1,0 +1,43 @@
+<sanctus id="john-of-avila" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">John of Ávila</nomen>
+  <ortus annus="1500" mensis="1" dies="6" locus="Almodóvar del Campo, Spain" fontes="ce sd"/>
+  <obitus annus="1569" mensis="5" dies="10" locus="Montilla" fontes="ce sd"/>
+  <beatificatio papa="Leo XIII" fontes="ce sd"/>
+  <canonizatio modus="formalis" annus="1970" mensis="5" dies="31" papa="Paul VI" fontes="sd"/>
+  <festum calendarium="generale" mensis="5" dies="10" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="ce sd us">priest</munus>
+  <munus fontes="ce">preacher</munus>
+  <munus fontes="sd us">doctor of the Church</munus>
+  <patrocinium fontes="sd">diocesan clergy of Spain</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">John was born at Almodóvar del Campo in the diocese of Toledo on 6 January 1500. He studied law at Salamanca, left it after a year for three years of austere life at home, and then studied philosophy and theology at Alcalá. After his ordination he sold the family property and gave the proceeds to the poor, meaning to go as a missionary to Mexico; but while he waited at Seville in 1527 the archbishop, Alfonso Manrique, persuaded him to stay and preach in Andalusia instead. From his first sermon in 1529 crowds filled the churches. Accused before the Inquisition of exaggerating the dangers of wealth, he was quickly cleared.</paragraphus>
+    <paragraphus fontes="ce sd">He preached for some forty years in Seville, Córdoba, Granada and other towns; among his disciples were St. Teresa, St. John of God and St. Francis Borgia, and his best-known work is the Audi Fili. In 1538 Paul III authorized him to found the University of Baeza. Ill for many years, he withdrew in 1554 to Montilla, where he died on 10 May 1569. He was beatified by Leo XIII (the sources differ on the date, 1893 or 1894), canonized by Paul VI on 31 May 1970, and declared a Doctor of the Church by Benedict XVI on 7 October 2012.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Bl. John of Avila" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Bl._John_of_Avila">
+    <excerptum>Apostolic preacher of Andalusia and author, b. at Almodóvar del Campo, a small town in the diocese of Toledo, Spain, 6 January, 1500; d. at Montilla, 10 May, 1569.</excerptum>
+    <excerptum>At the age of fourteen he was sent to the University of Salamanca to study law. Conceiving a distaste for jurisprudence he returned after a year to his father's home, where he spent the next three years in the practice of most austere piety.</excerptum>
+    <excerptum>he took up the study of philosophy and theology at Alcalá</excerptum>
+    <excerptum>after his ordination he celebrated his first Mass in the church where they were buried, sold the family property and gave the proceeds to the poor. He saw in the severing of natural ties a vocation to foreign missionary work and made preparation to go to Mexico in America.</excerptum>
+    <excerptum>While awaiting, at Seville in 1527, a favorable opportunity to start for his new field of labour</excerptum>
+    <excerptum>the archbishop and general inquisitor, Don Alphonso Manrique. The archbishop saw in the young missionary a powerful instrument to stir up the faith of Andalusia, and after considerable persuasion Blessed John was induced to abandon his journey to America.</excerptum>
+    <excerptum>His first sermon was preached on 22 July, 1529, and immediately his reputation was established; crowds thronged the churches at all his sermons.</excerptum>
+    <excerptum>he was brought before the inquisitor and charged with exaggerating the dangers of wealth and closing the gates of heaven to the rich. His innocence of the charges was speedily proved</excerptum>
+    <excerptum>After nine years in that province he returned to Seville only to depart for the wider fields of Cordova, Granada, Bolza, Montilla, and Zafra. For eighteen years before his death he was the victim of constant illness, the results of the hardships of his apostolate of forty years.</excerptum>
+    <excerptum>beatified by Leo XIII, 12 Nov., 1893.</excerptum>
+    <excerptum>Among the disciples drawn to him by his preaching and saintly reputation may be named St. Theresa, St. John of God, St. Francis Borgia, and Ven. Louis of Granada.</excerptum>
+    <excerptum>His best known works are the "Audi Fili"</excerptum>
+  </fons>
+  <fons id="sd" opus="sedes" locus="Benedict XVI, apostolic letter proclaiming St. John of Avila a Doctor of the Universal Church, 7 October 2012" url="https://www.vatican.va/content/benedict-xvi/en/apost_letters/documents/hf_ben-xvi_apl_20121007_giovanni-avila.html">
+    <excerptum>On 4 March 1538 Pope Paul III issued the Bull Altitudo Divinae Providentiae, addressed to John of Avila and authorizing him to found the University of Baeza</excerptum>
+    <excerptum>in 1554, already ill, he finally withdrew to a simple house in Montilla</excerptum>
+    <excerptum>On the morning of 10 May 1569, in his humble home in Montilla</excerptum>
+    <excerptum>Almodóvar del Campo and Montilla, where the Servant of God was born and died</excerptum>
+    <excerptum>John of Avila was beatified by Pope Leo XIII on 6 April 1894 and canonized by Pope Paul VI on 31 May 1970.</excerptum>
+    <excerptum>in 1946 Pius XII named him Patron of the diocesan clergy of Spain.</excerptum>
+    <excerptum>I declare Saint John of Avila, diocesan priest, and Saint Hildegard of Bingen, professed nun of the Order of Saint Benedict, to be Doctors of the Universal Church.</excerptum>
+    <excerptum>Given in Rome, at Saint Peter's, under the ring of the Fisherman, on 7 October 2012</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="10 May">
+    <excerptum>Saint John of Avila, Priest and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

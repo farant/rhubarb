@@ -1,0 +1,52 @@
+<sanctus id="john-of-damascus" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">John of Damascus</nomen>
+  <nomen lingua="en" fontes="us ce">John Damascene</nomen>
+  <ortus annus="676" circa="verum" locus="Damascus" fontes="ce"/>
+  <obitus saeculum="8" fontes="ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="12" dies="4" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="5" dies="6" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="3" dies="27" nota="festival; the elogium stands on 6 May" fontes="mr2"/>
+  <munus fontes="us ce">priest</munus>
+  <munus fontes="ce">monk</munus>
+  <munus fontes="us ce">doctor of the Church</munus>
+  <descriptio>
+    <paragraphus fontes="ce">John was born at Damascus about 676 and died at some date between 754 and 787. The only life of him, written in the tenth century, is called by the Catholic Encyclopedia unsatisfactory as history and given to legend. His father, probably named Mansur, was a Christian who served the caliph as chief financial officer and had John taught by Cosmas, a Sicilian monk freed from captivity. After his father's death John became chief councillor of Damascus.</paragraphus>
+    <paragraphus fontes="ce mr">When Leo the Isaurian issued his edict against the veneration of images in 726, John wrote against it and stirred the people to resist. His biographer relates that the emperor forged a letter to make the caliph believe John a traitor, that John's hand was cut off, and that it was restored through the intervention of the Blessed Virgin; the Martyrology tells the same story. He then entered the monastery of St. Sabas near Jerusalem and was ordained priest. The iconoclast synod of 754 condemned him by name; the Council of Nicaea of 787 vindicated him.</paragraphus>
+    <paragraphus fontes="ce">He is counted the last of the Greek Fathers. His best-known work, the "Fountain of Wisdom", gathers the teaching of earlier church writers and is the first attempt at a summa theologica to come down to us. Leo XIII enrolled him among the doctors of the Church.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. John Damascene" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._John_Damascene">
+    <excerptum>Born at Damascus, about 676; died some time between 754 and 787.</excerptum>
+    <excerptum>The only extant life of the saint is that by John, Patriarch of Jerusalem, which dates from the tenth century</excerptum>
+    <excerptum>It is extremely unsatisfactory from the standpoint of historical criticism. An exasperating lack of detail, a pronounced legendary tendency, and a turgid style are its chief characteristics.</excerptum>
+    <excerptum>Mansur was probably the name of John's father. What little is known of him indicates that he was a sterling Christian</excerptum>
+    <excerptum>discharged the duties of chief financial officer for the caliph, Abdul Malek.</excerptum>
+    <excerptum>he discovered among the captives taken in a recent raid on the shores of Italy a Sicilian monk named Cosmas.</excerptum>
+    <excerptum>Mansur secured the captive's liberty and appointed him tutor to his sons.</excerptum>
+    <excerptum>On the death of his father, John Damascene was made protosymbulus, or chief councillor, of Damascus.</excerptum>
+    <excerptum>In 726, despite the protests of Germanus, Patriarch of Constantinople, Leo the Isaurian issued his first edict against the veneration of images.</excerptum>
+    <excerptum>Not only did he himself oppose the Byzantine monarch, but he also stirred the people to resistance.</excerptum>
+    <excerptum>he forged a letter, exactly similar in chirography, purporting to have been written by John to the Isaurian, and offering to betray into his hands the city of Damascus. The letter he sent to the caliph.</excerptum>
+    <excerptum>ordered that the hand that wrote it be severed at the wrist. The sentence was executed, but, according to his biographer, through the intervention of the Blessed Virgin, the amputated hand was miraculously restored.</excerptum>
+    <excerptum>with his foster-brother entered the monastery of St. Sabas, some eighteen miles south-east of Jerusalem.</excerptum>
+    <excerptum>John V, Patriarch of Jerusalem, conferred on him the office of the priesthood.</excerptum>
+    <excerptum>In 754 the pseudo-Synod of Constantinople, convened at the command of Constantine Copronymus, the successor of Leo, confirmed the principles of the Iconoclasts and anathematized by name those who had conspicuously opposed them.</excerptum>
+    <excerptum>But the largest measure of the council's spleen was reserved for John of Damascus.</excerptum>
+    <excerptum>But the Seventh General Council of Nicea (787) made ample amends for the insults of his enemies</excerptum>
+    <excerptum>In the pontificate of Leo XIII he was enrolled among the doctors of the Church.</excerptum>
+    <excerptum>John of Damascus was the last of the Greek Fathers.</excerptum>
+    <excerptum>The most important and best known of all his works is that to which the author himself gave the name of "Fountain of Wisdom"</excerptum>
+    <excerptum>rather to collate and epitomize in a single work the opinions of the great ecclesiastical writers who have gone before him.</excerptum>
+    <excerptum>A special interest attaches to it for the reason that it is the first attempt at a summa theologica that has come down to us.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="6 May">
+    <excerptum>At Damascus, the birthday of the blessed John Damescene, renowned for sanctity and learning, who, by both the written and the spoken word, courageously resisted Leo the Isaurian, in defending the worship paid to sacred images.</excerptum>
+    <excerptum>By order of this emperor his right hand was cut off, but commending himself to an image of the blessed Virgin Mary, which he had defended, his hand was immediately restored to him entire and sound.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="27 March">
+    <excerptum>festival of St. John Damascene, confessor and doctor of the Church. He is mentioned on the 6th of May.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="4 December">
+    <excerptum>Saint John Damascene, Priest and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

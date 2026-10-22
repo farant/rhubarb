@@ -1,0 +1,52 @@
+<sanctus id="philip-neri" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Philip Neri</nomen>
+  <nomen lingua="en" fontes="ce">Philip Romolo Neri</nomen>
+  <nomen lingua="it" fontes="ce">Filippo Neri</nomen>
+  <ortus annus="1515" mensis="7" dies="22" locus="Florence" fontes="ce bu"/>
+  <obitus annus="1595" mensis="5" dies="26" locus="Rome" fontes="bu ce mr"/>
+  <beatificatio annus="1615" papa="Paul V" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1622" papa="Gregory XV" fontes="ce bu"/>
+  <festum calendarium="generale" mensis="5" dies="26" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="5" dies="26" fontes="mr"/>
+  <munus fontes="us ce">priest</munus>
+  <munus fontes="mr ce">founder of the Congregation of the Oratory</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Philip Neri was born in Florence on 22 July 1515, the son of the notary Francesco Neri. Sent as a youth to help a kinsman in business near Monte Cassino, he felt called instead to Rome, where he arrived penniless in 1533. For seventeen years he lived there as a layman, tutoring, studying philosophy and theology for a few years, visiting hospitals and talking with people in shops and public places about serving God. In 1548 he and his confessor Persiano Rosa founded the Confraternity of the Most Holy Trinity to care for pilgrims and convalescents.</paragraphus>
+    <paragraphus fontes="ce bu mr">Ordained priest in 1551 at his confessor's bidding, he lived at S. Girolamo and became a tireless confessor and guide, gathering men and boys for prayer, preaching and music in an oratory; from these meetings grew the Congregation of the Oratory, recognised by Gregory XIII in 1575 and given S. Maria in Vallicella. Known for cheerfulness and for teaching that saints could be made in the world, he declined a cardinal's hat. He died in Rome in the night between 25 and 26 May 1595 (the Catholic Encyclopedia heads its article 27 May), was beatified in 1615 and canonized by Gregory XV in 1622.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="26 May">
+    <excerptum>A T Home, St. Philip Neri, founder of the Congregation of the Oratory, celebrated for his virginal purity, the gift of prophecy, and miracles.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Philip Romolo Neri" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Philip_Romolo_Neri">
+    <excerptum>Born at Florence, Italy, 22 July, 1515; died 27 May, 1595.</excerptum>
+    <excerptum>Among these was Philip's own father, Francesco Neri, who eked out an insufficient private fortune with what he earned as a notary.</excerptum>
+    <excerptum>at the age of sixteen he was sent to help his father's cousin in business at S. Germano, near Monte Cassino.</excerptum>
+    <excerptum>In 1533 he arrived in Rome without any money.</excerptum>
+    <excerptum>in return for which he undertook the education of his two sons.</excerptum>
+    <excerptum>For seventeen years Philip lived as a layman in Rome, probably without thinking of becoming a priest.</excerptum>
+    <excerptum>He spent some three years, beginning about 1535, in the study of philosophy at the Sapienza, and of theology in the school of the Augustinians.</excerptum>
+    <excerptum>His active apostolate began with solitary and unobtrusive visits to the hospitals.</excerptum>
+    <excerptum>Then he began to frequent the shops, warehouses, banks, and public places of Rome, melting the hearts of those whom he chanced to meet, and exhorting them to serve God.</excerptum>
+    <excerptum>In 1548, together with his confessor, Persiano Rosa, he founded the Confraternity of the Most Holy Trinity for looking after pilgrims and convalescents.</excerptum>
+    <excerptum>At the bidding of his confessor — nothing short of this would overcome his humility — he entered the priesthood, and went to live at S. Girolamo</excerptum>
+    <excerptum>He stayed in church, hearing confessions or ready to hear them, from daybreak till nearly midday</excerptum>
+    <excerptum>Philip devoted his afternoons to men and boys, inviting them to informal meetings in his room</excerptum>
+    <excerptum>the informal meetings in his room developed into regular spiritual exercises in an oratory, which he built over the church. At these exercises laymen preached and the excellence of the discourses, the high quality of the music</excerptum>
+    <excerptum>the extreme reluctance of the saint alone prevented the pontiff from forcing him to accept the cardinalate.</excerptum>
+    <excerptum>in 1575 it was formally recognised by Gregory XIII as the Congregation of the Oratory, and given the church of S. Maria in Vallicella.</excerptum>
+    <excerptum>it was only in obedience to Gregory XIII that he then left his old home and came to live at the Vallicella.</excerptum>
+    <excerptum>About an hour after midnight Father Antonio Gallonio, who slept under him, heard him walking up and down</excerptum>
+    <excerptum>Philip was beatified by Paul V in 1615, and canonized by Gregory XV in 1622.</excerptum>
+    <excerptum>gives a sketch of the saint, entitled Filippo Neri, der humoristische Heilige.</excerptum>
+    <excerptum>protests that men may become saints in the world no less than in the cloister, dwells on the importance of serving God in a cheerful spirit</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v05 May 26 St. Philip Neri, C.">
+    <excerptum>He was born at Florence in 1515, and was son of Francis Neri a lawyer, and Lucretia Soldi</excerptum>
+    <excerptum>he was ordained priest in June 1551, being thirty-six years old almost complete.</excerptum>
+    <excerptum>between the twenty-fifth and twenty-sixth of May 1595, being near fourscore and two years old.</excerptum>
+    <excerptum>He was canonized by Gregory XV. in 1622</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="26 May">
+    <excerptum>Saint Philip Neri, Priest</excerptum>
+  </fons>
+</sanctus>

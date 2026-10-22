@@ -1,0 +1,43 @@
+<sanctus id="john-the-apostle" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">John the Apostle</nomen>
+  <nomen lingua="en" fontes="ce">John the Evangelist</nomen>
+  <obitus annus="100" circa="verum" locus="Ephesus" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="12" dies="27" gradus="festum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="12" dies="27" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="5" dies="6" nota="St. John before the Latin Gate" fontes="mr2"/>
+  <munus fontes="us ce mr">apostle</munus>
+  <munus fontes="us ce mr">evangelist</munus>
+  <descriptio>
+    <paragraphus fontes="ce">John was the son of Zebedee and Salome and the brother of James the Greater, a fisherman of the Lake of Genesareth whom Christ called with his brother "sons of thunder". With Peter and James he alone witnessed the raising of Jairus's daughter, the Transfiguration and the agony in Gethsemani. At the Last Supper he leaned on Christ's breast; he stood at the foot of the Cross and took the Mother of Jesus into his care; and he was the first to believe that Christ had risen. In his Gospel he refers to himself, without giving his name, as "the disciple whom Jesus loved". After the Ascension and the descent of the Holy Spirit he took a leading part with Peter in founding and guiding the Church, and Paul names him a "pillar of the Church".</paragraphus>
+    <paragraphus fontes="ce mr mr2">Tradition held universally that he later lived in Asia Minor and guided its churches from Ephesus, where he wrote his Gospel. He was banished to the island of Patmos under Domitian; the Apocalypse says that its author was on Patmos. Before this, according to Tertullian, he was thrown into a cauldron of boiling oil before the Latin Gate at Rome and came out unharmed, a story the Martyrology also tells. He returned to Ephesus under Trajan and died there about the year 100 at a great age, still repeating, "Little children, love one another". Christian art shows him with an eagle.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. John the Evangelist" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._John_the_Evangelist">
+    <excerptum>John was the son of Zebedee and Salome, and the brother of James the Greater.</excerptum>
+    <excerptum>received from Christ the honourable title of Boanerges, i.e. "sons of thunder" (Mark, iii, 17). Originally they were fishermen and fished with their father in the Lake of Genesareth.</excerptum>
+    <excerptum>Peter, James, and he were the only witnesses of the raising of Jairus's daughter (Mark, v, 37), of the Transfiguration (Matt., xvii, 1), and of the Agony in Gethsemani</excerptum>
+    <excerptum>At the Supper itself his place was next to Christ on Whose breast he leaned</excerptum>
+    <excerptum>John alone remained near his beloved Master at the foot of the Cross on Calvary with the Mother of Jesus and the pious women, and took the desolate Mother into his care as the last legacy of Christ</excerptum>
+    <excerptum>he was the first to believe that Christ had truly risen</excerptum>
+    <excerptum>by the title with which he is accustomed to indicate himself without giving his name: "the disciple whom Jesus loved". After Christ's Ascension and the Descent of the Holy Spirit, John took, together with Peter, a prominent part in the founding and guidance of the Church.</excerptum>
+    <excerptum>We see him in the company of Peter at the healing of the lame man in the Temple</excerptum>
+    <excerptum>St. Paul in opposing his enemies in Galatia names John explicitly along with Peter and James the Less as a "pillar of the Church"</excerptum>
+    <excerptum>The Christian writers of the second and third centuries testify to us as a tradition universally recognized and doubted by no one that the Apostle and Evangelist John lived in Asia Minor in the last decades of the first century and from Ephesus had guided the Churches of that province.</excerptum>
+    <excerptum>expressly declares that he wrote his Gospel at Ephesus</excerptum>
+    <excerptum>we are obliged to place the Apostle's banishment to Patmos in the reign of the Emperor Domitian (81-96). Previous to this, according to Tertullian's testimony (De praescript., xxxvi), John had been thrown into a cauldron of boiling oil before the Porta Latina at Rome without suffering injury.</excerptum>
+    <excerptum>the Apocalypse tells us that its author was on the island of Patmos</excerptum>
+    <excerptum>After Domitian's death the Apostle returned to Ephesus during the reign of Trajan, and at Ephesus he died about A.D. 100 at a great age.</excerptum>
+    <excerptum>his constantly repeated words of exhortation at the end of his life, "Little children, love one another"</excerptum>
+    <excerptum>Early Christian art usually represents St. John with an eagle</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="27 December">
+    <excerptum>At Ephesus, the birthday of St. John, apostle and evangelist, who, after writing his gospel, and after enduring exile and writing the divine Apocalypse, lived till the time of the emperor Trajan, and founded and governed the churches of all Asia.</excerptum>
+    <excerptum>Worn out with age, he died in the sixty-eighth year after the passion of our Lord, and was buried near Ephesus.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="6 May">
+    <excerptum>the feast of St. John before the Latin Gate. Being bound and brought to Rome from Ephesus by the order of Domitian, he was condemned by the Senate to be cast, near the said gate, into a vessel of boiling oil, from which he came out more healthy and vigorous than before.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="27 December">
+    <excerptum>Saint John, Apostle and Evangelist</excerptum>
+  </fons>
+</sanctus>

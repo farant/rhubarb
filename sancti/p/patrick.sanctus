@@ -1,0 +1,52 @@
+<sanctus id="patrick" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Patrick</nomen>
+  <nomen lingua="la" principale="verum" fontes="ce">Patritius</nomen>
+  <ortus annus="387" circa="verum" locus="Kilpatrick, near Dumbarton" fontes="ce bu"/>
+  <obitus annus="493" mensis="3" dies="17" circa="verum" locus="Saul, Downpatrick" fontes="ce bu"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="3" dies="17" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="3" dies="17" fontes="mr"/>
+  <munus fontes="us mr">bishop</munus>
+  <munus fontes="ce bu">apostle of Ireland</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Patrick called himself a Briton. He was born in the late fourth century at a place that both the Catholic Encyclopedia and Butler identify with Kilpatrick, near Dumbarton in Scotland; his father Calphurnius belonged to a Roman family. In his sixteenth year he was carried off by raiders to Ireland and sold as a slave, and for six years he tended flocks there. In his Confession he tells how in captivity he prayed as many as a hundred times a day and as often by night, in snow, ice and rain. Warned in a dream, he fled from his master and found a ship that took him home.</paragraphus>
+    <paragraphus fontes="ce bu">Later he put himself under the guidance of Germanus of Auxerre, by whose hands he was ordained priest, and on Germanus's recommendation he was sent by Pope Celestine I to bring the Irish into the fold of Christ. He landed probably in 433. He preached throughout the island, founded the church of Armagh, and visited and strengthened his churches until his death, which the Catholic Encyclopedia places at Saul on 17 March 493; Butler notes that other authorities give c. 455 or 464. His Confession and Letter to Coroticus are accepted as genuine.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="17 March">
+    <excerptum>TN Ireland, the birthday of St. Patrick, bishop and confessor, who was the first to preach Christ in that country, and became illustrious by great miracles and virtues.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v03 March 17 Saint Patrick, B. C., Apostle of Ireland">
+    <excerptum>St. Patrick was born in the decline of the fourth century</excerptum>
+    <excerptum>which seems to be the town of Killpa- trick, on the mouth of the river Cluyd, in Scotland, between Dunbriton and Glasgow. He calls himself both a Briton</excerptum>
+    <excerptum>493: tut Tillemont, about the year 455.</excerptum>
+    <excerptum>Nennius, published by Mr. Gale, says he</excerptum>
+    <excerptum>died fifty-seven years before the birth of</excerptum>
+    <excerptum>St. Columba, cousequently in 464</excerptum>
+    <excerptum>was admonished by God in a dream to return to his own country, and informed that a ship was then ready to sail thither.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Patrick" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Patrick">
+    <excerptum>Apostle of Ireland, born at Kilpatrick, near Dumbarton, in Scotland, in the year 387; died at Saul, Downpatrick, Ireland, 17 March, 493.</excerptum>
+    <excerptum>He had for his parents Calphurnius and Conchessa. The former belonged to a Roman family of high rank</excerptum>
+    <excerptum>In his sixteenth year, Patrick was carried off into captivity by Irish marauders and was sold as a slave to a chieftan named Milchu in Dalriada</excerptum>
+    <excerptum>where for six years he tended his master's flocks</excerptum>
+    <excerptum>He relates in his "Confessio" that during his captivity while tending the flocks he prayed many times in the day</excerptum>
+    <excerptum>in a single day, I have said as many as a hundred prayers, and in the night nearly the same</excerptum>
+    <excerptum>whether there was snow or ice or rain</excerptum>
+    <excerptum>Admonished by an angel he after six years fled from his cruel master and bent his steps towards the west.</excerptum>
+    <excerptum>He found a ship ready to set sail and after some rebuffs was allowed on board.</excerptum>
+    <excerptum>No sooner had St. Germain entered on his great mission at Auxerre than Patrick put himself under his guidance, and</excerptum>
+    <excerptum>it was at that great bishop's hands that Ireland's future apostle was a few years later promoted to the priesthood.</excerptum>
+    <excerptum>Pope St. Celestine I, who rendered immortal service to the Church</excerptum>
+    <excerptum>It was St. Germain, Bishop of Auxerre, who commended Patrick to the pope.</excerptum>
+    <excerptum>when he entrusted St. Patrick with the mission of gathering the Irish race into the one fold of Christ.</excerptum>
+    <excerptum>It was probably in the summer months of the year 433, that Patrick and his companions landed</excerptum>
+    <excerptum>St. Patrick chose that beautiful hill on which the old cathedral of Armagh stands.</excerptum>
+    <excerptum>St. Patrick continued until his death to visit and watch over the churches which he had founded in all the provinces in Ireland.</excerptum>
+    <excerptum>At Saul (Sabhall), St. Patrick received the summons to his reward on 17 March, 493.</excerptum>
+    <excerptum>The "Confessio" and the "Epistola ad Coroticum" are recognized by all modern critical writers as of unquestionable genuineness.</excerptum>
+    <excerptum>gave him the name "Patercius" or "Patritius"</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="17 March">
+    <excerptum>Saint Patrick, Bishop</excerptum>
+  </fons>
+</sanctus>

@@ -1,0 +1,53 @@
+<sanctus id="charles-borromeo" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Charles Borromeo</nomen>
+  <ortus annus="1538" mensis="10" dies="2" locus="Castle of Arona, Lago Maggiore" fontes="ce"/>
+  <obitus annus="1584" mensis="11" dies="3" locus="Milan" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1610" mensis="11" dies="1" papa="Paul V" fontes="ce mr"/>
+  <festum calendarium="generale" mensis="11" dies="4" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="11" dies="4" fontes="mr"/>
+  <munus fontes="us ce mr">bishop</munus>
+  <munus fontes="ce mr">cardinal</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Charles Borromeo was born in the castle of Arona on Lake Maggiore on 2 October 1538, the son of Count Giberto Borromeo and Margherita de' Medici, whose brother became Pope Pius IV in 1559. Tonsured at twelve, he studied at Pavia and took his doctorate in civil and canon law in 1559. His uncle called him to Rome in 1560, made him a cardinal and administrator of the see of Milan, and gave him charge of the papal states. As papal secretary of state he worked more than anyone to bring the Council of Trent together again, and afterwards on the catechism of the council and the revision of the Missal and Breviary. After his elder brother's death in 1562 he resisted pressure to marry and was ordained priest in 1563.</paragraphus>
+    <paragraphus fontes="ce mr">In 1565 he entered Milan, its first resident archbishop in eighty years, and set about reforming the diocese according to the Council, beginning with the clergy: synods and provincial councils, a seminary, the Confraternity of Christian Doctrine for teaching children, and the Oblates of St. Ambrose. In October 1569 an assassin fired at him as he knelt at the altar in his chapel; the ball did not even pierce his clothes. In the plague of 1576 he visited the sick and walked barefoot in procession with a rope round his neck. He died at Milan on 3 November 1584, and Paul V canonized him on 1 November 1610.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Charles Borromeo" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Charles_Borromeo">
+    <excerptum>was born in the Castle of Arona, a town on the southern shore of the Lago Maggiore in northern Italy, 2 October, 1538; died at Milan, 3 November, 1584.</excerptum>
+    <excerptum>His father was Count Giberto Borromeo, who, about 1530, married Margherita de Medici. Her younger brother was Giovanni Angelo, Cardinal de' Medici, who became pope in 1559 under the title of Pius IV.</excerptum>
+    <excerptum>At the age of twelve his father allowed him to receive the tonsure</excerptum>
+    <excerptum>in 1559 he maintained his thesis for the doctorate of civil and canon law.</excerptum>
+    <excerptum>On the 3rd of January, 1560, Charles received a message by a courier from the pope, asking him to proceed at once to Rome.</excerptum>
+    <excerptum>the pope had given him the charge of the administration of all the papal states. On 31 January he was created cardinal-deacon</excerptum>
+    <excerptum>on 8 February the pope named Charles as administrator of the vacant see.</excerptum>
+    <excerptum>Charles was very soon occupied as secretary of state in using his influence to bring about the re-assembling of the Council of Trent</excerptum>
+    <excerptum>for the most part it was Charles' patience and devotion that accomplished the object.</excerptum>
+    <excerptum>he was much occupied with the production of the catechism embodying the teaching of the council, the revision of the Missal and Breviary.</excerptum>
+    <excerptum>great pressure was brought to bear upon him to give up the ecclesiastical state and to marry.</excerptum>
+    <excerptum>finally he resolved to definitely fix himself in the ecclesiastical state by being secretly ordained priest.</excerptum>
+    <excerptum>The ordination took place, by the hands of Cardinal Federigo Cesa, in Santa Maria Maggiore, on the 4th of September, 1563.</excerptum>
+    <excerptum>he made his solemn entry into Milan on Sunday, 23 September, 1565. His arrival was the occasion of great rejoicings, and the people did their utmost to welcome the first resident archbishop for eighty years.</excerptum>
+    <excerptum>calling together a diocesan synod for the promulgation of the decrees of the Council of Trent.</excerptum>
+    <excerptum>It was with the clergy that Charles began the reform</excerptum>
+    <excerptum>three of these were placed over the seminary, which was opened on the 11th of November</excerptum>
+    <excerptum>Another great work which was begun at this time was that of the Confraternity of Christian Doctrine, in order that the children might be carefully and systematically instructed.</excerptum>
+    <excerptum>In October, 1552, he left Arona for the University of Pavia</excerptum>
+    <excerptum>Charles' elder brother, Count Federigo, had died (28 November, 1562).</excerptum>
+    <excerptum>On the 15th of October the first provincial council met.</excerptum>
+    <excerptum>In October, 1569, Charles was again in great danger.</excerptum>
+    <excerptum>giving it the title of the Oblates of St. Ambrose.</excerptum>
+    <excerptum>having entered with others of the public who were admitted to the chapel</excerptum>
+    <excerptum>the assassin fired his weapon, loaded with ball, and struck Charles, who was kneeling at the altar.</excerptum>
+    <excerptum>it was found that the ball had not even pierced his clothes</excerptum>
+    <excerptum>In 1576 the jubilee was kept in the Diocese of Milan.</excerptum>
+    <excerptum>All at once everything was changed, for the plague appeared in Milan.</excerptum>
+    <excerptum>Personal visits were paid by him to the plague-stricken houses.</excerptum>
+    <excerptum>he walked in procession, barefooted, with a rope round his neck</excerptum>
+    <excerptum>Finally, 1 November, 1610, Paul V solemnly canonized Charles Borromeo, and fixed his feast for the 4th day of November.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="4 November">
+    <excerptum>AT Milan, St. Charles Borromeo, cardinal, and bishop of that city, who was ranked among the Saints by Paul V. on account of the holiness of his life and his renown for miracles.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="4 November">
+    <excerptum>Saint Charles Borromeo, Bishop</excerptum>
+  </fons>
+</sanctus>

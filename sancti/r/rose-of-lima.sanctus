@@ -1,0 +1,42 @@
+<sanctus id="rose-of-lima" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Rose of Lima</nomen>
+  <nomen lingua="en" fontes="mr">Rose of St. Mary</nomen>
+  <ortus annus="1586" mensis="4" dies="20" locus="Lima" fontes="ce"/>
+  <obitus annus="1617" locus="Lima" fontes="ce"/>
+  <beatificatio annus="1667" papa="Clement IX" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1671" papa="Clement X" fontes="ce"/>
+  <festum calendarium="generale" mensis="8" dies="23" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="8" dies="26" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="8" dies="30" fontes="mr2"/>
+  <munus fontes="us ce mr">virgin</munus>
+  <munus fontes="mr">Dominican tertiary</munus>
+  <patrocinium fontes="ce">America</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">Rose was born at Lima, in Peru, on 20 April 1586. She took the name Rose at her confirmation in 1597, because as an infant her face had been seen transformed by a mystical rose. From childhood she gave herself to prayer and mortification, and, taking St. Catherine as her model, she fasted, cut off her hair and wore coarse clothing, against the ridicule of her family and the censure of her parents. She resolved to take a vow of virginity, and only after ten years of patient struggle did her parents, who wished her to marry, consent to her way of life. Her lace and embroidery helped to support her home.</paragraphus>
+    <paragraphus fontes="ce mr">In her twentieth year she received the habit of St. Dominic, and the Martyrology names her of the third Order. She lived almost as a recluse in a little cell in the family garden, keeping severe penances for fourteen years, which she offered for sinners, for the idolatry of her country and for the souls in Purgatory. She died at Lima in 1617; the Catholic Encyclopedia gives 30 August, while the Martyrology lists her on the 26th, which it calls her birthday, and keeps her feast on the 30th. Beatified by Clement IX in 1667, she was canonized by Clement X in 1671, the first American so honoured, and is called patroness of America.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Rose of Lima" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Rose_of_Lima">
+    <excerptum>Virgin, patroness of America, born at Lima, Peru 20 April, 1586; died there 30 August, 1617.</excerptum>
+    <excerptum>At her confirmation in 1597, she took the name of Rose, because, when an infant, her face had been seen transformed by a mystical rose.</excerptum>
+    <excerptum>As a child she was remarkable for a great reverence, and pronounced love, for all things relating to God. This so took possession of her that thenceforth her life was given up to prayer and mortification.</excerptum>
+    <excerptum>After reading of St. Catherine she determined to take that saint as her model. She began by fasting three times a week, adding secret severe penances, and when her vanity was assailed, cutting off her beautiful hair, wearing coarse clothing</excerptum>
+    <excerptum>All this time she had to struggle against the objections of her friends, the ridicule of her family, and the censure of her parents.</excerptum>
+    <excerptum>Finally she determined to take a vow of virginity</excerptum>
+    <excerptum>At the outset she had to combat the opposition of her parents, who wished her to marry. For ten years the struggle continued before she won, by patience and prayer, their consent to continue her mission.</excerptum>
+    <excerptum>her exquisite lace and embroidery helping to support her home</excerptum>
+    <excerptum>she retired to a little grotto which she had built, with her brother's aid, in their small garden</excerptum>
+    <excerptum>she was allowed later to become practically a recluse in this cell, save for her visits to the Blessed Sacrament. In her twentieth year she received the habit of St. Dominic.</excerptum>
+    <excerptum>Fourteen years this martyrdom of her body continued without relaxation</excerptum>
+    <excerptum>in expiation for offences against His Divine Majesty, for the idolatry of her country, for the conversion of sinners, and for the souls in Purgatory.</excerptum>
+    <excerptum>She was beatified by Clement IX, in 1667, and canonized in 1671 by Clement X, the first American to be so honoured.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="26 August">
+    <excerptum>At Lima, in Peru, St. Rose of St. Mary, virgin, of the third Order of St. Dominic. Her feast is celebrated on the 30th of this month.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="30 August">
+    <excerptum>feast of St. Kose of St. Mary, virgin, whose birthday is the 26th of this month.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="23 August">
+    <excerptum>Saint Rose of Lima, Virgin</excerptum>
+  </fons>
+</sanctus>

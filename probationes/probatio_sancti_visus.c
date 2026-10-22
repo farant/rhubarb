@@ -1,0 +1,707 @@
+/* probatio_sancti_visus.c - bibliotheca sanctorum in latere vici
+ * (include/sancti_visus.h). Fixtura: probationes/fixa/sancti (agnes
+ * 21 I, sine anno; thomas 28 I, c. 1225-1274; charles 3 VI, d. 1886);
+ * hodie fixum 25 I. Index ordine calendarii (electus primus a hodie),
+ * ordo s (nomen, aetas, calendarium), j k, paginae [ ], t, quaestio /,
+ * visus sancti (Enter, caput, Esc, j k inter sanctos, paginae
+ * textus), argumentum lateris; quaestio viva (fzf), ordo congruentiae,
+ * origo (Esc sancti per argumentum aperti latus reddit). */
+#include "latina.h"
+#include "piscina.h"
+#include "chorda.h"
+#include "internamentum.h"
+#include "insula.h"
+#include "componens.h"
+#include "dispensator.h"
+#include "eventus.h"
+#include "figura.h"
+#include "mandatum.h"
+#include "thema.h"
+#include "sancti.h"
+#include "sancti_visus.h"
+#include "semita.h"
+#include "organum_montatio.h"
+#include "credo.h"
+#include <stdio.h>
+#include <string.h>
+
+#define FIXA "probationes/fixa/sancti"
+#define LINEOLA "\342\200\223"
+
+nomen structura {
+     InternamentumChorda* intern;
+      InsulaRepositorium* repo;
+            SanctiCorpus* corpus;
+       SanctorumMontatio  m;
+             Dispensator* d;
+        constans Organum* organum;   /* semitae R2: semita_legere */
+} Mundus;
+
+interior b32
+hodie_fixum (
+    vacuum* ctx,
+       s32* mensis,
+       s32* dies)
+{
+    (vacuum)ctx;
+    *mensis  = I;
+    *dies    = XXV;
+    redde VERUM;
+}
+
+/* latus CCC x altitudo super fixturam */
+interior Mundus*
+mundus (
+    CredoContextus* c,
+               i32  altitudo)
+{
+    Mundus* w;
+     Motus* motus;
+
+    thema_initiare();
+    w = (Mundus*)piscina_allocare(c->piscina, magnitudo(Mundus));
+    memset(w, ZEPHYRUM, magnitudo(Mundus));
+    w->intern = internamentum_creare(c->piscina);
+    w->corpus = sancti_corpus_aperire(FIXA, c->piscina, w->intern);
+    w->repo    = insula_repositorium_creare(c->piscina, w->intern,
+        "<hospes/>");
+    si (   !w->corpus || !w->repo
+        || !sancti_visus_montare(&w->m, c->piscina, w->intern, w->repo,
+               "s1", w->corpus, hodie_fixum, w, CCC, altitudo, NIHIL))
+    {
+        redde NIHIL;
+    }
+    w->d = dispensator_creare(c->piscina, w->intern, w->repo,
+        w->m.actiones, sancti_visus_componere, &w->m, CCC);
+    si (!w->d)
+    {
+        redde NIHIL;
+    }
+    motus         = dispensator_motus(w->d);
+    motus->ramus  = w->m.ramus;
+    dispensator_recomponere(w->d);
+    redde w;
+}
+
+interior vacuum
+clavis (
+       Mundus* w,
+    character  typus)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                  = EVENTUS_CLAVIS_DEPRESSUS;
+    e.datum.clavis.producta  = (s32)(insignatus character)typus;
+    e.datum.clavis.clavis    = (clavis_t)typus;
+    e.datum.clavis.runa      = (s32)typus;
+    dispensator_tractare(w->d, &e);
+    dispensator_recomponere(w->d);
+}
+
+interior vacuum
+clavis_nominata (
+       Mundus* w,
+     clavis_t  k,
+          s32  producta)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                  = EVENTUS_CLAVIS_DEPRESSUS;
+    e.datum.clavis.clavis    = k;
+    e.datum.clavis.producta  = producta;
+    dispensator_tractare(w->d, &e);
+    dispensator_recomponere(w->d);
+}
+
+interior vacuum
+scribere (
+                 Mundus* w,
+     constans character* textus)
+{
+    dum (*textus)
+    {
+        clavis(w, *textus);
+        textus++;
+    }
+}
+
+interior b32
+campus_est (
+                 Mundus* w,
+     constans character* titulus,
+     constans character* valor)
+{
+    chorda* a;
+
+    a = insula_ramus_attributum(&w->m.ramus, titulus);
+    si (valor == NIHIL)
+    {
+        redde a == NIHIL || a->mensura == ZEPHYRUM;
+    }
+    redde a && chorda_aequalis_literis(*a, valor);
+}
+
+interior Mandata*
+reddere (
+     Mundus* w,
+    Piscina* p)
+{
+    Mandata* md;
+
+    md = mandata_creare(p, w->intern);
+    pingere(dispensator_arbor(w->d), w->m.figurae, ZEPHYRUM, md);
+    redde md;
+}
+
+/* textus pictus continens fragmentum? */
+interior b32
+pictum (
+                 Mundus* w,
+     constans character* fragmentum,
+                Piscina* p)
+{
+                Mandata* md;
+      constans Mandatum* x;
+                    i32  i;
+
+    md = reddere(w, p);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_TEXTUS
+            && chorda_continet(x->textus, chorda_ex_literis(fragmentum,
+                p)))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* index paginae pictus "k/n" (textus digitis et '/' solis): k, n */
+interior b32
+_index_paginae (
+     Mundus* w,
+    Piscina* p,
+        s32* k,
+        s32* n)
+{
+               Mandata* md;
+     constans Mandatum* x;
+                   i32  i;
+                   i32  j;
+                   b32  forma;
+
+    md = reddere(w, p);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (x->genus != MANDATUM_TEXTUS || x->textus.mensura < III)
+        {
+            perge;
+        }
+        forma = chorda_continet(x->textus, chorda_ex_literis("/", p));
+        per (j = ZEPHYRUM; forma && j < x->textus.mensura; j++)
+        {
+            character ch = (character)x->textus.datum[j];
+
+            si (!((ch >= '0' && ch <= '9') || ch == '/'))
+            {
+                forma = FALSUM;
+            }
+        }
+        si (forma && sscanf(chorda_ut_cstr(x->textus, p), "%d/%d", k, n)
+            == II)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* index: titulus, ordo calendarii, electus primus a hodie */
+interior vacuum
+_sectio_index (
+    CredoContextus* c)
+{
+    Mundus* w;
+
+    w = mundus(c, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(w);
+    CREDO_VERUM(pictum(w, "Saints", c->piscina));
+    CREDO_VERUM(pictum(w, "Thomas Aquinas", c->piscina));
+    CREDO_VERUM(pictum(w, "Jan 28", c->piscina));
+    CREDO_VERUM(pictum(w, "c. 1225" LINEOLA "1274", c->piscina));
+    CREDO_VERUM(pictum(w, "Agnes of Rome", c->piscina));
+    CREDO_VERUM(pictum(w, "d. 1886", c->piscina));
+    CREDO_VERUM(pictum(w, "virgin, martyr", c->piscina));
+    /* electus: primus a 25 I = thomas (28 I) */
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "electus",
+        "charles-lwanga-and-companions"));
+    clavis(w, 'k');
+    clavis(w, 'k');
+    CREDO_VERUM(campus_est(w, "electus", "agnes-of-rome"));
+    /* in initio: nihil */
+    clavis(w, 'k');
+    CREDO_VERUM(campus_est(w, "electus", "agnes-of-rome"));
+    clavis(w, 't');
+    CREDO_VERUM(campus_est(w, "electus", "thomas-aquinas"));
+}
+
+/* ordo: s cyclum facit - nomen, aetas, calendarium */
+interior vacuum
+_sectio_ordo (
+    CredoContextus* c)
+{
+    Mundus* w;
+
+    w = mundus(c, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(w);
+    clavis(w, 's');
+    CREDO_VERUM(campus_est(w, "ordo", "nomen"));
+    CREDO_VERUM(pictum(w, "by name", c->piscina));
+    clavis(w, 't');
+    CREDO_VERUM(campus_est(w, "electus", "agnes-of-rome"));
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "electus",
+        "charles-lwanga-and-companions"));
+    clavis(w, 's');
+    CREDO_VERUM(campus_est(w, "ordo", "aetas"));
+    clavis(w, 't');
+    /* aetas: thomas 1274, charles 1886, agnes ignota ultima */
+    CREDO_VERUM(campus_est(w, "electus", "thomas-aquinas"));
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "electus",
+        "charles-lwanga-and-companions"));
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "electus", "agnes-of-rome"));
+    clavis(w, 's');
+    CREDO_VERUM(campus_est(w, "ordo", "calendarium"));
+}
+
+/* paginae: latus humile (ordines duo per paginam) */
+interior vacuum
+_sectio_paginae (
+    CredoContextus* c)
+{
+    Mundus* w;
+
+    w = mundus(c, CXX);
+    CREDO_NECESSE_NON_NIHIL(w);
+    /* thomas (secundus) in pagina prima: agnes, thomas | charles */
+    CREDO_VERUM(pictum(w, "Agnes of Rome", c->piscina));
+    CREDO_VERUM(!pictum(w, "Charles Lwanga", c->piscina));
+    clavis(w, ']');
+    CREDO_VERUM(pictum(w, "Charles Lwanga", c->piscina));
+    CREDO_VERUM(campus_est(w, "electus",
+        "charles-lwanga-and-companions"));
+    clavis(w, '[');
+    CREDO_VERUM(pictum(w, "Agnes of Rome", c->piscina));
+    CREDO_VERUM(campus_est(w, "electus", "agnes-of-rome"));
+}
+
+/* quaestio: / aqu Enter -> thomas solus; Esc quaestionem tollit, Esc
+ * iterum non consumitur (vicus latus tollit) */
+interior vacuum
+_sectio_quaestio (
+    CredoContextus* c)
+{
+    Mundus* w;
+
+    w = mundus(c, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(w);
+    clavis(w, '/');
+    CREDO_VERUM(campus_est(w, "prompta", "quaestio"));
+    scribere(w, "AQU");
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "quaestio", "AQU"));
+    CREDO_VERUM(campus_est(w, "prompta", NIHIL)
+        || campus_est(w, "prompta", "nulla"));
+    CREDO_VERUM(pictum(w, "Thomas Aquinas", c->piscina));
+    CREDO_VERUM(!pictum(w, "Agnes of Rome", c->piscina));
+    CREDO_VERUM(campus_est(w, "electus", "thomas-aquinas"));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "quaestio", NIHIL));
+    CREDO_VERUM(pictum(w, "Agnes of Rome", c->piscina));
+    /* nihil inventum */
+    clavis(w, '/');
+    scribere(w, "zzz");
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(pictum(w, "No saints", c->piscina));
+}
+
+/* visus sancti: Enter, caput, j k, Esc */
+interior vacuum
+_sectio_sanctus (
+    CredoContextus* c)
+{
+    Mundus* w;
+
+    w = mundus(c, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(w);
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "visus", "sanctus"));
+    CREDO_VERUM(campus_est(w, "sanctus_apertus", "thomas-aquinas"));
+    CREDO_VERUM(pictum(w, "Thomas Aquinas", c->piscina));
+    CREDO_VERUM(pictum(w, "Thomas de Aquino", c->piscina));
+    CREDO_VERUM(pictum(w, "Fossanova", c->piscina));
+    CREDO_VERUM(pictum(w, "Canonized 18 July 1323 by John XXII",
+        c->piscina));
+    CREDO_VERUM(pictum(w, "Feast: 28 January (memorial)", c->piscina));
+    CREDO_VERUM(pictum(w, "Sources:", c->piscina));
+    /* j: sanctus proximus ordine indicis (charles) */
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "sanctus_apertus",
+        "charles-lwanga-and-companions"));
+    CREDO_VERUM(pictum(w, "Matthias Mulumba", c->piscina));
+    clavis(w, 'k');
+    clavis(w, 'k');
+    CREDO_VERUM(campus_est(w, "sanctus_apertus", "agnes-of-rome"));
+    CREDO_VERUM(pictum(w, "No virgin martyr of Rome", c->piscina));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    CREDO_VERUM(campus_est(w, "electus", "agnes-of-rome"));
+}
+
+/* paginae textus: latus humile, descriptio agnetis paginas plures */
+interior vacuum
+_sectio_paginae_textus (
+    CredoContextus* c)
+{
+    Mundus* w;
+
+    w = mundus(c, CLX);
+    CREDO_NECESSE_NON_NIHIL(w);
+    CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m, "agnes-of-rome"));
+    dispensator_recomponere(w->d);
+    CREDO_VERUM(pictum(w, "No virgin martyr of Rome", c->piscina));
+    CREDO_VERUM(!pictum(w, "Sources:", c->piscina));
+    clavis(w, ']');
+    CREDO_VERUM(campus_est(w, "pagina_textus", "1"));
+    CREDO_VERUM(!pictum(w, "No virgin martyr of Rome", c->piscina));
+    clavis(w, ']');
+    clavis(w, ']');
+    clavis(w, ']');
+    clavis(w, ']');
+    clavis(w, ']');
+    clavis(w, ']');
+    clavis(w, ']');
+    clavis(w, ']');
+    /* pagina ultima: fons ultimus (paragraphus fontium paginas
+     * transit); ultra ultimam non progreditur */
+    CREDO_VERUM(pictum(w, "USCCB calendar", c->piscina));
+    {
+        chorda* a;
+        chorda  ultima;
+
+        a = insula_ramus_attributum(&w->m.ramus, "pagina_textus");
+        CREDO_NECESSE(a && a->mensura > ZEPHYRUM);
+        ultima = chorda_transcribere(*a, c->piscina);
+        clavis(w, ']');
+        CREDO_VERUM(campus_est(w, "pagina_textus",
+            chorda_ut_cstr(ultima, c->piscina)));
+    }
+    {
+        s32 k;
+        s32 n;
+
+        /* index pictus: ultima = n/n; una retro = (n-1)/n */
+        CREDO_NECESSE(_index_paginae(w, c->piscina, &k, &n));
+        CREDO_VERUM(n > I);
+        CREDO_AEQUALIS_S32(k, n);
+        clavis(w, '[');
+        CREDO_NECESSE(_index_paginae(w, c->piscina, &k, &n));
+        CREDO_AEQUALIS_S32(k, n - I);
+    }
+    clavis(w, '[');
+    clavis(w, '[');
+    clavis(w, '[');
+    clavis(w, '[');
+    clavis(w, '[');
+    clavis(w, '[');
+    clavis(w, '[');
+    clavis(w, '[');
+    clavis(w, '[');
+    clavis(w, '[');
+    CREDO_VERUM(campus_est(w, "pagina_textus", NIHIL)
+        || campus_est(w, "pagina_textus", "0"));
+}
+
+/* argumentum lateris */
+interior vacuum
+_sectio_argumentum (
+    CredoContextus* c)
+{
+    Mundus* w;
+
+    w = mundus(c, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(w);
+    CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m,
+        "charles-lwanga-and-companions"));
+    CREDO_VERUM(campus_est(w, "visus", "sanctus"));
+    CREDO_VERUM(campus_est(w, "sanctus_apertus",
+        "charles-lwanga-and-companions"));
+    CREDO_FALSUM(sancti_visus_argumentum_ponere(&w->m, "nemo"));
+    CREDO_VERUM(campus_est(w, "sanctus_apertus",
+        "charles-lwanga-and-companions"));
+    CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m, ""));
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+}
+
+/* ordinata y textus picti primi continentis fragmentum; -1 nullus */
+interior s32
+pictum_y (
+                 Mundus* w,
+     constans character* fragmentum,
+                Piscina* p)
+{
+                Mandata* md;
+      constans Mandatum* x;
+                    i32  i;
+
+    md = reddere(w, p);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_TEXTUS
+            && chorda_continet(x->textus, chorda_ex_literis(fragmentum,
+                p)))
+        {
+            redde (s32)x->fines.y;
+        }
+    }
+    redde -I;
+}
+
+/* quaestio viva: index scribendo filtratur (prompta aperta, quaestio
+ * nondum commissa); congruentia fzf, signa neglecta; Esc promptae
+ * quaestionem priorem restituit */
+interior vacuum
+_sectio_vivus (
+    CredoContextus* c)
+{
+    Mundus* w;
+
+    w = mundus(c, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(w);
+    clavis(w, '/');
+    scribere(w, "thaq");
+    CREDO_VERUM(campus_est(w, "prompta", "quaestio"));
+    CREDO_VERUM(campus_est(w, "quaestio", NIHIL));
+    CREDO_VERUM(pictum(w, "Thomas Aquinas", c->piscina));
+    CREDO_VERUM(!pictum(w, "Agnes of Rome", c->piscina));
+    CREDO_VERUM(!pictum(w, "Charles Lwanga", c->piscina));
+    /* nomen alienum "Inés de Roma" sine signo quaesitum */
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(pictum(w, "Agnes of Rome", c->piscina));
+    CREDO_VERUM(campus_est(w, "quaestio", NIHIL));
+    clavis(w, '/');
+    scribere(w, "ines");
+    CREDO_VERUM(pictum(w, "Agnes of Rome", c->piscina));
+    CREDO_VERUM(!pictum(w, "Thomas Aquinas", c->piscina));
+    /* nihil congruit dum scribitur */
+    scribere(w, "zz");
+    CREDO_VERUM(pictum(w, "No saints match \"ineszz\"", c->piscina));
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "quaestio", "ineszz"));
+    /* ordo vivus: "an" scribendo charles (optimum) supra thomam -
+     * calendarium thomam (28 I) supra charles (3 VI) daret */
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "quaestio", NIHIL));
+    clavis(w, '/');
+    scribere(w, "an");
+    CREDO_VERUM(pictum_y(w, "Charles Lwanga", c->piscina) >= ZEPHYRUM);
+    CREDO_VERUM(pictum_y(w, "Charles Lwanga", c->piscina)
+        < pictum_y(w, "Thomas Aquinas", c->piscina));
+}
+
+/* ordo congruentiae: quaestio optimum primum (non calendarium); s:
+ * congruentia -> calendarium -> nomen -> aetas -> congruentia; Esc
+ * quaestionem tollens ordinem calendarii restituit */
+interior vacuum
+_sectio_congruentia (
+    CredoContextus* c)
+{
+    Mundus* w;
+
+    w = mundus(c, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(w);
+    clavis(w, '/');
+    scribere(w, "an");
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "ordo", "congruentia"));
+    CREDO_VERUM(pictum(w, "best match", c->piscina));
+    /* "an": charles optimum (lwANga, ANd); calendarium thomam daret */
+    CREDO_VERUM(campus_est(w, "electus",
+        "charles-lwanga-and-companions"));
+    clavis(w, 's');
+    CREDO_VERUM(campus_est(w, "ordo", "calendarium"));
+    CREDO_VERUM(pictum(w, "by date", c->piscina));
+    clavis(w, 's');
+    CREDO_VERUM(campus_est(w, "ordo", "nomen"));
+    clavis(w, 's');
+    CREDO_VERUM(campus_est(w, "ordo", "aetas"));
+    clavis(w, 's');
+    CREDO_VERUM(campus_est(w, "ordo", "congruentia"));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "quaestio", NIHIL));
+    CREDO_VERUM(campus_est(w, "ordo", "calendarium"));
+    CREDO_VERUM(campus_est(w, "electus", "thomas-aquinas"));
+    /* sine quaestione: s congruentiam praeterit */
+    clavis(w, 's');
+    clavis(w, 's');
+    clavis(w, 's');
+    CREDO_VERUM(campus_est(w, "ordo", "calendarium"));
+    /* quaestio vacua commissa: ordo calendarii */
+    clavis(w, '/');
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "quaestio", NIHIL));
+    CREDO_VERUM(campus_est(w, "ordo", "calendarium"));
+}
+
+/* origo: sanctus per argumentum apertus (calendarium, $saints(id)) -
+ * Esc non consumitur (latus tollitur, prius redit); per indicem
+ * apertus - Esc ad indicem */
+interior vacuum
+_sectio_origo (
+    CredoContextus* c)
+{
+    Mundus* w;
+
+    w = mundus(c, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(w);
+    CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m, "agnes-of-rome"));
+    CREDO_VERUM(campus_est(w, "origo", "argumentum"));
+    dispensator_recomponere(w->d);
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "sanctus"));
+    /* j k inter sanctos originem non mutant */
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "sanctus_apertus", "thomas-aquinas"));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "sanctus"));
+    /* argumentum vacuum: index (origo indicis) */
+    CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m, ""));
+    CREDO_VERUM(campus_est(w, "origo", "index"));
+    dispensator_recomponere(w->d);
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "visus", "sanctus"));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+}
+
+/* semitae R2: organum sanctorum pro semita_legere; ctx = Mundus* */
+interior constans Organum*
+organa_sanctorum (
+     vacuum* ctx,
+     chorda  genus)
+{
+    redde chorda_aequalis_literis(genus, "sancti")
+        ? ((Mundus*)ctx)->organum : NIHIL;
+}
+
+/* semita currens lateris ut URI */
+interior chorda
+semita_currens (
+     Mundus* w,
+    Piscina* p)
+{
+    si (!w->organum)
+    {
+        w->organum = organum_legere_genus(p, w->intern, "sancti",
+            "probatio");
+    }
+    redde semita_ad_uri(organa_sanctorum, w, semita_legere(
+        organa_sanctorum, w, &w->m.ramus, "sancti", p, w->intern), p);
+}
+
+/* semitae (R2): argumentum = URI semitae aut id nudum (alias) aut
+ * vacuum; semita legitur; ligatio mutata paginam textus resettit;
+ * mala nihil mutant; Esc ad indicem sanctum apertum tollit */
+interior vacuum
+_sectio_semitae (
+    CredoContextus* c)
+{
+    Mundus* w;
+
+    w = mundus(c, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(w);
+    CREDO_CHORDA_AEQUALIS_LITERIS(semita_currens(w, c->piscina),
+        "sancti/index");
+    /* quaestio et ordo per semitam */
+    CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m,
+        "sancti/index?quaestio=ines&ordo=congruentia"));
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    CREDO_VERUM(campus_est(w, "quaestio", "ines"));
+    CREDO_VERUM(campus_est(w, "ordo", "congruentia"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(semita_currens(w, c->piscina),
+        "sancti/index?ordo=congruentia&quaestio=ines");
+    dispensator_recomponere(w->d);
+    CREDO_VERUM(pictum(w, "Agnes of Rome", c->piscina));
+    CREDO_VERUM(!pictum(w, "Thomas Aquinas", c->piscina));
+    /* sanctus cum pagina textus; origo, electus */
+    CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m,
+        "sancti/index?quaestio=&ordo="));
+    CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m,
+        "sancti/sanctus/thomas-aquinas?pagina_textus=2"));
+    CREDO_VERUM(campus_est(w, "visus", "sanctus"));
+    CREDO_VERUM(campus_est(w, "sanctus_apertus", "thomas-aquinas"));
+    CREDO_VERUM(campus_est(w, "pagina_textus", "2"));
+    CREDO_VERUM(campus_est(w, "origo", "argumentum"));
+    CREDO_VERUM(campus_est(w, "electus", "thomas-aquinas"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(semita_currens(w, c->piscina),
+        "sancti/sanctus/thomas-aquinas?pagina_textus=2");
+    /* ligatio mutata (alias id nudum): pagina textus ad absens */
+    CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m, "agnes-of-rome"));
+    CREDO_VERUM(campus_est(w, "sanctus_apertus", "agnes-of-rome"));
+    CREDO_VERUM(campus_est(w, "pagina_textus", NIHIL));
+    CREDO_CHORDA_AEQUALIS_LITERIS(semita_currens(w, c->piscina),
+        "sancti/sanctus/agnes-of-rome");
+    /* mala: nihil mutatum */
+    CREDO_FALSUM(sancti_visus_argumentum_ponere(&w->m,
+        "sancti/sanctus/nemo"));
+    CREDO_FALSUM(sancti_visus_argumentum_ponere(&w->m,
+        "sancti/tabula"));
+    CREDO_FALSUM(sancti_visus_argumentum_ponere(&w->m,
+        "sancti?nemo=1"));
+    CREDO_VERUM(campus_est(w, "sanctus_apertus", "agnes-of-rome"));
+    CREDO_VERUM(campus_est(w, "visus", "sanctus"));
+    /* Esc (origo indicis): ad indicem, sanctus apertus sublatus,
+     * electus manet; semita indicis sine sancto */
+    CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m, ""));
+    dispensator_recomponere(w->d);
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "visus", "sanctus"));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    CREDO_VERUM(campus_est(w, "sanctus_apertus", NIHIL));
+    CREDO_VERUM(!campus_est(w, "electus", NIHIL));
+    CREDO_CHORDA_AEQUALIS_LITERIS(semita_currens(w, c->piscina),
+        "sancti/index");
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "index", _sectio_index, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ordo", _sectio_ordo, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "paginae", _sectio_paginae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "quaestio", _sectio_quaestio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sanctus", _sectio_sanctus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "paginae_textus", _sectio_paginae_textus, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "argumentum", _sectio_argumentum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "vivus", _sectio_vivus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "congruentia", _sectio_congruentia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "origo", _sectio_origo, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "semitae", _sectio_semitae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("sancti_visus", SECTIONES);
+}

@@ -214,7 +214,9 @@ interior constans Renominatio TYPI_EXACTI[] = {
      * lib/runae_tabulae.o consumptoris (saltuarius) colliderent. Porta
      * nm (gradus 5) id NON videt: solum RADIX_FONTES silvae confert */
     { "RUNAE_GRADUS_PRIMUS",          "SILVA_RUNAE_GRADUS_PRIMUS" },
-    { "RUNAE_GRADUS_SECUNDUS",        "SILVA_RUNAE_GRADUS_SECUNDUS" }
+    { "RUNAE_GRADUS_SECUNDUS",        "SILVA_RUNAE_GRADUS_SECUNDUS" },
+    { "RUNAE_BASES",                  "SILVA_RUNAE_BASES" },
+    { "RUNAE_BASES_NUMERUS",          "SILVA_RUNAE_BASES_NUMERUS" }
 };
 
 /* Praefixa functionum - longissimum primum (chorda_aedificator_

@@ -1,0 +1,34 @@
+<sanctus id="vincent-of-saragossa" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Vincent of Saragossa</nomen>
+  <ortus locus="Saragossa" fontes="ce"/>
+  <obitus annus="304" locus="Valencia" martyrium="verum" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="usa" mensis="1" dies="23" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="1" dies="22" fontes="mr"/>
+  <munus fontes="us ce mr">deacon</munus>
+  <munus fontes="us ce mr">martyr</munus>
+  <patrocinium fontes="ce">Valencia</patrocinium>
+  <patrocinium fontes="ce">Saragossa</patrocinium>
+  <patrocinium fontes="ce">Portugal</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">Vincent, the most renowned martyr of Spain, was born at Saragossa, the son of Eutricius and of Enola of Osca. He studied under Valerius, Bishop of Saragossa; ordained deacon, he was given the preaching of the diocese, because the bishop had an impediment of speech. His Acts were already read in the churches of Africa at the end of the fourth century, as St. Augustine testifies; the surviving Acts are much later but agree in substance with the poem of Prudentius.</paragraphus>
+    <paragraphus fontes="ce mr">In the persecution of Diocletian, in 304, the governor Dacian had Vincent and his bishop taken in chains to Valencia and imprisoned. Valerius was banished, but Vincent was tortured on the rack and the gridiron and scourged, then laid on a soft bed to break his constancy, and there he died. His body, thrown out for the vultures, was said to be guarded by a raven. He is shown in a deacon's dalmatic and is honoured as patron in Valencia, Saragossa and Portugal.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Vincent" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Vincent">
+    <excerptum>Deacon of Saragossa, and martyr under Diocletian, 304; mentioned in the Roman Martyrology, 22 Jan., with St. Anastasius the Persian</excerptum>
+    <excerptum>This most renowned martyr of Spain is represented in the dalmatic of a deacon, and has as emblems a cross, a raven, a grate, or a fire-pile. He is honoured as patron in Valencia, Saragossa, Portugal etc.</excerptum>
+    <excerptum>His Acts were read in the churches of Africa at the end of the fourth century, as St. Augustine testifies in Sermon 275.</excerptum>
+    <excerptum>The present Acts (Acta SS., III Jan., 6) date from the eighth or ninth century, and were compiled from tradition.</excerptum>
+    <excerptum>All agree in substance with the metric life by Prudentius</excerptum>
+    <excerptum>He was born at Saragossa; his father was Eutricius (Euthicius), and his mother, Enola, a native of Osca. Under the direction of Valerius, Bishop of Sargossa, Vincent made great progress in his studies. He was ordained deacon and commissioned to do the preaching in the diocese, the bishop having an impediment of speech.</excerptum>
+    <excerptum>By order of the Governor Dacian he and his bishop were dragged in chains to Valencia and kept in prison for a long time. Then Valerius was banished, but Vincent was subjected to many cruel torments, the rack, the gridiron, and scourgings.</excerptum>
+    <excerptum>He was next placed in a soft and luxurious bed, to shake his constancy, but here he expired. His body was thrown to be devoured by vultures, but it was defended by a raven.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="22 January">
+    <excerptum>At Valencia, in Spain, while the wicked Dacian was governor, St. Vincent, deacon and martyr, who, after suffering imprisonment, hunger, the torture, the disjointing of his limbs; after being burned with plates of heated metal and on the gridiron, and tormented in other ways, took his flight to heaven</excerptum>
+    <excerptum>His noble triumph over his sufferings has been elegantly set forth in verse by Prudentius, and highly eulogized by St. Augustine and pope St. Leo.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="23 January">
+    <excerptum>Saint Vincent, Deacon and Martyr</excerptum>
+  </fons>
+</sanctus>

@@ -1,0 +1,46 @@
+<sanctus id="dominic" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Dominic</nomen>
+  <ortus annus="1170" circa="verum" locus="Calaroga, Old Castile" fontes="ce"/>
+  <obitus annus="1221" mensis="8" dies="6" locus="Bologna" fontes="ce mr"/>
+  <canonizatio modus="formalis" annus="1234" mensis="7" dies="13" papa="Gregory IX" fontes="ce"/>
+  <festum calendarium="generale" mensis="8" dies="8" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="8" dies="4" fontes="mr"/>
+  <munus fontes="us">priest</munus>
+  <munus fontes="ce mr">founder of the Order of Preachers</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Dominic was born about 1170 at Calaroga in Old Castile, son of Felix Guzman and Blessed Joanna of Aza, of the Spanish nobility. After studying ten years at the University of Palencia, where he once sold his annotated books to feed the starving poor, he was called to the cathedral chapter of Osma to help reform it, and later became its prior. In 1203 he accompanied Bishop Diego of Osma on a royal embassy, and passing through Toulouse they saw the ruin wrought by the Albigensian heresy; there Dominic first conceived an order to combat heresy by preaching. Sent by Innocent III to Languedoc, he and Diego persuaded the Cistercian preachers to a more austere life and disputed with the heretics, and in 1206 Dominic founded a convent for women at Prouille.</paragraphus>
+    <paragraphus fontes="ce mr">Gathering followers at Toulouse, he obtained the bull confirming his Order of Preachers on 22 December 1216. On 15 August 1217 he boldly dispersed his seventeen friars across Europe, founding houses at Paris, Bologna and Rome, where Honorius III gave the order the church of Saint Sixtus. He presided over the order's first general chapters at Bologna, and died there on 6 August 1221 after three weeks of illness. Gregory IX signed the bull of canonization on 13 July 1234. The Martyrology praises his chastity, learning and miracles, and keeps his feast on 4 August by decree of Paul IV.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Dominic" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Dominic">
+    <excerptum>Founder of the Order of Preachers, commonly known as the Dominican Order; born at Calaroga, in Old Castile, c. 1170; died 6 August, 1221. His parents, Felix Guzman and Joanna of Aza, undoubtedly belonged to the nobility of Spain</excerptum>
+    <excerptum>To nobility of blood Joanna of Aza added a nobility of soul which so enshrined her in the popular veneration that in 1828 she was solemnly beatified by Leo XII.</excerptum>
+    <excerptum>In 1184 Saint Dominic entered the University of Palencia. Here he remained for ten years</excerptum>
+    <excerptum>On one occasion he sold his books, annotated with his own hand, to relieve the starving poor of Palencia.</excerptum>
+    <excerptum>Dominic was still a student at Palencia when Don Martin de Bazan, the Bishop of Osma, called him to membership in the cathedral chapter for the purpose If assisting in its reform.</excerptum>
+    <excerptum>On the accession of Don Diego d'Azevedo to the Bishopric of Osma in 1201, Dominic became superior of the chapter with the title of prior.</excerptum>
+    <excerptum>In 1203 Alfonso IX, King of Castile, deputed the Bishop of Osma to demand from the Lord of the Marches, presumably a Danish prince, the hand of his daughter on behalf of the king's son</excerptum>
+    <excerptum>For his companion on this embassy Don Diego chose Saint Dominic. Passing through Toulouse in the pursuit of their mission, they beheld with amazement and sorrow the work of spiritual ruin wrought by the Albigensian heresy.</excerptum>
+    <excerptum>It was in the contemplation of this scene that Dominic first conceived the idea of founding an order for the purpose of combating heresy and spreading the light of the Gospel by preaching</excerptum>
+    <excerptum>Innocent III, however, refused to approve this project, and instead sent the bishop and his companion to Languedoc to join forces with the Cistercians</excerptum>
+    <excerptum>Diego and Dominic quickly saw that the failure of the Cistercian apostolate was due to the monks' indulgent habits, and finally prevailed upon them to adopt a more austere manner of life.</excerptum>
+    <excerptum>Dominic and his companion, therefore, lost no time in engaging their opponents in this kind of theological exposition.</excerptum>
+    <excerptum>Saint Dominic, with the permission of Foulques, Bishop of Toulouse, established a convent at Prouille in 1206.</excerptum>
+    <excerptum>with the approval of Bishop Foulques of Toulouse, he began the organization of his little band of followers.</excerptum>
+    <excerptum>on 22 December, 1216, the Bull of confirmation was issued.</excerptum>
+    <excerptum>On 15 August, 1217, he gathered the brethren about him at Prouille to deliberate on the affairs of the order. He had determined upon the heroic plan of dispersing his little band of seventeen unformed followers over all europe.</excerptum>
+    <excerptum>By another Bull, dated 3 Dec., 1218, Honorius III bestowed upon the order the church of Saint Sixtus in Rome.</excerptum>
+    <excerptum>he dispatched Matthew of France and two companions to Paris. A foundation was made in the vicinity of the university, and the friars took possession in October, 1217.</excerptum>
+    <excerptum>Saint Dominic next determined upon a settlement at the University of Bologna.</excerptum>
+    <excerptum>the first general chapter of the order, to be held at Bologna on the feast of the following Pentecost.</excerptum>
+    <excerptum>The thirtieth of May, 1221, found him again at Bologna presiding over the second general chapter of the order.</excerptum>
+    <excerptum>He had scarcely returned to Bologna when a fatal illness attacked him. He died after three weeks of sickness</excerptum>
+    <excerptum>after signing the Bull of canonization on 13 July, 1234, Gregory IX declared that he no more doubted the saintliness of Saint Dominic than he did that of Saint Peter and Saint Paul.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="4 August">
+    <excerptum>T Bologna, St. Dominic, confessor, founder of the Order of Friars Preachers, most renowned for sanctity and learning. He preserved his chastity unsullied to the end of his life, and by his great merits raised three persons from the dead.</excerptum>
+    <excerptum>he rested in peace on the 6th of this month. His feast, however, is celebrated on this day, by decree of pope Paul IV.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="8 August">
+    <excerptum>Saint Dominic, Priest</excerptum>
+  </fons>
+</sanctus>

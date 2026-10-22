@@ -1,0 +1,36 @@
+<sanctus id="john-of-kanty" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">John of Kanty</nomen>
+  <nomen lingua="en" fontes="ce mr">John Cantius</nomen>
+  <ortus saeculum="15" locus="Kenty, near Oswiecim, Poland" fontes="ce"/>
+  <obitus annus="1473" locus="Krakow" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1767" papa="Clement XIII" fontes="ce"/>
+  <festum calendarium="generale" mensis="12" dies="23" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="10" dies="20" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="12" dies="24" nota="the elogium; the Martyrology adds that his feast is kept on 20 October" fontes="mr2"/>
+  <munus fontes="us ce mr">priest</munus>
+  <descriptio>
+    <paragraphus fontes="ce">John Cantius was born at Kenty, near Oswiecim in the diocese of Krakow, in 1412 (some say 1403), the son of pious country people. He studied at the Academy of Krakow, took his degrees up to the doctorate, was ordained priest and became professor of theology there. Sent for a short time as parish priest to Olkusz, he feared the responsibility of the cure of souls and returned to the Academy, where he taught Sacred Scripture until his death.</paragraphus>
+    <paragraphus fontes="ce mr2">His first biographer stresses his humility and charity: he gave the poor all the money and clothes he did not strictly need, slept little and on the floor, and ate very sparingly. He went once on pilgrimage to Jerusalem and four times on foot to Rome. The Martyrology praises his learning, his zeal in spreading the faith and his miracles. He died at Krakow in 1473 and was buried in the church of St. Anne. Clement XIII canonized him in 1767.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. John Cantius" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._John_Cantius">
+    <excerptum>Born at Kenty, near Oswiecim, Diocese of Krakow, Poland, 1412 (or 1403); died at Krakow, 1473, and was buried there under the church of St. Anne; his feast is on 20 October.</excerptum>
+    <excerptum>He was the son of Stanislaus and Anne who were pious country people</excerptum>
+    <excerptum>then being sent by his parents to the Academy of Krakow</excerptum>
+    <excerptum>he was graduated first as bachelor, then as master and doctor, was ordained priest and then appointed professor of theology at the Academy of Krakow</excerptum>
+    <excerptum>he was sent, after a short time, by his superiors to olkusz, Diocese of Krakow, to be parish priest. Being afraid of the great responsiblity of parish work, he very soon left the parish</excerptum>
+    <excerptum>was again appointed professor of Sacres Scripture at the Academy of Krakow, which position he held without interruption until his death.</excerptum>
+    <excerptum>As testified by Michael Miechowita, the medieval Polish historian and the saint's first biographer, extreme humility and charity were conspicuous in his life</excerptum>
+    <excerptum>He distributed to the poor all the money and clothes he had, retaining only what was absolutely necessary to support himself. He slept but little, and on the floor, ate very sparingly</excerptum>
+    <excerptum>He made one pilgrimage to Jerusalem with the desire of becoming a martyr among the Turks, and four pilgrimages to Rome on foot.</excerptum>
+    <excerptum>He was canonized by Clement XIII in 1767.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="20 October">
+    <excerptum>Poland, St. John Cantius, priest and confessor. Being glorious for virtues and miracles, he was inscribed among the saints by the Sovereign</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="24 December">
+    <excerptum>In Poland, St. John Cantius, secular priest and confessor, celebrated for his learning, his zeal in propagating the faith, and for his virtues and miracles. His feast is kept on the 20th of October.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="23 December">
+    <excerptum>Saint John of Kanty, Priest</excerptum>
+  </fons>
+</sanctus>

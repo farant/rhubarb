@@ -1,0 +1,39 @@
+<sanctus id="christopher-magallanes-and-companions" versio="1" genus="coetus" status="sanctus">
+  <nomen lingua="en" principale="verum">Christopher Magallanes and Companions</nomen>
+  <nomen lingua="es" fontes="can">Cristóbal Magallanes</nomen>
+  <obitus saeculum="20" locus="Mexico" martyrium="verum" fontes="can"/>
+  <beatificatio annus="1992" mensis="11" dies="22" papa="John Paul II" fontes="beat"/>
+  <canonizatio modus="formalis" annus="2000" mensis="5" dies="21" papa="John Paul II" fontes="can"/>
+  <festum calendarium="generale" mensis="5" dies="21" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us can">martyr</munus>
+  <munus fontes="us beat">priest</munus>
+  <munus fontes="beat">layman</munus>
+  <socius fontes="can">Cristóbal Magallanes</socius>
+  <socius fontes="beat">Luis Batis</socius>
+  <socius fontes="beat">Manuel</socius>
+  <socius fontes="beat">Salvador</socius>
+  <socius fontes="beat">David</socius>
+  <descriptio>
+    <paragraphus fontes="can beat">This group comprises Cristóbal Magallanes and twenty-four companions, Mexican martyrs who died during the religious persecution in Mexico in the first three decades of the twentieth century. Twenty-two were diocesan priests serving the Churches of Guadalajara, Durango, Chilpancingo-Chilapa, Morelia and Colima; three were young laymen of Catholic Action, Manuel, Salvador and David, whom John Paul II honoured together with their parish priest, Luis Batis.</paragraphus>
+    <paragraphus fontes="can beat">Though they could have left their communities during the armed conflict, the priests chose to remain so as not to deprive their people of the Eucharist and pastoral care, and according to John Paul II all of them accepted martyrdom calmly, forgiving their persecutors. Many died crying out for Christ the King and the Virgin of Guadalupe; Manuel, a husband and father of three, said before he was shot that he would die but God would not, and would care for his wife and children. John Paul II beatified them on 22 November 1992 and canonized them on 21 May 2000.</paragraphus>
+  </descriptio>
+  <fons id="can" opus="sedes" locus="Homily of John Paul II, Canonization of 27 New Saints, 21 May 2000" url="https://www.vatican.va/content/john-paul-ii/en/homilies/2000/documents/hf_jp-ii_hom_20000521_canonizations.html">
+    <excerptum>CANONIZATION OF 27 NEW SAINTS Sunday, 21 May 2000</excerptum>
+    <excerptum>the Church rejoices in canonizing these children of Mexico: Cristóbal Magallanes and his 24 companion martyrs, priests and laymen</excerptum>
+    <excerptum>the situation which Cristóbal Magallanes and his 24 companion martyrs had to endure in the first 30 years of the 20th century.</excerptum>
+    <excerptum>Most of them belonged to the secular clergy and three were laymen seriously committed to helping priests. They did not stop courageously exercising their ministry when religious persecution intensified in the beloved land of Mexico</excerptum>
+    <excerptum>They all freely and calmly accepted martyrdom as a witness to their faith, explicitly forgiving their persecutors.</excerptum>
+  </fons>
+  <fons id="beat" opus="sedes" locus="Homilía de Juan Pablo II, Beatificación de 22 sacerdotes, 3 laicos y de la Madre María de Jesús Sacramentado Venegas, 22 de noviembre de 1992" url="https://www.vatican.va/content/john-paul-ii/es/homilies/1992/documents/hf_jp-ii_hom_19921122_beatificazioni.html">
+    <excerptum>BEATIFICACIÓN DE 22 SACERDOTES, 3 LAICOS Y DE LA MADRE MARÍA DE JESÚS SACRAMENTADO VENEGAS</excerptum>
+    <excerptum>HOMILÍA DEL SANTO PADRE JUAN PABLO II Domingo 22 de noviembre de 1992</excerptum>
+    <excerptum>Veintidós de ellos eran sacerdotes diocesanos, los cuales desarrollaban una fecunda labor apostólica en sus Iglesias particulares: Guadalajara, Durango, Chilpancingo-Chilapa, Morelia y Colima.</excerptum>
+    <excerptum>aun teniendo la posibilidad de ausentarse de sus comunidades durante el conflicto armado, decidieron, a ejemplo del Buen Pastor, permanecer entre los suyos para no privarlos de la Eucaristía, de la Palabra de Dios y del cuidado pastoral.</excerptum>
+    <excerptum>Junto con estos sacerdotes mártires queremos honrar, de modo especial, a tres jóvenes laicos de la Acción Católica: Manuel, Salvador y David, los cuales, unidos a su párroco Luis Batis</excerptum>
+    <excerptum>es bien expresivo el testimonio de Manuel, de veintiocho años, esposo fiel y padre de tres niños pequeños, el cual antes de ser fusilado exclamó: “Yo muero, pero Dios no muere, Él cuidará de mi esposa y de mis hijos”.</excerptum>
+    <excerptum>de manera que al morir muchos gritaban: ¡Viva Cristo Rey y la Virgen de Guadalupe!</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="21 May">
+    <excerptum>Saint Christopher Magallanes, Priest, and Companions, Martyrs</excerptum>
+  </fons>
+</sanctus>

@@ -129,7 +129,24 @@ def caput_planum():
     return textus, visa
 
 
+# subdirectoria src in aedificatio.stml singula declarata (plagulae
+# gradu 0 tegunt; actio memorabilis): novum aut absens = declaratio
+# vetus, clavis fabricae contenta eius non videret (2026-10-17)
+SUBDIRECTORIA = {'aead', 'codec', 'ec', 'hash', 'int', 'kdf', 'mac',
+                 'rand', 'rsa', 'ssl', 'symcipher', 'x509'}
+
+
 def main():
+    src = os.path.join(ARBOR, 'src')
+    for d, sub, _ in os.walk(src):
+        if d != src and sub:
+            fracta('src gradu altiore quam I: ' + os.path.relpath(d, src))
+    praesentia = {e for e in os.listdir(src)
+                  if os.path.isdir(os.path.join(src, e))}
+    if praesentia != SUBDIRECTORIA:
+        fracta('subdirectoria src ab aedificatio.stml differunt: '
+               + ' '.join(sorted(praesentia ^ SUBDIRECTORIA))
+               + ' (declara in actione bearssl_amalgama)')
     fontes = sorted(
         os.path.relpath(os.path.join(d, f), os.path.join(ARBOR, 'src'))
         for d, _, fs in os.walk(os.path.join(ARBOR, 'src'))

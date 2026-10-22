@@ -1,0 +1,40 @@
+<sanctus id="bonaventure" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Bonaventure</nomen>
+  <nomen lingua="it" fontes="bu">Bonaventura</nomen>
+  <ortus annus="1221" locus="Bagnarea, Tuscany" fontes="bu"/>
+  <obitus annus="1274" mensis="7" dies="14" locus="Lyons" fontes="bu mr"/>
+  <canonizatio modus="formalis" annus="1482" papa="Sixtus IV" fontes="bu"/>
+  <festum calendarium="generale" mensis="7" dies="15" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="7" dies="14" fontes="mr"/>
+  <munus fontes="us mr">bishop</munus>
+  <munus fontes="us bu">doctor of the Church</munus>
+  <munus fontes="mr">cardinal</munus>
+  <munus fontes="bu">religious</munus>
+  <descriptio>
+    <paragraphus fontes="bu">Bonaventure, called the Seraphic Doctor, was born at Bagnarea in Tuscany in 1221 and was christened John. According to Butler, when he was four and gravely ill his mother sought the prayers of Francis of Assisi, and the child recovered; the name Bonaventura ("good luck") came from that occasion. In 1243, at twenty-two, he entered the Order of St. Francis, and he was sent to Paris to study under Alexander of Hales and, after Alexander's death in 1245, under John of Rochelle.</paragraphus>
+    <paragraphus fontes="bu mr">While teaching at Paris he was chosen general of his Order at Rome in 1256, aged only thirty-five. The pope later named him cardinal and bishop of Albano. He took part in the second Council of Lyons, called by Gregory X to seek union with the Greeks, fell ill after one of its sessions, and died at Lyons on 14 July 1274 in his fifty-third year; the pope and the council attended his funeral that day. He was canonized in 1482 and Sixtus V enrolled him among the doctors of the Church.</paragraphus>
+  </descriptio>
+  <fons id="bu" opus="butler1812" locus="v07 Jul. 14 St. Bonaventure, Cardinal, Bishop and Doctor of the Church">
+    <excerptum>is surnamed the Seraphie Doctor. He was born at Bagnarea in Tuscany, in the year 1221, of pious parents, named John of Fidenza and Mary Ritelli. He was christened by the name of John</excerptum>
+    <excerptum>In the fourth year of his age he fell so dangerously sick that his life was despaired of by the physicians.</excerptum>
+    <excerptum>cast herself at the feet of St. Francis of Assisium, with many tears begging his intercession with God for the life of her son.</excerptum>
+    <excerptum>and at his prayer the child recovered so perfect a state of health that he was never known to be sick from that time till the illness of which he died.</excerptum>
+    <excerptum>O buona ventura, that is, in Italian, Good luck. Whence the name of Bonaventura was given our saint.</excerptum>
+    <excerptum>In 1243, being twenty-two years of age, he entered into the Order of St. Francis</excerptum>
+    <excerptum>he was sent to Paris to complete his studies under the celebrated Alexander of Hales, surnamed the Irrefragable Doctor. After his death in 1245, St. Bonaventure continued his course under his successor John of Rochelle.</excerptum>
+    <excerptum>Whilst he continued to teach at Paris he was chosen general of his Order in a chapter held in the convent called Ara-Ceeli at Rome m 1256. The saint was only thirty-five years old.</excerptum>
+    <excerptum>he received from the pope a brief by which he was nominated cardinal, and bishop of Albano, one of the six suffragans of Rome.</excerptum>
+    <excerptum>The emperor Michael Paleeologus had made proposals to pope Clement IV, fora union. Pope Gregory X. zealously pursued this affair.</excerptum>
+    <excerptum>To bring this affair to an happy conclusion, Gregory X. invited the Greeks to come to the general council which he assembled at Lyons for this very purpose</excerptum>
+    <excerptum>This was the fourteenth general council, and the second of Lyons.</excerptum>
+    <excerptum>St. Bonaventure was taken ill after this session</excerptum>
+    <excerptum>expired im great tranquillity on the fourteenth of July in the year 1274, of his age the fifty-third. The pope and the whole council solemnized his obsequies on the same day in the church of the Franciscans at Lyons.</excerptum>
+    <excerptum>St. Bonaventure was canonized by Sixtus [V.in 1482. Sixtus V. enrolled his name among the doctors of the church</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="14 July">
+    <excerptum>AT Lyons, the demise of St. Bonaventure, Cardinal and bishop of Albano, confessor and doctor of the Order of Minorites, most celebrated for his learning and holiness of life.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="15 July">
+    <excerptum>Saint Bonaventure, Bishop and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

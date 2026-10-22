@@ -1,0 +1,37 @@
+<sanctus id="maria-goretti" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Maria Goretti</nomen>
+  <nomen lingua="la" principale="verum" fontes="px">Maria Goretti</nomen>
+  <ortus annus="1890" mensis="10" dies="16" locus="Corinaldo, The Marches" fontes="jp"/>
+  <obitus annus="1902" mensis="7" dies="6" locus="Nettuno" martyrium="verum" fontes="jp px"/>
+  <canonizatio modus="formalis" annus="1950" mensis="6" dies="24" papa="Pius XII" fontes="px"/>
+  <festum calendarium="generale" mensis="7" dies="6" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us px">virgin</munus>
+  <munus fontes="us px">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="jp px">Maria Goretti was born at Corinaldo in the Marches on 16 October 1890. Her family, poor farm labourers, had to emigrate and settled at Le Ferriere di Conca in the Pontine Marshes; poverty kept her from school, and she learned the faith from her mother. Her father died of malaria. On 5 July 1902, not yet twelve years old, she was brutally stabbed at Le Ferriere while resisting an attempt on her purity, and she died the next day, 6 July, in the hospital at Nettuno.</paragraphus>
+    <paragraphus fontes="jp px">John Paul II singled out her forgiveness of the man who killed her and her wish to meet him one day in heaven. Her murderer recognized his sin, asked forgiveness of God and of her family, and expiated his crime; her mother pardoned him on the family's behalf in the courtroom during his trial. Pius XII canonized her on 24 June 1950, called her "the sweet little martyr of purity", and set her memorial on the day of her death, 6 July. Her remains rest in a shrine at Nettuno in the care of the Passionists.</paragraphus>
+  </descriptio>
+  <fons id="jp" opus="sedes" locus="John Paul II, Message to the Bishop of Albano for the centenary of the death of St. Maria Goretti, 6 July 2002" url="https://www.vatican.va/content/john-paul-ii/en/messages/pont_messages/2002/documents/hf_jp-ii_mes_20020708_santa-maria-goretti.html">
+    <excerptum>A hundred years ago, on 6 July 1902, Maria Goretti died in the hospital at Nettuno, brutally stabbed the day before in the little village of Le Ferriere, in the Pontine Marshes.</excerptum>
+    <excerptum>Maria Goretti, born in Corinaldo in The Marches on 16 October 1890, was soon obliged to emigrate with her family, and after sometime they arrived at Le Ferriere di Conca in the Pontine Marshes.</excerptum>
+    <excerptum>Despite the hardships of poverty which even prevented her from going to school</excerptum>
+    <excerptum>which she showed in particular at the death of her father, who died of malaria.</excerptum>
+    <excerptum>Pope Pius XII of venerable memory pointed to Maria Goretti as "the sweet little martyr of purity"</excerptum>
+    <excerptum>her forgiveness of the man who killed her and her desire to be able to meet him one day in heaven deserve special attention.</excerptum>
+    <excerptum>Maria Goretti's murderer recognized the sin he had committed. He asked forgiveness of God and of the martyr's family, conscientiously expiated his crime</excerptum>
+    <excerptum>The saint's mother, for her part, pardoned him on behalf of the family in the hall of the tribunal where his trial was taking place.</excerptum>
+    <excerptum>the Congregation of the Passion (C.P.), entrusted with the care of the shrine where the saint's remains repose</excerptum>
+    <excerptum>to the worthy Passionist Fathers in charge of the Shrine at Nettuno</excerptum>
+  </fons>
+  <fons id="px" opus="sedes" locus="Pius XII, Homily for the canonization of Maria Goretti, 24 June 1950" url="https://www.vatican.va/content/pius-xii/la/homilies/documents/hf_p-xii_hom_19500624_maria-goretti.html">
+    <excerptum>IN SOLEMNI CANONIZATIONE BEATAE MARIAE GORETTI, VIRGINIS ET MARTYRIS, IN PETRIANO FORO HABITA HOMILIA SANCTISSIMI DOMINI NOSTRI PIO PP. XII* Die XXIV mensis Iunii, Anno Domini MCML</excerptum>
+    <excerptum>Beatam Mariam Goretti, Sanctam esse decernimus et definimus ac Sanctorum catalogo adscribimus : statuentes ab Ecclesia Universali illius memoriam quolibet anno die eius natali, sexta nempe iulii, inter Sanctas Virgines et Martyres pia devotione recoli debere.</excerptum>
+    <excerptum>Haec quidem omnia in virginea puella miramur, Maria Goretti, quam heri Nobis licuit sanctorum caelitum redimire gloria.</excerptum>
+    <excerptum>Ex aerariae plebis parentibus orta est; qui, ut honesto labore panem succrescenti suboli compararent, oppidulum relinquere suum coacti sunt, et ad Latii oras contendere, ubi excolendis agris frugalissimum victum filiis providerent.</excerptum>
+    <excerptum>Nullis litteris erudita, ab ipsa genetrice sua prima christianae doctrinae rudimenta accepit</excerptum>
+    <excerptum>cum nondum esset duodecim annos nata, ad mortem usque invicta decertare, ut niveum innocentiae suae lilium intactum, illibatum servaret</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="6 July">
+    <excerptum>Saint Maria Goretti, Virgin and Martyr</excerptum>
+  </fons>
+</sanctus>
