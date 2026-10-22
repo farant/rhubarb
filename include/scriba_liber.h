@@ -98,4 +98,28 @@ scriba_liber_lineas_legere (
                     i32  maximum,
                     Xar* exitus);
 
+/* D5 (indagatio S2): nomina paginarum, LECTIO SOLA, ordine indicis;
+ * praefixum NIHIL = liber communis vici (index 'scriba/paginae').
+ * Liber absens = nulla (VERUM); FALSUM si index malus. Xar de chorda
+ * in exitus. */
+b32
+scriba_liber_nomina_legere (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* praefixum,
+                    Xar* exitus);
+
+/* D5: lineae paginae unius, LECTIO SOLA (vacuae omissae, ut
+ * scriba_liber_lineas_legere); praefixum NIHIL = liber communis.
+ * Pagina absens = nullae lineae. */
+b32
+scriba_liber_paginam_legere (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* praefixum,
+                 chorda  titulus,
+                    Xar* exitus);
+
 #endif /* SCRIBA_LIBER_H */

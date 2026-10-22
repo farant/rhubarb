@@ -267,6 +267,72 @@ _sectio_prima (
         CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(x, I),
             "  beta");
     }
+
+    CREDO_GRADUS("X: nomina et pagina una, lectio sola (D5)");
+    {
+        Xar* x;
+        s64  acta;
+        s64  plagulae;
+
+        acta      = volumen_summa_actorum(vol);
+        plagulae  = volumen_summa_plagularum(vol);
+        /* liber communis: praefixum NIHIL */
+        x = xar_creare(piscina, (i32)magnitudo(chorda));
+        CREDO_VERUM(scriba_liber_nomina_legere(piscina, intern, vol,
+            NIHIL, x));
+        CREDO_AEQUALIS_I32(xar_numerus(x), CXXV);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(x,
+            ZEPHYRUM), "1");
+        CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(x,
+            CXXIV), "x-1_b");
+        x = xar_creare(piscina, (i32)magnitudo(chorda));
+        CREDO_VERUM(scriba_liber_paginam_legere(piscina, intern, vol,
+            NIHIL, lit("1"), x));
+        CREDO_AEQUALIS_I32(xar_numerus(x), I);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(x,
+            ZEPHYRUM), "q");
+        /* liber diei: index ordine, paginae singulae */
+        x = xar_creare(piscina, (i32)magnitudo(chorda));
+        CREDO_VERUM(scriba_liber_nomina_legere(piscina, intern, vol,
+            "dies/2026-10-21", x));
+        CREDO_AEQUALIS_I32(xar_numerus(x), III);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(x, II),
+            "3");
+        x = xar_creare(piscina, (i32)magnitudo(chorda));
+        CREDO_VERUM(scriba_liber_paginam_legere(piscina, intern, vol,
+            "dies/2026-10-21", lit("1"), x));
+        CREDO_AEQUALIS_I32(xar_numerus(x), II);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(x, I),
+            "  beta");
+        x = xar_creare(piscina, (i32)magnitudo(chorda));
+        CREDO_VERUM(scriba_liber_paginam_legere(piscina, intern, vol,
+            "dies/2026-10-21", lit("2"), x));
+        CREDO_AEQUALIS_I32(xar_numerus(x), I);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(x,
+            ZEPHYRUM), "gamma");
+        /* pagina in indice sine documento, pagina ignota, liber
+         * absens: nihil, nihil creatum */
+        x = xar_creare(piscina, (i32)magnitudo(chorda));
+        CREDO_VERUM(scriba_liber_paginam_legere(piscina, intern, vol,
+            "dies/2026-10-21", lit("3"), x));
+        CREDO_VERUM(scriba_liber_paginam_legere(piscina, intern, vol,
+            "dies/2026-10-21", lit("nusquam"), x));
+        CREDO_VERUM(scriba_liber_paginam_legere(piscina, intern, vol,
+            "dies/2026-10-30", lit("1"), x));
+        CREDO_VERUM(scriba_liber_nomina_legere(piscina, intern, vol,
+            "dies/2026-10-30", x));
+        CREDO_AEQUALIS_I32(xar_numerus(x), ZEPHYRUM);
+        CREDO_AEQUALIS_S64(volumen_summa_actorum(vol), acta);
+        CREDO_AEQUALIS_S64(volumen_summa_plagularum(vol), plagulae);
+        CREDO_VERUM(scriba_documentum_aperire(piscina, intern, vol,
+            "dies/2026-10-21/paginae/3") == NIHIL);
+        /* index malus */
+        CREDO_VERUM(volumen_plagulam_condere(vol,
+            lit("dies/2026-10-23/paginae"), lit("<paginae"),
+            "probatio"));
+        CREDO_FALSUM(scriba_liber_nomina_legere(piscina, intern, vol,
+            "dies/2026-10-23", x));
+    }
     volumen_claudere(vol);
 }
 

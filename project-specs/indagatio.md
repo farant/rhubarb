@@ -231,7 +231,7 @@ registry itself, so adding a kind touches nothing in the host.
 |---|---|
 | **S0** | measure: counts on a scratch copy of Fran's volume (items, contacts, notebook pages, text bytes - counts only, never content); time to build an in-memory FTS5 index of that size on fixture text |
 | **S1** | lib `indagatio` + the conspectus observer and `enumerare` hook (header text first); fixture kinds only; lazy maintenance, verification, sanitizer, clustering, pages |
-| **S2** | real kinds: agenda items (done ones marked), notebook pages (day and common), contacts (fields + notes notebook) |
+| **S2** | real kinds: agenda items (done ones marked), notebook pages (day and common), contacts (fields + notes notebook) - DONE 2026-10-21: lib `indagatio_genera` (conspectus `res`, `notae`, `liber`, `personae`, names approved by Fran) + read-only `scriba_liber_nomina_legere` / `_paginam_legere`; detail in lib/indagatio.worklog.md |
 | **S3** | the pane in the right-hand cycle, route `indagatio?q=`, Enter opens; Fran's look |
 | **S4** | cluster order decided on real data; saints (reference data, indexed once per corpus version); the `quaestio` relation |
 | **later, on PULL** | index file beside the volume (startup measured too slow); stemming; communications; "as of" links; D6 category defaults |
@@ -270,6 +270,12 @@ None at the spec level; header text and Latin names come with S1.
 - **Not checked:** the route of an agenda item WITHOUT a day (the
   §IV template assumes one; undated items probably open the agenda
   view with the item selected) - S2.
+  *S2 (2026-10-21):* undated items route to
+  `calendarium/agenda?res_electa=<id>`, but the manifest documents
+  `res_electa` for the day view only - S3 checks. Common-notebook
+  hits route to `scriba/<nomen>`, which does NOT exist yet (scriba has
+  no routes) - S3 makes it real or picks the form. Day-note hits open
+  the day (no route field for the notes page).
 - **Not designed:** search inside pictures (pictor) or blobs (PDF
   text); communications (no such documents yet).
 - The other-process limit (§V) is inherited from D4c, not new.

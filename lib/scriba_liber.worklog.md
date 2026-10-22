@@ -45,3 +45,16 @@ byte must never reach the text). Tabs DO survive (`\t` + continuation
 cell) and a tab-only line becomes spaces-only, which is the case the
 "spaces only = blank" check really catches (plain spaces never count
 as content in `tabula_invenire_finem_contenti`). Both are tested.
+
+## 2026-10-21 — read-only page names and single pages (indagatio S2)
+
+`scriba_liber_nomina_legere` and `scriba_liber_paginam_legere`: search
+(lib indagatio_genera) needs a notebook's page names and ONE page's
+lines with nothing written - `scriba_liber_aperire*` write page "1"
+when the index is absent, and `lineas_legere` flattens every page.
+praefixum NIHIL = the common book (its old layout: index
+`scriba/paginae`, pages `paginae/<n>`, not `<p>/paginae/<n>`), resolved
+in one helper `vias_libri`. `lineas_legere` now runs on the same
+internals (`nomina_legere` + `paginam_legere`), behaviour unchanged
+(steps IX pass as before). Step X checks volumen_summa_actorum and
+_plagularum are unchanged across every read.
