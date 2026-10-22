@@ -116,3 +116,38 @@
   MUTARE replaces the object after serving one request (same size, new
   ETag) - without If-Match the result would be a spliced file of the
   right size, which is exactly what the `capere_mutatum` plant shows.
+
+## 2026-10-22 - T5: reactor layer (horreum_vocatio)
+
+- **The blocking loop re-expressed as a state machine.** At any moment
+  at most one thing is pending per vocatio: the `http_vocatio` of an
+  attempt, the HEAD child, or a reactor timer (backoff, or the deferred
+  finis). Abort cancels/aborts whichever it is; the inner finis that
+  `http_vocationem_abrumpere` / the child's abort calls synchronously is
+  silenced by the `abrumpens` flag, then our own finis runs once with
+  `abrupta`.
+- **The 'iam nostrum' HEAD is a child HorreumVocatio** (same machine,
+  so the HEAD gets its own retries and clock offset - as the blocking
+  layer's nested `horreum_exsequi` does). Its result decides: our
+  sha256 meta (conditional PUT) or the expected ETag (Complete) ->
+  success `iam_nostrum`, else the saved 412/404.
+- **finis never inside `horreum_vocare`:** the only immediate failure is
+  the signer (e.g. `h == NIHIL`); it is reported through a 0 ms timer.
+  `http_vocare` already defers its own failures (closed port).
+- **No shared clock state at this layer.** The blocking layer keeps the
+  offset in the horreum's executor slot; here the offset goes out in
+  `resultus.deviatio_s` and back in through `optiones.deviatio_s`.
+- **Fake over TCP = `probationes/horreum_simulacrum_rete.h`**, a door in
+  its own header: putting it into `horreum_simulacrum.h` would force the
+  T3/T4 suite (interior-function convention) to call it and link
+  reactor/tcp. The request is parsed with `http_parser`, rebuilt as an
+  `HttpPetitio` (raw URI, every header but Connection, body) and handed
+  to the same `_sim_exsequi`. HEAD goes through
+  `http_responsum_capita_serialize` with the model's Content-Length -
+  the normal serializer overwrites Content-Length from the (empty) body.
+  SCRIBERE_ABRUMPERE = close without a reply.
+- **Linux:** `http_vocatio` resolves names through `nomina`, which only
+  has `nomina_macos.m`, so no reactor suite can link on Linux (true of
+  `probatio_http_vocatio*` too). Checked compile-only under gcc musl +
+  glibc with the house flags; the T2-T4 suites run green there. Parked
+  ...NPMN7.

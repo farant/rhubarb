@@ -242,6 +242,31 @@ this plan.
 - **T4: two plants added** - exsequi's NoSuchUpload branch removed ->
   `perficere_iam_nostrum` red; md5 check removed -> `md5_etag` red.
 
+- **T5: the loopback door is its own header**
+  (`probationes/horreum_simulacrum_rete.h`, `simulacrum_rete_aperire` /
+  `simulacrum_rete_claudere`, handle with `portus`) instead of
+  `simulacrum_audire` in `horreum_simulacrum.h`: interior functions must
+  all be called by the includer, so the T3/T4 suite would have had to
+  link reactor/tcp; the plan's signature also had no way to close.
+- **T5: `HorreumVocatioResultus` gains `abrupta` and `deviatio_s`;
+  options gain `deviatio_s`** (no shared clock state at the reactor
+  layer - the caller carries the offset). Abort = `abrupta`, genus
+  MALUM "vocatio abrupta". Cost if wrong: two fields.
+- **T5: `horreum_vocatio_finita` + `horreum_vocatio_conatus` added**
+  (the abort test must know the first backoff has begun; also progress).
+- **T5: the HEAD follow-up is a child vocatio** (own retries, as the
+  blocking layer's nested exsequi).
+- **T5: `finis_non_intra` covers both immediate paths** - signer refusal
+  (`h == NIHIL`, the only way to fail signing with a valid opus) and a
+  closed port (a door opened then closed, not port 1). New section
+  `duae_ianuae`: the vectura door and the TCP door answer the same,
+  If-Match crosses the wire, a 412 body parses over the wire.
+- **T5: Linux runs are impossible for any suite linking http_vocatio**
+  (`nomina` is macOS-only); both new files compile clean under gcc musl
+  + glibc, T2-T4 suites run green; parked ...NPMN7.
+- **T5: two plants added** - CONDITIO branch disabled -> `iam_nostrum`
+  red; offset not applied -> `horologium` red (plus the plan's two).
+
 ## Review focus
 
 1. **Object keys with awkward characters** (space, `+`, `%`, `?`, `#`,
