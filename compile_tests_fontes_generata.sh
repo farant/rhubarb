@@ -286,6 +286,7 @@ declare -a SOURCE_FILES=(
     "lib/thema.c"
     "lib/thema_visus.c"
     "lib/thesaurus.c"
+    "lib/tintinnabulum.c"
     "lib/tls.c"
     "lib/tls13.c"
     "lib/tls13_clavis.c"

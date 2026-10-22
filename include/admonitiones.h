@@ -29,6 +29,9 @@ nomen structura {
                 chorda fons;        /* "colloquia" */
                 chorda titulus;     /* "secunda" */
                 chorda corpus;      /* "Needs permission: Bash" */
+                chorda genus;       /* occasio: "permissio" | "finis" |
+                                     * "vitium" (genera cantualis -
+                                     * tintinnabulum); vacua = nulla */
                    s64 tempus;
     GradusAdmonitionis gradus;
                    b32 lecta;
@@ -72,7 +75,9 @@ admonitio (
 
 /* colloquia -> admonitiones: eventus qualis (EXSPECTAT, PERFECIT,
  * StopFailure) -> admonitio cum actione "panellus" (argumentum
- * "<panellus> <socket>"); FALSUM si eventus non qualis */
+ * "<panellus> <socket>") et genere (licentia/input/elicitatio ->
+ * permissio, Stop -> finis, StopFailure -> vitium); FALSUM si eventus
+ * non qualis */
 b32
 admonitio_ex_eventu (
     constans PraeconiumEventus* e,
