@@ -80,3 +80,15 @@ changed one brings it back to all defaults (canonical route "proba").
   pointer for the resolver's concrete value; children by montatio.
 - Order trap: `est_dies` accepts `2026-10` (length 7), so the calendar's
   computed `YYYY-MM` alias must run before the manifest's typed `dies`.
+
+## 2026-10-22 — child branches "<parent id>_nomen" (D5 S3c)
+
+The spec's open naming question (§X): vicus panes mount their notebook
+children as `<scriba id="<pane id>_notae">` because scriba keys its
+viewed page by id (`scriba/visus/<id>`), which must be unique in the
+volume - two calendars with a child "notae" would share it.
+`_ramus_liberi` now tries `<genus id="<parent id>_nomen"/>` first and
+falls back to `<genus id="nomen"/>` (the old fixtures keep working).
+A pane's own SemitaOrganum must also answer for its children's genus
+(the calendar's resolver returned NIHIL for "scriba", so any route with
+`notae` was refused). Plant red: prefixed lookup skipped.

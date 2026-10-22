@@ -259,6 +259,16 @@ _probare_notas (
             dispensator_motus(x->app.d)->spatium_intimum);
         a  = insula_ramus_attributum(&rs, "pagina_positio");
         CREDO_VERUM(a && chorda_aequalis_literis(*a, "2"));
+        /* D5 S3c: pagina notarum in semita calendarii - Ctrl+O ad
+         * paginam I (historia dextra), Ctrl+I ad II */
+        (vacuum)manus_ludus_clavem(m, 'o', MOD_IMPERIUM);
+        (vacuum)vicus_pulsare(v);
+        a  = insula_ramus_attributum(&rs, "pagina_positio");
+        CREDO_VERUM(a && chorda_aequalis_literis(*a, "1"));
+        (vacuum)manus_ludus_clavem(m, 'i', MOD_IMPERIUM);
+        (vacuum)vicus_pulsare(v);
+        a  = insula_ramus_attributum(&rs, "pagina_positio");
+        CREDO_VERUM(a && chorda_aequalis_literis(*a, "2"));
     }
 }
 

@@ -88,6 +88,38 @@ paginam_scribere (
 /* fixtura ante vicum: res "1".."5" ("Rhubarb ...", "1" die XXI X),
  * "6" "Call the plumber", persona "1" Anna Rossi cum notis, liber
  * diei 2026-10-19, liber communis paginae "1" et "2" ("Pantry") */
+/* D5 S3c: pagina secunda libri diei cum textu */
+interior b32
+paginam_secundam_diei_scribere (
+                 Mundus* x,
+     constans character* spatium,
+     constans character* textus)
+{
+          ScribaLiber* l;
+     ScribaDocumentum* d;
+    TabulaCharacterum  folium;
+               chorda  titulus;
+
+    l = scriba_liber_aperire_in_spatio(x->piscina, x->intern,
+        x->volumen,
+        spatium, XL, X);
+    titulus.datum    = NIHIL;
+    titulus.mensura  = ZEPHYRUM;
+    si (l)
+    {
+        titulus = scriba_liber_pagina_nova(l);
+    }
+    d = titulus.mensura > ZEPHYRUM ? scriba_liber_pagina(l, titulus)
+                                   : NIHIL;
+    si (!d)
+    {
+        redde FALSUM;
+    }
+    tabula_ex_literis_cum_dimensionibus(&folium, x->piscina,
+        d->latitudo, d->altitudo, textus);
+    redde scriba_documentum_committere(d, &folium) > ZEPHYRUM;
+}
+
 /* pagina nova libri communis ("2") cum textu */
 interior b32
 paginam_novam_scribere (
@@ -162,6 +194,8 @@ fixturam_scribere (
     redde paginam_scribere(x, "persona/1", "likes rhubarb")
         && paginam_scribere(x, "dies/2026-10-19",
                "rhubarb crumble recipe")
+        && paginam_secundam_diei_scribere(x, "dies/2026-10-19",
+               "rhubarb pudding")
         && paginam_scribere(x, NIHIL, "Groceries\nrhubarb, sugar")
         && paginam_novam_scribere(x, "Pantry\nrhubarb syrup");
 }
@@ -599,6 +633,23 @@ _sectio_porta (
     k = (KalendariumMontatio*)frons(x)->montatio;
     d = kalendarium_dies_electus(k);
     CREDO_VERUM(d.annus == MMXXVI && d.mensis == X && d.dies == XIX);
+
+    CREDO_GRADUS("notae diei, pagina 2: liber notarum in pagina 2");
+    quaerere(x, "pudding");
+    clavis(x, (character)XIII);
+    CREDO_NECESSE(genus_frontis(x, "calendarium"));
+    {
+        InsulaRamus  r;
+        InsulaRamus  n;
+             chorda* a;
+
+        r = ((KalendariumMontatio*)frons(x)->montatio)->ramus;
+        n = insula_ramus_liberi(&r, "scriba", chorda_ut_cstr(
+            chorda_concatenare(frons(x)->id, lit("_notae", x->piscina),
+            x->piscina), x->piscina));
+        a = insula_ramus_attributum(&n, "pagina_positio");
+        CREDO_VERUM(a && chorda_aequalis_literis(*a, "2"));
+    }
 
     CREDO_GRADUS("res: calendarium in die rei");
     quaerere(x, "tart");

@@ -407,8 +407,9 @@ _probare_res (
     CREDO_AEQUALIS_I32(discrepantes(m), ZEPHYRUM);
 }
 
-/* notae dierum: ordo per paginam, "page n of x" cum paginis pluribus;
- * pagina vacua nullum ordinem */
+/* notae dierum: ordo per paginam, "page n of x" cum paginis pluribus,
+ * semita cum pagina (D5 S3c: ?notae.pagina=); pagina vacua nullum
+ * ordinem */
 interior vacuum
 _probare_notas (
     CredoContextus* c)
@@ -428,7 +429,7 @@ _probare_notas (
     CREDO_CHORDA_AEQUALIS_LITERIS(v->titulus, "Mon 19 Oct 2026");
     CREDO_AEQUALIS_I32(v->contextus.mensura, ZEPHYRUM);
     CREDO_CHORDA_AEQUALIS_LITERIS(v->semita,
-        "calendarium/dies/2026-10-19");
+        "calendarium/dies/2026-10-19?notae.pagina=1");
     CREDO_AEQUALIS_I32(numerus(m, "second", "notae", c->piscina), I);
 
     CREDO_GRADUS("paginae duae: tituli ambo mutantur");
@@ -439,6 +440,11 @@ _probare_notas (
         "Mon 19 Oct 2026 - page 1 of 2", c->piscina));
     CREDO_NON_NIHIL(inventum_tituli(m, "beta", "notae",
         "Mon 19 Oct 2026 - page 2 of 2", c->piscina));
+    /* D5 S3c: semita paginam suam fert */
+    v = inventum(m, "beta", "notae", c->piscina);
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_CHORDA_AEQUALIS_LITERIS(v->semita,
+        "calendarium/dies/2026-10-19?notae.pagina=2");
 
     CREDO_GRADUS("pagina vacua, textus deletus");
     (vacuum)paginam_scribere(m, "dies/2026-10-20", "1", "");

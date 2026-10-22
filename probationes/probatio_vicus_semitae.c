@@ -631,6 +631,119 @@ nomenclatoris_est (
     redde a && chorda_aequalis_literis(*a, valor);
 }
 
+/* D5 S3c: liber in spatio dato cum paginis duabus ("1", "2") */
+interior b32
+librum_duarum_paginarum (
+                 Mundus* x,
+     constans character* spatium,
+                Piscina* p)
+{
+    ScribaLiber* l;
+
+    l = scriba_liber_aperire_in_spatio(p, internamentum_creare(p),
+        x->volumen, spatium, XL, X);
+    redde l && scriba_liber_pagina(l, chorda_ex_literis("1", p))
+        && scriba_liber_pagina_nova(l).mensura > ZEPHYRUM;
+}
+
+/* campus liberi notarum frontis ("<id>_notae", genus scriba) */
+interior b32
+notae_frontis_est (
+                 Mundus* x,
+     constans character* titulus,
+     constans character* valor,
+                Piscina* p)
+{
+     VicusLatus* l;
+    InsulaRamus  r;
+    InsulaRamus  n;
+         chorda* a;
+
+    l = frons(x);
+    si (!l || !l->montata || !l->facies.ramus)
+    {
+        redde FALSUM;
+    }
+    r = *l->facies.ramus;
+    n = insula_ramus_liberi(&r, "scriba", chorda_ut_cstr(
+        chorda_concatenare(l->id, chorda_ex_literis("_notae", p), p),
+        p));
+    a = insula_ramus_attributum(&n, titulus);
+    redde a && chorda_aequalis_literis(*a, valor);
+}
+
+/* D5 S3c: calendarium - pagina notarum in semita (notae.pagina);
+ * Ctrl+O per paginas notarum (historia dextra) */
+interior vacuum
+_probare_notas_calendarii (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x->volumen);
+    CREDO_NECESSE(librum_duarum_paginarum(x, "dies/2026-10-19",
+        c->piscina));
+    CREDO_NECESSE(mundum_struere(x, c));
+    CREDO_VERUM(vicus_acervo_aperire(x->app.vicus, "calendarium",
+        "calendarium/dies/2026-10-19?notae.pagina=2"));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    dispensator_recomponere(x->app.d);
+    (vacuum)vicus_pulsare(x->app.vicus);
+    CREDO_NECESSE(frons_generis(x, "calendarium"));
+    CREDO_VERUM(notae_frontis_est(x, "pagina", "2", c->piscina));
+    CREDO_VERUM(notae_frontis_est(x, "pagina_positio", "2",
+        c->piscina));
+
+    CREDO_GRADUS("semita pagina 1, Ctrl+O: pagina 2");
+    CREDO_VERUM(vicus_acervo_mutare(x->app.vicus, "calendarium",
+        "calendarium/dies/2026-10-19?notae.pagina=1"));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    dispensator_recomponere(x->app.d);
+    CREDO_VERUM(notae_frontis_est(x, "pagina_positio", "1",
+        c->piscina));
+    clavis(x, 'o', (i32)MOD_IMPERIUM);
+    CREDO_VERUM(notae_frontis_est(x, "pagina", "2", c->piscina));
+    CREDO_VERUM(notae_frontis_est(x, "pagina_positio", "2",
+        c->piscina));
+    clavis(x, 'i', (i32)MOD_IMPERIUM);
+    CREDO_VERUM(notae_frontis_est(x, "pagina_positio", "1",
+        c->piscina));
+}
+
+/* D5 S3c: nomenclator - pagina notarum personae in semita */
+interior vacuum
+_probare_notas_personae (
+    CredoContextus* c)
+{
+                 Mundus* x;
+     PersonaeDocumentum* doc;
+                    i32  numerator;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x->volumen);
+    doc = personae_aperire(c->piscina, internamentum_creare(c->piscina),
+        x->volumen, "personae", ZEPHYRUM);
+    numerator = ZEPHYRUM;
+    personae_monetam_ponere(doc, moneta_numerator, &numerator);
+    CREDO_NECESSE(doc
+        && chorda_aequalis_literis(personae_hominem_creare(
+        doc, chorda_ex_literis("Anna", c->piscina), chorda_ex_literis(
+        "Rossi", c->piscina)), "1"));
+    CREDO_NECESSE(librum_duarum_paginarum(x, "persona/1", c->piscina));
+    CREDO_NECESSE(mundum_struere(x, c));
+    CREDO_VERUM(vicus_acervo_aperire(x->app.vicus, "nomenclator",
+        "nomenclator/1?notae.pagina=2"));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    dispensator_recomponere(x->app.d);
+    (vacuum)vicus_pulsare(x->app.vicus);
+    CREDO_NECESSE(frons_generis(x, "nomenclator"));
+    CREDO_VERUM(nomenclatoris_est(x, "persona_aperta", "1"));
+    CREDO_VERUM(notae_frontis_est(x, "pagina", "2", c->piscina));
+    CREDO_VERUM(notae_frontis_est(x, "pagina_positio", "2",
+        c->piscina));
+}
+
 /* semitae R4b: nomenclator - persona aperta (impelle), Esc ad indicem
  * (impelle), Ctrl+O personam restituit et iterum indicem; hospes post
  * gradum vocatur */
@@ -848,8 +961,9 @@ _probare_initium_calendarii (
     dispensator_recomponere(x->app.d);
     (vacuum)vicus_pulsare(x->app.vicus);
     CREDO_VERUM(kalendarii_est(x, "dies_electus", "2026-10-19"));
+    /* D5 S3c: pagina notarum (persistens) in semita servata */
     CREDO_CHORDA_AEQUALIS_LITERIS(frons(x)->semita_servata,
-        "calendarium/dies");
+        "calendarium/dies?notae.pagina=1");
     memset(&altera, ZEPHYRUM, magnitudo(altera));
     CREDO_NECESSE(vicus_applicatio_aedificare(&altera, c->piscina,
         internamentum_creare(c->piscina), x->volumen, CDLXXX,
@@ -954,6 +1068,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "maximum", _probare_maximum, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
+    { "notae_calendarii", _probare_notas_calendarii, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "notae_personae", _probare_notas_personae, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
     { "sinistra", _probare_sinistram, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "calendarium", _probare_calendarium, mundum_parare,

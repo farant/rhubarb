@@ -5,7 +5,9 @@
  * Forma canonica STML; URI derivatum. Semita statum SOLUM ponit.
  *
  * RAMI LIBERORUM (conventio): montatio (nomen, genus) in ramo
- * <genus id="nomen"/> sub ramo parentis (insula_ramus_liberi).
+ * <genus id="<id parentis>_nomen"/> sub ramo parentis (id unicum in
+ * volumine: calendarium "3_dextrum_calendarium_notae"); absens:
+ * <genus id="nomen"/> (insula_ramus_liberi).
  * SCRIPTURA: campus quisque scriptore suo (dominus manifesti) -
  * scriptura una per scriptorem distinctum.
  *

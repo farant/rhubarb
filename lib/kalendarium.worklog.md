@@ -927,3 +927,20 @@ cuts the text up to '-'; ULIDs never contain '-'). Album `res` =
 `AgendaRes.ordo` (creation ordinal); `res_ordinis` maps it back for
 paging. Group order ties break by ordinal (= old id order for old
 data). Row-id buffer XXXII -> XLVIII.
+
+## 2026-10-22 — notes page in the route (D5 S3c)
+
+`<montatio nomen="notae" genus="scriba"/>`: the day-notes page is route
+state, `calendarium/dies/2026-10-19?notae.pagina=2`. Mount order: the
+notes book follows the selected day, so the argument is applied FIRST
+without children (day), then the notes are mounted, then the whole
+route again (idempotent) and `librum_aptare_cum_pagina` - which reads
+the requested page before re-pointing the book and shows it after (the
+book switch alone would land on the last viewed page). The same helper
+runs in kalendarium_semitam_secuta and argumentum_ponere. The saved
+route now carries the page: `calendarium/dies?notae.pagina=1`.
+organa_calendarii answers for "scriba" too (organum_scribae). Turning a
+notes page is a right-side history step (key test in
+probatio_vicus_kalendarium notae). Plants red: resolver without scriba,
+second application skipped, children not stripped at mount, page not
+shown.

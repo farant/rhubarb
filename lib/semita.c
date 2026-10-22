@@ -153,13 +153,29 @@ _hereditarius (
     redde FALSUM;
 }
 
-/* ramus liberi montationis (conventio: <genus id="nomen"/>) */
+/* ramus liberi montationis (conventio, semita.h): <genus
+ * id="<id parentis>_nomen"/> si exstat, aliter <genus id="nomen"/> */
 interior InsulaRamus
 _ramus_liberi (
         constans InsulaRamus* parens,
     constans OrganumMontatio* m,
                      Piscina* piscina)
 {
+    InsulaRamus r;
+         chorda id;
+
+    si (parens->id.mensura > ZEPHYRUM)
+    {
+        id = chorda_concatenare(chorda_concatenare(parens->id,
+            chorda_ex_literis("_", piscina), piscina), m->titulus,
+            piscina);
+        r  = insula_ramus_liberi(parens, chorda_ut_cstr(m->genus,
+            piscina), chorda_ut_cstr(id, piscina));
+        si (insula_ramus_nodus(&r))
+        {
+            redde r;
+        }
+    }
     redde insula_ramus_liberi(parens, chorda_ut_cstr(m->genus, piscina),
         chorda_ut_cstr(m->titulus, piscina));
 }

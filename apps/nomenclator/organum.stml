@@ -79,5 +79,9 @@
   </cognomina>
 
   <basis genus="organum_commune"/>
-  <montationes/>
+  <montationes>
+    <!-- D5 S3c: liber notarum (scriba nidificata, id "<id>_notae");
+         pagina eius in semita: ?notae.pagina=2 -->
+    <montatio nomen="notae" genus="scriba"/>
+  </montationes>
 </organum>

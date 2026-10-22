@@ -18,7 +18,8 @@
  *             res_electa=<id> (sine die calendarium/agenda?...);
  *             corpus notae et rubricae
  *   notae     ordo per paginam: "Mon 19 Oct 2026" (paginis pluribus
- *             + " - page 2 of 3") | vacuus | calendarium/dies/<dies>
+ *             + " - page 2 of 3") | vacuus | calendarium/dies/<dies>?
+ *             notae.pagina=<nomen paginae>
  *   liber     linea prima paginae | "page 3" | scriba/<nomen>
  *   personae  nomen ostensum | epistula prima - telephonum primum |
  *             nomenclator/<id>; corpus nomina altera, rubricae,

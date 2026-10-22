@@ -368,8 +368,12 @@ notas_computare (
                 (integer)xar_numerus(nomina));
             chorda_aedificator_appendere_literis(a, numerus);
         }
+        /* D5 S3c: semita paginam suam fert (?notae.pagina=) */
         ordinem_addere(v, chorda_aedificator_finire(a), vacua(),
-            lineas_iungere(lineae, ZEPHYRUM, piscina), semita);
+            lineas_iungere(lineae, ZEPHYRUM, piscina),
+            chorda_concatenare(
+            semita, literis_iungere("?notae.pagina=",
+            *(chorda*)xar_obtinere(nomina, i), piscina), piscina));
     }
     redde v;
 }

@@ -200,8 +200,9 @@ kalendarium_argumentum_ponere (
      constans character* argumentum);
 
 /* semitae R4 (facies.semitam_secuta): post semitam a vico applicatam
- * (historia) liber notarum diem electum sequitur; FALSUM si liber
- * aptari non potuit */
+ * (historia) liber notarum diem electum sequitur; D5 S3c: pagina
+ * notarum semitae (notae.pagina) praevalet paginae visae ultimae.
+ * FALSUM si liber aptari non potuit */
 b32
 kalendarium_semitam_secuta (
     vacuum* ctx);

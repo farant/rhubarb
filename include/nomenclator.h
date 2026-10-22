@@ -106,8 +106,9 @@ nomenclator_argumentum_ponere (
       constans character* argumentum);
 
 /* semitae R4b (facies.semitam_secuta): post semitam a vico applicatam
- * (historia) liber notarum personam apertam sequitur; FALSUM si
- * latus nullum */
+ * (historia) liber notarum personam apertam sequitur; D5 S3c: pagina
+ * notarum semitae (notae.pagina) praevalet paginae visae ultimae.
+ * FALSUM si latus nullum */
 b32
 nomenclator_semitam_secuta (
     vacuum* ctx);

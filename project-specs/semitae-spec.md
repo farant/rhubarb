@@ -508,7 +508,11 @@ accessors, R1.)
 
 - Not verified: that every insula branch name maps 1:1 to a montatio
   name - today children are mounted by hand with ids like
-  `<id>_notae`; R0/R4 must reconcile the naming.
+  `<id>_notae`; R0/R4 must reconcile the naming. **Resolved 2026-10-22
+  (D5 S3c):** the route library looks for `<genus id="<parent id>_
+  nomen"/>` first, then `<genus id="nomen"/>` (`include/semita.h`);
+  the calendar and contacts declare `<montatio nomen="notae"
+  genus="scriba"/>` - `calendarium/dies/2026-10-19?notae.pagina=2`.
 - Not measured: cost of applying a route (expected trivial: one branch
   write).
 - Not designed: routes for documents themselves (a picture's layer, a

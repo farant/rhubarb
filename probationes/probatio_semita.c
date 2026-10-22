@@ -2,8 +2,9 @@
  * applicare (ligatio, resetum ambitus ligationis, status, liberi,
  * scriptores plures), legere (forma canonica), recusationes nominatae
  * (nihil scriptum), URI utrimque (via, quaestio punctata, effugium),
- * lista URI (ligatio propria). Fixtura: organa proba (radix),
- * folium (liber, ligatio hereditaria), folium_liber (ligatio
+ * lista URI (ligatio propria); D5 S3c: rami liberorum
+ * "<id parentis>_nomen" (conventio vici). Fixtura: organa proba
+ * (radix), folium (liber, ligatio hereditaria), folium_liber (ligatio
  * propria). */
 #include "latina.h"
 #include "piscina.h"
@@ -885,8 +886,47 @@ _sectio_cognomina (
     CREDO_AEQUALIS_I32(vocationes, ZEPHYRUM);
 }
 
+/* D5 S3c: liberi in ramis "<id parentis>_nomen" (vicus: calendarium
+ * "<id>_notae", id unicum in volumine) - applicare et legere ut
+ * conventio nuda; ramus "nomen" nudus non tangitur */
+interior vacuum
+_sectio_liberi_praefixi (
+    CredoContextus* c)
+{
+         Mundus* w;
+         chorda  vitium;
+      StmlNodus* s;
+    InsulaRamus  nudus;
+
+    w = mundus(c, FALSUM);
+    CREDO_NECESSE_NON_NIHIL(w);
+    w->notae  = insula_ramus_liberi(&w->ramus, "folium", "p1_notae");
+    w->alter  = insula_ramus_liberi(&w->ramus, "folium_liber",
+        "p1_alter");
+    CREDO_NECESSE(   organum_ramum_parare(w->folium, &w->notae, NIHIL,
+                         NIHIL, NIHIL, c->piscina, w->intern)
+                  && organum_ramum_parare(w->folium_liber, &w->alter,
+                         NIHIL, NIHIL, NIHIL, c->piscina, w->intern));
+    CREDO_VERUM(applicare(w, "<proba visus=\"res\" res=\"alpha\">"
+        "<notae pagina=\"4\"/><alter dies=\"2026-10-19\""
+        " pagina=\"3\"/></proba>", c->piscina, &vitium));
+    CREDO_VERUM(campus_est(&w->notae, "pagina", "4"));
+    CREDO_VERUM(campus_est(&w->alter, "pagina", "3"));
+    /* ramus nudus "notae" non creatus */
+    nudus = insula_ramus_liberi(&w->ramus, "folium", "notae");
+    CREDO_VERUM(insula_ramus_nodus(&nudus) == NIHIL);
+    s = semita_legere(organa, w, &w->ramus, "proba", c->piscina,
+        w->intern);
+    CREDO_NECESSE_NON_NIHIL(s);
+    CREDO_CHORDA_AEQUALIS_LITERIS(semita_ad_uri(organa, w, s,
+        c->piscina), "proba/res/alpha?notae.pagina=4"
+        "&alter.dies=2026-10-19&alter.pagina=3");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "applicare", _sectio_applicare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "liberi_praefixi", _sectio_liberi_praefixi, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "ambitus", _sectio_ambitus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "recusationes", _sectio_recusationes, NIHIL, NIHIL, NIHIL,
         NIHIL },

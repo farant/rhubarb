@@ -54,6 +54,7 @@ nomen structura {
                      s32  latitudo_montationis;   /* A6e: 0 = ignota */
                      s32  altitudo_montationis;
         constans Organum* organum;   /* semitae R4: semita_legere */
+        constans Organum* organum_scribae;  /* D5 S3c: liber notae */
               DiesFontes  diei;      /* D4b: fontes conspectus 'dies' */
      ConspectusRegistrum* conspectus;  /* D4b: NIHIL sine volumine et
                                         * agenda - computatio directa */
@@ -3982,12 +3983,17 @@ organa_calendarii (
 {
     KalendariumMontatio* m = (KalendariumMontatio*)ctx;
 
-    si (   !m || !m->figurae_ctx
-        || !chorda_aequalis_literis(genus, "calendarium"))
+    si (!m || !m->figurae_ctx)
     {
         redde NIHIL;
     }
-    redde ((KalendariumFigurae*)m->figurae_ctx)->organum;
+    /* D5 S3c: montatio 'notae' (genus scriba) */
+    si (chorda_aequalis_literis(genus, "scriba"))
+    {
+        redde ((KalendariumFigurae*)m->figurae_ctx)->organum_scribae;
+    }
+    redde chorda_aequalis_literis(genus, "calendarium")
+        ? ((KalendariumFigurae*)m->figurae_ctx)->organum : NIHIL;
 }
 
 /* semitae R4e: resolutor valorum symbolicorum (dies: hodie, heri,
@@ -4023,6 +4029,35 @@ diem_symbolicum_resolvere (
     *concretus = fasti_formare_diem(fasti_addere_dies(hodie(m), gradus),
         FASTI_FORMA_ISO, piscina);
     redde concretus->mensura > ZEPHYRUM;
+}
+
+/* D5 S3c: pagina notarum semitae (campus 'pagina' scribae
+ * nidificatae) ante librum aptatum legitur, post eum ostenditur -
+ * praevalet paginae visae ultimae */
+interior vacuum
+librum_aptare_cum_pagina (
+    KalendariumMontatio* m)
+{
+    KalendariumFigurae* ctx;
+                chorda* a;
+                chorda  petita;
+
+    ctx             = m ? (KalendariumFigurae*)m->figurae_ctx : NIHIL;
+    petita.datum    = NIHIL;
+    petita.mensura  = ZEPHYRUM;
+    si (ctx && ctx->notae.montata)
+    {
+        a = insula_ramus_attributum(&ctx->notae.scriba.ramus, "pagina");
+        si (a && a->mensura > ZEPHYRUM)
+        {
+            petita = chorda_transcribere(*a, m->piscina);
+        }
+    }
+    librum_aptare(m, NIHIL);
+    si (ctx && ctx->notae.montata && petita.mensura > ZEPHYRUM)
+    {
+        (vacuum)scriba_paginam_ostendere(&ctx->notae.scriba, petita);
+    }
 }
 
 /* argumentum ut semita: cognomen computatum "YYYY-MM" (visus mensis;
@@ -4067,12 +4102,14 @@ semita_argumenti (
     redde n;
 }
 
-/* argumentum ut semita applicare (liber notarum non tangitur: in
- * montatione charta nondum montata est) */
+/* argumentum ut semita applicare; sine_liberis (montatio: charta
+ * notarum nondum montata, liber diem argumenti sequitur): montationes
+ * (notae) omittuntur - post notas montatas semita tota iterum */
 interior b32
 argumentum_applicare (
     KalendariumMontatio* m,
-     constans character* argumentum)
+     constans character* argumentum,
+                    b32  sine_liberis)
 {
      StmlNodus* semita;
         chorda* dies;
@@ -4094,6 +4131,10 @@ argumentum_applicare (
         && !diem_legere(chorda_ut_cstr(*dies, m->piscina), &d))
     {
         redde FALSUM;
+    }
+    si (sine_liberis && semita->liberi)
+    {
+        xar_vacare(semita->liberi);
     }
     redde semita_applicare(organa_calendarii, m, &m->ramus, semita,
         m->piscina, &vitium);
@@ -4160,15 +4201,27 @@ kalendarium_montare (
         ((KalendariumFigurae*)m->figurae_ctx)->fontes   = fontes;
         ((KalendariumFigurae*)m->figurae_ctx)->volumen  = volumen;
         ((KalendariumFigurae*)m->figurae_ctx)->organum  = organum;
+        ((KalendariumFigurae*)m->figurae_ctx)->organum_scribae =
+            organum_legere_genus(piscina, intern, "scriba",
+            "kalendarium");
         conspectum_parare((KalendariumFigurae*)m->figurae_ctx,
             documentum, fontes, volumen, intern);
     }
-    si (argumentum && !argumentum_applicare(m, argumentum))
+    si (argumentum && !argumentum_applicare(m, argumentum, VERUM))
     {
         redde FALSUM;
     }
-    /* A6d: notae diei post diem argumenti */
-    redde notas_montare(m, volumen, id, systemata);
+    /* A6d: notae diei post diem argumenti; D5 S3c: deinde semita tota
+     * (notae.pagina) */
+    si (!notas_montare(m, volumen, id, systemata))
+    {
+        redde FALSUM;
+    }
+    si (argumentum && argumentum_applicare(m, argumentum, FALSUM))
+    {
+        librum_aptare_cum_pagina(m);
+    }
+    redde VERUM;
 }
 
 b32
@@ -4176,11 +4229,11 @@ kalendarium_argumentum_ponere (
     KalendariumMontatio* m,
      constans character* argumentum)
 {
-    si (!argumentum_applicare(m, argumentum))
+    si (!argumentum_applicare(m, argumentum, FALSUM))
     {
         redde FALSUM;
     }
-    librum_aptare(m, NIHIL);
+    librum_aptare_cum_pagina(m);
     redde VERUM;
 }
 
@@ -4194,7 +4247,7 @@ kalendarium_semitam_secuta (
     {
         redde FALSUM;
     }
-    librum_aptare(m, NIHIL);
+    librum_aptare_cum_pagina(m);
     redde VERUM;
 }
 
