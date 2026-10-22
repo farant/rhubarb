@@ -19,6 +19,7 @@ nomen structura {
                 Volumen* volumen;
     InternamentumChorda* intern;
      PersonaeDocumentum* doc;
+                    i32  numerator;   /* moneta_numerator: "1", "2" */
 } Mundus;
 
 interior vacuum
@@ -35,6 +36,8 @@ mundum_parare (
     {
         m->doc = personae_aperire(c->piscina, m->intern, m->volumen, "",
             III);
+        personae_monetam_ponere(m->doc, moneta_numerator,
+            &m->numerator);
     }
     c->datum = m;
 }
@@ -58,6 +61,38 @@ lit (
                Piscina* p)
 {
     redde chorda_ex_literis(s, p);
+}
+
+/* id numeratoris (moneta_numerator): n -> "n" */
+interior chorda
+id_ex (
+         s32  n,
+     Piscina* p)
+{
+    redde chorda_ex_s32(n, p);
+}
+
+/* D3: ULID = XXVI signa Crockford base32 (0-9 A-Z sine I L O U) */
+interior b32
+ulid_est (
+    chorda id)
+{
+    i32 i;
+
+    si (id.mensura != XXVI)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < id.mensura; i++)
+    {
+        si (   !strchr("0123456789ABCDEFGHJKMNPQRSTVWXYZ",
+                (integer)id.datum[i])
+            || id.datum[i] == '\0')
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
 }
 
 /* Xar de chorda ex textibus (NIHIL finit) */
@@ -137,7 +172,7 @@ nomen_est (
 interior b32
 clavis_est (
                 Mundus* m,
-                   s32  id,
+                chorda  id,
     constans character* exspectata,
                Piscina* piscina)
 {
@@ -158,18 +193,21 @@ _probare_creationem (
 
     m = (Mundus*)c->datum;
     CREDO_NECESSE(m && m->doc);
-    CREDO_AEQUALIS_S32(personae_hominem_creare(m->doc, lit("Anna",
-        c->piscina), lit("Rossi", c->piscina)), I);
-    CREDO_AEQUALIS_S32(personae_societatem_creare(m->doc, lit(
-        "Rossi e Figli", c->piscina)), II);
-    CREDO_AEQUALIS_S32(personae_hominem_creare(m->doc, lit("",
-        c->piscina), lit("  ", c->piscina)), ZEPHYRUM);
-    CREDO_AEQUALIS_S32(personae_societatem_creare(m->doc, lit("",
-        c->piscina)), ZEPHYRUM);
-    CREDO_AEQUALIS_S32(personae_hominem_creare(m->doc, lit("Cher",
-        c->piscina), lit("", c->piscina)), III);
+    CREDO_CHORDA_AEQUALIS_LITERIS(personae_hominem_creare(m->doc,
+        lit("Anna",
+        c->piscina), lit("Rossi", c->piscina)), "1");
+    CREDO_CHORDA_AEQUALIS_LITERIS(personae_societatem_creare(m->doc,
+        lit(
+        "Rossi e Figli", c->piscina)), "2");
+    CREDO_AEQUALIS_I32(personae_hominem_creare(m->doc, lit("",
+        c->piscina), lit("  ", c->piscina)).mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(personae_societatem_creare(m->doc, lit("",
+        c->piscina)).mensura, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(personae_hominem_creare(m->doc,
+        lit("Cher",
+        c->piscina), lit("", c->piscina)), "3");
     CREDO_AEQUALIS_I32(personae_numerus(m->doc), III);
-    p = personae_persona(m->doc, I);
+    p = personae_persona(m->doc, id_ex(I, c->piscina));
     CREDO_NECESSE_NON_NIHIL(p);
     CREDO_VERUM(p->genus == PERSONA_HOMO);
     CREDO_CHORDA_AEQUALIS_LITERIS(p->praenomen, "Anna");
@@ -177,15 +215,17 @@ _probare_creationem (
     CREDO_FALSUM(p->natalis_positus);
     CREDO_AEQUALIS_I32(xar_numerus(p->telephona), ZEPHYRUM);
     CREDO_VERUM(nomen_est(p, "Anna Rossi", c->piscina));
-    CREDO_VERUM(personae_persona(m->doc, II)->genus
+    CREDO_VERUM(personae_persona(m->doc, id_ex(II, c->piscina))->genus
         == PERSONA_SOCIETAS);
-    CREDO_VERUM(nomen_est(personae_persona(m->doc, II), "Rossi e Figli",
+    CREDO_VERUM(nomen_est(personae_persona(m->doc, id_ex(II,
+        c->piscina)), "Rossi e Figli",
         c->piscina));
-    CREDO_VERUM(nomen_est(personae_persona(m->doc, III), "Cher",
+    CREDO_VERUM(nomen_est(personae_persona(m->doc, id_ex(III,
+        c->piscina)), "Cher",
         c->piscina));
-    CREDO_NIHIL(personae_persona(m->doc, IV));
+    CREDO_NIHIL(personae_persona(m->doc, id_ex(IV, c->piscina)));
     CREDO_NIHIL(personae_index(m->doc, III));
-    CREDO_AEQUALIS_S32(personae_index(m->doc, I)->id, II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(personae_index(m->doc, I)->id, "2");
 }
 
 /* nomina et genus: mutare; genus nomina non mutat, nomen alterum si
@@ -198,33 +238,46 @@ _probare_nomina (
 
     m = (Mundus*)c->datum;
     CREDO_NECESSE(m && m->doc);
-    CREDO_AEQUALIS_S32(personae_hominem_creare(m->doc, lit("Anna",
-        c->piscina), lit("Rossi", c->piscina)), I);
-    CREDO_VERUM(personae_nomen_ponere(m->doc, I, lit("Anna",
+    CREDO_CHORDA_AEQUALIS_LITERIS(personae_hominem_creare(m->doc,
+        lit("Anna",
+        c->piscina), lit("Rossi", c->piscina)), "1");
+    CREDO_VERUM(personae_nomen_ponere(m->doc, id_ex(I, c->piscina),
+        lit("Anna",
         c->piscina),
         lit("Rossi-Bianchi", c->piscina)) > ZEPHYRUM);
-    CREDO_VERUM(nomen_est(personae_persona(m->doc, I),
+    CREDO_VERUM(nomen_est(personae_persona(m->doc, id_ex(I,
+        c->piscina)),
         "Anna Rossi-Bianchi", c->piscina));
-    CREDO_AEQUALIS_S64(personae_nomen_ponere(m->doc, I, lit("",
+    CREDO_AEQUALIS_S64(personae_nomen_ponere(m->doc, id_ex(I,
+        c->piscina), lit("",
         c->piscina), lit("", c->piscina)), ZEPHYRUM);
     /* societas sine titulo: nomen hominis */
-    CREDO_VERUM(personae_genus_ponere(m->doc, I, PERSONA_SOCIETAS)
+    CREDO_VERUM(personae_genus_ponere(m->doc, id_ex(I, c->piscina),
+        PERSONA_SOCIETAS)
         > ZEPHYRUM);
-    CREDO_VERUM(personae_persona(m->doc, I)->genus == PERSONA_SOCIETAS);
-    CREDO_VERUM(nomen_est(personae_persona(m->doc, I),
+    CREDO_VERUM(personae_persona(m->doc, id_ex(I, c->piscina))->genus
+        == PERSONA_SOCIETAS);
+    CREDO_VERUM(nomen_est(personae_persona(m->doc, id_ex(I,
+        c->piscina)),
         "Anna Rossi-Bianchi", c->piscina));
-    CREDO_VERUM(personae_titulum_ponere(m->doc, I, lit("Studio Rossi",
+    CREDO_VERUM(personae_titulum_ponere(m->doc, id_ex(I, c->piscina),
+        lit("Studio Rossi",
         c->piscina)) > ZEPHYRUM);
-    CREDO_VERUM(nomen_est(personae_persona(m->doc, I), "Studio Rossi",
+    CREDO_VERUM(nomen_est(personae_persona(m->doc, id_ex(I,
+        c->piscina)), "Studio Rossi",
         c->piscina));
     /* homo iterum: nomina servata */
-    CREDO_VERUM(personae_genus_ponere(m->doc, I, PERSONA_HOMO)
+    CREDO_VERUM(personae_genus_ponere(m->doc, id_ex(I, c->piscina),
+        PERSONA_HOMO)
         > ZEPHYRUM);
-    CREDO_VERUM(nomen_est(personae_persona(m->doc, I),
+    CREDO_VERUM(nomen_est(personae_persona(m->doc, id_ex(I,
+        c->piscina)),
         "Anna Rossi-Bianchi", c->piscina));
-    CREDO_CHORDA_AEQUALIS_LITERIS(personae_persona(m->doc, I)->titulus,
+    CREDO_CHORDA_AEQUALIS_LITERIS(personae_persona(m->doc, id_ex(I,
+        c->piscina))->titulus,
         "Studio Rossi");
-    CREDO_AEQUALIS_S64(personae_titulum_ponere(m->doc, IX, lit("x",
+    CREDO_AEQUALIS_S64(personae_titulum_ponere(m->doc, id_ex(IX,
+        c->piscina), lit("x",
         c->piscina)), ZEPHYRUM);
 }
 
@@ -257,12 +310,18 @@ _probare_ordinem (
         lit("Rossi", c->piscina));
     /* ids: 1 Marco Rossi, 2 Anna Rossi, 3 Banca, 4 Cher, 5 3M, 6 Luca
      * bianchi */
-    CREDO_VERUM(clavis_est(m, II, "rossi anna", c->piscina));
-    CREDO_VERUM(clavis_est(m, III, "banca d'italia", c->piscina));
-    CREDO_VERUM(clavis_est(m, IV, "cher", c->piscina));
-    CREDO_VERUM(persona_littera(personae_persona(m->doc, II)) == 'R');
-    CREDO_VERUM(persona_littera(personae_persona(m->doc, VI)) == 'B');
-    CREDO_VERUM(persona_littera(personae_persona(m->doc, V)) == '#');
+    CREDO_VERUM(clavis_est(m, id_ex(II, c->piscina), "rossi anna",
+        c->piscina));
+    CREDO_VERUM(clavis_est(m, id_ex(III, c->piscina), "banca d'italia",
+        c->piscina));
+    CREDO_VERUM(clavis_est(m, id_ex(IV, c->piscina), "cher",
+        c->piscina));
+    CREDO_VERUM(persona_littera(personae_persona(m->doc, id_ex(II,
+        c->piscina))) == 'R');
+    CREDO_VERUM(persona_littera(personae_persona(m->doc, id_ex(VI,
+        c->piscina))) == 'B');
+    CREDO_VERUM(persona_littera(personae_persona(m->doc, id_ex(V,
+        c->piscina))) == '#');
     /* "3m" < "banca" < "bianchi luca" < "cher" < "rossi anna" (2, 7)
      * < "rossi marco" */
     l = personae_ordinatae(m->doc, c->piscina);
@@ -271,8 +330,10 @@ _probare_ordinem (
     ids[ZEPHYRUM]  = '\0';
     per (i = ZEPHYRUM; i < xar_numerus(l); i++)
     {
-        k += (i32)sprintf(ids + k, i > ZEPHYRUM ? " %d" : "%d",
-            (integer)(*(constans Persona**)xar_obtinere(l, i))->id);
+        k += (i32)sprintf(ids + k, i > ZEPHYRUM ? " %.*s" : "%.*s",
+            (integer)(*(constans Persona**)xar_obtinere(l, i))->id
+            .mensura, (constans character*)(*(constans Persona**)
+            xar_obtinere(l, i))->id.datum);
     }
     CREDO_VERUM(strcmp(ids, "5 3 6 4 2 7 1") == ZEPHYRUM);
 }
@@ -290,13 +351,17 @@ _probare_rubricas (
         lit("Rossi", c->piscina));
     (vacuum)personae_hominem_creare(m->doc, lit("Luca", c->piscina),
         lit("Bianchi", c->piscina));
-    CREDO_VERUM(personae_rubricas_ponere(m->doc, I, lit("roma familia",
+    CREDO_VERUM(personae_rubricas_ponere(m->doc, id_ex(I, c->piscina),
+        lit("roma familia",
         c->piscina)) > ZEPHYRUM);
-    CREDO_VERUM(index_est(personae_persona(m->doc, I)->rubricae,
+    CREDO_VERUM(index_est(personae_persona(m->doc, id_ex(I,
+        c->piscina))->rubricae,
         "familia|roma"));
-    CREDO_AEQUALIS_S64(personae_rubricas_ponere(m->doc, I, lit("Roma",
+    CREDO_AEQUALIS_S64(personae_rubricas_ponere(m->doc, id_ex(I,
+        c->piscina), lit("Roma",
         c->piscina)), ZEPHYRUM);
-    CREDO_VERUM(personae_rubricas_ponere(m->doc, II, lit("opus roma",
+    CREDO_VERUM(personae_rubricas_ponere(m->doc, id_ex(II, c->piscina),
+        lit("opus roma",
         c->piscina)) > ZEPHYRUM);
     CREDO_VERUM(index_est(personae_rubricae(m->doc, c->piscina),
         "familia|opus|roma"));
@@ -313,19 +378,24 @@ _probare_indices (
     CREDO_NECESSE(m && m->doc);
     (vacuum)personae_hominem_creare(m->doc, lit("Anna", c->piscina),
         lit("Rossi", c->piscina));
-    CREDO_VERUM(personae_telephona_ponere(m->doc, I,
+    CREDO_VERUM(personae_telephona_ponere(m->doc, id_ex(I, c->piscina),
         index_ex(c->piscina,
         "+39 06 1234567", "", "333 1234567")) > ZEPHYRUM);
-    CREDO_VERUM(index_est(personae_persona(m->doc, I)->telephona,
+    CREDO_VERUM(index_est(personae_persona(m->doc, id_ex(I,
+        c->piscina))->telephona,
         "+39 06 1234567|333 1234567"));
-    CREDO_VERUM(personae_epistulas_ponere(m->doc, I,
+    CREDO_VERUM(personae_epistulas_ponere(m->doc, id_ex(I, c->piscina),
         index_ex(c->piscina,
         "anna@example.org", NIHIL, NIHIL)) > ZEPHYRUM);
-    CREDO_VERUM(index_est(personae_persona(m->doc, I)->epistulae,
+    CREDO_VERUM(index_est(personae_persona(m->doc, id_ex(I,
+        c->piscina))->epistulae,
         "anna@example.org"));
-    CREDO_VERUM(personae_telephona_ponere(m->doc, I, NIHIL) > ZEPHYRUM);
-    CREDO_VERUM(index_est(personae_persona(m->doc, I)->telephona, ""));
-    CREDO_VERUM(index_est(personae_persona(m->doc, I)->epistulae,
+    CREDO_VERUM(personae_telephona_ponere(m->doc, id_ex(I, c->piscina),
+        NIHIL) > ZEPHYRUM);
+    CREDO_VERUM(index_est(personae_persona(m->doc, id_ex(I,
+        c->piscina))->telephona, ""));
+    CREDO_VERUM(index_est(personae_persona(m->doc, id_ex(I,
+        c->piscina))->epistulae,
         "anna@example.org"));
 }
 
@@ -343,8 +413,9 @@ _probare_natalem (
     (vacuum)personae_hominem_creare(m->doc, lit("Anna", c->piscina),
         lit("Rossi", c->piscina));
     d = fasti_dies(MCMLXXXVI, III, II);
-    CREDO_VERUM(personae_natalem_ponere(m->doc, I, &d) > ZEPHYRUM);
-    p = personae_persona(m->doc, I);
+    CREDO_VERUM(personae_natalem_ponere(m->doc, id_ex(I, c->piscina),
+        &d) > ZEPHYRUM);
+    p = personae_persona(m->doc, id_ex(I, c->piscina));
     CREDO_VERUM(p->natalis_positus && p->natalis.annus == MCMLXXXVI);
     CREDO_AEQUALIS_S32(persona_aetas(p, fasti_dies(MMXXVI, III, I)),
         XXXIX);
@@ -355,26 +426,31 @@ _probare_natalem (
     d.annus   = ZEPHYRUM;
     d.mensis  = II;
     d.dies    = XXIX;
-    CREDO_VERUM(personae_natalem_ponere(m->doc, I, &d) > ZEPHYRUM);
-    p = personae_persona(m->doc, I);
+    CREDO_VERUM(personae_natalem_ponere(m->doc, id_ex(I, c->piscina),
+        &d) > ZEPHYRUM);
+    p = personae_persona(m->doc, id_ex(I, c->piscina));
     CREDO_VERUM(p->natalis_positus && p->natalis.annus == ZEPHYRUM
         && p->natalis.mensis == II && p->natalis.dies == XXIX);
     CREDO_AEQUALIS_S32(persona_aetas(p, fasti_dies(MMXXVI, III, I)),
         -I);
     /* mali: mensis XIII, 30 II, 29 II anni non bissextilis */
     d.mensis = XIII;
-    CREDO_AEQUALIS_S64(personae_natalem_ponere(m->doc, I, &d),
+    CREDO_AEQUALIS_S64(personae_natalem_ponere(m->doc, id_ex(I,
+        c->piscina), &d),
         ZEPHYRUM);
     d.mensis  = II;
     d.dies    = XXX;
-    CREDO_AEQUALIS_S64(personae_natalem_ponere(m->doc, I, &d),
+    CREDO_AEQUALIS_S64(personae_natalem_ponere(m->doc, id_ex(I,
+        c->piscina), &d),
         ZEPHYRUM);
     d = fasti_dies(MMXXIII, II, XXIX);
-    CREDO_AEQUALIS_S64(personae_natalem_ponere(m->doc, I, &d),
+    CREDO_AEQUALIS_S64(personae_natalem_ponere(m->doc, id_ex(I,
+        c->piscina), &d),
         ZEPHYRUM);
     /* NIHIL: nullus */
-    CREDO_VERUM(personae_natalem_ponere(m->doc, I, NIHIL) > ZEPHYRUM);
-    p = personae_persona(m->doc, I);
+    CREDO_VERUM(personae_natalem_ponere(m->doc, id_ex(I, c->piscina),
+        NIHIL) > ZEPHYRUM);
+    p = personae_persona(m->doc, id_ex(I, c->piscina));
     CREDO_FALSUM(p->natalis_positus);
     CREDO_AEQUALIS_S32(persona_aetas(p, fasti_dies(MMXXVI, III, I)),
         -I);
@@ -391,14 +467,18 @@ _probare_deletionem (
     CREDO_NECESSE(m && m->doc);
     (vacuum)personae_hominem_creare(m->doc, lit("Anna", c->piscina),
         lit("Rossi", c->piscina));
-    CREDO_VERUM(personae_delere(m->doc, I) > ZEPHYRUM);
-    CREDO_NIHIL(personae_persona(m->doc, I));
+    CREDO_VERUM(personae_delere(m->doc, id_ex(I, c->piscina))
+        > ZEPHYRUM);
+    CREDO_NIHIL(personae_persona(m->doc, id_ex(I, c->piscina)));
     CREDO_AEQUALIS_I32(personae_numerus(m->doc), ZEPHYRUM);
-    CREDO_AEQUALIS_S64(personae_rubricas_ponere(m->doc, I, lit("a",
+    CREDO_AEQUALIS_S64(personae_rubricas_ponere(m->doc, id_ex(I,
+        c->piscina), lit("a",
         c->piscina)), ZEPHYRUM);
-    CREDO_AEQUALIS_S64(personae_delere(m->doc, I), ZEPHYRUM);
-    CREDO_AEQUALIS_S32(personae_societatem_creare(m->doc, lit("Nova",
-        c->piscina)), II);
+    CREDO_AEQUALIS_S64(personae_delere(m->doc, id_ex(I, c->piscina)),
+        ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(personae_societatem_creare(m->doc,
+        lit("Nova",
+        c->piscina)), "2");
 }
 
 /* revocare et reficere */
@@ -412,13 +492,16 @@ _probare_historiam (
     CREDO_NECESSE(m && m->doc);
     (vacuum)personae_hominem_creare(m->doc, lit("Anna", c->piscina),
         lit("Rossi", c->piscina));
-    (vacuum)personae_nomen_ponere(m->doc, I, lit("Anna", c->piscina),
+    (vacuum)personae_nomen_ponere(m->doc, id_ex(I, c->piscina),
+        lit("Anna", c->piscina),
         lit("Bianchi", c->piscina));
     CREDO_VERUM(personae_revocare(m->doc));
-    CREDO_VERUM(nomen_est(personae_persona(m->doc, I), "Anna Rossi",
+    CREDO_VERUM(nomen_est(personae_persona(m->doc, id_ex(I,
+        c->piscina)), "Anna Rossi",
         c->piscina));
     CREDO_VERUM(personae_reficere(m->doc));
-    CREDO_VERUM(nomen_est(personae_persona(m->doc, I), "Anna Bianchi",
+    CREDO_VERUM(nomen_est(personae_persona(m->doc, id_ex(I,
+        c->piscina)), "Anna Bianchi",
         c->piscina));
 }
 
@@ -447,18 +530,23 @@ _probare_aperitionem (
         lit("O'Brien <x>", c->piscina));
     (vacuum)personae_societatem_creare(m->doc, lit("A & B \"srl\"",
         c->piscina));
-    (vacuum)personae_rubricas_ponere(m->doc, VIII, lit("amici roma",
+    (vacuum)personae_rubricas_ponere(m->doc, id_ex(VIII, c->piscina),
+        lit("amici roma",
         c->piscina));
-    (vacuum)personae_telephona_ponere(m->doc, VIII, index_ex(c->piscina,
+    (vacuum)personae_telephona_ponere(m->doc, id_ex(VIII, c->piscina),
+        index_ex(c->piscina,
         "+1 \"555\" 0100", "<int> 22", NIHIL));
-    (vacuum)personae_epistulas_ponere(m->doc, VIII, index_ex(c->piscina,
+    (vacuum)personae_epistulas_ponere(m->doc, id_ex(VIII, c->piscina),
+        index_ex(c->piscina,
         "jo@example.org", NIHIL, NIHIL));
     d.annus   = ZEPHYRUM;
     d.mensis  = XII;
     d.dies    = XXV;
-    (vacuum)personae_natalem_ponere(m->doc, VIII, &d);
-    (vacuum)personae_genus_ponere(m->doc, VIII, PERSONA_SOCIETAS);
-    (vacuum)personae_delere(m->doc, III);
+    (vacuum)personae_natalem_ponere(m->doc, id_ex(VIII, c->piscina),
+        &d);
+    (vacuum)personae_genus_ponere(m->doc, id_ex(VIII, c->piscina),
+        PERSONA_SOCIETAS);
+    (vacuum)personae_delere(m->doc, id_ex(III, c->piscina));
     CREDO_VERUM(personae_verificare(m->doc));
     altera = personae_aperire(c->piscina, m->intern, m->volumen, "",
         III);
@@ -471,7 +559,7 @@ _probare_aperitionem (
     CREDO_CHORDA_AEQUALIS(personae_sigillum_hex(tertia, c->piscina),
         personae_sigillum_hex(m->doc, c->piscina));
     CREDO_AEQUALIS_I32(personae_numerus(tertia), VIII);
-    p = personae_persona(tertia, VIII);
+    p = personae_persona(tertia, id_ex(VIII, c->piscina));
     CREDO_NECESSE_NON_NIHIL(p);
     CREDO_VERUM(p->genus == PERSONA_SOCIETAS);
     CREDO_CHORDA_AEQUALIS_LITERIS(p->praenomen, "Jo \"JJ\"");
@@ -481,25 +569,27 @@ _probare_aperitionem (
     CREDO_VERUM(index_est(p->epistulae, "jo@example.org"));
     CREDO_VERUM(p->natalis_positus && p->natalis.annus == ZEPHYRUM
         && p->natalis.mensis == XII && p->natalis.dies == XXV);
-    CREDO_CHORDA_AEQUALIS_LITERIS(personae_persona(tertia, IX)->titulus,
+    CREDO_CHORDA_AEQUALIS_LITERIS(personae_persona(tertia, id_ex(IX,
+        c->piscina))->titulus,
         "A & B \"srl\"");
     CREDO_VERUM(personae_verificare(tertia));
-    CREDO_AEQUALIS_S32(personae_hominem_creare(tertia, lit("Ultima",
-        c->piscina), lit("", c->piscina)), X);
+    /* D3: documentum sine fonte posito ULID cudit (moneta_ulid) */
+    CREDO_VERUM(ulid_est(personae_hominem_creare(tertia, lit("Ultima",
+        c->piscina), lit("", c->piscina))));
 }
 
 /* P6: introitus fontis dierum cum referentia id; NIHIL si abest */
 interior constans FastiIntroitus*
 introitus_personae (
-    Xar* l,
-    s32  id)
+       Xar* l,
+    chorda  id)
 {
     i32 i;
 
     per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
     {
-        si (((constans FastiIntroitus*)xar_obtinere(l, i))->referentia
-            == id)
+        si (chorda_aequalis(((constans FastiIntroitus*)xar_obtinere(l,
+                i))->referentia, id))
         {
             redde (constans FastiIntroitus*)xar_obtinere(l, i);
         }
@@ -523,8 +613,10 @@ introitus_est (
     {
         si (t)
         {
-            imprimere("  introitus %d: %d-%d-%d '%.*s' %d\n",
-                (integer)t->referentia, (integer)t->dies.annus,
+            imprimere("  introitus %.*s: %d-%d-%d '%.*s' %d\n",
+                (integer)t->referentia.mensura,
+                (constans character*)t->referentia.datum,
+                (integer)t->dies.annus,
                 (integer)t->dies.mensis, (integer)t->dies.dies,
                 (integer)t->titulus.mensura,
                 (constans character*)t->titulus.datum,
@@ -561,22 +653,29 @@ _probare_fastos (
     (vacuum)personae_hominem_creare(m->doc, lit("Futurus", c->piscina),
         lit("Novus", c->piscina));
     d = fasti_dies(MCMLXXXVI, III, II);
-    CREDO_NECESSE(personae_natalem_ponere(m->doc, I, &d) > ZEPHYRUM);
+    CREDO_NECESSE(personae_natalem_ponere(m->doc, id_ex(I, c->piscina),
+        &d) > ZEPHYRUM);
     d = fasti_dies(ZEPHYRUM, XII, XXV);
-    CREDO_NECESSE(personae_natalem_ponere(m->doc, II, &d) > ZEPHYRUM);
+    CREDO_NECESSE(personae_natalem_ponere(m->doc, id_ex(II, c->piscina),
+        &d) > ZEPHYRUM);
     d = fasti_dies(MM, II, XXIX);
-    CREDO_NECESSE(personae_natalem_ponere(m->doc, IV, &d) > ZEPHYRUM);
+    CREDO_NECESSE(personae_natalem_ponere(m->doc, id_ex(IV, c->piscina),
+        &d) > ZEPHYRUM);
     d = fasti_dies(MCMXC, III, II);
-    CREDO_NECESSE(personae_natalem_ponere(m->doc, V, &d) > ZEPHYRUM);
-    CREDO_NECESSE(personae_delere(m->doc, V) > ZEPHYRUM);
+    CREDO_NECESSE(personae_natalem_ponere(m->doc, id_ex(V, c->piscina),
+        &d) > ZEPHYRUM);
+    CREDO_NECESSE(personae_delere(m->doc, id_ex(V, c->piscina))
+        > ZEPHYRUM);
     d = fasti_dies(MMXXVII, III, X);
-    CREDO_NECESSE(personae_natalem_ponere(m->doc, VI, &d) > ZEPHYRUM);
+    CREDO_NECESSE(personae_natalem_ponere(m->doc, id_ex(VI, c->piscina),
+        &d) > ZEPHYRUM);
     /* Martius MMXXVI: Anna sola */
     l = xar_creare(c->piscina, (i32)magnitudo(FastiIntroitus));
     CREDO_NECESSE(personae_fasti_legere(m->doc, fasti_dies(MMXXVI, III,
         I), fasti_dies(MMXXVI, III, XXXI), l, c->piscina));
     CREDO_AEQUALIS_I32(xar_numerus(l), I);
-    CREDO_VERUM(introitus_est(introitus_personae(l, I), MMXXVI, III, II,
+    CREDO_VERUM(introitus_est(introitus_personae(l, id_ex(I,
+        c->piscina)), MMXXVI, III, II,
         "Anna Rossi", MCMLXXXVI));
     /* XII MMXXVI - III MMXXVII: Luca (sine anno), Bruna (28 II),
      * Anna, Futurus */
@@ -584,20 +683,134 @@ _probare_fastos (
     CREDO_NECESSE(personae_fasti_legere(m->doc, fasti_dies(MMXXVI, XII,
         I), fasti_dies(MMXXVII, III, XXXI), l, c->piscina));
     CREDO_AEQUALIS_I32(xar_numerus(l), IV);
-    CREDO_VERUM(introitus_est(introitus_personae(l, II), MMXXVI, XII,
+    CREDO_VERUM(introitus_est(introitus_personae(l, id_ex(II,
+        c->piscina)), MMXXVI, XII,
         XXV, "Luca Bianchi", ZEPHYRUM));
-    CREDO_VERUM(introitus_est(introitus_personae(l, IV), MMXXVII, II,
+    CREDO_VERUM(introitus_est(introitus_personae(l, id_ex(IV,
+        c->piscina)), MMXXVII, II,
         XXVIII, "Bruna Verdi", MM));
-    CREDO_VERUM(introitus_est(introitus_personae(l, I), MMXXVII, III,
+    CREDO_VERUM(introitus_est(introitus_personae(l, id_ex(I,
+        c->piscina)), MMXXVII, III,
         II, "Anna Rossi", MCMLXXXVI));
-    CREDO_VERUM(introitus_est(introitus_personae(l, VI), MMXXVII, III,
+    CREDO_VERUM(introitus_est(introitus_personae(l, id_ex(VI,
+        c->piscina)), MMXXVII, III,
         X, "Futurus Novus", MMXXVII));
     /* bissextilis: 29 II */
     l = xar_creare(c->piscina, (i32)magnitudo(FastiIntroitus));
     CREDO_NECESSE(personae_fasti_legere(m->doc, fasti_dies(MMXXVIII, II,
         I), fasti_dies(MMXXVIII, II, XXIX), l, c->piscina));
-    CREDO_VERUM(introitus_est(introitus_personae(l, IV), MMXXVIII, II,
+    CREDO_VERUM(introitus_est(introitus_personae(l, id_ex(IV,
+        c->piscina)), MMXXVIII, II,
         XXIX, "Bruna Verdi", MM));
+}
+
+/* D3: fons qui id malum cudit */
+interior vacuum
+fons_malus (
+       vacuum* ctx,
+    character* effusio)
+{
+    (vacuum)ctx;
+    strcpy(effusio, "a-b");
+}
+
+/* D3: sine fonte posito ids ULID, distincti, crescentes; ex volumine
+ * iterum inveniuntur */
+interior vacuum
+_probare_identitates (
+    CredoContextus* c)
+{
+                 Mundus* m;
+     PersonaeDocumentum* nuda;
+     PersonaeDocumentum* altera;
+                 chorda  a;
+                 chorda  b;
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->volumen);
+    nuda = personae_aperire(c->piscina, m->intern, m->volumen, "nuda",
+        III);
+    CREDO_NECESSE_NON_NIHIL(nuda);
+    a = personae_hominem_creare(nuda, lit("Anna", c->piscina),
+        lit("Rossi", c->piscina));
+    b = personae_societatem_creare(nuda, lit("Banca", c->piscina));
+    CREDO_VERUM(ulid_est(a));
+    CREDO_VERUM(ulid_est(b));
+    CREDO_VERUM(chorda_comparare(a, b) < ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS(personae_index(nuda, ZEPHYRUM)->id, a);
+    CREDO_AEQUALIS_I32(personae_index(nuda, I)->ordo, II);
+    altera = personae_aperire(c->piscina, m->intern, m->volumen, "nuda",
+        III);
+    CREDO_NECESSE_NON_NIHIL(altera);
+    CREDO_VERUM(nomen_est(personae_persona(altera, a), "Anna Rossi",
+        c->piscina));
+    CREDO_VERUM(nomen_est(personae_persona(altera, b), "Banca",
+        c->piscina));
+}
+
+/* D3: acta vetera (id decimale) ut textus valent; ordo creationis
+ * inter claves aequales ("9" ante "17"); acta cum id malo
+ * praetereuntur; id cusum iam praesens (etiam deletum) aut malum
+ * recusatur */
+interior vacuum
+_probare_ids_veteres (
+    CredoContextus* c)
+{
+                 Mundus* m;
+     PersonaeDocumentum* doc;
+     PersonaeDocumentum* altera;
+                    Xar* l;
+                    i32  numerus;
+                 chorda  nova;
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->volumen);
+    CREDO_NECESSE(volumen_actum_appendere(m->volumen, "personae", lit(
+        "<persona actio=\"nova\" id=\"9\" genus=\"homo\">"
+        "<@praenomen=>Anna</><@cognomen=>Rossi</></persona>",
+        c->piscina)) > ZEPHYRUM);
+    CREDO_NECESSE(volumen_actum_appendere(m->volumen, "personae", lit(
+        "<persona actio=\"nova\" id=\"17\" genus=\"homo\">"
+        "<@praenomen=>Anna</><@cognomen=>Rossi</></persona>",
+        c->piscina)) > ZEPHYRUM);
+    CREDO_NECESSE(volumen_actum_appendere(m->volumen, "personae", lit(
+        "<persona actio=\"nova\" id=\"a-b\" genus=\"homo\">"
+        "<@praenomen=>Mala</></persona>", c->piscina)) > ZEPHYRUM);
+    doc = personae_aperire(c->piscina, m->intern, m->volumen, "", III);
+    CREDO_NECESSE_NON_NIHIL(doc);
+    CREDO_AEQUALIS_I32(personae_numerus(doc), II);
+    CREDO_VERUM(personae_nomen_ponere(doc, lit("9", c->piscina),
+        lit("Anna", c->piscina), lit("Rossi", c->piscina)) > ZEPHYRUM);
+    /* clavis aequalis: ordo creationis ("9" ante "17") */
+    l = personae_ordinatae(doc, c->piscina);
+    CREDO_NECESSE(l && xar_numerus(l) == II);
+    CREDO_CHORDA_AEQUALIS_LITERIS((*(constans Persona**)xar_obtinere(l,
+        ZEPHYRUM))->id, "9");
+    nova = personae_societatem_creare(doc, lit("Nova", c->piscina));
+    CREDO_VERUM(ulid_est(nova));
+    CREDO_CHORDA_AEQUALIS(personae_index(doc, II)->id, nova);
+    /* id cusum iam praesens recusatur, etiam deletum */
+    numerus = VIII;
+    personae_monetam_ponere(doc, moneta_numerator, &numerus);
+    CREDO_AEQUALIS_I32(personae_societatem_creare(doc, lit("Iterata",
+        c->piscina)).mensura, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(personae_societatem_creare(doc,
+        lit("Decem", c->piscina)), "10");
+    CREDO_VERUM(personae_delere(doc, lit("17", c->piscina)) > ZEPHYRUM);
+    numerus = XVI;
+    CREDO_AEQUALIS_I32(personae_societatem_creare(doc, lit("Rediviva",
+        c->piscina)).mensura, ZEPHYRUM);
+    personae_monetam_ponere(doc, fons_malus, NIHIL);
+    CREDO_AEQUALIS_I32(personae_societatem_creare(doc, lit("Mala",
+        c->piscina)).mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(personae_numerus(doc), III);
+    CREDO_VERUM(personae_verificare(doc));
+    altera = personae_aperire(c->piscina, m->intern, m->volumen, "",
+        III);
+    CREDO_NECESSE_NON_NIHIL(altera);
+    CREDO_CHORDA_AEQUALIS(personae_sigillum_hex(altera, c->piscina),
+        personae_sigillum_hex(doc, c->piscina));
+    CREDO_CHORDA_AEQUALIS(personae_index(altera, I)->id, nova);
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
@@ -621,6 +834,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "fasti", _probare_fastos, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
+    { "D3: identitates ULID", _probare_identitates, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "D3: ids veteres", _probare_ids_veteres, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

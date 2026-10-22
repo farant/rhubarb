@@ -1,0 +1,35 @@
+<sanctus id="fidelis-of-sigmaringen" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Fidelis of Sigmaringen</nomen>
+  <ortus annus="1577" locus="Sigmaringen" fontes="ce"/>
+  <obitus annus="1622" mensis="4" dies="24" locus="Sevis, Grisons" martyrium="verum" fontes="ce mr"/>
+  <beatificatio annus="1729" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1745" papa="Benedict XIV" fontes="ce mr"/>
+  <festum calendarium="generale" mensis="4" dies="24" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="4" dies="24" fontes="mr"/>
+  <munus fontes="ce us">priest</munus>
+  <munus fontes="mr ce">religious</munus>
+  <munus fontes="mr ce">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Fidelis was born at Sigmaringen in 1577, son of the burgomaster Johannes Rey. He studied at Freiburg im Breisgau, travelled in France and Italy as a tutor, took the doctorate in canon and civil law in 1611 and practised as an advocate, until the corruption of the courts led him to give up the law for the Church. Ordained priest, he entered the Capuchin friars at Freiburg, taking the name Fidelis, and served as guardian at Rheinfelden, Freiburg and Feldkirch, gaining a great name as a preacher.</paragraphus>
+    <paragraphus fontes="ce mr">In 1621 he was sent on a mission to the Grisons, where most of the people had become Calvinist. His preaching brought many conversions and alarmed the Protestant preachers, who stirred the people against him by claiming that he was preparing the way for Austrian rule. On 24 April 1622, at Sevis, his sermon was broken off by a tumult; outside the church he was offered his life if he would apostatize, refused, and was struck down. He was the first martyr of the Congregation of Propaganda. He was beatified in 1729, and Benedict XIV canonized him in 1745.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="24 April">
+    <excerptum>AT Sevis, in Switzerland, St. Fidelis of Sigmaringen, of the Order of Capuchin Minorites, who was sent thither to preach the Catholic faith. He was put to death by the heretics, and was placed among the holy martyrs by the Sovereign Pontiff, Benedict XIV.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Fidelis of Sigmaringen" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Fidelis_of_Sigmaringen">
+    <excerptum>Born in 1577, at Sigmaringen, Prussia, of which town his father Johannes Rey was burgomaster; died at Sevis, 24 April, 1622.</excerptum>
+    <excerptum>He pursued his studies at the University of Freiburg in the Breisgau, and in 1604 became tutor to Wilhelm von Stotzingen, with whom he travelled in France and Italy.</excerptum>
+    <excerptum>In 1611 he returned to Freiburg to take the doctorate in canon and civil law, and at once began to practise as an advocate. But the open corruption which found place in the law courts determined him to relinquish that profession and to enter the Church.</excerptum>
+    <excerptum>He was ordained priest the following year, and immediately afterwards was received into the Order of Friars Minor of the Capuchin Reform at Freiburg, taking the name of Fidelis.</excerptum>
+    <excerptum>Fidelis was appointed guardian first of the community at Rheinfelden, and afterwards at Freiburg and Feldkirch. As a preacher his burning zeal earned for him a great reputation.</excerptum>
+    <excerptum>in 1621 he was appointed to undertake a mission in the country of the Grisons with the purpose of bringing back that district to the Catholic Faith. The people there had almost all gone over to Calvinism</excerptum>
+    <excerptum>They resulted in the conversion of Rudolph de Salis, the most influential man in the town, whose public recantation was followed by many conversions.</excerptum>
+    <excerptum>the heretic preachers were seriously alarmed and set themselves to inflame the people against him by representing that his mission was political rather than religious and that he was preparing the way for the subjugation of the country by the Austrians.</excerptum>
+    <excerptum>At Sevis he entered the church and began to preach, but was interrupted by a sudden tumult both within and without the church.</excerptum>
+    <excerptum>Outside the church he was surrounded by a crowd led by the preachers who offered to save his life if he would apostatize. Fidelis replied: "I came to extirpate heresy, not to embrace it", whereupon he was struck down. He was the first martyr of the Congregation of Propaganda.</excerptum>
+    <excerptum>He was beatified in 1729, and canonized in 1745.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="24 April">
+    <excerptum>Saint Fidelis of Sigmaringen, Priest and Martyr</excerptum>
+  </fons>
+</sanctus>

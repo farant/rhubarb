@@ -22,3 +22,29 @@ drawings open in other panes; the skip lives in step 3).
   updated - only vicus panes swap.
 - pictor_documentum_finis counts log entries, not strokes (+2 per
   stroke here); assert on numerus_vivorum.
+
+## 2026-10-20 — semitae R4c: pictor on routes (Fran approved the text)
+
+- New manifest field `pictura` (textus, transiens, ligatio impelle, no
+  scriptor - derived like latitudo/altitudo). Written in two places
+  only: the mount's initial attributes (` pictura="<id>"`, absent for
+  the root pictor of the standalone app) and `dimensiones_mutator`
+  (now takes a PicturaOstensa {doc, spatium}) inside
+  pictor_picturam_ponere - the single switch point.
+- `pictor_argumentum_ponere(m, arg, condere)`: URI ("pictor/flores")
+  shows an EXISTING picture and never creates (routes only set
+  state); existence is checked (pictura_exstat = memory or library)
+  BEFORE semita_applicare so a refusal changes nothing. Alias keeps
+  the S3e/S3f behaviour; mount passes condere=FALSUM (it never
+  created), argument change passes VERUM ($pictor-new).
+- The organum for the URI parse is loaded into a per-call scratch
+  piscina and destroyed (no PictorMontatio field = no header struct
+  change); argument changes are rare user commands.
+- `pictor_semitam_secuta`: after a history step the document follows
+  the `pictura` field.
+- vicus `pictura_lateris` now reads the `pictura` field first: after
+  Ctrl+O the pane's `argumentum` is stale, and $pictor-next would have
+  cycled from the picture you left.
+- Test note: without vicus's shared document memory a re-opened
+  picture is a NEW PictorDocumentum pointer - compare dimensions, not
+  pointers (probatio_pictor_semitae flores_ostensae).

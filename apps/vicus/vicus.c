@@ -26,9 +26,11 @@
 #include "vicus_quaestio_porta.h"
 #include "vicus_quaestio_interna.h"
 #include "reactor.h"
+#include "vicus_sonus_porta.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 /* applicationes CDLXXX x CDLXXX ut solae, linea tabularum supra */
 #define VICUS_LATITUDO   CDLXXX
@@ -101,6 +103,7 @@ principale (
                                         s32  exitus;
                          constans character* via_imaginis;
                       VicusPortaQuaestionis  porta_quaestionis;
+                             VicusPortaSoni  porta_soni;
                                  PulsusVici  pulsus;
                                     Reactor* reactor;
                                         b32  per_adiutorem;
@@ -179,6 +182,13 @@ principale (
     /* T4a: admonitiones ex libro praeconii (colloquia Claude Code) */
     (vacuum)vicus_applicatio_admonitiones_aperire(&app,
         praeconium_via(piscina));
+    /* sonus S4: admonitiones sonantes (tintinnabulum super auditus,
+     * exitus piger); -fumus tacet - probationes numquam sonant */
+    si (   !fumus && vicus_sonus_porta(&porta_soni, piscina,
+            (i64)time(NIHIL)))
+    {
+        vicus_applicatio_soni_portam_ponere(&app, &porta_soni);
+    }
     /* L5: Cmd+V in pictore: imago e clipboard in stratum novum */
     vicus_applicatio_imaginis_portam_ponere(&app, imaginem_glutinatam,
         NIHIL);

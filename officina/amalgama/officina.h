@@ -42,8 +42,8 @@ typedef struct OfficinaChorda {
 } OfficinaChorda;
 
 /* PELLUCIDA - campi ordine EXACTO include/xar.h (definitio haec
- * sola in TU amalgamato); tabula segmentorum post caput allocata
- * (2026-09-02), sine titulo */
+ * sola in TU amalgamato); segmenta duo prima in capite inscripta,
+ * tabula plena pigre (2026-10-21, TABULA CRESCENS), sine titulo */
 typedef struct OfficinaXar {
     unsigned int  numerus_elementorum;
     unsigned int  magnitudo_elementi;
@@ -51,9 +51,12 @@ typedef struct OfficinaXar {
     unsigned int  numerus_segmentorum;
     unsigned int  capacitas_totalis;
     unsigned int  vexilla;
-    unsigned int  segmenta_maxima;   /* mensura tabulae (XXIV | LXIV) */
+    unsigned int  segmenta_maxima;   /* fines tabulae (XXIV | LXIV) */
+    unsigned int  mensura_tabulae;   /* tabula currens: 2, deinde fines */
     OfficinaPiscina* piscina;
-    void**        segmenta;          /* tabula post caput, una allocatione */
+    void**        segmenta;          /* -> segmenta_inlinea, aut tabula
+                                      * plena (segmento tertio petito) */
+    void*         segmenta_inlinea[2];
 } OfficinaXar;
 
 unsigned int officina_xar_numerus(const OfficinaXar* xar);

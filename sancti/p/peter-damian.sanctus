@@ -1,0 +1,57 @@
+<sanctus id="peter-damian" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Peter Damian</nomen>
+  <ortus annus="1007" locus="Ravenna" fontes="ce"/>
+  <obitus annus="1072" mensis="2" locus="Faenza" fontes="ce bu"/>
+  <canonizatio modus="ante-congregationem" fontes="ce"/>
+  <festum calendarium="generale" mensis="2" dies="21" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="2" dies="23" fontes="mr"/>
+  <munus fontes="mr us">bishop</munus>
+  <munus fontes="mr ce">cardinal</munus>
+  <munus fontes="mr us ce">doctor of the Church</munus>
+  <munus fontes="bu">monk</munus>
+  <patrocinium fontes="bu">Faenza</patrocinium>
+  <patrocinium fontes="bu">Fonte Avellana</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce bu">Peter was born at Ravenna, the youngest of a large family of good but impoverished stock; the Catholic Encyclopedia dates his birth to 1007, while Butler gives about 988. Orphaned young, he was ill-treated by one brother and set to keep swine, until another brother, Damian, archpriest of Ravenna, had him educated; Peter is thought to have taken his surname from him. He studied at Ravenna, Faenza and Parma and became a well-known teacher before turning to the monastic life.</paragraphus>
+    <paragraphus fontes="ce bu">He joined the Benedictine hermits of Fonte Avellana in Umbria, became their superior in 1041, and founded five more hermitages. In 1057 the pope (Stephen X in the Catholic Encyclopedia, Stephen IX in Butler) made him cardinal bishop of Ostia; he long refused and accepted only under threat of excommunication. He served several popes as legate, including a mission to France in 1063 and the synod called over the proposed divorce of King Henry IV of Germany.</paragraphus>
+    <paragraphus fontes="ce bu mr">Returning from a legation to Ravenna in 1072, he fell ill with fever near Faenza and died in a monastery there in February 1072, on the 21st according to the Catholic Encyclopedia, the 22nd according to Butler. No formal canonization took place, but his cult began at his death; in 1823 Leo XII extended his feast to the whole Church and declared him a Doctor of the Church.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="23 February">
+    <excerptum>At Faenza, St. Peter Dainian, Cardinal bishop of Ostia, and Doctor of the Church, celebrated for learning and sanctity.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v02 Feb. 23 B. Peter Damian, Cardinal, Bishop of Ostia">
+    <excerptum>Peter, surnamed of Damian, was born about the year 988, in Ravenna, of a good family, but reduced. He was the youngest of many children</excerptum>
+    <excerptum>losing his father and mother very young, was left in the hands of a brother who was married</excerptum>
+    <excerptum>he was sent to keep swine.</excerptum>
+    <excerptum>He had another brother called Damian, who w^as arch-priest of Ravenna, and afterward a monk</excerptum>
+    <excerptum>he seems from him to have taken the surname of Damian</excerptum>
+    <excerptum>Damian sent Peter 1o school, first at Faenza, afterward at Parma</excerptum>
+    <excerptum>it was not long before he found himself in a capacity to teach others, wliich he did with great applause</excerptum>
+    <excerptum>he resolved entirely to leave the world and embrace a monastic life</excerptum>
+    <excerptum>religious of the order of St. Benedict, belonging to Font-Aveljano, a desert at the foot of the Apennine in Umbria</excerptum>
+    <excerptum>at his decease, in 1041, Peter took upon him</excerptum>
+    <excerptum>He also founded five other numerous hermitages</excerptum>
+    <excerptum>Their successor, Stephen IX., in 1057, Erevailed with him to quit his desert, and made im cardinal bishop of Ostia.</excerptum>
+    <excerptum>his commands, in virtue of obedience, could induce Peter to submit.</excerptum>
+    <excerptum>who sent him in quality of his legate into France, in 1063.</excerptum>
+    <excerptum>Henry IV. king of Germany</excerptum>
+    <excerptum>afterward, in 1069, sought a divorce</excerptum>
+    <excerptum>he assembled a council at Mentz. Pope Alexander II. forbade him ever to consent to so enormous an injustice, and pitched upon Peter Damian for his legate to preside in that synod</excerptum>
+    <excerptum>When he arrived at Ravenna, in 1072</excerptum>
+    <excerptum>he was stopped by a fever in the monastery of our Lady without the gates of Faenza, and died there on the eighth day of his sickness</excerptum>
+    <excerptum>on the 22nd of February, 1 072, being fourscore and three years old. He is honoured as patron at Faenza and Font-Avellano, on the 23rd of the same month.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Peter Damian" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Peter_Damian">
+    <excerptum>Doctor of the Church, Cardinal-Bishop of Ostia, b. at Ravenna "five years after the death of the Emperor Otto III," 1007; d. at Faenza, 21 Feb., 1072.</excerptum>
+    <excerptum>He was the youngest of a large family; his parents were noble, but poor.</excerptum>
+    <excerptum>Left an orphan in early years, he was at first adopted by an elder brother, who ill-treated and under-fed him while employing him as a swineherd.</excerptum>
+    <excerptum>another brother, who was archpriest at Ravenna, had pity on him and took him away to be educated.</excerptum>
+    <excerptum>this brother was called Damian and it was generally accepted that St. Peter added this name to his own in grateful recognition of his brother's kindness. He made rapid progress in his studies, first at Ravenna, then at Faenza, finally at the University of Parma</excerptum>
+    <excerptum>In the autumn of 1057, Stephen X determined to create Damian a cardinal. For a long time he resisted the offer, but was finally forced, under threat of excommunication, to accept</excerptum>
+    <excerptum>On his return thence he was seized with fever near Faenza.</excerptum>
+    <excerptum>No formal canonization ever took place, but his cultas has existed since his death at Faenza, at Fonte-Avellana, at Monte Cassino, and at Cluny. In 1823 Leo XII extended his feast (23 Feb.) to the whole Church and pronounced him a Doctor of the Church.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="21 February">
+    <excerptum>Saint Peter Damian, Bishop and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

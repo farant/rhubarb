@@ -68,33 +68,36 @@ _causae (
     redde n;
 }
 
-s32 principale (vacuum)
+
+/* ==================================================
+ * GENERA EVENTUUM
+ * ================================================== */
+
+interior vacuum
+_genera_probare (
+    CredoContextus* c)
 {
-      Piscina* pn;
-    JsonValor* status;
+    Piscina* pn = c->piscina;
 
-    pn = piscina_generare_dynamicum("probatio_gesta_inventarium",
-        65536);
-    si (!pn)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(pn);
-    status = json_objectum_creare(pn);
-
-
-    /* ==================================================
-     * GENERA EVENTUUM
-     * ================================================== */
-
-    imprimere("\n--- Probans genera eventuum ---\n");
     CREDO_VERUM (gesta_inventarium_eventus_est(
         chorda_ex_literis("ordo-additus", pn)));
     CREDO_VERUM (gesta_inventarium_eventus_est(
         chorda_ex_literis("cella-posita", pn)));
     CREDO_FALSUM (gesta_inventarium_eventus_est(
         chorda_ex_literis("mutatio", pn)));
+}
+
+/* Sectio scaenica: status UNUS per plicaturam, remotionem et
+ * validationem plicatur - bloccus quisque statum priorum ex proposito
+ * continuat; gradus (CREDO_GRADUS) fracturam nominant. */
+interior vacuum
+_statum_probare (
+    CredoContextus* c)
+{
+      Piscina* pn = c->piscina;
+    JsonValor* status;
+
+    status = json_objectum_creare(pn);
 
 
     /* ==================================================
@@ -105,7 +108,7 @@ s32 principale (vacuum)
         JsonValor* ordines;
         JsonValor* cella;
 
-        imprimere("\n--- Probans plicaturam ---\n");
+        CREDO_GRADUS ("plicatura");
         CREDO_VERUM (_plicare(status, "ordo-additus",
             "{\"ordines\":[\"a.sh\",\"b.sh\"]}", pn));
         /* duplicatum praetermittitur (defensiva), novum additur */
@@ -170,7 +173,7 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        imprimere("\n--- Probans remotionem ---\n");
+        CREDO_GRADUS ("remotio");
         CREDO_VERUM (_plicare(status, "ordo-remotus",
             "{\"ordines\":[\"a.sh\"],\"causa\":\"deletum\"}", pn));
         CREDO_AEQUALIS_I32 (json_tabulatum_numerus(
@@ -185,42 +188,42 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        constans character* c;
+        constans character* causae_textus;
 
-        imprimere("\n--- Probans validationem ---\n");
+        CREDO_GRADUS ("validatio");
         CREDO_NIHIL (_validare(status, "ordo-additus",
             "{\"ordines\":[\"d.sh\"]}", pn));
-        c = _validare(status, "ordo-additus",
+        causae_textus = _validare(status, "ordo-additus",
             "{\"ordines\":[\"b.sh\",\"x.sh\",\"x.sh\"]}", pn);
-        CREDO_AEQUALIS_I32 (_causae(c), II);
-        CREDO_VERUM (c != NIHIL
-            && strstr(c, "'b.sh' iam adest") != NIHIL);
-        c = _validare(status, "ordo-remotus",
+        CREDO_AEQUALIS_I32 (_causae(causae_textus), II);
+        CREDO_VERUM (causae_textus != NIHIL
+            && strstr(causae_textus, "'b.sh' iam adest") != NIHIL);
+        causae_textus = _validare(status, "ordo-remotus",
             "{\"ordines\":[\"z.sh\"]}", pn);
-        CREDO_AEQUALIS_I32 (_causae(c), II);
-        c = _validare(status, "lens-addita",
+        CREDO_AEQUALIS_I32 (_causae(causae_textus), II);
+        causae_textus = _validare(status, "lens-addita",
             "{\"nomen\":\"tegit\",\"genus_valoris\":\"numerus\"}", pn);
-        CREDO_AEQUALIS_I32 (_causae(c), II);
+        CREDO_AEQUALIS_I32 (_causae(causae_textus), II);
         CREDO_NIHIL (_validare(status, "cella-posita",
             "{\"fons\":\"manu\",\"cellae\":[{\"ordo\":\"b.sh\","
             "\"lens\":\"tegit\",\"valor\":{\"genus\":\"textus\","
             "\"valor\":\"radix\"}}]}", pn));
         /* fons malus + ordo absens + lens absens + ita-non malum */
-        c = _validare(status, "cella-posita",
+        causae_textus = _validare(status, "cella-posita",
             "{\"fons\":\"coniectura\",\"cellae\":["
             "{\"ordo\":\"q.sh\",\"lens\":\"nulla\",\"valor\":"
             "{\"genus\":\"textus\",\"valor\":\"x\"}},"
             "{\"ordo\":\"b.sh\",\"lens\":\"in PORTAE\",\"valor\":"
             "{\"genus\":\"ita-non\",\"valor\":\"fortasse\"}}]}", pn);
-        CREDO_AEQUALIS_I32 (_causae(c), IV);
+        CREDO_AEQUALIS_I32 (_causae(causae_textus), IV);
         /* genus valoris lenti non congruens */
-        c = _validare(status, "cella-posita",
+        causae_textus = _validare(status, "cella-posita",
             "{\"fons\":\"manu\",\"cellae\":[{\"ordo\":\"b.sh\","
             "\"lens\":\"tegit\",\"valor\":{\"genus\":\"ita-non\","
             "\"valor\":\"ita\"}}]}", pn);
-        CREDO_AEQUALIS_I32 (_causae(c), I);
-        c = _validare(status, "mutatio", "{}", pn);
-        CREDO_AEQUALIS_I32 (_causae(c), I);
+        CREDO_AEQUALIS_I32 (_causae(causae_textus), I);
+        causae_textus = _validare(status, "mutatio", "{}", pn);
+        CREDO_AEQUALIS_I32 (_causae(causae_textus), I);
     }
 
 
@@ -230,10 +233,10 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        constans character* c;
+        constans character* causae_textus;
                  JsonValor* cella;
 
-        imprimere("\n--- Probans non applicabile ---\n");
+        CREDO_GRADUS ("non applicabile");
         /* in lente ita-non ET in lente textus: genus lentis non
          * obstat */
         CREDO_NIHIL (_validare(status, "cella-posita",
@@ -243,13 +246,13 @@ s32 principale (vacuum)
             "\"tegit\",\"valor\":{\"genus\":\"non-applicabile\","
             "\"valor\":\"GUI solum\"}}]}", pn));
         /* causa non chorda recusatur */
-        c = _validare(status, "cella-posita",
+        causae_textus = _validare(status, "cella-posita",
             "{\"fons\":\"manu\",\"cellae\":[{\"ordo\":\"b.sh\","
             "\"lens\":\"tegit\",\"valor\":{\"genus\":"
             "\"non-applicabile\",\"valor\":7}}]}", pn);
-        CREDO_AEQUALIS_I32 (_causae(c), I);
-        CREDO_VERUM (c != NIHIL
-            && strstr(c, "non-applicabile") != NIHIL);
+        CREDO_AEQUALIS_I32 (_causae(causae_textus), I);
+        CREDO_VERUM (causae_textus != NIHIL
+            && strstr(causae_textus, "non-applicabile") != NIHIL);
         /* plicatura: genus et causa servantur */
         CREDO_VERUM (_plicare(status, "cella-posita",
             "{\"fons\":\"manu\",\"cellae\":[{\"ordo\":\"c.sh\","
@@ -262,7 +265,18 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS (json_ad_chorda(
             json_objectum_capere(cella, "valor")), "GUI solum");
     }
+}
 
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "genera eventuum inventarii", _genera_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "status inventarii: plicatura ad non applicabile",
+        _statum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("gesta_inventarium", SECTIONES);
 }

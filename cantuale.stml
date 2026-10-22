@@ -1,0 +1,56 @@
+<!-- cantuale.stml - liber ordinarius cantilenarum (include/cantuale.h),
+     in binarium infixus per tools/cantuale_infigere.sh.
+
+     Occasiones: permissio (Claudius te exspectat - cantilena pendet,
+     sine tonica finali, ut interrogatio), finis (opus perfectum - ad
+     tonicam redit), vitium (aliquid fractum - gravis, minor aut
+     chromatica descendens). Affectus: laetus, gravis.
+
+     Textus MML (cantus.h): o4 c = C medium; '<' '>' octava; l
+     longitudo ordinaria; t tempus; @titulus praeparatum sonitus.
+     Notae <= XXXII. Sine '@' color vocantis (tonus). -->
+<cantuale>
+
+  <!-- PERMISSIO: pendet -->
+  <cantilena titulus="rogatio" genera="permissio">
+    <textus!>t150 o5 l16 c e g8 r16 a4</textus>
+  </>
+  <cantilena titulus="pulsatio" genera="permissio" intactus>
+    <textus!>@punctum t160 o6 l16 c r c r8 <g4</textus>
+  </>
+  <cantilena titulus="vocatio" genera="permissio">
+    <textus!>t132 o6 l8 g e r8 g e</textus>
+  </>
+  <cantilena titulus="interrogatio" genera="permissio">
+    <textus!>t180 o5 l16 e g >c d4</textus>
+  </>
+
+  <!-- FINIS: ad tonicam -->
+  <cantilena titulus="arpeggium" genera="finis laetus">
+    <textus!>t180 o6 l16 e g# b >e8</textus>
+  </>
+  <cantilena titulus="cadentia" genera="finis">
+    <textus!>t160 o5 l16 g f e d c4</textus>
+  </>
+  <cantilena titulus="tubae" genera="finis laetus">
+    <textus!>t150 o5 l16 g >c e g8 e16 g4</textus>
+  </>
+  <cantilena titulus="scala" genera="finis laetus">
+    <textus!>t200 o5 l32 c d e f g a b >c8</textus>
+  </>
+
+  <!-- VITIUM: gravis -->
+  <cantilena titulus="lapsus" genera="vitium gravis">
+    <textus!>t110 o4 l8 g f# f e4.</textus>
+  </>
+  <cantilena titulus="ictus" genera="vitium gravis" intactus>
+    <textus!>@fragor t140 o3 l8 c r16 c4</textus>
+  </>
+  <cantilena titulus="dissonantia" genera="vitium">
+    <textus!>t160 o5 l16 b f b f8</textus>
+  </>
+  <cantilena titulus="descensus" genera="vitium gravis">
+    <textus!>t150 o5 l16 c <a- f c4</textus>
+  </>
+
+</cantuale>

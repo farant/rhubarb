@@ -378,46 +378,67 @@ _descriptio_en (
     redde NIHIL;
 }
 
-s32
-principale (vacuum)
+/* FIXURA SUITAE: praeludium semel factum (parare_suitae;
+ * assertiones eius ibi); sectiones id per monstratorem
+ * constantem LEGUNT. */
+nomen structura {
+               constans character* radix;
+                OratioVocabularia  vocabularia;
+    constans OratioVocabulariumLa* voc;
+              MateriaLexiconRatum  ratum;
+            MateriaArborConsilium  consilium;
+              InternamentumChorda* intern;
+} FixuraPartium;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                                     Piscina* piscina;
-                          constans character* radix;
-                                   character  via[1024];
-                           OratioVocabularia  vocabularia;
-               constans OratioVocabulariumLa* voc;
-                    OratioVocabulariumVitium  vitium;
-                         MateriaLexiconRatum  ratum;
-                          MateriaLexIudicium  iudicium;
-                       MateriaArborConsilium  consilium;
-                         InternamentumChorda* intern;
+               FixuraPartium* f;
+    OratioVocabulariumVitium  vitium;
+          MateriaLexIudicium  iudicium;
 
-    piscina = piscina_generare_dynamicum("probatio_oratio_partes",
-        536870912);
-    credo_aperire(piscina);
-    radix = getenv("RHUBARB_RADIX");
-    si (radix == NIHIL)
+    f = (FixuraPartium*)piscina_allocare(c->piscina,
+        magnitudo(FixuraPartium));
+    si (f == NIHIL)
     {
-        radix = ".";
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    CREDO_VERUM (oratio_vocabularia_onerare(piscina, radix,
-        &vocabularia,
+    f->radix = getenv("RHUBARB_RADIX");
+    si (f->radix == NIHIL)
+    {
+        f->radix = ".";
+    }
+    CREDO_VERUM (oratio_vocabularia_onerare(c->piscina, f->radix,
+        &f->vocabularia,
         &vitium));
-    voc = vocabularia.la;
-    CREDO_NON_NIHIL (voc);
-    CREDO_NON_NIHIL (vocabularia.en);
-    si (voc == NIHIL || vocabularia.en == NIHIL)
+    f->voc = f->vocabularia.la;
+    CREDO_NON_NIHIL (f->voc);
+    CREDO_NON_NIHIL (f->vocabularia.en);
+    si (f->voc == NIHIL || f->vocabularia.en == NIHIL)
     {
-        credo_imprimere_compendium();
-        redde I;
+        redde;
     }
-    CREDO_VERUM (materia_lexicon_ratum_facere(&ratum, &ORATIO_LEXICON,
+    CREDO_VERUM (materia_lexicon_ratum_facere(&f->ratum,
+        &ORATIO_LEXICON,
         &iudicium));
-    oratio_stml_consilium(&consilium, &ratum);
-    intern = internamentum_creare(piscina);
-    CREDO_NON_NIHIL (intern);
+    oratio_stml_consilium(&f->consilium, &f->ratum);
+    f->intern = internamentum_creare(c->piscina);
+    CREDO_NON_NIHIL (f->intern);
+    c->datum = f;
+}
 
-    imprimere("\n--- I. Descriptiones ex WORDS et glossario ---\n");
+interior vacuum
+_descriptiones_probare (
+    CredoContextus* c)
+{
+                   Piscina* piscina = c->piscina;
+    constans FixuraPartium* fixura = (constans FixuraPartium*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     CREDO_AEQUALIS_S32 (oratio_partes_la_casus(_l("NOM")),
         (s32)ORATIO_CASUS_NOMINATIVUS);
     CREDO_AEQUALIS_S32 (oratio_partes_la_casus(_l("VOC")),
@@ -440,7 +461,7 @@ principale (vacuum)
                               Xar* x;
         constans OratioDescriptio* d;
 
-        x = _describere(piscina, voc, "puellam");
+        x = _describere(piscina, fixura->voc, "puellam");
         CREDO_NON_NIHIL (x);
         d = _prima(x, ORATIO_CLASSIS_SUBSTANTIVUM);
         CREDO_NON_NIHIL (d);
@@ -462,17 +483,17 @@ principale (vacuum)
             CREDO_VERUM (d->sensus.mensura > ZEPHYRUM);
             CREDO_AEQUALIS_S32 (d->persona, (s32)-I);
         }
-        x = _describere(piscina, voc, "Roma");
+        x = _describere(piscina, fixura->voc, "Roma");
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_NOMEN_PROPRIUM));   /* kind L */
         CREDO_FALSUM (_habet(x, ORATIO_CLASSIS_SUBSTANTIVUM));
-        x = _describere(piscina, voc, "Caesar");
+        x = _describere(piscina, fixura->voc, "Caesar");
         d = _prima(x, ORATIO_CLASSIS_NOMEN_PROPRIUM);            /* kind N */
         CREDO_NON_NIHIL (d);
         CREDO_VERUM (d != NIHIL
             && d->genus == (s32)ORATIO_GENUS_GRAMMATICUM_MASCULINUM);
-        x = _describere(piscina, voc, "vir");
+        x = _describere(piscina, fixura->voc, "vir");
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_SUBSTANTIVUM));   /* kind P */
-        x = _describere(piscina, voc, "amat");
+        x = _describere(piscina, fixura->voc, "amat");
         d = _prima(x, ORATIO_CLASSIS_VERBUM);
         CREDO_NON_NIHIL (d);
         si (d != NIHIL)
@@ -492,11 +513,11 @@ principale (vacuum)
             CREDO_VERUM (_aequalis(d->nativum,
                 "V 1 1 PRES ACTIVE IND 3 S"));
         }
-        x = _describere(piscina, voc, "amavit");
+        x = _describere(piscina, fixura->voc, "amavit");
         d = _prima(x, ORATIO_CLASSIS_VERBUM);
         CREDO_VERUM (d != NIHIL
             && d->tempus == (s32)ORATIO_TEMPUS_PERFECTUM);
-        x = _describere(piscina, voc, "amatus");
+        x = _describere(piscina, fixura->voc, "amatus");
         d = _prima_formae(x, ORATIO_CLASSIS_VERBUM,
             (s32)ORATIO_FORMA_VERBI_PARTICIPIUM);
         CREDO_NON_NIHIL (d);
@@ -514,10 +535,10 @@ principale (vacuum)
         d = _prima(x, ORATIO_CLASSIS_ADIECTIVUM);
         CREDO_VERUM (d != NIHIL
             && d->gradus == (s32)ORATIO_GRADUS_POSITIVUS);
-        x = _describere(piscina, voc, "amandi");
+        x = _describere(piscina, fixura->voc, "amandi");
         CREDO_NON_NIHIL (_prima_formae(x, ORATIO_CLASSIS_VERBUM,
             (s32)ORATIO_FORMA_VERBI_GERUNDIVUM));
-        x = _describere(piscina, voc, "amare");
+        x = _describere(piscina, fixura->voc, "amare");
         d = _prima_formae(x, ORATIO_CLASSIS_VERBUM,
             (s32)ORATIO_FORMA_VERBI_INFINITIVUM);
         CREDO_NON_NIHIL (d);
@@ -526,27 +547,27 @@ principale (vacuum)
             && d->persona == (s32)-I);
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_ADIECTIVUM));
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_ADVERBIUM));
-        x = _describere(piscina, voc, "loquitur");
+        x = _describere(piscina, fixura->voc, "loquitur");
         d = _prima(x, ORATIO_CLASSIS_VERBUM);
         CREDO_VERUM (d != NIHIL && d->vox == (s32)ORATIO_VOX_DEPONENS
             && d->coniugatio == (s32)III);
-        x = _describere(piscina, voc, "bonus");
+        x = _describere(piscina, fixura->voc, "bonus");
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_SUBSTANTIVUM));
         d = _prima(x, ORATIO_CLASSIS_ADIECTIVUM);
         CREDO_VERUM (d != NIHIL
             && d->gradus == (s32)ORATIO_GRADUS_POSITIVUS
             && d->declinatio == (s32)I);
-        x = _describere(piscina, voc, "melior");
+        x = _describere(piscina, fixura->voc, "melior");
         d = _prima(x, ORATIO_CLASSIS_ADIECTIVUM);
         CREDO_VERUM (d != NIHIL
             && d->gradus == (s32)ORATIO_GRADUS_COMPARATIVUS
             && _aequalis(d->lemma, "bonus"));
-        x = _describere(piscina, voc, "optime");
+        x = _describere(piscina, fixura->voc, "optime");
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_ADVERBIUM));
         d = _prima(x, ORATIO_CLASSIS_ADIECTIVUM);
         CREDO_VERUM (d != NIHIL
             && d->gradus == (s32)ORATIO_GRADUS_SUPERLATIVUS);
-        x = _describere(piscina, voc, "in");
+        x = _describere(piscina, fixura->voc, "in");
         CREDO_NON_NIHIL (x);
         CREDO_AEQUALIS_I32 (xar_numerus(x), (i32)II);
         {
@@ -570,33 +591,33 @@ principale (vacuum)
             }
             CREDO_VERUM (ablativus_adest && accusativus_adest);
         }
-        x = _describere(piscina, voc, "et");
+        x = _describere(piscina, fixura->voc, "et");
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_CONIUNCTIO_COORDINANS));
         CREDO_FALSUM (_habet(x, ORATIO_CLASSIS_CONIUNCTIO_SUBORDINANS));
-        x = _describere(piscina, voc, "ut");
+        x = _describere(piscina, fixura->voc, "ut");
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_CONIUNCTIO_SUBORDINANS));
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_VERBUM));
-        x = _describere(piscina, voc, "tres");
+        x = _describere(piscina, fixura->voc, "tres");
         d = _prima(x, ORATIO_CLASSIS_NUMERALE);
         CREDO_VERUM (d != NIHIL
             && d->species == (s32)ORATIO_SPECIES_NUMERALIS_CARDINALE
             && d->numerus == (s32)ORATIO_NUMERUS_GRAMMATICUS_PLURALIS);
-        x = _describere(piscina, voc, "ego");
+        x = _describere(piscina, fixura->voc, "ego");
         d = _prima(x, ORATIO_CLASSIS_PRONOMEN);
         CREDO_VERUM (d != NIHIL
             && d->casus_grammaticus == (s32)ORATIO_CASUS_NOMINATIVUS
             && d->numerus
                 == (s32)ORATIO_NUMERUS_GRAMMATICUS_SINGULARIS);
-        x = _describere(piscina, voc, "hic");
+        x = _describere(piscina, fixura->voc, "hic");
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_PRONOMEN));
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_ADVERBIUM));
-        x = _describere(piscina, voc, "virumque");
+        x = _describere(piscina, fixura->voc, "virumque");
         d = _prima(x, ORATIO_CLASSIS_CONIUNCTIO_COORDINANS);
         CREDO_NON_NIHIL (d);
         CREDO_VERUM (d != NIHIL && _aequalis(d->nativum, "TACKON que")
             && _aequalis(d->lemma, "que"));
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_SUBSTANTIVUM));
-        x = _describere(piscina, voc, "agantur");
+        x = _describere(piscina, fixura->voc, "agantur");
         d = _prima(x, ORATIO_CLASSIS_VERBUM);   /* forma unica prima */
         CREDO_NON_NIHIL (d);
         si (d != NIHIL)
@@ -613,7 +634,7 @@ principale (vacuum)
                 "V 3 1 PRES PASSIVE SUB 3 P",
                     (size_t)26) == ZEPHYRUM);
         }
-        x = _describere(piscina, voc, "est");
+        x = _describere(piscina, fixura->voc, "est");
         d = _prima(x, ORATIO_CLASSIS_VERBUM);   /* glossarium primum: sum */
         CREDO_NON_NIHIL (d);
         si (d != NIHIL)
@@ -632,44 +653,54 @@ principale (vacuum)
                 (s32)ORATIO_FORMA_VERBI_FINITUM);
             CREDO_VERUM (_aequalis(d->nativum, "glossarium verbum"));
         }
-        x = _describere(piscina, voc, "offset");
+        x = _describere(piscina, fixura->voc, "offset");
         d = _prima(x, ORATIO_CLASSIS_IGNOTUM);   /* ignotum-permissum */
         CREDO_NON_NIHIL (d);
         CREDO_VERUM (d != NIHIL && d->lingua == ORATIO_LINGUA_ANGLICA
             && d->fons == ORATIO_FONS_ANALYSIS_GLOSSARIUM);
-                x = _describere(piscina, voc, "xyzzy");
+                x = _describere(piscina, fixura->voc, "xyzzy");
         CREDO_NON_NIHIL (x);
         CREDO_AEQUALIS_I32 (xar_numerus(x), ZEPHYRUM);
         /* regulae secundariae ex oraculo (T13): copia post primariam */
-        x = _describere(piscina, voc, "est");
+        x = _describere(piscina, fixura->voc, "est");
         CREDO_VERUM (_prima(x, ORATIO_CLASSIS_VERBUM) != NIHIL);
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_AUXILIARE));
         CREDO_AEQUALIS_S32 ((s32)((constans OratioDescriptio*)xar_obtinere(x,
             ZEPHYRUM))->classis, (s32)ORATIO_CLASSIS_VERBUM);
-        x = _describere(piscina, voc, "hic");
+        x = _describere(piscina, fixura->voc, "hic");
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_DETERMINANS));
-        x = _describere(piscina, voc, "meas");
+        x = _describere(piscina, fixura->voc, "meas");
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_DETERMINANS));
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_ADIECTIVUM));
-        x = _describere(piscina, voc, "non");
+        x = _describere(piscina, fixura->voc, "non");
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_PARTICULA));
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_ADVERBIUM));
-        x = _describere(piscina, voc, "cum");
+        x = _describere(piscina, fixura->voc, "cum");
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_CONIUNCTIO_SUBORDINANS));
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_ADPOSITIO));
-        x = _describere(piscina, voc, "tertiae");
+        x = _describere(piscina, fixura->voc, "tertiae");
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_NUMERALE));
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_ADIECTIVUM));
-        x = _describere(piscina, voc, "deorum");
+        x = _describere(piscina, fixura->voc, "deorum");
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_NOMEN_PROPRIUM));
         CREDO_VERUM (_habet(x, ORATIO_CLASSIS_SUBSTANTIVUM));
-        x = _describere(piscina, voc, "puellam");
+        x = _describere(piscina, fixura->voc, "puellam");
         CREDO_FALSUM (_habet(x, ORATIO_CLASSIS_DETERMINANS));
         CREDO_FALSUM (_habet(x, ORATIO_CLASSIS_NOMEN_PROPRIUM));
     }
+}
 
-    imprimere("\n--- I b. Umbrae (T19d): dependens exspectatus e"
-        " codicibus fontis ---\n");
+interior vacuum
+_umbras_probare (
+    CredoContextus* c)
+{
+                   Piscina* piscina = c->piscina;
+    constans FixuraPartium* fixura = (constans FixuraPartium*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
         constans character* fons = "In urbem venit.\n";
               MateriaNodus* doc = oratio_arbor_parsare(piscina, fons,
@@ -685,7 +716,8 @@ principale (vacuum)
                           i32  umbrae_adpositionum = ZEPHYRUM;
 
         CREDO_NON_NIHIL (doc);
-        CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia, doc,
+        CREDO_VERUM (oratio_partes_annotare(piscina,
+            &fixura->vocabularia, doc,
             &census));
         in_vocabulum  = _vocabulum(doc, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
         urbem         = _vocabulum(doc, ZEPHYRUM, ZEPHYRUM, I);
@@ -758,7 +790,8 @@ principale (vacuum)
             constans MateriaNodus* prima;
 
             CREDO_NON_NIHIL (doc_f);
-            CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia,
+            CREDO_VERUM (oratio_partes_annotare(piscina,
+                &fixura->vocabularia,
                 doc_f, &census_f));
             armis  = _vocabulum(doc_f, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
             tela   = _vocabulum(doc_f, ZEPHYRUM, ZEPHYRUM, I);
@@ -796,7 +829,8 @@ principale (vacuum)
            constans MateriaNodus* lectio;
 
             CREDO_NON_NIHIL (doc_r);
-            CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia,
+            CREDO_VERUM (oratio_partes_annotare(piscina,
+                &fixura->vocabularia,
                 doc_r, &census_r));
             lectio = materia_valor_lista_obtinere(_vocabulum(doc_r,
                 ZEPHYRUM, ZEPHYRUM, ZEPHYRUM)->loci[
@@ -847,7 +881,7 @@ principale (vacuum)
             CREDO_NON_NIHIL (doc_m);
             CREDO_NON_NIHIL (doc_c);
             CREDO_VERUM (oratio_partes_praescandere(piscina,
-                &vocabularia,
+                &fixura->vocabularia,
                 doc_m, &recuperata, &verba));
             CREDO_AEQUALIS_I32 (verba, (i32)III);
             CREDO_AEQUALIS_I32 (recuperata, (i32)II);
@@ -859,7 +893,8 @@ principale (vacuum)
                 (i32)300), (s32)ORATIO_DIALECTUS_CLASSICUS);
             CREDO_AEQUALIS_S32 ((s32)oratio_partes_dialectus_censu(I,
                 (i32)200), (s32)ORATIO_DIALECTUS_MEDIUS);
-            CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia,
+            CREDO_VERUM (oratio_partes_annotare(piscina,
+                &fixura->vocabularia,
                 doc_m, &census_m));
             CREDO_AEQUALIS_S32 (census_m.dialectus,
                 (s32)ORATIO_DIALECTUS_MEDIUS);
@@ -886,7 +921,8 @@ principale (vacuum)
                 }
             }
             CREDO_VERUM (variantes > ZEPHYRUM);
-            CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia,
+            CREDO_VERUM (oratio_partes_annotare(piscina,
+                &fixura->vocabularia,
                 doc_c, &census_c));
             CREDO_AEQUALIS_S32 (census_c.dialectus,
                 (s32)ORATIO_DIALECTUS_CLASSICUS);
@@ -914,7 +950,8 @@ principale (vacuum)
                               i32  capita = ZEPHYRUM;
 
             CREDO_NON_NIHIL (doc_b);
-            CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia,
+            CREDO_VERUM (oratio_partes_annotare(piscina,
+                &fixura->vocabularia,
                 doc_b, &census_b));
             bona = _vocabulum(doc_b, ZEPHYRUM, ZEPHYRUM, I);
             CREDO_NON_NIHIL (bona);
@@ -973,7 +1010,8 @@ principale (vacuum)
                               i32  propria    = ZEPHYRUM;
 
             CREDO_NON_NIHIL (doc_e);
-            CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia,
+            CREDO_VERUM (oratio_partes_annotare(piscina,
+                &fixura->vocabularia,
                 doc_e, &census_e));
             ad = _vocabulum(doc_e, ZEPHYRUM, ZEPHYRUM, (i32)II);
             contractum = _vocabulum(doc_e, ZEPHYRUM, ZEPHYRUM,
@@ -1060,7 +1098,8 @@ principale (vacuum)
         /* proiectio: umbrae scriptae cum ordinali */
         {
             MateriaArborScriptura s =
-                materia_arbor_scribere_nodum(piscina, doc, &consilium);
+                materia_arbor_scribere_nodum(piscina, doc,
+                &fixura->consilium);
 
             CREDO_VERUM (s.successus);
             si (s.successus)
@@ -1074,8 +1113,20 @@ principale (vacuum)
             }
         }
     }
+}
 
-    imprimere("\n--- II. Annotatio arboris ---\n");
+interior vacuum
+_annotationem_probare (
+    CredoContextus* c)
+{
+                   Piscina* piscina = c->piscina;
+    constans FixuraPartium* fixura = (constans FixuraPartium*)c->suita;
+                 character  via[1024];
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
         constans character* fons = "Puella amat. Xyzzy virumque.\n";
               MateriaNodus* doc = oratio_arbor_parsare(piscina, fons,
@@ -1084,7 +1135,8 @@ principale (vacuum)
         MateriaNodus* v;
 
         CREDO_NON_NIHIL (doc);
-        CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia, doc,
+        CREDO_VERUM (oratio_partes_annotare(piscina,
+            &fixura->vocabularia, doc,
             &census));
         imprimere("  vocabula %d annotata %d analyses %d ignota %d\n",
             (integer)census.vocabula, (integer)census.annotata,
@@ -1180,7 +1232,8 @@ principale (vacuum)
             MateriaNodus* x3;
 
             CREDO_NON_NIHIL (doc3);
-            CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia,
+            CREDO_VERUM (oratio_partes_annotare(piscina,
+                &fixura->vocabularia,
                 doc3,
                 &census3));
                         CREDO_AEQUALIS_I32 (census3.ignota, I);
@@ -1261,7 +1314,8 @@ principale (vacuum)
                      MateriaScriptura emissa;
 
             CREDO_NON_NIHIL (doc3);
-            CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia,
+            CREDO_VERUM (oratio_partes_annotare(piscina,
+                &fixura->vocabularia,
                 doc3, &census3));
             CREDO_AEQUALIS_I32 (census3.enclitica, (i32)V);
             CREDO_AEQUALIS_I32 (census3.vocabula, (i32)XVII);
@@ -1332,7 +1386,8 @@ principale (vacuum)
             constans MateriaNodus* a4;
 
             CREDO_NON_NIHIL (doc_orthographiae);
-            CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia,
+            CREDO_VERUM (oratio_partes_annotare(piscina,
+                &fixura->vocabularia,
                 doc_orthographiae, &census_orthographiae));
             /* ecclesie abere adinpleta soledos recuperata; comutationem
              * (geminatio RECUSATA mensura) et petia (t > d) ignota */
@@ -1403,7 +1458,8 @@ principale (vacuum)
             MateriaNodus* k;
 
             CREDO_NON_NIHIL (doc2);
-            CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia,
+            CREDO_VERUM (oratio_partes_annotare(piscina,
+                &fixura->vocabularia,
                 doc2,
                 &census2));
             CREDO_AEQUALIS_I32 (census2.ignota, ZEPHYRUM);
@@ -1432,7 +1488,7 @@ principale (vacuum)
         }
         /* semel: cursus secundus nihil annotat */
                 CREDO_VERUM (oratio_partes_annotare(piscina,
-                    &vocabularia, doc,
+                    &fixura->vocabularia, doc,
                     &census));
         CREDO_AEQUALIS_I32 (census.vocabula, (i32)V);
         CREDO_AEQUALIS_I32 (census.annotata, ZEPHYRUM);
@@ -1440,11 +1496,11 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (_numerus_analysium(
             _vocabulum(doc, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM)), (i32)III);
 
-        imprimere("\n--- III. Proiectio STML, circuitus, canon ---\n");
+        CREDO_GRADUS ("III. Proiectio STML, circuitus, canon");
         {
             MateriaArborScriptura s =
                 materia_arbor_scribere_nodum(piscina,
-                doc, &consilium);
+                doc, &fixura->consilium);
             chorda fons_canonis;
 
             CREDO_VERUM (s.successus);
@@ -1469,9 +1525,11 @@ principale (vacuum)
                 imprimere("  STML %d octeti\n",
                     (integer)s.textus.mensura);
             }
-            CREDO_VERUM (_circuitum_arboris(piscina, &consilium, doc,
+            CREDO_VERUM (_circuitum_arboris(piscina, &fixura->consilium,
+                doc,
                 VERUM));
-            sprintf(via, "%s/oratio/grammatica/oratio.canon", radix);
+            sprintf(via, "%s/oratio/grammatica/oratio.canon",
+                fixura->radix);
             si (!_plagulam_legere(piscina, via, &fons_canonis))
             {
                 CREDO_CULPA ("oratio.canon absens");
@@ -1484,11 +1542,12 @@ principale (vacuum)
 
                 causa.datum    = NIHIL;
                 causa.mensura  = ZEPHYRUM;
-                canon = canon_legere(fons_canonis, piscina, intern,
+                canon = canon_legere(fons_canonis, piscina,
+                    fixura->intern,
                     &causa);
 
                 CREDO_NON_NIHIL (canon);
-                res = stml_legere(s.textus, piscina, intern);
+                res = stml_legere(s.textus, piscina, fixura->intern);
                 CREDO_VERUM (res.successus);
                 si (canon != NIHIL && res.successus)
                 {
@@ -1519,19 +1578,19 @@ principale (vacuum)
                         != NIHIL ? xar_numerus(vitia)
                         : (i32)-I, ZEPHYRUM);
 
-                    imprimere("\n--- IV. Selectio super documentum ---\n");
+                    CREDO_GRADUS ("IV. Selectio super documentum");
                     {
                         Xar* q;
 
                         q = stml_quaerere_omnes(res.elementum_radix,
                             "vocabulum[classes~=verbum]", piscina,
-                            intern);
+                            fixura->intern);
                         CREDO_NON_NIHIL (q);
                         CREDO_AEQUALIS_I32 (q ? xar_numerus(q) : ZEPHYRUM,
                             I);
                         q = stml_quaerere_omnes(res.elementum_radix,
                             "vocabulum[classes~=substantivum]", piscina,
-                            intern);
+                            fixura->intern);
                         imprimere("  [classes~=substantivum] %d\n",
                             (integer)(q ? xar_numerus(q) : ZEPHYRUM));
                         CREDO_AEQUALIS_I32 (q ? xar_numerus(q) : ZEPHYRUM,
@@ -1540,32 +1599,32 @@ principale (vacuum)
                                                                                                     stml_quaerere_omnes(res.elementum_radix,
                                                                                                     "vocabulum[linguae~=latina]",
                                                                                                     piscina,
-                                                                                                    intern);
+                                                                                                    fixura->intern);
                         CREDO_AEQUALIS_I32 (q ? xar_numerus(q) : ZEPHYRUM,
                             (i32)V);   /* T21: que Latinum */
                         q = stml_quaerere_omnes(res.elementum_radix,
                             "vocabulum[classes~=ignotum]", piscina,
-                            intern);
+                            fixura->intern);
                         CREDO_AEQUALIS_I32 (q ? xar_numerus(q) : ZEPHYRUM,
                             ZEPHYRUM);
                         q = stml_quaerere_omnes(res.elementum_radix,
                             "vocabulum[classes~=nomen-proprium]",
                             piscina,
-                            intern);
+                            fixura->intern);
                         CREDO_AEQUALIS_I32 (q ? xar_numerus(q) : ZEPHYRUM,
                             I);
                         q = stml_quaerere_omnes(res.elementum_radix,
                             "vocabulum[classes~=coniunctio-coordinans]",
                             piscina,
-                            intern);
+                            fixura->intern);
                         CREDO_AEQUALIS_I32 (q ? xar_numerus(q) : ZEPHYRUM,
                             I);
                         q = stml_quaerere_omnes(res.elementum_radix,
-                            "analysis-verbi", piscina, intern);
+                            "analysis-verbi", piscina, fixura->intern);
                         CREDO_VERUM (q != NIHIL && xar_numerus(q) >= I);
                         q = stml_quaerere_omnes(res.elementum_radix,
                             "vocabulum[classes~=adiectivum]", piscina,
-                            intern);
+                            fixura->intern);
                         CREDO_AEQUALIS_I32 (q ? xar_numerus(q) : ZEPHYRUM,
                             ZEPHYRUM);
                     }
@@ -1573,8 +1632,19 @@ principale (vacuum)
             }
         }
     }
+}
 
-    imprimere("\n--- V. Corpus: fixturae Latinae annotatae ---\n");
+interior vacuum
+_corpus_probare (
+    CredoContextus* c)
+{
+    constans FixuraPartium* fixura = (constans FixuraPartium*)c->suita;
+                 character  via[1024];
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
         hic_manens constans character* fixturae[] = {
             "hilarius.txt", "propertius.txt", "cicero.txt"
@@ -1593,7 +1663,8 @@ principale (vacuum)
             clock_t ante;
             duplex ms;
 
-            sprintf(via, "%s/oratio/probationes/fixa/txt/%s", radix,
+            sprintf(via, "%s/oratio/probationes/fixa/txt/%s",
+                fixura->radix,
                 fixturae[f]);
             si (!_plagulam_legere(p, via, &textus))
             {
@@ -1606,7 +1677,8 @@ principale (vacuum)
                 textus.mensura);
             CREDO_NON_NIHIL (doc);
             ante = clock();
-            CREDO_VERUM (oratio_partes_annotare(p, &vocabularia, doc,
+            CREDO_VERUM (oratio_partes_annotare(p, &fixura->vocabularia,
+                doc,
                 &census));
             ms = 1000.0 * (duplex)(clock() - ante)
                 / (duplex)CLOCKS_PER_SEC;
@@ -1632,12 +1704,6 @@ principale (vacuum)
                 < census.vocabula * (i32)XII);
             summa_vocabula  = summa_vocabula + census.vocabula;
             summa_ignota    = summa_ignota + census.ignota;
-            si (f == ZEPHYRUM)
-            {
-                /* circuitus arboris annotatae (Hilarius) */
-                CREDO_VERUM (_circuitum_arboris(p, &consilium, doc,
-                    VERUM));
-            }
             piscina_destruere(p);
         }
         imprimere("  SUMMA vocabula %d  ignota %d (%.1f%%)\n",
@@ -1646,15 +1712,66 @@ principale (vacuum)
                 ? 100.0 * (duplex)summa_ignota
                     / (duplex)summa_vocabula : 0.0);
     }
+}
 
-    imprimere("\n--- VI. Anglica: Moby + regulae -> descriptiones"
-        " (T16) ---\n");
+/* V b. circuitus STML arboris annotatae (Hilarius; olim in ansa
+ * corporis, f == 0). Arbor sine assertione refecta (annotatio in V
+ * asseritur). gravis: arbor annotata MMDCCC octetorum fontis -> IX MB
+ * STML; proiectio StmlNodus + lectio ~CCXL MiB (pondus proiectionis,
+ * park 01M5EGAWD5NT504BX9ZCR6JC37) - 2026-10-21 */
+interior vacuum
+_circuitum_corporis_probare (
+    CredoContextus* c)
+{
+    constans FixuraPartium* fixura = (constans FixuraPartium*)c->suita;
+                 character  via[1024];
+                   Piscina* p;
+                    chorda  textus;
+             MateriaNodus* doc;
+        OratioPartesCensus  census;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
+    p = piscina_generare_dynamicum("partes_circuitus", 16777216);
+    si (p == NIHIL)
+    {
+        redde;
+    }
+    sprintf(via, "%s/oratio/probationes/fixa/txt/hilarius.txt",
+        fixura->radix);
+    doc = _plagulam_legere(p, via, &textus)
+        ? oratio_arbor_parsare(p, (constans character*)textus.datum,
+            textus.mensura)
+        : NIHIL;
+    si (   doc != NIHIL
+        && oratio_partes_annotare(p, &fixura->vocabularia, doc,
+        &census))
+    {
+        CREDO_VERUM (_circuitum_arboris(p, &fixura->consilium, doc,
+            VERUM));
+    }
+    piscina_destruere(p);
+}
+
+interior vacuum
+_anglica_probare (
+    CredoContextus* c)
+{
+                   Piscina* piscina = c->piscina;
+    constans FixuraPartium* fixura = (constans FixuraPartium*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
                               Xar* x;
         constans OratioDescriptio* d;
 
         /* the\Dv: una per classem litterarum, ordine Moby */
-        x = _describere_en(piscina, vocabularia.en, "the");
+        x = _describere_en(piscina, fixura->vocabularia.en, "the");
         CREDO_NON_NIHIL (x);
         CREDO_AEQUALIS_I32 (xar_numerus(x), (i32)II);
         d = _descriptio_en(x, ORATIO_CLASSIS_DETERMINANS);
@@ -1673,29 +1790,29 @@ principale (vacuum)
          * ADPOSITIO; 'I' -> I\r ante i\N; 'Me' (initium sententiae) ->
          * me\rN ante Me\N; 'US' (maiusculum) -> US\N ante us\r;
          * 'can' -> can\VN ante Can\N */
-        x = _describere_en(piscina, vocabularia.en, "in");
+        x = _describere_en(piscina, fixura->vocabularia.en, "in");
         CREDO_NON_NIHIL (x);
         CREDO_AEQUALIS_S32 ((s32)((constans OratioDescriptio*)xar_obtinere(
             x, ZEPHYRUM))->classis, (s32)ORATIO_CLASSIS_ADPOSITIO);
-        x = _describere_en(piscina, vocabularia.en, "I");
+        x = _describere_en(piscina, fixura->vocabularia.en, "I");
         CREDO_NON_NIHIL (x);
         CREDO_AEQUALIS_S32 ((s32)((constans OratioDescriptio*)xar_obtinere(
             x, ZEPHYRUM))->classis, (s32)ORATIO_CLASSIS_PRONOMEN);
-        x = _describere_en(piscina, vocabularia.en, "Me");
+        x = _describere_en(piscina, fixura->vocabularia.en, "Me");
         CREDO_NON_NIHIL (x);
         CREDO_AEQUALIS_S32 ((s32)((constans OratioDescriptio*)xar_obtinere(
             x, ZEPHYRUM))->classis, (s32)ORATIO_CLASSIS_PRONOMEN);
-        x = _describere_en(piscina, vocabularia.en, "US");
+        x = _describere_en(piscina, fixura->vocabularia.en, "US");
         CREDO_NON_NIHIL (x);
         CREDO_AEQUALIS_S32 ((s32)((constans OratioDescriptio*)xar_obtinere(
             x, ZEPHYRUM))->classis, (s32)ORATIO_CLASSIS_SUBSTANTIVUM);
-        x = _describere_en(piscina, vocabularia.en, "can");
+        x = _describere_en(piscina, fixura->vocabularia.en, "can");
         CREDO_NON_NIHIL (x);
         CREDO_AEQUALIS_S32 ((s32)((constans OratioDescriptio*)xar_obtinere(
             x, ZEPHYRUM))->classis, (s32)ORATIO_CLASSIS_VERBUM);
         /* cats: pluralis-s super basin cat (N, NV) - substantivum
          * pluralis ET verbum personae III */
-        x = _describere_en(piscina, vocabularia.en, "cats");
+        x = _describere_en(piscina, fixura->vocabularia.en, "cats");
         d = _descriptio_en(x, ORATIO_CLASSIS_SUBSTANTIVUM);
         CREDO_NON_NIHIL (d);
         CREDO_AEQUALIS_S32 (d->numerus,
@@ -1712,7 +1829,7 @@ principale (vacuum)
             (s32)ORATIO_FORMA_VERBI_FINITUM);
         /* planned: V exacta, deinde praeteritum-ed-geminatum: finitum +
          * participium (basis plan) */
-        x = _describere_en(piscina, vocabularia.en, "planned");
+        x = _describere_en(piscina, fixura->vocabularia.en, "planned");
         CREDO_AEQUALIS_I32 (xar_numerus(x), (i32)III);
         d = (constans OratioDescriptio*)xar_obtinere(x, I);
         CREDO_AEQUALIS_S32 ((s32)d->classis,
@@ -1728,12 +1845,12 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (d->forma_verbi,
             (s32)ORATIO_FORMA_VERBI_PARTICIPIUM);
         /* quickly: v exacta + adverbium-ly (quick) */
-        x = _describere_en(piscina, vocabularia.en, "quickly");
+        x = _describere_en(piscina, fixura->vocabularia.en, "quickly");
         CREDO_AEQUALIS_I32 (xar_numerus(x), (i32)II);
         d = (constans OratioDescriptio*)xar_obtinere(x, I);
         CREDO_VERUM (_aequalis(d->lemma, "quick"));
         /* higher: comparativus-er (high) */
-        x = _describere_en(piscina, vocabularia.en, "higher");
+        x = _describere_en(piscina, fixura->vocabularia.en, "higher");
         d = _descriptio_en(x, ORATIO_CLASSIS_ADIECTIVUM);
         CREDO_NON_NIHIL (d);
         {
@@ -1755,7 +1872,7 @@ principale (vacuum)
         }
         /* Fran's: possessivum - substantivum genitivus + particula
          * (POS) + auxiliare */
-        x = _describere_en(piscina, vocabularia.en, "Fran's");
+        x = _describere_en(piscina, fixura->vocabularia.en, "Fran's");
         d = _descriptio_en(x, ORATIO_CLASSIS_SUBSTANTIVUM);
         CREDO_NON_NIHIL (d);
         CREDO_AEQUALIS_S32 (d->casus_grammaticus,
@@ -1764,13 +1881,13 @@ principale (vacuum)
         CREDO_NON_NIHIL (_descriptio_en(x, ORATIO_CLASSIS_PARTICULA));
         CREDO_NON_NIHIL (_descriptio_en(x, ORATIO_CLASSIS_AUXILIARE));
         /* it's: basis pronomen (rN) genitivo */
-        x = _describere_en(piscina, vocabularia.en, "it's");
+        x = _describere_en(piscina, fixura->vocabularia.en, "it's");
         d = _descriptio_en(x, ORATIO_CLASSIS_PRONOMEN);
         CREDO_NON_NIHIL (d);
         CREDO_AEQUALIS_S32 (d->casus_grammaticus,
             (s32)ORATIO_CASUS_GENITIVUS);
         /* don't: contractio-n't - verbum do + particula */
-        x = _describere_en(piscina, vocabularia.en, "don't");
+        x = _describere_en(piscina, fixura->vocabularia.en, "don't");
         {
             i32 k;
             b32 facere = FALSUM;
@@ -1790,13 +1907,14 @@ principale (vacuum)
         }
         CREDO_NON_NIHIL (_descriptio_en(x, ORATIO_CLASSIS_PARTICULA));
         /* we're: pronomen we + auxiliare */
-        x = _describere_en(piscina, vocabularia.en, "we're");
+        x = _describere_en(piscina, fixura->vocabularia.en, "we're");
         d = _descriptio_en(x, ORATIO_CLASSIS_PRONOMEN);
         CREDO_NON_NIHIL (d);
         CREDO_VERUM (_aequalis(d->lemma, "we"));
         CREDO_NON_NIHIL (_descriptio_en(x, ORATIO_CLASSIS_AUXILIARE));
         /* listae (cursus II): is that to two hello - fonte regula */
-        d = _descriptio_en(_describere_en(piscina, vocabularia.en,
+        d = _descriptio_en(_describere_en(piscina,
+            fixura->vocabularia.en,
             "is"),
             ORATIO_CLASSIS_AUXILIARE);
         CREDO_NON_NIHIL (d);
@@ -1804,22 +1922,33 @@ principale (vacuum)
             (s32)ORATIO_FONS_ANALYSIS_REGULA);
         CREDO_VERUM (_aequalis(d->nativum, "auxiliaria"));
         CREDO_NON_NIHIL (_descriptio_en(_describere_en(piscina,
-            vocabularia.en, "that"),
+            fixura->vocabularia.en, "that"),
             ORATIO_CLASSIS_CONIUNCTIO_SUBORDINANS));
         CREDO_NON_NIHIL (_descriptio_en(_describere_en(piscina,
-            vocabularia.en, "to"), ORATIO_CLASSIS_PARTICULA));
+            fixura->vocabularia.en, "to"), ORATIO_CLASSIS_PARTICULA));
         CREDO_NON_NIHIL (_descriptio_en(_describere_en(piscina,
-            vocabularia.en, "two"), ORATIO_CLASSIS_NUMERALE));
+            fixura->vocabularia.en, "two"), ORATIO_CLASSIS_NUMERALE));
         CREDO_NON_NIHIL (_descriptio_en(_describere_en(piscina,
-            vocabularia.en, "Hello"), ORATIO_CLASSIS_INTERIECTIO));
+            fixura->vocabularia.en, "Hello"),
+            ORATIO_CLASSIS_INTERIECTIO));
         /* ignotum Moby: nihil */
-        x = _describere_en(piscina, vocabularia.en, "xyzzy");
+        x = _describere_en(piscina, fixura->vocabularia.en, "xyzzy");
         CREDO_NON_NIHIL (x);
         CREDO_AEQUALIS_I32 (xar_numerus(x), ZEPHYRUM);
     }
+}
 
-    imprimere("\n--- VII. Annotatio Anglica; vocabularia ambo et"
-        " Latina sola ---\n");
+interior vacuum
+_annotationem_anglice_probare (
+    CredoContextus* c)
+{
+                   Piscina* piscina = c->piscina;
+    constans FixuraPartium* fixura = (constans FixuraPartium*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
         constans character* fons = "The cats ran quickly. Bush won.\n";
               MateriaNodus* doc = oratio_arbor_parsare(piscina, fons,
@@ -1831,7 +1960,8 @@ principale (vacuum)
         OratioVocabulariumVitium vitium;
 
         CREDO_NON_NIHIL (doc);
-        CREDO_VERUM (oratio_partes_annotare(piscina, &vocabularia, doc,
+        CREDO_VERUM (oratio_partes_annotare(piscina,
+            &fixura->vocabularia, doc,
             &census));
         CREDO_AEQUALIS_I32 (census.vocabula, (i32)VI);
         CREDO_AEQUALIS_I32 (census.ignota, ZEPHYRUM);
@@ -1877,7 +2007,7 @@ principale (vacuum)
                 (s32)ORATIO_FONS_ANALYSIS_REGULA);
         }
         /* Latina sola (en NIHIL): nihil Anglicum */
-        sola.la = vocabularia.la;
+        sola.la = fixura->vocabularia.la;
         sola.en = NIHIL;
         fons = "Puella amat.\n";
         doc = oratio_arbor_parsare(piscina, fons, (i32)strlen(fons));
@@ -1894,14 +2024,29 @@ principale (vacuum)
         CREDO_VERUM (vacua.la == NIHIL && vacua.en == NIHIL);
         CREDO_VERUM (strstr(vitium.plagula, "la.bin") != NIHIL);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. Descriptiones ex WORDS et glossario", _descriptiones_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "I b. Umbrae (T19d): dependens exspectatus e codicibus fontis",
+        _umbras_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "II. Annotatio arboris; III. proiectio STML, circuitus, canon; IV. selectio",
+        _annotationem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "V. Corpus: fixturae Latinae annotatae", _corpus_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "V b. circuitus STML arboris annotatae (Hilarius)",
+        _circuitum_corporis_probare, NIHIL, NIHIL, "gravis", NIHIL },
+    { "VI. Anglica: Moby + regulae -> descriptiones (T16)",
+        _anglica_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VII. Annotatio Anglica; vocabularia ambo et Latina sola",
+        _annotationem_anglice_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-        credo_claudere();
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("oratio_partes", SECTIONES,
+        _suitam_parare, NIHIL);
 }

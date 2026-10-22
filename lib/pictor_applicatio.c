@@ -7,6 +7,7 @@
 #include "stml.h"
 #include "canon.h"
 #include "organum.h"
+#include "semita.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -167,6 +168,16 @@ pictor_montare (
         chorda_ex_s32((s32)m->doc->altitudo, piscina), piscina);
     initium = chorda_concatenare(initium,
         chorda_ex_literis("\" focus=\"tabula\"", piscina), piscina);
+    /* semitae R4c: pictura ostensa (spatium lateris) */
+    si (id && id[ZEPHYRUM])
+    {
+        initium = chorda_concatenare(initium, chorda_ex_literis(
+            " pictura=\"", piscina), piscina);
+        initium = chorda_concatenare(initium, chorda_ex_literis(id,
+            piscina), piscina);
+        initium = chorda_concatenare(initium, chorda_ex_literis("\"",
+            piscina), piscina);
+    }
     si (!organum_ramum_parare(organum, &m->ramus,
             systemata ? &m->systemata : NIHIL,
             chorda_ut_cstr(initium, piscina), id ? id : "pictor",
@@ -212,7 +223,13 @@ pictor_montare (
     redde VERUM;
 }
 
-/* S3e: dimensiones durabiles ex documento (ctx) */
+/* S3e: pictura ostensa (ctx) - dimensiones durabiles ex documento;
+ * semitae R4c: campus pictura = spatium */
+nomen structura {
+    constans PictorDocumentum* doc;
+           constans character* spatium;
+} PicturaOstensa;
+
 interior vacuum
 dimensiones_mutator (
               StmlNodus* radix,
@@ -220,13 +237,14 @@ dimensiones_mutator (
     InternamentumChorda* in,
                  vacuum* ctx)
 {
-    constans PictorDocumentum* doc;
+    constans PicturaOstensa* ostensa;
 
-    doc = (constans PictorDocumentum*)ctx;
+    ostensa = (constans PicturaOstensa*)ctx;
     insula_attributum_ponere(radix, p, in, "latitudo", chorda_ut_cstr(
-        chorda_ex_s32((s32)doc->latitudo, p), p));
+        chorda_ex_s32((s32)ostensa->doc->latitudo, p), p));
     insula_attributum_ponere(radix, p, in, "altitudo", chorda_ut_cstr(
-        chorda_ex_s32((s32)doc->altitudo, p), p));
+        chorda_ex_s32((s32)ostensa->doc->altitudo, p), p));
+    insula_attributum_ponere(radix, p, in, "pictura", ostensa->spatium);
 }
 
 /* S3e: spatium in bibliotheca? (plagula alterius originis - scriba -
@@ -256,10 +274,11 @@ pictor_picturam_ponere (
          PictorMontatio* m,
      constans character* spatium)
 {
-    PictorDocumentum* doc;
-              vacuum* valor;
-              chorda  clavis;
-             Piscina* p;
+     PictorDocumentum* doc;
+               vacuum* valor;
+               chorda  clavis;
+              Piscina* p;
+       PicturaOstensa  ostensa;
 
     si (!m || !m->doc || !spatium)
     {
@@ -302,8 +321,9 @@ pictor_picturam_ponere (
         (vacuum)relatio_ligare(m->systemata.relatio, &m->ramus,
             "documentum", doc, doc->historia);
     }
-    redde mutare_ramum(&m->ramus, dimensiones_mutator,
-        doc);
+    ostensa.doc      = doc;
+    ostensa.spatium  = spatium;
+    redde mutare_ramum(&m->ramus, dimensiones_mutator, &ostensa);
 }
 
 b32
@@ -341,6 +361,118 @@ pictor_picturam_condere (
             clavis_memoriae(spatium, p), doc);
     }
     redde pictor_picturam_ponere(m, spatium);
+}
+
+/* semitae R4c: SemitaOrganum pro argumento - manifestum pictoris in
+ * scheda vocantis; ctx = Organum* */
+interior constans Organum*
+organa_pictoris (
+     vacuum* ctx,
+     chorda  genus)
+{
+    redde chorda_aequalis_literis(genus, "pictor")
+        ? (constans Organum*)ctx : NIHIL;
+}
+
+/* pictura exstat? (memoria communis aut bibliotheca - ut
+ * pictor_picturam_ponere, sine mutatione) */
+interior b32
+pictura_exstat (
+      constans PictorMontatio* m,
+              constans chorda  spatium,
+                      Piscina* p)
+{
+    vacuum* valor;
+
+    valor = NIHIL;
+    redde (   m->documenta
+           && tabula_dispersa_invenire(m->documenta, clavis_memoriae(
+                  chorda_ut_cstr(spatium, p), p), &valor))
+        || in_bibliotheca(m->doc->volumen, spatium, p);
+}
+
+/* URI semitae pictoris? ("pictor", "pictor/...", "pictor?...") */
+interior b32
+uri_pictoris (
+    constans character* argumentum)
+{
+    i32 l;
+
+    l = (i32)strlen(argumentum);
+    redde strncmp(argumentum, "pictor", VI) == ZEPHYRUM
+        && (l == VI || argumentum[VI] == '/' || argumentum[VI] == '?');
+}
+
+b32
+pictor_argumentum_ponere (
+          PictorMontatio* m,
+      constans character* argumentum,
+                     b32  condere)
+{
+                Piscina* scheda;
+    InternamentumChorda* in;
+                Organum* organum;
+              StmlNodus* semita;
+                 chorda* pictura;
+                 chorda  vitium;
+                    b32  bonum;
+
+    si (!m || !m->doc || !argumentum)
+    {
+        redde FALSUM;
+    }
+    si (!uri_pictoris(argumentum))
+    {
+        /* cognomen "<spatium>" (S3e/S3f) */
+        redde pictor_picturam_ponere(m, argumentum)
+            || (condere && pictor_picturam_condere(m, argumentum));
+    }
+    /* URI: picturam exstantem ostendit, numquam condit - documentum
+     * prius (ignota recusatur), deinde semita (status ceteri) */
+    scheda = piscina_generare_dynamicum("pictor_semita", XVI * M);
+    si (!scheda)
+    {
+        redde FALSUM;
+    }
+    in       = internamentum_creare(scheda);
+    organum  = in ? organum_legere_genus(scheda, in, "pictor", "pictor")
+                  : NIHIL;
+    semita   = organum ? semita_ex_uri(organa_pictoris, organum,
+        chorda_ex_literis(argumentum, scheda), scheda, in, &vitium)
+        : NIHIL;
+    pictura  = semita ? stml_attributum_capere(semita, "pictura")
+                      : NIHIL;
+    bonum    = semita
+        && (   !pictura || pictura->mensura == ZEPHYRUM
+            || pictura_exstat(m, *pictura, scheda))
+        && semita_applicare(organa_pictoris, organum, &m->ramus, semita,
+               scheda, &vitium)
+        && (   !pictura || pictura->mensura == ZEPHYRUM
+            || pictor_picturam_ponere(m, chorda_ut_cstr(*pictura,
+                   scheda)));
+    piscina_destruere(scheda);
+    redde bonum;
+}
+
+b32
+pictor_semitam_secuta (
+    vacuum* ctx)
+{
+    PictorMontatio* m;
+            chorda* pictura;
+
+    m = (PictorMontatio*)ctx;
+    si (!m)
+    {
+        redde FALSUM;
+    }
+    pictura = insula_ramus_attributum(&m->ramus, "pictura");
+    si (!pictura || pictura->mensura == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    redde pictor_picturam_ponere(m, chorda_ut_cstr(*pictura,
+        m->doc->piscina));
 }
 
 b32

@@ -1,0 +1,35 @@
+<sanctus id="pontian" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Pontian</nomen>
+  <nomen lingua="la" principale="verum" fontes="ce">Pontianus</nomen>
+  <obitus saeculum="3" locus="Sardinia" martyrium="verum" fontes="ce mr bu"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="8" dies="13" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="11" dies="19" fontes="mr"/>
+  <munus fontes="us ce mr">pope</munus>
+  <munus fontes="us ce mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce">The Liber Pontificalis makes Pontian a Roman, son of Calpurnius. According to the early chronicle of the Roman bishops that the Liberian Catalogue later drew on, he became pope on 21 July 230 and reigned until 235. The schism of Hippolytus continued during his time, but toward its end the schismatic party and its leader were reconciled with the Roman bishop; a Roman synod, without doubt held by Pontian, concurred in the condemnation of Origen at Alexandria.</paragraphus>
+    <paragraphus fontes="ce bu mr">In 235 the persecution of Maximinus the Thracian, aimed chiefly at the heads of the Church, sent Pontian and Hippolytus into exile on the unhealthy island of Sardinia. To allow a new election Pontian resigned on 28 September 235. How long he survived the mines is unknown: Butler has him die that same year, by the sword or by the hardships of exile; the Martyrology, which names the emperor Alexander as the persecutor, says he was beaten to death with rods. Pope Fabian brought his remains to Rome, where he was buried on 13 August in the papal crypt of the Catacomb of Callistus. His original epitaph, naming him bishop and martyr, was found there in 1909.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Pope St. Pontian" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Pope_St._Pontian">
+    <excerptum>Dates of birth and death unknown. The "Liber Pontificalis" (ed. Duchesne, I, 145) gives Rome as his native city and calls his father Calpurnius.</excerptum>
+    <excerptum>With him begins the brief chronicle of the Roman bishops of the third century, of which the author of the Liberian Catalogue of the popes made use in the fourth century</excerptum>
+    <excerptum>According to this account Pontian was made pope 21 July, 230, and reigned until 235. The schism of Hippolytus continued during his episcopate; towards the end of his pontificate there was a reconciliation between the schismatic party and its leader with the Roman bishop.</excerptum>
+    <excerptum>After the condemnation of Origen at Alexandria (231-2), a synod was held at Rome</excerptum>
+    <excerptum>which concurred in the decisions of the Alexandrian synod against Origen; without doubt this synod was held by Pontian</excerptum>
+    <excerptum>In 235 in the reign of Maximinus the Thracian began a persecution directed chiefly against the heads of the Church. One of its first victims was Pontian, who with Hippolytus was banished to the unhealthy island of Sardinia.</excerptum>
+    <excerptum>To make the election of a new pope possible, Pontian resigned 28 Sept., 235</excerptum>
+    <excerptum>How much longer Pontian endured the sufferings of exile and harsh treatment in the Sardinian mines is unknown.</excerptum>
+    <excerptum>Pope Fabian (236-50) had the remains of Pontian and Hippolytus brought to Rome at a later date and Pontian was buried on 13 August in the papal crypt of the Catacomb of Callistus. In 1909 the original epitaph was found</excerptum>
+    <excerptum>PONTIANOS, EPISK. MARTUR (Pontianus, Bishop, Martyr)</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v11 Nov. 19 St. Pontian, Pope, M.">
+    <excerptum>St. Pontian was banished by him in the beginning of his reign, into the isle of Sardinia, where he died the same year, if not by the sword, at least by the hardships of his exile, and the unhealthfulness of the air.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="19 November">
+    <excerptum>the birthday of St. Pontian, pope and martyr, who, with the priest Hippolytus, was transported to Sardinia,, by the emperor Alexander, and there, being scourged to death with rods, consummated his martyrdom.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="13 August">
+    <excerptum>Saints Pontian, Pope, and Hippolytus, Priest, Martyrs</excerptum>
+  </fons>
+</sanctus>

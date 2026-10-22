@@ -115,44 +115,26 @@ _summam_imprimere (
         (integer)summa->errata, (integer)summa->monita);
 }
 
-s32
-principale (vacuum)
+interior constans character*
+_radix_viae (vacuum)
 {
-                   b32  praeteritus;
-               Piscina* piscina;
     constans character* radix = getenv("RHUBARB_RADIX");
-    constans character* causa;
-                 Summa  domus;
-                 Summa  oraculi;
-                 Summa  adversarii;
-             character* lista;
-                   Xar* collectio;
-                   i32  mensura = ZEPHYRUM;
-                   i32  k;
 
-    piscina = piscina_generare_dynamicum("probatio_crusta_diagnostica",
-        4194304);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    si (radix == NIHIL)
-    {
-        radix = ".";
-    }
-    memset(&domus, ZEPHYRUM, magnitudo(domus));
-    memset(&oraculi, ZEPHYRUM, magnitudo(oraculi));
-    memset(&adversarii, ZEPHYRUM, magnitudo(adversarii));
+    redde radix != NIHIL ? radix : ".";
+}
 
-    /* APERTURA DERIVATA super grammaticam VERAM (sedes multiplices,
-     * opus I): 'if' non clausum. Sedes primaria punctum in fine est
-     * (linea III), sedes relata tractum nodi 'conditio' tegit, cuius
-     * initium ZEPHYRUM est - ubi 'if' incipit. Porta materiae eundem
-     * mechanismum super registrum fictum figit; haec eum super
-     * declarationes crustae veras figit. */
-    imprimere("\n--- Apertura derivata: 'if' non clausum ---\n");
+/* APERTURA DERIVATA super grammaticam VERAM (sedes multiplices,
+ * opus I): 'if' non clausum. Sedes primaria punctum in fine est
+ * (linea III), sedes relata tractum nodi 'conditio' tegit, cuius
+ * initium ZEPHYRUM est - ubi 'if' incipit. Porta materiae eundem
+ * mechanismum super registrum fictum figit; haec eum super
+ * declarationes crustae veras figit. */
+interior vacuum
+_aperturam_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     {
         hic_manens constans character* constans FONS =
             "if true; then\n  echo x\n";
@@ -178,11 +160,17 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (primum->relata[ZEPHYRUM].tractus.linea,
             (i32)I);
     }
+}
 
-    /* FORMAE PROPRIAE: quas corpora non ferunt (planta
-     * 'inanis' viridis mansit donec hi adessent - lista separatore
-     * sola, lista vacua, clausura absens, malum) */
-    imprimere("\n--- Concordia: casus propriae ---\n");
+/* FORMAE PROPRIAE: quas corpora non ferunt (planta
+ * 'inanis' viridis mansit donec hi adessent - lista separatore
+ * sola, lista vacua, clausura absens, malum) */
+interior vacuum
+_formas_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     {
         hic_manens constans character* constans FORMAE_PROPRIAE[] = {
             "{ ; }\n",
@@ -225,8 +213,19 @@ principale (vacuum)
         CREDO_VERUM (propriae.mala_derivata > ZEPHYRUM);
         CREDO_VERUM (propriae.monita > ZEPHYRUM);
     }
+}
 
-    imprimere("\n--- Concordia: corpus domus ---\n");
+interior vacuum
+_domum_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina  = c->piscina;
+    constans character* radix    = _radix_viae();
+                 Summa  domus;
+             character* lista;
+                   i32  mensura = ZEPHYRUM;
+
+    memset(&domus, ZEPHYRUM, magnitudo(domus));
     lista = crusta_oraculum_legere(piscina, radix,
         "build/crusta_corpus.lst", &mensura);
     si (lista == NIHIL)
@@ -285,8 +284,20 @@ principale (vacuum)
     CREDO_VERUM (domus.documenta >= (i32)DOMUS_MINIMUM);
     CREDO_AEQUALIS_I32 (domus.errata, (i32)DOMUS_ERRATA);
     CREDO_AEQUALIS_I32 (domus.monita, (i32)DOMUS_MONITA);
+}
 
-    imprimere("\n--- Concordia: casus oraculi ---\n");
+interior vacuum
+_oraculum_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina  = c->piscina;
+    constans character* radix    = _radix_viae();
+    constans character* causa;
+                 Summa  oraculi;
+                   Xar* collectio;
+                   i32  k;
+
+    memset(&oraculi, ZEPHYRUM, magnitudo(oraculi));
     collectio = crusta_oraculum_casus(piscina, radix, &causa);
     CREDO_NON_NIHIL (collectio);
     per (k = ZEPHYRUM; collectio != NIHIL && k < xar_numerus(collectio);
@@ -306,8 +317,19 @@ principale (vacuum)
     }
     _summam_imprimere("oraculi", &oraculi);
     CREDO_VERUM (oraculi.documenta >= (i32)ORACULI_MINIMUM);
+}
 
-    imprimere("\n--- Concordia: adversarius per casus ---\n");
+interior vacuum
+_adversarium_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina  = c->piscina;
+    constans character* radix    = _radix_viae();
+                 Summa  adversarii;
+                   i32  mensura = ZEPHYRUM;
+                   i32  k;
+
+    memset(&adversarii, ZEPHYRUM, magnitudo(adversarii));
     {
         character* fons = crusta_oraculum_legere(piscina, radix,
             "probationes/fixa/crusta/adversarius.sh", &mensura);
@@ -331,10 +353,24 @@ principale (vacuum)
         }
     }
     _summam_imprimere("adversarii", &adversarii);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Apertura derivata: 'if' non clausum",
+        _aperturam_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Concordia: casus propriae",
+        _formas_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Concordia: corpus domus", _domum_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Concordia: casus oraculi",
+        _oraculum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Concordia: adversarius per casus",
+        _adversarium_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("crusta_diagnostica", SECTIONES);
 }

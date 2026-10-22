@@ -243,36 +243,26 @@ _conferre (
     redde VERUM;
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: corpus contra ambulationem alteram
+ * ================================================== */
+
+interior vacuum
+_corpus_conferre (
+    CredoContextus* c)
 {
-                   b32  praeteritus;
-               Piscina* piscina;
-    constans character* radix = getenv("RHUBARB_RADIX");
+               Piscina* piscina  = c->piscina;
+    constans character* radix    = getenv("RHUBARB_RADIX");
                    i32  numerus;
                    i32  plagulae  = ZEPHYRUM;
                    i32  summa     = ZEPHYRUM;
                    i32  i;
 
-    piscina = piscina_generare_dynamicum("probatio_css_diagnostica",
-        4194304);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
     si (radix == NIHIL)
     {
         radix = ".";
     }
-
-
-    /* ==================================================
-     * PROBARE: corpus contra ambulationem alteram
-     * ================================================== */
-
-    imprimere("\n--- Probans corpus contra numerationem suam ---\n");
 
     numerus = (i32)(magnitudo(CORPUS) / magnitudo(CORPUS[0]));
     per (i = ZEPHYRUM; i < numerus; i++)
@@ -307,12 +297,18 @@ principale (vacuum)
         (integer)summa);
     CREDO_AEQUALIS_I32 (plagulae, numerus);
 
+}
 
-    /* ==================================================
-     * PROBARE: fixa parva, sedes pinnatae
-     * ================================================== */
 
-    imprimere("\n--- Probans fixa parva ---\n");
+/* ==================================================
+ * PROBARE: fixa parva, sedes pinnatae
+ * ================================================== */
+
+interior vacuum
+_fixa_parva_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         hic_manens constans Fixum FIXA[] = {
@@ -337,13 +333,18 @@ principale (vacuum)
             _fixum_probare(piscina, "fixum", arbor, &FIXA[n]);
         }
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: arbor selectorum (declaratio tertia)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: arbor selectorum (declaratio tertia)
+ * ================================================== */
 
-    imprimere("\n--- Probans arborem selectorum ---\n");
+interior vacuum
+_selectores_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         hic_manens constans Fixum SELECTORES[] = {
@@ -374,10 +375,19 @@ principale (vacuum)
                 &SELECTORES[n]);
         }
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "corpus contra numerationem suam", _corpus_conferre, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "fixa parva", _fixa_parva_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "arbor selectorum", _selectores_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("css_diagnostica", SECTIONES);
 }

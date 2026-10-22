@@ -1,0 +1,40 @@
+<sanctus id="robert-bellarmine" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Robert Bellarmine</nomen>
+  <nomen lingua="it" fontes="cs">Roberto Bellarmino</nomen>
+  <ortus annus="1542" mensis="10" dies="4" locus="Montepulciano" fontes="ga"/>
+  <obitus annus="1621" mensis="9" dies="17" locus="Rome" fontes="ga"/>
+  <beatificatio annus="1923" mensis="5" dies="13" papa="Pius XI" fontes="ga cs"/>
+  <canonizatio modus="formalis" annus="1930" mensis="6" dies="29" papa="Pius XI" fontes="ga cs"/>
+  <festum calendarium="generale" mensis="9" dies="17" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="ga">priest</munus>
+  <munus fontes="us ga">bishop</munus>
+  <munus fontes="ga">cardinal</munus>
+  <munus fontes="ga">religious</munus>
+  <munus fontes="us ga">doctor of the Church</munus>
+  <descriptio>
+    <paragraphus fontes="ga">Robert Bellarmine was born at Montepulciano, near Siena, on 4 October 1542, a nephew of Pope Marcellus II through his mother. He entered the Society of Jesus on 20 September 1560, was ordained priest on 25 March 1570 and taught theology at Louvain. Called to Rome to teach at the Roman College, he held the chair of apologetics from 1576 to 1586; his lectures became the Controversiae, a work of clarity and historical method that set out Catholic doctrine against the errors of the Reformation without polemic. As spiritual director of the Jesuit students in Rome he guided Aloysius Gonzaga, and his short catechism of 1597-1598 was among his most popular works.</paragraphus>
+    <paragraphus fontes="ga">Clement VIII made him a cardinal on 3 March 1599, and in 1602 he became Archbishop of Capua, where he preached in his cathedral and visited the parishes each week. Recalled to Rome, he served on several Roman congregations and wrote books on the spiritual life in his last years. He died in Rome on 17 September 1621. Pius XI beatified him in 1923, canonized him in 1930 and proclaimed him a Doctor of the Church in 1931.</paragraphus>
+  </descriptio>
+  <fons id="ga" opus="sedes" locus="Benedict XVI, General Audience of 23 February 2011, Saint Robert Bellarmine" url="https://www.vatican.va/content/benedict-xvi/en/audiences/2011/documents/hf_ben-xvi_aud_20110223.html">
+    <excerptum>Born on 4 October 1542 in Montepulciano near Siena, he was the nephew, on his mother’s side, of Pope Marcellus II.</excerptum>
+    <excerptum>before entering the Society of Jesus on 20 September 1560.</excerptum>
+    <excerptum>He was ordained a priest on 25 March 1570 and for a few years was professor of theology at Louvain.</excerptum>
+    <excerptum>Later, summoned to Rome to teach at the Roman College, he was entrusted with the chair of apologetics. In the decade in which he held it (1576-1586), he compiled a course of lessons which subsequently formed the Controversiae [Controversies], a work whose clarity, rich content and mainly historical tone earned it instant renown.</excerptum>
+    <excerptum>he avoids any polemical and aggressive approach in speaking of the ideas of the Reformation. Instead, using the arguments of reason and the Tradition of the Church, he illustrates the Catholic doctrine clearly and effectively.</excerptum>
+    <excerptum>From 1588 to 1594 he was first spiritual director of the Jesuit students at the Roman College — among whom he met and gave direction to St Aloysius Gonzaga — then religious superior.</excerptum>
+    <excerptum>His short catechism, Dottrina cristiana [Christian doctrine] dates back to the two-year period 1597–1598. It was one of his most popular works.</excerptum>
+    <excerptum>Pope Clement VIII created him a cardinal on 3 March 1599 and on 18 March 1602 he was appointed Archbishop of Capua.</excerptum>
+    <excerptum>he distinguished himself by his zeal as a preacher in his cathedral, by his weekly visits to parishes</excerptum>
+    <excerptum>he was called to Rome again, where he became a member of the Congregations of the Holy Office, of the Index, for Rites, for Bishops and for the Propagation of the Faith.</excerptum>
+    <excerptum>In his last years he composed various books on spirituality</excerptum>
+    <excerptum>He died in Rome on 17 September 1621. Pope Pius XI beatified him in 1923, canonized him in 1930 and proclaimed him a Doctor of the Church in 1931.</excerptum>
+    <excerptum>faithful to the demands of his own state as a religious, priest and bishop.</excerptum>
+  </fons>
+  <fons id="cs" opus="sedes" locus="Dicastero delle Cause dei Santi, Roberto Bellarmino" url="https://www.causesanti.va/it/santi-e-beati/roberto-bellarmino.html">
+    <excerptum>Roberto Bellarmino (1542-1621) Beatificazione: - 13 maggio 1923 - Papa Pio XI Celebrazione Canonizzazione: - 29 giugno 1930 - Papa Pio XI</excerptum>
+    <excerptum>Vescovo e dottore della Chiesa, della Compagnia di Gesù, che seppe brillantemente disputare nelle controversie teologiche del suo tempo con perizia e acume.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="17 September">
+    <excerptum>Saint Robert Bellarmine, Bishop and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

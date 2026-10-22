@@ -1,0 +1,38 @@
+<sanctus id="monica" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Monica</nomen>
+  <ortus annus="333" locus="Tagaste" fontes="ce"/>
+  <obitus annus="387" locus="Ostia" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="8" dies="27" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="5" dies="4" fontes="mr"/>
+  <munus fontes="ce">widow</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Monica was born of Christian parents at Tagaste, in North Africa, in 333. Married young to Patritius, a pagan official of violent temper, she had an unhappy marriage, yet by her sweetness and patience she exercised a kind of apostolate among the wives and mothers of the town, and her husband became a Christian shortly before he died. Of their three children, Augustine, Navigius and Perpetua, Augustine caused her the most anxiety: at Carthage he fell into grievous sin and became a Manichean. A holy bishop, whose name is not recorded, consoled her with the words, "the child of those tears shall never perish."</paragraphus>
+    <paragraphus fontes="ce mr mr2">She followed Augustine to Rome and on to Milan, where through St. Ambrose she saw him yield after seventeen years of resistance and be baptized. On their journey home to Africa she died at Ostia in 387; Augustine left an account of her life in the ninth book of his Confessions. She was buried at Ostia and at first almost forgotten. Her cult spread from about the thirteenth century, with a feast on 4 May, and in 1430 Martin V had her relics brought to Rome, where they were buried in the church of St. Augustine.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Monica" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Monica">
+    <excerptum>Widow; born of Christian parents at Tagaste, North Africa, in 333; died at Ostia, near Rome, in 387.</excerptum>
+    <excerptum>She was married early in life to Patritius who held an official position in Tagaste. He was a pagan</excerptum>
+    <excerptum>his temper was violent and he appears to have been of dissolute habits. Consequently Monica's married life was far from being a happy one</excerptum>
+    <excerptum>by her sweetness and patience, she was able to exercise a veritable apostolate amongst the wives and mothers of her native town</excerptum>
+    <excerptum>Three children were born of this marriage, Augustine the eldest, Navigius the second, and a daughter, Perpetua.</excerptum>
+    <excerptum>in compensation perhaps for all that she was to experience through Augustine - Patritius became a Christian.</excerptum>
+    <excerptum>Patritius died very shortly after his reception into the Church</excerptum>
+    <excerptum>Meanwhile, Augustine had been sent to Carthage, to prosecute his studies, and here he fell into grievous sin.</excerptum>
+    <excerptum>At Carthage Augustine had become a Manichean</excerptum>
+    <excerptum>she went to see a certain holy bishop, whose name is not given, but who consoled her with the now famous words, "the child of those tears shall never perish."</excerptum>
+    <excerptum>Monica pursuing her wayward son to Rome, wither he had gone by stealth; when she arrived he had already gone to Milan, but she followed him. Here she found St. Ambrose and through him she ultimately had the joy of seeing Augustine yield, after seventeen years of resistance.</excerptum>
+    <excerptum>Augustine was baptized in the church of St. John the Baptist at Milan. Africa claimed them however, and they set out on their journey, stopping at Cività Vecchia and at Ostia. Here death overtook Monica</excerptum>
+    <excerptum>St. Monica was buried at Ostia, and at first seems to have been almost forgotten</excerptum>
+    <excerptum>About the thirteenth century, however, the cult of St. Monica began to spread and a feast in her honour was kept on 4 May. In 1430 Martin V ordered the relics to be brought to Rome.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="4 May">
+    <excerptum>Ostia, the birthday of St. Monica, mother of blessed Augustine, who has left us in the ninth book of his Confessions a beautiful sketch of her life.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="9 April">
+    <excerptum>the translation of the body of St. Monica, mother of the blessed bishop Augustine, which was brought from Ostia to Rome, under the Sovereign Pontiff, Martin V., and with due honors buried in the Church of St. Augustine.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="27 August">
+    <excerptum>Saint Monica</excerptum>
+  </fons>
+</sanctus>

@@ -1,0 +1,44 @@
+<sanctus id="anthony-mary-claret" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Anthony Mary Claret</nomen>
+  <nomen lingua="es" fontes="ce">Antonio María Claret y Clará</nomen>
+  <ortus annus="1807" mensis="12" dies="23" locus="Sallent, near Barcelona" fontes="ce"/>
+  <obitus annus="1870" mensis="10" dies="24" locus="Fontfroide, Narbonne, France" fontes="ce"/>
+  <beatificatio annus="1934" mensis="2" dies="25" papa="Pius XI" fontes="cs"/>
+  <canonizatio modus="formalis" annus="1950" mensis="5" dies="7" papa="Pius XII" fontes="pxii cs"/>
+  <festum calendarium="generale" mensis="10" dies="24" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us ce">bishop</munus>
+  <munus fontes="ce">missionary</munus>
+  <munus fontes="ce pxii">founder</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Antonio María Claret was born at Sallent, near Barcelona, on 23 December 1807, the son of a small woollen manufacturer, and became a weaver at twelve. Feeling called to a higher life, he entered the seminary at Vich in 1829 and was ordained on 13 June 1835. He tried the Jesuit novitiate in Rome but found it did not suit him, and returned to give missions throughout Catalonia and, for fifteen months, in the Canary Islands. On 16 July 1849 at Vich he founded the Congregation of the Missionary Sons of the Immaculate Heart of Mary, and he founded at Barcelona a religious library that issued millions of cheap Catholic books.</paragraphus>
+    <paragraphus fontes="ce pxii cs">Appointed Archbishop of Santiago de Cuba in 1851, he reformed the seminary and the clergy, built a hospital and schools, and survived some fifteen attempts on his life; at Holguin an assassin's knife laid his cheek open. Recalled to Spain in 1857, he became confessor to Queen Isabella II and for nine years rector of the Escorial. Pius XII recalled his defence of papal infallibility at the Vatican Council. He died at the Cistercian abbey of Fontfroide in France on 24 October 1870. Leo XIII declared him Venerable in 1899; Pius XI beatified him in 1934, and Pius XII canonized him on 7 May 1950.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Ven. Antonio María Claret y Clará" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Ven._Antonio_María_Claret_y_Clará">
+    <excerptum>Spanish prelate and missionary, born at Sallent, near Barcelona, 23 Dec., 1807; d. at Fontfroide, Narbonne, France, on 24 Oct., 1870. Son of a small woollen manufacturer</excerptum>
+    <excerptum>at the age of twelve became a weaver.</excerptum>
+    <excerptum>Recognizing a call to a higher life, he left Barcelona, entered the seminary at Vich in 1829, and was ordained on 13 June, 1835.</excerptum>
+    <excerptum>There he entered the Jesuit novitiate but finding himself unsuited for that manner of life, he returned shortly to Spain</excerptum>
+    <excerptum>he was engaged in missionary work throughout Catalonia. In 1848 he was sent to the Canary Islands where he gave retreats for fifteen months.</excerptum>
+    <excerptum>Returning to Vich he established the Congregation of the Missionary Sons of the Immaculate Heart of Mary (16 July, 1849), and founded the great religious library at Barcelona which bears his name, and which has issued several million cheap copies</excerptum>
+    <excerptum>Pius IX at the request of the Spanish sovereign appointed him Archbishop of Santiago de Cuba in 1851.</excerptum>
+    <excerptum>The seminary was reorganized, clerical discipline strengthened</excerptum>
+    <excerptum>He erected a hospital and numerous schools.</excerptum>
+    <excerptum>No less than fifteen attempts were made on his life, and at Holguin his cheek was laid open from ear to chin by a would-be assassin's knife.</excerptum>
+    <excerptum>In February, 1857, he was recalled to Spain by Isabella II, who made him her confessor.</excerptum>
+    <excerptum>For nine years he was rector of the Escorial monastery</excerptum>
+    <excerptum>shortly afterwards he retired to the Cistercian abbey at Fontfroide where he expired.</excerptum>
+    <excerptum>he was declared Venerable by Leo XIII in 1899.</excerptum>
+  </fons>
+  <fons id="pxii" opus="sedes" locus="Pius XII, address to pilgrims for the canonization of Blessed Antonio María Claret, 8 May 1950" url="https://www.vatican.va/content/pius-xii/es/speeches/1950/documents/hf_p-xii_spe_19500508_claret.html">
+    <excerptum>ALOCUCIÓN DE SU SANTIDAD PÍO XII A LOS PEREGRINOS REUNIDOS EN ROMA CON MOTIVO DE LA CANONIZACIÓN DEL BEATO ANTONIO MARÍA CLARET</excerptum>
+    <excerptum>la satisfacción con que hemos otorgado los máximos honores de los altares a tan eminente figura</excerptum>
+    <excerptum>sus Misioneros Hijos del Inmaculado Corazón de María</excerptum>
+    <excerptum>a todo el Concilio Vaticano, al escuchar la vigorosa defensa de la infalibilidad pontificia</excerptum>
+  </fons>
+  <fons id="cs" opus="sedes" locus="Dicastery for the Causes of Saints, Antonio María Claret" url="https://www.causesanti.va/it/santi-e-beati/antonio-maria-claret.html">
+    <excerptum>Beatificazione: 25 febbraio 1934 Papa Pio XI Celebrazione Canonizzazione: 07 maggio 1950 Papa Pio XII</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="24 October">
+    <excerptum>Saint Anthony Mary Claret, Bishop</excerptum>
+  </fons>
+</sanctus>

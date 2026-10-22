@@ -1,0 +1,43 @@
+<sanctus id="john-leonardi" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">John Leonardi</nomen>
+  <nomen lingua="it" fontes="cs">Giovanni Leonardi</nomen>
+  <ortus annus="1541" locus="Diecimo" fontes="cs"/>
+  <obitus annus="1609" mensis="10" dies="9" locus="Rome" fontes="cs mr"/>
+  <canonizatio modus="formalis" annus="1938" mensis="4" dies="17" papa="Pius XI" fontes="cs"/>
+  <festum calendarium="generale" mensis="10" dies="9" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="10" dies="10" nota="as blessed John Leonardi, confessor" fontes="mr"/>
+  <munus fontes="us cs">priest</munus>
+  <munus fontes="mr cs">founder</munus>
+  <patrocinium fontes="cs">pharmacists</patrocinium>
+  <descriptio>
+    <paragraphus fontes="cs">Giovanni Leonardi was born in 1541 at Diecimo, near Lucca, the last of seven children in a family of small landowners. At seventeen his father enrolled him in a course in pharmacy at Lucca, and he trained for about ten years as an apothecary. When he gained the official licence to open a pharmacy of his own, he decided instead to become a priest, and he was ordained in 1571. He saw children's religious education as the first need, and his new way of teaching the catechism was extended by the bishop to all the churches of Lucca. From his Company of Christian Doctrine grew, from 1574, the community later called the Clerks Regular of the Mother of God.</paragraphus>
+    <paragraphus fontes="cs mr">Heretical preachers, backed by priests and lay people who disliked his reforms, turned against him, and in 1584, while he was in Rome, Lucca banished him for life. There the pope made him apostolic visitor and reformer of Benedictine monasteries. With Juan Bautista Vives and the Jesuit Martin de Funes he planned a congregation to spread the faith among peoples who did not yet know it, and he is counted a co-founder of what became the Urban College of Propaganda Fide; the Martyrology credits him with the missions established by the Propaganda. He died at Rome on 9 October 1609 of an illness caught while tending the sick of Campitelli during an epidemic. Pius XI canonized him on 17 April 1938, and in 2006 he was named patron of pharmacists.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="10 October">
+    <excerptum>A T Rome, blessed John Leonard!, confessor, founder of the Congregation of Clerks Regular of the Mother of God. He was illustrious by his labors and miracles, and through his instrumentality missions were established by the Propaganda.</excerptum>
+  </fons>
+  <fons id="cs" opus="sedes" locus="Dicastero delle Cause dei Santi, Giovanni Leonardi" url="https://www.causesanti.va/it/santi-e-beati/giovanni-leonardi.html">
+    <excerptum>Giovanni nasce nel 1541 a Diecimo, in provincia di Lucca, da una famiglia di modesti proprietari terrieri.</excerptum>
+    <excerptum>Ultimo di sette fratelli, ebbe un’adolescenza scandita dai ritmi di fede</excerptum>
+    <excerptum>A 17 anni il padre lo iscrisse ad un regolare corso di spezieria a Lucca, allo scopo di farne un futuro farmacista</excerptum>
+    <excerptum>Per circa un decennio il giovane Giovanni Leonardi ne fu vigile e diligente frequentatore</excerptum>
+    <excerptum>quando, secondo le norme previste dall’antica Repubblica di Lucca, acquisì il riconoscimento ufficiale che lo avrebbe autorizzato ad aprire una sua spezieria</excerptum>
+    <excerptum>Dopo matura riflessione decise di avviarsi al sacerdozio.</excerptum>
+    <excerptum>Matura, dunque, in lui, la vocazione al sacerdozio. Verrà ordinato nel 1571.</excerptum>
+    <excerptum>Da sacerdote Giovanni capisce subito che la priorità è l’educazione alla fede dei ragazzi, così sperimenta un metodo innovativo nell’insegnamento del catechismo, che spinge il vescovo di Lucca a estenderlo a tutte le chiese della città.</excerptum>
+    <excerptum>nasce quindi la Compagnia della Dottrina Cristiana, gestita da laici, che nel 1574 diventerà una famiglia religiosa, la Confraternita dei sacerdoti riformati, e infine prenderà l’attuale nome di Chierici Regolari della Madre di Dio.</excerptum>
+    <excerptum>I predicatori eretici che all’epoca non mancano iniziano a prendere di punta Giovanni, appoggiati anche da sacerdoti e laici che non apprezzano la sua azione riformatrice.</excerptum>
+    <excerptum>Così nel 1584, approfittando di un suo viaggio a Roma, lo bandiscono in perpetuo come nemico della patria dalla sua città</excerptum>
+    <excerptum>A Roma Giovanni viene inviato dal Papa come visitatore apostolico e riformatore dei monasteri benedettini</excerptum>
+    <excerptum>Insieme a Mons. Juan Bautista Vives e al gesuita Martin de Funes progettò e contribuì all’istituzione di una specifica Congregazione della Santa Sede per le missioni</excerptum>
+    <excerptum>progetta una nuova congregazione di sacerdoti con l’obiettivo specifico di propagandare la fede cristiana tra le popolazioni che ancora non la conoscono. Nasce così il nucleo di quello che diventerà il Collegio Urbano di Propaganda Fide, del quale è considerato cofondatore.</excerptum>
+    <excerptum>Dopodomani, 9 ottobre, si compiranno 400 anni dalla morte di san Giovanni Leonardi</excerptum>
+    <excerptum>canonizzato il 17 aprile del 1938 ed eletto Patrono dei farmacisti in data 8 agosto 2006.</excerptum>
+    <excerptum>Nel 1609 Giovanni muore; sarà canonizzato da Pio XI nel 1938.</excerptum>
+    <excerptum>Morì nel 1609 per un’influenza contratta mentre stava prodigandosi nella cura di quanti, nel quartiere romano di Campitelli, erano stati colpiti dall’epidemia.</excerptum>
+    <excerptum>Pose a Roma le fondamenta del Collegio di Propaganda Fide e morì in pace in questa città</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="9 October">
+    <excerptum>Saint John Leonardi, Priest</excerptum>
+  </fons>
+</sanctus>

@@ -1,0 +1,49 @@
+<sanctus id="vincent-ferrer" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Vincent Ferrer</nomen>
+  <ortus annus="1350" mensis="1" dies="23" locus="Valencia" fontes="ce"/>
+  <obitus annus="1419" mensis="4" dies="5" locus="Vannes, Brittany" fontes="ce mr"/>
+  <canonizatio modus="formalis" annus="1455" mensis="6" dies="3" papa="Calixtus III" fontes="ce"/>
+  <festum calendarium="generale" mensis="4" dies="5" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="4" dies="5" fontes="mr"/>
+  <munus fontes="us">priest</munus>
+  <munus fontes="ce mr">religious</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Vincent Ferrer was born at Valencia on 23 January 1350 (Butler gives 1357) of a noble family and entered the Dominican Order in 1367. He studied and taught philosophy and theology at Barcelona, Lerida, Toulouse and Valencia. Firmly convinced that the claims of the Avignon popes were legitimate, he entered the service of Cardinal Pedro de Luna, who as Benedict XIII later made him his confessor; he refused the cardinalate. Brought near to death by fever in 1398, he was cured during a vision of Christ with Dominic and Francis and, by the Encyclopedia's account, sent to preach penance and prepare people for the coming judgment.</paragraphus>
+    <paragraphus fontes="ce mr">From 1399, for twenty years, he travelled through western Europe, mostly on foot, preaching in squares to vast crowds and followed by an army of penitents; many biographers held that he had the gift of tongues, since he spoke only the language of Valencia. He took the leading part in the Compromise of Caspe, and in 1416, though still holding Benedict XIII to be the legitimate pope, he publicly announced that King Ferdinand had withdrawn his states from Benedict's obedience. He spent his last two years in Brittany and died at Vannes on 5 April 1419. Calixtus III canonized him in 1455.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="5 April">
+    <excerptum>At Vannes, in Brittany, St. Vincent Ferrer, confessor, of the Order of Preachers, who was mighty in word and deed, and converted many thousands of infidels to Christ.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v04 April 5 St. Vincent Ferrer, C.">
+    <excerptum>St. Vincent Ferrer was born at Valentia, in Spain, on the 23rd of January, 1357.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Vincent Ferrer" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Vincent_Ferrer">
+    <excerptum>Famous Dominican missionary, born at Valencia, 23 January, 1350; died at Vannes, Brittany, 5 April, 1419.</excerptum>
+    <excerptum>He was descended from the younger of two brothers who were knighted for their valour in the conquest of Valencia, 1238.</excerptum>
+    <excerptum>whose family had likewise been ennobled during the conquest of Valencia</excerptum>
+    <excerptum>In 1367 he entered the Dominican Order, and was sent to the house of studies at Barcelona the following year. In 1370 he taught philosophy at Lerida</excerptum>
+    <excerptum>In 1377 he was sent to continue his studies at Toulouse</excerptum>
+    <excerptum>From 1385 to 1390 he taught theology in the cathedral at Valencia.</excerptum>
+    <excerptum>In 1379 Vincent was retained by Cardinal Pedro de Luna, legate of the Court of Aragon</excerptum>
+    <excerptum>Pedro de Luna, recently raised to the papal chair as Benedict XIII</excerptum>
+    <excerptum>The saint, thoroughly convinced of the legitimacy of the claims of the Avignon pontiffs, was one of their strongest champions.</excerptum>
+    <excerptum>Benedict then called him to Avignon and appointed him confessor and Apostolic penitentiary.</excerptum>
+    <excerptum>He steadfastly refused the honours, including the cardinalate, which were offered to him.</excerptum>
+    <excerptum>France withdrew from the obedience of Avignon in September, 1398, and the troops of Charles VI laid siege to the city. An attack of fever at this time brought Vincent to death's door, but</excerptum>
+    <excerptum>during an apparition of Christ accompanied by St. Dominic and St. Francis he was miraculously cured and sent to preach penance and prepare men for the coming judgment.</excerptum>
+    <excerptum>Not until November, 1399, did Benedict allow Vincent Ferrer to begin his apostolate</excerptum>
+    <excerptum>he was obliged to preach in squares and open places, such were the numbers that flocked to hear him.</excerptum>
+    <excerptum>He was followed by an army of penitents drawn from every rank of society</excerptum>
+    <excerptum>he could speak only Limousin, the language of Valencia. Many of his biographers hold that he was endowed with the gift of tongues</excerptum>
+    <excerptum>At the judgment, known as the Compromise of Caspe, he took the leading part and helped to elect Ferdinand of Castile.</excerptum>
+    <excerptum>It was not until 1416, when pressed by Ferdinand, King of Aragon, that he abandoned him.</excerptum>
+    <excerptum>On 6 January, preaching at Perpignan, he declared anew to the vast throng gathered around his pulpit that Benedict XIII was the legitimate pope, but that, since he would not resign to bring peace to the Church, Ferdinand had withdrawn his states from the obedience of Avignon</excerptum>
+    <excerptum>spent the last two years of his life in Brittany</excerptum>
+    <excerptum>For twenty years he traversed Western Europe preaching penance</excerptum>
+    <excerptum>He usually travelled on foot, poorly clad.</excerptum>
+    <excerptum>He was canonized by Calixtus III at the Dominican Church of Santa Maria Sopra Minerva, Rome, 3 June, 1455.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="5 April">
+    <excerptum>Saint Vincent Ferrer, Priest</excerptum>
+  </fons>
+</sanctus>

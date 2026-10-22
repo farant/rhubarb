@@ -133,6 +133,15 @@ declare -a RADIX_FONTES=(
     "fasti_fontes"     # nomenclator-plan P6: fontes dierum
     "calendarium_liturgicum" # A2b: figurae calendarii (dies liturgici)
     "sanctorale"
+    # sancti-plan V1: bibliotheca sanctorum in vico ($saints)
+    "sancti"
+    "sancti_canon"
+    "sancti_visus"
+    "semita"
+    "quaerere"
+    "iter_directoria"
+    "via"
+    "paginarium"
     # colloquia-plan T4a: centrum admonitionum in vico
     "admonitiones_visus"
     "admonitiones_volantes"
@@ -161,6 +170,9 @@ declare -a RADIX_FONTES=(
     "vim"
     "tabula_characterum"
     "volumen"
+    # genera-datorum D2: identitas actuum (hora, machina)
+    "hora_hybrida"
+    "machina_posix"
     "filum"
     "sigillum"
     "lectiones"

@@ -1,0 +1,42 @@
+<sanctus id="hilary-of-poitiers" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Hilary of Poitiers</nomen>
+  <nomen lingua="la" principale="verum" fontes="ce">Hilarius Pictaviensis</nomen>
+  <ortus saeculum="4" locus="Poitiers" fontes="ce"/>
+  <obitus annus="368" locus="Poitiers" fontes="ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="1" dies="13" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="1" dies="13" fontes="mr1"/>
+  <festum calendarium="martyrologium" mensis="1" dies="14" fontes="mr2"/>
+  <munus fontes="us ce">bishop</munus>
+  <munus fontes="us ce mr1">doctor of the Church</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Hilary was born at Poitiers at the beginning of the fourth century, into a noble and very probably pagan family. Educated in secular learning, he found the truth he was seeking in the Scriptures, renounced idolatry and was baptized, and about 350 he was chosen bishop of his city. When Arianism threatened to invade Gaul he exposed its leading partisan, Saturninus of Arles; after a council at Béziers in 356 refused to hear him, the emperor Constantius exiled him to Phrygia. In exile he studied and wrote, including his treatise on the synods, and he took part in the synod of Seleucia in 359.</paragraphus>
+    <paragraphus fontes="ce mr1 mr2">In 361 he returned in triumph to Poitiers, where his former disciple Martin, later Bishop of Tours, visited him. He died at Poitiers in 368; the day is uncertain, 1 November in the most accredited opinion, 13 January according to the Roman Breviary. The Martyrology gives 13 January as his heavenly birthday and keeps his festival on 14 January. Pius IX declared him a Doctor of the Church.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Hilary of Poitiers" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Hilary_of_Poitiers">
+    <excerptum>Bishop, born in that city at the beginning of the fourth century; died there 1 November, according to the most accredited opinion, or according to the Roman Breviary, on 13 January, 368.</excerptum>
+    <excerptum>Belonging to a noble and very probably pagan family, he was instructed in all the branches of profane learning, but, having also taken up the study of Holy Scripture and finding there the truth which he sought so ardently, he renounced idolatry and was baptized.</excerptum>
+    <excerptum>he was chosen about 350 to govern the body of the faithful which the city had possessed since the third century.</excerptum>
+    <excerptum>Arianism had made frightful ravages in various regions and threatened to invade Gaul</excerptum>
+    <excerptum>Saturninus, Bishop of Arles, the most active of the latter, being exposed by Hilary, convened and presided over a council at Béziers in 356</excerptum>
+    <excerptum>the council, composed for the most part of Arians, refused to hear him, and being shortly afterwards denounced to the Emperor Constantius, the protector of Arianism, he was at his command transported to the distant coasts of Phrygia.</excerptum>
+    <excerptum>Instead of remaining inactive during his exile he gave himself up to study, completed certain of his works which he had begun, and wrote his treatise on the synods.</excerptum>
+    <excerptum>in 359, the city of Seleucia witnessed the assembly in synod of a large number of Oriental bishops</excerptum>
+    <excerptum>Hilary, whom everyone wished to see and hear, so great was his reputation for learning and virtue, was invited to be present at this assembly.</excerptum>
+    <excerptum>Then he took part in the violent discussions which took place between the Semi-Arians</excerptum>
+    <excerptum>In 361 Hilary re-entered Poitiers in triumph and resumed possession of his see.</excerptum>
+    <excerptum>was visited by Martin, his former disciple and subsequently Bishop of Tours.</excerptum>
+    <excerptum>The Latin Church celebrates his feast on 14 January, and Pius IX raised him to the rank of Doctor of the Universal Church.</excerptum>
+    <excerptum>VIEHAUSER, Hilarius Pictaviensis geschild. in seinem Kampfe gegen den Arianismus</excerptum>
+  </fons>
+  <fons id="mr1" opus="mr1916" locus="13 January">
+    <excerptum>At Poitiers, in France, the birthday of St. Hilary, bishop and confessor</excerptum>
+    <excerptum>faith, which he courageously defended, and for which he was banished four years to Phrygia, where, among other miracles, he raised a man from the dead. Pius IX. declared him Doctor of the Church. His festival is celebrated on the 14th of this month.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="14 January">
+    <excerptum>HILARY, bishop of Poitiers and confessor</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="13 January">
+    <excerptum>Saint Hilary, Bishop and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

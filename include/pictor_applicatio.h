@@ -61,8 +61,8 @@ nomen structura {
 
 /* S3e: picturam spatii (exsistentem) in montatione ostendere -
  * documentum ex memoria aut apertum; contextus actionum et figurarum
- * et dimensiones in insula (latitudo, altitudo) aptantur. FALSUM si
- * nullum documentum ibi. */
+ * et dimensiones in insula (latitudo, altitudo; semitae R4c: pictura)
+ * aptantur. FALSUM si nullum documentum ibi. */
 b32
 pictor_picturam_ponere (
          PictorMontatio* m,
@@ -76,6 +76,23 @@ b32
 pictor_picturam_condere (
          PictorMontatio* m,
      constans character* spatium);
+
+/* semitae R4c: argumentum lateris - URI ("pictor/flores") picturam
+ * EXSTANTEM ostendit (semita numquam condit); cognomen "<spatium>" ut
+ * ante: exstans ostenditur, ignota conditur si condere (S3f,
+ * $pictor-new). FALSUM si semita mala aut pictura ignota. */
+b32
+pictor_argumentum_ponere (
+          PictorMontatio* m,
+      constans character* argumentum,
+                     b32  condere);
+
+/* semitae R4c (facies.semitam_secuta): post semitam a vico applicatam
+ * (historia) documentum campum pictura sequitur; FALSUM si latus
+ * nullum aut pictura ignota */
+b32
+pictor_semitam_secuta (
+    vacuum* ctx);
 
 /* pictorem montare: id NIHIL = radix repositorii (elementum radicis
  * 'pictor' iam exstat); aliter liberum <pictor id> creatur si abest.

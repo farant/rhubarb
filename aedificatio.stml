@@ -405,6 +405,11 @@
     <ingressus genus="fasciculus" via="probationes/fixa/unicode/15.1.0/EastAsianWidth.txt"/>
     <ingressus genus="fasciculus" via="probationes/fixa/unicode/15.1.0/GraphemeBreakProperty.txt"/>
     <ingressus genus="fasciculus" via="probationes/fixa/unicode/15.1.0/emoji-data.txt"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/unicode/15.1.0/emoji-variation-sequences.txt"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/unicode/15.1.0/UnicodeData.txt"/>
+    <ingressus genus="fasciculus" via="include/runae_tabulae.h"/>
+    <ingressus genus="fasciculus" via="lib/lectiones.c"/>
+    <ingressus genus="fasciculus" via="include/lectiones.h"/>
     <exitus via="lib/runae_tabulae.c" provenientia="regeneratio"/>
   </actio>
   <!-- tabula monetarum (pecunia-plan T1): indices ISO 4217 fixi +
@@ -501,14 +506,33 @@
   </actio>
   <!-- BearSSL amalgama (tls-bearssl-plan T1, R1): oraculum clang
        (nomina interiora per -ast-dump=json), ergo identitas clang et
-       python ingressus -->
-  <actio titulus="bearssl_amalgama" genus="generator">
+       python ingressus. Arbor src gradu UNO profunda (XII
+       subdirectoria; generator os.walk): plagulae gradu 0 solum
+       tegunt, ergo subdirectorium quodque nominatur; directorium src
+       nomina tegit - subdirectorium novum clavem mutat. Ingressus sic
+       pleni: memorabilis (olim regeneratio LXXXI s omni iudicio
+       pleno; 2026-10-17). Mensura quintae (2026-10-21): sine memoria
+       haec actio LXII% portae radicis erat (DLVIII cursus, ~XII h). -->
+  <actio titulus="bearssl_amalgama" genus="generator" memorabilis="verum">
     <mandatum>
       <verbum! (>./tools/bearssl_amalgamare.sh
     </mandatum>
     <ingressus genus="fasciculus" via="tools/bearssl_amalgamare.sh"/>
     <ingressus genus="fasciculus" via="tools/bearssl_amalgamare.py"/>
     <ingressus genus="plagulae" via="vendor/bearssl/src" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/aead" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/codec" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/ec" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/hash" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/int" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/kdf" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/mac" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/rand" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/rsa" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/ssl" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/symcipher" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor/bearssl/src/x509" suffixa=".c .h"/>
+    <ingressus genus="directorium" via="vendor/bearssl/src"/>
     <ingressus genus="plagulae" via="vendor/bearssl/inc" suffixa=".h"/>
     <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>
     <ingressus genus="identitas_clang" via="clang"/>
@@ -524,6 +548,28 @@
     <ingressus genus="fasciculus" via="tools/norma_canon_infigere.sh"/>
     <ingressus genus="fasciculus" via="norma.canon"/>
     <exitus via="lib/norma_canon.c" provenientia="regeneratio"/>
+  </actio>
+  <!-- canon sanctorum infixus (sancti-plan par. II, mos norma_canon):
+       sancti.canon -> lib/sancti_canon.c, lector plagularum .sanctus
+       sine plagula canonis vivit -->
+  <actio titulus="sancti_canon" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/sancti_canon_infigere.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/sancti_canon_infigere.sh"/>
+    <ingressus genus="fasciculus" via="sancti.canon"/>
+    <exitus via="lib/sancti_canon.c" provenientia="regeneratio"/>
+  </actio>
+  <!-- liber cantilenarum infixus (sonus S4, mos sancti_canon):
+       cantuale.stml -> lib/cantuale_infixum.c, vicus et auditio
+       sine plagula libri vivunt -->
+  <actio titulus="cantuale_infixum" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/cantuale_infigere.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/cantuale_infigere.sh"/>
+    <ingressus genus="fasciculus" via="cantuale.stml"/>
+    <exitus via="lib/cantuale_infixum.c" provenientia="regeneratio"/>
   </actio>
   <!-- canon organi infixus (status-plan S1, mos norma_canon):
        organum.canon -> lib/organum_canon.c, onerator manifestorum

@@ -1,0 +1,52 @@
+<sanctus id="thomas-becket" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Thomas Becket</nomen>
+  <nomen lingua="en" fontes="ce">Thomas of London</nomen>
+  <nomen lingua="en" fontes="ce">Thomas of Canterbury</nomen>
+  <ortus annus="1118" mensis="12" dies="21" circa="verum" locus="London" fontes="ce"/>
+  <obitus annus="1170" mensis="12" dies="29" locus="Canterbury" martyrium="verum" fontes="ce mr"/>
+  <canonizatio modus="formalis" annus="1173" mensis="2" dies="21" fontes="ce"/>
+  <festum calendarium="generale" mensis="12" dies="29" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="12" dies="29" fontes="mr"/>
+  <munus fontes="us ce">bishop</munus>
+  <munus fontes="us ce mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Thomas was born in London, probably on 21 December 1118, of parents who had come from Normandy. After schooling at Merton and in Paris he entered, about 1141, the household of Theobald, Archbishop of Canterbury, who ordained him deacon and made him Archdeacon of Canterbury. Henry II made "Thomas of London" his chancellor, and for some years king and minister were close friends; Thomas lived in great state but was never charged with impurity.</paragraphus>
+    <paragraphus fontes="ce">In 1162 Henry resolved to have his chancellor made Archbishop of Canterbury. Thomas drew back, warning the king that he would have to oppose his claims on the Church, but yielded; he was ordained priest and consecrated bishop on 3 June 1162. He took up fasting and hair shirts, resigned the chancellorship, and resisted the king's attempt to bring clerics under the secular courts and the Constitutions of Clarendon. Persecuted with heavy demands for money, he fled in 1164 to Pope Alexander III at Sens, and remained in exile in France, for a time at the abbey of Pontigny.</paragraphus>
+    <paragraphus fontes="ce mr">After a patched-up reconciliation in 1170, four knights from France and their armed men killed him in his own church at Canterbury on 29 December 1170; to their cry of "traitor" he answered, "Here I am, no traitor, but archbishop and priest of God." Devotion to him spread rapidly through Europe; the bull of canonization followed on 21 February 1173, and on 12 July 1174 Henry did public penance and was scourged at his tomb.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Thomas Becket" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Thomas_Becket">
+    <excerptum>Martyr, Archbishop of Canterbury, born at London, 21 December, 1118 (?); died at Canterbury, 29 December, 1170. St. Thomas was born of parents who, coming from Normandy, had settled in England some years previously.</excerptum>
+    <excerptum>He learned to read at Merton Abbey and then studied in Paris.</excerptum>
+    <excerptum>Somewhere about the year 1141, under circumstances that are variously related, he entered the service of Theobald, Archbishop of Canterbury</excerptum>
+    <excerptum>ordained him deacon in 1154, after bestowing upon him several preferments, the most important of which was the Archdeaconry of Canterbury</excerptum>
+    <excerptum>He took "Thomas of London", as Becket was then most commonly called, for his chancellor</excerptum>
+    <excerptum>People declared that "they had but one heart and one mind".</excerptum>
+    <excerptum>he travelled with such pomp that the people said: "If this be only the chancellor what must be the glory of the king himself?"</excerptum>
+    <excerptum>No word was ever breathed against his personal purity.</excerptum>
+    <excerptum>Henry seems to have decided that it would be good policy to prepare the way for further schemes of reform by securing the advancement of his chancellor to the primacy.</excerptum>
+    <excerptum>But Henry would not be gainsaid, and Thomas at the instance of Cardinal Henry of Pisa, who urged it upon him as a service to religion, yielded in spite of his misgivings.</excerptum>
+    <excerptum>"I know your plans for the Church," he said, "you will assert claims which I, if I were archbishop, must needs oppose."</excerptum>
+    <excerptum>He was ordained priest on Saturday in Whitweek and consecrated bishop the next day, Sunday, 3 June, 1162.</excerptum>
+    <excerptum>he gave himself to fastings and disciplines, hair shirts, protracted vigils, and constant prayers.</excerptum>
+    <excerptum>Contrary to the king's wish he resigned the chancellorship.</excerptum>
+    <excerptum>Soon after this the great matter of dispute was reached in the resistance made by Thomas to the king's officials when they attempted to assert jurisdiction over criminous clerks.</excerptum>
+    <excerptum>sought to draw the saint on to a formal and public acceptance of the "Constitutions of Clarendon"</excerptum>
+    <excerptum>Then followed a period of unworthy and vindictive persecution.</excerptum>
+    <excerptum>Eventually a sum of nearly £30,000 was demanded of him.</excerptum>
+    <excerptum>He fled away secretly that night (13 October, 1164), sailed in disguise from Sandwich (2 November), and after being cordially welcomed by Louis VII of France, he threw himself at the feet of Pope Alexander III, then at Sens</excerptum>
+    <excerptum>Thomas went to take up his residence at the Cistercian Abbey of Pontigny in Burgundy</excerptum>
+    <excerptum>The negotiations between Henry, the pope, and the archbishop dragged on for the next four years</excerptum>
+    <excerptum>At last in 1170 some sort of reconciliation was patched up.</excerptum>
+    <excerptum>Four knights who came from France demanded the absolution of the bishops.</excerptum>
+    <excerptum>They left for a space, but came back at Vesper time with a band of armed men.</excerptum>
+    <excerptum>To their angry question, "Where is the traitor?" the saint boldly replied, "Here I am, no traitor, but archbishop and priest of God." They tried to drag him from the church, but were unable, and in the end they slew him where he stood</excerptum>
+    <excerptum>In an extraordinary brief space of time devotion to the martyred archbishop had spread all through Europe. The pope promulgated the bull of canonization, little more than two years after the martyrdom, 21 February, 1173. On 12 July, 1174, Henry II did public penance, and was scourged at the archbishop's tomb.</excerptum>
+    <excerptum>the shrine of St. Thomas of Canterbury was one of the wealthiest and most famous in Europe.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="29 December">
+    <excerptum>Canterbury, in England, the birthday of St. Thomas, bishop and martyr, who, for the defence of justice and ecclesiastical immunities, was struck with the sword in his own basilica by a faction of impious men, and thus went to Christ.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="29 December">
+    <excerptum>Saint Thomas Becket, Bishop and Martyr</excerptum>
+  </fons>
+</sanctus>

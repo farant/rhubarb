@@ -1,0 +1,44 @@
+<sanctus id="cornelius" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Cornelius</nomen>
+  <obitus annus="253" mensis="6" martyrium="verum" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="9" dies="16" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="9" dies="14" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="9" dies="16" nota="feast kept with Cyprian" fontes="mr16"/>
+  <munus fontes="us mr">pope</munus>
+  <munus fontes="us mr ce">martyr</munus>
+  <socius ad="cyprian-of-carthage" fontes="us mr16">Cyprian of Carthage</socius>
+  <descriptio>
+    <paragraphus fontes="ce bu">After Pope Fabian was put to death under Decius on 20 January 250, the Roman see stayed vacant for more than a year. When the persecution slackened in 251, sixteen bishops met at Rome and Cornelius, who had passed through all the orders of the clergy, was elected against his will. Weeks later the Roman priest Novatian set himself up as antipope. Cyprian of Carthage brought the African bishops to Cornelius's side, Dionysius of Alexandria won over the East, and Cornelius held a synod of sixty bishops in Italy. He approved the milder measures of Cyprian's council of 251 for receiving back, after penance, those who had lapsed in the persecution.</paragraphus>
+    <paragraphus fontes="ce mr bu">When a new persecution broke out early in 252, Cornelius was exiled to Centumcellae (Civita Vecchia), and the whole Roman Church stood with him as confessors. Accounts of his death differ. The Catholic Encyclopedia places it in June, at the end of a reign it dates 251 to 253, and notes that the wording of the Liberian catalogue may mean he died of the hardships of exile, though later accounts say he was beheaded; the Martyrology says he was scourged and beheaded on the Appian road, and Butler dates his death to 252. Cyprian repeatedly calls him a martyr. He was buried in a catacomb beside the papal crypt, under the Latin inscription CORNELIUS MARTYR, and his feast is kept together with Cyprian's.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="14 September">
+    <excerptum>Rome, in the Appian road, during the persecution of Decius, blessed Cornelius, pope and martyr, who, after being banished, was scourged with leaded whips, and then beheaded with twenty-one others of both sexes.</excerptum>
+    <excerptum>The festival of the Saints Cornelius and Cyprian is kept on the 16th of this month.</excerptum>
+  </fons>
+  <fons id="mr16" opus="mr1916" locus="16 September">
+    <excerptum>Saints Cornelius and Cyprian, pontiffs and martyrs, whose birthday is the 14th of this month.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="Pope Cornelius" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Pope_Cornelius">
+    <excerptum>Martyr (251 to 253). We may accept the statement of the Liberian catalogue that he reigned two years, three months, and ten days</excerptum>
+    <excerptum>His predecessor, Fabian, was put to death by Decius, 20 January, 250. About the beginning of March, 251 the persecution slackened</excerptum>
+    <excerptum>It was possible to assemble sixteen bishops at Rome, and Cornelius was elected though against his will</excerptum>
+    <excerptum>A few weeks later the Roman priest Novatian made himself antipope</excerptum>
+    <excerptum>But the adhesion of St. Cyprian secured to Cornelius the hundred bishops of Africa, and the influence of St. Dionysius the Great, Bishop of Alexandria, brought the East within a few months to a right decision. In Italy itself the pope got together a synod of sixty bishops.</excerptum>
+    <excerptum>Cornelius sanctioned the milder measures proposed by St. Cyprian and accepted by his Carthaginian council of 251 for the restoration to communion, after varying forms of penance, of those who had fallen during the Decian persecution</excerptum>
+    <excerptum>At the beginning of 252 a new persecution suddenly broke out. Cornelius was exiled to Centumcellæ (Civita Vecchia). There were no defections among the Roman Christians; all were confessors.</excerptum>
+    <excerptum>In June Cornelius died a martyr, as St. Cyprian repeatedly calls him.</excerptum>
+    <excerptum>The Liberian catalogue has ibi cum gloriâ dormicionem accepit, and this may mean that he died of the rigours of his banishment, though later accounts say that he was beheaded.</excerptum>
+    <excerptum>St. Cornelius was not buried in the chapel of the popes, but in an adjoining catacomb</excerptum>
+    <excerptum>His inscription is in Latin: CORNELIUS* MARTYR*</excerptum>
+    <excerptum>His feast is kept with that of St. Cyprian on 14 September</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v09 Sept. 16 St. Cornelius, Pope, M.">
+    <excerptum>A.D. 252. Tue holy pope Fabian having been crowned with martyrdom on the twentieth of January in the year 250</excerptum>
+    <excerptum>the see of Rome remained vacant above sixteen months</excerptum>
+    <excerptum>that he was not advanced to the episcopal dignity on a sudden, but had gone through all the orders of the clergy</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="16 September">
+    <excerptum>Saints Cornelius, Pope, and Cyprian, Bishop, Martyrs</excerptum>
+  </fons>
+</sanctus>

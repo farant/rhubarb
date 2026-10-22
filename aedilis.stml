@@ -83,6 +83,10 @@
       <vexillum! (>-framework IOKit
       <vexillum! (>-framework CoreFoundation
     </regula>
+    <regula obiectum="auditus_macos">
+      <vexillum! (>-framework AudioToolbox
+      <vexillum! (>-framework CoreAudio
+    </regula>
   </nexus>
   <vendor>
     <fons via="vendor/sqlite3.c">

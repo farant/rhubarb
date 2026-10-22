@@ -1,0 +1,37 @@
+<sanctus id="margaret-of-scotland" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Margaret of Scotland</nomen>
+  <ortus annus="1045" circa="verum" fontes="ce"/>
+  <obitus annus="1093" mensis="11" dies="16" locus="Edinburgh" fontes="ce bu"/>
+  <canonizatio modus="formalis" annus="1250" papa="Innocent IV" fontes="ce"/>
+  <festum calendarium="generale" mensis="11" dies="16" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="6" dies="10" fontes="mr"/>
+  <munus fontes="mr bu">queen</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Margaret was a granddaughter of Edmund Ironside and a daughter of Edward "the Exile"; a constant tradition holds that her father had been sent to Hungary for safety in the reign of Canute. The Catholic Encyclopedia gives her birth as about 1045 but admits that it cannot be fixed exactly. After the Norman conquest of England her mother Agatha set out for the Continent, but a storm drove their ship to Scotland, where King Malcolm III took the family under his protection and later married Margaret, some time between 1067 and 1070. The marriage had been delayed by her wish to enter religious life.</paragraphus>
+    <paragraphus fontes="ce bu mr">As queen she threw her influence on the side of religion: a synod regulated the Lenten fast and the Easter communion and removed abuses about marriage within the forbidden degrees. She founded several churches, including the abbey of Dunfermline. Butler relates that in Lent and Advent she rose at midnight for matins and washed the feet of six poor people before giving them alms, and the Martyrology praises her love of the poor and of voluntary poverty. Malcolm died four days before she did, and she died at Edinburgh on 16 November 1093 (the Catholic Encyclopedia's opening line says 1092). Innocent IV canonized her in 1250.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Margaret of Scotland" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Margaret_of_Scotland">
+    <excerptum>Born about 1045, died 16 Nov., 1092, was a daughter of Edward "Outremere", or "the Exile", by Agatha</excerptum>
+    <excerptum>She was the granddaughter of Edmund Ironside. A constant tradition asserts that Margaret's father and his brother Edmund were sent to Hungary for safety during the reign of Canute</excerptum>
+    <excerptum>The date of Margaret's birth cannot be ascertained with accuracy</excerptum>
+    <excerptum>on his death and the conquest of England by the Normans, her mother Agatha decided to return to the Continent. A storm however drove their ship to Scotland, where Malcolm III received the party under his protection, subsequently taking Margaret to wife.</excerptum>
+    <excerptum>This event had been delayed for a while by Margaret's desire to entire religion, but it took place some time between 1067 and 1070.</excerptum>
+    <excerptum>In her position as queen, all Margaret's great influence was thrown into the cause of religion and piety.</excerptum>
+    <excerptum>the most important were the regulation of the Lenten fast, observance of the Easter communion, and the removal of certain abuses concerning marriage within the prohibited degrees.</excerptum>
+    <excerptum>She founded several churches, including the Abbey of Dunfermline</excerptum>
+    <excerptum>She foretold the day of her death, which took place at Edinburgh on 16 Nov., 1093</excerptum>
+    <excerptum>In 1250 Margaret was canonized by Innocent IV</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v06 June 10 S. Margaret, Queen of Scotland">
+    <excerptum>was little niece to St. Edward the Confessor, and grand-daughter to Edmund Ironside.</excerptum>
+    <excerptum>In Lent and Advent she always rose at midnight, and went to church. to matins. Returning home she found six poor persons ready for her: she washed their feet and gave_to each a plentiful alms to begin the day.</excerptum>
+    <excerptum>Malcolm reigned thirty-three years, and died in 1093</excerptum>
+    <excerptum>His death happened four days before that of the queen.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="10 June">
+    <excerptum>Scotland, St. Margaret, queen, celebrated for her love of the poor and of voluntary poverty.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="16 November">
+    <excerptum>Saint Margaret of Scotland</excerptum>
+  </fons>
+</sanctus>

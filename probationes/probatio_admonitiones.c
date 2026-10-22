@@ -78,17 +78,24 @@ _probare_copiam (
      Admonitiones* a;
         Admonitio  x;
         character  alveus[XVI];
+        character  alveus_generis[XVI];
 
     a = admonitiones_creare(c->piscina, X);
+    strcpy(alveus_generis, "finis");
     CREDO_NECESSE(a != NIHIL);
     strcpy(alveus, "originale");
     x                 = admonitio_ficta("k", (s64)I, c->piscina);
     x.corpus.datum    = (i8*)alveus;
     x.corpus.mensura  = (i32)strlen(alveus);
+    x.genus.datum     = (i8*)alveus_generis;
+    x.genus.mensura   = (i32)strlen(alveus_generis);
     CREDO_VERUM(admonitiones_addere(a, &x));
     strcpy(alveus, "MUTATUM!!");
+    strcpy(alveus_generis, "MUTATUM");
     CREDO_CHORDA_AEQUALIS_LITERIS(admonitio(a, ZEPHYRUM)->corpus,
         "originale");
+    CREDO_CHORDA_AEQUALIS_LITERIS(admonitio(a, ZEPHYRUM)->genus,
+        "finis");
 }
 
 interior PraeconiumEventus
@@ -127,6 +134,7 @@ _probare_ex_eventu (
         "Claude needs your permission to use Bash", c->piscina);
     CREDO_VERUM(admonitio_ex_eventu(&e, t, &x, c->piscina));
     CREDO_AEQUALIS_S32((s32)x.gradus, (s32)ADMONITIO_ATTENTIO);
+    CREDO_CHORDA_AEQUALIS_LITERIS(x.genus, "permissio");
     CREDO_CHORDA_AEQUALIS_LITERIS(x.titulus, "secunda");
     CREDO_CHORDA_AEQUALIS_LITERIS(x.corpus,
         "Claude needs your permission to use Bash");
@@ -143,11 +151,23 @@ _probare_ex_eventu (
     CREDO_VERUM(admonitio_ex_eventu(&e, t, &x, c->piscina));
     CREDO_AEQUALIS_S32((s32)x.gradus, (s32)ADMONITIO_NUNTIUS);
     CREDO_CHORDA_AEQUALIS_LITERIS(x.corpus, "Done: built.");
+    CREDO_CHORDA_AEQUALIS_LITERIS(x.genus, "finis");
 
     e = eventus_fictus("StopFailure", "", "API error: overloaded",
         c->piscina);
     CREDO_VERUM(admonitio_ex_eventu(&e, t, &x, c->piscina));
     CREDO_AEQUALIS_S32((s32)x.gradus, (s32)ADMONITIO_ATTENTIO);
+    CREDO_CHORDA_AEQUALIS_LITERIS(x.genus, "vitium");
+
+    /* input et elicitatio: permissio quoque */
+    e = eventus_fictus("Notification", "agent_needs_input", "input?",
+        c->piscina);
+    CREDO_VERUM(admonitio_ex_eventu(&e, t, &x, c->piscina));
+    CREDO_CHORDA_AEQUALIS_LITERIS(x.genus, "permissio");
+    e = eventus_fictus("Notification", "elicitation_dialog", "choose",
+        c->piscina);
+    CREDO_VERUM(admonitio_ex_eventu(&e, t, &x, c->piscina));
+    CREDO_CHORDA_AEQUALIS_LITERIS(x.genus, "permissio");
 
     e = eventus_fictus("PreToolUse", "Bash", "ls", c->piscina);
     CREDO_FALSUM(admonitio_ex_eventu(&e, t, &x, c->piscina));

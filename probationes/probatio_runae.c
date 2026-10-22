@@ -240,6 +240,34 @@ hic_manens constans LinguaLatitudinis LINGUAE[] = {
     { "la", ZEPHYRUM, ZEPHYRUM, VERUM }
 };
 
+/* littera basis (runae_basis): casus MANU ex UnicodeData (decompositio
+ * canonica iterata usque ad runam primam) */
+nomen structura {
+                   s32  runa;
+                   s32  basis;
+    constans character* causa;
+} CasusBasis;
+
+hic_manens constans CasusBasis CASUS_BASIS[] = {
+    { 0x0061, 0x0061, "a (sine decompositione)" },
+    { 0x00E9, 0x0065, "e acutum" },
+    { 0x00C9, 0x0045, "E acutum (maiuscula manet)" },
+    { 0x014F, 0x006F, "o breve (Kim Tae-gon)" },
+    { 0x0169, 0x0075, "u tildis (Dung)" },
+    { 0x1EA1, 0x0061, "a puncto infra (Lac)" },
+    { 0x01D6, 0x0075, "u diaeresis + macron (iterata)" },
+    { 0x1EC7, 0x0065, "e puncto infra + circumflexo (iterata)" },
+    { 0x212B, 0x0041, "signum Angstrom (singulare -> A ring -> A)" },
+    { 0x2126, 0x03A9, "signum Ohm -> Omega" },
+    { 0x0958, 0x0915, "qa devanagari -> ka (nukta)" },
+    { 0x0142, 0x0142, "l transfixum: sine decompositione" },
+    { 0x00F8, 0x00F8, "o transfixum: sine decompositione" },
+    { 0x0301, 0x0301, "acutum componens ipsum" },
+    { 0xAC00, 0xAC00, "Hangul: decompositio algorithmica, non tabula" },
+    { -I, -I, "invalida" },
+    { 0x110000, 0x110000, "ultra Unicode" }
+};
+
 interior vacuum
 _sectio_prima (
     CredoContextus* c)
@@ -375,6 +403,30 @@ _sectio_quarta (
     }
 }
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    i32 j;
+
+    (vacuum)c;
+    per (j = ZEPHYRUM; j < (i32)(magnitudo(CASUS_BASIS)
+        / magnitudo(CASUS_BASIS[0])); j++)
+    {
+        s32 b = runae_basis(CASUS_BASIS[j].runa);
+
+        si (b != CASUS_BASIS[j].basis)
+        {
+            imprimere("  U+%04X -> U+%04X, exspectata U+%04X (%s)\n",
+                (insignatus integer)CASUS_BASIS[j].runa,
+                (insignatus integer)b,
+                (insignatus integer)CASUS_BASIS[j].basis,
+                CASUS_BASIS[j].causa);
+        }
+        CREDO_VERUM (b == CASUS_BASIS[j].basis);
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "Casus latitudinis (Unicode " RUNAE_VERSIO ")", _sectio_prima,
         NIHIL,
@@ -383,6 +435,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "Aurum oraculi (ICU)", _sectio_tertia, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "Corpus Lapidis", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Littera basis (runae_basis)", _sectio_quinta, NIHIL, NIHIL,
+        NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

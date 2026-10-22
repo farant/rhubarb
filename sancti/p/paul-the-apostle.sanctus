@@ -1,0 +1,50 @@
+<sanctus id="paul-the-apostle" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Paul the Apostle</nomen>
+  <nomen lingua="alia" fontes="ce">Saul</nomen>
+  <ortus locus="Tarsus in Cilicia" fontes="ce"/>
+  <obitus annus="67" circa="verum" locus="Aquae Salviae, near Rome" martyrium="verum" fontes="ce mr2"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="1" dies="25" gradus="festum" fontes="us1"/>
+  <festum calendarium="generale" mensis="6" dies="29" gradus="sollemnitas" fontes="us2"/>
+  <festum calendarium="martyrologium" mensis="1" dies="25" fontes="mr1"/>
+  <festum calendarium="martyrologium" mensis="6" dies="29" fontes="mr2"/>
+  <festum calendarium="martyrologium" mensis="6" dies="30" fontes="mr3"/>
+  <munus fontes="us1 us2 mr3">apostle</munus>
+  <munus fontes="mr2 ce">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce mr1">Paul was born at Tarsus in Cilicia, of a father who was a Roman citizen. Being of the tribe of Benjamin, he was named Saul at his circumcision; he took his Roman name Paul when he began his apostolate among the Gentiles. He learned the trade of making tents and as a young man was educated at Jerusalem in the school of Gamaliel. He first appears taking an active part in the martyrdom of St. Stephen. The Catholic Encyclopedia dates his conversion to about 35; the Martyrology places it in the second year after the Ascension.</paragraphus>
+    <paragraphus fontes="ce mr2">Set apart by the Holy Spirit for the evangelization of the Gentiles, he made three missionary journeys between about 45 and 57, the years of his great epistles. Arrested at Jerusalem in 57, he was sent to Rome and held captive there from 60 to 62. Ancient tradition says he was martyred near Rome at Aquae Salviae towards the end of Nero's reign, in 67 by the Catholic Encyclopedia's reckoning; the Martyrology says he was put to the sword and buried on the Ostian Way. By the most common opinion he died on the same day as Peter, and their solemnity has been kept on 29 June from time immemorial.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Paul" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Paul">
+    <excerptum>Paul himself we know that he was born at Tarsus in Cilicia (Acts, xxi, 39), of a father who was a Roman citizen</excerptum>
+    <excerptum>As he belonged to the tribe of Benjamin he was given at the time of his circumcision the name of Saul</excerptum>
+    <excerptum>It was natural that in inaugurating his apostolate among the Gentiles Paul should have adopted his Roman name</excerptum>
+    <excerptum>young Saul learned how to make tents (Acts, xviii, 3)</excerptum>
+    <excerptum>He was still very young when sent to Jerusalem to receive his education at the school of Gamaliel (Acts, xxii, 3).</excerptum>
+    <excerptum>From that time it is absolutely impossible to follow him until he takes an active part in the martyrdom of St. Stephen</excerptum>
+    <excerptum>Conversion, 35; first visit to Jerusalem, 37; sojourn at Tarsus, 37-43; apostolate at Antioch, 43-44; second visit to Jerusalem, 44 or 45; first mission, 45-49</excerptum>
+    <excerptum>second mission, 50-53; (I and II Thessalonians), 52; fourth visit to Jerusalem, 53; third mission, 53-57; (I and II Corinthians; Galatians), 56; (Romans), 57; fifth visit to Jerusalem, arrest, 57; arrival of Festus, departure for Rome, 59; captivity at Rome, 60-62</excerptum>
+    <excerptum>second period of activity, 62-66; (I Timothy; Titus), second arrest, 66; (II Timothy), martyrdom, 67.</excerptum>
+    <excerptum>Set apart by command of the Holy Ghost for the special evangelization of the Gentiles, Barnabas and Saul embark for Cyprus</excerptum>
+    <excerptum>Ancient tradition makes it possible to establish the following points: (1) Paul suffered martyrdom near Rome at a place called Aquae Salviae (now Tre Fontane), somewhat east of the Ostian Way</excerptum>
+    <excerptum>(2) The martyrdom took place towards the end of the reign of Nero</excerptum>
+    <excerptum>According to the most common opinion, Paul suffered in the same year and on the same day as Peter</excerptum>
+    <excerptum>From time immemorial the solemnity of the Apostles Peter and Paul has been celebrated on 29 June, which is the anniversary either of their death or of the translation of their relics.</excerptum>
+  </fons>
+  <fons id="mr1" opus="mr1916" locus="25 January">
+    <excerptum>conversion of St. Paul the Apostle, which happened the second year after the Ascension of our Lord.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="29 June">
+    <excerptum>AT Rome, the birthday of the holy apostles Peter and Paul, who suffered martyrdom on the same day, under the emperor Nero.</excerptum>
+    <excerptum>The latter was put to the sword and buried on the Ostian way, where he receives similar honors.</excerptum>
+  </fons>
+  <fons id="mr3" opus="mr1916" locus="30 June">
+    <excerptum>commemoration of the holy apostle Paul.</excerptum>
+  </fons>
+  <fons id="us1" opus="usccb2026" locus="25 January">
+    <excerptum>The Conversion of Saint Paul the Apostle</excerptum>
+  </fons>
+  <fons id="us2" opus="usccb2026" locus="29 June">
+    <excerptum>SAINTS PETER AND PAUL, APOSTLES</excerptum>
+  </fons>
+</sanctus>

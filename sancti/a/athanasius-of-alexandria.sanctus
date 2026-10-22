@@ -1,0 +1,45 @@
+<sanctus id="athanasius-of-alexandria" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Athanasius of Alexandria</nomen>
+  <ortus annus="296" circa="verum" locus="Alexandria" fontes="ce"/>
+  <obitus annus="373" mensis="5" dies="2" locus="Alexandria" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="5" dies="2" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="5" dies="2" fontes="mr"/>
+  <munus fontes="mr ce">bishop</munus>
+  <munus fontes="mr ce">doctor of the Church</munus>
+  <munus fontes="ce">confessor</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Athanasius was born, it seems, in Alexandria, most probably between 296 and 298, though 293 is sometimes given; the chronology of his life remains in large part uncertain. As a young deacon he wrote the treatises Contra Gentes and De Incarnatione, and he was the trusted secretary and adviser of Bishop Alexander in the struggle with Arius, playing a notable part at the Council of Nicaea in 325. He is also said to have known the monks of the Egyptian desert and to have written the life of St. Anthony. A few months after the council Alexander died, and Athanasius was chosen to succeed him; he was consecrated in 328.</paragraphus>
+    <paragraphus fontes="ce mr">His forty-six years as bishop were spent defending the faith of Nicaea against the Arian party, emperors and governors. He was exiled to Trier late in Constantine's reign and recalled after the emperor's death, later spent three years at Rome, and later passed six years hidden among the monks of upper Egypt; in 364 he was driven out yet again before Valens allowed his return. He died peacefully in Alexandria on 2 May 373. Called in his lifetime the Father of Orthodoxy, he is honoured as the greatest champion of Catholic belief on the Incarnation and a Doctor of the Church.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="2 May">
+    <excerptum>AT Alexandria, the birthday of St. Athauasius, bishop of that city and Doctor of the Church, most celebrated for sanctity and learning.</excerptum>
+    <excerptum>he courageously defended the Catholic faith, from the reign of Constantine t.o that of Valens, against emperors, governors, and a multitude of Arian bishops</excerptum>
+    <excerptum>he departed for heaven in the forty-sixth year of his priesthood</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Athanasius" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Athanasius">
+    <excerptum>Bishop of Alexandria; Confessor and Doctor of the Church; born c. 296; died 2 May, 373. Athanasius was the greatest champion of Catholic belief on the subject of the Incarnation that the Church has ever known and in his lifetime earned the characteristic title of "Father of Orthodoxy"</excerptum>
+    <excerptum>While the chronology of his career still remains for the most part a hopelessly involved problem</excerptum>
+    <excerptum>He was born, it would seem, in Alexandria, most probably between the years 296 and 298. An earlier date, 293, is sometimes assigned</excerptum>
+    <excerptum>the two treatises "Contra Gentes" and "De Incarnatione", which were admittedly written about the year 318</excerptum>
+    <excerptum>He was scarcely out of his teens, and certainly not in more than deacon's orders, when he published two treatises</excerptum>
+    <excerptum>at the times of his consecration to the episcopate in 328 he had not yet attained the canonical age of thirty years.</excerptum>
+    <excerptum>he seems to have been brought for a while into close relations with some of the solitaries of the Egyptian desert, and in particular with the great St. Anthony, whose life he is said to have written.</excerptum>
+    <excerptum>The conspicuous abilities displayed in the Nicaean debates and the character for courage and sincerity he won on all sides made the youthful cleric henceforth a marked man</excerptum>
+    <excerptum>He was the trusted secretary and advisor of Alexander</excerptum>
+    <excerptum>His opportunity came in the year 325, when the Emperor Constantine, in the hope of putting an end to the scandalous debates that were disturbing the peace of the Church, met the prelates of the entire Catholic world in council at Nicaea.</excerptum>
+    <excerptum>Five months after the close of the council the Primate of Alexandria died; and Athanasius</excerptum>
+    <excerptum>was chosen to succeed him.</excerptum>
+    <excerptum>His writings, composed during the forty-six critical years of his episcopate</excerptum>
+    <excerptum>Athanasius was condemned to go into exile at Treves</excerptum>
+    <excerptum>Arius had died amid startlingly dramatic circumstances at Constantinople in 336; and the death of Constantine himself had followed, on the 22nd of May the year after. Some three weeks later the younger Constantine invited the exiled primate to return to his see</excerptum>
+    <excerptum>Three years were passed at Rome</excerptum>
+    <excerptum>finally withdrew into the deserts of upper Egypt, where he remained for a period of six years, living the life of the monks</excerptum>
+    <excerptum>But in the following February Jovian died; and in October, 364, Athanasius was once more an exile.</excerptum>
+    <excerptum>Valens, who seems to have sincerely dreaded the possible consequences of a popular outbreak, gave order within a very few weeks for the return of Athanasius to his see.</excerptum>
+    <excerptum>died not by violence or in hiding, but peacefully in his own bed, surrounded by his clergy and mourned by the faithful of the see he had served so well.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="2 May">
+    <excerptum>Saint Athanasius, Bishop and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

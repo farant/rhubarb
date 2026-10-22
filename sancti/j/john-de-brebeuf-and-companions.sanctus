@@ -1,0 +1,67 @@
+<sanctus id="john-de-brebeuf-and-companions" versio="1" genus="coetus" status="sanctus">
+  <nomen lingua="en" principale="verum">John de Brébeuf and Companions</nomen>
+  <nomen lingua="en" fontes="hur">North American Martyrs</nomen>
+  <nomen lingua="it" fontes="sj">Martiri dell' America Settentrionale</nomen>
+  <canonizatio modus="formalis" annus="1930" mensis="6" dies="29" papa="Pius XI" fontes="sj"/>
+  <festum calendarium="usa" mensis="10" dies="19" gradus="memoria" fontes="us"/>
+  <munus fontes="us sj">martyr</munus>
+  <munus fontes="us hur">priest</munus>
+  <munus fontes="hur">missionary</munus>
+  <patrocinium fontes="sj">Canada</patrocinium>
+  <socius fontes="hur sj ceb">Jean de Brébeuf</socius>
+  <socius fontes="hur sj cej">Isaac Jogues</socius>
+  <socius fontes="hur sj">Gabriel Lalemant</socius>
+  <socius fontes="hur sj">Antoine Daniel</socius>
+  <socius fontes="hur sj">Charles Garnier</socius>
+  <socius fontes="hur sj">Noël Chabanel</socius>
+  <socius fontes="hur sj">René Goupil</socius>
+  <socius fontes="hur sj">Jean de la Lande</socius>
+  <descriptio>
+    <paragraphus fontes="hur sj pxii ceb">The eight North American Martyrs were French missionaries killed between 1642 and 1649: six Jesuit priests, Jean de Brébeuf, Isaac Jogues, Gabriel Lalemant, Antoine Daniel, Charles Garnier and Noël Chabanel, and two lay helpers of the Jesuits, René Goupil and Jean de la Lande. Three died at Ossernenon, now Auriesville near Albany in New York; five died in the Huron country north of Toronto. Pius XI canonized them on 29 June 1930, and in 1940 Pius XII declared them secondary patrons of Canada. Pius XII, speaking of Jogues and his two lay companions, said they were not the only missionaries martyred in America but the first raised to the altars.</paragraphus>
+    <paragraphus fontes="ceb">Brébeuf, born in Normandy in 1593, reached Quebec in 1625 and spent most of the rest of his life among the Hurons near Georgian Bay. On 16 March 1649 the Iroquois seized him and Lalemant, who had refused to abandon their people, and tortured both to death at St. Ignace; through it all Brébeuf never uttered a groan.</paragraphus>
+    <paragraphus fontes="cej sj">Jogues, born at Orléans in 1607, was captured by the Iroquois in 1642 and held as a slave at Ossernenon for thirteen months, where Goupil was killed; he escaped through New Amsterdam, the first Catholic priest on Manhattan Island, to France, and returned to Canada. Going back to the Mohawks in 1646, he was blamed for sickness and a failed harvest and was killed with a tomahawk on 18 October 1646; Jean de la Lande died the next day.</paragraphus>
+  </descriptio>
+  <fons id="hur" opus="sedes" locus="John Paul II, Liturgy of the Word at the Martyrs' Shrine in Huronia, 15 September 1984" url="https://www.vatican.va/content/john-paul-ii/en/homilies/1984/documents/hf_jp-ii_hom_19840915_santuario-huronia.html">
+    <excerptum>The North American Martyrs, then, gave up their lives for the sake of the Gospel - in order to bring the faith to the native people whom they served.</excerptum>
+    <excerptum>Six of them were Jesuit priests from France: Jean de Brébeuf, Isaac Jogues, Gabriel Lalemant, Antoine Daniel, Charles Garnier and Noël Chabanel.</excerptum>
+    <excerptum>Two lay brothers were part of the missionary group: René Goupil and Jean de la Lande.</excerptum>
+  </fons>
+  <fons id="sj" opus="sedes" locus="Martirologio della Compagnia di Gesù: Martiri dell' America Settentrionale (Pontificia Accademia Cultorum Martyrum)" url="https://www.vatican.va/roman_curia/pontifical_academies/cult-martyrum/martiri/002.html">
+    <excerptum>Martiri dell' America Settentrionale In questa memoria (19 ottobre) si celebrano otto martiri francesi della Compagnia di Gesu'</excerptum>
+    <excerptum>Nel secolo 17º, otto missionari francesi hanno subito il martirio in Canada: sei Gesuiti e due «cooperatori»</excerptum>
+    <excerptum>Tre sono stati uccisi a Ossenon, oggi Auriesville, vicino ad Albany, N. Y.; cinque in Uronia, a 200 km al nord di Toronto.</excerptum>
+    <excerptum>Renato Goupil venne finito a Ossenon il 29 Settembre 1642.</excerptum>
+    <excerptum>Jogues viene ucciso con un colpo alla nuca il 18 Ottobre 1646 e Giovanni de la Lande subisce la stessa sorte il giorno seguente.</excerptum>
+    <excerptum>I Martiri del Canada sono stati canonizzati il 29 giugno 1930 dal Papa Pio XI. Nel 1940 il Papa Pio XII li ha dichiarati secondi patroni del Canada.</excerptum>
+  </fons>
+  <fons id="pxii" opus="sedes" locus="Pius XII, radio message for the third centenary of the North American martyrs, 24 November 1946" url="https://www.vatican.va/content/pius-xii/en/speeches/1946/documents/hf_p-xii_spe_19461124_centenario-martiri-nord-america.html">
+    <excerptum>They were not priests, John Lalande and René Goupil; they were of the laity, one a doctor, the other a carpenter</excerptum>
+    <excerptum>He shared that glory with his two heroic, ever-loyal companions.</excerptum>
+    <excerptum>They were not the only missionaries martyred for the faith in America; but they are the first raised to the altars</excerptum>
+  </fons>
+  <fons id="ceb" opus="ce1913" locus="Jean de Brébeuf" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Jean_de_Brébeuf">
+    <excerptum>Jesuit missionary, born at Condé-sur-Vire in Normandy, 25 March, 1593; died in Canada, near Georgian Bay, 16 March, 1649.</excerptum>
+    <excerptum>On 19 June, 1625, he arrived in Quebec</excerptum>
+    <excerptum>they established their first mission near Georgian Bay, at Ihonatiria</excerptum>
+    <excerptum>The next sixteen years of uninterrupted labours among these savages were a continual series of privations and sufferings</excerptum>
+    <excerptum>They reached St. Mary's on the Wye, which was the central station of the Huron Mission.</excerptum>
+    <excerptum>On 16 March, 1649, the enemy attacked St. Louis and seized Brébeuf and Lallemant, who could have escaped but rejected the offer made to them and remained with their flock. The two priests were dragged to St. Ignace</excerptum>
+    <excerptum>cruelly beaten with clubs, and then tied to posts to be burned to death.</excerptum>
+    <excerptum>Through all the torture he never uttered a groan.</excerptum>
+    <excerptum>The remains of the victims were gathered up subsequently</excerptum>
+  </fons>
+  <fons id="cej" opus="ce1913" locus="St. Isaac Jogues" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Isaac_Jogues">
+    <excerptum>French missionary, born at Orléans, France, 10 January, 1607; martyred at Ossernenon, in the present State of New York, 18 October, 1646. He was the first Catholic priest who ever came to Manhattan Island (New York).</excerptum>
+    <excerptum>He was taken prisoner on 3 August, 1642, and after being cruelly tortured was carried to the Indian village of Ossernenon</excerptum>
+    <excerptum>There he remained for thirteen months in slavery</excerptum>
+    <excerptum>induced him to take refuge in a sailing vessel which carried him to New Amsterdam (New York).</excerptum>
+    <excerptum>landed Christmas morning, 1643, on the coast of Brittany, in a state of absolute destitution.</excerptum>
+    <excerptum>In early spring of 1644 he returned to Canada, and in 1646 was sent to negotiate peace with the Iroquois.</excerptum>
+    <excerptum>On 27 September he began his third and last journey to the Mohawk.</excerptum>
+    <excerptum>In the interim sickness had broken out in the tribe and a blight had fallen on the crops. This double calamity was ascribed to Jogues</excerptum>
+    <excerptum>On 18 October, 1646, when entering a cabin he was struck with a tomahawk and afterwards decapitated.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="19 October">
+    <excerptum>Saints John de Brébeuf and Isaac Jogues, Priests, and Companions, Martyrs</excerptum>
+  </fons>
+</sanctus>

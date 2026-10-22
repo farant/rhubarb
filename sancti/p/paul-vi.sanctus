@@ -1,0 +1,35 @@
+<sanctus id="paul-vi" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Paul VI</nomen>
+  <nomen lingua="it" fontes="bio">Giovanni Battista Montini</nomen>
+  <ortus annus="1897" mensis="9" dies="26" locus="Concesio, Brescia" fontes="bio"/>
+  <obitus annus="1978" mensis="8" dies="6" locus="Castel Gandolfo" fontes="bio"/>
+  <beatificatio annus="2014" mensis="10" dies="19" papa="Francis" fontes="bio"/>
+  <canonizatio modus="formalis" annus="2018" mensis="10" dies="14" papa="Francis" fontes="bio hom"/>
+  <festum calendarium="generale" mensis="5" dies="29" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us bio">pope</munus>
+  <munus fontes="bio">priest</munus>
+  <munus fontes="bio">archbishop of Milan</munus>
+  <descriptio>
+    <paragraphus fontes="bio">Giovanni Battista Montini, the second child of Giorgio and Giuditta Alghisi, was born at Concesio near Brescia on 26 September 1897 and ordained a priest on 19 May 1920. After a posting to the nunciature in Warsaw he served for many years in the Vatican Secretariat of State, where during the Second World War he worked to aid refugees and Jews. In 1954 he became Archbishop of Milan.</paragraphus>
+    <paragraphus fontes="bio hom">Elected pope on 21 June 1963, he took the name Paul VI and brought three periods of the Second Vatican Council to their conclusion. He began the practice of papal apostolic journeys with a visit to the Holy Land, wrote his first encyclical, Ecclesiam Suam, and later Populorum Progressio on the development of peoples, and instituted the World Day of Peace. He died at Castel Gandolfo on 6 August 1978. Pope Francis beatified him in 2014 and canonized him on 14 October 2018, calling him the Council's wise helmsman.</paragraphus>
+  </descriptio>
+  <fons id="bio" opus="sedes" locus="Biography of Paul VI" url="https://www.vatican.va/content/paul-vi/en/biografia/documents/hf_p-vi_spe_20190722_biografia.html">
+    <excerptum>The second child of Giorgio and Giuditta Alghisi, Giovanni Battista Montini was born in Concesio, Brescia, on 26 September 1897. He was ordained to the priesthood on 19 May 1920.</excerptum>
+    <excerptum>In 1923 he was appointed attaché at the Apostolic Nunciature in Warsaw and a year later returned and began serving in the Secretariat of State in the Vatican.</excerptum>
+    <excerptum>During World War II, he engaged in aiding refugees and Jews, also overseeing the Vatican Information Office.</excerptum>
+    <excerptum>In November 1952 he was appointed Pro-Secretary of State for General Affairs and two years later he was appointed Archbishop of Milan.</excerptum>
+    <excerptum>On 21 June 1963 he was elected pope and took the name of Paul VI. Amid numerous challenges, he brought three periods of the Second Vatican Council to a successful conclusion</excerptum>
+    <excerptum>Paul VI began the practice of Apostolic Journeys beginning with the Holy Land, where his historic meeting with Athenagoras took place. His first encyclical, Ecclesiam Suam (1964)</excerptum>
+    <excerptum>His other writings, include Populorum Progressio on the development of peoples. He also provided masterful teaching on the question of peace, also instituting the World Day of Peace.</excerptum>
+    <excerptum>After a brief illness, he died on 6 August 1978 in Castel Gandolfo. Pope Francis beatified him on 19 October 2014. He was canonised on 14 October 2018 by Pope Francis.</excerptum>
+  </fons>
+  <fons id="hom" opus="sedes" locus="Homily of Pope Francis, Holy Mass and Canonizations, 14 October 2018" url="https://www.vatican.va/content/francesco/en/homilies/2018/documents/papa-francesco_20181014_omelia-canonizzazione.html">
+    <excerptum>HOLY MASS AND CANONIZATION OF THE BLESSEDS: PAOLO VI, OSCAR ROMERO, FRANCESCO SPINELLI</excerptum>
+    <excerptum>St Peter's Square Sunday, 14 October 2018</excerptum>
+    <excerptum>HOMILY OF HIS HOLINESS POPE FRANCIS</excerptum>
+    <excerptum>Paul VI bore witness in a passionate way to the beauty and the joy of following Christ totally. Today he still urges us, together with the Council whose wise helmsman he was, to live our common vocation: the universal call to holiness.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="29 May">
+    <excerptum>Saint Paul VI, Pope</excerptum>
+  </fons>
+</sanctus>

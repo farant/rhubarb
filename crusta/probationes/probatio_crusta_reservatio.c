@@ -53,6 +53,18 @@
 /* mala extglob MENSURATA (plantatio: numerus mutatus -> rubet) */
 #define MALA_GLOBI_EXTENSI ((i32)II)
 
+/* FIXURA SUITAE: internamentum, crusta.canon, lexicon, consilium
+ * arboris (ratum per monstratorem tenet - ergo in fixura ipsa) et
+ * sigillum semel facta; sectiones LEGUNT (internatio in internamentum
+ * fixurae sola licet). */
+nomen structura {
+      InternamentumChorda* intern;
+                    Canon* canon;
+      MateriaLexiconRatum  ratum;
+    MateriaArborConsilium  consilium;
+                   chorda  sigillum;
+} FixuraCanonis;
+
 interior character*
 _plagulam_legere (
                Piscina* piscina,
@@ -244,7 +256,7 @@ interior s32
 _canone_iudicare (
                 Piscina* piscina,
     InternamentumChorda* intern,
-                  Canon* canon,
+         constans Canon* canon,
                  chorda  textus,
      constans character* nuntius,
      constans character* detail,
@@ -292,48 +304,39 @@ _canone_iudicare (
     redde (s32)n;
 }
 
-s32
-principale (vacuum)
+interior constans character*
+_radix_viae (vacuum)
 {
-                 Piscina* piscina;
-     InternamentumChorda* intern;
-      constans character* radix_viae;
-                   Canon* canon;
-     MateriaLexiconRatum  ratum;
-      MateriaLexIudicium  iudicium;
-   MateriaArborConsilium  consilium;
-      MateriaArborVitium  vitium;
-                  chorda  sigillum;
-           CrustaParsura  r;
-           MateriaNodus*  p;
-           MateriaNodus*  n;
-                     b32  praeteritus;
+    constans character* radix_viae = getenv("RHUBARB_RADIX");
 
-    piscina = piscina_generare_dynamicum("probatio_crusta_reservatio",
-        1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    redde radix_viae != NIHIL ? radix_viae : ".";
+}
 
-    radix_viae = getenv("RHUBARB_RADIX");
-    si (radix_viae == NIHIL)
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+            FixuraCanonis* fx;
+                  Piscina* piscina = c->piscina;
+       MateriaLexIudicium  iudicium;
+
+    fx = (FixuraCanonis*)piscina_allocare(piscina,
+        magnitudo(FixuraCanonis));
+    si (fx == NIHIL)
     {
-        radix_viae = ".";
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    si (!materia_lexicon_ratum_facere(&ratum, &CRUSTA_LEXICON,
+    fx->intern = internamentum_creare(piscina);
+    si (!materia_lexicon_ratum_facere(&fx->ratum, &CRUSTA_LEXICON,
             &iudicium))
     {
         imprimere("LEXICON CRUSTAE RECUSATUM\n");
-        redde I;
+        redde;
     }
-    materia_arbor_consilium_nudum(&consilium, &CRUSTA_REGISTRUM, &ratum,
-        "crusta");
-    consilium.forma.mensura_caudae = (i32)magnitudo(CrustaCauda);
-    sigillum = materia_arbor_sigillum(piscina, &CRUSTA_REGISTRUM);
+    materia_arbor_consilium_nudum(&fx->consilium, &CRUSTA_REGISTRUM,
+        &fx->ratum, "crusta");
+    fx->consilium.forma.mensura_caudae = (i32)magnitudo(CrustaCauda);
+    fx->sigillum = materia_arbor_sigillum(piscina, &CRUSTA_REGISTRUM);
 
     {
         character* textus;
@@ -341,29 +344,39 @@ principale (vacuum)
            chorda  fons;
            chorda  causa;
 
-        textus = _plagulam_legere(piscina, radix_viae,
+        textus = _plagulam_legere(piscina, _radix_viae(),
             "crusta/grammatica/crusta.canon", &mensura);
         CREDO_NON_NIHIL (textus);
         fons.datum     = (i8*)textus;
         fons.mensura   = mensura;
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
-        canon = textus ? canon_legere(fons, piscina, intern, &causa)
-                       : NIHIL;
-        CREDO_NON_NIHIL (canon);
-        si (canon == NIHIL)
+        fx->canon = textus ? canon_legere(fons, piscina, fx->intern,
+                                 &causa)
+                           : NIHIL;
+        CREDO_NON_NIHIL (fx->canon);
+        si (fx->canon == NIHIL)
         {
-            credo_imprimere_compendium();
-            redde I;
+            redde;
         }
     }
+    c->datum = fx;
+}
 
 
-    /* ==================================================
-     * DEVIATIO: extglob - optione absente semper
-     * ================================================== */
+/* ==================================================
+ * DEVIATIO: extglob - optione absente semper
+ * ================================================== */
 
-    imprimere("\n--- Deviatio: extglob ---\n");
+interior vacuum
+_globum_probare (
+    CredoContextus* c)
+{
+          Piscina* piscina = c->piscina;
+    CrustaParsura  r;
+     MateriaNodus* p;
+     MateriaNodus* n;
+
     p = _casus(piscina, "shopt -s extglob; echo @(a|b)", &r);
     imprimere("  mala %d (pinna %d)\n", (integer)r.mala,
         (integer)MALA_GLOBI_EXTENSI);
@@ -383,13 +396,22 @@ principale (vacuum)
         CRUSTA_GENUS_PIPA));
     CREDO_VERUM (_malum_fert(_liber(p, (i32)CRUSTA_PROGRAMMA_LIBERI, V),
         ZEPHYRUM, ")"));
+}
 
 
-    /* ==================================================
-     * DEVIATIO: alias - numquam expansum
-     * ================================================== */
+/* ==================================================
+ * DEVIATIO: alias - numquam expansum
+ * ================================================== */
 
-    imprimere("\n--- Deviatio: alias ---\n");
+interior vacuum
+_alias_probare (
+    CredoContextus* c)
+{
+          Piscina* piscina = c->piscina;
+    CrustaParsura  r;
+     MateriaNodus* p;
+     MateriaNodus* n;
+
     p = _casus(piscina, "alias x='if true; then'; x echo hi; fi", &r);
     CREDO_AEQUALIS_I32 (r.mala, (i32)I);
     n = _liber(p, (i32)CRUSTA_PROGRAMMA_LIBERI, II);
@@ -398,13 +420,22 @@ principale (vacuum)
         "x"));
     CREDO_VERUM (_malum_fert(_liber(p, (i32)CRUSTA_PROGRAMMA_LIBERI,
         IV), ZEPHYRUM, "fi"));
+}
 
 
-    /* ==================================================
-     * DEVIATIO: eval - argumentum opacum
-     * ================================================== */
+/* ==================================================
+ * DEVIATIO: eval - argumentum opacum
+ * ================================================== */
 
-    imprimere("\n--- Deviatio: eval ---\n");
+interior vacuum
+_eval_probare (
+    CredoContextus* c)
+{
+          Piscina* piscina = c->piscina;
+    CrustaParsura  r;
+     MateriaNodus* p;
+     MateriaNodus* n;
+
     p = _casus(piscina, "eval 'if'", &r);
     CREDO_AEQUALIS_I32 (r.mala, ZEPHYRUM);
     CREDO_VERUM (r.sana);
@@ -414,13 +445,21 @@ principale (vacuum)
     CREDO_VERUM (_genus(_liber(n, (i32)CRUSTA_VERBUM_PARTES, ZEPHYRUM),
         CRUSTA_GENUS_PARS_SIMPLEX));
     CREDO_VERUM (_staticum_est(piscina, n, "if"));
+}
 
 
-    /* ==================================================
-     * DEVIATIO: set -o posix, shopt - grammatica non mutatur
-     * ================================================== */
+/* ==================================================
+ * DEVIATIO: set -o posix, shopt - grammatica non mutatur
+ * ================================================== */
 
-    imprimere("\n--- Deviatio: posix et shopt ---\n");
+interior vacuum
+_posix_probare (
+    CredoContextus* c)
+{
+          Piscina* piscina = c->piscina;
+    CrustaParsura  r;
+     MateriaNodus* p;
+
     p = _casus(piscina,
         "set -o posix; shopt -s anything; if a; then b; fi", &r);
     CREDO_AEQUALIS_I32 (r.mala, ZEPHYRUM);
@@ -431,13 +470,22 @@ principale (vacuum)
         CRUSTA_GENUS_IMPERIUM));
     CREDO_VERUM (_genus(_liber(p, (i32)CRUSTA_PROGRAMMA_LIBERI, IV),
         CRUSTA_GENUS_CONDITIO));
+}
 
 
-    /* ==================================================
-     * DEVIATIO: $"..." et $'...' - numquam versa, decocta petitione
-     * ================================================== */
+/* ==================================================
+ * DEVIATIO: $"..." et $'...' - numquam versa, decocta petitione
+ * ================================================== */
 
-    imprimere("\n--- Deviatio: $\"...\" et $'...' ---\n");
+interior vacuum
+_versa_probare (
+    CredoContextus* c)
+{
+          Piscina* piscina = c->piscina;
+    CrustaParsura  r;
+     MateriaNodus* p;
+     MateriaNodus* n;
+
     p = _casus(piscina, "echo $\"x\" $'\\x41'", &r);
     CREDO_VERUM (r.sana);
     n = _liber(_liber(p, (i32)CRUSTA_PROGRAMMA_LIBERI, ZEPHYRUM),
@@ -450,19 +498,33 @@ principale (vacuum)
     CREDO_VERUM (_genus(_liber(n, (i32)CRUSTA_VERBUM_PARTES, ZEPHYRUM),
         CRUSTA_GENUS_PARS_EFFUGIA));
     CREDO_VERUM (_staticum_est(piscina, n, "A"));
+}
 
 
-    /* ==================================================
-     * LECTOR: testis positivus
-     * ================================================== */
+/* ==================================================
+ * LECTOR: testis positivus
+ * ================================================== */
 
-    imprimere("\n--- Testis positivus: documentum purum ---\n");
+interior vacuum
+_purum_probare (
+    CredoContextus* c)
+{
+                         Piscina* piscina = c->piscina;
+          constans FixuraCanonis* fx =
+              (constans FixuraCanonis*)c->suita;
+               MateriaArborVitium vitium;
+
+    si (fx == NIHIL)
     {
-        chorda doc = _documentum_struere(piscina, sigillum, "", "");
+        redde;
+    }
+    {
+        chorda doc = _documentum_struere(piscina, fx->sigillum, "", "");
         MateriaNodus* lecta;
         i32 congruentes;
 
-        lecta = materia_arbor_legere(piscina, NIHIL, doc, &consilium,
+        lecta = materia_arbor_legere(piscina, NIHIL, doc,
+            &fx->consilium,
             &vitium);
         CREDO_NON_NIHIL (lecta);
         CREDO_NIHIL (vitium.causa);
@@ -476,23 +538,38 @@ principale (vacuum)
             CREDO_VERUM (emissa.successus && emissa.textus.mensura == I
                 && emissa.textus.datum[ZEPHYRUM] == 'a');
         }
-        CREDO_AEQUALIS_S32 (_canone_iudicare(piscina, intern, canon,
+        CREDO_AEQUALIS_S32 (_canone_iudicare(piscina, fx->intern,
+            fx->canon,
             doc,
             NIHIL, "", &congruentes), (s32)ZEPHYRUM);
     }
+}
 
 
-    /* ==================================================
-     * LECTOR (a): elementum ignotum sub verbo - recusatum
-     * ================================================== */
+/* ==================================================
+ * LECTOR (a): elementum ignotum sub verbo - recusatum
+ * ================================================== */
 
-    imprimere("\n--- (a) <derivatum/> sub verbo ---\n");
+interior vacuum
+_ignotum_probare (
+    CredoContextus* c)
+{
+                         Piscina* piscina = c->piscina;
+          constans FixuraCanonis* fx =
+              (constans FixuraCanonis*)c->suita;
+               MateriaArborVitium vitium;
+
+    si (fx == NIHIL)
     {
-        chorda doc = _documentum_struere(piscina, sigillum, "",
+        redde;
+    }
+    {
+        chorda doc = _documentum_struere(piscina, fx->sigillum, "",
             "            <derivatum/>\n");
         MateriaNodus* lecta;
 
-        lecta = materia_arbor_legere(piscina, NIHIL, doc, &consilium,
+        lecta = materia_arbor_legere(piscina, NIHIL, doc,
+            &fx->consilium,
             &vitium);
         imprimere("  %s\n", vitium.causa ? vitium.causa : "(accepta)");
         CREDO_NIHIL (lecta);
@@ -503,13 +580,26 @@ principale (vacuum)
                 == ZEPHYRUM);
         }
     }
+}
 
 
-    /* ==================================================
-     * LECTOR (b)/(c): attributa ignota - lector accipit, canon iudicat
-     * ================================================== */
+/* ==================================================
+ * LECTOR (b)/(c): attributa ignota - lector accipit, canon iudicat
+ * ================================================== */
 
-    imprimere("\n--- (b) derivatum=\"x\" et (c) id in verbo ---\n");
+interior vacuum
+_attributa_probare (
+    CredoContextus* c)
+{
+                         Piscina* piscina = c->piscina;
+          constans FixuraCanonis* fx =
+              (constans FixuraCanonis*)c->suita;
+               MateriaArborVitium vitium;
+
+    si (fx == NIHIL)
+    {
+        redde;
+    }
     {
         hic_manens constans character* ATTRIBUTA[] = {
             " derivatum=\"x\"",
@@ -523,21 +613,22 @@ principale (vacuum)
 
         per (k = ZEPHYRUM; k < II; k++)
         {
-            chorda doc = _documentum_struere(piscina, sigillum,
+            chorda doc = _documentum_struere(piscina, fx->sigillum,
                 ATTRIBUTA[k], "");
             MateriaNodus* lecta;
             s32 vitia;
             i32 congruentes;
 
             lecta = materia_arbor_legere(piscina, NIHIL, doc,
-                &consilium,
+                &fx->consilium,
                 &vitium);
             /* PINNA: lector attributa ignota IGNORAT (mensuratum). Cum
              * materia census attributorum addat, haec rubet et ordo in
              * recusationem lectoris promovetur. */
             CREDO_NON_NIHIL (lecta);
             CREDO_NIHIL (vitium.causa);
-            vitia = _canone_iudicare(piscina, intern, canon, doc,
+            vitia = _canone_iudicare(piscina, fx->intern, fx->canon,
+                doc,
                 "attributum extra canonem", TITULI[k], &congruentes);
             imprimere("  %s: lector accipit, canon vitia %d\n",
                 TITULI[k], (integer)vitia);
@@ -545,10 +636,29 @@ principale (vacuum)
             CREDO_AEQUALIS_I32 (congruentes, (i32)I);
         }
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Deviatio: extglob",
+        _globum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Deviatio: alias", _alias_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Deviatio: eval", _eval_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Deviatio: posix et shopt",
+        _posix_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Deviatio: $\"...\" et $'...'",
+        _versa_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Testis positivus: documentum purum",
+        _purum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(a) <derivatum/> sub verbo",
+        _ignotum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(b) derivatum=\"x\" et (c) id in verbo",
+        _attributa_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("crusta_reservatio", SECTIONES,
+        _suitam_parare, NIHIL);
 }

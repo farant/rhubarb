@@ -554,8 +554,38 @@ _tok_legere_valor_attributi (
     redde result;
 }
 
+/* ATTRIBUTA PIGRA (2026-10-22): Xar attributorum nascitur cum
+ * attributo PRIMO, non cum elemento. NIHIL = nulla attributa -
+ * lectores id iam ferunt (xar_numerus(NIHIL) = 0, et nodi textus
+ * duplicataque semper NIHIL habuerunt). Proiectio hilarii: LXXIX
+ * centesimae Xar attributorum vacuae erant, LXIV octeti quisque
+ * (materia/fontes/materia_arbor.worklog.md 2026-10-22).
+ *
+ * _attributum_novum: Xar si deest creat, deinde cellam addit. */
+interior StmlAttributum*
+_attributum_novum (
+        Xar** attributa,
+    Piscina*  piscina)
+{
+    si (*attributa == NIHIL)
+    {
+        si (piscina == NIHIL)
+        {
+            redde NIHIL;
+        }
+        *attributa = xar_creare(piscina, magnitudo(StmlAttributum));
+        si (*attributa == NIHIL)
+        {
+            redde NIHIL;
+        }
+    }
+    redde (StmlAttributum*)xar_addere(*attributa);
+}
+
 /* Parse attributes into Xar of StmlAttributum
  * Handles boolean attributes (no = sign)
+ *
+ * NIHIL si tagum nulla attributa fert (vide ATTRIBUTA PIGRA supra).
  *
  * TRIVIA INTRA TAGUM (§1.6): spatium ANTE quodque attributum
  * notatur (attr->spatia_ante; spatium unicum canonicum = NIHIL);
@@ -581,11 +611,7 @@ _tok_legere_attributa (
     cauda_spatii->datum    = NIHIL;
     cauda_spatii->mensura  = ZEPHYRUM;
 
-    attributa = xar_creare(ctx->piscina, magnitudo(StmlAttributum));
-    si (!attributa)
-    {
-        redde NIHIL;
-    }
+    attributa = NIHIL;
 
     dum (ctx->positus < ctx->input.mensura)
     {
@@ -659,7 +685,7 @@ _tok_legere_attributa (
             valor_ptr = chorda_internare_ex_literis(ctx->intern,
                 "true");
 
-            attr = xar_addere(attributa);
+            attr = _attributum_novum(&attributa, ctx->piscina);
             si (attr)
             {
                 attr->titulus      = titulus_ptr;
@@ -679,7 +705,7 @@ _tok_legere_attributa (
         titulus_ptr  = chorda_internare(ctx->intern, titulus_ch);
         valor_ptr    = chorda_internare(ctx->intern, valor_ch);
 
-        attr = xar_addere(attributa);
+        attr = _attributum_novum(&attributa, ctx->piscina);
         si (attr)
         {
             attr->titulus      = titulus_ptr;
@@ -893,6 +919,32 @@ _tok_legere_doctype (
 }
 
 /* Parse a tag <...> */
+/* Parentheses capturae ultra STML_CAPTIO_NUMERUS_MAXIMUS: lexema
+ * ERRATUM (parsator STML_ERROR_SYNTAXIS ponit, ut titulo male
+ * incipienti). VERUM si nimiae - vocans 'token' statim reddit. */
+interior b32
+_tok_captio_nimia (
+     StmlToken* token,
+           i32  captio_numerus,
+           i32  initium,
+           i32  finis,
+           i32  linea,
+           i32  columna)
+{
+    si (captio_numerus <= STML_CAPTIO_NUMERUS_MAXIMUS)
+    {
+        redde FALSUM;
+    }
+    token->genus            = STML_TOKEN_ERRATUM;
+    token->valor.datum      = NIHIL;
+    token->valor.mensura    = ZEPHYRUM;
+    token->positus_initium  = initium;
+    token->positus_finis    = finis;
+    token->linea            = linea;
+    token->columna          = columna;
+    redde VERUM;
+}
+
 interior StmlToken
 _tok_legere_tag (
     StmlTokenContext* ctx)
@@ -967,6 +1019,11 @@ _tok_legere_tag (
         {
             captio_numerus++;
             _tok_progredi(ctx, I);
+        }
+        si (_tok_captio_nimia(&token, captio_numerus, initium,
+                ctx->positus, initium_linea, initium_columna))
+        {
+            redde token;
         }
 
         _tok_praeterire_spatium(ctx);
@@ -1141,6 +1198,11 @@ _tok_legere_tag (
         captio_numerus++;
         _tok_progredi(ctx, I);
     }
+    si (_tok_captio_nimia(&token, captio_numerus, initium,
+            ctx->positus, initium_linea, initium_columna))
+    {
+        redde token;
+    }
 
     /* Skip whitespace after capture parens (spatium '( >' non
      * modellatur - exceptio angusta nominata, §1.6) */
@@ -1280,6 +1342,11 @@ _tok_legere_fragmentum (
     {
         captio_numerus++;
         _tok_progredi(ctx, I);
+    }
+    si (_tok_captio_nimia(&token, captio_numerus, initium,
+            ctx->positus, initium_linea, initium_columna))
+    {
+        redde token;
     }
     _tok_praeterire_spatium(ctx);
 
@@ -1570,6 +1637,11 @@ _tok_legere_captio_nuda (
     {
         captio_numerus++;
         _tok_progredi(ctx, I);
+    }
+    si (_tok_captio_nimia(&token, captio_numerus, initium,
+            ctx->positus, initium_linea, initium_columna))
+    {
+        redde token;
     }
     _tok_praeterire_spatium(ctx);
 
@@ -2201,7 +2273,7 @@ _parser_creare_nodus (
         redde NIHIL;
     }
 
-    nodus->genus             = genus;
+    nodus->genus             = (i8)genus;
     nodus->titulus           = NIHIL;
     nodus->valor             = NIHIL;
     nodus->attributa         = NIHIL;
@@ -2329,7 +2401,7 @@ _parser_legere_elementum (
     titulus_ptr        = nodus->titulus;
 
     nodus->attributa   = ctx->current.attributa;
-    nodus->multilinea  = ctx->current.multilinea;
+    nodus->multilinea  = (i8)(ctx->current.multilinea != FALSUM);
     si (ctx->current.spatia_prae_finem.mensura > ZEPHYRUM)
     {
         nodus->spatia_intra_tagum = chorda_internare(ctx->intern,
@@ -2443,13 +2515,13 @@ _parser_legere_elementum_crudus (
     nodus->titulus     = titulus_ptr;
     nodus->attributa   = ctx->current.attributa;
     nodus->crudus      = VERUM;
-    nodus->multilinea  = ctx->current.multilinea;
+    nodus->multilinea  = (i8)(ctx->current.multilinea != FALSUM);
     si (ctx->current.spatia_prae_finem.mensura > ZEPHYRUM)
     {
         nodus->spatia_intra_tagum = chorda_internare(ctx->intern,
             ctx->current.spatia_prae_finem);
     }
-    nodus->captio_numerus  = ctx->current.captio_numerus;
+    nodus->captio_numerus  = (i8)ctx->current.captio_numerus;
 
     si (ctx->current.captio_numerus > ZEPHYRUM)
     {
@@ -2552,7 +2624,7 @@ _parser_legere_auto_claudere (
 
     _titulum_ex_tokeno_ponere(ctx, nodus, ctx->current.valor);
     nodus->attributa   = ctx->current.attributa;
-    nodus->multilinea  = ctx->current.multilinea;
+    nodus->multilinea  = (i8)(ctx->current.multilinea != FALSUM);
     si (ctx->current.spatia_prae_finem.mensura > ZEPHYRUM)
     {
         nodus->spatia_intra_tagum = chorda_internare(ctx->intern,
@@ -2596,7 +2668,7 @@ _parser_legere_captio_ante (
             ctx->current.spatia_prae_finem);
     }
     nodus->captio_directio = STML_CAPTIO_ANTE;
-    nodus->captio_numerus = ctx->current.captio_numerus;
+    nodus->captio_numerus = (i8)ctx->current.captio_numerus;
     nodus->liberi = xar_creare(ctx->piscina, magnitudo(StmlNodus*));
 
     _parser_progredi(ctx);
@@ -2622,7 +2694,7 @@ _parser_legere_captio_retro (
     nodus->titulus = titulus_ptr;
     nodus->attributa = ctx->current.attributa;
     nodus->captio_directio = STML_CAPTIO_RETRO;
-    nodus->captio_numerus = ctx->current.captio_numerus;
+    nodus->captio_numerus = (i8)ctx->current.captio_numerus;
     nodus->liberi = xar_creare(ctx->piscina, magnitudo(StmlNodus*));
 
     _parser_progredi(ctx);
@@ -3987,7 +4059,7 @@ _parser_legere_fragmentum_auto (
 
     /* Campi capturae (<# (> / <#id (>): receptaculum liberis
      * necessarium - _processare_captiones fratres huc movet */
-    nodus->captio_numerus = ctx->current.captio_numerus;
+    nodus->captio_numerus = (i8)ctx->current.captio_numerus;
     si (ctx->current.captio_numerus > ZEPHYRUM)
     {
         nodus->captio_directio = STML_CAPTIO_ANTE;
@@ -4742,7 +4814,7 @@ stml_invenire_omnes_liberos (
 
 chorda*
 stml_attributum_capere (
-             StmlNodus* nodus,
+    constans StmlNodus* nodus,
     constans character* titulus)
 {
                i32  i;
@@ -4817,7 +4889,7 @@ stml_attributum_capere (
 
 b32
 stml_attributum_habet (
-             StmlNodus* nodus,
+    constans StmlNodus* nodus,
     constans character* titulus)
 {
     redde stml_attributum_capere(nodus, titulus) != NIHIL;
@@ -6203,7 +6275,7 @@ stml_elementum_creare (
     nodus->genus = STML_NODUS_ELEMENTUM;
     nodus->titulus = chorda_internare_ex_literis(intern, titulus);
     nodus->valor = NIHIL;
-    nodus->attributa = xar_creare(piscina, magnitudo(StmlAttributum));
+    nodus->attributa = NIHIL;   /* pigra: vide ATTRIBUTA PIGRA */
     nodus->liberi = xar_creare(piscina, magnitudo(StmlNodus*));
     nodus->parens = NIHIL;
     nodus->crudus = FALSUM;
@@ -6422,14 +6494,14 @@ stml_attributum_addere (
 {
     StmlAttributum* attr;
 
-    (vacuum)piscina;
-
-    si (!nodus || !nodus->attributa)
+    /* Elementa sola attributa ferunt - antea Xar praesens id
+     * custodiebat (textus NIHIL habet); nunc Xar pigra est */
+    si (!nodus || nodus->genus != STML_NODUS_ELEMENTUM)
     {
         redde FALSUM;
     }
 
-    attr = xar_addere(nodus->attributa);
+    attr = _attributum_novum(&nodus->attributa, piscina);
     si (!attr)
     {
         redde FALSUM;
@@ -6463,14 +6535,14 @@ stml_attributum_addere_chorda (
 {
     StmlAttributum* attr;
 
-    (vacuum)piscina;
-
-    si (!nodus || !nodus->attributa)
+    /* Elementa sola attributa ferunt - antea Xar praesens id
+     * custodiebat (textus NIHIL habet); nunc Xar pigra est */
+    si (!nodus || nodus->genus != STML_NODUS_ELEMENTUM)
     {
         redde FALSUM;
     }
 
-    attr = xar_addere(nodus->attributa);
+    attr = _attributum_novum(&nodus->attributa, piscina);
     si (!attr)
     {
         redde FALSUM;

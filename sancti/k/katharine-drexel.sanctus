@@ -1,0 +1,33 @@
+<sanctus id="katharine-drexel" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Katharine Drexel</nomen>
+  <obitus annus="1955" mensis="3" dies="3" fontes="sb"/>
+  <canonizatio modus="formalis" annus="2000" mensis="10" dies="1" papa="John Paul II" fontes="sh"/>
+  <festum calendarium="usa" mensis="3" dies="3" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us">virgin</munus>
+  <munus fontes="sb sh">religious</munus>
+  <descriptio>
+    <paragraphus fontes="sh sb">Katharine Drexel was born into wealth in Philadelphia and learned from her parents that the family's possessions were meant to be shared. On a journey to the western United States as a young woman she saw the destitution of Native Americans, and began to give her fortune to missions and schools among Native Americans and African Americans. When she asked Pope Leo XIII for missionaries, he suggested she become a missionary herself. On 12 February 1891 she made her first vows and founded the Sisters of the Blessed Sacrament.</paragraphus>
+    <paragraphus fontes="sb sh">Her spirituality joined adoration of the Eucharist with service of the poor and of the victims of racial discrimination. She and her sisters opened and supported nearly sixty schools and missions, and in 1925 she founded Xavier University of Louisiana. For the last eighteen years of her life, almost immobile through illness, she gave herself to adoration and contemplation. She died on 3 March 1955 and was canonized by Pope John Paul II on 1 October 2000.</paragraphus>
+  </descriptio>
+  <fons id="sb" opus="sedes" locus="Katharine Drexel, biography, Vatican News Service, canonization of 1 October 2000" url="https://www.vatican.va/news_services/liturgy/saints/ns_lit_doc_20001001_katharine-drexel_en.html">
+    <excerptum>When the family took a trip to the Western part of the United States, Katharine, as a young woman, saw the plight and destitution of the native Indian-Americans.</excerptum>
+    <excerptum>Later, when visiting Pope Leo XIII in Rome, and asking him for missionaries to staff some of the Indian missions that she as a lay person was financing, she was surprised to hear the Pope suggest that she become a missionary herself.</excerptum>
+    <excerptum>she made the decision to give herself totally to God, along with her inheritance, through service to American Indians and Afro-Americans.</excerptum>
+    <excerptum>On February 12, 1891, she professed her first vows as a religious, founding the Sisters of the Blessed Sacrament</excerptum>
+    <excerptum>During her lifetime, she opened, staffed and directly supported nearly 60 schools and missions, especially in the West and Southwest United States.</excerptum>
+    <excerptum>Her crowning educational focus was the establishment in 1925 of Xavier University of Louisiana</excerptum>
+    <excerptum>For the last 18 years of her life she was rendered almost completely immobile because of a serious illness. During these years she gave herself to a life of adoration and contemplation</excerptum>
+    <excerptum>as she had desired from early childhood. She died on March 3, 1955.</excerptum>
+  </fons>
+  <fons id="sh" opus="sedes" locus="Homily of John Paul II, canonization, 1 October 2000" url="https://www.vatican.va/content/john-paul-ii/en/homilies/2000/documents/hf_jp-ii_hom_20001001_canonization.html">
+    <excerptum>1 October 2000, Canonization of Augustine Zhao Rong and 119 companions, Martyrs in China, María Josefa del Corazón de Jesús Sancho de Guerra, Katharine Mary Drexel and Josephine Bakhita</excerptum>
+    <excerptum>CAPPELLA PAPALE FOR THE CANONIZATION OF 123 NEW SAINTS HOMILY OF JOHN PAUL II Sunday 1 October 2000</excerptum>
+    <excerptum>Mother Katharine Drexel was born into wealth in Philadelphia in the United States. But from her parents she learned that her family's possessions were not for them alone but were meant to be shared with the less fortunate.</excerptum>
+    <excerptum>As a young woman, she was deeply distressed by the poverty and hopeless conditions endured by many Native Americans and Afro-Americans.</excerptum>
+    <excerptum>She began to devote her fortune to missionary and educational work among the poorest members of society.</excerptum>
+    <excerptum>To her religious community, the Sisters of the Blessed Sacrament, she taught a spirituality based on prayerful union with the Eucharistic Lord and zealous service of the poor and the victims of racial discrimination.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="3 March">
+    <excerptum>Saint Katharine Drexel, Virgin</excerptum>
+  </fons>
+</sanctus>

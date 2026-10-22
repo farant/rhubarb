@@ -1,0 +1,24 @@
+<sanctus id="andre-bessette" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">André Bessette</nomen>
+  <nomen lingua="fr" fontes="sedes">Alfred Bessette</nomen>
+  <ortus annus="1845" locus="Quebec, Canada" fontes="sedes"/>
+  <obitus annus="1937" fontes="sedes"/>
+  <canonizatio modus="formalis" annus="2010" mensis="10" dies="17" papa="Benedict XVI" fontes="sedes"/>
+  <festum calendarium="usa" mensis="1" dies="6" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us sedes">religious</munus>
+  <descriptio>
+    <paragraphus fontes="sedes">Brother André (Alfred) Bessette, a native of Quebec in Canada, lived from 1845 to 1937. He knew suffering and poverty from a very early age, and they led him to turn to God through prayer and an intense inner life. He became a religious of the Congregation of Holy Cross and served as porter of the College of Notre Dame in Montreal, where he showed boundless charity and tried to relieve the distress of the people who came to confide in him. He had very little education, yet understood what was essential in his faith.</paragraphus>
+    <paragraphus fontes="sedes">He built the Oratory of Saint Joseph on Mount Royal and remained its faithful custodian until his death in 1937, witnessing countless cures and conversions. Pope Benedict XVI canonized him in St Peter's Square on 17 October 2010.</paragraphus>
+  </descriptio>
+  <fons id="sedes" opus="sedes" locus="Benedict XVI, homily for the canonization, 17 October 2010" url="https://www.vatican.va/content/benedict-xvi/en/homilies/2010/documents/hf_ben-xvi_hom_20101017_canonizations.html">
+    <excerptum>ANDRÉ (Alfred) BESSETTE (1845 - 1937)</excerptum>
+    <excerptum>HOMILY OF HIS HOLINESS BENEDICT XVI St. Peter's Square Sunday, 17 October 2010</excerptum>
+    <excerptum>Bro. André Bessette, a native of Quebec in Canada, and a religious of the Congregation of the Holy Cross, experienced suffering and poverty at a very early age. They led him to have recourse to God through prayer and an intense inner life.</excerptum>
+    <excerptum>As porter of the College of Notre Dame in Montreal, he demonstrated boundless charity and strove to relieve the distress of those who came to confide in him.</excerptum>
+    <excerptum>With very little education, he had nevertheless understood where the essential of his faith was situated.</excerptum>
+    <excerptum>He had built the Oratory of St Joseph of Mount Royal, whose faithful custodian he remained until his death in 1937. He was the witness of innumerable cures and conversions.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="6 January">
+    <excerptum>Saint André Bessette, Religious</excerptum>
+  </fons>
+</sanctus>

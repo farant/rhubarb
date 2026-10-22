@@ -379,18 +379,13 @@ _plagulam_legere (
     redde memoria;
 }
 
-s32
-principale (vacuum)
+interior vacuum
+_paragraphos_caudas_probare (
+    CredoContextus* c)
 {
-    Piscina* piscina;
+    Piscina* piscina = c->piscina;
     MateriaNodus* d;
-    constans character* radix_viae;
 
-    piscina = piscina_generare_dynamicum("probatio_oratio_arbor",
-        8388608);
-    credo_aperire(piscina);
-
-    imprimere("\n--- Probans paragraphos, caudas, praefixa ---\n");
     {
         constans character* f =
             "Hello world. This is it.\n\nSecond para.\n";
@@ -447,8 +442,14 @@ principale (vacuum)
             ZEPHYRUM, I),
             (i32)ORATIO_VOCABULUM_CAUDA, "\n"));
     }
+}
 
-    imprimere("\n--- Probans sententias v1 ---\n");
+interior vacuum
+_sententias_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     CREDO_AEQUALIS_I32 (_sententiae_textus(piscina,
         "Mr. Smith went home. He slept."), II);
     CREDO_AEQUALIS_I32 (_sententiae_textus(piscina,
@@ -480,8 +481,15 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (_sententiae_textus(piscina, "a. b. c."), I);
     CREDO_AEQUALIS_I32 (_sententiae_textus(piscina, "In 1900. 5 men."),
         II);
+}
 
-    imprimere("\n--- Probans partes vocabuli et numeri ---\n");
+interior vacuum
+_partes_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+    MateriaNodus* d;
+
     {
         constans character* f =
             "well-known don't e.g B2 1980s 1,024 3.14 x";
@@ -513,8 +521,15 @@ principale (vacuum)
         CREDO_VERUM (_lexemata_sunt(_elementum(p, ZEPHYRUM, VII),
             (i32)ORATIO_VOCABULUM_PARTES, "x"));
     }
+}
 
-    imprimere("\n--- Probans circuitus marginales ---\n");
+interior vacuum
+_marginales_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+    MateriaNodus* d;
+
     CREDO_VERUM (_circuitus(piscina, "", ZEPHYRUM, &d));
     CREDO_AEQUALIS_I32 (_numerus_listae(d,
         (i32)ORATIO_DOCUMENTUM_PARAGRAPHI), ZEPHYRUM);
@@ -532,8 +547,15 @@ principale (vacuum)
     CREDO_VERUM (oratio_abbreviatio_est("J", I));
     CREDO_FALSUM (oratio_abbreviatio_est("j", I));
     CREDO_FALSUM (oratio_abbreviatio_est("Smith", V));
+}
 
-    imprimere("\n--- CORPUS: paragraphi md tracti, circuitus octetorum ---\n");
+interior vacuum
+_corpus_probare (
+    CredoContextus* c)
+{
+    constans character* radix_viae;
+    (vacuum)c;
+
     radix_viae = getenv("RHUBARB_RADIX");
     si (radix_viae == NIHIL)
     {
@@ -542,10 +564,10 @@ principale (vacuum)
     {
         character via[DXII];
         FILE* lista;
-        Census c;
+        Census census;
         i32 plagulae = ZEPHYRUM;
 
-        memset(&c, ZEPHYRUM, magnitudo(c));
+        memset(&census, ZEPHYRUM, magnitudo(census));
         sprintf(via, "%s/oratio/build/corpus_md.txt", radix_viae);
         lista = fopen(via, "r");
         si (lista == NIHIL)
@@ -587,10 +609,11 @@ principale (vacuum)
                 md = md_arbor_parsare(p, textus, mensura);
                 si (md != NIHIL)
                 {
-                    i32 fracti_ante = c.fracti;
+                    i32 fracti_ante = census.fracti;
 
-                    _paragraphos_probare(p, md, textus, &c);
-                    si (c.fracti > fracti_ante && c.fracti <= X)
+                    _paragraphos_probare(p, md, textus, &census);
+                    si (   census.fracti > fracti_ante
+                        && census.fracti <= X)
                     {
                         imprimere("    FRACTA: %s\n", linea);
                     }
@@ -600,20 +623,31 @@ principale (vacuum)
             fclose(lista);
             imprimere("    plagulae %d, paragraphi %d, fracti %d, sententiae %ld,"
                       " vocabula %ld\n", (integer)plagulae,
-                      (integer)c.paragraphi,
-                (integer)c.fracti, (longus)c.sententiae,
-                (longus)c.vocabula);
-            CREDO_MAIOR_I32 (c.paragraphi, (i32)50000);
-            CREDO_AEQUALIS_I32 (c.fracti, ZEPHYRUM);
+                      (integer)census.paragraphi,
+                (integer)census.fracti, (longus)census.sententiae,
+                (longus)census.vocabula);
+            CREDO_MAIOR_I32 (census.paragraphi, (i32)50000);
+            CREDO_AEQUALIS_I32 (census.fracti, ZEPHYRUM);
         }
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "paragraphos, caudas, praefixa", _paragraphos_caudas_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sententias v1", _sententias_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "partes vocabuli et numeri", _partes_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "circuitus marginales", _marginales_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "CORPUS: paragraphi md tracti, circuitus octetorum",
+        _corpus_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("oratio_arbor", SECTIONES);
 }

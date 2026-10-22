@@ -1,0 +1,43 @@
+<sanctus id="hippolytus-of-rome" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Hippolytus of Rome</nomen>
+  <obitus annus="236" circa="verum" locus="Sardinia" martyrium="verum" fontes="ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="8" dies="13" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="8" dies="13" fontes="mr"/>
+  <munus fontes="us ce">priest</munus>
+  <munus fontes="us ce mr">martyr</munus>
+  <munus fontes="ce">theologian</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Hippolytus was a presbyter of the Church of Rome at the beginning of the third century and, by the judgment of the Catholic Encyclopedia, the most important theologian and most prolific religious writer of the Roman Church before Constantine. He wrote in Greek; most of his many works are lost or survive in fragments or translations, among them commentaries on Daniel and the Canticle of Canticles, a treatise on Christ and Antichrist, and the Refutation of All Heresies (the Philosophumena), now generally held to be his. Opposing the Modalists, he clashed with Pope Zephyrinus, and when Callistus was elected pope he left the Roman communion and had himself elected antipope by a small following.</paragraphus>
+    <paragraphus fontes="ce mr">In 235 he was banished to Sardinia together with Pope Pontian, and shortly before or after this he was reconciled with the Church. Both died in exile, about 236 by this account; their remains were brought back to Rome on the same 13 August and Hippolytus was buried on the Via Tiburtina. That the Roman Church honoured both as martyrs is taken as proof that he died at peace with it. The poet Prudentius has him torn apart by wild horses, and the Martyrology, which sets his martyrdom under Valerian, has him dragged to death by them; the Catholic Encyclopedia reads the horses as an echo of Hippolytus, son of Theseus, and the Martyrology's Hippolytus as the same man, joined by legend to St. Lawrence.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Sts. Hippolytus" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Sts._Hippolytus">
+    <excerptum>St. Hippolytus of Rome, presbyter and antipope; date of birth unknown; d. about 236.</excerptum>
+    <excerptum>Hippolytus was a presbyter of the Church of Rome at the beginning of the third century.</excerptum>
+    <excerptum>In the reigh of Pope Zephyrinus (198-217) he came into conflict with that pontiff and with the majority of the Church of Rome, primarily on account of the christological opinions</excerptum>
+    <excerptum>As the heresy in the doctrine of the Modalists was not at first clearly apparent, Pope Zephyrinus declined to give a decision. For this Hippolytus gravely censured him</excerptum>
+    <excerptum>Consequently when Callistus was elected pope (217-218) on the death of Zephyrinus, Hippolytus immediately left the communion of the Roman Church and had himself elected antipope by his small band of followers.</excerptum>
+    <excerptum>He was banished to the unhealthful island (insula nociva) of Sardinia at the same time as Pontianus; and shortly before this, or soon afterward, he became reconciled with the legitimate bishop and the Church of Rome.</excerptum>
+    <excerptum>after both exiles had died on the island of Sardinia, their mortal remains were brought back to Rome on the same day, 13 August (either 236 or one of the following years), and solemnly interred, Pontianus in the papal vault in the catacomb of Callistus and Hippolytus in a spot on the Via Tiburtina.</excerptum>
+    <excerptum>Both were equally revered as martyrs by the Roman Church: certain proof that Hippolytus had made his peace with that Church before his death.</excerptum>
+    <excerptum>The Chronography of 354, in the list of popes, mentions Bishop Pontianus and the presbyter Hippolytus as being banished to the island of Sardinia in the year 235</excerptum>
+    <excerptum>Prudentius wrote a hymn on the martyr Hippolytus</excerptum>
+    <excerptum>describes Hippolytus as being torn to pieces by wild horses, evidently a reminiscence of the ancient Hippolytus, son of Theseus.</excerptum>
+    <excerptum>Hippolytus was the most important theologian and the most prolific religious writer of the Roman Church in the pre-Constantinian era.</excerptum>
+    <excerptum>Most of his works have been lost or are known only through scattered fragments, while much has survived only in old translations into Oriental and Slavic languages</excerptum>
+    <excerptum>The fact that the author wrote in Greek</excerptum>
+    <excerptum>The commentary on the Canticle of Canticles, however, has probably been preserved in its entirety</excerptum>
+    <excerptum>likewise the fullest extant commentary on the Book of Daniel in 4 books</excerptum>
+    <excerptum>This is the work on Christ and Antichrist</excerptum>
+    <excerptum>Of his polemics against heretics the most important is the "Philosophumena", the original title of which is kata pason aireseon elegchos (A Refutation of All Heresies)</excerptum>
+    <excerptum>But most modern scholars hold for weighty reasons that Hippolytus is undoubtedly its author.</excerptum>
+    <excerptum>The same statement also appears in the Roman Martyrology under the date of 13 August. But this Hippolytus is without doubt identical with the presbyter and martyr who has been connected by legend with St. Laurence</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="13 August">
+    <excerptum>Rome, blessed Hippolytus, martyr, who gloriously confessed the faith, under the emperor Valerian</excerptum>
+    <excerptum>he was tied by the feet to the necks of wild horses, and being cruelly dragged through briars and brambles, and having all his body lacerated, he yielded up his spirit.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="13 August">
+    <excerptum>Saints Pontian, Pope, and Hippolytus, Priest, Martyrs</excerptum>
+  </fons>
+</sanctus>

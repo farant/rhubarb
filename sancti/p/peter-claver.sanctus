@@ -1,0 +1,37 @@
+<sanctus id="peter-claver" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Peter Claver</nomen>
+  <ortus annus="1581" locus="Verdu" fontes="ce"/>
+  <obitus annus="1654" mensis="9" dies="8" locus="Cartagena" fontes="ce mr"/>
+  <beatificatio annus="1850" mensis="7" dies="16" papa="Pius IX" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1888" mensis="1" dies="15" papa="Leo XIII" fontes="ce mr"/>
+  <festum calendarium="usa" mensis="9" dies="9" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="9" dies="9" fontes="mr"/>
+  <munus fontes="us">priest</munus>
+  <munus fontes="mr ce">religious</munus>
+  <patrocinium fontes="ce">Catholic missions among the negroes</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">Peter Claver, the son of a Catalan farmer, was born at Verdu in 1581. After his first degrees at the University of Barcelona he entered the Jesuit novitiate at Tarragona at twenty. While he studied philosophy at Majorca in 1605, the college porter Alphonsus Rodriguez urged him to go to the Spanish possessions in America, and in 1610 he landed at Cartagena, then the chief slave market of the New World, where a thousand slaves arrived each month.</paragraphus>
+    <paragraphus fontes="ce mr">Trained by the missionary Alfonso de Sandoval, he declared himself the slave of the negroes forever. Each month he went out with food to meet the slave ships and cared for each of the captives, who arrived from the holds broken by suffering and fear; through interpreters he had trained as catechists, he instructed and baptized them while they waited to be sold. He was criticised for indiscreet zeal, but kept on, adding severe penances to his charity. He worked among them for more than forty years; the Martyrology says he personally baptized almost thirty thousand, while the Catholic Encyclopedia gives more than 300,000. He died on 8 September 1654, was beatified by Pius IX in 1850, and was canonized by Leo XIII on 15 January 1888, the same day as Alphonsus Rodriguez.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="9 September">
+    <excerptum>At Cartagena, in South America, St. Peter Claver, confessor of the Society</excerptum>
+    <excerptum>of Jesus, who labored with, wonderful self-abnegation and great charity among the negro slaves for more than forty years and baptized personally almost thirty thousand of them. He was canonized by order of pope Leo XIII.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Peter Claver" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Peter_Claver">
+    <excerptum>The son of a Catalonian farmer, was born at Verdu, in 1581; he died 8 September, 1654. He obtained his first degrees at the University of Barcelona. At the age of twenty he entered the Jesuit novitiate at Tarragona.</excerptum>
+    <excerptum>While he was studying philosophy at Majorca in 1605, Alphonsus Rodriguez, the saintly door-keeper of the college</excerptum>
+    <excerptum>thenceforth never ceased exhorting him to set out to evangelize the Spanish possessions in America. Peter obeyed, and in 1610 landed at Cartagena, where for forty-four years he was the Apostle of the negro slaves.</excerptum>
+    <excerptum>By its position in the Caribbean Sea, Cartagena became the chief slave-mart of the New World. A thousand slaves landed there each month.</excerptum>
+    <excerptum>Trained in the school of Père Alfonso de Sandoval, a wonderful missionary, Peter declared himself the slave of the negroes forever</excerptum>
+    <excerptum>Every month when the arrival of the negroes was signalled, Claver went out to meet them on the pilot's boat, carrying food and delicacies.</excerptum>
+    <excerptum>The negroes, cooped up in the hold, arrived crazed and brutalized by suffering and fear. Claver went to each, cared for him, and showed him kindness</excerptum>
+    <excerptum>Claver assembled at Cartagena a group of interpreters of various nationalities, of whom he made catechists. While the slaves were penned up at Cartagena waiting to be purchased and dispersed, Claver instructed and baptized them in the Faith.</excerptum>
+    <excerptum>The Apostle was accused of indiscreet zeal</excerptum>
+    <excerptum>Nevertheless, Claver continued his heroic career, accepting all humiliations and adding rigorous penances to his works of charity.</excerptum>
+    <excerptum>During his life he baptized and instructed in the Faith more than 300,000 negroes. He was beatified 16 July, 1850, Pius IX, and canonized 15 January, 1888, by Leo XIII.</excerptum>
+    <excerptum>On 7 July, 1896, he was proclaimed the special patron of all the Catholic missions among the negroes. Alphonsus Rodriguez was canonized on the same day as Peter Claver.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="9 September">
+    <excerptum>Saint Peter Claver, Priest</excerptum>
+  </fons>
+</sanctus>

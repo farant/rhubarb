@@ -40,6 +40,7 @@
 #include "oratio_glossarium.h"
 #include "unitates.h"
 #include "unitates_arboris.h"
+#include "filum.h"
 #include "chorda.h"
 #include "piscina.h"
 #include "xar.h"
@@ -246,50 +247,168 @@ _verbum (
     redde NIHIL;
 }
 
-s32
-principale (vacuum)
+interior constans character*
+_radix_viae (vacuum)
 {
-                       Piscina* piscina;
-            constans character* radix;
-                     character  via[1024];
-                        chorda  tabula;
-                        chorda  fons_glossarii;
-          OratioVocabulariumLa* voc;
-          OratioVocabulariumEn* en = NIHIL;
-                        chorda  fons_en;
-      OratioVocabulariumVitium  vitium;
-                OratioVocabula* vc;
-                           i32  i;
+    constans character* radix_viae = getenv("RHUBARB_RADIX");
 
-    piscina = piscina_generare_dynamicum("probatio_oratio_vocabula",
-        536870912);
-    credo_aperire(piscina);
-    radix = getenv("RHUBARB_RADIX");
-    si (radix == NIHIL)
+    redde radix_viae != NIHIL ? radix_viae : ".";
+}
+
+/* FIXURA SUITAE: tabula Latina cum glossario et Moby SEMEL oneratae
+ * (assertiones olim principalis et sectionis VI); sectiones LEGUNT -
+ * oratio_vocabula_creare(_anglice) tabulas constantes accipit
+ * (2026-10-21), ergo vocabula quaeque sectionis propria est. */
+nomen structura {
+    constans OratioVocabulariumLa* voc;
+    constans OratioVocabulariumEn* en;   /* NIHIL: Moby absens, VII
+                                          * tacet */
+} FixuraVocabulorum;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+           FixuraVocabulorum* f;
+          constans character* radix  = _radix_viae();
+                   character  via[1024];
+                      chorda  tabula;
+                      chorda  fons_glossarii;
+                      chorda  fons_en;
+        OratioVocabulariumLa* voc;
+    OratioVocabulariumVitium  vitium;
+
+    f = (FixuraVocabulorum*)piscina_allocare(c->piscina,
+        (memoriae_index)magnitudo(FixuraVocabulorum));
+    si (f == NIHIL)
     {
-        radix = ".";
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
     sprintf(via, "%s/oratio/vocabularium/la.bin", radix);
-    CREDO_VERUM (_plagulam_legere(piscina, via, &tabula));
-    voc = oratio_vocabularium_la_onerare(piscina, tabula, &vitium);
+    CREDO_VERUM (_plagulam_legere(c->piscina, via, &tabula));
+    voc = oratio_vocabularium_la_onerare(c->piscina, tabula, &vitium);
     CREDO_NON_NIHIL (voc);
     sprintf(via, "%s/oratio/glossarium.stml", radix);
-    CREDO_VERUM (_plagulam_legere(piscina, via, &fons_glossarii));
+    CREDO_VERUM (_plagulam_legere(c->piscina, via, &fons_glossarii));
     si (voc == NIHIL || fons_glossarii.datum == NIHIL)
     {
-        credo_imprimere_compendium();
-        redde I;
+        redde;
     }
     {
-        OratioGlossarium* gl = oratio_glossarium_legere(piscina,
+        OratioGlossarium* gl = oratio_glossarium_legere(c->piscina,
             fons_glossarii,
             &vitium);
 
         CREDO_NON_NIHIL (gl);
         oratio_vocabularium_la_glossarium_ponere(voc, gl);
     }
+    sprintf(via, "%s/oratio/vocabularium/en/mobypos.txt", radix);
+    CREDO_VERUM (_plagulam_legere(c->piscina, via, &fons_en));
+    f->voc  = voc;
+    f->en   = oratio_vocabularium_en_onerare(c->piscina, fons_en,
+        &vitium);
+    CREDO_NON_NIHIL (f->en);
+    c->datum = f;
+}
 
-    imprimere("\n--- I. Scissio identificatorum ---\n");
+/* nexus.tsv (CLXXII MB 2026-10-21, cum arbore crescens) PER PARTES
+ * fluit: lineae integrae partis cuiusque in ambas vocabulas.
+ * oratio_vocabula_symbola nihil ex nexu retinet (verbum, via,
+ * identificator copiantur), ergo capsa una sufficit - plagula tota
+ * numquam in memoria (olim CC MiB arenae sectionis IV). */
+#define CAPSA_NEXUS ((i32)16777216)
+
+interior vacuum
+_nexum_fluere (
+    FilumOctetorumLector* nexus,
+          OratioVocabula* corpus,
+          OratioVocabula* symbola_sola,
+                  chorda  tractatae,
+                     b32* bene_corporis,
+                     b32* bene_solorum)
+{
+    Piscina* capsae = piscina_generare_dynamicum("vocabula_nexus",
+        (memoriae_index)CAPSA_NEXUS + 65536);
+          i8* capsa;
+         i32  reliquum = ZEPHYRUM;   /* linea imperfecta in capite */
+         s32  lecti;
+
+    *bene_corporis  = FALSUM;
+    *bene_solorum   = FALSUM;
+    si (capsae == NIHIL)
+    {
+        redde;
+    }
+    capsa = (i8*)piscina_allocare(capsae, (memoriae_index)CAPSA_NEXUS);
+    si (capsa == NIHIL)
+    {
+        piscina_destruere(capsae);
+        redde;
+    }
+    *bene_corporis  = VERUM;
+    *bene_solorum   = symbola_sola != NIHIL;
+    fac
+    {
+           i32 finis;
+           i32 ultima;
+        chorda pars;
+
+        lecti = filum_octeti_legere(nexus, capsa + reliquum,
+            CAPSA_NEXUS - reliquum);
+        si (lecti < ZEPHYRUM)
+        {
+            *bene_corporis  = FALSUM;
+            *bene_solorum   = FALSUM;
+            frange;
+        }
+        finis   = reliquum + (i32)lecti;
+        ultima  = finis;
+        si (lecti > ZEPHYRUM)
+        {
+            dum (ultima > ZEPHYRUM && capsa[ultima - I] != '\n')
+            {
+                ultima = ultima - I;
+            }
+            si (ultima == ZEPHYRUM)
+            {
+                /* linea capsa longior: fracta, numquam tacite */
+                *bene_corporis  = FALSUM;
+                *bene_solorum   = FALSUM;
+                frange;
+            }
+        }
+        pars.datum    = capsa;
+        pars.mensura  = ultima;
+        *bene_corporis = *bene_corporis
+            && oratio_vocabula_symbola(corpus, pars, NIHIL, tractatae);
+        si (symbola_sola != NIHIL)
+        {
+            *bene_solorum = *bene_solorum
+                && oratio_vocabula_symbola(symbola_sola, pars, NIHIL,
+                    tractatae);
+        }
+        reliquum = finis - ultima;
+        memmove(capsa, capsa + ultima, (size_t)reliquum);
+    } dum (lecti > ZEPHYRUM);
+    piscina_destruere(capsae);
+}
+
+interior vacuum
+_scissio_probare (
+    CredoContextus* c)
+{
+    constans FixuraVocabulorum* f =
+        (constans FixuraVocabulorum*)c->suita;
+                               Piscina* piscina  = c->piscina;
+         constans OratioVocabulariumLa* voc;
+               OratioVocabula* vc;
+
+    si (f == NIHIL)
+    {
+        redde;   /* fixura absens: sectio VACUA, suita FRACTA */
+    }
+    voc = f->voc;
+    CREDO_GRADUS ("I. Scissio identificatorum");
     vc = oratio_vocabula_creare(piscina, voc);
     CREDO_NON_NIHIL (vc);
         CREDO_VERUM (oratio_vocabula_symbola(vc, _l(
@@ -356,7 +475,7 @@ principale (vacuum)
                 && v->linea_prima == (i32)40);
     }
 
-    imprimere("\n--- II. Commentaria per silvam et orationem ---\n");
+    CREDO_GRADUS ("II. Commentaria per silvam et orationem");
     CREDO_VERUM (oratio_vocabula_commenta(vc, _l(
         "/* Piscinam allocare; the buffer est offset.\n"
         " * iterum piscinam, virum. */\n"
@@ -385,7 +504,7 @@ principale (vacuum)
             && v->sedes_commentorum == I);
     }
 
-    imprimere("\n--- III. Iudicium ---\n");
+    CREDO_GRADUS ("III. Iudicium");
     CREDO_VERUM (oratio_vocabula_verbum_addere(vc, _l("xyzzy"),
         "lib/x.c", I,
         FALSUM));
@@ -478,12 +597,31 @@ principale (vacuum)
                 oratio_vocabula_numerus(vc, ORATIO_VERBUM_IGNOTUM));
         }
     }
+}
 
-    imprimere("\n--- IV. Corpus: symbola + commentaria ---\n");
+interior vacuum
+_corpus_symbolorum_probare (
+    CredoContextus* c)
+{
+    constans FixuraVocabulorum* f =
+        (constans FixuraVocabulorum*)c->suita;
+                               Piscina* piscina  = c->piscina;
+                    constans character* radix    = _radix_viae();
+                             character  via[1024];
+         constans OratioVocabulariumLa* voc;
+                                   i32  i;
+
+    si (f == NIHIL)
+    {
+        redde;   /* fixura absens: sectio VACUA, suita FRACTA */
+    }
+    voc = f->voc;
     {
                         OratioVocabula* corpus =
                             oratio_vocabula_creare(piscina, voc);
-                                chorda  nexus;
+                  FilumOctetorumLector* nexus;
+                                   b32  bene_corporis  = FALSUM;
+                                   b32  bene_solorum   = FALSUM;
                                 chorda  tractatae;
                         OratioVocabula* symbola_sola      = NIHIL;
                                 chorda  copia;
@@ -510,7 +648,8 @@ principale (vacuum)
         tractatae.mensura  = ZEPHYRUM;
         copia.datum        = NIHIL;
         copia.mensura      = ZEPHYRUM;
-        si (!_plagulam_legere(piscina, via, &nexus))
+        nexus              = filum_octeti_aperire(via, piscina);
+        si (nexus == NIHIL)
         {
             CREDO_CULPA ("build/nexus.tsv absens - ./silva/nexus.sh -renovare");
         }
@@ -543,8 +682,10 @@ principale (vacuum)
                 CREDO_FALSUM (ignotus);
                 CREDO_MAIOR_I32 (tractatae.mensura, ZEPHYRUM);
             }
-            CREDO_VERUM (oratio_vocabula_symbola(corpus, nexus, NIHIL,
-                tractatae));
+            _nexum_fluere(nexus, corpus, symbola_sola, tractatae,
+                &bene_corporis, &bene_solorum);
+            filum_octeti_claudere(nexus);
+            CREDO_VERUM (bene_corporis);
             /* PINNA = COPIA COMMISSA super identificatores DOMUS (knotapel/
              * vendor/ archivum/ exclusa, decisio Frani 2026-09-04; viae
              * tractatae solae 2026-09-07). Verbum ignotum extra copiam =
@@ -553,8 +694,7 @@ principale (vacuum)
              * deliberata ORATIO_VOCABULA_SCRIBERE=1 causa nominata.
              * Verdictum et relatio POST commentaria (IV b). */
             CREDO_NON_NIHIL (symbola_sola);
-            CREDO_VERUM (oratio_vocabula_symbola(symbola_sola, nexus,
-                NIHIL, tractatae));
+            CREDO_VERUM (bene_solorum);
             CREDO_VERUM (oratio_vocabula_iudicare(symbola_sola));
             ignota_symbolorum = oratio_vocabula_numerus(symbola_sola,
                 ORATIO_VERBUM_IGNOTUM);
@@ -659,7 +799,7 @@ principale (vacuum)
          * nuntio): consumptor quivis lineae 'FRACTA' (commissio,
          * relatio_fracturarum) verba et exitus videt, non numerum
          * lineae solum. Denominator item cum causis. */
-        imprimere("\n--- IV b. identificatores: verdictum contra copiam toleratam ---\n");
+        CREDO_GRADUS ("IV b. identificatores: verdictum contra copiam toleratam");
         si (symbola_sola != NIHIL)
         {
                                        i32 tolerata_n  =
@@ -708,8 +848,22 @@ principale (vacuum)
             }
         }
     }
+}
 
-        imprimere("\n--- V. Prosa markdown: nodi TEXTUS soli ---\n");
+interior vacuum
+_prosam_probare (
+    CredoContextus* c)
+{
+    constans FixuraVocabulorum* f =
+        (constans FixuraVocabulorum*)c->suita;
+                               Piscina* piscina  = c->piscina;
+         constans OratioVocabulariumLa* voc;
+
+    si (f == NIHIL)
+    {
+        redde;   /* fixura absens: sectio VACUA, suita FRACTA */
+    }
+    voc = f->voc;
     {
         OratioVocabula* pr = oratio_vocabula_creare(piscina, voc);
         constans OratioVerbum* v;
@@ -786,12 +940,24 @@ principale (vacuum)
             (i32)XXI);
         CREDO_AEQUALIS_I32 (oratio_vocabula_sedes(pr), (i32)XXIII);
     }
+}
 
-    imprimere("\n--- VI. Iudicium Anglice ---\n");
-    sprintf(via, "%s/oratio/vocabularium/en/mobypos.txt", radix);
-    CREDO_VERUM (_plagulam_legere(piscina, via, &fons_en));
-    en = oratio_vocabularium_en_onerare(piscina, fons_en, &vitium);
-    CREDO_NON_NIHIL (en);
+interior vacuum
+_iudicium_anglicum_probare (
+    CredoContextus* c)
+{
+    constans FixuraVocabulorum* f =
+        (constans FixuraVocabulorum*)c->suita;
+                               Piscina* piscina  = c->piscina;
+         constans OratioVocabulariumLa* voc;
+         constans OratioVocabulariumEn* en;
+
+    si (f == NIHIL)
+    {
+        redde;   /* fixura absens: sectio VACUA, suita FRACTA */
+    }
+    voc  = f->voc;
+    en   = f->en;
     {
         OratioVocabula* an = oratio_vocabula_creare_anglice(piscina,
             voc,
@@ -875,8 +1041,27 @@ principale (vacuum)
         CREDO_VERUM (strcmp(oratio_verbum_status_titulus(
             ORATIO_VERBUM_LATINUM), "latinum") == ZEPHYRUM);
     }
+}
 
-    imprimere("\n--- VII. Corpus: prosa markdown domus ---\n");
+interior vacuum
+_prosam_domus_probare (
+    CredoContextus* c)
+{
+    constans FixuraVocabulorum* f =
+        (constans FixuraVocabulorum*)c->suita;
+                               Piscina* piscina  = c->piscina;
+                    constans character* radix    = _radix_viae();
+                             character  via[1024];
+         constans OratioVocabulariumLa* voc;
+         constans OratioVocabulariumEn* en;
+                                   i32  i;
+
+    si (f == NIHIL)
+    {
+        redde;   /* fixura absens: sectio VACUA, suita FRACTA */
+    }
+    voc  = f->voc;
+    en   = f->en;
     si (en != NIHIL)
     {
         OratioVocabula* corpus = oratio_vocabula_creare_anglice(piscina,
@@ -998,14 +1183,25 @@ principale (vacuum)
             > n * (i32)VII);
         CREDO_VERUM (ignota * (i32)C <= n * (i32)XXIX);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I-III. Scissio identificatorum, commentaria, iudicium",
+        _scissio_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IV. Corpus: symbola + commentaria", _corpus_symbolorum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "V. Prosa markdown: nodi TEXTUS soli", _prosam_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "VI. Iudicium Anglice", _iudicium_anglicum_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "VII. Corpus: prosa markdown domus", _prosam_domus_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-        credo_claudere();
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("oratio_vocabula", SECTIONES,
+        _suitam_parare, NIHIL);
 }

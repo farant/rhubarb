@@ -362,7 +362,7 @@ scribere (
         fracta("scribi non potest: ", via);
     }
     fprintf(f,
-        "/* GENERATUM: tools/tabula_nodorum_generare.sh - "
+        "/* GENERATUM DATA: tools/tabula_nodorum_generare.sh - "
         "NE EDITA MANU\n"
         " *\n"
         " * Ex %s:\n"

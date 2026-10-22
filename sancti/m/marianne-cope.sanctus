@@ -1,0 +1,26 @@
+<sanctus id="marianne-cope" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Marianne Cope</nomen>
+  <nomen lingua="en" fontes="sedes">Mother Marianne</nomen>
+  <ortus annus="1838" locus="Heppenheim, Germany" fontes="sedes"/>
+  <canonizatio modus="formalis" annus="2012" mensis="10" dies="21" papa="Benedict XVI" fontes="sedes"/>
+  <festum calendarium="usa" mensis="1" dies="23" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us">virgin</munus>
+  <munus fontes="sedes">religious</munus>
+  <descriptio>
+    <paragraphus fontes="sedes">Marianne Cope was born in 1838 at Heppenheim in Germany and was taken to the United States when she was one year old. In 1862 she entered the Third Order Regular of Saint Francis at Syracuse, New York. As Superior General of her congregation she accepted a call to care for the lepers of Hawaii after many others had refused, and went herself with six of her sisters to manage a hospital on Oahu; she later founded Malulani Hospital on Maui and opened a home for girls whose parents were lepers.</paragraphus>
+    <paragraphus fontes="sedes">Five years later she agreed to open a home for women and girls on Molokai itself and went there in person, practically cutting herself off from the outside world. There she cared for Father Damien, nursed him as he died, and took over his work among the male lepers. Pope Benedict XVI, who canonized her on 21 October 2012, held her up as an example of the tradition of Catholic nursing sisters and of the spirit of St. Francis.</paragraphus>
+  </descriptio>
+  <fons id="sedes" opus="sedes" locus="Benedict XVI, homily for the canonization, 21 October 2012" url="https://www.vatican.va/content/benedict-xvi/en/homilies/2012/documents/hf_ben-xvi_hom_20121021_canonizzazioni.html">
+    <excerptum>21 October 2012: Holy Mass and Canonization of the Blesseds James Berthieu, Pedro Calungsod, John Baptist Piamarta, Carmen Sallés y Barangueras, Marianne Cope</excerptum>
+    <excerptum>HOMILY OF HIS HOLINESS POPE BENEDICT XVI Saint Peter's Square Sunday, 21 October 2012</excerptum>
+    <excerptum>I now turn to Marianne Cope, born in 1838 in Heppenheim, Germany. Only one year old when taken to the United States, in 1862 she entered the Third Order Regular of Saint Francis at Syracuse, New York.</excerptum>
+    <excerptum>Later, as Superior General of her congregation, Mother Marianne willingly embraced a call to care for the lepers of Hawaii after many others had refused.</excerptum>
+    <excerptum>She personally went, with six of her fellow sisters, to manage a hospital on Oahu, later founding Malulani Hospital on Maui and opening a home for girls whose parents were lepers.</excerptum>
+    <excerptum>Five years after that she accepted the invitation to open a home for women and girls on the island of Molokai itself, bravely going there herself and effectively ending her contact with the outside world.</excerptum>
+    <excerptum>There she looked after Father Damien, already famous for his heroic work among the lepers, nursed him as he died and took over his work among male lepers.</excerptum>
+    <excerptum>She is a shining and energetic example of the best of the tradition of Catholic nursing sisters and of the spirit of her beloved Saint Francis.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="23 January">
+    <excerptum>Saint Marianne Cope, Virgin</excerptum>
+  </fons>
+</sanctus>

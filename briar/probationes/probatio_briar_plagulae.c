@@ -121,36 +121,90 @@ _nomen_publicum (
     redde -I;
 }
 
-s32
-principale (vacuum)
+/* membra radicis SINE assertione: sectiones quae membra legunt (aut ad
+ * tempus mutant) suum quaeque aedificant - sectio 'membra' collectionem
+ * asserit (olim membra unica trans blocos communia) */
+interior Xar*
+_membra_restituere (
+               Piscina* piscina,
+   InternamentumChorda* intern,
+    constans SilexFons* fons,
+    constans character* via)
 {
-                b32  praeteritus;
-            Piscina* piscina;
-InternamentumChorda* intern;
-          SilexFons* fons;
- constans character* radix;
-   BriarMembraCausa  causa;
-                Xar* membra;
-          character  cwd[1024];
+                Xar* membra = NIHIL;
+                Xar* nexus = _nexum_texere(piscina, intern, fons,
+                    via);
+    BriarMembraCausa causa;
 
-    piscina = piscina_generare_dynamicum("probatio_briar_plagulae",
-        16777216);
-    si (!piscina)
+    si (   nexus == NIHIL
+        || !briar_membra_colligere(piscina, via, nexus, intern, fons,
+               &membra, &causa))
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde NIHIL;
     }
-    credo_aperire(piscina);
-    intern  = internamentum_creare(piscina);
-    radix   = getenv("RHUBARB_RADIX");
+    redde membra;
+}
+
+/* FIXURA SUITAE: internamentum et fons corporis (silex_fons_disci)
+ * semel facta; sectiones per monstratorem constantem LEGUNT -
+ * internatio in internamentum fixurae sola licet (decretum
+ * 2026-10-19). */
+nomen structura {
+    InternamentumChorda* intern;
+              SilexFons* fons;
+} FixuraPlagularum;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+       FixuraPlagularum* f;
+     constans character* radix;
+
+    f = (FixuraPlagularum*)piscina_allocare(c->piscina,
+        magnitudo(FixuraPlagularum));
+    si (f == NIHIL)
+    {
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
+    }
+    f->intern  = internamentum_creare(c->piscina);
+    radix      = getenv("RHUBARB_RADIX");
     si (radix == NIHIL)
     {
         radix = ".";
     }
-    fons = silex_fons_disci(piscina, radix);
-    CREDO_NON_NIHIL (fons);
+    f->fons = silex_fons_disci(c->piscina, radix);
+    CREDO_NON_NIHIL (f->fons);
+    si (f->fons == NIHIL)
+    {
+        redde;
+    }
+    c->datum = f;
+}
 
-    imprimere("\n--- Probans membra: rhombus, post-ordo, semel ---\n");
+
+/* ==================================================
+ * PROBARE: membra: rhombus, post-ordo, semel
+ * ================================================== */
+
+interior vacuum
+_membra_probare (
+    CredoContextus* c)
+{
+    constans FixuraPlagularum* f;
+                      Piscina* piscina = c->piscina;
+          InternamentumChorda* intern;
+           constans SilexFons* fons;
+             BriarMembraCausa  causa;
+                          Xar* membra;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f       = (constans FixuraPlagularum*)c->suita;
+    intern  = f->intern;
+    fons    = f->fons;
     membra = _colligere(piscina, intern, fons, FIXA "radix.thistle",
         &causa);
     CREDO_NON_NIHIL (membra);
@@ -180,9 +234,32 @@ InternamentumChorda* intern;
         CREDO_NON_NIHIL (_membrum(membra, 1)->nexus);
         CREDO_AEQUALIS_I32 (_membrum(membra, 1)->linea_elementi, VIII);
     }
+}
 
-    imprimere("\n--- Probans membra perfecta: nomina, derivatio, "
-        "visibilia ---\n");
+
+/* ==================================================
+ * PROBARE: membra perfecta: nomina, derivatio, visibilia
+ * ================================================== */
+
+interior vacuum
+_perfecta_probare (
+    CredoContextus* c)
+{
+    constans FixuraPlagularum* f;
+                      Piscina* piscina = c->piscina;
+          InternamentumChorda* intern;
+           constans SilexFons* fons;
+                          Xar* membra;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f       = (constans FixuraPlagularum*)c->suita;
+    intern  = f->intern;
+    fons    = f->fons;
+    membra = _membra_restituere(piscina, intern, fons,
+        FIXA "radix.thistle");
     si (membra != NIHIL && xar_numerus(membra) == III)
     {
         constans BriarMembrum* folium  = _membrum(membra, 0);
@@ -289,8 +366,33 @@ InternamentumChorda* intern;
                 0))->titulus, "folium") == ZEPHYRUM);
         CREDO_AEQUALIS_I32 (xar_numerus(folium->visibilia), ZEPHYRUM);
     }
+}
 
-    imprimere("\n--- Probans viam contra plagulam, non cwd ---\n");
+
+/* ==================================================
+ * PROBARE: via contra plagulam, non cwd
+ * ================================================== */
+
+interior vacuum
+_viam_probare (
+    CredoContextus* c)
+{
+    constans FixuraPlagularum* f;
+                      Piscina* piscina = c->piscina;
+          InternamentumChorda* intern;
+           constans SilexFons* fons;
+                          Xar* membra;
+                    character  cwd[1024];
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f       = (constans FixuraPlagularum*)c->suita;
+    intern  = f->intern;
+    fons    = f->fons;
+    membra = _membra_restituere(piscina, intern, fons,
+        FIXA "radix.thistle");
     CREDO_NON_NIHIL (getcwd(cwd, magnitudo(cwd)));
     {
         constans character* absoluta = chorda_ut_cstr(via_absoluta(
@@ -312,8 +414,33 @@ InternamentumChorda* intern;
                 _membrum(membra, 2)->via) == ZEPHYRUM);
         }
     }
+}
 
-    imprimere("\n--- Probans stampam clavis (membra) et statica ---\n");
+
+/* ==================================================
+ * PROBARE: stampa clavis (membra) et statica
+ * ================================================== */
+
+interior vacuum
+_stampam_probare (
+    CredoContextus* c)
+{
+    constans FixuraPlagularum* f;
+                      Piscina* piscina = c->piscina;
+          InternamentumChorda* intern;
+           constans SilexFons* fons;
+             BriarMembraCausa  causa;
+                          Xar* membra;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f       = (constans FixuraPlagularum*)c->suita;
+    intern  = f->intern;
+    fons    = f->fons;
+    membra = _membra_restituere(piscina, intern, fons,
+        FIXA "radix.thistle");
     /* sine membris stampa IPSA: claves plagularum sine bibliotheca non
      * moventur */
     CREDO_VERUM (strcmp(briar_membra_stampa(piscina, "s", NIHIL), "s")
@@ -392,9 +519,32 @@ InternamentumChorda* intern;
             CREDO_AEQUALIS_I32 (xar_numerus(b->statica), II);
         }
     }
+}
 
-    imprimere("\n--- Probans collectionem LEVEM (clavis ante parsuram)"
-        " ---\n");
+
+/* ==================================================
+ * PROBARE: collectio LEVIS (clavis ante parsuram)
+ * ================================================== */
+
+interior vacuum
+_levem_probare (
+    CredoContextus* c)
+{
+    constans FixuraPlagularum* f;
+                      Piscina* piscina = c->piscina;
+          InternamentumChorda* intern;
+           constans SilexFons* fons;
+                          Xar* membra;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f       = (constans FixuraPlagularum*)c->suita;
+    intern  = f->intern;
+    fons    = f->fons;
+    membra = _membra_restituere(piscina, intern, fons,
+        FIXA "radix.thistle");
     {
         Xar* nexus_r = _nexum_texere(piscina, intern, fons,
             FIXA "radix.thistle");
@@ -437,8 +587,30 @@ InternamentumChorda* intern;
         CREDO_VERUM (_continet(piscina, cl.causa,
             "partem communem in plagulam tertiam move"));
     }
+}
 
-    imprimere("\n--- Probans circulum ---\n");
+
+/* ==================================================
+ * PROBARE: circulus
+ * ================================================== */
+
+interior vacuum
+_circulum_probare (
+    CredoContextus* c)
+{
+    constans FixuraPlagularum* f;
+                      Piscina* piscina = c->piscina;
+          InternamentumChorda* intern;
+           constans SilexFons* fons;
+             BriarMembraCausa  causa;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f       = (constans FixuraPlagularum*)c->suita;
+    intern  = f->intern;
+    fons    = f->fons;
     CREDO_NIHIL (_colligere(piscina, intern, fons,
         FIXA "circulus_a.thistle", &causa));
     CREDO_VERUM (_continet(piscina, causa.causa,
@@ -449,8 +621,30 @@ InternamentumChorda* intern;
     CREDO_VERUM (_desinit(causa.via,
         "/bibliotheca/circulus_b.thistle"));
     CREDO_AEQUALIS_I32 (causa.linea, VI);
+}
 
-    imprimere("\n--- Probans refutationes ---\n");
+
+/* ==================================================
+ * PROBARE: refutationes
+ * ================================================== */
+
+interior vacuum
+_refutationes_probare (
+    CredoContextus* c)
+{
+    constans FixuraPlagularum* f;
+                      Piscina* piscina = c->piscina;
+          InternamentumChorda* intern;
+           constans SilexFons* fons;
+             BriarMembraCausa  causa;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f       = (constans FixuraPlagularum*)c->suita;
+    intern  = f->intern;
+    fons    = f->fons;
     CREDO_NIHIL (_colligere(piscina, intern, fons,
         FIXA "radix_absens.thistle", &causa));
     CREDO_VERUM (_continet(piscina, causa.causa, "non exsistit"));
@@ -474,11 +668,28 @@ InternamentumChorda* intern;
         "regio C plana nulla"));
     CREDO_VERUM (_desinit(causa.via,
         "/bibliotheca/radix_sine_c.thistle"));
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "membra: rhombus, post-ordo, semel", _membra_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "membra perfecta: nomina, derivatio, visibilia",
+        _perfecta_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "viam contra plagulam, non cwd", _viam_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "stampam clavis (membra) et statica", _stampam_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "collectionem LEVEM (clavis ante parsuram)", _levem_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "circulum", _circulum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "refutationes", _refutationes_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("briar_plagulae", SECTIONES,
+        _suitam_parare, NIHIL);
 }

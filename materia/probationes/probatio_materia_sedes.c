@@ -105,35 +105,20 @@ _numerare (
     redde numerus;
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: tractus lexematis
+ * ================================================== */
+
+interior vacuum
+_tractum_lexematis_probare (
+    CredoContextus* c)
 {
-                b32  praeteritus;
-            Piscina* piscina;
-MateriaLexiconRatum  ratum;
- MateriaLexIudicium  iudicium;
-
-    piscina = piscina_generare_dynamicum("probatio_materia_sedes",
-        65536);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    CREDO_VERUM (materia_lexicon_ratum_facere(&ratum, &LEXICON,
-        &iudicium));
-
-
-    /* ==================================================
-     * PROBARE: tractus lexematis
-     * ================================================== */
+    Piscina* piscina = c->piscina;
 
     {
         MateriaTractus t;
 
-        imprimere("\n--- Probans tractum lexematis ---\n");
         materia_tractus_lexematis(NIHIL, _lex(piscina, (s32)G_IDENT,
             "abc", (s32)10, (i32)II, (i32)III), &t);
         CREDO_AEQUALIS_S32 (t.initium, (s32)10);
@@ -170,11 +155,18 @@ MateriaLexiconRatum  ratum;
         CREDO_AEQUALIS_I32 (t.columna_finis, (i32)IV);
         CREDO_FALSUM (t.est_fons);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: tractus nodi
-     * ================================================== */
+/* ==================================================
+ * PROBARE: tractus nodi
+ * ================================================== */
+
+interior vacuum
+_tractum_nodi_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
           MateriaNodus* nodus;
@@ -182,7 +174,6 @@ MateriaLexiconRatum  ratum;
           MateriaNodus* scopus;
         MateriaTractus  t;
 
-        imprimere("\n--- Probans tractum nodi ---\n");
         filius = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
         CREDO_VERUM (materia_nodus_appendere(piscina, filius, ZEPHYRUM,
             materia_valor_token(_lex(piscina, (s32)G_IDENT, "yy",
@@ -228,14 +219,26 @@ MateriaLexiconRatum  ratum;
         CREDO_FALSUM (materia_tractus_nodi(NIHIL, nodus, &t));
         CREDO_AEQUALIS_S32 (t.initium, (s32)-I);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: visio sedium
-     * ================================================== */
+/* ==================================================
+ * PROBARE: visio sedium
+ * ================================================== */
 
+interior vacuum
+_visionem_sedium_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+    MateriaLexiconRatum  ratum;
+     MateriaLexIudicium  iudicium;
+
+    /* ratum sola haec sectio adhibet: hic fit (assertio sua cum eo) */
+    CREDO_VERUM (materia_lexicon_ratum_facere(&ratum, &LEXICON,
+        &iudicium));
     {
-        MateriaArborConsilium c;
+        MateriaArborConsilium consilium;
         MateriaArborScriptura s;
         MateriaArborScriptura nuda;
            MateriaArborVitium vitium;
@@ -245,7 +248,6 @@ MateriaLexiconRatum  ratum;
                           b32  admissi[1];
                     character* txt;
 
-        imprimere("\n--- Probans visionem sedium ---\n");
         /* fons: spatia duo ad 0, commentum quinque octetorum ad 2,
          * 'x' ad 7, linea nova ad 8 */
         x = _lex(piscina, (s32)G_IDENT, "x", (s32)VII, (i32)I,
@@ -264,16 +266,17 @@ MateriaLexiconRatum  ratum;
         CREDO_VERUM (materia_nodus_appendere(piscina, n, ZEPHYRUM,
             materia_valor_token(x), MATERIA_LOCUS_LISTA_MIXTA));
 
-        materia_arbor_consilium_nudum(&c, &REG, &ratum, "probatio");
-        nuda = materia_arbor_scribere_nodum(piscina, n, &c);
+        materia_arbor_consilium_nudum(&consilium, &REG, &ratum,
+            "probatio");
+        nuda = materia_arbor_scribere_nodum(piscina, n, &consilium);
         CREDO_VERUM (nuda.successus);
         CREDO_NIHIL (strstr(chorda_ut_cstr(nuda.textus, piscina),
             "sedes="));
         CREDO_NIHIL (strstr(chorda_ut_cstr(nuda.textus, piscina),
             "visio="));
 
-        c.sedes_scribere = VERUM;
-        s = materia_arbor_scribere_nodum(piscina, n, &c);
+        consilium.sedes_scribere = VERUM;
+        s = materia_arbor_scribere_nodum(piscina, n, &consilium);
         CREDO_VERUM (s.successus);
         txt = chorda_ut_cstr(s.textus, piscina);
         CREDO_NON_NIHIL (strstr(txt, "visio=\"sedes\""));
@@ -289,7 +292,8 @@ MateriaLexiconRatum  ratum;
         CREDO_NON_NIHIL (strstr(txt, "octeti=\"8-9\""));
 
         /* lector visionem recusat */
-        CREDO_NIHIL (materia_arbor_legere(piscina, NIHIL, s.textus, &c,
+        CREDO_NIHIL (materia_arbor_legere(piscina, NIHIL, s.textus,
+            &consilium,
             &vitium));
         CREDO_NON_NIHIL (vitium.causa);
         si (vitium.causa != NIHIL)
@@ -299,9 +303,10 @@ MateriaLexiconRatum  ratum;
         }
 
         /* cum filtro locorum */
-        admissi[0]      = VERUM;
-        c.loci_admissi  = admissi;
-        s               = materia_arbor_scribere_nodum(piscina, n, &c);
+        admissi[0]              = VERUM;
+        consilium.loci_admissi  = admissi;
+        s = materia_arbor_scribere_nodum(piscina, n,
+            &consilium);
         CREDO_VERUM (s.successus);
         CREDO_NON_NIHIL (strstr(chorda_ut_cstr(s.textus, piscina),
             "visio=\"partialis sedes\""));
@@ -312,16 +317,27 @@ MateriaLexiconRatum  ratum;
             materia_valor_token(x), MATERIA_LOCUS_LISTA_MIXTA));
         CREDO_VERUM (materia_nodus_appendere(piscina, n, ZEPHYRUM,
             materia_valor_token(x), MATERIA_LOCUS_LISTA_MIXTA));
-        c.loci_admissi  = NIHIL;
-        s               = materia_arbor_scribere_nodum(piscina, n, &c);
+        consilium.loci_admissi = NIHIL;
+        s = materia_arbor_scribere_nodum(piscina, n,
+            &consilium);
         CREDO_VERUM (s.successus);
         CREDO_AEQUALIS_I32 (_numerare(chorda_ut_cstr(s.textus, piscina),
             "octeti=\"7-8\""), (i32)II);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "tractus lexematis", _tractum_lexematis_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "tractus nodi", _tractum_nodi_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "visio sedium", _visionem_sedium_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("materia_sedes", SECTIONES);
 }

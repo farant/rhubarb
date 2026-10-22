@@ -1,0 +1,55 @@
+<sanctus id="bernardine-of-siena" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Bernardine of Siena</nomen>
+  <nomen lingua="it" fontes="ce">Bernardino</nomen>
+  <ortus annus="1380" mensis="9" dies="8" locus="Massa" fontes="ce bu"/>
+  <obitus annus="1444" mensis="5" dies="20" locus="Aquila" fontes="ce bu mr"/>
+  <canonizatio modus="formalis" annus="1450" mensis="5" dies="24" papa="Nicholas V" fontes="ce bu"/>
+  <festum calendarium="generale" mensis="5" dies="20" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="5" dies="20" fontes="mr"/>
+  <munus fontes="us ce">priest</munus>
+  <munus fontes="ce mr">religious</munus>
+  <munus fontes="ce">missionary</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Bernardine was born of the noble Albizeschi family at Massa, near Siena, on 8 September 1380, and was orphaned in childhood and raised by devout aunts. In 1400, when plague struck Siena, he and a group of young companions took charge of the great hospital of Santa Maria della Scala for four months, a labour that permanently damaged his health. He then gave away his inheritance and entered the Friars Minor in 1402, joining the strict Observance; he was professed in 1403 and ordained in 1404.</paragraphus>
+    <paragraphus fontes="ce mr bu">From 1417 he preached throughout Italy, often in market places to crowds of thousands, attacking usury and gambling and reconciling feuding factions. He spread devotion to the Holy Name of Jesus, showing the people a tablet bearing the monogram I.H.S.; accused of novelty over this, he was cleared at Rome before Martin V. He declined three bishoprics, served as vicar-general of the Observants in Italy from 1438, and saw them grow from about 130 friars to over four thousand. He died at Aquila on 20 May 1444 and was canonized by Nicholas V in 1450.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="20 May">
+    <excerptum>At Aquila, in Abruzzo, St. Bernardine of Siena, of the Order of Minorites, who ennobled Italy by his preaching and example.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Bernardine of Siena" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Bernardine_of_Siena">
+    <excerptum>Friar Minor, missionary, and reformer, often called the "Apostle of Italy", b. of the noble family of Albizeschi at Massa, a Sienese town of which his father was then governor, 8 September, 1380; d. at Aquila in the Abruzzi, 20 May, 1444.</excerptum>
+    <excerptum>Left an orphan at six Bernardine was brought up with great care by his pious aunts.</excerptum>
+    <excerptum>he joined the Confraternity of Our Lady attached to the great hospital of Santa Maria della Scala. Three years later, when the pestilence revisited Siena,</excerptum>
+    <excerptum>he came forth from the life of seclusion and prayer he had embraced, to minister to the plague-stricken, and, assisted by ten companions, took upon himself for four months entire charge of this hospital.</excerptum>
+    <excerptum>the heroic and unremitting labour it involved so far shattered his health that he never completely recovered.</excerptum>
+    <excerptum>Having distributed his patrimony in charity, Bernardine received the habit of the Friars Minor at San Francesco in Siena, 8 September, 1402, but soon withdrew to the Observantine convent of Columbaio outside the city. He was professed 8 September, 1403 and ordained 8 September, 1404.</excerptum>
+    <excerptum>It was in 1417 that his gift of eloquence was made manifest and his missionary life really began at Milan at the close of that year.</excerptum>
+    <excerptum>he was often compelled to preach in the market places, his auditors sometimes numbering thirty thousand.</excerptum>
+    <excerptum>Usury was one of the principal objects of the saint's attacks</excerptum>
+    <excerptum>his eloquence was exercised with great effect towards reconciling the mutual hatred of Guelphs and Ghibellines.</excerptum>
+    <excerptum>He thus gave a new impulse and a tangible form to the devotion to the Holy Name of Jesus</excerptum>
+    <excerptum>He used to hold a board in front of him while preaching, with the sacred monogram painted on it in the midst of rays and afterwards expose it for veneration.</excerptum>
+    <excerptum>to inscribe there, instead, the initials I. H. S.</excerptum>
+    <excerptum>a card-painter, who had been ruined by his sermons against gambling</excerptum>
+    <excerptum>The saint was charged with having introduced a profane, new devotion which exposed the people to the danger of idolatry, and he was cited to appear before the pope.</excerptum>
+    <excerptum>This was in 1427. Martin V received Bernardine coldly and forbade him to preach or exhibit his tablets until his conduct had been examined.</excerptum>
+    <excerptum>The latter took place at St. Peter's in presence of the pope</excerptum>
+    <excerptum>the pope not only justified and commended the saint's teaching, but urged him to preach in Rome.</excerptum>
+    <excerptum>Martin V subsequently approved Bernardine's election as Bishop of Siena. The saint, however, declined this honour as well as the Sees of Ferrara and Urbino</excerptum>
+    <excerptum>He resumed his missionary labours in 1436, but was forced to abandon them in 1438 on his election as Vicar-General of the Observants throughout Italy.</excerptum>
+    <excerptum>instead of the one hundred and thirty Friars constituting the Observance in Italy at Bernardine's reception into the order, it counted over four thousand before his death.</excerptum>
+    <excerptum>Amadio Luzzo, Vita di S. Bernardino</excerptum>
+    <excerptum>Miracles multiplied after the saint's death, and he was canonized by Nicholas V, 24 May, 1450.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v05 May 20 St. Bernardin of Sienna, C.">
+    <excerptum>He was born at Massa in 1380, of the noble family of Albizeschi, in the r epublic of Sienna.</excerptum>
+    <excerptum>He had served this hospital four years, when in 1400, a dreadful pestilence</excerptum>
+    <excerptum>Bernardin therefore persuaded twelve young men to bear him company in the service of the hospital</excerptum>
+    <excerptum>he shewed to the people the sacred name of Jesus curiously cut on a board with gold letters</excerptum>
+    <excerptum>he surrendered his pure soul into the hands of his Creator on the twentieth of May 1444</excerptum>
+    <excerptum>he was canonized by Nicholas V. in 1450.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="20 May">
+    <excerptum>Saint Bernardine of Siena, Priest</excerptum>
+  </fons>
+</sanctus>

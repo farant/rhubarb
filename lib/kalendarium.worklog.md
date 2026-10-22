@@ -841,3 +841,89 @@ plants red (one survivor first: widening the hit area horizontally -
 the "off the cake" point was below the cake; a left-edge point now
 guards it). Headless screenshots: $TMPDIR/imago/p6d_2026-10-14.png and
 p6d_2026-10-31.png (two birthdays, flipped).
+
+## 2026-10-19 — Week view (Fran: Sunday first, open todos only, notes after todos)
+
+- `visus="hebdomas"`, button "Week" between Month and Day. Seven day
+  blocks (PARTES_ITEM, ISO ids) in equal-height rows, Sunday first.
+  Because the ids are ISO dates, the month cell's click (select),
+  double-click (open day) and right-click menu (ELENCHUS_DIEI) work
+  unchanged - only the command masks gained VISUS_HEBDOMADIS.
+- Block: "Wed 14" (today inverted, as in the month), colour square,
+  celebration; then birthdays (genus natalis only - saints are not
+  repeated, the celebration line covers the day), open todos "[ ]",
+  day-book lines via `scriba_liber_lineas_legere` (read-only).
+  Overflow: the last visible line carries "+n" (lines not shown).
+- Celebration rule: the principal celebration when it is at least an
+  optional memorial (Sundays included); on a plain feria the first
+  celebration in `celebrationes[1..]` that may be kept (optional
+  memorials - Oct 14 St. Callistus is not the principal). Sunday
+  titles come from calendarium_liturgicum in Latin ("Dominica XXIX
+  per Annum"), same strings the day view shows.
+- Keys: j/k day, J/K week, t, Enter (day view), Esc (month); < > move
+  a week (GlobulusTituli gained `mandatum_hebdomadis`).
+- The P6d birthday hover was keyed on "not day, not agenda" - it would
+  have fired in the week; now `visus_currens == VISUS_MENSIS`.
+- "+n" in COLOR_TEXT_DIM vanished on the selection fill (seen in the
+  headless screenshot); now COLOR_TEXT. Capacity first reserved a
+  spare row; now (h - 2 - glyph) / 10.
+- Cost: 0.88 ms per recompose+paint for the week vs 0.97 ms for the
+  month (sample data, 100 frames) - no cache.
+- Test trap: day books are mounted for the SELECTED day at mount, so
+  "book absent stays absent" is checked on another day (Oct 12).
+- Dedent (Fran, same day): the day's note lines lose their common
+  leading spaces (relative indent kept), across all pages of the day;
+  todos and birthdays are not part of the computation (a todo has no
+  indent and would cancel it - tested with a todo on the same day).
+  Local helper `indentationem_communem_tollere`: stml.c has a dedent, but static and
+  over one '\n'-joined string; a shared one in chorda.h would owe ~29
+  gates for a dozen lines. Plants 3 red.
+- Month view, today (Fran 10-19, picked C of four headless variants:
+  A double accent border, B accent dots, C light solid fill, D dim
+  hatch): COLOR_SUPERFICIES fill inside the cell, drawn before the
+  grid line; the inverted day number, the selection's double border
+  and the out-of-month dotting are untouched. Test `fundus_hodie`
+  (fill on today, not on a neighbour, stays when the selection moves);
+  plants 3 red (no fill, every day, follows the selection).
+
+## 2026-10-20 — semitae R4a: the calendar on routes (Fran approved the text 10-19)
+
+- Manifest: `visus` ligatio impelle, `dies_electus` ligatio (stays
+  transient, now typus `dies`), `res_electa` + `pagina` status with
+  ambitus ligatio, `rubrica_filtrum` status. Needed the R0 rule relaxed
+  (organum.c): semita is now refused only on `sedes motus` and
+  `vita probatio` - "restore after restart?" (vita) and "addressable?"
+  (semita) are different questions. Spec principle 6 updated.
+- `kalendarium_argumentum_ponere` = route: URI ("calendarium/...") or
+  alias ("YYYY-MM" -> mensis/<day>, "YYYY-MM-DD" -> dies/<day>,
+  "agenda"). Typus `dies` checks FORM only (est_dies accepts
+  2026-02-30), so the calendar re-checks with diem_legere before apply.
+- Behaviour change (approved): "YYYY-MM" now also switches to month
+  view; before it only moved the day.
+- `kalendarium_semitam_secuta` = facies.semitam_secuta: after vicus
+  applies a history route the notes book follows the day.
+- BUG found by a FLAKY suite, not by the new tests: mount first called
+  kalendarium_argumentum_ponere, whose librum_aptare read
+  `ctx->notae.montata` BEFORE notas_montare - KalendariumFigurae came
+  from piscina_allocare (not zeroed), so garbage sometimes said
+  "mounted" and charta_clavem_ponere ran on a garbage Charta
+  (probatio_vicus_kalendarium exit 139 roughly every other run; two
+  plants reported "porta post reversionem non viridis" because of it).
+  Fix: mount uses `argumentum_applicare` (route only); argumentum_ponere
+  = apply + librum_aptare; the figurae context is now memset to zero.
+  Lesson: "not green after revert" from planta = suspect a flake first;
+  run the binary 10-15 times in a loop and backtrace under lldb
+  (`lldb -b -o run -k "bt 30"`).
+- Embedded manifests: after editing apps/*/organum.stml run
+  `./tools/organa_infigere.sh` (organum_legere_genus reads
+  lib/organa_infixa.c, not the disk) - the first red run said
+  "attributum non in semita: visus" for exactly this reason.
+
+## 2026-10-20 - D3: text ids
+
+`res_electa` holds id text (manifest `typus="nomen"`); row ids
+`r<id>`, `r<id>-<k>`, `q<id>` carry the ULID (`frustum_identitatis`
+cuts the text up to '-'; ULIDs never contain '-'). Album `res` =
+`AgendaRes.ordo` (creation ordinal); `res_ordinis` maps it back for
+paging. Group order ties break by ordinal (= old id order for old
+data). Row-id buffer XXXII -> XLVIII.

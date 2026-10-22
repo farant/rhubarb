@@ -1,0 +1,45 @@
+<sanctus id="anne" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Anne</nomen>
+  <nomen lingua="la" principale="verum" fontes="ce">Anna</nomen>
+  <nomen lingua="alia" fontes="ce">Hannah</nomen>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="7" dies="26" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="7" dies="26" fontes="mr"/>
+  <munus fontes="ce mr us">mother of the Blessed Virgin Mary</munus>
+  <patrocinium fontes="ce">Brittany</patrocinium>
+  <patrocinium fontes="ce">province of Quebec</patrocinium>
+  <patrocinium fontes="ce">women in labour</patrocinium>
+  <patrocinium fontes="ce">miners</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">Anne (Hebrew Hannah, "grace") is the traditional name of the mother of the Blessed Virgin Mary. Everything told of her and of Joachim comes from apocryphal writings, chiefly the Protoevangelium of James, of about A.D. 150, whose statements the Catholic Encyclopedia will not accept on its sole authority. That account makes them a rich and pious couple of Nazareth, long childless, whose prayers were answered by an angel and who named their daughter Mary; because it echoes the story of Samuel's mother Hannah, even Anne's name is called doubtful. Later legends giving her further husbands are called spurious; in the sixteenth-century controversy over her marriages, Baronius and Bellarmine defended her monogamy.</paragraphus>
+    <paragraphus fontes="ce bu mr">Her cult in the East goes back to the fourth century, and Justinian I dedicated a church to her; her supposed relics were brought to Constantinople in 710. In the West her feast on 26 July appears in the thirteenth century and was extended to the whole Latin Church in 1584; the Martyrology keeps that day as her departure from this life. She is patroness of Brittany, of women in labour and of miners, and principal patron of the province of Quebec. Butler presents her as a model for the married and for those charged with educating children.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Anne" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Anne">
+    <excerptum>Anne, Saint (Heb., Hannah, grace), Ann, Anne, Anna, is the traditional name of the mother of the Blessed Virgin Mary.</excerptum>
+    <excerptum>All our information concerning the names and lives of Sts. Joachim and Anne, the parents of Mary, is derived from apocryphal literature</excerptum>
+    <excerptum>goes back to about a.d. 150, we can hardly accept as beyond doubt its various statements on its sole authority.</excerptum>
+    <excerptum>In Nazareth there lived a rich and pious couple, Joachim and Hannah. They were childless.</excerptum>
+    <excerptum>Their prayers were heard; an angel came to Hannah</excerptum>
+    <excerptum>Hannah gave birth to a daughter whom she called Miriam (Mary). Since this story is apparently a reproduction of the biblical account of the conception of Samuel, whose mother was also called Hannah, even the name of the mother of Mary seems to be doubtful.</excerptum>
+    <excerptum>that St. Anne then married Cleophas, by whom she became the mother of Mary Cleophæ</excerptum>
+    <excerptum>The same spurious legend is found in the writings of Gerson</excerptum>
+    <excerptum>There arose in the sixteenth century an animated controversy over the marriages of St. Anne, in which Baronius and Bellarmine defended her monogamy.</excerptum>
+    <excerptum>In the Orient the cult of St. Anne can be traced to the fourth century. Justinian I (d. 565) had a church dedicated to her.</excerptum>
+    <excerptum>Her feast, under the influence of the "Golden Legend", is first found (26 July) in the thirteenth century</excerptum>
+    <excerptum>It was extended to the universal Latin Church in 1584.</excerptum>
+    <excerptum>The supposed relics of St. Anne were brought from the Holy Land to Constantinople in 710</excerptum>
+    <excerptum>St. Anne is the patroness of Brittany.</excerptum>
+    <excerptum>Also in Canada, where she is the principal patron of the province of Quebec</excerptum>
+    <excerptum>St. Anne is patroness of women in labour</excerptum>
+    <excerptum>She is also patroness of miners, Christ being compared to gold, Mary to silver.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="26 July">
+    <excerptum>departure out of this life of St. Anne, mother of the Blessed Virgin Mary, Mother of God.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v07 July 26 S. Anne, Mother of the Blessed Virgin">
+    <excerptum>who was the great model of virtue to all engaged in the married state, and charged with the education of children.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="26 July">
+    <excerptum>Saints Joachim and Anne, Parents of the Blessed Virgin Mary</excerptum>
+  </fons>
+</sanctus>

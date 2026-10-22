@@ -237,6 +237,7 @@ interior constans character* constans EXCLUDENDA_UTF8[] = {
 };
 
 interior constans character* constans EXCLUDENDA_RUNAE[] = {
+    "runae_basis",
     "runae_columnam_quaerere",
     "runae_latitudo_textus",
     "runae_unitas_proxima",

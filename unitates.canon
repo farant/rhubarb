@@ -93,6 +93,7 @@
     <attributum nomen="vitae"         genus="textus" necessarium="verum"/>
     <attributum nomen="munera"        genus="textus" necessarium="verum"/>
     <attributum nomen="provenientiae" genus="textus" necessarium="verum"/>
+    <attributum nomen="indoles"       genus="textus" necessarium="verum"/>
     <attributum nomen="linguae"       genus="textus" necessarium="verum"/>
     <attributum nomen="descriptio"    genus="textus" necessarium="verum"/>
   </elementum>

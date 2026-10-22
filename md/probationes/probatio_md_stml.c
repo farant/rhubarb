@@ -26,11 +26,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* VISIO SEDIUM (materia-sedes A2): elementa verificata per corpus -
- * porta quae nihil verificavit mortua est */
-hic_manens i32 SEDES_ELEMENTA = ZEPHYRUM;
-hic_manens i32 SEDES_DERIVATA = ZEPHYRUM;
-
 interior character*
 _plagulam_legere (
                Piscina* piscina,
@@ -71,14 +66,19 @@ _plagulam_legere (
     redde memoria;
 }
 
-/* Circuitus plenus. VERUM = omnia sana; causa imprimitur ante FALSUM. */
+/* Circuitus plenus. VERUM = omnia sana; causa imprimitur ante FALSUM.
+ * VISIO SEDIUM (materia-sedes A2): elementa verificata in *elementa /
+ * *derivata sectionis vocantis numerantur - porta quae nihil
+ * verificavit mortua est. */
 interior b32
 _circuitum_probare (
                            Piscina* piscina,
     constans MateriaArborConsilium* consilium,
                 constans character* fons,
                                i32  mensura,
-                               b32  fidelis)
+                               b32  fidelis,
+                               i32* elementa,
+                               i32* derivata)
 {
                MateriaNodus* radix;
                MateriaNodus* lecta;
@@ -111,8 +111,8 @@ _circuitum_probare (
                 sedes.causa ? sedes.causa : "-", (integer)sedes.index);
         }
         CREDO_VERUM (sedes.sana);
-        SEDES_ELEMENTA += sedes.elementa;
-        SEDES_DERIVATA += sedes.derivata;
+        *elementa += sedes.elementa;
+        *derivata += sedes.derivata;
     }
     lecta = materia_arbor_legere(piscina, NIHIL, s1.textus, consilium,
         &vitium);
@@ -188,35 +188,54 @@ _circuitum_probare (
     redde VERUM;
 }
 
-integer
-principale (vacuum)
-{
-                  Piscina* piscina;
-       constans character* radix_viae;
-      MateriaLexiconRatum  ratum;
-       MateriaLexIudicium  iudicium;
-    MateriaArborConsilium  consilium;
-                      b32  praeteritus;
+/* FIXURA SUITAE: lexicon et consilium proiectionis semel facta;
+ * sectiones ea per monstratorem constantem LEGUNT. */
+nomen structura {
+      MateriaLexiconRatum ratum;
+    MateriaArborConsilium consilium;
+} FixuraStml;
 
-    piscina = piscina_generare_dynamicum("probatio_md_stml", 4194304);
-    credo_aperire(piscina);
-    radix_viae = getenv("RHUBARB_RADIX");
-    si (radix_viae == NIHIL)
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+            FixuraStml* f;
+    MateriaLexIudicium  iudicium;
+
+    f = (FixuraStml*)piscina_allocare(c->piscina,
+        magnitudo(FixuraStml));
+    si (f == NIHIL)
     {
-        radix_viae = ".";
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    si (!materia_lexicon_ratum_facere(&ratum, &MD_LEXICON, &iudicium))
+    si (!materia_lexicon_ratum_facere(&f->ratum, &MD_LEXICON,
+        &iudicium))
     {
         imprimere("LEXICON MD RECUSATUM\n");
-        redde I;
+        redde;
     }
-    md_stml_consilium(&consilium, &ratum);
+    md_stml_consilium(&f->consilium, &f->ratum);
+    c->datum = f;
+}
 
 
-    /* ========================================================
-     * CASUS INLINEI: quaeque forma nodi per proiectionem
-     * ======================================================== */
+/* ==================================================
+ * CASUS INLINEI: quaeque forma nodi per proiectionem
+ * ================================================== */
 
+interior vacuum
+_casus_intra_lineam_probare (
+    CredoContextus* c)
+{
+    constans FixuraStml* fx        = (constans FixuraStml*)c->suita;
+                Piscina* piscina   = c->piscina;
+                    i32  elementa  = ZEPHYRUM;
+                    i32  derivata  = ZEPHYRUM;
+
+    si (fx == NIHIL)
+    {
+        redde;
+    }
     {
         hic_manens constans character* CASUS[] = {
             "# Titulus *em* `c`\n",
@@ -240,29 +259,40 @@ principale (vacuum)
         i32 numerus = (i32)(magnitudo(CASUS) / magnitudo(CASUS[0]));
         i32 i;
 
-        imprimere("\n--- Probans circuitum STML inlineum (structuralis + fidelis) ---\n");
         per (i = ZEPHYRUM; i < numerus; i++)
         {
-            CREDO_VERUM (_circuitum_probare(piscina, &consilium,
+            CREDO_VERUM (_circuitum_probare(piscina, &fx->consilium,
                 CASUS[i],
-                (i32)strlen(CASUS[i]), VERUM));
+                (i32)strlen(CASUS[i]), VERUM, &elementa, &derivata));
         }
     }
+}
 
 
-    /* ========================================================
-     * DERIVATA in proiectione: f="1", positio portata, cursor immotus
-     * ======================================================== */
+/* ==================================================
+ * DERIVATA in proiectione: f="1", positio portata, cursor immotus
+ * ================================================== */
 
+interior vacuum
+_derivata_probare (
+    CredoContextus* c)
+{
+    constans FixuraStml* fx       = (constans FixuraStml*)c->suita;
+                Piscina* piscina  = c->piscina;
+
+    si (fx == NIHIL)
+    {
+        redde;
+    }
     {
         constans character* f = "[foo]: /u\n\n[foo] \\*x\\*\n";
               MateriaNodus* radix = md_arbor_parsare(piscina, f,
                   (i32)strlen(f));
         MateriaArborScriptura s;
 
-        imprimere("\n--- Probans derivata in proiectione ---\n");
         CREDO_NON_NIHIL (radix);
-        s = materia_arbor_scribere_nodum(piscina, radix, &consilium);
+        s = materia_arbor_scribere_nodum(piscina, radix,
+            &fx->consilium);
         CREDO_VERUM (s.successus);
         CREDO_NON_NIHIL (strstr((character*)s.textus.datum, "f=\"1\""));
         CREDO_NON_NIHIL (strstr((character*)s.textus.datum,
@@ -271,14 +301,26 @@ principale (vacuum)
             "grammatica=\"md\""));
         CREDO_NIHIL (strstr((character*)s.textus.datum, "<ante>"));   /* trivia nulla */
     }
+}
 
 
-    /* ========================================================
-     * SEDES per proiectionem: derivatum positionem PORTATAM servat,
-     * cursor lectoris eo non promovetur (lexema fontis sequens sedem
-     * eandem habet quam in parsura)
-     * ======================================================== */
+/* ==================================================
+ * SEDES per proiectionem: derivatum positionem PORTATAM servat,
+ * cursor lectoris eo non promovetur (lexema fontis sequens sedem
+ * eandem habet quam in parsura)
+ * ================================================== */
 
+interior vacuum
+_sedes_derivatorum_probare (
+    CredoContextus* c)
+{
+    constans FixuraStml* fx       = (constans FixuraStml*)c->suita;
+                Piscina* piscina  = c->piscina;
+
+    si (fx == NIHIL)
+    {
+        redde;
+    }
     {
         constans character* f = "[foo]: /url\n\n[foo] b\n";
               MateriaNodus* radix = md_arbor_parsare(piscina, f,
@@ -295,12 +337,12 @@ principale (vacuum)
         constans MateriaToken* ta;
         constans MateriaToken* tb;
 
-        imprimere("\n--- Probans sedes derivatorum per proiectionem ---\n");
         CREDO_NON_NIHIL (radix);
-        s = materia_arbor_scribere_nodum(piscina, radix, &consilium);
+        s = materia_arbor_scribere_nodum(piscina, radix,
+            &fx->consilium);
         CREDO_VERUM (s.successus);
         lecta = materia_arbor_legere(piscina, NIHIL, s.textus,
-            &consilium, &vitium);
+            &fx->consilium, &vitium);
         CREDO_NON_NIHIL (lecta);
         /* paragraphus = blocus III (definitio, vacua, paragraphus) */
         pa =
@@ -342,12 +384,31 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (tb->columna, ta->columna);
         CREDO_AEQUALIS_S32 (ta->byte_offset, (s32)18);   /* "[foo]: /url\n\n[foo]" = XVIII */
     }
+}
 
 
-    /* ========================================================
-     * CORPUS TOTUM per circuitum, se metiens
-     * ======================================================== */
+/* ==================================================
+ * CORPUS TOTUM per circuitum, se metiens - et corpus elementa
+ * verificare DEBET (porta mortua aliter)
+ * ================================================== */
 
+interior vacuum
+_corpus_probare (
+    CredoContextus* c)
+{
+    constans FixuraStml* fx          = (constans FixuraStml*)c->suita;
+     constans character* radix_viae  = getenv("RHUBARB_RADIX");
+                    i32  elementa    = ZEPHYRUM;
+                    i32  derivata    = ZEPHYRUM;
+
+    si (fx == NIHIL)
+    {
+        redde;
+    }
+    si (radix_viae == NIHIL)
+    {
+        radix_viae = ".";
+    }
     {
         character via[DXII];
              FILE* lista;
@@ -355,7 +416,6 @@ principale (vacuum)
               i32  fractae  = ZEPHYRUM;
               s64  octeti   = ZEPHYRUM;
 
-        imprimere("\n--- Probans corpus per circuitum STML ---\n");
         sprintf(via, "%s/md/build/corpus_md.txt", radix_viae);
         lista = fopen(via, "r");
         si (lista == NIHIL)
@@ -395,8 +455,9 @@ principale (vacuum)
                 }
                 plagulae  = plagulae + I;
                 octeti    = octeti + (s64)mensura;
-                si (!_circuitum_probare(p, &consilium, textus, mensura,
-                    VERUM))
+                si (!_circuitum_probare(p, &fx->consilium, textus,
+                    mensura,
+                    VERUM, &elementa, &derivata))
                 {
                     fractae = fractae + I;
                     imprimere("  FRACTA: %s\n", linea);
@@ -410,13 +471,29 @@ principale (vacuum)
             CREDO_MAIOR_I32 (plagulae, (i32)1000);
         }
     }
+    imprimere("  sedes (visio): %d elementa verificata, %d derivata\n",
+        (integer)elementa, (integer)derivata);
+    CREDO_VERUM (elementa > ZEPHYRUM);
+}
 
-    imprimere("\n");
-    imprimere("\n--- sedes (visio): %d elementa verificata, %d derivata"
-        " ---\n", (integer)SEDES_ELEMENTA, (integer)SEDES_DERIVATA);
-    CREDO_VERUM (SEDES_ELEMENTA > ZEPHYRUM);
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "circuitum STML inlineum (structuralis + fidelis)",
+        _casus_intra_lineam_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "derivata in proiectione", _derivata_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "sedes derivatorum per proiectionem", _sedes_derivatorum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    /* gravis: circuitus STML corporis md (plagula maxima DCCLXXXVIII
+     * KB -> ~CCCVIII MiB); sumptus per nodum proiectionis, park
+     * 01M5EGAWD5NT504BX9ZCR6JC37 - 2026-10-21 */
+    { "corpus per circuitum STML", _corpus_probare, NIHIL, NIHIL,
+        "gravis", NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("md_stml", SECTIONES, _suitam_parare,
+        NIHIL);
 }

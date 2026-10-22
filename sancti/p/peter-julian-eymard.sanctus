@@ -1,0 +1,36 @@
+<sanctus id="peter-julian-eymard" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Peter Julian Eymard</nomen>
+  <nomen lingua="fr" fontes="ce hom">Pierre-Julien Eymard</nomen>
+  <nomen lingua="it" fontes="hom">Pietro Giuliano Eymard</nomen>
+  <ortus annus="1811" mensis="2" dies="4" locus="La Mure d'Isère, diocese of Grenoble, France" fontes="ce"/>
+  <obitus annus="1868" mensis="8" dies="1" locus="La Mure d'Isère, France" fontes="ce hom"/>
+  <canonizatio modus="formalis" annus="1962" mensis="12" dies="9" papa="John XXIII" fontes="hom"/>
+  <festum calendarium="generale" mensis="8" dies="2" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us ce hom">priest</munus>
+  <munus fontes="ce hom">founder of the Society of the Blessed Sacrament</munus>
+  <descriptio>
+    <paragraphus fontes="ce hom">Pierre-Julien Eymard was born at La Mure d'Isère, in the diocese of Grenoble, on 4 February 1811. From early childhood he showed a tender devotion to the Blessed Sacrament; John XXIII recalled the five-year-old found on the altar with his head resting against the tabernacle door. Illness ended his first attempt at religious life in 1829; he then studied at the seminary of Grenoble and was ordained priest on 20 July 1834. In 1839 he returned to religious life among the Marists and in 1845 became a provincial. The Eucharist was the centre of his preaching and spiritual direction.</paragraphus>
+    <paragraphus fontes="ce hom">In 1851, at the shrine of Our Lady of Fourvière, he promised to found a congregation of priests devoted to honouring the Blessed Sacrament. In a small house in Paris the Blessed Sacrament was exposed on 6 January 1857 and adoration begun by a community of two; a novitiate opened in 1862 and the society spread widely. In 1858 he also founded the Servants of the Blessed Sacrament, cloistered women given to perpetual adoration, and he promoted the Priests' Eucharistic League. He died in his native town on 1 August 1868, was declared Venerable in 1908, and was canonized by John XXIII on 9 December 1962, during the Second Vatican Council.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Ven. Pierre-Julien Eymard" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Ven._Pierre-Julien_Eymard">
+    <excerptum>founder of the Society of the Blessed Sacrament, and of the Servants of the Blessed Sacrament, b. at La Mure d'Isere, Diocese of Grenoble, France, February 4, 1811; d. there August 1, 1868.</excerptum>
+    <excerptum>From early childhood he gave evidence of great holiness and most tender devotion to the Blessed Sacrament. In 1829, he entered the novitiate of the Oblates of Mary, but illness compelled him to return home.</excerptum>
+    <excerptum>At the age of twenty he entered the grand seminary of Grenoble, and was ordained priest July 20, 1834. He returned to the Marist novitiate in 1839. In 1845 he was appointed Provincial of the Oblates of Mary.</excerptum>
+    <excerptum>His entire spiritual life was centered round the Eucharist. It was the subject of his sermons and exhortations, the object of his worship and prayers. Those who fell under his spiritual direction were taught by his counsel to fix their attention on the Blessed Sacrament.</excerptum>
+    <excerptum>In January of 1851 Pere Eymard made a pilgrimage to the shrine of Our Lady of Fourvieres, and there promised Mary to devote his life to founding a congregation of priests whose principal duty should be to honor the Blessed Sacrament.</excerptum>
+    <excerptum>he procured a small house in Paris, in which he and his single companion took up their abode. Here, on January 6, 1857, the Blessed Sacrament was exposed, and the nascent community of two members commenced the adoration of the Blessed Sacrament</excerptum>
+    <excerptum>Five years after, in 1862, Pere Eymard had enough spiritual sons to open a regular novitiate. From this date the congregation spread rapidly</excerptum>
+    <excerptum>The Servants of the Blessed Sacrament, a congregation of cloistered women who carry on perpetual adoration in their convents, were also founded by him in 1858. The Priests' Eucharistic League and the Archconfraternity of the Blessed Sacrament are evidences of his zeal</excerptum>
+    <excerptum>The author was declared Venerable, August 11, 1908, and the process for Pere Eymard's beatification is now in progress.</excerptum>
+  </fons>
+  <fons id="hom" opus="sedes" locus="Homily of John XXIII, canonization of Peter Julian Eymard, Anthony Mary Pucci and Francis Mary of Camporosso, 9 December 1962" url="https://www.vatican.va/content/john-xxiii/it/homilies/1962/documents/hf_j-xxiii_hom_19621209_canonizzazione-santi.html">
+    <excerptum>CANONIZZAZIONE DEI SANTI: PIETRO GIULIANO EYMARD ANTONIO MARIA PUCCI FRANCESCO MARIA DA CAMPOROSSO OMELIA DEL SANTO PADRE GIOVANNI XXIII Basilica Vaticana Domenica, 9 dicembre 1962</excerptum>
+    <excerptum>Il fanciullo quinquenne, trovato sull'altare, reclinante il capo sulla porticina del Tabernacolo, è lo stesso che fonderà a suo tempo la Società dei Sacerdoti del SS. Sacramento e le Ancelle del SS. Sacramento</excerptum>
+    <excerptum>la glorification de Saint Pierre-Julien Eymard, prétre, confesseur, fondateur de deux familles religieuses consacrées au culte du Saint-Sacrement.</excerptum>
+    <excerptum>de Nous rendre dans son pays natal, à la Mure d'Isère, près de Grenoble. Nous avons vu là de Nos yeux le pauvre lit, la modeste cham- bre, où ce fidèle imitateur du Christ rendit sa belle àme à Dieu.</excerptum>
+    <excerptum>Accidit praeterea congruenter, quod sacra haec caeremonia in cursum incidit Concilii Oecumenici Vaticani II</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="2 August">
+    <excerptum>Saint Peter Julian Eymard, Priest</excerptum>
+  </fons>
+</sanctus>

@@ -1,0 +1,44 @@
+<sanctus id="barnabas" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Barnabas</nomen>
+  <nomen lingua="alia" fontes="ce">Joseph</nomen>
+  <ortus saeculum="1" circa="verum" locus="Cyprus" fontes="ce mr"/>
+  <obitus saeculum="1" fontes="ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="6" dies="11" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="6" dies="11" fontes="mr"/>
+  <munus fontes="ce mr us">apostle</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Barnabas, originally named Joseph, was a Levite born of Jewish parents in Cyprus about the beginning of the Christian era. Scripture calls him an Apostle, and the Church ranks him with the Twelve though he was not one of them. Converted soon after Pentecost, he sold his property for the Church, and the Apostles gave him the name Barnabas, then understood as "son of exhortation" or "consolation". He vouched for the newly converted Saul at Jerusalem, and when sent to Antioch to examine the conversion of Gentiles there he welcomed them, fetched Paul from Tarsus, and worked with him for a year.</paragraphus>
+    <paragraphus fontes="ce">With Paul he evangelized Cyprus and Asia Minor, where at Lystra the crowd took him for Jupiter, and when preachers from Jerusalem taught that even Gentiles must be circumcised, the two went up to Jerusalem to oppose it and the council there decided in their favour. After a sharp disagreement over John Mark, his cousin or nephew, the two separated, and Barnabas sailed with Mark to Cyprus. Little is known afterwards; he was still living in 56 or 57.</paragraphus>
+    <paragraphus fontes="mr ce">The Martyrology says he crowned his apostolate with martyrdom in Cyprus and that his body was found in the time of the emperor Zeno, with a copy of St. Matthew's Gospel in his own hand; the Catholic Encyclopedia judges the traditions of his martyrdom and later career late and untrustworthy.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Barnabas" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Barnabas">
+    <excerptum>Barnabas (originally Joseph), styled an Apostle in Holy Scripture, and, like St. Paul, ranked by the Church with the Twelve, though not one of them; b. of Jewish parents in the Island of Cyprus about the beginning of the Christian Era. A Levite</excerptum>
+    <excerptum>he was converted to Christianity shortly after Pentecost (about A.D. 29 or 30) and immediately sold his property and devoted the proceeds to the Church.</excerptum>
+    <excerptum>The Apostles, probably because of his success as a preacher</excerptum>
+    <excerptum>surnamed him Barnabas, a name then interpreted as meaning "son of exhortation" or "consolation".</excerptum>
+    <excerptum>made his first visit (dated variously from A.D. 33 to 38) to Jerusalem after his conversion, the Church there, remembering his former fierce spirit, was slow to believe in the reality of his conversion.</excerptum>
+    <excerptum>Barnabas stood sponsor for him and had him received by the Apostles</excerptum>
+    <excerptum>Barnabas was sent thither by them to investigate the work of his countrymen.</excerptum>
+    <excerptum>He saw in the conversions effected the fruit of God's grace and, though a Jew, heartily welcomed these first Gentile converts.</excerptum>
+    <excerptum>set out without delay for distant Tarsus, and persuaded Paul to go to Antioch and begin the work of preaching.</excerptum>
+    <excerptum>Together they laboured at Antioch for a whole year</excerptum>
+    <excerptum>Cyprus, the native land of Barnabas, was first evangelized, and then they crossed over to Asia Minor.</excerptum>
+    <excerptum>took Paul, who had just cured a lame man, for Hermes (Mercury) "because he was the chief speaker", and Barnabas for Jupiter</excerptum>
+    <excerptum>Preachers came from Jerusalem with the gospel that circumcision was necessary for salvation, even for the Gentiles.</excerptum>
+    <excerptum>went up to Jerusalem to combat it; the older Apostles received them kindly and at what is called the Council of Jerusalem (dated variously from A.D. 47 to 51) granted a decision in their favour</excerptum>
+    <excerptum>the cousin, or nephew of Barnabas (Col., iv, 10), John Mark, the future Evangelist</excerptum>
+    <excerptum>A sharp contention ensuing, the Apostles agreed to separate.</excerptum>
+    <excerptum>Barnabas sailed with John Mark to Cypress</excerptum>
+    <excerptum>Little is known of the subsequent career of Barnabas. He was still living and labouring as an Apostle in 56 or 57</excerptum>
+    <excerptum>When Paul was a prisoner in Rome (61-63), John Mark was attached to him as a disciple, which is regarded as an indication that Barnabas was no longer living</excerptum>
+    <excerptum>and as having suffered martyrdom in Cyprus. The traditions are all late and untrustworthy.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="11 June">
+    <excerptum>birthday of the apostle St. Barnabas, born in Cyprus. By the disciples, he was ordained apostle of the Gentiles with St. Paul</excerptum>
+    <excerptum>At length he went to Cyprus, where he ennobled his apostolate by a glorious martyrdom. Through his own revelation his body was found, in the time of the emperor Zeno, together with a copy of St. Matthew's gospel copied with his own hand.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="11 June">
+    <excerptum>Saint Barnabas, Apostle</excerptum>
+  </fons>
+</sanctus>

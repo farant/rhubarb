@@ -37,3 +37,30 @@ declarations are hoisted to the function top (an inner-block
 declaration also skewed the outer alignment). Amalgams regenerated
 (silva, officina: this change only; tessera: also its drift since
 2026-09-02, latina.h tabs→spaces).
+
+## 2026-10-21 — growth through piscina_conari_ampliare; self-append
+
+`_crescere` asks `piscina_conari_ampliare` first and only allocates + copies
+when the pool cannot grow the buffer where it is (see lib/piscina.worklog.md).
+
+**Behaviour change for stale views.** Before, a growth left the old buffer
+in the arena, so a `spectare` view taken before an append still read the
+old bytes. That was never the contract ("validus solum usque ad proximam
+mutationem"), but it was what happened. Now:
+- path I (in place): the view sees the new bytes;
+- path II (realloc): the view may point at freed memory.
+
+**Self-append** (`appendere_chorda(a, spectare(a))` with growth, pinned by
+the audit probe `probationes/fixa/sondae_auditus/chorda_aedificator_alias.c`)
+worked only because the old buffer survived. `_appendere_interna` now
+notices a source inside its own buffer, keeps it as an offset, and
+re-derives it after growth. Plant: without the re-derivation, the suite
+built as the venenum gate builds it (ASan + VENENUM) aborts with
+heap-use-after-free; restored, 715/715. The suite is now in the venenum
+gate's list for exactly that reason.
+
+Audit for other stale views: heuristic scan of all `x = spectare(a)` sites
+followed by a mutation of `a` and a later use of `x` found one production
+candidate (lib/rivus_eventuum.c:92, a false positive: the reset is followed
+by `redde`) plus the audit probes. Views held in structs are not visible
+to that scan; the ASan sweep covers them.

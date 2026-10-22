@@ -122,6 +122,7 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(RTLD_LAZY == 0x1 && RTLD_NOW == 0x2);"
     echo "IUNGO_ASSERTA(RTLD_LOCAL == 0x4 && RTLD_GLOBAL == 0x8);"
     echo "IUNGO_ASSERTA(MAP_PRIVATE == 0x0002 && MAP_ANON == 0x1000);"
+    echo "IUNGO_ASSERTA(MAP_SHARED == 0x0001);"   # sonus S3a 2026-10-21
     echo "IUNGO_ASSERTA(sizeof(struct termios) == 72);"
     while read -r campus off mensura; do
         echo "IUNGO_ASSERTA(OFF(termios, $campus) == $off);"
@@ -222,6 +223,10 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(sizeof(struct rusage_info_v4) == 296);"
     echo "IUNGO_ASSERTA(OFF(rusage_info_v4, ri_resident_size) == 64 && OFF(rusage_info_v4, ri_phys_footprint) == 72);"
     echo "IUNGO_ASSERTA(OFF(rusage_info_v4, ri_lifetime_max_phys_footprint) == 240);"
+    # sonus S3 (2026-10-21): ordo memoriae __atomic (sectio
+    # postulata_atomica.h); in TU nostro redefinitio nostra praedefinitum
+    # clang AEQUALE esse debet (aliter -Werror 'macro redefined')
+    echo "IUNGO_ASSERTA(__ATOMIC_ACQUIRE == 2 && __ATOMIC_RELEASE == 3);"
 }
 
 PRAEAMBULUM='#define IUNGO2(a,b) a##b

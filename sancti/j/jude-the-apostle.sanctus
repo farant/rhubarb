@@ -1,0 +1,35 @@
+<sanctus id="jude-the-apostle" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Jude the Apostle</nomen>
+  <nomen lingua="en" fontes="mr bu">Thaddeus</nomen>
+  <obitus locus="Persia" martyrium="verum" fontes="mr bu"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="10" dies="28" gradus="festum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="10" dies="28" fontes="mr"/>
+  <munus fontes="us mr bu">apostle</munus>
+  <munus fontes="mr bu">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="bu">Jude, also called Thaddeus and Lebbeus, is distinguished by these surnames from Judas Iscariot. He calls himself the brother of James the Less in his epistle, and Butler counts him among the sons of Cleophas and Mary who are called the brethren of the Lord. After the Last Supper, when Christ promised to manifest himself to those who love him, Jude asked why he would not manifest himself to the world. He wrote a general epistle to the churches of the East, chiefly to Jewish converts, against the heretics of the time. Butler notes that Jerome and Bede identified him with the Thaddeus whom St. Thomas sent to Edessa, but that the general opinion takes that Thaddeus for another man, one of the seventy-two disciples.</paragraphus>
+    <paragraphus fontes="mr bu">The Martyrology says that he preached in Mesopotamia and then went with Simon into Persia, where both converted many and suffered martyrdom. Butler, citing Nicephorus, Isidore and the martyrologies, adds that he preached through Judea, Samaria, Idumea and Syria; the western martyrologists place his death in Persia, while many Greeks say he was shot with arrows.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="28 October">
+    <excerptum>birthday of the blessed apostles Simon the Cananean, and Thaddeus, who is called Jude. Simon preached the Gospel in Egypt, Thaddeus in Mesopotamia. Afterwards, entering Persia together, they converted to Christ a numberless multitude of the inhabitants, and then underwent martyrdom.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v10 Oct. 28 St. Jude, Apostle">
+    <excerptum>Tue apostle St. Jude is distinguished from the Iscariot, by the surname of Thaddeeus</excerptum>
+    <excerptum>also by that of Lebbzeus, which is given him in the Greek text of St. Matthew</excerptum>
+    <excerptum>St. Jude was brother to St. James the Less, as he styles himself in his epistle</excerptum>
+    <excerptum>who are styled the brethren of our Lord, and were sons of Cleophas, and Mary, sister to the Blessed Virgin.</excerptum>
+    <excerptum>After the last supper, when Christ promised to manifest himself to every one who should love him, St. Jude asked him, why he did not manifest. himself to the world?</excerptum>
+    <excerptum>He wrote a catholic or general epistle to all the churches of the East, particularly addressing himself to the Jewish converts</excerptum>
+    <excerptum>The havock which these heresies continued to make among souls stirred up the zeal of St. Jude</excerptum>
+    <excerptum>that the apostle St. Thomas sent Saint Thaddeus, one of the disciples of our Lord, to Edessa</excerptum>
+    <excerptum>St. Jerom and Bede take this Thaddgeus to have been the apostle St. Jude</excerptum>
+    <excerptum>but it is the general opinion that it was another person, one of the seventy-two disciples</excerptum>
+    <excerptum>Nicephorus, Isidore, and the Martyrologies tell us, that St. Jude preached up and down Judzea, Samaria, Idumzea, and Syria; especially in Mesopotamia.</excerptum>
+    <excerptum>Fortunatus and the western Martyrologists tell us, that the apostle St. Jude suffered martyrdom in Persia</excerptum>
+    <excerptum>Many Greeks say he was shot to death with arrows</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="28 October">
+    <excerptum>Saints Simon and Jude, Apostles</excerptum>
+  </fons>
+</sanctus>

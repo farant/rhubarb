@@ -32,9 +32,9 @@
 #define CIRCUITUS_MAXIMUS        CXXVIII
 
 
-/* ================================================================
+/* ==================================================
  * Pons frustorum
- * ================================================================ */
+ * ================================================== */
 
 nomen structura {
     i32 initium;
@@ -237,9 +237,9 @@ _pontem_parare (
 }
 
 
-/* ================================================================
+/* ==================================================
  * Cursus et comparatio
- * ================================================================ */
+ * ================================================== */
 
 /* Eventa legere usque ad frusta exhausta et lectorem vacuum.
  * *ruptum = VERUM si eventa nimia aut circuitus sine fine. */
@@ -345,9 +345,9 @@ _eventum_congruit (
 }
 
 
-/* ================================================================
+/* ==================================================
  * Impressio (solum in fractura)
- * ================================================================ */
+ * ================================================== */
 
 interior constans character* CLAVIUM_TITULI[] = {
     "nulla", "sursum", "deorsum", "dextra", "sinistra", "domus",
@@ -567,9 +567,9 @@ _formam_probare (
 }
 
 
-/* ================================================================
+/* ==================================================
  * Tabulam currere
- * ================================================================ */
+ * ================================================== */
 
 interior constans i32 FORMAE[] = {
     FORMA_INTEGRA, FORMA_BIPARTITA, FORMA_SINGULA, FORMA_SEQUENS
@@ -579,22 +579,21 @@ interior constans character* FORMARUM_TITULI[] = {
     "integra", "bipartita", "singula", "sequens"
 };
 
-interior i32 numerus_vectorum;
-interior i32 numerus_formarum;
-interior i32 numerus_debitorum;
-
+/* Tabulam unam currere (sectio una per tabulam; titulum credo
+ * imprimit). Numeri tabulae locales (olim statica per omnes tabulas
+ * summata) in fine imprimuntur. */
 interior vacuum
 _tabulam_currere (
                   Piscina* piscina,
-       constans character* titulus_tabulae,
     constans VectorInitus* tabula,
                       i32  numerus)
 {
     i32 j;
     i32 f;
+    i32 numerus_vectorum   = ZEPHYRUM;
+    i32 numerus_formarum   = ZEPHYRUM;
+    i32 numerus_debitorum  = ZEPHYRUM;
 
-    imprimere("\n--- Vectores: %s (%u) ---\n", titulus_tabulae,
-        (insignatus integer)numerus);
     per (j = ZEPHYRUM; j < numerus; j++)
     {
         constans VectorInitus* v = &tabula[j];
@@ -641,61 +640,97 @@ _tabulam_currere (
             }
         }
     }
+    imprimere("  vectores %u, formae probatae %u, debita manentia %u\n",
+        (insignatus integer)numerus_vectorum,
+        (insignatus integer)numerus_formarum,
+        (insignatus integer)numerus_debitorum);
 }
+
+
+/* ==================================================
+ * PROBARE: tabula SEMEN (tesserae propria)
+ * ================================================== */
+
+interior vacuum
+_semen_probare (
+    CredoContextus* c)
+{
+    _tabulam_currere(c->piscina, VECTORES_SEMEN,
+        (i32)(magnitudo(VECTORES_SEMEN)
+            / magnitudo(VECTORES_SEMEN[0])));
+}
+
+
+/* ==================================================
+ * PROBARE: tabula clavium (OpenTUI parse.keypress)
+ * ================================================== */
+
+interior vacuum
+_claves_probare (
+    CredoContextus* c)
+{
+    _tabulam_currere(c->piscina, VECTORES_CLAVIUM,
+        (i32)(magnitudo(VECTORES_CLAVIUM)
+            / magnitudo(VECTORES_CLAVIUM[0])));
+}
+
+
+/* ==================================================
+ * PROBARE: tabula murium (OpenTUI parse.mouse)
+ * ================================================== */
+
+interior vacuum
+_mures_probare (
+    CredoContextus* c)
+{
+    _tabulam_currere(c->piscina, VECTORES_MURIUM,
+        (i32)(magnitudo(VECTORES_MURIUM)
+            / magnitudo(VECTORES_MURIUM[0])));
+}
+
+
+/* ==================================================
+ * PROBARE: tabula frustorum (OpenTUI stdin-parser)
+ * ================================================== */
+
+interior vacuum
+_frusta_probare (
+    CredoContextus* c)
+{
+    _tabulam_currere(c->piscina, VECTORES_FRUSTORUM,
+        (i32)(magnitudo(VECTORES_FRUSTORUM)
+            / magnitudo(VECTORES_FRUSTORUM[0])));
+}
+
+
+/* ==================================================
+ * PROBARE: tabula glutinorum (OpenTUI stdin-parser + propria)
+ * ================================================== */
+
+interior vacuum
+_glutina_probare (
+    CredoContextus* c)
+{
+    _tabulam_currere(c->piscina, VECTORES_GLUTINORUM,
+        (i32)(magnitudo(VECTORES_GLUTINORUM)
+            / magnitudo(VECTORES_GLUTINORUM[0])));
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Vectores: semen", _semen_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Vectores: claves (OpenTUI parse.keypress)", _claves_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Vectores: mures (OpenTUI parse.mouse)", _mures_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "Vectores: frusta (OpenTUI stdin-parser)", _frusta_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "Vectores: glutina (OpenTUI stdin-parser + propria)",
+        _glutina_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
 s32
 principale (vacuum)
 {
-         b32  praeteritus;
-     Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_tessera_vectores",
-        4194304);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    _tabulam_currere(piscina, "semen",
-        VECTORES_SEMEN,
-        (i32)(magnitudo(VECTORES_SEMEN)
-            / magnitudo(VECTORES_SEMEN[0])));
-    _tabulam_currere(piscina, "claves (OpenTUI parse.keypress)",
-        VECTORES_CLAVIUM,
-        (i32)(magnitudo(VECTORES_CLAVIUM)
-            / magnitudo(VECTORES_CLAVIUM[0])));
-    _tabulam_currere(piscina, "mures (OpenTUI parse.mouse)",
-        VECTORES_MURIUM,
-        (i32)(magnitudo(VECTORES_MURIUM)
-            / magnitudo(VECTORES_MURIUM[0])));
-    _tabulam_currere(piscina, "frusta (OpenTUI stdin-parser)",
-        VECTORES_FRUSTORUM,
-        (i32)(magnitudo(VECTORES_FRUSTORUM)
-            / magnitudo(VECTORES_FRUSTORUM[0])));
-    _tabulam_currere(piscina,
-        "glutina (OpenTUI stdin-parser + propria)",
-        VECTORES_GLUTINORUM,
-        (i32)(magnitudo(VECTORES_GLUTINORUM)
-            / magnitudo(VECTORES_GLUTINORUM[0])));
-
-    imprimere("\nvectores %u, formae probatae %u, debita manentia %u\n",
-        (insignatus integer)numerus_vectorum,
-        (insignatus integer)numerus_formarum,
-        (insignatus integer)numerus_debitorum);
-
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+    redde credo_suitam_currere("tessera_vectores", SECTIONES);
 }

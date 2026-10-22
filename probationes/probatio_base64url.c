@@ -43,7 +43,7 @@ _vector (
 }
 
 interior vacuum
-_sectio_rfc4648 (
+_sectio_vectores_normae (
     CredoContextus* c)
 {
     _vector(c, "f", "Zg");
@@ -197,7 +197,7 @@ _sectio_provocatio (CredoContextus* c)
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
-    { "rfc4648", _sectio_rfc4648, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "rfc4648", _sectio_vectores_normae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vacuum", _sectio_vacuum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "signa_url", _sectio_signa_url, NIHIL, NIHIL, NIHIL, NIHIL },
     { "refutationes", _sectio_refutationes, NIHIL, NIHIL, NIHIL,

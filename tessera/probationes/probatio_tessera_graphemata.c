@@ -55,23 +55,24 @@ _cella_est (
     redde VERUM;
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: scaena in opere UNO (XVI x IV) - blocci statum
+ * priorum EX PROPOSITO continuant (internatio contra cellulam
+ * (0,0) bloci primi, status stabilis graphemata nota iterum
+ * pingit, ASCII super graphema bloci primi): sectio una,
+ * tituli -> CREDO_GRADUS
+ * ================================================== */
+
+interior vacuum
+_scaenam_probare (
+    CredoContextus* c)
 {
-                    b32  praeteritus;
-                Piscina* piscina;
+                Piscina* piscina = c->piscina;
     TesseraPonsMemoriae* pm;
             TesseraOpus* opus;
           TesseraStilus  nat;
 
-    piscina = piscina_generare_dynamicum("probatio_tessera_graphemata",
-        33554432);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
     nat   = tessera_stilus_nativus();
     pm    = tessera_pons_memoriae_creare(piscina, XVI, IV);
     opus  = tessera_aperire(piscina, &pm->pons);
@@ -81,7 +82,7 @@ principale (vacuum)
     {
         chorda captum;
 
-        imprimere("\n--- e + acutum (aureum) ---\n");
+        CREDO_GRADUS ("e + acutum (aureum)");
         tessera_scribere_literis(opus, ZEPHYRUM, ZEPHYRUM, E_ACUTUM "x",
             nat);
         CREDO_VERUM (_cella_est(opus, ZEPHYRUM, ZEPHYRUM, E_ACUTUM,
@@ -95,7 +96,7 @@ principale (vacuum)
     }
 
     /* Hindi: duo graphemata lata (Mc amplificat; GB9c coniungit) */
-    imprimere("\n--- Hindi ---\n");
+    CREDO_GRADUS ("Hindi");
     tessera_scribere_literis(opus, ZEPHYRUM, I,
         SYLLABA_PRIMA SYLLABA_CONIUNCTA, nat);
     CREDO_VERUM (_cella_est(opus, ZEPHYRUM, I, SYLLABA_PRIMA,
@@ -114,7 +115,7 @@ principale (vacuum)
     CREDO_VERUM (_cella_est(opus, I, I, "q", ZEPHYRUM));
 
     /* Emoji: cor cum VS16 et familia ZWJ - graphemata lata */
-    imprimere("\n--- Emoji ---\n");
+    CREDO_GRADUS ("Emoji");
     tessera_scribere_literis(opus, ZEPHYRUM, II, COR_EMOJI FAMILIA "z",
         nat);
     CREDO_VERUM (_cella_est(opus, ZEPHYRUM, II, COR_EMOJI,
@@ -124,7 +125,7 @@ principale (vacuum)
     CREDO_VERUM (_cella_est(opus, IV, II, "z", ZEPHYRUM));
 
     /* Internatio: idem graphema = idem ID */
-    imprimere("\n--- Internatio ---\n");
+    CREDO_GRADUS ("Internatio");
     tessera_scribere_literis(opus, V, ZEPHYRUM, E_ACUTUM, nat);
     CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, V,
         ZEPHYRUM).signum,
@@ -135,7 +136,7 @@ principale (vacuum)
         character longum[CXXVIII];
               i32 k;
 
-        imprimere("\n--- Limes octetorum ---\n");
+        CREDO_GRADUS ("Limes octetorum");
         longum[ZEPHYRUM] = 'a';
         per (k = ZEPHYRUM; k < XL; k++)
         {
@@ -148,7 +149,7 @@ principale (vacuum)
     }
 
     /* Signum solum sine basi: omissum */
-    imprimere("\n--- Signum sine basi ---\n");
+    CREDO_GRADUS ("Signum sine basi");
     tessera_scribere_literis(opus, ZEPHYRUM, III, "\xCC\x81q", nat);
     CREDO_VERUM (_cella_est(opus, ZEPHYRUM, III, "q", ZEPHYRUM));
 
@@ -157,7 +158,7 @@ principale (vacuum)
         memoriae_index ante;
         memoriae_index post;
 
-        imprimere("\n--- Status stabilis ---\n");
+        CREDO_GRADUS ("Status stabilis");
         (vacuum)tessera_praesentare(opus);
         ante = piscina_summa_usus(piscina);
         tessera_scribere_literis(opus, ZEPHYRUM, I,
@@ -170,9 +171,23 @@ principale (vacuum)
     }
 
     /* ASCII super graphema: vexillum aufertur */
-    imprimere("\n--- ASCII super graphema ---\n");
+    CREDO_GRADUS ("ASCII super graphema");
     tessera_cellulam_ponere(opus, ZEPHYRUM, ZEPHYRUM, (i32)'q', nat);
     CREDO_VERUM (_cella_est(opus, ZEPHYRUM, ZEPHYRUM, "q", ZEPHYRUM));
+
+}
+
+
+/* ==================================================
+ * PROBARE: Politica SIMPLEX (Terminal.app) - opus proprium
+ * ================================================== */
+
+interior vacuum
+_simplicem_probare (
+    CredoContextus* c)
+{
+          Piscina* piscina  = c->piscina;
+    TesseraStilus  nat      = tessera_stilus_nativus();
 
     /* Politica SIMPLEX (Terminal.app): hi manet latum (II);
      * familia = tria emoji lata (ZWJ non iungit) */
@@ -182,7 +197,6 @@ principale (vacuum)
             XVI, II);
         TesseraOpus* s = tessera_aperire(piscina, &pm_s->pons);
 
-        imprimere("\n--- Politica SIMPLEX ---\n");
         CREDO_NON_NIHIL (s);
         tessera_politicam_ponere(s, TESSERA_POLITICA_SIMPLEX);
         tessera_scribere_literis(s, ZEPHYRUM, ZEPHYRUM,
@@ -201,9 +215,18 @@ principale (vacuum)
         CREDO_VERUM (_cella_est(s, IV, I, "\xF0\x9F\x91\xA7",
             TESSERA_ORNAMENTUM_LATUM));
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "graphemata in opere uno", _scaenam_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "Politica SIMPLEX", _simplicem_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("tessera_graphemata", SECTIONES);
 }

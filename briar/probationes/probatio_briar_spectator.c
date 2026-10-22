@@ -131,33 +131,54 @@ _reddere (
         &fructus, octeti, via, vestis, causa);
 }
 
-s32
-principale (vacuum)
-{
-                  b32  praeteritus;
-              Piscina* piscina;
-  InternamentumChorda* intern;
-   constans character* radix;
-   constans SilexFons* fons;
+/* FIXURA SUITAE: internamentum et fons corporis (silex_fons_disci)
+ * semel facta; sectiones per monstratorem constantem LEGUNT -
+ * internatio in internamentum fixurae sola licet (decretum
+ * 2026-10-19). */
+nomen structura {
+    InternamentumChorda* intern;
+              SilexFons* fons;
+} FixuraSpectatoris;
 
-    piscina = piscina_generare_dynamicum("probatio_briar_spectator",
-        33554432);
-    si (!piscina)
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+     FixuraSpectatoris* f;
+    constans character* radix;
+
+    f = (FixuraSpectatoris*)piscina_allocare(c->piscina,
+        magnitudo(FixuraSpectatoris));
+    si (f == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    credo_aperire(piscina);
-    intern  = internamentum_creare(piscina);
-    radix   = getenv("RHUBARB_RADIX");
+    f->intern  = internamentum_creare(c->piscina);
+    radix      = getenv("RHUBARB_RADIX");
     si (radix == NIHIL)
     {
         radix = ".";
     }
-    fons = silex_fons_disci(piscina, radix);
-    CREDO_NON_NIHIL (fons);
+    f->fons = silex_fons_disci(c->piscina, radix);
+    CREDO_NON_NIHIL (f->fons);
+    si (f->fons == NIHIL)
+    {
+        redde;
+    }
+    c->datum = f;
+}
 
-    imprimere("\n--- Probans vestem e capsula ---\n");
+
+/* ==================================================
+ * PROBARE: vestem e capsula
+ * ================================================== */
+
+interior vacuum
+_vestem_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     {
         BriarVestis vestis;
              chorda causa;
@@ -183,8 +204,29 @@ principale (vacuum)
             filum_legere_totum("briar/facies/md-html-facies.stml",
             piscina));
     }
+}
 
-    imprimere("\n--- Probans paginam eandem ---\n");
+
+/* ==================================================
+ * PROBARE: paginam eandem
+ * ================================================== */
+
+interior vacuum
+_paginam_probare (
+    CredoContextus* c)
+{
+    constans FixuraSpectatoris* fx;
+                       Piscina* piscina = c->piscina;
+           InternamentumChorda* intern;
+            constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    fx      = (constans FixuraSpectatoris*)c->suita;
+    intern  = fx->intern;
+    fons    = fx->fons;
     {
           BriarVestis  e_capsula;
           BriarVestis  e_disco;
@@ -216,8 +258,27 @@ principale (vacuum)
         CREDO_CHORDA_CONTINET (a,
             chorda_ex_literis("--fr-charta", piscina));
     }
+}
 
-    imprimere("\n--- Probans optiones plagulae (una sedes) ---\n");
+
+/* ==================================================
+ * PROBARE: optiones plagulae (una sedes)
+ * ================================================== */
+
+interior vacuum
+_optiones_probare (
+    CredoContextus* c)
+{
+    constans FixuraSpectatoris* fx;
+                       Piscina* piscina = c->piscina;
+            constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    fx    = (constans FixuraSpectatoris*)c->suita;
+    fons  = fx->fons;
     {
         BriarFabricaOptiones  o;
           constans character* via;
@@ -236,8 +297,27 @@ principale (vacuum)
         CREDO_CHORDA_AEQUALIS (chorda_ex_literis(o.stampa, piscina),
             chorda_ex_literis(fons->titulus, piscina));
     }
+}
 
-    imprimere("\n--- Probans symbola bibliothecae ---\n");
+
+/* ==================================================
+ * PROBARE: symbola bibliothecae
+ * ================================================== */
+
+interior vacuum
+_symbola_probare (
+    CredoContextus* c)
+{
+    constans FixuraSpectatoris* fx;
+                       Piscina* piscina = c->piscina;
+            constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    fx    = (constans FixuraSpectatoris*)c->suita;
+    fons  = fx->fons;
     {
          BriarCursorSymbolorum* cursor;
          BriarSymboliResponsum  r;
@@ -315,9 +395,21 @@ principale (vacuum)
             CREDO_CHORDA_AEQUALIS (r.definitio, s2.definitio);
         }
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "vestem e capsula", _vestem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "paginam eandem", _paginam_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "optiones plagulae (una sedes)", _optiones_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "symbola bibliothecae", _symbola_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("briar_spectator", SECTIONES,
+        _suitam_parare, NIHIL);
 }

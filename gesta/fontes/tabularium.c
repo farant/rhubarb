@@ -2792,8 +2792,9 @@ nomen enumeratio {
     PARATUM_HOMINI,
     PARATUM_IMPEDITUM,
     PARATUM_COLLOQUIO,    /* quaestio consilii aperta */
-    PARATUM_DORMIENS      /* in regione collocata, NON fixa - in
+    PARATUM_DORMIENS,     /* in regione collocata, NON fixa - in
                            * visu scopi regionis solo (01M35650Z4) */
+    PARATUM_NUMERUS       /* terminus: mensura tabularum per classem */
 } ParatiClassis;
 
 /* quaestio CONSILII: quaestio cum 'natura: consilium' - quaestio
@@ -8367,12 +8368,12 @@ _classes_scopi_computare (
     Tabularium* t,
         chorda  res_id,
        Piscina* pn,
-           i32  classes[VII])
+           i32  classes[PARATUM_NUMERUS])
 {
     Xar* nodi = _parata_computare(t, res_id, pn);
     i32  i;
 
-    per (i = ZEPHYRUM; i < VII; i++)
+    per (i = ZEPHYRUM; i < PARATUM_NUMERUS; i++)
     {
         classes[i] = ZEPHYRUM;
     }
@@ -8389,20 +8390,21 @@ _classes_scopi_computare (
 }
 
 /* classes non-nullas appendere: ' \xc2\xb7 ad laborem N \xc2\xb7
- * impedita N' */
+ * impedita N'. Dormientia NON hic: numeri regionis ea iam nominant
+ * ('parca N (dormientia M)') */
 interior vacuum
 _classes_appendere (
     ChordaAedificator* aed,
-         constans i32  classes[VII])
+         constans i32  classes[PARATUM_NUMERUS])
 {
-    interior constans character* constans NOMINA[VII] = {
+    interior constans character* constans NOMINA[PARATUM_DORMIENS] = {
         "", "ad laborem", "ad consilium", "ad clausuram",
         "exspectant Franum", "impedita", "ad colloquium"
     };
     character linea[LXIV];
           i32 c;
 
-    per (c = I; c < VII; c++)
+    per (c = I; c < PARATUM_DORMIENS; c++)
     {
         si (classes[c] > ZEPHYRUM)
         {
@@ -8777,7 +8779,7 @@ _mappae_nodum_reddere (
         _regionis_numeros_appendere(aed, &rn);
         /* frons: classes paratae subarboris (non-nullae) */
         {
-            i32 classes[VII];
+            i32 classes[PARATUM_NUMERUS];
 
             _classes_scopi_computare(t, res_id, pn, classes);
             _classes_appendere(aed, classes);
@@ -10324,11 +10326,11 @@ _tab_census (
     {
         chorda  scopus_nullus;
            Xar* nodi;
-           i32  classes[VII];
+           i32  classes[PARATUM_NUMERUS];
 
         scopus_nullus.mensura  = ZEPHYRUM;
         scopus_nullus.datum    = NIHIL;
-        per (i = ZEPHYRUM; i < VII; i++)
+        per (i = ZEPHYRUM; i < PARATUM_NUMERUS; i++)
         {
             classes[i] = ZEPHYRUM;
         }
@@ -10342,7 +10344,7 @@ _tab_census (
                 ParatiNodus* n = (ParatiNodus*)xar_obtinere(nodi,
                     i);
 
-                si (n != NIHIL && (i32)n->classis < VII)
+                si (n != NIHIL && (i32)n->classis < PARATUM_NUMERUS)
                 {
                     classes[(i32)n->classis]++;
                 }

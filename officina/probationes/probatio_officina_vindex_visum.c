@@ -59,36 +59,54 @@ _quaerere (
     redde -I;
 }
 
-s32
-principale (vacuum)
+/* piscina tesserae sectionis (olim in praeludio, numquam destructa) */
+interior vacuum
+_tesseram_parare (
+    CredoContextus* c)
 {
-    Piscina* piscina;
-    TesseraPiscina* tp;
-    TesseraPonsMemoriae* pm;
-    TesseraOpus* opus;
-    b32 successus;
-
-    imprimere("\n========================================\n");
-    imprimere("PROBATIONES VINDEX VISUM (cellulae)\n");
-    imprimere("========================================\n");
-
-    piscina = piscina_generare_dynamicum("probatio_visum",
-        IV * M * M);
-    tp = tessera_piscina_generare_dynamicum("probatio_visum_t",
+    c->datum = tessera_piscina_generare_dynamicum("probatio_visum_t",
         4194304);
-    si (piscina == NIHIL || tp == NIHIL)
+    si (c->datum == NIHIL)
     {
         imprimere("FRACTA: piscinae\n");
-        redde I;
     }
-    credo_aperire(piscina);
+}
+
+interior vacuum
+_tesseram_purgare (
+    CredoContextus* c)
+{
+    si (c->datum != NIHIL)
+    {
+        tessera_piscina_destruere((TesseraPiscina*)c->datum);
+    }
+}
+
+
+/* ==================================================
+ * PROBARE: conspectus litteralis pictus, cellulae lectae (scaena:
+ * pictura una, deinde imperium et anulus eam continuant)
+ * ================================================== */
+
+interior vacuum
+_picturam_probare (
+    CredoContextus* c)
+{
+         TesseraPiscina* tp = (TesseraPiscina*)c->datum;
+    TesseraPonsMemoriae* pm;
+            TesseraOpus* opus;
+
+    si (tp == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     pm = tessera_pons_memoriae_creare(tp, LATITUDO, ALTITUDO);
     CREDO_NON_NIHIL (pm);
     opus = tessera_aperire(tp, &pm->pons);
     CREDO_NON_NIHIL (opus);
     si (opus == NIHIL)
     {
-        redde I;
+        redde;   /* NON_NIHIL supra fractum: sectio FRACTA */
     }
 
     {
@@ -137,14 +155,14 @@ principale (vacuum)
         vindex_visum_pingere(&conspectus, opus);
 
         /* vectis tituli */
-        imprimere("\n--- Probans vectem tituli ---\n");
+        CREDO_GRADUS ("vectem tituli");
         CREDO_VERUM (_quaerere(opus, 0, "VINDEX") >= ZEPHYRUM);
         CREDO_VERUM (_quaerere(opus, 0, "probe.c") >= ZEPHYRUM);
         CREDO_VERUM (_quaerere(opus, 0, "[PAUSA]") >= ZEPHYRUM);
 
         /* fons: signa punctorum + lineae currentis in linea 4
          * (ordo visus = 1 + (4 - linea_prima) = y 4) */
-        imprimere("\n--- Probans tabulam fontis ---\n");
+        CREDO_GRADUS ("tabulam fontis");
         {
             TesseraCellula stellula = tessera_cellulam_legere(
                 opus, 0, 4);
@@ -169,7 +187,7 @@ principale (vacuum)
         }
 
         /* columna dextra: stiva + variabilia */
-        imprimere("\n--- Probans columnam dextram ---\n");
+        CREDO_GRADUS ("columnam dextram");
         CREDO_VERUM (_quaerere(opus, 1, "STIVA") >= ZEPHYRUM);
         CREDO_VERUM (_quaerere(opus, 2, "computare") >= ZEPHYRUM);
         CREDO_VERUM (_quaerere(opus, 3, "main") >= ZEPHYRUM);
@@ -198,14 +216,14 @@ principale (vacuum)
         }
 
         /* linea positionis (acies macronum) + status */
-        imprimere("\n--- Probans positionem + statum ---\n");
+        CREDO_GRADUS ("positionem + statum");
         CREDO_VERUM (_quaerere(opus, (integer)ALTITUDO - 2,
             "per EXEMPLUM <- probe.h:2") >= ZEPHYRUM);
         CREDO_VERUM (_quaerere(opus, (integer)ALTITUDO - 1,
             "status probationis") >= ZEPHYRUM);
 
         /* linea imperii aperta */
-        imprimere("\n--- Probans lineam imperii ---\n");
+        CREDO_GRADUS ("lineam imperii");
         conspectus.imperium_apertum  = VERUM;
         conspectus.imperium          = _ch("punctum probe.c:4");
         vindex_visum_pingere(&conspectus, opus);
@@ -254,12 +272,23 @@ principale (vacuum)
             }
         }
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "picturam vindicis (cellulae)", _picturam_probare,
+        _tesseram_parare, _tesseram_purgare, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    s32 exitus;
+
+    imprimere("\n========================================\n");
+    imprimere("PROBATIONES VINDEX VISUM (cellulae)\n");
     imprimere("========================================\n");
-    successus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
-    redde successus ? ZEPHYRUM : I;
+    exitus = credo_suitam_currere("officina_vindex_visum", SECTIONES);
+    imprimere("========================================\n");
+    redde exitus;
 }

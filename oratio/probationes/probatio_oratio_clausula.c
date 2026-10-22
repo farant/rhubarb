@@ -284,34 +284,53 @@ _seminare (
     redde (b32)(summa_causarum > ZEPHYRUM);
 }
 
-s32
-principale (vacuum)
+/* FIXURA SUITAE: praeludium semel factum (parare_suitae;
+ * assertiones eius ibi); sectiones id per monstratorem
+ * constantem LEGUNT. */
+nomen structura {
+    constans character* radix;
+     OratioVocabularia  vocabularia;
+} FixuraClausulae;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                  Piscina* piscina;
-       constans character* radix;
-        OratioVocabularia  vocabularia;
- OratioVocabulariumVitium  vitium;
-     OratioClausulaCensus  census;
-             MateriaNodus* doc;
+             FixuraClausulae* f;
+    OratioVocabulariumVitium  vitium;
 
-    piscina = piscina_generare_dynamicum("probatio_oratio_clausula",
-        268435456);
-    credo_aperire(piscina);
-    radix = getenv("RHUBARB_RADIX");
-    si (radix == NIHIL)
+    f = (FixuraClausulae*)piscina_allocare(c->piscina,
+        magnitudo(FixuraClausulae));
+    si (f == NIHIL)
     {
-        radix = ".";
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    CREDO_VERUM (oratio_vocabularia_onerare(piscina, radix,
-        &vocabularia,
+    f->radix = getenv("RHUBARB_RADIX");
+    si (f->radix == NIHIL)
+    {
+        f->radix = ".";
+    }
+    CREDO_VERUM (oratio_vocabularia_onerare(c->piscina, f->radix,
+        &f->vocabularia,
         &vitium));
-    si (vocabularia.la == NIHIL || vocabularia.en == NIHIL)
+    si (f->vocabularia.la == NIHIL || f->vocabularia.en == NIHIL)
     {
-        credo_imprimere_compendium();
-        redde I;
+        redde;
     }
+    c->datum = f;
+}
 
-    imprimere("\n--- I. Data seminum ---\n");
+interior vacuum
+_data_seminum_probare (
+    CredoContextus* c)
+{
+    constans FixuraClausulae* fixura =
+        (constans FixuraClausulae*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     CREDO_VERUM (_in_lista(ORATIO_SEMINA_CERTA, "si"));
     CREDO_VERUM (_in_lista(ORATIO_SEMINA_CERTA, "quia"));
     CREDO_VERUM (_in_lista(ORATIO_SEMINA_CERTA, "quod"));
@@ -326,11 +345,25 @@ principale (vacuum)
     CREDO_VERUM (_in_lista(ORATIO_SEMINA_COORDINANTIA, "sed"));
     CREDO_FALSUM (_in_lista(ORATIO_SEMINA_COORDINANTIA, "que"));
     CREDO_FALSUM (_in_lista(ORATIO_SEMINA_COORDINANTIA, "vel"));
+}
 
-    imprimere("\n--- II. Casus manu iudicati ---\n");
+interior vacuum
+_casus_iudicatos_probare (
+    CredoContextus* c)
+{
+                     Piscina* piscina = c->piscina;
+    constans FixuraClausulae* fixura =
+        (constans FixuraClausulae*)c->suita;
+        OratioClausulaCensus census;
+    MateriaNodus* doc;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     /* (a) subordinata clausa verbo certo, comma post, principalis circum:
      * Caesar(0) ,(1) cum(2) venisset(3) ,(4) urbem(5) cepit(6) .(7) */
-    doc = _documentum(piscina, &vocabularia,
+    doc = _documentum(piscina, &fixura->vocabularia,
         "Caesar, cum venisset, urbem cepit.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
@@ -443,7 +476,7 @@ principale (vacuum)
 
     /* (b) coordinatae sorores: Puella(0) bona(1) ambulat(2) et(3) puer(4)
      * currit(5) .(6) - et inter verba finita capacia */
-    doc = _documentum(piscina, &vocabularia,
+    doc = _documentum(piscina, &fixura->vocabularia,
         "Puella bona ambulat et puer currit.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
@@ -461,7 +494,7 @@ principale (vacuum)
     CREDO_AEQUALIS_S32 (_causa(doc, (i32)V),
         (s32)ORATIO_CLAUSULA_CAUSA_EXTENTUM);
     /* (b2) et inter substantiva: nullum semen */
-    doc = _documentum(piscina, &vocabularia,
+    doc = _documentum(piscina, &fixura->vocabularia,
         "Puella et puer ambulant.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
@@ -474,7 +507,7 @@ principale (vacuum)
      * dabit(6) .(7) - quis NON semen (forma indefinita); subordinata
      * primo nata (index 0), principalis pigre post clausuram (index 1)
      * et pater subordinatae ei figitur */
-    doc = _documentum(piscina, &vocabularia,
+    doc = _documentum(piscina, &fixura->vocabularia,
         "Si quis hoc fecerit, poenam dabit.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
@@ -495,7 +528,8 @@ principale (vacuum)
     CREDO_AEQUALIS_S32 (_clausula(doc, (i32)VI), (s32)I);
 
     /* (d) sine semine: unica ubique */
-    doc = _documentum(piscina, &vocabularia, "Puella rosam amat.\n");
+    doc = _documentum(piscina, &fixura->vocabularia,
+        "Puella rosam amat.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
     CREDO_AEQUALIS_I32 (_numerus_clausularum(doc), I);
@@ -508,7 +542,7 @@ principale (vacuum)
 
     /* (e) relativum conectens initiale: Qui(0) cum(1) venisset(2) ,(3)
      * urbem(4) cepit(5) - Qui principalem aperit, cum subordinatam */
-    doc = _documentum(piscina, &vocabularia,
+    doc = _documentum(piscina, &fixura->vocabularia,
         "Qui cum venisset, urbem cepit.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
@@ -523,7 +557,7 @@ principale (vacuum)
     CREDO_AEQUALIS_S32 (_causa(doc, (i32)IV),
         (s32)ORATIO_CLAUSULA_CAUSA_CLAUSURA);
     /* (e2) relativum medium: Puella(0) quae(1) ambulat(2) cantat(3) */
-    doc = _documentum(piscina, &vocabularia,
+    doc = _documentum(piscina, &fixura->vocabularia,
         "Puella quae ambulat cantat.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
@@ -537,7 +571,7 @@ principale (vacuum)
         (s32)ORATIO_CLAUSULA_CAUSA_CLAUSURA);
 
     /* (f) corroboratio negata: Cum puella. - nullum verbum: unica */
-    doc = _documentum(piscina, &vocabularia, "Cum puella.\n");
+    doc = _documentum(piscina, &fixura->vocabularia, "Cum puella.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
     CREDO_AEQUALIS_I32 (_numerus_clausularum(doc), I);
@@ -547,7 +581,8 @@ principale (vacuum)
         (s32)ORATIO_CLAUSULA_CAUSA_UNICA);
 
     /* (g) parenthesis: Caesar(0) ((1) dux(2) )(3) venit(4) .(5) */
-    doc = _documentum(piscina, &vocabularia, "Caesar (dux) venit.\n");
+    doc = _documentum(piscina, &fixura->vocabularia,
+        "Caesar (dux) venit.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
     CREDO_AEQUALIS_I32 (_numerus_clausularum(doc), (i32)II);
@@ -563,7 +598,7 @@ principale (vacuum)
      * puer(2) currit(3) .(4) - sine semine, verbum certum alterum
      * clausulam coordinatam aperit; verba media (puer) ad novam (ordo
      * verbo finali, variatio A mensurata melior); non UNICA */
-    doc = _documentum(piscina, &vocabularia,
+    doc = _documentum(piscina, &fixura->vocabularia,
         "Puella cantat puer currit.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
@@ -590,7 +625,7 @@ principale (vacuum)
      * principalem non claudit; scissio ad cantat, verba media (comma,
      * puella) ad novam. (Veni, vidi, vici non valet: forma 'veni'
      * lectionem non verbalem fert - incertum, ergo nulla scissio) */
-    doc = _documentum(piscina, &vocabularia,
+    doc = _documentum(piscina, &fixura->vocabularia,
         "Puer currit, puella cantat.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
@@ -605,7 +640,8 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (census.scissae, I);
     /* (i3) verbum in clausula subordinata alterum non scindit:
      * subordinata ad primum clauditur (Si venit, vidit.) */
-    doc = _documentum(piscina, &vocabularia, "Si venit, vidit.\n");
+    doc = _documentum(piscina, &fixura->vocabularia,
+        "Si venit, vidit.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
     CREDO_AEQUALIS_I32 (_numerus_clausularum(doc), (i32)II);
@@ -615,7 +651,7 @@ principale (vacuum)
 
         /* (k) VARIATIONES clausurae (T20a ter) - qui supra formula: nullum
      * semen (Promitto ego qui supra Adalprando tibi: clausula una) */
-    doc = _documentum(piscina, &vocabularia,
+    doc = _documentum(piscina, &fixura->vocabularia,
         "Promitto ego qui supra Adalprando tibi.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
@@ -625,7 +661,7 @@ principale (vacuum)
     /* (k2) copula non claudit: Terra(0) qui(1) fuit(2) Filippi(3)
      * presbiteri(4) ,(5) manet(6) - relativa ad comma clauditur, non
      * ad fuit; praedicatum intra */
-    doc = _documentum(piscina, &vocabularia,
+    doc = _documentum(piscina, &fixura->vocabularia,
         "Terra qui fuit Filippi presbiteri, manet.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
@@ -638,7 +674,7 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (census.clausae_signo, I);
     /* (k3) coordinans ante semen clausulae seminatae accedit: Puella(0)
      * cantat(1) et(2) si(3) puer(4) venit(5) ,(6) ridet(7) */
-    doc = _documentum(piscina, &vocabularia,
+    doc = _documentum(piscina, &fixura->vocabularia,
         "Puella cantat et si puer venit, ridet.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
@@ -650,7 +686,7 @@ principale (vacuum)
         (s32)ORATIO_SPECIES_CLAUSULAE_SUBORDINATA);
     /* (k4) certitudo Latina: tenet substantivum Anglicum Moby - lectio
      * Anglica non suffragatur, tenet certum, cantat scindit */
-    doc = _documentum(piscina, &vocabularia,
+    doc = _documentum(piscina, &fixura->vocabularia,
         "Puer tenet terram puella cantat.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
@@ -659,7 +695,7 @@ principale (vacuum)
 
             /* (l) T20a quater - 'id est' formula: est post id nec scindit nec
      * claudit (Dedisti mihi id est terram: clausula una) */
-    doc = _documentum(piscina, &vocabularia,
+    doc = _documentum(piscina, &fixura->vocabularia,
         "Dedisti mihi id est terram.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
@@ -668,7 +704,7 @@ principale (vacuum)
     /* (l2) nomen proprium post verbum claudens intra manet: In(0)
      * loco(1) ubi(2) dicitur(3) Creta(4) manet(5) - Creta in clausula
      * ubi, manet clausura */
-    doc = _documentum(piscina, &vocabularia,
+    doc = _documentum(piscina, &fixura->vocabularia,
         "In loco ubi dicitur Creta manet.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
@@ -684,7 +720,7 @@ principale (vacuum)
 
         /* (m) T20a quinquies - una cum: adpositio, nullum semen etiam verbo
      * certo sequente (Terram una cum omnibus rebus dedisti) */
-    doc = _documentum(piscina, &vocabularia,
+    doc = _documentum(piscina, &fixura->vocabularia,
         "Terram una cum omnibus rebus dedisti.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
@@ -692,7 +728,7 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (census.corroborata, ZEPHYRUM);
     /* (m2) quantus relativum: Dedit(0) omnia(1) quantum(2) habebat(3)
      * - quantum clausulam aperit, habebat certum claudit */
-    doc = _documentum(piscina, &vocabularia,
+    doc = _documentum(piscina, &fixura->vocabularia,
         "Dedit omnia quantum habebat.\n");
     CREDO_NON_NIHIL (doc);
     CREDO_VERUM (_seminare(piscina, doc, &census));
@@ -704,7 +740,7 @@ principale (vacuum)
 
     /* (h) Anglica: documentum Anglicum lectionibus Latinis non seminatur
      * nec scinditur (it, sit, do verba Latina finita) - unica */
-    doc = _documentum(piscina, &vocabularia,
+    doc = _documentum(piscina, &fixura->vocabularia,
         "The cat sat because it was tired. Do sit it.\n");
     CREDO_NON_NIHIL (doc);
     oratio_clausula_census_vacare(&census);
@@ -716,8 +752,22 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (census.scissae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census.causae[ORATIO_CLAUSULA_CAUSA_UNICA],
         (i32)XII);
+}
 
-    imprimere("\n--- III. Per resolutionem (census) ---\n");
+interior vacuum
+_resolutionem_probare (
+    CredoContextus* c)
+{
+                     Piscina* piscina = c->piscina;
+    constans FixuraClausulae* fixura =
+        (constans FixuraClausulae*)c->suita;
+    OratioVocabulariumVitium vitium;
+    MateriaNodus* doc;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
          InternamentumChorda* intern = internamentum_creare(piscina);
          MateriaLexiconRatum  ratum;
@@ -730,9 +780,9 @@ principale (vacuum)
             &ORATIO_LEXICON,
             &iudicium));
         programma = oratio_resolutio_programma_onerare(piscina, intern,
-            radix, &vitium);
+            fixura->radix, &vitium);
         CREDO_NON_NIHIL (programma);
-        doc = _documentum(piscina, &vocabularia,
+        doc = _documentum(piscina, &fixura->vocabularia,
             "Caesar, cum venisset, urbem cepit. Puella rosam amat.\n");
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&rc);
@@ -755,7 +805,7 @@ principale (vacuum)
          * verbum NON motum (mensuratum: catena extentum non superat) -
          * Cum puella venisset, bona cantat: caput bonae = puella in
          * clausula cum, bona in principali (clausura) */
-        doc = _documentum(piscina, &vocabularia,
+        doc = _documentum(piscina, &fixura->vocabularia,
             "Cum puella venisset, bona cantat.\n");
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&rc);
@@ -783,14 +833,21 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (rc.clausulae.causae[ORATIO_CLAUSULA_CAUSA_CATENA],
             ZEPHYRUM);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. Data seminum", _data_seminum_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "II. Casus manu iudicati", _casus_iudicatos_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "III. Per resolutionem (census)", _resolutionem_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-        credo_claudere();
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("oratio_clausula", SECTIONES,
+        _suitam_parare, NIHIL);
 }

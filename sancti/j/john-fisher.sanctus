@@ -1,0 +1,39 @@
+<sanctus id="john-fisher" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">John Fisher</nomen>
+  <ortus annus="1459" locus="Beverley, Yorkshire" fontes="ce"/>
+  <obitus annus="1535" mensis="6" dies="22" locus="Tower Hill, London" martyrium="verum" fontes="ce"/>
+  <beatificatio annus="1886" mensis="12" dies="29" papa="Leo XIII" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1935" papa="Pius XI" fontes="sed"/>
+  <festum calendarium="generale" mensis="6" dies="22" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="ce us">bishop</munus>
+  <munus fontes="ce">cardinal</munus>
+  <munus fontes="ce us">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce">John Fisher was born at Beverley in Yorkshire in 1459 (some say 1469), the eldest son of a merchant. He studied at Michaelhouse, Cambridge, became Master of the college and Vice-Chancellor of the university, and as chaplain and confessor to Lady Margaret Beaufort, mother of Henry VII, guided her foundation of St. John's and Christ's Colleges. In 1504 he was made Bishop of Rochester and Chancellor of Cambridge, and he persuaded Erasmus to come to the university.</paragraphus>
+    <paragraphus fontes="ce sed">When Henry VIII sought to put away Queen Catherine, Fisher became her chief counsellor and declared before the legates that, like St. John the Baptist, he was ready to die for the indissolubility of marriage. He resisted Parliament's encroachments on the Church and refused the oath of succession, and on 26 April 1534 he was sent to the Tower of London. In May 1535 Paul III made him a cardinal; Henry answered that he would send the head to Rome instead. Condemned for denying that the king was supreme head of the Church, he was beheaded on Tower Hill on 22 June 1535. Leo XIII beatified him in 1886, and Pius XI canonized him together with Thomas More in 1935.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Bl. John Fisher" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Bl._John_Fisher">
+    <excerptum>Cardinal, Bishop of Rochester, and martyr; born at Beverley, Yorkshire, England, 1459 (?1469); died 22 June, 1535. John was the eldest son of Robert Fisher, merchant of Beverley</excerptum>
+    <excerptum>in 1484 he removed to Michaelhouse, Cambridge.</excerptum>
+    <excerptum>three years later was appointed Master of Michaelhouse, about which date he became chaplain and confessor to Margaret Beaufort, Countess of Richmond and Derby, mother of King Henry VII.</excerptum>
+    <excerptum>was elected Vice-Chancellor of Cambridge University. Under Fisher's guidance, the Lady Margaret founded St. John's and Christ's Colleges at Cambridge</excerptum>
+    <excerptum>By Bull dated 14 October, 1504, Fisher was advanced to the Bishopric of Rochester, and in the same year was elected Chancellor of Cambridge University</excerptum>
+    <excerptum>Fisher gave further proof of his genuine zeal for learning by inducing Erasmus to visit Cambridge.</excerptum>
+    <excerptum>When the question of Henry's divorce from Queen Catherine arose, Fisher became the Queen's chief supporter and most trusted counsellor.</excerptum>
+    <excerptum>legates' court, where he startled his hearers by the directness of his language and most of all by declaring that, like St. John the Baptist, he was ready to die on behalf of the indissolubility of marriage.</excerptum>
+    <excerptum>the "Long Parliament" of Henry's reign began its series of encroachments on the Church. Fisher, as a member of the upper house, at once warned Parliament that such acts could only end in the utter destruction of the Church in England.</excerptum>
+    <excerptum>compelled to take an oath of succession</excerptum>
+    <excerptum>Fisher refused the oath and was sent to the Tower of London, 26 April, 1534.</excerptum>
+    <excerptum>In may, 1535, the new pope, Paul III, created Fisher Cardinal Priest of St. Vitalis</excerptum>
+    <excerptum>Henry forbade the cardinal's hat to be brought into England, declaring that he would send the head to Rome instead.</excerptum>
+    <excerptum>on a charge of treason, in that he denied the king to be supreme head of the Church.</excerptum>
+    <excerptum>instead he was beheaded on Tower Hill.</excerptum>
+    <excerptum>In the Decree of 29 December, 1886, when fifty-four of the English martyrs were beatified by Leo XIII, the best place of all is given to John Fisher.</excerptum>
+  </fons>
+  <fons id="sed" opus="sedes" locus="John Paul II, Apostolic Letter E Sancti Thomae Mori, 31 October 2000" url="https://www.vatican.va/content/john-paul-ii/en/motu_proprio/documents/hf_jp-ii_motu-proprio_20001031_thomas-more.html">
+    <excerptum>Thomas More, together with 53 other martyrs, including Bishop John Fisher, was beatified by Pope Leo XIII in 1886. And with John Fisher, he was canonized by Pius XI in 1935, on the fourth centenary of his martyrdom.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="22 June">
+    <excerptum>Saints John Fisher, Bishop, and Thomas More, Martyrs</excerptum>
+  </fons>
+</sanctus>

@@ -1,0 +1,38 @@
+<sanctus id="john-eudes" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">John Eudes</nomen>
+  <nomen lingua="fr" fontes="ce">Jean Eudes</nomen>
+  <ortus annus="1601" mensis="11" dies="14" locus="Ri, France" fontes="ce"/>
+  <obitus annus="1680" mensis="8" dies="19" locus="Caen" fontes="ce"/>
+  <beatificatio annus="1909" mensis="4" dies="25" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1925" mensis="5" dies="31" papa="Pius XI" fontes="ga ce"/>
+  <festum calendarium="generale" mensis="8" dies="19" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us ce">priest</munus>
+  <munus fontes="ce">missionary</munus>
+  <munus fontes="ce ga">founder</munus>
+  <descriptio>
+    <paragraphus fontes="ce">John Eudes was born at Ri, in France, on 14 November 1601. After brilliant studies with the Jesuits at Caen he entered the Oratory in 1623, where de Bérulle and de Condren were his masters, and he began his priestly life with heroic labours for victims of the plague. He became a famous missionary, preaching no fewer than one hundred and ten missions, chiefly in Normandy. In 1641 he founded the Congregation of Our Lady of Charity of the Refuge for penitent women, and in 1643 he left the Oratory to found at Caen the Society of Jesus and Mary, for the education of priests and for missions.</paragraphus>
+    <paragraphus fontes="ce ga">He composed the Mass and Office for the feasts of the Holy Heart of Mary, first kept in 1648, and of the Sacred Heart of Jesus, first kept in 1672, and wrote the first book on devotion to the Sacred Hearts; Leo XIII called him the author of their liturgical worship. Benedict XVI singled out his work for the formation of diocesan priests in seminaries, the first at Caen. He died at Caen on 19 August 1680, was beatified on 25 April 1909, and was canonized by Pius XI, together with the Curé of Ars, on 31 May 1925.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Bl. Jean Eudes" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Bl._Jean_Eudes">
+    <excerptum>French missionary and founder of the Eudists and of the Congregation of Our Lady of Charity; author of the liturgical worship of the Sacred Hearts of Jesus and Mary; b. at Ri, France, 14 Nov., 1601; d. at Caen, 19 Aug., 1680.</excerptum>
+    <excerptum>After brilliant studies with the Jesuits at Caen, he entered the Oratory, 25 March, 1623. His masters and models in the spiritual life were Fathers de Bérulle and de Condren.</excerptum>
+    <excerptum>began his sacerdotal life with heroic labours for the victims of the plague, then ravaging the country. As a missionary, Father Eudes became famous.</excerptum>
+    <excerptum>In 1641 he founded the Congregation of Our Lady of Charity of the Refuge, to provide a refuge for women of ill-fame who wished to do penance.</excerptum>
+    <excerptum>Father Eudes severed his connection with the Oratory to establish the Society of Jesus and Mary for the education of priests and for missionary work. This congregation was founded at Caen, 25 March, 1643</excerptum>
+    <excerptum>Father Eudes, during his long life, preached not less than one hundred and ten missions</excerptum>
+    <excerptum>Normandy was the principal theatre of his apostolic labours.</excerptum>
+    <excerptum>The feast of the Holy Heart of Mary was celebrated for the first time in 1648, and that of the Sacred Heart of Jesus in 1672</excerptum>
+    <excerptum>The Mass and Office proper to these were composed by Father Eudes</excerptum>
+    <excerptum>Pope Leo XIII, in proclaiming his virtues heroic in 1903, gave him the title of "Author of the Liturgical Worship of the Sacred Heart of Jesus and Holy Heart of Mary".</excerptum>
+    <excerptum>This last is the first book ever written on the devotion to the Sacred Hearts.</excerptum>
+    <excerptum>St. John Eudes was beatified April 25, 1909 and canonized in 1925. His feast day is August 19.</excerptum>
+  </fons>
+  <fons id="ga" opus="sedes" locus="Benedict XVI, General Audience, 19 August 2009" url="https://www.vatican.va/content/benedict-xvi/en/audiences/2009/documents/hf_ben-xvi_aud_20090819.html">
+    <excerptum>my venerable Predecessor Pius XI canonized John Eudes and the Curé d'Ars together, on 31 May 1925</excerptum>
+    <excerptum>I want to dwell on the apostolic zeal of St John Eudes, which he focused in particular on the formation of the diocesan clergy.</excerptum>
+    <excerptum>the Saint, who was a parish priest, founded a congregation specifically dedicated to the formation of priests. He founded his first seminary in the university town of Caen</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="19 August">
+    <excerptum>Saint John Eudes, Priest</excerptum>
+  </fons>
+</sanctus>

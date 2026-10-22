@@ -1,0 +1,35 @@
+<sanctus id="john-neumann" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">John Neumann</nomen>
+  <nomen lingua="en" fontes="sedes">John Nepomucene Neumann</nomen>
+  <nomen lingua="it" fontes="sedes">Giovanni Nepomuceno Neumann</nomen>
+  <ortus annus="1811" mensis="3" dies="28" locus="Prachatitz, Bohemia" fontes="ce"/>
+  <obitus annus="1860" mensis="1" dies="5" locus="Philadelphia" fontes="ce"/>
+  <beatificatio annus="1963" mensis="10" dies="13" papa="Paul VI" fontes="sedes"/>
+  <canonizatio modus="formalis" annus="1977" mensis="6" dies="19" papa="Paul VI" fontes="sedes"/>
+  <festum calendarium="usa" mensis="1" dies="5" gradus="memoria" fontes="us"/>
+  <munus fontes="us ce">bishop</munus>
+  <munus fontes="ce">religious</munus>
+  <descriptio>
+    <paragraphus fontes="ce">John Nepomucene Neumann was born at Prachatitz in Bohemia on 28 March 1811 and studied at the seminary of Budweis and the University of Prague. Drawn to the American missions, he landed in America as a seminarian in June 1836 and was ordained on 25 June by Bishop Dubois of New York, who sent him to western New York, where he laboured for four years amid great hardships. In 1840 he entered the Redemptorists and was the first of their members professed in America, in January 1842.</paragraphus>
+    <paragraphus fontes="ce sedes">In 1852, under obedience to Pius IX, he accepted the see of Philadelphia, of which he was the fourth bishop. He visited the larger congregations of his diocese every year and the smaller ones every two years, was the first American bishop to introduce the Forty Hours devotion, and built up the Catholic schools: two parochial schools in the city at his consecration became nearly one hundred at his death. He died at Philadelphia on 5 January 1860. Paul VI beatified him on 13 October 1963 and canonized him on 19 June 1977.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Ven. John Nepomucene Neumann" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Ven._John_Nepomucene_Neumann">
+    <excerptum>fourth Bishop of Philadelphia, Pennsylvania, U.S.A., b. at Prachatitz, Bohemia, March 28, 1811, erroneously set down as Good Friday by his biographers; d. at Philadelphia, January 5, 1860.</excerptum>
+    <excerptum>entered the seminary of Budweis in 1831.</excerptum>
+    <excerptum>inspired Neumann with the desire of consecrating himself to the American missions.</excerptum>
+    <excerptum>Finishing his course at the University of Prague with distinction in August, 1835</excerptum>
+    <excerptum>while yet a seminarian he landed in America (June 2, 1836) was adopted, and (June 25, 1836) ordained by Bishop Dubois of New York, who sent him without delay to western New York, where he labored for four years amid incredible hardships.</excerptum>
+    <excerptum>In 1840 he entered the Redemptorist Congregation; and was the first of its members professed in America, January 16, 1842.</excerptum>
+    <excerptum>Pius IX gave Father Neumann a command under obedience to accept the Bishopric of Philadelphia</excerptum>
+    <excerptum>At his consecration (1852) there were but two parochial schools in Philadelphia; at his death eight years later, their number was nearly one hundred.</excerptum>
+    <excerptum>Neumann was the first American bishop to introduce the Forty Hours devotion into his diocese in 1853</excerptum>
+    <excerptum>he visited the larger congregations of his diocese every year and the smaller ones every two years</excerptum>
+  </fons>
+  <fons id="sedes" opus="sedes" locus="Paul VI, homily for the canonization, 19 June 1977" url="https://www.vatican.va/content/paul-vi/en/homilies/1977/documents/hf_p-vi_hom_19770619.html">
+    <excerptum>CANONIZATION OF JOHN NEPOMUCENE NEUMANN HOMILY OF PAUL VI Sunday, 19 June 1977</excerptum>
+    <excerptum>Giovanni Nepomuceno Neumann, già da noi insignito del titolo di Beato il 13 ottobre 1963.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="5 January">
+    <excerptum>Saint John Neumann, Bishop</excerptum>
+  </fons>
+</sanctus>

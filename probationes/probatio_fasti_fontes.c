@@ -97,14 +97,14 @@ fictum_legere (
     t->genus  = chorda_ex_literis("natalis", piscina);
     sprintf(titulus, "%s quintus", f->praefixum);
     t->titulus     = chorda_ex_literis(titulus, piscina);
-    t->referentia  = V;
+    t->referentia  = chorda_ex_literis("5", piscina);
     t              = (FastiIntroitus*)xar_addere(exitus);
     memset(t, ZEPHYRUM, magnitudo(FastiIntroitus));
     t->dies   = fasti_dies(prima.annus, prima.mensis, II);
     t->genus  = chorda_ex_literis("aliud", piscina);
     sprintf(titulus, "%s secundus", f->praefixum);
     t->titulus     = chorda_ex_literis(titulus, piscina);
-    t->referentia  = II;
+    t->referentia  = chorda_ex_literis("2", piscina);
     redde VERUM;
 }
 
@@ -113,7 +113,8 @@ fictum_aperire (
                      vacuum* ctx,
     constans FastiIntroitus* introitus)
 {
-    ((FonsFictus*)ctx)->apertum = introitus->referentia;
+    (vacuum)chorda_ut_s32(introitus->referentia,
+        &((FonsFictus*)ctx)->apertum);
     redde VERUM;
 }
 

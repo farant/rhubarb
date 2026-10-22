@@ -248,34 +248,26 @@ _visor (
  * Principale
  * ================================================== */
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * Comparator
+ * ================================================== */
+
+interior vacuum
+_comparatorem_probare (
+    CredoContextus* c)
 {
-                    b32  praeteritus;
-                Piscina* piscina;
-                Piscina* opus;
-     constans character* radix = lectiones_ambitus("RHUBARB_RADIX");
+    Piscina* opus = piscina_generare_dynamicum(
+        "probatio_toml_oraculum_opus", 1048576);
 
-    piscina = piscina_generare_dynamicum("probatio_toml_oraculum",
-        262144);
-    opus    = piscina_generare_dynamicum("probatio_toml_oraculum_opus",
-        1048576);
-    si (!piscina || !opus)
+    (vacuum)c;
+    si (opus == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde;
     }
-    credo_aperire(piscina);
-
-
-    /* ==================================================
-     * Comparator
-     * ================================================== */
-
     {
         i32 k;
 
-        imprimere("\n--- Probans comparatorem ---\n");
         per (k = ZEPHYRUM; CASUS_COMPARATIONIS[k].toml != NIHIL; k++)
         {
              constans CasusComparationis* cc = &CASUS_COMPARATIONIS[k];
@@ -300,22 +292,36 @@ principale (vacuum)
             piscina_vacare(opus);
         }
     }
+    piscina_destruere(opus);
+}
 
 
-    /* ==================================================
-     * Corpus toml-test 1.0.0
-     * ================================================== */
+/* ==================================================
+ * Corpus toml-test 1.0.0
+ * ================================================== */
 
+interior vacuum
+_corpus_probare (
+    CredoContextus* c)
+{
+               Piscina* opus = piscina_generare_dynamicum(
+                   "probatio_toml_oraculum_opus", 1048576);
+    constans character* radix = lectiones_ambitus("RHUBARB_RADIX");
+
+    si (opus == NIHIL)
+    {
+        redde;
+    }
     {
                   Status st;
         TomlCorpusNumeri nn;
 
-        imprimere("\n--- Probans corpus toml-test ---\n");
         memset(&st, ZEPHYRUM, magnitudo(st));
         st.radix     = radix != NIHIL ? radix : ".";
         st.omnia     = lectiones_ambitus("ORACULUM_OMNIA") != NIHIL;
         st.exemplum  = lectiones_ambitus("ORACULUM_EXEMPLUM");
-        toml_corpus_ambulare(piscina, opus, st.radix, _visor, &st, &nn);
+        toml_corpus_ambulare(c->piscina, opus, st.radix, _visor, &st,
+            &nn);
         imprimere("  valida paria %u/%u; invalida reiecta %u/%u "
             "(pinnae %d, %d)\n", st.paria, st.valida, st.reiecta,
             st.invalida, (integer)PINNA_VALIDA,
@@ -326,11 +332,17 @@ principale (vacuum)
         CREDO_MAIOR_AUT_AEQUALIS_I32 (st.paria, (i32)PINNA_VALIDA);
         CREDO_MAIOR_AUT_AEQUALIS_I32 (st.reiecta, (i32)PINNA_INVALIDA);
     }
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(opus);
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "comparator", _comparatorem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "corpus toml-test", _corpus_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("toml_oraculum", SECTIONES);
 }

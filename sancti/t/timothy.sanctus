@@ -1,0 +1,35 @@
+<sanctus id="timothy" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Timothy</nomen>
+  <ortus locus="Lycaonia, probably Lystra" fontes="bu"/>
+  <obitus annus="97" circa="verum" locus="Ephesus" martyrium="verum" fontes="bu ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="1" dies="26" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="1" dies="24" fontes="mr"/>
+  <munus fontes="us mr bu">bishop</munus>
+  <munus fontes="bu mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Timothy was one of the most beloved and trusted disciples of St. Paul and went with him on many of his journeys. He came from Lycaonia, probably from Lystra; his father was a Gentile and his mother Eunice a Jewess, who with his grandmother Lois became a Christian. When Paul preached in Lycaonia in the year 51, the brethren spoke so well of the young man that the apostle took him as the companion of his labours. In 64 Paul left him at Ephesus to govern that church, and he is always named its first bishop.</paragraphus>
+    <paragraphus fontes="mr bu ce">The Martyrology says he was stoned for rebuking those who sacrificed to Diana and soon afterwards died in peace. His Acts, ascribed in some copies to Polycrates of Ephesus but probably written in the fifth or sixth century, relate that he was killed with stones and clubs by the pagans in the year 97, under Nerva, while opposing one of their festivals; in the Catholic Encyclopedia's summary of this life he was then over eighty. His relics were translated with great solemnity to Constantinople in 356.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Epistles to Timothy and Titus" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Epistles_to_Timothy_and_Titus">
+    <excerptum>Saints Timothy and Titus were two of the most beloved and trusted disciples of St. Paul, whom they accompanied in many of his journeys.</excerptum>
+    <excerptum>According to the ancient Roman martyrology he died Bishop of Ephesus.</excerptum>
+    <excerptum>The Bollandists (24 Jan.) give two lives of St. Timothy, one ascribed to Polycrates (an early Bishop of Ephesus, and a contemporary of St. Irenæus)</excerptum>
+    <excerptum>Timothy, who was unmarried, continued Bishop of Ephesus until, when he was over eighty years of age, he was mortally beaten by the pagans.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v01 Jan. 24 S. Timothy">
+    <excerptum>the beloved disciple of St. Paul, was of Lycaonia, and probably of the city Lystra. His father was a Gentile, but his mother Eunice a Jewess. She, with Lois his grandmother, embraced the Christian religion</excerptum>
+    <excerptum>When St. Paul preached in Lyeaonia, in the year 51, the brethren of Iconium and Lystra gave him so advantageous a character of the young man, that the apostle, being deprived of St. Barnaby, took him for the companion of his labours</excerptum>
+    <excerptum>St. Paul being returned from Rome into the East, in the year 64, left Saint Timothy at Ephesus, to govern that church</excerptum>
+    <excerptum>St. Timothy is always named the first bishop of Ephesus.</excerptum>
+    <excerptum>His acts, in some copies ascribed to the famous Polycrates, bishop of Ephesus, but which seem to have been written at Ephesus, in the fifth or sixth age</excerptum>
+    <excerptum>relate, that under the emperor Nerva, in the year 97, Saint John being still in the isle of Patmos, St. Timothy was slain with stones and clubs, by the heathens, whilst he was endeavouring to oppose their idolatrous ceremonies</excerptum>
+    <excerptum>his relicks were with great pomp translated to Constantinople, in the year 356, in the reign of Constantius.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="24 January">
+    <excerptum>birthday of St. Timothy, disciple of the apostle St. Paul, who ordained him bishop of Ephesus. After many combats for Christ, he was stoned for reprehending those who offered sacrifices to Diana, and shortly after went peacefully to his rest in the Lord.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="26 January">
+    <excerptum>Saints Timothy and Titus, Bishops</excerptum>
+  </fons>
+</sanctus>

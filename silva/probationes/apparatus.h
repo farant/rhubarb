@@ -24,6 +24,7 @@
 #include "latina.h"
 #include "piscina.h"
 #include "silva_parsare.h"
+#include "unitates.h"
 
 /* CLAUSURA_MAXIMA: capita in clausura plagulae unius. Pondus: Clausura
  * valore series[CLAUSURA_MAXIMA][VIA_MAXIMA] tenet, una per plagulam
@@ -73,6 +74,33 @@ apparatus_est_c (
 b32
 apparatus_est_c_vel_h (
     constans character* titulus);
+
+/* CORPUS SILVAE: quas plagulas directorii (lib/) portae corporis
+ * tractant - iudex corpus_silvae (unitates.stml), non index viarum.
+ * Tabulae datorum (signum DATA in linea signorum: biblia_dr,
+ * tabula_nodorum_data) excluduntur, quaeque NOMINATA cum causa et
+ * numerata - numquam tacite. */
+nomen structura {
+     Unitates* unitates;
+          i32  exclusae;
+} CorpusSilvae;
+
+/* unitates arboris legere; FALSUM = politica illegibilis (causa
+ * impressa) - consumptor asserit */
+b32
+apparatus_corpus_parare (
+           CorpusSilvae* corpus,
+     constans character* radix,
+                Piscina* piscina);
+
+/* plagula C quam iudex corpus_silvae iudicat? (nomen sine
+ * directorio, ut readdir dat) */
+b32
+apparatus_in_corpore (
+           CorpusSilvae* corpus,
+     constans character* directorium,
+     constans character* nomen_plagulae,
+                Piscina* piscina);
 
 i8*
 apparatus_plagulam_legere (

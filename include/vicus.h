@@ -5,7 +5,7 @@
  * Vicus (via Romana insularum) repositorium UNUM possidet: radix
  * <vicus> (apps/vicus/organum.stml), liberi = montationes applicationum
  * (rami, canonibus suis iudicati). Volumen UNUM: documenta montationum
- * in spatiis suis (id), dispositio in plagula 'vicus/latera'
+ * in spatiis suis (id), dispositio in praesentia 'vicus/latera'
  * (configuratio, non historia: superscribitur). Vicus nullam
  * applicationem novit: principale genera registrat (titulus ->
  * magnitudo montationis + functio montandi).
@@ -38,6 +38,7 @@
 #include "dispensator.h"
 #include "delineare_mandata.h"
 #include "organum_montatio.h"
+#include "semita.h"
 
 /* tabulae fixae (vicus-latera decisio IX): index ordinarius tot
  * dat; vicus plures non legit */
@@ -119,6 +120,14 @@ nomen structura {
                  b32  (*argumentum_ponere)(vacuum* ctx,
                           constans character* argumentum);
               vacuum* argumentum_ponere_ctx;
+    /* semitae R3: ramus lateris (semita.h) - historia lateris et
+     * $via; NIHIL = latus sine semitis */
+    constans InsulaRamus* ramus;
+    /* semitae R4: post semitam a vico applicatam (historia) - latus
+     * statum derivatum reconciliat (calendarium: liber notarum diei;
+     * pictor: documentum). NIHIL = nihil reconciliandum */
+                 b32  (*semitam_secuta)(vacuum* ctx);
+              vacuum* semitam_secuta_ctx;
 } VicusFacies;
 
 nomen vacuum (*VicusDescriptor)(
@@ -149,6 +158,17 @@ nomen structura {
                     b32  finita;         /* concha exiit: titulus
                                           * "[exitus]", non iam
                                           * pulsatur */
+    /* semitae R3 (vicus privatum): historia lateris - semitae plenae
+     * ut textus STML (cum signo camporum 'impelle'); cursor = locus
+     * currens */
+                    Xar* historia;
+                    i32  historia_cursor;
+    /* semitae R4d: semita persistens lateris (URI, campi transientes
+     * omissi) - post pulsum mutata in indice servatur (attributum
+     * semita), in initio post montationem applicatur (deinde
+     * semitam_secuta); argumentum identitas manet (acervus, cyclus).
+     * Vacua = nulla */
+                 chorda semita_servata;
 } VicusLatus;
 
 nomen structura {
@@ -158,6 +178,8 @@ nomen structura {
                               * in fronte; numquam vacuus (decisio
                               * VIII) */
            i32 focus;       /* VICUS_SINISTRUM aut VICUS_DEXTRUM */
+           i32 focus_domus; /* T4f: focus cum latus cycli domum texit
+                             * (ordinarium VICUS_DEXTRUM) */
 } VicusTabula;
 
 /* S4 (Franus 2026-10-09): horologium in linea tabularum, ad dextrum
@@ -210,6 +232,12 @@ nomen structura {
                     /* T4a: vicus_systema_addere (privatum) */
                     Xar* systemata_hospitis;
              VicusLatus* stratum;     /* T4b: NIHIL = nullum */
+                    Xar* cyclus;      /* T4f: latera cycli (genus,
+                                       * argumentum; privatum); NIHIL
+                                       * aut vacuus = nullus */
+          SemitaOrganum  organa;      /* semitae R3: NIHIL = nullae */
+                 vacuum* organa_ctx;
+                Piscina* scheda_semitarum;   /* per pulsum vacatur */
 } Vicus;
 
 /* T4a (colloquia-plan): systema hospitis - in omni vicus_pulsare
@@ -440,6 +468,30 @@ vicus_acervo_mutare (
     constans character* genus,
     constans character* argumentum);
 
+/* T4f (colloquia-plan): cyclus lateris dextri - Cmd+] (directio +I)
+ * aut Cmd+[ (-I) in tabula activa: domus -> latus[0] -> ... ->
+ * latus[n-1] -> domus. Latus cycli = genera[k] cum argumenta[k]
+ * (identitas ut vicus_acervo_aperire, S3c; argumenta NIHIL aut
+ * argumenta[k] NIHIL = sine argumento). Domus = latus summum acervi
+ * quod in cyclo non est (nullum: imum). Gradus ad latus = ut
+ * vicus_acervo_aperire (focus dexter); gradus ad domum = latera cycli
+ * supra domum tolluntur (ut Esc), focus redit quo erat cum latus cycli
+ * domum texit. Copiantur; numerus ZEPHYRUM = cyclus nullus. FALSUM si
+ * genus ignotum. */
+b32
+vicus_cyclum_ponere (
+                           Vicus* v,
+    constans character* constans* genera,
+    constans character* constans* argumenta,
+                             i32  numerus);
+
+/* gradus cycli (+I aut -I): PETITIO, applicatur in vicus_pulsare
+ * proximo (ut vicus_acervo_aperire). FALSUM si cyclus nullus. */
+b32
+vicus_cyclo_gradi (
+    Vicus* v,
+      s32  directio);
+
 /* T4d: latus frontale acervi tabulae activae tollitur, prior in
  * frontem venit, focus ad dextrum; dispositio servatur. FALSUM si
  * acervus unum solum habet (numquam vacuus, decisio VIII). */
@@ -459,6 +511,15 @@ vicus_acervo_aperire (
                   Vicus* v,
      constans character* genus,
      constans character* argumentum);
+
+/* semitae R3: organa (genus -> manifestum) pro semitis laterum;
+ * applicatio ponit (organa infixa, cache). NIHIL = nullae (historia
+ * nulla) */
+vacuum
+vicus_organa_ponere (
+              Vicus* v,
+      SemitaOrganum  organa,
+             vacuum* ctx);
 
 chorda
 vicus_causa (

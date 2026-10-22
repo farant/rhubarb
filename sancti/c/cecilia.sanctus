@@ -1,0 +1,49 @@
+<sanctus id="cecilia" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Cecilia</nomen>
+  <nomen lingua="la" principale="verum" fontes="ce">Caecilia</nomen>
+  <nomen lingua="en" fontes="bu">Cecily</nomen>
+  <obitus locus="Rome" martyrium="verum" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="11" dies="22" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="11" dies="22" fontes="mr"/>
+  <munus fontes="us mr ce">virgin</munus>
+  <munus fontes="us mr ce">martyr</munus>
+  <patrocinium fontes="ce">church music</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">Cecilia is one of the most venerated martyrs of Christian antiquity. Her feast was kept in the Roman Church by the fourth century, and the feast of 22 November belonged to her church in the Trastevere quarter of Rome. The archaeologist De Rossi located her grave in the Catacomb of Callistus, beside the crypt of the popes.</paragraphus>
+    <paragraphus fontes="ce bu mr">Acts of her martyrdom, written about the middle of the fifth century, make her a Christian virgin of a senatorial family, given by her parents in marriage to a pagan, Valerian; Butler adds that she had vowed her virginity to God. She won Valerian and his brother Tiburtius to the faith, and they were martyred before her. Condemned to be suffocated in the bath of her house, she survived; the executioner struck her three times with the sword, and she lived three days more. The Catholic Encyclopedia calls this story, as a whole, a pious romance, while holding that the martyrs themselves are historical. When she died is not known: Butler, following the Acts, puts it about 230 under Alexander Severus, others under Marcus Aurelius; the position of her tomb points to some time between the end of the second century and the middle of the third.</paragraphus>
+    <paragraphus fontes="ce">She became patroness of church music from the story that she sang in her heart to God alone while musicians played at her wedding, and more widely once the Academy of Music founded at Rome in 1584 took her as patroness.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Cecilia" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Cecilia">
+    <excerptum>Virgin and martyr, patroness of church music, died at Rome.</excerptum>
+    <excerptum>is one of the most venerated martyrs of Christian antiquity</excerptum>
+    <excerptum>from this it is evident that her feast was celebrated in the Roman Church in the fourth century.</excerptum>
+    <excerptum>The feast of the saint mentioned under 22 November, on which day it is still celebrated, was kept in the church in the Trastevere quarter at Rome, dedicated to her.</excerptum>
+    <excerptum>De Rossi located the burial-place of Cecilia in the Catacomb of Callistus in a crypt immediately adjoining the crypt or chapel of the popes</excerptum>
+    <excerptum>to the family of St. Cecilia (Gens Caecilia)</excerptum>
+    <excerptum>About the middle of the fifth century originated Acts of the martyrdom of St. Cecilia</excerptum>
+    <excerptum>Cecilia, a virgin of a senatorial family and a Christian from her infancy, was given in marriage by her parents to a noble pagan youth Valerianus.</excerptum>
+    <excerptum>When Tiburtius, the brother of Valerianus, came to them, he too was won over to Christianity.</excerptum>
+    <excerptum>she was condemned to be suffocated in the bath of her own house. But as she remained unhurt in the overheated room, the prefect had her decapitated in that place.</excerptum>
+    <excerptum>The executioner let his sword fall three times without separating the head from the trunk</excerptum>
+    <excerptum>She lived three days, made dispositions in favour of the poor</excerptum>
+    <excerptum>In this shape the whole story has no historical value; it is a pious romance, like so many others compiled in the fifth and sixth century. The existence of the aforesaid martyrs, however, is a historical fact.</excerptum>
+    <excerptum>The time when Cecilia suffered martyrdom is not known.</excerptum>
+    <excerptum>The earliest part of this catacomb dates at all events from the end of the second century; from that time, therefore, to the middle of the third century is the period left open for the martyrdom of St. Cecilia.</excerptum>
+    <excerptum>that while the musicians played at her nuptials she sang in her heart to God only</excerptum>
+    <excerptum>When the Academy of Music was founded at Rome (1584) she was made patroness of the institute, whereupon her veneration as patroness of church music in general became still more universal</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v11 Nov. 22 S. Cecily, V. M.">
+    <excerptum>In her youth she by vow consecrated her virginity to. God, yet was compelled by her parents to marry a nobleman named Valerian.</excerptum>
+    <excerptum>Him she converted to the faith, and soon after gained to the same his brother Tiburtius. The men first suffered martyrdom</excerptum>
+    <excerptum>Their acts, which are of very small authority, make them cotemporary with pope Urban], and consequently place their martyrdom about the year 230, under Alexander Severus</excerptum>
+    <excerptum>Others, however, place the triumph of these martyrs under Marcus Aurelius</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="22 November">
+    <excerptum>AT Borne, St. Cecilia, virgin and martyr, who brought to the faith of Christ her spouse Valerian and his brother Tiburtius, and encouraged them to martyrdom.</excerptum>
+    <excerptum>exposed to the fire, from which she came out uninjured, she terminated her glorious sufferings by the sword</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="22 November">
+    <excerptum>Saint Cecilia, Virgin and Martyr</excerptum>
+  </fons>
+</sanctus>

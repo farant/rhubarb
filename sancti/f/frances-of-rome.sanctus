@@ -1,0 +1,39 @@
+<sanctus id="frances-of-rome" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Frances of Rome</nomen>
+  <ortus annus="1384" locus="Rome" fontes="ce bu"/>
+  <obitus annus="1440" mensis="3" dies="9" locus="Rome" fontes="ce bu"/>
+  <canonizatio modus="formalis" annus="1608" mensis="5" dies="9" papa="Paul V" fontes="ce bu"/>
+  <festum calendarium="generale" mensis="3" dies="9" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="3" dies="9" fontes="mr"/>
+  <munus fontes="us">religious</munus>
+  <munus fontes="mr bu">widow</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Frances was born at Rome in 1384 of a noble family. As a girl she wished to enter religious life, but at her father's wish she was married at twelve to Lorenzo de' Ponziani. Butler records that in forty years together they never quarrelled, and that she would leave her prayers at once when her household needed her. She was known for charity to the poor and zeal for souls, and she bore with patience her husband's banishment, the captivity of her son Battista, the deaths of two of her children and the loss of all her property.</paragraphus>
+    <paragraphus fontes="ce bu mr">She won many Roman ladies away from a life of frivolity and gathered them into an association of oblates attached to the Benedictine monastery of Santa Maria Nuova, which became the Oblates of Tor di Specchi in 1433; they lived as religious without strict enclosure or formal vows. After her husband's death she entered the community herself and was made its superior. She was a mystic, credited with miracles, ecstasies and the bodily vision of her guardian angel. She died at Rome on 9 March 1440, and Paul V canonized her in 1608.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="9 March">
+    <excerptum>At Rome, St. Frances, a widow, renowned for her noble extraction, holiness of life, and the gift of miracles.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v03 March 9 St. Frances, Widow">
+    <excerptum>Sr. Frances was born at Rome in 1384.</excerptum>
+    <excerptum>that for forty years which they lived together, there never happened the least disagreement</excerptum>
+    <excerptum>if called away by her husband, or the meanest person of her family, she laid all aside to obey without delay</excerptum>
+    <excerptum>she expired on the ninth of March, in the year 1440</excerptum>
+    <excerptum>solemnly canonized by Paul V. in 1608.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Frances of Rome" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Frances_of_Rome">
+    <excerptum>One of the greatest mystics of the fifteenth century; born at Rome, of a noble family, in 1384; died there, 9 March, 1440.</excerptum>
+    <excerptum>Her youthful desire was to enter religion, but at her father's wish she married, at the age of twelve, Lorenzo de' Ponziani.</excerptum>
+    <excerptum>Among her children we know of Battista, who carried on the family name, Evangelista, a child of great gifts (d. 1411), and Ages (d. 1413).</excerptum>
+    <excerptum>Frances was remarkable for her charity to the poor, and her zeal for souls.</excerptum>
+    <excerptum>She won away many Roman ladies from a life of frivolity, and united them in an association of oblates attached to the White Benedictine monastery of Santa Maria Nuova; later they became the Benedictine Oblate Congregation of Tor di Specchi (25 March, 1433)</excerptum>
+    <excerptum>Its members led the life of religious, but without the strict cloister or formal vows</excerptum>
+    <excerptum>She had the gift of miracles and ecstasy, we well as the bodily vision of her guardian angel</excerptum>
+    <excerptum>exemplified on the occasion ofher husband's banishment, the captivity of Battista, her sons' death, and the loss of all her property.</excerptum>
+    <excerptum>On the death of husband (1436) she retired among her oblates at Tor di Specchi, seeking admission for charity's sake, and was made superior.</excerptum>
+    <excerptum>Paul V declared her a saint on 9 May, 1608, assigning 9 March as her feast day.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="9 March">
+    <excerptum>Saint Frances of Rome, Religious</excerptum>
+  </fons>
+</sanctus>

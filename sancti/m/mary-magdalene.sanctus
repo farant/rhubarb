@@ -1,0 +1,37 @@
+<sanctus id="mary-magdalene" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Mary Magdalene</nomen>
+  <nomen lingua="en" fontes="ce mr">Mary Magdalen</nomen>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="7" dies="22" gradus="festum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="7" dies="22" fontes="mr"/>
+  <munus fontes="bu">penitent</munus>
+  <descriptio>
+    <paragraphus fontes="ce mr">Mary Magdalen took her name either from Magdala near Tiberias, in Galilee, or possibly from a Talmudic expression. The New Testament names her among the women who accompanied Christ and ministered to him, and says that seven devils had been cast out of her. She stood at the foot of the cross, saw Christ laid in the tomb, and was the first recorded witness of the Resurrection; the Martyrology says she deserved to be the first to see the Saviour risen.</paragraphus>
+    <paragraphus fontes="ce bu">Whether she is the same person as the "sinner" of Luke 7 and as Mary of Bethany, the sister of Martha and Lazarus, is disputed: the Greek Fathers as a whole distinguish the three, most of the Latins hold them to be one, and the Catholic Encyclopedia judges the identity impossible to demonstrate, though it holds that those who call it a mere conjecture go too far. Butler calls her the illustrious penitent woman of St. Luke and notes that many grave authors take all three to be one person. Her later life is likewise uncertain. The Greek Church holds that she retired to Ephesus and died there; a French tradition brings her with Lazarus to Marseilles and Provence, where she did penance for thirty years at La Sainte-Baume, and the Martyrology keeps her birthday at Marseilles.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Mary Magdalen" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Mary_Magdalen">
+    <excerptum>Mary Magdalen was so called either from Magdala near Tiberias, on the west shore of Galilee, or possibly from a Talmudic expression</excerptum>
+    <excerptum>In the New Testament she is mentioned among the women who accompanied Christ and ministered to Him (Luke 8:2-3), where it is also said that seven devils had been cast out of her</excerptum>
+    <excerptum>She is next named as standing at the foot of the cross</excerptum>
+    <excerptum>She saw Christ laid in the tomb, and she was the first recorded witness of the Resurrection.</excerptum>
+    <excerptum>The Greek Fathers, as a whole, distinguish the three persons: the "sinner" of Luke 7:36-50; the sister of Martha and Lazarus, Luke 10:38-42 and John 11; and Mary Magdalen.</excerptum>
+    <excerptum>On the other hand most of the Latins hold that these three were one and the same.</excerptum>
+    <excerptum>It is impossible to demonstrate the identity of the three</excerptum>
+    <excerptum>but those commentators undoubtedly go too far who assert, as does Westcott (on John 11:1), "that the identity of Mary with Mary Magdalene is a mere conjecture supported by no direct evidence</excerptum>
+    <excerptum>The Greek Church maintains that the saint retired to Ephesus with the Blessed Virgin and there died</excerptum>
+    <excerptum>according to a French tradition (see SAINT LAZARUS OF BETHANY), Mary, Lazarus, and some companions came to Marseilles and converted the whole of Provence.</excerptum>
+    <excerptum>Magdalen is said to have retired to a hill, La Sainte-Baume, near by, where she gave herself up to a life of penance for thirty years.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v07 Jul. 22 S. Mary Magdalen">
+    <excerptum>Tue illustrious penitent woman mentioned by St, Luke, was, by her perfect conversion, an encouraging example and</excerptum>
+    <excerptum>model of penitence to all succeeding ages.</excerptum>
+    <excerptum>Mention is made in the gospels of a woman who was a sinner, (Luke vii.) of Mary of Bethania, the sister of Lazarus,</excerptum>
+    <excerptum>Many grave authors think all this to belong to one and the same person</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="22 July">
+    <excerptum>T Marseilles, the birthday of St. Mary Magdalen, out of whom our Lord expelled seven demons, and who deserved to be the first to see the Saviour after He had risen from the dead.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="22 July">
+    <excerptum>Saint Mary Magdalene</excerptum>
+  </fons>
+</sanctus>

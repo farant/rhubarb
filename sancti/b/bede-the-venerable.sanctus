@@ -1,0 +1,48 @@
+<sanctus id="bede-the-venerable" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Bede the Venerable</nomen>
+  <nomen lingua="la" principale="verum" fontes="ce">Beda</nomen>
+  <nomen lingua="la" fontes="ce">Baeda</nomen>
+  <ortus annus="673" circa="verum" fontes="ce bu"/>
+  <obitus annus="735" mensis="5" dies="26" fontes="ce bu"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="5" dies="25" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="5" dies="27" fontes="mr"/>
+  <munus fontes="us mr ce">priest</munus>
+  <munus fontes="us mr ce">doctor of the Church</munus>
+  <munus fontes="ce bu">monk</munus>
+  <munus fontes="ce">historian</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Bede was born in 672 or 673 on lands belonging to the twin monastery of St. Peter and St. Paul at Wearmouth and Jarrow in Northumberland. At seven he was entrusted to Abbot Benedict Biscop and later to Ceolfrid, and he spent the rest of his life in that monastery, taking delight, as he wrote, in learning, teaching and writing amid the monastic round and the daily singing of the office. He was ordained deacon in his nineteenth year and priest in his thirtieth, both by St. John of Beverley.</paragraphus>
+    <paragraphus fontes="ce bu mr">His Ecclesiastical History of the English People, which he had written by 731, is in the Encyclopedia's words the foundation of all knowledge of British history; he also wrote commentaries on Scripture, which he and his contemporaries counted his most important works, treatises on chronology, and verse. The Catholic Encyclopedia calls him the most learned man of his time and notes his care to acknowledge what he borrowed from others. He died on the eve of the Ascension, 26 May 735, still dictating a translation of the Gospel of St. John, and was buried in St. Paul's church at Jarrow. The title Venerable was attached to his name within two generations, and in 1899 Leo XIII extended his feast to the whole Church with the title of Doctor.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="27 May">
+    <excerptum>demise of the Venerable Bebe, priest, confessor and doctor, renowned for sanctity and learning.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="Ven. Bede" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Ven._Bede">
+    <excerptum>Historian and Doctor of the Church, born 672 or 673; died 735.</excerptum>
+    <excerptum>I, Baeda, a servant of Christ and a priest of the monastery of the blessed apostles St. Peter and St. Paul, which is at Wearmouth and at Jarrow (in Northumberland), have with the Lord's help composed</excerptum>
+    <excerptum>I was born in the territory of the said monastery, and at the age of seven I was, by the care of my relations, given to the most reverend Abbot Benedict [St. Benedict Biscop], and afterwards to Ceolfrid, to be educated.</excerptum>
+    <excerptum>From that time I have spent the whole of my life within that monastery, devoting all my pains to the study of the Scriptures, and amid the observance of monastic discipline and the daily charge of singing in the Church, it has been ever my delight to learn or teach or write.</excerptum>
+    <excerptum>In my nineteenth year I was admitted to the diaconate, in my thirtieth to the priesthood, both by the hands of the most reverend Bishop John [St. John of Beverley]</excerptum>
+    <excerptum>His words, written in 731, when death was not far off</excerptum>
+    <excerptum>Even on the day of his death (the vigil of the Ascension, 735) the saint was still busy dictating a translation of the Gospel of St. John.</excerptum>
+    <excerptum>The title Venerabilis seems to have been associated with the name of Bede within two generations after his death.</excerptum>
+    <excerptum>venerabilis et modernis temporibus doctor admirabilis Beda</excerptum>
+    <excerptum>it was only on 13 November, 1899, that Leo XIII decreed that the feast of Venerable Bede with the title of Doctor Ecclesiae should be celebrated throughout the Church each year on 27 May.</excerptum>
+    <excerptum>In point of scholarship he was undoubtedly the most learned man of his time.</excerptum>
+    <excerptum>He himself scrupulously noted in his writings the passages he had borrowed from others</excerptum>
+    <excerptum>His great work, the "Historia Ecclesiastica Gentis Anglorum", giving an account of Christianity in England from the beginning until his own day, is the foundation of all our knowledge of British history</excerptum>
+    <excerptum>Bede's chronological treatises "De temporibus liber" and "De temporum ratione"</excerptum>
+    <excerptum>Bede's exegetical writings both in his own idea and in that of his contemporaries stood supreme in importance among his works</excerptum>
+    <excerptum>like other scholars of his age, he certainly wrote a good deal of verse.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v05 May 27 Saint Bede, Confessor, Father of the Church">
+    <excerptum>was born in 673, as Mabillon demonstrates from his own writings, in a village which soon after his birth became part of the estate of the new neighbouring monastery of Jarrow</excerptum>
+    <excerptum>he was ordained deacon in 691, at nineteen years of age, by St. John of Beverley</excerptum>
+    <excerptum>in the year 735, of his age sixty-two, on Wednesday evening the twenty-sixth of May, after the first vespers of our Lord’s Ascension</excerptum>
+    <excerptum>was buried in St. Paul’s chureh in Jarrow</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="25 May">
+    <excerptum>Saint Bede the Venerable, Priest and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

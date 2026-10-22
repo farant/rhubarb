@@ -1,0 +1,58 @@
+<sanctus id="benedict-of-nursia" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Benedict of Nursia</nomen>
+  <nomen lingua="en" fontes="bu">Bennet</nomen>
+  <nomen lingua="it" fontes="pn">Benedetto</nomen>
+  <ortus annus="480" circa="verum" locus="Norcia" fontes="ce bu"/>
+  <obitus annus="543" circa="verum" mensis="3" dies="21" locus="Monte Cassino" fontes="ce bu mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="7" dies="11" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="3" dies="21" fontes="mr"/>
+  <munus fontes="us mr">abbot</munus>
+  <munus fontes="pn">founder</munus>
+  <patrocinium fontes="pn">Europe</patrocinium>
+  <descriptio>
+    <paragraphus fontes="bu">Benedict (Bennet in Butler's English) was a native of Norcia in Umbria, of a family of note. Sent to Rome for his studies, he was shocked by the licentiousness of some of the Roman youth, left the city privately and went to the desert mountains of Subiaco (Sublacum), where a monk named Romanus gave him the monastic habit and led him to a cave; he lived there three years known only to Romanus. The monks of Vicovara chose him as their abbot, but their manners did not agree with his, and some of them tried to poison him. He returned to Subiaco and built twelve monasteries there.</paragraphus>
+    <paragraphus fontes="bu ce mr pn">Persecuted by a jealous priest, Florentius, he moved to Monte Cassino, where he built oratories on the ruins of a temple of Apollo and laid the foundation of the abbey in 529. He wrote a monastic rule, founded on silence, solitude, prayer, humility and obedience, which Gregory the Great preferred to all others and which for a time was adopted by all the monks of the West; Butler's account rests chiefly on Gregory. He died soon after his sister Scholastica, on 21 March, probably in 543, and was buried with her at Monte Cassino. The Catholic Encyclopedia gives his birth as about 480, which fits Butler's forty-eighth year in 529 but not Butler's own "about 460", and says Totila's visit in 543 is the only certain date in his life. Paul VI proclaimed him principal patron of all Europe in 1964.</paragraphus>
+  </descriptio>
+  <fons id="bu" opus="butler1812" locus="v03 Mar. 21 St. Benedict, Abbot">
+    <excerptum>From St. Gregory, (Dial. |. 2. c. 1.) who assures us that he received his account of this saint from four abbots, the saint’s disciples</excerptum>
+    <excerptum>was a native of Norcia, formerly an episcopal see in Umbria, and was descended from a family of note, and born about the year 460.</excerptum>
+    <excerptum>When he was fit for the higher studies, he was sent by his parenis to Rome, and there placed in the public schools.</excerptum>
+    <excerptum>was not a little shocked at the licen- tiousness which he observed in the conduct of some of the Roman youth</excerptum>
+    <excerptum>He therefore left the city privately, and made the best of his way towards the deserts.</excerptum>
+    <excerptum>his journey alone to the desert mountains of Sublacum</excerptum>
+    <excerptum>the saint met a monk of a neighbouring monastery, called tomanus, who gave him the monastic habit, with suitable instructions, and conducted him to a deep narrow cave in the midst of these mountains, almost inaccessible to men.</excerptum>
+    <excerptum>He lived three years in this manner known only to Romanus.</excerptum>
+    <excerptum>Some time after, the monks of Vicovara,</excerptum>
+    <excerptum>on ihe death of their abbot, pitched upon him to succeed him. He was very unwilling to take upon him that charge</excerptum>
+    <excerptum>soon found by experience that their manners did’ not square with his just idea of a monastic state.</excerptum>
+    <excerptum>carried their aversion so far as to mingle poison with his wine</excerptum>
+    <excerptum>He therefore returned to Sublacum ; which desert he soon peopled with monks, for whom he built twelve monasteries</excerptum>
+    <excerptum>Florentius, a priest in the neighbouring coun- try, though unworthy to bear that sacred character, moved by a secret jealousy, persecuted the saint</excerptum>
+    <excerptum>left Sublacum, and repaired to Mount Cassino.</excerptum>
+    <excerptum>on the top of which stood an old temple of Apollo</excerptum>
+    <excerptum>Upon the ruins of which temple and altar he erected two oratories or chapels</excerptum>
+    <excerptum>This was the origin of the celebrated abbey of Mount Cassino, the foundation of which the saint laid in 529, the forty-eighth year of his age</excerptum>
+    <excerptum>compiled a monastic rule, which, for wisdom and discretion, St. Gregory the Great preferred to all other rules; and which was afterward adopted, for some time, byall the monks of the West.</excerptum>
+    <excerptum>It is principally founded on silence, solitude, prayer, humility, and obedience.</excerptum>
+    <excerptum>The death of this great saint seems to have happened soon after that of his sister St. Scholastica</excerptum>
+    <excerptum>he calmly expired, in prayer, on Saturday, the twenty-first of March, probably in the year 543, and of his age the sixty-third ; having spent fourteen years at Mount Cassino.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Benedict of Nursia" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Benedict_of_Nursia">
+    <excerptum>Founder of western monasticism, born at Nursia, c. 480; died at Monte Cassino, 543. The only authentic life of Benedict of Nursia is that contained in the second book of St. Gregory's "Dialogues".</excerptum>
+    <excerptum>Totila's visit to Monte Cassino in 543 is the only certain date we have in the saint's life.</excerptum>
+    <excerptum>He was buried in the same grave with his sister "in the oratory of St. John the Baptist, which [he] himself had built when he overthrew the altar of Apollo"</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="21 March">
+    <excerptum>A"N Mount Cassino, the birthday of the holy abbot Benedict, who restored and wonderfully extended in the West the monastic discipline, which was almost destroyed.</excerptum>
+    <excerptum>His life, brilliant in virtues and miracles, was written by pope St. Gregory.</excerptum>
+  </fons>
+  <fons id="pn" opus="sedes" locus="Paul VI, Pacis nuntius, 24 October 1964" url="https://www.vatican.va/content/paul-vi/it/apost_letters/documents/hf_p-vi_apl_19641024_pacis-nuntius.html">
+    <excerptum>araldo della religione di Cristo e fondatore della vita monastica in Occidente: questi i giusti titoli della esaltazione di san Benedetto Abate.</excerptum>
+    <excerptum>costituiamo e proclamiamo san Benedetto Abate celeste Patrono principale dell'intera Europa</excerptum>
+    <excerptum>Dato a Roma, presso San Pietro, i1 24 ottobre dell'anno 1964</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="11 July">
+    <excerptum>Saint Benedict, Abbot</excerptum>
+  </fons>
+</sanctus>

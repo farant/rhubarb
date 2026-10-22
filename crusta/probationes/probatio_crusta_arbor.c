@@ -210,32 +210,36 @@ _nidum_parsare (
     piscina_destruere(piscina);
 }
 
-s32
-principale (vacuum)
+/* numerator casuum in parare sectionis reponitur: status sectionis
+ * propriae, non inter sectiones */
+interior vacuum
+_numeratorem_reponere (
+    CredoContextus* c)
 {
-              b32  praeteritus;
-          Piscina* piscina;
-    CrustaParsura  r;
+    (vacuum)c;
+    casus_numerus = ZEPHYRUM;
+}
+
+/* Sectio UNA: pinna 'casus > LXXX' casus OMNIUM blocorum numerat
+ * (assertio aggregata) - divisio numeros mutaret; gradus
+ * (CREDO_GRADUS) fracturam nominant. */
+interior vacuum
+_casus_probare (
+    CredoContextus* c)
+{
+            Piscina* piscina = c->piscina;
+      CrustaParsura  r;
     MateriaNodus* p;
     MateriaNodus* imperium;
     MateriaNodus* verbum;
     MateriaNodus* n;
-
-    piscina = piscina_generare_dynamicum("probatio_crusta_arbor",
-        524288);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
 
 
     /* ==================================================
      * PROBARE: programma, imperium, verba
      * ================================================== */
 
-    imprimere("\n--- Probans programma et imperia ---\n");
+    CREDO_GRADUS ("programma et imperia");
 
     p = _casus(piscina, "echo hi\n", &r);
     CREDO_AEQUALIS_I32 (_numerus(p, (i32)CRUSTA_PROGRAMMA_LIBERI),
@@ -501,7 +505,7 @@ principale (vacuum)
      * PROBARE: partes
      * ================================================== */
 
-    imprimere("\n--- Probans partes ---\n");
+    CREDO_GRADUS ("partes");
 
     p = _casus(piscina, "$x ${y:-d} $(echo z) \\$ ~/p $'\\t' $\"s\"",
         &r);
@@ -672,7 +676,7 @@ principale (vacuum)
      * PROBARE: redirectiones
      * ================================================== */
 
-    imprimere("\n--- Probans redirectiones ---\n");
+    CREDO_GRADUS ("redirectiones");
 
     p = _casus(piscina, "cmd 2>&1 >/dev/null <in &>all {fd}>x", &r);
     imperium = _sententia(p, ZEPHYRUM);
@@ -716,7 +720,7 @@ principale (vacuum)
      * PROBARE: listae - separatores, catena, pipa
      * ================================================== */
 
-    imprimere("\n--- Probans listas ---\n");
+    CREDO_GRADUS ("listas");
 
     p = _casus(piscina, "a; b & c\n", &r);
     CREDO_AEQUALIS_I32 (_numerus(p, (i32)CRUSTA_PROGRAMMA_LIBERI),
@@ -779,7 +783,7 @@ principale (vacuum)
      * PROBARE: ligator (C7) - trivia retro per lineam novam ultimam
      * ================================================== */
 
-    imprimere("\n--- Probans ligatorem ---\n");
+    CREDO_GRADUS ("ligatorem");
 
     p = _casus(piscina, "a &&\n\n  b", &r);
     n = _sententia(p, ZEPHYRUM);
@@ -846,7 +850,7 @@ principale (vacuum)
      * PROBARE: mala (totalitas) et EOF
      * ================================================== */
 
-    imprimere("\n--- Probans mala et EOF ---\n");
+    CREDO_GRADUS ("mala et EOF");
 
     {
         constans character* mala[] = { "fi", ")", ";;", "}", "; ;",
@@ -895,7 +899,7 @@ principale (vacuum)
      * PROBARE: valor staticus
      * ================================================== */
 
-    imprimere("\n--- Probans valorem staticum ---\n");
+    CREDO_GRADUS ("valorem staticum");
 
     p = _casus(piscina,
         "'a b' \"a\\\"b\" a\\ b $'\\x41\\101' \\\\x \"\\x\"",
@@ -920,7 +924,7 @@ principale (vacuum)
      * PROBARE: conditio et rami (P5)
      * ================================================== */
 
-    imprimere("\n--- Probans conditionem ---\n");
+    CREDO_GRADUS ("conditionem");
 
     p = _casus(piscina,
         "if a; then b; elif c; then d; else e; fi", &r);
@@ -1030,7 +1034,7 @@ principale (vacuum)
      * PROBARE: iteratio, cyclus, repetitio, cursus
      * ================================================== */
 
-    imprimere("\n--- Probans cyclos ---\n");
+    CREDO_GRADUS ("cyclos");
 
     p = _casus(piscina, "for i in a b; do c; done", &r);
     n = _sententia(p, ZEPHYRUM);
@@ -1152,7 +1156,7 @@ principale (vacuum)
      * PROBARE: electio et optiones
      * ================================================== */
 
-    imprimere("\n--- Probans electionem ---\n");
+    CREDO_GRADUS ("electionem");
 
     p = _casus(piscina, "case $x in a|b) echo 1 ;; (c) ;; d) esac",
         &r);
@@ -1251,7 +1255,7 @@ principale (vacuum)
      * PROBARE: grex, crustula, functio, socius
      * ================================================== */
 
-    imprimere("\n--- Probans gregem et functionem ---\n");
+    CREDO_GRADUS ("gregem et functionem");
 
     p = _casus(piscina, "{ a; b; } > f", &r);
     n = _sententia(p, ZEPHYRUM);
@@ -1386,7 +1390,7 @@ principale (vacuum)
      * PROBARE: iudicium [[ ]]
      * ================================================== */
 
-    imprimere("\n--- Probans iudicium ---\n");
+    CREDO_GRADUS ("iudicium");
 
     p = _casus(piscina,
         "[[ $a == b* && -f $c || ! ( x =~ ^a(b|c)$ ) ]]", &r);
@@ -1516,7 +1520,7 @@ principale (vacuum)
      * iacent, redirectio per referentiam)
      * ================================================== */
 
-    imprimere("\n--- Probans heredoca ---\n");
+    CREDO_GRADUS ("heredoca");
 
     p = _casus(piscina, "cat <<A\nl1\n$v\nA\nrest\n", &r);
     CREDO_AEQUALIS_I32 (_numerus(p, (i32)CRUSTA_PROGRAMMA_LIBERI),
@@ -1771,7 +1775,7 @@ principale (vacuum)
      * subarborem TOTAM recursive ambulabat, substitutiones intra -
      * '$(' x C milia: tempus quadraticum (LXXX s) et SIGSEGV. XX milia
      * olim ~XXIV s. */
-    imprimere("\n--- Probans valorem staticum in nido ---\n");
+    CREDO_GRADUS ("valorem staticum in nido");
     CREDO_NON_PENDET (_nidum_parsare("$(", (i32)20000), (i32)MM);
     CREDO_NON_PENDET (_nidum_parsare("$(\"", (i32)20000), (i32)MM);
     p = _casus(piscina, "$(a)b c", &r);
@@ -1794,7 +1798,7 @@ principale (vacuum)
      * (heredoca_transposita): corpus listae proximae infra, ordo
      * octetorum ruptus; 'for ((i=0' + linea nova ne numeratus
      * quidem. */
-    imprimere("\n--- Probans corpora heredoc in lacunis ---\n");
+    CREDO_GRADUS ("corpora heredoc in lacunis");
     {
         nomen structura {
             constans character* fons;
@@ -1973,10 +1977,16 @@ principale (vacuum)
 
     imprimere("\n    casus %d\n", (integer)casus_numerus);
     CREDO_MAIOR_I32 (casus_numerus, (i32)LXXX);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "aedificator: casus per structuram", _casus_probare,
+        _numeratorem_reponere, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("crusta_arbor", SECTIONES);
 }

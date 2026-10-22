@@ -1,0 +1,45 @@
+<sanctus id="michael-the-archangel" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Michael the Archangel</nomen>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="9" dies="29" gradus="festum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="9" dies="29" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="5" dies="8" nota="apparition on Mount Gargano" fontes="mr8"/>
+  <munus fontes="us ce">archangel</munus>
+  <patrocinium fontes="ce">the Church</patrocinium>
+  <patrocinium fontes="ce">mariners (Normandy)</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">Michael, whose Hebrew name means "Who is like God?", is one of the principal angels. Scripture names him four times: twice in Daniel, in the Epistle of Jude, where he disputes with the devil over the body of Moses, and in the Apocalypse, where he and his angels fight the dragon. Christian tradition gives him four offices: to fight against Satan, to rescue the souls of the faithful from the enemy, especially at the hour of death, to be the champion of God's people, and to bring souls to judgment. Opinions vary on his rank among the angels.</paragraphus>
+    <paragraphus fontes="ce bu mr mr8">His cult was early and widespread. In Phrygia and at Constantinople he was honoured above all as a heavenly physician, and Constantine built a church in his honour, the Michaelion. In the West the feast of 29 September grew from the dedication of his church on Mount Gargano, and Butler notes that the day honours all the good angels together with him. The Martyrology also keeps on 8 May the apparition on Mount Gargano. He is shown in art as an armed warrior standing over the dragon, sometimes holding scales to weigh the souls of the departed.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="29 September">
+    <excerptum>the commemoration of the blessed archangel Michael. This festival is kept in memory of the day, when under his invocation, was consecrated a church, unpretending in its exterior, but endowed with virtue celestial.</excerptum>
+  </fons>
+  <fons id="mr8" opus="mr1916" locus="8 May">
+    <excerptum>AN Mount Gargano, the apparition of the Arch- angel St. Michael.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Michael the Archangel" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Michael_the_Archangel">
+    <excerptum>(Hebrew "Who is like God?"). St. Michael is one of the principal angels</excerptum>
+    <excerptum>Four times his name is recorded in Scripture</excerptum>
+    <excerptum>(1) Daniel 10:13 sqq., Gabriel says to Daniel</excerptum>
+    <excerptum>(2) Daniel 12, the Angel speaking of the end of the world and the Antichrist says: "At that time shall Michael rise up, the great prince</excerptum>
+    <excerptum>(3) In the Catholic Epistle of St. Jude: "When Michael the Archangel, disputing with the devil, contended about the body of Moses</excerptum>
+    <excerptum>(4) Apocalypse 12:7, "And there was a great battle in heaven, Michael and his angels fought with the dragon.</excerptum>
+    <excerptum>Christian tradition gives to St. Michael four offices: To fight against Satan. To rescue the souls of the faithful from the power of the enemy, especially at the hour of death.</excerptum>
+    <excerptum>To be the champion of God's people, the Jews in the Old Law, the Christians in the New Testament; therefore he was the patron of the Church</excerptum>
+    <excerptum>To call away from earth and bring men's souls to judgment</excerptum>
+    <excerptum>Regarding his rank in the celestial hierarchy opinions vary</excerptum>
+    <excerptum>At the place where he was first venerated, in Phrygia, his prestige as angelic healer obscured his interposition in military affairs.</excerptum>
+    <excerptum>At Constantinople likewise, St. Michael was the great heavenly physician.</excerptum>
+    <excerptum>In Normandy St. Michael is the patron of mariners in his famous sanctuary at Mont-Saint-Michel</excerptum>
+    <excerptum>In art St. Michael is represented as an angelic warrior, fully armed with helmet, sword, and shield</excerptum>
+    <excerptum>standing over the dragon, whom he sometimes pierces with a lance. He also holds a pair of scales in which he weighs the souls of the departed</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v09 Sept. 29 The Dedication of St. Michael's Church">
+    <excerptum>The dedication of the famous church of St. Michael on Mount Gargano in Italy gave occasion to the institution of this feast in the West</excerptum>
+    <excerptum>Sozomen informs. us, that Constantine the. Great built a famous church in honour of this glorious arch- angel, called Michaelion</excerptum>
+    <excerptum>Though only St. Michael be mentioned. in the title of this festival, it appears from the prayers of the church that all the good angels are its object</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="29 September">
+    <excerptum>Saints Michael, Gabriel and Raphael, Archangels</excerptum>
+  </fons>
+</sanctus>

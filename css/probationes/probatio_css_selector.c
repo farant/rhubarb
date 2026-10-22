@@ -43,9 +43,16 @@ hic_manens constans character* CORPUS[] = {
     "probationes/fixa/css/knotapel_atlas_2026-02-26.css"
 };
 
-hic_manens Canon*                canon_globalis   = NIHIL;
-hic_manens InternamentumChorda*  intern_globalis  = NIHIL;
-hic_manens MateriaArborConsilium consilium_globale;
+/* FIXURA SUITAE: internamentum, canon, lexicon et consilium arboris
+ * semel facta (parare_suitae); sectiones et adiutores ea per
+ * monstratorem constantem LEGUNT - internatio in internamentum
+ * fixurae sola licet (decretum 2026-10-19). */
+nomen structura {
+     InternamentumChorda* intern;
+                   Canon* canon;
+     MateriaLexiconRatum  ratum;
+   MateriaArborConsilium  consilium;
+} FixuraSelectoris;
 
 
 interior character*
@@ -140,9 +147,10 @@ _pars (
  * iudicare. Redde numerum vitiorum; -I = fractura. */
 interior s32
 _canone_iudicare (
-               Piscina* piscina,
-          MateriaNodus* radix,
-    constans character* titulus)
+                      Piscina* piscina,
+    constans FixuraSelectoris* f,
+                 MateriaNodus* radix,
+           constans character* titulus)
 {
     MateriaArborScriptura  scriptura;
              StmlResultus  res;
@@ -151,20 +159,20 @@ _canone_iudicare (
                       i32  i;
 
     scriptura = materia_arbor_scribere_nodum(piscina, radix,
-        &consilium_globale);
+        &f->consilium);
     si (!scriptura.successus)
     {
         imprimere("  %s: scriptura recusata: %s\n", titulus,
             scriptura.causa ? scriptura.causa : "?");
         redde (s32)-I;
     }
-    res = stml_legere(scriptura.textus, piscina, intern_globalis);
+    res = stml_legere(scriptura.textus, piscina, f->intern);
     si (!res.successus || res.elementum_radix == NIHIL)
     {
         imprimere("  %s: stml_legere fractum\n", titulus);
         redde (s32)-I;
     }
-    vitia = canon_iudicare(canon_globalis, res.elementum_radix,
+    vitia = canon_iudicare(f->canon, res.elementum_radix,
         piscina);
     si (vitia == NIHIL)
     {
@@ -195,10 +203,11 @@ _canone_iudicare (
  * praeludium parsare, numerare, canone iudicare. */
 interior vacuum
 _regulas_percurrere (
-                  Piscina* piscina,
-    constans MateriaNodus* nodus,
-                      i32* parsata,
-                      s32* vitia_summa)
+                    Piscina* piscina,
+    constans FixuraSelectoris* f,
+      constans MateriaNodus* nodus,
+                        i32* parsata,
+                        s32* vitia_summa)
 {
     i32 i;
 
@@ -214,7 +223,7 @@ _regulas_percurrere (
         CREDO_NON_NIHIL (sel);
         si (sel != NIHIL)
         {
-            s32 vitia = _canone_iudicare(piscina, sel, "corpus");
+            s32 vitia = _canone_iudicare(piscina, f, sel, "corpus");
 
             si (vitia > ZEPHYRUM)
             {
@@ -229,7 +238,7 @@ _regulas_percurrere (
 
         si (v->genus == MATERIA_VALOR_NODUS)
         {
-            _regulas_percurrere(piscina, v->datum.nodus, parsata,
+            _regulas_percurrere(piscina, f, v->datum.nodus, parsata,
                 vitia_summa);
         }
         alioquin si (v->genus == MATERIA_VALOR_LISTA)
@@ -244,7 +253,7 @@ _regulas_percurrere (
 
                 si (e != NIHIL && e->genus == MATERIA_VALOR_NODUS)
                 {
-                    _regulas_percurrere(piscina, e->datum.nodus,
+                    _regulas_percurrere(piscina, f, e->datum.nodus,
                         parsata, vitia_summa);
                 }
             }
@@ -252,65 +261,72 @@ _regulas_percurrere (
     }
 }
 
-integer
-principale (vacuum)
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                Piscina* piscina;
-     constans character* radix_viae;
-    MateriaLexiconRatum  ratum;
-     MateriaLexIudicium  iudicium;
-                    b32  praeteritus;
+      FixuraSelectoris* f;
+    constans character* radix_viae = getenv("RHUBARB_RADIX");
+    MateriaLexIudicium  iudicium;
+             character  via[DXII];
+             character* textus;
+                   i32  mensura = ZEPHYRUM;
+                chorda  fons;
+                chorda  causa;
 
-    piscina = piscina_generare_dynamicum("probatio_css_selector",
-        (memoriae_index)64 * M * M);
-    credo_aperire(piscina);
-    intern_globalis = internamentum_creare(piscina);
-
-    radix_viae = getenv("RHUBARB_RADIX");
+    f = (FixuraSelectoris*)piscina_allocare(c->piscina,
+        magnitudo(FixuraSelectoris));
+    si (f == NIHIL)
+    {
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
+    }
     si (radix_viae == NIHIL)
     {
         radix_viae = ".";
     }
-    si (!materia_lexicon_ratum_facere(&ratum, &CSS_LEXICON, &iudicium))
+    f->intern = internamentum_creare(c->piscina);
+    si (!materia_lexicon_ratum_facere(&f->ratum, &CSS_LEXICON,
+        &iudicium))
     {
         imprimere("LEXICON CSS RECUSATUM\n");
-        redde I;
+        redde;
     }
-    materia_arbor_consilium_nudum(&consilium_globale, &CSS_REGISTRUM,
-        &ratum, "css");
+    materia_arbor_consilium_nudum(&f->consilium, &CSS_REGISTRUM,
+        &f->ratum, "css");
 
     /* canon (B7) - arbores selectorum contra eum iudicantur */
+    sprintf(via, "%s/css/grammatica/css.canon", radix_viae);
+    textus = _plagulam_legere(c->piscina, via, &mensura);
+    CREDO_NON_NIHIL (textus);
+    si (textus == NIHIL)
     {
-        character  via[DXII];
-        character* textus;
-              i32  mensura = ZEPHYRUM;
-           chorda  fons;
-           chorda  causa;
-
-        sprintf(via, "%s/css/grammatica/css.canon", radix_viae);
-        textus = _plagulam_legere(piscina, via, &mensura);
-        CREDO_NON_NIHIL (textus);
-        si (textus == NIHIL)
-        {
-            credo_imprimere_compendium();
-            redde I;
-        }
-        fons.datum     = (i8*)textus;
-        fons.mensura   = mensura;
-        causa.datum    = NIHIL;
-        causa.mensura  = ZEPHYRUM;
-        canon_globalis = canon_legere(fons, piscina, intern_globalis,
-            &causa);
-        CREDO_NON_NIHIL (canon_globalis);
-        si (canon_globalis == NIHIL)
-        {
-            credo_imprimere_compendium();
-            redde I;
-        }
+        redde;
     }
+    fons.datum     = (i8*)textus;
+    fons.mensura   = mensura;
+    causa.datum    = NIHIL;
+    causa.mensura  = ZEPHYRUM;
+    f->canon       = canon_legere(fons, c->piscina, f->intern, &causa);
+    CREDO_NON_NIHIL (f->canon);
+    si (f->canon == NIHIL)
+    {
+        redde;
+    }
+    c->datum = f;
+}
 
 
-    imprimere("\n--- Probans spatium UT COMBINATOREM ---\n");
+interior vacuum
+_spatium_probare (
+    CredoContextus* c)
+{
+    constans FixuraSelectoris* f = (constans FixuraSelectoris*)c->suita;
+                      Piscina* piscina = c->piscina;
+
+    si (f == NIHIL)
+    {
+        redde;
+    }
     {
         MateriaNodus* duo   = _selectorem_parsare(piscina, "a b");
         MateriaNodus* unus  = _selectorem_parsare(piscina, "ab");
@@ -334,12 +350,23 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (
             duo->loci[CSS_COMPLEXUS_DEXTER].datum.nodus->genus,
             (s32)CSS_GENUS_SELECTOR_COMPOSITUS);
-        CREDO_AEQUALIS_S32 (_canone_iudicare(piscina, duo, "a b"),
+        CREDO_AEQUALIS_S32 (_canone_iudicare(piscina, f, duo, "a b"),
             (s32)ZEPHYRUM);
     }
+}
 
 
-    imprimere("\n--- Probans 'a>b' et 'a > b' AEQUALES ---\n");
+interior vacuum
+_aequalitatem_probare (
+    CredoContextus* c)
+{
+    constans FixuraSelectoris* f = (constans FixuraSelectoris*)c->suita;
+                      Piscina* piscina = c->piscina;
+
+    si (f == NIHIL)
+    {
+        redde;
+    }
     {
         MateriaNodus* strictus;
         MateriaNodus* laxus;
@@ -365,9 +392,20 @@ principale (vacuum)
             CREDO_VERUM (comb->valor.datum[ZEPHYRUM] == '>');
         }
     }
+}
 
 
-    imprimere("\n--- Probans nidificationem sinistrorsum ---\n");
+interior vacuum
+_sinistrorsum_probare (
+    CredoContextus* c)
+{
+    constans FixuraSelectoris* f = (constans FixuraSelectoris*)c->suita;
+                      Piscina* piscina = c->piscina;
+
+    si (f == NIHIL)
+    {
+        redde;
+    }
     {
         /* 'a + b ~ c' = ((a + b) ~ c) */
         MateriaNodus* radix = _selectorem_parsare(piscina, "a + b ~ c");
@@ -383,42 +421,53 @@ principale (vacuum)
             (s32)CSS_GENUS_SELECTOR_COMPLEXUS);
         CREDO_VERUM (sinister->loci[CSS_COMPLEXUS_COMBINATOR]
             .datum.token->valor.datum[ZEPHYRUM] == '+');
-        CREDO_AEQUALIS_S32 (_canone_iudicare(piscina, radix,
+        CREDO_AEQUALIS_S32 (_canone_iudicare(piscina, f, radix,
             "a + b ~ c"),
             (s32)ZEPHYRUM);
     }
+}
 
 
-    imprimere("\n--- Probans partes compositi ---\n");
+interior vacuum
+_partes_probare (
+    CredoContextus* c)
+{
+    constans FixuraSelectoris* f = (constans FixuraSelectoris*)c->suita;
+                      Piscina* piscina = c->piscina;
+
+    si (f == NIHIL)
     {
-        MateriaNodus* c = _selectorem_parsare(piscina,
+        redde;
+    }
+    {
+        MateriaNodus* compositus = _selectorem_parsare(piscina,
             "div.foo#bar:hover::before[x^=\"y\"]");
         MateriaNodus* attr;
 
-        CREDO_NON_NIHIL (c);
-        CREDO_AEQUALIS_S32 (c->genus,
+        CREDO_NON_NIHIL (compositus);
+        CREDO_AEQUALIS_S32 (compositus->genus,
             (s32)CSS_GENUS_SELECTOR_COMPOSITUS);
         CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(
-            c->loci[CSS_COMPOSITUS_PARTES]), VI);
-        CREDO_AEQUALIS_S32 (_pars(c, ZEPHYRUM)->genus,
+            compositus->loci[CSS_COMPOSITUS_PARTES]), VI);
+        CREDO_AEQUALIS_S32 (_pars(compositus, ZEPHYRUM)->genus,
             (s32)CSS_GENUS_SELECTOR_TYPI);
-        CREDO_AEQUALIS_S32 (_pars(c, I)->genus,
+        CREDO_AEQUALIS_S32 (_pars(compositus, I)->genus,
             (s32)CSS_GENUS_SELECTOR_CLASSIS);
-        CREDO_AEQUALIS_S32 (_pars(c, II)->genus,
+        CREDO_AEQUALIS_S32 (_pars(compositus, II)->genus,
             (s32)CSS_GENUS_SELECTOR_IDENTITATIS);
-        CREDO_AEQUALIS_S32 (_pars(c, III)->genus,
+        CREDO_AEQUALIS_S32 (_pars(compositus, III)->genus,
             (s32)CSS_GENUS_PSEUDO_CLASSIS);
-        CREDO_AEQUALIS_S32 (_pars(c, IV)->genus,
+        CREDO_AEQUALIS_S32 (_pars(compositus, IV)->genus,
             (s32)CSS_GENUS_PSEUDO_ELEMENTUM);
-        CREDO_AEQUALIS_S32 (_pars(c, V)->genus,
+        CREDO_AEQUALIS_S32 (_pars(compositus, V)->genus,
             (s32)CSS_GENUS_SELECTOR_ATTRIBUTI);
 
         /* classis: '.' + 'foo' */
-        CREDO_VERUM (_pars(c, I)->loci[CSS_CLASSIS_TOK_NOMEN]
+        CREDO_VERUM (_pars(compositus, I)->loci[CSS_CLASSIS_TOK_NOMEN]
             .datum.token->valor.mensura == III);
         /* pseudo-elementum: colon PRIMUM refertur, nomen 'before' */
         {
-            MateriaNodus* pe = _pars(c, IV);
+            MateriaNodus* pe = _pars(compositus, IV);
             MateriaToken* colon =
                 pe->loci[CSS_PSEUDO_ELEMENTI_TOK_COLON].datum.token;
             MateriaToken* titulus =
@@ -428,29 +477,41 @@ principale (vacuum)
             CREDO_VERUM (titulus->valor.mensura == VI);
         }
         /* attributum: operator = '^' (lexema primum), valor chorda */
-        attr = _pars(c, V);
+        attr = _pars(compositus, V);
         CREDO_VERUM (attr->loci[CSS_ATTRIBUTI_TOK_OPERATOR]
             .datum.token->valor.datum[ZEPHYRUM] == '^');
         CREDO_AEQUALIS_S32 (attr->loci[CSS_ATTRIBUTI_VALOR]
             .datum.token->genus, (s32)CSS_LEX_CHORDA);
         CREDO_AEQUALIS_S32 (attr->loci[CSS_ATTRIBUTI_TOK_CLAUSUM]
             .datum.token->genus, (s32)CSS_LEX_QUADRA_CLAUSA);
-        CREDO_AEQUALIS_S32 (_canone_iudicare(piscina, c, "compositus"),
+        CREDO_AEQUALIS_S32 (_canone_iudicare(piscina, f, compositus,
+            "compositus"),
             (s32)ZEPHYRUM);
     }
+}
 
 
-    imprimere("\n--- Probans attributum nudum et universalem ---\n");
+interior vacuum
+_attributum_probare (
+    CredoContextus* c)
+{
+    constans FixuraSelectoris* f = (constans FixuraSelectoris*)c->suita;
+                      Piscina* piscina = c->piscina;
+
+    si (f == NIHIL)
     {
-        MateriaNodus* c = _selectorem_parsare(piscina, "*[x]");
+        redde;
+    }
+    {
+        MateriaNodus* compositus = _selectorem_parsare(piscina, "*[x]");
         MateriaNodus* attr;
 
-        CREDO_NON_NIHIL (c);
+        CREDO_NON_NIHIL (compositus);
         CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(
-            c->loci[CSS_COMPOSITUS_PARTES]), II);
-        CREDO_AEQUALIS_S32 (_pars(c, ZEPHYRUM)->genus,
+            compositus->loci[CSS_COMPOSITUS_PARTES]), II);
+        CREDO_AEQUALIS_S32 (_pars(compositus, ZEPHYRUM)->genus,
             (s32)CSS_GENUS_SELECTOR_UNIVERSALIS);
-        attr = _pars(c, I);
+        attr = _pars(compositus, I);
         CREDO_AEQUALIS_S32 (attr->genus,
             (s32)CSS_GENUS_SELECTOR_ATTRIBUTI);
         CREDO_AEQUALIS_S32 (
@@ -458,12 +519,24 @@ principale (vacuum)
             (s32)MATERIA_VALOR_NIHIL);
         CREDO_AEQUALIS_S32 ((s32)attr->loci[CSS_ATTRIBUTI_VALOR].genus,
             (s32)MATERIA_VALOR_NIHIL);
-        CREDO_AEQUALIS_S32 (_canone_iudicare(piscina, c, "*[x]"),
+        CREDO_AEQUALIS_S32 (_canone_iudicare(piscina, f, compositus,
+            "*[x]"),
             (s32)ZEPHYRUM);
     }
+}
 
 
-    imprimere("\n--- Probans listam et pseudo-classes ---\n");
+interior vacuum
+_listam_probare (
+    CredoContextus* c)
+{
+    constans FixuraSelectoris* f = (constans FixuraSelectoris*)c->suita;
+                      Piscina* piscina = c->piscina;
+
+    si (f == NIHIL)
+    {
+        redde;
+    }
     {
         MateriaNodus* lista = _selectorem_parsare(piscina,
             "a, :not(.c, d), li:nth-child(2n+1)");
@@ -505,12 +578,24 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (materia_valor_lista_obtinere(
             pseudo->loci[CSS_PSEUDO_CLASSIS_ARGUMENTA], ZEPHYRUM)
             ->datum.nodus->genus, (s32)CSS_GENUS_LEXEMA_SERVATUM);
-        CREDO_AEQUALIS_S32 (_canone_iudicare(piscina, lista, "lista"),
+        CREDO_AEQUALIS_S32 (_canone_iudicare(piscina, f, lista,
+            "lista"),
             (s32)ZEPHYRUM);
     }
+}
 
 
-    imprimere("\n--- Probans recuperationem (selector-malus) ---\n");
+interior vacuum
+_recuperationem_probare (
+    CredoContextus* c)
+{
+    constans FixuraSelectoris* f = (constans FixuraSelectoris*)c->suita;
+                      Piscina* piscina = c->piscina;
+
+    si (f == NIHIL)
+    {
+        redde;
+    }
     {
         MateriaNodus* m1 = _selectorem_parsare(piscina, "1");
         MateriaNodus* m2 = _selectorem_parsare(piscina, ". a");
@@ -541,16 +626,32 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (m5->genus, (s32)CSS_GENUS_SELECTOR_LISTA);
         CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(
             m5->loci[CSS_SEL_LISTA_SELECTORES]), II);
-        CREDO_AEQUALIS_S32 (_canone_iudicare(piscina, m1, "1"),
+        CREDO_AEQUALIS_S32 (_canone_iudicare(piscina, f, m1, "1"),
             (s32)ZEPHYRUM);
-        CREDO_AEQUALIS_S32 (_canone_iudicare(piscina, m3, "> b"),
+        CREDO_AEQUALIS_S32 (_canone_iudicare(piscina, f, m3, "> b"),
             (s32)ZEPHYRUM);
-        CREDO_AEQUALIS_S32 (_canone_iudicare(piscina, m5, ","),
+        CREDO_AEQUALIS_S32 (_canone_iudicare(piscina, f, m5, ","),
             (s32)ZEPHYRUM);
     }
+}
 
 
-    imprimere("\n--- Probans corpus: praeludia omnia ---\n");
+interior vacuum
+_corpus_probare (
+    CredoContextus* c)
+{
+    constans FixuraSelectoris* f = (constans FixuraSelectoris*)c->suita;
+                      Piscina* piscina = c->piscina;
+           constans character* radix_viae = getenv("RHUBARB_RADIX");
+
+    si (f == NIHIL)
+    {
+        redde;
+    }
+    si (radix_viae == NIHIL)
+    {
+        radix_viae = ".";
+    }
     {
         i32 numerus  = (i32)(magnitudo(CORPUS) / magnitudo(CORPUS[0]));
         i32 lectae   = ZEPHYRUM;
@@ -575,7 +676,7 @@ principale (vacuum)
             lectae   = lectae + I;
             plagula  = css_arbor_parsare(piscina, textus, mensura);
             CREDO_NON_NIHIL (plagula);
-            _regulas_percurrere(piscina, plagula, &parsata, &vitia);
+            _regulas_percurrere(piscina, f, plagula, &parsata, &vitia);
         }
         imprimere("  plagulae %d, praeludia %d, vitia canonis %d\n",
             (integer)lectae, (integer)parsata, (integer)vitia);
@@ -583,11 +684,31 @@ principale (vacuum)
         CREDO_MAIOR_I32 (parsata, (i32)C);
         CREDO_AEQUALIS_S32 (vitia, (s32)ZEPHYRUM);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "spatium ut combinator", _spatium_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "'a>b' et 'a > b' aequales", _aequalitatem_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nidificatio sinistrorsum", _sinistrorsum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "partes compositi", _partes_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "attributum nudum et universalis", _attributum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lista et pseudo-classes", _listam_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "recuperatio (selector-malus)", _recuperationem_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "corpus: praeludia omnia", _corpus_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("css_selector", SECTIONES,
+        _suitam_parare, NIHIL);
 }

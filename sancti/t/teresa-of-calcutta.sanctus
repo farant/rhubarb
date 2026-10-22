@@ -1,0 +1,39 @@
+<sanctus id="teresa-of-calcutta" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Teresa of Calcutta</nomen>
+  <nomen lingua="it" fontes="cs">Madre Teresa di Calcutta</nomen>
+  <nomen lingua="it" fontes="cs">Agnese Gonxha Bojaxhiu</nomen>
+  <ortus annus="1910" mensis="8" dies="26" locus="Skopje" fontes="cs"/>
+  <obitus annus="1997" mensis="9" dies="5" locus="Calcutta" fontes="cs"/>
+  <beatificatio annus="2003" mensis="10" dies="19" papa="John Paul II" fontes="cs"/>
+  <canonizatio modus="formalis" annus="2016" mensis="9" dies="4" papa="Francis" fontes="hom"/>
+  <festum calendarium="generale" mensis="9" dies="5" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us">virgin</munus>
+  <munus fontes="cs">religious</munus>
+  <descriptio>
+    <paragraphus fontes="cs">Agnes Gonxha Bojaxhiu was born at Skopje on 26 August 1910. In October 1928 she entered the Institute of the Blessed Virgin Mary at Rathfarnham as a postulant, taking the religious name Teresa, and reached Calcutta on 6 January 1929. On 10 September 1946, travelling to Darjeeling for her annual retreat, she received what she called "the call within the call": to found a community devoted to the poorest of the poor. The Missionaries of Charity were erected as a religious institute of the archdiocese of Calcutta on 7 October 1950; by 1997 the sisters numbered nearly 4,000 in some 600 houses in 120 countries.</paragraphus>
+    <paragraphus fontes="bt cs hom">She received the Nobel Peace Prize in 1979. John Paul II recalled that for long years she lived in "inner darkness", a trial she accepted. She died at the mother house in Calcutta on 5 September 1997, was beatified by John Paul II on 19 October 2003, and was canonized by Pope Francis on 4 September 2016, who held her up to volunteers as a model of holiness.</paragraphus>
+  </descriptio>
+  <fons id="cs" opus="sedes" locus="Dicastero delle Cause dei Santi, Madre Teresa di Calcutta" url="https://www.causesanti.va/it/santi-e-beati/madre-teresa-di-calcutta.html">
+    <excerptum>Agnese Gonxha Bojaxhiu, la futura Madre Teresa di Calcutta, nacque a Skopje il 26 agosto 1910 e venne battezzata il giorno seguente.</excerptum>
+    <excerptum>decise di entrare nell’Istituto della Beata Vergine Maria (Rathfarnham)</excerptum>
+    <excerptum>Gonxha giunse all’Abbazia di Rathfarnham agli inizi dell’ottobre 1928 e divenne postulante, ricevendo il nome religioso di Suor Teresa</excerptum>
+    <excerptum>arrivò a Calcutta – la città che sarebbe stata, poi, legata al suo nome – il 6 gennaio 1929.</excerptum>
+    <excerptum>Il 10 settembre 1946, mentre si recava a Darjeeling per il ritiro annuale, Madre Teresa ricevette ciò che lei stessa chiamò “la chiamata nella chiamata”.</excerptum>
+    <excerptum>Gesù le chiese di fondare una comunità religiosa dedita al servizio dei più poveri tra i poveri</excerptum>
+    <excerptum>Il 7 ottobre 1950 la nuova Congregazione delle Missionarie della Carità fu eretta ufficialmente come Istituto Religioso dell’Arcidiocesi di Calcutta.</excerptum>
+    <excerptum>Nel 1997 le suore avevano raggiunto quasi il numero di 4000 membri ed erano state fondate circa 600 case in 120 paesi del mondo.</excerptum>
+    <excerptum>dal rilevante Premio Nobel per la Pace nel 1979</excerptum>
+    <excerptum>Madre Teresa tornò a Calcutta nel luglio 1997. Il 5 settembre morì nella Casa Madre delle Missionarie della Carità a Calcutta.</excerptum>
+    <excerptum>il Santo Padre Giovanni Paolo II riconobbe che il caso in esame era stato un vero miracolo da attribuirsi all’intercessione della Venerabile Madre Teresa di Calcutta, che fu beatificata da lui a Roma in Piazza San Pietro il 19 ottobre 2003.</excerptum>
+  </fons>
+  <fons id="bt" opus="sedes" locus="Homily of John Paul II, beatification of Mother Teresa of Calcutta, 19 October 2003" url="https://www.vatican.va/content/john-paul-ii/en/homilies/2003/documents/hf_jp-ii_hom_20031019_mother-theresa.html">
+    <excerptum>Mother Teresa shared in the Passion of the crucified Christ in a special way during long years of "inner darkness". For her that was a test, at times an agonizing one, which she accepted as a rare "gift and privilege".</excerptum>
+  </fons>
+  <fons id="hom" opus="sedes" locus="Homily of Pope Francis, canonization of Mother Teresa of Calcutta, 4 September 2016" url="https://www.vatican.va/content/francesco/en/homilies/2016/documents/papa-francesco_20160904_omelia-canonizzazione-madre-teresa.html">
+    <excerptum>HOLY MASS AND CANONIZATION OF BLESSED MOTHER TERESA OF CALCUTTA JUBILEE FOR WORKERS OF MERCY AND VOLUNTEERS HOMILY OF HIS HOLINESS POPE FRANCIS Saint Peter's Square Sunday, 4 September 2016</excerptum>
+    <excerptum>Today, I pass on this emblematic figure of womanhood and of consecrated life to the whole world of volunteers: may she be your model of holiness!</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="5 September">
+    <excerptum>Saint Teresa of Calcutta, Virgin</excerptum>
+  </fons>
+</sanctus>

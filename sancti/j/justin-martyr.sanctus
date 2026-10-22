@@ -1,0 +1,54 @@
+<sanctus id="justin-martyr" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Justin Martyr</nomen>
+  <nomen lingua="en" fontes="mr bu">Justin the Philosopher</nomen>
+  <ortus annus="100" circa="verum" locus="Flavia Neapolis" fontes="ce bu"/>
+  <obitus annus="165" circa="verum" locus="Rome" martyrium="verum" fontes="ce mr bu"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="6" dies="1" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="4" dies="13" nota="elogium" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="4" dies="14" nota="feast; mentioned on the 13th" fontes="mr14"/>
+  <munus fontes="us mr ce">martyr</munus>
+  <munus fontes="ce">apologist</munus>
+  <munus fontes="mr bu">philosopher</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Justin was born about the year 100 at Flavia Neapolis, which Butler identifies with the ancient Sichem in Samaria, of a pagan family; he called himself the son of Priscos, son of Baccheios. In search of truth he went from one school of philosophy to another, Stoic, Peripatetic, Pythagorean and finally Platonist, until an old man he met on the seashore persuaded him that God is known through the Prophets. He was also moved by the courage of Christians facing death, and was converted by about 130. He kept the philosopher's cloak, lived for a time at Ephesus, and taught at Rome.</paragraphus>
+    <paragraphus fontes="ce mr bu">Of his writings, the two Apologies in defence of the Christians and the Dialogue with the Jew Tryphon survive. He wrote that he expected to be persecuted by Crescens, a Cynic philosopher; Eusebius blames Crescens's intrigues for his death, which the Catholic Encyclopedia finds credible but not certain. About 165, according to the Encyclopedia (Butler says about 167), he and six companions were tried before Rusticus, prefect of Rome, refused to sacrifice to the gods, and were scourged and beheaded. The authentic account of their trial survives.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="13 April">
+    <excerptum>there suffered at Rome that remarkable man, Justin the Philosopher, who had addressed to the emperors his second Apology in defence of our religion, and upheld it by strong arguments.</excerptum>
+    <excerptum>he obtained the reward of a martyr, as a remuneration for his faithful confession.</excerptum>
+  </fons>
+  <fons id="mr14" opus="mr1916" locus="14 April">
+    <excerptum>feast of St. Justin, martyr, who is mentioned on the 13th of this month.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Justin Martyr" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Justin_Martyr">
+    <excerptum>Christian apologist, born at Flavia Neapolis, about A.D. 100, converted to Christianity about A.D. 130, taught and defended the Christian religion in Asia Minor and at Rome, where he suffered martyrdom about the year 165.</excerptum>
+    <excerptum>Two "Apologies" bearing his name and his "Dialogue with the Jew Tryphon" have come down to us.</excerptum>
+    <excerptum>he calls himself "Justin, the son of Priscos, son of Baccheios, of Flavia Neapolis, in Palestinian Syria".</excerptum>
+    <excerptum>The names of the father and grandfather of Justin suggest a pagan origin</excerptum>
+    <excerptum>he placed himself first under a Stoic, but after some time found that he had learned nothing about God</excerptum>
+    <excerptum>A Peripatetic whom he then found welcomed him at first but afterwards demanded a fee from him</excerptum>
+    <excerptum>A Pythagorean refused to teach him anything until he should have learned music, astronomy, and geometry. Finally a Platonist arrived on the scene and for some time delighted Justin.</excerptum>
+    <excerptum>as he walked one day along the seashore, he met a mysterious old man; the conclusion of their long discussion was that he soul could not arrive through human knowledge at the idea of God, but that it needed to be instructed by the Prophets</excerptum>
+    <excerptum>hearing the accusations made against the Christians and seeing them intrepid in the face of death and of all that men fear</excerptum>
+    <excerptum>St. Justin lived certainly some time at Ephesus; the Acts of his martyrdom tell us that he went to Rome twice</excerptum>
+    <excerptum>He taught school there, and in the aforesaid Acts of his martyrdom we read of several of his disciples who were condemned with him.</excerptum>
+    <excerptum>I, too, expect to be persecuted and to be crucified by some of those whom I have named, or by Crescens, that friend of noise and of ostentation.</excerptum>
+    <excerptum>Indeed Tatian relates (Discourse, xix) that the Cynic philosopher Crescens did pursue him and Justin</excerptum>
+    <excerptum>Eusebius (Hist. eccl., IV, xvi, 7, 8) says that it was the intrigues of Crescens which brought about the death of Justin; this is credible, but not certain</excerptum>
+    <excerptum>St. Justin was condemned to death by the prefect, Rusticus, towards A.D. 165, with six companions, Chariton, Charito, Evelpostos, Pæon, Hierax, and Liberianos. We still have the authentic account of their martyrdom</excerptum>
+    <excerptum>The Prefect Rusticus read the sentence: Those who do not wish to sacrifice to the gods and to obey the emperor will be scourged and beheaded according to the laws.</excerptum>
+    <excerptum>The holy martyrs glorifying God betook themselves to the customary place, where they were beheaded and consummated their martyrdom confessing their Saviour.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v06 June 1 St. Justin the Philosopher, M.">
+    <excerptum>Sr. JUSTIN was born at Neapolis, now Naplosa, the ancient Sichem, and formerly the capital of the province of Samaria.</excerptum>
+    <excerptum>St. Justin, after he betarie a Christian, continued to wear the pallium or cloak, as Eusebius and St. Jerom inform us, which was the singular badge of a philosopher.</excerptum>
+    <excerptum>among whom ‘he named Cre- | ‘scens, a philosopher in name</excerptum>
+    <excerptum>brought before Rusticus, prefect of Rome</excerptum>
+    <excerptum>The prefect thereupon ordered them to be scourged and then beheaded, as the laws directed.</excerptum>
+    <excerptum>He suffered about the year 167, in the reign of Marcus Aurelius and Lucius Verus.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="1 June">
+    <excerptum>Saint Justin, Martyr</excerptum>
+  </fons>
+</sanctus>

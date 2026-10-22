@@ -1,0 +1,36 @@
+<sanctus id="miguel-pro" versio="1" genus="persona" status="beatus">
+  <nomen lingua="en" principale="verum">Miguel Pro</nomen>
+  <nomen lingua="es" fontes="cs">Miguel Agustín Pro Juárez</nomen>
+  <ortus annus="1891" mensis="1" dies="13" locus="Guadalupe, Mexico" fontes="cs"/>
+  <obitus annus="1927" mensis="11" dies="23" locus="Mexico City" martyrium="verum" fontes="cs"/>
+  <beatificatio annus="1988" mensis="9" dies="25" papa="John Paul II" fontes="cs hom"/>
+  <festum calendarium="usa" mensis="11" dies="23" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us hom">priest</munus>
+  <munus fontes="hom cs">Jesuit</munus>
+  <munus fontes="us cs">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="cs hom">Miguel Agustín Pro Juárez was born at Guadalupe on 13 January 1891, and he lived through the conflict between Church and State in Mexico. The anticlerical policy of the Constitutionalist movement forced him, then a Jesuit novice, to leave the country in 1914; he returned only in July 1926, for a single year. In the capital he worked as a tireless priest: going by bicycle he gave communion each week at clandestine gatherings, and he organized "Eucharistic stations" in private houses where people could secretly receive the Body of the Lord. He helped unmarried mothers and founded a house for prostitutes who wished to change their lives. John Paul II recalled that neither grave illness nor dangerous ministry quenched his joy.</paragraphus>
+    <paragraphus fontes="cs">Many times and in many ways he evaded capture. After an attack on Álvaro Obregón on 13 November 1927, in which the League for the Defence of Religious Liberty took part, the police accused him and his brothers Humberto and Roberto. He was condemned without trial, and the government moved the execution forward half an hour to prevent any help; only Roberto was saved. Miguel and Humberto were shot at ten in the morning of 23 November 1927, crying "Viva Cristo Rey". The Dicastery for the Causes of Saints calls him certainly innocent. He was declared a martyr in 1986 and beatified by John Paul II on 25 September 1988.</paragraphus>
+  </descriptio>
+  <fons id="cs" opus="sedes" locus="Dicastero delle Cause dei Santi, Miguel Agustín Pro" url="https://www.causesanti.va/it/santi-e-beati/miguel-agustin-pro.html">
+    <excerptum>Sacerdote della Compagnia di Gesù e martire, che, in tempo di persecuzione contro la Chiesa, condannato a morte senza processo come complice di un delitto</excerptum>
+    <excerptum>Miguel Agustín Pro Juárez nasce il 13 gennaio 1891 a Guadalupe e muore a Città del Messico il 23 novembre 1927. La scena è quella del conflitto in Messico tra Chiesa e Stato.</excerptum>
+    <excerptum>La politica anticlericale del movimento armato costituzionalista obbliga nel 1914 il novizio Miguel a lasciare il paese, che rivedrà per un anno solo nel luglio 1926</excerptum>
+    <excerptum>Lavora allora nella capitale come sacerdote instancabile e brillante, generoso e ironico. In bicicletta, distribuisce settimanalmente la comunione durante riunioni clandestine</excerptum>
+    <excerptum>aiuta le ragazze madri; inoltre, si preoccupa delle prostitute e fonda una casa per aiutarle a cambiar vita.</excerptum>
+    <excerptum>Molte volte e in molti modi diversi riesce a evitare la cattura, ma il 13 novembre 1927, quando la Lega in Difesa della Libertà Religiosa partecipa a un attentato contro Alvaro Obregòn</excerptum>
+    <excerptum>la polizia accusa anche P. Pro e i suoi fratelli, Humberto e Roberto.</excerptum>
+    <excerptum>il governo viola le procedure legali tanto da anticiparne di mezz’ora l’esecuzione, per impedire ogni soccorso. Gli interventi diplomatici arrivano, ma si salva solo Roberto</excerptum>
+    <excerptum>Miguel e Humberto vengono fucilati alle 10 del mattino del 23 novembre 1927, gridando “Viva Cristo Re”.</excerptum>
+    <excerptum>P. Pro era certamente innocente.</excerptum>
+    <excerptum>Viene dichiarato martire il 10 novembre 1986 e beatificato da Giovanni Paolo II il 25 settembre 1988.</excerptum>
+  </fons>
+  <fons id="hom" opus="sedes" locus="Omelia di Giovanni Paolo II, beatificazione di sei servi di Dio, 25 settembre 1988" url="https://www.vatican.va/content/john-paul-ii/it/homilies/1988/documents/hf_jp-ii_hom_19880925_sei-beati.html">
+    <excerptum>è la beatificazione di padre Miguel Agustin Pr, sacerdote gesuita, le cui virtù oggi esaltiamo e proponiamo al Popolo di Dio.</excerptum>
+    <excerptum>Né le sofferenze delle gravi malattie, né l’indefessa attività ministeriale svolta frequentemente in circostanze penose e rischiose, riuscirono a soffocare la gioia irradiante e comunicativa</excerptum>
+    <excerptum>Padre Pro aveva organizzato le cosiddette “stazioni eucaristiche” in domicili particolari, in cui quotidianamente si poteva ricevere di nascosto il corpo del Signore durante gli anni della persecuzione.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="23 November">
+    <excerptum>Blessed Miguel Agustín Pro, Priest and Martyr</excerptum>
+  </fons>
+</sanctus>

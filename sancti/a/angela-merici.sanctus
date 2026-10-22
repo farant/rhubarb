@@ -1,0 +1,43 @@
+<sanctus id="angela-merici" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Angela Merici</nomen>
+  <ortus annus="1474" mensis="3" dies="21" locus="Desenzano, Lombardy" fontes="ce"/>
+  <obitus annus="1540" mensis="1" dies="27" locus="Brescia" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1807" papa="Pius VII" fontes="ce"/>
+  <beatificatio annus="1768" papa="Clement XIII" fontes="ce"/>
+  <festum calendarium="generale" mensis="1" dies="27" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="1" dies="27" nota="dies obitus" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="5" dies="31" nota="festum" fontes="mr2"/>
+  <munus fontes="us mr">virgin</munus>
+  <munus fontes="ce mr">foundress</munus>
+  <munus fontes="ce">Franciscan tertiary</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Angela was born on 21 March 1474 at Desenzano on Lake Garda. Orphaned at ten, she lived with her elder sister in their uncle's house at Salò; after her sister's sudden death she became a Franciscan tertiary and increased her prayers and penances. At twenty, after her uncle died, she returned to Desenzano; convinced that girls badly needed instruction in the faith, she turned her home into a school, and she was then invited to open a similar school in Brescia.</paragraphus>
+    <paragraphus fontes="ce">On a pilgrimage to the Holy Land in 1524 she went blind on Crete and was cured on the way home. In the jubilee year 1525 Pope Clement VII asked her to remain in Rome, but she returned to Brescia. There, on 25 November 1535, she gathered twelve virgins and founded the Ursulines near the church of Saint Afra. She led them for five years and died at Brescia on 27 January 1540.</paragraphus>
+    <paragraphus fontes="ce mr">Clement XIII beatified her in 1768 and Pius VII canonized her in 1807. The 1916 Martyrology names her on 27 January and notes that her feast was then kept on 31 May.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="27 January">
+    <excerptum>St. Angela Merici, virgin, foundress of the Order of the Nuns of St. Ursula, whose principal aim is to direct young girls in the ways of the Lord. By an indult of Pius VII. her feast is celebrated on the 31st of May.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="31 May">
+    <excerptum>AT Brescia, St. Angela Merici, virgin, foundress of the nuns of St. Ursula. She is mentioned on the 27th of January.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Angela Merici" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Angela_Merici">
+    <excerptum>foundress of the Ursulines, b. 21 March, 1474, at Desenzano, a small town on the southwestern shore of Lake Garda in Lombardy; d. 27 January, 1540, at Brescia.</excerptum>
+    <excerptum>She was left an orphan at the age of ten and together with her elder sister came to the home of her uncle at the neighbouring town of Salo</excerptum>
+    <excerptum>When her sister met with a sudden death</excerptum>
+    <excerptum>She became a tertiary of St. Francis and greatly increased her prayers and mortifications for the repose of her sister's soul.</excerptum>
+    <excerptum>When she was twenty years old, her uncle died, and she returned to her paternal home at Desenzano.</excerptum>
+    <excerptum>Convinced that the great need of her times was a better instruction of young girls in the rudiments of the Christian religion, she converted her home into a school</excerptum>
+    <excerptum>she was invited to the neighbouring city, Brescia, to establish a similar school at that place.</excerptum>
+    <excerptum>In 1524, while making a pilgrimage to the Holy Land, she became suddenly blind when she was on the island of Crete</excerptum>
+    <excerptum>was cured on her return while praying before a crucifix</excerptum>
+    <excerptum>When, in the jubilee year 1525, she had come to Rome to gain the indulgences, Pope Clement VII</excerptum>
+    <excerptum>invited her to remain in Rome; but Angela, who shunned publicity, returned to Brescia.</excerptum>
+    <excerptum>Finally, on the 25th of November, 1535, Angela chose twelve virgins and laid the foundation of the order of the Ursulines in a small house near the Church of St. Afra in Brescia.</excerptum>
+    <excerptum>Haing been five years superior of the newly-founded order, she died.</excerptum>
+    <excerptum>She was beatified in 1768, by Clement XIII, and canonized in 1807, by Pius VII.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="27 January">
+    <excerptum>Saint Angela Merici, Virgin</excerptum>
+  </fons>
+</sanctus>

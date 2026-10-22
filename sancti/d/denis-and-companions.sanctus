@@ -1,0 +1,39 @@
+<sanctus id="denis-and-companions" versio="1" genus="coetus" status="sanctus">
+  <nomen lingua="en" principale="verum">Denis and Companions</nomen>
+  <nomen lingua="en" fontes="ce">Denis, Rusticus and Eleutherius</nomen>
+  <obitus annus="275" circa="verum" locus="Paris" martyrium="verum" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="10" dies="9" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="10" dies="9" fontes="mr"/>
+  <munus fontes="us mr">martyrs</munus>
+  <munus fontes="us ce">bishop</munus>
+  <socius fontes="mr ce">Denis, bishop</socius>
+  <socius fontes="mr ce">Rusticus, priest</socius>
+  <socius fontes="mr ce">Eleutherius, deacon</socius>
+  <descriptio>
+    <paragraphus fontes="ce">Denis, bishop of Paris, was born in Italy; nothing certain is known of his early life. Pope Fabian sent him with other missionary bishops to Gaul, whose Church had suffered under the persecution of Decius. The facts that follow are gleaned from a Life of the sixth or seventh century that is interwoven with much legend. With his inseparable companions, the priest Rusticus and the deacon Eleutherius, he settled on the island in the Seine, built a church there, and by his preaching made countless converts. The heathen priests stirred up the people and the governor Fescenninus Sisinnius against them, and the three were seized and, persevering in the faith, beheaded after many tortures, about 275. A pious woman named Catulla gave them burial, and a small shrine over their graves was later replaced by a basilica.</paragraphus>
+    <paragraphus fontes="mr ce">The Roman Martyrology (1916 English edition) follows the tradition that Denis was the Areopagite baptized by St. Paul, first bishop of Athens, and sent to Gaul by Pope Clement. The Catholic Encyclopedia treats this identification of Denis of Paris with Dionysius the Areopagite, which took deep root in the ninth century, as a serious error of the Middle Ages, first doubted by Launoy and entirely rejected by the Bollandist de Bye. He is usually shown carrying his head in his hands, after a legend that his body rose after the execution.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="9 October">
+    <excerptum>AT Paris, the birthday of the holy martyrs Denis the Areopagite, bishop, Rusticus, priest, and Eleutherius, deacon. Denis was baptized by the apostle St. Paul, and consecrated first bishop of Athens.</excerptum>
+    <excerptum>he was sent to Gaul by the blessed Roman Pontiff Clement, to preach the Gospel.</excerptum>
+    <excerptum>he was subjected to the severest kinds of torments by the prefect Fescenninus</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Denis" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Denis">
+    <excerptum>Bishop of Paris, and martyr. Born in Italy, nothing is definitely known of the time or place, or of his early life.</excerptum>
+    <excerptum>He is usually represented with his head in his hands because, according to the legend, after his execution the corpse rose again and carried the head for some distance.</excerptum>
+    <excerptum>Pope Fabian (236-250) sent him with some other missionary bishops to Gaul on a difficult mission. The Church of Gaul had suffered terribly under the persecution of the Emperor Decius</excerptum>
+    <excerptum>Denis with his inseparable companions, the priest Rusticus and the deacon Eleutherius, arrived in the neighbourhood of the present city of Paris and settled on the island in the Seine.</excerptum>
+    <excerptum>dating from the end of the sixth or the beginning of the seventh century and wrongly attributed to the poet Venantius Fortunatus, is interwoven with much legend, from which, however, the following facts can be gleaned.</excerptum>
+    <excerptum>On the island in the Seine Denis built a church and provided for a regular solemnization of the Divine service. His fearless and indefatigable preaching of the Gospel led to countless conversions. This aroused the envy, anger and hatred of the heathen priests.</excerptum>
+    <excerptum>They incited the populace against the strangers and importuned the governor Fescenninus Sisinnius to put a stop by force to the new teaching.</excerptum>
+    <excerptum>Denis with his two companions were seized and as they persevered in their faith were beheaded (about 275) after many tortures.</excerptum>
+    <excerptum>The bodies of the three holy martyrs received an honourable burial through the efforts of a pious matron named Catulla and a small shrine was erected over their graves. This was later on replaced by a beautiful basilica</excerptum>
+    <excerptum>This development is due in no small degree to an error prevailing throughout the Middle Ages, which identified St. Denis of Paris with St. Dionysius the Areopagite</excerptum>
+    <excerptum>it was only through the "Areopagitica" written in 836 by Hilduin, Abbot of Saint-Denis, at the request of Louis the Pious, that this serious error took deep root.</excerptum>
+    <excerptum>The investigations of Launoy first threw doubt on the story and the Bollandist de Bye entirely rejected it.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="9 October">
+    <excerptum>Saint Denis, Bishop, and Companions, Martyrs</excerptum>
+  </fons>
+</sanctus>

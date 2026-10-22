@@ -100,32 +100,23 @@ hic_manens constans character* GENERA_VALORUM =
     "kA = 8\n";
 
 
-s32
-principale (vacuum)
-{
-         b32  praeteritus;
-     Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_toml_api", 1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
     /* ==================================================
      * lapide feature-requests/013 ad verbum
      * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
            TomlDocumentum* doc;
                    chorda  c;
        constans TomlValor* radix;
                    chorda  textus;
 
-        imprimere("\n--- Probans feature-requests/013 ---\n");
         doc = _legere(piscina,
             "[llama-server]\nversio = \"b11201\"\n"
             "[poppler]\nversio = \"26.09.0\"\n", "config.toml");
@@ -163,12 +154,20 @@ principale (vacuum)
         CREDO_VERUM (toml_chorda(doc, "llama-server.versio", &c));
         CREDO_VERUM (_aequat(c, "b11201"));
     }
+}
 
 
     /* ==================================================
      * Getters typati
      * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
          TomlDocumentum* doc = _legere(piscina, GENERA_VALORUM,
              "typati.toml");
@@ -179,7 +178,6 @@ principale (vacuum)
              TomlTempus t;
                     s64 maximus = ((s64)(((i64)I << LXIII) - I));
 
-        imprimere("\n--- Probans getters typatos ---\n");
         CREDO_VERUM (toml_successus(doc));
         CREDO_VERUM (toml_chorda(doc, "s", &c));
         CREDO_VERUM (_aequat(c, "x"));
@@ -202,18 +200,25 @@ principale (vacuum)
         CREDO_FALSUM (toml_integer(doc, "nope", &i));
         CREDO_FALSUM (toml_chorda(doc, "tab", &c));
     }
+}
 
 
     /* ==================================================
      * Viae clavium (Review Focus 5)
      * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
          TomlDocumentum* doc = _legere(piscina, GENERA_VALORUM,
              "typati.toml");
                     s64 i;
 
-        imprimere("\n--- Probans vias clavium ---\n");
         CREDO_NIHIL (toml_quaerere(doc, ""));
         CREDO_NIHIL (toml_quaerere(doc, "   "));
         CREDO_NIHIL (toml_quaerere(doc, "a..b"));
@@ -239,19 +244,26 @@ principale (vacuum)
         CREDO_AEQUALIS_S64 (i, (s64)VIII);
         CREDO_NON_NIHIL (toml_quaerere(doc, "tab"));
     }
+}
 
 
     /* ==================================================
      * Enumeratio
      * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             TomlDocumentum* doc = _legere(piscina, GENERA_VALORUM,
                 "typati.toml");
         constans TomlValor* radix  = toml_radix(doc);
         constans TomlValor* arr    = toml_quaerere(doc, "arr");
 
-        imprimere("\n--- Probans enumerationem ---\n");
         CREDO_AEQUALIS_I32 (toml_tabulae_numerus(radix), IX);
         CREDO_VERUM (_aequat(toml_tabulae_clavis(radix, ZEPHYRUM),
             "s"));
@@ -269,12 +281,20 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (toml_tabulae_numerus(arr), ZEPHYRUM);
         CREDO_AEQUALIS_I32 (toml_tabulae_numerus(NIHIL), ZEPHYRUM);
     }
+}
 
 
     /* ==================================================
      * Pictura: tria vitia, ordine octetorum
      * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
          TomlDocumentum* doc;
                  chorda  textus;
@@ -282,7 +302,6 @@ principale (vacuum)
                     s32  p3;
                     s32  p4;
 
-        imprimere("\n--- Probans picturam ---\n");
         doc = _legere(piscina,
             "a = 1\na = 2\nb = 9223372036854775808\nc = ?\n",
             "tres.toml");
@@ -302,19 +321,26 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (_numerare(textus, '^'), ZEPHYRUM);
         CREDO_MAIOR_S32 (_invenire(textus, "tres.toml:4:5"), (s32)-I);
     }
+}
 
 
     /* ==================================================
      * toml_chordae: series chordarum
      * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         TomlDocumentum* doc = _legere(piscina,
             "a = [\"x\", \"yz\"]\nm = [\"x\", 1]\ne = []\ns = \"x\"\n",
             "chordae.toml");
                    Xar* x = NIHIL;
 
-        imprimere("\n--- Probans toml_chordae ---\n");
         CREDO_VERUM (toml_chordae(doc, "a", piscina, &x));
         CREDO_AEQUALIS_I32 (xar_numerus(x), II);
         CREDO_VERUM (_aequat(*(chorda*)xar_obtinere(x, I), "yz"));
@@ -329,6 +355,7 @@ principale (vacuum)
         CREDO_VERUM (toml_chordae(doc, "e", piscina, &x));
         CREDO_AEQUALIS_I32 (xar_numerus(x), ZEPHYRUM);
     }
+}
 
 
     /* ==================================================
@@ -336,6 +363,13 @@ principale (vacuum)
      * re-collocati: significatio NOVA (sectiones non planae)
      * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         TomlDocumentum* doc;
                  chorda c;
@@ -343,7 +377,6 @@ principale (vacuum)
                     b32 b;
                    Xar* x;
 
-        imprimere("\n--- Probans casus bibliothecae veteris ---\n");
         doc = _legere(piscina, "Title = \"Hello World\"", "v.toml");
         CREDO_VERUM (toml_chorda(doc, "Title", &c));
         CREDO_VERUM (_aequat(c, "Hello World"));
@@ -422,17 +455,24 @@ principale (vacuum)
         CREDO_VERUM (toml_integer(doc, "Year", &n));
         CREDO_AEQUALIS_S64 (n, (s64)MDCCCXCIX);
     }
+}
 
 
     /* ==================================================
      * Textus vacuus (plagula vacua: datum NIHIL)
      * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                 chorda vacua;
         TomlDocumentum* doc;
 
-        imprimere("\n--- Probans textum vacuum ---\n");
         vacua.datum    = NIHIL;
         vacua.mensura  = ZEPHYRUM;
         doc            = toml_legere(vacua, NIHIL, piscina);
@@ -442,10 +482,24 @@ principale (vacuum)
             ZEPHYRUM);
         CREDO_FALSUM (toml_successus(NIHIL));
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "feature-requests/013", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "getters typatos", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "vias clavium", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "enumerationem", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "picturam", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "toml_chordae", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "casus bibliothecae veteris", _sectio_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "textum vacuum", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("toml_api", SECTIONES);
 }

@@ -1,0 +1,46 @@
+<sanctus id="nicholas-of-myra" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Nicholas of Myra</nomen>
+  <nomen lingua="en" fontes="ce">Nicholas of Bari</nomen>
+  <obitus saeculum="4" mensis="12" dies="6" locus="Myra, Lycia" fontes="ce bu"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="12" dies="6" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="12" dies="6" fontes="mr"/>
+  <munus fontes="us ce">bishop</munus>
+  <munus fontes="bu">abbot</munus>
+  <patrocinium fontes="ce">mariners</patrocinium>
+  <patrocinium fontes="ce">merchants</patrocinium>
+  <patrocinium fontes="ce">bakers</patrocinium>
+  <patrocinium fontes="ce">travellers</patrocinium>
+  <patrocinium fontes="ce">children</patrocinium>
+  <patrocinium fontes="ce">Greece</patrocinium>
+  <patrocinium fontes="ce">Russia</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce bu">Nicholas is one of the most popular saints of both the Greek and the Latin Church, yet, as the Catholic Encyclopedia says, scarcely anything about him is historically certain except that he was Bishop of Myra in Lycia in the fourth century. He died on 6 December; the Encyclopedia gives the year as 345 or 352, while Butler, following the account of the translation of his relics, places his death in 342.</paragraphus>
+    <paragraphus fontes="ce bu mr">His legend says that he was born in Lycia, was abbot of the monastery of holy Sion near Myra, became its bishop, was imprisoned under Diocletian and attended the Council of Nicaea. Butler notes that many doubt the imprisonment and the presence at Nicaea, and the Catholic Encyclopedia also doubts that he was at Nicaea. Butler tells how, on three nights, he passed money through the window of three young women in distress so that all of them had dowries, and the Martyrology how he appeared to Constantine in a vision and saved condemned men. In 1087 Italian merchants carried his body from Myra to Bari. He is patron of mariners, merchants, bakers, travellers and children, and in Germany, Switzerland and the Netherlands he became the secret bringer of gifts to children on his feast.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Nicholas of Myra" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Nicholas_of_Myra">
+    <excerptum>(Also called NICHOLAS OF BARI).</excerptum>
+    <excerptum>Bishop of Myra in Lycia; died 6 December, 345 or 352.</excerptum>
+    <excerptum>Though he is one of the most popular saints in the Greek as well as the Latin Church, there is scarcely anything historically certain about him except that he was Bishop of Myra in the fourth century.</excerptum>
+    <excerptum>He was born at Parara, a city of Lycia in Asia Minor</excerptum>
+    <excerptum>cast into prison during the persecution of Diocletian, he was released after the accession of Constantine, and was present at the Council of Nicaea. In 1087 Italian merchants stole his body at Myra, bringing it to Bari in Italy.</excerptum>
+    <excerptum>There is reason to doubt his presence at Nicaea, since his name is not mentioned in any of the old lists of bishops that attended this council.</excerptum>
+    <excerptum>The following places honour him as patron: Greece, Russia, the Kingdom of Naples, Sicily, Lorraine, the Diocese of Liège</excerptum>
+    <excerptum>He is patron of mariners, merchants, bakers, travellers, children, etc.</excerptum>
+    <excerptum>Some of the main points in his legend are as follows</excerptum>
+    <excerptum>In Germany, Switzerland, and the Netherlands, they have the custom of making him the secret purveyor of gifts to children on 6 December, the day on which the Church celebrates his feast</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v12 Dec. 6 St. Nicholas, Confessor, Archbishop of Myra">
+    <excerptum>when he had devoted himself to a religious life in the monastery of holy Sion, near Myra, of which house he was made abbot, by the archbishop, its founder.</excerptum>
+    <excerptum>when three young virgins were exposed through distress to the danger of falling into vicious courses, he, for three successive nights, conveyed to them through the window a competent sum of money for a fortune for one of them, so that they were all portioned, and afterward happily married.</excerptum>
+    <excerptum>This metropolitan church falling vacant, the holy abbot Nicholas was chosen archbishop</excerptum>
+    <excerptum>The Greek histories of his life agree, that he suffered imprisonment for the faith, and made a glorious confession in the latter part of the persecution raised by Dioclesian: and that he was present at the great council of Nice</excerptum>
+    <excerptum>The silence of other authors make many justly suspect these circumstances. The history of the translation of his relicks place his death in 342. He died at Myra</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="6 December">
+    <excerptum>At Myra, the metropolis of Lycia, the birthday of St. Nicholas, bishop and confessor, of whom it is related, among other miracles, that, while at a great distance from the emperor Constantine, he appeared to him in a vision and moved him to mercy so as to deter him from putting to death some persons who had implored his assistance.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="6 December">
+    <excerptum>Saint Nicholas, Bishop</excerptum>
+  </fons>
+</sanctus>

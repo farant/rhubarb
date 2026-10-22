@@ -471,11 +471,21 @@ oratio_lexema_derivatum (
     {
         memcpy(copia.datum, valor.datum, (size_t)valor.mensura);
     }
-        redde materia_token_creare(piscina, &FORMA, genus, copia,
-            (s32)-I,
-            origo != NIHIL ? origo->linea : (i32)I,
-            origo != NIHIL ? origo->columna : (i32)I,
-            ORATIO_FONS_DERIVATUS);
+    redde oratio_lexema_derivatum_possessum(piscina, genus, copia,
+        origo);
+}
+
+MateriaToken*
+oratio_lexema_derivatum_possessum (
+                  Piscina* piscina,
+                      s32  genus,
+                   chorda  valor,
+    constans MateriaToken* origo)
+{
+    redde materia_token_creare(piscina, &FORMA, genus, valor, (s32)-I,
+        origo != NIHIL ? origo->linea : (i32)I,
+        origo != NIHIL ? origo->columna : (i32)I,
+        ORATIO_FONS_DERIVATUS);
 }
 
 MateriaToken*

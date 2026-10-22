@@ -40,8 +40,10 @@ source "$RADIX_DIR/tools/vexilla.sh"
 declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 mkdir -p build
 BIN="build/runae_generare"
-if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "tools/runae_generare.c" ]; then
-    clang "${GCC_FLAGS[@]}" -Iinclude tools/runae_generare.c -o "$BIN" || exit 2
+if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "tools/runae_generare.c" ] \
+    || ! [ "$BIN" -nt "lib/lectiones.c" ]; then
+    clang "${GCC_FLAGS[@]}" -Iinclude tools/runae_generare.c lib/lectiones.c \
+        -o "$BIN" || exit 2
 fi
 
 if [ "$PROBARE" = 1 ]; then

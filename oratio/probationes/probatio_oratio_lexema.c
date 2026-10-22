@@ -125,18 +125,13 @@ _plagulam_legere (
     redde memoria;
 }
 
-s32
-principale (vacuum)
+interior vacuum
+_genera_probare (
+    CredoContextus* c)
 {
-               Piscina* piscina;
-                   Xar* xs;
-    constans character* radix_viae;
+    Piscina* piscina = c->piscina;
+        Xar* xs;
 
-    piscina = piscina_generare_dynamicum("probatio_oratio_lexema",
-        4194304);
-    credo_aperire(piscina);
-
-    imprimere("\n--- Probans genera et positiones ---\n");
     {
         constans character* f = "Hello, world!\nOk.";
 
@@ -168,8 +163,15 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (_t(xs, VIII)->columna, IV);
         CREDO_VERUM (_lex_octetorum(xs, f, (i32)strlen(f)));
     }
+}
 
-    imprimere("\n--- Probans iuncturas: hyphen, apostrophus, punctum, digiti ---\n");
+interior vacuum
+_iuncturas_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        Xar* xs;
+
     {
         constans character* f =
             "don't well-known e.g. 3.14 -- ... a - b 'q' x''y";
@@ -221,8 +223,15 @@ principale (vacuum)
         CREDO_VERUM (_aequalis(_t(xs, XXXIII), (s32)ORATIO_LEX_LITTERAE,
             "y"));
     }
+}
 
-    imprimere("\n--- Probans lineas: CRLF, CR solus ---\n");
+interior vacuum
+_lineas_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        Xar* xs;
+
     {
         constans character* f = "a\r\nb\rc\n";
 
@@ -237,8 +246,15 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (_t(xs, IV)->linea, III);
         CREDO_AEQUALIS_I32 (_t(xs, VI)->linea, IV);
     }
+}
 
-    imprimere("\n--- Probans UTF-8: litterae, NBSP, interpunctio curva, apostrophus curvus ---\n");
+interior vacuum
+_utf8_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        Xar* xs;
+
     {
         /* "\xC3\x86r\xC3\xB8" = "Ærø"; NBSP; "\xE2\x80\x9C" = left quote;
          * "\xE2\x80\x94" = em dash; "\xE2\x80\x99" = right single quote */
@@ -279,8 +295,15 @@ principale (vacuum)
             "."));
         CREDO_AEQUALIS_I32 (_t(xs, II)->columna, IX);   /* octeti, non characteres */
     }
+}
 
-    imprimere("\n--- Probans plagulam vacuam et derivatum ---\n");
+interior vacuum
+_vacuam_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        Xar* xs;
+
     {
         MateriaToken* d;
         chorda v;
@@ -300,8 +323,15 @@ principale (vacuum)
         CREDO_VERUM (d->valor.datum != v.datum
             && d->valor.mensura == v.mensura);
     }
+}
 
-    imprimere("\n--- CORPUS: plagulae md tractae, lex octetorum ---\n");
+interior vacuum
+_corpus_probare (
+    CredoContextus* c)
+{
+    constans character* radix_viae;
+    (vacuum)c;
+
     radix_viae = getenv("RHUBARB_RADIX");
     si (radix_viae == NIHIL)
     {
@@ -377,13 +407,26 @@ principale (vacuum)
             CREDO_AEQUALIS_I32 (fractae, ZEPHYRUM);
         }
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "genera et positiones", _genera_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "iuncturas: hyphen, apostrophus, punctum, digiti",
+        _iuncturas_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lineas: CRLF, CR solus", _lineas_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "UTF-8: litterae, NBSP, interpunctio curva, apostrophus curvus",
+        _utf8_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "plagulam vacuam et derivatum", _vacuam_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "CORPUS: plagulae md tractae, lex octetorum", _corpus_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("oratio_lexema", SECTIONES);
 }

@@ -48,8 +48,6 @@ hic_manens constans Aestimandum AESTIMANDA[] = {
     { "- - 3", (s64)3 }
 };
 
-hic_manens i32 casus_numerus = ZEPHYRUM;
-
 interior constans character*
 _copia (
                Piscina* piscina,
@@ -77,7 +75,6 @@ _casus (
     MateriaScripturaConsilium consilium;
     b32 idem;
 
-    casus_numerus++;
     radix = crusta_arbor_parsare(piscina, fons, mensura, &CRUSTA_BASH,
         relatio);
     CREDO_NON_NIHIL (radix);
@@ -93,8 +90,7 @@ _casus (
                 == ZEPHYRUM);
     si (!idem)
     {
-        imprimere("    casus %d '%s': emissio '%.*s'\n",
-            (integer)casus_numerus, litterae,
+        imprimere("    casus '%s': emissio '%.*s'\n", litterae,
             (integer)emissa.textus.mensura,
             (constans character*)emissa.textus.datum);
     }
@@ -176,31 +172,20 @@ _expressio_ex (
     redde _expressio(_casus(piscina, f, &r));
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: structura
+ * ================================================== */
+
+interior vacuum
+_structuram_probare (
+    CredoContextus* c)
 {
-              b32  praeteritus;
-          Piscina* piscina;
+          Piscina* piscina = c->piscina;
     CrustaParsura  r;
-    MateriaNodus* p;
-    MateriaNodus* e;
-    MateriaNodus* n;
-
-    piscina = piscina_generare_dynamicum("probatio_crusta_arithmetica",
-        524288);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ==================================================
-     * PROBARE: structura
-     * ================================================== */
-
-    imprimere("\n--- Probans structuram ---\n");
+     MateriaNodus* p;
+     MateriaNodus* e;
+     MateriaNodus* n;
 
     /* 1+2*3: binaria(+, 1, binaria(*, 2, 3)) */
     e = _expressio_ex(piscina, "1+2*3");
@@ -363,13 +348,19 @@ principale (vacuum)
     /* $(( ad EOF: clausura absens */
     p = _casus(piscina, "$((1+1", &r);
     CREDO_AEQUALIS_I32 (r.clausurae_absentes, (i32)I);
+}
 
 
-    /* ==================================================
-     * PROBARE: aestimator contra bash
-     * ================================================== */
+/* ==================================================
+ * PROBARE: aestimator contra bash
+ * ================================================== */
 
-    imprimere("\n--- Probans aestimatorem ---\n");
+interior vacuum
+_aestimatorem_probare (
+    CredoContextus* c)
+{
+         Piscina* piscina = c->piscina;
+    MateriaNodus* e;
 
     {
         i32 i;
@@ -414,12 +405,17 @@ principale (vacuum)
             _expressio_ex(piscina, "a=1"), &v));
         CREDO_FALSUM (crusta_arithmetica_aestimare(NIHIL, &v));
     }
+}
 
-    imprimere("\n    casus %d\n", (integer)casus_numerus);
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "structuram", _structuram_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "aestimatorem", _aestimatorem_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("crusta_arithmetica", SECTIONES);
 }

@@ -1,0 +1,42 @@
+<sanctus id="martin-of-tours" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Martin of Tours</nomen>
+  <ortus annus="316" circa="verum" locus="Sabaria, Pannonia" fontes="ce bu"/>
+  <obitus annus="397" circa="verum" locus="Candes, Touraine" fontes="ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="11" dies="11" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="11" dies="11" fontes="mr"/>
+  <munus fontes="us ce">bishop</munus>
+  <munus fontes="mr">confessor</munus>
+  <munus fontes="ce">hermit</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Martin was born about 316 at Sabaria in Pannonia; Butler notes that Gregory of Tours put his birth in 316 or 317. His father, a military tribune, was transferred to Pavia in Italy, and Martin went with him. Butler says his parents were pagans and that at ten he went to the church against their will and asked to be enrolled as a catechumen; at fifteen he was compelled to take the military oath. At the gate of Amiens on a very cold day he met a half-naked beggar and cut his cloak in two to give him half; in the night, Butler relates, he saw Christ wearing that half. Still a catechumen, he was soon baptized, and was later freed from military service at Worms.</paragraphus>
+    <paragraphus fontes="ce mr">He joined St. Hilary at Poitiers in 361 and took up a solitary life at Ligugé, where many monks gathered around him, and he went out to preach to the still pagan countryside of Gaul. When the bishop of Tours died in 371 or 372, popular acclamation forced Martin to become bishop. He lived in a cell outside the city, the beginning of the monastery of Marmoutier. He died at Candes at about 81, most probably in 397, though some authorities say 400. The Martyrology remembers him as renowned for miracles, and his cult was very popular throughout the Middle Ages.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Martin of Tours" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Martin_of_Tours">
+    <excerptum>born at Sabaria (today Steinamanger in German, or Szombathely in Hungarian), Pannonia (Hungary), about 316; died at Candes, Touraine, most probably in 397.</excerptum>
+    <excerptum>when his father, a military tribune, was transferred to Pavia in Italy, Martin accompanied him thither</excerptum>
+    <excerptum>His regiment was soon sent to Amiens in Gaul, and this town became the scene of the celebrated legend of the cloak.</excerptum>
+    <excerptum>At the gates of the city, one very cold day, Martin met a shivering and half-naked beggar. Moved with compassion, he divided his coat into two parts and gave one to the poor man.</excerptum>
+    <excerptum>Martin, who was still only a catechumen, soon received baptism, and was a little later finally freed from military service at Worms on the Rhine.</excerptum>
+    <excerptum>he hastened to the side of his chosen master at Poitiers in 361, and obtained permission from him to embrace at some distance from there in a deserted region (now called Ligugé) the solitary life</excerptum>
+    <excerptum>His example was soon followed, and a great number of monks gathered around him.</excerptum>
+    <excerptum>often left it to preach the Gospel in the central and western parts of Gaul, where the rural inhabitants were still plunged in the darkness of idolatry</excerptum>
+    <excerptum>When St. Lidorius, second Bishop of Tours, died in 371 or 372, the clergy of that city desired to replace him by the famous hermit of Ligugé.</excerptum>
+    <excerptum>popular acclamation constrained him to become Bishop of the Church of Tours.</excerptum>
+    <excerptum>he settled himself in a small cell at a short distance from Tours, beyond the Loire. Some other hermits joined him there, and thus was gradually formed a new monastery, which surpassed that of Ligugé, as is indicated by the name, Marmoutier</excerptum>
+    <excerptum>he died there in 400 (according to some authorities, more probably in 397) at the age of about 81</excerptum>
+    <excerptum>His cult was very popular throughout the Middle Ages</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v11 Nov. 11 S. Martin, Bishop of Tours">
+    <excerptum>St. Gregory of Tours places his birth in the year 316, or before Easter in 317</excerptum>
+    <excerptum>though his parents were idolaters. At ten years of age he made his wayto the church against the will of his parents, and desired to be enrolled amongst the catechumens.</excerptum>
+    <excerptum>at fifteen years of age he was compelled to take the military oath</excerptum>
+    <excerptum>In the following night St. Martin saw in his sleep Jesus Christ dressed.in that half of the garment which he had given away</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="11 November">
+    <excerptum>AT Tours, in France, the birthday of blessed Martin, bishop and confessor, whose life was so renowned for miracles that he received the power to raise three persons from the dead.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="11 November">
+    <excerptum>Saint Martin of Tours, Bishop</excerptum>
+  </fons>
+</sanctus>

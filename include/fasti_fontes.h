@@ -28,7 +28,7 @@ nomen structura {
     chorda titulus;         /* "Anna Rossi" */
        s32 annus_originis;  /* natalis: annus nativitatis; 0 ignotus */
     chorda fons;            /* titulus fontis (a portu ponitur) */
-       s32 referentia;      /* id in fonte (persona) - ad aperiendum */
+    chorda referentia;      /* id in fonte (persona) - ad aperiendum */
 } FastiIntroitus;
 
 /* fons: introitus intervalli in exitus (Xar de FastiIntroitus) addit */

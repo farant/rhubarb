@@ -1,0 +1,34 @@
+<sanctus id="anthony-the-great" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Anthony the Great</nomen>
+  <nomen lingua="en" fontes="us">Anthony, Abbot</nomen>
+  <ortus saeculum="3" locus="Coma, near Heracleopolis Magna" fontes="ce"/>
+  <obitus annus="356" circa="verum" fontes="ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="1" dies="17" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="1" dies="17" fontes="mr"/>
+  <munus fontes="us mr">abbot</munus>
+  <munus fontes="ce">hermit</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Anthony, called the founder of Christian monasticism, is known chiefly from a Greek Life attributed to St. Athanasius. He was born at Coma, near Heracleopolis Magna in the Fayum, about the middle of the third century, to well-to-do parents. When they died, in his twentieth year, he heard the Gospel words "If thou wilt be perfect, go and sell all thou hast" as spoken to himself, gave away his property and devoted himself wholly to religious exercises. After years as an ascetic near his village and in a tomb, he crossed the Nile and shut himself in an old fort at Pispir, where he lived for twenty years without seeing anyone.</paragraphus>
+    <paragraphus fontes="ce mr">About 305 he came out to guide the disciples who had gathered round him, and later withdrew into the inner desert between the Nile and the Red Sea, to the mountain where the monastery bearing his name still stands. According to the Life he died at the age of a hundred and five; St. Jerome places his death in 356 or 357. The Martyrology adds that his body, found by divine revelation under Justinian, was brought to Alexandria.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Anthony" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Anthony">
+    <excerptum>Anthony, Saint, founder of Christian monasticism. The chief source of information on St. Anthony is a Greek Life attributed to St. Athanasius</excerptum>
+    <excerptum>Anthony was born at Coma, near Heracleopolis Magna in Fayum, about the middle of the third century. He was the son of well-to-do parents, and on their death, in his twentieth year, he inherited their possessions.</excerptum>
+    <excerptum>on hearing in the church the Gospel words, "If thou wilt be perfect, go and sell all thou hast", he received them as spoken to himself, disposed of all his property and goods, and devoted himself exclusively to religious exercises.</excerptum>
+    <excerptum>Then he took up his abode in one of the tombs, near his native village</excerptum>
+    <excerptum>After fifteen years of this life, at the age of thirty-five, Anthony determined to withdraw from the habitations of men and retire in absolute solitude.</excerptum>
+    <excerptum>He crossed the Nile, and on a mountain near the east bank, then called Pispir, now Der el Memum, he found an old fort into which he shut himself, and lived there for twenty years without seeing the face of man</excerptum>
+    <excerptum>gradually a number of would-be disciples established themselves in caves and in huts around the mountain.</excerptum>
+    <excerptum>At length, about the year 305, he yielded to their importunities and emerged from his retreat</excerptum>
+    <excerptum>he once again withdrew into the inner desert that lay between the Nile and the Red Sea, near the shore of which he fixed his abode on a mountain where still stands the monastery that bears his name, Der Mar Antonios.</excerptum>
+    <excerptum>The Life says he dies at the age of a hundred and five, and St. Jerome places his death in 356–357.</excerptum>
+    <excerptum>Anthony had become the recognized leader of Christian hermits.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="17 January">
+    <excerptum>Thebais, St. Anthony, abbot and spiritual guide of many monks. He was most celebrated for his life and miracles, of which St. Athanasius has written a detailed account. His sacred body was found by divine revelation, during the reign of the emperor Justinian, and brought to Alexandria</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="17 January">
+    <excerptum>Saint Anthony, Abbot</excerptum>
+  </fons>
+</sanctus>

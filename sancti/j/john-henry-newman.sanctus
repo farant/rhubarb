@@ -1,0 +1,51 @@
+<sanctus id="john-henry-newman" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">John Henry Newman</nomen>
+  <ortus annus="1801" mensis="2" dies="21" locus="London" fontes="cs"/>
+  <obitus annus="1890" mensis="8" dies="11" locus="Edgbaston" fontes="cs"/>
+  <beatificatio annus="2010" mensis="9" dies="19" papa="Benedict XVI" fontes="cs"/>
+  <canonizatio modus="formalis" annus="2019" mensis="10" dies="13" papa="Francis" fontes="cs hom"/>
+  <festum calendarium="generale" mensis="10" dies="9" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us cs">priest</munus>
+  <munus fontes="cs">cardinal</munus>
+  <munus fontes="us cs">doctor of the Church</munus>
+  <descriptio>
+    <paragraphus fontes="cs">John Henry Newman was born in London on 21 February 1801, the eldest of six children of an Anglican family. As a youth he held strongly Calvinist views. He studied at Trinity College, Oxford, became a Fellow of Oriel in 1822 and was ordained an Anglican priest in 1825. As vicar of the university church of St. Mary he became a celebrated preacher. On a journey through southern Europe begun in 1832 he wrote "Lead, Kindly Light"; the Oxford Movement, born in 1833, had him as its leading figure, and he wrote twenty-six of the Tracts for the Times. The protests over Tract 90, which read the Thirty-Nine Articles in a Catholic sense, made the bishop halt the Tracts; condemned at Oxford and disowned by forty-two bishops, he resigned his parish, and in 1842 he withdrew to Littlemore, where his conversion to Catholicism matured.</paragraphus>
+    <paragraphus fontes="cs hom us">Ordained a Catholic priest on 30 May 1847, he chose the Oratory of St. Philip Neri and founded the Oratory in Birmingham, later settled at Edgbaston. He was rector of the Catholic University of Dublin from 1854, published the Apologia pro vita sua in 1864, and was created cardinal by Leo XIII in 1879 with the motto "cor ad cor loquitur". He died at Edgbaston on 11 August 1890. Benedict XVI beatified him at Birmingham on 19 September 2010, and Pope Francis canonized him on 13 October 2019. His thought deeply influenced twentieth-century theology, and he is now honoured as a Doctor of the Church.</paragraphus>
+  </descriptio>
+  <fons id="cs" opus="sedes" locus="Dicastero delle Cause dei Santi, John Henry Newman" url="https://www.causesanti.va/it/santi-e-beati/john-henry-newman.html">
+    <excerptum>John Henry Newman Dottore della Chiesa (1801 - 1890)</excerptum>
+    <excerptum>Cardinale, teologo e filosofo inglese. Già presbitero anglicano, entrato a far parte del Movimento di Oxford, ne divenne uno degli animatori, fondò inoltre l’Oratorio di S. Filippo Neri in Inghilterra</excerptum>
+    <excerptum>John Henry Newman nacque a Londra il 21 feb­braio 1801 da una famiglia anglicana</excerptum>
+    <excerptum>Era il primo dei sei figli di John, banchiere, e di Jemina Fourdrinier.</excerptum>
+    <excerptum>matura l’adesione ai principi più radicali del Calvinismo</excerptum>
+    <excerptum>Nel 1817 entra nel Trinity College di Oxford</excerptum>
+    <excerptum>Nel 1822 viene eletto Fellow dell’Oriel College</excerptum>
+    <excerptum>Il 29 maggio 1825 viene ordinato Presbitero Anglicano.</excerptum>
+    <excerptum>è nominato parroco della chiesa universitaria di St. Mary, svolgendovi una ricca attività pastorale e di predicazione che lo rende molto celebre.</excerptum>
+    <excerptum>Nel 1832 accompagna il presbitero Froude nel suo viaggio nell’Europa meridionale</excerptum>
+    <excerptum>ed il poemetto Lead, Kindly, Light</excerptum>
+    <excerptum>nasce l’Oxford Movement che vede in Newman la figura di spicco.</excerptum>
+    <excerptum>su 90 saggi pubblicati Newman è l’autore di ben 26, incluso l’ultimo, il Tract 90</excerptum>
+    <excerptum>nel quale egli cercò di interpretare i 39 articoli della Chiesa Anglicana in un’ottica cattolica.</excerptum>
+    <excerptum>Le proteste suscitate spingono il Vescovo di Oxford a sospendere la pubblicazione dei Tracts. Condannato dall’Hebdomedal Board dell’Università di Oxford e sconfessato da 42 vescovi</excerptum>
+    <excerptum>rinuncia alla parrocchia universitaria. Il 9 aprile 1842 si ritira con alcuni amici a Littlemore</excerptum>
+    <excerptum>qui giunge a maturazione la sua “conversione” al cattolicesimo.</excerptum>
+    <excerptum>Ordinato presbitero il 30 maggio 1847</excerptum>
+    <excerptum>Newman chiede al Papa di poter fondare un Oratorio a Birmingham</excerptum>
+    <excerptum>la prima vera sede è posta ad Edgbaston, nella periferia di Birmingham.</excerptum>
+    <excerptum>Nel 1854 Padre Newman è nominato rettore dell’Università Cattolica di Dublino</excerptum>
+    <excerptum>Nel 1864 pubblica l’Apologia pro vita sua</excerptum>
+    <excerptum>Papa Leone XIII, su uno spunto di Monsignor William Bernard Ullathorne, Vescovo di Birmingham, il 12 maggio 1879 crea Newman Cardinale del titolo di San Giorgio al Velabro; il motto scelto recita: cor ad cor loquitur</excerptum>
+    <excerptum>l’11 agosto 1890 muore nella sua camera ad Edgbaston.</excerptum>
+    <excerptum>Il Santo Padre Benedetto XVI ha proclamato Beato il Venerabile Newman la domenica 19 settembre 2010, nel corso della celebrazione da lui stesso presieduta nel Cofton Park di Rednal, a Birmingham.</excerptum>
+    <excerptum>Dopo la canonizzazione di Newman, avvenuta il 13 ottobre 2019</excerptum>
+    <excerptum>La sua riflessione ha notevolmente influito sulla teologia del XX secolo, specialmente sul Concilio Vaticano II.</excerptum>
+  </fons>
+  <fons id="hom" opus="sedes" locus="Homily of Pope Francis, canonization of John Henry Newman and others, 13 October 2019" url="https://www.vatican.va/content/francesco/en/homilies/2019/documents/papa-francesco_20191013_omelia-canonizzazione.html">
+    <excerptum>HOLY MASS AND CANONIZATION OF THE BLESSEDS: JOHN HENRY NEWMAN, GIUSEPPINA VANNINI</excerptum>
+    <excerptum>HOMILY OF HIS HOLINESS POPE FRANCIS St Peter's Square XXVIII Sunday of Ordinary Time 13 October 2019</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="9 October">
+    <excerptum>Saint John Henry Newman, Priest and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

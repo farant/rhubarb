@@ -1,0 +1,43 @@
+<sanctus id="catherine-of-siena" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Catherine of Siena</nomen>
+  <nomen lingua="it" fontes="sd">Caterina da Siena</nomen>
+  <ortus annus="1347" mensis="3" dies="25" locus="Siena" fontes="ce"/>
+  <obitus annus="1380" mensis="4" dies="29" locus="Rome" fontes="ce mr"/>
+  <canonizatio modus="formalis" annus="1461" papa="Pius II" fontes="ce mr"/>
+  <festum calendarium="generale" mensis="4" dies="29" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="4" dies="30" fontes="mr"/>
+  <munus fontes="mr ce">virgin</munus>
+  <munus fontes="ce">Dominican tertiary</munus>
+  <munus fontes="sd us">doctor of the Church</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Catherine was born at Siena on 25 March 1347, the second-youngest of the many children of the dyer Giacomo di Benincasa. From early childhood she had visions and practised severe austerities; at seven she consecrated her virginity to Christ, and in her sixteenth year she took the habit of the Dominican tertiaries, living as a recluse in a small room of her father's house. After a mystical espousal, probably in 1366, she returned to family life, nursing the sick, serving the poor and working for the conversion of sinners, and gathered a circle of disciples.</paragraphus>
+    <paragraphus fontes="ce sd mr">In the summer of 1370, after a series of visions, she heard a divine command to enter public life, and she began writing letters to people of every condition and to the princes and republics of Italy. She urged Gregory XI to leave Avignon, and although her embassy to Avignon for Florence in 1376 failed, she so impressed him that he returned to Rome in January 1377. She dictated her Dialogue, and in the Great Schism she supported Urban VI, who called her to Rome in 1378. She died there on 29 April 1380. Pius II canonized her in 1461, and Paul VI proclaimed her a Doctor of the Church on 3 October 1970.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="30 April">
+    <excerptum>AT Rome, St. Catherine of Siena, virgin, of the Order of St. Dominic, renowned for her life and miracles. She was inscribed among the canonized virgins by Pius II.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Catherine of Siena" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Catherine_of_Siena">
+    <excerptum>Dominican Tertiary, born at Siena, 25 March, 1347; died at Rome, 29 April, 1380.</excerptum>
+    <excerptum>She was the youngest but one of a very large family. Her father, Giacomo di Benincasa, was a dyer</excerptum>
+    <excerptum>From her earliest childhood Catherine began to see visions and to practise extreme austerities. At the age of seven she consecrated her virginity to Christ; in her sixteenth year she took the habit of the Dominican Tertiaries, and renewed the life of the anchorites of the desert in a little room in her father's house.</excerptum>
+    <excerptum>she underwent the mystical experience known as the "spiritual espousals", probably during the carnival of 1366. She now rejoined her family, began to tend the sick</excerptum>
+    <excerptum>to serve the poor, and to labour for the conversion of sinners.</excerptum>
+    <excerptum>She began to gather disciples round her, both men and women</excerptum>
+    <excerptum>During the summer of 1370 she received a series of special manifestations of Divine mysteries</excerptum>
+    <excerptum>a vision of Hell, Purgatory, and Heaven, and heard a Divine command to leave her cell and enter the public life of the world.</excerptum>
+    <excerptum>She began to dispatch letters to men and women in every condition of life, entered into correspondence with the princes and republics of Italy</excerptum>
+    <excerptum>She implored the pope, Gregory XI, to leave Avignon</excerptum>
+    <excerptum>In June, 1376, she went to Avignon as ambassador of the Florentines</excerptum>
+    <excerptum>she was unsuccessful. Nevertheless she made such a profound impression upon the mind of the pope, that, in spite of the opposition of the French king and almost the whole of the Sacred College, he returned to Rome (17 January, 1377).</excerptum>
+    <excerptum>dictating her "Dialogue", the book of her meditations and revelations.</excerptum>
+    <excerptum>From the outset Catherine enthusiastically adhered to the Roman claimant, Urban VI, who in November, 1378, summoned her to Rome.</excerptum>
+    <excerptum>Catherine was canonized by Pius II in 1461.</excerptum>
+  </fons>
+  <fons id="sd" opus="sedes" locus="Paolo VI, omelia, 3 ottobre 1970" url="https://www.vatican.va/content/paul-vi/it/homilies/1970/documents/hf_p-vi_hom_19701003.html">
+    <excerptum>3 ottobre 1970: Proclamazione di Santa Caterina da Siena Dottore della Chiesa</excerptum>
+    <excerptum>nel proclamare Dottore della Chiesa la umile e sapiente vergine domenicana, Caterina da Siena</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="29 April">
+    <excerptum>Saint Catherine of Siena, Virgin and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

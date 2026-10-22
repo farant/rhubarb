@@ -21,14 +21,15 @@ nomen structura {
 } Sedes;
 
 structura OratioVocabula {
-                 Piscina* piscina;
-    OratioVocabulariumLa* voc;
-    OratioVocabulariumEn* en;          /* contextus Anglicus: Moby (NIHIL Latine) */
-                     b32  anglice;     /* VERUM = iudicium contextus Anglici */
-                     Xar* verba;                  /* OratioVerbum */
-          TabulaDispersa* per_verbum;  /* verbum minusculum -> Sedes */
-                     i32  sedes;
-                     b32  iudicata;
+                          Piscina* piscina;
+    /* tabulae lectae solae: communicari possunt (fixura suitae) */
+    constans OratioVocabulariumLa* voc;
+    constans OratioVocabulariumEn* en;  /* Moby (NIHIL Latine) */
+                              b32  anglice;     /* iudicium Anglicum */
+                              Xar* verba;       /* OratioVerbum */
+                   TabulaDispersa* per_verbum;  /* minusculum -> Sedes */
+                              i32  sedes;
+                              b32  iudicata;
 };
 
 hic_manens constans character* TITULI_STATUUM[] = {
@@ -144,9 +145,9 @@ _digitus_est (
 
 OratioVocabula*
 oratio_vocabula_creare_anglice (
-                 Piscina* piscina,
-    OratioVocabulariumLa* voc,
-    OratioVocabulariumEn* en)
+                          Piscina* piscina,
+    constans OratioVocabulariumLa* voc,
+    constans OratioVocabulariumEn* en)
 {
     OratioVocabula* vc = oratio_vocabula_creare(piscina, voc);
 
@@ -161,8 +162,8 @@ oratio_vocabula_creare_anglice (
 
 OratioVocabula*
 oratio_vocabula_creare (
-                 Piscina* piscina,
-    OratioVocabulariumLa* voc)
+                          Piscina* piscina,
+    constans OratioVocabulariumLa* voc)
 {
     OratioVocabula* vc = (OratioVocabula*)piscina_allocare(piscina,
         (memoriae_index)magnitudo(OratioVocabula));

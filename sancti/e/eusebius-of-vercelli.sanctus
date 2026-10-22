@@ -1,0 +1,48 @@
+<sanctus id="eusebius-of-vercelli" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Eusebius of Vercelli</nomen>
+  <ortus annus="283" circa="verum" locus="Sardinia" fontes="ce bu"/>
+  <obitus annus="371" mensis="8" dies="1" locus="Vercelli" fontes="ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="8" dies="2" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="8" dies="1" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="12" dies="16" fontes="mr3"/>
+  <munus fontes="us ce mr">bishop</munus>
+  <munus fontes="ce mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Eusebius was born in Sardinia about 283; Butler says his widowed mother took him to Rome as a child. He was made lector at Rome, later came to Vercelli, and in 340 was unanimously elected its bishop by clergy and people, receiving consecration from Pope Julius I on 15 December. St. Ambrose testifies that he was the first bishop of the West to unite the monastic with the clerical life, living in common with the clergy of his city after the manner of Eastern monks; for this the Canons Regular of St. Augustine honour him as a founder.</paragraphus>
+    <paragraphus fontes="ce bu mr mr2 mr3">Sent by Pope Liberius in 354 to ask the Emperor Constantius for a council, he refused at the Synod of Milan in 355 to sign the condemnation of St. Athanasius and was exiled to Scythopolis, where the Arian bishop Patrophilus treated him cruelly, then to Cappadocia and the Thebaid. Freed under Julian in 362, he joined Athanasius at the synod of Alexandria, tried in vain to heal the schism at Antioch, and returned to Vercelli in 363 to oppose Arianism with St. Hilary of Poitiers. He died at Vercelli on 1 August 371. The Church honours him as a martyr: the Martyrology says that after his return he suffered martyrdom in the Arian persecution, while the Catholic Encyclopedia records no violent death. The Martyrology names him on 1 August and keeps his feast on 16 December by order of Benedict XIII.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Eusebius, Bishop of Vercelli" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Eusebius,_Bishop_of_Vercelli">
+    <excerptum>Eusebius, Saint, Bishop of Vercelli, b. in Sardinia c. 283; d. at Vercelli, Piedmont, August 1, 371. He was made lector in Rome</excerptum>
+    <excerptum>Later he came to Vercellae, the present Vercelli, and in 340 was unanimously elected bishop of that city by the clergy and the people. He received episcopal consecration at the hands of Pope Julius I on December 15 of the same year.</excerptum>
+    <excerptum>he was the first bishop of the West who united monastic with clerical life. He led with the clergy of his city a common life modeled upon that of the Eastern cenobites</excerptum>
+    <excerptum>For this reason the Canons Regular of St. Augustine honor him along with St. Augustine as their founder</excerptum>
+    <excerptum>In 354 Pope Liberius sent Eusebius and Bishop Lucifer of Cagliari to the Emperor Constantius, who was then at Arles in Gaul, for the purpose of inducing the emperor to convoke a council</excerptum>
+    <excerptum>Eusebius vehemently protested against the unjust condemnation of St. Athanasius and, despite the threats of the emperor, refused to attach his signature to the document.</excerptum>
+    <excerptum>As a result he was sent into exile, first to Scythopolis in Syria, where the Arian Bishop Patrophilus, whom Eusebius calls his jailer</excerptum>
+    <excerptum>treated him very cruelly, then to Cappadocia, and lastly to the Thebaid. On the accession of the Emperor Julian, the exiled bishops were allowed to return to their sees, in 362.</excerptum>
+    <excerptum>Eusebius went to Alexandria to consult with St. Athanasius about convoking the synod which, in 362, was held there under their joint presidency.</excerptum>
+    <excerptum>Unable to reconcile the factions at Antioch, he visited other Churches of the Orient in the interest of the orthodox faith, and finally passed through Illyricum into Italy. Having arrived at Vercelli in 363, he assisted the zealous St. Hilary of Poitiers in the suppression of Arianism</excerptum>
+    <excerptum>The Church honors him as a martyr and celebrates his feast as a semi-double on December 16.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v12 Dec. 15 St. Eusebius, Bishop of Vercelli">
+    <excerptum>was born of a noble family in the isle of Sardinia, where his father is said to have died in chains for the faith.</excerptum>
+    <excerptum>His mother, whose name was Restituta, being left a widow, carried him anda daughter she had, both in their</excerptum>
+    <excerptum>infancy, to Rome. Eusebius was brought up in the practice of piety, and in the study of sacred learning, and ordained lector by St. Sylvester.</excerptum>
+    <excerptum>St. Ambrose assures us, that he was the first who in the West united the monastic life with the clerical</excerptum>
+    <excerptum>Constantius agreed to a council, which met at Milan in 355</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="1 August">
+    <excerptum>At Vercelli, St. Eusebius, bishop and martyr, who for the confession of the Catholic faith, was banished to Scythopolis and thence to Cappadocia by the emperor Constantius.</excerptum>
+    <excerptum>Afterwards returning to his church, he suffered martyrdom in the persecution of the Arians. His feast is kept on the 16th of December.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="15 December">
+    <excerptum>the consecration of St. Eusebius, bishop of Vercelli, whose birthday is commemorated on the 1st of August. His feast is kept on the 16th of this month, by order of pope Benedict XIII.</excerptum>
+  </fons>
+  <fons id="mr3" opus="mr1916" locus="16 December">
+    <excerptum>ST. EUSEBIUS, bishop of Vercelli and martyr, mentioned on the 1st of August, and also on the 15th of this month.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="2 August">
+    <excerptum>Saint Eusebius of Vercelli, Bishop</excerptum>
+  </fons>
+</sanctus>

@@ -1,0 +1,36 @@
+<sanctus id="matthias-the-apostle" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Matthias the Apostle</nomen>
+  <nomen lingua="la" principale="verum" fontes="mr">Matthias</nomen>
+  <obitus martyrium="verum" fontes="mr bu"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="5" dies="14" gradus="festum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="2" dies="24" fontes="mr"/>
+  <munus fontes="us mr ce">apostle</munus>
+  <munus fontes="mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Matthias was one of the seventy disciples of Jesus and had been with him from his baptism by John until the Ascension. In the days after the Ascension Peter proposed that the assembled brethren choose someone to take the place of Judas among the Apostles; two disciples, Joseph called Barsabas and Matthias, were put forward, lots were drawn, and the lot fell on Matthias, who was then numbered with the eleven.</paragraphus>
+    <paragraphus fontes="ce bu mr">Everything else told of his life and death is, in the words of the Catholic Encyclopedia, vague and contradictory. One tradition has him preach in Judea and then in Ethiopia, meaning Colchis, and be crucified; another says he was stoned at Jerusalem and then beheaded. The Greek menologies cited by Butler place his preaching around Cappadocia and the Caspian Sea and his martyrdom in Colchis, and the Martyrology says he suffered martyrdom for preaching the Gospel. Relics said to be his are shown at Rome and Trier, though Butler, and Bollandus as cited by the Encyclopedia, suspect that those at Rome belong to another Matthias, an early bishop of Jerusalem. The Latin Church kept his feast on 24 February before moving it to 14 May.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="24 February">
+    <excerptum>the birthday of the Apostle St. Matthias, who was chosen by lot by the apostles after the Ascension of our Lord in the place of the traitor Judas, and suffered martyrdom for preaching the Gospel.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Matthias" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Matthias">
+    <excerptum>Matthias was one of the seventy disciples of Jesus, and had been with Him from His baptism by John to the Ascension</excerptum>
+    <excerptum>in the days following the Ascension, Peter proposed to the assembled brethren, who numbered one hundred and twenty, that they choose one to fill the place of the traitor Judas in the Apostolate.</excerptum>
+    <excerptum>Two disciples, Joseph, called Barsabas, and Matthias were selected, and lots were drawn, with the result in favour of Matthias, who thus became associated with the eleven Apostles.</excerptum>
+    <excerptum>All further information concerning the life and death of Matthias is vague and contradictory. According to Nicephorus (Hist. eccl., 2, 40), he first preached the Gospel in Judea, then in Ethiopia (that is to say, Colchis) and was crucified.</excerptum>
+    <excerptum>Still another tradition maintains that Matthias was stoned at Jerusalem by the Jews, and then beheaded</excerptum>
+    <excerptum>It is said that St. Helena brought the relics of St. Matthias to Rome, and that a portion of them was at Trier. Bollandus (Acta SS., May, III) doubts if the relics that are in Rome are not rather those of the St. Matthias who was Bishop of Jerusalem about the year 120</excerptum>
+    <excerptum>The Latin Church celebrates the feast of St. Matthias on 24 February and the Greek Church on 9 August. [Note: After this article was written, the Latin Church moved the feast of St. Matthias to 14 May.]</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v02 Feb. 24 Saint Matthias, Apostle">
+    <excerptum>two were unanimously pitched upon by the assembly, as most worthy of the dignity, Joseph, called Barsabas, and, on account of his extraordinary piety, surnamed the Just, and Matthias.</excerptum>
+    <excerptum>The tradition of the Greeks in their menologies tells us that St. Matthias planted the faith about Cappadocia and on the coasts of the Caspian sea</excerptum>
+    <excerptum>The same authors add that he received the crown of martyrdom in Colchis</excerptum>
+    <excerptum>Some portions of his relics are shown in the abbatical church of Triers, and in that of St. Mary Major in Rome, unless these latter belong</excerptum>
+    <excerptum>to another Matthias, who was one of the first bishops of Jerusalem</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="14 May">
+    <excerptum>Saint Matthias, Apostle</excerptum>
+  </fons>
+</sanctus>

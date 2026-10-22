@@ -130,12 +130,36 @@ constans character*
 volumen_error (
     constans Volumen* volumen);
 
+/* identitas actus trans machinas (D2): hora ZEPHYRUM = nulla */
+nomen structura {
+       s64 hora;
+    chorda machina;
+} VolumenIdentitas;
+
 /* actum in caudam appendere (datum = JSON); seq redditum, 0 = vitium */
 s64
 volumen_actum_appendere (
                Volumen* volumen,
     constans character* genus,
                 chorda  datum);
+
+/* ut volumen_actum_appendere, sed actum BASIM suam nominat: statum
+ * contra quem factum est (genera-datorum VIII-c, D2b). Acta duo
+ * eiusdem basis = furca (revocatione locali aut machinis duabus). */
+s64
+volumen_actum_super_appendere (
+                 Volumen* volumen,
+      constans character* genus,
+                  chorda  datum,
+        VolumenIdentitas  basis);
+
+/* identitas actus per seq; FALSUM si seq ignotum */
+b32
+volumen_actum_identitas (
+             Volumen* volumen,
+                 s64  seq,
+             Piscina* piscina,
+    VolumenIdentitas* exitus);
 
 /* plagulam condere: transactione una - massa (sigillo dedup) +
  * actum 'plagula-condita' + manifestum (upsert per viam).
@@ -184,6 +208,26 @@ chorda
 volumen_plagulam_promere (
     Volumen* volumen,
      chorda  via_relativa,
+    Piscina* piscina,
+        b32* inventum);
+
+/* PRAESENTIA (genera-datorum D1): status applicationis - clavis ->
+ * valor, scriptor ultimus vincit, EXTRA acta: nec diarium nec massas
+ * auget (paginae-proba 2026-10-20: 58 % actorum erant instantanea
+ * status/, 11 % index vici). Veritas sine historia, non proiectio.
+ * Clientes: conservatio ("status/<clavis>"), vicus ("vicus/latera").
+ * Migratio: plagulae eorum semel copiatae (migratio VI). */
+b32
+volumen_praesens_ponere (
+    Volumen* volumen,
+     chorda  clavis,
+     chorda  valor);
+
+/* valor clavis; *inventum FALSUM si nulla (valor vacuus legitimus) */
+chorda
+volumen_praesens_legere (
+    Volumen* volumen,
+     chorda  clavis,
     Piscina* piscina,
         b32* inventum);
 
@@ -249,12 +293,22 @@ volumen_plagulas_enumerare (
     Volumen* volumen,
     Piscina* piscina);
 
-/* actum lectum (chordae ex piscina vocantis) */
+/* actum lectum (chordae ex piscina vocantis). Identitas actus =
+ * (hora, machina) - D2: hora hybrida (hora_hybrida.h) = ordo EVENTUS,
+ * seq = ordo ADVENTUS in hoc volumine; machina = machina_identitas()
+ * scriptoris. Acta vetera (ante migrationem VII, aut a codice vetere
+ * scripta) in aperiendo supplentur: ordine seq, momentum suum per
+ * hora_hybrida_proxima, machina huius machinae. Sine identitate
+ * machinae acta non appenduntur (recusat, non degenerat).
+ * basis (D2b): actum contra quem factum est - hora ZEPHYRUM = sine
+ * basi (acta non documentorum, actum primum, acta ante D2b). */
 nomen structura {
-       s64 seq;
-    chorda momentum;
-    chorda genus;
-    chorda datum;
+                 s64 seq;
+              chorda momentum;
+              chorda genus;
+              chorda datum;
+    VolumenIdentitas identitas;
+    VolumenIdentitas basis;
 } VolumenActum;
 
 /* acta POST seq datum (exclusivum; 0 = omnia), ordine seq -
@@ -264,6 +318,16 @@ volumen_acta_legere (
     Volumen* volumen,
         s64  post_seq,
     Piscina* piscina);
+
+/* acta generum datorum post seq, ordine seq (genera: tabula
+ * NIHIL-terminata; per indicem acta(genus, seq)) - historia documenti
+ * acta sua sola legit, non volumen totum */
+Xar*
+volumen_acta_generum_legere (
+                         Volumen* volumen,
+                             s64  post_seq,
+    constans character* constans* genera,
+                        Piscina* piscina);
 
 /* plica ad seq: manifestum RECONSTRUCTUM replicando acta plagularum
  * (plagula-condita ponit, plagula-remota tollit) cum seq <= ad_seq;

@@ -1,0 +1,35 @@
+<sanctus id="irenaeus-of-lyon" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Irenaeus of Lyon</nomen>
+  <ortus saeculum="2" locus="Proconsular Asia" fontes="ce"/>
+  <obitus saeculum="3" circa="verum" locus="Lyons" martyrium="verum" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="6" dies="28" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="6" dies="28" fontes="mr"/>
+  <munus fontes="ce mr us">bishop</munus>
+  <munus fontes="mr us">martyr</munus>
+  <munus fontes="us">doctor of the Church</munus>
+  <descriptio>
+    <paragraphus fontes="ce mr">Irenaeus was born in Proconsular Asia, or a neighbouring province, in the first half of the second century; the year is disputed. As a very young man he saw and heard the bishop Polycarp at Smyrna, and the Martyrology, following St. Jerome, calls him Polycarp's disciple. During the persecution under Marcus Aurelius he was a priest of the Church of Lyons, and in 177 or 178 its clergy, many of them imprisoned for the faith, sent him to Rome with a letter to Pope Eleutherius. Returning to Gaul, he succeeded the martyr Pothinus as Bishop of Lyons.</paragraphus>
+    <paragraphus fontes="ce mr">His writings were directed almost entirely against Gnosticism; his chief work, the five books commonly called Against Heresies, survives in an ancient Latin translation, and his Proof of the Apostolic Preaching in Armenian. In 190 or 191 he asked Pope Victor to lift the excommunication of the Asian churches that kept the Quartodeciman Easter. The date of his death, at the end of the second or the beginning of the third century, is unknown. The Martyrology says he was crowned with martyrdom with almost all the people of his city in the persecution of Severus; the Catholic Encyclopedia, however, thinks his martyrdom not very probable.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Irenaeus" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Irenaeus">
+    <excerptum>He was born in Proconsular Asia, or at least in some province bordering thereon, in the first half of the second century; the exact date is controverted</excerptum>
+    <excerptum>It is certain that, while still very young, Irenaeus had seen and heard the holy Bishop Polycarp (d. 155) at Smyrna.</excerptum>
+    <excerptum>During the persecution of Marcus Aurelius, Irenaeus was a priest of the Church of Lyons.</excerptum>
+    <excerptum>The clergy of that city, many of whom were suffering imprisonment for the Faith, sent him (177 or 178) to Rome with a letter to Pope Eleutherius concerning Montanism</excerptum>
+    <excerptum>Returning to Gaul, Irenaeus succeeded the martyr Saint Pothinus as Bishop of Lyons.</excerptum>
+    <excerptum>his writings, almost all of which were directed against Gnosticism</excerptum>
+    <excerptum>In 190 or 191 he interceded with Pope Victor to lift the sentence of excommunication laid by that pontiff upon the Christian communities of Asia Minor which persevered in the practice of the Quartodecimans</excerptum>
+    <excerptum>Nothing is known of the date of his death, which must have occurred at the end of the second or the beginning of the third century. In spite of some isolated and later testimony to that effect, it is not very probable that he ended his career with martyrdom.</excerptum>
+    <excerptum>A treatise in five books, commonly entitled Adversus haereses</excerptum>
+    <excerptum>Of this work we possess a very ancient Latin translation, the scrupulous fidelity of which is beyond doubt. It is the chief work of Irenaeus</excerptum>
+    <excerptum>an ancient literal translation in the Armenian language. This is the "Proof of the Apostolic Preaching."</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="28 June">
+    <excerptum>At Lyons, in France, St. Irenseus, bishop and martyr, who, as is related by St. Jerome, was the disciple of blessed Polycarp, bishop of Smyrna, and lived near the time of the</excerptum>
+    <excerptum>After having strenuously opposed the heretics by speech and writing, he was crowned with a glorious martyrdom, with almost all the people of his city, during the persecution of Severus.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="28 June">
+    <excerptum>Saint Irenaeus, Bishop, Martyr, and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

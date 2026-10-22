@@ -1,0 +1,25 @@
+<sanctus id="raphael-the-archangel" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Raphael the Archangel</nomen>
+  <nomen lingua="en" fontes="ce">Azarias</nomen>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="9" dies="29" gradus="festum" fontes="us"/>
+  <munus fontes="us ce">archangel</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Raphael, whose name means "God has healed", does not appear in the Hebrew Scriptures, and in the Septuagint he is named only in the Book of Tobias. There he travels in human form as the companion of the younger Tobias, calling himself Azarias, and protects him on his journey, binding the demon that had slain the seven husbands of Sara. After the return and the healing of the elder Tobias's blindness he makes himself known as "the angel Raphael, one of the seven, who stand before the Lord." Of these seven, only Gabriel, Michael and Raphael are named in the canonical Scriptures.</paragraphus>
+    <paragraphus fontes="ce us">Little more is told of his work than his own words to Tobias: that he offered Tobias's prayer to the Lord and was sent to heal him and to deliver Sara from the devil. Many commentators identify him with the angel who moved the water of the pool called Probatica in the fifth chapter of John, a conjecture resting on his name and his healing role. In 1913 his feast was kept on 24 October, with an Office recalling his healing power and his victory over the demon; he is now honoured together with Michael and Gabriel on 29 September.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Raphael" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Raphael">
+    <excerptum>The name of this archangel (Raphael = "God has healed") does not appear in the Hebrew Scriptures, and in the Septuagint only in the Book of Tobias.</excerptum>
+    <excerptum>Here he first appears disguised in human form as the travelling companion of the younger Tobias, calling himself "Azarias the son of the great Ananias".</excerptum>
+    <excerptum>The story of the adventurous journey during which the protective influence of the angel is shown in many ways including the binding "in the desert of upper Egypt" of the demon who had previously slain seven husbands of Sara, daughter of Raguel</excerptum>
+    <excerptum>After the return and the healing of the blindness of the elder Tobias, Azarias makes himself known as "the angel Raphael, one of the seven, who stand before the Lord"</excerptum>
+    <excerptum>only three, Gabriel, Michael and Raphael, are mentioned in the canonical Scriptures.</excerptum>
+    <excerptum>he (Raphael) offered his prayer to the Lord, that he was sent by the Lord to heal him of his blindness and to deliver Sara, his son's wife, from the devil.</excerptum>
+    <excerptum>Many commentators, however, identify Raphael with the "angel of the Lord" mentioned in John 5. This conjecture is base both on the significance of the name and on the healing role attributed to Raphael in the Book of Tobias.</excerptum>
+    <excerptum>the Gospel from John 5:1-4, referring to the pool called Probatica, where the multitude of the infirm lay awaiting the moving of the water, for "an angel of the Lord descended at certain times into the pond; and the water was moved.</excerptum>
+    <excerptum>The Church assigns the feast of St. Raphael to 24 October. The hymns of the Office recall the healing power of the archangel and his victory over the demon.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="29 September">
+    <excerptum>Saints Michael, Gabriel and Raphael, Archangels</excerptum>
+  </fons>
+</sanctus>

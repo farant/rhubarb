@@ -1,0 +1,36 @@
+<sanctus id="pio-of-pietrelcina" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Pio of Pietrelcina</nomen>
+  <nomen lingua="it" fontes="cs">Pio da Pietrelcina</nomen>
+  <nomen lingua="it" fontes="cs">Francesco Forgione</nomen>
+  <ortus annus="1887" mensis="5" dies="25" locus="Pietrelcina" fontes="cs"/>
+  <obitus annus="1968" mensis="9" dies="23" locus="San Giovanni Rotondo" fontes="cs"/>
+  <beatificatio annus="1999" mensis="5" dies="2" papa="John Paul II" fontes="cs"/>
+  <canonizatio modus="formalis" annus="2002" mensis="6" dies="16" papa="John Paul II" fontes="hom"/>
+  <festum calendarium="generale" mensis="9" dies="23" gradus="memoria" fontes="us"/>
+  <munus fontes="us cs">priest</munus>
+  <munus fontes="cs">religious</munus>
+  <descriptio>
+    <paragraphus fontes="cs">Francesco Forgione was born at Pietrelcina, in the archdiocese of Benevento, on 25 May 1887. At sixteen, on 6 January 1903, he entered the novitiate of the Capuchin Friars Minor at Morcone and took the name Fra Pio. He was ordained priest at Benevento on 10 August 1910 and, for reasons of health, stayed with his family until 1916; in September of that year he was sent to the friary of San Giovanni Rotondo, where he remained until his death.</paragraphus>
+    <paragraphus fontes="cs hom">His ministry was spiritual direction, the confessional and the Mass, and for more than fifty years crowds sought him out. He founded the Prayer Groups and the hospital called the Home for the Relief of Suffering, opened on 5 May 1956. For years he bore the pain of his wounds; when his priestly ministry was investigated and restricted he accepted it with humility, and he never answered unjust accusations and slanders. He died on 23 September 1968, aged 81. John Paul II beatified him on 2 May 1999, fixing his feast on 23 September, and canonized him on 16 June 2002.</paragraphus>
+  </descriptio>
+  <fons id="cs" opus="sedes" locus="Dicastero delle Cause dei Santi, Pio da Pietrelcina" url="https://www.causesanti.va/it/santi-e-beati/pio-da-pietrelcina.html">
+    <excerptum>Questo degnissimo seguace di San Francesco d'Assisi nacque il 25 maggio 1887 a Pietrelcina, nell'arcidiocesi di Benevento, da Grazio Forgione e Maria Giuseppa De Nunzio. Fu battezzato il giorno successivo col nome di Francesco Forgione.</excerptum>
+    <excerptum>A 16 anni, il 6 gennaio 1903, entrò nel noviziato dell'Ordine dei Frati Minori Cappuccini a Morcone, ove il 22 dello stesso mese vestì l'abito francescano e si chiamò Fra Pio.</excerptum>
+    <excerptum>Dopo l'ordinazione sacerdotale, ricevuta il 10 agosto 1910 a Benevento, restò in famiglia fino al 1916 per motivi di salute. Nel settembre dello stesso anno fu mandato al convento di San Giovanni Rotondo e vi rimase fino alla morte.</excerptum>
+    <excerptum>mediante la direzione spirituale dei fedeli, mediante la riconciliazione sacramentale dei penitenti e mediante la celebrazione dell'Eucaristia.</excerptum>
+    <excerptum>principalmente con la fondazione della “Casa Sollievo della Sofferenza”, inaugurata il 5 maggio 1956.</excerptum>
+    <excerptum>accogliendo, per oltre 50 anni, moltissime persone, che accorrevano al suo ministero e al suo confessionale</excerptum>
+    <excerptum>Per anni sopportò i dolori delle sue piaghe con ammirabile serenità.</excerptum>
+    <excerptum>Quando dovette subire indagini e restrizioni al suo servizio sacerdotale, accettò tutto con profonda umiltà e rassegnazione. Di fronte ad accuse ingiustificate e calunnie tacque sempre</excerptum>
+    <excerptum>Sorella morte lo colse preparato e sereno il 23 settembre 1968, all'età di 81 anni.</excerptum>
+    <excerptum>Il 2 maggio 1999 nel corso di una solenne Concelebrazione Eucaristica in piazza San Pietro Sua Santità Giovanni Paolo II, con la Sua autorità apostolica, dichiarò Beato il Venerabile Servo di Dio Pio da Pietrelcina, stabilendo per il 23 settembre la data della festa liturgica.</excerptum>
+  </fons>
+  <fons id="hom" opus="sedes" locus="Homily of John Paul II, canonization of St Pio of Pietrelcina, 16 June 2002" url="https://www.vatican.va/content/john-paul-ii/en/homilies/2002/documents/hf_jp-ii_hom_20020616_padre-pio.html">
+    <excerptum>CANONIZATION OF ST PIO OF PIETRELCINA, CAPUCHIN PRIEST HOMILY OF JOHN PAUL II Sunday, 16 June 2002</excerptum>
+    <excerptum>This fundamental characteristic of his spirituality continues in the "Prayer Groups" that he founded</excerptum>
+    <excerptum>To prayer, Padre Pio joined an intense charitable activity, of which the "Home for the Relief of Suffering" is an extraordinary expression.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="23 September">
+    <excerptum>Saint Pius of Pietrelcina, Priest</excerptum>
+  </fons>
+</sanctus>

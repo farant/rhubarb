@@ -24,6 +24,7 @@
 #include "vicus.h"
 #include "imago.h"
 #include "vicus_quaestio.h"   /* porta $question (typi) */
+#include "vicus_sonus.h"      /* porta soni (typi) */
 
 nomen structura {
                 Piscina* piscina;
@@ -36,6 +37,7 @@ nomen structura {
                  vacuum* quaestionis; /* $question: contextus (opacus) -
                                        * porta quaestionis */
                  vacuum* admonitionum; /* T4a: contextus (opacus) */
+                 vacuum* soni;         /* sonus S4: contextus opacus */
 } VicusApplicatio;
 
 
@@ -90,6 +92,18 @@ vacuum
 vicus_applicatio_quaestionis_portam_ponere (
                    VicusApplicatio* app,
     constans VicusPortaQuaestionis* porta);
+
+/* sonus S4: porta soni (vicus_sonus.h) - NIHIL = nulla (silentium);
+ * copia servatur. '$sound' (mutus totus) et '$sound(notifications)'
+ * (admonitiones solae) campos radicis sonus_mutus et
+ * sonus_admonitionum_mutus (persistentes) vertunt, etiam sine porta.
+ * Admonitio nova (systema 'admonitiones') genus recentissimae pulsat
+ * nisi muta; systema 'sonus' omni pulsu mutum factum tacet, deinde
+ * agit. */
+vacuum
+vicus_applicatio_soni_portam_ponere (
+            VicusApplicatio* app,
+    constans VicusPortaSoni* porta);
 
 /* textus planatus -> lineae paginae latitudinis w intra l lineas
  * ("<answer>" ... "</>", margines, praecisio ad finem sententiae), '\n'

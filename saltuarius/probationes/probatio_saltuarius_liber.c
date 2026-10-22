@@ -13,33 +13,36 @@
 #include <stdio.h>
 #include <string.h>
 
-s32
-principale (vacuum)
+
+/* creatio nexus semel asserta (ut olim ante blocos); sectiones nexum
+ * suum quaeque creant - status nexus inter sectiones non communis */
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                b32  praeteritus;
-            Piscina* piscina;
+    CREDO_NON_NIHIL (saltuarius_nexus_creare(c->piscina));
+}
+
+
+/* ==================================================
+ * PROBARE: index linearum + coloratio
+ * ================================================== */
+
+interior vacuum
+_lineas_probare (
+    CredoContextus* c)
+{
+            Piscina* piscina = c->piscina;
     SaltuariusNexus* nexus;
 
-    piscina = piscina_generare_dynamicum("probatio_salt_liber",
-        8388608);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
     nexus = saltuarius_nexus_creare(piscina);
-    CREDO_NON_NIHIL (nexus);
-
-
-    /* ========================================================
-     * PROBARE: index linearum + coloratio
-     * ======================================================== */
-
+    si (nexus == NIHIL)
+    {
+        redde;   /* creatio in parare_suitae asserta */
+    }
     {
         SaltuariusLiber* liber;
 
-        imprimere("\n--- Probans indicem linearum ---\n");
 
         liber = saltuarius_liber_aperire(piscina, nexus,
             chorda_ex_literis("probe.c", piscina),
@@ -63,16 +66,28 @@ principale (vacuum)
 
         saltuarius_liber_destruere(liber);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: merus (.md) + plagula vacua + cauda cum \n
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: merus (.md) + plagula vacua + cauda cum \n
+ * ================================================== */
 
+interior vacuum
+_merum_probare (
+    CredoContextus* c)
+{
+            Piscina* piscina = c->piscina;
+    SaltuariusNexus* nexus;
+
+    nexus = saltuarius_nexus_creare(piscina);
+    si (nexus == NIHIL)
+    {
+        redde;   /* creatio in parare_suitae asserta */
+    }
     {
         SaltuariusLiber* liber;
 
-        imprimere("\n--- Probans merum et vacuum ---\n");
 
         liber = saltuarius_liber_aperire(piscina, nexus,
             chorda_ex_literis("legendum.md", piscina),
@@ -98,16 +113,28 @@ principale (vacuum)
         CREDO_FALSUM (liber->est_colorata);   /* mensura 0 */
         saltuarius_liber_destruere(liber);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: cursor clausus + runae utf8 + volumina
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: cursor clausus + runae utf8 + volumina
+ * ================================================== */
 
+interior vacuum
+_cursorem_probare (
+    CredoContextus* c)
+{
+            Piscina* piscina = c->piscina;
+    SaltuariusNexus* nexus;
+
+    nexus = saltuarius_nexus_creare(piscina);
+    si (nexus == NIHIL)
+    {
+        redde;   /* creatio in parare_suitae asserta */
+    }
     {
         SaltuariusLiber* liber;
 
-        imprimere("\n--- Probans cursorem et volumina ---\n");
 
         /* linea II brevis; linea III cum runa 2-octetorum */
         liber = saltuarius_liber_aperire(piscina, nexus,
@@ -156,20 +183,32 @@ principale (vacuum)
 
         saltuarius_liber_destruere(liber);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: columnae pingendae (runae U6d) - cursor in
-     * COLUMNIS, gradus per unitatem, adstrictio ad initium
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: columnae pingendae (runae U6d) - cursor in
+ * COLUMNIS, gradus per unitatem, adstrictio ad initium
+ * ================================================== */
 
+interior vacuum
+_columnas_probare (
+    CredoContextus* c)
+{
+            Piscina* piscina = c->piscina;
+    SaltuariusNexus* nexus;
+
+    nexus = saltuarius_nexus_creare(piscina);
+    si (nexus == NIHIL)
+    {
+        redde;   /* creatio in parare_suitae asserta */
+    }
     {
         SaltuariusLiber* liber;
                     i32  primae;
                     i32  secundae;
                     i32  tertiae;
 
-        imprimere("\n--- Probans columnas pingendas ---\n");
 
         /* "a広b" (IV columnae), "e+acutum x y" (III), "広広" (IV) */
         liber = saltuarius_liber_aperire(piscina, nexus,
@@ -255,12 +294,25 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (liber->cursor_columna, VII);
         saltuarius_liber_destruere(liber);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: strata (C1) - parse, materializatio, OMISSUM
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: strata (C1) - parse, materializatio, OMISSUM
+ * ================================================== */
 
+interior vacuum
+_strata_probare (
+    CredoContextus* c)
+{
+            Piscina* piscina = c->piscina;
+    SaltuariusNexus* nexus;
+
+    nexus = saltuarius_nexus_creare(piscina);
+    si (nexus == NIHIL)
+    {
+        redde;   /* creatio in parare_suitae asserta */
+    }
     {
            SaltuariusLiber* liber;
         constans character* FONS =
@@ -269,7 +321,6 @@ principale (vacuum)
             "G(2);\n";
         constans SaltuariusStratum* stratum;
 
-        imprimere("\n--- Probans strata ---\n");
 
         /* fistula sine praebendis (fixum sine #include) */
         CREDO_AEQUALIS_S32 (
@@ -339,18 +390,34 @@ principale (vacuum)
 
         saltuarius_liber_destruere(liber);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: iunctio tuta - trivia expansione perdita spatium
-     * unum recipiunt (constPiscina numquam!)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: iunctio tuta - trivia expansione perdita spatium
+ * unum recipiunt (constPiscina numquam!)
+ * ================================================== */
 
+interior vacuum
+_coniunctionem_probare (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+    SaltuariusNexus* nexus;
+
+    /* nexus cum silva parata (olim a sectione 'strata' in nexu communi
+     * parata - dependentia ordinis, ordine mixto patefacta): paratio
+     * hic sine assertione, in 'strata' asserta */
+    nexus = saltuarius_nexus_creare(piscina);
+    si (   nexus == NIHIL
+        || saltuarius_nexus_silvam_parare(nexus, NIHIL, ZEPHYRUM)
+               != ZEPHYRUM)
+    {
+        redde;   /* creatio in parare_suitae asserta */
+    }
     {
                    SaltuariusLiber* liber;
         constans SaltuariusStratum* stratum;
-
-        imprimere("\n--- Probans iunctionem tutam ---\n");
 
         liber = saltuarius_liber_aperire(piscina, nexus,
             chorda_ex_literis("iunctio.c", piscina),
@@ -380,16 +447,28 @@ principale (vacuum)
         }
         saltuarius_liber_destruere(liber);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: degradatio - merus liber stratum unicum
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: degradatio - merus liber stratum unicum
+ * ================================================== */
 
+interior vacuum
+_degradationem_probare (
+    CredoContextus* c)
+{
+            Piscina* piscina = c->piscina;
+    SaltuariusNexus* nexus;
+
+    nexus = saltuarius_nexus_creare(piscina);
+    si (nexus == NIHIL)
+    {
+        redde;   /* creatio in parare_suitae asserta */
+    }
     {
         SaltuariusLiber* liber;
 
-        imprimere("\n--- Probans degradationem stratorum ---\n");
 
         liber = saltuarius_liber_aperire(piscina, nexus,
             chorda_ex_literis("notae.md", piscina),
@@ -402,9 +481,30 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (liber->stratum_currens, ZEPHYRUM);
         saltuarius_liber_destruere(liber);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "index linearum + coloratio", _lineas_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "merus (.md), plagula vacua, cauda cum linea nova",
+        _merum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "cursor clausus, runae utf8, volumina", _cursorem_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "columnae pingendae (runae U6d)", _columnas_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "strata (C1): parse, materializatio, omissum", _strata_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "iunctio tuta", _coniunctionem_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "degradatio: merus liber stratum unicum", _degradationem_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("saltuarius_liber", SECTIONES,
+        _suitam_parare, NIHIL);
 }

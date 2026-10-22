@@ -36,22 +36,12 @@ _continet (
     redde FALSUM;
 }
 
-s32
-principale (vacuum)
+interior vacuum
+_quadrum_probare (
+    CredoContextus* c)
 {
-         b32  praeteritus;
-     Piscina* piscina;
+    Piscina* piscina = c->piscina;
 
-    piscina = piscina_generare_dynamicum("probatio_ludus_tessera_fumus",
-        1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- I. tessera per fontes, quadrum unum ---\n");
     {
         TesseraPonsMemoriae* pm = tessera_pons_memoriae_creare(piscina,
             VIII, IV);
@@ -70,9 +60,16 @@ principale (vacuum)
             tessera_claudere(opus);
         }
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. tessera per fontes, quadrum unum", _quadrum_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("ludus_tessera_fumus", SECTIONES);
 }

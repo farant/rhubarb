@@ -476,33 +476,64 @@ _aurum_conferre (
  * Principale
  * ================================================== */
 
-s32
-principale (vacuum)
-{
-                  b32  praeteritus;
-              Piscina* piscina;
-  InternamentumChorda* intern;
-   constans character* radix;
-   constans SilexFons* fons;
+/* FIXURA SUITAE: internamentum et fons corporis (silex_fons_disci)
+ * semel facta; sectiones per monstratorem constantem LEGUNT -
+ * internatio in internamentum fixurae sola licet (decretum
+ * 2026-10-19). */
+nomen structura {
+    InternamentumChorda* intern;
+              SilexFons* fons;
+} FixuraFaciei;
 
-    piscina = piscina_generare_dynamicum("probatio_briar_facies",
-        33554432);
-    si (!piscina)
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+          FixuraFaciei* f;
+    constans character* radix;
+
+    f = (FixuraFaciei*)piscina_allocare(c->piscina,
+        magnitudo(FixuraFaciei));
+    si (f == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    credo_aperire(piscina);
-    intern  = internamentum_creare(piscina);
-    radix   = getenv("RHUBARB_RADIX");
+    f->intern  = internamentum_creare(c->piscina);
+    radix      = getenv("RHUBARB_RADIX");
     si (radix == NIHIL)
     {
         radix = ".";
     }
-    fons = silex_fons_disci(piscina, radix);
-    CREDO_NON_NIHIL (fons);
+    f->fons = silex_fons_disci(c->piscina, radix);
+    CREDO_NON_NIHIL (f->fons);
+    si (f->fons == NIHIL)
+    {
+        redde;
+    }
+    c->datum = f;
+}
 
-    imprimere("\n--- Probans paginam salve.thistle ---\n");
+
+/* ==================================================
+ * PROBARE: paginam salve.thistle
+ * ================================================== */
+
+interior vacuum
+_salve_probare (
+    CredoContextus* c)
+{
+    constans FixuraFaciei* fx;
+                  Piscina* piscina = c->piscina;
+      InternamentumChorda* intern;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    fx      = (constans FixuraFaciei*)c->suita;
+    intern  = fx->intern;
+    fons    = fx->fons;
     {
          Xar* nexus;
          Xar* fragmenta;
@@ -510,7 +541,7 @@ principale (vacuum)
       chorda  pagina = _paginam_fingere(piscina, intern, fons,
           _texere(piscina, FIXA, "salve.thistle"), &nexus,
           &fragmenta, &causa);
-      FaciesCensus c;
+      FaciesCensus census;
 
         CREDO_CHORDA_VACUA (causa);
         CREDO_VERUM (pagina.mensura > ZEPHYRUM);
@@ -542,15 +573,36 @@ principale (vacuum)
 
         /* census: XX lineae codicis, nulla gemina, nullus nexus
          * pendens; contexta et data-s opera II et III sunt */
-        c = _censere(piscina, pagina);
-        CREDO_AEQUALIS_S32 ((s32)c.ids, (s32)20);
-        CREDO_AEQUALIS_S32 ((s32)c.ids_gemini, (s32)0);
-        CREDO_AEQUALIS_S32 ((s32)c.nexus_pendentes, (s32)0);
+        census = _censere(piscina, pagina);
+        CREDO_AEQUALIS_S32 ((s32)census.ids, (s32)20);
+        CREDO_AEQUALIS_S32 ((s32)census.ids_gemini, (s32)0);
+        CREDO_AEQUALIS_S32 ((s32)census.nexus_pendentes, (s32)0);
 
         _aurum_conferre(piscina, pagina, "salve.html");
     }
+}
 
-    imprimere("\n--- Probans evasionem anguli (fragmenta) ---\n");
+
+/* ==================================================
+ * PROBARE: evasionem anguli (fragmenta)
+ * ================================================== */
+
+interior vacuum
+_angulum_probare (
+    CredoContextus* c)
+{
+    constans FixuraFaciei* fx;
+                  Piscina* piscina = c->piscina;
+      InternamentumChorda* intern;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    fx      = (constans FixuraFaciei*)c->suita;
+    intern  = fx->intern;
+    fons    = fx->fons;
     {
          Xar* nexus;
          Xar* fragmenta;
@@ -558,18 +610,39 @@ principale (vacuum)
       chorda  pagina = _paginam_fingere(piscina, intern, fons,
           _texere(piscina, FIXA, "fragmenta.thistle"), &nexus,
           &fragmenta, &causa);
-      FaciesCensus c;
+      FaciesCensus census;
 
         CREDO_CHORDA_VACUA (causa);
         /* 'per (i = ZEPHYRUM; i < n; i++)' angulum fert */
         CREDO_VERUM (_continet(piscina, pagina, "&lt;"));
         CREDO_FALSUM (_continet(piscina, pagina, "i < n"));
-        c = _censere(piscina, pagina);
-        CREDO_MAIOR_S32 ((s32)c.ids, (s32)30);
-        CREDO_AEQUALIS_S32 ((s32)c.ids_gemini, (s32)0);
+        census = _censere(piscina, pagina);
+        CREDO_MAIOR_S32 ((s32)census.ids, (s32)30);
+        CREDO_AEQUALIS_S32 ((s32)census.ids_gemini, (s32)0);
     }
+}
 
-    imprimere("\n--- Probans colorem (salve) ---\n");
+
+/* ==================================================
+ * PROBARE: colorem (salve)
+ * ================================================== */
+
+interior vacuum
+_colorem_probare (
+    CredoContextus* c)
+{
+    constans FixuraFaciei* fx;
+                  Piscina* piscina = c->piscina;
+      InternamentumChorda* intern;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    fx      = (constans FixuraFaciei*)c->suita;
+    intern  = fx->intern;
+    fons    = fx->fons;
     {
          Xar* nexus;
          Xar* fragmenta;
@@ -593,8 +666,29 @@ principale (vacuum)
         CREDO_VERUM (_continet(piscina, pagina,
             "<span class=\"ca-sy-genus\">s32</span>"));
     }
+}
 
-    imprimere("\n--- Probans commentarium bilineum et utf8 ---\n");
+
+/* ==================================================
+ * PROBARE: commentarium bilineum et utf8
+ * ================================================== */
+
+interior vacuum
+_commentarium_probare (
+    CredoContextus* c)
+{
+    constans FixuraFaciei* fx;
+                  Piscina* piscina = c->piscina;
+      InternamentumChorda* intern;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    fx      = (constans FixuraFaciei*)c->suita;
+    intern  = fx->intern;
+    fons    = fx->fons;
     {
          Xar* nexus;
          Xar* fragmenta;
@@ -613,8 +707,29 @@ principale (vacuum)
         CREDO_VERUM (_continet(piscina, pagina,
             "non-ASCII: \303\246 */"));
     }
+}
 
-    imprimere("\n--- Probans grafum fragmentorum ---\n");
+
+/* ==================================================
+ * PROBARE: grafum fragmentorum
+ * ================================================== */
+
+interior vacuum
+_fragmentorum_probare (
+    CredoContextus* c)
+{
+    constans FixuraFaciei* fx;
+                  Piscina* piscina = c->piscina;
+      InternamentumChorda* intern;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    fx      = (constans FixuraFaciei*)c->suita;
+    intern  = fx->intern;
+    fons    = fx->fons;
     {
          Xar* nexus;
          Xar* fragmenta;
@@ -622,7 +737,7 @@ principale (vacuum)
       chorda  pagina = _paginam_fingere(piscina, intern, fons,
           _texere(piscina, FIXA, "fragmenta.thistle"), &nexus,
           &fragmenta, &causa);
-      FaciesCensus c;
+      FaciesCensus census;
 
         CREDO_CHORDA_VACUA (causa);
         /* sedes definitionum quinque */
@@ -640,13 +755,13 @@ principale (vacuum)
         /* fragmentum non adhibitum ita dicitur */
         CREDO_VERUM (_continet(piscina, pagina, "non adhibitum"));
         /* radices duae, ergo duo textus contexti */
-        c = _censere(piscina, pagina);
-        CREDO_AEQUALIS_S32 ((s32)c.contexta, (s32)2);
-        CREDO_AEQUALIS_S32 ((s32)c.ids_gemini, (s32)0);
-        CREDO_AEQUALIS_S32 ((s32)c.nexus_pendentes, (s32)0);
+        census = _censere(piscina, pagina);
+        CREDO_AEQUALIS_S32 ((s32)census.contexta, (s32)2);
+        CREDO_AEQUALIS_S32 ((s32)census.ids_gemini, (s32)0);
+        CREDO_AEQUALIS_S32 ((s32)census.nexus_pendentes, (s32)0);
         /* nexus quinque: capita summa incrementum salutatio bis */
-        CREDO_AEQUALIS_S32 ((s32)c.nexus_fragmentorum, (s32)5);
-        CREDO_AEQUALIS_S32 ((s32)c.sedes_fragmentorum, (s32)5);
+        CREDO_AEQUALIS_S32 ((s32)census.nexus_fragmentorum, (s32)5);
+        CREDO_AEQUALIS_S32 ((s32)census.sedes_fragmentorum, (s32)5);
 
         /* MARGO TEXTI: linea contexta 'summa = summa + numeri[i];'
          * lineam FRAGMENTI (IX) nominat, non indicem compositum -
@@ -665,7 +780,7 @@ principale (vacuum)
         {
             i32 j;
 
-            CREDO_AEQUALIS_S32 ((s32)c.sedes_fragmentorum,
+            CREDO_AEQUALIS_S32 ((s32)census.sedes_fragmentorum,
                 (s32)xar_numerus(fragmenta));
             per (j = ZEPHYRUM; j < xar_numerus(fragmenta); j++)
             {
@@ -692,8 +807,29 @@ principale (vacuum)
             }
         }
     }
+}
 
-    imprimere("\n--- Probans symbola ---\n");
+
+/* ==================================================
+ * PROBARE: symbola
+ * ================================================== */
+
+interior vacuum
+_symbola_probare (
+    CredoContextus* c)
+{
+    constans FixuraFaciei* fx;
+                  Piscina* piscina = c->piscina;
+      InternamentumChorda* intern;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    fx      = (constans FixuraFaciei*)c->suita;
+    intern  = fx->intern;
+    fons    = fx->fons;
     {
          Xar* nexus;
          Xar* fragmenta;
@@ -701,14 +837,14 @@ principale (vacuum)
       chorda  pagina = _paginam_fingere(piscina, intern, fons,
           _texere(piscina, FIXA, "fragmenta_derivata.thistle"), &nexus,
           &fragmenta, &causa);
-      FaciesCensus c;
+      FaciesCensus census;
 
         CREDO_CHORDA_VACUA (causa);
-        c = _censere(piscina, pagina);
+        census = _censere(piscina, pagina);
         /* insula NON vacua: sine hoc 'omne data-s in insula est'
          * nihil probat (zephyrum ex zephyro congruit) */
-        CREDO_MAIOR_S32 ((s32)c.data_s, (s32)0);
-        CREDO_AEQUALIS_S32 ((s32)c.data_s_absentia, (s32)0);
+        CREDO_MAIOR_S32 ((s32)census.data_s, (s32)0);
+        CREDO_AEQUALIS_S32 ((s32)census.data_s_absentia, (s32)0);
         /* symbolum DERIVATUM: piscina_generare_dynamicum caput suum
          * nusquam in plagula habet - hoc est pretium quod pagina
          * reddit */
@@ -717,8 +853,29 @@ principale (vacuum)
         CREDO_VERUM (_continet(piscina, pagina,
             "\"piscina_generare_dynamicum\":{\"caput\":\"piscina.h\""));
     }
+}
 
-    imprimere("\n--- Probans symbola domestica ---\n");
+
+/* ==================================================
+ * PROBARE: symbola domestica
+ * ================================================== */
+
+interior vacuum
+_domestica_probare (
+    CredoContextus* c)
+{
+    constans FixuraFaciei* fx;
+                  Piscina* piscina = c->piscina;
+      InternamentumChorda* intern;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    fx      = (constans FixuraFaciei*)c->suita;
+    intern  = fx->intern;
+    fons    = fx->fons;
     {
          Xar* nexus;
          Xar* fragmenta;
@@ -733,8 +890,29 @@ principale (vacuum)
         CREDO_VERUM (_continet(piscina, pagina,
             "<a class=\"fr-sym\" href=\"#l35\">summare</a>"));
     }
+}
 
-    imprimere("\n--- Probans evasionem ---\n");
+
+/* ==================================================
+ * PROBARE: evasionem
+ * ================================================== */
+
+interior vacuum
+_evasionem_probare (
+    CredoContextus* c)
+{
+    constans FixuraFaciei* fx;
+                  Piscina* piscina = c->piscina;
+      InternamentumChorda* intern;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    fx      = (constans FixuraFaciei*)c->suita;
+    intern  = fx->intern;
+    fons    = fx->fons;
     {
          Xar* nexus;
          Xar* fragmenta;
@@ -756,8 +934,29 @@ principale (vacuum)
         CREDO_VERUM (_continet(piscina, pagina, "&lt;/script&gt;"));
         CREDO_VERUM (_continet(piscina, pagina, "&amp; &lt; &gt;"));
     }
+}
 
-    imprimere("\n--- Probans recusationes (adversa) ---\n");
+
+/* ==================================================
+ * PROBARE: recusationes (adversa)
+ * ================================================== */
+
+interior vacuum
+_recusationes_probare (
+    CredoContextus* c)
+{
+    constans FixuraFaciei* fx;
+                  Piscina* piscina = c->piscina;
+      InternamentumChorda* intern;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    fx      = (constans FixuraFaciei*)c->suita;
+    intern  = fx->intern;
+    fons    = fx->fons;
     {
         constans character* adversa[6];
                        i32  v;
@@ -813,8 +1012,19 @@ principale (vacuum)
             }
         }
     }
+}
 
-    imprimere("\n--- Probans derivam exemplarium ---\n");
+
+/* ==================================================
+ * PROBARE: derivam exemplarium
+ * ================================================== */
+
+interior vacuum
+_exemplaria_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     {
         /* duo exemplaria per annos taciti divergent: porta differentiam
          * ad tria bracchia html CONSTRINGIT. Lineae 'CASUS' ambarum
@@ -852,8 +1062,29 @@ principale (vacuum)
         }
         CREDO_AEQUALIS_S32 ((s32)divergentes, (s32)3);
     }
+}
 
-    imprimere("\n--- Probans visionem in proiecto (par. 4.9) ---\n");
+
+/* ==================================================
+ * PROBARE: visionem in proiecto (par. 4.9)
+ * ================================================== */
+
+interior vacuum
+_visionem_probare (
+    CredoContextus* c)
+{
+    constans FixuraFaciei* fx;
+                  Piscina* piscina = c->piscina;
+      InternamentumChorda* intern;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    fx      = (constans FixuraFaciei*)c->suita;
+    intern  = fx->intern;
+    fons    = fx->fons;
     {
         /* pagina in proiectum vitreum addita: plagula genita octetim
          * pagina ipsa, toml eam nominat; programma planum nihil
@@ -955,9 +1186,34 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 ((s32)xar_numerus(planum.genitae),
             (s32)numerus);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "paginam salve.thistle", _salve_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "evasionem anguli (fragmenta)", _angulum_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "colorem (salve)", _colorem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "commentarium bilineum et utf8", _commentarium_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "grafum fragmentorum", _fragmentorum_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "symbola", _symbola_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "symbola domestica", _domestica_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "evasionem", _evasionem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "recusationes (adversa)", _recusationes_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "derivam exemplarium", _exemplaria_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "visionem in proiecto (par. 4.9)", _visionem_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("briar_facies", SECTIONES,
+        _suitam_parare, NIHIL);
 }

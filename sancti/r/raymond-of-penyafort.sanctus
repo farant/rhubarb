@@ -1,0 +1,36 @@
+<sanctus id="raymond-of-penyafort" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Raymond of Penyafort</nomen>
+  <nomen lingua="en" fontes="ce">Raymond of Peñafort</nomen>
+  <nomen lingua="en" fontes="mr1">Raymond of Pennafort</nomen>
+  <ortus annus="1175" locus="Villafranca de Benadis, near Barcelona" fontes="ce"/>
+  <obitus annus="1275" mensis="1" dies="6" locus="Barcelona" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1601" papa="Clement VIII" fontes="ce"/>
+  <festum calendarium="generale" mensis="1" dies="7" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="1" dies="7" fontes="mr1"/>
+  <festum calendarium="martyrologium" mensis="1" dies="23" fontes="mr2"/>
+  <munus fontes="us">priest</munus>
+  <munus fontes="ce mr1">religious</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Raymond was born at Villafranca de Benadis, near Barcelona, in 1175. He became a professor of canon law in 1195 and later completed his studies and taught at Bologna. Drawn to the Dominicans, he received their habit at Barcelona after returning from Italy in 1222; there he also helped St. Peter Nolasco found the Order of Mercedarians. Gregory IX called him to Rome in 1230 as chaplain and grand penitentiary and, trusting his knowledge of law, gave him the task of rearranging and codifying the canons of the Church; in 1231 the pope announced the new collection in a bull to the universities of Paris and Bologna.</paragraphus>
+    <paragraphus fontes="ce mr1 mr2">He declined the archbishopric of Tarragona, was elected General of the Order of Preachers in 1238 and resigned two years later; St. Thomas wrote the Summa Contra Gentiles at his request. He died at Barcelona on 6 January 1275 according to the Catholic Encyclopedia, while the Martyrology commemorates his death on 7 January. Clement VIII canonized him in 1601.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Raymond of Penafort" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Raymond_of_Penafort">
+    <excerptum>Born at Villafranca de Benadis, near Barcelona, in 1175; died at Barcelona, 6 January, 1275. He became professor of canon law in 1195, and taught for fifteen years. He left Spain for Bologna in 1210 to complete his studies in canon law. He occupied a chair of canon law in the university for three years</excerptum>
+    <excerptum>received the habit in the Dominican Convent of Barcelona, whither he had returned from Italy in 1222. At Barcelona he was co-founder with St. Peter Nolasco of the Order of Mercedarians.</excerptum>
+    <excerptum>was summoned to Rome in 1230 by Gregory IX, who appointed him chaplain and grand penitentiary.</excerptum>
+    <excerptum>The reputation of the saint for juridical science decided the pope to employ Raymond of Peñafort's talents in re-arranging and codifying the canons of the Church.</excerptum>
+    <excerptum>The pope announced the new publication in a Bull directed to the doctors and students of Paris and Bologna in 1231</excerptum>
+    <excerptum>When Raymond completed his work the pope appointed him Archbishop of Tarragona, but the saint declined the honour.</excerptum>
+    <excerptum>he was elected General of the Order in 1238; but he resigned two years later.</excerptum>
+    <excerptum>it was at his request that St. Thomas wrote the Summa Contra Gentiles. St. Raymond was canonized by Clement VIII in 1601.</excerptum>
+  </fons>
+  <fons id="mr1" opus="mr1916" locus="7 January">
+    <excerptum>At Barcelona, St. Kaymond of Pennafort, of the Order of Preachers, celebrated for sanctity and learning. His festival is kept on the 23d of this month.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="23 January">
+    <excerptum>AT Barcelona, St. Eaymond of Pennafort. His birthday is the 7th of January.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="7 January">
+    <excerptum>Saint Raymond of Penyafort, Priest</excerptum>
+  </fons>
+</sanctus>

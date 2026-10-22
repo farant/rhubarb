@@ -1,0 +1,36 @@
+<sanctus id="charles-lwanga-and-companions" versio="1" genus="coetus" status="sanctus">
+  <nomen lingua="en" principale="verum">Charles Lwanga and Companions</nomen>
+  <nomen lingua="la" principale="verum" fontes="hom">Carolus Lwanga et socii</nomen>
+  <obitus annus="1886" locus="Uganda" martyrium="verum" fontes="ce hom"/>
+  <beatificatio annus="1920" mensis="6" dies="6" papa="Benedict XV" fontes="hom"/>
+  <canonizatio modus="formalis" annus="1964" mensis="10" dies="18" papa="Paul VI" fontes="hom"/>
+  <festum calendarium="generale" mensis="6" dies="3" gradus="memoria" fontes="us"/>
+  <munus fontes="hom us">martyrs</munus>
+  <socius fontes="hom fr">Charles Lwanga</socius>
+  <socius fontes="hom">Matthias Mulumba Kalemba</socius>
+  <socius fontes="fr">Joseph Mkasa</socius>
+  <descriptio>
+    <paragraphus fontes="ce hom">The White Fathers, the missionaries founded by Cardinal Lavigerie, began the Catholic mission of Victoria Nyanza in 1878, two years after Anglican missionaries had arrived in the region. According to the Catholic Encyclopedia, the Baganda people in 1886 gave the Church its first black African martyrs. Paul VI counted twenty-two Catholic martyrs, most of them young men, and noted that the same bloody persecution also killed other Catholic neophytes and catechumens, as well as Anglicans who, as the account goes, died for the name of Christ.</paragraphus>
+    <paragraphus fontes="hom fr">Benedict XV declared the twenty-two Blessed on 6 June 1920, and Paul VI canonized them on 18 October 1964, naming Charles Lwanga and Matthias Mulumba Kalemba with their twenty companions. Pope Francis, at the Namugongo shrine in 2015, recalled that Joseph Mkasa and Charles Lwanga, once catechized themselves, passed the faith on to others in dangerous times, when the lives of the younger boys in their care were also threatened.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Vicariate Apostolic of Northern Victoria Nyanza" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Vicariate_Apostolic_of_Northern_Victoria_Nyanza">
+    <excerptum>The Mission of Victoria Nyanza, founded in 1878 by the White Fathers of Cardinal Lavigerie</excerptum>
+    <excerptum>the first, that of the Baganda, is represented by 670,000 inhabitants, and has given the strongest support to evangelization, and in 1886 had the courage and the honour to give to the Church its first negro martyrs.</excerptum>
+  </fons>
+  <fons id="hom" opus="sedes" locus="Paul VI, homily at the canonization of the Martyrs of Uganda, 18 October 1964" url="https://www.vatican.va/content/paul-vi/la/homilies/1964/documents/hf_p-vi_hom_19641018_martiri-uganda.html">
+    <excerptum>In Sollemni Canonizatione Beatorum Caroli Lwanga, Matthiae Mulumba Kalemba et viginti sociorum Martyrum Ugandensium, Die 18 m. Octobris a. 1964, Paulus PP.VI</excerptum>
+    <excerptum>eos Benedictus XV, Decessor Noster recolendae memoriae, merita eorum singularia agnoscens, iam die sexta mensis Iunii anno millesimo nongentesimo vicesimo Beatos renuntiavit</excerptum>
+    <excerptum>In hunc apostolatus missionalis campum primum administri sacrorum anglicani, natione Britanni, advenerunt, quos post duos annos subsecuti sunt Missionarii catholici, scilicet Patres Albi</excerptum>
+    <excerptum>cum ad viginti duos homines spectent, maxima e parte adulescentes</excerptum>
+    <excerptum>alter index neophytos et catechumenos catholicos complectens, alter anglicanos, qui et ipsi - prout narratur - nominis Christi causa sunt necati</excerptum>
+    <excerptum>Collaudemus igitur Martyres, caeli cives hodie renuntiatos</excerptum>
+  </fons>
+  <fons id="fr" opus="sedes" locus="Francis, homily at the Shrine of the Martyrs of Namugongo, 28 November 2015" url="https://www.vatican.va/content/francesco/en/homilies/2015/documents/papa-francesco_20151128_uganda-omelia-martiri.html">
+    <excerptum>Holy Mass for the Martyrs of Uganda (Area of the Catholic Shrine of the Martyrs of Namugongo, 28 November 2015)</excerptum>
+    <excerptum>I think of Saints Joseph Mkasa and Charles Lwanga, who after being catechized by others, wanted to pass on the gift they had received. They did this in dangerous times.</excerptum>
+    <excerptum>Not only were their lives threatened but so too were the lives of the younger boys under their care.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="3 June">
+    <excerptum>Saint Charles Lwanga and Companions, Martyrs</excerptum>
+  </fons>
+</sanctus>
