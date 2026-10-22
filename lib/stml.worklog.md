@@ -1652,3 +1652,15 @@ Latent bug fixed by this: `stml_duplicare` and the macro copier already produced
 Audit: about 120 NIHIL tests on `->attributa` across 21 files. All but the two adders are read-guards ("NIHIL → no attribute / skip") that stay correct. Readers through `xar_numerus` / `xar_obtinere` take NIHIL already. Mutating xar calls on StmlNodus attributa outside the adders: only copies that create their own Xar first (stml.c duplicate, stml_macros `_nodum_comparandum`, `_dist_dissolvere`), plus insula's `xar_removere_cum_ultimo`, which sits behind a NIHIL guard.
 
 Results: hilarius projection pool 82,980 → 74,387 KiB (-10.4%), and zero empty attribute Xars in all five probe inputs (`build/sonda_partes/sonda_vacua.c`). ASan sweep of all lib suites: 218 clean, the same 3 pre-existing reds (park …Q6TEHK), the same 3 old UBSan sites, 0 ASan reports. Allocation goldens of 7 clients regenerated, every change downward and only `allocationes_arboris` moved (27 rows; up to -115,867 on oratio). silva's golden is unchanged. Plant (old `!nodus->attributa` guard restored in the adder) went red in probatio_stml, probatio_eventus_stml and probatio_norma_stml; reverted, green.
+
+## 2026-10-22 — C measured: StmlNodus field by field
+
+Probe `build/sonda_partes/sonda_nodus.c` (gitignored; args = STML files to parse, plus the built-in hilarius projection) prints each field's offset and size, and the share of nodes per genus where it is non-zero.
+
+Layout: 152 B = 144 B of fields + 8 B padding (4 after `genus`, 4 after `multilinea`). Nothing depends on field order (no positional initializers, no offsetof or memcpy by layout), so a reorder alone gives 144 B.
+
+Built tree (hilarius projection, 296,634 nodes = 59% of the 74 MiB pool): only genus, titulus OR valor (exclusive by genus: elements titulus, text/transclusion valor), attributa (21% of elements), liberi, parens, crudus (12% of elements) and fragmentum/fragmentum_id (3%) are ever non-zero. 96 of the 152 bytes are always zero: all trivia, positions, capture, augmentum, attributum_titulus, multilinea, indentatio, padding.
+
+Parsed trees (aedificatio, gutenberg_index, librarium): linea and positus are always set; spatia_ante and spatia_post are set on 100% of elements; spatia_clausurae on 15–20%; crudus/captio_* 0–15%; multilinea, indentatio, augmentum_clavis, attributum_titulus, clausura_anonyma, fragmentum* 0% in all three.
+
+Field use counts (approx; generic names like genus/titulus/valor/linea include other structs): rare-syntax fields 17–87 uses each in 3–11 files, mostly stml.c and stml_macros.c.

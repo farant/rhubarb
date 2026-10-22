@@ -6461,6 +6461,36 @@ _probare_attributa_pigra (
     }
 }
 
+/* MAGNITUDO NODI (2026-10-22): StmlNodus sine lacunis - summa
+ * camporum = magnitudo structurae (ORDO CAMPORUM in stml.h). Campus
+ * novus aut ordo qui lacunam reducit hic rubrum facit: aut campos IV
+ * octetorum bini serva, aut summam hic auge. Portabile (nullus
+ * numerus CXLIV fixus). */
+interior vacuum
+_probare_magnitudinem_nodi (
+    CredoContextus* c)
+{
+         StmlNodus n;
+    memoriae_index summa;
+
+    (vacuum)c;
+    summa = magnitudo(n.genus) + magnitudo(n.multilinea)
+          + magnitudo(n.titulus) + magnitudo(n.valor)
+          + magnitudo(n.attributa) + magnitudo(n.liberi)
+          + magnitudo(n.parens) + magnitudo(n.linea)
+          + magnitudo(n.positus_initium) + magnitudo(n.positus_finis)
+          + magnitudo(n.crudus) + magnitudo(n.captio_directio)
+          + magnitudo(n.captio_numerus) + magnitudo(n.clausura_anonyma)
+          + magnitudo(n.fragmentum) + magnitudo(n.fragmentum_id)
+          + magnitudo(n.augmentum_clavis)
+          + magnitudo(n.attributum_titulus) + magnitudo(n.spatia_ante)
+          + magnitudo(n.spatia_post) + magnitudo(n.spatia_clausurae)
+          + magnitudo(n.spatia_intra_tagum) + magnitudo(n.indentatio);
+    CREDO_AEQUALIS_I32((i32)magnitudo(StmlNodus), (i32)summa);
+    imprimere("  magnitudo(StmlNodus) %d, summa camporum %d\n",
+        (int)magnitudo(StmlNodus), (int)summa);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "stml_elementum_creare", _probare_stml_elementum_creare, NIHIL,
         NIHIL, NIHIL, NIHIL },
@@ -6605,6 +6635,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "circuitum scalae fugae", _probare_circuitum_scalae_fugae, NIHIL,
         NIHIL, NIHIL, NIHIL },
     { "attributa pigra", _probare_attributa_pigra, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "magnitudo nodi", _probare_magnitudinem_nodi, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

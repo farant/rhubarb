@@ -148,9 +148,16 @@ nomen structura {
 
 /* StmlNodus - Nodus in arbore STML
  * "Node in STML tree"
- */
+ *
+ * ORDO CAMPORUM (2026-10-22): campi IV octetorum bini iuncti, ne
+ * lacunae ante monstratores (VIII) nascantur - 'multilinea' ideo
+ * iuxta 'genus' stat, non iuxta 'indentatio'. CLII -> CXLIV octeti
+ * (lacunae II x IV), sine mutatione API. Campum novum addens:
+ * campos IV octetorum bini serva, aut probatio_stml ('magnitudo
+ * nodi') rubra fit. Mensura: lib/stml.worklog.md 2026-10-22. */
 nomen structura StmlNodus {
     StmlNodusGenus  genus;
+               b32  multilinea;      /* vide 'indentatio' infra */
             chorda* titulus;         /* Tag name for elements */
             chorda* valor;           /* Text/comment/PI/transclusion content */
                Xar* attributa;       /* Xar de StmlAttributum */
@@ -246,8 +253,8 @@ nomen structura StmlNodus {
      * CONTENTUM sunt, dedentatio in parsatione facta, praefixum
      * commune in 'indentatio' conditum (reassemblatio praefixum
      * lineis non-vacuis reinserit). FALSUM/NIHIL = fluxus
-     * ordinarius (lineae novae molles). Cum crudus: '<tag!\>'. */
-        b32  multilinea;
+     * ordinarius (lineae novae molles). Cum crudus: '<tag!\>'.
+     * 'multilinea' ipsa supra iuxta 'genus' stat (ORDO CAMPORUM). */
      chorda* indentatio;
 } StmlNodus;
 
