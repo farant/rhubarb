@@ -217,3 +217,30 @@ was found without it. Two improvements followed:
   x-amz-* headers at all. The R2 Host line carries the account id:
   traces are local only.
 
+## 2026-10-22 - whole-branch review fixes (spec V)
+
+- **C1, how the hole hid.** `capere_maius` used a fake vectura that
+  returned the string "corpus nimium", so it proved only horreum's
+  string match, never that the default transport has a limit. It did
+  not: `http_vectura_ordinaria` = plain `http_exsequi`, unbounded. The
+  new `capere_maius_vere` goes through a forked raw TCP server on
+  127.0.0.1. Two fixture traps cost time and are worth knowing:
+  `M` is 1000, so `XVII * M * M` bytes is not 17 MiB and the server
+  sent less than its Content-Length promised (client: "corpus
+  truncatum"); and plain `http_exsequi` reads to EOF, so the server
+  must half-close (`shutdown(SHUT_WR)`) and then drain until the
+  client hangs up, or it either deadlocks or RSTs bytes in flight. The
+  T7 observer found the first trap in one run (the trace showed the
+  truncation) - the hook earning its keep on its own suite.
+- The lector cap is `XVI * M * M` = 16,000,000 bytes, not 16 MiB; the
+  MALUM text now says "XVI MB".
+- **I3** reverses the T2 note above ("indistinguishable after xml.h;
+  accepted"): the fix is to decode once, in xml.h, not to guess
+  afterwards. `_referentias_decodificare` is gone.
+- **I5**: `_http_finis` re-checks `abrumpens` after `_observare`; the
+  test aborts from inside the observer against a 503 and asserts one
+  request and no timer left.
+- **I4**: `generic` probatae = 0. Every generic test that does a
+  conditional create now sets `periculum_accipere` (the suite showed a
+  1.7 GiB arena spike in `iam_nostrum` before the fix: the test ran on
+  with an unbuilt opus - a reminder to CREDO_NECESSE the builder).

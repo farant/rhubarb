@@ -128,6 +128,13 @@ nomen structura {
                                         * nos */
 } HorreumError;
 
+/* meta vocantis per opus (ultra: MALUM nominatum, numquam caput
+ * tacite omissum). Titulus HORREUM_META_SIGILLUM horrei est (P10:
+ * x-amz-meta-horreum-sha256 = SHA-256 corporis in ponere condicionali)
+ * - vocanti vetitus */
+#define HORREUM_META_MAXIMA    XVI
+#define HORREUM_META_SIGILLUM  "horreum-sha256"
+
 nomen structura {
                   chorda  genus_contenti;
                   chorda  cache_control;

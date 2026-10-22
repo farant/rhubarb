@@ -1192,7 +1192,7 @@ horreum_probare (
     }
     si (!pr.vectura.exsequi)
     {
-        pr.vectura = http_vectura_ordinaria();
+        pr.vectura = horreum_vectura_ordinaria();
     }
     si (   pr.responsa
         && !filum_directorium_creare_si_necesse(pr.responsa))

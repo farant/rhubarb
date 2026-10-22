@@ -283,7 +283,8 @@ _sectio_iam_nostrum (
         SIMULACRUM_VITIUM_SCRIBERE_ABRUMPERE, HTTP_PUT, NIHIL, ZEPHYRUM,
         NIHIL, I));
     memset(&ponendi, ZEPHYRUM, magnitudo(ponendi));
-    ponendi.solum_si_abest = VERUM;
+    ponendi.solum_si_abest      = VERUM;
+    ponendi.periculum_accipere  = VERUM;   /* generic: nihil probatum */
     CREDO_VERUM(horreum_opus_ponere(m.horreum, m.situla, _l("n.txt", p),
         _l("nostrum", p), &ponendi, &o, &e, p));
     CREDO_NON_NIHIL(_vocare(&m, m.horreum, &o, &t, p));
@@ -530,7 +531,8 @@ _sectio_observator (
         SIMULACRUM_VITIUM_SCRIBERE_ABRUMPERE, HTTP_PUT, NIHIL, ZEPHYRUM,
         NIHIL, I));
     memset(&ponendi, ZEPHYRUM, magnitudo(ponendi));
-    ponendi.solum_si_abest = VERUM;
+    ponendi.solum_si_abest      = VERUM;
+    ponendi.periculum_accipere  = VERUM;   /* generic: nihil probatum */
     CREDO_VERUM(horreum_opus_ponere(m.horreum, m.situla, _l("v.txt", p),
         _l("visum", p), &ponendi, &o, &e, p));
     CREDO_NON_NIHIL(_vocare(&m, m.horreum, &o, &t, p));
@@ -549,6 +551,56 @@ _sectio_observator (
     _mundum_claudere(&m);
 }
 
+/* ===== observator_abrumpens: abrumpere INTRA observatorem - post
+ * finem (abrupta) nulla petitio ulterior, nullum timer (recensio
+ * I5) ===== */
+interior vacuum
+_observare_abrumpens (
+                        vacuum* datum,
+    constans HorreumObservatio* o)
+{
+    Testis* t = (Testis*)datum;
+
+    (vacuum)o;
+    horreum_vocationem_abrumpere(t->vocatio);
+}
+
+interior vacuum
+_sectio_observator_abrumpens (
+    CredoContextus* c)
+{
+        Piscina* p = c->piscina;
+         Mundus  m;
+         Testis  t;
+    HorreumOpus  o;
+   HorreumError  e;
+            i32  timer_ante;
+            i32  i;
+
+    CREDO_NECESSE(_mundus(&m, p));
+    m.optiones.observator          = _observare_abrumpens;
+    m.optiones.observatoris_datum  = &t;
+    simulacrum_vitium_addere(m.simulacrum, _vitium(
+        SIMULACRUM_VITIUM_STATUS, HTTP_PUT, NIHIL, DIII,
+        "ServiceUnavailable", II));
+    CREDO_VERUM(horreum_opus_ponere(m.horreum, m.situla, _l("ab.txt",
+        p),
+        _l("salve", p), NIHIL, &o, &e, p));
+    timer_ante = reactor_numerus_timer(m.reactor);
+    CREDO_NON_NIHIL(_vocare(&m, m.horreum, &o, &t, p));
+    CREDO_VERUM(_pulsare(&m, &t));
+    per (i = ZEPHYRUM; i < L; i++)
+    {
+        (vacuum)reactor_poll(m.reactor, X);
+    }
+    CREDO_AEQUALIS_I32(t.vocata, I);
+    CREDO_VERUM(t.resultus.abrupta);
+    CREDO_FALSUM(t.resultus.successus);
+    CREDO_AEQUALIS_I32(simulacrum_petitiones(m.simulacrum), I);
+    CREDO_AEQUALIS_I32(reactor_numerus_timer(m.reactor), timer_ante);
+    _mundum_claudere(&m);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "iter", _sectio_iter, NIHIL, NIHIL, NIHIL, NIHIL },
     { "transitorium", _sectio_transitorium, NIHIL, NIHIL, NIHIL,
@@ -560,6 +612,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "duae_ianuae", _sectio_duae_ianuae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "observator", _sectio_observator, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "observator_abrumpens", _sectio_observator_abrumpens, NIHIL,
+        NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

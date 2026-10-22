@@ -3,13 +3,13 @@
  * mittit, legit; iterat errores transitorios (mora exponentialis cum
  * fortuna, Retry-After servatur), horologium semel corrigit ex capite
  * Date servi (RequestTimeTooSkewed), et '412 post iterationem' per
- * HEAD diiudicat: x-amz-meta-sha256 == nostrum -> successus cum
+ * HEAD diiudicat: x-amz-meta-horreum-sha256 == nostrum -> successus cum
  * iam_nostrum, aliter HORREUM_CONDITIO verus. Quisque conatus de novo
  * signatur. Numquam scribit in log aut stdout.
  *
  * Horologium, somnus et sors iniciuntur (probationes numquam
- * dormiunt). Sine horreum_cliens_parare: http_exsequi, time(),
- * nanosleep, III conatus, basis CC ms.
+ * dormiunt). Sine horreum_cliens_parare: horreum_vectura_ordinaria,
+ * time(), nanosleep, III conatus, basis CC ms.
  *
  *   HorreumObjectum ob;  HorreumError e;
  *   si (!horreum_ponere(h, situla, clavis, corpus, NIHIL, &ob, &e, p))
@@ -28,7 +28,8 @@
 
 nomen structura {
           HttpVectura vectura;                 /* exsequi NIHIL =
-                                                   * http_exsequi */
+                                                   * horreum_vectura_
+                                                   * ordinaria */
           MomentumSec (*nunc)(vacuum* datum);    /* NIHIL = time() */
                vacuum (*dormire)(vacuum* datum, i32 ms);  /* NIHIL =
                                                    * nanosleep */
@@ -40,6 +41,12 @@ nomen structura {
     HorreumObservator  observator;              /* NIHIL = nemo */
                vacuum* observatoris_datum;
 } HorreumClientisOptiones;
+
+/* vectura ordinaria horrei: http_exsequi_rivus sine rivo, cuius lector
+ * corpus ultra HTTP_LECTOR_CORPUS_MAXIMUM refutat ("corpus nimium" ->
+ * MALUM, P1). http_exsequi nudum sine limite colligit (recensio C1) */
+HttpVectura
+horreum_vectura_ordinaria (vacuum);
 
 /* optiones (NIHIL = ordinariae) in sedem horrei; piscina sedem tenet
  * et horreum superesse debet. Deviatio horologii semel inventa in sede
@@ -80,8 +87,8 @@ horreum_ponere (
                HorreumError* error,
                     Piscina* piscina);
 
-/* corpus in memoria (<= XVI MiB, P1: maius -> HORREUM_MALUM,
- * horreum_capere_in_filum) */
+/* corpus in memoria (<= HTTP_LECTOR_CORPUS_MAXIMUM = XVI MB, P1: maius
+ * -> HORREUM_MALUM, horreum_capere_in_filum) */
 b32
 horreum_capere (
                      Horreum* h,

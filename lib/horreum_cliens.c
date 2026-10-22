@@ -9,7 +9,7 @@
  * mittitur; legitur. Error -> (a) RequestTimeTooSkewed cum deviatione
  * et nondum correctum: deviatio servatur, iteratur sine mora; (b) 412
  * in opere
- * condicionali POST iterationem: HEAD, x-amz-meta-sha256 comparatur -
+ * condicionali POST iterationem: HEAD, x-amz-meta-horreum-sha256 -
  * nostrum = successus iam_nostrum, aliter CONDITIO verus; (c) politica
  * horreum_iterandum (transitoria, idempotentia, conatus) -> dormire,
  * iterare; ceterum finis. (d) CompleteMultipartUpload NoSuchUpload
@@ -37,6 +37,26 @@ nomen structura {
                        Sors sors;
                         s64 deviatio_s;
 } HorreumCliens;
+
+interior HttpResultus
+_vectura_ordinaria_exsequi (
+    HttpPetitio* petitio,
+        Piscina* piscina,
+         vacuum* datum)
+{
+    (vacuum)datum;
+    redde http_exsequi_rivus(petitio, NIHIL, NIHIL, piscina);
+}
+
+HttpVectura
+horreum_vectura_ordinaria (vacuum)
+{
+    HttpVectura v;
+
+    v.exsequi  = _vectura_ordinaria_exsequi;
+    v.datum    = NIHIL;
+    redde v;
+}
 
 interior MomentumSec
 _nunc_ordinarium (
@@ -71,7 +91,7 @@ _cliens_implere (
     }
     si (!c->optiones.vectura.exsequi)
     {
-        c->optiones.vectura = http_vectura_ordinaria();
+        c->optiones.vectura = horreum_vectura_ordinaria();
     }
     si (!c->optiones.nunc)
     {
@@ -136,7 +156,7 @@ _observare (
     c->optiones.observator(c->optiones.observatoris_datum, &ob);
 }
 
-/* obiectum fert x-amz-meta-sha256 == sigillum nostrum? */
+/* obiectum fert x-amz-meta-horreum-sha256 == sigillum nostrum? */
 interior b32
 _sigillum_nostrum (
     constans HorreumObjectum* ob,
@@ -146,7 +166,8 @@ _sigillum_nostrum (
 
     per (i = ZEPHYRUM; i < ob->meta_numerus; i++)
     {
-        si (   chorda_aequalis_literis(ob->meta[i].titulus, "sha256")
+        si (   chorda_aequalis_literis(ob->meta[i].titulus,
+                   HORREUM_META_SIGILLUM)
             && chorda_aequalis(ob->meta[i].valor, sigillum))
         {
             redde VERUM;

@@ -14,9 +14,14 @@
 #include "credo.h"
 #include "filum.h"
 #include "iter_directoria.h"
+#include "tcp.h"
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <sys/socket.h>
 
 #define SECRETUM        "SECRETUM-SIMULACRI-0123456789"
 #define SECRETUM_MALUM  "SECRETUM-ALIENUM-9876543210"
@@ -362,7 +367,8 @@ _sectio_iam_nostrum (
              chorda  corpus;
 
     memset(&ponendi, ZEPHYRUM, magnitudo(ponendi));
-    ponendi.solum_si_abest = VERUM;
+    ponendi.solum_si_abest      = VERUM;
+    ponendi.periculum_accipere  = VERUM;   /* generic: nihil probatum */
     simulacrum_vitium_addere(s, _vitium(
         SIMULACRUM_VITIUM_SCRIBERE_ABRUMPERE, HTTP_PUT, "nova.txt",
         ZEPHYRUM, NIHIL, ZEPHYRUM, I));
@@ -401,7 +407,8 @@ _sectio_conflictus_verus (
     simulacrum_obiectum_ponere(s, _l("alienum.txt", p), _l("alienum",
         p));
     memset(&ponendi, ZEPHYRUM, magnitudo(ponendi));
-    ponendi.solum_si_abest = VERUM;
+    ponendi.solum_si_abest      = VERUM;
+    ponendi.periculum_accipere  = VERUM;   /* generic: nihil probatum */
     simulacrum_vitium_addere(s, _vitium(SIMULACRUM_VITIUM_STATUS,
         HTTP_PUT,
         NIHIL, DIII, "SlowDown", ZEPHYRUM, I));
@@ -701,6 +708,163 @@ _sectio_capere_maius (
     CREDO_CHORDA_CONTINET(e.nuntius, _l("horreum_capere_in_filum", p));
     CREDO_AEQUALIS_I32(x.conatus, I);
     CREDO_AEQUALIS_I32(horologium.numerus, ZEPHYRUM);
+}
+
+/* ===== corpus nimium per vecturam VERAM (recensio C1): servus crudus
+ * in processu filiato XVII MiB mittit; vectura ordinaria horrei
+ * limitem lectoris tenere debet, non totum colligere ===== */
+#define MAGNUM_MENSURA  (XVII * MXXIV * MXXIV)
+
+interior i32
+_servum_magnum_incipere (
+    pid_t* pid_exitus)
+{
+    integer fistula[II];
+      pid_t pid;
+        i32 portus = ZEPHYRUM;
+
+    *pid_exitus = ZEPHYRUM;
+    si (pipe(fistula) != ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    pid = fork();
+    si (pid < ZEPHYRUM)
+    {
+        close(fistula[ZEPHYRUM]);
+        close(fistula[I]);
+        redde ZEPHYRUM;
+    }
+    si (pid == ZEPHYRUM)
+    {
+                  Piscina* p =
+                      piscina_generare_dynamicum("servus_magnus",
+                                  M * M);
+        TcpServusOptiones so = tcp_servus_optiones_default();
+        TcpServusResultus sr;
+              TcpResultus conn;
+                       i8 buffer[LXIV * MXXIV];
+                      i32 portus_infantis;
+                      i32 missa;
+                      i32 pars;
+                      s32 n;
+                character capita[CXXVIII];
+
+        signal(SIGPIPE, SIG_IGN);
+        so.non_blocans = FALSUM;
+        sr = tcp_servus_creare_cum_optionibus("127.0.0.1", ZEPHYRUM,
+            &so,
+            p);
+        close(fistula[ZEPHYRUM]);
+        si (   !sr.successus
+            || tcp_servus_auscultare(sr.servus, I) != TCP_OK)
+        {
+            _exit(I);
+        }
+        portus_infantis = tcp_servus_obtinere_portum(sr.servus);
+        si (write(fistula[I], &portus_infantis,
+            magnitudo(portus_infantis))
+            != (ssize_t)magnitudo(portus_infantis))
+        {
+            _exit(I);
+        }
+        close(fistula[I]);
+        conn = tcp_servus_accipere(sr.servus, p);
+        si (!conn.successus)
+        {
+            _exit(I);
+        }
+        /* petitio sine corpore (GET): satis est primam partem legere */
+        n = tcp_recipere(conn.connexio, buffer, (i32)magnitudo(buffer));
+        (vacuum)n;
+        memset(buffer, 'x', magnitudo(buffer));
+        sprintf(capita, "HTTP/1.1 200 OK\r\nContent-Length: %u\r\n\r\n",
+            (insignatus integer)MAGNUM_MENSURA);
+        si (tcp_mittere_omnia(conn.connexio, (constans i8*)capita,
+                (i32)strlen(capita)))
+        {
+            per (missa = ZEPHYRUM; missa < MAGNUM_MENSURA;
+                 missa += pars)
+            {
+                pars = MAGNUM_MENSURA - missa;
+                si (pars > (i32)magnitudo(buffer))
+                {
+                    pars = (i32)magnitudo(buffer);
+                }
+                si (!tcp_mittere_omnia(conn.connexio, buffer, pars))
+                {
+                    frange;
+                }
+            }
+        }
+        /* clausura dum octeti in via sunt RST gignit et cliens corpus
+         * truncatum videt: latus mittendi claude (FIN), deinde
+         * exspecta donec cliens ipse claudat */
+        shutdown(tcp_obtinere_fd(conn.connexio), SHUT_WR);
+        dum (tcp_recipere(conn.connexio, buffer,
+                 (i32)magnitudo(buffer)) > ZEPHYRUM)
+        {
+        }
+        tcp_claudere(conn.connexio);
+        _exit(ZEPHYRUM);
+    }
+    close(fistula[I]);
+    si (read(fistula[ZEPHYRUM], &portus, magnitudo(portus))
+        != (ssize_t)magnitudo(portus))
+    {
+        portus = ZEPHYRUM;
+    }
+    close(fistula[ZEPHYRUM]);
+    *pid_exitus = pid;
+    redde portus;
+}
+
+interior vacuum
+_sectio_capere_maius_vere (
+    CredoContextus* c)
+{
+                Piscina* p = c->piscina;
+             Horologium  horologium;
+    HorreumConfiguratio  conf;
+HorreumClientisOptiones  o;
+                Horreum* h;
+           HorreumError  e;
+                 chorda  corpus;
+                  pid_t  pid;
+                    i32  portus;
+              character  terminus[LXIV];
+
+    portus = _servum_magnum_incipere(&pid);
+    CREDO_VERUM(portus > ZEPHYRUM);
+    si (portus == ZEPHYRUM)
+    {
+        redde;
+    }
+    sprintf(terminus, "http://127.0.0.1:%u",
+        (insignatus integer)portus);
+    memset(&horologium, ZEPHYRUM, magnitudo(horologium));
+    horologium.tempus = TEMPUS;
+    memset(&conf, ZEPHYRUM, magnitudo(conf));
+    conf.provisor   = "generic";
+    conf.terminus   = _l(terminus, p);
+    conf.regio      = _l("us-east-1", p);
+    conf.situla     = _l(SIMULACRUM_SITULA, p);
+    conf.clavis_id  = _l(CLAVIS_ID, p);
+    conf.secretum   = _l(SECRETUM, p);
+    h               = horreum_creare(&conf, &e, p);
+    CREDO_VERUM(h != NIHIL);
+    memset(&o, ZEPHYRUM, magnitudo(o));
+    o.nunc     = _nunc;
+    o.dormire  = _dormire;
+    o.datum    = &horologium;
+    horreum_cliens_parare(h, &o, p);   /* vectura NIHIL = ordinaria */
+    CREDO_FALSUM(horreum_capere(h, _l(SIMULACRUM_SITULA, p),
+        _l("magnum.bin", p), NIHIL, &corpus, NIHIL, &e, p));
+    CREDO_AEQUALIS_I32((i32)e.genus, (i32)HORREUM_MALUM);
+    CREDO_CHORDA_CONTINET(e.nuntius, _l("horreum_capere_in_filum", p));
+    CREDO_AEQUALIS_I32(corpus.mensura, ZEPHYRUM);
+    kill(pid, SIGTERM);
+    waitpid(pid, NIHIL, ZEPHYRUM);
 }
 
 /* ===== T4: multipars et fila ===== */
@@ -1307,7 +1471,8 @@ _sectio_observator (
     horreum_cliens_parare(h, &co, p);
 
     memset(&ponendi, ZEPHYRUM, magnitudo(ponendi));
-    ponendi.solum_si_abest = VERUM;
+    ponendi.solum_si_abest      = VERUM;
+    ponendi.periculum_accipere  = VERUM;   /* generic: nihil probatum */
     simulacrum_vitium_addere(s, _vitium(
         SIMULACRUM_VITIUM_SCRIBERE_ABRUMPERE, HTTP_PUT, "visa.txt",
         ZEPHYRUM, NIHIL, ZEPHYRUM, I));
@@ -1353,6 +1518,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "capere_maius", _sectio_capere_maius, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "capere_maius_vere", _sectio_capere_maius_vere, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { "multipars_iter", _sectio_partium_iter, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "ex_filo_parvum", _sectio_ex_filo_parvum, NIHIL, NIHIL, NIHIL,

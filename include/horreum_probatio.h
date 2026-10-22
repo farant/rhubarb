@@ -58,7 +58,8 @@ nomen structura {
 
 /* memset ZEPHYRUM = ordinariae */
 nomen structura {
-            HttpVectura  vectura;     /* exsequi NIHIL = http_exsequi */
+            HttpVectura vectura;     /* exsequi NIHIL = horreum_vectura_
+                                       * ordinaria */
                  chorda  praefixum;   /* vacuum = "horreum-probatio/" */
                  chorda  id;          /* vacuum = ex tempore */
      constans character* responsa;    /* directorium; NIHIL = nulla */

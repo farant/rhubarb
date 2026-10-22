@@ -6,8 +6,8 @@
 layer + fake S3), T4 46e22e1b (multipart + file helpers), T5 1fbaed79
 (reactor layer), T6 (`bin/horreum`, `horreum probare`, capabilities
 probed live on DO Spaces and R2, real response fixtures) ef203a40;
-after-dogfooding addendum T7 (observer hook, II.5 end). Not yet in
-main. Spec written 2026-10-21 and approved in conversation section by
+after-dogfooding addendum T7 00e1aecf (observer hook, II.5 end);
+whole-branch review fixes 2026-10-22 (section V). Not yet in main. Spec written 2026-10-21 and approved in conversation section by
 section (units + names, API scope, provider profiles, errors + retries,
 tests). Follow-on: `inventarium` (the
 catalog, II.7) gets its own spec after this one is built.
@@ -154,7 +154,10 @@ nomen structura {
 ```
 
 - Built-ins: `digitalocean`, `r2` (account id fills the host; EU
-  jurisdiction host variant), `b2`, `generic` (everything supplied).
+  jurisdiction host variant), `b2`, `generic` (everything supplied;
+  every capability `creditum`, none `probatum` - an unknown store may
+  ignore `If-None-Match`, so `solum_si_abest` on `generic` needs
+  `periculum_accipere`; review I4).
   A profile file names a built-in and may override fields.
 - Capability bits (v1): `ACL` (per-object canned ACL),
   `SOLUM_SI_ABEST` (`If-None-Match: *` on PUT), `SOLUM_SI_ETAG`
@@ -260,7 +263,10 @@ Retries (policy in the core, executed by both layers):
 - **Conditional create retried.** Attempt 1 may succeed on the server
   and lose its response; attempt 2 then gets 412 for our own write.
   So a conditional create stores our SHA-256 of the body in
-  `x-amz-meta-sha256`; a 412 AFTER a retry triggers a HEAD and a
+  `x-amz-meta-horreum-sha256` (namespaced so a caller's own `sha256`
+  meta never collides; the title is reserved, and caller meta is
+  capped at `HORREUM_META_MAXIMA` = XVI so no header is ever dropped -
+  review M3, I2); a 412 AFTER a retry triggers a HEAD and a
   compare - equal -> success flagged `iam_nostrum`; different -> real
   `HORREUM_CONDITIO`. Provider-independent (no reliance on ETag form).
   The same for a retried CompleteMultipartUpload that returns
@@ -370,6 +376,33 @@ All suites green on macOS and Linux musl + glibc
   tagging; versions; POST-policy uploads.
 - Streaming request bodies in `http` (multipart makes it unneeded).
 
+
+## V. Whole-branch review (2026-10-22)
+
+One fresh reviewer read T1-T7 (report kept outside the repo); Fran
+approved the fix pass and the I4 direction. Fixed, each with a test
+that failed first:
+
+- **C1** `horreum_capere` had no 16 MB cap on the default blocking
+  transport (plain `http_exsequi` buffers without limit, and its i32
+  capacity doubling wrapped past 2 GiB into an endless loop). The
+  default is now `horreum_vectura_ordinaria()` (`http_exsequi_rivus`
+  without a stream, whose lector refuses past
+  `HTTP_LECTOR_CORPUS_MAXIMUM`); `http_exsequi` itself refuses past
+  1 GiB instead of wrapping. Tested through a real loopback socket.
+- **I1** CLI `delere k -vestigium V` deleted `-vestigium` and `V` too.
+- **I2** past 32 headers `If-None-Match` was silently dropped -> caller
+  meta capped at `HORREUM_META_MAXIMA` (MALUM beyond).
+- **I3** listing keys were entity-decoded twice (`&amp;#65;` -> `A`):
+  `xml.h` now decodes numeric references in its single pass and horreum
+  no longer decodes again (reverses the T2 "accepted" note).
+- **I4** `generic` no longer claims every capability as proven.
+- **I5** aborting from inside the observer still sent the retry.
+- **M3** P10's header is `x-amz-meta-horreum-sha256`; **M8** `-vestigium`
+  files are created 0600 (they hold request bodies).
+
+The remaining minors (and the CLI's missing risk flag) are parked in
+the ledger: park ...M7NJ7Q (`01M5JBAN6TH55XWF8Y67M7NJ7Q`).
 
 ## AUDIENDA (not verified)
 

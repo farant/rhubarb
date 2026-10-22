@@ -426,6 +426,84 @@ _sectio_via_clavis (
     }
 }
 
+/* ===== capita_plena (recensio I2, M3): meta ultra limitem et titulus
+ * reservatus refutantur NOMINATIM; ad limitem nullum caput horrei
+ * (If-None-Match, sigillum P10) perit ===== */
+interior vacuum
+_sectio_capita_plena (
+    CredoContextus* c)
+{
+             Piscina* p = c->piscina;
+             Horreum* d = _horreum("generic", "http://127.0.0.1:9000",
+                              "us-east-1", p);
+         HorreumOpus o;
+        HorreumError e;
+      HorreumPonendi ponendi;
+         HorreumMeta meta[HORREUM_META_MAXIMA + I];
+    HttpPetitioVisus v;
+           character titulus[XVI];
+                 i32 i;
+
+    per (i = ZEPHYRUM; i <= HORREUM_META_MAXIMA; i++)
+    {
+        sprintf(titulus, "m%u", (insignatus integer)i);
+        meta[i].titulus  = chorda_ex_literis(titulus, p);
+        meta[i].valor    = _l("v", p);
+    }
+    memset(&ponendi, ZEPHYRUM, magnitudo(ponendi));
+    ponendi.meta          = meta;
+    ponendi.meta_numerus  = HORREUM_META_MAXIMA + I;
+    CREDO_FALSUM(horreum_opus_ponere(d, _l("situla", p), _l("a.txt", p),
+        _l("salve", p), &ponendi, &o, &e, p));
+    CREDO_AEQUALIS_I32((i32)e.genus, (i32)HORREUM_MALUM);
+    CREDO_CHORDA_CONTINET(e.nuntius, _l("meta", p));
+
+    /* copiare (REPLACE) eodem limite */
+    CREDO_FALSUM(horreum_opus_copiare(d, _l("situla", p), _l("a.txt",
+        p),
+        _l("situla", p), _l("b.txt", p), &ponendi, &o, &e, p));
+    CREDO_AEQUALIS_I32((i32)e.genus, (i32)HORREUM_MALUM);
+
+    /* ad limitem: omnia capita adsunt */
+    ponendi.meta_numerus        = HORREUM_META_MAXIMA;
+    ponendi.genus_contenti      = _l("text/plain", p);
+    ponendi.cache_control       = _l("max-age=60", p);
+    ponendi.acl                 = HORREUM_ACL_PUBLICA_LECTIO;
+    ponendi.solum_si_abest      = VERUM;
+    ponendi.checksum            = HORREUM_CHECKSUM_SHA256;
+    ponendi.periculum_accipere  = VERUM;
+    CREDO_VERUM(horreum_opus_ponere(d, _l("situla", p), _l("a.txt", p),
+        _l("salve", p), &ponendi, &o, &e, p));
+    v = http_petitio_visus(_signare(d, &o, p));
+    CREDO_CHORDA_AEQUALIS_LITERIS(_caput_visus(&v, "If-None-Match", p),
+        "*");
+    CREDO_CHORDA_NON_VACUA(_caput_visus(&v, "x-amz-meta-horreum-sha256",
+        p));
+    CREDO_CHORDA_AEQUALIS_LITERIS(_caput_visus(&v, "x-amz-acl", p),
+        "public-read");
+    CREDO_CHORDA_AEQUALIS_LITERIS(_caput_visus(&v, "x-amz-meta-m0", p),
+        "v");
+    sprintf(titulus, "x-amz-meta-m%u",
+        (insignatus integer)(HORREUM_META_MAXIMA - I));
+    CREDO_CHORDA_AEQUALIS_LITERIS(_caput_visus(&v, titulus, p), "v");
+
+    /* titulus reservatus (quavis forma litterarum) */
+    meta[ZEPHYRUM].titulus  = _l("Horreum-SHA256", p);
+    ponendi.meta_numerus    = I;
+    CREDO_FALSUM(horreum_opus_ponere(d, _l("situla", p), _l("a.txt", p),
+        _l("salve", p), &ponendi, &o, &e, p));
+    CREDO_AEQUALIS_I32((i32)e.genus, (i32)HORREUM_MALUM);
+    CREDO_CHORDA_CONTINET(e.nuntius, _l("horreum-sha256", p));
+
+    /* titulus sha256 vocantis iam liber est */
+    meta[ZEPHYRUM].titulus  = _l("sha256", p);
+    CREDO_VERUM(horreum_opus_ponere(d, _l("situla", p), _l("a.txt", p),
+        _l("salve", p), &ponendi, &o, &e, p));
+    v = http_petitio_visus(_signare(d, &o, p));
+    CREDO_CHORDA_AEQUALIS_LITERIS(_caput_visus(&v, "x-amz-meta-sha256",
+        p), "v");
+}
+
 /* ===== ponere_capita (review focus 2) ===== */
 
 interior vacuum
@@ -471,7 +549,8 @@ _sectio_ponere_capita (
     CREDO_CHORDA_AEQUALIS_LITERIS(_caput_visus(&v,
         "x-amz-content-sha256", p),
         "f9afe0ca8d925f21494d6832ca2b3d7841caaed2df478889f8478cd750aaeb34");
-    CREDO_CHORDA_VACUA(_caput_visus(&v, "x-amz-meta-sha256", p));
+    CREDO_CHORDA_VACUA(_caput_visus(&v, "x-amz-meta-horreum-sha256",
+        p));
     CREDO_CHORDA_VACUA(_caput_visus(&v, "If-None-Match", p));
     CREDO_CHORDA_AEQUALIS_LITERIS(v.corpus, "salve");
     CREDO_VERUM(_signatura_verificata(pet, _l("nyc3", p), p));
@@ -489,7 +568,8 @@ _sectio_ponere_capita (
     v    = http_petitio_visus(pet);
     CREDO_CHORDA_AEQUALIS_LITERIS(_caput_visus(&v, "If-None-Match", p),
         "*");
-    CREDO_CHORDA_AEQUALIS_LITERIS(_caput_visus(&v, "x-amz-meta-sha256",
+    CREDO_CHORDA_AEQUALIS_LITERIS(_caput_visus(&v,
+        "x-amz-meta-horreum-sha256",
         p),
         "f9afe0ca8d925f21494d6832ca2b3d7841caaed2df478889f8478cd750aaeb34");
     CREDO_CHORDA_AEQUALIS_LITERIS(_caput_visus(&v,
@@ -505,7 +585,8 @@ _sectio_ponere_capita (
     v = http_petitio_visus(_signare(r, &o, p));
     CREDO_CHORDA_AEQUALIS_LITERIS(_caput_visus(&v, "If-Match", p),
         "\"0cc175b9c0f1b6a831c399e269772661\"");
-    CREDO_CHORDA_NON_VACUA(_caput_visus(&v, "x-amz-meta-sha256", p));
+    CREDO_CHORDA_NON_VACUA(_caput_visus(&v, "x-amz-meta-horreum-sha256",
+        p));
     CREDO_CHORDA_AEQUALIS_LITERIS(_caput_visus(&v,
         "x-amz-checksum-sha256",
         p), "+a/gyo2SXyFJTWgyyis9eEHKrtLfR4iJ+EeM11Cq6zQ=");
@@ -555,6 +636,23 @@ _sectio_incapax (
         _l("x", p), &ponendi, &o, &e, p));
     CREDO_VERUM(horreum_opus_ponere(d, _l("situla", p), _l("a", p),
         _l("x", p), &ponendi, &o, &e, p));
+
+    /* generic: capacitates creditae, nulla probata (recensio I4) -
+     * solum_si_abest sine periculo_accipere INCAPAX, cum eo licet */
+    {
+        Horreum* g = _horreum("generic", "http://127.0.0.1:9000",
+                         "us-east-1", p);
+
+        memset(&ponendi, ZEPHYRUM, magnitudo(ponendi));
+        ponendi.solum_si_abest = VERUM;
+        CREDO_FALSUM(horreum_opus_ponere(g, _l("situla", p), _l("a", p),
+            _l("x", p), &ponendi, &o, &e, p));
+        CREDO_AEQUALIS_I32((i32)e.genus, (i32)HORREUM_INCAPAX);
+        CREDO_CHORDA_CONTINET(e.nuntius, _l("periculum_accipere", p));
+        ponendi.periculum_accipere = VERUM;
+        CREDO_VERUM(horreum_opus_ponere(g, _l("situla", p), _l("a", p),
+            _l("x", p), &ponendi, &o, &e, p));
+    }
 
     /* refutatum in DO 2026-10-22: If-Match in PUT semper 412 */
     memset(&ponendi, ZEPHYRUM, magnitudo(ponendi));
@@ -973,6 +1071,16 @@ _sectio_enumeratio_legere (
 
     CREDO_FALSUM(horreum_paginam_legere(_l("<non", p), &pg, &e, p));
     CREDO_AEQUALIS_I32((i32)e.genus, (i32)HORREUM_MALUM);
+
+    /* clavis litteralis "&#65;" (in filo "&amp;#65;") SEMEL
+     * decodificatur - non "A" (recensio I3) */
+    CREDO_VERUM(horreum_paginam_legere(_l("<ListBucketResult>"
+        "<IsTruncated>false</IsTruncated><Contents><Key>&amp;#65;"
+        "&#66;</Key><Size>1</Size></Contents></ListBucketResult>", p),
+        &pg, &e, p));
+    CREDO_AEQUALIS_I32(pg.obiecta_numerus, I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(pg.obiecta[ZEPHYRUM].clavis,
+        "&#65;B");
 }
 
 interior vacuum
@@ -1402,6 +1510,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "provisores", _sectio_provisores, NIHIL, NIHIL, NIHIL, NIHIL },
     { "stilus", _sectio_stilus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "via_clavis", _sectio_via_clavis, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "capita_plena", _sectio_capita_plena, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "ponere_capita", _sectio_ponere_capita, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "incapax", _sectio_incapax, NIHIL, NIHIL, NIHIL, NIHIL },

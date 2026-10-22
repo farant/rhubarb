@@ -74,16 +74,15 @@ hic_manens constans HorreumProvisor provisores_horrei[] = {
     /* creditum: backblaze.com/docs/cloud-storage-s3-compatible-api */
     { "b2", "s3.{regio}.backblazeb2.com", HORREUM_STILUS_HOSPES, NIHIL,
       HORREUM_CAP_DELERE_PLURA, ZEPHYRUM, FALSUM },
-    /* qui generic ad repositorium dirigit, capacitates eius praestat */
+    /* generic: omnia credita, NIHIL probatum - repositorium ignotum
+     * If-None-Match neglegere potest, ergo solum_si_abest solum cum
+     * periculo_accipere (spec II.4; recensio I4 2026-10-22) */
     { "generic", NIHIL, HORREUM_STILUS_VIA, NIHIL,
       HORREUM_CAP_ACL | HORREUM_CAP_SOLUM_SI_ABEST
           | HORREUM_CAP_SOLUM_SI_ETAG
           | HORREUM_CAP_DELERE_PLURA | HORREUM_CAP_CHECKSUM_CRC32
           | HORREUM_CAP_CHECKSUM_SHA256,
-      HORREUM_CAP_ACL | HORREUM_CAP_SOLUM_SI_ABEST
-          | HORREUM_CAP_SOLUM_SI_ETAG
-          | HORREUM_CAP_DELERE_PLURA | HORREUM_CAP_CHECKSUM_CRC32
-          | HORREUM_CAP_CHECKSUM_SHA256, VERUM },
+      ZEPHYRUM, VERUM },
     { NIHIL, NIHIL, HORREUM_STILUS_HOSPES, NIHIL, ZEPHYRUM, ZEPHYRUM,
         FALSUM }
 };
@@ -1068,9 +1067,28 @@ _ponendi_validae (
                HorreumError* e,
                     Piscina* p)
 {
+    i32 i;
+
     si (!ponendi)
     {
         redde VERUM;
+    }
+    si (ponendi->meta_numerus > HORREUM_META_MAXIMA)
+    {
+        _errorem_ponere(e, HORREUM_MALUM, ZEPHYRUM,
+            "horreum: meta plura quam HORREUM_META_MAXIMA (XVI)", p);
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < ponendi->meta_numerus; i++)
+    {
+        si (chorda_aequalis_case_insensitivus(ponendi->meta[i].titulus,
+                _l(HORREUM_META_SIGILLUM, p)))
+        {
+            _errorem_ponere(e, HORREUM_MALUM, ZEPHYRUM,
+                "horreum: meta titulus " HORREUM_META_SIGILLUM
+                " horrei est (P10)", p);
+            redde FALSUM;
+        }
     }
     si (   ponendi->acl != HORREUM_ACL_NULLA
         && !_capax(h, HORREUM_CAP_ACL, "acl", e, p))
@@ -1150,11 +1168,13 @@ _ponendi_capita (
         chorda_aedificator_appendere_literis(a, "x-amz-meta-");
         chorda_aedificator_appendere_chorda(a,
             chorda_minuscula(ponendi->meta[i].titulus, p));
-        o->capita[o->capita_numerus].titulus =
-            chorda_aedificator_finire(a);
-        o->capita[o->capita_numerus].valor = ponendi->meta[i].valor;
-        si (o->capita_numerus < HORREUM_CAPITA_OPERIS - I)
+        /* meta <= HORREUM_META_MAXIMA (_ponendi_validae): capita
+         * fixa (VII) + XVI < HORREUM_CAPITA_OPERIS - nihil perit */
+        si (o->capita_numerus < HORREUM_CAPITA_OPERIS)
         {
+            o->capita[o->capita_numerus].titulus =
+                chorda_aedificator_finire(a);
+            o->capita[o->capita_numerus].valor = ponendi->meta[i].valor;
             o->capita_numerus++;
         }
     }
@@ -1208,7 +1228,8 @@ horreum_opus_ponere (
     si (o->condicionale)
     {
         /* P10: nostrum post iterationem cognoscitur */
-        _caput(o, "x-amz-meta-sha256", o->corpus_sha256_hex, p);
+        _caput(o, "x-amz-meta-" HORREUM_META_SIGILLUM,
+            o->corpus_sha256_hex, p);
     }
     si (ponendi && ponendi->checksum == HORREUM_CHECKSUM_CRC32)
     {
@@ -1991,104 +2012,6 @@ horreum_praesignare (
 }
 
 /* ===== lectio responsorum ===== */
-/* referentiae numericae (&#xH; &#D;) quas xml.h non decodificat
- * (P15) */
-interior chorda
-_referentias_decodificare (
-     chorda  s,
-    Piscina* p)
-{
-     ChordaAedificator* a;
-                   i32  i;
-
-    si (!chorda_continet(s, _l("&#", p)))
-    {
-        redde s;
-    }
-    a = chorda_aedificator_creare(p, (memoriae_index)(s.mensura + I));
-    per (i = ZEPHYRUM; i < s.mensura; i++)
-    {
-        si (   s.datum[i]     == '&' && i + II < s.mensura
-            && s.datum[i + I] == '#')
-        {
-              i32 j      = i + II;
-              i32 cp     = ZEPHYRUM;
-              b32 hex    = FALSUM;
-              b32 bonum  = FALSUM;
-
-            si (   j < s.mensura
-                && (s.datum[j] == 'x' || s.datum[j] == 'X'))
-            {
-                hex = VERUM;
-                j++;
-            }
-            dum (j < s.mensura && s.datum[j] != ';' && j - i < XII)
-            {
-                i8 c = s.datum[j];
-
-                si (hex && _cifra_hex(c))
-                {
-                    cp = cp * XVI + (i32)(c <= '9' ? c - '0'
-                        : (c | 0x20) - 'a' + X);
-                    bonum = VERUM;
-                }
-                alioquin si (!hex && c >= '0' && c <= '9')
-                {
-                    cp     = cp * X + (i32)(c - '0');
-                    bonum  = VERUM;
-                }
-                alioquin
-                {
-                    bonum = FALSUM;
-                    frange;
-                }
-                j++;
-            }
-            si (   bonum && j < s.mensura && s.datum[j] == ';'
-                && cp < 0x110000)
-            {
-                si (cp < 0x80)
-                {
-                    chorda_aedificator_appendere_character(a,
-                        (character)cp);
-                }
-                alioquin si (cp < 0x800)
-                {
-                    chorda_aedificator_appendere_character(a,
-                        (character)(0xC0 | (cp >> VI)));
-                    chorda_aedificator_appendere_character(a,
-                        (character)(0x80 | (cp & 0x3F)));
-                }
-                alioquin si (cp < 0x10000)
-                {
-                    chorda_aedificator_appendere_character(a,
-                        (character)(0xE0 | (cp >> XII)));
-                    chorda_aedificator_appendere_character(a,
-                        (character)(0x80 | ((cp >> VI) & 0x3F)));
-                    chorda_aedificator_appendere_character(a,
-                        (character)(0x80 | (cp & 0x3F)));
-                }
-                alioquin
-                {
-                    chorda_aedificator_appendere_character(a,
-                        (character)(0xF0 | (cp >> XVIII)));
-                    chorda_aedificator_appendere_character(a,
-                        (character)(0x80 | ((cp >> XII) & 0x3F)));
-                    chorda_aedificator_appendere_character(a,
-                        (character)(0x80 | ((cp >> VI) & 0x3F)));
-                    chorda_aedificator_appendere_character(a,
-                        (character)(0x80 | (cp & 0x3F)));
-                }
-                i = j;
-                perge;
-            }
-        }
-        chorda_aedificator_appendere_character(a,
-            (character)s.datum[i]);
-    }
-    redde chorda_aedificator_finire(a);
-}
-
 interior chorda
 _textus (
               XmlNodus* parens,
@@ -2102,7 +2025,10 @@ _textus (
     {
         redde chorda_ex_buffer(NIHIL, ZEPHYRUM);
     }
-    redde _referentias_decodificare(xml_textus_internus(n, p), p);
+    /* xml.h entitates et referentias numericas SEMEL decodificat
+     * (P15; iterum decodificare "&amp;#65;" in "A" verteret - recensio
+     * I3) */
+    redde xml_textus_internus(n, p);
 }
 
 interior XmlNodus*
@@ -2350,7 +2276,7 @@ horreum_responsum_legere (
             p)))
         {
             _errorem_ponere(e, HORREUM_MALUM, ZEPHYRUM,
-                "horreum: responsum maius quam XVI MiB - "
+                "horreum: responsum maius quam XVI MB - "
                 "horreum_capere_in_filum adhibe (P1)", p);
         }
         alioquin

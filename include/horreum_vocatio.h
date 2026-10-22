@@ -3,7 +3,7 @@
  * vocantis. Semantica eadem ac horreum_exsequi (horreum_cliens.h):
  * quisque conatus de novo signatur; RequestTimeTooSkewed semel
  * corrigitur sine mora; 412 post iterationem in opere condicionali ->
- * HEAD (x-amz-meta-sha256) = iam_nostrum; NoSuchUpload post iterationem
+ * HEAD (x-amz-meta-horreum-sha256) = iam_nostrum; NoSuchUpload post iterationem
  * Complete -> HEAD (ETag); ceterum politica horreum_iterandum, mora per
  * timer reactoris (nihil umquam obstat aut dormit).
  *

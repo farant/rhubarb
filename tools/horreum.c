@@ -15,7 +15,7 @@
  * -vestigium VIA (mandato cuivis): quisque conatus HTTP (iterationes et
  * HEAD comprehensa) in VIA appenditur ut transcriptio
  * (horreum_observationem_describere: Authorization tectum, corpus
- * longum abbreviatum).
+ * longum abbreviatum). Filum 0600 fit: corpora petitionum continet.
  *
  * Numquam secretum scribit; URL praesignata solum a 'praesignare'.
  * Exitus: 0 bene; I operatio defecit (probare: gradus non-capacitatis
@@ -447,13 +447,18 @@ _mandatum (
     }
     si (strcmp(m, "delere") == ZEPHYRUM && primum)
     {
-        per (i = IV; i < argc; i++)
+        /* claves per _positio: optiones (-vestigium VIA) numquam
+         * claves fiunt (recensio I1) */
+        constans character* clavis;
+
+        per (i = ZEPHYRUM;
+             (clavis = _positio(argc, argv, IV, i)) != NIHIL; i++)
         {
-            si (!horreum_delere(h, situla, _l(argv[i], p), &e, p))
+            si (!horreum_delere(h, situla, _l(clavis, p), &e, p))
             {
                 redde _error("delere", &e);
             }
-            imprimere("deletum\t%s\n", argv[i]);
+            imprimere("deletum\t%s\n", clavis);
         }
         redde ZEPHYRUM;
     }
@@ -530,6 +535,18 @@ principale (
     vestigium.via = _optio(argc, argv, IV, "-vestigium");
     si (vestigium.via)
     {
+        /* corpora petitionum (usque IV KiB) in vestigio stant - filum
+         * 0600 ANTE primam scripturam (recensio M8) */
+        si (   !filum_appendere_firmiter(vestigium.via,
+                    chorda_ex_buffer(NIHIL, ZEPHYRUM))
+            || !filum_modum_ponere(vestigium.via, 0600))
+        {
+            fprintf(stderr, "horreum: vestigium %s parari nequit\n",
+                vestigium.via);
+            horreum_claudere(h);
+            piscina_destruere(p);
+            redde II;
+        }
         co.observator          = _vestigium_scribere;
         co.observatoris_datum  = &vestigium;
     }

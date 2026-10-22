@@ -127,7 +127,7 @@ _iterare (
     }
 }
 
-/* obiectum fert x-amz-meta-sha256 == sigillum nostrum? */
+/* obiectum fert x-amz-meta-horreum-sha256 == sigillum nostrum? */
 interior b32
 _sigillum_nostrum (
     constans HorreumObjectum* ob,
@@ -137,7 +137,8 @@ _sigillum_nostrum (
 
     per (i = ZEPHYRUM; i < ob->meta_numerus; i++)
     {
-        si (   chorda_aequalis_literis(ob->meta[i].titulus, "sha256")
+        si (   chorda_aequalis_literis(ob->meta[i].titulus,
+                   HORREUM_META_SIGILLUM)
             && chorda_aequalis(ob->meta[i].valor, sigillum))
         {
             redde VERUM;
@@ -257,6 +258,12 @@ _http_finis (
     }
     v->resultus.conatus++;
     _observare(v, res);
+    si (v->abrumpens)
+    {
+        /* observator abrupit: finis iam vocatus, nihil ultra
+         * (recensio I5) */
+        redde;
+    }
     v->resultus.responsum = res.responsum;
     memset(&v->resultus.obiectum, ZEPHYRUM,
         magnitudo(v->resultus.obiectum));

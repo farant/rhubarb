@@ -328,6 +328,29 @@ this plan.
   fake switch `celare_onera` reproduced the live R2 "ListMultipartUploads:"
   line. (c) `bin/horreum -vestigium VIA`. Checked live read-only (HEAD
   of a missing key on both profiles): Authorization covered.
+- **Final review (2026-10-22, one fresh reviewer, Fran approved the
+  fix pass and the I4 direction):** 1 critical, 5 important fixed with
+  red-first tests (spec V). Rulings in that pass:
+  - C1 fixed in horreum, not by capping `http_exsequi` at 16 MB: vates,
+    oceanus, manus and hospitium use it and a cap could break a real
+    large fetch. horreum's default vectura is the lector path;
+    `http_exsequi` only gains a 1 GiB refusal so its doubling can no
+    longer wrap. No test for the 1 GiB refusal (a test would move a
+    gigabyte) - cost if wrong: the guard is unproven, but it only
+    replaces an endless loop.
+  - I1 checked by hand against a loopback python server in the
+    scratchpad (bin/horreum has no committed harness) - cost if wrong:
+    a later CLI change can reintroduce it unseen.
+  - I2: limit (XVI caller meta) instead of growing the header array -
+    S3 caps user metadata at 2 KB anyway.
+  - I3 fixed in xml.h (numeric references are XML; plist and the
+    pecunia generator inputs contain none, so no output changes).
+  - M3 (header rename) and M8 (trace 0600) pulled forward from the
+    minors: both get dearer once real data or real traces exist.
+  - `generic` + `-solum-si-abest` in bin/horreum is now refused
+    (INCAPAX names `periculum_accipere`); the CLI has no flag for the
+    risk - add one if a generic store needs it.
+  - The remaining minors are parked in the ledger (park ...M7NJ7Q).
 
 ## Review focus
 
