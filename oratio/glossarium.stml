@@ -1794,4 +1794,10 @@
     <forma textus="cantuali" casus="ablativus" numerus="singularis" genus="neutrum"/>
   </vocabulum>
 
+  <vocabulum lemma="aetherophonum" lingua="latina" classis="substantivum" nota="Latina nova (aetherophonum, -i n.; aether + phonum, ut 'etherphone' Termen 1920): theremin - latus vici sonus-spec S5c (include/aetherophonum.h); WORDS caret">
+    <forma textus="aetherophonum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="aetherophoni" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="aetherophono" casus="ablativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
+
 </glossarium>

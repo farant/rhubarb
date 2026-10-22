@@ -17,6 +17,7 @@ declare -a SOURCE_FILES=(
     "lib/aedilis.c"
     "lib/aemulator.c"
     "lib/aemulator_hospes.c"
+    "lib/aetherophonum.c"
     "lib/agenda.c"
     "lib/agmen.c"
     "lib/anulus.c"

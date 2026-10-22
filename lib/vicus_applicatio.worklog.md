@@ -136,3 +136,13 @@ log's tail, so jingles written before vicus opened never replay.
   not judge the text - praeco does, before writing (step C).
 
 Plants 9/9 red (8 vicus_sonus + sequax.eventus via admonitiones_visus).
+
+## 2026-10-22 - S5c: aetherophonum pane kind, $theremin
+
+Pane kind "aetherophonum" registered with ctx = ContextusSoni (which now
+also holds the Vicus and StatusSystemata). Wrappers aetheri_incipere /
+_ponere / _dimittere: no port or MASTER mute -> 0 / nothing; the
+notification mute is ignored on purpose. The port must now provide the
+three live-voice calls or it is refused as a whole (porta_dimidia).
+ludus_tessera's hand list gained "aetherophonum" (vicus_applicatio links
+the pane; the pane links nothing sound-related).

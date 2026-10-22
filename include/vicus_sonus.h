@@ -25,6 +25,18 @@ nomen structura {
      * exitus nullus - nihil sonat. Ut pulsare: una simul, recentissima
      * vincit */
     b32    (*canere)(vacuum* ctx, chorda textus, b32 intactus);
+    /* VOX VIVA (S5c aetherophonum): tibia praeparata ("aether",
+     * "quadrans", "triangulum"), vibratus aut non, nota MIDI fracta,
+     * lucrum 0..1; prioritas supra cantilenas. 0 = nulla (exitus
+     * nullus, sedes plenae) */
+    i64    (*vocem_incipere)(vacuum* ctx, constans character* tibia,
+                             b32 vibratus, f32 nota, f32 lucrum);
+    /* nota et lucrum cum glissando 'ms' (0 = statim) */
+    vacuum (*vocem_ponere)(vacuum* ctx, i64 vox, f32 nota, f32 lucrum,
+                           i32 ms);
+    /* porta clausa: remissio. tacere (mutus) portas omnium vocum
+     * vivarum quoque claudit */
+    vacuum (*vocem_dimittere)(vacuum* ctx, i64 vox);
     vacuum* ctx;
 } VicusPortaSoni;
 

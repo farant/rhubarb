@@ -25,3 +25,16 @@ plus room for live voices) over the auditus adapter and the tintinnabulum
 on top; `agere` = concentus_agere then tintinnabulum_agere (messages first,
 then waiting jingles). Ring capacities went 64 -> 128: auditus wants
 nuntii >= 2 x voices, and the voices grew to 48 (powers of two required).
+
+## 2026-10-22 - S5c: live voices (theremin)
+
+`vocem_incipere(tibia, vibratus, nota, lucrum)`: tibia preset by name
+(unknown -> aether; vibratus off zeroes the preset's depth), captured at
+priority II so jingles (I) never steal it, MUSICA bus. The mixer handle is
+packed into the i64 (sedes << 32 | generatio; generatio 0 = "no voice").
+`vocem_ponere` sends NOTAM_PONERE + VOCEM_PONERE with the same glide in
+frames. Up to IV live voices are remembered; `tacere` (master mute) closes
+their gates first, then the tintinnabulum's quiesce closes the device
+after the releases. PortaSoni is now memset - piscina_allocare memory is
+not zeroed, and garbage handles could have read as live. No unit test
+(real CoreAudio); Fran's ears.

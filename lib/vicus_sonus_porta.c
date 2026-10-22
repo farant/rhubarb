@@ -1,7 +1,9 @@
-/* vicus_sonus_porta.c - porta soni vera: tintinnabulum super auditus */
+/* vicus_sonus_porta.c - porta soni vera: concentus super auditus;
+ * tintinnabulum et voces vivae (aetherophonum) super eum */
 
 #include "vicus_sonus_porta.h"
 #include "tintinnabulum.h"
+#include "tibia.h"
 #include "cantuale.h"
 #include "auditus.h"
 #include "fenestra_tempus.h"
@@ -14,11 +16,17 @@
 /* capacitates anulorum auditus (potentiae II): iussa >= sedes
  * cantilenae et SISTERE omnium; nuntii >= II x voces (auditus.h) */
 #define PORTA_ANULI CXXVIII
+/* voces vivae simul (aetherophonum: una; reliquae pro lateribus
+ * pluribus) - tacere (mutus) omnes claudit */
+#define PORTA_VIVAE IV
+/* prioritas vocis vivae: supra cantilenas (I), ne surripiatur */
+#define PORTA_PRIORITAS_VIVAE II
 
 nomen structura {
-          Piscina* anuli;   /* per aperitionem; NIHIL clauso exitu */
-        Concentus* concentus;   /* hospes communis: mixtura, exitus */
-    Tintinnabulum* t;
+           Piscina* anuli;   /* per aperitionem; NIHIL clauso exitu */
+         Concentus* concentus;   /* hospes communis: mixtura, exitus */
+     Tintinnabulum* t;
+       MixturaAnsa  vivae[PORTA_VIVAE];   /* generatio 0 = vacua */
 } PortaSoni;
 
 
@@ -138,11 +146,157 @@ porta_canere (
         NIHIL);
 }
 
+/* ansa <-> i64 portae: sedes in bitis altis, generatio in imis
+ * (generatio 0 = ansa nulla = vox 0) */
+interior i64
+vocem_signare (
+    MixturaAnsa a)
+{
+    redde ((i64)a.sedes << XXXII) | (i64)a.generatio;
+}
+
+interior MixturaAnsa
+vocem_legere (
+    i64 vox)
+{
+    MixturaAnsa a;
+
+    a.sedes      = (i32)(vox >> XXXII);
+    a.generatio  = (i32)(vox & 0xFFFFFFFFu);
+    redde a;
+}
+
+interior vacuum
+portam_vocis_claudere (
+      PortaSoni* p,
+    MixturaAnsa  a)
+{
+    MixturaIussum i;
+
+    si (!concentus_vox_vivit(p->concentus, a))
+    {
+        redde;
+    }
+    mixtura_iussum_parare(&i, MIXTURA_IUSSUM_PORTAM_CLAUDERE,
+        concentus_initium(p->concentus));
+    i.ansa = a;
+    (vacuum)concentus_iubere(p->concentus, &i);
+}
+
 interior vacuum
 porta_tacere (
     vacuum* ctx)
 {
-    tintinnabulum_tacere(((PortaSoni*)ctx)->t);
+    PortaSoni* p = (PortaSoni*)ctx;
+          i32  k;
+
+    /* voces vivae prius clausae: quiescere tintinnabuli exitum post
+     * remissiones claudit */
+    per (k = ZEPHYRUM; k < PORTA_VIVAE; k++)
+    {
+        portam_vocis_claudere(p, p->vivae[k]);
+        p->vivae[k].generatio = ZEPHYRUM;
+    }
+    tintinnabulum_tacere(p->t);
+}
+
+/* vox viva: tibia praeparata (ignota = aether), vibratus aut non */
+interior i64
+porta_vocem_incipere (
+                 vacuum* ctx,
+     constans character* tibia,
+                    b32  vibratus,
+                    f32  nota,
+                    f32  lucrum)
+{
+                    PortaSoni* p = (PortaSoni*)ctx;
+      constans TibiaParametra* praeparatum;
+                MixturaIussum  i;
+                  MixturaAnsa  a;
+                          i32  k;
+                          i32  locus = PORTA_VIVAE;
+
+    per (k = ZEPHYRUM; k < PORTA_VIVAE; k++)
+    {
+        si (!concentus_vox_vivit(p->concentus, p->vivae[k]))
+        {
+            locus = k;
+            frange;
+        }
+    }
+    praeparatum = tibia_praeparatum(tibia);
+    si (praeparatum == NIHIL)
+    {
+        praeparatum = tibia_praeparatum("aether");
+    }
+    si (   locus == PORTA_VIVAE || praeparatum == NIHIL
+        || !concentus_aperire(p->concentus))
+    {
+        redde ZEPHYRUM;
+    }
+    a = mixtura_rector_capere(concentus_rector(p->concentus),
+        PORTA_PRIORITAS_VIVAE);
+    si (mixtura_ansa_nulla(a))
+    {
+        redde ZEPHYRUM;
+    }
+    mixtura_iussum_parare(&i, MIXTURA_IUSSUM_TIBIAM,
+        concentus_initium(p->concentus));
+    i.ansa    = a;
+    i.grex    = MIXTURA_GREX_MUSICA;
+    i.lucrum  = lucrum;
+    i.tibia   = *praeparatum;
+    i.nota    = nota;
+    si (!vibratus)
+    {
+        i.tibia.vibratus = 0.0f;
+    }
+    si (!concentus_iubere(p->concentus, &i))
+    {
+        redde ZEPHYRUM;
+    }
+    p->vivae[locus] = a;
+    redde vocem_signare(a);
+}
+
+/* nota et lucrum cum glissando 'ms' */
+interior vacuum
+porta_vocem_ponere (
+    vacuum* ctx,
+       i64  vox,
+       f32  nota,
+       f32  lucrum,
+       i32  ms)
+{
+     PortaSoni* p = (PortaSoni*)ctx;
+   MixturaAnsa  a = vocem_legere(vox);
+ MixturaIussum  i;
+           s64  momentum;
+           i32  quadra = ms * (i32)(SONUS_FREQUENTIA / M);
+
+    si (!concentus_vox_vivit(p->concentus, a))
+    {
+        redde;
+    }
+    momentum = concentus_initium(p->concentus);
+    mixtura_iussum_parare(&i, MIXTURA_IUSSUM_NOTAM_PONERE, momentum);
+    i.ansa    = a;
+    i.nota    = nota;
+    i.clivus  = quadra;
+    (vacuum)concentus_iubere(p->concentus, &i);
+    mixtura_iussum_parare(&i, MIXTURA_IUSSUM_VOCEM_PONERE, momentum);
+    i.ansa    = a;
+    i.lucrum  = lucrum;
+    i.clivus  = quadra;
+    (vacuum)concentus_iubere(p->concentus, &i);
+}
+
+interior vacuum
+porta_vocem_dimittere (
+    vacuum* ctx,
+       i64  vox)
+{
+    portam_vocis_claudere((PortaSoni*)ctx, vocem_legere(vox));
 }
 
 b32
@@ -171,6 +325,7 @@ vicus_sonus_porta (
     {
         redde FALSUM;
     }
+    memset(p, ZEPHYRUM, magnitudo(PortaSoni));
     memset(&vitium, ZEPHYRUM, magnitudo(CantualeVitium));
     si (!cantuale_ordinarium(piscina, liber, &vitium))
     {
@@ -198,10 +353,13 @@ vicus_sonus_porta (
     {
         redde FALSUM;
     }
-    porta->pulsare  = porta_pulsare;
-    porta->agere    = porta_agere;
-    porta->tacere   = porta_tacere;
-    porta->canere   = porta_canere;
-    porta->ctx      = p;
+    porta->pulsare          = porta_pulsare;
+    porta->agere            = porta_agere;
+    porta->tacere           = porta_tacere;
+    porta->canere           = porta_canere;
+    porta->vocem_incipere   = porta_vocem_incipere;
+    porta->vocem_ponere     = porta_vocem_ponere;
+    porta->vocem_dimittere  = porta_vocem_dimittere;
+    porta->ctx              = p;
     redde VERUM;
 }
