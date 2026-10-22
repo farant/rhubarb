@@ -246,4 +246,22 @@ mixtura_rector_tractare (
               MixturaRector* r,
     constans MixturaNuntius* nuntius);
 
+/* sedes ansae occupata generatione eadem */
+b32
+mixtura_rector_vivit (
+    constans MixturaRector* r,
+               MixturaAnsa  ansa);
+
+/* sedes capta sed vox numquam incepta (iussum recusatum): libera, si
+ * generatio par; aliter nihil */
+vacuum
+mixtura_rector_dimittere (
+     MixturaRector* r,
+       MixturaAnsa  ansa);
+
+/* sedes occupatae */
+i32
+mixtura_rector_occupatae (
+    constans MixturaRector* r);
+
 #endif /* MIXTURA_H */

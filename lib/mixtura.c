@@ -825,3 +825,41 @@ mixtura_rector_tractare (
         s->occupata = FALSUM;
     }
 }
+
+b32
+mixtura_rector_vivit (
+    constans MixturaRector* r,
+               MixturaAnsa  ansa)
+{
+    redde ansa.generatio != ZEPHYRUM && ansa.sedes < r->numerus
+        && r->sedes[ansa.sedes].occupata
+        && r->sedes[ansa.sedes].generatio == ansa.generatio;
+}
+
+vacuum
+mixtura_rector_dimittere (
+     MixturaRector* r,
+       MixturaAnsa  ansa)
+{
+    si (mixtura_rector_vivit(r, ansa))
+    {
+        r->sedes[ansa.sedes].occupata = FALSUM;
+    }
+}
+
+i32
+mixtura_rector_occupatae (
+    constans MixturaRector* r)
+{
+    i32 k;
+    i32 n = ZEPHYRUM;
+
+    per (k = ZEPHYRUM; k < r->numerus; k++)
+    {
+        si (r->sedes[k].occupata)
+        {
+            n++;
+        }
+    }
+    redde n;
+}

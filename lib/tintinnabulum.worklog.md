@@ -69,3 +69,18 @@ tests (missing vacare; ignoring a refused device, which swapped slots so a
 LATER parse overwrote `ultima`'s text) - tests strengthened, 14/14 red.
 
 `destruere` closes an open device at once (no fade) and frees the slots.
+
+## 2026-10-22 - S5b: client of the shared host (API change, Fran OK'd)
+
+`tintinnabulum_creare(piscina, liber, Concentus*, semen)`: no own mixer,
+rector or device. `sonat` = one of its handles still lives in the host;
+`tintinnabulum_agere(t)` (no clock) runs AFTER concentus_agere; tacere
+fades its own live voices and asks the host to quiesce (another client's
+voice keeps the device open). Removed: TintinnabuliExitus (now
+ConcentusExitus), TINTINNABULUM_QUIES (CONCENTUS_QUIES),
+tintinnabulum_apertum, the lost-message terminus. The 9 sections were
+adapted (device asserts moved to concentus_apertum) and passed first try;
+section `redit` added (occasion during the fade cancels the quiesce).
+Refused starts used to be dropped from `ansae`; now kept - the host freed
+their slot, so `vivit` reads them dead (the guard could not be tested
+because it changed nothing; removed).

@@ -51,6 +51,7 @@ declare -a SOURCE_FILES=(
     "lib/color.c"
     "lib/coloratio.c"
     "lib/componens.c"
+    "lib/concentus.c"
     "lib/concha.c"
     "lib/congruentia.c"
     "lib/conllu.c"

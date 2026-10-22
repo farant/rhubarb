@@ -17,3 +17,11 @@ piscina per open and `exitum_claudere` destroys it after
 No unit test (it would play through the speakers during gates); the
 logic above it is covered by probatio_tintinnabulum (offline mixtura)
 and probatio_vicus_sonus (fake port). Live check = Fran's ears.
+
+## 2026-10-22 - S5b: the port builds a concentus
+
+The port now creates one concentus (PORTA_VOCES = XLVIII: a full jingle
+plus room for live voices) over the auditus adapter and the tintinnabulum
+on top; `agere` = concentus_agere then tintinnabulum_agere (messages first,
+then waiting jingles). Ring capacities went 64 -> 128: auditus wants
+nuntii >= 2 x voices, and the voices grew to 48 (powers of two required).

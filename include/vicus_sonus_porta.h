@@ -1,13 +1,15 @@
-/* vicus_sonus_porta.h - porta soni vera: tintinnabulum super auditus
+/* vicus_sonus_porta.h - porta soni vera: concentus super auditus
  *
- * Liber ordinarius (cantuale_ordinarium, infixus) et tintinnabulum
+ * Hospes soni communis (concentus.h: mixtura, rector, exitus UNUS)
  * cuius exitus auditus est (vivum, CoreAudio; posix: aperire FALSUM -
- * silentium). Solum applicationes vici eam nectunt (vicus.c,
- * vicus_terminalis.c), non vicus_applicatio - probationes vici sine
- * sono et sine CoreAudio manent.
+ * silentium); super eum tintinnabulum cum libro ordinario
+ * (cantuale_ordinarium, infixus) et S5c aetherophonum. Solum
+ * applicationes vici eam nectunt (vicus.c, vicus_terminalis.c), non
+ * vicus_applicatio - probationes vici sine sono et sine CoreAudio
+ * manent.
  *
- * EXITUS PIGER: tintinnabulum exitum post quietem claudit et primo
- * sono iterum aperit; auditus_aperire anulos e piscina data allocat,
+ * EXITUS PIGER: concentus exitum post quietem claudit et primo sono
+ * iterum aperit; auditus_aperire anulos e piscina data allocat,
  * ergo porta piscinam PROPRIAM per aperitionem generat et in claudendo
  * destruit - piscina vici aliter per dies cresceret.
  *
