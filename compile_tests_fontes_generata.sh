@@ -210,6 +210,7 @@ declare -a SOURCE_FILES=(
     "lib/polynomium.c"
     "lib/portae.c"
     "lib/praeconium.c"
+    "lib/praeconium_cantus.c"
     "lib/processus_posix.c"
     "lib/provenientia.c"
     "lib/pseudoterminale.c"

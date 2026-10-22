@@ -6,6 +6,14 @@
  *                            (hamus numquam sessionem frangit)
  *   praeco status <textus>   eventus "status" ab agente (panellus ex
  *                            TMUX_PANE; sessio per T3 resolvitur)
+ *   praeco cantus [-intactus] <mml>
+ *   praeco cantus -titulus T | -genus G
+ *                            cantilena ad vicum (eventus "cantus"):
+ *                            iudicata ANTE scripturam - fracta: causa
+ *                            et caret, exitus 1, nihil scriptum;
+ *                            -titulus/-genus ex cantuali infixo
+ *                            (titulum electum imprimit)
+ *   praeco cantuale          cantilenae libri: titulus, genera, textus
  *   praeco cauda [n]         ultimi n eventus (XX) legibiles
  *
  * Tenue: omnis logica in lib/praeconium.c.
@@ -19,6 +27,9 @@
 #include "chorda.h"
 #include "xar.h"
 #include "praeconium.h"
+#include "praeconium_cantus.h"
+#include "cantuale.h"
+#include "sors.h"
 #include "provenientia.h"
 
 #include <stdio.h>
@@ -89,36 +100,206 @@ hamus (
     redde ZEPHYRUM;
 }
 
+/* eventus ab agente: tempus, panellus (TMUX_PANE), servitor (TMUX ante
+ * ','), via (PWD) - ceteri vacui */
+interior vacuum
+ambitus (
+    PraeconiumEventus* e,
+              Piscina* piscina)
+{
+    constans character* panellus;
+    constans character* tmux;
+                   i32  i;
+
+    memset(e, ZEPHYRUM, magnitudo(*e));
+    panellus     = getenv("TMUX_PANE");
+    tmux         = getenv("TMUX");
+    e->tempus    = nunc_ms();
+    e->panellus  = chorda_ex_literis(panellus ? panellus : "", piscina);
+    e->servitor  = chorda_ex_literis(tmux ? tmux : "", piscina);
+    per (i = ZEPHYRUM; i < e->servitor.mensura
+        && e->servitor.datum[i] != ','; i++)
+    {
+    }
+    e->servitor.mensura  = i;
+    e->via               =
+        chorda_ex_literis(getenv("PWD") ? getenv("PWD")
+        : "", piscina);
+}
+
 interior integer
 status (
                 Piscina* piscina,
      constans character* textus)
 {
-     PraeconiumEventus  e;
-    constans character* panellus;
-    constans character* tmux;
-                   i32  i;
+    PraeconiumEventus e;
 
-    memset(&e, ZEPHYRUM, magnitudo(e));
-    panellus    = getenv("TMUX_PANE");
-    tmux        = getenv("TMUX");
-    e.tempus    = nunc_ms();
-    e.eventus   = chorda_ex_literis("status", piscina);
-    e.panellus  = chorda_ex_literis(panellus ? panellus : "", piscina);
-    e.servitor  = chorda_ex_literis(tmux ? tmux : "", piscina);
-    per (i = ZEPHYRUM; i < e.servitor.mensura
-        && e.servitor.datum[i] != ','; i++)
-    {
-    }
-    e.servitor.mensura  = i;
-    e.via               =
-        chorda_ex_literis(getenv("PWD") ? getenv("PWD")
-        : "", piscina);
-    e.nuntius           = chorda_ex_literis(textus, piscina);
+    ambitus(&e, piscina);
+    e.eventus = chorda_ex_literis("status", piscina);
+    e.nuntius = chorda_ex_literis(textus, piscina);
     si (!praeconium_scribere(praeconium_via(piscina), &e, piscina))
     {
         fprintf(stderr, "praeco: scribere non potui\n");
         redde I;
+    }
+    redde ZEPHYRUM;
+}
+
+/* causa, textus, caret sub offset (ut auditio) */
+interior vacuum
+vitium_monstrare (
+                     chorda  textus,
+    constans CantualeVitium* vitium)
+{
+    i32 i;
+
+    fprintf(stderr, "praeco: cantus: %s\n  %.*s\n  ",
+        vitium->causa ? vitium->causa : "vitium",
+        (integer)textus.mensura, (constans character*)textus.datum);
+    per (i = ZEPHYRUM; i < vitium->offset; i++)
+    {
+        fputc(' ', stderr);
+    }
+    fputs("^\n", stderr);
+}
+
+interior integer
+cantus (
+       Piscina*  piscina,
+       integer   argc,
+     character** argv)
+{
+      PraeconiumEventus  e;
+               Cantuale  liber;
+         CantualeVitium  vitium;
+        constans Cantio* cantio;
+     constans character* titulus  = NIHIL;
+     constans character* genus    = NIHIL;
+     constans character* notatio  = NIHIL;
+                 chorda  textus;
+                    b32  intactus = FALSUM;
+                   Sors  sors;
+                integer  k;
+
+    per (k = II; k < argc; k++)
+    {
+        si (strcmp(argv[k], "-intactus") == ZEPHYRUM)
+        {
+            intactus = VERUM;
+        }
+        alioquin si (   strcmp(argv[k], "-titulus") == ZEPHYRUM
+                     && k + I < argc)
+        {
+            titulus = argv[++k];
+        }
+        alioquin si (   strcmp(argv[k], "-genus") == ZEPHYRUM
+                     && k + I < argc)
+        {
+            genus = argv[++k];
+        }
+        alioquin si (notatio == NIHIL && argv[k][ZEPHYRUM] != '-')
+        {
+            notatio = argv[k];
+        }
+        alioquin
+        {
+            fprintf(stderr, "praeco: cantus: argumentum ignotum: %s\n",
+                argv[k]);
+            redde I;
+        }
+    }
+    si ((notatio != NIHIL) + (titulus != NIHIL) + (genus != NIHIL) != I)
+    {
+        fprintf(stderr,
+            "usus: praeco cantus [-intactus] <mml> | cantus "
+            "-titulus T | cantus -genus G\n");
+        redde I;
+    }
+    si (notatio != NIHIL)
+    {
+        textus = chorda_ex_literis(notatio, piscina);
+    }
+    alioquin
+    {
+        si (!cantuale_ordinarium(piscina, &liber, &vitium))
+        {
+            fprintf(stderr, "praeco: cantuale fractum: %s\n",
+                vitium.causa ? vitium.causa : "memoria");
+            redde I;
+        }
+        sors_seminare(&sors, (i64)nunc_ms(), ZEPHYRUM);
+        cantio = titulus != NIHIL
+            ? cantuale_invenire(&liber, chorda_ex_literis(titulus,
+                  piscina))
+            : cantuale_eligere(&liber,
+                  chorda_ex_literis(genus, piscina),
+                  &sors, NIHIL);
+        si (cantio == NIHIL)
+        {
+            fprintf(stderr, "praeco: cantus: %s sine cantilena: %s\n",
+                titulus != NIHIL ? "titulus" : "genus",
+                titulus != NIHIL ? titulus : genus);
+            redde I;
+        }
+        textus    = cantio->textus;
+        intactus  = intactus || cantio->intactus;
+        imprimere("%.*s\n", (integer)cantio->titulus.mensura,
+            (constans character*)cantio->titulus.datum);
+    }
+    ambitus(&e, piscina);
+    si (!praeconium_cantum_parare(textus, intactus, &e, piscina,
+        &vitium))
+    {
+        vitium_monstrare(textus, &vitium);
+        redde I;
+    }
+    si (!praeconium_scribere(praeconium_via(piscina), &e, piscina))
+    {
+        fprintf(stderr, "praeco: scribere non potui\n");
+        redde I;
+    }
+    redde ZEPHYRUM;
+}
+
+/* cantilenae libri infixi: titulus, genera, [intactus], textus */
+interior integer
+cantuale_monstrare (
+    Piscina* piscina)
+{
+          Cantuale liber;
+    CantualeVitium vitium;
+         character genera[CXXVIII];
+               i32 i;
+               i32 j;
+
+    si (!cantuale_ordinarium(piscina, &liber, &vitium))
+    {
+        fprintf(stderr, "praeco: cantuale fractum: %s\n",
+            vitium.causa ? vitium.causa : "memoria");
+        redde I;
+    }
+    per (i = ZEPHYRUM; i < liber.numerus; i++)
+    {
+        constans Cantio* c = &liber.cantiones[i];
+
+        genera[ZEPHYRUM] = '\0';
+        per (j = ZEPHYRUM; j < c->genera_numerus; j++)
+        {
+            si (strlen(genera) + (size_t)c->genera[j].mensura + II
+                < magnitudo(genera))
+            {
+                si (j > ZEPHYRUM)
+                {
+                    strcat(genera, " ");
+                }
+                strncat(genera, (constans character*)c->genera[j].datum,
+                    (size_t)c->genera[j].mensura);
+            }
+        }
+        imprimere("%-14.*s %-18s %s%.*s\n", (integer)c->titulus.mensura,
+            (constans character*)c->titulus.datum, genera,
+            c->intactus ? "intactus  " : "", (integer)c->textus.mensura,
+            (constans character*)c->textus.datum);
     }
     redde ZEPHYRUM;
 }
@@ -175,8 +356,8 @@ principale (
     piscina = piscina_generare_dynamicum("praeco", LXIV * M);
     si (!piscina || argc < II)
     {
-        fprintf(stderr, "usus: praeco hamus | status <textus> | cauda "
-            "[n]\n");
+        fprintf(stderr, "usus: praeco hamus | status <textus> | cantus "
+            "... | cantuale | cauda [n]\n");
         /* hamus sine piscina aut argumentis: tamen 0 */
         redde argc >= II && strcmp(argv[I], "hamus") == ZEPHYRUM
             ? ZEPHYRUM : I;
@@ -189,11 +370,21 @@ principale (
     {
         redde status(piscina, argv[II]);
     }
+    si (strcmp(argv[I], "cantus") == ZEPHYRUM)
+    {
+        redde cantus(piscina, argc, argv);
+    }
+    si (strcmp(argv[I], "cantuale") == ZEPHYRUM)
+    {
+        redde cantuale_monstrare(piscina);
+    }
     si (strcmp(argv[I], "cauda") == ZEPHYRUM)
     {
         redde cauda(piscina, argc >= III ? atoi(argv[II]) : XX);
     }
     fprintf(stderr,
-        "usus: praeco hamus | status <textus> | cauda [n]\n");
+        "usus: praeco hamus | status <textus> | cantus [-intactus] "
+        "<mml> | cantus -titulus T | cantus -genus G | cantuale | "
+        "cauda [n]\n");
     redde I;
 }
