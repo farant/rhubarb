@@ -6367,6 +6367,100 @@ _probare_circuitum_scalae_fugae (
     }
 }
 
+/* ATTRIBUTA PIGRA (2026-10-22): Xar attributorum nascitur cum
+ * attributo PRIMO. Contractus: elementum novum NIHIL fert, addere id
+ * creat, textus addere recusat (ut antea), duplicatum sine attributis
+ * addere ACCIPIT (antea FALSUM tacitum - Xar deerat), parsatio sine
+ * attributis NIHIL dat et octeti idem manent. */
+interior vacuum
+_probare_attributa_pigra (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
+    {
+        StmlNodus* elementum;
+        StmlNodus* textus;
+        StmlNodus* duplicatum;
+           chorda* valor;
+
+        /* elementum novum: nulla Xar, lectores NIHIL ferunt */
+        elementum = stml_elementum_creare(piscina, intern, "e");
+        CREDO_NECESSE_NON_NIHIL(elementum);
+        CREDO_NIHIL(elementum->attributa);
+        CREDO_AEQUALIS_I32(xar_numerus(elementum->attributa), ZEPHYRUM);
+        CREDO_NIHIL(stml_attributum_capere(elementum, "a"));
+        CREDO_FALSUM(stml_attributum_habet(elementum, "a"));
+
+        /* addere Xar creat */
+        CREDO_VERUM(stml_attributum_addere(elementum, piscina, intern,
+            "a", "1"));
+        CREDO_NON_NIHIL(elementum->attributa);
+        CREDO_AEQUALIS_I32(xar_numerus(elementum->attributa), I);
+        valor = stml_attributum_capere(elementum, "a");
+        CREDO_VERUM(_chorda_ptr_eq_literis(valor, "1"));
+        CREDO_VERUM(stml_attributum_addere_chorda(elementum, piscina,
+            intern, "b", chorda_ex_literis("2", piscina)));
+        CREDO_AEQUALIS_I32(xar_numerus(elementum->attributa), II);
+
+        /* sine piscina Xar nasci non potest: FALSUM, nihil mutatum */
+        duplicatum = stml_elementum_creare(piscina, intern, "f");
+        CREDO_FALSUM(stml_attributum_addere(duplicatum, NIHIL, intern,
+            "a", "1"));
+        CREDO_NIHIL(duplicatum->attributa);
+
+        /* textus attributa numquam fert */
+        textus = stml_textum_creare(piscina, intern, "t");
+        CREDO_FALSUM(stml_attributum_addere(textus, piscina, intern,
+            "a", "1"));
+        CREDO_NIHIL(textus->attributa);
+
+        /* duplicatum elementi sine attributis: antea addere
+         * FALSUM reddebat (Xar NIHIL), nunc accipit */
+        duplicatum = stml_duplicare(
+            stml_elementum_creare(piscina, intern, "g"), piscina,
+            intern);
+        CREDO_NECESSE_NON_NIHIL(duplicatum);
+        CREDO_NIHIL(duplicatum->attributa);
+        CREDO_VERUM(stml_attributum_addere(duplicatum, piscina, intern,
+            "a", "1"));
+        CREDO_AEQUALIS_I32(xar_numerus(duplicatum->attributa), I);
+    }
+    {
+        /* parsatio: tagum sine attributis NIHIL, cum attributis Xar;
+         * octeti idem (spatium ante '/>' extra Xar servatur) */
+         constans character* fons;
+               StmlResultus  res;
+                  StmlNodus* a;
+                  StmlNodus* b;
+                  StmlNodus* d;
+
+        fons  = "<r><a/><b x=\"1\" y/><d /></r>";
+        res   = stml_legere_ex_literis(fons, piscina, intern);
+        CREDO_NECESSE(res.successus);
+        a = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi,
+            ZEPHYRUM);
+        b = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi, I);
+        d = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi, II);
+        CREDO_NIHIL(a->attributa);
+        CREDO_AEQUALIS_I32(xar_numerus(b->attributa), II);
+        CREDO_NIHIL(d->attributa);
+        CREDO_NIHIL(res.elementum_radix->attributa);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            stml_scribere(res.radix, piscina, FALSUM), fons);
+
+        /* elementum parsatum sine attributis addere accipit */
+        CREDO_VERUM(stml_attributum_addere(a, piscina, intern, "z",
+            "9"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(
+            stml_attributum_capere(a, "z"), "9"));
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "stml_elementum_creare", _probare_stml_elementum_creare, NIHIL,
         NIHIL, NIHIL, NIHIL },
@@ -6510,6 +6604,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
             NIHIL },
     { "circuitum scalae fugae", _probare_circuitum_scalae_fugae, NIHIL,
         NIHIL, NIHIL, NIHIL },
+    { "attributa pigra", _probare_attributa_pigra, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

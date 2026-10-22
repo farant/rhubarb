@@ -1638,3 +1638,17 @@ backslash) fires the VALUE assertion on depths 2 and 3; writer plant
 deliberately not sufficient as a test case — stripping all and
 stripping one agree there, which is exactly why the ladder needs
 depths 2 and 3 to be pinned.
+
+## 2026-10-22 — attributa pigra (B, half one)
+
+An element's `attributa` Xar is now created on its first attribute, not with the element. NIHIL means no attributes. Measurement and reasoning: `materia/fontes/materia_arbor.worklog.md` 2026-10-22 (79% of attribute Xars in the hilarius projection were empty, 64 B header each).
+
+Changed: `stml_elementum_creare` (NIHIL); the tokenizer's `_tok_legere_attributa` (returns NIHIL for an attribute-less tag; it already did on allocation failure and no caller checked); the adders `stml_attributum_addere` / `_addere_chorda` (and `_boolean_addere` through them) create the Xar via `_attributum_novum`, so the long-unused `piscina` parameter now matters (NIHIL piscina on an empty element → FALSUM).
+
+Contract kept: the adders used to refuse any node without a Xar, which in practice meant text/comment/etc. They now refuse `genus != STML_NODUS_ELEMENTUM` explicitly. Every parser site that hands attributes to a node creates an ELEMENTUM, so that is the same set.
+
+Latent bug fixed by this: `stml_duplicare` and the macro copier already produced NIHIL `attributa` for elements without attributes. So `stml_attributum_addere` / `insula_attributum_ponere` on such a copy returned FALSUM silently. Now they add. Covered in probatio_stml section "attributa pigra" (28 assertions incl. the duplicate and parsed-without-attributes cases).
+
+Audit: about 120 NIHIL tests on `->attributa` across 21 files. All but the two adders are read-guards ("NIHIL → no attribute / skip") that stay correct. Readers through `xar_numerus` / `xar_obtinere` take NIHIL already. Mutating xar calls on StmlNodus attributa outside the adders: only copies that create their own Xar first (stml.c duplicate, stml_macros `_nodum_comparandum`, `_dist_dissolvere`), plus insula's `xar_removere_cum_ultimo`, which sits behind a NIHIL guard.
+
+Results: hilarius projection pool 82,980 → 74,387 KiB (-10.4%), and zero empty attribute Xars in all five probe inputs (`build/sonda_partes/sonda_vacua.c`). ASan sweep of all lib suites: 218 clean, the same 3 pre-existing reds (park …Q6TEHK), the same 3 old UBSan sites, 0 ASan reports. Allocation goldens of 7 clients regenerated, every change downward and only `allocationes_arboris` moved (27 rows; up to -115,867 on oratio). silva's golden is unchanged. Plant (old `!nodus->attributa` guard restored in the adder) went red in probatio_stml, probatio_eventus_stml and probatio_norma_stml; reverted, green.

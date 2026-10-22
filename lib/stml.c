@@ -554,8 +554,38 @@ _tok_legere_valor_attributi (
     redde result;
 }
 
+/* ATTRIBUTA PIGRA (2026-10-22): Xar attributorum nascitur cum
+ * attributo PRIMO, non cum elemento. NIHIL = nulla attributa -
+ * lectores id iam ferunt (xar_numerus(NIHIL) = 0, et nodi textus
+ * duplicataque semper NIHIL habuerunt). Proiectio hilarii: LXXIX
+ * centesimae Xar attributorum vacuae erant, LXIV octeti quisque
+ * (materia/fontes/materia_arbor.worklog.md 2026-10-22).
+ *
+ * _attributum_novum: Xar si deest creat, deinde cellam addit. */
+interior StmlAttributum*
+_attributum_novum (
+        Xar** attributa,
+    Piscina*  piscina)
+{
+    si (*attributa == NIHIL)
+    {
+        si (piscina == NIHIL)
+        {
+            redde NIHIL;
+        }
+        *attributa = xar_creare(piscina, magnitudo(StmlAttributum));
+        si (*attributa == NIHIL)
+        {
+            redde NIHIL;
+        }
+    }
+    redde (StmlAttributum*)xar_addere(*attributa);
+}
+
 /* Parse attributes into Xar of StmlAttributum
  * Handles boolean attributes (no = sign)
+ *
+ * NIHIL si tagum nulla attributa fert (vide ATTRIBUTA PIGRA supra).
  *
  * TRIVIA INTRA TAGUM (§1.6): spatium ANTE quodque attributum
  * notatur (attr->spatia_ante; spatium unicum canonicum = NIHIL);
@@ -581,11 +611,7 @@ _tok_legere_attributa (
     cauda_spatii->datum    = NIHIL;
     cauda_spatii->mensura  = ZEPHYRUM;
 
-    attributa = xar_creare(ctx->piscina, magnitudo(StmlAttributum));
-    si (!attributa)
-    {
-        redde NIHIL;
-    }
+    attributa = NIHIL;
 
     dum (ctx->positus < ctx->input.mensura)
     {
@@ -659,7 +685,7 @@ _tok_legere_attributa (
             valor_ptr = chorda_internare_ex_literis(ctx->intern,
                 "true");
 
-            attr = xar_addere(attributa);
+            attr = _attributum_novum(&attributa, ctx->piscina);
             si (attr)
             {
                 attr->titulus      = titulus_ptr;
@@ -679,7 +705,7 @@ _tok_legere_attributa (
         titulus_ptr  = chorda_internare(ctx->intern, titulus_ch);
         valor_ptr    = chorda_internare(ctx->intern, valor_ch);
 
-        attr = xar_addere(attributa);
+        attr = _attributum_novum(&attributa, ctx->piscina);
         si (attr)
         {
             attr->titulus      = titulus_ptr;
@@ -6203,7 +6229,7 @@ stml_elementum_creare (
     nodus->genus = STML_NODUS_ELEMENTUM;
     nodus->titulus = chorda_internare_ex_literis(intern, titulus);
     nodus->valor = NIHIL;
-    nodus->attributa = xar_creare(piscina, magnitudo(StmlAttributum));
+    nodus->attributa = NIHIL;   /* pigra: vide ATTRIBUTA PIGRA */
     nodus->liberi = xar_creare(piscina, magnitudo(StmlNodus*));
     nodus->parens = NIHIL;
     nodus->crudus = FALSUM;
@@ -6422,14 +6448,14 @@ stml_attributum_addere (
 {
     StmlAttributum* attr;
 
-    (vacuum)piscina;
-
-    si (!nodus || !nodus->attributa)
+    /* Elementa sola attributa ferunt - antea Xar praesens id
+     * custodiebat (textus NIHIL habet); nunc Xar pigra est */
+    si (!nodus || nodus->genus != STML_NODUS_ELEMENTUM)
     {
         redde FALSUM;
     }
 
-    attr = xar_addere(nodus->attributa);
+    attr = _attributum_novum(&nodus->attributa, piscina);
     si (!attr)
     {
         redde FALSUM;
@@ -6463,14 +6489,14 @@ stml_attributum_addere_chorda (
 {
     StmlAttributum* attr;
 
-    (vacuum)piscina;
-
-    si (!nodus || !nodus->attributa)
+    /* Elementa sola attributa ferunt - antea Xar praesens id
+     * custodiebat (textus NIHIL habet); nunc Xar pigra est */
+    si (!nodus || nodus->genus != STML_NODUS_ELEMENTUM)
     {
         redde FALSUM;
     }
 
-    attr = xar_addere(nodus->attributa);
+    attr = _attributum_novum(&nodus->attributa, piscina);
     si (!attr)
     {
         redde FALSUM;
