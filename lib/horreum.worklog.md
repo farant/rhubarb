@@ -77,3 +77,42 @@
 - Deferred to T4 with the tests that need them: the fake's multipart
   model, TRUNCARE, `simulacrum_corpus_maximum`, and exsequi's
   NoSuchUpload-after-retry branch.
+
+## 2026-10-21 - T4: multipart and the file helpers
+
+- **One part in memory means one piscina per part.** An arena never
+  frees, so reading a 40 MiB file part by part into the caller's
+  piscina would still hold all 40 MiB. `horreum_ponere_ex_filo` gives
+  each part (and `horreum_capere_in_filum` each 8 MiB range) its own
+  `piscina_generare_dynamicum`, destroyed after the send; the part's
+  ETag and any error text are copied to the caller's piscina first
+  (`_errorem_transcribere`). The fake keeps each pending upload in its
+  own piscina too, freed on complete/abort (`simulacrum_claudere` frees
+  leftovers) - the whole suite peaks at ~180 MB RSS, under credo's
+  256 MiB section ceiling without the `gravis` flag.
+- **CompleteMultipartUpload's 200 body is read in the core**, like
+  CopyObject's (T3): `<Error>` in a 200 is an error the retry policy
+  sees, and the final ETag comes from `<CompleteMultipartUploadResult>`
+  (the response has no ETag header).
+- **NoSuchUpload after a retried Complete** -> HEAD, compare the ETag
+  with `perficere_etag_expectatum` (md5 of the part digests + `-N`,
+  computed by the T2 builder). Equal -> success `iam_nostrum`.
+- **Abort on any final failure** of the multipart path, with the
+  abort's own error ignored so the caller sees the first failure.
+- **`capere_in_filum` order:** HEAD -> temp file `<via>.horreum-<pid>-
+  <sors hex>` (same directory, so the move is a rename) -> ranged GETs
+  each with `If-Match: <HEAD ETag>` -> close -> total size check -> md5
+  check (single-part ETag form only) -> rename. Any failure deletes the
+  temp; an existing destination is never touched before the rename.
+  Caveat: on AWS, SSE-KMS objects have 32-hex ETags that are NOT md5;
+  DO and R2 are md5. If a provider ever breaks that, the md5 check
+  needs a capability bit rather than the ETag's shape.
+- **Fake faults matched by query parameter** (`parametrum`:
+  `"partNumber=2"`, `"uploadId"`): CreateMultipartUpload and
+  CompleteMultipartUpload are both POSTs on the same key, so method +
+  key alone cannot target the Complete.
+- TRUNCARE returns a short body with a matching Content-Length (a
+  server that sends less than asked without a transport error);
+  MUTARE replaces the object after serving one request (same size, new
+  ETag) - without If-Match the result would be a spliced file of the
+  right size, which is exactly what the `capere_mutatum` plant shows.

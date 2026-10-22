@@ -418,9 +418,9 @@ horreum_praesignare (
 
 /* resultus -> VERUM (facta in obiectum) aut FALSUM (error typatus).
  * tempus_signandi = tempus quo petitio signata est (deviatio
- * horologii ex capite Date servi). obiectum NIHIL licet. CopyObject:
- * '200 + <Error>' error est (status CC); ETag et tempus ex corpore
- * CopyObjectResult. */
+ * horologii ex capite Date servi). obiectum NIHIL licet. CopyObject
+ * et CompleteMultipartUpload: '200 + <Error>' error est (status CC);
+ * ETag (et tempus copiae) ex corpore. */
 b32
 horreum_responsum_legere (
     constans HorreumOpus* opus,

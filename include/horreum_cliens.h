@@ -143,4 +143,113 @@ horreum_enumerare (
                   HorreumError* error,
                        Piscina* piscina);
 
+/* ===== multipars (II.4) ===== */
+
+b32
+horreum_mp_incipere (
+                    Horreum* h,
+                     chorda  situla,
+                     chorda  clavis,
+    constans HorreumPonendi* optiones,
+                     chorda* id_oneris,
+               HorreumError* error,
+                    Piscina* piscina);
+
+/* exitus: numerus, ETag (sine virgulis), mensura - in perficere */
+b32
+horreum_mp_partem_mittere (
+         Horreum* h,
+          chorda  situla,
+          chorda  clavis,
+          chorda  id_oneris,
+             i32  numerus,
+          chorda  corpus,
+     HorreumPars* exitus,
+    HorreumError* error,
+         Piscina* piscina);
+
+/* '200 + <Error>' error est; NoSuchUpload post iterationem -> HEAD,
+ * ETag expectatum -> successus cum iam_nostrum (II.5) */
+b32
+horreum_mp_perficere (
+                 Horreum* h,
+                  chorda  situla,
+                  chorda  clavis,
+                  chorda  id_oneris,
+    constans HorreumPars* partes,
+                     i32  numerus,
+         HorreumObjectum* obiectum,
+            HorreumError* error,
+                 Piscina* piscina);
+
+b32
+horreum_mp_abicere (
+         Horreum* h,
+          chorda  situla,
+          chorda  clavis,
+          chorda  id_oneris,
+    HorreumError* error,
+         Piscina* piscina);
+
+b32
+horreum_mp_partes (
+          Horreum*  h,
+           chorda   situla,
+           chorda   clavis,
+           chorda   id_oneris,
+      HorreumPars** exitus,
+              i32*  numerus,
+     HorreumError*  error,
+          Piscina*  piscina);
+
+/* onera inchoata nec perfecta (pecunia constant, enumeratione
+ * invisibilia) - ad purgandum */
+b32
+horreum_mp_pendentes (
+                 Horreum*  h,
+                  chorda   situla,
+                  chorda   praefixum,
+      HorreumOnusPendens** exitus,
+                     i32*  numerus,
+            HorreumError*  error,
+                 Piscina*  piscina);
+
+/* ===== fila ===== */
+
+nomen structura {
+    i64 pars_mensura;          /* 0 = HORREUM_PARS_ORDINARIA */
+} HorreumFiliOptiones;
+
+/* infra partem (aut aequale): PUT unum; supra: multipars partibus
+ * aequis (P12), pars una in memoria (piscina propria quaeque);
+ * defectus finalis -> abicere (nihil orbum a nobis relinquitur).
+ * optiones NIHIL licet */
+b32
+horreum_ponere_ex_filo (
+                         Horreum* h,
+                          chorda  situla,
+                          chorda  clavis,
+              constans character* via,
+         constans HorreumPonendi* optiones,
+    constans HorreumFiliOptiones* fili_optiones,
+                 HorreumObjectum* obiectum,
+                    HorreumError* error,
+                         Piscina* piscina);
+
+/* HEAD, deinde GET per frusta HORREUM_FRUSTUM_LECTIONIS cum If-Match
+ * (P1) in filum temporarium eiusdem directorii ("<via>.horreum-<pid>-
+ * <signum>"); mensura (et md5 si ETag partis unius) probata, deinde
+ * filum_movere. Numquam filum dimidium aut mixtum ad destinationem;
+ * filum temporarium in omni defectu deletur, destinatio exsistens
+ * intacta manet. */
+b32
+horreum_capere_in_filum (
+                Horreum* h,
+                 chorda  situla,
+                 chorda  clavis,
+     constans character* via,
+        HorreumObjectum* obiectum,
+           HorreumError* error,
+                Piscina* piscina);
+
 #endif /* HORREUM_CLIENS_H */

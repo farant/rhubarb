@@ -224,6 +224,24 @@ this plan.
 - **T3: plant 5 added** (CopyObject body not read -> `iter` red at the
   copy's ETag).
 
+- **T4: CompleteMultipartUpload's 200 body read in the core** (as
+  CopyObject in T3): `<Error>` in a 200 goes through retry policy; the
+  final ETag comes from the body.
+- **T4: one piscina per part / per range**, destroyed after use (an
+  arena never frees, so "one part in memory" needs it). Part ETags and
+  error text are copied to the caller's piscina.
+- **T4: fake faults gain `parametrum`** (query-parameter match,
+  `"partNumber=2"`, `"uploadId"`): Create and Complete are both POSTs
+  on the key. New faults TRUNCARE (short body, matching length) and
+  MUTARE (object replaced after one request); new fake accessors
+  `simulacrum_obiectum_corpus`, `simulacrum_etag_ponere`,
+  `simulacrum_si_etag_visa`, `simulacrum_claudere`.
+- **T4: `ponere_ex_filo` uses a single PUT when size <= part size**
+  (equal counts as one part); parts above DXII MiB refused (chorda is
+  i32).
+- **T4: two plants added** - exsequi's NoSuchUpload branch removed ->
+  `perficere_iam_nostrum` red; md5 check removed -> `md5_etag` red.
+
 ## Review focus
 
 1. **Object keys with awkward characters** (space, `+`, `%`, `?`, `#`,

@@ -2232,10 +2232,11 @@ _obiectum_ex_capitibus (
     }
 }
 
-/* CopyObject: 200 cum <Error> (S3 errorem post capita missa
- * nuntiat) aut <CopyObjectResult> cum ETag et LastModified */
+/* CopyObject et CompleteMultipartUpload: 200 cum <Error> (S3 errorem
+ * post capita missa nuntiat) aut <CopyObjectResult> (ETag,
+ * LastModified) / <CompleteMultipartUploadResult> (ETag) */
 interior b32
-_copiam_legere (
+_corpus_successus_legere (
     constans HttpResponsum* r,
            HorreumObjectum* ob,
               HorreumError* e,
@@ -2266,9 +2267,14 @@ _copiam_legere (
         e->genus       = _genus_erroris(r->status, e->codex);
         si (e->nuntius.mensura == ZEPHYRUM)
         {
-            e->nuntius = _l("horreum: CopyObject 200 cum <Error>", p);
+            e->nuntius = _l("horreum: 200 cum <Error>", p);
         }
         redde FALSUM;
+    }
+    si (   ob && chorda_aequalis_literis(*radix->titulus,
+            "CompleteMultipartUploadResult"))
+    {
+        ob->etag = _sine_virgulis(_textus(radix, "ETag", p));
     }
     si (   ob && chorda_aequalis_literis(*radix->titulus,
             "CopyObjectResult"))
@@ -2332,8 +2338,9 @@ horreum_responsum_legere (
         {
             _obiectum_ex_capitibus(o, r, ob, p);
         }
-        redde o->genus != HORREUM_OPUS_COPIARE
-            || _copiam_legere(r, ob, e, p);
+        redde (   o->genus != HORREUM_OPUS_COPIARE
+               && o->genus != HORREUM_OPUS_MP_PERFICERE)
+            || _corpus_successus_legere(r, ob, e, p);
     }
     e->status      = r->status;
     e->petitio_id  = _caput_responsi(r, "x-amz-request-id", p);

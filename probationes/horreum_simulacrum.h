@@ -15,12 +15,18 @@
  * x-amz-copy-source + metadata-directive), GET (Range), HEAD, DELETE,
  * POST ?delete (Content-MD5 probatur; vitium per clavem intra
  * fasciculum), GET ?list-type=2 (prefix, delimiter, max-keys,
- * continuation-token). ETag = md5 hex. Multipars: T4.
+ * continuation-token), multipars (POST ?uploads, PUT ?partNumber&
+ * uploadId, POST ?uploadId cum ordine/ETag/mensura partium probatis,
+ * DELETE ?uploadId, GET ?uploadId, GET ?uploads). ETag = md5 hex;
+ * multipars md5(digesta partium) + "-N".
  *
  * Vitia (cauda, ordine addita, quaeque 'numerus' vicibus): STATUS
  * reddit status + codicem S3 (secundae > 0 = Retry-After; status CC =
  * '200 cum <Error>'); SCRIBERE_ABRUMPERE operationem PERFICIT, deinde
- * responsum perit (error transportus).
+ * responsum perit (error transportus); TRUNCARE corpus GET dimidiat
+ * (Content-Length congruum); MUTARE post responsum obiectum mutat.
+ * 'parametrum' vitium ad partem quaestionis restringit
+ * ("partNumber=2", "uploadId").
  *
  * Functiones INTERIORES (more servus_scriptus.h): includens omnes
  * aditus simulacrum_* vocare debet. */
@@ -48,13 +54,18 @@
 #define SIMULACRUM_VITIA_MAXIMA   XVI
 #define SIMULACRUM_PARIA_MAXIMA   XXXII
 #define SIMULACRUM_CAPITA_MAXIMA  XXXII
+#define SIMULACRUM_ONERA_MAXIMA   XVI
+#define SIMULACRUM_PARTES_MAXIMAE XVI
 /* 2024-03-15T12:00:00Z: tempus mutationis si hora non posita */
 #define SIMULACRUM_TEMPUS         ((MomentumSec)1710504000L)
 
 nomen enumeratio {
     SIMULACRUM_VITIUM_STATUS = 0,          /* status + codex S3 */
-    SIMULACRUM_VITIUM_SCRIBERE_ABRUMPERE   /* operatio fit, responsum
+    SIMULACRUM_VITIUM_SCRIBERE_ABRUMPERE,  /* operatio fit, responsum
                                             * perit */
+    SIMULACRUM_VITIUM_TRUNCARE,            /* GET: corpus dimidium */
+    SIMULACRUM_VITIUM_MUTARE               /* post responsum obiectum
+                                            * mutatur */
 } SimulacrumVitiumGenus;
 
 nomen structura {
@@ -62,6 +73,8 @@ nomen structura {
              HttpMethodus methodus;   /* HTTP_METHODUS_IGNOTUS =
                                          * quaelibet */
        constans character* clavis;     /* NIHIL = quaelibet */
+       constans character* parametrum; /* NIHIL = quaelibet; "nomen"
+                                         * aut "nomen=valor" */
                       i32  status;
        constans character* codex;
                       s32  secundae;   /* Retry-After si > 0 */
@@ -79,6 +92,28 @@ nomen structura {
 } SimulacrumObiectum;
 
 nomen structura {
+       i32 numerus;
+    chorda corpus;
+    chorda etag;
+        i8 digestum[MD5_DIGEST_MENSURA];
+} SimulacrumPars;
+
+/* onus multipartis: piscina propria, deletur cum perficitur aut
+ * abicitur */
+nomen structura {
+           b32  vivum;
+       Piscina* piscina;
+        chorda  clavis;
+        chorda  id;
+        chorda  genus_contenti;
+     HttpCaput* meta;
+           i32  meta_numerus;
+   MomentumSec  initium;
+SimulacrumPars  partes[SIMULACRUM_PARTES_MAXIMAE];
+           i32  partes_numerus;
+} SimulacrumOnus;
+
+nomen structura {
                Piscina* piscina;
                 chorda  clavis_id;
                 chorda  secretum;
@@ -90,6 +125,10 @@ nomen structura {
                    i32  vitia_numerus;
                    i32  petitiones;
            MomentumSec  hora;
+        SimulacrumOnus  onera[SIMULACRUM_ONERA_MAXIMA];
+                   i32  onera_numerus;
+                   i32  corpus_maximum;
+                   i32  si_etag_visa;
 } Simulacrum;
 
 /* ===== auxilia ===== */
@@ -476,9 +515,11 @@ _sim_removere (
 /* vitium primum quod congruit (numerus > 0) consumitur */
 interior SimulacrumVitium*
 _sim_vitium (
-      Simulacrum* s,
-    HttpMethodus  methodus,
-          chorda  clavis)
+               Simulacrum* s,
+             HttpMethodus  methodus,
+                   chorda  clavis,
+    constans SignaturaPar* q,
+                      i32  nq)
 {
     i32 i;
 
@@ -498,6 +539,23 @@ _sim_vitium (
         si (v->clavis && !chorda_aequalis_literis(clavis, v->clavis))
         {
             perge;
+        }
+        si (v->parametrum)
+        {
+             constans character* aeq = strchr(v->parametrum, '=');
+                      character  titulus[LXIV];
+                            s32  k;
+
+            sprintf(titulus, "%.*s", aeq ? (integer)(aeq
+                - v->parametrum)
+                : (integer)strlen(v->parametrum), v->parametrum);
+            k = _sim_par(q, nq, titulus);
+            si (   k < ZEPHYRUM
+                || (aeq
+                    && !chorda_aequalis_literis(q[k].valor, aeq + I)))
+            {
+                perge;
+            }
         }
         v->numerus--;
         redde v;
@@ -763,6 +821,20 @@ _sim_capere (
         redde _sim_error(s, CDIV, "NoSuchKey", ZEPHYRUM, p);
     }
     o = &s->obiecta[index];
+    si (_sim_caput(v, "If-Match", p).mensura > ZEPHYRUM)
+    {
+        chorda si_etag = _sim_caput(v, "If-Match", p);
+
+        s->si_etag_visa++;
+        si (   si_etag.mensura < II
+            || !chorda_aequalis(chorda_sectio(si_etag, I,
+            si_etag.mensura
+                - I), o->etag))
+        {
+            redde _sim_error(s, CDXII, "PreconditionFailed", ZEPHYRUM,
+                p);
+        }
+    }
     si (chorda_incipit(ambitus, _sim_l("bytes=", p)) && !solum_capita)
     {
            s32 linea = chorda_invenire_index(ambitus, _sim_l("-", p));
@@ -844,7 +916,8 @@ _sim_delere_plura (
                XmlNodus* k = xml_invenire_liberum(n, "Key");
                  chorda  clavis = k ? xml_textus_internus(k, p)
                                     : chorda_ex_buffer(NIHIL, ZEPHYRUM);
-       SimulacrumVitium* vi = _sim_vitium(s, HTTP_POST, clavis);
+       SimulacrumVitium* vi = _sim_vitium(s, HTTP_POST, clavis,
+            NIHIL, ZEPHYRUM);
 
         si (vi && vi->genus == SIMULACRUM_VITIUM_STATUS)
         {
@@ -1023,6 +1096,450 @@ _sim_enumerare (
     redde _sim_bene(r);
 }
 
+/* ===== multipars ===== */
+/* onus vivum per id (NIHIL si abest) */
+interior SimulacrumOnus*
+_sim_onus (
+                Simulacrum* s,
+     constans SignaturaPar* q,
+                       i32  nq,
+                    chorda  clavis)
+{
+    s32 iu = _sim_par(q, nq, "uploadId");
+    i32 i;
+
+    si (iu < ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < s->onera_numerus; i++)
+    {
+        SimulacrumOnus* o = &s->onera[i];
+
+        si (   o->vivum && chorda_aequalis(o->id, q[iu].valor)
+            && chorda_aequalis(o->clavis, clavis))
+        {
+            redde o;
+        }
+    }
+    redde NIHIL;
+}
+
+interior vacuum
+_sim_onus_finire (
+    SimulacrumOnus* o)
+{
+    si (o->vivum)
+    {
+        piscina_destruere(o->piscina);
+        o->piscina  = NIHIL;
+        o->vivum    = FALSUM;
+    }
+}
+
+interior HttpResultus
+_sim_mp_incipere (
+                Simulacrum* s,
+    constans HttpPetitioVisus* v,
+                    chorda  clavis,
+                   Piscina* p)
+{
+       SimulacrumOnus* o;
+            HttpCaput  meta[XVI];
+                  i32  n;
+                  i32  i;
+        HttpResponsum* r;
+    ChordaAedificator* a;
+            character  id[XXXII];
+
+    si (s->onera_numerus >= SIMULACRUM_ONERA_MAXIMA)
+    {
+        redde _sim_error(s, DIII, "SlowDown", ZEPHYRUM, p);
+    }
+    o = &s->onera[s->onera_numerus];
+    memset(o, ZEPHYRUM, magnitudo(*o));
+    s->onera_numerus++;
+    sprintf(id, "onus-%u", (insignatus integer)s->onera_numerus);
+    o->piscina         = piscina_generare_dynamicum("simulacrum_onus",
+        (memoriae_index)(LXIV * MXXIV));
+    o->vivum   = VERUM;
+    o->clavis  = chorda_transcribere(clavis, o->piscina);
+    o->id      = chorda_transcribere(_sim_l(id, p), o->piscina);
+    o->genus_contenti  = chorda_transcribere(_sim_caput(v,
+        "Content-Type",
+        p), o->piscina);
+    o->initium  = s->hora
+        > ZEPHYRUM ? s->hora : SIMULACRUM_TEMPUS;
+    n           = _sim_meta_petitionis(v, meta, p);
+    o->meta            = (HttpCaput*)piscina_allocare(o->piscina,
+        (memoriae_index)((n + I) * (i32)magnitudo(HttpCaput)));
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        o->meta[i].titulus = chorda_transcribere(meta[i].titulus,
+            o->piscina);
+        o->meta[i].valor = chorda_transcribere(meta[i].valor,
+            o->piscina);
+    }
+    o->meta_numerus  = n;
+    a                = chorda_aedificator_creare(p, CCLVI);
+    chorda_aedificator_appendere_literis(a,
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        "<InitiateMultipartUploadResult><Bucket>" SIMULACRUM_SITULA
+        "</Bucket><Key>");
+    _sim_effugere(a, clavis);
+    chorda_aedificator_appendere_literis(a, "</Key><UploadId>");
+    chorda_aedificator_appendere_literis(a, id);
+    chorda_aedificator_appendere_literis(a,
+        "</UploadId></InitiateMultipartUploadResult>");
+    r          = _sim_responsum(CC, p);
+    r->corpus  = chorda_aedificator_finire(a);
+    redde _sim_bene(r);
+}
+
+interior HttpResultus
+_sim_mp_pars (
+                   Simulacrum* s,
+    constans HttpPetitioVisus* v,
+        constans SignaturaPar* q,
+                          i32  nq,
+                       chorda  clavis,
+                      Piscina* p)
+{
+    SimulacrumOnus* o        = _sim_onus(s, q, nq, clavis);
+               s32  ip       = _sim_par(q, nq, "partNumber");
+               s32  numerus  = ZEPHYRUM;
+               i32  i;
+    SimulacrumPars* t = NIHIL;
+     HttpResponsum* r;
+
+    si (!o)
+    {
+        redde _sim_error(s, CDIV, "NoSuchUpload", ZEPHYRUM, p);
+    }
+    si (   ip < ZEPHYRUM || !chorda_ut_s32(q[ip].valor, &numerus)
+        || numerus < I || numerus > (s32)(X * M))
+    {
+        redde _sim_error(s, CD, "InvalidArgument", ZEPHYRUM, p);
+    }
+    per (i = ZEPHYRUM; i < o->partes_numerus; i++)
+    {
+        si (o->partes[i].numerus == (i32)numerus)
+        {
+            t = &o->partes[i];
+        }
+    }
+    si (!t)
+    {
+        si (o->partes_numerus >= SIMULACRUM_PARTES_MAXIMAE)
+        {
+            redde _sim_error(s, CD, "InvalidArgument", ZEPHYRUM, p);
+        }
+        t = &o->partes[o->partes_numerus];
+        o->partes_numerus++;
+    }
+    t->numerus  = (i32)numerus;
+    t->corpus   = chorda_transcribere(v->corpus, o->piscina);
+    md5_friare(v->corpus.datum, v->corpus.mensura, t->digestum);
+    t->etag  = _sim_hex(t->digestum, MD5_DIGEST_MENSURA, o->piscina);
+    r        = _sim_responsum(CC, p);
+    _sim_caput_addere(r, "ETag", chorda_concatenare(chorda_concatenare(
+        _sim_l("\"", p), t->etag, p), _sim_l("\"", p), p), p);
+    redde _sim_bene(r);
+}
+
+interior SimulacrumPars*
+_sim_pars_numeri (
+    SimulacrumOnus* o,
+               i32  numerus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < o->partes_numerus; i++)
+    {
+        si (o->partes[i].numerus == numerus)
+        {
+            redde &o->partes[i];
+        }
+    }
+    redde NIHIL;
+}
+
+interior HttpResultus
+_sim_mp_perficere (
+                Simulacrum* s,
+    constans HttpPetitioVisus* v,
+    constans SignaturaPar* q,
+                       i32  nq,
+                    chorda  clavis,
+                   Piscina* p)
+{
+       SimulacrumOnus* o = _sim_onus(s, q, nq, clavis);
+          XmlResultus  x;
+                  Xar* partes;
+                  i32  n;
+                  i32  i;
+                  i32  prior  = ZEPHYRUM;
+                  i64  tota   = ZEPHYRUM;
+       SimulacrumPars* ordo[SIMULACRUM_PARTES_MAXIMAE];
+                   i8* corpus;
+                  i64  ab = ZEPHYRUM;
+         MD5Contextus  ctx;
+                   i8  digestum[MD5_DIGEST_MENSURA];
+            character  suffixum[XVI];
+   SimulacrumObiectum* ob;
+        HttpResponsum* r;
+    ChordaAedificator* a;
+
+    si (!o)
+    {
+        redde _sim_error(s, CDIV, "NoSuchUpload", ZEPHYRUM, p);
+    }
+    x = xml_legere(v->corpus, p, internamentum_creare(p));
+    si (!x.successus || !x.radix)
+    {
+        redde _sim_error(s, CD, "MalformedXML", ZEPHYRUM, p);
+    }
+    partes  = xml_invenire_omnes_liberos(x.radix, "Part", p);
+    n       = partes ? (i32)xar_numerus(partes) : ZEPHYRUM;
+    si (n == ZEPHYRUM || n > SIMULACRUM_PARTES_MAXIMAE)
+    {
+        redde _sim_error(s, CD, "MalformedXML", ZEPHYRUM, p);
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+              XmlNodus* nd = *(XmlNodus**)xar_obtinere(partes, i);
+              XmlNodus* pn = xml_invenire_liberum(nd, "PartNumber");
+              XmlNodus* pe = xml_invenire_liberum(nd, "ETag");
+                   s32  numerus = ZEPHYRUM;
+                chorda  etag;
+        SimulacrumPars* t;
+
+        si (   !pn || !pe
+            || !chorda_ut_s32(xml_textus_internus(pn, p), &numerus))
+        {
+            redde _sim_error(s, CD, "MalformedXML", ZEPHYRUM, p);
+        }
+        si ((i32)numerus <= prior)
+        {
+            redde _sim_error(s, CD, "InvalidPartOrder", ZEPHYRUM, p);
+        }
+        prior  = (i32)numerus;
+        etag   = xml_textus_internus(pe, p);
+        si (etag.mensura >= II && etag.datum[ZEPHYRUM] == '"')
+        {
+            etag = chorda_sectio(etag, I, etag.mensura - I);
+        }
+        t = _sim_pars_numeri(o, (i32)numerus);
+        si (!t || !chorda_aequalis(t->etag, etag))
+        {
+            redde _sim_error(s, CD, "InvalidPart", ZEPHYRUM, p);
+        }
+        si (   i < n - I
+            && (i64)t->corpus.mensura < (i64)(V * MXXIV * MXXIV))
+        {
+            redde _sim_error(s, CD, "EntityTooSmall", ZEPHYRUM, p);
+        }
+        ordo[i]  = t;
+        tota     += (i64)t->corpus.mensura;
+    }
+    corpus = (i8*)piscina_allocare(s->piscina, (memoriae_index)(tota
+        + I));
+    md5_initiare(&ctx);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        memcpy(corpus + ab, ordo[i]->corpus.datum,
+            (size_t)ordo[i]->corpus.mensura);
+        ab += (i64)ordo[i]->corpus.mensura;
+        md5_addere(&ctx, ordo[i]->digestum, MD5_DIGEST_MENSURA);
+    }
+    md5_finire(&ctx, digestum);
+    sprintf(suffixum, "-%u", (insignatus integer)n);
+    ob          = _sim_locus(s, clavis);
+    ob->corpus  = chorda_ex_buffer(corpus, (i32)tota);
+    ob->etag            = chorda_concatenare(_sim_hex(digestum,
+        MD5_DIGEST_MENSURA, p), _sim_l(suffixum, p), s->piscina);
+    ob->genus_contenti  = chorda_transcribere(o->genus_contenti,
+        s->piscina);
+    ob->mutatum         = s->hora > ZEPHYRUM ? s->hora
+                                             : SIMULACRUM_TEMPUS;
+    ob->meta_numerus    = o->meta_numerus;
+    ob->meta            = (HttpCaput*)piscina_allocare(s->piscina,
+        (memoriae_index)((o->meta_numerus + I)
+            * (i32)magnitudo(HttpCaput)));
+    per (i = ZEPHYRUM; i < o->meta_numerus; i++)
+    {
+        ob->meta[i].titulus = chorda_transcribere(o->meta[i].titulus,
+            s->piscina);
+        ob->meta[i].valor = chorda_transcribere(o->meta[i].valor,
+            s->piscina);
+    }
+    a = chorda_aedificator_creare(p, CCLVI);
+    chorda_aedificator_appendere_literis(a,
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        "<CompleteMultipartUploadResult><Location>http://simulacrum."
+        "invalid/" SIMULACRUM_SITULA "/</Location><Bucket>"
+        SIMULACRUM_SITULA "</Bucket><Key>");
+    _sim_effugere(a, clavis);
+    chorda_aedificator_appendere_literis(a, "</Key><ETag>&quot;");
+    chorda_aedificator_appendere_chorda(a, ob->etag);
+    chorda_aedificator_appendere_literis(a,
+        "&quot;</ETag></CompleteMultipartUploadResult>");
+    _sim_onus_finire(o);
+    r          = _sim_responsum(CC, p);
+    r->corpus  = chorda_aedificator_finire(a);
+    redde _sim_bene(r);
+}
+
+interior HttpResultus
+_sim_mp_partes (
+                Simulacrum* s,
+     constans SignaturaPar* q,
+                       i32  nq,
+                    chorda  clavis,
+                   Piscina* p)
+{
+       SimulacrumOnus* o = _sim_onus(s, q, nq, clavis);
+                  i32  i;
+        HttpResponsum* r;
+    ChordaAedificator* a;
+
+    si (!o)
+    {
+        redde _sim_error(s, CDIV, "NoSuchUpload", ZEPHYRUM, p);
+    }
+    a = chorda_aedificator_creare(p, MXXIV);
+    chorda_aedificator_appendere_literis(a,
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ListPartsResult>"
+        "<Bucket>" SIMULACRUM_SITULA "</Bucket><Key>");
+    _sim_effugere(a, clavis);
+    chorda_aedificator_appendere_literis(a, "</Key><UploadId>");
+    chorda_aedificator_appendere_chorda(a, o->id);
+    chorda_aedificator_appendere_literis(a,
+        "</UploadId><IsTruncated>false</IsTruncated>");
+    per (i = ZEPHYRUM; i < o->partes_numerus; i++)
+    {
+        chorda_aedificator_appendere_literis(a, "<Part><PartNumber>");
+        chorda_aedificator_appendere_chorda(a, _sim_numerus((s64)
+            o->partes[i].numerus, p));
+        chorda_aedificator_appendere_literis(a,
+            "</PartNumber><ETag>&quot;");
+        chorda_aedificator_appendere_chorda(a, o->partes[i].etag);
+        chorda_aedificator_appendere_literis(a, "&quot;</ETag><Size>");
+        chorda_aedificator_appendere_chorda(a, _sim_numerus((s64)
+            o->partes[i].corpus.mensura, p));
+        chorda_aedificator_appendere_literis(a, "</Size></Part>");
+    }
+    chorda_aedificator_appendere_literis(a, "</ListPartsResult>");
+    r          = _sim_responsum(CC, p);
+    r->corpus  = chorda_aedificator_finire(a);
+    redde _sim_bene(r);
+}
+
+interior HttpResultus
+_sim_mp_pendentes (
+                Simulacrum* s,
+     constans SignaturaPar* q,
+                       i32  nq,
+                   Piscina* p)
+{
+                  s32 ip = _sim_par(q, nq, "prefix");
+               chorda praefixum = ip >= ZEPHYRUM ? q[ip].valor
+                                  : chorda_ex_buffer(NIHIL, ZEPHYRUM);
+                  i32  i;
+        HttpResponsum* r;
+    ChordaAedificator* a = chorda_aedificator_creare(p, MXXIV);
+
+    chorda_aedificator_appendere_literis(a,
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        "<ListMultipartUploadsResult><Bucket>" SIMULACRUM_SITULA
+        "</Bucket><Prefix>");
+    _sim_effugere(a, praefixum);
+    chorda_aedificator_appendere_literis(a,
+        "</Prefix><IsTruncated>false</IsTruncated>");
+    per (i = ZEPHYRUM; i < s->onera_numerus; i++)
+    {
+        SimulacrumOnus* o = &s->onera[i];
+
+        si (   !o->vivum
+            || (   praefixum.mensura > ZEPHYRUM
+                && !chorda_incipit(o->clavis, praefixum)))
+        {
+            perge;
+        }
+        chorda_aedificator_appendere_literis(a, "<Upload><Key>");
+        _sim_effugere(a, o->clavis);
+        chorda_aedificator_appendere_literis(a, "</Key><UploadId>");
+        chorda_aedificator_appendere_chorda(a, o->id);
+        chorda_aedificator_appendere_literis(a,
+            "</UploadId><Initiated>");
+        chorda_aedificator_appendere_chorda(a,
+            _sim_tempus_iso(o->initium,
+            p));
+        chorda_aedificator_appendere_literis(a,
+            "</Initiated></Upload>");
+    }
+    chorda_aedificator_appendere_literis(a,
+        "</ListMultipartUploadsResult>");
+    r          = _sim_responsum(CC, p);
+    r->corpus  = chorda_aedificator_finire(a);
+    redde _sim_bene(r);
+}
+
+/* TRUNCARE: corpus dimidium cum Content-Length congruo (servus qui
+ * minus mittit quam petitum, sine errore transportus) */
+interior vacuum
+_sim_truncare (
+    HttpResultus* res,
+         Piscina* p)
+{
+    HttpResponsum* r = res->responsum;
+              i32  i;
+
+    si (!res->successus || !r || r->corpus.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    r->corpus = chorda_sectio(r->corpus, ZEPHYRUM, r->corpus.mensura
+        / II);
+    per (i = ZEPHYRUM; i < r->capita_numerus; i++)
+    {
+        si (chorda_aequalis_literis(r->capita[i].titulus,
+            "Content-Length"))
+        {
+            r->capita[i].valor = _sim_numerus((s64)r->corpus.mensura,
+                p);
+        }
+    }
+}
+
+/* MUTARE: post responsum obiectum alio corpore (eadem mensura)
+ * substituitur - ETag novum */
+interior vacuum
+_sim_mutare (
+    Simulacrum* s,
+        chorda  clavis)
+{
+                   i32  index;
+    SimulacrumObiectum* o;
+                    i8* t;
+
+    si (!_sim_invenire(s, clavis, &index))
+    {
+        redde;
+    }
+    o = &s->obiecta[index];
+    si (o->corpus.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    t = (i8*)piscina_allocare(s->piscina,
+        (memoriae_index)o->corpus.mensura);
+    memcpy(t, o->corpus.datum, (size_t)o->corpus.mensura);
+    t[ZEPHYRUM]  = (i8)(t[ZEPHYRUM] ^ 0xFF);
+    o->corpus    = chorda_ex_buffer(t, o->corpus.mensura);
+    o->etag      = _sim_etag(o->corpus, s->piscina);
+}
+
 interior HttpResultus
 _sim_exsequi (
     HttpPetitio* pet,
@@ -1047,6 +1564,10 @@ _sim_exsequi (
                character  hex[LXV];
 
     s->petitiones++;
+    si ((i32)v.corpus.mensura > s->corpus_maximum)
+    {
+        s->corpus_maximum = (i32)v.corpus.mensura;
+    }
     si (signum >= ZEPHYRUM)
     {
         via = chorda_sectio(v.via, ZEPHYRUM, (i32)signum);
@@ -1115,7 +1636,7 @@ _sim_exsequi (
         clavis = chorda_sectio(via, I, via.mensura);
     }
 
-    vitium = _sim_vitium(s, v.methodus, clavis);
+    vitium = _sim_vitium(s, v.methodus, clavis, q, nq);
     si (vitium && vitium->genus == SIMULACRUM_VITIUM_STATUS)
     {
         redde _sim_error(s, vitium->status, vitium->codex,
@@ -1127,31 +1648,92 @@ _sim_exsequi (
     commutatio (v.methodus)
     {
         casus HTTP_PUT:
-            res = _sim_caput(&v, "x-amz-copy-source", p).mensura
-                      > ZEPHYRUM ? _sim_copiare(s, &v, clavis, p)
-                                 : _sim_ponere(s, &v, clavis, p);
+            si (_sim_par(q, nq, "uploadId") >= ZEPHYRUM)
+            {
+                res = _sim_mp_pars(s, &v, q, nq, clavis, p);
+            }
+            alioquin si (_sim_caput(&v, "x-amz-copy-source", p).mensura
+                         > ZEPHYRUM)
+            {
+                res = _sim_copiare(s, &v, clavis, p);
+            }
+            alioquin
+            {
+                res = _sim_ponere(s, &v, clavis, p);
+            }
             frange;
         casus HTTP_GET:
-            res = clavis.mensura == ZEPHYRUM
-                      && _sim_par(q, nq, "list-type") >= ZEPHYRUM
-                ? _sim_enumerare(s, q, nq, p)
-                : _sim_capere(s, &v, clavis, FALSUM, p);
+            si (   clavis.mensura             == ZEPHYRUM
+                && _sim_par(q, nq, "uploads") >= ZEPHYRUM)
+            {
+                res = _sim_mp_pendentes(s, q, nq, p);
+            }
+            alioquin si (_sim_par(q, nq, "uploadId") >= ZEPHYRUM)
+            {
+                res = _sim_mp_partes(s, q, nq, clavis, p);
+            }
+            alioquin si (   clavis.mensura               == ZEPHYRUM
+                         && _sim_par(q, nq, "list-type") >= ZEPHYRUM)
+            {
+                res = _sim_enumerare(s, q, nq, p);
+            }
+            alioquin
+            {
+                res = _sim_capere(s, &v, clavis, FALSUM, p);
+            }
             frange;
         casus HTTP_HEAD:
             res = _sim_capere(s, &v, clavis, VERUM, p);
             frange;
         casus HTTP_DELETE:
+            si (_sim_par(q, nq, "uploadId") >= ZEPHYRUM)
+            {
+                SimulacrumOnus* o = _sim_onus(s, q, nq, clavis);
+
+                si (o)
+                {
+                    _sim_onus_finire(o);
+                    res = _sim_bene(_sim_responsum(CCIV, p));
+                }
+                alioquin
+                {
+                    res = _sim_error(s, CDIV, "NoSuchUpload", ZEPHYRUM,
+                        p);
+                }
+                frange;
+            }
             _sim_removere(s, clavis);
             res = _sim_bene(_sim_responsum(CCIV, p));
             frange;
         casus HTTP_POST:
-            res = _sim_par(q, nq, "delete") >= ZEPHYRUM
-                ? _sim_delere_plura(s, &v, p)
-                : _sim_error(s, CD, "NotImplemented", ZEPHYRUM, p);
+            si (_sim_par(q, nq, "delete") >= ZEPHYRUM)
+            {
+                res = _sim_delere_plura(s, &v, p);
+            }
+            alioquin si (_sim_par(q, nq, "uploads") >= ZEPHYRUM)
+            {
+                res = _sim_mp_incipere(s, &v, clavis, p);
+            }
+            alioquin si (_sim_par(q, nq, "uploadId") >= ZEPHYRUM)
+            {
+                res = _sim_mp_perficere(s, &v, q, nq, clavis, p);
+            }
+            alioquin
+            {
+                res = _sim_error(s, CD, "NotImplemented", ZEPHYRUM, p);
+            }
             frange;
         ordinarius:
             res = _sim_error(s, CDV, "MethodNotAllowed", ZEPHYRUM, p);
             frange;
+    }
+    si (vitium && vitium->genus == SIMULACRUM_VITIUM_TRUNCARE)
+    {
+        _sim_truncare(&res, p);
+    }
+    si (vitium && vitium->genus == SIMULACRUM_VITIUM_MUTARE)
+    {
+        _sim_mutare(s, clavis);
     }
     si (abrumpere)
     {
@@ -1230,6 +1812,65 @@ simulacrum_obiectum_ponere (
 {
     _sim_scribere(s, clavis, corpus, chorda_ex_buffer(NIHIL, ZEPHYRUM),
         NIHIL, ZEPHYRUM);
+}
+
+/* maximum corpus petitionis visum (pars una in memoria) */
+interior i32
+simulacrum_corpus_maximum (
+    Simulacrum* s)
+{
+    redde s->corpus_maximum;
+}
+
+/* petitiones GET/HEAD cum If-Match */
+interior i32
+simulacrum_si_etag_visa (
+    Simulacrum* s)
+{
+    redde s->si_etag_visa;
+}
+
+/* corpus repositum (vacuum si abest) - sine HTTP */
+interior chorda
+simulacrum_obiectum_corpus (
+    Simulacrum* s,
+        chorda  clavis)
+{
+    i32 index;
+
+    si (!_sim_invenire(s, clavis, &index))
+    {
+        redde chorda_ex_buffer(NIHIL, ZEPHYRUM);
+    }
+    redde s->obiecta[index].corpus;
+}
+
+/* ETag repositum substituit (corruptio pro probatione md5) */
+interior vacuum
+simulacrum_etag_ponere (
+             Simulacrum* s,
+                 chorda  clavis,
+     constans character* etag)
+{
+    i32 index;
+
+    si (_sim_invenire(s, clavis, &index))
+    {
+        s->obiecta[index].etag = _sim_l(etag, s->piscina);
+    }
+}
+
+/* onera reliqua (piscinae propriae) deletur */
+interior vacuum
+simulacrum_claudere (
+    Simulacrum* s)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < s->onera_numerus; i++)
+    {
+        _sim_onus_finire(&s->onera[i]);
+    }
 }
 
 #endif /* HORREUM_SIMULACRUM_H */
