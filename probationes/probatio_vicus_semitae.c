@@ -625,8 +625,9 @@ librum_sinistri_ponere (
     redde ok;
 }
 
-/* comites P2: liber comes in latere sinistro - pagina sua cuique libro
- * (communis non perditur), Ctrl+O per mutationem libri, reapertura in
+/* comites P2: liber alius (praefixum non "comes/": sequela P3 non
+ * agit) in latere sinistro - pagina sua cuique libro
+ * (communis non perditur), Ctrl+O intra librum (P3b), reapertura in
  * libro comite */
 interior vacuum
 _probare_librum_comitem (
@@ -644,16 +645,16 @@ _probare_librum_comitem (
     CREDO_VERUM(pagina_sinistra_est(x, "2", c->piscina));
 
     CREDO_GRADUS("liber comes: pagina prima, communis pagina 2 manet");
-    CREDO_VERUM(librum_sinistri_ponere(x, "comes/nomenclator/1",
+    CREDO_VERUM(librum_sinistri_ponere(x, "alius/nomenclator/1",
         c->piscina));
-    CREDO_VERUM(liber_sinistri_est(x, "comes/nomenclator/1"));
+    CREDO_VERUM(liber_sinistri_est(x, "alius/nomenclator/1"));
     CREDO_VERUM(pagina_sinistra_est(x, "1", c->piscina));
     CREDO_VERUM(librum_sinistri_ponere(x, "", c->piscina));
     CREDO_VERUM(liber_sinistri_est(x, ""));
     CREDO_VERUM(pagina_sinistra_est(x, "2", c->piscina));
 
     CREDO_GRADUS("comes paginam suam servat");
-    CREDO_VERUM(librum_sinistri_ponere(x, "comes/nomenclator/1",
+    CREDO_VERUM(librum_sinistri_ponere(x, "alius/nomenclator/1",
         c->piscina));
     pagina_proxima(x);
     CREDO_VERUM(pagina_sinistra_est(x, "2", c->piscina));
@@ -661,22 +662,24 @@ _probare_librum_comitem (
     CREDO_VERUM(pagina_sinistra_est(x, "2", c->piscina));
     pagina_proxima(x);
     CREDO_VERUM(pagina_sinistra_est(x, "3", c->piscina));
-    CREDO_VERUM(librum_sinistri_ponere(x, "comes/nomenclator/1",
+    CREDO_VERUM(librum_sinistri_ponere(x, "alius/nomenclator/1",
         c->piscina));
     CREDO_VERUM(pagina_sinistra_est(x, "2", c->piscina));
     CREDO_VERUM(librum_sinistri_ponere(x, "", c->piscina));
     CREDO_VERUM(pagina_sinistra_est(x, "3", c->piscina));
 
-    CREDO_GRADUS("Ctrl+O per mutationem libri");
+    /* comites P3b: liber quisque historiam suam habet - mutatio libri
+     * locus non est; Ctrl+O in communi paginas eius tantum */
+    CREDO_GRADUS("Ctrl+O intra librum communem");
     clavis(x, 'o', (i32)MOD_IMPERIUM);
-    CREDO_VERUM(liber_sinistri_est(x, "comes/nomenclator/1"));
+    CREDO_VERUM(liber_sinistri_est(x, ""));
     CREDO_VERUM(pagina_sinistra_est(x, "2", c->piscina));
     clavis(x, 'i', (i32)MOD_IMPERIUM);
     CREDO_VERUM(liber_sinistri_est(x, ""));
     CREDO_VERUM(pagina_sinistra_est(x, "3", c->piscina));
 
     CREDO_GRADUS("reapertura in libro comite");
-    CREDO_VERUM(librum_sinistri_ponere(x, "comes/nomenclator/1",
+    CREDO_VERUM(librum_sinistri_ponere(x, "alius/nomenclator/1",
         c->piscina));
     memset(&altera, ZEPHYRUM, magnitudo(altera));
     CREDO_NECESSE(vicus_applicatio_aedificare(&altera, c->piscina,
@@ -685,7 +688,7 @@ _probare_librum_comitem (
     x->app = altera;
     CREDO_VERUM(vicus_activam_ponere(x->app.vicus, "3"));
     (vacuum)vicus_pulsare(x->app.vicus);
-    CREDO_VERUM(liber_sinistri_est(x, "comes/nomenclator/1"));
+    CREDO_VERUM(liber_sinistri_est(x, "alius/nomenclator/1"));
     CREDO_VERUM(pagina_sinistra_est(x, "2", c->piscina));
 }
 

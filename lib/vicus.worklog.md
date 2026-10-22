@@ -768,3 +768,37 @@ locus in code, not by manifest rounding: an absent day MEANS today
 the calendar's Sunday start. History entries renamed StatioHistoriae
 (was LocusTabulae). Plants red: facies.locus ignored, title hook
 ignored.
+
+## 2026-10-22 — Cmd+T companion notebooks (comites P3)
+
+Cmd+T is the host's own key (like Cmd+1..9 and Cmd+]/[): claimed in
+`destinare`, exact modifiers (Cmd+Shift+T does nothing). vicus knows no
+apps, so the left pane exposes `facies.comitem_ponere` (book prefix +
+bar title) and `facies.comes_currens` (its current prefix). Follow mode
+has NO extra state: a companion is active when the left book's prefix
+starts with "comes/"; each pulse, if active and the right front's
+"comes/" + locus differs from `t->comes_secutus`, the left pane is
+re-pointed. After a restart `comes_secutus` is empty, so the first
+pulse re-applies the companion with its (transient) bar title. Focus
+goes left on Cmd+T both ways. Consequence found in tests: any book
+whose prefix starts with "comes/" is treated as a companion and will
+follow - P2's test used such a prefix by hand and now uses "alius/".
+Plants red: Cmd+T not routed (terminal focused), modifiers ignored
+(after adding a Cmd+Shift+T check), no follow, focus not left, title
+without the location's label, toggle not returning to the home book.
+
+## 2026-10-22 — a history per book (comites P3b, Fran)
+
+Fran, after trying P3: Ctrl+O inside a companion walked back into OTHER
+companions' pages (and switched the book while the right pane stayed).
+Links (#tags, page numbers) are local to a book; history must be too.
+New `facies.historiae_ambitus`: a side's history is kept per SCOPE
+(scriba: its book prefix). On a scope change the current list is
+stored under the old scope and the new scope's list (or none: first
+entry seeded) becomes current; the change itself makes no entry.
+`historia[] / historia_cursor[]` stay "the list in use", so callers and
+tests did not change shape. Trap: the common book's scope is "" and
+TabulaDispersa keys cannot be empty - keys are "#" + scope (plant
+red). P2's test that stepped back ACROSS a book switch now checks the
+opposite. Plants red: scope ignored, scope change makes an entry,
+stored history not restored, empty key, scriba without a scope.

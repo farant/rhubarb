@@ -581,3 +581,41 @@ scriba_librum_praefixi_ponere (
     insula_scriptorem_ponere(m->ramus.repo, prior);
     redde ok;
 }
+
+/* comites P3: campus 'liber_titulus' (vacuum: tollitur) */
+interior vacuum
+tituli_libri_mutator (
+              StmlNodus* nodus,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    si (((chorda*)ctx)->mensura == ZEPHYRUM)
+    {
+        insula_attributum_tollere(nodus, "liber_titulus");
+        redde;
+    }
+    insula_attributum_ponere(nodus, p, in, "liber_titulus",
+        chorda_ut_cstr(*(chorda*)ctx, p));
+}
+
+b32
+scriba_comitem_ponere (
+    ScribaMontatio* m,
+            chorda  praefixum,
+            chorda  titulus)
+{
+    chorda prior;
+       b32 ok;
+
+    si (!scriba_librum_praefixi_ponere(m, praefixum))
+    {
+        redde FALSUM;
+    }
+    prior = m->ramus.repo->scriptor;
+    insula_scriptorem_ponere(m->ramus.repo, chorda_ex_literis(
+        "pagina.clavis", m->ramus.repo->piscina));
+    ok = mutare_ramum(&m->ramus, tituli_libri_mutator, &titulus);
+    insula_scriptorem_ponere(m->ramus.repo, prior);
+    redde ok;
+}

@@ -1082,6 +1082,30 @@ librum_scribae (
     redde l;
 }
 
+/* comites P3: facies scribae - liber comes et praefixum currens */
+interior b32
+comitem_scribae_ponere (
+     vacuum* ctx,
+     chorda  praefixum,
+     chorda  titulus)
+{
+    redde scriba_comitem_ponere((ScribaMontatio*)ctx, praefixum,
+        titulus);
+}
+
+interior chorda
+comitem_scribae_currentem (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    ScribaMontatio* m;
+
+    m = (ScribaMontatio*)ctx;
+    redde (m && m->liber)
+        ? chorda_transcribere(scriba_liber_praefixum(m->liber), piscina)
+        : chorda_ex_literis("", piscina);
+}
+
 interior b32
 scribam_montare (
                  vacuum* sedes,
@@ -1233,6 +1257,14 @@ scribam_describere (
     f->ramus               = &m->ramus;
     f->semitam_secuta      = scriba_semitam_secuta;
     f->semitam_secuta_ctx  = m;
+    /* comites P3: liber comes (Cmd+T, sequela) */
+    f->comitem_ponere      = comitem_scribae_ponere;
+    f->comitem_ponere_ctx  = m;
+    f->comes_currens       = comitem_scribae_currentem;
+    f->comes_currens_ctx   = m;
+    /* comites P3b: liber quisque historiam suam habet */
+    f->historiae_ambitus      = comitem_scribae_currentem;
+    f->historiae_ambitus_ctx  = m;
 }
 
 /* comites P1: tituli locorum laterum sine titulo proprio */

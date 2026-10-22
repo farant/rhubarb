@@ -624,10 +624,11 @@ _probare_scribam_vivam (
         d = *(StmlNodus**)xar_obtinere(domini->liberi, i);
         a = stml_attributum_capere(d, "attributum");
         novi++;
-        /* D5 S3c / comites P2: campi 'pagina' et 'liber' (semita
-         * scribae) post S6 additi - in imagine vetere desunt */
+        /* D5 S3c / comites P2-P3: campi 'pagina', 'liber',
+         * 'liber_titulus' post S6 additi - in imagine vetere desunt */
         si (   chorda_aequalis_literis(*a, "pagina")
-            || chorda_aequalis_literis(*a, "liber"))
+            || chorda_aequalis_literis(*a, "liber")
+            || chorda_aequalis_literis(*a, "liber_titulus"))
         {
             CREDO_CHORDA_AEQUALIS_LITERIS(*stml_attributum_capere(d,
                 "scriptor"), "pagina.clavis");
@@ -657,8 +658,8 @@ _probare_scribam_vivam (
             c->piscina)));
         veteres++;
     }
-    CREDO_AEQUALIS_S32(novi, veteres + II);
-    CREDO_AEQUALIS_S32(novi, XVIII);
+    CREDO_AEQUALIS_S32(novi, veteres + III);
+    CREDO_AEQUALIS_S32(novi, XIX);
 }
 
 

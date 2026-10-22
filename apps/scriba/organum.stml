@@ -80,6 +80,13 @@
             scriptor="pagina.clavis" semita="status" historia="impelle"
             nota="praefixum libri visi; vacuum = liber montationis"/>
 
+    <!-- comites P3: titulus vectis libri comitis ("Notes · Anna
+         Rossi"); vacuum = vectis nulla. Transiens: post initium
+         vicus sequendo reponit -->
+    <campus nomen="liber_titulus" typus="textus" vita="transiens"
+            scriptor="pagina.clavis"
+            nota="titulus vectis; vacuum = liber domus"/>
+
     <!-- copiae libri (derivatae; scriba_applicatio scribit) -->
     <campus nomen="pagina_positio" typus="numerus" vita="transiens"
             nota="pagina visa 1..n (veritas: plagula scriba/visus/id)"/>

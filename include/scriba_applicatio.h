@@ -144,6 +144,15 @@ scriba_librum_praefixi_ponere (
     ScribaMontatio* m,
             chorda  praefixum);
 
+/* comites P3: librum praefixi ostendere cum titulo vectis (campus
+ * 'liber_titulus'; vacuum = vectis nulla): scriba_librum_praefixi_
+ * ponere et titulus. FALSUM ut ille. */
+b32
+scriba_comitem_ponere (
+    ScribaMontatio* m,
+            chorda  praefixum,
+            chorda  titulus);
+
 /* D5 S3c: post semitam a vico applicatam (campus 'pagina', semita
  * scriba/<pagina>): visus ad paginam eam vertitur
  * (scriba_paginam_ostendere). ctx = ScribaMontatio*. FALSUM si liber

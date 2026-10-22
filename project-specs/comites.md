@@ -109,9 +109,11 @@ scriba book in the volume (pages, own viewed page)
   id).
 - **Bar**: a strip at the top of the left pane while a companion is
   shown, with the title; visually distinct from the common book.
-- **History**: the left side's Ctrl+O covers companion switches (the
-  book becomes part of scriba's route, e.g. `scriba/<liber>/<pagina>`,
-  as the page did in S3).
+- **History** (Fran 2026-10-22, after P3): every book has its OWN
+  left-side history - Ctrl+O in a companion moves only through that
+  companion's pages, the common book keeps its own, and switching books
+  (Cmd+T, follow) is not a history step. Links (#tags, page numbers)
+  are local to a book in the same way.
 - **Search**: companions become a searchable kind later (not in the
   first phases).
 
@@ -131,7 +133,7 @@ scriba book in the volume (pages, own viewed page)
 |---|---|
 | **P1** | Locus: derivation from a route (default + declared rounding + symbol resolution), view label; calendar declares its rounding. Tests on the route library and the calendar. DONE 2026-10-22: default `semita_locus` (binding fields of the current state); views override in CODE via `facies.locus` / `facies.locus_titulus` (the calendar's absent day means today and weeks start on Sunday - not expressible as manifest rounding). |
 | **P2** | Companion books: space per locus, per-book viewed page, book in scriba's route (left history). DONE 2026-10-22: scriba field `liber` (status, impelle; `scriba/2?liber=...`), `scriba_librum_praefixi_ponere`, host book lookup, per-book page `<prefix>/visus`. |
-| **P3** | Cmd+T, follow mode, bar - Fran's look. |
+| **P3** | Cmd+T, follow mode, bar - Fran's look. Implemented 2026-10-22: Cmd+T host key, facies.comitem_ponere / comes_currens, follow without extra state (left book prefix "comes/..."), bar = scriba `vectis` from transient `liber_titulus`. |
 | **P4** | Terminals: per pane, per tmux window when attached. |
 | **P5** | View relations slice: `quaestio` (Cmd+F) - the S4a work, if still wanted after P1 settles where declarations live. |
 | later | Companions searchable; drawing mode (§VII); saints as a search kind (D5 S4b). |

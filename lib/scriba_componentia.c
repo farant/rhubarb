@@ -147,6 +147,8 @@ scriba_componere (
                 chorda* nuntius;
                 chorda  textus_nuntii;
              Componens* nodus_nuntii;
+             Componens* vectis;
+                chorda* vectis_titulus;
 
     si (!repo || !piscina || !intern || !ctx)
     {
@@ -292,5 +294,16 @@ scriba_componere (
     componens_addere_liberum(prospectus, pagina);
     componens_addere_liberum(radix, prospectus);
     componens_addere_liberum(radix, status);
+    /* comites P3: vectis libri comitis in margine superiore (supra
+     * prospectum; folium non minuitur) */
+    vectis_titulus = insula_ramus_attributum(&ramus, "liber_titulus");
+    si (vectis_titulus && vectis_titulus->mensura > ZEPHYRUM)
+    {
+        vectis = nodus(piscina, intern, "vectis", PARTES_ITEM,
+            fines(fp.x, fp.y, fp.latitudo, ch));
+        componens_ponere_titulum(vectis, chorda_ut_cstr(*vectis_titulus,
+            piscina));
+        componens_addere_liberum(radix, vectis);
+    }
     redde radix;
 }

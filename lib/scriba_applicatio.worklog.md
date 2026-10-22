@@ -121,3 +121,12 @@ Clearing `liber` REMOVES the attribute: an empty STML value reads back
 as boolean "true" (plant red). Plants red: prefix always empty,
 companion page under the view's key, field not written, empty not
 removed, route's book ignored, no lookup set in vicus.
+
+## 2026-10-22 — companion bar (comites P3)
+
+`scriba_comitem_ponere` = book switch + transient field
+`liber_titulus` ("Notes · Anna Rossi"; removed when empty). The bar is
+a `vectis` component (PARTES_ITEM, scriba's registry had no ITEM
+figure) in the page's top margin row, drawn over the prospect so the
+page size does not change: accent-coloured band, text in the background
+colour. Plants red: bar never drawn, empty title not removed.

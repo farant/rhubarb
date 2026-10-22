@@ -39,6 +39,7 @@
 #include "delineare_mandata.h"
 #include "organum_montatio.h"
 #include "semita.h"
+#include "tabula_dispersa.h"
 
 /* tabulae fixae (vicus-latera decisio IX): index ordinarius tot
  * dat; vicus plures non legit */
@@ -148,6 +149,23 @@ nomen structura {
      * NIHIL = locus ipse */
                chorda  (*locus_titulus)(vacuum* ctx, Piscina* piscina);
               vacuum* locus_titulus_ctx;
+    /* comites P3: latus sinistrum librum comitem accipit - praefixum
+     * ("comes/<locus>"; vacuum = liber domus) et titulus vectis
+     * ("Notes · Anna Rossi"). NIHIL = latus comites non fert. */
+                 b32  (*comitem_ponere)(vacuum* ctx, chorda praefixum,
+                          chorda titulus);
+              vacuum* comitem_ponere_ctx;
+    /* praefixum libri visi (comes activus: "comes/..."); NIHIL =
+     * comites non fert */
+               chorda  (*comes_currens)(vacuum* ctx, Piscina* piscina);
+              vacuum* comes_currens_ctx;
+    /* comites P3b: ambitus historiae - historia lateris per ambitum
+     * separatur (scriba: praefixum libri visi; liber quisque
+     * historiam suam habet); mutatio ambitus locum non facit, historia
+     * ambitus prioris servatur. NIHIL = ambitus unus. */
+               chorda  (*historiae_ambitus)(vacuum* ctx,
+                           Piscina* piscina);
+              vacuum* historiae_ambitus_ctx;
 } VicusFacies;
 
 nomen vacuum (*VicusDescriptor)(
@@ -216,6 +234,14 @@ nomen structura {
                     i32  historia_cursor[II];
                  chorda  historia_frons;   /* id frontis pulsu ultimo
                                             * (privatum) */
+                 chorda comes_secutus;    /* comites P3: praefixum
+                                            * comitis ultimo positum
+                                            * (privatum) */
+    /* comites P3b: historiae ambituum non currentium (ambitus ->
+     * historia et cursor), et ambitus currens per latus (privatum);
+     * historia[] / historia_cursor[] = ambitus currens */
+         TabulaDispersa* historiae_ambituum[II];
+                 chorda  historia_ambitus[II];
 } VicusTabula;
 
 /* S4 (Franus 2026-10-09): horologium in linea tabularum, ad dextrum
@@ -579,6 +605,15 @@ vicus_organa_ponere (
               Vicus* v,
       SemitaOrganum  organa,
              vacuum* ctx);
+
+/* comites P3 (Cmd+T, hospes): latus sinistrum tabulae activae - liber
+ * domus <-> comes frontis dextrae ("comes/" + locus, titulus
+ * "Notes · " + titulus loci); focus sinister. Dum comes ostenditur,
+ * vicus_pulsare eum sequitur (locus frontis mutatus: comes novus).
+ * FALSUM si sinistrum comites non fert. */
+b32
+vicus_comitem_commutare (
+    Vicus* v);
 
 /* comites P1: locus lateris (facies.locus aut ordinarium) et titulus
  * eius; vacua si latus non montatum */
