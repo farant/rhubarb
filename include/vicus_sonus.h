@@ -21,6 +21,10 @@ nomen structura {
     vacuum (*agere)(vacuum* ctx);
     /* mutus factus: sonans evanescit, exspectata abicitur */
     vacuum (*tacere)(vacuum* ctx);
+    /* cantilena DATA (praeco cantus): textus MML; FALSUM = fracta aut
+     * exitus nullus - nihil sonat. Ut pulsare: una simul, recentissima
+     * vincit */
+    b32    (*canere)(vacuum* ctx, chorda textus, b32 intactus);
     vacuum* ctx;
 } VicusPortaSoni;
 

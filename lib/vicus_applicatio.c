@@ -12,6 +12,7 @@
 #include "colloquia_visus.h"
 #include "sancti_visus.h"
 #include "multiplexor.h"
+#include "praeconium.h"
 #include "filum.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -1974,6 +1975,67 @@ sonum_admonitionis (
     (vacuum)soni->porta.pulsare(soni->porta.ctx, genus);
 }
 
+/* praeco cantus: textus MML in nuntio, genus "intactus" aut vacuum */
+interior vacuum
+sonum_cantus (
+                 ContextusSoni* soni,
+                         Vicus* v,
+    constans PraeconiumEventus* e)
+{
+    si (!soni || !soni->posita || sonus_mutus(v))
+    {
+        redde;
+    }
+    (vacuum)soni->porta.canere(soni->porta.ctx, e->nuntius,
+        chorda_aequalis_literis(e->genus, "intactus"));
+}
+
+/* eventus 'cantus' recentissimus pulsus (ultimus ordine libri); NIHIL
+ * si nullus */
+interior constans PraeconiumEventus*
+cantum_recentissimum (
+    Xar* eventus)
+{
+    constans PraeconiumEventus* e;
+                           i32  i;
+
+    per (i = eventus ? xar_numerus(eventus) : ZEPHYRUM; i > ZEPHYRUM;
+         i--)
+    {
+        e = (constans PraeconiumEventus*)xar_obtinere(eventus, i - I);
+        si (chorda_aequalis_literis(e->eventus, "cantus"))
+        {
+            redde e;
+        }
+    }
+    redde NIHIL;
+}
+
+/* pulsus soni: admonitio nova et cantus eodem pulsu ordine temporis -
+ * posterior ultimus vocatur, ergo in tintinnabulo vincit */
+interior vacuum
+sonum_pulsus (
+                 ContextusSoni* soni,
+                         Vicus* v,
+            constans Admonitio* nova,
+    constans PraeconiumEventus* cantus)
+{
+    si (nova && cantus && cantus->tempus < nova->tempus)
+    {
+        sonum_cantus(soni, v, cantus);
+        sonum_admonitionis(soni, v, nova->genus);
+        redde;
+    }
+    si (nova)
+    {
+        sonum_admonitionis(soni, v, nova->genus);
+    }
+    si (cantus)
+    {
+        sonum_cantus(soni, v, cantus);
+    }
+}
+
 /* '$sound' -> sonus_mutus vertitur; '$sound(notifications)' ->
  * sonus_admonitionum_mutus. Non consumens (bulla manet); status in
  * nuntio. Sine porta quoque: campi persistentes sunt. */
@@ -2251,6 +2313,7 @@ systema_admonitionum (
 
     ca       = (ContextusAdmonitionum*)ctx;
     mutatum  = FALSUM;
+    nova     = NIHIL;
     si (!ca->sequitur)
     {
         redde FALSUM;
@@ -2273,11 +2336,9 @@ systema_admonitionum (
         mutatum = VERUM;
         /* sonus S4: recentissima sola - plures uno pulsu, sonus unus */
         nova = admonitio(ca->index, ZEPHYRUM);
-        si (nova)
-        {
-            sonum_admonitionis(ca->sonus, v, nova->genus);
-        }
     }
+    sonum_pulsus(ca->sonus, v, nova,
+        cantum_recentissimum(ca->sequax.eventus));
     u = (s32)admonitiones_non_lectae(ca->index);
     si (u != ca->non_lectae)
     {
@@ -2739,7 +2800,8 @@ vicus_applicatio_soni_portam_ponere (
         redde;
     }
     soni = (ContextusSoni*)app->soni;
-    si (!porta || !porta->pulsare || !porta->agere || !porta->tacere)
+    si (   !porta || !porta->pulsare || !porta->agere || !porta->tacere
+        || !porta->canere)
     {
         soni->posita = FALSUM;
         redde;

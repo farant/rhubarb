@@ -44,6 +44,10 @@ nomen structura {
           i32 actus;           /* agere */
           i32 taciturnitates;  /* tacere */
     character genus[XXXII];    /* pulsatum ultimum */
+          i32 cantus;          /* canere */
+    character textus[CCLVI];   /* cantatum ultimum */
+          b32 intactus;
+    character ultimum;         /* 'p' pulsare aut 'c' canere */
 } PortaFicta;
 
 nomen structura {
@@ -74,7 +78,28 @@ _pulsare (
         redde FALSUM;
     }
     memcpy(f->genus, genus.datum, (size_t)genus.mensura);
-    f->genus[genus.mensura] = '\0';
+    f->genus[genus.mensura]  = '\0';
+    f->ultimum               = 'p';
+    redde VERUM;
+}
+
+interior b32
+_canere (
+     vacuum* ctx,
+     chorda  textus,
+        b32  intactus)
+{
+    PortaFicta* f = (PortaFicta*)ctx;
+
+    f->cantus++;
+    f->intactus  = intactus;
+    f->ultimum   = 'c';
+    si (textus.mensura >= magnitudo(f->textus))
+    {
+        redde FALSUM;
+    }
+    memcpy(f->textus, textus.datum, (size_t)textus.mensura);
+    f->textus[textus.mensura] = '\0';
     redde VERUM;
 }
 
@@ -116,6 +141,26 @@ _admonere (
         "\"transcriptum\":\"\",\"genus\":\"%s\",\"nuntius\":\"n\"}\n",
         (long)time(NIHIL), (integer)s->eventa, (integer)s->eventa,
         eventus, (integer)s->eventa, genus);
+    redde filum_appendere_firmiter(s->liber, chorda_ex_literis(linea,
+        piscina));
+}
+
+/* eventus 'cantus' ut praeco scribit (genus "intactus" aut "") */
+interior b32
+_cantum_mittere (
+                 Mundus* s,
+     constans character* textus,
+     constans character* genus)
+{
+    character linea[DXII];
+
+    s->eventa++;
+    sprintf(linea,
+        "{\"tempus\":%ld%03d,\"sessio\":\"\",\"eventus\":\"cantus\","
+        "\"panellus\":\"%%%d\",\"servitor\":\"\",\"via\":\"/w/alpha\","
+        "\"transcriptum\":\"\",\"genus\":\"%s\",\"nuntius\":\"%s\"}\n",
+        (long)time(NIHIL), (integer)s->eventa, (integer)s->eventa,
+        genus, textus);
     redde filum_appendere_firmiter(s->liber, chorda_ex_literis(linea,
         piscina));
 }
@@ -246,6 +291,7 @@ _mundum_parare_porta (
     s->porta.pulsare = _pulsare;
     s->porta.agere = _agere;
     s->porta.tacere = _tacere;
+    s->porta.canere = _canere;
     s->porta.ctx = &s->ficta;
     s->vol = volumen_temporarium(piscina, "probatio_vicus_sonus");
     CREDO_NECESSE_NON_NIHIL(s->vol);
@@ -477,6 +523,95 @@ _probare_portam_nullam (
     CREDO_AEQUALIS_I32(s->ficta.taciturnitates, ZEPHYRUM);
 }
 
+interior vacuum
+_probare_cantum (
+    CredoContextus* c)
+{
+    Mundus* s = (Mundus*)c->datum;
+
+    CREDO_GRADUS("cantus: textus et intactus ad portam");
+    CREDO_NECESSE(_cantum_mittere(s, "t150 o5 l16 c e g8", ""));
+    _pulsus(s, I);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, I);
+    CREDO_VERUM(strcmp(s->ficta.textus, "t150 o5 l16 c e g8")
+        == ZEPHYRUM);
+    CREDO_FALSUM(s->ficta.intactus);
+    CREDO_AEQUALIS_I32(s->ficta.pulsus, ZEPHYRUM);
+    CREDO_NECESSE(_cantum_mittere(s, "@punctum c r c", "intactus"));
+    _pulsus(s, I);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, II);
+    CREDO_VERUM(s->ficta.intactus);
+
+    CREDO_GRADUS("duo cantus uno pulsu: recentissimus solus");
+    CREDO_NECESSE(_cantum_mittere(s, "t150 c", ""));
+    CREDO_NECESSE(_cantum_mittere(s, "t150 d", ""));
+    _pulsus(s, II);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, III);
+    CREDO_VERUM(strcmp(s->ficta.textus, "t150 d") == ZEPHYRUM);
+
+    CREDO_GRADUS("cum admonitione: ordine temporis, posterior vincit");
+    CREDO_NECESSE(_admonere(s, "Stop", ""));
+    CREDO_NECESSE(_cantum_mittere(s, "t150 e", ""));
+    _pulsus(s, I);
+    CREDO_AEQUALIS_I32(s->ficta.pulsus, I);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, IV);
+    CREDO_VERUM(s->ficta.ultimum == 'c');
+    CREDO_NECESSE(_cantum_mittere(s, "t150 f", ""));
+    CREDO_NECESSE(_admonere(s, "Notification", "permission_prompt"));
+    _pulsus(s, I);
+    CREDO_AEQUALIS_I32(s->ficta.pulsus, II);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, V);
+    CREDO_VERUM(s->ficta.ultimum == 'p');
+
+    CREDO_GRADUS("eventus alii (status) non canuntur");
+    CREDO_NECESSE(_admonere(s, "status", ""));
+    _pulsus(s, I);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, V);
+
+    CREDO_GRADUS("muta: uterque cantum tacet");
+    CREDO_VERUM(vicus_radicem_scribere(s->v, "sonus.agere",
+        "sonus_admonitionum_mutus", "verum"));
+    CREDO_NECESSE(_cantum_mittere(s, "t150 g", ""));
+    _pulsus(s, I);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, V);
+    CREDO_VERUM(vicus_radicem_scribere(s->v, "sonus.agere",
+        "sonus_admonitionum_mutus", "falsum"));
+    CREDO_VERUM(vicus_radicem_scribere(s->v, "sonus.agere",
+        "sonus_mutus", "verum"));
+    CREDO_NECESSE(_cantum_mittere(s, "t150 a", ""));
+    _pulsus(s, I);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, V);
+    CREDO_VERUM(vicus_radicem_scribere(s->v, "sonus.agere",
+        "sonus_mutus", "falsum"));
+    CREDO_NECESSE(_cantum_mittere(s, "t150 b", ""));
+    _pulsus(s, I);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, VI);
+
+    CREDO_GRADUS("initium: cantus prior non iteratur");
+    CREDO_NECESSE(_cantum_mittere(s, "t150 c d", ""));
+    CREDO_NECESSE(_aedificare(s, c, VERUM));
+    _ficta_vacare(s);
+    _pulsus(s, II);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, ZEPHYRUM);
+}
+
+/* porta sine canere: tota recusatur (numquam NIHIL vocatur) */
+interior vacuum
+_probare_portam_dimidiam (
+    CredoContextus* c)
+{
+    Mundus* s = (Mundus*)c->datum;
+
+    s->porta.canere = NIHIL;
+    vicus_applicatio_soni_portam_ponere(&s->app, &s->porta);
+    CREDO_NECESSE(_cantum_mittere(s, "t150 c", ""));
+    CREDO_NECESSE(_admonere(s, "Stop", ""));
+    _pulsus(s, II);
+    CREDO_AEQUALIS_I32(s->ficta.pulsus, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(s->ficta.actus, ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "quies", _probare_quietem, _mundum_parare, _mundum_purgare, NIHIL,
       NIHIL },
@@ -491,6 +626,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "persistens", _probare_persistentem, _mundum_parare,
       _mundum_purgare, NIHIL, NIHIL },
     { "porta_nulla", _probare_portam_nullam, _mundum_sine_porta,
+      _mundum_purgare, NIHIL, NIHIL },
+    { "cantus", _probare_cantum, _mundum_parare, _mundum_purgare, NIHIL,
+      NIHIL },
+    { "porta_dimidia", _probare_portam_dimidiam, _mundum_parare,
       _mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

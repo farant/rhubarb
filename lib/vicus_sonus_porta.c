@@ -121,6 +121,16 @@ porta_agere (
         fenestra_tempus_ms());
 }
 
+interior b32
+porta_canere (
+     vacuum* ctx,
+     chorda  textus,
+        b32  intactus)
+{
+    redde tintinnabulum_canere(((PortaSoni*)ctx)->t, textus, intactus,
+        NIHIL);
+}
+
 interior vacuum
 porta_tacere (
     vacuum* ctx)
@@ -178,6 +188,7 @@ vicus_sonus_porta (
     porta->pulsare  = porta_pulsare;
     porta->agere    = porta_agere;
     porta->tacere   = porta_tacere;
+    porta->canere   = porta_canere;
     porta->ctx      = p;
     redde VERUM;
 }
