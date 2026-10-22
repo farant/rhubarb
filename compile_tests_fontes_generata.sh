@@ -182,6 +182,7 @@ declare -a SOURCE_FILES=(
     "lib/navigator_entitatum.c"
     "lib/nervus.c"
     "lib/nomenclator.c"
+    "lib/nomina.c"
     "lib/norma.c"
     "lib/norma_ad_c.c"
     "lib/norma_canon.c"

@@ -104,3 +104,18 @@ modelled: examen judges the Darwin preprocessing.
 is not honoured on a socket accepted after its peer closed): added
 `MSG_NOSIGNAL 0x80000` (Darwin SDK value). auspex asserts both - planted
 SHUT_WR 2 -> DISSENTIT, restored -> CERTIFICATAE.
+
+## 2026-10-22 - netdb: AI_NUMERICHOST, AI_NUMERICSERV, EAI_NONAME (nomina_posix.c)
+
+The commit hook's examen refused the new `lib/nomina_posix.c` (unknown
+macro = violation): the netdb sectio had the addrinfo shape and the
+three functions but no flags or error codes. Added the three names with
+Darwin values (0x4, 0x1000, 8 - Linux differs: 0x400 and -2, which is
+why the lexicon is a Darwin certificate, not a Linux one; the Docker
+compile is Linux's judge). auspex asserts them - planted EAI_NONAME 9 ->
+DISSENTIT, restored -> CERTIFICATAE. EAI_NODATA deliberately NOT added:
+nomina_posix.c uses it only under `#ifdef`, an untaken arm stays quiet.
+Glossary: numerichost, numericserv, eai, noname as ignotum-permissum.
+Lesson: judge with `./silva/examen.sh VIA -machina` ONE file at a time
+(as the hook does) - a multi-file call accepted the file the hook
+refused.

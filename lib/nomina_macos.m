@@ -58,47 +58,6 @@ _dimittere (
     }
 }
 
-vacuum
-nomina_familias_alternare (
-    NominaAddressus* addressus,
-                i32  numerus)
-{
-    NominaAddressus prima[NOMINA_ADDRESSUS_MAXIMI];
-    NominaAddressus altera[NOMINA_ADDRESSUS_MAXIMI];
-                i32 np = 0;
-                i32 na = 0;
-                i32 ip = 0;
-                i32 ia = 0;
-                i32 k;
-
-    si (!addressus || numerus <= I || numerus > NOMINA_ADDRESSUS_MAXIMI)
-    {
-        redde;
-    }
-    per (k = 0; k < numerus; k++)
-    {
-        si (addressus[k].familia == addressus[0].familia)
-        {
-            prima[np++] = addressus[k];
-        }
-        alioquin
-        {
-            altera[na++] = addressus[k];
-        }
-    }
-    per (k = 0; k < numerus; k++)
-    {
-        si ((k % II == 0 && ip < np) || ia >= na)
-        {
-            addressus[k] = prima[ip++];
-        }
-        alioquin
-        {
-            addressus[k] = altera[ia++];
-        }
-    }
-}
-
 interior vacuum
 _finire (
     vacuum* datum)

@@ -426,6 +426,10 @@ int getaddrinfo(const char* hospes, const char* servitium,
                 struct addrinfo** fructus);
 void freeaddrinfo(struct addrinfo* fructus);
 const char* gai_strerror(int status);
+/* vexilla et erratum (valores Darwin; nomina_posix.c, 2026-10-22) */
+#define AI_NUMERICHOST  0x00000004
+#define AI_NUMERICSERV  0x00001000
+#define EAI_NONAME      8
 
 /* <sectio caput="net/if.h"/> net/if.h - vexilla interfacierum
  * (valores Darwin; IFF_UP et IFF_LOOPBACK soli adhibentur) */

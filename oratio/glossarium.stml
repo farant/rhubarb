@@ -1022,6 +1022,10 @@
   <vocabulum lemma="rmdir" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis POSIX (directorium vacuum delere); systema_posix.h 2026-09-14 pro filum_arborem_delere"/>
   <vocabulum lemma="symlink" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis POSIX (nexum symbolicum creare); systema_posix.h 2026-09-14 pro probatio_filum"/>
   <vocabulum lemma="enoent" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen macri errno POSIX (via non exsistit); systema_posix.h 2026-09-14 pro filum_arborem_delere"/>
+  <vocabulum lemma="numerichost" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pars macri POSIX AI_NUMERICHOST (getaddrinfo: IP litteralis solum, numquam obstat); systema_posix.h 2026-10-22 pro nomina_posix.c"/>
+  <vocabulum lemma="numericserv" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pars macri POSIX AI_NUMERICSERV (getaddrinfo: servitium numericum); systema_posix.h 2026-10-22 pro nomina_posix.c"/>
+  <vocabulum lemma="eai" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="praefixum errorum getaddrinfo POSIX (EAI_*); systema_posix.h 2026-10-22 pro nomina_posix.c"/>
+  <vocabulum lemma="noname" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pars macri POSIX EAI_NONAME (nomen ignotum); systema_posix.h 2026-10-22 pro nomina_posix.c"/>
   <vocabulum lemma="flock" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis BSD (sera fili per nucleum); systema_posix.h 2026-09-29 pro filum_seram_capere"/>
   <vocabulum lemma="rdonly" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="O_RDONLY fcntl.h (apertura lectionis solius); systema_posix.h 2026-09-29"/>
   <vocabulum lemma="rdwr" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="O_RDWR fcntl.h (apertura lectionis et scripturae); systema_posix.h 2026-09-29 pro filum_seram_capere"/>

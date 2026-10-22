@@ -170,6 +170,8 @@ emittere_asserta() {
         echo "IUNGO_ASSERTA(sizeof(((struct addrinfo*)0)->$campus) == $mensura);"
     done <<< "$TABULA_ADDRINFO"
     echo "IUNGO_ASSERTA(AF_UNSPEC == 0 && AF_INET == 2 && SOCK_STREAM == 1);"
+    echo "IUNGO_ASSERTA(AI_NUMERICHOST == 0x4 && AI_NUMERICSERV == 0x1000);"
+    echo "IUNGO_ASSERTA(EAI_NONAME == 8);"
     echo "IUNGO_ASSERTA(SO_RCVTIMEO == 0x1006 && SO_SNDTIMEO == 0x1005);"
     echo "IUNGO_ASSERTA(INADDR_ANY == 0u);"
     echo "IUNGO_ASSERTA(sizeof(struct pollfd) == 8);"
