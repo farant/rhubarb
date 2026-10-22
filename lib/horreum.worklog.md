@@ -151,3 +151,36 @@
   `probatio_http_vocatio*` too). Checked compile-only under gcc musl +
   glibc with the house flags; the T2-T4 suites run green there. Parked
   ...NPMN7.
+
+## 2026-10-22 - T6: live on DO Spaces and R2
+
+- **What the providers actually do** (horreum probare, both clean, 0
+  left behind):
+
+  | | DO Spaces | R2 |
+  |---|---|---|
+  | If-None-Match: * on PUT | yes | yes |
+  | If-Match on PUT | **412 even with the right ETag** | yes |
+  | If-Match on GET | yes (capere_in_filum works) | yes |
+  | x-amz-acl public-read | yes, readable unsigned | accepted, **no effect** (unsigned GET 400) |
+  | x-amz-checksum-crc32/sha256 | **ignored** (wrong value accepted) | verified (BadDigest), echoed |
+  | DeleteObjects + Content-MD5 | yes | yes |
+  | request id header | x-amz-request-id | cf-ray |
+  | Complete ETag | unquoted | `&quot;`-quoted |
+
+- **R2 UploadId quirk:** ListMultipartUploads gives a different UploadId
+  string than CreateMultipartUpload; both abort the same upload. The
+  probe first failed live at "ListMultipartUploads:" with an empty
+  error (the list call succeeded, the id just never matched). Never
+  compare upload ids across calls - compare keys.
+- **Testing a negative capability needs a falsifier:** "wrong checksum
+  refused" and "right ETag accepted" are what separate DO from R2;
+  "right checksum accepted" and "wrong ETag refused" pass on both.
+- **The probe runs against the fake before it touches a bucket.** The
+  fake had to learn presigned verification, checksums, host-style
+  requests and unsigned public reads - each of which is now covered
+  offline. The accessor table (`simulacrum_aditus`) ends the
+  "every includer calls every accessor" rule for this fake.
+- Smoke: `tools/horreum_fumus.sh <profile>` (put/get/inspect/list,
+  presigned GET via curl, 17 MiB two-part upload, cleanup) - green on
+  both. It never prints the presigned URL.

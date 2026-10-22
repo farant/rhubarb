@@ -11,8 +11,7 @@
  * corpus.
  *
  * Functiones INTERIORES: includens AMBOS aditus vocare debet -
- * simulacrum_rete_aperire et simulacrum_rete_claudere - et omnes
- * aditus horreum_simulacrum.h. */
+ * simulacrum_rete_aperire et simulacrum_rete_claudere. */
 #ifndef HORREUM_SIMULACRUM_RETE_H
 #define HORREUM_SIMULACRUM_RETE_H
 

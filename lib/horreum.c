@@ -43,20 +43,34 @@ structura Horreum {
 };
 
 /* provisores: capacitates "creditum" (documenta) donec horreum probare
- * (T6) eas probat; probatae ZEPHYRUM ubique nisi generic */
+ * eas probat (probatae) aut refutat (capacitas deletur); responsa vera
+ * in probationes/fixa/horreum/<provisor>/ */
 hic_manens constans HorreumProvisor provisores_horrei[] = {
-    /* creditum: docs.digitalocean.com/products/spaces/reference/
-     * s3-compatibility */
+    /* probatum 2026-10-22 (horreum probare): acl (public-read legitur
+     * sine signatura), solum_si_abest, delere_plura. refutatum
+     * 2026-10-22: solum_si_etag (If-Match in PUT semper 412, etiam
+     * ETag verum - in GET valet), checksum crc32/sha256 (summa falsa
+     * accepta) */
     { "digitalocean", "{regio}.digitaloceanspaces.com",
         HORREUM_STILUS_HOSPES,
       NIHIL, HORREUM_CAP_ACL | HORREUM_CAP_DELERE_PLURA
-          | HORREUM_CAP_SOLUM_SI_ETAG, ZEPHYRUM, FALSUM },
-    /* creditum: developers.cloudflare.com/r2/api/s3/api */
+          | HORREUM_CAP_SOLUM_SI_ABEST,
+      HORREUM_CAP_ACL | HORREUM_CAP_DELERE_PLURA
+          | HORREUM_CAP_SOLUM_SI_ABEST, FALSUM },
+    /* probatum 2026-10-22 (horreum probare): solum_si_abest,
+     * solum_si_etag, delere_plura, checksum crc32/sha256 (falsa:
+     * BadDigest). refutatum 2026-10-22: acl (x-amz-acl acceptum sed
+     * obiectum non publicum - accessus publicus per situlam). Nota:
+     * ListMultipartUploads UploadId ALIUM reddit quam Create; utrumque
+     * valet */
     { "r2", "{rationarium}.r2.cloudflarestorage.com",
         HORREUM_STILUS_HOSPES,
       "auto", HORREUM_CAP_SOLUM_SI_ABEST | HORREUM_CAP_SOLUM_SI_ETAG
           | HORREUM_CAP_DELERE_PLURA | HORREUM_CAP_CHECKSUM_CRC32
-          | HORREUM_CAP_CHECKSUM_SHA256, ZEPHYRUM, FALSUM },
+          | HORREUM_CAP_CHECKSUM_SHA256,
+      HORREUM_CAP_SOLUM_SI_ABEST | HORREUM_CAP_SOLUM_SI_ETAG
+          | HORREUM_CAP_DELERE_PLURA | HORREUM_CAP_CHECKSUM_CRC32
+          | HORREUM_CAP_CHECKSUM_SHA256, FALSUM },
     /* creditum: backblaze.com/docs/cloud-storage-s3-compatible-api */
     { "b2", "s3.{regio}.backblazeb2.com", HORREUM_STILUS_HOSPES, NIHIL,
       HORREUM_CAP_DELERE_PLURA, ZEPHYRUM, FALSUM },
@@ -642,6 +656,22 @@ horreum_sedes (
     Horreum* h)
 {
     redde h ? h->sedes : NIHIL;
+}
+
+vacuum
+horreum_omnia_permittere (
+    Horreum* h)
+{
+    i32 omnes = HORREUM_CAP_ACL | HORREUM_CAP_SOLUM_SI_ABEST
+              | HORREUM_CAP_SOLUM_SI_ETAG | HORREUM_CAP_CHECKSUM_CRC32
+              | HORREUM_CAP_CHECKSUM_SHA256 | HORREUM_CAP_DELERE_PLURA;
+
+    si (!h)
+    {
+        redde;
+    }
+    h->capacitates  = omnes;
+    h->probatae     = omnes;
 }
 
 /* ===== tabella (P5) ===== */

@@ -1,8 +1,14 @@
 # horreum - an S3-compatible object storage client (spec)
 
-**Status: SCRIPTUM 2026-10-21** - awaiting Fran's review. Approved in
-conversation section by section (units + names, API scope, provider
-profiles, errors + retries, tests). Follow-on: `inventarium` (the
+**Status: IMPLETUM 2026-10-22** - built in quarta per
+`project-specs/horreum-plan.md` (six tasks, Fran approving each): T1
+5a0f3e61 (MD5 + SigV4), T2 b7006108 (pure core), T3 780e65c6 (blocking
+layer + fake S3), T4 46e22e1b (multipart + file helpers), T5 1fbaed79
+(reactor layer), T6 (`bin/horreum`, `horreum probare`, capabilities
+probed live on DO Spaces and R2, real response fixtures). Not yet in
+main. Spec written 2026-10-21 and approved in conversation section by
+section (units + names, API scope, provider profiles, errors + retries,
+tests). Follow-on: `inventarium` (the
 catalog, II.7) gets its own spec after this one is built.
 Ledger: desideratum ...GWM (`01KY0P61RX7JFR91110PHRVGWM`, filed
 2026-07-20, "bibliotheca s3-compatibilis"); the catalog is desideratum
@@ -352,20 +358,36 @@ All suites green on macOS and Linux musl + glibc
 
 ## AUDIENDA (not verified)
 
-- Provider capability matrix is from training knowledge, possibly
-  stale: DO Spaces and B2 support for `If-None-Match: *` on PUT; R2's
-  and DO's checksum header support; B2 per-object ACLs; whether DO
-  and R2 require `Content-MD5` on DeleteObjects (AWS now also accepts
-  a checksum header). All start `creditum`; T6 probes decide.
+**Answered 2026-10-22 (T6, `horreum probare` live on DO Spaces nyc3 and
+R2; bodies in `probationes/fixa/horreum/{digitalocean,r2}/`):**
+
+- Capability matrix: DO - `If-None-Match: *` yes, per-object
+  `public-read` ACL yes (read back unsigned), DeleteObjects with
+  Content-MD5 yes; `If-Match` on PUT NO (412 even with the right ETag;
+  If-Match on GET works), checksum headers IGNORED (a wrong value is
+  accepted). R2 - `If-None-Match: *`, `If-Match`, DeleteObjects,
+  CRC32 and SHA-256 checksums all yes (wrong value -> BadDigest, value
+  echoed); `x-amz-acl` accepted but without effect (unsigned GET 400:
+  public access is per bucket). B2 not probed - stays `creditum`.
+- R2 quirk not foreseen: ListMultipartUploads returns a DIFFERENT
+  UploadId string than CreateMultipartUpload; both abort the upload.
+  Match pending uploads by key, never by id.
+- Request-id header: DO `x-amz-request-id`; R2 has none of the AWS
+  ones - `cf-ray`.
+- SigV4 vectors: aws-c-auth @84a26ea1, Apache-2.0
+  (`probationes/fixa/signatura_aws/NOTICE`, T1); the signer encodes
+  with its own `signatura_aws_codificare`, checked against them.
+
+**Still open:**
+
+- B2: every capability (never probed; `horreum probare` on a B2
+  profile answers it).
 - R2's "equal part sizes except the last" multipart rule - from
-  memory; the uniform part size satisfies it either way.
-- The AWS SigV4 test suite's current home and license (believed
-  Apache-2.0, in AWS's C auth library) - check before vendoring
-  vectors.
-- `url_codificare` matches the SigV4 query rule by reading
-  (`lib/url.c:18`, unreserved set) - not yet run against the vectors.
+  memory; the uniform part size satisfies it either way (probe used
+  equal parts only).
 - Whether `http_exsequi` keeps connections alive across calls (cost
   of many small requests in a list walk) - not measured.
-- 7-day presign maximum on DO and R2 - assumed equal to AWS.
-- Whether DO Spaces and R2 return `x-amz-request-id` (R2 may use a
-  different header) - fixtures will show.
+- 7-day presign maximum on DO and R2 - assumed equal to AWS (probe
+  presigns for 300 s).
+- The reactor layer (`horreum_vocatio`) cannot run on Linux until
+  `nomina` has a POSIX implementation (parcum ...NPMN7).

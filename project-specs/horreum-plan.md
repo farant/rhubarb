@@ -267,6 +267,55 @@ this plan.
 - **T5: two plants added** - CONDITIO branch disabled -> `iam_nostrum`
   red; offset not applied -> `horologium` red (plus the plan's two).
 
+- **T6: the probe engine is a library** (`include/horreum_probatio.h`,
+  `lib/horreum_probatio.c`, `horreum_probare` + `horreum_responsum_purgare`)
+  instead of code inside `tools/horreum.c`, so it runs against the fake
+  first (`probatio_horreum_probatio`: DO profile on the fake -> all
+  probatum, nothing left, an unrelated object survives; a fake that
+  ignores conditions/checksums/ACL -> those lines refutatum). Cost if
+  wrong: none - the CLI is a thin printer over it.
+- **T6: `horreum_omnia_permittere(Horreum*)` in the core** - the probe
+  must send what the builders refuse for a provider (INCAPAX). Probe
+  only; documented as such.
+- **T6: the fake grew** presigned-query verification, checksum
+  verification + echo (BadDigest), virtual-host addressing, public-read
+  objects served unsigned, three ignore switches (`neglegere_*`) and
+  an R2-style alien UploadId switch - set as struct fields, not
+  accessors. Its accessors now sit in `simulacrum_aditus`, a table
+  `simulacrum_claudere` touches, so an includer calls only `creare` +
+  `claudere` (the third includer made the call-everything rule a tax).
+- **T6: ACL is judged by effect, not acceptance** - after the
+  `public-read` PUT the probe GETs the bare URL unsigned. R2 accepts
+  the header but the object stays private -> refutatum; DO -> probatum.
+- **T6: probe extras beyond the plan list** - a WRONG checksum must be
+  refused (accepting the right one proves nothing: DO accepts both);
+  If-Match is tested with the right ETag too (DO 412s both - the
+  finding); multipart also aborts a second upload and checks
+  ListParts.
+- **T6: R2 returns a different UploadId in ListMultipartUploads** than
+  CreateMultipartUpload (both abort it). Found live; reproduced in the
+  fake first (`id_oneris_alienum`, section red), then the probe
+  matches pending uploads by key. Library callers already use the id
+  they were given or the listed one - both valid.
+- **T6: flags promoted 2026-10-22** - DO: acl, solum_si_abest,
+  delere_plura probatae; solum_si_etag and both checksums REFUTED
+  (removed from DO's capacities - horreum now refuses them up front).
+  R2: solum_si_abest, solum_si_etag, delere_plura, crc32, sha256
+  probatae; acl stays off. B2 unchanged (`creditum`). The core
+  `incapax` section now asserts the promoted state; the "claimed but
+  not yet probed" refusal branch is unreachable for the shipped
+  providers (it waits for a provider like B2 to claim
+  solum_si_abest).
+- **T6: fixtures scrub `<Location>` too** - R2's Complete body carries
+  the account id in its host. The two captured files were re-scrubbed
+  with the same rule rather than re-probed.
+- **T6: `responsa_vera` is a new section** in `probatio_horreum.c`
+  over `digitalocean/` and `r2/` (file names differ from
+  `aws_documenta/`, so no shared loop). No parser gap: DO's unquoted
+  and R2's `&quot;`-quoted Complete ETags read the same.
+- **T6: CLI flag stays `-profilum`** (the plan's interface; a string),
+  identifiers use `tabella` per the T2 ruling.
+
 ## Review focus
 
 1. **Object keys with awkward characters** (space, `+`, `%`, `?`, `#`,

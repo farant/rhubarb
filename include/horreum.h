@@ -257,6 +257,13 @@ vacuum*
 horreum_sedes (
     Horreum* h);
 
+/* SOLUM horreum probare (horreum_probatio.h): capacitates omnes creditae
+ * et probatae - aedificatores nihil recusant, ut probatio quaerat quod
+ * provisor revera facit. NIHIL tutum */
+vacuum
+horreum_omnia_permittere (
+    Horreum* h);
+
 b32
 horreum_opus_ponere (
                     Horreum* h,

@@ -548,15 +548,20 @@ _sectio_incapax (
     CREDO_AEQUALIS_I32((i32)e.genus, (i32)HORREUM_INCAPAX);
     CREDO_VERUM(memcmp(&o, &intactum, magnitudo(o)) == ZEPHYRUM);
 
+    /* probatum 2026-10-22 (horreum probare): sine periculo_accipere */
     memset(&ponendi, ZEPHYRUM, magnitudo(ponendi));
     ponendi.solum_si_abest = VERUM;
-    CREDO_FALSUM(horreum_opus_ponere(r, _l("situla", p), _l("a", p),
-        _l("x", p), &ponendi, &o, &e, p));
-    CREDO_AEQUALIS_I32((i32)e.genus, (i32)HORREUM_INCAPAX);
-    CREDO_CHORDA_CONTINET(e.nuntius, _l("probat", p));
-    ponendi.periculum_accipere = VERUM;
     CREDO_VERUM(horreum_opus_ponere(r, _l("situla", p), _l("a", p),
         _l("x", p), &ponendi, &o, &e, p));
+    CREDO_VERUM(horreum_opus_ponere(d, _l("situla", p), _l("a", p),
+        _l("x", p), &ponendi, &o, &e, p));
+
+    /* refutatum in DO 2026-10-22: If-Match in PUT semper 412 */
+    memset(&ponendi, ZEPHYRUM, magnitudo(ponendi));
+    ponendi.solum_si_etag = _l("e", p);
+    CREDO_FALSUM(horreum_opus_ponere(d, _l("situla", p), _l("a", p),
+        _l("x", p), &ponendi, &o, &e, p));
+    CREDO_AEQUALIS_I32((i32)e.genus, (i32)HORREUM_INCAPAX);
 
     memset(&ponendi, ZEPHYRUM, magnitudo(ponendi));
     ponendi.checksum = HORREUM_CHECKSUM_CRC32;
@@ -573,6 +578,18 @@ _sectio_incapax (
     CREDO_FALSUM(horreum_opus_ponere(b, _l("situla", p), _l("a", p),
         _l("x", p), &ponendi, &o, &e, p));
     CREDO_AEQUALIS_I32((i32)e.genus, (i32)HORREUM_INCAPAX);
+
+    /* horreum probare: omnia permissa, etiam non probata */
+    horreum_omnia_permittere(b);
+    CREDO_VERUM(horreum_opus_ponere(b, _l("situla", p), _l("a", p),
+        _l("x", p), &ponendi, &o, &e, p));
+    memset(&ponendi, ZEPHYRUM, magnitudo(ponendi));
+    ponendi.solum_si_abest  = VERUM;
+    ponendi.checksum        = HORREUM_CHECKSUM_SHA256;
+    ponendi.acl             = HORREUM_ACL_PUBLICA_LECTIO;
+    CREDO_VERUM(horreum_opus_ponere(b, _l("situla", p), _l("a", p),
+        _l("x", p), &ponendi, &o, &e, p));
+    horreum_omnia_permittere(NIHIL);
 }
 
 /* ===== delere_plura_corpus ===== */
@@ -1200,6 +1217,104 @@ _sectio_tabella_vitia (
     _tabellam_delere(via);
 }
 
+/* ===== responsa_vera: corpora a horreum probare capta (2026-10-22) ===== */
+
+interior chorda
+_verum (
+    constans character* provisor,
+    constans character* titulus,
+               Piscina* p)
+{
+    character via[CCLVI];
+
+    sprintf(via, "probationes/fixa/horreum/%s/%s", provisor, titulus);
+    redde filum_legere_totum(via, p);
+}
+
+interior vacuum
+_sectio_responsa_vera (
+    CredoContextus* c)
+{
+               Piscina* p = c->piscina;
+               Horreum* d = _horreum("digitalocean", NIHIL, "nyc3", p);
+    constans character* provisores[] = { "digitalocean", "r2" };
+           HorreumOpus  o;
+          HorreumError  e;
+       HorreumObjectum  ob;
+         HorreumPagina  pg;
+        HorreumDeletio* deletiones;
+           HorreumPars* partes;
+    HorreumOnusPendens* onera;
+                chorda  id;
+                chorda  etag;
+                   i32  numerus;
+                   i32  k;
+
+    per (k = ZEPHYRUM; k < II; k++)
+    {
+        constans character* pv = provisores[k];
+
+        CREDO_VERUM(horreum_paginam_legere(_verum(pv, "enumerare.xml",
+            p),
+            &pg, &e, p));
+        CREDO_AEQUALIS_I32(pg.praefixa_numerus, II);
+        CREDO_MAIOR_I32(pg.obiecta_numerus, ZEPHYRUM);
+        CREDO_VERUM(chorda_continet(pg.praefixa_communia[ZEPHYRUM],
+            _l("f&g/", p)) || chorda_continet(pg.praefixa_communia[I],
+            _l("f&g/", p)));
+        CREDO_CHORDA_INCIPIT(pg.obiecta[ZEPHYRUM].clavis,
+            _l("horreum-probatio/", p));
+        CREDO_FALSUM(pg.truncata);
+
+        CREDO_VERUM(horreum_deletiones_legere(_verum(pv,
+            "delere_plura.xml", p), &deletiones, &numerus, &e, p));
+        CREDO_AEQUALIS_I32(numerus, II);
+        CREDO_VERUM(deletiones[ZEPHYRUM].deletum
+            && deletiones[I].deletum);
+
+        CREDO_VERUM(horreum_id_oneris_legere(_verum(pv,
+            "mp_incipere.xml",
+            p), &id, &e, p));
+        CREDO_MAIOR_I32(id.mensura, XX);
+        CREDO_VERUM(horreum_partes_legere(_verum(pv, "mp_partes.xml",
+            p),
+            &partes, &numerus, &e, p));
+        CREDO_AEQUALIS_I32(numerus, III);
+        CREDO_AEQUALIS_I64(partes[ZEPHYRUM].mensura,
+            (i64)HORREUM_PARS_MINIMA);
+        CREDO_CHORDA_AEQUALIS_LITERIS(partes[ZEPHYRUM].etag,
+            "79b281060d337b9b2b84ccf390adcf74");
+        CREDO_VERUM(horreum_pendentes_legere(_verum(pv,
+            "mp_pendentes.xml",
+            p), &onera, &numerus, &e, p));
+        CREDO_AEQUALIS_I32(numerus, I);
+        CREDO_CHORDA_TERMINATUR(onera[ZEPHYRUM].clavis, _l("/multipars",
+            p));
+        /* DO sine virgulis, R2 cum &quot; - idem ETag */
+        CREDO_VERUM(horreum_etag_perfecti_legere(_verum(pv,
+            "mp_perficere.xml", p), &etag, &e, p));
+        CREDO_CHORDA_AEQUALIS_LITERIS(etag,
+            "d28775e24ea15a08e84376e6578fb480-3");
+
+        CREDO_VERUM(horreum_opus_capere(d, _l("situla", p), _l("nulla",
+            p),
+            NIHIL, &o, &e, p));
+        CREDO_FALSUM(horreum_responsum_legere(&o, _resultus(CDIV,
+            _verum(
+            pv, "error_abest.xml", p), NIHIL, ZEPHYRUM, p), TEMPUS, &ob,
+            &e, p));
+        CREDO_AEQUALIS_I32((i32)e.genus, (i32)HORREUM_ABEST);
+        CREDO_CHORDA_AEQUALIS_LITERIS(e.codex, "NoSuchKey");
+        CREDO_FALSUM(horreum_responsum_legere(&o, _resultus(CDXII,
+            _verum(
+            pv, "error_conditio.xml", p), NIHIL, ZEPHYRUM, p), TEMPUS,
+            &ob,
+            &e, p));
+        CREDO_AEQUALIS_I32((i32)e.genus, (i32)HORREUM_CONDITIO);
+        CREDO_CHORDA_AEQUALIS_LITERIS(e.codex, "PreconditionFailed");
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "provisores", _sectio_provisores, NIHIL, NIHIL, NIHIL, NIHIL },
     { "stilus", _sectio_stilus, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1227,6 +1342,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "iterandum", _sectio_iterandum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "partis_mensura", _sectio_partis_mensura, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "responsa_vera", _sectio_responsa_vera, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "tabella_vitia", _sectio_tabella_vitia, NIHIL, NIHIL, NIHIL,
         NIHIL },

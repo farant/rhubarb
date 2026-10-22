@@ -8,7 +8,11 @@
  * capita in SignedHeaders) cum secreto noto - discrepantia = 403
  * SignatureDoesNotMatch; x-amz-content-sha256 cum corpore comparatur;
  * hora posita (simulacrum_horam_ponere) x-amz-date ultra CM secundas
- * = 403 RequestTimeTooSkewed cum capite Date. Claves ordine octetorum
+ * = 403 RequestTimeTooSkewed cum capite Date. Petitiones praesignatae
+ * (X-Amz-Signature in quaestione) eodem modo iudicantur; summae
+ * x-amz-checksum-crc32/-sha256 cum corpore comparantur (BadDigest) et
+ * redduntur. Stilus hospitis ("situla.hospes") quoque accipitur.
+ * Claves ordine octetorum
  * servantur; signum continuationis = base64 ultimi nominis redditi.
  *
  * Operationes: PUT (If-None-Match *, If-Match, x-amz-meta-*,
@@ -28,8 +32,10 @@
  * 'parametrum' vitium ad partem quaestionis restringit
  * ("partNumber=2", "uploadId").
  *
- * Functiones INTERIORES (more servus_scriptus.h): includens omnes
- * aditus simulacrum_* vocare debet. */
+ * Functiones INTERIORES: includens simulacrum_creare et
+ * simulacrum_claudere vocare debet; ceteri aditus in tabula
+ * simulacrum_aditus stant quam claudere tangit, ergo includens solum
+ * quibus eget vocat (-Wunused-function sub gcc tacet). */
 #ifndef HORREUM_SIMULACRUM_H
 #define HORREUM_SIMULACRUM_H
 
@@ -89,6 +95,7 @@ nomen structura {
      HttpCaput* meta;                  /* titulus sine x-amz-meta- */
            i32  meta_numerus;
    MomentumSec  mutatum;
+           b32  publicum;              /* x-amz-acl public-read */
 } SimulacrumObiectum;
 
 nomen structura {
@@ -129,6 +136,15 @@ nomen structura {
                    i32  onera_numerus;
                    i32  corpus_maximum;
                    i32  si_etag_visa;
+    /* provisor qui neglegit (probatio refutationis, campi directe
+     * positi): If-None-Match/If-Match in PUT; summae x-amz-checksum */
+                   b32 neglegere_condiciones;
+                   b32 neglegere_summas;
+    /* x-amz-acl acceptum sed sine effectu (ut R2 creditur) */
+                   b32 neglegere_acl;
+    /* ut R2 (2026-10-22): ListMultipartUploads id ALIUM reddit
+     * ("L-" + id); utrumque in uploadId valet */
+                   b32 id_oneris_alienum;
 } Simulacrum;
 
 /* ===== auxilia ===== */
@@ -483,7 +499,8 @@ _sim_scribere (
         s->piscina);
     o->mutatum = s->hora
         > ZEPHYRUM ? s->hora : SIMULACRUM_TEMPUS;
-    o->meta_numerus = meta_numerus;
+    o->publicum      = FALSUM;
+    o->meta_numerus  = meta_numerus;
     o->meta            = (HttpCaput*)piscina_allocare(s->piscina,
         (memoriae_index)((meta_numerus
             + I) * (i32)magnitudo(HttpCaput)));
@@ -638,6 +655,126 @@ _sim_signatura_valida (
     redde r.successus && chorda_aequalis(r.auctoritas, auctoritas);
 }
 
+/* praesignata (X-Amz-Signature in quaestione, sine Authorization):
+ * signatura ex quaestione sine X-Amz-* recomputatur */
+interior b32
+_sim_praesignata_valida (
+                   Simulacrum* s,
+    constans HttpPetitioVisus* v,
+                       chorda  via,
+        constans SignaturaPar* q,
+                          i32  nq,
+                      Piscina* p)
+{
+         SignaturaPar base[SIMULACRUM_PARIA_MAXIMA];
+         SignaturaPar par_c[SIMULACRUM_PARIA_MAXIMA];
+                  i32 nb = ZEPHYRUM;
+                  i32 nc = ZEPHYRUM;
+                  i32 i;
+                  s32 duratio  = ZEPHYRUM;
+                  s32 k_sig    = _sim_par(q, nq, "X-Amz-Signature");
+                  s32 k_cap    = _sim_par(q, nq, "X-Amz-SignedHeaders");
+                  s32 k_exp    = _sim_par(q, nq, "X-Amz-Expires");
+                  s32 k_dies   = _sim_par(q, nq, "X-Amz-Date");
+                  s32 k_cred   = _sim_par(q, nq, "X-Amz-Credential");
+               chorda signata;
+     SignaturaPetitio sp;
+    SignaturaResultus r;
+
+    si (   k_sig < ZEPHYRUM || k_cap < ZEPHYRUM || k_exp < ZEPHYRUM
+        || k_dies < ZEPHYRUM || k_cred < ZEPHYRUM
+        || !chorda_incipit(q[k_cred].valor, s->clavis_id)
+        || !chorda_ut_s32(q[k_exp].valor, &duratio))
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < nq; i++)
+    {
+        si (!chorda_incipit(q[i].titulus, _sim_l("X-Amz-", p)))
+        {
+            base[nb] = q[i];
+            nb++;
+        }
+    }
+    signata = q[k_cap].valor;
+    dum (signata.mensura > ZEPHYRUM && nc < SIMULACRUM_PARIA_MAXIMA)
+    {
+           s32 sc = chorda_invenire_index(signata, _sim_l(";", p));
+        chorda t  = sc < ZEPHYRUM ? signata
+                                  : chorda_sectio(signata, ZEPHYRUM,
+                                      (i32)sc);
+
+        si (!chorda_aequalis_literis(t, "host"))
+        {
+            par_c[nc].titulus  = t;
+            par_c[nc].valor    = _sim_caput(v, chorda_ut_cstr(t, p), p);
+            nc++;
+        }
+        si (sc < ZEPHYRUM)
+        {
+            frange;
+        }
+        signata = chorda_sectio(signata, (i32)sc + I, signata.mensura);
+    }
+    memset(&sp, ZEPHYRUM, magnitudo(sp));
+    sp.methodus          = http_methodus_nomen(v->methodus);
+    sp.hospes            = _sim_caput(v, "Host", p);
+    sp.via               = via;
+    sp.quaestio          = base;
+    sp.quaestio_numerus  = nb;
+    sp.capita            = par_c;
+    sp.capita_numerus    = nc;
+    sp.corpus_sigillum   = _sim_l("UNSIGNED-PAYLOAD", p);
+    sp.tempus            = _sim_dies_amz(q[k_dies].valor, p);
+    sp.duratio           = (i32)duratio;
+    sp.regio             = s->regio;
+    sp.servitium         = _sim_l("s3", p);
+    sp.clavis_id         = s->clavis_id;
+    sp.secretum          = s->secretum;
+    r                    = signatura_aws_quaestione(&sp, p);
+    memset(&sp, ZEPHYRUM, magnitudo(sp));
+    redde r.successus && chorda_aequalis(r.signatura, q[k_sig].valor);
+}
+
+/* x-amz-checksum-*: comparatur cum corpore; VERUM si abest aut aequat */
+interior b32
+_sim_summae_validae (
+    constans HttpPetitioVisus* v,
+                      Piscina* p)
+{
+      chorda crc = _sim_caput(v, "x-amz-checksum-crc32", p);
+      chorda sha = _sim_caput(v, "x-amz-checksum-sha256", p);
+         i32 c;
+          i8 be[IV];
+    Sigillum sg;
+      chorda computata;
+
+    si (crc.mensura > ZEPHYRUM)
+    {
+        c = crc32_calculare(v->corpus.datum, v->corpus.mensura);
+        be[ZEPHYRUM] = (i8)((c >> XXIV) & 0xFFu);
+        be[I] = (i8)((c >> XVI) & 0xFFu);
+        be[II] = (i8)((c >> VIII) & 0xFFu);
+        be[III] = (i8)(c & 0xFFu);
+        computata = base64_codificare(be, IV, p);
+        si (!chorda_aequalis(computata, crc))
+        {
+            redde FALSUM;
+        }
+    }
+    si (sha.mensura > ZEPHYRUM)
+    {
+        sg = sigillum_computare(v->corpus.datum,
+            (memoriae_index)v->corpus.mensura);
+        computata = base64_codificare(sg.octeti, SIGILLUM_OCTETI, p);
+        si (!chorda_aequalis(computata, sha))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
 /* ===== operationes ===== */
 interior vacuum
 _sim_capita_obiecti (
@@ -710,6 +847,11 @@ _sim_ponere (
           HttpResponsum* r;
       ChordaAedificator* a;
 
+    si (s->neglegere_condiciones)
+    {
+        nisi_etag  = chorda_ex_buffer(NIHIL, ZEPHYRUM);
+        si_etag    = nisi_etag;
+    }
     si (chorda_aequalis_literis(nisi_etag, "*") && est)
     {
         redde _sim_error(s, CDXII, "PreconditionFailed", ZEPHYRUM, p);
@@ -729,16 +871,39 @@ _sim_ponere (
                 p);
         }
     }
+    si (!s->neglegere_summas && !_sim_summae_validae(v, p))
+    {
+        redde _sim_error(s, CD, "BadDigest", ZEPHYRUM, p);
+    }
     n = _sim_meta_petitionis(v, meta, p);
     _sim_scribere(s, clavis, v->corpus, _sim_caput(v, "Content-Type",
         p),
         meta, n);
+    si (   !s->neglegere_acl
+        && chorda_aequalis_literis(_sim_caput(v, "x-amz-acl", p),
+            "public-read")
+        && _sim_invenire(s, clavis, &index))
+    {
+        s->obiecta[index].publicum = VERUM;
+    }
     r = _sim_responsum(CC, p);
     a = chorda_aedificator_creare(p, XLVIII);
     chorda_aedificator_appendere_character(a, '"');
     chorda_aedificator_appendere_chorda(a, _sim_etag(v->corpus, p));
     chorda_aedificator_appendere_character(a, '"');
     _sim_caput_addere(r, "ETag", chorda_aedificator_finire(a), p);
+    si (   !s->neglegere_summas
+        && _sim_caput(v, "x-amz-checksum-crc32", p).mensura > ZEPHYRUM)
+    {
+        _sim_caput_addere(r, "x-amz-checksum-crc32", _sim_caput(v,
+            "x-amz-checksum-crc32", p), p);
+    }
+    si (   !s->neglegere_summas
+        && _sim_caput(v, "x-amz-checksum-sha256", p).mensura > ZEPHYRUM)
+    {
+        _sim_caput_addere(r, "x-amz-checksum-sha256", _sim_caput(v,
+            "x-amz-checksum-sha256", p), p);
+    }
     redde _sim_bene(r);
 }
 
@@ -1116,7 +1281,11 @@ _sim_onus (
     {
         SimulacrumOnus* o = &s->onera[i];
 
-        si (   o->vivum && chorda_aequalis(o->id, q[iu].valor)
+        si (   o->vivum
+            && (   chorda_aequalis(o->id, q[iu].valor)
+                || (   s->id_oneris_alienum
+                    && chorda_aequalis(chorda_concatenare(_sim_l("L-",
+                        s->piscina), o->id, s->piscina), q[iu].valor)))
             && chorda_aequalis(o->clavis, clavis))
         {
             redde o;
@@ -1469,6 +1638,10 @@ _sim_mp_pendentes (
         chorda_aedificator_appendere_literis(a, "<Upload><Key>");
         _sim_effugere(a, o->clavis);
         chorda_aedificator_appendere_literis(a, "</Key><UploadId>");
+        si (s->id_oneris_alienum)
+        {
+            chorda_aedificator_appendere_literis(a, "L-");
+        }
         chorda_aedificator_appendere_chorda(a, o->id);
         chorda_aedificator_appendere_literis(a,
             "</UploadId><Initiated>");
@@ -1562,6 +1735,9 @@ _sim_exsequi (
                      b32  abrumpere;
                 Sigillum  sg;
                character  hex[LXV];
+                     b32  praesignata;
+                     b32  anonyma;
+                     i32  locus_anonymi;
 
     s->petitiones++;
     si ((i32)v.corpus.mensura > s->corpus_maximum)
@@ -1596,8 +1772,13 @@ _sim_exsequi (
             quaestio.mensura);
     }
     via = url_decodificare(via, p);
+    praesignata = _sim_par(q, nq, "X-Amz-Signature") >= ZEPHYRUM
+        && _sim_caput(&v, "Authorization", p).mensura == ZEPHYRUM;
+    /* sine ulla signatura: solum GET obiecti publici */
+    anonyma = !praesignata
+        && _sim_caput(&v, "Authorization", p).mensura == ZEPHYRUM;
 
-    si (s->hora > ZEPHYRUM)
+    si (s->hora > ZEPHYRUM && !praesignata && !anonyma)
     {
         s64 t = (s64)_sim_dies_amz(_sim_caput(&v, "x-amz-date", p), p);
         s64 d = t - (s64)s->hora;
@@ -1608,7 +1789,9 @@ _sim_exsequi (
                 p);
         }
     }
-    si (!_sim_signatura_valida(s, &v, via, q, nq, p))
+    si (   !anonyma
+        && (praesignata ? !_sim_praesignata_valida(s, &v, via, q, nq, p)
+                        : !_sim_signatura_valida(s, &v, via, q, nq, p)))
     {
         redde _sim_error(s, CDIII, "SignatureDoesNotMatch", ZEPHYRUM,
             p);
@@ -1616,11 +1799,19 @@ _sim_exsequi (
     sg = sigillum_computare(v.corpus.datum,
         (memoriae_index)v.corpus.mensura);
     sigillum_hex(&sg, hex);
-    si (!chorda_aequalis_literis(_sim_caput(&v, "x-amz-content-sha256",
+    si (   !praesignata && !anonyma
+        && !chorda_aequalis_literis(_sim_caput(&v,
+        "x-amz-content-sha256",
             p), hex))
     {
         redde _sim_error(s, CD, "XAmzContentSHA256Mismatch", ZEPHYRUM,
             p);
+    }
+    /* stilus hospitis (situla.hospes/clavis) -> stilus viae */
+    si (chorda_incipit(_sim_caput(&v, "Host", p),
+            _sim_l(SIMULACRUM_SITULA ".", p)))
+    {
+        via = chorda_concatenare(radix, via, p);
     }
     si (!chorda_incipit(via, radix))
     {
@@ -1634,6 +1825,16 @@ _sim_exsequi (
     si (via.mensura > ZEPHYRUM)
     {
         clavis = chorda_sectio(via, I, via.mensura);
+    }
+    si (anonyma)
+    {
+        si (   v.methodus == HTTP_GET
+            && _sim_invenire(s, clavis, &locus_anonymi)
+            && s->obiecta[locus_anonymi].publicum)
+        {
+            redde _sim_capere(s, &v, clavis, FALSUM, p);
+        }
+        redde _sim_error(s, CDIII, "AccessDenied", ZEPHYRUM, p);
     }
 
     vitium = _sim_vitium(s, v.methodus, clavis, q, nq);
@@ -1860,6 +2061,32 @@ simulacrum_etag_ponere (
     }
 }
 
+nomen structura {
+         vacuum (*vitium_addere)(Simulacrum* s, SimulacrumVitium v);
+         vacuum (*horam_ponere)(Simulacrum* s, MomentumSec hora);
+    HttpVectura (*vectura)(Simulacrum* s);
+            i32 (*petitiones)(Simulacrum* s);
+         vacuum (*obiectum_ponere)(Simulacrum* s, chorda clavis,
+                     chorda corpus);
+            i32 (*corpus_maximum)(Simulacrum* s);
+            i32 (*si_etag_visa)(Simulacrum* s);
+         chorda (*obiectum_corpus)(Simulacrum* s, chorda clavis);
+         vacuum (*etag_ponere)(Simulacrum* s, chorda clavis,
+                     constans character* etag);
+} SimulacrumAditus;
+
+hic_manens constans SimulacrumAditus simulacrum_aditus = {
+    simulacrum_vitium_addere,
+    simulacrum_horam_ponere,
+    simulacrum_vectura,
+    simulacrum_petitiones,
+    simulacrum_obiectum_ponere,
+    simulacrum_corpus_maximum,
+    simulacrum_si_etag_visa,
+    simulacrum_obiectum_corpus,
+    simulacrum_etag_ponere
+};
+
 /* onera reliqua (piscinae propriae) deletur */
 interior vacuum
 simulacrum_claudere (
@@ -1867,6 +2094,7 @@ simulacrum_claudere (
 {
     i32 i;
 
+    (vacuum)simulacrum_aditus.vectura;
     per (i = ZEPHYRUM; i < s->onera_numerus; i++)
     {
         _sim_onus_finire(&s->onera[i]);
