@@ -72,6 +72,13 @@ nomen enumeratio {
     STML_CAPTIO_FARCIMEN    = III   /* sandwich <= tag => */
 } StmlCaptioDirectio;
 
+/* Parentheses capturae ('<tag ((>' = fratres duo) plures quam hoc
+ * numero parsator RECUSAT (STML_ERROR_SYNTAXIS) - numquam tacite
+ * secat, ne circuitus octetorum frangatur. Fines legibilitatis
+ * humanae longe infra; StmlNodus.captio_numerus octetus unus est
+ * (2026-10-22, decretum Frani). */
+#define STML_CAPTIO_NUMERUS_MAXIMUS CCLV
+
 
 /* ==================================================
  * Status Parsationis
@@ -149,20 +156,29 @@ nomen structura {
 /* StmlNodus - Nodus in arbore STML
  * "Node in STML tree"
  *
- * ORDO CAMPORUM (2026-10-22): campi IV octetorum bini iuncti, ne
- * lacunae ante monstratores (VIII) nascantur - 'multilinea' ideo
- * iuxta 'genus' stat, non iuxta 'indentatio'. CLII -> CXLIV octeti
- * (lacunae II x IV), sine mutatione API. Campum novum addens:
- * campos IV octetorum bini serva, aut probatio_stml ('magnitudo
- * nodi') rubra fit. Mensura: lib/stml.worklog.md 2026-10-22. */
+ * ORDO CAMPORUM (2026-10-22): campi parvi (octetus unus) primi,
+ * deinde i32 positionum, deinde monstratores - lacunae tantum quot
+ * alignatio monstratoris poscit. CLII -> CXLIV (ordo, lacunae
+ * sublatae) -> CXXVIII (campi parvi angusti), sine mutatione
+ * lectionis: comparationes, switch et lectiones campi intactae;
+ * assignatio ex VARIABILI b32/enumerationis castum poscit
+ * (-Wconversion). Campum novum addens: ordinem serva, aut
+ * probatio_stml ('magnitudo nodi') rubra fit. Mensura:
+ * lib/stml.worklog.md 2026-10-22.
+ *
+ * Vexilla (crudus, clausura_anonyma, fragmentum, multilinea) i8
+ * sunt cum VERUM/FALSUM; genus et captio_directio i8 valores
+ * enumerationum StmlNodusGenus / StmlCaptioDirectio ferunt. */
 nomen structura StmlNodus {
-    StmlNodusGenus  genus;
-               b32  multilinea;      /* vide 'indentatio' infra */
-            chorda* titulus;         /* Tag name for elements */
-            chorda* valor;           /* Text/comment/PI/transclusion content */
-               Xar* attributa;       /* Xar de StmlAttributum */
-               Xar* liberi;          /* Xar de StmlNodus* */
-    structura StmlNodus*     parens;
+    i8 genus;              /* StmlNodusGenus */
+    i8 crudus;             /* Raw content tag (! suffix) */
+    i8 captio_directio;    /* StmlCaptioDirectio */
+    i8 captio_numerus;     /* Number of capture parens (<=
+                             * STML_CAPTIO_NUMERUS_MAXIMUS) */
+    i8 clausura_anonyma;   /* Clausum per </> - scriptor formam
+                             * authoris servat */
+    i8 fragmentum;         /* Is this a fragment? <#> or <#id> */
+    i8 multilinea;         /* '<tag\>' - vide 'indentatio' infra */
 
     /* Linea fontis ubi nodus incipit (1-basata; 0 = non e
      * parsatione, e.g. stml_elementum_creare). Metadatum
@@ -170,7 +186,7 @@ nomen structura StmlNodus {
      * fidelitas byte-exacta intacta. Consumptor primus:
      * diagnostica canonis (vitium sine linea in plagula 49k
      * linearum venatio est, non diagnosticum). */
-    i32 linea;
+   i32 linea;
 
     /* EXTENSIO OCTETORUM [initium, finis) in fonte: ab primo
      * octeto tagi aperientis usque ad ultimum tagi CLAUDENTIS
@@ -190,18 +206,15 @@ nomen structura StmlNodus {
      *
      * Octeti, non puncta codicis (decretum 01M0ATF1E1: C octetos
      * emittit, consumens ad limitem convertit). */
-    i32 positus_initium;
-    i32 positus_finis;
+   i32 positus_initium;
+   i32 positus_finis;
 
-    /* STML-specific fields */
-                   b32 crudus;          /* Raw content tag (! suffix) */
-    StmlCaptioDirectio captio_directio;
-                   i32 captio_numerus;  /* Number of capture parens */
-                   b32 clausura_anonyma; /* Clausum per </> - scriptor
-                                                * formam authoris servat */
+            chorda* titulus;         /* Tag name for elements */
+            chorda* valor;           /* Text/comment/PI/transclusion content */
+               Xar* attributa;       /* Xar de StmlAttributum (NIHIL = nulla) */
+               Xar* liberi;          /* Xar de StmlNodus* */
+    structura StmlNodus*     parens;
 
-    /* Fragment fields */
-       b32  fragmentum;      /* Is this a fragment? <#> or <#id> */
     chorda* fragmentum_id;   /* Fragment ID (NIHIL for anonymous) */
 
     /* Augmentatio (librarium): '<% &clavis;>' - clavis destinata
@@ -254,7 +267,7 @@ nomen structura StmlNodus {
      * commune in 'indentatio' conditum (reassemblatio praefixum
      * lineis non-vacuis reinserit). FALSUM/NIHIL = fluxus
      * ordinarius (lineae novae molles). Cum crudus: '<tag!\>'.
-     * 'multilinea' ipsa supra iuxta 'genus' stat (ORDO CAMPORUM). */
+     * 'multilinea' ipsa inter campos parvos supra stat. */
      chorda* indentatio;
 } StmlNodus;
 

@@ -7535,6 +7535,13 @@ silva_chorda_internare_ex_literis (
 #ifndef STML_H
 #define STML_H
 
+/* Parentheses capturae ('<tag ((>' = fratres duo) plures quam hoc
+ * numero parsator RECUSAT (STML_ERROR_SYNTAXIS) - numquam tacite
+ * secat, ne circuitus octetorum frangatur. Fines legibilitatis
+ * humanae longe infra; StmlNodus.captio_numerus octetus unus est
+ * (2026-10-22, decretum Frani). */
+#define STML_CAPTIO_NUMERUS_MAXIMUS CCLV
+
 
 /* ==================================================
  * Genera Tokenum (Internal)
@@ -18107,6 +18114,32 @@ _tok_legere_doctype (
 }
 
 /* Parse a tag <...> */
+/* Parentheses capturae ultra STML_CAPTIO_NUMERUS_MAXIMUS: lexema
+ * ERRATUM (parsator STML_ERROR_SYNTAXIS ponit, ut titulo male
+ * incipienti). VERUM si nimiae - vocans 'token' statim reddit. */
+interior b32
+_tok_captio_nimia (
+     StmlToken* token,
+           i32  captio_numerus,
+           i32  initium,
+           i32  finis,
+           i32  linea,
+           i32  columna)
+{
+    si (captio_numerus <= STML_CAPTIO_NUMERUS_MAXIMUS)
+    {
+        redde FALSUM;
+    }
+    token->genus            = STML_TOKEN_ERRATUM;
+    token->valor.datum      = NIHIL;
+    token->valor.mensura    = ZEPHYRUM;
+    token->positus_initium  = initium;
+    token->positus_finis    = finis;
+    token->linea            = linea;
+    token->columna          = columna;
+    redde VERUM;
+}
+
 interior StmlToken
 _tok_legere_tag (
     StmlTokenContext* ctx)
@@ -18181,6 +18214,11 @@ _tok_legere_tag (
         {
             captio_numerus++;
             _tok_progredi(ctx, I);
+        }
+        si (_tok_captio_nimia(&token, captio_numerus, initium,
+                ctx->positus, initium_linea, initium_columna))
+        {
+            redde token;
         }
 
         _tok_praeterire_spatium(ctx);
@@ -18355,6 +18393,11 @@ _tok_legere_tag (
         captio_numerus++;
         _tok_progredi(ctx, I);
     }
+    si (_tok_captio_nimia(&token, captio_numerus, initium,
+            ctx->positus, initium_linea, initium_columna))
+    {
+        redde token;
+    }
 
     /* Skip whitespace after capture parens (spatium '( >' non
      * modellatur - exceptio angusta nominata, §1.6) */
@@ -18494,6 +18537,11 @@ _tok_legere_fragmentum (
     {
         captio_numerus++;
         _tok_progredi(ctx, I);
+    }
+    si (_tok_captio_nimia(&token, captio_numerus, initium,
+            ctx->positus, initium_linea, initium_columna))
+    {
+        redde token;
     }
     _tok_praeterire_spatium(ctx);
 
@@ -18784,6 +18832,11 @@ _tok_legere_captio_nuda (
     {
         captio_numerus++;
         _tok_progredi(ctx, I);
+    }
+    si (_tok_captio_nimia(&token, captio_numerus, initium,
+            ctx->positus, initium_linea, initium_columna))
+    {
+        redde token;
     }
     _tok_praeterire_spatium(ctx);
 
@@ -19326,7 +19379,7 @@ _parser_creare_nodus (
         redde NIHIL;
     }
 
-    nodus->genus             = genus;
+    nodus->genus             = (i8)genus;
     nodus->titulus           = NIHIL;
     nodus->valor             = NIHIL;
     nodus->attributa         = NIHIL;
@@ -19454,7 +19507,7 @@ _parser_legere_elementum (
     titulus_ptr        = nodus->titulus;
 
     nodus->attributa   = ctx->current.attributa;
-    nodus->multilinea  = ctx->current.multilinea;
+    nodus->multilinea  = (i8)(ctx->current.multilinea != FALSUM);
     si (ctx->current.spatia_prae_finem.mensura > ZEPHYRUM)
     {
         nodus->spatia_intra_tagum = silva_chorda_internare(ctx->intern,
@@ -19568,13 +19621,13 @@ _parser_legere_elementum_crudus (
     nodus->titulus     = titulus_ptr;
     nodus->attributa   = ctx->current.attributa;
     nodus->crudus      = VERUM;
-    nodus->multilinea  = ctx->current.multilinea;
+    nodus->multilinea  = (i8)(ctx->current.multilinea != FALSUM);
     si (ctx->current.spatia_prae_finem.mensura > ZEPHYRUM)
     {
         nodus->spatia_intra_tagum = silva_chorda_internare(ctx->intern,
             ctx->current.spatia_prae_finem);
     }
-    nodus->captio_numerus  = ctx->current.captio_numerus;
+    nodus->captio_numerus  = (i8)ctx->current.captio_numerus;
 
     si (ctx->current.captio_numerus > ZEPHYRUM)
     {
@@ -19677,7 +19730,7 @@ _parser_legere_auto_claudere (
 
     _titulum_ex_tokeno_ponere(ctx, nodus, ctx->current.valor);
     nodus->attributa   = ctx->current.attributa;
-    nodus->multilinea  = ctx->current.multilinea;
+    nodus->multilinea  = (i8)(ctx->current.multilinea != FALSUM);
     si (ctx->current.spatia_prae_finem.mensura > ZEPHYRUM)
     {
         nodus->spatia_intra_tagum = silva_chorda_internare(ctx->intern,
@@ -19721,7 +19774,7 @@ _parser_legere_captio_ante (
             ctx->current.spatia_prae_finem);
     }
     nodus->captio_directio = STML_CAPTIO_ANTE;
-    nodus->captio_numerus = ctx->current.captio_numerus;
+    nodus->captio_numerus = (i8)ctx->current.captio_numerus;
     nodus->liberi = silva_xar_creare(ctx->piscina, magnitudo(SilvaStmlNodus*));
 
     _parser_progredi(ctx);
@@ -19747,7 +19800,7 @@ _parser_legere_captio_retro (
     nodus->titulus = titulus_ptr;
     nodus->attributa = ctx->current.attributa;
     nodus->captio_directio = STML_CAPTIO_RETRO;
-    nodus->captio_numerus = ctx->current.captio_numerus;
+    nodus->captio_numerus = (i8)ctx->current.captio_numerus;
     nodus->liberi = silva_xar_creare(ctx->piscina, magnitudo(SilvaStmlNodus*));
 
     _parser_progredi(ctx);
@@ -21112,7 +21165,7 @@ _parser_legere_fragmentum_auto (
 
     /* Campi capturae (<# (> / <#id (>): receptaculum liberis
      * necessarium - _processare_captiones fratres huc movet */
-    nodus->captio_numerus = ctx->current.captio_numerus;
+    nodus->captio_numerus = (i8)ctx->current.captio_numerus;
     si (ctx->current.captio_numerus > ZEPHYRUM)
     {
         nodus->captio_directio = STML_CAPTIO_ANTE;

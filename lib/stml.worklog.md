@@ -1664,3 +1664,17 @@ Built tree (hilarius projection, 296,634 nodes = 59% of the 74 MiB pool): only g
 Parsed trees (aedificatio, gutenberg_index, librarium): linea and positus are always set; spatia_ante and spatia_post are set on 100% of elements; spatia_clausurae on 15–20%; crudus/captio_* 0–15%; multilinea, indentatio, augmentum_clavis, attributum_titulus, clausura_anonyma, fragmentum* 0% in all three.
 
 Field use counts (approx; generic names like genus/titulus/valor/linea include other structs): rare-syntax fields 17–87 uses each in 3–11 files, mostly stml.c and stml_macros.c.
+
+## 2026-10-22 — C/P: small fields narrowed, StmlNodus 144 -> 128 B
+
+`genus`, `captio_directio` (enum values) and the flags `crudus`, `clausura_anonyma`, `fragmentum`, `multilinea` (VERUM/FALSUM) are now `i8`; `captio_numerus` is `i8` too. They sit first in the struct, then the three i32 positions, then the pointers; 5 B of tail padding remain (field sum 123, rounded to pointer alignment 128). No read changed: comparisons, switch and field reads are untouched (i8 promotes to int).
+
+Writes: `-Wconversion` flagged every assignment from a wider variable (8 sites, all in stml.c), so the compiler was the audit. Booleans are normalized, not just cast: `(i8)(x != FALSUM)`. A b32 that holds a non-1 truthy value would otherwise turn into 0 in a byte. Counts and enums get a plain cast.
+
+`captio_numerus` limit (Fran's decision: readability caps it far below 255 anyway): `STML_CAPTIO_NUMERUS_MAXIMUS = CCLV` in stml.h. The tokenizer refuses more via `_tok_captio_nimia`, which returns the existing ERRATUM token, so the parser reports STML_ERROR_SYNTAXIS with a position. It never clamps, since clamping would break the byte round trip. There are four counting sites: `<t (>`, `<) t>`, `<# (>` and the bare `<(>` sugar. Section "captio numerus maximus" covers all four at 255 (accepted, bytes round-trip; the bare form normalizes to `<#(>` by design) and at 256 (refused). Plant: the limit widened by 256 makes it red on the 256 refusal.
+
+Size guard ("magnitudo nodi") is now "size == field sum rounded up to pointer alignment" rather than "no padding at all". It is still portable and still red if a field addition opens a hole between pointers.
+
+hilarius projection pool 72,069 -> 67,435 KiB (16 B x nodes). Today's total: 86.1 -> 65.9 MiB (-23%).
+
+The oratio allocation golden moved by +1 on cicero.txt (`allocationes_arboris` 1186508 -> 1186509), its only change. Controlled experiment (probe build/sonda_partes/sonda_oratio_alloc.c): the same code at 128 B gives 1186509, padded to 144 B gives 1186508. So it is size-dependent arena-boundary drift, the same mechanism as html adversarius_2 (html_arbor.worklog.md 2026-10-22). Golden moved by exactly that number.

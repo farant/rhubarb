@@ -6461,17 +6461,20 @@ _probare_attributa_pigra (
     }
 }
 
-/* MAGNITUDO NODI (2026-10-22): StmlNodus sine lacunis - summa
- * camporum = magnitudo structurae (ORDO CAMPORUM in stml.h). Campus
- * novus aut ordo qui lacunam reducit hic rubrum facit: aut campos IV
- * octetorum bini serva, aut summam hic auge. Portabile (nullus
- * numerus CXLIV fixus). */
+/* MAGNITUDO NODI (2026-10-22): StmlNodus sine lacunis evitabilibus -
+ * magnitudo = summa camporum ad alignationem monstratoris rotundata
+ * (ORDO CAMPORUM in stml.h; campi parvi i8 non ad VIII exeunt, ergo
+ * cauda impleta sola manet). Campus novus aut ordo qui lacunam inter
+ * monstratores reducit hic rubrum facit. Portabile (nullus numerus
+ * CXXVIII fixus). */
 interior vacuum
 _probare_magnitudinem_nodi (
     CredoContextus* c)
 {
          StmlNodus n;
     memoriae_index summa;
+    memoriae_index ordinatio;
+    memoriae_index rotundata;
 
     (vacuum)c;
     summa = magnitudo(n.genus) + magnitudo(n.multilinea)
@@ -6486,9 +6489,106 @@ _probare_magnitudinem_nodi (
           + magnitudo(n.attributum_titulus) + magnitudo(n.spatia_ante)
           + magnitudo(n.spatia_post) + magnitudo(n.spatia_clausurae)
           + magnitudo(n.spatia_intra_tagum) + magnitudo(n.indentatio);
-    CREDO_AEQUALIS_I32((i32)magnitudo(StmlNodus), (i32)summa);
-    imprimere("  magnitudo(StmlNodus) %d, summa camporum %d\n",
-        (int)magnitudo(StmlNodus), (int)summa);
+    ordinatio = magnitudo(vacuum*);
+    rotundata = ((summa + ordinatio - I) / ordinatio) * ordinatio;
+    CREDO_AEQUALIS_I32((i32)magnitudo(StmlNodus), (i32)rotundata);
+    imprimere("  magnitudo(StmlNodus) %d, summa camporum %d "
+        "(rotundata %d)\n", (int)magnitudo(StmlNodus), (int)summa,
+        (int)rotundata);
+}
+
+/* CAPTIO NUMERUS MAXIMUS (2026-10-22): CCLV parentheses accipiuntur
+ * et octetim redduntur; CCLVI RECUSANTUR (STML_ERROR_SYNTAXIS), non
+ * secantur - campus octetus unus est. Formae quattuor: '<t (>',
+ * '<) t>', '<# (>' et '<(>' nuda. */
+interior vacuum
+_probare_captionem_maximam (
+    CredoContextus* c)
+{
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+               character  fons[1024];
+                     i32  forma;
+                     i32  i;
+                     i32  n;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
+    per (forma = ZEPHYRUM; forma < IV; forma++)
+    {
+        per (n = STML_CAPTIO_NUMERUS_MAXIMUS;
+             n <= STML_CAPTIO_NUMERUS_MAXIMUS + I; n++)
+        {
+            StmlResultus res;
+                     i32 k;
+
+            k          = ZEPHYRUM;
+            fons[k++]  = '<'; fons[k++] = 'r'; fons[k++]  = '>';
+            fons[k++]                                     = '<';
+            si (forma == ZEPHYRUM)
+            {
+                fons[k++] = 't'; fons[k++] = ' ';
+                per (i = ZEPHYRUM; i < n; i++) fons[k++] = '(';
+                fons[k++] = '>';
+            }
+            alioquin si (forma == I)
+            {
+                per (i = ZEPHYRUM; i < n; i++) fons[k++] = ')';
+                fons[k++] = ' '; fons[k++] = 't'; fons[k++] = '>';
+            }
+            alioquin si (forma == II)
+            {
+                fons[k++] = '#'; fons[k++] = ' ';
+                per (i = ZEPHYRUM; i < n; i++) fons[k++] = '(';
+                fons[k++] = '>';
+            }
+            alioquin
+            {
+                per (i = ZEPHYRUM; i < n; i++) fons[k++] = '(';
+                fons[k++] = '>';
+            }
+            fons[k++] = '<'; fons[k++] = 'a'; fons[k++]  = '/';
+            fons[k++]                                    = '>';
+            fons[k++]                                    =
+                '<'; fons[k++] = '/'; fons[k++] = 'r';
+            fons[k++]  = '>';
+            fons[k]    = '\0';
+
+            res = stml_legere_ex_literis(fons, piscina, intern);
+            si (n <= STML_CAPTIO_NUMERUS_MAXIMUS)
+            {
+                CREDO_VERUM(res.successus);
+                si (res.successus && forma != III)
+                {
+                    CREDO_CHORDA_AEQUALIS_LITERIS(
+                        stml_scribere(res.radix, piscina, FALSUM),
+                        fons);
+                }
+                alioquin si (res.successus)
+                {
+                    /* '<(>' nuda: scriptor ad '<#(>' normalizat
+                     * (consulto, worklog 'Sugar') - exspectatum
+                     * igitur '#' post '<r><' insertum */
+                    character exspectatum[1032];
+
+                    memcpy(exspectatum, fons, (memoriae_index)IV);
+                    exspectatum[IV] = '#';
+                    memcpy(exspectatum + V, fons + IV,
+                        (memoriae_index)(k - IV + I));
+                    CREDO_CHORDA_AEQUALIS_LITERIS(
+                        stml_scribere(res.radix, piscina, FALSUM),
+                        exspectatum);
+                }
+            }
+            alioquin
+            {
+                CREDO_FALSUM(res.successus);
+                CREDO_AEQUALIS_I32((i32)res.status,
+                    (i32)STML_ERROR_SYNTAXIS);
+            }
+        }
+    }
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
@@ -6638,6 +6738,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "magnitudo nodi", _probare_magnitudinem_nodi, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "captio numerus maximus", _probare_captionem_maximam, NIHIL,
+        NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
