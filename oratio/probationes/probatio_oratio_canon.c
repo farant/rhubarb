@@ -51,6 +51,7 @@
 #include "stml.h"
 #include "xar.h"
 #include <ctype.h>
+#include "specimen_corporis.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -919,7 +920,7 @@ CREDO_GRADUS ("Iudicans corpus (plagulae md totae ut oratio)");
          FILE* lista;
           i32 lectae   = ZEPHYRUM;
          i32 vitiosae = ZEPHYRUM;
-         i32 numerus_lineae = ZEPHYRUM;
+         i32 truncatae = ZEPHYRUM;
 
     sprintf(via, "%s/oratio/build/corpus_md.txt", radix_viae);
     lista = fopen(via, "r");
@@ -950,12 +951,11 @@ CREDO_GRADUS ("Iudicans corpus (plagulae md totae ut oratio)");
             {
                 perge;
             }
-            /* specimen: plagula quinta quaeque (corpus totum:
+            /* specimen: plagula quinta quaeque PER FRIATIONEM VIAE,
+             * non per positionem (specimen_corporis.h; corpus totum:
              * ORATIO_CORPUS_TOTUS=1) - circuitus STML arboris
              * verborum XL s super MCXXXIV plagulas est */
-            numerus_lineae++;
-            si (   getenv("ORATIO_CORPUS_TOTUS") == NIHIL
-                && (numerus_lineae % V)          != ZEPHYRUM)
+            si (!_specimen_eligere(linea))
             {
                 perge;
             }
@@ -969,6 +969,11 @@ CREDO_GRADUS ("Iudicans corpus (plagulae md totae ut oratio)");
                 perge;
             }
             lectae = lectae + I;
+            si (mensura > (i32)SPECIMEN_OCTETI_MAXIMI)
+            {
+                truncatae  = truncatae + I;
+                mensura    = _caput_plagulae(textus, mensura);
+            }
             vitia = _documentum_iudicare(p, fx->intern, fx->canon,
                 &fx->consilium,
                 textus, mensura, linea);
@@ -980,8 +985,8 @@ CREDO_GRADUS ("Iudicans corpus (plagulae md totae ut oratio)");
             piscina_destruere(p);
         }
         fclose(lista);
-        imprimere("  plagulae %d, vitiosae %d\n", (integer)lectae,
-            (integer)vitiosae);
+        imprimere("  plagulae %d, vitiosae %d, per caput probatae %d\n",
+            (integer)lectae, (integer)vitiosae, (integer)truncatae);
         CREDO_AEQUALIS_I32 (vitiosae, ZEPHYRUM);
         CREDO_MAIOR_I32 (lectae, (i32)200);
     }

@@ -24,6 +24,7 @@
 #include "materia_token.h"
 #include "chorda.h"
 #include "piscina.h"
+#include "specimen_corporis.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -327,7 +328,7 @@ _corpus_probare (
                   FILE* lista;
                    i32  plagulae       = ZEPHYRUM;
                    i32  fractae        = ZEPHYRUM;
-                   i32  numerus_lineae = ZEPHYRUM;
+                   i32  truncatae      = ZEPHYRUM;
                    i32  elementa       = ZEPHYRUM;
                    i32  derivata       = ZEPHYRUM;
 
@@ -367,12 +368,11 @@ _corpus_probare (
             {
                 perge;
             }
-            /* specimen: plagula quinta quaeque (corpus totum:
+            /* specimen: plagula quinta quaeque PER FRIATIONEM VIAE,
+             * non per positionem (specimen_corporis.h; corpus totum:
              * ORATIO_CORPUS_TOTUS=1) - circuitus STML arboris
              * verborum XL s super MCXXXIV plagulas est */
-            numerus_lineae++;
-            si (   getenv("ORATIO_CORPUS_TOTUS") == NIHIL
-                && (numerus_lineae % V)          != ZEPHYRUM)
+            si (!_specimen_eligere(linea))
             {
                 perge;
             }
@@ -386,6 +386,11 @@ _corpus_probare (
                 perge;
             }
             plagulae++;
+            si (mensura > (i32)SPECIMEN_OCTETI_MAXIMI)
+            {
+                truncatae++;
+                mensura = _caput_plagulae(textus, mensura);
+            }
             si (!_circuitum_probare(p, &f->consilium, textus, mensura,
                 VERUM, &elementa, &derivata))
             {
@@ -398,9 +403,10 @@ _corpus_probare (
             piscina_destruere(p);
         }
         fclose(lista);
-        imprimere("    plagulae %d, fractae %d\n",
+        imprimere("    plagulae %d, fractae %d, per caput probatae %d\n",
             (integer)plagulae,
-            (integer)fractae);
+            (integer)fractae,
+            (integer)truncatae);
         CREDO_MAIOR_I32 (plagulae, (i32)200);
         CREDO_AEQUALIS_I32 (fractae, ZEPHYRUM);
     }
@@ -414,10 +420,11 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _casus_circuitus_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "canalis derivatorum (classes f=\"1\", emissor omittit)",
         _canalem_derivatorum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
-    /* gravis: circuitus STML corporis md ut oratio (~DCCCXXXI MiB
-     * apicis); sumptus per nodum proiectionis, park
-     * 01M5EGAWD5NT504BX9ZCR6JC37 -
-     * 2026-10-21 */
+    /* gravis: circuitus STML corporis md ut oratio - apex plagulam
+     * MAXIMAM speciminis sequitur (~IV-V KiB per octetum fontis);
+     * caput CXXVIII KiB (specimen_corporis.h) eum ligat: ~DCL MiB
+     * specimine, ~DCCXXX corpore toto (2026-10-22). Sumptus per
+     * nodum proiectionis: park 01M5EGAWD5NT504BX9ZCR6JC37 */
     { "CORPUS: plagulae md totae ut oratio, circuitus STML",
         _corpus_probare, NIHIL, NIHIL, "gravis", NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
