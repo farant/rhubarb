@@ -21,7 +21,9 @@
 #include "praeconium.h"
 #include "energia.h"
 #include "terminale.h"
+#include "vicus_sonus_porta.h"
 #include <stdio.h>
+#include <time.h>
 
 #define QUADRA_FUMI  XXX
 
@@ -75,6 +77,7 @@ principale (
                 Volumen* vol;
         VicusApplicatio  app;
             TesseraPons  pons;
+         VicusPortaSoni  porta_soni;
             TesseraOpus* opus;
            LudusTessera* lt;
                     b32  fumus;
@@ -127,6 +130,13 @@ principale (
     /* T4a: admonitiones ex libro praeconii (colloquia Claude Code) */
     (vacuum)vicus_applicatio_admonitiones_aperire(&app,
         praeconium_via(piscina));
+    /* sonus S4: admonitiones sonantes (tintinnabulum super auditus,
+     * exitus piger); -fumus tacet - probationes numquam sonant */
+    si (   !fumus && vicus_sonus_porta(&porta_soni, piscina,
+            (i64)time(NIHIL)))
+    {
+        vicus_applicatio_soni_portam_ponere(&app, &porta_soni);
+    }
     /* terminalia montata: ornamenta ut cellulae, non pixela (ut
      * terminale_terminalis) - tessellatio lineas in cellulas
      * verteret */
