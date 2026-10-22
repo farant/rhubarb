@@ -49,6 +49,7 @@
 #include "latina.h"
 #include "piscina.h"
 #include "sonitus.h"
+#include "tibia.h"
 
 
 /* ================================================================
@@ -85,7 +86,13 @@ nomen enumeratio {
     MIXTURA_IUSSUM_SISTERE,       /* evanescit per clivum, deinde finis */
     MIXTURA_IUSSUM_VOCEM_PONERE,  /* lucrum et positio vocis, cum clivo */
     MIXTURA_IUSSUM_GREGEM_PONERE, /* lucrum et mutus gregis, cum clivo */
-    MIXTURA_IUSSUM_CENSUM_PETERE  /* nuntium CENSUS postulat */
+    MIXTURA_IUSSUM_CENSUM_PETERE, /* nuntium CENSUS postulat */
+    MIXTURA_IUSSUM_TIBIAM,        /* vox tibiae: parametra + nota,
+                                   * porta aperta */
+    MIXTURA_IUSSUM_NOTAM_PONERE,  /* nota tibiae cum clivo (quadra) */
+    MIXTURA_IUSSUM_PORTAM_CLAUDERE /* tibia: remissio, deinde
+                                   * VOX_FINITA naturalis; vox alia:
+                                   * irritum */
 } MixturaIussumGenus;
 
 /* Campi plani (non unio): quisque genus suos legit, ceteros ignorat.
@@ -113,6 +120,9 @@ nomen structura {
     /* sonitus */
       SonitusParametra parametra;
                    i64 semen;
+    /* tibia (incipere: tibia + nota; notam_ponere: nota + clivus) */
+        TibiaParametra tibia;
+                   f32 nota;        /* MIDI, fractiones licent */
 } MixturaIussum;
 
 /* omnia nulla, deinde: genus, momentum, lucrum 1, positio 0, grex

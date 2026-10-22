@@ -72,3 +72,15 @@ ignored, lost reports not counted, unstable insertion.
 - Lint before commit: `MIXTURA_FINIS_SISTITA` -> `MIXTURA_FINIS_IUSSU`
   ("by command", ablative of iussum): *sistita* is not Latin (sisto's
   participle is *status*). The only rename after header approval.
+
+## 2026-10-22 - S5a: voice kind TIBIAE
+
+Third voice kind: MIXTURA_IUSSUM_TIBIAM (tibia params + note, gate open),
+NOTAM_PONERE (note with `clivus` frames of glide), PORTAM_CLAUDERE
+(release; the voice ends with FINIS_NATURALIS when the envelope rests).
+New enum values appended AFTER CENSUM_PETERE so existing values keep
+their numbers. NOTAM_PONERE / PORTAM_CLAUDERE on a stale handle or a non-
+tibia voice count as `iussa_irrita` (`_tibia_ansae`). SISTERE and
+VOCEM_PONERE work on tibia voices unchanged. The suite checks the mixer
+output bit-equals a direct tibia render x MEDIUM, including a pitch SET
+at frame 8000 (commands act BEFORE their frame is rendered). Plants 5/5.

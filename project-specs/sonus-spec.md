@@ -364,14 +364,36 @@ s64  auditus_mora     (vacuum);
 - Sounds play only while vicus runs (§X.4, accepted). Playing them
   outside vicus is a later option, not designed now.
 
-### VIII-b. The theremin pane (S5)
+### VIII-b. The theremin pane (S5) - `aetherophonum`
 
-- A vicus pane: x = pitch on a logarithmic scale (a few octaves), y =
-  loudness; a live voice with SET + ramp per mouse move; keys choose
-  the waveform and toggle a pitch grid (snap to scale) and vibrato.
+- A vicus pane (genus `aetherophonum`, Termen's "etherphone"; Fran
+  2026-10-22): x = pitch on a logarithmic scale (a few octaves), y =
+  loudness; SOUNDS WHILE THE BUTTON IS HELD (Fran 10-22: no accidental
+  sound when the pointer crosses the pane; hover only shows the pitch
+  line). Every mouse sample (coalesced motion samples carry their own
+  time, `EventusExemplum`) becomes a pitch SET with a short ramp; keys
+  choose the waveform and toggle a pitch grid (snap to scale) and
+  vibrato.
 - The first proof of live voices, smoothing and the latency budget.
 - State: waveform, range, snap = persistent widget state; pointer
   position = kinetic (never written to the store).
+- Pulls a MINIMAL `tibia` forward (Fran 10-22): a sonitus voice is an
+  effect (its length lives in its parameters, its pitch only follows
+  its own slide), a theremin needs a held note whose pitch moves on
+  command - the instrument voice of §V. S6 then adds patches as data
+  and songs on top.
+- Pulls a SHARED sound host into vicus (Fran 10-22): one output per
+  process (`auditus`), and S4's tintinnabulum owns a mixer of its own -
+  the theremin and the jingles must share one mixer + rector + output.
+
+Slices (2026-10-22):
+
+| slice | content |
+|---|---|
+| S5a | `tibia` minimal (gated note: oscillator + ADSR + vibrato + low-pass; pitch glides in semitones = log frequency) + mixtura voice kind TIBIAE: start, pitch SET with ramp, gate close (release); loudness through the existing per-voice gain ramp. Pure, headless tests |
+| S5b | one sound host in vicus: mixer + rector + auditus shared by every client (lazy open, close after quiet with no voice held); tintinnabulum becomes a client (API change); the vicus sound port gains live-voice calls |
+| S5c | the `aetherophonum` pane: figura (pitch grid, note names, current note), key table, button-held voice, motion -> pitch/gain SETs |
+| S5d | measure output latency and the real motion-event rate (§XI); Fran's ears |
 
 ### VIII-c. The arcade (S7)
 
@@ -388,7 +410,7 @@ s64  auditus_mora     (vacuum);
 | **S2** | `mixtura` offline: pool, handles, buses, scheduled commands, ramps, reports. Headless tests |
 | **S3** | `atomus` seam + `circulus` SPSC ring (headless tests, plus a two-thread stress test in the probe tier), then `auditus` macOS: AudioUnit callback thread, two rings, clock + latency; a smoke tool that plays a blip (§X.7) |
 | **S4** | first consumer: notification sounds in vicus + mute preference; retire the `afplay` hooks |
-| **S5** | theremin pane: live voice, SET with ramps, latency check |
+| **S5** | theremin pane `aetherophonum`: S5a minimal `tibia` + mixer voice kind, S5b shared sound host in vicus, S5c the pane, S5d latency + ears (§VIII-b) |
 | **S6** | `tibia` instruments + `cantus` sequencer; first song: *Korobeiniki* (19th-century Russian folk song - public domain; the Tetris theme) |
 | **S7** | the Tetris-like game (its own spec) |
 | later, on PULL | WAV read + resampling (canned assets), reverb (port solarium's Freeverb), patches in a sound-design pane, tracker patterns, a music-making app |
