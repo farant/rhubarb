@@ -1,0 +1,51 @@
+<!-- organum.stml - manifestum indagationis (genus "indagatio"; iussum
+     $search, Cmd+Shift+F; project-specs/indagatio.md S3). Index
+     (Indagatio) per ligamen a parente, unus per volumen vici - hic
+     solum status visus. -->
+<organum genus="indagatio" versio="1">
+
+  <ligamina>
+    <ligamen nomen="index" genus="indagatio" a="parens"/>
+  </ligamina>
+
+  <actiones>
+    <actio nomen="indagatio.agere"/>
+  </actiones>
+
+  <status>
+    <campus nomen="q" typus="textus" vita="persistens"
+            scriptor="indagatio.agere" semita="status"
+            historia="impelle"
+            nota="verba quaesita; absens = nulla (fructus vacuus)"/>
+    <campus nomen="genus" typus="textus" vita="persistens"
+            scriptor="indagatio.agere" semita="status"
+            historia="impelle"
+            nota="conspectus gregis unius (res, notae, liber,
+                  personae); absens = greges omnes"/>
+    <campus nomen="pagina" typus="numerus" vita="persistens"
+            scriptor="indagatio.agere" semita="status"
+            nota="pagina gregis (0 = prima); ad absens redit cum q aut
+                  genus mutatur"/>
+    <campus nomen="electus" typus="numerus" vita="transiens"
+            scriptor="indagatio.agere"
+            nota="linea electa in pagina (inventum aut '+ k more');
+                  absens = prima"/>
+    <campus nomen="prompta" typus="electio" vita="transiens"
+            absens="nulla" scriptor="indagatio.agere">
+      <optio>nulla</optio>
+      <optio>quaestio</optio>
+    </campus>
+    <campus nomen="prompta_textus" typus="textus" vita="transiens"
+            scriptor="indagatio.agere"/>
+    <campus nomen="prompta_cursor" typus="numerus" vita="transiens"
+            scriptor="indagatio.agere"/>
+  </status>
+
+  <cognomina>
+    <cognomen semita="indagatio"/>
+    <cognomen typus="textus" semita="indagatio?q={}"/>
+  </cognomina>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>

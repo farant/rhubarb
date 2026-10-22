@@ -128,6 +128,7 @@ declare -a SOURCE_FILES=(
     "lib/importatio_visus.c"
     "lib/indagatio.c"
     "lib/indagatio_genera.c"
+    "lib/indagatio_visus.c"
     "lib/insula.c"
     "lib/internamentum.c"
     "lib/internuntius.c"
