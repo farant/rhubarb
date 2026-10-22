@@ -532,6 +532,11 @@ _sectio_electio (
         || campus_est(w, "electus", "0"));
     clavis(w, 'j');
     CREDO_VERUM(campus_est(w, "electus", "1"));
+    /* sagittae ut j / k */
+    clavis_nominata(w, CLAVIS_DEORSUM, ZEPHYRUM);
+    CREDO_VERUM(campus_est(w, "electus", "2"));
+    clavis_nominata(w, CLAVIS_SURSUM, ZEPHYRUM);
+    CREDO_VERUM(campus_est(w, "electus", "1"));
     reditus(w);
     CREDO_AEQUALIS_I32(w->aperta, II);
     CREDO_CHORDA_AEQUALIS_LITERIS(w->apertum,

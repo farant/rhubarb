@@ -46,3 +46,14 @@ cluster, matched parts dropped, cache key without genus, index
 version ignored, Tab dead. Not plantable here: Esc with nothing left
 must NOT be consumed (vicus pops the pane) - the dispatcher returns
 void; S3b's vicus test covers it.
+
+## 2026-10-22 — arrows (Fran)
+
+Up/Down = k/j through two extra table rows; the key forms "Up"/"Down"
+are new in membrum__praecepta (arrows, no modifiers). Same change
+fixed a latent matcher bug: an unknown form longer than one character
+used to match on its first letter ("Tab" matched Shift+T); now only
+one-character forms take the "produced character" path. Plants red:
+Up/Down swapped, Shift ignored, first-letter match back, Down wired to
+k. Arrows inside the open prompt still do nothing (Enter there commits
+the query) - not asked for.

@@ -76,3 +76,56 @@ known, genus has routable fields ("<genus>: semitas nondum accipit"),
 `semita_ex_uri` valid (its error verbatim) - then
 `vicus_acervo_mutare(genus, uri)`; the pane's `argumentum_ponere`
 applies it. The saints pane sets `f->ramus` (history).
+
+## 2026-10-22 — D5 S3b: the search pane in vicus (genus "indagatio")
+
+- **One registry, one agenda, one contacts document.** The registry the
+  calendar built lazily (D4c, `dies` only) now also holds the four
+  searchable kinds (`indagatio_genera_registrare` before `parare`), and
+  the search index is created over it on the first search pane. The
+  agenda document stays on ContextusKalendarii; the contacts document
+  stays on ContextusNomenclatoris, reached from the calendar context
+  (`ck->nomenclatoris`) - `personas_aperire` replaces the three inline
+  lazy opens. Why it matters: per-rem kinds read the DOCUMENT, so a
+  second document over the same volume would not see an item created
+  in the calendar or a contact created in the contacts pane until it
+  re-read. Test: probatio_vicus_indagatio "communia" (both plants red).
+- `$via`'s checks moved into `semitam_aperire` (messages unchanged);
+  the search pane's Enter gate uses it. Stopgap until S3c:
+  `scriba/<name>` is not a route, so the gate opens it like
+  `$scriba(name)` (vicus_acervo_aperire "scriba", name).
+- `$search` = vicus_advocare (prompt open with the current q);
+  `$search(words)` = vicus_acervo_mutare with the words (cognomen
+  turns them into `indagatio?q=`); several arguments (commas in the
+  words) are joined with ", ".
+- Cycle: admonitiones, colloquia, calendarium "agenda", indagatio.
+  Cmd+Shift+F: vicus_brevitatem_addere('f', MOD_SHIFT, "indagatio").
+- Testing note: a click into a scriba page that is NOT focused only
+  focuses (its first-click action runs a command under the cursor, it
+  does not place the cursor), so typing after it lands at the old
+  cursor. probatio_vicus_indagatio writes all commands up front (one
+  per line, Enter between) as probatio_vicus_acervus does, then clicks
+  each.
+- Plants (silva.planta, filter vicus_indagatio), all red at their own
+  assertions: 15 - modifiers not exact (Cmd+F fires), routing check
+  blind (ctx dropped in destinare), dispenser drops the strategy ctx,
+  advocatum not called, advocare flag not set, transient ignored in
+  the mutare branch / after a new mount / not set by the pane, cycle
+  without indagatio, common-notebook gate missing, Esc not returning,
+  contacts or agenda not shared (second document), `$search` without
+  argument not advocating, wrong shortcut key. The two routing plants
+  are red ONLY at the terminal-focus step: with scriba focused the
+  chord bubbles to the root handler anyway.
+
+## 2026-10-22 — D5 S3b, after Fran's look: notebook hits open LEFT
+
+Fran: a common-notebook hit is the main journal, so it belongs in the
+left pane, not stacked on the right. The gate now switches the active
+tab's left pane (if it is a mounted scriba) to the page with the new
+`scriba_paginam_ostendere` and focuses it; any other left pane falls
+back to `$scriba(name)` in the stack. Focus moves inside event
+handling - fine, a click does the same. Plants red: focus left
+missing, left never chosen, page ignored. `m->doc` not reassigned was
+GREEN in vicus (focusing calls scriba_reficere, which resyncs m->doc),
+so the direct test lives in probatio_montatio (page doc, saved view,
+unknown name refused) - red there.

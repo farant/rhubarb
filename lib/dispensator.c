@@ -523,7 +523,8 @@ dispensator_creare (
     }
     d->repo = repo;
     d->actiones = actiones;
-    d->strategia = destinatio_geometrica;
+    d->strategia = NIHIL;
+    d->strategia_ctx = NIHIL;
     d->componere = componere;
     d->componere_ctx = componere_ctx;
     d->super = chorda_nulla();
@@ -541,13 +542,15 @@ dispensator_creare (
 vacuum
 dispensator_ponere_strategiam (
             Dispensator* d,
-    DestinatioStrategia  strategia)
+    DestinatioStrategia  strategia,
+                 vacuum* ctx)
 {
-    si (!d || !strategia)
+    si (!d)
     {
         redde;
     }
-    d->strategia = strategia;
+    d->strategia      = strategia;
+    d->strategia_ctx  = strategia ? ctx : NIHIL;
 }
 
 
@@ -889,7 +892,11 @@ tractare_unum (
         superficiem_scribere(d, e);
     }
     focus = dispensator_focus(d);
-    des = d->strategia(d->arbor, &d->motus, focus, e, d->scratch);
+    des = d->strategia
+        ? d->strategia(d->arbor, &d->motus, focus, e, d->scratch,
+              d->strategia_ctx)
+        : destinatio_geometrica(d->arbor, &d->motus, focus, e,
+              d->scratch);
     destinatum = destinatio_componens(&des);
     si (crudus && d->notata)
     {

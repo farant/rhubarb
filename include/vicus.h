@@ -128,6 +128,17 @@ nomen structura {
      * pictor: documentum). NIHIL = nihil reconciliandum */
                  b32  (*semitam_secuta)(vacuum* ctx);
               vacuum* semitam_secuta_ctx;
+    /* D5 (indagatio S3b): argumentum (vicus_acervo_mutare, $via)
+     * statum lateris mutat, non identitatem - latus argumentum
+     * vacuum servat (acervus, cyclus, vicus_advocare id sine
+     * argumento inveniunt; status in semita servata vivit, R4d).
+     * Ordinarie FALSUM */
+                 b32 argumentum_transiens;
+    /* D5: latus advocatum (vicus_advocare, brevitas hospitis), post
+     * frontem et focum: latus se parat (indagatio: prompta aperitur).
+     * NIHIL = nihil */
+                 b32  (*advocatum)(vacuum* ctx);
+              vacuum* advocatum_ctx;
 } VicusFacies;
 
 nomen vacuum (*VicusDescriptor)(
@@ -238,6 +249,8 @@ nomen structura {
           SemitaOrganum  organa;      /* semitae R3: NIHIL = nullae */
                  vacuum* organa_ctx;
                 Piscina* scheda_semitarum;   /* per pulsum vacatur */
+                    Xar* brevitates;  /* D5: brevitates hospitis
+                                       * (privatum); NIHIL = nullae */
 } Vicus;
 
 /* T4a (colloquia-plan): systema hospitis - in omni vicus_pulsare
@@ -511,6 +524,27 @@ vicus_acervo_aperire (
                   Vicus* v,
      constans character* genus,
      constans character* argumentum);
+
+/* D5 (indagatio S3b): latus generis SINE argumento in frontem acervi
+ * tabulae activae (praesens venit, aliter montatur - ut
+ * vicus_acervo_aperire), focus dexter, deinde facies.advocatum.
+ * PETITIO. FALSUM si genus ignotum. */
+b32
+vicus_advocare (
+                  Vicus* v,
+     constans character* genus);
+
+/* D5: brevitas hospitis - Cmd + runa (modificantes praeterea: MOD_SHIFT
+ * aut ZEPHYRUM, exacte; Caps Lock ignoratur) = vicus_advocare(genus).
+ * Ut Cmd+numerus et Cmd+]: hospes ante latera eam capit, latera
+ * numquam vident. runa sine maiuscula ('f' pro Cmd+Shift+F, ut
+ * fenestra dat). FALSUM si genus ignotum aut brevitas iam posita. */
+b32
+vicus_brevitatem_addere (
+                  Vicus* v,
+                    s32  runa,
+                    i32  modificantes,
+     constans character* genus);
 
 /* semitae R3: organa (genus -> manifestum) pro semitis laterum;
  * applicatio ponit (organa infixa, cache). NIHIL = nullae (historia

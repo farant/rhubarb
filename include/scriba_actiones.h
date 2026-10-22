@@ -96,6 +96,17 @@ scriba_actiones_librum_ponere (
           ScribaActiones* sa,
              ScribaLiber* liber);
 
+/* D5 (scriba_paginam_ostendere): visum ad paginam nominatam libri sui;
+ * via paginae ponendae (gestus effusus, folium laboris, plagula visus,
+ * cursor ad initium, modus normalis). Vocans scriptorem actionis
+ * scribae ponit. FALSUM si liber NIHIL aut nomen ignotum. */
+b32
+scriba_actiones_paginam_ostendere (
+    constans InsulaRamus* ramus,
+                   Motus* motus,
+          ScribaActiones* sa,
+                  chorda  titulus);
+
 /* folium laboris = copia proiectionis documenti */
 vacuum
 scriba_actiones_initiare (

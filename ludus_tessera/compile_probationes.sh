@@ -128,6 +128,9 @@ declare -a RADIX_FONTES=(
     "conspectus_canon" # proiectiones D4a: canon declarationis infixus
     "conspectus_dies"  # proiectiones D4b: conspectus diei
     "conspectus_infixa" # proiectiones D4b: declarationes infixae
+    "indagatio"        # genera-datorum D5: quaestio per textum plenum
+    "indagatio_genera" # D5 S2: genera quaerenda domus
+    "indagatio_visus"  # D5 S3b: latus indagationis in vico ($search)
     "elenchus"         # agenda-plan M2b: menu contextuale (calendarium)
     "membrum__album"   # nomenclator-plan U1: index paginatus (calendarium)
     "membrum__praecepta" # nomenclator-plan U2: tabula praeceptorum

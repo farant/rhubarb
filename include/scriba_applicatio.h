@@ -107,6 +107,14 @@ scriba_librum_ponere (
     ScribaMontatio* m,
        ScribaLiber* liber);
 
+/* D5: visum montatum ad paginam nominatam libri sui vertere (plagula
+ * visus scribitur, ut navigatio). FALSUM si liber NIHIL aut nomen
+ * ignotum. */
+b32
+scriba_paginam_ostendere (
+    ScribaMontatio* m,
+            chorda  titulus);
+
 /* Visus stalus reficitur (vicus-latera S2b): si alius visus paginam
  * commisit (cursor documenti != cursor_laboris), folium laboris ex
  * proiectione - visus sine gestu pendente solum (commissio in omni

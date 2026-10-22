@@ -144,6 +144,22 @@ _probare_claves (
     e = clavis((clavis_t)'r', 'r', 'r', ZEPHYRUM);
     CREDO_FALSUM(praecepta_clavis_congruit("C-r", &e));
     CREDO_VERUM(praecepta_clavis_congruit("r", &e));
+    /* D5: sagittae "Up" / "Down" - sine modificatoribus; littera 'U'
+     * non sagitta */
+    e = clavis(CLAVIS_SURSUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
+    CREDO_VERUM(praecepta_clavis_congruit("Up", &e));
+    CREDO_FALSUM(praecepta_clavis_congruit("Down", &e));
+    e = clavis(CLAVIS_DEORSUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
+    CREDO_VERUM(praecepta_clavis_congruit("Down", &e));
+    CREDO_FALSUM(praecepta_clavis_congruit("Up", &e));
+    e = clavis(CLAVIS_DEORSUM, ZEPHYRUM, ZEPHYRUM, (i32)MOD_SHIFT);
+    CREDO_FALSUM(praecepta_clavis_congruit("Down", &e));
+    e = clavis((clavis_t)'U', 'U', 'u', (i32)MOD_SHIFT);
+    CREDO_FALSUM(praecepta_clavis_congruit("Up", &e));
+    CREDO_VERUM(praecepta_clavis_congruit("U", &e));
+    /* forma longior ignota: nihil (olim littera prima congruebat) */
+    e = clavis((clavis_t)'T', 'T', 't', (i32)MOD_SHIFT);
+    CREDO_FALSUM(praecepta_clavis_congruit("Tab", &e));
 }
 
 /* ad clavem per visum: "a" in A = t.a, in B = t.g; Enter solum in B */

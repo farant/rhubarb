@@ -320,6 +320,35 @@ scriba_librum_ponere (
 }
 
 b32
+scriba_paginam_ostendere (
+    ScribaMontatio* m,
+            chorda  titulus)
+{
+    chorda prior;
+       b32 ok;
+
+    si (!m || !m->liber || !m->ramus.repo)
+    {
+        redde FALSUM;
+    }
+    /* domini rami scribae 'pagina.clavis' solam admittunt (vocans
+     * actio alia est: indagatio.agere) */
+    prior = m->ramus.repo->scriptor;
+    insula_scriptorem_ponere(m->ramus.repo, chorda_ex_literis(
+        "pagina.clavis", m->ramus.repo->piscina));
+    ok = scriba_actiones_paginam_ostendere(&m->ramus, NIHIL,
+        &m->actiones_ctx, titulus);
+    insula_scriptorem_ponere(m->ramus.repo, prior);
+    si (!ok)
+    {
+        redde FALSUM;
+    }
+    m->doc = m->actiones_ctx.doc;
+    (vacuum)paginam_indicare(m, VERUM);
+    redde VERUM;
+}
+
+b32
 scriba_reficere (
     ScribaMontatio* m)
 {

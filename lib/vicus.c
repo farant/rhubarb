@@ -37,7 +37,20 @@ nomen structura {
        b32 mutare;
        s32 gradus;      /* T4f: +I / -I = gradus cycli (genus nullum);
                          * ZEPHYRUM = aperitio */
+       b32 advocare;    /* D5: post aperitionem facies.advocatum */
 } PetitioAcervi;
+
+/* D5: brevitas hospitis (vicus_brevitatem_addere): Cmd + runa +
+ * modificantes (praeter Cmd, exacte) -> vicus_advocare(genus) */
+nomen structura {
+          s32  runa;
+          i32  modificantes;
+    character* genus;
+} Brevitas;
+
+/* modificantes quos brevitas discernit (Caps Lock, Num Lock, latera
+ * ignorantur) */
+#define MODI_BREVITATIS (MOD_SHIFT | MOD_IMPERIUM | MOD_ALT)
 
 /* T4f: latus cycli - identitas ut petitio (genus + argumentum) */
 nomen structura {
@@ -559,6 +572,36 @@ est_imperium_cycli (
         || ev->datum.clavis.runa == '[');
 }
 
+/* D5: brevitas hospitis eventus clavis (depressi aut liberati); NIHIL
+ * si nulla */
+interior constans Brevitas*
+brevitatem_invenire (
+      constans Vicus* v,
+    constans Eventus* ev)
+{
+     constans Brevitas* b;
+                   i32  modi;
+                   i32  i;
+
+    si (   !v || !v->brevitates || !ev
+        || (   ev->genus != EVENTUS_CLAVIS_DEPRESSUS
+            && ev->genus != EVENTUS_CLAVIS_LIBERATUS)
+        || !(ev->datum.clavis.modificantes & MOD_SUPER))
+    {
+        redde NIHIL;
+    }
+    modi = (i32)(ev->datum.clavis.modificantes & MODI_BREVITATIS);
+    per (i = ZEPHYRUM; i < xar_numerus(v->brevitates); i++)
+    {
+        b = (constans Brevitas*)xar_obtinere(v->brevitates, i);
+        si (b->runa == ev->datum.clavis.runa && b->modificantes == modi)
+        {
+            redde b;
+        }
+    }
+    redde NIHIL;
+}
+
 /* T4b: spatium strati? via "<genus>:stratum_<genus>[/...]" (gradus
  * primus; vicus solus ids "stratum_" dat) */
 interior b32
@@ -578,24 +621,27 @@ spatium_strati (
                == ZEPHYRUM;
 }
 
-/* DestinatioStrategia hospitis: Cmd+numerus ad radicem; ictus in
+/* DestinatioStrategia hospitis (ctx = Vicus*): Cmd+numerus, Cmd+] / [
+ * et brevitates (D5) ad radicem; ictus in
  * latus NON focatum (spatium destinati non sub Motus.spatium - S8c:
  * organum nidificatum in latere focato idem latus est)
  * ad radicem - radix latus focat (S2a; ictus primus lateris, si vult,
  * etiam agit); cetera geometrica (Ctrl-A ad latus focatum) */
 interior Destinatio
 destinare (
-           Componens* arbor,
-      constans Motus* motus,
-              chorda  focus,
-    constans Eventus* ev,
-             Piscina* piscina)
+            Componens* arbor,
+       constans Motus* motus,
+               chorda  focus,
+     constans Eventus* ev,
+              Piscina* piscina,
+               vacuum* ctx)
 {
      Destinatio  d;
       Componens* c;
          chorda  sp;
 
-    si (arbor && (est_imperium_tabulae(ev) || est_imperium_cycli(ev)))
+    si (arbor && (   est_imperium_tabulae(ev) || est_imperium_cycli(ev)
+                  || brevitatem_invenire((constans Vicus*)ctx, ev)))
     {
         redde destinatio_ex_componente(arbor, piscina);
     }
@@ -1179,6 +1225,20 @@ radicem_tractare (
                 ev->datum.clavis.runa == ']' ? I : -I);
         }
         redde VERUM;
+    }
+    /* D5: brevitas hospitis (depressa agit, liberata devoratur) */
+    {
+        constans Brevitas* b;
+
+        b = brevitatem_invenire(v, ev);
+        si (b)
+        {
+            si (ev->genus == EVENTUS_CLAVIS_DEPRESSUS)
+            {
+                (vacuum)vicus_advocare(v, b->genus);
+            }
+            redde VERUM;
+        }
     }
     redde FALSUM;
 }
@@ -2544,7 +2604,7 @@ vicus_dispensatorem_ligare (
     }
     v->motus = dispensator_motus(d);
     motum_aptare(v);
-    dispensator_ponere_strategiam(d, destinare);
+    dispensator_ponere_strategiam(d, destinare, v);
 }
 
 /* latus unum pulsare; *pingendum si visibile mutatum aut nunc
@@ -2729,8 +2789,12 @@ petitionem_applicare (
                 }
                 redde FALSUM;
             }
-            l->argumentum  = p->argumentum;
-            frons          = *l;
+            /* D5: argumentum transiens - identitas manet */
+            si (!l->facies.argumentum_transiens)
+            {
+                l->argumentum = p->argumentum;
+            }
+            frons = *l;
             per (k = (i32)j; k < n - I; k++)
             {
                 *(VicusLatus*)xar_obtinere(t->acervus, k) =
@@ -2785,6 +2849,12 @@ petitionem_applicare (
             }
             redde FALSUM;
         }
+        /* D5: argumentum transiens - montatio id accepit, identitas
+         * sine argumento */
+        si (l->facies.argumentum_transiens)
+        {
+            l->argumentum = chorda_nulla_vici();
+        }
         prior = v->repo->scriptor;
         insula_scriptorem_ponere(v->repo, chorda_ex_literis(
             "dispensator", v->piscina));
@@ -2810,6 +2880,11 @@ petitionem_applicare (
     {
         registra_reficere(v);
         motum_aptare(v);
+    }
+    /* D5: latus advocatum se parat (post frontem et focum) */
+    si (p->advocare && l && l->montata && l->facies.advocatum)
+    {
+        (vacuum)l->facies.advocatum(l->facies.advocatum_ctx);
     }
     redde indicem_scribere(v);
 }
@@ -2845,8 +2920,9 @@ petitionem_addere (
                    ? chorda_transcribere(chorda_ex_literis(argumentum,
                          v->piscina), v->piscina)
                    : chorda_nulla_vici();
-    p->mutare = mutare;
-    p->gradus = ZEPHYRUM;
+    p->mutare    = mutare;
+    p->gradus    = ZEPHYRUM;
+    p->advocare  = FALSUM;
     redde VERUM;
 }
 
@@ -3018,6 +3094,73 @@ vicus_acervo_mutare (
      constans character* argumentum)
 {
     redde petitionem_addere(v, genus, argumentum, VERUM);
+}
+
+b32
+vicus_advocare (
+                  Vicus* v,
+     constans character* genus)
+{
+    PetitioAcervi* p;
+
+    si (!petitionem_addere(v, genus, NIHIL, FALSUM))
+    {
+        redde FALSUM;
+    }
+    p = (PetitioAcervi*)xar_obtinere(v->petitiones,
+        xar_numerus(v->petitiones) - I);
+    p->advocare = VERUM;
+    redde VERUM;
+}
+
+b32
+vicus_brevitatem_addere (
+                  Vicus* v,
+                    s32  runa,
+                    i32  modificantes,
+     constans character* genus)
+{
+     Brevitas* b;
+       chorda  g;
+          i32  i;
+
+    si (   !v || !genus || runa <= ZEPHYRUM
+        || (modificantes != ZEPHYRUM && modificantes != (i32)MOD_SHIFT))
+    {
+        redde FALSUM;
+    }
+    si (runa >= 'A' && runa <= 'Z')
+    {
+        runa = runa - 'A' + 'a';
+    }
+    g = internare(v, genus);
+    si (chorda_vacua(g) || !genus_invenire(v, g))
+    {
+        redde FALSUM;
+    }
+    si (!v->brevitates)
+    {
+        v->brevitates = xar_creare(v->piscina,
+            (i32)magnitudo(Brevitas));
+    }
+    per (i = ZEPHYRUM; v->brevitates && i < xar_numerus(v->brevitates);
+         i++)
+    {
+        b = (Brevitas*)xar_obtinere(v->brevitates, i);
+        si (b->runa == runa && b->modificantes == modificantes)
+        {
+            redde FALSUM;
+        }
+    }
+    b = v->brevitates ? (Brevitas*)xar_addere(v->brevitates) : NIHIL;
+    si (!b)
+    {
+        redde FALSUM;
+    }
+    b->runa          = runa;
+    b->modificantes  = modificantes;
+    b->genus         = chorda_ut_cstr(g, v->piscina);
+    redde b->genus != NIHIL;
 }
 
 b32

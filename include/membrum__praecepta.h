@@ -11,7 +11,8 @@
  * hospitis, functionibus et requisitis traditus.
  *
  * Formae clavium: "x" (character productus, sine Imperio aut Super;
- * "X", "<", "[" item), "Enter", "Esc", "C-r" (Imperium + littera).
+ * "X", "<", "[" item), "Enter", "Esc", "Up", "Down" (sagittae, sine
+ * modificatoribus), "C-r" (Imperium + littera).
  */
 #ifndef MEMBRUM__PRAECEPTA_H
 #define MEMBRUM__PRAECEPTA_H

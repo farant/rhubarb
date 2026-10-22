@@ -657,3 +657,41 @@ skip by type only.
   VOLUME SEQ (they assume no other act lands between) - that was the
   symptom; the cause was a pointless startup write. Direct guard:
   probatio_vicus_semitae `initium_tacitum` (acta count unchanged).
+
+## 2026-10-22 — D5 S3b: host shortcuts, advocare, transient argument
+
+- **Host shortcuts need the routing step, not the root handler.** Keys
+  the host wants FIRST (Cmd+1..9, Cmd+]/[, now Cmd+Shift+F) must be
+  claimed in `destinare` (the DestinatioStrategia), because the
+  terminal pane consumes every Cmd chord and nothing bubbles back.
+  The old checks were stateless (shape of the event); a registered
+  shortcut is data on one Vicus, so `DestinatioStrategia` gained a
+  `ctx` (dispensator_ponere_strategiam(d, s, ctx); NIHIL strategy =
+  destinatio_geometrica called directly, so its 18 test call sites
+  kept their signature). manus_ludus calls the strategy directly for
+  replay divergence - it got the same NIHIL/ctx handling.
+  Test guard: probatio_vicus_indagatio "terminale focatum" (tab 1,
+  terminal pane focused); with scriba focused the chord bubbles to
+  the root anyway, so that step alone would not catch a missing
+  routing check.
+- Modifiers match EXACTLY over Shift/Ctrl/Alt (Caps Lock, Num Lock and
+  side bits ignored); Cmd+F must not fire Cmd+Shift+F. Runa is the
+  unshifted key ('f'), as fenestra delivers it.
+- `vicus_advocare` = an S3c petition (genus, no argument) plus an
+  `advocare` flag; after front + focus, `facies.advocatum` runs (the
+  search pane opens its prompt). Applied in the pulse like every
+  petition, so the hook writes outside event handling.
+- `argumentum_transiens`: identity is genus + argument (R4d note
+  above). `$search(words)` / `$via(indagatio?q=..)` go through
+  vicus_acervo_mutare, which overwrote the argument - the next
+  Cmd+Shift+F or Cmd+]/[ (both look for "indagatio" WITHOUT argument)
+  would then mount a second search pane. With the flag the pane keeps
+  an empty argument both in the mutare branch and after a new mount
+  (montare still received the argument). Its state survives a restart
+  through semita_servata, as for every pane with routes.
+- Unchanged semantics worth knowing: vicus_acervo_mutare focuses a
+  NEW pane (S3c path) but keeps focus when the genus is already in the
+  stack - so the first `$search(words)` focuses the search pane, later
+  ones leave focus where it was.
+- Plants (silva.planta): see vicus_applicatio worklog (one list for
+  S3b).
