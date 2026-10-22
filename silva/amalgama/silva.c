@@ -34418,9 +34418,12 @@ _scribere_lexema (
     si (nota != NIHIL && nota->usus > I && nota->emissum)
     {
         SilvaStmlNodus* transclusio;
+           SilvaChorda  valor;
+              i32  longitudo;
 
-        si (_numerus_ad_literas(nota->numerus, nomen_fragmenti + IV,
-                (i32)magnitudo(nomen_fragmenti) - IV) == ZEPHYRUM)
+        longitudo = _numerus_ad_literas(nota->numerus,
+            nomen_fragmenti + IV, (i32)magnitudo(nomen_fragmenti) - IV);
+        si (longitudo == ZEPHYRUM)
         {
             st->causa = "nomen fragmenti scribi non potuit";
             redde NIHIL;
@@ -34430,19 +34433,20 @@ _scribere_lexema (
         nomen_fragmenti[2] = 'e';
         nomen_fragmenti[3] = 'x';
 
-        transclusio = silva_stml_elementum_creare(st->piscina, st->intern,
-            "transclusio");
-        si (transclusio == NIHIL)
+        /* Constructor transclusionis, NON elementum mutato genere
+         * (2026-10-22): elementum attributa + liberi (Xar vacui, LXIV
+         * octeti quisque) et titulum ferebat quos nemo legit - III.I
+         * MiB in proiectione hilarii (XXV milia transclusionum).
+         * Octeti scripti idem: scriptor solum valor emittit. */
+        valor.datum    = (i8*)nomen_fragmenti;
+        valor.mensura  = longitudo + IV;
+
+        transclusio = silva_stml_transclusionem_creare(st->piscina,
+            st->intern,
+            valor);
+        si (transclusio == NIHIL || transclusio->valor == NIHIL)
         {
             st->causa = "transclusio creari non potuit";
-            redde NIHIL;
-        }
-        transclusio->genus = STML_NODUS_TRANSCLUSIO;
-        transclusio->valor = silva_chorda_internare_ex_literis(st->intern,
-            nomen_fragmenti);
-        si (transclusio->valor == NIHIL)
-        {
-            st->causa = "valor transclusionis internari non potuit";
             redde NIHIL;
         }
         redde transclusio;

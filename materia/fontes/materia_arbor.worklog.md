@@ -459,3 +459,15 @@ lib/stml.c, which must agree with the first forever. The client hooks
 (`attributa_ornare`, `liberos_ornare`, `nodum_ornare`) also take an
 `StmlNodus*`, and template compression substitutes elements after the
 tree is built.
+
+## 2026-10-22 — B measured: empty Xar headers in StmlNodus
+
+Probe `build/sonda_partes/sonda_vacua.c` (gitignored; `./tools/sonda.sh -domus` it with STML paths as args) counts empty `attributa`/`liberi` Xars (64 B header each; segments are already lazy).
+
+hilarius projection, 86 MiB pool, 296,634 nodes: nodes are 152 B × n = 43 MiB (50%), Xar headers 397k × 64 = 24 MiB (28%). 82% of attributa headers are empty, 13% of liberi headers. Lazy attributa alone: -10.2 MiB; both: -11.8 MiB.
+
+Quirk found: the second and later uses of a lexeme (line ~1283, "Usus secundus") build the transclusion with `stml_elementum_creare(..., "transclusio")` and then overwrite genus to TRANSCLUSIO. So 25,177 transclusion nodes each carry two empty Xars and an unused titulus: 3.1 MiB. `stml_transclusionem_creare` (used at line ~1091) makes them with NIHIL lists. Those nodes are 25,177 of the 25,560 empty liberi, so for oratio, lazy attributa plus this fix equals full B without changing the `stml_liberum_addere` API.
+
+Parsed STML is the opposite: leaf elements with attributes leave liberi empty (aedificatio 69%, glossarium 82%, gutenberg_index 49%). There full B gives about 8% vs 0–3% for attributa alone. Segment slack (not B): hilarius 1.6 MiB attributa + 3.9 MiB liberi.
+
+Fixed the same day: the transclusion is now built with `stml_transclusionem_creare`. hilarius pool 86,127 → 82,980 KiB (-3.1 MiB, as predicted), and lazy attributa now equals full B for oratio (8.6 MiB each). The bytes written are unchanged. All oratio round-trip assertions pass; the only red sections are the known memory ceilings (parks …E2Y7J, …C87H). Those read via process peak and swing 755–885 MiB run to run, so the probe's pool count is the measurement to trust. No computus golden moved: second uses of a lexeme only happen in oratio's ambiguity arms. The constructor dates from 08-26 and this line from 08-27, so it was a copy from the element path below, not something that predated the constructor.
