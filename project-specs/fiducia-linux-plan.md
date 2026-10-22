@@ -118,6 +118,12 @@ generator action + generata gate, Docker images for Linux.
   SecureTransport leg macOS-only) - outside the plan's file list, needed
   for its "probatio_tls_servus under Linux" step.
 
+- **T4: the live client is `tools/fiducia_vivum.c`** with +/-/~
+  expectations per host and exit code; R2 is checked by horreum (real
+  account host), cloudflare.com stands in for its chain in the public
+  list, the bare r2 host is reported only (its certificate expired
+  2026-09-09). Live checks stay by hand (network), not gates.
+
 ## Review focus
 
 1. **Serial encoding edge cases** - serials with a leading 0x00 (high

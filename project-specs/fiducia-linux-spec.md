@@ -1,8 +1,13 @@
 # fiducia on Linux - certificate trust for outgoing TLS (spec)
 
-**Status: APPROBATUM 2026-10-22** (Fran: "that looks good to me");
-amended the same day by the plan's checked facts (entry kinds, eMudhra
-already in OneCRL, CN fallback) - designed in
+**Status: IMPLETUM 2026-10-22** - built in quarta per
+`project-specs/fiducia-linux-plan.md` (four tasks, Fran approving
+each): T1 92af2494 (fiducia_der), T2 28d0e581 (house blocklist, both
+platforms), T3 d04f3d2f (fiducia_posix on BearSSL), T4 (live from
+Linux: DO, Cloudflare, badssl; horreum HEAD 404 against DO Spaces and
+R2 run by Fran). Not yet in main. Approved 2026-10-22 (Fran: "that
+looks good to me"); amended the same day by the plan's checked facts
+(entry kinds, eMudhra already in OneCRL, CN fallback) - designed in
 conversation section by section (trust store, override policy,
 blocklist, units, verification policy, tests). Ledger: desideratum
 ...GCMMBX (`01M5JJRA2YWA89HRREY7GCMMBX`). Worktree quarta.
@@ -252,6 +257,19 @@ eMudhra TLS intermediates are in it (above); `br_x509_minimal` DOES
 fall back to the subject CN without a SAN (`vendor/bearssl_amalgama.h:8955`),
 so the SAN-only rule is enforced by fiducia_posix itself.
 
+**Answered 2026-10-22 live (T4, `tools/linux/fiducia_vivum.sh`, both
+libcs, both transports):** DO Spaces, cloudflare.com (the R2 chain:
+GTS WE1 -> Root R4, ECDSA), badssl.com accepted; badssl expired,
+wrong.host, untrusted-root (refused at chain [1]), self-signed and
+sha1-intermediate (refused as EXPIRED - that intermediate has lapsed
+too) refused with the matching reason; revoked.badssl.com ACCEPTED
+(no revocation - IV, as designed). Found: the bare host
+`r2.cloudflarestorage.com` serves a certificate that expired
+2026-09-09 (refused, correctly; real R2 hosts are per-account).
+horreum `inspicere` of a missing key from a glibc container: 404 from
+DO Spaces and from R2 (Fran ran `tools/linux/horreum_vivum.sh`; the
+profile mounted read-only, never read by the session).
+
 **Still open:**
 - That `br_x509_minimal` accepts a chain whose LAST certificate is the
   root itself (servers sometimes send it) and ignores extra
@@ -260,7 +278,9 @@ so the SAN-only rule is enforced by fiducia_posix itself.
   intermediate (refuse as unknown-critical, or enforce?).
 - ~~Parse cost~~ answered T3: ~26-29 ms per full parse (Alpine 121,
   Ubuntu 123 anchors) -> cached; warm ~2 ms. Paths checked on Alpine
-  3.20 and Ubuntu 22.04 (the droplet's distribution still to check, T4).
+  3.20 and Ubuntu 22.04. The droplet's distribution is NOT yet checked
+  (`cat /etc/os-release` there; a Debian/Ubuntu family droplet uses the
+  first path).
 - The article's claims (Sectigo AAA cross-signs; OneCRL and CRLSet
   blocks; NSS root removal) are as reported by Scott Helme,
   2026-10-20/21 - not checked against the Mozilla bug.

@@ -42,3 +42,20 @@ iPAddress).
   count.)
 - examen: `inet_pton` is not in the lexicon; an unknown FUNCTION is only
   suspect (ACCIPE), so the lexicon was left alone.
+
+## 2026-10-22 - live from Linux (fiducia-linux T4)
+
+`tools/fiducia_vivum.c` + `tools/linux/fiducia_vivum.sh` (by hand,
+network): 16/16 expectations on glibc and musl, tls13 and bearssl -
+see spec AUDIENDA "Answered live" for the table. Two lessons:
+- An invented R2 account id gets `handshake_failure` from Cloudflare
+  BEFORE any certificate - the server refusing, not us; the bare
+  `r2.cloudflarestorage.com` serves a certificate expired 2026-09-09
+  (we refuse it; `openssl s_client` only "connects" because it does not
+  verify by default). cloudflare.com stands in for the R2 chain; real R2
+  was proven by horreum.
+- `tools/linux/horreum_vivum.sh TITULUS` builds bin/horreum in the
+  container (whole posix closure: fiducia_posix, nomina_posix, tls13,
+  bearssl) and HEADs `horreum-probatio/nusquam-linux` with the one
+  profile mounted read-only. Fran ran it: 404 from DO Spaces and from
+  R2 - TLS verification and SigV4 both work from Linux.
