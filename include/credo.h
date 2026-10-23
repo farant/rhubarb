@@ -995,7 +995,18 @@ credo_gradum_ponere (
  * ad vocationem primam (eadem via deinde), deletur tota post purgare
  * (etiam post NECESSE, etiam si filius CREDO_NON_RUIT eam creavit).
  * Sub fabrica TMPDIR = area membri. NIHIL si creari non potest aut c
- * contextus currens non est. Via usque ad deletionem valet. */
+ * contextus currens non est. Via usque ad deletionem valet.
+ *
+ * TMPDIR SUITAE (2026-10-23): credo_suitam_currere[_cum] TMPDIR in
+ * aream SUITAE ponit (filii hereditant) et post suitam restituit -
+ * quidquid temporarium suita creat suum est, suitae parallelae se non
+ * vident. Post sectionem quamque '*.volumen' ibi relictum = fractura
+ * 'credo_volumen' ILLIUS sectionis (volumen temporarium non clausum),
+ * deinde deletum; volumina post parare_suitae viva (fixurae suitae)
+ * sectionibus praetereuntur et post purgare_suitae iudicantur
+ * ('(suita)'). Pretium ~XXX-XL us per sectionem (mensuratum: chorda
+ * L sectiones +8.3 M instructiones). Suitae extra credo_suitam_currere
+ * (credo_aperire nudum) TMPDIR intactum habent. */
 constans character*
 credo_area (
     CredoContextus* c);

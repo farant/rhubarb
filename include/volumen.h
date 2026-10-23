@@ -108,8 +108,9 @@ volumen_scrinium (
  * appareat (e.g. "fumus_manus" -> $TMPDIR/fumus_manus-1.volumen).
  *
  * DELETIO IN CLAUDENDO: qui non claudit plagulam relinquit - quod
- * ipsum indicium est (probatio quae claudere omisit id in $TMPDIR
- * ostendit). */
+ * ipsum indicium est. Sub credo_suitam_currere (TMPDIR = area suitae)
+ * credo id NOMINAT: fractura 'credo_volumen' sectionis quae volumen
+ * non clausit, plagula deleta (credo.h, TMPDIR SUITAE). */
 Volumen*
 volumen_temporarium (
                Piscina* piscina,
