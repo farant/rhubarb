@@ -391,6 +391,31 @@ _partes_imprimere (
     _effusionem_emittere(aed);
 }
 
+/* SCRIBERE SI MUTATUM (2026-10-23): manifestum idem non rescribitur -
+ * mtime manet. Olim omnis derivatio manifestum rescribebat; actio
+ * fabricae quae aedilem currit (speculum_hospes) arborem ideo semper
+ * 'mutabat', et memoriae regenerationum fabricae vacabantur
+ * (generatores bis per cursum radicis iudicati). */
+interior b32
+_scribere_si_mutatum (
+    constans character* via,
+                chorda  contentum,
+               Piscina* piscina)
+{
+    chorda vetus;
+
+    vetus = filum_legere_totum(via, piscina);
+    si (   vetus.datum   != NIHIL
+        && vetus.mensura == contentum.mensura
+        && (   contentum.mensura == 0
+            || memcmp(vetus.datum, contentum.datum,
+                   (memoriae_index)contentum.mensura) == 0))
+    {
+        redde VERUM;
+    }
+    redde filum_scribere(via, contentum);
+}
+
 /* --manifestum: clausura quam enumeratio aut partes legunt, ad viam
  * EXPLICITAM (non build/aedilis/<basis>/ - basis communis manifestum
  * binarii installati obrueret). Sine commisso git: fabrica sigillo
@@ -411,8 +436,9 @@ _manifestum_scribere_si_petitum (
     via_parens = via_directorium(via_manifesti, piscina);
     si (   !filum_directorium_creare_cum_parentibus(
                chorda_ut_cstr(via_parens, piscina))
-        || !filum_scribere(chorda_ut_cstr(via_manifesti, piscina),
-               aedilis_manifestum_scribere(fructus, piscina, NIHIL)))
+        || !_scribere_si_mutatum(chorda_ut_cstr(via_manifesti, piscina),
+               aedilis_manifestum_scribere(fructus, piscina, NIHIL),
+               piscina))
     {
         fprintf(stderr, "AEDILIS RECUSAT: manifestum non "
             "scriptum: %.*s\n", (s32)via_manifesti.mensura,
@@ -1334,8 +1360,8 @@ principale (
         chorda_aedificator_appendere_literis(aedificator,
             "/manifestum.stml");
         via_manifesti = chorda_aedificator_finire(aedificator);
-        si (!filum_scribere(chorda_ut_cstr(via_manifesti,
-                piscina), manifestum))
+        si (!_scribere_si_mutatum(chorda_ut_cstr(via_manifesti,
+                piscina), manifestum, piscina))
         {
             fprintf(stderr,
                 "AEDILIS RECUSAT: manifestum non scriptum\n");

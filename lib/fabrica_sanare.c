@@ -82,16 +82,19 @@ _exitus_recentes (
 }
 
 /* memoriae per cursum descriptiones octetorum sunt quae actum modo
- * mutavit (Review Focus 2): post quodque actum vacantur */
+ * mutavit (Review Focus 2): post quodque actum vacantur; regenerationes
+ * solum si 'regenerationes_quoque' (membrum intra locum suum: eas
+ * servat - _membrum_agere) */
 interior vacuum
 _memorias_vacare (
-    constans FabricaSutura* sutura)
+    constans FabricaSutura* sutura,
+                       b32  regenerationes_quoque)
 {
     si (sutura->sigilla != NIHIL)
     {
         tabula_dispersa_vacare(sutura->sigilla);
     }
-    si (sutura->regenerationes != NIHIL)
+    si (regenerationes_quoque && sutura->regenerationes != NIHIL)
     {
         tabula_dispersa_vacare(sutura->regenerationes);
     }
@@ -454,6 +457,123 @@ _debita_notare (
         &contentum);
 }
 
+/* via in loco actionis: in area sua (membra; area vacua = nulla), aut
+ * liber lectionum aut acta sua (fabrica ea pro actione scribit) */
+interior b32
+_via_membri (
+    constans FabricaActio* actio,
+                   chorda  area,
+                   chorda  via,
+                  Piscina* piscina)
+{
+    redde (area.mensura > ZEPHYRUM && chorda_incipit(via, area))
+        || chorda_aequalis(via, fabrica_liber_via(actio->titulus,
+               piscina))
+        || chorda_aequalis(via, fabrica_acta_via(actio->titulus,
+               piscina));
+}
+
+/* MUTATA INTRA LOCUM (2026-10-23; fabrica.h): locus = _via_membri */
+b32
+fabrica_mutata_intra_locum (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+                    chorda  area,
+              constans Xar* ante,
+              constans Xar* post,
+                   Piscina* piscina)
+{
+    chorda liber;
+       i32 i;
+       i32 j;
+       i32 initium;
+       i32 k;
+
+    si (ante == NIHIL || post == NIHIL || sutura->legere == NIHIL)
+    {
+        redde FALSUM;
+    }
+    i = ZEPHYRUM;
+    j = ZEPHYRUM;
+    dum (i < xar_numerus(ante) || j < xar_numerus(post))
+    {
+        constans FabricaVestigium* x = i < xar_numerus(ante)
+            ? (constans FabricaVestigium*)xar_obtinere(ante, i) : NIHIL;
+        constans FabricaVestigium* y = j < xar_numerus(post)
+            ? (constans FabricaVestigium*)xar_obtinere(post, j) : NIHIL;
+                              s32 ordo;
+                           chorda mutatum;
+
+        ordo = x == NIHIL ? I : y == NIHIL ? -I
+            : chorda_comparare(x->via, y->via);
+        mutatum.datum    = NIHIL;
+        mutatum.mensura  = ZEPHYRUM;
+        si (ordo < ZEPHYRUM)
+        {
+            mutatum = x->via;
+            i++;
+        }
+        alioquin si (ordo > ZEPHYRUM)
+        {
+            mutatum = y->via;
+            j++;
+        }
+        alioquin
+        {
+            si (   x->tempus_ns != y->tempus_ns
+                || x->mensura   != y->mensura)
+            {
+                mutatum = x->via;
+            }
+            i++;
+            j++;
+        }
+        si (   mutatum.mensura > ZEPHYRUM
+            && !_via_membri(actio, area, mutatum, piscina))
+        {
+            redde FALSUM;
+        }
+    }
+    si (!sutura->legere(sutura->datum, chorda_ut_cstr(
+            fabrica_liber_via(actio->titulus, piscina), piscina),
+            piscina, &liber))
+    {
+        redde VERUM;
+    }
+    initium = ZEPHYRUM;
+    per (k = ZEPHYRUM; k <= liber.mensura; k++)
+    {
+        chorda versus;
+        chorda via;
+
+        si (k < liber.mensura && liber.datum[k] != '\n')
+        {
+            perge;
+        }
+        versus   = chorda_sectio(liber, initium, k);
+        initium  = k + I;
+        si (   versus.mensura < III || versus.datum[0] != 'S'
+            || versus.datum[I] != '\t')
+        {
+            perge;
+        }
+        via = chorda_sectio(versus, II, versus.mensura);
+        si (   sutura->radix.mensura > 0
+            && via.mensura > sutura->radix.mensura
+            && chorda_incipit(via, sutura->radix)
+            && via.datum[sutura->radix.mensura] == '/')
+        {
+            via = chorda_sectio(via, sutura->radix.mensura + I,
+                via.mensura);
+        }
+        si (!_via_membri(actio, area, via, piscina))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
 /* MEMBRUM AGERE (T5): verdictum vetus deletum, area parata et vacua,
  * ambitus basis, genus gradus agit; deinde scriptura extra vestigium,
  * ambitus non declaratus -> FALSUM nominatum; transitus -> verdictum
@@ -520,10 +640,10 @@ _membrum_agere (
     actum.cauda       = chorda_ex_literis("", piscina);
     incepit = actio->gradus->agere(sutura, actio, actio->membrum,
         chorda_ut_cstr(area, piscina), ambitus, piscina, &actum);
-    _memorias_vacare(sutura);
     *duratio_out = actum.duratio_ms;
     si (!incepit)
     {
+        _memorias_vacare(sutura, VERUM);
         *causa_out = fabricae_iungere(piscina, "non actum: ",
             actum.cauda, "");
         redde FALSUM;
@@ -535,6 +655,15 @@ _membrum_agere (
     {
         post = NIHIL;
     }
+    /* MEMORIAE (2026-10-23): sigilla et digesta octetos describunt -
+     * semper vacantur (area membri mutata est). Regenerationes
+     * (generatores semel per cursum) solum si membrum extra locum suum
+     * aliquid mutavit: ingressus generatorum in arbore sunt, numquam in
+     * area membri aut libris fabricae. Olim post QUODQUE membrum -
+     * lectores_cocti, tabulae_silvae et ceteri bis per cursum radicis
+     * regenerabantur (~V s cursu sine mutatione). */
+    _memorias_vacare(sutura, !fabrica_mutata_intra_locum(sutura, actio,
+        area, ante, post, piscina));
     si (post != NIHIL)
     {
         _debita_notare(sutura, actio, area, ante, post, actum.codex
@@ -657,8 +786,19 @@ _actionem_agere (
     incepit = sutura->agere(sutura->datum, actio,
         chorda_ut_cstr(fabricae_iungere(piscina, "build/fabrica/acta/",
             actio->titulus, ".log"), piscina), piscina, &actum);
-    _memorias_vacare(sutura);
     *duratio_out = actum.duratio_ms;
+    si (   ante != NIHIL
+        && !sutura->vestigium_capere(sutura->datum, piscina, &post))
+    {
+        post = NIHIL;
+    }
+    /* MEMORIAE: regenerationes servantur si actio nihil extra acta et
+     * librum suum mutavit (e.g. praecondicio residentis iam viventis:
+     * tabulariumd, speculum_hospes - olim memoriam ante membra
+     * vacabant, generatores iterum regenerabantur) */
+    _memorias_vacare(sutura, !incepit
+        || !fabrica_mutata_intra_locum(sutura, actio,
+        chorda_ex_literis("", piscina), ante, post, piscina));
     si (!incepit)
     {
         *causa_out = fabricae_iungere(piscina, "non actum: ",
@@ -672,8 +812,7 @@ _actionem_agere (
             "");
         redde FALSUM;
     }
-    si (   ante != NIHIL
-        && sutura->vestigium_capere(sutura->datum, piscina, &post))
+    si (post != NIHIL)
     {
         Xar* extra;
 
@@ -1544,7 +1683,7 @@ _undam_currere (
         (constans character* constans*)c->acta_viae,
         (constans character* constans*)c->libri, c->piscina, c->acta,
         c->incepta);
-    _memorias_vacare(sutura);
+    _memorias_vacare(sutura, VERUM);
     sanata = xar_creare(c->piscina, (i32)magnitudo(FabricaActio*));
     per (k = ZEPHYRUM; sanata != NIHIL && k < c->n; k++)
     {

@@ -981,6 +981,22 @@ fabrica_vestigia_comparare (
              constans Xar* post,
                   Piscina* piscina);
 
+/* MUTATA INTRA LOCUM (2026-10-23): VERUM si actio nihil extra locum
+ * suum mutavit - locus = 'area' (membra gradus; vacua = nulla), liber
+ * lectionum (fabrica_liber_via) et acta sua (fabrica_acta_via). Iudicat
+ * photographias ante/post (ordinatas) et lineas S libri per
+ * sutura->legere (scripturae transientes photographias fallunt; liber
+ * absens = nullae). ante aut post NIHIL: FALSUM. Fabrica eo memoriam
+ * regenerationum post actum servat (generatores semel per cursum). */
+b32
+fabrica_mutata_intra_locum (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+                    chorda  area,
+              constans Xar* ante,
+              constans Xar* post,
+                   Piscina* piscina);
+
 /* Undae: actiones (Xar de FabricaActio*, ordinatae) quae SIMUL
  * currere possent - nulla dependentia inter eas, vestigia disiuncta,
  * neutra communia tangit. Xar de Xar de FabricaActio*, ordine undarum.

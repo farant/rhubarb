@@ -3332,3 +3332,25 @@ The venenum gate (fusio tier, 487 s in the last fusio run) compiled each of its 
 - (venenum gate) a stale read after `piscina_reficere` in probatio_piscina.c is green in the ordinary radix build (147/147) and red under the composite at the exact line. So `-DPISCINA_VENENUM=1` reaches the member compiles, and the memo reran only that member.
 
 First plant attempt: removing the `_attributa_clavis_c` reference made the array unused, and `-Werror` refused it (silva.planta's pre-flight caught it). Plant INSIDE the data instead (rename the attribute strings).
+
+## 2026-10-23 — generator judgments once per run: the regeneration memo survives actions that changed nothing
+
+**Profile** (radix composite, no source changes, one member rerun: 20.1 s): 60% of fabrica's time was `poll` under `_regeneratione_iudicare`. That is judging generators (lectores_cocti, tabulae_silvae, canones_cocti, normae_fixae, vates_responsum, registrum_*, glossae_pagina, …) by regenerating into scratch, 0.5–1.4 s each. 7 of them were judged TWICE per run.
+
+**Cause.** `_memorias_vacare` emptied all three per-run memos (sigilla, regenerationes, digesta) after EVERY action. In a radix run the resident preconditions `tabulariumd` and `speculum_hospes` run (PRAEPARATUM) before the members, so every generator judged after them was regenerated again.
+
+**Change.**
+- `fabrica_mutata_intra_locum(sutura, actio, area, ante, post, piscina)` (public, fabrica.h) is VERUM iff the action changed nothing outside its location.
+  - Location = its area (members only; an empty area means none), its read log (`fabrica_liber_via`) and its log (`fabrica_acta_via`).
+  - It judges the before/after snapshots plus the `S` lines of the read log; transient writes fool snapshots. An absent read log counts as no lines.
+- `_membrum_agere` and `_actionem_agere` now take the post snapshot first, then keep `regenerationes` when that holds. `sigilla` and `digesta` are ALWAYS emptied: they describe bytes, and the member's area did change.
+- Why the regeneration memo is sound to keep: it records only "the generator ran into its scratch dir"; each output is compared against the tree afresh through the emptied byte memos. Generator inputs live in the tree, never in a member's area or fabrica's own logs.
+
+**Two needless writes were defeating it** (found with a per-pid diagnostic, since removed; the fabrica test binaries link fabrica_sanare.c and printed their own fixture diagnostics too):
+- `gesta/tabulariumd.sh` rewrote `gesta/build/tabulariumd.vigilia` on every run. It now writes `.novum`, then `cmp -s` → `mv` or `rm`.
+- aedilis rewrote `build/aedilis/<target>/manifestum.stml` (and `--manifestum`) on every derivation. `_scribere_si_mutatum` now keeps identical content, and its mtime.
+- I did NOT whitelist these paths in the memo rule: a generator may legitimately read an aedilis manifest (lectores_cocti declares one).
+
+**Measured** (full radix composite, one member forced stale by a comment edit): every action judged once; 14.6 s, against 20.1 s for the comparable run before. With nothing stale (no preconditions run): 11.3 s.
+
+**Test:** probatio_fabrica_sanare "mutata intra locum", covering area / log / read log, new / changed / deleted outside, empty area, `S` lines outside vs inside, and missing snapshots. Plants: ignoring `S` lines → red; ignoring deletions → red; dropping the `area.mensura > 0` guard → red only after the test's empty area became a zero-length slice with non-NIHIL data. `chorda_incipit(x, prefix)` is FALSUM for a NIHIL-data prefix but VERUM for an empty one with data, so the guard matters when the empty area comes from a slice.

@@ -101,7 +101,10 @@ if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$main_src" ] || [ -n "$obj_recentius" ] ||
 fi
 
 # vigilia: manifestum proprium (tabulariumd.vigilia) - resident
-# fori suam staleness ipse nuntiat
+# fori suam staleness ipse nuntiat. Rescriptum SOLUM si mutatum
+# (2026-10-23): actio fabricae 'tabulariumd' (praecondicio probationum
+# radicis) id omni cursu rescribebat - arbor 'mutata', memoriae
+# regenerationum fabricae vacatae, generatores bis iudicati
 MANIFEST="$BUILD_DIR/tabulariumd.vigilia"
 {
     echo "# clausura vera launcheri (clang -MM; exemplar tabularium.sh)"
@@ -112,7 +115,12 @@ MANIFEST="$BUILD_DIR/tabulariumd.vigilia"
         for f in "${FONTES_OMNES[@]}"; do echo "$f"; done
         find "$RADIX_DIR/include" "$GESTA_DIR/fontes" -name '*.h'
     fi
-} > "$MANIFEST" 2>/dev/null
+} > "$MANIFEST.novum" 2>/dev/null
+if cmp -s "$MANIFEST.novum" "$MANIFEST"; then
+    rm -f "$MANIFEST.novum"
+else
+    mv -f "$MANIFEST.novum" "$MANIFEST"
+fi
 
 # -struere: aedifica et exi (semen fumi + praestructio + explorator
 # renovationis; linea prima stdout = signum novum)

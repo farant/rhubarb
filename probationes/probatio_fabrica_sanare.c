@@ -1316,6 +1316,120 @@ _probare_progressum (
         &causa));
 }
 
+/* photographia ficta: viae (ordinatae) cum tempore uno; via 'mutata'
+ * tempus alterum fert */
+interior Xar*
+_photographia (
+    constans character* constans* viae,
+                             i32  numerus,
+             constans character*  mutata,
+                         Piscina* piscina)
+{
+    Xar* vestigia;
+    i32  i;
+
+    vestigia = xar_creare(piscina, (i32)magnitudo(FabricaVestigium));
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        FabricaVestigium* v = (FabricaVestigium*)xar_addere(vestigia);
+
+        v->via        = chorda_ex_literis(viae[i], piscina);
+        v->tempus_ns  = (mutata != NIHIL && strcmp(viae[i], mutata)
+            == ZEPHYRUM) ? II : I;
+        v->mensura    = I;
+    }
+    redde vestigia;
+}
+
+/* MUTATA INTRA LOCUM (2026-10-23): fabrica memoriam regenerationum post
+ * actum servat solum si actio nihil extra aream, librum et acta sua
+ * mutavit (photographiae et lineae S libri) */
+interior vacuum
+_probare_mutata_intra_locum (
+    CredoContextus* c)
+{
+          Piscina* piscina = c->piscina;
+    FabricaSutura  sutura;
+     DiscusFictus  discus;
+     FabricaActio* actio;
+           chorda  area;
+           chorda  nulla;
+    hic_manens constans character* constans BASIS[] = {
+        "build/fabrica/acta/M.log",
+        "build/fabrica/area/c/m/x.o",
+        "build/fabrica/lectiones/M.tsv",
+        "lib/x.c"
+    };
+    hic_manens constans character* constans CUM_NOVA[] = {
+        "build/fabrica/acta/M.log",
+        "build/fabrica/area/c/m/x.o",
+        "build/fabrica/area/c/m/y.o",
+        "build/fabrica/lectiones/M.tsv",
+        "lib/x.c"
+    };
+    hic_manens constans character* constans CUM_ALIENA[] = {
+        "build/fabrica/acta/M.log",
+        "build/fabrica/area/c/m/x.o",
+        "build/fabrica/lectiones/M.tsv",
+        "lib/novum.c",
+        "lib/x.c"
+    };
+    Xar* ante;
+
+    mundi_discum_parare(&discus, &sutura, piscina);
+    actio  = mundi_actio(piscina, "M", FABRICA_ACTIO_IUDICIUM);
+    area   = chorda_ex_literis("build/fabrica/area/c/m/", piscina);
+    /* area vacua cum datis non NIHIL (chorda_incipit praefixum vacuum
+     * talem VERUM reddit): custodia 'area.mensura > 0' necessaria */
+    nulla  = chorda_sectio(area, ZEPHYRUM, ZEPHYRUM);
+    ante   = _photographia(BASIS, IV, NIHIL, piscina);
+
+    /* I. nihil mutatum; sine photographia FALSUM */
+    CREDO_VERUM(fabrica_mutata_intra_locum(&sutura, actio, area, ante,
+        _photographia(BASIS, IV, NIHIL, piscina), piscina));
+    CREDO_FALSUM(fabrica_mutata_intra_locum(&sutura, actio, area, NIHIL,
+        ante, piscina));
+    CREDO_FALSUM(fabrica_mutata_intra_locum(&sutura, actio, area, ante,
+        NIHIL, piscina));
+
+    /* II. intra aream (nova et mutata), acta et liber sua: servantur */
+    CREDO_VERUM(fabrica_mutata_intra_locum(&sutura, actio, area, ante,
+        _photographia(CUM_NOVA, V, "build/fabrica/area/c/m/x.o",
+        piscina), piscina));
+    CREDO_VERUM(fabrica_mutata_intra_locum(&sutura, actio, area, ante,
+        _photographia(BASIS, IV, "build/fabrica/acta/M.log", piscina),
+        piscina));
+    CREDO_VERUM(fabrica_mutata_intra_locum(&sutura, actio, area, ante,
+        _photographia(BASIS, IV, "build/fabrica/lectiones/M.tsv",
+        piscina), piscina));
+
+    /* III. extra: nova, mutata, deleta */
+    CREDO_FALSUM(fabrica_mutata_intra_locum(&sutura, actio, area, ante,
+        _photographia(CUM_ALIENA, V, NIHIL, piscina), piscina));
+    CREDO_FALSUM(fabrica_mutata_intra_locum(&sutura, actio, area, ante,
+        _photographia(BASIS, IV, "lib/x.c", piscina), piscina));
+    CREDO_FALSUM(fabrica_mutata_intra_locum(&sutura, actio, area,
+        _photographia(CUM_ALIENA, V, NIHIL, piscina), ante, piscina));
+
+    /* IV. area vacua (actio non membrum): area alterius extra locum */
+    CREDO_FALSUM(fabrica_mutata_intra_locum(&sutura, actio, nulla, ante,
+        _photographia(CUM_NOVA, V, NIHIL, piscina), piscina));
+    CREDO_VERUM(fabrica_mutata_intra_locum(&sutura, actio, nulla, ante,
+        _photographia(BASIS, IV, "build/fabrica/acta/M.log", piscina),
+        piscina));
+
+    /* V. liber: scriptura transiens extra (S) FALSUM; S intra aream et
+     * lectiones (L) extra VERUM */
+    mundi_ponere(&discus, "build/fabrica/lectiones/M.tsv",
+        "L\tlib/x.c\nS\tlib/transiens.tmp\n");
+    CREDO_FALSUM(fabrica_mutata_intra_locum(&sutura, actio, area, ante,
+        _photographia(BASIS, IV, NIHIL, piscina), piscina));
+    mundi_ponere(&discus, "build/fabrica/lectiones/M.tsv",
+        "L\tlib/x.c\nS\tbuild/fabrica/area/c/m/t\nE\tHOME\n");
+    CREDO_VERUM(fabrica_mutata_intra_locum(&sutura, actio, area, ante,
+        _photographia(BASIS, IV, NIHIL, piscina), piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "sanare",
       _probare_sanare,
@@ -1328,6 +1442,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "progressus",
       _probare_progressum,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mutata intra locum",
+      _probare_mutata_intra_locum,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
