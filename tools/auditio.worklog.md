@@ -24,3 +24,12 @@ equals the song length = start of a bar that does not exist - clamped.
 Fran listened 10-22: "it sounds very good! bass/melody is excellent and
 tempo and notes sound great too"; loop works, no artifacts, the normal
 end fades out.
+
+## 2026-10-22 - M1/M4: -partitura, -mensurae, -liber
+
+-partitura prints partitura.h text (no sound); there -pars filters the
+score instead of soloing playback (_ex_carminibus takes 'solum').
+-liber reads an outside book with filum_legere_totum (never fopen,
+examen 96) and judges it like the embedded one; the error line now
+carries song / track / clip / offset (offset was missing before - an
+agent writing a book needs it). Validated combinations exit 2.

@@ -444,6 +444,22 @@ through `auditio -carmen` (live and WAV); vicus `$music` and the game
 | S6d | *Korobeiniki* + `auditio -carmen` (live, WAV) -> Fran's ears |
 | later | editor pane (piano roll; insula song documents with acts), notation pane, patch editor, generic parameter SET, more buses, agent tool (`praeco carmen` or MCP) |
 
+### VIII-e. Music tooling for agents (M) - decided 2026-10-22
+
+An agent cannot listen, so it needs to SEE a song, CHECK it, MEASURE its
+sound, and work on its OWN files. Fran 10-22: logic lives in libraries
+wherever it is reused across contexts (MCP tool vs DAW pane), CLI tools
+stay thin; checks are a TOOLBOX of named rules with a default
+configuration that the agent or user turns on and off.
+
+| slice | content |
+|---|---|
+| M1 | `partitura`: song as text, bar by bar (spelling from the note's letter or the key; values 1..64, dotted, triplet, `~ticks`; rests largest-first; ties `~`; chords `[..]`; meter/key/tempo changes in bar headings). `auditio -carmen T -partitura [-mensurae N-M] [-pars P]` |
+| M4 | outside books: `auditio -liber x.stml -carmina / -carmen T` through `filum`, judged like the embedded book, errors with song / track / clip / offset |
+| M2 | musical checks as a rule toolbox: barlines (`|` off a bar boundary - needs cantus to RECORD bar marks, a small cantus.h change), out-of-key notes, instrument range, strong-beat seconds / tritones between tracks, parallel fifths / octaves (style, off by default); each finding names bar, beat, track |
+| M3 | numbers from the offline render: peak, clipping, per-bar loudness, per-track solo levels (balance) |
+| later | writer (model -> STML, for the DAW / notation panes to save), MCP tool for remote agents |
+
 ### VIII-c. The arcade (S7)
 
 - Sound effects through sonitus presets; music through cantus +
