@@ -3441,3 +3441,11 @@ First plant attempt: removing the `_attributa_clavis_c` reference made the array
 - The test helper had to wire `mundi_lectiones_legere`/`scribere`: without a store, `_probationes_congruunt` returns VERUM (nothing to check).
 
 **Consequence.** Every memo hit now rests on an entry written under the guard, with its probes and environment rechecked. A periodic full audit adds coverage only for logged reads appearing some other way. The real residue is generators whose reads are not logged at all (shell, clang outside bin/compilator), which neither the guard nor an audit sees. `GENERATA_AUDITUS=1` stays as an on-demand tool, not a gate.
+
+## 2026-10-23 — normae_fixae / vates_responsum: undeclared WRITES, surfaced by the key bump
+
+The heal after the "custodita II" commit actually RAN vates_responsum: its memo had just been invalidated, and sanare executes stale producers. It failed with "scripsit extra vestigium: bin/norma, build/aedilis/norma/manifestum.stml, build/aedilis/norma/norma (+1)". `norma_c_regenerare.sh` rebuilds bin/norma on every run (`norma_struere.sh`: aedilis + struere.sh + cp). No action owns that tool, and neither norma generator declared the writes. Judgments regenerate in scratch, so only a real `sanare` run ever showed it.
+
+Both now declare `build/aedilis/norma` and `bin/norma` as communis vestigia. Verified by appending a comment to lib/vates_responsum_norma.c → `sanare` ran the generator (SANATUM, file restored byte-identical) with no vestigium failure. No cycle.
+
+Lesson: the read guard does not cover writes. Write declarations are only exercised when sanare executes an action for real, which a memorabilis action rarely does.

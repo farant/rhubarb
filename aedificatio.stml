@@ -509,6 +509,9 @@
     <ingressus genus="plagulae" via="vendor/bearssl/inc" suffixa=".h"/>
     <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>
     <ingressus genus="identitas_clang" via="clang"/>
+    <!-- promptuarium nominum per fontem (2026-10-23): clavis = octeti
+         fontis + capita + argumenta + versio clang; LXII s -> 0.15 s -->
+    <vestigium via="build/bearssl_amalgama_promptuarium"/>
     <exitus via="vendor/bearssl_amalgama.c" provenientia="regeneratio"/>
     <exitus via="vendor/bearssl_amalgama.h" provenientia="regeneratio"/>
   </actio>
@@ -584,6 +587,12 @@
     <ingressus genus="fasciculus" via="tools/norma_struere.sh"/>
     <ingressus genus="manifestum" via="build/aedilis/norma/manifestum.stml"/>
     <ingressus genus="fasciculus" via="probationes/fixa/norma/normae_fixae.norma"/>
+    <!-- norma_c_regenerare.sh bin/norma ipse struit (norma_struere.sh:
+         aedilis + struere.sh + cp) - scripturae communes ambabus
+         actionibus normae (sanare 2026-10-23: 'scripsit extra
+         vestigium' sine eis) -->
+    <vestigium via="build/aedilis/norma" communis="verum"/>
+    <vestigium via="bin/norma" forma="plagula" communis="verum"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <exitus via="probationes/fixa/norma/normae_fixae.h" provenientia="regeneratio"/>
     <exitus via="probationes/fixa/norma/normae_fixae.c" provenientia="regeneratio"/>
@@ -605,6 +614,12 @@
     <ingressus genus="fasciculus" via="tools/norma_struere.sh"/>
     <ingressus genus="manifestum" via="build/aedilis/norma/manifestum.stml"/>
     <ingressus genus="fasciculus" via="lib/vates_responsum.norma"/>
+    <!-- norma_c_regenerare.sh bin/norma ipse struit (norma_struere.sh:
+         aedilis + struere.sh + cp) - scripturae communes ambabus
+         actionibus normae (sanare 2026-10-23: 'scripsit extra
+         vestigium' sine eis) -->
+    <vestigium via="build/aedilis/norma" communis="verum"/>
+    <vestigium via="bin/norma" forma="plagula" communis="verum"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <exitus via="include/vates_responsum_norma.h" provenientia="regeneratio"/>
     <exitus via="lib/vates_responsum_norma.c" provenientia="regeneratio"/>
