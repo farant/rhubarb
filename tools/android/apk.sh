@@ -108,6 +108,9 @@ if [ ! -f "$CLAVIS" ]; then
         -keypass android -alias rhubarb -keyalg RSA -keysize 2048 -validity 10000 \
         -dname "CN=rhubarb debug" > /dev/null 2>&1 || apparatus "keytool fractum"
     chmod 600 "$CLAVIS"
+    # recensio I3: clavis nova = renovationes applicationum iam
+    # institutarum (picturae!) recusabuntur nisi haec clavis servetur
+    echo "MONITUM: clavis NOVA creata: $CLAVIS - SERVA EXEMPLAR (applicationes hac clave signatae solum ea renovari possunt; amissa = deinstallatio = picturae deletae)" >&2
 fi
 "$INSTRUMENTA_SEDES/apksigner" sign --ks "$CLAVIS" --ks-pass pass:android \
     --key-pass pass:android --ks-key-alias rhubarb --out "$D/$TITULUS.apk" \
@@ -128,7 +131,10 @@ fumum_finire () {
     A shell setprop debug.rhubarb.fumus 0 > /dev/null 2>&1
     # applicatio ANTE fumum instituta = data usoris (picturae liberorum):
     # numquam deinstallatur - fumus volumine temporario pingit
-    if [ "${PRAEINSTALLATUM:-1}" = 1 ]; then
+    # deinstallatio SOLUM si fumus ipse applicationem novam instituit
+    # (praesentia probata ABSENS in omnibus usoribus, institutio nostra
+    # successit); dubium = servare (recensio I1)
+    if [ "${PRAEINSTALLATUM:-1}" = 1 ] || [ "${INSTITUTUM_NOSTRUM:-0}" != 1 ]; then
         echo "servatum: $INVOLUCRUM ante fumum aderat (data usoris manent)"
         return 0
     fi
@@ -154,12 +160,23 @@ finis () {
 trap finis EXIT
 
 trap 'exit 130' INT TERM
-PRAEINSTALLATUM=0
-if A shell pm list packages 2>/dev/null | tr -d '\r' | grep -qx "package:$INVOLUCRUM"; then
-    PRAEINSTALLATUM=1
+# praesentia per 'dumpsys package' (omnes usores - profilia liberorum
+# quoque; 'pm list packages' usorem 0 solum videt): ABSENS solum si
+# quaestio successit et nomen deest; error quilibet = praesens (I1)
+PRAEINSTALLATUM=1
+INSTITUTUM_NOSTRUM=0
+if PRAESENTIA=$(A shell dumpsys package "$INVOLUCRUM" 2>/dev/null) \
+    && [ -n "$PRAESENTIA" ] \
+    && ! printf '%s\n' "$PRAESENTIA" | tr -d '\r' | grep -q "Package \[$INVOLUCRUM\]"; then
+    PRAEINSTALLATUM=0
 fi
 A install -r "$D/$TITULUS.apk" > "$D/instituere.log" 2>&1 \
-    || { cat "$D/instituere.log" >&2; apparatus "adb install fractum"; }
+    || { cat "$D/instituere.log" >&2
+         if grep -q 'INSTALL_FAILED_UPDATE_INCOMPATIBLE\|signatures do not match' "$D/instituere.log"; then
+             apparatus "SIGNUM DIFFERT: $INVOLUCRUM in tabula alia clave signatum est quam $CLAVIS - clavem veterem restitue (exemplar servatum); deinstallatio picturas DELET"
+         fi
+         apparatus "adb install fractum"; }
+INSTITUTUM_NOSTRUM=1
 echo "institutum: $INVOLUCRUM in $ANDROID_SERIAL"
 if [ "$FUMUS" = 1 ]; then
     # schirmus dormiens aut clausus = activitas in pausa, quadra nulla

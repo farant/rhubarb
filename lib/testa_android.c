@@ -138,6 +138,12 @@ _effusionem_ducere (
     {
         redde;
     }
+    /* finis SCRIPTURAE quoque non obstruens (recensio I2): lector solus
+     * in eodem filo principali currit - fistula plena (~LXIV KiB in
+     * vocatione una) scriptorem in aeternum obstrueret (ANR). Effusio
+     * superflua perditur, applicatio vivit. Vexillum descriptionis
+     * apertae: dup2 id communicat. */
+    (vacuum)fcntl(f[I], F_SETFL, O_NONBLOCK);
     (vacuum)dup2(f[I], STDOUT_FILENO);
     (vacuum)dup2(f[I], STDERR_FILENO);
     (vacuum)close(f[I]);
