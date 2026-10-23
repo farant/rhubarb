@@ -67,3 +67,20 @@ The 'regula ignota' message hard-coded the rule names (it would have missed 'ter
 ## 2026-10-23 - house tool declaration (M5c, wish …PQ3XN)
 
 auditio is now declared like praeco: answers `-provenientia` (provenientia_auditio, plagula build/fabrica/provenientia/auditio.c via the aedilis obiectum annotation), built by `tools/auditio_struere.sh` (praeco_struere.sh with names swapped: aedilis -> provenientia_scribere -> struere -> rm+cp into bin/auditio), actions `auditio` + `institutio_auditio` in aedificatio.stml, both in the `installata` composite. In sexta only bin/auditio is built (`bin/fabrica sanare bin/auditio`, RECENS); `~/.bin/auditio` is judged 'artificium absens' until main's `sanare installata` after the merge - the same state ~/.bin/praeco is in from any worktree. Use from then on: `auditio -carmen T -recensio [-partitura -harmonia] [-json]`, `-liber x.stml` for a scratch song file.
+
+## 2026-10-23 - E3: -mensura / -ponere / -substituere [-scribere] (wish …NJ7K)
+
+Thin layer over emendatio.h. `-mensura P M` prints the bar text and its START state
+(o l v @ - `l` written with partitura_valorem_scribere, MML lengths are always plain
+values): the korobeiniki trap (bar 1 contains 'o5 l8', so new text starts in o4) is
+visible before anyone writes. `-ponere P M:T NOTA` / `-substituere P M MML` print
+vetus / novum (the exact text swapped) and ante / post (the part's partitura line for
+that bar, last line of a one-bar one-part partitura_scribere). DRY RUN by default;
+`-scribere` needs `-liber` (the embedded book has no file to write; for carmina.stml the
+tool reminds to run tools/carmina_infigere.sh). Exit 0 / 1 refused (reason + frustum +
+offset) / 2 usage. `_vitium_carminis` shared with _ex_carminibus, and it fflush(stdout)s
+first - piped, stderr otherwise overtook the header line.
+
+Verified on a scratch copy: substituere bassus 2 -> ponere 2:3 A2 -> substituere back
+-> file identical to carmina.stml byte for byte. No fumus gate exists for auditio; the
+logic and its plants live in probatio_emendatio / probatio_cantus.
