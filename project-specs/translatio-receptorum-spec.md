@@ -213,6 +213,22 @@ ludus_tessera, officina: aedilis closures).
 pythonica + fabrica-fumus (`*`) are ~4.6 min of every rerun, which
 makes them the first B targets.
 
+## IV-quater. As built: T4 shadow (2026-10-23)
+
+- **In `silva._portas_currere`:** one `translatio` call per pass; one line
+  per gate ("portaretur" / "curreret", cause in place). Every gate still
+  runs.
+- **Records:** `build/portae/translatio/<g>.json`, written after a green,
+  non-stale run whose live receipt carries the pass-start sigillum.
+- **Log:** `build/portae/translatio_umbra.tsv`, with DISSENSUS flagged.
+- **Scopes:** (b) is the C decision; (a) also requires the record's
+  attempt (`fusio:<merge-base>` / `commissio:<HEAD>`) to equal the
+  current one.
+- **Off switch:** `PORTAE_TRANSLATIO_UMBRA=0`.
+- **After switch-on (A.3):** keep a sampled audit, i.e. run ~1 in N
+  carried gates anyway and compare. That is the pattern of
+  `AUDITUS_COMMISSIONIS` for fabrica memo hits.
+
 ## V. AUDIENDA
 
 - Tracing can't see Python, plain-shell or raw-IO reads (class 3; also

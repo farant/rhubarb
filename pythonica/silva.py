@@ -3549,6 +3549,7 @@ def _portas_currere(portae, genera, viae, recepta=True, pergere=False):
     versione). Reddit nomina portarum viridium TOTARUM (sine filtro) -
     debitum rami earum purgabile."""
     ante = _sigilla_viarum(viae)
+    umbra = _umbram_incipere(portae, pergere)
     virides = []
     fractae_prob = []
     # praeiudicia (circulus commissionis II T5): OMNIA currunt, fracturae
@@ -3575,7 +3576,11 @@ def _portas_currere(portae, genera, viae, recepta=True, pergere=False):
             filtrum = receptum_legere(p).filtrum
         else:
             nomen, filtrum = (p, None) if isinstance(p, str) else p
+            if filtrum is None:
+                _umbram_ante(umbra, nomen)
+            initium_umbrae = time.time()
             f = receptum_vivum(nomen, filtrum) if recepta else None
+            cursa = not (f is not None and f.sana)
             if f is not None and f.sana:
                 print('porta %s: %s - non iterum cursa' % (nomen, f.compendium))
             else:
@@ -3602,6 +3607,9 @@ def _portas_currere(portae, genera, viae, recepta=True, pergere=False):
                     print('porta %s: arbor mutata dum currebat (plagulae'
                           ' commissionis intactae - cetera libera);'
                           ' receptum non valet' % nomen)
+            if filtrum is None:
+                _umbram_post(umbra, nomen, f, time.time() - initium_umbrae,
+                             cursa)
         if not f.sana:
             # acta portae foris currentis nusquam servata erant: fractura
             # sine causa visibili (2026-09-03, porta pythonica sub md)
@@ -3941,6 +3949,165 @@ AESTIMATIO_MONITUM = 300
 Receptum = namedtuple('Receptum', 'via nomen filtrum sana cucurrit '
                       'compendium rc sigillum rancida finis fracturae '
                       'photographia', defaults=([], None))
+
+
+# ---------------------------------------------------------------- translatio (umbra)
+
+# TRANSLATIO RECEPTORUM, UMBRA (translatio receptorum spec §III, T4;
+# decretum …DC4A8Z). Ante portas 'bin/fabrica portae translatio' SEMEL
+# vocatur (iudicium in C - involucrum vocat, lineas legit, receptum
+# scribit); linea 'umbra translationis' per portam dicit quid A faceret,
+# porta TAMEN currit - verdictum numquam mutatur. Post cursum viridem
+# totum cuius receptum vivum sigillo initii ligatum est receptum
+# translationis scribitur {arbor, instrumenta, conatus}. Scopi duo: (a)
+# receptum EIUSDEM conatus (fusio: merge-base cum main; commissio: HEAD,
+# id est iterationes eiusdem commissionis) - quod primum accendetur; (b)
+# receptum quodlibet. DISSENSUS = portaretur sed FRACTA: linea clamans +
+# TRANSLATIO_ACTA. PORTAE_TRANSLATIO_UMBRA=0 claudit (probationes
+# pythonicae, quarum portae fictae annotationem non habent). Fractura
+# umbrae ipsius = MONITUM semel, portae ut hodie.
+TRANSLATIO_DIR = os.path.join(PORTAE_DIR, 'translatio')
+TRANSLATIO_ACTA = os.path.join(PORTAE_DIR, 'translatio_umbra.tsv')
+
+
+def _translationis_receptum_via(nomen):
+    return os.path.join(TRANSLATIO_DIR, re.sub(r'[^A-Za-z0-9_.-]+', '_',
+                                               nomen) + '.json')
+
+
+def _translationis_conatus(pergere):
+    """conatus: fusio (pergere) = merge-base HEAD main; commissio = HEAD"""
+    if pergere:
+        return 'fusio:' + _curre(['git', 'merge-base', 'HEAD',
+                                  'main']).stdout.strip()[:12]
+    return 'commissio:' + _curre(['git', 'rev-parse',
+                                  'HEAD']).stdout.strip()[:12]
+
+
+def _translationes_umbrae(nomina, recepta):
+    """bin/fabrica portae translatio -machina (contractus include/portae.h):
+    (arbor, {porta: digestum}, {porta: (genus, causa)}). recepta =
+    {porta: {'arbor', 'instrumenta'}}. Linea extra contractum = SilvaError."""
+    argumenta = []
+    for n in nomina:
+        r = recepta.get(n)
+        if r:
+            argumenta += ['-receptum', n, r['arbor'], r['instrumenta']]
+    arbor, instrumenta, decisiones = None, {}, {}
+    for linea in _portae_fabricae('translatio', argumenta + list(nomina),
+                                  True, normare=False).splitlines():
+        f = [_ineffugere(x) for x in linea.split('\t')]
+        if f[0] == 'ARBOR' and len(f) == 2:
+            arbor = f[1]
+        elif f[0] == 'INSTRUMENTA' and len(f) == 3:
+            instrumenta[f[1]] = f[2]
+        elif f[0] == 'TRANSLATIO' and len(f) == 4:
+            decisiones[f[1]] = (f[2], f[3])
+        else:
+            raise SilvaError('portae translatio: linea extra contractum: %r'
+                             % linea)
+    if arbor is None:
+        raise SilvaError('portae translatio: linea ARBOR deest')
+    return arbor, instrumenta, decisiones
+
+
+def _umbram_incipere(portae, pergere):
+    """status umbrae unius cursus portarum, aut None (clausa, fabrica
+    absens, fractura - MONITUM)"""
+    if os.environ.get('PORTAE_TRANSLATIO_UMBRA', '1') == '0':
+        return None
+    if not os.path.exists(FABRICA_BIN):
+        return None
+    nomina = [p for p in portae if isinstance(p, str)
+              and not p.endswith('.json')]
+    if not nomina:
+        return None
+    try:
+        conatus = _translationis_conatus(pergere)
+        sig = sigillum_arboris()
+        recepta = {}
+        for n in nomina:
+            via = _translationis_receptum_via(n)
+            if os.path.exists(via):
+                with open(via) as fr:
+                    recepta[n] = json.load(fr)
+        arbor, instrumenta, decisiones = _translationes_umbrae(nomina,
+                                                               recepta)
+    except Exception as ex:
+        print('MONITUM: umbra translationis omissa (%s) - portae ut'
+              ' hodie' % str(ex).splitlines()[0][:200])
+        return None
+    portarentur = [n for n in nomina
+                   if decisiones.get(n, ('',))[0] == 'portat']
+    print('umbra translationis (%s): %d ex %d portarentur, ceterae'
+          ' currerent - portae TAMEN omnes currunt'
+          % (conatus, len(portarentur), len(nomina)))
+    return {'conatus': conatus, 'sigillum': sig, 'arbor': arbor,
+            'instrumenta': instrumenta, 'decisiones': decisiones,
+            'recepta': recepta}
+
+
+def _umbrae_decisio(umbra, nomen):
+    """(genus b, genus a, causa) - a: receptum alius conatus non valet"""
+    genus, causa = umbra['decisiones'].get(nomen, ('nullum',
+                                                   'porta non quaesita'))
+    a = genus
+    r = umbra['recepta'].get(nomen)
+    if genus == 'portat' and r and r.get('conatus') != umbra['conatus']:
+        a = 'nullum'
+    return genus, a, causa
+
+
+def _umbram_ante(umbra, nomen):
+    """linea 'umbra translationis' ante portam (causa in loco)"""
+    if umbra is None or nomen not in umbra['decisiones']:
+        return
+    genus, a, causa = _umbrae_decisio(umbra, nomen)
+    if genus == 'portat':
+        print('umbra translationis: %s portaretur (%s)%s' % (
+            nomen, causa, '' if a == genus else
+            ' [scopus a: nullum - receptum conatus alius]'))
+    else:
+        print('umbra translationis: %s curreret (%s: %s)'
+              % (nomen, genus, causa))
+
+
+def _umbram_post(umbra, nomen, f, secundae, cursa):
+    """verdictum verum contra decisionem: acta, DISSENSUS, receptum novum
+    (viridis, non rancida, receptum vivum sigillo initii cursus)"""
+    if umbra is None or nomen not in umbra['decisiones']:
+        return
+    try:
+        genus, a, causa = _umbrae_decisio(umbra, nomen)
+        dissensus = genus == 'portat' and not f.sana
+        if dissensus:
+            print('UMBRA TRANSLATIONIS DISSENSUS: %s portaretur (%s) sed'
+                  ' FRACTA (%s) - translatio verdictum rubrum celaret'
+                  % (nomen, causa, f.compendium))
+        os.makedirs(os.path.dirname(TRANSLATIO_ACTA), exist_ok=True)
+        with open(TRANSLATIO_ACTA, 'a') as fa:
+            fa.write('\t'.join([
+                '%d' % int(time.time()), umbra['conatus'], nomen, genus, a,
+                re.sub(r'[\t\n]+', ' ', causa), '1' if f.sana else '0',
+                '1' if cursa else '0', '%.1f' % secundae,
+                '1' if dissensus else '0']) + '\n')
+        if not f.sana or f.rancida or not f.receptum \
+                or not os.path.exists(f.receptum):
+            return
+        with open(f.receptum) as fr:
+            if json.load(fr).get('sigillum') != umbra['sigillum']:
+                return
+        os.makedirs(TRANSLATIO_DIR, exist_ok=True)
+        via = _translationis_receptum_via(nomen)
+        with open(via + '.tmp', 'w') as fw:
+            json.dump({'nomen': nomen, 'arbor': umbra['arbor'],
+                       'instrumenta': umbra['instrumenta'].get(nomen, ''),
+                       'conatus': umbra['conatus'], 'finis': time.time(),
+                       'compendium': f.compendium}, fw)
+        os.rename(via + '.tmp', via)
+    except Exception as ex:
+        print('MONITUM: umbra translationis post %s fracta (%s)'
+              % (nomen, str(ex).splitlines()[0][:200]))
 
 
 def sigillum_arboris():

@@ -14,6 +14,11 @@ RADIX = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(RADIX, 'pythonica'))
 import silva  # noqa: E402
 
+# umbra translationis (T4) clausa per probationes: portae fictae
+# annotationem <porta> non habent (bin/fabrica portae eas recusaret);
+# sectio 'translatio receptorum, umbra' eam ipsa aperit
+os.environ['PORTAE_TRANSLATIO_UMBRA'] = '0'
+
 T = os.path.join(RADIX, 'build', 'pythonica')
 os.makedirs(T, exist_ok=True)
 fracta = []
@@ -3753,6 +3758,143 @@ if os.path.exists(silva.FABRICA_BIN):
 else:
     credo(False, 'consilium formae: bin/fabrica deest (nihil iudicatum)')
 silva.FABRICA_BIN = _fb_ficta_consilii
+
+# ---- translatio receptorum, umbra (T4, decretum …DC4A8Z) ----
+# _translationes_umbrae fictum (lector contra C veram in fine; C ipsa in
+# fumo portae-declaratae IV); portae fictae viridis et rubra; recepta et
+# acta in T; verdicta numquam mutata
+import shutil
+_tu_verum = silva._translationes_umbrae
+_tu_dir, _tu_acta_via = silva.TRANSLATIO_DIR, silva.TRANSLATIO_ACTA
+_tu_fb = silva.FABRICA_BIN
+silva.FABRICA_BIN = os.path.join(RADIX, 'bin', 'fabrica')
+silva.TRANSLATIO_DIR = os.path.join(T, 'translatio')
+silva.TRANSLATIO_ACTA = os.path.join(T, 'translatio_umbra.tsv')
+shutil.rmtree(silva.TRANSLATIO_DIR, ignore_errors=True)
+if os.path.exists(silva.TRANSLATIO_ACTA):
+    os.unlink(silva.TRANSLATIO_ACTA)
+_tu_n = os.path.join(T, 'umbra_numerator.txt')
+open(_tu_n, 'w').write('')
+_tu_v = os.path.join(T, 'umbra_viridis.sh')
+open(_tu_v, 'w').write("#!/bin/sh\necho x >> '%s'\necho 'fictum: sanum'\n" % _tu_n)
+_tu_r = os.path.join(T, 'umbra_rubra.sh')
+open(_tu_r, 'w').write("#!/bin/sh\necho 'fictum: FRACTUM'\nexit 1\n")
+for _s in (_tu_v, _tu_r):
+    os.chmod(_s, 0o755)
+os.environ['PYTHONICA_PORTAE_FICTAE'] = json.dumps({
+    'ficta-umbra-v': [[_tu_v], 'fictum: (sanum|FRACTUM)'],
+    'ficta-umbra-r': [[_tu_r], 'fictum: (sanum|FRACTUM)']})
+silva._portae_fictae()
+_tu_vocationes = []
+
+
+def _tu_fictum(nomina, recepta, genus='portat'):
+    _tu_vocationes.append((list(nomina), dict(recepta)))
+    return ('arbor0', dict((n, 'dig') for n in nomina),
+            dict((n, (genus, '1 via mutata, nulla huius portae'))
+                 for n in nomina))
+
+
+def _tu_currere(portae, pergere=False):
+    buf, err, v = io.StringIO(), None, None
+    with contextlib.redirect_stdout(buf):
+        try:
+            v = silva._portas_currere(portae, dict((q, 'probatio') for q in portae),
+                                      [], recepta=False, pergere=pergere)
+        except Exception as ex:
+            err = ex
+    return buf.getvalue(), v, err
+
+
+def _tu_acta():
+    if not os.path.exists(silva.TRANSLATIO_ACTA):
+        return []
+    return [l.rstrip('\n').split('\t') for l in open(silva.TRANSLATIO_ACTA)]
+
+
+_tu_conatus = 'commissio:' + subprocess.run(
+    ['git', 'rev-parse', 'HEAD'], capture_output=True, text=True,
+    cwd=RADIX).stdout.strip()[:12]
+try:
+    os.environ['PORTAE_TRANSLATIO_UMBRA'] = '1'
+    silva._translationes_umbrae = _tu_fictum
+    out, v, err = _tu_currere(['ficta-umbra-v'])
+    rec_via = silva._translationis_receptum_via('ficta-umbra-v')
+    rec = json.load(open(rec_via)) if os.path.exists(rec_via) else {}
+    credo(v == ['ficta-umbra-v'] and open(_tu_n).read().count('x') == 1
+          and 'umbra translationis: ficta-umbra-v portaretur (1 via mutata' in out
+          and 'portae TAMEN omnes currunt' in out,
+          'umbra: decisio impressa, porta TAMEN cursa (verdictum idem)', causa=out)
+    credo(rec.get('arbor') == 'arbor0' and rec.get('instrumenta') == 'dig'
+          and rec.get('conatus') == _tu_conatus,
+          'umbra: receptum translationis post viridem (arbor, instrumenta, conatus)',
+          causa=repr(rec))
+    a = _tu_acta()
+    credo(len(a) == 1 and a[0][2:5] == ['ficta-umbra-v', 'portat', 'portat']
+          and a[0][6:8] == ['1', '1'] and a[0][9] == '0',
+          'umbra: acta - decisio, verdictum, sine dissensu', causa=repr(a))
+    # receptum vocationi proximae traditur; conatus alius -> scopus a nullum
+    rec['conatus'] = 'commissio:alius'
+    json.dump(rec, open(rec_via, 'w'))
+    out, v, err = _tu_currere(['ficta-umbra-v'])
+    credo(_tu_vocationes[-1][1].get('ficta-umbra-v', {}).get('arbor') == 'arbor0'
+          and '[scopus a: nullum - receptum conatus alius]' in out
+          and _tu_acta()[-1][3:5] == ['portat', 'nullum'],
+          'umbra: receptum traditum; scopus a nullum si conatus alius', causa=out)
+    # rubra quae portaretur: DISSENSUS nominatus, actum, receptum nullum
+    out, v, err = _tu_currere(['ficta-umbra-r'], pergere=True)
+    credo(err is not None
+          and 'UMBRA TRANSLATIONIS DISSENSUS: ficta-umbra-r portaretur' in out
+          and _tu_acta()[-1][2] == 'ficta-umbra-r' and _tu_acta()[-1][9] == '1'
+          and not os.path.exists(silva._translationis_receptum_via('ficta-umbra-r')),
+          'umbra: rubra portanda = DISSENSUS, actum, receptum nullum', causa=out)
+    # debita: curreret cum causa, rubra sine dissensu
+    silva._translationes_umbrae = lambda n, r: _tu_fictum(n, r, 'debita')
+    out, v, err = _tu_currere(['ficta-umbra-r'], pergere=True)
+    credo('umbra translationis: ficta-umbra-r curreret (debita: 1 via' in out
+          and 'DISSENSUS' not in out and _tu_acta()[-1][9] == '0',
+          'umbra: debita -> curreret, rubra sine dissensu', causa=out)
+
+    # fractura umbrae ipsius: MONITUM, porta ut hodie
+    def _tu_fractum(n, r):
+        raise silva.SilvaError('fictum fractum')
+    silva._translationes_umbrae = _tu_fractum
+    out, v, err = _tu_currere(['ficta-umbra-v'])
+    credo(v == ['ficta-umbra-v']
+          and 'MONITUM: umbra translationis omissa (fictum fractum)' in out
+          and open(_tu_n).read().count('x') == 3,
+          'umbra: fractura sua = MONITUM, porta tamen cursa', causa=out)
+    # clausa: nulla vocatio, nulla linea
+    silva._translationes_umbrae = _tu_fictum
+    os.environ['PORTAE_TRANSLATIO_UMBRA'] = '0'
+    k = len(_tu_vocationes)
+    out, v, err = _tu_currere(['ficta-umbra-v'])
+    credo(len(_tu_vocationes) == k and 'umbra translationis' not in out
+          and v == ['ficta-umbra-v'],
+          'umbra: PORTAE_TRANSLATIO_UMBRA=0 claudit', causa=out)
+    # lector contractus contra bin/fabrica portae translatio veram
+    # (registrum sine portis fictis - C eas recusaret)
+    _tu_portae = silva.PORTAE
+    try:
+        silva.PORTAE = dict((k2, v2) for k2, v2 in _tu_portae.items()
+                            if not k2.startswith('ficta'))
+        arb, ins, dec = _tu_verum(['vexilla', 'radix'], {})
+        credo(re.match(r'^[0-9a-f]{40}$', arb or '') is not None
+              and dec.get('vexilla', ('',))[0] == 'nullum'
+              and dec.get('radix', ('',))[0] == 'numquam'
+              and len(ins.get('vexilla', '')) == 64,
+              'umbra: lector contractus contra C veram (ARBOR, INSTRUMENTA, TRANSLATIO)',
+              causa=repr((arb, ins, dec)))
+    finally:
+        silva.PORTAE = _tu_portae
+finally:
+    os.environ['PORTAE_TRANSLATIO_UMBRA'] = '0'
+    silva._translationes_umbrae = _tu_verum
+    silva.TRANSLATIO_DIR, silva.TRANSLATIO_ACTA = _tu_dir, _tu_acta_via
+    silva.FABRICA_BIN = _tu_fb
+    for _n in ('ficta-umbra-v', 'ficta-umbra-r'):
+        silva.receptum_delere(silva._receptum_vivum_via(_n))
+    os.environ.pop('PYTHONICA_PORTAE_FICTAE', None)
 
 print()
 if fracta:

@@ -1328,3 +1328,28 @@ receipt never deleted. Existing clones now carry an owner tag so each
 protection is tested on its own merits, not via the untagged grace
 period. Plants on silva.py copies: ignore owner / drop age rule / drop
 expiry - each turns its assertions red.
+
+## 2026-10-23 — translatio receptorum T4: shadow in `_portas_currere`
+
+Spec project-specs/translatio-receptorum-spec.md §III; decretum …DC4A8Z.
+
+**What it does.**
+- Once per pass, `_umbram_incipere` calls `bin/fabrica portae translatio -machina`. It passes every unfiltered gate and its record from `build/portae/translatio/<g>.json`.
+- It prints one summary line, then before each gate either `umbra translationis: X portaretur (causa)` or `X curreret (genus: causa)`.
+- **The gate runs regardless.** Verdicts are never touched.
+- After the run, `_umbram_post` appends to `build/portae/translatio_umbra.tsv`: time, attempt, gate, decision b, decision a, cause, sana, cursa, seconds, dissensus.
+- A gate that would be carried but went red prints `UMBRA TRANSLATIONIS DISSENSUS`.
+
+**Attempt (scope a).** Merge passes are the ones with `pergere`: `fusio:<merge-base HEAD main>`. Commit passes: `commissio:<HEAD>`, so retries of one commit share it. Scope (b) is the C decision as is. Scope (a) is the same, except a record from another attempt makes it `nullum`. That's a string compare, the only decision logic in Python.
+
+**When a record is written:** only after a green, non-stale run whose live receipt's sigillum equals the sigillum at the START of the pass. That proves the tree the CLI hashed is the one the gate judged. Fabrica-routed gates (composites, aedilis) write no live receipt, so they get no record; they're `numquam` anyway.
+
+**Off switch.** `PORTAE_TRANSLATIO_UMBRA=0` turns the shadow off. probatio_silva.py sets it globally, because its fake gates have no `<porta>` annotation and the C side would refuse the registry. Its own section turns the shadow on with a faked `_translationes_umbrae`, and checks the real contract parser against the real CLI with the fakes removed from PORTAE.
+
+**Plants**, via silva.planta with that section as the gate, each red and reverted green: DISSENSUS detection off; a record written for a red gate; the off switch ignored; scope a ignored.
+
+**Live run** (vexilla, sonda, radix, twice):
+- pass 1: nullum, nullum, numquam;
+- pass 2: vexilla and sonda "portaretur (nulla via mutata)", radix numquam.
+
+All of them ran both times. Full pythonica suite: green, 3.5 min.
