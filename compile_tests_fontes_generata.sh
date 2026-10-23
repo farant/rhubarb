@@ -306,6 +306,7 @@ declare -a SOURCE_FILES=(
     "lib/tempus.c"
     "lib/terminale.c"
     "lib/tessellatio.c"
+    "lib/testa_android_initus.c"
     "lib/testa_cursus.c"
     "lib/thema.c"
     "lib/thema_visus.c"

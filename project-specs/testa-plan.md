@@ -129,11 +129,11 @@ clang 18, aapt2/zipalign/apksigner (build-tools 34.0.0), adb.
   - `TestaForma { constans character* titulus; i32 latitudo, altitudo, scala; b32 plena_visio; Dispensator* d; FiguraRegistrum* figurae; i32 thema; ImagoFons fons; vacuum* fons_ctx; LudusPulsator pulsator; vacuum* pulsator_ctx; vacuum (*finis)(vacuum* ctx); vacuum* finis_ctx; }`
   - `nomen b32 (*TestaInitium)(constans TestaAmbitus* a, TestaForma* forma);`
   - `TestaOptiones { constans character* via_imaginis; b32 fumus; }`, `vacuum testa_optiones_legere(s32 argc, character** argv, TestaOptiones* o)`
-  - `constans character* testa_titulus_processus(constans character* argv0)`
+  - `constans character* testa_titulus_processus(constans character* programma)`
   - `b32 testa_formam_probare(constans TestaForma* f, constans character** causa)`
   - `TestaCursus { TestaForma forma; LudusFenestra* lf; b32 initiatus; b32 finitus; }`
   - `b32 testa_cursum_incipere(TestaCursus* c, constans TestaAmbitus* a, TestaInitium initium, constans character** causa)`
-  - `b32 testa_cursum_fenestrare(TestaCursus* c, Piscina* piscina, TabulaPixelorum* tabula)`
+  - `b32 testa_cursum_ludum_struere(TestaCursus* c, Piscina* piscina, TabulaPixelorum* tabula)`
   - `vacuum testa_cursum_finire(TestaCursus* c)` - `dispensator_finire` + the "ludus: quadra=..." line (R7)
   - `vacuum testa_cursum_dimittere(TestaCursus* c)` - `forma.finis` at most once, only if initium returned VERUM
   - `b32 applicatio_initium(constans TestaAmbitus* a, TestaForma* forma)` (declared in `testa.h`, defined by each app)
@@ -161,7 +161,7 @@ notices), ledger `Task 1: Ruling: vicus parity = same exit, same
 
 ```c
 /* probatio_testa.c - contractus applicationis (testa-spec III.2):
- * optiones, titulus processus, forma, cursus incipere -> fenestrare ->
+ * optiones, titulus processus, forma, cursus incipere -> ludum struere ->
  * finire -> dimittere (finis semel, numquam sine initio). Testa vera
  * (principale) non includitur: testa_cursus.h solum. */
 #include "latina.h"
@@ -346,12 +346,12 @@ _sectio_cursus (
     app = (AppProbanda*)cursus.forma.finis_ctx;
 
     t = tabula_pixelorum_creare_nuda(c->piscina, CC, C);
-    CREDO_VERUM(testa_cursum_fenestrare(&cursus, c->piscina, t));
+    CREDO_VERUM(testa_cursum_ludum_struere(&cursus, c->piscina, t));
     CREDO_NON_NIHIL(cursus.lf);
     CREDO_GRADUS("pulsus formae in ludo positus");
     CREDO_VERUM(cursus.lf->pulsator == _pulsare_probandam);
-    CREDO_GRADUS("fenestrare iterum: recusatur (ludus unus)");
-    CREDO_FALSUM(testa_cursum_fenestrare(&cursus, c->piscina, t));
+    CREDO_GRADUS("ludum struere iterum: recusatur (ludus unus)");
+    CREDO_FALSUM(testa_cursum_ludum_struere(&cursus, c->piscina, t));
 
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
     e.genus = EVENTUS_SUSPENSIO;
@@ -427,7 +427,7 @@ _sectio_forma_prava (
 hic_manens constans CredoSectio SECTIONES[] = {
     { "optiones testae", _sectio_optiones, NIHIL, NIHIL, NIHIL, NIHIL },
     { "titulus processus", _sectio_titulus, NIHIL, NIHIL, NIHIL, NIHIL },
-    { "cursus: incipere, fenestrare, quadrum, finire, dimittere",
+    { "cursus: incipere, ludum struere, quadrum, finire, dimittere",
         _sectio_cursus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "dimittere semel", _sectio_dimittere_semel, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -531,11 +531,11 @@ testa_optiones_legere (
        character** argv,
     TestaOptiones* o);
 
-/* basis argv[0] ("bin/pictor" -> "pictor"): titulus piscinae, ut olim
+/* basis programmatis ("bin/pictor" -> "pictor"): titulus piscinae, ut olim
  * per applicationem; "applicatio" si NIHIL aut vacua */
 constans character*
 testa_titulus_processus (
-    constans character* argv0);
+    constans character* programma);
 
 /* forma valida? FALSUM + causa (litterae fixae) nominata */
 b32
@@ -561,7 +561,7 @@ testa_cursum_incipere (
 
 /* ludum ex forma struere (semel; iterum FALSUM) */
 b32
-testa_cursum_fenestrare (
+testa_cursum_ludum_struere (
         TestaCursus* c,
             Piscina* piscina,
     TabulaPixelorum* tabula);
@@ -615,17 +615,17 @@ testa_optiones_legere (
 
 constans character*
 testa_titulus_processus (
-    constans character* argv0)
+    constans character* programma)
 {
     constans character* basis;
     constans character* p;
 
-    si (!argv0)
+    si (!programma)
     {
         redde "applicatio";
     }
-    basis = argv0;
-    per (p = argv0; *p != '\0'; p++)
+    basis = programma;
+    per (p = programma; *p != '\0'; p++)
     {
         si (*p == '/')
         {
@@ -686,7 +686,7 @@ testa_cursum_incipere (
 }
 
 b32
-testa_cursum_fenestrare (
+testa_cursum_ludum_struere (
         TestaCursus* c,
             Piscina* piscina,
     TabulaPixelorum* tabula)
@@ -962,7 +962,7 @@ principale (
     {
         fenestra_commutare_plenam_visionem(fenestra);
     }
-    si (!tabula || !testa_cursum_fenestrare(cursus, piscina, tabula))
+    si (!tabula || !testa_cursum_ludum_struere(cursus, piscina, tabula))
     {
         redde I;
     }
@@ -1306,7 +1306,7 @@ Expected: no callers (worklogs may still mention it - history, keep).
 
   <interrogatio genus="quomodo">
     <quaestio! (>how do I run an app's dispatcher in a real window?
-    <responsum symbolum="applicatio_initium testa_cursum_incipere testa_cursum_fenestrare" via="apps/pictor/pictor.c">Include
+    <responsum symbolum="applicatio_initium testa_cursum_incipere testa_cursum_ludum_struere" via="apps/pictor/pictor.c">Include
       testa.h and define applicatio_initium(a, forma): build your
       state in a->piscina (never in locals - their addresses outlive
       the call), then fill the forma - titulus, latitudo, altitudo,
@@ -2971,7 +2971,7 @@ _fenestra_creata (
         t->tabula->scala              = (f32)scala;
         t->tabula->fenestra_latitudo  = (i32)latitudo;
         t->tabula->fenestra_altitudo  = (i32)altitudo;
-        si (!testa_cursum_fenestrare(&t->cursus, t->piscina, t->tabula))
+        si (!testa_cursum_ludum_struere(&t->cursus, t->piscina, t->tabula))
         {
             _finire_fracte(t, "ludus");
             redde;
