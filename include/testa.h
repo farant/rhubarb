@@ -8,6 +8,25 @@
  * scriptis. Applicatio SOLUM applicatio_initium definit. Probationes
  * testa_cursus.h includunt, numquam hoc (principale duplex). */
 
+/* REGULAE (testa-spec II.9; Franus 2026-10-23: "shared material ...
+ * continuity / same aesthetics", non applicatio una ubique).
+ *
+ * MATERIA COMMUNIS (documenta, actiones, figurae, insula, volumen,
+ * thema) - leges, porta android-struere eas probat:
+ *  1. nulla vocatio platformae: servitia ut portae ab hospite veniunt
+ *     (exemplar: actiones_ctx.imago_capere pictoris)
+ *  2. tempus ex 'nunc' (dispensatoris), numquam "N ms post cursum
+ *     meum"; nihil obstruit, nulla ansa propria - applicatio in pausa
+ *     (Android) quadra nulla accipit
+ *  3. status qui valet in insula / volumine, numquam in memoria C sola
+ *     (Android processus in fundo necat - B2)
+ *
+ * COMPOSITIO (pictor_componentia et similia, per superficiem) suam
+ * superficiem supponere potest: super, dextra, claves in mensa; tactus
+ * et situs erectus in tabula. Viae ab hospite (a->sedes_datorum),
+ * numquam ex cwd binarii supposito. Documentum aspectui originis suae
+ * pertinet; clientes alii fortasse solum legunt. */
+
 #include "testa_cursus.h"
 
 /* Status applicationis in a->piscina aedificare et formam implere.

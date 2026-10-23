@@ -1,7 +1,13 @@
 # Testa - the app contract and two shells: pictor on the Fire (spec B1)
 
-**Status: PROPOSITUM 2026-10-23** - designed in conversation with
-Fran section by section (2026-10-23), awaiting review of this text.
+**Status: IMPLETUM 2026-10-23** - built in quarta per
+`project-specs/testa-plan.md`, one task per turn with Fran approving:
+T1 ca208b7d (contract + macOS shell; pictor/scriba/vicus moved), T2
+68243650 (pure Android pieces), T3 2c65a8bc (Android shell, apk.sh,
+T3b examen NDK lexicon), T4 (device smoke, gate android-struere,
+authoring rules). pictor drawn on by Fran on a Fire 7 (Fire OS 8 /
+API 30) and a C30 Pro (Android 15 / API 35). Not yet in main. Designed
+in conversation with Fran section by section (2026-10-23).
 Worktree quarta. Sub-project B1 of the mobile line; A (the Android
 build tier) is `project-specs/android-gradus-spec.md`, IMPLETUM.
 Ledger: vision desideratum ...577GAS (`01M5KAM5ATMEGGA7ZTFE577GAS`),
@@ -422,3 +428,79 @@ PORTAE (a new gate script unregistered = commits without it - lesson
   layout change, not a memory one.
 - vicus fullscreen parity under the new shell (III.1 covers only the
   fumus path).
+
+
+## VI. Found while building (2026-10-23)
+
+Every `Ruling:` of the plan's ledger, in order; each was told to Fran.
+
+- **R1-R7 (planning):** shell files follow the aedilis variant rule
+  (`lib/testa.c`, not `testa_fenestra.c`); `testa_cursus.h` holds the
+  types so suites never link a second `principale`; escaping locals
+  (fons_ctx, vicus pulse and ports) live in the shell's piscina; the
+  Android frame cadence mirrors the macOS loop (two callbacks - no
+  Choreographer cancel); screen queried only outside `-fumus`;
+  `ludus_fenestra.h` keeps `fenestra.h`; the timing line moved into
+  `testa_cursum_finire`.
+- **T1:** `-Wwrite-strings` forbids `(character*)"literal"` argv -
+  writable arrays. Parity: pictor and scriba `-fumus -imago` PNGs
+  byte-identical to the old binaries; vicus differs and is RIGHT - old
+  vicus read the uninitialized `plena` (park ...J49JH, closed) and its
+  smoke ran fullscreen (960x600); new 480x488 = its documented fixed
+  size. vicus PNGs carry the clock and battery: never byte-exact across
+  minutes. Latin lint refused my coinages `fenestrare`, `argv0` ->
+  `testa_cursum_ludum_struere`, `programma`.
+- **T2:** glossary `android` (proper name, oracle unmoved) and
+  `indicatores` (plural form).
+- **T3, found on the tablet by Fran:** (1) the tool row sat under the
+  nav bar - its frame [552,600] eats touches -> layout inside the
+  content rect (`onContentRectChanged`, `testa_geometriam_in_area`,
+  test red->green); (2) a band on top = NativeActivity's default TITLE
+  BAR (content [0,88]) -> theme `Theme.DeviceDefault.NoActionBar`;
+  (3) right/bottom borders hidden = new documents were made at the
+  desktop size 640x480 -> `TestaAmbitus.superficies_*` (surface the
+  shell imposes; 0 on macOS) and the shell calls `applicatio_initium`
+  only when window AND content rect are known; a fresh document then
+  showed all four borders. Scale II chosen by Fran ("the more zoomed
+  in"); scale I showed the whole 640x480 with a ~1.3 mm UI. Second
+  device C30 Pro (Android 15): `-z max-page-size=16384` (pagesize.max
+  16384); same build ran first try (content [0,32]-[1280,736]).
+- **T3b (Fran: option a):** examen judges against a lexicon, not real
+  headers - NDK sections added to `silva/fontes/systema_posix.h`
+  (examen 43 -> 0 violations), certified by `officina/auspex_android.sh`
+  (two TUs under the NDK clang; `__builtin_offsetof` - clang 18 refuses
+  the old OFF; planted value -> red). 37 fixed NDK API words (event,
+  window, looper, activity...) went to the tolerated-words copy by
+  deliberate regeneration, cause in the commit (glossary forbidden for
+  real English words). Commit gates caught: a dead `<tolera>`, a manual
+  `-I` root (vexilla), a `/*` inside a comment (auspex_posix).
+- **T4:** the smoke never uninstalls an app that was installed before it
+  (the C30 holds the kids' drawings; uninstall deletes app data); a
+  dozing/locked tablet is refused up front (activity paused = no
+  frames, correctly) instead of a 40 s timeout. Smoke on the C30:
+  `EXITUS=0`, `fumus.png` shows the swipe stroke at our (150,109) ->
+  (350,159). Gate `android-struere` = certifier + APK build (19 s);
+  plants by hand (silva.planta reads the gate's intended link error as
+  "build broken"): platform call -> FRACTA naming
+  `clipboard_capere_imaginem`; wrong NDK -> RECUSATA exit 2.
+
+### AUDIENDA - answered
+
+- pictor at 512x300/512x264: lays out cleanly (Fran chose II).
+- `setprop debug.*`, `run-as`, `input swipe`: all work on Fire OS 8 and
+  Android 15. stdout -> logcat pipe: complete (testa line, timing line,
+  `EXITUS=`). `AChoreographer_postFrameCallbackDelayed64`: fine on both.
+- Not answered: fps under heavy drawing (Fire timing line: 2304 frames,
+  delineare avg ~10 ms, max 22 ms - fine); build-tools/platform hashes
+  still unpinned.
+
+### Left for later (Fran informed)
+
+- Amazon Kids profiles do not list sideloaded apps (kids' Fire): Live
+  App Testing via the Amazon Developer Console (B6) or a non-Kids
+  profile.
+- pinacotheca - "open..." / new picture dialog (desideratum ...X7RJB),
+  next after B1.
+- minor: diagnostica warnings (effects table lacks zip/keytool/du;
+  `apparatus` defined by `communia.sh`'s callers).
+

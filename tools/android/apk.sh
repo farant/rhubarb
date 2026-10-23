@@ -120,12 +120,79 @@ echo "APK: $D/$TITULUS.apk ($(du -k "$D/$TITULUS.apk" | awk '{print $1}') KiB, $
 . tools/android/communia.sh
 android_tabulam_eligere
 android_seram_capere
-trap android_seram_liberare EXIT
+# fumus (testa-spec II.8): proprietas -> lanceatio -> ictus per 'input
+# swipe' -> EXITUS= in logcat -> fumus.png per run-as -> deinstallatio
+# (regula Frani: nihil in tabula manet nisi -servare)
+QUADRA_FUMI=600   # ~10 s: spatium ictui inter lanceationem et finem
+fumum_finire () {
+    A shell setprop debug.rhubarb.fumus 0 > /dev/null 2>&1
+    # applicatio ANTE fumum instituta = data usoris (picturae liberorum):
+    # numquam deinstallatur - fumus volumine temporario pingit
+    if [ "${PRAEINSTALLATUM:-1}" = 1 ]; then
+        echo "servatum: $INVOLUCRUM ante fumum aderat (data usoris manent)"
+        return 0
+    fi
+    if [ "$SERVARE" = 1 ]; then
+        echo "servatum: $INVOLUCRUM (adb uninstall $INVOLUCRUM)"
+        return 0
+    fi
+    A uninstall "$INVOLUCRUM" > /dev/null 2>&1
+    if A shell pm list packages 2>/dev/null | tr -d '\r' | grep -qx "package:$INVOLUCRUM"; then
+        echo "DEINSTALLATIO FRACTA: $INVOLUCRUM manet in tabula" >&2
+        return 1
+    fi
+    echo "deinstallatum: $INVOLUCRUM"
+}
+finis () {
+    local status=$?
+    if [ "$FUMUS" = 1 ] && ! fumum_finire && [ "$status" -lt 2 ]; then
+        status=2
+    fi
+    android_seram_liberare
+    exit "$status"
+}
+trap finis EXIT
+
 trap 'exit 130' INT TERM
+PRAEINSTALLATUM=0
+if A shell pm list packages 2>/dev/null | tr -d '\r' | grep -qx "package:$INVOLUCRUM"; then
+    PRAEINSTALLATUM=1
+fi
 A install -r "$D/$TITULUS.apk" > "$D/instituere.log" 2>&1 \
     || { cat "$D/instituere.log" >&2; apparatus "adb install fractum"; }
 echo "institutum: $INVOLUCRUM in $ANDROID_SERIAL"
-[ "$FUMUS" = 0 ] || apparatus "-fumus: testa T4"
+if [ "$FUMUS" = 1 ]; then
+    # schirmus dormiens aut clausus = activitas in pausa, quadra nulla
+    # (testa recte): apparatus statim, non XL s exspectatio (C30 2026-10-23)
+    if ! A shell dumpsys power 2>/dev/null | tr -d '\r' | grep -q 'mWakefulness=Awake' \
+        || A shell dumpsys window 2>/dev/null | tr -d '\r' | grep -q 'isKeyguardShowing=true'; then
+        apparatus "tabula $ANDROID_SERIAL dormit aut clausa est - expergefac et resera, deinde iterum"
+    fi
+    A shell setprop debug.rhubarb.fumus "$QUADRA_FUMI" || apparatus "setprop fractum"
+    A logcat -c
+    A shell am start -W -n "$INVOLUCRUM/android.app.NativeActivity" > /dev/null \
+        || apparatus "am start fractum"
+    sleep 1
+    # ictus trans tabulam (puncta fenestrae, landscape 1024x600)
+    A shell input swipe 300 250 700 350 400 || apparatus "input swipe fractum"
+    EXITUS=""
+    for _ in $(seq 1 40); do
+        EXITUS=$(A logcat -d -s "$TITULUS:I" 2>/dev/null | tr -d '\r' \
+            | awk -F'EXITUS=' 'NF > 1 {print $2}' | tail -1)
+        [ -n "$EXITUS" ] && break
+        sleep 1
+    done
+    A logcat -d -s "$TITULUS:I" 2>/dev/null | tr -d '\r' > "$D/logcat.txt"
+    [ -n "$EXITUS" ] || apparatus "nulla linea EXITUS intra XL s (logcat: $D/logcat.txt)"
+    A exec-out run-as "$INVOLUCRUM" cat files/fumus.png > "$D/fumus.png" 2>/dev/null
+    grep -q 'ludus: quadra=' "$D/logcat.txt" || fractum "linea mensurarum deest ($D/logcat.txt)"
+    [ "$EXITUS" = 0 ] || fractum "EXITUS=$EXITUS ($D/logcat.txt)"
+    [ "$(head -c 4 "$D/fumus.png" | od -An -c | tr -d ' ')" = "211PNG" ] \
+        || fractum "fumus.png non PNG ($D/fumus.png)"
+    echo "FUMUS ANDROID: EXITUS=0, imago $D/fumus.png"
+    exit 0
+fi
+
 if [ "$CURRERE" = 1 ]; then
     A shell am start -n "$INVOLUCRUM/android.app.NativeActivity" > /dev/null \
         || apparatus "am start fractum"
