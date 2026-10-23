@@ -247,6 +247,15 @@ nomen structura {
      * historia[] / historia_cursor[] = ambitus currens */
          TabulaDispersa* historiae_ambituum[II];
                  chorda  historia_ambitus[II];
+    /* comites P5a: aditus (Cmd+F cum semita, vicus_advocare) - dum
+     * prompta lateris advocati aperta manet, Esc eam claudens aditum
+     * revocat: historia dextra ad cursorem priorem, focus ad latus
+     * prius. Gradus in lib/vicus.c (privatum) */
+                    i32 aditus_gradus;
+                 chorda aditus_frons;     /* id lateris advocati */
+                    i32 aditus_latus;     /* focus ante aditum */
+                    s32 aditus_cursor;    /* cursor historiae dextrae
+                                            * ante aditum; -I nullus */
 } VicusTabula;
 
 /* S4 (Franus 2026-10-09): horologium in linea tabularum, ad dextrum
@@ -601,6 +610,17 @@ vicus_brevitatem_addere (
                     s32  runa,
                     i32  modificantes,
      constans character* genus);
+
+/* comites P5 (semitae-spec VI-b): aditus lateris focati sequitur -
+ * manifestum generis eius (<aditus><iter nomen=titulus/>): semita
+ * (URI) = latus generis eius in frontem acervi cum semita (ut
+ * vicus_acervo_mutare; PETITIO), si advocare focus dexter et
+ * facies.advocatum; semita nulla = facies.advocatum lateris ipsius
+ * (statim). FALSUM si iter non declaratur. Cmd+F = "quaestio". */
+b32
+vicus_aditum_sequi (
+                  Vicus* v,
+     constans character* titulus);
 
 /* semitae R3: organa (genus -> manifestum) pro semitis laterum;
  * applicatio ponit (organa infixa, cache). NIHIL = nullae (historia

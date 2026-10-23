@@ -98,6 +98,11 @@
     <cognomen typus="textus" semita="scriba/{}"/>
   </cognomina>
 
+  <!-- comites P5: Cmd+F = quaestio intra visum -->
+  <aditus>
+    <iter nomen="quaestio" semita="indagatio?genus=liber" advocare="verum"/>
+  </aditus>
+
   <basis genus="organum_commune"/>
   <montationes/>
 </organum>

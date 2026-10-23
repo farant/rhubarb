@@ -9,7 +9,9 @@
  * sinister), sequitur frontem dextram, pagina sua cuique comiti,
  * reditus ad librum communem, terminale focatum, reapertura, vectis
  * pingitur solum cum comite. P3b: liber quisque historiam suam habet
- * (Ctrl+O in comite librum numquam mutat). */
+ * (Ctrl+O in comite librum numquam mutat). P5a: Cmd+F = aditus
+ * "quaestio" lateris focati (scriba, calendarium, nomenclator, sancti,
+ * indagatio; terminale nihil). */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -450,6 +452,171 @@ _sectio_historia_comitis (
         "Notes \302\267 Anna Rossi", "1"));
 }
 
+/* campus rami lateris frontalis (genus eius) = valor */
+interior b32
+frontis_campus_est (
+                 Mundus* x,
+     constans character* genus,
+     constans character* titulus,
+     constans character* valor)
+{
+     VicusLatus* l;
+    InsulaRamus  r;
+         chorda* a;
+      character  id[CXXVIII];
+
+    l = vicus_latus(vicus_activa(x->v), VICUS_DEXTRUM);
+    si (   !l || !l->montata
+        || !chorda_aequalis_literis(l->genus, genus)
+        || l->id.mensura >= (i32)magnitudo(id))
+    {
+        redde FALSUM;
+    }
+    sprintf(id, "%.*s", (int)l->id.mensura,
+        (constans character*)l->id.datum);
+    r = insula_ramus(x->v->repo, genus, id);
+    a = insula_ramus_attributum(&r, titulus);
+    redde a && chorda_aequalis_literis(*a, valor);
+}
+
+/* genus frontis dextrae */
+interior b32
+frons_generis_est (
+                 Mundus* x,
+     constans character* genus)
+{
+    VicusLatus* l;
+
+    l = vicus_latus(vicus_activa(x->v), VICUS_DEXTRUM);
+    redde l && chorda_aequalis_literis(l->genus, genus);
+}
+
+interior b32
+focus_dexter (
+    Mundus* x)
+{
+    redde vicus_latus_focatum(x->v)
+        == vicus_latus(vicus_activa(x->v), VICUS_DEXTRUM);
+}
+
+/* comites P5a: Cmd+F = aditus "quaestio"; Esc in prompta advocata
+ * aditum revocat (frons prior, focus unde venit) */
+interior vacuum
+_sectio_aditus (
+    CredoContextus* c)
+{
+        Mundus* x;
+    VicusLatus* l;
+     character  prior[CXXVIII];
+           i32  n;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x && x->v);
+    l = vicus_latus(vicus_activa(x->v), VICUS_DEXTRUM);
+    CREDO_NECESSE(l && l->id.mensura < (i32)magnitudo(prior));
+    sprintf(prior, "%.*s", (int)l->id.mensura,
+        (constans character*)l->id.datum);
+    n = (i32)xar_numerus(vicus_activa(x->v)->acervus);
+
+    CREDO_GRADUS("scriba (liber communis): quaestio libri");
+    CREDO_VERUM(vicus_focum_ponere(x->v, VICUS_SINISTRUM));
+    clavis(x, 'f', (i32)MOD_SUPER);
+    CREDO_VERUM(frontis_campus_est(x, "indagatio", "genus", "liber"));
+    CREDO_VERUM(frontis_campus_est(x, "indagatio", "prompta",
+        "quaestio"));
+    CREDO_VERUM(focus_dexter(x));
+
+    CREDO_GRADUS("Esc: Cmd+F revocatur (frons prior, focus sinister)");
+    clavis(x, (character)XXVII, ZEPHYRUM);
+    (vacuum)vicus_pulsare(x->v);
+    l = vicus_latus(vicus_activa(x->v), VICUS_DEXTRUM);
+    CREDO_VERUM(l && chorda_aequalis_literis(l->id, prior));
+    CREDO_VERUM(focus_sinister(x));
+    CREDO_AEQUALIS_I32((i32)xar_numerus(vicus_activa(x->v)->acervus),
+        n + I);
+
+    CREDO_GRADUS("scriba iterum (indagatio in acervo): focus dexter");
+    clavis(x, 'f', (i32)MOD_SUPER);
+    CREDO_VERUM(frontis_campus_est(x, "indagatio", "genus", "liber"));
+    CREDO_VERUM(focus_dexter(x));
+
+    CREDO_GRADUS("Enter: quaestio manet (Cmd+F non revocatur)");
+    (vacuum)manus_ludus_scribere(x->m, "rhubarb");
+    clavis(x, (character)XIII, ZEPHYRUM);
+    (vacuum)vicus_pulsare(x->v);
+    CREDO_VERUM(frontis_campus_est(x, "indagatio", "q", "rhubarb"));
+    CREDO_VERUM(focus_dexter(x));
+
+    CREDO_GRADUS("indagatio ipsa: prompta sua, Esc eam solum claudit");
+    clavis(x, 'f', (i32)MOD_SUPER);
+    CREDO_VERUM(frontis_campus_est(x, "indagatio", "prompta",
+        "quaestio"));
+    CREDO_VERUM(frontis_campus_est(x, "indagatio", "genus", "liber"));
+    clavis(x, (character)XXVII, ZEPHYRUM);
+    (vacuum)vicus_pulsare(x->v);
+    CREDO_VERUM(frontis_campus_est(x, "indagatio", "q", "rhubarb"));
+    CREDO_VERUM(focus_dexter(x));
+
+    CREDO_GRADUS("calendarium: res agendae, Esc reddit calendarium");
+    ostendere(x, "calendarium", "calendarium/dies");
+    CREDO_VERUM(vicus_focum_ponere(x->v, VICUS_DEXTRUM));
+    dispensator_recomponere(x->app.d);
+    clavis(x, 'f', (i32)MOD_SUPER);
+    CREDO_VERUM(frontis_campus_est(x, "indagatio", "genus", "res"));
+    CREDO_VERUM(frontis_campus_est(x, "indagatio", "prompta",
+        "quaestio"));
+    clavis(x, (character)XXVII, ZEPHYRUM);
+    (vacuum)vicus_pulsare(x->v);
+    CREDO_VERUM(frons_generis_est(x, "calendarium"));
+    CREDO_VERUM(focus_dexter(x));
+
+    CREDO_GRADUS("ictus muris aditum finit");
+    clavis(x, 'f', (i32)MOD_SUPER);
+    CREDO_VERUM(frontis_campus_est(x, "indagatio", "prompta",
+        "quaestio"));
+    CREDO_VERUM(vicus_activa(x->v)->aditus_gradus != ZEPHYRUM);
+    (vacuum)manus_ludus_premere_ad(x->m, CDXL, CCCXC);
+    (vacuum)vicus_pulsare(x->v);
+    CREDO_VERUM(vicus_activa(x->v)->aditus_gradus == ZEPHYRUM);
+    clavis(x, (character)XXVII, ZEPHYRUM);
+
+    CREDO_GRADUS("nomenclator: quaestio sua");
+    ostendere(x, "nomenclator", "nomenclator/");
+    CREDO_VERUM(vicus_focum_ponere(x->v, VICUS_DEXTRUM));
+    dispensator_recomponere(x->app.d);
+    n = (i32)xar_numerus(vicus_activa(x->v)->acervus);
+    clavis(x, 'f', (i32)MOD_SUPER);
+    CREDO_VERUM(frontis_campus_est(x, "nomenclator", "prompta",
+        "quaestio"));
+    CREDO_AEQUALIS_I32((i32)xar_numerus(vicus_activa(x->v)->acervus),
+        n);
+    clavis(x, (character)XXVII, ZEPHYRUM);
+    CREDO_VERUM(frons_generis_est(x, "nomenclator"));
+
+    CREDO_GRADUS("sancti: index cum quaestione, Esc reddit sanctum");
+    ostendere(x, "sancti", "sancti/sanctus/thomas-aquinas");
+    CREDO_VERUM(vicus_focum_ponere(x->v, VICUS_DEXTRUM));
+    dispensator_recomponere(x->app.d);
+    clavis(x, 'f', (i32)MOD_SUPER);
+    CREDO_VERUM(frontis_campus_est(x, "sancti", "visus", "index"));
+    CREDO_VERUM(frontis_campus_est(x, "sancti", "prompta", "quaestio"));
+    clavis(x, (character)XXVII, ZEPHYRUM);
+    (vacuum)vicus_pulsare(x->v);
+    CREDO_VERUM(frontis_campus_est(x, "sancti", "visus", "sanctus"));
+    CREDO_VERUM(frontis_campus_est(x, "sancti", "sanctus_apertus",
+        "thomas-aquinas"));
+
+    CREDO_GRADUS("terminale: nihil");
+    CREDO_VERUM(vicus_activam_ponere(x->v, "1"));
+    CREDO_VERUM(vicus_focum_ponere(x->v, VICUS_DEXTRUM));
+    dispensator_recomponere(x->app.d);
+    n = (i32)xar_numerus(vicus_activa(x->v)->acervus);
+    clavis(x, 'f', (i32)MOD_SUPER);
+    CREDO_AEQUALIS_I32((i32)xar_numerus(vicus_activa(x->v)->acervus),
+        n);
+    CREDO_VERUM(frons_generis_est(x, "terminale"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "calendarium", _sectio_calendarium, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
@@ -459,6 +626,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "historia_comitis", _sectio_historia_comitis, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
+    { "aditus", _sectio_aditus, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -464,8 +464,8 @@ inventa (
     redde n;
 }
 
-/* Cmd+Shift+F: latus unum, focus dexter, prompta aperta; Cmd+F
- * nihil */
+/* Cmd+Shift+F: latus unum, focus dexter, prompta aperta; Cmd+Alt+F
+ * nihil (modificantes exacti; Cmd+F = aditus, probatio_vicus_comites) */
 interior vacuum
 _sectio_brevitas (
     CredoContextus* c)
@@ -476,8 +476,8 @@ _sectio_brevitas (
     CREDO_NECESSE(x && x->v);
     CREDO_AEQUALIS_I32(numerus_acervi(x), I);
 
-    CREDO_GRADUS("Cmd+F sine Shift: nihil");
-    (vacuum)manus_ludus_clavem(x->m, 'f', MOD_SUPER);
+    CREDO_GRADUS("Cmd+Alt+F: nihil");
+    (vacuum)manus_ludus_clavem(x->m, 'f', MOD_SUPER | MOD_ALT);
     pulsare(x);
     CREDO_AEQUALIS_I32(numerus_acervi(x), I);
     CREDO_VERUM(frons_est(x, "3_dextrum_scriba"));
@@ -759,8 +759,9 @@ _sectio_communia (
     CREDO_AEQUALIS_I32(inventa(x, "Zeno"), I);
 }
 
-/* D5 linea temporis (Franus): terminale -> Cmd+Shift+F -> Ctrl+O
- * terminale; quaestio -> Enter (dies) -> Ctrl+O quaestio cum q */
+/* D5 linea temporis (Franus): terminale -> Cmd+Shift+F -> Esc
+ * terminale (comites P5a: Esc aditum revocat), Ctrl+I quaestio;
+ * quaestio -> Enter (dies) -> Ctrl+O quaestio cum q */
 interior vacuum
 _sectio_historia (
     CredoContextus* c)
@@ -770,20 +771,22 @@ _sectio_historia (
     x = (Mundus*)c->datum;
     CREDO_NECESSE(x && x->v);
 
-    CREDO_GRADUS("terminale, Cmd+Shift+F, Ctrl+O: terminale");
+    CREDO_GRADUS("terminale, Cmd+Shift+F, Esc: terminale");
     /* tabula 1 = scriba | terminale */
     CREDO_VERUM(vicus_activam_ponere(x->v, "1"));
     CREDO_VERUM(vicus_focum_ponere(x->v, VICUS_DEXTRUM));
     pulsare(x);
     advocare(x);
     CREDO_VERUM(frons_est(x, "1_dextrum_indagatio"));
-    /* Esc: prompta clauditur (latus manet) */
+    /* Esc: prompta clauditur et aditus revocatur (terminale redit) */
     clavis(x, (character)XXVII);
-    CREDO_VERUM(frons_est(x, "1_dextrum_indagatio"));
-    (vacuum)manus_ludus_clavem(x->m, 'o', MOD_IMPERIUM);
     pulsare(x);
     CREDO_VERUM(frons_est(x, "1_dextrum_terminale"));
     CREDO_VERUM(focus_dexter(x));
+    /* historia integra: locus quaestionis post cursorem manet (Ctrl+I
+     * eum redderet; terminale ipsum Ctrl+I = Tab consumit) */
+    CREDO_VERUM((i32)vicus_activa(x->v)->historia_cursor[VICUS_DEXTRUM]
+        + I < xar_numerus(vicus_activa(x->v)->historia[VICUS_DEXTRUM]));
 
     CREDO_GRADUS("quaestio, Enter in die, Ctrl+O: quaestio cum q");
     CREDO_VERUM(vicus_activam_ponere(x->v, "3"));

@@ -802,3 +802,50 @@ TabulaDispersa keys cannot be empty - keys are "#" + scope (plant
 red). P2's test that stepped back ACROSS a book switch now checks the
 opposite. Plants red: scope ignored, scope change makes an entry,
 stored history not restored, empty key, scriba without a scope.
+
+## 2026-10-22 - comites P5a: Cmd+F = aditus "quaestio"
+
+Cmd+F (exact: no Shift/Ctrl/Alt) is a host key like Cmd+T: claimed in
+`destinare`, handled in `radicem_tractare`, ALWAYS swallowed (a pane
+with no `<aditus>` - the terminal - gets nothing, by Fran's decision).
+`vicus_aditum_sequi` looks up the FOCUSED pane's manifest iter: a
+`semita` becomes a mutare petition (genus = URI up to '/' or '?') with
+`advocare` set; no `semita` calls that pane's `facies.advocatum` at
+once (focus stays).
+
+The mutare-existing branch of `petitionem_applicare` used to keep focus
+and never advocated (D5 only advocated on the open/new path). With
+`p->advocare` it now sets focus right and calls the front's advocatum
+after `motum_aptare`. The plant that proved this needed a NEW test step
+(Cmd+F from the left scriba while a search pane is already in the
+stack) - every earlier step focused right first, so the focus plant
+stayed green.
+
+The D5 S3b test "Cmd+F without Shift: nothing" moved to Cmd+Alt+F
+(still proves the Cmd+Shift+F brevitas needs exact modifiers).
+
+## 2026-10-22 - P5a: Esc cancels a summoned search (one key, not Esc + Ctrl+O)
+
+Fran: after Cmd+F from scriba, getting the old right pane back took Esc
+(close prompt) then Ctrl+O. Now an advocating petition (vicus_aditum_sequi
+with a semita, and vicus_advocare = Cmd+Shift+F / `$search`) records on the
+tab: focus side + right history cursor BEFORE (`aditum_notare`). When it is
+applied and the summoned pane's prompt is open, the tab goes PENDENS
+(`aditum_pendere`, both advocatum sites in petitionem_applicare).
+
+Detection lives in `destinare` (`aditum_observare`): it sees every event
+before the panes. Esc with the summoned pane focused and its prompt open ->
+REVOCANDUS (the pane still gets the Esc and closes its own prompt - no pane
+code changed). Mouse down -> NULLUS. Next pulse, before petitions:
+`aditum_revocare` queues a right-history petition back to the saved cursor
+(only if history moved past it), state REDDENDUS; after petitions
+`aditum_finire` restores focus to the saved side. PENDENS also ends when
+front/focus changes or the prompt closes any other way (Enter).
+
+Host reads the prompt through membrum__prompta's `prompta_aperta` on the
+pane's ramus - vicus now includes membrum__prompta.h (the `prompta` field
+convention is shared by indagatio, sancti, nomenclator).
+
+Test trap: the D5 history test pressed Ctrl+I on a focused TERMINAL to
+check history - the terminal eats Ctrl+I (Tab). Checked the forward entry
+via historia_cursor instead.

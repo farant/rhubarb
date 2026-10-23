@@ -94,3 +94,24 @@ manifest approved by Fran before code.
   cached resolver comes with vicus in R3. ludus_tessera's hand list got
   `semita` (vicus reaches it through this pane).
 - Plants 6 red.
+
+## 2026-10-22 - `origo` removed: Esc in a saint always goes to the list
+
+Fran hit it: `$saints` in a tab showed an old saint, and Esc dropped to
+contacts. Cause: a calendar click had opened a saint (`origo=argumentum`,
+"Esc not consumed, vicus closes the pane"); Esc closed it; `$saints` made a
+new pane whose id_novum is the SAME free id (`3_dextrum_sancti`) and so read
+the dead pane's insula ramus - saint view AND the transient `origo`
+(transient = not saved to disk, but still in memory under that id).
+
+Decision (semitae-spec VI-f, ledger …PDYNHDY3): reopened panes inherit
+regular state per tab (intended); modal state lives on the vicus host only.
+`origo` was modal state in the pane, and its Esc contradicted the "Back to
+list" hint, so it is gone: manifest field, fac_ad_indicem branch, and the
+argumentum_ponere writes (only `electus = apertus` remains). Previous widget
+= Ctrl+O (two steps from a saint opened then Esc'd to the list: list ->
+saint -> calendar, since visus is `historia="impelle"`).
+
+Test traps in probatio_vicus_kalendarium: Esc after a pulse needs
+dispensator_recomponere first or it reaches the stale calendar component;
+day keys need a pulse before the saint opens, else history holds the old day.

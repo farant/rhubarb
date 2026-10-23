@@ -534,8 +534,9 @@ _probare_sanctos (
     CREDO_VERUM(dies_est(kalendarium_dies_electus(k), MMXXVI, I, XXV));
     CREDO_NECESSE(manus_ludus_premere(m, "#kalendarium"));
     CREDO_FALSUM(manus_ludus_invenire(m, "#n0") != NIHIL);
-    /* XXVIII: thomas */
+    /* XXVIII: thomas (pulsus: historia diem XXVIII notat) */
     CREDO_VERUM(manus_ludus_scribere(m, "lll"));
+    (vacuum)vicus_pulsare(v);
     dispensator_recomponere(x->app.d);
     CREDO_VERUM(manus_ludus_invenire(m, "#n0") != NIHIL);
     CREDO_FALSUM(manus_ludus_invenire(m, "#n1") != NIHIL);
@@ -556,11 +557,28 @@ _probare_sanctos (
         r = ((SanctorumMontatio*)l->montatio)->ramus;
         a = insula_ramus_attributum(&r, "sanctus_apertus");
         CREDO_VERUM(a && chorda_aequalis_literis(*a, "thomas-aquinas"));
-        a = insula_ramus_attributum(&r, "origo");
-        CREDO_VERUM(a && chorda_aequalis_literis(*a, "argumentum"));
     }
-    /* Esc: latus sanctorum tollitur, calendarium (XXVIII) redit */
+    /* Esc: index sanctorum (Franus 2026-10-22 - Esc non est "latus
+     * prius"); Ctrl+O bis: sanctus, deinde calendarium (XXVIII) */
+    dispensator_recomponere(x->app.d);
     CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(x->app.d);
+    {
+          VicusLatus* l;
+         InsulaRamus  r;
+              chorda* a;
+
+        l = vicus_latus(vicus_activa(v), VICUS_DEXTRUM);
+        CREDO_NECESSE(l && l->montata);
+        CREDO_CHORDA_AEQUALIS_LITERIS(l->genus, "sancti");
+        r = ((SanctorumMontatio*)l->montatio)->ramus;
+        a = insula_ramus_attributum(&r, "visus");
+        CREDO_VERUM(!a || chorda_aequalis_literis(*a, "index"));
+    }
+    CREDO_VERUM(manus_ludus_clavem(m, 'o', (i32)MOD_IMPERIUM));
+    (vacuum)vicus_pulsare(v);
+    CREDO_VERUM(manus_ludus_clavem(m, 'o', (i32)MOD_IMPERIUM));
     (vacuum)vicus_pulsare(v);
     dispensator_recomponere(x->app.d);
     k = kalendarium_frontale(v);

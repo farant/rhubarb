@@ -135,8 +135,9 @@ scriba book in the volume (pages, own viewed page)
 | **P2** | Companion books: space per locus, per-book viewed page, book in scriba's route (left history). DONE 2026-10-22: scriba field `liber` (status, impelle; `scriba/2?liber=...`), `scriba_librum_praefixi_ponere`, host book lookup, per-book page `<prefix>/visus`. |
 | **P3** | Cmd+T, follow mode, bar - Fran's look. Implemented 2026-10-22: Cmd+T host key, facies.comitem_ponere / comes_currens, follow without extra state (left book prefix "comes/..."), bar = scriba `vectis` from transient `liber_titulus`. |
 | **P4** | Terminals: per pane, per tmux window when attached. Implemented 2026-10-22: `terminale/tmux/<session>/<window index>` (title "<session> / <window name>"), else `terminale/<pane id>` ("Terminal"); tmux answer cached 1 s, refreshed at once on Cmd+T and when focus moves left (`facies.locum_renovare`). |
-| **P5** | View relations slice: `quaestio` (Cmd+F) - the S4a work, if still wanted after P1 settles where declarations live. |
-| later | Companions searchable; drawing mode (§VII); saints as a search kind (D5 S4b). |
+| **P5a** | View relations slice: `quaestio` (Cmd+F). Implemented 2026-10-22: manifest `<aditus><iter nomen="quaestio" semita="URI" advocare="verum"/></aditus>` (organum.canon; `organum_iter`), host key Cmd+F -> `vicus_aditum_sequi(v, "quaestio")` on the FOCUSED pane. With `semita`: that view opens at the URI (mutare, focus right) and is advocated; without: the pane's own `facies.advocatum`. Answers: calendar -> `indagatio?genus=res`, scriba -> `indagatio?genus=liber`, saints -> `sancti/index` + its prompt, contacts and search -> their own prompt; terminal declares nothing (Cmd+F swallowed). Esc on the summoned prompt (still open, nothing committed, no click) cancels the whole summon: right history back to before, focus back to its side (Fran 2026-10-22; also Cmd+Shift+F). |
+| **P5b** | Companions searchable (Fran 2026-10-22): companion books as a search kind (title = companion label + page); Enter opens the companion at that page on the left AND its paired view on the right (route saved when the companion was shown); book filter on the search pane so scriba's Cmd+F searches only its own notebook. Text first. |
+| later | Drawing mode (§VII). (Saints as a search kind: done in D5 S4.) |
 
 ## VII. Future consumer: drawing mode (Fran 2026-10-22)
 

@@ -1112,6 +1112,59 @@ _probare_cognomina (
         c->piscina), c->piscina));
 }
 
+/* comites P5a: aditus (relatio visus) - iter 'quaestio' legibile
+ * (semita, advocare; semita absens = latus ipsum); nomen ignotum et
+ * iter iteratum recusantur; nullus declaratus = NIHIL */
+interior vacuum
+_probare_aditus (
+    CredoContextus* c)
+{
+     InternamentumChorda* in;
+                     Xar* vitia;
+                 Organum* o;
+    constans OrganumIter* it;
+
+    in = internamentum_creare(c->piscina);
+    o  = legere_literas(c->piscina, in,
+        "<organum genus=\"probatio\" versio=\"1\"><status/>"
+        "<aditus><iter nomen=\"quaestio\""
+        " semita=\"indagatio?genus=res\" advocare=\"verum\"/>"
+        "</aditus></organum>", &vitia);
+    vitia_imprimere(vitia);
+    CREDO_NECESSE_NON_NIHIL(o);
+    it = organum_iter(o, "quaestio");
+    CREDO_NECESSE_NON_NIHIL(it);
+    CREDO_CHORDA_AEQUALIS_LITERIS(it->titulus, "quaestio");
+    CREDO_CHORDA_AEQUALIS_LITERIS(it->semita, "indagatio?genus=res");
+    CREDO_VERUM(it->advocare);
+    CREDO_NIHIL(organum_iter(o, "hodie"));
+    /* semita absens: latus ipsum; advocare absens: FALSUM */
+    o = legere_literas(c->piscina, in,
+        "<organum genus=\"probatio\" versio=\"1\"><status/>"
+        "<aditus><iter nomen=\"quaestio\"/></aditus></organum>",
+        &vitia);
+    CREDO_NECESSE_NON_NIHIL(o);
+    it = organum_iter(o, "quaestio");
+    CREDO_NECESSE_NON_NIHIL(it);
+    CREDO_AEQUALIS_I32(it->semita.mensura, ZEPHYRUM);
+    CREDO_FALSUM(it->advocare);
+    /* sine aditu: NIHIL */
+    o = legere_literas(c->piscina, in,
+        "<organum genus=\"probatio\" versio=\"1\"><status/>"
+        "</organum>", &vitia);
+    CREDO_NECESSE_NON_NIHIL(o);
+    CREDO_NIHIL(organum_iter(o, "quaestio"));
+    /* canon: nomen ignotum, iter iteratum */
+    CREDO_NIHIL(legere_literas(c->piscina, in,
+        "<organum genus=\"probatio\" versio=\"1\"><status/>"
+        "<aditus><iter nomen=\"ignotum\"/></aditus></organum>",
+        &vitia));
+    CREDO_NIHIL(legere_literas(c->piscina, in,
+        "<organum genus=\"probatio\" versio=\"1\"><status/>"
+        "<aditus><iter nomen=\"quaestio\"/><iter nomen=\"quaestio\"/>"
+        "</aditus></organum>", &vitia));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "pictor",            _probare_pictorem,
       NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1136,6 +1189,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "cognomina",         _probare_cognomina,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "montationes",       _probare_montationes,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "aditus",            _probare_aditus,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

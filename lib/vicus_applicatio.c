@@ -2241,6 +2241,8 @@ nomenclatorem_describere (
     /* comites P1: titulus loci = nomen personae */
     f->locus_titulus      = nomenclator_locus_titulus;
     f->locus_titulus_ctx  = m;
+    f->advocatum          = nomenclator_quaestionem_aperire;
+    f->advocatum_ctx      = m;
 }
 
 /* P6: fons dierum calendarii - natales ex documento personarum
@@ -3318,8 +3320,7 @@ sanctos_legere (
 }
 
 /* introitum sancti aperire: latus sanctorum in frontem acervi cum
- * sancto (vicus_acervo_mutare; origo argumentum - Esc calendarium
- * reddit) */
+ * sancto (vicus_acervo_mutare; Esc ad indicem, Ctrl+O calendarium) */
 interior b32
 sanctum_aperire (
                      vacuum* ctx,
@@ -3409,6 +3410,8 @@ sanctos_describere (
     /* comites P1: titulus loci = sanctus apertus */
     f->locus_titulus      = sancti_visus_locus_titulus;
     f->locus_titulus_ctx  = m;
+    f->advocatum          = sancti_visus_quaestionem_aperire;
+    f->advocatum_ctx      = m;
 }
 
 

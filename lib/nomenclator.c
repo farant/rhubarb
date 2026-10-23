@@ -3053,6 +3053,18 @@ nomenclator_argumentum_ponere (
     redde VERUM;
 }
 
+b32
+nomenclator_quaestionem_aperire (
+    vacuum* ctx)
+{
+    ContextusPraecepti cp;
+
+    memset(&cp, ZEPHYRUM, magnitudo(cp));
+    cp.m = (NomenclatorMontatio*)ctx;
+    cp.p = cp.m ? cp.m->piscina : NIHIL;
+    redde cp.m && fac_quaestionem(&cp);
+}
+
 chorda
 nomenclator_locus_titulus (
      vacuum* ctx,

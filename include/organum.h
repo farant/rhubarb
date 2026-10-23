@@ -122,6 +122,15 @@ nomen structura {
     chorda semita;      /* URI, "{}" si typatum */
 } OrganumCognomen;
 
+/* comites P5 (semitae-spec VI-b): aditus visus - verbum universale
+ * ("quaestio") et responsio: semita (URI; vacua = latus ipsum) et
+ * advocare (latus post semitam advocatur). NIHIL si non declaratur. */
+nomen structura {
+    chorda titulus;
+    chorda semita;
+       b32 advocare;
+} OrganumIter;
+
 nomen structura Organum Organum;   /* opacum */
 
 
@@ -220,6 +229,13 @@ constans OrganumCognomen*
 organum_cognomen_index (
      constans Organum* organum,
                   i32  index);
+
+/* comites P5: iter aditus nominatum ("quaestio"); NIHIL si non
+ * declaratur */
+constans OrganumIter*
+organum_iter (
+      constans Organum* o,
+    constans character* titulus);
 
 /* valor typo solo congruit? (cognomen typatum; electio non) */
 b32

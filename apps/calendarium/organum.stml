@@ -89,6 +89,11 @@
     <cognomen typus="dies" semita="calendarium/dies/{}"/>
   </cognomina>
 
+  <!-- comites P5: Cmd+F = quaestio intra visum -->
+  <aditus>
+    <iter nomen="quaestio" semita="indagatio?genus=res" advocare="verum"/>
+  </aditus>
+
   <basis genus="organum_commune"/>
   <montationes>
     <!-- D5 S3c: liber notarum (scriba nidificata, id "<id>_notae");

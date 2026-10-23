@@ -84,6 +84,13 @@ sancti_visus_argumentum_ponere (
        SanctorumMontatio* m,
       constans character* argumentum);
 
+/* comites P5 (facies.advocatum; ctx = SanctorumMontatio*): prompta
+ * "quaestio" (quaestione currenti praeimpleta), ordo congruentiae -
+ * ut '/' */
+b32
+sancti_visus_quaestionem_aperire (
+    vacuum* ctx);
+
 /* comites P1 (facies.locus_titulus; ctx = SanctorumMontatio*):
  * titulus sancti aperti, index "Saints" */
 chorda

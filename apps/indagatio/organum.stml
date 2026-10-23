@@ -46,6 +46,11 @@
     <cognomen typus="textus" semita="indagatio?q={}"/>
   </cognomina>
 
+  <!-- comites P5: Cmd+F = quaestio intra visum -->
+  <aditus>
+    <iter nomen="quaestio" advocare="verum"/>
+  </aditus>
+
   <basis genus="organum_commune"/>
   <montationes/>
 </organum>

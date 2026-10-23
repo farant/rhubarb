@@ -105,6 +105,12 @@ nomenclator_argumentum_ponere (
      NomenclatorMontatio* m,
       constans character* argumentum);
 
+/* comites P5 (facies.advocatum; ctx = NomenclatorMontatio*): prompta
+ * "quaestio" (quaestione commissa praeimpleta) - ut praeceptum eius */
+b32
+nomenclator_quaestionem_aperire (
+    vacuum* ctx);
+
 /* comites P1 (facies.locus_titulus; ctx = NomenclatorMontatio*):
  * nomen personae apertae ("Anna Rossi"), index "Contacts" */
 chorda

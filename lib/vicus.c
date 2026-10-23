@@ -10,6 +10,7 @@
 #include "mandatum.h"
 #include "componens.h"
 #include "organum_montatio.h"
+#include "membrum__prompta.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -42,7 +43,16 @@ nomen structura {
        i32 locus;       /* index loci (si historia) */
        i32 latus;       /* historia lateris (VICUS_SINISTRUM aut
                          * VICUS_DEXTRUM) */
+       b32 aditus;      /* comites P5a: post advocatum aditus pendet
+                         * (Esc in prompta revocat) */
 } PetitioAcervi;
+
+/* comites P5a: gradus aditus tabulae (VicusTabula.aditus_gradus) */
+#define ADITUS_NULLUS      ZEPHYRUM
+#define ADITUS_PENDENS     I     /* prompta advocata aperta */
+#define ADITUS_REVOCANDUS  II    /* Esc eam clausit: pulsus revocat */
+#define ADITUS_REDDENDUS   III   /* historia petita: focus post
+                                  * petitiones redit */
 
 /* D5: brevitas hospitis (vicus_brevitatem_addere): Cmd + runa +
  * modificantes (praeter Cmd, exacte) -> vicus_advocare(genus) */
@@ -590,6 +600,20 @@ est_imperium_comitis (
         && ev->datum.clavis.runa == 't';
 }
 
+/* comites P5: Cmd+F (sine Shift, Ctrl, Alt) = aditus "quaestio" */
+interior b32
+est_imperium_quaestionis (
+    constans Eventus* ev)
+{
+    redde ev
+        && (   ev->genus == EVENTUS_CLAVIS_DEPRESSUS
+            || ev->genus == EVENTUS_CLAVIS_LIBERATUS)
+        && (ev->datum.clavis.modificantes & MOD_SUPER)
+        && !(ev->datum.clavis.modificantes
+             & (MOD_SHIFT | MOD_IMPERIUM | MOD_ALT))
+        && ev->datum.clavis.runa == 'f';
+}
+
 /* D5: brevitas hospitis eventus clavis (depressi aut liberati); NIHIL
  * si nulla */
 interior constans Brevitas*
@@ -639,6 +663,56 @@ spatium_strati (
                == ZEPHYRUM;
 }
 
+/* comites P5a: prompta lateris aperta? (membrum__prompta in ramo eius;
+ * nomina in piscina data) */
+interior b32
+prompta_lateris_aperta (
+                  Vicus* v,
+    constans VicusLatus* l,
+                Piscina* piscina)
+{
+    InsulaRamus r;
+
+    r = insula_ramus(v->repo, chorda_ut_cstr(l->genus, piscina),
+        chorda_ut_cstr(l->id, piscina));
+    redde prompta_aperta(&r, NIHIL);
+}
+
+/* comites P5a: destinare eventus omnes videt ante latera. Esc in
+ * prompta aperta lateris advocati (focatum, dextrum): aditus
+ * revocandus (latus tamen Esc accipit et promptam claudit). Ictus
+ * muris aditum finit. */
+interior vacuum
+aditum_observare (
+               Vicus* v,
+    constans Eventus* ev,
+             Piscina* piscina)
+{
+    VicusTabula* t;
+     VicusLatus* l;
+
+    t = (v && ev) ? vicus_activa(v) : NIHIL;
+    si (!t || t->aditus_gradus != ADITUS_PENDENS)
+    {
+        redde;
+    }
+    si (ev->genus == EVENTUS_MUS_DEPRESSUS)
+    {
+        t->aditus_gradus = ADITUS_NULLUS;
+        redde;
+    }
+    si (   ev->genus               != EVENTUS_CLAVIS_DEPRESSUS
+        || ev->datum.clavis.clavis != CLAVIS_EFFUGIUM)
+    {
+        redde;
+    }
+    l = vicus_latus_focatum(v);
+    t->aditus_gradus = (   t->focus == VICUS_DEXTRUM && l && l->montata
+                        && chorda_aequalis(l->id, t->aditus_frons)
+                        && prompta_lateris_aperta(v, l, piscina))
+                     ? ADITUS_REVOCANDUS : ADITUS_NULLUS;
+}
+
 /* DestinatioStrategia hospitis (ctx = Vicus*): Cmd+numerus, Cmd+] / [
  * et brevitates (D5) ad radicem; ictus in
  * latus NON focatum (spatium destinati non sub Motus.spatium - S8c:
@@ -658,8 +732,10 @@ destinare (
       Componens* c;
          chorda  sp;
 
+    aditum_observare((Vicus*)ctx, ev, piscina);
     si (arbor && (   est_imperium_tabulae(ev) || est_imperium_cycli(ev)
                   || est_imperium_comitis(ev)
+                  || est_imperium_quaestionis(ev)
                   || brevitatem_invenire((constans Vicus*)ctx, ev)))
     {
         redde destinatio_ex_componente(arbor, piscina);
@@ -1275,6 +1351,127 @@ semitam_servare (
     redde !prima;
 }
 
+/* petitio historiae: locus 'meta' lateris (cursor statim movetur) */
+interior b32
+historiae_petitionem_addere (
+            Vicus* v,
+      VicusTabula* t,
+              i32  latus,
+              s32  meta)
+{
+    PetitioAcervi* p;
+
+    p = (PetitioAcervi*)xar_addere(v->petitiones);
+    si (!p)
+    {
+        redde FALSUM;
+    }
+    memset(p, ZEPHYRUM, magnitudo(PetitioAcervi));
+    p->tabula                  = t->id;
+    p->genus                   = chorda_nulla_vici();
+    p->argumentum              = chorda_nulla_vici();
+    p->historia                = VERUM;
+    p->locus                   = (i32)meta;
+    p->latus                   = latus;
+    t->historia_cursor[latus]  = (i32)meta;
+    redde VERUM;
+}
+
+/* comites P5a: aditus incipit (petitio advocans) - focus et cursor
+ * historiae dextrae ante eam (revocatio eo redit) */
+interior vacuum
+aditum_notare (
+            Vicus* v,
+    PetitioAcervi* p)
+{
+    VicusTabula* t;
+
+    t = vicus_activa(v);
+    si (!t)
+    {
+        redde;
+    }
+    t->aditus_gradus  = ADITUS_NULLUS;
+    t->aditus_latus   = t->focus;
+    t->aditus_cursor  = (   t->historia[VICUS_DEXTRUM]
+                         && xar_numerus(t->historia[VICUS_DEXTRUM])
+                            > ZEPHYRUM)
+                      ? (s32)t->historia_cursor[VICUS_DEXTRUM] : -I;
+    p->aditus = VERUM;
+}
+
+/* comites P5a: petitio advocans applicata - latus advocatum (frons)
+ * cum prompta aperta: aditus pendet */
+interior vacuum
+aditum_pendere (
+                     Vicus* v,
+               VicusTabula* t,
+       constans VicusLatus* l,
+    constans PetitioAcervi* p)
+{
+    si (p->aditus && l && prompta_lateris_aperta(v, l, v->piscina))
+    {
+        t->aditus_gradus  = ADITUS_PENDENS;
+        t->aditus_frons   = l->id;
+    }
+}
+
+/* comites P5a (vicus_pulsare): ante petitiones - aditus revocandus:
+ * historia dextra ad cursorem priorem (si post eum est); post
+ * petitiones - focus ad latus prius; aditus pendens finitur si frons,
+ * focus aut prompta mutata est */
+interior vacuum
+aditum_revocare (
+    Vicus* v)
+{
+    VicusTabula* t;
+
+    t = vicus_activa(v);
+    si (!t || t->aditus_gradus != ADITUS_REVOCANDUS)
+    {
+        redde;
+    }
+    t->aditus_gradus = ADITUS_REDDENDUS;
+    si (   v->petitiones && t->aditus_cursor >= ZEPHYRUM
+        && t->historia[VICUS_DEXTRUM]
+        && t->aditus_cursor
+           < (s32)xar_numerus(t->historia[VICUS_DEXTRUM])
+        && (s32)t->historia_cursor[VICUS_DEXTRUM] > t->aditus_cursor)
+    {
+        (vacuum)historiae_petitionem_addere(v, t, VICUS_DEXTRUM,
+            t->aditus_cursor);
+    }
+}
+
+interior vacuum
+aditum_finire (
+    Vicus* v)
+{
+    VicusTabula* t;
+     VicusLatus* l;
+
+    t = vicus_activa(v);
+    si (!t)
+    {
+        redde;
+    }
+    si (t->aditus_gradus == ADITUS_REDDENDUS)
+    {
+        t->aditus_gradus = ADITUS_NULLUS;
+        (vacuum)vicus_focum_ponere(v, t->aditus_latus);
+        redde;
+    }
+    l = frons_acervi(t);
+    si (   t->aditus_gradus == ADITUS_PENDENS
+        && (   t->focus != VICUS_DEXTRUM || !l
+            || !chorda_aequalis(l->id, t->aditus_frons)
+            || !prompta_lateris_aperta(v, l, v->scheda_semitarum
+                   ? v->scheda_semitarum : v->piscina)))
+    {
+        t->aditus_gradus = ADITUS_NULLUS;
+    }
+}
+
 /* Ctrl+O (-I) / Ctrl+I (+I): locus historiae lateris FOCATI tabulae
  * activae (D5) - petitio (vicus_pulsare: latus in frontem aut iterum
  * apertum, semita plena applicata, focus ad latus eius); cursor
@@ -1286,7 +1483,6 @@ historiam_gradi (
       s32  gradus)
 {
       VicusTabula* t;
-    PetitioAcervi* p;
               s32  meta;
               i32  latus;
 
@@ -1307,19 +1503,7 @@ historiam_gradi (
     {
         redde VERUM;
     }
-    p = (PetitioAcervi*)xar_addere(v->petitiones);
-    si (!p)
-    {
-        redde VERUM;
-    }
-    memset(p, ZEPHYRUM, magnitudo(PetitioAcervi));
-    p->tabula                  = t->id;
-    p->genus                   = chorda_nulla_vici();
-    p->argumentum              = chorda_nulla_vici();
-    p->historia                = VERUM;
-    p->locus                   = (i32)meta;
-    p->latus                   = latus;
-    t->historia_cursor[latus]  = (i32)meta;
+    (vacuum)historiae_petitionem_addere(v, t, latus, meta);
     redde VERUM;
 }
 
@@ -1461,6 +1645,16 @@ radicem_tractare (
         si (ev->genus == EVENTUS_CLAVIS_DEPRESSUS)
         {
             (vacuum)vicus_comitem_commutare(v);
+        }
+        redde VERUM;
+    }
+    /* comites P5: Cmd+F - aditus "quaestio" lateris focati (nullus:
+     * devoratur, ut terminale) */
+    si (est_imperium_quaestionis(ev))
+    {
+        si (ev->genus == EVENTUS_CLAVIS_DEPRESSUS)
+        {
+            (vacuum)vicus_aditum_sequi(v, "quaestio");
         }
         redde VERUM;
     }
@@ -3064,11 +3258,22 @@ petitionem_applicare (
                     *(VicusLatus*)xar_obtinere(t->acervus, k + I);
             }
             *(VicusLatus*)xar_obtinere(t->acervus, n - I) = frons;
+            /* comites P5: aditus advocans - focus dexter */
+            si (p->advocare)
+            {
+                t->focus = VICUS_DEXTRUM;
+            }
             si (activa)
             {
                 registra_reficere(v);
                 motum_aptare(v);
             }
+            l = frons_acervi(t);
+            si (p->advocare && l && l->montata && l->facies.advocatum)
+            {
+                (vacuum)l->facies.advocatum(l->facies.advocatum_ctx);
+            }
+            aditum_pendere(v, t, l, p);
             redde indicem_scribere(v);
         }
     }
@@ -3149,6 +3354,7 @@ petitionem_applicare (
     {
         (vacuum)l->facies.advocatum(l->facies.advocatum_ctx);
     }
+    aditum_pendere(v, t, l, p);
     redde indicem_scribere(v);
 }
 
@@ -3289,6 +3495,7 @@ petitionem_addere (
     p->mutare    = mutare;
     p->gradus    = ZEPHYRUM;
     p->advocare  = FALSUM;
+    p->aditus    = FALSUM;
     p->historia  = FALSUM;
     p->locus     = ZEPHYRUM;
     redde VERUM;
@@ -3478,6 +3685,59 @@ vicus_advocare (
     p = (PetitioAcervi*)xar_obtinere(v->petitiones,
         xar_numerus(v->petitiones) - I);
     p->advocare = VERUM;
+    aditum_notare(v, p);
+    redde VERUM;
+}
+
+b32
+vicus_aditum_sequi (
+                  Vicus* v,
+     constans character* titulus)
+{
+             VicusTabula* t;
+              VicusLatus* l;
+        constans Organum* o;
+    constans OrganumIter* it;
+           PetitioAcervi* p;
+                  chorda  genus;
+                     i32  i;
+
+    t = v ? vicus_activa(v) : NIHIL;
+    l = t ? vicus_latus(t, t->focus) : NIHIL;
+    o   = (l && l->montata && v->organa)
+        ? v->organa(v->organa_ctx, l->genus) : NIHIL;
+    it  = o ? organum_iter(o, titulus) : NIHIL;
+    si (!it)
+    {
+        redde FALSUM;
+    }
+    /* semita nulla: latus ipsum (focus manet) */
+    si (chorda_vacua(it->semita))
+    {
+        redde it->advocare && l->facies.advocatum
+            && l->facies.advocatum(l->facies.advocatum_ctx);
+    }
+    genus = it->semita;
+    per (i = ZEPHYRUM; i < genus.mensura; i++)
+    {
+        si (genus.datum[i] == '/' || genus.datum[i] == '?')
+        {
+            genus.mensura = i;
+            frange;
+        }
+    }
+    si (!petitionem_addere(v, chorda_ut_cstr(genus, v->piscina),
+            chorda_ut_cstr(it->semita, v->piscina), VERUM))
+    {
+        redde FALSUM;
+    }
+    p = (PetitioAcervi*)xar_obtinere(v->petitiones,
+        xar_numerus(v->petitiones) - I);
+    p->advocare = it->advocare;
+    si (p->advocare)
+    {
+        aditum_notare(v, p);
+    }
     redde VERUM;
 }
 
@@ -3647,6 +3907,8 @@ vicus_pulsare (
             pingendum = VERUM;
         }
     }
+    /* comites P5a: aditus revocandus (Esc in prompta advocata) */
+    aditum_revocare(v);
     /* S3c: aperitiones pendentes extra tractationem eventus */
     per (i = ZEPHYRUM; v->petitiones
                        && i < xar_numerus(v->petitiones); i++)
@@ -3663,6 +3925,7 @@ vicus_pulsare (
     {
         xar_vacare(v->petitiones);
     }
+    aditum_finire(v);
     per (i = ZEPHYRUM; i < xar_numerus(v->tabulae); i++)
     {
         t       = (VicusTabula*)xar_obtinere(v->tabulae, i);

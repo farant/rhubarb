@@ -269,6 +269,28 @@ cycle open a second agenda calendar (found 2026-10-20 before coding).
   a pane opened WITH an argument saves at once (the argument may carry
   transient state: `calendarium/dies/2026-10-19`).
 
+## VI-f. Regular state vs modal state; what Esc means (Fran 2026-10-22)
+
+- **A reopened pane inherits the closed pane's regular state, per
+  tab.** Closing a pane (Esc at its top level, T4d) and reopening its
+  genus in the same tab gives the same pane id and the same insula
+  state - the last saint, the last list mode. Intended.
+- **Modal state is the exception: it lives on the HOST** (the tab or
+  pane record in vicus), never in the pane's insula state, so it is
+  never saved or rehydrated by construction. Today the only modal is
+  the summoned prompt (Cmd+F / Cmd+Shift+F / `$search`, comites P5a):
+  the open prompt IS the visible modal, so "Esc: cancel" is honest;
+  Esc cancels the whole summon (right history back, focus back).
+- **Esc is not a universal back button.** Inside a widget Esc goes UP
+  (saint -> list, day -> month, contact -> list, close prompt, clear
+  filter); at a widget's top level it closes the widget (T4d). Going
+  back to the PREVIOUS widget is Ctrl+O. The saints field `origo`
+  (Esc closed a saint opened by the calendar or `$saints(id)`) was a
+  modal flag kept in pane state: it leaked into a reopened pane (a
+  `$saints` over contacts showed an old saint and Esc dropped to
+  contacts), and the key hint "Esc: Back to list" lied. Removed: Esc
+  in a saint always goes to the list.
+
 ## VI-a. Actions declare their result route (POST-redirect-GET as contract)
 
 On the web the result of a POST has no address - hence "Confirm Form
@@ -320,6 +342,15 @@ A view answers a relation in one of three ways (no expressions):
   <relatio nomen="proxima" functio="sancti.proxima"/>             <!-- computed -->
 </relationes>
 ```
+
+**First slice shipped (comites P5a, 2026-10-22):** Fran named the
+element `<aditus>` with `<iter nomen="..." semita="URI"
+advocare="verum"/>` children (not `<relationes>`/`<relatio>`); only
+`quaestio` exists so far, bound to Cmd+F. `semita` is a plain URI (any
+genus - the calendar's search answer is `indagatio?genus=res`); absent
+`semita` means "this pane itself", answered by `facies.advocatum`.
+`{q}` parameters and `functio` answers are not built yet. See
+`project-specs/comites.md` P5a.
 
 A `functio` is registered like an actio but RETURNS a route (pure:
 reads state, writes nothing); the host applies it. So "routes only set
