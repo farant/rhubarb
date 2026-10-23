@@ -875,12 +875,14 @@
     <exitus via="compile_tests_fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
   <!-- SPECULUM HOSPITIS (fabrica plan 5 T5b): capsula fontium quam
-       compile_tests.sh per tools/speculum_generare.sh generat - dominus
-       declaratus, strategia ignota (numquam iudicatur). Contentum
-       tempus, commissum, sordidum fert (omni cursu radicis mutatur):
-       porta_aedilis eam per EXSTANTIAM solam videt (X; clang contentum
-       extra librum legit) - approximatio nominata (Fran 2026-10-06);
-       provenientia determinata sub probationibus = desideratum. -->
+       tools/speculum_generare.sh generat. DETERMINISTICA (quaestio
+       …4HNHT89B, Franus 2026-10-23): tempus = tempus COMMISSI,
+       digestum_fontium pro 'sordidum', manifestum 'generatum' ad
+       epocham commissi - ergo provenientia REGENERATIO (fabrica eam
+       regenerando iudicat, in scriptura sua) et membra probationum
+       radicis eam per CONTENTUM clavant (olim strategia ignota et
+       exstantia sola: mutatio fontium quos capsula condit membra
+       speculi non iterum currebat). -->
   <actio titulus="speculum_hospes" genus="generator">
     <mandatum>
       <verbum! (>./tools/speculum_generare.sh
@@ -895,8 +897,8 @@
     <vestigium via="build/aedilis/probatio_vitrea_hospes"/>
     <ingressus genus="fasciculus" via="tools/speculum_generare.sh"/>
     <ingressus genus="fasciculus" via="tools/vexilla.sh"/>
-    <exitus via="build/speculum/hospes/capsula_speculi_hospes.c" provenientia="ignota"/>
-    <exitus via="build/speculum/hospes/capsula_speculi_hospes.h" provenientia="ignota"/>
+    <exitus via="build/speculum/hospes/capsula_speculi_hospes.c" provenientia="regeneratio"/>
+    <exitus via="build/speculum/hospes/capsula_speculi_hospes.h" provenientia="regeneratio"/>
   </actio>
   <!-- TABULARIUMD (fabrica plan 5 T5b): daemon tabularii ut artificium
        declaratum - probatio_cliens_tabularii id CURRIT, non struit

@@ -3499,3 +3499,23 @@ Option 1 (desideratum …VXWK8; the real migration into a fabrica composite come
 **Proof.** probationes_silva 56/56. A NEW file in probationes/fixa/roundtrip (enumerated by probatio_silva_arbor_circuitus) forced a rerun, and so did removing it; before, raw opendir made the member blind.
 
 **Left over:** canalis debts remain only in suites that are not composites: oratio 18, briar 13, officina 11, crusta 7, gesta 5, tessera 2, plus tools. Those gates rerun whole, so they can't keep a stale pass, but the debts are a PREREQUISITE for converting those suites to composites (oratio next).
+
+## 2026-10-23 — speculum capsule made deterministic, members key build/ by content (question …4HNHT89B)
+
+**The gap.** `_probationes_c_ingressus` left every build/ closure file out of a member's key; existence was guaranteed by the precondition. Only 3 of 662 members are affected (probatio_speculum, probatio_speculum_fontium, probatio_vitrea_hospes), all through build/speculum/hospes/capsula_speculi_hospes.c. A change to something the capsule embeds (worklogs, scripts) never reran them.
+
+**First attempt, reverted:** keying by content. The real tree refused: "ingressus est exitus numquam iudicatus - praecondicio sola licet". The producer declared `provenientia="ignota"` because the capsule embedded wall-clock time, and fabrica rightly won't key on an unjudged artifact.
+
+**Fix (option b′, Fran approved).**
+- The capsule is now a pure function of its inputs: `tempus` = commit time (`git show -s --format=%cI HEAD`), `digestum_fontium` (sha256 over the paths and contents of the embedded files) replaces `sordidum`, and the copied aedilis manifest's `generatum` is normalized to the commit epoch. That attribute was the last per-run difference, found by diffing two stagings.
+- The generator follows tools/capsula_radicis.sh: under FABRICA_SCRIPTURA/FABRICA_AGIT it ignores its mtime gate, stages under the scratch dir, and prints the canonical capsule path in exclusa.txt.
+- The capsule is `provenientia="regeneratio"`, and members key build/ files by content.
+
+**Proof.**
+- Byte-identical across forced regenerations and in scratch.
+- `bin/fabrica iudicare -plenus` → RECENS ("regeneratio congruit").
+- probare the three: rerun once (new key), then kept.
+- An embedded worklog (lib/chorda.worklog.md) changed → capsule STALUM, the precondition regenerates it, all 3 rerun. Restored → rerun once, then kept.
+- Unit: the fake worlds now model the capsule; case VIIIc (capsule changed → b only); the earlier plant (exclusion restored) went red at the key assertion.
+
+**Concept noted:** `provenientia="ignota"` is where fabrica is guessing. There are 8 such outputs in the graph (now 6); worth a pass ("can it be judged? if not, why").

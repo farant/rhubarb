@@ -1147,6 +1147,9 @@ _probare_probationes_c (
         mundi_ponere(discus, "t/probatio_zeta.c", "zeta\n");
         mundi_ponere(discus, "lib/x.c", "x I\n");
         mundi_ponere(discus, "lib/y.c", "y I\n");
+        /* capsula generata (productum praecondicionis) in disco: clavis
+         * eam per CONTENTUM fert (quaestio …4HNHT89B) */
+        mundi_ponere(discus, "build/gen/capsula.c", "capsula I\n");
         mundi_ponere(discus, "include/x.h", "xh I\n");
         mundi_ponere(discus, "include/y.h", "yh I\n");
         mundi_ponere(discus, "aedilis.stml", "<aedilis/>\n");
@@ -1216,8 +1219,9 @@ _probare_probationes_c (
         CREDO_NON_NIHIL(membrum_c);
         CREDO_NIHIL(_actio_explicata(explicata,
             "probationes_t/probatio_zeta"));
-        /* T4: fons sub build/ (capsula generata) NON in clave - per
-         * exstantiam solam, ut porta_aedilis */
+        /* fons sub build/ (capsula generata) IN clave per contentum
+         * (quaestio …4HNHT89B; olim exstantia sola - membra speculi
+         * mutationem fontium capsulae non videbant) */
         {
             FabricaActio* b = _actio_explicata(explicata,
                 "probationes_t/probatio_b");
@@ -1236,7 +1240,7 @@ _probare_probationes_c (
             }
             CREDO_NON_NIHIL(b);
             CREDO_VERUM(y_c);
-            CREDO_FALSUM(capsula);
+            CREDO_VERUM(capsula);
         }
         si (membrum_a != NIHIL)
         {
@@ -1368,6 +1372,18 @@ _probare_probationes_c (
             }
             CREDO_VERUM(instrumentum);
         }
+
+        /* VIIIc (quaestio …4HNHT89B). capsula generata (build/)
+         * mutata: b solum (olim exstantia sola - membra speculi
+         * mutationem fontium capsulae non videbant) */
+        nexus   = _c_nexus;
+        cursus  = _c_cursus;
+        mundi_ponere(discus, "build/gen/capsula.c", "capsula II\n");
+        (vacuum)fabrica_sanare(sutura, ordo, electa, FALSUM, piscina,
+            &causa);
+        CREDO_AEQUALIS_I32(_c_nexus, nexus + I);
+        CREDO_AEQUALIS_I32(_c_cursus, cursus + I);
+        CREDO_VERUM(strstr(_c_cursus_ultimus, "probatio_b") != NIHIL);
 
         /* IX. cursus b fractus: FRACTUM, deinde iterum currit */
         _c_fractus_cursus = "probatio_b";
@@ -1718,6 +1734,9 @@ _probare_sectiones (
         mundi_ponere(discus, "t/probatio_b.c", "b I\n");
         mundi_ponere(discus, "lib/x.c", "x I\n");
         mundi_ponere(discus, "lib/y.c", "y I\n");
+        /* capsula generata (productum praecondicionis) in disco: clavis
+         * eam per CONTENTUM fert (quaestio …4HNHT89B) */
+        mundi_ponere(discus, "build/gen/capsula.c", "capsula I\n");
         mundi_ponere(discus, "include/x.h", "xh I\n");
         mundi_ponere(discus, "include/y.h", "yh I\n");
         mundi_ponere(discus, "aedilis.stml", "<aedilis/>\n");
@@ -2535,6 +2554,9 @@ _probare_variantes (
         mundi_ponere(discus, "t/probatio_c.c", "c I\n");
         mundi_ponere(discus, "lib/x.c", "x I\n");
         mundi_ponere(discus, "lib/y.c", "y I\n");
+        /* capsula generata (productum praecondicionis) in disco: clavis
+         * eam per CONTENTUM fert (quaestio …4HNHT89B) */
+        mundi_ponere(discus, "build/gen/capsula.c", "capsula I\n");
         mundi_ponere(discus, "include/x.h", "xh I\n");
         mundi_ponere(discus, "include/y.h", "yh I\n");
         mundi_ponere(discus, "aedilis.stml", "<aedilis/>\n");
