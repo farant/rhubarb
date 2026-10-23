@@ -457,7 +457,7 @@ configuration that the agent or user turns on and off.
 | M1 | `partitura`: song as text, bar by bar (spelling from the note's letter or the key; values 1..64, dotted, triplet, `~ticks`; rests largest-first; ties `~`; chords `[..]`; meter/key/tempo changes in bar headings). `auditio -carmen T -partitura [-mensurae N-M] [-pars P]` |
 | M4 | outside books: `auditio -liber x.stml -carmina / -carmen T` through `filum`, judged like the embedded book, errors with song / track / clip / offset |
 | M2 | musical checks as a rule toolbox: barlines (`|` off a bar boundary - needs cantus to RECORD bar marks, a small cantus.h change), out-of-key notes, instrument range, strong-beat seconds / tritones between tracks, parallel fifths / octaves (style, off by default); each finding names bar, beat, track |
-| M3 | numbers from the offline render: peak, clipping, per-bar loudness, per-track solo levels (balance) |
+| M3 | numbers from the offline render: peak, clipping, per-bar loudness, per-track solo levels (balance) - `auscultatio` (reddere / metiri / partem / tacitae), `auditio -auscultare`, exit 3 on clipping or a silent bar that should sound |
 | later | writer (model -> STML, for the DAW / notation panes to save), MCP tool for remote agents |
 
 ### VIII-c. The arcade (S7)

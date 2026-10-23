@@ -26,6 +26,7 @@ declare -a SOURCE_FILES=(
     "lib/arx_caeli.c"
     "lib/atomus.c"
     "lib/atrium.c"
+    "lib/auscultatio.c"
     "lib/base64.c"
     "lib/biblia_dr.c"
     "lib/biblia_visus.c"

@@ -40,3 +40,11 @@ agent writing a book needs it). Validated combinations exit 2.
 (regulae: ...)"; exit 0 clean, 3 findings (1 errors, 2 usage kept).
 -regulae "+a,-b" edits the defaults, "a,b" (no signs) means exactly
 these; an unknown rule is a usage error (exit 2) naming the five.
+
+## 2026-10-23 - M3: -auscultare; WAV via auscultatio
+
+-via now renders through auscultatio_reddere (the in-file exitus is
+gone); _carmen_sonare is live-only. -auscultare prints the whole-song
+line (length, peak, clipping, RMS, dBFS), one line per track rendered
+solo, one per bar, TACITA where notes should sound; exit 3 on clipping
+or a TACITA bar.
