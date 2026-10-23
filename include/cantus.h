@@ -29,10 +29,10 @@
  *   "t180 o6 l16 e g# b >e8"     - arpeggium E maior sursum
  *   "@campana t96 o5 g4. e8 | c2" - tres notae cum praeparato
  *
- * TEMPUS SINE ERRORE CUMULATO: positio in pulsibus (DCCLXVIII per
- * notam integram) numeratur; quadrum = rotundatio positionis
- * EXACTAE intra segmentum temporis - mille notae sedecimae non
- * labuntur. Mutatio 't' segmentum novum incipit.
+ * TEMPUS SINE ERRORE CUMULATO: positio in pulsibus
+ * (CANTUS_PULSUS_QUARTAE = CMLX per quartam) numeratur; quadrum =
+ * rotundatio positionis EXACTAE intra segmentum temporis - mille notae
+ * sedecimae non labuntur. Mutatio 't' segmentum novum incipit.
  *
  * NOTA = longitudo SCRIPTA; quantum sonet (staccato, remissio)
  * color vocantis decernit, non lector.
@@ -62,10 +62,29 @@
 #include "piscina.h"
 #include "mixtura.h"
 
+/* pulsus per quartam: CMLX (DAW, MIDI, MusicXML) - dividitur per III,
+ * V, VI, XV (quintolae possibiles; olim DCCLXVIII per integram). Tempus
+ * MUSICUM in pulsibus est (sonus-spec VIII-d): quadra solum in sonando
+ * ex mappa temporis */
+#define CANTUS_PULSUS_QUARTAE  CMLX
+#define CANTUS_PULSUS_INTEGRAE MMMDCCCXL
+
+/* MAPPA TEMPORIS: segmentum quodque a pulsu suo, tempus (quartae per
+ * minutum); quadrum = initium segmenti in quadris (DERIVATUM, per
+ * cantus_tempora_computare - ut lector: segmentum claudit ad quadrum
+ * suum rotundatum, ergo nulla aberratio cumulata) */
+nomen structura {
+    s64 pulsus;     /* initium segmenti, pulsus absoluti */
+    i32 tempus;     /* 20..400 */
+    s64 quadrum;    /* initium segmenti, quadra (derivatum) */
+} CantusTempus;
+
 nomen structura {
             i32 nota;           /* MIDI 0..127 (LX = C4) */
             s64 initium;        /* quadrum ab initio cantilenae */
             s64 longitudo;      /* quadra scripta (> 0) */
+            s64 pulsus;         /* positio, pulsus ab initio */
+            s64 pulsus_longitudo;  /* longitudo scripta, pulsus (> 0) */
             f32 lucrum;         /* 'v' / C : 0..1 */
          chorda praeparatum;    /* '@titulus' (scissura textus) aut
                                  * vacua = ordinarium vocantis */
@@ -73,9 +92,14 @@ nomen structura {
 } CantusNota;
 
 nomen structura {
-    CantusNota* notae;       /* e piscina, ordine initii */
-           i32  numerus;
-           s64  longitudo;   /* quadra totius, pausa ultima inclusa */
+      CantusNota* notae;       /* e piscina, ordine initii */
+             i32  numerus;
+             s64  longitudo;   /* quadra totius, pausa ultima inclusa */
+             s64  pulsus;      /* pulsus totius, pausa ultima inclusa */
+    CantusTempus* tempora;     /* mutationes 't' ordine (e piscina);
+                                * prima ad pulsum 0 - CXX si textus 't'
+                                * initio caret */
+             i32 numerus_temporum;
 } Cantilena;
 
 nomen structura {
@@ -93,6 +117,30 @@ cantus_legere (
          Piscina* piscina,
        Cantilena* cantilena,
     CantusVitium* vitium);
+
+
+/* quadra initiorum segmentorum ex pulsibus et temporibus (ordine
+ * pulsus crescente; primum ad pulsum 0) */
+vacuum
+cantus_tempora_computare (
+    CantusTempus* tempora,
+             i32  numerus);
+
+/* pulsus -> quadrum: initium segmenti + rotundatio intra segmentum, ut
+ * lector (idem quadrum quod nota eo pulsu habet). Mappa vacua: CXX */
+s64
+cantus_quadrum_pulsus (
+    constans CantusTempus* tempora,
+                      i32  numerus,
+                      s64  pulsus);
+
+/* quadrum -> pulsus MAXIMUS cuius quadrum <= quadrum datum (lusor:
+ * positio currens, quaerere) */
+s64
+cantus_pulsus_quadri (
+    constans CantusTempus* tempora,
+                      i32  numerus,
+                      s64  quadrum);
 
 
 /* ================================================================

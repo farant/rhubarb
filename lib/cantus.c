@@ -4,7 +4,7 @@
  * NIHIL), deinde tabulam exactam e piscina implet. Transitus secundus
  * deficere non potest - idem textus, idem status.
  *
- * TEMPUS: positio in pulsibus (DCCLXVIII per notam integram) ab
+ * TEMPUS: positio in pulsibus (CANTUS_PULSUS_QUARTAE per quartam) ab
  * initio segmenti temporis; quadrum = initium segmenti + rotundatio
  * (pulsus x quadra per pulsum). Mutatio 't' segmentum claudit ad
  * quadrum suum rotundatum et novum incipit. Vide lib/cantus.worklog.md.
@@ -12,7 +12,6 @@
 #include "cantus.h"
 #include "sonus.h"
 
-#define CANTUS_PULSUS_INTEGRAE DCCLXVIII
 /* nota integra = IV quartae = CCXL / t secundae */
 #define CANTUS_SECUNDAE_INTEGRAE CCXL
 /* numeri longiores non leguntur (vitium, non circumvolutio) */
@@ -28,8 +27,12 @@ nomen structura {
           chorda  praeparatum;
              s64  pulsus;           /* ab initio segmenti */
              s64  quadrum_segmenti; /* initium segmenti, quadra */
+             s64  pulsus_totus;     /* ab initio cantilenae */
+             s64  pulsus_segmenti;  /* initium segmenti ultimi */
       CantusNota* notae;            /* NIHIL = transitus numerandi */
              i32  numerus;
+    CantusTempus* tempora;          /* NIHIL = transitus numerandi */
+             i32  numerus_temporum;
     CantusVitium* vitium;
 } CantusLector;
 
@@ -189,20 +192,29 @@ _mensuram_legere (
     redde _puncta_legere(l, pulsus);
 }
 
+/* quadra 'pulsus' pulsuum intra segmentum tempore dato, rotundata -
+ * regula UNA lectoris et mappae temporis */
+interior s64
+_quadra_segmenti (
+    s64 pulsus,
+    i32 tempus)
+{
+    s64 numerator   = pulsus * (s64)SONUS_FREQUENTIA
+                    * (s64)CANTUS_SECUNDAE_INTEGRAE;
+    s64 denominator = (s64)CANTUS_PULSUS_INTEGRAE * (s64)tempus;
+
+    /* (2n + d) / 2d = rotundatio n/d ad proximum (n >= 0) */
+    redde ((s64)II * numerator + denominator)
+        / ((s64)II * denominator);
+}
+
 /* quadrum positionis (pulsus ab initio segmenti), rotundatum */
 interior s64
 _quadrum (
     constans CantusLector* l,
-                     s64  pulsus)
+                      s64  pulsus)
 {
-    s64 numerator   = pulsus * (s64)SONUS_FREQUENTIA
-                    * (s64)CANTUS_SECUNDAE_INTEGRAE;
-    s64 denominator = (s64)CANTUS_PULSUS_INTEGRAE * (s64)l->tempus;
-
-    /* (2n + d) / 2d = rotundatio n/d ad proximum (n >= 0) */
-    redde l->quadrum_segmenti
-         + ((s64)II * numerator + denominator)
-             / ((s64)II * denominator);
+    redde l->quadrum_segmenti + _quadra_segmenti(pulsus, l->tempus);
 }
 
 interior b32
@@ -242,12 +254,15 @@ _notam_legere (
         n->initium  = _quadrum(l, l->pulsus);
         n->longitudo = _quadrum(l, l->pulsus + (s64)pulsus)
             - n->initium;
-        n->lucrum       = l->lucrum;
-        n->praeparatum  = l->praeparatum;
-        n->offset       = offset;
+        n->lucrum            = l->lucrum;
+        n->praeparatum       = l->praeparatum;
+        n->offset            = offset;
+        n->pulsus            = l->pulsus_totus;
+        n->pulsus_longitudo  = (s64)pulsus;
     }
     l->numerus++;
-    l->pulsus += (s64)pulsus;
+    l->pulsus        += (s64)pulsus;
+    l->pulsus_totus  += (s64)pulsus;
     redde VERUM;
 }
 
@@ -306,7 +321,8 @@ _currere (
             {
                 redde FALSUM;
             }
-            l->pulsus += (s64)pulsus;
+            l->pulsus        += (s64)pulsus;
+            l->pulsus_totus  += (s64)pulsus;
         }
         alioquin si (s == 'o')
         {
@@ -346,10 +362,24 @@ _currere (
             {
                 redde FALSUM;
             }
-            /* segmentum claudit ad quadrum suum, novum incipit */
+            /* segmentum claudit ad quadrum suum, novum incipit; eodem
+             * pulsu (initio, aut 't' bis) segmentum ultimum mutatur */
             l->quadrum_segmenti  = _quadrum(l, l->pulsus);
             l->pulsus            = ZEPHYRUM;
             l->tempus            = (i32)valor;
+            si (l->pulsus_totus != l->pulsus_segmenti)
+            {
+                l->numerus_temporum++;
+                l->pulsus_segmenti = l->pulsus_totus;
+            }
+            si (l->tempora != NIHIL)
+            {
+                CantusTempus* t = &l->tempora[l->numerus_temporum - I];
+
+                t->pulsus   = l->pulsus_segmenti;
+                t->tempus   = l->tempus;
+                t->quadrum  = l->quadrum_segmenti;
+            }
         }
         alioquin si (s == 'v')
         {
@@ -383,6 +413,7 @@ _lectorem_parare (
     CantusLector* l,
           chorda  textus,
       CantusNota* notae,
+    CantusTempus* tempora,
     CantusVitium* vitium)
 {
     l->textus               = textus;
@@ -395,9 +426,19 @@ _lectorem_parare (
     l->praeparatum.datum    = NIHIL;
     l->pulsus               = ZEPHYRUM;
     l->quadrum_segmenti     = ZEPHYRUM;
+    l->pulsus_totus         = ZEPHYRUM;
+    l->pulsus_segmenti      = ZEPHYRUM;
     l->notae                = notae;
     l->numerus              = ZEPHYRUM;
+    l->tempora              = tempora;
+    l->numerus_temporum     = I;   /* segmentum primum: CXX ad 0 */
     l->vitium               = vitium;
+    si (tempora != NIHIL)
+    {
+        tempora[ZEPHYRUM].pulsus   = ZEPHYRUM;
+        tempora[ZEPHYRUM].tempus   = CXX;
+        tempora[ZEPHYRUM].quadrum  = ZEPHYRUM;
+    }
 }
 
 b32
@@ -407,31 +448,40 @@ cantus_legere (
        Cantilena* cantilena,
     CantusVitium* vitium)
 {
-    CantusLector  l;
-      CantusNota* notae = NIHIL;
+     CantusLector  l;
+       CantusNota* notae = NIHIL;
+     CantusTempus* tempora;
 
-    cantilena->notae      = NIHIL;
-    cantilena->numerus    = ZEPHYRUM;
-    cantilena->longitudo  = ZEPHYRUM;
-    _lectorem_parare(&l, textus, NIHIL, vitium);
+    cantilena->notae             = NIHIL;
+    cantilena->numerus           = ZEPHYRUM;
+    cantilena->longitudo         = ZEPHYRUM;
+    cantilena->pulsus            = ZEPHYRUM;
+    cantilena->tempora           = NIHIL;
+    cantilena->numerus_temporum  = ZEPHYRUM;
+    _lectorem_parare(&l, textus, NIHIL, NIHIL, vitium);
     si (!_currere(&l))
     {
         redde FALSUM;
     }
+    tempora = (CantusTempus*)piscina_allocare(piscina,
+        (memoriae_index)l.numerus_temporum * magnitudo(CantusTempus));
     si (l.numerus > ZEPHYRUM)
     {
         notae = (CantusNota*)piscina_allocare(piscina,
             (memoriae_index)l.numerus * magnitudo(CantusNota));
-        si (notae == NIHIL)
-        {
-            redde _vitium(&l, ZEPHYRUM, "piscina exhausta");
-        }
-        _lectorem_parare(&l, textus, notae, vitium);
-        (vacuum)_currere(&l);
     }
-    cantilena->notae      = notae;
-    cantilena->numerus    = l.numerus;
-    cantilena->longitudo  = _quadrum(&l, l.pulsus);
+    si (tempora == NIHIL || (l.numerus > ZEPHYRUM && notae == NIHIL))
+    {
+        redde _vitium(&l, ZEPHYRUM, "piscina exhausta");
+    }
+    _lectorem_parare(&l, textus, notae, tempora, vitium);
+    (vacuum)_currere(&l);
+    cantilena->notae             = notae;
+    cantilena->numerus           = l.numerus;
+    cantilena->longitudo         = _quadrum(&l, l.pulsus);
+    cantilena->pulsus            = l.pulsus_totus;
+    cantilena->tempora           = tempora;
+    cantilena->numerus_temporum  = l.numerus_temporum;
     redde VERUM;
 }
 
@@ -529,4 +579,94 @@ cantus_iussa_parare (
             forma->prioritas);
     }
     redde VERUM;
+}
+
+/* segmentum ultimum cuius initium (pulsus aut quadrum) <= valor */
+interior i32
+_segmentum (
+    constans CantusTempus* tempora,
+                      i32  numerus,
+                      s64  valor,
+                      b32  quadrum)
+{
+    i32 k;
+
+    per (k = numerus; k > I; k--)
+    {
+        si ((quadrum ? tempora[k - I].quadrum : tempora[k - I].pulsus)
+            <= valor)
+        {
+            redde k - I;
+        }
+    }
+    redde ZEPHYRUM;
+}
+
+vacuum
+cantus_tempora_computare (
+    CantusTempus* tempora,
+             i32  numerus)
+{
+    i32 k;
+
+    si (numerus == ZEPHYRUM)
+    {
+        redde;
+    }
+    tempora[ZEPHYRUM].quadrum = ZEPHYRUM;
+    per (k = I; k < numerus; k++)
+    {
+        tempora[k].quadrum = tempora[k - I].quadrum + _quadra_segmenti(
+            tempora[k].pulsus - tempora[k - I].pulsus,
+            tempora[k - I].tempus);
+    }
+}
+
+s64
+cantus_quadrum_pulsus (
+    constans CantusTempus* tempora,
+                      i32  numerus,
+                      s64  pulsus)
+{
+    i32 k;
+
+    si (numerus == ZEPHYRUM || tempora == NIHIL)
+    {
+        redde _quadra_segmenti(pulsus, CXX);
+    }
+    k = _segmentum(tempora, numerus, pulsus, FALSUM);
+    redde tempora[k].quadrum + _quadra_segmenti(
+        pulsus - tempora[k].pulsus, tempora[k].tempus);
+}
+
+s64
+cantus_pulsus_quadri (
+    constans CantusTempus* tempora,
+                      i32  numerus,
+                      s64  quadrum)
+{
+    /* intra segmentum (tempus t): quadra(dp) = rotundatio(dp a / b),
+     * a = FREQUENTIA x CCXL, b = INTEGRAE x t. Maximum dp cum
+     * rotundatio <= r: floor((b (2r + 1) - 1) / 2a) */
+    s64 a = (s64)SONUS_FREQUENTIA * (s64)CANTUS_SECUNDAE_INTEGRAE;
+    s64 b;
+    s64 r;
+    s64 basis_pulsus  = ZEPHYRUM;
+    i32 tempus        = CXX;
+    i32 k;
+
+    si (quadrum < ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    r = quadrum;
+    si (numerus > ZEPHYRUM && tempora != NIHIL)
+    {
+        k             = _segmentum(tempora, numerus, quadrum, VERUM);
+        basis_pulsus  = tempora[k].pulsus;
+        tempus        = tempora[k].tempus;
+        r             = quadrum - tempora[k].quadrum;
+    }
+    b = (s64)CANTUS_PULSUS_INTEGRAE * (s64)tempus;
+    redde basis_pulsus + (b * ((s64)II * r + I) - I) / ((s64)II * a);
 }

@@ -395,6 +395,55 @@ Slices (2026-10-22):
 | S5c | the `aetherophonum` pane: figura (pitch grid, note names, current note), key table, button-held voice, motion -> pitch/gain SETs |
 | S5d | measure output latency and the real motion-event rate (§XI); Fran's ears |
 
+### VIII-d. Music: songs and the sequencer (S6) - decided 2026-10-22
+
+Fran 10-22: a music-authoring pane ("garageband / ableton type") and
+agents authoring music (MCP or similar) are expected later, and probably a
+sheet-music view. S6 builds only songs + a sequencer, but these choices
+are made NOW because they are cheap now and expensive to retrofit:
+
+1. **Musical time is the model.** Notes carry TICKS (position, length);
+   frames are computed only at playback from the song's tempo map. Tempo
+   change, seek, loop regions, drag-a-note = tick arithmetic, no re-parse.
+2. **960 ticks per quarter (3840 per whole)** - the DAW / MIDI / MusicXML
+   convention; divides by 3, 5, 6, 15 (the old 768-per-whole reader could
+   not express quintuplets).
+3. **A structured song model, MML as one way to write it.** Song ->
+   tracks (instrument by name, gain, mute, solo) -> clips placed at tick
+   positions -> notes (tick, length, pitch, velocity, optional spelling).
+   MML compiles into a clip (agents write it well, errors carry offsets);
+   an editor will edit notes directly. Later: songs as insula documents
+   with acts (undo, history).
+4. **Meter map, key map, per-note spelling** in the song - the facts a
+   score cannot derive (barlines; C# vs Db; the author's B# over C).
+   Beams, stems, ties across barlines, layout, glyphs, MusicXML belong to a
+   future notation pane.
+5. **The sequencer reads the live model.** `cantor` keeps a playhead in
+   ticks and each pulse schedules only the next ~250 ms from the CURRENT
+   song (an edit while playing is heard next pass); transport = play,
+   stop, seek, loop region; per-track gain / mute / solo applied at
+   scheduling (the three fixed buses do not scale to many tracks yet).
+6. **Instruments by name through a resolver** (like cantus's preset
+   resolver): user patches plug in later without touching the sequencer.
+   A generic live "set parameter" mixer command (a filter knob while a
+   note sounds) is NOT built in S6 and nothing in S6 forecloses it.
+7. **Agent feedback**: every text input validated with offsets; outputs an
+   agent can read - deterministic WAV render (for Fran), a textual summary
+   (tracks, bars, notes, range), later a piano-roll image.
+
+Names (Fran 10-22): `cantor` (sequencer, "the singer"), `carmen` (song),
+book `carmina.stml` (embedded, like `cantuale.stml`). Music plays first
+through `auditio -carmen` (live and WAV); vicus `$music` and the game
+(S7) come when they pull. First song: *Korobeiniki*, melody + bass.
+
+| slice | content |
+|---|---|
+| S6a | cantus at 960 per quarter; notes expose tick position and length (frames stay for jingles); a tempo-map type |
+| S6b | `carmen`: tracks -> clips -> notes in ticks, instrument by name, tempo / meter / key maps, optional spelling; STML reading with MML clips; book `carmina.stml` |
+| S6c | `cantor`: tick playhead, lookahead from the live model, loop / seek / stop, per-track gain / mute / solo, instrument resolver |
+| S6d | *Korobeiniki* + `auditio -carmen` (live, WAV) -> Fran's ears |
+| later | editor pane (piano roll; insula song documents with acts), notation pane, patch editor, generic parameter SET, more buses, agent tool (`praeco carmen` or MCP) |
+
 ### VIII-c. The arcade (S7)
 
 - Sound effects through sonitus presets; music through cantus +
@@ -411,7 +460,7 @@ Slices (2026-10-22):
 | **S3** | `atomus` seam + `circulus` SPSC ring (headless tests, plus a two-thread stress test in the probe tier), then `auditus` macOS: AudioUnit callback thread, two rings, clock + latency; a smoke tool that plays a blip (§X.7) |
 | **S4** | first consumer: notification sounds in vicus + mute preference; retire the `afplay` hooks |
 | **S5** | theremin pane `aetherophonum`: S5a minimal `tibia` + mixer voice kind, S5b shared sound host in vicus, S5c the pane, S5d latency + ears (§VIII-b) |
-| **S6** | `tibia` instruments + `cantus` sequencer; first song: *Korobeiniki* (19th-century Russian folk song - public domain; the Tetris theme) |
+| **S6** | songs + sequencer (§VIII-d): S6a ticks at 960/quarter, S6b `carmen` song model + `carmina.stml`, S6c `cantor` sequencer, S6d *Korobeiniki* (19th-century Russian folk song - public domain; the Tetris theme) via `auditio -carmen` |
 | **S7** | the Tetris-like game (its own spec) |
 | later, on PULL | WAV read + resampling (canned assets), reverb (port solarium's Freeverb), patches in a sound-design pane, tracker patterns, a music-making app |
 
