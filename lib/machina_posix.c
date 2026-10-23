@@ -12,8 +12,11 @@
 #include "sigillum.h"
 #include "chorda_aedificator.h"
 #include "lectiones.h"
+#include "filum.h"
+#include "moneta.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/utsname.h>
@@ -58,6 +61,89 @@ machina_identitas_ex_fonte (
 
 
 /* ============================================================
+ * Identitas persistens (fons ubi systema nullum praebet)
+ * ============================================================ */
+
+/* Plagulam novam sub sera scribere: XVI octeti fortuiti ut XXXII
+ * litterae hex, in 'via.novum' modo 0600, deinde renominatio - lector
+ * numquam plagulam semiscriptam videt. FALSUM si fortuita absunt aut
+ * scriptura deficit (nihil in 'via' relinquitur). */
+interior b32
+_plagulam_identitatis_scribere (
+    constans character* via,
+    constans character* via_nova)
+{
+    constans character* digiti = "0123456789abcdef";
+                    i8  octeti[XVI];
+             character  hex[XXXIII];
+                   i32  i;
+
+    si (!moneta_octeti_fortuiti(octeti, (i32)XVI))
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < (i32)XVI; i++)
+    {
+        hex[i * II]      = digiti[(octeti[i] >> IV) & 0xF];
+        hex[i * II + I]  = digiti[octeti[i] & 0xF];
+    }
+    hex[XXXII] = '\0';
+    si (   !filum_scribere_literis(via_nova, hex)
+        || !filum_modum_ponere(via_nova, 0600)
+        || !filum_movere(via_nova, via))
+    {
+        (vacuum)filum_delere(via_nova);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+chorda
+machina_identitas_ex_plagula (
+    constans character* via,
+               Piscina* piscina)
+{
+        chorda  vacua;
+        chorda  contentum;
+     character  via_serae[DXII];
+     character  via_nova[DXII];
+     FilumSera* sera;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    si (via == NIHIL || piscina == NIHIL || strlen(via) + VII > DXII)
+    {
+        redde vacua;
+    }
+    sprintf(via_serae, "%s.sera", via);
+    sprintf(via_nova, "%s.novum", via);
+
+    /* sera per totam seriem EXISTIT -> SCRIBERE -> LEGERE: duo
+     * processus simul incipientes identitatem unam vident */
+    sera = filum_seram_capere(via_serae, (i32)MM, piscina);
+    si (sera == NIHIL)
+    {
+        redde vacua;
+    }
+    si (   !filum_existit(via) && !_plagulam_identitatis_scribere(via,
+            via_nova))
+    {
+        filum_seram_liberare(sera);
+        redde vacua;
+    }
+    contentum = filum_legere_totum(via, piscina);
+    filum_seram_liberare(sera);
+
+    /* curta: recusatio, numquam rescriptio (RECUSAT supra) */
+    si (contentum.mensura < (i32)XVI)
+    {
+        redde vacua;
+    }
+    redde machina_identitas_ex_fonte(contentum, piscina);
+}
+
+
+/* ============================================================
  * Fons platformae
  * ============================================================ */
 
@@ -89,6 +175,27 @@ machina_identitas (
             fons.datum   = (i8*)id;
             fons.mensura = (i32)XVI;   /* uuid_t = XVI octeti */
             redde machina_identitas_ex_fonte(fons, piscina);
+        }
+    }
+#elif defined(__ANDROID__)
+    {
+        /* Android: nec gethostuuid nec /etc/machine-id. Identitas
+         * persistens sub $HOME/.rhubarb/machina - cursor tabulae HOME
+         * radicem suam ponit, applicatio directorium suum privatum
+         * (identitas = haec institutio; android-gradus T4) */
+        constans character* domus;
+                 character  directorium[DXII];
+                 character  via[DXII];
+
+        domus = getenv("HOME");
+        si (domus != NIHIL && domus[0] != '\0' && strlen(domus) < CDXL)
+        {
+            sprintf(directorium, "%s/.rhubarb", domus);
+            sprintf(via, "%s/machina", directorium);
+            si (filum_directorium_creare_cum_parentibus(directorium))
+            {
+                redde machina_identitas_ex_plagula(via, piscina);
+            }
         }
     }
 #else

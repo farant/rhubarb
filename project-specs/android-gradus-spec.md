@@ -1,10 +1,16 @@
 # Android build tier - house C on the Fire tablet (spec)
 
-**Status: APPROBANDUM** - designed in conversation 2026-10-22 section
-by section (scope, approach, components, runner and device
-lifecycle); spec written for Fran's review. Worktree quarta. Ledger:
-vision desideratum ...577GAS (`01M5KAM5ATMEGGA7ZTFE577GAS`), spike
-note ...RMQ67J (`01M5KD9MH0WD9HXX1SGTRMQ67J`).
+**Status: IMPLETUM 2026-10-23** - built in quarta per
+`project-specs/android-gradus-plan.md` (four tasks, Fran approving
+each): T1 eb06acad (aedilis `--varians` list), T2 7714bb0c (volumen
+TMPDIR), T3 aa63a0dd (NDK pin + installer), T4 (runner; plus machine
+identity on Android, VI below). Live on the Fire 7 (KFQUWI, API 30,
+arm64): `piscina chorda xar json volumen` PRAETERITAE, 2655
+assertions. Not yet in main. Approved 2026-10-23 (Fran: "i think that
+is a good spec"); designed in conversation 2026-10-22 section by
+section. Worktree quarta. Ledger: vision desideratum ...577GAS
+(`01M5KAM5ATMEGGA7ZTFE577GAS`), spike note ...RMQ67J
+(`01M5KD9MH0WD9HXX1SGTRMQ67J`).
 
 *Fran 2026-10-22: Android first ("there definitely will be android
 apps (probably a drawing app based on pictor first) and the first real
@@ -217,15 +223,45 @@ builds (approach 2 above).
 3. NDK pin + installer (II.3).
 4. Runner + device lifecycle (II.4, II.5), proven on the Fire (III).
 
-## AUDIENDA (not verified)
+## VI. Found while building (2026-10-23)
 
-- That every one of `piscina chorda xar json volumen` compiles against
-  bionic without change - only a plain `uname` program has been
-  proven; bionic differences surface in task 4.
-- Whether any of those suites reads repository files by relative path
-  (fixtures under `probationes/fixa/`); if so the runner would need to
-  push them - not designed here, found in task 4.
-- `llvm-strip` and `du -sk` behaviour on this NDK / Fire OS toolbox -
-  assumed standard.
-- That the Linux runner's vendor flags suit clang for Android - no
-  vendored source is in the minimal set.
+- **Machine identity on Android** (Fran, option 1 of 3, 2026-10-23:
+  "i think option 1 makes sense"). `volumen` stamps every record with
+  `machina_identitas`, whose sources are `gethostuuid()` (macOS) and
+  `/etc/machine-id` (Linux); Android has neither (checked on the
+  tablet), so the identity was empty and `volumen_creare` refused. New
+  `machina_identitas_ex_plagula(via, piscina)` (`include/machina.h`,
+  `lib/machina_posix.c`): a random identity written ONCE under a lock
+  (32 hex from `moneta_octeti_fortuiti`, temp file mode 0600, atomic
+  rename) and read thereafter - what `/etc/machine-id` itself is; a
+  present but short file is refused and never rewritten. Android
+  branch of `machina_identitas`: `$HOME/.rhubarb/machina` (meaning:
+  this installation); the runner sets `HOME=<root>`, a future app
+  layer its private files directory. Rejected: `ro.serialno` (hidden
+  from apps since API 29), `ANDROID_ID` (Java only - spec B).
+- **Test-side portability:** `probatio_volumen.c` hardcoded
+  `/tmp/probatio_volumen_ordinarium.volumen` -> `build/...` like its
+  neighbours. Still hardcoded, NOT ported: `probatio_volumen_rivi.c:47`
+  (`/tmp/volumen_rivi_*`) - fix when that suite is named.
+- **Runner:** text tools under `LC_ALL=C` (macOS `tr` refused the
+  json suite's UTF-8 output and lost the EXITUS line); cleanup
+  messages written to the saved stdout (fd 3) - a TERM arriving while
+  a suite's output was redirected put the "purgatum" line into that
+  suite's `effusio.txt` (the cleanup itself always ran).
+- **aedilis exit code:** a malformed `--varians` list exits 1 (the
+  tool's convention for every refusal), not the 2 written in II.1.
+
+## AUDIENDA - answered 2026-10-23
+
+- Bionic compatibility: all five suites compiled against bionic with
+  the house flags UNCHANGED; the only failure was the missing machine
+  identity (VI), a platform fact, not a compile problem.
+- Repository files: none of the five READS a repository file;
+  `probatio_volumen` WRITES `build/*.db` relative to cwd - the runner
+  creates `<root>/build/` (plan R3).
+- `llvm-strip` and `du -sk`: both behaved as assumed (footprints
+  92 KiB for piscina alone, ~2 MiB for all five).
+- Vendor flags: sqlite (pulled by volumen) compiled for Android with
+  the Linux runner's flags unchanged.
+- Still open: the vendor flags for BearSSL (no suite in this slice
+  pulls it).

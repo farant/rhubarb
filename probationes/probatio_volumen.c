@@ -1023,7 +1023,7 @@ _sectio_decima_prima (
     {
                    Volumen* ordinarium;
         constans character* via_ord =
-            "/tmp/probatio_volumen_ordinarium.volumen";
+            "build/probatio_volumen_ordinarium.volumen";
             PiscinaNotatio  nota;
                         i8* venenum;
 
