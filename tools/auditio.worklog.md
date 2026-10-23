@@ -48,3 +48,10 @@ gone); _carmen_sonare is live-only. -auscultare prints the whole-song
 line (length, peak, clipping, RMS, dBFS), one line per track rendered
 solo, one per bar, TACITA where notes should sound; exit 3 on clipping
 or a TACITA bar.
+
+## 2026-10-23 - -recensio [-json], -partitura -harmonia
+
+-recensio prints recensio_carminis_textus (or -json: the pretty JSON for
+MCP); -regulae / -partitura / -harmonia feed the report; exit 3 when
+monita > 0. -partitura -harmonia adds the chord row (harmonia.h) to the
+plain score too.

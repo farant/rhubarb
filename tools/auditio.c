@@ -50,6 +50,11 @@
  *                                      apex, tonsura, rms totius,
  *                                      partis solae, mensurae; exitus
  *                                      3 si tonsura aut mensura TACITA
+ *   auditio -carmen T -recensio        omnia uno transitu
+ *       [-regulae ...] [-json]         (recensio_carminis.h):
+ *       [-partitura [-harmonia]]       summarium, censura, sonus,
+ *                                      tacitae; -json pro MCP; exitus
+ *                                      3 si monita
  *
  * Carmen per concentum et cantorem - via eadem ac vicus: pulsus X ms
  * (concentus_agere, cantor_agere). Vivum: exitus = concentus_auditus;
@@ -89,6 +94,8 @@
 #include "censura.h"
 #include "auscultatio.h"
 #include "harmonia.h"
+#include "recensio_carminis.h"
+#include "json.h"
 #include "chorda_aedificator.h"
 #include "filum.h"
 #include <math.h>
@@ -779,6 +786,60 @@ _censuram_scribere (
     redde n > ZEPHYRUM ? III : ZEPHYRUM;
 }
 
+/* recensio in stdout: textus aut JSON (pulchrum). Exitus 0 sine
+ * monitis, 3 cum monitis, 2 regula ignota, 1 memoria */
+interior integer
+_recensere (
+       constans Carmen* k,
+    constans character* regulae,
+                   b32  partitura,
+                   b32  harmonia,
+                   b32  forma_json,
+               Piscina* piscina)
+{
+       RecensioForma f;
+    RecensioCarminis r;
+              chorda t;
+
+    recensio_carminis_ordinaria(&f);
+    si (   regulae != NIHIL && !_regulas_legere(regulae, &f.censura,
+                                             piscina))
+    {
+        redde II;
+    }
+    f.partitura  = partitura;
+    f.harmonia   = harmonia;
+    si (!recensio_carminis_facere(k, &f, NIHIL, piscina, &r))
+    {
+        fprintf(stderr, "auditio: memoria deest\n");
+        redde I;
+    }
+    si (forma_json)
+    {
+        JsonValor* v = recensio_carminis_json(&r, piscina);
+
+        si (v == NIHIL)
+        {
+            redde I;
+        }
+        t = json_scribere_pulchrum(v, piscina);
+        fwrite(t.datum, I, (size_t)t.mensura, stdout);
+        imprimere("\n");
+    }
+    alioquin
+    {
+        ChordaAedificator* a = chorda_aedificator_creare(piscina, M);
+
+        si (a == NIHIL || !recensio_carminis_textus(&r, a))
+        {
+            redde I;
+        }
+        t = chorda_aedificator_finire(a);
+        fwrite(t.datum, I, (size_t)t.mensura, stdout);
+    }
+    redde recensio_carminis_monita(&r) > ZEPHYRUM ? III : ZEPHYRUM;
+}
+
 /* partitura (partitura.h) in stdout; prima/ultima 0 = carmen totum */
 interior b32
 _partituram_scribere (
@@ -1133,6 +1194,8 @@ principale (
                     b32  harmonia        = FALSUM;
                     b32  censura         = FALSUM;
                     b32  auscultare      = FALSUM;
+                    b32  recensio        = FALSUM;
+                    b32  forma_json      = FALSUM;
      constans character* regulae         = NIHIL;
                     b32  mensurae_datae  = FALSUM;
                     i32  prima           = ZEPHYRUM;
@@ -1203,6 +1266,14 @@ principale (
         {
             liber = argv[++k];
         }
+        alioquin si (strcmp(argv[k], "-recensio") == ZEPHYRUM)
+        {
+            recensio = VERUM;
+        }
+        alioquin si (strcmp(argv[k], "-json") == ZEPHYRUM)
+        {
+            forma_json = VERUM;
+        }
         alioquin si (strcmp(argv[k], "-auscultare") == ZEPHYRUM)
         {
             auscultare = VERUM;
@@ -1267,7 +1338,7 @@ principale (
         }
     }
     si (   (iterare || pars != NIHIL || partitura || censura
-        || auscultare)
+        || auscultare || recensio)
         && (carmen == NIHIL || (via != NIHIL && iterare)))
     {
         fprintf(stderr,
@@ -1277,7 +1348,11 @@ principale (
     }
     si (   ((mensurae_datae || harmonia) && !partitura)
         || (partitura && (iterare || via != NIHIL))
-        || (regulae != NIHIL && !censura)
+        || (regulae != NIHIL && !censura && !recensio)
+        || (forma_json && !recensio)
+        || (recensio && (censura || auscultare || iterare
+                         || via != NIHIL || pars != NIHIL
+                         || mensurae_datae))
         || (censura && (partitura || iterare || via != NIHIL))
         || (auscultare && (censura || partitura || iterare
                            || via != NIHIL || pars != NIHIL))
@@ -1300,6 +1375,7 @@ principale (
                   "[-pars P] [-via x.wav] [-partitura [-mensurae N-M] "
                   "[-harmonia]] "
                   "[-censura [-regulae R,+R,-R]] [-auscultare] "
+                  "[-recensio [-regulae ...] [-json]] "
                   "[-liber via.stml])\n");
         _praeparata_monstrare();
         redde ZEPHYRUM;
@@ -1315,7 +1391,14 @@ principale (
         Carmen* k = _ex_carminibus(liber, carmina, carmen, pars,
             !partitura, piscina, &bene);
 
-        si (k != NIHIL && auscultare)
+        si (k != NIHIL && recensio)
+        {
+            k_exitus = _recensere(k, regulae, partitura, harmonia,
+                forma_json, piscina);
+            piscina_destruere(piscina);
+            redde k_exitus;
+        }
+        alioquin si (k != NIHIL && auscultare)
         {
             k_exitus = _auscultare(k, piscina);
             piscina_destruere(piscina);

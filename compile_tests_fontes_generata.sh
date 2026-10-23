@@ -232,6 +232,7 @@ declare -a SOURCE_FILES=(
     "lib/quaternio.c"
     "lib/radices.c"
     "lib/reactor.c"
+    "lib/recensio_carminis.c"
     "lib/registrum_commandi.c"
     "lib/registrum_widget.c"
     "lib/relatio.c"
