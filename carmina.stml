@@ -9,7 +9,13 @@
      KOROBEINIKI: carmen populare Russicum saeculi XIX (Nekrasov 1861,
      melodia popularis) - dominii publici; thema Tetris notum.
      Transcriptio nostra: A minor, 4/4, XVI mensurae - pars A (1-8) bis
-     non, deinde pars B lenta (9-16) notis dimidiis; carmen iterat. -->
+     non, deinde pars B lenta (9-16) notis dimidiis; carmen iterat.
+
+     VESPERAE: hymnus brevis noster (Claudius, 2026-10-23, per auditio
+     -partitura / -censura / -auscultare compositus; Franus auscultavit):
+     D maior, 4/4, 84, VIII mensurae, ritardando ad 66 in ultima;
+     melodia aether supra bassum triangulum (I-IV-V, nulla quinta
+     parallela). -->
 <carmina>
 
   <carmen titulus="korobeiniki" tempus="144" metrum="4/4"
@@ -22,6 +28,20 @@
     <pars titulus="bassus" instrumentum="triangulum" lucrum="0.8">
       <frustum mensura="1">
         <textus!>o2 l8 e >e <e >e <e >e <e >e < | a >a <a >a <a >a <a >a < | g# >g# <g# >g# <g# >g# <g# >g# < | a >a <a >a <a >a <a >a < | d >d <d >d <d >d <d >d < | c >c <c >c <c >c <c >c < | g# >g# <g# >g# <g# >g# <g# >g# < | a >a <a >a <a >a <a >a < | a >a <a >a <a >a <a >a < | g# >g# <g# >g# <g# >g# <g# >g# < | a >a <a >a <a >a <a >a < | e >e <e >e <e >e <e >e < | a >a <a >a <a >a <a >a < | g# >g# <g# >g# <g# >g# <g# >g# < | a >a <a >a <a >a <a >a < | e >e <e >e <e >e <e >e <</textus>
+      </>
+    </>
+  </>
+
+  <carmen titulus="vesperae" tempus="84" metrum="4/4" clavis="d maior">
+    <tempus mensura="8" valor="66"/>
+    <pars titulus="melodia" instrumentum="aether" lucrum="0.7">
+      <frustum mensura="1">
+        <textus!>o5 d4 e8 f#8 g4 f#4 | e4 d4 c#4 <a4 | >d4 f#4 b4 a4 | g2 f#2 | e4 f#8 g8 a4 g4 | f#4 e4 d4 c#4 | <b4 >e4 d4 c#4 | d1</textus>
+      </>
+    </>
+    <pars titulus="bassus" instrumentum="triangulum" lucrum="0.8">
+      <frustum mensura="1">
+        <textus!>o3 d2 o2 g2 | o2 a2 a2 | o3 f#2 g2 | o3 e2 d2 | o3 c#2 o2 a2 | o2 b2 a2 | o2 g2 a2 | o2 d1</textus>
       </>
     </>
   </>
