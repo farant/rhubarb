@@ -55,6 +55,22 @@ testa_geometriam_computare (
                i32  scala,
     TestaGeometria* g);
 
+/* idem intra rectangulum CONTENTI [x0,x1) x [y0,y1) fenestrae (T3:
+ * vectes systematis - status, navalis - tactus suos devorant; area
+ * eorum margo fit). Rectangulum ad fenestram secatur; FALSUM si
+ * vacuum aut minor scala. fenestra_* = fenestra TOTA (transfusio
+ * margines extra rectangulum implet). */
+b32
+testa_geometriam_in_area (
+               i32  fenestra_latitudo,
+               i32  fenestra_altitudo,
+               s32  x0,
+               s32  y0,
+               s32  x1,
+               s32  y1,
+               i32  scala,
+    TestaGeometria* g);
+
 /* punctum fenestrae -> pixela nostra, PAVIMENTO (negativa recte):
  * in margine extra [0, latitudo) cadit, ut mus extra fenestram (A3c) */
 vacuum

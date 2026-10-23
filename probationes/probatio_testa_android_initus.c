@@ -419,6 +419,64 @@ _sectio_transferre (
     }
 }
 
+/* area contenti (T3: vectes systematis Fire - status [0,24], navalis
+ * [552,600] - tactus suos devorant): geometria intra rectangulum */
+interior vacuum
+_sectio_rectangulum (
+    CredoContextus* c)
+{
+     TestaGeometria  g;
+    TabulaPixelorum* t;
+                s32  x;
+                s32  y;
+
+    CREDO_GRADUS("Fire 7: contentum [0,24]-[1024,552], scala II");
+    CREDO_VERUM(testa_geometriam_in_area(MXXIV, DC, ZEPHYRUM,
+        XXIV, MXXIV, DLII, II, &g));
+    CREDO_AEQUALIS_I32(g.fenestra_latitudo, MXXIV);
+    CREDO_AEQUALIS_I32(g.fenestra_altitudo, DC);
+    CREDO_AEQUALIS_I32(g.latitudo, DXII);
+    CREDO_AEQUALIS_I32(g.altitudo, CCLXIV);
+    CREDO_AEQUALIS_I32(g.margo_x, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(g.margo_y, XXIV);
+
+    CREDO_GRADUS("congruit cum ad_fenestram super contentum");
+    t         = tabula_pixelorum_creare_nuda(c->piscina, X, X);
+    t->scala  = 2.0f;
+    CREDO_VERUM(tabula_pixelorum_ad_fenestram(t, c->piscina, MXXIV,
+        DXXVIII));
+    CREDO_AEQUALIS_I32(t->latitudo, g.latitudo);
+    CREDO_AEQUALIS_I32(t->altitudo, g.altitudo);
+
+    CREDO_GRADUS("tactus sub vecte status et in navali: extra");
+    testa_punctum_mappare(&g, 10.0f, 30.0f, &x, &y);
+    CREDO_AEQUALIS_S32(x, V);
+    CREDO_AEQUALIS_S32(y, III);
+    testa_punctum_mappare(&g, 10.0f, 10.0f, &x, &y);
+    CREDO_AEQUALIS_S32(y, -VII);
+    testa_punctum_mappare(&g, 100.0f, 560.0f, &x, &y);
+    CREDO_AEQUALIS_S32(y, CCLXVIII);
+
+    CREDO_GRADUS("residuum impar: margo intra rectangulum");
+    CREDO_VERUM(testa_geometriam_in_area(MXXIV, DC, V, XXIV,
+        MXXIV, DLIII, II, &g));
+    CREDO_AEQUALIS_I32(g.latitudo, DIX);
+    CREDO_AEQUALIS_I32(g.altitudo, CCLXIV);
+    CREDO_AEQUALIS_I32(g.margo_x, V);
+    CREDO_AEQUALIS_I32(g.margo_y, XXIV);
+
+    CREDO_GRADUS("rectangulum extra fenestram secatur; vacuum: FALSUM");
+    CREDO_VERUM(testa_geometriam_in_area(MXXIV, DC, -X, -X,
+        MM, MM, II, &g));
+    CREDO_AEQUALIS_I32(g.latitudo, DXII);
+    CREDO_AEQUALIS_I32(g.altitudo, CCC);
+    CREDO_AEQUALIS_I32(g.margo_x, ZEPHYRUM);
+    CREDO_FALSUM(testa_geometriam_in_area(MXXIV, DC, C, C, C, CC,
+        II, &g));
+    CREDO_FALSUM(testa_geometriam_in_area(MXXIV, DC, ZEPHYRUM,
+        ZEPHYRUM, I, I, II, &g));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "geometria", _sectio_geometria, NIHIL, NIHIL, NIHIL, NIHIL },
     { "margo", _sectio_margo, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -428,6 +486,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "facultates", _sectio_facultates, NIHIL, NIHIL, NIHIL, NIHIL },
     { "decisio quadri", _sectio_quadrum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "transfusio", _sectio_transferre, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "rectangulum contenti", _sectio_rectangulum, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

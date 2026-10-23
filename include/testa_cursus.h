@@ -33,6 +33,11 @@ nomen structura {
                    i32  utilis_altitudo;
     constans character* sedes_datorum;      /* macOS ".", Android
                                              * internalDataPath (= cwd) */
+                   i32 superficies_latitudo; /* puncta quae testa */
+                   i32 superficies_altitudo; /* IMPONIT (Android: area
+                                             * contenti; documenta nova
+                                             * ei aptanda); 0 = applicatio
+                                             * magnitudinem eligit (macOS) */
                    i32 densitas;           /* Android dpi (Fire 7: 160);
                                              * 0 = ignota (macOS: puncta
                                              * iam scalam systematis ferunt) */

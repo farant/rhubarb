@@ -2418,7 +2418,7 @@ silva.commissio('testa T2: postulata_android.h (inline NDK -> static __inline__)
 
 /* constantae testa_android_initus.h == NDK (compilatio frangitur si
  * differunt: magnitudo negativa) */
-externus character testa_congruentia_ndk[
+externus character testa_congruentia_initus[
     (   AMOTION_EVENT_ACTION_DOWN         == TESTA_TACTUS_DEPRESSIO
      && AMOTION_EVENT_ACTION_UP           == TESTA_TACTUS_LIBERATIO
      && AMOTION_EVENT_ACTION_MOVE         == TESTA_TACTUS_MOTUS
@@ -2607,6 +2607,7 @@ _sedem_ponere (
     redde setenv("HOME", sedes, I) == ZEPHYRUM
         && setenv("TMPDIR", tmp, I) == ZEPHYRUM;
 }
+```
 
 ```c
 /* --- quadra --- */
@@ -2877,6 +2878,7 @@ _caudam_legere (
     }
     redde I;
 }
+```
 
 ```c
 /* --- vocationes activitatis --- */

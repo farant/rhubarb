@@ -12,3 +12,12 @@ NDK_SHA1="2970926d705988f79baa9b04c51b4f7914dd8c56"
 NDK_SHA256="e69092f9d2bfa5d1199039980a14eb91c03cc971ab5c6968fc08a8e6b84e7bb7"
 NDK_API_MINIMA="30"
 NDK_SEDES="$HOME/Library/Android/sdk/ndk/$NDK_VERSIO"
+
+# SDK (testa T3): instrumenta APK et platforma - Android Studio
+# instituit, non nostrum instrumentum (integritas non sigillata:
+# AUDIENDA testa-spec)
+SDK_SEDES="$HOME/Library/Android/sdk"
+INSTRUMENTA_VERSIO="34.0.0"
+PLATFORMA="android-34"
+INSTRUMENTA_SEDES="$SDK_SEDES/build-tools/$INSTRUMENTA_VERSIO"
+PLATFORMA_JAR="$SDK_SEDES/platforms/$PLATFORMA/android.jar"

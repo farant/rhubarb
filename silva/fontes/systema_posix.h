@@ -796,3 +796,195 @@ uint32x4_t vsha256su0q_u32(uint32x4_t w0_3, uint32x4_t w4_7);
 uint32x4_t vsha256su1q_u32(uint32x4_t tw0_3, uint32x4_t w8_11,
                            uint32x4_t w12_15);
 #endif
+
+
+/* ==================================================
+ * NDK ANDROID (testa B1 T3b, 2026-10-23; Franus optio a) - sectiones
+ * quas capita "android/..." (et sys/system_properties.h) plagulae ipsius
+ * evocant: lib/testa_android.c SOLA hodie. Formae et valores ex NDK
+ * r27d (aarch64-linux-android30), certificatae per
+ * officina/auspex_android.sh (TU verum capita NDK vera, TU nostrum hoc
+ * caput - eadem tabula assertionum). Functiones EAE SOLAE quas testa
+ * adhibet; typi opaci ut in NDK (monstrator solus traditur). Campi
+ * Java ANativeActivity (vm, env, clazz) ut vacuum* - eadem mensura,
+ * idem offset (auspex certificat), JNI nondum (B3).
+ * ================================================== */
+
+/* <sectio caput="android/rect.h"/> android/rect.h */
+typedef struct ARect {
+    int32_t left;
+    int32_t top;
+    int32_t right;
+    int32_t bottom;
+} ARect;
+
+/* <sectio caput="android/asset_manager.h"/> android/asset_manager.h -
+ * opacum (AConfiguration_fromAssetManager solum) */
+typedef struct AAssetManager AAssetManager;
+
+/* <sectio caput="android/native_window.h" poscit="android/rect.h"/>
+ * android/native_window.h - alveus fenestrae (testa pixela transfundit) */
+typedef struct ANativeWindow ANativeWindow;
+typedef struct ANativeWindow_Buffer {
+    int32_t  width;
+    int32_t  height;
+    int32_t  stride;
+    int32_t  format;
+    void*    bits;
+    uint32_t reserved[6];
+} ANativeWindow_Buffer;
+enum { WINDOW_FORMAT_RGBA_8888 = 1 };
+int32_t ANativeWindow_getWidth(ANativeWindow* fenestra);
+int32_t ANativeWindow_getHeight(ANativeWindow* fenestra);
+int32_t ANativeWindow_setBuffersGeometry(ANativeWindow* fenestra,
+    int32_t latitudo, int32_t altitudo, int32_t forma);
+int32_t ANativeWindow_lock(ANativeWindow* fenestra,
+    ANativeWindow_Buffer* alveus, ARect* limites);
+int32_t ANativeWindow_unlockAndPost(ANativeWindow* fenestra);
+
+/* <sectio caput="android/looper.h"/> android/looper.h - ansa fili
+ * principalis (cauda initus, fistula effusionis) */
+typedef struct ALooper ALooper;
+typedef int (*ALooper_callbackFunc)(int fossa, int eventa, void* datum);
+enum { ALOOPER_POLL_CALLBACK = -2 };
+enum { ALOOPER_EVENT_INPUT = 1 };
+ALooper* ALooper_forThread(void);
+int ALooper_addFd(ALooper* ansa, int fossa, int signum, int eventa,
+    ALooper_callbackFunc revocatio, void* datum);
+
+/* <sectio caput="android/input.h" poscit="android/looper.h"/>
+ * android/input.h (+ keycodes.h, quod input.h includit) - eventus
+ * initus, cauda; constantae testa_android_initus.h congruentes */
+typedef struct AInputEvent AInputEvent;
+typedef struct AInputQueue AInputQueue;
+enum { AINPUT_EVENT_TYPE_KEY = 1, AINPUT_EVENT_TYPE_MOTION = 2 };
+enum { AKEY_EVENT_ACTION_UP = 1 };
+enum { AKEYCODE_BACK = 4 };
+enum {
+    AMOTION_EVENT_ACTION_MASK = 0xff,
+    AMOTION_EVENT_ACTION_POINTER_INDEX_MASK = 0xff00,
+    AMOTION_EVENT_ACTION_DOWN = 0,
+    AMOTION_EVENT_ACTION_UP = 1,
+    AMOTION_EVENT_ACTION_MOVE = 2,
+    AMOTION_EVENT_ACTION_CANCEL = 3,
+    AMOTION_EVENT_ACTION_POINTER_DOWN = 5,
+    AMOTION_EVENT_ACTION_POINTER_UP = 6
+};
+#define AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT 8
+enum {
+    AMOTION_EVENT_TOOL_TYPE_FINGER = 1,
+    AMOTION_EVENT_TOOL_TYPE_STYLUS = 2,
+    AMOTION_EVENT_TOOL_TYPE_MOUSE = 3,
+    AMOTION_EVENT_TOOL_TYPE_ERASER = 4
+};
+int32_t AInputEvent_getType(const AInputEvent* eventus);
+int32_t AKeyEvent_getAction(const AInputEvent* eventus);
+int32_t AKeyEvent_getKeyCode(const AInputEvent* eventus);
+int32_t AMotionEvent_getAction(const AInputEvent* eventus);
+int64_t AMotionEvent_getEventTime(const AInputEvent* eventus);
+size_t  AMotionEvent_getPointerCount(const AInputEvent* eventus);
+int32_t AMotionEvent_getPointerId(const AInputEvent* eventus,
+    size_t index);
+int32_t AMotionEvent_getToolType(const AInputEvent* eventus,
+    size_t index);
+float   AMotionEvent_getX(const AInputEvent* eventus, size_t index);
+float   AMotionEvent_getY(const AInputEvent* eventus, size_t index);
+size_t  AMotionEvent_getHistorySize(const AInputEvent* eventus);
+int64_t AMotionEvent_getHistoricalEventTime(const AInputEvent* eventus,
+    size_t historia);
+float   AMotionEvent_getHistoricalX(const AInputEvent* eventus,
+    size_t index, size_t historia);
+float   AMotionEvent_getHistoricalY(const AInputEvent* eventus,
+    size_t index, size_t historia);
+void    AInputQueue_attachLooper(AInputQueue* cauda, ALooper* ansa,
+    int signum, ALooper_callbackFunc revocatio, void* datum);
+void    AInputQueue_detachLooper(AInputQueue* cauda);
+int32_t AInputQueue_getEvent(AInputQueue* cauda, AInputEvent** eventus);
+int32_t AInputQueue_preDispatchEvent(AInputQueue* cauda,
+    AInputEvent* eventus);
+void    AInputQueue_finishEvent(AInputQueue* cauda,
+    AInputEvent* eventus,
+    int tractatum);
+
+/* <sectio caput="android/native_activity.h" poscit="android/native_window.h,android/input.h,android/asset_manager.h,android/rect.h"/>
+ * android/native_activity.h - activitas et vocationes eius (testa
+ * Android: filum principale solum) */
+struct ANativeActivityCallbacks;
+typedef struct ANativeActivity {
+    struct ANativeActivityCallbacks* callbacks;
+    void*          vm;
+    void*          env;
+    void*          clazz;
+    const char*    internalDataPath;
+    const char*    externalDataPath;
+    int32_t        sdkVersion;
+    void*          instance;
+    AAssetManager* assetManager;
+    const char*    obbPath;
+} ANativeActivity;
+typedef struct ANativeActivityCallbacks {
+    void  (*onStart)(ANativeActivity* activitas);
+    void  (*onResume)(ANativeActivity* activitas);
+    void* (*onSaveInstanceState)(ANativeActivity* activitas,
+        size_t* mensura);
+    void  (*onPause)(ANativeActivity* activitas);
+    void  (*onStop)(ANativeActivity* activitas);
+    void  (*onDestroy)(ANativeActivity* activitas);
+    void  (*onWindowFocusChanged)(ANativeActivity* activitas,
+        int focus);
+    void  (*onNativeWindowCreated)(ANativeActivity* activitas,
+        ANativeWindow* fenestra);
+    void  (*onNativeWindowResized)(ANativeActivity* activitas,
+        ANativeWindow* fenestra);
+    void  (*onNativeWindowRedrawNeeded)(ANativeActivity* activitas,
+        ANativeWindow* fenestra);
+    void  (*onNativeWindowDestroyed)(ANativeActivity* activitas,
+        ANativeWindow* fenestra);
+    void  (*onInputQueueCreated)(ANativeActivity* activitas,
+        AInputQueue* cauda);
+    void  (*onInputQueueDestroyed)(ANativeActivity* activitas,
+        AInputQueue* cauda);
+    void  (*onContentRectChanged)(ANativeActivity* activitas,
+        const ARect* area);
+    void  (*onConfigurationChanged)(ANativeActivity* activitas);
+    void  (*onLowMemory)(ANativeActivity* activitas);
+} ANativeActivityCallbacks;
+void ANativeActivity_finish(ANativeActivity* activitas);
+/* punctum ingressus: plagula ipsa DEFINIT, prototypum ut consentiat */
+void ANativeActivity_onCreate(ANativeActivity* activitas, void* status,
+    size_t mensura);
+
+/* <sectio caput="android/choreographer.h"/> android/choreographer.h -
+ * quadra ad vsync (API XXIX+) */
+typedef struct AChoreographer AChoreographer;
+typedef void (*AChoreographer_frameCallback64)(int64_t tempus_ns,
+    void* datum);
+AChoreographer* AChoreographer_getInstance(void);
+void AChoreographer_postFrameCallback64(AChoreographer* chorographus,
+    AChoreographer_frameCallback64 revocatio, void* datum);
+void AChoreographer_postFrameCallbackDelayed64(
+    AChoreographer* chorographus,
+        AChoreographer_frameCallback64 revocatio,
+    void* datum, uint32_t mora_ms);
+
+/* <sectio caput="android/configuration.h" poscit="android/asset_manager.h"/>
+ * android/configuration.h - densitas schirmi */
+typedef struct AConfiguration AConfiguration;
+AConfiguration* AConfiguration_new(void);
+void    AConfiguration_delete(AConfiguration* configuratio);
+void    AConfiguration_fromAssetManager(AConfiguration* configuratio,
+    AAssetManager* res);
+int32_t AConfiguration_getDensity(AConfiguration* configuratio);
+
+/* <sectio caput="android/log.h"/> android/log.h - logcat (effusio
+ * testae) */
+enum { ANDROID_LOG_INFO = 4 };
+int __android_log_write(int gradus, const char* signum,
+    const char* textus);
+
+/* <sectio caput="sys/system_properties.h"/> sys/system_properties.h -
+ * proprietates (debug.rhubarb.fumus / .scala) */
+#define PROP_VALUE_MAX 92
+int __system_property_get(const char* titulus, char* valor);
+
+/* FINIS NDK ANDROID */

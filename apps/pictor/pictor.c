@@ -35,6 +35,8 @@ applicatio_initium (
                 Volumen* vol;
        PictorApplicatio* app;
                     b32  fumus;
+                    i32  latitudo;
+                    i32  altitudo;
 
     intern = internamentum_creare(a->piscina);
     thema_initiare();
@@ -44,13 +46,24 @@ applicatio_initium (
         fprintf(stderr, "pictor: volumen aperiri non potuit\n");
         redde FALSUM;
     }
+    /* superficies a testa imposita (Android: area contenti): documentum
+     * NOVUM ei aptatur - pertinet aspectui ubi natum est (D4); macOS:
+     * fenestra nostra, 640 x 480 */
+    latitudo = PICTOR_LATITUDO;
+    altitudo = PICTOR_ALTITUDO;
+    si (   a->superficies_latitudo >= SCALA
+        && a->superficies_altitudo >= SCALA)
+    {
+        latitudo = a->superficies_latitudo / SCALA;
+        altitudo = a->superficies_altitudo / SCALA;
+    }
     /* R3: app in piscina - fons_ctx (&montatio.figurae_ctx) ultra
      * initium vivit */
     app = (PictorApplicatio*)piscina_allocare(a->piscina,
         magnitudo(PictorApplicatio));
     si (   !app
         || !pictor_applicatio_aedificare(app, a->piscina, intern, vol,
-               PICTOR_LATITUDO, PICTOR_ALTITUDO))
+               latitudo, altitudo))
     {
         redde FALSUM;
     }
@@ -60,8 +73,8 @@ applicatio_initium (
     app->montatio.actiones_ctx.imago_ctx     = a->imago_ctx;
 
     forma->titulus    = "pictor";
-    forma->latitudo   = PICTOR_LATITUDO;
-    forma->altitudo   = PICTOR_ALTITUDO;
+    forma->latitudo   = latitudo;
+    forma->altitudo   = altitudo;
     forma->scala      = SCALA;
     forma->d          = app->d;
     forma->figurae    = app->figurae;

@@ -42,7 +42,6 @@ RADIX_TABULAE=/data/local/tmp/rhubarb
 # (effusio suitae > $D/effusio.txt) currere potest - nuntius purgationis
 # alioquin in effusionem suitae caderet (inventum 2026-10-23, TERM)
 exec 3>&1
-ADB="${ADB:-$HOME/Library/Android/sdk/platform-tools/adb}"
 SERVARE=0
 PURGARE=0
 while [ $# -gt 0 ]; do
@@ -58,23 +57,9 @@ apparatus () {
     exit 2
 }
 
-# --- tabula: exacte una, auctorizata -------------------------------
-[ -x "$ADB" ] || apparatus "adb deest ($ADB)"
-ADB_TABULAE=$("$ADB" devices | awk 'NR > 1 && NF >= 2 {print $1 " " $2}')
-if [ -n "${ANDROID_SERIAL:-}" ]; then
-    STATUS=$(printf '%s\n' "$ADB_TABULAE" | awk -v s="$ANDROID_SERIAL" '$1 == s {print $2}')
-    [ -n "$STATUS" ] || apparatus "tabula $ANDROID_SERIAL non connexa"
-else
-    NUMERUS=$(printf '%s\n' "$ADB_TABULAE" | grep -c .)
-    [ "$NUMERUS" -ge 1 ] || apparatus "nulla tabula connexa (adb devices vacuum)"
-    [ "$NUMERUS" -eq 1 ] || apparatus "plures tabulae ($NUMERUS) - ANDROID_SERIAL elige"
-    ANDROID_SERIAL=$(printf '%s\n' "$ADB_TABULAE" | awk '{print $1}')
-    STATUS=$(printf '%s\n' "$ADB_TABULAE" | awk '{print $2}')
-fi
-[ "$STATUS" = "device" ] || apparatus "tabula $ANDROID_SERIAL status '$STATUS' - 'Allow USB debugging?' in tabula accipe"
-export ANDROID_SERIAL
-
-A () { "$ADB" "$@"; }
+# --- tabula (tools/android/communia.sh: adb, tabula una, sera) ----
+. tools/android/communia.sh
+android_tabulam_eligere
 
 # "purgatum" SOLUM si tabula deletionem confirmat (signum PURGATUM ab
 # ipsa tabula redditum): tabula amissa (cablum, adb) nuntiatur, numquam
@@ -91,31 +76,7 @@ purgare () {
     return 0
 }
 
-# --- sera tabulae (recensio 2026-10-23): cursus plures (arbores operis
-# parallelae) eandem tabulam tangunt - initium alterius radicem alterius
-# in media suita deleret (rubrum fictum). Sera in HOSPITE per tabulam,
-# omnibus arboribus communis (~/.rhubarb), mkdir atomicum + pid; in
-# tabula nihil extra radicem scribitur (spec II.5).
-SERA_DIR="$HOME/.rhubarb/android"
-SERA="$SERA_DIR/$ANDROID_SERIAL.sera"
-SERA_NOSTRA=0
 RADIX_NOSTRA=0
-sera_capere () {
-    local alius
-    mkdir -p "$SERA_DIR" || apparatus "directorium serae $SERA_DIR creari nequit"
-    if ! mkdir "$SERA" 2>/dev/null; then
-        alius=$(cat "$SERA/pid" 2>/dev/null)
-        if [ -z "$alius" ] || kill -0 "$alius" 2>/dev/null; then
-            apparatus "tabula $ANDROID_SERIAL occupata (cursus pid ${alius:-ignotus}; sera $SERA) - exspecta; si nullus cursus vivit: rm -rf $SERA"
-        fi
-        # possessor mortuus: sera stala, capitur
-        { rm -rf "$SERA" && mkdir "$SERA" 2>/dev/null; } \
-            || apparatus "sera $SERA capi nequit"
-    fi
-    echo $$ > "$SERA/pid"
-    SERA_NOSTRA=1
-}
-
 # finis UNUS omnes exitus regit: radicem SUAM solum purgat, seram SUAM
 # solum liberat; purgatio fracta -> exitus 2 (contractus 0/1/2/130)
 finis () {
@@ -127,13 +88,11 @@ finis () {
             status=2
         fi
     fi
-    if [ "$SERA_NOSTRA" = 1 ]; then
-        rm -rf "$SERA"
-    fi
+    android_seram_liberare
     exit "$status"
 }
 
-sera_capere
+android_seram_capere
 trap finis EXIT
 trap 'exit 130' INT TERM
 

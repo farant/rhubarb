@@ -45,18 +45,59 @@ testa_geometriam_computare (
                i32  scala,
     TestaGeometria* g)
 {
-    si (   !g || scala < I || fenestra_latitudo < scala
-        || fenestra_altitudo < scala)
+    redde testa_geometriam_in_area(fenestra_latitudo,
+        fenestra_altitudo, ZEPHYRUM, ZEPHYRUM, (s32)fenestra_latitudo,
+        (s32)fenestra_altitudo, scala, g);
+}
+
+b32
+testa_geometriam_in_area (
+               i32  fenestra_latitudo,
+               i32  fenestra_altitudo,
+               s32  x0,
+               s32  y0,
+               s32  x1,
+               s32  y1,
+               i32  scala,
+    TestaGeometria* g)
+{
+    i32 latitudo_rect;
+    i32 altitudo_rect;
+
+    si (!g || scala < I)
     {
         redde FALSUM;
     }
+    /* ad fenestram secare */
+    si (x0 < ZEPHYRUM)
+    {
+        x0 = ZEPHYRUM;
+    }
+    si (y0 < ZEPHYRUM)
+    {
+        y0 = ZEPHYRUM;
+    }
+    si (x1 > (s32)fenestra_latitudo)
+    {
+        x1 = (s32)fenestra_latitudo;
+    }
+    si (y1 > (s32)fenestra_altitudo)
+    {
+        y1 = (s32)fenestra_altitudo;
+    }
+    si (x1 - x0 < (s32)scala || y1 - y0 < (s32)scala)
+    {
+        redde FALSUM;
+    }
+    latitudo_rect = (i32)(x1 - x0);
+    altitudo_rect = (i32)(y1 - y0);
     g->fenestra_latitudo = fenestra_latitudo;
     g->fenestra_altitudo = fenestra_altitudo;
     g->scala = scala;
-    g->latitudo = fenestra_latitudo / scala;
-    g->altitudo = fenestra_altitudo / scala;
-    g->margo_x = (fenestra_latitudo - g->latitudo * scala) / II;
-    g->margo_y = (fenestra_altitudo - g->altitudo * scala) / II;
+    g->latitudo = latitudo_rect / scala;
+    g->altitudo = altitudo_rect / scala;
+    g->margo_x = (i32)x0 + (latitudo_rect - g->latitudo * scala) / II;
+    g->margo_y = (i32)y0 + (altitudo_rect - g->altitudo * scala) / II;
     redde VERUM;
 }
 

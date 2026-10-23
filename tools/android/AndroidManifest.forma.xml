@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- forma manifesti testae Android (testa-spec II.7): apk.sh @TITULUS@
+     substituit; NativeActivity sine codice Java -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="earth.golden.@TITULUS@"
+    android:versionCode="1" android:versionName="0.1">
+  <uses-sdk android:minSdkVersion="30" android:targetSdkVersion="34"/>
+  <application android:label="@TITULUS@" android:hasCode="false"
+      android:debuggable="true">
+    <activity android:name="android.app.NativeActivity"
+        android:exported="true"
+        android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
+        android:screenOrientation="sensorLandscape"
+        android:configChanges="orientation|screenSize|screenLayout|keyboard|keyboardHidden">
+      <meta-data android:name="android.app.lib_name"
+          android:value="@TITULUS@"/>
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
+  </application>
+</manifest>
