@@ -31,6 +31,13 @@
       <optio>agenda</optio>
       <optio>monita</optio>
     </campus>
+    <campus nomen="monita_modus" typus="electio" vita="transiens"
+            absens="lectio" scriptor="calendarium.agere"
+            nota="visus monitorum (K5): lectio sola aut editio (scriba
+                  libri pensa infra, lectio supra)">
+      <optio>lectio</optio>
+      <optio>editio</optio>
+    </campus>
     <campus nomen="dies_electus" typus="dies" vita="transiens"
             scriptor="calendarium.agere" semita="ligatio"
             nota="YYYY-MM-DD; absens = hodie (semita

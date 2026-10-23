@@ -60,6 +60,7 @@ nomen structura {
      ConspectusRegistrum* conspectus;  /* D4b: NIHIL sine volumine et
                                         * agenda - computatio directa */
          PensaDocumentum* pensa;   /* K3: signa (NIHIL sine volumine) */
+                  Charta  pensorum;  /* K5: editor libri "pensa" */
 } KalendariumFigurae;
 
 /* A6e: superficies sine superficies_* rami: montationis (si nota),
@@ -613,6 +614,18 @@ visus_monitorum (
 
     a = insula_ramus_attributum(&m->ramus, "visus");
     redde a && chorda_aequalis_literis(*a, "monita");
+}
+
+/* K5: editio formae (visus monitorum, monita_modus editio) */
+interior b32
+editio_monitorum (
+    constans KalendariumMontatio* m)
+{
+    chorda* a;
+
+    a = insula_ramus_attributum(&m->ramus, "monita_modus");
+    redde visus_monitorum(m) && a && chorda_aequalis_literis(*a,
+        "editio");
 }
 
 /* grex visus agendae: rubrica (vacua = sine rubrica) et res apertae
@@ -1534,7 +1547,7 @@ capacitas_indicis (
         superficies_ordinaria(m, FALSUM)) / KALENDARIUM_LINEA - II
         - KALENDARIUM_BARRA_LINEAE - (visus_diei(m)
         ? KALENDARIUM_TITULI_DIEI : KALENDARIUM_TITULI_LINEAE);
-    si (visus_diei(m))
+    si (visus_diei(m) || editio_monitorum(m))
     {
         corpus = corpus * L / C;
     }
@@ -2114,13 +2127,55 @@ fac_visum_agendae (
     redde visum_ponere(cm->m, "agenda");
 }
 
+/* K5: visus monitorum semper in lectione incipit (scriptura una) */
 interior b32
 fac_visum_monitorum (
     vacuum* ctx)
 {
     ContextusMandati* cm = (ContextusMandati*)ctx;
+            ParCampi  pares[III];
+        GrexCamporum  grex;
+              chorda  prior;
+                 b32  ok;
 
-    redde visum_ponere(cm->m, "monita");
+    pares[ZEPHYRUM].titulus  = "visus";
+    pares[ZEPHYRUM].valor    = "monita";
+    pares[I].titulus         = "pagina";
+    pares[I].valor           = "";
+    pares[II].titulus        = "monita_modus";
+    pares[II].valor          = "";
+    grex.pares               = pares;
+    grex.numerus             = III;
+    prior                    = cm->m->ramus.repo->scriptor;
+    insula_scriptorem_ponere(cm->m->ramus.repo, chorda_ex_literis(
+        actio_calendarii, cm->m->piscina));
+    ok = mutare_ramum(&cm->m->ramus, campos_ponere, &grex);
+    insula_scriptorem_ponere(cm->m->ramus.repo, prior);
+    redde ok;
+}
+
+/* K5: e - editio formae (scriba infra; ictu aut Tab in eam) */
+interior b32
+fac_monita_edere (
+    vacuum* ctx)
+{
+    ContextusMandati* cm = (ContextusMandati*)ctx;
+
+    redde campum_scribere(cm->m, "monita_modus", "editio");
+}
+
+/* K5: Esc in indice monitorum: editio -> lectio, lectio -> mensis */
+interior b32
+fac_monita_effugere (
+    vacuum* ctx)
+{
+    ContextusMandati* cm = (ContextusMandati*)ctx;
+
+    si (editio_monitorum(cm->m))
+    {
+        redde campum_scribere(cm->m, "monita_modus", "");
+    }
+    redde visum_ponere(cm->m, "mensis");
 }
 
 /* tabula: clavis in visu UNO mandatum unum (praecepta_verificare);
@@ -2178,7 +2233,11 @@ hic_manens constans Praeceptum TABULA_MANDATORUM[] = {
     { "calendarium.res_post", "Move item to next day", ">", VISUS_DIEI,
         REQUIRIT_REM, fac_rem_post },
     { "calendarium.ad_mensem", "Back to month", "Esc", VISUS_DIEI
-        | VISUS_HEBDOMADIS | VISUS_MONITORUM, ZEPHYRUM, fac_mensem },
+        | VISUS_HEBDOMADIS, ZEPHYRUM, fac_mensem },
+    { "calendarium.monita_edere", "Edit checklist", "e",
+        VISUS_MONITORUM, ZEPHYRUM, fac_monita_edere },
+    { "calendarium.monita_effugere", "Back", "Esc", VISUS_MONITORUM,
+        ZEPHYRUM, fac_monita_effugere },
     { "calendarium.filtrum", "Filter by rubric", "f", VISUS_AGENDAE,
         ZEPHYRUM, fac_filtrum },
     { "calendarium.filtrum_tollere", "Clear filter", "Esc",
@@ -2372,6 +2431,10 @@ hic_manens constans GlobulusTituli GLOBULI[] = {
     { "nova", "+ New", VISUS_INDICIS, ZEPHYRUM, FALSUM,
         "calendarium.nova", "calendarium.nova", "calendarium.nova",
         VERUM },
+    /* K5: caput monitorum (solum in lectione, indicem_disponere) */
+    { "edere", "Edit", VISUS_MONITORUM, ZEPHYRUM, FALSUM,
+        "calendarium.monita_edere", "calendarium.monita_edere",
+        "calendarium.monita_edere", VERUM },
     { "pagina-prior", "<", VISUS_INDICIS | VISUS_MONITORUM, ZEPHYRUM,
         FALSUM,
         "calendarium.pagina_prior", "calendarium.pagina_prior",
@@ -2693,6 +2756,12 @@ librum_aptare (
     KalendariumMontatio* m,
                   Motus* motus);
 
+/* K5: gestus editori visibili - infra definita */
+interior vacuum
+gestum_aptare (
+    KalendariumMontatio* m,
+                  Motus* motus);
+
 /* P6d: placenta natalis sub mure (visus mensis, menu clausum) ->
  * campus natalis_super "YYYY-MM-DD x y" (punctum muris in spatio
  * calendarii); motus alibi, ictus, clavis, rotula, exitus delent.
@@ -2799,15 +2868,19 @@ agere (
     m = (KalendariumMontatio*)ctx;
     /* A6d-2: focus in notis: claves notis et dispensatori (Tab, Esc
      * gradus) relinquuntur - indicis mandata non currunt */
+    /* K5: idem in editore formae (scriba libri "pensa") */
     si (   ev->genus == EVENTUS_CLAVIS_DEPRESSUS && m->figurae_ctx
-        && charta_focata(&((KalendariumFigurae*)m->figurae_ctx)->notae,
-               motus))
+        && (   charta_focata(&((KalendariumFigurae*)m->figurae_ctx)
+                   ->notae, motus)
+            || charta_focata(&((KalendariumFigurae*)m->figurae_ctx)
+                   ->pensorum, motus)))
     {
         redde FALSUM;
     }
     cellula_mota = natalem_super_aptare(m, des, nodus, ev);
     r = agere_intus(repo, motus, des, nodus, ev, ctx) || cellula_mota;
     librum_aptare(m, motus);
+    gestum_aptare(m, motus);
     redde r;
 }
 
@@ -3728,8 +3801,9 @@ monita_pingere (
         si (chorda_aequalis_literis(l->id, "nullum"))
         {
             mandata_textus(md, l->fines.x + VI, l->fines.y + IV,
-                chorda_ex_literis("No checklist yet.", md->piscina),
-                ZEPHYRUM, figura_color_thematis(COLOR_TEXT_DIM));
+                chorda_ex_literis("No checklist yet. Press e to write "
+                "one.", md->piscina), ZEPHYRUM, figura_color_thematis(
+                COLOR_TEXT_DIM));
             perge;
         }
         si (   !forma || l->id.mensura < II
@@ -4106,6 +4180,17 @@ figura_tabulae (
     }
     si (visus_monitorum(contextus->m))
     {
+        /* K5: umbra plana editoris (scriba supra pingitur) */
+        per (i = ZEPHYRUM; contextus->pensorum.montata
+            && i < componens_numerus_liberorum(c); i++)
+        {
+            l = componens_liberum(c, i);
+            si (chorda_aequalis_literis(l->id, "forma"))
+            {
+                charta_umbram_pingere(&contextus->pensorum, md,
+                    l->fines);
+            }
+        }
         monita_pingere(contextus, md, c);
         redde;
     }
@@ -4634,6 +4719,73 @@ notas_montare (
         systemata);
 }
 
+/* K5: editor libri "pensa" (scriba nidificata "<id>_pensa"), loci
+ * mensura ut notae (dimidium inferum) */
+interior b32
+pensorum_montare (
+    KalendariumMontatio* m,
+                Volumen* volumen,
+     constans character* id,
+        StatusSystemata* systemata)
+{
+    KalendariumFigurae* ctx;
+             character  titulus[LXIV];
+                   s32  lat;
+                   s32  alt;
+
+    ctx = (KalendariumFigurae*)m->figurae_ctx;
+    si (!ctx)
+    {
+        redde VERUM;
+    }
+    sprintf(titulus, "%s_pensa", id ? id : "calendarium");
+    notarum_locus(m, &lat, &alt);
+    redde charta_montare(&ctx->pensorum, m->piscina, m->intern, volumen,
+        &m->ramus, m->actiones, m->figurae, titulus, "pensa", lat, alt,
+        systemata);
+}
+
+/* K5: editor visibilis - forma in editione monitorum, aliter notae
+ * (NIHIL si non montatus) */
+interior Charta*
+charta_visibilis (
+    KalendariumMontatio* m)
+{
+    KalendariumFigurae* ctx;
+
+    ctx = m ? (KalendariumFigurae*)m->figurae_ctx : NIHIL;
+    si (!ctx)
+    {
+        redde NIHIL;
+    }
+    si (editio_monitorum(m) && ctx->pensorum.montata)
+    {
+        redde &ctx->pensorum;
+    }
+    redde ctx->notae.montata ? &ctx->notae : NIHIL;
+}
+
+/* K5: Motus gestum UNUM tenet (effusor + status scribae): editori
+ * visibili addicitur. Dominus mutatus: pendentia prioris prius
+ * effunduntur (aliter scripta editoris prioris perirent). Post omnem
+ * actum calendarii (e, Edit, Esc, visus mutati) */
+interior vacuum
+gestum_aptare (
+    KalendariumMontatio* m,
+                  Motus* motus)
+{
+    Charta* c;
+
+    c = charta_visibilis(m);
+    si (   !c || !motus || !motus->gestus.status
+        || motus->gestus.status == (vacuum*)&c->scriba.actiones_ctx)
+    {
+        redde;
+    }
+    (vacuum)motus_gestum_effundere(motus, m->ramus.repo);
+    charta_gestum_ponere(c, motus);
+}
+
 /* liber diem electum sequitur: gestus pendens prius effunditur */
 interior vacuum
 librum_aptare (
@@ -4673,7 +4825,9 @@ kalendarium_reficere (
     KalendariumFigurae* ctx;
 
     ctx = m ? (KalendariumFigurae*)m->figurae_ctx : NIHIL;
-    redde ctx && charta_reficere(&ctx->notae);
+    /* K5: ambo editores (forma tantum si montata) */
+    redde ctx && (   charta_reficere(&ctx->notae)
+                  | charta_reficere(&ctx->pensorum));
 }
 
 vacuum
@@ -4684,10 +4838,10 @@ kalendarium_gestum_ponere (
     KalendariumMontatio* m;
 
     m = (KalendariumMontatio*)ctx;
-    si (m && m->figurae_ctx)
+    /* K5: editori visibili (forma in editione monitorum) */
+    si (charta_visibilis(m))
     {
-        charta_gestum_ponere(&((KalendariumFigurae*)m->figurae_ctx)
-            ->notae, motus);
+        charta_gestum_ponere(charta_visibilis(m), motus);
     }
 }
 
@@ -4932,7 +5086,8 @@ kalendarium_montare (
     }
     /* A6d: notae diei post diem argumenti; D5 S3c: deinde semita tota
      * (notae.pagina) */
-    si (!notas_montare(m, volumen, id, systemata))
+    si (   !notas_montare(m, volumen, id, systemata)
+        || !pensorum_montare(m, volumen, id, systemata))
     {
         redde FALSUM;
     }
@@ -5346,6 +5501,17 @@ indicem_disponere (
                    s32  i;
 
     regio = corpus;
+    /* K5: editio monitorum ut dies: dimidium inferum = forma (scriba
+     * libri "pensa") */
+    si (editio_monitorum(m))
+    {
+        regio = locum_addere(dp, corpus, DISPOSITIO_COLUMNA,
+            DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_PARS, L);
+        (vacuum)componentem_locare(dp, corpus, "forma", PARTES_NULLUM,
+            DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_CRESCENS,
+            ZEPHYRUM,
+            FALSUM, FALSUM);
+    }
     si (visus_diei(m))
     {
         regio = locum_addere(dp, corpus, DISPOSITIO_COLUMNA,
@@ -5366,6 +5532,11 @@ indicem_disponere (
     si (visus_currens(m) & VISUS_INDICIS)
     {
         globulum_capitis_locare(dp, caput, "nova");
+    }
+    /* K5: Edit in lectione monitorum */
+    si (visus_monitorum(m) && !editio_monitorum(m))
+    {
+        globulum_capitis_locare(dp, caput, "edere");
     }
     (vacuum)locum_addere(dp, caput, DISPOSITIO_LINEA, DISPOSITIO_FIXA,
         I, DISPOSITIO_FIXA, KALENDARIUM_CAPUT_LINEAE);
@@ -5524,6 +5695,33 @@ notas_componere (
     }
 }
 
+/* K5: editor libri "pensa" compositus in loco "forma" */
+interior vacuum
+pensorum_componere (
+     KalendariumMontatio* m,
+      InsulaRepositorium* repo,
+          constans Motus* motus,
+                 Piscina* piscina,
+     InternamentumChorda* intern,
+               Componens* radix)
+{
+    KalendariumFigurae* ctx;
+             Componens* locus;
+
+    ctx = (KalendariumFigurae*)m->figurae_ctx;
+    si (!ctx || !ctx->pensorum.montata)
+    {
+        redde;
+    }
+    locus = componens_invenire_per_id(radix, chorda_ex_literis("forma",
+        piscina));
+    si (locus)
+    {
+        charta_componere(&ctx->pensorum, repo, motus, piscina, intern,
+            radix, locus->fines);
+    }
+}
+
 /* <componens/> <purus/> */
 Componens*
 kalendarium_componere (
@@ -5632,6 +5830,11 @@ kalendarium_componere (
         }
     }
     /* A6d: notae diei in charta dimidii inferi */
+    /* K5: editor formae in loco "forma" */
+    si (editio_monitorum(m))
+    {
+        pensorum_componere(m, repo, motus, piscina, intern, radix);
+    }
     si (visus_diei(m))
     {
         notas_componere(m, repo, motus, piscina, intern, radix);

@@ -78,6 +78,16 @@
  * paginae, Esc ad mensem. Globulus barrae "visus-monita": "Reminders"
  * si barra capit, aliter campana (III cellulae).
  *
+ * EDITIO MONITORUM (pensa K5; campus monita_modus lectio|editio): e
+ * aut globulus capitis "edere" ("Edit", solum in lectione) visum
+ * dividit - supra lectio (ordines ut in K4, paginae dimidiae), infra
+ * locus "forma" cum scriba nidificata "<id>_pensa" in libro "pensa"
+ * (Charta, ut notae diei). In scribam ictu aut Tab; ibi claves scribae
+ * sunt (calendarium nihil agit); Esc primum scribae, secundum ad
+ * indicem, tertium (in indice) editionem claudit, deinde ad mensem.
+ * Lectio formam in omni pictura legit: vitia et "next:" dum scribitur
+ * mutantur. Visus mutatus (globulo) lectionem restituit.
+ *
  * CLAVES (mensis): h/l dies -1/+1, k/j hebdomas -1/+1, H/L mensis
  * -1/+1 (dies ad finem mensis praecisa), t hodie, Enter diem aperit.
  * BARRA (M1b): supra omnes visus, globuli (PARTES_BOTTONE) "praecedens"

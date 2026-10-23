@@ -245,7 +245,7 @@ One section for now: **Daily checklist**.
 | **K2** | `pensa`: outline parsing (§IV.1), items for a day, tick/untick acts. DONE 2026-10-23: `scriba_liber_textum_legere` (book text with blank lines), outline parser + items for a day, ticks as acts read before every query; see lib/pensa.worklog.md |
 | **K3** | Day view Checklist block (show, tick, history, future dimmed). DONE 2026-10-23: "k"/"k<n>" rows between to-dos and Completed, one day selection sequence (`electiones_diei`), tick via the complete command (today/past only), drawing + vicus end-to-end; pensa scratch pool for per-frame queries; see lib/kalendarium.worklog.md |
 | **K4** | Reminders tab read view. DONE 2026-10-23: `visus=monita` after Agenda (route `calendarium/monita`, title "Reminders"), template as album rows (band, headings as typed or dim "Every day" with today/next/no-more-dates notes, wrapped parse errors, items; "No checklist yet."), paging via the shared `pagina` field, bar word or bell by width; see lib/kalendarium.worklog.md |
-| **K5** | Edit view (embedded scriba on the `pensa` book) |
+| **K5** | Edit view (embedded scriba on the `pensa` book). DONE 2026-10-23: `e`/Edit splits the view (live read view on top, editor below; `monita_modus` lectio/editio); enter by click/Tab, Esc chain editor -> list -> read mode -> month; the pane's single gesture slot follows the visible editor (pending edits flushed on a change); see lib/kalendarium.worklog.md |
 
 Each phase: header text approved first, tests red, implementation,
 plants, worklog, commit on approval.
@@ -260,10 +260,16 @@ plants, worklog, commit on approval.
 - Unions/exceptions/end dates in `recursus` ("mondays except holidays",
   "until dec 2026").
 - Phrases in Latin ("dominica", "feria secunda").
+- Focus requests from actions (dispatcher): an action names a component
+  to focus and the dispatcher moves focus there with its own machinery,
+  so `e` lands in the editor directly (K5 uses click/Tab like the day
+  notes; Fran 2026-10-23: normal way first).
 
 ## AUDIENDA
 
-- The day-notes editor's exit key was not checked yet (K5).
+- (resolved 2026-10-23, K5) Day-notes editor keys: click or Tab in;
+  scriba takes its own Esc, an idle Esc returns to the list (dispatcher
+  level rule); the checklist editor follows the same rules.
 - (verified 2026-10-23) `scriba_liber_lineas_legere` keeps leading
   whitespace (`lineam_legere`, lib/scriba_liber.c: cells 0..end of
   content, tabs/continuations as spaces) and drops blank lines — fits

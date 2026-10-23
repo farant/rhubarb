@@ -1081,3 +1081,39 @@ Tests: the fixture's scriba page was 40x10 and silently cut K4's
 14-line templates (debug print of pensa_textum_legere) - now 40x40.
 Bar buttons draw component-relative: the bell test finds the button's
 own commands by its command group (provenientia + magnitudo_arboris).
+
+## 2026-10-23 — Reminders edit view (pensa K5)
+
+`e` or the header button "Edit" (read mode only) sets `monita_modus`
+= editio: the view splits like the day view (PARS L list on top, page
+capacity halved; slot "forma" below) and a second Charta, `pensorum`
+(nested scriba "<id>_pensa" on book key "pensa"), is composed into the
+slot. It is mounted with the pane, like the notes. Entering the editor
+= click or Tab (dispatcher level rules); the dispatcher owns `focus`,
+so `e` cannot jump into the editor (a focus-request feature is parked
+in the spec). Esc chain: scriba's own Esc; idle Esc -> list (dispatcher
+gradus); Esc on the list -> read mode (`calendarium.monita_effugere`,
+the one Esc command of this view); again -> month. Switching views via
+the bar and coming back starts in read mode (fac_visum_monitorum writes
+visus + pagina + modus in one write). The read view re-reads the book
+every frame, so a heading typed wrong shows its error at once.
+
+GESTURE SLOT - the real lesson. A pane's Motus holds ONE gesture
+(scriba state + effusor). scriba edits only when a gesture is present
+(`mutare_gestum`) and saving commits the slot OWNER's working sheet.
+With the notes owning it, typing in the checklist editor was drawn but
+never saved. `charta_visibilis` (pensa editor in edit mode, else the
+notes) + `gestum_aptare` at the end of `agere` (every calendar action:
+e, Edit, Esc chain, view switch) and in `kalendarium_gestum_ponere`
+(vicus focus hook) keep the slot on the visible editor; a change of
+owner FLUSHES the pending edit first - insert-mode text followed by a
+click on a bar button would otherwise be lost (test
+monita_gestus_pendens; its plant was green until that test existed).
+
+Mounting the editor CREATES the "pensa" book with page 1 sized to the
+slot (as the notes editor does for today's book): on a real volume the
+first mount fixes the template's first page size from the pane. Tests
+must write fixture books BEFORE mounting (agendam_struere + mount);
+writing after mount went into the small page and cut the template.
+scriba pages are fixed grids: `G` = last grid row, Enter at the bottom
+has no room - tests navigate with gg/j and type.

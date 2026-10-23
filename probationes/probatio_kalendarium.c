@@ -831,9 +831,11 @@ clavis_specialis (
 }
 
 /* agenda diei XIV: 1 aperta, 2 perfecta XIV, 3 assignata XX perfecta
- * XIV (hic perfecta), 4 deleta; dein montatio */
+ * XIV (hic perfecta), 4 deleta; SINE montatione (K5: libri ante
+ * montationem scribendi - editor formae librum "pensa" in montatione
+ * cum pagina loci creat) */
 interior b32
-agendam_parare (
+agendam_struere (
                 Mundus* x,
         CredoContextus* c)
 {
@@ -866,7 +868,16 @@ agendam_parare (
     (vacuum)agenda_perficere(x->documentum, id_ex(II, c->piscina), d);
     (vacuum)agenda_perficere(x->documentum, id_ex(III, c->piscina), d);
     (vacuum)agenda_rem_delere(x->documentum, id_ex(IV, c->piscina));
-    redde mundum_struere(x, c->piscina, NIHIL);
+    redde VERUM;
+}
+
+/* agenda diei XIV (agendam_struere); dein montatio */
+interior b32
+agendam_parare (
+                Mundus* x,
+        CredoContextus* c)
+{
+    redde agendam_struere(x, c) && mundum_struere(x, c->piscina, NIHIL);
 }
 
 /* agenda cum argumento "agenda": fixa agendae diei (1 domus XIV, 2 et
@@ -3813,8 +3824,9 @@ pensa_parare (
 {
     x->latitudo = CCCLX;
     x->altitudo = CDLXXX;
-    si (   !agendam_parare(x, c)
-        || !pensa_scribere(x, c->piscina, PENSA_EXEMPLI))
+    si (   !agendam_struere(x, c)
+        || !pensa_scribere(x, c->piscina, PENSA_EXEMPLI)
+        || !mundum_struere(x, c->piscina, NIHIL))
     {
         redde FALSUM;
     }
@@ -4312,11 +4324,10 @@ monita_parare (
          CredoContextus* c,
      constans character* textus)
 {
-    si (!agendam_parare(x, c))
-    {
-        redde FALSUM;
-    }
-    si (textus && !pensa_scribere(x, c->piscina, textus))
+    /* liber ante montationem (editor formae librum creat) */
+    si (   !agendam_struere(x, c)
+        || (textus && !pensa_scribere(x, c->piscina, textus))
+        || !mundum_struere(x, c->piscina, NIHIL))
     {
         redde FALSUM;
     }
@@ -4515,7 +4526,7 @@ _probare_monita_vacua (
     CREDO_NECESSE(monita_parare(x, c, NIHIL));
     md = reddere(x, c->piscina);
     CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "nullum",
-        c->piscina), "No checklist yet."));
+        c->piscina), "No checklist yet. Press e to write one."));
 }
 
 /* mandata coetus componentis id: (a, b) - mandata intra coetum (sine
@@ -4618,6 +4629,211 @@ _probare_monita_globulum (
     globulum_inspicere(md, "visus-monita", &textus, &campana);
     CREDO_FALSUM(textus);
     CREDO_VERUM(campana);
+}
+
+/* K5: e dividit visum monitorum - lectio supra, scriba libri "pensa"
+ * infra (locus "forma"); ictus in forma scribam focat; Esc: scriba ->
+ * index -> lectio -> mensis; globulus Edit; visus mutatus lectionem
+ * restituit */
+interior vacuum
+_probare_monita_editionem (
+    CredoContextus* c)
+{
+     Mundus* x;
+      Motus* motus;
+      Fines  f;
+      Fines  r;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    x->latitudo = CDLXXX;
+    x->altitudo = CDLXXX;
+    CREDO_NECESSE(monita_parare(x, c, MONITA_EXEMPLI));
+    motus = dispensator_motus(x->d);
+
+    CREDO_GRADUS("lectio: forma absens, globulus Edit adest");
+    CREDO_FALSUM(campus_est(x, "monita_modus", "editio"));
+    CREDO_NIHIL(componens_invenire_per_id(dispensator_arbor(x->d),
+        chorda_ex_literis("forma", c->piscina)));
+    CREDO_NON_NIHIL(componens_invenire_per_id(dispensator_arbor(x->d),
+        chorda_ex_literis("edere", c->piscina)));
+
+    CREDO_GRADUS("e: editio, forma infra ordines, Edit absens");
+    clavis(x, 'e');
+    CREDO_VERUM(campus_est(x, "monita_modus", "editio"));
+    f = fines_componentis(x, "forma", c->piscina);
+    r = fines_componentis(x, "m", c->piscina);
+    CREDO_NECESSE(f.altitudo > ZEPHYRUM);
+    CREDO_VERUM(f.y > r.y);
+    CREDO_VERUM(monita_comparare(x, "m h0", VERUM));
+    CREDO_NIHIL(componens_invenire_per_id(dispensator_arbor(x->d),
+        chorda_ex_literis("edere", c->piscina)));
+
+    CREDO_GRADUS("ictus in forma: scriba libri pensa focata");
+    ictus_ad(x, f.x + XL, f.y + XXX);
+    CREDO_VERUM(chorda_continet(motus->spatium_intimum,
+        chorda_ex_literis("_pensa", c->piscina)));
+
+    CREDO_GRADUS("Esc: ad indicem (editio manet), lectio, mensis");
+    effugium(x);
+    CREDO_FALSUM(chorda_continet(motus->spatium_intimum,
+        chorda_ex_literis("_pensa", c->piscina)));
+    CREDO_VERUM(campus_est(x, "monita_modus", "editio"));
+    effugium(x);
+    CREDO_FALSUM(campus_est(x, "monita_modus", "editio"));
+    CREDO_VERUM(campus_est(x, "visus", "monita"));
+    CREDO_NIHIL(componens_invenire_per_id(dispensator_arbor(x->d),
+        chorda_ex_literis("forma", c->piscina)));
+    effugium(x);
+    CREDO_VERUM(campus_est(x, "visus", "mensis"));
+
+    CREDO_GRADUS("globulus Edit; visus mutatus lectionem restituit");
+    CREDO_VERUM(ictus_in(x, "visus-monita", c->piscina));
+    CREDO_VERUM(ictus_in(x, "edere", c->piscina));
+    CREDO_VERUM(campus_est(x, "monita_modus", "editio"));
+    CREDO_VERUM(ictus_in(x, "visus-mensis", c->piscina));
+    CREDO_VERUM(ictus_in(x, "visus-monita", c->piscina));
+    CREDO_FALSUM(campus_est(x, "monita_modus", "editio"));
+}
+
+/* K5: sine volumine - e editionem ponit, forma adest, scriba nulla */
+interior vacuum
+_probare_monita_editionem_sine_volumine (
+    CredoContextus* c)
+{
+     Mundus* x;
+      Motus* motus;
+      Fines  f;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    x->latitudo = CDLXXX;
+    x->altitudo = CDLXXX;
+    CREDO_NECESSE(mundum_struere(x, c->piscina, "monita"));
+    motus = dispensator_motus(x->d);
+    clavis(x, 'e');
+    CREDO_VERUM(campus_est(x, "monita_modus", "editio"));
+    f = fines_componentis(x, "forma", c->piscina);
+    CREDO_NECESSE(f.altitudo > ZEPHYRUM);
+    ictus_ad(x, f.x + XL, f.y + XXX);
+    CREDO_FALSUM(chorda_continet(motus->spatium_intimum,
+        chorda_ex_literis("_pensa", c->piscina)));
+    (vacuum)reddere(x, c->piscina);
+}
+
+/* K5: scribere in editore formae - gestus editori visibili (forma in
+ * editione, aliter notae); grex novus cum vitio statim in lectione;
+ * Esc, Tab; notae diei postea adhuc scribuntur */
+interior vacuum
+_probare_monita_scribere (
+    CredoContextus* c)
+{
+     Mundus* x;
+      Motus* motus;
+      Fines  f;
+     chorda  t;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    x->latitudo = CDLXXX;
+    x->altitudo = CDLXXX;
+    CREDO_NECESSE(monita_parare(x, c, "vitamins"));
+    motus = dispensator_motus(x->d);
+    /* hospes gestum ponit (ut vicus in foco lateris) */
+    kalendarium_gestum_ponere(motus, &x->m);
+
+    CREDO_GRADUS("e, ictus in forma, grex novus scriptus");
+    clavis(x, 'e');
+    f = fines_componentis(x, "forma", c->piscina);
+    CREDO_NECESSE(f.altitudo > ZEPHYRUM);
+    ictus_ad(x, f.x + XL, f.y + XXX);
+    CREDO_NECESSE(chorda_continet(motus->spatium_intimum,
+        chorda_ex_literis("_pensa", c->piscina)));
+    /* pagina scribae = craticula fixa (G = linea ultima craticulae):
+     * gg, j j -> linea III (II vacua = sectio nova), i, Esc, j, i */
+    textum_mittere(x, "g");
+    textum_mittere(x, "g");
+    textum_mittere(x, "j");
+    textum_mittere(x, "j");
+    textum_mittere(x, "i");
+    textum_mittere(x, "every fortnight");
+    effugium(x);
+    textum_mittere(x, "j");
+    textum_mittere(x, "0");
+    textum_mittere(x, "i");
+    textum_mittere(x, "  water plants");
+    effugium(x);
+    (vacuum)motus_gestum_effundere(motus, x->repo);
+    t = pensa_textum_legere(x->volumen, x->intern, c->piscina);
+    CREDO_VERUM(chorda_continet(t, chorda_ex_literis("every fortnight",
+        c->piscina)));
+
+    CREDO_GRADUS("lectio statim: titulus et vitium gregis novi");
+    dispensator_recomponere(x->d);
+    CREDO_VERUM(monita_comparare(x, "m h0 u0-0 h1 v1 u1-0", FALSUM));
+
+    CREDO_GRADUS("Esc ex editore; Tab intro et foras");
+    effugium(x);
+    CREDO_FALSUM(chorda_continet(motus->spatium_intimum,
+        chorda_ex_literis("_pensa", c->piscina)));
+    CREDO_VERUM(campus_est(x, "monita_modus", "editio"));
+    clavis_specialis(x, CLAVIS_TABULA, '\t', '\t', ZEPHYRUM);
+    CREDO_VERUM(chorda_continet(motus->spatium_intimum,
+        chorda_ex_literis("_pensa", c->piscina)));
+    clavis_specialis(x, CLAVIS_TABULA, '\t', '\t', ZEPHYRUM);
+    CREDO_FALSUM(chorda_continet(motus->spatium_intimum,
+        chorda_ex_literis("_pensa", c->piscina)));
+
+    CREDO_GRADUS("notae diei postea: gestus redit, x in libro diei");
+    effugium(x);
+    CREDO_VERUM(ictus_in(x, "visus-dies", c->piscina));
+    CREDO_VERUM(campus_est(x, "visus", "dies"));
+    f = fines_componentis(x, "notae", c->piscina);
+    CREDO_NECESSE(f.altitudo > ZEPHYRUM);
+    ictus_ad(x, f.x + XL, f.y + XXX);
+    textum_mittere(x, "i");
+    textum_mittere(x, "x");
+    effugium(x);
+    (vacuum)motus_gestum_effundere(motus, x->repo);
+    CREDO_VERUM(littera_in_libro(x, "dies/2026-10-14", 'x',
+        c->piscina));
+}
+
+/* K5: scriptura pendens (modus inserendi, sine Esc) dum globulus
+ * visum mutat: gestus ad notas transit, scripta formae prius
+ * effunduntur - non pereunt */
+interior vacuum
+_probare_monita_gestum_pendentem (
+    CredoContextus* c)
+{
+     Mundus* x;
+      Motus* motus;
+      Fines  f;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    x->latitudo = CDLXXX;
+    x->altitudo = CDLXXX;
+    CREDO_NECESSE(monita_parare(x, c, "vitamins"));
+    motus = dispensator_motus(x->d);
+    kalendarium_gestum_ponere(motus, &x->m);
+    clavis(x, 'e');
+    f = fines_componentis(x, "forma", c->piscina);
+    CREDO_NECESSE(f.altitudo > ZEPHYRUM);
+    ictus_ad(x, f.x + XL, f.y + XXX);
+    textum_mittere(x, "g");
+    textum_mittere(x, "g");
+    textum_mittere(x, "j");
+    textum_mittere(x, "j");
+    textum_mittere(x, "i");
+    textum_mittere(x, "rosary");
+    /* nullum Esc: globulus Month */
+    CREDO_VERUM(ictus_in(x, "visus-mensis", c->piscina));
+    CREDO_VERUM(campus_est(x, "visus", "mensis"));
+    (vacuum)motus_gestum_effundere(motus, x->repo);
+    CREDO_VERUM(chorda_continet(pensa_textum_legere(x->volumen,
+        x->intern,
+        c->piscina), chorda_ex_literis("rosary", c->piscina)));
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
@@ -4735,6 +4951,15 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "monita_vacua", _probare_monita_vacua, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "monita_globulus", _probare_monita_globulum, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "monita_editio", _probare_monita_editionem, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "monita_scribere", _probare_monita_scribere, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "monita_gestus_pendens", _probare_monita_gestum_pendentem,
+        mundum_parare, mundum_purgare, NIHIL, NIHIL },
+    { "monita_editio_sine_volumine",
+        _probare_monita_editionem_sine_volumine, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
