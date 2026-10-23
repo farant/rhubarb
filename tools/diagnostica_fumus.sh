@@ -31,7 +31,7 @@
 #      (silex: macrum capitis in sede syntactica; scrinium/imago:
 #      capita venditorum ANTE latina.h inclusa) sine erratis.
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
-# <porta titulus="diagnostica" tegit="crusta/fontes/* crusta/lintrum/* css/fontes/* html/fontes/* materia/fontes/* silva/fontes/* silva/grammatica/*"/>
+# <porta titulus="diagnostica" tegit="crusta/fontes/* crusta/lintrum/* css/fontes/* html/fontes/* materia/fontes/* silva/fontes/* silva/grammatica/*" legit="*.sh *.c *.h *.stml *.py tools/unci-git/* .claude/*"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2

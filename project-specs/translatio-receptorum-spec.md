@@ -171,6 +171,48 @@ file. Shadow (A.2c) changes nothing about which gates run; switching on
   ingressus), so composites (option B) may make `legit` redundant. Fran
   asked to check in when such concepts surface.
 
+## IV-ter. As built: T3 annotations (2026-10-23, Fran approved the list)
+
+**`translatio="numquam"` (13 gates):**
+- the fabrica authority: radix css html materia md saltuarius silva toml
+  venenum generata briar-fumus aedilis;
+- credo: its read set couldn't be established (it compiles many C fixtures
+  against lib/, invisible to tracing), so it gets the safe default.
+
+**`legit` (18 gates), from the A.2a reads audit:**
+- pythonica, fabrica-fumus: `*` (they read almost the whole tree);
+- oratio: `*.md *.c *.h *.stml`;
+- silva-m3: `*.c *.h *.m *.stml *.sh *.canon *.genera *.toml *.html *.txt`;
+- examen-corpus: `*.c *.h` (blind to tracing, corpus by design);
+- instrumenta: `*.c *.h *.m *.stml *.thistle`;
+- unci, interrogationes: `*.h *.c *.stml`;
+- portae-declaratae: `*.c *.sh *.py tools/unci-git/*`;
+- crusta: `*.sh *.py tools/unci-git/* .claude/*`; diagnostica adds
+  `*.c *.h *.stml`;
+- formator-delta, formator-intra: `include/*`;
+- nexus-instrumentorum: `include/* silva/fontes/* silva/instrumenta/*`;
+- vexilla: `*unitas.stml include/unitates*.h`;
+- sera: `oratio/fontes/* include/nuntium.h lib/nuntium.c`;
+- unitates: its 11 sample paths;
+- briar: `md/html/md-html.stml` + the silva system headers.
+
+`*` crosses `/`. The other gates keep their derived coverage:
+iudicium-fumus, bearssl, qr-gyrus, silex-semen, examen-vectis (each
+checked by reading its runner) and the compiled suites (gesta, tessera,
+ludus_tessera, officina: aedilis closures).
+
+**Preview against today's pass 2 (27.6 min):**
+
+| the fix | rerun with A |
+|---|---|
+| golden `.tsv` | 6.9 min |
+| `.md` doc | 9.9 min |
+| `.sh` runner | 9.0 min |
+| C in `lib/` | 15.1 min |
+
+pythonica + fabrica-fumus (`*`) are ~4.6 min of every rerun, which
+makes them the first B targets.
+
 ## V. AUDIENDA
 
 - Tracing can't see Python, plain-shell or raw-IO reads (class 3; also
