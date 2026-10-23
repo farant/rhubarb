@@ -9,6 +9,10 @@ if [ -z "${CRUSTA_PROBATIONES_EFFUSIO:-}" ]; then
     "$0" "$@" 2>&1 | tee "$(dirname "$0")/../build/test_logs/crusta.log"
     exit "${PIPESTATUS[0]}"
 fi
+# initium scripti (2026-10-22): mensor_suitae 'totum' hinc metitur, ut
+# praevolatus (totum - compilatio - cursus) PRAEPARATIONEM obiectorum
+# ante ansam probationum nominet (olim ab ansa ipsa - invisa)
+SUITA_INITIUM="$(perl -MTime::HiRes -e 'print Time::HiRes::time')"
 
 # crusta/compile_probationes.sh - Probationes clientis crusta (materia)
 #
@@ -85,7 +89,7 @@ mkdir -p "$RADIX_DIR/build"
 # metra suitae in volumen mensoris (tools/mensor_suitae.sh; praefixum
 # "crusta." - silva.mensurae('crusta.', n) eas legit); numquam suitam frangit
 source "$RADIX_DIR/tools/mensor_suitae.sh"
-mensor_suitae_incipere "crusta."
+mensor_suitae_incipere "crusta." "$SUITA_INITIUM"
 total=0 ; passed=0 ; failed_names=""
 for test_file in "$CRUSTA_DIR"/probationes/probatio_*.c; do
     name="$(basename "$test_file" .c)"

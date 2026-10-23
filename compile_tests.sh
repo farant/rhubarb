@@ -108,9 +108,15 @@ COMPILE_TIMES_FILE=$(mktemp)
 # mensoris '|| true' fert et defectus tacet.
 # MENSOR_TACET=1 metra omnino claudit.
 MENSOR=""
-if [ -z "${MENSOR_TACET:-}" ] && [ -x "./bin/mensor" ]; then
-    if eval "$(./bin/mensor sessio 2>/dev/null)" 2>/dev/null; then
-        MENSOR="./bin/mensor"
+# in arbore FRIGIDA (clone recenti) bin/mensor nondum structum:
+# MENSOR_BINARIUM a vocante datum (tools/frigida_probare.sh, 2026-10-22)
+_MENSOR_VIA="./bin/mensor"
+if [ ! -x "$_MENSOR_VIA" ] && [ -x "${MENSOR_BINARIUM:-}" ]; then
+    _MENSOR_VIA="$MENSOR_BINARIUM"
+fi
+if [ -z "${MENSOR_TACET:-}" ] && [ -x "$_MENSOR_VIA" ]; then
+    if eval "$("$_MENSOR_VIA" sessio 2>/dev/null)" 2>/dev/null; then
+        MENSOR="$_MENSOR_VIA"
     fi
 fi
 
