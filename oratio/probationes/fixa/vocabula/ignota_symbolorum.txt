@@ -646,6 +646,7 @@ fclose
 fdopen
 fds
 feast
+feature
 features
 fence
 feof
@@ -1305,6 +1306,7 @@ nd
 ndf
 needle
 neg
+neon
 nested
 new
 newline
@@ -1478,7 +1480,6 @@ percent
 percentum
 perror
 pers
-persistens
 persistentia
 pext
 pf
@@ -1886,6 +1887,7 @@ setvbuf
 sf
 sg
 sh
+sha2
 shallow
 shared
 shas
@@ -2228,6 +2230,8 @@ uchar
 uev
 uid
 uint
+uint32x4
+uint8x16
 ul
 ulid
 ulong
@@ -2278,6 +2282,7 @@ uuids
 uuidv5
 uuidv7
 vac
+vaddq
 val1
 val2
 validare
@@ -2325,6 +2330,7 @@ visual
 visualis
 visus2
 vit
+vld1q
 vm
 vmin
 voc
@@ -2338,8 +2344,15 @@ vprintf
 vps
 vq
 vquit
+vreinterpretq
+vrev32q
 vs
+vsha256h2q
+vsha256hq
+vsha256su0q
+vsha256su1q
 vsprintf
+vst1q
 vtime
 vu
 vv

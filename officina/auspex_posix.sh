@@ -217,6 +217,10 @@ emittere_asserta() {
     # postulata_atomica.h); in TU nostro redefinitio nostra praedefinitum
     # clang AEQUALE esse debet (aliter -Werror 'macro redefined')
     echo "IUNGO_ASSERTA(__ATOMIC_ACQUIRE == 2 && __ATOMIC_RELEASE == 3);"
+    # sigillum (2026-10-22): sectio postulata_neon.h __ARM_FEATURE_SHA2
+    # definit ut silva ramum vectorum examinet - praedefinitum clang
+    # AEQUALE esse debet
+    echo "IUNGO_ASSERTA(__ARM_FEATURE_SHA2 == 1);"
 }
 
 PRAEAMBULUM='#define IUNGO2(a,b) a##b

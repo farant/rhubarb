@@ -728,3 +728,35 @@ unsigned int __atomic_load_n(const volatile unsigned int* locus,
 void __atomic_store_n(volatile unsigned int* locus, unsigned int valor,
                       int ordo);
 #endif
+
+
+/* ==================================================
+ * <sectio caput="postulata_neon.h"/>
+ * instructiones ARMv8 SHA2 (arm_neon.h) - SOLUM plagulis quae
+ * include/postulata_neon.h citatum includunt (sigillum, 2026-10-22;
+ * exemplar sectionis postulata_atomica.h). __ARM_FEATURE_SHA2 hic
+ * DEFINITUR ut silva ramum '#if defined(__ARM_FEATURE_SHA2)' examinet
+ * (valor praedefinitus clang aequalis - auspex_posix certificat). Typi
+ * vectorum ut structurae C89 (silva per valorem transit; numquam
+ * compilantur), functiones eae solae quas sigillum adhibet; sub clang
+ * celantur - arm_neon.h vera eas definit.
+ * ================================================== */
+
+#define __ARM_FEATURE_SHA2 1
+#ifndef __clang__
+typedef struct { unsigned char v[16]; } uint8x16_t;
+typedef struct { unsigned int v[4]; } uint32x4_t;
+uint32x4_t vld1q_u32(const unsigned int* locus);
+uint8x16_t vld1q_u8(const unsigned char* locus);
+void vst1q_u32(unsigned int* locus, uint32x4_t valor);
+uint8x16_t vrev32q_u8(uint8x16_t a);
+uint32x4_t vreinterpretq_u32_u8(uint8x16_t a);
+uint32x4_t vaddq_u32(uint32x4_t a, uint32x4_t b);
+uint32x4_t vsha256hq_u32(uint32x4_t abcd, uint32x4_t efgh,
+                         uint32x4_t wk);
+uint32x4_t vsha256h2q_u32(uint32x4_t efgh, uint32x4_t abcd,
+                          uint32x4_t wk);
+uint32x4_t vsha256su0q_u32(uint32x4_t w0_3, uint32x4_t w4_7);
+uint32x4_t vsha256su1q_u32(uint32x4_t tw0_3, uint32x4_t w8_11,
+                           uint32x4_t w12_15);
+#endif
