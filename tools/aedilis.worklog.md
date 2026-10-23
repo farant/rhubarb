@@ -915,3 +915,12 @@ Guard: tools/aedilis_porta.sh checks `--plures` = per-source calls (stdout + man
 Not converted: `amalgama_fontes_generare.sh` (uses --partes/--aristae, not --enumerare) and `fontes_generare.sh` (1-3 sources per call, little to gain).
 
 Next layer (profile of the batch): silva lexing (`silva_lexare_cruda`), hash-table inserts and allocation in extraction, plus `clang -MM` for .m files.
+
+## 2026-10-22 — `--plures` extended to `--partes` / `--aristae` (+ `--partes-ad` / `--aristae-ad`)
+
+`amalgama_fontes_generare.sh` (fontes_silva / fontes_officina / fontes_tessera) ran aedilis TWICE per root, once with `--partes` and once with `--aristae`, with no `--thesaurus`, so every process was cold: silva's 23 roots took 46 processes and ~20 s; `fontes_silva` was 31 s in a cold secunda generata run.
+
+- Output formats moved into single-definition appenders (`_obiecta_appendere`, `_partes_appendere`, `_aristas_appendere`, `_effusionem_emittere`). The single-source modes and `--corpus --partes` print through them, so the bytes cannot drift. Checked against main's pre-change bin/aedilis: --enumerare/--partes/--aristae on 4 sources and `--corpus silva/instrumenta/principalia --partes` (1640 lines), 0 differences.
+- `_plures_currere` derives each source ONCE and serves every requested mode from the same fructus. A mode with `--partes-ad` / `--aristae-ad` goes to its own file (accumulated, then one filum_scribere); at most one mode may go to stdout.
+- silva roots, the old loop against one `--plures --partes --partes-ad … --aristae --aristae-ad … --manifesta …`: 20.4 → 1.6 s; partes (858 lines), aristae (1472 lines) and 23 manifests identical (manifests ignoring `generatum`); no stdout/stderr. `fabrica iudicare -plenus` after switching the script: 43 RECENS, including the three fontes_generata.h.
+- Guard in tools/aedilis_porta.sh extended: the batch with -ad files equals single --partes/--aristae calls. Plant (aristae routed into the partes buffer) → "FRACTA (plures partes/aristae)"; restored → bona.

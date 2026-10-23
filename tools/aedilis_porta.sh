@@ -88,6 +88,22 @@ while IFS= read -r f; do
         --manifestum "$PLURES_D/singula/$(echo "$f" | sed 's|/|__|g').stml" \
         >> "$PLURES_D/singula.txt" 2>/dev/null
 done < "$PLURES_D/lista"
+: > "$PLURES_D/partes_singula.tsv"
+: > "$PLURES_D/aristae_singula.tsv"
+while IFS= read -r f; do
+    ./bin/aedilis "$f" --partes >> "$PLURES_D/partes_singula.tsv" 2>/dev/null
+    ./bin/aedilis "$f" --aristae >> "$PLURES_D/aristae_singula.tsv" 2>/dev/null
+done < "$PLURES_D/lista"
+./bin/aedilis --plures "$PLURES_D/lista" \
+    --partes --partes-ad "$PLURES_D/partes_plures.tsv" \
+    --aristae --aristae-ad "$PLURES_D/aristae_plures.tsv" > /dev/null 2>&1
+if    cmp -s "$PLURES_D/partes_singula.tsv" "$PLURES_D/partes_plures.tsv" \
+   && cmp -s "$PLURES_D/aristae_singula.tsv" "$PLURES_D/aristae_plures.tsv"; then
+    echo "bona: --plures --partes/--aristae = singula"
+else
+    echo "FRACTA (plures partes/aristae): a vocationibus singulis differt"
+    fracta="$fracta plures_partes"
+fi
 if    ./bin/aedilis --enumerare --plures "$PLURES_D/lista" \
           --thesaurus build/aedilis/obiecta --manifesta "$PLURES_D/plures" \
           > "$PLURES_D/plures.txt" 2>/dev/null \
