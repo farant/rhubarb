@@ -272,6 +272,14 @@ _sectio_dissonantia (
         "<pars titulus=\"bassus\" instrumentum=\"aether\">"
         "<frustum mensura=\"1\"><textus!>o3 c1.</textus></frustum>"
         "</pars></carmen></carmina>");
+    constans Carmen* tres = _carmen(c,
+        "<carmina><carmen titulus=\"t\" metrum=\"3/4\">"
+        "<pars titulus=\"melodia\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>o5 g4 d4 d4</textus>"
+        "</frustum></pars>"
+        "<pars titulus=\"bassus\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>o3 c2.</textus></frustum>"
+        "</pars></carmen></carmina>");
     CensuraInventum inv[CAPACITAS];
        CensuraForma f = _sola(CENSURA_DISSONANTIA);
 
@@ -300,6 +308,11 @@ _sectio_dissonantia (
     CREDO_NECESSE (censura_iudicare(duodecim, &f, inv, CAPACITAS)
         == IV);
     CREDO_AEQUALIS_S64 (inv[III].pulsus, (s64)III * MCDXL);
+    /* 3/4 simplex: initium solum forte - D5/C3 in temporibus II et III
+     * (debilibus) non, G5/C3 (quinta) in initio */
+    CREDO_NECESSE (tres != NIHIL);
+    CREDO_AEQUALIS_I32 (censura_iudicare(tres, &f, inv, CAPACITAS),
+        ZEPHYRUM);
 }
 
 

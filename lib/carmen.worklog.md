@@ -41,3 +41,13 @@ track (a track with BOTH mute and solo hid a mute/solo swap).
 CarmenFrustum.lineae / numerus_linearum point at the Cantilena's array
 (same piscina - no copy); pulse is inside the clip, offset inside the
 clip's text.
+
+## 2026-10-23 - carmen_tempus_mensurae (beat unit hoisted)
+
+The beat rule (1/denominator; 6/8 9/8 12/8 = three eighths: denominator 8, numerator > 3
+and a multiple of 3) lived in THREE places: harmonia `_tempus` (chord line per beat),
+censura `_fortia` (strong beats), emendatio `_unitas` ('M:T' locus). Fran OK'd the hoist
+10-23; all three now call carmen_tempus_mensurae(carmen, pulsus). 3/8 and 6/4 are NOT
+compound by this rule (tested). Plants 9/9 red - one (censura `tempus > unitas` ->
+`>=`, every beat strong in 3/4) survived until a 3/4 weak-beat dissonance case was added
+to probatio_censura 'dissonantia'; the old code had the same gap.

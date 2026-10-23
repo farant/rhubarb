@@ -124,31 +124,6 @@ emendatio_locum_legere (
     redde VERUM;
 }
 
-/* tempus mensurae: 1/denominator; metra composita: tres octavae (ut
- * harmonia.c) */
-interior s64
-_unitas (
-    constans Carmen* carmen,
-                s64  initium)
-{
-    constans CarmenMetrum* m = &carmen->metra[ZEPHYRUM];
-                      i32  i;
-
-    per (i = ZEPHYRUM; i < carmen->numerus_metrorum; i++)
-    {
-        si (carmen->metra[i].pulsus <= initium)
-        {
-            m = &carmen->metra[i];
-        }
-    }
-    si (   m->denominator     == VIII && m->numerator > III
-        && m->numerator % III == ZEPHYRUM)
-    {
-        redde (s64)III * CANTUS_PULSUS_INTEGRAE / VIII;
-    }
-    redde (s64)CANTUS_PULSUS_INTEGRAE / (s64)m->denominator;
-}
-
 
 /* ==================================================
  * Arbor STML
@@ -387,7 +362,7 @@ emendatio_notam_ponere (
     }
     initium  = carmen_pulsus_mensurae(k, (i32)locus->mensura);
     finis    = carmen_pulsus_mensurae(k, (i32)locus->mensura + I);
-    unitas   = _unitas(k, initium);
+    unitas   = carmen_tempus_mensurae(k, initium);
     locus_pulsus = initium + (s64)(locus->tempus - I) * unitas
                  + locus->pulsus;
     si (locus->pulsus >= unitas || locus_pulsus >= finis)

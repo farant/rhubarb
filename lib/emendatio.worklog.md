@@ -39,3 +39,7 @@ double accidental) - see above. Added `3:1+1920` before planting: a beat overflo
 lands EXACTLY on a later note start (3:3 = a4), else dropping the `pulsus >= unitas`
 check survived (1:1+960 lands inside d2. and is refused anyway). Smoke on carmina.stml
 (build/sonda_emendatio): stella bassus 1:1 F2 -> one line differs, 'd2.' -> '<f2.>'.
+
+## 2026-10-23 - `_unitas` removed
+
+The beat unit is carmen_tempus_mensurae now (hoisted on Fran's OK; see lib/carmen.worklog.md).

@@ -52,3 +52,10 @@ Two design refinements found while testing (Fran told after):
 - **Output count in Arabic** (`voces 3`, not the approved `voces III`): every other censura line uses Arabic numbers, and the writer has only a ChordaAedificator - numerus_romanus_scribere needs a piscina, so Roman would have meant a second numeral writer.
 
 The finding points at the LOWEST sounding note (pars/nota/frustum/offset); the writer recomputes the other notes from carmen + pulse (`_omnes_sonantes`, stable insertion by pitch). A plant on a per-note part-index array survived because only the lowest note's part was ever read - so the helper now reports just `pars_infimae` (first strict minimum in part order). Also folded censura's private `_notam_scribere` into `partitura_notam_scribere` (third copy of the note writer; same output - censura never writes '@' notes). Lint bit on `imae` again (pars_imae) - infimae.
+
+## 2026-10-23 - _fortia on carmen_tempus_mensurae
+
+Strong beats are now counted in units of the shared beat: bar start; 4/x the third beat
+(initium + 2 * tempus); compound meters (tempus > 1/denominator) every beat. Same output as
+before (all suites green). New test: 3/4 D5/C3 on beats 2 and 3 is NOT reported - nothing
+covered "simple meter weak beats stay weak" before (plant survived).

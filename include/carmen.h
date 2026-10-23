@@ -147,4 +147,13 @@ carmen_pulsus_mensurae (
     constans Carmen* carmen,
                 i32  mensura);
 
+/* tempus metri ad pulsum (absolutum), in pulsibus: 1/denominator;
+ * metra composita (denominator VIII, numerator > III et multiplex III:
+ * 6/8 9/8 12/8) tres octavae. Unitas una: linea harmoniae, tempora
+ * fortia censurae, locus emendationis ('M:T') */
+s64
+carmen_tempus_mensurae (
+    constans Carmen* carmen,
+                s64  pulsus);
+
 #endif /* CARMEN_H */

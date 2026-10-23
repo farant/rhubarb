@@ -363,11 +363,63 @@ _sectio_lineae (
     CREDO_AEQUALIS_I32 (f[I].lineae[ZEPHYRUM].offset, IV);
 }
 
+/* tempus metri ad pulsum: 1/denominator; 6/8 9/8 12/8 tres octavae;
+ * 3/8 et 6/4 non composita (regula: denominator VIII, numerator > III
+ * multiplex III); mutatio metri in initio mensurae */
+interior vacuum
+_sectio_tempus (
+    CredoContextus* c)
+{
+    hic_manens constans s64 SPERATA[IX] = {
+        960, 960, 1440, 1440, 1440, 480, 1920, 960, 1920
+    };
+            Carmina  liber;
+    constans Carmen* k;
+                i32  m;
+
+    CREDO_NECESSE (_legere(c,
+        "<carmina><carmen titulus=\"t\" metrum=\"4/4\">"
+        "<metrum mensura=\"2\" valor=\"3/4\"/>"
+        "<metrum mensura=\"3\" valor=\"6/8\"/>"
+        "<metrum mensura=\"4\" valor=\"9/8\"/>"
+        "<metrum mensura=\"5\" valor=\"12/8\"/>"
+        "<metrum mensura=\"6\" valor=\"3/8\"/>"
+        "<metrum mensura=\"7\" valor=\"2/2\"/>"
+        "<metrum mensura=\"8\" valor=\"6/4\"/>"
+        "<metrum mensura=\"9\" valor=\"3/2\"/>"
+        "<pars titulus=\"p\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>c4</textus></frustum></pars>"
+        "</carmen>"
+        "<carmen titulus=\"u\"><pars titulus=\"p\" instrumentum="
+        "\"aether\"><frustum mensura=\"1\"><textus!>c4</textus>"
+        "</frustum></pars></carmen></carmina>", &liber));
+    k = &liber.carmina[ZEPHYRUM];
+    per (m = I; m <= IX; m++)
+    {
+        s64 initium = carmen_pulsus_mensurae(k, (i32)m);
+
+        CREDO_AEQUALIS_S64 (carmen_tempus_mensurae(k, initium),
+                            SPERATA[m - I]);
+        CREDO_AEQUALIS_S64 (carmen_tempus_mensurae(k, initium + I),
+                            SPERATA[m - I]);
+        si (m > I)
+        {
+            /* pulsus ultimus mensurae prioris: metrum prius */
+            CREDO_AEQUALIS_S64 (carmen_tempus_mensurae(k, initium - I),
+                                SPERATA[m - II]);
+        }
+    }
+    /* sine metro: 4/4 ordinarium */
+    CREDO_AEQUALIS_S64 (carmen_tempus_mensurae(&liber.carmina[I],
+                                               ZEPHYRUM), CMLX);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "legere", _sectio_legere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia", _sectio_vitia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "lineae", _sectio_lineae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ordinarium", _sectio_ordinarium, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "tempus", _sectio_tempus, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

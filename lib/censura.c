@@ -432,7 +432,9 @@ _asperum (
     redde d == I || d == II || d == VI || d == X || d == XI;
 }
 
-/* tempora fortia mensurae in 'fortia' (absoluti); numerus */
+/* tempora fortia mensurae in 'fortia' (absoluti); numerus. Initium
+ * semper; 4/x tempus tertium; metra composita (tempus carminis maius
+ * quam 1/denominator: tres octavae) tempus quodque */
 interior i32
 _fortia (
     constans Carmen* carmen,
@@ -442,20 +444,22 @@ _fortia (
     constans CarmenMetrum* m = _metrum(carmen, initium);
                       s64  unitas = (s64)CANTUS_PULSUS_INTEGRAE
                                     / (s64)m->denominator;
+                      s64 tempus = carmen_tempus_mensurae(carmen,
+                                                           initium);
+                      s64 longitudo = (s64)m->numerator * unitas;
+                      s64 t;
                       i32 n = ZEPHYRUM;
-                      i32 k;
 
     fortia[n++] = initium;
     si (m->numerator == IV)
     {
-        fortia[n++] = initium + II * unitas;
+        fortia[n++] = initium + II * tempus;
     }
-    alioquin si (   m->denominator     == VIII && m->numerator > III
-                 && m->numerator % III == ZEPHYRUM)
+    alioquin si (tempus > unitas)
     {
-        per (k = III; k < m->numerator && n < XXII; k += III)
+        per (t = tempus; t < longitudo && n < XXII; t += tempus)
         {
-            fortia[n++] = initium + (s64)k * unitas;
+            fortia[n++] = initium + t;
         }
     }
     redde n;

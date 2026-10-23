@@ -888,3 +888,26 @@ carmen_pulsus_mensurae (
     redde _pulsus_mensurae(carmen->metra, carmen->numerus_metrorum,
         mensura);
 }
+
+s64
+carmen_tempus_mensurae (
+    constans Carmen* carmen,
+                s64  pulsus)
+{
+    constans CarmenMetrum* m = &carmen->metra[ZEPHYRUM];
+                      i32  i;
+
+    per (i = ZEPHYRUM; i < carmen->numerus_metrorum; i++)
+    {
+        si (carmen->metra[i].pulsus <= pulsus)
+        {
+            m = &carmen->metra[i];
+        }
+    }
+    si (   m->denominator     == VIII && m->numerator > III
+        && m->numerator % III == ZEPHYRUM)
+    {
+        redde (s64)III * CANTUS_PULSUS_INTEGRAE / VIII;
+    }
+    redde (s64)CANTUS_PULSUS_INTEGRAE / (s64)m->denominator;
+}
