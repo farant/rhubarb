@@ -771,6 +771,14 @@ _sectio_pulsus (
     CREDO_NECESSE (_legere(c, "c64..", &k));
     CREDO_AEQUALIS_S64 (k.notae[ZEPHYRUM].pulsus_longitudo, (s64)CV);
 
+    /* orthographia: littera ut scripta (c# = C sharp, d- = D flat) */
+    CREDO_NECESSE (_legere(c, "c# d- e", &k));
+    CREDO_NECESSE (k.numerus == III);
+    CREDO_VERUM (k.notae[ZEPHYRUM].littera == 'c');
+    CREDO_VERUM (k.notae[I].littera == 'd');
+    CREDO_AEQUALIS_I32 (k.notae[ZEPHYRUM].nota, k.notae[I].nota);
+    CREDO_VERUM (k.notae[II].littera == 'e');
+
     CREDO_GRADUS ("mappa temporis");
     CREDO_NECESSE (_legere(c, "c d", &k));
     CREDO_NECESSE (k.numerus_temporum == I);

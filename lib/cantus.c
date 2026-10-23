@@ -256,6 +256,7 @@ _notam_legere (
             - n->initium;
         n->lucrum            = l->lucrum;
         n->praeparatum       = l->praeparatum;
+        n->littera           = littera;
         n->offset            = offset;
         n->pulsus            = l->pulsus_totus;
         n->pulsus_longitudo  = (s64)pulsus;

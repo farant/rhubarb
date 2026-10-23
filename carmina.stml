@@ -1,0 +1,29 @@
+<!-- carmina.stml - liber ordinarius carminum (include/carmen.h), in
+     binarium infixus per tools/carmina_infigere.sh.
+
+     Carmen: tempus (quartae per minutum), metrum, clavis; partes cum
+     instrumento (tibia praeparata per titulum); frusta per mensuram (1 =
+     prima) aut pulsus. Textus frusti MML (cantus.h) SINE 't': tempus
+     carminis est. Mensura quaeque per '|' notata, ad legendum.
+
+     KOROBEINIKI: carmen populare Russicum saeculi XIX (Nekrasov 1861,
+     melodia popularis) - dominii publici; thema Tetris notum.
+     Transcriptio nostra: A minor, 4/4, XVI mensurae - pars A (1-8) bis
+     non, deinde pars B lenta (9-16) notis dimidiis; carmen iterat. -->
+<carmina>
+
+  <carmen titulus="korobeiniki" tempus="144" metrum="4/4"
+          clavis="a minor">
+    <pars titulus="melodia" instrumentum="quadrans" lucrum="0.7">
+      <frustum mensura="1">
+        <textus!>o5 l8 e4 <b >c d4 c <b | a4 a >c e4 d c | <b4. >c d4 e4 | c4 <a4 a2 | r >d4 f a4 g f | e4. c e4 d c | <b4 b >c d4 e4 | c4 <a4 a4 r4 | >e2 c2 | d2 <b2 | >c2 <a2 | g#2 b2 | >e2 c2 | d2 <b2 | >c4 e4 a2 | g#1</textus>
+      </>
+    </>
+    <pars titulus="bassus" instrumentum="triangulum" lucrum="0.8">
+      <frustum mensura="1">
+        <textus!>o2 l8 e >e <e >e <e >e <e >e < | a >a <a >a <a >a <a >a < | g# >g# <g# >g# <g# >g# <g# >g# < | a >a <a >a <a >a <a >a < | d >d <d >d <d >d <d >d < | c >c <c >c <c >c <c >c < | g# >g# <g# >g# <g# >g# <g# >g# < | a >a <a >a <a >a <a >a < | a >a <a >a <a >a <a >a < | g# >g# <g# >g# <g# >g# <g# >g# < | a >a <a >a <a >a <a >a < | e >e <e >e <e >e <e >e < | a >a <a >a <a >a <a >a < | g# >g# <g# >g# <g# >g# <g# >g# < | a >a <a >a <a >a <a >a < | e >e <e >e <e >e <e >e <</textus>
+      </>
+    </>
+  </>
+
+</carmina>

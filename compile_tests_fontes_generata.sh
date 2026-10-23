@@ -39,6 +39,8 @@ declare -a SOURCE_FILES=(
     "lib/capitula.c"
     "lib/capsula.c"
     "lib/capsula_caudae.c"
+    "lib/carmen.c"
+    "lib/carmina_infixum.c"
     "lib/cellae.c"
     "lib/chorda.c"
     "lib/chorda_aedificator.c"

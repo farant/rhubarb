@@ -85,6 +85,8 @@ nomen structura {
             s64 longitudo;      /* quadra scripta (> 0) */
             s64 pulsus;         /* positio, pulsus ab initio */
             s64 pulsus_longitudo;  /* longitudo scripta, pulsus (> 0) */
+      character littera;        /* 'a'..'g' ut scripta (orthographia:
+                                 * c# = C sharp, d- = D flat) */
             f32 lucrum;         /* 'v' / C : 0..1 */
          chorda praeparatum;    /* '@titulus' (scissura textus) aut
                                  * vacua = ordinarium vocantis */
