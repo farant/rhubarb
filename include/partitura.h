@@ -33,7 +33,10 @@
  * Lucra notarum (MML 'v') nondum monstrantur.
  *
  * USUS:
- *   PartituraForma f = { IX, XII, { NIHIL, 0 } };   (* mensurae 9-12 *)
+ *   PartituraForma f;
+ *   memset(&f, 0, magnitudo(f));  f.prima = IX;  f.ultima = XII;
+ *   f.additae_titulus = "harmonia";              (* linea addita, *)
+ *   f.addita = harmonia_lineam_scribere;         (* harmonia.h *)
  *   si (partitura_scribere(carmen, &f, aedificator)) ...
  */
 /* <aedilis corpus="lib/partitura.c"/> */
@@ -56,6 +59,14 @@ nomen structura {
        i32 prima;    /* mensura prima (1 = prima carminis; 0 = 1) */
        i32 ultima;   /* 0 = ultima carminis */
     chorda pars;     /* vacua = partes omnes */
+    /* linea addita per mensuram, post partes (analysis: harmonia.h);
+     * titulus in columna titulorum partium; NIHIL = nulla. Functio
+     * mensuram [initium, finis) pulsuum scribit, sine titulo et sine
+     * '\n'; FALSUM = memoria deest */
+    constans character* additae_titulus;
+    b32 (*addita)(vacuum* ctx, constans Carmen* carmen, s64 initium,
+                  s64 finis, ChordaAedificator* textus);
+    vacuum* additae_ctx;
 } PartituraForma;
 
 /* orthographia notae; clavis ex mappa carminis ad pulsum (absolutum) */
@@ -70,6 +81,13 @@ partitura_orthographia (
 constans character*
 partitura_clavis_littera (
     constans CarmenClavis* clavis);
+
+/* ':valor' partiturae (sine ':'): 1..64, '.' punctata, 't' trioli,
+ * aliter '~pulsus' - lineis additis eadem grammatica */
+b32
+partitura_valorem_scribere (
+                   s64  pulsus,
+     ChordaAedificator* textus);
 
 /* textum in aedificatorem appendit; forma NIHIL = totum carmen. FALSUM:
  * pars ignota, mensurae extra carmen (aut ultima < prima), memoria

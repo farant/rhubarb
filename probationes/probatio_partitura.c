@@ -60,6 +60,7 @@ _forma (
 {
     PartituraForma f;
 
+    memset(&f, ZEPHYRUM, magnitudo(f));
     f.prima         = prima;
     f.ultima        = ultima;
     f.pars.datum    = NIHIL;
@@ -416,6 +417,50 @@ _sectio_liber (
     CREDO_VERUM (i == t.mensura);
 }
 
+/* linea addita ficta: mensura quaeque "[initium,finis)" */
+interior b32
+_addita (
+               vacuum* ctx,
+      constans Carmen* carmen,
+                  s64  initium,
+                  s64  finis,
+    ChordaAedificator* textus)
+{
+    (vacuum)carmen;
+    (vacuum)ctx;
+    redde chorda_aedificator_appendere_character(textus, '[')
+        && chorda_aedificator_appendere_s32(textus, (s32)initium)
+        && chorda_aedificator_appendere_character(textus, ',')
+        && chorda_aedificator_appendere_s32(textus, (s32)finis)
+        && chorda_aedificator_appendere_character(textus, ')');
+}
+
+/* linea addita: post partes, titulus in columna (latitudo eius) */
+interior vacuum
+_sectio_addita (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c, CARMEN_TRIUM);
+     PartituraForma  f;
+
+    CREDO_NECESSE (k != NIHIL);
+    f                  = _forma(c, II, III, NIHIL);
+    f.additae_titulus  = "analysis";
+    f.addita           = _addita;
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scribere(c, k, &f),
+        "carmen t: c maior, 4/4, 120\n"
+        "  pars x: aether, lucrum 1.00\n"
+        "  pars yy: triangulum, lucrum 0.50\n"
+        "mensura 2\n"
+        "  x         D4:1\n"
+        "  yy        D2:1\n"
+        "  analysis  [3840,7680)\n"
+        "mensura 3\n"
+        "  x         E4:1\n"
+        "  yy        E2:1\n"
+        "  analysis  [7680,11520)\n");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "orthographia", _sectio_orthographia, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -424,6 +469,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "simul", _sectio_simul, NIHIL, NIHIL, NIHIL, NIHIL },
     { "mutationes", _sectio_mutationes, NIHIL, NIHIL, NIHIL, NIHIL },
     { "forma", _sectio_forma, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "addita", _sectio_addita, NIHIL, NIHIL, NIHIL, NIHIL },
     { "liber", _sectio_liber, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

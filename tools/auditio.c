@@ -35,7 +35,8 @@
  *   auditio -carmen T -via x.wav       in WAV stereo, semel (non sonat)
  *   auditio -carmen T -partitura       partitura ut textus
  *       [-mensurae 9-12] [-pars P]     (partitura.h), sine sono; -pars
- *                                      hic = sola pars
+ *       [-harmonia]                    hic = sola pars; -harmonia:
+ *                                      linea acordorum (harmonia.h)
  *   auditio -carmen T -censura         regulae musicae (censura.h):
  *       [-regulae +dissonantia,-ambitus]  ordinariae mutatae, aut
  *       [-regulae parallelae,lineae]      hae solae; exitus 3 si
@@ -87,6 +88,7 @@
 #include "partitura.h"
 #include "censura.h"
 #include "auscultatio.h"
+#include "harmonia.h"
 #include "chorda_aedificator.h"
 #include "filum.h"
 #include <math.h>
@@ -784,12 +786,19 @@ _partituram_scribere (
                    i32  prima,
                    i32  ultima,
     constans character* pars,
+                   b32  harmonia,
                Piscina* piscina)
 {
        PartituraForma  forma;
     ChordaAedificator* a = chorda_aedificator_creare(piscina, M);
                chorda  t;
 
+    memset(&forma, ZEPHYRUM, magnitudo(forma));
+    si (harmonia)
+    {
+        forma.additae_titulus  = "harmonia";
+        forma.addita           = harmonia_lineam_scribere;
+    }
     forma.prima         = prima;
     forma.ultima        = ultima;
     forma.pars.datum    = NIHIL;
@@ -1121,6 +1130,7 @@ principale (
                     b32  iterare         = FALSUM;
      constans character* liber           = NIHIL;
                     b32  partitura       = FALSUM;
+                    b32  harmonia        = FALSUM;
                     b32  censura         = FALSUM;
                     b32  auscultare      = FALSUM;
      constans character* regulae         = NIHIL;
@@ -1206,6 +1216,10 @@ principale (
         {
             regulae = argv[++k];
         }
+        alioquin si (strcmp(argv[k], "-harmonia") == ZEPHYRUM)
+        {
+            harmonia = VERUM;
+        }
         alioquin si (strcmp(argv[k], "-partitura") == ZEPHYRUM)
         {
             partitura = VERUM;
@@ -1261,7 +1275,7 @@ principale (
                 "-carmen (-iterare non cum -via)\n");
         redde II;
     }
-    si (   (mensurae_datae && !partitura)
+    si (   ((mensurae_datae || harmonia) && !partitura)
         || (partitura && (iterare || via != NIHIL))
         || (regulae != NIHIL && !censura)
         || (censura && (partitura || iterare || via != NIHIL))
@@ -1283,7 +1297,8 @@ principale (
                   "[-via x.wav] | -omnes | -cantus TEXTUS [-praeparatum T] "
                   "[-intactus] [-via x.wav] [semen] | -cantuale | -genus G "
                   "| -cantilena T | -carmina | -carmen T [-iterare] "
-                  "[-pars P] [-via x.wav] [-partitura [-mensurae N-M]] "
+                  "[-pars P] [-via x.wav] [-partitura [-mensurae N-M] "
+                  "[-harmonia]] "
                   "[-censura [-regulae R,+R,-R]] [-auscultare] "
                   "[-liber via.stml])\n");
         _praeparata_monstrare();
@@ -1324,7 +1339,7 @@ principale (
         alioquin si (k != NIHIL && partitura)
         {
             bene = _partituram_scribere(k, prima, ultima, pars,
-                piscina);
+                harmonia, piscina);
         }
         alioquin si (k != NIHIL)
         {

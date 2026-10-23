@@ -120,6 +120,7 @@ declare -a SOURCE_FILES=(
     "lib/friatio.c"
     "lib/git.c"
     "lib/glyphae_ductae.c"
+    "lib/harmonia.c"
     "lib/herbarium.c"
     "lib/historia.c"
     "lib/hora_hybrida.c"

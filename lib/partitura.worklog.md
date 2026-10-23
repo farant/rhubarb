@@ -24,3 +24,12 @@ must pick a case where the two rules DISAGREE: Gb major spells B as Cb,
 F# major spells F as E#. Three plants first failed to compile (unused
 variable / parameter; a multi-line anchor the plant tool refused) -
 rewritten, not findings.
+
+## 2026-10-23 - extra-row hook + public value writer
+
+PartituraForma.additae_titulus / addita / additae_ctx: one analysis row
+per bar after the tracks, title in the track-title column (width
+included). Added so harmonia (which needs partitura's spelling) can plug
+in WITHOUT a library cycle; later rows (dynamics, beat grid) use the same
+hook. partitura_valorem_scribere is the score's ':value' grammar made
+public for such rows. Callers that build a PartituraForma now memset it.

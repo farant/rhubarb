@@ -9,6 +9,7 @@
  */
 
 #include "partitura.h"
+#include <string.h>
 
 /* gradus C D E F G A B */
 hic_manens constans character LITTERAE[VII] = {
@@ -252,6 +253,19 @@ _valorem_scribere (
     }
     _character(s, '~');
     _numerus(s, l);
+}
+
+b32
+partitura_valorem_scribere (
+                   s64  pulsus,
+     ChordaAedificator* textus)
+{
+    Scriptor s;
+
+    s.a     = textus;
+    s.bene  = VERUM;
+    _valorem_scribere(&s, pulsus);
+    redde s.bene;
 }
 
 /* pausae ab 'ab' ad 'ad', valoribus maximis primum */
@@ -499,6 +513,14 @@ _mensurae (
 }
 
 interior b32
+_additam_habet (
+    constans PartituraForma* forma)
+{
+    redde forma != NIHIL && forma->addita != NIHIL
+        && forma->additae_titulus != NIHIL;
+}
+
+interior b32
 _monstranda (
         constans CarmenPars* pars,
     constans PartituraForma* forma)
@@ -550,6 +572,11 @@ partitura_scribere (
                 latitudo = carmen->partes[i].titulus.mensura;
             }
         }
+    }
+    si (   _additam_habet(forma)
+        && (i32)strlen(forma->additae_titulus) > latitudo)
+    {
+        latitudo = (i32)strlen(forma->additae_titulus);
     }
     si (   inventae == ZEPHYRUM && forma != NIHIL
         && forma->pars.mensura > ZEPHYRUM)
@@ -616,6 +643,17 @@ partitura_scribere (
             s.bene = chorda_aedificator_appendere_repetita(textus, ' ',
                 latitudo - p->titulus.mensura + II) && s.bene;
             _partem_scribere(&s, carmen, p, initium, finis);
+            _character(&s, '\n');
+        }
+        si (_additam_habet(forma))
+        {
+            _litterae(&s, "  ");
+            _litterae(&s, forma->additae_titulus);
+            s.bene = chorda_aedificator_appendere_repetita(textus, ' ',
+                latitudo - (i32)strlen(forma->additae_titulus) + II)
+                && s.bene;
+            s.bene = forma->addita(forma->additae_ctx, carmen, initium,
+                finis, textus) && s.bene;
             _character(&s, '\n');
         }
     }
