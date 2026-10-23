@@ -3449,3 +3449,21 @@ The heal after the "custodita II" commit actually RAN vates_responsum: its memo 
 Both now declare `build/aedilis/norma` and `bin/norma` as communis vestigia. Verified by appending a comment to lib/vates_responsum_norma.c → `sanare` ran the generator (SANATUM, file restored byte-identical) with no vestigium failure. No cycle.
 
 Lesson: the read guard does not cover writes. Write declarations are only exercised when sanare executes an action for real, which a memorabilis action rarely does.
+
+## 2026-10-23 — fabrica-fumus split: pura (tools/fabrica_fumus.sh) + vivus (tools/fabrica_fumus_vivus.sh)
+
+Option 1 (desideratum …VXWK8; the real migration into a fabrica composite comes later). New gate `fabrica-fumus-vivus`.
+
+**Which cases are live.**
+- Ran with FABRICA_LECTIONES and one `G` marker per output line, piped in from a `while read` loop. Markers TRAIL each case by one line, so reads "post X" belong to case X+1.
+- The cases that run `"$F"` at the repo root (not inside `(cd "$T/r" …)`) were checked by reading the script.
+- **Moved whole, verbatim, original numbers kept:** VI (the judge itself RECENS), VII (digest of the real fabrica action), VIII (judges the whole tree; writes an orphan manifest into the real build/aedilis), XI (digest == the installed binary's reported inputs), XXXIII (census), XLI (provenance families over the real aedificatio.stml + natura_quaesitor manifest).
+- **XLVII split:** its loop over `$T/r/build/fabrica.db` stays; the real `build/fabrica.db` half moved.
+- **XI was found only by a SECOND traced run.** After the first move the hermetic script still read 1,488 relative tracked paths, all "post X".
+
+**Result.**
+- pura reads 16 tracked files: the declarations and canons it copies or checks. That gives `legit="*aedificatio.stml aedificatio.canon canon.canon canones.registrum aedilis.stml fabrica.stml crusta/effectus_mandata.stml"`. Its tools are covered by owning bin/fabrica plus the binary digest.
+- vivus: `legit="*"`, `currit="tools/fabrica.c"`, so fabrica's sources owe it.
+- Case labels before = after, as a set. XLVII appears in both scripts.
+- Times: pura 46 s + vivus 21 s, against ~63 s before.
+- **New runner gotcha (again):** an untracked script is "sine annotatione" until `git add -N`.

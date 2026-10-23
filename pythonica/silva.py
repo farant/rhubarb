@@ -1622,6 +1622,10 @@ PORTAE = {
     # (GENERATUM sine iudicio). fumus = porta natalis bin/fabrica
     'fabrica-fumus': (['./tools/fabrica_fumus.sh'],
                       r'fumus fabricae: (sanum|FRACTUM)'),
+    # pars ARBORIS VIVAE fumi fabricae (casus VI VII VIII XI XXXIII XLI,
+    # XLVII memoriae vivae; desideratum …VXWK8)
+    'fabrica-fumus-vivus': (['./tools/fabrica_fumus_vivus.sh'],
+                            r'fumus fabricae vivus: (sanum|FRACTUM)'),
     # iudicium (fabrica spec 3 T7): porta ut actio - plantae P1-P8 et
     # auditus in radice temporaria (bin/fabrica, bin/compilator,
     # crusta/effectus.sh veri); ~XXV s
