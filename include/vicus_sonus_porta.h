@@ -9,9 +9,9 @@
  * manent.
  *
  * EXITUS PIGER: concentus exitum post quietem claudit et primo sono
- * iterum aperit; auditus_aperire anulos e piscina data allocat,
- * ergo porta piscinam PROPRIAM per aperitionem generat et in claudendo
- * destruit - piscina vici aliter per dies cresceret.
+ * iterum aperit; exitus communis concentus_auditus.h anulos in
+ * piscina PROPRIA per aperitionem tenet - piscina vici aliter per dies
+ * cresceret.
  *
  * TEMPUS: fenestra_tempus_ms (horologium pulsus).
  *

@@ -16,7 +16,7 @@
  *     (aetherophonum) a cantilena non surripitur.
  *
  * Exitus per tabulam functionum, ut concentus auditum non noverit:
- * hospes auditus.h adaptat (vicus_sonus_porta); probationes mixturam
+ * hospes auditus.h adaptat (concentus_auditus.h); probationes mixturam
  * offline cum horologio manuali dant - eadem logica, sine sono.
  *
  * TEMPUS duplex: quadra exitus (momentum, iussa) et ms hospitis (nunc:

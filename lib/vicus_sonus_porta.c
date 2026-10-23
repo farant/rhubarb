@@ -5,7 +5,7 @@
 #include "tintinnabulum.h"
 #include "tibia.h"
 #include "cantuale.h"
-#include "auditus.h"
+#include "concentus_auditus.h"
 #include "fenestra_tempus.h"
 #include <stdio.h>
 #include <string.h>
@@ -23,94 +23,10 @@
 #define PORTA_PRIORITAS_VIVAE II
 
 nomen structura {
-           Piscina* anuli;   /* per aperitionem; NIHIL clauso exitu */
          Concentus* concentus;   /* hospes communis: mixtura, exitus */
      Tintinnabulum* t;
        MixturaAnsa  vivae[PORTA_VIVAE];   /* generatio 0 = vacua */
 } PortaSoni;
-
-
-/* ==================================================
- * Exitus tintinnabuli super auditus
- * ================================================== */
-
-/* piscina PROPRIA anulorum: tintinnabulum post quietem claudit et
- * iterum aperit - in piscina vici anuli per dies cumularentur */
-interior b32
-exitum_aperire (
-     vacuum* ctx,
-    Mixtura* mixtura)
-{
-       PortaSoni* p;
-    AuditusForma  forma;
-
-    p             = (PortaSoni*)ctx;
-    forma.iussa   = PORTA_ANULI;
-    forma.nuntii  = PORTA_ANULI;
-    p->anuli = piscina_generare_dynamicum("vicus_sonus_anuli",
-        XXXII * M);
-    si (!p->anuli)
-    {
-        redde FALSUM;
-    }
-    si (!auditus_aperire(mixtura, &forma, p->anuli))
-    {
-        piscina_destruere(p->anuli);
-        p->anuli = NIHIL;
-        redde FALSUM;
-    }
-    redde VERUM;
-}
-
-/* filum soni prius exspectatur (auditus_claudere), deinde anuli
- * liberantur */
-interior vacuum
-exitum_claudere (
-    vacuum* ctx)
-{
-    PortaSoni* p = (PortaSoni*)ctx;
-
-    auditus_claudere();
-    si (p->anuli)
-    {
-        piscina_destruere(p->anuli);
-        p->anuli = NIHIL;
-    }
-}
-
-interior s64
-exitus_momentum (
-    vacuum* ctx)
-{
-    (vacuum)ctx;
-    redde auditus_momentum();
-}
-
-interior i32
-exitus_mora (
-    vacuum* ctx)
-{
-    (vacuum)ctx;
-    redde auditus_mora();
-}
-
-interior b32
-exitum_iubere (
-                    vacuum* ctx,
-    constans MixturaIussum* iussum)
-{
-    (vacuum)ctx;
-    redde auditus_iubere(iussum);
-}
-
-interior b32
-exitus_nuntium_legere (
-            vacuum* ctx,
-    MixturaNuntius* nuntius)
-{
-    (vacuum)ctx;
-    redde auditus_nuntium_legere(nuntius);
-}
 
 
 /* ==================================================
@@ -319,9 +235,7 @@ vicus_sonus_porta (
     p = (PortaSoni*)piscina_allocare(piscina,
         magnitudo(PortaSoni));
     liber = (Cantuale*)piscina_allocare(piscina, magnitudo(Cantuale));
-    exitus  = (ConcentusExitus*)piscina_allocare(piscina,
-        magnitudo(ConcentusExitus));
-    si (!p || !liber || !exitus)
+    si (!p || !liber)
     {
         redde FALSUM;
     }
@@ -335,18 +249,12 @@ vicus_sonus_porta (
             vitium.causa ? vitium.causa : "memoria");
         redde FALSUM;
     }
-    p->anuli                = NIHIL;
-    exitus->aperire         = exitum_aperire;
-    exitus->claudere        = exitum_claudere;
-    exitus->momentum        = exitus_momentum;
-    exitus->mora            = exitus_mora;
-    exitus->iubere          = exitum_iubere;
-    exitus->nuntium_legere  = exitus_nuntium_legere;
-    exitus->ctx             = p;
-    forma.voces             = PORTA_VOCES;
-    forma.iussa             = PORTA_ANULI;
-    forma.nuntii            = PORTA_ANULI;
-    p->concentus            = concentus_creare(piscina, &forma, exitus);
+    forma.voces   = PORTA_VOCES;
+    forma.iussa   = PORTA_ANULI;
+    forma.nuntii  = PORTA_ANULI;
+    exitus        = concentus_exitus_auditus(piscina, &forma);
+    p->concentus            = exitus == NIHIL ? NIHIL
+        : concentus_creare(piscina, &forma, exitus);
     p->t           = p->concentus == NIHIL ? NIHIL
         : tintinnabulum_creare(piscina, liber, p->concentus, semen);
     si (!p->t)
