@@ -257,9 +257,25 @@ _commissum_obtinere (
 }
 
 /* Partes fructus ut TSV: O obiecta, C capita, S systemata, V vendores */
+/* EFFUSIONES (2026-10-22): forma cuiusque modi definitio UNA -
+ * appendere in aedificatorem; vocationes singulae, corpus et --plures
+ * eadem functione utuntur, ergo octeti numquam divergunt. */
 interior vacuum
-_partes_imprimere (
-    constans AedilisFructus* fructus)
+_lineam_appendere (
+     ChordaAedificator* aed,
+    constans character* praefixum,
+                chorda  via)
+{
+    chorda_aedificator_appendere_literis(aed, praefixum);
+    chorda_aedificator_appendere_chorda(aed, via);
+    chorda_aedificator_appendere_character(aed, '\n');
+}
+
+/* --enumerare: obiecta clausurae nuda */
+interior vacuum
+_obiecta_appendere (
+    constans AedilisFructus* fructus,
+          ChordaAedificator* aed)
 {
     i32 i;
     i32 numerus;
@@ -270,8 +286,26 @@ _partes_imprimere (
         AedilisObiectum* obiectum;
 
         obiectum = (AedilisObiectum*)xar_obtinere(fructus->obiecta, i);
-        imprimere("O\t%.*s\n", (s32)obiectum->via.mensura,
-            (constans character*)obiectum->via.datum);
+        _lineam_appendere(aed, "", obiectum->via);
+    }
+}
+
+/* --partes: TSV (O/C/S/V via) */
+interior vacuum
+_partes_appendere (
+    constans AedilisFructus* fructus,
+          ChordaAedificator* aed)
+{
+    i32 i;
+    i32 numerus;
+
+    numerus = xar_numerus(fructus->obiecta);
+    per (i = 0; i < numerus; i++)
+    {
+        AedilisObiectum* obiectum;
+
+        obiectum = (AedilisObiectum*)xar_obtinere(fructus->obiecta, i);
+        _lineam_appendere(aed, "O\t", obiectum->via);
     }
     numerus = xar_numerus(fructus->capita);
     per (i = 0; i < numerus; i++)
@@ -279,17 +313,13 @@ _partes_imprimere (
         AedilisCaput* caput;
 
         caput = (AedilisCaput*)xar_obtinere(fructus->capita, i);
-        imprimere("C\t%.*s\n", (s32)caput->via.mensura,
-            (constans character*)caput->via.datum);
+        _lineam_appendere(aed, "C\t", caput->via);
     }
     numerus = xar_numerus(fructus->systemata);
     per (i = 0; i < numerus; i++)
     {
-        chorda via;
-
-        via = *(chorda*)xar_obtinere(fructus->systemata, i);
-        imprimere("S\t%.*s\n", (s32)via.mensura,
-            (constans character*)via.datum);
+        _lineam_appendere(aed, "S\t",
+            *(chorda*)xar_obtinere(fructus->systemata, i));
     }
     numerus = xar_numerus(fructus->vendores);
     per (i = 0; i < numerus; i++)
@@ -297,9 +327,93 @@ _partes_imprimere (
         AedilisVendor* vendor;
 
         vendor = (AedilisVendor*)xar_obtinere(fructus->vendores, i);
-        imprimere("V\t%.*s\n", (s32)vendor->fons.mensura,
-            (constans character*)vendor->fons.datum);
+        _lineam_appendere(aed, "V\t", vendor->fons);
     }
+}
+
+/* --aristae: arista graphi inclusionum (includens TAB inclusum) */
+interior vacuum
+_aristas_appendere (
+    constans AedilisFructus* fructus,
+          ChordaAedificator* aed)
+{
+    i32 i;
+    i32 numerus;
+
+    numerus = xar_numerus(fructus->capita);
+    per (i = 0; i < numerus; i++)
+    {
+        AedilisCaput* caput;
+                 i32  k;
+                 i32  numerus_aristarum;
+
+        caput = (AedilisCaput*)xar_obtinere(fructus->capita, i);
+        si (caput->inclusa == NIHIL)
+        {
+            perge;
+        }
+        numerus_aristarum = xar_numerus(caput->inclusa);
+        per (k = 0; k < numerus_aristarum; k++)
+        {
+            chorda_aedificator_appendere_chorda(aed, caput->via);
+            chorda_aedificator_appendere_character(aed, '\t');
+            chorda_aedificator_appendere_chorda(aed,
+                *(chorda*)xar_obtinere(caput->inclusa, k));
+            chorda_aedificator_appendere_character(aed, '\n');
+        }
+    }
+}
+
+/* aedificatorem ad stdout (per stdio, ordine cum imprimere servato) */
+interior vacuum
+_effusionem_emittere (
+    ChordaAedificator* aed)
+{
+    chorda effusio;
+
+    effusio = chorda_aedificator_finire(aed);
+    si (effusio.mensura > 0)
+    {
+        (vacuum)fwrite(effusio.datum, I, (size_t)effusio.mensura,
+            stdout);
+    }
+}
+
+interior vacuum
+_partes_imprimere (
+    constans AedilisFructus* fructus,
+                    Piscina* piscina)
+{
+    ChordaAedificator* aed;
+
+    aed = chorda_aedificator_creare(piscina, MXXIV);
+    _partes_appendere(fructus, aed);
+    _effusionem_emittere(aed);
+}
+
+/* SCRIBERE SI MUTATUM (2026-10-23): manifestum idem non rescribitur -
+ * mtime manet. Olim omnis derivatio manifestum rescribebat; actio
+ * fabricae quae aedilem currit (speculum_hospes) arborem ideo semper
+ * 'mutabat', et memoriae regenerationum fabricae vacabantur
+ * (generatores bis per cursum radicis iudicati). */
+interior b32
+_scribere_si_mutatum (
+    constans character* via,
+                chorda  contentum,
+               Piscina* piscina)
+{
+    chorda vetus;
+
+    vetus = filum_legere_totum(via, piscina);
+    si (   vetus.datum   != NIHIL
+        && vetus.mensura == contentum.mensura
+        && (   contentum.mensura == 0
+            || memcmp(vetus.datum, contentum.datum,
+                   (memoriae_index)contentum.mensura) == 0))
+    {
+        redde VERUM;
+    }
+    redde filum_scribere(via, contentum);
 }
 
 /* --manifestum: clausura quam enumeratio aut partes legunt, ad viam
@@ -322,8 +436,9 @@ _manifestum_scribere_si_petitum (
     via_parens = via_directorium(via_manifesti, piscina);
     si (   !filum_directorium_creare_cum_parentibus(
                chorda_ut_cstr(via_parens, piscina))
-        || !filum_scribere(chorda_ut_cstr(via_manifesti, piscina),
-               aedilis_manifestum_scribere(fructus, piscina, NIHIL)))
+        || !_scribere_si_mutatum(chorda_ut_cstr(via_manifesti, piscina),
+               aedilis_manifestum_scribere(fructus, piscina, NIHIL),
+               piscina))
     {
         fprintf(stderr, "AEDILIS RECUSAT: manifestum non "
             "scriptum: %.*s\n", (s32)via_manifesti.mensura,
@@ -476,6 +591,184 @@ _nexum_purum_currere (
     redde (fracta > 0 || promittentia == 0) ? 1 : 0;
 }
 
+/* PLURES (2026-10-22): clausurae MULTORUM fontium UNO processu - fons
+ * per lineam in plagula 'via_listae'. Extractor (memoria per cursum
+ * + thesaurus) COMMUNIS est; fructus quisque in piscina SUA (destruitur
+ * post fontem - extractor memoriam suam in piscina sua longaeva servat,
+ * piscinam vocationis ignorat). Fons quisque SEMEL derivatur, deinde
+ * modi petiti (--enumerare, --partes, --aristae) ex eodem fructu
+ * scribuntur: modus cum '--partes-ad' / '--aristae-ad' in plagulam
+ * suam, ceteri (unus summum) in stdout. Effusio modi cuiusque =
+ * concatenatio effusionum singularum ordine listae, octetim (eaedem
+ * functiones _*_appendere). Manifestum fontis quisque ad
+ * '<dir>/<via cum / -> __>.stml'. Causae: compile_tests CCCLXXXI
+ * processus (~XXXVIII s frigide); amalgama_fontes radicem quamque BIS
+ * (partes, aristae) sine thesauro derivabat (silva XXIII radices,
+ * XLVI processus, ~XX s). */
+interior integer
+_plures_currere (
+                         Piscina* piscina,
+    constans AedilisConfiguratio* configuratio,
+              constans character* via_listae,
+                          chorda  dir_manifestorum,
+              constans character* varians_cstr,
+                    AedilisSilva* extractor,
+                             b32  enumerare,
+                             b32  partes,
+                          chorda  partes_ad,
+                             b32  aristae,
+                          chorda  aristae_ad)
+{
+               chorda  lista;
+                  i32  i;
+                  i32  initium_lineae;
+    ChordaAedificator* aed_partium    = NIHIL;
+    ChordaAedificator* aed_aristarum  = NIHIL;
+
+    lista = filum_legere_totum(via_listae, piscina);
+    si (lista.datum == NIHIL)
+    {
+        fprintf(stderr, "AEDILIS RECUSAT: --plures: %s legi nequit\n",
+            via_listae);
+        redde 1;
+    }
+    si (partes && partes_ad.mensura > 0)
+    {
+        aed_partium = chorda_aedificator_creare(piscina, LXIV * MXXIV);
+    }
+    si (aristae && aristae_ad.mensura > 0)
+    {
+        aed_aristarum = chorda_aedificator_creare(piscina,
+            LXIV * MXXIV);
+    }
+    initium_lineae = 0;
+    per (i = 0; i <= lista.mensura; i++)
+    {
+                 Piscina* scopi_piscina;
+          AedilisFructus* fructus;
+       ChordaAedificator* aed_stdout;
+                  chorda  causa;
+                  chorda  scopus;
+               character* scopus_cstr;
+                     i32  k;
+                     i32  numerus;
+
+        si (i < lista.mensura && lista.datum[i] != '\n')
+        {
+            perge;
+        }
+        scopus.datum    = lista.datum + initium_lineae;
+        scopus.mensura  = i - initium_lineae;
+        initium_lineae  = i + 1;
+        dum (   scopus.mensura > 0
+             && (   scopus.datum[scopus.mensura - 1] == '\r'
+                 || scopus.datum[scopus.mensura - 1] == ' '))
+        {
+            scopus.mensura--;
+        }
+        si (scopus.mensura == 0)
+        {
+            perge;
+        }
+        scopi_piscina = piscina_generare_dynamicum("aedilis_scopus",
+            CCLVI * MXXIV);
+        si (scopi_piscina == NIHIL)
+        {
+            redde 1;
+        }
+        scopus_cstr    = chorda_ut_cstr(scopus, scopi_piscina);
+        causa.datum    = NIHIL;
+        causa.mensura  = 0;
+        fructus = aedilis_derivare(scopi_piscina, configuratio,
+            scopus_cstr, varians_cstr, aedilis_silva_extrahere,
+            extractor, &causa);
+        si (fructus == NIHIL)
+        {
+            fprintf(stderr, "AEDILIS RECUSAT: %s: %.*s\n", scopus_cstr,
+                (s32)causa.mensura, (constans character*)causa.datum);
+            piscina_destruere(scopi_piscina);
+            redde 1;
+        }
+        numerus = xar_numerus(fructus->inresolutae);
+        per (k = 0; k < numerus; k++)
+        {
+            chorda* via;
+
+            via = (chorda*)xar_obtinere(fructus->inresolutae, k);
+            fprintf(stderr, "AEDILIS CAUTIO: inclusio citata "
+                "inresoluta \"%.*s\" (scopus %s)\n",
+                (s32)via->mensura, (constans character*)via->datum,
+                scopus_cstr);
+        }
+        si (dir_manifestorum.mensura > 0)
+        {
+            ChordaAedificator* nomen_manifesti;
+                          i32  j;
+
+            nomen_manifesti = chorda_aedificator_creare(scopi_piscina,
+                CCLVI);
+            chorda_aedificator_appendere_chorda(nomen_manifesti,
+                dir_manifestorum);
+            chorda_aedificator_appendere_character(nomen_manifesti,
+                '/');
+            per (j = 0; j < scopus.mensura; j++)
+            {
+                si (scopus.datum[j] == '/')
+                {
+                    chorda_aedificator_appendere_literis(nomen_manifesti,
+                        "__");
+                }
+                alioquin
+                {
+                    chorda_aedificator_appendere_character(
+                        nomen_manifesti, (character)scopus.datum[j]);
+                }
+            }
+            chorda_aedificator_appendere_literis(nomen_manifesti,
+                ".stml");
+            si (!_manifestum_scribere_si_petitum(fructus,
+                    chorda_aedificator_finire(nomen_manifesti),
+                    scopi_piscina))
+            {
+                piscina_destruere(scopi_piscina);
+                redde 1;
+            }
+        }
+        aed_stdout = chorda_aedificator_creare(scopi_piscina, MXXIV);
+        si (enumerare)
+        {
+            _obiecta_appendere(fructus, aed_stdout);
+        }
+        si (partes)
+        {
+            _partes_appendere(fructus,
+                aed_partium != NIHIL ? aed_partium : aed_stdout);
+        }
+        si (aristae)
+        {
+            _aristas_appendere(fructus,
+                aed_aristarum != NIHIL ? aed_aristarum : aed_stdout);
+        }
+        _effusionem_emittere(aed_stdout);
+        piscina_destruere(scopi_piscina);
+    }
+    si (   aed_partium != NIHIL
+        && !filum_scribere(chorda_ut_cstr(partes_ad, piscina),
+               chorda_aedificator_finire(aed_partium)))
+    {
+        fprintf(stderr, "AEDILIS RECUSAT: --partes-ad non scriptum\n");
+        redde 1;
+    }
+    si (   aed_aristarum != NIHIL
+        && !filum_scribere(chorda_ut_cstr(aristae_ad, piscina),
+               chorda_aedificator_finire(aed_aristarum)))
+    {
+        fprintf(stderr, "AEDILIS RECUSAT: --aristae-ad non scriptum\n");
+        redde 1;
+    }
+    redde 0;
+}
+
 interior integer
 _corpus_currere (
                          Piscina* piscina,
@@ -565,7 +858,7 @@ _corpus_currere (
             exitus = 1;
             perge;
         }
-        _partes_imprimere(fructus);
+        _partes_imprimere(fructus, piscina);
     }
     redde exitus;
 }
@@ -711,6 +1004,18 @@ principale (
         "directorio dato servare/legere (cursus unus portae)");
     argumenta_addere_vexillum(parser, NIHIL, "--enumerare",
         "Obiecta clausurae nuda imprimere (consumptoribus)");
+    argumenta_addere_optionem(parser, NIHIL, "--plures",
+        "Cum --enumerare: fontes ex plagula data (unus per lineam) UNO "
+        "processu; effusio = concatenatio effusionum singularum");
+    argumenta_addere_optionem(parser, NIHIL, "--partes-ad",
+        "Cum --plures --partes: partes in plagulam datam "
+        "(non stdout)");
+    argumenta_addere_optionem(parser, NIHIL, "--aristae-ad",
+        "Cum --plures --aristae: aristae in plagulam datam "
+        "(non stdout)");
+    argumenta_addere_optionem(parser, NIHIL, "--manifesta",
+        "Cum --plures: manifestum fontis cuiusque ad <dir>/<via cum / -> "
+        "__>.stml");
     argumenta_addere_optionem(parser, NIHIL, "--manifestum",
         "Cum --enumerare aut --partes: manifestum etiam ad viam datam "
         "scribere (fabrica: clausura actionis memorabilis)");
@@ -761,6 +1066,46 @@ principale (
         {
             fprintf(stderr,
                 "usus: aedilis --corpus <directorium> --partes\n");
+            redde 1;
+        }
+        scopus.datum    = NIHIL;
+        scopus.mensura  = 0;
+        scopus_cstr     = NIHIL;
+    }
+    alioquin si (argumenta_obtinere_optionem(lecta, "--plures",
+                     piscina).mensura > 0)
+    {
+        b32 modus_enumerandi;
+        b32 modus_partium;
+        b32 modus_aristarum;
+        i32 ad_stdout;
+
+        modus_enumerandi = argumenta_habet_vexillum(lecta,
+            "--enumerare");
+        modus_partium    = argumenta_habet_vexillum(lecta, "--partes");
+        modus_aristarum  = argumenta_habet_vexillum(lecta, "--aristae");
+        ad_stdout        = modus_enumerandi ? 1 : 0;
+        si (   modus_partium
+            && argumenta_obtinere_optionem(lecta, "--partes-ad",
+                   piscina).mensura == 0)
+        {
+            ad_stdout++;
+        }
+        si (   modus_aristarum
+            && argumenta_obtinere_optionem(lecta, "--aristae-ad",
+                   piscina).mensura == 0)
+        {
+            ad_stdout++;
+        }
+        si (   argumenta_numerus_positionalium(lecta) != 0
+            || (!modus_enumerandi && !modus_partium && !modus_aristarum)
+            || ad_stdout > 1
+            || via_manifesti.mensura > 0)
+        {
+            fprintf(stderr, "usus: aedilis --plures <lista> "
+                "[--enumerare] [--partes [--partes-ad <via>]] "
+                "[--aristae [--aristae-ad <via>]] [--manifesta <dir>] "
+                "[--thesaurus <dir>] (stdout modo uno summum)\n");
             redde 1;
         }
         scopus.datum    = NIHIL;
@@ -851,6 +1196,23 @@ principale (
     {
         redde _nexum_purum_currere(piscina, configuratio, extractor);
     }
+    si (   scopus_cstr == NIHIL
+        && argumenta_obtinere_optionem(lecta, "--plures",
+               piscina).mensura > 0)
+    {
+        redde _plures_currere(piscina, configuratio,
+            chorda_ut_cstr(argumenta_obtinere_optionem(lecta,
+            "--plures",
+                piscina), piscina),
+            argumenta_obtinere_optionem(lecta, "--manifesta", piscina),
+            varians_cstr, extractor,
+            argumenta_habet_vexillum(lecta, "--enumerare"),
+            argumenta_habet_vexillum(lecta, "--partes"),
+            argumenta_obtinere_optionem(lecta, "--partes-ad", piscina),
+            argumenta_habet_vexillum(lecta, "--aristae"),
+            argumenta_obtinere_optionem(lecta, "--aristae-ad",
+            piscina));
+    }
     si (scopus_cstr == NIHIL)
     {
         redde _corpus_currere(piscina, configuratio,
@@ -895,23 +1257,17 @@ principale (
 
     si (argumenta_habet_vexillum(lecta, "--enumerare"))
     {
-        i32 i;
-        i32 numerus;
-
         si (!_manifestum_scribere_si_petitum(fructus, via_manifesti,
                 piscina))
         {
             redde 1;
         }
-        numerus = xar_numerus(fructus->obiecta);
-        per (i = 0; i < numerus; i++)
         {
-            AedilisObiectum* obiectum;
+            ChordaAedificator* aed;
 
-            obiectum = (AedilisObiectum*)xar_obtinere(
-                fructus->obiecta, i);
-            imprimere("%.*s\n", (s32)obiectum->via.mensura,
-                (constans character*)obiectum->via.datum);
+            aed = chorda_aedificator_creare(piscina, MXXIV);
+            _obiecta_appendere(fructus, aed);
+            _effusionem_emittere(aed);
         }
         redde 0;
     }
@@ -925,42 +1281,17 @@ principale (
         {
             redde 1;
         }
-        _partes_imprimere(fructus);
+        _partes_imprimere(fructus, piscina);
         redde 0;
     }
 
     si (argumenta_habet_vexillum(lecta, "--aristae"))
     {
-        i32 i;
-        i32 numerus;
+        ChordaAedificator* aed;
 
-        numerus = xar_numerus(fructus->capita);
-        per (i = 0; i < numerus; i++)
-        {
-            AedilisCaput* caput;
-                     i32  k;
-                     i32  numerus_aristarum;
-
-            caput = (AedilisCaput*)xar_obtinere(fructus->capita,
-                i);
-            si (caput->inclusa == NIHIL)
-            {
-                perge;
-            }
-            numerus_aristarum = xar_numerus(caput->inclusa);
-            per (k = 0; k < numerus_aristarum; k++)
-            {
-                chorda inclusum;
-
-                inclusum = *(chorda*)xar_obtinere(caput->inclusa,
-                    k);
-                imprimere("%.*s\t%.*s\n",
-                    (s32)caput->via.mensura,
-                    (constans character*)caput->via.datum,
-                    (s32)inclusum.mensura,
-                    (constans character*)inclusum.datum);
-            }
-        }
+        aed = chorda_aedificator_creare(piscina, MXXIV);
+        _aristas_appendere(fructus, aed);
+        _effusionem_emittere(aed);
         redde 0;
     }
 
@@ -1030,8 +1361,8 @@ principale (
         chorda_aedificator_appendere_literis(aedificator,
             "/manifestum.stml");
         via_manifesti = chorda_aedificator_finire(aedificator);
-        si (!filum_scribere(chorda_ut_cstr(via_manifesti,
-                piscina), manifestum))
+        si (!_scribere_si_mutatum(chorda_ut_cstr(via_manifesti,
+                piscina), manifestum, piscina))
         {
             fprintf(stderr,
                 "AEDILIS RECUSAT: manifestum non scriptum\n");

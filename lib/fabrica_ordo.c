@@ -499,6 +499,92 @@ fabricae_in_locis (
 }
 
 Xar*
+fabrica_lectiones_non_declaratae (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+              constans Xar* lectiones,
+              constans Xar* scripta,
+                   Piscina* piscina)
+{
+       Xar* loci;
+       Xar* alienae;
+    chorda  causa;
+       i32  i;
+       i32  j;
+
+    loci           = _vestigium_actionis(actio, VERUM, piscina);
+    alienae        = fabricae_xar_chordarum(piscina);
+    causa.datum    = NIHIL;
+    causa.mensura  = ZEPHYRUM;
+    si (   loci == NIHIL || alienae == NIHIL
+        || !fabrica_actionem_enumerare(sutura, actio, piscina, loci,
+               &causa))
+    {
+        redde NIHIL;
+    }
+    /* viae ingressuum ipsae (manifestum: loci sunt plagulae eius, non
+     * ipsum) */
+    per (i = ZEPHYRUM; i < xar_numerus(actio->ingressus); i++)
+    {
+        fabricae_locum_addere(loci, FABRICA_LOCUS_PLAGULA,
+            ((constans FabricaIngressus*)xar_obtinere(actio->ingressus,
+            i))->via, chorda_ex_literis("", piscina));
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(lectiones); i++)
+    {
+        constans FabricaLectio* lectio;
+                           b32  tecta;
+
+        lectio = (constans FabricaLectio*)xar_obtinere(lectiones, i);
+        /* quaesita absentia: probationes radicum inclusionis (aedilis,
+         * compilator) - strepitus, non ingressus */
+        si (   lectio->genus == LECTIO_ABSENS
+            || lectio->genus == LECTIO_AMBITUS)
+        {
+            perge;   /* ambitus: fabrica_ambitum_non_declaratum */
+        }
+        tecta = fabricae_in_locis(loci, lectio->via, piscina);
+        /* intermedia: cursus ipse scripsit */
+        per (j = ZEPHYRUM; !tecta && scripta != NIHIL
+             && j < xar_numerus(scripta); j++)
+        {
+            tecta = chorda_aequalis(*(constans chorda*)xar_obtinere(
+                scripta, j), lectio->via);
+        }
+        /* transientes: post cursum absentes (cursus eas fecit et
+         * delevit - e.g. directorium temporarium scripti) */
+        si (   !tecta && sutura->species != NIHIL
+            && sutura->species(sutura->datum,
+                   chorda_ut_cstr(lectio->via, piscina))
+               == (i32)FABRICA_SPECIES_ABSENS)
+        {
+            tecta = VERUM;
+        }
+        /* enumeratio directorii: tecta si locus id ipsum tenet */
+        per (j = ZEPHYRUM; !tecta && lectio->genus == LECTIO_ENUMERAVIT
+             && j < xar_numerus(loci); j++)
+        {
+            constans FabricaLocus* locus = (constans FabricaLocus*)
+                xar_obtinere(loci, j);
+
+            tecta = locus->forma != FABRICA_LOCUS_PLAGULA
+                && chorda_aequalis(locus->via, lectio->via);
+        }
+        /* via semel nominatur (L et X eiusdem viae) */
+        per (j = ZEPHYRUM; !tecta && j < xar_numerus(alienae); j++)
+        {
+            tecta = chorda_aequalis(*(constans chorda*)xar_obtinere(
+                alienae, j), lectio->via);
+        }
+        si (!tecta)
+        {
+            fabricae_chordam_addere(alienae, lectio->via);
+        }
+    }
+    redde alienae;
+}
+
+Xar*
 fabrica_vestigia_comparare (
     constans FabricaActio* actio,
              constans Xar* ante,

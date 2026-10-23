@@ -125,10 +125,12 @@ struct stat {
 #define S_IFMT  0170000
 #define S_IFDIR 0040000
 #define S_IFREG 0100000
+#define S_IFLNK 0120000   /* iter_directoria est_nexus (2026-10-22) */
 #define S_IFSOCK 0140000  /* filum_status est_socket (canalis T1) */
 
 #define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
+#define S_ISLNK(m) (((m) & S_IFMT) == S_IFLNK)
 #define S_ISSOCK(m) (((m) & S_IFMT) == S_IFSOCK)
 
 #define S_IRUSR 0400
@@ -492,7 +494,9 @@ struct dirent {
     char               d_name[1024];
 };
 
+#define DT_UNKNOWN 0    /* iter_directoria est_nexus (2026-10-22) */
 #define DT_DIR 4
+#define DT_LNK 10
 
 /* <gradus titulus="opendir" genus="canalis" pro="iter_directoria"/> (codex 96) */
 DIR*           opendir(const char* via);
@@ -759,4 +763,36 @@ unsigned int __atomic_load_n(const volatile unsigned int* locus,
     int ordo);
 void __atomic_store_n(volatile unsigned int* locus, unsigned int valor,
                       int ordo);
+#endif
+
+
+/* ==================================================
+ * <sectio caput="postulata_neon.h"/>
+ * instructiones ARMv8 SHA2 (arm_neon.h) - SOLUM plagulis quae
+ * include/postulata_neon.h citatum includunt (sigillum, 2026-10-22;
+ * exemplar sectionis postulata_atomica.h). __ARM_FEATURE_SHA2 hic
+ * DEFINITUR ut silva ramum '#if defined(__ARM_FEATURE_SHA2)' examinet
+ * (valor praedefinitus clang aequalis - auspex_posix certificat). Typi
+ * vectorum ut structurae C89 (silva per valorem transit; numquam
+ * compilantur), functiones eae solae quas sigillum adhibet; sub clang
+ * celantur - arm_neon.h vera eas definit.
+ * ================================================== */
+
+#define __ARM_FEATURE_SHA2 1
+#ifndef __clang__
+typedef struct { unsigned char v[16]; } uint8x16_t;
+typedef struct { unsigned int v[4]; } uint32x4_t;
+uint32x4_t vld1q_u32(const unsigned int* locus);
+uint8x16_t vld1q_u8(const unsigned char* locus);
+void vst1q_u32(unsigned int* locus, uint32x4_t valor);
+uint8x16_t vrev32q_u8(uint8x16_t a);
+uint32x4_t vreinterpretq_u32_u8(uint8x16_t a);
+uint32x4_t vaddq_u32(uint32x4_t a, uint32x4_t b);
+uint32x4_t vsha256hq_u32(uint32x4_t abcd, uint32x4_t efgh,
+                         uint32x4_t wk);
+uint32x4_t vsha256h2q_u32(uint32x4_t efgh, uint32x4_t abcd,
+                          uint32x4_t wk);
+uint32x4_t vsha256su0q_u32(uint32x4_t w0_3, uint32x4_t w4_7);
+uint32x4_t vsha256su1q_u32(uint32x4_t tw0_3, uint32x4_t w8_11,
+                           uint32x4_t w12_15);
 #endif

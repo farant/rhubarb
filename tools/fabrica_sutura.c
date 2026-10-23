@@ -1132,15 +1132,23 @@ _vestigium_addere (
     v->mensura    = (s64)status.st_size;
 }
 
-/* directorium VERUM (lstat: nexus symbolicus modum suum, non
- * destinationis, refert) */
-interior b32
-_directorium_verum_est (
-    constans character* via)
+/* vestigium ex introitu iteratoris (non-nexus: status eius = lstat) */
+interior vacuum
+_vestigium_ex_introitu (
+                              Xar* vestigia,
+                           chorda  via_nominata,
+    constans DirectoriumIntroitus* introitus)
 {
-    structura stat status;
+    FabricaVestigium* v;
 
-    redde lstat(via, &status) == 0 && S_ISDIR(status.st_mode);
+    v = (FabricaVestigium*)xar_addere(vestigia);
+    si (v == NIHIL)
+    {
+        redde;
+    }
+    v->via        = via_nominata;
+    v->tempus_ns  = introitus->tempus_ns;
+    v->mensura    = (s64)introitus->mensura;
 }
 
 /* arbor recursive (nexus symbolici non sequuntur; .git radicis
@@ -1207,10 +1215,21 @@ _arborem_photographare (
          * eum ut directorium refert) - radices umbrae scripturae (1b
          * T6) arborem veram per nexus ostendunt; secuta, scriptura vera
          * bis appareret, sub via umbrae extra omne vestigium */
+        /* ENUMERATIO UNO VOCAMINE (2026-10-22): introitus non-nexus
+         * statum suum iam fert (stat = lstat ubi nexus non est;
+         * aequalitas super CCCXLIX milia introituum mensurata) - lstat
+         * solum pro nexibus et ignotis. Photographia olim readdir +
+         * stat (iterator) + lstat (hic) + lstat (directorium) per
+         * introitum. */
         si (   introitus->genus == INTROITUS_DIRECTORIUM
-            && _directorium_verum_est(chorda_ut_cstr(via, piscina)))
+            && !introitus->est_nexus)
         {
             _arborem_photographare(via, vestigia, piscina);
+        }
+        alioquin si (   !introitus->est_nexus
+                     && introitus->genus != INTROITUS_IGNOTUS)
+        {
+            _vestigium_ex_introitu(vestigia, via, introitus);
         }
         alioquin
         {

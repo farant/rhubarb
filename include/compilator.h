@@ -62,4 +62,15 @@ compilator_compilare (
     constans character* constans* argumenta,
                               i32 numerus);
 
+/* MEMORIA PER PROCESSUM (2026-10-23): capita indicis sigillata et
+ * existentiae obumbrationis memorantur (via -> sigillum / praesens):
+ * vocatio quaeque post primam capita communia nec legit nec quaerit.
+ * Solum ubi capita intra processum non mutantur ET liber lectionum
+ * (FABRICA_LECTIONES) per vocationem non postulatur - lectio memorata
+ * liber non notat. Vocat 'bin/compilator --plures'; fabrica (membra
+ * in processu uno, liber per membrum) NON. */
+vacuum
+compilator_memoriam_incipere (
+    Compilator* compilator);
+
 #endif /* COMPILATOR_H */

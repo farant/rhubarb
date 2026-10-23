@@ -646,6 +646,7 @@ fclose
 fdopen
 fds
 feast
+feature
 features
 fence
 feof
@@ -893,6 +894,7 @@ if
 ifdef
 ifdir
 iff
+iflnk
 ifmt
 ifn
 ifndef
@@ -1036,6 +1038,7 @@ isdir
 isgraph
 isig
 isize
+islnk
 islower
 iso
 isprint
@@ -1147,6 +1150,7 @@ literals
 ll
 llm
 ln
+lnk
 load
 loc
 local
@@ -1305,6 +1309,7 @@ nd
 ndf
 needle
 neg
+neon
 nested
 new
 newline
@@ -1885,6 +1890,7 @@ setvbuf
 sf
 sg
 sh
+sha2
 shallow
 shared
 shas
@@ -2227,6 +2233,8 @@ uchar
 uev
 uid
 uint
+uint32x4
+uint8x16
 ul
 ulid
 ulong
@@ -2246,6 +2254,7 @@ unilinearis
 uniques
 unix
 unixthread
+unknown
 unlink
 unreserved
 unsetenv
@@ -2277,6 +2286,7 @@ uuids
 uuidv5
 uuidv7
 vac
+vaddq
 val1
 val2
 validare
@@ -2324,6 +2334,7 @@ visual
 visualis
 visus2
 vit
+vld1q
 vm
 vmin
 voc
@@ -2337,8 +2348,15 @@ vprintf
 vps
 vq
 vquit
+vreinterpretq
+vrev32q
 vs
+vsha256h2q
+vsha256hq
+vsha256su0q
+vsha256su1q
 vsprintf
+vst1q
 vtime
 vu
 vv

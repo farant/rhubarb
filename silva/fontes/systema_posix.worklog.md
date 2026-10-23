@@ -162,3 +162,7 @@ Glossary: numerichost, numericserv, eai, noname as ignotum-permissum.
 Lesson: judge with `./silva/examen.sh VIA -machina` ONE file at a time
 (as the hook does) - a multi-file call accepted the file the hook
 refused.
+
+## 2026-10-22 — section postulata_neon.h (sigillum)
+
+The same pattern as postulata_atomica.h. `#define __ARM_FEATURE_SHA2 1` (equal to clang's predefined value; auspex_posix asserts it; plant value 2 → auspex fails) so silva evaluates the `#if defined(__ARM_FEATURE_SHA2)` branch instead of skipping it as undefined. The vector types are C89 structs and the prototypes cover only the 10 intrinsics sigillum uses, under `#ifndef __clang__`. An intrinsic used but not declared here is an implicit call, so REICE (verified). Adding one means a line here, which is the point: the vector surface is declared, not exempt.

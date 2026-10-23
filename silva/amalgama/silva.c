@@ -10809,6 +10809,10 @@ structura SilvaExpansio {
                SilvaXar* fontes;     /* Xar de SilvaFons (per valorem) */
     SilvaTabulaDispersa* macros;     /* status vivus - via defalta */
                SilvaXar* acta;       /* Xar de SilvaEventum (per valorem) */
+               SilvaXar* definitiones; /* Xar de i32: indices eventorum
+                                   * DEFINITIO in acta, ordine - macro
+                                   * k-a sine percursu actorum
+                                   * (2026-10-23) */
                SilvaXar* rami;       /* Xar de SilvaRamus* - tabula conditio_id */
                SilvaXar* regiones;   /* Xar de SilvaRegio* - regiones supremae */
     SilvaTabulaDispersa* includenda; /* via (chorda) -> SilvaIncludendum* */
@@ -11067,7 +11071,8 @@ silva_ramus_vista (
            SilvaRamusVista* vista_out);
 
 /* Definitiones UT ACTAE (acta = fructus: #undef historiam non
- * delet); O(acta) per vocatum - satis ad mensuram v1 */
+ * delet); O(1) per vocatum per exp->definitiones (olim O(acta):
+ * percursus nexus quadraticus, 2026-10-23) */
 i32
 silva_macros_numerus (
     constans SilvaExpansio* exp);
@@ -47336,14 +47341,15 @@ silva_expansio_creare (
     {
         redde NIHIL;
     }
-    exp->piscina      = piscina;
-    exp->fontes       = silva_xar_creare(piscina, magnitudo(SilvaFons));
-    exp->macros       = silva_tabula_dispersa_creare_chorda(piscina, LXIV);
-    exp->acta         = silva_xar_creare(piscina, magnitudo(SilvaEventum));
-    exp->rami         = silva_xar_creare(piscina, magnitudo(SilvaRamus*));
-    exp->regiones     = silva_xar_creare(piscina, magnitudo(SilvaRegio*));
-    exp->includenda   = silva_tabula_dispersa_creare_chorda(piscina, XVI);
-    exp->inclusiones  = silva_xar_creare(piscina, magnitudo(SilvaInclusio));
+    exp->piscina       = piscina;
+    exp->fontes        = silva_xar_creare(piscina, magnitudo(SilvaFons));
+    exp->macros        = silva_tabula_dispersa_creare_chorda(piscina, LXIV);
+    exp->acta          = silva_xar_creare(piscina, magnitudo(SilvaEventum));
+    exp->definitiones  = silva_xar_creare(piscina, magnitudo(i32));
+    exp->rami          = silva_xar_creare(piscina, magnitudo(SilvaRamus*));
+    exp->regiones      = silva_xar_creare(piscina, magnitudo(SilvaRegio*));
+    exp->includenda    = silva_tabula_dispersa_creare_chorda(piscina, XVI);
+    exp->inclusiones   = silva_xar_creare(piscina, magnitudo(SilvaInclusio));
     exp->extenta = silva_xar_creare(piscina,
         magnitudo(SilvaExtentumInvocationis));
     exp->indices_extentorum = (SilvaIndicesExtentorum*)silva_piscina_allocare(
@@ -47447,6 +47453,18 @@ _eventum_scribere (
     locus->def          = def;
     locus->conditio_id  = conditio_id;
     locus->positus      = positus;
+    /* index definitionum (silva_macro_vista et corpora macronis per
+     * indicem: olim percursus actorum per vocatum, quadraticus in
+     * nexu - latina.h milia macronum fert) */
+    si (genus == SILVA_EVENTUM_DEFINITIO)
+    {
+        i32* index = (i32*)silva_xar_addere(exp->definitiones);
+
+        si (index != NIHIL)
+        {
+            *index = silva_xar_numerus(exp->acta) - I;
+        }
+    }
 }
 
 SilvaTabulaDispersa*
@@ -50769,21 +50787,22 @@ i32
 silva_macros_numerus (
     constans SilvaExpansio* exp)
 {
-    i32 n        = silva_xar_numerus(exp->acta);
-    i32 numerus  = ZEPHYRUM;
-    i32 k;
+    redde silva_xar_numerus(exp->definitiones);
+}
 
-    per (k = ZEPHYRUM; k < n; k++)
+/* eventum DEFINITIO numero 'index' (ordine actorum, ab 0) per
+ * exp->definitiones; NIHIL si index malus */
+interior constans SilvaEventum*
+_definitio_ad_indicem (
+    constans SilvaExpansio* exp,
+                       i32  index)
+{
+    si (exp == NIHIL || index >= silva_xar_numerus(exp->definitiones))
     {
-        constans SilvaEventum* eventum =
-            (constans SilvaEventum*)silva_xar_obtinere(exp->acta, k);
-
-        si (eventum->genus == SILVA_EVENTUM_DEFINITIO)
-        {
-            numerus++;
-        }
+        redde NIHIL;
     }
-    redde numerus;
+    redde (constans SilvaEventum*)silva_xar_obtinere(exp->acta,
+        *(constans i32*)silva_xar_obtinere(exp->definitiones, index));
 }
 
 b32
@@ -50792,55 +50811,43 @@ silva_macro_vista (
                        i32  index,
            SilvaMacroVista* vista_out)
 {
-    i32 n      = silva_xar_numerus(exp->acta);
-    i32 visae  = ZEPHYRUM;
-    i32 k;
+    constans SilvaEventum* eventum = _definitio_ad_indicem(exp, index);
 
-    per (k = ZEPHYRUM; k < n; k++)
+    si (eventum == NIHIL)
     {
-        constans SilvaEventum* eventum =
-            (constans SilvaEventum*)silva_xar_obtinere(exp->acta, k);
-
-        si (eventum->genus != SILVA_EVENTUM_DEFINITIO)
-        {
-            perge;
-        }
-        si (visae == index)
-        {
-            vista_out->titulus = eventum->titulus;
-            vista_out->est_functio = (eventum->def != NIHIL)
-                ? eventum->def->est_functio : FALSUM;
-            vista_out->fons_index  = eventum->fons_index;
-            vista_out->linea       = eventum->linea;
-            /* extenta corporis ex laminis (lexemata cruda fontis -
-             * positiones exactae, continuationes '\' inclusae) */
-            vista_out->corpus_initium  = -I;
-            vista_out->corpus_finis    = -I;
-            si (   eventum->def != NIHIL && !eventum->def->ex_api
-                && eventum->def->corpus != NIHIL
-                && silva_xar_numerus(eventum->def->corpus) > ZEPHYRUM)
-            {
-                SilvaToken* primum = *(SilvaToken**)silva_xar_obtinere(
-                    eventum->def->corpus, ZEPHYRUM);
-                SilvaToken* ultimum = *(SilvaToken**)silva_xar_obtinere(
-                    eventum->def->corpus,
-                    silva_xar_numerus(eventum->def->corpus) - I);
-
-                si (   primum               != NIHIL && ultimum != NIHIL
-                    && primum->byte_offset  >= ZEPHYRUM
-                    && ultimum->byte_offset >= ZEPHYRUM)
-                {
-                    vista_out->corpus_initium =
-                        primum->byte_offset;
-                    vista_out->corpus_finis = ultimum->byte_offset
-                        + (s32)silva_token_longitudo(ultimum);
-                }
-            }
-            redde VERUM;
-        }
-        visae++;
+        redde FALSUM;
     }
-    redde FALSUM;
+    vista_out->titulus = eventum->titulus;
+    vista_out->est_functio = (eventum->def != NIHIL)
+        ? eventum->def->est_functio : FALSUM;
+    vista_out->fons_index  = eventum->fons_index;
+    vista_out->linea       = eventum->linea;
+    /* extenta corporis ex laminis (lexemata cruda fontis -
+     * positiones exactae, continuationes '\' inclusae) */
+    vista_out->corpus_initium  = -I;
+    vista_out->corpus_finis    = -I;
+    si (   eventum->def         != NIHIL
+        && !eventum->def->ex_api
+        && eventum->def->corpus != NIHIL
+        && silva_xar_numerus(eventum->def->corpus) > ZEPHYRUM)
+    {
+        SilvaToken* primum = *(SilvaToken**)silva_xar_obtinere(
+            eventum->def->corpus, ZEPHYRUM);
+        SilvaToken* ultimum = *(SilvaToken**)silva_xar_obtinere(
+            eventum->def->corpus,
+            silva_xar_numerus(eventum->def->corpus) - I);
+
+        si (   primum               != NIHIL && ultimum != NIHIL
+            && primum->byte_offset  >= ZEPHYRUM
+            && ultimum->byte_offset >= ZEPHYRUM)
+        {
+            vista_out->corpus_initium =
+                primum->byte_offset;
+            vista_out->corpus_finis = ultimum->byte_offset
+                + (s32)silva_token_longitudo(ultimum);
+        }
+    }
+    redde VERUM;
 }
 
 
@@ -50855,31 +50862,9 @@ _def_ad_indicem (
     constans SilvaExpansio* exp,
                        i32  index)
 {
-    i32 n;
-    i32 visae = ZEPHYRUM;
-    i32 k;
+    constans SilvaEventum* eventum = _definitio_ad_indicem(exp, index);
 
-    si (exp == NIHIL)
-    {
-        redde NIHIL;
-    }
-    n = silva_xar_numerus(exp->acta);
-    per (k = ZEPHYRUM; k < n; k++)
-    {
-        constans SilvaEventum* eventum =
-            (constans SilvaEventum*)silva_xar_obtinere(exp->acta, k);
-
-        si (eventum->genus != SILVA_EVENTUM_DEFINITIO)
-        {
-            perge;
-        }
-        si (visae == index)
-        {
-            redde eventum->def;
-        }
-        visae++;
-    }
-    redde NIHIL;
+    redde eventum != NIHIL ? eventum->def : NIHIL;
 }
 
 i32

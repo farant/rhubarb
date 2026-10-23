@@ -527,9 +527,14 @@ nomen structura {
                       chorda* causa_out);
     /* COMPILARE fontem in obiectum (via data) per thesaurum
      * compilatoris; vexilla domus (aedilis.stml: communia, per
-     * fontem, vendor) ab sutura. FALSUM + erratum clang. */
+     * fontem, vendor) ab sutura, deinde vexilla_addita (Xar de chorda,
+     * NIHIL = nulla; gradus variantis, e.g. sanitatores et
+     * -DPISCINA_VENENUM=1 - 2026-10-22) - thesaurus mandatum totum
+     * sigillat, ergo obiecta variantis sua sunt. FALSUM + erratum
+     * clang. */
     b32 (*compilare)(vacuum* datum, constans character* fons,
-                     constans character* obiectum, Piscina* piscina,
+                     constans character* obiectum,
+                     constans Xar* vexilla_addita, Piscina* piscina,
                      chorda* erratum_out);
     /* GRADUS SOLUS (cursores ad gradus T3b): titulus actionis gradus
      * cuius SOLIUS membra fabrica_gradus_explicare facit (clausurae
@@ -685,6 +690,13 @@ structura FabricaGradus {
     /* CENSUS */
                b32 lectiones_dynamicae; /* clavis ex vestigio cursus */
     FabricaSumptus sumptus;
+    /* ATTRIBUTA IN CLAVE (2026-10-22, variantes venenum): nomina
+     * attributorum elementi gradus quae EFFECTUM membri mutant (e.g.
+     * vexilla variantis) - valor eorum in mandato membri (ut ambitus
+     * declaratus), ergo variatio membra frescit; attributa cetera
+     * (exemplar, membra) membra SELIGUNT, clavem non mutant. NIHIL
+     * terminatum; NIHIL = nulla. */
+    constans character* constans* attributa_clavis;
 };
 
 /* Registra: fasciculus, configuratio, instrumentum (octeti plagulae;
@@ -968,6 +980,39 @@ fabrica_vestigia_comparare (
              constans Xar* ante,
              constans Xar* post,
                   Piscina* piscina);
+
+/* LECTIONES NON DECLARATAE (2026-10-23, custodia memorabilium): viae
+ * lectionum (Xar de FabricaLectio, e libro regenerationis) quas nec
+ * ingressus declarati (loci eorum et viae ipsae) nec vestigium actionis
+ * (exitus, vestigia, communia, involucrum) tegunt. Praetermittuntur:
+ * quaesitae absentes (A, probationes radicum), viae a cursu ipso
+ * scriptae ('scripta', Xar de chorda - intermedia), et viae post
+ * cursum absentes (sutura->species: transientes, cursus eas fecit).
+ * Enumeratio (D) tecta si locus directorium ipsum tenet. Xar de chorda
+ * (vacua = omnes tectae); NIHIL si ingressus enumerari nequeunt. */
+Xar*
+fabrica_lectiones_non_declaratae (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+              constans Xar* lectiones,
+              constans Xar* scripta,
+                   Piscina* piscina);
+
+/* MUTATA INTRA LOCUM (2026-10-23): VERUM si actio nihil extra locum
+ * suum mutavit - locus = 'area' (membra gradus; vacua = nulla), liber
+ * lectionum (fabrica_liber_via) et acta sua (fabrica_acta_via). Iudicat
+ * photographias ante/post (ordinatas) et lineas S libri per
+ * sutura->legere (scripturae transientes photographias fallunt; liber
+ * absens = nullae). ante aut post NIHIL: FALSUM. Fabrica eo memoriam
+ * regenerationum post actum servat (generatores semel per cursum). */
+b32
+fabrica_mutata_intra_locum (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+                    chorda  area,
+              constans Xar* ante,
+              constans Xar* post,
+                   Piscina* piscina);
 
 /* Undae: actiones (Xar de FabricaActio*, ordinatae) quae SIMUL
  * currere possent - nulla dependentia inter eas, vestigia disiuncta,
