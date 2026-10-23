@@ -102,6 +102,8 @@ _sectio_ordinaria (
     CREDO_VERUM (f.activae[CENSURA_AMBITUS]);
     CREDO_FALSUM (f.activae[CENSURA_DISSONANTIA]);
     CREDO_FALSUM (f.activae[CENSURA_PARALLELAE]);
+    CREDO_FALSUM (f.activae[CENSURA_SALTUS]);
+    CREDO_AEQUALIS_I32 (f.saltus_maximus, ZEPHYRUM);
     CREDO_VERUM (f.ambitus == NIHIL);
     per (r = CENSURA_LINEAE; r < CENSURA_REGULAE;
          r = (CensuraRegula)(r + I))
@@ -340,11 +342,11 @@ _sectio_parallelae (
     CREDO_AEQUALIS_I32 (inv[I].mensura, II);
     CREDO_AEQUALIS_S64 (inv[I].pulsus, (s64)CMLX);
     CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[ZEPHYRUM]),
-        "mensura 1 +960 melodia/bassus: quintae parallelae D5 G4 "
-        "(frustum 0, offset 5)\n");
+        "mensura 1 +960 melodia/bassus: quintae parallelae "
+        "C5/F4 -> D5/G4 (frustum 0, offset 5)\n");
     CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[I]),
-        "mensura 2 +960 melodia/bassus: octavae parallelae D5 D3 "
-        "(frustum 0, offset 16)\n");
+        "mensura 2 +960 melodia/bassus: octavae parallelae "
+        "C5/C3 -> D5/D3 (frustum 0, offset 16)\n");
 }
 
 
@@ -405,6 +407,62 @@ _sectio_liber (
     /* stilus: nonae supra bassum - monita, non vitia */
     f = _sola(CENSURA_DISSONANTIA);
     CREDO_VERUM (censura_iudicare(k, &f, inv, CAPACITAS) > ZEPHYRUM);
+    /* bassus octavis alternantibus: VII saltus veri (ad XIX) - causa
+     * cur 'saltus' non ORD. */
+    f = _sola(CENSURA_SALTUS);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS), VII);
+}
+
+
+    /* ==================================================
+     * SALTUS: ultra octavam (etiam trans pausam); octava ipsa non;
+     * percussio non; limes proprius
+     * ================================================== */
+
+interior vacuum
+_sectio_saltus (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"s\">"
+        "<pars titulus=\"m\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 c >c d r4 | o4 e >>c @punctum "
+        "o2 c r4</textus></frustum></pars></carmen></carmina>");
+    Carmen* acervus = (Carmen*)(vacuum*)_carmen(c,
+        "<carmina><carmen titulus=\"a\">"
+        "<pars titulus=\"m\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 c >>c r2</textus></frustum></pars>"
+        "</carmen></carmina>");
+    CensuraInventum inv[CAPACITAS];
+       CensuraForma f = _sola(CENSURA_SALTUS);
+
+    CREDO_NECESSE (k != NIHIL && acervus != NIHIL);
+    /* C4 -> C6 saltus; idem acervus [C4 C6] (editio) - non saltus */
+    CREDO_AEQUALIS_I32 (censura_iudicare(acervus, &f, inv, CAPACITAS),
+        I);
+    acervus->partes[ZEPHYRUM].frusta[ZEPHYRUM].notae[I].pulsus
+        = ZEPHYRUM;
+    CREDO_AEQUALIS_I32 (censura_iudicare(acervus, &f, inv, CAPACITAS),
+        ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, NIHIL, inv, CAPACITAS),
+        ZEPHYRUM);
+    /* C4 -> C5 (XII) licet; D5 -> (pausa) E4 = X; E4 -> C6 = XX;
+     * percussio (C2) non iudicatur */
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == I);
+    CREDO_VERUM (inv[ZEPHYRUM].regula == CENSURA_SALTUS);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].mensura, II);
+    CREDO_AEQUALIS_S64 (inv[ZEPHYRUM].pulsus, (s64)CMLX);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].nota->nota, LXXXIV);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].nota_prior->nota, LXIV);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[ZEPHYRUM]),
+        "mensura 2 +960 m: saltus E4 -> C6, 20 semitonia "
+        "(frustum 0, offset 22)\n");
+    /* limes proprius: XX licet, XIX non */
+    f.saltus_maximus = XX;
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS),
+        ZEPHYRUM);
+    f.saltus_maximus = XIX;
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS), I);
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
@@ -414,6 +472,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "ambitus", _sectio_ambitus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "dissonantia", _sectio_dissonantia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "parallelae", _sectio_parallelae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "saltus", _sectio_saltus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "capacitas", _sectio_capacitas, NIHIL, NIHIL, NIHIL, NIHIL },
     { "liber", _sectio_liber, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

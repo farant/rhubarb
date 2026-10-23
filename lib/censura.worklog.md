@@ -28,3 +28,17 @@ parallelae is implied by "both moved the same direction" (a held or
 repeated pitch has zero motion). Test fixes found by the first run were
 MY counting (offsets) and one real test bug: the dissonance song had an
 F# in C major, so the DEFAULT rules (clavis) fired - moved it to G major.
+
+## 2026-10-23 - saltus rule + parallel findings show both pairs
+
+From composing 'vesperae' with the tools (ledger wishes ...DJHY,
+...WS0V). saltus: consecutive notes of a track (across rests; a chord =
+one onset, so its own notes are never a "leap"; percussion skipped) more
+than saltus_maximus semitones apart (0 = XII). I expected it to be
+default ON ("a leap over an octave is almost always a forgotten < or
+>"), then measured: Korobeiniki's octave-alternating bass has 7 real
+leaps of 13..19 (A3 -> D2 at a chord change). So it is a style rule,
+default OFF, with a settable limit; the liber test pins the 7 so the
+reason survives. Parallels now carry nota_prior / nota_altera_prior and
+print 'quintae parallelae C5/F4 -> D5/G4' - composing, I had to
+reconstruct the first pair by hand.

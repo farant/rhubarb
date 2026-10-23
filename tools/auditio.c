@@ -712,7 +712,7 @@ _regulas_legere (
         {
             fprintf(stderr,
                 "auditio: regula ignota '%.*s' (lineae, clavis, "
-                    "ambitus, dissonantia, parallelae)\n",
+                    "ambitus, dissonantia, parallelae, saltus)\n",
                     (integer)t.mensura,
                     (constans character*)t.datum);
             redde FALSUM;

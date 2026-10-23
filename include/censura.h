@@ -17,6 +17,11 @@
  *                tempus forte                                     -
  *   parallelae   quintae aut octavae parallelae inter duas partes:
  *                initia sequentia, ambae motae, eodem sensu       -
+ *   saltus       saltus melodicus > saltus_maximus semitonia (XII
+ *                ordinarie) inter notas sequentes partis - signum
+ *                octavae ('<' '>') oblitum fere; bassi octavis
+ *                alternantibus saltus veros habent (Korobeiniki:
+ *                VII, ad XIX), ergo non ORD.                      -
  *
  * TEMPUS FORTE: initium mensurae; in 4/x etiam medium; in metris
  * compositis (6/8, 9/8, 12/8) omnis tertia octava. Percussio ('@')
@@ -49,6 +54,7 @@ nomen enumeratio {
     CENSURA_AMBITUS,
     CENSURA_DISSONANTIA,
     CENSURA_PARALLELAE,
+    CENSURA_SALTUS,
     CENSURA_REGULAE
 } CensuraRegula;
 
@@ -59,6 +65,8 @@ nomen structura {
     b32 (*ambitus)(vacuum* ctx, chorda instrumentum, i32* infima,
                    i32* summa);
     vacuum* ctx;
+    /* saltus maximus licitus, semitonia; 0 = XII (octava) */
+    i32 saltus_maximus;
 } CensuraForma;
 
 nomen structura {
@@ -72,6 +80,10 @@ nomen structura {
                                          * '|') */
     constans CarmenNota* nota;          /* in carmine; NIHIL: lineae */
     constans CarmenNota* nota_altera;   /* partis alterius */
+    /* parallelae: notae initii prioris (par primum); saltus: nota
+     * prior partis; NIHIL aliter */
+    constans CarmenNota* nota_prior;
+    constans CarmenNota* nota_altera_prior;
 } CensuraInventum;
 
 /* ORD. activae (lineae, clavis, ambitus), ambitus ordinarius */
