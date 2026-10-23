@@ -255,39 +255,6 @@ _interrumpere (
     interruptum = I;
 }
 
-/* nota MIDI -> "E4" (littera, signum, octava) in alveo dato */
-interior constans character*
-_nota_titulus (
-          i32  nota,
-    character* alveus)
-{
-    hic_manens constans character* LITTERAE[XII] = {
-        "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
-    };
-
-    sprintf(alveus, "%s%d", LITTERAE[nota % XII], (integer)nota / XII
-        - I);
-    redde alveus;
-}
-
-/* clavis -> "a minor"; quintae -7..7 */
-interior constans character*
-_clavis_titulus (
-    constans CarmenClavis* clavis)
-{
-    hic_manens constans character* MAIORES[XV] = {
-        "cb", "gb", "db", "ab", "eb", "bb", "f", "c",
-        "g", "d", "a", "e", "b", "f#", "c#"
-    };
-    hic_manens constans character* MINORES[XV] = {
-        "ab", "eb", "bb", "f", "c", "g", "d", "a", "e", "b", "f#", "c#",
-        "g#", "d#", "a#"
-    };
-
-    redde clavis->minor ? MINORES[clavis->quintae + VII]
-                        : MAIORES[clavis->quintae + VII];
-}
-
 /* mensurae carminis (ultima quae ante finem incipit) */
 interior i32
 _mensurae (
@@ -321,19 +288,18 @@ _mensura_pulsus (
  * agenti (sine sono) */
 interior vacuum
 _carmen_monstrare (
-    constans Carmen* k)
+    constans Carmen* k,
+           Piscina* piscina)
 {
      constans character* clavis       = "c";
                     b32  minor        = FALSUM;
                     i32  numerator    = IV;
                     i32  denominator  = IV;
                     i32  i;
-                    i32  f;
-                    i32  n;
 
     si (k->numerus_clavium > ZEPHYRUM)
     {
-        clavis  = _clavis_titulus(&k->claves[ZEPHYRUM]);
+        clavis  = partitura_clavis_littera(&k->claves[ZEPHYRUM]);
         minor   = k->claves[ZEPHYRUM].minor;
     }
     si (k->numerus_metrorum > ZEPHYRUM)
@@ -351,35 +317,30 @@ _carmen_monstrare (
                   / (duplex)SONUS_FREQUENTIA);
     per (i = ZEPHYRUM; i < k->numerus_partium; i++)
     {
-        constans CarmenPars* p       = &k->partes[i];
-                        i32  infima  = CXXVII;
-                        i32  summa   = ZEPHYRUM;
-                  character  a[VIII];
-                  character  b[VIII];
+        constans CarmenPars* p    = &k->partes[i];
+           PartituraAmbitus  amb  = partitura_ambitus(p);
+          ChordaAedificator* a    = chorda_aedificator_creare(piscina,
+                                        XVI);
+                     chorda ambitus;
 
-        n = ZEPHYRUM;
-        per (f = ZEPHYRUM; f < p->numerus_frustorum; f++)
+        ambitus = chorda_ex_literis("-", piscina);
+        si (   a != NIHIL && amb.numerus > ZEPHYRUM
+            && partitura_notam_scribere(k, amb.infima,
+                   amb.pulsus_infimae, a)
+            && chorda_aedificator_appendere_literis(a, "..")
+            && partitura_notam_scribere(k, amb.summa, amb.pulsus_summae,
+                   a))
         {
-            i32 j;
-
-            per (j = ZEPHYRUM; j < p->frusta[f].numerus; j++)
-            {
-                i32 nota = p->frusta[f].notae[j].nota;
-
-                infima  = nota < infima ? nota : infima;
-                summa   = nota > summa ? nota : summa;
-                n++;
-            }
+            ambitus = chorda_aedificator_finire(a);
         }
         imprimere("  %-10.*s %-12.*s lucrum %.2f  notae %3u  "
-                  "%s..%s%s%s\n",
+                  "%.*s%s%s\n",
             (integer)p->titulus.mensura,
             (constans character*)p->titulus.datum,
             (integer)p->instrumentum.mensura,
             (constans character*)p->instrumentum.datum,
-            (duplex)p->lucrum,
-            n, n ? _nota_titulus(infima, a) : "-",
-            n ? _nota_titulus(summa, b) : "-",
+            (duplex)p->lucrum, amb.numerus, (integer)ambitus.mensura,
+            (constans character*)ambitus.datum,
             p->mutus ? "  mutus" : "",
             p->solus ? "  solus" : "");
     }
@@ -437,7 +398,7 @@ _ex_carminibus (
     {
         si (indicare)
         {
-            _carmen_monstrare(&liber.carmina[i]);
+            _carmen_monstrare(&liber.carmina[i], piscina);
         }
         alioquin si (chorda_aequalis_literis(liber.carmina[i].titulus,
                                              titulus))
@@ -1426,7 +1387,7 @@ principale (
         }
         alioquin si (k != NIHIL)
         {
-            _carmen_monstrare(k);
+            _carmen_monstrare(k, piscina);
             bene = _instrumenta_probare(k)
                 && (via != NIHIL ? _carmen_scribere(k, via, piscina)
                                  : _carmen_sonare(k, iterare, piscina));

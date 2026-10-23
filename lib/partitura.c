@@ -330,6 +330,58 @@ _notam_scribere (
     _numerus(s, (s64)o.octava);
 }
 
+b32
+partitura_notam_scribere (
+        constans Carmen* carmen,
+    constans CarmenNota* nota,
+                    s64  pulsus,
+      ChordaAedificator* textus)
+{
+    Scriptor s;
+
+    s.a     = textus;
+    s.bene  = VERUM;
+    _notam_scribere(&s, carmen, nota, pulsus);
+    redde s.bene;
+}
+
+PartituraAmbitus
+partitura_ambitus (
+    constans CarmenPars* pars)
+{
+    PartituraAmbitus a;
+                 i32 f;
+                 i32 j;
+
+    memset(&a, ZEPHYRUM, magnitudo(a));
+    per (f = ZEPHYRUM; f < pars->numerus_frustorum; f++)
+    {
+        constans CarmenFrustum* fr = &pars->frusta[f];
+
+        per (j = ZEPHYRUM; j < fr->numerus; j++)
+        {
+            constans CarmenNota* n = &fr->notae[j];
+
+            si (n->praeparatum.mensura > ZEPHYRUM)
+            {
+                perge;
+            }
+            a.numerus++;
+            si (a.infima == NIHIL || n->nota < a.infima->nota)
+            {
+                a.infima          = n;
+                a.pulsus_infimae  = fr->pulsus + n->pulsus;
+            }
+            si (a.summa == NIHIL || n->nota > a.summa->nota)
+            {
+                a.summa          = n;
+                a.pulsus_summae  = fr->pulsus + n->pulsus;
+            }
+        }
+    }
+    redde a;
+}
+
 /* notae partis in mensura [initium, finis), una linea sine titulo */
 interior vacuum
 _partem_scribere (

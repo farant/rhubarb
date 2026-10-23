@@ -33,3 +33,9 @@ included). Added so harmonia (which needs partitura's spelling) can plug
 in WITHOUT a library cycle; later rows (dynamics, beat grid) use the same
 hook. partitura_valorem_scribere is the score's ':value' grammar made
 public for such rows. Callers that build a PartituraForma now memset it.
+
+## 2026-10-23 - partitura_ambitus + partitura_notam_scribere (M5a, park …FXND4)
+
+Found while composing 'stella': `auditio -carmina` printed the melody's range as `A#4..D6`, recensio as `Bb4..D6`. Two copies of "a part's lowest/highest note": auditio's (MIDI -> sharp-only name table, '@' sound notes counted) and recensio's (spelled via partitura_orthographia, '@' skipped). The one with the spelling won; it moved here because partitura owns spelling. `partitura_notam_scribere` is the existing internal `_notam_scribere` behind the same Scriptor wrapper as `partitura_valorem_scribere` - so a '@' note writes `@punctum`, same as in the score.
+
+Contract worth remembering: the pulses in PartituraAmbitus are CARMEN pulses (frustum.pulsus + nota.pulsus). A note-relative pulse spells by the key at the start of the song - the test proves it with a littera-less note in a frustum starting in bar 2 under an Eb major change (Eb4 at the carmen pulse, D#4 at the frustum-relative one). Ties: first wins, at both ends (A#4 before Bb4; D# before Eb). 8 plants red; two only after adding a tied top note and an assertion on the lowest note's pulse in a frustum not starting at 0 (the first draft only checked pulsus_infimae == 0, which a dropped frustum offset also satisfies).

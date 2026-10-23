@@ -55,3 +55,7 @@ or a TACITA bar.
 MCP); -regulae / -partitura / -harmonia feed the report; exit 3 when
 monita > 0. -partitura -harmonia adds the chord row (harmonia.h) to the
 plain score too.
+
+## 2026-10-23 - -carmina spells ranges like recensio (M5a)
+
+`-carmina` now uses partitura_ambitus / partitura_notam_scribere / partitura_clavis_littera; auditio's own `_nota_titulus` (sharps only) and `_clavis_titulus` (a copy of partitura's key table) are gone. Visible changes: stella's melody `Bb4..D6` (was `A#4..D6`); note counts exclude '@' sounds (no book song has any); an empty part prints `-` (was `-..-`). `_carmen_monstrare` takes the caller's piscina for the range string.

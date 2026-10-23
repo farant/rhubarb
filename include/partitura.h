@@ -76,6 +76,31 @@ partitura_orthographia (
     constans CarmenNota* nota,
                     s64  pulsus);
 
+/* nota ut partitura eam scribit, sine valore: "Bb4", "F#5", "@punctum"
+ * (sonitus praeparatus). pulsus = pulsus CARMINIS notae (frustum +
+ * nota). FALSUM = memoria deest */
+b32
+partitura_notam_scribere (
+        constans Carmen* carmen,
+    constans CarmenNota* nota,
+                    s64  pulsus,
+      ChordaAedificator* textus);
+
+/* ambitus partis: nota infima et summa altitudinis (sonitus '@'
+ * omittuntur - altitudine carent), cum pulsibus carminis ad
+ * orthographiam; aequales: prima vincit */
+nomen structura {
+    constans CarmenNota* infima;           /* NIHIL si numerus 0 */
+                    s64  pulsus_infimae;
+    constans CarmenNota* summa;
+                    s64  pulsus_summae;
+                    i32  numerus;          /* notae altitudinis */
+} PartituraAmbitus;
+
+PartituraAmbitus
+partitura_ambitus (
+    constans CarmenPars* pars);
+
 /* tonica clavis ut carmina.stml eam scribit ("a", "eb", "f#"); modus
  * (maior / minor) in clavis->minor. Statica */
 constans character*

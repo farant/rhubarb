@@ -461,6 +461,94 @@ _sectio_addita (
         "  analysis  [7680,11520)\n");
 }
 
+/* nota scripta (partitura_notam_scribere); mensura 0 si FALSUM */
+interior chorda
+_nota (
+          CredoContextus* c,
+         constans Carmen* k,
+     constans CarmenNota* n,
+                     s64  pulsus)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(c->piscina, XVI);
+               chorda  vacua;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    si (a == NIHIL || !partitura_notam_scribere(k, n, pulsus, a))
+    {
+        redde vacua;
+    }
+    redde chorda_aedificator_finire(a);
+}
+
+/* ambitus: aequales (prima vincit), sonitus '@' omissi, pulsus carminis
+ * (frustum + nota) ad orthographiam clavis */
+interior vacuum
+_sectio_ambitus (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"a\" clavis=\"c maior\">"
+        "<clavis mensura=\"2\" valor=\"eb maior\"/>"
+        "<pars titulus=\"m\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>o4 a#4 >d4 <b-4 >c4 | f1"
+        "</textus></frustum></pars>"
+        "<pars titulus=\"p\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>@punctum c4 g4</textus>"
+        "</frustum></pars>"
+        "<pars titulus=\"q\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>c4 @punctum g4</textus>"
+        "</frustum></pars>"
+        "<pars titulus=\"s\" instrumentum=\"aether\">"
+        "<frustum mensura=\"2\"><textus!>c4 d#4 e-4</textus></frustum>"
+        "</pars></carmen></carmina>");
+    constans CarmenNota* m;
+             CarmenNota* s;
+       PartituraAmbitus  a;
+
+    CREDO_NECESSE (k != NIHIL && k->numerus_partium == IV);
+    /* A#4 et Bb4 aequales: prima (pulsus 0) vincit, littera sua */
+    m = k->partes[ZEPHYRUM].frusta[ZEPHYRUM].notae;
+    a = partitura_ambitus(&k->partes[ZEPHYRUM]);
+    CREDO_AEQUALIS_I32 (a.numerus, V);
+    CREDO_VERUM (a.infima == &m[ZEPHYRUM]);
+    CREDO_AEQUALIS_S64 (a.pulsus_infimae, ZEPHYRUM);
+    CREDO_VERUM (a.summa == &m[IV]);
+    CREDO_AEQUALIS_S64 (a.pulsus_summae, MMMDCCCXL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_nota(c, k, a.infima,
+        a.pulsus_infimae), "A#4");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_nota(c, k, &m[II], MCMXX), "Bb4");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_nota(c, k, a.summa,
+        a.pulsus_summae), "F5");
+    /* sonitus soli: nulla altitudo; scriptus '@titulus' */
+    a = partitura_ambitus(&k->partes[I]);
+    CREDO_AEQUALIS_I32 (a.numerus, ZEPHYRUM);
+    CREDO_VERUM (a.infima == NIHIL && a.summa == NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_nota(c, k,
+        &k->partes[I].frusta[ZEPHYRUM].notae[ZEPHYRUM], ZEPHYRUM),
+        "@punctum");
+    /* mixta: G '@' altior omittitur - C4 infima et summa */
+    m = k->partes[II].frusta[ZEPHYRUM].notae;
+    a = partitura_ambitus(&k->partes[II]);
+    CREDO_AEQUALIS_I32 (a.numerus, I);
+    CREDO_VERUM (a.infima == &m[ZEPHYRUM] && a.summa == &m[ZEPHYRUM]);
+    /* sine littera (editio exemplaris): clavis ad pulsum CARMINIS -
+     * frustum in mensura 2 (Eb maior) -> Eb4; pulsus intra frustum
+     * solus (C maior) D#4 daret. Summa aequalis (D# scripta, Eb):
+     * prima vincit */
+    s             = k->partes[III].frusta[ZEPHYRUM].notae;
+    s[I].littera  = '\0';
+    a             = partitura_ambitus(&k->partes[III]);
+    CREDO_AEQUALIS_I32 (a.numerus, III);
+    CREDO_VERUM (a.infima == &s[ZEPHYRUM]);
+    CREDO_AEQUALIS_S64 (a.pulsus_infimae, MMMDCCCXL);
+    CREDO_VERUM (a.summa == &s[I]);
+    CREDO_AEQUALIS_S64 (a.pulsus_summae, MMMDCCCXL + CMLX);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_nota(c, k, a.summa,
+        a.pulsus_summae), "Eb4");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_nota(c, k, a.summa, CMLX), "D#4");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "orthographia", _sectio_orthographia, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -470,6 +558,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "mutationes", _sectio_mutationes, NIHIL, NIHIL, NIHIL, NIHIL },
     { "forma", _sectio_forma, NIHIL, NIHIL, NIHIL, NIHIL },
     { "addita", _sectio_addita, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ambitus", _sectio_ambitus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "liber", _sectio_liber, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

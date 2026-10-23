@@ -175,51 +175,6 @@ recensio_carminis_monita (
  * Notae partium (ambitus)
  * ================================================== */
 
-nomen structura {
-    constans CarmenNota* infima;
-                    s64  pulsus_infimae;
-    constans CarmenNota* summa;
-                    s64  pulsus_summae;
-                    i32  numerus;
-} AmbitusPartis;
-
-interior AmbitusPartis
-_ambitus (
-    constans CarmenPars* pars)
-{
-    AmbitusPartis a;
-              i32 f;
-              i32 j;
-
-    memset(&a, ZEPHYRUM, magnitudo(a));
-    per (f = ZEPHYRUM; f < pars->numerus_frustorum; f++)
-    {
-        constans CarmenFrustum* fr = &pars->frusta[f];
-
-        per (j = ZEPHYRUM; j < fr->numerus; j++)
-        {
-            constans CarmenNota* n = &fr->notae[j];
-
-            si (n->praeparatum.mensura > ZEPHYRUM)
-            {
-                perge;
-            }
-            a.numerus++;
-            si (a.infima == NIHIL || n->nota < a.infima->nota)
-            {
-                a.infima          = n;
-                a.pulsus_infimae  = fr->pulsus + n->pulsus;
-            }
-            si (a.summa == NIHIL || n->nota > a.summa->nota)
-            {
-                a.summa          = n;
-                a.pulsus_summae  = fr->pulsus + n->pulsus;
-            }
-        }
-    }
-    redde a;
-}
-
 /* nota scripta ("G#4"); '-' si NIHIL */
 interior b32
 _notam_scribere (
@@ -228,25 +183,11 @@ _notam_scribere (
                     s64  pulsus,
       ChordaAedificator* a)
 {
-    PartituraNota o;
-              b32 bene;
-              s32 k;
-
     si (nota == NIHIL)
     {
         redde chorda_aedificator_appendere_character(a, '-');
     }
-    o     = partitura_orthographia(carmen, nota, pulsus);
-    bene  = chorda_aedificator_appendere_character(a, o.littera);
-    per (k = ZEPHYRUM; k < o.alteratio; k++)
-    {
-        bene = chorda_aedificator_appendere_character(a, '#') && bene;
-    }
-    per (k = ZEPHYRUM; k < -o.alteratio; k++)
-    {
-        bene = chorda_aedificator_appendere_character(a, 'b') && bene;
-    }
-    redde chorda_aedificator_appendere_s32(a, o.octava) && bene;
+    redde partitura_notam_scribere(carmen, nota, pulsus, a);
 }
 
 /* nota ut chorda (e piscina) */
@@ -348,7 +289,7 @@ recensio_carminis_textus (
     per (i = ZEPHYRUM; i < k->numerus_partium; i++)
     {
         constans CarmenPars* p    = &k->partes[i];
-              AmbitusPartis  amb  = _ambitus(p);
+           PartituraAmbitus  amb  = partitura_ambitus(p);
 
         bene = chorda_aedificator_appendere_literis(a, "  pars ")
             && bene;
@@ -603,7 +544,7 @@ recensio_carminis_json (
     per (i = ZEPHYRUM; i < k->numerus_partium; i++)
     {
         constans CarmenPars* p    = &k->partes[i];
-              AmbitusPartis  amb  = _ambitus(p);
+           PartituraAmbitus  amb  = partitura_ambitus(p);
                   JsonValor* x    = json_objectum_creare(piscina);
 
         si (x == NIHIL)
