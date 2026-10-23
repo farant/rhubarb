@@ -901,3 +901,17 @@ is red, a table row whose script has none is red - the table only
 shrinks. aedilis_struere.sh stays hand (it builds bin/aedilis itself).
 Plants IV red (--radices off, helper empty, hand root re-added, row
 removed). The test came after the CLI this time - the plant is the red.
+
+## 2026-10-22 — `--enumerare --plures <lista> [--manifesta <dir>]` (batch mode)
+
+Why: the `generata` gate (= `bin/fabrica iudicare -plenus -omnia`) costs 14-20 s in a warm tree but 60-180 s in secunda/quarta. There the time is memo misses on generators with broad inputs, and the biggest, `fragmentum_compile_tests` (38 s), was `compile_tests_fontes_generare.sh` calling `bin/aedilis --enumerare` once per source: 381 processes. `amalgama_excludenda_generare.sh` (`excludenda_silva` 15 s) had the same loop, one process per silva source.
+
+What: `--plures` reads sources (one per line) and computes every closure in ONE process with the extractor (per-run memory + thesaurus) shared. Each source's derivation gets its OWN piscina, destroyed after the source; the extractor keeps its memory in its own long-lived piscina and ignores the call's (lib/aedilis_silva.c), so this is safe. One piscina for all would peak at 1.18 GB; per-source piscinae peak at ~300-380 MB. Output = the concatenation of the single-source `--enumerare` outputs in list order. `--manifesta <dir>` writes `<dir>/<path with / -> __>.stml`, the name the scripts used. The single-source path's CAUTIO lines (unresolved quoted includes) are reproduced per source.
+
+Parity (380 sources, the compile_tests list): stdout identical (9927 lines), stderr identical, all 380 manifests identical except the `generatum` timestamp (which differs between any two runs). Warm 35.0 → 2.5 s; cold (empty thesaurus) ~35-38 → 13.2 s. `fabrica iudicare -plenus` regenerated compile_tests_fontes_generata.sh, excludenda_generata.h and the 41 other aedilis-dependent artifacts: all 43 RECENS ("regeneratio congruit"). Read-trace memo is unaffected: the list is a mktemp path (absolute, outside the tree), which fabrica's lectiones collector skips.
+
+Guard: tools/aedilis_porta.sh checks `--plures` = per-source calls (stdout + manifests, ignoring `generatum`) on 5 entries: simple, Objective-C-dependent (vicus), a tool, stml, and a duplicate. Plant (each source's first object skipped) → "FRACTA (plures)"; restored → bona.
+
+Not converted: `amalgama_fontes_generare.sh` (uses --partes/--aristae, not --enumerare) and `fontes_generare.sh` (1-3 sources per call, little to gain).
+
+Next layer (profile of the batch): silva lexing (`silva_lexare_cruda`), hash-table inserts and allocation in extraction, plus `clang -MM` for .m files.

@@ -476,6 +476,144 @@ _nexum_purum_currere (
     redde (fracta > 0 || promittentia == 0) ? 1 : 0;
 }
 
+/* PLURES (2026-10-22): clausurae MULTORUM fontium UNO processu - fons
+ * per lineam in plagula 'via_listae'. Extractor (memoria per cursum
+ * + thesaurus) COMMUNIS est; fructus quisque in piscina SUA (destruitur
+ * post fontem - extractor memoriam suam in piscina sua longaeva servat,
+ * piscinam vocationis ignorat). Effusio = concatenatio effusionum
+ * '--enumerare' singularum ordine listae, octetim; manifestum fontis
+ * quisque ad '<dir>/<via cum / -> __>.stml' (nomen quo scripta
+ * generatorum utebantur). Causa: compile_tests_fontes_generare.sh
+ * CCCLXXXI processus aedilis vocabat (~XXXVIII s memoria frigida in
+ * porta generata); uno processu ~XI s, apex ~CCC MiB (sonda
+ * build/sonda_partes/sonda_aedilis_plures.c). */
+interior integer
+_plures_enumerare (
+                         Piscina* piscina,
+    constans AedilisConfiguratio* configuratio,
+              constans character* via_listae,
+                          chorda  dir_manifestorum,
+              constans character* varians_cstr,
+                    AedilisSilva* extractor)
+{
+    chorda lista;
+       i32 i;
+       i32 initium_lineae;
+
+    lista = filum_legere_totum(via_listae, piscina);
+    si (lista.datum == NIHIL)
+    {
+        fprintf(stderr, "AEDILIS RECUSAT: --plures: %s legi nequit\n",
+            via_listae);
+        redde 1;
+    }
+    initium_lineae = 0;
+    per (i = 0; i <= lista.mensura; i++)
+    {
+                 Piscina* scopi_piscina;
+          AedilisFructus* fructus;
+                  chorda  causa;
+                  chorda  scopus;
+               character* scopus_cstr;
+                     i32  k;
+                     i32  numerus;
+
+        si (i < lista.mensura && lista.datum[i] != '\n')
+        {
+            perge;
+        }
+        scopus.datum    = lista.datum + initium_lineae;
+        scopus.mensura  = i - initium_lineae;
+        initium_lineae  = i + 1;
+        dum (   scopus.mensura > 0
+             && (   scopus.datum[scopus.mensura - 1] == '\r'
+                 || scopus.datum[scopus.mensura - 1] == ' '))
+        {
+            scopus.mensura--;
+        }
+        si (scopus.mensura == 0)
+        {
+            perge;
+        }
+        scopi_piscina = piscina_generare_dynamicum("aedilis_scopus",
+            CCLVI * MXXIV);
+        si (scopi_piscina == NIHIL)
+        {
+            redde 1;
+        }
+        scopus_cstr    = chorda_ut_cstr(scopus, scopi_piscina);
+        causa.datum    = NIHIL;
+        causa.mensura  = 0;
+        fructus = aedilis_derivare(scopi_piscina, configuratio,
+            scopus_cstr, varians_cstr, aedilis_silva_extrahere,
+            extractor, &causa);
+        si (fructus == NIHIL)
+        {
+            fprintf(stderr, "AEDILIS RECUSAT: %s: %.*s\n", scopus_cstr,
+                (s32)causa.mensura, (constans character*)causa.datum);
+            piscina_destruere(scopi_piscina);
+            redde 1;
+        }
+        numerus = xar_numerus(fructus->inresolutae);
+        per (k = 0; k < numerus; k++)
+        {
+            chorda* via;
+
+            via = (chorda*)xar_obtinere(fructus->inresolutae, k);
+            fprintf(stderr, "AEDILIS CAUTIO: inclusio citata "
+                "inresoluta \"%.*s\" (scopus %s)\n",
+                (s32)via->mensura, (constans character*)via->datum,
+                scopus_cstr);
+        }
+        si (dir_manifestorum.mensura > 0)
+        {
+            ChordaAedificator* nomen_manifesti;
+                          i32  j;
+
+            nomen_manifesti = chorda_aedificator_creare(scopi_piscina,
+                CCLVI);
+            chorda_aedificator_appendere_chorda(nomen_manifesti,
+                dir_manifestorum);
+            chorda_aedificator_appendere_character(nomen_manifesti,
+                '/');
+            per (j = 0; j < scopus.mensura; j++)
+            {
+                si (scopus.datum[j] == '/')
+                {
+                    chorda_aedificator_appendere_literis(nomen_manifesti,
+                        "__");
+                }
+                alioquin
+                {
+                    chorda_aedificator_appendere_character(
+                        nomen_manifesti, (character)scopus.datum[j]);
+                }
+            }
+            chorda_aedificator_appendere_literis(nomen_manifesti,
+                ".stml");
+            si (!_manifestum_scribere_si_petitum(fructus,
+                    chorda_aedificator_finire(nomen_manifesti),
+                    scopi_piscina))
+            {
+                piscina_destruere(scopi_piscina);
+                redde 1;
+            }
+        }
+        numerus = xar_numerus(fructus->obiecta);
+        per (k = 0; k < numerus; k++)
+        {
+            AedilisObiectum* obiectum;
+
+            obiectum = (AedilisObiectum*)xar_obtinere(fructus->obiecta,
+                k);
+            imprimere("%.*s\n", (s32)obiectum->via.mensura,
+                (constans character*)obiectum->via.datum);
+        }
+        piscina_destruere(scopi_piscina);
+    }
+    redde 0;
+}
+
 interior integer
 _corpus_currere (
                          Piscina* piscina,
@@ -710,6 +848,12 @@ principale (
         "directorio dato servare/legere (cursus unus portae)");
     argumenta_addere_vexillum(parser, NIHIL, "--enumerare",
         "Obiecta clausurae nuda imprimere (consumptoribus)");
+    argumenta_addere_optionem(parser, NIHIL, "--plures",
+        "Cum --enumerare: fontes ex plagula data (unus per lineam) UNO "
+        "processu; effusio = concatenatio effusionum singularum");
+    argumenta_addere_optionem(parser, NIHIL, "--manifesta",
+        "Cum --plures: manifestum fontis cuiusque ad <dir>/<via cum / -> "
+        "__>.stml");
     argumenta_addere_optionem(parser, NIHIL, "--manifestum",
         "Cum --enumerare aut --partes: manifestum etiam ad viam datam "
         "scribere (fabrica: clausura actionis memorabilis)");
@@ -760,6 +904,22 @@ principale (
         {
             fprintf(stderr,
                 "usus: aedilis --corpus <directorium> --partes\n");
+            redde 1;
+        }
+        scopus.datum    = NIHIL;
+        scopus.mensura  = 0;
+        scopus_cstr     = NIHIL;
+    }
+    alioquin si (argumenta_obtinere_optionem(lecta, "--plures",
+                     piscina).mensura > 0)
+    {
+        si (   argumenta_numerus_positionalium(lecta) != 0
+            || !argumenta_habet_vexillum(lecta, "--enumerare")
+            || via_manifesti.mensura > 0)
+        {
+            fprintf(stderr,
+                "usus: aedilis --enumerare --plures <lista> "
+                "[--manifesta <dir>] [--thesaurus <dir>]\n");
             redde 1;
         }
         scopus.datum    = NIHIL;
@@ -849,6 +1009,17 @@ principale (
     si (argumenta_habet_vexillum(lecta, "--nexus-purus"))
     {
         redde _nexum_purum_currere(piscina, configuratio, extractor);
+    }
+    si (   scopus_cstr == NIHIL
+        && argumenta_obtinere_optionem(lecta, "--plures",
+               piscina).mensura > 0)
+    {
+        redde _plures_enumerare(piscina, configuratio,
+            chorda_ut_cstr(argumenta_obtinere_optionem(lecta,
+            "--plures",
+                piscina), piscina),
+            argumenta_obtinere_optionem(lecta, "--manifesta", piscina),
+            varians_cstr, extractor);
     }
     si (scopus_cstr == NIHIL)
     {

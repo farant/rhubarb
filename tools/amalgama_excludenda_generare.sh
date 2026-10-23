@@ -88,13 +88,18 @@ if [ "$PROBARE" -eq 0 ]; then
     mkdir -p "$CLAUSURAE_MECHANISMI"
     # shellcheck source=/dev/null
     . tools/mechanismus_fontes.sh
+    # PLURES (2026-10-22): aedilis UNO processu (bin/aedilis --plures),
+    # manifesta eadem - olim processus per fontem
     NUMERUS_FONTIUM=0
+    LISTA_MECHANISMI="$(mktemp)"
     for fons in "$SEDES/amalgamator.c" $(mechanismus_silvae_fontes); do
-        ./bin/aedilis "$fons" --enumerare --manifestum \
-            "$CLAUSURAE_MECHANISMI/$(echo "$fons" | sed 's|/|__|g').stml" \
-            > /dev/null || si_fracta "clausura mechanismi fracta: $fons"
+        printf '%s\n' "$fons" >> "$LISTA_MECHANISMI"
         NUMERUS_FONTIUM=$((NUMERUS_FONTIUM + 1))
     done
+    ./bin/aedilis --enumerare --plures "$LISTA_MECHANISMI" \
+        --manifesta "$CLAUSURAE_MECHANISMI" > /dev/null \
+        || { rm -f "$LISTA_MECHANISMI"; si_fracta "clausura mechanismi fracta (vide AEDILIS RECUSAT supra)"; }
+    rm -f "$LISTA_MECHANISMI"
     # postcondicio: manifestum per fontem (directorium vacuum nihil
     # sigillaret - memoria tacite falsa)
     NUMERUS_MANIFESTORUM=$(find "$CLAUSURAE_MECHANISMI" -name '*.stml' | wc -l | tr -d ' ')

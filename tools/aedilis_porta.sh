@@ -74,6 +74,31 @@ done
 # NEXUS PURUS (eventus A1b, 2026-10-01): capita <aedilis nexus="purus"/>
 # clausuram sine regula nexus (frameworks) servant; catena fracta
 # nominatur. Nullum promittens = porta mortua -> fracta quoque.
+# PLURES (2026-10-22): --enumerare --plures = concatenatio vocationum
+# singularum, manifesta eadem (praeter 'generatum') - fontes varii:
+# simplex, cum Objective-C (vicus), instrumentum, duplex intra listam
+PLURES_D="$(mktemp -d)"
+printf '%s\n' probationes/probatio_piscina.c probationes/probatio_vicus_saltus.c \
+    tools/generare.c probationes/probatio_stml.c probationes/probatio_piscina.c \
+    > "$PLURES_D/lista"
+mkdir -p "$PLURES_D/singula" "$PLURES_D/plures"
+: > "$PLURES_D/singula.txt"
+while IFS= read -r f; do
+    ./bin/aedilis "$f" --enumerare --thesaurus build/aedilis/obiecta \
+        --manifestum "$PLURES_D/singula/$(echo "$f" | sed 's|/|__|g').stml" \
+        >> "$PLURES_D/singula.txt" 2>/dev/null
+done < "$PLURES_D/lista"
+if    ./bin/aedilis --enumerare --plures "$PLURES_D/lista" \
+          --thesaurus build/aedilis/obiecta --manifesta "$PLURES_D/plures" \
+          > "$PLURES_D/plures.txt" 2>/dev/null \
+   && cmp -s "$PLURES_D/singula.txt" "$PLURES_D/plures.txt" \
+   && diff -r -I 'generatum="[0-9]*"' "$PLURES_D/singula" "$PLURES_D/plures" > /dev/null; then
+    echo "bona: --plures = singula ($(wc -l < "$PLURES_D/plures.txt" | tr -d ' ') lineae)"
+else
+    echo "FRACTA (plures): --plures a vocationibus singulis differt"
+    fracta="$fracta plures"
+fi
+rm -rf "$PLURES_D"
 if ! ./bin/aedilis --nexus-purus 2>&1; then
     echo "FRACTA (nexus purus)"
     fracta="$fracta nexus_purus"
