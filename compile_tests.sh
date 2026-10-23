@@ -187,11 +187,12 @@ compile_libraries() {
     # Obiectum identicum NON rescribitur: inodi ante et post comparati
     # = obiecta hoc cursu mutata (LIBS_COMPILED, metrum frigidi).
     #
-    # PARALLELE per FILA fila (xargs -L 1): CCXXV hits seriatim ~VII s
-    # (compilator ~XXX ms per vocationem, dimidium in 'clang
-    # -print-prog-name'); mandata una tabula, linea quaeque vocatio
-    # integra (viae et vexilla sine spatiis). Fractum: clang ipse fontem
-    # nominat.
+    # PROCESSU UNO (bin/compilator --plures, 2026-10-23): linea quaeque
+    # vocatio integra (viae et vexilla sine spatiis); thesaurus,
+    # identitas clang et capita communia SEMEL per processum. Olim xargs
+    # -P FILA, processus per vocationem (~XXII ms): CCCLII hits 1.8-2.2 s
+    # parallele, nunc ~0.3 s seriatim. Fractum: clang ipse fontem
+    # nominat; lineae omnes curruntur, exitus I si qua fracta.
     cursor_instrumenta_parare || return 1
     : > "$CLAUSURAE_DIR/mandata.tsv"
     local ante post numerus vocationes
@@ -216,7 +217,7 @@ compile_libraries() {
     done
     numerus=$(grep -c . "$vocationes")
 
-    if ! xargs -P "$FILA" -L 1 "$COMPILATOR" < "$vocationes" 2>&1; then
+    if ! "$COMPILATOR" --plures "$vocationes" 2>&1; then
         echo -e "${RED}✗ FAILED: bibliothecae (fons a clang supra nominatus)${RESET}"
         return 1
     fi
