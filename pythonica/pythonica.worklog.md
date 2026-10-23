@@ -1381,3 +1381,19 @@ Option 1 of the composite discussion (desideratum …VXWK8: the real fabrica mig
 **Cost / benefit, measured:**
 - pura 197 s + arboris 72 s, against 214 s before as one file. That's a second process and the duplicated preamble (+ noise), so a first merge pass costs roughly +1 min.
 - Under A, pura is carried for golden fixtures, docs and scripts outside its tool sources, saving ~3.3 min on such reruns.
+
+## 2026-10-23 — commissio refuses when the owed gates can't be computed (park …CYF3PX)
+
+**Before.** `_portae_debitas_addere` caught the SilvaError from `portae_debitae` (RECUSATIO of the declarations, bin/fabrica missing or broken), printed "MONITUM … portae petitae solae", and carried on with the requested gates only.
+- 2026-10-20 a commit with an unregistered `<porta>` title went through with NO gates, where ~19 were owed.
+- A gate that degrades to "nothing" is a dead gate.
+
+**After.** It raises SilvaError BEFORE any gate runs, naming the cause, a remedy (registry key in pythonica/silva.py, ./tools/fabrica_struere.sh) and the deliberate escape `sine_debitis='<causa>'`, which is printed. This covers commissio, commissio_umbra and fusio_probare (one function). Decision …SQ2Q4C ("warn, don't refuse") presupposes a KNOWN owed set, so a failed computation falls outside it.
+
+**Found by the change: the hermetic tests had been riding the hole.** The suite-wide fake bin/fabrica printed one NOTA line for EVERY subcommand, so `portae debitae` broke on "linea extra contractum" and every hermetic commissio quietly ran "petitae solae". The default fake (`_fabrica_ficta_ordinaria` in probatio_communia.py) now answers `portae …` with an empty contract: owed gates computable, and none.
+
+**Test V** rewritten:
+- an uncomputable owed set → refusal naming the cause and the escape; the requested gate does NOT run (its own marker file);
+- `sine_debitis` → printed, and the commit proceeds.
+
+**Plant**, by hand (silva.planta can't anchor in .py, park …4Z416NN): put the old `return list(portae)` back → red at exactly that assertion; restored with cp + touch → green. Both halves of the suite green.

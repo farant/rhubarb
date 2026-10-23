@@ -41,8 +41,23 @@ def _fabrica_ficta(rc, effusio='', via_argv=None):
     return via
 
 
-# omnes commissiones probationum sub fabrica ficta sana (exitus 0)
-silva.FABRICA_BIN = _fabrica_ficta(0, 'NOTA\tnulla artificia generata a viis tacta\n')
+# omnes commissiones probationum sub fabrica ficta sana (exitus 0).
+# 'portae ...' (debita, ordo, translatio) contractu VACUO respondet: debita
+# computabilia et nulla - olim lineam NOTA ubique reddebat, computatio
+# debitorum frangebatur et commissio 'petitae solae' tacite pergebat
+# (parcum …CYF3PX: nunc recusatio)
+def _fabrica_ficta_ordinaria():
+    via = os.path.join(T, 'fabrica_ficta_ordinaria')
+    with open(via, 'w') as f:
+        f.write('#!/bin/bash\n'
+                'if [ "$1" = portae ]; then exit 0; fi\n'
+                "printf 'NOTA\\tnulla artificia generata a viis tacta\\n'\n"
+                'exit 0\n')
+    os.chmod(via, 0o755)
+    return via
+
+
+silva.FABRICA_BIN = _fabrica_ficta_ordinaria()
 
 # tempora portarum et phasium (parcum fabricae …AR15): in T, numquam in
 # build/portae/tempora.tsv vivum (portae fictae ibi mentirentur)

@@ -2687,10 +2687,14 @@ def _portae_debitas_addere(viae, portae, excusatae=None, binaria_out=None,
     debitae manu nominantur, numquam curruntur. excusatae {porta: causa}
     (circulus commissionis P5): debitae nominatae NON adduntur, linea
     'porta debita EXCUSATA'; excusata quae debita non est = SilvaError
-    (nihil excusandum - numquam tacite). Debita incomputabilia
-    (RECUSATIO, bin/fabrica fractum) = MONITUM et petitae solae (monet,
-    numquam obstat: machina haec
-    commissionem nunquam impedit). Decretum 01M38VGAK8. binaria_out
+    (nihil excusandum - numquam tacite). Debita INCOMPUTABILIA
+    (RECUSATIO declarationum, bin/fabrica absens aut fractum) = SilvaError
+    ANTE portas, causa et remedium nominata (parcum …CYF3PX, 2026-10-20:
+    olim MONITUM et petitae solae - commissio sine portis XIX debitis
+    commisit; porta quae in 'nihil' cadit porta mortua est). Decretum
+    01M38VGAK8 (monet, non recusat) debita NOTA supponit - computatio
+    fracta extra eum stat. Evasio consulta: sine_debitis='<causa>'
+    (impressa). binaria_out
     (dict, circulus commissionis II T2) impletur {porta: [(bin, ratio)]}
     portarum quae current (petitae et additae, non manu nec excusatae).
     additae_out (dict, gradus-portarum T3) impletur {porta: causa}
@@ -2701,12 +2705,13 @@ def _portae_debitas_addere(viae, portae, excusatae=None, binaria_out=None,
     try:
         debita, _ = portae_debitae(viae)
     except SilvaError as ex:
-        print('MONITUM: portae debitae computari non potuerunt (%s) -'
-              ' portae petitae solae' % ex)
-        if excusatae:
-            print('MONITUM: excusatae sine effectu (%s)'
-                  % ', '.join(sorted(excusatae)))
-        return list(portae)
+        raise SilvaError('PORTAE DEBITAE computari non potuerunt - nihil'
+                         ' cursum, nihil commissum (porta in nihil cadens'
+                         ' porta mortua est; parcum …CYF3PX):\n  %s\n'
+                         'remedium: causam sana (e.g. clavis PORTAE in'
+                         ' pythonica/silva.py, ./tools/fabrica_struere.sh);'
+                         ' evasio consulta: sine_debitis=\'<causa>\''
+                         % str(ex).replace('\n', '\n  '))
     excusatae = excusatae or {}
     debitae = set(d.porta for d in debita if not d.manu)
     vanae = sorted(n for n in excusatae if n not in debitae)

@@ -2376,15 +2376,25 @@ try:
     eff, err = _commissio_capta(portae=[], sine_debitis='  ')
     credo(err is not None and 'sine_debitis' in err and 'nihil cursum' in err and not os.path.exists(_signum),
           'commissio: sine_debitis vacua refutatur ante portas')
-    # V. debita computari nequeunt (bin/fabrica fractum): MONITUM,
-    # commissio pergit cum petitis
+    # V. debita computari nequeunt (bin/fabrica fractum, RECUSATIO):
+    # RECUSATIO ANTE portas, causa et evasio nominatae, nihil cursum
+    # (parcum …CYF3PX: olim MONITUM et commissio sine portis)
     def _fracta(viae, *a, **k):
         raise silva.SilvaError("inventarium 'x' legi non potuit")
     silva.portae_debitae = _fracta
-    eff, err = _commissio_capta(portae=[])
-    credo('MONITUM: portae debitae computari non potuerunt' in eff and "inventarium 'x'" in eff
+    if os.path.exists(_umbra_signum):
+        os.remove(_umbra_signum)
+    eff, err = _commissio_capta(portae=['ficta-petita'])
+    credo(err is not None and 'PORTAE DEBITAE computari non potuerunt' in err
+          and "inventarium 'x'" in err and 'sine_debitis' in err
+          and 'nec in disco' not in err and not os.path.exists(_umbra_signum),
+          'commissio: debita incomputabilia RECUSANT ante portas (petita quoque non cursa)',
+          causa=repr((eff[-300:], err)))
+    # evasio consulta: sine_debitis - computatio non vocatur, petitae currunt
+    eff, err = _commissio_capta(portae=[], sine_debitis='probatio: debita incomputabilia')
+    credo('portae debitae OMISSAE: probatio: debita incomputabilia' in eff
           and err is not None and 'nec in disco' in err,
-          'commissio: inventarium illegibile monet, non obstat')
+          'commissio: sine_debitis evadit (causa impressa, commissio pergit)', causa=err)
     silva.portae_debitae = lambda viae, *a, **k: (list(_debita_ficta), [])
     # VI. commissio_umbra: debita in UMBRA additur et currit (siccum)
     buf = io.StringIO()
