@@ -1,4 +1,4 @@
-/* GENERATUM: tools/tabula_nodorum_generare.sh - NE EDITA MANU
+/* GENERATUM DATA: tools/tabula_nodorum_generare.sh - NE EDITA MANU
  *
  * Ex probationes/fixa/knotinfo/2026.10.5/nodi_xiii.tsv:
  * nomina, transitus, symmetria et codices PD ex KnotInfo

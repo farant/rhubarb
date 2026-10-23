@@ -340,24 +340,17 @@ _aurum_conferre (
     }
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: lector lineae
+ * ================================================== */
+
+interior vacuum
+_lectorem_lineae_probare (
+    CredoContextus* c)
 {
-                    b32  praeteritus;
-                Piscina* piscina;
-    InternamentumChorda* intern;
+    Piscina* piscina = c->piscina;
 
-    piscina = piscina_generare_dynamicum("probatio_briar_contextus",
-        16777216);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
-
-    imprimere("\n--- Probans lector lineae ---\n");
     _lectorem_probare(piscina, "    <<#summa>>", I, "summa", "    ");
     _lectorem_probare(piscina, "<<#x>>  ", I, "x", "");
     _lectorem_probare(piscina, "\t<<#a-b_c>>", I, "a-b_c", "\t");
@@ -370,9 +363,23 @@ principale (vacuum)
         NIHIL);
     _lectorem_probare(piscina, "", ZEPHYRUM, NIHIL, NIHIL);
     _lectorem_probare(piscina, "<<x>>", ZEPHYRUM, NIHIL, NIHIL);
+}
 
-    imprimere("\n--- Probans fragmenta.thistle: classificatio, textura,"
-        " tabula ---\n");
+
+/* ==================================================
+ * PROBARE: fragmenta.thistle: classificatio, textura, tabula
+ * ================================================== */
+
+interior vacuum
+_fragmenta_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+    InternamentumChorda* intern;
+
+    /* internamentum sectionis proprium (olim unum principalis;
+     * nulla fixura communis) */
+    intern = internamentum_creare(piscina);
     {
                          Xar* nexus;
                          Xar* fragmenta  = NIHIL;
@@ -464,9 +471,23 @@ principale (vacuum)
         }
         _aurum_conferre(piscina, nexus);
     }
+}
 
-    imprimere("\n--- Probans salve.thistle: sine fragmentis, tabula"
-        " identitatis ---\n");
+
+/* ==================================================
+ * PROBARE: salve.thistle: sine fragmentis, tabula identitatis
+ * ================================================== */
+
+interior vacuum
+_salve_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+    InternamentumChorda* intern;
+
+    /* internamentum sectionis proprium (olim unum principalis;
+     * nulla fixura communis) */
+    intern = internamentum_creare(piscina);
     {
                   Xar* nexus;
                   Xar* fragmenta  = NIHIL;
@@ -499,8 +520,23 @@ principale (vacuum)
             CREDO_VERUM (k == xar_numerus(r->lineae));
         }
     }
+}
 
-    imprimere("\n--- Probans recusationes VI ---\n");
+
+/* ==================================================
+ * PROBARE: recusationes VI
+ * ================================================== */
+
+interior vacuum
+_recusationes_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+    InternamentumChorda* intern;
+
+    /* internamentum sectionis proprium (olim unum principalis;
+     * nulla fixura communis) */
+    intern = internamentum_creare(piscina);
     _recusationem_probare(piscina, intern, "fragmentum_absens.thistle",
         ZEPHYRUM, "transclusio '#nusquam' (linea 8): fragmentum non"
         " definitum", VIII);
@@ -520,9 +556,22 @@ principale (vacuum)
         "transclusio_malformata.thistle", I,
         "transclusio malformata (linea 12): '<<#x>>' sola in linea sua"
         " exspectata", XII);
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "lector lineae", _lectorem_lineae_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fragmenta.thistle: classificatio, textura, tabula",
+        _fragmenta_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "salve.thistle: sine fragmentis, tabula identitatis",
+        _salve_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "recusationes VI", _recusationes_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("briar_contextus", SECTIONES);
 }

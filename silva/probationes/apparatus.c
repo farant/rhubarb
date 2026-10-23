@@ -6,6 +6,7 @@
 #include "silva_token.h"
 #include "silva_expandere.h"
 #include "silva_c89_oraculum.h"
+#include "unitates_arboris.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -438,4 +439,51 @@ apparatus_sanus (
         *expansa_exitus = expansa;
     }
     redde (b32)(expansa > ZEPHYRUM);
+}
+
+b32
+apparatus_corpus_parare (
+           CorpusSilvae* corpus,
+     constans character* radix,
+                Piscina* piscina)
+{
+    chorda causa;
+
+    corpus->exclusae  = ZEPHYRUM;
+    corpus->unitates  = unitates_legere(unitates_sutura_arboris(radix,
+        piscina), piscina, &causa, NIHIL);
+    si (corpus->unitates == NIHIL)
+    {
+        imprimere("  CORPUS: unitates illegibiles: %.*s\n",
+            (integer)causa.mensura, (constans character*)causa.datum);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+b32
+apparatus_in_corpore (
+           CorpusSilvae* corpus,
+     constans character* directorium,
+     constans character* nomen_plagulae,
+                Piscina* piscina)
+{
+     character via[VIA_MAXIMA];
+        chorda causa;
+
+    si (!apparatus_est_c(nomen_plagulae) || corpus->unitates == NIHIL)
+    {
+        redde FALSUM;
+    }
+    sprintf(via, "%s/%s", directorium, nomen_plagulae);
+    si (unitates_iudicat(corpus->unitates, chorda_ex_literis(
+            "corpus_silvae", piscina), chorda_ex_literis(via, piscina),
+            piscina, &causa) == UNITATES_IUDICAT)
+    {
+        redde VERUM;
+    }
+    corpus->exclusae = corpus->exclusae + I;
+    imprimere("  extra corpus: %s (%.*s)\n", via,
+        (integer)causa.mensura, (constans character*)causa.datum);
+    redde FALSUM;
 }

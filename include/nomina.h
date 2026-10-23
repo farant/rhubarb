@@ -1,13 +1,19 @@
 /* nomina.h - resolutio nominum NON-OBSTRUENS super reactorem
  * (http-vocatio-spec II.1, decretum ...CYT9A8)
  *
- * Implementatio: nomina_macos.m (DNSServiceGetAddrInfo ex <dns_sd.h>:
- * per resolutorem systematis - /etc/hosts, DNS per interfaciem, VPN,
- * /etc/resolver, mDNS - ergo responsa eadem ac systema). Fossa
- * servitii in reactorem VOCANTIS intrat; responsa per familiam (IPv4,
- * IPv6) colliguntur; finis cum ambae responderunt (positive aut
- * NoSuchRecord) aut NOMINA_MORA_RESOLUTIONIS_MS post addressum primum
- * (RFC 8305 §3, "resolution delay"). IP litteralis sine quaestione.
+ * Implementationes (per systematis resolutorem - responsa eadem ac
+ * ceterae applicationes):
+ * - nomina_macos.m: DNSServiceGetAddrInfo ex <dns_sd.h> (/etc/hosts,
+ *   DNS per interfaciem, VPN, /etc/resolver, mDNS). Fossa servitii in
+ *   reactorem VOCANTIS intrat; responsa per familiam (IPv4, IPv6)
+ *   colliguntur; finis cum ambae responderunt (positive aut
+ *   NoSuchRecord) aut NOMINA_MORA_RESOLUTIONIS_MS post addressum primum
+ *   (RFC 8305 §3, "resolution delay").
+ * - nomina_posix.c: getaddrinfo in processu FILIO (POSIX resolutionem
+ *   non-obstruentem non habet; fila numquam): responsum per fistulam in
+ *   reactorem vocantis; abrumpere filium occidit et metit.
+ * IP litteralis sine quaestione (nec processus filius). Pars communis
+ * (nomina_familias_alternare) in nomina.c.
  *
  * finis SEMEL, numquam intra nomina_quaerere_incipere (timer 0 ms).
  * Addressus PORTU POSITO redduntur (sockaddr crudum, tcp_incipere
@@ -19,6 +25,8 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "reactor.h"
+
+/* <aedilis corpus="lib/nomina.c"/> */
 
 #define NOMINA_ADDRESSUS_MAXIMI      XVI
 #define NOMINA_ADDRESSUS_OCTETI      CXXVIII   /* sockaddr_storage */

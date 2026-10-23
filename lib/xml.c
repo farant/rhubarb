@@ -862,6 +862,97 @@ _legere_titulus (
         ctx->positus);
 }
 
+/* Referentia numerica (&#D; aut &#xH;) ad ctx->positus ('&'): si
+ * bona, UTF-8 appenditur et positus progreditur (VERUM); aliter nihil
+ * mutatur (FALSUM - vocans '&' litteralem copiat). Decodificatio
+ * SEMEL in eodem gradu ac entitates nominatae, ne vocans iterum
+ * decodificet ("&amp;#65;" textus "&#65;" est, non "A"). */
+interior b32
+_referentiam_numeri_legere (
+         XmlContextus* ctx,
+    ChordaAedificator* aed)
+{
+    i32 j       = ctx->positus + II;
+    i32 cp      = ZEPHYRUM;
+    i32 cifrae  = ZEPHYRUM;
+    b32 hex     = FALSUM;
+
+    si (   ctx->positus + II                  >= ctx->input.mensura
+        || ctx->input.datum[ctx->positus + I] != '#')
+    {
+        redde FALSUM;
+    }
+    si (ctx->input.datum[j] == 'x' || ctx->input.datum[j] == 'X')
+    {
+        hex = VERUM;
+        j++;
+    }
+    dum (j < ctx->input.mensura && ctx->input.datum[j] != ';')
+    {
+         i8 c = ctx->input.datum[j];
+        i32 v;
+
+        si (c >= '0' && c <= '9')
+        {
+            v = (i32)(c - '0');
+        }
+        alioquin si (hex && (c | 0x20) >= 'a' && (c | 0x20) <= 'f')
+        {
+            v = (i32)((c | 0x20) - 'a') + X;
+        }
+        alioquin
+        {
+            redde FALSUM;
+        }
+        cp = cp * (hex ? XVI : X) + v;
+        si (cp > 0x10FFFF)
+        {
+            redde FALSUM;
+        }
+        cifrae++;
+        j++;
+    }
+    si (   j  >= ctx->input.mensura || cifrae == ZEPHYRUM
+        || cp == ZEPHYRUM || (cp >= 0xD800 && cp <= 0xDFFF))
+    {
+        redde FALSUM;
+    }
+    si (cp < 0x80)
+    {
+        chorda_aedificator_appendere_character(aed, (character)cp);
+    }
+    alioquin si (cp < 0x800)
+    {
+        chorda_aedificator_appendere_character(aed,
+            (character)(0xC0 | (cp >> VI)));
+        chorda_aedificator_appendere_character(aed,
+            (character)(0x80 | (cp & 0x3F)));
+    }
+    alioquin si (cp < 0x10000)
+    {
+        chorda_aedificator_appendere_character(aed,
+            (character)(0xE0 | (cp >> XII)));
+        chorda_aedificator_appendere_character(aed,
+            (character)(0x80 | ((cp >> VI) & 0x3F)));
+        chorda_aedificator_appendere_character(aed,
+            (character)(0x80 | (cp & 0x3F)));
+    }
+    alioquin
+    {
+        chorda_aedificator_appendere_character(aed,
+            (character)(0xF0 | (cp >> XVIII)));
+        chorda_aedificator_appendere_character(aed,
+            (character)(0x80 | ((cp >> XII) & 0x3F)));
+        chorda_aedificator_appendere_character(aed,
+            (character)(0x80 | ((cp >> VI) & 0x3F)));
+        chorda_aedificator_appendere_character(aed,
+            (character)(0x80 | (cp & 0x3F)));
+    }
+    ctx->columna += j + I - ctx->positus;
+    ctx->positus = j + I;
+    redde VERUM;
+}
+
 /* Legere valor attributi (post =") */
 interior chorda*
 _legere_valor_attributi (
@@ -958,7 +1049,7 @@ _legere_valor_attributi (
                 ctx->positus += VI;
                 ctx->columna += VI;
             }
-            alioquin
+            alioquin si (!_referentiam_numeri_legere(ctx, aed))
             {
                 /* Entity non recognita, copiere & */
                 chorda_aedificator_appendere_character(aed, '&');
@@ -1070,7 +1161,7 @@ _legere_textus (
                 ctx->positus += VI;
                 ctx->columna += VI;
             }
-            alioquin
+            alioquin si (!_referentiam_numeri_legere(ctx, aed))
             {
                 chorda_aedificator_appendere_character(aed, '&');
                 ctx->positus++;

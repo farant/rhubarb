@@ -277,3 +277,33 @@ Reviewer's measurements:
 - S_120: 679 MB -> 10.5 MB;
 - Mignotte a = 3^350: 31.9 s / 1.03 GB -> 22.0 s / 16 MB;
 - a = 3^440: still refuses cleanly (19 MB).
+
+## 2026-10-23 — pre-bisection in `_compara_intra` (probatio_cellae 72 → 56 s)
+
+**Profile.** `sample` of probatio_cellae "imago sine iactura" (filter off, so every comparison is exact): 45% of samples under `radix_compara`, and 79% of that in `radix_signum_polynomii(b.f, a)`. That is a polynomial gcd (the equality test) followed by Descartes tests, each test being a scale, a Taylor shift, a primitive part, then a reverse and a second Taylor shift on bignums. `_compara_intra` called it as soon as the two isolating intervals overlapped. In cellae, overlapping numbers are nearly always DISTINCT but close (tan² h against a threshold).
+
+**Change.** Before that call, bisect both numbers up to `LIMES_SECTIONUM_PRIMARUM` (XVI) rounds and return as soon as `_ordo_intervallorum` separates them. Each bisection is two Horner evaluations (`_signum_ad` at the midpoint, `_signum_iuxta` at the lower end).
+- If either number becomes exact (a midpoint hit its root), it recurses into the exact branches at the top; depth is at most II.
+- Otherwise, after XVI rounds (equal numbers, or very close ones) it continues into the old path with the narrowed intervals.
+
+Results cannot change: the only shortcut is a disjointness answer, and that one is exact.
+
+**Measured** (same flags, one run after another, ms):
+
+| section | before | after |
+|---|---|---|
+| iudicium filtrum sine iactura | 11,010 | 4,164 |
+| imago sine iactura | 15,740 | 8,365 |
+| cellae phasis contra oraculum | 5,882 | 4,463 |
+| filtrum sine iactura | 1,686 | 1,228 |
+| scrutinium axium | 3,592 | 3,890 |
+| k sine limite | 3,316 | 3,652 |
+| total | 72.2 s | 55.8 s |
+
+N = 4 already got imago 11.2 → 7.1 s; N = 16 and N = 64 are the same (5.2 s), so the gain plateaus by XVI. The two small slowdowns (+0.3 s) are probably ties paying for XVI wasted rounds, or noise.
+
+**Plants.**
+- Flipping the sign of the pre-bisection answer turns probatio_radices red at :319.
+- Disabling the exact-number fallthrough stays GREEN in both radices and cellae. That is expected: the old path also handles a number made exact by bisection (bisecting an exact number is a no-op, and the other interval narrows until disjoint or until it too hits the rational). The fallthrough only routes that case to the cheaper linear-polynomial branch. It is a shortcut, not a guard.
+
+**Not touched:** "iudicium contra D119 lentum" (20 s) is about 1.06 M judgments of the float prefilter (`_vector_parare` loop over XII–XIII axes, ~17 µs per judgment). No bignums there.

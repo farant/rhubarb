@@ -630,6 +630,138 @@ _probare_memoriam_verificationum (
 
 
 /* ==================================================
+ * PROBARE: custodia memorabilium (2026-10-23) - regeneratio actionis
+ * memorabilis quae legit quod ingressus non tegunt: memoria NEGATA
+ * (verdictum RECENS, causa nominat, nihil inscribitur); intermedia
+ * (S ante L), quaesitae absentes (A), transientes (post cursum
+ * absentes) et ingressus via ipsa non obstant
+ * ================================================== */
+
+/* actio memorabilis 'gen' (ingressus data/fons.txt) cum libro ficto */
+interior FabricaActio*
+_custodiae_actio (
+     DiscusFictus*  discus,
+    FabricaSutura*  sutura,
+          Piscina*  piscina,
+    FabricaExitus** exitus_out)
+{
+    FabricaActio* a;
+
+    mundi_discum_parare(discus, sutura, piscina);
+    sutura->meminisse           = _meminisse;
+    sutura->inscribere          = _inscribere;
+    sutura->species             = mundi_species_ficta;
+    sutura->lectiones_legere    = mundi_lectiones_legere;
+    sutura->lectiones_scribere  = mundi_lectiones_scribere;
+    mundi_ponere(discus, "data/fons.txt", "datum\n");
+    mundi_ponere(discus, "data/alienum.txt", "alienum\n");
+    mundi_ponere(discus, "gen/exitus.c", "linea I\n");
+    a = mundi_actio(piscina, "gen", FABRICA_ACTIO_GENERATOR);
+    a->memorabilis = VERUM;
+    mundi_ingressum_addere(a, "fasciculus", "data/fons.txt", piscina);
+    *exitus_out = mundi_exitum_addere(a, "gen/exitus.c", "regeneratio",
+        piscina);
+    discus->generatio = "linea I\n";
+    redde a;
+}
+
+interior vacuum
+_probare_custodiam_memorabilium (
+    CredoContextus* c)
+{
+            Piscina* piscina = c->piscina;
+       DiscusFictus  discus;
+      FabricaSutura  sutura;
+       FabricaActio* a;
+      FabricaExitus* exitus;
+    FabricaIudicium  iudicium;
+
+    /* I. lectio non declarata: RECENS, MEMORIA NEGATA nominans, nihil
+     * inscriptum; iterum: iterum regeneratur (nulla memoria) */
+    a = _custodiae_actio(&discus, &sutura, piscina, &exitus);
+    discus.lectiones_ficti = "L\tdata/fons.txt\nL\tdata/alienum.txt\n";
+    iudicium = fabrica_iudicare(&sutura, a, exitus, VERUM, piscina);
+    CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_RECENS);
+    CREDO_VERUM(mundi_continet(iudicium.causa, "MEMORIA NEGATA",
+        piscina));
+    CREDO_VERUM(mundi_continet(iudicium.causa, "data/alienum.txt",
+        piscina));
+    CREDO_AEQUALIS_I32(discus.inscriptiones, ZEPHYRUM);
+    discus.cursus = ZEPHYRUM;
+    (vacuum)fabrica_iudicare(&sutura, a, exitus, VERUM, piscina);
+    CREDO_AEQUALIS_I32(discus.cursus, I);
+
+    /* II. lectiones declaratae solae: inscribitur */
+    a = _custodiae_actio(&discus, &sutura, piscina, &exitus);
+    discus.lectiones_ficti = "L\tdata/fons.txt\nX\tdata/fons.txt\n";
+    iudicium = fabrica_iudicare(&sutura, a, exitus, VERUM, piscina);
+    CREDO_FALSUM(mundi_continet(iudicium.causa, "MEMORIA NEGATA",
+        piscina));
+    CREDO_AEQUALIS_I32(discus.inscriptiones, I);
+
+    /* III. intermedium (S ante L) et quaesita absens (A): non
+     * obstant */
+    a = _custodiae_actio(&discus, &sutura, piscina, &exitus);
+    discus.lectiones_ficti =
+        "S\tbuild/medium.tmp\nL\tbuild/medium.tmp\n"
+        "A\tinclude/nusquam.h\nL\tdata/fons.txt\n";
+    iudicium = fabrica_iudicare(&sutura, a, exitus, VERUM, piscina);
+    CREDO_FALSUM(mundi_continet(iudicium.causa, "MEMORIA NEGATA",
+        piscina));
+    CREDO_AEQUALIS_I32(discus.inscriptiones, I);
+
+    /* IV. transiens: post cursum absens (directorium temporarium
+     * scripti, scriptum per sed/cp sine S) - non obstat */
+    a = _custodiae_actio(&discus, &sutura, piscina, &exitus);
+    mundi_via_absens_ficta = "build/tmp.7/x.h";
+    discus.lectiones_ficti = "L\tbuild/tmp.7/x.h\nL\tdata/fons.txt\n";
+    iudicium = fabrica_iudicare(&sutura, a, exitus, VERUM, piscina);
+    mundi_via_absens_ficta = NIHIL;
+    CREDO_FALSUM(mundi_continet(iudicium.causa, "MEMORIA NEGATA",
+        piscina));
+    CREDO_AEQUALIS_I32(discus.inscriptiones, I);
+
+    /* V. eadem lectio, sed via PRAESENS post cursum: obstat (transiens
+     * solum si absens - aliter ingressus verus non declaratus) */
+    a = _custodiae_actio(&discus, &sutura, piscina, &exitus);
+    discus.lectiones_ficti = "L\tdata/alienum.txt\n";
+    iudicium = fabrica_iudicare(&sutura, a, exitus, VERUM, piscina);
+    CREDO_VERUM(mundi_continet(iudicium.causa, "MEMORIA NEGATA",
+        piscina));
+    CREDO_AEQUALIS_I32(discus.inscriptiones, ZEPHYRUM);
+
+    /* VI. PROBATIO (A) cum memoria: ictus servatur dum absens; via
+     * quaesita nunc PRAESENS (obumbratio) -> regeneratio */
+    a = _custodiae_actio(&discus, &sutura, piscina, &exitus);
+    discus.lectiones_ficti = "A\tdata/umbra.txt\nL\tdata/fons.txt\n";
+    (vacuum)fabrica_iudicare(&sutura, a, exitus, VERUM, piscina);
+    CREDO_AEQUALIS_I32(discus.inscriptiones, I);
+    discus.cursus = ZEPHYRUM;
+    iudicium = fabrica_iudicare(&sutura, a, exitus, VERUM, piscina);
+    CREDO_VERUM(mundi_continet(iudicium.causa, "memoria", piscina));
+    CREDO_AEQUALIS_I32(discus.cursus, ZEPHYRUM);
+    mundi_ponere(&discus, "data/umbra.txt", "umbra\n");
+    (vacuum)fabrica_iudicare(&sutura, a, exitus, VERUM, piscina);
+    CREDO_AEQUALIS_I32(discus.cursus, I);
+
+    /* VII. ambitus: non declaratus (nec basis) -> MEMORIA NEGATA
+     * nominans '$NOMEN'; basis (HOME) non obstat */
+    a = _custodiae_actio(&discus, &sutura, piscina, &exitus);
+    discus.lectiones_ficti = "E\tVARIABILIS_IGNOTA\nL\tdata/fons.txt\n";
+    iudicium = fabrica_iudicare(&sutura, a, exitus, VERUM, piscina);
+    CREDO_VERUM(mundi_continet(iudicium.causa, "$VARIABILIS_IGNOTA",
+        piscina));
+    CREDO_AEQUALIS_I32(discus.inscriptiones, ZEPHYRUM);
+    a = _custodiae_actio(&discus, &sutura, piscina, &exitus);
+    discus.lectiones_ficti = "E\tHOME\nL\tdata/fons.txt\n";
+    iudicium = fabrica_iudicare(&sutura, a, exitus, VERUM, piscina);
+    CREDO_FALSUM(mundi_continet(iudicium.causa, "MEMORIA NEGATA",
+        piscina));
+    CREDO_AEQUALIS_I32(discus.inscriptiones, I);
+}
+
+
+/* ==================================================
  * PROBARE: mandatum in clave memoriae (T6)
  * ================================================== */
 
@@ -1575,6 +1707,7 @@ _mundum_reponere (
     mundi_effectus_effusio  = "";
     mundi_identitas_ficta   = "clang I";
     mundi_via_alia_ficta    = NIHIL;
+    mundi_via_absens_ficta  = NIHIL;
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
@@ -1589,6 +1722,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "memoriam verificationum",
       _probare_memoriam_verificationum,
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
+    { "custodia memorabilium",
+      _probare_custodiam_memorabilium,
       NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "mandatum in memoria",
       _probare_mandatum_in_memoria,

@@ -1321,6 +1321,9 @@ _connexionem_aperire (
     redde VERUM;
 }
 
+/* limes corporis http_exsequi (totum in memoria colligit) */
+#define HTTP_EXSEQUI_CORPUS_MAXIMUM  ((i32)I << XXX)
+
 HttpResultus
 http_exsequi (
     HttpPetitio* petitio,
@@ -1335,6 +1338,7 @@ http_exsequi (
                     i8* total_data;
                    i32  total_size;
                    i32  total_capacity;
+                   b32  nimium = FALSUM;
                    s32  n;
     constans character* headers_end;
     constans character* line_start;
@@ -1385,6 +1389,13 @@ http_exsequi (
 
         si (n > 0)
         {
+            /* capacitas duplicata ultra I GiB i32 involveret et ansa
+             * dum infinita fieret (recensio horrei C1): refutare */
+            si (total_size > HTTP_EXSEQUI_CORPUS_MAXIMUM - (i32)n)
+            {
+                nimium = VERUM;
+                frange;
+            }
             /* Expandere si necesse */
             si (total_size + (i32)n > total_capacity)
             {
@@ -1414,6 +1425,13 @@ http_exsequi (
     alioquin
     {
         tcp_claudere(tcp_conn);
+    }
+
+    si (nimium)
+    {
+        redde _creare_error(HTTP_ERROR_PARSE,
+            "corpus nimium (ultra I GiB; http_exsequi_rivus adhibe)",
+            piscina);
     }
 
     /* Iudicare CUR ansa exiit (01KYANH7AN): solum n == 0 EOF mundus

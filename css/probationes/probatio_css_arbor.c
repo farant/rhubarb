@@ -172,34 +172,21 @@ _octetos_probare (
                        (size_t)mensura) == ZEPHYRUM);
 }
 
-integer
-principale (vacuum)
+
+/* ==================================================
+ * CUSTODIA: loci nominati contra TITULOS tabulae
+ * ================================================== */
+
+interior vacuum
+_locos_nominatos_probare (
+    CredoContextus* c)
 {
-                Piscina* piscina;
-    MateriaLexiconRatum  ratum;
-     MateriaLexIudicium  iudicium;
-                    b32  praeteritus;
-
-    piscina = piscina_generare_dynamicum("probatio_css_arbor", 65536);
-    credo_aperire(piscina);
-
-    si (!materia_lexicon_ratum_facere(&ratum, &CSS_LEXICON, &iudicium))
-    {
-        imprimere("LEXICON CSS RECUSATUM\n");
-        redde I;
-    }
-
-
-    /* ========================================================
-     * CUSTODIA: loci nominati contra TITULOS tabulae
-     * ======================================================== */
-
+    (vacuum)c;
     {
         i32 numerus = (i32)(magnitudo(LOCI_NOMINATI)
                           / magnitudo(LOCI_NOMINATI[0]));
         i32 i;
 
-        imprimere("\n--- Probans locos nominatos ---\n");
 
         /* OMNIS locus tabulae nomen habet - aliter parsator numerum
          * nudum pro loco innominato scriberet et custodia eum non
@@ -220,16 +207,22 @@ principale (vacuum)
                 LOCI_NOMINATI[i].titulus) == ZEPHYRUM);
         }
     }
+}
 
 
-    /* ========================================================
-     * STRUCTURA: casus degeneres
-     * ======================================================== */
+/* ==================================================
+ * STRUCTURA: casus degeneres
+ * ================================================== */
+
+interior vacuum
+_degeneres_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaNodus* radix;
 
-        imprimere("\n--- Probans plagulam vacuam ---\n");
         {
             radix = css_arbor_parsare(piscina, "", ZEPHYRUM);
             CREDO_NON_NIHIL (radix);
@@ -254,7 +247,7 @@ principale (vacuum)
                 (s32)CSS_LEX_FINIS);
         }
 
-        imprimere("\n--- Probans plagulam spatiorum solorum ---\n");
+        CREDO_GRADUS ("plagulam spatiorum solorum");
         {
             constans character* fons = "\n\n  ";
             MateriaToken* cauda;
@@ -275,7 +268,7 @@ principale (vacuum)
                 (s32)CSS_LEX_SPATIA);
         }
 
-        imprimere("\n--- Probans plagulam commentarii solius ---\n");
+        CREDO_GRADUS ("plagulam commentarii solius");
         {
             constans character* fons = "/* solum */\n";
             MateriaToken* cauda;
@@ -290,11 +283,18 @@ principale (vacuum)
                 (s32)CSS_LEX_COMMENTARIUM);
         }
     }
+}
 
 
-    /* ========================================================
-     * OCTETI: oraculum separans (par. IX.4)
-     * ======================================================== */
+/* ==================================================
+ * OCTETI: oraculum separans (par. IX.4)
+ * ================================================== */
+
+interior vacuum
+_octetos_degenerum_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         hic_manens constans character* DEGENERES[] = {
@@ -312,7 +312,6 @@ principale (vacuum)
         i32 i;
         i32 probata = ZEPHYRUM;
 
-        imprimere("\n--- ORACULUM: octeti ex parsura DIRECTE ---\n");
 
         per (i = ZEPHYRUM; i < numerus; i++)
         {
@@ -322,15 +321,20 @@ principale (vacuum)
         }
         CREDO_MAIOR_S32 ((s32)probata, (s32)V);
     }
+}
 
 
-    /* ========================================================
-     * REGULAE QUALIFICATAE (B2) - pinnae T9 VERSAE
-     * ======================================================== */
+/* ==================================================
+ * REGULAE QUALIFICATAE (B2) - pinnae T9 VERSAE
+ * ================================================== */
+
+interior vacuum
+_regulas_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
-        imprimere("\n--- Probans circuitum octetorum, regulae ---\n");
-
         /* Hae duae CREDO_FALSUM natae sunt (T9): porta rubra donec
          * regulae parsarentur. B2 eas vertit - id ipsum quod pinna
          * rubra promittebat. */
@@ -343,7 +347,7 @@ principale (vacuum)
             XIII));
         CREDO_VERUM (_octetos_probare(piscina, "a b{}", V));
 
-        imprimere("\n--- Probans praeludium CONTENTUM (D7) ---\n");
+        CREDO_GRADUS ("praeludium CONTENTUM (D7)");
         {
             /* 'a b{}' - praeludium III elementa: a, SPATIUM, b.
              * Spatium NODUS est (lexema-servatum), non trivium -
@@ -385,14 +389,20 @@ principale (vacuum)
                 (s32)CSS_GENUS_SAEPTUM);
         }
     }
+}
 
 
-    /* ==================================================
-     * DECLARATIONES (B3)
-     * ================================================== */
+/* ==================================================
+ * DECLARATIONES (B3)
+ * ================================================== */
+
+interior vacuum
+_declarationes_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
-        imprimere("\n--- Probans spatia UT CONTENTUM in valore ---\n");
         {
             /* 'a{margin:1px 2px}' - valor III elementa: 1px,
              * SPATIUM, 2px. Spatium NODUS est (D7). */
@@ -424,7 +434,7 @@ principale (vacuum)
                 (s32)MATERIA_VALOR_NIHIL);
         }
 
-        imprimere("\n--- Probans spatia UT TRIVIA ---\n");
+        CREDO_GRADUS ("spatia UT TRIVIA");
         {
             /* Spatium INTER regulas trivium manet: II regulae */
             MateriaNodus* plagula = css_arbor_parsare(piscina,
@@ -436,11 +446,11 @@ principale (vacuum)
         }
         CREDO_VERUM (_octetos_probare(piscina, "a{} b{}", VII));
 
-        imprimere("\n--- Probans commentarium UT CONTENTUM ---\n");
+        CREDO_GRADUS ("commentarium UT CONTENTUM");
         CREDO_VERUM (_octetos_probare(piscina,
             "a{margin:1px /* c */ 2px}", XXV));
 
-        imprimere("\n--- Probans praevalentiam ---\n");
+        CREDO_GRADUS ("praevalentiam");
         CREDO_VERUM (_octetos_probare(piscina,
             "a{color:red !important}", XXIII));
         CREDO_VERUM (_octetos_probare(piscina,
@@ -491,17 +501,23 @@ principale (vacuum)
                 decl->loci[CSS_DECL_VALOR]), II);
         }
 
-        imprimere("\n--- Probans declarationem malam (sine ':') ---\n");
+        CREDO_GRADUS ("declarationem malam (sine ':')");
         CREDO_VERUM (_octetos_probare(piscina, "a{color red}", XII));
     }
+}
 
 
-    /* ==================================================
-     * REGULAE APUD + RECUPERATIO (B4)
-     * ================================================== */
+/* ==================================================
+ * REGULAE APUD + RECUPERATIO (B4)
+ * ================================================== */
+
+interior vacuum
+_apud_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
-        imprimere("\n--- Probans regulas apud ---\n");
         CREDO_VERUM (_octetos_probare(piscina,
             "@import url(a.css);", XIX));
         CREDO_VERUM (_octetos_probare(piscina,
@@ -558,13 +574,13 @@ principale (vacuum)
                 (s32)MATERIA_VALOR_TOKEN);
         }
 
-        imprimere("\n--- Probans functiones nidificatas ---\n");
+        CREDO_GRADUS ("functiones nidificatas");
         CREDO_VERUM (_octetos_probare(piscina,
             "a{color:rgba(1,2,3,.4)}", XXIII));
         CREDO_VERUM (_octetos_probare(piscina,
             "a{w:calc((1px + 2px) * 3)}", XXVI));
 
-        imprimere("\n--- Probans recuperationem spec-definitam ---\n");
+        CREDO_GRADUS ("recuperationem spec-definitam");
         CREDO_VERUM (_octetos_probare(piscina, "}a{}", IV));
         CREDO_VERUM (_octetos_probare(piscina, "a{;;color:red}", XIV));
         CREDO_VERUM (_octetos_probare(piscina, "a{color}", VIII));
@@ -625,16 +641,23 @@ principale (vacuum)
                 (s32)CSS_GENUS_DECLARATIO_MALA);
         }
     }
+}
 
 
-    /* ==================================================
-     * TOTALITAS: saepta non clausa ad FINEM (01M1FACW)
-     *
-     * Consumens interior FINEM videt et frangit; exterior deinde
-     * lexema aliud petit - fluxus exhaustus, NIHIL usque ad
-     * radicem. 'a{b:(}' sufficiebat. FINIS HAERENS: semel visus,
-     * omni petenti iterum redditur.
-     * ================================================== */
+/* ==================================================
+ * TOTALITAS: saepta non clausa ad FINEM (01M1FACW)
+ *
+ * Consumens interior FINEM videt et frangit; exterior deinde
+ * lexema aliud petit - fluxus exhaustus, NIHIL usque ad
+ * radicem. 'a{b:(}' sufficiebat. FINIS HAERENS: semel visus,
+ * omni petenti iterum redditur.
+ * ================================================== */
+
+interior vacuum
+_saepta_aperta_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         hic_manens constans character* APERTA[] = {
@@ -650,7 +673,6 @@ principale (vacuum)
         i32 numerus = (i32)(magnitudo(APERTA) / magnitudo(APERTA[0]));
         i32 i;
 
-        imprimere("\n--- Probans saepta non clausa ad FINEM ---\n");
 
         per (i = ZEPHYRUM; i < numerus; i++)
         {
@@ -704,12 +726,26 @@ principale (vacuum)
                 (s32)MATERIA_VALOR_NIHIL);
         }
     }
+}
 
 
-    /* ========================================================
-     * STML: circuitus BIS
-     * ======================================================== */
+/* ==================================================
+ * STML: circuitus BIS
+ * ================================================== */
 
+interior vacuum
+_circuitum_stml_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+    MateriaLexiconRatum  ratum;
+     MateriaLexIudicium  iudicium;
+
+    si (!materia_lexicon_ratum_facere(&ratum, &CSS_LEXICON, &iudicium))
+    {
+        imprimere("LEXICON CSS RECUSATUM\n");
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     {
         hic_manens constans character* DEGENERES[] = {
             "",
@@ -720,7 +756,6 @@ principale (vacuum)
                           / magnitudo(DEGENERES[0]));
         i32 i;
 
-        imprimere("\n--- Probans circuitum STML (bis) ---\n");
 
         per (i = ZEPHYRUM; i < numerus; i++)
         {
@@ -793,12 +828,30 @@ principale (vacuum)
             }
         }
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "loci nominati contra titulos tabulae", _locos_nominatos_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "structura: casus degeneres", _degeneres_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "octeti: oraculum separans", _octetos_degenerum_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "regulae qualificatae (B2)", _regulas_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "declarationes (B3)", _declarationes_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "regulae apud et recuperatio (B4)", _apud_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "totalitas: saepta non clausa ad FINEM", _saepta_aperta_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "STML: circuitus bis", _circuitum_stml_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("css_arbor", SECTIONES);
 }

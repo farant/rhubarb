@@ -266,6 +266,17 @@
     <ingressus genus="fasciculus" via="silva/fontes/systema_c89.h"/>
     <ingressus genus="fasciculus" via="silva/fontes/systema_posix.h"/>
     <ingressus genus="fasciculus" via="tools/capsula_radicis.sh"/>
+    <!-- nexus (corpus_symbola_generare -> silva/nexus.sh -renovare):
+         instrumentum percursus ex fontibus suis structum - custodia
+         memorabilium (2026-10-23) eos legi monstravit, non declaratos -->
+    <ingressus genus="fasciculus" via="silva/amalgama/silva.c"/>
+    <ingressus genus="fasciculus" via="silva/amalgama/silva.h"/>
+    <ingressus genus="fasciculus" via="silva/instrumenta/nexus_ordines.c"/>
+    <ingressus genus="fasciculus" via="silva/instrumenta/nexus_ordines.h"/>
+    <ingressus genus="fasciculus" via="silva/instrumenta/principalia/nexus.c"/>
+    <ingressus genus="fasciculus" via="silva/instrumenta/principalia/nexus_percursus.c"/>
+    <ingressus genus="fasciculus" via="silva/nexus.sh"/>
+    <ingressus genus="plagulae" via="silva" suffixa="nexus_fontes_generata.sh"/>
     <exitus via="build/capsula_corpus_silicis.c" provenientia="regeneratio"/>
     <exitus via="build/capsula_corpus_silicis.h" provenientia="regeneratio"/>
   </actio>
@@ -412,6 +423,46 @@
     <ingressus genus="fasciculus" via="include/lectiones.h"/>
     <exitus via="lib/runae_tabulae.c" provenientia="regeneratio"/>
   </actio>
+  <!-- tabula monetarum (pecunia-plan T1): indices ISO 4217 fixi +
+       supplementum; generator per aedilis structus (xml.h, stml.h),
+       ergo directorium eius vestigium declaratum -->
+  <actio titulus="pecunia_monetae" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/pecunia_monetae_generare.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/pecunia_monetae_generare"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
+    <ingressus genus="fasciculus" via="tools/pecunia_monetae_generare.sh"/>
+    <ingressus genus="fasciculus" via="tools/pecunia_monetae_generare.c"/>
+    <ingressus genus="fasciculus" via="include/pecunia.h"/>
+    <ingressus genus="fasciculus" via="include/pecunia_monetae.h"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/iso4217/2026-09-17/list-one.xml"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/iso4217/2026-09-17/list-three.xml"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/iso4217/supplementum.stml"/>
+    <ingressus genus="manifestum" via="build/aedilis/pecunia_monetae_generare/manifestum.stml"/>
+    <exitus via="lib/pecunia_monetae.c" provenientia="regeneratio"/>
+  </actio>
+  <!-- tabula diffisarum (fiducia-linux-plan T2): instantanea OneCRL
+       fixa + index manu; generator per aedilis structus (json.h,
+       stml.h), ergo directorium eius vestigium declaratum -->
+  <actio titulus="fiducia_diffisa" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/fiducia_diffisa_generare.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/fiducia_diffisa_generare"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
+    <ingressus genus="fasciculus" via="tools/fiducia_diffisa_generare.sh"/>
+    <ingressus genus="fasciculus" via="tools/fiducia_diffisa_generare.c"/>
+    <ingressus genus="fasciculus" via="include/fiducia_diffisa.h"/>
+    <ingressus genus="fasciculus" via="include/fiducia_diffisa_tabula.h"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/fiducia/onecrl/2026-10-21/changeset.json"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/fiducia/onecrl/2026-10-21/SHA256SUMS"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/fiducia/diffisa.stml"/>
+    <ingressus genus="manifestum" via="build/aedilis/fiducia_diffisa_generare/manifestum.stml"/>
+    <exitus via="lib/fiducia_diffisa_tabula.c" provenientia="regeneratio"/>
+  </actio>
   <!-- tabula nodorum: polynomia per laqueus ex codicibus PD extracti
        KnotInfo fixi (tools/tabula_nodorum_extrahere.sh) computata.
        MEMORABILIS (cursores ad gradus T5): lib/tabula_nodorum_data.c
@@ -473,7 +524,8 @@
        tegunt, ergo subdirectorium quodque nominatur; directorium src
        nomina tegit - subdirectorium novum clavem mutat. Ingressus sic
        pleni: memorabilis (olim regeneratio LXXXI s omni iudicio
-       pleno; 2026-10-17) -->
+       pleno; 2026-10-17). Mensura quintae (2026-10-21): sine memoria
+       haec actio LXII% portae radicis erat (DLVIII cursus, ~XII h). -->
   <actio titulus="bearssl_amalgama" genus="generator" memorabilis="verum">
     <mandatum>
       <verbum! (>./tools/bearssl_amalgamare.sh
@@ -497,6 +549,9 @@
     <ingressus genus="plagulae" via="vendor/bearssl/inc" suffixa=".h"/>
     <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>
     <ingressus genus="identitas_clang" via="clang"/>
+    <!-- promptuarium nominum per fontem (2026-10-23): clavis = octeti
+         fontis + capita + argumenta + versio clang; LXII s -> 0.15 s -->
+    <vestigium via="build/bearssl_amalgama_promptuarium"/>
     <exitus via="vendor/bearssl_amalgama.c" provenientia="regeneratio"/>
     <exitus via="vendor/bearssl_amalgama.h" provenientia="regeneratio"/>
   </actio>
@@ -566,7 +621,11 @@
   </actio>
   <!-- normae fixae -> C generatum (norma-plan-3 A5, oraculum III):
        bin/norma c per aedilis structum (regula R8) -->
-  <actio titulus="normae_fixae" genus="generator">
+  <actio titulus="normae_fixae" genus="generator" memorabilis="verum">
+    <!-- MEMORABILIS (2026-10-23, audit B): ingressus declarati contra
+         lectiones veras (FABRICA_LECTIONES in regeneratione) verificati
+         - plenos esse probatum; regeneratio omni cursu radicis
+         omittitur dum immutati. Vide lib/fabrica.worklog.md. -->
     <mandatum>
       <verbum! (>./tools/norma_c_regenerare.sh
       <verbum! (>probationes/fixa/norma/normae_fixae.norma
@@ -574,15 +633,32 @@
       <verbum! (>probationes/fixa/norma/normae_fixae.h
       <verbum! (>probationes/fixa/norma/normae_fixae.c
     </mandatum>
+    <!-- norma_struere.sh bin/norma per aedilis struit: directorium
+         eius et binarium vestigia declarata (ut pecunia_monetae;
+         inventum fiducia-linux T2, 2026-10-22) -->
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/norma"/>
+    <vestigium via="bin/norma"/>
     <ingressus genus="fasciculus" via="tools/norma_c_regenerare.sh"/>
     <ingressus genus="fasciculus" via="tools/norma_struere.sh"/>
     <ingressus genus="manifestum" via="build/aedilis/norma/manifestum.stml"/>
     <ingressus genus="fasciculus" via="probationes/fixa/norma/normae_fixae.norma"/>
+    <!-- norma_c_regenerare.sh bin/norma ipse struit (norma_struere.sh:
+         aedilis + struere.sh + cp) - scripturae communes ambabus
+         actionibus normae (sanare 2026-10-23: 'scripsit extra
+         vestigium' sine eis) -->
+    <vestigium via="build/aedilis/norma" communis="verum"/>
+    <vestigium via="bin/norma" forma="plagula" communis="verum"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
     <exitus via="probationes/fixa/norma/normae_fixae.h" provenientia="regeneratio"/>
     <exitus via="probationes/fixa/norma/normae_fixae.c" provenientia="regeneratio"/>
   </actio>
   <!-- schema responsi vatis ex .norma (norma-plan-3 A6) -->
-  <actio titulus="vates_responsum" genus="generator">
+  <actio titulus="vates_responsum" genus="generator" memorabilis="verum">
+    <!-- MEMORABILIS (2026-10-23, audit B): ingressus declarati contra
+         lectiones veras (FABRICA_LECTIONES in regeneratione) verificati
+         - plenos esse probatum; regeneratio omni cursu radicis
+         omittitur dum immutati. Vide lib/fabrica.worklog.md. -->
     <mandatum>
       <verbum! (>./tools/norma_c_regenerare.sh
       <verbum! (>lib/vates_responsum.norma
@@ -590,10 +666,23 @@
       <verbum! (>include/vates_responsum_norma.h
       <verbum! (>lib/vates_responsum_norma.c
     </mandatum>
+    <!-- norma_struere.sh bin/norma per aedilis struit: directorium
+         eius et binarium vestigia declarata (ut pecunia_monetae;
+         inventum fiducia-linux T2, 2026-10-22) -->
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/norma"/>
+    <vestigium via="bin/norma"/>
     <ingressus genus="fasciculus" via="tools/norma_c_regenerare.sh"/>
     <ingressus genus="fasciculus" via="tools/norma_struere.sh"/>
     <ingressus genus="manifestum" via="build/aedilis/norma/manifestum.stml"/>
     <ingressus genus="fasciculus" via="lib/vates_responsum.norma"/>
+    <!-- norma_c_regenerare.sh bin/norma ipse struit (norma_struere.sh:
+         aedilis + struere.sh + cp) - scripturae communes ambabus
+         actionibus normae (sanare 2026-10-23: 'scripsit extra
+         vestigium' sine eis) -->
+    <vestigium via="build/aedilis/norma" communis="verum"/>
+    <vestigium via="bin/norma" forma="plagula" communis="verum"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
     <exitus via="include/vates_responsum_norma.h" provenientia="regeneratio"/>
     <exitus via="lib/vates_responsum_norma.c" provenientia="regeneratio"/>
   </actio>
@@ -847,7 +936,11 @@
        ingressus sunt (forma mutata = lector stalus, mensuratum).
        capsula_libri NON declarata: libri *.txt in .gitignore, ergo
        ex arbore non reproducibilis (fixura, non artificium). -->
-  <actio titulus="canones_cocti" genus="generator">
+  <actio titulus="canones_cocti" genus="generator" memorabilis="verum">
+    <!-- MEMORABILIS (2026-10-23, audit B): ingressus declarati contra
+         lectiones veras (FABRICA_LECTIONES in regeneratione) verificati
+         - plenos esse probatum; regeneratio omni cursu radicis
+         omittitur dum immutati. Vide lib/fabrica.worklog.md. -->
     <mandatum>
       <verbum! (>./tools/natura_canones.sh
     </mandatum>
@@ -900,7 +993,7 @@
     <exitus via="natura/cocta/vectura.canon" provenientia="regeneratio"/>
     <exitus via="natura/cocta/versio.canon" provenientia="regeneratio"/>
   </actio>
-  <actio titulus="lectores_cocti" genus="generator">
+  <actio titulus="lectores_cocti" genus="generator" memorabilis="verum">
     <mandatum>
       <verbum! (>./tools/canon_coquere.sh
     </mandatum>
@@ -919,6 +1012,21 @@
     <ingressus genus="fasciculus" via="silva/formator.sh"/>
     <ingressus genus="fasciculus" via="silva/instrumenta/principalia/formator.c"/>
     <ingressus genus="plagulae" via="silva/fontes" suffixa=".c .h"/>
+    <!-- formator (artificia formata, 2026-10-23 audit B): fontes
+         structurae eius late (lib, materia, silva/instrumenta - manifesta
+         fragmenta_silva cyclum facerent) et capita QUAE currens legit
+         (include/, silva/instrumenta: nomina typorum), exclusiones,
+         scripta structurae -->
+    <ingressus genus="plagulae" via="lib" suffixa=".c"/>
+    <ingressus genus="plagulae" via="include" suffixa=".h"/>
+    <ingressus genus="plagulae" via="materia/fontes" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="silva/instrumenta" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="silva/instrumenta/principalia" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="silva" suffixa="formator_fontes_generata.sh"/>
+    <ingressus genus="fasciculus" via="silva/probationes/fixa/formatoris/exclusiones.txt"/>
+    <ingressus genus="fasciculus" via="silva/materia_substratum.sh"/>
+    <ingressus genus="fasciculus" via="tools/instrumentum_nectere.sh"/>
+    <ingressus genus="fasciculus" via="tools/vexilla.sh"/>
     <exitus via="include/quaestiones_lectio.h" provenientia="regeneratio"/>
     <exitus via="lib/quaestiones_lectio.c" provenientia="regeneratio"/>
     <exitus via="include/planta_lectio.h" provenientia="regeneratio"/>
@@ -1129,6 +1237,21 @@
     <debitum_scripturae membrum="probatio_vigilia" via="build/probatio_vigilia_commissum" causa="vigilia: artificia ficta probationis"/>
     <debitum_scripturae membrum="probatio_vigilia" via="build/probatio_vigilia_fons.c" causa="vigilia: artificia ficta probationis"/>
     <debitum_scripturae membrum="probatio_vigilia" via="build/probatio_vigilia_manifestum" causa="vigilia: artificia ficta probationis"/>
+  </actio>
+
+  <!-- PROBATIONES VENENI (2026-10-22): porta venenum ut variantes
+       probationum radicis - suitae quae piscinas notant et reficiunt,
+       compilatae cum -DPISCINA_VENENUM=1 et sanitatoribus (vide
+       tools/venenum_probare.sh). Vexilla in clave membri: obiecta
+       variantis per thesaurum compilatoris SEMEL structa et inter membra
+       communia (olim XVII suitae catenam suam quaeque iterum
+       compilabant), membra immutata non recurrunt. -Wno-deprecated-
+       declarations: SDK sprintf notat solum sub sanitatoribus. -->
+  <actio titulus="probationes_veneni" genus="iudicium">
+    <probationes_c exemplar="probationes/probatio_*.c"
+        membra="probatio_piscina probatio_magnus probatio_fractio probatio_situs probatio_polynomium probatio_matrix probatio_laqueus probatio_extensio probatio_quaternio probatio_radices probatio_cellae probatio_reticulum probatio_plexus probatio_nervus probatio_dependentia probatio_chorda_aedificator"
+        vexilla="-g -O1 -fsanitize=address,undefined -fno-sanitize-recover=all -Wno-deprecated-declarations -Wno-overlength-strings -DPISCINA_VENENUM=1"
+        vexilla_nexus="-fsanitize=address,undefined"/>
   </actio>
 
   <!-- INSTITUTIONES (1b T5, Q42): copia ~/.bin actio sua - fasciculus

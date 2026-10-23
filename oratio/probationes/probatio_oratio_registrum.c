@@ -193,786 +193,844 @@ _lexema (
         ORATIO_FONS_PLAGULAE);
 }
 
+/* FIXURA SUITAE: ratum lexici semel factum (parare_suitae; assertiones
+ * eius ibi); sectiones id per monstratorem constantem LEGUNT. */
+nomen structura {
+    MateriaLexiconRatum ratum;
+} FixuraLexici;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+          FixuraLexici* f;
+    MateriaLexIudicium  iudicium;
+
+    f = (FixuraLexici*)piscina_allocare(c->piscina,
+        magnitudo(FixuraLexici));
+    si (f == NIHIL)
+    {
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
+    }
+    c->datum = f;
+    CREDO_VERUM (materia_lexicon_ratum_facere(&f->ratum,
+        &ORATIO_LEXICON,
+        &iudicium));
+    CREDO_AEQUALIS_S32 (iudicium.vitium, (s32)MATERIA_LEX_SANUM);
+}
+
+interior vacuum
+_lexicon_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+{
+    i32 i;
+    i32 trivia = ZEPHYRUM;
+
+    CREDO_AEQUALIS_I32 (ORATIO_LEXICON.numerus_generum,
+        (i32)ORATIO_LEX_NUMERUS_GENERUM);
+    CREDO_AEQUALIS_I32 ((i32)(magnitudo(ORDO_EXSPECTATUS)
+        / magnitudo(ORDO_EXSPECTATUS[0])),
+        (i32)ORATIO_LEX_NUMERUS_GENERUM);
+    per (i = ZEPHYRUM; i < (i32)ORATIO_LEX_NUMERUS_GENERUM; i++)
+    {
+        constans character* t = materia_lexicon_titulus(ratum,
+            (s32)i);
+
+        CREDO_NON_NIHIL (t);
+        CREDO_VERUM (strcmp(t, ORDO_EXSPECTATUS[i]) == ZEPHYRUM);
+        si (materia_lexicon_trivium_est(ratum, (s32)i))
+        {
+            trivia = trivia + I;
+        }
+    }
+    CREDO_AEQUALIS_S32 ((s32)materia_lexicon_species(ratum,
+        (s32)ORATIO_LEX_LINEA), (s32)MATERIA_LEX_TERMINATOR);
+    CREDO_AEQUALIS_S32 ((s32)materia_lexicon_species(ratum,
+        (s32)ORATIO_LEX_FINIS), (s32)MATERIA_LEX_FIXUM);
+    CREDO_AEQUALIS_S32 ((s32)materia_lexicon_species(ratum,
+        (s32)ORATIO_LEX_PUNCTUM), (s32)MATERIA_LEX_FIXUM);
+    CREDO_VERUM (strcmp(materia_lexicon_orthographia(ratum,
+        (s32)ORATIO_LEX_HYPHEN), "-") == ZEPHYRUM);
+    CREDO_VERUM (materia_lexicon_textum_fert(ratum,
+        (s32)ORATIO_LEX_LITTERAE));
+    CREDO_VERUM (materia_lexicon_textum_fert(ratum,
+        (s32)ORATIO_LEX_SPATIUM));
+    CREDO_FALSUM (materia_lexicon_textum_fert(ratum,
+        (s32)ORATIO_LEX_FINIS));
+    CREDO_VERUM (strcmp(ORATIO_LEXICON.praefixum_tagi, "or-")
+        == ZEPHYRUM);
+    /* trivia: LINEA et LINEA_CR solae (munus LINEA); SPATIUM contentum */
+    CREDO_AEQUALIS_I32 (trivia, (i32)II);
+    CREDO_FALSUM (materia_lexicon_trivium_est(ratum,
+        (s32)ORATIO_LEX_SPATIUM));
+    CREDO_AEQUALIS_S32 (ORATIO_LEXICON.genus_spatii, (s32)-I);
+    CREDO_VERUM (materia_lexicon_munus_habet(ratum,
+        MATERIA_MUNUS_LINEA));
+    CREDO_VERUM (materia_lexicon_munus_habet(ratum,
+        MATERIA_MUNUS_FINIS));
+    CREDO_FALSUM (materia_lexicon_munus_habet(ratum,
+        MATERIA_MUNUS_SPATIUM));
+    CREDO_FALSUM (materia_lexicon_munus_habet(ratum,
+        MATERIA_MUNUS_COMMENTUM));
+}
+}
+
+interior vacuum
+_registrum_probare (
+    CredoContextus* c)
+{
+    (vacuum)c;
+{
+    i32 i;
+    i32 exspectatus_offset = ZEPHYRUM;
+
+    CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.numerus_generum,
+        (i32)ORATIO_GENUS_NUMERUS_GENERUM);
+    CREDO_AEQUALIS_I32 ((i32)(magnitudo(GENERA_EXSPECTATA)
+        / magnitudo(GENERA_EXSPECTATA[0])),
+        (i32)ORATIO_GENUS_NUMERUS_GENERUM);
+    per (i = ZEPHYRUM; i < (i32)ORATIO_GENUS_NUMERUS_GENERUM; i++)
+    {
+        CREDO_NON_NIHIL (ORATIO_REGISTRUM.genera[i].titulus);
+        CREDO_VERUM (strcmp(ORATIO_REGISTRUM.genera[i].titulus,
+            GENERA_EXSPECTATA[i]) == ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (materia_arbor_genus_index(
+            &ORATIO_REGISTRUM, GENERA_EXSPECTATA[i],
+            (i32)strlen(GENERA_EXSPECTATA[i])), (s32)i);
+        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[i].loci_offset,
+            exspectatus_offset);
+        CREDO_MAIOR_I32 (ORATIO_REGISTRUM.genera[i].loci_numerus,
+            ZEPHYRUM);
+        exspectatus_offset += ORATIO_REGISTRUM.genera[i].loci_numerus;
+    }
+    CREDO_AEQUALIS_I32 (exspectatus_offset,
+        ORATIO_REGISTRUM.numerus_locorum);
+    per (i = ZEPHYRUM; i < ORATIO_REGISTRUM.numerus_locorum; i++)
+    {
+        CREDO_NON_NIHIL (ORATIO_REGISTRUM.loci[i].titulus);
+        CREDO_MINOR_S32 (ORATIO_REGISTRUM.loci[i].species,
+            (s32)MATERIA_LOCUS_NUMERUS_SPECIERUM);
+    }
+    /* enumerationes locorum contra titulos tabulae */
+    CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
+        + (i32)ORATIO_VOCABULUM_CAUDA].titulus, "cauda")
+        == ZEPHYRUM);
+    CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
+        + (i32)ORATIO_VOCABULUM_LINGUAE].titulus, "linguae")
+        == ZEPHYRUM);
+    /* T19g: decisio (INDEX) + auctor (TOKEN derivatum) ultimi
+     * vocabuli; tituli decisionum == OratioDecisio */
+    CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
+        + (i32)ORATIO_VOCABULUM_DECISIO].titulus, "decisio")
+        == ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (ORATIO_REGISTRUM.loci[
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
+        + (i32)ORATIO_VOCABULUM_DECISIO].species,
+        (s32)MATERIA_LOCUS_INDEX);
+    CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
+        + (i32)ORATIO_VOCABULUM_AUCTOR].titulus, "auctor")
+        == ZEPHYRUM);
+            /* T20a: clausula + clausula-causa (INDEX) ultimi vocabuli,
+     * interpunctionis, numeri; per oratio_locus_clausulae */
+    /* T38 c: habitus (INDEX OratioHabitus) ultimus vocabuli */
+    CREDO_AEQUALIS_I32 ((i32)ORATIO_VOCABULUM_HABITUS + I,
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_numerus);
+    CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
+        + (i32)ORATIO_VOCABULUM_HABITUS].titulus, "habitus")
+        == ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (ORATIO_REGISTRUM.loci[
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
+        + (i32)ORATIO_VOCABULUM_HABITUS].species,
+        (s32)MATERIA_LOCUS_INDEX);
+    CREDO_VERUM (strcmp(ORATIO_TITULI_HABITUUM[ORATIO_HABITUS_APERTUS],
+        "apertus") == ZEPHYRUM);
+    CREDO_VERUM (strcmp(ORATIO_TITULI_DECISIONUM[ORATIO_DECISIO_DECRETUM],
+        "decretum") == ZEPHYRUM);
+    CREDO_VERUM (strcmp(ORATIO_TITULI_CAUSARUM_ALTERNAE[
+        ORATIO_ALTERNA_CAUSA_PRAEOCCUPATA], "praeoccupata")
+            == ZEPHYRUM);
+    CREDO_AEQUALIS_I32 ((i32)ORATIO_VOCABULUM_CLAUSULA_CAUSA
+        + (i32)II,
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_numerus);
+    CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
+        + (i32)ORATIO_VOCABULUM_CLAUSULA].titulus, "clausula")
+        == ZEPHYRUM);
+    CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_INTERPUNCTIO].loci_offset
+        + (i32)ORATIO_INTERPUNCTIO_CLAUSULA_CAUSA].titulus,
+        "clausula-causa") == ZEPHYRUM);
+    CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_NUMERUS].loci_offset
+        + (i32)ORATIO_NUMERUS_CLAUSULA].titulus, "clausula")
+        == ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (oratio_locus_clausulae(ORATIO_GENUS_VOCABULUM,
+        FALSUM), (s32)ORATIO_VOCABULUM_CLAUSULA);
+    CREDO_AEQUALIS_S32 (oratio_locus_clausulae(ORATIO_GENUS_NUMERUS,
+        VERUM), (s32)ORATIO_NUMERUS_CLAUSULA_CAUSA);
+    CREDO_AEQUALIS_S32 (oratio_locus_clausulae(ORATIO_GENUS_SENTENTIA,
+        FALSUM), (s32)-I);
+    CREDO_AEQUALIS_S32 (ORATIO_REGISTRUM.loci[
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
+        + (i32)ORATIO_VOCABULUM_CLAUSULA].species,
+        (s32)MATERIA_LOCUS_INDEX);
+    CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_SENTENTIA].loci_offset
+        + (i32)ORATIO_SENTENTIA_CLAUSULAE].titulus, "clausulae")
+        == ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
+        ORATIO_GENUS_SENTENTIA].loci_numerus, (i32)II);
+    CREDO_AEQUALIS_I32 ((i32)ORATIO_DECISIO_NUMERUS, (i32)IV);   /* T38 c: + decretum */
+    CREDO_VERUM (strcmp(ORATIO_TITULI_DECISIONUM[
+        ORATIO_DECISIO_PRAELATIO], "praelatio") == ZEPHYRUM);
+    CREDO_VERUM (strcmp(ORATIO_TITULI_DECISIONUM[
+        ORATIO_DECISIO_IMPLETIO], "impletio") == ZEPHYRUM);
+    CREDO_VERUM (strcmp(ORATIO_TITULI_DECISIONUM[
+        ORATIO_DECISIO_UMBRA], "umbra") == ZEPHYRUM);
+    CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_PARAGRAPHUS].loci_offset
+        + (i32)ORATIO_PARAGRAPHUS_CAUDA].titulus, "cauda")
+        == ZEPHYRUM);
+    CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_NUMERUS].loci_offset
+        + (i32)ORATIO_NUMERUS_CRUDUM].titulus, "crudum")
+        == ZEPHYRUM);
+    /* T6b: forma APPENSA post caudam, INDEX (lex deprimendi) */
+    CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_PARAGRAPHUS].loci_offset
+        + (i32)ORATIO_PARAGRAPHUS_FORMA].titulus, "forma")
+        == ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (ORATIO_REGISTRUM.loci[
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_PARAGRAPHUS].loci_offset
+        + (i32)ORATIO_PARAGRAPHUS_FORMA].species,
+        (s32)MATERIA_LOCUS_INDEX);
+    CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
+        ORATIO_GENUS_PARAGRAPHUS].loci_numerus, (i32)IV);
+    CREDO_MINOR_S32 ((s32)ORATIO_FORMA_INDEX,
+        (s32)ORATIO_FORMA_NUMERUS_FORMARUM);
+    CREDO_AEQUALIS_S32 (ORATIO_REGISTRUM.loci[
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
+        + (i32)ORATIO_VOCABULUM_PARTES].species,
+        (s32)MATERIA_LOCUS_LISTA_TOKEN);
+    CREDO_AEQUALIS_S32 (ORATIO_REGISTRUM.loci[
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
+        + (i32)ORATIO_VOCABULUM_ANALYSES].species,
+        (s32)MATERIA_LOCUS_LISTA_NODUS);
+    CREDO_AEQUALIS_S32 (ORATIO_REGISTRUM.loci[
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_INTERPUNCTIO].loci_offset
+        + (i32)ORATIO_INTERPUNCTIO_SIGNUM].species,
+        (s32)MATERIA_LOCUS_TOKEN);
+}
+}
+
+interior vacuum
+_genera_analysis_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+    {
+    i32 i;
+    i32 j;
+
+    CREDO_AEQUALIS_I32 ((i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM,
+        (i32)XVII);
+    /* T19d: analyses [PRIMUM, ULTIMUM) contiguae, umbra ultima */
+    CREDO_AEQUALIS_I32 ((i32)ORATIO_GENUS_ANALYSIS_ULTIMUM
+        - (i32)ORATIO_GENUS_ANALYSIS_PRIMUM,
+        (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM);
+            /* T20a: clausula post umbram; umbra manet ULTIMUM analysium */
+    CREDO_AEQUALIS_I32 ((i32)ORATIO_GENUS_NUMERUS_GENERUM,
+        (i32)ORATIO_GENUS_ANALYSIS_ULTIMUM + (i32)III);   /* umbra, clausula, alterna (T32 b) */
+    CREDO_AEQUALIS_I32 ((i32)ORATIO_GENUS_CLAUSULA,
+        (i32)ORATIO_GENUS_UMBRA + I);
+    CREDO_AEQUALIS_I32 ((i32)ORATIO_GENUS_UMBRA,
+        (i32)ORATIO_GENUS_ANALYSIS_ULTIMUM);
+    CREDO_AEQUALIS_I32 ((i32)ORATIO_GENUS_ANALYSIS_PRIMUM,
+        (i32)ORATIO_GENUS_NUMERUS + I);
+            /* loci CXLVI (T11) -> CLXX (T19d: umbrae in analysibus XVII +
+     * umbra VII) -> CLXXII (T19g: decisio + auctor vocabuli) ->
+     * CLXXXIV (T20a: clausulae sententiae I, clausula +
+     * clausula-causa elementorum VI, forma-verbi umbrae I,
+     * clausula IV) */
+    CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.numerus_locorum, (i32)191);   /* T32 a: + auctor umbrae; T32 b: + alternae umbrae, genus alterna VI; T33: referentiae - umbra X -> IX, alterna VI -> V; T38 c: + habitus vocabuli (CXC -> CXCI) */
+    per (i = ZEPHYRUM; i
+        < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM; i++)
+    {
+             OratioClassis  cl  = (OratioClassis)i;
+               OratioGenus  g   = oratio_classis_genus(cl);
+        constans character* t   = oratio_classis_titulus(cl);
+
+        CREDO_AEQUALIS_I32 ((i32)oratio_genus_classis(g), i);
+        CREDO_NON_NIHIL (t);
+        CREDO_AEQUALIS_I32 ((i32)oratio_classis_ex_titulo(t,
+            (i32)strlen(t)), i);
+        CREDO_VERUM (strncmp(ORATIO_REGISTRUM.genera[g].titulus,
+            "analysis-", (size_t)IX) == ZEPHYRUM);
+        /* loci communes V primi, ordine, speciebus suis */
+        CREDO_VERUM (ORATIO_REGISTRUM.genera[g].loci_numerus
+            >= (i32)ORATIO_ANALYSIS_COMMUNIA_NUMERUS);
+        CREDO_VERUM (strcmp(_locus(g, (i32)ORATIO_ANALYSIS_LEMMA),
+            "lemma") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(_locus(g, (i32)ORATIO_ANALYSIS_LINGUA),
+            "lingua") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(_locus(g, (i32)ORATIO_ANALYSIS_FONS),
+            "fons") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(_locus(g, (i32)ORATIO_ANALYSIS_NATIVUM),
+            "nativum") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(_locus(g, (i32)ORATIO_ANALYSIS_SENSUS),
+            "sensus") == ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_species(g, (i32)ORATIO_ANALYSIS_LEMMA),
+            (s32)MATERIA_LOCUS_TOKEN);
+        CREDO_AEQUALIS_S32 (_species(g,
+            (i32)ORATIO_ANALYSIS_LINGUA),
+            (s32)MATERIA_LOCUS_INDEX);
+        CREDO_AEQUALIS_S32 (_species(g, (i32)ORATIO_ANALYSIS_FONS),
+            (s32)MATERIA_LOCUS_INDEX);
+        CREDO_AEQUALIS_S32 (_species(g,
+            (i32)ORATIO_ANALYSIS_NATIVUM),
+            (s32)MATERIA_LOCUS_TOKEN);
+        CREDO_AEQUALIS_S32 (_species(g,
+            (i32)ORATIO_ANALYSIS_SENSUS),
+            (s32)MATERIA_LOCUS_TOKEN);
+        /* accidentia: INDEX omnia; locus ULTIMUS = umbrae (T19d:
+         * LISTA_NODUS, in genere quoque, per titulum inventus) */
+        per (j = (i32)ORATIO_ANALYSIS_COMMUNIA_NUMERUS;
+             j < ORATIO_REGISTRUM.genera[g].loci_numerus - I; j++)
+        {
+            CREDO_AEQUALIS_S32 (_species(g, j),
+                (s32)MATERIA_LOCUS_INDEX);
+        }
+        j = ORATIO_REGISTRUM.genera[g].loci_numerus - I;
+        CREDO_VERUM (strcmp(_locus(g, j), "umbrae") == ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_species(g, j),
+            (s32)MATERIA_LOCUS_LISTA_NODUS);
+        CREDO_AEQUALIS_S32 (oratio_partes_locus(cl, "umbrae"),
+            (s32)j);
+    }
+    /* umbra (T19d): genus post analyses; T33: impletio REFERENTIA
+     * una pro ordinalibus duobus (loci IX) */
+    {
+                    hic_manens constans character* constans tituli_umbrae[] =
+                        {
+            "relatio", "classis", "casus", "numerus", "genus",
+            "impletio",     /* T33: REFERENTIA ad nodum analysis */
+            "forma-verbi",  /* T20a */
+            "auctor",       /* T32 a: TOKEN derivatum */
+            "alternae"      /* T32 b: LISTA_NODUS alterna */
+        };
+
+        CREDO_VERUM (strcmp(ORATIO_REGISTRUM.genera[
+            ORATIO_GENUS_UMBRA].titulus, "umbra") == ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
+            ORATIO_GENUS_UMBRA].loci_numerus,
+            (i32)ORATIO_UMBRA_NUMERUS_LOCORUM);
+                    CREDO_AEQUALIS_I32 ((i32)ORATIO_UMBRA_NUMERUS_LOCORUM,
+                        (i32)IX);
+        per (j = ZEPHYRUM; j < (i32)IX; j++)
+        {
+            CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_UMBRA, j),
+                tituli_umbrae[j]) == ZEPHYRUM);
+        }
+        per (j = ZEPHYRUM; j < (i32)V; j++)
+        {
+            CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_UMBRA, j),
+                (s32)MATERIA_LOCUS_INDEX);
+        }
+        /* T33: locus V 'impletio' REFERENTIA */
+        CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_UMBRA, (i32)V),
+            (s32)MATERIA_LOCUS_REFERENTIA);
+        CREDO_AEQUALIS_I32 ((i32)ORATIO_UMBRA_IMPLETIO, (i32)V);
+        CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_UMBRA, (i32)VI),
+            (s32)MATERIA_LOCUS_INDEX);   /* forma-verbi */
+        /* T32 a: locus VII 'auctor' TOKEN derivatum (ut vocabuli) */
+        CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_UMBRA, (i32)VII),
+            (s32)MATERIA_LOCUS_TOKEN);
+        CREDO_AEQUALIS_I32 ((i32)ORATIO_UMBRA_AUCTOR, (i32)VII);
+        /* T32 b: locus VIII 'alternae' LISTA_NODUS */
+        CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_UMBRA, (i32)VIII),
+            (s32)MATERIA_LOCUS_LISTA_NODUS);
+        CREDO_AEQUALIS_I32 ((i32)ORATIO_UMBRA_ALTERNAE, (i32)VIII);
+        CREDO_AEQUALIS_I32 ((i32)oratio_genus_classis(
+            ORATIO_GENUS_UMBRA),
+            (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM);
+        CREDO_VERUM (strcmp(ORATIO_TITULI_RELATIONUM[
+            ORATIO_RELATIO_OBIECTUM], "obiectum") == ZEPHYRUM);
+                    CREDO_VERUM (strcmp(ORATIO_TITULI_RELATIONUM[
+                        ORATIO_RELATIO_CAPUT], "caput")
+                            == ZEPHYRUM);
+        /* T20a: relationes clausulae appensae */
+        CREDO_VERUM (strcmp(ORATIO_TITULI_RELATIONUM[
+            ORATIO_RELATIO_VERBUM_FINITUM], "verbum-finitum")
+            == ZEPHYRUM);
+        CREDO_VERUM (strcmp(ORATIO_TITULI_RELATIONUM[
+            ORATIO_RELATIO_SUBIECTUM], "subiectum") == ZEPHYRUM);
+        CREDO_AEQUALIS_I32 ((i32)ORATIO_RELATIO_NUMERUS, (i32)V);   /* T31 b: + obiectum-verbi */
+    }
+    /* alterna (T32 b): genus post clausulam, loci V (T33: socius
+     * REFERENTIA; causa fides INDEX, auctor victor TOKEN) */
+    {
+        hic_manens constans character* constans tituli_alternae[] =
+            {
+            "socius", "auctor", "causa", "fides", "victor"
+        };
+
+        CREDO_VERUM (strcmp(ORATIO_REGISTRUM.genera[
+            ORATIO_GENUS_ALTERNA].titulus, "alterna") == ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
+            ORATIO_GENUS_ALTERNA].loci_numerus,
+            (i32)ORATIO_ALTERNA_NUMERUS_LOCORUM);
+        CREDO_AEQUALIS_I32 ((i32)ORATIO_ALTERNA_NUMERUS_LOCORUM,
+            (i32)V);
+        per (j = ZEPHYRUM; j < (i32)V; j++)
+        {
+            CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ALTERNA, j),
+                tituli_alternae[j]) == ZEPHYRUM);
+        }
+        CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_ALTERNA,
+            (i32)ORATIO_ALTERNA_SOCIUS),
+            (s32)MATERIA_LOCUS_REFERENTIA);
+        CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_ALTERNA,
+            (i32)ORATIO_ALTERNA_AUCTOR), (s32)MATERIA_LOCUS_TOKEN);
+        CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_ALTERNA,
+            (i32)ORATIO_ALTERNA_VICTOR), (s32)MATERIA_LOCUS_TOKEN);
+        CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_ALTERNA,
+            (i32)ORATIO_ALTERNA_CAUSA), (s32)MATERIA_LOCUS_INDEX);
+        CREDO_AEQUALIS_I32 ((i32)ORATIO_ALTERNA_CAUSA_NUMERUS,
+            (i32)IV);   /* T38 c: + praeoccupata, decreta */
+        CREDO_VERUM (strcmp(ORATIO_TITULI_CAUSARUM_ALTERNAE[
+            ORATIO_ALTERNA_CAUSA_REVOCATA], "revocata")
+                == ZEPHYRUM);
+    }
+    /* clausula (T20a): genus post umbram, loci IV (semen species
+     * pater INDEX, umbrae LISTA_NODUS); tituli specierum et
+     * causarum == enumerationes */
+    {
+        hic_manens constans character* constans tituli_clausulae[] =
+            {
+            "semen", "species", "pater", "umbrae"
+        };
+
+        CREDO_VERUM (strcmp(ORATIO_REGISTRUM.genera[
+            ORATIO_GENUS_CLAUSULA].titulus, "clausula")
+                == ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
+            ORATIO_GENUS_CLAUSULA].loci_numerus,
+            (i32)ORATIO_CLAUSULA_NUMERUS_LOCORUM);
+        CREDO_AEQUALIS_I32 ((i32)ORATIO_CLAUSULA_NUMERUS_LOCORUM,
+            (i32)IV);
+        per (j = ZEPHYRUM; j < (i32)IV; j++)
+        {
+            CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_CLAUSULA, j),
+                tituli_clausulae[j]) == ZEPHYRUM);
+        }
+        CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_CLAUSULA,
+            (i32)ORATIO_CLAUSULA_UMBRAE),
+            (s32)MATERIA_LOCUS_LISTA_NODUS);
+        CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_CLAUSULA,
+            (i32)ORATIO_CLAUSULA_SPECIES),
+            (s32)MATERIA_LOCUS_INDEX);
+        CREDO_AEQUALIS_I32 ((i32)oratio_genus_classis(
+            ORATIO_GENUS_CLAUSULA),
+            (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM);
+        CREDO_AEQUALIS_I32 ((i32)ORATIO_SPECIES_CLAUSULAE_NUMERUS,
+            (i32)V);
+        CREDO_VERUM (strcmp(ORATIO_TITULI_SPECIERUM_CLAUSULAE[
+            ORATIO_SPECIES_CLAUSULAE_PRINCIPALIS], "principalis")
+            == ZEPHYRUM);
+        CREDO_VERUM (strcmp(ORATIO_TITULI_SPECIERUM_CLAUSULAE[
+            ORATIO_SPECIES_CLAUSULAE_PARENTHETICA], "parenthetica")
+            == ZEPHYRUM);
+                    CREDO_AEQUALIS_I32 ((i32)ORATIO_CLAUSULA_CAUSA_NUMERUS,
+                        (i32)VI);
+        CREDO_VERUM (strcmp(ORATIO_TITULI_CAUSARUM_CLAUSULAE[
+            ORATIO_CLAUSULA_CAUSA_SEMEN], "semen") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(ORATIO_TITULI_CAUSARUM_CLAUSULAE[
+            ORATIO_CLAUSULA_CAUSA_UNICA], "unica") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(ORATIO_TITULI_CAUSARUM_CLAUSULAE[
+            ORATIO_CLAUSULA_CAUSA_VERBUM], "verbum") == ZEPHYRUM);
+    }
+    CREDO_AEQUALIS_I32 ((i32)oratio_classis_ex_titulo("xyzzy",
+        (i32)V),
+        (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM);
+    CREDO_AEQUALIS_I32 ((i32)oratio_genus_classis(
+        ORATIO_GENUS_VOCABULUM),
+        (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM);
+    CREDO_NIHIL (oratio_classis_titulus(
+        ORATIO_CLASSIS_NUMERUS_CLASSIUM));
+    /* accidentia per classem (decisio 2026-09-04) */
+    CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
+        ORATIO_GENUS_ANALYSIS_SUBSTANTIVI].loci_numerus, (i32)X);
+    CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ANALYSIS_SUBSTANTIVI,
+        (i32)ORATIO_ANALYSIS_SUBSTANTIVI_CASUS), "casus")
+            == ZEPHYRUM);
+    CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ANALYSIS_SUBSTANTIVI,
+        (i32)ORATIO_ANALYSIS_SUBSTANTIVI_DECLINATIO), "declinatio")
+        == ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
+        ORATIO_GENUS_ANALYSIS_NOMINIS_PROPRII].loci_numerus,
+        (i32)X);
+    CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
+        ORATIO_GENUS_ANALYSIS_VERBI].loci_numerus, (i32)XV);
+    CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ANALYSIS_VERBI,
+        (i32)ORATIO_ANALYSIS_VERBI_PERSONA), "persona")
+            == ZEPHYRUM);
+    CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ANALYSIS_VERBI,
+        (i32)ORATIO_ANALYSIS_VERBI_FORMA_VERBI), "forma-verbi")
+        == ZEPHYRUM);
+    CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ANALYSIS_VERBI,
+        (i32)ORATIO_ANALYSIS_VERBI_GENUS), "genus") == ZEPHYRUM);
+    /* auxiliare = forma verbi (loci iidem) */
+    CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
+        ORATIO_GENUS_ANALYSIS_AUXILIARIS].loci_numerus, (i32)XV);
+    per (j = ZEPHYRUM; j < (i32)XV; j++)
+    {
+        CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ANALYSIS_VERBI, j),
+            _locus(ORATIO_GENUS_ANALYSIS_AUXILIARIS, j))
+                == ZEPHYRUM);
+    }
+    CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
+        ORATIO_GENUS_ANALYSIS_ADIECTIVI].loci_numerus, (i32)XI);
+    CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ANALYSIS_ADIECTIVI,
+        (i32)ORATIO_ANALYSIS_ADIECTIVI_GRADUS), "gradus")
+            == ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
+        ORATIO_GENUS_ANALYSIS_ADVERBII].loci_numerus, (i32)VII);
+    CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
+        ORATIO_GENUS_ANALYSIS_PRONOMINIS].loci_numerus, (i32)X);
+    CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ANALYSIS_PRONOMINIS,
+        (i32)ORATIO_ANALYSIS_PRONOMINIS_PERSONA), "persona")
+        == ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
+        ORATIO_GENUS_ANALYSIS_DETERMINANTIS].loci_numerus,
+        (i32)IX);
+    CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
+        ORATIO_GENUS_ANALYSIS_ADPOSITIONIS].loci_numerus, (i32)VII);
+    CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ANALYSIS_ADPOSITIONIS,
+        (i32)ORATIO_ANALYSIS_ADPOSITIONIS_CASUS), "casus")
+            == ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
+        ORATIO_GENUS_ANALYSIS_NUMERALIS].loci_numerus, (i32)X);
+    CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ANALYSIS_NUMERALIS,
+        (i32)ORATIO_ANALYSIS_NUMERALIS_SPECIES), "species")
+            == ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
+        ORATIO_GENUS_ANALYSIS_CONIUNCTIONIS_COORDINANTIS].loci_numerus,
+        (i32)VI);
+    CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
+        ORATIO_GENUS_ANALYSIS_IGNOTI].loci_numerus, (i32)VI);
+    /* enumerationes: primus et ultimus titulus */
+    CREDO_VERUM (strcmp(ORATIO_TITULI_CASUUM[ORATIO_CASUS_NOMINATIVUS],
+        "nominativus") == ZEPHYRUM);
+            CREDO_VERUM (strcmp(ORATIO_TITULI_CASUUM[ORATIO_CASUS_NUMERUS
+                - I],
+                "vocativus") == ZEPHYRUM);
+    CREDO_VERUM (strcmp(ORATIO_TITULI_CASUUM[ORATIO_CASUS_GENITIVUS],
+        "genitivus") == ZEPHYRUM);
+    CREDO_AEQUALIS_I32 ((i32)ORATIO_CASUS_NUMERUS, (i32)VII);
+    CREDO_VERUM (strcmp(ORATIO_TITULI_NUMERORUM[
+        ORATIO_NUMERUS_GRAMMATICUS_NUMERUS - I], "dualis")
+            == ZEPHYRUM);
+    CREDO_VERUM (strcmp(ORATIO_TITULI_GENERUM_GRAMMATICORUM[
+        ORATIO_GENUS_GRAMMATICUM_NUMERUS - I], "commune")
+            == ZEPHYRUM);
+            CREDO_VERUM (strcmp(ORATIO_TITULI_PERSONARUM[
+                ORATIO_PERSONA_TERTIA], "III") == ZEPHYRUM);
+    CREDO_VERUM (strcmp(ORATIO_TITULI_TEMPORUM[
+        ORATIO_TEMPUS_NUMERUS - I], "praeteritum") == ZEPHYRUM);
+    CREDO_AEQUALIS_I32 ((i32)ORATIO_TEMPUS_NUMERUS, (i32)VII);
+    CREDO_VERUM (strcmp(ORATIO_TITULI_MODORUM[
+        ORATIO_MODUS_NUMERUS - I], "infinitivus") == ZEPHYRUM);
+    CREDO_VERUM (strcmp(ORATIO_TITULI_VOCUM[ORATIO_VOX_DEPONENS],
+        "deponens") == ZEPHYRUM);
+    CREDO_VERUM (strcmp(ORATIO_TITULI_FORMARUM_VERBI[
+        ORATIO_FORMA_VERBI_NUMERUS - I], "supinum") == ZEPHYRUM);
+    CREDO_VERUM (strcmp(ORATIO_TITULI_GRADUUM[
+        ORATIO_GRADUS_SUPERLATIVUS], "superlativus") == ZEPHYRUM);
+    CREDO_VERUM (strcmp(ORATIO_TITULI_SPECIERUM_NUMERALIS[
+        ORATIO_SPECIES_NUMERALIS_NUMERUS - I], "adverbiale")
+        == ZEPHYRUM);
+    CREDO_VERUM (strcmp(ORATIO_TITULI_LINGUARUM[ORATIO_LINGUA_ANGLICA],
+        "anglica") == ZEPHYRUM);
+            CREDO_VERUM (strcmp(ORATIO_TITULI_FONTIUM_ANALYSIS[
+                ORATIO_FONS_ANALYSIS_GLOSSARIUM], "glossarium")
+                == ZEPHYRUM);
+    CREDO_VERUM (strcmp(ORATIO_TITULI_FONTIUM_ANALYSIS[
+        ORATIO_FONS_ANALYSIS_ORTHOGRAPHIA], "orthographia")
+            == ZEPHYRUM);   /* T22 */
+    /* CUSTOS: tituli classium == optiones 'classis' canonis glossarii
+     * (oratio/grammatica/glossarium.canon) - una fons vocabularii */
+    {
+        constans character* radix = getenv("RHUBARB_RADIX");
+                 character  via[1024];
+                    chorda  canon;
+
+        sprintf(via, "%s/oratio/grammatica/glossarium.canon",
+            radix != NIHIL ? radix : ".");
+        si (!_plagulam_legere(piscina, via, &canon))
+        {
+            CREDO_CULPA ("glossarium.canon absens");
+        }
+        alioquin
+        {
+            per (i = ZEPHYRUM; i
+                < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM;
+                 i++)
+            {
+                character optio[96];
+
+                sprintf(optio, "<optio>%s</optio>",
+                    oratio_classis_titulus((OratioClassis)i));
+                si (strstr((character*)canon.datum, optio) == NIHIL)
+                {
+                    imprimere("    classis '%s' in canone glossarii DEEST\n",
+                        oratio_classis_titulus((OratioClassis)i));
+                }
+                                    CREDO_NON_NIHIL (strstr((character*)canon.datum,
+                                        optio));
+            }
+            /* accidentia: optiones attributi ORDINE == tituli
+             * enumerationis (una fons, duae domus) */
+            CREDO_VERUM (_optiones_congruunt(canon, "casus",
+                ORATIO_TITULI_CASUUM, (i32)ORATIO_CASUS_NUMERUS));
+            CREDO_VERUM (_optiones_congruunt(canon, "numerus",
+                ORATIO_TITULI_NUMERORUM,
+                (i32)ORATIO_NUMERUS_GRAMMATICUS_NUMERUS));
+            CREDO_VERUM (_optiones_congruunt(canon, "genus",
+                ORATIO_TITULI_GENERUM_GRAMMATICORUM,
+                (i32)ORATIO_GENUS_GRAMMATICUM_NUMERUS));
+            CREDO_VERUM (_optiones_congruunt(canon, "persona",
+                ORATIO_TITULI_PERSONARUM,
+                    (i32)ORATIO_PERSONA_NUMERUS));
+            CREDO_VERUM (_optiones_congruunt(canon, "tempus",
+                ORATIO_TITULI_TEMPORUM,
+                    (i32)ORATIO_TEMPUS_NUMERUS));
+            CREDO_VERUM (_optiones_congruunt(canon, "modus",
+                ORATIO_TITULI_MODORUM, (i32)ORATIO_MODUS_NUMERUS));
+            CREDO_VERUM (_optiones_congruunt(canon, "vox",
+                ORATIO_TITULI_VOCUM, (i32)ORATIO_VOX_NUMERUS));
+            CREDO_VERUM (_optiones_congruunt(canon, "forma-verbi",
+                ORATIO_TITULI_FORMARUM_VERBI,
+                (i32)ORATIO_FORMA_VERBI_NUMERUS));
+            CREDO_VERUM (_optiones_congruunt(canon, "gradus",
+                ORATIO_TITULI_GRADUUM, (i32)ORATIO_GRADUS_NUMERUS));
+        }
+    }
+}
+}
+
+
+/* ========================================================
+ * PROBARE: porta rancoris tabularum coctarum (2026-09-15)
+ * oratio_registrum_coctum.{h,c} ex oratio.registrum.stml GENERATAE -
+ * redditio in memoria contra plagulas commissas OCTETIM (output,
+ * numquam tempora): declaratio mutata sine ./materia/coquere.sh
+ * -scribere, aut plagula generata manu tacta, hic rubet cum linea
+ * prima divergente. Numeri declarationis == tabula viva.
+ * ======================================================== */
+
+interior vacuum
+_tabulas_coctas_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+{
+    constans character* radix = getenv("RHUBARB_RADIX");
+         MateriaRancor  rancor;
+
+    si (!materia_registrum_recens(piscina, radix
+        != NIHIL ? radix : ".",
+            "oratio/grammatica/oratio.registrum.stml", &rancor))
+    {
+        imprimere("    recusatio: %.*s\n",
+            (integer)rancor.causa.mensura,
+            (constans character*)rancor.causa.datum);
+        CREDO_CULPA ("declaratio absens aut recusata");
+    }
+    alioquin
+    {
+        si (!rancor.recens)
+        {
+            imprimere("    RANCIDUM: %.*s:%u\n",
+                (integer)rancor.via.mensura,
+                (constans character*)rancor.via.datum,
+                rancor.linea);
+        }
+        CREDO_VERUM (rancor.recens);
+        CREDO_AEQUALIS_I32 (rancor.coctio.numerus_locorum,
+            ORATIO_REGISTRUM.numerus_locorum);
+        CREDO_AEQUALIS_I32 (rancor.coctio.numerus_generum,
+            ORATIO_REGISTRUM.numerus_generum);
+    }
+}
+}
+
+interior vacuum
+_circuitum_probare (
+    CredoContextus* c)
+{
+                         Piscina* piscina = c->piscina;
+    constans MateriaLexiconRatum* ratum;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+{
+    MateriaArborConsilium consilium;
+             MateriaNodus* documentum;
+             MateriaNodus* paragraphus;
+             MateriaNodus* sententia;
+             MateriaNodus* vocabulum;
+    MateriaArborScriptura  s1;
+    MateriaArborScriptura  s2;
+             MateriaNodus* lecta;
+       MateriaArborVitium  vitium;
+
+    /* "a\n": vocabulum 'a' cum cauda LINEA */
+    vocabulum = materia_nodus_creare(piscina,
+        (s32)ORATIO_GENUS_VOCABULUM,
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_numerus);
+    CREDO_VERUM (materia_nodus_appendere(piscina, vocabulum,
+        (i32)ORATIO_VOCABULUM_PARTES,
+        materia_valor_token(_lexema(piscina,
+        (s32)ORATIO_LEX_LITTERAE,
+            "a", ZEPHYRUM, (i32)I, (i32)I)),
+            MATERIA_LOCUS_LISTA_TOKEN));
+    CREDO_VERUM (materia_nodus_appendere(piscina, vocabulum,
+        (i32)ORATIO_VOCABULUM_CAUDA,
+        materia_valor_token(_lexema(piscina, (s32)ORATIO_LEX_LINEA,
+            "\n", (s32)I, (i32)I, (i32)II)),
+            MATERIA_LOCUS_LISTA_TOKEN));
+            /* T11: analysis-substantivi in vocabulo - lemma derivatum, lingua
+     * et casus INDEX; circuitus totus eam ferre debet */
+    {
+        MateriaNodus* analysis = materia_nodus_creare(piscina,
+            (s32)ORATIO_GENUS_ANALYSIS_SUBSTANTIVI,
+            ORATIO_REGISTRUM.genera[
+                ORATIO_GENUS_ANALYSIS_SUBSTANTIVI].loci_numerus);
+        MateriaToken* origo = materia_valor_lista_obtinere(
+            vocabulum->loci[ORATIO_VOCABULUM_PARTES], ZEPHYRUM)
+            ->datum.token;
+
+        CREDO_NON_NIHIL (analysis);
+        CREDO_VERUM (materia_nodus_ponere(analysis,
+            (i32)ORATIO_ANALYSIS_LEMMA,
+            materia_valor_token(oratio_lexema_derivatum(piscina,
+                (s32)ORATIO_LEX_DERIVATUM,
+                chorda_ex_literis("a", piscina), origo)),
+            MATERIA_LOCUS_TOKEN));
+        CREDO_VERUM (materia_nodus_ponere(analysis,
+            (i32)ORATIO_ANALYSIS_LINGUA,
+            materia_valor_index((s32)ORATIO_LINGUA_LATINA),
+            MATERIA_LOCUS_INDEX));
+        CREDO_VERUM (materia_nodus_ponere(analysis,
+            (i32)ORATIO_ANALYSIS_SUBSTANTIVI_CASUS,
+            materia_valor_index((s32)ORATIO_CASUS_ABLATIVUS),
+            MATERIA_LOCUS_INDEX));
+        CREDO_VERUM (materia_nodus_appendere(piscina, vocabulum,
+            (i32)ORATIO_VOCABULUM_ANALYSES,
+            materia_valor_nodus(analysis),
+            MATERIA_LOCUS_LISTA_NODUS));
+    }
+    sententia = materia_nodus_creare(piscina,
+        (s32)ORATIO_GENUS_SENTENTIA,
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_SENTENTIA].loci_numerus);
+    CREDO_VERUM (materia_nodus_appendere(piscina, sententia,
+        (i32)ORATIO_SENTENTIA_ELEMENTA,
+        materia_valor_nodus(vocabulum),
+        MATERIA_LOCUS_LISTA_NODUS));
+    paragraphus = materia_nodus_creare(piscina,
+        (s32)ORATIO_GENUS_PARAGRAPHUS,
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_PARAGRAPHUS].loci_numerus);
+    CREDO_VERUM (materia_nodus_appendere(piscina, paragraphus,
+        (i32)ORATIO_PARAGRAPHUS_SENTENTIAE,
+        materia_valor_nodus(sententia),
+        MATERIA_LOCUS_LISTA_NODUS));
+    documentum = materia_nodus_creare(piscina,
+        (s32)ORATIO_GENUS_DOCUMENTUM,
+        ORATIO_REGISTRUM.genera[ORATIO_GENUS_DOCUMENTUM].loci_numerus);
+    CREDO_VERUM (materia_nodus_appendere(piscina, documentum,
+        (i32)ORATIO_DOCUMENTUM_PARAGRAPHI,
+        materia_valor_nodus(paragraphus),
+        MATERIA_LOCUS_LISTA_NODUS));
+    CREDO_VERUM (materia_nodus_ponere(documentum,
+        (i32)ORATIO_DOCUMENTUM_FINIS,
+        materia_valor_token(_lexema(piscina, (s32)ORATIO_LEX_FINIS,
+        "",
+            (s32)II, (i32)II, (i32)I)), MATERIA_LOCUS_TOKEN));
+
+    materia_arbor_consilium_nudum(&consilium, &ORATIO_REGISTRUM, ratum,
+        "oratio");
+    s1 = materia_arbor_scribere_nodum(piscina, documentum, &consilium);
+    CREDO_VERUM (s1.successus);
+    si (!s1.successus)
+    {
+        imprimere("    (scriptura: %s)\n",
+            s1.causa ? s1.causa : "-");
+    }
+    CREDO_NON_NIHIL (strstr((character*)s1.textus.datum,
+        "grammatica=\"oratio\""));
+    CREDO_NON_NIHIL (strstr((character*)s1.textus.datum,
+        "<vocabulum"));
+            CREDO_NON_NIHIL (strstr((character*)s1.textus.datum,
+                "<or-litterae"));
+    CREDO_NON_NIHIL (strstr((character*)s1.textus.datum,
+        "<analysis-substantivi"));
+    CREDO_NON_NIHIL (strstr((character*)s1.textus.datum, "<casus"));
+    CREDO_NON_NIHIL (strstr((character*)s1.textus.datum, "<lemma"));
+    lecta = materia_arbor_legere(piscina, NIHIL, s1.textus, &consilium,
+        &vitium);
+    CREDO_NON_NIHIL (lecta);
+    si (lecta == NIHIL)
+    {
+        imprimere("    (lectio: %s, linea %d)\n",
+            vitium.causa ? vitium.causa : "-",
+            (integer)vitium.linea);
+    }
+    alioquin
+    {
+        CREDO_AEQUALIS_S32 (lecta->genus,
+            (s32)ORATIO_GENUS_DOCUMENTUM);
+        s2 = materia_arbor_scribere_nodum(piscina, lecta, &consilium);
+        CREDO_VERUM (s2.successus);
+        CREDO_AEQUALIS_I32 (s2.textus.mensura, s1.textus.mensura);
+        CREDO_VERUM (memcmp(s1.textus.datum, s2.textus.datum,
+            (size_t)s1.textus.mensura) == ZEPHYRUM);
+    }
+}
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "lexicon orationis", _lexicon_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "registrum nodorum", _registrum_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "genera analysis-* (T11)", _genera_analysis_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "rancorem tabularum coctarum", _tabulas_coctas_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "circuitum orationis per materiam", _circuitum_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
 s32
 principale (vacuum)
 {
-                b32  praeteritus;
-            Piscina* piscina;
-MateriaLexiconRatum  ratum;
- MateriaLexIudicium  iudicium;
-
-    piscina = piscina_generare_dynamicum("probatio_oratio_registrum",
-        65536);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    {
-        i32 i;
-        i32 trivia = ZEPHYRUM;
-
-        imprimere("\n--- Probans lexicon orationis ---\n");
-        CREDO_VERUM (materia_lexicon_ratum_facere(&ratum,
-            &ORATIO_LEXICON,
-            &iudicium));
-        CREDO_AEQUALIS_S32 (iudicium.vitium, (s32)MATERIA_LEX_SANUM);
-        CREDO_AEQUALIS_I32 (ORATIO_LEXICON.numerus_generum,
-            (i32)ORATIO_LEX_NUMERUS_GENERUM);
-        CREDO_AEQUALIS_I32 ((i32)(magnitudo(ORDO_EXSPECTATUS)
-            / magnitudo(ORDO_EXSPECTATUS[0])),
-            (i32)ORATIO_LEX_NUMERUS_GENERUM);
-        per (i = ZEPHYRUM; i < (i32)ORATIO_LEX_NUMERUS_GENERUM; i++)
-        {
-            constans character* t = materia_lexicon_titulus(&ratum,
-                (s32)i);
-
-            CREDO_NON_NIHIL (t);
-            CREDO_VERUM (strcmp(t, ORDO_EXSPECTATUS[i]) == ZEPHYRUM);
-            si (materia_lexicon_trivium_est(&ratum, (s32)i))
-            {
-                trivia = trivia + I;
-            }
-        }
-        CREDO_AEQUALIS_S32 ((s32)materia_lexicon_species(&ratum,
-            (s32)ORATIO_LEX_LINEA), (s32)MATERIA_LEX_TERMINATOR);
-        CREDO_AEQUALIS_S32 ((s32)materia_lexicon_species(&ratum,
-            (s32)ORATIO_LEX_FINIS), (s32)MATERIA_LEX_FIXUM);
-        CREDO_AEQUALIS_S32 ((s32)materia_lexicon_species(&ratum,
-            (s32)ORATIO_LEX_PUNCTUM), (s32)MATERIA_LEX_FIXUM);
-        CREDO_VERUM (strcmp(materia_lexicon_orthographia(&ratum,
-            (s32)ORATIO_LEX_HYPHEN), "-") == ZEPHYRUM);
-        CREDO_VERUM (materia_lexicon_textum_fert(&ratum,
-            (s32)ORATIO_LEX_LITTERAE));
-        CREDO_VERUM (materia_lexicon_textum_fert(&ratum,
-            (s32)ORATIO_LEX_SPATIUM));
-        CREDO_FALSUM (materia_lexicon_textum_fert(&ratum,
-            (s32)ORATIO_LEX_FINIS));
-        CREDO_VERUM (strcmp(ORATIO_LEXICON.praefixum_tagi, "or-")
-            == ZEPHYRUM);
-        /* trivia: LINEA et LINEA_CR solae (munus LINEA); SPATIUM contentum */
-        CREDO_AEQUALIS_I32 (trivia, (i32)II);
-        CREDO_FALSUM (materia_lexicon_trivium_est(&ratum,
-            (s32)ORATIO_LEX_SPATIUM));
-        CREDO_AEQUALIS_S32 (ORATIO_LEXICON.genus_spatii, (s32)-I);
-        CREDO_VERUM (materia_lexicon_munus_habet(&ratum,
-            MATERIA_MUNUS_LINEA));
-        CREDO_VERUM (materia_lexicon_munus_habet(&ratum,
-            MATERIA_MUNUS_FINIS));
-        CREDO_FALSUM (materia_lexicon_munus_habet(&ratum,
-            MATERIA_MUNUS_SPATIUM));
-        CREDO_FALSUM (materia_lexicon_munus_habet(&ratum,
-            MATERIA_MUNUS_COMMENTUM));
-    }
-
-    {
-        i32 i;
-        i32 exspectatus_offset = ZEPHYRUM;
-
-        imprimere("\n--- Probans registrum nodorum ---\n");
-        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.numerus_generum,
-            (i32)ORATIO_GENUS_NUMERUS_GENERUM);
-        CREDO_AEQUALIS_I32 ((i32)(magnitudo(GENERA_EXSPECTATA)
-            / magnitudo(GENERA_EXSPECTATA[0])),
-            (i32)ORATIO_GENUS_NUMERUS_GENERUM);
-        per (i = ZEPHYRUM; i < (i32)ORATIO_GENUS_NUMERUS_GENERUM; i++)
-        {
-            CREDO_NON_NIHIL (ORATIO_REGISTRUM.genera[i].titulus);
-            CREDO_VERUM (strcmp(ORATIO_REGISTRUM.genera[i].titulus,
-                GENERA_EXSPECTATA[i]) == ZEPHYRUM);
-            CREDO_AEQUALIS_S32 (materia_arbor_genus_index(
-                &ORATIO_REGISTRUM, GENERA_EXSPECTATA[i],
-                (i32)strlen(GENERA_EXSPECTATA[i])), (s32)i);
-            CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[i].loci_offset,
-                exspectatus_offset);
-            CREDO_MAIOR_I32 (ORATIO_REGISTRUM.genera[i].loci_numerus,
-                ZEPHYRUM);
-            exspectatus_offset += ORATIO_REGISTRUM.genera[i].loci_numerus;
-        }
-        CREDO_AEQUALIS_I32 (exspectatus_offset,
-            ORATIO_REGISTRUM.numerus_locorum);
-        per (i = ZEPHYRUM; i < ORATIO_REGISTRUM.numerus_locorum; i++)
-        {
-            CREDO_NON_NIHIL (ORATIO_REGISTRUM.loci[i].titulus);
-            CREDO_MINOR_S32 (ORATIO_REGISTRUM.loci[i].species,
-                (s32)MATERIA_LOCUS_NUMERUS_SPECIERUM);
-        }
-        /* enumerationes locorum contra titulos tabulae */
-        CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
-            + (i32)ORATIO_VOCABULUM_CAUDA].titulus, "cauda")
-            == ZEPHYRUM);
-        CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
-            + (i32)ORATIO_VOCABULUM_LINGUAE].titulus, "linguae")
-            == ZEPHYRUM);
-        /* T19g: decisio (INDEX) + auctor (TOKEN derivatum) ultimi
-         * vocabuli; tituli decisionum == OratioDecisio */
-        CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
-            + (i32)ORATIO_VOCABULUM_DECISIO].titulus, "decisio")
-            == ZEPHYRUM);
-        CREDO_AEQUALIS_S32 (ORATIO_REGISTRUM.loci[
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
-            + (i32)ORATIO_VOCABULUM_DECISIO].species,
-            (s32)MATERIA_LOCUS_INDEX);
-        CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
-            + (i32)ORATIO_VOCABULUM_AUCTOR].titulus, "auctor")
-            == ZEPHYRUM);
-                /* T20a: clausula + clausula-causa (INDEX) ultimi vocabuli,
-         * interpunctionis, numeri; per oratio_locus_clausulae */
-        /* T38 c: habitus (INDEX OratioHabitus) ultimus vocabuli */
-        CREDO_AEQUALIS_I32 ((i32)ORATIO_VOCABULUM_HABITUS + I,
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_numerus);
-        CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
-            + (i32)ORATIO_VOCABULUM_HABITUS].titulus, "habitus")
-            == ZEPHYRUM);
-        CREDO_AEQUALIS_S32 (ORATIO_REGISTRUM.loci[
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
-            + (i32)ORATIO_VOCABULUM_HABITUS].species,
-            (s32)MATERIA_LOCUS_INDEX);
-        CREDO_VERUM (strcmp(ORATIO_TITULI_HABITUUM[ORATIO_HABITUS_APERTUS],
-            "apertus") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(ORATIO_TITULI_DECISIONUM[ORATIO_DECISIO_DECRETUM],
-            "decretum") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(ORATIO_TITULI_CAUSARUM_ALTERNAE[
-            ORATIO_ALTERNA_CAUSA_PRAEOCCUPATA], "praeoccupata")
-                == ZEPHYRUM);
-        CREDO_AEQUALIS_I32 ((i32)ORATIO_VOCABULUM_CLAUSULA_CAUSA
-            + (i32)II,
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_numerus);
-        CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
-            + (i32)ORATIO_VOCABULUM_CLAUSULA].titulus, "clausula")
-            == ZEPHYRUM);
-        CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_INTERPUNCTIO].loci_offset
-            + (i32)ORATIO_INTERPUNCTIO_CLAUSULA_CAUSA].titulus,
-            "clausula-causa") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_NUMERUS].loci_offset
-            + (i32)ORATIO_NUMERUS_CLAUSULA].titulus, "clausula")
-            == ZEPHYRUM);
-        CREDO_AEQUALIS_S32 (oratio_locus_clausulae(ORATIO_GENUS_VOCABULUM,
-            FALSUM), (s32)ORATIO_VOCABULUM_CLAUSULA);
-        CREDO_AEQUALIS_S32 (oratio_locus_clausulae(ORATIO_GENUS_NUMERUS,
-            VERUM), (s32)ORATIO_NUMERUS_CLAUSULA_CAUSA);
-        CREDO_AEQUALIS_S32 (oratio_locus_clausulae(ORATIO_GENUS_SENTENTIA,
-            FALSUM), (s32)-I);
-        CREDO_AEQUALIS_S32 (ORATIO_REGISTRUM.loci[
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
-            + (i32)ORATIO_VOCABULUM_CLAUSULA].species,
-            (s32)MATERIA_LOCUS_INDEX);
-        CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_SENTENTIA].loci_offset
-            + (i32)ORATIO_SENTENTIA_CLAUSULAE].titulus, "clausulae")
-            == ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
-            ORATIO_GENUS_SENTENTIA].loci_numerus, (i32)II);
-        CREDO_AEQUALIS_I32 ((i32)ORATIO_DECISIO_NUMERUS, (i32)IV);   /* T38 c: + decretum */
-        CREDO_VERUM (strcmp(ORATIO_TITULI_DECISIONUM[
-            ORATIO_DECISIO_PRAELATIO], "praelatio") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(ORATIO_TITULI_DECISIONUM[
-            ORATIO_DECISIO_IMPLETIO], "impletio") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(ORATIO_TITULI_DECISIONUM[
-            ORATIO_DECISIO_UMBRA], "umbra") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_PARAGRAPHUS].loci_offset
-            + (i32)ORATIO_PARAGRAPHUS_CAUDA].titulus, "cauda")
-            == ZEPHYRUM);
-        CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_NUMERUS].loci_offset
-            + (i32)ORATIO_NUMERUS_CRUDUM].titulus, "crudum")
-            == ZEPHYRUM);
-        /* T6b: forma APPENSA post caudam, INDEX (lex deprimendi) */
-        CREDO_VERUM (strcmp(ORATIO_REGISTRUM.loci[
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_PARAGRAPHUS].loci_offset
-            + (i32)ORATIO_PARAGRAPHUS_FORMA].titulus, "forma")
-            == ZEPHYRUM);
-        CREDO_AEQUALIS_S32 (ORATIO_REGISTRUM.loci[
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_PARAGRAPHUS].loci_offset
-            + (i32)ORATIO_PARAGRAPHUS_FORMA].species,
-            (s32)MATERIA_LOCUS_INDEX);
-        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
-            ORATIO_GENUS_PARAGRAPHUS].loci_numerus, (i32)IV);
-        CREDO_MINOR_S32 ((s32)ORATIO_FORMA_INDEX,
-            (s32)ORATIO_FORMA_NUMERUS_FORMARUM);
-        CREDO_AEQUALIS_S32 (ORATIO_REGISTRUM.loci[
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
-            + (i32)ORATIO_VOCABULUM_PARTES].species,
-            (s32)MATERIA_LOCUS_LISTA_TOKEN);
-        CREDO_AEQUALIS_S32 (ORATIO_REGISTRUM.loci[
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_offset
-            + (i32)ORATIO_VOCABULUM_ANALYSES].species,
-            (s32)MATERIA_LOCUS_LISTA_NODUS);
-        CREDO_AEQUALIS_S32 (ORATIO_REGISTRUM.loci[
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_INTERPUNCTIO].loci_offset
-            + (i32)ORATIO_INTERPUNCTIO_SIGNUM].species,
-            (s32)MATERIA_LOCUS_TOKEN);
-    }
-
-        {
-        i32 i;
-        i32 j;
-
-        imprimere("\n--- Probans genera analysis-* (T11) ---\n");
-        CREDO_AEQUALIS_I32 ((i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM,
-            (i32)XVII);
-        /* T19d: analyses [PRIMUM, ULTIMUM) contiguae, umbra ultima */
-        CREDO_AEQUALIS_I32 ((i32)ORATIO_GENUS_ANALYSIS_ULTIMUM
-            - (i32)ORATIO_GENUS_ANALYSIS_PRIMUM,
-            (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM);
-                /* T20a: clausula post umbram; umbra manet ULTIMUM analysium */
-        CREDO_AEQUALIS_I32 ((i32)ORATIO_GENUS_NUMERUS_GENERUM,
-            (i32)ORATIO_GENUS_ANALYSIS_ULTIMUM + (i32)III);   /* umbra, clausula, alterna (T32 b) */
-        CREDO_AEQUALIS_I32 ((i32)ORATIO_GENUS_CLAUSULA,
-            (i32)ORATIO_GENUS_UMBRA + I);
-        CREDO_AEQUALIS_I32 ((i32)ORATIO_GENUS_UMBRA,
-            (i32)ORATIO_GENUS_ANALYSIS_ULTIMUM);
-        CREDO_AEQUALIS_I32 ((i32)ORATIO_GENUS_ANALYSIS_PRIMUM,
-            (i32)ORATIO_GENUS_NUMERUS + I);
-                /* loci CXLVI (T11) -> CLXX (T19d: umbrae in analysibus XVII +
-         * umbra VII) -> CLXXII (T19g: decisio + auctor vocabuli) ->
-         * CLXXXIV (T20a: clausulae sententiae I, clausula +
-         * clausula-causa elementorum VI, forma-verbi umbrae I,
-         * clausula IV) */
-        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.numerus_locorum, (i32)191);   /* T32 a: + auctor umbrae; T32 b: + alternae umbrae, genus alterna VI; T33: referentiae - umbra X -> IX, alterna VI -> V; T38 c: + habitus vocabuli (CXC -> CXCI) */
-        per (i = ZEPHYRUM; i
-            < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM; i++)
-        {
-                 OratioClassis  cl  = (OratioClassis)i;
-                   OratioGenus  g   = oratio_classis_genus(cl);
-            constans character* t   = oratio_classis_titulus(cl);
-
-            CREDO_AEQUALIS_I32 ((i32)oratio_genus_classis(g), i);
-            CREDO_NON_NIHIL (t);
-            CREDO_AEQUALIS_I32 ((i32)oratio_classis_ex_titulo(t,
-                (i32)strlen(t)), i);
-            CREDO_VERUM (strncmp(ORATIO_REGISTRUM.genera[g].titulus,
-                "analysis-", (size_t)IX) == ZEPHYRUM);
-            /* loci communes V primi, ordine, speciebus suis */
-            CREDO_VERUM (ORATIO_REGISTRUM.genera[g].loci_numerus
-                >= (i32)ORATIO_ANALYSIS_COMMUNIA_NUMERUS);
-            CREDO_VERUM (strcmp(_locus(g, (i32)ORATIO_ANALYSIS_LEMMA),
-                "lemma") == ZEPHYRUM);
-            CREDO_VERUM (strcmp(_locus(g, (i32)ORATIO_ANALYSIS_LINGUA),
-                "lingua") == ZEPHYRUM);
-            CREDO_VERUM (strcmp(_locus(g, (i32)ORATIO_ANALYSIS_FONS),
-                "fons") == ZEPHYRUM);
-            CREDO_VERUM (strcmp(_locus(g, (i32)ORATIO_ANALYSIS_NATIVUM),
-                "nativum") == ZEPHYRUM);
-            CREDO_VERUM (strcmp(_locus(g, (i32)ORATIO_ANALYSIS_SENSUS),
-                "sensus") == ZEPHYRUM);
-            CREDO_AEQUALIS_S32 (_species(g, (i32)ORATIO_ANALYSIS_LEMMA),
-                (s32)MATERIA_LOCUS_TOKEN);
-            CREDO_AEQUALIS_S32 (_species(g,
-                (i32)ORATIO_ANALYSIS_LINGUA),
-                (s32)MATERIA_LOCUS_INDEX);
-            CREDO_AEQUALIS_S32 (_species(g, (i32)ORATIO_ANALYSIS_FONS),
-                (s32)MATERIA_LOCUS_INDEX);
-            CREDO_AEQUALIS_S32 (_species(g,
-                (i32)ORATIO_ANALYSIS_NATIVUM),
-                (s32)MATERIA_LOCUS_TOKEN);
-            CREDO_AEQUALIS_S32 (_species(g,
-                (i32)ORATIO_ANALYSIS_SENSUS),
-                (s32)MATERIA_LOCUS_TOKEN);
-            /* accidentia: INDEX omnia; locus ULTIMUS = umbrae (T19d:
-             * LISTA_NODUS, in genere quoque, per titulum inventus) */
-            per (j = (i32)ORATIO_ANALYSIS_COMMUNIA_NUMERUS;
-                 j < ORATIO_REGISTRUM.genera[g].loci_numerus - I; j++)
-            {
-                CREDO_AEQUALIS_S32 (_species(g, j),
-                    (s32)MATERIA_LOCUS_INDEX);
-            }
-            j = ORATIO_REGISTRUM.genera[g].loci_numerus - I;
-            CREDO_VERUM (strcmp(_locus(g, j), "umbrae") == ZEPHYRUM);
-            CREDO_AEQUALIS_S32 (_species(g, j),
-                (s32)MATERIA_LOCUS_LISTA_NODUS);
-            CREDO_AEQUALIS_S32 (oratio_partes_locus(cl, "umbrae"),
-                (s32)j);
-        }
-        /* umbra (T19d): genus post analyses; T33: impletio REFERENTIA
-         * una pro ordinalibus duobus (loci IX) */
-        {
-                        hic_manens constans character* constans tituli_umbrae[] =
-                            {
-                "relatio", "classis", "casus", "numerus", "genus",
-                "impletio",     /* T33: REFERENTIA ad nodum analysis */
-                "forma-verbi",  /* T20a */
-                "auctor",       /* T32 a: TOKEN derivatum */
-                "alternae"      /* T32 b: LISTA_NODUS alterna */
-            };
-
-            CREDO_VERUM (strcmp(ORATIO_REGISTRUM.genera[
-                ORATIO_GENUS_UMBRA].titulus, "umbra") == ZEPHYRUM);
-            CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
-                ORATIO_GENUS_UMBRA].loci_numerus,
-                (i32)ORATIO_UMBRA_NUMERUS_LOCORUM);
-                        CREDO_AEQUALIS_I32 ((i32)ORATIO_UMBRA_NUMERUS_LOCORUM,
-                            (i32)IX);
-            per (j = ZEPHYRUM; j < (i32)IX; j++)
-            {
-                CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_UMBRA, j),
-                    tituli_umbrae[j]) == ZEPHYRUM);
-            }
-            per (j = ZEPHYRUM; j < (i32)V; j++)
-            {
-                CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_UMBRA, j),
-                    (s32)MATERIA_LOCUS_INDEX);
-            }
-            /* T33: locus V 'impletio' REFERENTIA */
-            CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_UMBRA, (i32)V),
-                (s32)MATERIA_LOCUS_REFERENTIA);
-            CREDO_AEQUALIS_I32 ((i32)ORATIO_UMBRA_IMPLETIO, (i32)V);
-            CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_UMBRA, (i32)VI),
-                (s32)MATERIA_LOCUS_INDEX);   /* forma-verbi */
-            /* T32 a: locus VII 'auctor' TOKEN derivatum (ut vocabuli) */
-            CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_UMBRA, (i32)VII),
-                (s32)MATERIA_LOCUS_TOKEN);
-            CREDO_AEQUALIS_I32 ((i32)ORATIO_UMBRA_AUCTOR, (i32)VII);
-            /* T32 b: locus VIII 'alternae' LISTA_NODUS */
-            CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_UMBRA, (i32)VIII),
-                (s32)MATERIA_LOCUS_LISTA_NODUS);
-            CREDO_AEQUALIS_I32 ((i32)ORATIO_UMBRA_ALTERNAE, (i32)VIII);
-            CREDO_AEQUALIS_I32 ((i32)oratio_genus_classis(
-                ORATIO_GENUS_UMBRA),
-                (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM);
-            CREDO_VERUM (strcmp(ORATIO_TITULI_RELATIONUM[
-                ORATIO_RELATIO_OBIECTUM], "obiectum") == ZEPHYRUM);
-                        CREDO_VERUM (strcmp(ORATIO_TITULI_RELATIONUM[
-                            ORATIO_RELATIO_CAPUT], "caput")
-                                == ZEPHYRUM);
-            /* T20a: relationes clausulae appensae */
-            CREDO_VERUM (strcmp(ORATIO_TITULI_RELATIONUM[
-                ORATIO_RELATIO_VERBUM_FINITUM], "verbum-finitum")
-                == ZEPHYRUM);
-            CREDO_VERUM (strcmp(ORATIO_TITULI_RELATIONUM[
-                ORATIO_RELATIO_SUBIECTUM], "subiectum") == ZEPHYRUM);
-            CREDO_AEQUALIS_I32 ((i32)ORATIO_RELATIO_NUMERUS, (i32)V);   /* T31 b: + obiectum-verbi */
-        }
-        /* alterna (T32 b): genus post clausulam, loci V (T33: socius
-         * REFERENTIA; causa fides INDEX, auctor victor TOKEN) */
-        {
-            hic_manens constans character* constans tituli_alternae[] =
-                {
-                "socius", "auctor", "causa", "fides", "victor"
-            };
-
-            CREDO_VERUM (strcmp(ORATIO_REGISTRUM.genera[
-                ORATIO_GENUS_ALTERNA].titulus, "alterna") == ZEPHYRUM);
-            CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
-                ORATIO_GENUS_ALTERNA].loci_numerus,
-                (i32)ORATIO_ALTERNA_NUMERUS_LOCORUM);
-            CREDO_AEQUALIS_I32 ((i32)ORATIO_ALTERNA_NUMERUS_LOCORUM,
-                (i32)V);
-            per (j = ZEPHYRUM; j < (i32)V; j++)
-            {
-                CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ALTERNA, j),
-                    tituli_alternae[j]) == ZEPHYRUM);
-            }
-            CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_ALTERNA,
-                (i32)ORATIO_ALTERNA_SOCIUS),
-                (s32)MATERIA_LOCUS_REFERENTIA);
-            CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_ALTERNA,
-                (i32)ORATIO_ALTERNA_AUCTOR), (s32)MATERIA_LOCUS_TOKEN);
-            CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_ALTERNA,
-                (i32)ORATIO_ALTERNA_VICTOR), (s32)MATERIA_LOCUS_TOKEN);
-            CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_ALTERNA,
-                (i32)ORATIO_ALTERNA_CAUSA), (s32)MATERIA_LOCUS_INDEX);
-            CREDO_AEQUALIS_I32 ((i32)ORATIO_ALTERNA_CAUSA_NUMERUS,
-                (i32)IV);   /* T38 c: + praeoccupata, decreta */
-            CREDO_VERUM (strcmp(ORATIO_TITULI_CAUSARUM_ALTERNAE[
-                ORATIO_ALTERNA_CAUSA_REVOCATA], "revocata")
-                    == ZEPHYRUM);
-        }
-        /* clausula (T20a): genus post umbram, loci IV (semen species
-         * pater INDEX, umbrae LISTA_NODUS); tituli specierum et
-         * causarum == enumerationes */
-        {
-            hic_manens constans character* constans tituli_clausulae[] =
-                {
-                "semen", "species", "pater", "umbrae"
-            };
-
-            CREDO_VERUM (strcmp(ORATIO_REGISTRUM.genera[
-                ORATIO_GENUS_CLAUSULA].titulus, "clausula")
-                    == ZEPHYRUM);
-            CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
-                ORATIO_GENUS_CLAUSULA].loci_numerus,
-                (i32)ORATIO_CLAUSULA_NUMERUS_LOCORUM);
-            CREDO_AEQUALIS_I32 ((i32)ORATIO_CLAUSULA_NUMERUS_LOCORUM,
-                (i32)IV);
-            per (j = ZEPHYRUM; j < (i32)IV; j++)
-            {
-                CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_CLAUSULA, j),
-                    tituli_clausulae[j]) == ZEPHYRUM);
-            }
-            CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_CLAUSULA,
-                (i32)ORATIO_CLAUSULA_UMBRAE),
-                (s32)MATERIA_LOCUS_LISTA_NODUS);
-            CREDO_AEQUALIS_S32 (_species(ORATIO_GENUS_CLAUSULA,
-                (i32)ORATIO_CLAUSULA_SPECIES),
-                (s32)MATERIA_LOCUS_INDEX);
-            CREDO_AEQUALIS_I32 ((i32)oratio_genus_classis(
-                ORATIO_GENUS_CLAUSULA),
-                (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM);
-            CREDO_AEQUALIS_I32 ((i32)ORATIO_SPECIES_CLAUSULAE_NUMERUS,
-                (i32)V);
-            CREDO_VERUM (strcmp(ORATIO_TITULI_SPECIERUM_CLAUSULAE[
-                ORATIO_SPECIES_CLAUSULAE_PRINCIPALIS], "principalis")
-                == ZEPHYRUM);
-            CREDO_VERUM (strcmp(ORATIO_TITULI_SPECIERUM_CLAUSULAE[
-                ORATIO_SPECIES_CLAUSULAE_PARENTHETICA], "parenthetica")
-                == ZEPHYRUM);
-                        CREDO_AEQUALIS_I32 ((i32)ORATIO_CLAUSULA_CAUSA_NUMERUS,
-                            (i32)VI);
-            CREDO_VERUM (strcmp(ORATIO_TITULI_CAUSARUM_CLAUSULAE[
-                ORATIO_CLAUSULA_CAUSA_SEMEN], "semen") == ZEPHYRUM);
-            CREDO_VERUM (strcmp(ORATIO_TITULI_CAUSARUM_CLAUSULAE[
-                ORATIO_CLAUSULA_CAUSA_UNICA], "unica") == ZEPHYRUM);
-            CREDO_VERUM (strcmp(ORATIO_TITULI_CAUSARUM_CLAUSULAE[
-                ORATIO_CLAUSULA_CAUSA_VERBUM], "verbum") == ZEPHYRUM);
-        }
-        CREDO_AEQUALIS_I32 ((i32)oratio_classis_ex_titulo("xyzzy",
-            (i32)V),
-            (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM);
-        CREDO_AEQUALIS_I32 ((i32)oratio_genus_classis(
-            ORATIO_GENUS_VOCABULUM),
-            (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM);
-        CREDO_NIHIL (oratio_classis_titulus(
-            ORATIO_CLASSIS_NUMERUS_CLASSIUM));
-        /* accidentia per classem (decisio 2026-09-04) */
-        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
-            ORATIO_GENUS_ANALYSIS_SUBSTANTIVI].loci_numerus, (i32)X);
-        CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ANALYSIS_SUBSTANTIVI,
-            (i32)ORATIO_ANALYSIS_SUBSTANTIVI_CASUS), "casus")
-                == ZEPHYRUM);
-        CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ANALYSIS_SUBSTANTIVI,
-            (i32)ORATIO_ANALYSIS_SUBSTANTIVI_DECLINATIO), "declinatio")
-            == ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
-            ORATIO_GENUS_ANALYSIS_NOMINIS_PROPRII].loci_numerus,
-            (i32)X);
-        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
-            ORATIO_GENUS_ANALYSIS_VERBI].loci_numerus, (i32)XV);
-        CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ANALYSIS_VERBI,
-            (i32)ORATIO_ANALYSIS_VERBI_PERSONA), "persona")
-                == ZEPHYRUM);
-        CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ANALYSIS_VERBI,
-            (i32)ORATIO_ANALYSIS_VERBI_FORMA_VERBI), "forma-verbi")
-            == ZEPHYRUM);
-        CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ANALYSIS_VERBI,
-            (i32)ORATIO_ANALYSIS_VERBI_GENUS), "genus") == ZEPHYRUM);
-        /* auxiliare = forma verbi (loci iidem) */
-        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
-            ORATIO_GENUS_ANALYSIS_AUXILIARIS].loci_numerus, (i32)XV);
-        per (j = ZEPHYRUM; j < (i32)XV; j++)
-        {
-            CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ANALYSIS_VERBI, j),
-                _locus(ORATIO_GENUS_ANALYSIS_AUXILIARIS, j))
-                    == ZEPHYRUM);
-        }
-        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
-            ORATIO_GENUS_ANALYSIS_ADIECTIVI].loci_numerus, (i32)XI);
-        CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ANALYSIS_ADIECTIVI,
-            (i32)ORATIO_ANALYSIS_ADIECTIVI_GRADUS), "gradus")
-                == ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
-            ORATIO_GENUS_ANALYSIS_ADVERBII].loci_numerus, (i32)VII);
-        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
-            ORATIO_GENUS_ANALYSIS_PRONOMINIS].loci_numerus, (i32)X);
-        CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ANALYSIS_PRONOMINIS,
-            (i32)ORATIO_ANALYSIS_PRONOMINIS_PERSONA), "persona")
-            == ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
-            ORATIO_GENUS_ANALYSIS_DETERMINANTIS].loci_numerus,
-            (i32)IX);
-        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
-            ORATIO_GENUS_ANALYSIS_ADPOSITIONIS].loci_numerus, (i32)VII);
-        CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ANALYSIS_ADPOSITIONIS,
-            (i32)ORATIO_ANALYSIS_ADPOSITIONIS_CASUS), "casus")
-                == ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
-            ORATIO_GENUS_ANALYSIS_NUMERALIS].loci_numerus, (i32)X);
-        CREDO_VERUM (strcmp(_locus(ORATIO_GENUS_ANALYSIS_NUMERALIS,
-            (i32)ORATIO_ANALYSIS_NUMERALIS_SPECIES), "species")
-                == ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
-            ORATIO_GENUS_ANALYSIS_CONIUNCTIONIS_COORDINANTIS].loci_numerus,
-            (i32)VI);
-        CREDO_AEQUALIS_I32 (ORATIO_REGISTRUM.genera[
-            ORATIO_GENUS_ANALYSIS_IGNOTI].loci_numerus, (i32)VI);
-        /* enumerationes: primus et ultimus titulus */
-        CREDO_VERUM (strcmp(ORATIO_TITULI_CASUUM[ORATIO_CASUS_NOMINATIVUS],
-            "nominativus") == ZEPHYRUM);
-                CREDO_VERUM (strcmp(ORATIO_TITULI_CASUUM[ORATIO_CASUS_NUMERUS
-                    - I],
-                    "vocativus") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(ORATIO_TITULI_CASUUM[ORATIO_CASUS_GENITIVUS],
-            "genitivus") == ZEPHYRUM);
-        CREDO_AEQUALIS_I32 ((i32)ORATIO_CASUS_NUMERUS, (i32)VII);
-        CREDO_VERUM (strcmp(ORATIO_TITULI_NUMERORUM[
-            ORATIO_NUMERUS_GRAMMATICUS_NUMERUS - I], "dualis")
-                == ZEPHYRUM);
-        CREDO_VERUM (strcmp(ORATIO_TITULI_GENERUM_GRAMMATICORUM[
-            ORATIO_GENUS_GRAMMATICUM_NUMERUS - I], "commune")
-                == ZEPHYRUM);
-                CREDO_VERUM (strcmp(ORATIO_TITULI_PERSONARUM[
-                    ORATIO_PERSONA_TERTIA], "III") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(ORATIO_TITULI_TEMPORUM[
-            ORATIO_TEMPUS_NUMERUS - I], "praeteritum") == ZEPHYRUM);
-        CREDO_AEQUALIS_I32 ((i32)ORATIO_TEMPUS_NUMERUS, (i32)VII);
-        CREDO_VERUM (strcmp(ORATIO_TITULI_MODORUM[
-            ORATIO_MODUS_NUMERUS - I], "infinitivus") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(ORATIO_TITULI_VOCUM[ORATIO_VOX_DEPONENS],
-            "deponens") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(ORATIO_TITULI_FORMARUM_VERBI[
-            ORATIO_FORMA_VERBI_NUMERUS - I], "supinum") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(ORATIO_TITULI_GRADUUM[
-            ORATIO_GRADUS_SUPERLATIVUS], "superlativus") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(ORATIO_TITULI_SPECIERUM_NUMERALIS[
-            ORATIO_SPECIES_NUMERALIS_NUMERUS - I], "adverbiale")
-            == ZEPHYRUM);
-        CREDO_VERUM (strcmp(ORATIO_TITULI_LINGUARUM[ORATIO_LINGUA_ANGLICA],
-            "anglica") == ZEPHYRUM);
-                CREDO_VERUM (strcmp(ORATIO_TITULI_FONTIUM_ANALYSIS[
-                    ORATIO_FONS_ANALYSIS_GLOSSARIUM], "glossarium")
-                    == ZEPHYRUM);
-        CREDO_VERUM (strcmp(ORATIO_TITULI_FONTIUM_ANALYSIS[
-            ORATIO_FONS_ANALYSIS_ORTHOGRAPHIA], "orthographia")
-                == ZEPHYRUM);   /* T22 */
-        /* CUSTOS: tituli classium == optiones 'classis' canonis glossarii
-         * (oratio/grammatica/glossarium.canon) - una fons vocabularii */
-        {
-            constans character* radix = getenv("RHUBARB_RADIX");
-                     character  via[1024];
-                        chorda  canon;
-
-            sprintf(via, "%s/oratio/grammatica/glossarium.canon",
-                radix != NIHIL ? radix : ".");
-            si (!_plagulam_legere(piscina, via, &canon))
-            {
-                CREDO_CULPA ("glossarium.canon absens");
-            }
-            alioquin
-            {
-                per (i = ZEPHYRUM; i
-                    < (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM;
-                     i++)
-                {
-                    character optio[96];
-
-                    sprintf(optio, "<optio>%s</optio>",
-                        oratio_classis_titulus((OratioClassis)i));
-                    si (strstr((character*)canon.datum, optio) == NIHIL)
-                    {
-                        imprimere("    classis '%s' in canone glossarii DEEST\n",
-                            oratio_classis_titulus((OratioClassis)i));
-                    }
-                                        CREDO_NON_NIHIL (strstr((character*)canon.datum,
-                                            optio));
-                }
-                /* accidentia: optiones attributi ORDINE == tituli
-                 * enumerationis (una fons, duae domus) */
-                CREDO_VERUM (_optiones_congruunt(canon, "casus",
-                    ORATIO_TITULI_CASUUM, (i32)ORATIO_CASUS_NUMERUS));
-                CREDO_VERUM (_optiones_congruunt(canon, "numerus",
-                    ORATIO_TITULI_NUMERORUM,
-                    (i32)ORATIO_NUMERUS_GRAMMATICUS_NUMERUS));
-                CREDO_VERUM (_optiones_congruunt(canon, "genus",
-                    ORATIO_TITULI_GENERUM_GRAMMATICORUM,
-                    (i32)ORATIO_GENUS_GRAMMATICUM_NUMERUS));
-                CREDO_VERUM (_optiones_congruunt(canon, "persona",
-                    ORATIO_TITULI_PERSONARUM,
-                        (i32)ORATIO_PERSONA_NUMERUS));
-                CREDO_VERUM (_optiones_congruunt(canon, "tempus",
-                    ORATIO_TITULI_TEMPORUM,
-                        (i32)ORATIO_TEMPUS_NUMERUS));
-                CREDO_VERUM (_optiones_congruunt(canon, "modus",
-                    ORATIO_TITULI_MODORUM, (i32)ORATIO_MODUS_NUMERUS));
-                CREDO_VERUM (_optiones_congruunt(canon, "vox",
-                    ORATIO_TITULI_VOCUM, (i32)ORATIO_VOX_NUMERUS));
-                CREDO_VERUM (_optiones_congruunt(canon, "forma-verbi",
-                    ORATIO_TITULI_FORMARUM_VERBI,
-                    (i32)ORATIO_FORMA_VERBI_NUMERUS));
-                CREDO_VERUM (_optiones_congruunt(canon, "gradus",
-                    ORATIO_TITULI_GRADUUM, (i32)ORATIO_GRADUS_NUMERUS));
-            }
-        }
-    }
-
-
-    /* ========================================================
-     * PROBARE: porta rancoris tabularum coctarum (2026-09-15)
-     * oratio_registrum_coctum.{h,c} ex oratio.registrum.stml GENERATAE -
-     * redditio in memoria contra plagulas commissas OCTETIM (output,
-     * numquam tempora): declaratio mutata sine ./materia/coquere.sh
-     * -scribere, aut plagula generata manu tacta, hic rubet cum linea
-     * prima divergente. Numeri declarationis == tabula viva.
-     * ======================================================== */
-
-    {
-        constans character* radix = getenv("RHUBARB_RADIX");
-             MateriaRancor  rancor;
-
-        imprimere("\n--- Probans rancorem tabularum coctarum ---\n");
-        si (!materia_registrum_recens(piscina, radix
-            != NIHIL ? radix : ".",
-                "oratio/grammatica/oratio.registrum.stml", &rancor))
-        {
-            imprimere("    recusatio: %.*s\n",
-                (integer)rancor.causa.mensura,
-                (constans character*)rancor.causa.datum);
-            CREDO_CULPA ("declaratio absens aut recusata");
-        }
-        alioquin
-        {
-            si (!rancor.recens)
-            {
-                imprimere("    RANCIDUM: %.*s:%u\n",
-                    (integer)rancor.via.mensura,
-                    (constans character*)rancor.via.datum,
-                    rancor.linea);
-            }
-            CREDO_VERUM (rancor.recens);
-            CREDO_AEQUALIS_I32 (rancor.coctio.numerus_locorum,
-                ORATIO_REGISTRUM.numerus_locorum);
-            CREDO_AEQUALIS_I32 (rancor.coctio.numerus_generum,
-                ORATIO_REGISTRUM.numerus_generum);
-        }
-    }
-
-    {
-        MateriaArborConsilium c;
-                 MateriaNodus* documentum;
-                 MateriaNodus* paragraphus;
-                 MateriaNodus* sententia;
-                 MateriaNodus* vocabulum;
-        MateriaArborScriptura  s1;
-        MateriaArborScriptura  s2;
-                 MateriaNodus* lecta;
-           MateriaArborVitium  vitium;
-
-        imprimere("\n--- Probans circuitum orationis per materiam ---\n");
-        /* "a\n": vocabulum 'a' cum cauda LINEA */
-        vocabulum = materia_nodus_creare(piscina,
-            (s32)ORATIO_GENUS_VOCABULUM,
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_VOCABULUM].loci_numerus);
-        CREDO_VERUM (materia_nodus_appendere(piscina, vocabulum,
-            (i32)ORATIO_VOCABULUM_PARTES,
-            materia_valor_token(_lexema(piscina,
-            (s32)ORATIO_LEX_LITTERAE,
-                "a", ZEPHYRUM, (i32)I, (i32)I)),
-                MATERIA_LOCUS_LISTA_TOKEN));
-        CREDO_VERUM (materia_nodus_appendere(piscina, vocabulum,
-            (i32)ORATIO_VOCABULUM_CAUDA,
-            materia_valor_token(_lexema(piscina, (s32)ORATIO_LEX_LINEA,
-                "\n", (s32)I, (i32)I, (i32)II)),
-                MATERIA_LOCUS_LISTA_TOKEN));
-                /* T11: analysis-substantivi in vocabulo - lemma derivatum, lingua
-         * et casus INDEX; circuitus totus eam ferre debet */
-        {
-            MateriaNodus* analysis = materia_nodus_creare(piscina,
-                (s32)ORATIO_GENUS_ANALYSIS_SUBSTANTIVI,
-                ORATIO_REGISTRUM.genera[
-                    ORATIO_GENUS_ANALYSIS_SUBSTANTIVI].loci_numerus);
-            MateriaToken* origo = materia_valor_lista_obtinere(
-                vocabulum->loci[ORATIO_VOCABULUM_PARTES], ZEPHYRUM)
-                ->datum.token;
-
-            CREDO_NON_NIHIL (analysis);
-            CREDO_VERUM (materia_nodus_ponere(analysis,
-                (i32)ORATIO_ANALYSIS_LEMMA,
-                materia_valor_token(oratio_lexema_derivatum(piscina,
-                    (s32)ORATIO_LEX_DERIVATUM,
-                    chorda_ex_literis("a", piscina), origo)),
-                MATERIA_LOCUS_TOKEN));
-            CREDO_VERUM (materia_nodus_ponere(analysis,
-                (i32)ORATIO_ANALYSIS_LINGUA,
-                materia_valor_index((s32)ORATIO_LINGUA_LATINA),
-                MATERIA_LOCUS_INDEX));
-            CREDO_VERUM (materia_nodus_ponere(analysis,
-                (i32)ORATIO_ANALYSIS_SUBSTANTIVI_CASUS,
-                materia_valor_index((s32)ORATIO_CASUS_ABLATIVUS),
-                MATERIA_LOCUS_INDEX));
-            CREDO_VERUM (materia_nodus_appendere(piscina, vocabulum,
-                (i32)ORATIO_VOCABULUM_ANALYSES,
-                materia_valor_nodus(analysis),
-                MATERIA_LOCUS_LISTA_NODUS));
-        }
-        sententia = materia_nodus_creare(piscina,
-            (s32)ORATIO_GENUS_SENTENTIA,
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_SENTENTIA].loci_numerus);
-        CREDO_VERUM (materia_nodus_appendere(piscina, sententia,
-            (i32)ORATIO_SENTENTIA_ELEMENTA,
-            materia_valor_nodus(vocabulum),
-            MATERIA_LOCUS_LISTA_NODUS));
-        paragraphus = materia_nodus_creare(piscina,
-            (s32)ORATIO_GENUS_PARAGRAPHUS,
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_PARAGRAPHUS].loci_numerus);
-        CREDO_VERUM (materia_nodus_appendere(piscina, paragraphus,
-            (i32)ORATIO_PARAGRAPHUS_SENTENTIAE,
-            materia_valor_nodus(sententia),
-            MATERIA_LOCUS_LISTA_NODUS));
-        documentum = materia_nodus_creare(piscina,
-            (s32)ORATIO_GENUS_DOCUMENTUM,
-            ORATIO_REGISTRUM.genera[ORATIO_GENUS_DOCUMENTUM].loci_numerus);
-        CREDO_VERUM (materia_nodus_appendere(piscina, documentum,
-            (i32)ORATIO_DOCUMENTUM_PARAGRAPHI,
-            materia_valor_nodus(paragraphus),
-            MATERIA_LOCUS_LISTA_NODUS));
-        CREDO_VERUM (materia_nodus_ponere(documentum,
-            (i32)ORATIO_DOCUMENTUM_FINIS,
-            materia_valor_token(_lexema(piscina, (s32)ORATIO_LEX_FINIS,
-            "",
-                (s32)II, (i32)II, (i32)I)), MATERIA_LOCUS_TOKEN));
-
-        materia_arbor_consilium_nudum(&c, &ORATIO_REGISTRUM, &ratum,
-            "oratio");
-        s1 = materia_arbor_scribere_nodum(piscina, documentum, &c);
-        CREDO_VERUM (s1.successus);
-        si (!s1.successus)
-        {
-            imprimere("    (scriptura: %s)\n",
-                s1.causa ? s1.causa : "-");
-        }
-        CREDO_NON_NIHIL (strstr((character*)s1.textus.datum,
-            "grammatica=\"oratio\""));
-        CREDO_NON_NIHIL (strstr((character*)s1.textus.datum,
-            "<vocabulum"));
-                CREDO_NON_NIHIL (strstr((character*)s1.textus.datum,
-                    "<or-litterae"));
-        CREDO_NON_NIHIL (strstr((character*)s1.textus.datum,
-            "<analysis-substantivi"));
-        CREDO_NON_NIHIL (strstr((character*)s1.textus.datum, "<casus"));
-        CREDO_NON_NIHIL (strstr((character*)s1.textus.datum, "<lemma"));
-        lecta = materia_arbor_legere(piscina, NIHIL, s1.textus, &c,
-            &vitium);
-        CREDO_NON_NIHIL (lecta);
-        si (lecta == NIHIL)
-        {
-            imprimere("    (lectio: %s, linea %d)\n",
-                vitium.causa ? vitium.causa : "-",
-                (integer)vitium.linea);
-        }
-        alioquin
-        {
-            CREDO_AEQUALIS_S32 (lecta->genus,
-                (s32)ORATIO_GENUS_DOCUMENTUM);
-            s2 = materia_arbor_scribere_nodum(piscina, lecta, &c);
-            CREDO_VERUM (s2.successus);
-            CREDO_AEQUALIS_I32 (s2.textus.mensura, s1.textus.mensura);
-            CREDO_VERUM (memcmp(s1.textus.datum, s2.textus.datum,
-                (size_t)s1.textus.mensura) == ZEPHYRUM);
-        }
-    }
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    redde praeteritus ? ZEPHYRUM : I;
+    redde credo_suitam_currere_cum("oratio_registrum", SECTIONES,
+        _suitam_parare, NIHIL);
 }

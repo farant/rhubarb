@@ -202,3 +202,14 @@ open 2 s; the test asserts first sink call < 200 ms and total < 1.5 s.
 Plant (stop condition removed): red on the 1.5 s assert, as intended.
 Streaming seam `HttpVecturaRivi` mirrors `HttpVectura` (ordinary =
 `http_exsequi_rivus`; `exsequi` NIHIL -> named error).
+
+## 2026-10-22 - http_exsequi: 1 GiB refusal (horreum review C1)
+
+`http_exsequi` collects the whole response; its i32 capacity doubled
+without bound and wrapped (`nova_capacitas *= II` past 2^31 -> 0, then
+`dum (nova_capacitas < ...)` never ends). It now refuses past 1 GiB
+(`HTTP_EXSEQUI_CORPUS_MAXIMUM`, "corpus nimium ... http_exsequi_rivus
+adhibe"). Deliberately NOT the lector's 16 MB: other callers may fetch
+more than that in memory. Untested (a test would move a gigabyte).
+horreum no longer uses `http_exsequi` by default: its vectura is
+`http_exsequi_rivus` without a stream, which has the lector's cap.

@@ -44,3 +44,15 @@ the formatter, so the commit carries many `cosmetica` rewraps beside the
 two substantive changes (`XmlStatus`, `xml_legere`). One pre-existing
 call near `:1234` came out with odd continuation alignment — inherited
 from its previous layout, valid C, not touched by hand.
+
+## 2026-10-22 - numeric character references (horreum review I3)
+
+The reader decoded only the five named entities; `&#D;` / `&#xH;` were
+left raw, so horreum decoded them afterwards - a second pass that turned
+the literal key `&#65;` (on the wire `&amp;#65;`) into `A`. Now
+`_referentiam_numeri_legere` decodes them in the SAME pass as named
+entities, in text and attribute values; malformed ones (`&#;`, bad
+digits, no `;`, 0, surrogates, > U+10FFFF) stay literal like unknown
+entities. Checked that committed XML inputs of other consumers (plist
+tests, pecunia's pinned SIX lists) contain no numeric references, so no
+generated output changes.

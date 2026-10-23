@@ -60,26 +60,24 @@ _octeti (
         == ZEPHYRUM);
 }
 
-integer
-principale (vacuum)
+hic_manens constans character fons_a[] =
+    "# Title one\n\ntext *em* here\n\n## Sub\n\n- a\n- b\n\n"
+    "```c\nx;\n```\n";
+hic_manens constans character fons_b[] =
+    "Title\n=====\n\n- a\n  - b\n- c\n";
+hic_manens constans character fons_c[] = "[x]: /u \"t\"\n\n[x]\n";
+
+/* Sectio quaeque internamentum suum in c->piscina creat: quaestio
+ * quaeque fontem suum de novo parsat, comparatio per contentum fit. */
+
+interior vacuum
+_capitula_probare (
+    CredoContextus* c)
 {
-                Piscina* piscina;
-    InternamentumChorda* intern;
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_creare(piscina);
       MdExtentaResultus  r;
-     constans character* fons_a =
-         "# Title one\n\ntext *em* here\n\n## Sub\n\n- a\n- b\n\n"
-         "```c\nx;\n```\n";
-    constans character* fons_b = "Title\n=====\n\n- a\n  - b\n- c\n";
-    constans character* fons_c = "[x]: /u \"t\"\n\n[x]\n";
 
-    piscina = piscina_generare_dynamicum("probatio_md_extenta",
-        8388608);
-    intern = internamentum_creare(piscina);
-
-
-    credo_aperire(piscina);
-
-    imprimere("\n--- Probans capitula ATX ---\n");
     r = _quaerere(piscina, intern, fons_a, "capitulum");
     CREDO_VERUM (r.successus);
     CREDO_VERUM (r.lexemata > ZEPHYRUM);
@@ -94,8 +92,16 @@ principale (vacuum)
         _extentum(&r, ZEPHYRUM)->tag, piscina), "capitulum");
     CREDO_VERUM (_octeti(fons_a, _extentum(&r, I), "## Sub\n"));
     CREDO_AEQUALIS_I32 (_extentum(&r, I)->linea, V);
+}
 
-    imprimere("\n--- Probans elementa, saeptum, paragraphum, documentum ---\n");
+interior vacuum
+_elementa_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_creare(piscina);
+      MdExtentaResultus  r;
+
     r = _quaerere(piscina, intern, fons_a, "elementum");
     CREDO_VERUM (r.successus);
     CREDO_AEQUALIS_I32 (xar_numerus(r.extenta), II);
@@ -122,8 +128,16 @@ principale (vacuum)
     CREDO_VERUM (r.successus);
     CREDO_AEQUALIS_I32 (xar_numerus(r.extenta), I);
     CREDO_VERUM (_octeti(fons_a, _extentum(&r, ZEPHYRUM), fons_a));
+}
 
-    imprimere("\n--- Probans lexemata ipsa et combinatores ---\n");
+interior vacuum
+_lexemata_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_creare(piscina);
+      MdExtentaResultus  r;
+
     r = _quaerere(piscina, intern, fons_a, "md-textus");
     CREDO_VERUM (r.successus);
     CREDO_VERUM (xar_numerus(r.extenta) >= V);
@@ -138,8 +152,16 @@ principale (vacuum)
     CREDO_VERUM (r.successus);
     CREDO_AEQUALIS_I32 (xar_numerus(r.extenta), II);
     CREDO_VERUM (_octeti(fons_a, _extentum(&r, I), "Sub"));
+}
 
-    imprimere("\n--- Probans setext et nidificationem ---\n");
+interior vacuum
+_nidos_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_creare(piscina);
+      MdExtentaResultus  r;
+
     r = _quaerere(piscina, intern, fons_b, "capitulum");
     CREDO_VERUM (r.successus);
     CREDO_AEQUALIS_I32 (xar_numerus(r.extenta), I);
@@ -153,8 +175,16 @@ principale (vacuum)
         "- a\n  - b\n"));
     CREDO_VERUM (_octeti(fons_b, _extentum(&r, I), "  - b\n"));
     CREDO_VERUM (_octeti(fons_b, _extentum(&r, II), "- c\n"));
+}
 
-    imprimere("\n--- Probans lexemata derivata et refusiones ---\n");
+interior vacuum
+_derivata_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_creare(piscina);
+      MdExtentaResultus  r;
+
     r = _quaerere(piscina, intern, fons_c, "definitio-nexus");
     CREDO_VERUM (r.successus);
     CREDO_AEQUALIS_I32 (xar_numerus(r.extenta), I);
@@ -172,17 +202,23 @@ principale (vacuum)
     CREDO_FALSUM (r.successus);
     CREDO_VERUM (r.causa.mensura > ZEPHYRUM);
     CREDO_VERUM (r.extenta == NIHIL);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "capitula ATX", _capitula_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "elementa, saeptum, paragraphum, documentum", _elementa_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lexemata ipsa et combinatores", _lexemata_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "setext et nidificationem", _nidos_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "lexemata derivata et refusiones", _derivata_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-        piscina_destruere(piscina);
-        si (praeteritus)
-        {
-            redde ZEPHYRUM;
-        }
-    }
-    redde I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("md_extenta", SECTIONES);
 }

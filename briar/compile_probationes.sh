@@ -9,6 +9,10 @@ if [ -z "${BRIAR_PROBATIONES_EFFUSIO:-}" ]; then
     "$0" "$@" 2>&1 | tee "$(dirname "$0")/../build/test_logs/briar.log"
     exit "${PIPESTATUS[0]}"
 fi
+# initium scripti (2026-10-22): mensor_suitae 'totum' hinc metitur, ut
+# praevolatus (totum - compilatio - cursus) PRAEPARATIONEM obiectorum
+# ante ansam probationum nominet (olim ab ansa ipsa - invisa)
+SUITA_INITIUM="$(perl -MTime::HiRes -e 'print Time::HiRes::time')"
 
 # briar/compile_probationes.sh - Probationes thistle (cliens materiae; md consumit)
 #
@@ -327,7 +331,7 @@ done
 # metra suitae in volumen mensoris (tools/mensor_suitae.sh; praefixum
 # "md." - silva.mensurae('md.', n) eas legit); numquam suitam frangit
 source "$RADIX_DIR/tools/mensor_suitae.sh"
-mensor_suitae_incipere "briar."
+mensor_suitae_incipere "briar." "$SUITA_INITIUM"
 total=0 ; passed=0 ; failed_names=""
 if [ "$OBIECTA" -eq 1 ]; then
     echo "obiecta briar parata"

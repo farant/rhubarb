@@ -145,20 +145,54 @@ if [ -z "$SUITAE" ]; then
 fi
 
 echo "frigida: commissum $BREVE, arbor $ARBOR"
+# MENSURA (2026-10-22): arbor frigida bin/mensor non habet - mensor
+# HUIUS arboris suitis datur (metra suitarum: compile_tests.sh,
+# tools/mensor_suitae.sh), et suita quaeque cursus suus est (filius
+# cursus frigidae: 'mensor quaestio filii' ubi tempus abiit). Mensor
+# absens = sine mensura, numquam fractura.
+if [ -x "$RADIX/bin/mensor" ]; then
+    export MENSOR_BINARIUM="$RADIX/bin/mensor"
+fi
+_suitam_incipere () {   # <suita> -> SUITA_CURSUS, MENSOR_PARENS suitae
+    SUITA_CURSUS=""
+    SUITA_PARENS_VETUS="${MENSOR_PARENS:-}"
+    SUITA_MS0="$(perl -MTime::HiRes -e 'printf "%d", Time::HiRes::time * 1000')"
+    [ -n "${MENSOR_BINARIUM:-}" ] || return 0
+    SUITA_CURSUS="$("$MENSOR_BINARIUM" cursus incipere -titulus "frigida:$1" \
+        2>/dev/null | sed -n 's/^MENSOR_PARENS=//p')"
+    [ -n "$SUITA_CURSUS" ] && export MENSOR_PARENS="$SUITA_CURSUS"
+    return 0
+}
+_suitam_finire () {     # <exitus>
+    local ms1
+    ms1="$(perl -MTime::HiRes -e 'printf "%d", Time::HiRes::time * 1000')"
+    if [ -n "${SUITA_CURSUS:-}" ]; then
+        "$MENSOR_BINARIUM" cursus finire -id "$SUITA_CURSUS" -exitus "$1" \
+            -duratio_ms "$((ms1 - SUITA_MS0))" >/dev/null 2>&1 || true
+    fi
+    if [ -n "$SUITA_PARENS_VETUS" ]; then
+        export MENSOR_PARENS="$SUITA_PARENS_VETUS"
+    else
+        unset MENSOR_PARENS
+    fi
+    return 0
+}
 RUBRAE=0
 for s in $SUITAE; do
     t0=$(date +%s)
+    _suitam_incipere "$s"
     if [ "$s" = radix ]; then
         ( cd "$ARBOR" && ./compile_tests.sh ) > "$ACTA/$s.log" 2>&1 &
     elif [ -x "$ARBOR/$s/compile_probationes.sh" ]; then
         ( cd "$ARBOR" && "./$s/compile_probationes.sh" ) > "$ACTA/$s.log" 2>&1 &
     else
-        echo "  $s: SUITA IGNOTA"; RUBRAE=$((RUBRAE + 1)); continue
+        echo "  $s: SUITA IGNOTA"; RUBRAE=$((RUBRAE + 1)); _suitam_finire 2; continue
     fi
     NATUS=$!
     wait "$NATUS"
     rc=$?
     NATUS=""
+    _suitam_finire "$rc"
     dt=$(( $(date +%s) - t0 ))
     if [ "$rc" = 0 ]; then
         printf "  %-12s viridis (%ds)\n" "$s" "$dt"

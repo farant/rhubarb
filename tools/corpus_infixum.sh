@@ -70,6 +70,10 @@ corpus_symbola_generare () {
     [ -f "$RADIX/build/nexus.tsv" ] || return 1
     {
         echo "# corpus.symbola.tsv GENERATUM a tools/corpus_infixum.sh (sedes include/*.h et <radix>/*.h = capita; sedes lib/*.c et <radix>/*.c profunditate 0 sine capite, non externa = statica; radices: ${RADICES_CLIENTIUM[*]}) e build/nexus.tsv - NE MANU EDITES"
+        # PRAEFILTRUM (2026-10-22): nexus.tsv ~CLXVI MB, lineae 'sedes'
+        # XVIII% solae (regulae ambae $2=="sedes" poscunt) - grep -F eas
+        # ante awk seligit: effusio eadem, ~XIV s -> ~III.III s (mensuratum)
+        LC_ALL=C grep -F "$(printf '\tsedes\t')" "$RADIX/build/nexus.tsv" |
         awk -F'\t' -v radices="${RADICES_CLIENTIUM[*]}" '
             BEGIN { nr = split(radices, R, " ") }
             function in_radice(via, suffixum,    k) {
@@ -84,7 +88,7 @@ corpus_symbola_generare () {
                 n=n+1; statica[n]=$1"\t"$3"\t"$4; nomina[n]=$1
             }
             END { for (k=1; k<=n; k++) if (!(nomina[k] in publica)) print statica[k] }
-        ' "$RADIX/build/nexus.tsv" | sort -u
+        ' | sort -u
     } > "$TABULA" || return 1
     return 0
 }
@@ -112,10 +116,13 @@ _corpus_plagulae () {
 
 # sigillum contentorum: via + SHA-256 cuiusque, deinde SHA-256 totius
 corpus_sigillum () {
-    local f
-    _corpus_plagulae | while IFS= read -r f; do
-        printf '%s\t%s\n' "$f" "$(shasum -a 256 < "$f" | cut -c1-64)"
-    done | shasum -a 256 | cut -c1-64
+    # SHASUM UNUM (2026-10-22): olim shasum (scriptum perl) et cut per
+    # plagulam - MD+ processus, ~XVIII s; nunc shasum unus super omnes
+    # (xargs ordinem servat), lineae 'via<TAB>sigillum' eaedem, ergo
+    # sigillum totale idem (viae corporis sine spatio aut '\\')
+    _corpus_plagulae | tr '\n' '\0' | xargs -0 shasum -a 256 \
+        | awk '{ h = $1; print substr($0, length(h) + 3) "\t" h }' \
+        | shasum -a 256 | cut -c1-64
 }
 
 corpus_infixum_regenerare () {

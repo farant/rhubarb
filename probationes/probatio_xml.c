@@ -831,6 +831,29 @@ _sectio_vicesima_tertia (
     }
 }
 
+/* referentiae numericae (&#D; &#xH;) in textu et attributis, SEMEL
+ * decodificatae: "&amp;#67;" textus litteralis "&#67;" manet
+ * (recensio horrei I3) */
+interior vacuum
+_sectio_referentiae_numerorum (
+    CredoContextus* c)
+{
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_creare(piscina);
+            XmlResultus  res;
+
+    res = xml_legere_ex_literis(
+        "<d a=\"&#65;&#x42;&amp;#67;\">&#65;&#x42;&amp;#67;"
+        "&#x1234;&#13;|&#;&#xZZ;&#1114112;&#65</d>", piscina, intern);
+    CREDO_NECESSE(res.successus);
+    CREDO_CHORDA_AEQUALIS_LITERIS(xml_textus_internus(res.radix,
+        piscina),
+        "AB&#67;\xE1\x88\xB4\r|&#;&#xZZ;&#1114112;&#65");
+    CREDO_CHORDA_AEQUALIS_LITERIS(*xml_attributum_capere(res.radix,
+        "a"),
+        "AB&#67;");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "xml_elementum_creare", _sectio_prima, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -877,6 +900,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL, NIHIL },
     { "DOCTYPE in prologo", _sectio_vicesima_tertia, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "referentiae_numerorum", _sectio_referentiae_numerorum, NIHIL,
+        NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

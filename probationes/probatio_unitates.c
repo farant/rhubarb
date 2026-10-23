@@ -130,16 +130,20 @@ hic_manens constans character* constans POLITICA[] = {
     "  <lingua titulus=\"stml\" extensiones=\".stml\"/>",
     "  <iudex titulus=\"lint\" curae=\"domestica\""
         " vitae=\"viva vetusta\" munera=\"fons caput probatio\"",
-    "         provenientiae=\"manu\" linguae=\"c89 objc\""
-        " descriptio=\"l\"/>",
+    "         provenientiae=\"manu\" indoles=\"codex data\""
+        " linguae=\"c89 objc\" descriptio=\"l\"/>",
     "  <bibliothecae capita=\"include\" fontes=\"lib\""
         " probationes=\"probationes\" praefixum=\"probatio_\"",
     "                partes=\"_macos _posix\""
         " paginae=\"docs/bibliothecae\" bona=\"_assets\"/>",
     "  <iudex titulus=\"omnia\" curae=\"domestica\""
         " vitae=\"viva\" munera=\"fons\"",
-    "         provenientiae=\"manu generatum\" linguae=\"c89\""
-        " descriptio=\"o\"/>",
+    "         provenientiae=\"manu generatum\" indoles=\"codex data\""
+        " linguae=\"c89\" descriptio=\"o\"/>",
+    "  <iudex titulus=\"codex\" curae=\"domestica\""
+        " vitae=\"viva\" munera=\"fons documentum\"",
+    "         provenientiae=\"manu generatum\" indoles=\"codex\""
+        " linguae=\"c89 md\" descriptio=\"c\"/>",
     "  <exspectatio genus=\"/elementa_programmatis/bibliotheca\""
         " munus=\"probatio\" minimum=\"1\" descriptio=\"probatio\"/>",
     "  <exspectatio genus=\"/elementa_programmatis/applicatio\""
@@ -598,7 +602,7 @@ _sectio_iudex (
         "formator", c->piscina), chorda_ex_literis("lib/xar.c",
         c->piscina), c->piscina, &causa), (i32)UNITATES_IUDEX_IGNOTUS);
     CREDO_CHORDA_AEQUALIS_LITERIS(causa,
-        "iudex 'formator' ignotus (noti: lint, omnia)");
+        "iudex 'formator' ignotus (noti: lint, omnia, codex)");
 
     /* iudex provenientias omnes admittens plagulam NON legit: via
      * illegibilis iudicatur (lint indicem MMC viarum sine lectione
@@ -610,6 +614,104 @@ _sectio_iudex (
         "lib/nusquam.c", c->piscina), c->piscina, &causa),
         (i32)UNITATES_NON_IUDICAT);
     INCIPIT_LITERIS(causa, "provenientia nullum (plagula legi nequit)");
+}
+
+/* VI b. indoles ex SIGNO DATORUM (verbum integrum 'DATA' in linea
+ * signorum, ut GENERATUM): orthogonalis ad provenientiam; iudex
+ * indolem codicis solam admittens tabulas datorum excludit cum causa;
+ * mundus proprius (census MUNDI immotus) */
+interior vacuum
+_sectio_indoles (
+    CredoContextus* c)
+{
+    hic_manens constans PlagulaFicta mundus[] = {
+        { "unitates.stml", NIHIL, POLITICA },
+        { "unitas.stml", "<unitas titulus=\"rhubarb\" genus=\"" SUB "\""
+            " descriptio=\"r\"/>", NIHIL },
+        { "include/imago.h", "/* familia POLITICAE */\n", NIHIL },
+        { "lib/biblia_dr.c", "/* DATA: biblia_dr.c - textus */\n"
+            "hic_manens int t[] = { 1 };\n", NIHIL },
+        { "lib/nodi_data.c", "/* GENERATUM DATA: g.sh - NE EDITA */\n",
+            NIHIL },
+        { "lib/databasis.c",
+            "/* DATABASE, TABULA_DATA, DATAE: codex */\n",
+            NIHIL },
+        { "lib/tertia.c",
+            "/*\n *\n * DATA in linea III non valet\n */\n",
+            NIHIL },
+        { "docs/tabula.md", "<!doctype html>\n<!-- DATA -->\n", NIHIL },
+        { "docs/prosa.md", "# prosa\n", NIHIL },
+        { NIHIL, NIHIL, NIHIL }
+    };
+             Unitates* u;
+    UnitatisResponsum  r;
+               chorda  causa;
+               chorda  iudex;
+
+    u = _mundum_legere(c, mundus, &causa, NIHIL);
+    si (u == NIHIL)
+    {
+        imprimere("  CAUSA: %.*s\n", (integer)causa.mensura,
+            (constans character*)causa.datum);
+    }
+    CREDO_NECESSE_NON_NIHIL(u);
+
+    r = _quid(c, u, "lib/biblia_dr.c");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.indoles.valor, "data");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.indoles.causa, "linea I: DATA");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.provenientia.valor, "manu");
+
+    /* duo signa in linea eadem: generatum ET data */
+    r = _quid(c, u, "lib/nodi_data.c");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.indoles.valor, "data");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.provenientia.valor, "generatum");
+
+    /* verbum INTEGRUM: DATABASE, TABULA_DATA, DATAE non signant */
+    r = _quid(c, u, "lib/databasis.c");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.indoles.valor, "codex");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.indoles.causa, "linea I sine DATA");
+
+    /* positio fixa: linea III non valet; post declarationem linea II */
+    r = _quid(c, u, "lib/tertia.c");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.indoles.valor, "codex");
+    r = _quid(c, u, "docs/tabula.md");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.indoles.valor, "data");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.indoles.causa,
+        "linea II (post declarationem): DATA");
+
+    r = _quid(c, u, "lib/nusquam.c");
+    CREDO_CHORDA_VACUA(r.indoles.valor);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.indoles.causa,
+        "plagula legi nequit");
+
+    /* iudex indolem codicis solam admittens: data excluduntur cum
+     * causa, codex iudicatur (manu et generatum) */
+    iudex = chorda_ex_literis("codex", c->piscina);
+    CREDO_AEQUALIS_I32((i32)unitates_iudicat(u, iudex,
+        chorda_ex_literis(
+        "lib/biblia_dr.c", c->piscina), c->piscina, &causa),
+        (i32)UNITATES_NON_IUDICAT);
+    CREDO_CHORDA_AEQUALIS_LITERIS(causa, "indoles data (linea I: DATA) "
+        "non in indoles iudicis codex");
+    CREDO_AEQUALIS_I32((i32)unitates_iudicat(u, iudex,
+        chorda_ex_literis(
+        "lib/nodi_data.c", c->piscina), c->piscina, &causa),
+        (i32)UNITATES_NON_IUDICAT);
+    CREDO_AEQUALIS_I32((i32)unitates_iudicat(u, iudex,
+        chorda_ex_literis(
+        "lib/databasis.c", c->piscina), c->piscina, &causa),
+        (i32)UNITATES_IUDICAT);
+    CREDO_AEQUALIS_I32((i32)unitates_iudicat(u, iudex,
+        chorda_ex_literis(
+        "docs/prosa.md", c->piscina), c->piscina, &causa),
+        (i32)UNITATES_IUDICAT);
+
+    /* iudex indoles OMNES admittens: data iudicat, plagulam non
+     * legit */
+    CREDO_AEQUALIS_I32((i32)unitates_iudicat(u,
+        chorda_ex_literis("omnia",
+        c->piscina), chorda_ex_literis("lib/biblia_dr.c", c->piscina),
+        c->piscina, &causa), (i32)UNITATES_IUDICAT);
 }
 
 /* IX. lista viarum filtrata (corpus_tractatae.txt): eadem forma, '\r'
@@ -657,6 +759,10 @@ _sectio_recusationes (
         "  <iudex titulus=\"lint\" curae=\"domestica\" vitae=\"viva\""
             " munera=\"caput\" provenientiae=\"manu\"",
         "         linguae=\"c89\" descriptio=\"l\"/>",
+        "  <iudex titulus=\"alter\" curae=\"domestica\" vitae=\"viva\""
+            " munera=\"fons\" provenientiae=\"manu\"",
+        "         indoles=\"tabula\"",
+        "         linguae=\"c89\" descriptio=\"a\"/>",
         "  <bibliothecae capita=\"include\" fontes=\"lib\""
             " probationes=\"probationes\" praefixum=\"probatio_\""
             " partes=\"_macos\"/>",
@@ -690,6 +796,8 @@ _sectio_recusationes (
         "regula munus 'nihil' vacua",
         "elementum ignotum <ignotum>",
         "munus 'caput' ignotus (noti: fons, nihil)",
+        "attributum necessarium 'indoles' abest",
+        "indoles 'tabula' ignotus (noti: codex, data)",
         "a/unitas.stml:1: genus '/x/ignotum' ignotus (noti: " SUB ", "
             APP ")",
         "b/unitas.stml:1: attributum ignotum 'colores'",
@@ -1020,6 +1128,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "provenientia", _sectio_provenientia, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "iudex", _sectio_iudex, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "indoles", _sectio_indoles, NIHIL, NIHIL, NIHIL, NIHIL },
     { "recusationes", _sectio_recusationes, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "radix absens", _sectio_radix_absens, NIHIL, NIHIL, NIHIL,

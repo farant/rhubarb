@@ -23,3 +23,32 @@ real SDK (296 octets; resident 64, footprint 72, lifetime max 240).
 
 Gotcha while writing the test: `M` is the Roman numeral 1000, so
 `M * MXXIV` is 1,024,000, not a MiB - use `MXXIV * MXXIV`.
+
+## 2026-10-20 - Linux body (from quarta, ianua T3)
+
+After main 7f1c85c5 was merged into quarta, EVERY Linux test link failed
+(`undefined reference to memoria_processus_legere` from credo.c):
+credo T2+ calls this library, but it had only the macOS body ("Linux can
+follow later", credo-memoria-spec II.1). Found by ianua T3's Linux run;
+`cives` (green on Linux before the merge) failed identically.
+
+`lib/memoria_processus_posix.c` reads `/proc/<pid>/status`:
+footprint = VmRSS + VmSwap (closest to ri_phys_footprint: pages held,
+resident or swapped), peak = VmHWM (RSS peak; Linux keeps no
+swap-inclusive peak), resident = VmRSS; kB -> bytes. No /proc (BSD) or a
+zombie child without Vm* lines -> FALSUM, which the header allows and
+credo already tolerates (memory recorded as 0).
+
+PITFALL: /proc files report st_size 0, so `filum_legere_totum` would
+return an EMPTY chorda with no error. Read with `filum_octeti_*` to EOF.
+Under FABRICA_LECTIONES the read would be journaled; fabrica does not
+run inside the Linux containers.
+
+Also fixed in probatio_memoria_processus.c: `(vacuum)read(...)` fails
+glibc builds (`warn_unused_result`; gcc ignores the void cast) - the
+suite had never been built on Linux.
+
+Oracle = the existing platform-neutral suite, unchanged: 20/20 on musl,
+glibc and macOS. Hand plant (posix body not compiled on macOS, so no
+silva.planta): kB not converted -> 18/20 on musl (the 64 MiB growth
+section), restored -> 20/20.

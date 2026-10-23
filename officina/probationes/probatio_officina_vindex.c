@@ -40,13 +40,20 @@
 #define LINEA_POST    39          /* piscina_destruere(p); */
 #define CUSTOS_GRADUUM 200000L
 
-hic_manens SilvaParsura*   systema_parsura = NIHIL;
-hic_manens SilvaSemantica* systema_semantica = NIHIL;
-hic_manens Piscina* piscina_officinae = NIHIL;
-hic_manens Xar* moduli_mundi = NIHIL;
-hic_manens Xar* lineae_mundi = NIHIL;
-hic_manens IndiciumScriptor* scriptor_indicii = NIHIL;
-hic_manens constans character* radix_repositorii = ".";
+/* MUNDUS sectionis (olim statica plagulae - examen 92 in sectione
+ * v2): piscinae in parare sectionis creatae, in purgare destructae;
+ * systema, moduli, lineae, scriptor in sectione impleta. */
+nomen structura {
+               Piscina* piscina_ctx;
+               Piscina* piscina_officinae;
+          SilvaPiscina* piscina_silvae_ctx;
+          SilvaParsura* systema_parsura;
+        SilvaSemantica* systema_semantica;
+                   Xar* moduli_mundi;
+                   Xar* lineae_mundi;
+      IndiciumScriptor* scriptor_indicii;
+    constans character* radix_repositorii;
+} MundusVindicis;
 
 interior chorda
 _ch (
@@ -178,8 +185,9 @@ _capita_praeparare (
 
 interior MedullaModulus*
 _plagulam_demittere (
-    constans SilvaContextus* ctx,
-         constans character* via_parsurae)
+              MundusVindicis* mundus,
+     constans SilvaContextus* ctx,
+          constans character* via_parsurae)
 {
     character via_lecta[CCLVI];
          long mensura_l = 0L;
@@ -191,11 +199,12 @@ _plagulam_demittere (
     MedullaModulus* modulus;
     MedullaLineae* lineae = NIHIL;
 
-    sprintf(via_lecta, "%s/%s", radix_repositorii, via_parsurae);
+    sprintf(via_lecta, "%s/%s", mundus->radix_repositorii,
+        via_parsurae);
     piscina_arboris = silva_piscina_generare_dynamicum(
         "vindex_arbor", 8388608);
     si (piscina_arboris == NIHIL) redde NIHIL;
-    fons = _plagulam_legere_cruda(piscina_officinae, via_lecta,
+    fons = _plagulam_legere_cruda(mundus->piscina_officinae, via_lecta,
         &mensura_l);
     si (fons == NIHIL)
     {
@@ -203,10 +212,10 @@ _plagulam_demittere (
         redde NIHIL;
     }
     oraculum = silva_oraculum_creare(piscina_arboris);
-    si (oraculum != NIHIL && systema_semantica != NIHIL)
+    si (oraculum != NIHIL && mundus->systema_semantica != NIHIL)
     {
         (vacuum)silva_c89_semantica_oraculum_augere(
-            systema_semantica, oraculum);
+            mundus->systema_semantica, oraculum);
     }
     parsura = silva_c89_parsare_cum_contextu(piscina_arboris, ctx,
         via_parsurae, fons, (insignatus integer)mensura_l,
@@ -218,7 +227,7 @@ _plagulam_demittere (
         redde NIHIL;
     }
     sem = silva_c89_semantica_analysare_cum_systemate(
-        piscina_arboris, parsura, systema_parsura);
+        piscina_arboris, parsura, mundus->systema_parsura);
     si (sem != NIHIL && oraculum != NIHIL)
     {
         (vacuum)silva_c89_semantica_oraculum_augere(sem, oraculum);
@@ -226,28 +235,28 @@ _plagulam_demittere (
         (vacuum)silva_recanonicare(parsura->commissio, oraculum,
             silva_c89_resolutor, NIHIL);
         sem = silva_c89_semantica_analysare_cum_systemate(
-            piscina_arboris, parsura, systema_parsura);
+            piscina_arboris, parsura, mundus->systema_parsura);
     }
     si (sem == NIHIL)
     {
         silva_piscina_destruere(piscina_arboris);
         redde NIHIL;
     }
-    modulus = demissio_currere(piscina_officinae, parsura, sem,
+    modulus = demissio_currere(mundus->piscina_officinae, parsura, sem,
         _ch(via_parsurae));
     si (modulus != NIHIL)
     {
         /* fenestra collige-ante-destrue: lineae + INDICIUM */
-        lineae = demissio_lineas_colligere(piscina_officinae,
+        lineae = demissio_lineas_colligere(mundus->piscina_officinae,
             modulus, parsura);
-        (vacuum)indicium_modulum_colligere(scriptor_indicii,
+        (vacuum)indicium_modulum_colligere(mundus->scriptor_indicii,
             modulus, parsura, sem);
     }
     silva_piscina_destruere(piscina_arboris);
     si (modulus != NIHIL)
     {
-        MedullaModulus** locellus    = xar_addere(moduli_mundi);
-         MedullaLineae** locellus_l  = xar_addere(lineae_mundi);
+        MedullaModulus** locellus    = xar_addere(mundus->moduli_mundi);
+         MedullaLineae** locellus_l  = xar_addere(mundus->lineae_mundi);
 
         *locellus    = modulus;
         *locellus_l  = lineae;
@@ -255,52 +264,96 @@ _plagulam_demittere (
     redde modulus;
 }
 
-s32
-principale (vacuum)
+/* piscinae mundi (olim in principale, numquam destructae) */
+interior vacuum
+_mundum_parare (
+    CredoContextus* c)
 {
-    Piscina* piscina;
-    Piscina* piscina_ctx;
-    SilvaPiscina* piscina_silvae_ctx;
-    SilvaContextus* ctx;
-    b32 successus;
-    constans character* radix_ambitus = getenv("RHUBARB_RADIX");
+         MundusVindicis* mundus;
+     constans character* radix_ambitus = getenv("RHUBARB_RADIX");
 
-    si (radix_ambitus != NIHIL)
+    mundus = (MundusVindicis*)piscina_allocare(c->piscina,
+        magnitudo(MundusVindicis));
+    si (mundus == NIHIL)
     {
-        radix_repositorii = radix_ambitus;
+        redde;
     }
-
-    imprimere("\n========================================\n");
-    imprimere("PROBATIO OFFICINA VINDEX (SIGILLUM M3)\n");
-    imprimere("========================================\n");
-
-    piscina = piscina_generare_dynamicum("probatio_vindex",
-        LXIV * M * M);
-    piscina_ctx = piscina_generare_dynamicum("vindex_ctx", 8388608);
-    piscina_officinae = piscina_generare_dynamicum("vindex_off",
-        33554432);
-    piscina_silvae_ctx = silva_piscina_generare_dynamicum(
+    memset(mundus, ZEPHYRUM, magnitudo(MundusVindicis));
+    mundus->radix_repositorii = (radix_ambitus != NIHIL)
+        ? radix_ambitus : ".";
+    mundus->piscina_ctx = piscina_generare_dynamicum("vindex_ctx",
+        8388608);
+    mundus->piscina_officinae = piscina_generare_dynamicum(
+        "vindex_off", 33554432);
+    mundus->piscina_silvae_ctx = silva_piscina_generare_dynamicum(
         "vindex_silva", 8388608);
-    si (   piscina            == NIHIL || piscina_ctx == NIHIL
-        || piscina_officinae  == NIHIL
-        || piscina_silvae_ctx == NIHIL)
+    c->datum = mundus;
+}
+
+interior vacuum
+_mundum_purgare (
+    CredoContextus* c)
+{
+    MundusVindicis* mundus = (MundusVindicis*)c->datum;
+
+    si (mundus == NIHIL)
+    {
+        redde;
+    }
+    si (mundus->piscina_silvae_ctx != NIHIL)
+    {
+        silva_piscina_destruere(mundus->piscina_silvae_ctx);
+    }
+    si (mundus->piscina_officinae != NIHIL)
+    {
+        piscina_destruere(mundus->piscina_officinae);
+    }
+    si (mundus->piscina_ctx != NIHIL)
+    {
+        piscina_destruere(mundus->piscina_ctx);
+    }
+}
+
+
+/* ==================================================
+ * PROBARE: sigillum M3 - punctum/gradus/inspectio per indicium solum
+ * (scaena: phasis quaeque statum machinulae priorum continuat)
+ * ================================================== */
+
+interior vacuum
+_sigillum_probare (
+    CredoContextus* c)
+{
+         MundusVindicis* mundus = (MundusVindicis*)c->datum;
+         SilvaContextus* ctx;
+                Piscina* piscina_ctx;
+                Piscina* piscina_officinae;
+           SilvaPiscina* piscina_silvae_ctx;
+    constans character* radix_repositorii;
+
+    si (   mundus == NIHIL || mundus->piscina_ctx == NIHIL
+        || mundus->piscina_officinae == NIHIL
+        || mundus->piscina_silvae_ctx == NIHIL)
     {
         imprimere("FRACTA: piscinae\n");
-        redde I;
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
     }
-    credo_aperire(piscina);
-
-    ctx = silva_contextus_creare(piscina_silvae_ctx);
-    moduli_mundi = xar_creare(piscina_ctx,
+    piscina_ctx         = mundus->piscina_ctx;
+    piscina_officinae   = mundus->piscina_officinae;
+    piscina_silvae_ctx  = mundus->piscina_silvae_ctx;
+    radix_repositorii   = mundus->radix_repositorii;
+    ctx                 = silva_contextus_creare(piscina_silvae_ctx);
+    mundus->moduli_mundi = xar_creare(piscina_ctx,
         (i32)magnitudo(MedullaModulus*));
-    lineae_mundi = xar_creare(piscina_ctx,
+    mundus->lineae_mundi = xar_creare(piscina_ctx,
         (i32)magnitudo(MedullaLineae*));
-    scriptor_indicii = indicium_scriptor_creare(piscina_officinae);
+    mundus->scriptor_indicii =
+        indicium_scriptor_creare(piscina_officinae);
     CREDO_NON_NIHIL (ctx);
-    CREDO_NON_NIHIL (scriptor_indicii);
+    CREDO_NON_NIHIL (mundus->scriptor_indicii);
 
     /* --- systema ISO+POSIX (exemplar interpretare) --- */
-    imprimere("\n--- Praeparans systema + capita ---\n");
+    CREDO_GRADUS ("Praeparans systema + capita");
     {
         character  via_iso[CCLVI];
         character  via_posix[CCLVI];
@@ -323,7 +376,7 @@ principale (vacuum)
         CREDO_NON_NIHIL (fons_posix);
         si (fons_iso == NIHIL || fons_posix == NIHIL)
         {
-            redde I;
+            redde;   /* assertio supra fracta: sectio FRACTA */
         }
         mensura_sys = m_iso + 1L + m_posix;
         fons_sys = (character*)piscina_allocare(piscina_ctx,
@@ -335,13 +388,13 @@ principale (vacuum)
         CREDO_VERUM (silva_contextus_lexicon_addere(ctx,
             "systema_c89.h", fons_sys,
             (insignatus integer)mensura_sys));
-        systema_parsura = silva_c89_parsare(piscina_silvae_ctx,
+        mundus->systema_parsura = silva_c89_parsare(piscina_silvae_ctx,
             "systema_c89.h", fons_sys,
             (insignatus integer)mensura_sys, NIHIL);
-        CREDO_NON_NIHIL (systema_parsura);
-        systema_semantica = silva_c89_semantica_analysare(
-            piscina_silvae_ctx, systema_parsura);
-        CREDO_NON_NIHIL (systema_semantica);
+        CREDO_NON_NIHIL (mundus->systema_parsura);
+        mundus->systema_semantica = silva_c89_semantica_analysare(
+            piscina_silvae_ctx, mundus->systema_parsura);
+        CREDO_NON_NIHIL (mundus->systema_semantica);
     }
     {
         TabulaDispersa* visa = tabula_dispersa_creare_chorda(
@@ -352,13 +405,13 @@ principale (vacuum)
     }
 
     /* --- mundus scopo dato + suita --- */
-    imprimere("\n--- Demittens mundum (V TUs) ---\n");
-    CREDO_NON_NIHIL (_plagulam_demittere(ctx, "lib/piscina.c"));
-    CREDO_NON_NIHIL (_plagulam_demittere(ctx, "lib/chorda.c"));
-    CREDO_NON_NIHIL (_plagulam_demittere(ctx,
+    CREDO_GRADUS ("Demittens mundum (V TUs)");
+    CREDO_NON_NIHIL (_plagulam_demittere(mundus, ctx, "lib/piscina.c"));
+    CREDO_NON_NIHIL (_plagulam_demittere(mundus, ctx, "lib/chorda.c"));
+    CREDO_NON_NIHIL (_plagulam_demittere(mundus, ctx,
         "lib/chorda_aedificator.c"));
-    CREDO_NON_NIHIL (_plagulam_demittere(ctx, "lib/credo.c"));
-    CREDO_NON_NIHIL (_plagulam_demittere(ctx, VIA_SUITAE));
+    CREDO_NON_NIHIL (_plagulam_demittere(mundus, ctx, "lib/credo.c"));
+    CREDO_NON_NIHIL (_plagulam_demittere(mundus, ctx, VIA_SUITAE));
 
     /* --- nexus + machinula + indicium scriptum-RECLUSUM --- */
     {
@@ -374,22 +427,23 @@ principale (vacuum)
 
         CREDO_NON_NIHIL (regio);
         CREDO_NON_NIHIL (conexio);
-        per (k = ZEPHYRUM; k < xar_numerus(moduli_mundi); k++)
+        per (k = ZEPHYRUM; k < xar_numerus(mundus->moduli_mundi); k++)
         {
             CREDO_VERUM (conexio_modulum_addere(conexio,
-                *(MedullaModulus**)xar_obtinere(moduli_mundi, k)));
+                *(MedullaModulus**)xar_obtinere(mundus->moduli_mundi,
+                k)));
         }
         CREDO_VERUM (conexio_nectere(conexio));
         machinula = machinula_creare(piscina_ctx, conexio, regio);
         CREDO_NON_NIHIL (machinula);
         si (machinula == NIHIL)
         {
-            redde I;
+            redde;   /* assertio supra fracta: sectio FRACTA */
         }
-        per (k = ZEPHYRUM; k < xar_numerus(lineae_mundi); k++)
+        per (k = ZEPHYRUM; k < xar_numerus(mundus->lineae_mundi); k++)
         {
             MedullaLineae* lineae_k = *(MedullaLineae**)
-                xar_obtinere(lineae_mundi, k);
+                xar_obtinere(mundus->lineae_mundi, k);
 
             si (lineae_k != NIHIL)
             {
@@ -398,23 +452,24 @@ principale (vacuum)
             }
         }
 
-        imprimere("\n--- Scribens + recludens indicium ---\n");
+        CREDO_GRADUS ("Scribens + recludens indicium");
         sprintf(via_indicii,
             "%s/officina/build/probatio_vindex.indicium",
             radix_repositorii);
-        CREDO_VERUM (indicium_scribere(scriptor_indicii, conexio,
+        CREDO_VERUM (indicium_scribere(mundus->scriptor_indicii,
+            conexio,
             via_indicii));
         lector = indicium_aperire(piscina_ctx, via_indicii);
         CREDO_NON_NIHIL (lector);
         si (lector == NIHIL)
         {
-            redde I;
+            redde;   /* assertio supra fracta: sectio FRACTA */
         }
         /* ab hoc puncto: quaestiones per LECTOREM SOLUM */
 
-        /* --- PHASIS 1: punctum per lineam RETRO (linea CREDO) --- */
-        imprimere("\n--- Phasis 1: punctum linea %d (CREDO) ---\n",
-            (int)LINEA_CREDO);
+        /* --- PHASIS 1: punctum per lineam RETRO (linea CREDO) ---
+         * (37 = LINEA_CREDO; titulus gradus litterae durare debet) */
+        CREDO_GRADUS ("Phasis 1: punctum linea 37 (CREDO)");
         {
             constans IndiciumSitus* situs = NIHIL;
             i32 numerus = indicium_situs_de_linea(lector,
@@ -423,7 +478,7 @@ principale (vacuum)
             CREDO_VERUM (numerus > ZEPHYRUM);
             si (numerus == ZEPHYRUM)
             {
-                redde I;
+                redde;   /* assertio supra fracta: sectio FRACTA */
             }
             functio_main       = (s32)situs[ZEPHYRUM].functio;
             instructio_puncti  = situs[ZEPHYRUM].instructio;
@@ -523,7 +578,7 @@ principale (vacuum)
         }
 
         /* --- PHASIS 2: gradus-super-lineam -> linea 39 --- */
-        imprimere("\n--- Phasis 2: gradus super lineam ---\n");
+        CREDO_GRADUS ("Phasis 2: gradus super lineam");
         {
             i32 profunditas_introitus = machinula_tabulata_numerus(
                 machinula);
@@ -572,7 +627,7 @@ principale (vacuum)
 
         /* --- PHASIS 3: punctum per-functionem trans-modulum
          * (piscina_summa_usus, lib/piscina.c) + FINI --- */
-        imprimere("\n--- Phasis 3: punctum in vocato + fini ---\n");
+        CREDO_GRADUS ("Phasis 3: punctum in vocato + fini");
         {
             s32 functio_su = (s32)indicium_functionem_quaerere(
                 lector, _ch("piscina_summa_usus"));
@@ -627,7 +682,7 @@ principale (vacuum)
         }
 
         /* --- PHASIS 4: tollere -> BENE codex 0 --- */
-        imprimere("\n--- Phasis 4: perfectio suitae ---\n");
+        CREDO_GRADUS ("Phasis 4: perfectio suitae");
         CREDO_VERUM (machinula_punctum_tollere(machinula,
             functio_main, instructio_puncti));
         CREDO_AEQUALIS_I32 ((i32)machinula_pergere(machinula),
@@ -639,12 +694,24 @@ principale (vacuum)
 
         regio_destruere(regio);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "sigillum M3 (punctum, gradus, inspectio per indicium)",
+        _sigillum_probare, _mundum_parare, _mundum_purgare, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    s32 exitus;
+
+    imprimere("\n========================================\n");
+    imprimere("PROBATIO OFFICINA VINDEX (SIGILLUM M3)\n");
     imprimere("========================================\n");
-    successus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
-    redde successus ? ZEPHYRUM : I;
+    exitus = credo_suitam_currere("officina_vindex", SECTIONES);
+    imprimere("========================================\n");
+    redde exitus;
 }

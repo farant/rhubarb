@@ -119,36 +119,18 @@ _lexema (
     redde *(MateriaToken**)xar_obtinere(xs, i);
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: tabula linearum
+ * ================================================== */
+
+interior vacuum
+_tabulam_linearum_probare (
+    CredoContextus* c)
 {
-                   b32  praeteritus;
-               Piscina* piscina;
-    constans character* radix_viae;
-
-    piscina = piscina_generare_dynamicum("probatio_md_lexema", 1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    radix_viae = getenv("RHUBARB_RADIX");
-    si (radix_viae == NIHIL)
-    {
-        radix_viae = ".";
-    }
-
-
-    /* ========================================================
-     * PROBARE: tabula linearum
-     * ======================================================== */
-
+    Piscina* piscina = c->piscina;
     {
         MdLineae tab;
-
-        imprimere("\n--- Probans tabulam linearum ---\n");
 
         CREDO_VERUM (md_lineae_scindere(piscina, "", ZEPHYRUM, &tab));
         CREDO_AEQUALIS_I32 (md_lineae_numerus(&tab), ZEPHYRUM);
@@ -180,18 +162,22 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (md_linea(&tab, I)->mensura, ZEPHYRUM);
         CREDO_NIHIL (md_linea(&tab, II));
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: lexatio cruda - positiones et circuitus
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: lexatio cruda - positiones et circuitus
+ * ================================================== */
 
+interior vacuum
+_lexare_crude_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
     {
         constans character* f = "ab\n  cd";
                        Xar* xs;
                        i32  n;
-
-        imprimere("\n--- Probans lexationem crudam ---\n");
 
         CREDO_VERUM (_circuitus(piscina, f, (i32)strlen(f), &n));
         CREDO_AEQUALIS_I32 (n, V);
@@ -237,23 +223,28 @@ principale (vacuum)
         CREDO_VERUM (_circuitus(piscina, "", ZEPHYRUM, &n));
         CREDO_AEQUALIS_I32 (n, I);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: scanners - exempla CommonMark
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: scanners - exempla CommonMark
+ * ================================================== */
 
+interior vacuum
+_explorationes_probare (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
                  MdAtx a;
                    i32 g;
                    s32 p;
-                   i32 c;
+                   i32 columna;
              MdSaeptum s;
          MdMarcaListae m;
         MdMarcaOfficii o;
                    i32 ord[VIII];
 
-        imprimere("\n--- Probans scanners ---\n");
 
 #define AB(lit) (lit), ZEPHYRUM, (s32)strlen(lit)
 
@@ -376,11 +367,11 @@ principale (vacuum)
         CREDO_FALSUM (md_scan_officium(AB("[ ]x"), &o));
 
         /* indentatio, columnae */
-        p = md_scan_indentatio(AB("  \tx"), ZEPHYRUM, &c);
+        p = md_scan_indentatio(AB("  \tx"), ZEPHYRUM, &columna);
         CREDO_AEQUALIS_S32 (p, (s32)III);
-        CREDO_AEQUALIS_I32 (c, IV);
-        p = md_scan_indentatio(AB("\t x"), II, &c);
-        CREDO_AEQUALIS_I32 (c, III);   /* a columna II: tabula ad IV, + I */
+        CREDO_AEQUALIS_I32 (columna, IV);
+        p = md_scan_indentatio(AB("\t x"), II, &columna);
+        CREDO_AEQUALIS_I32 (columna, III);   /* a columna II: tabula ad IV, + I */
 
         /* separator tabulae (GFM par. 4.10) */
         CREDO_AEQUALIS_I32 (md_scan_tabula_separator(AB("| --- | :-: |"),
@@ -406,11 +397,24 @@ principale (vacuum)
             ord, II), III);   /* capacitas II: numerus verus redditur */
 #undef AB
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: corpus - omnes plagulae md a git tractatae
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: corpus - omnes plagulae md a git tractatae
+ * ================================================== */
+
+interior vacuum
+_corpus_probare (
+    CredoContextus* c)
+{
+    constans character* radix_viae = getenv("RHUBARB_RADIX");
+
+    (vacuum)c;
+    si (radix_viae == NIHIL)
+    {
+        radix_viae = ".";
+    }
 
     {
         character via[DXII];
@@ -420,8 +424,6 @@ principale (vacuum)
               s64  octeti     = ZEPHYRUM;
               s64  lexemata   = ZEPHYRUM;
               i32  fractae    = ZEPHYRUM;
-
-        imprimere("\n--- PORTA CORPORIS: plagulae md a git tractatae ---\n");
 
         sprintf(via, "%s/md/build/corpus_md.txt", radix_viae);
         lista = fopen(via, "r");
@@ -486,12 +488,22 @@ principale (vacuum)
             CREDO_MAIOR_S32 ((s32)(octeti / (s64)1000), (s32)1000);
         }
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "tabulam linearum", _tabulam_linearum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lexationem crudam", _lexare_crude_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "scanners", _explorationes_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "PORTA CORPORIS: plagulae md a git tractatae", _corpus_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("md_lexema", SECTIONES);
 }

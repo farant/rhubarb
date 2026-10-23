@@ -237,35 +237,56 @@ _arbor_cauda (
         NIHIL, NIHIL);
 }
 
-integer
-principale (
-    vacuum)
+
+/* FIXURA SUITAE: ratum lexici semel factum (parare_suitae; assertio
+ * eius ibi); sectiones id per monstratorem constantem LEGUNT. */
+nomen structura {
+    MateriaLexiconRatum ratum;
+} FixuraLexici;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                    b32  praeteritus;
-                Piscina* piscina;
-    MateriaLexiconRatum  ratum;
-     MateriaLexIudicium  iudicium;
+          FixuraLexici* f;
+    MateriaLexIudicium  iudicium;
 
-    piscina = piscina_generare_dynamicum("probatio_annotationes",
-        262144);
-    si (piscina == NIHIL)
+    f = (FixuraLexici*)piscina_allocare(c->piscina,
+        magnitudo(FixuraLexici));
+    si (f == NIHIL)
     {
-        imprimere("FRACTA: piscina\n");
-        redde I;
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    credo_aperire(piscina);
-    CREDO_VERUM (materia_lexicon_ratum_facere(&ratum, &LEXICON,
+    c->datum = f;
+    CREDO_VERUM (materia_lexicon_ratum_facere(&f->ratum, &LEXICON,
         &iudicium));
+}
 
+
+/* ==================================================
+ * PROBARE: annotatio una, ambitus = nodus
+ * ================================================== */
+
+interior vacuum
+_annotationem_unam_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
     {
         MateriaNodus* radix = _arbor(piscina, NOTA_BONA);
                  Xar* a;
     MateriaAnnotatio* prima;
               chorda* codex;
 
-        imprimere("\n--- I. Annotatio una, ambitus = nodus ---\n");
         CREDO_NON_NIHIL (radix);
-        a = materia_annotationes_colligere(piscina, radix, &ratum,
+        a = materia_annotationes_colligere(piscina, radix, ratum,
                 "#", NIHIL, NIHIL);
         CREDO_NON_NIHIL (a);
         CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
@@ -279,11 +300,11 @@ principale (
         CREDO_NON_NIHIL (codex);
         CREDO_VERUM (chorda_aequalis_literis(*codex, "lint:x"));
 
-        imprimere("\n--- II. Sedes commentarii EXTRA nodum ---\n");
+        CREDO_GRADUS ("Sedes commentarii EXTRA nodum");
         CREDO_AEQUALIS_S32 (prima->commentarium.initium, ZEPHYRUM);
         CREDO_AEQUALIS_S32 (prima->commentarium.finis, (s32)37);
 
-        imprimere("\n--- III. Scopus par PRIUS tegit ---\n");
+        CREDO_GRADUS ("Scopus par PRIUS tegit");
         /* par prius XXXVII-XLIV; par alterum XLV-LI. Si scopus ad
          * parentem promoveatur, finis LI fieret et par alterum
          * TACERET - hoc est quod planta portae huius probat. */
@@ -291,26 +312,60 @@ principale (
         CREDO_AEQUALIS_S32 (prima->scopus.finis, (s32)44);
         CREDO_VERUM (prima->scopus.finis < (s32)45);
     }
+}
 
+
+/* ==================================================
+ * PROBARE: prosa omittitur
+ * ================================================== */
+
+interior vacuum
+_prosam_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
     {
         Xar* a;
 
-        imprimere("\n--- IV. Prosa omittitur ---\n");
         a = materia_annotationes_colligere(piscina,
                 _arbor(piscina, "# commentarium merum, nulla tag"),
-                &ratum, "#", NIHIL, NIHIL);
+                ratum, "#", NIHIL, NIHIL);
         CREDO_NON_NIHIL (a);
         CREDO_AEQUALIS_I32 (xar_numerus(a), ZEPHYRUM);
     }
+}
 
+
+/* ==================================================
+ * PROBARE: malformatum retinetur
+ * ================================================== */
+
+interior vacuum
+_malformatum_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
     {
                  Xar* a;
     MateriaAnnotatio* prima;
 
-        imprimere("\n--- V. Malformatum RETINETUR ---\n");
         a = materia_annotationes_colligere(piscina,
                 _arbor(piscina, "# <tolera codex=\"x\""),
-                &ratum, "#", NIHIL, NIHIL);
+                ratum, "#", NIHIL, NIHIL);
         CREDO_NON_NIHIL (a);
         CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
         prima = (MateriaAnnotatio*)xar_obtinere(a, ZEPHYRUM);
@@ -318,54 +373,117 @@ principale (
         /* sedes SERVATUR: consumptor id nominare debet */
         CREDO_AEQUALIS_S32 (prima->commentarium.initium, ZEPHYRUM);
     }
+}
 
+
+/* ==================================================
+ * PROBARE: praefixum NIHIL: nulla exuvia
+ * ================================================== */
+
+interior vacuum
+_sine_praefixo_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
     {
                  Xar* a;
     MateriaAnnotatio* prima;
 
-        imprimere("\n--- VI. Praefixum NIHIL: nulla exuvia ---\n");
         a = materia_annotationes_colligere(piscina,
                 _arbor(piscina, "<tolera codex=\"y\" (>causa"),
-                &ratum, NIHIL, NIHIL, NIHIL);
+                ratum, NIHIL, NIHIL, NIHIL);
         CREDO_NON_NIHIL (a);
         CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
         prima = (MateriaAnnotatio*)xar_obtinere(a, ZEPHYRUM);
         CREDO_VERUM (prima->parsata);
     }
+}
 
+
+/* ==================================================
+ * PROBARE: cauda: linea propria -> antrorsum
+ * ================================================== */
+
+interior vacuum
+_caudam_prorsum_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
     {
                  Xar* a;
     MateriaAnnotatio* prima;
 
-        imprimere("\n--- VII. Cauda: linea PROPRIA -> antrorsum ---\n");
         /* Commentarium post ')' paris prioris sed in linea PROPRIA
          * id annotat quod SEQUITUR - par alterum (XLV-LI). Ante
          * emendationem operis V possessorem TRIVII accipiebat (par
          * prius, aut separatorem) et excusatio aut mortua erat aut
          * nimis lata. */
-        a = _arbor_cauda(piscina, &ratum, NOTA_BONA, (i32)II);
+        a = _arbor_cauda(piscina, ratum, NOTA_BONA, (i32)II);
         CREDO_NON_NIHIL (a);
         CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
         prima = (MateriaAnnotatio*)xar_obtinere(a, ZEPHYRUM);
         CREDO_AEQUALIS_S32 (prima->scopus.initium, (s32)90);
         CREDO_AEQUALIS_S32 (prima->scopus.finis, (s32)96);
     }
+}
 
+
+/* ==================================================
+ * PROBARE: cauda: linea eadem -> retro
+ * ================================================== */
+
+interior vacuum
+_caudam_retro_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
     {
                  Xar* a;
     MateriaAnnotatio* prima;
 
-        imprimere("\n--- VIII. Cauda: linea EADEM -> retro ---\n");
         /* Lex silvae 'linea eadem aut praecedens': commentarium in
          * cauda lineae id annotat quod in EA linea iacet. Par cum
          * VII - eadem arbor, linea sola mutata, sedes DIVERSA. */
-        a = _arbor_cauda(piscina, &ratum, NOTA_BONA, (i32)I);
+        a = _arbor_cauda(piscina, ratum, NOTA_BONA, (i32)I);
         CREDO_NON_NIHIL (a);
         CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
         prima = (MateriaAnnotatio*)xar_obtinere(a, ZEPHYRUM);
         CREDO_AEQUALIS_S32 (prima->scopus.initium, (s32)37);
         CREDO_AEQUALIS_S32 (prima->scopus.finis, (s32)44);
     }
+}
+
+
+/* ==================================================
+ * PROBARE: decoratio bloci: clausura exuitur
+ * ================================================== */
+
+interior vacuum
+_decorationem_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         hic_manens constans MateriaDecoratio BLOCUS = {
@@ -376,7 +494,6 @@ principale (
         };
         MateriaAnnotatio a;
 
-        imprimere("\n--- IX. Decoratio bloci: clausura exuitur ---\n");
         memset(&a, ZEPHYRUM, magnitudo(a));
         CREDO_VERUM (materia_annotationem_legere(piscina,
             chorda_ex_literis("/" "* <tolera codex=\"x\" (>causa *" "/",
@@ -391,7 +508,7 @@ principale (
         CREDO_AEQUALIS_I32 ((i32)a.textus.datum[a.textus.mensura - I],
             (i32)' ');
 
-        imprimere("\n--- X. Continuatio: linea erroris EXACTA ---\n");
+        CREDO_GRADUS ("Continuatio: linea erroris EXACTA");
         /* linea I = linea commentarii; error in linea III. Si lineae
          * ducentes aut continuationes lineas amitterent, linea hic
          * moveretur. */
@@ -405,7 +522,7 @@ principale (
         CREDO_FALSUM (chorda_continet(a.textus,
             chorda_ex_literis("* </alia>", piscina)));
 
-        imprimere("\n--- XI. Ancora: '<' cum LITTERA ---\n");
+        CREDO_GRADUS ("Ancora: '<' cum LITTERA");
         memset(&a, ZEPHYRUM, magnitudo(a));
         CREDO_FALSUM (materia_annotationem_legere(piscina,
             chorda_ex_literis("# < 5 minor est", piscina), &LINEA,
@@ -423,7 +540,25 @@ principale (
             &BLOCUS, NIHIL, &a));
         CREDO_VERUM (a.parsata);
     }
+}
 
+
+/* ==================================================
+ * PROBARE: collector decoratus (css)
+ * ================================================== */
+
+interior vacuum
+_collectorem_decoratum_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
     {
         hic_manens constans MateriaDecoratio BLOCUS = {
             "/" "*", "*" "/", '*'
@@ -433,12 +568,11 @@ principale (
         constans character* nota =
             "/" "* <tolera codex=\"lint:x\" (>causa *" "/";
 
-        imprimere("\n--- XII. Collector decoratus (css) ---\n");
         /* Praefixo solo clausura in textu MANET: forma capturae
          * '(>' eam in causam devorat - parsatio 'successus' et tamen
          * causa mendax (spec excusatio par. IV: css). */
         a = materia_annotationes_colligere(piscina,
-                _arbor(piscina, nota), &ratum, "/" "*", NIHIL, NIHIL);
+                _arbor(piscina, nota), ratum, "/" "*", NIHIL, NIHIL);
         CREDO_NON_NIHIL (a);
         CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
         prima = (MateriaAnnotatio*)xar_obtinere(a, ZEPHYRUM);
@@ -446,7 +580,7 @@ principale (
             chorda_ex_literis("*" "/", piscina)));
 
         a = materia_annotationes_decoratione_colligere(piscina,
-                _arbor(piscina, nota), &ratum, &BLOCUS, NIHIL, NIHIL);
+                _arbor(piscina, nota), ratum, &BLOCUS, NIHIL, NIHIL);
         CREDO_NON_NIHIL (a);
         CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
         prima = (MateriaAnnotatio*)xar_obtinere(a, ZEPHYRUM);
@@ -455,10 +589,30 @@ principale (
             chorda_ex_literis("*" "/", piscina)));
         CREDO_AEQUALIS_S32 (prima->scopus.initium, (s32)37);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "annotatio una, ambitus = nodus", _annotationem_unam_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "prosa omittitur", _prosam_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "malformatum retinetur", _malformatum_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "praefixum NIHIL: nulla exuvia", _sine_praefixo_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "cauda: linea propria -> antrorsum", _caudam_prorsum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "cauda: linea eadem -> retro", _caudam_retro_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "decoratio bloci: clausura exuitur", _decorationem_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "collector decoratus (css)", _collectorem_decoratum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("materia_annotationes", SECTIONES,
+        _suitam_parare, NIHIL);
 }

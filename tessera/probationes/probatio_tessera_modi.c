@@ -101,31 +101,24 @@ _continet (
     redde FALSUM;
 }
 
-s32
-principale (vacuum)
+/* Sectio UNA: leges omnes super eosdem modos collectos (intrati,
+ * relicti, per_quadrum) - computatio una, non blocci independentes. */
+interior vacuum
+_scaenam_probare (
+    CredoContextus* c)
 {
-         b32  praeteritus;
-     Piscina* piscina;
-         s32  intrati[MODI_MAXIMI];
-         s32  relicti[MODI_MAXIMI];
-         s32  spurii[MODI_MAXIMI];
-         s32  per_quadrum[MODI_MAXIMI];
-         s32  relicti_ordinis[MODI_MAXIMI];
-         i32  n_intrati;
-         i32  n_relicti;
-         i32  n_quadri;
-         i32  n_ordinis;
-         i32  j;
+         s32 intrati[MODI_MAXIMI];
+         s32 relicti[MODI_MAXIMI];
+         s32 spurii[MODI_MAXIMI];
+         s32 per_quadrum[MODI_MAXIMI];
+         s32 relicti_ordinis[MODI_MAXIMI];
+         i32 n_intrati;
+         i32 n_relicti;
+         i32 n_quadri;
+         i32 n_ordinis;
+         i32 j;
 
-    piscina = piscina_generare_dynamicum("probatio_tessera_modi",
-        65536);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
+    (vacuum)c;
     n_intrati = _modos_colligere(INTRANDI, 'h', intrati);
     n_relicti = _modos_colligere(EXEUNDI, 'l', relicti);
 
@@ -224,9 +217,16 @@ principale (vacuum)
     CREDO_VERUM (_continet(intrati, n_intrati, MII));
     CREDO_VERUM (_continet(intrati, n_intrati, MVI));
     CREDO_VERUM (_continet(intrati, n_intrati, MMIV));
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "lex parium modorum", _scaenam_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("tessera_modi", SECTIONES);
 }

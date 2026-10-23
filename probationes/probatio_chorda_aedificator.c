@@ -1240,6 +1240,73 @@ _sectio_tricesima_quarta (
     }
 }
 
+/* AMPLIATIO (2026-10-21): crescentia per piscina_conari_ampliare -
+ * buffera vetera non relinquuntur, et appendix sui buffer motum
+ * superstat. Piscinae propriae: mensura ex statu piscinae pendet. */
+interior vacuum
+_sectio_tricesima_quinta (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    {
+                   Piscina* p;
+         ChordaAedificator* a;
+                    chorda  s;
+                       i32  i;
+                       b32  recte;
+
+        /* I. C milia characterum ab capacitate XVI: capacitas finalis
+         * CXXXI milia (II ad XVII); olim summa duplicationum omnium
+         * relinquebatur (~CCLXII milia) */
+        p = piscina_generare_dynamicum("ampliatio", IV * MXXIV);
+        CREDO_NON_NIHIL (p);
+        a = chorda_aedificator_creare(p, XVI);
+        per (i = ZEPHYRUM; i < C * M; i++)
+        {
+            (vacuum)chorda_aedificator_appendere_character(a,
+                (character)('a' + (i % XXVI)));
+        }
+        s = chorda_aedificator_spectare(a);
+        CREDO_AEQUALIS_I32 ((i32)s.mensura, C * M);
+        recte = VERUM;
+        per (i = ZEPHYRUM; i < s.mensura; i++)
+        {
+            si (s.datum[i] != (i8)('a' + (i % XXVI)))
+            {
+                recte = FALSUM;
+            }
+        }
+        CREDO_VERUM (recte);
+        CREDO_VERUM (piscina_summa_usus(p) < (memoriae_index)(CL * M));
+        piscina_destruere(p);
+
+        /* II. appendix sui XII vicibus, crescentia in alveo solo (via
+         * II - motus possibilis): "abcde" x II ad XII. Sine
+         * re-derivatione fontis lectio ex buffer liberato. */
+        p = piscina_generare_dynamicum("ampliatio_sui", LXIV);
+        CREDO_NON_NIHIL (p);
+        a = chorda_aedificator_creare(p, VIII);
+        (vacuum)chorda_aedificator_appendere_literis(a, "abcde");
+        per (i = ZEPHYRUM; i < XII; i++)
+        {
+            s = chorda_aedificator_spectare(a);
+            CREDO_VERUM (chorda_aedificator_appendere_chorda(a, s));
+        }
+        s = chorda_aedificator_spectare(a);
+        CREDO_AEQUALIS_I32 ((i32)s.mensura, XX * MXXIV);
+        recte = VERUM;
+        per (i = ZEPHYRUM; i < s.mensura; i++)
+        {
+            si (s.datum[i] != (i8)("abcde"[i % V]))
+            {
+                recte = FALSUM;
+            }
+        }
+        CREDO_VERUM (recte);
+        piscina_destruere(p);
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "chorda_aedificator_creare", _sectio_prima, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -1309,6 +1376,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "appendere_hex_i32", _sectio_tricesima_quarta, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "ampliatio: sine bufferis relictis, appendix sui",
+        _sectio_tricesima_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -139,36 +139,50 @@ hic_manens constans LocusNominatus LOCI_NOMINATI[] = {
         "tokens" }
 };
 
-s32
-principale (vacuum)
+
+/* FIXURA SUITAE: ratum lexici semel factum; sectiones id per
+ * monstratorem constantem LEGUNT. */
+nomen structura {
+    MateriaLexiconRatum ratum;
+} FixuraLexici;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                b32  praeteritus;
-            Piscina* piscina;
-MateriaLexiconRatum  ratum;
- MateriaLexIudicium  iudicium;
+          FixuraLexici* f;
+    MateriaLexIudicium  iudicium;
 
-    piscina = piscina_generare_dynamicum("probatio_html_registrum",
-        32768);
-    si (!piscina)
+    f = (FixuraLexici*)piscina_allocare(c->piscina,
+        magnitudo(FixuraLexici));
+    si (f == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    credo_aperire(piscina);
+    CREDO_VERUM (materia_lexicon_ratum_facere(&f->ratum, &HTML_LEXICON,
+        &iudicium));
+    CREDO_AEQUALIS_S32 (iudicium.vitium, (s32)MATERIA_LEX_SANUM);
+    c->datum = f;
+}
 
 
-    /* ==================================================
-     * PROBARE: lexicon portam transit, et ORDINEM servat
-     * ================================================== */
+/* ==================================================
+ * PROBARE: lexicon portam transit, et ORDINEM servat
+ * ================================================== */
 
+interior vacuum
+_lexicon_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
     {
         i32 i;
-
-        imprimere("\n--- Probans lexicon HTML ---\n");
-
-        CREDO_VERUM (materia_lexicon_ratum_facere(&ratum, &HTML_LEXICON,
-            &iudicium));
-        CREDO_AEQUALIS_S32 (iudicium.vitium, (s32)MATERIA_LEX_SANUM);
 
         /* Numerus generum lexico == numerus lexatoris (XXII) */
         CREDO_AEQUALIS_I32 (HTML_LEXICON.numerus_generum,
@@ -180,7 +194,7 @@ MateriaLexiconRatum  ratum;
         /* ORDO per titulos - permutatio capitur */
         per (i = ZEPHYRUM; i < (i32)HTML_LEX_NUMERUS_GENERUM; i++)
         {
-            constans character* t = materia_lexicon_titulus(&ratum,
+            constans character* t = materia_lexicon_titulus(ratum,
                 (s32)i);
 
             CREDO_NON_NIHIL (t);
@@ -188,88 +202,104 @@ MateriaLexiconRatum  ratum;
         }
 
         /* Sedes notae - erratum transcriptionis grossum caperent */
-        CREDO_AEQUALIS_S32 ((s32)materia_lexicon_species(&ratum,
+        CREDO_AEQUALIS_S32 ((s32)materia_lexicon_species(ratum,
             (s32)HTML_LEX_TAG_FINIS), (s32)MATERIA_LEX_FIXUM);
-        CREDO_VERUM (strcmp(materia_lexicon_orthographia(&ratum,
+        CREDO_VERUM (strcmp(materia_lexicon_orthographia(ratum,
             (s32)HTML_LEX_TAG_FINIS), ">") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(materia_lexicon_orthographia(&ratum,
+        CREDO_VERUM (strcmp(materia_lexicon_orthographia(ratum,
             (s32)HTML_LEX_TAG_FINIS_SOLUS), "/>") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(materia_lexicon_orthographia(&ratum,
+        CREDO_VERUM (strcmp(materia_lexicon_orthographia(ratum,
             (s32)HTML_LEX_AEQUALE), "=") == ZEPHYRUM);
-        CREDO_VERUM (materia_lexicon_textum_fert(&ratum,
+        CREDO_VERUM (materia_lexicon_textum_fert(ratum,
             (s32)HTML_LEX_TEXTUS));
-        CREDO_VERUM (materia_lexicon_textum_fert(&ratum,
+        CREDO_VERUM (materia_lexicon_textum_fert(ratum,
             (s32)HTML_LEX_CDATA));
-        CREDO_FALSUM (materia_lexicon_textum_fert(&ratum,
+        CREDO_FALSUM (materia_lexicon_textum_fert(ratum,
             (s32)HTML_LEX_TAG_FINIS));
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: trivia INTRA TAG sola; commentaria NODI (H6)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: trivia INTRA TAG sola; commentaria NODI (H6)
+ * ================================================== */
 
+interior vacuum
+_trivia_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
     {
         i32 postulata;
 
-        imprimere("\n--- Probans trivia et munus LINEA absens ---\n");
-
         /* SPATIA lineas novas intra tag absorbet: VERBATIM/SPATIUM */
-        CREDO_AEQUALIS_S32 ((s32)materia_lexicon_species(&ratum,
+        CREDO_AEQUALIS_S32 ((s32)materia_lexicon_species(ratum,
             (s32)HTML_LEX_SPATIA), (s32)MATERIA_LEX_VERBATIM);
-        CREDO_AEQUALIS_S32 ((s32)materia_lexicon_munus(&ratum,
+        CREDO_AEQUALIS_S32 ((s32)materia_lexicon_munus(ratum,
             (s32)HTML_LEX_SPATIA), (s32)MATERIA_MUNUS_SPATIUM);
-        CREDO_VERUM (materia_lexicon_trivium_est(&ratum,
+        CREDO_VERUM (materia_lexicon_trivium_est(ratum,
             (s32)HTML_LEX_SPATIA));
-        CREDO_VERUM (materia_lexicon_trivium_est(&ratum,
+        CREDO_VERUM (materia_lexicon_trivium_est(ratum,
             (s32)HTML_LEX_DELIM));
 
         /* COMMENTARIUM* et TEXTUS contentum sunt - NUMQUAM trivia */
-        CREDO_FALSUM (materia_lexicon_trivium_est(&ratum,
+        CREDO_FALSUM (materia_lexicon_trivium_est(ratum,
             (s32)HTML_LEX_COMMENTARIUM));
-        CREDO_FALSUM (materia_lexicon_trivium_est(&ratum,
+        CREDO_FALSUM (materia_lexicon_trivium_est(ratum,
             (s32)HTML_LEX_COMMENTARIUM_PRAVUM));
-        CREDO_FALSUM (materia_lexicon_trivium_est(&ratum,
+        CREDO_FALSUM (materia_lexicon_trivium_est(ratum,
             (s32)HTML_LEX_TEXTUS));
-        CREDO_AEQUALIS_S32 ((s32)materia_lexicon_munus(&ratum,
+        CREDO_AEQUALIS_S32 ((s32)materia_lexicon_munus(ratum,
             (s32)HTML_LEX_COMMENTARIUM),
             (s32)MATERIA_MUNUS_SUBSTANTIVUM);
 
         /* Munera quae HTML FERT, et quae NON */
-        CREDO_VERUM (materia_lexicon_munus_habet(&ratum,
+        CREDO_VERUM (materia_lexicon_munus_habet(ratum,
             MATERIA_MUNUS_SPATIUM));
-        CREDO_VERUM (materia_lexicon_munus_habet(&ratum,
+        CREDO_VERUM (materia_lexicon_munus_habet(ratum,
             MATERIA_MUNUS_FINIS));
-        CREDO_FALSUM (materia_lexicon_munus_habet(&ratum,
+        CREDO_FALSUM (materia_lexicon_munus_habet(ratum,
             MATERIA_MUNUS_COMMENTUM));
-        CREDO_FALSUM (materia_lexicon_munus_habet(&ratum,
+        CREDO_FALSUM (materia_lexicon_munus_habet(ratum,
             MATERIA_MUNUS_LINEA));
-        CREDO_FALSUM (materia_lexicon_munus_habet(&ratum,
+        CREDO_FALSUM (materia_lexicon_munus_habet(ratum,
             MATERIA_MUNUS_LAMINA));
 
         /* Capacitas linea-sensitiva RECUSATUR (politica B) */
         postulata = MATERIA_MUNUS_VEXILLUM(MATERIA_MUNUS_SPATIUM)
                   | MATERIA_MUNUS_VEXILLUM(MATERIA_MUNUS_LINEA);
-        CREDO_FALSUM (materia_lexicon_munera_habet(&ratum, postulata));
-        CREDO_VERUM (materia_lexicon_munera_habet(&ratum,
+        CREDO_FALSUM (materia_lexicon_munera_habet(ratum, postulata));
+        CREDO_VERUM (materia_lexicon_munera_habet(ratum,
             MATERIA_MUNUS_VEXILLUM(MATERIA_MUNUS_SPATIUM)));
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: porta rancoris tabularum coctarum
-     * html_registrum_coctum.{h,c} ex html.registrum.stml GENERATAE -
-     * redditio in memoria contra plagulas commissas OCTETIM (output,
-     * numquam tempora): declaratio mutata sine ./materia/coquere.sh
-     * -scribere, aut plagula generata manu tacta, hic rubet cum linea
-     * prima divergente.
-     * ================================================== */
+/* ==================================================
+ * PROBARE: porta rancoris tabularum coctarum
+ * html_registrum_coctum.{h,c} ex html.registrum.stml GENERATAE -
+ * redditio in memoria contra plagulas commissas OCTETIM (output,
+ * numquam tempora): declaratio mutata sine ./materia/coquere.sh
+ * -scribere, aut plagula generata manu tacta, hic rubet cum linea
+ * prima divergente.
+ * ================================================== */
+
+interior vacuum
+_tabulas_coctas_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         constans character* radix = getenv("RHUBARB_RADIX");
              MateriaRancor  rancor;
 
-        imprimere("\n--- Probans rancorem tabularum coctarum ---\n");
         si (!materia_registrum_recens(piscina, radix
             != NIHIL ? radix : ".",
                 "html/grammatica/html.registrum.stml", &rancor))
@@ -295,18 +325,23 @@ MateriaLexiconRatum  ratum;
                 HTML_REGISTRUM.numerus_generum);
         }
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: registrum - ordo, CONTIGUITAS locorum, loci nominati
-     * ================================================== */
+/* ==================================================
+ * PROBARE: registrum - ordo, CONTIGUITAS locorum, loci nominati
+ * ================================================== */
+
+interior vacuum
+_registrum_probare (
+    CredoContextus* c)
+{
+    (vacuum)c;
 
     {
         i32 i;
         i32 exspectatus_offset;
         i32 numerus_nominatorum;
-
-        imprimere("\n--- Probans registrum nodorum ---\n");
 
         CREDO_AEQUALIS_I32 (HTML_REGISTRUM.numerus_generum,
             (i32)HTML_GENUS_NUMERUS_GENERUM);
@@ -367,22 +402,33 @@ MateriaLexiconRatum  ratum;
                 n->titulus) == ZEPHYRUM);
         }
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: circuitus per materiam (arbor HTML minima '<br>')
-     * ================================================== */
+/* ==================================================
+ * PROBARE: circuitus per materiam (arbor HTML minima '<br>')
+ * ================================================== */
 
+interior vacuum
+_circuitum_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        MateriaArborConsilium c;
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        MateriaArborConsilium compositus;
                  MateriaNodus* documentum;
                  MateriaNodus* elementum;
         MateriaArborScriptura  s1;
         MateriaArborScriptura  s2;
                  MateriaNodus* lecta;
            MateriaArborVitium  vitium;
-
-        imprimere("\n--- Probans circuitum HTML per materiam ---\n");
 
         /* '<br>' - elementum vacuum: apertura et finis soli, clausura
          * ABSENS (H4); numerus locorum ex registro (O7c: manu VIII
@@ -416,31 +462,48 @@ MateriaLexiconRatum  ratum;
                 chorda_ex_literis("", piscina), (s32)IV, (i32)I,
                 (i32)V, ZEPHYRUM)), MATERIA_LOCUS_TOKEN));
 
-        materia_arbor_consilium_nudum(&c, &HTML_REGISTRUM, &ratum,
+        materia_arbor_consilium_nudum(&compositus, &HTML_REGISTRUM,
+            ratum,
             "html");
-        s1 = materia_arbor_scribere_nodum(piscina, documentum, &c);
+        s1 = materia_arbor_scribere_nodum(piscina, documentum,
+            &compositus);
         CREDO_VERUM (s1.successus);
         CREDO_VERUM (_textus_continet(s1.textus,
             "grammatica=\"html\""));
         CREDO_VERUM (_textus_continet(s1.textus, "<lex-tag-finis"));
 
-        lecta = materia_arbor_legere(piscina, NIHIL, s1.textus, &c,
+        lecta = materia_arbor_legere(piscina, NIHIL, s1.textus,
+            &compositus,
             &vitium);
         CREDO_NON_NIHIL (lecta);
         CREDO_NIHIL (vitium.causa);
         CREDO_AEQUALIS_S32 (lecta->genus, (s32)HTML_GENUS_DOCUMENTUM);
 
-        s2 = materia_arbor_scribere_nodum(piscina, lecta, &c);
+        s2 = materia_arbor_scribere_nodum(piscina, lecta, &compositus);
         CREDO_VERUM (s2.successus);
         CREDO_AEQUALIS_I32 (s2.textus.mensura, s1.textus.mensura);
         CREDO_VERUM (memcmp(s1.textus.datum, s2.textus.datum,
             (size_t)s1.textus.mensura) == ZEPHYRUM);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "lexicon HTML: portam transit, ordinem servat", _lexicon_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "trivia intra tag sola, commentaria nodi", _trivia_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "tabulae coctae recentes", _tabulas_coctas_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "registrum: ordo, contiguitas, loci nominati", _registrum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "circuitus HTML per materiam", _circuitum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("html_registrum", SECTIONES,
+        _suitam_parare, NIHIL);
 }

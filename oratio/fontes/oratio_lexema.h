@@ -53,6 +53,17 @@ oratio_lexema_derivatum (
                    chorda  valor,
     constans MateriaToken* origo);
 
+/* Idem SINE copia valoris: vocans praestat valorem lexemate non breviorem
+ * vivere (internatum in piscina eadem, aut octeti eiusdem piscinae).
+ * oratio_partes textum derivatum per documentum internat et lexemata
+ * per vocabulum communicat. */
+MateriaToken*
+oratio_lexema_derivatum_possessum (
+                  Piscina* piscina,
+                      s32  genus,
+                   chorda  valor,
+    constans MateriaToken* origo);
+
 /* PARS lexematis (T21, enclitica): lexema novum ex octetis
  * [ab, ab + mensura) originis - valor visus in octetos originis (eadem
  * piscina, eadem vita), genus originis, byte_offset et columna translata,

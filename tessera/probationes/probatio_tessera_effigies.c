@@ -77,38 +77,63 @@ _cellulae (
     redde c;
 }
 
-s32
-principale (vacuum)
+/* Opus probationis (VIII x II, pons memoriae): sectio quaeque suum
+ * aperit (cellulae scribuntur - status nullus communis); creatio semel
+ * ASSERITUR in parare_suitae. NIHIL = creatio fracta. */
+interior TesseraOpus*
+_opus_aperire (
+    Piscina* piscina)
 {
-                    b32  praeteritus;
-                Piscina* piscina;
+    TesseraPonsMemoriae* pm = tessera_pons_memoriae_creare(piscina,
+        VIII, II);
+
+    si (pm == NIHIL)
+    {
+        redde NIHIL;
+    }
+    redde tessera_aperire(piscina, &pm->pons);
+}
+
+/* creatio operis semel asserta (ut olim ante blocos) */
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
     TesseraPonsMemoriae* pm;
             TesseraOpus* opus;
 
-    piscina = piscina_generare_dynamicum("probatio_tessera_effigies",
-        16777216);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    pm    = tessera_pons_memoriae_creare(piscina, VIII, II);
-    opus  = tessera_aperire(piscina, &pm->pons);
+    pm    = tessera_pons_memoriae_creare(c->piscina, VIII, II);
+    opus  = tessera_aperire(c->piscina, &pm->pons);
     CREDO_NON_NIHIL (opus);
+}
 
-    imprimere("\n--- II. Pictura cellularum ---\n");
+
+/* ==================================================
+ * PROBARE: II. effigies_pingere - runa -> signum compactum,
+ * colores; spatium fundum servat
+ * ================================================== */
+
+interior vacuum
+_picturam_probare (
+    CredoContextus* c)
+{
+    TesseraOpus* opus = _opus_aperire(c->piscina);
+
+    si (opus == NIHIL)
     {
-        QuadransCellula c[II];
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    {
+        QuadransCellula cellulae[II];
                      i8 octeti[VIII];
 
-        c[0].runa            = 0x2580;
-        c[0].color_litterae  = 0xFF0000;
-        c[0].color_fundi     = 0x0000FF;
-        c[1].runa            = 0x20;
-        c[1].color_litterae  = 0x00FF00;
-        c[1].color_fundi     = 0x00FF00;
-        effigies_pingere(opus, I, ZEPHYRUM, c, II, I);
+        cellulae[0].runa            = 0x2580;
+        cellulae[0].color_litterae  = 0xFF0000;
+        cellulae[0].color_fundi     = 0x0000FF;
+        cellulae[1].runa            = 0x20;
+        cellulae[1].color_litterae  = 0x00FF00;
+        cellulae[1].color_fundi     = 0x00FF00;
+        effigies_pingere(opus, I, ZEPHYRUM, cellulae, II, I);
         CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, I,
             ZEPHYRUM).signum, 0x8096E2);
         CREDO_AEQUALIS_I32 (tessera_cellulae_octeti(opus, I, ZEPHYRUM,
@@ -123,15 +148,31 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, II,
             ZEPHYRUM).color_fundi, 0x00FF00);
     }
+}
 
-    imprimere("\n--- III. Via tota ---\n");
+
+/* ==================================================
+ * PROBARE: III. Via tota - imago minima -> quadrans_computare
+ * -> effigies_pingere -> cellulae relectae
+ * ================================================== */
+
+interior vacuum
+_viam_probare (
+    CredoContextus* c)
+{
+    TesseraOpus* opus = _opus_aperire(c->piscina);
+
+    si (opus == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     {
         /* 4x2: bloccus sinister TL niger (ceteri albi) -> U+2598;
          * dexter ruber uniformis -> spatium */
                       i8 pixela[IV * II * IV];
                    Imago im;
         QuadransOptiones o = quadrans_optiones_ordinariae();
-         QuadransCellula c[II];
+         QuadransCellula cellulae[II];
                       i8 octeti[VIII];
                      i32 k;
 
@@ -149,8 +190,9 @@ principale (vacuum)
         im.pixela    = pixela;
         im.latitudo  = IV;
         im.altitudo  = II;
-        quadrans_computare(&im, ZEPHYRUM, ZEPHYRUM, IV, II, &o, c);
-        effigies_pingere(opus, ZEPHYRUM, I, c, II, I);
+        quadrans_computare(&im, ZEPHYRUM, ZEPHYRUM, IV, II, &o,
+            cellulae);
+        effigies_pingere(opus, ZEPHYRUM, I, cellulae, II, I);
         CREDO_AEQUALIS_I32 (tessera_cellulae_octeti(opus, ZEPHYRUM, I,
             octeti, VIII), III);
         CREDO_VERUM (memcmp(octeti, "\xE2\x96\x98", III) == ZEPHYRUM);
@@ -163,12 +205,25 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, I,
             I).color_fundi, 0xFF0000);
     }
+}
 
-    imprimere("\n--- IV. Paletta Aquinas ---\n");
+
+/* ==================================================
+ * PROBARE: IV. Paletta (Q6) - imago diffusa solis coloribus
+ * Aquinas constat; EXTREMA super eam in paletta manet;
+ * mensura photographiarum contra imaginem NON diffusam
+ * ================================================== */
+
+interior vacuum
+_palettam_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     {
                   Imago  im;
                   Imago  diffusa;
-        QuadransCellula* c;
+        QuadransCellula* cellulae;
                     i32  lat;
                     i32  alt;
                     i32  k;
@@ -231,13 +286,13 @@ principale (vacuum)
                 (insignatus integer)chromatici);
             CREDO_VERUM (chromatici >= III);
             /* EXTREMA super imaginem diffusam: colores in paletta */
-            c = _cellulae(piscina, &diffusa, QUADRANS_EXTREMA, &lat,
-                &alt);
+            cellulae = _cellulae(piscina, &diffusa, QUADRANS_EXTREMA,
+                &lat, &alt);
             extra = ZEPHYRUM;
             per (k = ZEPHYRUM; k < lat * alt; k++)
             {
-                si (   !_in_paletta(c[k].color_litterae)
-                    || !_in_paletta(c[k].color_fundi))
+                si (   !_in_paletta(cellulae[k].color_litterae)
+                    || !_in_paletta(cellulae[k].color_fundi))
                 {
                     extra++;
                 }
@@ -259,7 +314,7 @@ principale (vacuum)
                        Imago  referentia;
                        Imago  diffusa;
             QuadransOptiones  o = quadrans_optiones_ordinariae();
-             QuadransCellula* c;
+             QuadransCellula* cellulae;
                          i32  sub_lat;
                          i32  sub_alt;
                          i32  lat;
@@ -283,18 +338,18 @@ principale (vacuum)
             referentia = imago_scalare(&f.imago, sub_lat, sub_alt,
                 IMAGO_SCALA_AREA, piscina);
             diffusa = effigies_palettam_applicare(&referentia, piscina);
-            c = _cellulae(piscina, &referentia, QUADRANS_MEDIA, &lat,
-                &alt);
+            cellulae = _cellulae(piscina, &referentia, QUADRANS_MEDIA,
+                &lat, &alt);
             simplex = quadrans_error(&referentia, ZEPHYRUM, ZEPHYRUM,
-                sub_lat, sub_alt, &o, c);
-            c = _cellulae(piscina, &diffusa, QUADRANS_EXTREMA, &lat,
-                &alt);
+                sub_lat, sub_alt, &o, cellulae);
+            cellulae = _cellulae(piscina, &diffusa, QUADRANS_EXTREMA,
+                &lat, &alt);
             paletta_extrema = quadrans_error(&referentia, ZEPHYRUM,
-                ZEPHYRUM, sub_lat, sub_alt, &o, c);
-            c = _cellulae(piscina, &diffusa, QUADRANS_MEDIA, &lat,
-                &alt);
+                ZEPHYRUM, sub_lat, sub_alt, &o, cellulae);
+            cellulae = _cellulae(piscina, &diffusa, QUADRANS_MEDIA,
+                &lat, &alt);
             paletta_media = quadrans_error(&referentia, ZEPHYRUM,
-                ZEPHYRUM, sub_lat, sub_alt, &o, c);
+                ZEPHYRUM, sub_lat, sub_alt, &o, cellulae);
             imprimere("  %-18s %ux%u: simplex %6u  "
                 "paletta+extrema %6u  paletta+media %6u\n",
                 PHOTOGRAPHIAE[k],
@@ -308,9 +363,20 @@ principale (vacuum)
             CREDO_VERUM (simplex < paletta_media);
         }
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "II. Pictura cellularum", _picturam_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "III. Via tota", _viam_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IV. Paletta Aquinas", _palettam_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("tessera_effigies", SECTIONES,
+        _suitam_parare, NIHIL);
 }

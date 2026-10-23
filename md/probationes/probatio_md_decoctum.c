@@ -25,58 +25,61 @@ _aequalis (
 
 #define DEC(lit) md_decoquere(piscina, (lit), (i32)strlen(lit), &mutatus)
 
-s32
-principale (vacuum)
+interior vacuum
+_effugia_probare (
+    CredoContextus* c)
 {
-        b32  praeteritus;
-    Piscina* piscina;
+    Piscina* piscina = c->piscina;
         b32  mutatus;
-     chorda  c;
+     chorda  res;
 
-    piscina = piscina_generare_dynamicum("probatio_md_decoctum", 65536);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- Probans effugia ---\n");
-    c = DEC("\\*not emphasized\\*");
+    res = DEC("\\*not emphasized\\*");
     CREDO_VERUM (mutatus);
-    CREDO_VERUM (_aequalis(c, "*not emphasized*"));
-    c = DEC("\\a \\\\ \\");
-    CREDO_VERUM (_aequalis(c, "\\a \\ \\"));   /* '\a' manet; '\\' -> '\'; '\' finalis manet */
-    c = DEC("planus");
+    CREDO_VERUM (_aequalis(res, "*not emphasized*"));
+    res = DEC("\\a \\\\ \\");
+    CREDO_VERUM (_aequalis(res, "\\a \\ \\"));   /* '\a' manet; '\\' -> '\'; '\' finalis manet */
+    res = DEC("planus");
     CREDO_FALSUM (mutatus);
-    CREDO_VERUM (_aequalis(c, "planus"));
-    c = DEC("");
+    CREDO_VERUM (_aequalis(res, "planus"));
+    res = DEC("");
     CREDO_FALSUM (mutatus);
-    CREDO_AEQUALIS_I32 (c.mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (res.mensura, ZEPHYRUM);
+}
 
-    imprimere("\n--- Probans entia ---\n");
-    c = DEC("&amp; &lt; &gt; &quot;");
+interior vacuum
+_entia_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        b32  mutatus;
+     chorda  res;
+
+    res = DEC("&amp; &lt; &gt; &quot;");
     CREDO_VERUM (mutatus);
-    CREDO_VERUM (_aequalis(c, "& < > \""));
-    c = DEC("&#35; &#1234; &#x22; &#XD06;");
-    CREDO_VERUM (_aequalis(c, "# \xd3\x92 \" \xe0\xb4\x86"));
-    c = DEC("&copy; &nbsp;");
-    CREDO_VERUM (_aequalis(c, "\xc2\xa9 \xc2\xa0"));
+    CREDO_VERUM (_aequalis(res, "& < > \""));
+    res = DEC("&#35; &#1234; &#x22; &#XD06;");
+    CREDO_VERUM (_aequalis(res, "# \xd3\x92 \" \xe0\xb4\x86"));
+    res = DEC("&copy; &nbsp;");
+    CREDO_VERUM (_aequalis(res, "\xc2\xa9 \xc2\xa0"));
     /* invalida: litterae manent */
-    c =
+    res =
         DEC("&nbsp &x; &#; &#x; &#87654321; &#abcdef0; &ThisIsNotDefined; &hi?;");
-    CREDO_VERUM (_aequalis(c,
+    CREDO_VERUM (_aequalis(res,
         "&nbsp &x; &#; &#x; &#87654321; &#abcdef0; &ThisIsNotDefined; &hi?;"));
     CREDO_FALSUM (mutatus);
     /* zephyrum -> U+FFFD */
-    c = DEC("&#0;");
-    CREDO_VERUM (_aequalis(c, "\xef\xbf\xbd"));
+    res = DEC("&#0;");
+    CREDO_VERUM (_aequalis(res, "\xef\xbf\xbd"));
     /* ens effugitum non decoquitur */
-    c = DEC("\\&amp;");
-    CREDO_VERUM (_aequalis(c, "&amp;"));
+    res = DEC("\\&amp;");
+    CREDO_VERUM (_aequalis(res, "&amp;"));
+}
 
-    imprimere("\n");
-    imprimere("\n--- url codificare (B3.3) ---\n");
+interior vacuum
+_url_codificare_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
     {
         chorda u = md_url_codificare(piscina,
             chorda_ex_literis("/my uri\\[x]%20b\xc3\xa4\"", piscina));
@@ -87,9 +90,18 @@ principale (vacuum)
             piscina));
         CREDO_CHORDA_AEQUALIS_LITERIS (u, "/a?b=1&c=2#f");
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "effugia", _effugia_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "entia", _entia_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "url codificare (B3.3)", _url_codificare_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("md_decoctum", SECTIONES);
 }

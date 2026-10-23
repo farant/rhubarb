@@ -153,6 +153,7 @@ _sectio_resolutio (
     {
         character idem_sha[GIT_SHA_HEX_MENSURA];
 
+        /* <tolera codex="CREDO_SUITA_MUTATA" (>lectio git scratch in repositorium->piscina allocat (arena fixurae crescit, status idem) - vitium bibliothecae, parcum 01M5DWCWHCV4Q1Q8Z8767WTA47 */
         CREDO_VERUM(git_ref_resolvere(repositorium, caput,
             idem_sha));
         CREDO_VERUM(strcmp(caput, idem_sha) == 0);
@@ -193,6 +194,7 @@ _sectio_resolutio (
         }
         nomen_rami = chorda_sectio(caput_textus,
             (i32)strlen("ref: "), finis);
+        /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
         CREDO_VERUM(git_ref_resolvere(repositorium,
             chorda_ut_cstr(nomen_rami, piscina), ramus));
         CREDO_VERUM(strcmp(caput, ramus) == 0);
@@ -203,8 +205,10 @@ _sectio_resolutio (
         character primus[GIT_SHA_HEX_MENSURA];
         character tertius[GIT_SHA_HEX_MENSURA];
 
+        /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
         CREDO_VERUM(git_ref_resolvere(repositorium, "HEAD~1",
             primus));
+        /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
         CREDO_VERUM(git_ref_resolvere(repositorium, "HEAD~3",
             tertius));
         CREDO_VERUM(strcmp(caput, primus) != 0);
@@ -215,6 +219,7 @@ _sectio_resolutio (
     {
         character vanum[GIT_SHA_HEX_MENSURA];
 
+        /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
         CREDO_FALSUM(git_ref_resolvere(repositorium,
             "ramus/qui/non/est", vanum));
     }
@@ -227,10 +232,12 @@ _sectio_resolutio (
 
         memcpy(breve, caput, 8);
         breve[8] = '\0';
+        /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
         CREDO_VERUM(git_ref_resolvere(repositorium, breve,
             resolutum));
         CREDO_VERUM(strcmp(caput, resolutum) == 0);
         breve[3] = '\0';
+        /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
         CREDO_FALSUM(git_ref_resolvere(repositorium, breve,
             resolutum));
     }
@@ -307,6 +314,7 @@ _sectio_commissum (
     constans MundusGit* m = (constans MundusGit*)c->suita;
           GitCommissum  commissum;
 
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
     commissum = git_commissum_legere(m->repositorium, m->caput,
         c->piscina);
     CREDO_VERUM(commissum.successus);
@@ -332,9 +340,11 @@ _sectio_arbor (
                    b32  claude_massa   = FALSUM;
                    i32  i;
 
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
     commissum = git_commissum_legere(m->repositorium, m->caput,
         piscina);
     CREDO_NECESSE(commissum.successus);
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
     introitus = git_arborem_legere(m->repositorium,
         chorda_ut_cstr(commissum.arbor, piscina), piscina);
     CREDO_NECESSE_NON_NIHIL(introitus);
@@ -373,6 +383,7 @@ _sectio_massa (
 
     {
            b32 inventum = FALSUM;
+        /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
         chorda massa = git_massam_per_viam(m->repositorium, m->caput,
             "include/latina.h", c->piscina, &inventum);
         chorda discus = _massa_per_git(c->piscina);
@@ -389,6 +400,7 @@ _sectio_massa (
     {
         b32 inventum = VERUM;
 
+        /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
         (vacuum)git_massam_per_viam(m->repositorium, m->caput,
             "non/exsistit.c", c->piscina, &inventum);
         CREDO_FALSUM(inventum);
@@ -406,14 +418,18 @@ _sectio_historia (
                    b32  inventum = FALSUM;
                 chorda  massa;
 
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
     CREDO_VERUM(git_ref_resolvere(m->repositorium, "HEAD~20", vetus));
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
     massa = git_massam_per_viam(m->repositorium, vetus,
         "include/latina.h", c->piscina, &inventum);
     CREDO_VERUM(inventum);
     CREDO_VERUM(massa.mensura > (i32)1000);
 
     /* et profundius: catena parentum XL gradus */
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
     CREDO_VERUM(git_ref_resolvere(m->repositorium, "HEAD~40", vetus));
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
     massa = git_massam_per_viam(m->repositorium, vetus, "CLAUDE.md",
         c->piscina, &inventum);
     CREDO_VERUM(inventum);
@@ -433,10 +449,12 @@ _sectio_sha_per_viam (
            GitObiectum  obiectum;
                 chorda  discus;
 
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
     CREDO_VERUM(git_sha_per_viam(m->repositorium, m->caput,
         "include/latina.h", c->piscina, sha_massae, &est_arbor));
     CREDO_FALSUM(est_arbor);
     CREDO_VERUM(_est_sha_hex(sha_massae));
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
     obiectum = git_obiectum_legere(m->repositorium, sha_massae,
         c->piscina);
     CREDO_VERUM(obiectum.successus);
@@ -448,11 +466,13 @@ _sectio_sha_per_viam (
                (memoriae_index)discus.mensura) == 0);
 
     /* directorium: sha redditur, est_arbor VERUM */
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
     CREDO_VERUM(git_sha_per_viam(m->repositorium, m->caput, "lib",
         c->piscina, sha_massae, &est_arbor));
     CREDO_VERUM(est_arbor);
 
     /* via ignota */
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
     CREDO_FALSUM(git_sha_per_viam(m->repositorium, m->caput,
         "non/exsistit.c", c->piscina, sha_massae, &est_arbor));
 }
@@ -480,21 +500,27 @@ _sectio_differentia (
                    Xar* mutatae;
           GitViaMutata* via_mutata;
 
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
     CREDO_VERUM(git_ref_resolvere(repositorium, "d4a89dd",
         sha_parentis));
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
     CREDO_VERUM(git_ref_resolvere(repositorium, "4aafde9", sha_nati));
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
     parens  = git_commissum_legere(repositorium, sha_parentis, piscina);
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
     natus   = git_commissum_legere(repositorium, sha_nati, piscina);
     CREDO_NECESSE(parens.successus);
     CREDO_NECESSE(natus.successus);
 
     /* arbor contra se ipsam - differentia nulla */
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
     mutatae = git_arbores_differre(repositorium,
         chorda_ut_cstr(parens.arbor, piscina),
         chorda_ut_cstr(parens.arbor, piscina), piscina);
     CREDO_NECESSE_NON_NIHIL(mutatae);
     CREDO_AEQUALIS_I32(xar_numerus(mutatae), (i32)0);
 
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
     mutatae = git_arbores_differre(repositorium,
         chorda_ut_cstr(parens.arbor, piscina),
         chorda_ut_cstr(natus.arbor, piscina), piscina);
@@ -530,6 +556,7 @@ _sectio_differentia (
     CREDO_VERUM(via_mutata->genus == GIT_VIA_ADDITA);
 
     /* directio inversa: ADDITA fiunt REMOTA, symmetria */
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
     mutatae = git_arbores_differre(repositorium,
         chorda_ut_cstr(natus.arbor, piscina),
         chorda_ut_cstr(parens.arbor, piscina), piscina);

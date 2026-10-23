@@ -6367,6 +6367,230 @@ _probare_circuitum_scalae_fugae (
     }
 }
 
+/* ATTRIBUTA PIGRA (2026-10-22): Xar attributorum nascitur cum
+ * attributo PRIMO. Contractus: elementum novum NIHIL fert, addere id
+ * creat, textus addere recusat (ut antea), duplicatum sine attributis
+ * addere ACCIPIT (antea FALSUM tacitum - Xar deerat), parsatio sine
+ * attributis NIHIL dat et octeti idem manent. */
+interior vacuum
+_probare_attributa_pigra (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
+    {
+        StmlNodus* elementum;
+        StmlNodus* textus;
+        StmlNodus* duplicatum;
+           chorda* valor;
+
+        /* elementum novum: nulla Xar, lectores NIHIL ferunt */
+        elementum = stml_elementum_creare(piscina, intern, "e");
+        CREDO_NECESSE_NON_NIHIL(elementum);
+        CREDO_NIHIL(elementum->attributa);
+        CREDO_AEQUALIS_I32(xar_numerus(elementum->attributa), ZEPHYRUM);
+        CREDO_NIHIL(stml_attributum_capere(elementum, "a"));
+        CREDO_FALSUM(stml_attributum_habet(elementum, "a"));
+
+        /* addere Xar creat */
+        CREDO_VERUM(stml_attributum_addere(elementum, piscina, intern,
+            "a", "1"));
+        CREDO_NON_NIHIL(elementum->attributa);
+        CREDO_AEQUALIS_I32(xar_numerus(elementum->attributa), I);
+        valor = stml_attributum_capere(elementum, "a");
+        CREDO_VERUM(_chorda_ptr_eq_literis(valor, "1"));
+        CREDO_VERUM(stml_attributum_addere_chorda(elementum, piscina,
+            intern, "b", chorda_ex_literis("2", piscina)));
+        CREDO_AEQUALIS_I32(xar_numerus(elementum->attributa), II);
+
+        /* sine piscina Xar nasci non potest: FALSUM, nihil mutatum */
+        duplicatum = stml_elementum_creare(piscina, intern, "f");
+        CREDO_FALSUM(stml_attributum_addere(duplicatum, NIHIL, intern,
+            "a", "1"));
+        CREDO_NIHIL(duplicatum->attributa);
+
+        /* textus attributa numquam fert */
+        textus = stml_textum_creare(piscina, intern, "t");
+        CREDO_FALSUM(stml_attributum_addere(textus, piscina, intern,
+            "a", "1"));
+        CREDO_NIHIL(textus->attributa);
+
+        /* duplicatum elementi sine attributis: antea addere
+         * FALSUM reddebat (Xar NIHIL), nunc accipit */
+        duplicatum = stml_duplicare(
+            stml_elementum_creare(piscina, intern, "g"), piscina,
+            intern);
+        CREDO_NECESSE_NON_NIHIL(duplicatum);
+        CREDO_NIHIL(duplicatum->attributa);
+        CREDO_VERUM(stml_attributum_addere(duplicatum, piscina, intern,
+            "a", "1"));
+        CREDO_AEQUALIS_I32(xar_numerus(duplicatum->attributa), I);
+    }
+    {
+        /* parsatio: tagum sine attributis NIHIL, cum attributis Xar;
+         * octeti idem (spatium ante '/>' extra Xar servatur) */
+         constans character* fons;
+               StmlResultus  res;
+                  StmlNodus* a;
+                  StmlNodus* b;
+                  StmlNodus* d;
+
+        fons  = "<r><a/><b x=\"1\" y/><d /></r>";
+        res   = stml_legere_ex_literis(fons, piscina, intern);
+        CREDO_NECESSE(res.successus);
+        a = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi,
+            ZEPHYRUM);
+        b = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi, I);
+        d = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi, II);
+        CREDO_NIHIL(a->attributa);
+        CREDO_AEQUALIS_I32(xar_numerus(b->attributa), II);
+        CREDO_NIHIL(d->attributa);
+        CREDO_NIHIL(res.elementum_radix->attributa);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            stml_scribere(res.radix, piscina, FALSUM), fons);
+
+        /* elementum parsatum sine attributis addere accipit */
+        CREDO_VERUM(stml_attributum_addere(a, piscina, intern, "z",
+            "9"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(
+            stml_attributum_capere(a, "z"), "9"));
+    }
+}
+
+/* MAGNITUDO NODI (2026-10-22): StmlNodus sine lacunis evitabilibus -
+ * magnitudo = summa camporum ad alignationem monstratoris rotundata
+ * (ORDO CAMPORUM in stml.h; campi parvi i8 non ad VIII exeunt, ergo
+ * cauda impleta sola manet). Campus novus aut ordo qui lacunam inter
+ * monstratores reducit hic rubrum facit. Portabile (nullus numerus
+ * CXXVIII fixus). */
+interior vacuum
+_probare_magnitudinem_nodi (
+    CredoContextus* c)
+{
+         StmlNodus n;
+    memoriae_index summa;
+    memoriae_index ordinatio;
+    memoriae_index rotundata;
+
+    (vacuum)c;
+    summa = magnitudo(n.genus) + magnitudo(n.multilinea)
+          + magnitudo(n.titulus) + magnitudo(n.valor)
+          + magnitudo(n.attributa) + magnitudo(n.liberi)
+          + magnitudo(n.parens) + magnitudo(n.linea)
+          + magnitudo(n.positus_initium) + magnitudo(n.positus_finis)
+          + magnitudo(n.crudus) + magnitudo(n.captio_directio)
+          + magnitudo(n.captio_numerus) + magnitudo(n.clausura_anonyma)
+          + magnitudo(n.fragmentum) + magnitudo(n.fragmentum_id)
+          + magnitudo(n.augmentum_clavis)
+          + magnitudo(n.attributum_titulus) + magnitudo(n.spatia_ante)
+          + magnitudo(n.spatia_post) + magnitudo(n.spatia_clausurae)
+          + magnitudo(n.spatia_intra_tagum) + magnitudo(n.indentatio);
+    ordinatio = magnitudo(vacuum*);
+    rotundata = ((summa + ordinatio - I) / ordinatio) * ordinatio;
+    CREDO_AEQUALIS_I32((i32)magnitudo(StmlNodus), (i32)rotundata);
+    imprimere("  magnitudo(StmlNodus) %d, summa camporum %d "
+        "(rotundata %d)\n", (int)magnitudo(StmlNodus), (int)summa,
+        (int)rotundata);
+}
+
+/* CAPTIO NUMERUS MAXIMUS (2026-10-22): CCLV parentheses accipiuntur
+ * et octetim redduntur; CCLVI RECUSANTUR (STML_ERROR_SYNTAXIS), non
+ * secantur - campus octetus unus est. Formae quattuor: '<t (>',
+ * '<) t>', '<# (>' et '<(>' nuda. */
+interior vacuum
+_probare_captionem_maximam (
+    CredoContextus* c)
+{
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+               character  fons[1024];
+                     i32  forma;
+                     i32  i;
+                     i32  n;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
+    per (forma = ZEPHYRUM; forma < IV; forma++)
+    {
+        per (n = STML_CAPTIO_NUMERUS_MAXIMUS;
+             n <= STML_CAPTIO_NUMERUS_MAXIMUS + I; n++)
+        {
+            StmlResultus res;
+                     i32 k;
+
+            k          = ZEPHYRUM;
+            fons[k++]  = '<'; fons[k++] = 'r'; fons[k++]  = '>';
+            fons[k++]                                     = '<';
+            si (forma == ZEPHYRUM)
+            {
+                fons[k++] = 't'; fons[k++] = ' ';
+                per (i = ZEPHYRUM; i < n; i++) fons[k++] = '(';
+                fons[k++] = '>';
+            }
+            alioquin si (forma == I)
+            {
+                per (i = ZEPHYRUM; i < n; i++) fons[k++] = ')';
+                fons[k++] = ' '; fons[k++] = 't'; fons[k++] = '>';
+            }
+            alioquin si (forma == II)
+            {
+                fons[k++] = '#'; fons[k++] = ' ';
+                per (i = ZEPHYRUM; i < n; i++) fons[k++] = '(';
+                fons[k++] = '>';
+            }
+            alioquin
+            {
+                per (i = ZEPHYRUM; i < n; i++) fons[k++] = '(';
+                fons[k++] = '>';
+            }
+            fons[k++] = '<'; fons[k++] = 'a'; fons[k++]  = '/';
+            fons[k++]                                    = '>';
+            fons[k++]                                    =
+                '<'; fons[k++] = '/'; fons[k++] = 'r';
+            fons[k++]  = '>';
+            fons[k]    = '\0';
+
+            res = stml_legere_ex_literis(fons, piscina, intern);
+            si (n <= STML_CAPTIO_NUMERUS_MAXIMUS)
+            {
+                CREDO_VERUM(res.successus);
+                si (res.successus && forma != III)
+                {
+                    CREDO_CHORDA_AEQUALIS_LITERIS(
+                        stml_scribere(res.radix, piscina, FALSUM),
+                        fons);
+                }
+                alioquin si (res.successus)
+                {
+                    /* '<(>' nuda: scriptor ad '<#(>' normalizat
+                     * (consulto, worklog 'Sugar') - exspectatum
+                     * igitur '#' post '<r><' insertum */
+                    character exspectatum[1032];
+
+                    memcpy(exspectatum, fons, (memoriae_index)IV);
+                    exspectatum[IV] = '#';
+                    memcpy(exspectatum + V, fons + IV,
+                        (memoriae_index)(k - IV + I));
+                    CREDO_CHORDA_AEQUALIS_LITERIS(
+                        stml_scribere(res.radix, piscina, FALSUM),
+                        exspectatum);
+                }
+            }
+            alioquin
+            {
+                CREDO_FALSUM(res.successus);
+                CREDO_AEQUALIS_I32((i32)res.status,
+                    (i32)STML_ERROR_SYNTAXIS);
+            }
+        }
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "stml_elementum_creare", _probare_stml_elementum_creare, NIHIL,
         NIHIL, NIHIL, NIHIL },
@@ -6509,6 +6733,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _probare_scalam_fugae_clausurae_crudae, NIHIL, NIHIL, NIHIL,
             NIHIL },
     { "circuitum scalae fugae", _probare_circuitum_scalae_fugae, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "attributa pigra", _probare_attributa_pigra, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "magnitudo nodi", _probare_magnitudinem_nodi, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "captio numerus maximus", _probare_captionem_maximam, NIHIL,
         NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

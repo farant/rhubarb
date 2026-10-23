@@ -17,25 +17,19 @@
 #include <stdio.h>
 #include <string.h>
 
-s32
-principale (vacuum)
+/* Sectio UNA: probatio scaenica - blocci statum priorum ex proposito
+ * continuant; gradus (CREDO_GRADUS) fracturam nominant. */
+interior vacuum
+_scaenam_probare (
+    CredoContextus* c)
 {
-        b32  praeteritus;
-    Piscina* piscina;
+            Piscina* piscina = c->piscina;
     TesseraPiscina* tp;
     TesseraPonsMemoriae* pm;
     TesseraOpus* opus;
     SaltuariusNexus* nexus;
     SaltuariusRes* res;
 
-    piscina = piscina_generare_dynamicum("probatio_salt_visum",
-        8388608);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
     nexus  = saltuarius_nexus_creare(piscina);
     res    = saltuarius_res_creare(piscina, "/probe");
     tp = tessera_piscina_generare_dynamicum("salt_visum_tessera",
@@ -45,7 +39,7 @@ principale (vacuum)
     si (opus == NIHIL || nexus == NIHIL)
     {
         imprimere("FRACTA: apertura\n");
-        redde I;
+        redde;   /* sine assertione: sectio VACUA */
     }
 
 
@@ -56,7 +50,7 @@ principale (vacuum)
     {
         SaltuariusLiber* liber;
 
-        imprimere("\n--- Probans scaenam coloratam ---\n");
+        CREDO_GRADUS ("scaenam coloratam");
 
         liber = saltuarius_liber_aperire(piscina, nexus,
             chorda_ex_literis("probe.c", piscina),
@@ -134,7 +128,7 @@ principale (vacuum)
     {
         SaltuariusLiber* liber;
 
-        imprimere("\n--- Probans volumen horizontale ---\n");
+        CREDO_GRADUS ("volumen horizontale");
 
         liber = saltuarius_liber_aperire(piscina, nexus,
             chorda_ex_literis("longus.c", piscina),
@@ -174,7 +168,7 @@ principale (vacuum)
         SaltuariusLiber* liber;
                      i8  octeti[XVI];
 
-        imprimere("\n--- Probans graphemata lata ---\n");
+        CREDO_GRADUS ("graphemata lata");
 
         /* "a広b" et "e+acutum x y"; textus ad x=II */
         liber = saltuarius_liber_aperire(piscina, nexus,
@@ -244,7 +238,7 @@ principale (vacuum)
     {
         SaltuariusLiber* liber;
 
-        imprimere("\n--- Probans merum ---\n");
+        CREDO_GRADUS ("merum");
 
         liber = saltuarius_liber_aperire(piscina, nexus,
             chorda_ex_literis("notae.md", piscina),
@@ -270,7 +264,7 @@ principale (vacuum)
         SaltuariusLiber* liber;
         SaltuariusOrigo* origo;
 
-        imprimere("\n--- Probans strata et tabellam ---\n");
+        CREDO_GRADUS ("strata et tabellam");
 
         CREDO_AEQUALIS_S32 (
             saltuarius_nexus_silvam_parare(nexus, NIHIL, ZEPHYRUM),
@@ -372,7 +366,7 @@ principale (vacuum)
          * linea fructus (D3): praesentare semel ut numeri
          * vivant, deinde tabula telemetriae in linea status
          * ---------------------------------------------------- */
-        imprimere("\n--- Probans lineam fructus ---\n");
+        CREDO_GRADUS ("lineam fructus");
 
         (vacuum)tessera_praesentare(opus);
         saltuarius_visum_pingere(liber, res, opus);
@@ -404,9 +398,16 @@ principale (vacuum)
         saltuarius_liber_destruere(liber);
     }
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    tessera_piscina_destruere(tp);
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "scaena colorata: sessio", _scaenam_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("saltuarius_visum", SECTIONES);
 }

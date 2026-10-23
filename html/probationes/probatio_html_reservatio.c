@@ -20,7 +20,7 @@
  */
 
 #include "latina.h"
-#include "lectiones.h"   /* lectiones_fopen: canalis lectionum (examen 96) */
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "credo.h"
 #include "canon.h"
 #include "chorda.h"
@@ -118,10 +118,10 @@ _plagulam_legere (
 /* Vitia canonis in documento (s32 -I = fractura ante iudicium) */
 hic_manens s32
 _canone_iudicare (
-                Piscina* piscina,
-    InternamentumChorda* intern,
-                  Canon* canon,
-                 chorda  textus)
+                         Piscina* piscina,
+             InternamentumChorda* intern,
+                  constans Canon* canon,
+                          chorda  textus)
 {
     StmlResultus  res;
              Xar* vitia;
@@ -152,38 +152,48 @@ _canone_iudicare (
     redde (s32)n;
 }
 
-integer
-principale (vacuum)
-{
-                Piscina* piscina;
+/* FIXURA SUITAE: internamentum, ratum lexici, consilium arboris,
+ * sigillum vivum et canon semel facta (parare_suitae; assertiones
+ * canonis ibi); sectiones ea per monstratorem constantem LEGUNT
+ * (internatio in internamentum fixurae sola licet). */
+nomen structura {
     InternamentumChorda* intern;
-     constans character* radix_viae;
-                  Canon* canon;
     MateriaLexiconRatum  ratum;
-     MateriaLexIudicium  iudicium;
   MateriaArborConsilium  consilium;
-     MateriaArborVitium  vitium;
                  chorda  sigillum;
-                    b32  praeteritus;
-                    i32  k;
+                  Canon* canon;
+} FixuraCanonis;
 
-    piscina = piscina_generare_dynamicum("probatio_html_reservatio",
-        1048576);
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+          FixuraCanonis* f;
+     constans character* radix_viae;
+     MateriaLexIudicium  iudicium;
+
+    f = (FixuraCanonis*)piscina_allocare(piscina,
+        magnitudo(FixuraCanonis));
+    si (f == NIHIL)
+    {
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
+    }
+    f->intern = internamentum_creare(piscina);
 
     radix_viae = getenv("RHUBARB_RADIX");
     si (radix_viae == NIHIL)
     { radix_viae = ".";
     }
-    si (!materia_lexicon_ratum_facere(&ratum, &HTML_LEXICON, &iudicium))
+    si (!materia_lexicon_ratum_facere(&f->ratum, &HTML_LEXICON,
+        &iudicium))
     {
         imprimere("LEXICON HTML RECUSATUM\n");
-        redde I;
+        redde;
     }
-    materia_arbor_consilium_nudum(&consilium, &HTML_REGISTRUM, &ratum,
-        "html");
-    sigillum = materia_arbor_sigillum(piscina, &HTML_REGISTRUM);
+    materia_arbor_consilium_nudum(&f->consilium, &HTML_REGISTRUM,
+        &f->ratum, "html");
+    f->sigillum = materia_arbor_sigillum(piscina, &HTML_REGISTRUM);
 
     /* canon */
     {
@@ -200,41 +210,69 @@ principale (vacuum)
         fons.mensura   = mensura;
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
-        canon = textus ? canon_legere(fons, piscina, intern, &causa)
-                       : NIHIL;
-        CREDO_NON_NIHIL (canon);
-        si (canon == NIHIL)
+        f->canon = textus ? canon_legere(fons, piscina, f->intern,
+            &causa) : NIHIL;
+        CREDO_NON_NIHIL (f->canon);
+        si (f->canon == NIHIL)
         {
-            credo_imprimere_compendium();
-            redde I;
+            redde;
         }
     }
+    c->datum = f;
+}
 
 
-    /* ==================================================
-     * TESTIS POSITIVUS: documentum purum transit
-     * ================================================== */
+/* ==================================================
+ * TESTIS POSITIVUS: documentum purum transit
+ * ================================================== */
 
+interior vacuum
+_testem_positivum_probare (
+    CredoContextus* c)
+{
+    constans FixuraCanonis* f =
+        (constans FixuraCanonis*)c->suita;
+                          Piscina* piscina = c->piscina;
+               MateriaArborVitium  vitium;
+
+    si (f == NIHIL)
     {
-        chorda doc = _documentum_struere(piscina, sigillum, "", "", "");
+        redde;
+    }
+    {
+        chorda doc = _documentum_struere(piscina, f->sigillum, "", "",
+            "");
         MateriaNodus* lecta;
 
-        imprimere("\n--- Testis positivus: documentum purum ---\n");
-        lecta = materia_arbor_legere(piscina, NIHIL, doc, &consilium,
+        lecta = materia_arbor_legere(piscina, NIHIL, doc, &f->consilium,
             &vitium);
         CREDO_NON_NIHIL (lecta);
         CREDO_NIHIL (vitium.causa);
-        CREDO_AEQUALIS_S32 (_canone_iudicare(piscina, intern, canon,
-            doc),
+        CREDO_AEQUALIS_S32 (_canone_iudicare(piscina, f->intern,
+            f->canon, doc),
             (s32)ZEPHYRUM);
     }
+}
 
 
-    /* ==================================================
-     * (a) ut ELEMENTUM intra elementum: 'locus generi ignotus'
-     * ================================================== */
+/* ==================================================
+ * (a) ut ELEMENTUM intra elementum: 'locus generi ignotus'
+ * ================================================== */
 
-    imprimere("\n--- (a) res reservata ut elementum elementi ---\n");
+interior vacuum
+_elementum_elementi_probare (
+    CredoContextus* c)
+{
+    constans FixuraCanonis* f =
+        (constans FixuraCanonis*)c->suita;
+                          Piscina* piscina = c->piscina;
+               MateriaArborVitium  vitium;
+                              i32  k;
+
+    si (f == NIHIL)
+    {
+        redde;
+    }
     per (k = ZEPHYRUM; k < IV; k++)
     {
         character liberum[LXIV];
@@ -242,8 +280,9 @@ principale (vacuum)
         MateriaNodus* lecta;
 
         sprintf(liberum, "        <%s/>\n", RESERVATA[k]);
-        doc = _documentum_struere(piscina, sigillum, liberum, "", "");
-        lecta = materia_arbor_legere(piscina, NIHIL, doc, &consilium,
+        doc = _documentum_struere(piscina, f->sigillum, liberum, "",
+            "");
+        lecta = materia_arbor_legere(piscina, NIHIL, doc, &f->consilium,
             &vitium);
         imprimere("  <%s/>: %s\n", RESERVATA[k],
             vitium.causa ? vitium.causa : "(accepta)");
@@ -255,19 +294,32 @@ principale (vacuum)
                 == ZEPHYRUM);
         }
     }
+}
 
 
-    /* ==================================================
-     * (b) <reinserendum> ut ELEMENTUM intra liberi: 'genus ignotum'
-     * ================================================== */
+/* ==================================================
+ * (b) <reinserendum> ut ELEMENTUM intra liberi: 'genus ignotum'
+ * ================================================== */
 
+interior vacuum
+_genus_in_liberis_probare (
+    CredoContextus* c)
+{
+    constans FixuraCanonis* f =
+        (constans FixuraCanonis*)c->suita;
+                          Piscina* piscina = c->piscina;
+               MateriaArborVitium  vitium;
+
+    si (f == NIHIL)
     {
-        chorda doc = _documentum_struere(piscina, sigillum, "", "",
+        redde;
+    }
+    {
+        chorda doc = _documentum_struere(piscina, f->sigillum, "", "",
             "      <reinserendum/>\n");
         MateriaNodus* lecta;
 
-        imprimere("\n--- (b) reinserendum ut genus in liberis ---\n");
-        lecta = materia_arbor_legere(piscina, NIHIL, doc, &consilium,
+        lecta = materia_arbor_legere(piscina, NIHIL, doc, &f->consilium,
             &vitium);
         imprimere("  %s\n", vitium.causa ? vitium.causa : "(accepta)");
         CREDO_NIHIL (lecta);
@@ -278,13 +330,27 @@ principale (vacuum)
                 == ZEPHYRUM);
         }
     }
+}
 
 
-    /* ==================================================
-     * (c) ut ATTRIBUTUM: lector ACCIPIT (pinna), canon iudicat
-     * ================================================== */
+/* ==================================================
+ * (c) ut ATTRIBUTUM: lector ACCIPIT (pinna), canon iudicat
+ * ================================================== */
 
-    imprimere("\n--- (c) res reservata ut attributum elementi ---\n");
+interior vacuum
+_attributum_elementi_probare (
+    CredoContextus* c)
+{
+    constans FixuraCanonis* f =
+        (constans FixuraCanonis*)c->suita;
+                          Piscina* piscina = c->piscina;
+               MateriaArborVitium  vitium;
+                              i32  k;
+
+    si (f == NIHIL)
+    {
+        redde;
+    }
     per (k = ZEPHYRUM; k < III; k++)
     {
         character attributum[LXIV];
@@ -293,24 +359,37 @@ principale (vacuum)
         s32 vitia;
 
         sprintf(attributum, " %s=\"x\"", RESERVATA[k]);
-        doc = _documentum_struere(piscina, sigillum, "", attributum,
+        doc = _documentum_struere(piscina, f->sigillum, "", attributum,
             "");
-        lecta = materia_arbor_legere(piscina, NIHIL, doc, &consilium,
+        lecta = materia_arbor_legere(piscina, NIHIL, doc, &f->consilium,
             &vitium);
         /* PINNA: lector attributa ignota IGNORAT (mensuratum). Cum
          * materia census attributorum addat, haec rubet et ordo (c)
          * in recusationem lectoris promovetur. */
         CREDO_NON_NIHIL (lecta);
         CREDO_NIHIL (vitium.causa);
-        vitia = _canone_iudicare(piscina, intern, canon, doc);
+        vitia = _canone_iudicare(piscina, f->intern, f->canon, doc);
         imprimere("  %s=\"x\": lector accipit, canon vitia %d\n",
             RESERVATA[k], (integer)vitia);
         CREDO_MAIOR_S32 (vitia, (s32)ZEPHYRUM);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "testis positivus: documentum purum", _testem_positivum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(a) res reservata ut elementum elementi",
+        _elementum_elementi_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(b) reinserendum ut genus in liberis",
+        _genus_in_liberis_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "(c) res reservata ut attributum elementi",
+        _attributum_elementi_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("html_reservatio", SECTIONES,
+        _suitam_parare, NIHIL);
 }

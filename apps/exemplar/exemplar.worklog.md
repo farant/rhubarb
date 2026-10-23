@@ -27,3 +27,311 @@
 - **Test speed:** client and server share a thread; keep the client's
   recv timeout tiny and pump many cycles per wait, or argon2id (one
   step per cycle) makes each login take seconds.
+
+## 2026-10-19 - mcp-remotus T1: the probe
+
+exemplar grows MCP/OAuth routes in a second file `exemplar_mcp.c`
+(nucleus is 1522 lines); the shared structs moved to
+`exemplar_internum.h`; `exemplar_mcp.h` makes aedilis pick up the new
+`.c` (the test source list is the union of aedilis closures).
+
+**Routes now:** `POST /mcp` -> always 401 with `WWW-Authenticate: Bearer
+resource_metadata="<basis>/.well-known/oauth-protected-resource",
+scope="notae:legere notae:scribere"` (nothing issues tokens yet); both
+protected-resource paths (RFC 9728, also `/mcp`-suffixed); the
+authorization-server document (RFC 8414); `POST /oauth/register` -> 503
+`temporarily_unavailable` (the probe stops Claude there on purpose). All
+JSON built with `json`, none hand-written.
+
+**`-basis URL`** (plan P10): `-hospes` is the LISTEN address (127.0.0.1
+behind nginx), so the public base for issuer and resource is its own
+flag; trailing `/` stripped; default `http://<hospes>:<port>`.
+
+**`-sonda`:** one line per request to the MCP/OAuth routes: method, URI,
+EVERY header (Authorization / Proxy-Authorization keep only the scheme,
+Cookie / Set-Cookie fully redacted), body up to 4 KB with non-printables
+as `\xHH` - never the body of `/oauth/token`. The writer is a callback in
+the config (default stderr), so the test captures lines in memory and
+asserts the test token text appears nowhere.
+
+`tools/dimittere.sh -cum-unitate` now also installs the app's systemd
+unit (prior kept as `.prior`, daemon-reload; restored together with
+the binary if health fails) - the unit gains `-basis` and `-sonda`.
+
+Gotcha: a comment containing the path `/.well-known/*` has `/*` inside a
+block comment -> `-Wcomment` error. Write `/.well-known/...`.
+
+## 2026-10-19 (20 UTC) - mcp-remotus T1: what Claude actually sent
+
+Deployed with `tools/dimittere.sh -agere -cum-unitate exemplar smaragda`
+(health good; nginx passes the well-known paths). Fran added the
+connector from the desktop app. Full findings in the spec, section
+"VERIFIED by the probe"; the short version for T3-T6:
+
+- **initialize era, 2025-11-25** - the gate passes, the plan stands.
+  `mcp-protocol-version` is sent on EVERY request, even initialize and
+  the discovery GETs - so the core must not reject an initialize that
+  carries it.
+- The caller is python-httpx from 160.79.106.x (Anthropic's servers),
+  even for the desktop app: no Origin, no cookies - exemplar's POST
+  Origin rule must not touch /mcp or /oauth/* (plan P3 confirmed).
+- It fetches the PRM at the exact `resource_metadata` URL (root path),
+  then the RFC 8414 document. The `/mcp`-suffixed PRM route stays for
+  other clients.
+- DCR asks for `scope: "notae:legere notae:scribere offline_access"`
+  (taken from the AS `scopes_supported`), `token_endpoint_auth_method:
+  none`, `application_type: web`, `client_name: Claude`, one redirect
+  URI `https://claude.ai/api/mcp/auth_callback`. T5's register must
+  accept `offline_access` in the requested scope and ignore
+  `application_type`.
+- The first of two attempts stopped after discovery without
+  registering; the second registered. Unexplained - watch for it at T9.
+
+## 2026-10-20 - mcp-remotus T7: exemplar is the third MCP server
+
+T1's static discovery documents, the always-401 `/mcp` and the 503
+register are GONE; the libraries own those routes now:
+`mcp_servus_http_montare` (with `admissio_verificator`) and
+`admissio_montare` (login through exemplar's own session:
+`exemplar_intratus_usor` returns user + the page CSRF). The sonda
+survives through the libraries' new `speculator` hooks - it is still
+the raw-request capture; bodies of `/oauth/token` AND of the consent
+POST (it carries the CSRF token) are redacted.
+
+**Tools** (`exemplar_mcp.c`): `notas_enumerare` (`pagina`, 20 per
+page, newest first, `{pagina, paginae, notae}`), `notam_legere` (text
++ attachment name/mime/size), `notam_addere`, `notam_delere`
+(destructiveHint). Only the token user's notes: a foreign or deleted id
+gives the SAME tool error "nota non inventa" - nothing leaks. MCP notes
+are written by `exemplar_notam_scribere` with `via: "claude"` and the
+client id; web notes now carry `via: "retis"`.
+
+**`/applicationes`** (in the nucleus - it needs the page helpers):
+client name, scopes, created, last used, revoke (Origin + CSRF). The
+next `/mcp` call of the revoked grant is 401, its refresh
+`invalid_grant`; other people's grants untouched (`revocare` section).
+
+**`/intrare?redire=`**: only local paths (`/x`; never `//x`, `/\x`,
+control chars) are kept - in a hidden field on the login page, then in
+the deferred login `Opus`, then as the 303 target. Anything else lands
+on `/notae`.
+
+`admissio_putare` runs at start and hourly (reactor timer).
+
+Found by the Linux build, not by clang: `lib/base64.c` (T2) had
+`(I << bits) - I` - an `int` into `i32` arithmetic, which gcc's
+`-Wsign-conversion` rejects. Always build Linux before calling a C
+task done.
+
+## 2026-10-20 - mcp-remotus T8: Claude Code end to end, Linux, fumus
+
+**Claude Code 2.1.303 against a local exemplar** (`http://127.0.0.1:3010`,
+`-sonda`; Fran ran `claude mcp add --transport http exemplar-loc ...`
+from /tmp, `/mcp`, signed in in Firefox, added a note). It WORKED, and
+the sonda shows a DUAL-ERA client:
+
+1. First request: `POST /mcp` `server/discover` with
+   `mcp-protocol-version: 2026-07-28` and `_meta`
+   (`io.modelcontextprotocol/protocolVersion`, `.../clientInfo`) - no
+   token -> our 401 -> OAuth starts.
+2. Discovery: both documents (UA `claude-code`, then `Bun/1.4.4`).
+   DCR: `client_name "Claude Code (exemplar-loc)"`, redirect
+   `http://localhost:53734/callback` (random port - loopback rule hit).
+3. Authorize: `resource=http://127.0.0.1:3010/mcp` (RFC 8707, as
+   expected) and `prompt=consent` (ignored - we always show consent).
+   Consent POST from Firefox with Origin `http://127.0.0.1:3010`.
+   Token exchange (body redacted in the sonda).
+4. With the token: `server/discover` again -> our 400 `-32022`
+   Unsupported protocol version (data.supported = our three) -> it FELL
+   BACK to `initialize` `2025-11-25`. The T4 design (official 2026
+   error shape) is exactly what made the fallback work.
+5. `notifications/initialized` 202, `GET /mcp` (SSE attempt) 405,
+   `tools/list`, `tools/call notam_addere` with an emoji - stored and
+   logged `usor=fran cliens=7B3B...`.
+
+So the spec's AUDIENDA "does Claude Code accept OAuth on plain
+http://localhost" is answered: yes.
+
+**Linux:** `tools/linux/probatio.sh -musl` and `-glibc` with base64url,
+mcp_servus, mcp_servus_http, admissio, admissio_fluxus,
+exemplar_applicatio: 6/6 each. Static build `build/linux/exemplar` OK
+(T7 fixed the gcc sign-conversion it found).
+
+**`tools/exemplar_mcp_fumus.sh <basis>`** - live smoke, never signs in:
+exact 401 header, both PRM paths + the AS document agree on resource
+and issuer, `GET /mcp` 405, a throwaway registration 201 (pruned after a
+day). Local run: all six BENE; a dead port and a host that mismatches
+the issuer (`localhost` vs `127.0.0.1`) both exit 1.
+
+## 2026-10-20 - mcp-remotus T9: live
+
+Deployed with `tools/dimittere.sh -agere exemplar smaragda` (binary
+only - the unit was already T1's, checked identical). Before it, the
+service was STOPPED and `/var/lib/exemplar/exemplar.volumen` copied to
+`exemplar.volumen.ante-T9` (stop first = checkpointed, no WAL to copy;
+backup stays until the slice is closed). Health `{"status":"ok","acta":6}`
+- old events kept; admissio's tables were created on first start.
+`tools/exemplar_mcp_fumus.sh https://exemplar.golden.earth`: six BENE.
+
+Live, from the journal: claude.ai behaves like Claude Code - it probes
+the 2026 era first (`server/discover`), gets our 400 `-32022`
+(`exitus=versio`), falls back to `initialize` 2025-11-25. Fran: two
+sign-ins (6 registrations total incl. fumus), `notas_enumerare` and
+`notam_addere` from Claude, `/applicationes` viewed. Tool calls answer
+in 4-11 ms on the droplet.
+
+Not yet observed: Amanda's own connection, a live revoke + re-add, and
+the first refresh after the access token's hour (look for
+`POST /oauth/token` with a refresh body, then 200s on `/mcp`).
+
+## 2026-10-20 - accounts through ianua (ianua T5)
+
+exemplar's account layer is gone: `Usor`/`Sessio`/`Opus`, the account
+routes, the async hashing slots, the shared `cfg.invitatio` secret and
+the `usor.*`/`tessera.*`/`sessio.*` replay. exemplar_nucleus.c 1719 ->
+1408 lines (and the 1408 now include the migration, the CLI invite and
+a test hook). ianua is mounted with exemplar's page frame (`pagina`
+callback), `via_post_intrationem` /notae, invitations required.
+
+- Notes carry `civis` (ULID). Old `nota.scripta` events carry `usor`
+  (a handle); replay maps them through `exemplar_nomina_vetera`, filled
+  once by the migration. The log is never rewritten (plan P7).
+- MIGRATION `_cives_migrare`, at the END of exemplar_creare (after
+  admissio created its tables, before replay), ONE transaction: latest
+  PHC per handle from `usor.creatus`/`tessera.mutata` -> `cives_creare`
+  + `credentialia_tesseram_ponere`; the map row; `admissio_concessiones`
+  and `admissio_codices` `usor` re-keyed handle -> ULID (P8); event
+  `exemplar.migratio {cives: {handle: ULID}}`; marker row in
+  `exemplar_migrationes`. Any failure -> rollback, "exemplar: migratio
+  civium fracta: <reason>" on stderr, exemplar refuses to start. A
+  fresh volumen writes only the marker.
+- Old `sessio.creata` events are ignored: everyone signs in once (P12).
+- admissio `concessio.*` events written BEFORE the migration still say
+  `"usor":"fran"` (history); new ones carry the ULID. Two suite
+  assertions changed accordingly (`_usor_civis` reads the ULID).
+- SINGLE WRITER (P1): `data/sera` via `filum_seram_capere` at start; a
+  second server or `exemplar -invitare` while running is refused.
+  `exemplar -data D -invitare "<nota>" [-basis URL]` prints the code (and
+  link with -basis) on stdout only. `-invitatio`/`-invitatio-via`
+  removed; exemplar.service updated (P14 - deploy with -cum-unitate).
+- Every failure path of exemplar_creare goes through `_creatio_fracta`
+  (destroys the hospitium, closes the volumen, releases the lock) - the
+  migratio_fracta test relies on the lock being free for the retry.
+
+Tests: probatio_exemplar_applicatio 342/342 (5 new sections: migratio,
+migratio_iterata, migratio_fracta, sera, mcp_nota_civis; every sign-up
+now uses a fresh code via `exemplar_invitationem_probationis`). Plants
+red then green: migration commits instead of rolling back
+(migratio_fracta: fran exists after a refused start); replay ignores
+the map (migratio: fran's old note gone); lock not taken (sera). Linux
+musl + glibc green (7 suites); static build OK (build/linux/exemplar,
+2.0 MB).
+
+Local end to end (scratch data, port 3011): CLI invite while stopped ->
+code; while running -> exit 2 "servus currit"; link -> form; sign-up 303;
+reused code 403; sign-in as "Fran" -> /notae "salve, Fran"; /mcp 401
+exact; clean SIGTERM. Claude Code OAuth round trip not repeated locally
+(needs a browser) - covered by T6's live check.
+
+## 2026-10-20 - ianua T6: live on exemplar.golden.earth
+
+Deploy: service stopped (clean WAL checkpoint - no -wal/-shm left), backup
+`/var/lib/exemplar/exemplar.volumen.ante-ianua` (same size as live), then
+`tools/dimittere.sh -agere -cum-unitate exemplar smaragda` (old binary and
+unit kept as `.prior`). `/salus` {"status":"ok","acta":11}; journal
+`exemplar: migratio civium facta (1)` - one distinct handle in the old
+log, so one person; no "fracta". `exemplar_mcp_fumus` 6/6 BENE;
+code-less `/inscribere` -> "invitatio non valet"; `/intrare` 200. Fran's
+live checks (web sign-in + notes, Claude still connected through the
+re-keyed grant, password change, invitations page): "looks good to me".
+
+Rollback if ever needed: stop; restore `.ante-ianua`, `exemplar.prior`,
+`exemplar.service.prior`; daemon-reload; start. dimittere's own rollback
+restores binary + unit only, never the volumen - after a migration ran,
+the volumen backup is part of the rollback.
+
+Left on the server for Fran to decide: the old `/var/lib/exemplar/
+invitatio` file (nothing reads it since P14) and the backups
+`.ante-T9`, `.ante-recensio`, `.ante-ianua`.
+
+## 2026-10-21 - canalis T4: admin channel
+
+Second McpServus (`exemplar_administratio.c`, seven tools, scope
+`administratio`) served at `<data>/canalis/servus` through
+mcp_servus_canalis; opened after the lock and the migration (the lock is
+what makes removing a stale socket safe), closed first in
+`exemplar_claudere` and `_creatio_fracta`. A channel that cannot open is
+fatal ("exemplar: canalis fractus: ..."), like a failed migration.
+
+- `-invitare` asks the running server first (`mcp_canalis_vocare
+  "invitare"`, JSON reply -> codex); 2 (nobody listening) falls back to
+  the lock path; exit 2 now means "lock held but channel did not answer"
+  (message changed accordingly). `-administrare` = `exemplar_administrare`
+  (public nucleus function, so exemplar.c keeps including only the
+  public header) = `mcp_canalis_pons(<data>/canalis/servus, 0, 1)`.
+- **Suspension found an admissio defect:** `_concessionem_necare` opened
+  its own sqlite transaction (scrinium_incipere), so revoking a grant
+  inside the suspension transaction failed ("suspensio servari nequit").
+  Fixed in admissio (joins the caller's transaction, new
+  `volumen_in_transactione`), not by splitting suspension.
+- **Grant revocation is load-bearing.** Plant "skip the revocation
+  loop": the web session dies (ianua checks CIVIS_ACTIVUS) but the
+  bearer token still gets 200 on /mcp - the OAuth path does not consult
+  the civis status. Suspension therefore must revoke grants (it does,
+  same transaction). Worth remembering for admissio userinfo (MK0 #3).
+- `sera` section: the old expectation "-invitare while running -> 2" is
+  obsolete (it now goes through the channel; the in-process server is not
+  pumped during the blocking call, so it would time out). The section now
+  removes the socket file first - a real "lock held, nobody answering"
+  case -> 2.
+- Test harness: `_administrare` is a non-blocking channel client that
+  pumps the in-process server (P5). A first red run hung forever in
+  `read()` on a pipe: the parent kept the write end open after fork, so
+  EOF never came when the child exited without writing - parents now
+  close their write ends immediately.
+- Local e2e (port 3011, /tmp data - scratchpad path would exceed
+  sun_path): dir 0700 / socket 0600; -invitare while running -> code on
+  stdout, nothing in the server log; -administrare session: initialize,
+  tools/list (7 tools), status; SIGTERM -> socket removed; -invitare
+  stopped -> lock path; -administrare stopped -> exit 2.
+- Tests 37/37 (12 new sections + sera updated); plants red: grant loop
+  skipped (suspensio), channel failure ignored (canalis_fractus +
+  canalis_longus), admin table as the /mcp servus (mcp_separatum, by
+  hand - needs an include, silva.planta takes one edit). Linux musl +
+  glibc: exemplar_applicatio 472/472, mcp_servus_canalis, canalis,
+  admissio green; volumen's suite cannot run in the read-only container
+  (build/probatio_volumen.db relative path - environmental, like filum's
+  lock test).
+
+## 2026-10-21 - canalis T5: live on exemplar.golden.earth
+
+Service stopped, backup `/var/lib/exemplar/exemplar.volumen.ante-canalis`
+(clean - no -wal/-shm), `tools/dimittere.sh -agere exemplar smaragda`
+(binary only, unit unchanged; old binary `.prior`). /salus ok; journal
+clean, no "canalis fractus"; `canalis/` 0700 and `canalis/servus` 0600,
+owner exemplar; exemplar_mcp_fumus all BENE. Live channel as exemplar via
+`sudo -n -u exemplar`: -invitare while running -> exit 0 (code redacted
+on smaragda by sed before it left); -administrare session: status
+(1 active, 1 live invitation = the test one), invitationes_enumerare
+filtered on the server to the test invitation's id, revoked -> 0 live.
+Stale socket: `systemctl kill -s KILL` left the socket file; Restart=
+on-failure brought the service back in 2 s and audire replaced it;
+channel answered again. Fran added `exemplar-admin` to Claude Code
+(ssh + sudo -n -u exemplar -administrare): status and cives_enumerare
+worked ("mcp server seemed like it all worked").
+
+Rollback if ever needed: stop; restore `/opt/exemplar/exemplar.prior`;
+start (no migration ran - `.ante-canalis` only as belt and braces).
+
+## 2026-10-21 - /mcp checks the civis status (whole-branch review)
+
+T4 noted that the bearer verifier ignores the civis status, so
+suspension relied entirely on revoking grants. The reviewer showed the
+gap: an OAuth code issued before suspension (60 s life) can still be
+redeemed afterwards and mints a fresh grant (refresh token 30 days). The
+/mcp verifier is now exemplar's `_verificator`: admissio_verificator AND
+`cives_per_id(persona.usor)` ACTIVUS. Section `mcp_status_civis`
+suspends through the volumen directly (grants untouched) -> bearer 401;
+restore -> 200 again. Red before; plant (status check made always-true)
+-> red. Also makes a silently empty `admissio_concessiones` list (prepare
+failure) harmless.

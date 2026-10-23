@@ -1,7 +1,7 @@
 /* probatio_crusta_effectus.c - summarium effectuum (effectus-plan.md
  * T3; spec par. IV)
  *
- * Arbor ficta sub crusta/build/ (idioma
+ * Arbor ficta in area sectionis, credo_area (idioma
  * probatio_crusta_effectus_idiomata): scriptum unum (a/r.sh) classem
  * omnem situum spec par. IV.2 tangit, linea per classem. Quaeque
  * assertio CONTRARIUM quoque fert ubi analysis errare potest: globus
@@ -29,21 +29,40 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
-hic_manens character basis[CCLVI];
-hic_manens character radix[CCLVI];
+/* MUNDUS SECTIONIS: arbor ficta in area sectionis propria (credo_area)
+ * cum scriptis fundamentalibus, summarium a/r.sh derivatum, situs
+ * collecti. Sectio quaeque suum aedificat (arbor in disco a sectionibus
+ * augetur; summaria StmlNodus* adiutoribus non constantibus traduntur);
+ * creatio semel ASSERITUR in parare_suitae. */
+nomen structura {
+               character  radix[DXII];
+     InternamentumChorda* intern;
+               StmlNodus* summarium;
+                     Xar* situs;
+                     Xar* situs_puer;
+      constans character* causa;
+} Mundus;
+
+interior constans character*
+_radix_viae (vacuum)
+{
+    constans character* radix_viae = getenv("RHUBARB_RADIX");
+
+    redde radix_viae != NIHIL ? radix_viae : ".";
+}
 
 interior vacuum
 _scribere (
-    constans character* relativa,
-    constans character* contentum)
+         constans Mundus* mundus,
+      constans character* relativa,
+      constans character* contentum)
 {
     character  via[DXII];
     character  directorium[DXII];
     character* ultimum;
 
-    sprintf(via, "%s/%s", radix, relativa);
+    sprintf(via, "%s/%s", mundus->radix, relativa);
     strcpy(directorium, via);
     ultimum = strrchr(directorium, '/');
     si (ultimum != NIHIL)
@@ -661,218 +680,394 @@ _causa_lineae (
     redde VERUM;
 }
 
-s32 principale (vacuum)
+/* mundum sectionis aedificare SINE assertione; FALSUM = area absens
+ * aut derivatio a/r.sh fracta (mundus->causa) */
+interior b32
+_mundum_parare (
+    CredoContextus* c,
+            Mundus* mundus)
 {
-                 Piscina* piscina;
-     InternamentumChorda* intern;
-               StmlNodus* summarium;
-                     Xar* situs;
-                     Xar* situs_puer;
-      constans character* causa = NIHIL;
-               StmlNodus* s;
-                     b32  praeteritus;
-      constans character* r;
+                 Piscina* piscina  = c->piscina;
+      constans character* area     = credo_area(c);
+               character  via_tabulae[DXII];
 
-    piscina = piscina_generare_dynamicum("probatio_crusta_effectus",
-        (memoriae_index)LXIV * M * M);
-    si (!piscina)
+    mundus->intern     = internamentum_creare(piscina);
+    mundus->summarium  = NIHIL;
+    mundus->causa      = NIHIL;
+    mundus->situs = xar_creare(piscina,
+        (i32)magnitudo(StmlNodus*));
+    mundus->situs_puer = xar_creare(piscina,
+        (i32)magnitudo(StmlNodus*));
+    si (area == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        imprimere("  MUNDUS: area sectionis absens\n");
+        redde FALSUM;
     }
-    credo_aperire(piscina);
-    intern  = internamentum_creare(piscina);
-    r       = getenv("RHUBARB_RADIX");
-    si (r == NIHIL)
-    {
-        r = ".";
-    }
-    sprintf(basis, "%s/crusta/build/effectus_fixa.%ld", r,
-        (longus)getpid());
-    (vacuum)filum_arborem_delere(basis);
-    sprintf(radix, "%s/arbor", basis);
-    _scribere("a/r.sh", RADIX_SCRIPTI);
-    _scribere("a/lib.sh", LIB);
-    _scribere("a/puer.sh", PUER);
-    _scribere("a/struere.sh", STRUERE);
-    _scribere("a/nepos.sh", NEPOS);
-    _scribere("a/communis.sh", COMMUNIS);
-    _scribere("data/f.txt", "f\n");
-    _scribere("src/a.c", "int a;\n");
+    sprintf(mundus->radix, "%s/arbor", area);
+    _scribere(mundus, "a/r.sh", RADIX_SCRIPTI);
+    _scribere(mundus, "a/lib.sh", LIB);
+    _scribere(mundus, "a/puer.sh", PUER);
+    _scribere(mundus, "a/struere.sh", STRUERE);
+    _scribere(mundus, "a/nepos.sh", NEPOS);
+    _scribere(mundus, "a/communis.sh", COMMUNIS);
+    _scribere(mundus, "data/f.txt", "f\n");
+    _scribere(mundus, "src/a.c", "int a;\n");
     /* tabula mandatorum vera (arbor ficta eam non habet) */
+    sprintf(via_tabulae, "%s/crusta/effectus_mandata.stml",
+        _radix_viae());
+    /* chorda NON terminata: per chorda_ut_cstr (olim .datum crudum -
+     * octeti post finem in piscina refecta tabulam corrumpebant,
+     * sectio VACUA fortuita) */
+    _scribere(mundus, "crusta/effectus_mandata.stml",
+        chorda_ut_cstr(filum_legere_totum(via_tabulae, piscina),
+            piscina));
+    mundus->summarium = crusta_effectus_derivare(piscina,
+        mundus->intern,
+        mundus->radix, "a/r.sh", NIHIL, &mundus->causa);
+    si (mundus->summarium == NIHIL)
     {
-        character via_tabulae[DXII];
-
-        sprintf(via_tabulae, "%s/crusta/effectus_mandata.stml", r);
-        _scribere("crusta/effectus_mandata.stml",
-            (constans character*)filum_legere_totum(via_tabulae,
-                piscina).datum);
+        imprimere("  MUNDUS: a/r.sh non derivatum (%s)\n",
+            mundus->causa ? mundus->causa : "?");
+        redde FALSUM;
     }
+    _situs_colligere(mundus->summarium, mundus->situs, "a/r.sh");
+    _situs_colligere(mundus->summarium, mundus->situs_puer,
+        "a/puer.sh");
+    redde VERUM;
+}
 
-    summarium = crusta_effectus_derivare(piscina, intern, radix,
-        "a/r.sh", NIHIL, &causa);
-    CREDO_NON_NIHIL (summarium);
-    si (summarium == NIHIL)
+/* creatio mundi semel asserta (ut olim ante sectiones), mundo proprio
+ * et non communicato; situs radicis semel impressi */
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+    Mundus mundus;
+
+    (vacuum)_mundum_parare(c, &mundus);
+    CREDO_NON_NIHIL (mundus.summarium);
+    si (mundus.summarium == NIHIL)
     {
-        imprimere("  CAUSA: %s\n", causa ? causa : "?");
-        credo_imprimere_compendium();
-        credo_claudere();
-        redde I;
+        imprimere("  CAUSA: %s\n", mundus.causa ? mundus.causa : "?");
+        redde;
     }
-    situs       = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
-    situs_puer  = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
-    _situs_colligere(summarium, situs, "a/r.sh");
-    _situs_colligere(summarium, situs_puer, "a/puer.sh");
-    imprimere("\n--- situs processus a/r.sh (%u) ---\n",
-        (insignatus integer)xar_numerus(situs));
-    _imprimere_situs(situs);
+    imprimere("  situs processus a/r.sh: %u\n",
+        (insignatus integer)xar_numerus(mundus.situs));
+    _imprimere_situs(mundus.situs);
+}
 
-    imprimere("\n--- I. fontatio, lectio (mandatum, redirectio) ---\n");
-    s = _situs(situs, "fontatio", "a/lib.sh", III);
+interior vacuum
+_fontationem_probare (
+    CredoContextus* c)
+{
+       Mundus  mundus;
+    StmlNodus* s;
+
+    si (!_mundum_parare(c, &mundus))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    s = _situs(mundus.situs, "fontatio", "a/lib.sh", III);
     CREDO_VERUM (_attributum(s, "resolutio", "plena"));
     CREDO_VERUM (_attributum(s, "classis", "arbor"));
     CREDO_VERUM (_attributum(s, "sedes", "3:8-3:21"));
     CREDO_VERUM (_attributum(s, "octeti", "72-85"));
-    s = _situs(situs, "lectio", "data/f.txt", IV);
+    s = _situs(mundus.situs, "lectio", "data/f.txt", IV);
     CREDO_VERUM (_attributum(s, "per", "mandatum"));
     CREDO_VERUM (_attributum(s, "mandatum", "cat"));
     CREDO_VERUM (_attributum(s, "classis", "arbor"));
-    s = _situs(situs, "lectio", "data/lista.txt", V);
+    s = _situs(mundus.situs, "lectio", "data/lista.txt", V);
     CREDO_VERUM (_attributum(s, "per", "redirectio"));
     CREDO_VERUM (_attributum(s, "operator", "<"));
     /* lib.sh in ambitu radicis: $D resolvitur */
-    s = _situs(situs, "lectio", "data/lib.txt", ZEPHYRUM);
+    s = _situs(mundus.situs, "lectio", "data/lib.txt", ZEPHYRUM);
     CREDO_VERUM (_attributum(s, "plagula", "a/lib.sh"));
     CREDO_VERUM (_attributum(s, "resolutio", "plena"));
+}
 
-    imprimere("\n--- II. probatio, scriptura, globus ---\n");
-    s = _situs(situs, "probatio", "build/gen.h", VI);
+interior vacuum
+_scripturam_probare (
+    CredoContextus* c)
+{
+       Mundus  mundus;
+    StmlNodus* s;
+
+    si (!_mundum_parare(c, &mundus))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    s = _situs(mundus.situs, "probatio", "build/gen.h", VI);
     CREDO_VERUM (_attributum(s, "operator", "-f"));
     CREDO_VERUM (_attributum(s, "classis", "build"));
-    s = _situs(situs, "scriptura", "build/out.txt", VI);
+    s = _situs(mundus.situs, "scriptura", "build/out.txt", VI);
     CREDO_VERUM (_attributum(s, "per", "redirectio"));
     CREDO_VERUM (_attributum(s, "operator", ">"));
     /* contrarium: '>' scribit, non legit */
-    CREDO_NIHIL (_situs(situs, "lectio", "build/out.txt", ZEPHYRUM));
-    CREDO_AEQUALIS_I32 (_numerare(situs, NIHIL, VI), II);
-    s = _situs(situs, "enumeratio", "src/", VII);
+    CREDO_NIHIL (_situs(mundus.situs, "lectio", "build/out.txt",
+        ZEPHYRUM));
+    CREDO_AEQUALIS_I32 (_numerare(mundus.situs, NIHIL, VI), II);
+    s = _situs(mundus.situs, "enumeratio", "src/", VII);
     CREDO_VERUM (_attributum(s, "forma", "globus"));
     CREDO_VERUM (_attributum(s, "exemplar", "*.c"));
     /* contraria: globus citatus, /dev/null, 2>&1, <<< */
-    CREDO_AEQUALIS_I32 (_numerare(situs, NIHIL, VIII), ZEPHYRUM);
-    CREDO_AEQUALIS_I32 (_numerare(situs, NIHIL, IX), ZEPHYRUM);
-    CREDO_AEQUALIS_I32 (_numerare(situs, "enumeratio", ZEPHYRUM), II);
+    CREDO_AEQUALIS_I32 (_numerare(mundus.situs, NIHIL, VIII), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (_numerare(mundus.situs, NIHIL, IX), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (_numerare(mundus.situs, "enumeratio", ZEPHYRUM),
+        II);
+}
 
-    imprimere("\n--- III. [[ ]] ---\n");
-    s = _situs(situs, "probatio", "src", X);
+interior vacuum
+_iudicium_probare (
+    CredoContextus* c)
+{
+       Mundus  mundus;
+    StmlNodus* s;
+
+    si (!_mundum_parare(c, &mundus))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    s = _situs(mundus.situs, "probatio", "src", X);
     CREDO_VERUM (_attributum(s, "operator", "-d"));
-    s = _situs(situs, "probatio", "build/a.o", X);
+    s = _situs(mundus.situs, "probatio", "build/a.o", X);
     CREDO_VERUM (_attributum(s, "operator", "-nt"));
-    s = _situs(situs, "probatio", "src/a.c", X);
+    s = _situs(mundus.situs, "probatio", "src/a.c", X);
     CREDO_VERUM (_attributum(s, "operator", "-nt"));
+}
 
-    imprimere("\n--- IV. tabula mandatorum ---\n");
-    s = _situs(situs, "scriptura", "build/s.txt", XI);
+interior vacuum
+_tabulam_probare (
+    CredoContextus* c)
+{
+       Mundus  mundus;
+    StmlNodus* s;
+
+    si (!_mundum_parare(c, &mundus))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    s = _situs(mundus.situs, "scriptura", "build/s.txt", XI);
     CREDO_VERUM (_attributum(s, "mandatum", "sort"));
-    CREDO_NON_NIHIL (_situs(situs, "lectio", "data/f.txt", XI));
-    CREDO_NON_NIHIL (_situs(situs, "lectio", "data/g.txt", XII));
-    CREDO_NON_NIHIL (_situs(situs, "scriptura", "data/g.txt", XII));
-    CREDO_AEQUALIS_I32 (_numerare(situs, NIHIL, XII), II);
-    CREDO_NON_NIHIL (_situs(situs, "lectio", "data/f.txt", XIII));
-    CREDO_AEQUALIS_I32 (_numerare(situs, NIHIL, XIII), I);
-    CREDO_NON_NIHIL (_situs(situs, "lectio", "data/h.txt", XIV));
-    CREDO_AEQUALIS_I32 (_numerare(situs, NIHIL, XIV), I);
-    CREDO_NON_NIHIL (_situs(situs, "lectio", "data/f.txt", XXII));
-    CREDO_NON_NIHIL (_situs(situs, "scriptura", "build/copia.txt",
+    CREDO_NON_NIHIL (_situs(mundus.situs, "lectio", "data/f.txt", XI));
+    CREDO_NON_NIHIL (_situs(mundus.situs, "lectio", "data/g.txt", XII));
+    CREDO_NON_NIHIL (_situs(mundus.situs, "scriptura", "data/g.txt",
+        XII));
+    CREDO_AEQUALIS_I32 (_numerare(mundus.situs, NIHIL, XII), II);
+    CREDO_NON_NIHIL (_situs(mundus.situs, "lectio", "data/f.txt",
+        XIII));
+    CREDO_AEQUALIS_I32 (_numerare(mundus.situs, NIHIL, XIII), I);
+    CREDO_NON_NIHIL (_situs(mundus.situs, "lectio", "data/h.txt", XIV));
+    CREDO_AEQUALIS_I32 (_numerare(mundus.situs, NIHIL, XIV), I);
+    CREDO_NON_NIHIL (_situs(mundus.situs, "lectio", "data/f.txt",
         XXII));
+    CREDO_NON_NIHIL (_situs(mundus.situs, "scriptura",
+        "build/copia.txt",
+        XXII));
+}
 
-    imprimere("\n--- V. functio domus, ignota ---\n");
-    CREDO_AEQUALIS_I32 (_numerare(situs, NIHIL, XV), ZEPHYRUM);
-    s = _situs(situs, "ignotum", NIHIL, XVI);
+interior vacuum
+_ignota_probare (
+    CredoContextus* c)
+{
+       Mundus  mundus;
+    StmlNodus* s;
+
+    si (!_mundum_parare(c, &mundus))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    CREDO_AEQUALIS_I32 (_numerare(mundus.situs, NIHIL, XV), ZEPHYRUM);
+    s = _situs(mundus.situs, "ignotum", NIHIL, XVI);
     CREDO_VERUM (_attributum(s, "mandatum", "jqx"));
     CREDO_VERUM (_attributum(s, "causa", "mandatum ignotum"));
-    s = _situs(situs, "ignotum", NIHIL, XVII);
+    s = _situs(mundus.situs, "ignotum", NIHIL, XVII);
     CREDO_VERUM (_attributum(s, "mandatum", "eval"));
+}
 
-    imprimere("\n--- VI. ambitus ---\n");
-    s = _situs(situs, "ambitus_lectio", "CMD", XVII);
+interior vacuum
+_ambitum_probare (
+    CredoContextus* c)
+{
+       Mundus  mundus;
+    StmlNodus* s;
+
+    si (!_mundum_parare(c, &mundus))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    s = _situs(mundus.situs, "ambitus_lectio", "CMD", XVII);
     CREDO_VERUM (_attributum(s, "assignatum", "falsum"));
-    CREDO_NON_NIHIL (_situs(situs, "ambitus_lectio", "HOME", XVIII));
-    CREDO_AEQUALIS_I32 (_numerare(situs, "ambitus_lectio", XVIII), I);
-    CREDO_NIHIL (_situs(situs, "ambitus_lectio", "R", ZEPHYRUM));
-    CREDO_NIHIL (_situs(situs, "ambitus_lectio", "D", ZEPHYRUM));
-    CREDO_NIHIL (_situs(situs, "ambitus_lectio", "L", ZEPHYRUM));
-    CREDO_NON_NIHIL (_situs(situs, "lectio", "data/r.txt", XX));
+    CREDO_NON_NIHIL (_situs(mundus.situs, "ambitus_lectio", "HOME",
+        XVIII));
+    CREDO_AEQUALIS_I32 (_numerare(mundus.situs, "ambitus_lectio",
+        XVIII), I);
+    CREDO_NIHIL (_situs(mundus.situs, "ambitus_lectio", "R", ZEPHYRUM));
+    CREDO_NIHIL (_situs(mundus.situs, "ambitus_lectio", "D", ZEPHYRUM));
+    CREDO_NIHIL (_situs(mundus.situs, "ambitus_lectio", "L", ZEPHYRUM));
+    CREDO_NON_NIHIL (_situs(mundus.situs, "lectio", "data/r.txt", XX));
+}
 
-    imprimere("\n--- VII. processus novus (a/puer.sh) ---\n");
-    s = _situs(situs, "exsecutio", "a/puer.sh", XXIII);
+interior vacuum
+_puerum_probare (
+    CredoContextus* c)
+{
+       Mundus  mundus;
+    StmlNodus* s;
+
+    si (!_mundum_parare(c, &mundus))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    s = _situs(mundus.situs, "exsecutio", "a/puer.sh", XXIII);
     CREDO_VERUM (_attributum(s, "classis", "arbor"));
-    _imprimere_situs(situs_puer);
-    s = _situs(situs_puer, "lectio", NIHIL, II);
+    _imprimere_situs(mundus.situs_puer);
+    s = _situs(mundus.situs_puer, "lectio", NIHIL, II);
     CREDO_VERUM (_attributum(s, "resolutio", "nulla"));
-    CREDO_NON_NIHIL (_situs(situs_puer, "ambitus_lectio", "D", II));
+    CREDO_NON_NIHIL (_situs(mundus.situs_puer, "ambitus_lectio", "D",
+        II));
+}
 
-    imprimere("\n--- VIII. cwd ---\n");
-    s = _situs(situs, "lectio", NIHIL, XXIV);
+interior vacuum
+_cwd_probare (
+    CredoContextus* c)
+{
+       Mundus  mundus;
+    StmlNodus* s;
+
+    si (!_mundum_parare(c, &mundus))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    s = _situs(mundus.situs, "lectio", NIHIL, XXIV);
     CREDO_VERUM (_attributum(s, "resolutio", "nulla"));
     CREDO_VERUM (_attributum(s, "causa", "cwd ignotum"));
-    s = _situs(situs, "lectio", "build/rel.txt", XXV);
+    s = _situs(mundus.situs, "lectio", "build/rel.txt", XXV);
     CREDO_VERUM (_attributum(s, "scripta_in_ambitu", "falsum"));
     /* 'cd build' (linea 25, in catena) probat 'build' - non
      * 'build/build': cd argumento suo cwd non mutat */
-    s = _situs(situs, "probatio", "build", XXV);
+    s = _situs(mundus.situs, "probatio", "build", XXV);
     CREDO_VERUM (_attributum(s, "operator", "cd"));
+}
 
-    imprimere("\n--- IX. scripta_in_ambitu ---\n");
-    s = _situs(situs, "scriptura", "build/clausurae/", XXVII);
+interior vacuum
+_scripta_probare (
+    CredoContextus* c)
+{
+       Mundus  mundus;
+    StmlNodus* s;
+
+    (vacuum)c;
+    si (!_mundum_parare(c, &mundus))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    s = _situs(mundus.situs, "scriptura", "build/clausurae/", XXVII);
     CREDO_VERUM (_attributum(s, "forma", "praefixum"));
     CREDO_VERUM (_attributum(s, "resolutio", "partialis"));
-    s = _situs(situs, "lectio", "build/clausurae/*.lst", XXVI);
+    s = _situs(mundus.situs, "lectio", "build/clausurae/*.lst", XXVI);
     CREDO_VERUM (_attributum(s, "forma", "globus"));
     CREDO_VERUM (_attributum(s, "scripta_in_ambitu", "verum"));
+}
 
-    imprimere("\n--- IX b. redirectio ex processu ---\n");
+interior vacuum
+_redirectionem_probare (
+    CredoContextus* c)
+{
+    Mundus mundus;
+
+    si (!_mundum_parare(c, &mundus))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     /* '< <(cat x)': redirectio ipsa nihil legit; cat intus legit */
-    CREDO_NON_NIHIL (_situs(situs, "lectio", "data/p.txt", XXVIII));
-    CREDO_AEQUALIS_I32 (_numerare(situs, "lectio", XXVIII), I);
+    CREDO_NON_NIHIL (_situs(mundus.situs, "lectio", "data/p.txt",
+        XXVIII));
+    CREDO_AEQUALIS_I32 (_numerare(mundus.situs, "lectio", XXVIII), I);
+}
 
-    imprimere("\n--- IX c. cd in summo gradu ---\n");
+interior vacuum
+_cd_probare (
+    CredoContextus* c)
+{
+       Mundus  mundus;
+    StmlNodus* s;
+
+    si (!_mundum_parare(c, &mundus))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     /* 'cd lib' summi gradus: probatio 'lib' (non 'lib/lib'); situs
      * sequens in lib/ */
-    s = _situs(situs, "probatio", "lib", XXIX);
+    s = _situs(mundus.situs, "probatio", "lib", XXIX);
     CREDO_VERUM (_attributum(s, "operator", "cd"));
-    CREDO_NON_NIHIL (_situs(situs, "lectio", "lib/q.txt", XXX));
+    CREDO_NON_NIHIL (_situs(mundus.situs, "lectio", "lib/q.txt", XXX));
+}
 
-    imprimere("\n--- IX d. aedificator custoditus ---\n");
+interior vacuum
+_custodiam_probare (
+    CredoContextus* c)
+{
+       Mundus  mundus;
+    StmlNodus* s;
+
+    si (!_mundum_parare(c, &mundus))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     /* '[ -x bin/inst ] || ./a/struere.sh': exsecutio custodita;
      * processus struere et nepos (solum per eum) custoditi; communis
      * (libere) non; plagulam_tenet processus custoditos praeterit */
-    s = _situs(situs, "exsecutio", "a/struere.sh", XXXII);
+    s = _situs(mundus.situs, "exsecutio", "a/struere.sh", XXXII);
     CREDO_VERUM (_attributum(s, "custodia", "bin/inst"));
-    s = _situs(situs, "exsecutio", "a/communis.sh", XXXIII);
+    s = _situs(mundus.situs, "exsecutio", "a/communis.sh", XXXIII);
     CREDO_VERUM (_attributum(s, "custodia", NIHIL));
-    CREDO_VERUM (_processus_custodia(summarium, "a/struere.sh",
+    CREDO_VERUM (_processus_custodia(mundus.summarium, "a/struere.sh",
         "bin/inst"));
-    CREDO_VERUM (_processus_custodia(summarium, "a/nepos.sh",
+    CREDO_VERUM (_processus_custodia(mundus.summarium, "a/nepos.sh",
         "bin/inst"));
-    CREDO_VERUM (_processus_custodia(summarium, "a/communis.sh",
+    CREDO_VERUM (_processus_custodia(mundus.summarium, "a/communis.sh",
         NIHIL));
-    CREDO_FALSUM (crusta_effectus_plagulam_tenet(summarium,
+    CREDO_FALSUM (crusta_effectus_plagulam_tenet(mundus.summarium,
         "a/nepos.sh"));
-    CREDO_VERUM (crusta_effectus_plagulam_tenet(summarium,
+    CREDO_VERUM (crusta_effectus_plagulam_tenet(mundus.summarium,
         "a/communis.sh"));
+}
 
-    imprimere("\n--- IX e. binarium domus cum ordine tabulae ---\n");
+interior vacuum
+_binarium_probare (
+    CredoContextus* c)
+{
+       Mundus  mundus;
+    StmlNodus* s;
+
+    si (!_mundum_parare(c, &mundus))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     /* bin/compilator: exsecutio (provenientia) ET ordo 'compilator'
      * tabulae - '-o' scribitur; lectiones per librum lectionum
      * vestigantur, ergo hic nullae */
-    CREDO_NON_NIHIL (_situs(situs, "exsecutio", "bin/compilator",
+    CREDO_NON_NIHIL (_situs(mundus.situs, "exsecutio", "bin/compilator",
         XXXIV));
-    s = _situs(situs, "scriptura", "build/x.o", XXXIV);
+    s = _situs(mundus.situs, "scriptura", "build/x.o", XXXIV);
     CREDO_VERUM (_attributum(s, "mandatum", "compilator"));
-    CREDO_AEQUALIS_I32 (_numerare(situs, "lectio", XXXIV), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (_numerare(mundus.situs, "lectio", XXXIV),
+        ZEPHYRUM);
+}
 
-    imprimere("\n--- X. canon super summarium ---\n");
+interior vacuum
+_canonem_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+                Mundus  mundus;
+    constans character* r      = _radix_viae();
+    constans character* causa  = NIHIL;
+
+    si (!_mundum_parare(c, &mundus))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     {
         character  via_canonis[DXII];
             Canon* canon;
@@ -881,15 +1076,15 @@ s32 principale (vacuum)
 
         sprintf(via_canonis, "%s/effectus.canon", r);
         canon = canon_legere(filum_legere_totum(via_canonis, piscina),
-            piscina, intern, &causa_canonis);
+            piscina, mundus.intern, &causa_canonis);
         CREDO_NON_NIHIL (canon);
-        vitia = canon ? canon_iudicare(canon, summarium,
+        vitia = canon ? canon_iudicare(canon, mundus.summarium,
             piscina) : NIHIL;
         CREDO_NON_NIHIL (vitia);
         CREDO_AEQUALIS_I32 (vitia ? xar_numerus(vitia) : I, ZEPHYRUM);
 
         /* XI. domus tota: omne .sh summatur, canon sanum */
-        imprimere("\n--- XI. domus tota ---\n");
+        CREDO_GRADUS ("XI. domus tota");
         {
             character via_indicis[DXII];
                chorda index;
@@ -906,6 +1101,7 @@ s32 principale (vacuum)
                  character  scriptum[DXII];
                        i32  b = a;
                  StmlNodus* sm;
+                   Piscina* opus;
 
                 dum (b < index.mensura && index.datum[b] != '\n')
                 {
@@ -918,7 +1114,20 @@ s32 principale (vacuum)
                 {
                     memcpy(scriptum, index.datum + a, (size_t)(b - a));
                     scriptum[b - a] = '\0';
-                    sm = crusta_effectus_derivare(piscina, intern, r,
+                    /* piscina PER SCRIPTUM: summarium et vitia post
+                     * iudicium non leguntur - olim omnia in piscina
+                     * sectionis (CCC+ scripta -> ~MCCCLXX MiB) */
+                    opus =
+                        piscina_generare_dynamicum("effectus_scriptum",
+                        1048576);
+                    si (opus == NIHIL)
+                    {
+                        fracta++;
+                        a = b + I;
+                        perge;
+                    }
+                    sm = crusta_effectus_derivare(opus, mundus.intern,
+                        r,
                         scriptum, NIHIL, &causa);
                     si (sm == NIHIL)
                     {
@@ -928,7 +1137,7 @@ s32 principale (vacuum)
                     }
                     alioquin
                     {
-                        Xar* v = canon_iudicare(canon, sm, piscina);
+                        Xar* v = canon_iudicare(canon, sm, opus);
 
                         si (v == NIHIL || xar_numerus(v) > ZEPHYRUM)
                         {
@@ -939,6 +1148,7 @@ s32 principale (vacuum)
                         }
                         summata++;
                     }
+                    piscina_destruere(opus);
                 }
                 a = b + I;
             }
@@ -950,12 +1160,21 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32 (vitiosa, ZEPHYRUM);
         }
     }
+}
 
-    /* XII. oraculum: summaria statica fixorum contra AURAS observatas
-     * (crusta/effectus_oraculum.sh -scribere; lex C14: nihil hic
-     * spawnatur). Observatum omne tegi debet; pinna situs certos
-     * fert, ne aura vacua 'omnia tecta' mentiatur. */
-    imprimere("\n--- XII. oraculum: fixa contra auras ---\n");
+/* XII. oraculum: summaria statica fixorum contra AURAS observatas
+ * (crusta/effectus_oraculum.sh -scribere; lex C14: nihil hic
+ * spawnatur). Observatum omne tegi debet; pinna situs certos
+ * fert, ne aura vacua 'omnia tecta' mentiatur. */
+interior vacuum
+_oraculum_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_creare(c->piscina);
+     constans character* r        = _radix_viae();
+     constans character* causa    = NIHIL;
+
     {
         constans character* fixa[] = {
             "ante", "cd", "fontatio", "globus", "mandatum", "probatio",
@@ -1061,13 +1280,27 @@ s32 principale (vacuum)
             }
         }
     }
+}
 
-    /* XIII. causae (effectus-plan-2 T1): omnis situs irresolutus
-     * causam suam NOMINAT, numquam 'valor ignotus' */
-    imprimere("\n--- XIII. causae ---\n");
-    _scribere("a/causae.sh", CAUSAE);
+/* XIII. causae (effectus-plan-2 T1): omnis situs irresolutus
+ * causam suam NOMINAT, numquam 'valor ignotus' */
+interior vacuum
+_causas_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+                Mundus  mundus;
+             StmlNodus* s;
+    constans character* causa   = NIHIL;
+
+    si (!_mundum_parare(c, &mundus))
     {
-        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    _scribere(&mundus, "a/causae.sh", CAUSAE);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, mundus.intern,
+            mundus.radix,
             "a/causae.sh", NIHIL, &causa);
               Xar* cs = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
 
@@ -1100,15 +1333,29 @@ s32 principale (vacuum)
             CREDO_VERUM (_attributum(s, "causa", NIHIL));
         }
     }
+}
 
-    /* XIV. temporaria (effectus-plan-2 T3; spec-2 par. V.5, A1): via =
-     * cauda sub objecto mktemp ('.' = ipsum), attributum temporaria =
-     * plagula:linea:columna substitutionis creantis */
-    imprimere("\n--- XIV. temporaria ---\n");
-    _scribere("a/temporaria.sh", TEMPORARIA);
-    _scribere("a/filius_t.sh", FILIUS_T);
+/* XIV. temporaria (effectus-plan-2 T3; spec-2 par. V.5, A1): via =
+ * cauda sub objecto mktemp ('.' = ipsum), attributum temporaria =
+ * plagula:linea:columna substitutionis creantis */
+interior vacuum
+_temporaria_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+                Mundus  mundus;
+             StmlNodus* s;
+    constans character* causa   = NIHIL;
+
+    si (!_mundum_parare(c, &mundus))
     {
-        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    _scribere(&mundus, "a/temporaria.sh", TEMPORARIA);
+    _scribere(&mundus, "a/filius_t.sh", FILIUS_T);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, mundus.intern,
+            mundus.radix,
             "a/temporaria.sh", NIHIL, &causa);
               Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
               Xar* fs = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
@@ -1166,13 +1413,27 @@ s32 principale (vacuum)
             CREDO_NIHIL (tt);
         }
     }
+}
 
-    /* XV. tabulata (effectus-plan-2 T4; spec-2 par. III, V.2) */
-    imprimere("\n--- XV. tabulata ---\n");
-    _scribere("a/tabulata.sh", TABULATA);
-    _scribere("a/vexilla_ficta.sh", VEXILLA_FICTA);
+/* XV. tabulata (effectus-plan-2 T4; spec-2 par. III, V.2) */
+interior vacuum
+_tabulata_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+                Mundus  mundus;
+             StmlNodus* s;
+    constans character* causa   = NIHIL;
+
+    si (!_mundum_parare(c, &mundus))
     {
-        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    _scribere(&mundus, "a/tabulata.sh", TABULATA);
+    _scribere(&mundus, "a/vexilla_ficta.sh", VEXILLA_FICTA);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, mundus.intern,
+            mundus.radix,
             "a/tabulata.sh", NIHIL, &causa);
               Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
 
@@ -1206,14 +1467,28 @@ s32 principale (vacuum)
             CREDO_NON_NIHIL (_situs(ts, "lectio", "src/d.c", XI));
         }
     }
+}
 
-    /* XVI. ansae, exemplaria, operatores (effectus-plan-2 T5) */
-    imprimere("\n--- XVI. ansae et exemplaria ---\n");
-    _scribere("a/ansae.sh", ANSAE);
-    _scribere("a/m1.sh", M1);
-    _scribere("a/m2.sh", M2);
+/* XVI. ansae, exemplaria, operatores (effectus-plan-2 T5) */
+interior vacuum
+_ansas_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+                Mundus  mundus;
+             StmlNodus* s;
+    constans character* causa   = NIHIL;
+
+    si (!_mundum_parare(c, &mundus))
     {
-        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    _scribere(&mundus, "a/ansae.sh", ANSAE);
+    _scribere(&mundus, "a/m1.sh", M1);
+    _scribere(&mundus, "a/m2.sh", M2);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, mundus.intern,
+            mundus.radix,
             "a/ansae.sh", NIHIL, &causa);
               Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
 
@@ -1269,12 +1544,26 @@ s32 principale (vacuum)
             CREDO_VERUM (_attributum(s, "forma", "praefixum"));
         }
     }
+}
 
-    /* XVII. praedefinita (effectus-plan-2 T6; spec-2 A4) */
-    imprimere("\n--- XVII. praedefinita ---\n");
-    _scribere("a/praedefinita.sh", PRAEDEFINITUM);
+/* XVII. praedefinita (effectus-plan-2 T6; spec-2 A4) */
+interior vacuum
+_ordinaria_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+                Mundus  mundus;
+             StmlNodus* s;
+    constans character* causa   = NIHIL;
+
+    si (!_mundum_parare(c, &mundus))
     {
-        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    _scribere(&mundus, "a/praedefinita.sh", PRAEDEFINITUM);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, mundus.intern,
+            mundus.radix,
             "a/praedefinita.sh", NIHIL, &causa);
               Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
 
@@ -1302,11 +1591,18 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", VIII), I);
         }
     }
+}
 
-    /* XVIII. subsumptio (effectus-plan-3 T1; spec-3 par. VIII): omnis
-     * situs NOVI a situ VETERIS eiusdem plagulae, sedis, elementi
-     * tegitur - aliter defectus (membrum novum aut regressio) */
-    imprimere("\n--- XVIII. subsumptio ---\n");
+/* XVIII. subsumptio (effectus-plan-3 T1; spec-3 par. VIII): omnis
+ * situs NOVI a situ VETERIS eiusdem plagulae, sedis, elementi
+ * tegitur - aliter defectus (membrum novum aut regressio) */
+interior vacuum
+_comprehensa_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_creare(c->piscina);
+
     {
         StmlResultus v = stml_legere(chorda_ex_literis(SUMMARIUM_VETUS,
             piscina), piscina, intern);
@@ -1342,12 +1638,26 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32 (r ? xar_numerus(r) : I, ZEPHYRUM);
         }
     }
+}
 
-    /* XIX. ordo (effectus-plan-3 T2; spec-3 par. II, A2, A3) */
-    imprimere("\n--- XIX. ordo ---\n");
-    _scribere("a/ordo.sh", ORDO);
+/* XIX. ordo (effectus-plan-3 T2; spec-3 par. II, A2, A3) */
+interior vacuum
+_ordinem_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+                Mundus  mundus;
+             StmlNodus* s;
+    constans character* causa   = NIHIL;
+
+    si (!_mundum_parare(c, &mundus))
     {
-        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    _scribere(&mundus, "a/ordo.sh", ORDO);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, mundus.intern,
+            mundus.radix,
             "a/ordo.sh", NIHIL, &causa);
               Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
 
@@ -1390,12 +1700,25 @@ s32 principale (vacuum)
             CREDO_NON_NIHIL (_situs(ts, "lectio", "k0", XXV));
         }
     }
+}
 
-    /* XX. subprocessus (effectus-plan-3 T3; RF 1, RF 2) */
-    imprimere("\n--- XX. subprocessus ---\n");
-    _scribere("a/subprocessus.sh", SUBPROCESSUS);
+/* XX. subprocessus (effectus-plan-3 T3; RF 1, RF 2) */
+interior vacuum
+_subprocessus_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+                Mundus  mundus;
+    constans character* causa   = NIHIL;
+
+    si (!_mundum_parare(c, &mundus))
     {
-        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    _scribere(&mundus, "a/subprocessus.sh", SUBPROCESSUS);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, mundus.intern,
+            mundus.radix,
             "a/subprocessus.sh", NIHIL, &causa);
               Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
 
@@ -1428,16 +1751,30 @@ s32 principale (vacuum)
             CREDO_NON_NIHIL (_situs(ts, "lectio", "h2", XXIII));
         }
     }
+}
 
-    /* XXI. functiones (effectus-plan-3 T4; RF 3, RF 5) */
-    imprimere("\n--- XXI. functiones ---\n");
-    _scribere("a/functiones.sh", FUNCTIONES);
-    _scribere("a/functio_lib.sh", FUNCTIO_LIB);
-    /* RF 5: recursio mutua (m1 <-> m2) finita */
-    CREDO_NON_PENDET ((vacuum)crusta_effectus_derivare(piscina, intern,
-        radix, "a/functiones.sh", NIHIL, &causa), (i32)MM);
+/* XXI. functiones (effectus-plan-3 T4; RF 3, RF 5) */
+interior vacuum
+_functiones_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+                Mundus  mundus;
+    constans character* causa   = NIHIL;
+
+    si (!_mundum_parare(c, &mundus))
     {
-        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    _scribere(&mundus, "a/functiones.sh", FUNCTIONES);
+    _scribere(&mundus, "a/functio_lib.sh", FUNCTIO_LIB);
+    /* RF 5: recursio mutua (m1 <-> m2) finita */
+    CREDO_NON_PENDET ((vacuum)crusta_effectus_derivare(piscina,
+        mundus.intern,
+        mundus.radix, "a/functiones.sh", NIHIL, &causa), (i32)MM);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, mundus.intern,
+            mundus.radix,
             "a/functiones.sh", NIHIL, &causa);
               Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
 
@@ -1483,18 +1820,31 @@ s32 principale (vacuum)
             CREDO_VERUM (_causa_lineae(ts, XXI, "argumentum"));
         }
     }
+}
 
-    /* XXII. argumenta (effectus-plan-3 T5; A1) */
-    imprimere("\n--- XXII. argumenta ---\n");
-    _scribere("a/arg_pater.sh", ARG_PATER);
-    _scribere("a/arg_filius.sh", ARG_FILIUS);
-    _scribere("a/arg_omnia.sh", ARG_SOLUS);
-    _scribere("a/arg_bash.sh", ARG_SOLUS);
-    _scribere("a/arg_radix.sh", ARG_RADIX);
-    _scribere("a/fons_pater.sh", FONS_PATER);
-    _scribere("a/fons_filius.sh", FONS_FILIUS);
+/* XXII. argumenta (effectus-plan-3 T5; A1) */
+interior vacuum
+_argumenta_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+                Mundus  mundus;
+    constans character* causa   = NIHIL;
+
+    si (!_mundum_parare(c, &mundus))
     {
-        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    _scribere(&mundus, "a/arg_pater.sh", ARG_PATER);
+    _scribere(&mundus, "a/arg_filius.sh", ARG_FILIUS);
+    _scribere(&mundus, "a/arg_omnia.sh", ARG_SOLUS);
+    _scribere(&mundus, "a/arg_bash.sh", ARG_SOLUS);
+    _scribere(&mundus, "a/arg_radix.sh", ARG_RADIX);
+    _scribere(&mundus, "a/fons_pater.sh", FONS_PATER);
+    _scribere(&mundus, "a/fons_filius.sh", FONS_FILIUS);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, mundus.intern,
+            mundus.radix,
             "a/arg_pater.sh", NIHIL, &causa);
               Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
 
@@ -1529,7 +1879,8 @@ s32 principale (vacuum)
         argv = xar_creare(piscina, (i32)magnitudo(character*));
         ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
         *(constans character**)xar_addere(argv) = "r.txt";
-        sm = crusta_effectus_derivare_argumentis(piscina, intern, radix,
+        sm = crusta_effectus_derivare_argumentis(piscina, mundus.intern,
+            mundus.radix,
             "a/arg_radix.sh", NIHIL, argv, &causa);
         CREDO_NON_NIHIL (sm);
         si (sm != NIHIL)
@@ -1543,8 +1894,9 @@ s32 principale (vacuum)
         /* "$0" "$@" (cursor se ipsum exsequens): argv eadem, nihil
          * novi - punctum fixum minimum */
         xar_truncare(ts, ZEPHYRUM);
-        _scribere("a/arg_ipse.sh", ARG_IPSE);
-        sm = crusta_effectus_derivare_argumentis(piscina, intern, radix,
+        _scribere(&mundus, "a/arg_ipse.sh", ARG_IPSE);
+        sm = crusta_effectus_derivare_argumentis(piscina, mundus.intern,
+            mundus.radix,
             "a/arg_ipse.sh", NIHIL, argv, &causa);
         si (sm != NIHIL)
         {
@@ -1554,7 +1906,8 @@ s32 principale (vacuum)
         }
         /* sine argv declarata: argumentum */
         xar_truncare(ts, ZEPHYRUM);
-        sm = crusta_effectus_derivare(piscina, intern, radix,
+        sm = crusta_effectus_derivare(piscina, mundus.intern,
+            mundus.radix,
             "a/arg_radix.sh", NIHIL, &causa);
         si (sm != NIHIL)
         {
@@ -1567,10 +1920,11 @@ s32 principale (vacuum)
         character  fab[CCLVI + XVI];
               Xar* r;
 
-        _scribere("fab/fabrica.stml", FAB_FABRICA);
-        _scribere("fab/sub/aedificatio.stml", FAB_AEDIFICATIO);
-        sprintf(fab, "%s/fab", radix);
-        r = crusta_effectus_argumenta_radicis(piscina, intern, fab,
+        _scribere(&mundus, "fab/fabrica.stml", FAB_FABRICA);
+        _scribere(&mundus, "fab/sub/aedificatio.stml", FAB_AEDIFICATIO);
+        sprintf(fab, "%s/fab", mundus.radix);
+        r = crusta_effectus_argumenta_radicis(piscina, mundus.intern,
+            fab,
             "sub/r.sh");
         CREDO_NON_NIHIL (r);
         si (r != NIHIL)
@@ -1579,7 +1933,8 @@ s32 principale (vacuum)
             CREDO_VERUM (strcmp(*(character**)xar_obtinere(r, ZEPHYRUM),
                 "r.txt") == ZEPHYRUM);
         }
-        r = crusta_effectus_argumenta_radicis(piscina, intern, fab,
+        r = crusta_effectus_argumenta_radicis(piscina, mundus.intern,
+            fab,
             "sub/n.sh");
         CREDO_NON_NIHIL (r);
         si (r != NIHIL)
@@ -1588,7 +1943,8 @@ s32 principale (vacuum)
         }
         /* sine <argumenta>, declarationes discordes, non declarata */
         /* A3 (fabrica plan 5 T3): argv ex mandato actionis ipsius */
-        r = crusta_effectus_argumenta_radicis(piscina, intern, fab,
+        r = crusta_effectus_argumenta_radicis(piscina, mundus.intern,
+            fab,
             "sub/m.sh");
         CREDO_NON_NIHIL (r);
         si (r != NIHIL)
@@ -1597,15 +1953,19 @@ s32 principale (vacuum)
             CREDO_VERUM (strcmp(*(character**)xar_obtinere(r, ZEPHYRUM),
                 "-x") == ZEPHYRUM);
         }
-        CREDO_NIHIL (crusta_effectus_argumenta_radicis(piscina, intern,
+        CREDO_NIHIL (crusta_effectus_argumenta_radicis(piscina,
+            mundus.intern,
             fab, "sub/u.sh"));
-        CREDO_NIHIL (crusta_effectus_argumenta_radicis(piscina, intern,
+        CREDO_NIHIL (crusta_effectus_argumenta_radicis(piscina,
+            mundus.intern,
             fab, "sub/c.sh"));
-        CREDO_NIHIL (crusta_effectus_argumenta_radicis(piscina, intern,
+        CREDO_NIHIL (crusta_effectus_argumenta_radicis(piscina,
+            mundus.intern,
             fab, "sub/x.sh"));
     }
     {
-        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+        StmlNodus* sm = crusta_effectus_derivare(piscina, mundus.intern,
+            mundus.radix,
             "a/fons_pater.sh", NIHIL, &causa);
               Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
 
@@ -1622,11 +1982,59 @@ s32 principale (vacuum)
             CREDO_NIHIL (_situs(ts, "lectio", "t9", ZEPHYRUM));
         }
     }
+}
 
-    (vacuum)filum_arborem_delere(basis);
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. fontatio, lectio (mandatum, redirectio)",
+        _fontationem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "II. probatio, scriptura, globus",
+        _scripturam_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III. [[ ]]", _iudicium_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IV. tabula mandatorum",
+        _tabulam_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "V. functio domus, ignota",
+        _ignota_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VI. ambitus", _ambitum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VII. processus novus (a/puer.sh)",
+        _puerum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VIII. cwd", _cwd_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IX. scripta_in_ambitu",
+        _scripta_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IX b. redirectio ex processu",
+        _redirectionem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IX c. cd in summo gradu",
+        _cd_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IX d. aedificator custoditus",
+        _custodiam_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IX e. binarium domus cum ordine tabulae",
+        _binarium_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "X. canon super summarium",
+        _canonem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XII. oraculum: fixa contra auras",
+        _oraculum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XIII. causae", _causas_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XIV. temporaria",
+        _temporaria_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XV. tabulata", _tabulata_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XVI. ansae et exemplaria",
+        _ansas_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XVII. praedefinita",
+        _ordinaria_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XVIII. subsumptio",
+        _comprehensa_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XIX. ordo", _ordinem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XX. subprocessus",
+        _subprocessus_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XXI. functiones",
+        _functiones_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XXII. argumenta",
+        _argumenta_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("crusta_effectus", SECTIONES,
+        _suitam_parare, NIHIL);
 }

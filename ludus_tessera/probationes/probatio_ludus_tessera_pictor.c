@@ -121,11 +121,13 @@ _murem (
     redde e;
 }
 
-s32
-principale (vacuum)
+/* Sectio UNA: probatio scaenica - blocci statum priorum ex
+ * proposito continuant; gradus (CREDO_GRADUS) fracturam nominant. */
+interior vacuum
+_sessionem_probare (
+    CredoContextus* c)
 {
-                    b32  praeteritus;
-                Piscina* piscina;
+                Piscina* piscina = c->piscina;
     InternamentumChorda* intern;
        PictorApplicatio  f;
        PictorApplicatio  t;
@@ -140,19 +142,10 @@ principale (vacuum)
                     i32  me;
                     i32  i;
 
-    piscina =
-        piscina_generare_dynamicum("probatio_ludus_tessera_pictor",
-        IV * M * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
     intern = internamentum_creare(piscina);
     thema_initiare();
 
-    imprimere("\n--- I. sessio fenestrae: ictus notatus ---\n");
+    CREDO_GRADUS ("I. sessio fenestrae: ictus notatus");
     CREDO_VERUM (pictor_applicatio_aedificare(&f, piscina, intern,
         volumen_temporarium(piscina, "lt_pictor_f"),
         COLUMNAE * VI, LINEAE * VIII));
@@ -189,7 +182,7 @@ principale (vacuum)
     /* ictus actum in documento */
     CREDO_VERUM (pictor_documentum_cursor(f.doc) > ZEPHYRUM);
 
-    imprimere("\n--- II. eadem per terminalem (glutinum) ---\n");
+    CREDO_GRADUS ("II. eadem per terminalem (glutinum)");
     CREDO_VERUM (pictor_applicatio_aedificare(&t, piscina, intern,
         volumen_temporarium(piscina, "lt_pictor_t"),
         COLUMNAE * VI, LINEAE * VIII));
@@ -224,7 +217,7 @@ principale (vacuum)
             "superficies_latitudo"), "480");
     }
 
-    imprimere("\n--- III. quadrum in cellulas ---\n");
+    CREDO_GRADUS ("III. quadrum in cellulas");
     ludus_tessera_quadrum(lt, M + C);
     CREDO_VERUM (tessera_praesentare(opus));
     CREDO_VERUM (_continet(tessera_pons_memoriae_captum(pm),
@@ -245,8 +238,7 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, XXIII,
         LINEAE - II).signum, (i32)'p');
 
-    imprimere("\n--- IV. amplitudo mutata: linea status sequitur"
-              " ---\n");
+    CREDO_GRADUS ("IV. amplitudo mutata: linea status sequitur");
     {
         Eventus e;
 
@@ -268,9 +260,16 @@ principale (vacuum)
      * inventum 2026-10-06, porta commissionis aemulator C4) */
     volumen_claudere(f.volumen);
     volumen_claudere(t.volumen);
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "pictor per glutinum: sessio", _sessionem_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("ludus_tessera_pictor", SECTIONES);
 }

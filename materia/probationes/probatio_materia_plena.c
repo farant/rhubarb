@@ -227,33 +227,39 @@ _nodus (
     redde n;
 }
 
-integer
-principale (
-    vacuum)
-{
-                    b32  praeteritus;
-                Piscina* piscina;
-    MateriaLexiconRatum  ratum;
-     MateriaLexIudicium  iudicium;
-    InternamentumChorda* intern;
-           StmlResultus  r;
-MateriaDiagnosticaRatio  ratio;
-                    Xar* regulae;
+/* FIXURA SUITAE: lexicon, internamentum, regula gradus II et ratio
+ * sequentiae semel facta (parare_suitae; assertiones eorum ibi);
+ * sectiones ea per monstratorem constantem LEGUNT - internatio in
+ * internamentum fixurae sola licet (decretum 2026-10-19). */
+nomen structura {
+        MateriaLexiconRatum  ratum;
+        InternamentumChorda* intern;
+    MateriaDiagnosticaRatio  ratio;
+} FixuraPlena;
 
-    piscina = piscina_generare_dynamicum("probatio_plena", 1048576);
-    si (piscina == NIHIL)
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+           FixuraPlena* f;
+    MateriaLexIudicium  iudicium;
+          StmlResultus  r;
+                   Xar* regulae;
+
+    f = (FixuraPlena*)piscina_allocare(c->piscina,
+        magnitudo(FixuraPlena));
+    si (f == NIHIL)
     {
-        imprimere("FRACTA: piscina\n");
-        redde I;
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    credo_aperire(piscina);
-    CREDO_VERUM (materia_lexicon_ratum_facere(&ratum, &LEXICON,
+    c->datum = f;
+    CREDO_VERUM (materia_lexicon_ratum_facere(&f->ratum, &LEXICON,
         &iudicium));
-    intern = internamentum_creare(piscina);
-    CREDO_NON_NIHIL (intern);
-    r = stml_legere_ex_literis(REGULA_TEXTUS, piscina, intern);
+    f->intern = internamentum_creare(c->piscina);
+    CREDO_NON_NIHIL (f->intern);
+    r = stml_legere_ex_literis(REGULA_TEXTUS, c->piscina, f->intern);
     CREDO_VERUM (r.successus);
-    regulae = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+    regulae = xar_creare(c->piscina, (i32)magnitudo(StmlNodus*));
     CREDO_NON_NIHIL (regulae);
     {
         StmlNodus** cella = (StmlNodus**)xar_addere(regulae);
@@ -265,21 +271,38 @@ MateriaDiagnosticaRatio  ratio;
         }
     }
 
-    memset(&ratio, ZEPHYRUM, magnitudo(ratio));
-    ratio.grammatica  = "proba";
-    ratio.tabularium  = &REG;
-    ratio.lexicon     = &ratum;
-    ratio.declarata   = &DECLARATA;
-    ratio.praefixum   = "#";
-    ratio.regulae     = regulae;
-    ratio.intern      = intern;
+    memset(&f->ratio, ZEPHYRUM, magnitudo(f->ratio));
+    f->ratio.grammatica  = "proba";
+    f->ratio.tabularium  = &REG;
+    f->ratio.lexicon     = &f->ratum;
+    f->ratio.declarata   = &DECLARATA;
+    f->ratio.praefixum   = "#";
+    f->ratio.regulae     = regulae;
+    f->ratio.intern      = f->intern;
+}
 
+
+/* ==================================================
+ * PROBARE: gradus ambo in cursu uno
+ * ================================================== */
+
+interior vacuum
+_gradus_ambo_probare (
+    CredoContextus* c)
+{
+                             Piscina* piscina = c->piscina;
+    constans MateriaDiagnosticaRatio* ratio;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratio = &((constans FixuraPlena*)c->suita)->ratio;
     {
         MateriaNodus* radix = materia_nodus_creare(piscina,
                                   (s32)GR_RADIX, (i32)I);
                  Xar* d;
 
-        imprimere("\n--- I. Gradus AMBO in cursu uno ---\n");
         CREDO_NON_NIHIL (radix);
         CREDO_VERUM (materia_nodus_appendere(piscina, radix, ZEPHYRUM,
             materia_valor_nodus(_nodus(piscina, (s32)GR_MALUM, "@@",
@@ -289,13 +312,31 @@ MateriaDiagnosticaRatio  ratio;
             materia_valor_nodus(_nodus(piscina, (s32)GR_VERBUM, "alpha",
                 (s32)110, NIHIL, ZEPHYRUM)),
             MATERIA_LOCUS_LISTA_NODUS));
-        d = materia_diagnostica_plena(piscina, radix, &ratio, NIHIL,
+        d = materia_diagnostica_plena(piscina, radix, ratio, NIHIL,
             NIHIL);
         CREDO_NON_NIHIL (d);
         /* gradus I 'malum' + gradus II 'omne-verbum' = DUO */
         CREDO_AEQUALIS_I32 (xar_numerus(d), (i32)II);
     }
+}
 
+
+/* ==================================================
+ * PROBARE: excusatio gradum II solum tegit
+ * ================================================== */
+
+interior vacuum
+_excusationem_probare (
+    CredoContextus* c)
+{
+                             Piscina* piscina = c->piscina;
+    constans MateriaDiagnosticaRatio* ratio;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratio = &((constans FixuraPlena*)c->suita)->ratio;
     {
         MateriaNodus* radix = materia_nodus_creare(piscina,
                                   (s32)GR_RADIX, (i32)I);
@@ -304,7 +345,6 @@ MateriaDiagnosticaRatio  ratio;
                  b32  habet_malum   = FALSUM;
                  b32  habet_verbum  = FALSUM;
 
-        imprimere("\n--- II. Excusatio gradum II SOLUM tegit ---\n");
         CREDO_VERUM (materia_nodus_appendere(piscina, radix, ZEPHYRUM,
             materia_valor_nodus(_nodus(piscina, (s32)GR_MALUM, "@@",
                 (s32)100, NIHIL, ZEPHYRUM)),
@@ -315,7 +355,7 @@ MateriaDiagnosticaRatio  ratio;
                 "# <tolera codex=\"lint:omne-verbum\" (>consulto",
                 (s32)103)),
             MATERIA_LOCUS_LISTA_NODUS));
-        d = materia_diagnostica_plena(piscina, radix, &ratio, NIHIL,
+        d = materia_diagnostica_plena(piscina, radix, ratio, NIHIL,
             NIHIL);
         CREDO_NON_NIHIL (d);
         per (k = ZEPHYRUM; k < xar_numerus(d); k++)
@@ -337,26 +377,63 @@ MateriaDiagnosticaRatio  ratio;
         CREDO_FALSUM (habet_verbum);
         CREDO_AEQUALIS_I32 (xar_numerus(d), (i32)I);
     }
+}
 
+
+/* ==================================================
+ * PROBARE: sine regulis: gradus I solus
+ * ================================================== */
+
+interior vacuum
+_sine_regulis_probare (
+    CredoContextus* c)
+{
+                             Piscina* piscina = c->piscina;
+    constans MateriaDiagnosticaRatio* ratio;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratio = &((constans FixuraPlena*)c->suita)->ratio;
     {
         MateriaNodus* radix = materia_nodus_creare(piscina,
                                   (s32)GR_RADIX, (i32)I);
                     Xar* d;
 MateriaDiagnosticaRatio  sine;
 
-        imprimere("\n--- III. Sine regulis: gradus I solus ---\n");
         CREDO_VERUM (materia_nodus_appendere(piscina, radix, ZEPHYRUM,
             materia_valor_nodus(_nodus(piscina, (s32)GR_VERBUM, "alpha",
                 (s32)110, NIHIL, ZEPHYRUM)),
             MATERIA_LOCUS_LISTA_NODUS));
-        sine          = ratio;
+        sine          = *ratio;
         sine.regulae  = NIHIL;
         d = materia_diagnostica_plena(piscina, radix, &sine, NIHIL,
             NIHIL);
         CREDO_NON_NIHIL (d);
         CREDO_AEQUALIS_I32 (xar_numerus(d), ZEPHYRUM);
     }
+}
 
+
+/* ==================================================
+ * PROBARE: subtractio declarata: III - II = I
+ * ================================================== */
+
+interior vacuum
+_subtractionem_probare (
+    CredoContextus* c)
+{
+                             Piscina* piscina = c->piscina;
+    constans MateriaDiagnosticaRatio* ratio;
+                 InternamentumChorda* intern;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratio   = &((constans FixuraPlena*)c->suita)->ratio;
+    intern  = ((constans FixuraPlena*)c->suita)->intern;
     {
         MateriaNodus* radix = materia_nodus_creare(piscina,
                                   (s32)GR_RADIX, (i32)I);
@@ -364,7 +441,6 @@ MateriaDiagnosticaRatio  duo;
                     Xar* d;
      constans character* causa = NIHIL;
 
-        imprimere("\n--- IV. Subtractio declarata: III - II = I ---\n");
         CREDO_NON_NIHIL (radix);
         CREDO_VERUM (materia_nodus_appendere(piscina, radix, ZEPHYRUM,
             materia_valor_nodus(_nodus(piscina, (s32)GR_VERBUM, "alpha",
@@ -378,7 +454,7 @@ MateriaDiagnosticaRatio  duo;
             materia_valor_nodus(_nodus(piscina, (s32)GR_VERBUM, "alpha",
                 (s32)130, NIHIL, ZEPHYRUM)),
             MATERIA_LOCUS_LISTA_NODUS));
-        duo          = ratio;
+        duo          = *ratio;
         duo.regulae  = _regulae(piscina, intern, REGULA_BRACCHIORUM);
         CREDO_NON_NIHIL (duo.regulae);
         d = materia_diagnostica_plena(piscina, radix, &duo, NIHIL,
@@ -406,7 +482,7 @@ MateriaDiagnosticaRatio  duo;
             }
         }
 
-        imprimere("\n--- V. 'crudum': bracchia INTACTA ---\n");
+        CREDO_GRADUS ("'crudum': bracchia INTACTA");
         duo.crudum  = VERUM;
         causa       = NIHIL;
         d = materia_diagnostica_plena(piscina, radix, &duo, NIHIL,
@@ -419,7 +495,27 @@ MateriaDiagnosticaRatio  duo;
             CREDO_AEQUALIS_I32 (xar_numerus(d), (i32)V);
         }
     }
+}
 
+
+/* ==================================================
+ * PROBARE: bracchium vagum refutatur
+ * ================================================== */
+
+interior vacuum
+_bracchium_vagum_probare (
+    CredoContextus* c)
+{
+                             Piscina* piscina = c->piscina;
+    constans MateriaDiagnosticaRatio* ratio;
+                 InternamentumChorda* intern;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratio   = &((constans FixuraPlena*)c->suita)->ratio;
+    intern  = ((constans FixuraPlena*)c->suita)->intern;
     {
         MateriaNodus* radix = materia_nodus_creare(piscina,
                                   (s32)GR_RADIX, (i32)I);
@@ -427,7 +523,6 @@ MateriaDiagnosticaRatio  vaga;
                     Xar* d;
      constans character* causa = NIHIL;
 
-        imprimere("\n--- VI. Bracchium vagum REFUTATUR ---\n");
         CREDO_NON_NIHIL (radix);
         CREDO_VERUM (materia_nodus_appendere(piscina, radix, ZEPHYRUM,
             materia_valor_nodus(_nodus(piscina, (s32)GR_MALUM, "@@",
@@ -437,7 +532,7 @@ MateriaDiagnosticaRatio  vaga;
             materia_valor_nodus(_nodus(piscina, (s32)GR_VERBUM, "alpha",
                 (s32)110, NIHIL, ZEPHYRUM)),
             MATERIA_LOCUS_LISTA_NODUS));
-        vaga          = ratio;
+        vaga          = *ratio;
         vaga.regulae  = _regulae(piscina, intern, REGULA_VAGA);
         CREDO_NON_NIHIL (vaga.regulae);
         d = materia_diagnostica_plena(piscina, radix, &vaga, NIHIL,
@@ -452,7 +547,27 @@ MateriaDiagnosticaRatio  vaga;
             CREDO_VERUM (strstr(causa, "sedes diversas") != NIHIL);
         }
     }
+}
 
+
+/* ==================================================
+ * PROBARE: ordo sine sede refutatur
+ * ================================================== */
+
+interior vacuum
+_sine_sede_probare (
+    CredoContextus* c)
+{
+                             Piscina* piscina = c->piscina;
+    constans MateriaDiagnosticaRatio* ratio;
+                 InternamentumChorda* intern;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratio   = &((constans FixuraPlena*)c->suita)->ratio;
+    intern  = ((constans FixuraPlena*)c->suita)->intern;
     {
         MateriaNodus* radix = materia_nodus_creare(piscina,
                                   (s32)GR_RADIX, (i32)I);
@@ -460,13 +575,12 @@ MateriaDiagnosticaRatio  vacua;
                     Xar* d;
      constans character* causa = NIHIL;
 
-        imprimere("\n--- VII. Ordo SINE SEDE refutatur ---\n");
         CREDO_NON_NIHIL (radix);
         CREDO_VERUM (materia_nodus_appendere(piscina, radix, ZEPHYRUM,
             materia_valor_nodus(_nodus(piscina, (s32)GR_VERBUM, "alpha",
                 (s32)110, NIHIL, ZEPHYRUM)),
             MATERIA_LOCUS_LISTA_NODUS));
-        vacua          = ratio;
+        vacua          = *ratio;
         vacua.regulae  = _regulae(piscina, intern, REGULA_SINE_SEDE);
         CREDO_NON_NIHIL (vacua.regulae);
         d = materia_diagnostica_plena(piscina, radix, &vacua, NIHIL,
@@ -482,10 +596,27 @@ MateriaDiagnosticaRatio  vacua;
             CREDO_VERUM (strstr(causa, "lint:vacuum") != NIHIL);
         }
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "gradus ambo in cursu uno", _gradus_ambo_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "excusatio gradum II solum tegit", _excusationem_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "sine regulis: gradus I solus", _sine_regulis_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "subtractio declarata: III - II = I", _subtractionem_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "bracchium vagum refutatur", _bracchium_vagum_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "ordo sine sede refutatur", _sine_sede_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("materia_plena", SECTIONES,
+        _suitam_parare, NIHIL);
 }

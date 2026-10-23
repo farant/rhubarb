@@ -25,7 +25,7 @@
  */
 
 #include "latina.h"
-#include "lectiones.h"   /* lectiones_fopen: canalis lectionum (examen 96) */
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "credo.h"
 #include "html_arbor.h"
 #include "html_alienum.h"
@@ -265,10 +265,13 @@ _casum_probare (
     redde c;
 }
 
-integer
-principale (vacuum)
+/* Sectio UNA (conversio fidelis): pinnae summas per causam super
+ * corpus TOTUM asserunt - divisio per plagulam numeros mutaret. */
+interior vacuum
+_circuitum_probare (
+    CredoContextus* c)
 {
-                Piscina* piscina;
+                Piscina* piscina = c->piscina;
      constans character* radix_viae;
               character  via[DXII];
     MateriaLexiconRatum  ratum;
@@ -281,14 +284,6 @@ principale (vacuum)
                     i32  f;
                     i32  k;
 
-    piscina = piscina_generare_dynamicum("probatio_html_circuitus",
-        16777216);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
     radix_viae = getenv("RHUBARB_RADIX");
     si (radix_viae == NIHIL)
     {
@@ -297,7 +292,7 @@ principale (vacuum)
     si (!materia_lexicon_ratum_facere(&ratum, &HTML_LEXICON, &iudicium))
     {
         imprimere("LEXICON HTML RECUSATUM\n");
-        redde I;
+        redde;   /* sine assertione: sectio VACUA */
     }
     materia_arbor_consilium_nudum(&consilium, &HTML_REGISTRUM, &ratum,
         "html");
@@ -306,8 +301,6 @@ principale (vacuum)
         summae[k] = ZEPHYRUM;
     }
 
-    imprimere("\n--- CIRCUITUS: corpus html5lib per octetos et STML "
-              "---\n");
     per (f = ZEPHYRUM; HTML_EXEMPLA_PLAGULAE[f] != NIHIL; f++)
     {
         character* textus;
@@ -334,7 +327,7 @@ principale (vacuum)
         {
             HtmlExemplum* e = (HtmlExemplum*)xar_obtinere(exempla, i);
                  Piscina* p;
-               Circuitus  c;
+               Circuitus  circuitus;
 
             si (e == NIHIL)
             {
@@ -351,11 +344,12 @@ principale (vacuum)
                 CREDO_CULPA ("piscina casus");
                 perge;
             }
-            c                = _casum_probare(p, &consilium, e);
-            summae[c.causa]  = summae[c.causa] + I;
-            si (   c.causa != CIRCUITUS_IDEM
-                && c.causa != CIRCUITUS_SCRIPTURA_RECUSATA_NUL
-                && c.causa != CIRCUITUS_SCRIPTURA_RECUSATA_SEQUENTIA
+            circuitus                = _casum_probare(p, &consilium, e);
+            summae[circuitus.causa]  = summae[circuitus.causa] + I;
+            si (   circuitus.causa != CIRCUITUS_IDEM
+                && circuitus.causa != CIRCUITUS_SCRIPTURA_RECUSATA_NUL
+                && circuitus.causa
+                   != CIRCUITUS_SCRIPTURA_RECUSATA_SEQUENTIA
                 && fractae_impressae < FRACTAE_IMPRESSAE)
             {
                 fractae_impressae = fractae_impressae + I;
@@ -363,15 +357,16 @@ principale (vacuum)
                     _titulus(HTML_EXEMPLA_PLAGULAE[f]),
                     (integer)e->numerus,
                     e->fragmentum ? " [fr]" : "",
-                    CAUSAE[c.causa],
-                    c.nuntius != NIHIL ? " - " : "",
-                    c.nuntius != NIHIL ? c.nuntius : "");
+                    CAUSAE[circuitus.causa],
+                    circuitus.nuntius != NIHIL ? " - " : "",
+                    circuitus.nuntius
+                        != NIHIL ? circuitus.nuntius : "");
             }
             piscina_destruere(p);
         }
     }
 
-    imprimere("\n--- per causam ---\n");
+    imprimere("\n  per causam:\n");
     per (k = ZEPHYRUM; k < (i32)CIRCUITUS_NUMERUS_CAUSARUM; k++)
     {
         si (summae[k] > ZEPHYRUM)
@@ -379,8 +374,8 @@ principale (vacuum)
             imprimere("  %5d  %s\n", (integer)summae[k], CAUSAE[k]);
         }
     }
-    imprimere("--- CIRCUITUS: %d casus (%d fragmenta); octeti idem "
-              "%d; STML idem %d, recusata NUL %d, sequentia %d ---\n",
+    imprimere("  CIRCUITUS: %d casus (%d fragmenta); octeti idem "
+              "%d; STML idem %d, recusata NUL %d, sequentia %d\n",
         (integer)totalis, (integer)fragmenta,
         (integer)(totalis - summae[CIRCUITUS_PARSATOR_NIHIL]
                   - summae[CIRCUITUS_OCTETI_DISPARES_FONTI]),
@@ -411,12 +406,16 @@ principale (vacuum)
         ZEPHYRUM);
     CREDO_AEQUALIS_I32 (summae[CIRCUITUS_IDEM],
         TOTALIS_PINNATUS - RECUSATA_NUL - RECUSATA_SEQUENTIA);
+}
 
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "circuitus: corpus html5lib per octetos et STML",
+        _circuitum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("html_circuitus", SECTIONES);
 }

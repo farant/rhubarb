@@ -46,23 +46,17 @@ _ev_imperium (
     redde ev;
 }
 
-s32
-principale (vacuum)
+/* Sectio UNA: probatio scaenica - blocci statum priorum ex proposito
+ * continuant; gradus (CREDO_GRADUS) fracturam nominant. */
+interior vacuum
+_scaenam_probare (
+    CredoContextus* c)
 {
-                 b32  praeteritus;
-             Piscina* piscina;
-    SaltuariusClaves  claves;
-    SaltuariusIussum  iussum;
-      TesseraEventum  ev;
+    SaltuariusClaves claves;
+    SaltuariusIussum iussum;
+      TesseraEventum ev;
 
-    piscina = piscina_generare_dynamicum("probatio_salt_claves",
-        262144);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
+    (vacuum)c;
     saltuarius_claves_parare(&claves);
 
 
@@ -71,7 +65,7 @@ principale (vacuum)
      * ======================================================== */
 
     {
-        imprimere("\n--- Probans claves simplices ---\n");
+        CREDO_GRADUS ("claves simplices");
 
         ev = _ev_runa((s32)'j');
         CREDO_VERUM (saltuarius_claves_tradere(&claves,
@@ -135,7 +129,7 @@ principale (vacuum)
      * ======================================================== */
 
     {
-        imprimere("\n--- Probans gg ---\n");
+        CREDO_GRADUS ("gg");
 
         ev = _ev_runa((s32)'g');
         CREDO_FALSUM (saltuarius_claves_tradere(&claves,
@@ -169,7 +163,7 @@ principale (vacuum)
      * ======================================================== */
 
     {
-        imprimere("\n--- Probans f<littera> ---\n");
+        CREDO_GRADUS ("f<littera>");
 
         ev = _ev_runa((s32)'f');
         CREDO_FALSUM (saltuarius_claves_tradere(&claves,
@@ -223,7 +217,7 @@ principale (vacuum)
      * ======================================================== */
 
     {
-        imprimere("\n--- Probans ctrl-d/u ---\n");
+        CREDO_GRADUS ("ctrl-d/u");
 
         ev = _ev_imperium((s32)'d');
         CREDO_VERUM (saltuarius_claves_tradere(&claves,
@@ -252,7 +246,7 @@ principale (vacuum)
      * ======================================================== */
 
     {
-        imprimere("\n--- Probans murem ---\n");
+        CREDO_GRADUS ("murem");
 
         memset(&ev, ZEPHYRUM, magnitudo(ev));
         ev.genus      = TESSERA_EVENTUM_MUS;
@@ -360,7 +354,7 @@ principale (vacuum)
      * ======================================================== */
 
     {
-        imprimere("\n--- Probans modum fontis ---\n");
+        CREDO_GRADUS ("modum fontis");
 
         ev = _ev_runa((s32)'h');
         CREDO_VERUM (saltuarius_claves_tradere(&claves,
@@ -455,8 +449,16 @@ principale (vacuum)
             (i32)SALT_ACTIO_FINIRE);
     }
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "claves et modi: sessio", _scaenam_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("saltuarius_claves", SECTIONES);
 }

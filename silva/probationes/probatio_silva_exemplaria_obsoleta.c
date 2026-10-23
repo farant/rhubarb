@@ -726,6 +726,7 @@ principale (vacuum)
                character  via_plagulae[1024];
                     DIR* corpus;
        structura dirent* introitus;
+           CorpusSilvae  corpus_silvae;
               LintCensus census_bibliothecae;
               LintCensus census_probationum;
                      i8* lint_datum;
@@ -803,6 +804,10 @@ principale (vacuum)
     /* gradus bibliothecae */
     memset(&census_bibliothecae, 0,
            magnitudo(census_bibliothecae));
+    /* corpus verum per iudicem corpus_silvae (unitates.stml):
+     * tabulae datorum (signum DATA) extra, nominatae */
+    CREDO_VERUM (apparatus_corpus_parare(&corpus_silvae, radix,
+        piscina));
     sprintf(via_corporis, "%s/lib", radix);
     corpus = opendir(via_corporis);
     si (corpus == NIHIL)
@@ -814,7 +819,8 @@ principale (vacuum)
     }
     dum ((introitus = readdir(corpus)) != NIHIL)
     {
-        si (!apparatus_est_c(introitus->d_name))
+        si (!apparatus_in_corpore(&corpus_silvae, "lib",
+            introitus->d_name, piscina))
         {
             perge;
         }

@@ -1057,6 +1057,27 @@ _sectio_decima_prima (
     }
 }
 
+/* volumen_in_transactione: vocator transactionem tenetne? (canalis T4
+ * - admissio eam iungit) */
+interior vacuum
+_sectio_in_transactione (
+    CredoContextus* c)
+{
+    Volumen* v = volumen_temporarium(c->piscina, "probatio_volumen_tr");
+
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_FALSUM(volumen_in_transactione(v));
+    CREDO_NECESSE(volumen_transactionem_incipere(v));
+    CREDO_VERUM(volumen_in_transactione(v));
+    CREDO_NECESSE(volumen_transactionem_committere(v));
+    CREDO_FALSUM(volumen_in_transactione(v));
+    CREDO_NECESSE(volumen_transactionem_incipere(v));
+    CREDO_NECESSE(volumen_transactionem_revolvere(v));
+    CREDO_FALSUM(volumen_in_transactione(v));
+    CREDO_FALSUM(volumen_in_transactione(NIHIL));
+    volumen_claudere(v);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "volumen_creare", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "aperire_aut_creare", _sectio_secunda, NIHIL, NIHIL, NIHIL,
@@ -1090,6 +1111,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "volumen ordinarium SUPERSTES", _sectio_decima_prima, NIHIL,
         NIHIL, NIHIL, NIHIL },
+    { "in_transactione", _sectio_in_transactione, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

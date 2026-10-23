@@ -35,6 +35,12 @@
 #define XAR_MAXIMUS_SEGMENTORUM     LXIV    /* tabula magna (xar_creare_magnum) */
 #define XAR_PRIMUS_SEGMENTUM        IV      /* elementa in primo segmento */
 
+/* TABULA CRESCENS (2026-10-21): segmenta duo prima in capite INSCRIPTA;
+ * tabula plena (segmenta_maxima) ex piscina solum cum segmentum
+ * tertium petitur. Proiectio STML plagulae toml LXX K: XCVI M Xar,
+ * LIII M vacua, capita (CCXL octeti) LXV% arenae - nunc LXIV octeti. */
+#define XAR_SEGMENTA_INLINEA        II
+
 /* Vexilla */
 #define XAR_VEXILLUM_ORDINARIUS     ZEPHYRUM    /* Ordinarius: memoria ad zephyrum */
 #define XAR_VEXILLUM_SINE_ZEPHYRUM  I           /* Non zephyrum facere memoriam in allocatio */
@@ -59,16 +65,20 @@ nomen s32 (*XarComparator)(constans vacuum* a, constans vacuum* b);
  * "Tabula Exponentialis"
  */
 nomen structura Xar {
-                   i32  numerus_elementorum; /* Quot elementa? */
-                   i32  magnitudo_elementi;  /* Quam magnus elementum? (in bytes) */
-                   i32  magnitudo_primi;     /* Magnitudo primi segmenti */
-                   i32  numerus_segmentorum; /* Quot segmenta allocata? */
-                   i32  capacitas_totalis;   /* Capacitas totalis */
-                   i32  vexilla;             /* Signa comportamenti */
-                   i32  segmenta_maxima;     /* mensura tabulae: ORDINARIA | MAXIMUS */
+                   i32 numerus_elementorum; /* Quot elementa? */
+                   i32 magnitudo_elementi;  /* Quam magnus elementum? (in bytes) */
+                   i32 magnitudo_primi;     /* Magnitudo primi segmenti */
+                   i32 numerus_segmentorum; /* Quot segmenta allocata? */
+                   i32 capacitas_totalis;   /* Capacitas totalis */
+                   i32 vexilla;             /* Signa comportamenti */
+                   i32 segmenta_maxima;     /* fines tabulae: ORDINARIA | MAXIMUS */
+                   i32 mensura_tabulae;     /* longitudo tabulae currentis:
+                                              * INLINEA, deinde segmenta_maxima */
                Piscina* piscina;             /* Piscina memoriae */
-               vacuum** segmenta;            /* tabula segmentorum, post caput
-                                              * una allocatione (segmenta_maxima) */
+               vacuum** segmenta;            /* -> segmenta_inlinea, aut tabula
+                                              * plena ex piscina (segmento
+                                              * tertio petito) */
+                vacuum* segmenta_inlinea[XAR_SEGMENTA_INLINEA];
 } Xar;
 
 

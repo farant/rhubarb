@@ -242,3 +242,11 @@ act. Tightened with a lookup of the first act after the second exists.
   download. Re-opening per 16-64 KB chunk costs microseconds.
 - SQLite blobs cap at ~1 GB (SQLITE_MAX_LENGTH); the API refuses > 2 GB
   up front, sqlite refuses beyond its own limit.
+
+## 2026-10-21 - volumen_in_transactione (canalis T4)
+
+Public read of the existing `in_transactione` flag, so a library that
+would otherwise open its own transaction can join the caller's instead
+(sqlite forbids nesting). First user: admissio_revocare, called inside
+the exemplar suspension transaction. Section "in_transactione" (begin,
+commit, rollback, NIHIL).

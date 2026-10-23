@@ -77,9 +77,19 @@
 #include <string.h>
 
 /* VISIO SEDIUM (materia-sedes A2): elementa verificata per corpus -
- * porta quae nihil verificavit mortua est */
-hic_manens i32 SEDES_ELEMENTA = ZEPHYRUM;
-hic_manens i32 SEDES_DERIVATA = ZEPHYRUM;
+ * porta quae nihil verificavit mortua est. Numeratores sectionis
+ * propriae, per monstratorem traditi (NIHIL = non numerantur). */
+nomen structura {
+    i32 elementa;
+    i32 derivata;
+} VisioSedium;
+
+/* FIXURA SUITAE: lexicon et consilium arboris (ratum per monstratorem
+ * tenet - ergo in fixura ipsa) semel facta; sectiones LEGUNT. */
+nomen structura {
+      MateriaLexiconRatum ratum;
+    MateriaArborConsilium consilium;
+} FixuraLexici;
 
 /* casus inlinei: porta arboris (P3/P5: XC casus + mala VII) et porta
  * arithmeticae (P4: V) verbatim */
@@ -446,7 +456,8 @@ _circuitum_probare (
     constans MateriaArborConsilium* consilium,
                 constans character* fons,
                                i32  mensura,
-                               b32  mutare)
+                               b32  mutare,
+                       VisioSedium* visio)
 {
                 Circuitus c;
              MateriaNodus* radix;
@@ -503,8 +514,11 @@ _circuitum_probare (
                 sedes.causa ? sedes.causa : "-", (integer)sedes.index);
         }
         CREDO_VERUM (sedes.sana);
-        SEDES_ELEMENTA += sedes.elementa;
-        SEDES_DERIVATA += sedes.derivata;
+        si (visio != NIHIL)
+        {
+            visio->elementa += sedes.elementa;
+            visio->derivata += sedes.derivata;
+        }
     }
 
     relecta = materia_arbor_legere(piscina, NIHIL, s1.textus, consilium,
@@ -630,7 +644,8 @@ _plagula (
                 constans character* radix,
                 constans character* via,
     constans MateriaArborConsilium* consilium,
-                             Summa* summa)
+                             Summa* summa,
+                       VisioSedium* visio)
 {
     Piscina* piscina = piscina_generare_dynamicum("crusta_stml",
         4194304);
@@ -652,7 +667,8 @@ _plagula (
         piscina_destruere(piscina);
         redde;
     }
-    c = _circuitum_probare(piscina, consilium, fons, mensura, FALSUM);
+    c = _circuitum_probare(piscina, consilium, fons, mensura, FALSUM,
+        visio);
     si (c.causa != CIRCUITUS_IDEM)
     {
         imprimere("  %s (%d octeti)\n", via, (integer)mensura);
@@ -672,7 +688,8 @@ _fixum_per_casus (
                 constans character* radix,
                 constans character* via,
                              Summa* summa,
-                            chorda* titulus_recusati)
+                            chorda* titulus_recusati,
+                       VisioSedium* visio)
 {
                    i32  mensura;
     constans character* fons;
@@ -697,7 +714,7 @@ _fixum_per_casus (
             (constans CrustaExemplum*)xar_obtinere(exempla, i);
         Circuitus c = _circuitum_probare(piscina, consilium,
             (constans character*)e->datum.datum, e->datum.mensura,
-            FALSUM);
+            FALSUM, visio);
 
         si (c.causa != CIRCUITUS_IDEM)
         {
@@ -743,158 +760,110 @@ _summam_imprimere (
     }
 }
 
-s32
-principale (vacuum)
+interior constans character*
+_radix_viae (vacuum)
 {
-                   Piscina* piscina;
-       MateriaLexiconRatum  ratum;
-        MateriaLexIudicium  iudicium;
-     MateriaArborConsilium  consilium;
-                       b32  praeteritus;
-        constans character* radix;
-                       i32  i;
-                     Summa  casuum;
-                     Summa  fixa;
-                     Summa  corpus;
-                    chorda  titulus_recusati;
-                       i32  documenta;
+    constans character* radix_viae = getenv("RHUBARB_RADIX");
 
-    piscina = piscina_generare_dynamicum("probatio_crusta_stml",
-        1048576);
-    si (!piscina)
+    redde radix_viae != NIHIL ? radix_viae : ".";
+}
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+          FixuraLexici* f;
+    MateriaLexIudicium  iudicium;
+
+    f = (FixuraLexici*)piscina_allocare(c->piscina,
+        magnitudo(FixuraLexici));
+    si (f == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    credo_aperire(piscina);
-    radix = getenv("RHUBARB_RADIX");
-    si (radix == NIHIL)
+    si (!materia_lexicon_ratum_facere(&f->ratum, &CRUSTA_LEXICON,
+            &iudicium))
     {
-        radix = ".";
+        imprimere("LEXICON CRUSTAE RECUSATUM\n");
+        redde;
+    }
+    materia_arbor_consilium_nudum(&f->consilium, &CRUSTA_REGISTRUM,
+        &f->ratum, "crusta");
+    /* forma lexematum: cauda crustae (profunditas backtick), ad
+     * zephyrum in lexematibus relectis - vide caput */
+    f->consilium.forma.mensura_caudae = (i32)magnitudo(CrustaCauda);
+
+    c->datum = f;
+}
+
+
+/* ==================================================
+ * CIRCUITUS STML: casus inlinei, fixa per casus, corpus totum,
+ * FIDELITAS - sectio UNA, quia summa documentorum (se metiens) et
+ * mensura fidelitatis tres portas tegunt; visio sedium eas numerat
+ * ================================================== */
+
+interior vacuum
+_circuitum_portae (
+    CredoContextus* c)
+{
+                  Piscina* piscina  = c->piscina;
+    constans FixuraLexici* fx       = (constans FixuraLexici*)c->suita;
+       constans character* radix    = _radix_viae();
+                      i32  i;
+                    Summa  casuum;
+                    Summa  fixa;
+                    Summa  corpus;
+                   chorda  titulus_recusati;
+                      i32  documenta;
+              VisioSedium  visio;
+
+    si (fx == NIHIL)
+    {
+        redde;
     }
     memset(&casuum, ZEPHYRUM, magnitudo(casuum));
     memset(&fixa, ZEPHYRUM, magnitudo(fixa));
     memset(&corpus, ZEPHYRUM, magnitudo(corpus));
+    memset(&visio, ZEPHYRUM, magnitudo(visio));
     titulus_recusati.mensura  = ZEPHYRUM;
     titulus_recusati.datum    = NIHIL;
-
-    si (!materia_lexicon_ratum_facere(&ratum, &CRUSTA_LEXICON,
-            &iudicium))
-    {
-        imprimere("LEXICON CRUSTAE RECUSATUM\n");
-        redde I;
-    }
-    materia_arbor_consilium_nudum(&consilium, &CRUSTA_REGISTRUM, &ratum,
-        "crusta");
-    /* forma lexematum: cauda crustae (profunditas backtick), ad
-     * zephyrum in lexematibus relectis - vide caput */
-    consilium.forma.mensura_caudae = (i32)magnitudo(CrustaCauda);
 
 
     /* ==================================================
      * PORTA: casus inlinei - duo cycli + comparator + emissio
      * ================================================== */
 
-    imprimere("\n--- PORTA: circuitus STML, casus inlinei (%d) ---\n",
-        (integer)NUMERUS_CASUUM);
+    CREDO_GRADUS ("PORTA: circuitus STML, casus inlinei");
+    imprimere("  casus inlinei %d\n", (integer)NUMERUS_CASUUM);
     per (i = ZEPHYRUM; i < NUMERUS_CASUUM; i++)
     {
-        Circuitus c = _circuitum_probare(piscina, &consilium, CASUS[i],
-            (i32)strlen(CASUS[i]), FALSUM);
+        Circuitus circuitus = _circuitum_probare(piscina,
+            &fx->consilium, CASUS[i],
+            (i32)strlen(CASUS[i]), FALSUM, &visio);
 
-        si (c.causa != CIRCUITUS_IDEM)
+        si (circuitus.causa != CIRCUITUS_IDEM)
         {
             imprimere("  casus %d: %s\n", (integer)i, CASUS[i]);
-            _causam_imprimere(&c);
+            _causam_imprimere(&circuitus);
         }
-        CREDO_AEQUALIS_S32 ((s32)c.causa, (s32)CIRCUITUS_IDEM);
-        _summam_addere(&casuum, &c, (i32)strlen(CASUS[i]));
+        CREDO_AEQUALIS_S32 ((s32)circuitus.causa, (s32)CIRCUITUS_IDEM);
+        _summam_addere(&casuum, &circuitus, (i32)strlen(CASUS[i]));
     }
     _summam_imprimere("inlinei", &casuum);
-
-
-    /* ==================================================
-     * PORTA: referentiae heredoc relatae
-     * ================================================== */
-
-    imprimere("\n--- PORTA: referentiae heredoc (%d casus) ---\n",
-        (integer)NUMERUS_CASUUM_HEREDOC);
-    per (i = ZEPHYRUM; i < NUMERUS_CASUUM_HEREDOC; i++)
-    {
-        MateriaNodus* r = crusta_arbor_parsare(piscina,
-            CASUS_HEREDOC[i],
-            (i32)strlen(CASUS_HEREDOC[i]), &CRUSTA_BASH, NIHIL);
-        MateriaArborScriptura s;
-                    Circuitus c;
-
-        CREDO_NON_NIHIL (r);
-        s = materia_arbor_scribere_nodum(piscina, r, &consilium);
-        CREDO_VERUM (s.successus);
-        CREDO_VERUM (_textus_continet(s.textus, "<corpus(> #nod"));
-        CREDO_VERUM (_textus_continet(s.textus, "id=\"nod"));
-        c = _circuitum_probare(piscina, &consilium, CASUS_HEREDOC[i],
-            (i32)strlen(CASUS_HEREDOC[i]), FALSUM);
-        CREDO_AEQUALIS_S32 ((s32)c.causa, (s32)CIRCUITUS_IDEM);
-        /* petitio quaeque corpus: referentiae = heredoca, utrimque,
-         * scopus generis heredoc semper (-I aliter) */
-        CREDO_AEQUALIS_S32 (c.referentiae, (s32)c.relatio.heredoca);
-        CREDO_AEQUALIS_S32 (c.referentiae_relectae,
-            (s32)c.relatio.heredoca);
-        CREDO_MAIOR_S32 (c.referentiae, ZEPHYRUM);
-    }
-
-    /* structura relecta: imperium -> redirectio.corpus -> heredoc
-     * (liber II programmatis: imperium, separator, heredoc, ...) */
-    {
-        MateriaNodus* r = crusta_arbor_parsare(piscina,
-            CASUS_HEREDOC[0],
-            (i32)strlen(CASUS_HEREDOC[0]), &CRUSTA_BASH, NIHIL);
-        MateriaArborScriptura s;
-           MateriaArborVitium vitium;
-                 MateriaNodus* relecta;
-                 MateriaNodus* imperium;
-                 MateriaNodus* redirectio;
-                 MateriaNodus* heredoc;
-
-        CREDO_NON_NIHIL (r);
-        s = materia_arbor_scribere_nodum(piscina, r, &consilium);
-        CREDO_VERUM (s.successus);
-        relecta = s.successus ? materia_arbor_legere(piscina, NIHIL,
-            s.textus, &consilium, &vitium) : NIHIL;
-        CREDO_NON_NIHIL (relecta);
-        imperium   = _liber(relecta, (i32)CRUSTA_PROGRAMMA_LIBERI,
-            ZEPHYRUM);
-        redirectio  = _liber(imperium, (i32)CRUSTA_IMPERIUM_LIBERI, I);
-        heredoc     = _liber(relecta, (i32)CRUSTA_PROGRAMMA_LIBERI, II);
-        CREDO_NON_NIHIL (redirectio);
-        CREDO_NON_NIHIL (heredoc);
-        si (redirectio != NIHIL && heredoc != NIHIL)
-        {
-            CREDO_AEQUALIS_S32 (redirectio->genus,
-                (s32)CRUSTA_GENUS_REDIRECTIO);
-            CREDO_AEQUALIS_S32 (heredoc->genus,
-                (s32)CRUSTA_GENUS_HEREDOC);
-            CREDO_AEQUALIS_S32 (
-                (s32)redirectio->loci[CRUSTA_REDIRECTIO_CORPUS].genus,
-                (s32)MATERIA_VALOR_REFERENTIA);
-            CREDO_AEQUALIS_PTR (
-                redirectio->loci[CRUSTA_REDIRECTIO_CORPUS].datum.nodus,
-                heredoc);
-        }
-    }
 
 
     /* ==================================================
      * PORTA: fixa per casus (lector casuum)
      * ================================================== */
 
-    imprimere("\n--- PORTA: circuitus STML, casus fixorum ---\n");
-    _fixum_per_casus(piscina, &consilium, radix,
+    CREDO_GRADUS ("PORTA: circuitus STML, casus fixorum");
+    _fixum_per_casus(piscina, &fx->consilium, radix,
         "probationes/fixa/crusta/pathologiae.sh", &fixa,
-        &titulus_recusati);
-    _fixum_per_casus(piscina, &consilium, radix,
+        &titulus_recusati, &visio);
+    _fixum_per_casus(piscina, &fx->consilium, radix,
         "probationes/fixa/crusta/adversarius.sh", &fixa,
-        &titulus_recusati);
+        &titulus_recusati, &visio);
     _summam_imprimere("fixa", &fixa);
     /* XXXVI + XVII casus. Recusatio per sequentiam claudentem
      * EXSTINCTA est (2026-09-21, planum clausurae gradus III):
@@ -920,7 +889,7 @@ principale (vacuum)
      * PORTA: corpus totum - domus, fixa totae, FreeBSD
      * ================================================== */
 
-    imprimere("\n--- PORTA: circuitus STML, corpus ---\n");
+    CREDO_GRADUS ("PORTA: circuitus STML, corpus");
     {
         constans character* lista;
                        i32  mensura;
@@ -955,7 +924,8 @@ principale (vacuum)
                         && !_eadem_via(via,
                             "probationes/fixa/crusta/adversarius.sh"))
                     {
-                        _plagula(radix, via, &consilium, &corpus);
+                        _plagula(radix, via, &fx->consilium, &corpus,
+                            &visio);
                     }
                 }
                 ab = ad + I;
@@ -969,15 +939,15 @@ principale (vacuum)
         corpus.plagulae);
 
     _plagula(radix, "probationes/fixa/crusta/pathologiae.sh",
-        &consilium,
-        &corpus);
+        &fx->consilium,
+        &corpus, &visio);
     _plagula(radix, "probationes/fixa/crusta/adversarius.sh",
-        &consilium,
-        &corpus);
+        &fx->consilium,
+        &corpus, &visio);
     per (i = ZEPHYRUM; CRUSTA_FREEBSD_PLAGULAE[i] != NIHIL; i++)
     {
-        _plagula(radix, CRUSTA_FREEBSD_PLAGULAE[i], &consilium,
-            &corpus);
+        _plagula(radix, CRUSTA_FREEBSD_PLAGULAE[i], &fx->consilium,
+            &corpus, &visio);
     }
     _summam_imprimere("corpus", &corpus);
     /* + II fixa + LXXXIX FreeBSD: omnes idem. adversarius.sh TOTA
@@ -1002,31 +972,135 @@ principale (vacuum)
      * MENSURA: FIDELITAS (spec par. X)
      * ================================================== */
 
-    imprimere("\n--- Mensura: FIDELITAS ---\n");
+    CREDO_GRADUS ("Mensura: FIDELITAS");
     imprimere("  fideles: casuum %d/%d, fixa %d/%d, corpus %d/%d\n",
         (integer)casuum.fideles, (integer)casuum.plagulae,
         (integer)fixa.fideles, (integer)fixa.plagulae,
         (integer)corpus.fideles, (integer)corpus.plagulae);
     {
-        Circuitus c = _circuitum_probare(piscina, &consilium, "a\nb\n",
-            (i32)IV, FALSUM);
+        Circuitus circuitus = _circuitum_probare(piscina,
+            &fx->consilium, "a\nb\n",
+            (i32)IV, FALSUM, &visio);
 
-        CREDO_AEQUALIS_S32 ((s32)c.causa, (s32)CIRCUITUS_IDEM);
-        imprimere("  'a\\nb\\n' fidelis %d", (integer)c.fidelis);
-        si (!c.fidelis && c.differentia_fidelitatis.campus != NIHIL)
+        CREDO_AEQUALIS_S32 ((s32)circuitus.causa, (s32)CIRCUITUS_IDEM);
+        imprimere("  'a\\nb\\n' fidelis %d",
+            (integer)circuitus.fidelis);
+        si (   !circuitus.fidelis
+            && circuitus.differentia_fidelitatis.campus != NIHIL)
         {
             imprimere(" - campus %s via %s",
-                c.differentia_fidelitatis.campus,
-                c.differentia_fidelitatis.via);
+                circuitus.differentia_fidelitatis.campus,
+                circuitus.differentia_fidelitatis.via);
         }
         imprimere("\n");
     }
 
+    imprimere("  sedes (visio): %d elementa verificata, %d derivata\n",
+        (integer)visio.elementa, (integer)visio.derivata);
+    CREDO_VERUM (visio.elementa > ZEPHYRUM);
+}
 
-    /* ==================================================
-     * PROMOTUM: sequentia claudens propria (olim limes substrati)
-     * ================================================== */
 
+/* ==================================================
+ * PORTA: referentiae heredoc relatae
+ * ================================================== */
+
+interior vacuum
+_referentias_probare (
+    CredoContextus* c)
+{
+                  Piscina* piscina  = c->piscina;
+    constans FixuraLexici* fx       = (constans FixuraLexici*)c->suita;
+                      i32  i;
+
+    si (fx == NIHIL)
+    {
+        redde;
+    }
+    imprimere("  casus %d\n", (integer)NUMERUS_CASUUM_HEREDOC);
+    per (i = ZEPHYRUM; i < NUMERUS_CASUUM_HEREDOC; i++)
+    {
+        MateriaNodus* r = crusta_arbor_parsare(piscina,
+            CASUS_HEREDOC[i],
+            (i32)strlen(CASUS_HEREDOC[i]), &CRUSTA_BASH, NIHIL);
+        MateriaArborScriptura s;
+                    Circuitus circuitus;
+
+        CREDO_NON_NIHIL (r);
+        s = materia_arbor_scribere_nodum(piscina, r, &fx->consilium);
+        CREDO_VERUM (s.successus);
+        CREDO_VERUM (_textus_continet(s.textus, "<corpus(> #nod"));
+        CREDO_VERUM (_textus_continet(s.textus, "id=\"nod"));
+        circuitus = _circuitum_probare(piscina, &fx->consilium,
+            CASUS_HEREDOC[i],
+            (i32)strlen(CASUS_HEREDOC[i]), FALSUM, NIHIL);
+        CREDO_AEQUALIS_S32 ((s32)circuitus.causa, (s32)CIRCUITUS_IDEM);
+        /* petitio quaeque corpus: referentiae = heredoca, utrimque,
+         * scopus generis heredoc semper (-I aliter) */
+        CREDO_AEQUALIS_S32 (circuitus.referentiae,
+            (s32)circuitus.relatio.heredoca);
+        CREDO_AEQUALIS_S32 (circuitus.referentiae_relectae,
+            (s32)circuitus.relatio.heredoca);
+        CREDO_MAIOR_S32 (circuitus.referentiae, ZEPHYRUM);
+    }
+
+    /* structura relecta: imperium -> redirectio.corpus -> heredoc
+     * (liber II programmatis: imperium, separator, heredoc, ...) */
+    {
+        MateriaNodus* r = crusta_arbor_parsare(piscina,
+            CASUS_HEREDOC[0],
+            (i32)strlen(CASUS_HEREDOC[0]), &CRUSTA_BASH, NIHIL);
+        MateriaArborScriptura s;
+           MateriaArborVitium vitium;
+                 MateriaNodus* relecta;
+                 MateriaNodus* imperium;
+                 MateriaNodus* redirectio;
+                 MateriaNodus* heredoc;
+
+        CREDO_NON_NIHIL (r);
+        s = materia_arbor_scribere_nodum(piscina, r, &fx->consilium);
+        CREDO_VERUM (s.successus);
+        relecta = s.successus ? materia_arbor_legere(piscina, NIHIL,
+            s.textus, &fx->consilium, &vitium) : NIHIL;
+        CREDO_NON_NIHIL (relecta);
+        imperium   = _liber(relecta, (i32)CRUSTA_PROGRAMMA_LIBERI,
+            ZEPHYRUM);
+        redirectio  = _liber(imperium, (i32)CRUSTA_IMPERIUM_LIBERI, I);
+        heredoc     = _liber(relecta, (i32)CRUSTA_PROGRAMMA_LIBERI, II);
+        CREDO_NON_NIHIL (redirectio);
+        CREDO_NON_NIHIL (heredoc);
+        si (redirectio != NIHIL && heredoc != NIHIL)
+        {
+            CREDO_AEQUALIS_S32 (redirectio->genus,
+                (s32)CRUSTA_GENUS_REDIRECTIO);
+            CREDO_AEQUALIS_S32 (heredoc->genus,
+                (s32)CRUSTA_GENUS_HEREDOC);
+            CREDO_AEQUALIS_S32 (
+                (s32)redirectio->loci[CRUSTA_REDIRECTIO_CORPUS].genus,
+                (s32)MATERIA_VALOR_REFERENTIA);
+            CREDO_AEQUALIS_PTR (
+                redirectio->loci[CRUSTA_REDIRECTIO_CORPUS].datum.nodus,
+                heredoc);
+        }
+    }
+}
+
+
+/* ==================================================
+ * PROMOTUM: sequentia claudens propria (olim limes substrati)
+ * ================================================== */
+
+interior vacuum
+_promota_probare (
+    CredoContextus* c)
+{
+                  Piscina* piscina  = c->piscina;
+    constans FixuraLexici* fx       = (constans FixuraLexici*)c->suita;
+
+    si (fx == NIHIL)
+    {
+        redde;
+    }
     {
         /* Commentarium (trivium crudum) et corpus heredoc (pars
          * litteralis cruda). Olim AMBO recusabantur, causa
@@ -1044,42 +1118,65 @@ principale (vacuum)
             "a # </crusta-commentum>",
             "cat <<X\n</crusta-litteralis>\nX\n"
         };
-        Circuitus c;
+        Circuitus circuitus;
               i32 k;
 
-        imprimere("\n--- Sequentia claudens propria: circuitus ---\n");
         per (k = ZEPHYRUM; k < II; k++)
         {
-            c = _circuitum_probare(piscina, &consilium, PROMOTA[k],
-                (i32)strlen(PROMOTA[k]), FALSUM);
-            CREDO_AEQUALIS_S32 ((s32)c.causa, (s32)CIRCUITUS_IDEM);
+            circuitus = _circuitum_probare(piscina, &fx->consilium,
+                PROMOTA[k],
+                (i32)strlen(PROMOTA[k]), FALSUM, NIHIL);
+            CREDO_AEQUALIS_S32 ((s32)circuitus.causa,
+                (s32)CIRCUITUS_IDEM);
         }
     }
+}
 
 
-    /* ==================================================
-     * PINNA SEPARATIONIS ORACULORUM: octeti idem, arbor dispar
-     * ================================================== */
+/* ==================================================
+ * PINNA SEPARATIONIS ORACULORUM: octeti idem, arbor dispar
+ * ================================================== */
 
+interior vacuum
+_separationem_probare (
+    CredoContextus* c)
+{
+                  Piscina* piscina  = c->piscina;
+    constans FixuraLexici* fx       = (constans FixuraLexici*)c->suita;
+
+    si (fx == NIHIL)
     {
-        Circuitus c;
+        redde;
+    }
+    {
+        Circuitus circuitus;
 
-        imprimere("\n--- Probans separationem oraculorum ---\n");
         /* arbor relecta laesa POST rescripturam: octeti STML bis idem
          * manent, comparator solus dissentit. Si haec assertio viridis
          * esset sine laesione, comparator non curreret. */
-        c = _circuitum_probare(piscina, &consilium, "a; b\n", (i32)V,
-            VERUM);
-        CREDO_AEQUALIS_S32 ((s32)c.causa, (s32)CIRCUITUS_ARBOR_DISPAR);
-        CREDO_NON_NIHIL (c.differentia.campus);
+        circuitus = _circuitum_probare(piscina, &fx->consilium,
+            "a; b\n", (i32)V,
+            VERUM, NIHIL);
+        CREDO_AEQUALIS_S32 ((s32)circuitus.causa,
+            (s32)CIRCUITUS_ARBOR_DISPAR);
+        CREDO_NON_NIHIL (circuitus.differentia.campus);
     }
+}
 
-    imprimere("\n");
-    imprimere("\n--- sedes (visio): %d elementa verificata, %d derivata"
-        " ---\n", (integer)SEDES_ELEMENTA, (integer)SEDES_DERIVATA);
-    CREDO_VERUM (SEDES_ELEMENTA > ZEPHYRUM);
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "circuitus STML", _circuitum_portae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "PORTA: referentiae heredoc",
+        _referentias_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Sequentia claudens propria: circuitus",
+        _promota_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "separationem oraculorum",
+        _separationem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("crusta_stml", SECTIONES,
+        _suitam_parare, NIHIL);
 }

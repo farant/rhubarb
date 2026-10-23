@@ -1,8 +1,10 @@
 /* probatio_nomina.c - resolutio nominum non-obstruens (http-vocatio
  * II.1): localhost sine rete, IP litteralis sine quaestione, finis
- * numquam intra incipere, abrumpere tacet, nihil in reactore post
- * finem. Portus in addressu ipso (R3): octeti II-III big-endian in
- * sockaddr_in et sockaddr_in6 (BSD: sa_len, sa_family, portus). */
+ * numquam intra incipere, abrumpere tacet (POSIX: filius quoque
+ * occiditur et metitur), nihil in reactore post finem. Portus in
+ * addressu ipso (R3): octeti II-III big-endian in sockaddr_in et
+ * sockaddr_in6 (BSD: sa_len, sa_family, portus; Linux: sa_family II
+ * octeti, portus). */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -13,6 +15,8 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/time.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #define PORTUS_PROBATIONIS (VIII * M + LXXX)   /* 8080 */
 
@@ -104,6 +108,8 @@ _sectio_hospes_localis (
     CREDO_AEQUALIS_I32(x.portus_primi, PORTUS_PROBATIONIS);
     CREDO_AEQUALIS_I32(reactor_numerus_fd(r), ZEPHYRUM);
     CREDO_AEQUALIS_I32(reactor_numerus_timer(r), ZEPHYRUM);
+    /* POSIX: filius post responsum messus (nullus zombie) */
+    CREDO_VERUM(waitpid((pid_t)-I, NIHIL, WNOHANG) == (pid_t)-I);
 }
 
 /* IP litteralis: sine DNS, finis post transitum primum, non ante */
@@ -162,6 +168,41 @@ _sectio_abruptum (
         (vacuum)reactor_poll(r, L);
     }
     CREDO_AEQUALIS_I32(x.vocatus, ZEPHYRUM);
+}
+
+/* abrumpere dum quaestio currit (POSIX: processus filius getaddrinfo
+ * vocat): nihil in reactore, nullus filius superstes (nec zombie); in
+ * macOS nullus filius umquam - eadem sententia valet */
+interior vacuum
+_sectio_abruptum_filius (
+    CredoContextus* c)
+{
+            Reactor* r = reactor_creare(c->piscina);
+     NominaQuaestio* q;
+             chorda  error;
+             Exitus  x;
+                i32  k;
+
+    memset(&x, ZEPHYRUM, magnitudo(x));
+    error.datum    = NIHIL;
+    error.mensura  = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        q = nomina_quaerere_incipere(r, chorda_ex_literis("localhost",
+            c->piscina), PORTUS_PROBATIONIS, _finis, &x, c->piscina,
+            &error);
+        CREDO_NECESSE_NON_NIHIL(q);
+        /* sine reactor_poll: poll unus fistulam legere ET timer 0 ms
+         * incendere potest (filius ex /etc/hosts celer) - tunc finis
+         * iure ante abrumpere venit */
+        nomina_quaerere_abrumpere(q);
+    }
+    CREDO_AEQUALIS_I32(reactor_numerus_fd(r), ZEPHYRUM);
+    CREDO_AEQUALIS_I32(reactor_numerus_timer(r), ZEPHYRUM);
+    CREDO_AEQUALIS_I32(x.vocatus, ZEPHYRUM);
+    /* WNOHANG: -1 solum si nullus filius exstat (0 = vivus, pid =
+     * zombie) */
+    CREDO_VERUM(waitpid((pid_t)-I, NIHIL, WNOHANG) == (pid_t)-I);
 }
 
 /* hospes vacuus: NIHIL + error nominatus, nihil in reactore */
@@ -234,6 +275,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "localhost", _sectio_hospes_localis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "litteralis", _sectio_litteralis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "abruptum", _sectio_abruptum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "abruptum_filius", _sectio_abruptum_filius, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "vacuus", _sectio_vacuus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "alternare", _sectio_alternare, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

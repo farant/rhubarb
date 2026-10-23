@@ -193,11 +193,13 @@ _transire (
     _codificare(t, e, I);
 }
 
-s32
-principale (vacuum)
+/* Sectio UNA: probatio scaenica - blocci statum priorum ex
+ * proposito continuant; gradus (CREDO_GRADUS) fracturam nominant. */
+interior vacuum
+_sessionem_probare (
+    CredoContextus* c)
 {
-                    b32  praeteritus;
-                Piscina* piscina;
+                Piscina* piscina = c->piscina;
     InternamentumChorda* intern;
        ScribaApplicatio  f;
        ScribaApplicatio  t;
@@ -214,19 +216,10 @@ principale (vacuum)
                     i32  mi;
                     i32  me;
 
-    piscina =
-        piscina_generare_dynamicum("probatio_ludus_tessera_scriba",
-        IV * M * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
     intern = internamentum_creare(piscina);
     thema_initiare();
 
-    imprimere("\n--- I. sessio fenestrae: scriptio notata ---\n");
+    CREDO_GRADUS ("I. sessio fenestrae: scriptio notata");
     vol_f = volumen_temporarium(piscina, "lt_scriba_f");
     CREDO_VERUM (scriba_applicatio_aedificare(&f, piscina, intern,
         vol_f, COLUMNAE * VI, LINEAE * VIII));
@@ -257,7 +250,7 @@ principale (vacuum)
     CREDO_VERUM (memcmp(scriba_documentum_tabula(f.doc)->cellulae,
         "salve munde", XI) == ZEPHYRUM);
 
-    imprimere("\n--- II. eadem per terminalem (glutinum) ---\n");
+    CREDO_GRADUS ("II. eadem per terminalem (glutinum)");
     vol_t = volumen_temporarium(piscina, "lt_scriba_t");
     CREDO_VERUM (scriba_applicatio_aedificare(&t, piscina, intern,
         vol_t, COLUMNAE * VI, LINEAE * VIII));
@@ -287,7 +280,7 @@ principale (vacuum)
     CREDO_VERUM (chorda_aequalis(_status(&t, piscina),
         _status(&f, piscina)));
 
-    imprimere("\n--- III. quadrum in cellulas ---\n");
+    CREDO_GRADUS ("III. quadrum in cellulas");
     ludus_tessera_quadrum(lt, M * X);
     CREDO_VERUM (tessera_praesentare(opus));
     CREDO_VERUM (_continet(tessera_pons_memoriae_captum(pm),
@@ -307,10 +300,18 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, ZEPHYRUM,
         LINEAE - I).signum, (i32)'N');
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
     volumen_claudere(vol_f);
     volumen_claudere(vol_t);
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "scriba per glutinum: sessio", _sessionem_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("ludus_tessera_scriba", SECTIONES);
 }

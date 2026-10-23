@@ -82,6 +82,7 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(S_IFMT  == 0170000);"
     echo "IUNGO_ASSERTA(S_IFDIR == 0040000);"
     echo "IUNGO_ASSERTA(S_IFREG == 0100000);"
+    echo "IUNGO_ASSERTA(S_IFLNK == 0120000);"
     echo "IUNGO_ASSERTA(S_IRUSR == 0400);"
     echo "IUNGO_ASSERTA(S_IWUSR == 0200);"
     echo "IUNGO_ASSERTA(S_ISDIR(0040755) && !S_ISDIR(0100644));"
@@ -117,6 +118,7 @@ emittere_asserta() {
         echo "IUNGO_ASSERTA(sizeof(((struct dirent*)0)->$campus) == $mensura);"
     done <<< "$TABULA_DIRENT"
     echo "IUNGO_ASSERTA(DT_DIR == 4);"
+    echo "IUNGO_ASSERTA(DT_UNKNOWN == 0 && DT_LNK == 10);"
     echo "IUNGO_ASSERTA(PROT_READ == 0x01 && PROT_WRITE == 0x02);"
     # dlfcn (runae U3, 2026-09-28)
     echo "IUNGO_ASSERTA(RTLD_LAZY == 0x1 && RTLD_NOW == 0x2);"
@@ -171,6 +173,8 @@ emittere_asserta() {
         echo "IUNGO_ASSERTA(sizeof(((struct addrinfo*)0)->$campus) == $mensura);"
     done <<< "$TABULA_ADDRINFO"
     echo "IUNGO_ASSERTA(AF_UNSPEC == 0 && AF_INET == 2 && SOCK_STREAM == 1);"
+    echo "IUNGO_ASSERTA(AI_NUMERICHOST == 0x4 && AI_NUMERICSERV == 0x1000);"
+    echo "IUNGO_ASSERTA(EAI_NONAME == 8);"
     echo "IUNGO_ASSERTA(SO_RCVTIMEO == 0x1006 && SO_SNDTIMEO == 0x1005);"
     echo "IUNGO_ASSERTA(INADDR_ANY == 0u);"
     echo "IUNGO_ASSERTA(sizeof(struct pollfd) == 8);"
@@ -198,6 +202,14 @@ emittere_asserta() {
     # filum_arborem_delere (2026-09-14): lstat ENOENT = nihil delendum
     echo "IUNGO_ASSERTA(ENOENT == 2);"
     echo "IUNGO_ASSERTA(EINPROGRESS == 36);"
+    # canalis T1 (2026-10-21): AF_UNIX, sockaddr_un, S_ISSOCK, ECONNABORTED
+    echo "IUNGO_ASSERTA(AF_UNIX == 1 && ECONNABORTED == 53);"
+    echo "IUNGO_ASSERTA(SHUT_RD == 0 && SHUT_WR == 1 && SHUT_RDWR == 2);"
+    echo "IUNGO_ASSERTA(MSG_NOSIGNAL == 0x80000);"
+    echo "IUNGO_ASSERTA(S_IFSOCK == 0140000 && S_ISSOCK(0140600) && !S_ISSOCK(0100644));"
+    echo "IUNGO_ASSERTA(sizeof(struct sockaddr_un) == 106);"
+    echo "IUNGO_ASSERTA(OFF(sockaddr_un, sun_family) == 1 && OFF(sockaddr_un, sun_path) == 2);"
+    echo "IUNGO_ASSERTA(sizeof(((struct sockaddr_un*)0)->sun_path) == 104);"
     echo "IUNGO_ASSERTA(EINTR == 4 && EAGAIN == 35 && EISCONN == 56);"
     # analytica T2 (2026-10-13): horologium monotonum + usus prolis
     echo "IUNGO_ASSERTA(CLOCK_REALTIME == 0 && CLOCK_MONOTONIC == 6);"
@@ -217,6 +229,10 @@ emittere_asserta() {
     # postulata_atomica.h); in TU nostro redefinitio nostra praedefinitum
     # clang AEQUALE esse debet (aliter -Werror 'macro redefined')
     echo "IUNGO_ASSERTA(__ATOMIC_ACQUIRE == 2 && __ATOMIC_RELEASE == 3);"
+    # sigillum (2026-10-22): sectio postulata_neon.h __ARM_FEATURE_SHA2
+    # definit ut silva ramum vectorum examinet - praedefinitum clang
+    # AEQUALE esse debet
+    echo "IUNGO_ASSERTA(__ARM_FEATURE_SHA2 == 1);"
 }
 
 PRAEAMBULUM='#define IUNGO2(a,b) a##b
@@ -231,6 +247,7 @@ PRAEAMBULUM='#define IUNGO2(a,b) a##b
     echo "#include <sys/stat.h>"
     echo "#include <sys/time.h>"
     echo "#include <sys/socket.h>"
+    echo "#include <sys/un.h>"
     echo "#include <sys/wait.h>"
     echo "#include <netinet/in.h>"
     echo "#include <netinet/tcp.h>"

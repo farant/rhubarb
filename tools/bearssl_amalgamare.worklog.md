@@ -56,3 +56,19 @@ generator now refuses unless src's subdirectories are exactly the
 declared twelve (SUBDIRECTORIA) and src is one level deep - output
 byte-identical. A general fix is an `arbor` input kind (whole tree by
 suffix; FABRICA_LOCUS_ARBOR exists) - parked.
+
+## 2026-10-23 — per-source name cache (62 s → 0.15 s)
+
+The full memorabilis audit (`GENERATA_AUDITUS=1`) spent 62 of its ~144 s here. It runs `clang -fsyntax-only -Xclang -ast-dump=json` on all ~290 sources (already in a thread pool) and parses the whole JSON AST just to collect each file's own top-level names.
+
+`nomina_interiora` now goes through `build/bearssl_amalgama_promptuarium/<sha256>.json`. The key covers:
+- the source's bytes;
+- every `.h` under vendor/bearssl (header macros can create definitions);
+- the clang arguments with RELATIVE paths, so worktrees share entries;
+- `clang --version`.
+
+Writes are atomic (temp + `os.replace`, since thread-pool callers race). The cache lives in the real tree, not under FABRICA_SCRIPTURA, so scratch regenerations reuse it. It is declared as the action's vestigium.
+
+**Measured:** cold 56 s, warm 0.15 s, both byte-identical to the committed amalgam.
+
+**Plant:** `static int planta_promptuarii;` appended to src/codec/ccopy.c → only that file recomputed (0.38 s) and the name appears in the amalgam. Restored → byte-identical.

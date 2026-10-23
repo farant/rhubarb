@@ -16,7 +16,11 @@
 # Exitus: 0 = omnia legibilia, I = aliquod fractum.
 #
 # NOTA: macOS solum (osascript + CoreImage + sips). Curritur a
-# compile_tests.sh sicut probatio_velaminis.js.
+# compile_tests.sh sicut probatio_velaminis.js (cursus plenus, frigida)
+# et ut porta SUA 'qr-gyrus' (2026-10-23): olim in residuis portae
+# radicis omni commissione (~IV.VIII s), nunc solum cum qr aut clausura
+# eius mutatur.
+# <porta titulus="qr-gyrus" tegit="probationes/probatio_qr_gyrus.sh probationes/qr_assets/*" currit="probationes/qr_assets/qr_gyrus.c lib/qr.c lib/piscina.c lib/chorda.c lib/chorda_aedificator.c"/>
 
 set -u
 cd "$(dirname "${BASH_SOURCE[0]}")/.." || exit 1

@@ -112,47 +112,37 @@ _linea_bash (
     redde ZEPHYRUM;
 }
 
-s32
-principale (vacuum)
+interior constans character*
+_radix_viae (vacuum)
 {
-                   b32  praeteritus;
-               Piscina* piscina;
     constans character* radix = getenv("RHUBARB_RADIX");
+
+    redde radix != NIHIL ? radix : ".";
+}
+
+
+/* ==================================================
+ * PROBARE: sanitas contra 'bash -n'
+ * ================================================== */
+
+interior vacuum
+_sanitatem_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina  = c->piscina;
+    constans character* radix    = _radix_viae();
     constans character* causa;
                    Xar* collectio;
                    Xar* aurum;
              character* fons;
-             character* lista;
-                   i32  mensura    = ZEPHYRUM;
-                   i32  concordes  = ZEPHYRUM;
-                   i32  discordes  = ZEPHYRUM;
-                   i32  sine_auro  = ZEPHYRUM;
-                   i32  plagulae   = ZEPHYRUM;
-                   i32  mala       = ZEPHYRUM;
+                   i32  mensura            = ZEPHYRUM;
+                   i32  concordes          = ZEPHYRUM;
+                   i32  discordes          = ZEPHYRUM;
+                   i32  sine_auro          = ZEPHYRUM;
                    i32  k;
-                   i32  gravitas_concordes  = ZEPHYRUM;
-                   i32  lineae_comparatae   = ZEPHYRUM;
-                   i32  lineae_concordes    = ZEPHYRUM;
-
-    piscina = piscina_generare_dynamicum("probatio_crusta_differentia",
-        4194304);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    si (radix == NIHIL)
-    {
-        radix = ".";
-    }
-
-
-    /* ==================================================
-     * PROBARE: sanitas contra 'bash -n'
-     * ================================================== */
-
-    imprimere("\n--- Probans sanitatem contra aurum bash -n ---\n");
+                   i32  gravitas_concordes = ZEPHYRUM;
+                   i32  lineae_comparatae  = ZEPHYRUM;
+                   i32  lineae_concordes   = ZEPHYRUM;
 
     collectio = crusta_oraculum_casus(piscina, radix, &causa);
     fons = crusta_oraculum_legere(piscina, radix,
@@ -162,18 +152,17 @@ principale (vacuum)
         CREDO_CULPA (collectio == NIHIL ? "casus oraculi non lecti"
             : "aurum sanitas.txt absens - ./crusta/oraculum.sh "
               "-scribere");
-        credo_imprimere_compendium();
-        redde I;
+        redde;
     }
     aurum = crusta_exempla_legere(piscina, fons, mensura);
     CREDO_NON_NIHIL (aurum);
     si (aurum == NIHIL)
     {
-        redde I;
+        redde;
     }
     per (k = ZEPHYRUM; k < xar_numerus(collectio); k++)
     {
-        constans CrustaCasusOraculi* c =
+        constans CrustaCasusOraculi* probandum =
             (constans CrustaCasusOraculi*)xar_obtinere(collectio, k);
                               chorda status;
                               chorda erratum;
@@ -182,15 +171,18 @@ principale (vacuum)
                                  b32  accepta;
                                  b32  sana;
 
-        status = crusta_oraculum_aurum(aurum, c->clavis, "status");
+        status = crusta_oraculum_aurum(aurum, probandum->clavis,
+            "status");
         si (status.datum == NIHIL)
         {
             sine_auro++;
             perge;
         }
-        erratum = crusta_oraculum_aurum(aurum, c->clavis, "ERRATUM");
+        erratum = crusta_oraculum_aurum(aurum, probandum->clavis,
+            "ERRATUM");
         arbor   = crusta_arbor_parsare(piscina,
-            (constans character*)c->datum.datum, c->datum.mensura,
+            (constans character*)probandum->datum.datum,
+            probandum->datum.mensura,
             &CRUSTA_BASH, &relatio);
         accepta  = _status(status) == ZEPHYRUM ? VERUM : FALSUM;
         sana     = (arbor != NIHIL && relatio.sana) ? VERUM : FALSUM;
@@ -203,8 +195,8 @@ principale (vacuum)
             discordes++;
             imprimere("    discors %.*s: bash status %.*s ('%.*s'), "
                 "crusta sana %d (mala %d, clausurae absentes %d)\n",
-                (integer)c->clavis.mensura,
-                (constans character*)c->clavis.datum,
+                (integer)probandum->clavis.mensura,
+                (constans character*)probandum->clavis.datum,
                 (integer)status.mensura,
                 (constans character*)status.datum,
                 (integer)erratum.mensura,
@@ -241,8 +233,8 @@ principale (vacuum)
             {
                 imprimere("    gravitas discors %.*s: bash status "
                     "%.*s, erratum primum %s\n",
-                    (integer)c->clavis.mensura,
-                    (constans character*)c->clavis.datum,
+                    (integer)probandum->clavis.mensura,
+                    (constans character*)probandum->clavis.datum,
                     (integer)status.mensura,
                     (constans character*)status.datum,
                     primum != NIHIL ? primum->codex : "-");
@@ -258,8 +250,9 @@ principale (vacuum)
                 alioquin
                 {
                     imprimere("    linea discors %.*s: bash %d, "
-                        "crusta %d (%s)\n", (integer)c->clavis.mensura,
-                        (constans character*)c->clavis.datum,
+                        "crusta %d (%s)\n",
+                        (integer)probandum->clavis.mensura,
+                        (constans character*)probandum->clavis.datum,
                         (integer)_linea_bash(erratum),
                         (integer)primum->tractus.linea, primum->codex);
                 }
@@ -299,13 +292,23 @@ principale (vacuum)
     CREDO_VERUM (concordes >= (i32)PINNA_CONCORDIUM);
     CREDO_VERUM (gravitas_concordes >= (i32)PINNA_GRAVITATIS);
     CREDO_VERUM (lineae_concordes >= (i32)PINNA_LINEARUM);
+}
 
 
-    /* ==================================================
-     * PROBARE: mala corporis domus
-     * ================================================== */
+/* ==================================================
+ * PROBARE: mala corporis domus
+ * ================================================== */
 
-    imprimere("\n--- Probans mala corporis domus ---\n");
+interior vacuum
+_mala_domus_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina  = c->piscina;
+    constans character* radix    = _radix_viae();
+             character* lista;
+                   i32  mensura   = ZEPHYRUM;
+                   i32  plagulae  = ZEPHYRUM;
+                   i32  mala      = ZEPHYRUM;
 
     lista = crusta_oraculum_legere(piscina, radix,
         "build/crusta_corpus.lst", &mensura);
@@ -381,10 +384,18 @@ principale (vacuum)
         (integer)plagulae, (integer)mala, (integer)MALA_DOMUS_PINNA);
     CREDO_VERUM (plagulae >= (i32)DOMUS_MINIMUM);
     CREDO_VERUM (mala <= (i32)MALA_DOMUS_PINNA);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "sanitatem contra aurum bash -n",
+        _sanitatem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mala corporis domus", _mala_domus_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("crusta_differentia", SECTIONES);
 }

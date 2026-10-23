@@ -167,7 +167,7 @@ _ludicrum_agere (
 
 interior constans FabricaGradus _gradus_ludicrum = {
     "ludicrum", _ludicrum_membra, _ludicrum_ingressus, _ludicrum_agere,
-    VERUM, FABRICA_SUMPTUS_VILIS
+    VERUM, FABRICA_SUMPTUS_VILIS, NIHIL
 };
 
 /* membra duplicia (recusatio 'membrum duplex') */
@@ -201,7 +201,7 @@ _duplex_membra (
 
 interior constans FabricaGradus _gradus_duplex = {
     "duplex", _duplex_membra, NIHIL, _ludicrum_agere, VERUM,
-    FABRICA_SUMPTUS_VILIS
+    FABRICA_SUMPTUS_VILIS, NIHIL
 };
 
 /* area ficta: plagulae sub area deletae (VACUA), numeratur */
@@ -331,6 +331,12 @@ hic_manens                 i32 _c_nexus_compagis  = ZEPHYRUM;
 
 hic_manens                 i32 _c_cursus          = ZEPHYRUM;
 
+/* vexilla addita compilationis ULTIMAE et an nexus '-fsanitize=ficta'
+ * tulerit (variantes, 2026-10-22) */
+hic_manens            character _c_vexilla_ultima[CCLVI];
+
+hic_manens                 i32 _c_nexus_variantis = ZEPHYRUM;
+
 hic_manens            character _c_cursus_ultimus[CCLVI];
 
 hic_manens constans character* _c_fractus_cursus      = NIHIL;
@@ -406,12 +412,24 @@ _compilare_fictum (
                 vacuum* datum,
     constans character* fons,
     constans character* obiectum,
+          constans Xar* vexilla_addita,
                Piscina* piscina,
                 chorda* erratum_out)
 {
     character contentum[CCLVI];
+          i32 i;
 
     _c_compilationes++;
+    _c_vexilla_ultima[0] = '\0';
+    per (i = ZEPHYRUM; vexilla_addita != NIHIL
+         && i < xar_numerus(vexilla_addita); i++)
+    {
+        chorda v = *(constans chorda*)xar_obtinere(vexilla_addita, i);
+
+        sprintf(_c_vexilla_ultima + strlen(_c_vexilla_ultima), "%s%.*s",
+            i > ZEPHYRUM ? " " : "", (integer)v.mensura,
+            (constans character*)v.datum);
+    }
     si (   _c_fractus_compilatio               != NIHIL
         && strcmp(fons, _c_fractus_compilatio) == ZEPHYRUM)
     {
@@ -464,6 +482,10 @@ _in_area_currere_c (
             si (chorda_aequalis_literis(verbum, "-framework"))
             {
                 compages = VERUM;
+            }
+            si (chorda_aequalis_literis(verbum, "-fsanitize=ficta"))
+            {
+                _c_nexus_variantis++;
             }
         }
         per (i = ZEPHYRUM; i < xar_numerus(argv); i++)
@@ -2447,6 +2469,145 @@ constans character* nomina_u[] = { "x.c" };
  * fixum conformitatis habet (T6: probationes_c)
  * ================================================== */
 
+/* mandatum membri continet 'quod'? */
+interior b32
+_mandatum_continet (
+    constans FabricaActio* actio,
+       constans character* quod)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; actio != NIHIL && actio->mandatum != NIHIL
+         && k < xar_numerus(actio->mandatum); k++)
+    {
+        chorda m = *(constans chorda*)xar_obtinere(actio->mandatum, k);
+
+        si (chorda_aequalis_literis(m, quod))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* VARIANTES (2026-10-22, porta venenum): membra nominata, vexilla
+ * compilationis et nexus addita, vexilla in clave membri SOLIUS
+ * variantis */
+interior vacuum
+_probare_variantes (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+                 DiscusFictus* discus =
+                     &((MundusSectionis*)c->datum)->discus;
+                FabricaSutura* sutura =
+                    &((MundusSectionis*)c->datum)->sutura;
+          InternamentumChorda* intern =
+              ((MundusSectionis*)c->datum)->intern;
+                          Xar* actiones;
+                          Xar* explicata;
+                          Xar* ordo;
+                          Xar* electa;
+                       chorda  causa;
+                 FabricaActio* va;
+                 FabricaActio* na;
+           constans character* nomina_t[] = { "probatio_a.c",
+              "probatio_b.c", "probatio_c.c" };
+          constans character* DECLARATIO =
+              "<aedificatio>\n"
+              "  <actio titulus=\"probationes_v\" genus=\"iudicium\">\n"
+              "    <probationes_c exemplar=\"t/probatio_*.c\""
+              " membra=\"probatio_a probatio_b\" vexilla=\"-O1 -DV=1\""
+              " vexilla_nexus=\"-fsanitize=ficta\"/>\n"
+              "  </actio>\n"
+              "  <actio titulus=\"probationes_n\" genus=\"iudicium\">\n"
+              "    <probationes_c exemplar=\"t/probatio_*.c\""
+              " membra=\"probatio_a\"/>\n"
+              "  </actio>\n"
+              "</aedificatio>\n";
+
+        causa = chorda_ex_literis("", piscina);
+        mundi_ponere(discus, "t/probatio_a.c", "a I\n");
+        mundi_ponere(discus, "t/probatio_b.c", "b I\n");
+        mundi_ponere(discus, "t/probatio_c.c", "c I\n");
+        mundi_ponere(discus, "lib/x.c", "x I\n");
+        mundi_ponere(discus, "lib/y.c", "y I\n");
+        mundi_ponere(discus, "include/x.h", "xh I\n");
+        mundi_ponere(discus, "include/y.h", "yh I\n");
+        mundi_ponere(discus, "aedilis.stml", "<aedilis/>\n");
+        mundi_ponere(discus, "data/communis.txt", "communis I\n");
+        mundi_directorium_ponere(discus, "t/", nomina_t, III);
+
+        /* I. membra NOMINATA solum: v/a, v/b, n/a (c nusquam) */
+        actiones = fabrica_declarationes_legere(chorda_ex_literis(
+            DECLARATIO, piscina), "t.stml", piscina, intern, &causa);
+        CREDO_NECESSE_NON_NIHIL(actiones);
+        explicata = fabrica_gradus_explicare(sutura, actiones, piscina,
+            &causa);
+        CREDO_NECESSE_NON_NIHIL(explicata);
+        va = _actio_explicata(explicata, "probationes_v/probatio_a");
+        na = _actio_explicata(explicata, "probationes_n/probatio_a");
+        CREDO_NON_NIHIL(va);
+        CREDO_NON_NIHIL(_actio_explicata(explicata,
+            "probationes_v/probatio_b"));
+        CREDO_NON_NIHIL(na);
+        CREDO_NIHIL(_actio_explicata(explicata,
+            "probationes_v/probatio_c"));
+        CREDO_NIHIL(_actio_explicata(explicata,
+            "probationes_n/probatio_b"));
+
+        /* II. clavis: vexilla variantis in mandato membri v, nulla in n
+         * (compositum sine eis claves non mutat) */
+        CREDO_VERUM(_mandatum_continet(va,
+            "attributum:vexilla=-O1 -DV=1"));
+        CREDO_VERUM(_mandatum_continet(va,
+            "attributum:vexilla_nexus=-fsanitize=ficta"));
+        CREDO_FALSUM(_mandatum_continet(na,
+            "attributum:vexilla=-O1 -DV=1"));
+        CREDO_FALSUM(_mandatum_continet(va, "attributum:membra="
+            "probatio_a probatio_b"));
+
+        /* III. sanare: v/a compilatur CUM vexillis et nectitur cum
+         * vexillo nexus; n/a sine utroque */
+        ordo = fabrica_ordinare(explicata, piscina, &causa);
+        CREDO_NECESSE_NON_NIHIL(ordo);
+        electa = xar_creare(piscina, (i32)magnitudo(chorda));
+        *(chorda*)xar_addere(electa) = chorda_ex_literis(
+            "build/fabrica/area/probationes_v/probatio_a/verdictum.txt",
+            piscina);
+        (vacuum)fabrica_sanare(sutura, ordo, electa, FALSUM, piscina,
+            &causa);
+        CREDO_VERUM(strcmp(_c_vexilla_ultima, "-O1 -DV=1") == ZEPHYRUM);
+        CREDO_AEQUALIS_I32(_c_nexus_variantis, I);
+        electa = xar_creare(piscina, (i32)magnitudo(chorda));
+        *(chorda*)xar_addere(electa) = chorda_ex_literis(
+            "build/fabrica/area/probationes_n/probatio_a/verdictum.txt",
+            piscina);
+        (vacuum)fabrica_sanare(sutura, ordo, electa, FALSUM, piscina,
+            &causa);
+        CREDO_VERUM(_c_vexilla_ultima[0] == '\0');
+        CREDO_AEQUALIS_I32(_c_nexus_variantis, I);
+
+        /* IV. membrum nominatum absens: recusatio nominata */
+        causa = chorda_ex_literis("", piscina);
+        actiones = fabrica_declarationes_legere(chorda_ex_literis(
+            "<aedificatio>\n"
+            "  <actio titulus=\"probationes_q\" genus=\"iudicium\">\n"
+            "    <probationes_c exemplar=\"t/probatio_*.c\""
+            " membra=\"probatio_a probatio_q\"/>\n"
+            "  </actio>\n</aedificatio>\n", piscina), "t.stml", piscina,
+            intern, &causa);
+        CREDO_NECESSE_NON_NIHIL(actiones);
+        CREDO_NIHIL(fabrica_gradus_explicare(sutura, actiones, piscina,
+            &causa));
+        CREDO_VERUM(mundi_continet(causa,
+            "membrum nominatum absens: probatio_q", piscina));
+    }
+}
+
 interior vacuum
 _probare_registrum_graduum (
     CredoContextus* c)
@@ -2573,6 +2734,8 @@ _mundum_purgare (
     _c_nexus_compagis        = ZEPHYRUM;
     _c_cursus                = ZEPHYRUM;
     _c_cursus_ultimus[0]     = '\0';
+    _c_vexilla_ultima[0]     = '\0';
+    _c_nexus_variantis       = ZEPHYRUM;
     _s_verdicta_a[0]         = '\0';
 }
 
@@ -2598,6 +2761,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "gradus solus (cursores ad gradus T3b)",
       _probare_gradum_solum,
       _mundum_ludicrum_parare, _mundum_purgare, NIHIL, NIHIL },
+    { "variantes (membra, vexilla, clavis)",
+      _probare_variantes,
+      _mundum_c_parare, _mundum_purgare, NIHIL, NIHIL },
     { "chassis: registrum graduum",
       _probare_registrum_graduum,
       NIHIL, NIHIL, NIHIL, NIHIL },

@@ -176,16 +176,16 @@ _stalitatem_fingere (
 
 interior vacuum
 probatio_renovare_recens (
-    Piscina* p)
+    CredoContextus* c)
 {
-                   FILE* intra = tmpfile();
-                   FILE* extra = tmpfile();
+                Piscina* p      = c->piscina;
+                   FILE* intra  = tmpfile();
+                   FILE* extra  = tmpfile();
     LegatusConfiguratio  cfg;
                     b32  bene = FALSUM;
      TabellariusNuntius  n;
                  chorda  cruda;
 
-    imprimere("--- Probans renovare recentem (nihil agendum) ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
 
     _scribe_lineam(intra, p,
@@ -230,7 +230,7 @@ probatio_renovare_recens (
 
 interior vacuum
 probatio_renovare_explorator_fractus (
-    Piscina* p)
+    CredoContextus* c)
 {
     constans character* via_binarii =
         "officina/build/probatio_renovatio_binarium";
@@ -238,14 +238,14 @@ probatio_renovare_explorator_fractus (
         "officina/build/probatio_renovatio_manifestum";
     constans character* via_stipulae =
         "officina/build/probatio_renovatio_fractum.sh";
-                   FILE* intra = tmpfile();
-                   FILE* extra = tmpfile();
+                Piscina* p      = c->piscina;
+                   FILE* intra  = tmpfile();
+                   FILE* extra  = tmpfile();
     LegatusConfiguratio  cfg;
                     b32  bene = FALSUM;
      TabellariusNuntius  n;
                  chorda  textus;
 
-    imprimere("--- Probans exploratorem fractum (recusatio) ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
 
     _stalitatem_fingere(via_binarii, via_manifesti);
@@ -304,7 +304,7 @@ probatio_renovare_explorator_fractus (
 
 interior vacuum
 probatio_renovatio_integra (
-    Piscina* p)
+    CredoContextus* c)
 {
     constans character* via_binarii =
         "officina/build/probatio_renovatio_binarium2";
@@ -312,11 +312,10 @@ probatio_renovatio_integra (
         "officina/build/probatio_renovatio_manifestum2";
     constans character* via_stipulae =
         "officina/build/probatio_renovatio_renovator.sh";
-    integer p2i[II];   /* parens -> infans (stdin infantis) */
-    integer i2p[II];   /* infans -> parens (stdout infantis) */
-      pid_t pid;
-
-    imprimere("--- Probans renovationem integram (exec verus) ---\n");
+    Piscina* p = c->piscina;
+    integer  p2i[II];   /* parens -> infans (stdin infantis) */
+    integer  i2p[II];   /* infans -> parens (stdout infantis) */
+      pid_t  pid;
 
     (vacuum)signal(SIGPIPE, SIG_IGN);
     alarm(120);   /* custos: fistula pendens = mors honesta */
@@ -456,6 +455,23 @@ probatio_renovatio_integra (
 }
 
 
+/* gravis OMNIBUS: legatus_currere in processu indicem nexus totum
+ * onerat (~CD MiB apicis vitae, 2026-10-21). Apex vitae semel
+ * crescit - sumptum fert sectio quae PRIMA currit (ordo mixtus alteram
+ * eligit), ergo signum in omnibus, non in prima tabulae sola. Memoria
+ * hic probatur, non effluit. */
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "renovare recentem (nihil agendum)", probatio_renovare_recens,
+        NIHIL, NIHIL, "gravis", NIHIL },
+    { "exploratorem fractum (recusatio)",
+        probatio_renovare_explorator_fractus, NIHIL, NIHIL, "gravis",
+        NIHIL },
+    { "renovationem integram (exec verus)", probatio_renovatio_integra,
+        NIHIL, NIHIL, "gravis", NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+
 /* ==================================================
  * principale (+ modus -fingere-legatum pro III)
  * ================================================== */
@@ -465,7 +481,7 @@ principale (
       integer   argc,
     character** argv)
 {
-    Piscina* piscina;
+    s32 exitus;
 
     si (argc > I && strcmp(argv[I], "-fingere-legatum") == ZEPHYRUM)
     {
@@ -504,27 +520,7 @@ principale (
     imprimere("\n========================================\n");
     imprimere("PROBATIO OFFICINA RENOVATIO\n");
     imprimere("========================================\n\n");
-
-    piscina = piscina_generare_dynamicum("probatio_renovatio",
-        1048576);
-    si (piscina == NIHIL)
-    {
-        imprimere("piscina generari non potuit\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    probatio_renovare_recens(piscina);
-    probatio_renovare_explorator_fractus(piscina);
-    probatio_renovatio_integra(piscina);
-
-    credo_imprimere_compendium();
-
-    {
-        b32 omnia = credo_omnia_praeterierunt();
-
-        piscina_destruere(piscina);
-        imprimere("========================================\n\n");
-        redde omnia ? ZEPHYRUM : I;
-    }
+    exitus = credo_suitam_currere("officina_renovatio", SECTIONES);
+    imprimere("========================================\n\n");
+    redde (integer)exitus;
 }

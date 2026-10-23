@@ -277,9 +277,9 @@ canon_infixum_invenire (
  * Redde: Xar de CanonVitium (vacuum = sanum) */
 Xar*
 canon_iudicare (
-        Canon* canon,
-    StmlNodus* radix,
-      Piscina* piscina);
+    constans Canon* canon,
+         StmlNodus* radix,
+           Piscina* piscina);
 
 /* Documentum EXPANSUM iudicare: stml_expandere primum (arbor
  * instantiata = documentum contenti ordinarium - vocationes,
@@ -296,7 +296,7 @@ canon_iudicare (
  * faceret (mensuratum nativitate huius functionis). */
 Xar*
 canon_iudicare_expansum (
-                  Canon* canon,
+         constans Canon* canon,
               StmlNodus* radix,
                 Piscina* piscina,
     InternamentumChorda* intern);
@@ -312,7 +312,7 @@ canon_iudicare_expansum (
  * canon_iudicare_expansum). */
 Xar*
 canon_iudicare_distributum (
-                  Canon* canon,
+         constans Canon* canon,
               StmlNodus* radix,
                 Piscina* piscina,
     InternamentumChorda* intern);

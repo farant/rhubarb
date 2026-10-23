@@ -103,8 +103,12 @@ _tabulae (
  * 770/771, EWT 677/679 -> 753/754 (permille truncata); tecta immota.
  * T19d (2026-09-07): regulae adpositionum in UMBRAS obiecti versae
  * (lectio et implens praelatae): CIRCSE 728, LLCT 771/771, EWT immota
- * (permille ex numeris truncata, non ex centesimis). */
-#define EWT_DEV_PRIMARIA_PINNA   786
+ * (permille ex numeris truncata, non ex centesimis).
+ * 2026-10-22 (fusio main in quarta): glossarium 'shut' (anglica,
+ * ignotum-permissum, SHUT_WR POSIX - nomen non mutabile) EWT dev
+ * 786 -> 785; causa sola probata (sine 'shut' 786, 'shutdown' immotum),
+ * test 789 immotum. Decretum Frani 2026-10-06: repinna. */
+#define EWT_DEV_PRIMARIA_PINNA   785
 #define EWT_TEST_PRIMARIA_PINNA  789
 /* T19g (2026-09-08, decretum SUDOKU decisio XL): accuratio decisionum
  * COACTARUM (impletio + umbra: testimonium) permille, solum crescens -
@@ -1383,51 +1387,72 @@ _columnas_lis_probare (
     CREDO_VERUM (_aequalis(t, "x"));
 }
 
-s32
-principale (vacuum)
-{
-                  Piscina* piscina;
-       constans character* radix;
-        OratioVocabularia  vocabularia;
- OratioVocabulariumVitium  vitium;
-             ConlluVitium  vitium_conllu = { ZEPHYRUM, NIHIL };
-      InternamentumChorda* intern;
-          OratioProgramma* programma;
+/* FIXURA SUITAE: praeludium semel factum (parare_suitae;
+ * assertiones eius ibi); sectiones id per monstratorem
+ * constantem LEGUNT. */
+nomen structura {
+     constans character* radix;
+      OratioVocabularia  vocabularia;
+    InternamentumChorda* intern;
+        OratioProgramma* programma;
+} FixuraOraculi;
 
-    piscina = piscina_generare_dynamicum("probatio_oratio_oraculum",
-        536870912);
-    credo_aperire(piscina);
-    radix = getenv("RHUBARB_RADIX");
-    si (radix == NIHIL)
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+               FixuraOraculi* f;
+    OratioVocabulariumVitium  vitium;
+
+    f = (FixuraOraculi*)piscina_allocare(c->piscina,
+        magnitudo(FixuraOraculi));
+    si (f == NIHIL)
     {
-        radix = ".";
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    CREDO_VERUM (oratio_vocabularia_onerare(piscina, radix,
-        &vocabularia,
-        &vitium));
-    si (vocabularia.la == NIHIL || vocabularia.en == NIHIL)
+    f->radix = getenv("RHUBARB_RADIX");
+    si (f->radix == NIHIL)
     {
-        credo_imprimere_compendium();
-        redde I;
+        f->radix = ".";
+    }
+    CREDO_VERUM (oratio_vocabularia_onerare(c->piscina, f->radix,
+        &f->vocabularia,
+        &vitium));
+    si (f->vocabularia.la == NIHIL || f->vocabularia.en == NIHIL)
+    {
+        redde;
     }
     /* T17: programma resolutionis necessarium (pinnae primarii) */
-    intern = internamentum_creare(piscina);
-    CREDO_NON_NIHIL (intern);
-    programma = intern == NIHIL ? NIHIL
-        : oratio_resolutio_programma_onerare(piscina, intern, radix,
+    f->intern = internamentum_creare(c->piscina);
+    CREDO_NON_NIHIL (f->intern);
+    f->programma = f->intern == NIHIL ? NIHIL
+        : oratio_resolutio_programma_onerare(c->piscina, f->intern,
+        f->radix,
         &vitium);
-    CREDO_NON_NIHIL (programma);
-    si (programma == NIHIL)
+    CREDO_NON_NIHIL (f->programma);
+    si (f->programma == NIHIL)
     {
         imprimere("  programma: %s:%d %s\n",
             vitium.plagula ? vitium.plagula
             : "?", (integer)vitium.linea,
             vitium.causa ? vitium.causa : "-");
-        credo_imprimere_compendium();
-        redde I;
+        redde;
     }
+    c->datum = f;
+}
 
-    imprimere("\n--- I. Forma sententiae (lector: probatio_conllu) ---\n");
+interior vacuum
+_formam_sententiae_probare (
+    CredoContextus* c)
+{
+                   Piscina* piscina = c->piscina;
+    constans FixuraOraculi* fixura = (constans FixuraOraculi*)c->suita;
+              ConlluVitium  vitium_conllu = { ZEPHYRUM, NIHIL };
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
         Xar* s = conllu_legere(piscina, _l(
             "# sent_id = a-1\n"
@@ -1454,8 +1479,7 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (s ? xar_numerus(s) : ZEPHYRUM, (i32)II);
         si (s == NIHIL || xar_numerus(s) != (i32)II)
         {
-            credo_imprimere_compendium();
-            redde I;
+            redde;
         }
         a = (constans ConlluSententia*)xar_obtinere(s, ZEPHYRUM);
         b = (constans ConlluSententia*)xar_obtinere(s, I);
@@ -1494,8 +1518,20 @@ principale (vacuum)
                 (s32)ORATIO_FORMA_PROSA);
         }
     }
+}
 
-    imprimere("\n--- II. Oraculum inlineare ---\n");
+interior vacuum
+_oraculum_breve_probare (
+    CredoContextus* c)
+{
+                   Piscina* piscina = c->piscina;
+    constans FixuraOraculi* fixura = (constans FixuraOraculi*)c->suita;
+              ConlluVitium  vitium_conllu = { ZEPHYRUM, NIHIL };
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
         Xar* s = conllu_legere(piscina, _l(
             "# text = Puella rosam amat.\n"
@@ -1503,35 +1539,37 @@ principale (vacuum)
             "2\trosam\trosa\tNOUN\t_\t_\t3\tobj\t_\t_\n"
             "3\tamat\tamo\tVERB\t_\t_\t0\troot\t_\tSpaceAfter=No\n"
             "4\t.\t.\tPUNCT\t_\t_\t3\tpunct\t_\t_\n"), &vitium_conllu);
-        OratioOraculumCensus c;
+        OratioOraculumCensus census;
 
         CREDO_NON_NIHIL (s);
-        oratio_oraculum_census_vacare(&c);
-        CREDO_VERUM (oratio_oraculum_iudicare(piscina, &vocabularia, s,
-            &c));
-        _tabulam_imprimere(&c, "Puella rosam amat.");
-        CREDO_AEQUALIS_I32 (c.sententiae, I);
-        CREDO_AEQUALIS_I32 (c.sententiae_fractae, ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (c.verba, (i32)IV);
-        CREDO_AEQUALIS_I32 (c.tecta, (i32)IV);
-        CREDO_AEQUALIS_I32 (c.primaria, (i32)III);   /* rosam: verbum prius */
-        CREDO_AEQUALIS_I32 (c.lemmata, (i32)III);    /* '.' sine lemmate nostro */
-        CREDO_AEQUALIS_I32 (c.ignota, ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (c.inalignata, ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_SUBSTANTIVUM].verba,
+        oratio_oraculum_census_vacare(&census);
+        CREDO_VERUM (oratio_oraculum_iudicare(piscina,
+            &fixura->vocabularia, s,
+            &census));
+        _tabulam_imprimere(&census, "Puella rosam amat.");
+        CREDO_AEQUALIS_I32 (census.sententiae, I);
+        CREDO_AEQUALIS_I32 (census.sententiae_fractae, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (census.verba, (i32)IV);
+        CREDO_AEQUALIS_I32 (census.tecta, (i32)IV);
+        CREDO_AEQUALIS_I32 (census.primaria, (i32)III);   /* rosam: verbum prius */
+        CREDO_AEQUALIS_I32 (census.lemmata, (i32)III);    /* '.' sine lemmate nostro */
+        CREDO_AEQUALIS_I32 (census.ignota, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (census.inalignata, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (census.classes[ORATIO_CLASSIS_SUBSTANTIVUM].verba,
             (i32)II);
-        CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_SUBSTANTIVUM].tecta,
+        CREDO_AEQUALIS_I32 (census.classes[ORATIO_CLASSIS_SUBSTANTIVUM].tecta,
             (i32)II);
-        CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_SUBSTANTIVUM].primaria,
+        CREDO_AEQUALIS_I32 (census.classes[ORATIO_CLASSIS_SUBSTANTIVUM].primaria,
             I);
-        CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_VERBUM].tecta, I);
-        CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_VERBUM].lemmata,
+        CREDO_AEQUALIS_I32 (census.classes[ORATIO_CLASSIS_VERBUM].tecta,
             I);
-        CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_INTERPUNCTIO].tecta,
+        CREDO_AEQUALIS_I32 (census.classes[ORATIO_CLASSIS_VERBUM].lemmata,
             I);
-        CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_INTERPUNCTIO].lemmata,
+        CREDO_AEQUALIS_I32 (census.classes[ORATIO_CLASSIS_INTERPUNCTIO].tecta,
+            I);
+        CREDO_AEQUALIS_I32 (census.classes[ORATIO_CLASSIS_INTERPUNCTIO].lemmata,
             ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_SUBSTANTIVUM]
+        CREDO_AEQUALIS_I32 (census.classes[ORATIO_CLASSIS_SUBSTANTIVUM]
             .numerus_exemplorum, ZEPHYRUM);
 
         /* T38 c/d: DECRETUM iudicatum super 'Puella bellum videt' programmate
@@ -1542,7 +1580,7 @@ principale (vacuum)
          * vincit: bellum accusativum, decretum mutatum, ELECTA contra
          * aurum obj. CULPA PLANTATA: comparatio casuum inversa ->
          * lectio electa 'falsa' -> CEDENS/NEUTRA pro ELECTA. */
-        si (programma != NIHIL)
+        si (fixura->programma != NIHIL)
         {
             OratioOraculumCensus cd;
 
@@ -1558,7 +1596,8 @@ principale (vacuum)
             oratio_oraculum_census_vacare(&cd);
             setenv("ORATIO_DECRETOR", "1", I);   /* ordinarium OFF */
             CREDO_VERUM (oratio_oraculum_iudicare_resolutum(piscina,
-                &vocabularia, programma, (s32)-I, s, &cd));
+                &fixura->vocabularia, fixura->programma, (s32)-I, s,
+                &cd));
             unsetenv("ORATIO_DECRETOR");
             imprimere("    decreta %d: %s\n",
                 (integer)cd.decretor_cellae,
@@ -1605,37 +1644,39 @@ principale (vacuum)
             "6\tabstulit\taufero\tFOO\t_\t_\t3\tdep\t_\t_\n"),
             &vitium_conllu);
         CREDO_NON_NIHIL (s);
-        oratio_oraculum_census_vacare(&c);
-        CREDO_VERUM (oratio_oraculum_iudicare(piscina, &vocabularia, s,
-            &c));
-        _tabulam_imprimere(&c, "pronumque abstulit xyzzy");
-        CREDO_AEQUALIS_I32 (c.rangae, I);
-        CREDO_AEQUALIS_I32 (c.verba, (i32)VI);   /* pronum que abstulit xyzzy zzz abstulit */
-        CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_ADIECTIVUM].tecta,
+        oratio_oraculum_census_vacare(&census);
+        CREDO_VERUM (oratio_oraculum_iudicare(piscina,
+            &fixura->vocabularia, s,
+            &census));
+        _tabulam_imprimere(&census, "pronumque abstulit xyzzy");
+        CREDO_AEQUALIS_I32 (census.rangae, I);
+        CREDO_AEQUALIS_I32 (census.verba, (i32)VI);   /* pronum que abstulit xyzzy zzz abstulit */
+        CREDO_AEQUALIS_I32 (census.classes[ORATIO_CLASSIS_ADIECTIVUM].tecta,
             I);
-                CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_ADIECTIVUM].primaria,
+                CREDO_AEQUALIS_I32 (census.classes[ORATIO_CLASSIS_ADIECTIVUM].primaria,
                     I);   /* T21: pronum scissum a que, contra elementum suum solum */
-        CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_CONIUNCTIO_COORDINANS]
+        CREDO_AEQUALIS_I32 (census.classes[ORATIO_CLASSIS_CONIUNCTIO_COORDINANS]
             .tecta, I);
-        CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_VERBUM].tecta, I);
-        CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_VERBUM].primaria,
+        CREDO_AEQUALIS_I32 (census.classes[ORATIO_CLASSIS_VERBUM].tecta,
             I);
-        CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_VERBUM].lemmata,
+        CREDO_AEQUALIS_I32 (census.classes[ORATIO_CLASSIS_VERBUM].primaria,
             I);
-        CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_SUBSTANTIVUM].tecta,
+        CREDO_AEQUALIS_I32 (census.classes[ORATIO_CLASSIS_VERBUM].lemmata,
+            I);
+        CREDO_AEQUALIS_I32 (census.classes[ORATIO_CLASSIS_SUBSTANTIVUM].tecta,
             ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_SUBSTANTIVUM].ignota,
+        CREDO_AEQUALIS_I32 (census.classes[ORATIO_CLASSIS_SUBSTANTIVUM].ignota,
             I);
-        CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_SUBSTANTIVUM]
+        CREDO_AEQUALIS_I32 (census.classes[ORATIO_CLASSIS_SUBSTANTIVUM]
             .numerus_exemplorum, I);
-        CREDO_VERUM (_aequalis(c.classes[ORATIO_CLASSIS_SUBSTANTIVUM]
+        CREDO_VERUM (_aequalis(census.classes[ORATIO_CLASSIS_SUBSTANTIVUM]
             .exempla[ZEPHYRUM].forma, "xyzzy"));
-        CREDO_VERUM (_aequalis(c.classes[ORATIO_CLASSIS_SUBSTANTIVUM]
+        CREDO_VERUM (_aequalis(census.classes[ORATIO_CLASSIS_SUBSTANTIVUM]
             .exempla[ZEPHYRUM].classes, "ignotum"));
-        CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_ADVERBIUM].inalignata,
+        CREDO_AEQUALIS_I32 (census.classes[ORATIO_CLASSIS_ADVERBIUM].inalignata,
             I);
-        CREDO_AEQUALIS_I32 (c.inalignata, (i32)II);   /* zzz, abstulit II (cursor post) */
-        CREDO_AEQUALIS_I32 (c.classes[ORATIO_CLASSIS_NUMERUS_CLASSIUM].verba,
+        CREDO_AEQUALIS_I32 (census.inalignata, (i32)II);   /* zzz, abstulit II (cursor post) */
+        CREDO_AEQUALIS_I32 (census.classes[ORATIO_CLASSIS_NUMERUS_CLASSIUM].verba,
             I);   /* FOO */
         CREDO_AEQUALIS_I32 ((i32)oratio_oraculum_classis_ex_upos(_l("PROPN")),
             (i32)ORATIO_CLASSIS_NOMEN_PROPRIUM);
@@ -1644,12 +1685,35 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)oratio_oraculum_classis_ex_upos(_l("_")),
             (i32)ORATIO_CLASSIS_NUMERUS_CLASSIUM);
     }
+}
 
-    imprimere("\n--- II b. Columnae LIS (T35 c) ---\n");
+interior vacuum
+_columnas_lis_sectio (
+    CredoContextus* c)
+{
+                   Piscina* piscina = c->piscina;
+    constans FixuraOraculi* fixura = (constans FixuraOraculi*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     _columnas_lis_probare(piscina);
+}
 
-    imprimere("\n--- III. Treebanks venditae (CC BY-SA) ---\n");
-    _thesaurus_arborum(piscina, &vocabularia, programma, radix,
+interior vacuum
+_thesauros_probare (
+    CredoContextus* c)
+{
+                   Piscina* piscina = c->piscina;
+    constans FixuraOraculi* fixura = (constans FixuraOraculi*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
+    _thesaurus_arborum(piscina, &fixura->vocabularia, fixura->programma,
+        fixura->radix,
         "la_circse-ud-test.conllu",
         (i32)893,
         (i32)CIRCSE_TECTA_PINNA,
@@ -1668,7 +1732,8 @@ principale (vacuum)
         (i32)CIRCSE_PARES_PINNA,
         (i32)CIRCSE_CONCORDIA_PINNA);
 
-    _thesaurus_arborum(piscina, &vocabularia, programma, radix,
+    _thesaurus_arborum(piscina, &fixura->vocabularia, fixura->programma,
+        fixura->radix,
         "la_llct-ud-dev.conllu",
         (i32)850,
         (i32)LLCT_DEV_TECTA_PINNA,
@@ -1687,7 +1752,8 @@ principale (vacuum)
         (i32)LLCT_DEV_PARES_PINNA,
         (i32)LLCT_DEV_CONCORDIA_PINNA);
 
-    _thesaurus_arborum(piscina, &vocabularia, programma, radix,
+    _thesaurus_arborum(piscina, &fixura->vocabularia, fixura->programma,
+        fixura->radix,
         "la_llct-ud-test.conllu",
         (i32)884,
         (i32)LLCT_TEST_TECTA_PINNA,
@@ -1706,7 +1772,8 @@ principale (vacuum)
         (i32)LLCT_TEST_PARES_PINNA,
         (i32)LLCT_TEST_CONCORDIA_PINNA);
 
-    _thesaurus_arborum(piscina, &vocabularia, programma, radix,
+    _thesaurus_arborum(piscina, &fixura->vocabularia, fixura->programma,
+        fixura->radix,
         "en_ewt-ud-dev.conllu",
         (i32)2001,
         (i32)EWT_DEV_TECTA_PINNA,
@@ -1725,7 +1792,8 @@ principale (vacuum)
         (i32)EWT_DEV_PARES_PINNA,
         (i32)EWT_DEV_CONCORDIA_PINNA);
 
-    _thesaurus_arborum(piscina, &vocabularia, programma, radix,
+    _thesaurus_arborum(piscina, &fixura->vocabularia, fixura->programma,
+        fixura->radix,
         "en_ewt-ud-test.conllu",
         (i32)2077,
         (i32)EWT_TEST_TECTA_PINNA,
@@ -1743,15 +1811,23 @@ principale (vacuum)
         (i32)EWT_TEST_PURITAS_PINNA,
         (i32)EWT_TEST_PARES_PINNA,
         (i32)EWT_TEST_CONCORDIA_PINNA);
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. Forma sententiae (lector: probatio_conllu)",
+        _formam_sententiae_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "II. Oraculum inlineare", _oraculum_breve_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "II b. Columnae LIS (T35 c)", _columnas_lis_sectio, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "III. Treebanks venditae (CC BY-SA)", _thesauros_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
-
-        credo_claudere();
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("oratio_oraculum", SECTIONES,
+        _suitam_parare, NIHIL);
 }

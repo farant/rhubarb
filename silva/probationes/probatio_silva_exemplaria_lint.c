@@ -672,6 +672,7 @@ principale (vacuum)
                character  via_relativa[1024];
                     DIR* corpus;
        structura dirent* introitus;
+           CorpusSilvae  corpus_silvae;
     ClausuraeCorporis* clausurae_corporis;
                 Clausura clausura;
               LintCensus census_planum;
@@ -781,6 +782,10 @@ principale (vacuum)
 
     /* gradus latinum */
     memset(&census_latinum, 0, magnitudo(census_latinum));
+    /* corpus verum per iudicem corpus_silvae (unitates.stml):
+     * tabulae datorum (signum DATA) extra, nominatae */
+    CREDO_VERUM (apparatus_corpus_parare(&corpus_silvae, radix,
+        piscina));
     sprintf(via_corporis, "%s/lib", radix);
     /* clausurae corporis uno cursu aedilis (apparatus.h) */
     clausurae_corporis = apparatus_clausuras_petere(radix, "lib",
@@ -795,7 +800,8 @@ principale (vacuum)
     }
     dum ((introitus = readdir(corpus)) != NIHIL)
     {
-        si (!apparatus_est_c(introitus->d_name))
+        si (!apparatus_in_corpore(&corpus_silvae, "lib",
+            introitus->d_name, piscina))
         {
             perge;
         }

@@ -24,6 +24,10 @@
 #   XI   FONS mutatus (octeti): miss, obiectum novum (fabrica-6 T4)
 #   X    caput ALIENUM in radice additum: hit (clavis nomina radicis
 #        non sigillat; verdicta caput novum non tangit)
+#   XII  --plures (2026-10-23): lineae quattuor processu uno - hit,
+#        fractum, hit, hit (quarta capita primae per MEMORIAM legit):
+#        exitus 1, fons fractus nominatus, obiecta octetim eadem ac
+#        vocationibus singulis, clang SEMEL (fractum solum)
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/compilator deest.
 # <porta titulus="compilator" instrumentum="bin/compilator" tegit="tools/compilator_struere.sh"/>
@@ -129,6 +133,26 @@ printf '#include "caput.h"\nint functio(void) { return VALOR + 1; }\n' > "$B/fix
 "$C" "${VF[@]}" -c "$B/fixa/fons.c" -o "$B/o/fons.o" 2> "$B/err"; rc=$?
 if [ "$rc" -eq 0 ] && [ "$(numerus)" -gt "$n_xi" ] && ! cmp -s "$B/o/fons.o" "$B/o/fons_originale.o"; then echo "  XI   fons mutatus: miss, obiectum novum OK"; else echo "  XI   FRACTUM (rc=$rc, clang $n_xi -> $(numerus))"; cat "$B/err"; fracta=1; fi
 
+# XII: --plures - memoria capitum per processum claves non mutat
+printf 'int malus(void) { return }\n' > "$B/fixa/malus.c"
+{
+    echo "${V[*]} -c lib/chorda.c -o $B/o/pl_chorda.o"
+    echo "${VF[*]} -c $B/fixa/malus.c -o $B/o/malus.o"
+    echo "${VF[*]} -c $B/fixa/fons.c -o $B/o/pl_fons.o"
+    echo "${V[*]} -c lib/chorda.c -o $B/o/pl_chorda2.o"
+} > "$B/lista"
+# lib/chorda.c sub clang_b (ab VI) nondum conditum: semel singulariter
+"$C" "${V[@]}" -c lib/chorda.c -o "$B/o/pl_prima.o" 2> "$B/err"
+n_xii=$(numerus)
+"$C" --plures "$B/lista" > /dev/null 2> "$B/err"; rc=$?
+if [ "$rc" -eq 1 ] && grep -q "malus.c" "$B/err" && [ "$(numerus)" -eq $((n_xii + 1)) ] \
+    && cmp -s "$B/o/pl_chorda.o" "$B/o/nudum.o" && cmp -s "$B/o/pl_fons.o" "$B/o/fons.o" \
+    && cmp -s "$B/o/pl_chorda2.o" "$B/o/nudum.o"; then
+    echo "  XII  --plures: hit, fractum, hit, hit  OK"
+else
+    echo "  XII  FRACTUM (rc=$rc, clang $n_xii -> $(numerus))"; cat "$B/err"; fracta=1
+fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus compilatoris: FRACTUM"; exit 1; fi
-echo "fumus compilatoris: sanum (XI/XI)"
+echo "fumus compilatoris: sanum (XII/XII)"
 exit 0
