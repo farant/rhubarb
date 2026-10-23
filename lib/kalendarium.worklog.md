@@ -1031,3 +1031,11 @@ read-the-text-back test could pass by luck). It covers every text
 command in the month and week views, so any future site that forgets
 to copy fails here. Plants: each of the four copies removed -> red (the
 birthday one needed a birthday in the fixture; it was green first).
+
+## 2026-10-23 — A2b is now the library's job
+
+`mandata_textus` copies its text itself (lib/mandatum.worklog.md), so
+the A2b rule ("text handed to mandata lives in the mandata pool") no
+longer depends on callers. The existing chorda_transcribe calls in this
+file are now redundant and harmless; `textus_in_piscina` keeps checking
+the invariant from the outside.
