@@ -17,6 +17,7 @@
  */
 #include "postulata_posix.h"
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
@@ -31,10 +32,21 @@
 #include "silva_parsare.h"
 #include "silva_scribere.h"
 #include "credo.h"
+#include "iter_directoria.h"  /* canalis (examen 96) */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dirent.h>  /* probatio solum - macOS/POSIX */
+
+/* titulus introitus (chorda, non terminata) ut litterae C - lectio
+ * directorii per iter_directoria (liber lectionum 'D', canalis examen
+ * 96; quaestio …4XE9S9K6: opendir crudus membrum caecum faciebat) */
+interior constans character*
+_introitus_titulus (
+    constans DirectoriumIntroitus* introitus,
+                          Piscina* piscina)
+{
+    redde chorda_ut_cstr(introitus->titulus, piscina);
+}
 
 #define VIA_MAXIMA 1024
 
@@ -57,7 +69,7 @@ _plagulam_legere (
     i8* buffer;
     signatus longus mensura;
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL)
     {
         redde NIHIL;
@@ -180,16 +192,16 @@ _est_c_vel_h (
 
 s32 principale (vacuum)
 {
-                   b32  praeteritus;
-               Piscina* piscina;
-    constans character* radix;
-             character  via_corporis[VIA_MAXIMA];
-             character  via_plagulae[VIA_MAXIMA];
-    DIR* corpus;
-    structura dirent* introitus;
-    i32 numerus;
-    i32 fideles;
-    i32 fideles_arboris;
+                     b32  praeteritus;
+                 Piscina* piscina;
+      constans character* radix;
+               character  via_corporis[VIA_MAXIMA];
+               character  via_plagulae[VIA_MAXIMA];
+     DirectoriumIterator* corpus;
+    DirectoriumIntroitus* introitus;
+                     i32  numerus;
+                     i32  fideles;
+                     i32  fideles_arboris;
 
     piscina = piscina_generare_dynamicum("probatio_silva_fidelitas",
         262144);
@@ -213,7 +225,8 @@ s32 principale (vacuum)
     numerus          = ZEPHYRUM;
     fideles          = ZEPHYRUM;
     fideles_arboris  = ZEPHYRUM;
-    corpus           = opendir(via_corporis);
+    corpus = directorium_iterator_aperire(via_corporis,
+        piscina);
     si (corpus == NIHIL)
     {
         imprimere("FRACTA: corpus non apertum: %s\n", via_corporis);
@@ -222,16 +235,17 @@ s32 principale (vacuum)
         redde I;
     }
 
-    dum ((introitus = readdir(corpus)) != NIHIL)
+    dum ((introitus = directorium_iterator_proximum(corpus)) != NIHIL)
     {
         b32 fidelis_lex;
         b32 fidelis_arboris;
 
-        si (!_est_c_vel_h(introitus->d_name))
+        si (!_est_c_vel_h(_introitus_titulus(introitus, piscina)))
         {
             perge;
         }
-        sprintf(via_plagulae, "%s/%s", via_corporis, introitus->d_name);
+        sprintf(via_plagulae, "%s/%s", via_corporis,
+            _introitus_titulus(introitus, piscina));
 
         _fidelitatem_probare(via_plagulae, &fidelis_lex,
             &fidelis_arboris);
@@ -247,12 +261,13 @@ s32 principale (vacuum)
         si (!fidelis_lex || !fidelis_arboris)
         {
             imprimere("  INFIDELIS%s: %s\n",
-                fidelis_lex ? " (arbor)" : "", introitus->d_name);
+                fidelis_lex ? " (arbor)" : "",
+                _introitus_titulus(introitus, piscina));
         }
         CREDO_VERUM (fidelis_lex);
         CREDO_VERUM (fidelis_arboris);
     }
-    closedir(corpus);
+    directorium_iterator_claudere(corpus);
 
     imprimere("  plagulae: %d, fideles (lex): %d, fideles (arbor): %d\n",
         numerus, fideles, fideles_arboris);

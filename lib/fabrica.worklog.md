@@ -3485,3 +3485,17 @@ Option 1 (desideratum …VXWK8; the real migration into a fabrica composite come
 **After.** The same golden corruption now forces a rerun and goes red ("cursae 1"); restored, it's green. Suites green: md 14/14, css 10/10, materia 14/14, saltuarius 13/13, radix probatio_aedilis_praefixum.
 
 **Still open:** silva's 22 debt files (stat/opendir/access as well as fopen, and the shared helper silva/probationes/apparatus.c) come next. Tools (instrumenta) debts aren't composite members.
+
+## 2026-10-23 — members blind to raw reads (…4XE9S9K6): slice 2, silva (22 files): no composite member left with raw IO
+
+**Changes.**
+- 14 files had only `fopen` → `lectiones_fopen`, including the shared helper silva/probationes/apparatus.c (anchor: after `#include "apparatus.h"`; it has no latina.h line). Its `popen` is not a channel call.
+- 9 files enumerated corpus directories with opendir/readdir/closedir. Converted to `directorium_iterator_aperire`/`_proximum`/`_claudere` (iter_directoria writes the 'D' record):
+  - `introitus->d_name` → a per-file helper `_introitus_titulus()` = `chorda_ut_cstr(introitus->titulus, piscina)`;
+  - `d_type == DT_DIR` → `genus == INTROITUS_DIRECTORIUM`. genus FOLLOWS symlinks, unlike d_type; no symlinks exist under lib/ include/ probationes/fixa/ silva/probationes/fixa/.
+- The formatter rules that tripped the first attempt: a house include must precede system ones (ordo-inclusionum); 72 columns.
+- examen ACCEPTS all 22 and formatter counts equal HEAD. 22 debt lines deleted; NO composite member has a canalis debt left.
+
+**Proof.** probationes_silva 56/56. A NEW file in probationes/fixa/roundtrip (enumerated by probatio_silva_arbor_circuitus) forced a rerun, and so did removing it; before, raw opendir made the member blind.
+
+**Left over:** canalis debts remain only in suites that are not composites: oratio 18, briar 13, officina 11, crusta 7, gesta 5, tessera 2, plus tools. Those gates rerun whole, so they can't keep a stale pass, but the debts are a PREREQUISITE for converting those suites to composites (oratio next).

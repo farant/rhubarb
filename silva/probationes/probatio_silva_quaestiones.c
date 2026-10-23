@@ -3,6 +3,7 @@
  * omnes nominatae; INTENTIO phase-log 2026-07-31, parcum
  * 01KXPV9FPK) */
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
@@ -417,7 +418,7 @@ principale (vacuum)
         {
             (vacuum)sprintf(via, "%s/silva/quaestiones.stml",
                 radix);
-            filum = fopen(via, "rb");
+            filum = lectiones_fopen(via, "rb");
             CREDO_NON_NIHIL (filum);
             si (filum != NIHIL)
             {

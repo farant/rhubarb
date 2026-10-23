@@ -2,6 +2,7 @@
  * aestimator (fixa ex colloquio pineata - consilium
  * project-specs/silva-semantica-design.md) */
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
@@ -874,7 +875,7 @@ s32 principale (vacuum)
             radix_env = "..";
         }
         sprintf(via, "%s/silva/fontes/systema_c89.h", radix_env);
-        pl = fopen(via, "rb");
+        pl = lectiones_fopen(via, "rb");
         CREDO_NON_NIHIL (pl);
         si (pl != NIHIL)
         {

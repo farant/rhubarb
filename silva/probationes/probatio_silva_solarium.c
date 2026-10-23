@@ -14,6 +14,7 @@
  */
 #include "postulata_posix.h"
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
@@ -29,10 +30,21 @@
 #include "silva_parsare.h"
 #include "silva_scribere.h"
 #include "credo.h"
+#include "iter_directoria.h"  /* canalis (examen 96) */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dirent.h>
+
+/* titulus introitus (chorda, non terminata) ut litterae C - lectio
+ * directorii per iter_directoria (liber lectionum 'D', canalis examen
+ * 96; quaestio …4XE9S9K6: opendir crudus membrum caecum faciebat) */
+interior constans character*
+_introitus_titulus (
+    constans DirectoriumIntroitus* introitus,
+                          Piscina* piscina)
+{
+    redde chorda_ut_cstr(introitus->titulus, piscina);
+}
 
 #define VIA_MAXIMA 1024
 #define PLAGULAE_MAXIMAE 512
@@ -55,7 +67,7 @@ _plagulam_legere (
     i8* buffer;
     signatus longus mensura;
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL)
     {
         redde NIHIL;
@@ -141,8 +153,9 @@ s32 principale (vacuum)
 
     /* Nomina colligere; solarium absens = VIRIDIS cum nota */
     {
-        DIR* dir = opendir(via_solarii);
-        structura dirent* introitus;
+        DirectoriumIterator* dir =
+            directorium_iterator_aperire(via_solarii, piscina);
+        DirectoriumIntroitus* introitus;
 
         si (dir == NIHIL)
         {
@@ -153,24 +166,29 @@ s32 principale (vacuum)
             piscina_destruere(piscina);
             redde ZEPHYRUM;
         }
-        dum (   (introitus = readdir(dir)) != NIHIL
+        dum (   (introitus = directorium_iterator_proximum(dir))
+            != NIHIL
              && numerus_plagularum < PLAGULAE_MAXIMAE)
         {
-            si (   _suffixum_habet(introitus->d_name, ".c")
-                || _suffixum_habet(introitus->d_name, ".h"))
+            si (   _suffixum_habet(_introitus_titulus(introitus,
+                piscina), ".c")
+                || _suffixum_habet(_introitus_titulus(introitus,
+                piscina), ".h"))
             {
-                memoriae_index m = strlen(introitus->d_name) + I;
+                memoriae_index m = strlen(_introitus_titulus(introitus,
+                    piscina)) + I;
                 character* nomen_novum = (character*)piscina_allocare(
                     piscina, m);
 
                 si (nomen_novum != NIHIL)
                 {
-                    memcpy(nomen_novum, introitus->d_name, m);
+                    memcpy(nomen_novum, _introitus_titulus(introitus,
+                        piscina), m);
                     nomina[numerus_plagularum++] = nomen_novum;
                 }
             }
         }
-        closedir(dir);
+        directorium_iterator_claudere(dir);
     }
 
     imprimere("\n--- Probans corpus solarii (%d plagulae) ---\n",

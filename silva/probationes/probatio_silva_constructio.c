@@ -7,6 +7,7 @@
  * probati, children(), listae, et violationes S32.
  */
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "piscina.h"
 #include "chorda.h"
 #include "internamentum.h"
@@ -32,7 +33,7 @@ _plagulam_legere (
     character* buffer;
     signatus longus mensura;
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL)
     {
         redde NIHIL;

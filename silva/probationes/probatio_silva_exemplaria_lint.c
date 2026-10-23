@@ -56,10 +56,21 @@
 #include "silva_arbor.h"
 #include "apparatus.h"
 #include "credo.h"
+#include "iter_directoria.h"  /* canalis (examen 96) */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dirent.h>
+
+/* titulus introitus (chorda, non terminata) ut litterae C - lectio
+ * directorii per iter_directoria (liber lectionum 'D', canalis examen
+ * 96; quaestio …4XE9S9K6: opendir crudus membrum caecum faciebat) */
+interior constans character*
+_introitus_titulus (
+    constans DirectoriumIntroitus* introitus,
+                          Piscina* piscina)
+{
+    redde chorda_ut_cstr(introitus->titulus, piscina);
+}
 
 #define DIVERGENTIAE_MAX 8
 
@@ -665,26 +676,26 @@ _censum_referre (
 s32
 principale (vacuum)
 {
-                 Piscina* piscina;
-      constans character* radix;
-               character  via_corporis[512];
-               character  via_plagulae[1024];
-               character  via_relativa[1024];
-                    DIR* corpus;
-       structura dirent* introitus;
-           CorpusSilvae  corpus_silvae;
-    ClausuraeCorporis* clausurae_corporis;
-                Clausura clausura;
-              LintCensus census_planum;
-              LintCensus census_latinum;
-                     i8* lint_datum;
-                     i32 lint_mensura;
-                  chorda lint_textus;
-                     i8* catena_datum;
-                     i32 catena_mensura;
-                  chorda lint_catena;
-                    Xar* conditio_pares;
-                     b32 praeteritus;
+                                Piscina* piscina;
+                     constans character* radix;
+                              character  via_corporis[512];
+                              character  via_plagulae[1024];
+                              character  via_relativa[1024];
+                    DirectoriumIterator* corpus;
+                   DirectoriumIntroitus* introitus;
+                           CorpusSilvae  corpus_silvae;
+                      ClausuraeCorporis* clausurae_corporis;
+                               Clausura  clausura;
+                             LintCensus  census_planum;
+                             LintCensus  census_latinum;
+                                     i8* lint_datum;
+                                    i32  lint_mensura;
+                                 chorda  lint_textus;
+                                     i8* catena_datum;
+                                    i32  catena_mensura;
+                                 chorda  lint_catena;
+                                    Xar* conditio_pares;
+                                    b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_lint", 4194304);
     si (!piscina)
@@ -757,7 +768,7 @@ principale (vacuum)
     /* gradus planum */
     memset(&census_planum, 0, magnitudo(census_planum));
     sprintf(via_corporis, "%s/probationes/fixa/roundtrip", radix);
-    corpus = opendir(via_corporis);
+    corpus = directorium_iterator_aperire(via_corporis, piscina);
     si (corpus == NIHIL)
     {
         imprimere("FRACTA: corpus non apertum: %s\n", via_corporis);
@@ -765,19 +776,20 @@ principale (vacuum)
         piscina_destruere(piscina);
         redde I;
     }
-    dum ((introitus = readdir(corpus)) != NIHIL)
+    dum ((introitus = directorium_iterator_proximum(corpus)) != NIHIL)
     {
-        si (!apparatus_est_c_vel_h(introitus->d_name))
+        si (!apparatus_est_c_vel_h(_introitus_titulus(introitus,
+            piscina)))
         {
             perge;
         }
         sprintf(via_plagulae, "%s/%s", via_corporis,
-                introitus->d_name);
+                _introitus_titulus(introitus, piscina));
         _plagulam_probare(via_plagulae, radix, NIHIL, FALSUM,
                           &lint_textus, &lint_catena,
                           conditio_pares, &census_planum);
     }
-    closedir(corpus);
+    directorium_iterator_claudere(corpus);
     _censum_referre("planum", &census_planum);
 
     /* gradus latinum */
@@ -790,7 +802,7 @@ principale (vacuum)
     /* clausurae corporis uno cursu aedilis (apparatus.h) */
     clausurae_corporis = apparatus_clausuras_petere(radix, "lib",
         piscina);
-    corpus = opendir(via_corporis);
+    corpus = directorium_iterator_aperire(via_corporis, piscina);
     si (corpus == NIHIL)
     {
         imprimere("FRACTA: corpus latinum non apertum\n");
@@ -798,14 +810,15 @@ principale (vacuum)
         piscina_destruere(piscina);
         redde I;
     }
-    dum ((introitus = readdir(corpus)) != NIHIL)
+    dum ((introitus = directorium_iterator_proximum(corpus)) != NIHIL)
     {
         si (!apparatus_in_corpore(&corpus_silvae, "lib",
-            introitus->d_name, piscina))
+            _introitus_titulus(introitus, piscina), piscina))
         {
             perge;
         }
-        sprintf(via_relativa, "lib/%s", introitus->d_name);
+        sprintf(via_relativa, "lib/%s", _introitus_titulus(introitus,
+            piscina));
         sprintf(via_plagulae, "%s/%s", radix, via_relativa);
         (vacuum)apparatus_clausuram_ex_corpore(clausurae_corporis,
             via_relativa, &clausura);
@@ -813,7 +826,7 @@ principale (vacuum)
                           &lint_textus, &lint_catena,
                           conditio_pares, &census_latinum);
     }
-    closedir(corpus);
+    directorium_iterator_claudere(corpus);
     _censum_referre("latinum", &census_latinum);
 
 
