@@ -3,10 +3,12 @@
  *
  * Catena (DER, folium primum) contra repositorium systematis aut
  * ancoram SOLAM, politia SSL cum nomine hospitis (catena, tempus,
- * nomen, revocatio - quidquid systema honorat). Implementatio:
- * fiducia_macos.m (SecTrustEvaluateWithError); postea fiducia_windows.c
- * (CertGetCertificateChain), fiducia_linux.c (br_x509_minimal +
- * fasciculus distributionis).
+ * nomen, revocatio - quidquid systema honorat). Implementationes:
+ * fiducia_macos.m (SecTrustEvaluateWithError) et fiducia_posix.c
+ * (fiducia-linux T3: BearSSL br_x509_minimal + fasciculus CA
+ * distributionis per vias notas, SAN solum, revocatio nulla); postea
+ * fiducia_windows.c. Ambae indicium diffisarum domus PRIMUM consulunt
+ * (fiducia_diffisa.h).
  *
  * NOTA: iudicium OBSTRUERE potest (intermedia per AIA, revocatio) - ut
  * SecureTransport intus faciebat. FiduciaFolium = TlsCertificatum sine
@@ -52,5 +54,20 @@ fiducia_folium_describere (
     constans FiduciaCertificatum* folium,
                    FiduciaFolium* exitus,
                          Piscina* piscina);
+
+/* fasciculus certificatorum (POSIX): via NIHIL = systematis (prima via
+ * nota exstans; *via_usa eam nominat), aliter fasciculus PEM datus in
+ * repositorium temporarium (probationes). *ancorae = ancorae legitimae,
+ * *omissae = obiecta praeterita (non CERTIFICATE, malum, aut diffisa).
+ * FALSUM + *causa si nullus fasciculus aut legi nequit. macOS: FALSUM
+ * "solum POSIX" (SecTrust fasciculum non habet) */
+b32
+fiducia_fasciculum_describere (
+    constans character* via,
+                   i32* ancorae,
+                   i32* omissae,
+                chorda* via_usa,
+                chorda* causa,
+               Piscina* piscina);
 
 #endif /* FIDUCIA_H */

@@ -1461,12 +1461,16 @@ filum_status (
     status_out->potest_legere   = (st.st_mode & _S_IREAD) != ZEPHYRUM;
     status_out->potest_scribere = (st.st_mode & _S_IWRITE) != ZEPHYRUM;
     status_out->potest_exsequi  = (st.st_mode & _S_IEXEC) != ZEPHYRUM;
+    status_out->modus           = (integer)(st.st_mode & 0777);
+    status_out->est_socket      = FALSUM;
 #else
     status_out->est_directorium  = S_ISDIR(st.st_mode);
     status_out->est_filum        = S_ISREG(st.st_mode);
     status_out->potest_legere    = (st.st_mode & S_IRUSR) != ZEPHYRUM;
     status_out->potest_scribere  = (st.st_mode & S_IWUSR) != ZEPHYRUM;
     status_out->potest_exsequi   = (st.st_mode & S_IXUSR) != ZEPHYRUM;
+    status_out->modus            = (integer)(st.st_mode & 07777);
+    status_out->est_socket       = S_ISSOCK(st.st_mode);
 #endif
 
     redde VERUM;

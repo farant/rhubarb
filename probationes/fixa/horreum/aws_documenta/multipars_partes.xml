@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListPartsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+  <Bucket>situla</Bucket>
+  <Key>magnum.bin</Key>
+  <UploadId>VXBsb2FkIElE</UploadId>
+  <IsTruncated>false</IsTruncated>
+  <Part>
+    <PartNumber>1</PartNumber>
+    <LastModified>2026-10-21T14:09:00.000Z</LastModified>
+    <ETag>"7778aef83f66abc1fa1e8477f296d394"</ETag>
+    <Size>5242880</Size>
+  </Part>
+  <Part>
+    <PartNumber>2</PartNumber>
+    <LastModified>2026-10-21T14:09:01.000Z</LastModified>
+    <ETag>"aaaa18db4cc2f85cedef654fccc4a4x8"</ETag>
+    <Size>1048576</Size>
+  </Part>
+</ListPartsResult>

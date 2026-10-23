@@ -1,0 +1,256 @@
+# pecunia worklog
+
+## 2026-10-19 - T1: ISO data, generator, table, currency lookup
+
+**Data pinned** in `probationes/fixa/iso4217/2026-09-17/`: SIX
+`list-one.xml` (Pblshd 2026-09-17) and `list-three.xml` (Pblshd
+2026-01-01), unchanged, sha256 in `SHA256SUMS`. They have CRLF line
+endings; the repo has no `.gitattributes` and no `core.autocrlf`, so git
+stores the bytes as-is (checked). If someone ever adds `* text=auto`,
+these hashes break first.
+
+**Supplement sourced row by row** (nothing guessed, nothing left out):
+the withdrawn list carries codes, numbers and dates but no minor units,
+so each HISTORICA row cites the newest archived list-one that still
+carried it (Wayback Machine): LVL/LTL from the 2013-04-09 list
+(`table_a1.xml`, the old file name), MRO from 2017-01-01, ANG/BGN/CUC/HRK
+from 2022-09-23. All 2 - MRO too, despite the ouguiya's khoums (fifths):
+ISO always gave MRO two decimals. GGP/IMP/JEP are local issues of
+sterling at par (government pages cited); exponent = GBP's.
+Withdrawn rows take their ISO NUMBER from list-three (BGN 975, HRK 191,
+MRO 478); EXTRA_ISO rows have numerus 0.
+
+**Counts:** 175 rows = 165 current (178 codes - 13 N.A.) + 7 historic +
+3 extra ISO; 13 codes without a minor unit (XAG XAU XBA XBB XBC XBD XDR
+XPD XPT XSU XTS XUA XXX) kept in a separate list so lookups can say
+SINE_UNITATE instead of IGNOTA.
+
+**Generator built by aedilis** (it reads XML through `xml.h` and the
+supplement through `stml.h`), unlike runae's stdio-only generator. The
+fabrica action declares `build/aedilis/pecunia_monetae_generare` as
+`vestigium`; `bin/fabrica iudicare -plenus lib/pecunia_monetae.c`
+regenerates and compares: recens. Titles with non-ASCII bytes are
+written as 3-digit OCTAL escapes - a `\x` escape would swallow a
+following hex-letter (`Bol\xC3\xADvar` is fine, `Caf\xC3\xA9e` is not).
+
+**`-fumus` mode** feeds the generator six bad supplements (contradicts
+list-one, superfluous, same code twice, "historic" code not in
+list-three, "extra ISO" code that is in list-three, missing source) and
+expects each refused with its NAMED reason. Real data never exercises
+these rules, so without the fumus deleting one would be mute. An empty
+attribute (`fons=""`) reads as ABSENT in STML, so that case is refused
+as "attributum deest: fons" - still the right refusal.
+
+**Plant hazard found (park ...RN9):** after `silva.planta` restored the
+generator, a fresh build still ran the PLANTED code - the object in
+`build/aedilis/obiecta` was compiled from the plant in the same second
+the source was restored, and `struere.sh` judges with `-nt` under
+`/bin/sh` (bash 3.2, whole seconds). Deleting the binary is not enough;
+the object itself is stale. `touch` + rebuild fixed it here. Same family
+as the `cp -p` memory (plant-restore-mtime).
+
+**Plants (red, revert, green):** supplement contradiction check
+disabled -> `-fumus` red; binary search stepping two -> `tabula` red;
+case folding disabled -> `codices` red. Before the plants the test was
+widened so EVERY row is looked up by its own code (a search off by one
+at the edges would hide behind the handful of named codes).
+
+**Lint:** `solvibilis` (Medieval Latin, from solvere "to pay") added to
+the glossary; WORDS lacks it.
+
+## 2026-10-19 - T2: the value type and refusing arithmetic
+
+`Pecunia` = s64 ten-thousandths + `PecuniaMoneta`, 16 bytes, by value.
+`PECUNIA_QUANTITAS_MAXIMA/MINIMA` are exported (every house lib defines
+its own s64 limit - magnus, polynomium, surdus - there is no shared one).
+
+**Overflow is checked BEFORE the operation**, never by inspecting a
+wrapped result (signed overflow is undefined in C). `pecunia_subtrahe`
+has its own two-sided check rather than `adde(a, nega(b))`, because
+`nega(MINIMA)` is itself out of range while `0 - MINIMA` must be
+refused and `-1 - MAXIMA` must succeed (it equals MINIMA exactly).
+
+**`pecunia_ex_unitatibus` bound:** `|unitates| <= MAXIMA / factor` on
+both sides. The lower bound is not `MINIMA / factor`: C89 leaves the
+rounding of negative division implementation-defined, and the true
+bound is `ceil(MINIMA / f) = -(MAXIMA / f)` because every factor > 1 is
+a multiple of 5 and never divides 2^63. CLF (factor 1) takes any s64.
+
+**`pecunia_summa` refuses overflow mid-way** even when the final sum
+would fit (`MAXIMA + 1 - 1`): reordering to dodge it would make the
+result depend on more than the input, and a partial sum out of range
+in a budget is a data error worth surfacing.
+
+Plants: `_adde_tutum` upper check disabled -> `arithmetica` red; summa's
+currency check only on element 0 -> `summa_mixta` red.
+
+## 2026-10-19 - T3: rounding, multiplication, payable amounts, conversion
+
+**Oracle:** `tools/pecunia_rotundatio_oraculum.py` (Python `decimal`,
+precision 80, stdlib only) writes `probationes/fixa/pecunia/rotundatio.txt`
+once; the C test pins its sha256 and checks that it consumed exactly
+3320 `M` (multiply) and 1560 `U` (round to payable) lines, so a
+truncated or half-parsed fixture cannot pass quietly. Two runs of the
+script give the same bytes. The fixture's first line deliberately does
+NOT say GENERATUM - that word in line 1 makes the `generata` gate demand
+a fabrica generator action, and this file is a pinned oracle, not a
+build artifact.
+
+**No currency has exponent 1** in the 2026-09-17 ISO list (0, 2, 3, 4
+only), and `pecunia_ad_unitatem` takes the exponent from the currency,
+so exponent-1 lines could not be tested through the API - the oracle
+writes exponents {0, 2, 3, 4} only (plan R5). If ISO ever adds one, the
+`_factor_unitatis` case for I already exists; extend the oracle then.
+
+**One rounding decision, two arithmetic paths.** `_sursum(modus,
+residuum_nullum, dimidium, quotiens_negativus, quotiens_impar)` decides
+"floor + 1 or not" from the floor quotient and remainder. `multiplica`
+/ `convertere` feed it from `Magnus` (`magnus_divide` is Euclidean, so
+the quotient is already the floor and `2r` vs `den` gives the half
+test); `ad_unitatem` feeds it from s64 directly (divisor <= 10^4) with
+a hand Euclidean step - C89 leaves `/` and `%` of negatives
+implementation-defined, but `a == q*f + r` always holds, so a negative
+`r` is corrected (`q -= 1; r += f`). The first draft of `ad_unitatem`
+went through Magnus and created a piscina per call for values that
+always fit in s64; the API has no piscina parameter, so the s64 path is
+the honest one.
+
+**Half-away-from-zero** = Python's ROUND_HALF_UP: on a tie, step up when
+the floor quotient is >= 0 (value q + 0.5, positive), stay when it is
+negative (q + 0.5 <= -0.5, so q is the one further from zero).
+
+All 4880 oracle lines agreed on the first run. Plants: PAR made to
+behave like half-up; the s64 negative-floor correction removed;
+VERSUS_NIHIL made SOLUM for negatives - each `oraculum` red.
+
+## 2026-10-19 - T4: splitting
+
+`pecunia_partiri(totum, rationes, n, granum, piscina, exitus)` - largest
+remainder: each part gets `floor(G * r_i / S)` grains (G = grains of the
+total's magnitude, S = sum of ratios, both in `Magnus`, so huge ratios
+like {MAXIMA, MAXIMA} are fine), the leftover grains (always < n) go one
+each to the largest remainders, ties to the LOWER index (the first
+maximum found wins - no sort, O(n * leftover)). A zero ratio has
+remainder 0 and can never win a leftover grain: the leftover equals the
+sum of the fractional parts, so it is smaller than the number of parts
+whose remainder is positive.
+
+**Bug the edge test caught:** splitting MINIMA into ONE part. Its
+magnitude is 2^63, which does not fit in s64, and the first draft
+converted the magnitude part to s64 before restoring the sign. Now the
+sign is restored in `Magnus` and only the signed part is converted; it
+always fits (same sign as the total, never larger in magnitude). All
+parts are computed before any `exitus` is written, so a failure leaves
+the output untouched.
+
+`GRANUM_UNITAS` refuses a total that is not already payable
+(`NON_SOLVIBILIS`): USD 10.0050 cannot become cents that add back up to
+it. With `GRANUM_SCALA` the same total splits to 5.0025 + 5.0025.
+
+`Piscina*` added to both functions (plan P8) - the spec's sketch had
+none.
+
+Property check: 3000 random cases (USD/JPY/KWD/CLF, n 1..12, ratios
+0..1000, both grains): parts sum exactly to the total, never take the
+opposite sign, are payable under UNITAS; equal splits differ by at most
+one grain. Plants: leftover to the last parts, ties to the higher index,
+sign not restored - each red in `exempla`.
+
+## 2026-10-19 - T5: canonical text and bare decimals
+
+**Canonical form `USD -12.3400`:** upper-case code, one space, optional
+`-`, integer part without leading zeros (but `0` itself), exactly four
+decimals, no grouping, no `+`, zero never signed. The reader accepts
+ONLY that, so text equality is value equality - clean event logs and
+diffs. The reader checks the code is three upper-case letters BEFORE
+lookup (`usd 12.3400` is FORMA, not a currency question), then reads
+the quantity, then looks the code up (XAU -> SINE_UNITATE, ABC ->
+IGNOTA).
+
+**Bare decimal = Lunch Money's pattern** `^-?\d+(\.\d{1,4})?$`: leading
+zeros allowed (even 46 of them - accumulation stays 0 until the first
+non-zero digit, so no false overflow), `12.` and `.5` refused, five
+decimals -> DECIMALES (named, so a form can say why).
+
+**Shape first, value second.** `_quantitatem_legere` scans the whole
+text and refuses bad shape (FORMA / DECIMALES) before computing; the
+value is accumulated in `i64` (unsigned 64-bit), the integer part
+capped at 2^63 / 10^4 per digit, then compared with 2^63 (negative) or
+2^63 - 1 (positive). Writers take the magnitude as `i64` too:
+`-(q + 1) + 1` gets |MINIMA| = 2^63 without overflow.
+
+**Bitten again by a latina.h macro:** a local named `magnitudo` - that is
+`sizeof`. examen flagged it ("magnitudo macrum latina.h est"); renamed
+`amplitudo`. And a local `usd` was a new word for the Latin lint ->
+`nummus`.
+
+Round trip over 5000 random s64 values (full range, USD and JPY): both
+`ex_textu(ad_textum(x)) == x` and `ex_numero(numerus(x)) == x`. Plants:
+`-0.0000` accepted, a leading zero accepted, the positive bound
+loosened by one (`...5808` would wrap to MINIMA) - each red.
+
+## 2026-10-19 - T6: display and human input
+
+**Display rounds first and never fails.** `pecunia_formare` needs the
+rounded amount in UNITS, not the rounded amount back at scale 4: MAXIMA
+rounded UP to cents is ...477.59, whose scale-4 value (...5900) is out
+of s64, so `pecunia_ad_unitatem` must refuse it - but the display can
+still show it. The rounding step is now `_unitates_rotundatae(q, f,
+modus)` (shared with `ad_unitatem`, which adds the bound check and the
+multiply-back); units always fit (|q| / f + 1). The sign comes from the
+ROUNDED units, so USD -0.0040 shows "USD 0.00" (plan P9).
+
+**Sign placement (plan P6):** with a caller symbol the sign wraps the
+symbol (`-$12.34`, `($12.34)`, post: `-12.34$`); with the code it wraps
+the number only (`USD -12.34`, `USD (12.34)`, post: `-12.34 USD`).
+Default separators are static byte arrays: `","` as a string literal is
+const under -Wwrite-strings, and pointing an `i8*` at it would cast the
+qualifier away.
+
+**Input rules, in order:** trim spaces; accounting parentheses around
+everything; one leading `-`; a marker before (the forma's symbol, or
+three letters + space) or after (symbol, or space + three letters);
+optional spaces; a `-` right before the digits (only if no sign yet -
+`--12`, `-(12)`, `(-12)`, `-$-12` are FORMA); digits with group
+separators only where they belong (first group 1..3 digits, the rest
+exactly 3 - `12,34`, `1,23,456`, `1234,567`, `1,2345` refused); the
+decimal separator + digits. The digits are copied into a bare-decimal
+buffer and read by the same `_quantitatem_legere` as T5, so DECIMALES
+and SUPERFLUXUS come out named the same way. A code that is a real
+currency but not the one given -> MONETAE_DIVERSAE; an unknown code is
+reported as such (IGNOTA), never guessed.
+
+**Two of my own test numerals were wrong** (1,234,567.89 written as
+1234*10^7 + 8900; 1,234.56 as 1234*10^5 + 5600) - Roman-numeral
+arithmetic in tests deserves a python3 one-liner check before the run;
+the implementation was right both times.
+
+Round trip: `ex_ingressu(formare(x)) == ad_unitatem(x, PAR)` for 2000
+random amounts, with the code and with `"$"` + accounting. Plants: group
+check disabled at the end (`12,34` read as 1234), second sign accepted
+(`--12`), display sign from the unrounded value (`USD -0.00`) - each red.
+
+## 2026-10-19 - T7: questions, Linux, close-out
+
+Seven typed questions in `lib/pecunia.interrogationes.stml` (split a
+bill, store an amount, why input is refused, round to cents, convert,
+Lunch Money's format, crypto - no); `bin/fabrica quid -interrogationes
+pecunia` reads them with 0 errors, `interrogationes_fumus` finds no dead
+anchors, `docs/faq.html` regenerated.
+
+Linux: `./tools/linux/probatio.sh -musl pecunia` and `-glibc pecunia`
+both green, 135129 assertions each. gcc flagged one maybe-uninitialized
+local in the TEST (`modus`, set via `CREDO_NECESSE(_modus(...))`) -
+clang follows that, gcc does not; initialized. The library compiled
+clean under gcc on the first try.
+
+Final checks: suite green (24 sections), generator `-probare` recens
+and `-fumus` sanum, `generata` gate sana (147 judged).
+
+**What a consumer should know (C, the budgeting app):** store amounts
+with `pecunia_ad_textum` only; show them with `pecunia_formare`; parse
+form fields with `pecunia_ex_ingressu` and show `pecunia_vitium_titulus`
+on refusal; split shared expenses with `pecunia_partiri` in
+`GRANUM_UNITAS`. For Lunch Money (D): `pecunia_ex_numero` on string
+amounts; balances that arrive as JSON numbers still need `json.h` to
+keep number text (spec IV).

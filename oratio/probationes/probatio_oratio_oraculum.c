@@ -103,8 +103,12 @@ _tabulae (
  * 770/771, EWT 677/679 -> 753/754 (permille truncata); tecta immota.
  * T19d (2026-09-07): regulae adpositionum in UMBRAS obiecti versae
  * (lectio et implens praelatae): CIRCSE 728, LLCT 771/771, EWT immota
- * (permille ex numeris truncata, non ex centesimis). */
-#define EWT_DEV_PRIMARIA_PINNA   786
+ * (permille ex numeris truncata, non ex centesimis).
+ * 2026-10-22 (fusio main in quarta): glossarium 'shut' (anglica,
+ * ignotum-permissum, SHUT_WR POSIX - nomen non mutabile) EWT dev
+ * 786 -> 785; causa sola probata (sine 'shut' 786, 'shutdown' immotum),
+ * test 789 immotum. Decretum Frani 2026-10-06: repinna. */
+#define EWT_DEV_PRIMARIA_PINNA   785
 #define EWT_TEST_PRIMARIA_PINNA  789
 /* T19g (2026-09-08, decretum SUDOKU decisio XL): accuratio decisionum
  * COACTARUM (impletio + umbra: testimonium) permille, solum crescens -

@@ -125,6 +125,44 @@ added `0x0001` (Darwin; Linux too). auspex asserts it - CONSENTIT;
 hand plant 0x0003 -> TU nostrum DISSENTIT, restored. Tolerated-copy
 gains `shared` (system name, same cause as store/release).
 
+## 2026-10-21 - AF_UNIX surface (canalis T1)
+
+`lib/canalis_posix.c` compiled clean under clang but examen REICE'd it:
+`struct sockaddr_un`, `AF_UNIX`, `ECONNABORTED`, `getpeereid`, `geteuid`,
+`socketpair`, `S_ISSOCK` unknown. Added (Darwin forms): S_IFSOCK 0140000 +
+S_ISSOCK in sys/stat.h; ECONNABORTED 53 in errno.h; AF_UNIX 1 and
+socketpair in sys/socket.h; a new `sys/un.h` sectio with `sockaddr_un
+{sun_len, sun_family, sun_path[104]}`; geteuid + getpeereid in the
+unistd.h identity sectio. auspex asserts values, sizeof 106 and offsets
+(real TU now includes <sys/un.h>) - CONSENTIT both TUs; hand plant
+sun_path[103] -> TU nostrum DISSENTIT (assertum_185), restored ->
+CERTIFICATAE. The Linux-only branch (`struct ucred`, SO_PEERCRED) is not
+modelled: examen judges the Darwin preprocessing.
+
+## 2026-10-21 - shutdown/SHUT_* and MSG_NOSIGNAL (canalis T2)
+
+`mcp_canalis_pons` half-closes with `shutdown(s, SHUT_WR)`; added
+`shutdown` + SHUT_RD/WR/RDWR (0/1/2) to the sys/socket.h sectio. And
+`tcp_mittere` now sends with MSG_NOSIGNAL on Darwin as well (SO_NOSIGPIPE
+is not honoured on a socket accepted after its peer closed): added
+`MSG_NOSIGNAL 0x80000` (Darwin SDK value). auspex asserts both - planted
+SHUT_WR 2 -> DISSENTIT, restored -> CERTIFICATAE.
+
+## 2026-10-22 - netdb: AI_NUMERICHOST, AI_NUMERICSERV, EAI_NONAME (nomina_posix.c)
+
+The commit hook's examen refused the new `lib/nomina_posix.c` (unknown
+macro = violation): the netdb sectio had the addrinfo shape and the
+three functions but no flags or error codes. Added the three names with
+Darwin values (0x4, 0x1000, 8 - Linux differs: 0x400 and -2, which is
+why the lexicon is a Darwin certificate, not a Linux one; the Docker
+compile is Linux's judge). auspex asserts them - planted EAI_NONAME 9 ->
+DISSENTIT, restored -> CERTIFICATAE. EAI_NODATA deliberately NOT added:
+nomina_posix.c uses it only under `#ifdef`, an untaken arm stays quiet.
+Glossary: numerichost, numericserv, eai, noname as ignotum-permissum.
+Lesson: judge with `./silva/examen.sh VIA -machina` ONE file at a time
+(as the hook does) - a multi-file call accepted the file the hook
+refused.
+
 ## 2026-10-22 — section postulata_neon.h (sigillum)
 
 The same pattern as postulata_atomica.h. `#define __ARM_FEATURE_SHA2 1` (equal to clang's predefined value; auspex_posix asserts it; plant value 2 → auspex fails) so silva evaluates the `#if defined(__ARM_FEATURE_SHA2)` branch instead of skipping it as undefined. The vector types are C89 structs and the prototypes cover only the 10 intrinsics sigillum uses, under `#ifndef __clang__`. An intrinsic used but not declared here is an implicit call, so REICE (verified). Adding one means a line here, which is the point: the vector surface is declared, not exempt.

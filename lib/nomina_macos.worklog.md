@@ -58,3 +58,10 @@ starting with the family of the first answer, order within a family
 kept), so two dead IPv6 addresses can no longer stand in front of a
 working IPv4 one. Public for addresses that come from elsewhere
 (http_vocatio's pre-resolved test seam). Pure; section `alternare`.
+
+## 2026-10-22 - alternare moved to nomina.c
+
+`nomina_familias_alternare` (pure) now lives in the portable
+`lib/nomina.c`, shared with the new `nomina_posix.c` (getaddrinfo in a
+forked child; see its worklog). This file keeps only the DNS-SD
+resolver.

@@ -350,6 +350,31 @@ _sectio_csrf (CredoContextus* c)
     reactor_destruere(r);
 }
 
+/* valor fixus: secretum XXXII x 0x07, sessio octeti 0..31 -
+ * base64url(HMAC-SHA256) ex Pythone (hmac, base64.urlsafe_b64encode,
+ * '=' remotum), computatus ANTE quam custodia base64url bibliothecae
+ * utebatur: mutatio codificationis signum non mutat */
+interior vacuum
+_sectio_csrf_fixum (CredoContextus* c)
+{
+      Reactor* r       = reactor_creare(c->piscina);
+     Custodia* custos  = _custodia(c, r, VII);
+     Sigillum  s;
+       chorda  t;
+          i32  i;
+
+    CREDO_NECESSE_NON_NIHIL(custos);
+    per (i = ZEPHYRUM; i < SIGILLUM_OCTETI; i++)
+    {
+        s.octeti[i] = (i8)i;
+    }
+    t = custodia_csrf(custos, &s, c->piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(t,
+        "VNM_jGSpAm7wDcUprXJjDrpb5UZXT8j69GE6DmWhbqA");
+    CREDO_VERUM(custodia_csrf_verificare(custos, &s, t));
+    reactor_destruere(r);
+}
+
 interior vacuum
 _sectio_origo (CredoContextus* c)
 {
@@ -460,6 +485,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "renovanda", _sectio_renovanda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sessio", _sectio_sessio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "csrf", _sectio_csrf, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "csrf_fixum", _sectio_csrf_fixum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "origo", _sectio_origo, NIHIL, NIHIL, NIHIL, NIHIL },
     { "frenum", _sectio_frenum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "secretum", _sectio_secretum, NIHIL, NIHIL, NIHIL, NIHIL },

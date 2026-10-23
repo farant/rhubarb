@@ -423,6 +423,46 @@
     <ingressus genus="fasciculus" via="include/lectiones.h"/>
     <exitus via="lib/runae_tabulae.c" provenientia="regeneratio"/>
   </actio>
+  <!-- tabula monetarum (pecunia-plan T1): indices ISO 4217 fixi +
+       supplementum; generator per aedilis structus (xml.h, stml.h),
+       ergo directorium eius vestigium declaratum -->
+  <actio titulus="pecunia_monetae" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/pecunia_monetae_generare.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/pecunia_monetae_generare"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
+    <ingressus genus="fasciculus" via="tools/pecunia_monetae_generare.sh"/>
+    <ingressus genus="fasciculus" via="tools/pecunia_monetae_generare.c"/>
+    <ingressus genus="fasciculus" via="include/pecunia.h"/>
+    <ingressus genus="fasciculus" via="include/pecunia_monetae.h"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/iso4217/2026-09-17/list-one.xml"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/iso4217/2026-09-17/list-three.xml"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/iso4217/supplementum.stml"/>
+    <ingressus genus="manifestum" via="build/aedilis/pecunia_monetae_generare/manifestum.stml"/>
+    <exitus via="lib/pecunia_monetae.c" provenientia="regeneratio"/>
+  </actio>
+  <!-- tabula diffisarum (fiducia-linux-plan T2): instantanea OneCRL
+       fixa + index manu; generator per aedilis structus (json.h,
+       stml.h), ergo directorium eius vestigium declaratum -->
+  <actio titulus="fiducia_diffisa" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/fiducia_diffisa_generare.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/fiducia_diffisa_generare"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
+    <ingressus genus="fasciculus" via="tools/fiducia_diffisa_generare.sh"/>
+    <ingressus genus="fasciculus" via="tools/fiducia_diffisa_generare.c"/>
+    <ingressus genus="fasciculus" via="include/fiducia_diffisa.h"/>
+    <ingressus genus="fasciculus" via="include/fiducia_diffisa_tabula.h"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/fiducia/onecrl/2026-10-21/changeset.json"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/fiducia/onecrl/2026-10-21/SHA256SUMS"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/fiducia/diffisa.stml"/>
+    <ingressus genus="manifestum" via="build/aedilis/fiducia_diffisa_generare/manifestum.stml"/>
+    <exitus via="lib/fiducia_diffisa_tabula.c" provenientia="regeneratio"/>
+  </actio>
   <!-- tabula nodorum: polynomia per laqueus ex codicibus PD extracti
        KnotInfo fixi (tools/tabula_nodorum_extrahere.sh) computata.
        MEMORABILIS (cursores ad gradus T5): lib/tabula_nodorum_data.c
@@ -583,6 +623,12 @@
       <verbum! (>probationes/fixa/norma/normae_fixae.h
       <verbum! (>probationes/fixa/norma/normae_fixae.c
     </mandatum>
+    <!-- norma_struere.sh bin/norma per aedilis struit: directorium
+         eius et binarium vestigia declarata (ut pecunia_monetae;
+         inventum fiducia-linux T2, 2026-10-22) -->
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/norma"/>
+    <vestigium via="bin/norma"/>
     <ingressus genus="fasciculus" via="tools/norma_c_regenerare.sh"/>
     <ingressus genus="fasciculus" via="tools/norma_struere.sh"/>
     <ingressus genus="manifestum" via="build/aedilis/norma/manifestum.stml"/>
@@ -610,6 +656,12 @@
       <verbum! (>include/vates_responsum_norma.h
       <verbum! (>lib/vates_responsum_norma.c
     </mandatum>
+    <!-- norma_struere.sh bin/norma per aedilis struit: directorium
+         eius et binarium vestigia declarata (ut pecunia_monetae;
+         inventum fiducia-linux T2, 2026-10-22) -->
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/norma"/>
+    <vestigium via="bin/norma"/>
     <ingressus genus="fasciculus" via="tools/norma_c_regenerare.sh"/>
     <ingressus genus="fasciculus" via="tools/norma_struere.sh"/>
     <ingressus genus="manifestum" via="build/aedilis/norma/manifestum.stml"/>

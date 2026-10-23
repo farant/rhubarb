@@ -1,0 +1,15 @@
+<!-- diffisa.stml - certificata diffisa quae instantanea OneCRL fixa
+     (onecrl/<dies>/) NON habet (fiducia-linux-spec II.4).
+
+     Forma, omnia attributa necessaria (generator aliter recusat):
+       diffisa genus="emittens_series|subiectum_clavis"
+               primum="base64 Name DER (emittens aut subiectum)"
+               secundum="base64 (series INTEGER octeti, 0x00 initiali
+                         servato; aut SHA-256 SubjectPublicKeyInfo)"
+               causa="quid et cur" dies="YYYY-MM-DD" fons="URL"
+     Octeti ex certificato IPSO sumendi, numquam ex articulo transcripti.
+
+     Natum VACUUM 2026-10-22: eMudhra (bug 2083382) iam in OneCRL est
+     (emittens+series 10-17, subiectum+clavis 10-21). -->
+<diffisae>
+</diffisae>

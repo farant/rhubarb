@@ -577,7 +577,7 @@ fasti_ad_unix (
     DiesHora dh)
 {
     /* Unix epoch: 1970-01-01 00:00:00 UTC */
-            Dies epoch      = fasti_dies(MCMX + LXX, I, I);
+            Dies epoch      = fasti_dies(MCMLXX, I, I);
     DiesIulianus jdn_dies   = fasti_ad_iulianum(dh.dies);
     DiesIulianus jdn_epoch  = fasti_ad_iulianum(epoch);
       MoraDierum dies_diff  = jdn_dies - jdn_epoch;
@@ -597,7 +597,7 @@ DiesHora
 fasti_ex_unix (
     MomentumSec timestamp)
 {
-            Dies epoch      = fasti_dies(MCMX + LXX, I, I);
+            Dies epoch      = fasti_dies(MCMLXX, I, I);
     DiesIulianus jdn_epoch  = fasti_ad_iulianum(epoch);
              s64 dies_diff;
              s64 secunda_diei;

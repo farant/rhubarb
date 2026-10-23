@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Error>
+  <Code>SignatureDoesNotMatch</Code>
+  <Message>The request signature we calculated does not match the signature you provided.</Message>
+  <AWSAccessKeyId>AKIDEXAMPLE</AWSAccessKeyId>
+  <StringToSign>AWS4-HMAC-SHA256</StringToSign>
+  <RequestId>SIG789</RequestId>
+</Error>

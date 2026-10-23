@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListMultipartUploadsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+  <Bucket>situla</Bucket>
+  <KeyMarker></KeyMarker>
+  <UploadIdMarker></UploadIdMarker>
+  <Prefix>x/</Prefix>
+  <MaxUploads>1000</MaxUploads>
+  <IsTruncated>false</IsTruncated>
+  <Upload>
+    <Key>x/unum</Key>
+    <UploadId>ID-UNUM</UploadId>
+    <Initiated>2026-10-20T10:00:00.000Z</Initiated>
+    <StorageClass>STANDARD</StorageClass>
+  </Upload>
+  <Upload>
+    <Key>x/duo</Key>
+    <UploadId>ID-DUO</UploadId>
+    <Initiated>2026-10-21T10:00:00.000Z</Initiated>
+    <StorageClass>STANDARD</StorageClass>
+  </Upload>
+</ListMultipartUploadsResult>
