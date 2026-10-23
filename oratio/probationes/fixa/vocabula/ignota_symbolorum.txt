@@ -1478,7 +1478,6 @@ percent
 percentum
 perror
 pers
-persistens
 persistentia
 pext
 pf

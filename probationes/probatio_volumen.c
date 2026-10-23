@@ -1,6 +1,7 @@
 /* probatio_volumen.c - Probationes Voluminis (documentum = plagula
  * sqlite una; acta veritas, plagulae/massae proiectio) */
 
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -12,6 +13,7 @@
 #include "credo.h"
 #include "filum.h"
 #include <string.h>
+#include <stdlib.h>
 
 #include <stdio.h>
 
@@ -1078,6 +1080,100 @@ _sectio_in_transactione (
     volumen_claudere(v);
 }
 
+
+/* ========================================================
+ * PROBARE: volumen temporarium sub $TMPDIR (android-gradus II.2)
+ *
+ * Android /tmp caret; cursor tabulae TMPDIR sub radice sua
+ * ponit. Basis: $TMPDIR non vacuum (virgulae finales abscissae),
+ * aliter /tmp - regula credo (lib/credo.c).
+ * ======================================================== */
+
+interior b32
+_incipit (
+    constans character* via,
+    constans character* praefixum)
+{
+    redde strncmp(via, praefixum, strlen(praefixum)) == ZEPHYRUM;
+}
+
+/* casus unus: TMPDIR = valor (NIHIL = absens) -> volumen sub
+ * 'exspectatum'; exspectatum NIHIL = basis /tmp, quae in Android
+ * deest - ibi volumen nasci NON debet (nec alibi) */
+interior vacuum
+_temporarium_sub (
+        CredoContextus* c,
+    constans character* valor,
+    constans character* exspectatum)
+{
+      Volumen* vol;
+    character  via[DXII];
+
+    si (valor != NIHIL)
+    {
+        (vacuum)setenv("TMPDIR", valor, I);
+    }
+    alioquin
+    {
+        (vacuum)unsetenv("TMPDIR");
+    }
+    vol = volumen_temporarium(c->piscina, "tmpdir_probatio");
+    si (exspectatum == NIHIL && !filum_directorium_existit("/tmp"))
+    {
+        CREDO_NIHIL (vol);
+        redde;
+    }
+    CREDO_NON_NIHIL (vol);
+    si (vol == NIHIL)
+    {
+        redde;
+    }
+    strcpy(via, volumen_via(vol));
+    CREDO_VERUM (_incipit(via, exspectatum != NIHIL ? exspectatum
+        : "/tmp/tmpdir_probatio-"));
+    CREDO_VERUM (filum_existit(via));
+    volumen_claudere(vol);
+    CREDO_FALSUM (filum_existit(via));
+}
+
+interior vacuum
+_sectio_temporarii_ambitus (
+    CredoContextus* c)
+{
+    constans character* vetus;
+             character  servatum[DXII];
+                   b32  habuit;
+
+    vetus   = getenv("TMPDIR");
+    habuit  = vetus != NIHIL && strlen(vetus) < DXII;
+    si (habuit)
+    {
+        strcpy(servatum, vetus);
+    }
+    CREDO_VERUM (filum_directorium_creare_cum_parentibus(
+        "build/probatio_volumen_tmpdir"));
+
+    /* I: directorium datum */
+    _temporarium_sub(c, "build/probatio_volumen_tmpdir",
+        "build/probatio_volumen_tmpdir/tmpdir_probatio-");
+    /* II: virgulae finales abscinduntur (macOS TMPDIR '/' terminat) */
+    _temporarium_sub(c, "build/probatio_volumen_tmpdir//",
+        "build/probatio_volumen_tmpdir/tmpdir_probatio-");
+    /* III-IV: vacuum aut absens -> /tmp */
+    _temporarium_sub(c, "", NIHIL);
+    _temporarium_sub(c, NIHIL, NIHIL);
+
+    si (habuit)
+    {
+        (vacuum)setenv("TMPDIR", servatum, I);
+    }
+    alioquin
+    {
+        (vacuum)unsetenv("TMPDIR");
+    }
+}
+
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "volumen_creare", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "aperire_aut_creare", _sectio_secunda, NIHIL, NIHIL, NIHIL,
@@ -1109,6 +1205,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "volumen_temporarium", _sectio_decima, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "volumen_temporarium sub TMPDIR", _sectio_temporarii_ambitus,
+        NIHIL, NIHIL, NIHIL, NIHIL },
     { "volumen ordinarium SUPERSTES", _sectio_decima_prima, NIHIL,
         NIHIL, NIHIL, NIHIL },
     { "in_transactione", _sectio_in_transactione, NIHIL, NIHIL, NIHIL,
