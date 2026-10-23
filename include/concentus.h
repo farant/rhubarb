@@ -82,6 +82,11 @@ s64
 concentus_initium (
     Concentus* c);
 
+/* horologium exitus: quadra reddita (momentum); 0 si clausus */
+s64
+concentus_momentum (
+    Concentus* c);
+
 /* iussum ad exitum. FALSUM: clausus aut anulus plenus - iussum
  * INCIPIENS (tabula, sonitus, tibia) recusatum sedem suam liberat, ne
  * occupata maneat sine voce */

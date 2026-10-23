@@ -99,6 +99,13 @@ _incipiens (
         || genus == MIXTURA_IUSSUM_TIBIAM;
 }
 
+s64
+concentus_momentum (
+    Concentus* c)
+{
+    redde c->apertum ? c->exitus.momentum(c->exitus.ctx) : ZEPHYRUM;
+}
+
 b32
 concentus_iubere (
                    Concentus* c,

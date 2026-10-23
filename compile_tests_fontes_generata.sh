@@ -33,6 +33,7 @@ declare -a SOURCE_FILES=(
     "lib/calendario_visus.c"
     "lib/calendarium_liturgicum.c"
     "lib/canon.c"
+    "lib/cantor.c"
     "lib/cantuale.c"
     "lib/cantuale_infixum.c"
     "lib/cantus.c"
