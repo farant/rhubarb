@@ -273,6 +273,7 @@ structura PensaDocumentum {
                 Piscina* piscina;
     InternamentumChorda* intern;
                 Volumen* volumen;
+                Piscina* scheda;   /* quaestio una (vacatur) */
          TabulaDispersa* signa;    /* clavis -> &signum_factum aut
                                     * &signum_infectum */
                     s64 seq;      /* actum ultimum lectum */
@@ -298,7 +299,8 @@ clavis_signi (
         piscina), res, piscina);
 }
 
-/* acta nova (post doc->seq) in tabulam */
+/* acta nova (post doc->seq) in tabulam; lectio in scheda, clavis nova
+ * sola in piscina documenti */
 interior vacuum
 acta_legere (
     PensaDocumentum* doc)
@@ -310,15 +312,19 @@ acta_legere (
            chorda* dies;
              Dies  d;
            chorda  textus;
+           chorda  clavis;
+           vacuum* valor;
+           vacuum* signum;
               i32  i;
 
+    piscina_vacare(doc->scheda);
     acta = volumen_acta_generum_legere(doc->volumen, doc->seq,
-        GENERA_PENSORUM, doc->piscina);
+        GENERA_PENSORUM, doc->scheda);
     per (i = ZEPHYRUM; acta && i < xar_numerus(acta); i++)
     {
-        actum = (VolumenActum*)xar_obtinere(acta, i);
-        doc->seq = actum->seq;
-        res = stml_legere(actum->datum, doc->piscina, doc->intern);
+        actum     = (VolumenActum*)xar_obtinere(acta, i);
+        doc->seq  = actum->seq;
+        res       = stml_legere(actum->datum, doc->scheda, doc->intern);
         si (!res.successus || !res.elementum_radix)
         {
             perge;
@@ -326,16 +332,27 @@ acta_legere (
         actio  = stml_attributum_capere(res.elementum_radix, "actio");
         dies   = stml_attributum_capere(res.elementum_radix, "dies");
         textus  = purgare(stml_textus_internus(res.elementum_radix,
-            doc->piscina));
+            doc->scheda));
         si (   !actio || !dies || textus.mensura == ZEPHYRUM
             || !fasti_parsare_iso(*dies, &d))
         {
             perge;
         }
-        (vacuum)tabula_dispersa_inserere(doc->signa, clavis_signi(d,
-            textus, doc->piscina),
-            chorda_aequalis_literis(*actio, "factum")
-            ? (vacuum*)&signum_factum : (vacuum*)&signum_infectum);
+        signum = chorda_aequalis_literis(*actio, "factum")
+               ? (vacuum*)&signum_factum : (vacuum*)&signum_infectum;
+        /* clavis nota: valor renovatur (tabula clavem veterem servat);
+         * nova: clavis in piscina documenti (tabula per referentiam) */
+        clavis = clavis_signi(d, textus, doc->scheda);
+        si (tabula_dispersa_invenire(doc->signa, clavis, &valor))
+        {
+            (vacuum)tabula_dispersa_inserere(doc->signa, clavis,
+                signum);
+        }
+        alioquin
+        {
+            (vacuum)tabula_dispersa_inserere(doc->signa,
+                chorda_transcribere(clavis, doc->piscina), signum);
+        }
     }
 }
 
@@ -361,8 +378,9 @@ pensa_aperire (
     doc->piscina  = piscina;
     doc->intern   = intern;
     doc->volumen  = volumen;
+    doc->scheda   = piscina_generare_dynamicum("pensa_scheda", XVI * M);
     doc->signa    = tabula_dispersa_creare_chorda(piscina, LXIV);
-    si (!doc->signa)
+    si (!doc->scheda || !doc->signa)
     {
         redde NIHIL;
     }
@@ -385,7 +403,7 @@ pensa_factum (
     }
     acta_legere(doc);
     redde tabula_dispersa_invenire(doc->signa, clavis_signi(d, res,
-        doc->piscina), &valor) && valor == (vacuum*)&signum_factum;
+        doc->scheda), &valor) && valor == (vacuum*)&signum_factum;
 }
 
 b32
@@ -407,18 +425,18 @@ pensa_ponere (
     {
         redde VERUM;
     }
-    n = stml_elementum_creare(doc->piscina, doc->intern, "pensum");
-    t = stml_textum_creare_ex_chorda(doc->piscina, doc->intern, res);
+    n = stml_elementum_creare(doc->scheda, doc->intern, "pensum");
+    t = stml_textum_creare_ex_chorda(doc->scheda, doc->intern, res);
     si (   !n || !t
-        || !stml_attributum_addere(n, doc->piscina, doc->intern,
+        || !stml_attributum_addere(n, doc->scheda, doc->intern,
         "actio",
                factum ? "factum" : "infectum")
-        || !stml_attributum_addere_chorda(n, doc->piscina, doc->intern,
+        || !stml_attributum_addere_chorda(n, doc->scheda, doc->intern,
                "dies", fasti_formare_diem(d, FASTI_FORMA_ISO,
-               doc->piscina))
+               doc->scheda))
         || !stml_liberum_addere(n, t)
         || volumen_actum_appendere(doc->volumen, "pensa",
-               stml_scribere(n, doc->piscina, FALSUM)) <= ZEPHYRUM)
+               stml_scribere(n, doc->scheda, FALSUM)) <= ZEPHYRUM)
     {
         redde FALSUM;
     }

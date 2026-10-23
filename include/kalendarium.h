@@ -53,6 +53,18 @@
  * assignatae; notae sub quaque re. "prompta" (PARTES_CAMPUS) solum
  * dum prompta aperta est (A3b).
  *
+ * INDEX COTIDIANUS (pensa K3; visus diei, volumine dato): post res
+ * apertas titulus "k" (PARTES_INDEX, fascia "Checklist"; in pagina
+ * nova "k-c") et ordines "k<n>" (PARTES_ITEM): res pensorum diei
+ * (pensa_res_diei super librum "pensa" voluminis, ordine formae);
+ * deinde "c" et perfectae. Electio "k<n>" (res_electa); j/k per res et
+ * pensa ordine indicis; x aut ictus in capsa signum ponit aut tollit
+ * (pensa_ponere) - solum die hodierno aut praeterito (hodie ex porta);
+ * dies futuri obscuri, x nihil agit. Pensum signatum: capsa signata,
+ * titulus obscurus linea transversa (ut res perfecta), loco suo manet.
+ * Mandata rei (titulus, dies, nota, rubricae, < >, X) pensis non
+ * praesto (in menu obscura); u signa non revocat (x iterum).
+ *
  * CLAVES (mensis): h/l dies -1/+1, k/j hebdomas -1/+1, H/L mensis
  * -1/+1 (dies ad finem mensis praecisa), t hodie, Enter diem aperit.
  * BARRA (M1b): supra omnes visus, globuli (PARTES_BOTTONE) "praecedens"

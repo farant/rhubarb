@@ -243,7 +243,7 @@ One section for now: **Daily checklist**.
 |---|---|
 | **K1** | `recursus` + corpus: seed grammar (§III.2), canonical form, errors, anchors. DONE 2026-10-23: 62-entry corpus with round trips, API edge tests; see lib/recursus.worklog.md |
 | **K2** | `pensa`: outline parsing (§IV.1), items for a day, tick/untick acts. DONE 2026-10-23: `scriba_liber_textum_legere` (book text with blank lines), outline parser + items for a day, ticks as acts read before every query; see lib/pensa.worklog.md |
-| **K3** | Day view Checklist block (show, tick, history, future dimmed) |
+| **K3** | Day view Checklist block (show, tick, history, future dimmed). DONE 2026-10-23: "k"/"k<n>" rows between to-dos and Completed, one day selection sequence (`electiones_diei`), tick via the complete command (today/past only), drawing + vicus end-to-end; pensa scratch pool for per-frame queries; see lib/kalendarium.worklog.md |
 | **K4** | Reminders tab read view |
 | **K5** | Edit view (embedded scriba on the `pensa` book) |
 
@@ -264,9 +264,6 @@ plants, worklog, commit on approval.
 ## AUDIENDA
 
 - The day-notes editor's exit key was not checked yet (K5).
-- How the day view's selection currently spans its list (j/k over
-  agenda items) was read from the key table only
-  (`lib/kalendarium.c` ~l.1787-1821), not from the selection code.
 - (verified 2026-10-23) `scriba_liber_lineas_legere` keeps leading
   whitespace (`lineam_legere`, lib/scriba_liber.c: cells 0..end of
   content, tabs/continuations as spaces) and drops blank lines — fits

@@ -38,7 +38,7 @@
             scriptor="calendarium.agere"
             semita="status" ambitus="ligatio"
             nota="id rei electae (ULID aut decimale vetus) in visu
-                  diei; absens = prima"/>
+                  diei, aut k<n> (pensum diei, K3); absens = prima"/>
     <campus nomen="prompta" typus="electio" vita="transiens"
             absens="nulla" scriptor="calendarium.agere">
       <optio>nulla</optio>

@@ -23,6 +23,7 @@
 #include "vim.h"
 #include "semita.h"
 #include "conspectus_dies.h"
+#include "pensa.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -58,6 +59,7 @@ nomen structura {
               DiesFontes  diei;      /* D4b: fontes conspectus 'dies' */
      ConspectusRegistrum* conspectus;  /* D4b: NIHIL sine volumine et
                                         * agenda - computatio directa */
+         PensaDocumentum* pensa;   /* K3: signa (NIHIL sine volumine) */
 } KalendariumFigurae;
 
 /* A6e: superficies sine superficies_* rami: montationis (si nota),
@@ -333,6 +335,19 @@ dies_aequales (
         && a.dies == b.dies;
 }
 
+/* infra definitae */
+interior b32
+frustum_identitatis (
+         chorda  id,
+      character  praefixum,
+         chorda* frustum);
+
+interior b32
+numerus_identitatis (
+         chorda  id,
+      character  praefixum,
+            s32* numerus);
+
 /* P6: dies signati in [prima, ultima] ex fontibus (nulli: vacuum) */
 interior Xar*
 signati (
@@ -346,6 +361,25 @@ signati (
     ctx = (constans KalendariumFigurae*)m->figurae_ctx;
     redde fasti_fontes_legere(ctx ? ctx->fontes : NIHIL, prima, ultima,
         piscina);
+}
+
+/* K3: res indicis cotidiani diei (Xar de chorda, ordine formae; liber
+ * "pensa" voluminis); vacuum sine volumine */
+interior Xar*
+pensa_diei (
+     constans KalendariumMontatio* m,
+                             Dies  dies,
+                          Piscina* p)
+{
+    constans KalendariumFigurae* ctx;
+
+    ctx = (constans KalendariumFigurae*)m->figurae_ctx;
+    si (!ctx || !ctx->pensa)
+    {
+        redde xar_creare(p, (i32)magnitudo(chorda));
+    }
+    redde pensa_res_diei(pensa_formam_legere(pensa_textum_legere(
+        ctx->volumen, m->intern, p), p), dies, p);
 }
 
 /* ordines visus diei (A6b): apertae diei assignatae (ordine id),
@@ -394,6 +428,60 @@ ordines_diei (
     redde l;
 }
 
+/* K3: claves "k0".."k<n-1>" in l */
+interior vacuum
+claves_pensorum_addere (
+         Xar* l,
+         i32  numerus,
+     Piscina* p)
+{
+    character id[XVI];
+          i32 i;
+
+    per (i = ZEPHYRUM; l && i < numerus; i++)
+    {
+        sprintf(id, "k%d", (integer)i);
+        *(chorda*)xar_addere(l) = chorda_ex_literis(id, p);
+    }
+}
+
+/* K3: electiones visus diei ordine indicis: res apertae (id), pensa
+ * ("k<n>"), res perfectae (id) - Xar de chorda */
+interior Xar*
+electiones_diei (
+     constans KalendariumMontatio* m,
+                          Piscina* p)
+{
+                   Xar* l;
+                   Xar* res;
+                   Xar* pensa;
+    constans AgendaRes* r;
+                   b32  posita;
+                   i32  i;
+
+    l       = xar_creare(p, (i32)magnitudo(chorda));
+    res     = ordines_diei(m, kalendarium_dies_electus(m), p);
+    pensa   = pensa_diei(m, kalendarium_dies_electus(m), p);
+    posita  = FALSUM;
+    per (i = ZEPHYRUM; l && res && i < xar_numerus(res); i++)
+    {
+        r = *(constans AgendaRes**)xar_obtinere(res, i);
+        si (r->perfecta && !posita)
+        {
+            claves_pensorum_addere(l, pensa ? xar_numerus(pensa)
+                : ZEPHYRUM, p);
+            posita = VERUM;
+        }
+        *(chorda*)xar_addere(l) = r->id;
+    }
+    si (!posita)
+    {
+        claves_pensorum_addere(l, pensa ? xar_numerus(pensa) : ZEPHYRUM,
+            p);
+    }
+    redde l;
+}
+
 /* index rei in ordinibus; -1 si abest */
 interior s32
 index_rei (
@@ -426,16 +514,35 @@ id_vacuum (
 }
 
 /* res electa: campus res_electa si in ordinibus, aliter prima; chorda
- * vacua si nulla (id in intern documenti) */
+ * vacua si nulla (id in intern documenti). K3: visus diei - res et
+ * pensa ("k<n>") ordine indicis (electiones_diei) */
 interior chorda
 res_electa (
     constans KalendariumMontatio* m,
-                             Xar* l)
+                             Xar* l,
+                         Piscina* p)
 {
     chorda* a;
+       Xar* e;
        s32  k;
+       i32  i;
 
     a = insula_ramus_attributum(&m->ramus, "res_electa");
+    si (visus_diei(m))
+    {
+        e = electiones_diei(m, p);
+        k = ZEPHYRUM;
+        per (i = ZEPHYRUM; a && e && i < xar_numerus(e); i++)
+        {
+            si (chorda_aequalis(*(chorda*)xar_obtinere(e, i), *a))
+            {
+                k = (s32)i;
+                frange;
+            }
+        }
+        redde (e && xar_numerus(e) > ZEPHYRUM)
+            ? *(chorda*)xar_obtinere(e, (i32)k) : id_vacuum();
+    }
     k = a ? index_rei(l, *a) : -I;
     si (k < ZEPHYRUM && l && xar_numerus(l) > ZEPHYRUM)
     {
@@ -920,7 +1027,7 @@ promptam_committere (
     }
     d   = kalendarium_dies_electus(m);
     l   = ordines_currentes(m, p);
-    id  = res_electa(m, l);
+    id  = res_electa(m, l, p);
     si (chorda_aequalis_literis(genus, "nova"))
     {
         chorda titulus;
@@ -1098,13 +1205,6 @@ signatum_aperire (
         (i32)k));
 }
 
-/* infra definita */
-interior b32
-frustum_identitatis (
-         chorda  id,
-      character  praefixum,
-         chorda* frustum);
-
 /* visus indicis (dies, agenda): ictus in ordine ("r<id>", "r<id>-<k>")
  * rem eligit; claves per tabulam mandatorum */
 interior b32
@@ -1113,7 +1213,14 @@ ictus_ordinis (
               Componens* nodus)
 {
     chorda id;
+       s32 n;
 
+    /* K3: ordo pensi "k<n>" (visus diei) */
+    si (   nodus && visus_diei(m)
+        && numerus_identitatis(nodus->id, 'k', &n) && n >= ZEPHYRUM)
+    {
+        redde electionem_scribere(m, nodus->id);
+    }
     /* "r<id>" (dies), "r<id>-<grex>" (agenda), "q<id>" (perfectae) */
     si (   nodus && (   frustum_identitatis(nodus->id, 'r', &id)
                      || frustum_identitatis(nodus->id, 'q', &id)))
@@ -1135,8 +1242,30 @@ interior s32
 capacitas_indicis (
     constans KalendariumMontatio* m);
 
+/* K3: titulus "k" et ordines "k<n>" (res albi -(n+1)) */
+interior vacuum
+pensa_in_album (
+     Album* l,
+       Xar* pensa)
+{
+    character id[XVI];
+          i32 n;
+
+    si (!pensa || xar_numerus(pensa) == ZEPHYRUM)
+    {
+        redde;
+    }
+    (vacuum)album_addere(l, "k", ALBUM_TITULUS, II, ZEPHYRUM);
+    per (n = ZEPHYRUM; n < xar_numerus(pensa); n++)
+    {
+        sprintf(id, "k%d", (integer)n);
+        (vacuum)album_addere(l, id, ALBUM_RES, II, -(s32)(n + I));
+    }
+}
+
 /* album indicis visus currentis (dies aut agenda), ordine picturae:
- * dies - apertae "r<id>", "c" (titulus), perfectae "r<id>"; agenda -
+ * dies - apertae "r<id>", "k" (titulus) et pensa "k<n>" (K3), "c"
+ * (titulus), perfectae "r<id>"; agenda -
  * "g<k>" (titulus) et "r<id>-<k>", "p" (fascia), "p<k>" (titulus),
  * "q<id>". Altitudo: II + notae (dies: omnes; agenda: electae solius).
  * Paginae per album (nomenclator-plan U1). */
@@ -1150,6 +1279,7 @@ ordines_indicis (
                     Xar* signa;
                     Xar* greges;
                     Xar* perfectae;
+                    Xar* pensa;
             GrexAgendae* g;
      constans AgendaRes* r;
               character  id[XLVIII];
@@ -1175,12 +1305,15 @@ ordines_indicis (
             (vacuum)album_addere(l, id, ALBUM_RES, II, ZEPHYRUM);
         }
         res      = ordines_diei(m, kalendarium_dies_electus(m), p);
+        pensa    = pensa_diei(m, kalendarium_dies_electus(m), p);
         divisor  = FALSUM;
         per (i = ZEPHYRUM; res && i < xar_numerus(res); i++)
         {
             r = *(constans AgendaRes**)xar_obtinere(res, i);
             si (r->perfecta && !divisor)
             {
+                /* K3: pensa inter apertas et perfectas */
+                pensa_in_album(l, pensa);
                 (vacuum)album_addere(l, "c", ALBUM_TITULUS, II,
                     ZEPHYRUM);
                 divisor = VERUM;
@@ -1190,10 +1323,14 @@ ordines_indicis (
             (vacuum)album_addere(l, id, ALBUM_RES, (s32)(II
                 + xar_numerus(r->notae)), (s32)r->ordo);
         }
+        si (!divisor)
+        {
+            pensa_in_album(l, pensa);
+        }
         redde l;
     }
     greges = greges_agendae(m, p);
-    electa = res_electa(m, ordines_currentes(m, p));
+    electa = res_electa(m, ordines_currentes(m, p), p);
     per (i = ZEPHYRUM; greges && i < xar_numerus(greges); i++)
     {
         g = (GrexAgendae*)xar_obtinere(greges, i);
@@ -1279,19 +1416,34 @@ pagina_rei (
                  Album* l;
                Piscina* p;
     constans AgendaRes* r;
+                   s32  res;
+                   s32  n;
 
     p = m->figurae_ctx ? ((KalendariumFigurae*)m->figurae_ctx)->scheda
                        : NIHIL;
-    r = m->documentum ? agenda_res(m->documentum, id) : NIHIL;
-    si (!(visus_diei(m) || visus_agendae(m)) || !p || !r)
+    si (!(visus_diei(m) || visus_agendae(m)) || !p)
     {
         redde -I;
     }
+    /* K3: pensum "k<n>" (visus diei) = res albi -(n+1); aliter res albi
+     * = ordinalis creationis */
+    si (   visus_diei(m) && numerus_identitatis(id, 'k', &n)
+        && n >= ZEPHYRUM)
+    {
+        res = -(n + I);
+    }
+    alioquin
+    {
+        r = m->documentum ? agenda_res(m->documentum, id) : NIHIL;
+        si (!r)
+        {
+            redde -I;
+        }
+        res = (s32)r->ordo;
+    }
     l = ordines_indicis(m, p);
-    /* res iterata (agenda): pagina currens praefertur; res albi =
-     * ordinalis creationis */
-    redde l ? album_pagina_rei(l, (s32)r->ordo, pagina_currens(m, l))
-            : -I;
+    /* res iterata (agenda): pagina currens praefertur */
+    redde l ? album_pagina_rei(l, res, pagina_currens(m, l)) : -I;
 }
 
 /* res viva cuius ordinalis creationis = ordo (res albi); NIHIL si
@@ -1340,8 +1492,10 @@ paginam_vertere (
 {
                  Album* l;
                    s32  k;
+                   s32  res;
     constans AgendaRes* r;
              character  pagina[XVI];
+             character  id[XVI];
 
     l = ordines_indicis(m, p);
     si (!l)
@@ -1354,7 +1508,15 @@ paginam_vertere (
         redde VERUM;
     }
     sprintf(pagina, "%d", (integer)k);
-    r = res_ordinis(m, album_res_prima(l, k));
+    res = album_res_prima(l, k);
+    /* K3: pagina a pensa incipiens: pensum electum */
+    si (res < ZEPHYRUM)
+    {
+        sprintf(id, "k%d", (integer)(-res - I));
+        redde campos_duos_scribere(m, "pagina", pagina, "res_electa",
+            id);
+    }
+    r = res_ordinis(m, res);
     si (r)
     {
         redde campos_duos_scribere(m, "pagina", pagina, "res_electa",
@@ -1378,6 +1540,8 @@ paginam_vertere (
 /* requisita: quod mandatum praesto facit (data, non functio) */
 #define REQUIRIT_REM      I    /* res electa */
 #define REQUIRIT_FILTRUM  II   /* filtrum positum */
+#define REQUIRIT_SIGNANDUM  IV   /* res electa, aut pensum hodie aut
+                                  * ante (K3) */
 
 /* contextus: semel per eventum computatus */
 nomen structura {
@@ -1388,6 +1552,9 @@ nomen structura {
                  chorda  id;         /* res electa, vacua = nulla */
                     s32  index;      /* -1 = nulla */
      constans AgendaRes* r;
+                    s32  pensum;      /* K3: index pensi, -1 = nullum */
+                 chorda  res_pensi;   /* textus eius */
+                    b32  signandum;   /* dies hodie aut ante */
 } ContextusMandati;
 
 interior b32
@@ -1491,13 +1658,44 @@ rem_gradi (
     redde VERUM;
 }
 
+/* K3: visus diei - electio proxima/prior in electionibus diei (res et
+ * pensa) */
+interior b32
+electionem_gradi (
+    ContextusMandati* cm,
+                 s32  gradus)
+{
+    Xar* e;
+    s32  k;
+    i32  i;
+
+    e = electiones_diei(cm->m, cm->p);
+    k = -I;
+    per (i = ZEPHYRUM; e && i < xar_numerus(e); i++)
+    {
+        si (chorda_aequalis(*(chorda*)xar_obtinere(e, i), cm->id))
+        {
+            k = (s32)i;
+            frange;
+        }
+    }
+    si (   k < ZEPHYRUM || k + gradus < ZEPHYRUM
+        || k + gradus >= (s32)xar_numerus(e))
+    {
+        redde VERUM;
+    }
+    redde electionem_scribere(cm->m, *(chorda*)xar_obtinere(e,
+        (i32)(k + gradus)));
+}
+
 interior b32
 fac_rem_proximam (
     vacuum* ctx)
 {
     ContextusMandati* cm = (ContextusMandati*)ctx;
 
-    redde rem_gradi(cm, I);
+    redde visus_diei(cm->m) ? electionem_gradi(cm, I) : rem_gradi(cm,
+        I);
 }
 
 interior b32
@@ -1506,17 +1704,30 @@ fac_rem_priorem (
 {
     ContextusMandati* cm = (ContextusMandati*)ctx;
 
-    redde rem_gradi(cm, -I);
+    redde visus_diei(cm->m) ? electionem_gradi(cm, -I)
+                            : rem_gradi(cm, -I);
 }
 
 /* dies perfectionis = hodie ex porta; agenda: res perfecta abit -
- * electio ad ordinem proximum */
+ * electio ad ordinem proximum. K3: pensum signum ponit aut tollit (die
+ * electo; clavis consumitur utcumque) */
 interior b32
 fac_perficere (
     vacuum* ctx)
 {
     ContextusMandati* cm = (ContextusMandati*)ctx;
+     PensaDocumentum* doc;
 
+    si (cm->pensum >= ZEPHYRUM)
+    {
+        doc = ((KalendariumFigurae*)cm->m->figurae_ctx)->pensa;
+        si (doc)
+        {
+            (vacuum)pensa_ponere(doc, cm->dies, cm->res_pensi,
+                !pensa_factum(doc, cm->dies, cm->res_pensi));
+        }
+        redde VERUM;
+    }
     (vacuum)(cm->r->perfecta
         ? agenda_perfectionem_tollere(cm->m->documentum, cm->id)
         : agenda_perficere(cm->m->documentum, cm->id, hodie(cm->m)));
@@ -1789,7 +2000,7 @@ hic_manens constans Praeceptum TABULA_MANDATORUM[] = {
     { "calendarium.res_prior", "Previous item", "k", VISUS_INDICIS,
         ZEPHYRUM, fac_rem_priorem },
     { "calendarium.perficere", "Complete / reopen item", "x",
-        VISUS_INDICIS, REQUIRIT_REM, fac_perficere },
+        VISUS_INDICIS, REQUIRIT_SIGNANDUM, fac_perficere },
     { "calendarium.delere", "Delete item", "X", VISUS_INDICIS,
         REQUIRIT_REM, fac_delere },
     { "calendarium.revocare", "Undo", "u", VISUS_INDICIS, ZEPHYRUM,
@@ -1851,18 +2062,35 @@ contextum_parare (
                 Piscina* p,
        ContextusMandati* cm)
 {
+    Xar* pensa;
+    s32  n;
+
     memset(cm, ZEPHYRUM, magnitudo(*cm));
-    cm->m      = m;
-    cm->p      = p;
-    cm->dies   = kalendarium_dies_electus(m);
-    cm->index  = -I;
+    cm->m       = m;
+    cm->p       = p;
+    cm->dies    = kalendarium_dies_electus(m);
+    cm->index   = -I;
+    cm->pensum  = -I;
     si (visus_currens(m) & VISUS_INDICIS)
     {
         cm->ordines  = ordines_currentes(m, p);
-        cm->id       = res_electa(m, cm->ordines);
+        cm->id       = res_electa(m, cm->ordines, p);
         cm->index    = index_rei(cm->ordines, cm->id);
         cm->r        = (m->documentum && cm->id.mensura > ZEPHYRUM)
                      ? agenda_res(m->documentum, cm->id) : NIHIL;
+        /* K3: pensum electum - signandum die hodierno aut praeterito */
+        si (   visus_diei(m) && numerus_identitatis(cm->id, 'k', &n)
+            && n >= ZEPHYRUM)
+        {
+            pensa = pensa_diei(m, cm->dies, p);
+            si (pensa && (i32)n < xar_numerus(pensa))
+            {
+                cm->pensum     = n;
+                cm->res_pensi  = *(chorda*)xar_obtinere(pensa, (i32)n);
+                cm->signandum  = fasti_comparare(cm->dies, hodie(m))
+                               <= ZEPHYRUM;
+            }
+        }
     }
 }
 
@@ -1877,6 +2105,8 @@ requisita_kalendarii (
 
     cm = (ContextusMandati*)ctx;
     redde (!(requisita & REQUIRIT_REM) || cm->r)
+        && (   !(requisita & REQUIRIT_SIGNANDUM) || cm->r
+            || (cm->pensum >= ZEPHYRUM && cm->signandum))
         && (   !(requisita & REQUIRIT_FILTRUM)
             || insula_ramus_attributum(&cm->m->ramus,
             "rubrica_filtrum"));
@@ -2129,12 +2359,6 @@ globulum_premere (
     }
     redde FALSUM;
 }
-
-interior b32
-numerus_identitatis (
-         chorda  id,
-      character  praefixum,
-            s32* numerus);
 
 /* M2a: ictus in titulo gregis "g<k>" (agenda) rubricam eius filtrat; in
  * titulo filtri iam positi filtrum tollit. "(none)" nihil agit. */
@@ -2678,11 +2902,13 @@ cellulam_pingere (
             color_liturgicus(v->color), VERUM);
     }
     /* festum: memoria aut maius; dominica nuda nihil (Franus: color et
-     * columna dicunt - titulus praecisus "Dominica X" fallebat) */
+     * columna dicunt - titulus praecisus "Dominica X" fallebat). Textus
+     * conspectus in piscinam mandatorum transcribitur (A2b): introitus
+     * registri ante rasterizationem eici potest */
     si (v && v->festum.mensura > ZEPHYRUM)
     {
         mandata_textus(md, f.x + IV, f.y + KALENDARIUM_LINEA + III,
-            praecidere(v->festum,
+            praecidere(chorda_transcribere(v->festum, md->piscina),
             f.latitudo - VI - (natalis ? KALENDARIUM_PLACENTA_LATITUDO
             + II : ZEPHYRUM)), ZEPHYRUM, figura_color_thematis(alienus
             ? COLOR_TEXT_DIM : COLOR_TEXT));
@@ -2845,6 +3071,17 @@ greges_pingere (
                 figura_color_thematis(COLOR_TEXT));
             perge;
         }
+        /* K3: "k" Checklist (dies; "k-c" iteratus) */
+        si (   l->partes == PARTES_INDEX
+            && (   chorda_aequalis_literis(l->id, "k")
+                || chorda_aequalis_literis(l->id, "k-c")))
+        {
+            figura_fasciam_pingere(md, l->fines);
+            figura_textum_audacem(md, l->fines.x + VI, l->fines.y + IV,
+                chorda_ex_literis("Checklist", md->piscina),
+                figura_color_thematis(COLOR_TEXT));
+            perge;
+        }
         si (   l->partes == PARTES_INDEX
             && chorda_aequalis_literis(l->id, "caput"))
         {
@@ -2960,6 +3197,61 @@ signatum_pingere (
         ZEPHYRUM, figura_color_thematis(COLOR_TEXT));
 }
 
+/* K3: ordo pensi: electus fundo, ceteri linea infra; capsa (signum si
+ * factum); titulus obscurus si factum aut dies futurus (nisi electus);
+ * factum linea per titulum */
+interior vacuum
+pensum_pingere (
+                Mandata* md,
+     constans Componens* l,
+                 chorda  textus,
+                    b32  factum,
+                    b32  electus,
+                    b32  signandum)
+{
+         Punctum a;
+         Punctum b;
+    ColorMandati color;
+             s32 spatium;
+             s32 n;
+
+    si (electus)
+    {
+        figura_ordinem_electum_pingere(md, l->fines);
+    }
+    alioquin
+    {
+        a.x = l->fines.x;
+        a.y = l->fines.y + l->fines.altitudo - I;
+        b.x = l->fines.x + l->fines.latitudo - I;
+        b.y = a.y;
+        mandata_linea(md, a, b, I, figura_color_thematis(
+            COLOR_SUPERFICIES));
+    }
+    figura_capsam_pingere(md, l->fines.x + VIII, l->fines.y + III,
+        factum);
+    color    = figura_color_thematis((!electus
+        && (factum || !signandum))
+             ? COLOR_TEXT_DIM : COLOR_TEXT);
+    spatium  = l->fines.latitudo - XXVI;
+    mandata_textus(md, l->fines.x + XXII, l->fines.y + IV, praecidere(
+        chorda_transcribere(textus, md->piscina), spatium), ZEPHYRUM,
+        color);
+    si (factum)
+    {
+        n = (s32)textus.mensura;
+        si (n * KALENDARIUM_LITTERA > spatium)
+        {
+            n = spatium / KALENDARIUM_LITTERA;
+        }
+        a.x = l->fines.x + XXII;
+        a.y = l->fines.y + IV + KALENDARIUM_LINEA / II;
+        b.x = a.x + n * KALENDARIUM_LITTERA - I;
+        b.y = a.y;
+        mandata_linea(md, a, b, I, color);
+    }
+}
+
 /* ordines (liberi "r<id>", in agenda "r<id>-<k>") - electio, capsa et
  * titulus, notae infra. Visus diei: res alibi assignata obscura cum
  * die sua, notae omnium. Agenda: dies ad dextrum ("-" sine die), notae
@@ -2974,6 +3266,8 @@ ordines_pingere (
        constans AgendaRes* r;
       constans AgendaNota* nota;
                       Xar* signa;
+                      Xar* pensa;
+          PensaDocumentum* doc;
                 Componens* l;
                    chorda  linea;
                    chorda  dextrum;
@@ -2984,6 +3278,7 @@ ordines_pingere (
                       s32  spatium;
                       b32  alibi;
                       b32  agenda;
+                      b32  signandum;
              ColorMandati  color_notae;
              ColorMandati  color_tituli;
                       i32  i;
@@ -2992,10 +3287,15 @@ ordines_pingere (
     m       = contextus->m;
     agenda  = visus_agendae(m);
     dies    = kalendarium_dies_electus(m);
-    electa  = res_electa(m, ordines_currentes(m, md->piscina));
+    electa  = res_electa(m, ordines_currentes(m, md->piscina),
+        md->piscina);
     /* tituli (gregum, perfectarum, capitis indicis, paginae) */
     greges_pingere(contextus, md, c);
     signa = agenda ? NIHIL : signati(m, dies, dies, md->piscina);
+    /* K3: pensa diei, signa, dies signandus (hodie aut ante) */
+    pensa      = agenda ? NIHIL : pensa_diei(m, dies, md->piscina);
+    doc        = contextus->pensa;
+    signandum  = fasti_comparare(dies, hodie(m)) <= ZEPHYRUM;
     per (i = ZEPHYRUM; i < componens_numerus_liberorum(c); i++)
     {
         l = componens_liberum(c, i);
@@ -3003,6 +3303,15 @@ ordines_pingere (
             &id))
         {
             signatum_pingere(md, l, signa, id);
+            perge;
+        }
+        si (   l->partes == PARTES_ITEM && pensa
+            && numerus_identitatis(l->id, 'k', &id) && id >= ZEPHYRUM
+            && (i32)id < xar_numerus(pensa))
+        {
+            linea = *(chorda*)xar_obtinere(pensa, (i32)id);
+            pensum_pingere(md, l, linea, doc && pensa_factum(doc, dies,
+                linea), chorda_aequalis(l->id, electa), signandum);
             perge;
         }
         r = (   m->documentum && l->partes == PARTES_ITEM
@@ -3279,11 +3588,14 @@ diem_hebdomadis_pingere (
             v->color), VERUM);
         si (v->celebratio.mensura > ZEPHYRUM)
         {
-            mandata_textus(md, x, f.y + I, praecidere(v->celebratio,
+            mandata_textus(md, x, f.y + I, praecidere(
+                chorda_transcribere(v->celebratio, md->piscina),
                 latitudo), ZEPHYRUM, figura_color_thematis(COLOR_TEXT));
         }
     }
-    /* lineae: natales, res apertae, notae diei (conspectus 'dies') */
+    /* lineae: natales, res apertae, notae diei (conspectus 'dies');
+     * in piscinam mandatorum transcriptae (A2b: introitus eici
+     * potest) */
     lineae = xar_creare(md->piscina, (i32)magnitudo(chorda));
     si (!lineae)
     {
@@ -3291,9 +3603,8 @@ diem_hebdomadis_pingere (
     }
     per (i = ZEPHYRUM; v && i < xar_numerus(v->natales); i++)
     {
-        *(chorda*)xar_addere(lineae) =
-            *(chorda*)xar_obtinere(v->natales,
-            i);
+        *(chorda*)xar_addere(lineae) = chorda_transcribere(
+            *(chorda*)xar_obtinere(v->natales, i), md->piscina);
     }
     per (i = ZEPHYRUM; v && i < xar_numerus(v->apertae); i++)
     {
@@ -3303,8 +3614,8 @@ diem_hebdomadis_pingere (
     }
     per (i = ZEPHYRUM; v && i < xar_numerus(v->lineae_libri); i++)
     {
-        *(chorda*)xar_addere(lineae) = *(chorda*)xar_obtinere(
-            v->lineae_libri, i);
+        *(chorda*)xar_addere(lineae) = chorda_transcribere(
+            *(chorda*)xar_obtinere(v->lineae_libri, i), md->piscina);
     }
     capacitas = (f.altitudo - II - KALENDARIUM_LINEA)
         / KALENDARIUM_LINEA_HEBDOMADIS;
@@ -4200,6 +4511,8 @@ kalendarium_montare (
             (s32)altitudo;
         ((KalendariumFigurae*)m->figurae_ctx)->fontes   = fontes;
         ((KalendariumFigurae*)m->figurae_ctx)->volumen  = volumen;
+        ((KalendariumFigurae*)m->figurae_ctx)->pensa = volumen
+            ? pensa_aperire(piscina, intern, volumen) : NIHIL;
         ((KalendariumFigurae*)m->figurae_ctx)->organum  = organum;
         ((KalendariumFigurae*)m->figurae_ctx)->organum_scribae =
             organum_legere_genus(piscina, intern, "scriba",

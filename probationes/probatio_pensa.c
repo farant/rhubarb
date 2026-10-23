@@ -284,11 +284,70 @@ _sectio_liber (
     volumen_claudere(vol);
 }
 
+/* K3: documentum diu vivens, quaestio per picturam: piscina eius non
+ * crescit (scheda interna); signa alterna clavem novam non faciunt.
+ * Volumen piscinam propriam habet: appendere ipsum VIII octetos per
+ * actum in piscina voluminis capit (genus), non documenti */
+interior vacuum
+_sectio_memoria (
+    CredoContextus* c)
+{
+                Piscina* p;
+                Piscina* pv;
+    InternamentumChorda* intern;
+                Volumen* vol;
+        PensaDocumentum* a;
+                   Dies  d;
+                 chorda  res;
+                 chorda  absens;
+         memoriae_index  usus;
+                    i32  i;
+
+    p   = c->piscina;
+    pv  = piscina_generare_dynamicum("probatio_pensa_volumen",
+        XVI * M);
+    CREDO_NECESSE_NON_NIHIL(pv);
+    intern  = internamentum_creare(p);
+    vol     = volumen_temporarium(pv, "probatio_pensa");
+    CREDO_NECESSE_NON_NIHIL(vol);
+    d = fasti_dies(MMXXVI, X, XXIII);
+    a = pensa_aperire(p, intern, vol);
+    CREDO_NECESSE_NON_NIHIL(a);
+    res     = chorda_ex_literis("vitamins", p);
+    absens  = chorda_ex_literis("mass", p);
+    CREDO_VERUM(pensa_ponere(a, d, res, VERUM));
+
+    CREDO_GRADUS("quaestiones C: piscina non crescit");
+    usus = piscina_summa_usus(p);
+    per (i = ZEPHYRUM; i < C; i++)
+    {
+        (vacuum)pensa_factum(a, d, res);
+        (vacuum)pensa_factum(a, d, absens);
+    }
+    CREDO_AEQUALIS_S64((s64)piscina_summa_usus(p), (s64)usus);
+
+    CREDO_GRADUS("signa alterna X: clavis eadem, piscina non crescit");
+    /* par primum: "infectum" semel internatur */
+    CREDO_VERUM(pensa_ponere(a, d, res, FALSUM));
+    CREDO_VERUM(pensa_ponere(a, d, res, VERUM));
+    usus = piscina_summa_usus(p);
+    per (i = ZEPHYRUM; i < X; i++)
+    {
+        CREDO_VERUM(pensa_ponere(a, d, res, FALSUM));
+        CREDO_VERUM(pensa_ponere(a, d, res, VERUM));
+    }
+    CREDO_AEQUALIS_S64((s64)piscina_summa_usus(p), (s64)usus);
+    CREDO_VERUM(pensa_factum(a, d, res));
+    volumen_claudere(vol);
+    piscina_destruere(pv);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "forma", _sectio_forma, NIHIL, NIHIL, NIHIL, NIHIL },
     { "dies", _sectio_dies, NIHIL, NIHIL, NIHIL, NIHIL },
     { "signa", _sectio_signa, NIHIL, NIHIL, NIHIL, NIHIL },
     { "liber", _sectio_liber, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "memoria", _sectio_memoria, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

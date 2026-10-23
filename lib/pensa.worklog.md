@@ -42,3 +42,24 @@ content is escaped on write and unescaped on read). Test item
 `R&D "notes" <x>` round-trips. Item text is trimmed on write and on
 query. The trim on READ (around `stml_textus_internus`) is a guard only:
 its plant stayed green because our writer never pads the text.
+
+## 2026-10-23 — K3 Task 1: scratch pool (scheda)
+
+The calendar recomposes and redraws every frame, so one long-lived
+`PensaDocumentum` gets `pensa_factum` many times per second. Before this
+change every query allocated its key (ISO date + "\x1f" + item) and every
+`acta_legere` its act list in `doc->piscina`: 100 query pairs grew the
+pool 14.7 KB -> 199.5 KB. Now a per-document `scheda` (dynamic pool,
+vacated at the top of every `acta_legere`) holds the act list, the parsed
+STML, query keys and the act `pensa_ponere` builds. Only a key the table
+has never seen is transcribed into `doc->piscina` (`tabula_dispersa`
+holds keys BY REFERENCE and keeps the old key on update), so a toggled
+item costs nothing after its first tick.
+
+Two things the memory test had to step around, both not pensa's:
+- `volumen_actum_super_appendere` allocates `genus_ch` with
+  `chorda_ex_literis(genus, volumen->piscina)` on EVERY append (8 B for
+  "pensa"). User-paced, so harmless here, but a volume that appends in a
+  loop grows its pool. The test gives the volume its own pool.
+- The first "infectum" act interns the word once (shared interner): one
+  warm-up pair before measuring.

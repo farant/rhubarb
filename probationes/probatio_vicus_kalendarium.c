@@ -24,6 +24,7 @@
 #include "motus.h"
 #include "figura.h"
 #include "mandatum.h"
+#include "pensa.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -709,6 +710,56 @@ _probare_visus_post_notas (
         XIV));
 }
 
+/* K3: calendarium vici: liber "pensa" voluminis vici, visus diei XIV
+ * (Enter in mense, hodie), x signum in volumine ponit (documentum
+ * alterum videt) */
+interior vacuum
+_probare_pensa (
+    CredoContextus* c)
+{
+               Mundus* x;
+                Vicus* v;
+           ManusLudus* m;
+          ScribaLiber* l;
+     ScribaDocumentum* d;
+    TabulaCharacterum  folium;
+      PensaDocumentum* b;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x && x->volumen);
+    l = scriba_liber_aperire_in_spatio(c->piscina,
+        internamentum_creare(c->piscina), x->volumen, "pensa", XL, X);
+    d = l ? scriba_liber_pagina(l, chorda_ex_literis("1", c->piscina))
+          : NIHIL;
+    CREDO_NECESSE_NON_NIHIL(d);
+    tabula_ex_literis_cum_dimensionibus(&folium, c->piscina,
+        d->latitudo, d->altitudo, "vitamins");
+    CREDO_NECESSE(scriba_documentum_committere(d, &folium) > ZEPHYRUM);
+    CREDO_NECESSE(vicus_applicatio_aedificare(&x->app, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CDLXXX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    v                 = x->app.vicus;
+    x->tempus.annus   = MMXXVI;
+    x->tempus.mensis  = X;
+    x->tempus.dies    = XIV;
+    vicus_horologium_ponere(v, horologium_fictum, &x->tempus);
+    CREDO_VERUM(vicus_acervo_aperire(v, "calendarium", "2026-10"));
+    (vacuum)vicus_pulsare(v);
+    CREDO_NECESSE_NON_NIHIL(kalendarium_frontale(v));
+    m = manus_ludus_creare(c->piscina, x->app.d);
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(manus_ludus_premere(m, "#kalendarium"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XIII, ZEPHYRUM));
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(manus_ludus_premere(m, "#k0"));
+    CREDO_VERUM(manus_ludus_clavem(m, 'x', ZEPHYRUM));
+    b = pensa_aperire(c->piscina, internamentum_creare(c->piscina),
+        x->volumen);
+    CREDO_NECESSE_NON_NIHIL(b);
+    CREDO_VERUM(pensa_factum(b, fasti_dies(MMXXVI, X, XIV),
+        chorda_ex_literis("vitamins", c->piscina)));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latera",  _probare_latera,  mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
@@ -724,6 +775,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "visus_post_notas", _probare_visus_post_notas, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
+    { "pensa", _probare_pensa, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

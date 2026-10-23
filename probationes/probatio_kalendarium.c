@@ -30,6 +30,7 @@
 #include "exemplaria.h"
 #include "semita.h"
 #include "organum_montatio.h"
+#include "pensa.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -3772,6 +3773,440 @@ _probare_fundum_hodie (
         c->piscina)));
 }
 
+/* K3: forma exempli in libro "pensa" voluminis mundi (pagina XL x X).
+ * Dies XIV (feria IV, hodie): vitamins, morning offering, mass; XV:
+ * vitamins, morning offering; XVII (sabbatum): + mow the lawn */
+hic_manens constans character PENSA_EXEMPLI[] =
+    "vitamins\nmorning offering\n\nwednesdays\n  mass\n\nweekends\n"
+    "  mow the lawn";
+
+interior b32
+pensa_scribere (
+                 Mundus* x,
+                Piscina* p,
+     constans character* textus)
+{
+          ScribaLiber* l;
+     ScribaDocumentum* d;
+    TabulaCharacterum  folium;
+
+    l = scriba_liber_aperire_in_spatio(p, x->intern, x->volumen,
+        "pensa",
+        XL, X);
+    d = l ? scriba_liber_pagina(l, chorda_ex_literis("1", p)) : NIHIL;
+    si (!d)
+    {
+        redde FALSUM;
+    }
+    tabula_ex_literis_cum_dimensionibus(&folium, p, d->latitudo,
+        d->altitudo, textus);
+    redde scriba_documentum_committere(d, &folium) > ZEPHYRUM;
+}
+
+/* agenda diei XIV (agendam_parare) + pensa; superficies magna (index
+ * totus in pagina una); visus diei */
+interior b32
+pensa_parare (
+             Mundus* x,
+     CredoContextus* c)
+{
+    x->latitudo = CCCLX;
+    x->altitudo = CDLXXX;
+    si (   !agendam_parare(x, c)
+        || !pensa_scribere(x, c->piscina, PENSA_EXEMPLI))
+    {
+        redde FALSUM;
+    }
+    reditus(x);
+    dispensator_recomponere(x->d);
+    redde campus_est(x, "visus", "dies");
+}
+
+/* ordines indicis (r<n>, k, k-c, k<n>, c, c-c) ordine arboris */
+interior b32
+indicem_esse (
+                 Mundus* x,
+     constans character* exspectati)
+{
+    Componens* radix;
+    Componens* l;
+    character  visi[CCLVI];
+          i32  i;
+          i32  k;
+          b32  noster;
+
+    radix           = dispensator_arbor(x->d);
+    k               = ZEPHYRUM;
+    visi[ZEPHYRUM]  = '\0';
+    per (i = ZEPHYRUM; radix && i < componens_numerus_liberorum(radix);
+        i++)
+    {
+        l       = componens_liberum(radix, i);
+        noster  = l->id.mensura >= I && (   l->id.datum[ZEPHYRUM] == 'k'
+               || chorda_aequalis_literis(l->id, "c")
+               || chorda_aequalis_literis(l->id, "c-c")
+               || (   l->id.datum[ZEPHYRUM] == 'r'
+                   && l->id.mensura >= II
+                   && l->id.datum[I] >= '0' && l->id.datum[I] <= '9'));
+        si (!noster || k + l->id.mensura + II >= (i32)magnitudo(visi))
+        {
+            perge;
+        }
+        si (k > ZEPHYRUM)
+        {
+            visi[k++] = ' ';
+        }
+        memcpy(visi + k, l->id.datum, (size_t)l->id.mensura);
+        k        += l->id.mensura;
+        visi[k]  = '\0';
+    }
+    redde strcmp(visi, exspectati) == ZEPHYRUM;
+}
+
+/* campum scribere scriptore calendarii (domini alios tacite recusant),
+ * ut campum_scribere in kalendarium.c */
+nomen structura {
+    constans character* titulus;
+    constans character* valor;
+} ParProbationis;
+
+interior vacuum
+campum_ponere_probatio (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    ParProbationis* par;
+
+    par = (ParProbationis*)ctx;
+    insula_attributum_ponere(radix, p, in, par->titulus, par->valor);
+}
+
+interior b32
+campum_scribere_probatio (
+                 Mundus* x,
+     constans character* titulus,
+     constans character* valor)
+{
+    ParProbationis par;
+            chorda prior;
+               b32 ok;
+
+    par.titulus  = titulus;
+    par.valor    = valor;
+    prior        = x->repo->scriptor;
+    insula_scriptorem_ponere(x->repo, chorda_ex_literis(
+        "calendarium.agere", x->m.piscina));
+    ok = mutare_ramum(&x->m.ramus, campum_ponere_probatio, &par);
+    insula_scriptorem_ponere(x->repo, prior);
+    redde ok;
+}
+
+/* K3: ordines pensorum inter res apertas et perfectas; electio per
+ * j/k; ictus eligit; dies alius; electio invalida */
+interior vacuum
+_probare_pensa_ordines (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(pensa_parare(x, c));
+
+    CREDO_GRADUS("XIV: r1, Checklist, pensa III, Completed");
+    CREDO_VERUM(indicem_esse(x, "r1 k k0 k1 k2 c r2 r3"));
+
+    CREDO_GRADUS("j/k: r1 -> k0 .. k2 -> r2, et retro");
+    clavis(x, 'j');
+    CREDO_VERUM(campus_est(x, "res_electa", "k0"));
+    clavis(x, 'j');
+    clavis(x, 'j');
+    CREDO_VERUM(campus_est(x, "res_electa", "k2"));
+    clavis(x, 'j');
+    CREDO_VERUM(campus_est(x, "res_electa", "2"));
+    clavis(x, 'k');
+    clavis(x, 'k');
+    CREDO_VERUM(campus_est(x, "res_electa", "k1"));
+
+    CREDO_GRADUS("ictus in ordine pensi eligit");
+    CREDO_VERUM(ictus_in(x, "k2", c->piscina));
+    CREDO_VERUM(campus_est(x, "res_electa", "k2"));
+
+    CREDO_GRADUS("XVII (sabbatum): pensa III, nullae res");
+    clavis(x, 'l');
+    clavis(x, 'l');
+    clavis(x, 'l');
+    CREDO_VERUM(indicem_esse(x, "k k0 k1 k2"));
+
+    CREDO_GRADUS("electio k5 invalida: prima, j procedit");
+    CREDO_VERUM(campum_scribere_probatio(x, "res_electa", "k5"));
+    dispensator_recomponere(x->d);
+    clavis(x, 'j');
+    CREDO_VERUM(campus_est(x, "res_electa", "k1"));
+}
+
+/* K3: liber "pensa" absens - index ut ante (r1 c r2 r3) */
+interior vacuum
+_probare_pensa_absentia (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(agendam_parare(x, c));
+    reditus(x);
+    dispensator_recomponere(x->d);
+    CREDO_VERUM(indicem_esse(x, "r1 c r2 r3"));
+    clavis(x, 'j');
+    CREDO_VERUM(campus_est(x, "res_electa", "2"));
+}
+
+/* K3: superficies ordinaria (capacitas IX): pensa per paginas; titulus
+ * "k-c" in pagina nova; j paginam sequitur; ] pensum eligit */
+interior vacuum
+_probare_pensa_paginas (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(agendam_parare(x, c));
+    CREDO_NECESSE(pensa_scribere(x, c->piscina, PENSA_EXEMPLI));
+    reditus(x);
+    dispensator_recomponere(x->d);
+
+    CREDO_GRADUS("pagina I: r1 k k0 k1");
+    CREDO_VERUM(indicem_esse(x, "r1 k k0 k1"));
+
+    CREDO_GRADUS("j ter: k2 in pagina II cum titulo iterato");
+    clavis(x, 'j');
+    clavis(x, 'j');
+    clavis(x, 'j');
+    CREDO_VERUM(campus_est(x, "res_electa", "k2"));
+    CREDO_VERUM(campus_est(x, "pagina", "1"));
+    CREDO_VERUM(indicem_esse(x, "k-c k2 c r2"));
+
+    CREDO_GRADUS("[ et ]: pagina II incipit a pensa k2");
+    clavis(x, '[');
+    CREDO_VERUM(campus_est(x, "res_electa", "1"));
+    clavis(x, ']');
+    CREDO_VERUM(campus_est(x, "res_electa", "k2"));
+}
+
+/* K3: x et ictus in capsa signant (hodie, praeterito); futurus nihil;
+ * res agendae adhuc perficiuntur */
+interior vacuum
+_probare_pensa_signa (
+    CredoContextus* c)
+{
+              Mundus* x;
+     PensaDocumentum* b;
+               Fines  f;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(pensa_parare(x, c));
+    b = pensa_aperire(c->piscina, x->intern, x->volumen);
+    CREDO_NECESSE_NON_NIHIL(b);
+
+    CREDO_GRADUS("hodie: x in k0 signat, iterum tollit");
+    clavis(x, 'j');
+    clavis(x, 'x');
+    CREDO_VERUM(pensa_factum(b, fasti_dies(MMXXVI, X, XIV),
+        chorda_ex_literis("vitamins", c->piscina)));
+    CREDO_VERUM(campus_est(x, "res_electa", "k0"));
+    clavis(x, 'x');
+    CREDO_FALSUM(pensa_factum(b, fasti_dies(MMXXVI, X, XIV),
+        chorda_ex_literis("vitamins", c->piscina)));
+
+    CREDO_GRADUS("ictus in capsa k1: eligit et signat");
+    f = fines_componentis(x, "k1", c->piscina);
+    ictus_ad(x, f.x + X, f.y + IV);
+    CREDO_VERUM(campus_est(x, "res_electa", "k1"));
+    CREDO_VERUM(pensa_factum(b, fasti_dies(MMXXVI, X, XIV),
+        chorda_ex_literis("morning offering", c->piscina)));
+
+    CREDO_GRADUS("res agendae: x adhuc perficit");
+    clavis(x, 'k');
+    clavis(x, 'k');
+    clavis(x, 'x');
+    CREDO_VERUM(agenda_res(x->documentum, id_ex(I, c->piscina))
+        ->perfecta);
+
+    /* x in k0, capsa in k1: pensa diversa, ne actus duo se mutuo
+     * tollant */
+    CREDO_GRADUS("XV (futurus): x et capsa nihil agunt");
+    clavis(x, 'l');
+    dispensator_recomponere(x->d);
+    clavis(x, 'x');
+    f = fines_componentis(x, "k1", c->piscina);
+    ictus_ad(x, f.x + X, f.y + IV);
+    CREDO_FALSUM(pensa_factum(b, fasti_dies(MMXXVI, X, XV),
+        chorda_ex_literis("vitamins", c->piscina)));
+    CREDO_FALSUM(pensa_factum(b, fasti_dies(MMXXVI, X, XV),
+        chorda_ex_literis("morning offering", c->piscina)));
+
+    CREDO_GRADUS("XIII (praeteritus): x signat");
+    clavis(x, 'h');
+    clavis(x, 'h');
+    dispensator_recomponere(x->d);
+    clavis(x, 'k');
+    CREDO_VERUM(campus_est(x, "res_electa", "k0"));
+    clavis(x, 'x');
+    CREDO_VERUM(pensa_factum(b, fasti_dies(MMXXVI, X, XIII),
+        chorda_ex_literis("vitamins", c->piscina)));
+}
+
+/* K3: fascia "Checklist"; capsa (signata post x), linea per titulum;
+ * electus fundo selectionis; futurus obscurus */
+interior vacuum
+_probare_pensa_figuras (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+      Fines  f;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    CREDO_NECESSE(pensa_parare(x, c));
+    clavis(x, 'j');
+    clavis(x, 'x');
+    clavis(x, 'j');
+    md = reddere(x, c->piscina);
+
+    CREDO_GRADUS("fascia Checklist");
+    f = fines_componentis(x, "k", c->piscina);
+    CREDO_VERUM(fascia_in(md, f));
+    CREDO_VERUM(textus_in_continet(md, f, "Checklist"));
+
+    CREDO_GRADUS("k0 signatum: capsa signata, linea, obscurum");
+    f = fines_componentis(x, "k0", c->piscina);
+    CREDO_VERUM(capsa_in(md, f, VERUM));
+    CREDO_VERUM(linea_transversa_in(md, f));
+    CREDO_VERUM(textus_coloris_est(md, f, "vitamins", COLOR_TEXT_DIM));
+
+    CREDO_GRADUS("k1 electum: capsa vacua, accentus, textus plenus");
+    f = fines_componentis(x, "k1", c->piscina);
+    CREDO_VERUM(capsa_in(md, f, FALSUM));
+    CREDO_VERUM(accentus_in(md, f));
+    CREDO_VERUM(textus_coloris_est(md, f, "morning offering",
+        COLOR_TEXT));
+
+    CREDO_GRADUS("k2 non electum hodie: textus plenus, sine linea");
+    f = fines_componentis(x, "k2", c->piscina);
+    CREDO_VERUM(textus_coloris_est(md, f, "mass", COLOR_TEXT));
+    CREDO_FALSUM(linea_transversa_in(md, f));
+
+    CREDO_GRADUS("XV futurus: k0 (non electum) obscurum, capsa vacua");
+    clavis(x, 'l');
+    md  = reddere(x, c->piscina);
+    f   = fines_componentis(x, "k0", c->piscina);
+    CREDO_VERUM(textus_coloris_est(md, f, "vitamins", COLOR_TEXT_DIM));
+    CREDO_VERUM(capsa_in(md, f, FALSUM));
+}
+
+/* K3: superficies ordinaria - "k-c" fascia Checklist in pagina II */
+interior vacuum
+_probare_pensa_titulum_iteratum (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+      Fines  f;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    CREDO_NECESSE(agendam_parare(x, c));
+    CREDO_NECESSE(pensa_scribere(x, c->piscina, PENSA_EXEMPLI));
+    reditus(x);
+    clavis(x, ']');
+    md  = reddere(x, c->piscina);
+    f   = fines_componentis(x, "k-c", c->piscina);
+    CREDO_VERUM(fascia_in(md, f));
+    CREDO_VERUM(textus_in_continet(md, f, "Checklist"));
+}
+
+/* A2b: textus omnis mandatorum in piscina mandatorum (fines [basis,
+ * basis + mensura) piscinae certae magnitudinis). Registrum
+ * conspectuum introitus suos eicit (tectum) - textus in eis relictus
+ * post eiectionem memoria aliena legebatur (mensis: festa hebdomadis
+ * primae, Franus 10-23) */
+interior b32
+textus_in_piscina (
+               Mandata* md,
+    constans character* basis,
+        memoriae_index  mensura)
+{
+    constans Mandatum* y;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus == MANDATUM_TEXTUS
+            && y->textus.mensura > ZEPHYRUM
+            && (   (constans character*)y->textus.datum < basis
+                || (constans character*)y->textus.datum
+                   + y->textus.mensura > basis + mensura))
+        {
+            imprimere("  textus extra piscinam: '%.*s'\n",
+                (integer)y->textus.mensura,
+                (constans character*)y->textus.datum);
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior vacuum
+_probare_textum_in_piscina (
+    CredoContextus* c)
+{
+                  Mundus* x;
+     ConspectusRegistrum* r;
+              DiesFontes  fontes;
+                     Xar* vitia;
+                 Piscina* pm;
+      constans character* basis;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    CREDO_NECESSE(agendam_parare(x, c));
+    CREDO_NECESSE(librum_scribere(x, "dies/2026-10-15", "ora et labora",
+        c->piscina));
+    memset(&fontes, ZEPHYRUM, magnitudo(fontes));
+    fontes.fontes    = fontes_ficti(x, c->piscina);   /* Anna XIV */
+    fontes.agenda    = x->documentum;
+    fontes.liturgia  = calendarium_creare(c->piscina);
+    fontes.volumen   = x->volumen;
+    fontes.intern    = x->intern;
+    r = conspectus_registrum_creare(c->piscina, x->intern, x->volumen,
+        ZEPHYRUM);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_NECESSE(conspectus_dies_registrare(r, &fontes, &vitia));
+    CREDO_NECESSE(conspectus_parare(r, &vitia));
+    kalendarium_conspectum_ponere(&x->m, r);
+    pm = piscina_generare_certae_magnitudinis("probatio_mandata",
+        IV * M * M);
+    CREDO_NECESSE_NON_NIHIL(pm);
+    basis = (constans character*)piscina_allocare(pm, I);
+    CREDO_NECESSE_NON_NIHIL(basis);
+
+    CREDO_GRADUS("mensis: festa (conspectus) in piscina mandatorum");
+    dispensator_recomponere(x->d);
+    CREDO_VERUM(textus_in_piscina(reddere(x, pm), basis, IV * M * M));
+
+    CREDO_GRADUS("hebdomas: celebratio, natales, lineae libri");
+    CREDO_NECESSE(ictus_in(x, "visus-hebdomas", c->piscina));
+    CREDO_VERUM(campus_est(x, "visus", "hebdomas"));
+    piscina_vacare(pm);
+    basis = (constans character*)piscina_allocare(pm, I);
+    CREDO_VERUM(textus_in_piscina(reddere(x, pm), basis, IV * M * M));
+    piscina_destruere(pm);
+    conspectus_registrum_destruere(r);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "natalis_super", _probare_natalis_super, mundum_parare,
       mundum_purgare, NIHIL, NIHIL },
@@ -3857,6 +4292,20 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "hebdomas", _probare_hebdomadem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "fundus_hodie", _probare_fundum_hodie, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "pensa_ordines", _probare_pensa_ordines, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "pensa_absentia", _probare_pensa_absentia, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "pensa_paginae", _probare_pensa_paginas, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "pensa_signa", _probare_pensa_signa, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "pensa_figurae", _probare_pensa_figuras, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "pensa_titulus_iteratus", _probare_pensa_titulum_iteratum,
+        mundum_parare, mundum_purgare, NIHIL, NIHIL },
+    { "textus_in_piscina", _probare_textum_in_piscina, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

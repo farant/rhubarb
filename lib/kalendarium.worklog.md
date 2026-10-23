@@ -953,3 +953,81 @@ Locus rounded to the view's unit, today concrete: dies
 annus `calendarium/annus/2026`, agenda `calendarium/agenda`. Titles
 "Mon 19 Oct 2026", "Week of 18 Oct 2026", "October 2026", "2026",
 "Agenda". Plants red: week not rounded, month with day.
+
+## 2026-10-23 — Checklist block in the day view (pensa K3)
+
+The day view shows the day's checklist items (the `pensa` book of the
+volume, parsed by `pensa_formam_legere`, filtered by `pensa_res_diei`)
+between the open to-dos and Completed: band "k" ("Checklist", repeated
+as "k-c" when a page starts mid-block), rows "k<n>".
+
+Selection model. `res_electa` used to be an agenda id looked up in
+`ordines_currentes` (Xar of AgendaRes*). The day view now has one
+sequence of selectable rows, `electiones_diei` (Xar of chorda): open
+to-do ids, then "k0".."k<n-1>", then completed ids - the same order the
+album draws. `res_electa` (now takes a pool) looks the stored value up
+in it and falls back to the first row, so a stale "k5" after the
+template shrank never strands j/k. j/k in the day view walk that
+sequence (`electionem_gradi`); the agenda view keeps `rem_gradi`.
+Checklist rows go into the album with `res` = -(n+1): 0 is what titles
+and birthday rows carry, so "k0" cannot be 0. `pagina_rei`,
+`paginam_vertere` (a page starting with a checklist row selects it) and
+`ictus_ordinis` each map "k<n>" <-> -(n+1). Agenda ids never look like
+"k<digits>" (decimal or ULID).
+
+Ticking. `contextum_parare` resolves a "k<n>" selection to the item's
+index and text and whether the day is today or earlier (`hodie()`
+from the gate). "Complete" now requires REQUIRIT_SIGNANDUM: an agenda
+item, or a checklist row on a tickable day. The box click already
+called the same command, so it follows the same rule. `fac_perficere`
+flips the tick with `pensa_ponere(doc, dies, res, !pensa_factum(...))`.
+Item commands (title, date, note, rubrics, < >, X) keep REQUIRIT_REM,
+so they grey out on checklist rows. Ticks are NOT in agenda undo: they
+are pensa acts in the volume, not agenda acts; `x` again is the undo.
+The one `PensaDocumentum` per pane is opened at mount (NIHIL without a
+volume) and lives as long as the pane.
+
+Test design trap (Task 3): the future-day check first pressed `x` on k0
+and clicked k0's box - with the today rule broken, the two acts ticked
+and unticked the SAME item and the assertion stayed green. Act on
+different rows when asserting "nothing happened".
+
+Cost. The book is read on every listing (several times per frame:
+compose, paint, selection), and a scriba page read replays the page's
+history. Day view at 800x600, 5 to-dos, 200 frames of
+compose+paint (throwaway probe, scratchpad mensura_pensa.sh):
+no `pensa` book 0.050 ms/frame; template written once 0.479 ms; template
+edited 50 times 1.165 ms. Linear in edits, far inside a frame. If it
+ever matters: cache the parsed form keyed on the volume's last act seq.
+
+pensa side (lib/pensa.c, K3 Task 1): a long-lived document queried per
+frame must not grow its pool - per-query work moved to a scratch pool;
+see lib/pensa.worklog.md.
+
+## 2026-10-23 — garbage feast titles in the month view (A2b again)
+
+Fran saw the first week row's feast titles cycle through random bytes
+on every mouse move ("dies/2026-" in one cell - a day-notes book name).
+Not K3. The shared projection registry (`conspectus`, given by vicus)
+is an LRU with a byte ceiling: after each new day projection, `eicere`
+destroys the least recently read entries' pools. The month painter
+reads 42 days in a row and handed `v->festum` - a pointer INTO the
+entry's pool - straight to `mandata_textus`. Rasterization happens
+after all cells are queued; by then the later reads had evicted the
+first row's entries, and their text pointed at freed memory. The week
+view did the same with the celebration, birthday lines and notes-book
+lines (open items were already copied by chorda_concatenare).
+
+Fix: transcribe projection text into `md->piscina` at those four
+sites - the A2b rule (text given to mandata_textus lives in the
+mandata pool). A projection pointer is valid only until the next
+`conspectus_legere`.
+
+Test `textus_in_piscina`: render into a FIXED-SIZE pool, take its
+base from the first 1-byte allocation, and assert every text command's
+bytes lie in [base, base + size). Deterministic: it does not depend on
+an eviction happening or on what the freed memory holds (a
+read-the-text-back test could pass by luck). It covers every text
+command in the month and week views, so any future site that forgets
+to copy fails here. Plants: each of the four copies removed -> red (the
+birthday one needed a birthday in the fixture; it was green first).
