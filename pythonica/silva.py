@@ -1580,6 +1580,8 @@ PORTAE = {
     'ludus_tessera': (['./ludus_tessera/compile_probationes.sh'],
                       r'LUDUS_TESSERA PROBATIONES: \d+/\d+'),
     'pythonica': (['./pythonica/probare.sh'], r'PYTHONICA: (sana|FRACTA)'),
+    'pythonica-arboris': (['./pythonica/probare.sh', '-arboris'],
+                          r'PYTHONICA ARBORIS: (sana|FRACTA)'),
     # tls-bearssl-plan T1: integritas vendor/bearssl + KAT upstream
     'bearssl': (['./tools/bearssl_probare.sh'], r'BEARSSL: (sana|FRACTA)'),
     'formator-intra': (['./silva/formator_intra_fumus.sh'],

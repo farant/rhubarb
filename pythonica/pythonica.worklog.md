@@ -1353,3 +1353,31 @@ Spec project-specs/translatio-receptorum-spec.md §III; decretum …DC4A8Z.
 - pass 2: vexilla and sonda "portaretur (nulla via mutata)", radix numquam.
 
 All of them ran both times. Full pythonica suite: green, 3.5 min.
+
+## 2026-10-23 — pythonica split: pura (probatio_silva.py) + arboris (probatio_silva_arboris.py)
+
+Option 1 of the composite discussion (desideratum …VXWK8: the real fabrica migration comes later). Gate `pythonica-arboris` added.
+
+**How the split was chosen.**
+- Ran the suite with FABRICA_LECTIONES. Every `_grex` wrote a `G\t<nomen>` marker into the trace via a scratch runner that patched `_grex` in memory, with no repo change.
+- Sections were then classified by how many tracked files they read.
+- 7 groups sweep the live tree, plus the consilium checks and the umbra real-CLI check:
+  - lint latinus, probatio_currere, oraculum md, vocabula;
+  - the VIVUM tail of the portae involucrum;
+  - portae_debitae.sh VIVA.
+- The ~27 groups showing exactly 385 reads are one tool-rebuild staleness scan (silva fontes/instrumenta + include). That is dependence on tool SOURCES, not on the tree.
+- An AST pass (top-level names defined/used per block) showed the live groups were nearly self-contained. Only ACTA_RADIX and imports were shared, so the code moved verbatim.
+
+**Layout.**
+- `probatio_communia.py`: the shared preamble, with `__all__` listing every non-dunder name so `_grex`/`_GREX` survive the star import, plus ACTA_RADIX.
+- `_abortum` now names the RUNNING script (sys.argv[0]) and `SIGNUM`: 'PYTHONICA' or 'PYTHONICA ARBORIS'.
+- `probare.sh [-arboris]`, with two `<porta>` lines.
+
+**Proof.**
+- Check names before vs after, as a multiset: 597 = 597. The only differences are titles embedding timings, run ids, or an interleaved stderr line.
+- Both halves green, directly and through silva.porta.
+- The hermetic half was re-traced alone: 586 tracked reads, all tool closures. That gave its `legit` (include/*, lib/*.c, the front-end fontes/instrumenta, *unitas.stml, *aedificatio.stml, 6 exact files). The live half keeps `legit="*"`.
+
+**Cost / benefit, measured:**
+- pura 197 s + arboris 72 s, against 214 s before as one file. That's a second process and the duplicated preamble (+ noise), so a first merge pass costs roughly +1 min.
+- Under A, pura is carried for golden fixtures, docs and scripts outside its tool sources, saving ~3.3 min on such reruns.
