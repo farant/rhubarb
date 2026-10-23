@@ -113,8 +113,12 @@ _probare_sequi (
     CREDO_NECESSE(via != NIHIL);
     CREDO_NECESSE(admonitiones_sequacem_initiare(&s, c->piscina,
         admonitiones_creare(c->piscina, L), via, M * M));
+    CREDO_VERUM(s.eventus == NIHIL);
     CREDO_AEQUALIS_I32(admonitiones_sequi(&s, &r), ZEPHYRUM);
     CREDO_AEQUALIS_I32(r.mensura, ZEPHYRUM);
+    /* eventus pulsus: nulli, sed tabula adest */
+    CREDO_NECESSE(s.eventus != NIHIL);
+    CREDO_AEQUALIS_I32(xar_numerus(s.eventus), ZEPHYRUM);
     CREDO_NECESSE(appendere(c, via,
         "{\"tempus\":400,\"sessio\":\"s-c\","
         "\"eventus\":\"Notification\","
@@ -129,6 +133,13 @@ _probare_sequi (
         "\"nuntius\":\"x\"}\n"));
     CREDO_AEQUALIS_I32(admonitiones_sequi(&s, &r), I);
     CREDO_CHORDA_AEQUALIS_LITERIS(r, "colloquia:s-c:400");
+    /* eventus OMNES lecti, etiam non qualis, ordine libri */
+    CREDO_NECESSE(s.eventus != NIHIL
+        && xar_numerus(s.eventus) == II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(((constans PraeconiumEventus*)
+        xar_obtinere(s.eventus, ZEPHYRUM))->eventus, "Notification");
+    CREDO_CHORDA_AEQUALIS_LITERIS(((constans PraeconiumEventus*)
+        xar_obtinere(s.eventus, I))->eventus, "PreToolUse");
     CREDO_AEQUALIS_I32(admonitiones_numerus(s.index), V);
     CREDO_CHORDA_AEQUALIS_LITERIS(admonitio(s.index, ZEPHYRUM)->titulus,
         "gamma");
@@ -138,6 +149,8 @@ _probare_sequi (
     CREDO_NECESSE(appendere(c, via,
         "{\"tempus\":500,\"sessio\":\"s-b\",\"eventus\":\"Stop\","));
     CREDO_AEQUALIS_I32(admonitiones_sequi(&s, &r), ZEPHYRUM);
+    CREDO_VERUM(s.eventus != NIHIL
+        && xar_numerus(s.eventus) == ZEPHYRUM);
     CREDO_NECESSE(appendere(c, via,
         "\"panellus\":\"%2\",\"servitor\":\"\",\"via\":\"/w/beta\","
         "\"transcriptum\":\"\",\"genus\":\"\","

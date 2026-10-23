@@ -44,6 +44,16 @@ nomen structura {
           i32 actus;           /* agere */
           i32 taciturnitates;  /* tacere */
     character genus[XXXII];    /* pulsatum ultimum */
+          i32 cantus;          /* canere */
+    character textus[CCLVI];   /* cantatum ultimum */
+          b32 intactus;
+    character ultimum;         /* 'p' pulsare aut 'c' canere */
+    /* voces vivae (aetherophonum) */
+          i32 incepta;
+          i32 positae;
+          i32 dimissae;
+    character tibia[XXXII];
+          f32 nota;
 } PortaFicta;
 
 nomen structura {
@@ -74,8 +84,73 @@ _pulsare (
         redde FALSUM;
     }
     memcpy(f->genus, genus.datum, (size_t)genus.mensura);
-    f->genus[genus.mensura] = '\0';
+    f->genus[genus.mensura]  = '\0';
+    f->ultimum               = 'p';
     redde VERUM;
+}
+
+interior b32
+_canere (
+     vacuum* ctx,
+     chorda  textus,
+        b32  intactus)
+{
+    PortaFicta* f = (PortaFicta*)ctx;
+
+    f->cantus++;
+    f->intactus  = intactus;
+    f->ultimum   = 'c';
+    si (textus.mensura >= magnitudo(f->textus))
+    {
+        redde FALSUM;
+    }
+    memcpy(f->textus, textus.datum, (size_t)textus.mensura);
+    f->textus[textus.mensura] = '\0';
+    redde VERUM;
+}
+
+interior i64
+_vocem_incipere (
+                 vacuum* ctx,
+     constans character* tibia,
+                    b32  vibratus,
+                    f32  nota,
+                    f32  lucrum)
+{
+    PortaFicta* f = (PortaFicta*)ctx;
+
+    (vacuum)vibratus;
+    (vacuum)lucrum;
+    f->incepta++;
+    f->nota = nota;
+    sprintf(f->tibia, "%.30s", tibia ? tibia : "");
+    redde (i64)VII;
+}
+
+interior vacuum
+_vocem_ponere (
+    vacuum* ctx,
+       i64  vox,
+       f32  nota,
+       f32  lucrum,
+       i32  ms)
+{
+    PortaFicta* f = (PortaFicta*)ctx;
+
+    (vacuum)vox;
+    (vacuum)lucrum;
+    (vacuum)ms;
+    f->positae++;
+    f->nota = nota;
+}
+
+interior vacuum
+_vocem_dimittere (
+    vacuum* ctx,
+       i64  vox)
+{
+    (vacuum)vox;
+    ((PortaFicta*)ctx)->dimissae++;
 }
 
 interior vacuum
@@ -116,6 +191,26 @@ _admonere (
         "\"transcriptum\":\"\",\"genus\":\"%s\",\"nuntius\":\"n\"}\n",
         (long)time(NIHIL), (integer)s->eventa, (integer)s->eventa,
         eventus, (integer)s->eventa, genus);
+    redde filum_appendere_firmiter(s->liber, chorda_ex_literis(linea,
+        piscina));
+}
+
+/* eventus 'cantus' ut praeco scribit (genus "intactus" aut "") */
+interior b32
+_cantum_mittere (
+                 Mundus* s,
+     constans character* textus,
+     constans character* genus)
+{
+    character linea[DXII];
+
+    s->eventa++;
+    sprintf(linea,
+        "{\"tempus\":%ld%03d,\"sessio\":\"\",\"eventus\":\"cantus\","
+        "\"panellus\":\"%%%d\",\"servitor\":\"\",\"via\":\"/w/alpha\","
+        "\"transcriptum\":\"\",\"genus\":\"%s\",\"nuntius\":\"%s\"}\n",
+        (long)time(NIHIL), (integer)s->eventa, (integer)s->eventa,
+        genus, textus);
     redde filum_appendere_firmiter(s->liber, chorda_ex_literis(linea,
         piscina));
 }
@@ -246,6 +341,10 @@ _mundum_parare_porta (
     s->porta.pulsare = _pulsare;
     s->porta.agere = _agere;
     s->porta.tacere = _tacere;
+    s->porta.canere = _canere;
+    s->porta.vocem_incipere = _vocem_incipere;
+    s->porta.vocem_ponere = _vocem_ponere;
+    s->porta.vocem_dimittere = _vocem_dimittere;
     s->porta.ctx = &s->ficta;
     s->vol = volumen_temporarium(piscina, "probatio_vicus_sonus");
     CREDO_NECESSE_NON_NIHIL(s->vol);
@@ -477,6 +576,209 @@ _probare_portam_nullam (
     CREDO_AEQUALIS_I32(s->ficta.taciturnitates, ZEPHYRUM);
 }
 
+interior vacuum
+_probare_cantum (
+    CredoContextus* c)
+{
+    Mundus* s = (Mundus*)c->datum;
+
+    CREDO_GRADUS("cantus: textus et intactus ad portam");
+    CREDO_NECESSE(_cantum_mittere(s, "t150 o5 l16 c e g8", ""));
+    _pulsus(s, I);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, I);
+    CREDO_VERUM(strcmp(s->ficta.textus, "t150 o5 l16 c e g8")
+        == ZEPHYRUM);
+    CREDO_FALSUM(s->ficta.intactus);
+    CREDO_AEQUALIS_I32(s->ficta.pulsus, ZEPHYRUM);
+    CREDO_NECESSE(_cantum_mittere(s, "@punctum c r c", "intactus"));
+    _pulsus(s, I);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, II);
+    CREDO_VERUM(s->ficta.intactus);
+
+    CREDO_GRADUS("duo cantus uno pulsu: recentissimus solus");
+    CREDO_NECESSE(_cantum_mittere(s, "t150 c", ""));
+    CREDO_NECESSE(_cantum_mittere(s, "t150 d", ""));
+    _pulsus(s, II);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, III);
+    CREDO_VERUM(strcmp(s->ficta.textus, "t150 d") == ZEPHYRUM);
+
+    CREDO_GRADUS("cum admonitione: ordine temporis, posterior vincit");
+    CREDO_NECESSE(_admonere(s, "Stop", ""));
+    CREDO_NECESSE(_cantum_mittere(s, "t150 e", ""));
+    _pulsus(s, I);
+    CREDO_AEQUALIS_I32(s->ficta.pulsus, I);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, IV);
+    CREDO_VERUM(s->ficta.ultimum == 'c');
+    CREDO_NECESSE(_cantum_mittere(s, "t150 f", ""));
+    CREDO_NECESSE(_admonere(s, "Notification", "permission_prompt"));
+    _pulsus(s, I);
+    CREDO_AEQUALIS_I32(s->ficta.pulsus, II);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, V);
+    CREDO_VERUM(s->ficta.ultimum == 'p');
+
+    CREDO_GRADUS("eventus alii (status) non canuntur");
+    CREDO_NECESSE(_admonere(s, "status", ""));
+    _pulsus(s, I);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, V);
+
+    CREDO_GRADUS("muta: uterque cantum tacet");
+    CREDO_VERUM(vicus_radicem_scribere(s->v, "sonus.agere",
+        "sonus_admonitionum_mutus", "verum"));
+    CREDO_NECESSE(_cantum_mittere(s, "t150 g", ""));
+    _pulsus(s, I);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, V);
+    CREDO_VERUM(vicus_radicem_scribere(s->v, "sonus.agere",
+        "sonus_admonitionum_mutus", "falsum"));
+    CREDO_VERUM(vicus_radicem_scribere(s->v, "sonus.agere",
+        "sonus_mutus", "verum"));
+    CREDO_NECESSE(_cantum_mittere(s, "t150 a", ""));
+    _pulsus(s, I);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, V);
+    CREDO_VERUM(vicus_radicem_scribere(s->v, "sonus.agere",
+        "sonus_mutus", "falsum"));
+    CREDO_NECESSE(_cantum_mittere(s, "t150 b", ""));
+    _pulsus(s, I);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, VI);
+
+    CREDO_GRADUS("initium: cantus prior non iteratur");
+    CREDO_NECESSE(_cantum_mittere(s, "t150 c d", ""));
+    CREDO_NECESSE(_aedificare(s, c, VERUM));
+    _ficta_vacare(s);
+    _pulsus(s, II);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, ZEPHYRUM);
+}
+
+/* porta sine canere: tota recusatur (numquam NIHIL vocatur) */
+interior vacuum
+_probare_portam_dimidiam (
+    CredoContextus* c)
+{
+    Mundus* s = (Mundus*)c->datum;
+
+    s->porta.canere = NIHIL;
+    vicus_applicatio_soni_portam_ponere(&s->app, &s->porta);
+    CREDO_NECESSE(_cantum_mittere(s, "t150 c", ""));
+    CREDO_NECESSE(_admonere(s, "Stop", ""));
+    _pulsus(s, II);
+    CREDO_AEQUALIS_I32(s->ficta.pulsus, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(s->ficta.cantus, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(s->ficta.actus, ZEPHYRUM);
+    /* sine vocibus vivis: item recusatur */
+    s->porta.canere          = _canere;
+    s->porta.vocem_incipere  = NIHIL;
+    vicus_applicatio_soni_portam_ponere(&s->app, &s->porta);
+    CREDO_NECESSE(_admonere(s, "Stop", ""));
+    _pulsus(s, II);
+    CREDO_AEQUALIS_I32(s->ficta.pulsus, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(s->ficta.actus, ZEPHYRUM);
+}
+
+/* eventus muris ad componentem "campus" aetherophoni (relativa) */
+interior b32
+_aetherophonum_ictus (
+             Mundus* s,
+    eventus_genus_t  genus,
+                s32  x,
+                s32  y)
+{
+     Componens* k;
+       Eventus  e;
+       Punctum  o;
+
+    k = componens_invenire_per_id(dispensator_arbor(s->app.d),
+        chorda_ex_literis("campus", piscina));
+    si (!k)
+    {
+        redde FALSUM;
+    }
+    /* fines locales: schirmum = locale - locale(origo schirmi) */
+    o.x  = ZEPHYRUM;
+    o.y  = ZEPHYRUM;
+    o    = destinatio_ad_locale(k, o);
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus             = genus;
+    e.datum.mus.x       = x - o.x;
+    e.datum.mus.y       = y - o.y;
+    e.datum.mus.botton  = MUS_SINISTER;
+    dispensator_tractare(s->app.d, &e);
+    dispensator_recomponere(s->app.d);
+    redde VERUM;
+}
+
+/* altitudo campi aetherophoni (linea status infra) */
+interior s32
+_aetherophoni_altitudo (
+    Mundus* s)
+{
+    Componens* k =
+        componens_invenire_per_id(dispensator_arbor(s->app.d),
+        chorda_ex_literis("campus", piscina));
+
+    redde k ? k->fines.altitudo : ZEPHYRUM;
+}
+
+/* $theremin aperit; ictus -> vox per portam soni; mutus -> nulla */
+interior vacuum
+_probare_aetherophonum (
+    CredoContextus* c)
+{
+    Mundus* s = (Mundus*)c->datum;
+
+    _ictus(s->m, LINEA, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(s->m, "i$theremin"));
+    CREDO_VERUM(manus_ludus_clavem(s->m, (character)XXVII, ZEPHYRUM));
+    _ictus(s->m, LINEA, II);
+    /* aperitio pendens: pulsu proximo (vicus S3c) */
+    _pulsus(s, I);
+    dispensator_recomponere(s->app.d);
+    CREDO_NECESSE(chorda_aequalis_literis(vicus_latus(
+        vicus_activa(s->v), VICUS_DEXTRUM)->genus, "aetherophonum"));
+
+    CREDO_GRADUS("ictus in campo: vox aether");
+    CREDO_NECESSE(_aetherophonum_ictus(s, EVENTUS_MUS_DEPRESSUS, XX,
+        XX));
+    CREDO_AEQUALIS_I32(s->ficta.incepta, I);
+    CREDO_VERUM(strcmp(s->ficta.tibia, "aether") == ZEPHYRUM);
+    CREDO_VERUM(_aetherophonum_ictus(s, EVENTUS_MUS_MOTUS, XL, XX));
+    CREDO_AEQUALIS_I32(s->ficta.positae, I);
+    /* captura: super latus sinistrum (scriba) motus adhuc aetheri */
+    CREDO_VERUM(_aetherophonum_ictus(s, EVENTUS_MUS_MOTUS, -CC, XX));
+    CREDO_AEQUALIS_I32(s->ficta.positae, II);
+    CREDO_VERUM(_aetherophonum_ictus(s, EVENTUS_MUS_LIBERATUS, XL, XX));
+    CREDO_AEQUALIS_I32(s->ficta.dimissae, I);
+
+    CREDO_GRADUS("ictus primus: in linea status focat solum, in campo"
+        " sonat");
+    _ictus(s->m, LINEA + II, ZEPHYRUM);
+    CREDO_VERUM(_aetherophonum_ictus(s, EVENTUS_MUS_DEPRESSUS, XX,
+        _aetherophoni_altitudo(s) + V));
+    CREDO_VERUM(_aetherophonum_ictus(s, EVENTUS_MUS_LIBERATUS, XX,
+        _aetherophoni_altitudo(s) + V));
+    CREDO_AEQUALIS_I32(s->ficta.incepta, I);
+    _ictus(s->m, LINEA + II, ZEPHYRUM);
+    CREDO_VERUM(_aetherophonum_ictus(s, EVENTUS_MUS_DEPRESSUS, XX, XX));
+    CREDO_AEQUALIS_I32(s->ficta.incepta, II);
+    CREDO_VERUM(_aetherophonum_ictus(s, EVENTUS_MUS_LIBERATUS, XX, XX));
+    CREDO_AEQUALIS_I32(s->ficta.dimissae, II);
+
+    CREDO_GRADUS("mutus: ictus nihil sonat");
+    CREDO_VERUM(vicus_radicem_scribere(s->v, "sonus.agere",
+        "sonus_mutus", "verum"));
+    CREDO_VERUM(_aetherophonum_ictus(s, EVENTUS_MUS_DEPRESSUS, XX, XX));
+    CREDO_VERUM(_aetherophonum_ictus(s, EVENTUS_MUS_LIBERATUS, XX, XX));
+    CREDO_AEQUALIS_I32(s->ficta.incepta, II);
+    CREDO_AEQUALIS_I32(s->ficta.dimissae, II);
+    CREDO_VERUM(vicus_radicem_scribere(s->v, "sonus.agere",
+        "sonus_mutus", "falsum"));
+
+    CREDO_GRADUS("admonitionum mutus aetherophonum non tacet");
+    CREDO_VERUM(vicus_radicem_scribere(s->v, "sonus.agere",
+        "sonus_admonitionum_mutus", "verum"));
+    CREDO_VERUM(_aetherophonum_ictus(s, EVENTUS_MUS_DEPRESSUS, XX, XX));
+    CREDO_AEQUALIS_I32(s->ficta.incepta, III);
+    CREDO_VERUM(_aetherophonum_ictus(s, EVENTUS_MUS_LIBERATUS, XX, XX));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "quies", _probare_quietem, _mundum_parare, _mundum_purgare, NIHIL,
       NIHIL },
@@ -491,6 +793,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "persistens", _probare_persistentem, _mundum_parare,
       _mundum_purgare, NIHIL, NIHIL },
     { "porta_nulla", _probare_portam_nullam, _mundum_sine_porta,
+      _mundum_purgare, NIHIL, NIHIL },
+    { "cantus", _probare_cantum, _mundum_parare, _mundum_purgare, NIHIL,
+      NIHIL },
+    { "porta_dimidia", _probare_portam_dimidiam, _mundum_parare,
+      _mundum_purgare, NIHIL, NIHIL },
+    { "aetherophonum", _probare_aetherophonum, _mundum_parare,
       _mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

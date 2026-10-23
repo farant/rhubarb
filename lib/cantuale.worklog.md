@@ -53,3 +53,16 @@ none given; 80 seeds over four `finis` jingles gave 19/21/19/21),
 
 Suite: 6 sections, green on the first implementation run; plants 9/9
 red then green, plus the book plant.
+
+## 2026-10-22 - cantionem_legere: one jingle outside the book (praeco cantus)
+
+For `praeco cantus` (Claude-sent jingles, wish …RJSBFQ) a single MML text
+must pass exactly the checks a book entry passes. The checks that ran
+after `stml_textus_valor` (cantus_legere, 0 notes, > XXXII notes, unknown
+'@' preset at the '@') moved into `_cantilenam_iudicare`, called by both
+`_cantionem_legere` (book) and the new public `cantionem_legere`. Suite
+section `cantio` asserts the SAME causa string for the same text both ways.
+`cantionem_legere` does not copy the text: notes' `praeparatum` chordae
+point into it, so it must outlive the Cantio (tintinnabulum copies first).
+A trailing unknown preset with no note after it ("c @nullum") is accepted -
+in the book too: nothing resolves it, nothing plays it.

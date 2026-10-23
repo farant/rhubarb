@@ -1,0 +1,33 @@
+<!-- organum.stml - manifestum aetherophoni (sonus-spec S5c): theremin
+     in latere vici. Vox sub mure dum botton premitur (kinetica: ansa et
+     positio in memoria, numquam in statu); hic solum praeferentiae,
+     persistentes - claves eas mutant. -->
+<organum genus="aetherophonum" versio="1">
+
+  <actiones>
+    <actio nomen="aetherophonum.agere"/>
+  </actiones>
+
+  <status>
+    <campus nomen="tibia" typus="textus" vita="persistens"
+            scriptor="aetherophonum.agere"
+            nota="praeparatum tibiae: aether, quadrans, triangulum
+                  ('f'); absens = aether"/>
+    <campus nomen="nota_infima" typus="numerus" vita="persistens"
+            scriptor="aetherophonum.agere"
+            nota="nota MIDI margine sinistro ('[' ']' octavam);
+                  absens = XLVIII (C3)"/>
+    <campus nomen="octavae" typus="numerus" vita="persistens"
+            scriptor="aetherophonum.agere"
+            nota="latitudo in octavis, I..VI ('-' '='); absens = III"/>
+    <campus nomen="gradus" typus="veritas" vita="persistens"
+            scriptor="aetherophonum.agere"
+            nota="nota ad semitonium rotundatur ('g')"/>
+    <campus nomen="vibratus" typus="veritas" vita="persistens"
+            scriptor="aetherophonum.agere"
+            nota="vibratus tibiae ('v'); absens = verum"/>
+  </status>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>

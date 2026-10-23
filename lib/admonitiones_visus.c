@@ -223,8 +223,8 @@ admonitiones_sequi (
         redde ZEPHYRUM;
     }
     piscina_vacare(s->scheda);
-    redde eventus_addere(s, praeconium_legere_ab(s->via, &s->positio,
-        s->scheda), recentissima);
+    s->eventus = praeconium_legere_ab(s->via, &s->positio, s->scheda);
+    redde eventus_addere(s, s->eventus, recentissima);
 }
 
 i32

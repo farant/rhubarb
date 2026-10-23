@@ -474,6 +474,108 @@ _sectio_ordinarium (
 }
 
 
+    /* ==================================================
+     * CANTIO: cantilena una extra librum, iudicia libri eadem
+     * ================================================== */
+
+/* cantionem legit; FALSUM, titulum vacuum et offset asserit; causam
+ * reddit */
+interior constans character*
+_vitium_cantionis (
+     CredoContextus* c,
+    constans character* textus,
+                    i32 offset)
+{
+            Cantio cantio;
+    CantualeVitium vitium;
+               b32 bene;
+
+    vitium.titulus  = _chorda(c, "(nullus)");
+    vitium.offset   = CMXCIX;
+    vitium.causa    = NIHIL;
+    bene = cantionem_legere(_chorda(c, textus), FALSUM, c->piscina,
+                            &cantio, &vitium);
+    CREDO_FALSUM (bene);
+    CREDO_AEQUALIS_I32 (vitium.titulus.mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_S32 ((s32)vitium.offset, (s32)offset);
+    CREDO_VERUM (vitium.causa != NIHIL);
+    si (bene || (s32)vitium.offset != (s32)offset)
+    {
+        imprimere("  cantio '%s': offset %d (exspectatum %d)\n", textus,
+                  (integer)vitium.offset, (integer)offset);
+    }
+    redde vitium.causa;
+}
+
+/* causa libri pro textu eodem */
+interior constans character*
+_causa_libri (
+        CredoContextus* c,
+    constans character* textus)
+{
+          Cantuale liber;
+    CantualeVitium vitium;
+
+    vitium.causa = NIHIL;
+    (vacuum)cantuale_legere(_chorda(c, _liber_unius(c, textus)),
+                            c->piscina, &liber, &vitium);
+    redde vitium.causa;
+}
+
+interior vacuum
+_sectio_cantio (
+    CredoContextus* c)
+{
+                Cantio  cantio;
+        CantualeVitium  vitium;
+                chorda  textus;
+                   i32  k;
+    constans character* fracti[] = { "t180 l3 c", "c @nullum d",
+        "", "t90 r4 r2", NIHIL };
+
+    textus = _chorda(c, "t150 o5 l16 c e g8");
+    memset(&cantio, ZEPHYRUM, magnitudo(Cantio));
+    CREDO_NECESSE (cantionem_legere(textus, FALSUM, c->piscina, &cantio,
+                                    &vitium));
+    CREDO_AEQUALIS_I32 (cantio.cantilena.numerus, III);
+    CREDO_FALSUM (cantio.intactus);
+    CREDO_AEQUALIS_I32 (cantio.titulus.mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (cantio.genera_numerus, ZEPHYRUM);
+    CREDO_VERUM (cantio.genera == NIHIL);
+    /* textus non copiatur: notae in eum spectant */
+    CREDO_VERUM (cantio.textus.datum == textus.datum);
+    CREDO_AEQUALIS_I32 (cantio.textus.mensura, textus.mensura);
+    CREDO_AEQUALIS_I32 (cantio.cantilena.notae[ZEPHYRUM].nota, LXXII);
+
+    /* intactus traditur; '@praeparatum' notum; XXXII notae limes */
+    CREDO_VERUM (cantionem_legere(_chorda(c, "@punctum c r c"), VERUM,
+                                  c->piscina, &cantio, &vitium));
+    CREDO_VERUM (cantio.intactus);
+    CREDO_VERUM (cantionem_legere(_chorda(c, _notae_multae(c, XXXII)),
+                                  FALSUM, c->piscina, &cantio,
+                                  &vitium));
+    CREDO_AEQUALIS_I32 (cantio.cantilena.numerus,
+        CANTUALE_NOTAE_MAXIMAE);
+
+    /* vitia: offset in textu ipso (idem ac in libro) */
+    (vacuum)_vitium_cantionis(c, "t180 l3 c", VI);
+    (vacuum)_vitium_cantionis(c, "c @nullum d", II);
+    (vacuum)_vitium_cantionis(c, _notae_multae(c, XXXIII), LXVIII);
+    (vacuum)_vitium_cantionis(c, "", ZEPHYRUM);
+    (vacuum)_vitium_cantionis(c, "t90 r4 r2", ZEPHYRUM);
+    /* regula una: causa eadem ac libri */
+    per (k = ZEPHYRUM; fracti[k] != NIHIL; k++)
+    {
+        constans character* a = _vitium_cantionis(c, fracti[k],
+            k == ZEPHYRUM ? VI : k == I ? II : ZEPHYRUM);
+        constans character* b = _causa_libri(c, fracti[k]);
+
+        CREDO_VERUM (a != NIHIL && b != NIHIL
+            && strcmp(a, b) == ZEPHYRUM);
+    }
+}
+
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "legere", _sectio_legere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "limites", _sectio_limites, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -481,6 +583,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "invenire", _sectio_invenire, NIHIL, NIHIL, NIHIL, NIHIL },
     { "eligere", _sectio_eligere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ordinarium", _sectio_ordinarium, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "cantio", _sectio_cantio, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

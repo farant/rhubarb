@@ -1,0 +1,77 @@
+<!-- carmina.stml - liber ordinarius carminum (include/carmen.h), in
+     binarium infixus per tools/carmina_infigere.sh.
+
+     Carmen: tempus (quartae per minutum), metrum, clavis; partes cum
+     instrumento (tibia praeparata per titulum); frusta per mensuram (1 =
+     prima) aut pulsus. Textus frusti MML (cantus.h) SINE 't': tempus
+     carminis est. Mensura quaeque per '|' notata, ad legendum.
+
+     KOROBEINIKI: carmen populare Russicum saeculi XIX (Nekrasov 1861,
+     melodia popularis) - dominii publici; thema Tetris notum.
+     Transcriptio nostra: A minor, 4/4, XVI mensurae - pars A (1-8) bis
+     non, deinde pars B lenta (9-16) notis dimidiis; carmen iterat.
+
+     VESPERAE: hymnus brevis noster (Claudius, 2026-10-23, per auditio
+     -partitura / -censura / -auscultare compositus; Franus auscultavit):
+     D maior, 4/4, 84, VIII mensurae, ritardando ad 66 in ultima;
+     melodia aether supra bassum triangulum (I-IV-V, nulla quinta
+     parallela).
+
+     STELLA: antiphona brevis nostra (Claudius, 2026-10-23, per auditio
+     -recensio -partitura -harmonia composita; Franus auscultavit): D
+     minor, 3/4, 72, XVI mensurae, tres voces - melodia aether, vox media
+     quadrans, bassus triangulum; ad F maior per C7 (mensurae 7-8) et
+     domum per A7; ritardando gradibus 63, 54. Censura +dissonantia
+     septimas duas in mensura 7 nominat - consultas (septima C7
+     descendit, appoggiatura). -->
+<carmina>
+
+  <carmen titulus="korobeiniki" tempus="144" metrum="4/4"
+          clavis="a minor">
+    <pars titulus="melodia" instrumentum="quadrans" lucrum="0.7">
+      <frustum mensura="1">
+        <textus!>o5 l8 e4 <b >c d4 c <b | a4 a >c e4 d c | <b4. >c d4 e4 | c4 <a4 a2 | r >d4 f a4 g f | e4. c e4 d c | <b4 b >c d4 e4 | c4 <a4 a4 r4 | >e2 c2 | d2 <b2 | >c2 <a2 | g#2 b2 | >e2 c2 | d2 <b2 | >c4 e4 a2 | g#1</textus>
+      </>
+    </>
+    <pars titulus="bassus" instrumentum="triangulum" lucrum="0.8">
+      <frustum mensura="1">
+        <textus!>o2 l8 e >e <e >e <e >e <e >e < | a >a <a >a <a >a <a >a < | g# >g# <g# >g# <g# >g# <g# >g# < | a >a <a >a <a >a <a >a < | d >d <d >d <d >d <d >d < | c >c <c >c <c >c <c >c < | g# >g# <g# >g# <g# >g# <g# >g# < | a >a <a >a <a >a <a >a < | a >a <a >a <a >a <a >a < | g# >g# <g# >g# <g# >g# <g# >g# < | a >a <a >a <a >a <a >a < | e >e <e >e <e >e <e >e < | a >a <a >a <a >a <a >a < | g# >g# <g# >g# <g# >g# <g# >g# < | a >a <a >a <a >a <a >a < | e >e <e >e <e >e <e >e <</textus>
+      </>
+    </>
+  </>
+
+  <carmen titulus="vesperae" tempus="84" metrum="4/4" clavis="d maior">
+    <tempus mensura="8" valor="66"/>
+    <pars titulus="melodia" instrumentum="aether" lucrum="0.7">
+      <frustum mensura="1">
+        <textus!>o5 d4 e8 f#8 g4 f#4 | e4 d4 c#4 <a4 | >d4 f#4 b4 a4 | g2 f#2 | e4 f#8 g8 a4 g4 | f#4 e4 d4 c#4 | <b4 >e4 d4 c#4 | d1</textus>
+      </>
+    </>
+    <pars titulus="bassus" instrumentum="triangulum" lucrum="0.8">
+      <frustum mensura="1">
+        <textus!>o3 d2 o2 g2 | o2 a2 a2 | o3 f#2 g2 | o3 e2 d2 | o3 c#2 o2 a2 | o2 b2 a2 | o2 g2 a2 | o2 d1</textus>
+      </>
+    </>
+  </>
+
+  <carmen titulus="stella" tempus="72" metrum="3/4" clavis="d minor">
+    <tempus mensura="15" valor="63"/>
+    <tempus mensura="16" valor="54"/>
+    <pars titulus="melodia" instrumentum="aether" lucrum="0.55">
+      <frustum mensura="1">
+        <textus!>o5 d2 e4 | f4. e8 d4 | g4 f4 e4 | c#2. | f2 d4 | d4 g4 b-4 | a4 g4 e4 | f2. | d2 <b-4 | >c#2 e4 | f4 a4 >d4 | c4 <b-4 a4 | g4 f4 e4 | f4 e4 g4 | e2 c#4 | d2.</textus>
+      </>
+    </>
+    <pars titulus="media" instrumentum="quadrans" lucrum="0.35">
+      <frustum mensura="1">
+        <textus!>o4 f2. | d2. | b-2 >c#4 | <e2. | d2. | b-2. | b-2. | a2. | b-2 g4 | e2 >c#4 | <f2. | f2. | b-2 >c#4 | c#2. | c#2 <g4 | f2.</textus>
+      </>
+    </>
+    <pars titulus="bassus" instrumentum="triangulum" lucrum="0.65">
+      <frustum mensura="1">
+        <textus!>o3 d2. | o2 b-2. | g2 a4 | a2. | b-2. | g2. | o3 c2. | o2 f2. | g2. | a2. | o3 d2. | o2 a2 f4 | g2 a4 | a2. | a2. | d2.</textus>
+      </>
+    </>
+  </>
+
+</carmina>

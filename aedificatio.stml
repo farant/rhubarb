@@ -78,6 +78,22 @@
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <exitus via="bin/praeco" provenientia="relatio"/>
   </actio>
+  <!-- auditio (sonus M5c): sonus et musica in terminali - praeparata,
+       cantus, carmina (-carmen/-partitura/-censura/-auscultare/
+       -recensio [-json]); instrumentum agentis componentis -->
+  <actio titulus="auditio" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/auditio_struere.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/auditio"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
+    <ingressus genus="manifestum" via="build/aedilis/auditio/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/auditio_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/auditio" provenientia="relatio"/>
+  </actio>
   <!-- clonare (pythonica S3): clonefile(2) arborum pro photographiis
        silvae (silva._clonare_ignorata) -->
   <actio titulus="clonare" genus="institutio">
@@ -586,6 +602,16 @@
     <ingressus genus="fasciculus" via="tools/cantuale_infigere.sh"/>
     <ingressus genus="fasciculus" via="cantuale.stml"/>
     <exitus via="lib/cantuale_infixum.c" provenientia="regeneratio"/>
+  </actio>
+  <!-- liber carminum infixus (sonus S6b, mos cantuale_infixum):
+       carmina.stml -> lib/carmina_infixum.c -->
+  <actio titulus="carmina_infixum" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/carmina_infigere.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/carmina_infigere.sh"/>
+    <ingressus genus="fasciculus" via="carmina.stml"/>
+    <exitus via="lib/carmina_infixum.c" provenientia="regeneratio"/>
   </actio>
   <!-- canon organi infixus (status-plan S1, mos norma_canon):
        organum.canon -> lib/organum_canon.c, onerator manifestorum
@@ -1293,6 +1319,15 @@
     <ingressus genus="fasciculus" via="tools/instituere.sh"/>
     <exitus via="~/.bin/praeco" scriptura="praeco" provenientia="regeneratio"/>
   </actio>
+  <actio titulus="institutio_auditio" genus="institutio" memorabilis="verum" celer="verum">
+    <mandatum>
+      <verbum! (>./tools/instituere.sh
+      <verbum! (>bin/auditio
+    </mandatum>
+    <ingressus genus="fasciculus" via="bin/auditio"/>
+    <ingressus genus="fasciculus" via="tools/instituere.sh"/>
+    <exitus via="~/.bin/auditio" scriptura="auditio" provenientia="regeneratio"/>
+  </actio>
   <!-- colloquia T10b (Franus 2026-10-16): vicus 'mensor quaestio
        currentes -machina' vocat - ~/.bin/mensor, ut praeco -->
   <actio titulus="institutio_mensor" genus="institutio" memorabilis="verum" celer="verum">
@@ -1337,6 +1372,8 @@
     <pars actio="praeco"/>
     <pars actio="institutio_praeco"/>
     <pars actio="institutio_mensor"/>
+    <pars actio="auditio"/>
+    <pars actio="institutio_auditio"/>
   </compositum>
   <compositum titulus="briar">
     <pars actio="corpus_silicis"/>
