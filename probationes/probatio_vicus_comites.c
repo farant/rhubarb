@@ -359,9 +359,8 @@ _sectio_comes (
     CREDO_VERUM(vicus_focum_ponere(x->v, VICUS_DEXTRUM));
     dispensator_recomponere(x->app.d);
     clavis(x, 't', (i32)MOD_SUPER);
-    CREDO_VERUM(comes_est(x, "comes/terminale",
-        "Notes \302\267 terminale",
-        "1"));
+    CREDO_VERUM(comes_est(x, "comes/terminale/1_dextrum_terminale",
+        "Notes \302\267 Terminal", "1"));
     clavis(x, 't', (i32)MOD_SUPER);
     CREDO_VERUM(comes_est(x, "", NIHIL, "1"));
 

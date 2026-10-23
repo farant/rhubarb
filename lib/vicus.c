@@ -2474,6 +2474,21 @@ vicus_latus_focatum (
     redde t ? vicus_latus(t, t->focus) : NIHIL;
 }
 
+/* comites P4: frons dextra locum recenter quaerat (facies.
+ * locum_renovare) - ante Cmd+T et focum in sinistrum */
+interior vacuum
+frontem_monere (
+    VicusTabula* t)
+{
+    VicusLatus* f;
+
+    f = t ? frons_acervi(t) : NIHIL;
+    si (f && f->montata && f->facies.locum_renovare)
+    {
+        f->facies.locum_renovare(f->facies.locum_renovare_ctx);
+    }
+}
+
 b32
 vicus_focum_ponere (
     Vicus* v,
@@ -2498,6 +2513,11 @@ vicus_focum_ponere (
         redde FALSUM;
     }
     t->focus = latus;
+    /* comites P4: ante scripturam in comite, locus frontis recens */
+    si (latus == VICUS_SINISTRUM)
+    {
+        frontem_monere(t);
+    }
     motum_aptare(v);
     redde indicem_scribere(v);
 }
@@ -3790,6 +3810,7 @@ vicus_comitem_commutare (
     }
     alioquin
     {
+        frontem_monere(t);
         ok = comitem_sequi(v, t, VERUM);
     }
     si (ok && chorda_aequalis(t->id, v->activa))

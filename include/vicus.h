@@ -159,6 +159,11 @@ nomen structura {
      * comites non fert */
                chorda  (*comes_currens)(vacuum* ctx, Piscina* piscina);
               vacuum* comes_currens_ctx;
+    /* comites P4: ante lectionem loci decisivam (Cmd+T, focus in
+     * sinistrum) hospes latus monet ut locum recenter quaerat
+     * (terminale: tmux iterum interrogatur). NIHIL = nihil. */
+                 vacuum  (*locum_renovare)(vacuum* ctx);
+              vacuum* locum_renovare_ctx;
     /* comites P3b: ambitus historiae - historia lateris per ambitum
      * separatur (scriba: praefixum libri visi; liber quisque
      * historiam suam habet); mutatio ambitus locum non facit, historia

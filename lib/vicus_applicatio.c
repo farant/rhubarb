@@ -17,6 +17,7 @@
 #include "indagatio_genera.h"
 #include "indagatio_visus.h"
 #include "multiplexor.h"
+#include "fenestra_tempus.h"
 #include "filum.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -1711,6 +1712,128 @@ argumenta_terminalis (
  * T4c: argumentum "tmux <servitor> <sessio>" sessioni adhaeret (et
  * post restitutionem iterum). ctx = systemata vici (S7c-3: organum,
  * ut scriba et pictor) */
+/* comites P4: latus terminalis in vico - applicatio PRIMA (casus ad
+ * TerminaleApplicatio* manent), deinde locus eius: tmux - sessio et
+ * fenestra activa clientis cuius tty pty lateris est (servitor ex
+ * argumento "tmux <servitor> <sessio>", aliter ordinarius); sine tmux
+ * - id lateris. Inspectio tmux processum incipit: memoria M ms;
+ * facies.locum_renovare (Cmd+T, focus sinister) eam abicit */
+#define MEMORIA_LOCI_TERMINALIS_MS  M
+
+nomen structura {
+    TerminaleApplicatio app;
+              character id[LXIV];
+              character servitor[CCLVI];   /* vacuus = ordinarius */
+            Multiplexor mx;
+              character locus[CCLVI];
+              character titulus[CXXVIII];
+                    s64 tempus_ms;         /* inspectio ultima */
+                    b32 inspectum;
+} TerminaleInVico;
+
+/* locum et titulum terminalis (re)computare, memoria D ms */
+interior vacuum
+locum_terminalis_inspicere (
+    TerminaleInVico* t)
+{
+                       Piscina* scheda;
+                           Xar* clientes;
+                           Xar* panelli;
+    constans MultiplexorCliens* cl;
+  constans MultiplexorPanellus* q;
+                        chorda  tty;
+                        chorda  sessio;
+                           s64  nunc;
+                           i32  i;
+
+    nunc = fenestra_tempus_ms();
+    si (   t->inspectum
+        && nunc - t->tempus_ms < MEMORIA_LOCI_TERMINALIS_MS)
+    {
+        redde;
+    }
+    t->inspectum = VERUM;
+    t->tempus_ms = nunc;
+    sprintf(t->locus, "terminale/%s", t->id);
+    strcpy(t->titulus, "Terminal");
+    tty = terminale_tty(&t->app);
+    si (tty.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    scheda = piscina_generare_dynamicum("locus_terminalis", XVI * M);
+    si (!scheda)
+    {
+        redde;
+    }
+    sessio.datum    = NIHIL;
+    sessio.mensura  = ZEPHYRUM;
+    clientes        = multiplexor_clientes(&t->mx, scheda);
+    per (i = ZEPHYRUM; clientes && i < xar_numerus(clientes); i++)
+    {
+        cl = (constans MultiplexorCliens*)xar_obtinere(clientes, i);
+        si (chorda_aequalis(cl->tty, tty))
+        {
+            sessio = cl->sessio;
+            frange;
+        }
+    }
+    panelli = sessio.mensura > ZEPHYRUM
+            ? multiplexor_panelli(&t->mx, scheda) : NIHIL;
+    per (i = ZEPHYRUM; panelli && i < xar_numerus(panelli); i++)
+    {
+        q = (constans MultiplexorPanellus*)xar_obtinere(panelli, i);
+        si (   q->fenestra_activa && q->activus
+            && chorda_aequalis(q->sessio, sessio)
+            && sessio.mensura < C && q->fenestra_titulus.mensura < LX)
+        {
+            sprintf(t->locus, "terminale/tmux/%.*s/%d",
+                (int)sessio.mensura, (constans character*)sessio.datum,
+                (integer)q->fenestra);
+            sprintf(t->titulus, "%.*s / %.*s", (int)sessio.mensura,
+                (constans character*)sessio.datum,
+                (int)q->fenestra_titulus.mensura,
+                (constans character*)q->fenestra_titulus.datum);
+            frange;
+        }
+    }
+    piscina_destruere(scheda);
+}
+
+/* comites P4: memoria abicitur - lectio proxima tmux interrogat */
+interior vacuum
+terminalis_locum_renovare (
+    vacuum* ctx)
+{
+    ((TerminaleInVico*)ctx)->inspectum = FALSUM;
+}
+
+interior chorda
+terminalis_locus (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    TerminaleInVico* t;
+
+    t = (TerminaleInVico*)ctx;
+    locum_terminalis_inspicere(t);
+    redde chorda_transcribere(chorda_ex_literis(t->locus, piscina),
+        piscina);
+}
+
+interior chorda
+terminalis_locus_titulus (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    TerminaleInVico* t;
+
+    t = (TerminaleInVico*)ctx;
+    locum_terminalis_inspicere(t);
+    redde chorda_transcribere(chorda_ex_literis(t->titulus, piscina),
+        piscina);
+}
+
 interior b32
 terminale_montare_in_vico (
                  vacuum* sedes,
@@ -1724,10 +1847,40 @@ terminale_montare_in_vico (
                     i32  altitudo,
                  vacuum* ctx)
 {
+    TerminaleInVico* t;
+          character* finis;
+
     (vacuum)volumen;
-    redde terminale_montare((TerminaleApplicatio*)sedes, piscina,
-        intern, repo, id, argumenta_terminalis(argumentum, piscina),
-        (StatusSystemata*)ctx, latitudo, altitudo);
+    t = (TerminaleInVico*)sedes;
+    si (!terminale_montare(&t->app, piscina, intern, repo, id,
+            argumenta_terminalis(argumentum, piscina),
+            (StatusSystemata*)ctx, latitudo, altitudo))
+    {
+        redde FALSUM;
+    }
+    /* comites P4: id et servitor ("tmux <servitor> <sessio>"; "-" =
+     * ordinarius) pro loco */
+    memset(t->id, ZEPHYRUM, magnitudo(t->id));
+    memset(t->servitor, ZEPHYRUM, magnitudo(t->servitor));
+    memset(&t->mx, ZEPHYRUM, magnitudo(t->mx));
+    t->inspectum = FALSUM;
+    strncpy(t->id, id ? id : "terminale", magnitudo(t->id) - I);
+    si (   argumentum && strncmp(argumentum, "tmux ", V) == ZEPHYRUM
+        && strlen(argumentum + V) < magnitudo(t->servitor))
+    {
+        strcpy(t->servitor, argumentum + V);
+        finis = strchr(t->servitor, ' ');
+        si (finis)
+        {
+            *finis = '\0';
+        }
+        si (strcmp(t->servitor, "-") == ZEPHYRUM)
+        {
+            t->servitor[ZEPHYRUM] = '\0';
+        }
+    }
+    t->mx.socket = t->servitor[ZEPHYRUM] ? t->servitor : NIHIL;
+    redde VERUM;
 }
 
 /* pulsus sine mora: ansa hospitis XVI ms ipsa exspectat */
@@ -1761,6 +1914,13 @@ terminale_describere (
     f->vivit_in_fundo  = VERUM;
     /* Franus: 'tmux a' statim post aperturam ad concham, non scribam */
     f->focus_in_apertura = VERUM;
+    /* comites P4: locus per fenestram tmux aut latus */
+    f->locus               = terminalis_locus;
+    f->locus_ctx           = montatio;
+    f->locus_titulus       = terminalis_locus_titulus;
+    f->locus_titulus_ctx   = montatio;
+    f->locum_renovare      = terminalis_locum_renovare;
+    f->locum_renovare_ctx  = montatio;
 }
 
 /* nomenclator-plan P2: nomenclator - documentum personarum UNUM per
@@ -3632,7 +3792,7 @@ ContextusNomenclatoris* cn;
                magnitudo(PictorMontatio), pictorem_montare,
                pictorem_describere, cp)
         || !vicus_genus_addere(app->vicus, "terminale",
-               magnitudo(TerminaleApplicatio),
+               magnitudo(TerminaleInVico),
                terminale_montare_in_vico, terminale_describere,
                systemata)
         || !ck

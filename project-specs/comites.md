@@ -134,7 +134,7 @@ scriba book in the volume (pages, own viewed page)
 | **P1** | Locus: derivation from a route (default + declared rounding + symbol resolution), view label; calendar declares its rounding. Tests on the route library and the calendar. DONE 2026-10-22: default `semita_locus` (binding fields of the current state); views override in CODE via `facies.locus` / `facies.locus_titulus` (the calendar's absent day means today and weeks start on Sunday - not expressible as manifest rounding). |
 | **P2** | Companion books: space per locus, per-book viewed page, book in scriba's route (left history). DONE 2026-10-22: scriba field `liber` (status, impelle; `scriba/2?liber=...`), `scriba_librum_praefixi_ponere`, host book lookup, per-book page `<prefix>/visus`. |
 | **P3** | Cmd+T, follow mode, bar - Fran's look. Implemented 2026-10-22: Cmd+T host key, facies.comitem_ponere / comes_currens, follow without extra state (left book prefix "comes/..."), bar = scriba `vectis` from transient `liber_titulus`. |
-| **P4** | Terminals: per pane, per tmux window when attached. |
+| **P4** | Terminals: per pane, per tmux window when attached. Implemented 2026-10-22: `terminale/tmux/<session>/<window index>` (title "<session> / <window name>"), else `terminale/<pane id>` ("Terminal"); tmux answer cached 1 s, refreshed at once on Cmd+T and when focus moves left (`facies.locum_renovare`). |
 | **P5** | View relations slice: `quaestio` (Cmd+F) - the S4a work, if still wanted after P1 settles where declarations live. |
 | later | Companions searchable; drawing mode (§VII); saints as a search kind (D5 S4b). |
 

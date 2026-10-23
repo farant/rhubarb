@@ -177,3 +177,26 @@ ContextusScribae keeps opened companion books in a TabulaDispersa
 is the common book. Every scriba pane gets the lookup at mount. Not
 plantable: dropping the cache (a reopened book reads the same volume
 state; only cost and object identity change, not behaviour).
+
+## 2026-10-22 — terminal locations (comites P4)
+
+Terminal panes are registered with `TerminaleInVico` (TerminaleApplicatio
+FIRST, so every existing cast stays valid) holding the pane id, the tmux
+server from the argument ("tmux <server> <session>", "-" = default) and
+a cached location. Location: the tmux client on the pane's tty -> its
+session -> the active pane of the session's active window ->
+`terminale/tmux/<session>/<window index>`, title "<session> / <window
+name>"; no client -> `terminale/<pane id>`, "Terminal". Session + INDEX
+(Fran): window ids reset with the tmux server, names auto-rename.
+Asking tmux starts processes, so the answer is cached 1 s (the follow
+check runs every pulse); results live in fixed buffers, the query
+arena is created and destroyed per inspection. The one harmful lag
+(switch tmux window, type into the companion at once -> previous
+window's notebook) is closed by `facies.locum_renovare`: vicus calls
+it on the right front before Cmd+T reads the location and when focus
+moves into the left pane; the terminal drops its cache. Plants red:
+no refresh on focus-left, none on Cmd+T, refresh a no-op. Test: probatio_vicus_comites_terminale against a
+private tmux server (build/pmx, own TMUX_TMPDIR, as probatio_vicus_saltus).
+Plants red: cache forever, client not matched, active window ignored,
+argument's server ignored, hooks unset. Not plantable: removing the cache
+(same answers, only cost).
