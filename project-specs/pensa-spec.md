@@ -244,7 +244,7 @@ One section for now: **Daily checklist**.
 | **K1** | `recursus` + corpus: seed grammar (§III.2), canonical form, errors, anchors. DONE 2026-10-23: 62-entry corpus with round trips, API edge tests; see lib/recursus.worklog.md |
 | **K2** | `pensa`: outline parsing (§IV.1), items for a day, tick/untick acts. DONE 2026-10-23: `scriba_liber_textum_legere` (book text with blank lines), outline parser + items for a day, ticks as acts read before every query; see lib/pensa.worklog.md |
 | **K3** | Day view Checklist block (show, tick, history, future dimmed). DONE 2026-10-23: "k"/"k<n>" rows between to-dos and Completed, one day selection sequence (`electiones_diei`), tick via the complete command (today/past only), drawing + vicus end-to-end; pensa scratch pool for per-frame queries; see lib/kalendarium.worklog.md |
-| **K4** | Reminders tab read view |
+| **K4** | Reminders tab read view. DONE 2026-10-23: `visus=monita` after Agenda (route `calendarium/monita`, title "Reminders"), template as album rows (band, headings as typed or dim "Every day" with today/next/no-more-dates notes, wrapped parse errors, items; "No checklist yet."), paging via the shared `pagina` field, bar word or bell by width; see lib/kalendarium.worklog.md |
 | **K5** | Edit view (embedded scriba on the `pensa` book) |
 
 Each phase: header text approved first, tests red, implementation,

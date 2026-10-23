@@ -3790,9 +3790,10 @@ pensa_scribere (
      ScribaDocumentum* d;
     TabulaCharacterum  folium;
 
+    /* pagina XL x XL: formae K4 plures quam X lineas habent (pagina X
+     * alta formam praecidebat) */
     l = scriba_liber_aperire_in_spatio(p, x->intern, x->volumen,
-        "pensa",
-        XL, X);
+        "pensa", XL, XL);
     d = l ? scriba_liber_pagina(l, chorda_ex_literis("1", p)) : NIHIL;
     si (!d)
     {
@@ -4207,6 +4208,418 @@ _probare_textum_in_piscina (
     conspectus_registrum_destruere(r);
 }
 
+/* K4: globulus Reminders visum monita aperit; titulus, locus, semita;
+ * Esc ad mensem; argumentum "monita" (cognomen) */
+interior vacuum
+_probare_monita_visum (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    x->latitudo = CDLXXX;
+    x->altitudo = CDLXXX;
+    CREDO_NECESSE(agendam_parare(x, c));
+
+    CREDO_GRADUS("globulus Reminders");
+    CREDO_VERUM(ictus_in(x, "visus-monita", c->piscina));
+    CREDO_VERUM(campus_est(x, "visus", "monita"));
+    /* titulus fonte titulorum (globulus barrae "Reminders" fonte
+     * ordinario - non sufficit) */
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_fontis_est(md, "Reminders", FONS_TITULI));
+
+    CREDO_GRADUS("locus et titulus loci");
+    CREDO_CHORDA_AEQUALIS_LITERIS(kalendarium_locus(&x->m, c->piscina),
+        "calendarium/monita");
+    CREDO_CHORDA_AEQUALIS_LITERIS(kalendarium_locus_titulus(&x->m,
+        c->piscina), "Reminders");
+
+    CREDO_GRADUS("Esc ad mensem");
+    effugium(x);
+    CREDO_VERUM(campus_est(x, "visus", "mensis"));
+
+    CREDO_GRADUS("argumentum monita");
+    CREDO_VERUM(kalendarium_argumentum_ponere(&x->m, "monita"));
+    CREDO_VERUM(campus_est(x, "visus", "monita"));
+}
+
+/* K4: forma exempli monitorum (hodie XIV, feria IV): greges 0
+ * cotidianus (implicitus), 1 wednesdays, 2 weekends, 3 vitium, 4 semel
+ * (praeteritum) */
+hic_manens constans character MONITA_EXEMPLI[] =
+    "vitamins\nmorning offering\n\nwednesdays\n  mass\n\nweekends\n"
+    "  mow the lawn\n\nevery other monday\n  call mom\n\n2026-10-01\n"
+    "  pay rent";
+
+/* ordines monitorum ordine arboris: "m", "nullum", et h/v/u numero
+ * sequente (globuli "hodie", "visus-*" excluduntur); integri aut
+ * incipientes (prefixum) */
+interior b32
+monita_comparare (
+                  Mundus* x,
+      constans character* exspectati,
+                     b32  prefixum)
+{
+    Componens* radix;
+    Componens* l;
+    character  visi[DXII];
+          i32  i;
+          i32  k;
+          b32  noster;
+
+    radix           = dispensator_arbor(x->d);
+    k               = ZEPHYRUM;
+    visi[ZEPHYRUM]  = '\0';
+    per (i = ZEPHYRUM; radix && i < componens_numerus_liberorum(radix);
+        i++)
+    {
+        l       = componens_liberum(radix, i);
+        noster  = chorda_aequalis_literis(l->id, "m")
+               || chorda_aequalis_literis(l->id, "nullum")
+               || (   l->id.mensura >= II
+                   && (   l->id.datum[ZEPHYRUM] == 'h'
+                       || l->id.datum[ZEPHYRUM] == 'v'
+                       || l->id.datum[ZEPHYRUM] == 'u')
+                   && l->id.datum[I] >= '0' && l->id.datum[I] <= '9');
+        si (!noster || k + l->id.mensura + II >= (i32)magnitudo(visi))
+        {
+            perge;
+        }
+        si (k > ZEPHYRUM)
+        {
+            visi[k++] = ' ';
+        }
+        memcpy(visi + k, l->id.datum, (size_t)l->id.mensura);
+        k        += l->id.mensura;
+        visi[k]  = '\0';
+    }
+    si (prefixum ? strncmp(visi, exspectati, strlen(exspectati))
+                 != ZEPHYRUM : strcmp(visi, exspectati) != ZEPHYRUM)
+    {
+        imprimere("  ordines visi: '%s'\n", visi);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+/* agenda + liber "pensa" cum textu; visus monita */
+interior b32
+monita_parare (
+                 Mundus* x,
+         CredoContextus* c,
+     constans character* textus)
+{
+    si (!agendam_parare(x, c))
+    {
+        redde FALSUM;
+    }
+    si (textus && !pensa_scribere(x, c->piscina, textus))
+    {
+        redde FALSUM;
+    }
+    si (!kalendarium_argumentum_ponere(&x->m, "monita"))
+    {
+        redde FALSUM;
+    }
+    dispensator_recomponere(x->d);
+    redde campus_est(x, "visus", "monita");
+}
+
+/* K4: ordines formae: fascia, greges (titulus, vitium, res) */
+interior vacuum
+_probare_monita_ordines (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x            = (Mundus*)c->datum;
+    x->latitudo  = CDLXXX;
+    x->altitudo  = CDLXXX;
+    CREDO_NECESSE(monita_parare(x, c, MONITA_EXEMPLI));
+    CREDO_VERUM(monita_comparare(x,
+        "m h0 u0-0 u0-1 h1 u1-0 h2 u2-0 h3 v3 u3-0 h4 u4-0", FALSUM));
+}
+
+/* K4: liber absens et volumen absens: "m nullum" */
+interior vacuum
+_probare_monita_absentiam (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x            = (Mundus*)c->datum;
+    x->latitudo  = CDLXXX;
+    x->altitudo  = CDLXXX;
+
+    CREDO_GRADUS("liber pensa absens");
+    CREDO_NECESSE(monita_parare(x, c, NIHIL));
+    CREDO_VERUM(monita_comparare(x, "m nullum", FALSUM));
+
+    CREDO_GRADUS("sine volumine");
+    volumen_claudere(x->volumen);
+    x->volumen     = NIHIL;
+    x->documentum  = NIHIL;
+    CREDO_NECESSE(mundum_struere(x, c->piscina, "monita"));
+    CREDO_VERUM(campus_est(x, "visus", "monita"));
+    CREDO_VERUM(monita_comparare(x, "m nullum", FALSUM));
+}
+
+/* K4: superficies ordinaria: grex cotidianus XV rerum per paginas;
+ * titulus "h0-c" in pagina II; ] et [ */
+interior vacuum
+_probare_monita_paginas (
+    CredoContextus* c)
+{
+    Mundus* x;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(monita_parare(x, c, "i0\ni1\ni2\ni3\ni4\ni5\ni6\ni7\n"
+        "i8\ni9\ni10\ni11\ni12\ni13\ni14"));
+
+    CREDO_GRADUS("pagina I");
+    CREDO_VERUM(monita_comparare(x, "m h0 u0-0 u0-1", VERUM));
+
+    CREDO_GRADUS("] pagina II: titulus iteratus");
+    clavis(x, ']');
+    CREDO_VERUM(campus_est(x, "pagina", "1"));
+    CREDO_VERUM(monita_comparare(x, "h0-c u0-", VERUM));
+
+    CREDO_GRADUS("[ ad paginam I");
+    clavis(x, '[');
+    CREDO_VERUM(monita_comparare(x, "m h0 u0-0", VERUM));
+}
+
+/* textus coloris signi: numerus mandatorum et omnia intra f? */
+interior i32
+textus_coloris_numerare (
+          Mandata* md,
+            Fines  f,
+              i32  signum,
+              b32* omnia_intra)
+{
+    constans Mandatum* y;
+                  i32  i;
+                  i32  n;
+
+    n             = ZEPHYRUM;
+    *omnia_intra  = VERUM;
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus       != MANDATUM_TEXTUS
+            || y->color.genus != COLOR_MANDATI_THEMA
+            || y->color.valor != signum)
+        {
+            perge;
+        }
+        n++;
+        si (!punctum_intra(y->fines, f))
+        {
+            *omnia_intra = FALSUM;
+        }
+    }
+    redde n;
+}
+
+/* K4: fascia; tituli (scripti, "Every day" obscurum) cum notis today /
+ * next / no more dates; vitium sine nota; res */
+interior vacuum
+_probare_monita_figuras (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+      Fines  f;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    x->latitudo = CDLXXX;
+    x->altitudo = CDLXXX;
+    CREDO_NECESSE(monita_parare(x, c, MONITA_EXEMPLI));
+    md = reddere(x, c->piscina);
+
+    CREDO_GRADUS("fascia Daily checklist");
+    f = fines_componentis(x, "m", c->piscina);
+    CREDO_VERUM(fascia_in(md, f));
+    CREDO_VERUM(textus_in_continet(md, f, "Daily checklist"));
+
+    CREDO_GRADUS("Every day obscurum, today");
+    f = fines_componentis(x, "h0", c->piscina);
+    CREDO_VERUM(textus_coloris_est(md, f, "Every day", COLOR_TEXT_DIM));
+    CREDO_VERUM(textus_in_continet(md, f, "today"));
+
+    CREDO_GRADUS("wednesdays scriptum, today");
+    f = fines_componentis(x, "h1", c->piscina);
+    CREDO_VERUM(textus_coloris_est(md, f, "wednesdays", COLOR_TEXT));
+    CREDO_VERUM(textus_in_continet(md, f, "today"));
+
+    CREDO_GRADUS("weekends: next Sat 17 Oct");
+    f = fines_componentis(x, "h2", c->piscina);
+    CREDO_VERUM(textus_in_continet(md, f, "weekends"));
+    CREDO_VERUM(textus_in_continet(md, f, "next: Sat 17 Oct"));
+
+    CREDO_GRADUS("vitium: sine nota, nuntius colore erroris");
+    f = fines_componentis(x, "h3", c->piscina);
+    CREDO_VERUM(textus_in_continet(md, f, "every other monday"));
+    CREDO_FALSUM(textus_in_continet(md, f, "next"));
+    CREDO_FALSUM(textus_in_continet(md, f, "today"));
+    f = fines_componentis(x, "v3", c->piscina);
+    CREDO_VERUM(textus_coloris_est(md, f, "from which day",
+        COLOR_ERROR));
+
+    CREDO_GRADUS("semel praeteritum: no more dates");
+    f = fines_componentis(x, "h4", c->piscina);
+    CREDO_VERUM(textus_in_continet(md, f, "no more dates"));
+
+    CREDO_GRADUS("res");
+    f = fines_componentis(x, "u2-0", c->piscina);
+    CREDO_VERUM(textus_coloris_est(md, f, "mow the lawn", COLOR_TEXT));
+}
+
+/* K4: superficies ordinaria - vitium involutum (II lineae aut plures),
+ * omnes intra ordinem "v0" (altitudo ex eadem involutione) */
+interior vacuum
+_probare_monita_vitium (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+      Fines  f;
+        b32  intra;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    CREDO_NECESSE(monita_parare(x, c,
+        "every other monday\n  call mom"));
+    CREDO_VERUM(monita_comparare(x, "m h0 v0 u0-0", FALSUM));
+    md  = reddere(x, c->piscina);
+    f   = fines_componentis(x, "v0", c->piscina);
+    CREDO_VERUM(textus_coloris_numerare(md, f, COLOR_ERROR, &intra)
+        >= II);
+    CREDO_VERUM(intra);
+}
+
+/* K4: liber absens - "No checklist yet." */
+interior vacuum
+_probare_monita_vacua (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    CREDO_NECESSE(monita_parare(x, c, NIHIL));
+    md = reddere(x, c->piscina);
+    CREDO_VERUM(textus_in_continet(md, fines_componentis(x, "nullum",
+        c->piscina), "No checklist yet."));
+}
+
+/* mandata coetus componentis id: (a, b) - mandata intra coetum (sine
+ * coetu ipso); FALSUM si nullus */
+interior b32
+coetus_componentis (
+                Mandata* md,
+     constans character* id,
+                    i32* a,
+                    i32* b)
+{
+    constans Mandatum* y;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   y->genus == MANDATUM_COETUS
+            && chorda_aequalis_literis(y->provenientia, id))
+        {
+            *a = i + I;
+            *b = i + y->magnitudo_arboris;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* globulus: textus non vacuus et campana (ordo latissimus IX x I,
+ * impletus) in coetu eius */
+interior vacuum
+globulum_inspicere (
+                Mandata* md,
+     constans character* id,
+                    b32* textus,
+                    b32* campana)
+{
+    constans Mandatum* y;
+                  i32  a;
+                  i32  b;
+                  i32  i;
+
+    *textus   = FALSUM;
+    *campana  = FALSUM;
+    si (!coetus_componentis(md, id, &a, &b))
+    {
+        redde;
+    }
+    per (i = a; i < b; i++)
+    {
+        y = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (y->genus == MANDATUM_TEXTUS && y->textus.mensura > ZEPHYRUM)
+        {
+            *textus = VERUM;
+        }
+        si (   y->genus          == MANDATUM_RECTANGULUM && y->impletum
+            && y->fines.latitudo == IX && y->fines.altitudo == I)
+        {
+            *campana = VERUM;
+        }
+    }
+}
+
+/* K4: globulus Reminders: verbum si barra capit (480), aliter campana
+ * III cellularum (280, visus mensis = barra latissima), intra
+ * superficiem */
+interior vacuum
+_probare_monita_globulum (
+    CredoContextus* c)
+{
+     Mundus* x;
+    Mandata* md;
+      Fines  f;
+        b32  textus;
+        b32  campana;
+
+    x = (Mundus*)c->datum;
+    thema_initiare();
+    x->latitudo = CDLXXX;
+    x->altitudo = CDLXXX;
+    CREDO_NECESSE(agendam_parare(x, c));
+
+    CREDO_GRADUS("CDLXXX: verbum");
+    md  = reddere(x, c->piscina);
+    f   = fines_componentis(x, "visus-monita", c->piscina);
+    CREDO_AEQUALIS_S32(f.latitudo, (s32)(strlen("Reminders") + II)
+        * VI);
+    globulum_inspicere(md, "visus-monita", &textus, &campana);
+    CREDO_VERUM(textus);
+    CREDO_FALSUM(campana);
+
+    CREDO_GRADUS("CCLXXX: campana, intra superficiem");
+    x->latitudo = ZEPHYRUM;
+    x->altitudo = ZEPHYRUM;
+    CREDO_NECESSE(mundum_struere(x, c->piscina, NIHIL));
+    md  = reddere(x, c->piscina);
+    f   = fines_componentis(x, "visus-monita", c->piscina);
+    CREDO_AEQUALIS_S32(f.latitudo, III * VI);
+    CREDO_VERUM(f.x + f.latitudo <= CCLXXX);
+    globulum_inspicere(md, "visus-monita", &textus, &campana);
+    CREDO_FALSUM(textus);
+    CREDO_VERUM(campana);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "natalis_super", _probare_natalis_super, mundum_parare,
       mundum_purgare, NIHIL, NIHIL },
@@ -4306,6 +4719,22 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "pensa_titulus_iteratus", _probare_pensa_titulum_iteratum,
         mundum_parare, mundum_purgare, NIHIL, NIHIL },
     { "textus_in_piscina", _probare_textum_in_piscina, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "monita_visus", _probare_monita_visum, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "monita_ordines", _probare_monita_ordines, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "monita_absentia", _probare_monita_absentiam, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "monita_paginae", _probare_monita_paginas, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "monita_figurae", _probare_monita_figuras, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "monita_vitium", _probare_monita_vitium, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "monita_vacua", _probare_monita_vacua, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "monita_globulus", _probare_monita_globulum, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

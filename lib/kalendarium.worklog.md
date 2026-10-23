@@ -1039,3 +1039,45 @@ the A2b rule ("text handed to mandata lives in the mandata pool") no
 longer depends on callers. The existing chorda_transcribe calls in this
 file are now redundant and harmless; `textus_in_piscina` keeps checking
 the invariant from the outside.
+
+## 2026-10-23 — Reminders tab, read view (pensa K4)
+
+A fifth view, `visus = monita` (bit VISUS_MONITORUM XVI), after Agenda:
+the daily checklist template rendered read-only. It reuses the index
+machinery: the composer gives it `indicem_disponere` (header row with
+page arrows; "+ New" only in VISUS_INDICIS views), `ordines_indicis`
+has a monita branch (`monita_in_album`), the root figure dispatches to
+`monita_pingere`. Rows: band "m" ("Daily checklist"), per group "h<k>"
+(ALBUM_TITULUS, so it repeats as "h<k>-c" on a new page), "v<k>" (the
+recursus error, wrapped), "u<k>-<j>" items; "nullum" when there is no
+volume, no book or an empty template. Every row has album res 0:
+nothing is selectable until K5's edit view gives the view something to
+act on, so `[`/`]` just turn pages (paginam_vertere finds no res).
+Headingless every-day lines show under a DIM "Every day" (Fran: not
+typed, so dim). Heading note: "today" (recursus_continet), else "next:
+Sat 17 Oct" (recursus_proximus from tomorrow), else "no more dates";
+none for a heading that does not parse.
+
+Wrap: `lineas_involvere` (break at spaces, hard-break long words) and
+`columnae_textus(m)` - the album sizes the error row from the SAME
+width the painter wraps to; test `monita_vitium` checks every error
+line lies inside the row, and a plant with the painter at half width
+goes red.
+
+Bar: "Reminders" made the widest bar (month view: < > Today + 5
+segments) 52 columns. Adding the word alone broke OLD tests in narrow
+panes (birthday popover position, day-view paging, vicus notes): an
+overflowing bar distorts the whole layout. `barra_verbum_capit` sums
+the visible buttons' word widths (+ left-group gaps) against the bar's
+columns; when the word does not fit, the button is III columns with no
+title and `figura_globuli` draws a 9x9 bell (`campana`, runs like the
+birthday cake). Limit found in the vicus test: at ~250 px panes the bar
+does not fit even with the bell (needs 44 columns) - the dispositio
+squeezes the last button to NEGATIVE width (the click misses); Agenda
+was already squeezed there before K4. Real panes (960 screen -> 480)
+fit the word; >= ~270 px fit the bell. Not addressed in K4.
+
+Tests: the fixture's scriba page was 40x10 and silently cut K4's
+14-line templates (debug print of pensa_textum_legere) - now 40x40.
+Bar buttons draw component-relative: the bell test finds the button's
+own commands by its command group (provenientia + magnitudo_arboris).

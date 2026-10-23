@@ -760,6 +760,59 @@ _probare_pensa (
         chorda_ex_literis("vitamins", c->piscina)));
 }
 
+/* K4: calendarium vici: globulus Reminders (verbum aut campana) visum
+ * monita aperit; forma libri "pensa" voluminis vici in ordinibus */
+interior vacuum
+_probare_monita (
+    CredoContextus* c)
+{
+               Mundus* x;
+                Vicus* v;
+           ManusLudus* m;
+          ScribaLiber* l;
+     ScribaDocumentum* d;
+    TabulaCharacterum  folium;
+  KalendariumMontatio* k;
+               chorda* a;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x && x->volumen);
+    l = scriba_liber_aperire_in_spatio(c->piscina,
+        internamentum_creare(c->piscina), x->volumen, "pensa", XL, XL);
+    d = l ? scriba_liber_pagina(l, chorda_ex_literis("1", c->piscina))
+          : NIHIL;
+    CREDO_NECESSE_NON_NIHIL(d);
+    tabula_ex_literis_cum_dimensionibus(&folium, c->piscina,
+        d->latitudo, d->altitudo,
+        "vitamins\n\nweekends\n  mow the lawn");
+    CREDO_NECESSE(scriba_documentum_committere(d, &folium) > ZEPHYRUM);
+    /* CMLX: latus ~CDLXXX (ut schermus Frani). In CDLXXX latus ~CCL
+     * est - barra ne campanam quidem capit, globulus comprimitur
+     * (latitudo negativa; Agenda iam ante K4 compressa) */
+    CREDO_NECESSE(vicus_applicatio_aedificare(&x->app, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CMLX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    v                 = x->app.vicus;
+    x->tempus.annus   = MMXXVI;
+    x->tempus.mensis  = X;
+    x->tempus.dies    = XIV;
+    vicus_horologium_ponere(v, horologium_fictum, &x->tempus);
+    CREDO_VERUM(vicus_acervo_aperire(v, "calendarium", "2026-10"));
+    (vacuum)vicus_pulsare(v);
+    k = kalendarium_frontale(v);
+    CREDO_NECESSE_NON_NIHIL(k);
+    m = manus_ludus_creare(c->piscina, x->app.d);
+    dispensator_recomponere(x->app.d);
+    /* ictus primus latus focat; deinde globulus */
+    CREDO_NECESSE(manus_ludus_premere(m, "#kalendarium"));
+    CREDO_NECESSE(manus_ludus_premere(m, "#visus-monita"));
+    dispensator_recomponere(x->app.d);
+    a = insula_ramus_attributum(&k->ramus, "visus");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "monita"));
+    CREDO_NON_NIHIL(manus_ludus_invenire(m, "#h1"));
+    CREDO_NON_NIHIL(manus_ludus_invenire(m, "#u1-0"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latera",  _probare_latera,  mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
@@ -777,6 +830,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         mundum_purgare, NIHIL, NIHIL },
     { "pensa", _probare_pensa, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
+    { "monita", _probare_monita, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

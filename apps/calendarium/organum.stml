@@ -29,6 +29,7 @@
       <optio>dies</optio>
       <optio>annus</optio>
       <optio>agenda</optio>
+      <optio>monita</optio>
     </campus>
     <campus nomen="dies_electus" typus="dies" vita="transiens"
             scriptor="calendarium.agere" semita="ligatio"
@@ -86,6 +87,7 @@
        kalendarium.c, ante cognomina) -->
   <cognomina>
     <cognomen nomen="agenda" semita="calendarium/agenda"/>
+    <cognomen nomen="monita" semita="calendarium/monita"/>
     <cognomen typus="dies" semita="calendarium/dies/{}"/>
   </cognomina>
 

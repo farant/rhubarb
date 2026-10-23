@@ -65,6 +65,19 @@
  * Mandata rei (titulus, dies, nota, rubricae, < >, X) pensis non
  * praesto (in menu obscura); u signa non revocat (x iterum).
  *
+ * VISUS MONITORUM (pensa K4; visus="monita", post agendam): forma
+ * indicis cotidiani (liber "pensa" voluminis) lectioni sola. Titulus
+ * "Reminders"; caput cum sagittis paginae; ordines (album, paginae ut
+ * in die et agenda): fascia "m" ("Daily checklist"), pro grege k
+ * titulus "h<k>" (PARTES_INDEX; schedula ut scripta, aut "Every day"
+ * obscurum pro lineis sine capite; ad dextrum obscure "today", "next:
+ * Sat 24 Oct" (recursus_proximus) aut "no more dates"; in pagina nova
+ * "h<k>-c"), vitium "v<k>" (schedula non lecta: nuntius recursus
+ * involutus, colore erroris) et res "u<k>-<j>" (PARTES_ITEM, non
+ * eligendae); sine forma "nullum" ("No checklist yet."). Claves: [ ]
+ * paginae, Esc ad mensem. Globulus barrae "visus-monita": "Reminders"
+ * si barra capit, aliter campana (III cellulae).
+ *
  * CLAVES (mensis): h/l dies -1/+1, k/j hebdomas -1/+1, H/L mensis
  * -1/+1 (dies ad finem mensis praecisa), t hodie, Enter diem aperit.
  * BARRA (M1b): supra omnes visus, globuli (PARTES_BOTTONE) "praecedens"
