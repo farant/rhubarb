@@ -173,7 +173,9 @@ nomen structura {
 } AedilisFructus;
 
 /* Clausuram scopi derivare (punctum fixum trans plagulas).
- * varians NIHIL = praelatio prima configurationis.
+ * varians: nomen unum ("posix") aut index ordine praelationis
+ * ("android,posix": X_android, aliter X_posix); NIHIL = praelatio
+ * configurationis. Index malus (elementum vacuum) = recusatio.
  * NIHIL + causa in recusatione - nullus fructus partialis. */
 AedilisFructus*
 aedilis_derivare (
