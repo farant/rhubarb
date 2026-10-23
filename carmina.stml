@@ -74,4 +74,24 @@
     </>
   </>
 
+  <carmen titulus="pastorale" tempus="90" metrum="6/8" clavis="g maior">
+    <tempus mensura="15" valor="80"/>
+    <tempus mensura="16" valor="68"/>
+    <pars titulus="melodia" instrumentum="aether" lucrum="0.55">
+      <frustum mensura="1">
+        <textus!>o5 d4 g8 b4 a8 | g4 b8 a4. | e4 g8 g4 d8 | f#4 e8 d4. | d4 g8 b4 >d8 | <b4 g8 >c4. | c4 <a8 f#4 a8 | g2. | e4 g8 >c4. | <b4 a8 g4 b8 | >c4 <b8 >d4. | <b4 g8 a4. | b4 g8 >e4 d8 | <b4 >d8 <g4 b8 | a4 >c8< a4 f#8 | g2.</textus>
+      </>
+    </>
+    <pars titulus="media" instrumentum="quadrans" lucrum="0.30">
+      <frustum mensura="1">
+        <textus!>o4 b4. g4. | b4. f#4. | g4. b4. | f#2. | b4. g4. | g4. e4. | e4. d4. | b2. | g4. e4. | d4. e4. | e4. f#4. | g4. f#4. | b4. g4. | g4. e4. | e4. f#4. | b2.</textus>
+      </>
+    </>
+    <pars titulus="bassus" instrumentum="triangulum" lucrum="0.65">
+      <frustum mensura="1">
+        <textus!>o2 g2. | g4. >d4. | c4. <g4. | >d2. | <g2. | >e4. c4. | <a4. >d4. | <g2. | >c2. | <g4. >e4. | <a4. >d4. | <g4. >d4. | <g4. >c4. | <g4. >e4. | c4. d4. | <g2.</textus>
+      </>
+    </>
+  </>
+
 </carmina>
