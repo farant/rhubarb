@@ -688,3 +688,78 @@ scriba_liber_comitem_legere (
     *semita   = campum_legere(res.elementum_radix, "semita", piscina);
     redde VERUM;
 }
+
+b32
+scriba_liber_textum_legere (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* praefixum,
+                 chorda* exitus)
+{
+                        chorda  index;
+                        chorda  spatium;
+                           Xar* nomina;
+                           b32  inventum;
+                           b32  prima;
+                           i32  i;
+                           i32  linea;
+                           s32  ultima;
+             ChordaAedificator* a;
+              ScribaDocumentum* doc;
+    constans TabulaCharacterum* t;
+
+    si (!piscina || !intern || !volumen || !exitus)
+    {
+        redde FALSUM;
+    }
+    *exitus = chorda_vacua_libri();
+    vias_libri(praefixum, piscina, &index, &spatium);
+    nomina = nomina_legere(piscina, intern, volumen, index, &inventum);
+    si (!inventum)
+    {
+        redde VERUM;
+    }
+    si (!nomina)
+    {
+        redde FALSUM;
+    }
+    a      = chorda_aedificator_creare(piscina, (memoriae_index)CCLVI);
+    prima  = VERUM;
+    per (i = ZEPHYRUM; i < xar_numerus(nomina); i++)
+    {
+        doc = scriba_documentum_aperire(piscina, intern, volumen,
+            chorda_ut_cstr(chorda_concatenare(spatium,
+            *(chorda*)xar_obtinere(nomina, i), piscina), piscina));
+        t       = doc ? scriba_documentum_tabula(doc) : NIHIL;
+        ultima  = -I;
+        per (linea = ZEPHYRUM; t && linea < (i32)t->altitudo; linea++)
+        {
+            si (lineam_legere(t, linea, piscina).mensura > ZEPHYRUM)
+            {
+                ultima = (s32)linea;
+            }
+        }
+        si (ultima < ZEPHYRUM)
+        {
+            perge;
+        }
+        si (!prima)
+        {
+            chorda_aedificator_appendere_literis(a, "\n\n");
+        }
+        prima = FALSUM;
+        per (linea = ZEPHYRUM; (s32)linea <= ultima; linea++)
+        {
+            si (linea > ZEPHYRUM)
+            {
+                chorda_aedificator_appendere_character(a, '\n');
+            }
+            chorda_aedificator_appendere_chorda(a, lineam_legere(t,
+                linea,
+                piscina));
+        }
+    }
+    *exitus = chorda_aedificator_finire(a);
+    redde VERUM;
+}

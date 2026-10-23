@@ -135,24 +135,34 @@ form must parse back to the same canonical form and the same days
 
 ## IV. The checklist — `pensa`
 
-### IV.1 Outline format
+### IV.1 Outline format (revised with Fran 2026-10-23, K2)
 
 ```
-vitamins                       <- before any heading: "every day"
-morning offering
-weekends
+vitamins                 <- every day (no children)
+morning offering         <- every day
+
+weekends                 <- schedule (it has children)
     mow the lawn
-every other monday from oct 26 2026
-    call mom
+    change the sheets
+
+    every other monday from oct 26 2026   <- the section as a whole is
+        call mom                             indented: dedent -> heading
 ```
 
-- A line at the left margin is a **schedule heading**; an indented line
-  (any leading whitespace) is an **item** of the last heading.
-- **Items before the first heading belong to "every day"** — a new
-  checklist is just a list of lines.
-- Blank lines are ignored. A heading that does not parse is reported
-  with its line number and contributes no items (nothing silently
-  disappears: the read view shows the error).
+- **Sections are separated by blank lines** (a page break of the book
+  counts as one).
+- **Each section is dedented on its own**: its common leading
+  indentation is removed; only RELATIVE indentation matters.
+- **Inside a section**, a top-level line WITH more-indented lines under
+  it is a **schedule heading** (parsed by `recursus`) and those lines
+  are its items, at any depth (two logical levels); a top-level line
+  WITHOUT children is an **every-day item** and is never parsed as a
+  schedule. Consecutive childless lines form one implicit "every day"
+  group, so the groups keep the text's order.
+- A heading that does not parse keeps its items but contributes none to
+  any day; the read view shows the error under it (nothing silently
+  disappears; a misspelled heading still has children, so it is still
+  a heading).
 - **Item identity is its text** (trimmed). Renaming an item starts a
   fresh history; past days keep their ticks under the old text. The
   same text in two groups that apply on the same day is shown once.
@@ -161,11 +171,14 @@ every other monday from oct 26 2026
 
 - **Template**: an ordinary scriba book in the volume, prefix `pensa`
   (pages `pensa/paginae/...`). Editing, undo, history and pagination
-  are scriba's. The outline is the book's pages read in order
-  (`scriba_liber_lineas_legere`-style, keeping indentation).
+  are scriba's. The outline is the book's pages read in order WITH their
+  blank lines (they separate sections): `scriba_liber_textum_legere`,
+  added in K2 - the older readers drop blank lines (written for search).
 - **Ticks**: acts in the volume, genus `pensa`:
-  `<pensum actio="factum" dies="2026-10-23" res="vitamins"/>` and
-  `actio="infectum"` to untick (last act per day + item wins).
+  `<pensum actio="factum" dies="2026-10-23">vitamins</pensum>` and
+  `actio="infectum"` to untick (last act per day + item wins). The item
+  is text CONTENT, not an attribute (attribute values are raw in STML;
+  `R&D "notes"` must round-trip).
   Rejected: `[x]` marks inside the template text (a daily list would
   rewrite the template every day and mix template with history).
 
@@ -229,7 +242,7 @@ One section for now: **Daily checklist**.
 | | |
 |---|---|
 | **K1** | `recursus` + corpus: seed grammar (§III.2), canonical form, errors, anchors. DONE 2026-10-23: 62-entry corpus with round trips, API edge tests; see lib/recursus.worklog.md |
-| **K2** | `pensa`: outline parsing (§IV.1), items for a day, tick/untick acts |
+| **K2** | `pensa`: outline parsing (§IV.1), items for a day, tick/untick acts. DONE 2026-10-23: `scriba_liber_textum_legere` (book text with blank lines), outline parser + items for a day, ticks as acts read before every query; see lib/pensa.worklog.md |
 | **K3** | Day view Checklist block (show, tick, history, future dimmed) |
 | **K4** | Reminders tab read view |
 | **K5** | Edit view (embedded scriba on the `pensa` book) |

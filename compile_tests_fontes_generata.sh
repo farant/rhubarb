@@ -201,6 +201,7 @@ declare -a SOURCE_FILES=(
     "lib/paginatio.c"
     "lib/partitio.c"
     "lib/partitio_aestimatio.c"
+    "lib/pensa.c"
     "lib/persistentia_memoria.c"
     "lib/persistentia_nuntium.c"
     "lib/personae.c"

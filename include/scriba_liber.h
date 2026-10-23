@@ -155,4 +155,16 @@ scriba_liber_comitem_legere (
                  chorda* titulus,
                  chorda* semita);
 
+/* pensa K2: textus libri TOTUS cum lineis vacuis (sectiones separant),
+ * LECTIO SOLA: pagina quaeque lineis suis (vacuae finales demptae),
+ * paginae "\n\n" separatae; liber absens = textus vacuus (VERUM);
+ * FALSUM si index malus. praefixum NIHIL = liber communis */
+b32
+scriba_liber_textum_legere (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* praefixum,
+                 chorda* exitus);
+
 #endif /* SCRIBA_LIBER_H */

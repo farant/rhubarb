@@ -419,11 +419,57 @@ _sectio_comes (
     volumen_claudere(vol);
 }
 
+/* pensa K2: textus libri cum lineis vacuis; paginae "\n\n" separatae;
+ * lineae vacuae finales paginae demptae; liber absens vacuus */
+interior vacuum
+_sectio_textus (
+    CredoContextus* c)
+{
+              Volumen* vol;
+          ScribaLiber* l;
+     ScribaDocumentum* d;
+    TabulaCharacterum  folium;
+               chorda  textus;
+
+    (vacuum)c;
+    vol = volumen_temporarium(piscina, "probatio_scriba_liber");
+    CREDO_NECESSE_NON_NIHIL(vol);
+
+    CREDO_GRADUS("liber absens: vacuus");
+    CREDO_VERUM(scriba_liber_textum_legere(piscina, intern, vol,
+        "pensa",
+        &textus));
+    CREDO_AEQUALIS_I32(textus.mensura, ZEPHYRUM);
+
+    CREDO_GRADUS("paginae duae, lineae vacuae servatae");
+    l = scriba_liber_aperire_in_spatio(piscina, intern, vol, "pensa",
+        XL,
+        X);
+    CREDO_NECESSE_NON_NIHIL(l);
+    d = scriba_liber_pagina(l, lit("1"));
+    CREDO_NECESSE_NON_NIHIL(d);
+    tabula_ex_literis_cum_dimensionibus(&folium, piscina, d->latitudo,
+        d->altitudo, "vitamins\n\nweekends\n    mow the lawn\n\n");
+    CREDO_VERUM(scriba_documentum_committere(d, &folium) > ZEPHYRUM);
+    d = scriba_liber_paginam_condere(l, lit("2"));
+    CREDO_NECESSE_NON_NIHIL(d);
+    tabula_ex_literis_cum_dimensionibus(&folium, piscina, d->latitudo,
+        d->altitudo, "  sundays\n    mass");
+    CREDO_VERUM(scriba_documentum_committere(d, &folium) > ZEPHYRUM);
+    CREDO_VERUM(scriba_liber_textum_legere(piscina, intern, vol,
+        "pensa",
+        &textus));
+    CREDO_CHORDA_AEQUALIS_LITERIS(textus,
+        "vitamins\n\nweekends\n    mow the lawn\n\n  sundays\n    mass");
+    volumen_claudere(vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "liber paginarum (scenarium I-IX)", _sectio_prima, _parare,
         NIHIL, NIHIL, NIHIL },
     { "praefixum", _sectio_praefixum, _parare, NIHIL, NIHIL, NIHIL },
     { "comes", _sectio_comes, _parare, NIHIL, NIHIL, NIHIL },
+    { "textus", _sectio_textus, _parare, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
