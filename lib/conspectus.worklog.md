@@ -169,3 +169,36 @@ registries x 3 reads after 100 warm-up: clean 320-1104 KiB; plants
 destroy-noop 33 MiB, entries 19, scratch 8.2, per-rem 6.1; bound 3 MiB.
 Lesson: calibrate a footprint bound with the plants' SIZES, not just
 their colour, and run the clean case five times first.
+
+## 2026-10-23 — conspectus 'dies': working memory out of the entry
+
+`conspectus_dies_computare` did all its work in the entry's pool: the
+liturgy lookup, the birthday query, the agenda lists and above all the
+day-notes read, which replays the page's whole edit history. The entry
+kept only a few strings, but the pool kept everything. Measured on
+Fran's volume (copy, 10-23): ~124 KB per day with a notes book, 540 KB
+for one busy day; the October grid (42 days) reached 4.1 MB and the
+4 MiB ceiling evicted the first 14 days on every frame - so each mouse
+move recomputed them (replays included), and the month painter, which
+held pointers into evicted entries, drew garbage (fixed separately in
+kalendarium, A2b copy, d68eebf3).
+
+Fix: a scratch pool per computation (`conspectus_dies_scheda`, created
+and destroyed inside the call - safe if computations ever nest); only
+`v`, its Xars and the transcribed strings go to the entry pool. The
+existing chorda_transcribe calls were right in intent but copied into
+the SAME pool. Result: test day with 50 edits 178,509 B -> 929 B;
+Fran's grid 4.1 MB -> 37.8 KB, nothing evicted; the 14th 540 KB ->
+924 B.
+
+Test `magnitudo` (probatio_conspectus_dies): 50 edits, entry < 8 KB,
+content = last edit. Plants: book read in the entry pool -> red (size);
+lines not transcribed -> red (conspectus_verificare). Liturgy lookup in
+the entry pool stayed GREEN: +475 B fixed (1404 vs 929), not
+history-proportional; a 1 KB bound would be fragile, the 8 KB bound
+exists for replay-scale growth. Kept in scratch anyway.
+
+Open design note: the next projection kind can repeat this mistake.
+Structural option, not built: the registry hands `computare` a scratch
+pool next to the result pool (API change in conspectus), or
+conspectus_verificare flags entries above a size bound.

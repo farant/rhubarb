@@ -444,6 +444,41 @@ _probare_sine_fontibus (
     CREDO_VERUM(v->liturgia);
 }
 
+/* introitus parvus: liber diei L vicibus mutatus (historia replicatur
+ * in lectione) - opus lectionis in scheda, introitus solum fructum
+ * tenet (volumen Frani 10-23: dies cum libro ~124 KB, mensis super
+ * tectum, menses eiciebant se ipsos) */
+interior vacuum
+_probare_magnitudinem (
+    CredoContextus* c)
+{
+                      Mundus* m;
+     constans DiesConspectus* v;
+                   character  textus[CXXVIII];
+              memoriae_index  ante;
+              memoriae_index  usus;
+                         i32  i;
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->repertorium);
+    per (i = ZEPHYRUM; i < L; i++)
+    {
+        sprintf(textus, "ora et labora\nversio %u",
+            (insignatus integer)i);
+        CREDO_NECESSE(librum_scribere(m, XIV, textus, c->piscina));
+    }
+    ante  = conspectus_summa_usus(m->repertorium);
+    v     = legere(m, XIV, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(v);
+    usus  = conspectus_summa_usus(m->repertorium) - ante;
+    imprimere("  introitus diei cum libro: %lu octeti\n",
+        (longus insignatus)usus);
+    CREDO_AEQUALIS_I32(xar_numerus(v->lineae_libri), II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(lineam(v->lineae_libri, I),
+        "versio 49");
+    CREDO_VERUM(usus < VIII * MXXIV);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "computatio",     _probare_computationem, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -452,6 +487,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "registrum",      _probare_registrum,     mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "copia",          _probare_copiam,        mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "magnitudo",      _probare_magnitudinem,  mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "sine fontibus",  _probare_sine_fontibus, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },

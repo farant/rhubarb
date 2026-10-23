@@ -106,6 +106,9 @@ celebratio_hebdomadis (
     redde NIHIL;
 }
 
+/* opus (quaestiones, replicatio historiae libri) in scheda propria,
+ * deinde liberata; in piscina solum fructus (v, Xar eius, chordae
+ * transcriptae) - introitus registri parvus manet */
 DiesConspectus*
 conspectus_dies_computare (
     constans DiesFontes* fontes,
@@ -113,10 +116,17 @@ conspectus_dies_computare (
                 Piscina* piscina)
 {
     DiesConspectus* v;
+           Piscina* scheda;
                Xar* l;
                i32  i;
 
     si (!fontes || !piscina || !fasti_dies_valida(dies))
+    {
+        redde NIHIL;
+    }
+    scheda = piscina_generare_dynamicum("conspectus_dies_scheda",
+        XVI * MXXIV);
+    si (!scheda)
     {
         redde NIHIL;
     }
@@ -135,7 +145,7 @@ conspectus_dies_computare (
         constans Celebratio* c;
 
         info = calendarium_obtinere_diem(fontes->liturgia, dies,
-            piscina);
+            scheda);
         si (info)
         {
             v->liturgia  = VERUM;
@@ -155,7 +165,7 @@ conspectus_dies_computare (
 
     /* natales (fontes dierum) */
     l = fontes->fontes ? fasti_fontes_legere(fontes->fontes, dies, dies,
-        piscina) : NIHIL;
+        scheda) : NIHIL;
     per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
     {
         constans FastiIntroitus* t = (constans FastiIntroitus*)
@@ -165,14 +175,14 @@ conspectus_dies_computare (
             && chorda_aequalis_literis(t->genus, FASTI_GENUS_NATALIS))
         {
             *(chorda*)xar_addere(v->natales) = chorda_transcribere(
-                fasti_introitum_textus(t, piscina), piscina);
+                fasti_introitum_textus(t, scheda), piscina);
         }
     }
 
     /* res diei et signa */
     si (fontes->agenda)
     {
-        l = agenda_res_diei(fontes->agenda, dies, piscina);
+        l = agenda_res_diei(fontes->agenda, dies, scheda);
         per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
         {
             constans AgendaRes* r = *(constans AgendaRes**)xar_obtinere(
@@ -186,7 +196,7 @@ conspectus_dies_computare (
                     r->titulus, piscina);
             }
         }
-        l = agenda_perfectae_die(fontes->agenda, dies, piscina);
+        l = agenda_perfectae_die(fontes->agenda, dies, scheda);
         v->signum.perfectae = l ? xar_numerus(l) : ZEPHYRUM;
     }
 
@@ -197,16 +207,17 @@ conspectus_dies_computare (
 
         sprintf(praefixum, "dies/%04d-%02d-%02d", (integer)dies.annus,
             (integer)dies.mensis, (integer)dies.dies);
-        (vacuum)scriba_liber_lineas_legere(piscina, fontes->intern,
-            fontes->volumen, praefixum, ZEPHYRUM, v->lineae_libri);
-        indentationem_communem_tollere(v->lineae_libri);
-        per (i = ZEPHYRUM; i < xar_numerus(v->lineae_libri); i++)
+        l = xar_creare(scheda, (i32)magnitudo(chorda));
+        (vacuum)scriba_liber_lineas_legere(scheda, fontes->intern,
+            fontes->volumen, praefixum, ZEPHYRUM, l);
+        indentationem_communem_tollere(l);
+        per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
         {
-            chorda* linea = (chorda*)xar_obtinere(v->lineae_libri, i);
-
-            *linea = chorda_transcribere(*linea, piscina);
+            *(chorda*)xar_addere(v->lineae_libri) = chorda_transcribere(
+                *(chorda*)xar_obtinere(l, i), piscina);
         }
     }
+    piscina_destruere(scheda);
     redde v;
 }
 
