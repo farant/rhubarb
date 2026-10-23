@@ -1,4 +1,5 @@
-/* auditio.c - praeparata sonitus et cantilenas audire (sonus S1, S4)
+/* auditio.c - praeparata sonitus, cantilenas et carmina audire (sonus
+ * S1, S4, S6)
  *
  * Sonitum praeparatum reddit in plagulam WAV et per afplay sonat;
  * cantilenam (cantus.h) per exitum vivum (auditus) sonat -
@@ -22,6 +23,22 @@
  *   auditio -genus finis [semen]       cantilena generis sorte (semen
  *                                      absens = horologium)
  *   auditio -cantilena arpeggium       cantilena per titulum
+ *
+ *   auditio -carmina                   carmina libri ordinarii:
+ *                                      titulus, clavis, metrum, tempus,
+ *                                      mensurae; partes (instrumentum,
+ *                                      notae, ambitus)
+ *   auditio -carmen korobeiniki        vivum, semel; mensura currens
+ *                                      monstratur
+ *   auditio -carmen T -iterare         vivum, iterans (Ctrl-C finit)
+ *   auditio -carmen T -pars bassus     pars sola (solus)
+ *   auditio -carmen T -via x.wav       in WAV stereo, semel (non sonat)
+ *
+ * Carmen per concentum et cantorem - via eadem ac vicus: pulsus X ms
+ * (concentus_agere, cantor_agere). Vivum: exitus = concentus_auditus;
+ * WAV: exitus scripturae (mixtura servata, quadra per pulsum redduntur,
+ * momentum = quadra reddita) - eadem logica prospectus sine horologio.
+ * Finis: cantor non sonat et nulla vox vivit (caudae inclusae).
  *
  * Cantus: voces = notae (potentia II, >= XVI), quia cantus_iussa_parare
  * sedes OMNES statim capit - voces pauciores notas futuras surriperent.
@@ -47,6 +64,11 @@
 #include "auditus.h"
 #include "cantus.h"
 #include "cantuale.h"
+#include "carmen.h"
+#include "cantor.h"
+#include "concentus.h"
+#include "concentus_auditus.h"
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -181,6 +203,459 @@ _vitium_monstrare (
     }
     fprintf(stderr, "^ %s\n", vitium->causa);
 }
+
+
+/* ==================================================
+ * Carmen: cantor super concentum (S6d)
+ * ================================================== */
+
+/* pulsus hospitis, ms - via eadem ac vicus */
+#define AUDITIO_PULSUS_MS X
+#define AUDITIO_PULSUS_QUADRA (SONUS_FREQUENTIA / C)
+/* WAV: quadra ultra finem carminis (caudae remissionis) */
+#define AUDITIO_CAUDA (II * SONUS_FREQUENTIA)
+
+/* Ctrl-C in vivo: cantor sistitur, voces evanescunt, exitus
+ * clauditur */
+hic_manens volatilis sig_atomic_t interruptum = ZEPHYRUM;
+
+interior vacuum
+_interrumpere (
+    integer signum)
+{
+    (vacuum)signum;
+    interruptum = I;
+}
+
+/* exitus scripturae (WAV): mixtura in aperiendo servata; quadra a
+ * vocante redduntur (pulsus quisque), momentum = mixtura_momentum */
+nomen structura {
+    Mixtura* mixtura;
+} AuditioScriptura;
+
+interior b32
+_scriptura_aperire (
+     vacuum* ctx,
+    Mixtura* mixtura)
+{
+    ((AuditioScriptura*)ctx)->mixtura = mixtura;
+    redde VERUM;
+}
+
+interior vacuum
+_scriptura_claudere (
+    vacuum* ctx)
+{
+    (vacuum)ctx;
+}
+
+interior s64
+_scriptura_momentum (
+    vacuum* ctx)
+{
+    AuditioScriptura* o = (AuditioScriptura*)ctx;
+
+    redde o->mixtura ? mixtura_momentum(o->mixtura) : ZEPHYRUM;
+}
+
+interior i32
+_scriptura_mora (
+    vacuum* ctx)
+{
+    (vacuum)ctx;
+    redde ZEPHYRUM;
+}
+
+interior b32
+_scriptura_iubere (
+                    vacuum* ctx,
+    constans MixturaIussum* iussum)
+{
+    redde mixtura_iubere(((AuditioScriptura*)ctx)->mixtura, iussum);
+}
+
+interior b32
+_scriptura_nuntium_legere (
+            vacuum* ctx,
+    MixturaNuntius* nuntius)
+{
+    AuditioScriptura* o = (AuditioScriptura*)ctx;
+
+    redde o->mixtura && mixtura_nuntium_legere(o->mixtura, nuntius);
+}
+
+/* nota MIDI -> "E4" (littera, signum, octava) in alveo dato */
+interior constans character*
+_nota_titulus (
+          i32  nota,
+    character* alveus)
+{
+    hic_manens constans character* LITTERAE[XII] = {
+        "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
+    };
+
+    sprintf(alveus, "%s%d", LITTERAE[nota % XII], (integer)nota / XII
+        - I);
+    redde alveus;
+}
+
+/* clavis -> "a minor"; quintae -7..7 */
+interior constans character*
+_clavis_titulus (
+    constans CarmenClavis* clavis)
+{
+    hic_manens constans character* MAIORES[XV] = {
+        "cb", "gb", "db", "ab", "eb", "bb", "f", "c",
+        "g", "d", "a", "e", "b", "f#", "c#"
+    };
+    hic_manens constans character* MINORES[XV] = {
+        "ab", "eb", "bb", "f", "c", "g", "d", "a", "e", "b", "f#", "c#",
+        "g#", "d#", "a#"
+    };
+
+    redde clavis->minor ? MINORES[clavis->quintae + VII]
+                        : MAIORES[clavis->quintae + VII];
+}
+
+/* mensurae carminis (ultima quae ante finem incipit) */
+interior i32
+_mensurae (
+    constans Carmen* k)
+{
+    i32 m = I;
+
+    dum (carmen_pulsus_mensurae(k, m + I) < k->pulsus)
+    {
+        m++;
+    }
+    redde m;
+}
+
+/* mensura (1 = prima) in qua pulsus jacet */
+interior i32
+_mensura_pulsus (
+    constans Carmen* k,
+                s64  pulsus)
+{
+    i32 m = I;
+
+    dum (carmen_pulsus_mensurae(k, m + I) <= pulsus)
+    {
+        m++;
+    }
+    redde m;
+}
+
+/* summarium: carmen una linea, pars quaeque una linea - lectori et
+ * agenti (sine sono) */
+interior vacuum
+_carmen_monstrare (
+    constans Carmen* k)
+{
+     constans character* clavis       = "c";
+                    b32  minor        = FALSUM;
+                    i32  numerator    = IV;
+                    i32  denominator  = IV;
+                    i32  i;
+                    i32  f;
+                    i32  n;
+
+    si (k->numerus_clavium > ZEPHYRUM)
+    {
+        clavis  = _clavis_titulus(&k->claves[ZEPHYRUM]);
+        minor   = k->claves[ZEPHYRUM].minor;
+    }
+    si (k->numerus_metrorum > ZEPHYRUM)
+    {
+        numerator    = k->metra[ZEPHYRUM].numerator;
+        denominator  = k->metra[ZEPHYRUM].denominator;
+    }
+    imprimere("%.*s: %s %s, %u/%u, %u quartae/min, %u mensurae, "
+              "%.3f s\n", (integer)k->titulus.mensura,
+              (constans character*)k->titulus.datum, clavis,
+              minor ? "minor" : "maior", numerator, denominator,
+              k->tempora[ZEPHYRUM].tempus, _mensurae(k),
+              (duplex)cantus_quadrum_pulsus(k->tempora,
+                  k->numerus_temporum, k->pulsus)
+                  / (duplex)SONUS_FREQUENTIA);
+    per (i = ZEPHYRUM; i < k->numerus_partium; i++)
+    {
+        constans CarmenPars* p       = &k->partes[i];
+                        i32  infima  = CXXVII;
+                        i32  summa   = ZEPHYRUM;
+                  character  a[VIII];
+                  character  b[VIII];
+
+        n = ZEPHYRUM;
+        per (f = ZEPHYRUM; f < p->numerus_frustorum; f++)
+        {
+            i32 j;
+
+            per (j = ZEPHYRUM; j < p->frusta[f].numerus; j++)
+            {
+                i32 nota = p->frusta[f].notae[j].nota;
+
+                infima  = nota < infima ? nota : infima;
+                summa   = nota > summa ? nota : summa;
+                n++;
+            }
+        }
+        imprimere("  %-10.*s %-12.*s lucrum %.2f  notae %3u  "
+                  "%s..%s%s%s\n",
+            (integer)p->titulus.mensura,
+            (constans character*)p->titulus.datum,
+            (integer)p->instrumentum.mensura,
+            (constans character*)p->instrumentum.datum,
+            (duplex)p->lucrum,
+            n, n ? _nota_titulus(infima, a) : "-",
+            n ? _nota_titulus(summa, b) : "-",
+            p->mutus ? "  mutus" : "",
+            p->solus ? "  solus" : "");
+    }
+}
+
+/* liber ordinarius; indicare = carmina monstrat; aliter carmen per
+ * titulum (et pars sola si data). NIHIL: vitium monstratum aut index */
+interior Carmen*
+_ex_carminibus (
+                    b32  indicare,
+     constans character* titulus,
+     constans character* pars,
+                Piscina* piscina,
+                    b32* bene)
+{
+           Carmina  liber;
+    CarminisVitium  vitium;
+            Carmen* k = NIHIL;
+               i32  i;
+
+    *bene = FALSUM;
+    si (!carmina_ordinaria(piscina, &liber, &vitium))
+    {
+        fprintf(stderr, "auditio: carmina.stml '%.*s' '%.*s': %s\n",
+                (integer)vitium.carmen.mensura,
+                (constans character*)vitium.carmen.datum,
+                (integer)vitium.pars.mensura,
+                (constans character*)vitium.pars.datum, vitium.causa);
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < liber.numerus; i++)
+    {
+        si (indicare)
+        {
+            _carmen_monstrare(&liber.carmina[i]);
+        }
+        alioquin si (chorda_aequalis_literis(liber.carmina[i].titulus,
+                                             titulus))
+        {
+            k = &liber.carmina[i];
+        }
+    }
+    si (indicare)
+    {
+        *bene = VERUM;
+        redde NIHIL;
+    }
+    si (k == NIHIL)
+    {
+        fprintf(stderr, "auditio: nullum carmen '%s'\n", titulus);
+        redde NIHIL;
+    }
+    si (pars != NIHIL)
+    {
+        b32 inventa = FALSUM;
+
+        per (i = ZEPHYRUM; i < k->numerus_partium; i++)
+        {
+            si (chorda_aequalis_literis(k->partes[i].titulus, pars))
+            {
+                k->partes[i].solus  = VERUM;
+                inventa             = VERUM;
+            }
+        }
+        si (!inventa)
+        {
+            fprintf(stderr, "auditio: nulla pars '%s'\n", pars);
+            redde NIHIL;
+        }
+    }
+    *bene = VERUM;
+    redde k;
+}
+
+/* instrumenta partium resolvuntur (resolutor ordinarius cantoris):
+ * ignotum = vitium hic, non silentium in sonando */
+interior b32
+_instrumenta_probare (
+    constans Carmen* k)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < k->numerus_partium; i++)
+    {
+        si (cantor_tibia_ordinaria(NIHIL, k->partes[i].instrumentum)
+            == NIHIL)
+        {
+            fprintf(stderr,
+                "auditio: pars '%.*s': instrumentum ignotum "
+                    "'%.*s'\n", (integer)k->partes[i].titulus.mensura,
+                    (constans character*)k->partes[i].titulus.datum,
+                    (integer)k->partes[i].instrumentum.mensura,
+                    (constans character*)
+                        k->partes[i].instrumentum.datum);
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* carmen sonat (via NIHIL: vivum) aut in WAV scribitur. Pulsus X ms:
+ * concentus_agere, deinde cantor_agere; finis = cantor tacet et nulla
+ * vox vivit (caudae inclusae) */
+interior b32
+_carmen_sonare (
+     constans Carmen* k,
+                 b32  iterare,
+    constans character* via,
+             Piscina* piscina)
+{
+          MixturaForma  forma;
+       ConcentusExitus  scriptura;
+      AuditioScriptura  o;
+       ConcentusExitus* exitus;
+             Concentus* concentus  = NIHIL;
+                Cantor* cantor     = NIHIL;
+                   f32* exempla    = NIHIL;
+                   i32  capacitas  = ZEPHYRUM;
+                   i32  scripta    = ZEPHYRUM;
+                   s64  nunc       = ZEPHYRUM;
+                   i32  mensura    = ZEPHYRUM;
+                   i32  transitus  = I;
+                   s64  prior      = ZEPHYRUM;
+                   i32  mensurae   = _mensurae(k);
+                   b32  sistitur   = FALSUM;
+
+    forma.voces   = LXIV;
+    forma.iussa   = CCLVI;
+    forma.nuntii  = CXXVIII;
+    si (via != NIHIL)
+    {
+        o.mixtura                 = NIHIL;
+        scriptura.aperire         = _scriptura_aperire;
+        scriptura.claudere        = _scriptura_claudere;
+        scriptura.momentum        = _scriptura_momentum;
+        scriptura.mora            = _scriptura_mora;
+        scriptura.iubere          = _scriptura_iubere;
+        scriptura.nuntium_legere  = _scriptura_nuntium_legere;
+        scriptura.ctx             = &o;
+        exitus                    = &scriptura;
+        capacitas = (i32)cantus_quadrum_pulsus(k->tempora,
+            k->numerus_temporum, k->pulsus) + AUDITIO_CAUDA;
+        exempla = (f32*)piscina_allocare(piscina,
+            (memoriae_index)capacitas * II * magnitudo(f32));
+        si (exempla == NIHIL)
+        {
+            fprintf(stderr, "auditio: memoria deest\n");
+            redde FALSUM;
+        }
+    }
+    alioquin
+    {
+        exitus = concentus_exitus_auditus(piscina, &forma);
+    }
+    si (exitus != NIHIL)
+    {
+        concentus = concentus_creare(piscina, &forma, exitus);
+    }
+    si (concentus != NIHIL)
+    {
+        cantor = cantor_creare(piscina, concentus, NIHIL);
+    }
+    si (cantor == NIHIL)
+    {
+        fprintf(stderr, "auditio: memoria deest\n");
+        redde FALSUM;
+    }
+    cantor_regio(cantor, iterare, ZEPHYRUM, ZEPHYRUM);
+    si (!cantor_incipere(cantor, k, ZEPHYRUM))
+    {
+        fprintf(stderr,
+            "auditio: exitus soni non apertus (sine sono)\n");
+        concentus_destruere(concentus);
+        redde FALSUM;
+    }
+    si (via == NIHIL)
+    {
+        (vacuum)signal(SIGINT, _interrumpere);
+    }
+    per (;;)
+    {
+        b32 vivit;
+
+        si (interruptum && !sistitur)
+        {
+            cantor_sistere(cantor);
+            sistitur = VERUM;
+        }
+        vivit = concentus_agere(concentus, nunc);
+        vivit = cantor_agere(cantor) || vivit;
+        si (via == NIHIL && cantor_sonat(cantor))
+        {
+            s64 p = cantor_pulsus(cantor);
+            i32 m = _mensura_pulsus(k, p);
+
+            m = m > mensurae ? mensurae : m;   /* finis ipse */
+
+            si (p < prior)
+            {
+                transitus++;
+            }
+            prior = p;
+            si (m != mensura)
+            {
+                mensura = m;
+                imprimere("transitus %u  mensura %u/%u\n", transitus, m,
+                          mensurae);
+                fflush(stdout);
+            }
+        }
+        si (!vivit)
+        {
+            frange;
+        }
+        si (via != NIHIL)
+        {
+            si (scripta + AUDITIO_PULSUS_QUADRA > capacitas)
+            {
+                fprintf(stderr,
+                    "auditio: cauda ultra II s - truncata\n");
+                frange;
+            }
+            mixtura_reddere(o.mixtura, exempla + II * scripta,
+                AUDITIO_PULSUS_QUADRA);
+            scripta += AUDITIO_PULSUS_QUADRA;
+        }
+        alioquin
+        {
+            _dormire_ms(AUDITIO_PULSUS_MS);
+        }
+        nunc += AUDITIO_PULSUS_MS;
+    }
+    concentus_destruere(concentus);
+    si (via != NIHIL)
+    {
+        si (!sonus_wav_scribere(via, exempla, scripta, II,
+                                SONUS_FREQUENTIA, piscina))
+        {
+            fprintf(stderr, "auditio: scribi non potuit '%s'\n", via);
+            redde FALSUM;
+        }
+        imprimere("carmen -> %s (%.3f s)\n", via,
+            (duplex)scripta / (duplex)SONUS_FREQUENTIA);
+    }
+    redde VERUM;
+}
+
 
 /* potentia II minima >= numerus, numquam < XVI */
 interior i32
@@ -487,6 +962,10 @@ principale (
      constans character* color        = "tonus";
      constans character* genus        = NIHIL;
      constans character* cantilena    = NIHIL;
+     constans character* carmen       = NIHIL;
+     constans character* pars         = NIHIL;
+                    b32  carmina      = FALSUM;
+                    b32  iterare      = FALSUM;
                     b32  indicare     = FALSUM;
                     b32  intactus     = FALSUM;
                     i64  semen        = I;
@@ -534,6 +1013,24 @@ principale (
         {
             cantilena = argv[++k];
         }
+        alioquin si (   strcmp(argv[k], "-carmen") == ZEPHYRUM
+                     && k + I < argc)
+        {
+            carmen = argv[++k];
+        }
+        alioquin si (strcmp(argv[k], "-carmina") == ZEPHYRUM)
+        {
+            carmina = VERUM;
+        }
+        alioquin si (strcmp(argv[k], "-iterare") == ZEPHYRUM)
+        {
+            iterare = VERUM;
+        }
+        alioquin si (   strcmp(argv[k], "-pars") == ZEPHYRUM
+                     && k + I < argc)
+        {
+            pars = argv[++k];
+        }
         alioquin si (argv[k][ZEPHYRUM] == '-')
         {
             fprintf(stderr, "auditio: vexillum ignotum '%s'\n",
@@ -541,7 +1038,8 @@ principale (
             redde II;
         }
         alioquin si (   titulus == NIHIL && cantus == NIHIL
-                     && genus   == NIHIL && cantilena == NIHIL)
+                     && genus   == NIHIL && cantilena == NIHIL
+                     && carmen  == NIHIL)
         {
             titulus = argv[k];
         }
@@ -551,13 +1049,22 @@ principale (
             semen_datum  = VERUM;
         }
     }
+    si (   (iterare || pars != NIHIL)
+        && (carmen == NIHIL || (via != NIHIL && iterare)))
+    {
+        fprintf(stderr, "auditio: -iterare et -pars solum cum -carmen "
+                "(-iterare non cum -via)\n");
+        redde II;
+    }
     si (   !omnes && !indicare && titulus == NIHIL && cantus == NIHIL
-        && genus == NIHIL && cantilena == NIHIL)
+        && genus == NIHIL && cantilena == NIHIL && carmen == NIHIL
+        && !carmina)
     {
         imprimere("auditio: praeparata sonitus (auditio TITULUS [semen] "
                   "[-via x.wav] | -omnes | -cantus TEXTUS [-praeparatum T] "
                   "[-intactus] [-via x.wav] [semen] | -cantuale | -genus G "
-                  "| -cantilena T)\n");
+                  "| -cantilena T | -carmina | -carmen T [-iterare] "
+                  "[-pars P] [-via x.wav])\n");
         _praeparata_monstrare();
         redde ZEPHYRUM;
     }
@@ -566,6 +1073,20 @@ principale (
     si (piscina == NIHIL)
     {
         redde I;
+    }
+    si (carmina || carmen != NIHIL)
+    {
+        Carmen* k = _ex_carminibus(carmina, carmen, pars, piscina,
+            &bene);
+
+        si (k != NIHIL)
+        {
+            _carmen_monstrare(k);
+            bene = _instrumenta_probare(k)
+                && _carmen_sonare(k, iterare, via, piscina);
+        }
+        piscina_destruere(piscina);
+        redde bene ? ZEPHYRUM : I;
     }
     si (indicare || genus != NIHIL || cantilena != NIHIL)
     {

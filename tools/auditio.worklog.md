@@ -1,0 +1,26 @@
+# auditio worklog
+
+## 2026-10-22 - S6d step 3: -carmen / -carmina
+
+Songs play through concentus + cantor exactly as vicus will drive them:
+a 10 ms pulse, concentus_agere then cantor_agere, done when the cantor no
+longer sounds AND concentus_agere reports no live voice (release tails
+included - the natural end fades out, no cut). Live: the exitus is
+concentus_auditus (step 2). WAV: an in-file exitus keeps the mixtura from
+aperire, momentum = mixtura_momentum, each pulse renders 480 frames -
+same horizon logic with simulated time; Korobeiniki renders 26.8 s in
+0.08 s, and two renders are byte-identical. Buffer = song + 2 s tail.
+
+-iterare (live only; refused with -via, exit 2): Ctrl-C sets a
+sig_atomic_t flag, the loop calls cantor_sistere (5 ms fade) and keeps
+pulsing until the voices finish - no click (Fran: no artifacts).
+-pars P sets solus on that track. Instruments are checked up front with
+cantor_tibia_ordinaria so an unknown one is an error, not silence.
+
+The bar trace ("transitus N  mensura m/M", one line per change, readable
+by agents) printed "17/16" at the very end: cantor_pulsus at the end
+equals the song length = start of a bar that does not exist - clamped.
+
+Fran listened 10-22: "it sounds very good! bass/melody is excellent and
+tempo and notes sound great too"; loop works, no artifacts, the normal
+end fades out.
