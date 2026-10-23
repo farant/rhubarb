@@ -648,9 +648,11 @@ _custodiae_actio (
     FabricaActio* a;
 
     mundi_discum_parare(discus, sutura, piscina);
-    sutura->meminisse   = _meminisse;
-    sutura->inscribere  = _inscribere;
-    sutura->species     = mundi_species_ficta;
+    sutura->meminisse           = _meminisse;
+    sutura->inscribere          = _inscribere;
+    sutura->species             = mundi_species_ficta;
+    sutura->lectiones_legere    = mundi_lectiones_legere;
+    sutura->lectiones_scribere  = mundi_lectiones_scribere;
     mundi_ponere(discus, "data/fons.txt", "datum\n");
     mundi_ponere(discus, "data/alienum.txt", "alienum\n");
     mundi_ponere(discus, "gen/exitus.c", "linea I\n");
@@ -727,6 +729,35 @@ _probare_custodiam_memorabilium (
     CREDO_VERUM(mundi_continet(iudicium.causa, "MEMORIA NEGATA",
         piscina));
     CREDO_AEQUALIS_I32(discus.inscriptiones, ZEPHYRUM);
+
+    /* VI. PROBATIO (A) cum memoria: ictus servatur dum absens; via
+     * quaesita nunc PRAESENS (obumbratio) -> regeneratio */
+    a = _custodiae_actio(&discus, &sutura, piscina, &exitus);
+    discus.lectiones_ficti = "A\tdata/umbra.txt\nL\tdata/fons.txt\n";
+    (vacuum)fabrica_iudicare(&sutura, a, exitus, VERUM, piscina);
+    CREDO_AEQUALIS_I32(discus.inscriptiones, I);
+    discus.cursus = ZEPHYRUM;
+    iudicium = fabrica_iudicare(&sutura, a, exitus, VERUM, piscina);
+    CREDO_VERUM(mundi_continet(iudicium.causa, "memoria", piscina));
+    CREDO_AEQUALIS_I32(discus.cursus, ZEPHYRUM);
+    mundi_ponere(&discus, "data/umbra.txt", "umbra\n");
+    (vacuum)fabrica_iudicare(&sutura, a, exitus, VERUM, piscina);
+    CREDO_AEQUALIS_I32(discus.cursus, I);
+
+    /* VII. ambitus: non declaratus (nec basis) -> MEMORIA NEGATA
+     * nominans '$NOMEN'; basis (HOME) non obstat */
+    a = _custodiae_actio(&discus, &sutura, piscina, &exitus);
+    discus.lectiones_ficti = "E\tVARIABILIS_IGNOTA\nL\tdata/fons.txt\n";
+    iudicium = fabrica_iudicare(&sutura, a, exitus, VERUM, piscina);
+    CREDO_VERUM(mundi_continet(iudicium.causa, "$VARIABILIS_IGNOTA",
+        piscina));
+    CREDO_AEQUALIS_I32(discus.inscriptiones, ZEPHYRUM);
+    a = _custodiae_actio(&discus, &sutura, piscina, &exitus);
+    discus.lectiones_ficti = "E\tHOME\nL\tdata/fons.txt\n";
+    iudicium = fabrica_iudicare(&sutura, a, exitus, VERUM, piscina);
+    CREDO_FALSUM(mundi_continet(iudicium.causa, "MEMORIA NEGATA",
+        piscina));
+    CREDO_AEQUALIS_I32(discus.inscriptiones, I);
 }
 
 

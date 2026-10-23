@@ -66,8 +66,10 @@ fabricae_actionem_sigillare_semel (
 
 Sigillum
 fabricae_clavem_memoriae (
-    constans FabricaActio* actio,
-        constans Sigillum* ingressus);
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+         constans Sigillum* ingressus,
+                   Piscina* piscina);
 
 b32
 fabricae_lectionem_sigillare (

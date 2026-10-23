@@ -3415,3 +3415,29 @@ First plant attempt: removing the `_attributa_clavis_c` reference made the array
 **Limits.**
 - A generator whose reads are not logged (shell-only, clang outside bin/compilator, hand-built tools like tabulae_silvae's generator) passes trivially; the guard only sees house-tool reads.
 - Drift is caught only when a regeneration happens: a key change, or an audit. Running `GENERATA_AUDITUS=1` at fusio tier would close that.
+
+## 2026-10-23 — memorabilis: memo key "custodita II" + probes and environment verified on every hit
+
+**Why.** After the drift guard, two holes remained for which a periodic full audit (~4 min, `GENERATA_AUDITUS=1`) would have been needed:
+- **memo entries written before the guard existed.** corpus_silicis showed they can be wrong;
+- **reads the guard deliberately ignores:** absence probes (A), e.g. a header search that finds nothing until someone creates a shadowing file, and environment reads (E).
+
+**1. Key version.** `fabricae_clavem_memoriae(sutura, actio, ingressus, piscina)` now mixes in `"memoria custodita II"` and the values of the action's declared `<ambitus>` variables, for memorabilis actions only. Members and lectiones actions are untouched, so radix does not rerun.
+- Every old memo entry misses once. The first generata run after this took 130 s, regenerating all memorabilis actions under the guard; later runs ~20 s.
+- Declared `<ambitus>` values were never in a generator's key before. A declared variable changing silently kept the memo.
+
+**2. Probe record with the memo** (`_probationes_scribere` / `_probationes_congruunt`):
+- **On write:** when the guard passes, the run's A probes plus the artifact itself as X are stored via `lectiones_scribere` under (titulus, exitus, clavis, artificium). The X entry guarantees at least one row: `_lectiones_legere` reports zero rows as "no record".
+- **On every memo hit:** the record is read and resealed with `_lectiones_congruunt`. If a probed path now exists, or there is no record, the action regenerates.
+- lectiones actions keep their full read vestigium (a superset).
+- **Environment:** `_lectiones_colligere(..., ambitus_tolerare)` now KEEPS E entries (name only, no seal) instead of skipping them. `fabrica_lectiones_non_declaratae` ignores them. `_memoriam_negare` adds `fabrica_ambitum_non_declaratum`'s names (basis: PATH HOME TMPDIR RHUBARB_RADIX FABRICA_LECTIONES; else must be `<ambitus>`) to the refusal as `$NAME`.
+
+**Evidence.**
+- Shadow plant on the real tree: created `tools/latina.h`, a path the norma build probes (4116 A probes per normae_fixae run) → normae_fixae regenerated instead of hitting; removed → memo hit again.
+- probatio_fabrica_iudicium "custodia memorabilium" cases:
+  - VI: A recorded; hit while absent; regeneration once present;
+  - VII: undeclared `$VARIABILIS_IGNOTA` refused; HOME accepted.
+- Plants: `_probationes_congruunt` forced VERUM → VI red; ambitus check disabled → VII red.
+- The test helper had to wire `mundi_lectiones_legere`/`scribere`: without a store, `_probationes_congruunt` returns VERUM (nothing to check).
+
+**Consequence.** Every memo hit now rests on an entry written under the guard, with its probes and environment rechecked. A periodic full audit adds coverage only for logged reads appearing some other way. The real residue is generators whose reads are not logged at all (shell, clang outside bin/compilator), which neither the guard nor an audit sees. `GENERATA_AUDITUS=1` stays as an on-demand tool, not a gate.

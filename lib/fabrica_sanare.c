@@ -984,7 +984,8 @@ _auditum_iudicii (
     {
         redde FALSUM;
     }
-    clavis = fabricae_clavem_memoriae(actio, &ingressus);
+    clavis = fabricae_clavem_memoriae(sutura, actio, &ingressus,
+        piscina);
     si (   sutura->auditus > I
         && (clavis.octeti[0] % sutura->auditus) != 0)
     {
@@ -1368,7 +1369,8 @@ _post_agere (
         }
         alioquin
         {
-            clavis = fabricae_clavem_memoriae(actio, &ingressus);
+            clavis = fabricae_clavem_memoriae(sutura, actio,
+                &ingressus, piscina);
             sutura->lectiones_scribere(sutura->datum,
                 chorda_ut_cstr(actio->titulus, piscina),
                 chorda_ut_cstr(exitus->via, piscina), &clavis,

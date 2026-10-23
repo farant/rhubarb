@@ -538,9 +538,10 @@ fabrica_lectiones_non_declaratae (
         lectio = (constans FabricaLectio*)xar_obtinere(lectiones, i);
         /* quaesita absentia: probationes radicum inclusionis (aedilis,
          * compilator) - strepitus, non ingressus */
-        si (lectio->genus == LECTIO_ABSENS)
+        si (   lectio->genus == LECTIO_ABSENS
+            || lectio->genus == LECTIO_AMBITUS)
         {
-            perge;
+            perge;   /* ambitus: fabrica_ambitum_non_declaratum */
         }
         tecta = fabricae_in_locis(loci, lectio->via, piscina);
         /* intermedia: cursus ipse scripsit */
