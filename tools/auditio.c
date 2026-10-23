@@ -67,13 +67,15 @@
  * Vivum: momentum = nunc + mora + margo; exit cum vox ultima finita
  * (cauda remissionis inclusa). Eadem iussa offline et vivum.
  *
- * Usus: ./bin/aedilis tools/auditio.c && bash
- *   build/aedilis/auditio/struere.sh &&
- *   ./build/aedilis/auditio/auditio radius
+ * Usus: ./tools/auditio_struere.sh && bin/auditio radius (instrumentum
+ *   domus: ~/.bin/auditio per 'bin/fabrica sanare installata' in main)
  *
  * Exitus: 0 bene, 1 praeparatum ignotum, cantus vitiosus, sine sono aut
  * scriptio fracta, 2 usus, 3 censura invenit.
  */
+/* plagula provenientiae (fabrica T7): '-provenientia' respondetur -
+ * sine ea installatio (sanare installata) auditionem recusat */
+/* <aedilis obiectum="build/fabrica/provenientia/auditio.c"/> */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -98,6 +100,7 @@
 #include "json.h"
 #include "chorda_aedificator.h"
 #include "filum.h"
+#include "provenientia.h"
 #include <math.h>
 #include <signal.h>
 #include <stdio.h>
@@ -1140,6 +1143,8 @@ _ex_cantuali (
     redde *cantus != NIHIL;
 }
 
+externus constans ProvenientiaRelatio provenientia_auditio;
+
 integer
 principale (
       integer   argc,
@@ -1176,6 +1181,10 @@ principale (
                 integer  k_exitus;
                 integer  k;
 
+    si (provenientia_respondere((s32)argc, argv, &provenientia_auditio))
+    {
+        redde ZEPHYRUM;
+    }
     per (k = I; k < argc; k++)
     {
         si (strcmp(argv[k], "-omnes") == ZEPHYRUM)

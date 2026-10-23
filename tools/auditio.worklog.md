@@ -63,3 +63,7 @@ plain score too.
 ## 2026-10-23 - unknown -regulae name lists rules from censura (M5b)
 
 The 'regula ignota' message hard-coded the rule names (it would have missed 'tertia'); it now loops censura_titulus over the enum.
+
+## 2026-10-23 - house tool declaration (M5c, wish …PQ3XN)
+
+auditio is now declared like praeco: answers `-provenientia` (provenientia_auditio, plagula build/fabrica/provenientia/auditio.c via the aedilis obiectum annotation), built by `tools/auditio_struere.sh` (praeco_struere.sh with names swapped: aedilis -> provenientia_scribere -> struere -> rm+cp into bin/auditio), actions `auditio` + `institutio_auditio` in aedificatio.stml, both in the `installata` composite. In sexta only bin/auditio is built (`bin/fabrica sanare bin/auditio`, RECENS); `~/.bin/auditio` is judged 'artificium absens' until main's `sanare installata` after the merge - the same state ~/.bin/praeco is in from any worktree. Use from then on: `auditio -carmen T -recensio [-partitura -harmonia] [-json]`, `-liber x.stml` for a scratch song file.
