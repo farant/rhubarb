@@ -262,6 +262,48 @@ s32 principale (vacuum)
     }
 
 
+    /* ==================================================
+     * PROBARE: index definitionum inter eventa alia (2026-10-23)
+     * - definitio k-a = eventum DEFINITIO k-um ACTORUM, non
+     * eventum k-um: #undef interpositum indices non movet
+     * ================================================== */
+
+    {
+          SilvaExpansio* exp;
+                    Xar* reliqua;
+        SilvaMacroVista  vista;
+
+        imprimere("\n--- Probans indicem definitionum ---\n");
+
+        exp = _praeparare(piscina,
+            "#define ALPHA 1\n"
+            "#undef ALPHA\n"
+            "#undef NUSQUAM\n"
+            "#define BETA(x) ((x) + (x))\n"
+            "#define ALPHA 3\n", &reliqua, NIHIL);
+        CREDO_AEQUALIS_I32 (silva_macros_numerus(exp), III);
+
+        CREDO_VERUM (silva_macro_vista(exp, I, &vista));
+        CREDO_NON_NIHIL (vista.titulus);
+        CREDO_VERUM (vista.titulus != NIHIL
+            && chorda_aequalis_literis(*vista.titulus, "BETA"));
+        CREDO_VERUM (vista.est_functio);
+        CREDO_AEQUALIS_I32 (vista.linea, IV);
+        CREDO_AEQUALIS_I32 (silva_macro_corpus_numerus(exp, I), IX);
+
+        /* redefinitio ALPHA: definitio tertia, linea V */
+        CREDO_VERUM (silva_macro_vista(exp, II, &vista));
+        CREDO_VERUM (vista.titulus != NIHIL
+            && chorda_aequalis_literis(*vista.titulus, "ALPHA"));
+        CREDO_AEQUALIS_I32 (vista.linea, V);
+
+        /* extra fines */
+        CREDO_FALSUM (silva_macro_vista(exp, III, &vista));
+        CREDO_AEQUALIS_I32 (silva_macro_corpus_numerus(exp, III),
+            ZEPHYRUM);
+    }
+
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
 
