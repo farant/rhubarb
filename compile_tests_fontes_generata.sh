@@ -43,6 +43,7 @@ declare -a SOURCE_FILES=(
     "lib/carmen.c"
     "lib/carmina_infixum.c"
     "lib/cellae.c"
+    "lib/censura.c"
     "lib/chorda.c"
     "lib/chorda_aedificator.c"
     "lib/circulus.c"

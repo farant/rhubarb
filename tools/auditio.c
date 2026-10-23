@@ -36,6 +36,10 @@
  *   auditio -carmen T -partitura       partitura ut textus
  *       [-mensurae 9-12] [-pars P]     (partitura.h), sine sono; -pars
  *                                      hic = sola pars
+ *   auditio -carmen T -censura         regulae musicae (censura.h):
+ *       [-regulae +dissonantia,-ambitus]  ordinariae mutatae, aut
+ *       [-regulae parallelae,lineae]      hae solae; exitus 3 si
+ *                                      inventa (0 si nulla)
  *   auditio -liber x.stml -carmina     liber externus (filum),
  *   auditio -liber x.stml -carmen T    iudicatus ut ordinarius; vitium
  *                                      cum carmine, parte, frusto,
@@ -57,7 +61,7 @@
  *   ./build/aedilis/auditio/auditio radius
  *
  * Exitus: 0 bene, 1 praeparatum ignotum, cantus vitiosus, sine sono aut
- * scriptio fracta, 2 usus.
+ * scriptio fracta, 2 usus, 3 censura invenit.
  */
 #include "postulata_posix.h"
 #include "latina.h"
@@ -76,6 +80,7 @@
 #include "concentus.h"
 #include "concentus_auditus.h"
 #include "partitura.h"
+#include "censura.h"
 #include "chorda_aedificator.h"
 #include "filum.h"
 #include <signal.h>
@@ -690,6 +695,111 @@ _carmen_sonare (
 }
 
 
+/* "-regulae": "+a,-b" ordinarias mutat; "a,b" (sine signis) hae solae.
+ * FALSUM: regula ignota (monstrata) */
+interior b32
+_regulas_legere (
+    constans character* index,
+          CensuraForma* forma,
+               Piscina* piscina)
+{
+     constans character* p = index;
+                    b32  solae = index[ZEPHYRUM] != '+'
+                        && index[ZEPHYRUM] != '-';
+
+    censura_ordinaria(forma);
+    si (solae)
+    {
+        memset(forma->activae, ZEPHYRUM, magnitudo(forma->activae));
+    }
+    dum (*p != '\0')
+    {
+         constans character* q          = p;
+                        b32  accendere  = VERUM;
+              CensuraRegula  r;
+                     chorda  t;
+
+        si (*q == '+' || *q == '-')
+        {
+            accendere = *q == '+';
+            q++;
+        }
+        p = q;
+        dum (*p != '\0' && *p != ',')
+        {
+            p++;
+        }
+        t          = chorda_ex_literis(q, piscina);
+        t.mensura  = (i32)(p - q);
+        si (!censura_regulam_invenire(t, &r))
+        {
+            fprintf(stderr,
+                "auditio: regula ignota '%.*s' (lineae, clavis, "
+                    "ambitus, dissonantia, parallelae)\n",
+                    (integer)t.mensura,
+                    (constans character*)t.datum);
+            redde FALSUM;
+        }
+        forma->activae[r] = accendere;
+        si (*p == ',')
+        {
+            p++;
+        }
+    }
+    redde VERUM;
+}
+
+/* censura in stdout: linea per inventum, deinde summa. Exitus 0 nulla,
+ * 3 inventa, 1 memoria */
+interior integer
+_censuram_scribere (
+          constans Carmen* k,
+    constans CensuraForma* forma,
+                  Piscina* piscina)
+{
+      CensuraInventum* inventa;
+    ChordaAedificator* a = chorda_aedificator_creare(piscina, M);
+                  i32  capacitas = CCLVI;
+                  i32  n;
+                  i32  i;
+               chorda  t;
+
+    inventa = (CensuraInventum*)piscina_allocare(piscina,
+        (memoriae_index)capacitas * magnitudo(CensuraInventum));
+    si (inventa == NIHIL || a == NIHIL)
+    {
+        redde I;
+    }
+    n = censura_iudicare(k, forma, inventa, capacitas);
+    si (n > capacitas)
+    {
+        capacitas = n;
+        inventa = (CensuraInventum*)piscina_allocare(piscina,
+            (memoriae_index)capacitas * magnitudo(CensuraInventum));
+        si (inventa == NIHIL)
+        {
+            redde I;
+        }
+        n = censura_iudicare(k, forma, inventa, capacitas);
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        (vacuum)censura_inventum_scribere(k, &inventa[i], a);
+    }
+    t = chorda_aedificator_finire(a);
+    fwrite(t.datum, I, (size_t)t.mensura, stdout);
+    imprimere("censura: %u inventa (regulae:", n);
+    per (i = ZEPHYRUM; i < (i32)CENSURA_REGULAE; i++)
+    {
+        si (forma->activae[i])
+        {
+            imprimere(" %s", censura_titulus((CensuraRegula)i));
+        }
+    }
+    imprimere(")\n");
+    redde n > ZEPHYRUM ? III : ZEPHYRUM;
+}
+
 /* partitura (partitura.h) in stdout; prima/ultima 0 = carmen totum */
 interior b32
 _partituram_scribere (
@@ -1034,6 +1144,8 @@ principale (
                     b32  iterare         = FALSUM;
      constans character* liber           = NIHIL;
                     b32  partitura       = FALSUM;
+                    b32  censura         = FALSUM;
+     constans character* regulae         = NIHIL;
                     b32  mensurae_datae  = FALSUM;
                     i32  prima           = ZEPHYRUM;
                     i32  ultima          = ZEPHYRUM;
@@ -1043,6 +1155,7 @@ principale (
                     b32  semen_datum     = FALSUM;
                     b32  omnes           = FALSUM;
                     b32  bene            = VERUM;
+                integer  k_exitus;
                 integer  k;
 
     per (k = I; k < argc; k++)
@@ -1102,6 +1215,15 @@ principale (
         {
             liber = argv[++k];
         }
+        alioquin si (strcmp(argv[k], "-censura") == ZEPHYRUM)
+        {
+            censura = VERUM;
+        }
+        alioquin si (   strcmp(argv[k], "-regulae") == ZEPHYRUM
+                     && k + I < argc)
+        {
+            regulae = argv[++k];
+        }
         alioquin si (strcmp(argv[k], "-partitura") == ZEPHYRUM)
         {
             partitura = VERUM;
@@ -1148,7 +1270,7 @@ principale (
             semen_datum  = VERUM;
         }
     }
-    si (   (iterare || pars != NIHIL || partitura)
+    si (   (iterare || pars != NIHIL || partitura || censura)
         && (carmen == NIHIL || (via != NIHIL && iterare)))
     {
         fprintf(stderr,
@@ -1158,11 +1280,14 @@ principale (
     }
     si (   (mensurae_datae && !partitura)
         || (partitura && (iterare || via != NIHIL))
+        || (regulae != NIHIL && !censura)
+        || (censura && (partitura || iterare || via != NIHIL))
         || (liber != NIHIL && carmen == NIHIL && !carmina))
     {
         fprintf(stderr,
-            "auditio: -mensurae solum cum -partitura (non cum "
-                "-iterare, -via); -liber cum -carmen aut -carmina\n");
+            "auditio: -mensurae cum -partitura, -regulae cum -censura "
+                "(neutrum cum -iterare, -via); -liber cum -carmen aut "
+                "-carmina\n");
         redde II;
     }
     si (   !omnes && !indicare && titulus == NIHIL && cantus == NIHIL
@@ -1174,7 +1299,7 @@ principale (
                   "[-intactus] [-via x.wav] [semen] | -cantuale | -genus G "
                   "| -cantilena T | -carmina | -carmen T [-iterare] "
                   "[-pars P] [-via x.wav] [-partitura [-mensurae N-M]] "
-                  "[-liber via.stml])\n");
+                  "[-censura [-regulae R,+R,-R]] [-liber via.stml])\n");
         _praeparata_monstrare();
         redde ZEPHYRUM;
     }
@@ -1189,7 +1314,22 @@ principale (
         Carmen* k = _ex_carminibus(liber, carmina, carmen, pars,
             !partitura, piscina, &bene);
 
-        si (k != NIHIL && partitura)
+        si (k != NIHIL && censura)
+        {
+            CensuraForma forma;
+
+            censura_ordinaria(&forma);
+            si (   regulae != NIHIL && !_regulas_legere(regulae, &forma,
+                                                     piscina))
+            {
+                piscina_destruere(piscina);
+                redde II;
+            }
+            k_exitus = _censuram_scribere(k, &forma, piscina);
+            piscina_destruere(piscina);
+            redde k_exitus;
+        }
+        alioquin si (k != NIHIL && partitura)
         {
             bene = _partituram_scribere(k, prima, ultima, pars,
                 piscina);

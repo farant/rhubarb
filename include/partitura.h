@@ -65,6 +65,12 @@ partitura_orthographia (
     constans CarmenNota* nota,
                     s64  pulsus);
 
+/* tonica clavis ut carmina.stml eam scribit ("a", "eb", "f#"); modus
+ * (maior / minor) in clavis->minor. Statica */
+constans character*
+partitura_clavis_littera (
+    constans CarmenClavis* clavis);
+
 /* textum in aedificatorem appendit; forma NIHIL = totum carmen. FALSUM:
  * pars ignota, mensurae extra carmen (aut ultima < prima), memoria
  * deest */

@@ -33,3 +33,10 @@ score instead of soloing playback (_ex_carminibus takes 'solum').
 examen 96) and judges it like the embedded one; the error line now
 carries song / track / clip / offset (offset was missing before - an
 agent writing a book needs it). Validated combinations exit 2.
+
+## 2026-10-23 - M2b: -censura, -regulae
+
+-censura prints one line per finding, then "censura: N inventa
+(regulae: ...)"; exit 0 clean, 3 findings (1 errors, 2 usage kept).
+-regulae "+a,-b" edits the defaults, "a,b" (no signs) means exactly
+these; an unknown rule is a usage error (exit 2) naming the five.

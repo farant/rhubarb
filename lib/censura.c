@@ -1,0 +1,847 @@
+/* censura.c - Carmen iudicatum (vide include/censura.h)
+ *
+ * Regulae ordine enumerationis currunt et inventa in tabulam vocantis
+ * addunt (ultra capacitatem solum numerantur); deinde ordinatio
+ * stabilis per (mensura, pulsus) - aequalia ordinem regularum servant.
+ *
+ * NOTA SONANS partis ad pulsum t: initium <= t < finis, sine
+ * percussione; plures (acervus) -> summa (parallelae), omnes
+ * (dissonantia).
+ */
+
+#include "censura.h"
+#include "partitura.h"
+#include <string.h>
+
+hic_manens constans character* TITULI[CENSURA_REGULAE] = {
+    "lineae", "clavis", "ambitus", "dissonantia", "parallelae"
+};
+
+nomen structura {
+     constans character* instrumentum;
+                    i32  infima;
+                    i32  summa;
+} AmbitusOrdinarius;
+
+hic_manens constans AmbitusOrdinarius AMBITUS[III] = {
+    { "aether",     XXXVI,  XCVI  },
+    { "quadrans",   XLVIII, XCVI  },
+    { "triangulum", XXIV,   LXXII }
+};
+
+/* gradus scalae maioris a tonica */
+hic_manens constans s32 SCALA[VII] = {
+    ZEPHYRUM, II, IV, V, VII, IX, XI
+};
+
+/* notae sonantes partis simul (dissonantia) maximae */
+#define CENSURA_SIMUL XVI
+
+nomen structura {
+             constans Carmen* carmen;
+       constans CensuraForma* forma;
+             CensuraInventum* inventa;
+                         i32  capacitas;
+                         i32  numerus;
+} Iudex;
+
+/* nota cum frusto suo */
+nomen structura {
+    constans CarmenNota* nota;
+                    s32  frustum;
+                    s64  initium;   /* absolutus */
+} NotaLocata;
+
+interior s32
+_modulus (
+    s32 a,
+    s32 m)
+{
+    redde ((a % m) + m) % m;
+}
+
+vacuum
+censura_ordinaria (
+    CensuraForma* forma)
+{
+    memset(forma, ZEPHYRUM, magnitudo(CensuraForma));
+    forma->activae[CENSURA_LINEAE]   = VERUM;
+    forma->activae[CENSURA_CLAVIS]   = VERUM;
+    forma->activae[CENSURA_AMBITUS]  = VERUM;
+}
+
+constans character*
+censura_titulus (
+    CensuraRegula regula)
+{
+    si ((i32)regula < ZEPHYRUM || regula >= CENSURA_REGULAE)
+    {
+        redde NIHIL;
+    }
+    redde TITULI[regula];
+}
+
+b32
+censura_regulam_invenire (
+           chorda  titulus,
+    CensuraRegula* regula)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < (i32)CENSURA_REGULAE; i++)
+    {
+        si (chorda_aequalis_literis(titulus, TITULI[i]))
+        {
+            *regula = (CensuraRegula)i;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+b32
+censura_ambitus_ordinarius (
+     vacuum* ctx,
+     chorda  instrumentum,
+        i32* infima,
+        i32* summa)
+{
+    i32 i;
+
+    (vacuum)ctx;
+    per (i = ZEPHYRUM; i < III; i++)
+    {
+        si (chorda_aequalis_literis(instrumentum,
+            AMBITUS[i].instrumentum))
+        {
+            *infima  = AMBITUS[i].infima;
+            *summa   = AMBITUS[i].summa;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+
+/* ==================================================
+ * Loca
+ * ================================================== */
+
+/* mensura (1 = prima) et pulsus intra eam */
+interior vacuum
+_locus (
+    constans Carmen* carmen,
+                s64  pulsus,
+                i32* mensura,
+                s64* intra)
+{
+    i32 m = I;
+
+    dum (carmen_pulsus_mensurae(carmen, m + I) <= pulsus)
+    {
+        m++;
+    }
+    *mensura  = m;
+    *intra    = pulsus - carmen_pulsus_mensurae(carmen, m);
+}
+
+interior i32
+_mensurae (
+    constans Carmen* carmen)
+{
+    i32 m = I;
+
+    dum (carmen_pulsus_mensurae(carmen, m + I) < carmen->pulsus)
+    {
+        m++;
+    }
+    redde m;
+}
+
+interior constans CarmenMetrum*
+_metrum (
+    constans Carmen* carmen,
+                s64  pulsus)
+{
+    i32 i;
+    i32 electum = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < carmen->numerus_metrorum; i++)
+    {
+        si (carmen->metra[i].pulsus <= pulsus)
+        {
+            electum = i;
+        }
+    }
+    redde &carmen->metra[electum];
+}
+
+interior constans CarmenClavis*
+_clavis (
+    constans Carmen* carmen,
+                s64  pulsus)
+{
+    i32 i;
+    i32 electa = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < carmen->numerus_clavium; i++)
+    {
+        si (carmen->claves[i].pulsus <= pulsus)
+        {
+            electa = i;
+        }
+    }
+    redde &carmen->claves[electa];
+}
+
+interior b32
+_percussio (
+    constans CarmenNota* nota)
+{
+    redde nota->praeparatum.mensura > ZEPHYRUM;
+}
+
+interior vacuum
+_addere (
+                  Iudex* iudex,
+          CensuraRegula  regula,
+    constans CarmenPars* pars,
+                    s32  frustum,
+                    s64  pulsus,     /* absolutus */
+                    i32  offset,
+    constans CarmenNota* nota,
+    constans CarmenPars* altera,
+    constans CarmenNota* nota_altera)
+{
+    CensuraInventum* x;
+
+    si (iudex->numerus < iudex->capacitas)
+    {
+        x = &iudex->inventa[iudex->numerus];
+        memset(x, ZEPHYRUM, magnitudo(CensuraInventum));
+        x->regula  = regula;
+        x->pars    = pars->titulus;
+        si (altera != NIHIL)
+        {
+            x->pars_altera = altera->titulus;
+        }
+        _locus(iudex->carmen, pulsus, &x->mensura, &x->pulsus);
+        x->frustum      = frustum;
+        x->offset       = offset;
+        x->nota         = nota;
+        x->nota_altera  = nota_altera;
+    }
+    iudex->numerus++;
+}
+
+
+/* ==================================================
+ * Regulae
+ * ================================================== */
+
+interior vacuum
+_lineae (
+    Iudex* iudex)
+{
+    constans Carmen* k = iudex->carmen;
+                i32  i;
+                i32  f;
+                i32  j;
+
+    per (i = ZEPHYRUM; i < k->numerus_partium; i++)
+    {
+        constans CarmenPars* p = &k->partes[i];
+
+        per (f = ZEPHYRUM; f < p->numerus_frustorum; f++)
+        {
+            constans CarmenFrustum* fr = &p->frusta[f];
+
+            per (j = ZEPHYRUM; j < fr->numerus_linearum; j++)
+            {
+                s64 pulsus = fr->pulsus + fr->lineae[j].pulsus;
+                i32 m;
+                s64 intra;
+
+                _locus(k, pulsus, &m, &intra);
+                si (intra != ZEPHYRUM)
+                {
+                    _addere(iudex, CENSURA_LINEAE, p, (s32)f, pulsus,
+                        fr->lineae[j].offset, NIHIL, NIHIL, NIHIL);
+                }
+            }
+        }
+    }
+}
+
+/* classis in clave: scala maior tonicae relativae; minor etiam VI et
+ * VII elevati */
+interior b32
+_in_clave (
+    constans CarmenClavis* clavis,
+                      s32  nota)
+{
+    s32 basis    = _modulus(VII * clavis->quintae, XII);   /* maior */
+    s32 classis  = _modulus(nota, XII);
+    i32 g;
+
+    per (g = ZEPHYRUM; g < VII; g++)
+    {
+        si (_modulus(basis + SCALA[g], XII) == classis)
+        {
+            redde VERUM;
+        }
+    }
+    /* minor: tonica = basis + IX; VI elevatus +IX, VII elevatus +XI */
+    redde clavis->minor
+        && (   classis == _modulus(basis + IX + IX, XII)
+            || classis == _modulus(basis + IX + XI, XII));
+}
+
+interior vacuum
+_clavis_regula (
+    Iudex* iudex)
+{
+    constans Carmen* k = iudex->carmen;
+                i32  i;
+                i32  f;
+                i32  j;
+
+    per (i = ZEPHYRUM; i < k->numerus_partium; i++)
+    {
+        constans CarmenPars* p = &k->partes[i];
+
+        per (f = ZEPHYRUM; f < p->numerus_frustorum; f++)
+        {
+            constans CarmenFrustum* fr = &p->frusta[f];
+
+            per (j = ZEPHYRUM; j < fr->numerus; j++)
+            {
+                constans CarmenNota* n       = &fr->notae[j];
+                                s64  pulsus  = fr->pulsus + n->pulsus;
+
+                si (   !_percussio(n)
+                    && !_in_clave(_clavis(k, pulsus), (s32)n->nota))
+                {
+                    _addere(iudex, CENSURA_CLAVIS, p, (s32)f, pulsus,
+                        n->offset, n, NIHIL, NIHIL);
+                }
+            }
+        }
+    }
+}
+
+interior vacuum
+_ambitus (
+    Iudex* iudex)
+{
+    constans Carmen* k = iudex->carmen;
+                i32  i;
+                i32  f;
+                i32  j;
+
+    per (i = ZEPHYRUM; i < k->numerus_partium; i++)
+    {
+        constans CarmenPars* p = &k->partes[i];
+                        i32  infima;
+                        i32  summa;
+                        b32  notus;
+
+        notus = iudex->forma->ambitus != NIHIL
+            ? iudex->forma->ambitus(iudex->forma->ctx, p->instrumentum,
+                                    &infima, &summa)
+            : censura_ambitus_ordinarius(NIHIL, p->instrumentum,
+            &infima,
+                                         &summa);
+        si (!notus)
+        {
+            perge;
+        }
+        per (f = ZEPHYRUM; f < p->numerus_frustorum; f++)
+        {
+            constans CarmenFrustum* fr = &p->frusta[f];
+
+            per (j = ZEPHYRUM; j < fr->numerus; j++)
+            {
+                constans CarmenNota* n = &fr->notae[j];
+
+                si (   !_percussio(n)
+                    && (n->nota < infima || n->nota > summa))
+                {
+                    _addere(iudex, CENSURA_AMBITUS, p, (s32)f,
+                        fr->pulsus + n->pulsus, n->offset, n, NIHIL,
+                        NIHIL);
+                }
+            }
+        }
+    }
+}
+
+/* notae partis sonantes ad pulsum (sine percussione), ad maximum
+ * 'capacitas'; numerus redditur */
+interior i32
+_sonantes (
+    constans CarmenPars* pars,
+                    s64  pulsus,
+             NotaLocata* sonantes,
+                    i32  capacitas)
+{
+    i32 n = ZEPHYRUM;
+    i32 f;
+    i32 j;
+
+    per (f = ZEPHYRUM; f < pars->numerus_frustorum; f++)
+    {
+        constans CarmenFrustum* fr = &pars->frusta[f];
+
+        per (j = ZEPHYRUM; j < fr->numerus && n < capacitas; j++)
+        {
+            constans CarmenNota* x   = &fr->notae[j];
+                            s64  ab  = fr->pulsus + x->pulsus;
+
+            si (   !_percussio(x) && ab <= pulsus
+                && ab + x->longitudo > pulsus)
+            {
+                sonantes[n].nota     = x;
+                sonantes[n].frustum  = (s32)f;
+                sonantes[n].initium  = ab;
+                n++;
+            }
+        }
+    }
+    redde n;
+}
+
+/* secunda, septima, tritonus (classis intervalli) */
+interior b32
+_asperum (
+    i32 a,
+    i32 b)
+{
+    s32 d = _modulus((s32)a - (s32)b, XII);
+
+    redde d == I || d == II || d == VI || d == X || d == XI;
+}
+
+/* tempora fortia mensurae in 'fortia' (absoluti); numerus */
+interior i32
+_fortia (
+    constans Carmen* carmen,
+                s64  initium,
+                s64* fortia)
+{
+    constans CarmenMetrum* m = _metrum(carmen, initium);
+                      s64  unitas = (s64)CANTUS_PULSUS_INTEGRAE
+                                    / (s64)m->denominator;
+                      i32 n = ZEPHYRUM;
+                      i32 k;
+
+    fortia[n++] = initium;
+    si (m->numerator == IV)
+    {
+        fortia[n++] = initium + II * unitas;
+    }
+    alioquin si (   m->denominator     == VIII && m->numerator > III
+                 && m->numerator % III == ZEPHYRUM)
+    {
+        per (k = III; k < m->numerator && n < XXII; k += III)
+        {
+            fortia[n++] = initium + (s64)k * unitas;
+        }
+    }
+    redde n;
+}
+
+interior vacuum
+_dissonantia (
+    Iudex* iudex)
+{
+    constans Carmen* k = iudex->carmen;
+         NotaLocata  a[CENSURA_SIMUL];
+         NotaLocata  b[CENSURA_SIMUL];
+                s64  fortia[XXII];
+                i32  m;
+
+    per (m = I; m <= _mensurae(k); m++)
+    {
+        i32 numerus = _fortia(k, carmen_pulsus_mensurae(k, m), fortia);
+        i32 t;
+
+        per (t = ZEPHYRUM; t < numerus; t++)
+        {
+            i32 i;
+            i32 j;
+
+            per (i = ZEPHYRUM; i < k->numerus_partium; i++)
+            {
+                i32 na = _sonantes(&k->partes[i], fortia[t], a,
+                    CENSURA_SIMUL);
+
+                per (j = i + I; j < k->numerus_partium; j++)
+                {
+                    i32 nb = _sonantes(&k->partes[j], fortia[t], b,
+                        CENSURA_SIMUL);
+                    i32 x;
+                    i32 y;
+
+                    per (x = ZEPHYRUM; x < na; x++)
+                    {
+                        per (y = ZEPHYRUM; y < nb; y++)
+                        {
+                            si (_asperum(a[x].nota->nota,
+                                b[y].nota->nota))
+                            {
+                                _addere(iudex, CENSURA_DISSONANTIA,
+                                    &k->partes[i], a[x].frustum,
+                                    fortia[t],
+                                    a[x].nota->offset, a[x].nota,
+                                    &k->partes[j], b[y].nota);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* nota summa sonans partis; nota NIHIL si nulla */
+interior NotaLocata
+_summa (
+    constans CarmenPars* pars,
+                    s64  pulsus)
+{
+    NotaLocata sonantes[CENSURA_SIMUL];
+    NotaLocata electa;
+           i32 n = _sonantes(pars, pulsus, sonantes, CENSURA_SIMUL);
+           i32 i;
+
+    electa.nota     = NIHIL;
+    electa.frustum  = -I;
+    electa.initium  = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        si (   electa.nota == NIHIL || sonantes[i].nota->nota
+            > electa.nota->nota)
+        {
+            electa = sonantes[i];
+        }
+    }
+    redde electa;
+}
+
+/* initium proximum post 'post' in parte (sine percussione); -1 =
+ * nullum */
+interior s64
+_initium_proximum (
+    constans CarmenPars* pars,
+                    s64  post)
+{
+    s64 proximum = -I;
+    i32 f;
+    i32 j;
+
+    per (f = ZEPHYRUM; f < pars->numerus_frustorum; f++)
+    {
+        constans CarmenFrustum* fr = &pars->frusta[f];
+
+        per (j = ZEPHYRUM; j < fr->numerus; j++)
+        {
+            s64 ab = fr->pulsus + fr->notae[j].pulsus;
+
+            si (   !_percussio(&fr->notae[j]) && ab > post
+                && (proximum < ZEPHYRUM || ab < proximum))
+            {
+                proximum = ab;
+            }
+        }
+    }
+    redde proximum;
+}
+
+interior vacuum
+_parallelae (
+    Iudex* iudex)
+{
+    constans Carmen* k = iudex->carmen;
+                i32  i;
+                i32  j;
+
+    per (i = ZEPHYRUM; i < k->numerus_partium; i++)
+    {
+        per (j = i + I; j < k->numerus_partium; j++)
+        {
+            constans CarmenPars* p = &k->partes[i];
+            constans CarmenPars* q = &k->partes[j];
+                     NotaLocata  a_prior;
+                     NotaLocata  b_prior;
+                            s64  t = -I;
+
+            a_prior.nota = NIHIL;
+            b_prior.nota = NIHIL;
+            per (;;)
+            {
+                       s64 proximum_a = _initium_proximum(p, t);
+                       s64 proximum_b = _initium_proximum(q, t);
+                NotaLocata a;
+                NotaLocata b;
+
+                si (proximum_a < ZEPHYRUM && proximum_b < ZEPHYRUM)
+                {
+                    frange;
+                }
+                t = proximum_a < ZEPHYRUM ? proximum_b
+                    : proximum_b < ZEPHYRUM ? proximum_a
+                    : proximum_a < proximum_b ? proximum_a : proximum_b;
+                a = _summa(p, t);
+                b = _summa(q, t);
+                /* ambae motae eodem sensu: nota tenta aut repetita
+                 * (motus 0) non est parallela */
+                si (   a.nota       != NIHIL && b.nota != NIHIL
+                    && a_prior.nota != NIHIL && b_prior.nota != NIHIL)
+                {
+                    s32 da = (s32)a.nota->nota
+                        - (s32)a_prior.nota->nota;
+                    s32 db = (s32)b.nota->nota
+                        - (s32)b_prior.nota->nota;
+                    s32 iv = _modulus((s32)a.nota->nota
+                        - (s32)b.nota->nota, XII);
+                    s32 ip = _modulus((s32)a_prior.nota->nota
+                        - (s32)b_prior.nota->nota, XII);
+
+                    si (   ((da > ZEPHYRUM && db > ZEPHYRUM)
+                            || (da < ZEPHYRUM && db < ZEPHYRUM))
+                        && iv == ip && (iv == ZEPHYRUM || iv == VII))
+                    {
+                        _addere(iudex, CENSURA_PARALLELAE, p, a.frustum,
+                            t,
+                            a.nota->offset, a.nota, q, b.nota);
+                    }
+                }
+                a_prior = a;
+                b_prior = b;
+            }
+        }
+    }
+}
+
+i32
+censura_iudicare (
+           constans Carmen* carmen,
+     constans CensuraForma* forma,
+           CensuraInventum* inventa,
+                       i32  capacitas)
+{
+    CensuraForma ordinaria;
+           Iudex iudex;
+             i32 x;
+             i32 y;
+
+    si (forma == NIHIL)
+    {
+        censura_ordinaria(&ordinaria);
+        forma = &ordinaria;
+    }
+    iudex.carmen     = carmen;
+    iudex.forma      = forma;
+    iudex.inventa    = inventa;
+    iudex.capacitas  = capacitas;
+    iudex.numerus    = ZEPHYRUM;
+    si (forma->activae[CENSURA_LINEAE])
+    {
+        _lineae(&iudex);
+    }
+    si (forma->activae[CENSURA_CLAVIS])
+    {
+        _clavis_regula(&iudex);
+    }
+    si (forma->activae[CENSURA_AMBITUS])
+    {
+        _ambitus(&iudex);
+    }
+    si (forma->activae[CENSURA_DISSONANTIA])
+    {
+        _dissonantia(&iudex);
+    }
+    si (forma->activae[CENSURA_PARALLELAE])
+    {
+        _parallelae(&iudex);
+    }
+    /* ordinatio stabilis (insertio) per mensuram, pulsum */
+    x = iudex.numerus < capacitas ? iudex.numerus : capacitas;
+    per (y = I; y < x; y++)
+    {
+        CensuraInventum t = inventa[y];
+                    i32 z = y;
+
+        dum (   z > ZEPHYRUM
+             && (   inventa[z - I].mensura > t.mensura
+                 || (   inventa[z - I].mensura == t.mensura
+                     && inventa[z - I].pulsus > t.pulsus)))
+        {
+            inventa[z] = inventa[z - I];
+            z--;
+        }
+        inventa[z] = t;
+    }
+    redde iudex.numerus;
+}
+
+
+/* ==================================================
+ * Scriptio
+ * ================================================== */
+
+interior b32
+_notam_scribere (
+        constans Carmen* carmen,
+    constans CarmenNota* nota,
+                    s64  pulsus,
+      ChordaAedificator* a)
+{
+    PartituraNota o = partitura_orthographia(carmen, nota, pulsus);
+              b32 bene;
+              s32 i;
+
+    bene = chorda_aedificator_appendere_character(a, o.littera);
+    per (i = ZEPHYRUM; i < o.alteratio; i++)
+    {
+        bene = chorda_aedificator_appendere_character(a, '#') && bene;
+    }
+    per (i = ZEPHYRUM; i < -o.alteratio; i++)
+    {
+        bene = chorda_aedificator_appendere_character(a, 'b') && bene;
+    }
+    redde chorda_aedificator_appendere_s32(a, o.octava) && bene;
+}
+
+interior chorda
+_instrumentum (
+    constans Carmen* carmen,
+             chorda  pars)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < carmen->numerus_partium; i++)
+    {
+        si (chorda_aequalis(carmen->partes[i].titulus, pars))
+        {
+            redde carmen->partes[i].instrumentum;
+        }
+    }
+    redde pars;   /* non attingitur */
+}
+
+b32
+censura_inventum_scribere (
+             constans Carmen* carmen,
+    constans CensuraInventum* inventum,
+           ChordaAedificator* textus)
+{
+    constans CensuraInventum* x = inventum;
+                         s64  pulsus;
+                         b32  bene;
+
+    pulsus = carmen_pulsus_mensurae(carmen, x->mensura) + x->pulsus;
+    bene = chorda_aedificator_appendere_literis(textus, "mensura ");
+    bene = chorda_aedificator_appendere_i32(textus, x->mensura) && bene;
+    si (x->pulsus > ZEPHYRUM)
+    {
+        bene = chorda_aedificator_appendere_literis(textus, " +")
+            && bene;
+        bene = chorda_aedificator_appendere_s32(textus, (s32)x->pulsus)
+            && bene;
+    }
+    bene = chorda_aedificator_appendere_character(textus, ' ') && bene;
+    bene = chorda_aedificator_appendere_chorda(textus, x->pars) && bene;
+    si (x->pars_altera.mensura > ZEPHYRUM)
+    {
+        bene = chorda_aedificator_appendere_character(textus, '/')
+            && bene;
+        bene = chorda_aedificator_appendere_chorda(textus,
+            x->pars_altera)
+            && bene;
+    }
+    bene = chorda_aedificator_appendere_literis(textus, ": ") && bene;
+    commutatio (x->regula)
+    {
+        casus CENSURA_LINEAE:
+            bene = chorda_aedificator_appendere_literis(textus,
+                "'|' non in linea mensurae") && bene;
+            frange;
+        casus CENSURA_CLAVIS:
+        {
+            constans CarmenClavis* k = _clavis(carmen, pulsus);
+
+            bene = _notam_scribere(carmen, x->nota, pulsus, textus)
+                && bene;
+            bene = chorda_aedificator_appendere_literis(textus,
+                " extra clavem ") && bene;
+            bene = chorda_aedificator_appendere_literis(textus,
+                partitura_clavis_littera(k)) && bene;
+            bene = chorda_aedificator_appendere_literis(textus,
+                k->minor ? " minor" : " maior") && bene;
+            frange;
+        }
+        casus CENSURA_AMBITUS:
+            bene = _notam_scribere(carmen, x->nota, pulsus, textus)
+                && bene;
+            bene = chorda_aedificator_appendere_literis(textus,
+                " extra ambitum ") && bene;
+            bene = chorda_aedificator_appendere_chorda(textus,
+                _instrumentum(carmen, x->pars)) && bene;
+            frange;
+        casus CENSURA_DISSONANTIA:
+        {
+            s32 d = _modulus((s32)x->nota->nota
+                - (s32)x->nota_altera->nota, XII);
+
+            bene = _notam_scribere(carmen, x->nota, pulsus, textus)
+                && bene;
+            bene = chorda_aedificator_appendere_literis(textus,
+                " contra ")
+                && bene;
+            bene = _notam_scribere(carmen, x->nota_altera, pulsus,
+                textus)
+                && bene;
+            bene = chorda_aedificator_appendere_literis(textus,
+                d == VI ? ", tritonus" : d <= II ? ", secunda"
+                                                 : ", septima") && bene;
+            frange;
+        }
+        casus CENSURA_PARALLELAE:
+        {
+            s32 d = _modulus((s32)x->nota->nota
+                - (s32)x->nota_altera->nota, XII);
+
+            bene = chorda_aedificator_appendere_literis(textus,
+                d == VII ? "quintae " : "octavae ") && bene;
+            bene = chorda_aedificator_appendere_literis(textus,
+                "parallelae ") && bene;
+            bene = _notam_scribere(carmen, x->nota, pulsus, textus)
+                && bene;
+            bene = chorda_aedificator_appendere_character(textus, ' ')
+                && bene;
+            bene = _notam_scribere(carmen, x->nota_altera, pulsus,
+                textus)
+                && bene;
+            frange;
+        }
+        ordinarius:
+            frange;
+    }
+    si (x->frustum >= ZEPHYRUM)
+    {
+        bene = chorda_aedificator_appendere_literis(textus,
+            " (frustum ")
+            && bene;
+        bene = chorda_aedificator_appendere_s32(textus, x->frustum)
+            && bene;
+        bene = chorda_aedificator_appendere_literis(textus, ", offset ")
+            && bene;
+        bene = chorda_aedificator_appendere_i32(textus, x->offset)
+            && bene;
+        bene = chorda_aedificator_appendere_character(textus, ')')
+            && bene;
+    }
+    redde chorda_aedificator_appendere_character(textus, '\n') && bene;
+}

@@ -205,13 +205,20 @@ _character (
         && s->bene;
 }
 
+constans character*
+partitura_clavis_littera (
+    constans CarmenClavis* clavis)
+{
+    redde clavis->minor ? CLAVES_MINORES[clavis->quintae + VII]
+                        : CLAVES_MAIORES[clavis->quintae + VII];
+}
+
 interior vacuum
 _clavem_scribere (
                  Scriptor* s,
     constans CarmenClavis* clavis)
 {
-    _litterae(s, clavis->minor ? CLAVES_MINORES[clavis->quintae + VII]
-                               : CLAVES_MAIORES[clavis->quintae + VII]);
+    _litterae(s, partitura_clavis_littera(clavis));
     _litterae(s, clavis->minor ? " minor" : " maior");
 }
 
