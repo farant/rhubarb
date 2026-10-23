@@ -1,108 +1,66 @@
-/* scriba.c - scriba: pagina vim (folium LXVIII x LVI) in FENESTRA
+/* scriba.c - scriba: pagina vim (folium LXVIII x LVI)
  *
- * Compositio communis (scriba_applicatio) + glutinum fenestrae;
+ * Compositio communis (scriba_applicatio) + forma pro testa (testa.h);
  * gemellus scriba_terminalis.c (scriba-plan S3). -fumus: volumen
- * temporarium, XXX quadra, exitus; -volumen <via> (ordinarie
- * scriba.volumen).
+ * temporarium, XXX quadra (testa), exitus; -volumen <via>
+ * (ordinarie scriba.volumen); -imago <via> (testa).
  */
 #include "latina.h"
 #include "piscina.h"
 #include "internamentum.h"
 #include "thema.h"
 #include "volumen.h"
-#include "fenestra.h"
-#include "delineare_mandata.h"
-#include "ludus_fenestra.h"
+#include "testa.h"
 #include "scriba_applicatio.h"
 #include <stdio.h>
-#include <string.h>
 
 /* LXXX x LX cellulae: folium cum margine et linea status */
 #define SCRIBA_LATITUDO   CDLXXX
 #define SCRIBA_ALTITUDO   CDLXXX
-#define QUADRA_FUMI       XXX
 /* pixelum nostrum = II puncta fenestrae (ut terminale) */
 #define SCALA             II
 
-s32
-principale (
-      integer   argc,
-    character** argv)
+interior vacuum
+_scribam_finire (
+    vacuum* ctx)
 {
-                                    Piscina* piscina;
-                        InternamentumChorda* intern;
-                                    Volumen* vol;
-                           ScribaApplicatio  app;
-                                   Fenestra* fenestra;
-                            TabulaPixelorum* tabula;
-                              LudusFenestra* lf;
-                       FenestraConfiguratio  cfg;
-                                        b32  fumus;
-                                        s32  exitus;
-                         constans character* via_imaginis;
-                                        s32  k;
+    volumen_claudere((Volumen*)ctx);
+}
 
-    piscina = piscina_generare_dynamicum("scriba", IV * M * M);
-    si (!piscina)
-    {
-        redde I;
-    }
-    /* -imago <via>: quadrum ultimum in PNG (screenshot) */
-    via_imaginis = NIHIL;
-    per (k = I; k + I < (s32)argc; k++)
-    {
-        si (strcmp(argv[k], "-imago") == ZEPHYRUM)
-        {
-            via_imaginis = argv[k + I];
-        }
-    }
-    intern = internamentum_creare(piscina);
+b32
+applicatio_initium (
+    constans TestaAmbitus* a,
+               TestaForma* forma)
+{
+    InternamentumChorda* intern;
+                Volumen* vol;
+       ScribaApplicatio* app;
+                    b32  fumus;
+
+    intern = internamentum_creare(a->piscina);
     thema_initiare();
-
-    vol = scriba_volumen_aperire(piscina, (s32)argc, argv, &fumus);
+    vol = scriba_volumen_aperire(a->piscina, a->argc, a->argv, &fumus);
     si (!vol)
     {
         fprintf(stderr, "scriba: volumen aperiri non potuit\n");
-        redde I;
+        redde FALSUM;
     }
-    si (!scriba_applicatio_aedificare(&app, piscina, intern, vol,
-            SCRIBA_LATITUDO, SCRIBA_ALTITUDO))
+    app = (ScribaApplicatio*)piscina_allocare(a->piscina,
+        magnitudo(ScribaApplicatio));
+    si (   !app
+        || !scriba_applicatio_aedificare(app, a->piscina, intern, vol,
+               SCRIBA_LATITUDO, SCRIBA_ALTITUDO))
     {
-        redde I;
+        redde FALSUM;
     }
-
-    memset(&cfg, ZEPHYRUM, magnitudo(FenestraConfiguratio));
-    cfg.titulus   = "scriba";
-    cfg.x         = C;
-    cfg.y         = C;
-    cfg.latitudo  = SCRIBA_LATITUDO * SCALA;
-    cfg.altitudo  = SCRIBA_ALTITUDO * SCALA;
-    cfg.vexilla   = FENESTRA_ORDINARIA;
-    fenestra      = fenestra_creare(piscina, &cfg);
-    si (!fenestra)
-    {
-        fprintf(stderr, "scriba: fenestra\n");
-        redde I;
-    }
-    tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra,
-                                               SCRIBA_ALTITUDO);
-    lf = ludus_fenestra_creare(piscina, app.d, app.figurae, ZEPHYRUM,
-                               NIHIL, NIHIL, tabula);
-    si (!tabula || !lf)
-    {
-        redde I;
-    }
-    exitus = ludus_fenestra_currere(lf, fenestra,
-                                    fumus ? QUADRA_FUMI : ZEPHYRUM);
-    si (   via_imaginis
-        && !ludus_fenestra_imaginem_scribere(lf, via_imaginis))
-    {
-        fprintf(stderr, "scriba: imago non scripta: %s\n",
-            via_imaginis);
-        exitus = I;
-    }
-    fenestra_destruere(fenestra);
-    volumen_claudere(vol);
-    piscina_destruere(piscina);
-    redde exitus;
+    forma->titulus    = "scriba";
+    forma->latitudo   = SCRIBA_LATITUDO;
+    forma->altitudo   = SCRIBA_ALTITUDO;
+    forma->scala      = SCALA;
+    forma->d          = app->d;
+    forma->figurae    = app->figurae;
+    forma->thema      = ZEPHYRUM;
+    forma->finis      = _scribam_finire;
+    forma->finis_ctx  = vol;
+    redde VERUM;
 }

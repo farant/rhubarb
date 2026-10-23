@@ -12,6 +12,9 @@
  * Rotula: EVENTUS_MUS_ROTULA ex ansa perscrutandi fenestrae venit
  * (fenestra_macos.m, NSEventTypeScrollWheel). Methodus scrollWheel:
  * ibi vacua manet - eventus non inde oriuntur.
+ *
+ * Ansa ipsa testae est (lib/testa.c; testa-spec II.3): ludus_fenestra
+ * partes dat (tractare, pingendum, quadrum, mora), testa eas ordinat.
  */
 
 #ifndef LUDUS_FENESTRA_H
@@ -92,16 +95,6 @@ ludus_quadrum (
 Mora
 ludus_fenestra_mora (
     constans LudusFenestra* lf);
-
-/* ansa vera: exspectare (ludus_fenestra_mora), tractare, quadrum,
- * praesentare; finis in EVENTUS_CLAUDERE aut post quadra_maxima
- * (> 0), deinde dispensator_finire (pendentia effunduntur).
- * Mensurae ad stdout. */
-s32
-ludus_fenestra_currere (
-    LudusFenestra* lf,
-         Fenestra* fenestra,
-              i32  quadra_maxima);
 
 /* Quadrum ultimum (tabulam) in plagulam PNG scribere - pixela ipsa
  * quae fenestrae praesentata sunt aut praesentarentur (etiam sine

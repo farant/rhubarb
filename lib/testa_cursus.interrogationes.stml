@@ -1,0 +1,17 @@
+<interrogationes unitas="testa_cursus">
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I run an app's dispatcher in a real window?
+    <responsum symbolum="applicatio_initium testa_cursum_incipere testa_cursum_ludum_struere" via="apps/pictor/pictor.c">Include
+      testa.h and define applicatio_initium(a, forma): build your
+      state in a->piscina (never in locals - their addresses outlive
+      the call), then fill the forma - titulus, latitudo, altitudo,
+      scala, d, figurae, optional fons/fons_ctx, pulsator and finis.
+      The shell (lib/testa.c on macOS, lib/testa_android.c on
+      Android) owns principale, the window, the loop, -fumus (XXX
+      frames) and -imago, and calls finis once at the end. A forma
+      failing testa_formam_probare stops the run with its causa named;
+      finis still runs.</responsum>
+  </interrogatio>
+
+</interrogationes>

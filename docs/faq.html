@@ -15,7 +15,7 @@
 
 <p>Each unit declares the questions it answers in <code>lib/S.interrogationes.stml</code> (canon <code>interrogationes.canon</code>). Every answer is anchored to a symbol, a path or a command, and the gate <code>interrogationes</code> turns red when an anchor dies. From the terminal: <code>bin/fabrica quid -interrogationes -quaere "how do I ..."</code>, or <code>-symbolum xar_addere</code> for the questions that name a symbol.</p>
 
-<p class="nota">827 questions in 97 units · quomodo 371 · possumne 232 · quid 131 · cur 93</p>
+<p class="nota">827 questions in 98 units · quomodo 371 · possumne 232 · quid 131 · cur 93</p>
 <ul>
 <li><a href="#actio">actio</a> <span class="nota">6</span></li>
 <li><a href="#aedilis">aedilis</a> <span class="nota">11</span></li>
@@ -58,7 +58,7 @@
 <li><a href="#json">json</a> <span class="nota">12</span></li>
 <li><a href="#lapifex_generare">lapifex_generare</a> <span class="nota">10</span></li>
 <li><a href="#lectiones">lectiones</a> <span class="nota">6</span></li>
-<li><a href="#ludus_fenestra">ludus_fenestra</a> <span class="nota">9</span></li>
+<li><a href="#ludus_fenestra">ludus_fenestra</a> <span class="nota">8</span></li>
 <li><a href="#magnus">magnus</a> <span class="nota">10</span></li>
 <li><a href="#mandatum">mandatum</a> <span class="nota">8</span></li>
 <li><a href="#manus_ludus">manus_ludus</a> <span class="nota">8</span></li>
@@ -101,6 +101,7 @@
 <li><a href="#tabula_dispersa">tabula_dispersa</a> <span class="nota">8</span></li>
 <li><a href="#tempus">tempus</a> <span class="nota">8</span></li>
 <li><a href="#terminale">terminale</a> <span class="nota">11</span></li>
+<li><a href="#testa_cursus">testa_cursus</a> <span class="nota">1</span></li>
 <li><a href="#thema">thema</a> <span class="nota">5</span></li>
 <li><a href="#thesaurus">thesaurus</a> <span class="nota">8</span></li>
 <li><a href="#tls">tls</a> <span class="nota">9</span></li>
@@ -1070,23 +1071,21 @@
 <h2 id="ludus_fenestra">ludus_fenestra</h2>
 <p class="nota"><a href="../include/ludus_fenestra.h"><code>include/ludus_fenestra.h</code></a> · <a href="../lib/ludus_fenestra.interrogationes.stml"><code>lib/ludus_fenestra.interrogationes.stml</code></a></p>
 <ol class="quaestiones">
-<li id="ludus_fenestra-1"><span class="status">quomodo</span>how do I run an app's dispatcher in a real window?
-<div class="responsum">Create the window, make its pixel table with fenestra_creare_tabulam_pixelorum, then call ludus_fenestra_creare(piscina, d, figurae, thema, fons, fons_ctx, tabula) and ludus_fenestra_currere(lf, fenestra, ZEPHYRUM). creare returns NIHIL if piscina, d, figurae or tabula is NIHIL. The loop runs until EVENTUS_CLAUDERE or the window asks to close. It then calls dispensator_finire, prints one timing line to stdout and returns ZEPHYRUM (I only when lf or fenestra is NIHIL). Destroying the window is still your job, as apps/pictor/pictor.c shows.<br><span class="nota">symbolum <code>ludus_fenestra_creare</code> <code>ludus_fenestra_currere</code> <code>fenestra_creare_tabulam_pixelorum</code> <code>fenestra_destruere</code> · via <a href="../apps/pictor/pictor.c"><code>apps/pictor/pictor.c</code></a></span></div></li>
-<li id="ludus_fenestra-2"><span class="status">quomodo</span>how do I render frames or take a screenshot without opening a window?
+<li id="ludus_fenestra-1"><span class="status">quomodo</span>how do I render frames or take a screenshot without opening a window?
 <div class="responsum">Make a bare table with tabula_pixelorum_creare_nuda, pass it to ludus_fenestra_creare, call ludus_quadrum(lf, nunc) once per frame, then ludus_fenestra_imaginem_scribere(lf, via) to write the last frame as a PNG. That function returns FALSUM before the first frame and when the write fails. The worklog records a real-window PNG that was byte-identical to the headless one, so headless frames are faithful screenshots. The apps expose this as -imago with -fumus.<br><span class="nota">symbolum <code>tabula_pixelorum_creare_nuda</code> <code>ludus_fenestra_creare</code> <code>ludus_quadrum</code> <code>ludus_fenestra_imaginem_scribere</code> · via <a href="../probationes/probatio_ludus_imago.c"><code>probationes/probatio_ludus_imago.c</code></a></span></div></li>
-<li id="ludus_fenestra-3"><span class="status">possumne</span>can I keep lf-&gt;mandata or anything from the previous frame across ludus_quadrum calls?
+<li id="ludus_fenestra-2"><span class="status">possumne</span>can I keep lf-&gt;mandata or anything from the previous frame across ludus_quadrum calls?
 <div class="responsum">No. Each ludus_quadrum pulses the dispatcher, then calls piscina_vacare on the per-frame piscina and builds a fresh Mandata there, so lf-&gt;mandata and everything allocated for the last frame (including the PNG buffers of ludus_fenestra_imaginem_scribere) is valid only until the next frame. Copy out anything you need first.<br><span class="nota">symbolum <code>ludus_quadrum</code> <code>ludus_fenestra_imaginem_scribere</code> <code>piscina_vacare</code></span></div></li>
-<li id="ludus_fenestra-4"><span class="status">cur</span>why does the window loop sleep when idle, and does that delay input?
+<li id="ludus_fenestra-3"><span class="status">cur</span>why does the window loop sleep when idle, and does that delay input?
 <div class="responsum">Until 2026-10-05 it polled without waiting, and an idle pictor window pinned a CPU core. Now it blocks in fenestra_expectare_eventus for ludus_fenestra_mora(lf): ZEPHYRUM before the first frame, then the dispatcher's quies_ms. An arriving event wakes the wait at once, so drags and strokes are not delayed. The quiet flush still runs in each frame's dispensator_pulsare.<br><span class="nota">symbolum <code>ludus_fenestra_mora</code> <code>fenestra_expectare_eventus</code> <code>dispensator_pulsare</code> · via <a href="../lib/ludus_fenestra.worklog.md"><code>lib/ludus_fenestra.worklog.md</code></a></span></div></li>
-<li id="ludus_fenestra-5"><span class="status">quomodo</span>how do I keep a live app (a terminal, a clock) updating when no events arrive?
+<li id="ludus_fenestra-4"><span class="status">quomodo</span>how do I keep a live app (a terminal, a clock) updating when no events arrive?
 <div class="responsum">Install a pulse with ludus_fenestra_pulsum_ponere(lf, fn, ctx); NIHIL removes it. In the normal loop (quadra_maxima ZEPHYRUM) fn(ctx) runs once per iteration, inside ludus_fenestra_pingendum, and with a pulse every wait is XVI ms at most (also the first one, which would otherwise be ZEPHYRUM). The loop draws only when ludus_fenestra_pingendum says so: there were events, the pulse returned VERUM, no frame has been drawn yet, or (after the dispatcher alone is pulsed for its timers) the store version differs from the one at the last drawn frame. So return VERUM from the pulse whenever it changed something visible. Without a pulse every iteration draws, as before.<br><span class="nota">symbolum <code>ludus_fenestra_pulsum_ponere</code> <code>ludus_fenestra_pingendum</code> <code>LudusPulsator</code> · via <a href="../apps/vicus/vicus.c"><code>apps/vicus/vicus.c</code></a></span></div></li>
-<li id="ludus_fenestra-6"><span class="status">cur</span>why does the frame skip compare the store version instead of counting recompositions?
+<li id="ludus_fenestra-5"><span class="status">cur</span>why does the frame skip compare the store version instead of counting recompositions?
 <div class="responsum">The dispatcher recomposes on EVERY event, including the empty pulse (the staleness rule), so recompositions do not mean anything changed. insula_versio goes up once per accepted write. It is compared with versio_picta, which ludus_quadrum records, rather than with the value before this pulse, because a click handled in an earlier iteration may still be undrawn.<br><span class="nota">symbolum <code>ludus_fenestra_pingendum</code> <code>insula_versio</code> <code>ludus_quadrum</code> · via <a href="../lib/ludus_fenestra.worklog.md"><code>lib/ludus_fenestra.worklog.md</code></a></span></div></li>
-<li id="ludus_fenestra-7"><span class="status">possumne</span>can I use quadra_maxima for a smoke run of an idle app that installs a pulse?
-<div class="responsum">Yes. With quadra_maxima &gt; ZEPHYRUM the frame skip is bypassed and every iteration draws, so the loop stops after exactly that many frames. Before the 2026-10-08 fix an idle vicus -fumus drew one frame and hung. Two consequences: in smoke mode ludus_fenestra_pingendum is never called, so your pulse function never runs (vicus -fumus does not poll its reactor); and with a pulse each idle wait is at most XVI ms, while an app without one waits the dispatcher's quies (300 ms in pictor) per idle frame, which made pictor's 30-frame smoke run take about 9 s.<br><span class="nota">symbolum <code>ludus_fenestra_currere</code> <code>ludus_fenestra_pingendum</code></span></div></li>
-<li id="ludus_fenestra-8"><span class="status">quid</span>what coordinates does the dispatcher see for window resizes and the first size?
+<li id="ludus_fenestra-6"><span class="status">possumne</span>can I use quadra_maxima for a smoke run of an idle app that installs a pulse?
+<div class="responsum">Yes. Under -fumus the shell's loop (lib/testa.c, once ludus_fenestra_currere) passes quadra_maxima XXX: the frame skip is bypassed and every iteration draws, so the loop stops after exactly that many frames. Before the 2026-10-08 fix an idle vicus -fumus drew one frame and hung. Two consequences: in smoke mode ludus_fenestra_pingendum is never called, so your pulse function never runs (vicus -fumus does not poll its reactor); and with a pulse each idle wait is at most XVI ms, while an app without one waits the dispatcher's quies (300 ms in pictor) per idle frame, which made pictor's 30-frame smoke run take about 9 s.<br><span class="nota">symbolum <code>ludus_fenestra_pingendum</code> <code>ludus_fenestra_mora</code></span></div></li>
+<li id="ludus_fenestra-7"><span class="status">quid</span>what coordinates does the dispatcher see for window resizes and the first size?
 <div class="responsum">Table pixels, never window points. On EVENTUS_MUTARE_MAGNITUDINEM, ludus_fenestra_tractare refits the table with tabula_pixelorum_ad_fenestram (scale kept, buffer grown in the piscina only when it gets bigger) and rewrites the event's size to the table's before passing it on. The very first event or frame first sends one synthetic MUTARE_MAGNITUDINEM with the table's size. An event with tempus ZEPHYRUM is stamped with nunc.<br><span class="nota">symbolum <code>ludus_fenestra_tractare</code> <code>tabula_pixelorum_ad_fenestram</code></span></div></li>
-<li id="ludus_fenestra-9"><span class="status">possumne</span>can I destroy a LudusFenestra and free its frame memory?
+<li id="ludus_fenestra-8"><span class="status">possumne</span>can I destroy a LudusFenestra and free its frame memory?
 <div class="responsum">Not through the API: there is no destroy function. The struct lives in your piscina, but ludus_fenestra_creare also makes its own dynamic piscina for frames (&quot;ludus_quadrum&quot;, LXIV * M initial), and nothing ever destroys it. Destroying your piscina does not release it. The field is public, so code that creates many (such as tests) can call piscina_destruere(lf-&gt;piscina_quadri) itself once it is done with lf; nothing in the tree does today. Apps create one per process.<br><span class="nota">symbolum <code>ludus_fenestra_creare</code> <code>piscina_generare_dynamicum</code> <code>piscina_destruere</code></span></div></li>
 </ol>
 
@@ -1966,6 +1965,13 @@
 <div class="responsum">terminale_tty(app) returns the child's tty path (for example /dev/ttys011), copied into the piscina when the app is built; vicus uses it to match tmux clients to panes. It is an empty chorda when the pseudoterminal has no tty, such as the in-memory bridge.<br><span class="nota">symbolum <code>terminale_tty</code></span></div></li>
 <li id="terminale-11"><span class="status">possumne</span>can I mount and close terminals over and over without leaking memory?
 <div class="responsum">Not completely. Everything else lives in the piscina you pass, but every build also creates its own dynamic scratch piscina (terminale_scrutinium, first block LXIV * MXXIV bytes) for encoding key bytes, and nothing ever destroys it: terminale_claudere only closes the emulator host. vicus mounts a new terminale on every pane opening, so each one leaves that pool behind for the life of the process.<br><span class="nota">symbolum <code>terminale_claudere</code> <code>terminale_montare</code> <code>piscina_generare_dynamicum</code></span></div></li>
+</ol>
+
+<h2 id="testa_cursus">testa_cursus</h2>
+<p class="nota"><a href="../include/testa_cursus.h"><code>include/testa_cursus.h</code></a> · <a href="../lib/testa_cursus.interrogationes.stml"><code>lib/testa_cursus.interrogationes.stml</code></a></p>
+<ol class="quaestiones">
+<li id="testa_cursus-1"><span class="status">quomodo</span>how do I run an app's dispatcher in a real window?
+<div class="responsum">Include testa.h and define applicatio_initium(a, forma): build your state in a-&gt;piscina (never in locals - their addresses outlive the call), then fill the forma - titulus, latitudo, altitudo, scala, d, figurae, optional fons/fons_ctx, pulsator and finis. The shell (lib/testa.c on macOS, lib/testa_android.c on Android) owns principale, the window, the loop, -fumus (XXX frames) and -imago, and calls finis once at the end. A forma failing testa_formam_probare stops the run with its causa named; finis still runs.<br><span class="nota">symbolum <code>applicatio_initium</code> <code>testa_cursum_incipere</code> <code>testa_cursum_ludum_struere</code> · via <a href="../apps/pictor/pictor.c"><code>apps/pictor/pictor.c</code></a></span></div></li>
 </ol>
 
 <h2 id="thema">thema</h2>
