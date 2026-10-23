@@ -991,14 +991,18 @@ _genus_litterae (
  * ingressus); radix absoluta et './' demuntur; scriptura iudicis,
  * libri ipsi et viae absolutae extra arborem praetermittuntur;
  * (genus, via) semel. FALSUM = liber absens aut lectio non
- * verificabilis (E) - nullum vestigium (regeneratio semper). */
+ * verificabilis (E) - nullum vestigium (regeneratio semper).
+ * ambitus_tolerare: E praetermittitur (custodia memorabilium viis solis
+ * utitur; ambitus per <ambitus> declaratur) */
 interior b32
 _lectiones_colligere (
     constans FabricaSutura*  sutura,
         constans character*  liber_via,
                     chorda   scriptura_dir,
+                       b32   ambitus_tolerare,
                    Piscina*  piscina,
-                       Xar** lectiones_out)
+                       Xar** lectiones_out,
+                       Xar** scripta_out)
 {
              chorda  liber;
                 Xar* lectiones;
@@ -1036,12 +1040,16 @@ _lectiones_colligere (
             perge;
         }
         genus = _genus_litterae((character)linea.datum[0], &notum);
-        si (!notum || genus == LECTIO_SCRIPSIT)
+        si (!notum)
         {
             perge;
         }
         si (genus == LECTIO_AMBITUS)
         {
+            si (ambitus_tolerare)
+            {
+                perge;
+            }
             redde FALSUM;   /* ambitus a nucleo non verificatur */
         }
         via = chorda_sectio(linea, II, linea.mensura);
@@ -1064,6 +1072,15 @@ _lectiones_colligere (
                    piscina))
             || _in_thesauro(via, piscina))
         {
+            perge;
+        }
+        /* S: exitus, non ingressus - solum in scripta (custodia) */
+        si (genus == LECTIO_SCRIPSIT)
+        {
+            si (scripta_out != NIHIL && *scripta_out != NIHIL)
+            {
+                fabricae_chordam_addere(*scripta_out, via);
+            }
             perge;
         }
         {
@@ -1402,6 +1419,66 @@ _relatione_iudicare (
     redde _relationem_iudicare(sutura, exitus, ingressus, piscina);
 }
 
+/* CUSTODIA MEMORABILIUM (2026-10-23): regeneratio actionis memorabilis
+ * quae legit quod ingressus declarati non tegunt -> memoria NEGATA
+ * (clavis mutationem eius celaret). Reddit causam ('MEMORIA NEGATA
+ * ...') aut chordam vacuam (memoria licet: nihil alienum, aut liber
+ * absens - generator sine lectionibus domus nihil probat) */
+interior chorda
+_memoriam_negare (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+        constans character* liber_via,
+                    chorda  scriptura_dir,
+                   Piscina* piscina)
+{
+    ChordaAedificator* nuntius;
+                  Xar* lectiones;
+                  Xar* scripta;
+                  Xar* alienae;
+               chorda  vacua;
+                  i32  i;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    scripta        = fabricae_xar_chordarum(piscina);
+    si (   liber_via == NIHIL || scripta == NIHIL
+        || !_lectiones_colligere(sutura, liber_via, scriptura_dir,
+               VERUM, piscina, &lectiones, &scripta))
+    {
+        redde vacua;
+    }
+    alienae = fabrica_lectiones_non_declaratae(sutura, actio, lectiones,
+        scripta, piscina);
+    si (alienae == NIHIL || xar_numerus(alienae) == ZEPHYRUM)
+    {
+        redde vacua;
+    }
+    nuntius = chorda_aedificator_creare(piscina, CCLVI);
+    si (nuntius == NIHIL)
+    {
+        redde chorda_ex_literis("MEMORIA NEGATA", piscina);
+    }
+    (vacuum)chorda_aedificator_appendere_literis(nuntius,
+        "MEMORIA NEGATA - lectiones non declaratae "
+        "(declara <ingressus>):");
+    per (i = ZEPHYRUM; i < xar_numerus(alienae) && i < V; i++)
+    {
+        (vacuum)chorda_aedificator_appendere_literis(nuntius, " ");
+        (vacuum)chorda_aedificator_appendere_chorda(nuntius,
+            *(chorda*)xar_obtinere(alienae, i));
+    }
+    si (xar_numerus(alienae) > V)
+    {
+        character numerus[XXXII];
+
+        sprintf(numerus, " (+%u)",
+            (insignatus integer)(xar_numerus(alienae) - V));
+        (vacuum)chorda_aedificator_appendere_literis(nuntius, numerus);
+    }
+    redde chorda_aedificator_finire(nuntius);
+}
+
 /* REGENERATIO, memoria ante eam (actionibus memorabilibus solis) */
 interior FabricaIudicium
 _regeneratione_iudicare (
@@ -1487,7 +1564,8 @@ _regeneratione_iudicare (
     scriptura_dir = fabricae_iungere(piscina,
         "build/fabrica/scriptura/",
         actio->titulus, "");
-    liber_via = actio->lectiones
+    /* liber etiam memorabilibus: custodia lectionum non declaratarum */
+    liber_via = (actio->lectiones || actio->memorabilis)
         ? chorda_ut_cstr(fabricae_iungere(piscina, LIBRI_DIRECTORIUM,
               actio->titulus, ".tsv"), piscina)
         : NIHIL;
@@ -1516,7 +1594,7 @@ _regeneratione_iudicare (
         si (   actio->lectiones && liber_via != NIHIL
             && sutura->lectiones_scribere != NIHIL
             && _lectiones_colligere(sutura, liber_via, scriptura_dir,
-                   piscina, &vestigium))
+                   FALSUM, piscina, &vestigium, NIHIL))
         {
             sutura->lectiones_scribere(sutura->datum,
                 chorda_ut_cstr(actio->titulus, piscina),
@@ -1525,6 +1603,17 @@ _regeneratione_iudicare (
         }
         si (actio->memorabilis && sutura->inscribere != NIHIL)
         {
+            chorda negata;
+
+            negata = _memoriam_negare(sutura, actio, liber_via,
+                scriptura_dir, piscina);
+            si (negata.mensura > ZEPHYRUM)
+            {
+                /* verdictum verum (regeneratio congruit), memoria NON
+                 * scripta: clavis ingressus quod legit non tegit */
+                redde fabricae_iudicium(exitus->via, FABRICA_RECENS,
+                    negata);
+            }
             sutura->inscribere(sutura->datum,
                 chorda_ut_cstr(actio->titulus, piscina), &clavis,
                 &artificium);

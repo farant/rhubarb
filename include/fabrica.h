@@ -981,6 +981,23 @@ fabrica_vestigia_comparare (
              constans Xar* post,
                   Piscina* piscina);
 
+/* LECTIONES NON DECLARATAE (2026-10-23, custodia memorabilium): viae
+ * lectionum (Xar de FabricaLectio, e libro regenerationis) quas nec
+ * ingressus declarati (loci eorum et viae ipsae) nec vestigium actionis
+ * (exitus, vestigia, communia, involucrum) tegunt. Praetermittuntur:
+ * quaesitae absentes (A, probationes radicum), viae a cursu ipso
+ * scriptae ('scripta', Xar de chorda - intermedia), et viae post
+ * cursum absentes (sutura->species: transientes, cursus eas fecit).
+ * Enumeratio (D) tecta si locus directorium ipsum tenet. Xar de chorda
+ * (vacua = omnes tectae); NIHIL si ingressus enumerari nequeunt. */
+Xar*
+fabrica_lectiones_non_declaratae (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+              constans Xar* lectiones,
+              constans Xar* scripta,
+                   Piscina* piscina);
+
 /* MUTATA INTRA LOCUM (2026-10-23): VERUM si actio nihil extra locum
  * suum mutavit - locus = 'area' (membra gradus; vacua = nulla), liber
  * lectionum (fabrica_liber_via) et acta sua (fabrica_acta_via). Iudicat

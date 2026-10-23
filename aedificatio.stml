@@ -266,6 +266,17 @@
     <ingressus genus="fasciculus" via="silva/fontes/systema_c89.h"/>
     <ingressus genus="fasciculus" via="silva/fontes/systema_posix.h"/>
     <ingressus genus="fasciculus" via="tools/capsula_radicis.sh"/>
+    <!-- nexus (corpus_symbola_generare -> silva/nexus.sh -renovare):
+         instrumentum percursus ex fontibus suis structum - custodia
+         memorabilium (2026-10-23) eos legi monstravit, non declaratos -->
+    <ingressus genus="fasciculus" via="silva/amalgama/silva.c"/>
+    <ingressus genus="fasciculus" via="silva/amalgama/silva.h"/>
+    <ingressus genus="fasciculus" via="silva/instrumenta/nexus_ordines.c"/>
+    <ingressus genus="fasciculus" via="silva/instrumenta/nexus_ordines.h"/>
+    <ingressus genus="fasciculus" via="silva/instrumenta/principalia/nexus.c"/>
+    <ingressus genus="fasciculus" via="silva/instrumenta/principalia/nexus_percursus.c"/>
+    <ingressus genus="fasciculus" via="silva/nexus.sh"/>
+    <ingressus genus="plagulae" via="silva" suffixa="nexus_fontes_generata.sh"/>
     <exitus via="build/capsula_corpus_silicis.c" provenientia="regeneratio"/>
     <exitus via="build/capsula_corpus_silicis.h" provenientia="regeneratio"/>
   </actio>

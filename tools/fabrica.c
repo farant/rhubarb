@@ -661,8 +661,12 @@ _sententiam_imprimere (
     commutatio (sententia->iudicium.status)
     {
         casus FABRICA_RECENS:
-            /* machina: RECENS semper (consumptor omnia videt) */
-            si (!omnia && !suturae_machina)
+            /* machina: RECENS semper (consumptor omnia videt);
+             * MEMORIA NEGATA (custodia memorabilium) semper:
+             * declaratio fracta */
+            si (   !omnia && !suturae_machina
+                && !chorda_incipit(sententia->iudicium.causa,
+                       chorda_ex_literis("MEMORIA NEGATA", piscina)))
             {
                 redde;
             }

@@ -3386,3 +3386,32 @@ First plant attempt: removing the `_attributa_clavis_c` reference made the array
 - Appending a blank line to `silva/materia_substratum.sh` → lectores_cocti regenerates (1259 ms); restored → served.
 
 **Result.** A no-change radix run: ~11–12 s → 7.7 s (similar load). Left in it: tabulae_silvae ~1.3 s and capsula_assets ~0.35 s.
+
+## 2026-10-23 — memorabilis guard: an undeclared read refuses the memo (drift check)
+
+**Problem.** memorabilis trusts a hand-written `<ingressus>` list. Audit B checked four lists once, but nothing kept them true: a generator that starts reading a new file keeps hitting the memo, and if that file later changes on its own the stale verdict survives until the `generata` gate happens to regenerate.
+
+**Mechanism** (lib/fabrica.c `_memoriam_negare`, lib/fabrica_ordo.c `fabrica_lectiones_non_declaratae`):
+- A memorabilis action's regeneration now always writes its read log (liber_via for `lectiones || memorabilis`).
+- When a regeneration matches the committed artifact, every logged read (L, X, D) must be covered by the declared inputs:
+  - their loci, plus each input's own path (a manifest covers its listed files, not itself);
+  - or the action's vestigium (exitus, vestigia, communia, fabrica bookkeeping).
+- Otherwise the memo is NOT written. The verdict is still RECENS (the regeneration matched), with causa `MEMORIA NEGATA - lectiones non declaratae (declara <ingressus>): …`, first five paths named, deduplicated.
+- `bin/fabrica` prints such RECENS verdicts even without `-omnia`. The `generata` gate counts them as FRACTA ("DECLARATIO FRACTA").
+- `GENERATA_AUDITUS=1` runs `iudicare -audit`: every memorabilis action regenerates and is guarded (~250 s, vs ~19 s normal).
+
+**Noise rules, each found on the first run:**
+- A (absence probes): aedilis/compilator probe every include root. Ignored.
+- Paths the run itself wrote (S in the same log): aedilis `build/aedilis/oraculum.<pid>.tmp`, `commissum.<pid>.tmp`; the manifest it rewrites. `_lectiones_colligere` gained a `scripta_out` and an `ambitus_tolerare` flag (E lines skipped rather than failing the whole collection).
+- Paths absent after the run (`sutura->species` == ABSENS): transient files the run created and deleted. canon_coquere.sh's `build/canon_coquere_tmp.<pid>/` is written by sed/cp (no S line) and read by the formatter.
+
+**Plants** (lectores_cocti, -audit):
+- `exclusiones.txt` declaration removed → MEMORIA NEGATA naming it.
+- `plagulae include .h` removed → `include` + 306 headers named.
+- Restored → all four audit-B generators clean.
+
+**First real finding.** corpus_silicis (memorabilis before today) reads the nexus tool's sources through `corpus_symbola_generare` → `silva/nexus.sh -renovare`: silva/amalgama/silva.{c,h}, silva/instrumenta/nexus_ordines.{c,h}, principalia/nexus{,_percursus}.c. None were declared, so a silva change could leave corpus.symbola.tsv stale behind the memo. Declared now (plus silva/nexus.sh and nexus_fontes_generata.sh as plagulae); no cycle; generata sana again, 17–19 s.
+
+**Limits.**
+- A generator whose reads are not logged (shell-only, clang outside bin/compilator, hand-built tools like tabulae_silvae's generator) passes trivially; the guard only sees house-tool reads.
+- Drift is caught only when a regeneration happens: a key change, or an audit. Running `GENERATA_AUDITUS=1` at fusio tier would close that.
