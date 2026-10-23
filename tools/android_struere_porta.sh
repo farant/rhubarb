@@ -5,7 +5,7 @@
 # nominato (-Wl,--no-undefined). NDK aut SDK absens = RECUSATIO
 # (exitus 2, signum nullum - porta 'non cucurrit'), numquam saltus
 # tacitus.
-# <porta titulus="android-struere" gradus="fusio" instrumentum="bin/aedilis" tegit="include/* lib/*.c apps/pictor/* tools/android/* tools/vexilla.sh silva/fontes/systema_posix.h officina/auspex_android.sh"/>
+# <porta titulus="android-struere" gradus="fusio" tegit="include/* lib/*.c apps/pictor/* tools/android/* tools/vexilla.sh silva/fontes/systema_posix.h officina/auspex_android.sh"/>
 set -u
 cd "$(dirname "${BASH_SOURCE[0]}")/.." || exit 2
 # lexicon NDK examinis (T3b) contra capita vera - forma falsa = iudicium
