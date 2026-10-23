@@ -86,6 +86,15 @@ partitura_notam_scribere (
                     s64  pulsus,
       ChordaAedificator* textus);
 
+/* inversa partitura_notam_scribere: "Bb4", "F#5", "C##3", "C-1" ->
+ * orthographia (littera 'A'..'G') et MIDI in *altitudo. FALSUM: forma
+ * mala (etiam '@titulus'), extra 0..127 */
+b32
+partitura_notam_legere (
+            chorda  textus,
+     PartituraNota* nota,
+               i32* altitudo);
+
 /* ambitus partis: nota infima et summa altitudinis (sonitus '@'
  * omittuntur - altitudine carent), cum pulsibus carminis ad
  * orthographiam; aequales: prima vincit */

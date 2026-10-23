@@ -94,6 +94,7 @@ declare -a SOURCE_FILES=(
     "lib/diurna.c"
     "lib/elementa.c"
     "lib/elenchus.c"
+    "lib/emendatio.c"
     "lib/entitas.c"
     "lib/entitas_repositorium_impl.c"
     "lib/entitates_html.c"

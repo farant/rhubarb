@@ -345,6 +345,79 @@ partitura_notam_scribere (
     redde s.bene;
 }
 
+b32
+partitura_notam_legere (
+            chorda  textus,
+     PartituraNota* nota,
+               i32* altitudo)
+{
+          s32 i = ZEPHYRUM;
+          s32 n = (s32)textus.mensura;
+          s32 g;
+          s32 alteratio  = ZEPHYRUM;
+          s32 octava     = ZEPHYRUM;
+          b32 negativa   = FALSUM;
+          s32 digiti     = ZEPHYRUM;
+          s32 m;
+    character x;
+
+    si (n < II)
+    {
+        redde FALSUM;
+    }
+    x = (character)textus.datum[ZEPHYRUM];
+    x = (x >= 'a' && x <= 'g') ? (character)(x - 'a' + 'A') : x;
+    si (x < 'A' || x > 'G')
+    {
+        redde FALSUM;
+    }
+    g = (x - 'A' + V) % VII;   /* A -> 5 */
+    per (i = I; i < n && textus.datum[i] == '#'; i++)
+    {
+        alteratio++;
+    }
+    si (alteratio == ZEPHYRUM)
+    {
+        per (; i < n && textus.datum[i] == 'b'; i++)
+        {
+            alteratio--;
+        }
+    }
+    si (alteratio > II || alteratio < -II)
+    {
+        redde FALSUM;
+    }
+    si (i < n && textus.datum[i] == '-')
+    {
+        negativa = VERUM;
+        i++;
+    }
+    per (; i < n && textus.datum[i] >= '0' && textus.datum[i] <= '9';
+         i++)
+    {
+        si (++digiti > I)
+        {
+            redde FALSUM;
+        }
+        octava = (s32)(textus.datum[i] - '0');
+    }
+    si (i != n || digiti == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    octava  = negativa ? -octava : octava;
+    m       = (octava + I) * XII + SEMITONIA[g] + alteratio;
+    si (m < ZEPHYRUM || m > CXXVII)
+    {
+        redde FALSUM;
+    }
+    nota->littera    = LITTERAE[g];
+    nota->alteratio  = alteratio;
+    nota->octava     = octava;
+    *altitudo        = (i32)m;
+    redde VERUM;
+}
+
 PartituraAmbitus
 partitura_ambitus (
     constans CarmenPars* pars)
