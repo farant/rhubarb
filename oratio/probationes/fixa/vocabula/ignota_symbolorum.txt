@@ -894,6 +894,7 @@ if
 ifdef
 ifdir
 iff
+iflnk
 ifmt
 ifn
 ifndef
@@ -1037,6 +1038,7 @@ isdir
 isgraph
 isig
 isize
+islnk
 islower
 iso
 isprint
@@ -1148,6 +1150,7 @@ literals
 ll
 llm
 ln
+lnk
 load
 loc
 local
@@ -2251,6 +2254,7 @@ unilinearis
 uniques
 unix
 unixthread
+unknown
 unlink
 unreserved
 unsetenv

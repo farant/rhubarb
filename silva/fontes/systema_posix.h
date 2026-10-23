@@ -125,9 +125,11 @@ struct stat {
 #define S_IFMT  0170000
 #define S_IFDIR 0040000
 #define S_IFREG 0100000
+#define S_IFLNK 0120000   /* iter_directoria est_nexus (2026-10-22) */
 
 #define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
+#define S_ISLNK(m) (((m) & S_IFMT) == S_IFLNK)
 
 #define S_IRUSR 0400
 #define S_IWUSR 0200
@@ -464,7 +466,9 @@ struct dirent {
     char               d_name[1024];
 };
 
+#define DT_UNKNOWN 0    /* iter_directoria est_nexus (2026-10-22) */
 #define DT_DIR 4
+#define DT_LNK 10
 
 /* <gradus titulus="opendir" genus="canalis" pro="iter_directoria"/> (codex 96) */
 DIR*           opendir(const char* via);

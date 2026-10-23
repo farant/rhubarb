@@ -82,6 +82,7 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(S_IFMT  == 0170000);"
     echo "IUNGO_ASSERTA(S_IFDIR == 0040000);"
     echo "IUNGO_ASSERTA(S_IFREG == 0100000);"
+    echo "IUNGO_ASSERTA(S_IFLNK == 0120000);"
     echo "IUNGO_ASSERTA(S_IRUSR == 0400);"
     echo "IUNGO_ASSERTA(S_IWUSR == 0200);"
     echo "IUNGO_ASSERTA(S_ISDIR(0040755) && !S_ISDIR(0100644));"
@@ -117,6 +118,7 @@ emittere_asserta() {
         echo "IUNGO_ASSERTA(sizeof(((struct dirent*)0)->$campus) == $mensura);"
     done <<< "$TABULA_DIRENT"
     echo "IUNGO_ASSERTA(DT_DIR == 4);"
+    echo "IUNGO_ASSERTA(DT_UNKNOWN == 0 && DT_LNK == 10);"
     echo "IUNGO_ASSERTA(PROT_READ == 0x01 && PROT_WRITE == 0x02);"
     # dlfcn (runae U3, 2026-09-28)
     echo "IUNGO_ASSERTA(RTLD_LAZY == 0x1 && RTLD_NOW == 0x2);"
