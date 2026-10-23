@@ -251,6 +251,30 @@ builds (approach 2 above).
 - **aedilis exit code:** a malformed `--varians` list exits 1 (the
   tool's convention for every refusal), not the 2 written in II.1.
 
+- **Whole-branch review (2026-10-23):** author self-review plus a
+  fresh reviewer subagent (Fran: review subagents OK). Fix pass, each
+  shown red then green on the tablet:
+  - I1 device lost mid-run: missing EXITUS -> exit 2 "tabula amissa";
+    `purgare` reports "purgatum" ONLY when the device echoes a marker
+    after `rm`, else "PURGATIO FRACTA ... -purgare" and exit 2 (fake
+    adb dropping the run and the rm).
+  - I2 `machina` added to the proven set (35 assertions on the Fire,
+    incl. the `__ANDROID__` branch).
+  - Real Ctrl-C (group SIGINT; the earlier TERM test was not one):
+    tee died, the purge report was lost, exit 141 - confirmed on the
+    tablet; tee now ignores INT/TERM -> exit 130, report on screen
+    and in the log. The suspected device-side orphan did NOT occur
+    (binary already a zombie, root stayed deleted) - no exec rework.
+  - Two runs on one tablet: run B's start-wipe gave run A 10 false
+    failures (shown with the old runner); host lock per tablet
+    `~/.rhubarb/android/<serial>.sera` (mkdir + pid, stale pid taken
+    over) refuses B and `-purgare` with exit 2, naming the pid.
+  - Identity file written with `filum_appendere_firmiter` (fsync)
+    before the rename - a power loss can no longer leave an empty file
+    that the never-rewrite rule would refuse forever. Verified by
+    construction only (no test can observe a power loss).
+  - Deferred minors filed in the ledger (see there).
+
 ## AUDIENDA - answered 2026-10-23
 
 - Bionic compatibility: all five suites compiled against bionic with

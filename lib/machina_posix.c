@@ -76,6 +76,7 @@ _plagulam_identitatis_scribere (
     constans character* digiti = "0123456789abcdef";
                     i8  octeti[XVI];
              character  hex[XXXIII];
+                chorda  contentum;
                    i32  i;
 
     si (!moneta_octeti_fortuiti(octeti, (i32)XVI))
@@ -88,7 +89,15 @@ _plagulam_identitatis_scribere (
         hex[i * II + I]  = digiti[octeti[i] & 0xF];
     }
     hex[XXXII] = '\0';
-    si (   !filum_scribere_literis(via_nova, hex)
+    /* firmiter (write + fsync) ANTE renominationem: alioquin post
+     * defectum potentiae plagula vacua sub nomine vero manere potest
+     * (allocatio dilata ext4/f2fs), quae ut 'curta' in aeternum
+     * recusaretur (recensio 2026-10-23). Reliquiae .novum prius
+     * deletae, quia firmiter APPENDIT. */
+    contentum.datum    = (i8*)hex;
+    contentum.mensura  = (i32)XXXII;
+    (vacuum)filum_delere(via_nova);
+    si (   !filum_appendere_firmiter(via_nova, contentum)
         || !filum_modum_ponere(via_nova, 0600)
         || !filum_movere(via_nova, via))
     {

@@ -5,7 +5,10 @@
 if [ -z "${ANDROID_PROBATIO_EFFUSIO:-}" ]; then
     export ANDROID_PROBATIO_EFFUSIO=1
     mkdir -p "$(dirname "$0")/../../build/test_logs"
-    "$0" "$@" 2>&1 | tee "$(dirname "$0")/../../build/test_logs/android.log"
+    # tee signa gregis (Ctrl-C) ignorat: alioquin moritur, et nuntius
+    # purgationis in fd 3 SIGPIPE cursum interiorem necat (exitus 141,
+    # nuntius perditus - recensio 2026-10-23, in tabula probatum)
+    "$0" "$@" 2>&1 | (trap '' INT TERM; tee "$(dirname "$0")/../../build/test_logs/android.log")
     exit "${PIPESTATUS[0]}"
 fi
 
@@ -73,15 +76,69 @@ export ANDROID_SERIAL
 
 A () { "$ADB" "$@"; }
 
+# "purgatum" SOLUM si tabula deletionem confirmat (signum PURGATUM ab
+# ipsa tabula redditum): tabula amissa (cablum, adb) nuntiatur, numquam
+# purgatio ficta (recensio I1, 2026-10-23). FALSUM si non confirmata.
 purgare () {
-    local kib
-    kib=$(A shell "du -sk $RADIX_TABULAE 2>/dev/null" | tr -d '\r' | awk '{print $1}')
-    A shell "rm -rf $RADIX_TABULAE" > /dev/null 2>&1
+    local kib confirmatio
+    kib=$(A shell "du -sk $RADIX_TABULAE 2>/dev/null" 2>/dev/null | tr -d '\r' | awk '{print $1}')
+    confirmatio=$(A shell "rm -rf $RADIX_TABULAE && echo PURGATUM" 2>/dev/null | tr -d '\r')
+    if [ "$confirmatio" != "PURGATUM" ]; then
+        echo "PURGATIO FRACTA: tabula deletionem $RADIX_TABULAE non confirmavit - radix fortasse manet; tabula reconnexa: ./tools/android/probatio.sh -purgare" >&3
+        return 1
+    fi
     echo "vestigium in tabula: ${kib:-0} KiB, purgatum" >&3
+    return 0
 }
 
+# --- sera tabulae (recensio 2026-10-23): cursus plures (arbores operis
+# parallelae) eandem tabulam tangunt - initium alterius radicem alterius
+# in media suita deleret (rubrum fictum). Sera in HOSPITE per tabulam,
+# omnibus arboribus communis (~/.rhubarb), mkdir atomicum + pid; in
+# tabula nihil extra radicem scribitur (spec II.5).
+SERA_DIR="$HOME/.rhubarb/android"
+SERA="$SERA_DIR/$ANDROID_SERIAL.sera"
+SERA_NOSTRA=0
+RADIX_NOSTRA=0
+sera_capere () {
+    local alius
+    mkdir -p "$SERA_DIR" || apparatus "directorium serae $SERA_DIR creari nequit"
+    if ! mkdir "$SERA" 2>/dev/null; then
+        alius=$(cat "$SERA/pid" 2>/dev/null)
+        if [ -z "$alius" ] || kill -0 "$alius" 2>/dev/null; then
+            apparatus "tabula $ANDROID_SERIAL occupata (cursus pid ${alius:-ignotus}; sera $SERA) - exspecta; si nullus cursus vivit: rm -rf $SERA"
+        fi
+        # possessor mortuus: sera stala, capitur
+        { rm -rf "$SERA" && mkdir "$SERA" 2>/dev/null; } \
+            || apparatus "sera $SERA capi nequit"
+    fi
+    echo $$ > "$SERA/pid"
+    SERA_NOSTRA=1
+}
+
+# finis UNUS omnes exitus regit: radicem SUAM solum purgat, seram SUAM
+# solum liberat; purgatio fracta -> exitus 2 (contractus 0/1/2/130)
+finis () {
+    local status=$?
+    if [ "$RADIX_NOSTRA" = 1 ]; then
+        if [ "$SERVARE" = 1 ]; then
+            echo "radix servata: $RADIX_TABULAE (./tools/android/probatio.sh -purgare)" >&3
+        elif ! purgare && [ "$status" -lt 2 ]; then
+            status=2
+        fi
+    fi
+    if [ "$SERA_NOSTRA" = 1 ]; then
+        rm -rf "$SERA"
+    fi
+    exit "$status"
+}
+
+sera_capere
+trap finis EXIT
+trap 'exit 130' INT TERM
+
 if [ "$PURGARE" = 1 ]; then
-    purgare
+    purgare || exit 2
     exit 0
 fi
 [ $# -ge 1 ] || apparatus "usus: $0 [-servare | -purgare] <nomina probationum...>"
@@ -110,18 +167,10 @@ VFLAGS=(-O2 -DBR_ENABLE_INTRINSICS=1 -DSQLITE_ENABLE_FTS5 -DSQLITE_THREADSAFE=0
     -DSQLITE_DQS=0 -DSQLITE_DEFAULT_MEMSTATUS=0 -DSQLITE_OMIT_LOAD_EXTENSION
     -DSQLITE_OMIT_DEPRECATED -DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1)
 
-# --- radix tabulae: initio munda, fine semper deleta -------------------
-finis () {
-    if [ "$SERVARE" = 1 ]; then
-        echo "radix servata: $RADIX_TABULAE (./tools/android/probatio.sh -purgare)" >&3
-    else
-        purgare
-    fi
-}
+# --- radix tabulae: initio munda, fine semper deleta (finis supra) -----
 A shell "rm -rf $RADIX_TABULAE && mkdir -p $RADIX_TABULAE/tmp $RADIX_TABULAE/build" \
     || apparatus "radix $RADIX_TABULAE creari nequit"
-trap finis EXIT
-trap 'exit 130' INT TERM
+RADIX_NOSTRA=1
 
 echo "tabula $ANDROID_SERIAL: $ABI, API $API; NDK $NDK_NOMEN, $TRIPLEX"
 FRACTAE=""
@@ -159,6 +208,8 @@ for titulus in "$@"; do
         > "$D/effusio.txt" 2>&1
     tr -d '\r' < "$D/effusio.txt" | grep -v '^EXITUS=' | tail -6
     EXITUS=$(tr -d '\r' < "$D/effusio.txt" | awk -F= '/^EXITUS=/ {print $2}' | tail -1)
+    # linea EXITUS absens = tabula amissa (cablum, adb), non suita fracta
+    [ -n "$EXITUS" ] || apparatus "tabula amissa dum $titulus currit (linea EXITUS nulla) - cablum et 'adb devices' inspice"
     [ "$EXITUS" = "0" ] || FRACTAE="$FRACTAE $titulus"
 done
 
