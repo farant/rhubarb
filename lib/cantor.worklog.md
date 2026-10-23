@@ -37,3 +37,16 @@ future voices (the test sampled only the LAST block - now a peak over the
 whole window) and never forgetting finished voices (the effect appears
 only after > CANTOR_VOCES notes - the short-loop test now runs 3 s, ~320
 notes). Final: 16/16 red.
+
+## 2026-10-22 - S6d step 1: public default resolver
+
+cantor_tibia_ordinaria / cantor_sonitus_ordinarius are the former
+interior _tibia / _sonitus bodies, made public with the CantorResolutor
+field signatures so a user-patch resolver (vicus, later) can fall back to
+them for names it does not know. cantor_creare now FILLS any NIHIL field
+with them, so the call sites call c->resolutor.X directly (no fallback
+branch). Section 'ordinarius': known / unknown / prefix chord without a
+terminator ("quadransX" mensura 8) / empty / 200-byte name; a resolver
+built from the two functions plays like NIHIL. Plants 4/4 red (prefix
+ignored, tibia field not filled, sonitus returns NIHIL, call site
+bypasses the resolver).

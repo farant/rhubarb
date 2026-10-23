@@ -57,9 +57,9 @@
 #define CANTOR_ITERATIONES XVI
 
 nomen structura {
-    /* NIHIL functio = ordinarius (tibia_praeparatum,
-     * sonitus_praeparatum); NIHIL redditum = pars aut nota tacet (non
-     * vitium) */
+    /* NIHIL functio = ordinarius (cantor_tibia_ordinaria,
+     * cantor_sonitus_ordinarius); NIHIL redditum = pars aut nota tacet
+     * (non vitium) */
     constans TibiaParametra*   (*tibia)(vacuum* ctx,
         chorda instrumentum);
     constans SonitusParametra* (*sonitus)(vacuum* ctx,
@@ -68,6 +68,20 @@ nomen structura {
 } CantorResolutor;
 
 nomen structura Cantor Cantor;
+
+/* resolutor ordinarius, publicus: instrumentum -> tibia_praeparatum
+ * (titulus < LXIV octeti), '@titulus' -> sonitus_praeparatum. Resolutor
+ * proprius (patches usoris) ignota sua huc remittat. ctx non adhibetur;
+ * NIHIL = ignotum */
+constans TibiaParametra*
+cantor_tibia_ordinaria (
+     vacuum* ctx,
+     chorda  instrumentum);
+
+constans SonitusParametra*
+cantor_sonitus_ordinarius (
+     vacuum* ctx,
+     chorda  praeparatum);
 
 /* resolutor copiatur (NIHIL = ordinarius); concentus vivat dum cantor.
  * NIHIL si memoria deest */

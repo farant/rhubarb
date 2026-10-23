@@ -37,6 +37,33 @@ structura Cantor {
               CantorVox  voces[CANTOR_VOCES];
 };
 
+constans TibiaParametra*
+cantor_tibia_ordinaria (
+     vacuum* ctx,
+     chorda  instrumentum)
+{
+    character titulus[LXIV];
+
+    (vacuum)ctx;
+    si (   instrumentum.mensura <= ZEPHYRUM
+        || instrumentum.mensura >= (i32)magnitudo(titulus))
+    {
+        redde NIHIL;
+    }
+    memcpy(titulus, instrumentum.datum, (size_t)instrumentum.mensura);
+    titulus[instrumentum.mensura] = '\0';
+    redde tibia_praeparatum(titulus);
+}
+
+constans SonitusParametra*
+cantor_sonitus_ordinarius (
+     vacuum* ctx,
+     chorda  praeparatum)
+{
+    (vacuum)ctx;
+    redde cantus_praeparatum_sonitus(praeparatum, NIHIL);
+}
+
 Cantor*
 cantor_creare (
                      Piscina* piscina,
@@ -59,6 +86,14 @@ cantor_creare (
     si (resolutor != NIHIL)
     {
         c->resolutor = *resolutor;
+    }
+    si (c->resolutor.tibia == NIHIL)
+    {
+        c->resolutor.tibia = cantor_tibia_ordinaria;
+    }
+    si (c->resolutor.sonitus == NIHIL)
+    {
+        c->resolutor.sonitus = cantor_sonitus_ordinarius;
     }
     redde c;
 }
@@ -157,39 +192,6 @@ _voces_tacere (
     }
 }
 
-interior constans TibiaParametra*
-_tibia (
-    constans Cantor* c,
-             chorda  instrumentum)
-{
-    character titulus[LXIV];
-
-    si (c->resolutor.tibia != NIHIL)
-    {
-        redde c->resolutor.tibia(c->resolutor.ctx, instrumentum);
-    }
-    si (   instrumentum.mensura <= ZEPHYRUM
-        || instrumentum.mensura >= (i32)magnitudo(titulus))
-    {
-        redde NIHIL;
-    }
-    memcpy(titulus, instrumentum.datum, (size_t)instrumentum.mensura);
-    titulus[instrumentum.mensura] = '\0';
-    redde tibia_praeparatum(titulus);
-}
-
-interior constans SonitusParametra*
-_sonitus (
-    constans Cantor* c,
-             chorda  praeparatum)
-{
-    si (c->resolutor.sonitus != NIHIL)
-    {
-        redde c->resolutor.sonitus(c->resolutor.ctx, praeparatum);
-    }
-    redde cantus_praeparatum_sonitus(praeparatum, NIHIL);
-}
-
 /* nota una (pulsus absolutus p) iubetur; sine voce aut sede omissa */
 interior vacuum
 _notam_iubere (
@@ -208,7 +210,8 @@ _notam_iubere (
 
     si (n->praeparatum.mensura > ZEPHYRUM)
     {
-        sonitus = _sonitus(c, n->praeparatum);
+        sonitus = c->resolutor.sonitus(c->resolutor.ctx,
+            n->praeparatum);
         si (sonitus == NIHIL)
         {
             redde;
@@ -288,7 +291,8 @@ _notas_iubere (
         {
             perge;
         }
-        tibia = _tibia(c, pars->instrumentum);
+        tibia = c->resolutor.tibia(c->resolutor.ctx,
+            pars->instrumentum);
         per (j = ZEPHYRUM; j < pars->numerus_frustorum; j++)
         {
             constans CarmenFrustum* f = &pars->frusta[j];

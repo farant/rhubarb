@@ -540,6 +540,67 @@ _sectio_instrumenta (
                  == sonitus_praeparatum("punctum")->forma);
 }
 
+/* resolutor ordinarius publicus: tituli noti, ignoti, chorda sine
+ * terminatore (praefixum), titulus longior quam tabula; resolutor ex
+ * functionibus publicis = NIHIL */
+interior vacuum
+_sectio_ordinarius (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"ord\" tempus=\"120\">"
+        "<pars titulus=\"a\" instrumentum=\"triangulum\">"
+        "<frustum mensura=\"1\"><textus!>c</textus></frustum></pars>"
+        "<pars titulus=\"b\" instrumentum=\"ignotum\">"
+        "<frustum mensura=\"1\"><textus!>d</textus></frustum></pars>"
+        "<pars titulus=\"p\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>@punctum e</textus></frustum>"
+        "</pars></carmen></carmina>");
+          character  b[CC];
+             chorda  q;
+    CantorResolutor  r;
+             Cantor* meus;
+
+    CREDO_NECESSE (k != NIHIL && concentus != NIHIL);
+    CREDO_VERUM (cantor_tibia_ordinaria(NIHIL,
+        chorda_ex_literis("quadrans", c->piscina))
+                 == tibia_praeparatum("quadrans"));
+    CREDO_VERUM (cantor_tibia_ordinaria(NIHIL,
+        chorda_ex_literis("triangulum", c->piscina))
+                 == tibia_praeparatum("triangulum"));
+    CREDO_VERUM (cantor_tibia_ordinaria(NIHIL,
+        chorda_ex_literis("ignotum", c->piscina)) == NIHIL);
+    /* praefixum: "quadransX" mensura VIII = quadrans */
+    memcpy(b, "quadransX", X);
+    q.datum    = (i8*)b;
+    q.mensura  = VIII;
+    CREDO_VERUM (cantor_tibia_ordinaria(NIHIL, q)
+                 == tibia_praeparatum("quadrans"));
+    q.mensura = ZEPHYRUM;
+    CREDO_VERUM (cantor_tibia_ordinaria(NIHIL, q) == NIHIL);
+    memset(b, 'a', magnitudo(b));
+    q.mensura = (i32)magnitudo(b);
+    CREDO_VERUM (cantor_tibia_ordinaria(NIHIL, q) == NIHIL);
+    CREDO_VERUM (cantor_sonitus_ordinarius(NIHIL,
+        chorda_ex_literis("punctum", c->piscina))
+                 == sonitus_praeparatum("punctum"));
+    CREDO_VERUM (cantor_sonitus_ordinarius(NIHIL,
+        chorda_ex_literis("ignotum", c->piscina)) == NIHIL);
+
+    r.tibia    = cantor_tibia_ordinaria;
+    r.sonitus  = cantor_sonitus_ordinarius;
+    r.ctx      = NIHIL;
+    meus       = cantor_creare(c->piscina, concentus, &r);
+    CREDO_NECESSE (meus != NIHIL);
+    CREDO_NECESSE (cantor_incipere(meus, k, ZEPHYRUM));
+    (vacuum)cantor_agere(meus);
+    CREDO_AEQUALIS_I32 (_numerus(MIXTURA_IUSSUM_TIBIAM), I);
+    CREDO_VERUM (_iussum(MIXTURA_IUSSUM_TIBIAM,
+        ZEPHYRUM)->tibia.forma
+                 == tibia_praeparatum("triangulum")->forma);
+    CREDO_AEQUALIS_I32 (_numerus(MIXTURA_IUSSUM_SONITUM), I);
+}
+
 interior vacuum
 _sectio_lusor (
     CredoContextus* c)
@@ -625,6 +686,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "vivum", _sectio_vivum, _parare, NIHIL, NIHIL, NIHIL },
     { "instrumenta", _sectio_instrumenta, _parare, NIHIL, NIHIL,
         NIHIL },
+    { "ordinarius", _sectio_ordinarius, _parare, NIHIL, NIHIL, NIHIL },
     { "lusor", _sectio_lusor, _parare, NIHIL, NIHIL, NIHIL },
     { "prioritas", _sectio_prioritas, _parare, NIHIL, NIHIL, NIHIL },
     { "brevis", _sectio_brevis, _parare, NIHIL, NIHIL, NIHIL },
