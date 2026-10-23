@@ -1637,6 +1637,10 @@ PORTAE = {
                       r'fumus mensor_cursus: (sanum|FRACTUM)'),
     'sonda': (['./tools/sonda_fumus.sh'], r'fumus sonda: (sanum|FRACTUM)'),
     'vexilla': (['./tools/vexilla_fumus.sh'], r'fumus vexilla: (sanum|FRACTUM)'),
+    # oraculum gyri QR (CoreImage) - olim in residuis radicis, nunc
+    # porta sua ex clausura qr (2026-10-23)
+    'qr-gyrus': (['./probationes/probatio_qr_gyrus.sh'],
+                 r'QR GYRUS: (\d+/\d+ legibiles|\d+ ex \d+ FRACTAE)'),
     'scribe': (['./silva/scribe_fumus.sh'], r'fumus scribe: (sanum|FRACTUM)'),
     'aequivalentia': (['./silva/aequivalentia.sh', '-conferre'],
                       r'aequivalentia: (sana|FRACTA)'),

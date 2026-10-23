@@ -466,19 +466,26 @@ run_generare() {
         return 0
     fi
 
-    # Currere generare solum in filis quae compilabuntur
+    # Currere generare solum in filis quae compilabuntur - PER FASCES C
+    # (2026-10-23): generare vias multas accipit (positionalia summum
+    # CXXVIII, argumenta.h) et ad primam fractam desinit, eam nominans
+    # ('terminatur propter fracta in <via>'); olim processus per filum
+    # (CCCLXXVII, ~I.VII s portae radicis omni cursu)
     echo -e "${BLUE}Running generare on test files${RESET}"
+    local -a gen_lista=()
     while IFS= read -r gen_file; do
         [ -z "$gen_file" ] && continue
         # Saltare probatio_generare.c — continet directivas probationis in literis
         if [[ "$gen_file" == *"probatio_generare.c" ]]; then
             continue
         fi
-        if ! ./bin/generare "$gen_file" 2>&1; then
-            echo -e "${RED}✗ generare failed for $gen_file${RESET}"
-            return 1
-        fi
+        gen_lista+=("$gen_file")
     done <<< "$gen_files"
+    if [ "${#gen_lista[@]}" -gt 0 ] \
+        && ! printf '%s\n' "${gen_lista[@]}" | xargs -n 100 ./bin/generare 2>&1; then
+        echo -e "${RED}✗ generare failed (plagula supra nominata)${RESET}"
+        return 1
+    fi
     echo ""
 
     return 0
@@ -590,7 +597,10 @@ run_speculum() {
     # Oraculum gyri QR: qr.c scribit, CoreImage (decodator alienus)
     # legit. probatio_qr.c FORMAM probat; bits solum hoc probat -
     # bibliotheca V4+ fracta LXVI casus structurales praeteribat.
-    if [ -x "probationes/probatio_qr_gyrus.sh" ]; then
+    # Sub --residua (porta radix) OMISSUM: porta sua 'qr-gyrus' eum
+    # currit cum qr aut clausura eius mutatur (2026-10-23, ~IV.VIII s
+    # omni commissione olim); cursus plenus (frigida) eum retinet.
+    if [ "$RESIDUA_MODE" -eq 0 ] && [ -x "probationes/probatio_qr_gyrus.sh" ]; then
         if ! ./probationes/probatio_qr_gyrus.sh > /dev/null 2>&1; then
             echo -e "${RED}✗ qr gyrus fractus (curre: ./probationes/probatio_qr_gyrus.sh)${RESET}"
             return 1
