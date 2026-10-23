@@ -35,3 +35,9 @@ drifted up an octave per bar (4 '>' vs 3 '<') - fixed with a closing '<'.
 Suite probatio_carmen: 3 sections (legere, vitia x24, ordinarium); green
 on the first implementation run; plants 18/18 red after adding a mute-only
 track (a track with BOTH mute and solo hid a mute/solo swap).
+
+## 2026-10-23 - M2a: clips carry their bar marks
+
+CarmenFrustum.lineae / numerus_linearum point at the Cantilena's array
+(same piscina - no copy); pulse is inside the clip, offset inside the
+clip's text.

@@ -64,6 +64,9 @@ nomen structura {
      CarmenNota* notae;       /* ordine pulsus */
             i32  numerus;
             s64  longitudo;   /* pulsus, pausa ultima inclusa */
+    CantusLinea* lineae;      /* '|' scripta, pulsus intra frustum (ex
+                               * cantilena lecta, eadem piscina) */
+            i32 numerus_linearum;
 } CarmenFrustum;
 
 nomen structura {

@@ -145,3 +145,15 @@ green unchanged - the regression proof for the switch.
   tick) - a plant dropping it survived the round-trip loop; a tie case
   pins it now.
 Plants 11/11 red.
+
+## 2026-10-23 - M2a: '|' bar marks are recorded
+
+'|' no longer counts as whitespace: the reader records each one as a
+CantusLinea {pulsus (TOTAL, not per tempo segment), offset} in
+Cantilena.lineae - two passes like notes and tempo changes (count, then
+fill; NIHIL when there are none). Playback ignores them; they are facts
+about the TEXT so censura (M2b) can say "your '|' at offset 41 lands an
+eighth before the barline". Test asserts the frames are identical with
+and without marks. Plants 5/5 red (+2 again after a formatting rewrite to
+a local pointer): segment pulse instead of total is caught only because
+the test puts a 't' change before a mark.

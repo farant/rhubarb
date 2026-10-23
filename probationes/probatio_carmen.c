@@ -341,9 +341,32 @@ _sectio_ordinarium (
     CREDO_AEQUALIS_I32 (k->partes[I].frusta[ZEPHYRUM].numerus, CXXVIII);
 }
 
+/* lineae scriptae frusti: pulsus intra frustum, offset in textu eius */
+interior vacuum
+_sectio_lineae (
+    CredoContextus* c)
+{
+                   Carmina  liber;
+    constans CarmenFrustum* f;
+
+    CREDO_NECESSE (_legere(c,
+        "<carmina><carmen titulus=\"l\">"
+        "<pars titulus=\"m\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>c d e f</textus></frustum>"
+        "<frustum mensura=\"2\"><textus!>g a | b c</textus></frustum>"
+        "</pars></carmen></carmina>", &liber));
+    f = liber.carmina[ZEPHYRUM].partes[ZEPHYRUM].frusta;
+    CREDO_AEQUALIS_I32 (f[ZEPHYRUM].numerus_linearum, ZEPHYRUM);
+    CREDO_VERUM (f[ZEPHYRUM].lineae == NIHIL);
+    CREDO_NECESSE (f[I].numerus_linearum == I);
+    CREDO_AEQUALIS_S64 (f[I].lineae[ZEPHYRUM].pulsus, (s64)MCMXX);
+    CREDO_AEQUALIS_I32 (f[I].lineae[ZEPHYRUM].offset, IV);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "legere", _sectio_legere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia", _sectio_vitia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lineae", _sectio_lineae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ordinarium", _sectio_ordinarium, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

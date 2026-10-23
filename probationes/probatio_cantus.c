@@ -850,6 +850,52 @@ _sectio_pulsus (
 }
 
 
+    /* ==================================================
+     * LINEAE: '|' servatae (pulsus totus, offset), sonum non mutant
+     * ================================================== */
+
+interior vacuum
+_sectio_lineae (
+    CredoContextus* c)
+{
+    Cantilena k;
+    Cantilena sine;
+
+    CREDO_NECESSE (_legere(c, "c d | e f | g", &k));
+    CREDO_NECESSE (k.numerus_linearum == II);
+    CREDO_AEQUALIS_S64 (k.lineae[ZEPHYRUM].pulsus, (s64)MCMXX);
+    CREDO_AEQUALIS_I32 (k.lineae[ZEPHYRUM].offset, IV);
+    CREDO_AEQUALIS_S64 (k.lineae[I].pulsus, (s64)MMMDCCCXL);
+    CREDO_AEQUALIS_I32 (k.lineae[I].offset, X);
+    /* sonum non mutant: eadem quadra sine lineis */
+    CREDO_NECESSE (_legere(c, "c d e f g", &sine));
+    CREDO_AEQUALIS_S64 (k.notae[IV].initium, sine.notae[IV].initium);
+    CREDO_AEQUALIS_S64 (k.longitudo, sine.longitudo);
+    CREDO_AEQUALIS_I32 (sine.numerus_linearum, ZEPHYRUM);
+    CREDO_VERUM (sine.lineae == NIHIL);
+
+    /* pulsus TOTUS trans mutationem temporis */
+    CREDO_NECESSE (_legere(c, "t60 c | t120 d |", &k));
+    CREDO_NECESSE (k.numerus_linearum == II);
+    CREDO_AEQUALIS_S64 (k.lineae[ZEPHYRUM].pulsus, (s64)CMLX);
+    CREDO_AEQUALIS_I32 (k.lineae[ZEPHYRUM].offset, VI);
+    CREDO_AEQUALIS_S64 (k.lineae[I].pulsus, (s64)MCMXX);
+    CREDO_AEQUALIS_I32 (k.lineae[I].offset, XV);
+
+    /* initio, iteratae, post pausam punctatam */
+    CREDO_NECESSE (_legere(c, "|r4. || c8", &k));
+    CREDO_NECESSE (k.numerus_linearum == III);
+    CREDO_AEQUALIS_S64 (k.lineae[ZEPHYRUM].pulsus, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (k.lineae[ZEPHYRUM].offset, ZEPHYRUM);
+    CREDO_AEQUALIS_S64 (k.lineae[I].pulsus, (s64)MCDXL);
+    CREDO_AEQUALIS_I32 (k.lineae[I].offset, V);
+    CREDO_AEQUALIS_S64 (k.lineae[II].pulsus, (s64)MCDXL);
+    CREDO_AEQUALIS_I32 (k.lineae[II].offset, VI);
+
+    /* vitium post lineam: nihil semi-lectum */
+    _vitium(c, "c | x", IV);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "notae", _sectio_notae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "pulsus", _sectio_pulsus, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -857,6 +903,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "tempus", _sectio_tempus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "mandata", _sectio_mandata, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia", _sectio_vitia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lineae", _sectio_lineae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "iussa", _sectio_iussa, NIHIL, NIHIL, NIHIL, NIHIL },
     { "praeparata", _sectio_praeparata, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sedes", _sectio_sedes, NIHIL, NIHIL, NIHIL, NIHIL },

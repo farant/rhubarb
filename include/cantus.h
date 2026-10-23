@@ -7,7 +7,9 @@
  *
  * DIALECTUS - progenies MML ('Music Macro Language': PLAY in BASIC
  * MCMLXXXI, chiptune Iaponica); litterae magnae et parvae aequae,
- * spatia et '|' (lineae taktus, ad legendum) ignorantur:
+ * spatia ignorantur; '|' (linea mensurae, ad legendum) sonum non mutat
+ * sed SERVATUR (Cantilena.lineae: ubi auctor eam posuit - censura
+ * lineas scriptas cum mensuris carminis comparat):
  *
  *   cantilena := { signum }
  *   signum    := nota | pausa | mandatum | ' ' | '|'
@@ -93,6 +95,12 @@ nomen structura {
             i32 offset;         /* octetus notae in textu */
 } CantusNota;
 
+/* linea mensurae scripta ('|') */
+nomen structura {
+    s64 pulsus;   /* ab initio cantilenae */
+    i32 offset;   /* octetus '|' in textu */
+} CantusLinea;
+
 nomen structura {
       CantusNota* notae;       /* e piscina, ordine initii */
              i32  numerus;
@@ -101,7 +109,10 @@ nomen structura {
     CantusTempus* tempora;     /* mutationes 't' ordine (e piscina);
                                 * prima ad pulsum 0 - CXX si textus 't'
                                 * initio caret */
-             i32 numerus_temporum;
+             i32  numerus_temporum;
+     CantusLinea* lineae;      /* ordine textus (e piscina); NIHIL si
+                                * nullae */
+             i32 numerus_linearum;
 } Cantilena;
 
 nomen structura {

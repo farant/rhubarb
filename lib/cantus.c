@@ -33,6 +33,8 @@ nomen structura {
              i32  numerus;
     CantusTempus* tempora;          /* NIHIL = transitus numerandi */
              i32  numerus_temporum;
+     CantusLinea* lineae;           /* NIHIL = transitus numerandi */
+             i32  numerus_linearum;
     CantusVitium* vitium;
 } CantusLector;
 
@@ -304,8 +306,20 @@ _currere (
               s32 valor;
               i32 pulsus;
 
-        si (s == ' ' || s == '\t' || s == '\n' || s == '\r' || s == '|')
+        si (s == ' ' || s == '\t' || s == '\n' || s == '\r')
         {
+            l->positio++;
+        }
+        alioquin si (s == '|')
+        {
+            si (l->lineae != NIHIL)
+            {
+                CantusLinea* linea = &l->lineae[l->numerus_linearum];
+
+                linea->pulsus = l->pulsus_totus;
+                linea->offset = offset;
+            }
+            l->numerus_linearum++;
             l->positio++;
         }
         alioquin si (s >= 'a' && s <= 'g')
@@ -415,6 +429,7 @@ _lectorem_parare (
           chorda  textus,
       CantusNota* notae,
     CantusTempus* tempora,
+     CantusLinea* lineae,
     CantusVitium* vitium)
 {
     l->textus               = textus;
@@ -433,6 +448,8 @@ _lectorem_parare (
     l->numerus              = ZEPHYRUM;
     l->tempora              = tempora;
     l->numerus_temporum     = I;   /* segmentum primum: CXX ad 0 */
+    l->lineae               = lineae;
+    l->numerus_linearum     = ZEPHYRUM;
     l->vitium               = vitium;
     si (tempora != NIHIL)
     {
@@ -452,6 +469,7 @@ cantus_legere (
      CantusLector  l;
        CantusNota* notae = NIHIL;
      CantusTempus* tempora;
+      CantusLinea* lineae = NIHIL;
 
     cantilena->notae             = NIHIL;
     cantilena->numerus           = ZEPHYRUM;
@@ -459,7 +477,9 @@ cantus_legere (
     cantilena->pulsus            = ZEPHYRUM;
     cantilena->tempora           = NIHIL;
     cantilena->numerus_temporum  = ZEPHYRUM;
-    _lectorem_parare(&l, textus, NIHIL, NIHIL, vitium);
+    cantilena->lineae            = NIHIL;
+    cantilena->numerus_linearum  = ZEPHYRUM;
+    _lectorem_parare(&l, textus, NIHIL, NIHIL, NIHIL, vitium);
     si (!_currere(&l))
     {
         redde FALSUM;
@@ -471,11 +491,18 @@ cantus_legere (
         notae = (CantusNota*)piscina_allocare(piscina,
             (memoriae_index)l.numerus * magnitudo(CantusNota));
     }
-    si (tempora == NIHIL || (l.numerus > ZEPHYRUM && notae == NIHIL))
+    si (l.numerus_linearum > ZEPHYRUM)
+    {
+        lineae = (CantusLinea*)piscina_allocare(piscina,
+            (memoriae_index)l.numerus_linearum
+                * magnitudo(CantusLinea));
+    }
+    si (   tempora == NIHIL || (l.numerus > ZEPHYRUM && notae == NIHIL)
+        || (l.numerus_linearum > ZEPHYRUM && lineae == NIHIL))
     {
         redde _vitium(&l, ZEPHYRUM, "piscina exhausta");
     }
-    _lectorem_parare(&l, textus, notae, tempora, vitium);
+    _lectorem_parare(&l, textus, notae, tempora, lineae, vitium);
     (vacuum)_currere(&l);
     cantilena->notae             = notae;
     cantilena->numerus           = l.numerus;
@@ -483,6 +510,8 @@ cantus_legere (
     cantilena->pulsus            = l.pulsus_totus;
     cantilena->tempora           = tempora;
     cantilena->numerus_temporum  = l.numerus_temporum;
+    cantilena->lineae            = lineae;
+    cantilena->numerus_linearum  = l.numerus_linearum;
     redde VERUM;
 }
 

@@ -402,8 +402,10 @@ _frustum_legere (
         n->praeparatum  = k.notae[i].praeparatum;
         n->offset       = k.notae[i].offset;
     }
-    frustum->numerus    = k.numerus;
-    frustum->longitudo  = k.pulsus;
+    frustum->numerus           = k.numerus;
+    frustum->longitudo         = k.pulsus;
+    frustum->lineae            = k.lineae;
+    frustum->numerus_linearum  = k.numerus_linearum;
     redde VERUM;
 }
 
