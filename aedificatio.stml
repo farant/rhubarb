@@ -557,7 +557,11 @@
   </actio>
   <!-- normae fixae -> C generatum (norma-plan-3 A5, oraculum III):
        bin/norma c per aedilis structum (regula R8) -->
-  <actio titulus="normae_fixae" genus="generator">
+  <actio titulus="normae_fixae" genus="generator" memorabilis="verum">
+    <!-- MEMORABILIS (2026-10-23, audit B): ingressus declarati contra
+         lectiones veras (FABRICA_LECTIONES in regeneratione) verificati
+         - plenos esse probatum; regeneratio omni cursu radicis
+         omittitur dum immutati. Vide lib/fabrica.worklog.md. -->
     <mandatum>
       <verbum! (>./tools/norma_c_regenerare.sh
       <verbum! (>probationes/fixa/norma/normae_fixae.norma
@@ -569,11 +573,16 @@
     <ingressus genus="fasciculus" via="tools/norma_struere.sh"/>
     <ingressus genus="manifestum" via="build/aedilis/norma/manifestum.stml"/>
     <ingressus genus="fasciculus" via="probationes/fixa/norma/normae_fixae.norma"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
     <exitus via="probationes/fixa/norma/normae_fixae.h" provenientia="regeneratio"/>
     <exitus via="probationes/fixa/norma/normae_fixae.c" provenientia="regeneratio"/>
   </actio>
   <!-- schema responsi vatis ex .norma (norma-plan-3 A6) -->
-  <actio titulus="vates_responsum" genus="generator">
+  <actio titulus="vates_responsum" genus="generator" memorabilis="verum">
+    <!-- MEMORABILIS (2026-10-23, audit B): ingressus declarati contra
+         lectiones veras (FABRICA_LECTIONES in regeneratione) verificati
+         - plenos esse probatum; regeneratio omni cursu radicis
+         omittitur dum immutati. Vide lib/fabrica.worklog.md. -->
     <mandatum>
       <verbum! (>./tools/norma_c_regenerare.sh
       <verbum! (>lib/vates_responsum.norma
@@ -585,6 +594,7 @@
     <ingressus genus="fasciculus" via="tools/norma_struere.sh"/>
     <ingressus genus="manifestum" via="build/aedilis/norma/manifestum.stml"/>
     <ingressus genus="fasciculus" via="lib/vates_responsum.norma"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
     <exitus via="include/vates_responsum_norma.h" provenientia="regeneratio"/>
     <exitus via="lib/vates_responsum_norma.c" provenientia="regeneratio"/>
   </actio>
@@ -838,7 +848,11 @@
        ingressus sunt (forma mutata = lector stalus, mensuratum).
        capsula_libri NON declarata: libri *.txt in .gitignore, ergo
        ex arbore non reproducibilis (fixura, non artificium). -->
-  <actio titulus="canones_cocti" genus="generator">
+  <actio titulus="canones_cocti" genus="generator" memorabilis="verum">
+    <!-- MEMORABILIS (2026-10-23, audit B): ingressus declarati contra
+         lectiones veras (FABRICA_LECTIONES in regeneratione) verificati
+         - plenos esse probatum; regeneratio omni cursu radicis
+         omittitur dum immutati. Vide lib/fabrica.worklog.md. -->
     <mandatum>
       <verbum! (>./tools/natura_canones.sh
     </mandatum>
@@ -891,7 +905,7 @@
     <exitus via="natura/cocta/vectura.canon" provenientia="regeneratio"/>
     <exitus via="natura/cocta/versio.canon" provenientia="regeneratio"/>
   </actio>
-  <actio titulus="lectores_cocti" genus="generator">
+  <actio titulus="lectores_cocti" genus="generator" memorabilis="verum">
     <mandatum>
       <verbum! (>./tools/canon_coquere.sh
     </mandatum>
@@ -910,6 +924,21 @@
     <ingressus genus="fasciculus" via="silva/formator.sh"/>
     <ingressus genus="fasciculus" via="silva/instrumenta/principalia/formator.c"/>
     <ingressus genus="plagulae" via="silva/fontes" suffixa=".c .h"/>
+    <!-- formator (artificia formata, 2026-10-23 audit B): fontes
+         structurae eius late (lib, materia, silva/instrumenta - manifesta
+         fragmenta_silva cyclum facerent) et capita QUAE currens legit
+         (include/, silva/instrumenta: nomina typorum), exclusiones,
+         scripta structurae -->
+    <ingressus genus="plagulae" via="lib" suffixa=".c"/>
+    <ingressus genus="plagulae" via="include" suffixa=".h"/>
+    <ingressus genus="plagulae" via="materia/fontes" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="silva/instrumenta" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="silva/instrumenta/principalia" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="silva" suffixa="formator_fontes_generata.sh"/>
+    <ingressus genus="fasciculus" via="silva/probationes/fixa/formatoris/exclusiones.txt"/>
+    <ingressus genus="fasciculus" via="silva/materia_substratum.sh"/>
+    <ingressus genus="fasciculus" via="tools/instrumentum_nectere.sh"/>
+    <ingressus genus="fasciculus" via="tools/vexilla.sh"/>
     <exitus via="include/quaestiones_lectio.h" provenientia="regeneratio"/>
     <exitus via="lib/quaestiones_lectio.c" provenientia="regeneratio"/>
     <exitus via="include/planta_lectio.h" provenientia="regeneratio"/>

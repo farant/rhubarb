@@ -3354,3 +3354,35 @@ First plant attempt: removing the `_attributa_clavis_c` reference made the array
 **Measured** (full radix composite, one member forced stale by a comment edit): every action judged once; 14.6 s, against 20.1 s for the comparable run before. With nothing stale (no preconditions run): 11.3 s.
 
 **Test:** probatio_fabrica_sanare "mutata intra locum", covering area / log / read log, new / changed / deleted outside, empty area, `S` lines outside vs inside, and missing snapshots. Plants: ignoring `S` lines → red; ignoring deletions → red; dropping the `area.mensura > 0` guard → red only after the test's empty area became a zero-length slice with non-NIHIL data. `chorda_incipit(x, prefix)` is FALSUM for a NIHIL-data prefix but VERUM for an empty one with data, so the guard matters when the empty area comes from a slice.
+
+## 2026-10-23 — audit B: four generators made memorabilis after tracing their real inputs
+
+**Why.** A no-change radix run (22.4 s under load) spent 14.4 s in 21 generator judgments: every run regenerated lectores_cocti, canones_cocti, tabulae_silvae, normae_fixae and vates_responsum (~12.5 s). memorabilis skips regeneration while the declared inputs are byte-identical, but it is only sound when the declaration is complete (the bearssl lesson).
+
+**Method.**
+- Run the generator's command in regeneration mode (`FABRICA_SCRIPTURA=<scratch>`) with `FABRICA_LECTIONES=<log>`. House tools note every filum_* read, existence query and directory listing.
+- Read the scripts for what shell/clang read: sourced scripts, hand-compiled sources.
+- Compare against `<ingressus>`.
+
+**Findings.**
+- **canones_cocti:** reads natura/*.genera plus the listing of natura/, already declared (plagulae natura .genera, tool manifest, instrumentum_domus) → memorabilis.
+- **normae_fixae, vates_responsum:** `bin/norma` reads ONLY its .norma file. The ~600 reads in the first trace came from `norma_struere.sh`, i.e. aedilis rebuilding the tool. Declared already: the .norma file, both scripts, `build/aedilis/norma/manifestum.stml`. Added `configuratio aedilis.stml` → memorabilis.
+- **lectores_cocti:** its outputs are FORMATTED. The formatter is built by `silva/formator.sh` and at run time lists include/, silva/fontes and silva/instrumenta and reads EVERY header in them (324 in include/: type names), plus `silva/probationes/fixa/formatoris/exclusiones.txt`. None of the formatter's build or run-time inputs were declared except formator.sh, formator.c and silva/fontes.
+  - Added: `plagulae` lib .c, include .h, materia/fontes, silva/instrumenta(/principalia); `formator_fontes_generata.sh` (as plagulae with an exact-name suffix); exclusiones.txt; materia_substratum.sh; instrumentum_nectere.sh; vexilla.sh.
+  - Broad, but nothing is lost: any include/*.h change invalidates it anyway (run-time input).
+- **tabulae_silvae: NOT done.** Its hand-built generator's closure (lib/*, include/*, materia, silva/instrumenta) cannot be declared:
+  - lib/ and include/ hold lectores_cocti's outputs, and lectores_cocti depends on tabulae_silvae through the formatter → `fabrica: cyclus inter actiones`;
+  - fragmenta_silva's closure manifests and `generare_fontes_generata.sh` cycle too: fragmenta_silva reads tabulae_silvae's outputs.
+  - Options left: an exact file list (closure of generator.c, ~90 paths) with a gate that checks it against the aedilis manifest; or a manifest the action writes into its OWN vestigium. The latter needs fabrica to treat an absent manifest as "regenerate" rather than failing to seal (today a seal failure fails the judgment).
+
+**Cycles learned.**
+- A `manifestum` / `fasciculus` input inside another action's vestigium or exitus makes that action a producer.
+- `plagulae` over a directory holding a generator's exitus does too: tabulae_silvae plus `plagulae silva generare_fontes_generata.sh` cycled.
+- `post` is ordering only, but it still closes a loop.
+- Bisect by adding one input at a time and checking `bin/fabrica probare probationes_radicis 2>&1 | grep -c 'cyclus inter'`.
+
+**Plants.**
+- Appending a comment to `tools/norma_c_regenerare.sh` → normae_fixae and vates_responsum regenerate (775/783 ms); restored → served again (the memo keeps the old key).
+- Appending a blank line to `silva/materia_substratum.sh` → lectores_cocti regenerates (1259 ms); restored → served.
+
+**Result.** A no-change radix run: ~11–12 s → 7.7 s (similar load). Left in it: tabulae_silvae ~1.3 s and capsula_assets ~0.35 s.
