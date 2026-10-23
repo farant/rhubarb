@@ -561,3 +561,130 @@ scriba_liber_praefixum (
     c.mensura  = l->index.mensura - (i32)(magnitudo(cauda) - I);
     redde c;
 }
+
+/* comites P5b: via notae comitis */
+interior chorda
+via_comitis (
+    constans character* praefixum,
+               Piscina* piscina)
+{
+    redde chorda_concatenare(chorda_ex_literis(praefixum, piscina),
+        chorda_ex_literis("/comes", piscina), piscina);
+}
+
+/* valores ut TEXTUS liberorum, non attributa: scriptor STML
+ * attributa cruda scribit ('"' in semita parsationem frangit), textum
+ * evadit (&lt; &amp;) et lector revocat */
+interior b32
+campum_addere (
+                StmlNodus* n,
+                  Piscina* piscina,
+      InternamentumChorda* intern,
+       constans character* titulus,
+                   chorda  valor)
+{
+    StmlNodus* c;
+    StmlNodus* t;
+
+    c = stml_elementum_creare(piscina, intern, titulus);
+    t = stml_textum_creare_ex_chorda(piscina, intern, valor);
+    redde c && t && stml_liberum_addere(c, t)
+        && stml_liberum_addere(n, c);
+}
+
+interior chorda
+campum_legere (
+             StmlNodus* radix,
+    constans character* titulus,
+               Piscina* piscina)
+{
+    StmlNodus* c;
+
+    c = stml_invenire_liberum(radix, titulus);
+    redde c ? stml_textus_internus(c, piscina) : chorda_vacua_libri();
+}
+
+b32
+scriba_liber_comitem_notare (
+                Volumen* volumen,
+    InternamentumChorda* intern,
+     constans character* praefixum,
+                 chorda  titulus,
+                 chorda  semita,
+                Piscina* piscina)
+{
+     StmlNodus* n;
+        chorda  via;
+        chorda  textus;
+        chorda  prior;
+           b32  inventum;
+
+    si (   !volumen || !intern || !piscina || !praefixum || !praefixum[
+            ZEPHYRUM])
+    {
+        redde FALSUM;
+    }
+    n = stml_elementum_creare(piscina, intern, "comes");
+    si (   !n
+        || (   titulus.mensura > ZEPHYRUM
+            && !campum_addere(n, piscina, intern, "titulus", titulus))
+        || (   semita.mensura > ZEPHYRUM
+            && !campum_addere(n, piscina, intern, "semita", semita)))
+    {
+        redde FALSUM;
+    }
+    textus  = stml_scribere(n, piscina, FALSUM);
+    via     = via_comitis(praefixum, piscina);
+    prior = volumen_plagulam_promere(volumen, via, piscina,
+        &inventum);
+    si (inventum && chorda_aequalis(prior, textus))
+    {
+        redde VERUM;
+    }
+    redde volumen_plagulam_condere(volumen, via, textus,
+        "scriba:comes");
+}
+
+b32
+scriba_liber_comitem_legere (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* praefixum,
+                 chorda* titulus,
+                 chorda* semita)
+{
+          chorda textus;
+    StmlResultus res;
+             b32 inventum;
+
+    si (titulus)
+    {
+        *titulus = chorda_vacua_libri();
+    }
+    si (semita)
+    {
+        *semita = chorda_vacua_libri();
+    }
+    si (   !piscina || !intern || !volumen || !praefixum || !titulus
+        || !semita)
+    {
+        redde FALSUM;
+    }
+    textus = volumen_plagulam_promere(volumen, via_comitis(praefixum,
+        piscina), piscina, &inventum);
+    si (!inventum)
+    {
+        redde FALSUM;
+    }
+    res = stml_legere_ex_literis(chorda_ut_cstr(textus, piscina),
+        piscina,
+        intern);
+    si (!res.successus || !res.elementum_radix)
+    {
+        redde FALSUM;
+    }
+    *titulus  = campum_legere(res.elementum_radix, "titulus", piscina);
+    *semita   = campum_legere(res.elementum_radix, "semita", piscina);
+    redde VERUM;
+}

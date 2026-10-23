@@ -82,6 +82,9 @@ nomen enumeratio {
 nomen structura {
                  chorda verba;      /* quod persona scripsit */
                  chorda conspectus; /* vacua = greges omnes */
+                 chorda clavis;     /* comites P5b: vacua = claves
+                                     * omnes; aliter ordines clavis
+                                     * huius solae (liber comes unus) */
                     i32 pagina;     /* 0 = prima (grege uno) */
                     i32 capacitas;  /* inventa per gregem aut paginam */
     IndagatioOrdoGregum ordo;

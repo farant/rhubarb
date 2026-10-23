@@ -499,6 +499,117 @@ librum_enumerare (
 
 
 /* ==================================================
+ * Genus 'comites' (libri comites visuum, ordo per paginam; comites
+ * P5b)
+ * ================================================== */
+
+interior vacuum*
+comites_computare (
+                 vacuum* ctx,
+    ConspectusRegistrum* repertorium,
+                 chorda  clavis,
+                Piscina* piscina)
+{
+       IndagatioFontes* f;
+   IndagatioConspectus* v;
+                   Xar* nomina;
+                chorda  praefixum;
+                chorda  liber;
+                chorda  titulus;
+                chorda  semita;
+                   i32  i;
+
+    (vacuum)repertorium;
+    f          = (IndagatioFontes*)ctx;
+    v          = conspectum_novum(piscina);
+    praefixum  = literis_iungere("comes/", clavis, piscina);
+    nomina     = xar_creare(piscina, (i32)magnitudo(chorda));
+    si (   !v || !nomina
+        || !scriba_liber_nomina_legere(piscina, f->intern, f->volumen,
+               chorda_ut_cstr(praefixum, piscina), nomina))
+    {
+        redde v;
+    }
+    /* titulus ex nota comitis; absens: locus ipse */
+    si (   !scriba_liber_comitem_legere(piscina, f->intern, f->volumen,
+               chorda_ut_cstr(praefixum, piscina), &titulus, &semita)
+        || titulus.mensura == ZEPHYRUM)
+    {
+        titulus = chorda_transcribere(clavis, piscina);
+    }
+    liber = literis_iungere("?liber=", praefixum, piscina);
+    per (i = ZEPHYRUM; i < xar_numerus(nomina); i++)
+    {
+        chorda  nomen_paginae;
+           Xar* lineae;
+
+        nomen_paginae  = *(chorda*)xar_obtinere(nomina, i);
+        lineae         = xar_creare(piscina, (i32)magnitudo(chorda));
+        (vacuum)scriba_liber_paginam_legere(piscina, f->intern,
+            f->volumen, chorda_ut_cstr(praefixum, piscina),
+            nomen_paginae, lineae);
+        si (xar_numerus(lineae) == ZEPHYRUM)
+        {
+            perge;
+        }
+        ordinem_addere(v, xar_numerus(nomina) > I
+            ? chorda_concatenare(chorda_concatenare(titulus,
+                  chorda_ex_literis(" \302\267 ", piscina), piscina),
+                  nomen_paginae, piscina)
+            : titulus, vacua(), lineas_iungere(lineae, ZEPHYRUM,
+            piscina),
+            chorda_concatenare(literis_iungere("scriba/", nomen_paginae,
+            piscina), liber, piscina));
+    }
+    redde v;
+}
+
+/* libri comites: plagulae "comes/<locus>/paginae" (locus '/'
+ * continet) */
+interior Xar*
+comites_enumerare (
+                 vacuum* ctx,
+    ConspectusRegistrum* repertorium,
+                Piscina* piscina)
+{
+    hic_manens constans character  praefixum[]  = "comes/";
+    hic_manens constans character  cauda[]      = "/paginae";
+                  IndagatioFontes* f;
+                              Xar* plagulae;
+                              Xar* claves;
+                              i32  p;
+                              i32  c;
+                              i32  i;
+
+    (vacuum)repertorium;
+    f         = (IndagatioFontes*)ctx;
+    p         = (i32)(magnitudo(praefixum) - I);
+    c         = (i32)(magnitudo(cauda) - I);
+    claves    = xar_creare(piscina, (i32)magnitudo(chorda));
+    plagulae  = volumen_plagulas_enumerare(f->volumen, piscina);
+    per (i = ZEPHYRUM; claves && plagulae
+        && i < xar_numerus(plagulae); i++)
+    {
+        chorda via = ((VolumenPlagula*)xar_obtinere(plagulae, i))->via;
+        chorda clavis;
+
+        si (   via.mensura                             <= p + c
+            || memcmp(via.datum, praefixum, (size_t)p) != ZEPHYRUM
+            || memcmp(via.datum + via.mensura - c, cauda, (size_t)c)
+               != ZEPHYRUM)
+        {
+            perge;
+        }
+        clavis.datum    = via.datum + p;
+        clavis.mensura  = via.mensura - p - c;
+        *(chorda*)xar_addere(claves) = chorda_transcribere(clavis,
+            piscina);
+    }
+    redde claves;
+}
+
+
+/* ==================================================
  * Genus 'personae' (personae per-rem + liber notarum)
  * ================================================== */
 
@@ -939,7 +1050,9 @@ indagatio_genera_registrare (
         si (   !genus_declarare(repertorium, "notae", fontes,
                    notas_computare, notas_enumerare, vitia)
             || !genus_declarare(repertorium, "liber", fontes,
-                   librum_computare, librum_enumerare, vitia))
+                   librum_computare, librum_enumerare, vitia)
+            || !genus_declarare(repertorium, "comites", fontes,
+                   comites_computare, comites_enumerare, vitia))
         {
             redde FALSUM;
         }

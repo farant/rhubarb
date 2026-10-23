@@ -2,7 +2,9 @@
  * res agendae, notae dierum, liber communis, personae cum notis -
  * tituli, contextus, semitae; renominatio, perfectio, deletio,
  * revocatio; paginae plures; rescriptio clavis unius; verificatio
- * post acta mixta; lectio sola. */
+ * post acta mixta; lectio sola. comites P5b: libri comites (titulus
+ * ex nota, semita scriba/<pagina>?liber=, nota absens: locus) et
+ * filtrum clavis. */
 
 #include "latina.h"
 #include "credo.h"
@@ -197,6 +199,7 @@ quaerere (
 {
     IndagatioPetitio p;
 
+    memset(&p, ZEPHYRUM, magnitudo(p));
     p.verba       = lit(verba, piscina);
     p.conspectus  = lit(conspectus ? conspectus : "", piscina);
     p.pagina      = ZEPHYRUM;
@@ -283,6 +286,28 @@ inventum_tituli (
     redde NIHIL;
 }
 
+/* comites P5b: numerus inventorum generis clavis unius */
+interior i32
+numerus_clavis (
+                 Mundus* m,
+     constans character* verba,
+     constans character* conspectus,
+     constans character* clavis,
+                Piscina* piscina)
+{
+           IndagatioPetitio  p;
+     constans IndagatioGrex* g;
+
+    memset(&p, ZEPHYRUM, magnitudo(p));
+    p.verba = lit(verba, piscina);
+    p.conspectus = lit(conspectus, piscina);
+    p.clavis = lit(clavis, piscina);
+    p.capacitas = XX;
+    p.ordo = INDAGATIO_ORDO_ALPHABETICUS;
+    g = grex(indagatio_quaerere(m->ix, &p, piscina), conspectus);
+    redde g ? g->numerus : ZEPHYRUM;
+}
+
 interior i32
 discrepantes (
     Mundus* m)
@@ -323,16 +348,17 @@ _probare_fontes (
     indagatio_destruere(m->ix);
     conspectus_registrum_destruere(m->repertorium);
 
+    /* libri: notae, liber, comites (P5b) */
     CREDO_VERUM(registrum_parare(m, NIHIL, NIHIL, m->volumen));
     q = conspectus_quaerenda(m->repertorium, c->piscina);
-    CREDO_AEQUALIS_I32(xar_numerus(q), II);
+    CREDO_AEQUALIS_I32(xar_numerus(q), III);
     indagatio_destruere(m->ix);
     conspectus_registrum_destruere(m->repertorium);
 
     CREDO_VERUM(registrum_parare(m, m->agenda, m->personae,
         m->volumen));
     q = conspectus_quaerenda(m->repertorium, c->piscina);
-    CREDO_AEQUALIS_I32(xar_numerus(q), IV);
+    CREDO_AEQUALIS_I32(xar_numerus(q), V);
     CREDO_FALSUM(indagatio_genera_registrare(NIHIL, &m->fontes, NIHIL));
     CREDO_FALSUM(indagatio_genera_registrare(m->repertorium, NIHIL,
         NIHIL));
@@ -751,6 +777,73 @@ _probare_sine_sanctis (
         ZEPHYRUM);
 }
 
+/* comites P5b: libri comites - titulus ex nota comitis (+ " · nomen"
+ * cum paginis pluribus), semita scriba/<pagina>?liber=comes/<locus>,
+ * nota absens: locus; pagina vacua nullum ordinem; filtrum clavis */
+interior vacuum
+_probare_comites (
+    CredoContextus* c)
+{
+                        Mundus* m;
+    constans IndagatioInventum* v;
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->ix);
+    CREDO_VERUM(paginam_scribere(m, "comes/calendarium/dies/2026-10-22",
+        "1", "rhubarb crumble"));
+    CREDO_VERUM(scriba_liber_comitem_notare(m->volumen, m->intern,
+        "comes/calendarium/dies/2026-10-22", lit("Notes \302\267 "
+        "Thu 22 Oct 2026", c->piscina),
+        lit("calendarium/dies/2026-10-22",
+        c->piscina), c->piscina));
+
+    CREDO_GRADUS("titulus ex nota, semita libri comitis");
+    v = inventum(m, "crumble", "comites", c->piscina);
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_CHORDA_AEQUALIS_LITERIS(v->titulus,
+        "Notes \302\267 Thu 22 Oct 2026");
+    CREDO_CHORDA_AEQUALIS_LITERIS(v->semita,
+        "scriba/1?liber=comes/calendarium/dies/2026-10-22");
+    CREDO_AEQUALIS_I32(numerus(m, "crumble", "liber", c->piscina),
+        ZEPHYRUM);
+
+    CREDO_GRADUS("paginae plures: nomen paginae in titulo; vacua nulla");
+    CREDO_VERUM(paginam_scribere(m, "comes/calendarium/dies/2026-10-22",
+        "jam", "rhubarb jam"));
+    /* pagina condita sine textu (committere vacuum nihil scribit) */
+    (vacuum)paginam_scribere(m, "comes/calendarium/dies/2026-10-22",
+        "vacua", "");
+    CREDO_NECESSE_NON_NIHIL(inventum_tituli(m, "rhubarb", "comites",
+        "Notes \302\267 Thu 22 Oct 2026 \302\267 1", c->piscina));
+    v = inventum_tituli(m, "rhubarb", "comites",
+        "Notes \302\267 Thu 22 Oct 2026 \302\267 jam", c->piscina);
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_CHORDA_AEQUALIS_LITERIS(v->semita,
+        "scriba/jam?liber=comes/calendarium/dies/2026-10-22");
+    CREDO_AEQUALIS_I32(numerus(m, "rhubarb", "comites", c->piscina),
+        II);
+
+    CREDO_GRADUS("nota absens: locus titulus");
+    CREDO_VERUM(paginam_scribere(m,
+        "comes/terminale/1_dextrum_terminale",
+        "1", "plumber rhubarb"));
+    v = inventum(m, "plumber", "comites", c->piscina);
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_CHORDA_AEQUALIS_LITERIS(v->titulus,
+        "terminale/1_dextrum_terminale");
+
+    CREDO_GRADUS("filtrum clavis: liber unus");
+    CREDO_AEQUALIS_I32(numerus(m, "rhubarb", "comites", c->piscina),
+        III);
+    CREDO_AEQUALIS_I32(numerus_clavis(m, "rhubarb", "comites",
+        "calendarium/dies/2026-10-22", c->piscina), II);
+    CREDO_AEQUALIS_I32(numerus_clavis(m, "rhubarb", "comites",
+        "terminale/1_dextrum_terminale", c->piscina), I);
+    CREDO_AEQUALIS_I32(numerus_clavis(m, "rhubarb", "comites",
+        "nemo", c->piscina), ZEPHYRUM);
+    CREDO_AEQUALIS_I32(discrepantes(m), ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "sancti",        _probare_sanctos,         NIHIL, mundum_purgare,
         NIHIL, NIHIL },
@@ -763,6 +856,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "notae",         _probare_notas,           mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "liber",         _probare_librum,          mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "comites",       _probare_comites,         mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "personae",      _probare_personas,        mundum_parare,
         mundum_purgare, NIHIL, NIHIL },

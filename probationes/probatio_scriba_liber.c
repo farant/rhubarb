@@ -359,10 +359,71 @@ _sectio_praefixum (
     volumen_claudere(vol);
 }
 
+/* comites P5b: nota comitis ('<praefixum>/comes') - titulus et semita
+ * visus comitati; scriptura iterata eadem actum non addit; semita
+ * vacua omittitur (STML: attributum vacuum "true" legeretur); signa
+ * '"', '&', '<' in valoribus integra redeunt */
+interior vacuum
+_sectio_comes (
+    CredoContextus* c)
+{
+    Volumen* vol;
+     chorda  titulus;
+     chorda  semita;
+        s64  acta;
+
+    (vacuum)c;
+    vol = volumen_temporarium(piscina, "probatio_scriba_liber");
+    CREDO_NECESSE_NON_NIHIL(vol);
+
+    CREDO_GRADUS("absens: FALSUM, vacuae");
+    titulus  = lit("x");
+    semita   = lit("x");
+    CREDO_FALSUM(scriba_liber_comitem_legere(piscina, intern, vol,
+        "comes/calendarium/dies/2026-10-22", &titulus, &semita));
+    CREDO_AEQUALIS_I32(titulus.mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(semita.mensura, ZEPHYRUM);
+
+    CREDO_GRADUS("scripta et lecta");
+    CREDO_VERUM(scriba_liber_comitem_notare(vol, intern,
+        "comes/calendarium/dies/2026-10-22",
+        lit("Notes \302\267 Thursday, October 22"),
+        lit("calendarium/dies/2026-10-22?notae.pagina=2&x=\"<y>\""),
+        piscina));
+    CREDO_VERUM(scriba_liber_comitem_legere(piscina, intern, vol,
+        "comes/calendarium/dies/2026-10-22", &titulus, &semita));
+    CREDO_CHORDA_AEQUALIS_LITERIS(titulus,
+        "Notes \302\267 Thursday, October 22");
+    CREDO_CHORDA_AEQUALIS_LITERIS(semita,
+        "calendarium/dies/2026-10-22?notae.pagina=2&x=\"<y>\"");
+
+    CREDO_GRADUS("iterum eadem: actum nullum");
+    acta = volumen_summa_actorum(vol);
+    CREDO_VERUM(scriba_liber_comitem_notare(vol, intern,
+        "comes/calendarium/dies/2026-10-22",
+        lit("Notes \302\267 Thursday, October 22"),
+        lit("calendarium/dies/2026-10-22?notae.pagina=2&x=\"<y>\""),
+        piscina));
+    CREDO_AEQUALIS_S64(volumen_summa_actorum(vol), acta);
+
+    CREDO_GRADUS("semita vacua (terminale): titulus solus");
+    CREDO_VERUM(scriba_liber_comitem_notare(vol, intern,
+        "comes/terminale/tmux/alpha/1",
+        lit("Notes \302\267 alpha / prima"),
+        lit(""), piscina));
+    CREDO_VERUM(scriba_liber_comitem_legere(piscina, intern, vol,
+        "comes/terminale/tmux/alpha/1", &titulus, &semita));
+    CREDO_CHORDA_AEQUALIS_LITERIS(titulus,
+        "Notes \302\267 alpha / prima");
+    CREDO_AEQUALIS_I32(semita.mensura, ZEPHYRUM);
+    volumen_claudere(vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "liber paginarum (scenarium I-IX)", _sectio_prima, _parare,
         NIHIL, NIHIL, NIHIL },
     { "praefixum", _sectio_praefixum, _parare, NIHIL, NIHIL, NIHIL },
+    { "comes", _sectio_comes, _parare, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

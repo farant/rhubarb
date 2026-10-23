@@ -129,4 +129,30 @@ chorda
 scriba_liber_praefixum (
     constans ScribaLiber* l);
 
+/* comites P5b: nota libri comitis in plagula '<praefixum>/comes'
+ * (<comes><titulus>..</titulus><semita>..</semita></comes>; textus
+ * liberorum, non attributa - scriptor attributa cruda scribit): titulus comitis ("Notes ·
+ * Thursday, October 22") et semita PLENA visus comitati (vacua: visus
+ * sine semitis, e.g. terminale - attributum omittitur). Scribitur
+ * solum si mutata (sequela actum non addit). */
+b32
+scriba_liber_comitem_notare (
+                Volumen* volumen,
+    InternamentumChorda* intern,
+     constans character* praefixum,
+                 chorda  titulus,
+                 chorda  semita,
+                Piscina* piscina);
+
+/* LECTIO SOLA; nota absens aut mala: FALSUM, *titulus et *semita
+ * vacuae */
+b32
+scriba_liber_comitem_legere (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* praefixum,
+                 chorda* titulus,
+                 chorda* semita);
+
 #endif /* SCRIBA_LIBER_H */

@@ -849,3 +849,17 @@ convention is shared by indagatio, sancti, nomenclator).
 Test trap: the D5 history test pressed Ctrl+I on a focused TERMINAL to
 check history - the terminal eats Ctrl+I (Tab). Checked the forward entry
 via historia_cursor instead.
+
+## 2026-10-22 - P5b host pieces
+
+- `facies.comitem_ponere` gained the paired route; `comitem_sequi` passes
+  the front's canonical route (`semitam_lateris_legere`: semita_legere ->
+  semita_ad_uri, empty for views without routes).
+- `vicus_comitem_ostendere`: show a GIVEN companion (search result) - seeds
+  `comes_secutus` from the current front so follow reacts only to later
+  front changes; focus left is DEFERRED (`focus_differtus`) to after the
+  next pulse's petitions, because opening a new pane forces focus right.
+  The Esc-cancel focus restore now uses the same deferred step
+  (ADITUS_REDDENDUS removed).
+- `facies.iter_semita`: a view computes an iter's route in code (same
+  pattern as facies.locus); empty = the manifest's semita.

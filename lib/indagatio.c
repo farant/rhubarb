@@ -825,6 +825,7 @@ indagatio_quaerere (
         " FROM ix JOIN ordines o ON o.id = ix.rowid"
         " WHERE ix MATCH ?1"
         " AND (coalesce(?2, '') = '' OR o.conspectus = ?2)"
+        " AND (coalesce(?3, '') = '' OR o.clavis = ?3)"
         " ORDER BY " ORDO_CONGRUENTIAE ", o.id");
     si (!e)
     {
@@ -833,6 +834,8 @@ indagatio_quaerere (
     }
     (vacuum)scrinium_ligare_textum(e, I, match);
     (vacuum)scrinium_ligare_textum(e, II, petitio->conspectus);
+    /* comites P5b: clavis una (liber comes) */
+    (vacuum)scrinium_ligare_textum(e, III, petitio->clavis);
     gradus = scrinium_gradi(e);
     dum (gradus == SCRINIUM_ORDO)
     {

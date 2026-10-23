@@ -200,3 +200,16 @@ private tmux server (build/pmx, own TMUX_TMPDIR, as probatio_vicus_saltus).
 Plants red: cache forever, client not matched, active window ignored,
 argument's server ignored, hooks unset. Not plantable: removing the cache
 (same answers, only cost).
+
+## 2026-10-22 - companion search results (comites P5b)
+
+The gate (`inventum_aperire`) splits `scriba/<page>?liber=<prefix>`; with a
+liber it goes to `comitem_inventum_aperire`: read the record via the left
+scriba's book context (`m->libri_ctx` = ContextusScribae - the montatio has
+no volume of its own, which is also why the RECORD is written in the
+`comitem_scribae_ponere` wrapper, not in scriba_comitem_ponere), open the
+paired route as a petition, then `vicus_comitem_ostendere` + page. No route
+(terminal companions): right pane unchanged and follow does not yank the
+left away, because ostendere seeds `comes_secutus` from the CURRENT front.
+Scriba's `facies.iter_semita` (`iter_scribae`) turns Cmd+F inside a
+companion into `indagatio?genus=comites&clavis=<locus>`.

@@ -151,9 +151,11 @@ nomen structura {
               vacuum* locus_titulus_ctx;
     /* comites P3: latus sinistrum librum comitem accipit - praefixum
      * ("comes/<locus>"; vacuum = liber domus) et titulus vectis
-     * ("Notes · Anna Rossi"). NIHIL = latus comites non fert. */
+     * ("Notes · Anna Rossi"); P5b: semita visus comitati (URI
+     * canonica frontis dextrae; vacua = visus sine semitis) - nota
+     * comitis ad quaestionem. NIHIL = latus comites non fert. */
                  b32  (*comitem_ponere)(vacuum* ctx, chorda praefixum,
-                          chorda titulus);
+                          chorda titulus, chorda semita);
               vacuum* comitem_ponere_ctx;
     /* praefixum libri visi (comes activus: "comes/..."); NIHIL =
      * comites non fert */
@@ -171,6 +173,14 @@ nomen structura {
                chorda  (*historiae_ambitus)(vacuum* ctx,
                            Piscina* piscina);
               vacuum* historiae_ambitus_ctx;
+    /* comites P5b: semita iteris (aditus) in CODICE - ut
+     * facies.locus manifestum supplet; vacua = semita manifesti
+     * (scriba: in comite "indagatio?genus=comites&clavis=<locus>").
+     * NIHIL = manifestum solum. */
+               chorda  (*iter_semita)(vacuum* ctx,
+                           constans character* titulus,
+                           Piscina* piscina);
+              vacuum* iter_semita_ctx;
 } VicusFacies;
 
 nomen vacuum (*VicusDescriptor)(
@@ -256,6 +266,10 @@ nomen structura {
                     i32 aditus_latus;     /* focus ante aditum */
                     s32 aditus_cursor;    /* cursor historiae dextrae
                                             * ante aditum; -I nullus */
+    /* focus post petitiones pulsus proximi (aditus revocatus, comes
+     * ostensus: aperitio nova focum dextrum cogit) - privatum */
+                    b32 focus_differtus;
+                    i32 focus_differtus_latus;
 } VicusTabula;
 
 /* S4 (Franus 2026-10-09): horologium in linea tabularum, ad dextrum
@@ -639,6 +653,19 @@ vicus_organa_ponere (
 b32
 vicus_comitem_commutare (
     Vicus* v);
+
+/* comites P5b (inventum comitis): latus sinistrum tabulae activae
+ * librum comitem praefixi ostendit (facies.comitem_ponere, ut Cmd+T,
+ * sed comes datus non frontis); sequela a fronte CURRENTI incipit
+ * (mutatio eius posterior comitem mutat - visus comitatus per
+ * petitionem apertus comitem eundem dat); focus sinister post
+ * petitiones pulsus proximi. FALSUM si sinistrum comites non fert. */
+b32
+vicus_comitem_ostendere (
+      Vicus* v,
+     chorda  praefixum,
+     chorda  titulus,
+     chorda  semita);
 
 /* comites P1: locus lateris (facies.locus aut ordinarium) et titulus
  * eius; vacua si latus non montatum */

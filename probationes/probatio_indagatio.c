@@ -587,6 +587,7 @@ quaerere (
 {
     IndagatioPetitio p;
 
+    memset(&p, ZEPHYRUM, magnitudo(p));
     p.verba       = lit(verba, piscina);
     p.conspectus  = lit(conspectus ? conspectus : "", piscina);
     p.pagina      = pagina;

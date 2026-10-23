@@ -50,9 +50,9 @@ nomen structura {
 /* comites P5a: gradus aditus tabulae (VicusTabula.aditus_gradus) */
 #define ADITUS_NULLUS      ZEPHYRUM
 #define ADITUS_PENDENS     I     /* prompta advocata aperta */
-#define ADITUS_REVOCANDUS  II    /* Esc eam clausit: pulsus revocat */
-#define ADITUS_REDDENDUS   III   /* historia petita: focus post
-                                  * petitiones redit */
+#define ADITUS_REVOCANDUS  II    /* Esc eam clausit: pulsus revocat
+                                  * (historia petita, focus
+                                  * differtus) */
 
 /* D5: brevitas hospitis (vicus_brevitatem_addere): Cmd + runa +
  * modificantes (praeter Cmd, exacte) -> vicus_advocare(genus) */
@@ -1431,7 +1431,9 @@ aditum_revocare (
     {
         redde;
     }
-    t->aditus_gradus = ADITUS_REDDENDUS;
+    t->aditus_gradus          = ADITUS_NULLUS;
+    t->focus_differtus        = VERUM;
+    t->focus_differtus_latus  = t->aditus_latus;
     si (   v->petitiones && t->aditus_cursor >= ZEPHYRUM
         && t->historia[VICUS_DEXTRUM]
         && t->aditus_cursor
@@ -1440,6 +1442,22 @@ aditum_revocare (
     {
         (vacuum)historiae_petitionem_addere(v, t, VICUS_DEXTRUM,
             t->aditus_cursor);
+    }
+}
+
+/* focus differtus (aditus revocatus, comes ostensus): post
+ * petitiones, quae focum dextrum cogere possunt */
+interior vacuum
+focum_differtum_applicare (
+    Vicus* v)
+{
+    VicusTabula* t;
+
+    t = vicus_activa(v);
+    si (t && t->focus_differtus)
+    {
+        t->focus_differtus = FALSUM;
+        (vacuum)vicus_focum_ponere(v, t->focus_differtus_latus);
     }
 }
 
@@ -1453,12 +1471,6 @@ aditum_finire (
     t = vicus_activa(v);
     si (!t)
     {
-        redde;
-    }
-    si (t->aditus_gradus == ADITUS_REDDENDUS)
-    {
-        t->aditus_gradus = ADITUS_NULLUS;
-        (vacuum)vicus_focum_ponere(v, t->aditus_latus);
         redde;
     }
     l = frons_acervi(t);
@@ -3700,6 +3712,7 @@ vicus_aditum_sequi (
     constans OrganumIter* it;
            PetitioAcervi* p;
                   chorda  genus;
+                  chorda  semita;
                      i32  i;
 
     t = v ? vicus_activa(v) : NIHIL;
@@ -3711,13 +3724,26 @@ vicus_aditum_sequi (
     {
         redde FALSUM;
     }
+    /* P5b: semita in codice (facies.iter_semita) manifestum supplet */
+    semita = it->semita;
+    si (l->facies.iter_semita)
+    {
+        chorda c;
+
+        c = l->facies.iter_semita(l->facies.iter_semita_ctx, titulus,
+            v->piscina);
+        si (!chorda_vacua(c))
+        {
+            semita = c;
+        }
+    }
     /* semita nulla: latus ipsum (focus manet) */
-    si (chorda_vacua(it->semita))
+    si (chorda_vacua(semita))
     {
         redde it->advocare && l->facies.advocatum
             && l->facies.advocatum(l->facies.advocatum_ctx);
     }
-    genus = it->semita;
+    genus = semita;
     per (i = ZEPHYRUM; i < genus.mensura; i++)
     {
         si (genus.datum[i] == '/' || genus.datum[i] == '?')
@@ -3727,7 +3753,7 @@ vicus_aditum_sequi (
         }
     }
     si (!petitionem_addere(v, chorda_ut_cstr(genus, v->piscina),
-            chorda_ut_cstr(it->semita, v->piscina), VERUM))
+            chorda_ut_cstr(semita, v->piscina), VERUM))
     {
         redde FALSUM;
     }
@@ -3800,6 +3826,25 @@ comes_activus (
         && memcmp(praefixum.datum, "comes/", VI) == ZEPHYRUM;
 }
 
+/* comites P5b: semita canonica lateris ut URI (in v->piscina - nota
+ * comitis eam statim scribit); vacua si latus sine semitis */
+interior chorda
+semitam_lateris_legere (
+         Vicus* v,
+    VicusLatus* l)
+{
+    StmlNodus* semita;
+
+    si (!v->organa || !l || !l->montata || !l->facies.ramus)
+    {
+        redde chorda_nulla_vici();
+    }
+    semita = semita_legere(v->organa, v->organa_ctx, l->facies.ramus,
+        chorda_ut_cstr(l->genus, v->piscina), v->piscina, v->intern);
+    redde semita ? semita_ad_uri(v->organa, v->organa_ctx, semita,
+        v->piscina) : chorda_nulla_vici();
+}
+
 /* comites P3: comes frontis dextrae in sinistro ponere ("comes/" +
  * locus, "Notes · " + titulus loci) si differt a secuto (aut cogere);
  * VERUM si positus aut iam aequalis */
@@ -3831,7 +3876,7 @@ comitem_sequi (
         v->piscina), vicus_latus_locus_titulus(v, f, v->piscina),
         v->piscina);
     ok = s->facies.comitem_ponere(s->facies.comitem_ponere_ctx,
-        praefixum, titulus);
+        praefixum, titulus, semitam_lateris_legere(v, f));
     si (ok)
     {
         t->comes_secutus = praefixum;
@@ -3925,6 +3970,7 @@ vicus_pulsare (
     {
         xar_vacare(v->petitiones);
     }
+    focum_differtum_applicare(v);
     aditum_finire(v);
     per (i = ZEPHYRUM; i < xar_numerus(v->tabulae); i++)
     {
@@ -4048,6 +4094,37 @@ vicus_causa (
 }
 
 b32
+vicus_comitem_ostendere (
+      Vicus* v,
+     chorda  praefixum,
+     chorda  titulus,
+     chorda  semita)
+{
+    VicusTabula* t;
+     VicusLatus* s;
+     VicusLatus* f;
+
+    t = v ? vicus_activa(v) : NIHIL;
+    s = t ? &t->sinistrum : NIHIL;
+    si (   !s || !s->montata || !s->facies.comitem_ponere
+        || praefixum.mensura == ZEPHYRUM
+        || !s->facies.comitem_ponere(s->facies.comitem_ponere_ctx,
+               praefixum, titulus, semita))
+    {
+        redde FALSUM;
+    }
+    /* sequela a fronte currenti: comes non statim ad eam redit */
+    f = frons_acervi(t);
+    t->comes_secutus = (f && f->montata)
+        ? chorda_concatenare(chorda_ex_literis("comes/", v->piscina),
+              vicus_latus_locus(v, f, v->piscina), v->piscina)
+        : chorda_nulla_vici();
+    t->focus_differtus        = VERUM;
+    t->focus_differtus_latus  = VICUS_SINISTRUM;
+    redde VERUM;
+}
+
+b32
 vicus_comitem_commutare (
     Vicus* v)
 {
@@ -4068,7 +4145,8 @@ vicus_comitem_commutare (
     si (comes_activus(currens))
     {
         ok = s->facies.comitem_ponere(s->facies.comitem_ponere_ctx,
-            chorda_nulla_vici(), chorda_nulla_vici());
+            chorda_nulla_vici(), chorda_nulla_vici(),
+            chorda_nulla_vici());
         t->comes_secutus = chorda_nulla_vici();
     }
     alioquin

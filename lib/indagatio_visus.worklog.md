@@ -57,3 +57,10 @@ one-character forms take the "produced character" path. Plants red:
 Up/Down swapped, Shift ignored, first-letter match back, Down wired to
 k. Arrows inside the open prompt still do nothing (Enter there commits
 the query) - not asked for.
+
+## 2026-10-22 - field `clavis` (comites P5b)
+
+Search pane field `clavis` (status, persistent): passed as
+`IndagatioPetitio.clavis` and part of the result-cache key. A route that
+omits it clears it (like q/genus/pagina); Esc out of a one-cluster view
+clears it with genus.

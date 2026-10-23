@@ -22,6 +22,11 @@
             historia="impelle"
             nota="conspectus gregis unius (res, notae, liber,
                   personae); absens = greges omnes"/>
+    <campus nomen="clavis" typus="textus" vita="persistens"
+            scriptor="indagatio.agere" semita="status"
+            historia="impelle"
+            nota="comites P5b: clavis una gregis (liber comes: locus,
+                  Cmd+F in comite); absens = claves omnes"/>
     <campus nomen="pagina" typus="numerus" vita="persistens"
             scriptor="indagatio.agere" semita="status"
             nota="pagina gregis (0 = prima); ad absens redit cum q aut

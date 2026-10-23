@@ -133,3 +133,16 @@ code sits above the saints context in vicus_applicatio.c). Cluster
 order unchanged (best hit; Fran 10-22: it has felt right). Plants red:
 kind not registered, feast dropped, paragraphs/patronages not
 indexed, wrong route, vicus registry without the corpus.
+
+## 2026-10-22 - key filter + kind `comites` (comites P5b)
+
+`IndagatioPetitio.clavis` (empty = all) -> `AND (coalesce(?3,'')='' OR
+o.clavis = ?3)`; rows already stored their key. Every caller that builds a
+petition field by field must memset it first (probatio_indagatio did not).
+Kind `comites` (indagatio_genera): key = locus, which contains '/', so the
+declaration uses a SUFFIX - `spatium="comes/{clavis}/paginae"`;
+clavis_ex_spatio then takes everything up to the suffix. Consequence: writes
+to `comes/<locus>/comes` (the record) do not invalidate; a label-only change
+shows after the next page edit of that companion. Rows: one per non-empty
+page, title = record label (fallback: locus) + " · <page>" when >1 page,
+route `scriba/<page>?liber=comes/<locus>`.

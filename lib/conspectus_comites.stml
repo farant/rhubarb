@@ -1,0 +1,11 @@
+<!-- conspectus_comites.stml - genus quaerendum 'comites': libri comites
+     visuum (comites P5b; C: lib/indagatio_genera.c). Clavis = locus
+     ("calendarium/dies/2026-10-22", '/' continet - suffixum
+     '/paginae' eam terminat). Ordo per paginam: titulus ex nota
+     comitis ('comes/<locus>/comes'), semita scriba/<pagina>?liber=.
+     Infixa in lib/conspectus_infixa.c per tools/conspectus_infigere.sh. -->
+<conspectus nomen="comites" versio="1">
+  <clavis typus="textus"/>
+  <fons spatium="comes/{clavis}/paginae"/>
+  <quaerendum genus="Companion notes"/>
+</conspectus>

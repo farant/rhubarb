@@ -11,7 +11,10 @@
  * pingitur solum cum comite. P3b: liber quisque historiam suam habet
  * (Ctrl+O in comite librum numquam mutat). P5a: Cmd+F = aditus
  * "quaestio" lateris focati (scriba, calendarium, nomenclator, sancti,
- * indagatio; terminale nihil). */
+ * indagatio; terminale nihil). P5b: comites quaeruntur - nota comitis
+ * (titulus, semita visus), inventum comitis: comes sinister ad
+ * paginam, visus comitatus dexter; Cmd+F in comite = liber ipse;
+ * comes terminalis (sine semita): sinister solus. */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -28,6 +31,8 @@
 #include "vicus_applicatio.h"
 #include "scriba_applicatio.h"
 #include "scriba_liber.h"
+#include "scriba_documentum.h"
+#include "tabula_characterum.h"
 #include "manus_ludus.h"
 #include "credo.h"
 #include <stdio.h>
@@ -617,6 +622,155 @@ _sectio_aditus (
     CREDO_VERUM(frons_generis_est(x, "terminale"));
 }
 
+/* paginam currentem comitis sinistri textu dato scribere */
+interior b32
+comitem_scribere (
+                 Mundus* x,
+     constans character* textus,
+                Piscina* piscina)
+{
+       ScribaMontatio* m;
+    TabulaCharacterum  folium;
+
+    m = scriba_sinistra(x);
+    si (!m || !m->doc)
+    {
+        redde FALSUM;
+    }
+    tabula_ex_literis_cum_dimensionibus(&folium, piscina,
+        m->doc->latitudo, m->doc->altitudo, textus);
+    redde scriba_documentum_committere(m->doc, &folium) > ZEPHYRUM;
+}
+
+/* Cmd+Shift+F, verba, Enter (prompta), deinde Enter (inventum primum) */
+interior vacuum
+quaerere_et_aperire (
+                 Mundus* x,
+     constans character* verba)
+{
+    clavis(x, 'f', (i32)(MOD_SUPER | MOD_SHIFT));
+    (vacuum)manus_ludus_scribere(x->m, verba);
+    clavis(x, (character)XIII, ZEPHYRUM);
+    clavis(x, (character)XIII, ZEPHYRUM);
+    (vacuum)vicus_pulsare(x->v);
+    dispensator_recomponere(x->app.d);
+}
+
+interior b32
+incipit (
+                 chorda  c,
+     constans character* praefixum)
+{
+    redde c.mensura >= (i32)strlen(praefixum)
+        && memcmp(c.datum, praefixum, strlen(praefixum)) == ZEPHYRUM;
+}
+
+/* comites P5b: nota comitis, inventum comitis (sinister + dexter),
+ * Cmd+F in comite, comes sine semita */
+interior vacuum
+_sectio_quaerendi (
+    CredoContextus* c)
+{
+                 Mundus* x;
+    InternamentumChorda* intern;
+                 chorda  titulus;
+                 chorda  semita;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x && x->v);
+    intern = internamentum_creare(c->piscina);
+
+    CREDO_GRADUS("Cmd+T in die: nota comitis (titulus, semita)");
+    CREDO_VERUM(vicus_focum_ponere(x->v, VICUS_DEXTRUM));
+    ostendere(x, "calendarium", "calendarium/dies/2026-10-22");
+    dispensator_recomponere(x->app.d);
+    clavis(x, 't', (i32)MOD_SUPER);
+    CREDO_VERUM(comes_est(x, "comes/calendarium/dies/2026-10-22",
+        "Notes \302\267 Thu 22 Oct 2026", "1"));
+    CREDO_VERUM(scriba_liber_comitem_legere(c->piscina, intern,
+        x->volumen, "comes/calendarium/dies/2026-10-22", &titulus,
+        &semita));
+    CREDO_CHORDA_AEQUALIS_LITERIS(titulus,
+        "Notes \302\267 Thu 22 Oct 2026");
+    CREDO_VERUM(incipit(semita, "calendarium/dies/2026-10-22"));
+    CREDO_VERUM(comitem_scribere(x, "rhubarb crumble for Thursday",
+        c->piscina));
+    /* pagina secunda per librum applicationis ipsum */
+    {
+           ScribaMontatio* m;
+         ScribaDocumentum* d;
+        TabulaCharacterum  folium;
+
+        m = scriba_sinistra(x);
+        CREDO_NECESSE(m && m->liber);
+        d = scriba_liber_paginam_condere(m->liber,
+            chorda_ex_literis("jam",
+            c->piscina));
+        CREDO_NECESSE_NON_NIHIL(d);
+        tabula_ex_literis_cum_dimensionibus(&folium, c->piscina,
+            d->latitudo, d->altitudo, "gooseberry fool");
+        CREDO_VERUM(scriba_documentum_committere(d, &folium)
+            > ZEPHYRUM);
+    }
+
+    CREDO_GRADUS("inventum comitis: comes ad paginam, dies dexter");
+    clavis(x, 't', (i32)MOD_SUPER);
+    CREDO_VERUM(comes_est(x, "", NIHIL, "1"));
+    CREDO_VERUM(vicus_focum_ponere(x->v, VICUS_DEXTRUM));
+    ostendere(x, "nomenclator", "nomenclator/1");
+    dispensator_recomponere(x->app.d);
+    quaerere_et_aperire(x, "gooseberry");
+    CREDO_VERUM(comes_est(x, "comes/calendarium/dies/2026-10-22",
+        "Notes \302\267 Thu 22 Oct 2026", "jam"));
+    CREDO_VERUM(locus_est(x, "calendarium/dies/2026-10-22",
+        "Thu 22 Oct 2026", c->piscina));
+    CREDO_VERUM(focus_sinister(x));
+
+    CREDO_GRADUS("Cmd+F in comite: liber ipse");
+    clavis(x, 'f', (i32)MOD_SUPER);
+    CREDO_VERUM(frontis_campus_est(x, "indagatio", "genus", "comites"));
+    CREDO_VERUM(frontis_campus_est(x, "indagatio", "clavis",
+        "calendarium/dies/2026-10-22"));
+    CREDO_VERUM(frontis_campus_est(x, "indagatio", "prompta",
+        "quaestio"));
+    clavis(x, (character)XXVII, ZEPHYRUM);
+
+    CREDO_GRADUS("comes terminalis (sine semita): sinister solus");
+    CREDO_VERUM(vicus_activam_ponere(x->v, "1"));
+    CREDO_VERUM(vicus_focum_ponere(x->v, VICUS_DEXTRUM));
+    (vacuum)vicus_pulsare(x->v);
+    dispensator_recomponere(x->app.d);
+    clavis(x, 't', (i32)MOD_SUPER);
+    CREDO_VERUM(comes_est(x, "comes/terminale/1_dextrum_terminale",
+        "Notes \302\267 Terminal", "1"));
+    CREDO_VERUM(scriba_liber_comitem_legere(c->piscina, intern,
+        x->volumen, "comes/terminale/1_dextrum_terminale", &titulus,
+        &semita));
+    CREDO_AEQUALIS_I32(semita.mensura, ZEPHYRUM);
+    CREDO_VERUM(comitem_scribere(x, "plumber xyzzy", c->piscina));
+    clavis(x, 't', (i32)MOD_SUPER);
+    CREDO_VERUM(vicus_focum_ponere(x->v, VICUS_DEXTRUM));
+    dispensator_recomponere(x->app.d);
+    quaerere_et_aperire(x, "xyzzy");
+    CREDO_VERUM(comes_est(x, "comes/terminale/1_dextrum_terminale",
+        "Notes \302\267 Terminal", "1"));
+    CREDO_VERUM(frons_generis_est(x, "indagatio"));
+    (vacuum)vicus_pulsare(x->v);
+    CREDO_VERUM(comes_est(x, "comes/terminale/1_dextrum_terminale",
+        "Notes \302\267 Terminal", "1"));
+
+    CREDO_GRADUS("Cmd+F in comite terminalis: alterius liber non");
+    clavis(x, 'f', (i32)MOD_SUPER);
+    CREDO_VERUM(frontis_campus_est(x, "indagatio", "clavis",
+        "terminale/1_dextrum_terminale"));
+    (vacuum)manus_ludus_scribere(x->m, "gooseberry");
+    clavis(x, (character)XIII, ZEPHYRUM);
+    clavis(x, (character)XIII, ZEPHYRUM);
+    (vacuum)vicus_pulsare(x->v);
+    CREDO_VERUM(comes_est(x, "comes/terminale/1_dextrum_terminale",
+        "Notes \302\267 Terminal", "1"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "calendarium", _sectio_calendarium, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
@@ -626,6 +780,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "historia_comitis", _sectio_historia_comitis, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
+    { "quaerendi", _sectio_quaerendi, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
     { "aditus", _sectio_aditus, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

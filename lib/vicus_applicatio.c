@@ -1083,15 +1083,58 @@ librum_scribae (
     redde l;
 }
 
-/* comites P3: facies scribae - liber comes et praefixum currens */
+/* comites P3: facies scribae - liber comes et praefixum currens;
+ * P5b: nota comitis (titulus, semita visus) in spatio libri - porta
+ * librorum (ContextusScribae) volumen fert, montatio non */
 interior b32
 comitem_scribae_ponere (
      vacuum* ctx,
      chorda  praefixum,
-     chorda  titulus)
+     chorda  titulus,
+     chorda  semita)
 {
-    redde scriba_comitem_ponere((ScribaMontatio*)ctx, praefixum,
-        titulus);
+      ScribaMontatio* m;
+    ContextusScribae* cs;
+
+    m = (ScribaMontatio*)ctx;
+    si (!scriba_comitem_ponere(m, praefixum, titulus))
+    {
+        redde FALSUM;
+    }
+    cs = m ? (ContextusScribae*)m->libri_ctx : NIHIL;
+    si (cs && praefixum.mensura > ZEPHYRUM)
+    {
+        (vacuum)scriba_liber_comitem_notare(cs->volumen, cs->intern,
+            chorda_ut_cstr(praefixum, cs->piscina), titulus, semita,
+            cs->piscina);
+    }
+    redde VERUM;
+}
+
+/* comites P5b: Cmd+F in comite = liber ipse (genus comitum, clavis =
+ * locus); liber domus: semita manifesti (indagatio?genus=liber) */
+interior chorda
+iter_scribae (
+                 vacuum* ctx,
+     constans character* titulus,
+                Piscina* piscina)
+{
+    ScribaMontatio* m;
+            chorda  pr;
+
+    m   = (ScribaMontatio*)ctx;
+    pr  = (m && m->liber) ? scriba_liber_praefixum(m->liber)
+                          : chorda_ex_literis("", piscina);
+    si (   strcmp(titulus, "quaestio")    != ZEPHYRUM
+        || pr.mensura                     <= (i32)strlen("comes/")
+        || memcmp(pr.datum, "comes/", VI) != ZEPHYRUM)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    pr.datum    += VI;
+    pr.mensura  -= VI;
+    redde chorda_concatenare(chorda_ex_literis(
+        "indagatio?genus=comites&clavis=", piscina), pr, piscina);
 }
 
 interior chorda
@@ -1266,6 +1309,9 @@ scribam_describere (
     /* comites P3b: liber quisque historiam suam habet */
     f->historiae_ambitus      = comitem_scribae_currentem;
     f->historiae_ambitus_ctx  = m;
+    /* comites P5b: Cmd+F in comite = liber ipse */
+    f->iter_semita      = iter_scribae;
+    f->iter_semita_ctx  = m;
 }
 
 /* comites P1: tituli locorum laterum sine titulo proprio */
@@ -3432,6 +3478,45 @@ nomen structura {
  * communis "scriba/<nomen>" nondum semita (S3c): pagina in latere
  * sinistro tabulae activae (Franus 2026-10-22), focus ibi; sinistrum
  * non scriba - ut '$scriba(nomen)' in acervo */
+/* comites P5b: inventum comitis ("scriba/<pagina>?liber=comes/..."):
+ * visus comitatus dexter ex nota comitis (petitio; semita nulla aut
+ * mala - dexter manet), comes in sinistro ad paginam, focus sinister
+ * post petitiones (vicus_comitem_ostendere) */
+interior b32
+comitem_inventum_aperire (
+    ContextusIndagationis* ci,
+               VicusLatus* sinistrum,
+                   chorda  liber,
+                   chorda  pagina,
+                  Piscina* scheda)
+{
+      ScribaMontatio* m;
+    ContextusScribae* cs;
+              chorda  titulus;
+              chorda  semita;
+              chorda  vitium;
+
+    si (   !sinistrum || !sinistrum->montata
+        || !chorda_aequalis_literis(sinistrum->genus, "scriba"))
+    {
+        redde FALSUM;
+    }
+    m   = (ScribaMontatio*)sinistrum->montatio;
+    cs  = (ContextusScribae*)m->libri_ctx;
+    si (!cs)
+    {
+        redde FALSUM;
+    }
+    (vacuum)scriba_liber_comitem_legere(scheda, cs->intern, cs->volumen,
+        chorda_ut_cstr(liber, scheda), &titulus, &semita);
+    si (semita.mensura > ZEPHYRUM)
+    {
+        (vacuum)semitam_aperire(ci->via, semita, scheda, &vitium);
+    }
+    redde vicus_comitem_ostendere(ci->vicus, liber, titulus, semita)
+        && scriba_paginam_ostendere(m, pagina);
+}
+
 interior b32
 inventum_aperire (
      vacuum* ctx,
@@ -3442,6 +3527,8 @@ inventum_aperire (
                VicusLatus* sinistrum;
                    chorda  titulus;
                    chorda  vitium;
+                   chorda  liber;
+                      i32  i;
 
     ci = (ContextusIndagationis*)ctx;
     si (!ci || !ci->via)
@@ -3455,12 +3542,41 @@ inventum_aperire (
     {
         titulus.datum    = semita.datum + VII;
         titulus.mensura  = semita.mensura - VII;
+        /* P5b: "?liber=<praefixum>" - pagina libri comitis */
+        liber.datum    = NIHIL;
+        liber.mensura  = ZEPHYRUM;
+        per (i = ZEPHYRUM; i < titulus.mensura; i++)
+        {
+            si (titulus.datum[i] == '?')
+            {
+                liber.datum      = titulus.datum + i + I;
+                liber.mensura    = titulus.mensura - i - I;
+                titulus.mensura  = i;
+                frange;
+            }
+        }
+        si (   liber.mensura > VI
+            && memcmp(liber.datum, "liber=", VI) == ZEPHYRUM)
+        {
+            liber.datum    += VI;
+            liber.mensura  -= VI;
+        }
+        alioquin
+        {
+            liber.mensura = ZEPHYRUM;
+        }
         si (!nomen_paginae_validum(titulus))
         {
             redde FALSUM;
         }
         sinistrum = vicus_latus(vicus_activa(ci->vicus),
             VICUS_SINISTRUM);
+        si (liber.mensura > ZEPHYRUM)
+        {
+            redde comitem_inventum_aperire(ci, sinistrum, liber,
+                titulus,
+                scheda);
+        }
         si (   sinistrum && sinistrum->montata
             && chorda_aequalis_literis(sinistrum->genus, "scriba")
             && scriba_paginam_ostendere(

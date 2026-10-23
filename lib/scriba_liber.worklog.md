@@ -58,3 +58,13 @@ in one helper `vias_libri`. `lineas_legere` now runs on the same
 internals (`nomina_legere` + `paginam_legere`), behaviour unchanged
 (steps IX pass as before). Step X checks volumen_summa_actorum and
 _plagularum are unchanged across every read.
+
+## 2026-10-22 - companion record (comites P5b)
+
+`scriba_liber_comitem_notare/legere`: plagula `<prefix>/comes` holding the
+companion label and the paired view's route. First version used attributes
+and broke on a route containing `"`: the STML writer emits attribute values
+RAW (only text content is escaped, `_scribere_evasus`, and unescaped on
+read). So the values are TEXT children: `<comes><titulus>..</titulus>
+<semita>..</semita></comes>`. Written only when the serialized text differs
+(follow mode would otherwise add an act per switch); empty route omitted.

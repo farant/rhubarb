@@ -271,6 +271,7 @@ _fructus (
     memset(&petitio, ZEPHYRUM, magnitudo(petitio));
     petitio.verba       = _verba(m, vivus);
     petitio.conspectus  = _campus(m, "genus");
+    petitio.clavis      = _campus(m, "clavis");
     petitio.ordo        = INDAGATIO_ORDO_OPTIMUS;
     si (petitio.conspectus.mensura > ZEPHYRUM)
     {
@@ -285,6 +286,8 @@ _fructus (
     chorda_aedificator_appendere_chorda(a, petitio.verba);
     chorda_aedificator_appendere_character(a, '\x1f');
     chorda_aedificator_appendere_chorda(a, petitio.conspectus);
+    chorda_aedificator_appendere_character(a, '\x1f');
+    chorda_aedificator_appendere_chorda(a, petitio.clavis);
     sprintf(numerus, "\x1f%u\x1f%u", (insignatus integer)petitio.pagina,
         (insignatus integer)petitio.capacitas);
     chorda_aedificator_appendere_literis(a, numerus);
@@ -722,8 +725,8 @@ fac_redire (
     vacuum* ctx)
 {
     ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
-    constans character* tituli[III];
-    constans character* valores[III];
+    constans character* tituli[IV];
+    constans character* valores[IV];
 
     si (cp->grex)
     {
@@ -733,7 +736,10 @@ fac_redire (
         valores[I]         = "";
         tituli[II]         = "electus";
         valores[II]        = "";
-        redde _campos_scribere(cp->m, tituli, valores, III);
+        /* comites P5b: filtrum clavis cum grege tollitur */
+        tituli[III]   = "clavis";
+        valores[III]  = "";
+        redde _campos_scribere(cp->m, tituli, valores, IV);
     }
     si (_campus(cp->m, "q").mensura > ZEPHYRUM)
     {
@@ -1640,9 +1646,9 @@ indagatio_visus_argumentum_ponere (
 {
               StmlNodus* semita;
                  chorda  vitium;
-     constans character* tituli[IV];
-     constans character* valores[IV];
-     constans character* campi[III];
+     constans character* tituli[V];
+     constans character* valores[V];
+     constans character* campi[IV];
                     i32  n;
                     i32  i;
 
@@ -1667,8 +1673,9 @@ indagatio_visus_argumentum_ponere (
     campi[ZEPHYRUM]  = "q";
     campi[I]         = "genus";
     campi[II]        = "pagina";
+    campi[III]       = "clavis";
     n                = ZEPHYRUM;
-    per (i = ZEPHYRUM; i < III; i++)
+    per (i = ZEPHYRUM; i < IV; i++)
     {
         si (!stml_attributum_capere(semita, campi[i]))
         {
