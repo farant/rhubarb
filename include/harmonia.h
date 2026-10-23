@@ -74,6 +74,16 @@ harmonia_ex_classibus (
     i32 classes,
     i32 bassus);
 
+/* acordum sine tertia: classes (bits) congruunt exemplari cuius tertia
+ * abest - {0} classis una, {0,7} quinta, {0,7,10} septima, {0,7,11}
+ * septima maior. Radix in his exemplaribus unica; VERUM -> *radix
+ * (classis 0..11). sus2/sus4 NON: tertia consulto substituta (titulus
+ * eam nominat) */
+b32
+harmonia_sine_tertia (
+     i32  classes,
+     i32* radix);
+
 /* quod sonat ad pulsum: partes omnes non mutae (si sola quaedam,
  * solae), sine percussione */
 Harmonia

@@ -27,3 +27,7 @@ Plants: two cases added beforehand because I could see they would survive
 when the bass is C (test with bass E), and in 6/8 sampling every eighth
 vs every dotted quarter is hidden by merging unless a passing note sits
 mid-beat (F5 on the second eighth).
+
+## 2026-10-23 - harmonia_sine_tertia (M5b)
+
+Pure predicate for censura 'tertia' (and later the DAW pane): classes match {0}, {0,7}, {0,7,10} or {0,7,11} from some root. Each shape has a unique root (no rotation of one matches another), so no bass tie-break is needed. sus2/sus4 deliberately NOT matched - the chord name already says the third was replaced. Dropped a `classes & _bit(r)` root-presence check: every shape contains 0, so an absent root can never match - a plant there was an equivalent mutant. The `& 0xFFF` mask is NOT redundant (F + bit 13 rotated by 5 gives {0,8}, a false negative) and has a test.

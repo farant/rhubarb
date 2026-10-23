@@ -22,6 +22,11 @@
  *                octavae ('<' '>') oblitum fere; bassi octavis
  *                alternantibus saltus veros habent (Korobeiniki:
  *                VII, ad XIX), ergo non ORD.                      -
+ *   tertia       ad tempus forte >= III notae sonantes (partes
+ *                omnes) quarum classes acordum sine tertia faciunt
+ *                (harmonia_sine_tertia: D3 A4 D5, A2 G4 E5); semel
+ *                per sonum - nota aliqua post tempus forte prius
+ *                incipiat (acordum sustentum non iteratur)         -
  *
  * TEMPUS FORTE: initium mensurae; in 4/x etiam medium; in metris
  * compositis (6/8, 9/8, 12/8) omnis tertia octava. Percussio ('@')
@@ -55,6 +60,7 @@ nomen enumeratio {
     CENSURA_DISSONANTIA,
     CENSURA_PARALLELAE,
     CENSURA_SALTUS,
+    CENSURA_TERTIA,
     CENSURA_REGULAE
 } CensuraRegula;
 
@@ -78,7 +84,8 @@ nomen structura {
                     s32 frustum;       /* index in parte; -1 = nullum */
                     i32 offset;        /* in textu frusti (nota aut
                                          * '|') */
-    constans CarmenNota* nota;          /* in carmine; NIHIL: lineae */
+    constans CarmenNota* nota;          /* in carmine (tertia: infima
+                                         * sonantium); NIHIL: lineae */
     constans CarmenNota* nota_altera;   /* partis alterius */
     /* parallelae: notae initii prioris (par primum); saltus: nota
      * prior partis; NIHIL aliter */

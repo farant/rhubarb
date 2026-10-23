@@ -49,6 +49,15 @@ _cl (
     redde b;
 }
 
+/* classes transpositae (sursum r semitonia) */
+interior i32
+_rotare_classes (
+    i32 classes,
+    i32 r)
+{
+    redde ((classes << r) | (classes >> (XII - r))) & 0xFFF;
+}
+
 interior b32
 _est (
      constans s32* classes,
@@ -369,12 +378,72 @@ _sectio_linea (
         chorda_ex_literis("\n  harmonia  C/E:2 D:2\n", c->piscina));
 }
 
+/* sine tertia: exemplaria IV ab omni radice; propinqua cum tertia aut
+ * suspensa non */
+interior vacuum
+_sectio_sine_tertia (
+    CredoContextus* c)
+{
+    hic_manens constans s32 FORMAE[IV][IV] = {
+        { 0, -1, -1, -1 },
+        { 0, 7, -1, -1 },
+        { 0, 7, 10, -1 },
+        { 0, 7, 11, -1 }
+    };
+    hic_manens constans s32 CUM_TERTIA[][V] = {
+        { 0, 4, 7, -1, -1 },
+        { 0, 3, 7, -1, -1 },
+        { 0, 4, 7, 10, -1 },
+        { 0, 4, 10, -1, -1 },
+        { 0, 4, -1, -1, -1 },
+        { 0, 3, -1, -1, -1 },
+        { 0, 2, 7, -1, -1 },
+        { 0, 5, 7, -1, -1 },
+        { 0, 10, -1, -1, -1 },
+        { 0, 1, 2, -1, -1 },
+        { -1, -1, -1, -1, -1 }
+    };
+    i32 f;
+    i32 r;
+    i32 radix;
+
+    (vacuum)c;
+    per (f = ZEPHYRUM; f < IV; f++)
+    {
+        per (r = ZEPHYRUM; r < XII; r++)
+        {
+            i32 cl = _rotare_classes(_cl(FORMAE[f]), r);
+
+            radix = XCIX;
+            CREDO_VERUM (harmonia_sine_tertia(cl, &radix));
+            CREDO_AEQUALIS_I32 (radix, r);
+        }
+    }
+    /* bits supra XII ignorantur: F (5) cum bit XIII - sine larva F
+     * et 'C#' (XIII - V = VIII) {0,8} legeretur */
+    radix = XCIX;
+    CREDO_VERUM (harmonia_sine_tertia(((i32)I << V) | ((i32)I << XIII),
+                                      &radix));
+    CREDO_AEQUALIS_I32 (radix, V);
+    per (f = ZEPHYRUM; f < (i32)(magnitudo(CUM_TERTIA)
+                                / magnitudo(CUM_TERTIA[ZEPHYRUM])); f++)
+    {
+        per (r = ZEPHYRUM; r < XII; r++)
+        {
+            CREDO_FALSUM (harmonia_sine_tertia(
+                _rotare_classes(_cl(CUM_TERTIA[f]), r), &radix));
+        }
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "exemplaria", _sectio_exemplaria, NIHIL, NIHIL, NIHIL, NIHIL },
     { "radices", _sectio_radices, NIHIL, NIHIL, NIHIL, NIHIL },
     { "nomina", _sectio_nomina, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sonantes", _sectio_sonantes, NIHIL, NIHIL, NIHIL, NIHIL },
     { "linea", _sectio_linea, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sine_tertia", _sectio_sine_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

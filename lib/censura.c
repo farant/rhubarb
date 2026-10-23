@@ -10,11 +10,14 @@
  */
 
 #include "censura.h"
+#include "harmonia.h"
 #include "partitura.h"
 #include <string.h>
 
 hic_manens constans character* TITULI[CENSURA_REGULAE] = {
-    "lineae", "clavis", "ambitus", "dissonantia", "parallelae", "saltus"
+    "lineae", "clavis", "ambitus", "dissonantia", "parallelae",
+        "saltus",
+    "tertia"
 };
 
 nomen structura {
@@ -36,6 +39,8 @@ hic_manens constans s32 SCALA[VII] = {
 
 /* notae sonantes partis simul (dissonantia) maximae */
 #define CENSURA_SIMUL XVI
+/* notae sonantes omnium partium simul (tertia) maximae */
+#define CENSURA_SONANTES LXIV
 
 nomen structura {
              constans Carmen* carmen;
@@ -510,6 +515,94 @@ _dissonantia (
     }
 }
 
+/* notae sonantes partium omnium ad pulsum, ordine altitudinis
+ * (insertio stabilis); *pars_infimae (si non NIHIL) = pars notae
+ * infimae, aequalibus prior ordine partium; numerus (ad
+ * CENSURA_SONANTES) */
+interior i32
+_omnes_sonantes (
+    constans Carmen* carmen,
+                s64  pulsus,
+         NotaLocata* omnes,
+                i32* pars_infimae)
+{
+    NotaLocata a[CENSURA_SIMUL];
+           i32 n = ZEPHYRUM;
+           i32 i;
+           i32 x;
+           i32 y;
+
+    per (i = ZEPHYRUM; i < carmen->numerus_partium; i++)
+    {
+        i32 na = _sonantes(&carmen->partes[i], pulsus, a,
+            CENSURA_SIMUL);
+
+        per (x = ZEPHYRUM; x < na && n < CENSURA_SONANTES; x++)
+        {
+            i32 altitudo = a[x].nota->nota;
+
+            si (   pars_infimae != NIHIL
+                && (   n == ZEPHYRUM
+                    || altitudo < omnes[ZEPHYRUM].nota->nota))
+            {
+                *pars_infimae = i;
+            }
+            /* insertio stabilis per altitudinem */
+            y = n;
+            dum (y > ZEPHYRUM && omnes[y - I].nota->nota > altitudo)
+            {
+                omnes[y] = omnes[y - I];
+                y--;
+            }
+            omnes[y] = a[x];
+            n++;
+        }
+    }
+    redde n;
+}
+
+interior vacuum
+_tertia (
+    Iudex* iudex)
+{
+    constans Carmen* k = iudex->carmen;
+         NotaLocata  omnes[CENSURA_SONANTES];
+                s64  fortia[XXII];
+                s64  prius = -I;   /* tempus forte prius */
+                i32  m;
+
+    per (m = I; m <= _mensurae(k); m++)
+    {
+        i32 numerus = _fortia(k, carmen_pulsus_mensurae(k, m), fortia);
+        i32 t;
+
+        per (t = ZEPHYRUM; t < numerus; t++)
+        {
+            i32 pars     = ZEPHYRUM;
+            i32 n        = _omnes_sonantes(k, fortia[t], omnes, &pars);
+            i32 classes  = ZEPHYRUM;
+            b32 novum    = FALSUM;
+            i32 radix;
+            i32 x;
+
+            per (x = ZEPHYRUM; x < n; x++)
+            {
+                classes  |= (i32)I << (omnes[x].nota->nota % XII);
+                novum    = novum || omnes[x].initium > prius;
+            }
+            prius = fortia[t];
+            si (   n >= III && novum
+                && harmonia_sine_tertia(classes, &radix))
+            {
+                _addere(iudex, CENSURA_TERTIA, &k->partes[pars],
+                    omnes[ZEPHYRUM].frustum, fortia[t],
+                    omnes[ZEPHYRUM].nota->offset, omnes[ZEPHYRUM].nota,
+                    NIHIL, NIHIL, NIHIL, NIHIL);
+            }
+        }
+    }
+}
+
 /* nota summa sonans partis; nota NIHIL si nulla */
 interior NotaLocata
 _summa (
@@ -726,6 +819,10 @@ censura_iudicare (
     {
         _saltus(&iudex);
     }
+    si (forma->activae[CENSURA_TERTIA])
+    {
+        _tertia(&iudex);
+    }
     /* ordinatio stabilis (insertio) per mensuram, pulsum */
     x = iudex.numerus < capacitas ? iudex.numerus : capacitas;
     per (y = I; y < x; y++)
@@ -750,29 +847,6 @@ censura_iudicare (
 /* ==================================================
  * Scriptio
  * ================================================== */
-
-interior b32
-_notam_scribere (
-        constans Carmen* carmen,
-    constans CarmenNota* nota,
-                    s64  pulsus,
-      ChordaAedificator* a)
-{
-    PartituraNota o = partitura_orthographia(carmen, nota, pulsus);
-              b32 bene;
-              s32 i;
-
-    bene = chorda_aedificator_appendere_character(a, o.littera);
-    per (i = ZEPHYRUM; i < o.alteratio; i++)
-    {
-        bene = chorda_aedificator_appendere_character(a, '#') && bene;
-    }
-    per (i = ZEPHYRUM; i < -o.alteratio; i++)
-    {
-        bene = chorda_aedificator_appendere_character(a, 'b') && bene;
-    }
-    redde chorda_aedificator_appendere_s32(a, o.octava) && bene;
-}
 
 interior chorda
 _instrumentum (
@@ -832,8 +906,8 @@ censura_inventum_scribere (
         {
             constans CarmenClavis* k = _clavis(carmen, pulsus);
 
-            bene = _notam_scribere(carmen, x->nota, pulsus, textus)
-                && bene;
+            bene = partitura_notam_scribere(carmen, x->nota, pulsus,
+                textus) && bene;
             bene = chorda_aedificator_appendere_literis(textus,
                 " extra clavem ") && bene;
             bene = chorda_aedificator_appendere_literis(textus,
@@ -843,8 +917,8 @@ censura_inventum_scribere (
             frange;
         }
         casus CENSURA_AMBITUS:
-            bene = _notam_scribere(carmen, x->nota, pulsus, textus)
-                && bene;
+            bene = partitura_notam_scribere(carmen, x->nota, pulsus,
+                textus) && bene;
             bene = chorda_aedificator_appendere_literis(textus,
                 " extra ambitum ") && bene;
             bene = chorda_aedificator_appendere_chorda(textus,
@@ -855,14 +929,13 @@ censura_inventum_scribere (
             s32 d = _modulus((s32)x->nota->nota
                 - (s32)x->nota_altera->nota, XII);
 
-            bene = _notam_scribere(carmen, x->nota, pulsus, textus)
-                && bene;
+            bene = partitura_notam_scribere(carmen, x->nota, pulsus,
+                textus) && bene;
             bene = chorda_aedificator_appendere_literis(textus,
                 " contra ")
                 && bene;
-            bene = _notam_scribere(carmen, x->nota_altera, pulsus,
-                textus)
-                && bene;
+            bene = partitura_notam_scribere(carmen, x->nota_altera,
+                pulsus, textus) && bene;
             bene = chorda_aedificator_appendere_literis(textus,
                 d == VI ? ", tritonus" : d <= II ? ", secunda"
                                                  : ", septima") && bene;
@@ -879,23 +952,23 @@ censura_inventum_scribere (
                 "parallelae ") && bene;
             si (x->nota_prior != NIHIL && x->nota_altera_prior != NIHIL)
             {
-                bene = _notam_scribere(carmen, x->nota_prior, pulsus,
-                    textus) && bene;
+                bene = partitura_notam_scribere(carmen, x->nota_prior,
+                    pulsus, textus) && bene;
                 bene = chorda_aedificator_appendere_character(textus,
                     '/')
                     && bene;
-                bene = _notam_scribere(carmen, x->nota_altera_prior,
-                    pulsus, textus) && bene;
+                bene = partitura_notam_scribere(carmen,
+                    x->nota_altera_prior, pulsus, textus) && bene;
                 bene = chorda_aedificator_appendere_literis(textus,
                     " -> ")
                     && bene;
             }
-            bene = _notam_scribere(carmen, x->nota, pulsus, textus)
-                && bene;
+            bene = partitura_notam_scribere(carmen, x->nota, pulsus,
+                textus) && bene;
             bene = chorda_aedificator_appendere_character(textus, '/')
                 && bene;
-            bene = _notam_scribere(carmen, x->nota_altera, pulsus,
-                textus) && bene;
+            bene = partitura_notam_scribere(carmen, x->nota_altera,
+                pulsus, textus) && bene;
             frange;
         }
         casus CENSURA_SALTUS:
@@ -905,19 +978,40 @@ censura_inventum_scribere (
             bene = chorda_aedificator_appendere_literis(textus,
                 "saltus ")
                 && bene;
-            bene = _notam_scribere(carmen, x->nota_prior, pulsus,
-                textus)
-                && bene;
+            bene = partitura_notam_scribere(carmen, x->nota_prior,
+                pulsus, textus) && bene;
             bene = chorda_aedificator_appendere_literis(textus, " -> ")
                 && bene;
-            bene = _notam_scribere(carmen, x->nota, pulsus, textus)
-                && bene;
+            bene = partitura_notam_scribere(carmen, x->nota, pulsus,
+                textus) && bene;
             bene = chorda_aedificator_appendere_literis(textus, ", ")
                 && bene;
             bene = chorda_aedificator_appendere_s32(textus,
                 d < ZEPHYRUM ? -d : d) && bene;
             bene = chorda_aedificator_appendere_literis(textus,
                 " semitonia") && bene;
+            frange;
+        }
+        casus CENSURA_TERTIA:
+        {
+            NotaLocata omnes[CENSURA_SONANTES];
+                   i32 n = _omnes_sonantes(carmen, pulsus, omnes,
+                       NIHIL);
+                   i32 j;
+
+            bene = chorda_aedificator_appendere_literis(textus,
+                "voces ") && bene;
+            bene = chorda_aedificator_appendere_i32(textus, n) && bene;
+            bene = chorda_aedificator_appendere_literis(textus,
+                " sine tertia:") && bene;
+            per (j = ZEPHYRUM; j < n; j++)
+            {
+                bene = chorda_aedificator_appendere_character(textus,
+                    ' ')
+                    && bene;
+                bene = partitura_notam_scribere(carmen, omnes[j].nota,
+                    pulsus, textus) && bene;
+            }
             frange;
         }
         ordinarius:

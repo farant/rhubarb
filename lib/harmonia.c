@@ -144,6 +144,39 @@ harmonia_ex_classibus (
     redde h;
 }
 
+/* exemplaria sine tertia (harmonia_sine_tertia); radix unica in
+ * singulis - nulla rotatio alterius congruit */
+hic_manens constans Exemplar SINE_TERTIA[IV] = {
+    { HARMONIA_CLASSIS_UNA,   { 0, -1 } },
+    { HARMONIA_QUINTA,        { 0, 7, -1 } },
+    { HARMONIA_SEPTIMA,       { 0, 7, 10, -1 } },
+    { HARMONIA_SEPTIMA_MAIOR, { 0, 7, 11, -1 } }
+};
+
+b32
+harmonia_sine_tertia (
+     i32  classes,
+     i32* radix)
+{
+    i32 r;
+    i32 i;
+
+    classes &= 0xFFF;
+    /* radix absens: bit 0 rotatus deest, exemplaria omnia eum habent */
+    per (r = ZEPHYRUM; r < XII; r++)
+    {
+        per (i = ZEPHYRUM; i < IV; i++)
+        {
+            si (_rotare(classes, r) == _intervalla(&SINE_TERTIA[i]))
+            {
+                *radix = r;
+                redde VERUM;
+            }
+        }
+    }
+    redde FALSUM;
+}
+
 Harmonia
 harmonia_ad_pulsum (
     constans Carmen* carmen,

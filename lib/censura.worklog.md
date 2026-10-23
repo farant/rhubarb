@@ -42,3 +42,13 @@ default OFF, with a settable limit; the liber test pins the 7 so the
 reason survives. Parallels now carry nota_prior / nota_altera_prior and
 print 'quintae parallelae C5/F4 -> D5/G4' - composing, I had to
 reconstruct the first pair by hand.
+
+## 2026-10-23 - rule 'tertia' (M5b, wish …SV2FPM)
+
+Opt-in rule from composing 'stella': at a strong beat, >= 3 sounding notes (all parts, written-score view like the other rules - mutes ignored) whose classes form a no-third shape (harmonia_sine_tertia: unison, fifth, 7 or maj7 without third). Acceptance: stella's first draft fires at bars 1, 9, 15 - exactly the three bars I had fixed by reading the chord row; the saved stella, Korobeiniki and vesperae are clean.
+
+Two design refinements found while testing (Fran told after):
+- **Once per sonority.** A whole-note chord in 4/4 fired at beat 1 AND beat 3. Now a strong beat reports only if some sounding note started after the previous strong beat; a no-third chord formed on a weak beat is still caught at the next strong beat. Plant 'sustentum iteratur' proves it.
+- **Output count in Arabic** (`voces 3`, not the approved `voces III`): every other censura line uses Arabic numbers, and the writer has only a ChordaAedificator - numerus_romanus_scribere needs a piscina, so Roman would have meant a second numeral writer.
+
+The finding points at the LOWEST sounding note (pars/nota/frustum/offset); the writer recomputes the other notes from carmen + pulse (`_omnes_sonantes`, stable insertion by pitch). A plant on a per-note part-index array survived because only the lowest note's part was ever read - so the helper now reports just `pars_infimae` (first strict minimum in part order). Also folded censura's private `_notam_scribere` into `partitura_notam_scribere` (third copy of the note writer; same output - censura never writes '@' notes). Lint bit on `imae` again (pars_imae) - infimae.

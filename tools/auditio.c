@@ -680,11 +680,17 @@ _regulas_legere (
         t.mensura  = (i32)(p - q);
         si (!censura_regulam_invenire(t, &r))
         {
-            fprintf(stderr,
-                "auditio: regula ignota '%.*s' (lineae, clavis, "
-                    "ambitus, dissonantia, parallelae, saltus)\n",
-                    (integer)t.mensura,
-                    (constans character*)t.datum);
+            CensuraRegula g;
+
+            fprintf(stderr, "auditio: regula ignota '%.*s' (",
+                    (integer)t.mensura, (constans character*)t.datum);
+            per (g = CENSURA_LINEAE; g < CENSURA_REGULAE;
+                 g = (CensuraRegula)(g + I))
+            {
+                fprintf(stderr, "%s%s", g == CENSURA_LINEAE ? "" : ", ",
+                        censura_titulus(g));
+            }
+            fprintf(stderr, ")\n");
             redde FALSUM;
         }
         forma->activae[r] = accendere;
