@@ -64,3 +64,13 @@ applicatio_initium (
     forma->finis_ctx  = vol;
     redde VERUM;
 }
+
+/* introitus: testa (testa.h) - macOS fenestra et ansa; Android
+ * ingressus suus (ANativeActivity_onCreate) */
+s32
+principale (
+      integer   argc,
+    character** argv)
+{
+    redde testa_principale(argc, argv);
+}

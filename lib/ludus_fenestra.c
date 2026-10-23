@@ -207,6 +207,85 @@ ludus_fenestra_mora (
     redde (Mora)lf->d->quies_ms;
 }
 
+/* Ansa fenestrae perscrutabilis (macOS): API publica - programmata
+ * briar (.thistle) eam vocant, testa macOS (lib/testa.c) quoque. In
+ * Android nulla fenestra perscrutabilis (testa_android quadra per
+ * chorographum ducit): non compilatur. Restituta 2026-10-23 (fusio:
+ * briar-fumus et instrumenta fracta post T1). */
+#ifndef __ANDROID__
+
+/* S1c: exspectatio maxima cum applicatione viva (ut terminale) */
+#define MORA_PULSUS  XVI
+
+s32
+ludus_fenestra_currere (
+    LudusFenestra* lf,
+         Fenestra* fenestra,
+              i32  quadra_maxima)
+{
+    Eventus e;
+        s64 nunc;
+        b32 claudendum;
+
+    si (!lf || !fenestra)
+    {
+        redde I;
+    }
+    claudendum = FALSUM;
+    dum (!claudendum && !fenestra_debet_claudere(fenestra))
+    {
+        Mora mora;
+         b32 eventa;
+
+        /* S1c: applicatio viva (pulsus) - XVI ms ad summum */
+        mora = ludus_fenestra_mora(lf);
+        si (lf->pulsator && (mora == ZEPHYRUM || mora > MORA_PULSUS))
+        {
+            mora = MORA_PULSUS;
+        }
+        fenestra_expectare_eventus(fenestra, mora);
+        nunc    = fenestra_tempus_ms();
+        eventa  = FALSUM;
+        dum (fenestra_obtinere_eventus(fenestra, &e))
+        {
+            si (e.genus == EVENTUS_CLAUDERE)
+            {
+                claudendum = VERUM;
+                frange;
+            }
+            ludus_fenestra_tractare(lf, &e, nunc);
+            eventa = VERUM;
+        }
+        /* fumus (quadra_maxima): omne quadrum pingitur - aliter
+         * applicatio viva otiosa post quadrum primum numquam exit */
+        si (   quadra_maxima == ZEPHYRUM
+            && !ludus_fenestra_pingendum(lf, eventa, nunc))
+        {
+            perge;
+        }
+        ludus_quadrum(lf, nunc);
+        fenestra_praesentare_pixela(fenestra, lf->tabula);
+        si (   quadra_maxima > ZEPHYRUM
+            && lf->mensurae.quadra >= quadra_maxima)
+        {
+            claudendum = VERUM;
+        }
+    }
+    /* S1a: pendentia (gestus, pan/zoom) ante exitum effunduntur */
+    dispensator_finire(lf->d);
+    imprimere("ludus: quadra=%d compositio=%ldms pingere=%ldms"
+              " delineare=%ldms maximum=%ldms\n",
+              (int)lf->mensurae.quadra,
+              (long)lf->mensurae.ms_compositionis,
+              (long)lf->mensurae.ms_pingendi,
+              (long)lf->mensurae.ms_delineandi,
+              (long)lf->mensurae.ms_quadri_maximum);
+    redde ZEPHYRUM;
+}
+
+
+#endif /* __ANDROID__ */
+
 b32
 ludus_fenestra_imaginem_scribere (
     constans LudusFenestra* lf,

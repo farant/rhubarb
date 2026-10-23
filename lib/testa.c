@@ -1,7 +1,8 @@
 /* testa.c - testa fenestrae (macOS; quaevis fenestra perscrutabilis):
- * principale possidet, applicatio_initium vocat, ansam currit
- * (testa-spec II.3). Ansa = ludus_fenestra_currere olim (sedes
- * mutata, verbatim; mensurae in testa_cursum_finire). */
+ * testa_principale (principale applicationis eum vocat) possidet,
+ * applicatio_initium vocat, ansam currit
+ * (testa-spec II.3). Ansa = ludus_fenestra_currere (API publica;
+ * programmata briar eam quoque vocant). */
 
 #include "testa.h"
 #include "fenestra.h"
@@ -11,9 +12,6 @@
 #include <string.h>
 
 #define QUADRA_FUMI  XXX
-/* S1c: exspectatio maxima cum applicatione viva (ut terminale) */
-#define MORA_PULSUS  XVI
-
 /* L5: porta imaginis - clipboard systematis (Cmd+V in pictore) */
 interior ImagoFructus
 _imaginem_glutinatam (
@@ -24,62 +22,8 @@ _imaginem_glutinatam (
     redde clipboard_capere_imaginem(piscina);
 }
 
-/* ansa vera: exspectare (ludus_fenestra_mora), tractare, quadrum,
- * praesentare; finis in EVENTUS_CLAUDERE aut post quadra_maxima */
-interior vacuum
-_currere (
-    LudusFenestra* lf,
-         Fenestra* fenestra,
-              i32  quadra_maxima)
-{
-    Eventus e;
-        s64 nunc;
-        b32 claudendum;
-
-    claudendum = FALSUM;
-    dum (!claudendum && !fenestra_debet_claudere(fenestra))
-    {
-        Mora mora;
-         b32 eventa;
-
-        /* S1c: applicatio viva (pulsus) - XVI ms ad summum */
-        mora = ludus_fenestra_mora(lf);
-        si (lf->pulsator && (mora == ZEPHYRUM || mora > MORA_PULSUS))
-        {
-            mora = MORA_PULSUS;
-        }
-        fenestra_expectare_eventus(fenestra, mora);
-        nunc    = fenestra_tempus_ms();
-        eventa  = FALSUM;
-        dum (fenestra_obtinere_eventus(fenestra, &e))
-        {
-            si (e.genus == EVENTUS_CLAUDERE)
-            {
-                claudendum = VERUM;
-                frange;
-            }
-            ludus_fenestra_tractare(lf, &e, nunc);
-            eventa = VERUM;
-        }
-        /* fumus (quadra_maxima): omne quadrum pingitur - aliter
-         * applicatio viva otiosa post quadrum primum numquam exit */
-        si (   quadra_maxima == ZEPHYRUM
-            && !ludus_fenestra_pingendum(lf, eventa, nunc))
-        {
-            perge;
-        }
-        ludus_quadrum(lf, nunc);
-        fenestra_praesentare_pixela(fenestra, lf->tabula);
-        si (   quadra_maxima > ZEPHYRUM
-            && lf->mensurae.quadra >= quadra_maxima)
-        {
-            claudendum = VERUM;
-        }
-    }
-}
-
 s32
-principale (
+testa_principale (
       integer   argc,
     character** argv)
 {
@@ -183,8 +127,10 @@ principale (
         redde I;
     }
 
-    _currere(cursus->lf, fenestra, o.fumus ? QUADRA_FUMI : ZEPHYRUM);
-    testa_cursum_finire(cursus);
+    /* ansa publica (dispensator_finire + linea mensurarum intus) -
+     * testa_cursum_finire solum testae Android (sine ansa propria) */
+    (vacuum)ludus_fenestra_currere(cursus->lf, fenestra,
+        o.fumus ? QUADRA_FUMI : ZEPHYRUM);
     exitus = ZEPHYRUM;
     si (   o.via_imaginis
         && !ludus_fenestra_imaginem_scribere(cursus->lf,

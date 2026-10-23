@@ -1746,6 +1746,12 @@ _credo_arborem_delere (
     redde bene && rmdir(via) == ZEPHYRUM;
 }
 
+/* TMPDIR suitae (infra, 'TMPDIR SUITAE'): vetus servatum dum TMPDIR in
+ * aream suitae ductum est */
+hic_manens character _credo_temporarii_vetus[DXII];
+hic_manens b32       _credo_temporarii_habuit;
+hic_manens b32       _credo_temporarii_positum;
+
 /* '<TMPDIR>/<suita sanata>.<signum>.<pid>' - '/' finalis TMPDIR
  * (macOS) demitur; nihil creatur */
 interior vacuum
@@ -1760,7 +1766,12 @@ _credo_aream_ponere (
          memoriae_index  i;
               character  ch;
 
-    tmp = getenv("TMPDIR");
+    /* areae semper sub TMPDIR VETERE, iuxta aream suitae, numquam intra
+     * eam - TMPDIR in aream suitae ductum (1d9b1756) areas sectionum
+     * nidificabat (fumus credo XI, fusio 2026-10-23) */
+    tmp = _credo_temporarii_positum
+        ? (_credo_temporarii_habuit ? _credo_temporarii_vetus : NIHIL)
+        : getenv("TMPDIR");
     si (tmp == NIHIL || tmp[0] == '\0')
     {
         tmp = "/tmp";
@@ -1860,10 +1871,6 @@ credo_area (
  * /tmp portam rubram faciebant (2026-10-06); TMPDIR sub fabrica (area
  * membri, ante membrum deleta) eas tacite delebat.
  * ================================================== */
-
-hic_manens character _credo_temporarii_vetus[DXII];
-hic_manens b32       _credo_temporarii_habuit;
-hic_manens b32       _credo_temporarii_positum;
 
 /* FIXURAE SUITAE: volumina post parare_suitae iam viva per sectiones
  * CONSULTO vivunt (fixura communis, e.g. probatio_pictor_figurae) -

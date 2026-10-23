@@ -2,11 +2,12 @@
 #define TESTA_H
 
 /* testa.h - "applicatio sum: da mihi testam" (testa-spec II.1).
- * Includere = principale a testa accipere: lib/testa.c (macOS, et
- * quaevis fenestra perscrutabilis) aut lib/testa_android.c (--varians
- * android,posix) - regula variantium aedilis, nullus casus in
- * scriptis. Applicatio SOLUM applicatio_initium definit. Probationes
- * testa_cursus.h includunt, numquam hoc (principale duplex). */
+ * Includere = testam accipere: lib/testa.c (macOS, et quaevis fenestra
+ * perscrutabilis) aut lib/testa_android.c (--varians android,posix) -
+ * regula variantium aedilis, nullus casus in scriptis. Applicatio
+ * applicatio_initium definit et principale unius lineae quod
+ * testa_principale vocat (bibliothecae principale non habent).
+ * Probationes testa_cursus.h solum includunt. */
 
 /* REGULAE (testa-spec II.9; Franus 2026-10-23: "shared material ...
  * continuity / same aesthetics", non applicatio una ubique).
@@ -37,5 +38,16 @@ b32
 applicatio_initium (
     constans TestaAmbitus* a,
                TestaForma* forma);
+
+/* Introitus testae: principale APPLICATIONIS hoc solum vocat (linea
+ * una - bibliothecae principale non habent, regula domus; porta
+ * instrumenta introitus aedificat). macOS: fenestra, ansa, exitus.
+ * Android: introitus verus ANativeActivity_onCreate
+ * (lib/testa_android.c) - testa_principale ibi numquam vocatur, I
+ * reddit. */
+s32
+testa_principale (
+        integer   argc,
+      character** argv);
 
 #endif /* TESTA_H */

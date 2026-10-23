@@ -65,8 +65,8 @@
   <interrogatio genus="possumne">
     <quaestio! (>can I use quadra_maxima for a smoke run of an idle app that installs a pulse?
     <responsum symbolum="ludus_fenestra_pingendum ludus_fenestra_mora">Yes.
-      Under -fumus the shell's loop (lib/testa.c, once
-      ludus_fenestra_currere) passes quadra_maxima XXX: the frame skip
+      Under -fumus the macOS shell (lib/testa.c) calls
+      ludus_fenestra_currere with quadra_maxima XXX: the frame skip
       is bypassed and every iteration draws, so the loop stops after
       exactly that many frames. Before the 2026-10-08 fix an idle vicus -fumus drew
       one frame and hung. Two consequences: in smoke mode

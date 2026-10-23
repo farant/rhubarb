@@ -794,6 +794,19 @@ _deleta (
     piscina_destruere(t->piscina);
 }
 
+/* principale applicationis in Android numquam vocatur (introitus =
+ * ANativeActivity_onCreate); symbolum adest ut nexus
+ * (-Wl,--no-undefined) consentiat */
+s32
+testa_principale (
+        integer   argc,
+      character** argv)
+{
+    (vacuum)argc;
+    (vacuum)argv;
+    redde I;
+}
+
 vacuum
 ANativeActivity_onCreate (
      ANativeActivity* activitas,
