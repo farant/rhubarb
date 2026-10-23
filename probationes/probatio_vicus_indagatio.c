@@ -663,6 +663,15 @@ _sectio_porta (
     a = insula_ramus_attributum(&k->ramus, "res_electa");
     CREDO_VERUM(a && chorda_aequalis_literis(*a, "1"));
 
+    CREDO_GRADUS("sanctus (D5 S4): latus sanctorum in sancto");
+    quaerere(x, "Aquinas");
+    clavis(x, (character)XIII);
+    CREDO_NECESSE(genus_frontis(x, "sancti"));
+    r = insula_ramus(x->v->repo, "sancti", chorda_ut_cstr(frons(x)->id,
+        x->piscina));
+    a = insula_ramus_attributum(&r, "sanctus_apertus");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "thomas-aquinas"));
+
     CREDO_GRADUS("persona: nomenclator in persona");
     quaerere(x, "Anna");
     clavis(x, (character)XIII);

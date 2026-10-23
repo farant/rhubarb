@@ -738,6 +738,134 @@ personas_enumerare (
  * ================================================== */
 
 /* declarationem infixam legere, opera et enumerationem ponere */
+
+
+/* ==================================================
+ * Genus 'sancti' (D5 S4: corpus sanctorum, fons pura)
+ * ================================================== */
+
+/* textum (si plenum) ad corpus addere, linea nova */
+interior vacuum
+corpori_addere (
+     ChordaAedificator* a,
+                chorda  textus)
+{
+    si (textus.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    chorda_aedificator_appendere_chorda(a, textus);
+    chorda_aedificator_appendere_character(a, '\n');
+}
+
+/* Xar de chorda ad corpus */
+interior vacuum
+chordas_corpori_addere (
+    ChordaAedificator* a,
+                  Xar* x)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; x && i < xar_numerus(x); i++)
+    {
+        corpori_addere(a, *(chorda*)xar_obtinere(x, i));
+    }
+}
+
+interior vacuum*
+sanctum_computare (
+                 vacuum* ctx,
+    ConspectusRegistrum* repertorium,
+                 chorda  clavis,
+                Piscina* piscina)
+{
+         IndagatioFontes* f;
+     IndagatioConspectus* v;
+        constans Sanctus* s;
+   constans SanctiFestum* festum;
+       ChordaAedificator* contextus;
+       ChordaAedificator* corpus;
+                  chorda  aetas;
+                     i32  i;
+               character  dies[XVI];
+
+    (vacuum)repertorium;
+    f = (IndagatioFontes*)ctx;
+    v = conspectum_novum(piscina);
+    s = (v && f->sancti) ? sancti_invenire(f->sancti, clavis) : NIHIL;
+    si (!s)
+    {
+        redde v;
+    }
+    /* contextus: festum primum - aetas */
+    contextus = chorda_aedificator_creare(piscina,
+        (memoriae_index)XXXII);
+    festum  = sancti_festum_primum(s);
+    aetas   = sancti_aetas_textus(s, piscina);
+    si (festum && festum->mensis > ZEPHYRUM && festum->dies > ZEPHYRUM)
+    {
+        sprintf(dies, "%d ", (integer)festum->dies);
+        chorda_aedificator_appendere_literis(contextus, dies);
+        chorda_aedificator_appendere_chorda(contextus,
+            fasti_nomen_mensis(
+            festum->mensis, VERUM, FASTI_LINGUA_ANGLICA, piscina));
+        si (aetas.mensura > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(contextus,
+                " \302\267 ");
+        }
+    }
+    chorda_aedificator_appendere_chorda(contextus, aetas);
+    /* corpus: nomina, munera, patrocinia, loci, socii, paragraphi */
+    corpus = chorda_aedificator_creare(piscina, (memoriae_index)CCLVI);
+    corpori_addere(corpus, s->titulus_latinus);
+    per (i = ZEPHYRUM; s->nomina && i < xar_numerus(s->nomina); i++)
+    {
+        corpori_addere(corpus, ((SanctiNomen*)xar_obtinere(s->nomina,
+            i))
+            ->textus);
+    }
+    chordas_corpori_addere(corpus, s->munera);
+    chordas_corpori_addere(corpus, s->patrocinia);
+    corpori_addere(corpus, s->ortus.locus);
+    corpori_addere(corpus, s->obitus.locus);
+    per (i = ZEPHYRUM; s->socii && i < xar_numerus(s->socii); i++)
+    {
+        corpori_addere(corpus, ((SanctiSocius*)xar_obtinere(s->socii,
+            i))
+            ->textus);
+    }
+    chordas_corpori_addere(corpus, s->paragraphi);
+    ordinem_addere(v, chorda_transcribere(s->titulus, piscina),
+        chorda_aedificator_finire(contextus),
+        chorda_aedificator_finire(corpus),
+        literis_iungere("sancti/sanctus/", s->id, piscina));
+    redde v;
+}
+
+/* omnes sancti corporis (ordine id) */
+interior Xar*
+sanctos_enumerare (
+                 vacuum* ctx,
+    ConspectusRegistrum* repertorium,
+                Piscina* piscina)
+{
+    IndagatioFontes* f;
+                Xar* claves;
+                i32  i;
+
+    (vacuum)repertorium;
+    f       = (IndagatioFontes*)ctx;
+    claves  = xar_creare(piscina, (i32)magnitudo(chorda));
+    per (i = ZEPHYRUM; claves && f->sancti
+                       && i < sancti_numerus(f->sancti); i++)
+    {
+        *(chorda*)xar_addere(claves) = chorda_transcribere(
+            sancti_ad_indicem(f->sancti, i)->id, piscina);
+    }
+    redde claves;
+}
+
 interior b32
 genus_declarare (
      ConspectusRegistrum*  repertorium,
@@ -832,6 +960,13 @@ indagatio_genera_registrare (
         {
             redde FALSUM;
         }
+    }
+    /* D5 S4: sancti - fons pura, semel per processum */
+    si (   fontes->sancti
+        && !genus_declarare(repertorium, "sancti", fontes,
+               sanctum_computare, sanctos_enumerare, vitia))
+    {
+        redde FALSUM;
     }
     redde VERUM;
 }

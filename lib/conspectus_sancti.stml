@@ -1,0 +1,9 @@
+<!-- conspectus_sancti.stml - genus quaerendum 'sancti': sancti
+     corporis (indagatio D5 S4; C: lib/indagatio_genera.c). Clavis
+     textus: id habent '-'. Fons pura: corpus intra processum non
+     mutatur - semel per processum indicitur. -->
+<conspectus nomen="sancti" versio="1">
+  <clavis typus="textus"/>
+  <fons pura="sancti"/>
+  <quaerendum genus="Saints"/>
+</conspectus>

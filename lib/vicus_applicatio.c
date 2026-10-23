@@ -1972,6 +1972,10 @@ nomen structura {
     ConspectusRegistrum* conspectus;
  ContextusNomenclatoris* nomenclatoris;
               Indagatio* index;
+    /* D5 S4: corpus sanctorum (genus quaerendum 'sancti'), pigre per
+     * contextum sanctorum */
+    constans SanctiCorpus* (*sancti)(vacuum* ctx);
+                   vacuum* sancti_ctx;
 } ContextusKalendarii;
 
 /* porta 'hodie' calendarii: horologium vici (fons ipse lectionis
@@ -2008,11 +2012,13 @@ conspectum_communem_parare (
     ck->quaerendi.personae  = personas_aperire(ck->nomenclatoris);
     ck->quaerendi.volumen   = ck->volumen;
     ck->quaerendi.intern    = ck->intern;
-    ck->diei.agenda         = ck->documentum;
-    ck->diei.fontes         = ck->fontes;
-    ck->diei.liturgia       = calendarium_creare(ck->piscina);
-    ck->diei.volumen        = ck->volumen;
-    ck->diei.intern         = ck->intern;
+    ck->quaerendi.sancti    = ck->sancti ? ck->sancti(ck->sancti_ctx)
+                                         : NIHIL;
+    ck->diei.agenda    = ck->documentum;
+    ck->diei.fontes    = ck->fontes;
+    ck->diei.liturgia  = calendarium_creare(ck->piscina);
+    ck->diei.volumen   = ck->volumen;
+    ck->diei.intern    = ck->intern;
     ck->conspectus     = conspectus_registrum_creare(ck->piscina,
         ck->intern, ck->volumen, ZEPHYRUM);
     si (   ck->conspectus
@@ -3203,6 +3209,14 @@ corpus_sanctorum (
     redde cs->corpus;
 }
 
+/* D5 S4: corpus pro registro communi (ContextusKalendarii.sancti) */
+interior constans SanctiCorpus*
+corpus_sanctorum_communis (
+    vacuum* ctx)
+{
+    redde corpus_sanctorum((ContextusSanctorum*)ctx);
+}
+
 /* festum generale aut usa? (calendaria visus diei) */
 interior b32
 festum_diei (
@@ -3674,6 +3688,12 @@ ContextusNomenclatoris* cn;
         sanctorum->piscina    = piscina;
         sanctorum->intern     = intern;
         sanctorum->systemata  = systemata;
+    }
+    /* D5 S4: registrum commune sanctos quaerit (corpus pigre) */
+    si (ck && sanctorum)
+    {
+        ck->sancti      = corpus_sanctorum_communis;
+        ck->sancti_ctx  = sanctorum;
     }
     /* P6: fontes dierum calendarii (natales nomenclatoris) */
     si (ck)

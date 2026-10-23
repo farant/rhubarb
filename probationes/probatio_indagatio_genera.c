@@ -22,6 +22,7 @@
 #include "conspectus.h"
 #include "indagatio.h"
 #include "indagatio_genera.h"
+#include "sancti.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -689,7 +690,72 @@ _probare_verificationem (
     CREDO_VERUM(indagatio_mensura(m->ix).ordines > X);
 }
 
+/* D5 S4: sancti (fons pura) - titulus, contextus "festum · aetas",
+ * semita; nomina alia, patrocinia, loci, paragraphi quaeruntur;
+ * corpus nullum: grex nullus */
+interior vacuum
+_probare_sanctos (
+    CredoContextus* c)
+{
+                        Mundus* m;
+    constans IndagatioInventum* v;
+                  SanctiCorpus* corpus;
+
+    mundum_creare(c);
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->volumen);
+    corpus = sancti_corpus_aperire("probationes/fixa/sancti",
+        c->piscina, m->intern);
+    CREDO_NECESSE_NON_NIHIL(corpus);
+    m->fontes.sancti = corpus;
+    CREDO_NECESSE(registrum_parare(m, NIHIL, NIHIL, NIHIL));
+
+    CREDO_GRADUS("titulus, contextus, semita");
+    v = inventum(m, "Aquinas", "sancti", c->piscina);
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_CHORDA_AEQUALIS_LITERIS(v->titulus, "Thomas Aquinas");
+    CREDO_CHORDA_AEQUALIS_LITERIS(v->contextus,
+        "28 Jan \302\267 c. 1225\342\200\2231274");
+    CREDO_CHORDA_AEQUALIS_LITERIS(v->semita,
+        "sancti/sanctus/thomas-aquinas");
+
+    CREDO_GRADUS("nomina alia, patrocinia, loci, paragraphi");
+    v = inventum(m, "Tommaso", "sancti", c->piscina);
+    CREDO_VERUM(v && chorda_aequalis_literis(v->titulus,
+        "Thomas Aquinas"));
+    v = inventum(m, "schools", "sancti", c->piscina);
+    CREDO_VERUM(v && chorda_aequalis_literis(v->titulus,
+        "Thomas Aquinas"));
+    v = inventum(m, "Fossanova", "sancti", c->piscina);
+    CREDO_VERUM(v && chorda_aequalis_literis(v->titulus,
+        "Thomas Aquinas"));
+    v = inventum(m, "Nomentana", "sancti", c->piscina);
+    CREDO_VERUM(v && chorda_aequalis_literis(v->titulus,
+        "Agnes of Rome"));
+    CREDO_AEQUALIS_I32(numerus(m, "rhubarb", "sancti", c->piscina),
+        ZEPHYRUM);
+}
+
+/* D5 S4: sine corpore sanctorum grex 'sancti' nullus */
+interior vacuum
+_probare_sine_sanctis (
+    CredoContextus* c)
+{
+    Mundus* m;
+
+    mundum_creare(c);
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->volumen);
+    CREDO_NECESSE(registrum_parare(m, NIHIL, NIHIL, NIHIL));
+    CREDO_AEQUALIS_I32(numerus(m, "Aquinas", "sancti", c->piscina),
+        ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
+    { "sancti",        _probare_sanctos,         NIHIL, mundum_purgare,
+        NIHIL, NIHIL },
+    { "sine sanctis",  _probare_sine_sanctis,    NIHIL, mundum_purgare,
+        NIHIL, NIHIL },
     { "fontes",        _probare_fontes,          NIHIL,
         mundum_purgare, NIHIL, NIHIL },
     { "res",           _probare_res,             mundum_parare,

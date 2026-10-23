@@ -1,6 +1,6 @@
 /* indagatio_genera.h - GENERA QUAERENDA domus (indagatio S2,
  * project-specs/indagatio.md): res agendae, notae dierum, liber
- * communis, personae cum notis suis. Declarationes
+ * communis, personae cum notis suis, sancti (D5 S4). Declarationes
  * lib/conspectus_<n>.stml (infixae); computare cuiusque functio PURA
  * documentorum et librorum - lectio sola: nihil scribitur, liber
  * absens non creatur.
@@ -11,6 +11,7 @@
  *   liber       nomen paginae spatium paginae/{clavis}     Notebook
  *   personae    id personae   personae per-rem,            Contacts
  *                             spatium persona/{clavis}
+ *   sancti      id sancti     pura (corpus non mutatur)    Saints
  *
  * Ordines (titulus | contextus | semita; corpus):
  *   res       titulus rei | "due Wed 21 Oct 2026 - #domus", "done
@@ -24,6 +25,11 @@
  *   personae  nomen ostensum | epistula prima - telephonum primum |
  *             nomenclator/<id>; corpus nomina altera, rubricae,
  *             epistulae, telephona (et cifrae solae), lineae notarum
+ *   sancti    titulus sancti | festum primum - aetas
+ *             ("28 Jan · 1225–1274") | sancti/sanctus/<id>; corpus
+ *             titulus latinus,
+ *             nomina, munera, patrocinia, loci ortus et obitus, socii,
+ *             paragraphi
  * Pagina sine lineis nullum ordinem dat; res aut persona deleta
  * nullum.
  */
@@ -39,6 +45,7 @@
 #include "volumen.h"
 #include "agenda.h"
 #include "personae.h"
+#include "sancti.h"
 #include "conspectus.h"
 
 nomen structura {
@@ -46,7 +53,8 @@ nomen structura {
      PersonaeDocumentum* personae;  /* NIHIL: 'personae' abest */
                 Volumen* volumen;   /* libri; NIHIL: 'notae', 'liber'
                                      * et notae personarum absunt */
-    InternamentumChorda* intern;
+      InternamentumChorda* intern;
+    constans SanctiCorpus* sancti;   /* D5 S4: NIHIL = 'sancti' abest */
 } IndagatioFontes;
 
 /* declarationes generum quorum fontes adsunt legit; opera, per-rem et

@@ -115,3 +115,21 @@ contact notes inverted, contact fingerprint without surname, books
 without a volume, deleted contact kept (caught only by verificare);
 scriba_liber: common-book path wrong, maximum ignored, bad index
 accepted.
+
+## 2026-10-22 — S4: saints as a searchable kind
+
+Kind `sancti` in indagatio_genera, declared with `<fons pura="sancti"/>`:
+a pure source is never invalidated by volume acts, which is right for
+reference data that does not change while the process runs - saints
+are indexed once per process (the corpus is re-read on restart). Key =
+saint id (typus textus: ids have '-'). Row: title = the saint's title;
+context = first feast ("28 Jan", English month) and lifespan
+(sancti_aetas_textus) joined by " · ", either part dropped when
+unknown; route sancti/sanctus/<id>; body = Latin title, other names,
+roles, patronages, birth and death places, companions, paragraphs. In
+vicus the shared registry gets the SAME lazily opened corpus as the
+saints pane (ContextusKalendarii.sancti accessor, because the registry
+code sits above the saints context in vicus_applicatio.c). Cluster
+order unchanged (best hit; Fran 10-22: it has felt right). Plants red:
+kind not registered, feast dropped, paragraphs/patronages not
+indexed, wrong route, vicus registry without the corpus.
