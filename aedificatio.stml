@@ -421,6 +421,7 @@
     </mandatum>
     <praecondicio actio="aedilis"/>
     <vestigium via="build/aedilis/pecunia_monetae_generare"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
     <ingressus genus="fasciculus" via="tools/pecunia_monetae_generare.sh"/>
     <ingressus genus="fasciculus" via="tools/pecunia_monetae_generare.c"/>
     <ingressus genus="fasciculus" via="include/pecunia.h"/>
@@ -440,6 +441,7 @@
     </mandatum>
     <praecondicio actio="aedilis"/>
     <vestigium via="build/aedilis/fiducia_diffisa_generare"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
     <ingressus genus="fasciculus" via="tools/fiducia_diffisa_generare.sh"/>
     <ingressus genus="fasciculus" via="tools/fiducia_diffisa_generare.c"/>
     <ingressus genus="fasciculus" via="include/fiducia_diffisa.h"/>
