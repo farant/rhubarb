@@ -195,6 +195,7 @@ suturae_compilare_gradus (
                 vacuum* datum,
     constans character* fons,
     constans character* obiectum,
+          constans Xar* vexilla_addita,
                Piscina* piscina,
                 chorda* erratum_out);
 

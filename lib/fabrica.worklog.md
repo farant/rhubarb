@@ -3310,3 +3310,25 @@ The 10-21 entry, and the comment that went with it, claimed `bearssl_amalgama`'s
 ## 2026-10-22 — snapshot (_arborem_photographare) uses the iterator's fields
 
 `tools/fabrica_sutura.c`: a non-symlink, non-IGNOTUS entry is recorded from the iterator's `tempus_ns` / `mensura` (stat == lstat when the entry is not a link; equality measured over 349k entries); recursion is `genus == DIRECTORIUM && !est_nexus`. lstat remains only for symlinks and IGNOTUS. `_directorium_verum_est` is gone. Per entry this went from readdir + stat + lstat (+ lstat for dirs) to one bulk call per ~300 entries. Measured walk: cold 1.60 → 0.39 s, warm ~0.5 → ~0.28 s (lib/iter_directoria.worklog.md). Together with deleting build/sonda (26.5k entries), a cold snapshot of quinta is now a fraction of the ~2 s it was.
+
+## 2026-10-22 — probationes_c variants: `membra`, `vexilla`, `vexilla_nexus` (venenum gate)
+
+The venenum gate (fusio tier, 487 s in the last fusio run) compiled each of its 16 suites from scratch with its own hand-written list of library sources: the shared chain (magnus, fractio, polynomium, matrix, ...) was rebuilt under ASan up to 16 times, and nothing was ever memoized. It is now a `probationes_c` composite, `probationes_veneni` in aedificatio.stml, using three new optional attributes:
+
+- `membra="probatio_a probatio_b"` keeps only the named members of the `exemplar` directory. A name that matches no file is refused by name ("membrum nominatum absens"); otherwise a typo would silently shrink the gate.
+- `vexilla="..."` is appended to the compile argv after the house flags, so the last one wins (`-O1` over the house optimization level).
+- `vexilla_nexus="..."` is appended to the link argv before `-o`.
+
+**Key.** A new `FabricaGradus.attributa_clavis` (NIHIL-terminated) names the composite attributes that change a member's EFFECT. `_membrum_actionem_facere` appends `attributum:<name>=<value>` to the member's mandatum for each one present, just as declared `ambitus` values get in. Editing the flags makes every member fresh; `exemplar`/`membra` only SELECT members and stay out of the key. A gradus with `attributa_clavis == NIHIL` (every other chassis) produces exactly the same keys as before.
+
+**Objects.** The `compilare` hook gained `vexilla_addita`. The compiler thesaurus seals the whole argv, so sanitized objects are cache entries distinct from ordinary ones (no collision with probationes_radicis) and shared across the variant's members.
+
+**Measured:** cold 432 s, which is essentially probatio_cellae's 306 s ASan runtime (laqueus 53 s, everything else under 9 s). Warm, nothing changed: 1.2 s (16/16 servatae). Old gate: ~487 s on every run.
+
+**Plants:**
+- (fabrica_gradus suite) dropping `vexilla` from `attributa_clavis` turns the key assertion red;
+- passing NIHIL instead of the variant flags to compilare turns it red;
+- disabling the absent-member refusal turns it red.
+- (venenum gate) a stale read after `piscina_reficere` in probatio_piscina.c is green in the ordinary radix build (147/147) and red under the composite at the exact line. So `-DPISCINA_VENENUM=1` reaches the member compiles, and the memo reran only that member.
+
+First plant attempt: removing the `_attributa_clavis_c` reference made the array unused, and `-Werror` refused it (silva.planta's pre-flight caught it). Plant INSIDE the data instead (rename the attribute strings).

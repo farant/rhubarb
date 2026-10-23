@@ -223,6 +223,7 @@ suturae_compilare_gradus (
                 vacuum* datum,
     constans character* fons,
     constans character* obiectum,
+          constans Xar* vexilla_addita,
                Piscina* piscina,
                 chorda* erratum_out)
 {
@@ -292,6 +293,14 @@ suturae_compilare_gradus (
                 }
             }
         }
+    }
+    /* vexilla variantis (gradus, 2026-10-22) post domus: ultima
+     * vincunt (-O1 super -O2) */
+    per (i = ZEPHYRUM; vexilla_addita != NIHIL
+         && i < xar_numerus(vexilla_addita); i++)
+    {
+        *(chorda*)xar_addere(verba) = *(constans chorda*)xar_obtinere(
+            vexilla_addita, i);
     }
     *(chorda*)xar_addere(verba) = chorda_ex_literis("-c", piscina);
     *(chorda*)xar_addere(verba) = fons_c;

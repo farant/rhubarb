@@ -527,9 +527,14 @@ nomen structura {
                       chorda* causa_out);
     /* COMPILARE fontem in obiectum (via data) per thesaurum
      * compilatoris; vexilla domus (aedilis.stml: communia, per
-     * fontem, vendor) ab sutura. FALSUM + erratum clang. */
+     * fontem, vendor) ab sutura, deinde vexilla_addita (Xar de chorda,
+     * NIHIL = nulla; gradus variantis, e.g. sanitatores et
+     * -DPISCINA_VENENUM=1 - 2026-10-22) - thesaurus mandatum totum
+     * sigillat, ergo obiecta variantis sua sunt. FALSUM + erratum
+     * clang. */
     b32 (*compilare)(vacuum* datum, constans character* fons,
-                     constans character* obiectum, Piscina* piscina,
+                     constans character* obiectum,
+                     constans Xar* vexilla_addita, Piscina* piscina,
                      chorda* erratum_out);
     /* GRADUS SOLUS (cursores ad gradus T3b): titulus actionis gradus
      * cuius SOLIUS membra fabrica_gradus_explicare facit (clausurae
@@ -685,6 +690,13 @@ structura FabricaGradus {
     /* CENSUS */
                b32 lectiones_dynamicae; /* clavis ex vestigio cursus */
     FabricaSumptus sumptus;
+    /* ATTRIBUTA IN CLAVE (2026-10-22, variantes venenum): nomina
+     * attributorum elementi gradus quae EFFECTUM membri mutant (e.g.
+     * vexilla variantis) - valor eorum in mandato membri (ut ambitus
+     * declaratus), ergo variatio membra frescit; attributa cetera
+     * (exemplar, membra) membra SELIGUNT, clavem non mutant. NIHIL
+     * terminatum; NIHIL = nulla. */
+    constans character* constans* attributa_clavis;
 };
 
 /* Registra: fasciculus, configuratio, instrumentum (octeti plagulae;

@@ -14,7 +14,65 @@
  * sutura->clausura_c, compilatio per thesaurum (sutura->compilare) in
  * <area>obiecta/, nexus et cursus per in_area_currere (cwd = radix).
  * Facultas scopi -> nexus solum (iudicatum, non cursum).
+ *
+ * VARIANTES (2026-10-22, porta venenum): attributa optionalia -
+ *   membra="probatio_a probatio_b"  membra NOMINATA solum (exemplar
+ *                                   directorium dat; nomen absens =
+ *                                   recusatio nominata);
+ *   vexilla="-O1 -fsanitize=..."     vexilla compilationis ADDITA
+ *                                   (post domus - ultima vincunt);
+ *   vexilla_nexus="-fsanitize=..."   vexilla nexus addita.
+ * vexilla et vexilla_nexus in CLAVE membri (attributa_clavis): variatio
+ * membra frescit; thesaurus compilatoris mandatum totum sigillat, ergo
+ * obiecta variantis communia inter membra eius, aliena a ceteris.
  * ================================================== */
+
+/* attributum in verba spatio separata (Xar de chorda; vacuum = Xar
+ * vacua) */
+interior Xar*
+_verba_findere (
+     chorda  valor,
+    Piscina* piscina)
+{
+    Xar* verba;
+    i32  initium;
+    i32  i;
+
+    verba    = fabricae_xar_chordarum(piscina);
+    initium  = ZEPHYRUM;
+    per (i = ZEPHYRUM; verba != NIHIL && i <= valor.mensura; i++)
+    {
+        si (i == valor.mensura || valor.datum[i] == ' ')
+        {
+            si (i > initium)
+            {
+                fabricae_chordam_addere(verba, chorda_sectio(valor,
+                    initium, i));
+            }
+            initium = i + I;
+        }
+    }
+    redde verba;
+}
+
+/* nomen in verbis? */
+interior b32
+_in_verbis (
+    constans Xar* verba,
+          chorda  titulus_membri)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; verba != NIHIL && i < xar_numerus(verba); i++)
+    {
+        si (chorda_aequalis(*(constans chorda*)xar_obtinere(verba, i),
+                titulus_membri))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
 
 /* valor attributi elementi gradus; *adest_out FALSUM si abest */
 interior chorda
@@ -60,6 +118,9 @@ _probationes_c_membra (
     chorda  forma;
        b32  adest;
        b32  praeter_adest;
+       b32  nominata_adest;
+    chorda  nominata;
+       Xar* lista;
        Xar* nomina;
        s32  finis;
        i32  i;
@@ -71,8 +132,10 @@ _probationes_c_membra (
             piscina);
         redde FALSUM;
     }
-    praeter  = _attributum_gradus(actio, "praeter", &praeter_adest);
-    finis    = -I;
+    praeter = _attributum_gradus(actio, "praeter", &praeter_adest);
+    nominata = _attributum_gradus(actio, "membra", &nominata_adest);
+    lista = nominata_adest ? _verba_findere(nominata, piscina) : NIHIL;
+    finis = -I;
     per (i = ZEPHYRUM; i < exemplar.mensura; i++)
     {
         si (exemplar.datum[i] == '/')
@@ -116,6 +179,12 @@ _probationes_c_membra (
         {
             perge;
         }
+        si (   nominata_adest
+            && !_in_verbis(lista, chorda_sectio(n, ZEPHYRUM,
+                   n.mensura - II)))
+        {
+            perge;
+        }
         membrum = (FabricaMembrum*)xar_addere(membra_out);
         si (membrum == NIHIL)
         {
@@ -123,6 +192,30 @@ _probationes_c_membra (
         }
         membrum->titulus  = chorda_sectio(n, ZEPHYRUM, n.mensura - II);
         membrum->fons     = chorda_concatenare(directorium, n, piscina);
+    }
+    /* membrum nominatum quod exemplari non congruit: recusatio (lista
+     * mendax tacite minor fieret) */
+    per (i = ZEPHYRUM; nominata_adest && i < xar_numerus(lista); i++)
+    {
+        chorda titulus_membri = *(constans chorda*)xar_obtinere(lista,
+            i);
+           i32 k;
+           b32 inventum = FALSUM;
+
+        per (k = ZEPHYRUM; k < xar_numerus(membra_out); k++)
+        {
+            si (chorda_aequalis(((constans FabricaMembrum*)xar_obtinere(
+                    membra_out, k))->titulus, titulus_membri))
+            {
+                inventum = VERUM;
+            }
+        }
+        si (!inventum)
+        {
+            *causa_out = fabricae_iungere(piscina,
+                "membrum nominatum absens: ", titulus_membri, "");
+            redde FALSUM;
+        }
     }
     redde VERUM;
 }
@@ -884,6 +977,8 @@ _probationes_c_agere (
                  b32  positum;
   constans character* acta;
                  b32  nexus_solum;
+                 Xar* vexilla;
+                 Xar* vexilla_nexus;
                  i32  i;
 
     area_c = chorda_ex_literis(area, piscina);
@@ -905,6 +1000,14 @@ _probationes_c_agere (
             causa, "");
         redde VERUM;
     }
+    {
+        b32 adest;
+
+        vexilla = _verba_findere(_attributum_gradus(actio, "vexilla",
+            &adest), piscina);
+        vexilla_nexus = _verba_findere(_attributum_gradus(actio,
+            "vexilla_nexus", &adest), piscina);
+    }
     argv = fabricae_xar_chordarum(piscina);
     fabricae_chordam_addere(argv, chorda_ex_literis("clang", piscina));
     per (i = ZEPHYRUM; i < xar_numerus(clausura.fontes); i++)
@@ -917,8 +1020,8 @@ _probationes_c_agere (
             "obiecta/"), _obiectum_nominare(fons, piscina), piscina);
         erratum = chorda_ex_literis("", piscina);
         si (!sutura->compilare(sutura->datum, chorda_ut_cstr(fons,
-                piscina), chorda_ut_cstr(obiectum, piscina), piscina,
-                &erratum))
+                piscina), chorda_ut_cstr(obiectum, piscina), vexilla,
+                piscina, &erratum))
         {
             actum_out->codex  = I;
             actum_out->cauda  =
@@ -947,6 +1050,13 @@ _probationes_c_agere (
                 initium = j + I;
             }
         }
+    }
+    /* vexilla nexus variantis (e.g. -fsanitize=address,undefined) */
+    per (i = ZEPHYRUM; vexilla_nexus != NIHIL
+         && i < xar_numerus(vexilla_nexus); i++)
+    {
+        fabricae_chordam_addere(argv, *(chorda*)xar_obtinere(
+            vexilla_nexus, i));
     }
     binarium = chorda_concatenare(area_c, membrum->titulus, piscina);
     fabricae_chordam_addere(argv, chorda_ex_literis("-o", piscina));
@@ -1030,7 +1140,12 @@ _probationes_c_agere (
     redde VERUM;
 }
 
+hic_manens constans character* constans _attributa_clavis_c[] = {
+    "vexilla", "vexilla_nexus", NIHIL
+};
+
 constans FabricaGradus fabricae_gradus_probationes_c = {
     "probationes_c", _probationes_c_membra, _probationes_c_ingressus,
-    _probationes_c_agere, VERUM, FABRICA_SUMPTUS_CARUS
+    _probationes_c_agere, VERUM, FABRICA_SUMPTUS_CARUS,
+    _attributa_clavis_c
 };
