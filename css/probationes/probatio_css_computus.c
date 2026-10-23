@@ -7,6 +7,7 @@
  * nominata portam in numerum vacuum vertit. Causa in commissione.
  */
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "credo.h"
 #include "piscina.h"
 #include "css_computus.h"
@@ -40,7 +41,7 @@ _plagulam_legere (
     longus mensura;
       i8* buffer;
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL)
     {
         redde NIHIL;
@@ -203,7 +204,7 @@ _aurum_conferre (
     si (getenv("COMPUTUS_SCRIBERE") != NIHIL)
     {
         imprimere("\n  AURUM SCRIBITUR (COMPUTUS_SCRIBERE) - AUDI causam\n");
-        aurum = fopen(f->via_auri, "w");
+        aurum = lectiones_fopen(f->via_auri, "w");
         CREDO_NON_NIHIL (aurum);
         si (aurum != NIHIL)
         {
@@ -232,7 +233,7 @@ _aurum_conferre (
     }
 
     imprimere("  aurum: %s\n", f->via_auri);
-    aurum = fopen(f->via_auri, "r");
+    aurum = lectiones_fopen(f->via_auri, "r");
     si (aurum == NIHIL)
     {
         imprimere("  FRACTA: aurum absens - primum: COMPUTUS_SCRIBERE=1\n");

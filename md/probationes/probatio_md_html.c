@@ -9,6 +9,7 @@
  * bracchium h2 -> h3 in programmate.
  */
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "md_html.h"
 #include "credo.h"
 #include "chorda.h"
@@ -30,7 +31,7 @@ _plagulam_legere (
 
     c.datum    = NIHIL;
     c.mensura  = ZEPHYRUM;
-    f          = fopen(via, "rb");
+    f          = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde c;

@@ -3467,3 +3467,21 @@ Option 1 (desideratum …VXWK8; the real migration into a fabrica composite come
 - Case labels before = after, as a set. XLVII appears in both scripts.
 - Times: pura 46 s + vivus 21 s, against ~63 s before.
 - **New runner gotcha (again):** an untracked script is "sine annotatione" until `git add -N`.
+
+## 2026-10-23 — members blind to raw reads (question …4XE9S9K6): slice 1, md css materia saltuarius + 1 radix
+
+**Reproduced live before the fix.** `md/probationes/fixa/computus/basis.tsv` (probatio_md_computus's golden, read with raw `fopen`) was corrupted.
+- `bin/fabrica probare probationes_md probatio_md_computus` said "servatae 1/1: ingressus immutati … lectiones congruunt" and KEPT the member green.
+- `-vis` turned it red.
+- So a broken golden or fixture was committable green: the read trace (lectiones) never saw the file, and the member's static key doesn't include fixtures.
+- html, the question's original example, was already migrated: a fixture change reruns it.
+
+**Fix (decision "all file IO through the channel", examen 96).** Every raw `fopen` in the composite-member tests listed in canalis_debita.tsv becomes `lectiones_fopen` (same signature: L/A for reads, S for writes) plus `#include "lectiones.h"`. Files:
+- md 9, css 8, materia 2, saltuarius 1;
+- probationes/probatio_aedilis_praefixum.c.
+
+21 debt lines deleted, as the ratchet requires. examen ACCEPTS all of them, and formatter counts are unchanged.
+
+**After.** The same golden corruption now forces a rerun and goes red ("cursae 1"); restored, it's green. Suites green: md 14/14, css 10/10, materia 14/14, saltuarius 13/13, radix probatio_aedilis_praefixum.
+
+**Still open:** silva's 22 debt files (stat/opendir/access as well as fopen, and the shared helper silva/probationes/apparatus.c) come next. Tools (instrumenta) debts aren't composite members.
