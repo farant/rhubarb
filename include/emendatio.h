@@ -16,8 +16,14 @@
  * circumdatur ("d2." -> "<g2.>") - notae sequentes octavam suam
  * servant.
  *
- * NONDUM: pausa -> nota (E2: mensuram substituere), longitudo mutata,
- * notae motae in tempore (scriptor exemplar -> MML; pagina DAW).
+ * MENSURA TOTA (emendatio_mensuram_substituere): sectio inter lineas
+ * '|' scriptas textu MML novo substituitur. Textus novus in statu
+ * lectoris ad initium mensurae legitur (cantus_status_ad: octava, 'l',
+ * 'v', '@'); post eum status finis veteris restituitur ("| o2 b-2. |"
+ * + "o3 d2." -> "| o3 d2. o2 |") - mensurae sequentes sonant ut prius.
+ *
+ * NONDUM: notae motae in tempore (scriptor exemplar -> MML; pagina
+ * DAW).
  */
 /* <aedilis corpus="lib/emendatio.c"/> */
 #ifndef EMENDATIO_H
@@ -27,6 +33,7 @@
 #include "chorda.h"
 #include "piscina.h"
 #include "carmen.h"
+#include "cantus.h"
 
 nomen structura {
     i32 mensura;   /* 1.. */
@@ -65,5 +72,46 @@ emendatio_notam_ponere (
                      chorda* novus,
            EmendatioMutatio* mutatio,
              CarminisVitium* vitium);
+
+/* mensura partis in textu frusti: sectio inter lineas '|' scriptas
+ * (aut initium / finem frusti), spatiis orae exclusis, cum statu
+ * lectoris ad initium - textus novus in hoc statu legitur */
+nomen structura {
+             s32 frustum;    /* index in parte */
+             i32 initium;    /* [initium, finis) in textu frusti */
+             i32 finis;
+          chorda textus;     /* sectio: " o2 b-2. " -> "o2 b-2." */
+    CantusStatus status;     /* ad initium */
+} EmendatioMensura;
+
+/* FALSUM: pars ignota, mensura non intra frustum unum (frusta absunt
+ * aut frustum intra mensuram incipit), linea '|' ad initium / finem
+ * non scripta */
+b32
+emendatio_mensuram_invenire (
+     constans Carmen* carmen,
+              chorda  pars,
+                 i32  mensura,
+    EmendatioMensura* inventa,
+      CarminisVitium* vitium);
+
+/* mensuram textu MML novo substituit. Textus novus in statu initii
+ * legitur; post eum status finis veteris restituitur ('o' 'l' 'v'
+ * scripta solum si differunt; nihil si frustum ibi desinit). Textus
+ * novus sine '|', longitudo eius = mensura. FALSUM (vitium impletum,
+ * *novus intactus): vitia invenire, '|' in textu novo, longitudo
+ * diversa, '@' novum ubi finis vetus nullum habet (MML '@' revocare
+ * nequit), liber novus iudicio cadit */
+b32
+emendatio_mensuram_substituere (
+               chorda  liber,
+               chorda  carmen,
+               chorda  pars,
+                  i32  mensura,
+               chorda  textus,
+              Piscina* piscina,
+               chorda* novus,
+     EmendatioMutatio* mutatio,
+       CarminisVitium* vitium);
 
 #endif /* EMENDATIO_H */

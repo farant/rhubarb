@@ -378,12 +378,337 @@ _sectio_vitia (
         &v));
 }
 
+
+/* ==================================================
+ * Mensurae (E2)
+ * ================================================== */
+
+/* bassus: mensurae 1-4 in frusto 0 (3: 'l8' et '>' mutat; 4: finis
+ * textus), 5 silentium, 6-7 in frusto 1. sine: lineae nullae. medium:
+ * frustum intra mensuram 1 incipit. tympanum: '@' in mensura 1,
+ * '|' ultima */
+hic_manens constans character LIBER_M[] =
+    "<carmina>\n"
+    "  <carmen titulus=\"m\" metrum=\"3/4\">\n"
+    "    <pars titulus=\"bassus\" instrumentum=\"triangulum\">\n"
+    "      <frustum mensura=\"1\"><textus!>o3 d2. | o2 b-2. |"
+    " l8 g4 a b >c d | <a2.</textus></frustum>\n"
+    "      <frustum mensura=\"6\"><textus!>r2. | c2.</textus>"
+    "</frustum>\n"
+    "    </pars>\n"
+    "    <pars titulus=\"sine\" instrumentum=\"aether\">\n"
+    "      <frustum mensura=\"1\"><textus!>o4 c2. d2. e2.</textus>"
+    "</frustum>\n"
+    "    </pars>\n"
+    "    <pars titulus=\"medium\" instrumentum=\"aether\">\n"
+    "      <frustum pulsus=\"960\"><textus!>c4 c4 | c2.</textus>"
+    "</frustum>\n"
+    "    </pars>\n"
+    "    <pars titulus=\"tympanum\" instrumentum=\"aether\">\n"
+    "      <frustum mensura=\"1\"><textus!>@punctum c2. | c2. |"
+    "</textus></frustum>\n"
+    "    </pars>\n"
+    "    <pars titulus=\"duplex\" instrumentum=\"aether\">\n"
+    "      <frustum mensura=\"1\"><textus!>o3 d2. | | o2 a2. | |"
+    " c2.</textus></frustum>\n"
+    "    </pars>\n"
+    "    <pars titulus=\"brevis\" instrumentum=\"aether\">\n"
+    "      <frustum mensura=\"1\"><textus!>c2. | c4</textus>"
+    "</frustum>\n"
+    "    </pars>\n"
+    "    <pars titulus=\"punctata\" instrumentum=\"aether\">\n"
+    "      <frustum mensura=\"1\"><textus!>o4 l4. c c | d d</textus>"
+    "</frustum>\n"
+    "    </pars>\n"
+    "  </carmen>\n"
+    "</carmina>\n";
+
+interior b32
+_inventa_est (
+         CredoContextus* c,
+        constans Carmen* k,
+     constans character* pars,
+                    i32  mensura,
+                    s32  frustum,
+     constans character* textus,
+                    s32  octava,
+                    i32  ordinaria,
+     constans character* praeparatum)
+{
+    EmendatioMensura m;
+      CarminisVitium v;
+
+    memset(&m, ZEPHYRUM, magnitudo(m));
+    si (   emendatio_mensuram_invenire(k,
+               chorda_ex_literis(pars, c->piscina), mensura, &m, &v)
+        && m.frustum                    == frustum
+        && chorda_aequalis_literis(m.textus, textus)
+        && m.finis - m.initium          == m.textus.mensura
+        && m.status.octava              == octava
+        && m.status.ordinaria           == ordinaria
+        && m.status.praeparatum.mensura == (i32)strlen(praeparatum)
+        && (praeparatum[0] == '\0'
+            || chorda_aequalis_literis(m.status.praeparatum,
+                                       praeparatum)))
+    {
+        redde VERUM;
+    }
+    imprimere("  %s %u: frustum %d '%.*s' o%d l%u\n", pars, mensura,
+              (integer)m.frustum, (integer)m.textus.mensura,
+              m.textus.datum ? (constans character*)m.textus.datum : "",
+              (integer)m.status.octava, m.status.ordinaria);
+    redde FALSUM;
+}
+
+interior vacuum
+_sectio_invenire (
+    CredoContextus* c)
+{
+             Carmina  liber;
+      CarminisVitium  v;
+    EmendatioMensura  m;
+     constans Carmen* k;
+
+    CREDO_NECESSE (carmina_legere(chorda_ex_literis(LIBER_M,
+                                                    c->piscina),
+                                  c->piscina, &liber, &v));
+    k = &liber.carmina[ZEPHYRUM];
+    CREDO_VERUM (_inventa_est(c, k, "bassus", I, ZEPHYRUM, "o3 d2.", IV,
+                              CMLX, ""));
+    CREDO_VERUM (_inventa_est(c, k, "bassus", II, ZEPHYRUM, "o2 b-2.",
+                              III, CMLX, ""));
+    CREDO_VERUM (_inventa_est(c, k, "bassus", III, ZEPHYRUM,
+                              "l8 g4 a b >c d", II, CMLX, ""));
+    CREDO_VERUM (_inventa_est(c, k, "bassus", IV, ZEPHYRUM, "<a2.", III,
+                              CDLXXX, ""));
+    CREDO_VERUM (_inventa_est(c, k, "bassus", VI, I, "r2.", IV, CMLX,
+                              ""));
+    CREDO_VERUM (_inventa_est(c, k, "bassus", VII, I, "c2.", IV, CMLX,
+                              ""));
+    CREDO_VERUM (_inventa_est(c, k, "medium", II, ZEPHYRUM, "c2.", IV,
+                              CMLX, ""));
+    CREDO_VERUM (_inventa_est(c, k, "tympanum", II, ZEPHYRUM, "c2.", IV,
+                              CMLX, "punctum"));
+    /* lineae duplices: initium post ULTIMAM, finis ad PRIMAM */
+    CREDO_VERUM (_inventa_est(c, k, "duplex", II, ZEPHYRUM, "o2 a2.",
+                              III, CMLX, ""));
+    CREDO_VERUM (_inventa_est(c, k, "duplex", III, ZEPHYRUM, "c2.", II,
+                              CMLX, ""));
+    /* sedes in textu frusti: initium post '| ', finis ante ' |' */
+    CREDO_NECESSE (emendatio_mensuram_invenire(k,
+        chorda_ex_literis("bassus", c->piscina), II, &m, &v));
+    CREDO_AEQUALIS_I32 (m.initium, IX);
+    CREDO_AEQUALIS_I32 (m.finis, XVI);
+    /* silentium inter frusta; ultra carmen; mensura 0 */
+    CREDO_FALSUM (emendatio_mensuram_invenire(k,
+        chorda_ex_literis("bassus", c->piscina), V, &m, &v));
+    CREDO_FALSUM (emendatio_mensuram_invenire(k,
+        chorda_ex_literis("bassus", c->piscina), VIII, &m, &v));
+    CREDO_FALSUM (emendatio_mensuram_invenire(k,
+        chorda_ex_literis("bassus", c->piscina), ZEPHYRUM, &m, &v));
+    /* lineae non scriptae (initium et finis) */
+    CREDO_FALSUM (emendatio_mensuram_invenire(k,
+        chorda_ex_literis("sine", c->piscina), I, &m, &v));
+    CREDO_FALSUM (emendatio_mensuram_invenire(k,
+        chorda_ex_literis("sine", c->piscina), II, &m, &v));
+    /* frustum intra mensuram incipit; frustum intra mensuram desinit */
+    CREDO_FALSUM (emendatio_mensuram_invenire(k,
+        chorda_ex_literis("medium", c->piscina), I, &m, &v));
+    CREDO_LITERAE_AEQUALES (v.causa, "frustum intra mensuram incipit");
+    CREDO_FALSUM (emendatio_mensuram_invenire(k,
+        chorda_ex_literis("brevis", c->piscina), II, &m, &v));
+    CREDO_LITERAE_AEQUALES (v.causa, "mensura non intra frustum unum");
+    CREDO_FALSUM (emendatio_mensuram_invenire(k,
+        chorda_ex_literis("melodia", c->piscina), I, &m, &v));
+    CREDO_CHORDA_AEQUALIS_LITERIS (v.pars, "melodia");
+}
+
+/* substituere; FALSUM -> causa imprimitur */
+interior b32
+_substituere (
+         CredoContextus* c,
+                 chorda  liber,
+     constans character* pars,
+                    i32  mensura,
+     constans character* textus,
+                 chorda* novus,
+       EmendatioMutatio* mutatio,
+         CarminisVitium* vitium)
+{
+    b32 r;
+
+    memset(novus, ZEPHYRUM, magnitudo(*novus));
+    memset(mutatio, ZEPHYRUM, magnitudo(*mutatio));
+    memset(vitium, ZEPHYRUM, magnitudo(*vitium));
+    r = emendatio_mensuram_substituere(liber,
+        chorda_ex_literis("m", c->piscina),
+        chorda_ex_literis(pars, c->piscina), mensura,
+        chorda_ex_literis(textus, c->piscina), c->piscina, novus,
+        mutatio, vitium);
+    si (!r)
+    {
+        imprimere("  %s %u '%s': %s (frustum %d, offset %u)\n", pars,
+                  mensura, textus, vitium->causa ? vitium->causa : "-",
+                  (integer)vitium->frustum, vitium->offset);
+    }
+    redde r;
+}
+
+/* status restitutus: octava, 'l', 'v', '@'; nihil ubi frustum desinit;
+ * spatia orae servata; textus novus sine spatiis orae */
+interior vacuum
+_sectio_substituere (
+    CredoContextus* c)
+{
+              chorda liber = chorda_ex_literis(LIBER_M, c->piscina);
+              chorda novus;
+    EmendatioMutatio m;
+      CarminisVitium v;
+
+    /* octava: initium o3 (ex mensura 1), finis vetus o2 */
+    CREDO_VERUM (_substituere(c, liber, "bassus", II, "o3 d2.", &novus,
+                              &m, &v));
+    CREDO_CHORDA_AEQUALIS (novus, _exspectatus(c, liber,
+        "| o2 b-2. |", "| o3 d2. o2 |"));
+    CREDO_AEQUALIS_S32 (m.frustum, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (m.offset, IX);
+    CREDO_CHORDA_AEQUALIS_LITERIS (m.vetus, "o2 b-2.");
+    CREDO_CHORDA_AEQUALIS_LITERIS (m.novum, "o3 d2. o2");
+    /* status idem: nihil additum; spatia textus novi abscissa */
+    CREDO_VERUM (_substituere(c, liber, "bassus", I, "  o3 f2 e4 ",
+                              &novus, &m, &v));
+    CREDO_CHORDA_AEQUALIS (novus, _exspectatus(c, liber,
+        "o3 d2. | o2", "o3 f2 e4 | o2"));
+    /* 'l' et octava: finis vetus o3 l8 */
+    CREDO_VERUM (_substituere(c, liber, "bassus", III, "g2.", &novus,
+                              &m, &v));
+    CREDO_CHORDA_AEQUALIS (novus, _exspectatus(c, liber,
+        "| l8 g4 a b >c d |", "| g2. o3 l8 |"));
+    /* 'v' (et octava) */
+    CREDO_VERUM (_substituere(c, liber, "bassus", II, "v50 g2.",
+                              &novus, &m, &v));
+    CREDO_CHORDA_AEQUALIS (novus, _exspectatus(c, liber,
+        "| o2 b-2. |", "| v50 g2. o2 v100 |"));
+    /* frustum desinit: nihil restituitur */
+    CREDO_VERUM (_substituere(c, liber, "bassus", IV, "f2.", &novus,
+                              &m, &v));
+    CREDO_CHORDA_AEQUALIS (novus, _exspectatus(c, liber,
+        "| <a2.</textus>", "| f2.</textus>"));
+    /* pausa -> nota, frustum secundum */
+    CREDO_VERUM (_substituere(c, liber, "bassus", VI, "g2.", &novus,
+                              &m, &v));
+    CREDO_CHORDA_AEQUALIS (novus, _exspectatus(c, liber,
+        ">r2. | c2.<", ">g2. | c2.<"));
+    CREDO_AEQUALIS_S32 (m.frustum, I);
+    /* '@' vetus restitutum */
+    CREDO_VERUM (_substituere(c, liber, "tympanum", I, "c2.", &novus,
+                              &m, &v));
+    CREDO_CHORDA_AEQUALIS (novus, _exspectatus(c, liber,
+        ">@punctum c2. |", ">c2. @punctum |"));
+    /* 'l' punctata restituta */
+    CREDO_VERUM (_substituere(c, liber, "punctata", I, "o4 l4 c2.",
+                              &novus, &m, &v));
+    CREDO_CHORDA_AEQUALIS (novus, _exspectatus(c, liber,
+        ">o4 l4. c c |", ">o4 l4 c2. l4. |"));
+}
+
+/* bis: mensura substituta deinde reddita -> liber originalis */
+interior vacuum
+_sectio_mensura_iterum (
+    CredoContextus* c)
+{
+              chorda liber = chorda_ex_literis(LIBER_M, c->piscina);
+              chorda primus;
+              chorda secundus;
+    EmendatioMutatio m;
+      CarminisVitium v;
+
+    CREDO_NECESSE (_substituere(c, liber, "bassus", II, "o3 d2.",
+                                &primus, &m, &v));
+    CREDO_VERUM (_substituere(c, primus, "bassus", II, "o2 b-2.",
+                              &secundus, &m, &v));
+    CREDO_CHORDA_AEQUALIS (secundus, liber);
+    CREDO_NECESSE (_substituere(c, liber, "bassus", III, "g2.",
+                                &primus, &m, &v));
+    CREDO_VERUM (_substituere(c, primus, "bassus", III,
+                              "l8 g4 a b >c d", &secundus, &m, &v));
+    CREDO_CHORDA_AEQUALIS (secundus, liber);
+}
+
+interior b32
+_substituere_recusat (
+         CredoContextus* c,
+     constans character* pars,
+                    i32  mensura,
+     constans character* textus,
+         CarminisVitium* v)
+{
+              chorda liber = chorda_ex_literis(LIBER_M, c->piscina);
+              chorda novus = chorda_ex_literis("intactus", c->piscina);
+    EmendatioMutatio m;
+
+    memset(v, ZEPHYRUM, magnitudo(*v));
+    si (emendatio_mensuram_substituere(liber,
+            chorda_ex_literis("m", c->piscina),
+            chorda_ex_literis(pars, c->piscina), mensura,
+            chorda_ex_literis(textus, c->piscina), c->piscina, &novus,
+            &m, v))
+    {
+        imprimere("  acceptum: %s %u '%s'\n", pars, mensura, textus);
+        redde FALSUM;
+    }
+    si (   v->causa == NIHIL
+        || !chorda_aequalis_literis(novus, "intactus"))
+    {
+        imprimere("  sine causa aut novus mutatus: %s %u\n", pars,
+                  mensura);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+interior vacuum
+_sectio_mensura_vitia (
+    CredoContextus* c)
+{
+    CarminisVitium v;
+
+    /* longitudo brevior, longior */
+    CREDO_VERUM (_substituere_recusat(c, "bassus", II, "o3 d2", &v));
+    CREDO_LITERAE_AEQUALES (v.causa,
+        "longitudo textus novi mensuram non aequat");
+    CREDO_VERUM (_substituere_recusat(c, "bassus", II, "d2. d4", &v));
+    CREDO_LITERAE_AEQUALES (v.causa,
+        "longitudo textus novi mensuram non aequat");
+    /* '|' in textu novo */
+    CREDO_VERUM (_substituere_recusat(c, "bassus", II, "d4 | d2", &v));
+    CREDO_LITERAE_AEQUALES (v.causa, "textus novus sine '|'");
+    /* '@' novum ubi finis vetus nullum habet */
+    CREDO_VERUM (_substituere_recusat(c, "bassus", II, "@punctum c2.",
+                                      &v));
+    CREDO_LITERAE_AEQUALES (v.causa,
+        "'@' novum notas sequentes mutaret (MML '@' revocare nequit)");
+    /* MML mala; 't' in frusto (liber novus iudicio cadit) */
+    CREDO_VERUM (_substituere_recusat(c, "bassus", II, "x2.", &v));
+    CREDO_VERUM (_substituere_recusat(c, "bassus", II, "t90 d2.", &v));
+    /* invenire: silentium, lineae non scriptae, carmen ignotum */
+    CREDO_VERUM (_substituere_recusat(c, "bassus", V, "d2.", &v));
+    CREDO_VERUM (_substituere_recusat(c, "sine", II, "d2.", &v));
+    CREDO_VERUM (_substituere_recusat(c, "nulla", II, "d2.", &v));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "locus", _sectio_locus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ponere", _sectio_ponere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "composita", _sectio_composita, NIHIL, NIHIL, NIHIL, NIHIL },
     { "iterum", _sectio_iterum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia", _sectio_vitia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "invenire", _sectio_invenire, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "substituere", _sectio_substituere, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mensura_iterum", _sectio_mensura_iterum, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "mensura_vitia", _sectio_mensura_vitia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

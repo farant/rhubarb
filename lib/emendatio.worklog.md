@@ -43,3 +43,30 @@ check survived (1:1+960 lands inside d2. and is refused anyway). Smoke on carmin
 ## 2026-10-23 - `_unitas` removed
 
 The beat unit is carmen_tempus_mensurae now (hoisted on Fran's OK; see lib/carmen.worklog.md).
+
+## 2026-10-23 - E2: emendatio_mensuram_invenire / _substituere
+
+A bar is the text between WRITTEN barlines (or frustum start/end): start after the LAST
+'|' at the bar's start pulse, end at the FIRST '|' at its end pulse (doubled '| |' tested),
+edge whitespace trimmed. Commands before a '|' belong to the bar they end (korobeiniki's
+trailing '<'). Refusals: silence between frusta, a frustum starting or ending inside the
+bar, unwritten barline.
+
+Replacement runs in the bar's START state (cantus_status_ad); after it the OLD end state
+is restored, only what differs: ' oN' (relative '<'/'>' if the old octave is outside 0..8),
+' lN[.]' (dotted lengths via _longitudinem_scribere), ' vN', ' @x'. A new '@' where the old
+end had none is refused - MML cannot clear '@'. No restoration when the frustum ends with
+the bar. Then: total frustum length must be unchanged (explicit causa), and after the
+re-judged write every note OUTSIDE the bar (pulsus, longitudo, nota, lucrum, praeparatum)
+and every barline pulse must be identical (_extra_eaedem).
+
+E1's tree-write + re-read + "textus relectus == scriptus" moved into `_librum_scribere`,
+shared by both operations.
+
+TRAP for E3 (smoke on korobeiniki): bar 1's span INCLUDES the setup 'o5 l8', so a
+replacement 'e2 e2' plays in the default o4 (and ' l8' is restored for bar 2). Correct, but
+an agent will miss it - the CLI must print the start state ("o4 l4") with the bar.
+
+Plants 21/21 red (cantus 4, emendatio 17); the 'l' dot arithmetic needed the 'punctata'
+case, and the frustum-boundary guards needed exact causa asserts (else they fall through
+to other refusals and survive).

@@ -18,6 +18,7 @@
 #include "internamentum.h"
 #include "partitura.h"
 #include "stml.h"
+#include "chorda_aedificator.h"
 #include <string.h>
 
 /* octava MML: 0..8 (cantus.h) */
@@ -291,6 +292,65 @@ _textus_novus (
     redde r;
 }
 
+/* nodus textus frusti 'fi' textum novum accipit, scriptor non-pulcher
+ * (reliqua octetim), liber novus TOTUS iudicatur; custodia: textus
+ * frusti relectus = textus scriptus. *relectum = frustum in *relectus;
+ * 'offset' vitiis solum */
+interior b32
+_librum_scribere (
+                    chorda   liber,
+                    chorda   carmen,
+                    chorda   pars,
+                       s32   fi,
+                       i32   offset,
+                    chorda   textus,
+                   Piscina*  piscina,
+                   Carmina*  relectus,
+                    chorda*  scriptus,
+    constans CarmenFrustum** relectum,
+            CarminisVitium*  vitium)
+{
+           StmlResultus  r;
+              StmlNodus* nodus;
+                 chorda* valor;
+        constans Carmen* k;
+    constans CarmenPars* p;
+
+    r = stml_legere(liber, piscina, internamentum_creare(piscina));
+    nodus = r.successus ? _textum_frusti(r.elementum_radix, carmen,
+                                         pars, fi)
+                        : NIHIL;
+    si (nodus == NIHIL)
+    {
+        redde _vitium(vitium, carmen, pars, fi, ZEPHYRUM,
+            "textus crudus poscitur ('<textus!>')");
+    }
+    valor = (chorda*)piscina_allocare(piscina, magnitudo(chorda));
+    si (valor == NIHIL)
+    {
+        redde _vitium(vitium, carmen, pars, fi, offset,
+            "piscina exhausta");
+    }
+    *valor        = textus;
+    nodus->valor  = valor;
+    *scriptus     = stml_scribere(r.radix, piscina, FALSUM);
+    si (!carmina_legere(*scriptus, piscina, relectus, vitium))
+    {
+        redde FALSUM;
+    }
+    k = carmina_invenire(relectus, carmen);
+    p = k ? _partem_invenire(k, pars) : NIHIL;
+    *relectum = p && fi < (s32)p->numerus_frustorum ? &p->frusta[fi]
+                                                    : NIHIL;
+    si (   *relectum == NIHIL || !chorda_aequalis((*relectum)->textus,
+                                               textus))
+    {
+        redde _vitium(vitium, carmen, pars, fi, offset,
+            "scriptor textum frusti mutavit");
+    }
+    redde VERUM;
+}
+
 b32
 emendatio_notam_ponere (
                      chorda  liber,
@@ -331,10 +391,8 @@ emendatio_notam_ponere (
                         i8* m;
                     chorda  medium;
                     chorda  textus;
-              StmlResultus  r;
-                 StmlNodus* nodus;
-                    chorda* valor;
                     chorda  scriptus;
+    constans CarmenFrustum* f2;
 
     si (!carmina_legere(liber, piscina, &vetus, vitium))
     {
@@ -491,57 +549,27 @@ emendatio_notam_ponere (
             "piscina exhausta");
     }
 
-    /* arbor: nodus textus mutatur, scriptor non-pulcher */
-    r = stml_legere(liber, piscina, internamentum_creare(piscina));
-    nodus = r.successus ? _textum_frusti(r.elementum_radix, carmen,
-        pars,
-                                         fi)
-                        : NIHIL;
-    si (nodus == NIHIL)
-    {
-        redde _vitium(vitium, carmen, pars, fi, ZEPHYRUM,
-            "textus crudus poscitur ('<textus!>')");
-    }
-    valor = (chorda*)piscina_allocare(piscina, magnitudo(chorda));
-    si (valor == NIHIL)
-    {
-        redde _vitium(vitium, carmen, pars, fi, n->offset,
-            "piscina exhausta");
-    }
-    *valor        = textus;
-    nodus->valor  = valor;
-    scriptus      = stml_scribere(r.radix, piscina, FALSUM);
-
-    /* iudicium et custodia */
-    si (!carmina_legere(scriptus, piscina, &relectus, vitium))
+    /* arbor, iudicium, custodia */
+    si (!_librum_scribere(liber, carmen, pars, fi, n->offset, textus,
+                          piscina, &relectus, &scriptus, &f2, vitium))
     {
         redde FALSUM;
     }
+    si (f2->numerus != fr->numerus)
     {
-            constans Carmen* k2 = carmina_invenire(&relectus, carmen);
-        constans CarmenPars* p2 = k2 ? _partem_invenire(k2,
-            pars) : NIHIL;
-        constans CarmenFrustum* f2 = p2
-            && fi < (s32)p2->numerus_frustorum
-                                   ? &p2->frusta[fi] : NIHIL;
+        redde _vitium(vitium, carmen, pars, fi, n->offset,
+            "notae ceterae mutatae (octava non restituta)");
+    }
+    per (i = ZEPHYRUM; i < fr->numerus; i++)
+    {
+        i32 sperata = (s32)i == ni ? altitudo : fr->notae[i].nota;
 
-        si (   f2 == NIHIL || !chorda_aequalis(f2->textus, textus)
-            || f2->numerus != fr->numerus)
+        si (   f2->notae[i].pulsus    != fr->notae[i].pulsus
+            || f2->notae[i].longitudo != fr->notae[i].longitudo
+            || f2->notae[i].nota      != sperata)
         {
             redde _vitium(vitium, carmen, pars, fi, n->offset,
-                "scriptor textum frusti mutavit");
-        }
-        per (i = ZEPHYRUM; i < fr->numerus; i++)
-        {
-            i32 sperata = (s32)i == ni ? altitudo : fr->notae[i].nota;
-
-            si (   f2->notae[i].pulsus    != fr->notae[i].pulsus
-                || f2->notae[i].longitudo != fr->notae[i].longitudo
-                || f2->notae[i].nota      != sperata)
-            {
-                redde _vitium(vitium, carmen, pars, fi, n->offset,
-                    "notae ceterae mutatae (octava non restituta)");
-            }
+                "notae ceterae mutatae (octava non restituta)");
         }
     }
     *novus                  = scriptus;
@@ -550,5 +578,388 @@ emendatio_notam_ponere (
     mutatio->vetus.datum    = fr->textus.datum + s0;
     mutatio->vetus.mensura  = e0 - s0;
     mutatio->novum          = medium;
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Mensura tota (E2)
+ * ================================================== */
+
+interior b32
+_spatium (
+    i8 s)
+{
+    redde s == ' ' || s == '\t' || s == '\n' || s == '\r';
+}
+
+/* offset lineae '|' ad pulsum (intra frustum), ab offset 'ab':
+ * ultima aut prima; -I si nulla */
+interior s32
+_linea (
+    constans CarmenFrustum* f,
+                       s64  pulsus,
+                       b32  ultima,
+                       i32  ab)
+{
+    s32 inventa = -I;
+    i32 i;
+
+    per (i = ZEPHYRUM; i < f->numerus_linearum; i++)
+    {
+        si (f->lineae[i].pulsus == pulsus && f->lineae[i].offset >= ab)
+        {
+            inventa = (s32)f->lineae[i].offset;
+            si (!ultima)
+            {
+                frange;
+            }
+        }
+    }
+    redde inventa;
+}
+
+/* longitudo MML ('l'): 1..64 cum punctis 0..2 - ordinaria semper ex
+ * mensura scripta, ergo semper repraesentabilis */
+interior b32
+_longitudinem_scribere (
+                   i32  pulsus,
+     ChordaAedificator* a)
+{
+    i32 v;
+    i32 p;
+
+    per (v = I; v <= LXIV; v *= II)
+    {
+        i32 basis  = (i32)CANTUS_PULSUS_INTEGRAE / v;
+        i32 l      = basis;
+        i32 adde   = basis / II;
+
+        per (p = ZEPHYRUM; p <= II; p++)
+        {
+            si (l == pulsus)
+            {
+                redde chorda_aedificator_appendere_i32(a, v)
+                    && chorda_aedificator_appendere_repetita(a, '.',
+                                                             p);
+            }
+            l     += adde;
+            adde  /= II;
+        }
+    }
+    redde FALSUM;
+}
+
+b32
+emendatio_mensuram_invenire (
+     constans Carmen* carmen,
+              chorda  pars,
+                 i32  mensura,
+    EmendatioMensura* inventa,
+      CarminisVitium* vitium)
+{
+       constans CarmenPars* p = _partem_invenire(carmen, pars);
+    constans CarmenFrustum* f;
+                       s64  b0;
+                       s64  b1;
+                       s32  fi = -I;
+                       s32  l0;
+                       s32  l1;
+                       i32  initium;
+                       i32  finis;
+                       i32  i;
+              CantusVitium  cv;
+
+    si (p == NIHIL)
+    {
+        redde _vitium(vitium, carmen->titulus, pars, -I, ZEPHYRUM,
+            "pars ignota");
+    }
+    si (mensura < I)
+    {
+        redde _vitium(vitium, carmen->titulus, pars, -I, ZEPHYRUM,
+            "mensura nulla (1 = prima)");
+    }
+    b0 = carmen_pulsus_mensurae(carmen, mensura);
+    b1 = carmen_pulsus_mensurae(carmen, mensura + I);
+    per (i = ZEPHYRUM; i < p->numerus_frustorum; i++)
+    {
+        f = &p->frusta[i];
+        si (f->pulsus > b0 && f->pulsus < b1)
+        {
+            redde _vitium(vitium, carmen->titulus, pars, (s32)i,
+                ZEPHYRUM, "frustum intra mensuram incipit");
+        }
+        si (f->pulsus <= b0 && b0 < f->pulsus + f->longitudo)
+        {
+            fi = (s32)i;
+            frange;
+        }
+    }
+    si (fi < ZEPHYRUM)
+    {
+        redde _vitium(vitium, carmen->titulus, pars, -I, ZEPHYRUM,
+            "mensura sine frusto (silentium)");
+    }
+    f = &p->frusta[fi];
+    si (b1 > f->pulsus + f->longitudo)
+    {
+        redde _vitium(vitium, carmen->titulus, pars, fi, ZEPHYRUM,
+            "mensura non intra frustum unum");
+    }
+    l0 = _linea(f, b0 - f->pulsus, VERUM, ZEPHYRUM);
+    si (l0 < ZEPHYRUM && b0 != f->pulsus)
+    {
+        redde _vitium(vitium, carmen->titulus, pars, fi, ZEPHYRUM,
+            "linea '|' ad initium mensurae non scripta");
+    }
+    initium  = l0 < ZEPHYRUM ? ZEPHYRUM : (i32)l0 + I;
+    l1       = _linea(f, b1 - f->pulsus, FALSUM, initium);
+    si (l1 < ZEPHYRUM && b1 != f->pulsus + f->longitudo)
+    {
+        redde _vitium(vitium, carmen->titulus, pars, fi, initium,
+            "linea '|' ad finem mensurae non scripta");
+    }
+    finis = l1 < ZEPHYRUM ? f->textus.mensura : (i32)l1;
+    dum (initium < finis && _spatium(f->textus.datum[initium]))
+    {
+        initium++;
+    }
+    dum (finis > initium && _spatium(f->textus.datum[finis - I]))
+    {
+        finis--;
+    }
+    si (!cantus_status_ad(f->textus, initium, &inventa->status, &cv))
+    {
+        redde _vitium(vitium, carmen->titulus, pars, fi, cv.offset,
+            cv.causa);
+    }
+    inventa->frustum         = fi;
+    inventa->initium         = initium;
+    inventa->finis           = finis;
+    inventa->textus.datum    = f->textus.datum + initium;
+    inventa->textus.mensura  = finis - initium;
+    redde VERUM;
+}
+
+/* notae extra mensuram [r0, r1) (pulsus intra frustum) eaedem in
+ * frusto novo, ordine; lineae eaedem */
+interior b32
+_extra_eaedem (
+    constans CarmenFrustum* a,
+    constans CarmenFrustum* b,
+                       s64  r0,
+                       s64  r1)
+{
+    i32 i;
+    i32 j = ZEPHYRUM;
+
+    si (a->numerus_linearum != b->numerus_linearum)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < a->numerus_linearum; i++)
+    {
+        si (a->lineae[i].pulsus != b->lineae[i].pulsus)
+        {
+            redde FALSUM;
+        }
+    }
+    i = ZEPHYRUM;
+    dum (VERUM)
+    {
+        constans CarmenNota* x;
+        constans CarmenNota* y;
+
+        dum (   i < a->numerus && a->notae[i].pulsus >= r0
+             && a->notae[i].pulsus < r1)
+        {
+            i++;
+        }
+        dum (   j < b->numerus && b->notae[j].pulsus >= r0
+             && b->notae[j].pulsus < r1)
+        {
+            j++;
+        }
+        si (i == a->numerus || j == b->numerus)
+        {
+            redde i == a->numerus && j == b->numerus;
+        }
+        x = &a->notae[i++];
+        y = &b->notae[j++];
+        si (   x->pulsus != y->pulsus || x->longitudo != y->longitudo
+            || x->nota   != y->nota || x->lucrum != y->lucrum
+            || !chorda_aequalis(x->praeparatum, y->praeparatum))
+        {
+            redde FALSUM;
+        }
+    }
+}
+
+b32
+emendatio_mensuram_substituere (
+               chorda  liber,
+               chorda  carmen,
+               chorda  pars,
+                  i32  mensura,
+               chorda  textus,
+              Piscina* piscina,
+               chorda* novus,
+     EmendatioMutatio* mutatio,
+       CarminisVitium* vitium)
+{
+                   Carmina  vetus;
+                   Carmina  relectus;
+           constans Carmen* k;
+    constans CarmenFrustum* fr;
+    constans CarmenFrustum* f2;
+          EmendatioMensura  m;
+                    chorda  nova = textus;
+                    chorda  candidatus;
+                    chorda  medium;
+                    chorda  scriptus;
+              CantusStatus  vetus_finis;
+              CantusStatus  novus_finis;
+              CantusVitium  cv;
+                 Cantilena  cn;
+         ChordaAedificator* a;
+                       s64  r0;
+                       s64  r1;
+                       b32  desinit;
+                       i32  i;
+
+    si (!carmina_legere(liber, piscina, &vetus, vitium))
+    {
+        redde FALSUM;
+    }
+    k = carmina_invenire(&vetus, carmen);
+    si (k == NIHIL)
+    {
+        redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
+            "carmen ignotum");
+    }
+    si (!emendatio_mensuram_invenire(k, pars, mensura, &m, vitium))
+    {
+        redde FALSUM;
+    }
+    fr = &_partem_invenire(k, pars)->frusta[m.frustum];
+    r0 = carmen_pulsus_mensurae(k, mensura) - fr->pulsus;
+    r1 = carmen_pulsus_mensurae(k, mensura + I) - fr->pulsus;
+
+    /* textus novus: spatia orae abscissa, sine '|' */
+    dum (nova.mensura > ZEPHYRUM && _spatium(nova.datum[ZEPHYRUM]))
+    {
+        nova.datum++;
+        nova.mensura--;
+    }
+    dum (   nova.mensura > ZEPHYRUM
+         && _spatium(nova.datum[nova.mensura - I]))
+    {
+        nova.mensura--;
+    }
+    per (i = ZEPHYRUM; i < nova.mensura; i++)
+    {
+        si (nova.datum[i] == '|')
+        {
+            redde _vitium(vitium, carmen, pars, m.frustum, m.initium,
+                "textus novus sine '|'");
+        }
+    }
+
+    /* status: finis veteris, finis novi (in statu initii lecti) */
+    (vacuum)cantus_status_ad(fr->textus, m.finis, &vetus_finis, &cv);
+    candidatus = _textus_novus(piscina, fr->textus, m.initium, m.finis,
+                               nova);
+    si (!cantus_status_ad(candidatus, m.initium + nova.mensura,
+                          &novus_finis, &cv))
+    {
+        redde _vitium(vitium, carmen, pars, m.frustum, cv.offset,
+            cv.causa);
+    }
+
+    /* textus novus + restitutio (nihil si frustum hic desinit) */
+    desinit = r1 == fr->longitudo;
+    a = chorda_aedificator_creare(piscina,
+        (memoriae_index)(nova.mensura + LXIV));
+    si (a == NIHIL || !chorda_aedificator_appendere_chorda(a, nova))
+    {
+        redde _vitium(vitium, carmen, pars, m.frustum, m.initium,
+            "piscina exhausta");
+    }
+    si (!desinit && novus_finis.octava != vetus_finis.octava)
+    {
+        si (   vetus_finis.octava >= ZEPHYRUM
+            && vetus_finis.octava <= EMENDATIO_OCTAVA_SUMMA)
+        {
+            (vacuum)chorda_aedificator_appendere_literis(a, " o");
+            (vacuum)chorda_aedificator_appendere_s32(a,
+                vetus_finis.octava);
+        }
+        alioquin
+        {
+            s32 d = vetus_finis.octava - novus_finis.octava;
+
+            (vacuum)chorda_aedificator_appendere_character(a, ' ');
+            (vacuum)chorda_aedificator_appendere_repetita(a,
+                d > ZEPHYRUM ? '>' : '<',
+                (i32)(d > ZEPHYRUM ? d : -d));
+        }
+    }
+    si (!desinit && novus_finis.ordinaria != vetus_finis.ordinaria)
+    {
+        (vacuum)chorda_aedificator_appendere_literis(a, " l");
+        (vacuum)_longitudinem_scribere(vetus_finis.ordinaria, a);
+    }
+    si (!desinit && novus_finis.lucrum != vetus_finis.lucrum)
+    {
+        (vacuum)chorda_aedificator_appendere_literis(a, " v");
+        (vacuum)chorda_aedificator_appendere_i32(a, vetus_finis.lucrum);
+    }
+    si (   !desinit && !chorda_aequalis(novus_finis.praeparatum,
+                                     vetus_finis.praeparatum))
+    {
+        si (vetus_finis.praeparatum.mensura == ZEPHYRUM)
+        {
+            redde _vitium(vitium, carmen, pars, m.frustum, m.initium,
+                "'@' novum notas sequentes mutaret (MML '@' revocare "
+                "nequit)");
+        }
+        (vacuum)chorda_aedificator_appendere_literis(a, " @");
+        (vacuum)chorda_aedificator_appendere_chorda(a,
+            vetus_finis.praeparatum);
+    }
+    medium      = chorda_aedificator_finire(a);
+    candidatus  = _textus_novus(piscina, fr->textus, m.initium, m.finis,
+                                medium);
+
+    /* longitudo: frustum totum idem */
+    si (!cantus_legere(candidatus, piscina, &cn, &cv))
+    {
+        redde _vitium(vitium, carmen, pars, m.frustum, cv.offset,
+            cv.causa);
+    }
+    si (cn.pulsus != fr->longitudo)
+    {
+        redde _vitium(vitium, carmen, pars, m.frustum, m.initium,
+            "longitudo textus novi mensuram non aequat");
+    }
+
+    /* arbor, iudicium, custodia */
+    si (!_librum_scribere(liber, carmen, pars, m.frustum, m.initium,
+                          candidatus, piscina, &relectus, &scriptus,
+                          &f2, vitium))
+    {
+        redde FALSUM;
+    }
+    si (!_extra_eaedem(fr, f2, r0, r1))
+    {
+        redde _vitium(vitium, carmen, pars, m.frustum, m.initium,
+            "notae extra mensuram mutatae (status non restitutus)");
+    }
+    *novus            = scriptus;
+    mutatio->frustum  = m.frustum;
+    mutatio->offset   = m.initium;
+    mutatio->vetus    = m.textus;
+    mutatio->novum    = medium;
     redde VERUM;
 }
