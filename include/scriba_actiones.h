@@ -68,6 +68,14 @@ nomen structura {
      * ramus proprius (scriba sola). Hospes post montationem ponit, ut
      * liber et iussa (vicus: radix - registrum unum applicationis) */
           InsulaRamus ramus_capsae;
+    /* exportatio registri (Franus 2026-10-22): capsa scripta (yy, y
+     * visualis, dd, d visualis - etiam idem iterum) -> textus
+     * exportatur: lineae '\n' iunctae sine fine novo, indentatio
+     * communis linearum non vacuarum dempta. Applicatio fenestrae
+     * clipboard_textum_ponere ponit; NIHIL = nulla (probationes,
+     * terminale). */
+                  b32 (*textum_exportare)(vacuum* ctx, chorda textus);
+               vacuum* exportare_ctx;
     /* $question (2026-10-13): iussum DILATUM (effectus.differre) -
      * 0 nullum, I armatum (pulsus proximus picturam sinit), II
      * currendum (pulsus sequens verbum iterum currit) */

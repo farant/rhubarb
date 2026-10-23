@@ -67,6 +67,17 @@ imaginem_glutinatam (
     redde clipboard_capere_imaginem(piscina);
 }
 
+/* porta textus - registrum scribae in clipboard systematis */
+interior b32
+textum_exportatum (
+     vacuum* ctx,
+     chorda  textus)
+{
+    (vacuum)ctx;
+    redde clipboard_textum_ponere((constans character*)textus.datum,
+        textus.mensura);
+}
+
 /* S5: porta pilae - energia_status systematis */
 interior b32
 pilam_systematis (
@@ -191,6 +202,9 @@ principale (
     }
     /* L5: Cmd+V in pictore: imago e clipboard in stratum novum */
     vicus_applicatio_imaginis_portam_ponere(&app, imaginem_glutinatam,
+        NIHIL);
+    /* yy / y / dd in scriba: registrum in clipboard systematis */
+    vicus_applicatio_textus_portam_ponere(&app, textum_exportatum,
         NIHIL);
     /* $question: in processu (via B, http-vocatio; clavis per
      * petitionem in piscinam vocationis) nisi -quaestio adiutor (via A:

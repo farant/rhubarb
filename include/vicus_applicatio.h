@@ -38,6 +38,8 @@ nomen structura {
                                        * porta quaestionis */
                  vacuum* admonitionum; /* T4a: contextus (opacus) */
                  vacuum* soni;         /* sonus S4: contextus opacus */
+                 vacuum* scribae;      /* contextus scribae (opacus) -
+                                        * porta textus */
 } VicusApplicatio;
 
 
@@ -68,6 +70,16 @@ vacuum
 vicus_applicatio_imaginis_portam_ponere (
      VicusApplicatio* app,
         ImagoFructus (*porta)(vacuum* ctx, Piscina* piscina),
+              vacuum* ctx);
+
+/* porta textus (2026-10-22): registrum scribae scriptum (yy, y, dd)
+ * -> clipboard systematis, omnium laterum scribae (etiam iam
+ * montatorum) - NIHIL = nulla (gemellus terminalis, probationes);
+ * applicatio fenestrae clipboard_textum_ponere ponit */
+vacuum
+vicus_applicatio_textus_portam_ponere (
+     VicusApplicatio* app,
+                 b32 (*porta)(vacuum* ctx, chorda textus),
               vacuum* ctx);
 
 /* T4a (colloquia-plan): fontes libri praeconii (via; applicationes

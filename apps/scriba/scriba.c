@@ -14,8 +14,20 @@
 #include "delineare_mandata.h"
 #include "ludus_fenestra.h"
 #include "scriba_applicatio.h"
+#include "clipboard_platform.h"
 #include <stdio.h>
 #include <string.h>
+
+/* porta textus - registrum (yy, y, dd) in clipboard systematis */
+interior b32
+textum_exportatum (
+     vacuum* ctx,
+     chorda  textus)
+{
+    (vacuum)ctx;
+    redde clipboard_textum_ponere((constans character*)textus.datum,
+        textus.mensura);
+}
 
 /* LXXX x LX cellulae: folium cum margine et linea status */
 #define SCRIBA_LATITUDO   CDLXXX
@@ -70,6 +82,8 @@ principale (
     {
         redde I;
     }
+    app.montatio.actiones_ctx.textum_exportare  = textum_exportatum;
+    app.montatio.actiones_ctx.exportare_ctx     = NIHIL;
 
     memset(&cfg, ZEPHYRUM, magnitudo(FenestraConfiguratio));
     cfg.titulus   = "scriba";

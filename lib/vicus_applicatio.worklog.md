@@ -213,3 +213,18 @@ paired route as a petition, then `vicus_comitem_ostendere` + page. No route
 left away, because ostendere seeds `comes_secutus` from the CURRENT front.
 Scriba's `facies.iter_semita` (`iter_scribae`) turns Cmd+F inside a
 companion into `indagatio?genus=comites&clavis=<locus>`.
+
+## 2026-10-22 - `$sound` toast, scriba text port
+
+- `nuntium_hospitis(ca, titulus)`: NUNTIUS into `ca->transientes` with
+  time = max(now, previous + 1 ms) - nunc_vici is whole seconds and the
+  index puts an equal-time entry AFTER older ones, so two quick `$sound`
+  clicks would show the stale toast first. `$sound` now registers with the
+  notifications context (it reaches the vicus through `ca->vicus`) and raises
+  "Sounds muted/unmuted" / "Notification sounds muted/unmuted".
+  Test trap: toasts are 48 cells wide at the right edge and cover scriba
+  line 3 from column ~30 at 480 px - the `$sound(x)` click had to hide them.
+- Text port: ContextusScribae.porta_textus (set any time via
+  vicus_applicatio_textus_portam_ponere, app->scribae is the context);
+  every scriba pane gets a trampoline at mount. apps/vicus and apps/scriba
+  wire clipboard_textum_ponere (new, NSPasteboard, manual retain/release).

@@ -72,12 +72,17 @@ nomen enumeratio {
  * Clipboard (inter editores communicatus)
  * ================================================== */
 
-#define VIM_CLIPBOARD_LINEA_MAXIMA    LXVIII  /* 68 - par tabula latitudo */
-#define VIM_CLIPBOARD_LINEAE_MAXIMAE  XXXII   /* 32 lineae maxime */
+/* 2026-10-22: 68 x 32 -> 256 x 128 (folia scribae latiora quam 68;
+ * exportatio ad clipboard systematis lineas integras vult) */
+#define VIM_CLIPBOARD_LINEA_MAXIMA    CCLVI   /* 256 (NUL incluso) */
+#define VIM_CLIPBOARD_LINEAE_MAXIMAE  CXXVIII /* 128 lineae maxime */
 
 nomen structura {
     character lineae[VIM_CLIPBOARD_LINEAE_MAXIMAE][VIM_CLIPBOARD_LINEA_MAXIMA];
           i32 numerus_linearum;
+    /* scripturae post initiare (yy, y, dd, d visualis): hospes scit
+     * registrum scriptum esse etiam si idem (exportatio) */
+          i32 versio;
 } VimClipboard;
 
 
