@@ -3533,6 +3533,8 @@ _usus (vacuum)
         "      bin/fabrica portae debitae [-machina] -portae TSV "
         "VIA...\n"
         "      bin/fabrica portae declaratae [-machina] -portae TSV\n"
+        "      bin/fabrica portae translatio [-machina] -portae TSV "
+        "[-receptum PORTA ARBOR DIGESTUM]... PORTA...\n"
         "      bin/fabrica quid [-machina] [-iudex TITULUS] VIA... "
         "| -omnes\n"
         "(ex radice repositorii; exitus 0 sanum, 1 stalum/ignotum, "
