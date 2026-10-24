@@ -1253,6 +1253,9 @@
          tls-bearssl T3 R22): valor in clavi - RHUBARB_TLS mutatum
          probationes TLS iterum currit, verdicta vetera non reddit -->
     <ambitus variabilis="RHUBARB_TLS"/>
+    <!-- bibliotheca lectoris (lector L3): vicus_applicatio per
+         lectiones_ambitus legit; probatio_vicus_lector ad fixa ponit -->
+    <ambitus variabilis="RHUBARB_CODICES"/>
     <debitum_scripturae membrum="probatio_generare" via="build/probatio_generare_instrumenta/" causa="instrumenta generata (scratch) in build/"/>
     <debitum_scripturae membrum="probatio_natura_canones" via="build/probatio_natura_canones/" causa="canones probationis (scratch)"/>
     <debitum_scripturae membrum="probatio_silex" via="build/probatio_silex_area/" causa="area silicis (scratch)"/>

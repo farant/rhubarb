@@ -1,0 +1,55 @@
+<!-- organum.stml - manifestum lectoris (genus "lector"; lector L3, spec
+     project-specs/lector-spec.md): bibliotheca, index capitum, paginae
+     libri. Bibliotheca codicum (lector_bibliotheca.h) per ligamen a
+     parente, communis omnibus lateribus - hic solum status visus.
+     Positio legendi per LIBRUM in volumine est, non hic. -->
+<organum genus="lector" versio="1">
+
+  <ligamina>
+    <ligamen nomen="bibliotheca" genus="lector" a="parens"/>
+  </ligamina>
+
+  <actiones>
+    <actio nomen="lector.agere"/>
+  </actiones>
+
+  <status>
+    <campus nomen="visus" typus="electio" vita="persistens"
+            absens="bibliotheca" scriptor="lector.agere"
+            semita="ligatio" historia="impelle">
+      <optio>bibliotheca</optio>
+      <optio>index</optio>
+      <optio>pagina</optio>
+    </campus>
+    <campus nomen="liber" typus="textus" vita="persistens"
+            scriptor="lector.agere" semita="ligatio" historia="impelle"
+            nota="dc:identifier libri aperti; in bibliotheca absens"/>
+    <campus nomen="caput" typus="numerus" vita="transiens"
+            scriptor="lector.agere" semita="status" ambitus="ligatio"
+            nota="TRANSIENS: restitutio semitae persistentis librum
+                  solum nominat, ergo latus restitutum positionem LIBRI
+                  legit (ultima mutatio vincit)"/>
+    <campus nomen="pagina" typus="numerus" vita="transiens"
+            scriptor="lector.agere" semita="status" ambitus="ligatio"
+            nota="pagina intra caput"/>
+    <campus nomen="electus_liber" typus="textus" vita="persistens"
+            scriptor="lector.agere"
+            nota="identitas libri electi (non legibilis: via fili);
+                  absens = primus"/>
+    <campus nomen="electus_caput" typus="numerus" vita="transiens"
+            scriptor="lector.agere" nota="caput electum in indice"/>
+    <campus nomen="nota" typus="textus" vita="transiens"
+            scriptor="lector.agere"
+            nota="nuntius in linea ima ('position not found')"/>
+  </status>
+
+  <!-- argumentum nudum: vacuum = bibliotheca; identitas libri =
+       liber ad positionem suam -->
+  <cognomina>
+    <cognomen semita="lector/bibliotheca"/>
+    <cognomen typus="textus" semita="lector/pagina/{}"/>
+  </cognomina>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>

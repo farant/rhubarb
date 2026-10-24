@@ -13,6 +13,8 @@
 #include "admonitiones_volantes.h"
 #include "colloquia_visus.h"
 #include "sancti_visus.h"
+#include "lector.h"
+#include "lectiones.h"
 #include "indagatio.h"
 #include "indagatio_genera.h"
 #include "indagatio_visus.h"
@@ -3709,6 +3711,121 @@ sanctos_describere (
 }
 
 
+/* lector (lector L3): bibliotheca codicum UNA per vicum, pigre aperta
+ * ex RHUBARB_CODICES aut ~/.rhubarb/codices, communis omnibus
+ * lateribus; positiones in volumine vici */
+nomen structura {
+                  Vicus* vicus;
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                Volumen* volumen;
+      LectorBibliotheca* bibliotheca;
+                    b32  temptatum;
+        StatusSystemata* systemata;
+} ContextusLectoris;
+
+interior LectorBibliotheca*
+bibliotheca_lectoris (
+    ContextusLectoris* cl)
+{
+    constans character* directorium;
+    constans character* domus;
+             character* via;
+
+    si (!cl->temptatum)
+    {
+        cl->temptatum  = VERUM;
+        directorium    = lectiones_ambitus("RHUBARB_CODICES");
+        si (!directorium || !directorium[ZEPHYRUM])
+        {
+            domus = lectiones_ambitus("HOME");
+            via   = (character*)piscina_allocare(cl->piscina,
+                (memoriae_index)(domus ? strlen(domus) : ZEPHYRUM)
+                + XXXII);
+            si (!via)
+            {
+                redde NIHIL;
+            }
+            sprintf(via, "%s/.rhubarb/codices", domus ? domus : ".");
+            directorium = via;
+        }
+        cl->bibliotheca = lector_bibliotheca_aperire(directorium,
+            cl->volumen, cl->piscina, cl->intern);
+    }
+    redde cl->bibliotheca;
+}
+
+interior b32
+lectorem_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+    ContextusLectoris* cl;
+
+    (vacuum)volumen;
+    cl = (ContextusLectoris*)ctx;
+    si (   !cl
+        || !lector_montare((LectorMontatio*)sedes, piscina, intern,
+        repo,
+               id, bibliotheca_lectoris(cl), latitudo, altitudo,
+               cl->systemata))
+    {
+        redde FALSUM;
+    }
+    /* URI, identitas libri (liber ad positionem suam); mala:
+     * bibliotheca manet */
+    si (argumentum && argumentum[ZEPHYRUM])
+    {
+        (vacuum)lector_argumentum_ponere((LectorMontatio*)sedes,
+            argumentum);
+    }
+    redde VERUM;
+}
+
+interior b32
+lectoris_argumentum_ponere (
+                 vacuum* ctx,
+     constans character* argumentum)
+{
+    redde lector_argumentum_ponere((LectorMontatio*)ctx, argumentum);
+}
+
+interior vacuum
+lectorem_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    LectorMontatio* m;
+
+    m                 = (LectorMontatio*)montatio;
+    f->actiones       = m->actiones;
+    f->figurae        = m->figurae;
+    f->componere      = lector_componere;
+    f->componere_ctx  = m;
+    f->ramus          = &m->ramus;
+    /* Esc quod bibliotheca non consumpsit: latus prius */
+    f->effugium_redit = VERUM;
+    /* $via, historia, restitutio: semita sine capite = positio libri */
+    f->argumentum_ponere      = lectoris_argumentum_ponere;
+    f->argumentum_ponere_ctx  = m;
+    f->semitam_secuta         = lector_semitam_secuta;
+    f->semitam_secuta_ctx     = m;
+    /* comites: locus paginae (cum capite et pagina), titulus humanus */
+    f->locus              = lector_locus;
+    f->locus_ctx          = m;
+    f->locus_titulus      = lector_locus_titulus;
+    f->locus_titulus_ctx  = m;
+}
+
+
 /* ==================================================
  * Indagatio (genera-datorum D5, S3b)
  * ================================================== */
@@ -3988,6 +4105,7 @@ ContextusNomenclatoris* cn;
  ContextusAdmonitionum* cad;
          ContextusSoni* soni;
     ContextusSanctorum* sanctorum;
+     ContextusLectoris* lectoris;
  ContextusIndagationis* ci;
        StatusSystemata* systemata;
 
@@ -4055,6 +4173,18 @@ ContextusNomenclatoris* cn;
         sanctorum->piscina    = piscina;
         sanctorum->intern     = intern;
         sanctorum->systemata  = systemata;
+    }
+    /* lector: bibliotheca codicum communis, pigre aperta */
+    lectoris = (ContextusLectoris*)piscina_allocare(piscina,
+        magnitudo(ContextusLectoris));
+    si (lectoris)
+    {
+        memset(lectoris, ZEPHYRUM, magnitudo(ContextusLectoris));
+        lectoris->vicus      = app->vicus;
+        lectoris->piscina    = piscina;
+        lectoris->intern     = intern;
+        lectoris->volumen    = volumen;
+        lectoris->systemata  = systemata;
     }
     /* D5 S4: registrum commune sanctos quaerit (corpus pigre) */
     si (ck && sanctorum)
@@ -4215,6 +4345,9 @@ ContextusNomenclatoris* cn;
         || !vicus_genus_addere(app->vicus, "sancti",
                magnitudo(SanctorumMontatio), sanctos_montare_in_vico,
                sanctos_describere, sanctorum)
+        || !vicus_genus_addere(app->vicus, "lector",
+               magnitudo(LectorMontatio), lectorem_montare_in_vico,
+               lectorem_describere, lectoris)
         || !vicus_genus_addere(app->vicus, "colloquia",
                magnitudo(ColloquiorumMontatio),
                colloquia_montare_in_vico,
