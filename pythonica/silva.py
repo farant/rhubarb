@@ -3866,6 +3866,48 @@ def portae_debitae_ramus(basis='main'):
     return '\n'.join(lineae) + '\n'
 
 
+def _producentes_fusionis_sanare():
+    """PRODUCENTES ANTE PRAEIUDICIA (parcum …J1AJ5V2): artificia commissa
+    FORTASSE/STALUM/IGNOTUM quia producens NON commissus supra stalus est
+    (capsula speculi: tempus commissi, stala post commissionem quamque) -
+    porta generata (iudicare -plenus -omnia) fusionem frustra sistebat.
+    Ambitus idem ac porta generata (-omnia); consilium producentium idem
+    ac commissio (producentes non commissi soli, politica iudicat) -
+    artificia COMMISSA numquam hic regenerantur (fusio commissum iudicat):
+    stala vera portam generata ut antea frangunt."""
+    if not os.path.exists(FABRICA_BIN):
+        return
+    r = subprocess.run([FABRICA_BIN, 'iudicare', '-plenus', '-omnia',
+                        '-machina'], cwd=RADIX, capture_output=True,
+                       text=True)
+    if r.returncode != 1:
+        return
+    malae = [o[2] for o in _machina_legere(r.stdout)
+             if o[0] == 'IUDICIUM' and len(o) >= 3
+             and o[1] in ('STALUM', 'IGNOTUM', 'FORTASSE')]
+    if not malae or not VIAE_COMMISSAE(malae):
+        return
+    consilium = _consilium_producentium(malae)
+    if consilium is None:
+        return
+    rc_c, acta_c, err_c, via_c = _consilium_agere(consilium,
+                                                  'producentes_fusionis')
+    sanatae = _consilium_acta(acta_c)
+    if sanatae:
+        print('fusio: producentes stali per consilium in arbore sanati'
+              ' (%s; %s)' % (', '.join(sanatae), via_c))
+    # MONITUM, non obstaculum: sanatio commoditas est ante iudicium;
+    # porta generata statim verum iudicat (gradus fractus, e.g. corpus
+    # silicis 'extra propositum', parcum …AG7, fusionem non sistit si
+    # artificia commissa iam recentia sunt)
+    if rc_c != 0:
+        print('MONITUM fusio: consilium producentium (%s) %s - porta'
+              ' generata iudicabit:\n%s'
+              % (via_c, 'sine iudicio exsequi NON licet'
+                 if rc_c in (1, 2) else 'non totum actum',
+                 _consilium_fracturae(acta_c, err_c)))
+
+
 def fusio_probare(basis='main', frigida=True, recepta=True):
     """FUSIO (gradus-portarum T4, spec §III): ramus ante fusionem in basis.
     1. basis antecessor HEAD esse debet ('merge main first'), arbor munda
@@ -3904,6 +3946,8 @@ def fusio_probare(basis='main', frigida=True, recepta=True):
                                                       recepta=recepta)
     with _phasis('instrumenta portarum'):
         _instrumenta_portarum_sanare(binaria)
+    with _phasis('producentes'):
+        _producentes_fusionis_sanare()
     try:
         _portas_currere(portae, genera, viae, recepta, pergere=True)
     except PortaeFractae as ex:
