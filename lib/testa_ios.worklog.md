@@ -61,3 +61,18 @@
   as `EVENTUS_DEPOSITIO` - pictor's drop handler (T1) does the rest.
 - One flag `_eligens` covers "picker open" and "photo still loading";
   an empty result (Cancel or swipe-down) clears it.
+
+## 2026-10-24 - Xcode 27.1 (macOS 27) after merging main 822639ae
+
+- iOS 27.1 SDK + clang 21: `lib/testa_ios.m` compiles clean (postulata_ios.h
+  already does what main's postulata_macos.h does for macOS .m files).
+  Old simulator runtimes (17.0, 18.1) remain; the default "iPhone 15 Pro
+  Max" simulator still exists.
+- `devicectl list devices` now lists SIMULATORS too (`reality =
+  simulated`), and for the phone omits `developerModeStatus`,
+  `marketingName` and `reality` until a tunnel is open; the identifier
+  changed (16FF1CC7-... instead of C935DC82-...). `communia.sh` skips
+  simulated entries, accepts an absent Developer Mode field (install
+  names the cause if it is off), falls back to `productType`.
+- TestFlight's "iOS 26 SDK" requirement is now met by the installed Xcode;
+  C2 step 0 (the upgrade) is done.

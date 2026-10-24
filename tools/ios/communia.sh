@@ -11,11 +11,14 @@ _ios_campus () {
 # IOS_TABULA (identificator devicectl), IOS_UDID (ferramenti - in
 # ProvisionedDevices profili), IOS_NOMEN, IOS_MODELLUM, IOS_VERSIO
 # ponit. IOS_DEVICE (identificator, UDID aut nomen) eligit; aliter
-# telephonum UNUM iOS coniunctum (pairingState paired) cum modo
-# auctoris (developerModeStatus enabled). Nexus (USB aut rete) devicectl
+# telephonum UNUM iOS verum (non 'simulated') coniunctum (pairingState
+# paired) cum modo auctoris. Xcode 27 (devicectl, 2026-10-24) simulatores
+# quoque enumerat et developerModeStatus / marketingName ante nexum non
+# refert: modus ABSENS acceptatur (institutio ipsa causam nominat), solum
+# valor alius quam 'enabled' recusatur. Nexus (USB aut rete) devicectl
 # ipse aperit. Aliter apparatus statum nominans.
 ios_tabulam_eligere () {
-    local j n i id nomen udid platforma par modus modellum versio apti
+    local j n i id nomen udid platforma par modus modellum versio apti realitas
     j=$(mktemp -t ios_tabulae) || apparatus "mktemp fractum"
     if ! xcrun devicectl list devices --json-output "$j" > /dev/null 2>&1; then
         rm -f "$j"
@@ -32,16 +35,20 @@ ios_tabulam_eligere () {
         platforma=$(_ios_campus "$j" "result.devices.$i.hardwareProperties.platform")
         par=$(_ios_campus "$j" "result.devices.$i.connectionProperties.pairingState")
         modus=$(_ios_campus "$j" "result.devices.$i.deviceProperties.developerModeStatus")
-        modellum=$(_ios_campus "$j" "result.devices.$i.hardwareProperties.marketingName")
+        modellum=$(_ios_campus "$j" "result.devices.$i.hardwareProperties.marketingName") \
+            || modellum=$(_ios_campus "$j" "result.devices.$i.hardwareProperties.productType")
+        realitas=$(_ios_campus "$j" "result.devices.$i.hardwareProperties.reality")
         versio=$(_ios_campus "$j" "result.devices.$i.deviceProperties.osVersionNumber")
         i=$((i + 1))
+        [ "$realitas" = simulated ] && continue
         if [ -n "${IOS_DEVICE:-}" ]; then
             [ "$IOS_DEVICE" = "$id" ] || [ "$IOS_DEVICE" = "$udid" ] \
                 || [ "$IOS_DEVICE" = "$nomen" ] || continue
             [ "$par" = paired ] || { rm -f "$j"; apparatus "telephonum '$IOS_DEVICE' non coniunctum (pairingState '$par') - Xcode: Window > Devices"; }
-            [ "$modus" = enabled ] || { rm -f "$j"; apparatus "telephonum '$IOS_DEVICE': Developer Mode '$modus' - Settings > Privacy & Security > Developer Mode"; }
+            [ -z "$modus" ] || [ "$modus" = enabled ] || { rm -f "$j"; apparatus "telephonum '$IOS_DEVICE': Developer Mode '$modus' - Settings > Privacy & Security > Developer Mode"; }
         else
-            [ "$platforma" = iOS ] && [ "$par" = paired ] && [ "$modus" = enabled ] || continue
+            [ "$platforma" = iOS ] && [ "$par" = paired ] || continue
+            [ -z "$modus" ] || [ "$modus" = enabled ] || continue
         fi
         apti=$((apti + 1))
         IOS_TABULA=$id; IOS_UDID=$udid; IOS_NOMEN=$nomen
