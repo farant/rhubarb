@@ -6,6 +6,7 @@
  */
 #include "sonus.h"
 #include <math.h>
+#include <string.h>
 
 /* 2^32: cyclus unus phasis */
 #define SONUS_CYCLUS     4294967296.0
@@ -376,6 +377,131 @@ sonus_resonans_proximum (
     c->y2 = c->y1;
     c->y1 = y;
     redde y;
+}
+
+
+    /* ==================================================
+     * REVERBERATIO
+     * ================================================== */
+
+/* morae Freeverb ad 44.1 kHz (Jezar): pectines, allpass, et
+ * extensio stereo canalis dextri */
+hic_manens constans i32 MORAE_PECTINUM[SONUS_REVERBERATIO_PECTINES] = {
+    1116U, 1188U, 1277U, 1356U, 1422U, 1491U, 1557U, 1617U
+};
+hic_manens constans i32 MORAE_TRANSITUUM[SONUS_REVERBERATIO_TRANSITUS] =
+    {
+    556U, 441U, 341U, 225U
+};
+#define SONUS_EXTENSIO_DEXTRA XXIII
+#define SONUS_LUCRUM_INGRESSUS 0.015f   /* Freeverb 'fixedgain' */
+
+/* mora ad SONUS_FREQUENTIA scalata, ad lineam coercita */
+interior i32
+_mora_scalata (
+    i32 mora,
+    i32 maxima)
+{
+    i32 n = (i32)((f64)mora * (f64)SONUS_FREQUENTIA / 44100.0 + 0.5);
+
+    redde n > maxima ? maxima : (n < I ? I : n);
+}
+
+vacuum
+sonus_reverberationem_parare (
+                   SonusReverberatio* r,
+     constans SonusReverberatioForma* forma)
+{
+    i32 c;
+    i32 k;
+
+    memset(r, ZEPHYRUM, magnitudo(SonusReverberatio));
+    per (c = ZEPHYRUM; c < II; c++)
+    {
+        per (k = ZEPHYRUM; k < SONUS_REVERBERATIO_PECTINES; k++)
+        {
+            r->pectines[c][k].longitudo = _mora_scalata(
+                MORAE_PECTINUM[k] + c * SONUS_EXTENSIO_DEXTRA,
+                SONUS_PECTEN_MAXIMUS);
+        }
+        per (k = ZEPHYRUM; k < SONUS_REVERBERATIO_TRANSITUS; k++)
+        {
+            r->transitus[c][k].longitudo = _mora_scalata(
+                MORAE_TRANSITUUM[k] + c * SONUS_EXTENSIO_DEXTRA,
+                SONUS_TRANSITUS_MAXIMUS);
+        }
+    }
+    sonus_reverberationem_ponere(r, forma);
+}
+
+/* Freeverb: retro = 0.7 + 0.28 aula (aula 1 -> 0.98, stabilis),
+ * hebetatio = 0.4 mollities; latitudo miscet canales */
+vacuum
+sonus_reverberationem_ponere (
+                   SonusReverberatio* r,
+     constans SonusReverberatioForma* forma)
+{
+    f32 aula       = _coercere(forma->aula, 0.0f, 1.0f);
+    f32 mollities  = _coercere(forma->mollities, 0.0f, 1.0f);
+    f32 latitudo   = _coercere(forma->latitudo, 0.0f, 1.0f);
+
+    r->retro            = 0.7f + 0.28f * aula;
+    r->hebetatio        = 0.4f * mollities;
+    r->umidum_proprium  = 0.5f + 0.5f * latitudo;
+    r->umidum_alienum   = 0.5f - 0.5f * latitudo;
+}
+
+vacuum
+sonus_reverberationis_proximum (
+    SonusReverberatio* r,
+                  f32  ingressus,
+                  f32* sinistrum,
+                  f32* dextrum)
+{
+    f32 x = ingressus * SONUS_LUCRUM_INGRESSUS;
+    f32 exitus[II];
+    i32 c;
+    i32 k;
+
+    per (c = ZEPHYRUM; c < II; c++)
+    {
+        f32 y = 0.0f;
+
+        /* pectines paralleli: linea per filtrum hebetationis redit */
+        per (k = ZEPHYRUM; k < SONUS_REVERBERATIO_PECTINES; k++)
+        {
+             SonusPecten* p       = &r->pectines[c][k];
+                     f32  lectum  = p->linea[p->locus];
+
+            p->memoria = lectum * (1.0f - r->hebetatio)
+                       + p->memoria * r->hebetatio;
+            /* subnormalia vitantur (cauda longa) */
+            si (p->memoria < 1.0e-25f && p->memoria > -1.0e-25f)
+            {
+                p->memoria = 0.0f;
+            }
+            p->linea[p->locus] = x + p->memoria * r->retro;
+            p->locus = p->locus + I == p->longitudo ? ZEPHYRUM
+                                                    : p->locus + I;
+            y += lectum;
+        }
+        /* allpass in serie (retro 0.5) */
+        per (k = ZEPHYRUM; k < SONUS_REVERBERATIO_TRANSITUS; k++)
+        {
+             SonusTransitus* t       = &r->transitus[c][k];
+                        f32  lectum  = t->linea[t->locus];
+
+            t->linea[t->locus] = y + lectum * 0.5f;
+            t->locus = t->locus + I == t->longitudo ? ZEPHYRUM
+                                                    : t->locus + I;
+            y = lectum - y;
+        }
+        exitus[c] = y;
+    }
+    *sinistrum  = exitus[ZEPHYRUM] * r->umidum_proprium
+                + exitus[I] * r->umidum_alienum;
+    *dextrum    = exitus[I] * r->umidum_proprium
+                + exitus[ZEPHYRUM] * r->umidum_alienum;
 }
 
 

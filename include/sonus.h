@@ -237,6 +237,68 @@ sonus_resonans_proximum (
 
 
 /* ================================================================
+ * REVERBERATIO - aula (Freeverb, Jezar 2000, dominii publici): per
+ * canalem VIII filtra pectinis parallela cum hebetatione, deinde IV
+ * allpass in serie; canalis dexter moris paulo longioribus (stereo).
+ * Morae ex 44.1 kHz ad SONUS_FREQUENTIA scalatae. Sine allocatione:
+ * lineae in structura (~135 KB)
+ * ================================================================ */
+
+#define SONUS_REVERBERATIO_PECTINES   VIII  /* filtra pectinis */
+#define SONUS_REVERBERATIO_TRANSITUS  IV    /* allpass in serie */
+#define SONUS_PECTEN_MAXIMUS          MDCCC /* mora maxima, exempla */
+#define SONUS_TRANSITUS_MAXIMUS       DCXL
+
+nomen structura {
+    f32 aula;        /* 0..1 magnitudo aulae (cauda longior) */
+    f32 mollities;   /* 0..1 acuta in cauda absorbentur */
+    f32 latitudo;    /* 0 mono .. 1 stereo plenum */
+} SonusReverberatioForma;
+
+nomen structura {
+    f32 linea[SONUS_PECTEN_MAXIMUS];
+    i32 longitudo;
+    i32 locus;
+    f32 memoria;     /* filtrum hebetationis */
+} SonusPecten;
+
+nomen structura {
+    f32 linea[SONUS_TRANSITUS_MAXIMUS];
+    i32 longitudo;
+    i32 locus;
+} SonusTransitus;
+
+nomen structura {
+       SonusPecten pectines[II][SONUS_REVERBERATIO_PECTINES];
+    SonusTransitus transitus[II][SONUS_REVERBERATIO_TRANSITUS];
+               f32 retro;        /* lucrum reditus pectinum */
+               f32 hebetatio;
+               f32 umidum_proprium;  /* canalis suus */
+               f32 umidum_alienum;   /* canalis alter (latitudo) */
+} SonusReverberatio;
+
+/* memoria nullata */
+vacuum
+sonus_reverberationem_parare (
+                   SonusReverberatio* r,
+     constans SonusReverberatioForma* forma);
+
+/* forma nova SINE memoria reposita */
+vacuum
+sonus_reverberationem_ponere (
+                   SonusReverberatio* r,
+     constans SonusReverberatioForma* forma);
+
+/* mono intrat, stereo exit (umidum solum, sine sicco) */
+vacuum
+sonus_reverberationis_proximum (
+    SonusReverberatio* r,
+                  f32  ingressus,
+                  f32* sinistrum,
+                  f32* dextrum);
+
+
+/* ================================================================
  * RETENTIO et COMMINUTIO - asperitas digitalis ('8-bit' ut parametra)
  * ================================================================ */
 

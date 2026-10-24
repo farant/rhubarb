@@ -245,9 +245,11 @@ _notam_iubere (
         i.tibia  = *tibia;
         i.nota   = (f32)n->nota;
     }
-    i.ansa    = a;
-    i.grex    = MIXTURA_GREX_MUSICA;
-    i.lucrum  = n->lucrum * pars->lucrum;
+    i.ansa     = a;
+    i.grex     = MIXTURA_GREX_MUSICA;
+    i.lucrum   = n->lucrum * pars->lucrum;
+    i.positio  = pars->positio;
+    i.missio   = pars->reverberatio;
     si (!concentus_iubere(c->concentus, &i))
     {
         redde;
@@ -347,6 +349,16 @@ cantor_incipere (
     }
     _voces_tacere(c);
     c->carmen = carmen;
+    /* aula carminis (sine aula reditus 0: prior tacet) */
+    {
+        MixturaIussum i;
+
+        mixtura_iussum_parare(&i, MIXTURA_IUSSUM_REVERBERATIONEM_PONERE,
+                              concentus_initium(c->concentus));
+        i.reverberatio  = carmen->reverberatio;
+        i.lucrum        = carmen->lucrum_reverberationis;
+        (vacuum)concentus_iubere(c->concentus, &i);
+    }
     _ponere(c, pulsus);
     redde VERUM;
 }

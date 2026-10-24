@@ -365,7 +365,7 @@ _carmen_monstrare (
             ambitus = chorda_aedificator_finire(a);
         }
         imprimere("  %-10.*s %-12.*s lucrum %.2f  notae %3u  "
-                  "%.*s%s%s\n",
+                  "%.*s%s%s",
             (integer)p->titulus.mensura,
             (constans character*)p->titulus.datum,
             (integer)p->instrumentum.mensura,
@@ -374,6 +374,23 @@ _carmen_monstrare (
             (constans character*)ambitus.datum,
             p->mutus ? "  mutus" : "",
             p->solus ? "  solus" : "");
+        si (p->positio != 0.0f)
+        {
+            imprimere("  positio %+.2f", (duplex)p->positio);
+        }
+        si (p->reverberatio != 0.0f)
+        {
+            imprimere("  reverberatio %.2f", (duplex)p->reverberatio);
+        }
+        imprimere("\n");
+    }
+    si (k->lucrum_reverberationis > 0.0f)
+    {
+        imprimere("  aula: magnitudo %.2f  mollities %.2f  latitudo "
+                  "%.2f  reditus %.2f\n", (duplex)k->reverberatio.aula,
+                  (duplex)k->reverberatio.mollities,
+                  (duplex)k->reverberatio.latitudo,
+                  (duplex)k->lucrum_reverberationis);
     }
     /* instrumenta carminis et libri (genus); instrumentarii non hic
      * (-instrumenta) */

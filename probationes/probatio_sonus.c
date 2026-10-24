@@ -9,6 +9,8 @@
 #include "latina.h"
 #include "credo.h"
 #include "sonus.h"
+#include <math.h>
+#include <string.h>
 
 /* circumvolutiones serrae in n exemplis: saltus deorsum > 1 */
 interior i32
@@ -599,6 +601,254 @@ _sectio_resonans (
 
 
     /* ==================================================
+     * REVERBERATIO - responsum impulsus: silentium manet silentium,
+     * aula caudam longiorem, mollities obscuriorem, latitudo 0 = mono;
+     * stabilis ad aulam 1; deterministica; ponere memoriam servat
+     * ================================================== */
+
+#define CAUDA_QUADRA (II * SONUS_FREQUENTIA)
+
+hic_manens SonusReverberatio aula_probanda;
+hic_manens f32 cauda_sinistra[CAUDA_QUADRA];
+hic_manens f32 cauda_dextra[CAUDA_QUADRA];
+
+/* status sectionis nullatus */
+interior vacuum
+_parare_caudam (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    memset(&aula_probanda, ZEPHYRUM, magnitudo(aula_probanda));
+    memset(cauda_sinistra, ZEPHYRUM, magnitudo(cauda_sinistra));
+    memset(cauda_dextra, ZEPHYRUM, magnitudo(cauda_dextra));
+}
+
+/* impulsus (aut strepitus 'strepitus' quadris) deinde silentium */
+interior vacuum
+_caudam_reddere (
+    constans SonusReverberatioForma* forma,
+                                i32  strepitus)
+{
+    i32 k;
+    i32 semen = 12345U;
+
+    sonus_reverberationem_parare(&aula_probanda, forma);
+    per (k = ZEPHYRUM; k < CAUDA_QUADRA; k++)
+    {
+        f32 x = k == ZEPHYRUM ? 1.0f : 0.0f;
+
+        si (k < strepitus)
+        {
+            semen  = semen * 1103515245U + 12345U;
+            x      = (f32)(semen >> VIII) / 8388608.0f - 1.0f;
+        }
+        sonus_reverberationis_proximum(&aula_probanda, x,
+            &cauda_sinistra[k], &cauda_dextra[k]);
+    }
+}
+
+interior f64
+_efficax_caudae (
+    constans f32* x,
+             i32  initium,
+             i32  numerus)
+{
+    f64 s = 0.0;
+    i32 k;
+
+    per (k = initium; k < initium + numerus; k++)
+    {
+        s += (f64)x[k] * (f64)x[k];
+    }
+    redde sqrt(s / (f64)numerus);
+}
+
+/* energia acuta (supra 4 kHz) / tota in fenestra */
+interior f64
+_fractio_acuta_caudae (
+    constans f32* x,
+             i32  initium,
+             i32  numerus)
+{
+    SonusResonans r;
+              f64 acuta  = 0.0;
+              f64 tota   = 0.0;
+              i32 k;
+
+    sonus_resonans_parare(&r, SONUS_RESONANS_ACUTA, 4000.0f, 0.7071f);
+    per (k = ZEPHYRUM; k < initium + numerus; k++)
+    {
+        f32 y = sonus_resonans_proximum(&r, x[k]);
+
+        si (k >= initium)
+        {
+            acuta  += (f64)y * (f64)y;
+            tota   += (f64)x[k] * (f64)x[k];
+        }
+    }
+    redde tota > 0.0 ? acuta / tota : 0.0;
+}
+
+interior vacuum
+_sectio_reverberatio (
+    CredoContextus* c)
+{
+    SonusReverberatioForma forma;
+                       f64 parva;
+                       f64 magna;
+                       f64 clara;
+                       f64 mollis;
+                       f32 l;
+                       f32 r;
+                       i32 k;
+                       b32 bene = VERUM;
+
+    (vacuum)c;
+    forma.aula       = 0.5f;
+    forma.mollities  = 0.5f;
+    forma.latitudo   = 1.0f;
+
+    CREDO_GRADUS ("silentium manet silentium");
+    sonus_reverberationem_parare(&aula_probanda, &forma);
+    per (k = ZEPHYRUM; k < M; k++)
+    {
+        sonus_reverberationis_proximum(&aula_probanda, 0.0f, &l, &r);
+        bene = bene && l == 0.0f && r == 0.0f;
+    }
+    CREDO_VERUM (bene);
+
+    CREDO_GRADUS ("impulsus: cauda adest, aula longiorem facit");
+    forma.aula = 0.2f;
+    _caudam_reddere(&forma, ZEPHYRUM);
+    CREDO_VERUM (_efficax_caudae(cauda_sinistra, SONUS_FREQUENTIA / XX,
+                                 SONUS_FREQUENTIA / X) > 1.0e-4);
+    parva = _efficax_caudae(cauda_sinistra, SONUS_FREQUENTIA / II,
+                            SONUS_FREQUENTIA / X)
+          / _efficax_caudae(cauda_sinistra, SONUS_FREQUENTIA / XX,
+                            SONUS_FREQUENTIA / X);
+    forma.aula = 0.9f;
+    _caudam_reddere(&forma, ZEPHYRUM);
+    magna = _efficax_caudae(cauda_sinistra, SONUS_FREQUENTIA / II,
+                            SONUS_FREQUENTIA / X)
+          / _efficax_caudae(cauda_sinistra, SONUS_FREQUENTIA / XX,
+                            SONUS_FREQUENTIA / X);
+    CREDO_VERUM (magna > 3.0 * parva);
+
+    CREDO_GRADUS ("mollities: cauda obscurior");
+    forma.aula       = 0.8f;
+    forma.mollities  = 0.0f;
+    _caudam_reddere(&forma, ZEPHYRUM);
+    clara  = _fractio_acuta_caudae(cauda_sinistra, SONUS_FREQUENTIA / V,
+                                   SONUS_FREQUENTIA / V);
+    forma.mollities = 1.0f;
+    _caudam_reddere(&forma, ZEPHYRUM);
+    mollis = _fractio_acuta_caudae(cauda_sinistra, SONUS_FREQUENTIA / V,
+                                   SONUS_FREQUENTIA / V);
+    CREDO_VERUM (clara > 2.0 * mollis);
+
+    CREDO_GRADUS ("latitudo: 0 = mono, 1 = canales diversi");
+    forma.mollities  = 0.5f;
+    forma.latitudo   = 0.0f;
+    _caudam_reddere(&forma, ZEPHYRUM);
+    bene = VERUM;
+    per (k = ZEPHYRUM; k < CAUDA_QUADRA; k++)
+    {
+        bene = bene && cauda_sinistra[k] == cauda_dextra[k];
+    }
+    CREDO_VERUM (bene);
+    forma.latitudo = 1.0f;
+    _caudam_reddere(&forma, ZEPHYRUM);
+    bene = VERUM;
+    per (k = ZEPHYRUM; k < CAUDA_QUADRA; k++)
+    {
+        bene = bene && cauda_sinistra[k] == cauda_dextra[k];
+    }
+    CREDO_FALSUM (bene);
+
+    CREDO_GRADUS ("morae scalatae: primum eccho ad pectinem "
+                  "brevissimum "
+                  "(1116 x 48/44.1 = 1215; dexter +23 -> 1240)");
+    {
+        s32 primus_l  = -I;
+        s32 primus_r  = -I;
+        f64 lr        = 0.0;
+        f64 ll        = 0.0;
+        f64 rr        = 0.0;
+
+        per (k = ZEPHYRUM; k < CAUDA_QUADRA; k++)
+        {
+            si (primus_l == -I && cauda_sinistra[k] != 0.0f)
+            {
+                primus_l = (s32)k;
+            }
+            si (primus_r == -I && cauda_dextra[k] != 0.0f)
+            {
+                primus_r = (s32)k;
+            }
+        }
+        CREDO_AEQUALIS_S32 (primus_l, (s32)MCCXV);
+        CREDO_AEQUALIS_S32 (primus_r, (s32)MCCXL);
+        /* canales fere incorrelati (latitudo 1) */
+        per (k = SONUS_FREQUENTIA / X; k < SONUS_FREQUENTIA; k++)
+        {
+            lr += (f64)cauda_sinistra[k] * (f64)cauda_dextra[k];
+            ll += (f64)cauda_sinistra[k] * (f64)cauda_sinistra[k];
+            rr += (f64)cauda_dextra[k] * (f64)cauda_dextra[k];
+        }
+        CREDO_VERUM (fabs(lr / sqrt(ll * rr)) < 0.5);
+    }
+
+    CREDO_GRADUS ("aula 1, sine mollitie: stabilis, decidit");
+    forma.aula       = 1.0f;
+    forma.mollities  = 0.0f;
+    _caudam_reddere(&forma, SONUS_FREQUENTIA / IV);
+    bene = VERUM;
+    per (k = ZEPHYRUM; k < CAUDA_QUADRA; k++)
+    {
+        bene = bene && cauda_sinistra[k] == cauda_sinistra[k]
+               && cauda_sinistra[k] < 10.0f
+               && cauda_sinistra[k] > -10.0f;
+    }
+    CREDO_VERUM (bene);
+    CREDO_VERUM (_efficax_caudae(cauda_sinistra, CAUDA_QUADRA
+                                 - SONUS_FREQUENTIA / X,
+                                 SONUS_FREQUENTIA / X)
+                 < _efficax_caudae(cauda_sinistra, SONUS_FREQUENTIA
+                     / IV,
+                                   SONUS_FREQUENTIA / X));
+
+    CREDO_GRADUS ("deterministica");
+    forma.aula = 0.6f;
+    _caudam_reddere(&forma, SONUS_FREQUENTIA / X);
+    l = cauda_sinistra[SONUS_FREQUENTIA / II];
+    r = cauda_dextra[SONUS_FREQUENTIA];
+    _caudam_reddere(&forma, SONUS_FREQUENTIA / X);
+    CREDO_VERUM (   l == cauda_sinistra[SONUS_FREQUENTIA / II]
+                 && r == cauda_dextra[SONUS_FREQUENTIA] && l != 0.0f);
+
+    CREDO_GRADUS ("ponere memoriam servat, parare delet");
+    sonus_reverberationem_parare(&aula_probanda, &forma);
+    sonus_reverberationis_proximum(&aula_probanda, 1.0f, &l, &r);
+    per (k = ZEPHYRUM; k < M; k++)
+    {
+        sonus_reverberationis_proximum(&aula_probanda, 0.0f, &l, &r);
+    }
+    forma.aula = 0.3f;
+    sonus_reverberationem_ponere(&aula_probanda, &forma);
+    bene = FALSUM;
+    per (k = ZEPHYRUM; k < M; k++)
+    {
+        sonus_reverberationis_proximum(&aula_probanda, 0.0f, &l, &r);
+        bene = bene || l != 0.0f;
+    }
+    CREDO_VERUM (bene);
+    sonus_reverberationem_parare(&aula_probanda, &forma);
+    sonus_reverberationis_proximum(&aula_probanda, 0.0f, &l, &r);
+    CREDO_VERUM (l == 0.0f && r == 0.0f);
+}
+
+
+    /* ==================================================
      * RETENTIO et COMMINUTIO
      * ================================================== */
 
@@ -761,6 +1011,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "repercussio", _sectio_repercussio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "colum", _sectio_colum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "resonans", _sectio_resonans, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "reverberatio", _sectio_reverberatio, _parare_caudam, NIHIL,
+        NIHIL, NIHIL },
     { "asperitas", _sectio_asperitas, NIHIL, NIHIL, NIHIL, NIHIL },
     { "altitudo", _sectio_altitudo, NIHIL, NIHIL, NIHIL, NIHIL },
     { "determinismus", _sectio_determinismus, NIHIL, NIHIL, NIHIL,

@@ -118,3 +118,16 @@ carmina_legere_cum(..., NIHIL, 0, ...) is the isolated form for tests.
 Genus words now come from tibia_generis_titulus (_genus_verbi loops until NIHIL), and
 the GENERA table here is gone. Existing count asserts in 'instrumenta' subtract
 numerus_instrumentarii.
+
+## 2026-10-24 - positio, reverberatio (pars) and <reverberatio> (carmen / liber)
+
+The pars gets positio -1..1 and reverberatio 0..1 (its send). The room element
+<reverberatio aula mollities latitudo lucrum/> sits in a song or at book level. Defaults
+are 0.5 0.5 1 0.25 when the element is present, and lucrum 0 when there is none. A
+song's own element replaces the book's WHOLE form, not attribute by attribute, so a
+song writing only mollities gets aula 0.5, not the book's aula (tested). The book
+default is threaded into _carmen_legere as two parameters.
+
+Gotcha: the book's second children loop (the one that reads songs) skipped only
+`instrumentum` - a book-level <reverberatio> was then read as a song and failed. Both
+loops now skip it.

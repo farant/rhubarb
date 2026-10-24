@@ -915,6 +915,100 @@ _sectio_instrumentarium_vitia (
         "STML fractum"));
 }
 
+/* aula et positio: pars positio/reverberatio, reverberatio libri
+ * ordinaria, carminis propria totum substituit, nulla = lucrum 0 */
+hic_manens constans character LIBER_AULAE[] =
+    "<carmina>"
+    "<reverberatio aula=\"0.8\" lucrum=\"0.3\"/>"
+    "<carmen titulus=\"a\"><pars titulus=\"p\" instrumentum=\"aether\""
+    " positio=\"-0.5\" reverberatio=\"0.4\">"
+    "<frustum mensura=\"1\"><textus!>c4</textus></frustum></pars>"
+    "<pars titulus=\"q\" instrumentum=\"aether\">"
+    "<frustum mensura=\"1\"><textus!>e4</textus></frustum></pars>"
+    "</carmen>"
+    "<carmen titulus=\"b\"><reverberatio mollities=\"0.9\"/>"
+    "<pars titulus=\"p\" instrumentum=\"aether\">"
+    "<frustum mensura=\"1\"><textus!>c4</textus></frustum></pars>"
+    "</carmen></carmina>";
+
+interior vacuum
+_sectio_aula (
+    CredoContextus* c)
+{
+            Carmina  liber;
+    constans Carmen* a;
+    constans Carmen* b;
+
+    CREDO_NECESSE (_legere(c, LIBER_AULAE, &liber));
+    a = carmina_invenire(&liber, _ch(c, "a"));
+    b = carmina_invenire(&liber, _ch(c, "b"));
+    CREDO_NECESSE (a != NIHIL && b != NIHIL);
+    CREDO_VERUM (   a->partes[ZEPHYRUM].positio == -0.5f
+                 && a->partes[ZEPHYRUM].reverberatio == 0.4f);
+    CREDO_VERUM (   a->partes[I].positio == 0.0f
+                 && a->partes[I].reverberatio == 0.0f);
+    /* libri ordinaria (mollities, latitudo ordinariae) */
+    CREDO_VERUM (   a->reverberatio.aula == 0.8f
+                 && a->reverberatio.mollities == 0.5f
+                 && a->reverberatio.latitudo == 1.0f
+                 && a->lucrum_reverberationis == 0.3f);
+    /* carminis propria: tota substituta (aula non hereditaria) */
+    CREDO_VERUM (   b->reverberatio.aula == 0.5f
+                 && b->reverberatio.mollities == 0.9f
+                 && b->lucrum_reverberationis == 0.25f);
+    /* liber sine reverberatione: lucrum 0 */
+    CREDO_NECESSE (_legere(c, LIBER_INSTRUMENTORUM, &liber));
+    a = carmina_invenire(&liber, _ch(c, "a"));
+    CREDO_NECESSE (a != NIHIL);
+    CREDO_VERUM (a->lucrum_reverberationis == 0.0f);
+}
+
+/* causa nominata pro libro integro */
+interior b32
+_causa_est (
+        CredoContextus* c,
+    constans character* stml,
+    constans character* causa)
+{
+           Carmina liber;
+    CarminisVitium v;
+
+    memset(&v, ZEPHYRUM, magnitudo(v));
+    si (carmina_legere(_ch(c, stml), c->piscina, &liber, &v))
+    {
+        imprimere("  acceptum: %s\n", stml);
+        redde FALSUM;
+    }
+    si (v.causa == NIHIL || strcmp(v.causa, causa) != ZEPHYRUM)
+    {
+        imprimere("  %s: causa '%s'\n", stml, v.causa ? v.causa : "-");
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+interior vacuum
+_sectio_aula_vitia (
+    CredoContextus* c)
+{
+    CREDO_VERUM (_causa_est(c, _carmen(c, "", "<pars titulus=\"a\""
+        " instrumentum=\"q\" positio=\"2\"/>"), "positio extra -1..1"));
+    CREDO_VERUM (_causa_est(c, _carmen(c, "", "<pars titulus=\"a\""
+        " instrumentum=\"q\" reverberatio=\"-0.1\"/>"),
+        "reverberatio extra 0..1"));
+    CREDO_VERUM (_causa_est(c, _carmen(c, "",
+        "<reverberatio aula=\"1.5\"/>"),
+        "reverberatio: valor extra 0..1"));
+    CREDO_VERUM (_causa_est(c, _carmen(c, "",
+        "<reverberatio sonus=\"1\"/>"),
+        "reverberatio: attributum ignotum"));
+    CREDO_VERUM (_causa_est(c, _carmen(c, "",
+        "<reverberatio/><reverberatio/>"), "reverberatio iterata"));
+    CREDO_VERUM (_causa_est(c,
+        "<carmina><reverberatio/><reverberatio/></carmina>",
+        "reverberatio iterata"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "legere", _sectio_legere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia", _sectio_vitia, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -934,6 +1028,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "instrumentarium_vitia", _sectio_instrumentarium_vitia, NIHIL,
         NIHIL, NIHIL, NIHIL },
+    { "aula", _sectio_aula, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "aula_vitia", _sectio_aula_vitia, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

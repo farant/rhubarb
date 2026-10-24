@@ -10,6 +10,7 @@
 #include "sonitus.h"
 #include "mixtura.h"
 #include "tibia.h"
+#include <math.h>
 #include <string.h>
 
 #define MEDIUM 0.70710677f
@@ -880,6 +881,165 @@ _sectio_tibia (
 }
 
 
+    /* ==================================================
+     * REVERBERATIO: missio 0 nihil mutat; missio cum reditu caudam
+     * post vocem relinquit, quae vivit deinde tacet; reditus 0 nullam;
+     * mutus summae tacet; vocem_ponere missionem mutat
+     * ================================================== */
+
+interior vacuum
+_aulam_ponere (
+    Mixtura* m,
+        f32  lucrum)
+{
+    MixturaIussum i;
+
+    mixtura_iussum_parare(&i, MIXTURA_IUSSUM_REVERBERATIONEM_PONERE,
+                          mixtura_momentum(m));
+    i.lucrum                  = lucrum;
+    i.reverberatio.aula       = 0.5f;
+    i.reverberatio.mollities  = 0.5f;
+    i.reverberatio.latitudo   = 1.0f;
+    (vacuum)mixtura_iubere(m, &i);
+}
+
+/* vox tabulae unius cum missione */
+interior vacuum
+_missam_incipere (
+        Mixtura* m,
+    MixturaAnsa  ansa,
+            f32  missio,
+            b32  iterans)
+{
+    MixturaIussum i;
+
+    mixtura_iussum_parare(&i, MIXTURA_IUSSUM_TABULAM,
+                          mixtura_momentum(m));
+    i.ansa       = ansa;
+    i.exempla    = tabula_unius;
+    i.longitudo  = C;
+    i.iterans    = iterans;
+    i.missio     = missio;
+    (vacuum)mixtura_iubere(m, &i);
+}
+
+interior vacuum
+_sectio_reverberatio (
+    CredoContextus* c)
+{
+          Mixtura* a = _mixtura(c, IV, XVI, XVI);
+          Mixtura* b = _mixtura(c, IV, XVI, XVI);
+              i32  k;
+              b32  tacuit = FALSUM;
+              b32  aequalia;
+    MixturaIussum  i;
+
+    CREDO_NECESSE (a != NIHIL && b != NIHIL);
+    CREDO_GRADUS ("iussum_parare missionem et formam aulae nullat");
+    memset(&i, 0xFF, magnitudo(i));
+    mixtura_iussum_parare(&i, MIXTURA_IUSSUM_REVERBERATIONEM_PONERE,
+                          ZEPHYRUM);
+    CREDO_VERUM (   i.missio == 0.0f && i.reverberatio.aula == 0.0f
+                 && i.reverberatio.mollities == 0.0f
+                 && i.reverberatio.latitudo == 0.0f);
+    CREDO_GRADUS ("missio 0: reditus nihil addit (octetim)");
+    _aulam_ponere(a, 1.0f);
+    _missam_incipere(a, _ansa(ZEPHYRUM, I), 0.0f, FALSUM);
+    _missam_incipere(b, _ansa(ZEPHYRUM, I), 0.0f, FALSUM);
+    mixtura_reddere(a, exitus_a, QUADRA_MAXIMA);
+    mixtura_reddere(b, exitus_b, QUADRA_MAXIMA);
+    CREDO_VERUM (memcmp(exitus_a, exitus_b, magnitudo(exitus_a))
+                 == ZEPHYRUM);
+    CREDO_FALSUM (mixtura_cauda_vivit(a));
+
+    CREDO_GRADUS ("missio 1: cauda post vocem, vivit, deinde tacet");
+    a = _mixtura(c, IV, XVI, XVI);
+    CREDO_NECESSE (a != NIHIL);
+    _aulam_ponere(a, 1.0f);
+    _missam_incipere(a, _ansa(ZEPHYRUM, I), 1.0f, FALSUM);
+    mixtura_reddere(a, exitus_a, QUADRA_MAXIMA);
+    CREDO_VERUM (   fabs(exitus_a[II * V * M]) > 1.0e-4f
+                 || fabs(exitus_a[II * V * M + I]) > 1.0e-4f
+                 || fabs(exitus_a[II * V * M + II]) > 1.0e-4f);
+    CREDO_VERUM (mixtura_cauda_vivit(a));
+    per (k = ZEPHYRUM; k < LX && !tacuit; k++)
+    {
+        mixtura_reddere(a, exitus_a, QUADRA_MAXIMA);
+        tacuit = !mixtura_cauda_vivit(a);
+    }
+    CREDO_VERUM (tacuit);
+
+    CREDO_GRADUS ("reditus ordinarius 0: nulla cauda");
+    a = _mixtura(c, IV, XVI, XVI);
+    CREDO_NECESSE (a != NIHIL);
+    _missam_incipere(a, _ansa(ZEPHYRUM, I), 1.0f, FALSUM);
+    mixtura_reddere(a, exitus_a, QUADRA_MAXIMA);
+    CREDO_VERUM (exitus_a[II * V * M] == 0.0f);
+    CREDO_FALSUM (mixtura_cauda_vivit(a));
+
+    CREDO_GRADUS ("mutus summae caudam tacet");
+    a = _mixtura(c, IV, XVI, XVI);
+    CREDO_NECESSE (a != NIHIL);
+    _aulam_ponere(a, 1.0f);
+    _missam_incipere(a, _ansa(ZEPHYRUM, I), 1.0f, FALSUM);
+    mixtura_reddere(a, exitus_a, M);
+    mixtura_iussum_parare(&i, MIXTURA_IUSSUM_GREGEM_PONERE,
+                          mixtura_momentum(a));
+    i.grex   = MIXTURA_GREX_SUMMA;
+    i.mutus  = VERUM;
+    (vacuum)mixtura_iubere(a, &i);
+    mixtura_reddere(a, exitus_a, QUADRA_MAXIMA);
+    aequalia = VERUM;
+    per (k = ZEPHYRUM; k < II * QUADRA_MAXIMA; k++)
+    {
+        aequalia = aequalia && exitus_a[k] == 0.0f;
+    }
+    CREDO_VERUM (aequalia);
+
+    CREDO_GRADUS ("forma aulae agit (aula 0.2 contra 0.9)");
+    a = _mixtura(c, IV, XVI, XVI);
+    b = _mixtura(c, IV, XVI, XVI);
+    CREDO_NECESSE (a != NIHIL && b != NIHIL);
+    _aulam_ponere(a, 1.0f);
+    mixtura_iussum_parare(&i, MIXTURA_IUSSUM_REVERBERATIONEM_PONERE,
+                          mixtura_momentum(b));
+    i.lucrum                  = 1.0f;
+    i.reverberatio.aula       = 0.9f;
+    i.reverberatio.mollities  = 0.5f;
+    i.reverberatio.latitudo   = 1.0f;
+    (vacuum)mixtura_iubere(b, &i);
+    _missam_incipere(a, _ansa(ZEPHYRUM, I), 1.0f, FALSUM);
+    _missam_incipere(b, _ansa(ZEPHYRUM, I), 1.0f, FALSUM);
+    mixtura_reddere(a, exitus_a, QUADRA_MAXIMA);
+    mixtura_reddere(b, exitus_b, QUADRA_MAXIMA);
+    CREDO_VERUM (memcmp(exitus_a, exitus_b, magnitudo(exitus_a))
+                 != ZEPHYRUM);
+
+    CREDO_GRADUS ("vocem_ponere missionem mutat");
+    a = _mixtura(c, IV, XVI, XVI);
+    b = _mixtura(c, IV, XVI, XVI);
+    CREDO_NECESSE (a != NIHIL && b != NIHIL);
+    _aulam_ponere(a, 1.0f);
+    _aulam_ponere(b, 1.0f);
+    _missam_incipere(a, _ansa(ZEPHYRUM, I), 0.0f, VERUM);
+    _missam_incipere(b, _ansa(ZEPHYRUM, I), 0.0f, VERUM);
+    mixtura_iussum_parare(&i, MIXTURA_IUSSUM_VOCEM_PONERE, M * II);
+    i.ansa    = _ansa(ZEPHYRUM, I);
+    i.missio  = 1.0f;
+    (vacuum)mixtura_iubere(a, &i);
+    mixtura_reddere(a, exitus_a, QUADRA_MAXIMA);
+    mixtura_reddere(b, exitus_b, QUADRA_MAXIMA);
+    CREDO_VERUM (memcmp(exitus_a, exitus_b,
+        II * M * II * magnitudo(f32))
+                 == ZEPHYRUM);
+    aequalia = VERUM;
+    per (k = II * M * VI; k < II * QUADRA_MAXIMA; k++)
+    {
+        aequalia = aequalia && exitus_a[k] == exitus_b[k];
+    }
+    CREDO_FALSUM (aequalia);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "creatio", _sectio_creatio, _parare, NIHIL, NIHIL, NIHIL },
     { "initium", _sectio_initium, _parare, NIHIL, NIHIL, NIHIL },
@@ -892,6 +1052,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "sonitus", _sectio_sonitus, _parare, NIHIL, NIHIL, NIHIL },
     { "tibia", _sectio_tibia, _parare, NIHIL, NIHIL, NIHIL },
     { "determinismus", _sectio_determinismus, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "reverberatio", _sectio_reverberatio, _parare, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

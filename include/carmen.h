@@ -31,8 +31,14 @@
  *   tempus    20..400 quartae per minutum (ordinarium CXX)
  *   textus    MML (cantus.h) SINE 't' - tempus carminis est; '@'
  *             praeparatum per notam (percussio sonitus) admittitur
- *   pars      instrumentum necessarium; lucrum 0..1 (1); mutus, solus
- *             (attributa sine valore); frusta in parte non se tegunt
+ *   pars      instrumentum necessarium; lucrum 0..1 (1); positio
+ *             -1..1 (0, potentia constans); reverberatio 0..1 (0:
+ *             missio ad aulam); mutus, solus (attributa sine valore);
+ *             frusta in parte non se tegunt
+ *   reverberatio  <reverberatio aula mollities latitudo lucrum/>
+ *             (omnia 0..1; ordinaria 0.5, 0.5, 1, 0.25) in carmine aut
+ *             in libro (ordinaria carminibus sine sua); nulla = lucrum
+ *             0. Elementum totum substituitur, non attributa singula
  *
  * INSTRUMENTA (libri et carminis):
  *   <carmina>
@@ -101,6 +107,8 @@ nomen structura {
             chorda  titulus;
             chorda  instrumentum;
                f32  lucrum;
+               f32  positio;        /* -1 sinistra .. 1 dextra (0) */
+               f32  reverberatio;   /* missio ad aulam 0..1 (0) */
                b32  mutus;
                b32  solus;
      CarmenFrustum* frusta;    /* ordine pulsus */
@@ -143,6 +151,9 @@ nomen structura {
                    i32 numerus_instrumentorum;
                    i32 numerus_instrumentarii; /* ultimi tot ex
                                                 * instrumentario */
+    SonusReverberatioForma reverberatio;      /* aula carminis */
+                       f32 lucrum_reverberationis;  /* reditus; 0 =
+                                                     * nulla */
 } Carmen;
 
 nomen structura {

@@ -30,8 +30,11 @@
 
 /* limen silentii: -60 dBFS (amplitudo rms) */
 #define AUSCULTATIO_TACITUM 0.001f
-/* cauda remissionis post finem carminis, quadra maxima */
+/* cauda remissionis post finem carminis, quadra (capacitas prima) */
 #define AUSCULTATIO_CAUDA (II * SONUS_FREQUENTIA)
+/* cauda maxima dum aliquid vivit (reverberatio: capacitas duplicatur
+ * usque ad hunc finem) - custodia contra sonum sine fine */
+#define AUSCULTATIO_CAUDA_MAXIMA (XX * SONUS_FREQUENTIA)
 
 nomen structura {
      f32  apex;       /* |exemplum| maximum */
@@ -42,7 +45,8 @@ nomen structura {
 } AuscultatioSummarium;
 
 /* carmen semel offline: exempla stereo intercalata (e piscina), quadrum
- * 0 = pulsus 0, cauda remissionis inclusa (ad AUSCULTATIO_CAUDA).
+ * 0 = pulsus 0, cauda inclusa (remissio, reverberatio) dum vivit,
+ * ad AUSCULTATIO_CAUDA_MAXIMA.
  * resolutor NIHIL = ordinarius cantoris. FALSUM: memoria deest */
 b32
 auscultatio_reddere (

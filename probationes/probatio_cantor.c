@@ -599,6 +599,50 @@ _sectio_instrumentarium (
                     ZEPHYRUM)->tibia.claritas == 0.95f);
 }
 
+/* aula et positio: iussum reverberationis initio (carminis forma et
+ * reditus; sine aula reditus 0 - aula prior tacet), notae positionem
+ * et missionem partis ferunt */
+interior vacuum
+_sectio_aula (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"aula\" tempus=\"120\">"
+        "<reverberatio aula=\"0.7\" lucrum=\"0.4\"/>"
+        "<pars titulus=\"a\" instrumentum=\"aether\" positio=\"-0.5\""
+        " reverberatio=\"0.3\">"
+        "<frustum mensura=\"1\"><textus!>c</textus></frustum></pars>"
+        "</carmen></carmina>");
+    constans Carmen* sicca = _carmen(c,
+        "<carmina><carmen titulus=\"sicca\" tempus=\"120\">"
+        "<pars titulus=\"a\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>c</textus></frustum></pars>"
+        "</carmen></carmina>");
+    Cantor* meus;
+
+    CREDO_NECESSE (k != NIHIL && sicca != NIHIL && concentus != NIHIL);
+    meus = cantor_creare(c->piscina, concentus, NIHIL);
+    CREDO_NECESSE (meus != NIHIL);
+    CREDO_NECESSE (cantor_incipere(meus, k, ZEPHYRUM));
+    (vacuum)cantor_agere(meus);
+    CREDO_NECESSE (_numerus(MIXTURA_IUSSUM_REVERBERATIONEM_PONERE)
+        == I);
+    CREDO_VERUM (   _iussum(MIXTURA_IUSSUM_REVERBERATIONEM_PONERE,
+                        ZEPHYRUM)->lucrum == 0.4f
+                 && _iussum(MIXTURA_IUSSUM_REVERBERATIONEM_PONERE,
+                        ZEPHYRUM)->reverberatio.aula == 0.7f);
+    CREDO_VERUM (   _iussum(MIXTURA_IUSSUM_TIBIAM, ZEPHYRUM)->positio
+                    == -0.5f
+                 && _iussum(MIXTURA_IUSSUM_TIBIAM, ZEPHYRUM)->missio
+                    == 0.3f);
+    CREDO_NECESSE (cantor_incipere(meus, sicca, ZEPHYRUM));
+    (vacuum)cantor_agere(meus);
+    CREDO_NECESSE (_numerus(MIXTURA_IUSSUM_REVERBERATIONEM_PONERE)
+                   == II);
+    CREDO_VERUM (_iussum(MIXTURA_IUSSUM_REVERBERATIONEM_PONERE,
+                         I)->lucrum == 0.0f);
+}
+
 /* resolutor ordinarius publicus: tituli noti, ignoti, chorda sine
  * terminatore (praefixum), titulus longior quam tabula; resolutor ex
  * functionibus publicis = NIHIL */
@@ -750,6 +794,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "instrumentarium", _sectio_instrumentarium, _parare, NIHIL, NIHIL,
         NIHIL },
+    { "aula", _sectio_aula, _parare, NIHIL, NIHIL, NIHIL },
     { "ordinarius", _sectio_ordinarius, _parare, NIHIL, NIHIL, NIHIL },
     { "lusor", _sectio_lusor, _parare, NIHIL, NIHIL, NIHIL },
     { "prioritas", _sectio_prioritas, _parare, NIHIL, NIHIL, NIHIL },

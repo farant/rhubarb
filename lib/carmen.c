@@ -410,6 +410,57 @@ _frustum_legere (
     redde VERUM;
 }
 
+/* <reverberatio aula mollities latitudo lucrum/>: omnia 0..1,
+ * ordinaria 0.5 0.5 1 0.25; causa NIHIL si bene */
+interior constans character*
+_reverberationem_legere (
+                 StmlNodus* nodus,
+    SonusReverberatioForma* forma,
+                       f32* lucrum)
+{
+    hic_manens constans character* constans CAMPI_AULAE[IV] = {
+        "aula", "mollities", "latitudo", "lucrum"
+    };
+    f32* loca[IV];
+    i32  i;
+    i32  k;
+
+    forma->aula       = 0.5f;
+    forma->mollities  = 0.5f;
+    forma->latitudo   = 1.0f;
+    *lucrum           = 0.25f;
+    loca[0]           = &forma->aula;
+    loca[1]           = &forma->mollities;
+    loca[2]           = &forma->latitudo;
+    loca[3]           = lucrum;
+    per (i = ZEPHYRUM; nodus->attributa != NIHIL
+                       && i < (i32)xar_numerus(nodus->attributa); i++)
+    {
+        StmlAttributum* t = (StmlAttributum*)xar_obtinere(
+            nodus->attributa, i);
+                    f64 valor;
+
+        per (k = ZEPHYRUM; k < IV; k++)
+        {
+            si (chorda_aequalis_literis(*t->titulus, CAMPI_AULAE[k]))
+            {
+                frange;
+            }
+        }
+        si (k == IV)
+        {
+            redde "reverberatio: attributum ignotum";
+        }
+        si (   t->valor == NIHIL || !chorda_ut_f64(*t->valor, &valor)
+            || valor < 0.0 || valor > 1.0)
+        {
+            redde "reverberatio: valor extra 0..1";
+        }
+        *loca[k] = (f32)valor;
+    }
+    redde NIHIL;
+}
+
 interior b32
 _partem_legere (
                StmlNodus* nodus,
@@ -448,6 +499,29 @@ _partem_legere (
                 ZEPHYRUM, "lucrum extra 0..1");
         }
         pars->lucrum = (f32)lucrum;
+    }
+    pars->positio  = 0.0f;
+    a              = stml_attributum_capere(nodus, "positio");
+    si (a != NIHIL)
+    {
+        si (   !chorda_ut_f64(*a, &lucrum) || lucrum < -1.0
+            || lucrum > 1.0)
+        {
+            redde _vitium(vitium, carmen->titulus, pars->titulus, -I,
+                ZEPHYRUM, "positio extra -1..1");
+        }
+        pars->positio = (f32)lucrum;
+    }
+    pars->reverberatio  = 0.0f;
+    a                   = stml_attributum_capere(nodus, "reverberatio");
+    si (a != NIHIL)
+    {
+        si (!chorda_ut_f64(*a, &lucrum) || lucrum < 0.0 || lucrum > 1.0)
+        {
+            redde _vitium(vitium, carmen->titulus, pars->titulus, -I,
+                ZEPHYRUM, "reverberatio extra 0..1");
+        }
+        pars->reverberatio = (f32)lucrum;
     }
     pars->mutus = stml_attributum_habet(nodus, "mutus");
     pars->solus = stml_attributum_habet(nodus, "solus");
@@ -979,12 +1053,14 @@ _instrumenta_legere (
 
 interior b32
 _carmen_legere (
-                      StmlNodus* nodus,
-    constans CarmenInstrumentum* libri,
-                            i32  numerus_libri,
-                        Piscina* piscina,
-                         Carmen* k,
-                 CarminisVitium* vitium)
+                          StmlNodus* nodus,
+        constans CarmenInstrumentum* libri,
+                                i32  numerus_libri,
+    constans SonusReverberatioForma* aula_libri,
+                                f32  lucrum_aulae_libri,
+                            Piscina* piscina,
+                             Carmen* k,
+                     CarminisVitium* vitium)
 {
                 chorda* a;
                    i32  i;
@@ -993,8 +1069,11 @@ _carmen_legere (
                    s64  positio;
                    s64  finis;
     constans character* causa;
+                   b32  aula_propria = FALSUM;
 
     memset(k, ZEPHYRUM, magnitudo(Carmen));
+    k->reverberatio = *aula_libri;
+    k->lucrum_reverberationis = lucrum_aulae_libri;
     a = stml_attributum_capere(nodus, "titulus");
     si (a == NIHIL || !_signum_validum(*a))
     {
@@ -1059,11 +1138,30 @@ _carmen_legere (
             && !_elementum_est(n, "metrum")
             && !_elementum_est(n, "clavis")
             && !_elementum_est(n, "pars")
-            && !_elementum_est(n, "instrumentum"))
+            && !_elementum_est(n, "instrumentum")
+            && !_elementum_est(n, "reverberatio"))
         {
             redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
                 "in carmine solum tempus, metrum, clavis, pars, "
-                "instrumentum");
+                "instrumentum, reverberatio");
+        }
+        /* aula propria: tota substituit libri */
+        si (_elementum_est(n, "reverberatio"))
+        {
+            si (aula_propria)
+            {
+                redde _vitium(vitium, k->titulus, _vacua(), -I,
+                    ZEPHYRUM, "reverberatio iterata");
+            }
+            causa = _reverberationem_legere(n, &k->reverberatio,
+                                            &k->lucrum_reverberationis);
+            si (causa != NIHIL)
+            {
+                redde _vitium(vitium, k->titulus, _vacua(), -I,
+                    ZEPHYRUM, causa);
+            }
+            aula_propria = VERUM;
+            perge;
         }
         si (!_elementum_est(n, "metrum"))
         {
@@ -1226,17 +1324,23 @@ carmina_legere_cum (
                         Carmina* liber,
                  CarminisVitium* vitium)
 {
-          StmlResultus  r;
-             StmlNodus* radix;
-                Carmen* carmina;
-                   i32  numerus = ZEPHYRUM;
-                   i32  i;
-                   i32  j;
-                   i32  m;
-    CarmenInstrumentum* libri;
-                   i32  numerus_libri;
-    CarmenInstrumentum* visibilia;
+              StmlResultus  r;
+                 StmlNodus* radix;
+                    Carmen* carmina;
+                       i32  numerus = ZEPHYRUM;
+                       i32  i;
+                       i32  j;
+                       i32  m;
+        CarmenInstrumentum* libri;
+                       i32  numerus_libri;
+        CarmenInstrumentum* visibilia;
+    SonusReverberatioForma  aula;
+                       f32  lucrum_aulae  = 0.0f;
+                       b32  aula_libri    = FALSUM;
 
+    aula.aula = 0.5f;
+    aula.mollities = 0.5f;
+    aula.latitudo = 1.0f;
     liber->carmina = NIHIL;
     liber->numerus = ZEPHYRUM;
     r = stml_legere(stml, piscina, internamentum_creare(piscina));
@@ -1263,10 +1367,30 @@ carmina_legere_cum (
         {
             perge;
         }
+        /* aula libri: carminibus sine sua ordinaria */
+        si (_elementum_est(n, "reverberatio"))
+        {
+            constans character* causa;
+
+            si (aula_libri)
+            {
+                redde _vitium(vitium, _vacua(), _vacua(), -I, ZEPHYRUM,
+                    "reverberatio iterata");
+            }
+            causa = _reverberationem_legere(n, &aula, &lucrum_aulae);
+            si (causa != NIHIL)
+            {
+                redde _vitium(vitium, _vacua(), _vacua(), -I, ZEPHYRUM,
+                    causa);
+            }
+            aula_libri = VERUM;
+            perge;
+        }
         si (!_elementum_est(n, "carmen"))
         {
             redde _vitium(vitium, _vacua(), _vacua(), -I, ZEPHYRUM,
-                "in carminibus solum carmina et instrumenta");
+                "in carminibus solum carmina, instrumenta, "
+                "reverberatio");
         }
         numerus++;
     }
@@ -1311,12 +1435,14 @@ carmina_legere_cum (
         StmlNodus* n = stml_liberum_ad_indicem(radix, i);
 
         si (   n->genus != STML_NODUS_ELEMENTUM
-            || _elementum_est(n, "instrumentum"))
+            || _elementum_est(n, "instrumentum")
+            || _elementum_est(n, "reverberatio"))
         {
             perge;
         }
         si (!_carmen_legere(n, visibilia,
                             numerus_libri + numerus_instrumentarii,
+                            &aula, lucrum_aulae,
                             piscina, &carmina[j], vitium))
         {
             redde FALSUM;

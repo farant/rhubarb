@@ -91,3 +91,21 @@ For the shared host (concentus): `vivit` = slot occupied with the same
 generation; `dimittere` frees a slot whose start was refused (only if the
 handle is current - a stale handle must not kill the slot's new voice);
 `occupatae` counts occupied slots (the host's quiet test).
+
+## 2026-10-24 - reverb send bus, missio, cauda
+
+Voices x missio (slid like gain/pan) are summed mono into one shared SonusReverberatio,
+whose stereo output is added to the master sum BEFORE the master gain, so master mute
+silences the tail but a group mute does not (the tail lives in the shared room). The
+return level (lucrum_reverberationis, set by REVERBERATIONEM_PONERE with a slide)
+defaults to 0, and at 0 the reverb isn't processed at all. So every existing render is
+byte-identical, and the state freezes until the level comes back.
+
+mixtura_cauda_vivit: quadra_tacita counts samples whose wet output (after the return
+level) stays under 1.6e-5 (-96 dB); alive while that count is under 100 ms. It starts
+at the limit (not alive). concentus_agere counts a live tail as alive, which is what
+makes the auditio WAV export, auscultatio and live output keep the tail and then close
+on their own.
+
+mixtura_iussum_parare didn't zero tibia/nota (older) and now zeroes the reverb form
+explicitly (aula 0).
