@@ -3763,3 +3763,10 @@ Test: probatio_fabrica_gradus 'debita scripturae' part VII (fake disk): unnamed 
 photographia; both see it -> only 'cursus'; transient S -> liber, S inside the member's area never
 listed; flag off -> no file. Plants (silva.planta) red at their assertion, then green: call
 removed, trace not consulted for snapshot changes, member location not excluded for S lines.
+
+## 2026-10-24 — -conferre over all composites
+
+css 10, html 14, materia 14, md 14, saltuarius 13, toml 13, silva 56, veneni 16 (all green):
+zero differences in BOTH directions. Only silva has members that execute programs (5/56: /bin/sh,
+git); the other seven none. Totals across the nine composites: 554 members, 46 execute programs,
+3 snapshot-only paths (radix, both explained). Spec: project-specs/fabrica-spec-8.md.
