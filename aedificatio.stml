@@ -603,14 +603,16 @@
     <ingressus genus="fasciculus" via="cantuale.stml"/>
     <exitus via="lib/cantuale_infixum.c" provenientia="regeneratio"/>
   </actio>
-  <!-- liber carminum infixus (sonus S6b, mos cantuale_infixum):
-       carmina.stml -> lib/carmina_infixum.c -->
+  <!-- liber carminum et instrumentarium infixi (sonus S6b, mos
+       cantuale_infixum): carmina.stml + instrumentarium.stml ->
+       lib/carmina_infixum.c -->
   <actio titulus="carmina_infixum" genus="generator">
     <mandatum>
       <verbum! (>./tools/carmina_infigere.sh
     </mandatum>
     <ingressus genus="fasciculus" via="tools/carmina_infigere.sh"/>
     <ingressus genus="fasciculus" via="carmina.stml"/>
+    <ingressus genus="fasciculus" via="instrumentarium.stml"/>
     <exitus via="lib/carmina_infixum.c" provenientia="regeneratio"/>
   </actio>
   <!-- canon organi infixus (status-plan S1, mos norma_canon):

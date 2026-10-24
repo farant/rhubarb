@@ -47,15 +47,19 @@
  *                 instrumentum libri SUPRA definitum (catena); sine
  *                 basi: genus unda, forma sinus, officium 0.5, tenor
  *                 1, amplitudo 0.5, cetera 0. Attributa = campi
- *                 TibiaParametra: genus (unda|chorda|modulatio), forma
+ *                 TibiaParametra: genus (tibia_generis_titulus: unda|
+ *                 chorda|modulatio|partiales|formantes), forma
  *                 (pulsus|serra|triangulum|sinus), officium, impetus,
  *                 lapsus, tenor, remissio, vibratus, celeritas, gravia,
- *                 amplitudo, decrementum, claritas, ratio, index;
+ *                 amplitudo, decrementum, claritas, ratio, index,
+ *                 partiales="r:a:d ...", vocalis (a|e|i|o|u aut 0..4),
+ *                 flatus, resonans, acumen, motus (-48..48);
  *                 ambitus="N..M" (MIDI, censurae). Ordo quaerendi:
- *                 carminis, libri, praeparata - titulus praeparati
- *                 redefinitus vincit. Vitia: attributum ignotum,
- *                 numerus malus aut extra fines, basis ignota, titulus
- *                 iteratus in eodem gradu.
+ *                 carminis, libri, instrumentarii (instrumentarium.stml
+ *                 infixus, carmina_legere), praeparata - titulus
+ *                 inferior redefinitus vincit. Vitia: attributum
+ *                 ignotum, numerus malus aut extra fines, basis
+ *                 ignota, titulus iteratus in eodem gradu.
  *
  * TOTUS LIBER IN LECTIONE IUDICATUR: vitium cum carmine, parte, frusto
  * et offset in textu frusti - numquam carmen semi-lectum.
@@ -134,9 +138,11 @@ nomen structura {
               i32  numerus_partium;
               s64  pulsus;           /* longitudo: finis frusti ultimi
                                       * (iteratio hic) */
-    CarmenInstrumentum* instrumenta;  /* carminis primum, deinde
-                                       * libri */
+    CarmenInstrumentum* instrumenta;  /* carminis, libri, deinde
+                                       * instrumentarii */
                    i32 numerus_instrumentorum;
+                   i32 numerus_instrumentarii; /* ultimi tot ex
+                                                * instrumentario */
 } Carmen;
 
 nomen structura {
@@ -152,14 +158,46 @@ nomen structura {
      constans character* causa;     /* Latina, statica */
 } CarminisVitium;
 
-/* librum STML legit et TOTUM iudicat. FALSUM: vitium impletum, liber
- * vacuus. Chordae (tituli, textus) in piscina - vivunt dum piscina */
+/* librum STML legit et TOTUM iudicat, cum instrumentario ordinario
+ * (instrumentarium_ordinarium) sub libro. FALSUM: vitium impletum,
+ * liber vacuus. Chordae (tituli, textus) in piscina - vivunt dum
+ * piscina */
 b32
 carmina_legere (
             chorda  stml,
            Piscina* piscina,
            Carmina* liber,
     CarminisVitium* vitium);
+
+/* liber cum instrumentario dato (NIHIL, 0 = nullum): basis et
+ * quaestio ea sub libro vident */
+b32
+carmina_legere_cum (
+                         chorda  stml,
+    constans CarmenInstrumentum* instrumentarium,
+                            i32  numerus_instrumentarii,
+                        Piscina* piscina,
+                        Carmina* liber,
+                 CarminisVitium* vitium);
+
+/* instrumentarium: <instrumentarium> cum filiis <instrumentum>
+ * (grammatica libri; basis = praeparatum aut instrumentum SUPRA).
+ * Chordae in piscina */
+b32
+instrumentarium_legere (
+                 chorda   stml,
+                Piscina*  piscina,
+     CarmenInstrumentum** instrumenta,
+                    i32*  numerus,
+         CarminisVitium*  vitium);
+
+/* instrumentarium ordinarium (instrumentarium.stml infixus) */
+b32
+instrumentarium_ordinarium (
+                Piscina*  piscina,
+     CarmenInstrumentum** instrumenta,
+                    i32*  numerus,
+         CarminisVitium*  vitium);
 
 /* liber ordinarius (carmina.stml infixus) */
 b32

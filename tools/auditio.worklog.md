@@ -122,3 +122,11 @@ header change).
 ## 2026-10-24 - genus formantes in -carmina
 
 One more branch in the instrumenta line (TIBIA_FORMANTES -> "formantes"). The duplicated genus-word table is still pending Fran (see the entry above).
+
+## 2026-10-24 - -instrumenta; -carmina leaves the instrumentarium out
+
+-instrumenta prints the built-in presets (genus, censura range table) and the house
+instrumentarium (genus, its own ambitus). -carmina's instrumenta line only lists song and
+book instruments now (numerus_instrumentorum - numerus_instrumentarii). Without that,
+every song would print the five house instruments. Genus words come from
+tibia_generis_titulus.

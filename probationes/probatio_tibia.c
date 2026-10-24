@@ -1195,6 +1195,51 @@ _sectio_genus_coercitum (
         SECUNDA / X)) != ZEPHYRUM);
 }
 
+/* titulus non NIHIL et aequalis */
+interior b32
+_titulus_est (
+    constans character* a,
+    constans character* b)
+{
+    redde a != NIHIL && strcmp(a, b) == ZEPHYRUM;
+}
+
+/* tituli: praeparata ad indicem (finis NIHIL, quisque invenitur),
+ * genera verba (extra NIHIL) */
+interior vacuum
+_sectio_tituli (
+    CredoContextus* c)
+{
+    i32 i;
+    b32 omnia = VERUM;
+
+    (vacuum)c;
+    CREDO_VERUM (_titulus_est(tibia_praeparati_titulus(ZEPHYRUM),
+                              "aether"));
+    per (i = ZEPHYRUM; tibia_praeparati_titulus(i) != NIHIL; i++)
+    {
+        omnia = omnia && tibia_praeparatum(tibia_praeparati_titulus(i))
+                         != NIHIL;
+    }
+    CREDO_VERUM (omnia);
+    CREDO_AEQUALIS_I32 (i, XI);
+    CREDO_VERUM (tibia_praeparati_titulus(i + I) == NIHIL);
+    CREDO_VERUM (tibia_praeparati_titulus(M) == NIHIL);
+    CREDO_VERUM (_titulus_est(tibia_generis_titulus(TIBIA_UNDA),
+        "unda"));
+    CREDO_VERUM (_titulus_est(tibia_generis_titulus(TIBIA_CHORDA),
+        "chorda"));
+    CREDO_VERUM (_titulus_est(tibia_generis_titulus(TIBIA_MODULATIO),
+        "modulatio"));
+    CREDO_VERUM (_titulus_est(tibia_generis_titulus(TIBIA_PARTIALES),
+        "partiales"));
+    CREDO_VERUM (_titulus_est(tibia_generis_titulus(TIBIA_FORMANTES),
+        "formantes"));
+    CREDO_VERUM (tibia_generis_titulus((TibiaGenus)(TIBIA_FORMANTES
+        + I))
+                 == NIHIL);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "tenet", _sectio_tenet, _parare, NIHIL, NIHIL, NIHIL },
     { "involucrum", _sectio_involucrum, _parare, NIHIL, NIHIL, NIHIL },
@@ -1217,6 +1262,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "nubes", _sectio_nubes, _parare, NIHIL, NIHIL, NIHIL },
     { "genus_coercitum", _sectio_genus_coercitum, _parare, NIHIL,
         NIHIL, NIHIL },
+    { "tituli", _sectio_tituli, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

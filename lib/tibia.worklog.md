@@ -124,3 +124,10 @@ All three are skipped entirely when 0 (flatus, resonans), so the old presets sta
 byte-identical (vetera FNV). Voice keeps copies of flatus/resonans/acumen/motus, plus
 lucrum_flatus and involucrum_ultimum - two more fields than the approved header (told
 Fran). schola joins the theremin cycle.
+
+## 2026-10-24 - tibia_praeparati_titulus, tibia_generis_titulus
+
+Enumeration for tools (auditio -instrumenta) and one home for genus words (carmen's
+parser and auditio's listing used to keep their own tables, and auditio printed
+"unda" for partiales before 984564ed). The table of words lives in the function, as
+`constans character* constans`.

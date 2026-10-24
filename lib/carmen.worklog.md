@@ -95,3 +95,26 @@ e i o u -> 0..4) is tried first, then the normal numeric path with bounds 0..4 -
 "1.5" works and "y" / "5" are refused. motus is the first field with a negative lower
 bound (-48..48). The words check changed from `k >= XIII` to `k == XIII || k == XIV`,
 since fields after forma are numeric again.
+
+## 2026-10-24 - instrumentarium (house instruments as data)
+
+instrumentarium.stml (repo root, next to carmina.stml) holds instruments in the book
+grammatica, under <instrumentarium>. tools/carmina_infigere.sh embeds it into the same
+generated lib/carmina_infixum.c (instrumentarium_infixum_textus). The generator action
+gained the input, so there is no second generator.
+
+The tiers fell out of what already existed. _instrumenta_legere always took "externa" as
+bases; the book-level call passed NIHIL. Now carmina_legere_cum passes the
+instrumentarium there, and each song gets a "visibilia" list (book instruments, then
+the instrumentarium) as its externa. So Carmen.instrumenta = song, book, instrumentarium
+in lookup order, and carmen_instrumentum's first match gives "lower tier redefined
+wins". Carmen.numerus_instrumentarii = how many trailing entries are the
+instrumentarium, so listings (auditio -carmina) can leave them out.
+
+carmina_legere = instrumentarium_ordinarium + carmina_legere_cum; a broken house
+instrumentarium fails every book (it's a house bug - the carmen suite parses it).
+carmina_legere_cum(..., NIHIL, 0, ...) is the isolated form for tests.
+
+Genus words now come from tibia_generis_titulus (_genus_verbi loops until NIHIL), and
+the GENERA table here is gone. Existing count asserts in 'instrumenta' subtract
+numerus_instrumentarii.

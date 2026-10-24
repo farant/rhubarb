@@ -588,9 +588,6 @@ hic_manens constans CampusInstrumenti CAMPI[XX] = {
     { "motus",     -48.0f, 48.0f    }
 };
 
-hic_manens constans character* GENERA[V] = {
-    "unda", "chorda", "modulatio", "partiales", "formantes"
-};
 hic_manens constans character* VOCALES[V] = {
     "a", "e", "i", "o", "u"
 };
@@ -643,6 +640,26 @@ _verbum (
         si (chorda_aequalis_literis(v, tabula[i]))
         {
             redde (s32)i;
+        }
+    }
+    redde -I;
+}
+
+/* verbum generis (tibia_generis_titulus) -> TibiaGenus; -1 si
+ * ignotum */
+interior s32
+_genus_verbi (
+    chorda v)
+{
+    i32 g;
+
+    per (g = ZEPHYRUM; tibia_generis_titulus((TibiaGenus)g) != NIHIL;
+         g++)
+    {
+        si (chorda_aequalis_literis(v, tibia_generis_titulus(
+            (TibiaGenus)g)))
+        {
+            redde (s32)g;
         }
     }
     redde -I;
@@ -873,7 +890,7 @@ _instrumentum_legere (
         }
         si (k == XIII || k == XIV)
         {
-            w = k == XIII ? _verbum(*t->valor, GENERA, V)
+            w = k == XIII ? _genus_verbi(*t->valor)
                           : _verbum(*t->valor, FORMAE, IV);
             si (w < ZEPHYRUM)
             {
@@ -1201,11 +1218,13 @@ _carmen_legere (
 }
 
 b32
-carmina_legere (
-            chorda  stml,
-           Piscina* piscina,
-           Carmina* liber,
-    CarminisVitium* vitium)
+carmina_legere_cum (
+                         chorda  stml,
+    constans CarmenInstrumentum* instrumentarium,
+                            i32  numerus_instrumentarii,
+                        Piscina* piscina,
+                        Carmina* liber,
+                 CarminisVitium* vitium)
 {
           StmlResultus  r;
              StmlNodus* radix;
@@ -1216,6 +1235,7 @@ carmina_legere (
                    i32  m;
     CarmenInstrumentum* libri;
                    i32  numerus_libri;
+    CarmenInstrumentum* visibilia;
 
     liber->carmina = NIHIL;
     liber->numerus = ZEPHYRUM;
@@ -1250,11 +1270,29 @@ carmina_legere (
         }
         numerus++;
     }
-    /* instrumenta libri (ordine; basis supra) ante carmina */
-    si (!_instrumenta_legere(radix, NIHIL, ZEPHYRUM, _vacua(), piscina,
+    /* instrumenta libri (ordine; basis supra et instrumentarium) ante
+     * carmina; carminibus visibilia = libri, deinde instrumentarii */
+    si (!_instrumenta_legere(radix, instrumentarium,
+                             numerus_instrumentarii, _vacua(), piscina,
                              &libri, &numerus_libri, vitium))
     {
         redde FALSUM;
+    }
+    visibilia = (CarmenInstrumentum*)piscina_allocare(piscina,
+        (memoriae_index)(numerus_libri + numerus_instrumentarii + I)
+            * magnitudo(CarmenInstrumentum));
+    si (visibilia == NIHIL)
+    {
+        redde _vitium(vitium, _vacua(), _vacua(), -I, ZEPHYRUM,
+            "piscina exhausta");
+    }
+    per (i = ZEPHYRUM; i < numerus_libri; i++)
+    {
+        visibilia[i] = libri[i];
+    }
+    per (i = ZEPHYRUM; i < numerus_instrumentarii; i++)
+    {
+        visibilia[numerus_libri + i] = instrumentarium[i];
     }
     si (numerus == ZEPHYRUM)
     {
@@ -1277,11 +1315,13 @@ carmina_legere (
         {
             perge;
         }
-        si (!_carmen_legere(n, libri, numerus_libri, piscina,
-                            &carmina[j], vitium))
+        si (!_carmen_legere(n, visibilia,
+                            numerus_libri + numerus_instrumentarii,
+                            piscina, &carmina[j], vitium))
         {
             redde FALSUM;
         }
+        carmina[j].numerus_instrumentarii = numerus_instrumentarii;
         per (m = ZEPHYRUM; m < j; m++)
         {
             si (chorda_aequalis(carmina[m].titulus, carmina[j].titulus))
@@ -1295,6 +1335,81 @@ carmina_legere (
     liber->carmina = carmina;
     liber->numerus = numerus;
     redde VERUM;
+}
+
+b32
+carmina_legere (
+            chorda  stml,
+           Piscina* piscina,
+           Carmina* liber,
+    CarminisVitium* vitium)
+{
+    CarmenInstrumentum* instrumentarium;
+                   i32  numerus;
+
+    liber->carmina = NIHIL;
+    liber->numerus = ZEPHYRUM;
+    si (!instrumentarium_ordinarium(piscina, &instrumentarium, &numerus,
+                                    vitium))
+    {
+        redde FALSUM;
+    }
+    redde carmina_legere_cum(stml, instrumentarium, numerus, piscina,
+                             liber, vitium);
+}
+
+b32
+instrumentarium_legere (
+                 chorda   stml,
+                Piscina*  piscina,
+     CarmenInstrumentum** instrumenta,
+                    i32*  numerus,
+         CarminisVitium*  vitium)
+{
+    StmlResultus  r;
+       StmlNodus* radix;
+             i32  i;
+
+    *instrumenta = NIHIL;
+    *numerus = ZEPHYRUM;
+    r = stml_legere(stml, piscina, internamentum_creare(piscina));
+    si (!r.successus)
+    {
+        redde _vitium(vitium, _vacua(), _vacua(), -I, ZEPHYRUM,
+            "STML fractum");
+    }
+    radix = r.elementum_radix;
+    si (radix == NIHIL || !_elementum_est(radix, "instrumentarium"))
+    {
+        redde _vitium(vitium, _vacua(), _vacua(), -I, ZEPHYRUM,
+            "radix non est 'instrumentarium'");
+    }
+    per (i = ZEPHYRUM; i < stml_numerus_liberorum(radix); i++)
+    {
+        StmlNodus* n = stml_liberum_ad_indicem(radix, i);
+
+        si (   n->genus == STML_NODUS_ELEMENTUM
+            && !_elementum_est(n, "instrumentum"))
+        {
+            redde _vitium(vitium, _vacua(), _vacua(), -I, ZEPHYRUM,
+                "in instrumentario solum instrumenta");
+        }
+    }
+    redde _instrumenta_legere(radix, NIHIL, ZEPHYRUM, _vacua(), piscina,
+                              instrumenta, numerus, vitium);
+}
+
+b32
+instrumentarium_ordinarium (
+                Piscina*  piscina,
+     CarmenInstrumentum** instrumenta,
+                    i32*  numerus,
+         CarminisVitium*  vitium)
+{
+    chorda textus = instrumentarium_infixum_textus(piscina);
+
+    redde instrumentarium_legere(textus, piscina, instrumenta, numerus,
+                                 vitium);
 }
 
 b32

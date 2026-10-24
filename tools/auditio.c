@@ -28,6 +28,10 @@
  *                                      titulus, clavis, metrum, tempus,
  *                                      mensurae; partes (instrumentum,
  *                                      notae, ambitus)
+ *   auditio -instrumenta               instrumenta omnia: praeparata
+ *                                      (tibia.h) et instrumentarium
+ *                                      (instrumentarium.stml) - genus,
+ *                                      ambitus
  *   auditio -carmen korobeiniki        vivum, semel; mensura currens
  *                                      monstratur
  *   auditio -carmen T -iterare         vivum, iterans (Ctrl-C finit)
@@ -371,8 +375,10 @@ _carmen_monstrare (
             p->mutus ? "  mutus" : "",
             p->solus ? "  solus" : "");
     }
-    /* instrumenta carminis et libri (genus) */
-    per (i = ZEPHYRUM; i < k->numerus_instrumentorum; i++)
+    /* instrumenta carminis et libri (genus); instrumentarii non hic
+     * (-instrumenta) */
+    per (i = ZEPHYRUM;
+         i < k->numerus_instrumentorum - k->numerus_instrumentarii; i++)
     {
          constans CarmenInstrumentum* x = &k->instrumenta[i];
                                  s32  g = (s32)(x->parametra.genus
@@ -382,12 +388,70 @@ _carmen_monstrare (
             == ZEPHYRUM ? "  instrumenta: " : ", ",
                   (integer)x->titulus.mensura,
                   (constans character*)x->titulus.datum,
-                  g == TIBIA_CHORDA ? "chorda"
-                      : g == TIBIA_MODULATIO ? "modulatio"
-                      : g == TIBIA_PARTIALES ? "partiales"
-                      : g == TIBIA_FORMANTES ? "formantes" : "unda",
-                  i + I == k->numerus_instrumentorum ? "\n" : "");
+                  tibia_generis_titulus((TibiaGenus)g) != NIHIL
+                      ? tibia_generis_titulus((TibiaGenus)g) : "?",
+                  i + I == k->numerus_instrumentorum
+                      - k->numerus_instrumentarii ? "\n" : "");
     }
+}
+
+/* -instrumenta: praeparata (tibia.h; ambitus ex tabula censurae) et
+ * instrumentarium ordinarium (instrumentarium.stml; ambitus suus):
+ * titulus, genus, ambitus. Exitus 1 si instrumentarium fractum */
+interior s32
+_instrumenta_monstrare (
+    Piscina* piscina)
+{
+    CarmenInstrumentum* x;
+                   i32  n;
+                   i32  i;
+                   i32  infima;
+                   i32  summa;
+        CarminisVitium  vitium;
+    constans character* t;
+
+    imprimere("praeparata (tibia.h):\n");
+    per (i = ZEPHYRUM; (t = tibia_praeparati_titulus(i)) != NIHIL; i++)
+    {
+         constans TibiaParametra* p = tibia_praeparatum(t);
+                             s32  g = (s32)(p->genus + 0.5f);
+
+        imprimere("  %-20s %-10s", t,
+                  tibia_generis_titulus((TibiaGenus)g) != NIHIL
+                      ? tibia_generis_titulus((TibiaGenus)g) : "?");
+        si (censura_ambitus_ordinarius(NIHIL, chorda_ex_literis(t,
+                                       piscina), &infima, &summa))
+        {
+            imprimere(" ambitus %u..%u", (insignatus integer)infima,
+                      (insignatus integer)summa);
+        }
+        imprimere("\n");
+    }
+    memset(&vitium, ZEPHYRUM, magnitudo(vitium));
+    si (!instrumentarium_ordinarium(piscina, &x, &n, &vitium))
+    {
+        fprintf(stderr, "auditio: instrumentarium fractum: %s\n",
+                vitium.causa != NIHIL ? vitium.causa : "?");
+        redde I;
+    }
+    imprimere("instrumentarium (instrumentarium.stml):\n");
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        s32 g = (s32)(x[i].parametra.genus + 0.5f);
+
+        imprimere("  %-20.*s %-10s", (integer)x[i].titulus.mensura,
+                  (constans character*)x[i].titulus.datum,
+                  tibia_generis_titulus((TibiaGenus)g) != NIHIL
+                      ? tibia_generis_titulus((TibiaGenus)g) : "?");
+        si (x[i].infima != ZEPHYRUM || x[i].summa != CXXVII)
+        {
+            imprimere(" ambitus %u..%u",
+                (insignatus integer)x[i].infima,
+                      (insignatus integer)x[i].summa);
+        }
+        imprimere("\n");
+    }
+    redde ZEPHYRUM;
 }
 
 /* vitium libri: carmen, pars, frustum, offset, causa */
@@ -1575,6 +1639,7 @@ principale (
       constans character* carmen          = NIHIL;
       constans character* pars            = NIHIL;
                      b32  carmina         = FALSUM;
+                     b32  instrumenta     = FALSUM;
                      b32  iterare         = FALSUM;
       constans character* liber           = NIHIL;
                      b32  partitura       = FALSUM;
@@ -1654,6 +1719,10 @@ principale (
         alioquin si (strcmp(argv[k], "-carmina") == ZEPHYRUM)
         {
             carmina = VERUM;
+        }
+        alioquin si (strcmp(argv[k], "-instrumenta") == ZEPHYRUM)
+        {
+            instrumenta = VERUM;
         }
         alioquin si (strcmp(argv[k], "-iterare") == ZEPHYRUM)
         {
@@ -1835,6 +1904,17 @@ principale (
                 "-ponere/-substituere et -liber\n");
         redde II;
     }
+    si (instrumenta)
+    {
+        piscina = piscina_generare_dynamicum("auditio", M * M);
+        si (piscina == NIHIL)
+        {
+            redde I;
+        }
+        k_exitus = _instrumenta_monstrare(piscina);
+        piscina_destruere(piscina);
+        redde k_exitus;
+    }
     si (   !omnes && !indicare && titulus == NIHIL && cantus == NIHIL
         && genus == NIHIL && cantilena == NIHIL && carmen == NIHIL
         && !carmina)
@@ -1842,7 +1922,8 @@ principale (
         imprimere("auditio: praeparata sonitus (auditio TITULUS [semen] "
                   "[-via x.wav] | -omnes | -cantus TEXTUS [-praeparatum T] "
                   "[-intactus] [-via x.wav] [semen] | -cantuale | -genus G "
-                  "| -cantilena T | -carmina | -carmen T [-iterare] "
+                  "| -cantilena T | -carmina | -instrumenta "
+                  "| -carmen T [-iterare] "
                   "[-pars P] [-via x.wav] [-partitura [-mensurae N-M] "
                   "[-harmonia]] "
                   "[-censura [-regulae R,+R,-R]] [-auscultare] "

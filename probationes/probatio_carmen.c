@@ -456,8 +456,12 @@ _sectio_instrumenta (
     a = carmina_invenire(&liber, _ch(c, "a"));
     b = carmina_invenire(&liber, _ch(c, "b"));
     CREDO_NECESSE (a != NIHIL && b != NIHIL);
-    CREDO_AEQUALIS_I32 (a->numerus_instrumentorum, VIII);
-    CREDO_AEQUALIS_I32 (b->numerus_instrumentorum, V);
+    /* sine instrumentario ordinario (V, sub libro) */
+    CREDO_AEQUALIS_I32 (a->numerus_instrumentarii, V);
+    CREDO_AEQUALIS_I32 (a->numerus_instrumentorum
+                        - a->numerus_instrumentarii, VIII);
+    CREDO_AEQUALIS_I32 (b->numerus_instrumentorum
+                        - b->numerus_instrumentarii, V);
     /* basis praeparata, campi mutati, ambitus */
     x = carmen_instrumentum(b, _ch(c, "cembalo"));
     CREDO_NECESSE (x != NIHIL);
@@ -753,6 +757,164 @@ _sectio_formantes_vitia (
         "<instrumentum titulus=\"x\" genus=\"vox\"/>", causa));
 }
 
+/* instrumentarium: ordinarium (V, ambitus, bases praeparatae),
+ * proprium (catena), sub libro (basis, quaestio, liber vincit),
+ * NIHIL = nullum, carmina_legere ordinarium adhibet */
+hic_manens constans character INSTRUMENTARIUM_PROPRIUM[] =
+    "<instrumentarium>"
+    "<!-- nota -->"
+    "<instrumentum titulus=\"a\" basis=\"chorda\"/>"
+    "<instrumentum titulus=\"b\" basis=\"a\" claritas=\"0.2\""
+    " ambitus=\"40..80\"/>"
+    "</instrumentarium>";
+
+hic_manens constans character LIBER_SUPER_INSTRUMENTARIUM[] =
+    "<carmina>"
+    "<instrumentum titulus=\"c\" basis=\"b\" decrementum=\"3\"/>"
+    "<instrumentum titulus=\"a\" basis=\"quadrans\"/>"
+    "<carmen titulus=\"k\"><pars titulus=\"p\" instrumentum=\"b\">"
+    "<frustum mensura=\"1\"><textus!>c4</textus></frustum></pars>"
+    "</carmen></carmina>";
+
+hic_manens constans character LIBER_DOMUS[] =
+    "<carmina>"
+    "<instrumentum titulus=\"cembalo_mollis\" basis=\"cembalo\""
+    " claritas=\"0.5\"/>"
+    "<carmen titulus=\"k\"><pars titulus=\"p\""
+    " instrumentum=\"cembalo\">"
+    "<frustum mensura=\"1\"><textus!>c4</textus></frustum></pars>"
+    "</carmen></carmina>";
+
+interior vacuum
+_sectio_instrumentarium (
+    CredoContextus* c)
+{
+             CarmenInstrumentum* domus;
+             CarmenInstrumentum* proprium;
+                            i32  n;
+                            i32  m;
+                            i32  i;
+                        Carmina  liber;
+                 CarminisVitium  v;
+                constans Carmen* k;
+    constans CarmenInstrumentum* x;
+                            b32  ambitus = VERUM;
+
+    memset(&v, ZEPHYRUM, magnitudo(v));
+    CREDO_GRADUS ("ordinarium: V instrumenta, ambitus omnibus");
+    CREDO_NECESSE (instrumentarium_ordinarium(c->piscina, &domus, &n,
+                                              &v));
+    CREDO_AEQUALIS_I32 (n, V);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        ambitus = ambitus && (domus[i].infima > ZEPHYRUM
+                              || domus[i].summa < CXXVII);
+    }
+    CREDO_VERUM (ambitus);
+    CREDO_CHORDA_AEQUALIS_LITERIS (domus[ZEPHYRUM].titulus, "cembalo");
+    CREDO_VERUM (   domus[ZEPHYRUM].parametra.genus == 1.0f
+                 && domus[ZEPHYRUM].parametra.claritas == 0.95f);
+    CREDO_CHORDA_AEQUALIS_LITERIS (domus[II].titulus,
+                                   "piano_electricum");
+    CREDO_VERUM (   domus[II].parametra.genus == 2.0f
+                 && domus[II].parametra.ratio == 1.0f);
+
+    CREDO_GRADUS ("proprium: catena intra instrumentarium");
+    CREDO_NECESSE (instrumentarium_legere(
+        _ch(c, INSTRUMENTARIUM_PROPRIUM), c->piscina, &proprium, &m,
+        &v));
+    CREDO_AEQUALIS_I32 (m, II);
+    CREDO_VERUM (   proprium[I].parametra.claritas == 0.2f
+                 && proprium[I].parametra.decrementum
+                    == tibia_praeparatum("chorda")->decrementum);
+    CREDO_AEQUALIS_I32 (proprium[I].infima, XL);
+
+    CREDO_GRADUS ("sub libro: basis, quaestio, liber vincit");
+    CREDO_NECESSE (carmina_legere_cum(
+        _ch(c, LIBER_SUPER_INSTRUMENTARIUM), proprium, m, c->piscina,
+        &liber, &v));
+    k = carmina_invenire(&liber, _ch(c, "k"));
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_AEQUALIS_I32 (k->numerus_instrumentarii, II);
+    CREDO_AEQUALIS_I32 (k->numerus_instrumentorum, IV);
+    x = carmen_instrumentum(k, _ch(c, "b"));
+    CREDO_VERUM (x != NIHIL && x->parametra.claritas == 0.2f
+                 && x->summa == LXXX);
+    x = carmen_instrumentum(k, _ch(c, "c"));
+    CREDO_VERUM (   x != NIHIL && x->parametra.claritas == 0.2f
+                 && x->parametra.decrementum == 3.0f);
+    x = carmen_instrumentum(k, _ch(c, "a"));
+    CREDO_VERUM (   x != NIHIL && x->parametra.genus == 0.0f
+                 && x->parametra.forma == 0.0f);
+
+    CREDO_GRADUS ("NIHIL = nullum: basis instrumentarii ignota");
+    CREDO_FALSUM (carmina_legere_cum(_ch(c, LIBER_DOMUS), NIHIL,
+                                     ZEPHYRUM, c->piscina, &liber, &v));
+    CREDO_VERUM (   v.causa != NIHIL
+                 && strcmp(v.causa, "instrumentum: basis ignota")
+                    == ZEPHYRUM);
+
+    CREDO_GRADUS ("carmina_legere: instrumentarium ordinarium sub "
+                  "libro");
+    CREDO_NECESSE (_legere(c, LIBER_DOMUS, &liber));
+    k = carmina_invenire(&liber, _ch(c, "k"));
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_AEQUALIS_I32 (k->numerus_instrumentarii, V);
+    CREDO_AEQUALIS_I32 (k->numerus_instrumentorum, VI);
+    x = carmen_instrumentum(k, _ch(c, "cembalo_mollis"));
+    CREDO_VERUM (   x != NIHIL && x->parametra.claritas == 0.5f
+                 && x->parametra.decrementum == 1.2f
+                 && x->infima == XXIX);
+    CREDO_VERUM (carmen_instrumentum(k, _ch(c, "piano_electricum"))
+                 != NIHIL);
+}
+
+/* vitia instrumentarii: causa nominata */
+interior b32
+_instrumentarium_recusat (
+        CredoContextus* c,
+    constans character* textus,
+    constans character* causa)
+{
+     CarmenInstrumentum* x;
+                    i32  n;
+         CarminisVitium  v;
+
+    memset(&v, ZEPHYRUM, magnitudo(v));
+    si (instrumentarium_legere(_ch(c, textus), c->piscina, &x, &n, &v))
+    {
+        imprimere("  acceptum: %s\n", textus);
+        redde FALSUM;
+    }
+    si (v.causa == NIHIL || strcmp(v.causa, causa) != ZEPHYRUM)
+    {
+        imprimere("  %s: causa '%s'\n", textus,
+            v.causa ? v.causa : "-");
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+interior vacuum
+_sectio_instrumentarium_vitia (
+    CredoContextus* c)
+{
+    CREDO_VERUM (_instrumentarium_recusat(c, "<carmina/>",
+        "radix non est 'instrumentarium'"));
+    CREDO_VERUM (_instrumentarium_recusat(c,
+        "<instrumentarium><carmen titulus=\"x\"/></instrumentarium>",
+        "in instrumentario solum instrumenta"));
+    CREDO_VERUM (_instrumentarium_recusat(c,
+        "<instrumentarium><instrumentum titulus=\"x\" sonus=\"1\"/>"
+        "</instrumentarium>", "instrumentum: attributum ignotum"));
+    CREDO_VERUM (_instrumentarium_recusat(c,
+        "<instrumentarium><instrumentum titulus=\"x\"/>"
+        "<instrumentum titulus=\"x\"/></instrumentarium>",
+        "instrumentum iteratum"));
+    CREDO_VERUM (_instrumentarium_recusat(c, "<instrumentarium>",
+        "STML fractum"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "legere", _sectio_legere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia", _sectio_vitia, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -768,6 +930,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "formantes", _sectio_formantes, NIHIL, NIHIL, NIHIL, NIHIL },
     { "formantes_vitia", _sectio_formantes_vitia, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "instrumentarium", _sectio_instrumentarium, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "instrumentarium_vitia", _sectio_instrumentarium_vitia, NIHIL,
+        NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

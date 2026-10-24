@@ -573,6 +573,32 @@ _sectio_instrumenta_libri (
         ZEPHYRUM)->tibia.officium == 0.125f);
 }
 
+/* instrumentarium ordinarium sub libro: 'cembalo' (chorda clara) sine
+ * definitione in libro sonat */
+interior vacuum
+_sectio_instrumentarium (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"domus\" tempus=\"120\">"
+        "<pars titulus=\"a\" instrumentum=\"cembalo\">"
+        "<frustum mensura=\"1\"><textus!>c</textus></frustum></pars>"
+        "</carmen></carmina>");
+    Cantor* meus;
+
+    CREDO_NECESSE (k != NIHIL && concentus != NIHIL);
+    meus = cantor_creare(c->piscina, concentus, NIHIL);
+    CREDO_NECESSE (meus != NIHIL);
+    CREDO_NECESSE (cantor_incipere(meus, k, ZEPHYRUM));
+    (vacuum)cantor_agere(meus);
+    CREDO_AEQUALIS_I32 (_numerus(MIXTURA_IUSSUM_TIBIAM), I);
+    CREDO_VERUM (   _iussum(MIXTURA_IUSSUM_TIBIAM,
+        ZEPHYRUM)->tibia.genus
+                    == (f32)TIBIA_CHORDA
+                 && _iussum(MIXTURA_IUSSUM_TIBIAM,
+                    ZEPHYRUM)->tibia.claritas == 0.95f);
+}
+
 /* resolutor ordinarius publicus: tituli noti, ignoti, chorda sine
  * terminatore (praefixum), titulus longior quam tabula; resolutor ex
  * functionibus publicis = NIHIL */
@@ -721,6 +747,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "instrumenta_libri", _sectio_instrumenta_libri, _parare, NIHIL,
         NIHIL,
+        NIHIL },
+    { "instrumentarium", _sectio_instrumentarium, _parare, NIHIL, NIHIL,
         NIHIL },
     { "ordinarius", _sectio_ordinarius, _parare, NIHIL, NIHIL, NIHIL },
     { "lusor", _sectio_lusor, _parare, NIHIL, NIHIL, NIHIL },

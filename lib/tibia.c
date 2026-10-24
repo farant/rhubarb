@@ -641,3 +641,22 @@ tibia_praeparatum (
     }
     redde NIHIL;
 }
+
+constans character*
+tibia_praeparati_titulus (
+    i32 index)
+{
+    redde index < TIBIAE_PRAEPARATA ? tibiae_praeparata[index].titulus
+                                    : NIHIL;
+}
+
+constans character*
+tibia_generis_titulus (
+    TibiaGenus genus)
+{
+    hic_manens constans character* constans GENERA[V] = {
+        "unda", "chorda", "modulatio", "partiales", "formantes"
+    };
+
+    redde (i32)genus < V ? GENERA[genus] : NIHIL;
+}

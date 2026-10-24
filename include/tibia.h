@@ -201,4 +201,15 @@ constans TibiaParametra*
 tibia_praeparatum (
     constans character* titulus);
 
+/* titulus praeparati ad indicem (0..); NIHIL ultra finem */
+constans character*
+tibia_praeparati_titulus (
+    i32 index);
+
+/* verbum generis: "unda" "chorda" "modulatio" "partiales"
+ * "formantes"; NIHIL si extra */
+constans character*
+tibia_generis_titulus (
+    TibiaGenus genus);
+
 #endif /* TIBIA_H */

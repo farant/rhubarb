@@ -187,6 +187,22 @@ _sectio_ordinaria (
         CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == II);
         CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].nota->nota, LIX);
     }
+    /* instrumentarium ordinarium: campanae_tubulares 60..77 - C4
+     * intra, G5 extra */
+    {
+        constans Carmen* k = _carmen(c,
+            "<carmina><carmen titulus=\"ct\"><pars titulus=\"p\" "
+            "instrumentum=\"campanae_tubulares\">"
+            "<frustum mensura=\"1\">"
+            "<textus!>o4 c2 o5 g2</textus></frustum></pars></carmen>"
+            "</carmina>");
+        CensuraInventum inv[CAPACITAS];
+           CensuraForma f = _sola(CENSURA_AMBITUS);
+
+        CREDO_NECESSE (k != NIHIL);
+        CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == I);
+        CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].nota->nota, LXXIX);
+    }
     /* praeparatum redefinitum SINE ambitu: tabula manet (non 0..127) */
     {
         constans Carmen* k = _carmen(c,
