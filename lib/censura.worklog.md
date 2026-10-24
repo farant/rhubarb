@@ -59,3 +59,29 @@ Strong beats are now counted in units of the shared beat: bar start; 4/x the thi
 (initium + 2 * tempus); compound meters (tempus > 1/denominator) every beat. Same output as
 before (all suites green). New test: 3/4 D5/C3 on beats 2 and 3 is NOT reported - nothing
 covered "simple meter weak beats stay weak" before (plant survived).
+
+## 2026-10-23 - N2: dissonantia judged through explicatio, ON by default
+
+A strong-beat dissonant pair (same pair test as before) is now looked up in explicatio:
+the segment of each note sounding at that pulse (last segment of the note starting at or
+before it). EXCUSED if either note is an explained non-chord tone (transitus, vicinus,
+innixa, anticipatio, effugiens) or a RESOLVED suspension / retardation / seventh, or if
+both are chord tones of a NAMED chord (G#dim's own tritone). REPORTED otherwise, with a
+static causa on the inventum: 'nota sine explicatione', 'suspensio / retardatio / septima
+non resoluta', 'acordum sine nomine'; the writer appends ' - causa'. No explicatio
+(memory) or no segment (muted part) = reported as before, causa NIHIL.
+
+censura_iudicare has no piscina in its API, so it makes its own (piscina_generare_dynamicum)
+only while dissonantia is active and destroys it before returning - inventa hold carmen
+notes and static strings, nothing from the arena.
+
+Library songs under the new defaults: korobeiniki 0 (was 5 - E7 sevenths/tritones and
+passing tones explained), stella 0, vesperae 0, pastorale 0. I PREDICTED stella 1 (the A7
+seventh G5 that leaps in bar 14) - wrong: it sits on beat 3, a weak beat in 3/4, and
+dissonantia judges strong beats only. An unresolved weak-beat seventh is voice leading,
+not strong-beat dissonance - a candidate separate rule (told Fran).
+
+Found on the way: the dissonance line computed the interval as (nota - nota_altera) mod
+12 in PART order - when the lower part comes first (bassus/media), a seventh printed as
+'secunda'. Every old test had the melody first. Fixed: from the absolute distance;
+test 'G2 contra F4, septima'.
