@@ -57,6 +57,7 @@ declare -a SOURCE_FILES=(
     "lib/claves_physicae.c"
     "lib/cliens_tabularii.c"
     "lib/clonatio_macos.c"
+    "lib/codex.c"
     "lib/codificator_terminalis.c"
     "lib/colloquia.c"
     "lib/colloquia_visus.c"

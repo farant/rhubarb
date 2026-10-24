@@ -19,6 +19,10 @@ Leges chartae:
 
 ## inedita
 
+- corpus: `sarcina` (arca ZIP solum legenda, lector L1) et `codex`
+  (liber EPUB: capita, clausulae, sententiae, emendationes; lector L2)
+  additae.
+
 - corpus: `hora_hybrida` addita (hora logica hybrida, genera-datorum
   D2); `volumen` nunc `machina` et `hora_hybrida` trahit - acta
   identitatem (`hora`, `machina`) et basim ferunt (`VolumenActum`

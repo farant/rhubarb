@@ -181,7 +181,7 @@ plants, worklog, commit on Fran's word (the pensa rhythm).
 | | |
 |---|---|
 | **L1** | `sarcina`: ZIP reader, tested on hand-made archives (stored, deflated, bad CRC, missing entry) and a real Gutenberg EPUB. DONE 2026-10-23: in-memory archives (comment, data descriptors, ZIP64/encryption/unknown-method refusals, lying offsets), an independent macOS `zip` fixture (local extra 28 vs central 24), Cranford EPUB 134/134 entries CRC OK; see lib/sarcina.worklog.md |
-| **L2** | `codex`: container, OPF, spine, contents, chapter blocks, sentences with offsets, fixes as data |
+| **L2** | `codex`: container, OPF, spine, contents, chapter blocks, sentences with offsets, fixes as data. DONE 2026-10-24: nav else NCX (preorder), front matter only with visible text, chapters read with `html_lexema` (xml.c loses mixed-content spaces and rejects `alt=""`), blocks heading/paragraph/verse (stanzas separate), splits-then-joins (order-free, joins stay in a block), `codex_reperire`; Cranford 21 chapters, 802 blocks, 2834 sentences, every byte covered, 0.35 s; see lib/codex.worklog.md |
 | **L3** | `lector` page view: library, contents, pages (chapters on fresh pages, title-font headings), routes, reading position |
 | **L4** | sentence view: centred column, `j`/`k`, switch views, `J` / `i` fixes, favourites + list |
 | **L5** | companions: lazy creation (comites-wide), loci per page and sentence, note marks |
@@ -202,15 +202,14 @@ plants, worklog, commit on Fran's word (the pensa rhythm).
 
 ## AUDIENDA
 
-- Gutenberg EPUB 3 files are expected to carry both a nav document and
-  an NCX; not checked on the actual files yet.
-- `xml.h` says it does not support namespaces or CDATA; OPF uses
-  `dc:title` etc. Whether the parser keeps `dc:title` as a plain name is
-  not verified.
-- Whether chapter XHTML is better read with `xml.h` (strict) or
-  `html_lexema.h` (tolerant) is not decided.
-- `sententia_fissio` quality on Cranford's prose and dialogue is not
-  measured.
+- ~~Gutenberg EPUB 3 carries nav and NCX~~ - checked (Cranford: both;
+  nav wins).
+- ~~`xml.h` keeps `dc:title` as a plain name~~ - yes (L2 tests).
+- ~~`xml.h` or `html_lexema.h` for chapters~~ - `html_lexema` (L2, Fran
+  agreed): xml.c drops mixed-content whitespace and fails on `alt=""`.
+- ~~`sententia_fissio` quality on Cranford~~ - measured in L2: 2834
+  sentences, dialogue and quotes split well, nothing lost; 27 sentences
+  over 600 B (sentence view must wrap long periods).
 - That opening a companion today CREATES its book is inferred from the
   `pensa` book in K5 (`scriba_liber_aperire_in_spatio` at mount), not
   traced in the comites code.
