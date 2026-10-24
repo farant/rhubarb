@@ -363,12 +363,27 @@ _ambitus (
                         i32  summa;
                         b32  notus;
 
-        notus = iudex->forma->ambitus != NIHIL
-            ? iudex->forma->ambitus(iudex->forma->ctx, p->instrumentum,
-                                    &infima, &summa)
-            : censura_ambitus_ordinarius(NIHIL, p->instrumentum,
-            &infima,
-                                         &summa);
+        constans CarmenInstrumentum* ci = carmen_instrumentum(k,
+            p->instrumentum);
+
+        /* forma ordinaria: ambitus instrumenti libri si datus, aliter
+         * tabula (praeparatum redefinitum sine ambitu: tabula) */
+        si (   iudex->forma->ambitus == NIHIL && ci != NIHIL
+            && (ci->infima != ZEPHYRUM || ci->summa != CXXVII))
+        {
+            notus   = VERUM;
+            infima  = ci->infima;
+            summa   = ci->summa;
+        }
+        alioquin
+        {
+            notus = iudex->forma->ambitus != NIHIL
+                ? iudex->forma->ambitus(iudex->forma->ctx,
+                                        p->instrumentum, &infima,
+                                        &summa)
+                : censura_ambitus_ordinarius(NIHIL, p->instrumentum,
+                                             &infima, &summa);
+        }
         si (!notus)
         {
             perge;

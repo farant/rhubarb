@@ -6,6 +6,7 @@
  * deinde partes. Vitium ubicumque = liber vacuus.
  */
 #include "carmen.h"
+#include "xar.h"
 #include "carmina_infixum.h"
 #include "internamentum.h"
 #include "stml.h"
@@ -552,12 +553,316 @@ _locus_mutationis (
     redde (s32)numerus;
 }
 
+
+/* ==================================================
+ * Instrumenta (libri et carminis)
+ * ================================================== */
+
+/* campus TibiaParametra per titulum attributi; fines inclusivi */
+nomen structura {
+     constans character* titulus;
+                    f32  infima;
+                    f32  summa;
+} CampusInstrumenti;
+
+hic_manens constans CampusInstrumenti CAMPI[XV] = {
+    { "officium",    0.0f, 1.0f     },
+    { "impetus",     0.0f, 60.0f    },
+    { "lapsus",      0.0f, 60.0f    },
+    { "tenor",       0.0f, 1.0f     },
+    { "remissio",    0.0f, 60.0f    },
+    { "vibratus",    0.0f, 12.0f    },
+    { "celeritas",   0.0f, 50.0f    },
+    { "gravia",      0.0f, 24000.0f },
+    { "amplitudo",   0.0f, 1.0f     },
+    { "decrementum", 0.0f, 60.0f    },
+    { "claritas",    0.0f, 1.0f     },
+    { "ratio",       0.0f, 32.0f    },
+    { "index",       0.0f, 50.0f    },
+    { "genus",       0.0f, 0.0f     },   /* verbum */
+    { "forma",       0.0f, 0.0f     }    /* verbum */
+};
+
+hic_manens constans character* GENERA[III] = {
+    "unda", "chorda", "modulatio"
+};
+hic_manens constans character* FORMAE[IV] = {
+    "pulsus", "serra", "triangulum", "sinus"
+};
+
+/* campus k -> locus in parametris */
+interior f32*
+_campus (
+    TibiaParametra* p,
+               i32  k)
+{
+    f32* campi[XV];
+
+    campi[0]   = &p->officium;
+    campi[1]   = &p->involucrum.impetus;
+    campi[2]   = &p->involucrum.lapsus;
+    campi[3]   = &p->involucrum.tenor;
+    campi[4]   = &p->involucrum.remissio;
+    campi[5]   = &p->vibratus;
+    campi[6]   = &p->vibratus_celeritas;
+    campi[7]   = &p->gravia;
+    campi[8]   = &p->amplitudo;
+    campi[9]   = &p->decrementum;
+    campi[10]  = &p->claritas;
+    campi[11]  = &p->ratio;
+    campi[12]  = &p->index;
+    campi[13]  = &p->genus;
+    campi[14]  = &p->forma;
+    redde campi[k];
+}
+
+/* verbum in tabula -> index; -1 si ignotum */
+interior s32
+_verbum (
+                  chorda   v,
+      constans character** tabula,
+                     i32   numerus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        si (chorda_aequalis_literis(v, tabula[i]))
+        {
+            redde (s32)i;
+        }
+    }
+    redde -I;
+}
+
+/* "N..M" MIDI 0..127, N <= M */
+interior b32
+_ambitum_legere (
+    chorda  v,
+       i32* infima,
+       i32* summa)
+{
+    i32 i;
+    s64 a;
+    s64 b;
+
+    per (i = ZEPHYRUM; i + I < v.mensura; i++)
+    {
+        si (v.datum[i] == '.' && v.datum[i + I] == '.')
+        {
+            chorda x = chorda_sectio(v, ZEPHYRUM, i);
+            chorda y = chorda_sectio(v, i + II, v.mensura);
+
+            si (   !chorda_ut_s64(x, &a) || !chorda_ut_s64(y, &b)
+                || a < ZEPHYRUM || b > CXXVII || a > b)
+            {
+                redde FALSUM;
+            }
+            *infima  = (i32)a;
+            *summa   = (i32)b;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* instrumentum ex nodo; priora (eodem gradu et libri) = bases licitae.
+ * vitium cum carmine (vacuo in libro) */
+interior b32
+_instrumentum_legere (
+                      StmlNodus* nodus,
+    constans CarmenInstrumentum* priora,
+                            i32  numerus,
+                         chorda  carmen,
+             CarmenInstrumentum* x,
+                 CarminisVitium* vitium)
+{
+    chorda* a      = stml_attributum_capere(nodus, "titulus");
+    chorda* basis  = stml_attributum_capere(nodus, "basis");
+       i32  i;
+       i32  k;
+
+    si (a == NIHIL || !_signum_validum(*a))
+    {
+        redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
+            "instrumentum sine titulo [a-z0-9_]+");
+    }
+    x->titulus  = *a;
+    x->infima   = ZEPHYRUM;
+    x->summa    = CXXVII;
+    memset(&x->parametra, ZEPHYRUM, magnitudo(TibiaParametra));
+    x->parametra.forma             = (f32)SONUS_UNDA_SINUS;
+    x->parametra.officium          = 0.5f;
+    x->parametra.involucrum.tenor  = 1.0f;
+    x->parametra.amplitudo         = 0.5f;
+    si (basis != NIHIL)
+    {
+         constans CarmenInstrumentum* b = NIHIL;
+                           character  t[LXIV];
+
+        per (i = numerus; i > ZEPHYRUM && b == NIHIL; i--)
+        {
+            si (chorda_aequalis(priora[i - I].titulus, *basis))
+            {
+                b = &priora[i - I];
+            }
+        }
+        si (b != NIHIL)
+        {
+            x->parametra  = b->parametra;
+            x->infima     = b->infima;
+            x->summa      = b->summa;
+        }
+        alioquin si (   basis->mensura > ZEPHYRUM
+                     && basis->mensura < (i32)magnitudo(t))
+        {
+            memcpy(t, basis->datum, (size_t)basis->mensura);
+            t[basis->mensura] = '\0';
+            si (tibia_praeparatum(t) == NIHIL)
+            {
+                redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
+                    "instrumentum: basis ignota");
+            }
+            x->parametra = *tibia_praeparatum(t);
+        }
+        alioquin
+        {
+            redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
+                "instrumentum: basis ignota");
+        }
+    }
+    /* attributa omnia: nota aut vitium */
+    per (i = ZEPHYRUM; nodus->attributa != NIHIL
+                       && i < (i32)xar_numerus(nodus->attributa); i++)
+    {
+        StmlAttributum* t = (StmlAttributum*)xar_obtinere(
+            nodus->attributa, i);
+                    f64 valor;
+                    s32 w;
+
+        si (   chorda_aequalis_literis(*t->titulus, "titulus")
+            || chorda_aequalis_literis(*t->titulus, "basis"))
+        {
+            perge;
+        }
+        si (chorda_aequalis_literis(*t->titulus, "ambitus"))
+        {
+            si (!_ambitum_legere(*t->valor, &x->infima, &x->summa))
+            {
+                redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
+                    "instrumentum: valor malus aut extra fines");
+            }
+            perge;
+        }
+        per (k = ZEPHYRUM; k < XV; k++)
+        {
+            si (chorda_aequalis_literis(*t->titulus, CAMPI[k].titulus))
+            {
+                frange;
+            }
+        }
+        si (k == XV)
+        {
+            redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
+                "instrumentum: attributum ignotum");
+        }
+        si (k >= XIII)
+        {
+            w = k == XIII ? _verbum(*t->valor, GENERA, III)
+                          : _verbum(*t->valor, FORMAE, IV);
+            si (w < ZEPHYRUM)
+            {
+                redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
+                    "instrumentum: valor malus aut extra fines");
+            }
+            *_campus(&x->parametra, k) = (f32)w;
+            perge;
+        }
+        si (   !chorda_ut_f64(*t->valor, &valor)
+            || valor < (f64)CAMPI[k].infima
+            || valor > (f64)CAMPI[k].summa)
+        {
+            redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
+                "instrumentum: valor malus aut extra fines");
+        }
+        *_campus(&x->parametra, k) = (f32)valor;
+    }
+    redde VERUM;
+}
+
+/* instrumenta nodi (filii 'instrumentum') in x[ab..]; bases: priora
+ * eiusdem gradus et 'externa' (libri). Reddit numerum aut FALSUM per
+ * vitium (numerus in *n) */
+interior b32
+_instrumenta_legere (
+                      StmlNodus*  nodus,
+    constans CarmenInstrumentum*  externa,
+                            i32   numerus_externorum,
+                         chorda   carmen,
+                        Piscina*  piscina,
+             CarmenInstrumentum** x,
+                            i32*  n,
+                 CarminisVitium*  vitium)
+{
+                   i32  numerus = _numerare(nodus, "instrumentum");
+                   i32  i;
+                   i32  j = ZEPHYRUM;
+                   i32  m;
+    CarmenInstrumentum* bases;
+
+    *n = ZEPHYRUM;
+    *x = (CarmenInstrumentum*)piscina_allocare(piscina,
+        (memoriae_index)(numerus + numerus_externorum + I)
+            * magnitudo(CarmenInstrumentum));
+    bases = (CarmenInstrumentum*)piscina_allocare(piscina,
+        (memoriae_index)(numerus + numerus_externorum + I)
+            * magnitudo(CarmenInstrumentum));
+    si (*x == NIHIL || bases == NIHIL)
+    {
+        redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
+            "piscina exhausta");
+    }
+    /* bases: externa, deinde propria ordine (supra) */
+    per (i = ZEPHYRUM; i < numerus_externorum; i++)
+    {
+        bases[i] = externa[i];
+    }
+    per (i = ZEPHYRUM; i < stml_numerus_liberorum(nodus); i++)
+    {
+        StmlNodus* l = stml_liberum_ad_indicem(nodus, i);
+
+        si (!_elementum_est(l, "instrumentum"))
+        {
+            perge;
+        }
+        si (!_instrumentum_legere(l, bases, numerus_externorum + j,
+                                  carmen, &(*x)[j], vitium))
+        {
+            redde FALSUM;
+        }
+        per (m = ZEPHYRUM; m < j; m++)
+        {
+            si (chorda_aequalis((*x)[m].titulus, (*x)[j].titulus))
+            {
+                redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
+                    "instrumentum iteratum");
+            }
+        }
+        bases[numerus_externorum + j] = (*x)[j];
+        j++;
+    }
+    *n = j;
+    redde VERUM;
+}
+
 interior b32
 _carmen_legere (
-          StmlNodus* nodus,
-            Piscina* piscina,
-             Carmen* k,
-     CarminisVitium* vitium)
+                      StmlNodus* nodus,
+    constans CarmenInstrumentum* libri,
+                            i32  numerus_libri,
+                        Piscina* piscina,
+                         Carmen* k,
+                 CarminisVitium* vitium)
 {
                 chorda* a;
                    i32  i;
@@ -631,10 +936,12 @@ _carmen_legere (
         si (   !_elementum_est(n, "tempus")
             && !_elementum_est(n, "metrum")
             && !_elementum_est(n, "clavis")
-            && !_elementum_est(n, "pars"))
+            && !_elementum_est(n, "pars")
+            && !_elementum_est(n, "instrumentum"))
         {
             redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
-                "in carmine solum tempus, metrum, clavis, pars");
+                "in carmine solum tempus, metrum, clavis, pars, "
+                "instrumentum");
         }
         si (!_elementum_est(n, "metrum"))
         {
@@ -713,6 +1020,25 @@ _carmen_legere (
         }
     }
     cantus_tempora_computare(k->tempora, k->numerus_temporum);
+    /* instrumenta: carminis propria (bases: libri et supra), deinde
+     * libri - quaerendo propria vincunt */
+    {
+        CarmenInstrumentum* propria;
+                       i32  n;
+
+        si (!_instrumenta_legere(nodus, libri, numerus_libri,
+            k->titulus,
+                                 piscina, &propria, &n, vitium))
+        {
+            redde FALSUM;
+        }
+        per (i = ZEPHYRUM; i < numerus_libri; i++)
+        {
+            propria[n + i] = libri[i];
+        }
+        k->instrumenta             = propria;
+        k->numerus_instrumentorum  = n + numerus_libri;
+    }
     /* partes */
     k->numerus_partium = _numerare(nodus, "pars");
     si (k->numerus_partium > ZEPHYRUM)
@@ -776,13 +1102,15 @@ carmina_legere (
            Carmina* liber,
     CarminisVitium* vitium)
 {
-    StmlResultus  r;
-       StmlNodus* radix;
-          Carmen* carmina;
-             i32  numerus = ZEPHYRUM;
-             i32  i;
-             i32  j;
-             i32  m;
+          StmlResultus  r;
+             StmlNodus* radix;
+                Carmen* carmina;
+                   i32  numerus = ZEPHYRUM;
+                   i32  i;
+                   i32  j;
+                   i32  m;
+    CarmenInstrumentum* libri;
+                   i32  numerus_libri;
 
     liber->carmina = NIHIL;
     liber->numerus = ZEPHYRUM;
@@ -806,12 +1134,22 @@ carmina_legere (
         {
             perge;
         }
+        si (_elementum_est(n, "instrumentum"))
+        {
+            perge;
+        }
         si (!_elementum_est(n, "carmen"))
         {
             redde _vitium(vitium, _vacua(), _vacua(), -I, ZEPHYRUM,
-                "in carminibus solum carmina");
+                "in carminibus solum carmina et instrumenta");
         }
         numerus++;
+    }
+    /* instrumenta libri (ordine; basis supra) ante carmina */
+    si (!_instrumenta_legere(radix, NIHIL, ZEPHYRUM, _vacua(), piscina,
+                             &libri, &numerus_libri, vitium))
+    {
+        redde FALSUM;
     }
     si (numerus == ZEPHYRUM)
     {
@@ -829,11 +1167,13 @@ carmina_legere (
     {
         StmlNodus* n = stml_liberum_ad_indicem(radix, i);
 
-        si (n->genus != STML_NODUS_ELEMENTUM)
+        si (   n->genus != STML_NODUS_ELEMENTUM
+            || _elementum_est(n, "instrumentum"))
         {
             perge;
         }
-        si (!_carmen_legere(n, piscina, &carmina[j], vitium))
+        si (!_carmen_legere(n, libri, numerus_libri, piscina,
+                            &carmina[j], vitium))
         {
             redde FALSUM;
         }
@@ -910,4 +1250,21 @@ carmen_tempus_mensurae (
         redde (s64)III * CANTUS_PULSUS_INTEGRAE / VIII;
     }
     redde (s64)CANTUS_PULSUS_INTEGRAE / (s64)m->denominator;
+}
+
+constans CarmenInstrumentum*
+carmen_instrumentum (
+    constans Carmen* carmen,
+             chorda  titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < carmen->numerus_instrumentorum; i++)
+    {
+        si (chorda_aequalis(carmen->instrumenta[i].titulus, titulus))
+        {
+            redde &carmen->instrumenta[i];
+        }
+    }
+    redde NIHIL;
 }

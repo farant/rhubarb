@@ -291,8 +291,11 @@ _notas_iubere (
         {
             perge;
         }
-        tibia = c->resolutor.tibia(c->resolutor.ctx,
-            pars->instrumentum);
+        /* instrumentum carminis (libri) primum, deinde resolutor */
+        tibia = carmen_instrumentum(k, pars->instrumentum) != NIHIL
+              ? &carmen_instrumentum(k, pars->instrumentum)->parametra
+              : c->resolutor.tibia(c->resolutor.ctx,
+              pars->instrumentum);
         per (j = ZEPHYRUM; j < pars->numerus_frustorum; j++)
         {
             constans CarmenFrustum* f = &pars->frusta[j];

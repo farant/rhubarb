@@ -138,6 +138,44 @@ _sectio_ordinaria (
     CREDO_AEQUALIS_I32 (infima, XLVIII);
     CREDO_FALSUM (censura_ambitus_ordinarius(NIHIL,
         chorda_ex_literis("meum", c->piscina), &infima, &summa));
+    /* ambitus instrumenti libri: B3 extra 60..72, C4 intra;
+     * instrumentum
+     * libri sine ambitu nec in tabula: tacet */
+    {
+        constans Carmen* k = _carmen(c,
+            "<carmina><instrumentum titulus=\"angustum\" "
+            "basis=\"aether\""
+            " ambitus=\"60..72\"/><instrumentum titulus=\"liberum\"/>"
+            "<carmen titulus=\"am\"><pars titulus=\"p\" "
+            "instrumentum=\"angustum\"><frustum mensura=\"1\"><textus!>"
+            "o3 b4 >c4 c2</textus></frustum></pars><pars titulus=\"q\" "
+            "instrumentum=\"liberum\"><frustum mensura=\"1\"><textus!>"
+            "o1 c1</textus></frustum></pars><pars titulus=\"r\" "
+            "instrumentum=\"aether\"><frustum mensura=\"1\"><textus!>"
+            "o1 c1</textus></frustum></pars></carmen></carmina>");
+        CensuraInventum inv[CAPACITAS];
+           CensuraForma f = _sola(CENSURA_AMBITUS);
+
+        /* 'aether' (praeparatum) non redefinitum: tabula (36..96) - C1
+         * extra */
+        CREDO_NECESSE (k != NIHIL);
+        CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == II);
+        CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].nota->nota, LIX);
+    }
+    /* praeparatum redefinitum SINE ambitu: tabula manet (non 0..127) */
+    {
+        constans Carmen* k = _carmen(c,
+            "<carmina><instrumentum titulus=\"aether\" "
+            "basis=\"quadrans\""
+            "/><carmen titulus=\"rd\"><pars titulus=\"p\" "
+            "instrumentum=\"aether\"><frustum mensura=\"1\"><textus!>"
+            "o1 c1</textus></frustum></pars></carmen></carmina>");
+        CensuraInventum inv[CAPACITAS];
+           CensuraForma f = _sola(CENSURA_AMBITUS);
+
+        CREDO_NECESSE (k != NIHIL);
+        CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS), I);
+    }
 }
 
 

@@ -51,3 +51,25 @@ censura `_fortia` (strong beats), emendatio `_unitas` ('M:T' locus). Fran OK'd t
 compound by this rule (tested). Plants 9/9 red - one (censura `tempus > unitas` ->
 `>=`, every beat strong in 3/4) survived until a 3/4 weak-beat dissonance case was added
 to probatio_censura 'dissonantia'; the old code had the same gap.
+
+## 2026-10-23 - instrumenta libri et carminis (wish …WN96C4, Fran's #1)
+
+`<instrumentum>` at book level (siblings of <carmen>) and inside a song. Every attribute is
+a TibiaParametra field (Latin names; genus/forma as words), plus ambitus="N..M" for
+censura; unknown attribute, bad / out-of-range number, unknown basis, duplicate title at
+the same level all refuse the whole book. basis = a built-in (tibia_praeparatum) or a
+book instrument defined ABOVE (chains: cembalo_mollis on cembalo); song-level instruments
+may base on any book instrument (the book list is read first) or on earlier song ones.
+Without basis: unda/sinus, officium 0.5, tenor 1, amplitudo 0.5, rest 0.
+
+Each Carmen carries the merged list (its own first, then the book's), so carmen_instrumentum
+answers alone and every consumer gets book sounds with NO API change: cantor looks in the
+song before its resolver (book beats even a custom resolver - the song defines its own
+sound), auscultatio / WAV / live all through cantor; censura's ordinary ambitus uses an
+instrument's ambitus when given, else the table (a redefined built-in without ambitus
+keeps the built-in's range, not 0..127 - tested); auditio's instrument check accepts book
+instruments and -carmina lists them. A song-level instrument is invisible to other songs.
+
+Plants 14/14 red (one rewritten to compile: '&&' inside '||'). Two cases were added before
+planting: a song-level instrument based on a book instrument, and a redefined built-in
+without ambitus (censura must keep the table range).

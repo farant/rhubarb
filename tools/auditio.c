@@ -371,6 +371,21 @@ _carmen_monstrare (
             p->mutus ? "  mutus" : "",
             p->solus ? "  solus" : "");
     }
+    /* instrumenta carminis et libri (genus) */
+    per (i = ZEPHYRUM; i < k->numerus_instrumentorum; i++)
+    {
+         constans CarmenInstrumentum* x = &k->instrumenta[i];
+                                 s32  g = (s32)(x->parametra.genus
+                                     + 0.5f);
+
+        imprimere("%s%.*s (%s)%s", i
+            == ZEPHYRUM ? "  instrumenta: " : ", ",
+                  (integer)x->titulus.mensura,
+                  (constans character*)x->titulus.datum,
+                  g == TIBIA_CHORDA ? "chorda"
+                      : (g == TIBIA_MODULATIO ? "modulatio" : "unda"),
+                  i + I == k->numerus_instrumentorum ? "\n" : "");
+    }
 }
 
 /* vitium libri: carmen, pars, frustum, offset, causa */
@@ -485,8 +500,10 @@ _instrumenta_probare (
 
     per (i = ZEPHYRUM; i < k->numerus_partium; i++)
     {
-        si (cantor_tibia_ordinaria(NIHIL, k->partes[i].instrumentum)
-            == NIHIL)
+        si (   carmen_instrumentum(k, k->partes[i].instrumentum)
+            == NIHIL
+            && cantor_tibia_ordinaria(NIHIL, k->partes[i].instrumentum)
+                   == NIHIL)
         {
             fprintf(stderr,
                 "auditio: pars '%.*s': instrumentum ignotum "

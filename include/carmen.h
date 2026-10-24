@@ -34,6 +34,29 @@
  *   pars      instrumentum necessarium; lucrum 0..1 (1); mutus, solus
  *             (attributa sine valore); frusta in parte non se tegunt
  *
+ * INSTRUMENTA (libri et carminis):
+ *   <carmina>
+ *     <instrumentum titulus="cembalo" basis="chorda" claritas="0.9"
+ *                   decrementum="0.8" ambitus="41..89"/>
+ *     <carmen titulus="...">
+ *       <instrumentum titulus="campana_mollis" basis="campana"
+ *                     index="3"/>          (* carminis proprium *)
+ *       <pars instrumentum="cembalo" ...>
+ *
+ *   instrumentum  titulus [a-z0-9_]+; basis = praeparatum (tibia.h) aut
+ *                 instrumentum libri SUPRA definitum (catena); sine
+ *                 basi: genus unda, forma sinus, officium 0.5, tenor
+ *                 1, amplitudo 0.5, cetera 0. Attributa = campi
+ *                 TibiaParametra: genus (unda|chorda|modulatio), forma
+ *                 (pulsus|serra|triangulum|sinus), officium, impetus,
+ *                 lapsus, tenor, remissio, vibratus, celeritas, gravia,
+ *                 amplitudo, decrementum, claritas, ratio, index;
+ *                 ambitus="N..M" (MIDI, censurae). Ordo quaerendi:
+ *                 carminis, libri, praeparata - titulus praeparati
+ *                 redefinitus vincit. Vitia: attributum ignotum,
+ *                 numerus malus aut extra fines, basis ignota, titulus
+ *                 iteratus in eodem gradu.
+ *
  * TOTUS LIBER IN LECTIONE IUDICATUR: vitium cum carmine, parte, frusto
  * et offset in textu frusti - numquam carmen semi-lectum.
  */
@@ -45,6 +68,7 @@
 #include "chorda.h"
 #include "piscina.h"
 #include "cantus.h"
+#include "tibia.h"
 
 nomen structura {
           s64 pulsus;        /* intra frustum */
@@ -92,6 +116,13 @@ nomen structura {
 } CarmenClavis;
 
 nomen structura {
+            chorda titulus;
+    TibiaParametra parametra;
+               i32 infima;     /* ambitus; 0 et CXXVII si non datus */
+               i32 summa;
+} CarmenInstrumentum;
+
+nomen structura {
            chorda  titulus;
      CantusTempus* tempora;           /* quadra computata */
               i32  numerus_temporum;
@@ -103,6 +134,9 @@ nomen structura {
               i32  numerus_partium;
               s64  pulsus;           /* longitudo: finis frusti ultimi
                                       * (iteratio hic) */
+    CarmenInstrumentum* instrumenta;  /* carminis primum, deinde
+                                       * libri */
+                   i32 numerus_instrumentorum;
 } Carmen;
 
 nomen structura {
@@ -155,5 +189,11 @@ s64
 carmen_tempus_mensurae (
     constans Carmen* carmen,
                 s64  pulsus);
+
+/* NIHIL si nec carmen nec liber definit (praeparata non hic) */
+constans CarmenInstrumentum*
+carmen_instrumentum (
+    constans Carmen* carmen,
+             chorda  titulus);
 
 #endif /* CARMEN_H */

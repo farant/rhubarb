@@ -104,3 +104,9 @@ leading digit or sign+digit (so `-1` is the interval, not a flag); `-semitonia` 
 `-repetere R` are only legal with -copiare. Output: header (source -> target, interval,
 repetitions) then 'ante' / 'post' partitura line per destination bar; dry run unless
 -scribere (with -liber).
+
+## 2026-10-23 - book instruments in auditio
+
+_instrumenta_probare accepts carmen_instrumentum before the built-ins; -carmina prints
+"instrumenta: cembalo (chorda), ..." under the parts. Playback / WAV / -auscultare need
+nothing: cantor resolves book instruments itself.
