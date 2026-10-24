@@ -1,12 +1,12 @@
-/* probatio_testa_android_initus.c - partes purae testae Android
+/* probatio_testa_initus.c - partes purae testae Android
  * (testa-spec II.5-II.6, III.3): geometria, margo, tactus, digiti
  * duo, abruptio, facultates, decisio quadri, transfusio. In hospite et
- * in tabula (tools/android/probatio.sh testa_android_initus). */
+ * in tabula (tools/android/probatio.sh testa_initus). */
 #include "latina.h"
 #include "piscina.h"
 #include "eventus.h"
 #include "delineare_mandata.h"
-#include "testa_android_initus.h"
+#include "testa_initus.h"
 #include "credo.h"
 #include <string.h>
 
@@ -394,7 +394,7 @@ _sectio_transferre (
         alveus[x] = 0xABu;
     }
     testa_pixela_transferre(t, &g, alveus, IX, 0x77u);
-    CREDO_GRADUS("lineae 0 et VII margo; columna VIII (gradus) intacta");
+    CREDO_GRADUS("lineae 0 et VII margo; columna VIII intacta");
     per (y = ZEPHYRUM; y < VIII; y++)
     {
         CREDO_AEQUALIS_I32(alveus[y * IX + VIII], 0xABu);
@@ -477,6 +477,37 @@ _sectio_rectangulum (
         ZEPHYRUM, I, I, II, &g));
 }
 
+/* testa-ios T1: phases UITouch -> actiones machinae tactus (digitus
+ * primus DEPRESSIO, ceteri INDICATOR_*; ultimus sublatus LIBERATIO) */
+interior vacuum
+_sectio_gradus_tactus (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_GRADUS("incipit: primus DEPRESSIO, secundus INDICATOR");
+    CREDO_AEQUALIS_S32(testa_actio_ex_phase(TESTA_PHASIS_INCIPIT,
+        ZEPHYRUM, I), (s32)TESTA_TACTUS_DEPRESSIO);
+    CREDO_AEQUALIS_S32(testa_actio_ex_phase(TESTA_PHASIS_INCIPIT, I,
+        II), (s32)TESTA_TACTUS_INDICATOR_DEPRESSIO);
+    CREDO_GRADUS("movetur: MOTUS; quiescit: nihil");
+    CREDO_AEQUALIS_S32(testa_actio_ex_phase(TESTA_PHASIS_MOVETUR, I, I),
+        (s32)TESTA_TACTUS_MOTUS);
+    CREDO_AEQUALIS_S32(testa_actio_ex_phase(TESTA_PHASIS_QUIESCIT, I,
+        I), -I);
+    CREDO_GRADUS("finit: ultimus LIBERATIO, alius restans INDICATOR");
+    CREDO_AEQUALIS_S32(testa_actio_ex_phase(TESTA_PHASIS_FINIT, I,
+        ZEPHYRUM), (s32)TESTA_TACTUS_LIBERATIO);
+    CREDO_AEQUALIS_S32(testa_actio_ex_phase(TESTA_PHASIS_FINIT, II, I),
+        (s32)TESTA_TACTUS_INDICATOR_LIBERATIO);
+    CREDO_GRADUS("abrupta: ABRUPTIO semper (Review Focus 2)");
+    CREDO_AEQUALIS_S32(testa_actio_ex_phase(TESTA_PHASIS_ABRUPTA, I,
+        ZEPHYRUM), (s32)TESTA_TACTUS_ABRUPTIO);
+    CREDO_AEQUALIS_S32(testa_actio_ex_phase(TESTA_PHASIS_ABRUPTA, II,
+        ZEPHYRUM), (s32)TESTA_TACTUS_ABRUPTIO);
+    CREDO_GRADUS("phasis ignota: nihil");
+    CREDO_AEQUALIS_S32(testa_actio_ex_phase(IX, I, I), -I);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "geometria", _sectio_geometria, NIHIL, NIHIL, NIHIL, NIHIL },
     { "margo", _sectio_margo, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -488,6 +519,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "transfusio", _sectio_transferre, NIHIL, NIHIL, NIHIL, NIHIL },
     { "rectangulum contenti", _sectio_rectangulum, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "phases UITouch", _sectio_gradus_tactus, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
@@ -495,5 +528,5 @@ s32
 principale (
     vacuum)
 {
-    redde credo_suitam_currere("testa_android_initus", SECTIONES);
+    redde credo_suitam_currere("testa_initus", SECTIONES);
 }

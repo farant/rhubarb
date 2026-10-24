@@ -1,7 +1,7 @@
-/* testa_android_initus.c - partes purae testae Android (testa-spec
- * II.5-II.6; testa_android_initus.h) */
+/* testa_initus.c - partes purae testae Android (testa-spec
+ * II.5-II.6; testa_initus.h) */
 
-#include "testa_android_initus.h"
+#include "testa_initus.h"
 
 #include <string.h>
 
@@ -268,8 +268,33 @@ testa_tactum_vertere (
             redde VERUM;
 
         ordinarius:
-            /* POINTER_DOWN (digitus secundus), HOVER, OUTSIDE: B1 nihil */
+            /* POINTER_DOWN (digitus II), HOVER, OUTSIDE: nihil */
             redde FALSUM;
+    }
+}
+
+s32
+testa_actio_ex_phase (
+    i32 phasis,
+    i32 activi_ante,
+    i32 activi_post)
+{
+    commutatio (phasis)
+    {
+        casus TESTA_PHASIS_INCIPIT:
+            redde activi_ante == ZEPHYRUM
+                ? TESTA_TACTUS_DEPRESSIO
+                : TESTA_TACTUS_INDICATOR_DEPRESSIO;
+        casus TESTA_PHASIS_MOVETUR:
+            redde TESTA_TACTUS_MOTUS;
+        casus TESTA_PHASIS_FINIT:
+            redde activi_post == ZEPHYRUM
+                ? TESTA_TACTUS_LIBERATIO
+                : TESTA_TACTUS_INDICATOR_LIBERATIO;
+        casus TESTA_PHASIS_ABRUPTA:
+            redde TESTA_TACTUS_ABRUPTIO;
+        ordinarius:
+            redde -I;
     }
 }
 
