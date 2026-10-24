@@ -10,6 +10,7 @@
 #include "sonitus.h"
 #include "mixtura.h"
 #include "tibia.h"
+#include <string.h>
 
 #define MEDIUM 0.70710677f
 /* XVI milia quadra = 0.33 s: radius (0.23 s) et fragor (0.30 s) toti */
@@ -729,6 +730,7 @@ _tibia_pura (
 {
     TibiaParametra p;
 
+    memset(&p, ZEPHYRUM, magnitudo(p));
     p.forma                = (f32)SONUS_UNDA_SINUS;
     p.officium             = 0.5f;
     p.involucrum.impetus   = 0.0f;

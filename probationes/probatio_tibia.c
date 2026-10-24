@@ -40,6 +40,7 @@ _pura (
 {
     TibiaParametra p;
 
+    memset(&p, ZEPHYRUM, magnitudo(p));
     p.forma                = (f32)SONUS_UNDA_SINUS;
     p.officium             = 0.5f;
     p.involucrum.impetus   = 0.0f;
@@ -476,6 +477,311 @@ _sectio_praeparata (
     CREDO_VERUM (_apex(tabula_a, ZEPHYRUM, SECUNDA) > 0.0f);
 }
 
+/* FNV-1a super octetos exemplorum: vox aperta I s (glissandum LX ->
+ * LXIV per 0.1 s), clausa 0.5 s */
+interior i64
+_vestigium (
+    constans TibiaParametra* p)
+{
+    TibiaVox v;
+         i64 h = 1469598103934665603ULL;
+         i32 i;
+         i32 j;
+
+    tibia_vocem_parare(&v, p, 60.0f);
+    tibia_notam_ponere(&v, 64.0f, 4800);
+    per (i = ZEPHYRUM; i < SONUS_FREQUENTIA * III / II; i++)
+    {
+        insignatus character b[IV];
+                         f32 x;
+
+        si (i == SONUS_FREQUENTIA)
+        {
+            tibia_portam_claudere(&v);
+        }
+        x = tibia_vocis_proximum(&v);
+        memcpy(b, &x, IV);
+        per (j = ZEPHYRUM; j < IV; j++)
+        {
+            h ^= (i64)b[j];
+            h *= 1099511628211ULL;
+        }
+    }
+    redde h;
+}
+
+/* praeparata vetera (genus UNDA) octetim eadem ac ante genera nova
+ * (vestigia 2026-10-23, ante CHORDA et FM computata) */
+interior vacuum
+_sectio_vetera (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_VERUM (_vestigium(tibia_praeparatum("aether"))
+                 == 17283308480231307402ULL);
+    CREDO_VERUM (_vestigium(tibia_praeparatum("quadrans"))
+                 == 11789016554117580620ULL);
+    CREDO_VERUM (_vestigium(tibia_praeparatum("triangulum"))
+                 == 398703613805126966ULL);
+}
+
+/* periodus per autocorrelationem: spatium in [prima, ultima] maximus
+ * super fenestram ab initio */
+interior i32
+_periodus (
+    constans f32* x,
+             i32  initium,
+             i32  fenestra,
+             i32  prima,
+             i32  ultima)
+{
+    i32 spatium;
+    i32 optimus = prima;
+    f64 maximum = -1.0e30;
+
+    per (spatium = prima; spatium <= ultima; spatium++)
+    {
+        f64 summa = 0.0;
+        i32 i;
+
+        per (i = initium; i < initium + fenestra; i++)
+        {
+            summa += (f64)x[i] * (f64)x[i + spatium];
+        }
+        si (summa > maximum)
+        {
+            maximum = summa;
+            optimus = spatium;
+        }
+    }
+    redde optimus;
+}
+
+/* correlatio normalizata ad spatium */
+interior f64
+_congruentia (
+    constans f32* x,
+             i32  initium,
+             i32  fenestra,
+             i32  spatium)
+{
+    f64 producta    = 0.0;
+    f64 quadrata_a  = 0.0;
+    f64 quadrata_b  = 0.0;
+    i32 i;
+
+    per (i = initium; i < initium + fenestra; i++)
+    {
+        producta    += (f64)x[i] * (f64)x[i + spatium];
+        quadrata_a  += (f64)x[i] * (f64)x[i];
+        quadrata_b  += (f64)x[i + spatium] * (f64)x[i + spatium];
+    }
+    redde quadrata_a > 0.0
+        && quadrata_b > 0.0 ? producta
+            / sqrt(quadrata_a * quadrata_b) : 0.0;
+}
+
+/* periodus fracta: maximum autocorrelationis cum interpolatione
+ * parabolica circa spatium optimum */
+interior f64
+_periodus_fracta (
+    constans f32* x,
+             i32  initium,
+             i32  fenestra,
+             i32  prima,
+             i32  ultima)
+{
+    i32 l = _periodus(x, initium, fenestra, prima, ultima);
+    f64 a = _congruentia(x, initium, fenestra, l - I);
+    f64 b = _congruentia(x, initium, fenestra, l);
+    f64 d = _congruentia(x, initium, fenestra, l + I);
+    f64 n = a - 2.0 * b + d;
+
+    redde n != 0.0 ? (f64)l + 0.5 * (a - d) / n : (f64)l;
+}
+
+interior f64
+_efficax (
+    constans f32* x,
+             i32  initium,
+             i32  numerus)
+{
+    f64 s = 0.0;
+    i32 i;
+
+    per (i = initium; i < initium + numerus; i++)
+    {
+        s += (f64)x[i] * (f64)x[i];
+    }
+    redde sqrt(s / (f64)numerus);
+}
+
+/* vox aperta per n exempla in tabulam */
+interior vacuum
+_sonare (
+    constans TibiaParametra* p,
+                        f32  nota,
+                        f32* tabula,
+                        i32  n)
+{
+    TibiaVox v;
+         i32 i;
+
+    tibia_vocem_parare(&v, p, nota);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        tabula[i] = tibia_vocis_proximum(&v);
+    }
+}
+
+/* Karplus-Strong: periodus = frequentia (A2, A4, C6), decrementum ad
+ * -60 dB, determinismus, glissandum, porta clausa finit */
+interior vacuum
+_sectio_chorda (
+    CredoContextus* c)
+{
+     constans TibiaParametra* p = tibia_praeparatum("chorda");
+                    TibiaVox  v;
+                         i32  i;
+                         f64  initium;
+                         f64  serum;
+
+    (vacuum)c;
+    CREDO_NECESSE (p != NIHIL
+        && (s32)(p->genus + 0.5f) == TIBIA_CHORDA);
+    /* A4: 48000 / 440 = 109.09 - etiam fracta (+-0.1: mora filtri
+     * pensata) */
+    _sonare(p, 69.0f, tabula_a, SECUNDA);
+    CREDO_AEQUALIS_I32 (_periodus(tabula_a, SECUNDA / XX, M, C, CXX),
+                        CIX);
+    CREDO_VERUM (   fabs(_periodus_fracta(tabula_a, SECUNDA / XX, M, C,
+                                          CXX) - 109.0909) < 0.1);
+    /* A2: 436.4; C6: 45.87 */
+    _sonare(p, 45.0f, tabula_a, SECUNDA);
+    i = _periodus(tabula_a, SECUNDA / XX, MM, CDXX, CDL);
+    CREDO_VERUM (i >= CDXXXV && i <= CDXXXVII);
+    _sonare(p, 84.0f, tabula_a, SECUNDA);
+    i = _periodus(tabula_a, SECUNDA / XX, D, XL, L);
+    CREDO_VERUM (i >= XLV && i <= XLVI);
+    /* decrementum: clivus stabilis (post 0.25 s - harmonici impulsus
+     * celeriter cadunt): -30 dB per dimidium decrementi (+-3 dB) */
+    _sonare(p, 69.0f, tabula_a, TABULA_MAXIMA);
+    initium = _efficax(tabula_a, SECUNDA / IV, SECUNDA / C);
+    serum   = _efficax(tabula_a, SECUNDA / IV
+                   + (i32)(p->decrementum * (f32)SECUNDA / 2.0f),
+                   SECUNDA / C);
+    CREDO_VERUM (initium > 0.01);
+    CREDO_VERUM (   20.0 * log10(serum / initium) < -27.0
+                 && 20.0 * log10(serum / initium) > -33.0);
+    /* determinismus: eadem nota eadem exempla; alia nota alia */
+    _sonare(p, 69.0f, tabula_b, TABULA_MAXIMA);
+    CREDO_VERUM (memcmp(tabula_a, tabula_b, magnitudo(tabula_a))
+                 == ZEPHYRUM);
+    _sonare(p, 70.0f, tabula_b, SECUNDA);
+    CREDO_VERUM (memcmp(tabula_a, tabula_b, SECUNDA * magnitudo(f32))
+                 != ZEPHYRUM);
+    /* glissandum statim ad A5: periodus 54.5 */
+    tibia_vocem_parare(&v, p, 69.0f);
+    per (i = ZEPHYRUM; i < SECUNDA / X; i++)
+    {
+        (vacuum)tibia_vocis_proximum(&v);
+    }
+    tibia_notam_ponere(&v, 81.0f, ZEPHYRUM);
+    per (i = ZEPHYRUM; i < SECUNDA / II; i++)
+    {
+        tabula_a[i] = tibia_vocis_proximum(&v);
+    }
+    i = _periodus(tabula_a, SECUNDA / X, M, XLV, LXV);
+    CREDO_VERUM (i >= LIV && i <= LV);
+    /* porta clausa: remissio, deinde finita */
+    tibia_portam_claudere(&v);
+    per (i = ZEPHYRUM; i < SECUNDA && !tibia_vox_finita(&v); i++)
+    {
+        (vacuum)tibia_vocis_proximum(&v);
+    }
+    CREDO_VERUM (tibia_vox_finita(&v));
+}
+
+/* claritas: plus energiae in differentiis (altae) cum claritas I */
+interior vacuum
+_sectio_claritas (
+    CredoContextus* c)
+{
+    TibiaParametra p = *tibia_praeparatum("chorda");
+               f64 clara;
+               f64 obscura;
+               i32 i;
+               f64 d;
+
+    (vacuum)c;
+    p.claritas = 1.0f;
+    _sonare(&p, 57.0f, tabula_a, SECUNDA / II);
+    p.claritas = 0.0f;
+    _sonare(&p, 57.0f, tabula_b, SECUNDA / II);
+    clara    = 0.0;
+    obscura  = 0.0;
+    per (i = SECUNDA / XX + I; i < SECUNDA / X; i++)
+    {
+        d        = (f64)tabula_a[i] - (f64)tabula_a[i - I];
+        clara    += d * d;
+        d        = (f64)tabula_b[i] - (f64)tabula_b[i - I];
+        obscura  += d * d;
+    }
+    CREDO_VERUM (   clara / _efficax(tabula_a, SECUNDA / XX, SECUNDA
+        / XX)
+                 > obscura / _efficax(tabula_b, SECUNDA / XX, SECUNDA
+                     / XX));
+}
+
+/* FM: initio index magnus (transitus multi), post decrementum index
+ * parvus - frequentia portantis per transitus; determinismus;
+ * limites */
+interior vacuum
+_sectio_campana (
+    CredoContextus* c)
+{
+     constans TibiaParametra* p = tibia_praeparatum("campana");
+                         i32  i;
+                         i32  primi  = ZEPHYRUM;
+                         i32  seri   = ZEPHYRUM;
+                         i32  t;
+                         f32  summum = 0.0f;
+
+    (vacuum)c;
+    CREDO_NECESSE (p != NIHIL
+        && (s32)(p->genus + 0.5f) == TIBIA_MODULATIO);
+    _sonare(p, 69.0f, tabula_a, TABULA_MAXIMA);
+    per (i = ZEPHYRUM; i < TABULA_MAXIMA; i++)
+    {
+        summum = (f32)fabs(tabula_a[i])
+            > summum ? (f32)fabs(tabula_a[i])
+                                                 : summum;
+    }
+    CREDO_VERUM (summum <= p->amplitudo + 1.0e-4f && summum > 0.05f);
+    /* ratio inharmonica: initio non periodica in cyclo portantis
+     * (ratio 1 periodica esset, correlatio ~1) */
+    CREDO_VERUM (_congruentia(tabula_a, SECUNDA / C, M, CIX) < 0.9);
+    /* transitus sursum: 0.1 s initio, 0.1 s post 4 decrementa */
+    t = (i32)(4.0f * p->decrementum * (f32)SECUNDA);
+    per (i = I; i < SECUNDA / X; i++)
+    {
+        si (tabula_a[i - I] < 0.0f && tabula_a[i] >= 0.0f)
+        {
+            primi++;
+        }
+        si (tabula_a[t + i - I] < 0.0f && tabula_a[t + i] >= 0.0f)
+        {
+            seri++;
+        }
+    }
+    CREDO_VERUM (primi > seri + V);
+    /* index ~0: sinus portantis, 44 transitus per 0.1 s (+-1) */
+    CREDO_VERUM (seri >= XLIII && seri <= XLV);
+    _sonare(p, 69.0f, tabula_b, TABULA_MAXIMA);
+    CREDO_VERUM (memcmp(tabula_a, tabula_b, magnitudo(tabula_a))
+                 == ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "tenet", _sectio_tenet, _parare, NIHIL, NIHIL, NIHIL },
     { "involucrum", _sectio_involucrum, _parare, NIHIL, NIHIL, NIHIL },
@@ -483,6 +789,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "vibratus", _sectio_vibratus, _parare, NIHIL, NIHIL, NIHIL },
     { "color", _sectio_color, _parare, NIHIL, NIHIL, NIHIL },
     { "praeparata", _sectio_praeparata, _parare, NIHIL, NIHIL, NIHIL },
+    { "vetera", _sectio_vetera, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "chorda", _sectio_chorda, _parare, NIHIL, NIHIL, NIHIL },
+    { "claritas", _sectio_claritas, _parare, NIHIL, NIHIL, NIHIL },
+    { "campana", _sectio_campana, _parare, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

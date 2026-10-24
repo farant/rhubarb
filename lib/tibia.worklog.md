@@ -31,3 +31,39 @@ Measurement: interpolated upward zero crossings - mean over a window, or
 instantaneous over three cycles around a sample (enough to see a glide's
 midpoint within +-3 Hz). Plants 10/10 red (one needed the single-line
 form).
+
+## 2026-10-23 - genera CHORDA (Karplus-Strong) et FM; patches 'chorda', 'campana' (wish …P1DXC)
+
+One patch format, a generator kind per patch (TibiaParametra.genus, f32 like the rest).
+Old patches keep genus 0 and are byte-identical - FNV-1a of 1.5 s per patch recorded
+BEFORE the change (sonda -domus) and asserted in 'vetera' (it passed on the old code
+first, proving the test build's flags match). Hand-built patches in the tibia and mixtura
+suites now memset first (new fields would otherwise be garbage - genus!).
+
+CHORDA: the delay line lives INSIDE TibiaVox (TIBIA_LINEA 2048 f32 = 8 KB/voice, notes
+down to ~23 Hz) so the voice stays a value type with no piscina; mixtura voices are
+allocated once. Noise burst seeded from the note (deterministic WAV), DC removed. Filter
+y = g(a x[n-D] + (1-a) x[n-D-1]), a = 1/2 + claritas/2, read delay D = mora - (1-a) so the
+period is exactly mora (fractional, linear interpolation). Per-cycle gain g from the
+decay time, DIVIDED by the filter's and the interpolator's magnitude at the fundamental -
+without that the slope ran ~43 dB/s against 40. Decay tests measure the STEADY slope
+(from 0.25 s): the noise burst's upper harmonics drop ~8 dB in the first 0.1 s, which is
+real plucked-string behaviour, not a decay error. Pitch to +-0.1 sample via parabolic
+autocorrelation peak.
+
+FM: carrier = the voice's own SonusUnda phase/increment (glissando, vibrato for free);
+modulator increment = carrier increment x ratio each sample; index decays exponentially.
+Preset 'campana': ratio 1.4, index 6, 1/e in 0.4 s, attack 2 ms, decay 3 s, no sustain.
+'chorda': decay 2.5 s, claritas 0.5, amplitude 1.0 (0.6 measured -40 dBFS RMS as an
+inner voice; plucks spend most of their life in the tail).
+
+Not added to the theremin's instrument cycle (proposal said so): both decay by
+themselves, a held theremin note would fade out. censura ambitus: chorda 28..88,
+campana 48..96.
+
+Plants 10/10 red on the first run - two tests were sharpened BEFORE planting: pitch to
++-0.1 sample (parabolic autocorrelation peak; the integer-lag check could not see the
+quarter-sample filter-delay compensation) and FM non-periodicity at the carrier period
+(ratio 1 would be harmonic, correlation ~1). Lint renames: TIBIA_FM -> TIBIA_MODULATIO,
+lucrum_filtri / lucrum_fractionis, test helpers _congruentia, _efficax (valor efficax =
+RMS).

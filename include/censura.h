@@ -11,7 +11,8 @@
  *                licent (harmonica, melodica)                     ORD.
  *   ambitus      nota extra ambitum instrumenti (ordinarius:
  *                aether 36..96, quadrans 48..96, triangulum
- *                24..72; ignotum tacet)                           ORD.
+ *                24..72, chorda 28..88, campana 48..96; ignotum
+ *                tacet)                                           ORD.
  *   dissonantia  secunda, septima, tritonus (etiam compositi)
  *                inter notas partium diversarum sonantes ad
  *                tempus forte, NISI explicata (explicatio.h): nota

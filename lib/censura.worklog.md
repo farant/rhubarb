@@ -85,3 +85,7 @@ Found on the way: the dissonance line computed the interval as (nota - nota_alte
 12 in PART order - when the lower part comes first (bassus/media), a seventh printed as
 'secunda'. Every old test had the melody first. Fixed: from the absolute distance;
 test 'G2 contra F4, septima'.
+
+## 2026-10-23 - ambitus: chorda 28..88, campana 48..96
+
+New tibia patches (Karplus-Strong string, FM bell) get default ranges; table AMBITUS[V].

@@ -6,6 +6,7 @@
  * eget. Via eadem offline et in mixtura: exempla octetim eadem.
  */
 #include "tibia.h"
+#include "sors.h"
 #include <math.h>
 #include <string.h>
 
@@ -23,12 +24,26 @@ hic_manens constans TibiaPraeparatum tibiae_praeparata[] = {
     /* aetherophonum: sinus, introitus et exitus lenes, vibratus
      * parvus (manus tremens) */
     { "aether",     { 3.0f, 0.5f,  { 0.04f,  0.0f,  1.0f, 0.25f },
-                      0.12f, 5.5f, 0.0f, 0.5f } },
+                      0.12f, 5.5f, 0.0f, 0.5f,
+                      0.0f, 0.0f, 0.0f, 0.0f, 0.0f } },
     /* chiptune: pulsus quartae, mollitus supra VI milia */
     { "quadrans",   { 0.0f, 0.25f, { 0.002f, 0.08f, 0.7f, 0.08f },
-                      0.0f, 0.0f, 6000.0f, 0.35f } },
+                      0.0f, 0.0f, 6000.0f, 0.35f,
+                      0.0f, 0.0f, 0.0f, 0.0f, 0.0f } },
     { "triangulum", { 2.0f, 0.5f,  { 0.002f, 0.05f, 0.9f, 0.05f },
-                      0.0f, 0.0f, 0.0f, 0.6f } }
+                      0.0f, 0.0f, 0.0f, 0.6f,
+                      0.0f, 0.0f, 0.0f, 0.0f, 0.0f } },
+    /* Karplus-Strong: involucrum plenum (chorda ipsa decrescit), manu
+     * tacta remittit; -60 dB in 2.5 s (citharae similis), claritas
+     * media; amplitudo plena - impulsus cito cadit */
+    { "chorda",     { 0.0f, 0.5f,  { 0.0f,   0.0f,  1.0f, 0.08f },
+                      0.0f, 0.0f, 0.0f, 1.0f,
+                      1.0f, 2.5f, 0.5f, 0.0f, 0.0f } },
+    /* FM: ratio 1.4 (inharmonica), index VI decrescens (1/e in 0.4 s),
+     * impetus 2 ms, lapsus longus sine tenore */
+    { "campana",    { 0.0f, 0.5f,  { 0.002f, 3.0f,  0.0f, 1.0f },
+                      0.0f, 0.0f, 0.0f, 0.45f,
+                      2.0f, 0.4f, 0.0f, 1.4f, 6.0f } }
 };
 
 #define TIBIAE_PRAEPARATA                                           \
@@ -53,13 +68,144 @@ _forma (
     redde (SonusFormaUndae)k;
 }
 
+/* genus rotundatum in [UNDA, FM] */
+interior TibiaGenus
+_genus (
+    f32 genus)
+{
+    s32 k = (s32)(genus + 0.5f);
+
+    si (genus < 0.0f || k < ZEPHYRUM)
+    {
+        k = ZEPHYRUM;
+    }
+    si (k > (s32)TIBIA_MODULATIO)
+    {
+        k = (s32)TIBIA_MODULATIO;
+    }
+    redde (TibiaGenus)k;
+}
+
+/* frequentia: unda (UNDA, FM portans); CHORDA longitudo morae (ad
+ * lineam coercita) */
 interior vacuum
 _frequentiam_ponere (
     TibiaVox* v,
          f32  nota)
 {
-    sonus_unda_frequentiam_ponere(&v->unda,
-        sonus_notae_frequentia(nota));
+    f32 f = sonus_notae_frequentia(nota);
+
+    sonus_unda_frequentiam_ponere(&v->unda, f);
+    si (v->genus == TIBIA_CHORDA)
+    {
+        f32 mora = f > 0.0f ? (f32)SONUS_FREQUENTIA / f
+                            : (f32)(TIBIA_LINEA - III);
+
+        v->mora = mora > (f32)(TIBIA_LINEA - III)
+                ? (f32)(TIBIA_LINEA - III) : (mora
+                    < 2.0f ? 2.0f : mora);
+    }
+}
+
+/* CHORDA: linea impulsu strepitus impleta (sors ex nota - eadem nota
+ * eadem exempla), media nulla; detrimentum per cyclum ex decremento */
+interior vacuum
+_chordam_parare (
+                     TibiaVox* v,
+    constans TibiaParametra* p,
+                          f32  nota)
+{
+    Sors sors;
+     f64 media = 0.0;
+     i32 n;
+     i32 i;
+     f32 f = sonus_notae_frequentia(nota);
+     f32 t = p->decrementum > 0.0f ? p->decrementum : 1.5f;
+
+    n = (i32)v->mora + II;
+    sors_seminare(&sors, (i64)(nota * 1000.0f) ^ 0x6368ULL, ZEPHYRUM);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        v->linea[i]  = (f32)sors_proximum(&sors) / 2147483648.0f - 1.0f;
+        media        += (f64)v->linea[i];
+    }
+    media /= (f64)n;
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        v->linea[i] -= (f32)media;
+    }
+    v->scriptura    = n;
+    v->claritas     = p->claritas < 0.0f ? 0.0f
+                    : (p->claritas > 1.0f ? 1.0f : p->claritas);
+    /* -60 dB post t secundas (f*t cycli), pensatis filtro et
+     * interpolatione (ambo fundamentalem paulum minuunt) */
+    si (f > 0.0f)
+    {
+        f64 w   = TIBIA_DUO_PI * (f64)f / (f64)SONUS_FREQUENTIA;
+        f64 a   = 0.5 + 0.5 * (f64)v->claritas;
+        f64 d   = (f64)v->mora - (1.0 - a);
+        f64 fr  = d - floor(d);
+        f64 lucrum_filtri  = sqrt(a * a + (1.0 - a) * (1.0 - a)
+                       + 2.0 * a * (1.0 - a) * cos(w));
+        f64 lucrum_fractionis  = sqrt((1.0 - fr) * (1.0 - fr) + fr * fr
+                       + 2.0 * fr * (1.0 - fr) * cos(w));
+        f64 g   = pow(10.0, -3.0 / ((f64)t * (f64)f))
+            / (lucrum_filtri * lucrum_fractionis);
+
+        v->detrimentum = (f32)(g < 0.99999 ? g : 0.99999);
+    }
+}
+
+/* linea in loco fracto (linealiter); locus intra [0, TIBIA_LINEA) */
+interior f32
+_lineam_legere (
+    constans TibiaVox* v,
+                  f32  locus)
+{
+    i32 i;
+    f32 fr;
+
+    dum (locus < 0.0f)
+    {
+        locus += (f32)TIBIA_LINEA;
+    }
+    i   = (i32)locus;
+    fr  = locus - (f32)i;
+    redde (1.0f - fr) * v->linea[i % TIBIA_LINEA]
+        + fr * v->linea[(i + I) % TIBIA_LINEA];
+}
+
+/* CHORDA: y = g (a x[n-D] + (1 - a) x[n-D-1]), a = 1/2 + claritas/2;
+ * D = mora - (1 - a) ut periodus tota = mora (filtrum (1-a) moratur) */
+interior f32
+_chordae_proximum (
+    TibiaVox* v)
+{
+    f32 a      = 0.5f + 0.5f * v->claritas;
+    f32 locus  = (f32)v->scriptura - (v->mora - (1.0f - a));
+    f32 y = v->detrimentum * (a * _lineam_legere(v, locus)
+          + (1.0f - a) * _lineam_legere(v, locus - 1.0f));
+
+    v->linea[v->scriptura]  = y;
+    v->scriptura            = (v->scriptura + I) % TIBIA_LINEA;
+    redde y;
+}
+
+/* FM: sin(portans + index sin(modulans)); modulans = ratio x portans;
+ * index decrescit per exemplum */
+interior f32
+_modulationis_proximum (
+    TibiaVox* v)
+{
+    f64 portans   = (f64)v->unda.phasis / TIBIA_CIRCULUS;
+    f64 modulans  = (f64)v->phasis_modulans / TIBIA_CIRCULUS;
+    f32 x = (f32)sin(TIBIA_DUO_PI * portans + (f64)v->index
+            * sin(TIBIA_DUO_PI * modulans));
+
+    v->unda.phasis      += v->unda.incrementum;
+    v->phasis_modulans  += (i32)((f32)v->unda.incrementum * v->ratio);
+    v->index            *= v->index_detrimentum;
+    redde x;
 }
 
 vacuum
@@ -71,6 +217,7 @@ tibia_vocem_parare (
     f64 incrementum;
 
     memset(v, ZEPHYRUM, magnitudo(TibiaVox));
+    v->genus = _genus(p->genus);
     sonus_unda_parare(&v->unda, _forma(p->forma), ZEPHYRUM);
     sonus_unda_officium_ponere(&v->unda, p->officium);
     sonus_involucrum_parare(&v->involucrum, &p->involucrum);
@@ -86,6 +233,19 @@ tibia_vocem_parare (
     v->meta    = nota;
     v->aperta  = VERUM;
     _frequentiam_ponere(v, nota);
+    si (v->genus == TIBIA_CHORDA)
+    {
+        _chordam_parare(v, p, nota);
+    }
+    alioquin si (v->genus == TIBIA_MODULATIO)
+    {
+        f32 t = p->decrementum > 0.0f ? p->decrementum : 1.0f;
+
+        v->ratio = p->ratio;
+        v->index = p->index;
+        v->index_detrimentum  = (f32)exp(-1.0 / ((f64)t
+                                         * (f64)SONUS_FREQUENTIA));
+    }
 }
 
 vacuum
@@ -144,8 +304,10 @@ tibia_vocis_proximum (
         }
         _frequentiam_ponere(v, nota);
     }
-    x = sonus_unda_proximum(&v->unda)
-        * sonus_involucrum_proximum(&v->involucrum);
+    x = v->genus == TIBIA_CHORDA ? _chordae_proximum(v)
+        : v->genus == TIBIA_MODULATIO     ? _modulationis_proximum(v)
+                                 : sonus_unda_proximum(&v->unda);
+    x *= sonus_involucrum_proximum(&v->involucrum);
     redde sonus_colum_proximum(&v->colum, x) * v->amplitudo;
 }
 

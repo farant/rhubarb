@@ -129,6 +129,13 @@ _sectio_ordinaria (
         chorda_ex_literis("triangulum", c->piscina), &infima, &summa));
     CREDO_AEQUALIS_I32 (infima, XXIV);
     CREDO_AEQUALIS_I32 (summa, LXXII);
+    CREDO_VERUM (censura_ambitus_ordinarius(NIHIL,
+        chorda_ex_literis("chorda", c->piscina), &infima, &summa));
+    CREDO_AEQUALIS_I32 (infima, XXVIII);
+    CREDO_AEQUALIS_I32 (summa, LXXXVIII);
+    CREDO_VERUM (censura_ambitus_ordinarius(NIHIL,
+        chorda_ex_literis("campana", c->piscina), &infima, &summa));
+    CREDO_AEQUALIS_I32 (infima, XLVIII);
     CREDO_FALSUM (censura_ambitus_ordinarius(NIHIL,
         chorda_ex_literis("meum", c->piscina), &infima, &summa));
 }
