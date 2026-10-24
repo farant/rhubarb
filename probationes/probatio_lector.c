@@ -40,9 +40,10 @@ nomen structura {
 
 /* latus LATITUDO x altitudo super bibliothecam (directorium) */
 interior Mundus*
-mundus (
+mundus_magnitudine (
          CredoContextus* c,
      constans character* directorium,
+                    i32  latitudo,
                     i32  altitudo)
 {
     Mundus* w;
@@ -61,7 +62,7 @@ mundus (
         "<hospes/>");
     si (   !w->volumen || !w->bibliotheca || !w->repo
         || !lector_montare(&w->m, c->piscina, w->intern, w->repo, "l1",
-               w->bibliotheca, LATITUDO, altitudo, NIHIL))
+               w->bibliotheca, latitudo, altitudo, NIHIL))
     {
         redde NIHIL;
     }
@@ -77,6 +78,15 @@ mundus (
     w->organum = organum_legere_genus(c->piscina, w->intern, "lector",
         "lector");
     redde w;
+}
+
+interior Mundus*
+mundus (
+         CredoContextus* c,
+     constans character* directorium,
+                    i32  altitudo)
+{
+    redde mundus_magnitudine(c, directorium, LATITUDO, altitudo);
 }
 
 interior vacuum
@@ -542,13 +552,25 @@ _sectio_rotunda (
     clavis(w, '[');
     CREDO_VERUM(campus_est(w, "caput", "1"));
     CREDO_VERUM(campus_est(w, "pagina", "1"));
+    mundum_claudere(w);
+
+    /* rotunda: latus CXII (area LXXX px = V lineae spatio duplici) -
+     * pagina quaeque initium sententiae habet (sententiae < C
+     * litterae);
+     * in area minore pagina tota intra sententiam unam iacere potest,
+     * quae reaperta paginam priorem ostendit (decisio I, accepta) */
+    w = mundus(c, "probationes/fixa/lector/longus", CXII);
+    CREDO_NECESSE_NON_NIHIL(w);
+    reditus(w);
     per (i = ZEPHYRUM; i < X && !campus_est(w, "caput", "3"); i++)
     {
         clavis(w, ']');
     }
     CREDO_NECESSE(campus_est(w, "caput", "3"));
 
-    CREDO_GRADUS("caput III: paginae omnes rotundae");
+    CREDO_GRADUS("caput III: paginae omnes rotundae (ultima excepta, "
+        "si "
+        "sententia nulla in ea incipit: tunc priorem ostendit)");
     paginae = ZEPHYRUM;
     per (i = ZEPHYRUM; i < C; i++)
     {
@@ -563,7 +585,16 @@ _sectio_rotunda (
         effugium(w);
         reditus(w);
         CREDO_CHORDA_AEQUALIS(campus(w, "caput"), caput);
-        CREDO_CHORDA_AEQUALIS(campus(w, "pagina"), pagina);
+        si (!chorda_aequalis(campus(w, "pagina"), pagina))
+        {
+            /* decisio I: pagina sine initio sententiae - solum ultima
+             * licet (] ad eam redit, ] iterum nihil) */
+            clavis(w, ']');
+            CREDO_CHORDA_AEQUALIS(campus(w, "pagina"), pagina);
+            clavis(w, ']');
+            CREDO_CHORDA_AEQUALIS(campus(w, "pagina"), pagina);
+            frange;
+        }
         clavis(w, ']');
         si (chorda_aequalis(campus(w, "pagina"), pagina))
         {
@@ -748,6 +779,136 @@ _sectio_semitae (
     mundum_claudere(w);
 }
 
+/* positio (px) textus picti continentis fragmentum; FALSUM si nullus */
+interior b32
+positio_picta (
+                 Mundus* w,
+     constans character* fragmentum,
+                    s32* x,
+                    s32* y,
+                Piscina* p)
+{
+               Mandata* md;
+     constans Mandatum* t;
+                   i32  i;
+
+    md = reddere(w, p);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        t = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   t->genus == MANDATUM_TEXTUS
+            && chorda_continet(t->textus, chorda_ex_literis(fragmentum,
+                p)))
+        {
+            *x = t->fines.x;
+            *y = t->fines.y;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* margo dexter textus picti (px, FONS_PARVUS): x + runae * VI
+ * maximum */
+interior s32
+dextrum_maximum (
+     Mundus* w,
+    Piscina* p)
+{
+               Mandata* md;
+     constans Mandatum* t;
+                   i32  i;
+                   i32  j;
+                   s32  runae;
+                   s32  maximum;
+
+    md       = reddere(w, p);
+    maximum  = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        t = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (t->genus != MANDATUM_TEXTUS || t->fons != FONS_PARVUS)
+        {
+            perge;
+        }
+        runae = ZEPHYRUM;
+        per (j = ZEPHYRUM; j < t->textus.mensura; j++)
+        {
+            si ((t->textus.datum[j] & 0xC0) != 0x80)
+            {
+                runae++;
+            }
+        }
+        si (t->fines.x + runae * VI > maximum)
+        {
+            maximum = t->fines.x + runae * VI;
+        }
+    }
+    redde maximum;
+}
+
+/* margines paginae ut liber: X cellulae utrimque, VI lineae supra et
+ * infra (in latere lato); titulus currens in margine supero, numerus
+ * paginae in infero; latus angustum margines minuit (columna >= XL) */
+interior vacuum
+_sectio_margines (
+    CredoContextus* c)
+{
+    Mundus* w;
+       s32  x;
+       s32  y;
+       s32  x_titulus;
+       s32  y_titulus;
+       s32  x_folium;
+       s32  y_folium;
+
+    CREDO_GRADUS("latus CDLXXX x CDLXXII: X cellulae, VI lineae");
+    w = mundus_magnitudine(c, BIBLIOTHECA, CDLXXX, ALTITUDO);
+    CREDO_NECESSE_NON_NIHIL(w);
+    clavis(w, 'j');
+    reditus(w);
+    CREDO_VERUM(positio_picta(w, "Prooemium.", &x, &y, c->piscina));
+    /* margo radicis (cellula una) + X cellulae; linea + VI lineae */
+    CREDO_AEQUALIS_S32(x, VI + X * VI);
+    CREDO_AEQUALIS_S32(y, VIII + VI * VIII);
+
+    CREDO_GRADUS("titulus currens supra, numerus paginae infra");
+    CREDO_VERUM(positio_picta(w, "Beginning", &x_titulus, &y_titulus,
+        c->piscina));
+    CREDO_VERUM(y_titulus < y);
+    CREDO_VERUM(x_titulus > X * VI);
+    CREDO_VERUM(positio_picta(w, "1/1", &x_folium, &y_folium,
+        c->piscina));
+    CREDO_VERUM(y_folium > ALTITUDO - VI * VIII - VIII);
+    CREDO_VERUM(x_folium > CC);
+    mundum_claudere(w);
+
+    CREDO_GRADUS("paragraphi longi intra columnam: nulla linea in "
+        "marginem dextrum (CDLXXX - VI - X cellulae)");
+    w = mundus_magnitudine(c, "probationes/fixa/lector/longus", CDLXXX,
+        ALTITUDO);
+    CREDO_NECESSE_NON_NIHIL(w);
+    reditus(w);
+    clavis(w, ']');
+    clavis(w, ']');
+    clavis(w, ']');
+    CREDO_VERUM(campus_est(w, "caput", "3"));
+    CREDO_VERUM(dextrum_maximum(w, c->piscina) > CCC);
+    CREDO_VERUM(dextrum_maximum(w, c->piscina) <= CDLXXX - VI
+        - X * VI);
+    mundum_claudere(w);
+
+    CREDO_GRADUS("latus angustum (CCXL): margo lateralis ad cellulam "
+        "unam");
+    w = mundus(c, BIBLIOTHECA, ALTITUDO);
+    CREDO_NECESSE_NON_NIHIL(w);
+    clavis(w, 'j');
+    reditus(w);
+    CREDO_VERUM(positio_picta(w, "Prooemium.", &x, &y, c->piscina));
+    CREDO_AEQUALIS_S32(x, VI + VI);
+    mundum_claudere(w);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "bibliotheca", _sectio_bibliotheca, NIHIL, NIHIL, NIHIL, NIHIL },
     { "paginae_ordinum", _sectio_paginae_ordinum, NIHIL, NIHIL, NIHIL,
@@ -757,6 +918,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "positio", _sectio_positio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "rotunda", _sectio_rotunda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "semitae", _sectio_semitae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "margines", _sectio_margines, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

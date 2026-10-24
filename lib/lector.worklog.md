@@ -79,3 +79,33 @@ praecepta key table, one root figure. Views: bibliotheca, index, pagina.
   and are silently not commands. (First misread as a `%` problem.)
 - Plants: 24 over the five tasks, all red (list in the plan's execution
   notes).
+
+## 2026-10-24 - book margins on the page view (Fran)
+
+Page view now has margins like a printed book: 10 characters left and
+right, 6 lines top and bottom (inside the pane's one-cell frame).
+`_margines()` computes them once for both `_area()` (pagination) and the
+painter, so pages and painting cannot disagree. They shrink only when
+the pane is too small: the side margin is half of whatever exceeds a
+40-character column (clamped 1..10), top/bottom half of whatever exceeds
+20 lines (clamped 1..6). The top margin carries the running head
+(chapter title, dim, centred), the bottom margin the folio "k/n"
+(centred) or "position not found" in red. Positions are sentences, so
+the extra pages this creates move nobody's place. Tests pin x/y of the
+first line in a 480 px pane (6 + 10 cells, 8 + 6 lines), the narrow-pane
+clamp, and that no line of Longus runs into the right margin (that last
+one catches an `_area` that ignores the margins).
+
+## 2026-10-24 - double-spaced text lines (Fran)
+
+Tried as an experiment, kept: every 6x8 text line is followed by an 8 px
+blank line (`INTERVALLUM_LINEARUM` in lector_paginae.c); headings keep their 16 px
+pitch, the 8 px gap between blocks stays (paragraphs read as 16 px of
+white). The blank AFTER the last line of a page is not required to fit
+(fit test uses the visible height, the advance uses height + blank), so
+a 72 px page holds five lines, not four. Side effect found by the round
+trip: with only a few lines per page, a chapter's LAST page can hold just
+the tail of its final sentence - no sentence starts there, so (Decision 1,
+accepted in the plan) reopening shows the page before. The round-trip
+test now runs in a pane with five lines per page and allows exactly that
+case on the last page only; the "first byte" plant still fails it.

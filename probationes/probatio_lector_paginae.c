@@ -242,7 +242,18 @@ _sectio_paginae (
     CREDO_VERUM(xar_numerus(x) > I);
     CREDO_VERUM(lineae_tegunt(k, x, CCXL, unus[ZEPHYRUM], p));
     CREDO_AEQUALIS_S32(linea(x, I, ZEPHYRUM)->y, ZEPHYRUM);
-    CREDO_AEQUALIS_I32(numerus_linearum(x, ZEPHYRUM), X);
+
+    CREDO_GRADUS("spatium duplex: lineae textus XVI px distant; LXXX "
+        "px "
+        "= V lineae (0..LXIV)");
+    CREDO_AEQUALIS_S32(linea(x, ZEPHYRUM, I)->y, XVI);
+    CREDO_AEQUALIS_I32(numerus_linearum(x, ZEPHYRUM), V);
+
+    CREDO_GRADUS("linea vacua post ultimam non requiritur: LXXII px = "
+        "V "
+        "lineae");
+    y = lector_paginare(k, CCXL, LXXII, p);
+    CREDO_AEQUALIS_I32(numerus_linearum(y, ZEPHYRUM), V);
 
     CREDO_GRADUS("determinatio: eadem area eaedem paginae, alia aliae");
     y = lector_paginare(k, CCXL, LXXX, p);

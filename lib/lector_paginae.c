@@ -5,6 +5,9 @@
 
 #define INTERVALLUM  VIII   /* px inter clausulas */
 #define INDENTATIO   II     /* cellulae continuationis versus */
+/* px vacui post lineam textus (FONS_PARVUS): spatium duplex (Franus
+ * 2026-10-24) */
+#define INTERVALLUM_LINEARUM  VIII
 
 /* dispositor: paginae, pagina currens (index), y in ea */
 nomen structura {
@@ -47,8 +50,14 @@ lineam_ponere (
     LectorPagina* g;
      LectorLinea* l;
              s32  altitudo_lineae;
+             s32  passus;
 
+    /* altitudo visibilis capere debet; passus (cum linea vacua spatii
+     * duplicis) solum ad lineam sequentem - vacua post ultimam paginae
+     * non requiritur */
     altitudo_lineae  = fons_altitudo(fons);
+    passus           = altitudo_lineae + (fons == FONS_PARVUS
+        ? INTERVALLUM_LINEARUM : ZEPHYRUM);
     g                = (LectorPagina*)xar_obtinere(d->paginae,
         d->currens);
     si (xar_numerus(g->lineae) == ZEPHYRUM)
@@ -80,7 +89,7 @@ lineam_ponere (
     l->fons     = fons;
     l->x        = x;
     l->y        = d->y;
-    d->y        += altitudo_lineae;
+    d->y        += passus;
     redde VERUM;
 }
 

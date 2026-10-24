@@ -25,7 +25,6 @@
 #define LECTOR_CAPUT     II       /* lineae capitis (paginae) */
 #define LECTOR_ORDO      III      /* lineae ordinis: titulus, auctor */
 #define LECTOR_ORDO_CAPITIS II    /* lineae ordinis indicis capitum */
-#define LECTOR_PES       II       /* lineae pedis paginae */
 
 #define VISUS_BIBLIOTHECAE  I
 #define VISUS_INDICIS       II
@@ -187,18 +186,57 @@ _campus_numerus (
         ? n : -I;
 }
 
-/* area textus paginae (px): superficies minus margines (cellula
- * utrimque), pes, et IV px intra - eadem in dispositione et pictura */
+/* margines paginae ut liber (cellulae, intra marginem radicis): lateris
+ * X, supra et infra VI; in latere angusto minuuntur ne columna textus
+ * infra XL litteras cadat (lateris saltem I, supra et infra saltem I:
+ * titulus currens et numerus paginae ibi stant) */
+interior vacuum
+_margines (
+    constans LectorMontatio* m,
+                        s32* lateris,
+                        s32* supra)
+{
+    s32 columnae;
+    s32 lineae;
+
+    columnae  = _superficies(m, VERUM) / LECTOR_LITTERA - II;
+    lineae    = _superficies(m, FALSUM) / LECTOR_LINEA - II;
+    *lateris  = (columnae - XL) / II;
+    *supra    = (lineae - XX) / II;
+    si (*lateris > X)
+    {
+        *lateris = X;
+    }
+    si (*lateris < I)
+    {
+        *lateris = I;
+    }
+    si (*supra > VI)
+    {
+        *supra = VI;
+    }
+    si (*supra < I)
+    {
+        *supra = I;
+    }
+}
+
+/* area textus paginae (px): superficies minus margo radicis et margines
+ * libri - eadem in dispositione et pictura */
 interior vacuum
 _area (
     constans LectorMontatio* m,
                         s32* latitudo,
                         s32* altitudo)
 {
-    *latitudo  = (_superficies(m, VERUM) / LECTOR_LITTERA - II)
-        * LECTOR_LITTERA - VIII;
+    s32 lateris;
+    s32 supra;
+
+    _margines(m, &lateris, &supra);
+    *latitudo  = (_superficies(m, VERUM) / LECTOR_LITTERA - II
+        - II * lateris) * LECTOR_LITTERA;
     *altitudo  = (_superficies(m, FALSUM) / LECTOR_LINEA - II
-        - LECTOR_PES) * LECTOR_LINEA - VIII;
+        - II * supra) * LECTOR_LINEA;
     si (*latitudo < LECTOR_LITTERA)
     {
         *latitudo = LECTOR_LITTERA;
@@ -1234,8 +1272,37 @@ _indicem_pingere (
     }
 }
 
-/* pagina: lineae paginae currentis in fontibus suis; pes: titulus
- * capitis (aut nota) et "k/n" */
+/* textus in medio componentis (horizontaliter et verticaliter),
+ * praecisus ad latitudinem; runae numerantur, non octeti */
+interior vacuum
+_centrum_pingere (
+               Mandata* md,
+    constans Componens* c,
+                chorda  textus,
+            ColorThema  color)
+{
+    s32 columnae;
+    s32 runae;
+    i32 i;
+
+    columnae  = c->fines.latitudo / LECTOR_LITTERA - II;
+    textus    = _praecidere(textus, columnae);
+    runae     = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < textus.mensura; i++)
+    {
+        si ((textus.datum[i] & 0xC0) != 0x80)
+        {
+            runae++;
+        }
+    }
+    _textum_pingere(md, c->fines.x + (c->fines.latitudo - runae
+        * LECTOR_LITTERA) / II, c->fines.y + (c->fines.altitudo
+        - LECTOR_LINEA) / II, textus, FONS_PARVUS, color);
+}
+
+/* pagina: lineae paginae currentis in fontibus suis intra margines;
+ * titulus currens in margine supero, numerus paginae (aut nota) in
+ * infero */
 interior vacuum
 _paginam_pingere (
         LectorMontatio* m,
@@ -1247,9 +1314,9 @@ _paginam_pingere (
      constans LectorLinea* l;
                 Componens* x;
                    chorda  nota;
-                   chorda  sinistrum;
-                   chorda  dextrum;
                       s32  k;
+                      s32  lateris;
+                      s32  supra;
                       i32  i;
                       i32  j;
                 character  textus[XXIV];
@@ -1265,6 +1332,7 @@ _paginam_pingere (
         k = ZEPHYRUM;
     }
     g = (constans LectorPagina*)xar_obtinere(f->paginae, (i32)k);
+    _margines(m, &lateris, &supra);
     per (i = ZEPHYRUM; i < componens_numerus_liberorum(c); i++)
     {
         x = componens_liberum(c, i);
@@ -1273,29 +1341,26 @@ _paginam_pingere (
             per (j = ZEPHYRUM; j < xar_numerus(g->lineae); j++)
             {
                 l = (constans LectorLinea*)xar_obtinere(g->lineae, j);
-                _textum_pingere(md, x->fines.x + IV + l->x, x->fines.y
-                    + IV + l->y, chorda_sectio(f->caput->textus,
-                    l->initium, l->finis), l->fons, COLOR_TEXT);
+                _textum_pingere(md, x->fines.x
+                    + lateris * LECTOR_LITTERA
+                    + l->x, x->fines.y + l->y, chorda_sectio(
+                    f->caput->textus, l->initium, l->finis), l->fons,
+                    COLOR_TEXT);
             }
+        }
+        alioquin si (chorda_aequalis_literis(x->id, "caput_paginae"))
+        {
+            _centrum_pingere(md, x, _titulus_capitis(f->codex,
+                (i32)f->caput_arcae, md->piscina), COLOR_TEXT_DIM);
         }
         alioquin si (chorda_aequalis_literis(x->id, "pes"))
         {
+            nota = _campus(m, "nota");
             sprintf(textus, "%d/%u", (integer)(k + I),
                 (insignatus integer)xar_numerus(f->paginae));
-            dextrum = chorda_ex_literis(textus, md->piscina);
-            _textum_pingere(md, x->fines.x + x->fines.latitudo - IV
-                - (s32)dextrum.mensura * LECTOR_LITTERA, x->fines.y
-                + IV,
-                dextrum, FONS_PARVUS, COLOR_TEXT_DIM);
-            nota       = _campus(m, "nota");
-            sinistrum  = nota.mensura > ZEPHYRUM ? nota
-                : _titulus_capitis(f->codex, (i32)f->caput_arcae,
-                md->piscina);
-            _textum_pingere(md, x->fines.x + IV, x->fines.y + IV,
-                _praecidere(sinistrum, (x->fines.latitudo - VIII)
-                / LECTOR_LITTERA - (s32)dextrum.mensura - I),
-                FONS_PARVUS, nota.mensura > ZEPHYRUM ? COLOR_ERROR
-                : COLOR_TEXT_DIM);
+            _centrum_pingere(md, x, nota.mensura > ZEPHYRUM ? nota
+                : chorda_ex_literis(textus, md->piscina),
+                nota.mensura > ZEPHYRUM ? COLOR_ERROR : COLOR_TEXT_DIM);
         }
     }
 }
@@ -1540,16 +1605,25 @@ _indicem_disponere (
     }
 }
 
-/* pagina: area textus (cf. _area) et pes */
+/* pagina: margo superus (titulus currens), area textus (cf. _area),
+ * margo inferus (numerus paginae) */
 interior vacuum
 _paginam_disponere (
-    Disponens* dp,
-          s32  radix_d)
+    LectorMontatio* m,
+         Disponens* dp,
+               s32  radix_d)
 {
+    s32 lateris;
+    s32 supra;
+
+    _margines(m, &lateris, &supra);
+    (vacuum)_componentem_locare(dp, radix_d, "caput_paginae",
+        PARTES_INDEX, DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA,
+        supra);
     (vacuum)_componentem_locare(dp, radix_d, "textus", PARTES_INDEX,
         DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_CRESCENS, ZEPHYRUM);
     (vacuum)_componentem_locare(dp, radix_d, "pes", PARTES_INDEX,
-        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, LECTOR_PES);
+        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, supra);
 }
 
 Componens*
@@ -1618,7 +1692,7 @@ lector_componere (
     radix_d                  = dispositio_addere(dp.d, -I, &forma);
     si (_visus(m) == VISUS_PAGINAE)
     {
-        _paginam_disponere(&dp, radix_d);
+        _paginam_disponere(m, &dp, radix_d);
     }
     alioquin si (_visus(m) == VISUS_INDICIS)
     {

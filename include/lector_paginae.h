@@ -3,7 +3,9 @@
  * fluunt: verba ad spatia ASCII franguntur, verbum linea longius ad
  * runam secatur. Titulus in FONS_TITULI (8x16), cetera FONS_PARVUS
  * (6x8); versus linea per lineam, continuatio II cellulis indentata;
- * inter clausulas linea vacua VIII px (non in summa pagina). Functio
+ * lineae textus spatio duplici (VIII px vacui post quamque, non post
+ * ultimam paginae); inter clausulas linea vacua VIII px addita (non in
+ * summa pagina). Functio
  * pura magnitudinis: eadem area -> eaedem paginae. Pagina saltem
  * lineam unam habet; caput sine textu = pagina una vacua. */
 
