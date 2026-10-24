@@ -13,6 +13,7 @@
 #include "harmonia.h"
 #include "partitura.h"
 #include "explicatio.h"
+#include "functio.h"
 #include "piscina.h"
 #include <string.h>
 
@@ -322,6 +323,38 @@ _in_clave (
             || classis == _modulus(basis + IX + XI, XII));
 }
 
+/* tertia Picardiae (functio.h): tertia maior finalis in clave minore,
+ * in fenestra quam functio Picardiae iudicat - licita */
+interior b32
+_picardiae_nota (
+                  Iudex* iudex,
+    constans CarmenNota* nota,
+                    s64  pulsus)
+{
+     constans CarmenClavis* clavis = _clavis(iudex->carmen, pulsus);
+                       s32  tertia = _modulus(VII * clavis->quintae
+                                     + IX + IV, XII);
+                       i32 f;
+
+    si (   iudex->explicatio              == NIHIL || !clavis->minor
+        || _modulus((s32)nota->nota, XII) != tertia)
+    {
+        redde FALSUM;
+    }
+    per (f = ZEPHYRUM; f < iudex->explicatio->numerus_fenestrarum; f++)
+    {
+        constans ExplicatioFenestra* w =
+            &iudex->explicatio->fenestrae[f];
+
+        si (w->initium <= pulsus && pulsus < w->finis)
+        {
+            redde functio_tertia_picardiae(iudex->carmen,
+                                           iudex->explicatio, f);
+        }
+    }
+    redde FALSUM;
+}
+
 interior vacuum
 _clavis_regula (
     Iudex* iudex)
@@ -345,7 +378,8 @@ _clavis_regula (
                                 s64  pulsus  = fr->pulsus + n->pulsus;
 
                 si (   !_percussio(n)
-                    && !_in_clave(_clavis(k, pulsus), (s32)n->nota))
+                    && !_in_clave(_clavis(k, pulsus), (s32)n->nota)
+                    && !_picardiae_nota(iudex, n, pulsus))
                 {
                     _addere(iudex, CENSURA_CLAVIS, p, (s32)f, pulsus,
                         n->offset, n, NIHIL, NIHIL, NIHIL, NIHIL);
@@ -947,10 +981,12 @@ censura_iudicare (
     iudex.capacitas   = capacitas;
     iudex.numerus     = ZEPHYRUM;
     iudex.explicatio  = NIHIL;
-    si (forma->activae[CENSURA_DISSONANTIA])
+    si (   forma->activae[CENSURA_DISSONANTIA]
+        || forma->activae[CENSURA_CLAVIS])
     {
         /* explicatio in piscina propria: inventa notas carminis et
-         * causas staticas tenent, nihil ex ea */
+         * causas staticas tenent, nihil ex ea (clavis: tertia
+         * Picardiae per fenestras) */
         piscina = piscina_generare_dynamicum("censura", M * XVI);
         si (   piscina != NIHIL
             && explicatio_carminis(carmen, piscina, &explicatio))

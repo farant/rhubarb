@@ -374,6 +374,114 @@ _sectio_linea (
         "  functio  I(3):1 [perf.]\n", c->piscina));
 }
 
+/* functio_tertia_picardiae fenestrae II carminis trium vocum */
+interior b32
+_picardia_medio (
+          CredoContextus* c,
+      constans character* clavis,
+      constans character* bassus,
+      constans character* media,
+      constans character* melodia)
+{
+    constans character* partes[IV];
+       constans Carmen* k;
+               Functio* f;
+
+    partes[0]  = bassus;
+    partes[1]  = media;
+    partes[2]  = melodia;
+    partes[3]  = NIHIL;
+    k          = _carmen(c, clavis, partes);
+    f          = _functio(c, k);
+    si (f == NIHIL || f->explicatio->numerus_fenestrarum <= II)
+    {
+        imprimere("  picardia: functio nulla\n");
+        redde FALSUM;
+    }
+    redde functio_tertia_picardiae(k, f->explicatio, II);
+}
+
+/* tertia Picardiae: A7 -> D in D minor = V7 -> I (perfecta); D maior
+ * ultima sine dominante = I; medio D -> Gm = V/iv -> iv (non
+ * Picardia); praedicatum per fenestras */
+interior vacuum
+_sectio_picardia (
+    CredoContextus* c)
+{
+    hic_manens constans character* constans sine_dominante[] = {
+        "i", "iv", "I", NIHIL };
+    hic_manens constans character* constans applicata[] = {
+        "V/iv", "iv", "V", "i", NIHIL };
+    constans character* partes[V];
+       constans Carmen* k;
+               Functio* f;
+
+    /* A7 -> D, voces IV (septima G -> F#, sensibilis C# -> D summa) */
+    partes[0]  = "o2 a1 | o3 d1";
+    partes[1]  = "o3 g1 | f#1";
+    partes[2]  = "o3 e1 | a1";
+    partes[3]  = "o4 c#1 | d1";
+    partes[4]  = NIHIL;
+    k          = _carmen(c, "d minor", partes);
+    f          = _functio(c, k);
+    CREDO_NECESSE (f != NIHIL && f->numerus == II);
+    CREDO_CHORDA_AEQUALIS_LITERIS (chorda_ex_literis(
+        f->gradus[ZEPHYRUM].numeralis, c->piscina), "V7");
+    CREDO_CHORDA_AEQUALIS_LITERIS (chorda_ex_literis(
+        f->gradus[I].numeralis, c->piscina), "I");
+    CREDO_AEQUALIS_I32 ((i32)f->gradus[I].clausula,
+                        (i32)FUNCTIO_PERFECTA);
+    CREDO_VERUM (functio_tertia_picardiae(k, f->explicatio, I));
+    /* D maior ultima sine dominante: I */
+    CREDO_VERUM (_progressio(c, "d minor", "o3 d1 | g1 | d1",
+        "o4 f1 | b-1 | f#1", "o4 a1 | o5 d1 | o4 a1", sine_dominante));
+    /* medio: D -> Gm = V/iv -> iv (non Picardia); ultima Dm */
+    CREDO_VERUM (_progressio(c, "d minor", "o3 d1 | g1 | a1 | d1",
+        "o4 f#1 | b-1 | c#1 | f1", "o4 a1 | o5 d1 | o4 e1 | a1",
+        applicata));
+    partes[0]  = "o3 d1 | g1 | a1 | d1";
+    partes[1]  = "o4 f#1 | b-1 | c#1 | f#1";
+    partes[2]  = "o4 a1 | o5 d1 | o4 e1 | a1";
+    partes[3]  = NIHIL;
+    k          = _carmen(c, "d minor", partes);
+    f          = _functio(c, k);
+    CREDO_NECESSE (f != NIHIL && f->numerus == IV);
+    CREDO_FALSUM (functio_tertia_picardiae(k, f->explicatio, ZEPHYRUM));
+    CREDO_VERUM (functio_tertia_picardiae(k, f->explicatio, III));
+    /* medio post dominantem, proxima V: Picardia */
+    CREDO_VERUM (_picardia_medio(c, "d minor",
+        "o3 d1 | a1 | d1 | a1 | d1",
+        "o4 f1 | e1 | f#1 | e1 | f1", "o4 a1 | c#1 | a1 | c#1 | a1"));
+    /* medio post iv (non dominantem): non Picardia */
+    CREDO_FALSUM (_picardia_medio(c, "d minor",
+        "o3 d1 | g1 | d1 | a1 | d1", "o4 f1 | b-1 | f#1 | e1 | f1",
+        "o4 a1 | o5 d1 | o4 a1 | c#1 | a1"));
+    /* medio post dominantem, proxima iv: V/iv, non Picardia */
+    CREDO_FALSUM (_picardia_medio(c, "d minor",
+        "o3 d1 | a1 | d1 | g1 | a1 | d1",
+        "o4 f1 | e1 | f#1 | b-1 | e1 | f1",
+        "o4 a1 | c#1 | a1 | o5 d1 | o4 c#1 | a1"));
+    /* ultima D + F# sine quinta (tertia maior): Picardia */
+    CREDO_VERUM (_picardia_medio(c, "d minor", "o3 d1 | a1 | d1",
+        "o4 f1 | e1 | f#1", "o4 a1 | c#1 | o5 d1"));
+    /* ultima Dm (tertia minor): non Picardia */
+    CREDO_FALSUM (_picardia_medio(c, "d minor", "o3 d1 | a1 | d1",
+        "o4 f1 | e1 | f1", "o4 a1 | c#1 | a1"));
+    /* dimidia mensurae (non adventus): non Picardia */
+    CREDO_FALSUM (_picardia_medio(c, "d minor", "o3 d2 a2 | d2 a2 | d1",
+        "o4 f2 e2 | f#2 e2 | f1", "o4 a2 c#2 | a2 c#2 | a1"));
+    /* clavis maior: numquam Picardia */
+    partes[0]  = "o2 a1 | o3 d1";
+    partes[1]  = "o3 g1 | f#1";
+    partes[2]  = "o3 e1 | a1";
+    partes[3]  = "o4 c#1 | d1";
+    partes[4]  = NIHIL;
+    k          = _carmen(c, "d maior", partes);
+    f          = _functio(c, k);
+    CREDO_NECESSE (f != NIHIL && f->numerus == II);
+    CREDO_FALSUM (functio_tertia_picardiae(k, f->explicatio, I));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "diatonici", _sectio_diatonici, NIHIL, NIHIL, NIHIL, NIHIL },
     { "conversiones", _sectio_conversiones, NIHIL, NIHIL, NIHIL,
@@ -383,6 +491,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "binae", _sectio_binae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "clausulae", _sectio_clausulae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "linea", _sectio_linea, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "picardia", _sectio_picardia, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

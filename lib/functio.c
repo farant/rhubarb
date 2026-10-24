@@ -198,11 +198,14 @@ _figura (
     redde septima ? "42" : "";
 }
 
+/* picardia: tertia Picardiae (functio_tertia_picardiae) - acordum
+ * finalis maius ut I, non applicata */
 interior vacuum
 _gradum_scribere (
                 constans Carmen* carmen,
     constans ExplicatioFenestra* w,
-                  FunctioGradus* g)
+                  FunctioGradus* g,
+                            b32  picardia)
 {
      constans Harmonia* h = &w->harmonia;
                 Clavis  k = _clavis(carmen, w->initium);
@@ -280,7 +283,8 @@ _gradum_scribere (
         || h->genus == HARMONIA_SEPTIMA;
     diminuta  = h->genus == HARMONIA_DIMINUTA
              || h->genus == HARMONIA_DIMINUTA_SEPTIMA;
-    si ((dominans || diminuta) && !_diatonicum(&k, h->classes))
+    si (   !picardia && (dominans || diminuta)
+        && !_diatonicum(&k, h->classes))
     {
         s32 meta = dominans ? _modulus(iv - VII, XII)
                             : _modulus(iv + I, XII);
@@ -419,7 +423,8 @@ functio_carminis (
 
         memset(g, ZEPHYRUM, magnitudo(FunctioGradus));
         g->fenestra = f;
-        _gradum_scribere(carmen, &e->fenestrae[f], g);
+        _gradum_scribere(carmen, &e->fenestrae[f], g,
+                         functio_tertia_picardiae(carmen, e, f));
     }
     /* clausulae: adventus et fenestra prior (fenestrae semper
      * contiguae) */
@@ -531,4 +536,61 @@ functio_lineam_scribere (
     }
     (vacuum)carmen;
     redde bene;
+}
+
+b32
+functio_tertia_picardiae (
+        constans Carmen* carmen,
+    constans Explicatio* explicatio,
+                    i32  fenestra)
+{
+            constans Explicatio* e = explicatio;
+    constans ExplicatioFenestra* w;
+                         Clavis  k;
+                            i32  ultima = ZEPHYRUM;
+                            i32  i;
+                            s32  summa;
+                  FunctioGradus  prior;
+                  FunctioGradus  proxima;
+
+    si (fenestra >= e->numerus_fenestrarum)
+    {
+        redde FALSUM;
+    }
+    w = &e->fenestrae[fenestra];
+    k = _clavis(carmen, w->initium);
+    si (   !k.minor || (s32)w->harmonia.radix != k.tonica
+        || (   w->harmonia.genus != HARMONIA_MAIOR
+            && w->harmonia.genus != HARMONIA_TERTIA_MAIOR))
+    {
+        redde FALSUM;
+    }
+    /* ultima sonans carminis */
+    per (i = ZEPHYRUM; i < e->numerus_fenestrarum; i++)
+    {
+        si (e->fenestrae[i].harmonia.genus != HARMONIA_NULLA)
+        {
+            ultima = i;
+        }
+    }
+    si (fenestra == ultima)
+    {
+        redde VERUM;
+    }
+    /* adventus post dominantem, proxima non in gradu IV (V/iv) */
+    si (fenestra == ZEPHYRUM || !_adventus(carmen, e, fenestra, &summa))
+    {
+        redde FALSUM;
+    }
+    memset(&prior, ZEPHYRUM, magnitudo(prior));
+    memset(&proxima, ZEPHYRUM, magnitudo(proxima));
+    _gradum_scribere(carmen, &e->fenestrae[fenestra - I], &prior,
+        FALSUM);
+    si (!_dominans(&prior, &e->fenestrae[fenestra - I].harmonia))
+    {
+        redde FALSUM;
+    }
+    _gradum_scribere(carmen, &e->fenestrae[fenestra + I], &proxima,
+                     FALSUM);
+    redde proxima.gradus != IV;
 }

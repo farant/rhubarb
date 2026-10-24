@@ -31,3 +31,32 @@ Plants 26/26 red; four first attempts did not compile (removing a call left a he
 variable unused; '&&' inside '||' without parentheses) and were rewritten; one survived
 until a case was added: V6 -> I with the tonic on top must stay IMPERFECTA (the only V6
 case had G on top, imperfect for the soprano reason, not the inversion).
+
+## 2026-10-24 - tertia Picardiae (desideratum ...CSJZHF)
+
+A major tonic in a minor key used to be named V/iv (D major in D minor is the dominant of
+G minor and not diatonic, so the applied-chord branch took it). completorium ended "V/iv".
+New predicate functio_tertia_picardiae(carmen, explicatio, fenestra): minor key, root =
+tonic, genus MAIOR or TERTIA_MAIOR, and either (a) the last sounding window, or (b) a
+mid-piece arrival (_adventus: the window fills its bar) right after a dominant, whose next
+window is not on IV (then it really is V/iv). _gradum_scribere gained 'b32 picardia' and
+skips the applied branch when set, so the chord reads I and the cadence logic sees V -> I
+(completorium's last bar is now "I:1 [perf.]").
+
+The predicate calls _gradum_scribere(..., FALSUM) for the neighbours - no recursion into
+the predicate, and the neighbour labels are the plain ones (good enough: the previous one
+only needs to be dominant, the next one only needs a scale degree).
+
+Tests: four-voice A7 -> D (V7 -> I, PERFECTA), i iv I at the end, V/iv iv V i stays
+applied, mid-piece i V I V i true, i V I iv V i false (the next chord is iv: V/iv), i iv
+I V i false (no dominant before), half-bar D after A false (not an arrival), a final D+F#
+without fifth true, a final Dm false, D major key false. The first set of fixtures doubled notes and the
+analysis read "I(3)" dyads - write full triads.
+
+Plants 12/12 red, after three rounds: two first attempts did not compile (removing a use left
+a parameter / helper unused - write '!(x && FALSUM)' instead) and two survived until cases
+were added: the only V/iv case had D in window 0, which returns FALSE before the 'next is
+IV' check; no fixture ended on a dyad (TERTIA_MAIOR). And one plant was itself wrong: '&& FALSUM'
+on the genus test removed the whole check instead of rejecting the dyad - it survived
+because nothing asked about a minor tonic at the end (now 'final Dm false'), and the
+dyad plant proper is '!= TERTIA_MAIOR' -> '!= MAIOR'.

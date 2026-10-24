@@ -718,10 +718,45 @@ _sectio_explicata (
         inv), ZEPHYRUM);
 }
 
+/* tertia Picardiae: F# acordi finalis D maioris in D minor licita (nec
+ * medio: D -> Gm = V/iv, F# extra clavem nominatur) */
+interior vacuum
+_sectio_picardia (
+    CredoContextus* c)
+{
+    constans Carmen* finalis = _carmen(c,
+        "<carmina><carmen titulus=\"p\" clavis=\"d minor\">"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 d1 | g1 | d1</textus></frustum>"
+        "</pars><pars titulus=\"m\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 f1 | b-1 | f#1</textus></frustum>"
+        "</pars><pars titulus=\"s\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 a1 | o5 d1 | o4 a1</textus>"
+        "</frustum></pars></carmen></carmina>");
+    constans Carmen* medio = _carmen(c,
+        "<carmina><carmen titulus=\"p\" clavis=\"d minor\">"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 d1 | g1 | a1 | d1</textus></frustum>"
+        "</pars><pars titulus=\"m\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 f#1 | b-1 | c#1 | f1</textus>"
+        "</frustum></pars><pars titulus=\"s\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>o4 a1 | o5 d1 | o4 e1 | a1"
+        "</textus></frustum></pars></carmen></carmina>");
+    CensuraInventum inv[CAPACITAS];
+       CensuraForma f = _sola(CENSURA_CLAVIS);
+
+    CREDO_NECESSE (finalis != NIHIL && medio != NIHIL);
+    CREDO_AEQUALIS_I32 (censura_iudicare(finalis, &f, inv, CAPACITAS),
+                        ZEPHYRUM);
+    CREDO_NECESSE (censura_iudicare(medio, &f, inv, CAPACITAS) == I);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].nota->nota, LXVI);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ordinaria", _sectio_ordinaria, NIHIL, NIHIL, NIHIL, NIHIL },
     { "lineae", _sectio_lineae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "clavis", _sectio_clavis, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "picardia", _sectio_picardia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ambitus", _sectio_ambitus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "dissonantia", _sectio_dissonantia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "parallelae", _sectio_parallelae, NIHIL, NIHIL, NIHIL, NIHIL },

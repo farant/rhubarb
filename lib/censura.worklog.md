@@ -89,3 +89,13 @@ test 'G2 contra F4, septima'.
 ## 2026-10-23 - ambitus: chorda 28..88, campana 48..96
 
 New tibia patches (Karplus-Strong string, FM bell) get default ranges; table AMBITUS[V].
+
+## 2026-10-24 - clavis: tertia Picardiae licita (desideratum ...CSJZHF)
+
+The key rule flagged the F# of a final D major in D minor (completorium, 2 findings).
+_picardiae_nota: in a minor key, a note whose class is the major third of the tonic
+(VII*quintae + IX + IV) is skipped when its window satisfies functio_tertia_picardiae.
+Only that one class is excused - any other chromatic note in the same window still counts.
+The explicatio is now built when CLAVIS is on too (before: only for DISSONANTIA); a
+CLAVIS-only forma pays for the window analysis. Six house songs: only completorium changed
+(2 -> 0).

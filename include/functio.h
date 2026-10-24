@@ -89,4 +89,16 @@ functio_lineam_scribere (
                   s64  finis,
     ChordaAedificator* textus);
 
+/* tertia Picardiae: clavis minor, acordum fenestrae MAIUS in finali
+ * (trias maior aut tertia maior), et fenestra aut ultima sonans
+ * carminis, aut adventus post dominantem (V, V7) cuius fenestra
+ * proxima non in gradu IV stat (ubi V/iv verum est). Ut I legitur
+ * (clausula servatur); censura tertiam eius clavem non violare
+ * iudicat */
+b32
+functio_tertia_picardiae (
+        constans Carmen* carmen,
+    constans Explicatio* explicatio,
+                    i32  fenestra);
+
 #endif /* FUNCTIO_H */
