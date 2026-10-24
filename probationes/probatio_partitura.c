@@ -444,9 +444,9 @@ _sectio_addita (
      PartituraForma  f;
 
     CREDO_NECESSE (k != NIHIL);
-    f                  = _forma(c, II, III, NIHIL);
-    f.additae_titulus  = "analysis";
-    f.addita           = _addita;
+    f                             = _forma(c, II, III, NIHIL);
+    f.additae[ZEPHYRUM].titulus   = "analysis";
+    f.additae[ZEPHYRUM].scribere  = _addita;
     CREDO_CHORDA_AEQUALIS_LITERIS (_scribere(c, k, &f),
         "carmen t: c maior, 4/4, 120\n"
         "  pars x: aether, lucrum 1.00\n"
@@ -459,6 +459,22 @@ _sectio_addita (
         "  x         E4:1\n"
         "  yy        E2:1\n"
         "  analysis  [7680,11520)\n");
+    /* lineae duae ordine; columna ad titulum longissimum; titulus
+     * NIHIL finit (tertia cum scriptore sed sine titulo omittitur) */
+    f.additae[I].titulus     = "analysis_altera";
+    f.additae[I].scribere    = _addita;
+    f.additae[III].titulus   = "nunquam";
+    f.additae[III].scribere  = _addita;
+    f.ultima                 = II;
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scribere(c, k, &f),
+        "carmen t: c maior, 4/4, 120\n"
+        "  pars x: aether, lucrum 1.00\n"
+        "  pars yy: triangulum, lucrum 0.50\n"
+        "mensura 2\n"
+        "  x                D4:1\n"
+        "  yy               D2:1\n"
+        "  analysis         [3840,7680)\n"
+        "  analysis_altera  [3840,7680)\n");
 }
 
 /* nota scripta (partitura_notam_scribere); mensura 0 si FALSUM */
@@ -549,6 +565,80 @@ _sectio_ambitus (
     CREDO_CHORDA_AEQUALIS_LITERIS (_nota(c, k, a.summa, CMLX), "D#4");
 }
 
+/* lectio notae: inversa scriptionis; littera dat octavam (Cb4 = LIX,
+ * B#3 = LX); fines MIDI; formae malae */
+interior b32
+_lecta (
+         CredoContextus* c,
+     constans character* textus,
+                    i32  altitudo,
+              character  littera,
+                    s32  alteratio,
+                    s32  octava)
+{
+    PartituraNota n;
+              i32 a = XCIX;
+
+    si (   partitura_notam_legere(chorda_ex_literis(textus, c->piscina),
+        &n,
+                                  &a)
+        && a           == altitudo && n.littera == littera
+        && n.alteratio == alteratio && n.octava == octava)
+    {
+        redde VERUM;
+    }
+    imprimere("  %s: altitudo %u %c %d %d\n", textus, a, n.littera,
+              (integer)n.alteratio, (integer)n.octava);
+    redde FALSUM;
+}
+
+interior vacuum
+_sectio_lectio (
+    CredoContextus* c)
+{
+    hic_manens constans character* MALAE[] = {
+        "", "H4", "C", "Bb", "@punctum", "C4x", "C###4", "C#b4",
+        "C-", "Cb-1", "G#9", "C10", "#4", " C4", "C4 "
+    };
+    PartituraNota n;
+              i32 a;
+              i32 i;
+              s32 o;
+        character t[VIII];
+
+    CREDO_VERUM (_lecta(c, "C4", LX, 'C', ZEPHYRUM, IV));
+    CREDO_VERUM (_lecta(c, "Bb4", LXX, 'B', -I, IV));
+    CREDO_VERUM (_lecta(c, "F#5", LXXVIII, 'F', I, V));
+    CREDO_VERUM (_lecta(c, "C##3", L, 'C', II, III));
+    CREDO_VERUM (_lecta(c, "Ebb2", XXXVIII, 'E', -II, II));
+    CREDO_VERUM (_lecta(c, "Cb4", LIX, 'C', -I, IV));
+    CREDO_VERUM (_lecta(c, "B#3", LX, 'B', I, III));
+    CREDO_VERUM (_lecta(c, "C-1", ZEPHYRUM, 'C', ZEPHYRUM, -I));
+    CREDO_VERUM (_lecta(c, "G9", CXXVII, 'G', ZEPHYRUM, IX));
+    /* litterae parvae (agens "g2" scribit): 'bb4' = Bb4 */
+    CREDO_VERUM (_lecta(c, "g2", XLIII, 'G', ZEPHYRUM, II));
+    CREDO_VERUM (_lecta(c, "bb4", LXX, 'B', -I, IV));
+    /* C per octavas omnes */
+    per (o = -I; o <= IX; o++)
+    {
+        sprintf(t, "C%d", (integer)o);
+        CREDO_VERUM (_lecta(c, t, (i32)((o + I) * XII), 'C', ZEPHYRUM,
+            o));
+    }
+    per (i = ZEPHYRUM; i < (i32)(magnitudo(MALAE)
+        / magnitudo(MALAE[0]));
+         i++)
+    {
+        si (partitura_notam_legere(chorda_ex_literis(MALAE[i],
+            c->piscina),
+                                   &n, &a))
+        {
+            imprimere("  mala accepta: '%s'\n", MALAE[i]);
+            CREDO_CULPA ("forma mala accepta");
+        }
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "orthographia", _sectio_orthographia, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -558,6 +648,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "mutationes", _sectio_mutationes, NIHIL, NIHIL, NIHIL, NIHIL },
     { "forma", _sectio_forma, NIHIL, NIHIL, NIHIL, NIHIL },
     { "addita", _sectio_addita, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lectio", _sectio_lectio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ambitus", _sectio_ambitus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "liber", _sectio_liber, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

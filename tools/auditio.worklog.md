@@ -67,3 +67,66 @@ The 'regula ignota' message hard-coded the rule names (it would have missed 'ter
 ## 2026-10-23 - house tool declaration (M5c, wish …PQ3XN)
 
 auditio is now declared like praeco: answers `-provenientia` (provenientia_auditio, plagula build/fabrica/provenientia/auditio.c via the aedilis obiectum annotation), built by `tools/auditio_struere.sh` (praeco_struere.sh with names swapped: aedilis -> provenientia_scribere -> struere -> rm+cp into bin/auditio), actions `auditio` + `institutio_auditio` in aedificatio.stml, both in the `installata` composite. In sexta only bin/auditio is built (`bin/fabrica sanare bin/auditio`, RECENS); `~/.bin/auditio` is judged 'artificium absens' until main's `sanare installata` after the merge - the same state ~/.bin/praeco is in from any worktree. Use from then on: `auditio -carmen T -recensio [-partitura -harmonia] [-json]`, `-liber x.stml` for a scratch song file.
+
+## 2026-10-23 - E3: -mensura / -ponere / -substituere [-scribere] (wish …NJ7K)
+
+Thin layer over emendatio.h. `-mensura P M` prints the bar text and its START state
+(o l v @ - `l` written with partitura_valorem_scribere, MML lengths are always plain
+values): the korobeiniki trap (bar 1 contains 'o5 l8', so new text starts in o4) is
+visible before anyone writes. `-ponere P M:T NOTA` / `-substituere P M MML` print
+vetus / novum (the exact text swapped) and ante / post (the part's partitura line for
+that bar, last line of a one-bar one-part partitura_scribere). DRY RUN by default;
+`-scribere` needs `-liber` (the embedded book has no file to write; for carmina.stml the
+tool reminds to run tools/carmina_infigere.sh). Exit 0 / 1 refused (reason + frustum +
+offset) / 2 usage. `_vitium_carminis` shared with _ex_carminibus, and it fflush(stdout)s
+first - piped, stderr otherwise overtook the header line.
+
+Verified on a scratch copy: substituere bassus 2 -> ponere 2:3 A2 -> substituere back
+-> file identical to carmina.stml byte for byte. No fumus gate exists for auditio; the
+logic and its plants live in probatio_emendatio / probatio_cantus.
+
+## 2026-10-23 - -partitura -explicatio (N1)
+
+Line from explicatio.h instead of the per-beat harmonia line (PartituraForma has ONE extra
+line slot, so -harmonia and -explicatio are exclusive - usage error with both). The
+Explicatio is computed once in _partituram_scribere and passed as additae_ctx.
+
+## 2026-10-23 - -partitura -functio (#3 F2)
+
+Lines stack now (PartituraAddita list): -harmonia -explicatio -functio in that order, any
+combination (the old "harmonia OR explicatio" usage error is gone). One Explicatio is
+computed for both explicatio and functio lines.
+
+## 2026-10-23 - -copiare (palette #4)
+
+`-copiare P M[-N] [Q:]K [+-g]`: the interval is an optional 4th argument recognised by a
+leading digit or sign+digit (so `-1` is the interval, not a flag); `-semitonia` and
+`-repetere R` are only legal with -copiare. Output: header (source -> target, interval,
+repetitions) then 'ante' / 'post' partitura line per destination bar; dry run unless
+-scribere (with -liber).
+
+## 2026-10-23 - book instruments in auditio
+
+_instrumenta_probare accepts carmen_instrumentum before the built-ins; -carmina prints
+"instrumenta: cembalo (chorda), ..." under the parts. Playback / WAV / -auscultare need
+nothing: cantor resolves book instruments itself.
+
+## 2026-10-24 - '-carmina' names genus partiales
+
+The `instrumenta:` line in -carmina had its own chorda/modulatio/unda ternary, so a book
+instrument with genus="partiales" printed "(unda)". The demo book showed it, but no test
+covers it. Fixed inline. The genus-word table now exists twice (lib/carmen.c GENERA,
+here) - a tibia_generis_titulus() in tibia.h would make one home (proposal to Fran,
+header change).
+
+## 2026-10-24 - genus formantes in -carmina
+
+One more branch in the instrumenta line (TIBIA_FORMANTES -> "formantes"). The duplicated genus-word table is still pending Fran (see the entry above).
+
+## 2026-10-24 - -instrumenta; -carmina leaves the instrumentarium out
+
+-instrumenta prints the built-in presets (genus, censura range table) and the house
+instrumentarium (genus, its own ambitus). -carmina's instrumenta line only lists song and
+book instruments now (numerus_instrumentorum - numerus_instrumentarii). Without that,
+every song would print the five house instruments. Genus words come from
+tibia_generis_titulus.

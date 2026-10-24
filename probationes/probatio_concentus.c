@@ -484,6 +484,47 @@ _sectio_destruere (
     CREDO_AEQUALIS_I32 (f.clausa, ZEPHYRUM);
 }
 
+/* cauda reverberationis: vox finita sed cauda sonat - agere VERUM
+ * (exitus apertus, offline reddit); deinde tacet - FALSUM */
+interior vacuum
+_sectio_cauda (
+    CredoContextus* c)
+{
+       ExitusFictus  f;
+    ConcentusExitus  exitus;
+          Concentus* k = _parare(c, &f, &exitus, VIII);
+        MixturaAnsa  a;
+      MixturaIussum  i;
+                i32  n;
+
+    CREDO_NECESSE (k != NIHIL && concentus_aperire(k));
+    mixtura_iussum_parare(&i, MIXTURA_IUSSUM_REVERBERATIONEM_PONERE,
+                          concentus_initium(k));
+    i.lucrum                  = 1.0f;
+    i.reverberatio.aula       = 0.9f;
+    i.reverberatio.mollities  = 0.3f;
+    i.reverberatio.latitudo   = 1.0f;
+    (vacuum)concentus_iubere(k, &i);
+    a = mixtura_rector_capere(concentus_rector(k), I);
+    CREDO_NECESSE (!mixtura_ansa_nulla(a));
+    mixtura_iussum_parare(&i, MIXTURA_IUSSUM_SONITUM,
+                          concentus_initium(k));
+    i.ansa       = a;
+    i.parametra  = *sonitus_praeparatum("radius");
+    i.semen      = I;
+    i.missio     = 1.0f;
+    (vacuum)concentus_iubere(k, &i);
+    _currere(k, &f, D);
+    CREDO_FALSUM (concentus_vox_vivit(k, a));
+    CREDO_VERUM (concentus_agere(k, _nunc(&f)));
+    per (n = ZEPHYRUM; n < LX && concentus_agere(k, _nunc(&f)); n++)
+    {
+        _currere(k, &f, D);
+    }
+    CREDO_VERUM (n < LX);
+    CREDO_FALSUM (concentus_agere(k, _nunc(&f)));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "creatio", _sectio_creatio, _parare_agmen, NIHIL, NIHIL, NIHIL },
     { "aperire", _sectio_aperire, _parare_agmen, NIHIL, NIHIL, NIHIL },
@@ -497,6 +538,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "destruere", _sectio_destruere, _parare_agmen, NIHIL, NIHIL,
         NIHIL },
+    { "cauda", _sectio_cauda, _parare_agmen, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -150,8 +150,8 @@ recensio_carminis_facere (
         memset(&pf, ZEPHYRUM, magnitudo(pf));
         si (r->forma.harmonia)
         {
-            pf.additae_titulus  = "harmonia";
-            pf.addita           = harmonia_lineam_scribere;
+            pf.additae[ZEPHYRUM].titulus   = "harmonia";
+            pf.additae[ZEPHYRUM].scribere  = harmonia_lineam_scribere;
         }
         si (a == NIHIL || !partitura_scribere(carmen, &pf, a))
         {

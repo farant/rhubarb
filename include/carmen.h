@@ -31,8 +31,41 @@
  *   tempus    20..400 quartae per minutum (ordinarium CXX)
  *   textus    MML (cantus.h) SINE 't' - tempus carminis est; '@'
  *             praeparatum per notam (percussio sonitus) admittitur
- *   pars      instrumentum necessarium; lucrum 0..1 (1); mutus, solus
- *             (attributa sine valore); frusta in parte non se tegunt
+ *   pars      instrumentum necessarium; lucrum 0..1 (1); positio
+ *             -1..1 (0, potentia constans); reverberatio 0..1 (0:
+ *             missio ad aulam); mutus, solus (attributa sine valore);
+ *             frusta in parte non se tegunt
+ *   reverberatio  <reverberatio aula mollities latitudo lucrum/>
+ *             (omnia 0..1; ordinaria 0.5, 0.5, 1, 0.25) in carmine aut
+ *             in libro (ordinaria carminibus sine sua); nulla = lucrum
+ *             0. Elementum totum substituitur, non attributa singula
+ *
+ * INSTRUMENTA (libri et carminis):
+ *   <carmina>
+ *     <instrumentum titulus="cembalo" basis="chorda" claritas="0.9"
+ *                   decrementum="0.8" ambitus="41..89"/>
+ *     <carmen titulus="...">
+ *       <instrumentum titulus="campana_mollis" basis="campana"
+ *                     index="3"/>          (* carminis proprium *)
+ *       <pars instrumentum="cembalo" ...>
+ *
+ *   instrumentum  titulus [a-z0-9_]+; basis = praeparatum (tibia.h) aut
+ *                 instrumentum libri SUPRA definitum (catena); sine
+ *                 basi: genus unda, forma sinus, officium 0.5, tenor
+ *                 1, amplitudo 0.5, cetera 0. Attributa = campi
+ *                 TibiaParametra: genus (tibia_generis_titulus: unda|
+ *                 chorda|modulatio|partiales|formantes), forma
+ *                 (pulsus|serra|triangulum|sinus), officium, impetus,
+ *                 lapsus, tenor, remissio, vibratus, celeritas, gravia,
+ *                 amplitudo, decrementum, claritas, ratio, index,
+ *                 partiales="r:a:d ...", vocalis (a|e|i|o|u aut 0..4),
+ *                 flatus, resonans, acumen, motus (-48..48);
+ *                 ambitus="N..M" (MIDI, censurae). Ordo quaerendi:
+ *                 carminis, libri, instrumentarii (instrumentarium.stml
+ *                 infixus, carmina_legere), praeparata - titulus
+ *                 inferior redefinitus vincit. Vitia: attributum
+ *                 ignotum, numerus malus aut extra fines, basis
+ *                 ignota, titulus iteratus in eodem gradu.
  *
  * TOTUS LIBER IN LECTIONE IUDICATUR: vitium cum carmine, parte, frusto
  * et offset in textu frusti - numquam carmen semi-lectum.
@@ -45,6 +78,7 @@
 #include "chorda.h"
 #include "piscina.h"
 #include "cantus.h"
+#include "tibia.h"
 
 nomen structura {
           s64 pulsus;        /* intra frustum */
@@ -73,6 +107,8 @@ nomen structura {
             chorda  titulus;
             chorda  instrumentum;
                f32  lucrum;
+               f32  positio;        /* -1 sinistra .. 1 dextra (0) */
+               f32  reverberatio;   /* missio ad aulam 0..1 (0) */
                b32  mutus;
                b32  solus;
      CarmenFrustum* frusta;    /* ordine pulsus */
@@ -92,6 +128,13 @@ nomen structura {
 } CarmenClavis;
 
 nomen structura {
+            chorda titulus;
+    TibiaParametra parametra;
+               i32 infima;     /* ambitus; 0 et CXXVII si non datus */
+               i32 summa;
+} CarmenInstrumentum;
+
+nomen structura {
            chorda  titulus;
      CantusTempus* tempora;           /* quadra computata */
               i32  numerus_temporum;
@@ -103,6 +146,14 @@ nomen structura {
               i32  numerus_partium;
               s64  pulsus;           /* longitudo: finis frusti ultimi
                                       * (iteratio hic) */
+    CarmenInstrumentum* instrumenta;  /* carminis, libri, deinde
+                                       * instrumentarii */
+                   i32 numerus_instrumentorum;
+                   i32 numerus_instrumentarii; /* ultimi tot ex
+                                                * instrumentario */
+    SonusReverberatioForma reverberatio;      /* aula carminis */
+                       f32 lucrum_reverberationis;  /* reditus; 0 =
+                                                     * nulla */
 } Carmen;
 
 nomen structura {
@@ -118,14 +169,46 @@ nomen structura {
      constans character* causa;     /* Latina, statica */
 } CarminisVitium;
 
-/* librum STML legit et TOTUM iudicat. FALSUM: vitium impletum, liber
- * vacuus. Chordae (tituli, textus) in piscina - vivunt dum piscina */
+/* librum STML legit et TOTUM iudicat, cum instrumentario ordinario
+ * (instrumentarium_ordinarium) sub libro. FALSUM: vitium impletum,
+ * liber vacuus. Chordae (tituli, textus) in piscina - vivunt dum
+ * piscina */
 b32
 carmina_legere (
             chorda  stml,
            Piscina* piscina,
            Carmina* liber,
     CarminisVitium* vitium);
+
+/* liber cum instrumentario dato (NIHIL, 0 = nullum): basis et
+ * quaestio ea sub libro vident */
+b32
+carmina_legere_cum (
+                         chorda  stml,
+    constans CarmenInstrumentum* instrumentarium,
+                            i32  numerus_instrumentarii,
+                        Piscina* piscina,
+                        Carmina* liber,
+                 CarminisVitium* vitium);
+
+/* instrumentarium: <instrumentarium> cum filiis <instrumentum>
+ * (grammatica libri; basis = praeparatum aut instrumentum SUPRA).
+ * Chordae in piscina */
+b32
+instrumentarium_legere (
+                 chorda   stml,
+                Piscina*  piscina,
+     CarmenInstrumentum** instrumenta,
+                    i32*  numerus,
+         CarminisVitium*  vitium);
+
+/* instrumentarium ordinarium (instrumentarium.stml infixus) */
+b32
+instrumentarium_ordinarium (
+                Piscina*  piscina,
+     CarmenInstrumentum** instrumenta,
+                    i32*  numerus,
+         CarminisVitium*  vitium);
 
 /* liber ordinarius (carmina.stml infixus) */
 b32
@@ -146,5 +229,20 @@ s64
 carmen_pulsus_mensurae (
     constans Carmen* carmen,
                 i32  mensura);
+
+/* tempus metri ad pulsum (absolutum), in pulsibus: 1/denominator;
+ * metra composita (denominator VIII, numerator > III et multiplex III:
+ * 6/8 9/8 12/8) tres octavae. Unitas una: linea harmoniae, tempora
+ * fortia censurae, locus emendationis ('M:T') */
+s64
+carmen_tempus_mensurae (
+    constans Carmen* carmen,
+                s64  pulsus);
+
+/* NIHIL si nec carmen nec liber definit (praeparata non hic) */
+constans CarmenInstrumentum*
+carmen_instrumentum (
+    constans Carmen* carmen,
+             chorda  titulus);
 
 #endif /* CARMEN_H */

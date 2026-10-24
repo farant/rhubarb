@@ -785,8 +785,11 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "NUL: octetim idem, circuitus STML, refusio", _nul_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
+    /* gravis (2026-10-24, Franus): sub clang 21 (Xcode macOS 27) apex
+     * auctus 301.6 MiB > CCLVI, arena 2.6 MiB - eadem probatio sub
+     * clang priore in quinta viridis eodem die; causa in parco */
     { "profunditas: parsura et coctio C milia", _profunditatem_probare,
-        NIHIL, NIHIL, NIHIL, NIHIL },
+        NIHIL, NIHIL, "gravis", NIHIL },
     { "profunditas: limites materiae (pinnae ruinae)", _limites_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

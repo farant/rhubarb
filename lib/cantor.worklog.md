@@ -50,3 +50,10 @@ terminator ("quadransX" mensura 8) / empty / 200-byte name; a resolver
 built from the two functions plays like NIHIL. Plants 4/4 red (prefix
 ignored, tibia field not filled, sonitus returns NIHIL, call site
 bypasses the resolver).
+
+## 2026-10-24 - room on start, pan and send per note
+
+cantor_incipere always sends REVERBERATIONEM_PONERE with the song's form and return
+level, 0 when the song has none. On the shared mixer that silences the previous song's
+room instead of letting it linger. Each note carries pars->positio and
+pars->reverberatio (missio).

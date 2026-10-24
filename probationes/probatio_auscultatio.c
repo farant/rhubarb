@@ -299,12 +299,53 @@ _sectio_tacitae (
         ZEPHYRUM);
 }
 
+/* cauda reverberationis ultra AUSCULTATIO_CAUDA redditur (capacitas
+ * crescit dum vivit), deinde tacet; sine aula longitudo eadem */
+interior vacuum
+_sectio_cauda_aulae (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"aula\" tempus=\"240\">"
+        "<reverberatio aula=\"0.85\" mollities=\"0.4\" lucrum=\"1\"/>"
+        "<pars titulus=\"a\" instrumentum=\"triangulum\""
+        " reverberatio=\"1\"><frustum mensura=\"1\"><textus!>"
+        "c4 r2.</textus></frustum></pars></carmen></carmina>");
+    constans Carmen* sicca = _carmen(c,
+        "<carmina><carmen titulus=\"sicca\" tempus=\"240\">"
+        "<pars titulus=\"a\" instrumentum=\"triangulum\">"
+        "<frustum mensura=\"1\"><textus!>c4 r2.</textus></frustum>"
+        "</pars></carmen></carmina>");
+    f32* x;
+    f32* y;
+    i32  n;
+    i32  m;
+    i32  i;
+    f32  apex = 0.0f;
+
+    CREDO_NECESSE (k != NIHIL && sicca != NIHIL);
+    CREDO_NECESSE (auscultatio_reddere(k, NIHIL, c->piscina, &x, &n));
+    CREDO_NECESSE (auscultatio_reddere(sicca, NIHIL, c->piscina, &y,
+                                       &m));
+    /* carmen 1 s; sine aula cauda brevis (remissio) */
+    CREDO_VERUM (m < SONUS_FREQUENTIA + AUSCULTATIO_CAUDA);
+    CREDO_VERUM (n > II * SONUS_FREQUENTIA + AUSCULTATIO_CAUDA);
+    per (i = n - SONUS_FREQUENTIA / C; i < n; i++)
+    {
+        f32 l = x[II * i] < 0.0f ? -x[II * i] : x[II * i];
+
+        apex = l > apex ? l : apex;
+    }
+    CREDO_VERUM (apex < 1.0e-4f);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "metiri", _sectio_metiri, NIHIL, NIHIL, NIHIL, NIHIL },
     { "mappae", _sectio_mappae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "reddere", _sectio_reddere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "partem", _sectio_partem, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tacitae", _sectio_tacitae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "cauda_aulae", _sectio_cauda_aulae, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

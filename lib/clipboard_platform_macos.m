@@ -5,6 +5,7 @@
  */
 
 /* Includere systemae primum ut vitare conflictos macros */
+#include "postulata_macos.h"   /* PRIMUM: ante capita Apple */
 #import <Cocoa/Cocoa.h>
 #include "clipboard_platform.h"
 #include "chorda.h"
@@ -186,7 +187,7 @@ clipboard_capere_imaginem(Piscina* piscina)
                 [NSGraphicsContext setCurrentContext:ctx];
 
                 /* Draw original into RGBA context */
-                tempImage = [[NSImage alloc] initWithSize:NSMakeSize(latitudo, altitudo)];
+                tempImage = [[NSImage alloc] initWithSize:NSMakeSize((CGFloat)latitudo, (CGFloat)altitudo)];
                 [tempImage addRepresentation:rep];
                 [tempImage drawAtPoint:NSZeroPoint fromRect:NSZeroRect operation:NSCompositingOperationCopy fraction:1.0];
 

@@ -931,11 +931,16 @@ CREDO_GRADUS ("Iudicans corpus (plagulae md totae ut oratio)");
     alioquin
     {
         character linea[DXII];
+        /* piscina UNA per sectionem, per plagulam VACATA (alvei
+         * servati): macOS 27 alveos liberatos non reddit - piscina
+         * per plagulam creata/deleta vestigium processus cum corpore
+         * augebat (CCXCI MiB, arena ~I MiB; 2026-10-24) */
+          Piscina* p = piscina_generare_dynamicum("corpus_oratio_canon",
+              4194304);
 
         dum (fgets(linea, (integer)magnitudo(linea), lista)
             != NIHIL)
         {
-                 Piscina* p;
                character* textus;
                      i32  mensura  = ZEPHYRUM;
                   size_t  l        = strlen(linea);
@@ -960,12 +965,10 @@ CREDO_GRADUS ("Iudicans corpus (plagulae md totae ut oratio)");
                 perge;
             }
             sprintf(via, "%s/%s", radix_viae, linea);
-            p = piscina_generare_dynamicum("corpus_oratio_canon",
-                4194304);
+            piscina_vacare(p);
             textus = _plagulam_legere(p, via, &mensura);
             si (textus == NIHIL)
             {
-                piscina_destruere(p);
                 perge;
             }
             lectae = lectae + I;
@@ -985,8 +988,8 @@ CREDO_GRADUS ("Iudicans corpus (plagulae md totae ut oratio)");
                 vitiosae = vitiosae + I;
             }
             documenta_iudicata = documenta_iudicata + I;
-            piscina_destruere(p);
         }
+        piscina_destruere(p);
         fclose(lista);
         imprimere("  plagulae %d, vitiosae %d, per caput probatae %d\n",
             (integer)lectae, (integer)vitiosae, (integer)truncatae);

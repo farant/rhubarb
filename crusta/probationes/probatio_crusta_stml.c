@@ -1164,7 +1164,11 @@ _separationem_probare (
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
-    { "circuitus STML", _circuitum_portae, NIHIL, NIHIL, NIHIL, NIHIL },
+    /* gravis (2026-10-24, Franus): sub clang 21 (Xcode macOS 27) apex
+     * auctus 291.9 MiB in suita (sola ~31 MiB: memoria liberata
+     * sectionum priorum in vestigio manet) - parcum ...ANGW6J9 */
+    { "circuitus STML", _circuitum_portae, NIHIL, NIHIL, "gravis",
+        NIHIL },
     { "PORTA: referentiae heredoc",
         _referentias_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "Sequentia claudens propria: circuitus",

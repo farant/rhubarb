@@ -41,3 +41,93 @@ track (a track with BOTH mute and solo hid a mute/solo swap).
 CarmenFrustum.lineae / numerus_linearum point at the Cantilena's array
 (same piscina - no copy); pulse is inside the clip, offset inside the
 clip's text.
+
+## 2026-10-23 - carmen_tempus_mensurae (beat unit hoisted)
+
+The beat rule (1/denominator; 6/8 9/8 12/8 = three eighths: denominator 8, numerator > 3
+and a multiple of 3) lived in THREE places: harmonia `_tempus` (chord line per beat),
+censura `_fortia` (strong beats), emendatio `_unitas` ('M:T' locus). Fran OK'd the hoist
+10-23; all three now call carmen_tempus_mensurae(carmen, pulsus). 3/8 and 6/4 are NOT
+compound by this rule (tested). Plants 9/9 red - one (censura `tempus > unitas` ->
+`>=`, every beat strong in 3/4) survived until a 3/4 weak-beat dissonance case was added
+to probatio_censura 'dissonantia'; the old code had the same gap.
+
+## 2026-10-23 - instrumenta libri et carminis (wish …WN96C4, Fran's #1)
+
+`<instrumentum>` at book level (siblings of <carmen>) and inside a song. Every attribute is
+a TibiaParametra field (Latin names; genus/forma as words), plus ambitus="N..M" for
+censura; unknown attribute, bad / out-of-range number, unknown basis, duplicate title at
+the same level all refuse the whole book. basis = a built-in (tibia_praeparatum) or a
+book instrument defined ABOVE (chains: cembalo_mollis on cembalo); song-level instruments
+may base on any book instrument (the book list is read first) or on earlier song ones.
+Without basis: unda/sinus, officium 0.5, tenor 1, amplitudo 0.5, rest 0.
+
+Each Carmen carries the merged list (its own first, then the book's), so carmen_instrumentum
+answers alone and every consumer gets book sounds with NO API change: cantor looks in the
+song before its resolver (book beats even a custom resolver - the song defines its own
+sound), auscultatio / WAV / live all through cantor; censura's ordinary ambitus uses an
+instrument's ambitus when given, else the table (a redefined built-in without ambitus
+keeps the built-in's range, not 0..127 - tested); auditio's instrument check accepts book
+instruments and -carmina lists them. A song-level instrument is invisible to other songs.
+
+Plants 14/14 red (one rewritten to compile: '&&' inside '||'). Two cases were added before
+planting: a song-level instrument based on a book instrument, and a redefined built-in
+without ambitus (censura must keep the table range).
+
+## 2026-10-24 - instrument attribute partiales="r:a:d ...", empty values
+
+`partiales` replaces ALL partials (unlisted slots go to zero), so basis="organum"
+partiales="1:1:0" is a bare sine and not organum with its first partial overwritten. With
+a basis and no attribute the partials are inherited (marimba_mollis). Bounds: ratio
+(0, 32], amp [0, 1], dec [0, 60]; 1..8 space-separated triples, exactly two colons each.
+genus word "partiales" added (GENERA[IV]).
+
+Bug found while testing (it was already in the #1 commit): an EMPTY attribute value
+(`claritas=""`) reaches the parser with t->valor == NIHIL. stml gives boolean attributes
+the interned "true", but gives "" no value at all. Every branch dereferenced *t->valor ->
+segfault. Now one guard after the titulus/basis skip -> "valor malus aut extra fines";
+tests for claritas="", ambitus="", partiales="".
+
+## 2026-10-24 - vocalis, flatus, resonans, acumen, motus; genus 'formantes'
+
+CAMPI grows to XX. vocalis is the one field that is word OR number: the VOCALES word (a
+e i o u -> 0..4) is tried first, then the normal numeric path with bounds 0..4 - so
+"1.5" works and "y" / "5" are refused. motus is the first field with a negative lower
+bound (-48..48). The words check changed from `k >= XIII` to `k == XIII || k == XIV`,
+since fields after forma are numeric again.
+
+## 2026-10-24 - instrumentarium (house instruments as data)
+
+instrumentarium.stml (repo root, next to carmina.stml) holds instruments in the book
+grammatica, under <instrumentarium>. tools/carmina_infigere.sh embeds it into the same
+generated lib/carmina_infixum.c (instrumentarium_infixum_textus). The generator action
+gained the input, so there is no second generator.
+
+The tiers fell out of what already existed. _instrumenta_legere always took "externa" as
+bases; the book-level call passed NIHIL. Now carmina_legere_cum passes the
+instrumentarium there, and each song gets a "visibilia" list (book instruments, then
+the instrumentarium) as its externa. So Carmen.instrumenta = song, book, instrumentarium
+in lookup order, and carmen_instrumentum's first match gives "lower tier redefined
+wins". Carmen.numerus_instrumentarii = how many trailing entries are the
+instrumentarium, so listings (auditio -carmina) can leave them out.
+
+carmina_legere = instrumentarium_ordinarium + carmina_legere_cum; a broken house
+instrumentarium fails every book (it's a house bug - the carmen suite parses it).
+carmina_legere_cum(..., NIHIL, 0, ...) is the isolated form for tests.
+
+Genus words now come from tibia_generis_titulus (_genus_verbi loops until NIHIL), and
+the GENERA table here is gone. Existing count asserts in 'instrumenta' subtract
+numerus_instrumentarii.
+
+## 2026-10-24 - positio, reverberatio (pars) and <reverberatio> (carmen / liber)
+
+The pars gets positio -1..1 and reverberatio 0..1 (its send). The room element
+<reverberatio aula mollities latitudo lucrum/> sits in a song or at book level. Defaults
+are 0.5 0.5 1 0.25 when the element is present, and lucrum 0 when there is none. A
+song's own element replaces the book's WHOLE form, not attribute by attribute, so a
+song writing only mollities gets aula 0.5, not the book's aula (tested). The book
+default is threaded into _carmen_legere as two parameters.
+
+Gotcha: the book's second children loop (the one that reads songs) skipped only
+`instrumentum` - a book-level <reverberatio> was then read as a song and failed. Both
+loops now skip it.

@@ -147,7 +147,9 @@ concentus_agere (
     {
         mixtura_rector_tractare(c->rector, &n);
     }
-    si (mixtura_rector_occupatae(c->rector) > ZEPHYRUM)
+    /* vox viva aut cauda reverberationis sonans: vivit */
+    si (   mixtura_rector_occupatae(c->rector) > ZEPHYRUM
+        || mixtura_cauda_vivit(c->mixtura))
     {
         c->quies_nota = FALSUM;
         redde VERUM;
