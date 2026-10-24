@@ -15,6 +15,11 @@
 /* cauda reverberationis: vivit dum exitus umidus supra limen (-96 dB)
  * intra C ms ultimos */
 #define MIXTURA_CAUDAE_LIMEN   1.6e-5f
+/* limitator summae: tectum ordinarium 1.0 (0 dBFS - plenum licitum
+ * intactum, solum supra tangitur) et remissio (1/e in CXX ms; ad 1
+ * exactum ~1.7 s) */
+#define MIXTURA_TECTUM_ORDINARIUM  1.0f
+#define MIXTURA_REMISSIO_MS        120.0
 #define MIXTURA_CAUDAE_QUADRA  (SONUS_FREQUENTIA / X)
 
 /* valor qui ad metam per quadra 'reliqua' linealiter it */
@@ -73,6 +78,15 @@ structura Mixtura {
                                                 * redditur */
                   i32 quadra_tacita;          /* cauda: quadra sub
                                                 * limine */
+                  f32 tectum;                 /* limitatoris; 0 =
+                                               * nullus */
+                  f32 reductio_limitatoris;   /* 1 - lucrum currens;
+                                               * decrescit (status ut
+                                               * reductio, non lucrum:
+                                               * 1 - x*c in f32 prope 1
+                                               * stat - remissio
+                                               * numquam finiretur) */
+                  f32 remissio_limitatoris;   /* per quadrum */
 };
 
 nomen structura {
@@ -381,6 +395,13 @@ _agere (
             _clivum_ponere(&m->lucrum_reverberationis, i->lucrum,
                            i->clivus);
             frange;
+        casus MIXTURA_IUSSUM_LIMITATOREM_PONERE:
+            m->tectum = i->lucrum > 0.0f ? i->lucrum : 0.0f;
+            si (m->tectum == 0.0f)
+            {
+                m->reductio_limitatoris = 0.0f;
+            }
+            frange;
         casus MIXTURA_IUSSUM_GREGEM_PONERE:
             si (i->grex >= MIXTURA_GREGES)
             {
@@ -406,7 +427,8 @@ _agere (
             n.exempla                = NIHIL;
             n.census                 = m->census;
             _nuntiare(m, &n);
-            m->census.apex = 0.0f;
+            m->census.apex      = 0.0f;
+            m->census.reductio  = 1.0f;
         }
             frange;
         ordinarius:
@@ -563,14 +585,56 @@ _segmentum_reddere (
         {
             lucrum_summae = 0.0f;
         }
-        l                   *= lucrum_summae;
-        r                   *= lucrum_summae;
+        l *= lucrum_summae;
+        r *= lucrum_summae;
+        {
+            f32 apex_sinister  = l < 0.0f ? -l : l;
+            f32 apex_dexter    = r < 0.0f ? -r : r;
+            f32 a             = apex_sinister > apex_dexter
+                              ? apex_sinister : apex_dexter;
+
+            /* census apex ANTE limitatorem (mixtura vera) */
+            si (a > m->census.apex)
+            {
+                m->census.apex = a;
+            }
+            /* limitator: remissio ad 1, deinde statim ad tectum si
+             * opus; lucrum 1 = exempla intacta */
+            si (m->tectum > 0.0f)
+            {
+                f32 x =
+                    m->reductio_limitatoris * m->remissio_limitatoris;
+                f32 g;
+
+                si (x < 1.0e-7f)
+                {
+                    x = 0.0f;
+                }
+                si (a * (1.0f - x) > m->tectum)
+                {
+                    x = 1.0f - m->tectum / a;
+                    m->census.limitata++;
+                }
+                si (x > 0.0f)
+                {
+                    g = 1.0f - x;
+                    l *= g;
+                    r *= g;
+                    /* rotundatio: numquam supra tectum */
+                    l = l > m->tectum ? m->tectum
+                        : (l < -m->tectum ? -m->tectum : l);
+                    r = r > m->tectum ? m->tectum
+                        : (r < -m->tectum ? -m->tectum : r);
+                    si (g < m->census.reductio)
+                    {
+                        m->census.reductio = g;
+                    }
+                }
+                m->reductio_limitatoris = x;
+            }
+        }
         exitus[II * q]      = l;
         exitus[II * q + I]  = r;
-        si (l < 0.0f) l = -l;
-        si (r < 0.0f) r = -r;
-        si (l > m->census.apex) m->census.apex = l;
-        si (r > m->census.apex) m->census.apex = r;
     }
     m->momentum += (s64)quadra;
 }
@@ -718,6 +782,8 @@ mixtura_creare (
     m->census.iussa_amissa   = ZEPHYRUM;
     m->census.nuntii_amissi  = ZEPHYRUM;
     m->census.apex           = 0.0f;
+    m->census.limitata       = ZEPHYRUM;
+    m->census.reductio       = 1.0f;
     {
         SonusReverberatioForma aula;
 
@@ -727,7 +793,11 @@ mixtura_creare (
         sonus_reverberationem_parare(&m->reverberatio, &aula);
     }
     _clivum_statuere(&m->lucrum_reverberationis, 0.0f);
-    m->quadra_tacita = MIXTURA_CAUDAE_QUADRA;
+    m->quadra_tacita         = MIXTURA_CAUDAE_QUADRA;
+    m->tectum                = MIXTURA_TECTUM_ORDINARIUM;
+    m->reductio_limitatoris  = 0.0f;
+    m->remissio_limitatoris  = (f32)exp(-1000.0 / (MIXTURA_REMISSIO_MS
+                                * (f64)SONUS_FREQUENTIA));
     redde m;
 }
 

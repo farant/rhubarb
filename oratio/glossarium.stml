@@ -1847,5 +1847,10 @@
     <forma textus="instrumentarii" casus="genitivus" numerus="singularis" genus="neutrum"/>
     <forma textus="instrumentario" casus="ablativus" numerus="singularis" genus="neutrum"/>
   </vocabulum>
+  <vocabulum lemma="limitator" lingua="latina" classis="substantivum" nota="limitator, -oris m. (Latinitas posterior, L&amp;S: qui limites ponit): hic limitator summae mixturae (apices supra tectum statim deprimit, include/mixtura.h)">
+    <forma textus="limitator" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="limitatoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="limitatorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
 
 </glossarium>

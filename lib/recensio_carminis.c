@@ -13,6 +13,10 @@
 #include <math.h>
 #include <string.h>
 
+/* limitatio ultra -3 dB (lucrum < 10^(-3/20)) = monitum: mixtura vere
+ * nimis calida, non apex fortuitus */
+#define RECENSIO_REDUCTIO_MONENDA 0.70794578f
+
 /* capacitas inventorum prima; plura -> iterum cum numero toto */
 #define RECENSIO_INVENTA LXIV
 
@@ -107,8 +111,8 @@ recensio_carminis_facere (
     }
 
     /* sonus: totum, partes solae, tacitae */
-    si (   !auscultatio_reddere(carmen, resolutor, piscina, &exempla,
-                                &quadra)
+    si (   !auscultatio_reddere_censum(carmen, resolutor, piscina,
+                                      &exempla, &quadra, &r->mixtura)
         || !auscultatio_metiri(carmen, exempla, quadra, piscina,
                                &r->sonus))
     {
@@ -167,7 +171,9 @@ recensio_carminis_monita (
     constans RecensioCarminis* recensio)
 {
     redde recensio->numerus_inventorum + recensio->numerus_tacitarum
-        + (recensio->sonus.tonsa > ZEPHYRUM ? I : ZEPHYRUM);
+        + (recensio->sonus.tonsa > ZEPHYRUM ? I : ZEPHYRUM)
+        + (recensio->mixtura.reductio < RECENSIO_REDUCTIO_MONENDA
+           ? I : ZEPHYRUM);
 }
 
 
@@ -336,7 +342,21 @@ recensio_carminis_textus (
     bene = _numerum_scribere(a, (f64)r->sonus.rms, III) && bene;
     bene = chorda_aedificator_appendere_literis(a, " (") && bene;
     bene = _numerum_scribere(a, _gradus_soni(r->sonus.rms), I) && bene;
-    bene = chorda_aedificator_appendere_literis(a, " dBFS)\n") && bene;
+    bene = chorda_aedificator_appendere_literis(a, " dBFS)") && bene;
+    si (r->mixtura.limitata > ZEPHYRUM)
+    {
+        bene = chorda_aedificator_appendere_literis(a, ", limitator ")
+            && bene;
+        bene = chorda_aedificator_appendere_i32(a, r->mixtura.limitata)
+            && bene;
+        bene = chorda_aedificator_appendere_literis(a, " quadra (")
+            && bene;
+        bene = _numerum_scribere(a, _gradus_soni(r->mixtura.reductio),
+            I)
+            && bene;
+        bene = chorda_aedificator_appendere_literis(a, " dB)") && bene;
+    }
+    bene = chorda_aedificator_appendere_character(a, '\n') && bene;
 
     bene = chorda_aedificator_appendere_literis(a, "  censura (")
         && bene;
@@ -577,6 +597,10 @@ recensio_carminis_json (
         _gradus_soni(r->sonus.apex), 10.0));
     json_objectum_ponere(sonus, "tonsa", json_integer_creare(piscina,
         (s64)r->sonus.tonsa));
+    json_objectum_ponere(sonus, "limitata", json_integer_creare(piscina,
+        (s64)r->mixtura.limitata));
+    json_objectum_ponere(sonus, "reductio_db", _numerus_json(piscina,
+        _gradus_soni(r->mixtura.reductio), 10.0));
     json_objectum_ponere(sonus, "rms", _numerus_json(piscina,
         (f64)r->sonus.rms, 1000.0));
     json_objectum_ponere(sonus, "dbfs", _numerus_json(piscina,

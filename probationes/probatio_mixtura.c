@@ -677,6 +677,20 @@ _iussa_mittere (
     (vacuum)mixtura_iubere(m, &i);
 }
 
+/* tectum limitatoris summae (0 = nullus) */
+interior vacuum
+_limitatorem_ponere (
+    Mixtura* m,
+        f32  tectum)
+{
+    MixturaIussum i;
+
+    mixtura_iussum_parare(&i, MIXTURA_IUSSUM_LIMITATOREM_PONERE,
+                          mixtura_momentum(m));
+    i.lucrum = tectum;
+    (vacuum)mixtura_iubere(m, &i);
+}
+
 interior vacuum
 _sectio_determinismus (
     CredoContextus* c)
@@ -694,6 +708,10 @@ _sectio_determinismus (
         CREDO_VERUM (FALSUM);
         redde;
     }
+    /* limitator nullus: census apex (ante limitatorem) = apex exitus
+     * (fragor supra 1.0 apicem habet) */
+    _limitatorem_ponere(a, 0.0f);
+    _limitatorem_ponere(b, 0.0f);
     _iussa_mittere(a);
     _iussa_mittere(b);
     /* agminibus diversis: CCLVI + reliquum contra unum totum */
@@ -1040,6 +1058,131 @@ _sectio_reverberatio (
     CREDO_FALSUM (aequalia);
 }
 
+
+    /* ==================================================
+     * LIMITATOR SUMMAE: infra tectum octetim idem; supra ad tectum
+     * statim; census apex ante limitatorem, limitata, reductio;
+     * remissio ad 1 exactum; stereo iunctum; 0 = nullus; tectum datum
+     * ================================================== */
+
+/* vox tabulae unius cum lucro et positione, momento currente */
+interior vacuum
+_vocem_positam (
+        Mixtura* m,
+    MixturaAnsa  ansa,
+            f32  lucrum,
+            f32  positio)
+{
+    MixturaIussum i;
+
+    mixtura_iussum_parare(&i, MIXTURA_IUSSUM_TABULAM,
+                          mixtura_momentum(m));
+    i.ansa       = ansa;
+    i.exempla    = tabula_unius;
+    i.longitudo  = C;
+    i.lucrum     = lucrum;
+    i.positio    = positio;
+    (vacuum)mixtura_iubere(m, &i);
+}
+
+
+interior vacuum
+_sectio_limitator (
+    CredoContextus* c)
+{
+          Mixtura* a = _mixtura(c, IV, XVI, XVI);
+          Mixtura* b = _mixtura(c, IV, XVI, XVI);
+    MixturaCensus  census;
+              i32  k;
+              b32  bene;
+              f32  maximum;
+
+    CREDO_NECESSE (a != NIHIL && b != NIHIL);
+    CREDO_GRADUS ("infra tectum: octetim idem ac sine limitatore");
+    _limitatorem_ponere(b, 0.0f);
+    _vocem_positam(a, _ansa(ZEPHYRUM, I), 0.5f, 0.0f);
+    _vocem_positam(b, _ansa(ZEPHYRUM, I), 0.5f, 0.0f);
+    mixtura_reddere(a, exitus_a, M);
+    mixtura_reddere(b, exitus_b, M);
+    CREDO_VERUM (memcmp(exitus_a, exitus_b, II * M * magnitudo(f32))
+                 == ZEPHYRUM);
+    census = _census(a);
+    CREDO_AEQUALIS_I32 (census.limitata, ZEPHYRUM);
+    CREDO_VERUM (census.reductio == 1.0f);
+
+    CREDO_GRADUS ("supra: ad tectum statim, census apex verus");
+    a = _mixtura(c, IV, XVI, XVI);
+    CREDO_NECESSE (a != NIHIL);
+    _vocem_positam(a, _ansa(ZEPHYRUM, I), 0.8f, -1.0f);
+    _vocem_positam(a, _ansa(I, I), 0.8f, -1.0f);
+    mixtura_reddere(a, exitus_a, M);
+    maximum = 0.0f;
+    per (k = ZEPHYRUM; k < II * M; k++)
+    {
+        f32 v = exitus_a[k] < 0.0f ? -exitus_a[k] : exitus_a[k];
+
+        maximum = v > maximum ? v : maximum;
+    }
+    CREDO_VERUM (maximum <= 1.0f + 1.0e-6f);
+    CREDO_F32_PROXIMUS (exitus_a[ZEPHYRUM], 1.0f, 1.0e-5f);
+    census = _census(a);
+    CREDO_F32_PROXIMUS (census.apex, 1.6f, 1.0e-5f);
+    CREDO_VERUM (census.limitata >= C);
+    CREDO_F32_PROXIMUS (census.reductio, 1.0f / 1.6f, 1.0e-4f);
+
+    CREDO_GRADUS ("remissio ad 1 exactum: post II s silentii octetim "
+                  "idem");
+    mixtura_reddere(a, exitus_a, QUADRA_MAXIMA);
+    per (k = ZEPHYRUM; k < V; k++)
+    {
+        mixtura_reddere(a, exitus_a, QUADRA_MAXIMA);
+    }
+    b = _mixtura(c, IV, XVI, XVI);
+    CREDO_NECESSE (b != NIHIL);
+    _vocem_positam(a, _ansa(II, I), 0.5f, 0.0f);
+    _vocem_positam(b, _ansa(II, I), 0.5f, 0.0f);
+    mixtura_reddere(a, exitus_a, C);
+    mixtura_reddere(b, exitus_b, C);
+    CREDO_VERUM (memcmp(exitus_a, exitus_b, II * C * magnitudo(f32))
+                 == ZEPHYRUM);
+
+    CREDO_GRADUS ("stereo iunctum: ratio canalium servata");
+    a = _mixtura(c, IV, XVI, XVI);
+    b = _mixtura(c, IV, XVI, XVI);
+    CREDO_NECESSE (a != NIHIL && b != NIHIL);
+    _limitatorem_ponere(b, 0.0f);
+    /* dextra fortior: canalis uterque iudicatur, non sinister solus */
+    _vocem_positam(a, _ansa(ZEPHYRUM, I), 1.6f, 0.4f);
+    _vocem_positam(b, _ansa(ZEPHYRUM, I), 1.6f, 0.4f);
+    mixtura_reddere(a, exitus_a, X);
+    mixtura_reddere(b, exitus_b, X);
+    CREDO_F32_PROXIMUS (exitus_a[ZEPHYRUM] / exitus_a[I],
+                        exitus_b[ZEPHYRUM] / exitus_b[I], 1.0e-5f);
+    CREDO_VERUM (exitus_b[I] > 1.0f);
+    CREDO_VERUM (   exitus_a[ZEPHYRUM] <= 1.0f
+                 && exitus_a[I] <= 1.0f);
+
+    CREDO_GRADUS ("0 = nullus: summa cruda; tectum datum servatur");
+    a = _mixtura(c, IV, XVI, XVI);
+    b = _mixtura(c, IV, XVI, XVI);
+    CREDO_NECESSE (a != NIHIL && b != NIHIL);
+    _limitatorem_ponere(a, 0.0f);
+    _limitatorem_ponere(b, 0.5f);
+    _vocem_positam(a, _ansa(ZEPHYRUM, I), 0.8f, -1.0f);
+    _vocem_positam(a, _ansa(I, I), 0.8f, -1.0f);
+    _vocem_positam(b, _ansa(ZEPHYRUM, I), 0.8f, -1.0f);
+    mixtura_reddere(a, exitus_a, X);
+    mixtura_reddere(b, exitus_b, C);
+    CREDO_F32_PROXIMUS (exitus_a[ZEPHYRUM], 1.6f, 1.0e-5f);
+    bene = VERUM;
+    per (k = ZEPHYRUM; k < II * C; k++)
+    {
+        bene = bene && exitus_b[k] <= 0.5f + 1.0e-6f
+               && exitus_b[k] >= -0.5f - 1.0e-6f;
+    }
+    CREDO_VERUM (bene);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "creatio", _sectio_creatio, _parare, NIHIL, NIHIL, NIHIL },
     { "initium", _sectio_initium, _parare, NIHIL, NIHIL, NIHIL },
@@ -1055,6 +1198,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "reverberatio", _sectio_reverberatio, _parare, NIHIL, NIHIL,
         NIHIL },
+    { "limitator", _sectio_limitator, _parare, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

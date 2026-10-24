@@ -36,3 +36,11 @@ concentus is still alive (which includes mixtura_cauda_vivit), capacity doubles
 (piscina allocation + copy) up to song + AUSCULTATIO_CAUDA_MAXIMA (20 s): still a hard
 guard against a sound that never ends. Songs without reverb render the same length as
 before.
+
+## 2026-10-24 - census at the end of the render; clipping = strictly above 1.0
+
+auscultatio_reddere_censum: the same render, and at the end a CENSUM_PETERE command plus
+one more pulse; the CENSUS message is caught in _nuntium_legere (concentus would have
+dropped it) and returned. auscultatio_reddere = the _censum variant with NIHIL.
+tonsa now counts |x| > 1.0 only: the limiter puts overs exactly on 1.0 (legal 16-bit
+maximum), and the old >= would have reported every limited peak as clipping.

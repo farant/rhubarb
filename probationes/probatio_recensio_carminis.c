@@ -227,11 +227,16 @@ _sectio_mala (
     CREDO_AEQUALIS_I32 (r.numerus_inventorum, I);
     CREDO_NECESSE (r.numerus_tacitarum == I);
     CREDO_AEQUALIS_I32 (r.tacitae[ZEPHYRUM], IV);
-    /* inventum + tacita + tonsura (ad CXX apices coincidunt: inventum
-     * verum, non consilium probationis - 'vesperae' eisdem partibus ad
-     * LXXXIV apicem -1.8 dBFS habet) */
-    CREDO_VERUM (r.sonus.tonsa > ZEPHYRUM);
-    CREDO_AEQUALIS_I32 (recensio_carminis_monita(&r), III);
+    /* ad CXX apices coincidunt (mixtura vera +0.4 dBFS - 'vesperae'
+     * eisdem partibus ad LXXXIV -1.8): limitator summae eos ponit -
+     * tonsura nulla, limitatio levis nominata non monita; monita =
+     * inventum + tacita */
+    CREDO_AEQUALIS_I32 (r.sonus.tonsa, ZEPHYRUM);
+    CREDO_VERUM (r.mixtura.apex > 1.0f);
+    CREDO_VERUM (r.mixtura.limitata > ZEPHYRUM);
+    CREDO_VERUM (   r.mixtura.reductio < 1.0f
+                 && r.mixtura.reductio > 0.70794578f);
+    CREDO_AEQUALIS_I32 (recensio_carminis_monita(&r), II);
 
     linea = chorda_aedificator_creare(c->piscina, CXXVIII);
     CREDO_NECESSE (linea != NIHIL && censura_inventum_scribere(k,
@@ -247,7 +252,9 @@ _sectio_mala (
         c->piscina));
     CREDO_CHORDA_INCIPIT (t,
         chorda_ex_literis("recensio mala: d maior, "
-        "4/4, 120, 4 mensurae, 8.000 s; monita 3\n", c->piscina));
+        "4/4, 120, 4 mensurae, 8.000 s; monita 2\n", c->piscina));
+    CREDO_CHORDA_CONTINET (t, chorda_ex_literis(", limitator ",
+        c->piscina));
 
     j = _json(c, &r);
     CREDO_NECESSE (j != NIHIL);
@@ -288,9 +295,13 @@ _sectio_mala (
             / 1000.0);
     CREDO_AEQUALIS_S64 (json_ad_integer(json_objectum_capere(j,
         "monita")),
-        III);
+        II);
+    CREDO_AEQUALIS_S64 (json_ad_integer(json_objectum_capere(
+        json_objectum_capere(j, "sonus"), "tonsa")), ZEPHYRUM);
     CREDO_VERUM (json_ad_integer(json_objectum_capere(
-        json_objectum_capere(j, "sonus"), "tonsa")) > ZEPHYRUM);
+        json_objectum_capere(j, "sonus"), "limitata")) > ZEPHYRUM);
+    CREDO_VERUM (json_ad_fluitans(json_objectum_capere(
+        json_objectum_capere(j, "sonus"), "reductio_db")) < 0.0);
 }
 
 
@@ -327,9 +338,43 @@ _sectio_partitura (
         "partitura")), r.partitura);
 }
 
+/* CALIDA: limitatio ultra -3 dB monetur (monita 1, nulla censura) */
+interior vacuum
+_sectio_calida (
+    CredoContextus* c)
+{
+             Carmina* liber;
+      CarminisVitium  vitium;
+       RecensioForma  f;
+    RecensioCarminis  r;
+
+    liber = (Carmina*)piscina_allocare(c->piscina, magnitudo(Carmina));
+    CREDO_NECESSE (liber != NIHIL && carmina_legere(chorda_ex_literis(
+        "<carmina><carmen titulus=\"calida\" tempus=\"120\">"
+        "<pars titulus=\"a\" instrumentum=\"triangulum\" "
+        "positio=\"-1\"><frustum "
+        "mensura=\"1\"><textus!>o3 c1</textus></frustum></pars>"
+        "<pars titulus=\"b\" instrumentum=\"triangulum\" "
+        "positio=\"-1\"><frustum "
+        "mensura=\"1\"><textus!>o3 c1</textus></frustum></pars>"
+        "<pars titulus=\"d\" instrumentum=\"triangulum\" "
+        "positio=\"-1\"><frustum "
+        "mensura=\"1\"><textus!>o3 c1</textus></frustum></pars>"
+        "</carmen></carmina>", c->piscina), c->piscina, liber,
+        &vitium));
+    recensio_carminis_ordinaria(&f);
+    CREDO_NECESSE (recensio_carminis_facere(&liber->carmina[ZEPHYRUM],
+        &f, NIHIL, c->piscina, &r));
+    CREDO_AEQUALIS_I32 (r.sonus.tonsa, ZEPHYRUM);
+    CREDO_VERUM (r.mixtura.reductio < 0.70794578f);
+    CREDO_AEQUALIS_I32 (r.numerus_inventorum, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (recensio_carminis_monita(&r), I);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "munda", _sectio_munda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "mala", _sectio_mala, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "calida", _sectio_calida, NIHIL, NIHIL, NIHIL, NIHIL },
     { "partitura", _sectio_partitura, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

@@ -120,7 +120,8 @@ _sectio_metiri (
                                       &s));
     CREDO_AEQUALIS_I32 (s.numerus, II);
     CREDO_VERUM (_prope((f64)s.apex, 1.25));
-    CREDO_AEQUALIS_I32 (s.tonsa, II);
+    /* tonsura solum supra 1.0: -1.0 plenum licitum */
+    CREDO_AEQUALIS_I32 (s.tonsa, I);
     CREDO_VERUM (_prope((f64)s.mensurae[ZEPHYRUM], 0.5));
     summa = 1.25 * 1.25 + 1.0;
     CREDO_VERUM (_prope((f64)s.mensurae[I],
@@ -339,6 +340,46 @@ _sectio_cauda_aulae (
     CREDO_VERUM (apex < 1.0e-4f);
 }
 
+/* limitator summae: tres partes unisonae sinistrae (triangulum 0.6) =
+ * mixtura ~1.8 - exitus numquam supra 1.0, tonsura nulla; census apex
+ * verus, limitata, reductio */
+interior vacuum
+_sectio_limitator (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"calida\" tempus=\"120\">"
+        "<pars titulus=\"a\" instrumentum=\"triangulum\" "
+        "positio=\"-1\"><frustum "
+        "mensura=\"1\"><textus!>o3 c1</textus></frustum></pars>"
+        "<pars titulus=\"b\" instrumentum=\"triangulum\" "
+        "positio=\"-1\"><frustum "
+        "mensura=\"1\"><textus!>o3 c1</textus></frustum></pars>"
+        "<pars titulus=\"d\" instrumentum=\"triangulum\" "
+        "positio=\"-1\"><frustum "
+        "mensura=\"1\"><textus!>o3 c1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    MixturaCensus  census;
+              f32* x;
+              i32  n;
+              i32  i;
+              f32  apex = 0.0f;
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_NECESSE (auscultatio_reddere_censum(k, NIHIL, c->piscina, &x,
+                                              &n, &census));
+    per (i = ZEPHYRUM; i < II * n; i++)
+    {
+        f32 v = x[i] < 0.0f ? -x[i] : x[i];
+
+        apex = v > apex ? v : apex;
+    }
+    CREDO_VERUM (apex <= 1.0f);
+    CREDO_VERUM (census.apex > 1.5f);
+    CREDO_VERUM (census.limitata > ZEPHYRUM);
+    CREDO_VERUM (census.reductio < 0.70794578f);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "metiri", _sectio_metiri, NIHIL, NIHIL, NIHIL, NIHIL },
     { "mappae", _sectio_mappae, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -346,6 +387,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "partem", _sectio_partem, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tacitae", _sectio_tacitae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "cauda_aulae", _sectio_cauda_aulae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "limitator", _sectio_limitator, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

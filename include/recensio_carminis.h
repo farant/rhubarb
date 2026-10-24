@@ -10,8 +10,10 @@
  * quodque in JSON 'textus' eundem fert ac linea censurae - formae duae
  * non divergunt.
  *
- * MONITA = inventa censurae + mensurae tacitae + (tonsa ? 1 : 0);
- * auditio -recensio exitum 3 reddit si monita.
+ * MONITA = inventa censurae + mensurae tacitae + (tonsa ? 1 : 0) +
+ * (limitator summae ultra -3 dB ? 1 : 0 - mixtura vere nimis
+ * calida); auditio -recensio exitum 3 reddit si monita. Limitatio
+ * levior (apices fortuiti) nominatur in linea soni, non monetur.
  *
  * Partitura non ordinaria (moles maxima): forma.partitura (et
  * .harmonia) eam addunt.
@@ -51,7 +53,11 @@ nomen structura {
                        f64  secundae;     /* carminis (sine cauda) */
            CensuraInventum* inventa;
                        i32  numerus_inventorum;
-      AuscultatioSummarium  sonus;        /* mixtura tota */
+      AuscultatioSummarium  sonus;        /* mixtura tota (post
+                                           * limitatorem) */
+             MixturaCensus mixtura;      /* census redditionis: apex
+                                           * ante limitatorem,
+                                           * limitata, reductio */
       AuscultatioSummarium* partes;       /* pars sola quaeque */
                        i32* tacitae;      /* mensurae (1 = prima) */
                        i32  numerus_tacitarum;
@@ -74,7 +80,7 @@ recensio_carminis_facere (
                       Piscina* piscina,
              RecensioCarminis* recensio);
 
-/* inventa + tacitae + (tonsa ? 1 : 0) */
+/* inventa + tacitae + (tonsa ? 1 : 0) + (reductio < -3 dB ? 1 : 0) */
 i32
 recensio_carminis_monita (
     constans RecensioCarminis* recensio);

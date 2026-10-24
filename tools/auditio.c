@@ -731,6 +731,7 @@ _auscultare (
 {
     AuscultatioSummarium  s;
     AuscultatioSummarium  p;
+           MixturaCensus  census;
                      f32* exempla;
                      i32  quadra;
                      i32* tacitae;
@@ -738,19 +739,28 @@ _auscultare (
                      i32  i;
                      i32  t = ZEPHYRUM;
 
-    si (   !auscultatio_reddere(k, NIHIL, piscina, &exempla, &quadra)
+    si (   !auscultatio_reddere_censum(k, NIHIL, piscina, &exempla,
+                                      &quadra, &census)
         || !auscultatio_metiri(k, exempla, quadra, piscina, &s))
     {
         fprintf(stderr, "auditio: memoria deest\n");
         redde I;
     }
     imprimere("auscultatio %.*s: %.3f s, apex %.3f (%.1f dBFS), "
-              "tonsa %u, rms %.3f (%.1f dBFS)\n",
+              "tonsa %u, rms %.3f (%.1f dBFS)",
               (integer)k->titulus.mensura,
               (constans character*)k->titulus.datum,
               (duplex)quadra / (duplex)SONUS_FREQUENTIA, (duplex)s.apex,
               _gradus_soni(s.apex), s.tonsa, (duplex)s.rms,
               _gradus_soni(s.rms));
+    /* limitator summae (mixtura.h): apex verus mixturae et reductio */
+    si (census.limitata > ZEPHYRUM)
+    {
+        imprimere(", limitator %u quadra (%.1f dB; mixtura %.1f dBFS)",
+                  census.limitata, _gradus_soni(census.reductio),
+                  _gradus_soni(census.apex));
+    }
+    imprimere("\n");
     per (i = ZEPHYRUM; i < k->numerus_partium; i++)
     {
         si (!auscultatio_partem(k, i, NIHIL, piscina, &p))

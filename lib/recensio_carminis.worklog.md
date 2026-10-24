@@ -21,3 +21,12 @@ dBFS: triangle B2 + aether peaks aligned at 120 bpm) - monita came out 3,
 not the 2 I designed. The report was right; the fixture now asserts all
 three. Same parts at 84 bpm (vesperae) peak -1.8: the mixer has no
 headroom policy - filed as a ledger wish.
+
+## 2026-10-24 - limiter in the report; warning only beyond -3 dB
+
+RecensioCarminis.mixtura = the render census. Sound line: ", limitator N quadra (-x.x
+dB)" when the limiter engaged; JSON sonus.limitata / reductio_db. Warnings: + 1 if the
+reduction is deeper than -3 dB (RECENSIO_REDUCTIO_MONENDA 0.708): a mix genuinely too
+hot. Light limiting (chance peak alignment, the 'mala' fixture's +0.4 dB) is named, not
+warned - 'mala' went from monita III to II (no clipping any more). New fixture 'calida':
+three triangulum hard left (~1.8, -5 dB) = monita 1.
