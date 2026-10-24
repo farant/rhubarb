@@ -146,6 +146,20 @@ mundi_legere (
     redde VERUM;
 }
 
+/* praesentia sine lectione (lecturae non crescunt): fasciculus aut
+ * directorium */
+b32
+mundi_existere (
+                vacuum* datum,
+    constans character* via,
+               Piscina* piscina)
+{
+    Xar* nomina;
+
+    redde mundi_fasciculum_invenire((DiscusFictus*)datum, via) != NIHIL
+        || mundi_enumerare(datum, via, piscina, &nomina);
+}
+
 b32
 mundi_enumerare (
                 vacuum*  datum,
@@ -728,6 +742,7 @@ mundi_discum_parare (
     sutura->datum              = discus;
     sutura->legere             = mundi_legere;
     sutura->enumerare          = mundi_enumerare;
+    sutura->existere           = mundi_existere;
     sutura->currere            = mundi_currere;
     sutura->rogare             = mundi_rogare;
     sutura->agere              = mundi_agere;

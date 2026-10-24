@@ -132,6 +132,7 @@ fabrica_suturam_parare (
     sutura->datum               = NIHIL;
     sutura->legere              = NIHIL;
     sutura->enumerare           = NIHIL;
+    sutura->existere            = NIHIL;
     sutura->currere             = NIHIL;
     sutura->rogare              = NIHIL;
     sutura->meminisse           = NIHIL;
@@ -623,6 +624,17 @@ fabricae_lectionem_sigillare (
                     fabricae_in_cursum(sutura, via, piscina), locus);
             }
         }
+        redde VERUM;
+    }
+    /* A/X: praesentia sola - sine lectione si sutura eam praebet */
+    si (   (genus == LECTIO_ABSENS || genus == LECTIO_EXSTAT)
+        && sutura->existere != NIHIL)
+    {
+        *sigillum_out = sutura->existere(sutura->datum, via_cstr,
+            piscina)
+            ? sigillum_computare(SIGNUM_PRAESENS,
+                  strlen(SIGNUM_PRAESENS))
+            : sigillum_computare(SIGNUM_ABSENS, strlen(SIGNUM_ABSENS));
         redde VERUM;
     }
     legibile     = sutura->legere(sutura->datum, via_cstr, piscina,

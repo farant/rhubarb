@@ -758,6 +758,34 @@ _probare_custodiam_memorabilium (
     CREDO_FALSUM(mundi_continet(iudicium.causa, "MEMORIA NEGATA",
         piscina));
     CREDO_AEQUALIS_I32(discus.inscriptiones, I);
+
+    /* VIII. X sine lectione (parcum T77EH4): ictus memoriae cum linea X
+     * plagulam non legit si sutura 'existere' praebet - olim tota
+     * legebatur (mensurae.volumen CCCXLVIII MB per membrum vici).
+     * Sine existere (NIHIL) idem ictus, lectio una plus */
+    {
+        i32 lecturae_cum;
+        i32 lecturae_sine;
+        i32 ante;
+
+        a = _custodiae_actio(&discus, &sutura, piscina, &exitus);
+        discus.lectiones_ficti = "L\tdata/fons.txt\nX\tdata/fons.txt\n";
+        (vacuum)fabrica_iudicare(&sutura, a, exitus, VERUM, piscina);
+        CREDO_AEQUALIS_I32(discus.inscriptiones, I);
+        discus.cursus = ZEPHYRUM;
+        ante = discus.lecturae;
+        iudicium = fabrica_iudicare(&sutura, a, exitus, VERUM, piscina);
+        lecturae_cum = discus.lecturae - ante;
+        CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_RECENS);
+        CREDO_AEQUALIS_I32(discus.cursus, ZEPHYRUM);
+        sutura.existere = NIHIL;
+        ante = discus.lecturae;
+        iudicium = fabrica_iudicare(&sutura, a, exitus, VERUM, piscina);
+        lecturae_sine = discus.lecturae - ante;
+        CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_RECENS);
+        CREDO_AEQUALIS_I32(discus.cursus, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(lecturae_sine, lecturae_cum + I);
+    }
 }
 
 

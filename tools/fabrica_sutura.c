@@ -396,6 +396,26 @@ _enumerare (
     redde VERUM;
 }
 
+/* PRAESENTIA (parcum …T77EH4): idem iudicium ac _legere || _enumerare
+ * - plagula regularis (via '~/' expansa, ut _legere) aut directorium
+ * (via ut data, ut _enumerare) - sed per statum solum, nihil lectum */
+interior b32
+_existere (
+                vacuum* datum,
+    constans character* via,
+               Piscina* piscina)
+{
+    FilumStatus status;
+
+    (vacuum)datum;
+    si (   filum_status(_domum_expandere(via, piscina), &status)
+        && status.est_filum)
+    {
+        redde VERUM;
+    }
+    redde filum_status(via, &status) && status.est_directorium;
+}
+
 /* ultima linea non vacua textus (causa brevis) */
 interior chorda
 _ultima_linea (
@@ -1067,6 +1087,7 @@ suturae_legentem_parare (
     fabrica_suturam_parare(sutura);
     sutura->legere     = _legere;
     sutura->enumerare  = _enumerare;
+    sutura->existere   = _existere;
 }
 
 /* ambitus verus (getenv) - explicatio membrorum valores variabilium

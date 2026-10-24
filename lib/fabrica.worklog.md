@@ -3615,3 +3615,22 @@ The wave part was pure garbage. `_simul_possunt` (O(n^2) over a wave) rebuilt
 prefix test that keeps the '/' boundary (build/opera vs build/operae must not conflict; new
 test). Memoized radix: 7.4 -> 5.6 GB. Remaining targets: the 1.8 GB startup, the 1.2 GB first
 sanare, preview, and the vicus/fragmenta staleness costs.
+
+## 2026-10-23 — fix part 4: A/X trace lines checked without reading the file (park …T77EH4)
+
+The two vicus members' 349 MB staleness checks were `~/.rhubarb/mensurae.volumen` (348 MB, mensor's
+database). Their read trace has an `X` (exists) line for it, and `fabricae_lectionem_sigillare`
+verified A/X lines by calling `sutura->legere` (WHOLE file into the piscina) plus `enumerare`,
+then threw the content away: the sigil is only PRAESENS/ABSENS.
+
+New optional sutura callback `existere(datum, via, piscina)`: same answer as legere || enumerare
+(regular file via the '~/'-expanded path like _legere, or directory via the raw path like
+_enumerare) through `filum_status`, nothing read. NIHIL keeps the old path. The fake world has
+`mundi_existere` (does not bump `lecturae`), so every fake-world iudicium test now exercises it.
+New case VIII in probatio_fabrica_iudicium: a memo hit with an X line reads exactly one file fewer
+with existere than without (planted: branch off -> red).
+
+Memoized radix: 5.6 -> 1.9 GB peak (7.4 GB before part 3). The read happened in more places
+than the two vicus checks (preview, first sanare pass, mensor-reading members), so the saving was
+bigger than the 0.7 GB predicted. Note mensurae.volumen keeps growing; anything that "touches" it
+by content scales with it.
