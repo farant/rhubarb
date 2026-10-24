@@ -401,6 +401,8 @@ _sectio_claves (
     _clavis(w, 'f');
     CREDO_VERUM (_campus_est(&w->m.ramus, "tibia", "organum"));
     _clavis(w, 'f');
+    CREDO_VERUM (_campus_est(&w->m.ramus, "tibia", "schola"));
+    _clavis(w, 'f');
     CREDO_VERUM (_campus_est(&w->m.ramus, "tibia", "aether"));
     _clavis(w, 'f');
 

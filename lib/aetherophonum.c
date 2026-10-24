@@ -29,7 +29,7 @@ hic_manens constans character actio_aetherophoni[] =
 
 /* praeparata tibiae per 'f', ordine circuli */
 hic_manens constans character* tibiae[] = {
-    "aether", "quadrans", "triangulum", "organum"
+    "aether", "quadrans", "triangulum", "organum", "schola"
 };
 
 hic_manens constans character* nomina_notarum[XII] = {

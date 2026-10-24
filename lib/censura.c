@@ -28,7 +28,7 @@ nomen structura {
                     i32  summa;
 } AmbitusOrdinarius;
 
-#define AMBITUS_NUMERUS VIII
+#define AMBITUS_NUMERUS XI
 
 hic_manens constans AmbitusOrdinarius AMBITUS[AMBITUS_NUMERUS] = {
     { "aether",     XXXVI,  XCVI  },
@@ -38,7 +38,10 @@ hic_manens constans AmbitusOrdinarius AMBITUS[AMBITUS_NUMERUS] = {
     { "campana",    XLVIII, XCVI  },
     { "organum",    XXXVI,  XCVI  },
     { "marimba",    XLV,    XCVI  },
-    { "glockenspiel", LXXIX, CVIII }
+    { "glockenspiel", LXXIX, CVIII },
+    { "schola",     XLVIII, LXXIV },
+    { "fistula",    LX,     XCVI  },
+    { "nubes",      XXXVI,  LXXXIV }
 };
 
 /* gradus scalae maioris a tonica */

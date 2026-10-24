@@ -296,6 +296,90 @@ sonus_colum_proximum (
 
 
     /* ==================================================
+     * RESONANS
+     * ================================================== */
+
+vacuum
+sonus_resonans_parare (
+           SonusResonans* c,
+    SonusGenusResonantis  genus,
+                     f32  frequentia,
+                     f32  acumen)
+{
+    c->genus  = genus;
+    c->x1     = 0.0f;
+    c->x2     = 0.0f;
+    c->y1     = 0.0f;
+    c->y2     = 0.0f;
+    sonus_resonans_ponere(c, frequentia, acumen);
+}
+
+vacuum
+sonus_resonans_ponere (
+    SonusResonans* c,
+              f32  frequentia,
+              f32  acumen)
+{
+    f64 w;
+    f64 cw;
+    f64 alpha;
+    f64 a0;
+    f64 q = acumen > 0.0f ? (f64)acumen : 0.70710678118654752;
+
+    si (frequentia <= 0.0f)
+    {
+        c->b0 = 1.0f;
+        c->b1 = 0.0f;
+        c->b2 = 0.0f;
+        c->a1 = 0.0f;
+        c->a2 = 0.0f;
+        redde;
+    }
+    /* sub Nyquist coercitum (w = pi degenerat) */
+    w      = SONUS_DUO_PI * (f64)_coercere(frequentia, 1.0f,
+             0.49f * (f32)SONUS_FREQUENTIA) / (f64)SONUS_FREQUENTIA;
+    cw     = cos(w);
+    alpha  = sin(w) / (2.0 * q);
+    a0     = 1.0 + alpha;
+    si (c->genus == SONUS_RESONANS_MEDIA)
+    {
+        c->b0 = (f32)(alpha / a0);
+        c->b1 = 0.0f;
+        c->b2 = (f32)(-alpha / a0);
+    }
+    alioquin si (c->genus == SONUS_RESONANS_ACUTA)
+    {
+        c->b0 = (f32)((1.0 + cw) / 2.0 / a0);
+        c->b1 = (f32)(-(1.0 + cw) / a0);
+        c->b2 = c->b0;
+    }
+    alioquin
+    {
+        c->b0 = (f32)((1.0 - cw) / 2.0 / a0);
+        c->b1 = (f32)((1.0 - cw) / a0);
+        c->b2 = c->b0;
+    }
+    c->a1 = (f32)(-2.0 * cw / a0);
+    c->a2 = (f32)((1.0 - alpha) / a0);
+}
+
+f32
+sonus_resonans_proximum (
+    SonusResonans* c,
+              f32  x)
+{
+    f32 y = c->b0 * x + c->b1 * c->x1 + c->b2 * c->x2
+          - c->a1 * c->y1 - c->a2 * c->y2;
+
+    c->x2 = c->x1;
+    c->x1 = x;
+    c->y2 = c->y1;
+    c->y1 = y;
+    redde y;
+}
+
+
+    /* ==================================================
      * RETENTIO et COMMINUTIO
      * ================================================== */
 

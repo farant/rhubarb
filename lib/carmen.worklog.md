@@ -87,3 +87,11 @@ Bug found while testing (it was already in the #1 commit): an EMPTY attribute va
 the interned "true", but gives "" no value at all. Every branch dereferenced *t->valor ->
 segfault. Now one guard after the titulus/basis skip -> "valor malus aut extra fines";
 tests for claritas="", ambitus="", partiales="".
+
+## 2026-10-24 - vocalis, flatus, resonans, acumen, motus; genus 'formantes'
+
+CAMPI grows to XX. vocalis is the one field that is word OR number: the VOCALES word (a
+e i o u -> 0..4) is tried first, then the normal numeric path with bounds 0..4 - so
+"1.5" works and "y" / "5" are refused. motus is the first field with a negative lower
+bound (-48..48). The words check changed from `k >= XIII` to `k == XIII || k == XIV`,
+since fields after forma are numeric again.

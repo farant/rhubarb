@@ -32,7 +32,16 @@
  *             (organum) aut inharmonica (marimba 1 : 3.9 : 9.2;
  *             lamina libera 1 : 2.76 : 5.40 : 8.93 - glockenspiel).
  *             Partiales supra frequentiam Nyquist omittuntur.
+ *   4 FORMANTES  unda (serra ordinaria) per V cola media parallela ad
+ *             formantes vocalis (tabula tenoris Csound: a e i o u);
+ *             vocalis fracta formantes inter vicinas linealiter ducit.
+ *             Formantes fixi (vocalis), non notam sequuntur - vox
+ *             cantans (schola)
  * Involucrum ADSR omnibus generibus; vibratus et glissandum omnibus.
+ * Omnibus etiam: FLATUS (strepitus per colum medium circa notam,
+ * deterministicus - semen ex nota) et COLUM RESONANS gravium (limes,
+ * acumen = Q, motus = semitonia quibus involucrum limitem attollit:
+ * pad subtractivus qui tenore aperitur).
  *
  * USUS:
  *   TibiaVox v;
@@ -48,9 +57,13 @@
 
 #include "latina.h"
 #include "sonus.h"
+#include "sors.h"
 
 /* partiales maximi per instrumentum */
 #define TIBIA_PARTIALES_NUMERUS VIII
+
+/* formantes per vocem (FORMANTES) */
+#define TIBIA_FORMANTES_NUMERUS V
 
 nomen structura {
     f32 ratio;         /* 0 = finis tabulae */
@@ -69,7 +82,7 @@ nomen structura {
                     f32 gravia;      /* limes coli gravium, cycli/s (0 =
                                       * nihil) */
                     f32 amplitudo;   /* lucrum lineare */
-                    f32 genus;       /* TibiaGenus 0..3 (rotundatum) */
+                    f32 genus;       /* TibiaGenus 0..4 (rotundatum) */
                     f32 decrementum; /* CHORDA: secundae ad -60 dB;
                                       * FM: secundae indicis ad 1/e */
                     f32 claritas;    /* CHORDA: 0..1 */
@@ -77,13 +90,26 @@ nomen structura {
                     f32 index;       /* FM: index initio */
          TibiaPartialis partiales[TIBIA_PARTIALES_NUMERUS];
                                      /* PARTIALES; ratio 0 = finis */
+                    f32 vocalis;     /* FORMANTES: 0..4 = a e i o u;
+                                      * fractio formantes inter
+                                      * vocales vicinas ducit */
+                    f32 flatus;      /* omnibus: strepitus circa notam,
+                                      * 0..1 */
+                    f32 resonans;    /* omnibus: limes coli gravium
+                                      * resonantis, cycli/s (0 =
+                                      * nihil) */
+                    f32 acumen;      /* Q coli resonantis (0 = 0.707) */
+                    f32 motus;       /* semitonia quibus involucrum
+                                      * limitem attollit (pad: tenor
+                                      * aperit) */
 } TibiaParametra;
 
 nomen enumeratio {
     TIBIA_UNDA,
     TIBIA_CHORDA,
     TIBIA_MODULATIO,
-    TIBIA_PARTIALES
+    TIBIA_PARTIALES,
+    TIBIA_FORMANTES
 } TibiaGenus;
 
 /* linea morae CHORDAE: notae usque ad ~23 Hz (F#0) */
@@ -119,6 +145,19 @@ nomen structura {
                  * divisae), detrimenta per exemplum */
                 f32 amplitudines[TIBIA_PARTIALES_NUMERUS];
                 f32 detrimenta[TIBIA_PARTIALES_NUMERUS];
+      SonusResonans formantes[TIBIA_FORMANTES_NUMERUS];
+                f32 lucra_formantium[TIBIA_FORMANTES_NUMERUS];
+      SonusResonans colum_resonans;
+      SonusResonans colum_flatus;
+               Sors sors_flatus;
+                f32 flatus;              /* exemplaria parametrorum */
+                f32 lucrum_flatus;       /* strepitus ad efficacem
+                                          * undae (per latitudinem) */
+                f32 resonans;
+                f32 acumen;
+                f32 motus;
+                f32 involucrum_ultimum;  /* motus: ultimum valor */
+                i32 reliqua_moderationis; /* cola per XXXII exempla */
 } TibiaVox;
 
 /* porta APERTA: impetus incipit ad notam datam */
@@ -155,7 +194,9 @@ tibia_vox_finita (
 /* "aether" (sinus, impetus lenis, vibratus parvus), "quadrans" (pulsus
  * XXV%, chiptune), "triangulum" (bassus), "chorda" (Karplus-Strong:
  * citharae similis), "campana" (FM, ratio 1.4), "organum" (8' 4' 2 2/3'
- * 2'), "marimba", "glockenspiel" (PARTIALES); NIHIL si ignotum */
+ * 2'), "marimba", "glockenspiel" (PARTIALES), "schola" (FORMANTES,
+ * vocalis a: cantus), "fistula" (partiales cum flatu), "nubes" (serra,
+ * colum resonans tenore apertum: pad); NIHIL si ignotum */
 constans TibiaParametra*
 tibia_praeparatum (
     constans character* titulus);

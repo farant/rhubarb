@@ -933,6 +933,268 @@ _sectio_partiales_nulli (
         SECUNDA / II, 440.0) < 0.001);
 }
 
+/* harmonicus fortissimus (1..n) notae f in fenestra 0.25..0.75 s */
+interior i32
+_harmonicus_fortissimus (
+    constans f32* x,
+             f64  f,
+             i32  n)
+{
+    i32 h;
+    i32 optimus = I;
+    f64 maximum = -1.0;
+
+    per (h = I; h <= n; h++)
+    {
+        f64 a = _amplitudo_frequentiae(x, SECUNDA / IV, SECUNDA / II,
+                                       f * (f64)h);
+
+        si (a > maximum)
+        {
+            maximum = a;
+            optimus = h;
+        }
+    }
+    redde optimus;
+}
+
+/* fractio energiae harmonicorum supra 1 kHz (harmonici 1..XL) */
+interior f64
+_fractio_acuta (
+    constans f32* x,
+             f64  f)
+{
+    f64 summa = 0.0;
+    f64 acuta = 0.0;
+    i32 h;
+
+    per (h = I; h <= XL; h++)
+    {
+        f64 a = _amplitudo_frequentiae(x, SECUNDA / IV, SECUNDA / II,
+                                       f * (f64)h);
+
+        summa += a * a;
+        si (f * (f64)h > 1000.0)
+        {
+            acuta += a * a;
+        }
+    }
+    redde summa > 0.0 ? acuta / summa : 0.0;
+}
+
+/* efficax per colum resonans (genus, f, Q) in fenestra */
+interior f64
+_efficax_per_colum (
+            constans f32* x,
+                     i32  initium,
+                     i32  numerus,
+    SonusGenusResonantis  genus,
+                     f32  frequentia,
+                     f32  acumen)
+{
+    SonusResonans r;
+              f64 s = 0.0;
+              i32 i;
+
+    sonus_resonans_parare(&r, genus, frequentia, acumen);
+    per (i = ZEPHYRUM; i < initium + numerus; i++)
+    {
+        f32 y = sonus_resonans_proximum(&r, x[i]);
+
+        si (i >= initium)
+        {
+            s += (f64)y * (f64)y;
+        }
+    }
+    redde sqrt(s / (f64)numerus);
+}
+
+/* schola: vocalis a - harmonicus III (660 Hz, F1 650) fortissimus,
+ * u - I aut II; a plus acutorum quam u; vocalis 3.5 inter o et u;
+ * apex finitus per ambitum; determinismus */
+interior vacuum
+_sectio_schola (
+    CredoContextus* c)
+{
+    constans TibiaParametra* p = tibia_praeparatum("schola");
+             TibiaParametra  q;
+                        f64  fa;
+                        f64  fu;
+                        i32  h;
+                        i32  k;
+               constans f32  notae[III] = { 48.0f, 60.0f, 74.0f };
+
+    (vacuum)c;
+    CREDO_NECESSE (p != NIHIL
+                   && (s32)(p->genus + 0.5f) == TIBIA_FORMANTES);
+    q           = *p;
+    q.flatus    = 0.0f;
+    q.vibratus  = 0.0f;
+    _sonare(&q, 57.0f, tabula_a, SECUNDA);
+    h   = _harmonicus_fortissimus(tabula_a, 220.0, VIII);
+    fa  = _fractio_acuta(tabula_a, 220.0);
+    CREDO_AEQUALIS_I32 (h, III);
+    q.vocalis = 4.0f;
+    _sonare(&q, 57.0f, tabula_a, SECUNDA);
+    h   = _harmonicus_fortissimus(tabula_a, 220.0, VIII);
+    fu  = _fractio_acuta(tabula_a, 220.0);
+    CREDO_VERUM (h <= II);
+    CREDO_VERUM (fa > 2.0 * fu);
+    /* vocalis 3.5: F2 medius inter o (800, latitudo 80, -10 dB) et u
+     * (600, 60, -20): 700 cycli/s, Q 10, -15 dB. (Fractio acuta non
+     * monotona: harmonici in cola angusta cadunt aut non) */
+    {
+             TibiaVox v;
+        SonusResonans r;
+
+        q.vocalis = 3.5f;
+        tibia_vocem_parare(&v, &q, 57.0f);
+        sonus_resonans_parare(&r, SONUS_RESONANS_MEDIA, 700.0f, 10.0f);
+        CREDO_VERUM (   v.formantes[I].b0 == r.b0
+                     && v.formantes[I].a1 == r.a1
+                     && v.formantes[I].a2 == r.a2);
+        CREDO_F32_PROXIMUS (v.lucra_formantium[I]
+            / v.lucra_formantium[ZEPHYRUM], 0.17783f, 0.0001f);
+    }
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        _sonare(p, notae[k], tabula_a, SECUNDA);
+        CREDO_VERUM (_apex(tabula_a, ZEPHYRUM, SECUNDA)
+                     < 1.2f * p->amplitudo);
+        CREDO_VERUM (_efficax(tabula_a, SECUNDA / II, SECUNDA / IV)
+                     > 0.05 * (f64)p->amplitudo);
+    }
+    _sonare(p, 57.0f, tabula_a, SECUNDA);
+    _sonare(p, 57.0f, tabula_b, SECUNDA);
+    CREDO_VERUM (memcmp(tabula_a, tabula_b, magnitudo(tabula_a))
+                 == ZEPHYRUM);
+}
+
+/* fistula: flatus = strepitus additus (residuum contra flatum 0)
+ * mensura flatus, circa notam (plus ad f quam ad 6f);
+ * deterministicum */
+interior vacuum
+_sectio_fistula (
+    CredoContextus* c)
+{
+    constans TibiaParametra* p = tibia_praeparatum("fistula");
+             TibiaParametra  q;
+                        f64  sonus_purus;
+                        f64  residuum;
+                        f64  ad_notam;
+                        f64  procul;
+                        i32  i;
+
+    (vacuum)c;
+    CREDO_NECESSE (p != NIHIL && p->flatus > 0.0f);
+    q         = *p;
+    q.flatus  = 0.0f;
+    _sonare(&q, 69.0f, tabula_b, SECUNDA);
+    _sonare(p, 69.0f, tabula_a, SECUNDA);
+    sonus_purus = _efficax(tabula_b, SECUNDA / II, SECUNDA / IV);
+    per (i = ZEPHYRUM; i < SECUNDA; i++)
+    {
+        tabula_a[i] -= (1.0f - p->flatus) * tabula_b[i];
+    }
+    residuum = _efficax(tabula_a, SECUNDA / II, SECUNDA / IV);
+    /* residuum strepitus est, non sonus scalatus: incorrelatum */
+    {
+        f64 productum = 0.0;
+
+        per (i = SECUNDA / II; i < SECUNDA / II + SECUNDA / IV; i++)
+        {
+            productum += (f64)tabula_a[i] * (f64)tabula_b[i];
+        }
+        productum /= (f64)(SECUNDA / IV) * residuum * sonus_purus;
+        CREDO_VERUM (fabs(productum) < 0.2);
+    }
+    CREDO_VERUM (residuum > 0.5 * (f64)p->flatus * sonus_purus);
+    CREDO_VERUM (residuum < 2.0 * (f64)p->flatus * sonus_purus);
+    ad_notam = _efficax_per_colum(tabula_a, SECUNDA / II, SECUNDA / IV,
+                                  SONUS_RESONANS_MEDIA, 440.0f, 4.0f);
+    procul   = _efficax_per_colum(tabula_a, SECUNDA / II, SECUNDA / IV,
+                                  SONUS_RESONANS_MEDIA, 2640.0f, 4.0f);
+    CREDO_VERUM (ad_notam > 2.0 * procul);
+    _sonare(p, 69.0f, tabula_a, SECUNDA);
+    _sonare(p, 69.0f, tabula_b, SECUNDA);
+    CREDO_VERUM (memcmp(tabula_a, tabula_b, magnitudo(tabula_a))
+                 == ZEPHYRUM);
+}
+
+/* nubes: colum tenore apertum - fractio acuta (supra 1.2 kHz) serius
+ * maior; motus 0 cum limite = obscurior quam sine limite */
+interior vacuum
+_sectio_nubes (
+    CredoContextus* c)
+{
+    constans TibiaParametra* p = tibia_praeparatum("nubes");
+             TibiaParametra  q;
+                        f64  primum;
+                        f64  serum;
+                        f64  apertum;
+                        f64  clausum;
+
+    (vacuum)c;
+    CREDO_NECESSE (p != NIHIL && p->resonans > 0.0f && p->motus > 0.0f);
+    _sonare(p, 45.0f, tabula_a, TABULA_MAXIMA);
+    primum = _efficax_per_colum(tabula_a, SECUNDA / XX, SECUNDA / X,
+                 SONUS_RESONANS_ACUTA, 1200.0f, 0.7071f)
+           / _efficax(tabula_a, SECUNDA / XX, SECUNDA / X);
+    serum  = _efficax_per_colum(tabula_a, SECUNDA, SECUNDA / X,
+                 SONUS_RESONANS_ACUTA, 1200.0f, 0.7071f)
+           / _efficax(tabula_a, SECUNDA, SECUNDA / X);
+    CREDO_VERUM (serum > 2.0 * primum);
+    q                     = *p;
+    q.motus               = 0.0f;
+    q.involucrum.impetus  = 0.0f;
+    _sonare(&q, 45.0f, tabula_a, SECUNDA);
+    clausum = _efficax_per_colum(tabula_a, SECUNDA / II, SECUNDA / IV,
+                  SONUS_RESONANS_ACUTA, 1200.0f, 0.7071f)
+            / _efficax(tabula_a, SECUNDA / II, SECUNDA / IV);
+    q.resonans  = 0.0f;
+    _sonare(&q, 45.0f, tabula_a, SECUNDA);
+    apertum = _efficax_per_colum(tabula_a, SECUNDA / II, SECUNDA / IV,
+                  SONUS_RESONANS_ACUTA, 1200.0f, 0.7071f)
+            / _efficax(tabula_a, SECUNDA / II, SECUNDA / IV);
+    CREDO_VERUM (apertum > 3.0 * clausum);
+    /* acumen: resonantia ad limitem (CD cycli/s) Q 4 contra 0.707 */
+    {
+        f64 acutum;
+        f64 planum;
+
+        q.resonans  = p->resonans;
+        _sonare(&q, 45.0f, tabula_a, SECUNDA);
+        acutum = _efficax_per_colum(tabula_a, SECUNDA / II, SECUNDA
+            / IV,
+                     SONUS_RESONANS_MEDIA, 400.0f, 4.0f);
+        q.acumen    = 0.7071f;
+        _sonare(&q, 45.0f, tabula_a, SECUNDA);
+        planum = _efficax_per_colum(tabula_a, SECUNDA / II, SECUNDA
+            / IV,
+                     SONUS_RESONANS_MEDIA, 400.0f, 4.0f);
+        CREDO_VERUM (acutum > 2.0 * planum);
+    }
+}
+
+/* genus supra FORMANTES coercetur ad FORMANTES */
+interior vacuum
+_sectio_genus_coercitum (
+    CredoContextus* c)
+{
+    TibiaParametra q = *tibia_praeparatum("schola");
+
+    (vacuum)c;
+    _sonare(&q, 57.0f, tabula_a, SECUNDA / X);
+    q.genus = 9.0f;
+    _sonare(&q, 57.0f, tabula_b, SECUNDA / X);
+    CREDO_VERUM (memcmp(tabula_a, tabula_b, magnitudo(f32) * (size_t)(
+        SECUNDA / X)) == ZEPHYRUM);
+    q.genus = 0.0f;
+    _sonare(&q, 57.0f, tabula_b, SECUNDA / X);
+    CREDO_VERUM (memcmp(tabula_a, tabula_b, magnitudo(f32) * (size_t)(
+        SECUNDA / X)) != ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "tenet", _sectio_tenet, _parare, NIHIL, NIHIL, NIHIL },
     { "involucrum", _sectio_involucrum, _parare, NIHIL, NIHIL, NIHIL },
@@ -949,6 +1211,11 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "glockenspiel", _sectio_campanulae, _parare, NIHIL, NIHIL,
         NIHIL },
     { "partiales_nulli", _sectio_partiales_nulli, _parare, NIHIL,
+        NIHIL, NIHIL },
+    { "schola", _sectio_schola, _parare, NIHIL, NIHIL, NIHIL },
+    { "fistula", _sectio_fistula, _parare, NIHIL, NIHIL, NIHIL },
+    { "nubes", _sectio_nubes, _parare, NIHIL, NIHIL, NIHIL },
+    { "genus_coercitum", _sectio_genus_coercitum, _parare, NIHIL,
         NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

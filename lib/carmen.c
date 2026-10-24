@@ -565,7 +565,7 @@ nomen structura {
                     f32  summa;
 } CampusInstrumenti;
 
-hic_manens constans CampusInstrumenti CAMPI[XV] = {
+hic_manens constans CampusInstrumenti CAMPI[XX] = {
     { "officium",    0.0f, 1.0f     },
     { "impetus",     0.0f, 60.0f    },
     { "lapsus",      0.0f, 60.0f    },
@@ -580,11 +580,19 @@ hic_manens constans CampusInstrumenti CAMPI[XV] = {
     { "ratio",       0.0f, 32.0f    },
     { "index",       0.0f, 50.0f    },
     { "genus",       0.0f, 0.0f     },   /* verbum */
-    { "forma",       0.0f, 0.0f     }    /* verbum */
+    { "forma",       0.0f, 0.0f     },   /* verbum */
+    { "vocalis",     0.0f, 4.0f     },   /* verbum aut numerus */
+    { "flatus",      0.0f, 1.0f     },
+    { "resonans",    0.0f, 20000.0f },
+    { "acumen",      0.0f, 20.0f    },
+    { "motus",     -48.0f, 48.0f    }
 };
 
-hic_manens constans character* GENERA[IV] = {
-    "unda", "chorda", "modulatio", "partiales"
+hic_manens constans character* GENERA[V] = {
+    "unda", "chorda", "modulatio", "partiales", "formantes"
+};
+hic_manens constans character* VOCALES[V] = {
+    "a", "e", "i", "o", "u"
 };
 hic_manens constans character* FORMAE[IV] = {
     "pulsus", "serra", "triangulum", "sinus"
@@ -596,7 +604,7 @@ _campus (
     TibiaParametra* p,
                i32  k)
 {
-    f32* campi[XV];
+    f32* campi[XX];
 
     campi[0]   = &p->officium;
     campi[1]   = &p->involucrum.impetus;
@@ -613,6 +621,11 @@ _campus (
     campi[12]  = &p->index;
     campi[13]  = &p->genus;
     campi[14]  = &p->forma;
+    campi[15]  = &p->vocalis;
+    campi[16]  = &p->flatus;
+    campi[17]  = &p->resonans;
+    campi[18]  = &p->acumen;
+    campi[19]  = &p->motus;
     redde campi[k];
 }
 
@@ -839,21 +852,28 @@ _instrumentum_legere (
             }
             perge;
         }
-        per (k = ZEPHYRUM; k < XV; k++)
+        per (k = ZEPHYRUM; k < XX; k++)
         {
             si (chorda_aequalis_literis(*t->titulus, CAMPI[k].titulus))
             {
                 frange;
             }
         }
-        si (k == XV)
+        si (k == XX)
         {
             redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
                 "instrumentum: attributum ignotum");
         }
-        si (k >= XIII)
+        /* vocalis: verbum (a e i o u) aut numerus infra */
+        w = k == XV ? _verbum(*t->valor, VOCALES, V) : -I;
+        si (w >= ZEPHYRUM)
         {
-            w = k == XIII ? _verbum(*t->valor, GENERA, IV)
+            *_campus(&x->parametra, k) = (f32)w;
+            perge;
+        }
+        si (k == XIII || k == XIV)
+        {
+            w = k == XIII ? _verbum(*t->valor, GENERA, V)
                           : _verbum(*t->valor, FORMAE, IV);
             si (w < ZEPHYRUM)
             {

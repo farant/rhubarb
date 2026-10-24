@@ -48,3 +48,17 @@ the same binary and machine (the suite runs a whole chain twice). `sin`,
 `exp`, `pow` come from libm, so goldens across machines may differ in
 the last bits (spec §VI-g) - goldens, when they come, compare with a
 tolerance or are regenerated per machine.
+
+## 2026-10-24 - SonusResonans (biquad, RBJ cookbook)
+
+Second-order filter next to the one-pole SonusColum: GRAVIA (low-pass), ACUTA
+(high-pass), MEDIA (band-pass, constant 0 dB peak - the formant shape). Coefficients
+computed in f64 (cos/sin of w0), stored f32, Direct Form I. Q = `acumen` (<= 0 ->
+0.70710678). Frequency <= 0 = exact pass-through (b0 1, rest 0); otherwise clamped to
+[1 Hz, 0.49 SR]: at w0 = pi the cookbook degenerates (sin w0 = 0, alpha = 0). ponere
+recomputes coefficients and keeps the four memory taps, so a sweep doesn't click (tibia
+sweeps every 32 samples).
+
+Tests are measured against the analytic RBJ values: |H(f0)| = Q for LP/HP (0.7071 at Q
+0.707, 10 at Q 10), BP 1 at f0 and 1/sqrt(1 + Q^2 (f/f0 - f0/f)^2) away (~0.053 at Q 5,
+f0/4 and 4 f0), impulse decays at 23 kHz Q 10, finite at 30 kHz (clamped).

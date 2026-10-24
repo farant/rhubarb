@@ -681,6 +681,78 @@ _sectio_partiales_vitia (
         " 4:1:0 5:1:0 6:1:0 7:1:0 8:1:0 9:1:0\"/>", causa));
 }
 
+/* formantes, flatus, colum resonans: genus verbum, vocalis verbum aut
+ * numerus, campi numerici, motus negativus licet */
+hic_manens constans character LIBER_FORMANTIUM[] =
+    "<carmina>"
+    "<instrumentum titulus=\"schola_u\" basis=\"schola\""
+    " vocalis=\"u\"/>"
+    "<instrumentum titulus=\"vox_media\" genus=\"formantes\""
+    " vocalis=\"1.5\" flatus=\"0.2\"/>"
+    "<instrumentum titulus=\"pad\" forma=\"serra\" resonans=\"800\""
+    " acumen=\"6\" motus=\"-12\"/>"
+    "<carmen titulus=\"a\"><pars titulus=\"p\" "
+    "instrumentum=\"schola_u\">"
+    "<frustum mensura=\"1\"><textus!>c4</textus></frustum></pars>"
+    "</carmen></carmina>";
+
+interior vacuum
+_sectio_formantes (
+    CredoContextus* c)
+{
+                        Carmina  liber;
+                constans Carmen* a;
+    constans CarmenInstrumentum* x;
+
+    CREDO_NECESSE (_legere(c, LIBER_FORMANTIUM, &liber));
+    a = carmina_invenire(&liber, _ch(c, "a"));
+    CREDO_NECESSE (a != NIHIL);
+    x = carmen_instrumentum(a, _ch(c, "schola_u"));
+    CREDO_NECESSE (x != NIHIL);
+    CREDO_VERUM (   x->parametra.genus == (f32)TIBIA_FORMANTES
+                 && x->parametra.vocalis == 4.0f
+                 && x->parametra.flatus
+                    == tibia_praeparatum("schola")->flatus);
+    x = carmen_instrumentum(a, _ch(c, "vox_media"));
+    CREDO_NECESSE (x != NIHIL);
+    CREDO_VERUM (   x->parametra.genus == (f32)TIBIA_FORMANTES
+                 && x->parametra.vocalis == 1.5f
+                 && x->parametra.flatus == 0.2f);
+    x = carmen_instrumentum(a, _ch(c, "pad"));
+    CREDO_NECESSE (x != NIHIL);
+    CREDO_VERUM (   x->parametra.resonans == 800.0f
+                 && x->parametra.acumen == 6.0f
+                 && x->parametra.motus == -12.0f
+                 && x->parametra.forma == (f32)SONUS_UNDA_SERRA);
+}
+
+interior vacuum
+_sectio_formantes_vitia (
+    CredoContextus* c)
+{
+    constans character* causa =
+        "instrumentum: valor malus aut extra fines";
+
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" vocalis=\"y\"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" vocalis=\"5\"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" vocalis=\"-1\"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" flatus=\"1.5\"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" resonans=\"30000\"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" acumen=\"21\"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" motus=\"-49\"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" motus=\"49\"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" genus=\"vox\"/>", causa));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "legere", _sectio_legere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia", _sectio_vitia, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -692,6 +764,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "partiales", _sectio_partiales, NIHIL, NIHIL, NIHIL, NIHIL },
     { "partiales_vitia", _sectio_partiales_vitia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "formantes", _sectio_formantes, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "formantes_vitia", _sectio_formantes_vitia, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

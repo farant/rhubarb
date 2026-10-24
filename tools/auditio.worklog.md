@@ -118,3 +118,7 @@ instrument with genus="partiales" printed "(unda)". The demo book showed it, but
 covers it. Fixed inline. The genus-word table now exists twice (lib/carmen.c GENERA,
 here) - a tibia_generis_titulus() in tibia.h would make one home (proposal to Fran,
 header change).
+
+## 2026-10-24 - genus formantes in -carmina
+
+One more branch in the instrumenta line (TIBIA_FORMANTES -> "formantes"). The duplicated genus-word table is still pending Fran (see the entry above).

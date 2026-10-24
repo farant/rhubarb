@@ -196,6 +196,47 @@ sonus_colum_proximum (
 
 
 /* ================================================================
+ * RESONANS - colum ordinis secundi (biquad, RBJ): gravia, acuta,
+ * media; acumen = Q (0.707 planum, magnum = resonantia acuta)
+ * ================================================================ */
+
+nomen enumeratio {
+    SONUS_RESONANS_GRAVIA = 0,  /* low-pass; apex +20 log10(Q) dB
+                                 * ad limitem */
+    SONUS_RESONANS_ACUTA,       /* high-pass */
+    SONUS_RESONANS_MEDIA        /* band-pass, apex 0 dB ad medium
+                                 * (formans) */
+} SonusGenusResonantis;
+
+nomen structura {
+    SonusGenusResonantis genus;
+                     f32 b0, b1, b2, a1, a2;   /* a0 = 1 */
+                     f32 x1, x2, y1, y2;       /* memoria */
+} SonusResonans;
+
+/* frequentia (cycli/s; <= 0 = transit), acumen (<= 0 = 0.707).
+ * Memoria reponitur */
+vacuum
+sonus_resonans_parare (
+           SonusResonans* c,
+    SonusGenusResonantis  genus,
+                     f32  frequentia,
+                     f32  acumen);
+
+/* coefficientes novi SINE memoria reposita (verrere sine crepitu) */
+vacuum
+sonus_resonans_ponere (
+    SonusResonans* c,
+              f32  frequentia,
+              f32  acumen);
+
+f32
+sonus_resonans_proximum (
+    SonusResonans* c,
+              f32  x);
+
+
+/* ================================================================
  * RETENTIO et COMMINUTIO - asperitas digitalis ('8-bit' ut parametra)
  * ================================================================ */
 

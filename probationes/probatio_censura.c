@@ -149,6 +149,18 @@ _sectio_ordinaria (
         &summa));
     CREDO_AEQUALIS_I32 (infima, LXXIX);
     CREDO_AEQUALIS_I32 (summa, CVIII);
+    CREDO_VERUM (censura_ambitus_ordinarius(NIHIL,
+        chorda_ex_literis("schola", c->piscina), &infima, &summa));
+    CREDO_AEQUALIS_I32 (infima, XLVIII);
+    CREDO_AEQUALIS_I32 (summa, LXXIV);
+    CREDO_VERUM (censura_ambitus_ordinarius(NIHIL,
+        chorda_ex_literis("fistula", c->piscina), &infima, &summa));
+    CREDO_AEQUALIS_I32 (infima, LX);
+    CREDO_AEQUALIS_I32 (summa, XCVI);
+    CREDO_VERUM (censura_ambitus_ordinarius(NIHIL,
+        chorda_ex_literis("nubes", c->piscina), &infima, &summa));
+    CREDO_AEQUALIS_I32 (infima, XXXVI);
+    CREDO_AEQUALIS_I32 (summa, LXXXIV);
     CREDO_FALSUM (censura_ambitus_ordinarius(NIHIL,
         chorda_ex_literis("meum", c->piscina), &infima, &summa));
     /* ambitus instrumenti libri: B3 extra 60..72, C4 intra;

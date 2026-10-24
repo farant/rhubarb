@@ -106,6 +106,39 @@ _passus (
      * UNDA: frequentia per circumvolutiones in secundo uno
      * ================================================== */
 
+/* amplitudo stabilis sinus 'frequentia' per colum resonantem (ut
+ * _amplitudo_per_colum) */
+interior f32
+_amplitudo_per_resonantem (
+    SonusGenusResonantis genus,
+                     f32 limes,
+                     f32 acumen,
+                     f32 frequentia)
+{
+        SonusUnda u;
+    SonusResonans r;
+              i32 k;
+              f32 maximum = 0.0f;
+
+    sonus_unda_parare(&u, SONUS_UNDA_SINUS, ZEPHYRUM);
+    sonus_unda_frequentiam_ponere(&u, frequentia);
+    sonus_resonans_parare(&r, genus, limes, acumen);
+    per (k = ZEPHYRUM; k < SONUS_FREQUENTIA; k++)
+    {
+        f32 y = sonus_resonans_proximum(&r, sonus_unda_proximum(&u));
+
+        si (y < 0.0f)
+        {
+            y = -y;
+        }
+        si (k >= SONUS_FREQUENTIA / II && y > maximum)
+        {
+            maximum = y;
+        }
+    }
+    redde maximum;
+}
+
 interior vacuum
 _sectio_frequentia (
     CredoContextus* c)
@@ -478,6 +511,94 @@ _sectio_colum (
 
 
     /* ==================================================
+     * RESONANS - RBJ: |H(f0)| = Q (gravia, acuta), 1 (media);
+     * media |H| = 1 / sqrt(1 + Q^2 (f/f0 - f0/f)^2) (Q 5, f0/4 ->
+     * ~0.053)
+     * ================================================== */
+
+interior vacuum
+_sectio_resonans (
+    CredoContextus* c)
+{
+    SonusResonans r;
+              f32 memoria[IV];
+              f32 y;
+              i32 k;
+              b32 finita = VERUM;
+
+    (vacuum)c;
+    CREDO_GRADUS ("gravia: planum, -3 dB, resonantia, declivitas");
+    CREDO_VERUM (_amplitudo_per_resonantem(SONUS_RESONANS_GRAVIA,
+        1000.0f, 0.7071f, 100.0f) > 0.99f);
+    CREDO_F32_PROXIMUS (_amplitudo_per_resonantem(SONUS_RESONANS_GRAVIA,
+        1000.0f, 0.7071f, 1000.0f), 0.7071f, 0.01f);
+    CREDO_F32_PROXIMUS (_amplitudo_per_resonantem(SONUS_RESONANS_GRAVIA,
+        1000.0f, 10.0f, 1000.0f), 10.0f, 0.15f);
+    CREDO_VERUM (_amplitudo_per_resonantem(SONUS_RESONANS_GRAVIA,
+        1000.0f, 0.7071f, 10000.0f) < 0.02f);
+    /* acumen 0 = 0.707 */
+    CREDO_F32_PROXIMUS (_amplitudo_per_resonantem(SONUS_RESONANS_GRAVIA,
+        1000.0f, 0.0f, 1000.0f), 0.7071f, 0.01f);
+
+    CREDO_GRADUS ("acuta: speculum gravium");
+    CREDO_VERUM (_amplitudo_per_resonantem(SONUS_RESONANS_ACUTA,
+        1000.0f, 0.7071f, 100.0f) < 0.02f);
+    CREDO_F32_PROXIMUS (_amplitudo_per_resonantem(SONUS_RESONANS_ACUTA,
+        1000.0f, 0.7071f, 1000.0f), 0.7071f, 0.01f);
+    CREDO_VERUM (_amplitudo_per_resonantem(SONUS_RESONANS_ACUTA,
+        1000.0f, 0.7071f, 10000.0f) > 0.98f);
+
+    CREDO_GRADUS ("media: 0 dB ad medium, procul attenuata");
+    CREDO_F32_PROXIMUS (_amplitudo_per_resonantem(SONUS_RESONANS_MEDIA,
+        1000.0f, 5.0f, 1000.0f), 1.0f, 0.01f);
+    CREDO_VERUM (_amplitudo_per_resonantem(SONUS_RESONANS_MEDIA,
+        1000.0f, 5.0f, 250.0f) < 0.07f);
+    CREDO_VERUM (_amplitudo_per_resonantem(SONUS_RESONANS_MEDIA,
+        1000.0f, 5.0f, 4000.0f) < 0.07f);
+
+    CREDO_GRADUS ("frequentia 0 = transit, octetim");
+    sonus_resonans_parare(&r, SONUS_RESONANS_GRAVIA, 0.0f, 4.0f);
+    CREDO_F32_PROXIMUS (sonus_resonans_proximum(&r, 0.3f), 0.3f, 0.0f);
+    CREDO_F32_PROXIMUS (sonus_resonans_proximum(&r, -0.7f), -0.7f,
+        0.0f);
+
+    CREDO_GRADUS ("prope Nyquist et supra: stabile, impulsus decidit");
+    sonus_resonans_parare(&r, SONUS_RESONANS_GRAVIA, 23000.0f, 10.0f);
+    y = sonus_resonans_proximum(&r, 1.0f);
+    per (k = ZEPHYRUM; k < SONUS_FREQUENTIA; k++)
+    {
+        y       = sonus_resonans_proximum(&r, 0.0f);
+        finita  = finita && y == y && y < 100.0f && y > -100.0f;
+    }
+    CREDO_VERUM (finita);
+    CREDO_VERUM (y < 1.0e-6f && y > -1.0e-6f);
+    sonus_resonans_parare(&r, SONUS_RESONANS_MEDIA, 30000.0f, 10.0f);
+    per (k = ZEPHYRUM; k < M; k++)
+    {
+        y       = sonus_resonans_proximum(&r, k == ZEPHYRUM ? 1.0f
+                                                         : 0.0f);
+        finita  = finita && y == y && y < 100.0f && y > -100.0f;
+    }
+    CREDO_VERUM (finita);
+
+    CREDO_GRADUS ("ponere memoriam servat");
+    sonus_resonans_parare(&r, SONUS_RESONANS_GRAVIA, 1000.0f, 2.0f);
+    per (k = ZEPHYRUM; k < C; k++)
+    {
+        (vacuum)sonus_resonans_proximum(&r, k % II ? 1.0f : 0.5f);
+    }
+    memoria[0] = r.x1;
+    memoria[1] = r.x2;
+    memoria[2] = r.y1;
+    memoria[3] = r.y2;
+    CREDO_VERUM (memoria[2] > 0.5f);
+    sonus_resonans_ponere(&r, 2000.0f, 4.0f);
+    CREDO_VERUM (   r.x1 == memoria[0] && r.x2 == memoria[1]
+                 && r.y1 == memoria[2] && r.y2 == memoria[3]);
+}
+
+
+    /* ==================================================
      * RETENTIO et COMMINUTIO
      * ================================================== */
 
@@ -639,6 +760,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "involucrum", _sectio_involucrum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "repercussio", _sectio_repercussio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "colum", _sectio_colum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "resonans", _sectio_resonans, NIHIL, NIHIL, NIHIL, NIHIL },
     { "asperitas", _sectio_asperitas, NIHIL, NIHIL, NIHIL, NIHIL },
     { "altitudo", _sectio_altitudo, NIHIL, NIHIL, NIHIL, NIHIL },
     { "determinismus", _sectio_determinismus, NIHIL, NIHIL, NIHIL,

@@ -92,3 +92,35 @@ dec 1.5/.8/.4/.2}. Tests: single-bin DFT on 110 whole cycles (organum ratios to 
 nothing at 1.5f), marimba overtone dies faster + fundamental at 1/e after its decay
 (+-20%), glockenspiel C8 bounded with nothing at the alias 48k - 8.93f, fallback = pure
 sine. Organum joins the theremin cycle (sustains; marimba and glockenspiel decay).
+
+## 2026-10-24 - genus FORMANTES (schola), flatus, colum resonans (fistula, nubes)
+
+FORMANTES = the unda (saw by default) into 5 band-pass SonusResonans in parallel, gains
+from the Csound "Formant Values" tenor table (a e i o u: F, dB, bandwidth; Q = F/BW).
+`vocalis` 0..4, a fraction lerps F, dB and BW between neighbours. The formants don't
+follow the note (that is what makes it a vowel). Makeup gain TIBIA_FORMANTIUM_LUCRUM 2.4
+measured with a probe (build/plantae_r/sonda.c): unity left RMS ~0.1 x amplitudo; 2.4
+gives ~0.23 and peak < 1.2 x amplitudo C3..D5 (D5 is loudest - harmonic 2 at 1174 Hz
+sits on F2).
+
+TEST LESSON: "fraction of energy above 1 kHz" is NOT monotone in vocalis between o and
+u. Harmonics of a fixed pitch fall into or out of narrow formant bands as the formants
+move (at A3 the o/u midpoint F3 = 2650 Hz sits almost exactly on harmonic 12 = 2640).
+The interpolation test compares the voice's F2 filter with one built at the midpoint
+(700 Hz, Q 10, -15 dB) instead.
+
+flatus (all genera): seeded RNG noise (seed from note, like CHORDA) through a band-pass
+at the note (Q 2), gain chosen so its RMS equals a sine's: noise-equivalent bandwidth of
+a 2-pole BP = pi/2 x f/Q, so G = (1/sqrt2) / ((1/sqrt3) sqrt(pi BW / SR)). Mixed (1 -
+flatus) x + flatus x noise BEFORE the envelope. Filter follows the current note every
+32 samples (glissando).
+
+colum resonans (all genera): GRAVIA biquad AFTER the envelope, cutoff = resonans x
+2^(motus x env / 12), updated every 32 samples from the previous sample's envelope
+value. nubes = saw, 0.8 s attack, 400 Hz Q 4, motus 24 (400 -> 1600 Hz over the swell);
+amplitudo 0.25 because Q 4 gives peak ~2.3 x amplitudo.
+
+All three are skipped entirely when 0 (flatus, resonans), so the old presets stay
+byte-identical (vetera FNV). Voice keeps copies of flatus/resonans/acumen/motus, plus
+lucrum_flatus and involucrum_ultimum - two more fields than the approved header (told
+Fran). schola joins the theremin cycle.
