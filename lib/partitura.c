@@ -637,12 +637,20 @@ _mensurae (
     redde m;
 }
 
-interior b32
-_additam_habet (
+/* lineae additae validae (ordine, ad primam sine titulo) */
+interior i32
+_additae (
     constans PartituraForma* forma)
 {
-    redde forma != NIHIL && forma->addita != NIHIL
-        && forma->additae_titulus != NIHIL;
+    i32 n = ZEPHYRUM;
+
+    dum (   forma                      != NIHIL && n < PARTITURA_ADDITAE
+         && forma->additae[n].titulus  != NIHIL
+         && forma->additae[n].scribere != NIHIL)
+    {
+        n++;
+    }
+    redde n;
 }
 
 interior b32
@@ -698,10 +706,12 @@ partitura_scribere (
             }
         }
     }
-    si (   _additam_habet(forma)
-        && (i32)strlen(forma->additae_titulus) > latitudo)
+    per (i = ZEPHYRUM; i < _additae(forma); i++)
     {
-        latitudo = (i32)strlen(forma->additae_titulus);
+        si ((i32)strlen(forma->additae[i].titulus) > latitudo)
+        {
+            latitudo = (i32)strlen(forma->additae[i].titulus);
+        }
     }
     si (   inventae == ZEPHYRUM && forma != NIHIL
         && forma->pars.mensura > ZEPHYRUM)
@@ -770,15 +780,16 @@ partitura_scribere (
             _partem_scribere(&s, carmen, p, initium, finis);
             _character(&s, '\n');
         }
-        si (_additam_habet(forma))
+        per (i = ZEPHYRUM; i < _additae(forma); i++)
         {
+            constans PartituraAddita* d = &forma->additae[i];
+
             _litterae(&s, "  ");
-            _litterae(&s, forma->additae_titulus);
+            _litterae(&s, d->titulus);
             s.bene = chorda_aedificator_appendere_repetita(textus, ' ',
-                latitudo - (i32)strlen(forma->additae_titulus) + II)
+                latitudo - (i32)strlen(d->titulus) + II) && s.bene;
+            s.bene = d->scribere(d->ctx, carmen, initium, finis, textus)
                 && s.bene;
-            s.bene = forma->addita(forma->additae_ctx, carmen, initium,
-                finis, textus) && s.bene;
             _character(&s, '\n');
         }
     }

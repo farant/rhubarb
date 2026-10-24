@@ -368,11 +368,11 @@ _sectio_linea (
         "C:4. G:4.");
     /* in partitura per lineam additam */
     memset(&f, ZEPHYRUM, magnitudo(f));
-    f.prima            = I;
-    f.ultima           = I;
-    f.additae_titulus  = "harmonia";
-    f.addita           = harmonia_lineam_scribere;
-    a                  = chorda_aedificator_creare(c->piscina, CCLVI);
+    f.prima = I;
+    f.ultima = I;
+    f.additae[ZEPHYRUM].titulus = "harmonia";
+    f.additae[ZEPHYRUM].scribere = harmonia_lineam_scribere;
+    a = chorda_aedificator_creare(c->piscina, CCLVI);
     CREDO_NECESSE (a != NIHIL && partitura_scribere(k, &f, a));
     CREDO_CHORDA_CONTINET (chorda_aedificator_finire(a),
         chorda_ex_literis("\n  harmonia  C/E:2 D:2\n", c->piscina));

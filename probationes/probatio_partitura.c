@@ -444,9 +444,9 @@ _sectio_addita (
      PartituraForma  f;
 
     CREDO_NECESSE (k != NIHIL);
-    f                  = _forma(c, II, III, NIHIL);
-    f.additae_titulus  = "analysis";
-    f.addita           = _addita;
+    f                             = _forma(c, II, III, NIHIL);
+    f.additae[ZEPHYRUM].titulus   = "analysis";
+    f.additae[ZEPHYRUM].scribere  = _addita;
     CREDO_CHORDA_AEQUALIS_LITERIS (_scribere(c, k, &f),
         "carmen t: c maior, 4/4, 120\n"
         "  pars x: aether, lucrum 1.00\n"
@@ -459,6 +459,22 @@ _sectio_addita (
         "  x         E4:1\n"
         "  yy        E2:1\n"
         "  analysis  [7680,11520)\n");
+    /* lineae duae ordine; columna ad titulum longissimum; titulus
+     * NIHIL finit (tertia cum scriptore sed sine titulo omittitur) */
+    f.additae[I].titulus     = "analysis_altera";
+    f.additae[I].scribere    = _addita;
+    f.additae[III].titulus   = "nunquam";
+    f.additae[III].scribere  = _addita;
+    f.ultima                 = II;
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scribere(c, k, &f),
+        "carmen t: c maior, 4/4, 120\n"
+        "  pars x: aether, lucrum 1.00\n"
+        "  pars yy: triangulum, lucrum 0.50\n"
+        "mensura 2\n"
+        "  x                D4:1\n"
+        "  yy               D2:1\n"
+        "  analysis         [3840,7680)\n"
+        "  analysis_altera  [3840,7680)\n");
 }
 
 /* nota scripta (partitura_notam_scribere); mensura 0 si FALSUM */

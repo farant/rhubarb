@@ -858,8 +858,8 @@ _partituram_scribere (
     memset(&forma, ZEPHYRUM, magnitudo(forma));
     si (harmonia)
     {
-        forma.additae_titulus  = "harmonia";
-        forma.addita           = harmonia_lineam_scribere;
+        forma.additae[ZEPHYRUM].titulus   = "harmonia";
+        forma.additae[ZEPHYRUM].scribere  = harmonia_lineam_scribere;
     }
     si (explicare)
     {
@@ -868,9 +868,9 @@ _partituram_scribere (
             fprintf(stderr, "auditio: explicatio: memoria deest\n");
             redde FALSUM;
         }
-        forma.additae_titulus  = "explicatio";
-        forma.addita           = explicatio_lineam_scribere;
-        forma.additae_ctx      = &e;
+        forma.additae[ZEPHYRUM].titulus   = "explicatio";
+        forma.additae[ZEPHYRUM].scribere  = explicatio_lineam_scribere;
+        forma.additae[ZEPHYRUM].ctx       = &e;
     }
     forma.prima         = prima;
     forma.ultima        = ultima;

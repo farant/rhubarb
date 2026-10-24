@@ -49,3 +49,13 @@ Accepts lowercase letters for agents ("g2", "bb4" = Bb4); accidentals not mixed 
 refused); one octave digit with optional '-' (C-1 = 0, C10 refused); 0..127. Double
 accidentals are READ (C##3) - it is emendatio, not the reader, that refuses them because
 MML writes only one.
+
+## 2026-10-23 - lineae additae: list (PartituraAddita[PARTITURA_ADDITAE])
+
+The single extra line (additae_titulus / addita / additae_ctx) became a short ordered list
+of {titulus, scribere, ctx}, so analysis lines stack (explicatio + functio, plus harmonia
+if wanted). The list ends at the first entry without titulus or scribere - callers memset
+the forma (all 7 did); the title column widens to the longest title. All callers migrated
+in one commit (harmonia/explicatio docs, recensio, auditio, three suites); output
+byte-identical. Plants 3/3 red ('dum' -> 'si' = one line only; width ignoring the extra
+titles; ctx not passed - caught by the explicatio suite, which is the one that uses ctx).

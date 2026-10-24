@@ -165,13 +165,13 @@ _linea (
                   i32  i;
 
     memset(&f, ZEPHYRUM, magnitudo(f));
-    f.prima            = mensura;
-    f.ultima           = mensura;
-    f.additae_titulus  = "explicatio";
-    f.addita           = explicatio_lineam_scribere;
-    f.additae_ctx      = e;
-    t.datum            = NIHIL;
-    t.mensura          = ZEPHYRUM;
+    f.prima                       = mensura;
+    f.ultima                      = mensura;
+    f.additae[ZEPHYRUM].titulus   = "explicatio";
+    f.additae[ZEPHYRUM].scribere  = explicatio_lineam_scribere;
+    f.additae[ZEPHYRUM].ctx       = e;
+    t.datum                       = NIHIL;
+    t.mensura                     = ZEPHYRUM;
     si (a == NIHIL || !partitura_scribere(k, &f, a))
     {
         redde t;

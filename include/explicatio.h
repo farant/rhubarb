@@ -103,7 +103,8 @@ constans character*
 explicatio_titulus (
     ExplicatioGenus genus);
 
-/* linea addita partiturae (PartituraForma.addita, ctx = Explicatio*):
+/* linea addita partiturae (PartituraAddita.scribere, ctx =
+ * Explicatio*):
  * per fenestram "C7:2. (A tr.)" - notae alienae abbreviatae, '*'
  * implicitum, '!' non resoluta */
 b32
