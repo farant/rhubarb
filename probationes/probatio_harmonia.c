@@ -436,12 +436,82 @@ _sectio_sine_tertia (
     }
 }
 
+/* orthographia auctoris: C#+E in D minor = C#m(3) (non Dbm); d- + f
+ * scripta = Db(3); linea acordorum eadem */
+interior chorda
+_ad_initium (
+     CredoContextus* c,
+    constans Carmen* k)
+{
+     ChordaAedificator* a = chorda_aedificator_creare(c->piscina, LXIV);
+              Harmonia  h = harmonia_ad_pulsum(k, ZEPHYRUM);
+                chorda  vacua;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    si (a == NIHIL || !harmonia_scribere(k, &h, ZEPHYRUM, a))
+    {
+        redde vacua;
+    }
+    redde chorda_aedificator_finire(a);
+}
+
+interior vacuum
+_sectio_orthographia (
+    CredoContextus* c)
+{
+    constans Carmen* acuta = _carmen(c,
+        "<carmina><carmen titulus=\"x\" clavis=\"d minor\">"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 c#1</textus></frustum></pars>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 e1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    constans Carmen* mollis = _carmen(c,
+        "<carmina><carmen titulus=\"x\" clavis=\"d minor\">"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 d-1</textus></frustum></pars>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 f1</textus></frustum></pars>"
+        "</carmen></carmina>");
+
+    /* G# non sensibilis D minoris: solum littera scripta G# dat (regula
+     * clavis Ab daret); prima littera vincit (c# ante d-) */
+    constans Carmen* extranea = _carmen(c,
+        "<carmina><carmen titulus=\"x\" clavis=\"d minor\">"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 g#1</textus></frustum></pars>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 b1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    constans Carmen* prima = _carmen(c,
+        "<carmina><carmen titulus=\"x\" clavis=\"d minor\">"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 c#1</textus></frustum></pars>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o5 d-1</textus></frustum></pars>"
+        "<pars titulus=\"d\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 e1</textus></frustum></pars>"
+        "</carmen></carmina>");
+
+    CREDO_NECESSE (acuta != NIHIL && mollis != NIHIL);
+    CREDO_NECESSE (extranea != NIHIL && prima != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_ad_initium(c, extranea), "G#m(3)");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_ad_initium(c, prima), "C#m(3)");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_ad_initium(c, acuta), "C#m(3)");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_ad_initium(c, mollis), "Db(3)");
+    CREDO_CHORDA_INCIPIT (_linea(c, acuta, ZEPHYRUM, acuta->pulsus),
+        chorda_ex_literis("C#m(3)", c->piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "exemplaria", _sectio_exemplaria, NIHIL, NIHIL, NIHIL, NIHIL },
     { "radices", _sectio_radices, NIHIL, NIHIL, NIHIL, NIHIL },
     { "nomina", _sectio_nomina, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sonantes", _sectio_sonantes, NIHIL, NIHIL, NIHIL, NIHIL },
     { "linea", _sectio_linea, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "orthographia", _sectio_orthographia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "sine_tertia", _sectio_sine_tertia, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

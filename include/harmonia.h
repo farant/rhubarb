@@ -66,6 +66,9 @@ nomen structura {
               i32 radix;     /* classis 0..11 (C = 0) */
               i32 bassus;    /* classis notae imae */
               i32 classes;   /* XII bits: 1 << classis */
+        character litterae[XII];  /* littera scripta per classem ('\0' =
+                                   * nulla): orthographia auctoris nomen
+                                   * acordi regit (C#m, non Dbm) */
 } Harmonia;
 
 /* purum: classes (bits) et bassus (classis notae imae) -> acordum */
@@ -73,6 +76,12 @@ Harmonia
 harmonia_ex_classibus (
     i32 classes,
     i32 bassus);
+
+/* littera notae in classem eius (prima vincit; '\0' ignoratur) */
+vacuum
+harmonia_litteram_notare (
+               Harmonia* h,
+    constans CarmenNota* nota);
 
 /* acordum sine tertia: classes (bits) congruunt exemplari cuius tertia
  * abest - {0} classis una, {0,7} quinta, {0,7,10} septima, {0,7,11}

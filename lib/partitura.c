@@ -144,6 +144,27 @@ partitura_orthographia (
             redde _notam_facere(n, g, _signatura(q, g));
         }
     }
+    /* sensibilis (gradus VII elevatus): littera sub finalis, ut C# in D
+     * minor (non Db) - finalis: quinta quaeque IV litteras promovet,
+     * minor VI gradus supra maiorem relativam */
+    {
+         constans CarmenClavis* k = _clavis(carmen, pulsus);
+                           i32  t = (i32)_modulus(q * IV
+                                   + (k->minor ? V : ZEPHYRUM), VII);
+                           s32 finalis = _modulus((s32)SEMITONIA[t]
+                                   + _signatura(q, t), XII);
+                           i32 l = (t + VI) % VII;
+
+        si (_modulus(finalis - I, XII) == classis)
+        {
+            a = _modulus(classis - SEMITONIA[l], XII);
+            a = a > VI ? a - XII : a;
+            si (a >= -II && a <= II)
+            {
+                redde _notam_facere(n, l, a);
+            }
+        }
+    }
     /* extra scalam: naturalis, aliter '#' (sine b) aut 'b' */
     per (g = ZEPHYRUM; g < VII; g++)
     {

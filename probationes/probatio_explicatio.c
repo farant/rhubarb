@@ -314,7 +314,9 @@ _sectio_acorda (
     CREDO_CHORDA_AEQUALIS_LITERIS (_acordum(c, k, e, ZEPHYRUM),
         "E7/G#");
     CREDO_VERUM (e->fenestrae[ZEPHYRUM].implicitum);
-    k = _tres(c, "4/4", "bb maior", "o2 g#1", "-", "o5 d1");
+    /* bassus ut A- scriptus (littera auctoris vincit; radix implicita
+     * Bb ex clave) */
+    k = _tres(c, "4/4", "bb maior", "o2 a-1", "-", "o5 d1");
     e = _explicare(c, k);
     CREDO_NECESSE (e != NIHIL);
     CREDO_CHORDA_AEQUALIS_LITERIS (_acordum(c, k, e, ZEPHYRUM),
@@ -458,6 +460,18 @@ _sectio_linea (
     CREDO_NECESSE (e != NIHIL);
     CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I),
         "C7:2. (A5 tr.)");
+    /* orthographia auctoris in fenestra: C#+E in D minor = C#m(3) */
+    k = _tres(c, "4/4", "d minor", "o4 c#1", "-", "o4 e1");
+    e = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("C#m(3)", c->piscina));
+    /* G#+B: G# non sensibilis - solum littera scripta */
+    k = _tres(c, "4/4", "d minor", "o4 g#1", "-", "o4 b1");
+    e = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("G#m(3)", c->piscina));
     /* implicita, septima sine resolutione */
     k = _tres(c, "4/4", "a minor", "o2 g#1", "-", "o5 d1");
     e = _explicare(c, k);

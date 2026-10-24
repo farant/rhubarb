@@ -639,9 +639,34 @@ _sectio_lectio (
     }
 }
 
+/* sine littera: sensibilis clavis minoris = gradus VII elevatus (C# in
+ * D minor, non Db); chroma aliud regulam priorem servat (Eb) */
+interior vacuum
+_sectio_sensibilis (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"x\" clavis=\"d minor\">"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>c</textus></frustum></pars>"
+        "</carmen></carmina>");
+       CarmenNota n;
+    PartituraNota o;
+
+    CREDO_NECESSE (k != NIHIL);
+    memset(&n, ZEPHYRUM, magnitudo(n));
+    n.nota  = LXI;
+    o       = partitura_orthographia(k, &n, ZEPHYRUM);
+    CREDO_VERUM (_aequat(&o, 'C', I, IV));
+    n.nota  = LXIII;
+    o       = partitura_orthographia(k, &n, ZEPHYRUM);
+    CREDO_VERUM (_aequat(&o, 'E', -I, IV));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "orthographia", _sectio_orthographia, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "sensibilis", _sectio_sensibilis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "valores", _sectio_valores, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ligaturae", _sectio_ligaturae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "simul", _sectio_simul, NIHIL, NIHIL, NIHIL, NIHIL },

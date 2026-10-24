@@ -59,3 +59,11 @@ the forma (all 7 did); the title column widens to the longest title. All callers
 in one commit (harmonia/explicatio docs, recensio, auditio, three suites); output
 byte-identical. Plants 3/3 red ('dum' -> 'si' = one line only; width ignoring the extra
 titles; ctx not passed - caught by the explicatio suite, which is the one that uses ctx).
+
+## 2026-10-24 - leading tone spelled as the raised 7th when no letter is written
+
+partitura_orthographia, after the in-scale lookup and before the natural/sharp/flat
+fallback: the class a semitone under the tonic is spelled on the letter under the tonic
+(C# in D minor, F# in G minor - not Db / Gb). Tonic letter = q*4 (+5 in minor) mod 7, one
+fifth = 4 letters. It matters for classes nobody wrote (implied chord tones in
+explicatio); written letters still come first.

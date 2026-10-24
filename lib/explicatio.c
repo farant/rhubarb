@@ -368,6 +368,22 @@ _sonans (
     redde !p->mutus && (!solus || p->solus);
 }
 
+/* litterae notarum fenestrae in acordum (orthographia auctoris) */
+interior vacuum
+_litteras_ponere (
+                          Harmonia* h,
+      constans ExplicatioSegmentum* segmenta,
+                               i32  primum,
+                               i32  numerus)
+{
+    i32 i;
+
+    per (i = primum; i < primum + numerus; i++)
+    {
+        harmonia_litteram_notare(h, segmenta[i].nota);
+    }
+}
+
 /* acordum fenestrae: remotio minima candidatarum */
 interior vacuum
 _acordum (
@@ -412,6 +428,7 @@ _acordum (
     {
         f->harmonia  = electa;
         a->septima   = -I;
+        _litteras_ponere(&f->harmonia, segmenta, primum, numerus);
         redde;
     }
     /* subsets ordine magnitudinis; prima magnitudo cum nomine vincit */
@@ -469,12 +486,14 @@ _acordum (
         f->harmonia  = electa;
         a->classes   = classes & ~optimum;
         a->septima   = _septima(&electa);
+        _litteras_ponere(&f->harmonia, segmenta, primum, numerus);
         redde;
     }
     /* ignotum: classes praeter bassum alienae */
     f->harmonia  = harmonia_ex_classibus(classes, bassus);
     a->classes   = _bit(bassus);
     a->septima   = -I;
+    _litteras_ponere(&f->harmonia, segmenta, primum, numerus);
 }
 
 /* bassus transiens: nota infima fenestrae gradu intrat et exit,
@@ -760,6 +779,8 @@ explicatio_carminis (
             fenestrae[nf].harmonia.genus    = HARMONIA_NULLA;
             fenestrae[nf].harmonia.radix    = infimae[i];
             fenestrae[nf].harmonia.classes  = ZEPHYRUM;
+            memset(fenestrae[nf].harmonia.litterae, ZEPHYRUM,
+                   magnitudo(fenestrae[nf].harmonia.litterae));
             fenestrae[nf].implicitum        = FALSUM;
             nf++;
         }

@@ -35,3 +35,24 @@ Pure predicate for censura 'tertia' (and later the DAW pane): classes match {0},
 ## 2026-10-23 - interior `_tempus` removed
 
 Uses carmen_tempus_mensurae (carmen.h) - the rule is shared with censura and emendatio.
+
+## 2026-10-24 - chord names spelled as the composer wrote (desideratum ...FP9CJ)
+
+_classem_scribere used to spell a pitch class with NO letter, so for out-of-scale classes
+partitura_orthographia fell back to "flat key -> flat": C#+E in D minor printed Dbm(3),
+though the cembalo wrote c#. Harmonia now carries litterae[XII] (the written letter per
+class, first one wins; ex_classibus clears it). harmonia_ad_pulsum and explicatio's
+windows record the letters of the notes they used (harmonia_litteram_notare), and
+_classem_scribere passes the letter into partitura_orthographia, which honours a
+written letter. A written d- stays Db.
+
+Test lesson: C# in D minor is ALSO the leading tone, so the new partitura fallback alone
+already spells it right - dropping the letters would still pass the C#m test. The
+G#+B in D minor case (G# is not the leading tone; the key rule says Ab) is the one that
+proves the letters arrive. The explicatio fixture for implied Bb7 in Bb major wrote its
+bass g# (copied from the A minor case); with letters winning it read Bb7/G#, so the
+fixture now writes a- and keeps "Bb7/Ab".
+
+Six house songs: analysis output (-harmonia -explicatio -functio) byte-identical before
+and after - none had a wrong spelling (completorium's Dbm bar was written out in the bass
+rewrite).

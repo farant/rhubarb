@@ -8,6 +8,7 @@
 
 #include "harmonia.h"
 #include "partitura.h"
+#include <string.h>
 
 nomen structura {
     HarmoniaGenus genus;
@@ -101,6 +102,7 @@ harmonia_ex_classibus (
          s32 electum = -I;
          i32 r;
 
+    memset(h.litterae, ZEPHYRUM, magnitudo(h.litterae));
     h.classes  = classes & 0xFFF;
     h.bassus   = bassus;
     h.radix    = bassus;
@@ -182,13 +184,16 @@ harmonia_ad_pulsum (
     constans Carmen* carmen,
                 s64  pulsus)
 {
-    i32 classes  = ZEPHYRUM;
-    i32 infima   = CXXVIII;
-    b32 solus    = FALSUM;
-    i32 i;
-    i32 f;
-    i32 j;
+         i32 classes  = ZEPHYRUM;
+         i32 infima   = CXXVIII;
+         b32 solus    = FALSUM;
+         i32 i;
+         i32 f;
+         i32 j;
+    Harmonia h;
+    Harmonia litterae;   /* solum litterae notarum sonantium */
 
+    memset(litterae.litterae, ZEPHYRUM, magnitudo(litterae.litterae));
     per (i = ZEPHYRUM; i < carmen->numerus_partium; i++)
     {
         solus = solus || carmen->partes[i].solus;
@@ -216,6 +221,7 @@ harmonia_ad_pulsum (
                     perge;
                 }
                 classes |= _bit(n->nota % XII);
+                harmonia_litteram_notare(&litterae, n);
                 si (n->nota < infima)
                 {
                     infima = n->nota;
@@ -223,14 +229,17 @@ harmonia_ad_pulsum (
             }
         }
     }
-    redde harmonia_ex_classibus(classes,
+    h = harmonia_ex_classibus(classes,
         infima < CXXVIII ? infima % XII : ZEPHYRUM);
+    memcpy(h.litterae, litterae.litterae, magnitudo(h.litterae));
+    redde h;
 }
 
 /* classis -> littera et alteratio ex clave ad pulsum */
 interior b32
 _classem_scribere (
        constans Carmen* carmen,
+     constans Harmonia* h,
                    i32  classis,
                    s64  pulsus,
      ChordaAedificator* textus)
@@ -240,11 +249,12 @@ _classem_scribere (
               b32 bene;
               s32 k;
 
-    n.pulsus = ZEPHYRUM;
-    n.longitudo = I;
-    n.nota = LX + classis;
-    n.lucrum = 1.0f;
-    n.littera = '\0';
+    n.pulsus     = ZEPHYRUM;
+    n.longitudo  = I;
+    n.nota       = LX + classis;
+    n.lucrum     = 1.0f;
+    /* littera auctoris si nota huius classis eam tulit */
+    n.littera = h->litterae[classis % XII];
     n.praeparatum.datum = NIHIL;
     n.praeparatum.mensura = ZEPHYRUM;
     n.offset = ZEPHYRUM;
@@ -280,7 +290,8 @@ harmonia_scribere (
             redde chorda_aedificator_appendere_character(textus, 'r');
         casus HARMONIA_CLASSIS_UNA:
             bene = chorda_aedificator_appendere_character(textus, '(');
-            bene = _classem_scribere(carmen, h->radix, pulsus, textus)
+            bene = _classem_scribere(carmen, h, h->radix, pulsus,
+                textus)
                 && bene;
             redde chorda_aedificator_appendere_character(textus, ')')
                 && bene;
@@ -298,8 +309,8 @@ harmonia_scribere (
                         bene = chorda_aedificator_appendere_character(
                             textus, ' ') && bene;
                     }
-                    bene = _classem_scribere(carmen, c, pulsus, textus)
-                        && bene;
+                    bene = _classem_scribere(carmen, h, c, pulsus,
+                                             textus) && bene;
                 }
             }
             redde chorda_aedificator_appendere_character(textus, ']')
@@ -307,14 +318,14 @@ harmonia_scribere (
         ordinarius:
             frange;
     }
-    bene = _classem_scribere(carmen, h->radix, pulsus, textus);
+    bene = _classem_scribere(carmen, h, h->radix, pulsus, textus);
     bene = chorda_aedificator_appendere_literis(textus,
         SUFFIXA[h->genus]) && bene;
     si (h->bassus != h->radix)
     {
         bene = chorda_aedificator_appendere_character(textus, '/')
             && bene;
-        bene = _classem_scribere(carmen, h->bassus, pulsus, textus)
+        bene = _classem_scribere(carmen, h, h->bassus, pulsus, textus)
             && bene;
     }
     redde bene;
@@ -373,4 +384,17 @@ harmonia_lineam_scribere (
         t     = ad;
     }
     redde bene;
+}
+
+vacuum
+harmonia_litteram_notare (
+               Harmonia* h,
+    constans CarmenNota* nota)
+{
+    i32 c = nota->nota % XII;
+
+    si (nota->littera != '\0' && h->litterae[c] == '\0')
+    {
+        h->litterae[c] = nota->littera;
+    }
 }
