@@ -3595,3 +3595,23 @@ at 84 MB (high-water, reused); run piscina +0.9 MB per member (staleness, record
 (-vis): css 355 MB, saltuarius 451, toml 432-492 (from 848 / 1080 / 1201 before part 1).
 Leftover fixed cost: ~330 MB in the run piscina before the first member (likely ordering /
 input hashing reading files into c->piscina). One-time, not growth; follow-up.
+
+## 2026-10-23 — fix part 3: wave formation without per-pair allocation (park …T77EH4)
+
+Radix -vis after parts 1+2 (merged main 3e57280f): 411/411, 582 s, footprint ~5.7 GB, flat during
+members. RSS lies here: ps showed ~460 MB while `footprint -p` said 4 GB (macOS compresses
+cold pages). Watch phys_footprint, not RSS.
+
+A MEMOIZED radix run (every commit) peaked at 7.4 GB in 14 s; the run piscina holds ~6.8 GB,
+none of it per member: 1.8 GB before fabrica_sanare, +1.2 GB first sanare (producer
+preflight?), +1.6 GB wave formation, +0.74 GB regeneration preview of the 354-member wave,
++1.2 GB _ante_agere (probatio_vicus_saltus 349 MB, probatio_vicus_admonitiones 349 MB,
+fragmenta_silva 247 MB).
+
+The wave part was pure garbage. `_simul_possunt` (O(n^2) over a wave) rebuilt
+`_vestigium_actionis` for BOTH actions on every pair, and `_loci_concurrunt` allocated
+`via + "/"` twice per pair of paths. Now each footprint is computed once per action in
+`fabrica_undas_formare` (parallel `indices` per wave), and `_via_sub` is an allocation-free
+prefix test that keeps the '/' boundary (build/opera vs build/operae must not conflict; new
+test). Memoized radix: 7.4 -> 5.6 GB. Remaining targets: the 1.8 GB startup, the 1.2 GB first
+sanare, preview, and the vicus/fragmenta staleness costs.
