@@ -35,8 +35,11 @@
  *   auditio -carmen T -via x.wav       in WAV stereo, semel (non sonat)
  *   auditio -carmen T -partitura       partitura ut textus
  *       [-mensurae 9-12] [-pars P]     (partitura.h), sine sono; -pars
- *       [-harmonia]                    hic = sola pars; -harmonia:
- *                                      linea acordorum (harmonia.h)
+ *       [-harmonia | -explicatio]      hic = sola pars; -harmonia:
+ *                                      linea acordorum (harmonia.h);
+ *                                      -explicatio: acorda per
+ *                                      fenestras bassi, notae alienae
+ *                                      (explicatio.h)
  *   auditio -carmen T -censura         regulae musicae (censura.h):
  *       [-regulae +dissonantia,-ambitus]  ordinariae mutatae, aut
  *       [-regulae parallelae,lineae]      hae solae; exitus 3 si
@@ -109,6 +112,7 @@
 #include "censura.h"
 #include "auscultatio.h"
 #include "harmonia.h"
+#include "explicatio.h"
 #include "recensio_carminis.h"
 #include "emendatio.h"
 #include "carmina_infixum.h"
@@ -843,10 +847,12 @@ _partituram_scribere (
                    i32  ultima,
     constans character* pars,
                    b32  harmonia,
+                   b32  explicare,
                Piscina* piscina)
 {
        PartituraForma  forma;
     ChordaAedificator* a = chorda_aedificator_creare(piscina, M);
+           Explicatio  e;
                chorda  t;
 
     memset(&forma, ZEPHYRUM, magnitudo(forma));
@@ -854,6 +860,17 @@ _partituram_scribere (
     {
         forma.additae_titulus  = "harmonia";
         forma.addita           = harmonia_lineam_scribere;
+    }
+    si (explicare)
+    {
+        si (!explicatio_carminis(k, piscina, &e))
+        {
+            fprintf(stderr, "auditio: explicatio: memoria deest\n");
+            redde FALSUM;
+        }
+        forma.additae_titulus  = "explicatio";
+        forma.addita           = explicatio_lineam_scribere;
+        forma.additae_ctx      = &e;
     }
     forma.prima         = prima;
     forma.ultima        = ultima;
@@ -1415,6 +1432,7 @@ principale (
       constans character* liber           = NIHIL;
                      b32  partitura       = FALSUM;
                      b32  harmonia        = FALSUM;
+                     b32  explicare       = FALSUM;
                      b32  censura         = FALSUM;
                      b32  auscultare      = FALSUM;
                      b32  recensio        = FALSUM;
@@ -1523,6 +1541,10 @@ principale (
         {
             harmonia = VERUM;
         }
+        alioquin si (strcmp(argv[k], "-explicatio") == ZEPHYRUM)
+        {
+            explicare = VERUM;
+        }
         alioquin si (strcmp(argv[k], "-partitura") == ZEPHYRUM)
         {
             partitura = VERUM;
@@ -1598,7 +1620,8 @@ principale (
                 "-carmen (-iterare non cum -via)\n");
         redde II;
     }
-    si (   ((mensurae_datae || harmonia) && !partitura)
+    si (   ((mensurae_datae || harmonia || explicare) && !partitura)
+        || (harmonia && explicare)
         || (partitura && (iterare || via != NIHIL))
         || (regulae != NIHIL && !censura && !recensio)
         || (forma_json && !recensio)
@@ -1698,7 +1721,7 @@ principale (
         alioquin si (k != NIHIL && partitura)
         {
             bene = _partituram_scribere(k, prima, ultima, pars,
-                harmonia, piscina);
+                harmonia, explicare, piscina);
         }
         alioquin si (k != NIHIL)
         {

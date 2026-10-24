@@ -84,3 +84,9 @@ first - piped, stderr otherwise overtook the header line.
 Verified on a scratch copy: substituere bassus 2 -> ponere 2:3 A2 -> substituere back
 -> file identical to carmina.stml byte for byte. No fumus gate exists for auditio; the
 logic and its plants live in probatio_emendatio / probatio_cantus.
+
+## 2026-10-23 - -partitura -explicatio (N1)
+
+Line from explicatio.h instead of the per-beat harmonia line (PartituraForma has ONE extra
+line slot, so -harmonia and -explicatio are exclusive - usage error with both). The
+Explicatio is computed once in _partituram_scribere and passed as additae_ctx.

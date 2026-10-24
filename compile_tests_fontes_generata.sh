@@ -105,6 +105,7 @@ declare -a SOURCE_FILES=(
     "lib/excerptum.c"
     "lib/exemplar.c"
     "lib/exemplaria.c"
+    "lib/explicatio.c"
     "lib/extensio.c"
     "lib/fabrica.c"
     "lib/fabrica_declarationes.c"

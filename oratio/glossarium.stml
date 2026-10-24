@@ -1831,4 +1831,10 @@
     <forma textus="aetherophono" casus="ablativus" numerus="singularis" genus="neutrum"/>
   </vocabulum>
 
+  <vocabulum lemma="acordum" lingua="latina" classis="substantivum" nota="Latina media (acordum/accordum, -i n., Du Cange: concordia, pactum): hic acordum musicum (chord) - notae simul sonantes nominatae (include/harmonia.h, include/explicatio.h); WORDS caret">
+    <forma textus="acordum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="acordi" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="acorda" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+
 </glossarium>
