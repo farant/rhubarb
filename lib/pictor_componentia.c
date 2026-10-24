@@ -670,10 +670,10 @@ pictor_componere (
     status = nodus(piscina, intern, "status", PARTES_TITULUS, fs.x,
         fs.y,
                    fs.latitudo, fs.altitudo);
-    componens_ponere_titulum(status,
-        chorda_vacua(instrumentum) ? "nihil"
-                                   : chorda_ut_cstr(instrumentum,
-                                   piscina));
+    /* testa-ios D6: nomen instrumenti non iam in linea - quadratum
+     * instrumenti id dicit (linea angusta in telephono; Franus
+     * 2026-10-23) */
+    componens_ponere_titulum(status, "");
 
     /* glutinatio pendens: A / B / OK / X loco quadratorum */
     si (pendens)
@@ -774,20 +774,18 @@ pictor_componere (
         }
         q = quadratum_addere(piscina, intern, status,
             "quadratum.magnitudo", V * cw + IV * XX, y, t);
-        /* L3: quadratum stratorum ad dextrum lineae (LXX latum): nomen
-         * strati currentis; palettam 'strata' aperit. Filius RADICIS,
-         * non lineae status: figura tituli textum post quadratum
-         * ultimum lineae ponit */
+        /* L3: quadratum stratorum ad dextrum lineae - testa-ios D6:
+         * ICON (XX x XX, "strata:quadratum"), stratum currens in
+         * palette (Franus 2026-10-23: linea in telephono angusta);
+         * palettam 'strata' aperit. Filius RADICIS, non lineae
+         * status */
         si (cfg->doc)
         {
-            sprintf(t, "strata:stratum %d", (integer)
-                stratum_currens_compositum(&ramus, cfg->doc));
-            /* variabilis propria: q (quadratum magnitudinis) infra
-             * actionem vacuam spongiae accipit */
             quadratum_stratorum = nodus(piscina, intern,
                 "quadratum.strata", PARTES_BOTTONE,
-                fs.x + fs.latitudo - cw - LXX, fs.y + y, LXX, XX);
-            componens_ponere_titulum(quadratum_stratorum, t);
+                fs.x + fs.latitudo - cw - XX, fs.y + y, XX, XX);
+            componens_ponere_titulum(quadratum_stratorum,
+                "strata:quadratum");
             componens_ponere_actio(quadratum_stratorum,
                 "palette.aperire");
         }

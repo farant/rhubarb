@@ -185,7 +185,6 @@ _sectio_prima (
         si (x->genus == MANDATUM_TEXTUS)
         {
             textus++;
-            CREDO_CHORDA_AEQUALIS_LITERIS(x->textus, "penicillus");
         }
     }
     CREDO_AEQUALIS_I32(imagines, I);

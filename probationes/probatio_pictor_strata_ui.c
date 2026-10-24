@@ -1,15 +1,15 @@
 /* probatio_pictor_strata_ui.c - palette stratorum (pictor-strata L3)
  *
  * Applicatio pictoris vera, CDLXXX x CDLXXX. I: quadratum stratorum
- * ("strata:stratum 1") palettam aperit: ordines summo primo, currens
- * notatum. II: '+' stratum novum supra currens, fit currens; palette
- * aperta manet. III: ictus in strato currenti (stratum="2"). IV:
- * oculus occultat (actum), revocatio restituit. V: ordo electus ictus
- * dirigit (stratum I: sine attributo). VI: '-' currens delet, inferius
- * currens; ultimum numquam. VII: Esc palettam claudit. VIII (L4):
- * ordo trahendo - index insertionis dum trahitur, solutio actum
- * 'ordo' scribit; ictus sine motu eligit solum; solutio extra
- * palettam et Esc abiciunt; revocatio ordinem restituit. */
+ * (icon "strata:quadratum", testa-ios D6) palettam aperit: ordines
+ * summo primo, currens notatum. II: '+' stratum novum supra currens,
+ * fit currens; palette aperta manet. III: ictus in strato currenti
+ * (stratum="2"). IV: oculus occultat (actum), revocatio restituit. V:
+ * ordo electus ictus dirigit (stratum I: sine attributo). VI: '-'
+ * currens delet, inferius currens; ultimum numquam. VII: Esc palettam
+ * claudit. VIII (L4): ordo trahendo - index insertionis dum trahitur,
+ * solutio actum 'ordo' scribit; ictus sine motu eligit solum; solutio
+ * extra palettam et Esc abiciunt; revocatio ordinem restituit. */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -288,8 +288,13 @@ _sectio_prima (
     dispensator_recomponere(app.d);
 
     CREDO_GRADUS("I: quadratum, palette");
+    /* testa-ios D6: quadratum icone (XX), stratum currens in palette */
     CREDO_VERUM(titulus_est(&app, "quadratum.strata",
-        "strata:stratum 1"));
+        "strata:quadratum"));
+    CREDO_VERUM(   nodus_arboris(&app, "quadratum.strata")
+                && nodus_arboris(&app,
+                "quadratum.strata")->fines.latitudo
+                   == XX);
     premere_quadratum(&app, m, "quadratum.strata");
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"),
         "strata");
@@ -313,7 +318,7 @@ _sectio_prima (
                 && nodus_arboris(&app, "stratum.2")->fines.y
                    < nodus_arboris(&app, "stratum.1")->fines.y);
     CREDO_VERUM(titulus_est(&app, "quadratum.strata",
-        "strata:stratum 2"));
+        "strata:quadratum"));
 
     CREDO_GRADUS("III: ictus in strato currenti");
     CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
@@ -349,7 +354,7 @@ _sectio_prima (
         chorda_ex_literis(
         "stratum=", piscina)));
     CREDO_VERUM(titulus_est(&app, "quadratum.strata",
-        "strata:stratum 1"));
+        "strata:quadratum"));
 
     CREDO_GRADUS("VI: '-'");
     premere_quadratum(&app, m, "quadratum.strata");
@@ -439,8 +444,101 @@ _sectio_prima (
     volumen_claudere(vol);
 }
 
+/* testa-ios D6: in latitudine telephoni ANGUSTISSIMI (iPhone SE,
+ * CCCLXXV puncta, scala II: CLXXXVII x CCCXXIII; XV Pro Max CCXV
+ * latior) quadrata lineae status non se tegunt - quadratum stratorum
+ * LXX latum ea tegebat */
+/* origo ABSOLUTA: fines filii relativi ad parentem (quadrata in linea
+ * status), quadratum stratorum filius radicis - summa parentum */
+interior vacuum
+_origo (
+    constans Componens* n,
+                   s32* x,
+                   s32* y)
+{
+    *x = ZEPHYRUM;
+    *y = ZEPHYRUM;
+    dum (n != NIHIL)
+    {
+        *x  += n->fines.x;
+        *y  += n->fines.y;
+        n   = n->parens;
+    }
+}
+
+interior b32
+_disiuncta (
+    constans Componens* a,
+    constans Componens* b)
+{
+    s32 x_a;
+    s32 y_a;
+    s32 x_b;
+    s32 y_b;
+
+    _origo(a, &x_a, &y_a);
+    _origo(b, &x_b, &y_b);
+    redde    x_a + a->fines.latitudo <= x_b
+          || x_b + b->fines.latitudo <= x_a
+          || y_a + a->fines.altitudo <= y_b
+          || y_b + b->fines.altitudo <= y_a;
+}
+
+interior vacuum
+_sectio_telephonum (
+    CredoContextus* c)
+{
+     constans character* ids[VI];
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                Volumen* vol;
+       PictorApplicatio  app;
+                    i32  i;
+                    i32  k;
+
+    ids[ZEPHYRUM]  = "quadratum.instrumentum";
+    ids[I]         = "quadratum.color_primus";
+    ids[II]        = "quadratum.color_secundus";
+    ids[III]       = "quadratum.exemplar";
+    ids[IV]        = "quadratum.magnitudo";
+    ids[V]         = "quadratum.strata";
+    piscina        = c->piscina;
+    intern         = internamentum_creare(piscina);
+    thema_initiare();
+    vol = volumen_temporarium(piscina, "probatio_pictor_strata_tel");
+    CREDO_VERUM(pictor_applicatio_aedificare(&app, piscina, intern, vol,
+        CLXXXVII, CCCXXIII));
+    dispensator_recomponere(app.d);
+    per (i = ZEPHYRUM; i < VI; i++)
+    {
+        CREDO_NON_NIHIL(nodus_arboris(&app, ids[i]));
+    }
+    CREDO_GRADUS("quadrata lineae status bina disiuncta");
+    per (i = ZEPHYRUM; i < VI; i++)
+    {
+        per (k = i + I; k < VI; k++)
+        {
+            si (   nodus_arboris(&app, ids[i])
+                && nodus_arboris(&app, ids[k]))
+            {
+                CREDO_VERUM(_disiuncta(nodus_arboris(&app, ids[i]),
+                    nodus_arboris(&app, ids[k])));
+            }
+        }
+    }
+    CREDO_GRADUS("quadratum stratorum intra latitudinem");
+    CREDO_VERUM(   nodus_arboris(&app, "quadratum.strata")
+                && nodus_arboris(&app, "quadratum.strata")->fines.x
+                   + nodus_arboris(&app,
+                   "quadratum.strata")->fines.latitudo
+                   <= CLXXXVII);
+    volumen_claudere(vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "palette stratorum", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "linea status in telephono", _sectio_telephonum, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -664,6 +664,26 @@ figura_quadrati (
         mandata_linea(m, a, b, I, figura_color_thematis(COLOR_TEXT));
         redde;
     }
+    /* testa-ios D6: icon stratorum - tres folia sibi superposita,
+     * a tergo ad frontem (fundus deinde margo: anterius tegit) */
+    si (chorda_aequalis_literis(t, "strata:quadratum"))
+    {
+        Fines g;
+          s32 k;
+
+        per (k = ZEPHYRUM; k < III; k++)
+        {
+            g.x         = IV + II * k;
+            g.y         = IV + III * k;
+            g.latitudo  = IX;
+            g.altitudo  = VI;
+            mandata_rectangulum(m, g,
+                figura_color_thematis(COLOR_BACKGROUND), VERUM);
+            mandata_rectangulum(m, g, figura_color_thematis(COLOR_TEXT),
+                FALSUM);
+        }
+        redde;
+    }
     si (t.mensura > VII && memcmp(t.datum, "strata:", VII) == ZEPHYRUM)
     {
         reliquum.datum    = t.datum + VII;
