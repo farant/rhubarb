@@ -131,6 +131,27 @@ cantus_legere (
        Cantilena* cantilena,
     CantusVitium* vitium);
 
+/* status lectoris post praefixum textus [0, offset): quod signum
+ * proximum invenit. Emendatio (emendatio.h) textum novum in statu
+ * loci legit et statum post eum restituit. FALSUM: praefixum vitium
+ * habet (vitium impletum), offset > mensura */
+nomen structura {
+       s32 octava;        /* 'o' '<' '>' (extra 0..8 licet - nota
+                           * proxima vitium fit) */
+       i32 ordinaria;     /* 'l', pulsus */
+       i32 lucrum;        /* 'v', centesimae 0..100 */
+    chorda praeparatum;   /* '@' vigens (sectio textus); vacua =
+                           * nullum */
+       s64 pulsus;        /* positio ad offset */
+} CantusStatus;
+
+b32
+cantus_status_ad (
+          chorda  textus,
+             i32  offset,
+    CantusStatus* status,
+    CantusVitium* vitium);
+
 
 /* quadra initiorum segmentorum ex pulsibus et temporibus (ordine
  * pulsus crescente; primum ad pulsum 0) */

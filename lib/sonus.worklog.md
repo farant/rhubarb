@@ -48,3 +48,35 @@ the same binary and machine (the suite runs a whole chain twice). `sin`,
 `exp`, `pow` come from libm, so goldens across machines may differ in
 the last bits (spec §VI-g) - goldens, when they come, compare with a
 tolerance or are regenerated per machine.
+
+## 2026-10-24 - SonusResonans (biquad, RBJ cookbook)
+
+Second-order filter next to the one-pole SonusColum: GRAVIA (low-pass), ACUTA
+(high-pass), MEDIA (band-pass, constant 0 dB peak - the formant shape). Coefficients
+computed in f64 (cos/sin of w0), stored f32, Direct Form I. Q = `acumen` (<= 0 ->
+0.70710678). Frequency <= 0 = exact pass-through (b0 1, rest 0); otherwise clamped to
+[1 Hz, 0.49 SR]: at w0 = pi the cookbook degenerates (sin w0 = 0, alpha = 0). ponere
+recomputes coefficients and keeps the four memory taps, so a sweep doesn't click (tibia
+sweeps every 32 samples).
+
+Tests are measured against the analytic RBJ values: |H(f0)| = Q for LP/HP (0.7071 at Q
+0.707, 10 at Q 10), BP 1 at f0 and 1/sqrt(1 + Q^2 (f/f0 - f0/f)^2) away (~0.053 at Q 5,
+f0/4 and 4 f0), impulse decays at 23 kHz Q 10, finite at 30 kHz (clamped).
+
+## 2026-10-24 - SonusReverberatio (Freeverb)
+
+Jezar's Freeverb (2000, public domain): per channel 8 parallel low-pass-feedback combs
+(1116 1188 1277 1356 1422 1491 1557 1617 at 44.1 kHz), then 4 series allpasses (556 441
+341 225, feedback 0.5). The right channel adds 23 samples to every delay, which is
+where the stereo comes from. Delays are scaled by SR/44100 and rounded (1116 -> 1215 at
+48 kHz). The first-echo test pins exactly that: the first non-zero output is sample
+1215 (L) / 1240 (R), and a wrong scale moves it.
+
+Mapping as in Freeverb: feedback 0.7 + 0.28 aula (0.98 max, stable), damping 0.4
+mollities, input gain 0.015, width mixing own = 0.5 + 0.5 w, other = 0.5 - 0.5 w (w 0
+gives L == R exactly, since IEEE addition is commutative). Comb filter memory under
+1e-25 is flushed to 0 (subnormals in long tails). All lines are fixed arrays in the
+struct (~135 KB), so no allocation; the mixer embeds one.
+
+Tests: L/R correlation < 0.5 at width 1. A survivor check showed that without it,
+dropping the comb stereo offset passed (the allpass offsets alone keep L != R).

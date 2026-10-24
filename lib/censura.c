@@ -12,6 +12,8 @@
 #include "censura.h"
 #include "harmonia.h"
 #include "partitura.h"
+#include "explicatio.h"
+#include "piscina.h"
 #include <string.h>
 
 hic_manens constans character* TITULI[CENSURA_REGULAE] = {
@@ -26,10 +28,20 @@ nomen structura {
                     i32  summa;
 } AmbitusOrdinarius;
 
-hic_manens constans AmbitusOrdinarius AMBITUS[III] = {
+#define AMBITUS_NUMERUS XI
+
+hic_manens constans AmbitusOrdinarius AMBITUS[AMBITUS_NUMERUS] = {
     { "aether",     XXXVI,  XCVI  },
     { "quadrans",   XLVIII, XCVI  },
-    { "triangulum", XXIV,   LXXII }
+    { "triangulum", XXIV,   LXXII },
+    { "chorda",     XXVIII, LXXXVIII },
+    { "campana",    XLVIII, XCVI  },
+    { "organum",    XXXVI,  XCVI  },
+    { "marimba",    XLV,    XCVI  },
+    { "glockenspiel", LXXIX, CVIII },
+    { "schola",     XLVIII, LXXIV },
+    { "fistula",    LX,     XCVI  },
+    { "nubes",      XXXVI,  LXXXIV }
 };
 
 /* gradus scalae maioris a tonica */
@@ -48,6 +60,8 @@ nomen structura {
              CensuraInventum* inventa;
                          i32  capacitas;
                          i32  numerus;
+         constans Explicatio* explicatio;   /* dissonantia; NIHIL =
+                                             * omnes inventae */
 } Iudex;
 
 /* nota cum frusto suo */
@@ -70,9 +84,10 @@ censura_ordinaria (
     CensuraForma* forma)
 {
     memset(forma, ZEPHYRUM, magnitudo(CensuraForma));
-    forma->activae[CENSURA_LINEAE]   = VERUM;
-    forma->activae[CENSURA_CLAVIS]   = VERUM;
-    forma->activae[CENSURA_AMBITUS]  = VERUM;
+    forma->activae[CENSURA_LINEAE]       = VERUM;
+    forma->activae[CENSURA_CLAVIS]       = VERUM;
+    forma->activae[CENSURA_AMBITUS]      = VERUM;
+    forma->activae[CENSURA_DISSONANTIA]  = VERUM;
 }
 
 constans character*
@@ -114,7 +129,7 @@ censura_ambitus_ordinarius (
     i32 i;
 
     (vacuum)ctx;
-    per (i = ZEPHYRUM; i < III; i++)
+    per (i = ZEPHYRUM; i < AMBITUS_NUMERUS; i++)
     {
         si (chorda_aequalis_literis(instrumentum,
             AMBITUS[i].instrumentum))
@@ -356,12 +371,27 @@ _ambitus (
                         i32  summa;
                         b32  notus;
 
-        notus = iudex->forma->ambitus != NIHIL
-            ? iudex->forma->ambitus(iudex->forma->ctx, p->instrumentum,
-                                    &infima, &summa)
-            : censura_ambitus_ordinarius(NIHIL, p->instrumentum,
-            &infima,
-                                         &summa);
+        constans CarmenInstrumentum* ci = carmen_instrumentum(k,
+            p->instrumentum);
+
+        /* forma ordinaria: ambitus instrumenti libri si datus, aliter
+         * tabula (praeparatum redefinitum sine ambitu: tabula) */
+        si (   iudex->forma->ambitus == NIHIL && ci != NIHIL
+            && (ci->infima != ZEPHYRUM || ci->summa != CXXVII))
+        {
+            notus   = VERUM;
+            infima  = ci->infima;
+            summa   = ci->summa;
+        }
+        alioquin
+        {
+            notus = iudex->forma->ambitus != NIHIL
+                ? iudex->forma->ambitus(iudex->forma->ctx,
+                                        p->instrumentum, &infima,
+                                        &summa)
+                : censura_ambitus_ordinarius(NIHIL, p->instrumentum,
+                                             &infima, &summa);
+        }
         si (!notus)
         {
             perge;
@@ -432,7 +462,9 @@ _asperum (
     redde d == I || d == II || d == VI || d == X || d == XI;
 }
 
-/* tempora fortia mensurae in 'fortia' (absoluti); numerus */
+/* tempora fortia mensurae in 'fortia' (absoluti); numerus. Initium
+ * semper; 4/x tempus tertium; metra composita (tempus carminis maius
+ * quam 1/denominator: tres octavae) tempus quodque */
 interior i32
 _fortia (
     constans Carmen* carmen,
@@ -442,23 +474,131 @@ _fortia (
     constans CarmenMetrum* m = _metrum(carmen, initium);
                       s64  unitas = (s64)CANTUS_PULSUS_INTEGRAE
                                     / (s64)m->denominator;
+                      s64 tempus = carmen_tempus_mensurae(carmen,
+                                                           initium);
+                      s64 longitudo = (s64)m->numerator * unitas;
+                      s64 t;
                       i32 n = ZEPHYRUM;
-                      i32 k;
 
     fortia[n++] = initium;
     si (m->numerator == IV)
     {
-        fortia[n++] = initium + II * unitas;
+        fortia[n++] = initium + II * tempus;
     }
-    alioquin si (   m->denominator     == VIII && m->numerator > III
-                 && m->numerator % III == ZEPHYRUM)
+    alioquin si (tempus > unitas)
     {
-        per (k = III; k < m->numerator && n < XXII; k += III)
+        per (t = tempus; t < longitudo && n < XXII; t += tempus)
         {
-            fortia[n++] = initium + (s64)k * unitas;
+            fortia[n++] = initium + t;
         }
     }
     redde n;
+}
+
+/* segmentum notae quod ad pulsum sonat (ultimum incipiens <=) */
+interior constans ExplicatioSegmentum*
+_segmentum (
+       constans Explicatio* e,
+       constans CarmenNota* nota,
+                       s64  pulsus)
+{
+    constans ExplicatioSegmentum* s = NIHIL;
+                             i32  i;
+
+    per (i = ZEPHYRUM; i < e->numerus_segmentorum; i++)
+    {
+        si (   e->segmenta[i].nota    == nota
+            && e->segmenta[i].initium <= pulsus)
+        {
+            s = &e->segmenta[i];
+        }
+    }
+    redde s;
+}
+
+/* nota dissonantiam explicat: aliena explicata, aut resoluta */
+interior b32
+_explicat (
+    constans ExplicatioSegmentum* s)
+{
+    commutatio (s->genus)
+    {
+        casus EXPLICATIO_TRANSITUS:
+        casus EXPLICATIO_VICINUS:
+        casus EXPLICATIO_INNIXA:
+        casus EXPLICATIO_ANTICIPATIO:
+        casus EXPLICATIO_EFFUGIENS:
+            redde VERUM;
+        casus EXPLICATIO_SUSPENSIO:
+        casus EXPLICATIO_RETARDATIO:
+        casus EXPLICATIO_SEPTIMA:
+            redde s->resoluta;
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
+/* culpa notae (statica); NIHIL si nulla */
+interior constans character*
+_culpa (
+    constans ExplicatioSegmentum* s)
+{
+    commutatio (s->genus)
+    {
+        casus EXPLICATIO_IGNOTA:
+            redde "nota sine explicatione";
+        casus EXPLICATIO_SUSPENSIO:
+            redde "suspensio non resoluta";
+        casus EXPLICATIO_RETARDATIO:
+            redde "retardatio non resoluta";
+        casus EXPLICATIO_SEPTIMA:
+            redde "septima non resoluta";
+        ordinarius:
+            redde NIHIL;
+    }
+}
+
+/* VERUM: dissonantia referenda (causa in *causa; NIHIL sine
+ * explicatione - ut ante N2); FALSUM: explicata */
+interior b32
+_referenda (
+                  Iudex*  iudex,
+    constans CarmenNota*  a,
+    constans CarmenNota*  b,
+                    s64   pulsus,
+     constans character** causa)
+{
+    constans ExplicatioSegmentum* sa;
+    constans ExplicatioSegmentum* sb;
+                   HarmoniaGenus  g;
+
+    *causa = NIHIL;
+    si (iudex->explicatio == NIHIL)
+    {
+        redde VERUM;
+    }
+    sa = _segmentum(iudex->explicatio, a, pulsus);
+    sb = _segmentum(iudex->explicatio, b, pulsus);
+    si (sa == NIHIL || sb == NIHIL)
+    {
+        redde VERUM;
+    }
+    si (_explicat(sa) || _explicat(sb))
+    {
+        redde FALSUM;
+    }
+    *causa = _culpa(sa) != NIHIL ? _culpa(sa) : _culpa(sb);
+    si (*causa != NIHIL)
+    {
+        redde VERUM;
+    }
+    g = iudex->explicatio->fenestrae[sa->fenestra].harmonia.genus;
+    si (g != HARMONIA_IGNOTA && g != HARMONIA_NULLA)
+    {
+        redde FALSUM;
+    }
+    *causa = "acordum sine nomine";
+    redde VERUM;
 }
 
 interior vacuum
@@ -497,8 +637,13 @@ _dissonantia (
                     {
                         per (y = ZEPHYRUM; y < nb; y++)
                         {
-                            si (_asperum(a[x].nota->nota,
-                                b[y].nota->nota))
+                            constans character* causa;
+                                           i32  n = iudex->numerus;
+
+                            si (   _asperum(a[x].nota->nota,
+                                       b[y].nota->nota)
+                                && _referenda(iudex, a[x].nota,
+                                       b[y].nota, fortia[t], &causa))
                             {
                                 _addere(iudex, CENSURA_DISSONANTIA,
                                     &k->partes[i], a[x].frustum,
@@ -506,6 +651,10 @@ _dissonantia (
                                     a[x].nota->offset, a[x].nota,
                                     &k->partes[j], b[y].nota, NIHIL,
                                     NIHIL);
+                                si (n < iudex->capacitas)
+                                {
+                                    iudex->inventa[n].causa = causa;
+                                }
                             }
                         }
                     }
@@ -780,21 +929,35 @@ censura_iudicare (
            CensuraInventum* inventa,
                        i32  capacitas)
 {
-    CensuraForma ordinaria;
-           Iudex iudex;
-             i32 x;
-             i32 y;
+    CensuraForma  ordinaria;
+           Iudex  iudex;
+      Explicatio  explicatio;
+         Piscina* piscina = NIHIL;
+             i32  x;
+             i32  y;
 
     si (forma == NIHIL)
     {
         censura_ordinaria(&ordinaria);
         forma = &ordinaria;
     }
-    iudex.carmen     = carmen;
-    iudex.forma      = forma;
-    iudex.inventa    = inventa;
-    iudex.capacitas  = capacitas;
-    iudex.numerus    = ZEPHYRUM;
+    iudex.carmen      = carmen;
+    iudex.forma       = forma;
+    iudex.inventa     = inventa;
+    iudex.capacitas   = capacitas;
+    iudex.numerus     = ZEPHYRUM;
+    iudex.explicatio  = NIHIL;
+    si (forma->activae[CENSURA_DISSONANTIA])
+    {
+        /* explicatio in piscina propria: inventa notas carminis et
+         * causas staticas tenent, nihil ex ea */
+        piscina = piscina_generare_dynamicum("censura", M * XVI);
+        si (   piscina != NIHIL
+            && explicatio_carminis(carmen, piscina, &explicatio))
+        {
+            iudex.explicatio = &explicatio;
+        }
+    }
     si (forma->activae[CENSURA_LINEAE])
     {
         _lineae(&iudex);
@@ -839,6 +1002,10 @@ censura_iudicare (
             z--;
         }
         inventa[z] = t;
+    }
+    si (piscina != NIHIL)
+    {
+        piscina_destruere(piscina);
     }
     redde iudex.numerus;
 }
@@ -926,8 +1093,11 @@ censura_inventum_scribere (
             frange;
         casus CENSURA_DISSONANTIA:
         {
-            s32 d = _modulus((s32)x->nota->nota
-                - (s32)x->nota_altera->nota, XII);
+            /* ab altitudine absoluta: pars inferior prima septimam in
+             * 'secundam' verteret */
+            s32 d = (s32)x->nota->nota - (s32)x->nota_altera->nota;
+
+            d = _modulus(d < ZEPHYRUM ? -d : d, XII);
 
             bene = partitura_notam_scribere(carmen, x->nota, pulsus,
                 textus) && bene;
@@ -939,6 +1109,13 @@ censura_inventum_scribere (
             bene = chorda_aedificator_appendere_literis(textus,
                 d == VI ? ", tritonus" : d <= II ? ", secunda"
                                                  : ", septima") && bene;
+            si (x->causa != NIHIL)
+            {
+                bene = chorda_aedificator_appendere_literis(textus,
+                    " - ") && bene;
+                bene = chorda_aedificator_appendere_literis(textus,
+                    x->causa) && bene;
+            }
             frange;
         }
         casus CENSURA_PARALLELAE:

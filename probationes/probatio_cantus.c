@@ -6,6 +6,7 @@
  * exacti asseruntur - lector tempus sine errore cumulato numerat.
  */
 #include <stdio.h>
+#include <string.h>
 #include "latina.h"
 #include "credo.h"
 #include "cantus.h"
@@ -896,6 +897,92 @@ _sectio_lineae (
     _vitium(c, "c | x", IV);
 }
 
+/* status post praefixum: ordinaria (o4 l4 v100 sine '@'), mandata
+ * singula, ad lineam, ad finem; '<' '>' extra 0..8 licent; praefixum
+ * intra signum ('l|8') vitium; offset ultra finem FALSUM */
+interior b32
+_status_est (
+         CredoContextus* c,
+     constans character* textus,
+                    i32  offset,
+                    s32  octava,
+                    i32  ordinaria,
+                    i32  lucrum,
+     constans character* praeparatum,
+                    s64  pulsus)
+{
+    CantusStatus s;
+    CantusVitium v;
+             i32 lp = (i32)strlen(praeparatum);
+
+    memset(&s, ZEPHYRUM, magnitudo(s));
+    si (   cantus_status_ad(chorda_ex_literis(textus, c->piscina),
+                            offset, &s, &v)
+        && s.octava              == octava && s.ordinaria == ordinaria
+        && s.lucrum              == lucrum && s.pulsus == pulsus
+        && s.praeparatum.mensura == lp
+        && (lp == ZEPHYRUM
+            || memcmp(s.praeparatum.datum, praeparatum, (size_t)lp)
+                   == ZEPHYRUM))
+    {
+        redde VERUM;
+    }
+    imprimere("  '%s' @%u: o%d l%u v%u '%.*s' pulsus %lld\n", textus,
+              offset, (integer)s.octava, s.ordinaria, s.lucrum,
+              (integer)s.praeparatum.mensura,
+              s.praeparatum.datum ? (constans character*)
+                                    s.praeparatum.datum : "",
+              (long long)s.pulsus);
+    redde FALSUM;
+}
+
+interior vacuum
+_sectio_status (
+    CredoContextus* c)
+{
+    hic_manens constans character T[] =
+        "o5 l8 v50 @punctum c d | >e4 <f";
+    CantusStatus s;
+    CantusVitium v;
+
+    CREDO_VERUM (_status_est(c, T, ZEPHYRUM, IV, CMLX, C, "",
+                             ZEPHYRUM));
+    CREDO_VERUM (_status_est(c, T, III, V, CMLX, C, "", ZEPHYRUM));
+    CREDO_VERUM (_status_est(c, T, VI, V, CDLXXX, C, "", ZEPHYRUM));
+    CREDO_VERUM (_status_est(c, T, X, V, CDLXXX, L, "", ZEPHYRUM));
+    /* ad '|' (offset XXIII): praeparatum vigens, pulsus duarum
+     * octavarum */
+    CREDO_VERUM (_status_est(c, T, XXIII, V, CDLXXX, L, "punctum",
+                             CMLX));
+    /* finis: '>' deinde '<' - octava V; 'e4' longitudinem ordinariam
+     * non mutat */
+    CREDO_VERUM (_status_est(c, T, (i32)strlen(T), V, CDLXXX, L,
+                             "punctum", CMLX + CMLX + CDLXXX));
+    CREDO_VERUM (_status_est(c, "l4. c", III, IV, MCDXL, C, "",
+                             ZEPHYRUM));
+    /* lucrum ex f32: 0.59f * C = 58.99... rotundatur (truncatio LVIII
+     * daret; inter 0..100 solum LIII et LIX ita cadunt) */
+    CREDO_VERUM (_status_est(c, "v59 c", IV, IV, CMLX, LIX, "",
+                             ZEPHYRUM));
+    CREDO_VERUM (_status_est(c, "o8 >", IV, IX, CMLX, C, "",
+                             ZEPHYRUM));
+    CREDO_VERUM (_status_est(c, "o0 <", IV, -I, CMLX, C, "",
+                             ZEPHYRUM));
+    CREDO_VERUM (_status_est(c, "", ZEPHYRUM, IV, CMLX, C, "",
+                             ZEPHYRUM));
+    /* praefixum intra signum: 'l' sine longitudine */
+    CREDO_FALSUM (cantus_status_ad(chorda_ex_literis("l8 c",
+                                                     c->piscina),
+                                   I, &s, &v));
+    CREDO_FALSUM (cantus_status_ad(chorda_ex_literis("o9 c",
+                                                     c->piscina),
+                                   II, &s, &v));
+    CREDO_AEQUALIS_I32 (v.offset, I);
+    /* ultra finem */
+    CREDO_FALSUM (cantus_status_ad(chorda_ex_literis("c4", c->piscina),
+                                   III, &s, &v));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "notae", _sectio_notae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "pulsus", _sectio_pulsus, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -907,6 +994,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "iussa", _sectio_iussa, NIHIL, NIHIL, NIHIL, NIHIL },
     { "praeparata", _sectio_praeparata, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sedes", _sectio_sedes, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "status", _sectio_status, NIHIL, NIHIL, NIHIL, NIHIL },
     { "reddere", _sectio_reddere, _parare_tabulas, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

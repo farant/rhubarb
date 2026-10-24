@@ -540,6 +540,109 @@ _sectio_instrumenta (
                  == sonitus_praeparatum("punctum")->forma);
 }
 
+/* instrumenta libri: ante resolutorem (etiam proprium) - carmen suum
+ * sonum definit */
+interior vacuum
+_sectio_instrumenta_libri (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina>"
+        "<instrumentum titulus=\"meum\" basis=\"quadrans\""
+        " officium=\"0.125\"/>"
+        "<carmen titulus=\"libri\" tempus=\"120\">"
+        "<pars titulus=\"a\" instrumentum=\"meum\">"
+        "<frustum mensura=\"1\"><textus!>c</textus></frustum></pars>"
+        "</carmen></carmina>");
+    CantorResolutor  r;
+             Cantor* meus;
+
+    CREDO_NECESSE (k != NIHIL && concentus != NIHIL);
+    /* resolutor proprius 'meum' aliter (0.9) dicit: liber vincit */
+    tibia_mea           = *tibia_praeparatum("quadrans");
+    tibia_mea.officium  = 0.9f;
+    r.tibia             = _tibia_mea;
+    r.sonitus           = NIHIL;
+    r.ctx               = NIHIL;
+    meus                = cantor_creare(c->piscina, concentus, &r);
+    CREDO_NECESSE (meus != NIHIL);
+    CREDO_NECESSE (cantor_incipere(meus, k, ZEPHYRUM));
+    (vacuum)cantor_agere(meus);
+    CREDO_AEQUALIS_I32 (_numerus(MIXTURA_IUSSUM_TIBIAM), I);
+    CREDO_VERUM (_iussum(MIXTURA_IUSSUM_TIBIAM,
+        ZEPHYRUM)->tibia.officium == 0.125f);
+}
+
+/* instrumentarium ordinarium sub libro: 'cembalo' (chorda clara) sine
+ * definitione in libro sonat */
+interior vacuum
+_sectio_instrumentarium (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"domus\" tempus=\"120\">"
+        "<pars titulus=\"a\" instrumentum=\"cembalo\">"
+        "<frustum mensura=\"1\"><textus!>c</textus></frustum></pars>"
+        "</carmen></carmina>");
+    Cantor* meus;
+
+    CREDO_NECESSE (k != NIHIL && concentus != NIHIL);
+    meus = cantor_creare(c->piscina, concentus, NIHIL);
+    CREDO_NECESSE (meus != NIHIL);
+    CREDO_NECESSE (cantor_incipere(meus, k, ZEPHYRUM));
+    (vacuum)cantor_agere(meus);
+    CREDO_AEQUALIS_I32 (_numerus(MIXTURA_IUSSUM_TIBIAM), I);
+    CREDO_VERUM (   _iussum(MIXTURA_IUSSUM_TIBIAM,
+        ZEPHYRUM)->tibia.genus
+                    == (f32)TIBIA_CHORDA
+                 && _iussum(MIXTURA_IUSSUM_TIBIAM,
+                    ZEPHYRUM)->tibia.claritas == 0.95f);
+}
+
+/* aula et positio: iussum reverberationis initio (carminis forma et
+ * reditus; sine aula reditus 0 - aula prior tacet), notae positionem
+ * et missionem partis ferunt */
+interior vacuum
+_sectio_aula (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"aula\" tempus=\"120\">"
+        "<reverberatio aula=\"0.7\" lucrum=\"0.4\"/>"
+        "<pars titulus=\"a\" instrumentum=\"aether\" positio=\"-0.5\""
+        " reverberatio=\"0.3\">"
+        "<frustum mensura=\"1\"><textus!>c</textus></frustum></pars>"
+        "</carmen></carmina>");
+    constans Carmen* sicca = _carmen(c,
+        "<carmina><carmen titulus=\"sicca\" tempus=\"120\">"
+        "<pars titulus=\"a\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>c</textus></frustum></pars>"
+        "</carmen></carmina>");
+    Cantor* meus;
+
+    CREDO_NECESSE (k != NIHIL && sicca != NIHIL && concentus != NIHIL);
+    meus = cantor_creare(c->piscina, concentus, NIHIL);
+    CREDO_NECESSE (meus != NIHIL);
+    CREDO_NECESSE (cantor_incipere(meus, k, ZEPHYRUM));
+    (vacuum)cantor_agere(meus);
+    CREDO_NECESSE (_numerus(MIXTURA_IUSSUM_REVERBERATIONEM_PONERE)
+        == I);
+    CREDO_VERUM (   _iussum(MIXTURA_IUSSUM_REVERBERATIONEM_PONERE,
+                        ZEPHYRUM)->lucrum == 0.4f
+                 && _iussum(MIXTURA_IUSSUM_REVERBERATIONEM_PONERE,
+                        ZEPHYRUM)->reverberatio.aula == 0.7f);
+    CREDO_VERUM (   _iussum(MIXTURA_IUSSUM_TIBIAM, ZEPHYRUM)->positio
+                    == -0.5f
+                 && _iussum(MIXTURA_IUSSUM_TIBIAM, ZEPHYRUM)->missio
+                    == 0.3f);
+    CREDO_NECESSE (cantor_incipere(meus, sicca, ZEPHYRUM));
+    (vacuum)cantor_agere(meus);
+    CREDO_NECESSE (_numerus(MIXTURA_IUSSUM_REVERBERATIONEM_PONERE)
+                   == II);
+    CREDO_VERUM (_iussum(MIXTURA_IUSSUM_REVERBERATIONEM_PONERE,
+                         I)->lucrum == 0.0f);
+}
+
 /* resolutor ordinarius publicus: tituli noti, ignoti, chorda sine
  * terminatore (praefixum), titulus longior quam tabula; resolutor ex
  * functionibus publicis = NIHIL */
@@ -686,6 +789,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "vivum", _sectio_vivum, _parare, NIHIL, NIHIL, NIHIL },
     { "instrumenta", _sectio_instrumenta, _parare, NIHIL, NIHIL,
         NIHIL },
+    { "instrumenta_libri", _sectio_instrumenta_libri, _parare, NIHIL,
+        NIHIL,
+        NIHIL },
+    { "instrumentarium", _sectio_instrumentarium, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "aula", _sectio_aula, _parare, NIHIL, NIHIL, NIHIL },
     { "ordinarius", _sectio_ordinarius, _parare, NIHIL, NIHIL, NIHIL },
     { "lusor", _sectio_lusor, _parare, NIHIL, NIHIL, NIHIL },
     { "prioritas", _sectio_prioritas, _parare, NIHIL, NIHIL, NIHIL },

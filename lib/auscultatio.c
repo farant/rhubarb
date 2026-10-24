@@ -156,10 +156,33 @@ auscultatio_reddere (
         b32 vivit = concentus_agere(concentus, nunc);
 
         vivit = cantor_agere(cantor) || vivit;
-        si (   (!vivit && scripta >= basis + carminis)
-            || scripta + AUSCULTATIO_PULSUS_QUADRA > capacitas)
+        si (!vivit && scripta >= basis + carminis)
         {
             frange;
+        }
+        /* plena sed vivit (cauda longa): capacitas duplicatur ad finem
+         * maximum */
+        si (scripta + AUSCULTATIO_PULSUS_QUADRA > capacitas)
+        {
+            s64 maxima = basis + carminis + AUSCULTATIO_CAUDA_MAXIMA
+                        + AUSCULTATIO_PULSUS_QUADRA;
+            s64 nova   = II * capacitas < maxima ? II * capacitas
+                                                  : maxima;
+            f32* y;
+
+            si (nova <= capacitas)
+            {
+                frange;
+            }
+            y = (f32*)piscina_allocare(piscina,
+                (memoriae_index)nova * II * magnitudo(f32));
+            si (y == NIHIL)
+            {
+                frange;
+            }
+            memcpy(y, x, (size_t)scripta * II * magnitudo(f32));
+            x          = y;
+            capacitas  = nova;
         }
         mixtura_reddere(scriptura.mixtura, x + II * scripta,
             AUSCULTATIO_PULSUS_QUADRA);

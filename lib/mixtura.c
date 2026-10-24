@@ -12,6 +12,11 @@
 
 #define MIXTURA_QUADRANS_PI 0.78539816339744830962   /* pi / IV */
 
+/* cauda reverberationis: vivit dum exitus umidus supra limen (-96 dB)
+ * intra C ms ultimos */
+#define MIXTURA_CAUDAE_LIMEN   1.6e-5f
+#define MIXTURA_CAUDAE_QUADRA  (SONUS_FREQUENTIA / X)
+
 /* valor qui ad metam per quadra 'reliqua' linealiter it */
 nomen structura {
     f32 valor;
@@ -33,6 +38,7 @@ nomen structura {
           MixturaGrex grex;
         MixturaClivus lucrum;
         MixturaClivus positio;
+        MixturaClivus missio;       /* ad reverberationem */
                   f32 sinistrum;    /* lucra potentiae constantis ex */
                   f32 dextrum;      /* positione (renovata dum movetur) */
                   b32 evanescens;   /* SISTERE: finis cum lucrum 0 */
@@ -50,18 +56,23 @@ nomen structura {
 } MixturaGregis;
 
 structura Mixtura {
-       MixturaVox* voces;
-              i32  numerus_vocum;
-    MixturaIussum* iussa;          /* ordine momenti */
-              i32  numerus_iussorum;
-              i32  capacitas_iussorum;
-   MixturaNuntius* nuntii;         /* circulus */
-              i32  caput_nuntiorum;
-              i32  numerus_nuntiorum;
-              i32  capacitas_nuntiorum;
-    MixturaGregis  greges[MIXTURA_GREGES];
-              s64  momentum;
-    MixturaCensus  census;
+           MixturaVox* voces;
+                  i32  numerus_vocum;
+        MixturaIussum* iussa;          /* ordine momenti */
+                  i32  numerus_iussorum;
+                  i32  capacitas_iussorum;
+       MixturaNuntius* nuntii;         /* circulus */
+                  i32  caput_nuntiorum;
+                  i32  numerus_nuntiorum;
+                  i32  capacitas_nuntiorum;
+        MixturaGregis  greges[MIXTURA_GREGES];
+                  s64  momentum;
+        MixturaCensus  census;
+    SonusReverberatio  reverberatio;           /* aula communis */
+        MixturaClivus  lucrum_reverberationis; /* reditus; 0 = non
+                                                * redditur */
+                  i32 quadra_tacita;          /* cauda: quadra sub
+                                                * limine */
 };
 
 nomen structura {
@@ -248,6 +259,7 @@ _incipere (
     _clivum_ponere(&v->lucrum, i->lucrum, i->clivus);
     _clivum_statuere(&v->positio, i->positio);
     _positionem_computare(v);
+    _clivum_statuere(&v->missio, i->missio);
     si (i->genus == MIXTURA_IUSSUM_TABULAM)
     {
         v->genus      = MIXTURA_VOX_TABULAE;
@@ -360,7 +372,14 @@ _agere (
                 _clivum_ponere(&v->lucrum, i->lucrum, i->clivus);
                 _clivum_ponere(&v->positio, i->positio, i->clivus);
                 _positionem_computare(v);
+                _clivum_ponere(&v->missio, i->missio, i->clivus);
             }
+            frange;
+        casus MIXTURA_IUSSUM_REVERBERATIONEM_PONERE:
+            sonus_reverberationem_ponere(&m->reverberatio,
+                                         &i->reverberatio);
+            _clivum_ponere(&m->lucrum_reverberationis, i->lucrum,
+                           i->clivus);
             frange;
         casus MIXTURA_IUSSUM_GREGEM_PONERE:
             si (i->grex >= MIXTURA_GREGES)
@@ -453,9 +472,11 @@ _segmentum_reddere (
     per (q = ZEPHYRUM; q < quadra; q++)
     {
         f32 summae[MIXTURA_GREGES][II];
-        f32 l = 0.0f;
-        f32 r = 0.0f;
+        f32 l      = 0.0f;
+        f32 r      = 0.0f;
+        f32 missa  = 0.0f;
         f32 lucrum_summae;
+        f32 lucrum_aulae;
         i32 g;
         i32 k;
 
@@ -484,6 +505,7 @@ _segmentum_reddere (
             x = _vocis_exemplum(v, &finita) * lucrum;
             summae[v->grex][ZEPHYRUM] += x * v->sinistrum;
             summae[v->grex][I] += x * v->dextrum;
+            missa += x * _clivum_provehere(&v->missio);
             si (finita)
             {
                 _vocem_finire(m, k, MIXTURA_FINIS_NATURALIS,
@@ -504,6 +526,36 @@ _segmentum_reddere (
                 l += summae[g][ZEPHYRUM] * lucrum;
                 r += summae[g][I] * lucrum;
             }
+        }
+        /* aula: missa mono -> stereo umidum, in summam ante lucrum
+         * summae; reditu 0 non redditur (status servatur) */
+        lucrum_aulae = _clivum_provehere(&m->lucrum_reverberationis);
+        si (lucrum_aulae != 0.0f)
+        {
+            f32 ul;
+            f32 ur;
+
+            sonus_reverberationis_proximum(&m->reverberatio, missa, &ul,
+                                           &ur);
+            ul  *= lucrum_aulae;
+            ur  *= lucrum_aulae;
+            l   += ul;
+            r   += ur;
+            si (   ul > MIXTURA_CAUDAE_LIMEN
+                || ul < -MIXTURA_CAUDAE_LIMEN
+                || ur > MIXTURA_CAUDAE_LIMEN
+                || ur < -MIXTURA_CAUDAE_LIMEN)
+            {
+                m->quadra_tacita = ZEPHYRUM;
+            }
+            alioquin si (m->quadra_tacita < MIXTURA_CAUDAE_QUADRA)
+            {
+                m->quadra_tacita++;
+            }
+        }
+        alioquin si (m->quadra_tacita < MIXTURA_CAUDAE_QUADRA)
+        {
+            m->quadra_tacita++;
         }
         lucrum_summae = _clivum_provehere(
             &m->greges[MIXTURA_GREX_SUMMA].lucrum);
@@ -596,6 +648,7 @@ mixtura_iussum_parare (
     iussum->grex            = MIXTURA_GREX_EFFECTUS;
     iussum->lucrum          = 1.0f;
     iussum->positio         = 0.0f;
+    iussum->missio          = 0.0f;
     iussum->mutus           = FALSUM;
     iussum->clivus          = ZEPHYRUM;
     iussum->exempla         = NIHIL;
@@ -606,7 +659,10 @@ mixtura_iussum_parare (
         *(f32*)((character*)&iussum->parametra
                 + sonitus_campus(k)->offset) = 0.0f;
     }
-    iussum->semen = ZEPHYRUM;
+    iussum->semen                   = ZEPHYRUM;
+    iussum->reverberatio.aula       = 0.0f;
+    iussum->reverberatio.mollities  = 0.0f;
+    iussum->reverberatio.latitudo   = 0.0f;
 }
 
 Mixtura*
@@ -662,6 +718,16 @@ mixtura_creare (
     m->census.iussa_amissa   = ZEPHYRUM;
     m->census.nuntii_amissi  = ZEPHYRUM;
     m->census.apex           = 0.0f;
+    {
+        SonusReverberatioForma aula;
+
+        aula.aula       = 0.5f;
+        aula.mollities  = 0.5f;
+        aula.latitudo   = 1.0f;
+        sonus_reverberationem_parare(&m->reverberatio, &aula);
+    }
+    _clivum_statuere(&m->lucrum_reverberationis, 0.0f);
+    m->quadra_tacita = MIXTURA_CAUDAE_QUADRA;
     redde m;
 }
 
@@ -862,4 +928,11 @@ mixtura_rector_occupatae (
         }
     }
     redde n;
+}
+
+b32
+mixtura_cauda_vivit (
+    constans Mixtura* m)
+{
+    redde m->quadra_tacita < MIXTURA_CAUDAE_QUADRA;
 }

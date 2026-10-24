@@ -157,3 +157,14 @@ eighth before the barline". Test asserts the frames are identical with
 and without marks. Plants 5/5 red (+2 again after a formatting rewrite to
 a local pointer): segment pulse instead of total is caught only because
 the test puts a 't' change before a mark.
+
+## 2026-10-23 - cantus_status_ad (E2 of edit-by-position)
+
+State after a PREFIX [0, offset): the same lexer (`_currere`) in its counting pass (notae /
+tempora / lineae NIHIL) over a chorda that is the text truncated at offset - no second
+parser, nothing allocated. An offset inside a token reads that truncated token ('l|8' ->
+'l' without length = error), which is the honest meaning of "prefix". `<` / `>` are NOT
+range-checked by the lexer (only the next note's MIDI is), so status.octava can be -1 or 9.
+`lucrum` is an f32 inside the lector; status rounds `lucrum * C + 0.5f` - of 0..100 only
+53 and 59 truncate wrong (0.59f * 100 = 58.999..), so the test uses v59 (v33 let the
+truncation plant survive). MML has no way to CLEAR '@' once set - emendatio relies on that.

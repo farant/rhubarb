@@ -6,6 +6,7 @@
  * (decisionHandler) vocamus - litterae blocorum vetitae manent
  * (decretum 2026-07-20). */
 
+#include "postulata_macos.h"   /* PRIMUM: ante capita Apple */
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
 
@@ -897,7 +898,7 @@ _cg_in_png_scribere (CGImageRef cg, NSString* semita)
     contextus = CGBitmapContextCreate(
                     pixela, (size_t)lat, (size_t)alt, (size_t)VIII,
                     (size_t)(lat * (i32)IV), spatium,
-                    kCGImageAlphaPremultipliedLast
+                    (CGBitmapInfo)kCGImageAlphaPremultipliedLast
                         | kCGBitmapByteOrder32Big);
     CGColorSpaceRelease(spatium);
 

@@ -39,3 +39,23 @@ public for such rows. Callers that build a PartituraForma now memset it.
 Found while composing 'stella': `auditio -carmina` printed the melody's range as `A#4..D6`, recensio as `Bb4..D6`. Two copies of "a part's lowest/highest note": auditio's (MIDI -> sharp-only name table, '@' sound notes counted) and recensio's (spelled via partitura_orthographia, '@' skipped). The one with the spelling won; it moved here because partitura owns spelling. `partitura_notam_scribere` is the existing internal `_notam_scribere` behind the same Scriptor wrapper as `partitura_valorem_scribere` - so a '@' note writes `@punctum`, same as in the score.
 
 Contract worth remembering: the pulses in PartituraAmbitus are CARMEN pulses (frustum.pulsus + nota.pulsus). A note-relative pulse spells by the key at the start of the song - the test proves it with a littera-less note in a frustum starting in bar 2 under an Eb major change (Eb4 at the carmen pulse, D#4 at the frustum-relative one). Ties: first wins, at both ends (A#4 before Bb4; D# before Eb). 8 plants red; two only after adding a tied top note and an assertion on the lowest note's pulse in a frustum not starting at 0 (the first draft only checked pulsus_infimae == 0, which a dropped frustum offset also satisfies).
+
+## 2026-10-23 - partitura_notam_legere (E1 of edit-by-position)
+
+Inverse of partitura_notam_scribere, filling the same PartituraNota that orthographia
+returns (signature deviates from the drafted `littera/alteratio` out-params - one type for
+both directions). Octave belongs to the LETTER (Cb4 = 59, B#3 = 60), same as the writer.
+Accepts lowercase letters for agents ("g2", "bb4" = Bb4); accidentals not mixed (C#b4
+refused); one octave digit with optional '-' (C-1 = 0, C10 refused); 0..127. Double
+accidentals are READ (C##3) - it is emendatio, not the reader, that refuses them because
+MML writes only one.
+
+## 2026-10-23 - lineae additae: list (PartituraAddita[PARTITURA_ADDITAE])
+
+The single extra line (additae_titulus / addita / additae_ctx) became a short ordered list
+of {titulus, scribere, ctx}, so analysis lines stack (explicatio + functio, plus harmonia
+if wanted). The list ends at the first entry without titulus or scribere - callers memset
+the forma (all 7 did); the title column widens to the longest title. All callers migrated
+in one commit (harmonia/explicatio docs, recensio, auditio, three suites); output
+byte-identical. Plants 3/3 red ('dum' -> 'si' = one line only; width ignoring the extra
+titles; ctx not passed - caught by the explicatio suite, which is the one that uses ctx).

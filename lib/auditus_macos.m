@@ -14,6 +14,7 @@
 
 /* capita systematis ANTE latina.h: macra eius ('character', numeri
  * Romani) capita Apple alioquin corrumpunt */
+#include "postulata_macos.h"   /* PRIMUM: ante capita Apple */
 #include <AudioToolbox/AudioToolbox.h>
 #include <CoreAudio/CoreAudio.h>
 #include <string.h>

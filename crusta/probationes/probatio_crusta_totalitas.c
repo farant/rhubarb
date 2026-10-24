@@ -908,8 +908,11 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "casus generati",
         _casus_generatos_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "NUL", _nul_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    /* gravis (2026-10-24, Franus): sub clang 21 (Xcode macOS 27) apex
+     * auctus 363.9 MiB, arena 2.2 MiB (acervus, non pila) - parcum
+     * ...ANGW6J9 */
     { "Profunditas: parsura sola C milia",
-        _parsuram_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+        _parsuram_probare, NIHIL, NIHIL, "gravis", NIHIL },
     { "Profunditas: emissio XL milia vivit",
         _emissionem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "Pinna: emissio '$(' C milia SIGSEGV",

@@ -26,3 +26,13 @@ Seen while smoke-testing: aether's release tail is long (the bar after a
 whole note still measured -25.8 dBFS), and a solo track's RMS can read a
 hair above the full mix when another track holds a SILENT voice (gain 0)
 that keeps the render running longer - longer denominator, not a bug.
+
+## 2026-10-24 - tail grows while alive (reverb)
+
+The offline render preallocated song + AUSCULTATIO_CAUDA (2 s) and stopped when full.
+That was enough for release tails, but a reverb room of size 0.85 needs ~5 s to fall to
+-96 dB, and the first #5 demo WAV ended at -55 dB. Now, when the buffer is full and the
+concentus is still alive (which includes mixtura_cauda_vivit), capacity doubles
+(piscina allocation + copy) up to song + AUSCULTATIO_CAUDA_MAXIMA (20 s): still a hard
+guard against a sound that never ends. Songs without reverb render the same length as
+before.
