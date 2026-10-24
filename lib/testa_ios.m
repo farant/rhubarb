@@ -15,6 +15,7 @@
 #include "postulata_ios.h"
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
+#import <PhotosUI/PhotosUI.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,6 +27,7 @@
 #include "thema.h"
 #include "color.h"
 #include "chorda.h"
+#include "eventus.h"
 
 #ifndef TESTA_TITULUS
 #define TESTA_TITULUS "applicatio"   /* app.sh: -DTESTA_TITULUS="X" */
@@ -79,12 +81,19 @@ nomen structura {
 } TestaIOS;
 
 @class TestaVisus;
+@class TestaElector;
 
 /* instantia una (scaena una, UIApplicationSupportsMultipleScenes
  * FALSUM) */
 hic_manens TestaIOS       _testa;
 hic_manens TestaVisus*    _visus    = nil;
 hic_manens CADisplayLink* _vinculum = nil;
+/* C1b: electio imaginis - rector qui electorem ostendit, delegatus
+ * electoris (vivit per processum), et vexillum 'eligens' quod electorem
+ * apertum ET photographiam adhuc lectam tegit (petitio una simul) */
+hic_manens UIViewController* _rector  = nil;
+hic_manens TestaElector*     _elector = nil;
+hic_manens b32               _eligens = FALSUM;
 
 /* --- servitia et sedes --- */
 
@@ -148,6 +157,10 @@ _tempus_tactus (
 interior vacuum
 _quadrum_petere (
     vacuum);
+
+interior b32
+_imaginem_eligere (
+    vacuum* ctx);
 
 interior vacuum
 _tradere (
@@ -661,6 +674,8 @@ _initium_facere (
     _testa.ambitus.densitas        = _testa.scala_schirmi
         * DENSITAS_PUNCTI;
     _testa.ambitus.imago_glutinata = _imaginem_nullam;
+    /* C1b: electio imaginis - photographia ut depositio redit */
+    _testa.ambitus.imaginem_eligere = _imaginem_eligere;
     si (!testa_cursum_incipere(&_testa.cursus, &_testa.ambitus,
             applicatio_initium, &causa))
     {
@@ -827,7 +842,8 @@ _quadrum_petere (
 
     visus = [[[TestaVisus alloc] initWithFrame:CGRectZero] autorelease];
     [self setView:visus];
-    _visus = visus;
+    _visus   = visus;
+    _rector  = self;
     si (!_vinculum)
     {
         _vinculum = [[CADisplayLink displayLinkWithTarget:visus
@@ -852,6 +868,147 @@ _quadrum_petere (
     redde UIInterfaceOrientationMaskPortrait;
 }
 @end
+
+/* ==================================================
+ * Electio imaginis (testa-ios C1b): PHPickerViewController extra
+ * processum (nulla licentia bibliothecae), photographia erecta et
+ * intra MXXIV (R4) in $TMPDIR/imago_electa.png, deinde
+ * EVENTUS_DEPOSITIO ut plagula deposita (D2)
+ * ================================================== */
+
+interior vacuum
+_imaginem_non_lectam (
+    constans character* causa)
+{
+    imprimere("testa: imago non lecta: %s\n", causa);
+    _eligens = FALSUM;
+}
+
+/* in filo principali (provisor in cauda Apple respondet - D1 B1) */
+interior vacuum
+_imaginem_tradere (
+    UIImage* imago)
+{
+    UIGraphicsImageRendererFormat* forma;
+          UIGraphicsImageRenderer* pictor;
+                          UIImage* parva;
+                           NSData* png;
+                         NSString* via;
+              constans character* via_c;
+                          Eventus  e;
+                              i32  latitudo;
+                              i32  altitudo;
+                              i32  lat;
+                              i32  alt;
+
+    si (!imago)
+    {
+        _imaginem_non_lectam("nulla");
+        redde;
+    }
+    latitudo = (i32)([imago size].width * [imago scale]);
+    altitudo = (i32)([imago size].height * [imago scale]);
+    si (!testa_mensuras_aptare(latitudo, altitudo, M + XXIV, &lat,
+            &alt))
+    {
+        _imaginem_non_lectam("mensurae nullae");
+        redde;
+    }
+    /* drawInRect orientationem EXIF adhibet: photographia erecta */
+    forma = [UIGraphicsImageRendererFormat defaultFormat];
+    [forma setScale:1.0];
+    pictor = [[UIGraphicsImageRenderer alloc]
+        initWithSize:CGSizeMake((CGFloat)lat, (CGFloat)alt) format:forma];
+    parva = [pictor imageWithActions:^(UIGraphicsImageRendererContext* c) {
+        (vacuum)c;
+        [imago drawInRect:CGRectMake(0.0, 0.0, (CGFloat)lat,
+            (CGFloat)alt)];
+    }];
+    [pictor release];
+    png  = parva ? UIImagePNGRepresentation(parva) : nil;
+    via  = [NSTemporaryDirectory()
+        stringByAppendingPathComponent:@"imago_electa.png"];
+    si (!png || ![png writeToFile:via atomically:YES])
+    {
+        _imaginem_non_lectam("PNG non scriptum");
+        redde;
+    }
+    via_c = [via fileSystemRepresentation];
+    imprimere("testa: imago electa %dx%d -> %dx%d\n", (int)latitudo,
+        (int)altitudo, (int)lat, (int)alt);
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                         = EVENTUS_DEPOSITIO;
+    e.tempus                        = fenestra_tempus_ms();
+    e.datum.depositio.viae.datum    = (i8*)(vacuum*)(uintptr_t)via_c;
+    e.datum.depositio.viae.mensura  = (i32)strlen(via_c);
+    e.datum.depositio.numerus       = I;
+    _eligens = FALSUM;
+    _tradere(&e);
+    _quadrum_petere();
+}
+
+@interface TestaElector : NSObject <PHPickerViewControllerDelegate>
+@end
+
+@implementation TestaElector
+- (void)picker:(PHPickerViewController*)electio
+    didFinishPicking:(NSArray<PHPickerResult*>*)electa {
+    NSItemProvider* provisor;
+
+    [electio dismissViewControllerAnimated:YES completion:nil];
+    si ([electa count] == ZEPHYRUM)
+    {
+        _eligens = FALSUM;    /* abiecta */
+        redde;
+    }
+    provisor = [[electa objectAtIndex:ZEPHYRUM] itemProvider];
+    si (![provisor canLoadObjectOfClass:[UIImage class]])
+    {
+        _imaginem_non_lectam("forma ignota");
+        redde;
+    }
+    [provisor loadObjectOfClass:[UIImage class]
+        completionHandler:^(id<NSItemProviderReading> res, NSError* e) {
+        UIImage* imago;
+
+        (vacuum)e;
+        imago = [(UIImage*)res retain];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            _imaginem_tradere(imago);
+            [imago release];
+        });
+    }];
+}
+@end
+
+/* servitium TestaImaginemEligere: electorem ostendit nisi iam eligitur
+ * (electio aperta aut photographia adhuc legitur) */
+interior b32
+_imaginem_eligere (
+    vacuum* ctx)
+{
+      PHPickerConfiguration* configuratio;
+    PHPickerViewController* electio;
+
+    (vacuum)ctx;
+    si (_eligens || !_rector)
+    {
+        redde FALSUM;
+    }
+    si (!_elector)
+    {
+        _elector = [[TestaElector alloc] init];
+    }
+    configuratio = [[[PHPickerConfiguration alloc] init] autorelease];
+    [configuratio setFilter:[PHPickerFilter imagesFilter]];
+    [configuratio setSelectionLimit:I];
+    electio = [[[PHPickerViewController alloc]
+        initWithConfiguration:configuratio] autorelease];
+    [electio setDelegate:_elector];
+    _eligens = VERUM;
+    [_rector presentViewController:electio animated:YES completion:nil];
+    redde VERUM;
+}
 
 /* scaena (D9): Info.plist UISceneDelegateClassName = TestaScaenaDelegatus */
 @interface TestaScaenaDelegatus : UIResponder <UIWindowSceneDelegate>

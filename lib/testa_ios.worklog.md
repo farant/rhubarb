@@ -44,3 +44,20 @@
   keychain (`security find-identity`), passed to codesign BY HASH.
 - Installing over an existing app keeps its data container (drawings
   survived the pop-up fix reinstall).
+
+## 2026-10-24 - photo picker (C1b T3)
+
+- `PHPickerViewController` runs out of process: no photo-library
+  permission, no Info.plist usage string. `[PHPickerFilter imagesFilter]`
+  needs no UniformTypeIdentifiers link.
+- The provider calls back on Apple's queue; the shell retains the
+  `UIImage` and `dispatch_async`s to the main queue, so all our code
+  stays on the main thread. Blocks compile under the house ObjC flags
+  (manual retain/release, no ARC).
+- `UIGraphicsImageRenderer` (format scale 1.0) + `[UIImage drawInRect:]`
+  = the EXIF orientation applied, so a portrait photo arrives upright;
+  alpha is kept (default format is not opaque).
+- The picked photo is written to `$TMPDIR/imago_electa.png` and delivered
+  as `EVENTUS_DEPOSITIO` - pictor's drop handler (T1) does the rest.
+- One flag `_eligens` covers "picker open" and "photo still loading";
+  an empty result (Cancel or swipe-down) clears it.

@@ -141,6 +141,19 @@ testa_actio_ex_phase (
     i32 activi_ante,
     i32 activi_post);
 
+/* mensurae imaginis intra 'maxima' (testa-ios C1b R4: photographia
+ * electa, latus longius <= MXXIV): utraque <= maxima -> immutatae;
+ * aliter latus longius = maxima, alterum proportione, rotundatum
+ * (dimidium sursum), minimum I. FALSUM si latitudo, altitudo aut
+ * maxima ZEPHYRUM. */
+b32
+testa_mensuras_aptare (
+    i32  latitudo,
+    i32  altitudo,
+    i32  maxima,
+    i32* lat,
+    i32* alt);
+
 /* EVENTUS_FACULTATES tactus: super (hover) FALSUM, pressio FALSUM
  * (pressio digiti Fire 0.10 synthetica, spica) */
 vacuum

@@ -508,6 +508,46 @@ _sectio_gradus_tactus (
     CREDO_AEQUALIS_S32(testa_actio_ex_phase(IX, I, I), -I);
 }
 
+/* C1b R4: photographia electa intra MXXIV (Review Focus 2: panorama
+ * longissima, numquam ZEPHYRUM) */
+interior vacuum
+_sectio_mensurae (
+    CredoContextus* c)
+{
+    i32 l;
+    i32 a;
+
+    (vacuum)c;
+    CREDO_GRADUS("parva: immutata");
+    CREDO_VERUM(testa_mensuras_aptare(DCCC, DC, M + XXIV, &l, &a));
+    CREDO_AEQUALIS_I32(l, DCCC);
+    CREDO_AEQUALIS_I32(a, DC);
+    CREDO_GRADUS("photographia jacens et erecta");
+    CREDO_VERUM(testa_mensuras_aptare(IV * M + XXXII, III * M + XXIV,
+        M + XXIV, &l, &a));
+    CREDO_AEQUALIS_I32(l, M + XXIV);
+    CREDO_AEQUALIS_I32(a, DCCLXVIII);
+    CREDO_VERUM(testa_mensuras_aptare(III * M + XXIV, IV * M + XXXII,
+        M + XXIV, &l, &a));
+    CREDO_AEQUALIS_I32(l, DCCLXVIII);
+    CREDO_AEQUALIS_I32(a, M + XXIV);
+    CREDO_GRADUS("panorama: proportio, minimum I");
+    CREDO_VERUM(testa_mensuras_aptare(XVI * M, III * M, M + XXIV, &l,
+        &a));
+    CREDO_AEQUALIS_I32(l, M + XXIV);
+    CREDO_AEQUALIS_I32(a, CXCII);
+    CREDO_VERUM(testa_mensuras_aptare(XX * M, V, M + XXIV, &l, &a));
+    CREDO_AEQUALIS_I32(l, M + XXIV);
+    CREDO_AEQUALIS_I32(a, I);
+    CREDO_GRADUS("rotundatio: dimidium sursum");
+    CREDO_VERUM(testa_mensuras_aptare(M, CCCXXXIII, D, &l, &a));
+    CREDO_AEQUALIS_I32(l, D);
+    CREDO_AEQUALIS_I32(a, CLXVII);
+    CREDO_GRADUS("ZEPHYRUM: FALSUM");
+    CREDO_FALSUM(testa_mensuras_aptare(ZEPHYRUM, X, M + XXIV, &l, &a));
+    CREDO_FALSUM(testa_mensuras_aptare(X, X, ZEPHYRUM, &l, &a));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "geometria", _sectio_geometria, NIHIL, NIHIL, NIHIL, NIHIL },
     { "margo", _sectio_margo, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -520,6 +560,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "rectangulum contenti", _sectio_rectangulum, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "phases UITouch", _sectio_gradus_tactus, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "mensurae imaginis", _sectio_mensurae, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

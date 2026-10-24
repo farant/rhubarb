@@ -1,8 +1,10 @@
 # pictor: a photo from the library, on the phone (spec C1b)
 
-**Status: PROBATUM 2026-10-24** - designed in conversation with Fran
+**Status: IMPLETUM 2026-10-24** - designed in conversation with Fran
 (2026-10-24), approved ("that looks great"); plan
-`project-specs/testa-ios-imago-plan.md`. Worktree quarta. Follows
+`project-specs/testa-ios-imago-plan.md`; built in T1-T3 and tried by
+Fran on the phone ("that looks great"). Section VI records what
+building found. Worktree quarta. Follows
 C1 (`project-specs/testa-ios-spec.md`, IMPLETUM: pictor on Fran's
 iPhone). Ledger: mobile vision desideratum ...577GAS.
 
@@ -165,3 +167,43 @@ drawings to Photos, the pinacotheca.
   retain/release (no ARC), so captured objects need explicit care.
 - Whether a picked HEIC loads as `UIImage` through the provider without
   extra work (expected yes).
+
+
+## VI. Built (2026-10-24)
+
+Commits in quarta: T1 976f1d71 (drop -> paste), T2 0e4434b7 (picture
+square by capability), T3 (this commit: resize rule, iOS picker).
+
+**Rulings made while building**
+
+- **Drop test at phone size:** a 480 x 480 document with four pastes in
+  one section peaked at 433 MiB of arena (credo ceiling 256 MiB); the
+  section uses 215 x 419 (the phone's surface) instead of a "gravis"
+  flag.
+- **Fake service without global state:** examen refused a static call
+  counter written in a section and reset nowhere; the counter now
+  travels through `imaginem_eligere_ctx`.
+- **No UniformTypeIdentifiers link:** the shell uses
+  `[PHPickerFilter imagesFilter]`, no UTType constants - the `testa_ios`
+  rule gained `-framework PhotosUI` only.
+- **Resize rule** `testa_mensuras_aptare` (testa_initus, host-tested):
+  integer, round half up, i64 intermediate, minimum I; FALSUM on a zero
+  input. Not device-run on Android (no tablet at hand); pure C.
+- **Picker in the shell:** `TestaElector` (PHPicker delegate, lives for
+  the process), `_rector` = the root view controller presents it; one
+  flag `_eligens` covers picker-open and loading. `loadObjectOfClass:
+  [UIImage class]` -> main queue -> `UIGraphicsImageRenderer` at scale 1
+  (`drawInRect` applies EXIF orientation, alpha kept) -> PNG
+  `$TMPDIR/imago_electa.png` -> `EVENTUS_DEPOSITIO`. Blocks compile
+  under the house flags with manual retain/release (the image is
+  retained across the hop to the main queue).
+
+**Measured / checked:** resize suite 11/11; simulator smoke EXITUS=0 with
+the picture square in its PNG; `ios-struere` and `android-struere`
+green; desktop golden unchanged; phone: Fran picked photos, A/B, OK
+("that looks great").
+
+**AUDIENDA answered:** blocks compile under `-std=c89 -pedantic
+-Werror` ObjC (precedent `lib/vitrea_macos.m`); HEIC photos load as
+`UIImage` through the provider with no extra work (Fran's library).
+

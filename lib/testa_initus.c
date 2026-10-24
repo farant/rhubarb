@@ -298,6 +298,43 @@ testa_actio_ex_phase (
     }
 }
 
+b32
+testa_mensuras_aptare (
+    i32  latitudo,
+    i32  altitudo,
+    i32  maxima,
+    i32* lat,
+    i32* alt)
+{
+    i32 longius;
+    i32 brevius;
+    i32 aptatum;
+
+    si (   latitudo == ZEPHYRUM || altitudo == ZEPHYRUM
+        || maxima   == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (latitudo <= maxima && altitudo <= maxima)
+    {
+        *lat = latitudo;
+        *alt = altitudo;
+        redde VERUM;
+    }
+    longius = latitudo >= altitudo ? latitudo : altitudo;
+    brevius = latitudo >= altitudo ? altitudo : latitudo;
+    /* brevius * maxima / longius, dimidium sursum; i64 ne superfluat */
+    aptatum  = (i32)(((i64)brevius * (i64)maxima + (i64)(longius / II))
+             / (i64)longius);
+    si (aptatum < I)
+    {
+        aptatum = I;
+    }
+    *lat = latitudo >= altitudo ? maxima : aptatum;
+    *alt = latitudo >= altitudo ? aptatum : maxima;
+    redde VERUM;
+}
+
 vacuum
 testa_facultates_tactus (
     Eventus* ev,

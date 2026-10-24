@@ -97,6 +97,7 @@
       <vexillum! (>-framework QuartzCore
       <vexillum! (>-framework CoreGraphics
       <vexillum! (>-framework Foundation
+      <vexillum! (>-framework PhotosUI
     </regula>
   </nexus>
   <vendor>
