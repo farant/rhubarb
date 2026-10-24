@@ -1656,6 +1656,8 @@ PORTAE = {
                 r'PORTA AEDILIS: \d+'),
     'android-struere': (['./tools/android_struere_porta.sh'],
                         r'PORTA ANDROID-STRUERE: (viridis|FRACTA)'),
+    'ios-struere': (['./tools/ios_struere_porta.sh'],
+                    r'PORTA IOS-STRUERE: (viridis|FRACTA)'),
     'briar-fumus': (['./tools/briar_fumus.sh'],
                     r'fumus briar: (sanum|FRACTUM)'),
     # 'materia-shim' RECESSIT (silva-migratio T10c, 2026-09-25): silva

@@ -1,7 +1,9 @@
 # Testa iOS - pictor on the iPhone, the pilot of house iOS apps (spec C1)
 
-**Status: PROPOSITUM 2026-10-23** - designed in conversation with Fran
-(2026-10-23), awaiting review of this text. Worktree quarta (main =
+**Status: IMPLETUM 2026-10-24** - designed in conversation with Fran
+(2026-10-23), approved, built in tasks T1-T4 (plan
+`project-specs/testa-ios-plan.md`); pictor runs on Fran's iPhone 15 Pro
+Max (iOS 26.4) over Wi-Fi. Section VI records what building found. Worktree quarta (main =
 quarta = ede64ea5 when written). Third shell of the app contract
 `testa` (B1: `project-specs/testa-spec.md`, IMPLETUM). Ledger: mobile
 vision desideratum ...577GAS.
@@ -286,3 +288,82 @@ renews it.
   (Fran asked).
 - How a stroke can be injected in the simulator without XCTest/XCUITest.
 - `exit()` from smoke mode is accepted by iOS for a development build.
+
+
+## VI. Built (2026-10-24)
+
+Commits in quarta: T1 c36819f8 (testa_initus + UITouch phases), T2
+0109b9b6 (layers icon, no tool name), T3 583c4dc8 (shell, simulator,
+aedilis), T4 (this commit: device path, gate, pop-ups inside the
+surface).
+
+**Rulings made while building**
+
+- **UIKit under `-std=c89`:** UIKit headers write `static inline`;
+  `include/postulata_ios.h` (`#define inline __inline__`) comes first in
+  every iOS `.m` - the sibling of `postulata_android.h`.
+- **aedilis reads iOS `.m` files:** `.m` headers come from `clang -MM`,
+  which saw only the macOS SDK. New `<oracula>` section in aedilis.stml
+  picks the compiler by variant suffix (`_ios` -> `xcrun --sdk
+  iphonesimulator clang -target ...`); an incomplete rule refuses the
+  config.
+- **Link flags from aedilis:** `bin/aedilis X.c --varians ios,posix
+  --nexus` prints the closure's frameworks (same list as the generated
+  struere.sh); `tools/ios/app.sh` reads them - nothing hard-coded. Not an
+  `N` line in `--partes`: the silva conflator refuses unknown kinds.
+- **Device signing (D7) by data:** `tools/ios/communia.sh` picks the
+  phone from `devicectl --json-output` (paired + Developer Mode), the
+  wildcard profile by `<team>.*` + `get-task-allow` + expiry +
+  `ProvisionedDevices`, and the identity whose certificate SHA-1 (from
+  the profile) is in the keychain - signing by hash, never by name. A
+  per-phone lock like Android's.
+- **Pop-ups inside the surface (Fran 2026-10-24, on the phone):** pictor
+  palettes started at their square and grew rightwards; pattern and size
+  (X per row, 226 px) were wider than the phone itself. Now: fewer per
+  row when X does not fit, then shifted left; the layers palette is
+  clamped on the left. Desktop (640) never reaches either limit.
+- **Gate `ios-struere`** (merge tier): builds pictor for the simulator
+  only. Plants by hand (a build gate's signal IS the compile error, which
+  `silva.planta` rightly rejects as "proves nothing"): a macOS-only call
+  in shared `lib/testa_cursus.c` -> FRACTA naming the file;
+  `DEVELOPER_DIR` pointed nowhere -> RECUSATA (exit 2).
+
+**Measured**
+
+| What | Simulator (iPhone 15 Pro Max, iOS 17.0) | Fran's iPhone 15 Pro Max (iOS 26.4) |
+|---|---|---|
+| View / scale | 430 x 932 pt, scale 3 | same |
+| Safe area | [0,59]-[430,898] | same |
+| pictor surface | 215 x 419 our pixels | same |
+| Smoke | 120 frames, EXITUS=0 | 120 frames, EXITUS=0 |
+| Smoke PNG | 215 x 419 | byte-identical to the simulator's |
+| App | 2.2 MB, 71 objects | 2.2 MB, signed Apple Development |
+
+**AUDIENDA answered**
+
+- Scene lifecycle on the iOS 18.1 SDK: a minimal `UISceneDelegate` named
+  in Info.plist works; no warnings seen.
+- Simulator signing: ad hoc (`codesign -s -`) installs and runs.
+- `devicectl` 397.24: `--console` streams stdout and waits for exit;
+  arguments after the bundle id reach `argv` (`-fumus`); `device copy
+  from --domain-type appDataContainer` pulls `Documents/fumus.png`.
+- Xcode 16.1 -> iOS 26.4: install, launch and copy all work over Wi-Fi
+  (here the phone's own hotspot) - devicectl enables developer disk image
+  services itself. **D8 stays where it was:** the upgrade is C2's step 0
+  (TestFlight needs the iOS 26 SDK), not needed for direct installs.
+- Stroke injection without XCTest: the shell feeds a synthetic DOWN /
+  MOVE x8 / UP through `testa_actio_ex_phase` + `testa_tactum_vertere`
+  (R4).
+- `exit()` in smoke mode: devicectl reports "terminated with the exit
+  code 0".
+
+**Fran by hand on the phone (2026-10-24):** drawing, tools, spraycan,
+layers via the new icon - fine; the one problem, pop-ups running off the
+right edge, fixed above and re-checked by Fran ("perfect").
+
+**Next (Fran):** photo library import on the phone only - a picture
+square beside the layers icon, Apple's photo picker (no permission
+prompt), the picked photo through pictor's existing paste path (pending
+paste + dithering choice, new layer). Then the pinacotheca (…X7RJB) and
+C2 (App Store Connect client, TestFlight).
+

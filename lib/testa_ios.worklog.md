@@ -29,3 +29,18 @@
   scale 3, safe area [0,59]-[430,898]; EXITUS=0 first run.
 - Machine id lands in `$HOME/Library/.rhubarb/machina` (0600), the
   drawing in `Documents/pictor.volumen` (seen in the simulator container).
+
+## 2026-10-24 - on the iPhone (testa-ios T4)
+
+- Xcode 16.1 / devicectl 397.24 installs, launches and copies files on
+  iOS 26.4 over Wi-Fi (the phone's own hotspot): "Enabling developer disk
+  image services" happens by itself. The D8 upgrade is only for C2.
+- Smoke PNG from the phone is byte-identical to the simulator's: the
+  composition is deterministic across simulator and device.
+- `plutil -convert json` fails on a whole provisioning profile (data
+  fields), so `ProvisionedDevices` is walked with `plutil -extract
+  ProvisionedDevices.N raw` (tools/ios/communia.sh).
+- Signing identity = the profile certificate whose SHA-1 is in the
+  keychain (`security find-identity`), passed to codesign BY HASH.
+- Installing over an existing app keeps its data container (drawings
+  survived the pop-up fix reinstall).

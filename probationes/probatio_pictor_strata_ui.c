@@ -535,10 +535,82 @@ _sectio_telephonum (
     volumen_claudere(vol);
 }
 
+/* testa-ios T4 (Franus 2026-10-24: palettae ultra marginem dextrum in
+ * telephono): in latitudine ANGUSTISSIMA quaeque palette - ex quadrato
+ * suo aperta - intra superficiem stat, et optiones eius intra
+ * palettam (pauciores per lineam ubi X non capiuntur) */
+interior vacuum
+_sectio_palettae_telephoni (
+    CredoContextus* c)
+{
+     constans character* ids[VI];
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                Volumen* vol;
+       PictorApplicatio  app;
+             ManusLudus* m;
+              Componens* q;
+              Componens* p;
+              Componens* o;
+                    i32  i;
+                    i32  k;
+                    s32  x;
+                    s32  y;
+
+    ids[ZEPHYRUM]  = "quadratum.instrumentum";
+    ids[I]         = "quadratum.color_primus";
+    ids[II]        = "quadratum.color_secundus";
+    ids[III]       = "quadratum.exemplar";
+    ids[IV]        = "quadratum.magnitudo";
+    ids[V]         = "quadratum.strata";
+    piscina        = c->piscina;
+    intern         = internamentum_creare(piscina);
+    thema_initiare();
+    vol = volumen_temporarium(piscina, "probatio_pictor_palettae_tel");
+    CREDO_VERUM(pictor_applicatio_aedificare(&app, piscina, intern, vol,
+        CLXXXVII, CCCXXIII));
+    m = manus_ludus_creare(piscina, app.d);
+    dispensator_recomponere(app.d);
+    per (i = ZEPHYRUM; i < VI; i++)
+    {
+        CREDO_GRADUS(ids[i]);
+        q = nodus_arboris(&app, ids[i]);
+        CREDO_NON_NIHIL(q);
+        si (!q)
+        {
+            perge;
+        }
+        _origo(q, &x, &y);
+        (vacuum)manus_ludus_premere_ad(m, x + q->fines.latitudo / II,
+            y + q->fines.altitudo / II);
+        dispensator_recomponere(app.d);
+        p = nodus_arboris(&app, "palette");
+        CREDO_NON_NIHIL(p);
+        si (p)
+        {
+            _origo(p, &x, &y);
+            CREDO_VERUM(x >= ZEPHYRUM);
+            CREDO_VERUM(x + p->fines.latitudo <= CLXXXVII);
+            per (k = ZEPHYRUM; k < componens_numerus_liberorum(p); k++)
+            {
+                o = componens_liberum(p, k);
+                CREDO_VERUM(   o->fines.x >= ZEPHYRUM
+                            && o->fines.x + o->fines.latitudo
+                               <= p->fines.latitudo);
+            }
+        }
+        CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+        dispensator_recomponere(app.d);
+    }
+    volumen_claudere(vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "palette stratorum", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "linea status in telephono", _sectio_telephonum, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "palettae intra telephonum", _sectio_palettae_telephoni, NIHIL,
+        NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

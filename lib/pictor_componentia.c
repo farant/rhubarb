@@ -142,7 +142,10 @@ hic_manens constans s32 magnitudines_lineae[V] = {
  * optiones XX x XX, II inter, IV margo, VI per lineam (exemplaria X).
  * genus 'instrumentum', 'color_primus'/'color_secundus' aut
  * 'exemplar' (P3; optiones coloribus primo et secundo, ut
- * quadratum); electum = valor currens (titulus ':electum') */
+ * quadratum); electum = valor currens (titulus ':electum').
+ * Palette intra [limes_x0, limes_x1) superficiei manet: angusta
+ * (telephonum, CCXV) optiones pauciores per lineam habet, deinde
+ * sinistrorsum movetur (Franus 2026-10-24, testa-ios T4) */
 interior Componens*
 palettam_componere (
                 Piscina* piscina,
@@ -150,6 +153,8 @@ palettam_componere (
                  chorda  genus,
                     s32  x,
                     s32  y_quadrati,
+                    s32  limes_x0,
+                    s32  limes_x1,
                  chorda  instrumentum,
                     s32  color_currens,
                     s32  primus,
@@ -163,6 +168,7 @@ palettam_componere (
                     b32  aspergilli;
                     s32  n;
                     s32  per_lineam;
+                    s32  capacitas;
                     s32  k;
                     s32  latitudo;
                     s32  altitudo;
@@ -192,10 +198,23 @@ palettam_componere (
     /* P3: exemplaria (IV lineae) et magnitudines X per lineam, cetera
      * VI */
     per_lineam  = (exemplaria || mensurae) ? X : VI;
+    capacitas   = (limes_x1 - limes_x0 - VIII + II) / (XX + II);
+    si (capacitas >= I && per_lineam > capacitas)
+    {
+        per_lineam = capacitas;
+    }
     latitudo = IV + (n < per_lineam ? n : per_lineam) * (XX + II) - II
              + IV;
     altitudo = IV + ((n + per_lineam - I) / per_lineam) * (XX + II) - II
              + IV;
+    si (x + latitudo > limes_x1)
+    {
+        x = limes_x1 - latitudo;
+    }
+    si (x < limes_x0)
+    {
+        x = limes_x0;
+    }
     palette   = nodus(piscina, intern, "palette", PARTES_DIALOGUS, x,
         y_quadrati - altitudo - II, latitudo, altitudo);
     per (k = ZEPHYRUM; k < n; k++)
@@ -379,7 +398,8 @@ indicem_tractus_addere (
 /* L3: palette stratorum (PARTES_DIALOGUS 'palette') supra quadratum,
  * margine dextro ad dextrum eius (x_dextrum): ordines summo primo -
  * oculus (XX x XX, 'oculus.<id>', "oculus:<0|1>") et nomen (C x XX,
- * 'stratum.<id>', "stratum:<id>[:electum]"); infra '+' et '-' */
+ * 'stratum.<id>', "stratum:<id>[:electum]"); infra '+' et '-'.
+ * Intra [limes_x0, ...) manet (testa-ios T4: margo sinister) */
 interior Componens*
 strata_palettam_componere (
                     Piscina* piscina,
@@ -387,7 +407,8 @@ strata_palettam_componere (
   constans PictorDocumentum* doc,
                         s32  currens,
                         s32  x_dextrum,
-                        s32  y_quadrati)
+                        s32  y_quadrati,
+                        s32  limes_x0)
 {
                Componens* palette;
                Componens* o;
@@ -404,8 +425,9 @@ strata_palettam_componere (
     latitudo  = IV + XX + II + C + IV;
     altitudo  = IV + ((s32)n + I) * (XX + II) - II + IV;
     palette   = nodus(piscina, intern, "palette", PARTES_DIALOGUS,
-        x_dextrum - latitudo, y_quadrati - altitudo - II, latitudo,
-        altitudo);
+        x_dextrum - latitudo < limes_x0 ? limes_x0
+                                        : x_dextrum - latitudo,
+        y_quadrati - altitudo - II, latitudo, altitudo);
     per (k = ZEPHYRUM; k < n; k++)
     {
         /* summum primum */
@@ -832,7 +854,7 @@ pictor_componere (
 
             ps = strata_palettam_componere(piscina, intern, cfg->doc,
                 stratum_currens_compositum(&ramus, cfg->doc),
-                fs.x + fs.latitudo - cw, qy);
+                fs.x + fs.latitudo - cw, qy, ZEPHYRUM);
             indicem_tractus_addere(piscina, intern, ps, motus,
                 cfg->doc);
             componens_addere_liberum(radix, ps);
@@ -844,7 +866,8 @@ pictor_componere (
             || chorda_aequalis_literis(palette, "magnitudo"))
         {
             componens_addere_liberum(radix, palettam_componere(piscina,
-                intern, palette, fs.x + qx, qy, instrumentum,
+                intern, palette, fs.x + qx, qy, ZEPHYRUM, latitudo,
+                instrumentum,
                 attributum_s32(&ramus,
                     chorda_aequalis_literis(palette, "magnitudo")
                     ? (chorda_aequalis_literis(instrumentum,

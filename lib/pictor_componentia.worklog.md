@@ -160,3 +160,16 @@ layout in the terminal:
 Before changing anything visible in the status line (titles, widths, order),
 run `./ludus_tessera/compile_probationes.sh` and
 `./compile_tests.sh probatio_tessellatio` too, not just `pictor`/`vicus`.
+
+## 2026-10-24 - palettes stay inside the surface (testa-ios T4)
+
+On the phone (215 wide) the palettes ran off the right edge: they start at
+their square's x and grow right, and pattern/size (X per row = 226 px)
+were wider than the whole surface. `palettam_componere` now takes
+`limes_x0, limes_x1` (the surface, `[0, latitudo)`): first fewer options
+per row if X do not fit (capacitas = (width - 8 + 2) / 22), then the
+palette is shifted left. `strata_palettam_componere` (right-aligned to
+the layers square) is clamped on the left. Desktop 640 never hits either
+limit, so desktop composition is unchanged. Test: probatio_pictor_strata_ui
+"palettae intra telephonum" opens all six palettes at 187 wide (iPhone
+SE) - red on the old code for color_secundus, exemplar, magnitudo.
