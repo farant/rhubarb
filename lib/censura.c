@@ -323,6 +323,32 @@ _in_clave (
             || classis == _modulus(basis + IX + XI, XII));
 }
 
+/* index fenestrae explicationis cui pulsus pertinet (initium <=
+ * pulsus < finis); -I si nulla aut explicatio nulla */
+interior s32
+_fenestra_ad_pulsum (
+    constans Iudex* iudex,
+               s64  pulsus)
+{
+    i32 f;
+
+    si (iudex->explicatio == NIHIL)
+    {
+        redde -I;
+    }
+    per (f = ZEPHYRUM; f < iudex->explicatio->numerus_fenestrarum; f++)
+    {
+        constans ExplicatioFenestra* w =
+            &iudex->explicatio->fenestrae[f];
+
+        si (w->initium <= pulsus && pulsus < w->finis)
+        {
+            redde (s32)f;
+        }
+    }
+    redde -I;
+}
+
 /* tertia Picardiae (functio.h): tertia maior finalis in clave minore,
  * in fenestra quam functio Picardiae iudicat - licita */
 interior b32
@@ -334,25 +360,16 @@ _picardiae_nota (
      constans CarmenClavis* clavis = _clavis(iudex->carmen, pulsus);
                        s32  tertia = _modulus(VII * clavis->quintae
                                      + IX + IV, XII);
-                       i32 f;
+                       s32 f       = _fenestra_ad_pulsum(iudex,
+                                                          pulsus);
 
-    si (   iudex->explicatio              == NIHIL || !clavis->minor
+    si (   f < ZEPHYRUM || !clavis->minor
         || _modulus((s32)nota->nota, XII) != tertia)
     {
         redde FALSUM;
     }
-    per (f = ZEPHYRUM; f < iudex->explicatio->numerus_fenestrarum; f++)
-    {
-        constans ExplicatioFenestra* w =
-            &iudex->explicatio->fenestrae[f];
-
-        si (w->initium <= pulsus && pulsus < w->finis)
-        {
-            redde functio_tertia_picardiae(iudex->carmen,
-                                           iudex->explicatio, f);
-        }
-    }
-    redde FALSUM;
+    redde functio_tertia_picardiae(iudex->carmen, iudex->explicatio,
+                                   (i32)f);
 }
 
 interior vacuum
@@ -744,6 +761,26 @@ _omnes_sonantes (
     redde n;
 }
 
+/* fenestra temporis acordum cum tertia nominat (post notas
+ * alienas remotas: arpeggium E2 E3 B3, G4 = Em). Sub sono >= III
+ * notarum fenestra numquam vacua est: genus non inspicitur */
+interior b32
+_fenestra_cum_tertia (
+    constans Iudex* iudex,
+               s64  pulsus)
+{
+    constans Harmonia* h;
+                  s32  f = _fenestra_ad_pulsum(iudex, pulsus);
+                  i32  radix;
+
+    si (f < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    h = &iudex->explicatio->fenestrae[f].harmonia;
+    redde !harmonia_sine_tertia(h->classes, &radix);
+}
+
 interior vacuum
 _tertia (
     Iudex* iudex)
@@ -775,7 +812,8 @@ _tertia (
             }
             prius = fortia[t];
             si (   n >= III && novum
-                && harmonia_sine_tertia(classes, &radix))
+                && harmonia_sine_tertia(classes, &radix)
+                && !_fenestra_cum_tertia(iudex, fortia[t]))
             {
                 _addere(iudex, CENSURA_TERTIA, &k->partes[pars],
                     omnes[ZEPHYRUM].frustum, fortia[t],
@@ -982,11 +1020,12 @@ censura_iudicare (
     iudex.numerus     = ZEPHYRUM;
     iudex.explicatio  = NIHIL;
     si (   forma->activae[CENSURA_DISSONANTIA]
-        || forma->activae[CENSURA_CLAVIS])
+        || forma->activae[CENSURA_CLAVIS]
+        || forma->activae[CENSURA_TERTIA])
     {
         /* explicatio in piscina propria: inventa notas carminis et
          * causas staticas tenent, nihil ex ea (clavis: tertia
-         * Picardiae per fenestras) */
+         * Picardiae per fenestras; tertia: acordum fenestrae) */
         piscina = piscina_generare_dynamicum("censura", M * XVI);
         si (   piscina != NIHIL
             && explicatio_carminis(carmen, piscina, &explicatio))

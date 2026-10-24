@@ -99,3 +99,26 @@ Only that one class is excused - any other chromatic note in the same window sti
 The explicatio is now built when CLAVIS is on too (before: only for DISSONANTIA); a
 CLAVIS-only forma pays for the window analysis. Six house songs: only completorium changed
 (2 -> 0).
+
+## 2026-10-24 - tertia: judged against the window chord (desideratum ...D03RH)
+
+The rule judged only the instant: vigilia's arpeggio (E2 E3 B3 at the downbeat, G4 on
+the fourth eighth) read "voces 3 sine tertia" on 18 downbeats although the explicatio
+names the bar Em. Now the instant still triggers (>= 3 voices, a new attack, classes
+without third), but _fenestra_cum_tertia stays silent when the window containing the beat
+names a chord with a third (window classes = after non-chord-tone removal; sus counts as
+"with" since harmonia_sine_tertia treats sus as deliberate). A bare-fifth window still
+fires, also when the third only arrives in the next window. Shared lookup
+_fenestra_ad_pulsum (index, -I if none) now serves both this and the Picardy skip.
+
+The window's genus is not checked: under an instant of >= 3 notes the window is never
+empty, so a NULLA guard would be untestable code - dropped.
+
+Explicatio is now built when TERTIA is on as well. Old 'tertia' fixture: bars 1, 3, 4
+(windows Dm, A7, Dm) no longer fire; only bar 6 (D3 D3 D5, window "(D)") remains and still
+carries the 'lowest equal = earlier part' and 'sustained once' checks. New 'fractum'
+section: bar 1 arpeggio with G (silent), bar 2 E+B only (fires at both strong beats -
+the arpeggio restarts), bar 3 G at mid-bar (silent: window Em).
+
+House songs with +tertia: vigilia 18 -> 0, completorium 7 -> 0 (chant + drone over Dm,
+C, F and the Picardy D); the others 0 -> 0; default rules unchanged everywhere.

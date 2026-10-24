@@ -450,10 +450,11 @@ _sectio_parallelae (
 }
 
 
-/* tertia: D3 A4 D5 ad initium (sic), F4 ad medium (non); D A D in
- * tempore debili (non); A2 G4 E5 (sic), A2 G4 C#5 (non: A7); notae
- * sustentae ad medium (sic); duae voces sine tertia (non); infimae
- * aequales: pars prior; acordum sustentum semel */
+/* tertia: D3 A4 D5 ad initium, F4 ad medium - fenestra Dm (non); D A
+ * D in tempore debili (non); A2 G4 E5 ante C#5 - fenestra A7 (non);
+ * notae sustentae ad medium in fenestra Dm (non); duae voces sine
+ * tertia (non); D3 D3 D5 in fenestra (D) (sic): infimae aequales =
+ * pars prior; acordum sustentum semel */
 interior vacuum
 _sectio_tertia (
     CredoContextus* c)
@@ -485,30 +486,49 @@ _sectio_tertia (
             CREDO_VERUM (inv[q].regula != CENSURA_TERTIA);
         }
     }
-    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == IV);
-    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].mensura, I);
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == I);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].mensura, VI);
     CREDO_AEQUALIS_S64 (inv[ZEPHYRUM].pulsus, ZEPHYRUM);
-    CREDO_CHORDA_AEQUALIS_LITERIS (inv[ZEPHYRUM].pars, "bassus");
+    CREDO_CHORDA_AEQUALIS_LITERIS (inv[ZEPHYRUM].pars, "media");
     CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].nota->nota, L);
     CREDO_VERUM (inv[ZEPHYRUM].nota_altera == NIHIL);
-    CREDO_AEQUALIS_I32 (inv[I].mensura, III);
-    CREDO_AEQUALIS_S64 (inv[I].pulsus, ZEPHYRUM);
-    CREDO_AEQUALIS_I32 (inv[II].mensura, IV);
-    CREDO_AEQUALIS_S64 (inv[II].pulsus, (s64)MCMXX);
-    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[ZEPHYRUM]),
-        "mensura 1 bassus: voces 3 sine tertia: D3 A4 D5 "
-        "(frustum 0, offset 3)\n");
-    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[I]),
-        "mensura 3 bassus: voces 3 sine tertia: A2 G4 E5 "
-        "(frustum 0, offset 16)\n");
-    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[II]),
-        "mensura 4 +1920 bassus: voces 3 sine tertia: D3 A4 D5 "
-        "(frustum 0, offset 24)\n");
     /* infimae aequales (D3 media, D3 bassus): pars prior nominatur;
      * acordum sustentum ad medium mensurae 6 non iteratur */
-    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[III]),
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[ZEPHYRUM]),
         "mensura 6 media: voces 3 sine tertia: D3 D3 D5 "
         "(frustum 0, offset 43)\n");
+}
+
+/* tertia per fenestram: acordum fractum (arpeggium) E3 B3 E3 G3
+ * super E2 B3 (fenestra Em) non; mensura 2 sola E et B (fenestra
+ * E(5), tertia demum in fenestra proxima) sic, ad initium et ad
+ * medium (arpeggium iteratur); mensura 3 G ad medium (fenestra Em)
+ * non */
+interior vacuum
+_sectio_fractum (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"a\" clavis=\"e minor\">"
+        "<pars titulus=\"bassus\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o2 e1 | e1 | e1</textus></frustum>"
+        "</pars><pars titulus=\"pad\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 b1 | b1 | b1</textus></frustum>"
+        "</pars><pars titulus=\"arp\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 e8 b8 e8 g8 e8 b8 e8 g8 | e8 b8 e8 "
+        "b8 e8 b8 e8 b8 | e2 g2</textus></frustum></pars>"
+        "</carmen></carmina>");
+    CensuraInventum inv[CAPACITAS];
+       CensuraForma f = _sola(CENSURA_TERTIA);
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == II);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[ZEPHYRUM]),
+        "mensura 2 bassus: voces 3 sine tertia: E2 E3 B3 "
+        "(frustum 0, offset 8)\n");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[I]),
+        "mensura 2 +1920 bassus: voces 3 sine tertia: E2 E3 B3 "
+        "(frustum 0, offset 8)\n");
 }
 
 
@@ -762,6 +782,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "parallelae", _sectio_parallelae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "saltus", _sectio_saltus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tertia", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fractum", _sectio_fractum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "explicata", _sectio_explicata, NIHIL, NIHIL, NIHIL, NIHIL },
     { "capacitas", _sectio_capacitas, NIHIL, NIHIL, NIHIL, NIHIL },
     { "liber", _sectio_liber, NIHIL, NIHIL, NIHIL, NIHIL },

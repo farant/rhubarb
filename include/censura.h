@@ -33,7 +33,9 @@
  *                omnes) quarum classes acordum sine tertia faciunt
  *                (harmonia_sine_tertia: D3 A4 D5, A2 G4 E5); semel
  *                per sonum - nota aliqua post tempus forte prius
- *                incipiat (acordum sustentum non iteratur)         -
+ *                incipiat (acordum sustentum non iteratur); NON si
+ *                fenestra explicationis cui tempus pertinet acordum
+ *                cum tertia nominat (arpeggium E2 E3 B3, G4: Em)  -
  *
  * TEMPUS FORTE: initium mensurae; in 4/x etiam medium; in metris
  * compositis (6/8, 9/8, 12/8) omnis tertia octava. Percussio ('@')
