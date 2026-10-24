@@ -201,8 +201,10 @@ _sectio_secunda (
 {
     constans Mundus* ctx = (constans Mundus*)c->suita;
 
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>pictor_imago_fons in pf->doc->piscina allocat (pictor_documentum_sigillum_hex; arena fixurae crescit) - vitium bibliothecae, parcum 01M5DWCWHCV4Q1Q8Z8767WTA47 */
     CREDO_VERUM(pictor_imago_fons(ctx->sigillum, ctx->pf)
                 == pictor_documentum_proiectio(ctx->doc));
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena documenti (parcum ...TA47) */
     CREDO_NIHIL(pictor_imago_fons(chorda_ex_literis("alienum",
         c->piscina), ctx->pf));
 }
@@ -221,6 +223,7 @@ _sectio_tertia (
     t = tabula_pixelorum_creare_nuda(c->piscina, LXIV, XLVIII);
     tabula_pixelorum_vacare(t,
         color_ad_pixelum(thema_color(COLOR_BACKGROUND)));
+    /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena documenti (parcum ...TA47) */
     delineare_mandata(ctx->m, t, pictor_imago_fons, ctx->pf);
     /* linea documenti y=2 sub pan (-5,3) et margine cellulae (VI,
      * VIII - tabula ad cellulam I, ut folium scribae): schirmo y=13,

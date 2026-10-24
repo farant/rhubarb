@@ -148,7 +148,7 @@ _ferentes_numerare(
 /* Nodos elementorum titulo dato numerare (tota arbore). */
 interior i32
 _titulo_numerare(
-    StmlNodus*           n,
+    constans StmlNodus*  n,
     constans character*  titulus)
 {
     i32 summa;
@@ -188,9 +188,9 @@ _titulo_numerare(
  * quaeritur. */
 interior StmlNodus*
 _definitio_intra_invenire(
-    StmlNodus*  canon_radix,
-    chorda      titulus,
-    chorda      intra)
+    constans StmlNodus*  canon_radix,
+    chorda               titulus,
+    chorda               intra)
 {
     i32 i;
 
@@ -223,8 +223,8 @@ _definitio_intra_invenire(
 
 interior StmlNodus*
 _elementum_invenire(
-    StmlNodus*  canon_radix,
-    chorda      titulus)
+    constans StmlNodus*  canon_radix,
+    chorda               titulus)
 {
     i32 i;
 
@@ -399,7 +399,7 @@ _declarationem_invenire(
 /* Omnes nodos tituli dati in Xar colligere (transitus profundus). */
 interior vacuum
 _titulo_colligere(
-    StmlNodus*           n,
+    constans StmlNodus*  n,
     constans character*  titulus,
     Xar*                 ex)
 {
@@ -413,7 +413,7 @@ _titulo_colligere(
     si (n->genus == STML_NODUS_ELEMENTUM && n->titulus &&
         chorda_aequalis_literis(*n->titulus, titulus))
     {
-        *(StmlNodus**)xar_addere(ex) = n;
+        *(constans StmlNodus**)xar_addere(ex) = n;
     }
 
     si (n->liberi)
@@ -695,7 +695,7 @@ _generatorem_currere(
  * tacita maneret. */
 interior b32
 _documentum_iudicare(
-    Canon*                canon,
+    constans Canon*       canon,
     constans character*   documentum,
     CanonVitiumGenus      quaesitum,
     i32*                  generis_ex,
@@ -1298,15 +1298,15 @@ _sectio_sexta (
     malae = ZEPHYRUM;
     per (i = ZEPHYRUM; i < xar_numerus(citationes); i++)
     {
-        StmlNodus* c;
-        StmlNodus* petitum;
-        StmlNodus* citans;
-        chorda*    ad;
-        chorda*    super;
-        chorda*    attributum;
-        s32        virgula;
+        constans StmlNodus* c;
+        StmlNodus*          petitum;
+        StmlNodus*          citans;
+        chorda*             ad;
+        chorda*             super;
+        chorda*             attributum;
+        s32                 virgula;
 
-        c          = *(StmlNodus**)xar_obtinere(citationes, i);
+        c          = *(constans StmlNodus**)xar_obtinere(citationes, i);
         ad         = stml_attributum_capere(c, "ad");
         super      = stml_attributum_capere(c, "super");
         attributum = stml_attributum_capere(c, "attributum");

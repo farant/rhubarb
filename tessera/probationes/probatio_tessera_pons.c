@@ -14,35 +14,38 @@
 #include <stdio.h>
 #include <string.h>
 
-s32
-principale (vacuum)
+/* Pons memoriae (LXXX x XXIV): sectio quaeque suum creat (initus,
+ * captum, amplitudo, numeri mutantur - status nullus communis); creatio
+ * semel ASSERITUR in parare_suitae (ut olim ante blocos). */
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                    b32  praeteritus;
-                Piscina* piscina;
     TesseraPonsMemoriae* pm;
 
-    piscina = piscina_generare_dynamicum("probatio_tessera_pons",
-        1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    pm = tessera_pons_memoriae_creare(piscina, LXXX, XXIV);
+    pm = tessera_pons_memoriae_creare(c->piscina, LXXX, XXIV);
     CREDO_NON_NIHIL (pm);
+}
 
 
-    /* ========================================================
-     * PROBARE: amplitudo + mutatio
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: amplitudo + mutatio
+ * ================================================== */
 
+interior vacuum
+_amplitudinem_probare (
+    CredoContextus* c)
+{
+    TesseraPonsMemoriae* pm = tessera_pons_memoriae_creare(c->piscina,
+        LXXX, XXIV);
+
+    si (pm == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     {
         i32 lat = ZEPHYRUM;
         i32 alt = ZEPHYRUM;
-
-        imprimere("\n--- Probans amplitudinem ---\n");
 
         CREDO_VERUM (pm->pons.amplitudo(pm->pons.datum, &lat, &alt));
         CREDO_AEQUALIS_I32 (lat, LXXX);
@@ -53,17 +56,27 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (lat, XL);
         CREDO_AEQUALIS_I32 (alt, XII);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: legere - scriptum portionibus, exhaustio = 0
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: legere - scriptum portionibus, exhaustio = 0
+ * ================================================== */
 
+interior vacuum
+_lectionem_probare (
+    CredoContextus* c)
+{
+    TesseraPonsMemoriae* pm = tessera_pons_memoriae_creare(c->piscina,
+        LXXX, XXIV);
+
+    si (pm == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     {
          i8 buffer[IV];
         s32 n;
-
-        imprimere("\n--- Probans lectionem scriptam ---\n");
 
         CREDO_VERUM (tessera_pons_memoriae_initum(pm,
             (constans i8*)"abcdef", VI));
@@ -83,16 +96,26 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (n, I);
         CREDO_AEQUALIS_I32 ((i32)buffer[ZEPHYRUM], (i32)'z');
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: scribere captum + purgare (buffer manet)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: scribere captum + purgare (buffer manet)
+ * ================================================== */
 
+interior vacuum
+_capturam_probare (
+    CredoContextus* c)
+{
+    TesseraPonsMemoriae* pm = tessera_pons_memoriae_creare(c->piscina,
+        LXXX, XXIV);
+
+    si (pm == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     {
         chorda captum;
-
-        imprimere("\n--- Probans capturam ---\n");
 
         CREDO_VERUM (pm->pons.scribere(pm->pons.datum,
             (constans i8*)"\033[2J", IV));
@@ -109,15 +132,25 @@ principale (vacuum)
         captum = tessera_pons_memoriae_captum(pm);
         CREDO_CHORDA_AEQUALIS_LITERIS (captum, "q");
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: intrare/egredi numerata
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: intrare/egredi numerata
+ * ================================================== */
 
+interior vacuum
+_intrare_probare (
+    CredoContextus* c)
+{
+    TesseraPonsMemoriae* pm = tessera_pons_memoriae_creare(c->piscina,
+        LXXX, XXIV);
+
+    si (pm == NIHIL)
     {
-        imprimere("\n--- Probans intrare/egredi ---\n");
-
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    {
         CREDO_FALSUM (pm->intratum);
         CREDO_VERUM (pm->pons.intrare(pm->pons.datum));
         CREDO_VERUM (pm->intratum);
@@ -126,18 +159,21 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (pm->numerus_intratum, I);
         CREDO_AEQUALIS_I32 (pm->numerus_exitum, I);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "amplitudinem", _amplitudinem_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "lectionem scriptam", _lectionem_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "capturam", _capturam_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "intrare/egredi", _intrare_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("tessera_pons", SECTIONES,
+        _suitam_parare, NIHIL);
 }

@@ -103,26 +103,17 @@ _versio_gradus (
         : (s64)ZEPHYRUM;
 }
 
-s32 principale (vacuum)
+
+/* ==================================================
+ * GENERA EVENTUUM
+ * ================================================== */
+
+interior vacuum
+_genera_probare (
+    CredoContextus* c)
 {
-      Piscina* pn;
-    JsonValor* status;
+    Piscina* pn = c->piscina;
 
-    pn = piscina_generare_dynamicum("probatio_gesta_expeditio", 65536);
-    si (!pn)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(pn);
-    status = json_objectum_creare(pn);
-
-
-    /* ==================================================
-     * GENERA EVENTUUM
-     * ================================================== */
-
-    imprimere("\n--- Probans genera eventuum ---\n");
     CREDO_VERUM (gesta_expeditio_eventus_est(
         chorda_ex_literis("expeditio-photographia", pn)));
     CREDO_VERUM (gesta_expeditio_eventus_est(
@@ -135,6 +126,20 @@ s32 principale (vacuum)
         chorda_ex_literis("ordines-additi", pn)));
     CREDO_FALSUM (gesta_expeditio_eventus_est(
         chorda_ex_literis("cella-posita", pn)));
+}
+
+/* Sectio scaenica: status UNUS per photographiam, gradus,
+ * promotionem et validationem plicatur - bloccus quisque statum
+ * priorum ex proposito continuat; gradus (CREDO_GRADUS) fracturam
+ * nominant. */
+interior vacuum
+_statum_probare (
+    CredoContextus* c)
+{
+      Piscina* pn = c->piscina;
+    JsonValor* status;
+
+    status = json_objectum_creare(pn);
 
 
     /* ==================================================
@@ -145,7 +150,7 @@ s32 principale (vacuum)
         JsonValor* ordines;
         JsonValor* rubrica;
 
-        imprimere("\n--- Probans photographiam ---\n");
+        CREDO_GRADUS ("photographia");
         CREDO_NIHIL (_validare(status, "expeditio-photographia",
             "{\"inventarium\":\"01INVENTARIUMFICTUM\",\"ordines\":[\""
             "a.sh\",\"b.sh\",\"c.sh\"],\"rubrica\":\"sors_lcg_classic"
@@ -209,7 +214,7 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        imprimere("\n--- Probans gradus et versiones rubricae ---\n");
+        CREDO_GRADUS ("gradus et versiones rubricae");
         CREDO_VERUM (_plicare(status, "gradus-positus",
             "{\"ordines\":[\"a.sh\",\"b.sh\"],\"status\":\"factum\","
             "\"per\":\"abc1234\"}",
@@ -253,7 +258,7 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        imprimere("\n--- Probans incrementum et promotionem ---\n");
+        CREDO_GRADUS ("incrementum et promotio");
         CREDO_NIHIL (_validare(status, "ordines-additi",
             "{\"ordines\":[\"d.sh\"]}", pn));
         CREDO_VERUM (_plicare(status, "ordines-additi",
@@ -290,22 +295,23 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        constans character* c;
+        constans character* causae_textus;
 
-        imprimere("\n--- Probans validationem ---\n");
+        CREDO_GRADUS ("validatio");
         /* omissum sine nota */
-        c = _validare(status, "gradus-positus",
+        causae_textus = _validare(status, "gradus-positus",
             "{\"ordines\":[\"c.sh\"],\"status\":\"omissum\"}", pn);
-        CREDO_AEQUALIS_I32 (_causae(c), I);
-        CREDO_VERUM (c != NIHIL && strstr(c, "nota") != NIHIL);
+        CREDO_AEQUALIS_I32 (_causae(causae_textus), I);
+        CREDO_VERUM (causae_textus != NIHIL
+            && strstr(causae_textus, "nota") != NIHIL);
         CREDO_NIHIL (_validare(status, "gradus-positus",
             "{\"ordines\":[\"c.sh\"],\"status\":\"omissum\",\"nota\":"
             "\"sine generatore\"}", pn));
         /* ordines duo ignoti + status pravus = tres causae */
-        c = _validare(status, "gradus-positus",
+        causae_textus = _validare(status, "gradus-positus",
             "{\"ordines\":[\"q.sh\",\"r.sh\"],\"status\":\"forsitan\""
             "}", pn);
-        CREDO_AEQUALIS_I32 (_causae(c), III);
+        CREDO_AEQUALIS_I32 (_causae(causae_textus), III);
         CREDO_AEQUALIS_I32 (_causae(_validare(status, "rubrica-mutata",
             "{\"textus\":\"\"}", pn)), I);
         CREDO_AEQUALIS_I32 (_causae(_validare(status, "gradus-positus",
@@ -313,7 +319,18 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (_causae(_validare(status, "mutatio", "{}",
             pn)), I);
     }
+}
 
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "genera eventuum expeditionis", _genera_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "status expeditionis: photographia ad validationem",
+        _statum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("gesta_expeditio", SECTIONES);
 }

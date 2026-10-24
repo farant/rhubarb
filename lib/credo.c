@@ -1746,6 +1746,12 @@ _credo_arborem_delere (
     redde bene && rmdir(via) == ZEPHYRUM;
 }
 
+/* TMPDIR suitae (infra, 'TMPDIR SUITAE'): vetus servatum dum TMPDIR in
+ * aream suitae ductum est */
+hic_manens character _credo_temporarii_vetus[DXII];
+hic_manens b32       _credo_temporarii_habuit;
+hic_manens b32       _credo_temporarii_positum;
+
 /* '<TMPDIR>/<suita sanata>.<signum>.<pid>' - '/' finalis TMPDIR
  * (macOS) demitur; nihil creatur */
 interior vacuum
@@ -1760,7 +1766,12 @@ _credo_aream_ponere (
          memoriae_index  i;
               character  ch;
 
-    tmp = getenv("TMPDIR");
+    /* areae semper sub TMPDIR VETERE, iuxta aream suitae, numquam intra
+     * eam - TMPDIR in aream suitae ductum (1d9b1756) areas sectionum
+     * nidificabat (fumus credo XI, fusio 2026-10-23) */
+    tmp = _credo_temporarii_positum
+        ? (_credo_temporarii_habuit ? _credo_temporarii_vetus : NIHIL)
+        : getenv("TMPDIR");
     si (tmp == NIHIL || tmp[0] == '\0')
     {
         tmp = "/tmp";
@@ -1846,6 +1857,205 @@ credo_area (
         area->creata = VERUM;
     }
     redde area->via;
+}
+
+
+/* ==================================================
+ * TMPDIR SUITAE et VOLUMINA RELICTA (recensio android-gradus, Franus
+ * 2026-10-23 optio b). Sub credo_suitam_currere TMPDIR = area suitae
+ * ('<suita>.suita.<pid>'): quidquid temporarium suita (et filii eius)
+ * creat in directorio SOLIUS suitae stat - suitae parallelae se non
+ * vident. Post sectionem quamque '*.volumen' ibi relictum = volumen
+ * temporarium non clausum -> fractura nominata ILLIUS sectionis, deinde
+ * deletum (cum sociis sqlite). Olim index fortuitus: C reliquiae in
+ * /tmp portam rubram faciebant (2026-10-06); TMPDIR sub fabrica (area
+ * membri, ante membrum deleta) eas tacite delebat.
+ * ================================================== */
+
+/* FIXURAE SUITAE: volumina post parare_suitae iam viva per sectiones
+ * CONSULTO vivunt (fixura communis, e.g. probatio_pictor_figurae) -
+ * inspectio sectionis eas praeterit; inspectio finalis (post
+ * purgare_suitae) omnia numerat */
+#define CREDO_FIXURAE_VOLUMINUM XVI
+hic_manens character _credo_fixurae[CREDO_FIXURAE_VOLUMINUM][CCLVI];
+hic_manens i32       _credo_fixurae_numerus;
+
+/* TMPDIR -> area suitae; area creari nequit aut TMPDIR vetus longior
+ * DXI -> nihil mutatur, nulla inspectio (numquam valor perditur) */
+interior vacuum
+_credo_temporarii_suitae_ponere (
+    CredoContextus* suitae)
+{
+    constans character* vetus;
+    constans character* area;
+
+    _credo_temporarii_positum  = FALSUM;
+    _credo_fixurae_numerus     = ZEPHYRUM;
+    vetus                      = getenv("TMPDIR");
+    si (vetus != NIHIL && strlen(vetus) >= DXII)
+    {
+        redde;
+    }
+    area = credo_area(suitae);
+    si (area == NIHIL)
+    {
+        redde;
+    }
+    _credo_temporarii_habuit = vetus != NIHIL;
+    si (_credo_temporarii_habuit)
+    {
+        strcpy(_credo_temporarii_vetus, vetus);
+    }
+    _credo_temporarii_positum = setenv("TMPDIR", area, I) == ZEPHYRUM;
+}
+
+interior vacuum
+_credo_temporarii_restituere (vacuum)
+{
+    si (!_credo_temporarii_positum)
+    {
+        redde;
+    }
+    si (_credo_temporarii_habuit)
+    {
+        (vacuum)setenv("TMPDIR", _credo_temporarii_vetus, I);
+    }
+    alioquin
+    {
+        (vacuum)unsetenv("TMPDIR");
+    }
+    _credo_temporarii_positum = FALSUM;
+}
+
+/* appellatio prima '*.volumen' in area suitae in 'appellatio' (DXII); FALSUM si
+ * nullum. Directorium clauditur ANTE deletionem (readdir post unlink
+ * inspecificatum) */
+interior b32
+_credo_fixura_est (
+    constans character* appellatio)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < _credo_fixurae_numerus; k++)
+    {
+        si (strcmp(_credo_fixurae[k], appellatio) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* post parare_suitae: '*.volumen' iam viva = fixurae suitae */
+interior vacuum
+_credo_fixuras_notare (vacuum)
+{
+                  DIR* d;
+    structura dirent* e;
+       memoriae_index  ln;
+
+    _credo_fixurae_numerus = ZEPHYRUM;
+    si (!_credo_temporarii_positum)
+    {
+        redde;
+    }
+    d = opendir(_credo_area_suitae.via);
+    si (d == NIHIL)
+    {
+        redde;
+    }
+    dum (   _credo_fixurae_numerus < CREDO_FIXURAE_VOLUMINUM
+         && (e = readdir(d)) != NIHIL)
+    {
+        ln = strlen(e->d_name);
+        si (   ln > VIII && ln < CCLVI
+            && strcmp(e->d_name + ln - VIII, ".volumen") == ZEPHYRUM)
+        {
+            strcpy(_credo_fixurae[_credo_fixurae_numerus], e->d_name);
+            _credo_fixurae_numerus++;
+        }
+    }
+    (vacuum)closedir(d);
+}
+
+interior b32
+_credo_volumen_relictum (
+     character* appellatio,
+           b32  etiam_fixurae)
+{
+                  DIR* d;
+    structura dirent* e;
+       memoriae_index  ln;
+                  b32  inventum;
+
+    d = opendir(_credo_area_suitae.via);
+    si (d == NIHIL)
+    {
+        redde FALSUM;
+    }
+    inventum = FALSUM;
+    dum (!inventum && (e = readdir(d)) != NIHIL)
+    {
+        ln = strlen(e->d_name);
+        si (   ln > VIII && ln < DXII
+            && strcmp(e->d_name + ln - VIII, ".volumen") == ZEPHYRUM
+            && (etiam_fixurae || !_credo_fixura_est(e->d_name)))
+        {
+            strcpy(appellatio, e->d_name);
+            inventum = VERUM;
+        }
+    }
+    (vacuum)closedir(d);
+    redde inventum;
+}
+
+/* post sectionem (aut suitam): quodque '*.volumen' relictum fractura
+ * nominata (ut tectum memoriae: ANTE summam), deinde deletum cum
+ * sociis sqlite - reliquiae numquam cumulantur */
+interior vacuum
+_credo_volumina_iudicare (
+    constans character* sectio,
+    constans character* suita,
+                   s32  sedes,
+                   b32  etiam_fixurae)
+{
+     constans character* socii[V];
+              character  appellatio[DXII];
+              character  via[MXXIV + DXII];
+              character  expressio[CCCLXXXIV];
+                    i32  k;
+                    i32  tectum;
+
+    si (!_credo_temporarii_positum)
+    {
+        redde;
+    }
+    socii[ZEPHYRUM]  = "";
+    socii[I]         = "-wal";
+    socii[II]        = "-shm";
+    socii[III]       = "-journal";
+    socii[IV]        = NIHIL;
+    /* tectum: deletio fracta numquam in gyrum aeternum */
+    per (tectum = ZEPHYRUM; tectum < C
+         && _credo_volumen_relictum(appellatio, etiam_fixurae);
+         tectum++)
+    {
+        sprintf(expressio, "sectio '%.120s': volumen temporarium non"
+            " clausum: %.200s (volumen_claudere deest)", sectio,
+            appellatio);
+        _credo_notare_plenum("credo_volumen", expressio, "relictum",
+            "clausum", NIHIL, suita, sedes, FALSUM);
+        per (k = ZEPHYRUM; socii[k] != NIHIL; k++)
+        {
+            sprintf(via, "%.1000s/%s%s", _credo_area_suitae.via,
+                appellatio,
+                socii[k]);
+            si (unlink(via) != ZEPHYRUM && k == ZEPHYRUM)
+            {
+                tectum = C;   /* deleri nequit: semel nominatum */
+            }
+        }
+    }
 }
 
 
@@ -2176,6 +2386,11 @@ _credo_suitam_purgare (
     {
         purgare_suitae(suitae);
     }
+    /* parare/purgare suitae quoque inspiciuntur; TMPDIR ANTE aream
+     * deletam restituitur */
+    _credo_volumina_iudicare("(suita)", suitae->titulus, ZEPHYRUM,
+        VERUM);
+    _credo_temporarii_restituere();
     _credo_aream_delere(&_credo_area_suitae);
     si (suitae->piscina != NIHIL)
     {
@@ -2344,6 +2559,7 @@ credo_suitam_currere_cum (
     suitae.titulus = titulus_suitae;
     _credo_aream_ponere(&_credo_area_suitae, &suitae, titulus_suitae,
         "suita");
+    _credo_temporarii_suitae_ponere(&suitae);
     si (parare_suitae != NIHIL || purgare_suitae != NIHIL)
     {
         suitae.piscina = piscina_generare_dynamicum(titulus_suitae,
@@ -2395,6 +2611,7 @@ credo_suitam_currere_cum (
             redde I;
         }
     }
+    _credo_fixuras_notare();
     per (k = ZEPHYRUM; k < numerus_sectionum; k++)
     {
         constans CredoSectio* sectio;
@@ -2480,6 +2697,8 @@ credo_suitam_currere_cum (
             sectio->purgare(&contextus);
         }
         _credo_aream_delere(&_credo_area_sectionis);
+        _credo_volumina_iudicare(sectio->titulus, titulus_suitae,
+            (s32)(i + I), FALSUM);
         /* memoria (credo memoria T2): apex arenae ante destructionem;
          * vestigium et apex vitae post purgare - apex numquam
          * reficitur, ergo solum INCREMENTUM sectioni tribuitur. ANTE

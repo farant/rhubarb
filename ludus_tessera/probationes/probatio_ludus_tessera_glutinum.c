@@ -108,11 +108,13 @@ _clavis (
     redde e;
 }
 
-s32
-principale (vacuum)
+/* Sectio UNA: probatio scaenica - blocci statum priorum ex
+ * proposito continuant; gradus (CREDO_GRADUS) fracturam nominant. */
+interior vacuum
+_sessionem_probare (
+    CredoContextus* c)
 {
-                b32  praeteritus;
-            Piscina* piscina;
+            Piscina* piscina = c->piscina;
 InternamentumChorda* intern;
  InsulaRepositorium* repo;
      ActioRegistrum* reg;
@@ -125,15 +127,6 @@ TesseraPonsMemoriae* pm;
                 Xar* notata;
             Eventus  e;
 
-    piscina =
-        piscina_generare_dynamicum("probatio_ludus_tessera_glutinum",
-        LXIV * M);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
     intern = internamentum_creare(piscina);
     thema_initiare();
     repo  = insula_repositorium_creare(piscina, intern, "<insula/>");
@@ -148,15 +141,14 @@ TesseraPonsMemoriae* pm;
     pm    = tessera_pons_memoriae_creare(piscina, XL, XIII);
     opus  = tessera_aperire(piscina, &pm->pons);
 
-    imprimere("\n--- I. creatio ---\n");
+    CREDO_GRADUS ("I. creatio");
     lt = ludus_tessera_creare(piscina, d, figurae, ZEPHYRUM, NIHIL,
         NIHIL,
         opus, VI, VIII);
     CREDO_NON_NIHIL (lt);
     si (!lt)
     {
-        credo_imprimere_compendium();
-        redde I;
+        redde;   /* sine assertione nova (ut olim redde I) */
     }
     CREDO_AEQUALIS_S32 (lt->modulus.cellula_latitudo, VI);
     CREDO_AEQUALIS_S32 (lt->modulus.extensio_latitudo, XL * VI);
@@ -166,7 +158,7 @@ TesseraPonsMemoriae* pm;
     CREDO_NIHIL (ludus_tessera_creare(piscina, NIHIL, figurae, ZEPHYRUM,
         NIHIL, NIHIL, opus, VI, VIII));
 
-    imprimere("\n--- II. chorda claudendi ---\n");
+    CREDO_GRADUS ("II. chorda claudendi");
     e = _clavis('c', MOD_IMPERIUM);
     CREDO_VERUM (ludus_tessera_claudendum_est(lt, &e));
     e = _clavis('c', ZEPHYRUM);
@@ -177,7 +169,7 @@ TesseraPonsMemoriae* pm;
     e.genus = EVENTUS_MUS_DEPRESSUS;
     CREDO_FALSUM (ludus_tessera_claudendum_est(lt, &e));
 
-    imprimere("\n--- III. tempus ante traditionem ---\n");
+    CREDO_GRADUS ("III. tempus ante traditionem");
     notata = xar_creare(piscina, (i32)magnitudo(EventusNotatum));
     dispensator_notarium_ponere(d, notata);
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
@@ -205,7 +197,7 @@ TesseraPonsMemoriae* pm;
     CREDO_NON_NIHIL (insula_attributum(repo,
         "numerus"));
 
-    imprimere("\n--- IV. quadrum ---\n");
+    CREDO_GRADUS ("IV. quadrum");
     {
         i32 n0 = toy.compositiones;
         i32 n1;
@@ -233,7 +225,7 @@ TesseraPonsMemoriae* pm;
         CREDO_AEQUALIS_I32 (mandata_numerus(lt->mandata), n1);
     }
 
-    imprimere("\n--- V. amplitudo ---\n");
+    CREDO_GRADUS ("V. amplitudo");
     pm->latitudo = L;
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
     e.genus                               = EVENTUS_MUTARE_MAGNITUDINEM;
@@ -244,7 +236,7 @@ TesseraPonsMemoriae* pm;
     CREDO_AEQUALIS_S32 (lt->modulus.extensio_latitudo, L * VI);
     CREDO_AEQUALIS_S32 (lt->modulus.extensio_altitudo, XIII * VIII);
 
-    imprimere("\n--- VI. resumptio ---\n");
+    CREDO_GRADUS ("VI. resumptio");
     ludus_tessera_quadrum(lt, M + D);
     (vacuum)tessera_praesentare(opus);
     tessera_pons_memoriae_purgare(pm);
@@ -261,10 +253,10 @@ TesseraPonsMemoriae* pm;
     CREDO_VERUM (_continet(tessera_pons_memoriae_captum(pm),
         "\033[2J"));
 
-    imprimere("\n--- VII. ansa vera sine terminali ---\n");
+    CREDO_GRADUS ("VII. ansa vera sine terminali");
     CREDO_AEQUALIS_S32 (ludus_tessera_currere(lt, I), I);
 
-    imprimere("\n--- VIII. vicus-latera S1c: pingendum ---\n");
+    CREDO_GRADUS ("VIII. vicus-latera S1c: pingendum");
     {
         PulsusProbandus pp;
 
@@ -290,9 +282,17 @@ TesseraPonsMemoriae* pm;
         ludus_tessera_pulsum_ponere(lt, NIHIL, NIHIL);
         CREDO_VERUM (ludus_tessera_pingendum(lt, FALSUM, M + D));
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "glutinum sine terminali: sessio", _sessionem_probare, NIHIL,
+        NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("ludus_tessera_glutinum", SECTIONES);
 }

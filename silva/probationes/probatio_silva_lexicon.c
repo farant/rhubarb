@@ -151,6 +151,26 @@ _sectio_realis (
                                      (i32)lexicon.mensura, sine,
                                      (i32)strlen(sine), c->piscina, &m);
     CREDO_VERUM (!_continet(e, m, "__ATOMIC_ACQUIRE"));
+
+    /* sectio postulata_neon.h (sigillum, 2026-10-22): citata evocat
+     * __ARM_FEATURE_SHA2 (silva ramum vectorum examinat) et typos
+     * functionesque vectorum; sine ea nihil horum */
+    {
+        constans character* neon =
+            "#include \"postulata_neon.h\"\n#include \"latina.h\"\n";
+
+        e = silva_lexicon_posix_derivare(
+            (constans character*)lexicon.datum, (i32)lexicon.mensura,
+            neon, (i32)strlen(neon), c->piscina, &m);
+        CREDO_VERUM (_continet(e, m, "__ARM_FEATURE_SHA2"));
+        CREDO_VERUM (_continet(e, m, "vsha256hq_u32"));
+        CREDO_VERUM (_continet(e, m, "uint32x4_t"));
+        e = silva_lexicon_posix_derivare(
+            (constans character*)lexicon.datum, (i32)lexicon.mensura,
+            sine, (i32)strlen(sine), c->piscina, &m);
+        CREDO_VERUM (!_continet(e, m, "__ARM_FEATURE_SHA2"));
+        CREDO_VERUM (!_continet(e, m, "vsha256hq_u32"));
+    }
 }
 
 

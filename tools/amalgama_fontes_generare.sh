@@ -83,19 +83,23 @@ if [ "$PROBARE" -eq 0 ]; then
     rm -rf "$CLAUSURAE"
     mkdir -p "$CLAUSURAE"
 fi
-while IFS= read -r radix; do
-    if [ "$PROBARE" -eq 0 ]; then
-        ./bin/aedilis "$radix" --partes \
-            --manifestum "$CLAUSURAE/$(echo "$radix" | sed 's|/|__|g').stml" \
-            >> "$STATIO/partes.tsv" \
-            || si_fracta "derivatio fracta: $radix"
-    else
-        ./bin/aedilis "$radix" --partes >> "$STATIO/partes.tsv" \
-            || si_fracta "derivatio fracta: $radix"
-    fi
-    ./bin/aedilis "$radix" --aristae >> "$STATIO/aristae.tsv" \
-        || si_fracta "aristae fractae: $radix"
-done < "$STATIO/radices.txt"
+# PLURES (2026-10-22): radices omnes UNO processu aedilis, radix quaeque
+# SEMEL derivata (partes et aristae ex eodem fructu) - olim duo
+# processus per radicem sine thesauro (silva XXIII radices: ~XX s ->
+# ~I.VI s). Partes, aristae, manifesta octetim eadem (praeter tempus
+# 'generatum').
+if [ "$PROBARE" -eq 0 ]; then
+    ./bin/aedilis --plures "$STATIO/radices.txt" \
+        --partes --partes-ad "$STATIO/partes.tsv" \
+        --aristae --aristae-ad "$STATIO/aristae.tsv" \
+        --manifesta "$CLAUSURAE" \
+        || si_fracta "derivatio fracta (vide AEDILIS RECUSAT supra)"
+else
+    ./bin/aedilis --plures "$STATIO/radices.txt" \
+        --partes --partes-ad "$STATIO/partes.tsv" \
+        --aristae --aristae-ad "$STATIO/aristae.tsv" \
+        || si_fracta "derivatio fracta (vide AEDILIS RECUSAT supra)"
+fi
 # postcondicio clausurarum: manifestum per radicem. Directorium vacuum
 # (aedilis vexillum tacite neglegens) nihil sigillaret - memoria
 # fabricae semper congrueret, tacite falsa

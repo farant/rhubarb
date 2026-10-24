@@ -226,6 +226,97 @@ _sectio_quinta (
     }
 }
 
+
+    /* ========================================================
+     * PROBARE: via ordinaria (instructiones SHA2 ubi adsunt) = via
+     * portabilis octetim (2026-10-22) - longitudines 0..M, magnae, et
+     * addere per frusta quae limites viae celeris (massa partim
+     * plena, blocca integra directe, cauda) omnes tangunt
+     * ======================================================== */
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    memoriae_index  magnitudo_totalis = (memoriae_index)(M * M + XIII);
+                i8* datum;
+    memoriae_index  i;
+               i32  semen          = 12345;
+               i32  discrepantiae  = ZEPHYRUM;
+
+    datum = (i8*)piscina_allocare(c->piscina, magnitudo_totalis);
+    CREDO_NECESSE_NON_NIHIL (datum);
+    per (i = 0; i < magnitudo_totalis; i++)
+    {
+        semen     = semen * 1103515245u + 12345u;
+        datum[i]  = (i8)(semen >> 16);
+    }
+    /* longitudines omnes 0..M (offset impar: ordinatio non adiuvat) */
+    per (i = 0; i <= (memoriae_index)M; i++)
+    {
+        Sigillum a = sigillum_computare(datum + III, i);
+        Sigillum b = sigillum_computare_portabile(datum + III, i);
+
+        si (!sigillum_aequale(&a, &b))
+        {
+            discrepantiae++;
+        }
+    }
+    CREDO_AEQUALIS_I32 (discrepantiae, ZEPHYRUM);
+    /* magnae */
+    {
+        memoriae_index magnae[III];
+               integer k;
+
+        magnae[0] = (memoriae_index)(LXIV * MXXIV + VII);
+        magnae[1] = (memoriae_index)(M * MXXIV);
+        magnae[2] = magnitudo_totalis;
+        per (k = 0; k < III; k++)
+        {
+            Sigillum a = sigillum_computare(datum, magnae[k]);
+            Sigillum b = sigillum_computare_portabile(datum, magnae[k]);
+
+            CREDO_VERUM (sigillum_aequale(&a, &b));
+        }
+    }
+    /* incrementaliter per frusta - idem ac uno ictu */
+    {
+        memoriae_index frusta[VI];
+        memoriae_index n = (memoriae_index)(X * MXXIV + XXIX);
+              Sigillum uno;
+               integer k;
+
+        frusta[0]  = I;
+        frusta[1]  = VII;
+        frusta[2]  = LXIII;
+        frusta[3]  = LXIV;
+        frusta[4]  = LXV;
+        frusta[5]  = CC;
+        uno        = sigillum_computare_portabile(datum, n);
+        per (k = 0; k < VI; k++)
+        {
+            SigillumContextus ctx;
+                     Sigillum partim;
+               memoriae_index j = 0;
+
+            sigillum_incipere(&ctx);
+            dum (j < n)
+            {
+                memoriae_index pars = frusta[k];
+
+                si (pars > n - j)
+                {
+                    pars = n - j;
+                }
+                sigillum_addere(&ctx, datum + j, pars);
+                j += pars;
+            }
+            partim = sigillum_finire(&ctx);
+            CREDO_VERUM (sigillum_aequale(&uno, &partim));
+        }
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "vectores NIST", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "limites bloccorum", _sectio_secunda, NIHIL, NIHIL, NIHIL,
@@ -233,6 +324,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "nuntium longum", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "HMAC-SHA256", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "aequalitatem", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "via portabilis = via ordinaria", _sectio_sexta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -6,7 +6,34 @@
 
 #include <dirent.h>
 #include <sys/stat.h>
+#include <stdlib.h>
 #include <string.h>
+#ifdef __APPLE__
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/attr.h>
+#include <sys/vnode.h>
+#endif
+
+/* mtime cum nanosecundis: nomen membri inter systemata differt.
+ * Bracchium Linux CUSTODITUR (ut tools/fabrica_sutura.c): lexicon silvae
+ * Darwin-veritas est, examen bracchium sine custodia aestimat */
+#ifdef __linux__
+#define _MTIME(st) ((st).st_mtim)
+#else
+#define _MTIME(st) ((st).st_mtimespec)
+#endif
+
+/* ENUMERATIO UNO VOCAMINE (macOS, 2026-10-22): getattrlistbulk nomen,
+ * genus, mtime et mensuram MULTORUM introituum uno vocamine reddit -
+ * olim readdir + stat() per introitum (et photographia fabricae lstat
+ * iterum). Mensuratum (build/sonda_partes/sonda_ambulatio.c): ~V x
+ * velocius frigide, ~II x calide; aequalitas cum lstat super CCCXLIX
+ * milia introituum (directoria et socketa incluso) octetim
+ * (sonda_aequalitas.c). Nexus symbolici stat() vocant ut antea (status
+ * SECUTUS servatur). Bracchium __APPLE__ silva non examinat (vernaculum
+ * Darwin, mos uuid.c / machina_posix.c); bracchium portabile examinat. */
+#define _MASSA_ENUMERATIONIS (XXXII * MXXIV)
 
 
 /* ==================================================
@@ -14,7 +41,15 @@
  * ================================================== */
 
 structura DirectoriumIterator {
+#ifdef __APPLE__
+                  integer  fd;               /* open(O_DIRECTORY) */
+               character* massa;            /* getattrlistbulk (malloc) */
+               character* cursor;           /* introitus proximus in massa */
+                  integer  residua;          /* introitus in massa restantes */
+                      b32  finitum;
+#else
                      DIR* descriptum;       /* opendir() handle */
+#endif
                  Piscina* piscina;          /* Pro allocationibus */
                   chorda  via_basis;        /* Via directorii */
     DirectoriumIntroitus  introitus_nunc;   /* Introitus currens */
@@ -65,6 +100,85 @@ _est_punctum (
     redde FALSUM;
 }
 
+/* Nomen in buffer_nominis copiare et titulum ponere */
+hic_manens vacuum
+_nomen_ponere (
+    DirectoriumIterator* iterator,
+     constans character* nomen_introitus)
+{
+    i32 longitudo_nominis;
+
+    longitudo_nominis = (i32)strlen(nomen_introitus);
+    si (longitudo_nominis >= CCLVI)
+    {
+        longitudo_nominis = CCLV;
+    }
+    memcpy(iterator->buffer_nominis, nomen_introitus,
+        (size_t)longitudo_nominis);
+    iterator->buffer_nominis[longitudo_nominis] = '\0';
+    iterator->introitus_nunc.titulus = chorda_ex_buffer(
+        (i8*)iterator->buffer_nominis,
+        longitudo_nominis
+        );
+}
+
+/* Statum SECUTUM per stat() implere (genus, mensura, tempus_ns) -
+ * via plena ex basi + nomine. Liber: eventus D directorii (nomina)
+ * hanc lectionem tegit - introitus novus/ablatus nomina mutat. LACUNA
+ * nota (plan 2 T3): genus/mensura sub nomine eodem mutata (filum ->
+ * directorium) sigillum D non mutant. */
+hic_manens vacuum
+_statum_secutum_implere (
+    DirectoriumIterator* iterator)
+{
+    structura stat  status;
+         character via_plena[1024];
+               i32 longitudo_basis;
+               i32 longitudo_nominis;
+
+    longitudo_basis = iterator->via_basis.mensura;
+    longitudo_nominis = iterator->introitus_nunc.titulus.mensura;
+    iterator->introitus_nunc.genus = INTROITUS_IGNOTUS;
+    iterator->introitus_nunc.mensura = 0;
+    iterator->introitus_nunc.tempus_ns = 0;
+    si (longitudo_basis + longitudo_nominis + II >= 1024)
+    {
+        redde;   /* via nimis longa */
+    }
+    memcpy(via_plena, iterator->via_basis.datum,
+        (size_t)longitudo_basis);
+    via_plena[longitudo_basis] = '/';
+    memcpy(via_plena + longitudo_basis + I, iterator->buffer_nominis,
+        (size_t)longitudo_nominis);
+    via_plena[longitudo_basis + I + longitudo_nominis] = '\0';
+    /* lectiones: notatur */
+    si (stat(via_plena, &status) == 0)
+    {
+        iterator->introitus_nunc.genus =
+            _determinare_genus(status.st_mode);
+        iterator->introitus_nunc.mensura =
+            (memoriae_index)status.st_size;
+        iterator->introitus_nunc.tempus_ns =
+            (s64)_MTIME(status).tv_sec * (s64)M * (s64)M * (s64)M
+            + (s64)_MTIME(status).tv_nsec;
+    }
+}
+
+#ifdef __APPLE__
+/* attributa petita: nomen, genus, mtime; mensura directorii et fili */
+hic_manens vacuum
+_attributa_parare (
+    structura attrlist* attributa)
+{
+    memset(attributa, 0, magnitudo(*attributa));
+    attributa->bitmapcount  = ATTR_BIT_MAP_COUNT;
+    attributa->commonattr   = ATTR_CMN_RETURNED_ATTRS | ATTR_CMN_NAME
+                            | ATTR_CMN_OBJTYPE | ATTR_CMN_MODTIME;
+    attributa->dirattr      = ATTR_DIR_DATALENGTH;
+    attributa->fileattr     = ATTR_FILE_DATALENGTH;
+}
+#endif
+
 
 /* ==================================================
  * Iterator: Aperire
@@ -76,13 +190,33 @@ directorium_iterator_aperire (
                Piscina* piscina)
 {
     DirectoriumIterator* iterator;
+#ifdef __APPLE__
+    integer  fd;
+    character* massa;
+#else
     DIR* descriptum;
+#endif
 
     si (via == NIHIL || piscina == NIHIL)
     {
         redde NIHIL;
     }
 
+#ifdef __APPLE__
+    /* lectiones: notatur */
+    fd = open(via, O_RDONLY | O_DIRECTORY);
+    si (fd < 0)
+    {
+        lectiones_notare(LECTIO_ABSENS, via);
+        redde NIHIL;
+    }
+    massa = (character*)memoriae_allocare(_MASSA_ENUMERATIONIS);
+    si (massa == NIHIL)
+    {
+        close(fd);
+        redde NIHIL;
+    }
+#else
     /* lectiones: notatur */
     descriptum = opendir(via);
     si (descriptum == NIHIL)
@@ -90,6 +224,7 @@ directorium_iterator_aperire (
         lectiones_notare(LECTIO_ABSENS, via);
         redde NIHIL;
     }
+#endif
     lectiones_notare(LECTIO_ENUMERAVIT, via);
 
     iterator = (DirectoriumIterator*)piscina_allocare(
@@ -97,15 +232,25 @@ directorium_iterator_aperire (
         magnitudo(DirectoriumIterator)
         );
 
+#ifdef __APPLE__
+    iterator->fd       = fd;
+    iterator->massa    = massa;
+    iterator->cursor   = massa;
+    iterator->residua  = 0;
+    iterator->finitum  = FALSUM;
+#else
     iterator->descriptum  = descriptum;
-    iterator->piscina     = piscina;
-    iterator->via_basis   = chorda_ex_literis(via, piscina);
+#endif
+    iterator->piscina    = piscina;
+    iterator->via_basis  = chorda_ex_literis(via, piscina);
 
     /* Initiare introitus_nunc */
     iterator->introitus_nunc.titulus.datum    = NIHIL;
     iterator->introitus_nunc.titulus.mensura  = 0;
     iterator->introitus_nunc.genus            = INTROITUS_IGNOTUS;
     iterator->introitus_nunc.mensura          = 0;
+    iterator->introitus_nunc.tempus_ns        = 0;
+    iterator->introitus_nunc.est_nexus        = FALSUM;
 
     redde iterator;
 }
@@ -119,11 +264,94 @@ DirectoriumIntroitus*
 directorium_iterator_proximum (
     DirectoriumIterator* iterator)
 {
+#ifdef __APPLE__
+    structura attrlist  attributa;
+
+    si (iterator == NIHIL || iterator->massa == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (;;)
+    {
+                     character* introitus;
+                   unsigned int  longitudo;
+                attribute_set_t  reddita;
+                attrreference_t  referentia_nominis;
+                   fsobj_type_t  typus;
+            structura timespec  tempus;
+                          off_t  mensura;
+                     character* campus;
+            constans character* nomen_introitus;
+                        integer  numerus;
+
+        si (iterator->residua == 0)
+        {
+            si (iterator->finitum)
+            {
+                redde NIHIL;
+            }
+            _attributa_parare(&attributa);
+            numerus = getattrlistbulk(iterator->fd, &attributa,
+                iterator->massa, (size_t)_MASSA_ENUMERATIONIS, 0);
+            si (numerus <= 0)
+            {
+                iterator->finitum = VERUM;
+                redde NIHIL;
+            }
+            iterator->residua = numerus;
+            iterator->cursor  = iterator->massa;
+        }
+        /* introitus: longitudo, attributa reddita, nomen (referentia),
+         * genus, mtime, mensura (si reddita) - ordine attrlist */
+        introitus = iterator->cursor;
+        memcpy(&longitudo, introitus, magnitudo(longitudo));
+        campus = introitus + magnitudo(longitudo);
+        memcpy(&reddita, campus, magnitudo(reddita));
+        campus += magnitudo(reddita);
+        memcpy(&referentia_nominis, campus,
+            magnitudo(referentia_nominis));
+        nomen_introitus = campus + referentia_nominis.attr_dataoffset;
+        campus += magnitudo(referentia_nominis);
+        memcpy(&typus, campus, magnitudo(typus));
+        campus += magnitudo(typus);
+        memcpy(&tempus, campus, magnitudo(tempus));
+        campus += magnitudo(tempus);
+        mensura = -1;
+        si (   (reddita.dirattr & ATTR_DIR_DATALENGTH)
+            || (reddita.fileattr & ATTR_FILE_DATALENGTH))
+        {
+            memcpy(&mensura, campus, magnitudo(mensura));
+        }
+        iterator->cursor  += longitudo;
+        iterator->residua -= 1;
+
+        si (_est_punctum(nomen_introitus))
+        {
+            perge;
+        }
+        _nomen_ponere(iterator, nomen_introitus);
+        iterator->introitus_nunc.est_nexus = (b32)(typus == VLNK);
+        si (typus == VLNK || mensura < 0)
+        {
+            /* nexus: status SECUTUS (destinatio), ut antea */
+            _statum_secutum_implere(iterator);
+        }
+        alioquin
+        {
+            iterator->introitus_nunc.genus =
+                  typus == VREG ? INTROITUS_FILUM
+                : typus == VDIR ? INTROITUS_DIRECTORIUM
+                : INTROITUS_ALIUS;
+            iterator->introitus_nunc.mensura    =
+                (memoriae_index)mensura;
+            iterator->introitus_nunc.tempus_ns  =
+                (s64)tempus.tv_sec * (s64)M * (s64)M * (s64)M
+                + (s64)tempus.tv_nsec;
+        }
+        redde &(iterator->introitus_nunc);
+    }
+#else
     structura dirent* introitus;
-      structura stat  status;
-           character via_plena[1024];
-                 i32 longitudo_basis;
-                 i32 longitudo_nominis;
 
     si (iterator == NIHIL || iterator->descriptum == NIHIL)
     {
@@ -138,65 +366,42 @@ directorium_iterator_proximum (
         {
             redde NIHIL;
         }
-
-        /* Saltare . et .. */
         si (!_est_punctum(introitus->d_name))
         {
             frange;
         }
     }
-
-    /* Copiare nomen ad buffer internum */
-    longitudo_nominis = (i32)strlen(introitus->d_name);
-    si (longitudo_nominis >= CCLVI)
+    _nomen_ponere(iterator, introitus->d_name);
+    _statum_secutum_implere(iterator);
+    iterator->introitus_nunc.est_nexus = (b32)(introitus->d_type
+        == DT_LNK);
+    si (introitus->d_type == DT_UNKNOWN)
     {
-        longitudo_nominis = CCLV;
+        /* systema genus non dat: lstat solum hic */
+        structura stat  status_proprius;
+             character via_plena[1024];
+                   i32 longitudo_basis = iterator->via_basis.mensura;
+                   i32 longitudo_nominis =
+                            iterator->introitus_nunc.titulus.mensura;
+
+        si (longitudo_basis + longitudo_nominis + II < 1024)
+        {
+            memcpy(via_plena, iterator->via_basis.datum,
+                (size_t)longitudo_basis);
+            via_plena[longitudo_basis] = '/';
+            memcpy(via_plena + longitudo_basis + I,
+                iterator->buffer_nominis, (size_t)longitudo_nominis);
+            via_plena[longitudo_basis + I + longitudo_nominis] = '\0';
+            /* lectiones: notatur */
+            si (lstat(via_plena, &status_proprius) == 0)
+            {
+                iterator->introitus_nunc.est_nexus =
+                    (b32)S_ISLNK(status_proprius.st_mode);
+            }
+        }
     }
-    memcpy(iterator->buffer_nominis, introitus->d_name,
-        (size_t)longitudo_nominis);
-    iterator->buffer_nominis[longitudo_nominis] = '\0';
-
-    /* Creare chorda ex buffer */
-    iterator->introitus_nunc.titulus = chorda_ex_buffer(
-        (i8*)iterator->buffer_nominis,
-        longitudo_nominis
-        );
-
-    /* Construere viam plenam pro stat() */
-    longitudo_basis = iterator->via_basis.mensura;
-    si (longitudo_basis + longitudo_nominis + II >= 1024)
-    {
-        /* Via nimis longa */
-        iterator->introitus_nunc.genus    = INTROITUS_IGNOTUS;
-        iterator->introitus_nunc.mensura  = 0;
-        redde &(iterator->introitus_nunc);
-    }
-
-    memcpy(via_plena, iterator->via_basis.datum,
-        (size_t)longitudo_basis);
-    via_plena[longitudo_basis] = '/';
-    memcpy(via_plena + longitudo_basis + I, iterator->buffer_nominis,
-        (size_t)longitudo_nominis);
-    via_plena[longitudo_basis + I + longitudo_nominis] = '\0';
-
-    /* Obtinere statum fili. Liber: eventus D directorii (nomina) hanc
-     * lectionem tegit - introitus novus/ablatus nomina mutat. LACUNA
-     * nota (plan 2 T3): genus/mensura sub nomine eodem mutata (filum
-     * -> directorium) sigillum D non mutant. */
-    /* lectiones: notatur */
-    si (stat(via_plena, &status) == 0)
-    {
-        iterator->introitus_nunc.genus =
-            _determinare_genus(status.st_mode);
-        iterator->introitus_nunc.mensura =
-            (memoriae_index)status.st_size;
-    } alioquin
-    {
-        iterator->introitus_nunc.genus    = INTROITUS_IGNOTUS;
-        iterator->introitus_nunc.mensura  = 0;
-    }
-
     redde &(iterator->introitus_nunc);
+#endif
 }
 
 
@@ -208,12 +413,22 @@ vacuum
 directorium_iterator_claudere (
     DirectoriumIterator* iterator)
 {
+#ifdef __APPLE__
+    si (iterator != NIHIL && iterator->massa != NIHIL)
+    {
+        close(iterator->fd);
+        liberare(iterator->massa);
+        iterator->massa  = NIHIL;
+        iterator->fd     = -1;
+    }
+#else
     si (iterator != NIHIL && iterator->descriptum != NIHIL)
     {
         closedir(iterator->descriptum);
         iterator->descriptum = NIHIL;
     }
-    /* Memoria liberata cum piscina destruitur */
+#endif
+    /* Structura cum piscina liberatur; massa (malloc) hic */
 }
 
 

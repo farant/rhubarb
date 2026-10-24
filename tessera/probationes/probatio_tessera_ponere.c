@@ -152,34 +152,72 @@ _congruit (
     redde VERUM;
 }
 
-s32
-principale (vacuum)
+/* Mundus probationis: opus (politica operis) et simplex (politica
+ * SIMPLEX), XVI x IV quisque. Sectio quaeque suum aedificat (cellulae
+ * scribuntur - status nullus communis); creatio semel ASSERITUR in
+ * parare_suitae. FALSUM = creatio fracta. */
+interior b32
+_mundum_parare (
+        Piscina*  piscina,
+    TesseraOpus** opus,
+    TesseraOpus** simplex)
 {
-                    b32  praeteritus;
-                Piscina* piscina;
+    TesseraPonsMemoriae* pm = tessera_pons_memoriae_creare(piscina, XVI,
+        IV);
+    TesseraPonsMemoriae* pm_simplex = tessera_pons_memoriae_creare(
+        piscina, XVI, IV);
+
+    si (pm == NIHIL || pm_simplex == NIHIL)
+    {
+        redde FALSUM;
+    }
+    *opus     = tessera_aperire(piscina, &pm->pons);
+    *simplex  = tessera_aperire(piscina, &pm_simplex->pons);
+    si (*opus == NIHIL || *simplex == NIHIL)
+    {
+        redde FALSUM;
+    }
+    tessera_politicam_ponere(*simplex, TESSERA_POLITICA_SIMPLEX);
+    redde VERUM;
+}
+
+/* creatio mundi semel asserta (ut olim ante blocos) */
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
     TesseraPonsMemoriae* pm;
             TesseraOpus* opus;
             TesseraOpus* simplex;
-          TesseraStilus  nat;
 
-    piscina = piscina_generare_dynamicum("probatio_tessera_ponere",
-        33554432);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    nat   = tessera_stilus_nativus();
     pm    = tessera_pons_memoriae_creare(piscina, XVI, IV);
     opus  = tessera_aperire(piscina, &pm->pons);
     simplex  = tessera_aperire(piscina,
         &tessera_pons_memoriae_creare(piscina, XVI, IV)->pons);
     CREDO_NON_NIHIL (opus);
     CREDO_NON_NIHIL (simplex);
-    tessera_politicam_ponere(simplex, TESSERA_POLITICA_SIMPLEX);
+}
 
-    imprimere("\n--- Casus ---\n");
+
+/* ==================================================
+ * PROBARE: I. Casus - unitas pingenda prima ponitur; reddit
+ * finem unitatis et latitudinem
+ * ================================================== */
+
+interior vacuum
+_casus_probare (
+    CredoContextus* c)
+{
+         Piscina* piscina  = c->piscina;
+     TesseraOpus* opus;
+     TesseraOpus* simplex;
+    TesseraStilus  nat      = tessera_stilus_nativus();
+
+    si (!_mundum_parare(piscina, &opus, &simplex))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     _ponere(opus, ZEPHYRUM, ZEPHYRUM, "ab", I, I, "a");
     CREDO_VERUM (_cella_est(opus, ZEPHYRUM, ZEPHYRUM, "a", ZEPHYRUM));
     _ponere(opus, II, ZEPHYRUM, LITTERA_LATA "b", III, II, "guang");
@@ -234,8 +272,26 @@ principale (vacuum)
             ZEPHYRUM));
         CREDO_VERUM (_cella_est(opus, XI, III, " ", ZEPHYRUM));
     }
+}
 
-    imprimere("\n--- Congruentia cum runae (corpus) ---\n");
+
+/* ==================================================
+ * PROBARE: II. Congruentia cum runae - per corpus Lapidis
+ * (XXXV linguae, politicae ambae)
+ * ================================================== */
+
+interior vacuum
+_congruentiam_probare (
+    CredoContextus* c)
+{
+        Piscina* piscina = c->piscina;
+    TesseraOpus* opus;
+    TesseraOpus* simplex;
+
+    si (!_mundum_parare(piscina, &opus, &simplex))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     {
         constans character* LINGUAE[] = {
             "ar", "bn", "ceb", "de", "el", "en", "es", "fa", "fr",
@@ -265,9 +321,18 @@ principale (vacuum)
             (insignatus integer)congruae);
         CREDO_AEQUALIS_I32 (congruae, XXXV);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Casus", _casus_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Congruentia cum runae (corpus)", _congruentiam_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("tessera_ponere", SECTIONES,
+        _suitam_parare, NIHIL);
 }

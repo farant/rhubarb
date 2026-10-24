@@ -19,7 +19,7 @@
  */
 
 #include "latina.h"
-#include "lectiones.h"   /* lectiones_fopen: canalis lectionum (examen 96) */
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "credo.h"
 #include "html_exempla.h"
 #include "piscina.h"
@@ -161,10 +161,21 @@ _exemplum (
     redde (HtmlExemplum*)xar_obtinere(exempla, numerus - I);
 }
 
-hic_manens vacuum
-_contractus_lectoris (
-    Piscina* piscina)
+/* radix arboris (RHUBARB_RADIX, aliter "."): functio, non staticum
+ * scriptum - status nullus inter sectiones */
+interior constans character*
+_radix_viae (vacuum)
 {
+    constans character* radix = getenv("RHUBARB_RADIX");
+
+    redde radix != NIHIL ? radix : ".";
+}
+
+interior vacuum
+_contractum_lectoris_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
     constans character* fons =
         "#errors\n"
         "ignoratum ante #data primum\n"
@@ -187,7 +198,6 @@ _contractus_lectoris (
                    Xar* exempla;
           HtmlExemplum* e;
 
-    imprimere("\n--- I. contractus lectoris ---\n");
     exempla = html_exempla_legere(piscina, fons, (i32)strlen(fons));
     CREDO_NON_NIHIL (exempla);
     si (exempla == NIHIL)
@@ -230,23 +240,23 @@ _contractus_lectoris (
     }
 }
 
-hic_manens vacuum
-_manifestum_totum (
-               Piscina* piscina,
-    constans character* radix)
+interior vacuum
+_manifestum_totum_probare (
+    CredoContextus* c)
 {
-    i32 i;
-    i32 lectae          = ZEPHYRUM;
-    i32 octeti          = ZEPHYRUM;
-    i32 exempla         = ZEPHYRUM;
-    i32 fragmenta       = ZEPHYRUM;
-    i32 aperta          = ZEPHYRUM;
-    i32 clausa          = ZEPHYRUM;
-    i32 data            = ZEPHYRUM;
-    i32 documenta       = ZEPHYRUM;
-    i32 pinnatae_visae  = ZEPHYRUM;
+               Piscina* piscina  = c->piscina;
+    constans character* radix    = _radix_viae();
+                   i32  i;
+                   i32  lectae          = ZEPHYRUM;
+                   i32  octeti          = ZEPHYRUM;
+                   i32  exempla         = ZEPHYRUM;
+                   i32  fragmenta       = ZEPHYRUM;
+                   i32  aperta          = ZEPHYRUM;
+                   i32  clausa          = ZEPHYRUM;
+                   i32  data            = ZEPHYRUM;
+                   i32  documenta       = ZEPHYRUM;
+                   i32  pinnatae_visae  = ZEPHYRUM;
 
-    imprimere("\n--- II. manifestum totum ---\n");
     per (i = ZEPHYRUM; HTML_EXEMPLA_PLAGULAE[i] != NIHIL; i++)
     {
         character  via[DXII];
@@ -329,15 +339,14 @@ _manifestum_totum (
     CREDO_AEQUALIS_I32 (pinnatae_visae, NUMERUS_PER_PLAGULAM);
 }
 
-hic_manens vacuum
-_casus_limitis (
-               Piscina* piscina,
-    constans character* radix)
+interior vacuum
+_casus_limitis_probare (
+    CredoContextus* c)
 {
-             Xar* ex;
+               Piscina* piscina  = c->piscina;
+    constans character* radix    = _radix_viae();
+                   Xar* ex;
     HtmlExemplum* e;
-
-    imprimere("\n--- III. casus limitis in fixura ---\n");
 
     ex = _exempla_plagulae(piscina, radix, "/tests1.dat");
     CREDO_NON_NIHIL (ex);
@@ -431,30 +440,18 @@ _casus_limitis (
     }
 }
 
-integer
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. contractus lectoris", _contractum_lectoris_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "II. manifestum totum", _manifestum_totum_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "III. casus limitis in fixura", _casus_limitis_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
 principale (vacuum)
 {
-                Piscina* piscina;
-                    b32  praeteritus;
-     constans character* radix;
-
-    piscina = piscina_generare_dynamicum("probatio_html_exempla",
-        4194304);
-    credo_aperire(piscina);
-
-    radix = getenv("RHUBARB_RADIX");
-    si (radix == NIHIL)
-    {
-        radix = ".";
-    }
-
-    imprimere("\n--- PORTA: lector .dat html5lib ---\n");
-    _contractus_lectoris(piscina);
-    _manifestum_totum(piscina, radix);
-    _casus_limitis(piscina, radix);
-
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+    redde credo_suitam_currere("html_exempla", SECTIONES);
 }

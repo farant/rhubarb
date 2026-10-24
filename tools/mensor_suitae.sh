@@ -41,16 +41,25 @@ mensor_suitae_nunc () {
 # <tolera codex="lint:effectus-mandatum-ignotum" (>eval sessionis mensoris: ambitus mensurae (canalis lateralis, spec 3 par. III.7)
 mensor_suitae_incipere () {
     MSU_PRAEFIXUM="${1:-}"
-    MSU_INITIUM=$(mensor_suitae_nunc)
+    # initium datum (caput scripti, 2026-10-22) aut nunc
+    MSU_INITIUM="${2:-$(mensor_suitae_nunc)}"
     MSU_CURSUS=$(mktemp)
     MSU_COMPILATIO=$(mktemp)
     MSU_MENSOR=""
-    if [ -z "${MENSOR_TACET:-}" ] && [ -x "$MSU_RADIX/bin/mensor" ]; then
+    # mensor arboris; in arbore FRIGIDA (clone recenti, bin/mensor
+    # nondum structum) MENSOR_BINARIUM a vocante datum
+    # (tools/frigida_probare.sh, 2026-10-22) - aliter suitae frigidae
+    # nihil metiebantur
+    local mensor_via="$MSU_RADIX/bin/mensor"
+    if [ ! -x "$mensor_via" ] && [ -x "${MENSOR_BINARIUM:-}" ]; then
+        mensor_via="$MENSOR_BINARIUM"
+    fi
+    if [ -z "${MENSOR_TACET:-}" ] && [ -x "$mensor_via" ]; then
         # FABRICA_LECTIONES= (vacuum = liber clausus): volumen mensoris
         # EXITUS est, numquam ingressus - in vestigio portae (actio
         # 'iudicium') clavem omni cursu mutaret (fabrica spec 3 T3)
-        if eval "$(FABRICA_LECTIONES= "$MSU_RADIX/bin/mensor" sessio 2>/dev/null)" 2>/dev/null; then
-            MSU_MENSOR="$MSU_RADIX/bin/mensor"
+        if eval "$(FABRICA_LECTIONES= "$mensor_via" sessio 2>/dev/null)" 2>/dev/null; then
+            MSU_MENSOR="$mensor_via"
         fi
     fi
     return 0

@@ -60,11 +60,13 @@ _dactylographare (
     }
 }
 
-s32
-principale (vacuum)
+/* Sectio UNA: probatio scaenica - blocci statum priorum ex proposito
+ * continuant; gradus (CREDO_GRADUS) fracturam nominant. */
+interior vacuum
+_scaenam_probare (
+    CredoContextus* c)
 {
-                   b32  praeteritus;
-               Piscina* piscina;
+            Piscina* piscina = c->piscina;
        SaltuariusNexus* nexus;
        SaltuariusLiber* liber;
     SaltuariusQuaestio  quaestio;
@@ -76,15 +78,6 @@ principale (vacuum)
         "int beta;\n"
         "int gamma;\n"
         "G(2);\n";
-
-    piscina = piscina_generare_dynamicum("probatio_salt_quaestio",
-        16777216);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
     nexus = saltuarius_nexus_creare(piscina);
     CREDO_NON_NIHIL (nexus);
     CREDO_AEQUALIS_S32 (
@@ -103,7 +96,7 @@ principale (vacuum)
      * ======================================================== */
 
     {
-        imprimere("\n--- Probans angustationem ---\n");
+        CREDO_GRADUS ("angustationem");
 
         saltuarius_liber_primum(liber);
         saltuarius_quaestio_aperire(&quaestio, liber);
@@ -156,7 +149,7 @@ principale (vacuum)
     {
         b32 volvit;
 
-        imprimere("\n--- Probans n/N ---\n");
+        CREDO_GRADUS ("n/N");
 
         CREDO_VERUM (saltuarius_quaestio_proximum(&quaestio, liber,
             I, &volvit));
@@ -198,7 +191,7 @@ principale (vacuum)
         s32 linea_ante;
         s32 columna_ante;
 
-        imprimere("\n--- Probans fugam ---\n");
+        CREDO_GRADUS ("fugam");
 
         liber->cursor_linea    = II;
         liber->cursor_columna  = IV;
@@ -231,7 +224,7 @@ principale (vacuum)
      * ======================================================== */
 
     {
-        imprimere("\n--- Probans runam UTF-8 ---\n");
+        CREDO_GRADUS ("runam UTF-8");
 
         saltuarius_quaestio_aperire(&quaestio, liber);
         {
@@ -264,7 +257,7 @@ principale (vacuum)
      * ======================================================== */
 
     {
-        imprimere("\n--- Probans stratum ostensum ---\n");
+        CREDO_GRADUS ("stratum ostensum");
 
         CREDO_MAIOR_I32 ((i32)liber->numerus_stratorum, I);
         saltuarius_liber_stratum_transferre(liber, nexus, I);
@@ -314,7 +307,7 @@ principale (vacuum)
         TesseraOpus* opus;
         SaltuariusRes* res;
 
-        imprimere("\n--- Probans lineam echo ---\n");
+        CREDO_GRADUS ("lineam echo");
 
         tp = tessera_piscina_generare_dynamicum(
             "salt_quaestio_tessera", 16777216);
@@ -342,8 +335,16 @@ principale (vacuum)
         tessera_piscina_destruere(tp);
     }
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "quaestio incrementalis: sessio", _scaenam_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("saltuarius_quaestio", SECTIONES);
 }

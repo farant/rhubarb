@@ -106,7 +106,13 @@ hic_manens constans character* CAUSAE[] = {
     "heredoc transpositum (relatio.heredoca_transposita)"
 };
 
-hic_manens constans character* RADIX_VIAE = ".";
+interior constans character*
+_radix_viae (vacuum)
+{
+    constans character* radix_viae = getenv("RHUBARB_RADIX");
+
+    redde radix_viae != NIHIL ? radix_viae : ".";
+}
 
 interior character*
 _plagulam_legere (
@@ -120,7 +126,7 @@ _plagulam_legere (
     character*  memoria;
         size_t  lecti;
 
-    sprintf(plena, "%s/%s", RADIX_VIAE, via);
+    sprintf(plena, "%s/%s", _radix_viae(), via);
     f = fopen(plena, "rb");
     si (f == NIHIL)
     {
@@ -323,7 +329,8 @@ _fractum_scribere (
     character via[DXII];
     FILE* f;
 
-    sprintf(via, "%s/crusta/build/totalitas_fractum.sh", RADIX_VIAE);
+    sprintf(via, "%s/crusta/build/totalitas_fractum.sh",
+        _radix_viae());
     f = fopen(via, "wb");
     si (f == NIHIL)
     {
@@ -495,40 +502,28 @@ _plagulam_vexare (
     }
 }
 
-s32
-principale (vacuum)
+/* Sectio UNA pro casibus generatis (octeti fortuiti, corpus mutatum
+ * et truncatum, nidificatio, CRLF): tegumentum et summa casuum (>= MM)
+ * classes omnes simul numerant - assertio aggregata trans blocos. */
+interior vacuum
+_casus_generatos_probare (
+    CredoContextus* c)
 {
-               Piscina* piscina;
-    constans character* radix_viae;
-                   b32  praeteritus;
-                   i32  plagulae_lectae  = ZEPHYRUM;
-                   i32  casus_fortuiti   = ZEPHYRUM;
-                   i32  casus_mutati     = ZEPHYRUM;
-                   i32  casus_truncati   = ZEPHYRUM;
-                   i32  casus_nidorum    = ZEPHYRUM;
-                   i32  casus_crlf       = ZEPHYRUM;
-                   i32  i;
-
-    piscina = piscina_generare_dynamicum("probatio_crusta_totalitas",
-        4194304);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    radix_viae = getenv("RHUBARB_RADIX");
-    si (radix_viae != NIHIL)
-    {
-        RADIX_VIAE = radix_viae;
-    }
+    Piscina* piscina          = c->piscina;
+        i32  plagulae_lectae  = ZEPHYRUM;
+        i32  casus_fortuiti   = ZEPHYRUM;
+        i32  casus_mutati     = ZEPHYRUM;
+        i32  casus_truncati   = ZEPHYRUM;
+        i32  casus_nidorum    = ZEPHYRUM;
+        i32  casus_crlf       = ZEPHYRUM;
+        i32  i;
 
 
     /* ==================================================
      * OCTETI FORTUITI: semina I..XXXII, LXIV..MMXLVIII octeti
      * ================================================== */
 
-    imprimere("\n--- Probans octetos fortuitos ---\n");
+    CREDO_GRADUS ("octetos fortuitos");
     per (i = I; i <= XXXII; i++)
     {
               Sors  s;
@@ -553,7 +548,7 @@ principale (vacuum)
      * CORPUS MUTATUM + TRUNCATUM: fixa, FreeBSD, domus XII
      * ================================================== */
 
-    imprimere("\n--- Probans corpus mutatum et truncatum ---\n");
+    CREDO_GRADUS ("corpus mutatum et truncatum");
     _plagulam_vexare(piscina, "probationes/fixa/crusta/pathologiae.sh",
         &casus_mutati, &casus_truncati, &plagulae_lectae);
     _plagulam_vexare(piscina, "probationes/fixa/crusta/adversarius.sh",
@@ -579,7 +574,7 @@ principale (vacuum)
      * NIDIFICATIO: formae XI x {clausa, aperta} x {I, X, C, M}
      * ================================================== */
 
-    imprimere("\n--- Probans nidificationem ---\n");
+    CREDO_GRADUS ("nidificationem");
     {
         i32 f;
         i32 c;
@@ -615,7 +610,7 @@ principale (vacuum)
      * CRLF: adversarius totus, casus pathologiarum conversi
      * ================================================== */
 
-    imprimere("\n--- Probans CRLF ---\n");
+    CREDO_GRADUS ("CRLF");
     {
                        i32  mensura = ZEPHYRUM;
         constans character* fons;
@@ -661,19 +656,34 @@ principale (vacuum)
         imprimere("  casus %d\n", (integer)casus_crlf);
         CREDO_AEQUALIS_I32 (casus_crlf, (i32)XXXVII);
     }
+    /* Tegumentum SUUM: classis vacua rubet */
+    CREDO_MAIOR_I32 (casus_fortuiti, ZEPHYRUM);
+    CREDO_MAIOR_I32 (casus_mutati, ZEPHYRUM);
+    CREDO_MAIOR_I32 (casus_truncati, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (casus_nidorum, NUMERUS_FORMARUM * (i32)VIII);
+    imprimere("\n  summa casuum: %d\n", (integer)(casus_fortuiti
+        + casus_mutati + casus_truncati + casus_nidorum + casus_crlf));
+    CREDO_MAIOR_I32 (casus_fortuiti + casus_mutati + casus_truncati
+        + casus_nidorum + casus_crlf, (i32)MM);
+}
 
 
-    /* ==================================================
-     * NUL: parsatur, emittitur, et per STML CIRCUIT
-     *
-     * Olim STML eum nominatim recusabat. Ex 2026-09-19 attributum
-     * 'nul' offsets fert (ut 'cr' ante eum), ergo circuitus PLENUS
-     * hic asseritur - scribere, legere, emittere, octetos conferre.
-     * Casus tertius trivium tangit (commentarium), semita altera a
-     * duobus prioribus quae lexema tangunt.
-     * ================================================== */
+/* ==================================================
+ * NUL: parsatur, emittitur, et per STML CIRCUIT
+ *
+ * Olim STML eum nominatim recusabat. Ex 2026-09-19 attributum
+ * 'nul' offsets fert (ut 'cr' ante eum), ergo circuitus PLENUS
+ * hic asseritur - scribere, legere, emittere, octetos conferre.
+ * Casus tertius trivium tangit (commentarium), semita altera a
+ * duobus prioribus quae lexema tangunt.
+ * ================================================== */
 
-    imprimere("\n--- Probans NUL ---\n");
+interior vacuum
+_nul_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     {
         nomen structura {
             constans character* fons;
@@ -753,13 +763,19 @@ principale (vacuum)
             }
         }
     }
+}
 
 
-    /* ==================================================
-     * PROFUNDITAS: parsura sola C milia (aedificator iterativus)
-     * ================================================== */
+/* ==================================================
+ * PROFUNDITAS: parsura sola C milia (aedificator iterativus)
+ * ================================================== */
 
-    imprimere("\n--- Profunditas: parsura sola C milia ---\n");
+interior vacuum
+_parsuram_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     {
         nomen structura {
             constans character* forma;
@@ -789,13 +805,19 @@ principale (vacuum)
                 (i32)TOTUM_IDEM);
         }
     }
+}
 
 
-    /* ==================================================
-     * PROFUNDITAS: emissio (materia_scribere_nodum, 01M1FAD8)
-     * ================================================== */
+/* ==================================================
+ * PROFUNDITAS: emissio (materia_scribere_nodum, 01M1FAD8)
+ * ================================================== */
 
-    imprimere("\n--- Profunditas: emissio XL milia vivit ---\n");
+interior vacuum
+_emissionem_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     {
               i32  mensura = ZEPHYRUM;
         character* fons = _nidum_struere(piscina, _forma("grex"),
@@ -804,8 +826,14 @@ principale (vacuum)
         CREDO_NON_RUIT (_totum(fons, mensura));
         CREDO_AEQUALIS_I32 (_totum(fons, mensura), (i32)TOTUM_IDEM);
     }
+}
 
-    imprimere("\n--- Pinna: emissio '$(' C milia SIGSEGV ---\n");
+interior vacuum
+_emissionem_ruere (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     {
               i32  mensura = ZEPHYRUM;
         character* fons = _nidum_struere(piscina, _forma("substitutio"),
@@ -815,13 +843,19 @@ principale (vacuum)
          * cum remedium veniat (01M1FAD8) - tunc in NON_RUIT. */
         CREDO_RUIT_CUM (_totum(fons, mensura), SIGSEGV);
     }
+}
 
 
-    /* ==================================================
-     * PROFUNDITAS: proiectio STML
-     * ================================================== */
+/* ==================================================
+ * PROFUNDITAS: proiectio STML
+ * ================================================== */
 
-    imprimere("\n--- Profunditas: proiectio STML D vivit ---\n");
+interior vacuum
+_proiectionem_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     {
               i32  mensura = ZEPHYRUM;
         character* fons = _nidum_struere(piscina, _forma("grex"),
@@ -831,8 +865,14 @@ principale (vacuum)
         CREDO_NON_RUIT (_proiectio(fons, mensura));
         CREDO_VERUM (_proiectio(fons, mensura));
     }
+}
 
-    imprimere("\n--- Pinna: proiectio STML C milia SIGSEGV ---\n");
+interior vacuum
+_proiectionem_ruere (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     {
               i32  mensura = ZEPHYRUM;
         character* fons = _nidum_struere(piscina, _forma("grex"),
@@ -840,34 +880,53 @@ principale (vacuum)
 
         CREDO_RUIT_CUM (_proiectio(fons, mensura), SIGSEGV);
     }
+}
 
 
-    /* ==================================================
-     * PROFUNDITAS: aestimator constans (recursivus, P4)
-     * ================================================== */
+/* ==================================================
+ * PROFUNDITAS: aestimator constans (recursivus, P4)
+ * ================================================== */
 
-    imprimere("\n--- Profunditas: aestimator C milia vivit ---\n");
+interior vacuum
+_aestimatorem_probare (
+    CredoContextus* c)
+{
+    (vacuum)c;
     CREDO_NON_RUIT (_aestimatio((i32)100000));
     CREDO_VERUM (_aestimatio((i32)100000));
+}
 
-    imprimere("\n--- Pinna: aestimator CC milia SIGSEGV ---\n");
+interior vacuum
+_aestimatorem_ruere (
+    CredoContextus* c)
+{
+    (vacuum)c;
     CREDO_RUIT_CUM (_aestimatio((i32)200000), SIGSEGV);
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "casus generati",
+        _casus_generatos_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "NUL", _nul_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Profunditas: parsura sola C milia",
+        _parsuram_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Profunditas: emissio XL milia vivit",
+        _emissionem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Pinna: emissio '$(' C milia SIGSEGV",
+        _emissionem_ruere, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Profunditas: proiectio STML D vivit",
+        _proiectionem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Pinna: proiectio STML C milia SIGSEGV",
+        _proiectionem_ruere, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Profunditas: aestimator C milia vivit",
+        _aestimatorem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Pinna: aestimator CC milia SIGSEGV",
+        _aestimatorem_ruere, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* Tegumentum SUUM: classis vacua rubet */
-    CREDO_MAIOR_I32 (casus_fortuiti, ZEPHYRUM);
-    CREDO_MAIOR_I32 (casus_mutati, ZEPHYRUM);
-    CREDO_MAIOR_I32 (casus_truncati, ZEPHYRUM);
-    CREDO_AEQUALIS_I32 (casus_nidorum, NUMERUS_FORMARUM * (i32)VIII);
-    imprimere("\n  summa casuum: %d\n", (integer)(casus_fortuiti
-        + casus_mutati + casus_truncati + casus_nidorum + casus_crlf));
-    CREDO_MAIOR_I32 (casus_fortuiti + casus_mutati + casus_truncati
-        + casus_nidorum + casus_crlf, (i32)MM);
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("crusta_totalitas", SECTIONES);
 }

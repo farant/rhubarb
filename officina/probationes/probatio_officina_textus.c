@@ -140,28 +140,17 @@ _summam_aedificare (
     redde modulus;
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: nomina signata
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
-    Piscina* piscina;
-        b32  praeteritus;
-
-    piscina = piscina_generare_dynamicum("probatio_textus",
-        16777216);
-    si (!piscina)
+    (vacuum)c;
     {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ========================================================
-     * PROBARE: nomina signata
-     * ======================================================== */
-
-    {
-        imprimere("\n--- Probans nomina signata ---\n");
         CREDO_VERUM (strcmp(medulla_op_titulus(MEDULLA_OP_AUT),
             "aut") == ZEPHYRUM);
         CREDO_VERUM (strcmp(medulla_op_titulus(MEDULLA_OP_SISTERE),
@@ -172,13 +161,21 @@ principale (vacuum)
             (s32)MEDULLA_OP_NUMERUS));
         CREDO_NIHIL ((constans vacuum*)medulla_typum_titulus(-I));
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: fabrica -> scriptura == plagula canonica
-     * (SCRIPTOR contra plagulam commissam fixus)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: fabrica -> scriptura == plagula canonica
+ * (SCRIPTOR contra plagulam commissam fixus)
+ * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         MedullaModulus* modulus = _summam_aedificare(piscina);
                 chorda  scriptura = medulla_textum_scribere(piscina,
@@ -186,18 +183,25 @@ principale (vacuum)
         chorda plagula = _plagulam_legere(piscina,
             "officina/probationes/fixa/summa.medulla");
 
-        imprimere("\n--- Probans scriptorem ($summa) ---\n");
         CREDO_NON_NIHIL (modulus);
         CREDO_VERUM (scriptura.mensura > ZEPHYRUM);
         CREDO_VERUM (plagula.mensura > ZEPHYRUM);
         CREDO_CHORDA_AEQUALIS (scriptura, plagula);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: VECTIS - dump(parse(t)) == t (canonicae)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: VECTIS - dump(parse(t)) == t (canonicae)
+ * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* plagulae[II];
                        i32  i;
@@ -205,7 +209,6 @@ principale (vacuum)
         plagulae[ZEPHYRUM] =
             "officina/probationes/fixa/summa.medulla";
         plagulae[I] = "officina/probationes/fixa/omnia.medulla";
-        imprimere("\n--- Probans vectem (byte-idem) ---\n");
         per (i = ZEPHYRUM; i < II; i++)
         {
             chorda plagula  = _plagulam_legere(piscina, plagulae[i]);
@@ -221,22 +224,29 @@ principale (vacuum)
             CREDO_CHORDA_AEQUALIS (scriptura, plagula);
         }
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: commenta praetermissa + idempotentia
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: commenta praetermissa + idempotentia
+ * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda plagula = _plagulam_legere(piscina,
             "officina/probationes/fixa/commenta.medulla");
         MedullaModulus* modulus = medulla_textum_legere(piscina,
             plagula, NIHIL);
-                chorda  prima;
-                chorda  secunda;
+                chorda prima;
+                chorda secunda;
         MedullaModulus* iterum;
 
-        imprimere("\n--- Probans commenta + idempotentiam ---\n");
         CREDO_NON_NIHIL (modulus);
         /* octeti partiales: imago[0]=1, reliqua zephyrum */
         {
@@ -254,12 +264,20 @@ principale (vacuum)
         secunda = medulla_textum_scribere(piscina, iterum);
         CREDO_CHORDA_AEQUALIS (prima, secunda);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: fluitantia bit-exacta per vectem
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: fluitantia bit-exacta per vectem
+ * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         MedullaModulus* modulus = medulla_modulum_creare(piscina,
             _ch("fluitans.c"));
@@ -271,7 +289,6 @@ principale (vacuum)
         chorda scriptura;
         MedullaModulus* iterum;
 
-        imprimere("\n--- Probans fluitantia (%%.17g) ---\n");
         instructio = _instructio(MEDULLA_OP_MOVERE,
             MEDULLA_TYPUS_F64, r_x, medulla_op_immediatum_f(0.1),
             medulla_op_nihil());
@@ -299,16 +316,23 @@ principale (vacuum)
         CREDO_CHORDA_AEQUALIS (scriptura,
             medulla_textum_scribere(piscina, iterum));
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: errores cum linea (strictus)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: errores cum linea (strictus)
+ * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         i32 linea;
 
-        imprimere("\n--- Probans errores lectoris ---\n");
         /* op ignotum in linea 4 */
         CREDO_NIHIL (medulla_textum_legere(piscina, _ch(
             "modulus \"x\"\n"
@@ -342,14 +366,24 @@ principale (vacuum)
             "functio $f () -> vacuum\n"), &linea));
         CREDO_AEQUALIS_I32 ((i32)linea, I);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "nomina signata", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "scriptorem ($summa)", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "vectem (byte-idem)", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "commenta + idempotentiam", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fluitantia (%.17g)", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "errores lectoris", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    redde I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("officina_textus", SECTIONES);
 }

@@ -3,6 +3,7 @@
 #include "piscina.h"
 #include "credo.h"
 #include <stdio.h>
+#include <string.h>
 
 
     /* ==================================================
@@ -675,6 +676,99 @@ _sectio_decima_octava (
     }
 }
 
+/* piscina_conari_ampliare (2026-10-21): via I in loco, via II alveus
+ * solus motus, recusationes cum allocatione intacta */
+interior vacuum
+_sectio_decima_nona (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    {
+               Piscina* p;
+                    i8* a;
+                    i8* b;
+                    i8* x;
+        memoriae_index  usus;
+        memoriae_index  numerus_ante;
+                   i32  i;
+                   b32  recte;
+
+        /* I. allocatio ultima alvei: in loco, idem monstrator, usus
+         * per incrementum, numerus allocationum immutatus */
+        p = piscina_generare_dynamicum("ampliatio", CCLVI);
+        CREDO_NON_NIHIL (p);
+        a = (i8*)piscina_allocare(p, XVI);
+        memset(a, 'q', XVI);
+        usus          = piscina_summa_usus(p);
+        numerus_ante  = piscina_numerus_allocationum(p);
+        CREDO_VERUM (piscina_conari_ampliare(p, a, XVI, XXXII) == a);
+        CREDO_AEQUALIS_I32 ((i32)(piscina_summa_usus(p) - usus), XVI);
+        CREDO_AEQUALIS_I32 ((i32)piscina_numerus_allocationum(p),
+            (i32)numerus_ante);
+        /* allocatio sequens POST partem auctam cadit */
+        b = (i8*)piscina_allocare(p, VIII);
+        CREDO_VERUM (b >= a + XXXII);
+
+        /* II. non ultima: NIHIL, contenta intacta */
+        CREDO_NIHIL (piscina_conari_ampliare(p, a, XXXII, LXIV));
+        recte = VERUM;
+        per (i = ZEPHYRUM; i < XVI; i++)
+        {
+            si (a[i] != 'q')
+            {
+                recte = FALSUM;
+            }
+        }
+        CREDO_VERUM (recte);
+        /* mensura vetus non exacta: finis non congruit, NIHIL */
+        CREDO_NIHIL (piscina_conari_ampliare(p, b, IV, XVI));
+        CREDO_NIHIL (piscina_conari_ampliare(p, b, VIII, IV));
+        CREDO_NIHIL (piscina_conari_ampliare(p, NIHIL, ZEPHYRUM, VIII));
+        CREDO_NIHIL (piscina_conari_ampliare(NIHIL, b, VIII, XVI));
+        piscina_destruere(p);
+
+        /* III. allocatio SOLA alvei, piscina dynamica: alveus ipse
+         * crescit (fortasse motus), contenta servata, alveus nullus
+         * novus */
+        p = piscina_generare_dynamicum("ampliatio_sola", LXIV);
+        CREDO_NON_NIHIL (p);
+        x = (i8*)piscina_allocare(p, LXIV);
+        per (i = ZEPHYRUM; i < LXIV; i++)
+        {
+            x[i] = (i8)i;
+        }
+        x = (i8*)piscina_conari_ampliare(p, x, LXIV, IV * MXXIV);
+        CREDO_NON_NIHIL (x);
+        recte = (x != NIHIL);
+        per (i = ZEPHYRUM; recte && i < LXIV; i++)
+        {
+            si (x[i] != (i8)i)
+            {
+                recte = FALSUM;
+            }
+        }
+        CREDO_VERUM (recte);
+        CREDO_AEQUALIS_I32 ((i32)piscina_numerus_alveorum(p), I);
+        CREDO_AEQUALIS_I32 ((i32)piscina_summa_usus(p), IV * MXXIV);
+        CREDO_VERUM (piscina_summa_apex_usus(p)
+            >= (memoriae_index)(IV * MXXIV));
+        /* alveus plenus: allocatio sequens alveum novum petit */
+        CREDO_NON_NIHIL (piscina_allocare(p, VIII));
+        CREDO_AEQUALIS_I32 ((i32)piscina_numerus_alveorum(p), II);
+        piscina_destruere(p);
+
+        /* IV. piscina certae magnitudinis: in loco solum, numquam
+         * motus */
+        p = piscina_generare_certae_magnitudinis("ampliatio_fixa",
+            CXXVIII);
+        CREDO_NON_NIHIL (p);
+        x = (i8*)piscina_allocare(p, LXIV);
+        CREDO_VERUM (piscina_conari_ampliare(p, x, LXIV, CXXVIII) == x);
+        CREDO_NIHIL (piscina_conari_ampliare(p, x, CXXVIII, CCLVI));
+        piscina_destruere(p);
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "piscina_generare_dynamicum", _sectio_prima, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -711,6 +805,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "numerus_alveorum / numerus_allocationum", _sectio_decima_octava,
         NIHIL, NIHIL, NIHIL, NIHIL },
+    { "piscina_conari_ampliare", _sectio_decima_nona, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

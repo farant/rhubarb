@@ -12,6 +12,7 @@
  */
 
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "credo.h"
 #include "css_arbor.h"
 #include "css_registrum.h"
@@ -42,7 +43,7 @@ _plagulam_legere (
     character* memoria;
         size_t lecti;
 
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde NIHIL;
@@ -155,20 +156,19 @@ _octetos_probare (
                        (size_t)mensura) == ZEPHYRUM);
 }
 
-integer
-principale (vacuum)
+/* Sectio una: circuitus per plagulas et tegumentum suum. Numeri
+ * (plagulae_lectae, octeti_probati) intra sectionem vivunt - status
+ * nullus inter sectiones. */
+interior vacuum
+_corpus_probare (
+    CredoContextus* c)
 {
-               Piscina* piscina;
+               Piscina* piscina = c->piscina;
     constans character* radix_viae;
-                   b32  praeteritus;
                    i32  numerus;
                    i32  i;
                    i32  plagulae_lectae;
                    s32  octeti_probati;
-
-    piscina = piscina_generare_dynamicum("probatio_css_corpus",
-        1048576);
-    credo_aperire(piscina);
 
     radix_viae = getenv("RHUBARB_RADIX");
     si (radix_viae == NIHIL)
@@ -179,8 +179,6 @@ principale (vacuum)
     numerus          = (i32)(magnitudo(CORPUS) / magnitudo(CORPUS[0]));
     plagulae_lectae  = ZEPHYRUM;
     octeti_probati   = ZEPHYRUM;
-
-    imprimere("\n--- PORTA CORPORIS: VI plagulae verae ---\n");
 
     per (i = ZEPHYRUM; i < numerus; i++)
     {
@@ -220,11 +218,17 @@ principale (vacuum)
     /* Tegumentum SUUM: plagula absens rubet, non tacet */
     CREDO_AEQUALIS_I32 (plagulae_lectae, VI);
     CREDO_MAIOR_S32 (octeti_probati, (s32)4000);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "porta corporis: VI plagulae verae", _corpus_probare, NIHIL,
+        NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("css_corpus", SECTIONES);
 }

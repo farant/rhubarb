@@ -34,11 +34,13 @@ _introitus (
     redde intr;
 }
 
-s32
-principale (vacuum)
+/* Sectio UNA: probatio scaenica - blocci statum priorum ex proposito
+ * continuant; gradus (CREDO_GRADUS) fracturam nominant. */
+interior vacuum
+_scaenam_probare (
+    CredoContextus* c)
 {
-        b32  praeteritus;
-    Piscina* piscina;
+            Piscina* piscina = c->piscina;
     TesseraPiscina* tp;
     TesseraPonsMemoriae* pm;
     TesseraOpus* opus;
@@ -48,15 +50,6 @@ principale (vacuum)
     SaltuariusTabularium* currens;
     SaltuariusTabularium* praevisus;
 
-    piscina = piscina_generare_dynamicum("probatio_salt_col",
-        4194304);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
     tp = tessera_piscina_generare_dynamicum("salt_col_tessera",
         16777216);
     pm    = tessera_pons_memoriae_creare(tp, LX, XII);
@@ -64,7 +57,7 @@ principale (vacuum)
     si (opus == NIHIL)
     {
         imprimere("FRACTA: apertura tesserae\n");
-        redde I;
+        redde;   /* sine assertione: sectio VACUA */
     }
 
 
@@ -75,7 +68,7 @@ principale (vacuum)
     {
         SaltuariusMetra metra;
 
-        imprimere("\n--- Probans metra (60x12) ---\n");
+        CREDO_GRADUS ("metra (60x12)");
 
         saltuarius_columnae_metiri(LX, XII, &metra);
         CREDO_AEQUALIS_S32 (metra.parens_x, ZEPHYRUM);
@@ -139,7 +132,7 @@ principale (vacuum)
     {
         chorda linea;
 
-        imprimere("\n--- Probans scaenam primam ---\n");
+        CREDO_GRADUS ("scaenam primam");
 
         saltuarius_columnae_pingere(columnae, res, opus);
 
@@ -210,7 +203,7 @@ principale (vacuum)
     {
         chorda linea;
 
-        imprimere("\n--- Probans scaenam secundam ---\n");
+        CREDO_GRADUS ("scaenam secundam");
 
         currens->selectio          = II;   /* opus.c */
         columnae->praevisus_genus  = SALT_PRAEVISUS_TEXTUS;
@@ -261,7 +254,7 @@ principale (vacuum)
         DirectoriumIntroitus longa[I];
                       chorda linea;
 
-        imprimere("\n--- Probans truncationem ---\n");
+        CREDO_GRADUS ("truncationem");
 
         longa[ZEPHYRUM] = _introitus(
             "titulus_valde_longus_qui_non_capit.c",
@@ -291,7 +284,7 @@ principale (vacuum)
     {
         chorda linea;
 
-        imprimere("\n--- Probans vacuum et nuntium ---\n");
+        CREDO_GRADUS ("vacuum et nuntium");
 
         saltuarius_tabularium_implere(currens, piscina, NIHIL,
             ZEPHYRUM);
@@ -317,7 +310,7 @@ principale (vacuum)
              SaltuariusMetra metra;
                       chorda linea;
 
-        imprimere("\n--- Probans amplitudinem mutatam ---\n");
+        CREDO_GRADUS ("amplitudinem mutatam");
 
         unus[ZEPHYRUM] = _introitus("brevis.c", INTROITUS_FILUM,
             piscina);
@@ -351,7 +344,7 @@ principale (vacuum)
     {
         QuadransCellula cellulae[II];
 
-        imprimere("\n--- Probans praevisum imaginis ---\n");
+        CREDO_GRADUS ("praevisum imaginis");
         /* scaena 'amplitudo mutata' supra XL x VIII reliquit: LX x XII
          * restituitur, ut positio manu computata valeat */
         tessera_pons_memoriae_amplitudo(pm, LX, XII);
@@ -382,10 +375,16 @@ principale (vacuum)
             PROBA_CELLA(opus, XXX, IV).signum);
     }
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
+}
 
-    tessera_piscina_destruere(tp);
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "columnae: sessio", _scaenam_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("saltuarius_columnae", SECTIONES);
 }

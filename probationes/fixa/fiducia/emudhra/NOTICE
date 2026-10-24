@@ -1,0 +1,21 @@
+Certificata publica CA - fixa probationis indicii diffisarum
+(fiducia-linux T2). Nihil secreti: certificata CA publice in Certificate
+Transparency inscripta. Lecta 2026-10-22 ex crt.sh (forma PEM, in DER
+versa per openssl x509 -outform DER).
+
+em_dv_g3b_aaa.der     crt.sh id 18519019583
+  subiectum  C=NL, O=eMudhra BV, CN=EM DV TLS CA - G3B
+  emittens   C=GB, ST=Greater Manchester, L=Salford, O=Comodo CA Limited,
+             CN=AAA Certificate Services  (TRANSSIGNATUM Sectigo)
+  series     00a024fdf4ba665c785ce4a020483858b7
+  SHA-256    45:A8:83:F3:49:AE:DF:D5:F3:A6:49:B5:49:8F:FB:12:17:12:BA:8B:44:8F:3F:2A:91:DB:C5:A7:66:FC:DD:BE
+
+em_dv_g3b_emsign.der  crt.sh id 18286207191
+  subiectum  C=NL, O=eMudhra BV, CN=EM DV TLS CA - G3B
+  emittens   C=IN, O=eMudhra Technologies Limited, CN=emSign Root TLS CA - G3
+  series     00a4aee678f23362b4c0e460b772f214
+  SHA-256    42:C4:AC:CD:12:C4:F5:95:97:92:5E:1A:08:A7:A9:01:02:60:85:43:80:93:08:D5:0E:C4:27:E1:18:BA:14:93
+
+Clavis privata utriusque (P-384, valor unius octeti) publice fracta -
+Mozilla bug 2083382; OneCRL eos reicit (subiectum+clavis 2026-10-21,
+emittens+series sub emSign 2026-10-17).

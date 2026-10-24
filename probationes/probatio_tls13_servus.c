@@ -36,7 +36,8 @@
 nomen structura {
     character dir[DXII];       /* fasciculi servi */
     character fixa[DXII];      /* certificata generata */
-    character ancora[DXII];    /* ca.der */
+    character ancora[MXXIV];   /* ca.der (fixa + nomen: gcc
+                                    * -Wformat-overflow) */
 } Locus;
 
 nomen structura {

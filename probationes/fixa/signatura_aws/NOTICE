@@ -1,0 +1,10 @@
+Vectores probationis AWS Signature Version 4 (solum data probationis).
+
+Fons:   https://github.com/awslabs/aws-c-auth
+        tests/aws-signing-test-suite/v4/
+Commit: 84a26ea184d9ccd322c8164759510b3604ab13fd (2026-10-09)
+Licentia: Apache License 2.0 (Copyright Amazon.com, Inc. or its affiliates)
+
+Directoria v4/ IMMUTATA copiata sunt. Claves in context.json sunt claves
+EXEMPLI publicatae ab AWS (AKIDEXAMPLE), non secreta.
+index.tsv: 'curre' aut 'exclude <causa>' per vectorem (horreum-plan P4).

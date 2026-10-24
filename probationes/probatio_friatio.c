@@ -670,6 +670,110 @@ _sectio_decima_nona (
     }
 }
 
+
+    /* ==================================================
+     * MD5 (RFC 1321) - vectores appendicis A.5
+     * ================================================== */
+
+/* digestum MD5 -> XXXII characteres hex minusculi in piscina */
+interior chorda
+_md5_hex (
+    constans i8* digest,
+        Piscina* piscina)
+{
+    hic_manens constans character  cifrae[] = "0123456789abcdef";
+                        character* t;
+                              i32  i;
+
+    t = (character*)piscina_allocare(piscina, (memoriae_index)XXXIII);
+    per (i = ZEPHYRUM; i < MD5_DIGEST_MENSURA; i++)
+    {
+        t[i * II]      = cifrae[((i32)digest[i] >> IV) & 0x0F];
+        t[i * II + I]  = cifrae[(i32)digest[i] & 0x0F];
+    }
+    t[XXXII] = '\0';
+    redde chorda_ex_literis(t, piscina);
+}
+
+nomen structura {
+    constans character* textus;
+    constans character* expectatum;
+} Md5Vector;
+
+hic_manens constans Md5Vector md5_vectores_canonici[] = {
+    { "", "d41d8cd98f00b204e9800998ecf8427e" },
+    { "a", "0cc175b9c0f1b6a831c399e269772661" },
+    { "abc", "900150983cd24fb0d6963f7d28e17f72" },
+    { "message digest", "f96b697d7cb7938d525a2f31aaf161d0" },
+    { "abcdefghijklmnopqrstuvwxyz",
+      "c3fcd3d76192e4007dfb496cca67e13b" },
+    { "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+      "d174ab98d277d9f5a5611c2c9f419d9f" },
+    { "1234567890123456789012345678901234567890"
+      "1234567890123456789012345678901234567890",
+      "57edf4a22be3c955ac49da2e2107b67a" },
+    { NIHIL, NIHIL }
+};
+
+interior vacuum
+_sectio_md5_vectores (
+    CredoContextus* c)
+{
+     i8 digest[MD5_DIGEST_MENSURA];
+    i32 k;
+
+    per (k = ZEPHYRUM; md5_vectores_canonici[k].textus != NIHIL; k++)
+    {
+        constans Md5Vector* v = &md5_vectores_canonici[k];
+
+        md5_friare((constans i8*)v->textus, (i32)strlen(v->textus),
+            digest);
+        CREDO_CHORDA_AEQUALIS_LITERIS(_md5_hex(digest, c->piscina),
+            v->expectatum);
+        md5_friare_chorda(chorda_ex_literis(v->textus, c->piscina),
+            digest);
+        CREDO_CHORDA_AEQUALIS_LITERIS(_md5_hex(digest, c->piscina),
+            v->expectatum);
+    }
+}
+
+interior vacuum
+_sectio_md5_incrementale (
+    CredoContextus* c)
+{
+    constans Md5Vector* v = &md5_vectores_canonici[VI];
+                   i32  n = (i32)strlen(v->textus);
+                   i32  scissura;
+                    i8  digest[MD5_DIGEST_MENSURA];
+          MD5Contextus  ctx;
+                    i8  mille[M];
+                   i32  k;
+
+    /* scissura in omni loco eundem digestum dat */
+    per (scissura = ZEPHYRUM; scissura <= n; scissura++)
+    {
+        md5_initiare(&ctx);
+        md5_addere(&ctx, (constans i8*)v->textus, scissura);
+        md5_addere(&ctx, (constans i8*)v->textus + scissura,
+            n - scissura);
+        md5_finire(&ctx, digest);
+        CREDO_CHORDA_AEQUALIS_LITERIS(_md5_hex(digest, c->piscina),
+            v->expectatum);
+    }
+
+    /* decies centena milia 'a' per frusta M (RFC 1321 A.5 non habet;
+     * valor ex implementatione referentiae) */
+    memset(mille, 'a', magnitudo(mille));
+    md5_initiare(&ctx);
+    per (k = ZEPHYRUM; k < M; k++)
+    {
+        md5_addere(&ctx, mille, M);
+    }
+    md5_finire(&ctx, digest);
+    CREDO_CHORDA_AEQUALIS_LITERIS(_md5_hex(digest, c->piscina),
+        "7707d6ae4e027c70eea2a935c2296f21");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "friatio_fnv1a", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "friatio_fnv1a_literis", _sectio_secunda, NIHIL, NIHIL, NIHIL,
@@ -705,6 +809,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "crc32_calculare_chorda", _sectio_decima_nona, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "md5 RFC 1321 vectors", _sectio_md5_vectores, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "md5 incrementale", _sectio_md5_incrementale, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

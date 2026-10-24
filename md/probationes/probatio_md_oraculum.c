@@ -17,6 +17,7 @@
  * utraque. Consilium B3.
  */
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "md_html.h"
 #include "md_exempla.h"
 #include "md_decoctum.h"
@@ -68,7 +69,7 @@ _plagulam_legere (
 
     c.datum    = NIHIL;
     c.mensura  = ZEPHYRUM;
-    f          = fopen(via, "rb");
+    f          = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde c;
@@ -504,11 +505,13 @@ _sectio (
     redde &sectiones[*numerus - I];
 }
 
-s32
-principale (
-    vacuum)
+/* Sectio UNA: aggregata (praeterita contra pinnam, totalis > MCCC)
+ * utramque plagulam numerant */
+interior vacuum
+_oraculum_probare (
+    CredoContextus* c)
 {
-                Piscina* piscina;
+                Piscina* piscina = c->piscina;
      constans character* radix_viae;
               character  via[4096];
                  chorda  programma;
@@ -523,14 +526,6 @@ principale (
         "md/probationes/fixa/gfm/spec.txt", NIHIL };
                     i32 f;
 
-    piscina = piscina_generare_dynamicum("probatio_md_oraculum",
-        67108864);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
     memset(&ig, ZEPHYRUM, magnitudo(ig));
     sectiones = (Sectio*)piscina_allocare(piscina,
         magnitudo(Sectio) * CCLVI);
@@ -544,8 +539,7 @@ principale (
     CREDO_VERUM (programma.datum != NIHIL);
     si (programma.datum == NIHIL)
     {
-        credo_imprimere_compendium();
-        redde I;
+        redde;
     }
 
     per (f = ZEPHYRUM; plagulae[f] != NIHIL; f++)
@@ -677,16 +671,17 @@ principale (
     CREDO_MAIOR_I32 (totalis, (i32)1300);
     CREDO_MAIOR_AUT_AEQUALIS_S32 ((s32)praeterita,
         (s32)PINNA_PRAETERITA);
+}
 
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "oraculum html: CommonMark et GFM", _oraculum_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-        piscina_destruere(piscina);
-        si (praeteritus)
-        {
-            redde ZEPHYRUM;
-        }
-    }
-    redde I;
+s32
+principale (
+    vacuum)
+{
+    redde credo_suitam_currere("md_oraculum", SECTIONES);
 }

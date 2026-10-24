@@ -1477,3 +1477,63 @@ when no trivium index was set, index — as the old code named them).
   same time); floor raised to 480, M3 pin moved 281 → 492 with cause.
   This replaces what the retired shim's all-top-level-node sweep gave,
   on the adversarial corpus.
+
+## 2026-10-21 — where the silva gate's time and memory go (measured, nothing changed)
+
+Opener for credo v2 step 4. Probes are in build/sonda_valor/ (gitignored):
+sonda_silva.c, sonda_circuitus_silvae.c.
+
+**The gate:** mensor median 275 s (max 12 min). Five corpus suites are
+nearly all of it: canon_corpus 68 s, exemplaria_obsoleta 62 s,
+exemplaria_lint 57 s, exemplaria_inutilia 52 s, arbor_plagula 48 s.
+The other ~50 suites take under 2 s each.
+
+**One silva parse is cheap:** ~16 MiB fixed, half of it re-parsing the
+latina.h lexicon standalone before every file (8.4 MiB, 3 ms), plus ~165 B
+per source byte. lib/stml.c: 64 MiB, 36 ms.
+
+**exemplaria_lint, sampled** (37 s, peak RSS 4.0 GB):
+- 34% blocked on `./bin/aedilis --corpus lib --partes` (8.2 s per call;
+  canon_corpus, arbor_plagula and exemplaria_lint each issue it);
+- ~50% the STML path: write parsura (22x the source size, ~15 B per STML
+  byte), read it, expand the lint, then read and expand AGAIN for the
+  chained form;
+- 9% the silva parse itself.
+
+Per-file pool for lib/stml.c: parse 62 -> write 178 -> read+expand 316
+-> second read+expand 461 MiB, about 1.5 KB per source byte.
+
+**The 4 GB peak is two data files:** lib/biblia_dr.c (6.1 MB, the
+Douay-Rheims text as string literals) reaches 4.2 GB per file, and
+lib/tabula_nodorum_data.c (6.2 MB) 3.7 GB. The next is imago.c at
+0.7 GB. Those two are 58% of lib/'s bytes and 17% of the per-file memory
+traffic. All five corpus suites readdir(lib) and include them.
+tabula_nodorum_data.c carries `GENERATUM` in line 1;
+biblia_dr.c says "Generated - DO NOT EDIT" in its own words, so
+`bin/fabrica quid` calls it provenientia **manu**: nothing in the house
+knows it is generated.
+
+## 2026-10-21 (later) — data tables out of the corpus gates: measured
+
+Fran approved a `DATA` marker (unitates `indoles`). The five corpus
+suites now ask the judge `corpus_silvae` per `lib/` file
+(`apparatus_in_corpore`; each exclusion printed with its cause). The
+judge excludes lib/biblia_dr.c (hand DATA, accessors split into
+lib/biblia.c) and lib/tabula_nodorum_data.c (`GENERATUM DATA` from its
+generator). Same machine, sequential runs:
+
+| suite | before | after |
+|---|---|---|
+| canon_corpus | 58.7 s / 2673 MiB | 40.3 s / 1244 MiB |
+| exemplaria_obsoleta | 45.7 s / 3325 MiB | 34.3 s / 763 MiB |
+| exemplaria_lint | 45.0 s / 3582 MiB | 32.3 s / 1023 MiB |
+| exemplaria_inutilia | 54.2 s / 3075 MiB | 26.5 s / 556 MiB |
+| arbor_plagula | 99.3 s / 2233 MiB | 30.0 s / 1041 MiB |
+| total | 303 s | 163 s (-46%) |
+
+Times and sizes are peak RSS. Totalis +1 each (the unitates-load assertion).
+
+Still open:
+- the 8.2 s aedilis closure query, recomputed per suite;
+- the doubled read+expand in exemplaria_lint;
+- STML write cost (#6).

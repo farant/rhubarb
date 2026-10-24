@@ -4524,6 +4524,41 @@ tessera_piscina_allocare_ordinatum (
                   memoriae_index  mensura,
                   memoriae_index  ordinatio);
 
+
+/* ===============================================
+ * Ampliatio - allocationem augere sine copia (2026-10-21)
+ *
+ * piscina_conari_ampliare: allocationem 'datum' (mensura_vetus
+ * octetorum EXACTE, ut allocata est) ad mensura_nova augere. Viae
+ * duae:
+ *   I.  allocatio ULTIMA alvei currentis et spatium suppetit: in
+ *       loco augetur - redde idem 'datum'.
+ *   II. allocatio SOLA alvei currentis (ab initio alvei usque ad
+ *       finem usus), piscina dynamica: alveus ipse per realloc
+ *       augetur - redde monstratorem fortasse MOTUM, contentis
+ *       servatis.
+ * Aliter NIHIL, allocatione intacta: vocans novam allocat et copiat,
+ * ut antea. Numerus allocationum non crescit (allocatio eadem est).
+ *
+ * CUR: aedificator chordae duplicando crescit, et arena buffera
+ * vetera numquam reddit - scriptura STML magna III.VI x textum
+ * consumebat (materia/fontes/materia_arbor.worklog.md 2026-10-21).
+ *
+ * CAUTIO viae II: monstratores in 'datum' veterem post motum
+ * PENDENT - memoria liberata est, non in arena servata. Solus
+ * possessor allocationis eos tenere debet (aedificator: spectatio
+ * valet solum usque ad mutationem proximam). Sub -DPISCINA_VENENUM=1
+ * via II SEMPER movet et buffer vetus veneno implet ante
+ * liberationem.
+ * =============================================== */
+
+static vacuum*
+tessera_piscina_conari_ampliare (
+                         TesseraPiscina* piscina,
+                          vacuum* datum,
+                  memoriae_index  mensura_vetus,
+                  memoriae_index  mensura_nova);
+
 #endif
 
 /* ================= ex include/chorda_aedificator.h ================= */
@@ -6637,6 +6672,94 @@ tessera_piscina_allocare_ordinatum (
     redde _allocare_interna(piscina, mensura, ordinatio, VERUM);
 }
 
+
+/* ==================================================
+ * AMPLIATIO (2026-10-21) - vide caput
+ * ================================================== */
+
+interior vacuum
+_usum_augere (
+           TesseraPiscina* piscina,
+    memoriae_index  incrementum)
+{
+    piscina->usus_currens += incrementum;
+    si (piscina->usus_currens > piscina->maximus_usus)
+    {
+        piscina->maximus_usus = piscina->usus_currens;
+    }
+}
+
+static vacuum*
+tessera_piscina_conari_ampliare (
+           TesseraPiscina* piscina,
+            vacuum* datum,
+    memoriae_index  mensura_vetus,
+    memoriae_index  mensura_nova)
+{
+            Alveus* alveus;
+    memoriae_index  incrementum;
+            vacuum* buffer_novum;
+
+    si (   !piscina || !piscina->nunc || !datum
+        || mensura_nova < mensura_vetus)
+    {
+        redde NIHIL;
+    }
+    alveus       = piscina->nunc;
+    incrementum  = mensura_nova - mensura_vetus;
+
+    /* ULTIMA alvei currentis? (aequalitas monstratorum tantum) */
+    si ((i8*)datum + mensura_vetus != (i8*)alveus->buffer
+        + alveus->offset)
+    {
+        redde NIHIL;
+    }
+
+    /* I. in loco */
+    si (alveus->offset + incrementum <= alveus->capacitas)
+    {
+        alveus->offset += incrementum;
+        _usum_augere(piscina, incrementum);
+        redde datum;
+    }
+
+    /* II. SOLA alvei: nemo alius in eum monstrat, ergo alveus ipse
+     * moveri potest. Piscina certae magnitudinis numquam crescit. */
+    si (!piscina->est_dynamicum || datum != alveus->buffer)
+    {
+        redde NIHIL;
+    }
+    si (PISCINA_VENENUM)
+    {
+        /* semper movere, vetus veneno implere: spectatio pendens
+         * venenum legit, non contenta vetera quae recte viderentur */
+        buffer_novum = memoriae_allocare(mensura_nova);
+        si (!buffer_novum)
+        {
+            redde NIHIL;
+        }
+        memcpy(buffer_novum, alveus->buffer, mensura_vetus);
+        memset(alveus->buffer, PISCINA_OCTETUS_VENENI,
+            alveus->capacitas);
+        liberare(alveus->buffer);
+    }
+    alioquin
+    {
+        buffer_novum = realloc(alveus->buffer, mensura_nova);
+        si (!buffer_novum)
+        {
+            redde NIHIL;
+        }
+    }
+    alveus->buffer     = buffer_novum;
+    alveus->capacitas  = mensura_nova;
+    alveus->offset     = mensura_nova;
+    _usum_augere(piscina, incrementum);
+    _debug_imprimere(piscina->titulus ? piscina->titulus : "nemo",
+        "ampliare (alveus motus)", mensura_nova);
+    redde buffer_novum;
+}
+
 /* ================= ex lib/chorda_aedificator.c ================= */
 
 
@@ -6679,6 +6802,19 @@ _crescere (
         capacitas_nova = _proxima_capacitas(capacitas_nova);
     }
 
+    /* AMPLIATIO primum (2026-10-21): buffer allocatio ultima aut sola
+     * alvei est - augetur sine copia, buffer vetus non relinquitur
+     * (duplicatio in arena olim ~II x finalem otiosum relinquebat).
+     * NIHIL = non potest: allocare et copiare ut antea. */
+    buffer_novum = (i8*)tessera_piscina_conari_ampliare(aedificator->piscina,
+        aedificator->buffer, aedificator->capacitas, capacitas_nova);
+    si (buffer_novum != NIHIL)
+    {
+        aedificator->buffer     = buffer_novum;
+        aedificator->capacitas  = capacitas_nova;
+        redde VERUM;
+    }
+
     buffer_novum = (i8*)tessera_piscina_allocare(aedificator->piscina,
         capacitas_nova);
     si (!buffer_novum) redde FALSUM;
@@ -6701,6 +6837,8 @@ _appendere_interna (
        memoriae_index  mensura)
 {
     memoriae_index necessaria;
+    memoriae_index locus;
+               b32 intra;
 
     /* Appendix vacua bona est */
     si (!aedificator || !datum || mensura == ZEPHYRUM)
@@ -6712,7 +6850,21 @@ _appendere_interna (
 
     si (necessaria > aedificator->capacitas)
     {
+        /* APPENDIX SUI (spectatio aedificatoris ipsius): crescentia
+         * buffer movere potest (piscina_conari_ampliare via II
+         * liberat vetus), ergo fons ut offset servatur et post
+         * crescentiam re-derivatur */
+        intra = (   aedificator->buffer != NIHIL
+                 && datum >= aedificator->buffer
+                 && datum < aedificator->buffer
+                     + aedificator->capacitas);
+        locus = intra ? (memoriae_index)(datum - aedificator->buffer)
+                      : ZEPHYRUM;
         si (!_crescere(aedificator, necessaria)) redde FALSUM;
+        si (intra)
+        {
+            datum = aedificator->buffer + locus;
+        }
     }
 
     memcpy(aedificator->buffer + aedificator->offset, datum, mensura);

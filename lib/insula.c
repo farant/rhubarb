@@ -436,8 +436,8 @@ insula_radix (
 
 chorda*
 insula_attributum (
-    InsulaRepositorium* repo,
-    constans character* titulus)
+    constans InsulaRepositorium* repo,
+             constans character* titulus)
 {
     si (!repo)
     {

@@ -74,3 +74,49 @@ plain 21 s, cold 26 s (+24%: -MD, hashing, identity), warm 5 s.
   Now it changes the FULL key (existence bit) -> miss; same outcome, but
   an unrelated header no longer costs a recompile either.
 
+
+## 2026-10-23 — `--plures` batch mode + opt-in per-process header memo
+
+**Why.** The radix gate's `--residua-prae` compiled the 352 library objects through `xargs -P FILA -L 1 bin/compilator`, one process per call at ~22 ms each (startup, identity, thesaurus open): 1.8–2.2 s wall, ~7.7 s CPU, all of it cache hits.
+
+**`bin/compilator --plures <lista>`:**
+- Each line of the list is one full argument line, split on whitespace, as compile_tests.sh writes `bibliothecae.vocationes`. One `Compilator` (thesaurus + clang identity) serves every line.
+- Uncacheable lines run clang as a CHILD (`processus_exsequi`), not via `processus_transformare`.
+- Every line runs even after a failure (as xargs did); exit 1 if any failed.
+- The tool arena is NOT reset per line: the thesaurus shares it and may allocate into it during a call.
+
+**Memo.** Sampling the batch: `_clavem_plenam` re-read and re-sealed every header in the depfile index for every compile (`filum_legere_totum` + `sigillum_computare`), and `_obumbrationem_addere` probed every other root with `filum_existit` (fopen/fclose) for every header. The same few dozen shared headers, 352 times.
+
+`compilator_memoriam_incipere(Compilator*)` (compilator.h) turns on two per-process tables in their own arena: header path → Sigillum (or absent), and candidate path → present/absent. Only `--plures` calls it.
+
+It is unsafe wherever a per-call read trace matters: a memoized lookup does not note L/A/X in `FABRICA_LECTIONES`, and fabrica compiles the members of a composite in ONE process with a read log per member. That is why it is opt-in. Output objects are never memoized (`_collocare` still seals the destination directly).
+
+**Measured** (352 lines, all hits, warm):
+
+| mode | time |
+|---|---|
+| xargs -P4 | 1.76–2.18 s |
+| `--plures` without memo | 1.14 s |
+| `--plures` with memo | 0.28–0.30 s, single-threaded |
+
+All 382 objects untouched (same inode and mtime). Warm radix `--residua-prae`: 4.2 → 2.5 s.
+
+**Fumus XII:** four lines in one process (hit, broken, hit, and a fourth that re-reads line 1's headers through the memo) → exit 1, the broken source named, objects byte-identical to single calls, clang invoked once.
+
+Plants, done by hand:
+- a corrupted memoized sigillum → XII red (clang 10 → 12);
+- an inverted existence memo → XII red;
+- restored → green.
+
+**Lesson: `silva.planta(..., 'compilator')` is MUTE.** The fumus runs the existing `bin/compilator` without rebuilding it, and `bin/fabrica sanare bin/compilator` refuses while fabrica itself (which links lib/compilator.c) is stale ("iudex ipse non recens"). Plant by hand: edit → `./tools/fabrica_struere.sh` → `bin/fabrica sanare bin/compilator` → fumus → restore → rebuild both.
+
+## 2026-10-23 — compilator_compilare_in (fabrica memory, park …T77EH4)
+
+Added `compilator_compilare_in(compilator, argv, n, piscina)`: every per-call allocation (file
+reads for the key and cache hit, argv parsing, captured output, error text) goes into the
+caller's piscina, so the caller can empty it after the call. `compilator_compilare` is now a
+wrapper passing `compilator->piscina` (unchanged behaviour, used by --plures). The thesaurus
+allocates in its own piscina only on a store (miss) and in GC. Test:
+probationes/probatio_compilator.c (needs lib/compilator.c in compile_tests_fontes_generata.sh,
+regenerated). argv is WITHOUT a leading 'clang', or it counts as a second source and the call
+is "non cacheabilia".

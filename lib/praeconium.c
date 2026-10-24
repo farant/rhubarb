@@ -9,9 +9,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* nuntius summum (octeti): linea brevis manet (scriptura integra) */
-#define PRAECONIUM_NUNTIUS_MAXIMUS CC
-
 constans character*
 praeconium_via (
     Piscina* piscina)

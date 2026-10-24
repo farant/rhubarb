@@ -201,25 +201,19 @@ _res_id_capere (
     exitus[k] = '\0';
 }
 
-s32
-principale (vacuum)
+/* Sectio UNA: probatio scaenica - blocci statum priorum ex proposito
+ * continuant; gradus (CREDO_GRADUS) fracturam nominant. */
+interior vacuum
+_scaenam_probare (
+    CredoContextus* c)
 {
-                   Piscina* piscina;
+                   Piscina* piscina = c->piscina;
     TabulariumConfiguratio  cfg;
                 Tabularium* t;
                  character  id_q[GESTA_RES_ID_MENSURA];
                  character  id_p[GESTA_RES_ID_MENSURA];
-                    Cursus  c;
-                       b32  praeteritus;
+                    Cursus  cursus;
 
-    piscina = piscina_generare_dynamicum("probatio_frigida",
-        67108864);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
     _purgare();
 
     cfg.radix             = ".";
@@ -243,7 +237,7 @@ principale (vacuum)
     CREDO_NON_NIHIL (t);
     si (t == NIHIL)
     {
-        redde I;
+        redde;   /* sine assertione: sectio VACUA */
     }
     CREDO_VERUM (tabularium_se_initiare(t));
     _res_id_capere(_mitte(t, piscina, "{\"jsonrpc\":\"2.0\","
@@ -323,9 +317,10 @@ principale (vacuum)
             "Frigida quaestio", "laborans" };
         constans character* an;
 
-        c = _curre(&cfg, piscina, IV, a);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
-        CREDO_VERUM (strstr(c.effusio, "status laborans") != NIHIL);
+        cursus = _curre(&cfg, piscina, IV, a);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        CREDO_VERUM (strstr(cursus.effusio, "status laborans")
+            != NIHIL);
         an = _plagula_litterae(piscina, VIA_AN);
         CREDO_VERUM (strstr(an, "\"novus\":\"laborans\"") != NIHIL);
         CREDO_VERUM (strstr(an, "\"origo\":\"frigida\"") != NIHIL);
@@ -341,8 +336,8 @@ principale (vacuum)
             "Frigida quaestio", "clausum" };
         constans character* an;
 
-        c = _curre(&cfg, piscina, VIII, a);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        cursus = _curre(&cfg, piscina, VIII, a);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_SCRIPTUM);
         an = _plagula_litterae(piscina, VIA_AN);
         CREDO_VERUM (strstr(an, "commissum:5ead8e54") != NIHIL);
         CREDO_VERUM (strstr(an, "\"novus\":\"clausum\"") != NIHIL);
@@ -357,10 +352,10 @@ principale (vacuum)
             "Frigida parcum", "dictum", "dixit \"salve\"" };
         constans character* an;
 
-        c = _curre(&cfg, piscina, V, a);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
-        c = _curre(&cfg, piscina, V, b);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        cursus = _curre(&cfg, piscina, V, a);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        cursus = _curre(&cfg, piscina, V, b);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_SCRIPTUM);
         an = _plagula_litterae(piscina, VIA_AN);
         CREDO_VERUM (strstr(an, "3412/5100") != NIHIL);
         CREDO_VERUM (strstr(an, "dixit \\\"salve\\\"") != NIHIL);
@@ -371,9 +366,9 @@ principale (vacuum)
         constans character* a[] = { "frigida", "-nexus",
             "Frigida quaestio", "impeditur-a", "Frigida parcum" };
 
-        c = _curre(&cfg, piscina, V, a);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
-        CREDO_VERUM (strstr(c.effusio, "--impeditur-a-->")
+        cursus = _curre(&cfg, piscina, V, a);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        CREDO_VERUM (strstr(cursus.effusio, "--impeditur-a-->")
             != NIHIL);
     }
 
@@ -385,13 +380,14 @@ principale (vacuum)
             "Frigida quaestio", "pendet-ex", "Frigida parcum" };
                  character speratum[CCLVI];
 
-        c = _curre(&cfg, piscina, V, a);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_RECUSATUM);
-        CREDO_VERUM (strstr(c.errores, "synonymum") != NIHIL);
-        CREDO_VERUM (strstr(c.errores, "IMPERIUM VALIDUM") != NIHIL);
+        cursus = _curre(&cfg, piscina, V, a);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_RECUSATUM);
+        CREDO_VERUM (strstr(cursus.errores, "synonymum") != NIHIL);
+        CREDO_VERUM (strstr(cursus.errores, "IMPERIUM VALIDUM")
+            != NIHIL);
         sprintf(speratum, "-nexus \"%s\" impeditur-a \"%s\"",
             id_q, id_p);
-        CREDO_VERUM (strstr(c.errores, speratum) != NIHIL);
+        CREDO_VERUM (strstr(cursus.errores, speratum) != NIHIL);
         /* clavis 'verbum' discernit: orthographia nuda in
          * annalibus IAM stat - semen eam inter synonyma fert */
         CREDO_AEQUALIS_I32 (_quoties_continet(
@@ -407,12 +403,12 @@ principale (vacuum)
             "Frigida quaestio" };
                  character speratum[CCLVI];
 
-        c = _curre(&cfg, piscina, VII, a);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_RECUSATUM);
-        CREDO_VERUM (strstr(c.errores, "inversum") != NIHIL);
+        cursus = _curre(&cfg, piscina, VII, a);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_RECUSATUM);
+        CREDO_VERUM (strstr(cursus.errores, "inversum") != NIHIL);
         sprintf(speratum, "-actor \"claude\" -nexus \"%s\""
             " impeditur-a \"%s\"", id_q, id_p);
-        CREDO_VERUM (strstr(c.errores, speratum) != NIHIL);
+        CREDO_VERUM (strstr(cursus.errores, speratum) != NIHIL);
     }
 
     /* VIII. CAUSAE OMNES SIMUL trans STRATA: causa lineae imperii
@@ -423,11 +419,12 @@ principale (vacuum)
             "Frigida quaestio", "pendet-ex", "Frigida parcum",
             "superfluum" };
 
-        c = _curre(&cfg, piscina, VI, a);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_USUS);
-        CREDO_VERUM (strstr(c.errores, "superflu") != NIHIL);
-        CREDO_VERUM (strstr(c.errores, "synonymum") != NIHIL);
-        CREDO_VERUM (strstr(c.errores, "IMPERIUM VALIDUM") != NIHIL);
+        cursus = _curre(&cfg, piscina, VI, a);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_USUS);
+        CREDO_VERUM (strstr(cursus.errores, "superflu") != NIHIL);
+        CREDO_VERUM (strstr(cursus.errores, "synonymum") != NIHIL);
+        CREDO_VERUM (strstr(cursus.errores, "IMPERIUM VALIDUM")
+            != NIHIL);
     }
 
     /* IX. operanda absentia: OMNIA nominantur, forma valida cum
@@ -436,11 +433,11 @@ principale (vacuum)
         constans character* a[] = { "frigida", "-mutatio",
             "Frigida parcum" };
 
-        c = _curre(&cfg, piscina, III, a);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_USUS);
-        CREDO_VERUM (strstr(c.errores, "<clavis>") != NIHIL);
-        CREDO_VERUM (strstr(c.errores, "<valor>") != NIHIL);
-        CREDO_VERUM (strstr(c.errores,
+        cursus = _curre(&cfg, piscina, III, a);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_USUS);
+        CREDO_VERUM (strstr(cursus.errores, "<clavis>") != NIHIL);
+        CREDO_VERUM (strstr(cursus.errores, "<valor>") != NIHIL);
+        CREDO_VERUM (strstr(cursus.errores,
             "-mutatio \"Frigida parcum\" <clavis> <valor>")
             != NIHIL);
     }
@@ -451,14 +448,14 @@ principale (vacuum)
         constans character* b[] = { "frigida", "-statum",
             "Frigida quaestio", "clausum" };
 
-        c = _curre(&cfg, piscina, II, a);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_USUS);
-        CREDO_VERUM (strstr(c.errores, "-origo") != NIHIL);
-        CREDO_VERUM (strstr(c.errores, "verbum deest") != NIHIL);
-        c = _curre(&cfg, piscina, IV, b);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_USUS);
-        CREDO_VERUM (strstr(c.errores, "-statum") != NIHIL);
-        CREDO_VERUM (strstr(c.errores, "-status") != NIHIL);
+        cursus = _curre(&cfg, piscina, II, a);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_USUS);
+        CREDO_VERUM (strstr(cursus.errores, "-origo") != NIHIL);
+        CREDO_VERUM (strstr(cursus.errores, "verbum deest") != NIHIL);
+        cursus = _curre(&cfg, piscina, IV, b);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_USUS);
+        CREDO_VERUM (strstr(cursus.errores, "-statum") != NIHIL);
+        CREDO_VERUM (strstr(cursus.errores, "-status") != NIHIL);
     }
 
     /* XI. recusatio machinae in -status (res ignota): exitus
@@ -467,9 +464,9 @@ principale (vacuum)
         constans character* a[] = { "frigida", "-status",
             "Res nusquam", "clausum" };
 
-        c = _curre(&cfg, piscina, IV, a);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_RECUSATUM);
-        CREDO_VERUM (strstr(c.errores, "ignota") != NIHIL);
+        cursus = _curre(&cfg, piscina, IV, a);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_RECUSATUM);
+        CREDO_VERUM (strstr(cursus.errores, "ignota") != NIHIL);
     }
 
     /* XIII. -status ILLEGALIS per viam frigidam (opus 01M335DZJM):
@@ -487,23 +484,25 @@ principale (vacuum)
                  character  speratum[CCLVI];
 
         an_ante  = _plagula_litterae(piscina, VIA_AN);
-        c        = _curre(&cfg, piscina, IV, a);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_RECUSATUM);
-        CREDO_VERUM (strstr(c.errores, "tractum | clausum") != NIHIL);
-        CREDO_VERUM (strstr(c.errores, "IMPERIUM VALIDUM") != NIHIL);
+        cursus   = _curre(&cfg, piscina, IV, a);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_RECUSATUM);
+        CREDO_VERUM (strstr(cursus.errores, "tractum | clausum")
+            != NIHIL);
+        CREDO_VERUM (strstr(cursus.errores, "IMPERIUM VALIDUM")
+            != NIHIL);
         /* res in imperio valido ut RES_ID (machina eam solvit -
          * forma pasta-parata inambigua), legales ut locus-tenens */
         sprintf(speratum, "-status \"%s\" <tractum | clausum>",
             id_p);
-        CREDO_VERUM (strstr(c.errores, speratum) != NIHIL);
-        CREDO_VERUM (strstr(c.errores, "-vis") != NIHIL);
+        CREDO_VERUM (strstr(cursus.errores, speratum) != NIHIL);
+        CREDO_VERUM (strstr(cursus.errores, "-vis") != NIHIL);
         an_post = _plagula_litterae(piscina, VIA_AN);
         CREDO_VERUM (strcmp(an_ante, an_post) == ZEPHYRUM);
 
         CREDO_VERUM (frigida_verbum_novit("-vis"));
-        c = _curre(&cfg, piscina, V, b);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
-        CREDO_VERUM (strstr(c.effusio, "status apertum") != NIHIL);
+        cursus = _curre(&cfg, piscina, V, b);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        CREDO_VERUM (strstr(cursus.effusio, "status apertum") != NIHIL);
         an_post = _plagula_litterae(piscina, VIA_AN);
         CREDO_VERUM (strstr(an_post, "violatio machinae") != NIHIL);
     }
@@ -522,16 +521,16 @@ principale (vacuum)
 
         CREDO_VERUM (frigida_verbum_novit("-res"));
         an_ante  = _plagula_litterae(piscina, VIA_AN);
-        c        = _curre(&cfg, piscina, III, a);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
-        CREDO_VERUM (strstr(c.effusio, "Frigida parcum (parcum, ")
-            == c.effusio);
-        CREDO_VERUM (strstr(c.effusio, "res_id ") != NIHIL);
+        cursus   = _curre(&cfg, piscina, III, a);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        CREDO_VERUM (strstr(cursus.effusio, "Frigida parcum (parcum, ")
+            == cursus.effusio);
+        CREDO_VERUM (strstr(cursus.effusio, "res_id ") != NIHIL);
         /* lectio NIHIL scribit */
         an_post = _plagula_litterae(piscina, VIA_AN);
         CREDO_VERUM (strcmp(an_ante, an_post) == ZEPHYRUM);
-        c = _curre(&cfg, piscina, III, b);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_RECUSATUM);
+        cursus = _curre(&cfg, piscina, III, b);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_RECUSATUM);
     }
 
     /* -MAPPA: forma lectionis SINE operando - arbor nominum per
@@ -545,19 +544,20 @@ principale (vacuum)
 
         CREDO_VERUM (frigida_verbum_novit("-mappa"));
         an_ante  = _plagula_litterae(piscina, VIA_AN);
-        c        = _curre(&cfg, piscina, II, a);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
-        CREDO_VERUM (strstr(c.effusio, "Frigida regio") != NIHIL);
-        CREDO_VERUM (strstr(c.effusio, "\n  Frigida sub-regio")
+        cursus   = _curre(&cfg, piscina, II, a);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        CREDO_VERUM (strstr(cursus.effusio, "Frigida regio") != NIHIL);
+        CREDO_VERUM (strstr(cursus.effusio, "\n  Frigida sub-regio")
             != NIHIL);
-        CREDO_VERUM (strstr(c.effusio, "parca ") == NIHIL);
+        CREDO_VERUM (strstr(cursus.effusio, "parca ") == NIHIL);
         an_post = _plagula_litterae(piscina, VIA_AN);
         CREDO_VERUM (strcmp(an_ante, an_post) == ZEPHYRUM);
-        c = _curre(&cfg, piscina, III, b);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_USUS);
-        CREDO_VERUM (strstr(c.errores, "operanda superflua") != NIHIL);
+        cursus = _curre(&cfg, piscina, III, b);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_USUS);
+        CREDO_VERUM (strstr(cursus.errores, "operanda superflua")
+            != NIHIL);
         /* -mappa lineas captas NON fert */
-        CREDO_VERUM (strstr(c.effusio, "<visio (>") == NIHIL);
+        CREDO_VERUM (strstr(cursus.effusio, "<visio (>") == NIHIL);
     }
 
     /* -MAPPA-PLENA: visiones et principia sub regione sua ut lineae
@@ -566,12 +566,13 @@ principale (vacuum)
         constans character* a[] = { "frigida", "-mappa-plena" };
 
         CREDO_VERUM (frigida_verbum_novit("-mappa-plena"));
-        c = _curre(&cfg, piscina, II, a);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
-        CREDO_VERUM (strstr(c.effusio, "MAPPA (plena)") != NIHIL);
-        CREDO_VERUM (strstr(c.effusio, "\n  <visio (> Frigida visio")
+        cursus = _curre(&cfg, piscina, II, a);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        CREDO_VERUM (strstr(cursus.effusio, "MAPPA (plena)") != NIHIL);
+        CREDO_VERUM (strstr(cursus.effusio,
+            "\n  <visio (> Frigida visio")
             != NIHIL);
-        CREDO_VERUM (strstr(c.effusio, "\n  Frigida sub-regio")
+        CREDO_VERUM (strstr(cursus.effusio, "\n  Frigida sub-regio")
             != NIHIL);
     }
 
@@ -590,18 +591,18 @@ principale (vacuum)
 
         CREDO_VERUM (frigida_verbum_novit("-inventarium"));
         an_ante  = _plagula_litterae(piscina, VIA_AN);
-        c        = _curre(&cfg, piscina, III, a);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
-        CREDO_VERUM (strstr(c.effusio,
+        cursus   = _curre(&cfg, piscina, III, a);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        CREDO_VERUM (strstr(cursus.effusio,
             "x.sh\tin PORTAE\tita-non\tita\n")
             != NIHIL);
-        CREDO_VERUM (strstr(c.effusio, "y.sh") == NIHIL);
+        CREDO_VERUM (strstr(cursus.effusio, "y.sh") == NIHIL);
         an_post = _plagula_litterae(piscina, VIA_AN);
         CREDO_VERUM (strcmp(an_ante, an_post) == ZEPHYRUM);
-        c = _curre(&cfg, piscina, III, b);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_RECUSATUM);
-        c = _curre(&cfg, piscina, IV, d);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_USUS);
+        cursus = _curre(&cfg, piscina, III, b);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_RECUSATUM);
+        cursus = _curre(&cfg, piscina, IV, d);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_USUS);
     }
 
     /* LECTIO PROIECTIONES NON TANGIT (desideratum 01M38YV4W4):
@@ -627,25 +628,40 @@ principale (vacuum)
             "signum\n"));
         CREDO_VERUM (filum_scribere_literis(VIA_TB, "tabula ficta\n"));
 
-        c = _curre(&cfg_proiectionum, piscina, III, a);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
-        c = _curre(&cfg_proiectionum, piscina, III, b);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        cursus = _curre(&cfg_proiectionum, piscina, III, a);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        cursus = _curre(&cfg_proiectionum, piscina, III, b);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_SCRIPTUM);
         CREDO_VERUM (filum_existit(VIA_EN "/signum/signum.md"));
         CREDO_VERUM (strcmp(_plagula_litterae(piscina, VIA_TB),
             "tabula ficta\n") == ZEPHYRUM);
 
         /* contra-probatio: scriptura proiectiones renovat */
-        c = _curre(&cfg_proiectionum, piscina, V, d);
-        CREDO_AEQUALIS_S32 (c.exitus, FRIGIDA_EXITUS_SCRIPTUM);
+        cursus = _curre(&cfg_proiectionum, piscina, V, d);
+        CREDO_AEQUALIS_S32 (cursus.exitus, FRIGIDA_EXITUS_SCRIPTUM);
         CREDO_VERUM (strstr(_plagula_litterae(piscina, VIA_TB),
             "Frigida parcum") != NIHIL);
         CREDO_FALSUM (filum_existit(VIA_EN "/signum/signum.md"));
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
+/* plagulae sectionis post eam deletae (ut olim post compendium) */
+interior vacuum
+_sectionem_purgare (
+    CredoContextus* c)
+{
+    (vacuum)c;
     _purgare();
-    redde praeteritus ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "via frigida per machinam tabularii", _scaenam_probare, NIHIL,
+        _sectionem_purgare, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("frigida", SECTIONES);
 }

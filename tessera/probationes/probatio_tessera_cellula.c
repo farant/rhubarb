@@ -13,33 +13,21 @@
 #include "credo.h"
 #include <stdio.h>
 
-s32
-principale (vacuum)
-{
-        b32  praeteritus;
-    Piscina* piscina;
 
-    piscina = piscina_generare_dynamicum("probatio_tessera_cellula",
-        65536);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ========================================================
+    /* ==================================================
      * PROBARE: compingere + mensura (ASCII pellucidum)
-     * ======================================================== */
+     * ================================================== */
 
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         hic_manens constans i8 UNUS[I]    = { 'a' };
         hic_manens constans i8 TRES[III]  = { 0xE2, 0x94, 0x80 };
         hic_manens constans i8 QUATTUOR[IV] = { 0xF0, 0x9F, 0x8E,
             0xB2 };
-
-        imprimere("\n--- Probans signum compactum ---\n");
 
         CREDO_AEQUALIS_I32 (tessera_signum_ex_octetis(UNUS, I),
             (i32)'a');
@@ -64,17 +52,23 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (tessera_signum_ex_octetis(TRES, V),
             ZEPHYRUM);
     }
+}
 
 
-    /* ========================================================
+    /* ==================================================
      * PROBARE: effusio (vacuum -> spatium; octeti fideles)
-     * ======================================================== */
+     * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         ChordaAedificator* aed;
                    chorda  visus;
-
-        imprimere("\n--- Probans effusionem signi ---\n");
 
         aed = chorda_aedificator_creare(piscina, LXIV);
         tessera_signum_scribere(aed, (i32)'x');
@@ -83,17 +77,21 @@ principale (vacuum)
         visus = chorda_aedificator_spectare(aed);
         CREDO_CHORDA_AEQUALIS_LITERIS (visus, "x \xE2\x94\x82");
     }
+}
 
 
-    /* ========================================================
+    /* ==================================================
      * PROBARE: stilus
-     * ======================================================== */
+     * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         TesseraStilus a;
         TesseraStilus b;
-
-        imprimere("\n--- Probans stilum ---\n");
 
         a = tessera_stilus_nativus();
         CREDO_AEQUALIS_I32 (a.color_litterae,
@@ -107,18 +105,17 @@ principale (vacuum)
         CREDO_VERUM (tessera_stilus_aequalis(a, a));
         CREDO_FALSUM (tessera_stilus_aequalis(a, b));
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "signum compactum", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "effusionem signi", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "stilum", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("tessera_cellula", SECTIONES);
 }

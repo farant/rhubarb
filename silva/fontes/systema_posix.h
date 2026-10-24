@@ -125,9 +125,13 @@ struct stat {
 #define S_IFMT  0170000
 #define S_IFDIR 0040000
 #define S_IFREG 0100000
+#define S_IFLNK 0120000   /* iter_directoria est_nexus (2026-10-22) */
+#define S_IFSOCK 0140000  /* filum_status est_socket (canalis T1) */
 
 #define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
+#define S_ISLNK(m) (((m) & S_IFMT) == S_IFLNK)
+#define S_ISSOCK(m) (((m) & S_IFMT) == S_IFSOCK)
 
 #define S_IRUSR 0400
 #define S_IWUSR 0200
@@ -311,6 +315,7 @@ int select(int numerus, fd_set* legendi, fd_set* scribendi,
 #define EWOULDBLOCK 35
 #define EISCONN     56
 #define EINPROGRESS 36   /* connect non-blocans pergit (http-vocatio T3) */
+#define ECONNABORTED 53  /* accept: par ante acceptionem abiit (canalis T1) */
 
 /* <sectio caput="sys/socket.h,netinet/in.h,netinet/tcp.h"/>
  * sys/socket.h + netinet/in.h + netinet/tcp.h (valores Darwin) */
@@ -322,6 +327,10 @@ int select(int numerus, fd_set* legendi, fd_set* scribendi,
  * Darwin solum - Linux nomen nescit (sonda 2026-08-03); via Linux =
  * MSG_NOSIGNAL per send aut SIGPIPE ignorare. Codex 86 usum flagat. */
 #define SO_NOSIGPIPE 0x1022
+/* send() sine SIGPIPE - Darwin quoque (SDK 0x80000). Necessarium: socket
+ * AF_UNIX acceptum POSTQUAM par iam clausit SO_NOSIGPIPE NON observat
+ * (signum XIII; canalis T2, sonda 2026-10-21) */
+#define MSG_NOSIGNAL 0x80000
 #define IPPROTO_TCP  6
 #define TCP_NODELAY  0x01
 
@@ -333,6 +342,7 @@ int setsockopt(int fossa, int gradus, int titulus, const void* valor,
 /* promotio ex blocis tcp_posix (01KYB2Z7XA, 2026-07-27) -
  * transcriptio verbatim, formae Darwin certificatae */
 #define AF_UNSPEC   0
+#define AF_UNIX     1    /* canalis localis (canalis T1) */
 #define AF_INET     2
 #define AF_INET6    30   /* Darwin (Linux 10) - familia IPv6, nomina.h */
 #define SOCK_STREAM 1
@@ -378,6 +388,22 @@ int getpeername(int fossa, struct sockaddr* titulus,
 ssize_t send(int fossa, const void* buffer, size_t mensura,
              int vexilla);
 ssize_t recv(int fossa, void* buffer, size_t mensura, int vexilla);
+/* par fossarum connexarum (probatio_canalis: nosigpipe) */
+int socketpair(int genus, int forma, int protocollum, int* fossae);
+/* latus unum claudere (mcp_canalis_pons: EOF intrae -> SHUT_WR,
+ * responsa adhuc leguntur; canalis T2) */
+#define SHUT_RD   0
+#define SHUT_WR   1
+#define SHUT_RDWR 2
+int shutdown(int fossa, int quomodo);
+
+/* <sectio caput="sys/un.h"/> sys/un.h - inscriptio AF_UNIX (forma
+ * Darwin: sun_len, sun_family, sun_path[104]; canalis T1) */
+struct sockaddr_un {
+    unsigned char sun_len;
+    unsigned char sun_family;
+    char          sun_path[104];
+};
 
 /* <sectio caput="arpa/inet.h"/> arpa/inet.h */
 const char* inet_ntop(int genus, const void* fons, char* destinatio,
@@ -402,6 +428,10 @@ int getaddrinfo(const char* hospes, const char* servitium,
                 struct addrinfo** fructus);
 void freeaddrinfo(struct addrinfo* fructus);
 const char* gai_strerror(int status);
+/* vexilla et erratum (valores Darwin; nomina_posix.c, 2026-10-22) */
+#define AI_NUMERICHOST  0x00000004
+#define AI_NUMERICSERV  0x00001000
+#define EAI_NONAME      8
 
 /* <sectio caput="net/if.h"/> net/if.h - vexilla interfacierum
  * (valores Darwin; IFF_UP et IFF_LOOPBACK soli adhibentur) */
@@ -464,7 +494,9 @@ struct dirent {
     char               d_name[1024];
 };
 
+#define DT_UNKNOWN 0    /* iter_directoria est_nexus (2026-10-22) */
 #define DT_DIR 4
+#define DT_LNK 10
 
 /* <gradus titulus="opendir" genus="canalis" pro="iter_directoria"/> (codex 96) */
 DIR*           opendir(const char* via);
@@ -596,6 +628,10 @@ int uname(struct utsname* nomina);
 
 /* <sectio caput="unistd.h"/> unistd.h - identitas processus */
 pid_t getpid(void);
+/* uid effectivus; uid paris socketi AF_UNIX (Darwin/BSD; Linux
+ * SO_PEERCRED) - canalis T1 */
+uid_t geteuid(void);
+int   getpeereid(int fossa, uid_t* uid, gid_t* gid);
 /* custos cursus (colloquia T8b, tools/mensor.c): vocans incipere */
 pid_t getppid(void);
 
@@ -728,3 +764,227 @@ unsigned int __atomic_load_n(const volatile unsigned int* locus,
 void __atomic_store_n(volatile unsigned int* locus, unsigned int valor,
                       int ordo);
 #endif
+
+
+/* ==================================================
+ * <sectio caput="postulata_neon.h"/>
+ * instructiones ARMv8 SHA2 (arm_neon.h) - SOLUM plagulis quae
+ * include/postulata_neon.h citatum includunt (sigillum, 2026-10-22;
+ * exemplar sectionis postulata_atomica.h). __ARM_FEATURE_SHA2 hic
+ * DEFINITUR ut silva ramum '#if defined(__ARM_FEATURE_SHA2)' examinet
+ * (valor praedefinitus clang aequalis - auspex_posix certificat). Typi
+ * vectorum ut structurae C89 (silva per valorem transit; numquam
+ * compilantur), functiones eae solae quas sigillum adhibet; sub clang
+ * celantur - arm_neon.h vera eas definit.
+ * ================================================== */
+
+#define __ARM_FEATURE_SHA2 1
+#ifndef __clang__
+typedef struct { unsigned char v[16]; } uint8x16_t;
+typedef struct { unsigned int v[4]; } uint32x4_t;
+uint32x4_t vld1q_u32(const unsigned int* locus);
+uint8x16_t vld1q_u8(const unsigned char* locus);
+void vst1q_u32(unsigned int* locus, uint32x4_t valor);
+uint8x16_t vrev32q_u8(uint8x16_t a);
+uint32x4_t vreinterpretq_u32_u8(uint8x16_t a);
+uint32x4_t vaddq_u32(uint32x4_t a, uint32x4_t b);
+uint32x4_t vsha256hq_u32(uint32x4_t abcd, uint32x4_t efgh,
+                         uint32x4_t wk);
+uint32x4_t vsha256h2q_u32(uint32x4_t efgh, uint32x4_t abcd,
+                          uint32x4_t wk);
+uint32x4_t vsha256su0q_u32(uint32x4_t w0_3, uint32x4_t w4_7);
+uint32x4_t vsha256su1q_u32(uint32x4_t tw0_3, uint32x4_t w8_11,
+                           uint32x4_t w12_15);
+#endif
+
+
+/* ==================================================
+ * NDK ANDROID (testa B1 T3b, 2026-10-23; Franus optio a) - sectiones
+ * quas capita "android/..." (et sys/system_properties.h) plagulae ipsius
+ * evocant: lib/testa_android.c SOLA hodie. Formae et valores ex NDK
+ * r27d (aarch64-linux-android30), certificatae per
+ * officina/auspex_android.sh (TU verum capita NDK vera, TU nostrum hoc
+ * caput - eadem tabula assertionum). Functiones EAE SOLAE quas testa
+ * adhibet; typi opaci ut in NDK (monstrator solus traditur). Campi
+ * Java ANativeActivity (vm, env, clazz) ut vacuum* - eadem mensura,
+ * idem offset (auspex certificat), JNI nondum (B3).
+ * ================================================== */
+
+/* <sectio caput="android/rect.h"/> android/rect.h */
+typedef struct ARect {
+    int32_t left;
+    int32_t top;
+    int32_t right;
+    int32_t bottom;
+} ARect;
+
+/* <sectio caput="android/asset_manager.h"/> android/asset_manager.h -
+ * opacum (AConfiguration_fromAssetManager solum) */
+typedef struct AAssetManager AAssetManager;
+
+/* <sectio caput="android/native_window.h" poscit="android/rect.h"/>
+ * android/native_window.h - alveus fenestrae (testa pixela transfundit) */
+typedef struct ANativeWindow ANativeWindow;
+typedef struct ANativeWindow_Buffer {
+    int32_t  width;
+    int32_t  height;
+    int32_t  stride;
+    int32_t  format;
+    void*    bits;
+    uint32_t reserved[6];
+} ANativeWindow_Buffer;
+enum { WINDOW_FORMAT_RGBA_8888 = 1 };
+int32_t ANativeWindow_getWidth(ANativeWindow* fenestra);
+int32_t ANativeWindow_getHeight(ANativeWindow* fenestra);
+int32_t ANativeWindow_setBuffersGeometry(ANativeWindow* fenestra,
+    int32_t latitudo, int32_t altitudo, int32_t forma);
+int32_t ANativeWindow_lock(ANativeWindow* fenestra,
+    ANativeWindow_Buffer* alveus, ARect* limites);
+int32_t ANativeWindow_unlockAndPost(ANativeWindow* fenestra);
+
+/* <sectio caput="android/looper.h"/> android/looper.h - ansa fili
+ * principalis (cauda initus, fistula effusionis) */
+typedef struct ALooper ALooper;
+typedef int (*ALooper_callbackFunc)(int fossa, int eventa, void* datum);
+enum { ALOOPER_POLL_CALLBACK = -2 };
+enum { ALOOPER_EVENT_INPUT = 1 };
+ALooper* ALooper_forThread(void);
+int ALooper_addFd(ALooper* ansa, int fossa, int signum, int eventa,
+    ALooper_callbackFunc revocatio, void* datum);
+
+/* <sectio caput="android/input.h" poscit="android/looper.h"/>
+ * android/input.h (+ keycodes.h, quod input.h includit) - eventus
+ * initus, cauda; constantae testa_android_initus.h congruentes */
+typedef struct AInputEvent AInputEvent;
+typedef struct AInputQueue AInputQueue;
+enum { AINPUT_EVENT_TYPE_KEY = 1, AINPUT_EVENT_TYPE_MOTION = 2 };
+enum { AKEY_EVENT_ACTION_UP = 1 };
+enum { AKEYCODE_BACK = 4 };
+enum {
+    AMOTION_EVENT_ACTION_MASK = 0xff,
+    AMOTION_EVENT_ACTION_POINTER_INDEX_MASK = 0xff00,
+    AMOTION_EVENT_ACTION_DOWN = 0,
+    AMOTION_EVENT_ACTION_UP = 1,
+    AMOTION_EVENT_ACTION_MOVE = 2,
+    AMOTION_EVENT_ACTION_CANCEL = 3,
+    AMOTION_EVENT_ACTION_POINTER_DOWN = 5,
+    AMOTION_EVENT_ACTION_POINTER_UP = 6
+};
+#define AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT 8
+enum {
+    AMOTION_EVENT_TOOL_TYPE_FINGER = 1,
+    AMOTION_EVENT_TOOL_TYPE_STYLUS = 2,
+    AMOTION_EVENT_TOOL_TYPE_MOUSE = 3,
+    AMOTION_EVENT_TOOL_TYPE_ERASER = 4
+};
+int32_t AInputEvent_getType(const AInputEvent* eventus);
+int32_t AKeyEvent_getAction(const AInputEvent* eventus);
+int32_t AKeyEvent_getKeyCode(const AInputEvent* eventus);
+int32_t AMotionEvent_getAction(const AInputEvent* eventus);
+int64_t AMotionEvent_getEventTime(const AInputEvent* eventus);
+size_t  AMotionEvent_getPointerCount(const AInputEvent* eventus);
+int32_t AMotionEvent_getPointerId(const AInputEvent* eventus,
+    size_t index);
+int32_t AMotionEvent_getToolType(const AInputEvent* eventus,
+    size_t index);
+float   AMotionEvent_getX(const AInputEvent* eventus, size_t index);
+float   AMotionEvent_getY(const AInputEvent* eventus, size_t index);
+size_t  AMotionEvent_getHistorySize(const AInputEvent* eventus);
+int64_t AMotionEvent_getHistoricalEventTime(const AInputEvent* eventus,
+    size_t historia);
+float   AMotionEvent_getHistoricalX(const AInputEvent* eventus,
+    size_t index, size_t historia);
+float   AMotionEvent_getHistoricalY(const AInputEvent* eventus,
+    size_t index, size_t historia);
+void    AInputQueue_attachLooper(AInputQueue* cauda, ALooper* ansa,
+    int signum, ALooper_callbackFunc revocatio, void* datum);
+void    AInputQueue_detachLooper(AInputQueue* cauda);
+int32_t AInputQueue_getEvent(AInputQueue* cauda, AInputEvent** eventus);
+int32_t AInputQueue_preDispatchEvent(AInputQueue* cauda,
+    AInputEvent* eventus);
+void    AInputQueue_finishEvent(AInputQueue* cauda,
+    AInputEvent* eventus,
+    int tractatum);
+
+/* <sectio caput="android/native_activity.h" poscit="android/native_window.h,android/input.h,android/asset_manager.h,android/rect.h"/>
+ * android/native_activity.h - activitas et vocationes eius (testa
+ * Android: filum principale solum) */
+struct ANativeActivityCallbacks;
+typedef struct ANativeActivity {
+    struct ANativeActivityCallbacks* callbacks;
+    void*          vm;
+    void*          env;
+    void*          clazz;
+    const char*    internalDataPath;
+    const char*    externalDataPath;
+    int32_t        sdkVersion;
+    void*          instance;
+    AAssetManager* assetManager;
+    const char*    obbPath;
+} ANativeActivity;
+typedef struct ANativeActivityCallbacks {
+    void  (*onStart)(ANativeActivity* activitas);
+    void  (*onResume)(ANativeActivity* activitas);
+    void* (*onSaveInstanceState)(ANativeActivity* activitas,
+        size_t* mensura);
+    void  (*onPause)(ANativeActivity* activitas);
+    void  (*onStop)(ANativeActivity* activitas);
+    void  (*onDestroy)(ANativeActivity* activitas);
+    void  (*onWindowFocusChanged)(ANativeActivity* activitas,
+        int focus);
+    void  (*onNativeWindowCreated)(ANativeActivity* activitas,
+        ANativeWindow* fenestra);
+    void  (*onNativeWindowResized)(ANativeActivity* activitas,
+        ANativeWindow* fenestra);
+    void  (*onNativeWindowRedrawNeeded)(ANativeActivity* activitas,
+        ANativeWindow* fenestra);
+    void  (*onNativeWindowDestroyed)(ANativeActivity* activitas,
+        ANativeWindow* fenestra);
+    void  (*onInputQueueCreated)(ANativeActivity* activitas,
+        AInputQueue* cauda);
+    void  (*onInputQueueDestroyed)(ANativeActivity* activitas,
+        AInputQueue* cauda);
+    void  (*onContentRectChanged)(ANativeActivity* activitas,
+        const ARect* area);
+    void  (*onConfigurationChanged)(ANativeActivity* activitas);
+    void  (*onLowMemory)(ANativeActivity* activitas);
+} ANativeActivityCallbacks;
+void ANativeActivity_finish(ANativeActivity* activitas);
+/* punctum ingressus: plagula ipsa DEFINIT, prototypum ut consentiat */
+void ANativeActivity_onCreate(ANativeActivity* activitas, void* status,
+    size_t mensura);
+
+/* <sectio caput="android/choreographer.h"/> android/choreographer.h -
+ * quadra ad vsync (API XXIX+) */
+typedef struct AChoreographer AChoreographer;
+typedef void (*AChoreographer_frameCallback64)(int64_t tempus_ns,
+    void* datum);
+AChoreographer* AChoreographer_getInstance(void);
+void AChoreographer_postFrameCallback64(AChoreographer* chorographus,
+    AChoreographer_frameCallback64 revocatio, void* datum);
+void AChoreographer_postFrameCallbackDelayed64(
+    AChoreographer* chorographus,
+        AChoreographer_frameCallback64 revocatio,
+    void* datum, uint32_t mora_ms);
+
+/* <sectio caput="android/configuration.h" poscit="android/asset_manager.h"/>
+ * android/configuration.h - densitas schirmi */
+typedef struct AConfiguration AConfiguration;
+AConfiguration* AConfiguration_new(void);
+void    AConfiguration_delete(AConfiguration* configuratio);
+void    AConfiguration_fromAssetManager(AConfiguration* configuratio,
+    AAssetManager* res);
+int32_t AConfiguration_getDensity(AConfiguration* configuratio);
+
+/* <sectio caput="android/log.h"/> android/log.h - logcat (effusio
+ * testae) */
+enum { ANDROID_LOG_INFO = 4 };
+int __android_log_write(int gradus, const char* signum,
+    const char* textus);
+
+/* <sectio caput="sys/system_properties.h"/> sys/system_properties.h -
+ * proprietates (debug.rhubarb.fumus / .scala) */
+#define PROP_VALUE_MAX 92
+int __system_property_get(const char* titulus, char* valor);
+
+/* FINIS NDK ANDROID */

@@ -12,6 +12,10 @@
  * Rotula: EVENTUS_MUS_ROTULA ex ansa perscrutandi fenestrae venit
  * (fenestra_macos.m, NSEventTypeScrollWheel). Methodus scrollWheel:
  * ibi vacua manet - eventus non inde oriuntur.
+ *
+ * Ansa: ludus_fenestra_currere (fenestra perscrutabilis - macOS, testa
+ * lib/testa.c, programmata briar); Android partes solas ordinat
+ * (tractare, pingendum, quadrum, mora; lib/testa_android.c).
  */
 
 #ifndef LUDUS_FENESTRA_H
@@ -93,6 +97,7 @@ Mora
 ludus_fenestra_mora (
     constans LudusFenestra* lf);
 
+#ifndef __ANDROID__
 /* ansa vera: exspectare (ludus_fenestra_mora), tractare, quadrum,
  * praesentare; finis in EVENTUS_CLAUDERE aut post quadra_maxima
  * (> 0), deinde dispensator_finire (pendentia effunduntur).
@@ -102,6 +107,7 @@ ludus_fenestra_currere (
     LudusFenestra* lf,
          Fenestra* fenestra,
               i32  quadra_maxima);
+#endif /* __ANDROID__ */
 
 /* Quadrum ultimum (tabulam) in plagulam PNG scribere - pixela ipsa
  * quae fenestrae praesentata sunt aut praesentarentur (etiam sine

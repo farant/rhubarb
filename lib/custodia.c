@@ -7,6 +7,7 @@
  * vocat (reditus opus novum addere potest). */
 #include "postulata_posix.h"
 #include "custodia.h"
+#include "base64.h"
 #include "filum.h"
 #include "moneta.h"
 
@@ -97,36 +98,14 @@ _aequale_constans (
     redde diff == 0;
 }
 
-hic_manens constans character* CUSTODIA_B64URL =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-
 /* XXXII octeti -> XLIII signa base64url (sine '='), NUL */
 interior vacuum
 _signa_tuta (
     constans i8* o,
       character* exitus)
 {
-    i32 i;
-    i32 k = 0;
+    i32 k = base64url_scribere(o, XXXII, exitus, XLIII);
 
-    per (i = 0; i + II < XXXII; i += III)
-    {
-        i32 v = ((i32)o[i] << XVI) | ((i32)o[i + I] << VIII)
-            | (i32)o[i + II];
-
-        exitus[k++] = CUSTODIA_B64URL[(v >> XVIII) & LXIII];
-        exitus[k++] = CUSTODIA_B64URL[(v >> XII) & LXIII];
-        exitus[k++] = CUSTODIA_B64URL[(v >> VI) & LXIII];
-        exitus[k++] = CUSTODIA_B64URL[v & LXIII];
-    }
-    /* reliqui II octeti (XXXII = X*III + II) -> III signa */
-    {
-        i32 v = ((i32)o[XXX] << VIII) | (i32)o[XXXI];
-
-        exitus[k++] = CUSTODIA_B64URL[(v >> X) & LXIII];
-        exitus[k++] = CUSTODIA_B64URL[(v >> IV) & LXIII];
-        exitus[k++] = CUSTODIA_B64URL[(v << II) & LXIII];
-    }
     exitus[k] = '\0';
 }
 

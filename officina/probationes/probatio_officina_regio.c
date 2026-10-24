@@ -11,30 +11,22 @@
 #include <stdio.h>
 #include <string.h>
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: vita + basis fixa + fines
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
     Piscina* piscina;
-        b32  praeteritus;
 
-    piscina = piscina_generare_dynamicum("probatio_regio", 1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ========================================================
-     * PROBARE: vita + basis fixa + fines
-     * ======================================================== */
-
+    piscina = c->piscina;
     {
         Regio* regio;
            i8* basis;
 
-        imprimere("\n--- Probans vitam + basim fixam ---\n");
         regio = regio_generare(piscina);
         CREDO_NON_NIHIL (regio);
         basis = (i8*)regio_basis(regio);
@@ -60,19 +52,26 @@ principale (vacuum)
         CREDO_AEQUALIS_PTR (regio_basis(regio), (vacuum*)basis);
         regio_destruere(regio);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: globalia - cumulus cum ordinatione
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: globalia - cumulus cum ordinatione
+ * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Regio* regio = regio_generare(piscina);
            i8* a;
            i8* b;
-           i8* c;
+           i8* tertium;
 
-        imprimere("\n--- Probans globalia ---\n");
         CREDO_NON_NIHIL (regio);
 
         a = (i8*)regio_globalia_allocare(regio, III, I);
@@ -86,9 +85,10 @@ principale (vacuum)
         CREDO_AEQUALIS_PTR ((vacuum*)b, (vacuum*)(a + VIII));
 
         /* ordinatio XVI */
-        c = (i8*)regio_globalia_allocare(regio, I, XVI);
-        CREDO_NON_NIHIL (c);
-        CREDO_VERUM ((memoriae_index)(vacuum*)c % XVI == ZEPHYRUM);
+        tertium = (i8*)regio_globalia_allocare(regio, I, XVI);
+        CREDO_NON_NIHIL (tertium);
+        CREDO_VERUM ((memoriae_index)(vacuum*)tertium % XVI
+            == ZEPHYRUM);
 
         /* usus crescit */
         CREDO_VERUM (regio_globalia_usus(regio) >= XVI + I);
@@ -99,17 +99,24 @@ principale (vacuum)
 
         regio_destruere(regio);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: stiva - fines intra regionem
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: stiva - fines intra regionem
+ * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Regio* regio = regio_generare(piscina);
            i8* stiva;
 
-        imprimere("\n--- Probans stivam ---\n");
         stiva = (i8*)regio_stiva_initium(regio);
         CREDO_NON_NIHIL (stiva);
         CREDO_VERUM (regio_continet(regio, stiva));
@@ -120,20 +127,26 @@ principale (vacuum)
 
         regio_destruere(regio);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: acervus - ordinatio + reusus LIFO + scissio
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: acervus - ordinatio + reusus LIFO + scissio
+ * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Regio* regio = regio_generare(piscina);
            i8* a;
            i8* b;
-           i8* c;
+           i8* magnum;
            i8* iterum;
-
-        imprimere("\n--- Probans acervum ---\n");
 
         a = (i8*)regio_allocare(regio, 100);
         b = (i8*)regio_allocare(regio, 50);
@@ -158,30 +171,36 @@ principale (vacuum)
 
         /* scissio: liberare locellum magnum, allocare parvum ->
          * basis eadem, residuum reusabile */
-        c = (i8*)regio_allocare(regio, 1000);
-        CREDO_NON_NIHIL (c);
-        CREDO_VERUM (regio_liberare(regio, c));
+        magnum = (i8*)regio_allocare(regio, 1000);
+        CREDO_NON_NIHIL (magnum);
+        CREDO_VERUM (regio_liberare(regio, magnum));
         iterum = (i8*)regio_allocare(regio, 100);
-        CREDO_AEQUALIS_PTR ((vacuum*)iterum, (vacuum*)c);
+        CREDO_AEQUALIS_PTR ((vacuum*)iterum, (vacuum*)magnum);
         /* residuum scissum in indice libero: allocatio parva sequens
          * intra locellum veterem cadit */
         iterum = (i8*)regio_allocare(regio, 100);
-        CREDO_VERUM (iterum > c && iterum < c + 1000);
+        CREDO_VERUM (iterum > magnum && iterum < magnum + 1000);
 
         regio_destruere(regio);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: liberare - validitas
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: liberare - validitas
+ * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Regio* regio = regio_generare(piscina);
            i8* a;
            i8  alienus[64];
-
-        imprimere("\n--- Probans validitatem liberationis ---\n");
 
         a = (i8*)regio_allocare(regio, 64);
         CREDO_NON_NIHIL (a);
@@ -200,17 +219,24 @@ principale (vacuum)
 
         regio_destruere(regio);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: custodia - venenum
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: custodia - venenum
+ * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Regio* regio = regio_generare(piscina);
            i8* a;
 
-        imprimere("\n--- Probans custodiam (venenum) ---\n");
         CREDO_FALSUM (regio_custodia(regio));
         regio_custodiam_ponere(regio, VERUM);
         CREDO_VERUM (regio_custodia(regio));
@@ -227,18 +253,24 @@ principale (vacuum)
 
         regio_destruere(regio);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: reallocare
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: reallocare
+ * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Regio* regio = regio_generare(piscina);
            i8* a;
            i8* b;
-
-        imprimere("\n--- Probans reallocare ---\n");
 
         a = (i8*)regio_allocare(regio, 64);
         memset(a, 0x77, 64);
@@ -260,18 +292,24 @@ principale (vacuum)
 
         regio_destruere(regio);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: census
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: census
+ * ================================================== */
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         Regio* regio = regio_generare(piscina);
            i8* a;
            i8* b;
-
-        imprimere("\n--- Probans censum ---\n");
 
         a = (i8*)regio_allocare(regio, 100);
         b = (i8*)regio_allocare(regio, 200);
@@ -289,14 +327,25 @@ principale (vacuum)
 
         regio_destruere(regio);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "vitam + basim fixam", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "globalia", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "stivam", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "acervum", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "validitatem liberationis", _sectio_quinta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "custodiam (venenum)", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "reallocare", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "censum", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    redde I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("officina_regio", SECTIONES);
 }

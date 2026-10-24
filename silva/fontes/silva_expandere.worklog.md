@@ -118,3 +118,21 @@ Not done (not hot in the profile): silva_frons `_silvae_extentum` and
 silva_arbor `_extentum_laminam_quaerere` are the same linear identity
 scan (frons could call silva_extentum_invocationis for expansio->extenta;
 extenta_lecta is a separate list).
+
+## 2026-10-23 — definition index: `exp->definitiones` (nexus full sweep 268 → 106 s)
+
+**Found by profiling briar's preparation on a fresh clone.** `corpus_symbola_generare` runs `nexus.sh -renovare`. The full sweep (2,988 files) took 251–268 s, and `sample` put 48% of it in `_def_ad_indicem` plus 22% in `nexus_ordines_fundere`, which was `silva_macro_vista` inlined. Both found "definition k" by scanning `acta` from the start (the header said so: "O(acta) per vocatum - satis ad mensuram v1"). nexus_ordines asks for every k, and for every token of every body: definitions × events × tokens per file. latina.h alone brings thousands of definitions (every Roman numeral), so every file paid it.
+
+**Change.**
+- `SilvaExpansio.definitiones` (Xar of i32) holds the `acta` position of each DEFINITIO event, in order. It is appended in `_eventum_scribere`, the only writer of `acta` (no truncation or rewrite exists).
+- `silva_macros_numerus` becomes `xar_numerus(definitiones)`.
+- `_definitio_ad_indicem` is the O(1) lookup used by `silva_macro_vista` and `_def_ad_indicem`, so `silva_macro_corpus_numerus` / `_lexema` are O(1) too.
+- The struct is internal to the amalgam: silva/amalgama/silva.h is unchanged, so consumers see no ABI change.
+
+**Evidence.**
+- In a fresh clone the sweep went 251/268 → 103/106 s.
+- In quinta, `nexus.tsv` before vs. after is byte-identical apart from the header timestamp and rows of the four edited files (2,423,867 rows compared); `inclusiones.tsv` is identical.
+- New test "indicem definitionum" in probatio_silva_expansio.c: `#undef` lines between definitions (one of an undefined name), a function macro and a redefinition, plus out-of-range indexes. It exists because the old cases had no non-definition events, so ordinal and position coincided.
+- Plant: storing the ordinal (`xar_numerus(definitiones) - I`) instead of the position turns it red at the BETA check; restored, green.
+
+**Next in the same profile (not done):** the remaining sweep is flat. The largest item is value extents (`_extentum_valoris` + `silva_valor_extensionem`, ~13%), then `_nodum_processare` and Xar/hash appends.

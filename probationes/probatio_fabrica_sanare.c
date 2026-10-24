@@ -1316,6 +1316,264 @@ _probare_progressum (
         &causa));
 }
 
+/* photographia ficta: viae (ordinatae) cum tempore uno; via 'mutata'
+ * tempus alterum fert */
+interior Xar*
+_photographia (
+    constans character* constans* viae,
+                             i32  numerus,
+             constans character*  mutata,
+                         Piscina* piscina)
+{
+    Xar* vestigia;
+    i32  i;
+
+    vestigia = xar_creare(piscina, (i32)magnitudo(FabricaVestigium));
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        FabricaVestigium* v = (FabricaVestigium*)xar_addere(vestigia);
+
+        v->via        = chorda_ex_literis(viae[i], piscina);
+        v->tempus_ns  = (mutata != NIHIL && strcmp(viae[i], mutata)
+            == ZEPHYRUM) ? II : I;
+        v->mensura    = I;
+    }
+    redde vestigia;
+}
+
+/* MUTATA INTRA LOCUM (2026-10-23): fabrica memoriam regenerationum post
+ * actum servat solum si actio nihil extra aream, librum et acta sua
+ * mutavit (photographiae et lineae S libri) */
+interior vacuum
+_probare_mutata_intra_locum (
+    CredoContextus* c)
+{
+          Piscina* piscina = c->piscina;
+    FabricaSutura  sutura;
+     DiscusFictus  discus;
+     FabricaActio* actio;
+           chorda  area;
+           chorda  nulla;
+    hic_manens constans character* constans BASIS[] = {
+        "build/fabrica/acta/M.log",
+        "build/fabrica/area/c/m/x.o",
+        "build/fabrica/lectiones/M.tsv",
+        "lib/x.c"
+    };
+    hic_manens constans character* constans CUM_NOVA[] = {
+        "build/fabrica/acta/M.log",
+        "build/fabrica/area/c/m/x.o",
+        "build/fabrica/area/c/m/y.o",
+        "build/fabrica/lectiones/M.tsv",
+        "lib/x.c"
+    };
+    hic_manens constans character* constans CUM_ALIENA[] = {
+        "build/fabrica/acta/M.log",
+        "build/fabrica/area/c/m/x.o",
+        "build/fabrica/lectiones/M.tsv",
+        "lib/novum.c",
+        "lib/x.c"
+    };
+    Xar* ante;
+
+    mundi_discum_parare(&discus, &sutura, piscina);
+    actio  = mundi_actio(piscina, "M", FABRICA_ACTIO_IUDICIUM);
+    area   = chorda_ex_literis("build/fabrica/area/c/m/", piscina);
+    /* area vacua cum datis non NIHIL (chorda_incipit praefixum vacuum
+     * talem VERUM reddit): custodia 'area.mensura > 0' necessaria */
+    nulla  = chorda_sectio(area, ZEPHYRUM, ZEPHYRUM);
+    ante   = _photographia(BASIS, IV, NIHIL, piscina);
+
+    /* I. nihil mutatum; sine photographia FALSUM */
+    CREDO_VERUM(fabrica_mutata_intra_locum(&sutura, actio, area, ante,
+        _photographia(BASIS, IV, NIHIL, piscina), piscina));
+    CREDO_FALSUM(fabrica_mutata_intra_locum(&sutura, actio, area, NIHIL,
+        ante, piscina));
+    CREDO_FALSUM(fabrica_mutata_intra_locum(&sutura, actio, area, ante,
+        NIHIL, piscina));
+
+    /* II. intra aream (nova et mutata), acta et liber sua: servantur */
+    CREDO_VERUM(fabrica_mutata_intra_locum(&sutura, actio, area, ante,
+        _photographia(CUM_NOVA, V, "build/fabrica/area/c/m/x.o",
+        piscina), piscina));
+    CREDO_VERUM(fabrica_mutata_intra_locum(&sutura, actio, area, ante,
+        _photographia(BASIS, IV, "build/fabrica/acta/M.log", piscina),
+        piscina));
+    CREDO_VERUM(fabrica_mutata_intra_locum(&sutura, actio, area, ante,
+        _photographia(BASIS, IV, "build/fabrica/lectiones/M.tsv",
+        piscina), piscina));
+
+    /* III. extra: nova, mutata, deleta */
+    CREDO_FALSUM(fabrica_mutata_intra_locum(&sutura, actio, area, ante,
+        _photographia(CUM_ALIENA, V, NIHIL, piscina), piscina));
+    CREDO_FALSUM(fabrica_mutata_intra_locum(&sutura, actio, area, ante,
+        _photographia(BASIS, IV, "lib/x.c", piscina), piscina));
+    CREDO_FALSUM(fabrica_mutata_intra_locum(&sutura, actio, area,
+        _photographia(CUM_ALIENA, V, NIHIL, piscina), ante, piscina));
+
+    /* IV. area vacua (actio non membrum): area alterius extra locum */
+    CREDO_FALSUM(fabrica_mutata_intra_locum(&sutura, actio, nulla, ante,
+        _photographia(CUM_NOVA, V, NIHIL, piscina), piscina));
+    CREDO_VERUM(fabrica_mutata_intra_locum(&sutura, actio, nulla, ante,
+        _photographia(BASIS, IV, "build/fabrica/acta/M.log", piscina),
+        piscina));
+
+    /* V. liber: scriptura transiens extra (S) FALSUM; S intra aream et
+     * lectiones (L) extra VERUM */
+    mundi_ponere(&discus, "build/fabrica/lectiones/M.tsv",
+        "L\tlib/x.c\nS\tlib/transiens.tmp\n");
+    CREDO_FALSUM(fabrica_mutata_intra_locum(&sutura, actio, area, ante,
+        _photographia(BASIS, IV, NIHIL, piscina), piscina));
+    mundi_ponere(&discus, "build/fabrica/lectiones/M.tsv",
+        "L\tlib/x.c\nS\tbuild/fabrica/area/c/m/t\nE\tHOME\n");
+    CREDO_VERUM(fabrica_mutata_intra_locum(&sutura, actio, area, ante,
+        _photographia(BASIS, IV, NIHIL, piscina), piscina));
+}
+
+/* mundus fractus-omissus-sanatus (ut 'sanare' IV): A frangitur, C ex X
+ * OMISSUM, D SANATUM; 'simul' = via undarum (membra tuta) */
+interior Xar*
+_mundus_fractus (
+      DiscusFictus* discus,
+     FabricaSutura* sutura,
+               b32  simul,
+           Piscina* piscina)
+{
+     FabricaActio* actiones[III];
+              i32  i;
+
+    mundi_discum_parare(discus, sutura, piscina);
+    mundi_memorias_parare(sutura, piscina);
+    si (simul)
+    {
+        sutura->agere_simul       = mundi_agere_simul;
+        sutura->vestigium_capere  = mundi_vestigium_capere;
+    }
+    mundi_ponere(discus, "a", "a\n");
+    mundi_ponere(discus, "X", "vetus\n");
+    mundi_ponere(discus, "Y", "C:alienum\n");
+    mundi_ponere(discus, "Z", "vetus\n");
+    mundi_scriptum_addere(discus, "gen_a", "X", NIHIL, "novum\n", I,
+        VERUM);
+    mundi_scriptum_addere(discus, "gen_c", "Y", "X", "C:", 0, FALSUM);
+    mundi_scriptum_addere(discus, "gen_d", "Z", NIHIL, "novum\n", 0,
+        FALSUM);
+    actiones[0] = mundi_actio_scripta(piscina, "A", "gen_a", "a", "X",
+        "regeneratio");
+    actiones[1] = mundi_actio_scripta(piscina, "C", "gen_c", "X", "Y",
+        "regeneratio");
+    actiones[2] = mundi_actio_scripta(piscina, "D", "gen_d", "a", "Z",
+        "regeneratio");
+    per (i = ZEPHYRUM; simul && i < III; i++)
+    {
+        actiones[i]->lectiones = VERUM;
+    }
+    redde mundi_ordinare_fictas(piscina, actiones, III);
+}
+
+/* PISCINA ACTI (parcum …T77EH4): cum sutura->piscina_cursus acta in
+ * piscina temporaria currunt (post actum vacata, in fine destructa).
+ * Quod ultra actum vivit - causae sanationum, memoria regenerationum
+ * - post fabrica_sanare legibile manet (monstrator in temporariam
+ * destructam: alvei magni, memoria reddita - legere ruit aut nulla
+ * videt); et piscina cursus MINUS crescit quam sine temporaria */
+interior vacuum
+_probare_piscinam_acti (
+    CredoContextus* c)
+{
+          Piscina* piscina = c->piscina;
+     DiscusFictus  discus;
+    FabricaSutura  sutura;
+              Xar* ordo;
+              Xar* sanationes;
+   FabricaSanatio* sanatio;
+           chorda  causa;
+           vacuum* memoratum;
+   memoriae_index  usus_cum;
+   memoriae_index  usus_sine;
+   memoriae_index  ante;
+              b32  simul;
+
+    causa.datum    = NIHIL;
+    causa.mensura  = ZEPHYRUM;
+    /* I. seriatim (simul FALSUM), deinde per undas (VERUM) */
+    per (simul = FALSUM; simul <= VERUM; simul++)
+    {
+        ordo = _mundus_fractus(&discus, &sutura, simul, piscina);
+        sutura.piscina_cursus = piscina;
+        ante = piscina_summa_usus(piscina);
+        sanationes = fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
+            piscina, &causa);
+        usus_cum = piscina_summa_usus(piscina) - ante;
+        CREDO_NON_NIHIL(sanationes);
+        si (sanationes == NIHIL)
+        {
+            redde;
+        }
+        /* causa ex acto (piscina acti) transcripta */
+        sanatio = mundi_sanatio_invenire(sanationes, "A");
+        CREDO_VERUM(sanatio != NIHIL
+            && sanatio->eventus == FABRICA_FRACTUM
+            && mundi_continet(sanatio->causa, "error ficti acti",
+            piscina));
+        sanatio = mundi_sanatio_invenire(sanationes, "C");
+        CREDO_VERUM(sanatio != NIHIL
+            && sanatio->eventus == FABRICA_OMISSUM
+            && mundi_continet(sanatio->causa, "A", piscina));
+        sanatio = mundi_sanatio_invenire(sanationes, "D");
+        CREDO_VERUM(sanatio != NIHIL
+            && sanatio->eventus == FABRICA_SANATUM
+            && sanatio->stalum.mensura > ZEPHYRUM);
+        /* memoria regenerationis D (post-condicio in piscina acti):
+         * valor in piscina cursus, mensura 0 = felix */
+        memoratum = NIHIL;
+        CREDO_VERUM(tabula_dispersa_invenire(sutura.regenerationes,
+            chorda_ex_literis("D", piscina), &memoratum));
+        CREDO_VERUM(memoratum != NIHIL
+            && ((chorda*)memoratum)->mensura == ZEPHYRUM);
+
+        /* idem mundus sine piscina cursus: omnia in piscina, ut olim */
+        ordo = _mundus_fractus(&discus, &sutura, simul, piscina);
+        ante = piscina_summa_usus(piscina);
+        CREDO_NON_NIHIL(fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
+            piscina, &causa));
+        usus_sine = piscina_summa_usus(piscina) - ante;
+        CREDO_VERUM(usus_cum < usus_sine);
+    }
+
+    /* II. regeneratio FRACTA in post-condicione (discus.fractus: agere
+     * in loco felix, regeneratio semper fracta): memoria cum causa
+     * NON vacua - temporaria vacata nullis eam 'felicem' (mensura 0)
+     * faceret */
+    {
+        FabricaActio* actiones[I];
+
+        mundi_discum_parare(&discus, &sutura, piscina);
+        mundi_memorias_parare(&sutura, piscina);
+        sutura.piscina_cursus = piscina;
+        mundi_ponere(&discus, "a", "a\n");
+        mundi_ponere(&discus, "Z", "vetus\n");
+        mundi_scriptum_addere(&discus, "gen_d", "Z", NIHIL, "novum\n",
+            0,
+            FALSUM);
+        actiones[0] = mundi_actio_scripta(piscina, "D", "gen_d", "a",
+            "Z", "regeneratio");
+        discus.fractus  = VERUM;
+        ordo            = mundi_ordinare_fictas(piscina, actiones, I);
+        sanationes = fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
+            piscina, &causa);
+        CREDO_NON_NIHIL(sanationes);
+        CREDO_AEQUALIS_I32(_eventus_sanationis(sanationes, "D"),
+            (i32)FABRICA_FRACTUM);
+        memoratum = NIHIL;
+        CREDO_VERUM(tabula_dispersa_invenire(sutura.regenerationes,
+            chorda_ex_literis("D", piscina), &memoratum));
+        CREDO_VERUM(memoratum != NIHIL
+            && mundi_continet(*(chorda*)memoratum, "error fictus",
+            piscina));
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "sanare",
       _probare_sanare,
@@ -1328,6 +1586,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "progressus",
       _probare_progressum,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mutata intra locum",
+      _probare_mutata_intra_locum,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "piscina acti",
+      _probare_piscinam_acti,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

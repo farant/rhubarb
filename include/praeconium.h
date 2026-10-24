@@ -7,7 +7,12 @@
  * Textus longi praeciduntur (UTF-8 integrum) ut linea brevis maneat.
  *
  * Instrumentum: tools/praeco.c ("praeco hamus" ex hamis, "praeco
- * status ..." ab agentibus, "praeco cauda [n]").
+ * status ..." ab agentibus, "praeco cantus ..." cantilena ad vicum,
+ * "praeco cauda [n]").
+ *
+ * EVENTUS 'cantus' (praeconium_cantus.h scribit, vicus legit): eventus
+ * "cantus", genus "intactus" aut "", nuntius = textus MML integer
+ * (numquam praecisus: praeco longiorem recusat).
  */
 
 #ifndef PRAECONIUM_H
@@ -19,6 +24,10 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
+
+/* nuntius summum (octeti): linea brevis manet (scriptura integra);
+ * longior praeciditur */
+#define PRAECONIUM_NUNTIUS_MAXIMUS CC
 
 nomen structura {
        s64 tempus;        /* ms ab epocha */

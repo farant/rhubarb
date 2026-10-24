@@ -185,33 +185,64 @@ _texere_omnia (
     redde nexus;
 }
 
-s32
-principale (vacuum)
-{
-                  b32  praeteritus;
-              Piscina* piscina;
-  InternamentumChorda* intern;
-   constans character* radix;
-   constans SilexFons* fons;
+/* FIXURA SUITAE: internamentum et fons corporis (silex_fons_disci)
+ * semel facta; sectiones per monstratorem constantem LEGUNT -
+ * internatio in internamentum fixurae sola licet (decretum
+ * 2026-10-19). */
+nomen structura {
+    InternamentumChorda* intern;
+              SilexFons* fons;
+} FixuraSilvae;
 
-    piscina = piscina_generare_dynamicum("probatio_briar_silva",
-        16777216);
-    si (!piscina)
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+           FixuraSilvae* f;
+     constans character* radix;
+
+    f = (FixuraSilvae*)piscina_allocare(c->piscina,
+        magnitudo(FixuraSilvae));
+    si (f == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    credo_aperire(piscina);
-    intern  = internamentum_creare(piscina);
-    radix   = getenv("RHUBARB_RADIX");
+    f->intern  = internamentum_creare(c->piscina);
+    radix      = getenv("RHUBARB_RADIX");
     si (radix == NIHIL)
     {
         radix = ".";
     }
-    fons = silex_fons_disci(piscina, radix);
-    CREDO_NON_NIHIL (fons);
+    f->fons = silex_fons_disci(c->piscina, radix);
+    CREDO_NON_NIHIL (f->fons);
+    si (f->fons == NIHIL)
+    {
+        redde;
+    }
+    c->datum = f;
+}
 
-    imprimere("\n--- Probans salve: principale -> main ---\n");
+
+/* ==================================================
+ * PROBARE: salve: principale -> main
+ * ================================================== */
+
+interior vacuum
+_salve_probare (
+    CredoContextus* c)
+{
+    constans FixuraSilvae* f;
+                  Piscina* piscina = c->piscina;
+      InternamentumChorda* intern;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f       = (constans FixuraSilvae*)c->suita;
+    intern  = f->intern;
+    fons    = f->fons;
     {
          character* textus;
                i32  mensura;
@@ -257,8 +288,29 @@ principale (vacuum)
             _silva_chorda(piscina, "credo_aperire")));
         briar_silvam_solvere(nexus);
     }
+}
 
-    imprimere("\n--- Probans salve_vitreum: methodus + exemplar ---\n");
+
+/* ==================================================
+ * PROBARE: salve_vitreum: methodus + exemplar
+ * ================================================== */
+
+interior vacuum
+_vitreum_probare (
+    CredoContextus* c)
+{
+    constans FixuraSilvae* f;
+                  Piscina* piscina = c->piscina;
+      InternamentumChorda* intern;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f       = (constans FixuraSilvae*)c->suita;
+    intern  = f->intern;
+    fons    = f->fons;
     {
             character* textus;
                   i32  mensura;
@@ -295,8 +347,29 @@ principale (vacuum)
             r->linea_initium);
         briar_silvam_solvere(nexus);
     }
+}
 
-    imprimere("\n--- Probans c_fractum: linea erroris .thistle ---\n");
+
+/* ==================================================
+ * PROBARE: c_fractum: linea erroris .thistle
+ * ================================================== */
+
+interior vacuum
+_fractum_probare (
+    CredoContextus* c)
+{
+    constans FixuraSilvae* f;
+                  Piscina* piscina = c->piscina;
+      InternamentumChorda* intern;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f       = (constans FixuraSilvae*)c->suita;
+    intern  = f->intern;
+    fons    = f->fons;
     {
             character* textus;
                   i32  mensura;
@@ -318,11 +391,32 @@ principale (vacuum)
         CREDO_VERUM (r->causa.mensura > ZEPHYRUM);
         briar_silvam_solvere(nexus);
     }
+}
 
+
+/* ==================================================
+ * PROBARE: syntaxis_locus: mors .thistle
+ * ================================================== */
+
+interior vacuum
+_locum_probare (
+    CredoContextus* c)
+{
+    constans FixuraSilvae* f;
+                  Piscina* piscina = c->piscina;
+      InternamentumChorda* intern;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f       = (constans FixuraSilvae*)c->suita;
+    intern  = f->intern;
+    fons    = f->fons;
     /* T19b-1 (lapide bugs/001): linea erroris = mors GLR (linea
      * .thistle), non initium unitatis/regionis; causa ordines locatos
      * cum excerpto fert (forma silvae una, silva_mortes_scribere) */
-    imprimere("\n--- Probans syntaxis_locus: mors .thistle ---\n");
     {
             character* textus;
                   i32  mensura;
@@ -355,11 +449,32 @@ principale (vacuum)
         }
         briar_silvam_solvere(nexus);
     }
+}
 
+
+/* ==================================================
+ * PROBARE: variadica: va_arg/offsetof sine errore
+ * ================================================== */
+
+interior vacuum
+_variadica_probare (
+    CredoContextus* c)
+{
+    constans FixuraSilvae* f;
+                  Piscina* piscina = c->piscina;
+      InternamentumChorda* intern;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f       = (constans FixuraSilvae*)c->suita;
+    intern  = f->intern;
+    fons    = f->fons;
     /* T16b (lapide bugs/009): transitus silvae lexicon systematis
      * (silva_lexicon, stand-ins e fonte silicis) accipit - va_arg et
      * offsetof TYPUM accipiunt, sine macris ERROR syntaxis erant */
-    imprimere("\n--- Probans variadica: va_arg/offsetof sine errore ---\n");
     {
             character* textus;
                   i32  mensura;
@@ -382,11 +497,32 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (r->linea_erroris, ZEPHYRUM);
         briar_silvam_solvere(nexus);
     }
+}
 
+
+/* ==================================================
+ * PROBARE: attributa: __attribute__ sine errore
+ * ================================================== */
+
+interior vacuum
+_attributa_probare (
+    CredoContextus* c)
+{
+    constans FixuraSilvae* f;
+                  Piscina* piscina = c->piscina;
+      InternamentumChorda* intern;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f       = (constans FixuraSilvae*)c->suita;
+    intern  = f->intern;
+    fons    = f->fons;
     /* T17a (lapide bugs/010): __attribute__ = macrum internum
      * vacuum expansoris silvae - post prototypum, ante
      * declarationem, post '}' structurae sine ERROR */
-    imprimere("\n--- Probans attributa: __attribute__ sine errore ---\n");
     {
             character* textus;
                   i32  mensura;
@@ -409,8 +545,29 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (r->linea_erroris, ZEPHYRUM);
         briar_silvam_solvere(nexus);
     }
+}
 
-    imprimere("\n--- Probans derivatum: capita ex usu ---\n");
+
+/* ==================================================
+ * PROBARE: derivatum: capita ex usu
+ * ================================================== */
+
+interior vacuum
+_derivatum_probare (
+    CredoContextus* c)
+{
+    constans FixuraSilvae* f;
+                  Piscina* piscina = c->piscina;
+      InternamentumChorda* intern;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f       = (constans FixuraSilvae*)c->suita;
+    intern  = f->intern;
+    fons    = f->fons;
     {
             character* textus;
                   i32  mensura;
@@ -456,9 +613,30 @@ principale (vacuum)
                     ZEPHYRUM);
         briar_silvam_solvere(nexus);
     }
+}
 
-        imprimere("\n--- Probans fragmenta: contextus parsatur, tabula"
-            " linearum, fragmenta non parsantur ---\n");
+
+/* ==================================================
+ * PROBARE: fragmenta: contextus parsatur, tabula linearum,
+ *          fragmenta non parsantur
+ * ================================================== */
+
+interior vacuum
+_fragmenta_probare (
+    CredoContextus* c)
+{
+    constans FixuraSilvae* f;
+                  Piscina* piscina = c->piscina;
+      InternamentumChorda* intern;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f       = (constans FixuraSilvae*)c->suita;
+    intern  = f->intern;
+    fons    = f->fons;
     {
             character* textus;
                   i32  mensura;
@@ -510,9 +688,29 @@ principale (vacuum)
         }
         briar_silvam_solvere(nexus);
     }
+}
 
-    imprimere("\n--- Probans fragmenta_derivata: derivatio per"
-        " texturam ---\n");
+
+/* ==================================================
+ * PROBARE: fragmenta_derivata: derivatio per texturam
+ * ================================================== */
+
+interior vacuum
+_fragmenta_derivata_probare (
+    CredoContextus* c)
+{
+    constans FixuraSilvae* f;
+                  Piscina* piscina = c->piscina;
+      InternamentumChorda* intern;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f       = (constans FixuraSilvae*)c->suita;
+    intern  = f->intern;
+    fons    = f->fons;
     {
             character* textus;
                   i32  mensura;
@@ -551,9 +749,29 @@ principale (vacuum)
         }
         briar_silvam_solvere(nexus);
     }
+}
 
-    imprimere("\n--- Probans punctum: typus regionis alterius numquam"
-        " derivatur ---\n");
+
+/* ==================================================
+ * PROBARE: punctum: typus regionis alterius numquam derivatur
+ * ================================================== */
+
+interior vacuum
+_punctum_probare (
+    CredoContextus* c)
+{
+    constans FixuraSilvae* f;
+                  Piscina* piscina = c->piscina;
+      InternamentumChorda* intern;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f       = (constans FixuraSilvae*)c->suita;
+    intern  = f->intern;
+    fons    = f->fons;
     {
             character* textus;
                   i32  mensura;
@@ -576,18 +794,37 @@ principale (vacuum)
         per (k = ZEPHYRUM; k < xar_numerus(r->silva->capita_derivata);
             k++)
         {
-            chorda c = *(chorda*)xar_obtinere(r->silva->capita_derivata,
+            chorda caput =
+                *(chorda*)xar_obtinere(r->silva->capita_derivata,
                 k);
 
-            imprimere("  derivatum: %.*s\n", (integer)c.mensura,
-                (constans character*)c.datum);
-            CREDO_FALSUM (chorda_aequalis_literis(c, "mandatum.h"));
+            imprimere("  derivatum: %.*s\n", (integer)caput.mensura,
+                (constans character*)caput.datum);
+            CREDO_FALSUM (chorda_aequalis_literis(caput, "mandatum.h"));
         }
         briar_silvam_solvere(nexus);
     }
+}
 
-    imprimere("\n--- Probans caput corporis ut plagulam"
-        " principalem ---\n");
+
+/* ==================================================
+ * PROBARE: caput corporis ut plagulam principalem
+ * ================================================== */
+
+interior vacuum
+_caput_probare (
+    CredoContextus* c)
+{
+    constans FixuraSilvae* f;
+                  Piscina* piscina = c->piscina;
+       constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f     = (constans FixuraSilvae*)c->suita;
+    fons  = f->fons;
     {
              chorda  textus;
          BriarSilva* s = briar_silvam_capitis_texere(piscina, fons,
@@ -652,9 +889,38 @@ principale (vacuum)
         CREDO_NIHIL (briar_silvam_capitis_texere(piscina, fons,
             "include/nusquam.h", &textus));
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "salve: principale -> main", _salve_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "salve_vitreum: methodus + exemplar", _vitreum_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "c_fractum: linea erroris .thistle", _fractum_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "syntaxis_locus: mors .thistle", _locum_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "variadica: va_arg/offsetof sine errore", _variadica_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "attributa: __attribute__ sine errore", _attributa_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "derivatum: capita ex usu", _derivatum_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "fragmenta: contextus parsatur, tabula linearum,"
+        " fragmenta non parsantur",
+        _fragmenta_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fragmenta_derivata: derivatio per texturam",
+        _fragmenta_derivata_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "punctum: typus regionis alterius numquam derivatur",
+        _punctum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "caput corporis ut plagulam principalem", _caput_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("briar_silva", SECTIONES,
+        _suitam_parare, NIHIL);
 }

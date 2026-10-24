@@ -247,32 +247,22 @@ _sedes_unica (
     redde FALSUM;
 }
 
-s32
-principale (vacuum)
-{
-                    b32  praeteritus;
-                Piscina* piscina;
-    MateriaLexiconRatum  ratum;
-     MateriaLexIudicium  iudicium;
 
-    piscina = piscina_generare_dynamicum("probatio_diagnostica",
-        262144);
-    si (piscina == NIHIL)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    imprimere("=== Probatio materia_diagnostica ===\n");
-    CREDO_VERUM (materia_lexicon_ratum_facere(&ratum, &LEXICON,
-        &iudicium));
+/* ==================================================
+ * PROBARE: arbor sana: nihil
+ * ================================================== */
+
+interior vacuum
+_arborem_sanam_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaNodus* radix;
         MateriaNodus* par;
                  Xar* exitus;
 
-        imprimere("\n--- I. Arbor sana: nihil ---\n");
         /* "( x )" */
         radix  = _radix_creare(piscina);
         par    = materia_nodus_creare(piscina, (s32)GR_PAR, (i32)III);
@@ -294,6 +284,18 @@ principale (vacuum)
         CREDO_NON_NIHIL (exitus);
         CREDO_AEQUALIS_I32 (xar_numerus(exitus), ZEPHYRUM);
     }
+}
+
+
+/* ==================================================
+ * PROBARE: clausura absens: punctum in fine
+ * ================================================== */
+
+interior vacuum
+_clausuram_absentem_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaNodus* radix;
@@ -301,7 +303,6 @@ principale (vacuum)
                  Xar* exitus;
                  Xar* emissa;
 
-        imprimere("\n--- II. Clausura absens: punctum in fine ---\n");
         /* "( x" */
         radix  = _radix_creare(piscina);
         par    = materia_nodus_creare(piscina, (s32)GR_PAR, (i32)III);
@@ -325,7 +326,7 @@ principale (vacuum)
 
         /* IX. emissa parsatoris: tractus ex nodo computatus, ordo
          * per initium */
-        imprimere("\n--- IX. Emissa parsatoris ---\n");
+        CREDO_GRADUS ("Emissa parsatoris");
         emissa = xar_creare(piscina, (i32)magnitudo(
             MateriaDiagnosticum));
         CREDO_NON_NIHIL (emissa);
@@ -351,13 +352,24 @@ principale (vacuum)
             "par/tok_clausura", (s32)MATERIA_GRAVITAS_ERRATUM,
             (s32)III, (s32)III, (i32)I, (i32)IV));
     }
+}
+
+
+/* ==================================================
+ * PROBARE: lista non scripta = vacua
+ * ================================================== */
+
+interior vacuum
+_listam_non_scriptam_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaNodus* radix;
         MateriaNodus* par;
                  Xar* exitus;
 
-        imprimere("\n--- III. Lista non scripta = vacua ---\n");
         /* "( )" */
         radix  = _radix_creare(piscina);
         par    = materia_nodus_creare(piscina, (s32)GR_PAR, (i32)III);
@@ -376,13 +388,24 @@ principale (vacuum)
             (i32)I, (i32)I));
         CREDO_VERUM (_sedes_unica(exitus, ZEPHYRUM));
     }
+}
+
+
+/* ==================================================
+ * PROBARE: lista separatore sola = vacua
+ * ================================================== */
+
+interior vacuum
+_separatorem_solum_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaNodus* radix;
         MateriaNodus* par;
                  Xar* exitus;
 
-        imprimere("\n--- IV. Lista separatore sola = vacua ---\n");
         /* "( ; )" */
         radix  = _radix_creare(piscina);
         par    = materia_nodus_creare(piscina, (s32)GR_PAR, (i32)III);
@@ -404,13 +427,24 @@ principale (vacuum)
             (s32)MATERIA_GRAVITAS_ERRATUM, ZEPHYRUM, (s32)V,
             (i32)I, (i32)I));
     }
+}
+
+
+/* ==================================================
+ * PROBARE: genus diagnosticum (malum)
+ * ================================================== */
+
+interior vacuum
+_genus_diagnosticum_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaNodus* radix;
         MateriaNodus* malum;
                  Xar* exitus;
 
-        imprimere("\n--- V. Genus diagnosticum (malum) ---\n");
         /* ")" */
         radix = _radix_creare(piscina);
         malum = materia_nodus_creare(piscina, (s32)GR_MALUM, (i32)I);
@@ -426,13 +460,24 @@ principale (vacuum)
             (i32)I));
         CREDO_VERUM (_sedes_unica(exitus, ZEPHYRUM));
     }
+}
+
+
+/* ==================================================
+ * PROBARE: nodus sine lexemate: punctum prius
+ * ================================================== */
+
+interior vacuum
+_sine_lexemate_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaNodus* radix;
         MateriaNodus* par;
                  Xar* exitus;
 
-        imprimere("\n--- VI. Nodus sine lexemate: punctum prius ---\n");
         /* "x (" - par sine lexematibus ullis */
         radix  = _radix_creare(piscina);
         CREDO_VERUM (_radici_addere(piscina, radix, _nodus_lexematis(
@@ -450,13 +495,24 @@ principale (vacuum)
             "par/tok_clausura", (s32)MATERIA_GRAVITAS_ERRATUM,
             (s32)I, (s32)I, (i32)I, (i32)II));
     }
+}
+
+
+/* ==================================================
+ * PROBARE: ordo octetorum ruptus
+ * ================================================== */
+
+interior vacuum
+_ordinem_octetorum_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
          MateriaNodus* radix;
          MateriaToken* lexema_a;
                   Xar* exitus;
 
-        imprimere("\n--- VII. Ordo octetorum ruptus ---\n");
         /* "b a" in arbore ordine inverso positum */
         radix     = _radix_creare(piscina);
         lexema_a  = _lex(piscina, (s32)G_IDENT, "a", ZEPHYRUM,
@@ -486,13 +542,24 @@ principale (vacuum)
             CREDO_NIHIL (r->nodus);
         }
     }
+}
+
+
+/* ==================================================
+ * PROBARE: usus iteratus semel visus
+ * ================================================== */
+
+interior vacuum
+_usum_iteratum_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaNodus* radix;
         MateriaToken* lexema;
                  Xar* exitus;
 
-        imprimere("\n--- VIII. Usus iteratus semel visus ---\n");
         radix   = _radix_creare(piscina);
         lexema  = _lex(piscina, (s32)G_IDENT, "x", ZEPHYRUM, (i32)I);
         {
@@ -512,7 +579,24 @@ principale (vacuum)
             &DIAGNOSTICA, NIHIL, NIHIL);
         CREDO_AEQUALIS_I32 (xar_numerus(exitus), ZEPHYRUM);
     }
+}
 
+
+/* ==================================================
+ * PROBARE: tractus refutationis scriptoris
+ * ================================================== */
+
+interior vacuum
+_tractum_refutationis_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+    MateriaLexiconRatum  ratum;
+     MateriaLexIudicium  iudicium;
+
+    /* ratum sola haec sectio adhibet: hic fit (assertio sua cum eo) */
+    CREDO_VERUM (materia_lexicon_ratum_facere(&ratum, &LEXICON,
+        &iudicium));
     {
         MateriaArborConsilium consilium;
         MateriaArborScriptura scriptura;
@@ -522,7 +606,6 @@ principale (vacuum)
                        chorda  valor;
                     character  memoria[XVI];
 
-        imprimere("\n--- X. Tractus refutationis scriptoris ---\n");
         /* VEHICULUM REFUTATIONIS, non subiectum: hic TRACTUM
          * refutationis probamus, non causam eius.
          *
@@ -573,6 +656,18 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (scriptura.tractus.linea, (i32)II);
         CREDO_AEQUALIS_I32 (scriptura.tractus.columna, (i32)III);
     }
+}
+
+
+/* ==================================================
+ * PROBARE: profunditas: ambulatio iterativa
+ * ================================================== */
+
+interior vacuum
+_profunditatem_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
          MateriaNodus* radix;
@@ -580,7 +675,6 @@ principale (vacuum)
                   Xar* exitus;
                   i32  k;
 
-        imprimere("\n--- XI. Profunditas: ambulatio iterativa ---\n");
         /* catena par{liberi:[par{...}]} L milia profunda: ambulatio
          * recursiva acervum frangeret, et tractus per nodum computatus
          * quadraticus esset (quaestio 01M2R9MKFQ). Imus sine clausura:
@@ -619,6 +713,18 @@ principale (vacuum)
          * plena, clausura absens quoque - ergo L milia + I ordines */
         CREDO_AEQUALIS_I32 (xar_numerus(exitus), (i32)50001);
     }
+}
+
+
+/* ==================================================
+ * PROBARE: emissum superat declaratum (T15)
+ * ================================================== */
+
+interior vacuum
+_emissum_superans_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaNodus* radix;
@@ -629,7 +735,6 @@ principale (vacuum)
   MateriaDiagnosticum* e;
   constans MateriaDiagnosticum* r;
 
-        imprimere("\n--- XII. Emissum superat declaratum (T15) ---\n");
         /* Genus 'malum' diagnosticum DECLARAT (V supra: monitum, sedes
          * una). Parsator eundem nodum accuratius novit: emissum cum
          * nodo et codice EISDEM declaratum superat - ordo UNUS, causa
@@ -680,10 +785,36 @@ principale (vacuum)
             &DIAGNOSTICA, NIHIL, emissa_malum);
         CREDO_AEQUALIS_I32 (xar_numerus(exitus), (i32)III);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "arbor sana: nihil", _arborem_sanam_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "clausura absens: punctum in fine", _clausuram_absentem_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lista non scripta = vacua", _listam_non_scriptam_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "lista separatore sola = vacua", _separatorem_solum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "genus diagnosticum (malum)", _genus_diagnosticum_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "nodus sine lexemate: punctum prius", _sine_lexemate_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ordo octetorum ruptus", _ordinem_octetorum_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "usus iteratus semel visus", _usum_iteratum_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "tractus refutationis scriptoris", _tractum_refutationis_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "profunditas: ambulatio iterativa", _profunditatem_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "emissum superat declaratum (T15)", _emissum_superans_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("materia_diagnostica", SECTIONES);
 }

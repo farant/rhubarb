@@ -5,7 +5,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/../tools/cursus.sh"
 
 # Effusio cursus ultimi semper in build/test_logs/materia.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS servatus).
-# <porta titulus="materia" tegit="materia/fontes/* materia/grammatica/* materia/probationes/*" currit="tools/fabrica.c"/>
+# <porta titulus="materia" tegit="materia/fontes/* materia/grammatica/* materia/probationes/*" currit="tools/fabrica.c" translatio="numquam"/>
 if [ -z "${MATERIA_PROBATIONES_EFFUSIO:-}" ]; then
     export MATERIA_PROBATIONES_EFFUSIO=1
     # effusio in plagula TEMPORARIA extra arborem, post cursum in locum

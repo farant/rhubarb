@@ -25,3 +25,10 @@
   instead of growing memory.
 - **Secret file is read raw** (see plan R19) - never through filum or
   lectiones.
+
+## 2026-10-19 - `_signa_tuta` now calls base64url_scribere (mcp-remotus T2)
+
+The private base64url alphabet and loop are gone; `_signa_tuta` wraps
+`base64url_scribere` (piscina-free, `base64.h`) and adds the NUL.
+`csrf_fixum` pins the CSRF value for a fixed secret and session; it was
+green on the old encoder before the switch and stays green after.

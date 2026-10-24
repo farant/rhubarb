@@ -29,32 +29,34 @@ _ubi (
     redde (s32)(inventum - textus);
 }
 
-s32
-principale (vacuum)
+
+/* creatio nexus semel asserta (ut olim ante blocos); sectiones nexum
+ * suum quaeque creant - status nexus inter sectiones non communis */
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                b32  praeteritus;
-            Piscina* piscina;
+    CREDO_NON_NIHIL (saltuarius_nexus_creare(c->piscina));
+}
+
+
+/* ==================================================
+ * PROBARE: index latinorum
+ * ================================================== */
+
+interior vacuum
+_latina_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
     SaltuariusNexus* nexus;
 
-    piscina = piscina_generare_dynamicum("probatio_salt_nexus",
-        4194304);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
     nexus = saltuarius_nexus_creare(piscina);
-    CREDO_NON_NIHIL (nexus);
-
-
-    /* ========================================================
-     * PROBARE: index latinorum
-     * ======================================================== */
-
+    si (nexus == NIHIL)
     {
-        imprimere("\n--- Probans indicem latinorum ---\n");
+        redde;   /* creatio in parare_suitae asserta */
+    }
+    {
         imprimere("  nomina latina: %d\n",
             (int)nexus->numerus_latinorum);
 
@@ -70,15 +72,20 @@ principale (vacuum)
         CREDO_FALSUM (saltuarius_nexus_est_latinum(nexus,
             chorda_ex_literis("saltuarius", piscina)));
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: classificatio viarum
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: classificatio viarum
+ * ================================================== */
+
+interior vacuum
+_vias_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
-        imprimere("\n--- Probans vias ---\n");
-
         CREDO_VERUM (saltuarius_nexus_est_fons_c(
             chorda_ex_literis("a/b.c", piscina)));
         CREDO_VERUM (saltuarius_nexus_est_fons_c(
@@ -90,12 +97,25 @@ principale (vacuum)
         CREDO_FALSUM (saltuarius_nexus_est_fons_c(
             chorda_ex_literis("d.c/intra", piscina)));
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: tabula classium
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: tabula classium
+ * ================================================== */
 
+interior vacuum
+_classes_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+    SaltuariusNexus* nexus;
+
+    nexus = saltuarius_nexus_creare(piscina);
+    si (nexus == NIHIL)
+    {
+        redde;   /* creatio in parare_suitae asserta */
+    }
     {
         constans character* FONS =
             "si (x) redde 5; /* c1\nc2 */\n#define QQ 7\n"
@@ -106,7 +126,6 @@ principale (vacuum)
         SilvaPiscina* arena = silva_piscina_generare_dynamicum(
             "probatio_nexus_silva", 1048576);
 
-        imprimere("\n--- Probans tabulam classium ---\n");
 
         CREDO_NON_NIHIL (arena);
         saltuarius_nexus_classificare(nexus, arena, textus,
@@ -153,19 +172,31 @@ principale (vacuum)
 
         silva_piscina_destruere(arena);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: fistula parsandi (C1) - praebenda iniecta, parse,
-     * strata, inclusio, resolutio
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: fistula parsandi (C1) - praebenda iniecta, parse,
+ * strata, inclusio, resolutio
+ * ================================================== */
 
+interior vacuum
+_fistulam_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+    SaltuariusNexus* nexus;
+
+    nexus = saltuarius_nexus_creare(piscina);
+    si (nexus == NIHIL)
+    {
+        redde;   /* creatio in parare_suitae asserta */
+    }
     {
         SaltuariusCaput capita[I];
         SilvaPiscina* arena;
         SilvaParsura* parsura;
 
-        imprimere("\n--- Probans fistulam parsandi ---\n");
 
         capita[ZEPHYRUM].titulus = chorda_ex_literis("geminare.h",
             piscina);
@@ -237,9 +268,23 @@ principale (vacuum)
         }
         silva_piscina_destruere(arena);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "index latinorum", _latina_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "classificatio viarum", _vias_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "tabula classium", _classes_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fistula parsandi (C1)", _fistulam_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("saltuarius_nexus", SECTIONES,
+        _suitam_parare, NIHIL);
 }

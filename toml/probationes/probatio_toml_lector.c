@@ -241,35 +241,53 @@ _fons (
     redde f;
 }
 
-s32
-principale (vacuum)
+/* FIXURA SUITAE: ratum lexici semel factum; sectiones id per
+ * monstratorem constantem LEGUNT. */
+nomen structura {
+    MateriaLexiconRatum ratum;
+} FixuraLexici;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                b32  praeteritus;
-            Piscina* piscina;
-MateriaLexiconRatum  ratum;
- MateriaLexIudicium  iudicium;
-                i32  octeti_tecti = ZEPHYRUM;
+          FixuraLexici* f;
+    MateriaLexIudicium  iudicium;
 
-    piscina = piscina_generare_dynamicum("probatio_toml_lector", 65536);
-    si (!piscina)
+    f = (FixuraLexici*)piscina_allocare(c->piscina,
+        magnitudo(FixuraLexici));
+    si (f == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    credo_aperire(piscina);
-    CREDO_VERUM (materia_lexicon_ratum_facere(&ratum, &TOML_LEXICON,
+    CREDO_VERUM (materia_lexicon_ratum_facere(&f->ratum, &TOML_LEXICON,
         &iudicium));
+    c->datum = f;
+}
 
 
-    /* ==================================================
-     * PROBARE: exempla - genera, octeti, tegumentum
-     * ================================================== */
+/* ==================================================
+ * PROBARE: exempla - genera, octeti, tegumentum
+ * ================================================== */
 
+interior vacuum
+_exempla_probare (
+    CredoContextus* c)
+{
+     constans MateriaLexiconRatum* ratum;
+                          Piscina* piscina       = c->piscina;
+                              i32  octeti_tecti  = ZEPHYRUM;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
     {
         i32 e;
         i32 numerus = (i32)(magnitudo(EXEMPLA) / magnitudo(EXEMPLA[0]));
 
-        imprimere("\n--- Probans exempla lectoris (%u) ---\n", numerus);
+        imprimere("  exempla %u\n", numerus);
         CREDO_VERUM (numerus >= XL);
 
         per (e = ZEPHYRUM; e < numerus; e++)
@@ -297,10 +315,10 @@ MateriaLexiconRatum  ratum;
                     sanum = FALSUM;
                     frange;
                 }
-                si (!_congruit(&ratum, t, x->exspectata[k]))
+                si (!_congruit(ratum, t, x->exspectata[k]))
                 {
                     constans character* ti =
-                        materia_lexicon_titulus(&ratum, t->genus);
+                        materia_lexicon_titulus(ratum, t->genus);
 
                     imprimere("  %s [%u]: exspectatum '%s', redditum "
                         "'%s|%.*s'\n", x->titulus, k, x->exspectata[k],
@@ -337,11 +355,18 @@ MateriaLexiconRatum  ratum;
         }
         imprimere("  octeti tecti: %u\n", octeti_tecti);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: sedes (linea, columna) et situs reponendus
-     * ================================================== */
+/* ==================================================
+ * PROBARE: sedes (linea, columna) et situs reponendus
+ * ================================================== */
+
+interior vacuum
+_sedes_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         constans character* fons = _fons(piscina,
@@ -360,7 +385,6 @@ MateriaLexiconRatum  ratum;
             { III, V }, { III, VI }, { III, VII }
         };
 
-        imprimere("\n--- Probans sedes et situm ---\n");
         CREDO_VERUM (toml_lector_incipere(&l, piscina, fons,
             (s32)strlen(fons)));
         per (k = ZEPHYRUM; k < (i32)(magnitudo(SEDES)
@@ -403,11 +427,18 @@ MateriaLexiconRatum  ratum;
             CREDO_AEQUALIS_I32 (t->valor.mensura, u->valor.mensura);
         }
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "exempla lectoris", _exempla_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "sedes et situs", _sedes_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("toml_lector", SECTIONES,
+        _suitam_parare, NIHIL);
 }

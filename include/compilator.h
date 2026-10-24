@@ -55,11 +55,35 @@ compilator_clavem (
                         Sigillum* clavis_out);
 
 /* compilare per thesaurum; effusio et erratum clang in resultu (vocans
- * ea imprimit aut servat) */
+ * ea imprimit aut servat). Allocationes in piscina compilatoris: per
+ * vocationem crescit (~I MB ex thesauro: fons, index, obiecta lecta) */
 CompilatorResultus
 compilator_compilare (
                       Compilator* compilator,
     constans character* constans* argumenta,
                               i32 numerus);
+
+/* idem, sed allocationes VOCATIONIS (plagulae lectae, argumenta,
+ * effusio, erratum) in 'piscina' vocantis - resultus in ea vivit; eam
+ * post vocationem vacare licet. Thesaurus et memoria per processum in
+ * piscinis suis manent (parcum …T77EH4: fabrica membrum quodque in
+ * piscina temporaria agit) */
+CompilatorResultus
+compilator_compilare_in (
+                      Compilator* compilator,
+    constans character* constans* argumenta,
+                              i32 numerus,
+                         Piscina* piscina);
+
+/* MEMORIA PER PROCESSUM (2026-10-23): capita indicis sigillata et
+ * existentiae obumbrationis memorantur (via -> sigillum / praesens):
+ * vocatio quaeque post primam capita communia nec legit nec quaerit.
+ * Solum ubi capita intra processum non mutantur ET liber lectionum
+ * (FABRICA_LECTIONES) per vocationem non postulatur - lectio memorata
+ * liber non notat. Vocat 'bin/compilator --plures'; fabrica (membra
+ * in processu uno, liber per membrum) NON. */
+vacuum
+compilator_memoriam_incipere (
+    Compilator* compilator);
 
 #endif /* COMPILATOR_H */

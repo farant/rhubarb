@@ -57,17 +57,26 @@ CLAUSURAE="build/fabrica/clausurae/compile_tests"
 rm -rf "$CLAUSURAE"
 mkdir -p "$CLAUSURAE"
 
+# PLURES (2026-10-22): aedilis UNO processu pro fontibus omnibus
+# (bin/aedilis --plures) - olim CCCLXXXI processus (~XXXV s calide,
+# ~XXXVIII s frigide in porta generata); nunc ~II.V s calide, ~XIII s
+# frigide. Effusio et manifesta octetim eadem (praeter tempus
+# 'generatum'), ordine listae.
+LISTA="$(mktemp)"
 for f in probationes/probatio_*.c \
          tools/generare.c tools/capsula_generare.c \
          instrumenta/nuntium_schema_generare.c; do
     case "$f" in *_benchmark.c) continue ;; esac
-    if ! ./bin/aedilis "$f" --enumerare --thesaurus build/aedilis/obiecta \
-            --manifestum "$CLAUSURAE/$(echo "$f" | sed 's|/|__|g').stml" \
-            >> "$TEMPORARIUM"; then
-        echo "compile_tests_fontes_generare: derivatio fracta: $f" >&2
-        exit 1
-    fi
+    printf '%s\n' "$f" >> "$LISTA"
 done
+if ! ./bin/aedilis --enumerare --plures "$LISTA" \
+        --thesaurus build/aedilis/obiecta --manifesta "$CLAUSURAE" \
+        >> "$TEMPORARIUM"; then
+    rm -f "$LISTA"
+    echo "compile_tests_fontes_generare: derivatio fracta (vide AEDILIS RECUSAT supra)" >&2
+    exit 1
+fi
+rm -f "$LISTA"
 
 UNIO_C=$(sort -u "$TEMPORARIUM" | awk '!/^build\// && !/^vendor\// && /\.c$/')
 UNIO_M=$(sort -u "$TEMPORARIUM" | awk '!/^build\// && !/^vendor\// && /\.m$/')

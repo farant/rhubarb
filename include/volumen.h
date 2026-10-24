@@ -89,7 +89,8 @@ volumen_scrinium (
 
 /* VOLUMEN SCRATCH - status qui probationem non superstat.
  *
- * Plagula unica sub /tmp, DELETA cum clauditur. Pro probationibus
+ * Plagula unica sub $TMPDIR (aliter /tmp; virgulae finales
+ * abscissae), DELETA cum clauditur. Pro probationibus
  * integrantibus, quae aliter in volumen VERUM usoris scribunt.
  *
  * CUR HOC EXSTAT (mensuratum 2026-08-13): probatio fumi laboratorii
@@ -104,11 +105,12 @@ volumen_scrinium (
  * fragilitatis facit quem nulla mora sanat.
  *
  * 'praefixum' plagulam nominat ut, si quid pendeat, cuius sit
- * appareat (e.g. "fumus_manus" -> /tmp/fumus_manus-1.volumen).
+ * appareat (e.g. "fumus_manus" -> $TMPDIR/fumus_manus-1.volumen).
  *
  * DELETIO IN CLAUDENDO: qui non claudit plagulam relinquit - quod
- * ipsum indicium est (probatio quae claudere omisit id in /tmp
- * ostendit). */
+ * ipsum indicium est. Sub credo_suitam_currere (TMPDIR = area suitae)
+ * credo id NOMINAT: fractura 'credo_volumen' sectionis quae volumen
+ * non clausit, plagula deleta (credo.h, TMPDIR SUITAE). */
 Volumen*
 volumen_temporarium (
                Piscina* piscina,
@@ -193,6 +195,13 @@ volumen_transactionem_committere (
 
 b32
 volumen_transactionem_revolvere (
+    Volumen* volumen);
+
+/* vocatorne transactionem tenet? (bibliothecae quae transactionem
+ * propriam aliter aperirent eam iungunt - admissio_revocare, canalis
+ * T4). NIHIL -> FALSUM */
+b32
+volumen_in_transactione (
     Volumen* volumen);
 
 /* contentum plagulae ex manifesto + massis; *inventum FALSUM si via

@@ -31,31 +31,52 @@ hic_manens constans character* GENERA_EXSPECTATA[] = {
     "documentum", "interpres", "prosa", "regio", "elementum"
 };
 
-s32
-principale (vacuum)
+
+/* FIXURA SUITAE: ratum lexici semel factum (parare_suitae; assertiones
+ * eius ibi); sectiones id per monstratorem constantem LEGUNT. */
+nomen structura {
+    MateriaLexiconRatum ratum;
+} FixuraRegistri;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                    b32  praeteritus;
-                Piscina* piscina;
-    MateriaLexiconRatum  ratum;
-     MateriaLexIudicium  iudicium;
+        FixuraRegistri* f;
+    MateriaLexIudicium  iudicium;
 
-    piscina = piscina_generare_dynamicum("probatio_briar_registrum",
-        65536);
-    si (!piscina)
+    f = (FixuraRegistri*)piscina_allocare(c->piscina,
+        magnitudo(FixuraRegistri));
+    si (f == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    credo_aperire(piscina);
+    c->datum = f;
+    CREDO_VERUM (materia_lexicon_ratum_facere(&f->ratum,
+        &BRIAR_LEXICON,
+        &iudicium));
+    CREDO_AEQUALIS_S32 (iudicium.vitium, (s32)MATERIA_LEX_SANUM);
+}
 
-    imprimere("\n--- Probans lexicon thistle ---\n");
+
+/* ==================================================
+ * PROBARE: lexicon thistle
+ * ================================================== */
+
+interior vacuum
+_lexicon_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraRegistri*)c->suita)->ratum;
     {
         i32 i;
 
-        CREDO_VERUM (materia_lexicon_ratum_facere(&ratum,
-            &BRIAR_LEXICON,
-            &iudicium));
-        CREDO_AEQUALIS_S32 (iudicium.vitium, (s32)MATERIA_LEX_SANUM);
         CREDO_AEQUALIS_I32 (BRIAR_LEXICON.numerus_generum,
             (i32)BRIAR_LEX_NUMERUS_GENERUM);
         CREDO_AEQUALIS_I32 ((i32)(magnitudo(ORDO_EXSPECTATUS)
@@ -63,34 +84,44 @@ principale (vacuum)
             (i32)BRIAR_LEX_NUMERUS_GENERUM);
         per (i = ZEPHYRUM; i < (i32)BRIAR_LEX_NUMERUS_GENERUM; i++)
         {
-            constans character* t = materia_lexicon_titulus(&ratum,
+            constans character* t = materia_lexicon_titulus(ratum,
                 (s32)i);
 
             CREDO_NON_NIHIL (t);
             CREDO_VERUM (strcmp(t, ORDO_EXSPECTATUS[i]) == ZEPHYRUM);
         }
-        CREDO_AEQUALIS_S32 ((s32)materia_lexicon_species(&ratum,
+        CREDO_AEQUALIS_S32 ((s32)materia_lexicon_species(ratum,
             (s32)BRIAR_LEX_FINIS), (s32)MATERIA_LEX_FIXUM);
-        CREDO_VERUM (materia_lexicon_textum_fert(&ratum,
+        CREDO_VERUM (materia_lexicon_textum_fert(ratum,
             (s32)BRIAR_LEX_PROSA));
-        CREDO_VERUM (materia_lexicon_textum_fert(&ratum,
+        CREDO_VERUM (materia_lexicon_textum_fert(ratum,
             (s32)BRIAR_LEX_CRUDUM));
-        CREDO_FALSUM (materia_lexicon_textum_fert(&ratum,
+        CREDO_FALSUM (materia_lexicon_textum_fert(ratum,
             (s32)BRIAR_LEX_FINIS));
         CREDO_VERUM (strcmp(BRIAR_LEXICON.praefixum_tagi, "briar-")
             == ZEPHYRUM);
         CREDO_AEQUALIS_S32 (BRIAR_LEXICON.genus_spatii, (s32)-I);
         /* nullum trivium, nullum genus LINEA: lineae novae intra
          * valores vivunt */
-        CREDO_VERUM (materia_lexicon_munus_habet(&ratum,
+        CREDO_VERUM (materia_lexicon_munus_habet(ratum,
             MATERIA_MUNUS_FINIS));
-        CREDO_FALSUM (materia_lexicon_munus_habet(&ratum,
+        CREDO_FALSUM (materia_lexicon_munus_habet(ratum,
             MATERIA_MUNUS_LINEA));
-        CREDO_FALSUM (materia_lexicon_munus_habet(&ratum,
+        CREDO_FALSUM (materia_lexicon_munus_habet(ratum,
             MATERIA_MUNUS_SPATIUM));
     }
+}
 
-    imprimere("\n--- Probans registrum nodorum ---\n");
+
+/* ==================================================
+ * PROBARE: registrum nodorum
+ * ================================================== */
+
+interior vacuum
+_registrum_probare (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
         i32 i;
         i32 offset = ZEPHYRUM;
@@ -142,8 +173,25 @@ principale (vacuum)
             + (i32)BRIAR_REGIO_VITIUM].species,
             (s32)MATERIA_LOCUS_INDEX);
     }
+}
 
-    imprimere("\n--- Probans circuitum minimum per materiam ---\n");
+
+/* ==================================================
+ * PROBARE: circuitus minimus per materiam
+ * ================================================== */
+
+interior vacuum
+_circuitum_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraRegistri*)c->suita)->ratum;
     {
         MateriaArborConsilium consilium;
         MateriaArborScriptura s1;
@@ -157,7 +205,7 @@ principale (vacuum)
         vacua.datum    = NIHIL;
         vacua.mensura  = ZEPHYRUM;
         materia_arbor_consilium_nudum(&consilium, &BRIAR_REGISTRUM,
-            &ratum, "briar");
+            ratum, "briar");
         doc = materia_nodus_creare(piscina, (s32)BRIAR_GENUS_DOCUMENTUM,
             (i32)4);
         finis = materia_token_creare(piscina, &FORMA,
@@ -188,10 +236,20 @@ principale (vacuum)
                 (size_t)s1.textus.mensura) == ZEPHYRUM);
         }
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "lexicon thistle", _lexicon_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "registrum nodorum", _registrum_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "circuitum minimum per materiam", _circuitum_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("briar_registrum", SECTIONES,
+        _suitam_parare, NIHIL);
 }

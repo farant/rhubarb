@@ -876,7 +876,10 @@ nomen structura CredoContextus {
      constans character* titulus;   /* sectio currens */
                  vacuum* suita;     /* (II) datum parare_suitae;
                                      * sectiones LEGUNT, numquam mutant
-                                     * (lint); NIHIL sine fixura */
+                                     * (examen 94) praeter internationem
+                                     * in internamentum fixurae (vide
+                                     * credo_suitam_currere_cum); NIHIL
+                                     * sine fixura */
 } CredoContextus;
 
 nomen vacuum (*CredoFunctio)(CredoContextus* c);
@@ -992,7 +995,18 @@ credo_gradum_ponere (
  * ad vocationem primam (eadem via deinde), deletur tota post purgare
  * (etiam post NECESSE, etiam si filius CREDO_NON_RUIT eam creavit).
  * Sub fabrica TMPDIR = area membri. NIHIL si creari non potest aut c
- * contextus currens non est. Via usque ad deletionem valet. */
+ * contextus currens non est. Via usque ad deletionem valet.
+ *
+ * TMPDIR SUITAE (2026-10-23): credo_suitam_currere[_cum] TMPDIR in
+ * aream SUITAE ponit (filii hereditant) et post suitam restituit -
+ * quidquid temporarium suita creat suum est, suitae parallelae se non
+ * vident. Post sectionem quamque '*.volumen' ibi relictum = fractura
+ * 'credo_volumen' ILLIUS sectionis (volumen temporarium non clausum),
+ * deinde deletum; volumina post parare_suitae viva (fixurae suitae)
+ * sectionibus praetereuntur et post purgare_suitae iudicantur
+ * ('(suita)'). Pretium ~XXX-XL us per sectionem (mensuratum: chorda
+ * L sectiones +8.3 M instructiones). Suitae extra credo_suitam_currere
+ * (credo_aperire nudum) TMPDIR intactum habent. */
 constans character*
 credo_area (
     CredoContextus* c);
@@ -1004,7 +1018,24 @@ credo_area (
  * (assertio aut NECESSE) -> nulla sectio currit, '(parare suitae)' in
  * plagula notatur, suita FRACTA. NIHIL licet (= credo_suitam_currere).
  * Fixura cara (daemon, applicatio) semel aedificatur; sectiones tamen
- * ordine liberae manent quia statum suitae non mutant. */
+ * ordine liberae manent quia statum suitae non mutant.
+ *
+ * LECTIO SOLA, EXCEPTIO UNA (decretum Frani 2026-10-19): sectiones in
+ * internamentum FIXURAE internare licet (InternamentumChorda* quod
+ * parare_suitae creavit, quovis vocato traditum). Chordae internatae per
+ * monstratorem comparantur, ergo internamentum proprium sectionis
+ * identitatem cum nominibus fixurae tacite frangeret; et internatio
+ * ordine libera est (textus idem -> chorda eadem, quaecumque sectio
+ * prima internat). Ubi comparatio per contentum fit, internamentum
+ * proprium sectionis (in c->piscina) ordinarium manet. Cetera mutatio
+ * fixurae vetita.
+ * Examen 94 c->suita ipsum (gradus primus) ET membra monstratoria
+ * fixurae (Xar*, Piscina*, ... per 'constans T*' lecta) intra
+ * sectionem iudicat: scriptio per ea aut traditio ad parametrum non
+ * constans accusatur. LIMES: fixura adiutori per parametrum tradita
+ * non sequitur; mutatio celata intra bibliothecam (arena possessoris
+ * crescens) per vocatum solum videtur - CREDO_ORDO=mixtus
+ * dependentiam ordinis prodit. */
 s32
 credo_suitam_currere_cum (
       constans character* titulus_suitae,

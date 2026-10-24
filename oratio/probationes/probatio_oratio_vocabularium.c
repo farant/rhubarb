@@ -276,162 +276,214 @@ _ambulare (
     redde (b32)!nuntium_lector_error(l);
 }
 
-s32
-principale (vacuum)
+/* FIXURA SUITAE: fontes venditi lecti et coctio semel facta
+ * (parare_suitae; assertiones lectionis et coctionis ibi); sectiones
+ * fontes, tabulam et censum per monstratorem constantem LEGUNT. */
+nomen structura {
+          constans character* radix;
+    OratioVocabulariumFontes  fontes;
+                      chorda  tabula;
+    OratioVocabulariumCensus  census;
+                      duplex  ms_coctionis;
+} FixuraVocabularii;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                  Piscina* piscina;
-       constans character* radix;
-                character  via[1024];
- OratioVocabulariumFontes  fontes;
-                   chorda  tabula;
-                   chorda  commissa;
- OratioVocabulariumCensus  census;
- OratioVocabulariumVitium  vitium;
-                   chorda  sigillum;
+           FixuraVocabularii* f;
+                   character  via[1024];
+    OratioVocabulariumVitium  vitium;
+                     clock_t  ante;
+                     clock_t  post;
+                         b32  sana;
 
-    piscina = piscina_generare_dynamicum("probatio_oratio_vocabularium",
-        268435456);
-    credo_aperire(piscina);
-    radix = getenv("RHUBARB_RADIX");
-    si (radix == NIHIL)
+    f = (FixuraVocabularii*)piscina_allocare(c->piscina,
+        magnitudo(FixuraVocabularii));
+    si (f == NIHIL)
     {
-        radix = ".";
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-
-    imprimere("\n--- I. Fontes venditi (oratio/vocabularium/la) ---\n");
-    sprintf(via, "%s/oratio/vocabularium/la/DICTLINE.GEN", radix);
-    CREDO_VERUM (_plagulam_legere(piscina, via, &fontes.dictline));
-    sprintf(via, "%s/oratio/vocabularium/la/INFLECTS.LAT", radix);
-    CREDO_VERUM (_plagulam_legere(piscina, via, &fontes.inflects));
-    sprintf(via, "%s/oratio/vocabularium/la/ADDONS.LAT", radix);
-    CREDO_VERUM (_plagulam_legere(piscina, via, &fontes.addons));
-    sprintf(via, "%s/oratio/vocabularium/la/UNIQUES.LAT", radix);
-    CREDO_VERUM (_plagulam_legere(piscina, via, &fontes.uniques));
-    imprimere("  DICTLINE %d  INFLECTS %d  ADDONS %d  UNIQUES %d octeti\n",
-        (integer)fontes.dictline.mensura,
-        (integer)fontes.inflects.mensura,
-        (integer)fontes.addons.mensura,
-        (integer)fontes.uniques.mensura);
-    CREDO_AEQUALIS_I32 (fontes.dictline.mensura, (i32)OCTETI_DICTLINE);
-    CREDO_AEQUALIS_I32 (fontes.inflects.mensura, (i32)OCTETI_INFLECTS);
-    CREDO_AEQUALIS_I32 (fontes.addons.mensura,   (i32)OCTETI_ADDONS);
-    CREDO_AEQUALIS_I32 (fontes.uniques.mensura,  (i32)OCTETI_UNIQUES);
-        {
-        /* CRLF verbatim: linea prima '\r' ante '\n' primum finit */
-        s32 nl = _invenire(fontes.dictline, "\n");
-
-        CREDO_VERUM (nl > ZEPHYRUM
-            && fontes.dictline.datum[(i32)nl - I] == '\r');
+    f->radix = getenv("RHUBARB_RADIX");
+    si (f->radix == NIHIL)
+    {
+        f->radix = ".";
     }
-
-    si (   fontes.dictline.datum == NIHIL
-        || fontes.inflects.datum == NIHIL
-        || fontes.addons.datum   == NIHIL
-        || fontes.uniques.datum  == NIHIL)
+    sprintf(via, "%s/oratio/vocabularium/la/DICTLINE.GEN", f->radix);
+    CREDO_VERUM (_plagulam_legere(c->piscina, via,
+        &f->fontes.dictline));
+    sprintf(via, "%s/oratio/vocabularium/la/INFLECTS.LAT", f->radix);
+    CREDO_VERUM (_plagulam_legere(c->piscina, via,
+        &f->fontes.inflects));
+    sprintf(via, "%s/oratio/vocabularium/la/ADDONS.LAT", f->radix);
+    CREDO_VERUM (_plagulam_legere(c->piscina, via, &f->fontes.addons));
+    sprintf(via, "%s/oratio/vocabularium/la/UNIQUES.LAT", f->radix);
+    CREDO_VERUM (_plagulam_legere(c->piscina, via, &f->fontes.uniques));
+    si (   f->fontes.dictline.datum == NIHIL
+        || f->fontes.inflects.datum == NIHIL
+        || f->fontes.addons.datum   == NIHIL
+        || f->fontes.uniques.datum  == NIHIL)
     {
         CREDO_CULPA ("fontes absunt - nihil ultra probatur");
-        credo_imprimere_compendium();
-        redde I;
+        redde;
     }
 
-    imprimere("\n--- II. Coctio ---\n");
+    /* II. coctio: semel hic, numeri in sectione II asseruntur */
+    ante = clock();
+    sana = oratio_vocabularium_coquere(c->piscina, &f->fontes,
+        "mk270/whitakers-words@1f2f0fb0", &f->tabula, &f->census,
+        &vitium);
+    post = clock();
+    si (!sana)
     {
-        clock_t ante = clock();
-        clock_t post;
-            b32 sana = oratio_vocabularium_coquere(piscina, &fontes,
-                "mk270/whitakers-words@1f2f0fb0", &tabula, &census,
-                &vitium);
-        Ambulatio a;
-
-        post = clock();
-        si (!sana)
-        {
-            imprimere("  COCTIO SISTIT: %s:%d %s\n", vitium.plagula,
-                (integer)vitium.linea, vitium.causa);
-        }
-        CREDO_VERUM (sana);
-        imprimere("  stirpes %d  flexiones %d  additamenta %d  unica %d  octeti %d  ms %.1f\n",
-            (integer)census.stirpes, (integer)census.flexiones,
-            (integer)census.additamenta, (integer)census.unica,
-            (integer)tabula.mensura,
-            1000.0 * (duplex)(post - ante) / (duplex)CLOCKS_PER_SEC);
-        CREDO_AEQUALIS_I32 (census.stirpes,     (i32)STIRPES_PINNA);
-        CREDO_AEQUALIS_I32 (census.flexiones,   (i32)FLEXIONES_PINNA);
-        CREDO_AEQUALIS_I32 (census.additamenta, (i32)ADDITAMENTA_PINNA);
-        CREDO_AEQUALIS_I32 (census.unica,       (i32)UNICA_PINNA);
-        CREDO_AEQUALIS_I32 (tabula.mensura,     (i32)OCTETI_TABULAE);
-
-        /* recorda decocta contra fontes */
-        CREDO_VERUM (_ambulare(piscina, tabula, &a));
-        CREDO_AEQUALIS_I32 (a.stirpes, census.stirpes);
-        CREDO_AEQUALIS_I32 (a.flexiones, census.flexiones);
-        CREDO_AEQUALIS_I32 (a.additamenta, census.additamenta);
-        CREDO_AEQUALIS_I32 (a.unica, census.unica);
-        CREDO_VERUM (_aequalis(a.stirps_prima.stirpes[ZEPHYRUM], "A"));
-        CREDO_VERUM (_aequalis(a.stirps_prima.stirpes[I], ""));
-        CREDO_AEQUALIS_S32 ((s32)a.stirps_prima.pars,
-            (s32)ORATIO_PARS_N);
-        CREDO_AEQUALIS_I32 (a.stirps_prima.declinatio, (i32)IX);
-        CREDO_AEQUALIS_I32 (a.stirps_prima.varians, (i32)VIII);
-        CREDO_VERUM (_aequalis(a.stirps_prima.species, "M N"));
-        CREDO_VERUM (a.stirps_prima.aetas == 'X'
-            && a.stirps_prima.area == 'X'
-            && a.stirps_prima.geo == 'X'
-            && a.stirps_prima.frequentia == 'C'
-            && a.stirps_prima.fons == 'G');
-        CREDO_VERUM (_incipit(a.stirps_prima.sensus,
-            "Aulus (Roman praenomen)"));
-        CREDO_AEQUALIS_I32 (a.stirps_prima.linea, I);
-        CREDO_VERUM (_aequalis(a.stirps_tertia.stirpes[ZEPHYRUM], "a"));
-        CREDO_AEQUALIS_S32 ((s32)a.stirps_tertia.pars,
-            (s32)ORATIO_PARS_PREP);
-        CREDO_VERUM (_aequalis(a.stirps_tertia.species, "ABL"));
-        CREDO_AEQUALIS_I32 (a.stirps_tertia.declinatio, ZEPHYRUM);
-        CREDO_VERUM (a.vir_adest);
-                /* recordum primum ordine plagulae: pars et linea publicatae */
-        imprimere("  flexio prima: %s linea %d\n",
-            oratio_pars_titulus(a.flexio_prima.pars),
-            (integer)a.flexio_prima.linea);
-        CREDO_MAIOR_I32 (a.flexio_prima.linea, ZEPHYRUM);
-        CREDO_VERUM (a.flexio_n_adest);
-        CREDO_AEQUALIS_I32 (a.flexio_n.clavis, I);
-        CREDO_AEQUALIS_I32 (a.flexio_n.mensura, I);
-        CREDO_VERUM (_aequalis(a.flexio_n.finis, "a"));
-        CREDO_VERUM (a.flexio_n.aetas == 'X'
-            && a.flexio_n.frequentia == 'A');
-
-        CREDO_VERUM (a.flexio_sine_fine);
-        CREDO_AEQUALIS_S32 ((s32)a.additamentum_primum.genus,
-            (s32)ORATIO_PARS_PREFIX);
-        CREDO_VERUM (_aequalis(a.additamentum_primum.forma, "ec"));
-        CREDO_VERUM (_aequalis(a.additamentum_primum.descriptio,
-            "PACK PACK"));
-        CREDO_VERUM (_incipit(a.additamentum_primum.sensus,
-            "is there any...that?"));
-        CREDO_VERUM (a.que_tackon);
-        CREDO_VERUM (_aequalis(a.unicum_primum.forma, "agantur"));
-        CREDO_VERUM (_incipit(a.unicum_primum.descriptio,
-            "V 3 1 PRES PASSIVE SUB 3 P IMPERS"));
-        CREDO_VERUM (_incipit(a.unicum_primum.sensus,
-            "let them be treated;"));
-        CREDO_VERUM (strcmp(oratio_pars_titulus(ORATIO_PARS_VPAR),
-            "VPAR")
-            == ZEPHYRUM);
-        CREDO_AEQUALIS_S32 ((s32)oratio_pars_ex_titulo(_copia(piscina,
-            a.additamentum_primum.descriptio)),
-            (s32)ORATIO_PARS_NUMERUS_PARTIUM);
+        imprimere("  COCTIO SISTIT: %s:%d %s\n", vitium.plagula,
+            (integer)vitium.linea, vitium.causa);
     }
+    CREDO_VERUM (sana);
+    f->ms_coctionis = 1000.0 * (duplex)(post - ante)
+        / (duplex)CLOCKS_PER_SEC;
+    c->datum = f;
+}
 
-    imprimere("\n--- III. Tabula commissa == coctio; sigillum ---\n");
-    sprintf(via, "%s/oratio/vocabularium/la.bin", radix);
+interior vacuum
+_fontes_probare (
+    CredoContextus* c)
+{
+    constans FixuraVocabularii* f =
+        (constans FixuraVocabularii*)c->suita;
+                           s32 nl;
+
+    si (f == NIHIL)
+    {
+        redde;
+    }
+    imprimere("  DICTLINE %d  INFLECTS %d  ADDONS %d  UNIQUES %d octeti\n",
+        (integer)f->fontes.dictline.mensura,
+        (integer)f->fontes.inflects.mensura,
+        (integer)f->fontes.addons.mensura,
+        (integer)f->fontes.uniques.mensura);
+    CREDO_AEQUALIS_I32 (f->fontes.dictline.mensura,
+        (i32)OCTETI_DICTLINE);
+    CREDO_AEQUALIS_I32 (f->fontes.inflects.mensura,
+        (i32)OCTETI_INFLECTS);
+    CREDO_AEQUALIS_I32 (f->fontes.addons.mensura,   (i32)OCTETI_ADDONS);
+    CREDO_AEQUALIS_I32 (f->fontes.uniques.mensura,
+        (i32)OCTETI_UNIQUES);
+    /* CRLF verbatim: linea prima '\r' ante '\n' primum finit */
+    nl = _invenire(f->fontes.dictline, "\n");
+    CREDO_VERUM (nl > ZEPHYRUM
+        && f->fontes.dictline.datum[(i32)nl - I] == '\r');
+}
+
+interior vacuum
+_coctionem_probare (
+    CredoContextus* c)
+{
+    constans FixuraVocabularii* f =
+        (constans FixuraVocabularii*)c->suita;
+                       Piscina* piscina = c->piscina;
+                     Ambulatio  a;
+
+    si (f == NIHIL)
+    {
+        redde;
+    }
+    imprimere("  stirpes %d  flexiones %d  additamenta %d  unica %d  octeti %d  ms %.1f\n",
+        (integer)f->census.stirpes, (integer)f->census.flexiones,
+        (integer)f->census.additamenta, (integer)f->census.unica,
+        (integer)f->tabula.mensura, f->ms_coctionis);
+    CREDO_AEQUALIS_I32 (f->census.stirpes,     (i32)STIRPES_PINNA);
+    CREDO_AEQUALIS_I32 (f->census.flexiones,   (i32)FLEXIONES_PINNA);
+    CREDO_AEQUALIS_I32 (f->census.additamenta, (i32)ADDITAMENTA_PINNA);
+    CREDO_AEQUALIS_I32 (f->census.unica,       (i32)UNICA_PINNA);
+    CREDO_AEQUALIS_I32 (f->tabula.mensura,     (i32)OCTETI_TABULAE);
+
+    /* recorda decocta contra fontes */
+    CREDO_VERUM (_ambulare(piscina, f->tabula, &a));
+    CREDO_AEQUALIS_I32 (a.stirpes, f->census.stirpes);
+    CREDO_AEQUALIS_I32 (a.flexiones, f->census.flexiones);
+    CREDO_AEQUALIS_I32 (a.additamenta, f->census.additamenta);
+    CREDO_AEQUALIS_I32 (a.unica, f->census.unica);
+    CREDO_VERUM (_aequalis(a.stirps_prima.stirpes[ZEPHYRUM], "A"));
+    CREDO_VERUM (_aequalis(a.stirps_prima.stirpes[I], ""));
+    CREDO_AEQUALIS_S32 ((s32)a.stirps_prima.pars,
+        (s32)ORATIO_PARS_N);
+    CREDO_AEQUALIS_I32 (a.stirps_prima.declinatio, (i32)IX);
+    CREDO_AEQUALIS_I32 (a.stirps_prima.varians, (i32)VIII);
+    CREDO_VERUM (_aequalis(a.stirps_prima.species, "M N"));
+    CREDO_VERUM (a.stirps_prima.aetas == 'X'
+        && a.stirps_prima.area == 'X'
+        && a.stirps_prima.geo == 'X'
+        && a.stirps_prima.frequentia == 'C'
+        && a.stirps_prima.fons == 'G');
+    CREDO_VERUM (_incipit(a.stirps_prima.sensus,
+        "Aulus (Roman praenomen)"));
+    CREDO_AEQUALIS_I32 (a.stirps_prima.linea, I);
+    CREDO_VERUM (_aequalis(a.stirps_tertia.stirpes[ZEPHYRUM], "a"));
+    CREDO_AEQUALIS_S32 ((s32)a.stirps_tertia.pars,
+        (s32)ORATIO_PARS_PREP);
+    CREDO_VERUM (_aequalis(a.stirps_tertia.species, "ABL"));
+    CREDO_AEQUALIS_I32 (a.stirps_tertia.declinatio, ZEPHYRUM);
+    CREDO_VERUM (a.vir_adest);
+            /* recordum primum ordine plagulae: pars et linea publicatae */
+    imprimere("  flexio prima: %s linea %d\n",
+        oratio_pars_titulus(a.flexio_prima.pars),
+        (integer)a.flexio_prima.linea);
+    CREDO_MAIOR_I32 (a.flexio_prima.linea, ZEPHYRUM);
+    CREDO_VERUM (a.flexio_n_adest);
+    CREDO_AEQUALIS_I32 (a.flexio_n.clavis, I);
+    CREDO_AEQUALIS_I32 (a.flexio_n.mensura, I);
+    CREDO_VERUM (_aequalis(a.flexio_n.finis, "a"));
+    CREDO_VERUM (a.flexio_n.aetas == 'X'
+        && a.flexio_n.frequentia == 'A');
+
+    CREDO_VERUM (a.flexio_sine_fine);
+    CREDO_AEQUALIS_S32 ((s32)a.additamentum_primum.genus,
+        (s32)ORATIO_PARS_PREFIX);
+    CREDO_VERUM (_aequalis(a.additamentum_primum.forma, "ec"));
+    CREDO_VERUM (_aequalis(a.additamentum_primum.descriptio,
+        "PACK PACK"));
+    CREDO_VERUM (_incipit(a.additamentum_primum.sensus,
+        "is there any...that?"));
+    CREDO_VERUM (a.que_tackon);
+    CREDO_VERUM (_aequalis(a.unicum_primum.forma, "agantur"));
+    CREDO_VERUM (_incipit(a.unicum_primum.descriptio,
+        "V 3 1 PRES PASSIVE SUB 3 P IMPERS"));
+    CREDO_VERUM (_incipit(a.unicum_primum.sensus,
+        "let them be treated;"));
+    CREDO_VERUM (strcmp(oratio_pars_titulus(ORATIO_PARS_VPAR),
+        "VPAR")
+        == ZEPHYRUM);
+    CREDO_AEQUALIS_S32 ((s32)oratio_pars_ex_titulo(_copia(piscina,
+        a.additamentum_primum.descriptio)),
+        (s32)ORATIO_PARS_NUMERUS_PARTIUM);
+}
+
+interior vacuum
+_tabulam_commissam_probare (
+    CredoContextus* c)
+{
+    constans FixuraVocabularii* f =
+        (constans FixuraVocabularii*)c->suita;
+                       Piscina* piscina = c->piscina;
+                     character  via[1024];
+                        chorda  commissa;
+                        chorda  sigillum;
+
+    si (f == NIHIL)
+    {
+        redde;
+    }
+    sprintf(via, "%s/oratio/vocabularium/la.bin", f->radix);
     CREDO_VERUM (_plagulam_legere(piscina, via, &commissa));
     sigillum = oratio_vocabularium_sigillum(piscina, commissa);
     imprimere("  la.bin %d octeti, sigillum %.*s (pinna %s)\n",
         (integer)commissa.mensura, (integer)sigillum.mensura,
         (constans character*)sigillum.datum, SIGILLUM_PINNA);
-    CREDO_AEQUALIS_I32 (commissa.mensura, tabula.mensura);
-    CREDO_VERUM (commissa.mensura == tabula.mensura
-        && memcmp(commissa.datum, tabula.datum, (size_t)tabula.mensura)
+    CREDO_AEQUALIS_I32 (commissa.mensura, f->tabula.mensura);
+    CREDO_VERUM (commissa.mensura == f->tabula.mensura
+        && memcmp(commissa.datum, f->tabula.datum,
+            (size_t)f->tabula.mensura)
             == ZEPHYRUM);
     si (!_aequalis(sigillum, SIGILLUM_PINNA))
     {
@@ -439,123 +491,166 @@ principale (vacuum)
     }
     CREDO_VERUM (_aequalis(sigillum, SIGILLUM_PINNA));
     CREDO_VERUM (_aequalis(oratio_vocabularium_sigillum(piscina,
-        tabula),
+        f->tabula),
         SIGILLUM_PINNA));
+}
 
-    imprimere("\n--- IV. Recensio tabulae commissae ---\n");
+/* IV: tabula commissa iterum legitur (sine assertione - lectio eius in
+ * sectione III asseritur) */
+interior vacuum
+_tabulam_recensere (
+    CredoContextus* c)
+{
+    constans FixuraVocabularii* f =
+        (constans FixuraVocabularii*)c->suita;
+                       Piscina* piscina = c->piscina;
+                     character  via[1024];
+                        chorda  commissa;
+      OratioVocabulariumVitium  vitium;
+      OratioVocabulariumCensus  c2;
+                       clock_t  ante;
+                       clock_t  post;
+                           b32  sana;
+                        chorda  truncata;
+                        chorda  mutata;
+
+    si (f == NIHIL)
     {
-        OratioVocabulariumCensus c2;
-        clock_t ante = clock();
-        clock_t post;
-        b32 sana = oratio_vocabularium_recensere(piscina, commissa, &c2,
-            &vitium);
-        chorda truncata;
-        chorda mutata;
-
-        post = clock();
-        CREDO_VERUM (sana);
-        imprimere("  recensio %.1f ms\n",
-            1000.0 * (duplex)(post - ante) / (duplex)CLOCKS_PER_SEC);
-        CREDO_AEQUALIS_I32 (c2.stirpes, census.stirpes);
-        CREDO_AEQUALIS_I32 (c2.flexiones, census.flexiones);
-        CREDO_AEQUALIS_I32 (c2.additamenta, census.additamenta);
-        CREDO_AEQUALIS_I32 (c2.unica, census.unica);
-        CREDO_AEQUALIS_I32 (c2.versio, (i32)ORATIO_VOCABULARIUM_VERSIO);
-        CREDO_VERUM (_aequalis(c2.fons,
-            "mk270/whitakers-words@1f2f0fb0"));
-        truncata          = commissa;
-        truncata.mensura  = truncata.mensura - (i32)100;
-        CREDO_FALSUM (oratio_vocabularium_recensere(piscina, truncata,
-            &c2,
-            &vitium));
-        imprimere("  truncata: %s @%d\n", vitium.causa,
-            (integer)vitium.offset);
-        mutata = _copia(piscina, commissa);
-        mutata.datum[mutata.mensura / (i32)II] =
-            (i8)(mutata.datum[mutata.mensura / (i32)II] ^ 0x01);
-        CREDO_FALSUM (_aequalis(oratio_vocabularium_sigillum(piscina,
-            mutata),
-            SIGILLUM_PINNA));
+        redde;
     }
+    sprintf(via, "%s/oratio/vocabularium/la.bin", f->radix);
+    (vacuum)_plagulam_legere(piscina, via, &commissa);
+    ante = clock();
+    sana = oratio_vocabularium_recensere(piscina, commissa, &c2,
+        &vitium);
+    post = clock();
+    CREDO_VERUM (sana);
+    imprimere("  recensio %.1f ms\n",
+        1000.0 * (duplex)(post - ante) / (duplex)CLOCKS_PER_SEC);
+    CREDO_AEQUALIS_I32 (c2.stirpes, f->census.stirpes);
+    CREDO_AEQUALIS_I32 (c2.flexiones, f->census.flexiones);
+    CREDO_AEQUALIS_I32 (c2.additamenta, f->census.additamenta);
+    CREDO_AEQUALIS_I32 (c2.unica, f->census.unica);
+    CREDO_AEQUALIS_I32 (c2.versio, (i32)ORATIO_VOCABULARIUM_VERSIO);
+    CREDO_VERUM (_aequalis(c2.fons,
+        "mk270/whitakers-words@1f2f0fb0"));
+    truncata          = commissa;
+    truncata.mensura  = truncata.mensura - (i32)100;
+    CREDO_FALSUM (oratio_vocabularium_recensere(piscina, truncata,
+        &c2,
+        &vitium));
+    imprimere("  truncata: %s @%d\n", vitium.causa,
+        (integer)vitium.offset);
+    mutata = _copia(piscina, commissa);
+    mutata.datum[mutata.mensura / (i32)II] =
+        (i8)(mutata.datum[mutata.mensura / (i32)II] ^ 0x01);
+    CREDO_FALSUM (_aequalis(oratio_vocabularium_sigillum(piscina,
+        mutata),
+        SIGILLUM_PINNA));
+}
 
-    imprimere("\n--- V. Assertio columnarum: fontes mutati sistunt ---\n");
+interior vacuum
+_columnas_probare (
+    CredoContextus* c)
+{
+    constans FixuraVocabularii* fixura =
+        (constans FixuraVocabularii*)c->suita;
+                     Piscina* piscina = c->piscina;
+    OratioVocabulariumVitium  vitium;
+    OratioVocabulariumFontes  f2;
+                      chorda  ex;
+                         s32  sedes;
+
+    si (fixura == NIHIL)
     {
-        OratioVocabulariumFontes f2 = fontes;
-                          chorda ex;
-                             s32 sedes;
+        redde;
+    }
+    f2 = fixura->fontes;
 
-        /* DICTLINE: spatium post stirpem primam lineae I sublatum */
-        f2.dictline                 = _copia(piscina, fontes.dictline);
-        f2.dictline.datum[(i32)18]  = 'x';
+    /* DICTLINE: spatium post stirpem primam lineae I sublatum */
+    f2.dictline = _copia(piscina,
+        fixura->fontes.dictline);
+    f2.dictline.datum[(i32)18] = 'x';
+    CREDO_FALSUM (oratio_vocabularium_coquere(piscina, &f2,
+        "probatio",
+        &ex, NIHIL, &vitium));
+    CREDO_VERUM (strcmp(vitium.plagula, "DICTLINE.GEN")
+        == ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (vitium.linea, I);
+    imprimere("  DICTLINE: %s:%d %s\n", vitium.plagula,
+        (integer)vitium.linea, vitium.causa);
+
+    /* INFLECTS: mensura finis recordi primi 1 -> 2 ("1 1 a" -> "1 2 a") */
+    f2           = fixura->fontes;
+    f2.inflects  = _copia(piscina, fixura->fontes.inflects);
+    sedes        = _invenire(f2.inflects, "NOM S C  1 1 a");
+    CREDO_VERUM (sedes >= ZEPHYRUM);
+    si (sedes >= ZEPHYRUM)
+    {
+                    f2.inflects.datum[(i32)sedes + (i32)11] = '2';
+
         CREDO_FALSUM (oratio_vocabularium_coquere(piscina, &f2,
             "probatio",
             &ex, NIHIL, &vitium));
-        CREDO_VERUM (strcmp(vitium.plagula, "DICTLINE.GEN")
+        CREDO_VERUM (strcmp(vitium.plagula, "INFLECTS.LAT")
             == ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (vitium.linea, I);
-        imprimere("  DICTLINE: %s:%d %s\n", vitium.plagula,
-            (integer)vitium.linea, vitium.causa);
-
-        /* INFLECTS: mensura finis recordi primi 1 -> 2 ("1 1 a" -> "1 2 a") */
-        f2           = fontes;
-        f2.inflects  = _copia(piscina, fontes.inflects);
-        sedes        = _invenire(f2.inflects, "NOM S C  1 1 a");
-        CREDO_VERUM (sedes >= ZEPHYRUM);
-        si (sedes >= ZEPHYRUM)
-        {
-                        f2.inflects.datum[(i32)sedes + (i32)11] = '2';
-
-            CREDO_FALSUM (oratio_vocabularium_coquere(piscina, &f2,
-                "probatio",
-                &ex, NIHIL, &vitium));
-            CREDO_VERUM (strcmp(vitium.plagula, "INFLECTS.LAT")
-                == ZEPHYRUM);
-            CREDO_MAIOR_I32 (vitium.linea, ZEPHYRUM);
-            imprimere("  INFLECTS: %s:%d %s\n", vitium.plagula,
-                (integer)vitium.linea, vitium.causa);
-        }
-
-        /* ADDONS: linea ultima (sensus) amota */
-        f2         = fontes;
-        f2.addons  = fontes.addons;
-        dum (   f2.addons.mensura > ZEPHYRUM
-             && (f2.addons.datum[f2.addons.mensura - I] == '\n'
-                || f2.addons.datum[f2.addons.mensura - I] == '\r'))
-        {
-            f2.addons.mensura = f2.addons.mensura - I;
-        }
-        dum (   f2.addons.mensura > ZEPHYRUM
-             && f2.addons.datum[f2.addons.mensura - I] != '\n')
-        {
-            f2.addons.mensura = f2.addons.mensura - I;
-        }
-        CREDO_FALSUM (oratio_vocabularium_coquere(piscina, &f2,
-            "probatio",
-            &ex, NIHIL, &vitium));
-        CREDO_VERUM (strcmp(vitium.plagula, "ADDONS.LAT") == ZEPHYRUM);
-        imprimere("  ADDONS: %s:%d %s\n", vitium.plagula,
-            (integer)vitium.linea, vitium.causa);
-
-        /* UNIQUES: forma prima duplex ("agantur" -> "aga tur") */
-        f2                          = fontes;
-        f2.uniques                  = _copia(piscina, fontes.uniques);
-        f2.uniques.datum[(i32)III]  = ' ';
-        CREDO_FALSUM (oratio_vocabularium_coquere(piscina, &f2,
-            "probatio",
-            &ex, NIHIL, &vitium));
-        CREDO_VERUM (strcmp(vitium.plagula, "UNIQUES.LAT") == ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (vitium.linea, I);
-        imprimere("  UNIQUES: %s:%d %s\n", vitium.plagula,
+        CREDO_MAIOR_I32 (vitium.linea, ZEPHYRUM);
+        imprimere("  INFLECTS: %s:%d %s\n", vitium.plagula,
             (integer)vitium.linea, vitium.causa);
     }
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+    /* ADDONS: linea ultima (sensus) amota */
+    f2         = fixura->fontes;
+    f2.addons  = fixura->fontes.addons;
+    dum (   f2.addons.mensura > ZEPHYRUM
+         && (f2.addons.datum[f2.addons.mensura - I] == '\n'
+            || f2.addons.datum[f2.addons.mensura - I] == '\r'))
     {
-        b32 praeteritus = credo_omnia_praeterierunt();
-
-        credo_claudere();
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
+        f2.addons.mensura = f2.addons.mensura - I;
     }
+    dum (   f2.addons.mensura > ZEPHYRUM
+         && f2.addons.datum[f2.addons.mensura - I] != '\n')
+    {
+        f2.addons.mensura = f2.addons.mensura - I;
+    }
+    CREDO_FALSUM (oratio_vocabularium_coquere(piscina, &f2,
+        "probatio",
+        &ex, NIHIL, &vitium));
+    CREDO_VERUM (strcmp(vitium.plagula, "ADDONS.LAT") == ZEPHYRUM);
+    imprimere("  ADDONS: %s:%d %s\n", vitium.plagula,
+        (integer)vitium.linea, vitium.causa);
+
+    /* UNIQUES: forma prima duplex ("agantur" -> "aga tur") */
+    f2 = fixura->fontes;
+    f2.uniques = _copia(piscina,
+        fixura->fontes.uniques);
+    f2.uniques.datum[(i32)III] = ' ';
+    CREDO_FALSUM (oratio_vocabularium_coquere(piscina, &f2,
+        "probatio",
+        &ex, NIHIL, &vitium));
+    CREDO_VERUM (strcmp(vitium.plagula, "UNIQUES.LAT") == ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (vitium.linea, I);
+    imprimere("  UNIQUES: %s:%d %s\n", vitium.plagula,
+        (integer)vitium.linea, vitium.causa);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. Fontes venditi (oratio/vocabularium/la)", _fontes_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "II. Coctio", _coctionem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III. Tabula commissa == coctio; sigillum",
+        _tabulam_commissam_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IV. Recensio tabulae commissae", _tabulam_recensere, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "V. Assertio columnarum: fontes mutati sistunt",
+        _columnas_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("oratio_vocabularium", SECTIONES,
+        _suitam_parare, NIHIL);
 }

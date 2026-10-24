@@ -102,26 +102,16 @@ _ullus_gradus_primi (
     redde FALSUM;
 }
 
-integer
-principale (
-    vacuum)
+interior vacuum
+_ambo_probare (
+    CredoContextus* c)
 {
-                b32  praeteritus;
-            Piscina* piscina;
- constans character* causa = NIHIL;
-
-    piscina = piscina_generare_dynamicum("probatio_facies", 4194304);
-    si (piscina == NIHIL)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
+               Piscina* piscina  = c->piscina;
+    constans character* causa    = NIHIL;
 
     {
         Xar* d;
 
-        imprimere("\n--- I. Gradus AMBO per faciem unam ---\n");
         d = crusta_diagnostica_omnia(piscina, FONS_UTERQUE,
                 (i32)strlen(FONS_UTERQUE), NIHIL, &causa);
         si (causa != NIHIL)
@@ -136,11 +126,18 @@ principale (
         /* bracchium auxiliare inventum non est */
         CREDO_AEQUALIS_S32 (_quot(d, "lint:nt-negata"), ZEPHYRUM);
     }
+}
+
+interior vacuum
+_textum_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    constans character* causa;
 
     {
         chorda textus;
 
-        imprimere("\n--- II. Gradus I: textus utrumque pingit ---\n");
         causa   = NIHIL;
         textus  = crusta_diagnostica_textus(piscina, "probatio.sh",
                       FONS_UTERQUE, (i32)strlen(FONS_UTERQUE), VERUM,
@@ -155,11 +152,18 @@ principale (
         CREDO_CHORDA_CONTINET (textus,
             chorda_ex_literis("^", piscina));
     }
+}
+
+interior vacuum
+_excusationem_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    constans character* causa;
 
     {
         Xar* d;
 
-        imprimere("\n--- III. Excusatio gradum II SOLUM tollit ---\n");
         causa  = NIHIL;
         d      = crusta_diagnostica_omnia(piscina, FONS_EXCUSATUS,
                      (i32)strlen(FONS_EXCUSATUS), NIHIL, &causa);
@@ -169,11 +173,18 @@ principale (
         /* gradus I MANET - asymmetria est porta */
         CREDO_VERUM (_ullus_gradus_primi(d));
     }
+}
+
+interior vacuum
+_negatum_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    constans character* causa;
 
     {
         Xar* d;
 
-        imprimere("\n--- IV. '-nt' negatum: subtractio ---\n");
         causa  = NIHIL;
         d      = crusta_diagnostica_omnia(piscina, FONS_NEGATUS,
                      (i32)strlen(FONS_NEGATUS), NIHIL, &causa);
@@ -182,12 +193,19 @@ principale (
         CREDO_AEQUALIS_S32 (_quot(d, "lint:nt-aequalitas"), ZEPHYRUM);
         CREDO_AEQUALIS_S32 (_quot(d, "lint:nt-negata"), ZEPHYRUM);
     }
+}
+
+interior vacuum
+_crudum_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    constans character* causa;
 
     {
                     Xar* d;
          CrustaOptiones  optiones;
 
-        imprimere("\n--- V. 'crudum': bracchia AMBO apparent ---\n");
         memset(&optiones, ZEPHYRUM, magnitudo(optiones));
         optiones.crudum  = VERUM;
         causa            = NIHIL;
@@ -201,12 +219,19 @@ principale (
         CREDO_AEQUALIS_S32 (_quot(d, "lint:nt-aequalitas"), (s32)I);
         CREDO_AEQUALIS_S32 (_quot(d, "lint:nt-negata"), (s32)I);
     }
+}
+
+interior vacuum
+_absentem_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    constans character* causa;
 
     {
                     Xar* d;
          CrustaOptiones  optiones;
 
-        imprimere("\n--- VI. Lintrum absens REFUTATUR nominatim ---\n");
         memset(&optiones, ZEPHYRUM, magnitudo(optiones));
         optiones.lintrum  = "crusta/lintrum-quod-non-est";
         causa             = NIHIL;
@@ -222,11 +247,18 @@ principale (
                 != NIHIL);
         }
     }
+}
+
+interior vacuum
+_clausuram_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    constans character* causa;
 
     {
         Xar* d;
 
-        imprimere("\n--- VII. Clausura propria: lintrum MUNDUM ---\n");
         causa  = NIHIL;
         d      = crusta_diagnostica_omnia(piscina, FONS_CLAUSURA,
                      (i32)strlen(FONS_CLAUSURA), NIHIL, &causa);
@@ -269,10 +301,28 @@ principale (
         }
         CREDO_AEQUALIS_I32 (xar_numerus(d), ZEPHYRUM);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. Gradus AMBO per faciem unam",
+        _ambo_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "II. Gradus I: textus utrumque pingit",
+        _textum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III. Excusatio gradum II SOLUM tollit",
+        _excusationem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IV. '-nt' negatum: subtractio",
+        _negatum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "V. 'crudum': bracchia AMBO apparent",
+        _crudum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VI. Lintrum absens REFUTATUR nominatim",
+        _absentem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VII. Clausura propria: lintrum MUNDUM",
+        _clausuram_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("crusta_facies", SECTIONES);
 }

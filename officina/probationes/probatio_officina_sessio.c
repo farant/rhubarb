@@ -49,41 +49,43 @@ _chorda_continet (
     redde FALSUM;
 }
 
-s32
-principale (vacuum)
+/* radix ex ambitu (olim in praeludio principalis) */
+interior constans character*
+_radix (vacuum)
 {
-               Piscina* piscina;
-    constans character* radix;
+    constans character* radix = getenv("RHUBARB_RADIX");
+
+    redde radix != NIHIL ? radix : ".";
+}
+
+/* configuratio communis sessionum (olim in praeludio principalis):
+ * sectio quaeque suam reficit - nulla fixura, nihil commune */
+interior vacuum
+_configurationem_parare (
+    SessioConfiguratio* cfg)
+{
+    memset(cfg, ZEPHYRUM, magnitudo(SessioConfiguratio));
+    cfg->radix           = _radix();
+    cfg->cum_posix       = FALSUM;
+    cfg->sine_capitibus  = VERUM;
+}
+
+
+/* ==================================================
+ * PROBARE: creatio + initus_completus (librae)
+ * ================================================== */
+
+interior vacuum
+_initum_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
     SessioConfiguratio  cfg;
 
-    piscina = piscina_generare_dynamicum("probatio_sessio",
-        134217728);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    radix = getenv("RHUBARB_RADIX");
-    si (radix == NIHIL)
-    {
-        radix = ".";
-    }
-    memset(&cfg, ZEPHYRUM, magnitudo(SessioConfiguratio));
-    cfg.radix           = radix;
-    cfg.cum_posix       = FALSUM;
-    cfg.sine_capitibus  = VERUM;
-
-
-    /* ========================================================
-     * PROBARE: creatio + initus_completus (librae)
-     * ======================================================== */
-
+    _configurationem_parare(&cfg);
     {
         Sessio* s;
 
-        imprimere("\n--- Probans creatio + initus_completus ---\n");
         s = sessio_creare(piscina, &cfg);
         CREDO_NON_NIHIL(s);
         CREDO_AEQUALIS_I32(sessio_turni_numerus(s), ZEPHYRUM);
@@ -103,17 +105,25 @@ principale (vacuum)
 
         sessio_destruere(s);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: classificatio + acceptatio + reparatio
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: classificatio + acceptatio + reparatio
+ * ================================================== */
 
+interior vacuum
+_genus_turni_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    SessioConfiguratio  cfg;
+
+    _configurationem_parare(&cfg);
     {
                Sessio* s;
         SessioRelatum  r;
 
-        imprimere("\n--- Probans classificatio + reparatio ---\n");
         s = sessio_creare(piscina, &cfg);
         CREDO_NON_NIHIL(s);
 
@@ -181,18 +191,26 @@ principale (vacuum)
 
         sessio_destruere(s);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: reiectio (identificator ignotus + syntaxis +
-     * multi-elementa) - documentum immotum
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: reiectio (identificator ignotus + syntaxis +
+ * multi-elementa) - documentum immotum
+ * ================================================== */
 
+interior vacuum
+_reiectionem_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    SessioConfiguratio  cfg;
+
+    _configurationem_parare(&cfg);
     {
                Sessio* s;
         SessioRelatum  r;
 
-        imprimere("\n--- Probans reiectio ---\n");
         s = sessio_creare(piscina, &cfg);
         CREDO_NON_NIHIL(s);
 
@@ -235,17 +253,25 @@ principale (vacuum)
 
         sessio_destruere(s);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: positiones multi-lineares (circuitus C3)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: positiones multi-lineares (circuitus C3)
+ * ================================================== */
 
+interior vacuum
+_positiones_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    SessioConfiguratio  cfg;
+
+    _configurationem_parare(&cfg);
     {
                Sessio* s;
         SessioRelatum  r;
 
-        imprimere("\n--- Probans positiones multi-lineares ---\n");
         s = sessio_creare(piscina, &cfg);
         CREDO_NON_NIHIL(s);
 
@@ -263,17 +289,25 @@ principale (vacuum)
 
         sessio_destruere(s);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: religatio in loco (substitutio)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: religatio in loco (substitutio)
+ * ================================================== */
 
+interior vacuum
+_religationem_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    SessioConfiguratio  cfg;
+
+    _configurationem_parare(&cfg);
     {
                Sessio* s;
         SessioRelatum  r;
 
-        imprimere("\n--- Probans religatio in loco ---\n");
         s = sessio_creare(piscina, &cfg);
         CREDO_NON_NIHIL(s);
 
@@ -297,17 +331,25 @@ principale (vacuum)
 
         sessio_destruere(s);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: redefinitio reicit ad lineam veterem (C2)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: redefinitio reicit ad lineam veterem (C2)
+ * ================================================== */
 
+interior vacuum
+_lineam_veterem_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    SessioConfiguratio  cfg;
+
+    _configurationem_parare(&cfg);
     {
                Sessio* s;
         SessioRelatum  r;
 
-        imprimere("\n--- Probans redefinitio ad lineam veterem ---\n");
         s = sessio_creare(piscina, &cfg);
         CREDO_NON_NIHIL(s);
 
@@ -357,18 +399,26 @@ principale (vacuum)
 
         sessio_destruere(s);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE B1: persistentia globalium (scriptio-N/lectio-N+1)
-     * - LACUNA exploratoris mundi: designata M2, probata HIC
-     * ======================================================== */
+/* ==================================================
+ * PROBARE B1: persistentia globalium (scriptio-N/lectio-N+1)
+ * - LACUNA exploratoris mundi: designata M2, probata HIC
+ * ================================================== */
 
+interior vacuum
+_globalia_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    SessioConfiguratio  cfg;
+
+    _configurationem_parare(&cfg);
     {
                Sessio* s;
         SessioRelatum  r;
 
-        imprimere("\n--- Probans persistentia globalium (B1) ---\n");
         s = sessio_creare(piscina, &cfg);
         CREDO_NON_NIHIL(s);
 
@@ -395,17 +445,25 @@ principale (vacuum)
 
         sessio_destruere(s);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE B3: recusationes (scripturae + tempus)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE B3: recusationes (scripturae + tempus)
+ * ================================================== */
 
+interior vacuum
+_recusationes_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    SessioConfiguratio  cfg;
+
+    _configurationem_parare(&cfg);
     {
                Sessio* s;
         SessioRelatum  r;
 
-        imprimere("\n--- Probans recusationes (B3) ---\n");
         s = sessio_creare(piscina, &cfg);
         CREDO_NON_NIHIL(s);
 
@@ -424,17 +482,25 @@ principale (vacuum)
 
         sessio_destruere(s);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE B4: historia mutata (redefinitio effusionem mutat)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE B4: historia mutata (redefinitio effusionem mutat)
+ * ================================================== */
 
+interior vacuum
+_historiam_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    SessioConfiguratio  cfg;
+
+    _configurationem_parare(&cfg);
     {
                Sessio* s;
         SessioRelatum  r;
 
-        imprimere("\n--- Probans historia mutata (B4) ---\n");
         s = sessio_creare(piscina, &cfg);
         CREDO_NON_NIHIL(s);
 
@@ -460,18 +526,26 @@ principale (vacuum)
 
         sessio_destruere(s);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE B5: C8 - vocatio implicita ACCIPITUR iudicio,
-     * DECIPULA in replicatione -> reiectio + restitutio mundi
-     * ======================================================== */
+/* ==================================================
+ * PROBARE B5: C8 - vocatio implicita ACCIPITUR iudicio,
+ * DECIPULA in replicatione -> reiectio + restitutio mundi
+ * ================================================== */
 
+interior vacuum
+_decipulam_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    SessioConfiguratio  cfg;
+
+    _configurationem_parare(&cfg);
     {
                Sessio* s;
         SessioRelatum  r;
 
-        imprimere("\n--- Probans C8 decipula + restitutio (B5) ---\n");
         s = sessio_creare(piscina, &cfg);
         CREDO_NON_NIHIL(s);
 
@@ -518,21 +592,29 @@ principale (vacuum)
 
         sessio_destruere(s);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE B7: bibliotheca vera (piscina demissa in mundum)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE B7: bibliotheca vera (piscina demissa in mundum)
+ * ================================================== */
 
+interior vacuum
+_bibliothecam_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    SessioConfiguratio  cfg;
+
+    _configurationem_parare(&cfg);
     {
                                Sessio* s;
                         SessioRelatum  r;
                    SessioConfiguratio  cfg_bibliothecae;
-        hic_manens constans character* plagulae[] = {
+                   constans character* plagulae[] = {
             "lib/piscina.c"
         };
 
-        imprimere("\n--- Probans bibliotheca vera (B7) ---\n");
         cfg_bibliothecae = cfg;
         cfg_bibliothecae.sine_capitibus = FALSUM;
         cfg_bibliothecae.cum_posix = VERUM;   /* piscina.c = mmap */
@@ -558,18 +640,26 @@ principale (vacuum)
 
         sessio_destruere(s);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE C: transcripta formata (vectis C - formator machinae)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE C: transcripta formata (vectis C - formator machinae)
+ * ================================================== */
 
+interior vacuum
+_transcripta_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    SessioConfiguratio  cfg;
+
+    _configurationem_parare(&cfg);
     {
                Sessio* s;
         SessioRelatum  r;
                chorda  f;
 
-        imprimere("\n--- Probans transcripta formata (C) ---\n");
         s = sessio_creare(piscina, &cfg);
         CREDO_NON_NIHIL(s);
 
@@ -631,18 +721,26 @@ principale (vacuum)
 
         sessio_destruere(s);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE C2: historia mutata formata + sessio plena
-     * ======================================================== */
+/* ==================================================
+ * PROBARE C2: historia mutata formata + sessio plena
+ * ================================================== */
 
+interior vacuum
+_historiam_formatam_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    SessioConfiguratio  cfg;
+
+    _configurationem_parare(&cfg);
     {
                Sessio* s;
         SessioRelatum  r;
                chorda  f;
 
-        imprimere("\n--- Probans historia mutata formata (C2) ---\n");
         s = sessio_creare(piscina, &cfg);
         CREDO_NON_NIHIL(s);
 
@@ -664,18 +762,26 @@ principale (vacuum)
 
         sessio_destruere(s);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE D1: recusatio stdin (familia tertia - vectis M4b)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE D1: recusatio stdin (familia tertia - vectis M4b)
+ * ================================================== */
 
+interior vacuum
+_recusationem_ingressus_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    SessioConfiguratio  cfg;
+
+    _configurationem_parare(&cfg);
     {
                Sessio* s;
         SessioRelatum  r;
                chorda  f;
 
-        imprimere("\n--- Probans recusatio stdin (D1) ---\n");
         s = sessio_creare(piscina, &cfg);
         CREDO_NON_NIHIL(s);
 
@@ -689,20 +795,30 @@ principale (vacuum)
 
         sessio_destruere(s);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE D2: scriptum #! (fixum verum, bibliothecae II,
-     * scripturae verae) - VECTIS M4b
-     * ======================================================== */
+/* ==================================================
+ * PROBARE D2: scriptum #! (fixum verum, bibliothecae II,
+ * scripturae verae) - VECTIS M4b
+ * ================================================== */
 
+interior vacuum
+_scriptum_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    SessioConfiguratio  cfg;
+    constans character* radix = _radix();
+
+    _configurationem_parare(&cfg);
     {
                                Sessio* s;
                         SessioRelatum  r;
                    SessioConfiguratio  cfg_scripti;
         /* filum + dependentiae: scriptum per canalem lectionum
          * scribit/legit (examen 96 fopen crudum recusat) */
-        hic_manens constans character* plagulae_scripti[] = {
+                   constans character* plagulae_scripti[] = {
             "lib/piscina.c", "lib/chorda.c", "lib/chorda_aedificator.c",
             "lib/lectiones.c", "lib/filum.c"
         };
@@ -710,7 +826,6 @@ principale (vacuum)
            s32 recepti;
            s64 codex = -I;
 
-        imprimere("\n--- Probans scriptum #! (D2) ---\n");
         cfg_scripti = cfg;
         cfg_scripti.sine_capitibus = FALSUM;
         cfg_scripti.cum_posix = VERUM;
@@ -763,13 +878,22 @@ principale (vacuum)
         }
         sessio_destruere(s);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE D3: circulus serva/aperi (documentum -> sessio
-     * recens -> documentum idem) - VECTIS M4b
-     * ======================================================== */
+/* ==================================================
+ * PROBARE D3: circulus serva/aperi (documentum -> sessio
+ * recens -> documentum idem) - VECTIS M4b
+ * ================================================== */
 
+interior vacuum
+_circulum_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    SessioConfiguratio  cfg;
+
+    _configurationem_parare(&cfg);
     {
                Sessio* s_a;
                Sessio* s_b;
@@ -778,7 +902,6 @@ principale (vacuum)
                chorda  doc_b;
                   s32  recepti;
 
-        imprimere("\n--- Probans circulus serva/aperi (D3) ---\n");
         s_a = sessio_creare(piscina, &cfg);
         CREDO_NON_NIHIL(s_a);
         r = sessio_turnum_offerre(s_a, _ch("integer x = 5;",
@@ -811,13 +934,23 @@ principale (vacuum)
 
         sessio_destruere(s_b);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE D4: exportatio stricta compilat (clang vexillis
-     * domus) - VECTIS M4b
-     * ======================================================== */
+/* ==================================================
+ * PROBARE D4: exportatio stricta compilat (clang vexillis
+ * domus) - VECTIS M4b
+ * ================================================== */
 
+interior vacuum
+_documentum_strictum_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    SessioConfiguratio  cfg;
+    constans character* radix = _radix();
+
+    _configurationem_parare(&cfg);
     {
                Sessio* s;
         SessioRelatum  r;
@@ -826,7 +959,6 @@ principale (vacuum)
             character  imperium[2048];
         FILE* pl;
 
-        imprimere("\n--- Probans exportatio stricta (D4) ---\n");
         s = sessio_creare(piscina, &cfg);
         CREDO_NON_NIHIL(s);
         r = sessio_turnum_offerre(s, _ch("integer x = 5;", piscina));
@@ -862,18 +994,26 @@ principale (vacuum)
 
         sessio_destruere(s);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: #include per praebenda (capita ambulata)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: #include per praebenda (capita ambulata)
+ * ================================================== */
 
+interior vacuum
+_capita_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    SessioConfiguratio  cfg;
+
+    _configurationem_parare(&cfg);
     {
                     Sessio* s;
              SessioRelatum  r;
         SessioConfiguratio  cfg_capita;
 
-        imprimere("\n--- Probans #include per praebenda ---\n");
         cfg_capita = cfg;
         cfg_capita.sine_capitibus = FALSUM;
         s = sessio_creare(piscina, &cfg_capita);
@@ -897,12 +1037,50 @@ principale (vacuum)
 
         sessio_destruere(s);
     }
+}
 
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "creatio + initus_completus", _initum_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "classificatio + reparatio", _genus_turni_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "reiectio", _reiectionem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "positiones multi-lineares", _positiones_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "religatio in loco", _religationem_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "redefinitio ad lineam veterem", _lineam_veterem_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "persistentia globalium (B1)", _globalia_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "recusationes (B3)", _recusationes_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "historia mutata (B4)", _historiam_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "C8 decipula + restitutio (B5)", _decipulam_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "bibliotheca vera (B7)", _bibliothecam_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "transcripta formata (C)", _transcripta_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "historia mutata formata (C2)", _historiam_formatam_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "recusatio stdin (D1)", _recusationem_ingressus_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "scriptum #! (D2)", _scriptum_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "circulus serva/aperi (D3)", _circulum_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "exportatio stricta (D4)", _documentum_strictum_probare, NIHIL,
+        NIHIL,
+        NIHIL, NIHIL },
+    { "#include per praebenda", _capita_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-        credo_imprimere_compendium();
-        credo_claudere();
-        redde praeteritus ? ZEPHYRUM : I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("officina_sessio", SECTIONES);
 }

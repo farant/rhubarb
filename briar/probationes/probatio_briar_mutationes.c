@@ -26,30 +26,36 @@ interior constans character* CHARTA =
     "\n"
     "## v1\n";
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: versio ex capite supremo
+ * ================================================== */
+
+interior vacuum
+_versionem_probare (
+    CredoContextus* c)
 {
-     Piscina* pn;
-         b32  praeteritus;
-      chorda  c;
+    Piscina* pn = c->piscina;
+     chorda  charta;
 
-    pn = piscina_generare_dynamicum("probatio_briar_mutationes",
-        65536);
-    si (!pn)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(pn);
-    c = chorda_ex_literis(CHARTA, pn);
-
-    imprimere("\n--- Probans versionem ex capite supremo ---\n");
-    CREDO_AEQUALIS_I32 (briar_mutationes_versio(c), XII);
-    CREDO_CHORDA_AEQUALIS_LITERIS (briar_mutationes_caput(c),
+    charta = chorda_ex_literis(CHARTA, pn);
+    CREDO_AEQUALIS_I32 (briar_mutationes_versio(charta), XII);
+    CREDO_CHORDA_AEQUALIS_LITERIS (briar_mutationes_caput(charta),
         "v12 \xe2\x80\x94 2026-10-01");
-    CREDO_VERUM (briar_mutationes_ordo_rectus(c));
+    CREDO_VERUM (briar_mutationes_ordo_rectus(charta));
+}
 
-    imprimere("\n--- Probans capita prava ---\n");
+
+/* ==================================================
+ * PROBARE: capita prava
+ * ================================================== */
+
+interior vacuum
+_capita_prava_probare (
+    CredoContextus* c)
+{
+    Piscina* pn = c->piscina;
+
     /* 'vN' sine spatio post numerum non caput versionis */
     CREDO_AEQUALIS_I32 (briar_mutationes_versio(chorda_ex_literis(
         "## v2x\n## v1\n", pn)), I);
@@ -63,10 +69,23 @@ principale (vacuum)
     /* v0 non versio */
     CREDO_AEQUALIS_I32 (briar_mutationes_versio(chorda_ex_literis(
         "## v0\n", pn)), ZEPHYRUM);
+}
 
-    imprimere("\n--- Probans mutationes ineditas ---\n");
+
+/* ==================================================
+ * PROBARE: mutationes ineditae
+ * ================================================== */
+
+interior vacuum
+_ineditas_probare (
+    CredoContextus* c)
+{
+    Piscina* pn = c->piscina;
+     chorda  charta;
+
+    charta = chorda_ex_literis(CHARTA, pn);
     /* CHARTA: una sub inedita */
-    CREDO_AEQUALIS_I32 (briar_mutationes_inedita(c), I);
+    CREDO_AEQUALIS_I32 (briar_mutationes_inedita(charta), I);
     CREDO_AEQUALIS_I32 (briar_mutationes_inedita(chorda_ex_literis(
         "## inedita\n\n- a\n  continuata\n- b\n\n## v1\n- c\n", pn)),
         II);
@@ -77,8 +96,19 @@ principale (vacuum)
     /* ad finem sine capite sequente */
     CREDO_AEQUALIS_I32 (briar_mutationes_inedita(chorda_ex_literis(
         "## inedita\n- a", pn)), I);
+}
 
-    imprimere("\n--- Probans ordinem ---\n");
+
+/* ==================================================
+ * PROBARE: ordo capitum
+ * ================================================== */
+
+interior vacuum
+_ordinem_probare (
+    CredoContextus* c)
+{
+    Piscina* pn = c->piscina;
+
     /* ascendens, aequalis, saltus sursum: pravi */
     CREDO_FALSUM (briar_mutationes_ordo_rectus(chorda_ex_literis(
         "## v1\n## v2\n", pn)));
@@ -88,9 +118,21 @@ principale (vacuum)
         "## v3\n## v1\n## v2\n", pn)));
     CREDO_VERUM (briar_mutationes_ordo_rectus(chorda_ex_literis(
         "## v1", pn)));
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(pn);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "versionem ex capite supremo", _versionem_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "capita prava", _capita_prava_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "mutationes ineditas", _ineditas_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "ordinem", _ordinem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("briar_mutationes", SECTIONES);
 }

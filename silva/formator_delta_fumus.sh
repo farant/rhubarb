@@ -9,7 +9,7 @@
 #   IV  -delta super plagulam extra git (novam) -> basis absens,
 #       omnia nova, exitus 1
 # Usage: ./silva/formator_delta_fumus.sh      exit 0 sanum | 1 fractum
-# <porta titulus="formator-delta" currit="silva/instrumenta/principalia/formator.c"/>
+# <porta titulus="formator-delta" currit="silva/instrumenta/principalia/formator.c" legit="include/*"/>
 
 set -u
 RADIX="$(git rev-parse --show-toplevel)" || exit 2

@@ -1638,3 +1638,43 @@ backslash) fires the VALUE assertion on depths 2 and 3; writer plant
 deliberately not sufficient as a test case — stripping all and
 stripping one agree there, which is exactly why the ladder needs
 depths 2 and 3 to be pinned.
+
+## 2026-10-22 — attributa pigra (B, half one)
+
+An element's `attributa` Xar is now created on its first attribute, not with the element. NIHIL means no attributes. Measurement and reasoning: `materia/fontes/materia_arbor.worklog.md` 2026-10-22 (79% of attribute Xars in the hilarius projection were empty, 64 B header each).
+
+Changed: `stml_elementum_creare` (NIHIL); the tokenizer's `_tok_legere_attributa` (returns NIHIL for an attribute-less tag; it already did on allocation failure and no caller checked); the adders `stml_attributum_addere` / `_addere_chorda` (and `_boolean_addere` through them) create the Xar via `_attributum_novum`, so the long-unused `piscina` parameter now matters (NIHIL piscina on an empty element → FALSUM).
+
+Contract kept: the adders used to refuse any node without a Xar, which in practice meant text/comment/etc. They now refuse `genus != STML_NODUS_ELEMENTUM` explicitly. Every parser site that hands attributes to a node creates an ELEMENTUM, so that is the same set.
+
+Latent bug fixed by this: `stml_duplicare` and the macro copier already produced NIHIL `attributa` for elements without attributes. So `stml_attributum_addere` / `insula_attributum_ponere` on such a copy returned FALSUM silently. Now they add. Covered in probatio_stml section "attributa pigra" (28 assertions incl. the duplicate and parsed-without-attributes cases).
+
+Audit: about 120 NIHIL tests on `->attributa` across 21 files. All but the two adders are read-guards ("NIHIL → no attribute / skip") that stay correct. Readers through `xar_numerus` / `xar_obtinere` take NIHIL already. Mutating xar calls on StmlNodus attributa outside the adders: only copies that create their own Xar first (stml.c duplicate, stml_macros `_nodum_comparandum`, `_dist_dissolvere`), plus insula's `xar_removere_cum_ultimo`, which sits behind a NIHIL guard.
+
+Results: hilarius projection pool 82,980 → 74,387 KiB (-10.4%), and zero empty attribute Xars in all five probe inputs (`build/sonda_partes/sonda_vacua.c`). ASan sweep of all lib suites: 218 clean, the same 3 pre-existing reds (park …Q6TEHK), the same 3 old UBSan sites, 0 ASan reports. Allocation goldens of 7 clients regenerated, every change downward and only `allocationes_arboris` moved (27 rows; up to -115,867 on oratio). silva's golden is unchanged. Plant (old `!nodus->attributa` guard restored in the adder) went red in probatio_stml, probatio_eventus_stml and probatio_norma_stml; reverted, green.
+
+## 2026-10-22 — C measured: StmlNodus field by field
+
+Probe `build/sonda_partes/sonda_nodus.c` (gitignored; args = STML files to parse, plus the built-in hilarius projection) prints each field's offset and size, and the share of nodes per genus where it is non-zero.
+
+Layout: 152 B = 144 B of fields + 8 B padding (4 after `genus`, 4 after `multilinea`). Nothing depends on field order (no positional initializers, no offsetof or memcpy by layout), so a reorder alone gives 144 B.
+
+Built tree (hilarius projection, 296,634 nodes = 59% of the 74 MiB pool): only genus, titulus OR valor (exclusive by genus: elements titulus, text/transclusion valor), attributa (21% of elements), liberi, parens, crudus (12% of elements) and fragmentum/fragmentum_id (3%) are ever non-zero. 96 of the 152 bytes are always zero: all trivia, positions, capture, augmentum, attributum_titulus, multilinea, indentatio, padding.
+
+Parsed trees (aedificatio, gutenberg_index, librarium): linea and positus are always set; spatia_ante and spatia_post are set on 100% of elements; spatia_clausurae on 15–20%; crudus/captio_* 0–15%; multilinea, indentatio, augmentum_clavis, attributum_titulus, clausura_anonyma, fragmentum* 0% in all three.
+
+Field use counts (approx; generic names like genus/titulus/valor/linea include other structs): rare-syntax fields 17–87 uses each in 3–11 files, mostly stml.c and stml_macros.c.
+
+## 2026-10-22 — C/P: small fields narrowed, StmlNodus 144 -> 128 B
+
+`genus`, `captio_directio` (enum values) and the flags `crudus`, `clausura_anonyma`, `fragmentum`, `multilinea` (VERUM/FALSUM) are now `i8`; `captio_numerus` is `i8` too. They sit first in the struct, then the three i32 positions, then the pointers; 5 B of tail padding remain (field sum 123, rounded to pointer alignment 128). No read changed: comparisons, switch and field reads are untouched (i8 promotes to int).
+
+Writes: `-Wconversion` flagged every assignment from a wider variable (8 sites, all in stml.c), so the compiler was the audit. Booleans are normalized, not just cast: `(i8)(x != FALSUM)`. A b32 that holds a non-1 truthy value would otherwise turn into 0 in a byte. Counts and enums get a plain cast.
+
+`captio_numerus` limit (Fran's decision: readability caps it far below 255 anyway): `STML_CAPTIO_NUMERUS_MAXIMUS = CCLV` in stml.h. The tokenizer refuses more via `_tok_captio_nimia`, which returns the existing ERRATUM token, so the parser reports STML_ERROR_SYNTAXIS with a position. It never clamps, since clamping would break the byte round trip. There are four counting sites: `<t (>`, `<) t>`, `<# (>` and the bare `<(>` sugar. Section "captio numerus maximus" covers all four at 255 (accepted, bytes round-trip; the bare form normalizes to `<#(>` by design) and at 256 (refused). Plant: the limit widened by 256 makes it red on the 256 refusal.
+
+Size guard ("magnitudo nodi") is now "size == field sum rounded up to pointer alignment" rather than "no padding at all". It is still portable and still red if a field addition opens a hole between pointers.
+
+hilarius projection pool 72,069 -> 67,435 KiB (16 B x nodes). Today's total: 86.1 -> 65.9 MiB (-23%).
+
+The oratio allocation golden moved by +1 on cicero.txt (`allocationes_arboris` 1186508 -> 1186509), its only change. Controlled experiment (probe build/sonda_partes/sonda_oratio_alloc.c): the same code at 128 B gives 1186509, padded to 144 B gives 1186508. So it is size-dependent arena-boundary drift, the same mechanism as html adversarius_2 (html_arbor.worklog.md 2026-10-22). Golden moved by exactly that number.

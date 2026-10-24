@@ -336,7 +336,80 @@ _probare_vestigia_et_undas (
         ordo   = mundi_ordinare_fictas(piscina, actiones, II);
         undae  = fabrica_undas_formare(ordo, piscina);
         CREDO_AEQUALIS_I32(xar_numerus(undae), II);
+
+        /* limes '/': build/opera et build/operae NON concurrunt
+         * (praefixum sine '/' non continet) -> unda una */
+        actiones[0] = mundi_actio_scripta(piscina, "A", "gen_a", "a",
+            "X",
+            "regeneratio");
+        actiones[1] = mundi_actio_scripta(piscina, "D", "gen_d", "a",
+            "Z",
+            "regeneratio");
+        _locum_addere_test(actiones[0]->vestigia, FABRICA_LOCUS_ARBOR,
+            "build/opera", "", piscina);
+        _locum_addere_test(actiones[1]->vestigia, FABRICA_LOCUS_ARBOR,
+            "build/operae", "", piscina);
+        ordo   = mundi_ordinare_fictas(piscina, actiones, II);
+        undae  = fabrica_undas_formare(ordo, piscina);
+        CREDO_AEQUALIS_I32(xar_numerus(undae), I);
     }
+}
+
+/* actiones n disiunctae (exitus X<k>) in ordine */
+interior Xar*
+_actiones_disiunctae (
+         i32  n,
+     Piscina* piscina)
+{
+     FabricaActio** actiones;
+        character   exitus[XXXII];
+        character   titulus[XXXII];
+              i32   k;
+
+    actiones = (FabricaActio**)piscina_allocare(piscina,
+        magnitudo(FabricaActio*) * (memoriae_index)n);
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        sprintf(exitus, "X%d", (integer)k);
+        sprintf(titulus, "A%d", (integer)k);
+        actiones[k] = mundi_actio_scripta(piscina,
+            chorda_ut_cstr(chorda_ex_literis(titulus, piscina),
+            piscina),
+            "gen", "a", chorda_ut_cstr(chorda_ex_literis(exitus,
+            piscina),
+            piscina), "regeneratio");
+    }
+    redde mundi_ordinare_fictas(piscina, actiones, n);
+}
+
+/* UNDAE SINE ALLOCATIONE PER PAR (parcum T77EH4): vestigium semel
+ * per actionem, concursus locorum sine chorda nova - memoria
+ * lineariter crescit (XL actiones < III x XX), olim per par (~IV x) */
+interior vacuum
+_probare_undas_memoria (
+    CredoContextus* c)
+{
+           Piscina* piscina = c->piscina;
+               Xar* ordo_parvus;
+               Xar* ordo_magnus;
+               Xar* undae;
+    memoriae_index  ante;
+    memoriae_index  usus_parvus;
+    memoriae_index  usus_magnus;
+
+    ordo_parvus  = _actiones_disiunctae(XX, piscina);
+    ordo_magnus  = _actiones_disiunctae(XL, piscina);
+    ante         = piscina_summa_usus(piscina);
+    undae        = fabrica_undas_formare(ordo_parvus, piscina);
+    usus_parvus  = piscina_summa_usus(piscina) - ante;
+    CREDO_NON_NIHIL(undae);
+    CREDO_AEQUALIS_I32(xar_numerus(undae), I);
+    ante         = piscina_summa_usus(piscina);
+    undae        = fabrica_undas_formare(ordo_magnus, piscina);
+    usus_magnus  = piscina_summa_usus(piscina) - ante;
+    CREDO_NON_NIHIL(undae);
+    CREDO_AEQUALIS_I32(xar_numerus(undae), I);
+    CREDO_VERUM(usus_magnus < III * usus_parvus);
 }
 
 
@@ -565,6 +638,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "vestigia et undas",
       _probare_vestigia_et_undas,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "undae memoria",
+      _probare_undas_memoria,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "dependentias per locos",
       _probare_dependentias_per_locos,

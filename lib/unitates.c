@@ -44,6 +44,7 @@ nomen structura {
        Xar* vitae;
        Xar* munera;
        Xar* provenientiae;
+       Xar* indoles;
        Xar* linguae;
 } UnitatesIudex;
 
@@ -67,6 +68,7 @@ structura Unitates {
                         Xar* linguae;          /* UnitatesLingua */
                         Xar* iudices;          /* UnitatesIudex */
                         Xar* provenientiae;    /* manu generatum */
+                        Xar* indoles;          /* codex data */
                      chorda  capita;
                      chorda  fontes;
                      chorda  probationes;
@@ -413,8 +415,8 @@ hic_manens constans character* constans _attributa_linguae[] = {
     "titulus", "extensiones", NIHIL
 };
 hic_manens constans character* constans _attributa_iudicis[] = {
-    "titulus", "curae", "vitae", "munera", "provenientiae", "linguae",
-        "descriptio",
+    "titulus", "curae", "vitae", "munera", "provenientiae", "indoles",
+        "linguae", "descriptio",
     NIHIL
 };
 hic_manens constans character* constans _attributa_bibliothecarum[] = {
@@ -651,6 +653,8 @@ _politicam_legere (
             piscina);
         d->provenientiae  = _verba(_necessarium(n, "provenientiae", via,
             k), piscina);
+        d->indoles        = _verba(_necessarium(n, "indoles", via, k),
+            piscina);
         d->linguae        = _verba(_necessarium(n, "linguae", via, k),
             piscina);
         _indicem_iudicare(k, via, n->linea, "cura '", d->curae,
@@ -661,6 +665,8 @@ _politicam_legere (
             u->munerum_tituli);
         _indicem_iudicare(k, via, n->linea, "provenientia '",
             d->provenientiae, u->provenientiae);
+        _indicem_iudicare(k, via, n->linea, "indoles '", d->indoles,
+            u->indoles);
         _indicem_iudicare(k, via, n->linea, "lingua '", d->linguae,
             linguarum_tituli);
     }
@@ -1204,6 +1210,8 @@ unitates_legere (
         UnitatesIudex));
     u->provenientiae   = _verba(chorda_ex_literis("manu generatum",
         piscina), piscina);
+    u->indoles         = _verba(chorda_ex_literis("codex data",
+        piscina), piscina);
     u->capita       = _vacua();
     u->fontes       = _vacua();
     u->probationes  = _vacua();
@@ -1685,8 +1693,10 @@ _respondere (
         }
     }
 
-    r->provenientia.valor = _vacua();
-    r->provenientia.causa = chorda_ex_literis("non lecta", piscina);
+    r->provenientia.valor  = _vacua();
+    r->provenientia.causa  = chorda_ex_literis("non lecta", piscina);
+    r->indoles.valor       = _vacua();
+    r->indoles.causa       = chorda_ex_literis("non lecta", piscina);
 }
 
 /* linea 'numero' (I-basata) textus; vacua si deest */
@@ -1727,13 +1737,47 @@ _declaratio_prima (
             == ZEPHYRUM));
 }
 
-/* SIGNUM GENERATI (lex domus): 'GENERATUM' in linea PRIMA, aut in
- * SECUNDA si prima declaratio est quam forma plagulae primam poscit
- * (<?xml ...?>, <!doctype html>). Positio fixa, non fenestra: caput
- * manu scriptum quod GENERATUM in prosa NOMINAT (include/
- * norma_canon.h linea II) generatum non est. */
+/* octetus verbi (littera, numerus, '_')? */
+interior b32
+_verbi_littera (
+    i8 c)
+{
+    redde (b32)(   (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+                || (c >= '0' && c <= '9') || c == '_');
+}
+
+/* verbum INTEGRUM in linea? (limites: initium, finis, aut octetus
+ * non littera/numerus/'_' - 'DATABASE', 'DATAE', 'TABULA_DATA' non
+ * congruunt) */
+interior b32
+_verbum_integrum (
+                 chorda  linea,
+     constans character* verbum)
+{
+    i32 m = (i32)strlen(verbum);
+    i32 i;
+
+    per (i = ZEPHYRUM; i + m <= linea.mensura; i++)
+    {
+        si (   memcmp(linea.datum + i, verbum, (size_t)m) == ZEPHYRUM
+            && (i == ZEPHYRUM || !_verbi_littera(linea.datum[i - I]))
+            && (   i + m == linea.mensura
+                || !_verbi_littera(linea.datum[i + m])))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* SIGNA (lex domus), linea UNA lecta: GENERATI ('GENERATUM' ->
+ * provenientia) et DATORUM (verbum integrum 'DATA' -> indoles) in
+ * linea PRIMA, aut in SECUNDA si prima declaratio est quam forma
+ * plagulae primam poscit (<?xml ...?>, <!doctype html>). Positio fixa,
+ * non fenestra: caput manu scriptum quod GENERATUM in prosa NOMINAT
+ * (include/norma_canon.h linea II) generatum non est. */
 interior vacuum
-_provenientia_legere (
+_signa_legere (
              constans Unitates* u,
                        Piscina* piscina,
              UnitatisResponsum* r)
@@ -1749,6 +1793,8 @@ _provenientia_legere (
         r->provenientia.causa  =
             chorda_ex_literis("plagula legi nequit",
             piscina);
+        r->indoles.valor = _vacua();
+        r->indoles.causa = r->provenientia.causa;
         redde;
     }
     signata = _linea(textus, I);
@@ -1773,6 +1819,20 @@ _provenientia_legere (
             ? "linea I sine GENERATUM"
             : "linea II (post declarationem) sine GENERATUM", piscina);
     }
+    si (_verbum_integrum(signata, "DATA"))
+    {
+        r->indoles.valor  = chorda_ex_literis("data", piscina);
+        r->indoles.causa  = chorda_ex_literis(numerus == I
+            ? "linea I: DATA"
+            : "linea II (post declarationem): DATA", piscina);
+    }
+    alioquin
+    {
+        r->indoles.valor  = chorda_ex_literis("codex", piscina);
+        r->indoles.causa  = chorda_ex_literis(numerus == I
+            ? "linea I sine DATA"
+            : "linea II (post declarationem) sine DATA", piscina);
+    }
 }
 
 b32
@@ -1788,7 +1848,7 @@ unitates_quid (
         redde FALSUM;
     }
     _respondere(unitates, via, piscina, responsum);
-    _provenientia_legere(unitates, piscina, responsum);
+    _signa_legere(unitates, piscina, responsum);
     redde VERUM;
 }
 
@@ -1831,6 +1891,24 @@ _admittit (
         *causa_out = chorda_aedificator_finire(c);
     }
     redde FALSUM;
+}
+
+/* index iudicis valores notos OMNES continet? */
+interior b32
+_omnes_admittit (
+    Xar* index_iudicis,
+    Xar* noti)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(noti); i++)
+    {
+        si (!_in_indice(index_iudicis, *(chorda*)xar_obtinere(noti, i)))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
 }
 
 UnitatesIudicium
@@ -1894,22 +1972,18 @@ unitates_iudicat (
     {
         redde UNITATES_NON_IUDICAT;
     }
-    /* iudex qui provenientias OMNES admittit plagulam non legit
-     * (lint: manu + generatum - MMC plagulae sine lectione) */
-    per (i = ZEPHYRUM; i < xar_numerus(unitates->provenientiae); i++)
+    /* iudex qui provenientias OMNES et indoles OMNES admittit
+     * plagulam non legit (lint: manu + generatum, codex + data - MMC
+     * plagulae sine lectione); aliter linea signorum SEMEL legitur */
+    si (   !_omnes_admittit(d->provenientiae, unitates->provenientiae)
+        || !_omnes_admittit(d->indoles, unitates->indoles))
     {
-        si (!_in_indice(d->provenientiae, *(chorda*)xar_obtinere(
-                unitates->provenientiae, i)))
-        {
-            frange;
-        }
-    }
-    si (i < xar_numerus(unitates->provenientiae))
-    {
-        _provenientia_legere(unitates, piscina, &r);
-        si (!_admittit(d->provenientiae, r.provenientia,
-                "provenientia", "provenientiae", iudex, piscina,
-                causa_out))
+        _signa_legere(unitates, piscina, &r);
+        si (   !_admittit(d->provenientiae, r.provenientia,
+                   "provenientia", "provenientiae", iudex, piscina,
+                   causa_out)
+            || !_admittit(d->indoles, r.indoles, "indoles", "indoles",
+                   iudex, piscina, causa_out))
         {
             redde UNITATES_NON_IUDICAT;
         }

@@ -1131,7 +1131,14 @@ _probare_tectum (
 
     m = (Mundus*)c->datum;
     CREDO_NECESSE(m && m->volumen);
-    tectum  = (memoriae_index)(XVI * MXXIV);
+    /* tectum = XVI introitus, ex magnitudine introitus MENSA (non
+     * octeti fixi: StmlNodus in 15c01bb4 minor factus est, et XVI KiB
+     * fixa XXXI dies sine eiectione tenebant) */
+    r = registrum_plenum(m, c->piscina, ZEPHYRUM);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_NON_NIHIL(conspectus_legere(r, "dies", diem(I, c->piscina)));
+    CREDO_VERUM(conspectus_summa_usus(r) > ZEPHYRUM);
+    tectum  = (memoriae_index)(XVI * conspectus_summa_usus(r));
     r       = registrum_plenum(m, c->piscina, tectum);
     CREDO_NECESSE_NON_NIHIL(r);
     per (k = I; k <= XXXI; k++)

@@ -1618,6 +1618,80 @@ _probare_fines_segmentorum_forma_clausa (
     }
 }
 
+/* TABULA CRESCENS (2026-10-21): segmenta duo prima in capite, tabula
+ * plena ex piscina solum cum segmentum tertium petitur; caput vacuum
+ * LXIV octeti, non CCXL. Transitio valores segmentorum inscriptorum
+ * servare DEBET. */
+interior vacuum
+_probare_tabulam_crescentem (
+    CredoContextus* c)
+{
+           Piscina* p = c->piscina;
+               Xar* x;
+               Xar* m;
+               Xar* d;
+    memoriae_index  ante;
+               i32  n;
+               b32  integri;
+               i32* e;
+
+    /* caput solum: nulla tabula segmentorum allocata */
+    ante  = piscina_summa_usus(p);
+    x     = xar_creare(p, (i32)sizeof(i32));
+    CREDO_NON_NIHIL (x);
+    CREDO_AEQUALIS_I32 ((i32)(piscina_summa_usus(p) - ante),
+        (i32)magnitudo(Xar));
+    CREDO_AEQUALIS_I32 (x->mensura_tabulae, (i32)XAR_SEGMENTA_INLINEA);
+
+    /* VIII elementa (IV + IV): segmenta inscripta sufficiunt */
+    per (n = ZEPHYRUM; n < VIII; n++)
+    {
+        e = (i32*)xar_addere(x);
+        CREDO_NON_NIHIL (e);
+        *e = n * XI;
+    }
+    CREDO_AEQUALIS_I32 (x->mensura_tabulae, (i32)XAR_SEGMENTA_INLINEA);
+    CREDO_VERUM (x->segmenta == x->segmenta_inlinea);
+
+    /* nonum: segmentum tertium -> tabula plena; priora integra */
+    e = (i32*)xar_addere(x);
+    CREDO_NON_NIHIL (e);
+    *e = VIII * XI;
+    CREDO_AEQUALIS_I32 (x->mensura_tabulae,
+        (i32)XAR_SEGMENTA_ORDINARIA);
+    CREDO_VERUM (x->segmenta != x->segmenta_inlinea);
+    integri = VERUM;
+    per (n = ZEPHYRUM; n < IX; n++)
+    {
+        e = (i32*)xar_obtinere(x, n);
+        si (e == NIHIL || *e != n * XI)
+        { integri = FALSUM;
+        }
+    }
+    CREDO_VERUM (integri);
+    CREDO_AEQUALIS_I32 (x->numerus_segmentorum, III);
+
+    /* magnum: tabula ad LXIV crescit */
+    m = xar_creare_magnum(p, (i32)sizeof(i32), IV);
+    CREDO_NON_NIHIL (m);
+    per (n = ZEPHYRUM; n < XVII; n++)
+    {
+        CREDO_NON_NIHIL (xar_addere(m));
+    }
+    CREDO_AEQUALIS_I32 (m->mensura_tabulae,
+        (i32)XAR_MAXIMUS_SEGMENTORUM);
+
+    /* dispersa: obtinere_vel_creare ad indicem altum in xar novo */
+    d = xar_creare(p, (i32)sizeof(i32));
+    CREDO_NON_NIHIL (d);
+    e = (i32*)xar_obtinere_vel_creare(d, M);
+    CREDO_NON_NIHIL (e);
+    *e = DCCLXXVII;
+    CREDO_AEQUALIS_I32 (*(i32*)xar_obtinere(d, M), DCCLXXVII);
+    CREDO_NON_NIHIL (xar_obtinere(d, ZEPHYRUM));
+    CREDO_AEQUALIS_I32 (xar_numerus(d), M + I);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "xar_creare", _probare_xar_creare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "xar_addere et xar_obtinere", _probare_xar_addere_et_xar_obtinere,
@@ -1685,6 +1759,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "fines segmentorum (forma clausa)",
         _probare_fines_segmentorum_forma_clausa, NIHIL, NIHIL, NIHIL,
             NIHIL },
+    { "tabula crescens", _probare_tabulam_crescentem, NIHIL, NIHIL,
+        NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

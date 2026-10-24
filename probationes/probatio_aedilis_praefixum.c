@@ -8,6 +8,7 @@
  * sectionis (credo_area).
  */
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "piscina.h"
 #include "chorda.h"
 #include "chorda_aedificator.h"
@@ -38,7 +39,7 @@ _plagula (
     chorda_aedificator_appendere_character(a, '/');
     chorda_aedificator_appendere_literis(a, titulus);
     via  = chorda_aedificator_finire(a);
-    f    = fopen(chorda_ut_cstr(via, c->piscina), "w");
+    f    = lectiones_fopen(chorda_ut_cstr(via, c->piscina), "w");
     si (f != NIHIL)
     {
         fputs(contentum, f);

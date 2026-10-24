@@ -175,32 +175,22 @@ _filius_arboris (
         (i32)ZEPHYRUM)->datum.nodus;
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: aequalitas, nullitas, pater radicis
+ * ================================================== */
+
+interior vacuum
+_aequales_probare (
+    CredoContextus* c)
 {
-                        b32  praeteritus;
-                    Piscina* piscina;
+                    Piscina* piscina = c->piscina;
     MateriaArborDifferentia  d;
-
-    piscina = piscina_generare_dynamicum("probatio_aequalitatis",
-        262144);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ==================================================
-     * PROBARE: aequalitas, nullitas, pater radicis
-     * ================================================== */
 
     {
         MateriaNodus* a;
         MateriaNodus* b;
 
-        imprimere("\n--- Probans arbores aequales ---\n");
         a = _arborem_struere(piscina);
         b = _arborem_struere(piscina);
         CREDO_NON_NIHIL (a);
@@ -211,7 +201,7 @@ principale (vacuum)
         CREDO_VERUM (materia_arbor_aequalis(a, b,
             MATERIA_ARBOR_COMPARATIO_FIDELITAS, &d));
 
-        imprimere("\n--- Probans NIHIL utrimque = aequales ---\n");
+        CREDO_GRADUS ("NIHIL utrimque = aequales");
         CREDO_VERUM (materia_arbor_aequalis(NIHIL, NIHIL,
             MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
         CREDO_FALSUM (materia_arbor_aequalis(a, NIHIL,
@@ -219,7 +209,7 @@ principale (vacuum)
         CREDO_NON_NIHIL (d.campus);
         CREDO_VERUM (strcmp(d.campus, "nodus/nihil") == ZEPHYRUM);
 
-        imprimere("\n--- Probans patrem RADICUM exclusum ---\n");
+        CREDO_GRADUS ("patrem RADICUM exclusum");
         /* Subarbor electa patrem habet, arbor seorsum lecta non
          * habet - radices conferre divergentias falsas dat (silva:
          * CIX super corpus). Interiorum nullitas SOLA confertur. */
@@ -228,17 +218,24 @@ principale (vacuum)
             MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
         a->pater = NIHIL;
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: divergentiae nodi
-     * ================================================== */
+/* ==================================================
+ * PROBARE: divergentiae nodi
+ * ================================================== */
+
+interior vacuum
+_divergentias_nodi_probare (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+    MateriaArborDifferentia  d;
 
     {
         MateriaNodus* a;
         MateriaNodus* b;
 
-        imprimere("\n--- Probans divergentias nodi ---\n");
         a = _arborem_struere(piscina);
 
         b         = _arborem_struere(piscina);
@@ -260,7 +257,7 @@ principale (vacuum)
         CREDO_VERUM (strcmp(d.campus, "locus/genus-valoris")
             == ZEPHYRUM);
 
-        imprimere("\n--- Probans patrem INTERIORUM collatum ---\n");
+        CREDO_GRADUS ("patrem INTERIORUM collatum");
         /* Verba ponentia patrem figunt (2026-09-10), ergo latus SINE
          * patre manu fingitur - comparator nullitatem interiorum
          * adhuc confert. */
@@ -274,18 +271,25 @@ principale (vacuum)
         CREDO_VERUM (d.via[ZEPHYRUM] != '\0');
         _filius_arboris(b)->pater = b;
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: listae per PROSPECTUM
-     * ================================================== */
+/* ==================================================
+ * PROBARE: listae per PROSPECTUM
+ * ================================================== */
+
+interior vacuum
+_prospectum_probare (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+    MateriaArborDifferentia  d;
 
     {
           MateriaNodus* a;
           MateriaNodus* b;
           MateriaValor  ampliata;
 
-        imprimere("\n--- Probans prospectum contra repositorium ---\n");
         a = _arborem_struere(piscina);
         b = _arborem_struere(piscina);
 
@@ -302,7 +306,7 @@ principale (vacuum)
         CREDO_VERUM (materia_arbor_aequalis(a, b,
             MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
 
-        imprimere("\n--- Probans numerum listae divergentem ---\n");
+        CREDO_GRADUS ("numerum listae divergentem");
         b = _arborem_struere(piscina);
         b->loci[I] = materia_valor_lista_appendere(piscina,
             b->loci[I], materia_valor_nodus(_arborem_struere(piscina)));
@@ -310,17 +314,24 @@ principale (vacuum)
             MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, &d));
         CREDO_VERUM (strcmp(d.campus, "lista/numerus") == ZEPHYRUM);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: divergentiae lexematum
-     * ================================================== */
+/* ==================================================
+ * PROBARE: divergentiae lexematum
+ * ================================================== */
+
+interior vacuum
+_divergentias_lexematum_probare (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+    MateriaArborDifferentia  d;
 
     {
         MateriaNodus* a;
         MateriaNodus* b;
 
-        imprimere("\n--- Probans divergentias lexematum ---\n");
         a = _arborem_struere(piscina);
 
         b                         = _arborem_struere(piscina);
@@ -350,7 +361,7 @@ principale (vacuum)
         CREDO_VERUM (strcmp(d.campus, "lexema/initium-lineae")
             == ZEPHYRUM);
 
-        imprimere("\n--- Probans provenientiam UTROQUE modo ---\n");
+        CREDO_GRADUS ("provenientiam UTROQUE modo");
         /* Signum offset (verum contra syntheticum) factum
          * STRUCTURALE est - custodia quae 'solum cum ambo adsint'
          * conferret transiret quia subiectum abesset. */
@@ -361,17 +372,24 @@ principale (vacuum)
         CREDO_VERUM (strcmp(d.campus, "lexema/provenientia")
             == ZEPHYRUM);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: series triviorum
-     * ================================================== */
+/* ==================================================
+ * PROBARE: series triviorum
+ * ================================================== */
+
+interior vacuum
+_trivia_probare (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+    MateriaArborDifferentia  d;
 
     {
         MateriaNodus* a;
         MateriaNodus* b;
 
-        imprimere("\n--- Probans trivia divergentia ---\n");
         a = _arborem_struere(piscina);
 
         b                                = _arborem_struere(piscina);
@@ -419,18 +437,25 @@ principale (vacuum)
                 == ZEPHYRUM);
         }
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: lexemata EXTRA arborem (T10d)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: lexemata EXTRA arborem (T10d)
+ * ================================================== */
+
+interior vacuum
+_lexemata_extra_probare (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+    MateriaArborDifferentia  d;
 
     {
         MateriaToken* x;
         MateriaToken* y;
         MateriaToken* t;
 
-        imprimere("\n--- Probans lexemata extra arborem ---\n");
         x = _caput_arboris(_arborem_struere(piscina));
         y = _caput_arboris(_arborem_struere(piscina));
         CREDO_VERUM (materia_arbor_lexemata_aequalia_fronte(x, y,
@@ -461,17 +486,24 @@ principale (vacuum)
             MATERIA_ARBOR_COMPARATIO_STRUCTURALIS, NIHIL, &d));
         CREDO_VERUM (strcmp(d.campus, "lexema/nihil") == ZEPHYRUM);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: modus fissus - STRUCTURALIS contra FIDELITATEM
-     * ================================================== */
+/* ==================================================
+ * PROBARE: modus fissus - STRUCTURALIS contra FIDELITATEM
+ * ================================================== */
+
+interior vacuum
+_modum_fissum_probare (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+    MateriaArborDifferentia  d;
 
     {
         MateriaNodus* a;
         MateriaNodus* b;
 
-        imprimere("\n--- Probans modum fissum (offset) ---\n");
         a                               = _arborem_struere(piscina);
         b                               = _arborem_struere(piscina);
         _caput_arboris(b)->byte_offset  = (s32)IX;
@@ -481,7 +513,7 @@ principale (vacuum)
             MATERIA_ARBOR_COMPARATIO_FIDELITAS, &d));
         CREDO_VERUM (strcmp(d.campus, "lexema/offset") == ZEPHYRUM);
 
-        imprimere("\n--- Probans modum fissum (linea) ---\n");
+        CREDO_GRADUS ("modum fissum (linea)");
         b                         = _arborem_struere(piscina);
         _caput_arboris(b)->linea  = (i32)V;
         CREDO_VERUM (materia_arbor_aequalis(a, b,
@@ -490,17 +522,24 @@ principale (vacuum)
             MATERIA_ARBOR_COMPARATIO_FIDELITAS, &d));
         CREDO_VERUM (strcmp(d.campus, "lexema/linea") == ZEPHYRUM);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: referentiae per SEMITAM relativam (2026-09-10)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: referentiae per SEMITAM relativam (2026-09-10)
+ * ================================================== */
+
+interior vacuum
+_referentias_probare (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+    MateriaArborDifferentia  d;
 
     {
         MateriaNodus* a;
         MateriaNodus* b;
 
-        imprimere("\n--- Probans referentias (semita relativa) ---\n");
         a = _arborem_cum_referentia(piscina, ZEPHYRUM);
         b = _arborem_cum_referentia(piscina, ZEPHYRUM);
         CREDO_NON_NIHIL (a);
@@ -556,18 +595,29 @@ principale (vacuum)
         CREDO_VERUM (strcmp(d.campus, "locus/genus-valoris")
             == ZEPHYRUM);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "arbores aequales", _aequales_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "divergentiae nodi", _divergentias_nodi_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "listae per prospectum", _prospectum_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "divergentiae lexematum", _divergentias_lexematum_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "series triviorum", _trivia_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lexemata extra arborem", _lexemata_extra_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "modus fissus: structuralis contra fidelitatem",
+        _modum_fissum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "referentiae per semitam relativam", _referentias_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("materia_aequalitas", SECTIONES);
 }

@@ -19,22 +19,17 @@ _descriptio (
         chorda_ex_literis(titulus, pn));
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: descriptio capitis
+ * ================================================== */
+
+interior vacuum
+_descriptionem_probare (
+    CredoContextus* c)
 {
-     Piscina* pn;
-         b32  praeteritus;
+    Piscina* pn = c->piscina;
 
-    pn = piscina_generare_dynamicum("probatio_briar_bibliotheca",
-        65536);
-    si (!pn)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(pn);
-
-    imprimere("\n--- Probans descriptionem capitis ---\n");
     /* conventio domus: '/' '*' titulus ' - ' descriptio */
     CREDO_CHORDA_AEQUALIS_LITERIS (_descriptio(
         "/* sors.h - Numeri pseudo-fortuiti SEMINABILES\n"
@@ -60,8 +55,19 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (_descriptio("/* a.hx - y\n", "a.h", pn)
         .mensura, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (_descriptio("", "a.h", pn).mensura, ZEPHYRUM);
+}
 
-    imprimere("\n--- Probans signaturas alineatas ---\n");
+
+/* ==================================================
+ * PROBARE: signaturae alineatae
+ * ================================================== */
+
+interior vacuum
+_signaturas_probare (
+    CredoContextus* c)
+{
+    Piscina* pn = c->piscina;
+
     {
         chorda lineae[V];
         chorda tituli[V];
@@ -113,9 +119,18 @@ principale (vacuum)
             lineae, tituli, I, pn),
             "i32 xar_numerus (Xar* numerus_x);\n");
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(pn);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "descriptionem capitis", _descriptionem_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "signaturas alineatas", _signaturas_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("briar_bibliotheca", SECTIONES);
 }

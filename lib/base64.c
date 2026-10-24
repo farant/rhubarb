@@ -9,13 +9,14 @@
 #include <string.h>
 
 
-/* ========================================================================
+/* ==================================================
  * TABULAE
- * ======================================================================== */
+ * ================================================== */
 
 /* Alphabetum Base64 standard */
 hic_manens constans character*
-    alphabetum = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    alphabetum =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 /* Tabula decodificationis (character -> valor 0-63, -1 = invalidus) */
 hic_manens constans s8 tabula_decodificationis[CXXVIII] = {
@@ -30,9 +31,9 @@ hic_manens constans s8 tabula_decodificationis[CXXVIII] = {
 };
 
 
-/* ========================================================================
+/* ==================================================
  * FUNCTIONES - UTILITAS
- * ======================================================================== */
+ * ================================================== */
 
 i32
 base64_longitudo_codificata (
@@ -77,9 +78,9 @@ base64_longitudo_decodificata (
 }
 
 
-/* ========================================================================
+/* ==================================================
  * FUNCTIONES - CODIFICATIO
- * ======================================================================== */
+ * ================================================== */
 
 chorda
 base64_codificare (
@@ -114,7 +115,8 @@ base64_codificare (
         c = (i + II < mensura) ? datum[i + II] : 0;
 
         /* Combinare in 24-bit integer */
-        triplex = ((i32)(a & 0xFF) << XVI) | ((i32)(b & 0xFF) << VIII) | (i32)(c & 0xFF);
+        triplex = ((i32)(a & 0xFF) << XVI) | ((i32)(b & 0xFF) << VIII)
+            | (i32)(c & 0xFF);
 
         /* Extrahere 4 x 6-bit valores */
         output[j++] = (i8)alphabetum[(triplex >> XVIII) & 0x3F];
@@ -141,9 +143,9 @@ base64_codificare (
 }
 
 
-/* ========================================================================
+/* ==================================================
  * FUNCTIONES - DECODIFICATIO
- * ======================================================================== */
+ * ================================================== */
 
 Base64Fructus
 base64_decodificare (
@@ -162,7 +164,8 @@ base64_decodificare (
     resultatus.datum    = NIHIL;
     resultatus.mensura  = 0;
 
-    si (codificata.datum == NIHIL || codificata.mensura <= 0 || piscina == NIHIL)
+    si (   codificata.datum == NIHIL || codificata.mensura <= 0
+        || piscina          == NIHIL)
     {
         redde resultatus;
     }
@@ -186,7 +189,8 @@ base64_decodificare (
         d = codificata.datum[i + III];
 
         /* Convertere ad valores (ignorare padding) */
-        val = (a >= 0 && a < CXXVIII) ? tabula_decodificationis[(integer)a] : -1;
+        val = (a >= 0
+            && a < CXXVIII) ? tabula_decodificationis[(integer)a] : -1;
         si (val < 0)
         {
             resultatus.datum    = NIHIL;
@@ -195,7 +199,8 @@ base64_decodificare (
         }
         quadruplex = (i32)val << XVIII;
 
-        val = (b >= 0 && b < CXXVIII) ? tabula_decodificationis[(integer)b] : -1;
+        val = (b >= 0
+            && b < CXXVIII) ? tabula_decodificationis[(integer)b] : -1;
         si (val < 0)
         {
             resultatus.datum    = NIHIL;
@@ -206,7 +211,9 @@ base64_decodificare (
 
         si (c != '=')
         {
-            val = (c >= 0 && c < CXXVIII) ? tabula_decodificationis[(integer)c] : -1;
+            /* i8 insignatum: c >= 0 semper */
+            val = (c < CXXVIII) ? tabula_decodificationis[(integer)c]
+                : -1;
             si (val < 0)
             {
                 resultatus.datum    = NIHIL;
@@ -222,7 +229,9 @@ base64_decodificare (
              * castum nudum hic non honorat, temporarium honorat) */
             i32 val_i;
 
-            val = (d >= 0 && d < CXXVIII) ? tabula_decodificationis[(integer)d] : -1;
+            /* i8 insignatum: d >= 0 semper */
+            val = (d < CXXVIII) ? tabula_decodificationis[(integer)d]
+                : -1;
             si (val < 0)
             {
                 resultatus.datum    = NIHIL;
@@ -251,5 +260,180 @@ base64_decodificare (
     resultatus.datum    = output;
     resultatus.mensura  = longitudo_output;
 
+    redde resultatus;
+}
+
+
+/* ==================================================
+ * BASE64URL
+ * ================================================== */
+
+hic_manens constans character*
+    alphabetum_url =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+
+/* scriptura decodificationis vacuae: datum non NIHIL, nihil legitur */
+hic_manens i8 octetum_vacuum[I];
+
+/* valor 0..63 aut -1 (extra alphabetum, inter alia '=' '+' '/') */
+interior s32
+_url_valor (
+    i8 k)
+{
+    si (k >= 'A' && k <= 'Z')
+    {
+        redde (s32)(k - 'A');
+    }
+    si (k >= 'a' && k <= 'z')
+    {
+        redde (s32)(k - 'a') + XXVI;
+    }
+    si (k >= '0' && k <= '9')
+    {
+        redde (s32)(k - '0') + LII;
+    }
+    si (k == '-')
+    {
+        redde LXII;
+    }
+    si (k == '_')
+    {
+        redde LXIII;
+    }
+    redde -I;
+}
+
+i32
+base64url_longitudo_codificata (
+    i32 mensura)
+{
+    redde (mensura / III) * IV + ((mensura % III) ? (mensura % III) + I
+        : 0);
+}
+
+i32
+base64url_scribere (
+    constans i8* datum,
+            i32  mensura,
+      character* exitus,
+            i32  capacitas)
+{
+    i32 longitudo = base64url_longitudo_codificata(mensura);
+    i32 i;
+    i32 k = 0;
+
+    si (mensura == 0)
+    {
+        redde 0;
+    }
+    si (!datum || !exitus || capacitas < longitudo)
+    {
+        redde 0;
+    }
+    per (i = 0; i + II < mensura; i += III)
+    {
+        i32 v = ((i32)datum[i] << XVI) | ((i32)datum[i + I] << VIII)
+            | (i32)datum[i + II];
+
+        exitus[k++] = alphabetum_url[(v >> XVIII) & LXIII];
+        exitus[k++] = alphabetum_url[(v >> XII) & LXIII];
+        exitus[k++] = alphabetum_url[(v >> VI) & LXIII];
+        exitus[k++] = alphabetum_url[v & LXIII];
+    }
+    si (mensura - i == I)
+    {
+        i32 v = (i32)datum[i];
+
+        exitus[k++] = alphabetum_url[(v >> II) & LXIII];
+        exitus[k++] = alphabetum_url[(v << IV) & LXIII];
+    }
+    alioquin si (mensura - i == II)
+    {
+        i32 v = ((i32)datum[i] << VIII) | (i32)datum[i + I];
+
+        exitus[k++] = alphabetum_url[(v >> X) & LXIII];
+        exitus[k++] = alphabetum_url[(v >> IV) & LXIII];
+        exitus[k++] = alphabetum_url[(v << II) & LXIII];
+    }
+    redde k;
+}
+
+chorda
+base64url_codificare (
+    constans i8* datum,
+            i32  mensura,
+        Piscina* piscina)
+{
+    chorda resultatus;
+       i32 longitudo = base64url_longitudo_codificata(mensura);
+
+    resultatus.datum    = NIHIL;
+    resultatus.mensura  = 0;
+    si (mensura == 0 || !datum || !piscina)
+    {
+        redde resultatus;
+    }
+    resultatus.datum    = (i8*)piscina_allocare(piscina, longitudo);
+    resultatus.mensura  = (i32)base64url_scribere(datum, mensura,
+        (character*)resultatus.datum, longitudo);
+    redde resultatus;
+}
+
+Base64Fructus
+base64url_decodificare (
+     chorda  codificata,
+    Piscina* piscina)
+{
+    Base64Fructus  resultatus;
+              i32  n        = codificata.mensura;
+              i32  reliqui  = n % IV;
+              i32  longitudo;
+              i32  i;
+              i32  j        = 0;
+              i32  acervus  = 0;
+              i32  bits     = 0;
+               i8* output;
+
+    resultatus.datum    = NIHIL;
+    resultatus.mensura  = 0;
+    si (!piscina || reliqui == I || (n && !codificata.datum))
+    {
+        redde resultatus;
+    }
+    si (n == 0)
+    {
+        resultatus.datum = octetum_vacuum;
+        redde resultatus;
+    }
+    longitudo  = (n / IV) * III + (reliqui ? reliqui - I : 0);
+    output     = (i8*)piscina_allocare(piscina, longitudo);
+    si (!output)
+    {
+        redde resultatus;
+    }
+    per (i = 0; i < n; i++)
+    {
+        s32 v = _url_valor(codificata.datum[i]);
+
+        si (v < 0)
+        {
+            redde resultatus;
+        }
+        acervus  = ((acervus << VI) | (i32)v) & 0xFFFFFF;
+        bits     += VI;
+        si (bits >= VIII)
+        {
+            bits         -= VIII;
+            output[j++]  = (i8)((acervus >> bits) & 0xFF);
+        }
+    }
+    /* bits reliqui (II aut IV) nulli esse debent - aliter "Zh" et "Zg"
+     * idem octetum darent */
+    si (acervus & (((i32)I << bits) - (i32)I))
+    {
+        redde resultatus;
+    }
+    resultatus.datum    = output;
+    resultatus.mensura  = j;
     redde resultatus;
 }

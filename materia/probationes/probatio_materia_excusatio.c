@@ -227,33 +227,54 @@ _habet (
     redde FALSUM;
 }
 
-integer
-principale (
-    vacuum)
+
+/* FIXURA SUITAE: ratum lexici semel factum (parare_suitae; assertio
+ * eius ibi); sectiones id per monstratorem constantem LEGUNT. */
+nomen structura {
+    MateriaLexiconRatum ratum;
+} FixuraLexici;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                    b32  praeteritus;
-                Piscina* piscina;
-    MateriaLexiconRatum  ratum;
-     MateriaLexIudicium  iudicium;
+          FixuraLexici* f;
+    MateriaLexIudicium  iudicium;
 
-    piscina = piscina_generare_dynamicum("probatio_excusatio",
-        262144);
-    si (piscina == NIHIL)
+    f = (FixuraLexici*)piscina_allocare(c->piscina,
+        magnitudo(FixuraLexici));
+    si (f == NIHIL)
     {
-        imprimere("FRACTA: piscina\n");
-        redde I;
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    credo_aperire(piscina);
-    CREDO_VERUM (materia_lexicon_ratum_facere(&ratum, &LEXICON,
+    c->datum = f;
+    CREDO_VERUM (materia_lexicon_ratum_facere(&f->ratum, &LEXICON,
         &iudicium));
+}
 
+
+/* ==================================================
+ * PROBARE: excusatum cadit, frater superest
+ * ================================================== */
+
+interior vacuum
+_fratrem_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        Xar* a = _annotationes(piscina, &ratum, NOTA_BONA);
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        Xar* a = _annotationes(piscina, ratum, NOTA_BONA);
         Xar* d = xar_creare(piscina,
                      (i32)magnitudo(MateriaDiagnosticum));
         Xar* e;
 
-        imprimere("\n--- I. Excusatum cadit, frater superest ---\n");
         CREDO_NON_NIHIL (a);
         CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
         /* XXXVIII-XLIII intra par prius; XLVI-L intra alterum */
@@ -269,15 +290,32 @@ principale (
         CREDO_FALSUM (_habet(e, MATERIA_CODEX_EXCUSATIO_MORTUA));
         CREDO_VERUM (_habet(e, "lint:y"));
     }
+}
 
+
+/* ==================================================
+ * PROBARE: excusatio mortua nominatur
+ * ================================================== */
+
+interior vacuum
+_mortuam_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        Xar* a = _annotationes(piscina, &ratum, NOTA_NOTA);
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        Xar* a = _annotationes(piscina, ratum, NOTA_NOTA);
         Xar* d = xar_creare(piscina,
                      (i32)magnitudo(MateriaDiagnosticum));
                                  Xar* e;
         constans MateriaDiagnosticum* primum;
 
-        imprimere("\n--- II. Excusatio MORTUA nominatur ---\n");
         /* nihil intra scopum: tolera nihil absorbet. CODEX
          * NON-LINTRIS consulto (porta IX par est). */
         CREDO_VERUM (_diag(d, "lint:x", (s32)111, (s32)115));
@@ -294,14 +332,31 @@ principale (
         CREDO_VERUM (strcmp(primum->codex,
             MATERIA_CODEX_EXCUSATIO_MORTUA) == ZEPHYRUM);
     }
+}
 
+
+/* ==================================================
+ * PROBARE: sine causa: non excusat
+ * ================================================== */
+
+interior vacuum
+_sine_causa_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        Xar* a = _annotationes(piscina, &ratum, NOTA_SINE);
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        Xar* a = _annotationes(piscina, ratum, NOTA_SINE);
         Xar* d = xar_creare(piscina,
                      (i32)magnitudo(MateriaDiagnosticum));
         Xar* e;
 
-        imprimere("\n--- III. Sine causa: NON excusat ---\n");
         CREDO_NON_NIHIL (a);
         CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
         CREDO_VERUM (_diag(d, "lint:x", (s32)101, (s32)106));
@@ -313,14 +368,31 @@ principale (
         CREDO_VERUM (_habet(e, "lint:x"));
         CREDO_VERUM (_habet(e, MATERIA_CODEX_EXCUSATIO_SINE_CAUSA));
     }
+}
 
+
+/* ==================================================
+ * PROBARE: fractum nominatur, non tacet
+ * ================================================== */
+
+interior vacuum
+_fractum_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        Xar* a = _annotationes(piscina, &ratum, NOTA_FRACTA);
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        Xar* a = _annotationes(piscina, ratum, NOTA_FRACTA);
         Xar* d = xar_creare(piscina,
                      (i32)magnitudo(MateriaDiagnosticum));
         Xar* e;
 
-        imprimere("\n--- IV. Fractum nominatur, non tacet ---\n");
         CREDO_NON_NIHIL (a);
         CREDO_AEQUALIS_I32 (xar_numerus(a), (i32)I);
         CREDO_VERUM (_diag(d, "lint:x", (s32)101, (s32)106));
@@ -331,14 +403,31 @@ principale (
         CREDO_VERUM (_habet(e, "lint:x"));
         CREDO_VERUM (_habet(e, MATERIA_CODEX_EXCUSATIO_FRACTA));
     }
+}
 
+
+/* ==================================================
+ * PROBARE: codex non declaratus nominatur
+ * ================================================== */
+
+interior vacuum
+_ignotum_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        Xar* a = _annotationes(piscina, &ratum, NOTA_IGNOTA);
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        Xar* a = _annotationes(piscina, ratum, NOTA_IGNOTA);
         Xar* d = xar_creare(piscina,
                      (i32)magnitudo(MateriaDiagnosticum));
         Xar* e;
 
-        imprimere("\n--- V. Codex non declaratus nominatur ---\n");
         CREDO_VERUM (_diag(d, "par/notus", (s32)101, (s32)106));
         e = materia_excusatio_applicare(piscina, d, a, &DECLARATA,
                 NIHIL, NIHIL);
@@ -347,14 +436,31 @@ principale (
         CREDO_VERUM (_habet(e, MATERIA_CODEX_EXCUSATIO_IGNOTA));
         CREDO_VERUM (_habet(e, "par/notus"));
     }
+}
 
+
+/* ==================================================
+ * PROBARE: codex declaratus excusat
+ * ================================================== */
+
+interior vacuum
+_declaratum_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        Xar* a = _annotationes(piscina, &ratum, NOTA_NOTA);
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        Xar* a = _annotationes(piscina, ratum, NOTA_NOTA);
         Xar* d = xar_creare(piscina,
                      (i32)magnitudo(MateriaDiagnosticum));
         Xar* e;
 
-        imprimere("\n--- VI. Codex DECLARATUS excusat ---\n");
         /* par cum V: eadem tabula, codex notus - ergo probatio
          * discernit, non semper IGNOTA reddit. Et hoc ostendit
          * diagnostica DECLARATA excusari, non lintris sola. */
@@ -364,14 +470,31 @@ principale (
         CREDO_NON_NIHIL (e);
         CREDO_AEQUALIS_I32 (xar_numerus(e), ZEPHYRUM);
     }
+}
 
+
+/* ==================================================
+ * PROBARE: forma picta codicis excusat
+ * ================================================== */
+
+interior vacuum
+_pictam_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        Xar* a = _annotationes(piscina, &ratum, NOTA_PICTA);
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        Xar* a = _annotationes(piscina, ratum, NOTA_PICTA);
         Xar* d = xar_creare(piscina,
                      (i32)magnitudo(MateriaDiagnosticum));
         Xar* e;
 
-        imprimere("\n--- VII. Forma PICTA codicis excusat ---\n");
         /* Pictor 'crusta:' codici sine ':' praefigit, ergo usor
          * 'crusta:grex/tok_clausura' LEGIT dum codex ipse nudus est.
          * EX1 promittit id quod usor VIDIT sufficere. */
@@ -381,14 +504,31 @@ principale (
         CREDO_NON_NIHIL (e);
         CREDO_AEQUALIS_I32 (xar_numerus(e), ZEPHYRUM);
     }
+}
 
+
+/* ==================================================
+ * PROBARE: sine grammatica: picta cadit
+ * ================================================== */
+
+interior vacuum
+_sine_grammatica_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        Xar* a = _annotationes(piscina, &ratum, NOTA_PICTA);
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        Xar* a = _annotationes(piscina, ratum, NOTA_PICTA);
         Xar* d = xar_creare(piscina,
                      (i32)magnitudo(MateriaDiagnosticum));
         Xar* e;
 
-        imprimere("\n--- VIII. Sine grammatica: picta CADIT ---\n");
         /* Par cum VII: sine grammatica congruentia fieri NON potest,
          * ergo probatio VII grammaticam REVERA adhibet et non forte
          * viridis est. */
@@ -400,14 +540,31 @@ principale (
         CREDO_VERUM (_habet(e, "grex/tok_clausura"));
         CREDO_VERUM (_habet(e, MATERIA_CODEX_EXCUSATIO_MORTUA));
     }
+}
 
+
+/* ==================================================
+ * PROBARE: codex lintris: mortua non iudicata
+ * ================================================== */
+
+interior vacuum
+_lintrem_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        Xar* a = _annotationes(piscina, &ratum, NOTA_BONA);
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        Xar* a = _annotationes(piscina, ratum, NOTA_BONA);
         Xar* d = xar_creare(piscina,
                      (i32)magnitudo(MateriaDiagnosticum));
         Xar* e;
 
-        imprimere("\n--- IX. Codex LINTRIS: mortua NON iudicata ---\n");
         /* Par cum II: eadem arbor, eadem sedes, codex SOLUS mutatus.
          * Regula gradus II quae victimam pareret non cucurrit, ergo
          * 'nihil absorbuit' nihil probat. Mensuratum in transitu
@@ -420,10 +577,33 @@ principale (
         CREDO_AEQUALIS_I32 (xar_numerus(e), (i32)I);
         CREDO_FALSUM (_habet(e, MATERIA_CODEX_EXCUSATIO_MORTUA));
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "excusatum cadit, frater superest", _fratrem_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "excusatio mortua nominatur", _mortuam_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "sine causa: non excusat", _sine_causa_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "fractum nominatur, non tacet", _fractum_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "codex non declaratus nominatur", _ignotum_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "codex declaratus excusat", _declaratum_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "forma picta codicis excusat", _pictam_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "sine grammatica: picta cadit", _sine_grammatica_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "codex lintris: mortua non iudicata", _lintrem_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("materia_excusatio", SECTIONES,
+        _suitam_parare, NIHIL);
 }

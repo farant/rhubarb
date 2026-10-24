@@ -34,6 +34,7 @@
 #include "processus.h"
 #include "compilator.h"
 #include "lectiones.h"
+#include "tabula_dispersa.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -61,12 +62,20 @@ nomen structura {
     /* radices inclusionis ordine clavis (-I, deinde directorium fontis):
      * obumbratio per NOMEN in clave plena (fabrica plan 5 T2) */
                    Xar* radices;
+    /* MEMORIA PER PROCESSUM (compilator_memoriam_incipere; NIHIL =
+     * nulla): capita sigillata et existentiae obumbrationis */
+        TabulaDispersa* sigilla_capitum;
+        TabulaDispersa* existentiae;
+               Piscina* piscina_memoriae;
 } Compilatio;
 
 structura Compilator {
                Piscina* piscina;
              Thesaurus* thesaurus;
     constans character* clang;
+        TabulaDispersa* sigilla_capitum;   /* via -> Sigillum* */
+        TabulaDispersa* existentiae;       /* via -> I / II */
+               Piscina* piscina_memoriae;
 };
 
 interior b32
@@ -365,6 +374,31 @@ _sine_puncto (
     redde via;
 }
 
+/* existentia viae - per memoriam si activa (I praesens, II absens) */
+interior b32
+_existit (
+            Compilatio* c,
+    constans character* via)
+{
+    vacuum* memoratum;
+       b32  exstat;
+
+    si (   c->existentiae != NIHIL
+        && tabula_dispersa_invenire(c->existentiae,
+               chorda_ex_literis(via, c->piscina), &memoratum))
+    {
+        redde memoratum == (vacuum*)I;
+    }
+    exstat = filum_existit(via);
+    si (c->existentiae != NIHIL)
+    {
+        (vacuum)tabula_dispersa_inserere(c->existentiae,
+            chorda_ex_literis(via, c->piscina_memoriae),
+            exstat ? (vacuum*)I : (vacuum*)II);
+    }
+    redde exstat;
+}
+
 /* OBUMBRATIO PER NOMEN (fabrica plan 5 T2): caput 'via' in radice R
  * inventum - idem nomen relativum in OMNI radice altera quaeritur
  * (filum_existit: liber A/X notat; clavis bit unum). Radix posterior
@@ -431,9 +465,57 @@ _obumbrationem_addere (
         {
             sprintf(candidata, "%s/%s", r, relativa);
         }
-        exstat = filum_existit(candidata);
+        exstat = _existit(c, candidata);
         sigillum_addere(contextus, exstat ? "1" : "0", I);
     }
+}
+
+/* caput indicis sigillatum - per memoriam si activa (capita intra
+ * processum non mutantur: compilatio solum obiecta et depfiles
+ * scribit); FALSUM si absens */
+interior b32
+_caput_sigillare (
+    Compilatio* c,
+        chorda  via,
+      Sigillum* out)
+{
+       vacuum* memoratum;
+     Sigillum* locus;
+    character* via_cstr;
+
+    si (   c->sigilla_capitum != NIHIL
+        && tabula_dispersa_invenire(c->sigilla_capitum, via,
+               &memoratum))
+    {
+        si (memoratum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        *out = *(Sigillum*)memoratum;
+        redde VERUM;
+    }
+    via_cstr = chorda_ut_cstr(via, c->piscina);
+    si (!_plagulam_sigillare(via_cstr, c->piscina, out))
+    {
+        si (c->sigilla_capitum != NIHIL)
+        {
+            (vacuum)tabula_dispersa_inserere(c->sigilla_capitum,
+                chorda_transcribere(via, c->piscina_memoriae), NIHIL);
+        }
+        redde FALSUM;
+    }
+    si (c->sigilla_capitum != NIHIL)
+    {
+        locus = (Sigillum*)piscina_allocare(c->piscina_memoriae,
+            magnitudo(Sigillum));
+        si (locus != NIHIL)
+        {
+            *locus = *out;
+            (vacuum)tabula_dispersa_inserere(c->sigilla_capitum,
+                chorda_transcribere(via, c->piscina_memoriae), locus);
+        }
+    }
+    redde VERUM;
 }
 
 /* CLAVIS PLENA: caput ‖ per caput indicis: via ‖ sigillum ‖
@@ -467,8 +549,7 @@ _clavem_plenam (
         {
             perge;
         }
-        si (!_plagulam_sigillare(chorda_ut_cstr(via, c->piscina),
-                c->piscina, &sigillum))
+        si (!_caput_sigillare(c, via, &sigillum))
         {
             redde FALSUM;
         }
@@ -757,15 +838,48 @@ _compilationem_parare (
                         Compilator* compilator,
     constans character* constans* argumenta,
                                 i32 numerus,
+                           Piscina* piscina,
                          Compilatio* c)
 {
-    c->piscina    = compilator->piscina;
+    c->piscina    = piscina;
     c->thesaurus  = compilator->thesaurus;
     c->clang      = compilator->clang;
     c->argumenta  = argumenta;
     c->numerus    = (integer)numerus;
-    c->radices    = xar_creare(compilator->piscina,
+    c->radices    = xar_creare(piscina,
         (i32)magnitudo(constans character*));
+    c->sigilla_capitum   = compilator->sigilla_capitum;
+    c->existentiae       = compilator->existentiae;
+    c->piscina_memoriae  = compilator->piscina_memoriae;
+}
+
+vacuum
+compilator_memoriam_incipere (
+    Compilator* compilator)
+{
+    Piscina* piscina;
+
+    si (compilator == NIHIL || compilator->sigilla_capitum != NIHIL)
+    {
+        redde;
+    }
+    piscina = piscina_generare_dynamicum("compilator_memoria",
+        CCLVI * MXXIV);
+    si (piscina == NIHIL)
+    {
+        redde;
+    }
+    compilator->piscina_memoriae  = piscina;
+    compilator->sigilla_capitum   = tabula_dispersa_creare_chorda(
+        piscina, CCLVI);
+    compilator->existentiae       = tabula_dispersa_creare_chorda(
+        piscina, CCLVI);
+    si (   compilator->sigilla_capitum == NIHIL
+        || compilator->existentiae     == NIHIL)
+    {
+        compilator->sigilla_capitum  = NIHIL;
+        compilator->existentiae      = NIHIL;
+    }
 }
 
 Compilator*
@@ -794,9 +908,12 @@ compilator_aperire (
     {
         clang = "clang";
     }
-    compilator->piscina    = piscina;
-    compilator->clang      = clang;
-    compilator->thesaurus  = thesaurus_aperire(radix_thesauri, piscina);
+    compilator->piscina = piscina;
+    compilator->clang = clang;
+    compilator->sigilla_capitum = NIHIL;
+    compilator->existentiae = NIHIL;
+    compilator->piscina_memoriae = NIHIL;
+    compilator->thesaurus = thesaurus_aperire(radix_thesauri, piscina);
     si (compilator->thesaurus == NIHIL)
     {
         redde NIHIL;
@@ -827,7 +944,8 @@ compilator_clavem (
     Compilatio c;
       Sigillum identitas;
 
-    _compilationem_parare(compilator, argumenta, numerus, &c);
+    _compilationem_parare(compilator, argumenta, numerus,
+        compilator->piscina, &c);
     redde _argumenta_parare(&c)
         && _identitas_compilatoris(&c, &identitas)
         && _clavem_capitis(&c, &identitas, clavis_out);
@@ -839,6 +957,17 @@ compilator_compilare (
     constans character* constans* argumenta,
                               i32 numerus)
 {
+    redde compilator_compilare_in(compilator, argumenta, numerus,
+        compilator->piscina);
+}
+
+CompilatorResultus
+compilator_compilare_in (
+                      Compilator* compilator,
+    constans character* constans* argumenta,
+                              i32 numerus,
+                         Piscina* piscina)
+{
     CompilatorResultus r;
             Compilatio c;
               Sigillum identitas;
@@ -846,16 +975,16 @@ compilator_compilare (
 
     r.codex        = -I;
     r.ex_thesauro  = FALSUM;
-    r.effusio      = chorda_ex_literis("", compilator->piscina);
-    r.erratum      = chorda_ex_literis("", compilator->piscina);
-    _compilationem_parare(compilator, argumenta, numerus, &c);
+    r.effusio      = chorda_ex_literis("", piscina);
+    r.erratum      = chorda_ex_literis("", piscina);
+    _compilationem_parare(compilator, argumenta, numerus, piscina, &c);
     si (   !_argumenta_parare(&c)
         || !_identitas_compilatoris(&c, &identitas)
         || !_clavem_capitis(&c, &identitas, &caput))
     {
         r.erratum = chorda_ex_literis("compilator: argumenta non "
             "cacheabilia aut identitas clang ignota\n",
-            compilator->piscina);
+            piscina);
         redde r;
     }
     si (_invenire(&c, &caput))

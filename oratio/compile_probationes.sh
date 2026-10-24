@@ -2,13 +2,17 @@
 
 # Effusio cursus ultimi semper in build/test_logs/oratio.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS servatus).
-# <porta titulus="oratio" gradus="fusio" tegit="materia/fontes/* md/fontes/* oratio/*.stml oratio/census/* oratio/fontes/* oratio/grammatica/* oratio/probationes/* oratio/vocabularium/* silva/fontes/*"/>
+# <porta titulus="oratio" gradus="fusio" tegit="materia/fontes/* md/fontes/* oratio/*.stml oratio/census/* oratio/fontes/* oratio/grammatica/* oratio/probationes/* oratio/vocabularium/* silva/fontes/*" legit="*.md *.c *.h *.stml"/>
 if [ -z "${ORATIO_PROBATIONES_EFFUSIO:-}" ]; then
     export ORATIO_PROBATIONES_EFFUSIO=1
     mkdir -p "$(dirname "$0")/../build/test_logs"
     "$0" "$@" 2>&1 | tee "$(dirname "$0")/../build/test_logs/oratio.log"
     exit "${PIPESTATUS[0]}"
 fi
+# initium scripti (2026-10-22): mensor_suitae 'totum' hinc metitur, ut
+# praevolatus (totum - compilatio - cursus) PRAEPARATIONEM obiectorum
+# ante ansam probationum nominet (olim ab ansa ipsa - invisa)
+SUITA_INITIUM="$(perl -MTime::HiRes -e 'print Time::HiRes::time')"
 
 # oratio/compile_probationes.sh - Probationes orationis (cliens quartus materiae)
 #
@@ -280,7 +284,7 @@ git -C "$RADIX_DIR" ls-files 'lib/*.c' 'silva/fontes/*.c' > "$BUILD_DIR/corpus_c
 # metra suitae in volumen mensoris (tools/mensor_suitae.sh; praefixum
 # "md." - silva.mensurae('md.', n) eas legit); numquam suitam frangit
 source "$RADIX_DIR/tools/mensor_suitae.sh"
-mensor_suitae_incipere "oratio."
+mensor_suitae_incipere "oratio." "$SUITA_INITIUM"
 total=0 ; passed=0 ; failed_names=""
 for test_file in "$ORATIO_DIR"/probationes/probatio_*.c; do
     name="$(basename "$test_file" .c)"

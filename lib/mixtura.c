@@ -23,7 +23,8 @@ nomen structura {
 nomen enumeratio {
     MIXTURA_VOX_VACUA = 0,
     MIXTURA_VOX_TABULAE,
-    MIXTURA_VOX_SONITUS
+    MIXTURA_VOX_SONITUS,
+    MIXTURA_VOX_TIBIAE
 } MixturaGenusVocis;
 
 nomen structura {
@@ -40,6 +41,7 @@ nomen structura {
                   i32 locus;
                   b32 iterans;
            SonitusVox sonitus;
+             TibiaVox tibia;
 } MixturaVox;
 
 nomen structura {
@@ -254,12 +256,34 @@ _incipere (
         v->locus      = ZEPHYRUM;
         v->iterans    = i->iterans;
     }
+    alioquin si (i->genus == MIXTURA_IUSSUM_TIBIAM)
+    {
+        v->genus    = MIXTURA_VOX_TIBIAE;
+        v->exempla  = NIHIL;
+        tibia_vocem_parare(&v->tibia, &i->tibia, i->nota);
+    }
     alioquin
     {
         v->genus    = MIXTURA_VOX_SONITUS;
         v->exempla  = NIHIL;
         sonitus_vocem_parare(&v->sonitus, &i->parametra, i->semen);
     }
+}
+
+/* vox tibiae ansae; NIHIL (iussum irritum) si stala aut generis alii */
+interior MixturaVox*
+_tibia_ansae (
+        Mixtura* m,
+    MixturaAnsa  ansa)
+{
+    MixturaVox* v = _vox_ansae(m, ansa);
+
+    si (v == NIHIL || v->genus != MIXTURA_VOX_TIBIAE)
+    {
+        m->census.iussa_irrita++;
+        redde NIHIL;
+    }
+    redde v;
 }
 
 interior i32
@@ -291,7 +315,22 @@ _agere (
     {
         casus MIXTURA_IUSSUM_TABULAM:
         casus MIXTURA_IUSSUM_SONITUM:
+        casus MIXTURA_IUSSUM_TIBIAM:
             _incipere(m, i, momentum);
+            frange;
+        casus MIXTURA_IUSSUM_NOTAM_PONERE:
+            v = _tibia_ansae(m, i->ansa);
+            si (v != NIHIL)
+            {
+                tibia_notam_ponere(&v->tibia, i->nota, i->clivus);
+            }
+            frange;
+        casus MIXTURA_IUSSUM_PORTAM_CLAUDERE:
+            v = _tibia_ansae(m, i->ansa);
+            si (v != NIHIL)
+            {
+                tibia_portam_claudere(&v->tibia);
+            }
             frange;
         casus MIXTURA_IUSSUM_SISTERE:
             v = _vox_ansae(m, i->ansa);
@@ -389,6 +428,11 @@ _vocis_exemplum (
                 *finita = VERUM;
             }
         }
+    }
+    alioquin si (v->genus == MIXTURA_VOX_TIBIAE)
+    {
+        x        = tibia_vocis_proximum(&v->tibia);
+        *finita  = tibia_vox_finita(&v->tibia);
     }
     alioquin
     {
@@ -780,4 +824,42 @@ mixtura_rector_tractare (
     {
         s->occupata = FALSUM;
     }
+}
+
+b32
+mixtura_rector_vivit (
+    constans MixturaRector* r,
+               MixturaAnsa  ansa)
+{
+    redde ansa.generatio != ZEPHYRUM && ansa.sedes < r->numerus
+        && r->sedes[ansa.sedes].occupata
+        && r->sedes[ansa.sedes].generatio == ansa.generatio;
+}
+
+vacuum
+mixtura_rector_dimittere (
+     MixturaRector* r,
+       MixturaAnsa  ansa)
+{
+    si (mixtura_rector_vivit(r, ansa))
+    {
+        r->sedes[ansa.sedes].occupata = FALSUM;
+    }
+}
+
+i32
+mixtura_rector_occupatae (
+    constans MixturaRector* r)
+{
+    i32 k;
+    i32 n = ZEPHYRUM;
+
+    per (k = ZEPHYRUM; k < r->numerus; k++)
+    {
+        si (r->sedes[k].occupata)
+        {
+            n++;
+        }
+    }
+    redde n;
 }

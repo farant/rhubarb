@@ -661,8 +661,12 @@ _sententiam_imprimere (
     commutatio (sententia->iudicium.status)
     {
         casus FABRICA_RECENS:
-            /* machina: RECENS semper (consumptor omnia videt) */
-            si (!omnia && !suturae_machina)
+            /* machina: RECENS semper (consumptor omnia videt);
+             * MEMORIA NEGATA (custodia memorabilium) semper:
+             * declaratio fracta */
+            si (   !omnia && !suturae_machina
+                && !chorda_incipit(sententia->iudicium.causa,
+                       chorda_ex_literis("MEMORIA NEGATA", piscina)))
             {
                 redde;
             }
@@ -1092,6 +1096,9 @@ _iudicare_suturam (
         64);
     /* sigillum ingressuum semel per actionem */
     c->sutura.digesta = tabula_dispersa_creare_chorda(c->piscina, 128);
+    /* quod ultra actum vivit: piscina cursus (acta piscinam
+     * temporariam suam habent, parcum …T77EH4) */
+    c->sutura.piscina_cursus = c->piscina;
     redde VERUM;
 }
 
@@ -2456,6 +2463,7 @@ _sanare_suturam (
     c->sutura.regenerationes  = tabula_dispersa_creare_chorda(
         c->piscina, 64);
     c->sutura.digesta = tabula_dispersa_creare_chorda(c->piscina, 128);
+    c->sutura.piscina_cursus = c->piscina;
     redde _sanare_iudicem_ipsum(m) && _sanare_seram_capere(m);
 }
 
@@ -3529,6 +3537,8 @@ _usus (vacuum)
         "      bin/fabrica portae debitae [-machina] -portae TSV "
         "VIA...\n"
         "      bin/fabrica portae declaratae [-machina] -portae TSV\n"
+        "      bin/fabrica portae translatio [-machina] -portae TSV "
+        "[-receptum PORTA ARBOR DIGESTUM]... PORTA...\n"
         "      bin/fabrica quid [-machina] [-iudex TITULUS] VIA... "
         "| -omnes\n"
         "(ex radice repositorii; exitus 0 sanum, 1 stalum/ignotum, "

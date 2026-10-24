@@ -93,7 +93,11 @@ _sectio_quarta (
     {
         /* filius: exspectat donec parens fistulam claudat */
         close(fistula[I]);
-        (vacuum)read(fistula[ZEPHYRUM], &signum, I);
+        /* glibc: read warn_unused_result - (vacuum) gcc non sufficit */
+        si (read(fistula[ZEPHYRUM], &signum, I) < ZEPHYRUM)
+        {
+            _exit(I);
+        }
         _exit(ZEPHYRUM);
     }
     close(fistula[ZEPHYRUM]);

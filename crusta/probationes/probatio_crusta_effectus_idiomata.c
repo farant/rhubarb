@@ -25,19 +25,30 @@
 #include <string.h>
 #include <unistd.h>
 
-hic_manens character basis[CCLVI];
-hic_manens character radix[CCLVI];
+/* MUNDUS: arbor ficta in area contextus (credo_area) et summarium
+ * derivatum. Sectiones quaeque suum aedificant (summarium StmlNodus*
+ * adiutoribus non constantibus traditur - fixura esse non potest);
+ * creatio semel ASSERITUR in parare_suitae. */
+nomen structura {
+              character  basis[DXII];
+              character  radix[DXII];
+              character  externum[DXII];
+              StmlNodus* tabula;
+              StmlNodus* summarium;
+     constans character* causa;
+} Mundus;
 
 interior vacuum
 _scribere (
-    constans character* relativa,
-    constans character* contentum)
+         constans Mundus* mundus,
+      constans character* relativa,
+      constans character* contentum)
 {
     character  via[DXII];
     character  directorium[DXII];
     character* ultimum;
 
-    sprintf(via, "%s/%s", radix, relativa);
+    sprintf(via, "%s/%s", mundus->radix, relativa);
     strcpy(directorium, via);
     ultimum = strrchr(directorium, '/');
     si (ultimum != NIHIL)
@@ -238,153 +249,213 @@ hic_manens constans character* CURSOR =
     "L=\"$(readlink -f \"$X_DIR/../tools\")\"\n"                    /* 41 */
     "source \"$L/l.sh\"\n";                                         /* 42 */
 
-s32 principale (vacuum)
+interior constans character*
+_radix_viae (vacuum)
 {
-                  Piscina* piscina;
-      InternamentumChorda* intern;
-                StmlNodus* summarium;
-                StmlNodus* tabula;
-       constans character* causa = NIHIL;
-       constans character* r;
-                StmlNodus* s;
-                character  externum[DXII];
-                character  via_tabulae[DXII];
-                      b32  praeteritus;
+    constans character* radix_viae = getenv("RHUBARB_RADIX");
 
-    piscina = piscina_generare_dynamicum("probatio_effectus_idiomata",
-        (memoriae_index)XVI * M * M);
-    si (!piscina)
+    redde radix_viae != NIHIL ? radix_viae : ".";
+}
+
+/* arborem fictam scribere et summarium derivare SINE assertione;
+ * FALSUM = area absens aut derivatio fracta (mundus->causa) */
+interior b32
+_mundum_parare (
+    CredoContextus* c,
+            Mundus* mundus)
+{
+                  Piscina* piscina  = c->piscina;
+      InternamentumChorda* intern   = internamentum_creare(piscina);
+       constans character* area     = credo_area(c);
+                character  via_tabulae[DXII];
+
+    mundus->tabula     = NIHIL;
+    mundus->summarium  = NIHIL;
+    mundus->causa      = NIHIL;
+    si (area == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde FALSUM;
     }
-    credo_aperire(piscina);
-    intern  = internamentum_creare(piscina);
-    r       = getenv("RHUBARB_RADIX");
-    si (r == NIHIL)
-    {
-        r = ".";
-    }
-    sprintf(basis, "%s/crusta/build/effectus_idiomata.%ld", r,
-        (longus)getpid());
-    (vacuum)filum_arborem_delere(basis);
-    sprintf(radix, "%s/arbor", basis);
-    _scribere("a/cursor.sh", CURSOR);
-    _scribere("a/alia.sh", "#!/bin/bash\n:\n");
-    _scribere("a/alia2.sh", "#!/bin/bash\n:\n");
-    _scribere("tools/v.sh", "source \"$RADIX_DIR/tools/w.sh\"\n");
-    _scribere("tools/w.sh", ":\n");
-    _scribere("tools/e.sh",
+    sprintf(mundus->basis, "%s", area);
+    sprintf(mundus->radix, "%s/arbor", mundus->basis);
+    _scribere(mundus, "a/cursor.sh", CURSOR);
+    _scribere(mundus, "a/alia.sh", "#!/bin/bash\n:\n");
+    _scribere(mundus, "a/alia2.sh", "#!/bin/bash\n:\n");
+    _scribere(mundus, "tools/v.sh",
+        "source \"$RADIX_DIR/tools/w.sh\"\n");
+    _scribere(mundus, "tools/w.sh", ":\n");
+    _scribere(mundus, "tools/e.sh",
         "#!/bin/bash\nsource \"$RADIX_DIR/tools/z.sh\"\n");
-    _scribere("tools/z.sh", ":\n");
-    _scribere("tools/q.sh", ":\n");
-    _scribere("tools/p.sh", ":\n");
-    _scribere("tools/rel.sh", "#!/bin/bash\n:\n");
-    _scribere("tools/e3.sh", "#!/bin/bash\n:\n");
-    _scribere("tools/e4.sh", "#!/bin/bash\n:\n");
-    _scribere("tools/e5.sh", "#!/bin/bash\n:\n");
-    _scribere("tools/l.sh", ":\n");
-    _scribere("tools/fracta.sh", "if then\n(\n");
-    _scribere("bin/inst", "\177ELF binarium\n");
-    _scribere("bin/inst2", "\177ELF binarium\n");
-    sprintf(externum, "%s/extra.sh", basis);
-    (vacuum)filum_scribere_literis(externum, ":\n");
-    sprintf(via_tabulae, "%s/crusta/effectus_mandata.stml", r);
+    _scribere(mundus, "tools/z.sh", ":\n");
+    _scribere(mundus, "tools/q.sh", ":\n");
+    _scribere(mundus, "tools/p.sh", ":\n");
+    _scribere(mundus, "tools/rel.sh", "#!/bin/bash\n:\n");
+    _scribere(mundus, "tools/e3.sh", "#!/bin/bash\n:\n");
+    _scribere(mundus, "tools/e4.sh", "#!/bin/bash\n:\n");
+    _scribere(mundus, "tools/e5.sh", "#!/bin/bash\n:\n");
+    _scribere(mundus, "tools/l.sh", ":\n");
+    _scribere(mundus, "tools/fracta.sh", "if then\n(\n");
+    _scribere(mundus, "bin/inst", "\177ELF binarium\n");
+    _scribere(mundus, "bin/inst2", "\177ELF binarium\n");
+    sprintf(mundus->externum, "%s/extra.sh", mundus->basis);
+    (vacuum)filum_scribere_literis(mundus->externum, ":\n");
+    sprintf(via_tabulae, "%s/crusta/effectus_mandata.stml",
+        _radix_viae());
     {
         StmlResultus t = stml_legere(filum_legere_totum(via_tabulae,
             piscina), piscina, intern);
 
-        tabula = t.successus ? t.elementum_radix : NIHIL;
+        mundus->tabula = t.successus ? t.elementum_radix : NIHIL;
     }
-    CREDO_NON_NIHIL (tabula);
-    summarium = crusta_effectus_derivare(piscina, intern, radix,
-        "a/cursor.sh", tabula, &causa);
-    CREDO_NON_NIHIL (summarium);
-    si (summarium == NIHIL)
-    {
-        imprimere("FRACTA: derivatio: %s\n", causa ? causa : "-");
-        credo_imprimere_compendium();
-        credo_claudere();
-        redde I;
-    }
+    mundus->summarium = crusta_effectus_derivare(piscina, intern,
+        mundus->radix, "a/cursor.sh", mundus->tabula, &mundus->causa);
+    redde mundus->summarium != NIHIL;
+}
 
-    imprimere("\n--- I. idiomata et ambitus communis ---\n");
-    CREDO_VERUM (_processus_est(summarium, "a/cursor.sh"));
-    s = _situs(summarium, "a/cursor.sh", "fontatio", "tools/v.sh");
+/* creatio mundi semel asserta (ut olim ante sectiones), mundo proprio
+ * et non communicato */
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+    Mundus mundus;
+
+    (vacuum)_mundum_parare(c, &mundus);
+    CREDO_NON_NIHIL (mundus.tabula);
+    CREDO_NON_NIHIL (mundus.summarium);
+    si (mundus.summarium == NIHIL)
+    {
+        imprimere("FRACTA: derivatio: %s\n",
+            mundus.causa ? mundus.causa : "-");
+    }
+}
+
+interior vacuum
+_idiomata_probare (
+    CredoContextus* c)
+{
+       Mundus  mundus;
+    StmlNodus* s;
+
+    si (!_mundum_parare(c, &mundus))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    CREDO_VERUM (_processus_est(mundus.summarium, "a/cursor.sh"));
+    s = _situs(mundus.summarium, "a/cursor.sh", "fontatio",
+        "tools/v.sh");
     CREDO_VERUM (_attributum(s, "resolutio", "plena"));
     CREDO_VERUM (_attributum(s, "sedes", NIHIL) == FALSUM);
     /* w.sh: v.sh RADIX_DIR vocantis videt (ambitus communis) */
-    CREDO_NON_NIHIL (_situs(summarium, "a/cursor.sh", "fontatio",
+    CREDO_NON_NIHIL (_situs(mundus.summarium, "a/cursor.sh", "fontatio",
         "tools/w.sh"));
     /* intra 'if': superaestimatio */
-    CREDO_NON_NIHIL (_situs(summarium, NIHIL, "fontatio", "a/alia.sh"));
+    CREDO_NON_NIHIL (_situs(mundus.summarium, NIHIL, "fontatio",
+        "a/alia.sh"));
     /* $(dirname "$0") et $(readlink -f ...) */
-    CREDO_NON_NIHIL (_situs(summarium, NIHIL, "fontatio",
+    CREDO_NON_NIHIL (_situs(mundus.summarium, NIHIL, "fontatio",
         "a/alia2.sh"));
-    CREDO_NON_NIHIL (_situs(summarium, NIHIL, "fontatio",
+    CREDO_NON_NIHIL (_situs(mundus.summarium, NIHIL, "fontatio",
         "tools/l.sh"));
     /* globalis q extra g: q.sh */
-    CREDO_NON_NIHIL (_situs(summarium, NIHIL, "fontatio",
+    CREDO_NON_NIHIL (_situs(mundus.summarium, NIHIL, "fontatio",
         "tools/q.sh"));
+}
 
-    imprimere("\n--- II. exsecuta: ambitus novus, involucra, binaria ---\n");
-    CREDO_NON_NIHIL (_situs(summarium, "a/cursor.sh", "exsecutio",
+interior vacuum
+_exsecuta_probare (
+    CredoContextus* c)
+{
+       Mundus  mundus;
+    StmlNodus* s;
+
+    si (!_mundum_parare(c, &mundus))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    CREDO_NON_NIHIL (_situs(mundus.summarium, "a/cursor.sh",
+        "exsecutio",
         "tools/e.sh"));
-    CREDO_VERUM (_processus_est(summarium, "tools/e.sh"));
+    CREDO_VERUM (_processus_est(mundus.summarium, "tools/e.sh"));
     /* e.sh ambitum NOVUM habet: RADIX_DIR vocantis non videt */
-    CREDO_NIHIL (_situs(summarium, NIHIL, "fontatio", "tools/z.sh"));
-    s = _situs(summarium, "tools/e.sh", "fontatio",
+    CREDO_NIHIL (_situs(mundus.summarium, NIHIL, "fontatio",
+        "tools/z.sh"));
+    s = _situs(mundus.summarium, "tools/e.sh", "fontatio",
         "&quot;$RADIX_DIR/tools/z.sh&quot;");
     CREDO_VERUM (_attributum(s, "resolutio", "nulla"));
     CREDO_VERUM (_attributum(s, "plagula", "tools/e.sh"));
-    CREDO_NON_NIHIL (_situs(summarium, NIHIL, "exsecutio",
+    CREDO_NON_NIHIL (_situs(mundus.summarium, NIHIL, "exsecutio",
         "tools/rel.sh"));
-    CREDO_VERUM (_processus_est(summarium, "tools/e3.sh"));   /* exec */
-    CREDO_VERUM (_processus_est(summarium, "tools/e4.sh"));   /* env */
-    CREDO_VERUM (_processus_est(summarium, "tools/e5.sh"));   /* bash -x */
-    CREDO_NIHIL (_situs(summarium, NIHIL, "exsecutio", "nihil.sh"));
-    s = _situs(summarium, NIHIL, "exsecutio", "bin/inst");
+    /* exec, env, bash -x */
+    CREDO_VERUM (_processus_est(mundus.summarium, "tools/e3.sh"));
+    CREDO_VERUM (_processus_est(mundus.summarium, "tools/e4.sh"));
+    CREDO_VERUM (_processus_est(mundus.summarium, "tools/e5.sh"));
+    CREDO_NIHIL (_situs(mundus.summarium, NIHIL, "exsecutio",
+        "nihil.sh"));
+    s = _situs(mundus.summarium, NIHIL, "exsecutio", "bin/inst");
     CREDO_VERUM (_attributum(s, "classis", "instrumentum_domus"));
-    s = _situs(summarium, NIHIL, "exsecutio", "bin/absens");
+    s = _situs(mundus.summarium, NIHIL, "exsecutio", "bin/absens");
     CREDO_VERUM (_attributum(s, "classis", "instrumentum_domus"));
-    CREDO_NON_NIHIL (_situs(summarium, NIHIL, "exsecutio",
+    CREDO_NON_NIHIL (_situs(mundus.summarium, NIHIL, "exsecutio",
         "bin/inst2"));
     /* ansa 'for nomen in a b' (effectus-plan-2 T5): membra duo
      * resoluta, non praefixum a/build/ */
-    s = _situs(summarium, NIHIL, "exsecutio", "a/build/a");
+    s = _situs(mundus.summarium, NIHIL, "exsecutio", "a/build/a");
     CREDO_VERUM (_attributum(s, "resolutio", "plena"));
     CREDO_VERUM (_attributum(s, "classis", "build"));
-    CREDO_NON_NIHIL (_situs(summarium, NIHIL, "exsecutio",
+    CREDO_NON_NIHIL (_situs(mundus.summarium, NIHIL, "exsecutio",
         "a/build/b"));
+}
 
-    imprimere("\n--- III. irresoluta (et quod NON irresolutum) ---\n");
-    s = _situs(summarium, NIHIL, "fontatio", "&quot;$NESCIO&quot;");
+interior vacuum
+_irresoluta_probare (
+    CredoContextus* c)
+{
+       Mundus  mundus;
+    StmlNodus* s;
+
+    si (!_mundum_parare(c, &mundus))
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    s = _situs(mundus.summarium, NIHIL, "fontatio",
+        "&quot;$NESCIO&quot;");
     CREDO_VERUM (_attributum(s, "resolutio", "nulla"));
     /* local q="$1" in g: definitio globalis non valet */
-    s = _situs(summarium, NIHIL, "fontatio", "&quot;$q&quot;");
+    s = _situs(mundus.summarium, NIHIL, "fontatio", "&quot;$q&quot;");
     CREDO_VERUM (_attributum(s, "resolutio", "nulla"));
     /* P="" deinde P="$RADIX_DIR": ordo (effectus-plan-3 T2)
      * assignationem posteriorem solam attingere scit - resolutum (ante
      * slice 3 unio cum "" irresolutum dabat) */
-    s = _situs(summarium, NIHIL, "fontatio", "tools/p.sh");
+    s = _situs(mundus.summarium, NIHIL, "fontatio", "tools/p.sh");
     CREDO_VERUM (_attributum(s, "resolutio", "plena"));
     /* ${NESCIO:-...} (effectus-plan-2 T6, A4): NESCIO in ambitu non
      * definita -> valor praedefinitus resolutus; clavis lineam
      * 'ambitus NESCIO' per ambitus_lectio tenet */
-    s = _situs(summarium, NIHIL, "fontatio", "tools/v.sh");
+    s = _situs(mundus.summarium, NIHIL, "fontatio", "tools/v.sh");
     CREDO_VERUM (_attributum(s, "resolutio", "plena"));
-    s = _ignotum_causae(summarium, "parsura non sana");
+    s = _ignotum_causae(mundus.summarium, "parsura non sana");
     CREDO_VERUM (_attributum(s, "plagula", "tools/fracta.sh"));
-    s = _situs(summarium, NIHIL, "fontatio", externum);
+    s = _situs(mundus.summarium, NIHIL, "fontatio", mundus.externum);
     CREDO_VERUM (_attributum(s, "classis", "externa"));
     /* 'RADIX_DIR=/alibi true' non est definitio: aliter omnia supra
      * irresoluta essent - numerus irresolutorum exactus */
-    CREDO_AEQUALIS_I32 (_irresoluta_numerare(summarium), IV);
+    CREDO_AEQUALIS_I32 (_irresoluta_numerare(mundus.summarium), IV);
+}
 
-    (vacuum)filum_arborem_delere(basis);
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    credo_claudere();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. idiomata et ambitus communis",
+        _idiomata_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "II. exsecuta: ambitus novus, involucra, binaria",
+        _exsecuta_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III. irresoluta (et quod NON irresolutum)",
+        _irresoluta_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("crusta_effectus_idiomata",
+        SECTIONES, _suitam_parare, NIHIL);
 }

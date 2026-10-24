@@ -81,27 +81,21 @@ _extrahere (
     redde materia_exemplaria_extrahere(piscina, r.radix);
 }
 
-integer
-principale (
-    vacuum)
-{
-             b32  praeteritus;
-         Piscina* piscina;
 
-    piscina = piscina_generare_dynamicum("probatio_exemplaria",
-        262144);
-    si (piscina == NIHIL)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
+/* ==================================================
+ * PROBARE: ordo unus, attributa declarata
+ * ================================================== */
+
+interior vacuum
+_ordinem_unum_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
                                  Xar* d = _extrahere(piscina, DOC_UNUS);
         constans MateriaDiagnosticum* p;
 
-        imprimere("\n--- I. Ordo unus, attributa declarata ---\n");
         CREDO_NON_NIHIL (d);
         CREDO_AEQUALIS_I32 (xar_numerus(d), (i32)I);
         p = (constans MateriaDiagnosticum*)xar_obtinere(d, ZEPHYRUM);
@@ -110,13 +104,13 @@ principale (
             (s32)MATERIA_GRAVITAS_MONITUM);
         CREDO_VERUM (strcmp(p->causa, "c") == ZEPHYRUM);
 
-        imprimere("\n--- II. Sedes PRIMA primaria, cum nota sua ---\n");
+        CREDO_GRADUS ("Sedes PRIMA primaria, cum nota sua");
         CREDO_AEQUALIS_S32 (p->tractus.initium, (s32)7);
         CREDO_AEQUALIS_S32 (p->tractus.finis, (s32)10);
         CREDO_NON_NIHIL (p->nota);
         CREDO_VERUM (strcmp(p->nota, "hic") == ZEPHYRUM);
 
-        imprimere("\n--- III. DESCENSUS TACET post capturam ---\n");
+        CREDO_GRADUS ("DESCENSUS TACET post capturam");
         /* Involucrum alterum sedem dat; nodus INTRA eum sedem
          * PROPRIAM fert sed apparere NON debet. Lex tota haec est.
          * (Tags hic NON nominantur: commentarium quod tag aperit
@@ -133,11 +127,22 @@ principale (
                 == ZEPHYRUM);
         }
     }
+}
+
+
+/* ==================================================
+ * PROBARE: filii bini = inventa duo
+ * ================================================== */
+
+interior vacuum
+_filios_binos_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         Xar* d = _extrahere(piscina, DOC_BINI);
 
-        imprimere("\n--- IV. Filii BINI = inventa DUO ---\n");
         CREDO_NON_NIHIL (d);
         CREDO_AEQUALIS_I32 (xar_numerus(d), (i32)II);
         si (xar_numerus(d) == (i32)II)
@@ -154,6 +159,18 @@ principale (
             CREDO_AEQUALIS_I32 (a->numerus_relatorum, ZEPHYRUM);
         }
     }
+}
+
+
+/* ==================================================
+ * PROBARE: ordinaria: erratum, causa = lint
+ * ================================================== */
+
+interior vacuum
+_ordinaria_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
                                  Xar* d;
@@ -161,7 +178,6 @@ principale (
 
         d = _extrahere(piscina, DOC_NUDUS);
 
-        imprimere("\n--- V. Ordinaria: erratum, causa = lint ---\n");
         CREDO_NON_NIHIL (d);
         CREDO_AEQUALIS_I32 (xar_numerus(d), (i32)I);
         p = (constans MateriaDiagnosticum*)xar_obtinere(d, ZEPHYRUM);
@@ -170,6 +186,18 @@ principale (
         CREDO_VERUM (strcmp(p->causa, "z") == ZEPHYRUM);
         CREDO_VERUM (p->nota == NIHIL);
     }
+}
+
+
+/* ==================================================
+ * PROBARE: ordo sine sede transit
+ * ================================================== */
+
+interior vacuum
+_sine_sede_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
                                  Xar* d;
@@ -184,7 +212,6 @@ principale (
         d = _extrahere(piscina,
                 "<relatum lint=\"vacuum\"><situs/></relatum>");
 
-        imprimere("\n--- VI. Ordo SINE SEDE transit ---\n");
         CREDO_NON_NIHIL (d);
         CREDO_AEQUALIS_I32 (xar_numerus(d), (i32)I);
         si (xar_numerus(d) == (i32)I)
@@ -196,10 +223,22 @@ principale (
             CREDO_VERUM (strcmp(p->codex, "lint:vacuum") == ZEPHYRUM);
         }
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "ordo unus, attributa declarata", _ordinem_unum_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "filii bini = inventa duo", _filios_binos_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "ordinaria: erratum, causa = lint", _ordinaria_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "ordo sine sede transit", _sine_sede_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("materia_exemplaria", SECTIONES);
 }

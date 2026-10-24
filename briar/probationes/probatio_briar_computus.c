@@ -89,49 +89,49 @@ _columnas (
     v[10]  = (insignatus longus)c->allocationes_arboris;
 }
 
-integer
-principale (vacuum)
+/* FIXURA SUITAE: corpus semel mensum (parare_suitae); sectiones
+ * mensuras LEGUNT - proprietates (I) et collatio cum auro (II) sine
+ * ordine inter se. */
+nomen structura {
+       constans character* radix;
+                character  via_auri[VIA_MAXIMA];
+            BriarComputus  computa[NUMERUS_CORPORIS];
+        insignatus longus  facta[NUMERUS_CORPORIS][COLUMNAE];
+                      b32  metita[NUMERUS_CORPORIS];
+} FixuraComputi;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                   b32  praeteritus;
-               Piscina* piscina;
-    constans character* radix;
-                   b32  scribere;
-             character  via_auri[VIA_MAXIMA];
-             character  via[VIA_MAXIMA];
-                  FILE* aurum;
-                   i32  i;
-                   i32  k;
-     insignatus longus  facta[NUMERUS_CORPORIS][COLUMNAE];
-                   b32  metita[NUMERUS_CORPORIS];
+    FixuraComputi* f;
+              i32  i;
 
-    piscina = piscina_generare_dynamicum("probatio_briar_computus",
-        IV * MXXIV * XVI);
-    si (!piscina)
+    f = (FixuraComputi*)piscina_allocare(c->piscina,
+        magnitudo(FixuraComputi));
+    si (f == NIHIL)
     {
-        imprimere("FRACTA: piscina\n");
-        redde I;
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    credo_aperire(piscina);
-    radix = getenv("RHUBARB_RADIX");
-    si (radix == NIHIL)
+    c->datum = f;
+    f->radix = getenv("RHUBARB_RADIX");
+    si (f->radix == NIHIL)
     {
-        radix = ".";
+        f->radix = ".";
     }
-    scribere = getenv("COMPUTUS_SCRIBERE") != NIHIL;
-    sprintf(via_auri, "%s/briar/probationes/fixa/computus/basis.tsv",
-        radix);
+    sprintf(f->via_auri, "%s/briar/probationes/fixa/computus/basis.tsv",
+        f->radix);
 
-    imprimere("\n--- I. mensura corporis (fixa/thistle) ---\n");
     per (i = ZEPHYRUM; i < NUMERUS_CORPORIS; i++)
     {
-         BriarComputus  c;
-                    i8* fons;
-                   i32  mensura;
+        character  via[VIA_MAXIMA];
+               i8* fons;
+              i32  mensura;
 
-        metita[i] = FALSUM;
-        sprintf(via, "%s/briar/probationes/fixa/thistle/%s", radix,
+        f->metita[i] = FALSUM;
+        sprintf(via, "%s/briar/probationes/fixa/thistle/%s", f->radix,
             CORPUS[i]);
-        fons = _plagulam_legere(piscina, via, &mensura);
+        fons = _plagulam_legere(c->piscina, via, &mensura);
         CREDO_NON_NIHIL (fons);
         si (fons == NIHIL)
         {
@@ -139,33 +139,71 @@ principale (vacuum)
         }
         (vacuum)briar_computus_metiri((constans character*)fons,
             mensura,
-            &c);
-        _columnas(&c, facta[i]);
-        metita[i] = VERUM;
+            &f->computa[i]);
+        _columnas(&f->computa[i], f->facta[i]);
+        f->metita[i] = VERUM;
+    }
+}
+
+/* I. mensura corporis: proprietates, semper - circuitus totus sanus;
+ * commissa = usus + otiosa; apex usum commissum non superat;
+ * allocationes nodos superant (Xar per nodum). Tempora imprimuntur,
+ * non pinnantur. */
+interior vacuum
+_mensuram_probare (
+    CredoContextus* c)
+{
+    constans FixuraComputi* f = (constans FixuraComputi*)c->suita;
+                       i32  i;
+
+    si (f == NIHIL)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < NUMERUS_CORPORIS; i++)
+    {
+        constans BriarComputus* m = &f->computa[i];
+
+        si (!f->metita[i])
+        {
+            perge;
+        }
         imprimere("  %-26s nodi %5u lex %5u stml %6u  dati %5.2f MB"
                   "  alloc %lu  pars %.2f ms  emit %.2f  stml %.2f/%.2f"
                   "  conf %.2f\n",
-            CORPUS[i], (insignatus)c.nodi, (insignatus)c.lexemata,
-            (insignatus)c.octeti_stml,
-            (duplex)c.usus / (1024.0 * 1024.0),
-            (insignatus longus)c.allocationes, c.ms_parsandi,
-            c.ms_emittendi, c.ms_arbor_scribendi, c.ms_arbor_legendi,
-            c.ms_comparandi);
-        /* proprietates, semper: circuitus totus sanus; commissa = usus
-         * + otiosa; apex usum commissum non superat; allocationes nodos
-         * superant (Xar per nodum) */
-        CREDO_VERUM (c.successus);
-        CREDO_VERUM (c.commissa == c.usus + c.otiosa);
-        CREDO_VERUM (c.apex <= c.commissa);
-        CREDO_VERUM (c.alvei >= I);
-        CREDO_VERUM (c.allocationes > (memoriae_index)c.nodi);
-        CREDO_VERUM (c.lexemata >= I && c.octeti_stml > ZEPHYRUM);
+            CORPUS[i], (insignatus)m->nodi, (insignatus)m->lexemata,
+            (insignatus)m->octeti_stml,
+            (duplex)m->usus / (1024.0 * 1024.0),
+            (insignatus longus)m->allocationes, m->ms_parsandi,
+            m->ms_emittendi, m->ms_arbor_scribendi, m->ms_arbor_legendi,
+            m->ms_comparandi);
+        CREDO_VERUM (m->successus);
+        CREDO_VERUM (m->commissa == m->usus + m->otiosa);
+        CREDO_VERUM (m->apex <= m->commissa);
+        CREDO_VERUM (m->alvei >= I);
+        CREDO_VERUM (m->allocationes > (memoriae_index)m->nodi);
+        CREDO_VERUM (m->lexemata >= I && m->octeti_stml > ZEPHYRUM);
     }
+}
 
-    si (scribere)
+/* II. collatio cum auro (COMPUTUS_SCRIBERE=1 prius rescribit) */
+interior vacuum
+_aurum_conferre (
+    CredoContextus* c)
+{
+    constans FixuraComputi* f = (constans FixuraComputi*)c->suita;
+                      FILE* aurum;
+                       i32  i;
+                       i32  k;
+
+    si (f == NIHIL)
     {
-        imprimere("\n--- AURUM SCRIBITUR (COMPUTUS_SCRIBERE) - AUDI causam ---\n");
-        aurum = fopen(via_auri, "w");
+        redde;
+    }
+    si (getenv("COMPUTUS_SCRIBERE") != NIHIL)
+    {
+        imprimere("\n  AURUM SCRIBITUR (COMPUTUS_SCRIBERE) - AUDI causam\n");
+        aurum = fopen(f->via_auri, "w");
         CREDO_NON_NIHIL (aurum);
         si (aurum != NIHIL)
         {
@@ -177,24 +215,24 @@ principale (vacuum)
             fprintf(aurum, "\n");
             per (i = ZEPHYRUM; i < NUMERUS_CORPORIS; i++)
             {
-                si (!metita[i])
+                si (!f->metita[i])
                 {
                     perge;
                 }
                 fprintf(aurum, "%s", CORPUS[i]);
                 per (k = ZEPHYRUM; k < COLUMNAE; k++)
                 {
-                    fprintf(aurum, "\t%lu", facta[i][k]);
+                    fprintf(aurum, "\t%lu", f->facta[i][k]);
                 }
                 fprintf(aurum, "\n");
             }
             fclose(aurum);
-            imprimere("  scriptum: %s\n", via_auri);
+            imprimere("  scriptum: %s\n", f->via_auri);
         }
     }
 
-    imprimere("\n--- II. collatio cum auro (%s) ---\n", via_auri);
-    aurum = fopen(via_auri, "r");
+    imprimere("  aurum: %s\n", f->via_auri);
+    aurum = fopen(f->via_auri, "r");
     si (aurum == NIHIL)
     {
         imprimere("  FRACTA: aurum absens - primum: COMPUTUS_SCRIBERE=1\n");
@@ -242,30 +280,40 @@ principale (vacuum)
                 }
             }
             CREDO_VERUM (idx >= ZEPHYRUM);
-            si (idx < ZEPHYRUM || !metita[idx])
+            si (idx < ZEPHYRUM || !f->metita[idx])
             {
                 perge;
             }
             lectae++;
             per (k = ZEPHYRUM; k < COLUMNAE; k++)
             {
-                si (facta[idx][k] != exspectata[k])
+                si (f->facta[idx][k] != exspectata[k])
                 {
                     imprimere("  DIVERGIT %s.%s: aurum %lu, factum %lu\n",
                         titulus, TITULI[k], exspectata[k],
-                        facta[idx][k]);
+                        f->facta[idx][k]);
                 }
-                CREDO_VERUM (facta[idx][k] == exspectata[k]);
+                CREDO_VERUM (f->facta[idx][k] == exspectata[k]);
             }
         }
         fclose(aurum);
         /* aurum plagulas OMNES corporis ferat */
         CREDO_AEQUALIS_I32 ((i32)lectae, (i32)NUMERUS_CORPORIS);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. mensura corporis (fixa/thistle)", _mensuram_probare, NIHIL,
+        NIHIL,
+        NIHIL, NIHIL },
+    { "II. collatio cum auro", _aurum_conferre, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("briar_computus", SECTIONES,
+        _suitam_parare, NIHIL);
 }

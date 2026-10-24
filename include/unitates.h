@@ -42,6 +42,11 @@
  * SIGNUM GENERATI: 'GENERATUM' in linea prima, aut secunda si prima
  * declaratio est quam forma poscit (<?xml, <!doctype) - positio fixa,
  * non fenestra (caput quod GENERATUM in prosa nominat manu est).
+ * Indoles per SIGNUM DATORUM in eadem linea: verbum INTEGRUM 'DATA'
+ * -> 'data' (tabula initializatorum et literarum, nulla logica quam
+ * iudices codicis probent: biblia, tabula nodorum), aliter 'codex'.
+ * Ad provenientiam orthogonalis: data manu scripta esse possunt,
+ * generatum codex esse potest (lectores cocti).
  *
  * RECUSATIO, numquam praestitutum tacitum: genus non citabile, cura
  * vita munus lingua ignota (in declaratione AUT in indicibus
@@ -118,6 +123,7 @@ nomen structura {
    UnitatesProprietas vita;
    UnitatesProprietas munus;
    UnitatesProprietas provenientia; /* manu / generatum */
+   UnitatesProprietas indoles;      /* codex / data */
    UnitatesProprietas lingua;
 } UnitatisResponsum;
 
@@ -166,9 +172,10 @@ nomen enumeratio {
 } UnitatesIudicium;
 
 /* Iudicatne iudex 'iudex' viam? Plagula iudicatur sola si cura,
- * vita, munus, provenientia, lingua OMNES in indicibus iudicis sunt.
- * Iudex qui provenientias omnes admittit plagulam NON legit (via
- * illegibilis tum iudicatur - provenientia nihil decernit).
+ * vita, munus, provenientia, indoles, lingua OMNES in indicibus
+ * iudicis sunt. Iudex qui provenientias OMNES et indoles OMNES
+ * admittit plagulam NON legit (via illegibilis tum iudicatur - signa
+ * nihil decernunt).
  * *causa_out (NIHIL licet): NON_IUDICAT -> proprietas prima quae
  * excludit cum causa sua ('cura aliena (vendor/unitas.stml) non in
  * curae iudicis lint_latinus'); IUDEX_IGNOTUS -> iudices noti. */

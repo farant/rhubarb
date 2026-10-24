@@ -319,381 +319,464 @@ hic_manens constans character* FIXTURAE_LATINAE[] = {
     "oratio/probationes/fixa/txt/cicero.txt"
 };
 
+/* FIXURA SUITAE: tabula la.bin lecta et vocabularium Latinum semel
+ * oneratum (parare_suitae; assertiones lectionis et oneris ibi);
+ * sectiones id per monstratorem constantem LEGUNT. */
+nomen structura {
+      constans character* radix;
+    OratioVocabulariumLa* voc;
+                  duplex  ms_oneris;
+} FixuraLatina;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+                FixuraLatina* f;
+                   character  via[1024];
+                      chorda  tabula;
+    OratioVocabulariumVitium  vitium;
+                     clock_t  ante;
+                     clock_t  post;
+
+    f = (FixuraLatina*)piscina_allocare(c->piscina,
+        magnitudo(FixuraLatina));
+    si (f == NIHIL)
+    {
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
+    }
+    f->radix = getenv("RHUBARB_RADIX");
+    si (f->radix == NIHIL)
+    {
+        f->radix = ".";
+    }
+    sprintf(via, "%s/oratio/vocabularium/la.bin", f->radix);
+    CREDO_VERUM (_plagulam_legere(c->piscina, via, &tabula));
+    ante = clock();
+    f->voc = oratio_vocabularium_la_onerare(c->piscina, tabula,
+        &vitium);
+    post = clock();
+    f->ms_oneris = 1000.0 * (duplex)(post - ante)
+        / (duplex)CLOCKS_PER_SEC;
+    CREDO_NON_NIHIL (f->voc);
+    si (f->voc == NIHIL)
+    {
+        imprimere("  onus fractum: %s\n", vitium.causa);
+        redde;
+    }
+    c->datum = f;
+}
+
+interior vacuum
+_plicare_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
+CREDO_VERUM (_aequalis(oratio_vocabularium_la_plicare(piscina,
+    _l("VIRVM")),
+    "uirum"));
+CREDO_VERUM (_aequalis(oratio_vocabularium_la_plicare(piscina,
+    _l("Jam")),
+    "iam"));
+CREDO_VERUM (_aequalis(oratio_vocabularium_la_plicare(piscina,
+    _l("\xC3\x86quus")), "aequus"));                 /* Æquus */
+CREDO_VERUM (_aequalis(oratio_vocabularium_la_plicare(piscina,
+    _l("R\xC5\x8Dma")), "roma"));                    /* Rōma */
+CREDO_VERUM (_aequalis(oratio_vocabularium_la_plicare(piscina,
+    _l("c\xC5\x93lum")), "coelum"));                 /* cœlum */
+CREDO_VERUM (_aequalis(oratio_vocabularium_la_plicare(piscina,
+    _l("\xC4\x81m\xC4\x83")), "ama"));               /* āmă */
+CREDO_VERUM (_aequalis(oratio_vocabularium_la_plicare(piscina,
+    _l("caf\xC3\xA9")), "caf\xC3\xA9"));             /* é manet */
+CREDO_VERUM (_aequalis(oratio_vocabularium_la_plicare(piscina,
+    _l("")), ""));
+}
+
+interior vacuum
+_onus_probare (
+    CredoContextus* c)
+{
+    constans FixuraLatina* fixura = (constans FixuraLatina*)c->suita;
+    constans OratioVocabulariumLa* voc;
+    OratioVocabulariumCensus census;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
+    voc     = fixura->voc;
+    census  = oratio_vocabularium_la_census(voc);
+    imprimere("  stirpes %d flexiones %d additamenta %d unica %d tackons %d  onus %.1f ms\n",
+        (integer)census.stirpes, (integer)census.flexiones,
+        (integer)census.additamenta,
+        (integer)census.unica,
+        (integer)oratio_vocabularium_la_tackones(voc),
+        fixura->ms_oneris);
+    CREDO_AEQUALIS_I32 (census.stirpes, (i32)39335);
+    CREDO_AEQUALIS_I32 (census.flexiones, (i32)1797);
+    CREDO_AEQUALIS_I32 (oratio_vocabularium_la_tackones(voc),
+        (i32)III);
+}
+
+interior vacuum
+_quaesitionem_probare (
+    CredoContextus* c)
+{
+    constans FixuraLatina* fixura  = (constans FixuraLatina*)c->suita;
+    Piscina* piscina               = c->piscina;
+    constans OratioVocabulariumLa* voc;
+    i32 i;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
+    voc = fixura->voc;
+{
+    Xar* x;
+
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("vir"));
+    CREDO_AEQUALIS_I32 (xar_numerus(x), (i32)II);
+    CREDO_VERUM (_adest(voc, x, "vir", ORATIO_PARS_N, "NOM S", I));
+    CREDO_VERUM (_adest(voc, x, "vir", ORATIO_PARS_N, "VOC S", I));
+
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("virum"));
+    CREDO_VERUM (_adest(voc, x, "vir", ORATIO_PARS_N, "ACC S",
+        (i32)II));
+    CREDO_VERUM (_adest(voc, x, "vir", ORATIO_PARS_N, "GEN P",
+        (i32)II));
+    CREDO_VERUM (_adest(voc, x, "vis", ORATIO_PARS_N, "GEN P",
+        (i32)II));
+    imprimere("  virum: %d analyses\n", (integer)xar_numerus(x));
+    {
+        Xar* y = oratio_vocabularium_la_quaerere(piscina, voc,
+            _l("VIRVM"));
+
+        CREDO_AEQUALIS_I32 (xar_numerus(y), xar_numerus(x));
+    }
+
+    x = oratio_vocabularium_la_quaerere(piscina, voc,
+        _l("puellam"));
+    CREDO_AEQUALIS_I32 (xar_numerus(x), I);
+    CREDO_VERUM (_adest(voc, x, "puell", ORATIO_PARS_N, "ACC S",
+        (i32)II));
+
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("rex"));
+    CREDO_AEQUALIS_I32 (xar_numerus(x), (i32)II);
+    CREDO_VERUM (_adest(voc, x, "rex", ORATIO_PARS_N, "NOM S", I));
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("regis"));
+    CREDO_VERUM (_adest(voc, x, "rex", ORATIO_PARS_N, "GEN S",
+        (i32)II));
+    CREDO_VERUM (_adest(voc, x, "reg", ORATIO_PARS_V,
+        "PRES ACTIVE IND 2 S", (i32)II));
+
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("amat"));
+    CREDO_AEQUALIS_I32 (xar_numerus(x), I);
+    CREDO_VERUM (_adest(voc, x, "am", ORATIO_PARS_V,
+        "PRES ACTIVE IND 3 S", (i32)II));
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("amavit"));
+    CREDO_VERUM (_adest(voc, x, "am", ORATIO_PARS_V,
+        "PERF ACTIVE IND 3 S",
+        (i32)III));
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("amatus"));
+    CREDO_VERUM (_adest(voc, x, "am", ORATIO_PARS_V,
+        "NOM S M PERF PASSIVE PPL",
+        (i32)IV));
+    CREDO_VERUM (_adest(voc, x, "amat", ORATIO_PARS_ADJ,
+        "NOM S M POS", I));
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("amare"));
+    CREDO_VERUM (_adest(voc, x, "am", ORATIO_PARS_V,
+        "PRES ACTIVE INF", (i32)II));
+    CREDO_AEQUALIS_I32 (_numerus_partis(voc, x, ORATIO_PARS_ADV),
+        I);
+    imprimere("  amare: %d analyses (ADV semel)\n",
+        (integer)xar_numerus(x));
+
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("bonus"));
+    CREDO_VERUM (_adest(voc, x, "bon", ORATIO_PARS_ADJ,
+        "NOM S M POS", I));
+    CREDO_VERUM (_adest(voc, x, "bon", ORATIO_PARS_N, "NOM S", I));
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("melior"));
+    CREDO_AEQUALIS_I32 (xar_numerus(x), (i32)II);
+    CREDO_VERUM (_adest(voc, x, "bon", ORATIO_PARS_ADJ,
+        "NOM S C COMP", (i32)III));
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("optime"));
+    CREDO_VERUM (_adest(voc, x, "bon", ORATIO_PARS_ADJ,
+        "VOC S M SUPER", (i32)IV));
+    CREDO_VERUM (_adest(voc, x, "bene", ORATIO_PARS_ADV, "X",
+        (i32)III));
+    x = oratio_vocabularium_la_quaerere(piscina, voc,
+        _l("amariter"));
+    CREDO_AEQUALIS_I32 (xar_numerus(x), I);
+    CREDO_VERUM (_adest(voc, x, "amariter", ORATIO_PARS_ADV, "POS",
+        I));
+
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("et"));
+    CREDO_AEQUALIS_I32 (xar_numerus(x), I);
+    CREDO_VERUM (_adest(voc, x, "et", ORATIO_PARS_CONJ, "", I));
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("in"));
+    CREDO_AEQUALIS_I32 (xar_numerus(x), (i32)II);
+    CREDO_VERUM (_adest(voc, x, "in", ORATIO_PARS_PREP, "ABL", I));
+    CREDO_VERUM (_adest(voc, x, "in", ORATIO_PARS_PREP, "ACC", I));
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("a"));
+    CREDO_AEQUALIS_I32 (xar_numerus(x), (i32)V);
+    CREDO_VERUM (_adest(voc, x, "a", ORATIO_PARS_PREP, "ABL", I));
+    CREDO_VERUM (_adest(voc, x, "a", ORATIO_PARS_INTERJ, "", I));
+
+    /* tackon: -que ante hospites, hospites tackon ferunt */
+    x = oratio_vocabularium_la_quaerere(piscina, voc,
+        _l("virumque"));
+    CREDO_VERUM (xar_numerus(x) >= (i32)III);
+    si (xar_numerus(x) >= (i32)II)
+    {
+        constans OratioAnalysis* t =
+            (constans OratioAnalysis*)xar_obtinere(x, ZEPHYRUM);
+        constans OratioAnalysis* h =
+            (constans OratioAnalysis*)xar_obtinere(x, I);
+
+        CREDO_AEQUALIS_S32 ((s32)t->genus,
+            (s32)ORATIO_ANALYSIS_TACKON);
+        CREDO_VERUM (_aequalis(oratio_vocabularium_la_additamentum(voc,
+            t->tackon)->forma, "que"));
+        CREDO_AEQUALIS_S32 ((s32)h->genus,
+            (s32)ORATIO_ANALYSIS_STIRPS);
+        CREDO_AEQUALIS_S32 (h->tackon, t->tackon);
+        CREDO_AEQUALIS_I32 (h->mensura_stirpis + (i32)II, (i32)V);
+    }
+            CREDO_VERUM (_adest(voc, x, "vir", ORATIO_PARS_N,
+                "ACC S", (i32)II));
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("sine"));
+    CREDO_VERUM (_adest(voc, x, "sine", ORATIO_PARS_PREP, "ABL",
+        I));
+    per (i = ZEPHYRUM; i < xar_numerus(x); i++)
+    {
+        CREDO_AEQUALIS_S32 (((constans OratioAnalysis*)xar_obtinere(x,
+            i))
+            ->tackon, (s32)-I);   /* nihil tentatum: directae adsunt */
+    }
+
+                            /* INVENTUM (T8): 'sum' in DICTLINE.GEN venditae DEEST - V 5 1 lineae
+     * omnes composita (absum adsum ...), INFLECTS V 5 1 XIX formae
+     * solae (essem forem es este esto esse sunto). In TABULA SOLA
+     * 'erat' 'fuit' IGNOTA manent (pinna huius plagulae); glossarium
+     * domus (T9, oratio/glossarium.stml) paradigma fert - porta
+     * probatio_oratio_glossarium ea cum glossario appenso probat.
+     * Stirpes vacuae internae (Bdl WORDS) paratae. */
+
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("erat"));
+    CREDO_AEQUALIS_I32 (xar_numerus(x), ZEPHYRUM);
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("fuit"));
+    CREDO_AEQUALIS_I32 (xar_numerus(x), ZEPHYRUM);
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("esse"));
+    CREDO_VERUM (_adest(voc, x, "ed", ORATIO_PARS_V,
+        "PRES ACTIVE INF", (i32)II));
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("absunt"));
+    CREDO_VERUM (_adest(voc, x, "abs", ORATIO_PARS_V,
+        "PRES ACTIVE IND 3 P", I));
+
+
+    /* unicum */
+    x = oratio_vocabularium_la_quaerere(piscina, voc,
+        _l("agantur"));
+
+    CREDO_AEQUALIS_I32 (xar_numerus(x), (i32)II);
+    CREDO_AEQUALIS_S32 ((s32)((constans OratioAnalysis*)xar_obtinere(x,
+        ZEPHYRUM))->genus, (s32)ORATIO_ANALYSIS_UNICUM);
+    CREDO_VERUM (_adest(voc, x, "ag", ORATIO_PARS_V,
+        "PRES PASSIVE SUB 3 P", I));
+
+    /* ordo: stirpes ordine plagulae, finis longior prior */
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("regis"));
+    {
+        i32 k;
+        s32 ultima    = (s32)-I;
+        b32 ordinata  = VERUM;
+
+        per (k = ZEPHYRUM; k < xar_numerus(x); k++)
+        {
+            constans OratioAnalysis* a =
+                (constans OratioAnalysis*)xar_obtinere(x, k);
+
+            si (a->stirps < ultima)
+            {
+                ordinata = FALSUM;
+            }
+            ultima = a->stirps;
+        }
+        CREDO_VERUM (ordinata);
+    }
+
+    /* ignota = inventa */
+    CREDO_AEQUALIS_I32 (xar_numerus(oratio_vocabularium_la_quaerere(piscina,
+        voc, _l("xyzzy"))), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (xar_numerus(oratio_vocabularium_la_quaerere(piscina,
+        voc, _l("Troiae"))), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (xar_numerus(oratio_vocabularium_la_quaerere(piscina,
+        voc, _l(""))), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (xar_numerus(oratio_vocabularium_la_quaerere(piscina,
+        voc, _l("abcdefghijklmnopqrstuvwxyzabcdefghijklmn"))),
+        ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (xar_numerus(oratio_vocabularium_la_quaerere(piscina,
+        voc, _l("\xE2\x80\x94"))), ZEPHYRUM);
+}
+}
+
+interior vacuum
+_lemma_probare (
+    CredoContextus* c)
+{
+    constans FixuraLatina* fixura  = (constans FixuraLatina*)c->suita;
+    Piscina* piscina               = c->piscina;
+    constans OratioVocabulariumLa* voc;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
+    voc = fixura->voc;
+{
+    Xar* x;
+    s32  s;
+
+            x = oratio_vocabularium_la_quaerere(piscina, voc,
+                _l("vir"));
+    s = _stirps_analysis(voc, x, "vir", ORATIO_PARS_N);
+    CREDO_VERUM (s >= ZEPHYRUM
+        && _aequalis(oratio_vocabularium_la_lemma(
+        piscina, voc, s), "vir"));
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("amat"));
+    s = _stirps_analysis(voc, x, "am", ORATIO_PARS_V);
+    CREDO_VERUM (s >= ZEPHYRUM
+        && _aequalis(oratio_vocabularium_la_lemma(
+        piscina, voc, s), "amo"));
+    x = oratio_vocabularium_la_quaerere(piscina, voc,
+        _l("puellam"));
+    s = _stirps_analysis(voc, x, "puell", ORATIO_PARS_N);
+    CREDO_VERUM (s >= ZEPHYRUM
+        && _aequalis(oratio_vocabularium_la_lemma(
+        piscina, voc, s), "puella"));
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("melior"));
+    s = _stirps_analysis(voc, x, "bon", ORATIO_PARS_ADJ);
+    CREDO_VERUM (s >= ZEPHYRUM
+        && _aequalis(oratio_vocabularium_la_lemma(
+        piscina, voc, s), "bonus"));
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("regis"));
+    s = _stirps_analysis(voc, x, "rex", ORATIO_PARS_N);
+    CREDO_VERUM (s >= ZEPHYRUM
+        && _aequalis(oratio_vocabularium_la_lemma(
+        piscina, voc, s), "rex"));
+    x = oratio_vocabularium_la_quaerere(piscina, voc,
+        _l("agantur"));
+    s = _stirps_analysis(voc, x, "ag", ORATIO_PARS_V);
+    CREDO_VERUM (s >= ZEPHYRUM
+        && _aequalis(oratio_vocabularium_la_lemma(
+        piscina, voc, s), "ago"));
+    x = oratio_vocabularium_la_quaerere(piscina, voc,
+        _l("loquitur"));
+    s = _stirps_analysis(voc, x, "loqu", ORATIO_PARS_V);
+    CREDO_VERUM (s >= ZEPHYRUM
+        && _aequalis(oratio_vocabularium_la_lemma(
+        piscina, voc, s), "loquor"));
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("amare"));
+    s = _stirps_analysis(voc, x, "amare", ORATIO_PARS_ADV);
+    CREDO_VERUM (s >= ZEPHYRUM
+        && _aequalis(oratio_vocabularium_la_lemma(
+        piscina, voc, s), "amare"));
+    x = oratio_vocabularium_la_quaerere(piscina, voc, _l("et"));
+    s = _stirps_analysis(voc, x, "et", ORATIO_PARS_CONJ);
+    CREDO_VERUM (s >= ZEPHYRUM
+        && _aequalis(oratio_vocabularium_la_lemma(
+        piscina, voc, s), "et"));
+}
+}
+
+interior vacuum
+_corpus_probare (
+    CredoContextus* c)
+{
+    constans FixuraLatina* fixura = (constans FixuraLatina*)c->suita;
+    constans character* radix;
+    character via[1024];
+    constans OratioVocabulariumLa* voc;
+    i32 i;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
+    radix  = fixura->radix;
+    voc    = fixura->voc;
+{
+    Coverage summa;
+
+    memset(&summa, ZEPHYRUM, magnitudo(summa));
+    per (i = ZEPHYRUM; i < (i32)(magnitudo(FIXTURAE_LATINAE)
+        / magnitudo(FIXTURAE_LATINAE[0])); i++)
+    {
+        Piscina* p = piscina_generare_dynamicum("la_corpus",
+            268435456);
+          chorda textus;
+        Coverage tegmen;
+        MateriaNodus* doc;
+        clock_t ante;
+        clock_t post;
+
+        memset(&tegmen, ZEPHYRUM, magnitudo(tegmen));
+        sprintf(via, "%s/%s", radix, FIXTURAE_LATINAE[i]);
+        CREDO_VERUM (_plagulam_legere(p, via, &textus));
+        doc = oratio_arbor_parsare(p,
+            (constans character*)textus.datum,
+            textus.mensura);
+        CREDO_NON_NIHIL (doc);
+        ante = clock();
+        si (doc != NIHIL)
+        {
+                            _vocabula_quaerere(p, voc, doc, textus,
+                                &tegmen);
+
+        }
+        post = clock();
+        imprimere("  %-44s vocabula %6ld  nota %6ld  ignota %5ld  (%.1f%%)  %.1f ms\n",
+            FIXTURAE_LATINAE[i], (longus)tegmen.vocabula,
+            (longus)tegmen.nota,
+            (longus)tegmen.ignota,
+            tegmen.vocabula > ZEPHYRUM ? 100.0 * (duplex)tegmen.nota
+                / (duplex)tegmen.vocabula
+                : 0.0,
+            1000.0 * (duplex)(post - ante)
+                / (duplex)CLOCKS_PER_SEC);
+        CREDO_VERUM (tegmen.vocabula > (s64)1000);
+        CREDO_VERUM (tegmen.nota * (s64)II > tegmen.vocabula);
+        summa.vocabula  += tegmen.vocabula;
+        summa.nota      += tegmen.nota;
+        summa.ignota    += tegmen.ignota;
+        piscina_destruere(p);
+    }
+    imprimere("  SUMMA vocabula %ld  nota %ld  ignota %ld  (%.1f%%)\n",
+        (longus)summa.vocabula, (longus)summa.nota,
+        (longus)summa.ignota,
+        100.0 * (duplex)summa.nota / (duplex)summa.vocabula);
+}
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. Plicatio", _plicare_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "II. Onus", _onus_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III. Quaesitio contra WORDS", _quaesitionem_probare, NIHIL,
+        NIHIL,
+        NIHIL, NIHIL },
+    { "IV. Lemma v1 (forma prima)", _lemma_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "V. Corpus: vocabula fixturarum Latinarum", _corpus_probare,
+        NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
 s32
 principale (vacuum)
 {
-                  Piscina* piscina;
-       constans character* radix;
-                character  via[1024];
-                   chorda  tabula;
-    OratioVocabulariumLa* voc;
- OratioVocabulariumVitium vitium;
-                      i32  i;
-
-    piscina =
-        piscina_generare_dynamicum("probatio_oratio_vocabularium_la",
-        268435456);
-    credo_aperire(piscina);
-    radix = getenv("RHUBARB_RADIX");
-    si (radix == NIHIL)
-    {
-        radix = ".";
-    }
-
-    imprimere("\n--- I. Plicatio ---\n");
-    CREDO_VERUM (_aequalis(oratio_vocabularium_la_plicare(piscina,
-        _l("VIRVM")),
-        "uirum"));
-    CREDO_VERUM (_aequalis(oratio_vocabularium_la_plicare(piscina,
-        _l("Jam")),
-        "iam"));
-    CREDO_VERUM (_aequalis(oratio_vocabularium_la_plicare(piscina,
-        _l("\xC3\x86quus")), "aequus"));                 /* Æquus */
-    CREDO_VERUM (_aequalis(oratio_vocabularium_la_plicare(piscina,
-        _l("R\xC5\x8Dma")), "roma"));                    /* Rōma */
-    CREDO_VERUM (_aequalis(oratio_vocabularium_la_plicare(piscina,
-        _l("c\xC5\x93lum")), "coelum"));                 /* cœlum */
-    CREDO_VERUM (_aequalis(oratio_vocabularium_la_plicare(piscina,
-        _l("\xC4\x81m\xC4\x83")), "ama"));               /* āmă */
-    CREDO_VERUM (_aequalis(oratio_vocabularium_la_plicare(piscina,
-        _l("caf\xC3\xA9")), "caf\xC3\xA9"));             /* é manet */
-    CREDO_VERUM (_aequalis(oratio_vocabularium_la_plicare(piscina,
-        _l("")), ""));
-
-    imprimere("\n--- II. Onus ---\n");
-    sprintf(via, "%s/oratio/vocabularium/la.bin", radix);
-    CREDO_VERUM (_plagulam_legere(piscina, via, &tabula));
-    {
-                         clock_t ante = clock();
-                         clock_t post;
-        OratioVocabulariumCensus c;
-
-        voc = oratio_vocabularium_la_onerare(piscina, tabula, &vitium);
-        post = clock();
-        CREDO_NON_NIHIL (voc);
-        si (voc == NIHIL)
-        {
-            imprimere("  onus fractum: %s\n", vitium.causa);
-            credo_imprimere_compendium();
-            redde I;
-        }
-        c = oratio_vocabularium_la_census(voc);
-        imprimere("  stirpes %d flexiones %d additamenta %d unica %d tackons %d  onus %.1f ms\n",
-            (integer)c.stirpes, (integer)c.flexiones,
-            (integer)c.additamenta,
-            (integer)c.unica,
-            (integer)oratio_vocabularium_la_tackones(voc),
-            1000.0 * (duplex)(post - ante) / (duplex)CLOCKS_PER_SEC);
-        CREDO_AEQUALIS_I32 (c.stirpes, (i32)39335);
-        CREDO_AEQUALIS_I32 (c.flexiones, (i32)1797);
-        CREDO_AEQUALIS_I32 (oratio_vocabularium_la_tackones(voc),
-            (i32)III);
-    }
-
-    imprimere("\n--- III. Quaesitio contra WORDS ---\n");
-    {
-        Xar* x;
-
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("vir"));
-        CREDO_AEQUALIS_I32 (xar_numerus(x), (i32)II);
-        CREDO_VERUM (_adest(voc, x, "vir", ORATIO_PARS_N, "NOM S", I));
-        CREDO_VERUM (_adest(voc, x, "vir", ORATIO_PARS_N, "VOC S", I));
-
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("virum"));
-        CREDO_VERUM (_adest(voc, x, "vir", ORATIO_PARS_N, "ACC S",
-            (i32)II));
-        CREDO_VERUM (_adest(voc, x, "vir", ORATIO_PARS_N, "GEN P",
-            (i32)II));
-        CREDO_VERUM (_adest(voc, x, "vis", ORATIO_PARS_N, "GEN P",
-            (i32)II));
-        imprimere("  virum: %d analyses\n", (integer)xar_numerus(x));
-        {
-            Xar* y = oratio_vocabularium_la_quaerere(piscina, voc,
-                _l("VIRVM"));
-
-            CREDO_AEQUALIS_I32 (xar_numerus(y), xar_numerus(x));
-        }
-
-        x = oratio_vocabularium_la_quaerere(piscina, voc,
-            _l("puellam"));
-        CREDO_AEQUALIS_I32 (xar_numerus(x), I);
-        CREDO_VERUM (_adest(voc, x, "puell", ORATIO_PARS_N, "ACC S",
-            (i32)II));
-
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("rex"));
-        CREDO_AEQUALIS_I32 (xar_numerus(x), (i32)II);
-        CREDO_VERUM (_adest(voc, x, "rex", ORATIO_PARS_N, "NOM S", I));
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("regis"));
-        CREDO_VERUM (_adest(voc, x, "rex", ORATIO_PARS_N, "GEN S",
-            (i32)II));
-        CREDO_VERUM (_adest(voc, x, "reg", ORATIO_PARS_V,
-            "PRES ACTIVE IND 2 S", (i32)II));
-
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("amat"));
-        CREDO_AEQUALIS_I32 (xar_numerus(x), I);
-        CREDO_VERUM (_adest(voc, x, "am", ORATIO_PARS_V,
-            "PRES ACTIVE IND 3 S", (i32)II));
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("amavit"));
-        CREDO_VERUM (_adest(voc, x, "am", ORATIO_PARS_V,
-            "PERF ACTIVE IND 3 S",
-            (i32)III));
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("amatus"));
-        CREDO_VERUM (_adest(voc, x, "am", ORATIO_PARS_V,
-            "NOM S M PERF PASSIVE PPL",
-            (i32)IV));
-        CREDO_VERUM (_adest(voc, x, "amat", ORATIO_PARS_ADJ,
-            "NOM S M POS", I));
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("amare"));
-        CREDO_VERUM (_adest(voc, x, "am", ORATIO_PARS_V,
-            "PRES ACTIVE INF", (i32)II));
-        CREDO_AEQUALIS_I32 (_numerus_partis(voc, x, ORATIO_PARS_ADV),
-            I);
-        imprimere("  amare: %d analyses (ADV semel)\n",
-            (integer)xar_numerus(x));
-
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("bonus"));
-        CREDO_VERUM (_adest(voc, x, "bon", ORATIO_PARS_ADJ,
-            "NOM S M POS", I));
-        CREDO_VERUM (_adest(voc, x, "bon", ORATIO_PARS_N, "NOM S", I));
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("melior"));
-        CREDO_AEQUALIS_I32 (xar_numerus(x), (i32)II);
-        CREDO_VERUM (_adest(voc, x, "bon", ORATIO_PARS_ADJ,
-            "NOM S C COMP", (i32)III));
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("optime"));
-        CREDO_VERUM (_adest(voc, x, "bon", ORATIO_PARS_ADJ,
-            "VOC S M SUPER", (i32)IV));
-        CREDO_VERUM (_adest(voc, x, "bene", ORATIO_PARS_ADV, "X",
-            (i32)III));
-        x = oratio_vocabularium_la_quaerere(piscina, voc,
-            _l("amariter"));
-        CREDO_AEQUALIS_I32 (xar_numerus(x), I);
-        CREDO_VERUM (_adest(voc, x, "amariter", ORATIO_PARS_ADV, "POS",
-            I));
-
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("et"));
-        CREDO_AEQUALIS_I32 (xar_numerus(x), I);
-        CREDO_VERUM (_adest(voc, x, "et", ORATIO_PARS_CONJ, "", I));
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("in"));
-        CREDO_AEQUALIS_I32 (xar_numerus(x), (i32)II);
-        CREDO_VERUM (_adest(voc, x, "in", ORATIO_PARS_PREP, "ABL", I));
-        CREDO_VERUM (_adest(voc, x, "in", ORATIO_PARS_PREP, "ACC", I));
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("a"));
-        CREDO_AEQUALIS_I32 (xar_numerus(x), (i32)V);
-        CREDO_VERUM (_adest(voc, x, "a", ORATIO_PARS_PREP, "ABL", I));
-        CREDO_VERUM (_adest(voc, x, "a", ORATIO_PARS_INTERJ, "", I));
-
-        /* tackon: -que ante hospites, hospites tackon ferunt */
-        x = oratio_vocabularium_la_quaerere(piscina, voc,
-            _l("virumque"));
-        CREDO_VERUM (xar_numerus(x) >= (i32)III);
-        si (xar_numerus(x) >= (i32)II)
-        {
-            constans OratioAnalysis* t =
-                (constans OratioAnalysis*)xar_obtinere(x, ZEPHYRUM);
-            constans OratioAnalysis* h =
-                (constans OratioAnalysis*)xar_obtinere(x, I);
-
-            CREDO_AEQUALIS_S32 ((s32)t->genus,
-                (s32)ORATIO_ANALYSIS_TACKON);
-            CREDO_VERUM (_aequalis(oratio_vocabularium_la_additamentum(voc,
-                t->tackon)->forma, "que"));
-            CREDO_AEQUALIS_S32 ((s32)h->genus,
-                (s32)ORATIO_ANALYSIS_STIRPS);
-            CREDO_AEQUALIS_S32 (h->tackon, t->tackon);
-            CREDO_AEQUALIS_I32 (h->mensura_stirpis + (i32)II, (i32)V);
-        }
-                CREDO_VERUM (_adest(voc, x, "vir", ORATIO_PARS_N,
-                    "ACC S", (i32)II));
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("sine"));
-        CREDO_VERUM (_adest(voc, x, "sine", ORATIO_PARS_PREP, "ABL",
-            I));
-        per (i = ZEPHYRUM; i < xar_numerus(x); i++)
-        {
-            CREDO_AEQUALIS_S32 (((constans OratioAnalysis*)xar_obtinere(x,
-                i))
-                ->tackon, (s32)-I);   /* nihil tentatum: directae adsunt */
-        }
-
-                                /* INVENTUM (T8): 'sum' in DICTLINE.GEN venditae DEEST - V 5 1 lineae
-         * omnes composita (absum adsum ...), INFLECTS V 5 1 XIX formae
-         * solae (essem forem es este esto esse sunto). In TABULA SOLA
-         * 'erat' 'fuit' IGNOTA manent (pinna huius plagulae); glossarium
-         * domus (T9, oratio/glossarium.stml) paradigma fert - porta
-         * probatio_oratio_glossarium ea cum glossario appenso probat.
-         * Stirpes vacuae internae (Bdl WORDS) paratae. */
-
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("erat"));
-        CREDO_AEQUALIS_I32 (xar_numerus(x), ZEPHYRUM);
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("fuit"));
-        CREDO_AEQUALIS_I32 (xar_numerus(x), ZEPHYRUM);
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("esse"));
-        CREDO_VERUM (_adest(voc, x, "ed", ORATIO_PARS_V,
-            "PRES ACTIVE INF", (i32)II));
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("absunt"));
-        CREDO_VERUM (_adest(voc, x, "abs", ORATIO_PARS_V,
-            "PRES ACTIVE IND 3 P", I));
-
-
-        /* unicum */
-        x = oratio_vocabularium_la_quaerere(piscina, voc,
-            _l("agantur"));
-
-        CREDO_AEQUALIS_I32 (xar_numerus(x), (i32)II);
-        CREDO_AEQUALIS_S32 ((s32)((constans OratioAnalysis*)xar_obtinere(x,
-            ZEPHYRUM))->genus, (s32)ORATIO_ANALYSIS_UNICUM);
-        CREDO_VERUM (_adest(voc, x, "ag", ORATIO_PARS_V,
-            "PRES PASSIVE SUB 3 P", I));
-
-        /* ordo: stirpes ordine plagulae, finis longior prior */
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("regis"));
-        {
-            i32 k;
-            s32 ultima    = (s32)-I;
-            b32 ordinata  = VERUM;
-
-            per (k = ZEPHYRUM; k < xar_numerus(x); k++)
-            {
-                constans OratioAnalysis* a =
-                    (constans OratioAnalysis*)xar_obtinere(x, k);
-
-                si (a->stirps < ultima)
-                {
-                    ordinata = FALSUM;
-                }
-                ultima = a->stirps;
-            }
-            CREDO_VERUM (ordinata);
-        }
-
-        /* ignota = inventa */
-        CREDO_AEQUALIS_I32 (xar_numerus(oratio_vocabularium_la_quaerere(piscina,
-            voc, _l("xyzzy"))), ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (xar_numerus(oratio_vocabularium_la_quaerere(piscina,
-            voc, _l("Troiae"))), ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (xar_numerus(oratio_vocabularium_la_quaerere(piscina,
-            voc, _l(""))), ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (xar_numerus(oratio_vocabularium_la_quaerere(piscina,
-            voc, _l("abcdefghijklmnopqrstuvwxyzabcdefghijklmn"))),
-            ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (xar_numerus(oratio_vocabularium_la_quaerere(piscina,
-            voc, _l("\xE2\x80\x94"))), ZEPHYRUM);
-    }
-
-    imprimere("\n--- IV. Lemma v1 (forma prima) ---\n");
-    {
-        Xar* x;
-        s32  s;
-
-                x = oratio_vocabularium_la_quaerere(piscina, voc,
-                    _l("vir"));
-        s = _stirps_analysis(voc, x, "vir", ORATIO_PARS_N);
-        CREDO_VERUM (s >= ZEPHYRUM
-            && _aequalis(oratio_vocabularium_la_lemma(
-            piscina, voc, s), "vir"));
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("amat"));
-        s = _stirps_analysis(voc, x, "am", ORATIO_PARS_V);
-        CREDO_VERUM (s >= ZEPHYRUM
-            && _aequalis(oratio_vocabularium_la_lemma(
-            piscina, voc, s), "amo"));
-        x = oratio_vocabularium_la_quaerere(piscina, voc,
-            _l("puellam"));
-        s = _stirps_analysis(voc, x, "puell", ORATIO_PARS_N);
-        CREDO_VERUM (s >= ZEPHYRUM
-            && _aequalis(oratio_vocabularium_la_lemma(
-            piscina, voc, s), "puella"));
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("melior"));
-        s = _stirps_analysis(voc, x, "bon", ORATIO_PARS_ADJ);
-        CREDO_VERUM (s >= ZEPHYRUM
-            && _aequalis(oratio_vocabularium_la_lemma(
-            piscina, voc, s), "bonus"));
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("regis"));
-        s = _stirps_analysis(voc, x, "rex", ORATIO_PARS_N);
-        CREDO_VERUM (s >= ZEPHYRUM
-            && _aequalis(oratio_vocabularium_la_lemma(
-            piscina, voc, s), "rex"));
-        x = oratio_vocabularium_la_quaerere(piscina, voc,
-            _l("agantur"));
-        s = _stirps_analysis(voc, x, "ag", ORATIO_PARS_V);
-        CREDO_VERUM (s >= ZEPHYRUM
-            && _aequalis(oratio_vocabularium_la_lemma(
-            piscina, voc, s), "ago"));
-        x = oratio_vocabularium_la_quaerere(piscina, voc,
-            _l("loquitur"));
-        s = _stirps_analysis(voc, x, "loqu", ORATIO_PARS_V);
-        CREDO_VERUM (s >= ZEPHYRUM
-            && _aequalis(oratio_vocabularium_la_lemma(
-            piscina, voc, s), "loquor"));
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("amare"));
-        s = _stirps_analysis(voc, x, "amare", ORATIO_PARS_ADV);
-        CREDO_VERUM (s >= ZEPHYRUM
-            && _aequalis(oratio_vocabularium_la_lemma(
-            piscina, voc, s), "amare"));
-        x = oratio_vocabularium_la_quaerere(piscina, voc, _l("et"));
-        s = _stirps_analysis(voc, x, "et", ORATIO_PARS_CONJ);
-        CREDO_VERUM (s >= ZEPHYRUM
-            && _aequalis(oratio_vocabularium_la_lemma(
-            piscina, voc, s), "et"));
-    }
-
-    imprimere("\n--- V. Corpus: vocabula fixturarum Latinarum ---\n");
-    {
-        Coverage summa;
-
-        memset(&summa, ZEPHYRUM, magnitudo(summa));
-        per (i = ZEPHYRUM; i < (i32)(magnitudo(FIXTURAE_LATINAE)
-            / magnitudo(FIXTURAE_LATINAE[0])); i++)
-        {
-            Piscina* p = piscina_generare_dynamicum("la_corpus",
-                268435456);
-              chorda textus;
-            Coverage c;
-            MateriaNodus* doc;
-            clock_t ante;
-            clock_t post;
-
-            memset(&c, ZEPHYRUM, magnitudo(c));
-            sprintf(via, "%s/%s", radix, FIXTURAE_LATINAE[i]);
-            CREDO_VERUM (_plagulam_legere(p, via, &textus));
-            doc = oratio_arbor_parsare(p,
-                (constans character*)textus.datum,
-                textus.mensura);
-            CREDO_NON_NIHIL (doc);
-            ante = clock();
-            si (doc != NIHIL)
-            {
-                                _vocabula_quaerere(p, voc, doc, textus,
-                                    &c);
-
-            }
-            post = clock();
-            imprimere("  %-44s vocabula %6ld  nota %6ld  ignota %5ld  (%.1f%%)  %.1f ms\n",
-                FIXTURAE_LATINAE[i], (longus)c.vocabula, (longus)c.nota,
-                (longus)c.ignota,
-                c.vocabula > ZEPHYRUM ? 100.0 * (duplex)c.nota
-                    / (duplex)c.vocabula
-                    : 0.0,
-                1000.0 * (duplex)(post - ante)
-                    / (duplex)CLOCKS_PER_SEC);
-            CREDO_VERUM (c.vocabula > (s64)1000);
-            CREDO_VERUM (c.nota * (s64)II > c.vocabula);
-            summa.vocabula  += c.vocabula;
-            summa.nota      += c.nota;
-            summa.ignota    += c.ignota;
-            piscina_destruere(p);
-        }
-        imprimere("  SUMMA vocabula %ld  nota %ld  ignota %ld  (%.1f%%)\n",
-            (longus)summa.vocabula, (longus)summa.nota,
-            (longus)summa.ignota,
-            100.0 * (duplex)summa.nota / (duplex)summa.vocabula);
-    }
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
-
-        credo_claudere();
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
-    }
+    redde credo_suitam_currere_cum("oratio_vocabularium_la", SECTIONES,
+        _suitam_parare, NIHIL);
 }

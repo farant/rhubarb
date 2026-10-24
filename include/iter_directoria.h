@@ -52,11 +52,21 @@ nomen enumeratio {
  * Introitus Directorii
  * ================================================== */
 
-/* Informatio de introitu in directorio */
+/* Informatio de introitu in directorio
+ *
+ * genus, mensura, tempus_ns: status SECUTUS (stat - nexus symbolicus
+ * destinationem suam refert; nexus fractus = INTROITUS_IGNOTUS).
+ * mensura st_size est, ETIAM directoriorum (valor systematis). est_nexus:
+ * introitus IPSE nexus symbolicus est (lstat) - ambulator qui statum
+ * nexus ipsius poscit (photographia fabricae) solum tunc lstat vocat.
+ * tempus_ns + est_nexus 2026-10-22 (enumeratio uno vocamine in macOS:
+ * vide iter_directoria.c). */
 nomen structura {
-            chorda titulus;  /* Titulus introitus (non via plena) */
-    IntroitusGenus genus;    /* Genus introitus */
-    memoriae_index mensura;  /* Mensura fili in bytes (0 pro directoriis) */
+            chorda titulus;    /* Titulus introitus (non via plena) */
+    IntroitusGenus genus;      /* Genus introitus */
+    memoriae_index mensura;    /* Mensura in octetis (st_size) */
+               s64 tempus_ns;  /* mtime in nanosecundis (secutus) */
+               b32 est_nexus;  /* introitus ipse nexus symbolicus */
 } DirectoriumIntroitus;
 
 

@@ -529,34 +529,27 @@ _visor (
  * Principale
  * ================================================== */
 
-s32
-principale (vacuum)
-{
-                    b32  praeteritus;
-                Piscina* piscina;
-                Piscina* opus;
-     constans character* radix = lectiones_ambitus("RHUBARB_RADIX");
 
-    piscina = piscina_generare_dynamicum("probatio_toml_scalaris",
-        262144);
+/* ==================================================
+ * Integri
+ * ================================================== */
+
+interior vacuum
+_integros_probare (
+    CredoContextus* c)
+{
+    Piscina* opus;
+    (vacuum)c;
+
     opus = piscina_generare_dynamicum("probatio_toml_scalaris_opus",
         1048576);
-    si (!piscina || !opus)
+    si (opus == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde;
     }
-    credo_aperire(piscina);
-
-
-    /* ==================================================
-     * Integri
-     * ================================================== */
-
     {
         i32 k;
 
-        imprimere("\n--- Probans integros ---\n");
         per (k = ZEPHYRUM; INTEGRI[k].fons != NIHIL; k++)
         {
             TomlValor v;
@@ -577,19 +570,33 @@ principale (vacuum)
             piscina_vacare(opus);
         }
     }
+    piscina_destruere(opus);
+}
 
 
-    /* ==================================================
-     * Fluitantes
-     * ================================================== */
+/* ==================================================
+ * Fluitantes
+ * ================================================== */
 
+interior vacuum
+_fluitantes_probare (
+    CredoContextus* c)
+{
+    Piscina* opus;
+    (vacuum)c;
+
+    opus = piscina_generare_dynamicum("probatio_toml_scalaris_opus",
+        1048576);
+    si (opus == NIHIL)
+    {
+        redde;
+    }
     {
         i32 k;
 
-        imprimere("\n--- Probans fluitantes ---\n");
         per (k = ZEPHYRUM; FLUITANTES[k].fons != NIHIL; k++)
         {
-             constans CasusFluitantis* c = &FLUITANTES[k];
+             constans CasusFluitantis* compositus = &FLUITANTES[k];
                             TomlValor  v;
                                   Xar* dd;
                                   b32 bene;
@@ -597,7 +604,7 @@ principale (vacuum)
                                   b32 negativum;
                                   i32 species;
 
-            bene  = _coquere(opus, c->fons, &v, &dd);
+            bene  = _coquere(opus, compositus->fons, &v, &dd);
             x     = v.datum.fluitans_valor;
             species = x != x ? II
                 : (x > 1e308 || x < -1e308) ? I : ZEPHYRUM;
@@ -622,36 +629,52 @@ principale (vacuum)
                 negativum = (o[summus] & 0x80) != ZEPHYRUM;
             }
             si (   !bene || v.genus != TOML_VALOR_FLUITANS
-                || species != c->species || negativum != c->negativum
-                || (species == ZEPHYRUM && x != c->valor))
+                || species   != compositus->species
+                || negativum != compositus->negativum
+                || (species == ZEPHYRUM && x != compositus->valor))
             {
                 imprimere("    %s -> %g (species %u, neg %d)\n",
-                    c->fons,
+                    compositus->fons,
                     x, species, (integer)negativum);
             }
             CREDO_VERUM (bene);
             CREDO_AEQUALIS_S32 ((s32)v.genus, (s32)TOML_VALOR_FLUITANS);
-            CREDO_AEQUALIS_I32 (species, c->species);
-            CREDO_AEQUALIS_S32 ((s32)negativum, (s32)c->negativum);
-            si (c->species == ZEPHYRUM)
+            CREDO_AEQUALIS_I32 (species, compositus->species);
+            CREDO_AEQUALIS_S32 ((s32)negativum,
+                (s32)compositus->negativum);
+            si (compositus->species == ZEPHYRUM)
             {
-                CREDO_VERUM (x == c->valor);
+                CREDO_VERUM (x == compositus->valor);
             }
             CREDO_AEQUALIS_I32 (_numerus_diagnosticorum(dd), ZEPHYRUM);
             piscina_vacare(opus);
         }
     }
+    piscina_destruere(opus);
+}
 
 
-    /* ==================================================
-     * Boolean
-     * ================================================== */
+/* ==================================================
+ * Boolean
+ * ================================================== */
 
+interior vacuum
+_boolean_probare (
+    CredoContextus* c)
+{
+    Piscina* opus;
+    (vacuum)c;
+
+    opus = piscina_generare_dynamicum("probatio_toml_scalaris_opus",
+        1048576);
+    si (opus == NIHIL)
+    {
+        redde;
+    }
     {
         TomlValor v;
               Xar* dd;
 
-        imprimere("\n--- Probans boolean ---\n");
         CREDO_VERUM (_coquere(opus, "a = true", &v, &dd));
         CREDO_AEQUALIS_S32 ((s32)v.genus, (s32)TOML_VALOR_BOOLEAN);
         CREDO_VERUM (v.datum.boolean_valor);
@@ -660,32 +683,47 @@ principale (vacuum)
         CREDO_NON_NIHIL (v.nodus);
         piscina_vacare(opus);
     }
+    piscina_destruere(opus);
+}
 
 
-    /* ==================================================
-     * Chordae
-     * ================================================== */
+/* ==================================================
+ * Chordae
+ * ================================================== */
 
+interior vacuum
+_chordas_probare (
+    CredoContextus* c)
+{
+    Piscina* opus;
+    (vacuum)c;
+
+    opus = piscina_generare_dynamicum("probatio_toml_scalaris_opus",
+        1048576);
+    si (opus == NIHIL)
+    {
+        redde;
+    }
     {
         i32 k;
 
-        imprimere("\n--- Probans chordas ---\n");
         per (k = ZEPHYRUM; CHORDAE[k].fons != NIHIL; k++)
         {
-             constans CasusChordae* c = &CHORDAE[k];
+             constans CasusChordae* compositus = &CHORDAE[k];
                          TomlValor  v;
                                Xar* dd;
                                b32 bene;
-                               i32 m = c->mensura != ZEPHYRUM
-                                   ? c->mensura
-                                   : (i32)strlen(c->valor);
+                               i32 m = compositus->mensura != ZEPHYRUM
+                                   ? compositus->mensura
+                                   : (i32)strlen(compositus->valor);
                                b32 idem;
 
-            bene = _coquere(opus, c->fons, &v, &dd);
+            bene = _coquere(opus, compositus->fons, &v, &dd);
             idem = bene && v.genus == TOML_VALOR_CHORDA
                 && v.datum.chorda_valor.mensura == m
                 && (m == ZEPHYRUM
-                    || memcmp(v.datum.chorda_valor.datum, c->valor,
+                    || memcmp(v.datum.chorda_valor.datum,
+                    compositus->valor,
                         (size_t)m) == ZEPHYRUM);
             si (!idem)
             {
@@ -699,12 +737,27 @@ principale (vacuum)
             piscina_vacare(opus);
         }
     }
+    piscina_destruere(opus);
+}
 
 
-    /* ==================================================
-     * Claves quotatae
-     * ================================================== */
+/* ==================================================
+ * Claves quotatae
+ * ================================================== */
 
+interior vacuum
+_claves_probare (
+    CredoContextus* c)
+{
+    Piscina* opus;
+    (vacuum)c;
+
+    opus = piscina_generare_dynamicum("probatio_toml_scalaris_opus",
+        1048576);
+    si (opus == NIHIL)
+    {
+        redde;
+    }
     {
         constans character* FONTES[] = { "\"k\\u0041\" = 1",
             "'lit\\n' = 1", "abc = 1", "\"\" = 1" };
@@ -712,7 +765,6 @@ principale (vacuum)
             "" };
                         i32 k;
 
-        imprimere("\n--- Probans claves quotatas ---\n");
         per (k = ZEPHYRUM; k < IV; k++)
         {
             MateriaNodus* radix = _radix(opus, FONTES[k],
@@ -742,19 +794,33 @@ principale (vacuum)
             piscina_vacare(opus);
         }
     }
+    piscina_destruere(opus);
+}
 
 
-    /* ==================================================
-     * Tempora
-     * ================================================== */
+/* ==================================================
+ * Tempora
+ * ================================================== */
 
+interior vacuum
+_tempora_probare (
+    CredoContextus* c)
+{
+    Piscina* opus;
+    (vacuum)c;
+
+    opus = piscina_generare_dynamicum("probatio_toml_scalaris_opus",
+        1048576);
+    si (opus == NIHIL)
+    {
+        redde;
+    }
     {
         i32 k;
 
-        imprimere("\n--- Probans tempora ---\n");
         per (k = ZEPHYRUM; TEMPORA[k].fons != NIHIL; k++)
         {
-             constans CasusTemporis* c = &TEMPORA[k];
+             constans CasusTemporis* compositus = &TEMPORA[k];
                           TomlValor  v;
                                 Xar* dd;
                                 b32 bene;
@@ -763,7 +829,8 @@ principale (vacuum)
                                 i32 j;
                                 b32 idem;
 
-            bene             = _coquere(opus, c->fons, &v, &dd);
+            bene = _coquere(opus, compositus->fons, &v,
+                &dd);
             campi[ZEPHYRUM]  = t->annus;
             campi[I]         = t->mensis;
             campi[II]        = t->dies;
@@ -773,10 +840,10 @@ principale (vacuum)
             campi[VI]        = t->nanosecunda;
             campi[VII]       = t->zona_minuta;
             idem = bene && v.genus == TOML_VALOR_TEMPUS
-                && t->genus == c->genus;
+                && t->genus == compositus->genus;
             per (j = ZEPHYRUM; j < VIII; j++)
             {
-                si (campi[j] != c->campi[j])
+                si (campi[j] != compositus->campi[j])
                 {
                     idem = FALSUM;
                 }
@@ -784,7 +851,7 @@ principale (vacuum)
             si (!idem)
             {
                 imprimere("    %s -> genus %d: %d-%d-%d %d:%d:%d.%d "
-                    "zona %d\n", c->fons, (integer)t->genus,
+                    "zona %d\n", compositus->fons, (integer)t->genus,
                     (integer)t->annus, (integer)t->mensis,
                     (integer)t->dies, (integer)t->hora,
                     (integer)t->minutum, (integer)t->secundum,
@@ -795,36 +862,51 @@ principale (vacuum)
             piscina_vacare(opus);
         }
     }
+    piscina_destruere(opus);
+}
 
 
-    /* ==================================================
-     * Vitia: codex, sedes, numerus
-     * ================================================== */
+/* ==================================================
+ * Vitia: codex, sedes, numerus
+ * ================================================== */
 
+interior vacuum
+_vitia_probare (
+    CredoContextus* c)
+{
+    Piscina* opus;
+    (vacuum)c;
+
+    opus = piscina_generare_dynamicum("probatio_toml_scalaris_opus",
+        1048576);
+    si (opus == NIHIL)
+    {
+        redde;
+    }
     {
         i32 k;
 
-        imprimere("\n--- Probans vitia ---\n");
         per (k = ZEPHYRUM; VITIA[k].fons != NIHIL; k++)
         {
-            constans CasusVitii* c = &VITIA[k];
-                   MateriaNodus* radix = _radix(opus, c->fons,
-                                            (s32)strlen(c->fons));
+            constans CasusVitii* compositus = &VITIA[k];
+                   MateriaNodus* radix = _radix(opus, compositus->fons,
+                                            (s32)strlen(compositus->fons));
                            Xar* dd = radix != NIHIL
                                ? toml_scalaria_iudicare(opus, radix)
                                : NIHIL;
                            i32 n  = _numerus_diagnosticorum(dd);
                            b32 bene;
 
-            bene = n == c->numerus
-                && strcmp(_diagnosticum(dd, ZEPHYRUM)->codex, c->codex)
+            bene = n == compositus->numerus
+                && strcmp(_diagnosticum(dd, ZEPHYRUM)->codex,
+                compositus->codex)
                     == ZEPHYRUM
                 && _diagnosticum(dd, ZEPHYRUM)->tractus.initium
-                    == c->initium;
+                    == compositus->initium;
             si (!bene)
             {
                 imprimere("    casus %u '%s': %u diagnostica", k,
-                    c->fons,
+                    compositus->fons,
                     n);
                 si (n > ZEPHYRUM)
                 {
@@ -852,18 +934,37 @@ principale (vacuum)
             piscina_vacare(opus);
         }
     }
+    piscina_destruere(opus);
+}
 
 
-    /* ==================================================
-     * Sedes linearis: vitium in linea altera chordae multae
-     * ================================================== */
+/* ==================================================
+ * Sedes linearis: vitium in linea altera chordae multae
+ * ================================================== */
 
+interior vacuum
+_sedem_linearem_probare (
+    CredoContextus* c)
+{
+               Piscina* opus;
+    constans character* radix = lectiones_ambitus("RHUBARB_RADIX");
+    (vacuum)c;
+
+    si (radix == NIHIL)
+    {
+        radix = ".";
+    }
+    opus = piscina_generare_dynamicum("probatio_toml_scalaris_opus",
+        1048576);
+    si (opus == NIHIL)
+    {
+        redde;
+    }
     {
         constans character* f = "a = \"\"\"\nab\n  \\q\"\"\"";
             MateriaNodus* radix;
                       Xar* dd;
 
-        imprimere("\n--- Probans lineam et columnam vitii ---\n");
         radix  = _radix(opus, f, (s32)strlen(f));
         dd     = toml_scalaria_iudicare(opus, radix);
         CREDO_AEQUALIS_I32 (_numerus_diagnosticorum(dd), I);
@@ -880,19 +981,33 @@ principale (vacuum)
         }
         piscina_vacare(opus);
     }
+    piscina_destruere(opus);
+}
 
 
-    /* ==================================================
-     * Malum non iudicatur; trivia eius iudicantur
-     * ================================================== */
+/* ==================================================
+ * Malum non iudicatur; trivia eius iudicantur
+ * ================================================== */
 
+interior vacuum
+_malum_probare (
+    CredoContextus* c)
+{
+    Piscina* opus;
+    (vacuum)c;
+
+    opus = piscina_generare_dynamicum("probatio_toml_scalaris_opus",
+        1048576);
+    si (opus == NIHIL)
+    {
+        redde;
+    }
     {
         constans character* f = "\"\\q\" \"\\q\" = 1 # \001";
             MateriaNodus* radix;
                       Xar* dd;
                TomlParsura r;
 
-        imprimere("\n--- Probans malum non iudicatum ---\n");
         radix = toml_arbor_parsare(opus, f, (s32)strlen(f), &r);
         CREDO_FALSUM (r.sana);
         dd = toml_scalaria_iudicare(opus, radix);
@@ -907,34 +1022,67 @@ principale (vacuum)
         }
         piscina_vacare(opus);
     }
+    piscina_destruere(opus);
+}
 
 
-    /* ==================================================
-     * Verdictum BOM (Q1): syntaxis recusat, coctio tacet
-     * ================================================== */
+/* ==================================================
+ * Verdictum BOM (Q1): syntaxis recusat, coctio tacet
+ * ================================================== */
 
+interior vacuum
+_signum_ordinis_probare (
+    CredoContextus* c)
+{
+    Piscina* opus;
+    (vacuum)c;
+
+    opus = piscina_generare_dynamicum("probatio_toml_scalaris_opus",
+        1048576);
+    si (opus == NIHIL)
+    {
+        redde;
+    }
     {
         constans character* f = "\357\273\277a = 1";
                TomlParsura  r;
             MateriaNodus* radix;
 
-        imprimere("\n--- Probans BOM (verdictum Q1) ---\n");
         radix = toml_arbor_parsare(opus, f, (s32)strlen(f), &r);
         CREDO_NON_NIHIL (radix);
         CREDO_FALSUM (r.sana);
         piscina_vacare(opus);
     }
+    piscina_destruere(opus);
+}
 
 
-    /* ==================================================
-     * Corpora
-     * ================================================== */
+/* ==================================================
+ * Corpora
+ * ================================================== */
 
+interior vacuum
+_corpora_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+               Piscina* opus;
+    constans character* radix = lectiones_ambitus("RHUBARB_RADIX");
+
+    si (radix == NIHIL)
+    {
+        radix = ".";
+    }
+    opus = piscina_generare_dynamicum("probatio_toml_scalaris_opus",
+        1048576);
+    si (opus == NIHIL)
+    {
+        redde;
+    }
     {
                   Status st;
         TomlCorpusNumeri nn;
 
-        imprimere("\n--- Probans corpora ---\n");
         memset(&st, ZEPHYRUM, magnitudo(st));
         toml_corpus_ambulare(piscina, opus, radix
             != NIHIL ? radix : ".",
@@ -957,11 +1105,38 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (st.domus_cum_vitio, ZEPHYRUM);
         CREDO_AEQUALIS_I32 (st.ordo_ruptus, ZEPHYRUM);
     }
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(opus);
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "integri", _integros_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fluitantes", _fluitantes_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "boolean", _boolean_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "chordae", _chordas_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "claves quotatae", _claves_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "tempora", _tempora_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "vitia: codex, sedes, numerus", _vitia_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sedes linearis: vitium in linea altera", _sedem_linearem_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "malum non iudicatur; trivia eius iudicantur", _malum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "verdictum BOM: syntaxis recusat, coctio tacet",
+        _signum_ordinis_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "corpora", _corpora_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("toml_scalaris", SECTIONES);
 }

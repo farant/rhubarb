@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #include <sys/time.h>
 
 #define MENSURA_CAMPI VII
@@ -322,6 +323,15 @@ mensura_condere (
     plagula = lectiones_fopen(via_diarii, "rb");
     si (plagula == NIHIL)
     {
+        structura stat status;
+
+        /* diarium absens = nihil condendum (conditio iterata, aut
+         * sessio sine mensuris): successus, nulla condita */
+        si (lectiones_stat(via_diarii, &status) != ZEPHYRUM)
+        {
+            fructus.successus = VERUM;
+            redde fructus;
+        }
         fructus.causa = chorda_ex_literis(
             "Diarium aperiri non potest", piscina);
         redde fructus;
@@ -404,12 +414,19 @@ mensura_condere (
         redde fructus;
     }
 
-    /* Diarium conditum truncare: aliter conditio proxima easdem
-     * mensuras iterum conderet */
-    plagula = lectiones_fopen(via_diarii, "wb");
-    si (plagula != NIHIL)
+    /* Diarium conditum DELERE: aliter conditio proxima easdem
+     * mensuras iterum conderet. Deletio, non truncatio (2026-10-23):
+     * diaria per sessionem (/tmp/mensurae-<sessio>.diarium) truncata
+     * vacua manebant - MMMDCCCLXXXIV in /tmp intra dies IV, porta
+     * probatio_saltuarius_limes rubra (parcum ...BPYFX). Appensor
+     * posterior plagulam novam creat ('ab'). */
+    si (remove(via_diarii) != ZEPHYRUM)
     {
-        fclose(plagula);
+        plagula = lectiones_fopen(via_diarii, "wb");
+        si (plagula != NIHIL)
+        {
+            fclose(plagula);
+        }
     }
 
     fructus.successus = VERUM;

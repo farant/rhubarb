@@ -337,25 +337,22 @@ hic_manens constans character* FIXTURAE[] = {
     "oratio/probationes/fixa/txt/trinity.txt"
 };
 
-s32
-principale (vacuum)
+interior vacuum
+_collationem_probare (
+    CredoContextus* c)
 {
-               Piscina* piscina;
     constans character* radix_viae;
-              Collatio  c;
+              Collatio  summa;
                    i32  i;
+    (vacuum)c;
 
-    piscina = piscina_generare_dynamicum("probatio_oratio_fissio",
-        8388608);
-    credo_aperire(piscina);
     radix_viae = getenv("RHUBARB_RADIX");
     si (radix_viae == NIHIL)
     {
         radix_viae = ".";
     }
-    memset(&c, ZEPHYRUM, magnitudo(c));
+    memset(&summa, ZEPHYRUM, magnitudo(summa));
 
-    imprimere("\n--- Collatio super fixturas (fixa/txt) ---\n");
     per (i = ZEPHYRUM; i < (i32)(magnitudo(FIXTURAE)
         / magnitudo(FIXTURAE[0])); i++)
     {
@@ -378,16 +375,16 @@ principale (vacuum)
                 (longus)una.orationis,
                 (longus)una.communia, (longus)una.solum_fissionis,
                 (longus)una.solum_orationis);
-            c.fissionis        += una.fissionis;
-            c.orationis        += una.orationis;
-            c.communia         += una.communia;
-            c.solum_fissionis  += una.solum_fissionis;
-            c.solum_orationis  += una.solum_orationis;
+            summa.fissionis        += una.fissionis;
+            summa.orationis        += una.orationis;
+            summa.communia         += una.communia;
+            summa.solum_fissionis  += una.solum_fissionis;
+            summa.solum_orationis  += una.solum_orationis;
         }
         piscina_destruere(p);
     }
 
-    imprimere("\n--- Collatio super paragraphos md (specimen quinta quaeque) ---\n");
+    CREDO_GRADUS ("Collatio super paragraphos md (specimen quinta quaeque)");
     {
         character via[DXII];
         FILE* lista;
@@ -450,31 +447,36 @@ principale (vacuum)
             (longus)md.orationis,
             (longus)md.communia, (longus)md.solum_fissionis,
             (longus)md.solum_orationis);
-        c.fissionis        += md.fissionis;
-        c.orationis        += md.orationis;
-        c.communia         += md.communia;
-        c.solum_fissionis  += md.solum_fissionis;
-        c.solum_orationis  += md.solum_orationis;
+        summa.fissionis        += md.fissionis;
+        summa.orationis        += md.orationis;
+        summa.communia         += md.communia;
+        summa.solum_fissionis  += md.solum_fissionis;
+        summa.solum_orationis  += md.solum_orationis;
     }
 
-    imprimere("\n--- SUMMA: fissio %ld, oratio %ld, communia %ld (%.1f%% fissionis, %.1f%% orationis),"
-              " sola fissionis %ld, sola orationis %ld ---\n",
-        (longus)c.fissionis, (longus)c.orationis, (longus)c.communia,
-        c.fissionis > ZEPHYRUM ? 100.0 * (duplex)c.communia
-            / (duplex)c.fissionis : 0.0,
-        c.orationis > ZEPHYRUM ? 100.0 * (duplex)c.communia
-            / (duplex)c.orationis : 0.0,
-        (longus)c.solum_fissionis, (longus)c.solum_orationis);
-    CREDO_VERUM (c.fissionis > (s64)1000 && c.orationis > (s64)1000);
-    CREDO_VERUM (c.communia * (s64)II > c.fissionis);
-    CREDO_VERUM (c.communia * (s64)II > c.orationis);
+    imprimere("\n  SUMMA: fissio %ld, oratio %ld, communia %ld (%.1f%% fissionis, %.1f%% orationis),"
+              " sola fissionis %ld, sola orationis %ld\n",
+        (longus)summa.fissionis, (longus)summa.orationis,
+        (longus)summa.communia,
+        summa.fissionis > ZEPHYRUM ? 100.0 * (duplex)summa.communia
+            / (duplex)summa.fissionis : 0.0,
+        summa.orationis > ZEPHYRUM ? 100.0 * (duplex)summa.communia
+            / (duplex)summa.orationis : 0.0,
+        (longus)summa.solum_fissionis, (longus)summa.solum_orationis);
+    CREDO_VERUM (summa.fissionis > (s64)1000
+        && summa.orationis > (s64)1000);
+    CREDO_VERUM (summa.communia * (s64)II > summa.fissionis);
+    CREDO_VERUM (summa.communia * (s64)II > summa.orationis);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "Collatio super fixturas (fixa/txt) et paragraphos md, summa",
+        _collationem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("oratio_fissio", SECTIONES);
 }

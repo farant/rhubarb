@@ -88,7 +88,8 @@
   <interrogatio genus="quomodo">
     <quaestio! (>how do I use a volumen in a test without touching the user's real files?
     <responsum symbolum="volumen_temporarium volumen_claudere volumen_via">volumen_temporarium(piscina,
-      praefixum) creates /tmp/praefixum-N.volumen with the first free N
+      praefixum) creates $TMPDIR/praefixum-N.volumen (/tmp when TMPDIR
+      is unset or empty) with the first free N
       from 1 to C, and volumen_claudere DELETES that file. A test that
       forgets to close leaves its file behind, and after C leftovers
       volumen_temporarium returns NIHIL, so close every one.

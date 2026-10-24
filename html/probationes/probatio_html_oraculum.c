@@ -17,7 +17,7 @@
  */
 
 #include "latina.h"
-#include "lectiones.h"   /* lectiones_fopen: canalis lectionum (examen 96) */
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "credo.h"
 #include "html_arbor.h"
 #include "html_coctum.h"
@@ -402,10 +402,14 @@ _differentiam_imprimere (
     }
 }
 
-integer
-principale (vacuum)
+/* Sectio UNA (conversio fidelis): series recusatorum ex cursu ipso
+ * oraculi colligitur et contra aurum confertur - pars secunda primam
+ * continuat (CREDO_GRADUS fracturam nominat). */
+interior vacuum
+_oraculum_probare (
+    CredoContextus* c)
 {
-                Piscina* piscina;
+                Piscina* piscina = c->piscina;
      constans character* radix;
               character  via[DXII];
                   Summa* summae;
@@ -425,14 +429,6 @@ principale (vacuum)
                                                    != NIHIL);
                     i32 f;
 
-    piscina = piscina_generare_dynamicum("probatio_html_oraculum",
-        16777216);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
     summae = (Summa*)piscina_allocare(piscina, magnitudo(Summa) * LXIV);
     recusata_aed = chorda_aedificator_creare(piscina,
         (memoriae_index)16384);
@@ -443,8 +439,7 @@ principale (vacuum)
         radix = ".";
     }
 
-    imprimere("\n--- ORACULUM html5lib: arbor cocta contra "
-              "exspectatam ---\n");
+    CREDO_GRADUS ("arbor cocta contra exspectatam");
     per (f = ZEPHYRUM; HTML_EXEMPLA_PLAGULAE[f] != NIHIL; f++)
     {
         character* textus;
@@ -634,8 +629,8 @@ principale (vacuum)
         }
     }
 
-    imprimere("\n--- per plagulam (praeterita/totalis; "
-              "fragmenta) ---\n");
+    imprimere("\n  per plagulam (praeterita/totalis; "
+              "fragmenta):\n");
     {
         i32 i;
 
@@ -656,8 +651,8 @@ principale (vacuum)
             imprimere("  %s\n", summae[i].plagula);
         }
     }
-    imprimere("\n--- ORACULUM: %d/%d praeterita (pinna %d); fragmenta "
-              "%d/%d; script-on omissa %d; parsator NIHIL %d ---\n",
+    imprimere("\n  ORACULUM: %d/%d praeterita (pinna %d); fragmenta "
+              "%d/%d; script-on omissa %d; parsator NIHIL %d\n",
         (integer)praeterita, (integer)totalis,
         (integer)PINNA_PRAETERITA,
         (integer)fragmenta_praeterita, (integer)fragmenta,
@@ -681,6 +676,7 @@ principale (vacuum)
      * generatur, ergo nostra dicit. Rectitudo ab html5lib venit, quae
      * infra stat; hoc regressionem solam custodit. */
 
+    CREDO_GRADUS ("series recusatorum");
     {
         character via_auri[DXII];
         character* aurum_textus;
@@ -700,8 +696,8 @@ principale (vacuum)
                 fwrite(recusata_viva.datum, I,
                     (size_t)recusata_viva.mensura, f);
                 fclose(f);
-                imprimere("--- AURUM recusatorum scriptum (%d) -"
-                    " CAUSAM in commissione NOMINA ---\n",
+                imprimere("  AURUM recusatorum scriptum (%d) -"
+                    " CAUSAM in commissione NOMINA\n",
                     (integer)_lineas_numerare(recusata_viva));
             }
         }
@@ -757,8 +753,8 @@ principale (vacuum)
                         b       = b + I;
                     }
                 }
-                imprimere("--- SERIES: recusata %d (aurum %d);"
-                    " regressa %d, sanata %d ---\n",
+                imprimere("  SERIES: recusata %d (aurum %d);"
+                    " regressa %d, sanata %d\n",
                     (integer)n_viva, (integer)n_auri,
                     (integer)regressa, (integer)sanata);
                 /* REGRESSA = fractura. SANATA = aurum movendum
@@ -770,11 +766,16 @@ principale (vacuum)
         }
     }
 
-    credo_imprimere_compendium();
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
+}
 
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
-    }
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "oraculum html5lib: arbor cocta et series recusatorum",
+        _oraculum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("html_oraculum", SECTIONES);
 }

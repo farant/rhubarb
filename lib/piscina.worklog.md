@@ -96,3 +96,61 @@ multiply): the normal suite stayed green, a poisoned build caught both.
 - Owed automatically only once the ledger inventory ('suitae
   probationum') gets a lens for it — not possible from a worktree;
   agenda A7.
+
+## 2026-10-21 — piscina_conari_ampliare: grow an allocation without copying
+
+Trigger: STML serialization took a pool 3.6x the text it produced
+(materia/fontes/materia_arbor.worklog.md, same date). `chorda_aedificator`
+doubles by allocate-and-copy, and an arena never returns the old buffer.
+
+Two paths, else NIHIL with the allocation untouched (the caller falls back
+to allocate + copy):
+- **I. last allocation of the current block, room left:** extend the
+  block's offset. Same pointer.
+- **II. sole allocation of the current block (starts at the block's first
+  byte, ends at its offset), dynamic pool:** `realloc` the block itself.
+  Nothing else can point into that block, so moving it is safe for
+  everyone except holders of views into the allocation itself.
+
+Why path I alone is not enough: a request larger than twice the initial
+block size gets its own block sized `request + initial`, so a doubling
+buffer overflows that slack at every doubling. Path I would have saved
+almost nothing on large outputs (1+2+5+9+17 MiB for a 16 MiB buffer in a
+1 MiB pool). Path II turns every doubling after the first dedicated block
+into a realloc.
+
+Under `-DPISCINA_VENENUM=1` path II always moves (malloc, copy, fill the
+old block with 0xA5, free), so a stale view reads poison instead of
+plausible old bytes. `numerus_allocationum` does not grow (same
+allocation).
+
+Measured (`build/sonda_partes/sonda_scriptura.c`, hilarius STML, 9.3 MB):
+serialization pool 32 MiB -> 16.5 MiB (3.6x -> 1.85x). The rest is the
+final doubling's slack (16 MiB capacity); untouched pages of it are never
+resident.
+
+Plants (`silva.planta`, radix): path I without the offset update -> red at
+the usus delta; path II disabled -> red in the builder's pool-size check.
+
+**Verification beyond the suites (same day).**
+- ASan sweep, `tegmen_probationum.sh -sanitare -omnes`: 227 library
+  suites, zero ASan reports. Reds and UBSan sites all reproduce at HEAD
+  or are environmental (park 01M5GFKH01EKR57AEQ3ZQ6TEHK).
+- Always-move run: path II temporarily forced to the VENENUM branch
+  (move + poison on every growth), then root suites, materia, crusta,
+  oratio, briar. No content failure attributable to a moved buffer. The
+  first attempt at md/css/html/toml/silva ran NOTHING (exit 2): bin/fabrica
+  links piscina, so the judge was stale, and the materia runner healed the
+  silva amalgam WITH the plant inside. Sequence that works: plant ->
+  fabrica_struere -> sanare amalgams -> fabrica_struere -> runners.
+- Computus goldens (all eight clients; silva unchanged): only DOWNWARD
+  moves. `allocationes_arboris` in 29 rows (crusta, oratio, briar, css,
+  html, toml: -3..-49; md: -29..-212) - growths that are now in place,
+  not new allocations. md also drops `usus`/`apex` by 192..17,280 bytes
+  and `allocationes` by 2..110 (its builder's old buffers no longer
+  stay in the pool). Regenerated with COMPUTUS_SCRIBERE=1. css was found
+  only by the commit's css gate: list them with
+  `git ls-files '*fixa/computus/basis.tsv'` instead of remembering.
+- oratio_canon / oratio_stml over their ceilings: pre-existing on the
+  branch (HEAD 885 / 4096 MiB; with this change 755 / 3871). Parks
+  01M5GH4FA11PP0GGZ9TZ5E2Y7J and 01M5GKMDGSVZEKPXA54Y0VC87H.

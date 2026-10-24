@@ -111,7 +111,10 @@ vicus_applicatio_quaestionis_portam_ponere (
  * sonus_admonitionum_mutus (persistentes) vertunt, etiam sine porta.
  * Admonitio nova (systema 'admonitiones') genus recentissimae pulsat
  * nisi muta; systema 'sonus' omni pulsu mutum factum tacet, deinde
- * agit. */
+ * agit. Eventus 'cantus' libri praeconii (praeco cantus: nuntius =
+ * MML, genus "intactus" aut vacuum) recentissimus canitur, nisi mutus
+ * QUILIBET; cum admonitione nova eodem pulsu, ordine temporis
+ * (posterior vincit). */
 vacuum
 vicus_applicatio_soni_portam_ponere (
             VicusApplicatio* app,

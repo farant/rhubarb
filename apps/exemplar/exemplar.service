@@ -8,7 +8,7 @@ After=network.target
 Type=simple
 User=exemplar
 Group=exemplar
-ExecStart=/opt/exemplar/exemplar -data /var/lib/exemplar -portus 3010 -procurator -acta -invitatio-via /var/lib/exemplar/invitatio
+ExecStart=/opt/exemplar/exemplar -data /var/lib/exemplar -portus 3010 -procurator -acta -basis https://exemplar.golden.earth -sonda
 Restart=on-failure
 RestartSec=2
 # SIGTERM -> sistere molliter (X s), deinde volumen clausum
