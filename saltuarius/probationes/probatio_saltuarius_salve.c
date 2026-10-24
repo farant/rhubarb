@@ -17,6 +17,7 @@
  * codex saltuarii ipse erret.
  */
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "piscina.h"
 #include "chorda.h"
 #include "filum.h"
@@ -57,7 +58,7 @@ _suitam_parare (
     sprintf(mandatum, "mkdir -p %s/subdir", fx->via);
     (vacuum)system(mandatum);
     sprintf(via, "%s/plaga.txt", fx->via);
-    f = fopen(via, "wb");
+    f = lectiones_fopen(via, "wb");
     CREDO_NON_NIHIL (f);
     si (f != NIHIL)
     {

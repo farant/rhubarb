@@ -6,6 +6,7 @@
 #include "fabrica.h"
 #include "fabrica_interna.h"
 #include "chorda_aedificator.h"
+#include <string.h>
 
 
 /* ==================================================
@@ -656,33 +657,43 @@ fabrica_vestigia_comparare (
     redde extra;
 }
 
+/* via 'filia' sub 'parens' (parens + '/' praefixum eius), SINE
+ * allocatione: olim fabricae_iungere(parens, "/") per par locorum -
+ * unda radicis (CCCLIV membra, ~LXII milia parium) ~I.VI GB in piscina
+ * cursus (parcum …T77EH4) */
+interior b32
+_via_sub (
+    chorda filia,
+    chorda parens)
+{
+    redde filia.mensura > parens.mensura
+        && filia.datum[parens.mensura] == '/'
+        && (parens.mensura == ZEPHYRUM
+            || memcmp(filia.datum, parens.datum,
+            (memoriae_index)parens.mensura) == ZEPHYRUM);
+}
+
 /* loci concurrunt si via una alteram continet (conservativum) */
 interior b32
 _loci_concurrunt (
     constans FabricaLocus* a,
-    constans FabricaLocus* b,
-                  Piscina* piscina)
+    constans FabricaLocus* b)
 {
-    si (chorda_aequalis(a->via, b->via))
-    {
-        redde VERUM;
-    }
-    redde chorda_incipit(b->via, fabricae_iungere(piscina, "", a->via,
-        "/"))
-        || chorda_incipit(a->via, fabricae_iungere(piscina, "", b->via,
-        "/"));
+    redde chorda_aequalis(a->via, b->via)
+        || _via_sub(b->via, a->via)
+        || _via_sub(a->via, b->via);
 }
 
+/* lx, ly: vestigia semel per actionem computata (undas_formare) */
 interior b32
 _simul_possunt (
     constans FabricaActio* x,
+             constans Xar* lx,
     constans FabricaActio* y,
-                  Piscina* piscina)
+             constans Xar* ly)
 {
-    Xar* lx;
-    Xar* ly;
-    i32  i;
-    i32  j;
+    i32 i;
+    i32 j;
 
     si (   (x->communia != NIHIL && xar_numerus(x->communia) > 0)
         || (y->communia != NIHIL && xar_numerus(y->communia) > 0))
@@ -693,14 +704,13 @@ _simul_possunt (
     {
         redde FALSUM;
     }
-    lx = _vestigium_actionis(x, FALSUM, piscina);
-    ly = _vestigium_actionis(y, FALSUM, piscina);
-    per (i = ZEPHYRUM; i < xar_numerus(lx); i++)
+    per (i = ZEPHYRUM; lx != NIHIL && i < xar_numerus(lx); i++)
     {
-        per (j = ZEPHYRUM; j < xar_numerus(ly); j++)
+        per (j = ZEPHYRUM; ly != NIHIL && j < xar_numerus(ly); j++)
         {
-            si (_loci_concurrunt((FabricaLocus*)xar_obtinere(lx, i),
-                    (FabricaLocus*)xar_obtinere(ly, j), piscina))
+            si (_loci_concurrunt((constans FabricaLocus*)xar_obtinere(
+                    lx, i),
+                    (constans FabricaLocus*)xar_obtinere(ly, j)))
             {
                 redde FALSUM;
             }
@@ -714,19 +724,30 @@ fabrica_undas_formare (
     constans Xar* ordo,
          Piscina* piscina)
 {
-     Xar* undae;
-     i32* unda;
-     i32  numerus;
-     i32  i;
-     i32  j;
+     Xar*  undae;
+     Xar*  indices;   /* per undam: Xar de i32 (index in ordine) */
+     Xar** vestigia;  /* per actionem: semel computatum */
+     i32*  unda;
+     i32   numerus;
+     i32   i;
+     i32   j;
 
     numerus  = xar_numerus(ordo);
     undae    = xar_creare(piscina, (i32)magnitudo(Xar*));
+    indices  = xar_creare(piscina, (i32)magnitudo(Xar*));
     unda = (i32*)piscina_allocare(piscina,
         magnitudo(i32) * (memoriae_index)(numerus + 1));
-    si (undae == NIHIL || unda == NIHIL)
+    vestigia = (Xar**)piscina_allocare(piscina,
+        magnitudo(Xar*) * (memoriae_index)(numerus + 1));
+    si (   undae    == NIHIL || indices == NIHIL || unda == NIHIL
+        || vestigia == NIHIL)
     {
         redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        vestigia[i] = _vestigium_actionis(*(FabricaActio**)xar_obtinere(
+            ordo, i), FALSUM, piscina);
     }
     per (i = ZEPHYRUM; i < numerus; i++)
     {
@@ -750,12 +771,16 @@ fabrica_undas_formare (
             Xar* membra;
             b32  apta;
 
-            membra  = *(Xar**)xar_obtinere(undae, w);
+            membra  = *(Xar**)xar_obtinere(indices, w);
             apta    = VERUM;
             per (j = ZEPHYRUM; apta && j < xar_numerus(membra); j++)
             {
-                apta = _simul_possunt(actio,
-                    *(FabricaActio**)xar_obtinere(membra, j), piscina);
+                i32 k;
+
+                k     = *(i32*)xar_obtinere(membra, j);
+                apta  = _simul_possunt(actio, vestigia[i],
+                    *(FabricaActio**)xar_obtinere(ordo, k),
+                    vestigia[k]);
             }
             si (apta)
             {
@@ -767,10 +792,13 @@ fabrica_undas_formare (
         {
             *(Xar**)xar_addere(undae) = xar_creare(piscina,
                 (i32)magnitudo(FabricaActio*));
+            *(Xar**)xar_addere(indices) = xar_creare(piscina,
+                (i32)magnitudo(i32));
         }
         *(FabricaActio**)xar_addere(*(Xar**)xar_obtinere(undae, w)) =
             actio;
-        unda[i] = w;
+        *(i32*)xar_addere(*(Xar**)xar_obtinere(indices, w))  = i;
+        unda[i]                                              = w;
     }
     redde undae;
 }

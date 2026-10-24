@@ -9,7 +9,7 @@
 # quaevis plagulam obruit - cursus ultimus vincit. Schema:
 # build/test_logs/<cursor>.log, cursor quisque suam (radix,
 # silva, officina, gesta, saltuarius, tessera, linux).
-# <porta titulus="radix" tegit="aedificatio.stml probationes/* tools/compile_tests_fontes_generare.sh" currit="tools/compilator.c tools/fabrica.c"/>
+# <porta titulus="radix" tegit="aedificatio.stml probationes/* tools/compile_tests_fontes_generare.sh" currit="tools/compilator.c tools/fabrica.c" translatio="numquam"/>
 if [ -z "${COMPILE_TESTS_EFFUSIO:-}" ]; then
     export COMPILE_TESTS_EFFUSIO=1
     mkdir -p "$(dirname "$0")/build/test_logs"

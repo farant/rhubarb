@@ -2,7 +2,7 @@
 
 # Effusio cursus ultimi semper in build/test_logs/oratio.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS servatus).
-# <porta titulus="oratio" gradus="fusio" tegit="materia/fontes/* md/fontes/* oratio/*.stml oratio/census/* oratio/fontes/* oratio/grammatica/* oratio/probationes/* oratio/vocabularium/* silva/fontes/*"/>
+# <porta titulus="oratio" gradus="fusio" tegit="materia/fontes/* md/fontes/* oratio/*.stml oratio/census/* oratio/fontes/* oratio/grammatica/* oratio/probationes/* oratio/vocabularium/* silva/fontes/*" legit="*.md *.c *.h *.stml"/>
 if [ -z "${ORATIO_PROBATIONES_EFFUSIO:-}" ]; then
     export ORATIO_PROBATIONES_EFFUSIO=1
     mkdir -p "$(dirname "$0")/../build/test_logs"

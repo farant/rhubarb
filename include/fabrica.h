@@ -321,6 +321,13 @@ nomen structura {
     /* nomina (chorda) ordinata; FALSUM = directorium absens */
     b32 (*enumerare)(vacuum* datum, constans character* via,
                      Piscina* piscina, Xar** nomina_out);
+    /* praesentia SOLA (plagula regularis aut directorium), sine
+     * lectione: lineae A/X libri (praesens/absens) sic sigillantur.
+     * NIHIL licet: tum legere + enumerare, plagula tota lecta (olim:
+     * ~/.rhubarb/mensurae.volumen CCCXLVIII MB per membrum vici,
+     * parcum …T77EH4) */
+    b32 (*existere)(vacuum* datum, constans character* via,
+                    Piscina* piscina);
     /* mandatum currere (argv fixum) cum directorio scripturae
      * VACUO (sutura id ante cursum vacuat - reliquiae cursus prioris
      * generatorem mutum celarent); FABRICA_SCRIPTURA = scriptura_dir.
@@ -363,6 +370,14 @@ nomen structura {
      * causa): actio exituum multorum semel explicatur (silva: XXII
      * exitus, LIV manifesta). NIHIL licet. */
     TabulaDispersa* digesta;
+    /* PISCINA CURSUS (parcum …T77EH4): quod ultra actum unum vivit -
+     * claves et valores memoriarum (sigilla, digesta, regenerationes,
+     * audita) et causae sanationum - hic transcribitur, ut quodque
+     * actum piscina temporaria sua utatur, post actum vacata
+     * (photographiae, libri, acta: ~LX MB per membrum, olim usque ad
+     * finem cursus servati). NIHIL licet: omnia in piscina vocantis,
+     * nihil vacatur (ut olim). */
+    Piscina* piscina_cursus;
     /* mandatum actionis IN LOCO currere (FABRICA_SCRIPTURA nulla:
      * generatores in arbore scribunt), effusionem in acta_via
      * scribere. FALSUM = incipi non potuit aut terminus excessus

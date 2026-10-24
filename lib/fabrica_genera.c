@@ -95,13 +95,14 @@ _particulam_legere (
         {
             Sigillum* locus;
 
-            locus = (Sigillum*)piscina_allocare(piscina,
+            locus = (Sigillum*)piscina_allocare(
+                fabricae_piscina_cursus(sutura, piscina),
                 magnitudo(Sigillum));
             si (locus != NIHIL)
             {
                 *locus = octeti;
-                (vacuum)tabula_dispersa_inserere(sutura->sigilla, via,
-                    locus);
+                (vacuum)tabula_dispersa_inserere(sutura->sigilla,
+                    fabricae_in_cursum(sutura, via, piscina), locus);
             }
         }
     }
@@ -242,13 +243,13 @@ _directorium_explicare (
     {
         Sigillum* locus;
 
-        locus = (Sigillum*)piscina_allocare(piscina,
-            magnitudo(Sigillum));
+        locus = (Sigillum*)piscina_allocare(fabricae_piscina_cursus(
+            sutura, piscina), magnitudo(Sigillum));
         si (locus != NIHIL)
         {
             *locus = particula->octeti;
-            (vacuum)tabula_dispersa_inserere(sutura->sigilla, clavis,
-                locus);
+            (vacuum)tabula_dispersa_inserere(sutura->sigilla,
+                fabricae_in_cursum(sutura, clavis, piscina), locus);
         }
     }
     redde VERUM;

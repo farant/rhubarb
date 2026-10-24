@@ -13,6 +13,7 @@
  */
 
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "credo.h"
 #include "materia_coctor.h"
 #include "materia_nodus.h"
@@ -511,7 +512,7 @@ _plagulas_generatas_probare (
             radix = radix_temporaria;
         }
         sprintf(via, "%s/materia/build/proba.registrum.stml", radix);
-        f = fopen(via, "wb");
+        f = lectiones_fopen(via, "wb");
         CREDO_NON_NIHIL (f);
         si (f != NIHIL)
         {
@@ -535,7 +536,7 @@ _plagulas_generatas_probare (
         /* scriptae ex redditione: recens */
         sprintf(via, "%s/materia/build/proba_registrum_coctum.h",
             radix);
-        f = fopen(via, "wb");
+        f = lectiones_fopen(via, "wb");
         CREDO_NON_NIHIL (f);
         si (f != NIHIL)
         {
@@ -545,7 +546,7 @@ _plagulas_generatas_probare (
         }
         sprintf(via, "%s/materia/build/proba_registrum_coctum.c",
             radix);
-        f = fopen(via, "wb");
+        f = lectiones_fopen(via, "wb");
         CREDO_NON_NIHIL (f);
         si (f != NIHIL)
         {
@@ -557,7 +558,7 @@ _plagulas_generatas_probare (
             "materia/build/proba.registrum.stml", &rancor));
         CREDO_VERUM (rancor.recens);
         /* fons manu tactus: rancidus cum linea */
-        f = fopen(via, "ab");
+        f = lectiones_fopen(via, "ab");
         CREDO_NON_NIHIL (f);
         si (f != NIHIL)
         {

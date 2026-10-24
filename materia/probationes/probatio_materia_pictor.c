@@ -11,6 +11,7 @@
  */
 
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "credo.h"
 #include "materia_pictor.h"
 #include "materia_diagnostica.h"
@@ -34,7 +35,7 @@ _aurum_legere (
         "materia/probationes/fixa/pictor/aurum.txt";
            longus longitudo;
 
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde NIHIL;

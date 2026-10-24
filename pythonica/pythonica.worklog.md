@@ -1328,3 +1328,72 @@ receipt never deleted. Existing clones now carry an owner tag so each
 protection is tested on its own merits, not via the untagged grace
 period. Plants on silva.py copies: ignore owner / drop age rule / drop
 expiry - each turns its assertions red.
+
+## 2026-10-23 — translatio receptorum T4: shadow in `_portas_currere`
+
+Spec project-specs/translatio-receptorum-spec.md §III; decretum …DC4A8Z.
+
+**What it does.**
+- Once per pass, `_umbram_incipere` calls `bin/fabrica portae translatio -machina`. It passes every unfiltered gate and its record from `build/portae/translatio/<g>.json`.
+- It prints one summary line, then before each gate either `umbra translationis: X portaretur (causa)` or `X curreret (genus: causa)`.
+- **The gate runs regardless.** Verdicts are never touched.
+- After the run, `_umbram_post` appends to `build/portae/translatio_umbra.tsv`: time, attempt, gate, decision b, decision a, cause, sana, cursa, seconds, dissensus.
+- A gate that would be carried but went red prints `UMBRA TRANSLATIONIS DISSENSUS`.
+
+**Attempt (scope a).** Merge passes are the ones with `pergere`: `fusio:<merge-base HEAD main>`. Commit passes: `commissio:<HEAD>`, so retries of one commit share it. Scope (b) is the C decision as is. Scope (a) is the same, except a record from another attempt makes it `nullum`. That's a string compare, the only decision logic in Python.
+
+**When a record is written:** only after a green, non-stale run whose live receipt's sigillum equals the sigillum at the START of the pass. That proves the tree the CLI hashed is the one the gate judged. Fabrica-routed gates (composites, aedilis) write no live receipt, so they get no record; they're `numquam` anyway.
+
+**Off switch.** `PORTAE_TRANSLATIO_UMBRA=0` turns the shadow off. probatio_silva.py sets it globally, because its fake gates have no `<porta>` annotation and the C side would refuse the registry. Its own section turns the shadow on with a faked `_translationes_umbrae`, and checks the real contract parser against the real CLI with the fakes removed from PORTAE.
+
+**Plants**, via silva.planta with that section as the gate, each red and reverted green: DISSENSUS detection off; a record written for a red gate; the off switch ignored; scope a ignored.
+
+**Live run** (vexilla, sonda, radix, twice):
+- pass 1: nullum, nullum, numquam;
+- pass 2: vexilla and sonda "portaretur (nulla via mutata)", radix numquam.
+
+All of them ran both times. Full pythonica suite: green, 3.5 min.
+
+## 2026-10-23 — pythonica split: pura (probatio_silva.py) + arboris (probatio_silva_arboris.py)
+
+Option 1 of the composite discussion (desideratum …VXWK8: the real fabrica migration comes later). Gate `pythonica-arboris` added.
+
+**How the split was chosen.**
+- Ran the suite with FABRICA_LECTIONES. Every `_grex` wrote a `G\t<nomen>` marker into the trace via a scratch runner that patched `_grex` in memory, with no repo change.
+- Sections were then classified by how many tracked files they read.
+- 7 groups sweep the live tree, plus the consilium checks and the umbra real-CLI check:
+  - lint latinus, probatio_currere, oraculum md, vocabula;
+  - the VIVUM tail of the portae involucrum;
+  - portae_debitae.sh VIVA.
+- The ~27 groups showing exactly 385 reads are one tool-rebuild staleness scan (silva fontes/instrumenta + include). That is dependence on tool SOURCES, not on the tree.
+- An AST pass (top-level names defined/used per block) showed the live groups were nearly self-contained. Only ACTA_RADIX and imports were shared, so the code moved verbatim.
+
+**Layout.**
+- `probatio_communia.py`: the shared preamble, with `__all__` listing every non-dunder name so `_grex`/`_GREX` survive the star import, plus ACTA_RADIX.
+- `_abortum` now names the RUNNING script (sys.argv[0]) and `SIGNUM`: 'PYTHONICA' or 'PYTHONICA ARBORIS'.
+- `probare.sh [-arboris]`, with two `<porta>` lines.
+
+**Proof.**
+- Check names before vs after, as a multiset: 597 = 597. The only differences are titles embedding timings, run ids, or an interleaved stderr line.
+- Both halves green, directly and through silva.porta.
+- The hermetic half was re-traced alone: 586 tracked reads, all tool closures. That gave its `legit` (include/*, lib/*.c, the front-end fontes/instrumenta, *unitas.stml, *aedificatio.stml, 6 exact files). The live half keeps `legit="*"`.
+
+**Cost / benefit, measured:**
+- pura 197 s + arboris 72 s, against 214 s before as one file. That's a second process and the duplicated preamble (+ noise), so a first merge pass costs roughly +1 min.
+- Under A, pura is carried for golden fixtures, docs and scripts outside its tool sources, saving ~3.3 min on such reruns.
+
+## 2026-10-23 — commissio refuses when the owed gates can't be computed (park …CYF3PX)
+
+**Before.** `_portae_debitas_addere` caught the SilvaError from `portae_debitae` (RECUSATIO of the declarations, bin/fabrica missing or broken), printed "MONITUM … portae petitae solae", and carried on with the requested gates only.
+- 2026-10-20 a commit with an unregistered `<porta>` title went through with NO gates, where ~19 were owed.
+- A gate that degrades to "nothing" is a dead gate.
+
+**After.** It raises SilvaError BEFORE any gate runs, naming the cause, a remedy (registry key in pythonica/silva.py, ./tools/fabrica_struere.sh) and the deliberate escape `sine_debitis='<causa>'`, which is printed. This covers commissio, commissio_umbra and fusio_probare (one function). Decision …SQ2Q4C ("warn, don't refuse") presupposes a KNOWN owed set, so a failed computation falls outside it.
+
+**Found by the change: the hermetic tests had been riding the hole.** The suite-wide fake bin/fabrica printed one NOTA line for EVERY subcommand, so `portae debitae` broke on "linea extra contractum" and every hermetic commissio quietly ran "petitae solae". The default fake (`_fabrica_ficta_ordinaria` in probatio_communia.py) now answers `portae …` with an empty contract: owed gates computable, and none.
+
+**Test V** rewritten:
+- an uncomputable owed set → refusal naming the cause and the escape; the requested gate does NOT run (its own marker file);
+- `sine_debitis` → printed, and the commit proceeds.
+
+**Plant**, by hand (silva.planta can't anchor in .py, park …4Z416NN): put the old `return list(portae)` back → red at exactly that assertion; restored with cp + touch → green. Both halves of the suite green.

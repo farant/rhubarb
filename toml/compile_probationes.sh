@@ -5,7 +5,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/../tools/cursus.sh"
 
 # Effusio cursus ultimi semper in build/test_logs/toml.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS servatus).
-# <porta titulus="toml" tegit="materia/fontes/* toml/*.sh toml/aedificatio.stml toml/fontes/* toml/grammatica/* toml/instrumenta/* toml/probationes/*" currit="tools/fabrica.c"/>
+# <porta titulus="toml" tegit="materia/fontes/* toml/*.sh toml/aedificatio.stml toml/fontes/* toml/grammatica/* toml/instrumenta/* toml/probationes/*" currit="tools/fabrica.c" translatio="numquam"/>
 if [ -z "${TOML_PROBATIONES_EFFUSIO:-}" ]; then
     export TOML_PROBATIONES_EFFUSIO=1
     # effusio in plagula TEMPORARIA extra arborem, post cursum in locum

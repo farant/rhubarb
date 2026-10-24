@@ -29,7 +29,7 @@
 # Exitus: 0 sanum · 1 FRACTUM (responsum mortuum aut vitium lectionis)
 #         · 2 iudicare nequit (bin/fabrica deest, tabula nexus fracta,
 #         nulla interrogatio - porta quae nihil iudicat mortua est)
-# <porta titulus="interrogationes" genus="praeiudicium" tegit="*.interrogationes.stml interrogationes.canon include/* tools/interrogationes_fumus.sh" currit="tools/fabrica.c silva/instrumenta/principalia/nexus.c"/>
+# <porta titulus="interrogationes" genus="praeiudicium" tegit="*.interrogationes.stml interrogationes.canon include/* tools/interrogationes_fumus.sh" currit="tools/fabrica.c silva/instrumenta/principalia/nexus.c" legit="*.c *.h *.stml"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2

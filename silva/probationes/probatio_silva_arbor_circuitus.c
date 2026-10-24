@@ -42,6 +42,7 @@
 
 #include "postulata_posix.h"
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
@@ -55,10 +56,21 @@
 #include "silva_c89_oraculum.h"
 #include "silva_arbor.h"
 #include "credo.h"
+#include "iter_directoria.h"  /* canalis (examen 96) */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dirent.h>
+
+/* titulus introitus (chorda, non terminata) ut litterae C - lectio
+ * directorii per iter_directoria (liber lectionum 'D', canalis examen
+ * 96; quaestio …4XE9S9K6: opendir crudus membrum caecum faciebat) */
+interior constans character*
+_introitus_titulus (
+    constans DirectoriumIntroitus* introitus,
+                          Piscina* piscina)
+{
+    redde chorda_ut_cstr(introitus->titulus, piscina);
+}
 
 #define CAUSAE_MAXIMAE      32
 
@@ -149,7 +161,7 @@ _plagulam_legere (
                 i8* buffer;
     signatus longus  mensura;
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL)
     {
         redde NIHIL;
@@ -404,15 +416,15 @@ _plagulam_probare (
 s32
 principale (vacuum)
 {
-        Piscina* piscina;
-    ArborCensus  census;
-    DIR*                corpus;
-    structura dirent*   introitus;
-    constans character* radix;
-    character           via_corporis[1024];
-    character           via_plagulae[1024];
-    b32                 praeteritus;
-    i32                 i;
+                 Piscina* piscina;
+             ArborCensus  census;
+     DirectoriumIterator* corpus;
+    DirectoriumIntroitus* introitus;
+      constans character* radix;
+               character  via_corporis[1024];
+               character  via_plagulae[1024];
+                     b32  praeteritus;
+                     i32  i;
 
     piscina = piscina_generare_dynamicum("probatio_circuitus", 4194304);
     si (!piscina)
@@ -434,7 +446,7 @@ principale (vacuum)
     imprimere("\n--- PORTA M1: circuitus arboris super corpus ---\n");
     imprimere("  corpus: %s\n", via_corporis);
 
-    corpus = opendir(via_corporis);
+    corpus = directorium_iterator_aperire(via_corporis, piscina);
     si (corpus == NIHIL)
     {
         imprimere("FRACTA: corpus non apertum: %s\n", via_corporis);
@@ -442,17 +454,17 @@ principale (vacuum)
         piscina_destruere(piscina);
         redde I;
     }
-    dum ((introitus = readdir(corpus)) != NIHIL)
+    dum ((introitus = directorium_iterator_proximum(corpus)) != NIHIL)
     {
-        si (!_est_c_vel_h(introitus->d_name))
+        si (!_est_c_vel_h(_introitus_titulus(introitus, piscina)))
         {
             perge;
         }
         sprintf(via_plagulae, "%s/%s", via_corporis,
-            introitus->d_name);
+            _introitus_titulus(introitus, piscina));
         _plagulam_probare(via_plagulae, &census);
     }
-    closedir(corpus);
+    directorium_iterator_claudere(corpus);
 
     imprimere("  plagulae: %d, subarbores: %d\n",
         census.plagulae, census.subarbores);
@@ -555,19 +567,20 @@ principale (vacuum)
         CREDO_NON_NIHIL (opus);
 
         sprintf(via_plagulae, "%s/probationes/fixa/roundtrip", radix);
-        corpus = opendir(via_plagulae);
+        corpus = directorium_iterator_aperire(via_plagulae, piscina);
         CREDO_NON_NIHIL (corpus);
         via_corporis[0] = '\0';
-        dum ((introitus = readdir(corpus)) != NIHIL)
+        dum ((introitus = directorium_iterator_proximum(corpus))
+            != NIHIL)
         {
-            si (_est_c_vel_h(introitus->d_name))
+            si (_est_c_vel_h(_introitus_titulus(introitus, piscina)))
             {
                 sprintf(via_corporis, "%s/%s", via_plagulae,
-                    introitus->d_name);
+                    _introitus_titulus(introitus, piscina));
                 frange;
             }
         }
-        closedir(corpus);
+        directorium_iterator_claudere(corpus);
         CREDO_VERUM (via_corporis[0] != '\0');
 
         fons    = _plagulam_legere(opus, via_corporis, &mensura);

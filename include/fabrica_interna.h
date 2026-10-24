@@ -43,6 +43,21 @@ Xar*
 fabricae_xar_chordarum (
     Piscina* piscina);
 
+/* PISCINA CURSUS (parcum …T77EH4): ubi quod ultra actum vivit
+ * allocatur - sutura->piscina_cursus, aut 'piscina' si NIHIL */
+Piscina*
+fabricae_piscina_cursus (
+    constans FabricaSutura* sutura,
+                   Piscina* piscina);
+
+/* valor in piscinam cursus transcriptus (nisi ea ipsa 'piscina' est:
+ * tum valor ut datus) */
+chorda
+fabricae_in_cursum (
+    constans FabricaSutura* sutura,
+                    chorda  valor,
+                   Piscina* piscina);
+
 vacuum
 fabricae_chordam_addere (
        Xar* xar,

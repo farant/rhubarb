@@ -1430,6 +1430,150 @@ _probare_mutata_intra_locum (
         _photographia(BASIS, IV, NIHIL, piscina), piscina));
 }
 
+/* mundus fractus-omissus-sanatus (ut 'sanare' IV): A frangitur, C ex X
+ * OMISSUM, D SANATUM; 'simul' = via undarum (membra tuta) */
+interior Xar*
+_mundus_fractus (
+      DiscusFictus* discus,
+     FabricaSutura* sutura,
+               b32  simul,
+           Piscina* piscina)
+{
+     FabricaActio* actiones[III];
+              i32  i;
+
+    mundi_discum_parare(discus, sutura, piscina);
+    mundi_memorias_parare(sutura, piscina);
+    si (simul)
+    {
+        sutura->agere_simul       = mundi_agere_simul;
+        sutura->vestigium_capere  = mundi_vestigium_capere;
+    }
+    mundi_ponere(discus, "a", "a\n");
+    mundi_ponere(discus, "X", "vetus\n");
+    mundi_ponere(discus, "Y", "C:alienum\n");
+    mundi_ponere(discus, "Z", "vetus\n");
+    mundi_scriptum_addere(discus, "gen_a", "X", NIHIL, "novum\n", I,
+        VERUM);
+    mundi_scriptum_addere(discus, "gen_c", "Y", "X", "C:", 0, FALSUM);
+    mundi_scriptum_addere(discus, "gen_d", "Z", NIHIL, "novum\n", 0,
+        FALSUM);
+    actiones[0] = mundi_actio_scripta(piscina, "A", "gen_a", "a", "X",
+        "regeneratio");
+    actiones[1] = mundi_actio_scripta(piscina, "C", "gen_c", "X", "Y",
+        "regeneratio");
+    actiones[2] = mundi_actio_scripta(piscina, "D", "gen_d", "a", "Z",
+        "regeneratio");
+    per (i = ZEPHYRUM; simul && i < III; i++)
+    {
+        actiones[i]->lectiones = VERUM;
+    }
+    redde mundi_ordinare_fictas(piscina, actiones, III);
+}
+
+/* PISCINA ACTI (parcum …T77EH4): cum sutura->piscina_cursus acta in
+ * piscina temporaria currunt (post actum vacata, in fine destructa).
+ * Quod ultra actum vivit - causae sanationum, memoria regenerationum
+ * - post fabrica_sanare legibile manet (monstrator in temporariam
+ * destructam: alvei magni, memoria reddita - legere ruit aut nulla
+ * videt); et piscina cursus MINUS crescit quam sine temporaria */
+interior vacuum
+_probare_piscinam_acti (
+    CredoContextus* c)
+{
+          Piscina* piscina = c->piscina;
+     DiscusFictus  discus;
+    FabricaSutura  sutura;
+              Xar* ordo;
+              Xar* sanationes;
+   FabricaSanatio* sanatio;
+           chorda  causa;
+           vacuum* memoratum;
+   memoriae_index  usus_cum;
+   memoriae_index  usus_sine;
+   memoriae_index  ante;
+              b32  simul;
+
+    causa.datum    = NIHIL;
+    causa.mensura  = ZEPHYRUM;
+    /* I. seriatim (simul FALSUM), deinde per undas (VERUM) */
+    per (simul = FALSUM; simul <= VERUM; simul++)
+    {
+        ordo = _mundus_fractus(&discus, &sutura, simul, piscina);
+        sutura.piscina_cursus = piscina;
+        ante = piscina_summa_usus(piscina);
+        sanationes = fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
+            piscina, &causa);
+        usus_cum = piscina_summa_usus(piscina) - ante;
+        CREDO_NON_NIHIL(sanationes);
+        si (sanationes == NIHIL)
+        {
+            redde;
+        }
+        /* causa ex acto (piscina acti) transcripta */
+        sanatio = mundi_sanatio_invenire(sanationes, "A");
+        CREDO_VERUM(sanatio != NIHIL
+            && sanatio->eventus == FABRICA_FRACTUM
+            && mundi_continet(sanatio->causa, "error ficti acti",
+            piscina));
+        sanatio = mundi_sanatio_invenire(sanationes, "C");
+        CREDO_VERUM(sanatio != NIHIL
+            && sanatio->eventus == FABRICA_OMISSUM
+            && mundi_continet(sanatio->causa, "A", piscina));
+        sanatio = mundi_sanatio_invenire(sanationes, "D");
+        CREDO_VERUM(sanatio != NIHIL
+            && sanatio->eventus == FABRICA_SANATUM
+            && sanatio->stalum.mensura > ZEPHYRUM);
+        /* memoria regenerationis D (post-condicio in piscina acti):
+         * valor in piscina cursus, mensura 0 = felix */
+        memoratum = NIHIL;
+        CREDO_VERUM(tabula_dispersa_invenire(sutura.regenerationes,
+            chorda_ex_literis("D", piscina), &memoratum));
+        CREDO_VERUM(memoratum != NIHIL
+            && ((chorda*)memoratum)->mensura == ZEPHYRUM);
+
+        /* idem mundus sine piscina cursus: omnia in piscina, ut olim */
+        ordo = _mundus_fractus(&discus, &sutura, simul, piscina);
+        ante = piscina_summa_usus(piscina);
+        CREDO_NON_NIHIL(fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
+            piscina, &causa));
+        usus_sine = piscina_summa_usus(piscina) - ante;
+        CREDO_VERUM(usus_cum < usus_sine);
+    }
+
+    /* II. regeneratio FRACTA in post-condicione (discus.fractus: agere
+     * in loco felix, regeneratio semper fracta): memoria cum causa
+     * NON vacua - temporaria vacata nullis eam 'felicem' (mensura 0)
+     * faceret */
+    {
+        FabricaActio* actiones[I];
+
+        mundi_discum_parare(&discus, &sutura, piscina);
+        mundi_memorias_parare(&sutura, piscina);
+        sutura.piscina_cursus = piscina;
+        mundi_ponere(&discus, "a", "a\n");
+        mundi_ponere(&discus, "Z", "vetus\n");
+        mundi_scriptum_addere(&discus, "gen_d", "Z", NIHIL, "novum\n",
+            0,
+            FALSUM);
+        actiones[0] = mundi_actio_scripta(piscina, "D", "gen_d", "a",
+            "Z", "regeneratio");
+        discus.fractus  = VERUM;
+        ordo            = mundi_ordinare_fictas(piscina, actiones, I);
+        sanationes = fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
+            piscina, &causa);
+        CREDO_NON_NIHIL(sanationes);
+        CREDO_AEQUALIS_I32(_eventus_sanationis(sanationes, "D"),
+            (i32)FABRICA_FRACTUM);
+        memoratum = NIHIL;
+        CREDO_VERUM(tabula_dispersa_invenire(sutura.regenerationes,
+            chorda_ex_literis("D", piscina), &memoratum));
+        CREDO_VERUM(memoratum != NIHIL
+            && mundi_continet(*(chorda*)memoratum, "error fictus",
+            piscina));
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "sanare",
       _probare_sanare,
@@ -1445,6 +1589,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "mutata intra locum",
       _probare_mutata_intra_locum,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "piscina acti",
+      _probare_piscinam_acti,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

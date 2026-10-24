@@ -166,6 +166,13 @@ mundi_enumerare (
                Piscina*  piscina,
                    Xar** nomina_out);
 
+/* praesentia sine lectione (lecturae non crescunt) */
+b32
+mundi_existere (
+                vacuum* datum,
+    constans character* via,
+               Piscina* piscina);
+
 /* scriptum actionis per mandatum[0]; NIHIL si nullum */
 ScriptumFictum*
 mundi_scriptum_invenire (

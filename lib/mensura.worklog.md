@@ -462,3 +462,24 @@ fumus XVIII (CLI, both output forms). Plants: pondus without auctus,
 KiB x M instead of x MXXIV, MiB divisor M*MXXIV - each red on its own
 assertion. The multi-line planta anchor was refused (fewer tokens in
 the replacement than lines in the anchor); a one-token swap worked.
+
+## 2026-10-23 — delete the diary after a fold, don't truncate it (park …BPYFX)
+
+**The leak.** `mensor sessio` hands every run its own diary, `/tmp/mensurae-<sessio>.diarium` (tools/mensor.c:222): compile_tests.sh and every subsystem runner through tools/mensor_suitae.sh start one. `mensura_condere` truncated the diary after a successful fold, so each run left a 0-byte file behind. 3,884 of them piled up between 10-19 and 10-23. That pushed /tmp past 4,096 entries, and frigida went red on probatio_saltuarius_limes, whose parent column was /tmp itself.
+
+**The fix.**
+- After the commit, `remove()` the diary; truncate only if the remove fails. An appender that comes later creates a fresh file ('ab').
+- Racing appenders are no worse off than before. A writer that opened before the remove and writes after it loses its line, exactly as it did against truncation.
+- The cursus diary path (`_cursus_condere`, rename first) was already leak-free.
+
+**An absent diary is now "nothing to fold"**: successus, conditae 0, where it used to fail with "Diarium aperiri non potest". It's told apart from a real open failure with `lectiones_stat`. This matters because a second fold now finds no file at all, and that must stay harmless (`mensor condere` twice; the cursus test folds twice).
+
+**Test VII** asserts the diary no longer exists, and that a second fold succeeds with 0. Plants:
+- truncate instead of remove → red at `_existit(DIARIUM)`;
+- an absent diary reported as failure → red at `fructus.successus`.
+
+Both reverted green.
+
+**Live check** with a rebuilt bin/mensor: sessio, addere, condere → the diary is gone; a second condere → "0 mensurae conditae", rc 0.
+
+**The diaries stay in /tmp, not `$TMPDIR`.** Under credo or fabrica, `TMPDIR` is a per-section or per-member area that gets deleted, and the session diary must outlive any one process. Moving it is a separate question (Android has no /tmp; quarta's 7714bb0c moved volumen_temporarium).
