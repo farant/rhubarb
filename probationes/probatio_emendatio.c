@@ -9,6 +9,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "credo.h"
+#include "chorda_aedificator.h"
 #include "carmen.h"
 #include "emendatio.h"
 #include <stdio.h>
@@ -697,6 +698,215 @@ _sectio_mensura_vitia (
     CREDO_VERUM (_substituere_recusat(c, "nulla", II, "d2.", &v));
 }
 
+
+/* ==================================================
+ * Copia et transpositio (palette #4)
+ * ================================================== */
+
+/* G maior, deinde c maior a mensura 3; mensura 6 pausa desinit,
+ * mensura 7 notam trans lineam fert; tympanum '@' */
+hic_manens constans character LIBER_S[] =
+    "<carmina><carmen titulus=\"s\" clavis=\"g maior\">"
+    "<clavis mensura=\"3\" valor=\"c maior\"/>"
+    "<pars titulus=\"melodia\" instrumentum=\"aether\"><frustum "
+    "mensura=\"1\"><textus!>o4 f#4 g4 a4 b4 | c4 d8 e8 r4 >c#4 | c1 | "
+    "v50 c4 d4 v100 e4 f4 | a4 b4 >c4 d4 | c2 r2 | c2. d2</textus>"
+    "</frustum>"
+    "</pars>"
+    "<pars titulus=\"tympanum\" instrumentum=\"aether\"><frustum "
+    "mensura=\"1\"><textus!>@punctum c1</textus></frustum></pars>"
+    "</carmen></carmina>";
+
+/* textus scriptoris; vacua si FALSUM (causa in *v) */
+interior chorda
+_scriptum (
+              CredoContextus* c,
+          constans character* pars,
+                         i32  mensura,
+       EmendatioTranspositio  modus,
+                         s32  intervallum,
+                         i32  meta,
+              CarminisVitium* v)
+{
+              Carmina  liber;
+    ChordaAedificator* a = chorda_aedificator_creare(c->piscina, CCLVI);
+               chorda  vacua;
+      constans Carmen* k;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    memset(v, ZEPHYRUM, magnitudo(*v));
+    si (   a == NIHIL
+        || !carmina_legere(chorda_ex_literis(LIBER_S, c->piscina),
+                           c->piscina, &liber, v))
+    {
+        redde vacua;
+    }
+    k = &liber.carmina[ZEPHYRUM];
+    si (!emendatio_mensuram_scribere(k, chorda_ex_literis(pars,
+            c->piscina), mensura, modus, intervallum,
+            carmen_pulsus_mensurae(k, meta), a, v))
+    {
+        redde vacua;
+    }
+    redde chorda_aedificator_finire(a);
+}
+
+interior vacuum
+_sectio_scriptor (
+    CredoContextus* c)
+{
+    CarminisVitium v;
+
+    /* idem: longitudines expressae, 'oN' initio et mutata */
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scriptum(c, "melodia", I,
+        EMENDATIO_SEMITONIA, ZEPHYRUM, I, &v), "o4 f#4 g4 a4 b4");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scriptum(c, "melodia", II,
+        EMENDATIO_SEMITONIA, ZEPHYRUM, II, &v),
+        "o4 c4 d8 e8 r4 o5 c#4");
+    /* diatonice in clave eadem; alteratio ad signaturam servata */
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scriptum(c, "melodia", I,
+        EMENDATIO_DIATONICE, II, I, &v), "o4 a4 b4 o5 c4 d4");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scriptum(c, "melodia", II,
+        EMENDATIO_DIATONICE, I, II, &v), "o4 d4 e8 f#8 r4 o5 d#4");
+    /* ex G maior in c maior: gradus servatur (F# -> B, VII manet
+     * VII) */
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scriptum(c, "melodia", I,
+        EMENDATIO_DIATONICE, ZEPHYRUM, III, &v), "o4 b4 o5 c4 d4 e4");
+    /* lucrum; octava transiens */
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scriptum(c, "melodia", IV,
+        EMENDATIO_SEMITONIA, ZEPHYRUM, IV, &v),
+        "o5 v50 c4 d4 v100 e4 f4");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scriptum(c, "melodia", V,
+        EMENDATIO_DIATONICE, II, V, &v), "o6 c4 d4 e4 f4");
+    /* semitonia: orthographia ex clave metae (c maior: diesis) */
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scriptum(c, "melodia", III,
+        EMENDATIO_SEMITONIA, III, III, &v), "o5 d#1");
+    /* recusationes */
+    /* pausa in fine mensurae */
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scriptum(c, "melodia", VI,
+        EMENDATIO_SEMITONIA, ZEPHYRUM, VI, &v), "o6 c2 r2");
+    CREDO_CHORDA_VACUA (_scriptum(c, "melodia", VII,
+        EMENDATIO_SEMITONIA,
+        ZEPHYRUM, VII, &v));
+    CREDO_LITERAE_AEQUALES (v.causa, "nota trans lineam mensurae");
+    CREDO_CHORDA_VACUA (_scriptum(c, "tympanum", I, EMENDATIO_SEMITONIA,
+        ZEPHYRUM, I, &v));
+    CREDO_LITERAE_AEQUALES (v.causa, "sonitus '@' non transponitur");
+    CREDO_CHORDA_VACUA (_scriptum(c, "melodia", V, EMENDATIO_DIATONICE,
+        XXI, V, &v));
+    CREDO_LITERAE_AEQUALES (v.causa, "octava extra MML (0..8)");
+    /* C# +3 in G maior: F## */
+    CREDO_CHORDA_VACUA (_scriptum(c, "melodia", II, EMENDATIO_DIATONICE,
+        III, II, &v));
+    CREDO_LITERAE_AEQUALES (v.causa,
+        "MML alterationem unam scribit (# aut b)");
+}
+
+hic_manens constans character LIBER_C[] =
+    "<carmina><carmen titulus=\"c\">"
+    "<pars titulus=\"melodia\" instrumentum=\"aether\"><frustum "
+    "mensura=\"1\"><textus!>o4 c4 d4 e4 f4 | g1 | a1 | b1 | >c1 | d1 | "
+    "e1 | f1</textus></frustum></pars>"
+    "<pars titulus=\"bassus\" instrumentum=\"aether\"><frustum "
+    "mensura=\"1\"><textus!>o3 c1 | c1 | c1 | c1 | c1 | c1 | c1 | c1"
+    "</textus></frustum></pars>"
+    "<pars titulus=\"tympanum\" instrumentum=\"aether\"><frustum "
+    "mensura=\"1\"><textus!>@punctum c1 | c1</textus></frustum></pars>"
+    "</carmen></carmina>";
+
+/* copia; FALSUM -> causa imprimitur */
+interior b32
+_copiare (
+              CredoContextus* c,
+                      chorda  liber,
+          constans character* fons,
+                         i32  prima,
+                         i32  ultima,
+          constans character* meta,
+                         i32  k,
+       EmendatioTranspositio  modus,
+                         s32  intervallum,
+                         i32  repetitiones,
+                      chorda* novus,
+                         i32* mutatae,
+              CarminisVitium* v)
+{
+    EmendatioCopia x;
+               b32 r;
+
+    x.pars_fons     = chorda_ex_literis(fons, c->piscina);
+    x.prima         = prima;
+    x.ultima        = ultima;
+    x.pars_meta     = chorda_ex_literis(meta, c->piscina);
+    x.meta          = k;
+    x.modus         = modus;
+    x.intervallum   = intervallum;
+    x.repetitiones  = repetitiones;
+    memset(v, ZEPHYRUM, magnitudo(*v));
+    *novus = chorda_ex_literis("intactus", c->piscina);
+    r = emendatio_mensuras_copiare(liber, chorda_ex_literis("c",
+            c->piscina), &x, c->piscina, novus, mutatae, v);
+    si (!r)
+    {
+        imprimere("  copia %s %u-%u -> %s %u: %s\n", fons, prima,
+            ultima,
+                  meta, k, v->causa ? v->causa : "-");
+    }
+    redde r;
+}
+
+interior vacuum
+_sectio_copia (
+    CredoContextus* c)
+{
+            chorda liber = chorda_ex_literis(LIBER_C, c->piscina);
+            chorda novus;
+               i32 n;
+    CarminisVitium v;
+
+    /* copia simplex +2 in mensuram 3 */
+    CREDO_VERUM (_copiare(c, liber, "melodia", I, I, "melodia", III,
+        EMENDATIO_DIATONICE, II, I, &novus, &n, &v));
+    CREDO_AEQUALIS_I32 (n, I);
+    CREDO_CHORDA_AEQUALIS (novus, _exspectatus(c, liber, "| a1 |",
+        "| o4 e4 f4 g4 a4 |"));
+    /* sequentia: 1 -> 2, gradu infra, ter */
+    CREDO_VERUM (_copiare(c, liber, "melodia", I, I, "melodia", II,
+        EMENDATIO_DIATONICE, -I, III, &novus, &n, &v));
+    CREDO_AEQUALIS_I32 (n, III);
+    CREDO_CHORDA_AEQUALIS (novus, _exspectatus(c, liber,
+        "| g1 | a1 | b1 |",
+        "| o3 b4 o4 c4 d4 e4 | o3 a4 b4 o4 c4 d4 | "
+        "o3 g4 a4 b4 o4 c4 |"));
+    /* in partem aliam, octava infra (-7 gradus) */
+    CREDO_VERUM (_copiare(c, liber, "melodia", I, I, "bassus", II,
+        EMENDATIO_DIATONICE, -VII, I, &novus, &n, &v));
+    CREDO_CHORDA_AEQUALIS (novus, _exspectatus(c, liber,
+        "o3 c1 | c1 | c1", "o3 c1 | o3 c4 d4 e4 f4 | c1"));
+    /* pars metae vacua = pars fontis */
+    CREDO_VERUM (_copiare(c, liber, "melodia", I, I, "", III,
+        EMENDATIO_DIATONICE, II, I, &novus, &n, &v));
+    CREDO_CHORDA_AEQUALIS (novus, _exspectatus(c, liber, "| a1 |",
+        "| o4 e4 f4 g4 a4 |"));
+    /* meta fontem tegit: fons ex libro originali */
+    CREDO_VERUM (_copiare(c, liber, "melodia", I, II, "melodia", II,
+        EMENDATIO_SEMITONIA, ZEPHYRUM, I, &novus, &n, &v));
+    CREDO_AEQUALIS_I32 (n, II);
+    CREDO_CHORDA_AEQUALIS (novus, _exspectatus(c, liber,
+        "| g1 | a1 |", "| o4 c4 d4 e4 f4 | o4 g1 |"));
+    /* recusationes: fons extra carmen, meta extra frusta, meta '@' */
+    CREDO_FALSUM (_copiare(c, liber, "melodia", IX, IX, "melodia", I,
+        EMENDATIO_SEMITONIA, ZEPHYRUM, I, &novus, &n, &v));
+    CREDO_CHORDA_AEQUALIS_LITERIS (novus, "intactus");
+    CREDO_FALSUM (_copiare(c, liber, "melodia", I, I, "melodia", IX,
+        EMENDATIO_SEMITONIA, ZEPHYRUM, I, &novus, &n, &v));
+    CREDO_FALSUM (_copiare(c, liber, "melodia", I, I, "tympanum", II,
+        EMENDATIO_SEMITONIA, ZEPHYRUM, I, &novus, &n, &v));
+    CREDO_LITERAE_AEQUALES (v.causa, "meta in statu '@' (sonitus)");
+    CREDO_CHORDA_AEQUALIS_LITERIS (novus, "intactus");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "locus", _sectio_locus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ponere", _sectio_ponere, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -709,6 +919,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "mensura_vitia", _sectio_mensura_vitia, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "scriptor", _sectio_scriptor, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "copia", _sectio_copia, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -96,3 +96,11 @@ Explicatio is computed once in _partituram_scribere and passed as additae_ctx.
 Lines stack now (PartituraAddita list): -harmonia -explicatio -functio in that order, any
 combination (the old "harmonia OR explicatio" usage error is gone). One Explicatio is
 computed for both explicatio and functio lines.
+
+## 2026-10-23 - -copiare (palette #4)
+
+`-copiare P M[-N] [Q:]K [+-g]`: the interval is an optional 4th argument recognised by a
+leading digit or sign+digit (so `-1` is the interval, not a flag); `-semitonia` and
+`-repetere R` are only legal with -copiare. Output: header (source -> target, interval,
+repetitions) then 'ante' / 'post' partitura line per destination bar; dry run unless
+-scribere (with -liber).

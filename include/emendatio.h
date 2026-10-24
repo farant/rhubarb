@@ -34,6 +34,7 @@
 #include "piscina.h"
 #include "carmen.h"
 #include "cantus.h"
+#include "chorda_aedificator.h"
 
 nomen structura {
     i32 mensura;   /* 1.. */
@@ -113,5 +114,69 @@ emendatio_mensuram_substituere (
                chorda* novus,
      EmendatioMutatio* mutatio,
        CarminisVitium* vitium);
+
+/* COPIA (emendatio_mensuras_copiare): mensurae M..N partis fontis in
+ * mensuras K.. partis metae (eadem aut alia) scribuntur, quaeque per
+ * emendatio_mensuram_substituere (lineae scriptae, status restitutus) -
+ * SUPERSCRIBIT, numquam inserit (notae sequentes non moventur). Textus
+ * fontis ex libro ORIGINALI (meta fontem tegens fontem non mutat).
+ *
+ * TRANSPOSITIO: diatonice - gradus notae in clave fontis computatur,
+ * gradu promotus in clave metae redditur, alteratio ad signaturam
+ * servata (C D E +2 in c maior -> E F G; C# +1 -> D#; ex G maior in c
+ * maior: F# -> B, gradus VII manet VII; in minore VII elevatus
+ * alteratio est: G# +1 -> A#); aut semitonia (exacte, orthographia ex
+ * clave metae). REPETITIO (sequentia): repetitio r (1..R) in mensura
+ * K + (r - 1) * longitudo, intervallo r-plo (1-2 ad 3, -1, R III:
+ * 3-4 gradu infra, 5-6 duobus, 7-8 tribus).
+ *
+ * SCRIPTOR (emendatio_mensuram_scribere): notae mensurae ut MML eodem
+ * rhythmo - longitudo expressa in nota quaque, pausae inter notas
+ * (valores maximi primum), 'oN' initio et ubi octava mutatur, 'vN' ubi
+ * lucrum mutatur (initio si non 1). Recusat: '@' (sonitus), nota trans
+ * lineam mensurae, octava extra MML 0..8, alteratio duplex. */
+
+nomen enumeratio {
+    EMENDATIO_DIATONICE,
+    EMENDATIO_SEMITONIA
+} EmendatioTranspositio;
+
+nomen structura {
+                   chorda pars_fons;
+                      i32 prima;          /* mensurae fontis */
+                      i32 ultima;
+                   chorda pars_meta;      /* vacua = pars fontis */
+                      i32 meta;           /* mensura metae prima */
+    EmendatioTranspositio modus;
+                      s32 intervallum;    /* gradus aut semitonia */
+                      i32 repetitiones;   /* 1 = copia simplex */
+} EmendatioCopia;
+
+/* MML mensurae unius partis (sine '|'), transpositione mutatae;
+ * clavis metae ad pulsum 'pulsus_metae'. FALSUM: vitium impletum */
+b32
+emendatio_mensuram_scribere (
+          constans Carmen* carmen,
+                   chorda  pars,
+                      i32  mensura,
+    EmendatioTranspositio  modus,
+                      s32  intervallum,
+                      s64  pulsus_metae,
+        ChordaAedificator* textus,
+           CarminisVitium* vitium);
+
+/* copia (et repetitiones) in librum novum; *mutatae = mensurae metae
+ * scriptae. FALSUM (vitium impletum, *novus intactus): vitia
+ * scriptoris aut substitutionis (meta sine lineis, extra frusta,
+ * longitudo, meta in statu '@'), mensurae fontis extra carmen */
+b32
+emendatio_mensuras_copiare (
+                     chorda  liber,
+                     chorda  carmen,
+    constans EmendatioCopia* copia,
+                    Piscina* piscina,
+                     chorda* novus,
+                        i32* mutatae,
+             CarminisVitium* vitium);
 
 #endif /* EMENDATIO_H */

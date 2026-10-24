@@ -963,3 +963,403 @@ emendatio_mensuram_substituere (
     mutatio->novum    = medium;
     redde VERUM;
 }
+
+
+/* ==================================================
+ * Copia et transpositio (palette #4)
+ * ================================================== */
+
+/* ordo diesium in signatura: F C G D A E B (indices C = 0) */
+hic_manens constans s32 ORDO_DIESIUM[VII] = {
+    III, ZEPHYRUM, IV, I, V, II, VI
+};
+/* semitonia litterarum C D E F G A B */
+hic_manens constans s32 SEMITONIA_LITTERARUM[VII] = {
+    ZEPHYRUM, II, IV, V, VII, IX, XI
+};
+/* pausae: valores maximi primum (punctati simplices) */
+hic_manens constans s64 PAUSAE[XIV] = {
+    5760, 3840, 2880, 1920, 1440, 960, 720, 480, 360, 240, 180, 120, 90,
+    60
+};
+
+/* alteratio litterae in signatura (quintae -7..7) */
+interior s32
+_signatura (
+    s32 quintae,
+    s32 littera)
+{
+    s32 i;
+
+    per (i = ZEPHYRUM; i < quintae; i++)
+    {
+        si (ORDO_DIESIUM[i] == littera)
+        {
+            redde I;
+        }
+    }
+    per (i = ZEPHYRUM; i < -quintae; i++)
+    {
+        si (ORDO_DIESIUM[VI - i] == littera)
+        {
+            redde -I;
+        }
+    }
+    redde ZEPHYRUM;
+}
+
+/* clavis ad pulsum (prima si nulla prior) */
+interior constans CarmenClavis*
+_clavis (
+    constans Carmen* carmen,
+                s64  pulsus)
+{
+    constans CarmenClavis* c = NIHIL;
+                      i32  i;
+
+    per (i = ZEPHYRUM; i < carmen->numerus_clavium; i++)
+    {
+        si (c == NIHIL || carmen->claves[i].pulsus <= pulsus)
+        {
+            c = &carmen->claves[i];
+        }
+    }
+    redde c;
+}
+
+/* index litterae tonicae (C = 0 .. B = 6) */
+interior s32
+_finalis_littera (
+    constans CarmenClavis* c)
+{
+    character t = c
+        != NIHIL ? partitura_clavis_littera(c)[ZEPHYRUM] : 'c';
+
+    redde _modulus((s32)(t - 'a') + V, VII);
+}
+
+interior s32
+_quintae (
+    constans CarmenClavis* c)
+{
+    redde c != NIHIL ? c->quintae : ZEPHYRUM;
+}
+
+/* pausas [a, a + spatium) scribere; FALSUM si non expressibilis */
+interior b32
+_pausas_scribere (
+    ChordaAedificator* a,
+                  s64  spatium,
+                  b32* primum)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < XIV && spatium > ZEPHYRUM; k++)
+    {
+        dum (spatium >= PAUSAE[k])
+        {
+            si (!*primum)
+            {
+                (vacuum)chorda_aedificator_appendere_character(a, ' ');
+            }
+            *primum = FALSUM;
+            (vacuum)chorda_aedificator_appendere_character(a, 'r');
+            (vacuum)_longitudinem_scribere((i32)PAUSAE[k], a);
+            spatium -= PAUSAE[k];
+        }
+    }
+    redde spatium == ZEPHYRUM;
+}
+
+b32
+emendatio_mensuram_scribere (
+          constans Carmen* carmen,
+                   chorda  pars,
+                      i32  mensura,
+    EmendatioTranspositio  modus,
+                      s32  intervallum,
+                      s64  pulsus_metae,
+        ChordaAedificator* textus,
+           CarminisVitium* vitium)
+{
+      constans CarmenPars* p = _partem_invenire(carmen, pars);
+    constans CarmenClavis* fons;
+    constans CarmenClavis* meta;
+                      s64  b0;
+                      s64  b1;
+                      s64  cursor;
+                      s32  octava = -C;
+                      f32  lucrum = 1.0f;
+                      b32  primum = VERUM;
+                      i32  f;
+                      i32  j;
+
+    si (p == NIHIL)
+    {
+        redde _vitium(vitium, carmen->titulus, pars, -I, ZEPHYRUM,
+            "pars ignota");
+    }
+    si (mensura < I)
+    {
+        redde _vitium(vitium, carmen->titulus, pars, -I, ZEPHYRUM,
+            "mensura nulla (1 = prima)");
+    }
+    b0      = carmen_pulsus_mensurae(carmen, mensura);
+    b1      = carmen_pulsus_mensurae(carmen, mensura + I);
+    fons    = _clavis(carmen, b0);
+    meta    = _clavis(carmen, pulsus_metae);
+    cursor  = b0;
+    per (f = ZEPHYRUM; f < p->numerus_frustorum; f++)
+    {
+        constans CarmenFrustum* fr = &p->frusta[f];
+
+        per (j = ZEPHYRUM; j < fr->numerus; j++)
+        {
+            constans CarmenNota* n = &fr->notae[j];
+                            s64  a = fr->pulsus + n->pulsus;
+                            s64  e = a + n->longitudo;
+                            s32  littera;
+                            s32  alteratio;
+                            s32  oct;
+                            s32  altitudo;
+                            s32  centesimae;
+
+            si (e <= b0 || a >= b1)
+            {
+                perge;
+            }
+            si (a < b0 || e > b1)
+            {
+                redde _vitium(vitium, carmen->titulus, pars, (s32)f,
+                    n->offset, "nota trans lineam mensurae");
+            }
+            si (n->praeparatum.mensura > ZEPHYRUM)
+            {
+                redde _vitium(vitium, carmen->titulus, pars, (s32)f,
+                    n->offset, "sonitus '@' non transponitur");
+            }
+            si (!_pausas_scribere(textus, a - cursor, &primum))
+            {
+                redde _vitium(vitium, carmen->titulus, pars, (s32)f,
+                    n->offset, "longitudo non expressibilis");
+            }
+            si (modus == EMENDATIO_SEMITONIA)
+            {
+                   CarmenNota t = *n;
+                PartituraNota o;
+
+                t.nota = (i32)((s32)n->nota + intervallum);
+                t.littera = '\0';
+                o = partitura_orthographia(carmen, &t, pulsus_metae);
+                littera = _modulus((s32)(o.littera - 'A') + V, VII);
+                alteratio = o.alteratio;
+                oct = o.octava;
+            }
+            alioquin
+            {
+                PartituraNota o = partitura_orthographia(carmen, n, a);
+                          s32 l = _modulus((s32)(o.littera - 'A') + V,
+                                           VII);
+                          s32 relativa = o.alteratio
+                                       - _signatura(_quintae(fons), l);
+                          s32 dt = _finalis_littera(meta)
+                                 - _finalis_littera(fons);
+                          s32 d;
+
+                dt         = dt > III ? dt - VII
+                                      : (dt < -III ? dt + VII : dt);
+                d        = o.octava * VII + l + dt + intervallum;
+                littera  = _modulus(d, VII);
+                oct      = (d - littera) / VII;
+                alteratio  = _signatura(_quintae(meta), littera)
+                           + relativa;
+            }
+            si (alteratio > I || alteratio < -I)
+            {
+                redde _vitium(vitium, carmen->titulus, pars, (s32)f,
+                    n->offset,
+                    "MML alterationem unam scribit (# aut b)");
+            }
+            altitudo = (oct + I) * XII + SEMITONIA_LITTERARUM[littera]
+                     + alteratio;
+            si (   oct < ZEPHYRUM || oct > EMENDATIO_OCTAVA_SUMMA
+                || altitudo < ZEPHYRUM || altitudo > CXXVII)
+            {
+                redde _vitium(vitium, carmen->titulus, pars, (s32)f,
+                    n->offset, "octava extra MML (0..8)");
+            }
+            si (oct != octava)
+            {
+                si (!primum)
+                {
+                    (vacuum)chorda_aedificator_appendere_character(
+                        textus, ' ');
+                }
+                primum = FALSUM;
+                (vacuum)chorda_aedificator_appendere_character(textus,
+                    'o');
+                (vacuum)chorda_aedificator_appendere_s32(textus, oct);
+                octava = oct;
+            }
+            si (n->lucrum != lucrum)
+            {
+                centesimae = (s32)(n->lucrum * (f32)C + 0.5f);
+                (vacuum)chorda_aedificator_appendere_literis(textus,
+                    primum ? "v" : " v");
+                (vacuum)chorda_aedificator_appendere_s32(textus,
+                    centesimae);
+                primum = FALSUM;
+                lucrum = n->lucrum;
+            }
+            si (!primum)
+            {
+                (vacuum)chorda_aedificator_appendere_character(textus,
+                    ' ');
+            }
+            primum = FALSUM;
+            (vacuum)chorda_aedificator_appendere_character(textus,
+                (character)("cdefgab"[littera]));
+            si (alteratio != ZEPHYRUM)
+            {
+                (vacuum)chorda_aedificator_appendere_character(textus,
+                    alteratio > ZEPHYRUM ? '#' : '-');
+            }
+            si (!_longitudinem_scribere((i32)n->longitudo, textus))
+            {
+                redde _vitium(vitium, carmen->titulus, pars, (s32)f,
+                    n->offset, "longitudo non expressibilis");
+            }
+            cursor = e;
+        }
+    }
+    si (!_pausas_scribere(textus, b1 - cursor, &primum))
+    {
+        redde _vitium(vitium, carmen->titulus, pars, -I, ZEPHYRUM,
+            "longitudo non expressibilis");
+    }
+    redde VERUM;
+}
+
+/* mensurae carminis (ultima quae ante finem incipit) */
+interior i32
+_mensurae (
+    constans Carmen* k)
+{
+    i32 m = I;
+
+    dum (carmen_pulsus_mensurae(k, m + I) < k->pulsus)
+    {
+        m++;
+    }
+    redde m;
+}
+
+b32
+emendatio_mensuras_copiare (
+                     chorda  liber,
+                     chorda  carmen,
+    constans EmendatioCopia* copia,
+                    Piscina* piscina,
+                     chorda* novus,
+                        i32* mutatae,
+             CarminisVitium* vitium)
+{
+             Carmina  vetus;
+     constans Carmen* k;
+              chorda  meta = copia->pars_meta.mensura > ZEPHYRUM
+                           ? copia->pars_meta : copia->pars_fons;
+              chorda* textus;
+                 i32* metae;
+                 i32  n;
+                 i32  r;
+                 i32  i;
+                 i32  numerus;
+                 i32  repetitiones = copia->repetitiones > ZEPHYRUM
+                                   ? copia->repetitiones : I;
+              chorda liber_currens = liber;
+
+    *mutatae = ZEPHYRUM;
+    si (!carmina_legere(liber, piscina, &vetus, vitium))
+    {
+        redde FALSUM;
+    }
+    k = carmina_invenire(&vetus, carmen);
+    si (k == NIHIL)
+    {
+        redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
+            "carmen ignotum");
+    }
+    si (   copia->prima < I || copia->ultima < copia->prima
+        || copia->ultima > _mensurae(k))
+    {
+        redde _vitium(vitium, carmen, copia->pars_fons, -I, ZEPHYRUM,
+            "mensurae fontis extra carmen");
+    }
+    n        = copia->ultima - copia->prima + I;
+    numerus  = n * repetitiones;
+    textus   = (chorda*)piscina_allocare(piscina,
+        (memoriae_index)numerus * magnitudo(chorda));
+    metae    = (i32*)piscina_allocare(piscina,
+        (memoriae_index)numerus * magnitudo(i32));
+    si (textus == NIHIL || metae == NIHIL)
+    {
+        redde _vitium(vitium, carmen, meta, -I, ZEPHYRUM,
+            "piscina exhausta");
+    }
+    /* textus omnes ex libro ORIGINALI */
+    per (r = ZEPHYRUM; r < repetitiones; r++)
+    {
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+                          i32  x = r * n + i;
+            ChordaAedificator* a = chorda_aedificator_creare(piscina,
+                CCLVI);
+
+            metae[x] = copia->meta + x;
+            si (   a == NIHIL
+                || !emendatio_mensuram_scribere(k, copia->pars_fons,
+                       copia->prima + i, copia->modus,
+                       copia->intervallum * (s32)(r + I),
+                       carmen_pulsus_mensurae(k, metae[x]), a, vitium))
+            {
+                redde FALSUM;
+            }
+            textus[x] = chorda_aedificator_finire(a);
+        }
+    }
+    /* substitutiones ordine; meta in statu '@' recusatur */
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+                 Carmina  currens;
+         constans Carmen* currentis;
+        EmendatioMensura  m;
+                  chorda  proximus;
+        EmendatioMutatio  mutatio;
+
+        si (!carmina_legere(liber_currens, piscina, &currens, vitium))
+        {
+            redde FALSUM;
+        }
+        currentis = carmina_invenire(&currens, carmen);
+        si (!emendatio_mensuram_invenire(currentis, meta, metae[i], &m,
+            vitium))
+        {
+            redde FALSUM;
+        }
+        si (m.status.praeparatum.mensura > ZEPHYRUM)
+        {
+            redde _vitium(vitium, carmen, meta, m.frustum, m.initium,
+                "meta in statu '@' (sonitus)");
+        }
+        si (!emendatio_mensuram_substituere(liber_currens, carmen, meta,
+                metae[i], textus[i], piscina, &proximus, &mutatio,
+                vitium))
+        {
+            redde FALSUM;
+        }
+        liber_currens = proximus;
+    }
+    *novus    = liber_currens;
+    *mutatae  = numerus;
+    redde VERUM;
+}

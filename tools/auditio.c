@@ -72,6 +72,9 @@
  *                                      -liber solo: liber scriptus;
  *                                      carmina.stml deinde per
  *                                      tools/carmina_infigere.sh)
+ *   auditio -carmen T -copiare P M[-N] mensurae M..N partis P in [Q:]K,
+ *       [Q:]K [+g|-g] [-semitonia]     gradibus g diatonicis (aut
+ *       [-repetere R] [-scribere]      semitoniis); R: sequentia
  *
  * Carmen per concentum et cantorem - via eadem ac vicus: pulsus X ms
  * (concentus_agere, cantor_agere). Vivum: exitus = concentus_auditus;
@@ -1287,6 +1290,110 @@ _status_scribere (
     redde chorda_aedificator_finire(a);
 }
 
+/* copia: "M[-N]" fontis, "[Q:]K" metae; intervallum, semitonia,
+ * repetitiones ex argumentis. Exitus ut _emendare */
+hic_manens s32 copia_intervallum   = ZEPHYRUM;
+hic_manens b32 copia_semitonia     = FALSUM;
+hic_manens i32 copia_repetitiones  = I;
+
+interior integer
+_copiare (
+     constans character* via_libri,
+                 chorda  liber,
+     constans character* carmen,
+     constans character* pars,
+     constans character* fontes,
+     constans character* meta,
+                    b32  scribere,
+                Piscina* piscina)
+{
+       EmendatioCopia  x;
+              Carmina  vetus;
+              Carmina  relectus;
+       CarminisVitium  vitium;
+      constans Carmen* k;
+      constans Carmen* k2;
+               chorda  novus;
+               chorda  q;
+               chorda  t = chorda_ex_literis(carmen, piscina);
+                  i32  mutatae;
+                  i32  i;
+            character* finis;
+   constans character* duo = strchr(meta, ':');
+
+    memset(&x, ZEPHYRUM, magnitudo(x));
+    x.pars_fons  = chorda_ex_literis(pars, piscina);
+    x.prima      = (i32)strtoul(fontes, &finis, X);
+    x.ultima     = x.prima;
+    si (*finis == '-')
+    {
+        x.ultima = (i32)strtoul(finis + I, &finis, X);
+    }
+    si (*finis != '\0' || x.prima == ZEPHYRUM || x.ultima < x.prima)
+    {
+        fprintf(stderr, "auditio: -copiare: mensurae M aut M-N, non "
+                "'%s'\n", fontes);
+        redde II;
+    }
+    si (duo != NIHIL)
+    {
+        x.pars_meta          = chorda_ex_literis(meta, piscina);
+        x.pars_meta.mensura  = (i32)(duo - meta);
+        meta                 = duo + I;
+    }
+    x.meta = (i32)strtoul(meta, &finis, X);
+    si (*finis != '\0' || x.meta == ZEPHYRUM)
+    {
+        fprintf(stderr, "auditio: -copiare: meta [Q:]K, non '%s'\n",
+                meta);
+        redde II;
+    }
+    x.modus         = copia_semitonia ? EMENDATIO_SEMITONIA
+                                      : EMENDATIO_DIATONICE;
+    x.intervallum   = copia_intervallum;
+    x.repetitiones  = copia_repetitiones;
+    si (!emendatio_mensuras_copiare(liber, t, &x, piscina, &novus,
+                                    &mutatae, &vitium))
+    {
+        _vitium_carminis(via_libri, &vitium);
+        redde I;
+    }
+    (vacuum)carmina_legere(liber, piscina, &vetus, &vitium);
+    (vacuum)carmina_legere(novus, piscina, &relectus, &vitium);
+    k   = carmina_invenire(&vetus, t);
+    k2  = carmina_invenire(&relectus, t);
+    q   = x.pars_meta.mensura > ZEPHYRUM ? x.pars_meta : x.pars_fons;
+    imprimere("%s %s %u-%u -> %.*s %u (%+d %s, x%u)\n", carmen, pars,
+              x.prima, x.ultima, (integer)q.mensura,
+              (constans character*)q.datum, x.meta,
+              (integer)x.intervallum,
+              copia_semitonia ? "semitonia" : "gradus", x.repetitiones);
+    per (i = ZEPHYRUM; i < mutatae; i++)
+    {
+        chorda ante = _linea_partis(k, x.meta + i, q, piscina);
+        chorda post = _linea_partis(k2, x.meta + i, q, piscina);
+
+        imprimere("  mensura %-3u ante  %.*s\n"
+                  "               post  %.*s\n", x.meta + i,
+                  (integer)ante.mensura,
+                  (constans character*)ante.datum,
+                  (integer)post.mensura,
+                  (constans character*)post.datum);
+    }
+    si (!scribere)
+    {
+        imprimere("siccum: -scribere librum scribit\n");
+        redde ZEPHYRUM;
+    }
+    si (!filum_scribere(via_libri, novus))
+    {
+        fprintf(stderr, "auditio: '%s' scribi non potuit\n", via_libri);
+        redde I;
+    }
+    imprimere("scriptum: %s\n", via_libri);
+    redde ZEPHYRUM;
+}
+
 /* modus 'm' monstrat, 'p' ponit, 's' substituit; siccum nisi scribere.
  * Exitus 0 bene, 1 recusatum aut liber fractus, 2 usus */
 interior integer
@@ -1339,6 +1446,11 @@ _emendare (
         redde I;
     }
 
+    si (modus == 'c')
+    {
+        redde _copiare(via_libri, liber, carmen, pars, locus, novum,
+                       scribere, piscina);
+    }
     /* locus: "M" (mensura) aut "M:T[+P]" (ponere) */
     si (modus == 'p')
     {
@@ -1614,6 +1726,34 @@ principale (
         {
             scribere = VERUM;
         }
+        alioquin si (   strcmp(argv[k], "-copiare") == ZEPHYRUM
+                     && k + III < argc && modus == '\0')
+        {
+            modus      = 'c';
+            emendanda  = argv[++k];
+            locus      = argv[++k];
+            novum      = argv[++k];
+            /* intervallum optionale: [+-]N */
+            si (   k + I < argc
+                && (   (argv[k + I][ZEPHYRUM] >= '0'
+                        && argv[k + I][ZEPHYRUM] <= '9')
+                    || (   (   argv[k + I][ZEPHYRUM] == '+'
+                            || argv[k + I][ZEPHYRUM] == '-')
+                        && argv[k + I][I] >= '0'
+                        && argv[k + I][I] <= '9')))
+            {
+                copia_intervallum = (s32)strtol(argv[++k], NIHIL, X);
+            }
+        }
+        alioquin si (strcmp(argv[k], "-semitonia") == ZEPHYRUM)
+        {
+            copia_semitonia = VERUM;
+        }
+        alioquin si (   strcmp(argv[k], "-repetere") == ZEPHYRUM
+                     && k + I < argc)
+        {
+            copia_repetitiones = (i32)strtoul(argv[++k], NIHIL, X);
+        }
         alioquin si (argv[k][ZEPHYRUM] == '-')
         {
             fprintf(stderr, "auditio: vexillum ignotum '%s'\n",
@@ -1665,7 +1805,9 @@ principale (
                 || recensio || auscultare || iterare || via != NIHIL
                 || pars != NIHIL || regulae != NIHIL))
         || (scribere
-            && (modus == '\0' || modus == 'm' || liber == NIHIL)))
+            && (modus == '\0' || modus == 'm' || liber == NIHIL))
+        || (   (copia_semitonia || copia_repetitiones != I)
+            && modus != 'c'))
     {
         fprintf(stderr,
             "auditio: -mensura P M, -ponere P M:T NOTA, "
@@ -1687,7 +1829,8 @@ principale (
                   "[-censura [-regulae R,+R,-R]] [-auscultare] "
                   "[-recensio [-regulae ...] [-json]] "
                   "[-mensura P M | -ponere P M:T NOTA | "
-                  "-substituere P M MML [-scribere]] "
+                  "-substituere P M MML | -copiare P M-N [Q:]K [+-g] "
+                  "[-semitonia] [-repetere R]] [-scribere]] "
                   "[-liber via.stml])\n");
         _praeparata_monstrare();
         redde ZEPHYRUM;

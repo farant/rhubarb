@@ -70,3 +70,31 @@ an agent will miss it - the CLI must print the start state ("o4 l4") with the ba
 Plants 21/21 red (cantus 4, emendatio 17); the 'l' dot arithmetic needed the 'punctata'
 case, and the frustum-boundary guards needed exact causa asserts (else they fall through
 to other refusals and survive).
+
+## 2026-10-23 - (4) copy / transpose / sequence (wish …1K9G5)
+
+emendatio_mensuram_scribere is the bar-scoped notes -> MML writer deferred since E1: same
+rhythm, explicit length on every note, rests between notes (largest-first, simple dots),
+'oN' at the start and where the octave changes, 'vN' where the volume changes (not at
+the start when 1.0 - the destination's state is restored by substitution anyway).
+Diatonic transposition works on LETTER numbers: D = octave*7 + letter, shifted by the
+tonic-letter difference between source and destination keys (normalised to -3..3, so
+G -> C moves up a fourth, not down a fifth) plus the interval; the accidental is kept
+RELATIVE to each key's signature (F# in G = signature, -> B in C = signature). In minor
+the raised VII is an accidental by this rule (G# +1 -> A#) - documented, not "fixed".
+Semitone mode spells from the destination key (partitura_orthographia).
+
+emendatio_mensuras_copiare builds ALL destination texts from the ORIGINAL book first,
+then applies E2 substitutions one by one (re-reading the book each time) - a destination
+overlapping the source copies the original bars. Repetition r is written at K + (r-1)*n
+with r times the interval. Refuses a destination whose start state has '@' (the copied
+notes would become percussion).
+
+auditio -copiare P M[-N] [Q:]K [+-g] [-semitonia] [-repetere R] [-scribere]: before/after
+partitura line per destination bar. Checked on pastorale (bars 1-2 -> 13 up two steps in
+G: F#5 B5 D6 C6), a falling sequence, stella melody -> bassus an octave down.
+
+Plants 17/17 red (one first form did not compile: replacing the bar-count check left
+_mensurae unused); two paths got tests BEFORE planting (trailing rest in a bar; empty
+destination part = source part). Lint renames: _tonica_littera -> _finalis_littera,
+kc -> currentis.
