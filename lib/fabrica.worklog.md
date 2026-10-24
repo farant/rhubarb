@@ -3725,3 +3725,13 @@ Also in this commit, the snapshot bookkeeping trim (tools/fabrica_sutura.c `_via
 allocation per entry, NUL-terminated so no per-dir chorda_ut_cstr; `_in_thesauro` /
 `fabrica_via_thesauri` allocation-free). Old/new oracle: identical path sets (43,924). Not a speed
 win: the kernel walk is ~90% of the ~190 ms snapshot (bare walk ~170 ms, sort 8 ms).
+
+## 2026-10-24 — step 2: sqlite in the trace (see lib/scrinium.worklog.md)
+
+The trace VFS in lib/scrinium.c closes the second gap in trace completeness (after P lines):
+database reads are now L inputs of the member's memo key, and writes are S lines judged like any
+filum write. The first -vis run with it found three tests writing sqlite siblings under build/
+outside their debts; fixed by moving them into credo areas (three debts removed). Remaining gap
+for trace-only judgment: the 41 members that execute foreign programs (step 3 spec: trust the
+trace where it is complete, snapshot only members with P lines of untraced programs, plus a
+sampled snapshot audit).

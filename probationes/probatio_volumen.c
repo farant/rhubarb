@@ -17,7 +17,11 @@
 
 #include <stdio.h>
 
-#define VIA_PROBATIONIS "build/probatio_volumen.db"
+/* plagula communis sectionum in area SUITAE (credo_area contextus
+ * suitae, per sectiones viva; via per c->suita, lectio sola): olim
+ * build/probatio_volumen.db extra vestigium membri (-journal per VFS
+ * vestigii notatum) */
+#define VIA_PROBATIONIS ((constans character*)c->suita)
 
 interior b32
 _continet (
@@ -27,17 +31,15 @@ _continet (
     redde (strstr(fenum, acus) != NIHIL) ? VERUM : FALSUM;
 }
 
-/* tabula rasa (percursus prior); sectiones sequentes plagulam
- * VIA_PROBATIONIS ordine tabulae aedificant */
+/* area suitae recens; sectiones sequentes plagulam VIA_PROBATIONIS
+ * ordine tabulae aedificant */
 interior vacuum
 _suitam_parare (
     CredoContextus* c)
 {
-    (vacuum)c;
-    si (filum_existit(VIA_PROBATIONIS))
-    {
-        filum_delere(VIA_PROBATIONIS);
-    }
+    c->datum = chorda_ut_cstr(chorda_concatenare(chorda_ex_literis(
+        credo_area(c), c->piscina), chorda_ex_literis(
+        "/probatio_volumen.db", c->piscina), c->piscina), c->piscina);
 }
 
 
@@ -93,17 +95,14 @@ _sectio_secunda (
         CREDO_AEQUALIS_S64(volumen_summa_actorum(vol), (s64)1);
         volumen_claudere(vol);
 
-        /* absens: creat */
-        si (filum_existit("build/probatio_volumen_aut.db"))
-        {
-            filum_delere("build/probatio_volumen_aut.db");
-        }
-        vol = volumen_aperire_aut_creare(piscina,
-            "build/probatio_volumen_aut.db");
+        /* absens (area sectionis recens): creat */
+        vol = volumen_aperire_aut_creare(piscina, chorda_ut_cstr(
+            chorda_concatenare(chorda_ex_literis(credo_area(c),
+            piscina), chorda_ex_literis("/probatio_volumen_aut.db",
+            piscina), piscina), piscina));
         CREDO_NON_NIHIL(vol);
         CREDO_AEQUALIS_S64(volumen_summa_actorum(vol), (s64)1);
         volumen_claudere(vol);
-        filum_delere("build/probatio_volumen_aut.db");
     }
 }
 
