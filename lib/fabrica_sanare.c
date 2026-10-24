@@ -407,9 +407,10 @@ _debita_notare (
                 versus   = chorda_sectio(liber, initium, k);
                 initium  = k + I;
                 si (   versus.mensura < III || versus.datum[I] != '\t'
-                    || versus.datum[0] == 'E')
+                    || versus.datum[0] == 'E'
+                    || versus.datum[0] == 'P')
                 {
-                    perge;
+                    perge;   /* E ambitus, P exsecutio: non debita */
                 }
                 via = chorda_sectio(versus, II, versus.mensura);
                 si (   sutura->radix.mensura > 0

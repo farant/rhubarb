@@ -14,6 +14,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "pseudoterminale.h"
+#include "filum.h"
 #include "credo.h"
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -316,6 +317,11 @@ posix_probare (
     constans character* crudus[]    = { "/bin/sh", "-c",
         "stty raw -echo; exec sleep 100", NIHIL };
 
+    /* liber lectionum (sub fabrica) ANTE numerationem aperitur:
+     * descriptor eius infrastructura processus est (semel apertus,
+     * servatus), non fossa - linea P pseudoterminalis eum aliter intra
+     * numerationem primum aperiret */
+    (vacuum)filum_existit("probationes/probatio_pseudoterminale.c");
     fossae_ante = fossas_numerare();
 
     /* effusio per terminalem: onlcr facit \r\n */

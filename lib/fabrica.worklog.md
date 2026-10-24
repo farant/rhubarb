@@ -3699,3 +3699,29 @@ Radix -vis 582 -> 520 s; area objects 12,195 -> 295; area 1.5 GB -> 706 MB; snap
 ~60.6k -> ~49.1k; memoized radix still 411/411 servatae. What's left of the overhead is mostly
 the two snapshots per member (216 s sys in the -vis run): next candidates are sharing one
 member's 'post' as the next member's 'ante', or FSEvents.
+
+## 2026-10-24 — exec recording (P lines) + snapshot bookkeeping trim
+
+Toward trace-only judgment (snapshots only where the trace can't be complete): the trace now
+records every program executed. `LECTIO_EXSECUTIO` = 'P', argv[0] as given, logged BEFORE
+fork (a failed exec is still recorded, conservatively) in processus_posix.c (both exec paths),
+pseudoterminale_posix.c, and the three system() calls (cliens_tabularii x2, aedilis_silva
+oracle) as /bin/sh. fabrica's parsers deliberately do NOT know 'P' (skipped as input; the
+sigillare switch puts it with S/E as not verifiable); `_debita_notare` skips it. No verdict
+or key changes.
+
+Measured (radix -vis): only 41 of 411 members executed anything; ~370 (~90%) executed nothing,
+so their trace is complete except for sqlite (VFS shim, next). Of the 41: /bin/sh 24, fixture
+scripts (tls/generare.sh 8), tmux 4, chmod, curl, git, clang, plus house bins (bin/natura*,
+~/.bin/mensor) and test-built fakes (trace themselves).
+
+Bug found on the way: the trace descriptor (opened once per process, kept) lacked O_CLOEXEC,
+so every exec'd program, foreign ones included, inherited it. Fixed. probatio_pseudoterminale
+counts fds around pseudoterminal creation; under fabrica its first trace line (the new P) opened
+the descriptor inside the count. The test now opens the trace first (filum_existit of its own
+source; NOT lectiones_ambitus - an undeclared E input is refused).
+
+Also in this commit, the snapshot bookkeeping trim (tools/fabrica_sutura.c `_viam_iungere`, one
+allocation per entry, NUL-terminated so no per-dir chorda_ut_cstr; `_in_thesauro` /
+`fabrica_via_thesauri` allocation-free). Old/new oracle: identical path sets (43,924). Not a speed
+win: the kernel walk is ~90% of the ~190 ms snapshot (bare walk ~170 ms, sort 8 ms).

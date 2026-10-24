@@ -355,6 +355,7 @@ _extractor_oraculi (
     }
     alioquin
     {
+        lectiones_notare(LECTIO_EXSECUTIO, "/bin/sh");   /* system() */
         si (system(mandatum_cstr) != 0)
         {
             (vacuum)remove(via_temporaria);

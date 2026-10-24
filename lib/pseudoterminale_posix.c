@@ -22,6 +22,7 @@
  */
 
 #include "postulata_posix.h"
+#include "lectiones.h"
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -453,6 +454,8 @@ pseudoterminale_posix_creare (
     (vacuum)fcntl(fistula[ZEPHYRUM], F_SETFD, FD_CLOEXEC);
     (vacuum)fcntl(fistula[I], F_SETFD, FD_CLOEXEC);
 
+    /* EXSECUTIO in libro (P), ANTE fork */
+    lectiones_notare(LECTIO_EXSECUTIO, cfg->argumenta[ZEPHYRUM]);
     infans = fork();
     si (infans < ZEPHYRUM)
     {

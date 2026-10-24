@@ -519,6 +519,8 @@ constans character* constans fabricae_thesauri_partes[III] = {
     "build/aedilis/obiecta/generationes/"
 };
 
+/* SINE ALLOCATIONE (photographia: vocatur per directorium arboris; olim
+ * chorda nova per partem et per vocationem) */
 interior b32
 _in_thesauro (
       chorda  via,
@@ -526,11 +528,14 @@ _in_thesauro (
 {
     i32 k;
 
+    (vacuum)piscina;
     per (k = ZEPHYRUM; k < III; k++)
     {
-        si (chorda_incipit(via,
-            chorda_ex_literis(fabricae_thesauri_partes[k],
-                piscina)))
+        size_t longitudo = strlen(fabricae_thesauri_partes[k]);
+
+        si (   (size_t)via.mensura >= longitudo
+            && memcmp(via.datum, fabricae_thesauri_partes[k], longitudo)
+               == ZEPHYRUM)
         {
             redde VERUM;
         }
@@ -538,13 +543,31 @@ _in_thesauro (
     redde FALSUM;
 }
 
+/* directorium 'via' in thesauro: via + '/' partem thesauri incipit
+ * (partes in '/' desinunt) - sine chorda nova */
 b32
 fabrica_via_thesauri (
       chorda  via,
      Piscina* piscina)
 {
-    redde _in_thesauro(chorda_concatenare(via, chorda_ex_literis("/",
-        piscina), piscina), piscina);
+    i32 k;
+
+    (vacuum)piscina;
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        size_t longitudo = strlen(fabricae_thesauri_partes[k]);
+
+        si (   (   (size_t)via.mensura >= longitudo
+                && memcmp(via.datum, fabricae_thesauri_partes[k],
+                       longitudo) == ZEPHYRUM)
+            || (   (size_t)via.mensura + I == longitudo
+                && memcmp(via.datum, fabricae_thesauri_partes[k],
+                       longitudo - I) == ZEPHYRUM))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
 }
 
 hic_manens constans character* constans SIGNUM_ABSENS   = "\001absens";
@@ -684,6 +707,7 @@ fabricae_lectionem_sigillare (
             redde VERUM;
         casus LECTIO_SCRIPSIT:
         casus LECTIO_AMBITUS:
+        casus LECTIO_EXSECUTIO:   /* P: non ingressus verificabilis */
             redde FALSUM;
     }
     redde FALSUM;

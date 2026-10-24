@@ -9,6 +9,7 @@
 #include "filum.h"
 #include "via.h"
 #include "lectiones.h"
+#include "processus.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -215,6 +216,41 @@ _sectio_quinta (
     }
 }
 
+/* IId. EXSECUTIO (P): processus_exsequi argv[0] ANTE fork notat -
+ * etiam exec fractum (programma absens); sine libro nihil */
+interior vacuum
+_sectio_exsecutionis (
+    CredoContextus* c)
+{
+               Piscina* piscina;
+                chorda  liber;
+    constans character* verum[II];
+    constans character* absens[II];
+     ProcessusResultus  r;
+
+    piscina    = c->piscina;
+    verum[0]   = "/usr/bin/true";
+    verum[I]   = NIHIL;
+    absens[0]  = "programma_nusquam_exstans";
+    absens[I]  = NIHIL;
+    (vacuum)remove(LIBER);
+    setenv("FABRICA_LECTIONES", LIBER, I);
+    r = processus_exsequi(verum, 5000, piscina);
+    CREDO_VERUM(r.successus);
+    (vacuum)processus_exsequi(absens, 5000, piscina);
+    unsetenv("FABRICA_LECTIONES");
+    liber = filum_legere_totum(LIBER, piscina);
+    CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
+        "P\t/usr/bin/true\n", piscina)));
+    CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
+        "P\tprogramma_nusquam_exstans\n", piscina)));
+    /* sine libro: nihil notatur */
+    (vacuum)remove(LIBER);
+    r = processus_exsequi(verum, 5000, piscina);
+    CREDO_VERUM(r.successus);
+    CREDO_FALSUM(filum_existit(LIBER));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I. variabilis absens: nihil scribitur", _sectio_prima, NIHIL,
         NIHIL, NIHIL, NIHIL },
@@ -222,6 +258,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "IIb. scriptura (S) et ambitus (E)", _sectio_tertia, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "IId. exsecutio (P) ante fork", _sectio_exsecutionis, NIHIL,
+        NIHIL, NIHIL, NIHIL },
     { "IIc. fopen et stat per librum (plan 5 T5a)", _sectio_quarta,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "III. filii duo paralleli: lineae integrae", _sectio_quinta,

@@ -269,6 +269,7 @@ int WTERMSIG(int status);
 #define O_TRUNC    0x0400
 #define O_EXCL     0x0800
 #define O_NOFOLLOW 0x0100
+#define O_CLOEXEC  0x01000000
 #define F_GETFL    3
 #define F_SETFL    4
 #define F_SETFD    2
