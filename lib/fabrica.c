@@ -85,6 +85,28 @@ fabricae_xar_chordarum (
     redde xar_creare(piscina, (i32)magnitudo(chorda));
 }
 
+Piscina*
+fabricae_piscina_cursus (
+    constans FabricaSutura* sutura,
+                   Piscina* piscina)
+{
+    redde (sutura->piscina_cursus != NIHIL) ? sutura->piscina_cursus
+        : piscina;
+}
+
+chorda
+fabricae_in_cursum (
+    constans FabricaSutura* sutura,
+                    chorda  valor,
+                   Piscina* piscina)
+{
+    Piscina* cursus;
+
+    cursus = fabricae_piscina_cursus(sutura, piscina);
+    redde (cursus == piscina) ? valor : chorda_transcribere(valor,
+        cursus);
+}
+
 vacuum
 fabricae_chordam_addere (
        Xar* xar,
@@ -117,6 +139,7 @@ fabrica_suturam_parare (
     sutura->sigilla             = NIHIL;
     sutura->regenerationes      = NIHIL;
     sutura->digesta             = NIHIL;
+    sutura->piscina_cursus      = NIHIL;
     sutura->agere               = NIHIL;
     sutura->agere_simul         = NIHIL;
     sutura->currere_simul       = NIHIL;
@@ -395,13 +418,15 @@ fabricae_actionem_sigillare_semel (
         sigillum_out, causa_out);
     si (sutura->digesta != NIHIL)
     {
-        locus = (DigestumMemoratum*)piscina_allocare(piscina,
+        locus = (DigestumMemoratum*)piscina_allocare(
+            fabricae_piscina_cursus(sutura, piscina),
             magnitudo(DigestumMemoratum));
         si (locus != NIHIL)
         {
             locus->bonum     = bonum;
             locus->sigillum  = *sigillum_out;
-            locus->causa     = *causa_out;
+            locus->causa     = fabricae_in_cursum(sutura, *causa_out,
+                piscina);
             (vacuum)tabula_dispersa_inserere(sutura->digesta,
                 actio->titulus, locus);
         }
@@ -587,14 +612,15 @@ fabricae_lectionem_sigillare (
             (memoriae_index)contentum.mensura);
         si (sutura->sigilla != NIHIL)
         {
-            Sigillum* locus = (Sigillum*)piscina_allocare(piscina,
+            Sigillum* locus = (Sigillum*)piscina_allocare(
+                fabricae_piscina_cursus(sutura, piscina),
                 magnitudo(Sigillum));
 
             si (locus != NIHIL)
             {
                 *locus = *sigillum_out;
-                (vacuum)tabula_dispersa_inserere(sutura->sigilla, via,
-                    locus);
+                (vacuum)tabula_dispersa_inserere(sutura->sigilla,
+                    fabricae_in_cursum(sutura, via, piscina), locus);
             }
         }
         redde VERUM;
@@ -1258,10 +1284,12 @@ _regenerare (
     }
     si (sutura->regenerationes != NIHIL)
     {
-        locus = (chorda*)piscina_allocare(piscina, magnitudo(chorda));
+        locus =
+            (chorda*)piscina_allocare(fabricae_piscina_cursus(sutura,
+            piscina), magnitudo(chorda));
         si (locus != NIHIL)
         {
-            *locus = *causa_out;
+            *locus = fabricae_in_cursum(sutura, *causa_out, piscina);
             (vacuum)tabula_dispersa_inserere(sutura->regenerationes,
                 actio->titulus, locus);
         }
@@ -1410,10 +1438,12 @@ fabrica_regenerationes_praevidere (
         {
             causae[i] = chorda_ex_literis("causa ignota", piscina);
         }
-        locus = (chorda*)piscina_allocare(piscina, magnitudo(chorda));
+        locus =
+            (chorda*)piscina_allocare(fabricae_piscina_cursus(sutura,
+            piscina), magnitudo(chorda));
         si (locus != NIHIL)
         {
-            *locus = causae[i];
+            *locus = fabricae_in_cursum(sutura, causae[i], piscina);
             (vacuum)tabula_dispersa_inserere(sutura->regenerationes,
                 membra[i]->titulus, locus);
         }

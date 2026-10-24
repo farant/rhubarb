@@ -3519,3 +3519,63 @@ Option 1 (desideratum …VXWK8; the real migration into a fabrica composite come
 - Unit: the fake worlds now model the capsule; case VIIIc (capsule changed → b only); the earlier plant (exclusion restored) went red at the key assertion.
 
 **Concept noted:** `provenientia="ignota"` is where fabrica is guessing. There are 8 such outputs in the graph (now 6); worth a pass ("can it be judged? if not, why").
+
+## 2026-10-23 — fabrica probare memory grows ~60 MB per member (kernel panic)
+
+Panic 19:13 (watchdog, compressor segments 100%): two `fabrica` processes at 16.0 and 14.2 GiB
+(quinta radix -vis, secunda commissio radix). Measured with temporary stderr prints
+(piscina_summa_usus, malloc_zone_statistics, ru_maxrss) on `probare -vis probationes_toml`,
+13 members: RSS 401 -> 1139 MB, i.e. ~62 MB per member, never released until exit.
+
+Where it goes (per member):
+- **Tree snapshots, ~25 MB.** `vestigium_capere` (tools/fabrica_sutura.c) walks ~54.6k entries
+  (~230 B each = 12.7 MB), twice per member (before/after), into the run-long piscina from
+  tools/fabrica.c:3569. Nothing ever resets it.
+- **Compiler bookkeeping, ~20-25 MB.** `_piscina_gradus` (tools/fabrica_ansae.c, static,
+  process-long) grows ~1 MB per `compilator_compilare` call, ~20 calls per member (one per
+  object in the link closure, even on cache hits). On a hit, the compiler reads whole files
+  into `compilator->piscina`: the source (key), the index, the cached .o, and the existing .o
+  (`_collocare` compare). fabrica never calls `compilator_memoriam_incipere`, so every header
+  in every index is re-read and re-hashed on every call (memo exists, only `--plures` uses it).
+  Costs time as well as memory.
+- **Run itself (gradus agere), 2-5 MB.** Post-run checks (comparare, debita, S lines,
+  ambitus) ~1 MB.
+
+Also: ~360 MB is allocated after closure derivation and before the first member (not yet
+attributed). A dynamic piscina abandons a block's tail when a request doesn't fit (`inutilis`
+50-130 MB), but that isn't what grows.
+
+Fix direction: a scratch piscina per member (copy out causa/notes that must outlive it); the
+compiler per call, or with the header memo on and cleared by `_memorias_vacare` (generators
+can rewrite headers mid-run, so the memo must be invalidated the same way sigils are).
+
+## 2026-10-23 — fix part 1: scratch piscina per action (park …T77EH4)
+
+What has to outlive an action turned out to be small. Everything persistent is already written
+per member: the verdict file, `<area>/debita.txt`, fabrica.db rows (`_lectiones_scribere` commits
+per call), mensor spans, `cursum_inscribere`. In memory only two things must survive until exit:
+1. the `FabricaSanatio` record (reason + stale-cause strings);
+2. the sutura caches (`sigilla`, `digesta`, `regenerationes`, `audita`).
+
+Trap: `sigilla`/`digesta` are emptied after each action, but the post-condition check fills them
+again AFTER that, and the next member's staleness check reads them. `regenerationes` is kept
+across members on purpose. So all four caches need long-lived keys AND values; the hash table
+stores keys by value (no copy).
+
+Change:
+- `FabricaSutura.piscina_cursus` (NIHIL = old behaviour, nothing reset). The cache inserts and the
+  sanatio strings go through `fabricae_piscina_cursus` / `fabricae_in_cursum`.
+- `fabrica_sanare` creates one scratch piscina ("fabrica_actum") only when piscina_cursus is set
+  and not siccum. Used by `_actionem_agere` + `_post_agere` in the serial loop and `_solam_agere`,
+  and per wave by `_undam_agere`; emptied with `piscina_vacare` after each.
+- `_ante_agere` (staleness) stays long-lived: ~0.8 MB per member memoized, ~500 B under -vis.
+
+Why `piscina_vacare` and not notare/reficere: it ZEROES, so a missed copy-out reads zeros, not
+plausible stale data. That is how the test catches it: a zeroed chorda reads as mensura 0 =
+"regeneration succeeded", so the test needs a FAILED regeneration memo (`discus.fractus`) to tell
+a dangling entry from a valid one. A success memo alone was a mute plant.
+
+Measured (`probare -vis`, peak footprint): css 848 -> 560 MB, saltuarius 1080 -> 667, toml
+1201 -> 751. A/B on toml shows no time cost (noise 39-68 s both ways, syspolicyd/mds busy after
+the reboot). Still ~30 MB per member left: the compiler bookkeeping in `_piscina_gradus`
+(part 2). Radix -vis is NOT safe until then (~400 x 30 MB).

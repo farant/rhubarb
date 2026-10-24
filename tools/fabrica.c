@@ -1096,6 +1096,9 @@ _iudicare_suturam (
         64);
     /* sigillum ingressuum semel per actionem */
     c->sutura.digesta = tabula_dispersa_creare_chorda(c->piscina, 128);
+    /* quod ultra actum vivit: piscina cursus (acta piscinam
+     * temporariam suam habent, parcum …T77EH4) */
+    c->sutura.piscina_cursus = c->piscina;
     redde VERUM;
 }
 
@@ -2460,6 +2463,7 @@ _sanare_suturam (
     c->sutura.regenerationes  = tabula_dispersa_creare_chorda(
         c->piscina, 64);
     c->sutura.digesta = tabula_dispersa_creare_chorda(c->piscina, 128);
+    c->sutura.piscina_cursus = c->piscina;
     redde _sanare_iudicem_ipsum(m) && _sanare_seram_capere(m);
 }
 
