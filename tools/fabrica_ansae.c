@@ -323,8 +323,11 @@ suturae_compilare_gradus (
         piscina);
     (vacuum)filum_directorium_creare_cum_parentibus(chorda_ut_cstr(
         directorium, piscina));
-    r = compilator_compilare(_compilator_gradus, argv,
-        (i32)xar_numerus(verba));
+    /* piscina vocationis (actum membri, temporaria): lectiones
+     * thesauri cum membro vacantur, non in _piscina_gradus crescunt
+     * (~I MB per compilationem, parcum …T77EH4) */
+    r = compilator_compilare_in(_compilator_gradus, argv,
+        (i32)xar_numerus(verba), piscina);
     si (r.codex != ZEPHYRUM)
     {
         *erratum_out = suturae_ultimae_lineae(r.erratum.mensura

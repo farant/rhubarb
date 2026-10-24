@@ -3579,3 +3579,19 @@ Measured (`probare -vis`, peak footprint): css 848 -> 560 MB, saltuarius 1080 ->
 1201 -> 751. A/B on toml shows no time cost (noise 39-68 s both ways, syspolicyd/mds busy after
 the reboot). Still ~30 MB per member left: the compiler bookkeeping in `_piscina_gradus`
 (part 2). Radix -vis is NOT safe until then (~400 x 30 MB).
+
+## 2026-10-23 — fix part 2: compiler calls in the caller's piscina (park …T77EH4)
+
+`_piscina_gradus` grew ~1 MB per `compilator_compilare` call (~20 per member, cache hits
+included): source, index, cached .o, existing .o and every header, all read into the
+compiler's own piscina. New `compilator_compilare_in(…, piscina)` puts a call's allocations in
+the caller's piscina; `suturae_compilare_gradus` passes its own, which since part 1 is the
+action scratch. Did NOT enable `compilator_memoriam_incipere`: a memoized header read is not
+recorded in FABRICA_LECTIONES (compilator.h says fabrica must not), so member keys would
+silently lose headers.
+
+Measured per toml member (temporary prints): gradus flat at 2.6 MB; scratch capacity levels off
+at 84 MB (high-water, reused); run piscina +0.9 MB per member (staleness, records, caches). Peak
+(-vis): css 355 MB, saltuarius 451, toml 432-492 (from 848 / 1080 / 1201 before part 1).
+Leftover fixed cost: ~330 MB in the run piscina before the first member (likely ordering /
+input hashing reading files into c->piscina). One-time, not growth; follow-up.

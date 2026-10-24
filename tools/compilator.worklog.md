@@ -109,3 +109,14 @@ Plants, done by hand:
 - restored → green.
 
 **Lesson: `silva.planta(..., 'compilator')` is MUTE.** The fumus runs the existing `bin/compilator` without rebuilding it, and `bin/fabrica sanare bin/compilator` refuses while fabrica itself (which links lib/compilator.c) is stale ("iudex ipse non recens"). Plant by hand: edit → `./tools/fabrica_struere.sh` → `bin/fabrica sanare bin/compilator` → fumus → restore → rebuild both.
+
+## 2026-10-23 — compilator_compilare_in (fabrica memory, park …T77EH4)
+
+Added `compilator_compilare_in(compilator, argv, n, piscina)`: every per-call allocation (file
+reads for the key and cache hit, argv parsing, captured output, error text) goes into the
+caller's piscina, so the caller can empty it after the call. `compilator_compilare` is now a
+wrapper passing `compilator->piscina` (unchanged behaviour, used by --plures). The thesaurus
+allocates in its own piscina only on a store (miss) and in GC. Test:
+probationes/probatio_compilator.c (needs lib/compilator.c in compile_tests_fontes_generata.sh,
+regenerated). argv is WITHOUT a leading 'clang', or it counts as a second source and the call
+is "non cacheabilia".

@@ -838,14 +838,15 @@ _compilationem_parare (
                         Compilator* compilator,
     constans character* constans* argumenta,
                                 i32 numerus,
+                           Piscina* piscina,
                          Compilatio* c)
 {
-    c->piscina    = compilator->piscina;
+    c->piscina    = piscina;
     c->thesaurus  = compilator->thesaurus;
     c->clang      = compilator->clang;
     c->argumenta  = argumenta;
     c->numerus    = (integer)numerus;
-    c->radices    = xar_creare(compilator->piscina,
+    c->radices    = xar_creare(piscina,
         (i32)magnitudo(constans character*));
     c->sigilla_capitum   = compilator->sigilla_capitum;
     c->existentiae       = compilator->existentiae;
@@ -943,7 +944,8 @@ compilator_clavem (
     Compilatio c;
       Sigillum identitas;
 
-    _compilationem_parare(compilator, argumenta, numerus, &c);
+    _compilationem_parare(compilator, argumenta, numerus,
+        compilator->piscina, &c);
     redde _argumenta_parare(&c)
         && _identitas_compilatoris(&c, &identitas)
         && _clavem_capitis(&c, &identitas, clavis_out);
@@ -955,6 +957,17 @@ compilator_compilare (
     constans character* constans* argumenta,
                               i32 numerus)
 {
+    redde compilator_compilare_in(compilator, argumenta, numerus,
+        compilator->piscina);
+}
+
+CompilatorResultus
+compilator_compilare_in (
+                      Compilator* compilator,
+    constans character* constans* argumenta,
+                              i32 numerus,
+                         Piscina* piscina)
+{
     CompilatorResultus r;
             Compilatio c;
               Sigillum identitas;
@@ -962,16 +975,16 @@ compilator_compilare (
 
     r.codex        = -I;
     r.ex_thesauro  = FALSUM;
-    r.effusio      = chorda_ex_literis("", compilator->piscina);
-    r.erratum      = chorda_ex_literis("", compilator->piscina);
-    _compilationem_parare(compilator, argumenta, numerus, &c);
+    r.effusio      = chorda_ex_literis("", piscina);
+    r.erratum      = chorda_ex_literis("", piscina);
+    _compilationem_parare(compilator, argumenta, numerus, piscina, &c);
     si (   !_argumenta_parare(&c)
         || !_identitas_compilatoris(&c, &identitas)
         || !_clavem_capitis(&c, &identitas, &caput))
     {
         r.erratum = chorda_ex_literis("compilator: argumenta non "
             "cacheabilia aut identitas clang ignota\n",
-            compilator->piscina);
+            piscina);
         redde r;
     }
     si (_invenire(&c, &caput))
