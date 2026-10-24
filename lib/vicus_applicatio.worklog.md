@@ -115,3 +115,34 @@ Suite `probatio_vicus_sonus` (7 sections, 123 asserts, fake port that
 counts calls; TMUX_TMPDIR in the credo area so systema 'terminalia'
 never sees Fran's server). Plants 13/13 red (12 C via silva.planta,
 plus organum `vita="transiens"` by hand -> persistens red).
+
+## 2026-10-22 - praeco cantus step B: vicus plays Claude-sent jingles
+
+Transport = the praeconium log vicus already tails. `praeco cantus` will
+append `{"eventus":"cantus","genus":"intactus"|"","nuntius":"<MML>"}`.
+No second reader: `AdmonitionumSequax.eventus` now keeps ALL events the
+last `admonitiones_sequi` read (scheda, valid until the next pulse), and
+`systema_admonitionum` takes the newest `cantus` from it
+(`cantum_recentissimum`, scanning from the end). The sequax starts at the
+log's tail, so jingles written before vicus opened never replay.
+
+- Both mutes silence jingles (Fran 10-22: Claude's jingle = Claude getting
+  your attention, same channel as notifications).
+- Notification + jingle in one pulse: `sonum_pulsus` calls them in TIME
+  order, later last - tintinnabulum's queue makes the last call win.
+- `VicusPortaSoni.canere` is required: a port without it is refused as a
+  whole (section porta_dimidia; the plant segfaulted = NULL call).
+- The real port forwards to `tintinnabulum_canere(..., NIHIL)`: vicus does
+  not judge the text - praeco does, before writing (step C).
+
+Plants 9/9 red (8 vicus_sonus + sequax.eventus via admonitiones_visus).
+
+## 2026-10-22 - S5c: aetherophonum pane kind, $theremin
+
+Pane kind "aetherophonum" registered with ctx = ContextusSoni (which now
+also holds the Vicus and StatusSystemata). Wrappers aetheri_incipere /
+_ponere / _dimittere: no port or MASTER mute -> 0 / nothing; the
+notification mute is ignored on purpose. The port must now provide the
+three live-voice calls or it is refused as a whole (porta_dimidia).
+ludus_tessera's hand list gained "aetherophonum" (vicus_applicatio links
+the pane; the pane links nothing sound-related).

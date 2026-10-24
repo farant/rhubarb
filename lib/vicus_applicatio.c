@@ -12,6 +12,8 @@
 #include "colloquia_visus.h"
 #include "sancti_visus.h"
 #include "multiplexor.h"
+#include "praeconium.h"
+#include "aetherophonum.h"
 #include "filum.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -1937,6 +1939,9 @@ nomen structura {
     VicusPortaSoni porta;
                b32 posita;
                b32 mutus_prior;
+    /* S5c: aetherophonum - mutus in vocatione, systemata montationis */
+             Vicus* vicus;
+   StatusSystemata* systemata;
 } ContextusSoni;
 
 /* campus veritatis radicis; absens = FALSUM */
@@ -1972,6 +1977,67 @@ sonum_admonitionis (
         redde;
     }
     (vacuum)soni->porta.pulsare(soni->porta.ctx, genus);
+}
+
+/* praeco cantus: textus MML in nuntio, genus "intactus" aut vacuum */
+interior vacuum
+sonum_cantus (
+                 ContextusSoni* soni,
+                         Vicus* v,
+    constans PraeconiumEventus* e)
+{
+    si (!soni || !soni->posita || sonus_mutus(v))
+    {
+        redde;
+    }
+    (vacuum)soni->porta.canere(soni->porta.ctx, e->nuntius,
+        chorda_aequalis_literis(e->genus, "intactus"));
+}
+
+/* eventus 'cantus' recentissimus pulsus (ultimus ordine libri); NIHIL
+ * si nullus */
+interior constans PraeconiumEventus*
+cantum_recentissimum (
+    Xar* eventus)
+{
+    constans PraeconiumEventus* e;
+                           i32  i;
+
+    per (i = eventus ? xar_numerus(eventus) : ZEPHYRUM; i > ZEPHYRUM;
+         i--)
+    {
+        e = (constans PraeconiumEventus*)xar_obtinere(eventus, i - I);
+        si (chorda_aequalis_literis(e->eventus, "cantus"))
+        {
+            redde e;
+        }
+    }
+    redde NIHIL;
+}
+
+/* pulsus soni: admonitio nova et cantus eodem pulsu ordine temporis -
+ * posterior ultimus vocatur, ergo in tintinnabulo vincit */
+interior vacuum
+sonum_pulsus (
+                 ContextusSoni* soni,
+                         Vicus* v,
+            constans Admonitio* nova,
+    constans PraeconiumEventus* cantus)
+{
+    si (nova && cantus && cantus->tempus < nova->tempus)
+    {
+        sonum_cantus(soni, v, cantus);
+        sonum_admonitionis(soni, v, nova->genus);
+        redde;
+    }
+    si (nova)
+    {
+        sonum_admonitionis(soni, v, nova->genus);
+    }
+    si (cantus)
+    {
+        sonum_cantus(soni, v, cantus);
+    }
 }
 
 /* '$sound' -> sonus_mutus vertitur; '$sound(notifications)' ->
@@ -2049,6 +2115,103 @@ systema_soni (
     }
     soni->mutus_prior = mutus;
     redde FALSUM;
+}
+
+/* S5c: porta aetherophoni - mutus TOTUS vocem negat (mutus
+ * admonitionum non: aetherophonum admonitio non est); porta soni
+ * nulla = 0 */
+interior i64
+aetheri_incipere (
+                 vacuum* ctx,
+     constans character* tibia,
+                    b32  vibratus,
+                    f32  nota,
+                    f32  lucrum)
+{
+    ContextusSoni* soni = (ContextusSoni*)ctx;
+
+    si (   !soni->posita || !soni->vicus
+        || veritas_radicis_vici(soni->vicus, "sonus_mutus"))
+    {
+        redde ZEPHYRUM;
+    }
+    redde soni->porta.vocem_incipere(soni->porta.ctx, tibia, vibratus,
+        nota, lucrum);
+}
+
+interior vacuum
+aetheri_ponere (
+    vacuum* ctx,
+       i64  vox,
+       f32  nota,
+       f32  lucrum,
+       i32  ms)
+{
+    ContextusSoni* soni = (ContextusSoni*)ctx;
+
+    si (soni->posita)
+    {
+        soni->porta.vocem_ponere(soni->porta.ctx, vox, nota, lucrum,
+            ms);
+    }
+}
+
+interior vacuum
+aetheri_dimittere (
+    vacuum* ctx,
+       i64  vox)
+{
+    ContextusSoni* soni = (ContextusSoni*)ctx;
+
+    si (soni->posita)
+    {
+        soni->porta.vocem_dimittere(soni->porta.ctx, vox);
+    }
+}
+
+interior b32
+aetherophonum_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+        ContextusSoni* soni = (ContextusSoni*)ctx;
+    AetherophoniPorta  porta;
+
+    (vacuum)volumen;
+    (vacuum)argumentum;
+    porta.incipere   = aetheri_incipere;
+    porta.ponere     = aetheri_ponere;
+    porta.dimittere  = aetheri_dimittere;
+    porta.ctx        = soni;
+    redde soni && aetherophonum_montare((AetherophoniMontatio*)sedes,
+        piscina, intern, repo, id, &porta, latitudo, altitudo,
+        soni->systemata);
+}
+
+interior vacuum
+aetherophonum_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    AetherophoniMontatio* m = (AetherophoniMontatio*)montatio;
+
+    f->actiones       = m->actiones;
+    f->figurae        = m->figurae;
+    f->componere      = aetherophonum_componere;
+    f->componere_ctx  = m;
+    /* Esc sine voce tenta: latus prius */
+    f->effugium_redit  = VERUM;
+    /* theremin uno ictu sonat (focus et vox simul) */
+    f->ictus_primus      = aetherophonum_ictus_primus;
+    f->ictus_primus_ctx  = m;
 }
 
 
@@ -2251,6 +2414,7 @@ systema_admonitionum (
 
     ca       = (ContextusAdmonitionum*)ctx;
     mutatum  = FALSUM;
+    nova     = NIHIL;
     si (!ca->sequitur)
     {
         redde FALSUM;
@@ -2273,11 +2437,9 @@ systema_admonitionum (
         mutatum = VERUM;
         /* sonus S4: recentissima sola - plures uno pulsu, sonus unus */
         nova = admonitio(ca->index, ZEPHYRUM);
-        si (nova)
-        {
-            sonum_admonitionis(ca->sonus, v, nova->genus);
-        }
     }
+    sonum_pulsus(ca->sonus, v, nova,
+        cantum_recentissimum(ca->sequax.eventus));
     u = (s32)admonitiones_non_lectae(ca->index);
     si (u != ca->non_lectae)
     {
@@ -2739,7 +2901,9 @@ vicus_applicatio_soni_portam_ponere (
         redde;
     }
     soni = (ContextusSoni*)app->soni;
-    si (!porta || !porta->pulsare || !porta->agere || !porta->tacere)
+    si (   !porta || !porta->pulsare || !porta->agere || !porta->tacere
+        || !porta->canere || !porta->vocem_incipere
+        || !porta->vocem_ponere || !porta->vocem_dimittere)
     {
         soni->posita = FALSUM;
         redde;
@@ -3142,6 +3306,8 @@ ContextusNomenclatoris* cn;
     si (soni)
     {
         memset(soni, ZEPHYRUM, magnitudo(ContextusSoni));
+        soni->vicus      = app->vicus;
+        soni->systemata  = systemata;
     }
     si (cad)
     {
@@ -3181,6 +3347,8 @@ ContextusNomenclatoris* cn;
                "notifications", "admonitiones", NIHIL, piscina)
         || !aperiens_fixum_registrare(cs->iussa, app->vicus,
                "sessions", "colloquia", NIHIL, piscina)
+        || !aperiens_fixum_registrare(cs->iussa, app->vicus,
+               "theremin", "aetherophonum", NIHIL, piscina)
         || !sanctorum
         || !aperiens_fixum_registrare(cs->iussa, app->vicus, "saints",
                "sancti", NIHIL, piscina)
@@ -3220,6 +3388,10 @@ ContextusNomenclatoris* cn;
                magnitudo(AdmonitionumMontatio),
                admonitiones_montare_in_vico, admonitiones_describere,
                cad)
+        || !vicus_genus_addere(app->vicus, "aetherophonum",
+               magnitudo(AetherophoniMontatio),
+               aetherophonum_montare_in_vico, aetherophonum_describere,
+               soni)
         || !vicus_genus_addere(app->vicus, "sancti",
                magnitudo(SanctorumMontatio), sanctos_montare_in_vico,
                sanctos_describere, sanctorum)

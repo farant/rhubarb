@@ -1,21 +1,6 @@
 <interrogationes unitas="ludus_fenestra">
 
   <interrogatio genus="quomodo">
-    <quaestio! (>how do I run an app's dispatcher in a real window?
-    <responsum symbolum="ludus_fenestra_creare ludus_fenestra_currere fenestra_creare_tabulam_pixelorum fenestra_destruere" via="apps/pictor/pictor.c">Create
-      the window, make its pixel table with
-      fenestra_creare_tabulam_pixelorum, then call
-      ludus_fenestra_creare(piscina, d, figurae, thema, fons,
-      fons_ctx, tabula) and ludus_fenestra_currere(lf, fenestra,
-      ZEPHYRUM). creare returns NIHIL if piscina, d, figurae or tabula
-      is NIHIL. The loop runs until EVENTUS_CLAUDERE or the window
-      asks to close. It then calls dispensator_finire, prints one
-      timing line to stdout and returns ZEPHYRUM (I only when lf or
-      fenestra is NIHIL). Destroying the window is still your job, as
-      apps/pictor/pictor.c shows.</responsum>
-  </interrogatio>
-
-  <interrogatio genus="quomodo">
     <quaestio! (>how do I render frames or take a screenshot without opening a window?
     <responsum symbolum="tabula_pixelorum_creare_nuda ludus_fenestra_creare ludus_quadrum ludus_fenestra_imaginem_scribere" via="probationes/probatio_ludus_imago.c">Make
       a bare table with tabula_pixelorum_creare_nuda, pass it to
@@ -79,10 +64,11 @@
 
   <interrogatio genus="possumne">
     <quaestio! (>can I use quadra_maxima for a smoke run of an idle app that installs a pulse?
-    <responsum symbolum="ludus_fenestra_currere ludus_fenestra_pingendum">Yes.
-      With quadra_maxima &gt; ZEPHYRUM the frame skip is bypassed and
-      every iteration draws, so the loop stops after exactly that
-      many frames. Before the 2026-10-08 fix an idle vicus -fumus drew
+    <responsum symbolum="ludus_fenestra_pingendum ludus_fenestra_mora">Yes.
+      Under -fumus the macOS shell (lib/testa.c) calls
+      ludus_fenestra_currere with quadra_maxima XXX: the frame skip
+      is bypassed and every iteration draws, so the loop stops after
+      exactly that many frames. Before the 2026-10-08 fix an idle vicus -fumus drew
       one frame and hung. Two consequences: in smoke mode
       ludus_fenestra_pingendum is never called, so your pulse function
       never runs (vicus -fumus does not poll its reactor); and with a

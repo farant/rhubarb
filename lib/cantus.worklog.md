@@ -117,3 +117,43 @@ Lessons from the first consumer, for vicus (step 4):
   printed tail end). Live waits for VOX_FINITA from every non-null voice,
   with a hard cap of end + 1 s.
 - Errors print the text with a caret under the offending byte.
+
+## 2026-10-22 - S6a: musical time in ticks (960 per quarter) + tempo map
+
+Why (sonus-spec VIII-d, Fran 10-22): a music-authoring pane, agent
+authoring and a future sheet-music view all edit in MUSICAL time, so notes
+now carry ticks and a song has a tempo map; frames are derived only at
+playback. Resolution moved 768/whole -> 960/quarter (3840/whole), the
+DAW / MIDI / MusicXML convention: divides by 3, 5, 6, 15 (quintuplets).
+Frames depend only on the ratio, so every existing frame assertion stayed
+green unchanged - the regression proof for the switch.
+
+- CantusNota.pulsus / pulsus_longitudo; Cantilena.pulsus, tempora,
+  numerus_temporum. The reader keeps `pulsus_totus` (absolute) beside the
+  per-segment `pulsus`; a `t` at the position where the last segment
+  starts (start of text, or `t` twice) MODIFIES that segment instead of
+  adding a zero-length one. Two passes, as before: pass 1 counts notes AND
+  segments, pass 2 fills both arrays.
+- One rounding rule for reader and map: `_quadra_segmenti(pulsus,
+  tempus)` = (2n + d) / 2d. `cantus_tempora_computare` derives segment
+  start frames exactly as the reader closes segments, so
+  `cantus_quadrum_pulsus` == each note's own frame (suite checks 5 melodies
+  incl. tempo changes and the drift case).
+- `cantus_pulsus_quadri` (frame -> largest tick not later): within a
+  segment, max dp with round(dp a / b) <= r is floor((b(2r+1) - 1) / 2a).
+  The "- 1" matters only at exact rounding ties (t240: 12.5 frames per
+  tick) - a plant dropping it survived the round-trip loop; a tie case
+  pins it now.
+Plants 11/11 red.
+
+## 2026-10-23 - M2a: '|' bar marks are recorded
+
+'|' no longer counts as whitespace: the reader records each one as a
+CantusLinea {pulsus (TOTAL, not per tempo segment), offset} in
+Cantilena.lineae - two passes like notes and tempo changes (count, then
+fill; NIHIL when there are none). Playback ignores them; they are facts
+about the TEXT so censura (M2b) can say "your '|' at offset 41 lands an
+eighth before the barline". Test asserts the frames are identical with
+and without marks. Plants 5/5 red (+2 again after a formatting rewrite to
+a local pointer): segment pulse instead of total is caught only because
+the test puts a 't' change before a mark.

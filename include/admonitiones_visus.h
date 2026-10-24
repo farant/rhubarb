@@ -97,6 +97,10 @@ nomen structura {
                 Piscina* piscina;     /* diuturna */
                 Piscina* scheda;      /* per pulsum vacatur */
                     Xar* tituli;      /* sessio -> titulus */
+    /* eventus (PraeconiumEventus) pulsu ultimo lecti, OMNES (etiam non
+     * admonitiones: 'cantus', 'status'), ordine libri; in scheda -
+     * valent donec sequi proximum. NIHIL ante primum */
+                    Xar* eventus;
 } AdmonitionumSequax;
 
 b32

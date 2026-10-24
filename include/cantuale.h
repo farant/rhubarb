@@ -86,6 +86,20 @@ cantuale_legere (
           Cantuale* liber,
     CantualeVitium* vitium);
 
+/* cantilena UNA extra librum (praeco cantus, tintinnabulum_canere):
+ * iudicia libri eadem - textus per cantus_legere, '@titulus' notus,
+ * 1..CANTUALE_NOTAE_MAXIMAE notae; cantuale_legere eam per cantilenam
+ * vocat (regula una). titulus vacuus, genera nulla; textus NON copiatur
+ * (notae in eum spectant - vivat dum cantio). FALSUM: vitium (titulus
+ * vacuus, offset in textu) */
+b32
+cantionem_legere (
+            chorda  textus,
+               b32  intactus,
+           Piscina* piscina,
+            Cantio* cantio,
+    CantualeVitium* vitium);
+
 /* liber ordinarius (cantuale.stml infixus) - FALSUM solum si liber
  * commissus fractus est (probatio id custodit) aut memoria deest */
 b32

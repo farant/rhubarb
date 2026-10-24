@@ -8,9 +8,6 @@
 #include <stdio.h>
 #include <string.h>
 
-/* S1c: exspectatio maxima cum applicatione viva (ut terminale) */
-#define MORA_PULSUS  XVI
-
 /* versio repositorii (insula una, C2) */
 interior i32
 versionem_summare (
@@ -210,6 +207,16 @@ ludus_fenestra_mora (
     redde (Mora)lf->d->quies_ms;
 }
 
+/* Ansa fenestrae perscrutabilis (macOS): API publica - programmata
+ * briar (.thistle) eam vocant, testa macOS (lib/testa.c) quoque. In
+ * Android nulla fenestra perscrutabilis (testa_android quadra per
+ * chorographum ducit): non compilatur. Restituta 2026-10-23 (fusio:
+ * briar-fumus et instrumenta fracta post T1). */
+#ifndef __ANDROID__
+
+/* S1c: exspectatio maxima cum applicatione viva (ut terminale) */
+#define MORA_PULSUS  XVI
+
 s32
 ludus_fenestra_currere (
     LudusFenestra* lf,
@@ -275,6 +282,9 @@ ludus_fenestra_currere (
               (long)lf->mensurae.ms_quadri_maximum);
     redde ZEPHYRUM;
 }
+
+
+#endif /* __ANDROID__ */
 
 b32
 ludus_fenestra_imaginem_scribere (

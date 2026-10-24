@@ -115,6 +115,10 @@ _extractor_fixturarum (
     {
         _fix_addere(*directivae_out, "beta.h", piscina);
     }
+    alioquin si (strstr(via, "lib/beta_android.c") != NIHIL)
+    {
+        _fix_addere(*directivae_out, "beta.h", piscina);
+    }
     alioquin si (strstr(via, "lib/delta_verum.c") != NIHIL)
     {
         _fix_addere(*directivae_out, "delta.h", piscina);
@@ -772,6 +776,50 @@ _sectio_septima (
             "lib/beta_posix.c"));
         CREDO_NIHIL(_obiectum_invenire(fructus,
             "lib/beta_macos.m"));
+
+        /* index variantium (android-gradus II.1): android prior ->
+         * beta_android, nec posix nec macos */
+        fructus = aedilis_derivare(piscina, configuratio,
+            "fons/scopus.c", "android,posix", _extractor_fixturarum,
+            NIHIL, &causa);
+        CREDO_NON_NIHIL(fructus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(fructus->varians, "android");
+        CREDO_NON_NIHIL(_obiectum_invenire(fructus,
+            "lib/beta_android.c"));
+        CREDO_NIHIL(_obiectum_invenire(fructus,
+            "lib/beta_posix.c"));
+        CREDO_NIHIL(_obiectum_invenire(fructus,
+            "lib/beta_macos.m"));
+
+        /* prima absens (linux) -> sequens (posix) */
+        fructus = aedilis_derivare(piscina, configuratio,
+            "fons/scopus.c", "linux,posix", _extractor_fixturarum,
+            NIHIL, &causa);
+        CREDO_NON_NIHIL(fructus);
+        CREDO_NON_NIHIL(_obiectum_invenire(fructus,
+            "lib/beta_posix.c"));
+        CREDO_NIHIL(_obiectum_invenire(fructus,
+            "lib/beta_android.c"));
+
+        /* index malus = recusatio nominata, numquam varians una */
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+        CREDO_NIHIL(aedilis_derivare(piscina, configuratio,
+            "fons/scopus.c", "android,,posix", _extractor_fixturarum,
+            NIHIL, &causa));
+        CREDO_CHORDA_NON_VACUA(causa);
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+        CREDO_NIHIL(aedilis_derivare(piscina, configuratio,
+            "fons/scopus.c", ",", _extractor_fixturarum, NIHIL,
+            &causa));
+        CREDO_CHORDA_NON_VACUA(causa);
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+        CREDO_NIHIL(aedilis_derivare(piscina, configuratio,
+            "fons/scopus.c", "", _extractor_fixturarum, NIHIL,
+            &causa));
+        CREDO_CHORDA_NON_VACUA(causa);
     }
 }
 

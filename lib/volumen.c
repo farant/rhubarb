@@ -10,6 +10,7 @@
 #include "json.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 structura Volumen {
@@ -355,6 +356,35 @@ volumen_claudere (
     }
 }
 
+/* Basis temporariorum: $TMPDIR non vacuum, virgulis finalibus
+ * abscissis (regula credo, lib/credo.c), aliter /tmp. Android /tmp
+ * caret - ibi TMPDIR=/data/local/tmp (android-gradus II.2).
+ * Copia in 'basis' (DXII), ut chorda constans non castetur. */
+interior vacuum
+_basis_temporaria (
+    character* basis)
+{
+     constans character* tmp;
+         memoriae_index  n;
+
+    tmp = getenv("TMPDIR");
+    si (tmp == NIHIL || tmp[0] == '\0')
+    {
+        tmp = "/tmp";
+    }
+    n = strlen(tmp);
+    dum (n > I && tmp[n - I] == '/')
+    {
+        n--;
+    }
+    si (n > DXI)
+    {
+        n = DXI;
+    }
+    memcpy(basis, tmp, n);
+    basis[n] = '\0';
+}
+
 Volumen*
 volumen_temporarium (
                Piscina* piscina,
@@ -364,6 +394,7 @@ volumen_temporarium (
     constans character* via = NIHIL;
                Volumen* vol;
                    i32  i;
+             character  basis[DXII];
 
     si (piscina == NIHIL)
     {
@@ -373,10 +404,11 @@ volumen_temporarium (
     {
         praefixum = "volumen";
     }
+    _basis_temporaria(basis);
 
     /* Nomen liberum quaerere. Numerus, non tempus nec fors: volumen
-     * pendens ita nomen suum RETINET, et qui in /tmp inspicit videt
-     * quot cursus reliquerint. */
+     * pendens ita nomen suum RETINET, et qui in basi temporaria
+     * inspicit videt quot cursus reliquerint. */
     per (i = I; i <= C; i = i + I)
     {
         character numerus[XXXII];
@@ -387,7 +419,8 @@ volumen_temporarium (
             redde NIHIL;
         }
         sprintf(numerus, "%lu", (insignatus longus)i);
-        chorda_aedificator_appendere_literis(aed, "/tmp/");
+        chorda_aedificator_appendere_literis(aed, basis);
+        chorda_aedificator_appendere_literis(aed, "/");
         chorda_aedificator_appendere_literis(aed, praefixum);
         chorda_aedificator_appendere_literis(aed, "-");
         chorda_aedificator_appendere_literis(aed, numerus);
@@ -406,7 +439,8 @@ volumen_temporarium (
     si (via == NIHIL)
     {
         fprintf(stderr, "volumen_temporarium: C nomina occupata"
-            " (praefixum '%s') - reliquiae in /tmp?\n", praefixum);
+            " (praefixum '%s') - reliquiae in %s?\n", praefixum,
+            basis);
         redde NIHIL;
     }
 

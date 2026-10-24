@@ -130,6 +130,49 @@ _genera_legere (
     redde VERUM;
 }
 
+/* textus cantionis (iam positus) legitur et iudicatur: regula UNA
+ * libri et cantionis solae */
+interior b32
+_cantilenam_iudicare (
+            Cantio* cantio,
+           Piscina* piscina,
+    CantualeVitium* vitium)
+{
+    CantusVitium cv;
+             i32 i;
+
+    si (!cantus_legere(cantio->textus, piscina, &cantio->cantilena,
+        &cv))
+    {
+        redde _vitium(vitium, cantio->titulus, cv.offset, cv.causa);
+    }
+    si (cantio->cantilena.numerus == ZEPHYRUM)
+    {
+        redde _vitium(vitium, cantio->titulus, ZEPHYRUM,
+            "cantilena sine notis");
+    }
+    si (cantio->cantilena.numerus > CANTUALE_NOTAE_MAXIMAE)
+    {
+        redde _vitium(vitium, cantio->titulus,
+            cantio->cantilena.notae[CANTUALE_NOTAE_MAXIMAE].offset,
+            "notae plures quam XXXII");
+    }
+    /* '@titulus' quisque nunc resolvitur - offset ad '@' */
+    per (i = ZEPHYRUM; i < cantio->cantilena.numerus; i++)
+    {
+        chorda p = cantio->cantilena.notae[i].praeparatum;
+
+        si (   p.mensura > ZEPHYRUM
+            && cantus_praeparatum_sonitus(p, NIHIL) == NIHIL)
+        {
+            redde _vitium(vitium, cantio->titulus,
+                (i32)(p.datum - cantio->textus.datum) - I,
+                "praeparatum ignotum");
+        }
+    }
+    redde VERUM;
+}
+
 /* cantilenam unam legit et iudicat; titulus iam validus */
 interior b32
 _cantionem_legere (
@@ -141,7 +184,6 @@ _cantionem_legere (
 {
         StmlNodus* textus  = NIHIL;
            chorda* genera;
-     CantusVitium  cv;
               i32  i;
 
     cantio->titulus   = titulus;
@@ -174,36 +216,7 @@ _cantionem_legere (
             "cantilena sine textu");
     }
     cantio->textus = stml_textus_valor(textus, piscina);
-    si (!cantus_legere(cantio->textus, piscina, &cantio->cantilena,
-        &cv))
-    {
-        redde _vitium(vitium, titulus, cv.offset, cv.causa);
-    }
-    si (cantio->cantilena.numerus == ZEPHYRUM)
-    {
-        redde _vitium(vitium, titulus, ZEPHYRUM,
-            "cantilena sine notis");
-    }
-    si (cantio->cantilena.numerus > CANTUALE_NOTAE_MAXIMAE)
-    {
-        redde _vitium(vitium, titulus,
-            cantio->cantilena.notae[CANTUALE_NOTAE_MAXIMAE].offset,
-            "notae plures quam XXXII");
-    }
-    /* '@titulus' quisque nunc resolvitur - offset ad '@' */
-    per (i = ZEPHYRUM; i < cantio->cantilena.numerus; i++)
-    {
-        chorda p = cantio->cantilena.notae[i].praeparatum;
-
-        si (   p.mensura > ZEPHYRUM
-            && cantus_praeparatum_sonitus(p, NIHIL) == NIHIL)
-        {
-            redde _vitium(vitium, titulus,
-                (i32)(p.datum - cantio->textus.datum) - I,
-                "praeparatum ignotum");
-        }
-    }
-    redde VERUM;
+    redde _cantilenam_iudicare(cantio, piscina, vitium);
 }
 
 b32
@@ -302,6 +315,22 @@ cantuale_legere (
     liber->cantiones  = cantiones;
     liber->numerus    = numerus;
     redde VERUM;
+}
+
+b32
+cantionem_legere (
+            chorda  textus,
+               b32  intactus,
+           Piscina* piscina,
+            Cantio* cantio,
+    CantualeVitium* vitium)
+{
+    cantio->titulus         = _vacua();
+    cantio->textus          = textus;
+    cantio->genera          = NIHIL;
+    cantio->genera_numerus  = ZEPHYRUM;
+    cantio->intactus        = intactus;
+    redde _cantilenam_iudicare(cantio, piscina, vitium);
 }
 
 b32
