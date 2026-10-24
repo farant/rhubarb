@@ -383,7 +383,8 @@ _carmen_monstrare (
                   (integer)x->titulus.mensura,
                   (constans character*)x->titulus.datum,
                   g == TIBIA_CHORDA ? "chorda"
-                      : (g == TIBIA_MODULATIO ? "modulatio" : "unda"),
+                      : g == TIBIA_MODULATIO ? "modulatio"
+                      : g == TIBIA_PARTIALES ? "partiales" : "unda",
                   i + I == k->numerus_instrumentorum ? "\n" : "");
     }
 }

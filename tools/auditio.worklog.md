@@ -110,3 +110,11 @@ repetitions) then 'ante' / 'post' partitura line per destination bar; dry run un
 _instrumenta_probare accepts carmen_instrumentum before the built-ins; -carmina prints
 "instrumenta: cembalo (chorda), ..." under the parts. Playback / WAV / -auscultare need
 nothing: cantor resolves book instruments itself.
+
+## 2026-10-24 - '-carmina' names genus partiales
+
+The `instrumenta:` line in -carmina had its own chorda/modulatio/unda ternary, so a book
+instrument with genus="partiales" printed "(unda)". The demo book showed it, but no test
+covers it. Fixed inline. The genus-word table now exists twice (lib/carmen.c GENERA,
+here) - a tibia_generis_titulus() in tibia.h would make one home (proposal to Fran,
+header change).
