@@ -3677,3 +3677,25 @@ What it found:
 
 Note: the check reports only the FIRST alien path per member. For a full list, read the S
 lines of build/fabrica/lectiones/<actio>.tsv. Radix -vis after: 411/411.
+
+## 2026-10-24 — members link straight from the compile cache (no per-area object copies)
+
+Profiling (sample, toml -vis): fabrica's own active time is mostly file-system work. The tree
+snapshot (`_arborem_photographare`: getattrlistbulk + directory opens) was ~16% of the
+composite's wall; the compile-cache path (whole-file reads + existence checks) came next. Radix
+-vis: 582 s wall, only 233 s inside the tests.
+
+40% of the snapshot was build/fabrica, and inside it every member area held its OWN copy of
+each linked object (12,195 .o across radix, 1.5 GB). Each run wiped the area and copied every
+object back (`_collocare`: read the cached object, compare, temp write, rename).
+
+Now `sutura->compilare` returns the path to link (`obiectum_out`), and the real sutura uses
+`compilator_compilare_sine_collocatione`: on a cache hit nothing is read or written and the
+thesaurus blob path is returned; clang links extensionless blobs as objects. A miss still
+compiles into <area>obiecta/. Thesaurus reads are already skipped as inputs in read traces
+(`_in_thesauro`), so member keys are unchanged.
+
+Radix -vis 582 -> 520 s; area objects 12,195 -> 295; area 1.5 GB -> 706 MB; snapshot entries
+~60.6k -> ~49.1k; memoized radix still 411/411 servatae. What's left of the overhead is mostly
+the two snapshots per member (216 s sys in the -vis run): next candidates are sharing one
+member's 'post' as the next member's 'ante', or FSEvents.

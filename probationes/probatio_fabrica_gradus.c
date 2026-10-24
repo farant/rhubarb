@@ -343,6 +343,12 @@ hic_manens constans character* _c_fractus_cursus      = NIHIL;
 
 hic_manens constans character* _c_fractus_compilatio  = NIHIL;
 
+/* NEXUS EX THESAURO: compilatio ficta viam thesauri reddit (non
+ * obiectum areae) - nexus eam ferre debet; argv nexus ultimi */
+hic_manens                  b32 _c_obiectum_thesauri  = FALSUM;
+
+hic_manens            character _c_nexus_argv_ultimus[MMXLVIII];
+
 interior vacuum
 _c_addere (
                    Xar* xar,
@@ -414,12 +420,21 @@ _compilare_fictum (
     constans character* obiectum,
           constans Xar* vexilla_addita,
                Piscina* piscina,
+                chorda* obiectum_out,
                 chorda* erratum_out)
 {
     character contentum[CCLVI];
           i32 i;
 
     _c_compilationes++;
+    *obiectum_out = chorda_ex_literis(obiectum, piscina);
+    si (_c_obiectum_thesauri)
+    {
+        *obiectum_out = chorda_concatenare(chorda_ex_literis(
+            "build/aedilis/obiecta/blobi/fictum/", piscina),
+            chorda_ex_literis(strrchr(obiectum, '/') ? strrchr(obiectum,
+            '/') + I : obiectum, piscina), piscina);
+    }
     _c_vexilla_ultima[0] = '\0';
     per (i = ZEPHYRUM; vexilla_addita != NIHIL
          && i < xar_numerus(vexilla_addita); i++)
@@ -469,6 +484,19 @@ _in_area_currere_c (
         b32 cocoa     = FALSUM;
 
         _c_nexus++;
+        _c_nexus_argv_ultimus[0] = '\0';
+        per (i = ZEPHYRUM; i < xar_numerus(argv); i++)
+        {
+            chorda v = *(constans chorda*)xar_obtinere(argv, i);
+
+            si (strlen(_c_nexus_argv_ultimus) + (size_t)v.mensura + II
+                < magnitudo(_c_nexus_argv_ultimus))
+            {
+                sprintf(_c_nexus_argv_ultimus
+                    + strlen(_c_nexus_argv_ultimus), "%.*s ",
+                    (integer)v.mensura, (constans character*)v.datum);
+            }
+        }
         mundi_ponere(discus, liber_via, "");
         per (i = ZEPHYRUM; i + I < xar_numerus(argv); i++)
         {
@@ -1339,6 +1367,24 @@ _probare_probationes_c (
         CREDO_AEQUALIS_I32(_c_nexus, nexus + I);
         CREDO_AEQUALIS_I32(_c_cursus, cursus + I);
         CREDO_VERUM(strstr(_c_cursus_ultimus, "probatio_a") != NIHIL);
+        /* obiecta areae nectuntur (sutura viam obiecti sui reddit) */
+        CREDO_VERUM(strstr(_c_nexus_argv_ultimus, "probatio_a/obiecta/")
+            != NIHIL);
+
+        /* Vb. NEXUS EX THESAURO: sutura viam thesauri reddit -> nexus
+         * eam fert, nullum obiectum areae (nulla copia in area) */
+        _c_obiectum_thesauri = VERUM;
+        mundi_ponere(discus, "lib/x.c", "x thesauri\n");
+        (vacuum)fabrica_sanare(sutura, ordo, electa, FALSUM, piscina,
+            &causa);
+        _c_obiectum_thesauri = FALSUM;
+        CREDO_AEQUALIS_I32(_c_nexus, nexus + II);
+        CREDO_VERUM(strstr(_c_nexus_argv_ultimus,
+            "build/aedilis/obiecta/blobi/fictum/") != NIHIL);
+        CREDO_VERUM(strstr(_c_nexus_argv_ultimus, "probatio_a/obiecta/")
+            == NIHIL);
+        nexus++;   /* Vb: a iterum nexum et cursum */
+        cursus++;
 
         /* VI. caput b solius: b solum */
         mundi_ponere(discus, "include/y.h", "yh II\n");
@@ -2763,6 +2809,11 @@ _mundum_purgare (
     _d_via_b                = NIHIL;
     _d_liber_a              = NIHIL;
     mundi_ambitus_ficti[0]  = NIHIL;
+
+    /* nexus ex thesauro (sectio Vb) */
+    _c_obiectum_thesauri      = FALSUM;
+    _c_nexus_argv_ultimus[0]  = '\0';
+
     /* numeratores et 'ultima' quoque (credo II T6: CREDO_ORDO=mixtus
      * eos invenit - ordine tabulae sectio quae eos legit prima
      * currebat, ergo ZEPHYRUM fortuito videbat) */
