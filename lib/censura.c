@@ -28,12 +28,17 @@ nomen structura {
                     i32  summa;
 } AmbitusOrdinarius;
 
-hic_manens constans AmbitusOrdinarius AMBITUS[V] = {
+#define AMBITUS_NUMERUS VIII
+
+hic_manens constans AmbitusOrdinarius AMBITUS[AMBITUS_NUMERUS] = {
     { "aether",     XXXVI,  XCVI  },
     { "quadrans",   XLVIII, XCVI  },
     { "triangulum", XXIV,   LXXII },
     { "chorda",     XXVIII, LXXXVIII },
-    { "campana",    XLVIII, XCVI  }
+    { "campana",    XLVIII, XCVI  },
+    { "organum",    XXXVI,  XCVI  },
+    { "marimba",    XLV,    XCVI  },
+    { "glockenspiel", LXXIX, CVIII }
 };
 
 /* gradus scalae maioris a tonica */
@@ -121,7 +126,7 @@ censura_ambitus_ordinarius (
     i32 i;
 
     (vacuum)ctx;
-    per (i = ZEPHYRUM; i < V; i++)
+    per (i = ZEPHYRUM; i < AMBITUS_NUMERUS; i++)
     {
         si (chorda_aequalis_literis(instrumentum,
             AMBITUS[i].instrumentum))

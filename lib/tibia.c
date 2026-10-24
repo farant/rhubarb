@@ -25,25 +25,52 @@ hic_manens constans TibiaPraeparatum tibiae_praeparata[] = {
      * parvus (manus tremens) */
     { "aether",     { 3.0f, 0.5f,  { 0.04f,  0.0f,  1.0f, 0.25f },
                       0.12f, 5.5f, 0.0f, 0.5f,
-                      0.0f, 0.0f, 0.0f, 0.0f, 0.0f } },
+                      0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+                      { { 0.0f, 0.0f, 0.0f } } } },
     /* chiptune: pulsus quartae, mollitus supra VI milia */
     { "quadrans",   { 0.0f, 0.25f, { 0.002f, 0.08f, 0.7f, 0.08f },
                       0.0f, 0.0f, 6000.0f, 0.35f,
-                      0.0f, 0.0f, 0.0f, 0.0f, 0.0f } },
+                      0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+                      { { 0.0f, 0.0f, 0.0f } } } },
     { "triangulum", { 2.0f, 0.5f,  { 0.002f, 0.05f, 0.9f, 0.05f },
                       0.0f, 0.0f, 0.0f, 0.6f,
-                      0.0f, 0.0f, 0.0f, 0.0f, 0.0f } },
+                      0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+                      { { 0.0f, 0.0f, 0.0f } } } },
     /* Karplus-Strong: involucrum plenum (chorda ipsa decrescit), manu
      * tacta remittit; -60 dB in 2.5 s (citharae similis), claritas
      * media; amplitudo plena - impulsus cito cadit */
     { "chorda",     { 0.0f, 0.5f,  { 0.0f,   0.0f,  1.0f, 0.08f },
                       0.0f, 0.0f, 0.0f, 1.0f,
-                      1.0f, 2.5f, 0.5f, 0.0f, 0.0f } },
+                      1.0f, 2.5f, 0.5f, 0.0f, 0.0f,
+                      { { 0.0f, 0.0f, 0.0f } } } },
     /* FM: ratio 1.4 (inharmonica), index VI decrescens (1/e in 0.4 s),
      * impetus 2 ms, lapsus longus sine tenore */
     { "campana",    { 0.0f, 0.5f,  { 0.002f, 3.0f,  0.0f, 1.0f },
                       0.0f, 0.0f, 0.0f, 0.45f,
-                      2.0f, 0.4f, 0.0f, 1.4f, 6.0f } }
+                      2.0f, 0.4f, 0.0f, 1.4f, 6.0f,
+                      { { 0.0f, 0.0f, 0.0f } } } },
+    /* organum: registra 8' 4' 2 2/3' 2' (rationes 1 2 3 4), tenet;
+     * impetus 30 ms (aer in fistula) */
+    { "organum",    { 0.0f, 0.5f,  { 0.03f,  0.0f,  1.0f, 0.15f },
+                      0.0f, 0.0f, 0.0f, 0.4f,
+                      3.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+                      { { 1.0f, 1.0f, 0.0f }, { 2.0f, 0.6f, 0.0f },
+                        { 3.0f, 0.4f, 0.0f },
+                        { 4.0f, 0.3f, 0.0f } } } },
+    /* marimba: lamina accommodata 1 : 3.9 : 9.2, superiores citius
+     * cadunt */
+    { "marimba",    { 0.0f, 0.5f,  { 0.001f, 0.0f,  1.0f, 0.3f },
+                      0.0f, 0.0f, 0.0f, 0.7f,
+                      3.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+                      { { 1.0f, 1.0f, 0.6f }, { 3.9f, 0.5f, 0.15f },
+                        { 9.2f, 0.2f, 0.05f } } } },
+    /* glockenspiel: lamina libera 1 : 2.76 : 5.40 : 8.93, longa */
+    { "glockenspiel", { 0.0f, 0.5f, { 0.001f, 0.0f, 1.0f, 1.5f },
+                      0.0f, 0.0f, 0.0f, 0.4f,
+                      3.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+                      { { 1.0f, 1.0f, 1.5f }, { 2.76f, 0.6f, 0.8f },
+                        { 5.40f, 0.3f, 0.4f },
+                        { 8.93f, 0.15f, 0.2f } } } }
 };
 
 #define TIBIAE_PRAEPARATA                                           \
@@ -79,9 +106,9 @@ _genus (
     {
         k = ZEPHYRUM;
     }
-    si (k > (s32)TIBIA_MODULATIO)
+    si (k > (s32)TIBIA_PARTIALES)
     {
-        k = (s32)TIBIA_MODULATIO;
+        k = (s32)TIBIA_PARTIALES;
     }
     redde (TibiaGenus)k;
 }
@@ -208,6 +235,76 @@ _modulationis_proximum (
     redde x;
 }
 
+/* PARTIALES: activi (ratio > 0, amplitudo > 0) in ordinem collecti;
+ * amplitudines per summam divisae (apex <= 1); detrimentum per
+ * exemplum ex decremento (0 = tenet). Nulli dati = fundamentalis
+ * sola */
+interior vacuum
+_partiales_parare (
+                     TibiaVox* v,
+    constans TibiaParametra* p)
+{
+    f32 summa  = 0.0f;
+    i32 n      = ZEPHYRUM;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < TIBIA_PARTIALES_NUMERUS; k++)
+    {
+        constans TibiaPartialis* q = &p->partiales[k];
+
+        si (q->ratio > 0.0f && q->amplitudo > 0.0f)
+        {
+            v->rationes[n]      = q->ratio;
+            v->amplitudines[n]  = q->amplitudo;
+            v->detrimenta[n]    = q->decrementum > 0.0f
+                ? (f32)exp(-1.0 / ((f64)q->decrementum
+                                   * (f64)SONUS_FREQUENTIA)) : 1.0f;
+            summa += q->amplitudo;
+            n++;
+        }
+    }
+    si (n == ZEPHYRUM)
+    {
+        v->rationes[ZEPHYRUM]      = 1.0f;
+        v->amplitudines[ZEPHYRUM]  = 1.0f;
+        v->detrimenta[ZEPHYRUM]    = 1.0f;
+
+        summa  = 1.0f;
+        n      = I;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        v->amplitudines[k] /= summa;
+    }
+    v->numerus_partialium = n;
+}
+
+/* PARTIALES: summa sinuum; phasis quaeque = incrementum undae x
+ * ratio (glissandum et vibratus sequuntur). Partialis supra Nyquist
+ * omittitur (phasis stat), sed decrescit ut ceteri */
+interior f32
+_partialium_proximum (
+    TibiaVox* v)
+{
+    f64 x = 0.0;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < v->numerus_partialium; k++)
+    {
+        f64 incrementum = (f64)v->unda.incrementum
+                        * (f64)v->rationes[k];
+
+        si (incrementum < TIBIA_CIRCULUS / 2.0)
+        {
+            x += (f64)v->amplitudines[k] * sin(TIBIA_DUO_PI
+                 * (f64)v->phases[k] / TIBIA_CIRCULUS);
+            v->phases[k] += (i32)incrementum;
+        }
+        v->amplitudines[k] *= v->detrimenta[k];
+    }
+    redde (f32)x;
+}
+
 vacuum
 tibia_vocem_parare (
                  TibiaVox* v,
@@ -245,6 +342,10 @@ tibia_vocem_parare (
         v->index = p->index;
         v->index_detrimentum  = (f32)exp(-1.0 / ((f64)t
                                          * (f64)SONUS_FREQUENTIA));
+    }
+    alioquin si (v->genus == TIBIA_PARTIALES)
+    {
+        _partiales_parare(v, p);
     }
 }
 
@@ -306,6 +407,7 @@ tibia_vocis_proximum (
     }
     x = v->genus == TIBIA_CHORDA ? _chordae_proximum(v)
         : v->genus == TIBIA_MODULATIO     ? _modulationis_proximum(v)
+        : v->genus == TIBIA_PARTIALES     ? _partialium_proximum(v)
                                  : sonus_unda_proximum(&v->unda);
     x *= sonus_involucrum_proximum(&v->involucrum);
     redde sonus_colum_proximum(&v->colum, x) * v->amplitudo;

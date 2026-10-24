@@ -136,6 +136,19 @@ _sectio_ordinaria (
     CREDO_VERUM (censura_ambitus_ordinarius(NIHIL,
         chorda_ex_literis("campana", c->piscina), &infima, &summa));
     CREDO_AEQUALIS_I32 (infima, XLVIII);
+    CREDO_VERUM (censura_ambitus_ordinarius(NIHIL,
+        chorda_ex_literis("organum", c->piscina), &infima, &summa));
+    CREDO_AEQUALIS_I32 (infima, XXXVI);
+    CREDO_AEQUALIS_I32 (summa, XCVI);
+    CREDO_VERUM (censura_ambitus_ordinarius(NIHIL,
+        chorda_ex_literis("marimba", c->piscina), &infima, &summa));
+    CREDO_AEQUALIS_I32 (infima, XLV);
+    CREDO_AEQUALIS_I32 (summa, XCVI);
+    CREDO_VERUM (censura_ambitus_ordinarius(NIHIL,
+        chorda_ex_literis("glockenspiel", c->piscina), &infima,
+        &summa));
+    CREDO_AEQUALIS_I32 (infima, LXXIX);
+    CREDO_AEQUALIS_I32 (summa, CVIII);
     CREDO_FALSUM (censura_ambitus_ordinarius(NIHIL,
         chorda_ex_literis("meum", c->piscina), &infima, &summa));
     /* ambitus instrumenti libri: B3 extra 60..72, C4 intra;

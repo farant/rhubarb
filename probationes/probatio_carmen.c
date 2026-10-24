@@ -573,6 +573,12 @@ _sectio_instrumenta_vitia (
         "<instrumentum titulus=\"x\" ambitus=\"50..40\"/>",
         "instrumentum: valor malus aut extra fines"));
     CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" claritas=\"\"/>",
+        "instrumentum: valor malus aut extra fines"));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" ambitus=\"\"/>",
+        "instrumentum: valor malus aut extra fines"));
+    CREDO_VERUM (_instrumentum_recusat(c,
         "<instrumentum titulus=\"x\" basis=\"nullum\"/>",
         "instrumentum: basis ignota"));
     /* basis infra definita: ignota */
@@ -588,6 +594,93 @@ _sectio_instrumenta_vitia (
         "instrumentum sine titulo [a-z0-9_]+"));
 }
 
+/* partiales: genus verbum, "r:a:d ..." in ordinem, basis hereditaria
+ * (marimba), attributum omnes substituit (reliqui nulli) */
+hic_manens constans character LIBER_PARTIALIUM[] =
+    "<carmina>"
+    "<instrumentum titulus=\"organum_plenum\" genus=\"partiales\""
+    " partiales=\"1:1:0  2:0.5:0 4:0.25:1.5\"/>"
+    "<instrumentum titulus=\"marimba_mollis\" basis=\"marimba\""
+    " amplitudo=\"0.3\"/>"
+    "<instrumentum titulus=\"organum_tenue\" basis=\"organum\""
+    " partiales=\"1:1:0\"/>"
+    "<carmen titulus=\"a\"><pars titulus=\"p\" "
+    "instrumentum=\"organum_plenum\">"
+    "<frustum mensura=\"1\"><textus!>c4</textus></frustum></pars>"
+    "</carmen></carmina>";
+
+interior vacuum
+_sectio_partiales (
+    CredoContextus* c)
+{
+                        Carmina  liber;
+                constans Carmen* a;
+    constans CarmenInstrumentum* x;
+        constans TibiaParametra* m = tibia_praeparatum("marimba");
+                            i32  k;
+
+    CREDO_NECESSE (_legere(c, LIBER_PARTIALIUM, &liber));
+    a = carmina_invenire(&liber, _ch(c, "a"));
+    CREDO_NECESSE (a != NIHIL && m != NIHIL);
+    x = carmen_instrumentum(a, _ch(c, "organum_plenum"));
+    CREDO_NECESSE (x != NIHIL);
+    CREDO_VERUM (x->parametra.genus == (f32)TIBIA_PARTIALES);
+    CREDO_VERUM (   x->parametra.partiales[0].ratio == 1.0f
+                 && x->parametra.partiales[0].amplitudo == 1.0f
+                 && x->parametra.partiales[1].ratio == 2.0f
+                 && x->parametra.partiales[1].amplitudo == 0.5f
+                 && x->parametra.partiales[2].ratio == 4.0f
+                 && x->parametra.partiales[2].amplitudo == 0.25f
+                 && x->parametra.partiales[2].decrementum == 1.5f
+                 && x->parametra.partiales[3].ratio == 0.0f);
+    x = carmen_instrumentum(a, _ch(c, "marimba_mollis"));
+    CREDO_NECESSE (x != NIHIL);
+    CREDO_VERUM (x->parametra.amplitudo == 0.3f);
+    per (k = ZEPHYRUM; k < TIBIA_PARTIALES_NUMERUS; k++)
+    {
+        CREDO_VERUM (   x->parametra.partiales[k].ratio
+                        == m->partiales[k].ratio
+                     && x->parametra.partiales[k].decrementum
+                        == m->partiales[k].decrementum);
+    }
+    x = carmen_instrumentum(a, _ch(c, "organum_tenue"));
+    CREDO_NECESSE (x != NIHIL);
+    CREDO_VERUM (   x->parametra.genus == (f32)TIBIA_PARTIALES
+                 && x->parametra.partiales[0].ratio == 1.0f
+                 && x->parametra.partiales[1].ratio == 0.0f
+                 && x->parametra.partiales[1].amplitudo == 0.0f);
+}
+
+interior vacuum
+_sectio_partiales_vitia (
+    CredoContextus* c)
+{
+    constans character* causa =
+        "instrumentum: valor malus aut extra fines";
+
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" partiales=\"0:1:0\"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" partiales=\"33:1:0\"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" partiales=\"1:2:0\"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" partiales=\"1:1:61\"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" partiales=\"1:1\"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" partiales=\"1:1:0:2\"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" partiales=\"1:x:0\"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" partiales=\"\"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" partiales=\"   \"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" partiales=\"1:1:0 2:1:0 3:1:0"
+        " 4:1:0 5:1:0 6:1:0 7:1:0 8:1:0 9:1:0\"/>", causa));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "legere", _sectio_legere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia", _sectio_vitia, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -597,6 +690,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "instrumenta", _sectio_instrumenta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "instrumenta_vitia", _sectio_instrumenta_vitia, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "partiales", _sectio_partiales, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "partiales_vitia", _sectio_partiales_vitia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

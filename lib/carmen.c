@@ -583,8 +583,8 @@ hic_manens constans CampusInstrumenti CAMPI[XV] = {
     { "forma",       0.0f, 0.0f     }    /* verbum */
 };
 
-hic_manens constans character* GENERA[III] = {
-    "unda", "chorda", "modulatio"
+hic_manens constans character* GENERA[IV] = {
+    "unda", "chorda", "modulatio", "partiales"
 };
 hic_manens constans character* FORMAE[IV] = {
     "pulsus", "serra", "triangulum", "sinus"
@@ -666,6 +666,76 @@ _ambitum_legere (
     redde FALSUM;
 }
 
+/* "r:a:d r:a:d ..." (spatiis separati, 1..TIBIA_PARTIALES_NUMERUS):
+ * ratio (0, 32], amplitudo [0, 1], decrementum [0, 60]; omnes
+ * substituit, reliqui nulli */
+interior b32
+_partiales_legere (
+             chorda  v,
+     TibiaParametra* p)
+{
+    TibiaPartialis q[TIBIA_PARTIALES_NUMERUS];
+               i32 n = ZEPHYRUM;
+               i32 i = ZEPHYRUM;
+
+    memset(q, ZEPHYRUM, magnitudo(q));
+    dum (i < v.mensura)
+    {
+           i32 initium;
+           i32 divisiones[II];
+           i32 numerus_divisionum = ZEPHYRUM;
+           f64 r;
+           f64 a;
+           f64 d;
+        chorda partes[III];
+
+        si (v.datum[i] == ' ')
+        {
+            i++;
+            perge;
+        }
+        initium = i;
+        dum (i < v.mensura && v.datum[i] != ' ')
+        {
+            si (v.datum[i] == ':')
+            {
+                si (numerus_divisionum == II)
+                {
+                    redde FALSUM;
+                }
+                divisiones[numerus_divisionum++] = i;
+            }
+            i++;
+        }
+        si (numerus_divisionum != II || n == TIBIA_PARTIALES_NUMERUS)
+        {
+            redde FALSUM;
+        }
+        partes[ZEPHYRUM]  = chorda_sectio(v, initium, divisiones[0]);
+        partes[I]         = chorda_sectio(v, divisiones[0] + I,
+                                          divisiones[I]);
+        partes[II]        = chorda_sectio(v, divisiones[I] + I, i);
+        si (   !chorda_ut_f64(partes[ZEPHYRUM], &r)
+            || !chorda_ut_f64(partes[I], &a)
+            || !chorda_ut_f64(partes[II], &d)
+            || r <= 0.0 || r > 32.0 || a < 0.0 || a > 1.0
+            || d < 0.0 || d > 60.0)
+        {
+            redde FALSUM;
+        }
+        q[n].ratio        = (f32)r;
+        q[n].amplitudo    = (f32)a;
+        q[n].decrementum  = (f32)d;
+        n++;
+    }
+    si (n == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    memcpy(p->partiales, q, magnitudo(q));
+    redde VERUM;
+}
+
 /* instrumentum ex nodo; priora (eodem gradu et libri) = bases licitae.
  * vitium cum carmine (vacuo in libro) */
 interior b32
@@ -745,6 +815,21 @@ _instrumentum_legere (
         {
             perge;
         }
+        /* valor vacuus ("") in stml = NIHIL */
+        si (t->valor == NIHIL)
+        {
+            redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
+                "instrumentum: valor malus aut extra fines");
+        }
+        si (chorda_aequalis_literis(*t->titulus, "partiales"))
+        {
+            si (!_partiales_legere(*t->valor, &x->parametra))
+            {
+                redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
+                    "instrumentum: valor malus aut extra fines");
+            }
+            perge;
+        }
         si (chorda_aequalis_literis(*t->titulus, "ambitus"))
         {
             si (!_ambitum_legere(*t->valor, &x->infima, &x->summa))
@@ -768,7 +853,7 @@ _instrumentum_legere (
         }
         si (k >= XIII)
         {
-            w = k == XIII ? _verbum(*t->valor, GENERA, III)
+            w = k == XIII ? _verbum(*t->valor, GENERA, IV)
                           : _verbum(*t->valor, FORMAE, IV);
             si (w < ZEPHYRUM)
             {

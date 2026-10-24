@@ -73,3 +73,17 @@ instruments and -carmina lists them. A song-level instrument is invisible to oth
 Plants 14/14 red (one rewritten to compile: '&&' inside '||'). Two cases were added before
 planting: a song-level instrument based on a book instrument, and a redefined built-in
 without ambitus (censura must keep the table range).
+
+## 2026-10-24 - instrument attribute partiales="r:a:d ...", empty values
+
+`partiales` replaces ALL partials (unlisted slots go to zero), so basis="organum"
+partiales="1:1:0" is a bare sine and not organum with its first partial overwritten. With
+a basis and no attribute the partials are inherited (marimba_mollis). Bounds: ratio
+(0, 32], amp [0, 1], dec [0, 60]; 1..8 space-separated triples, exactly two colons each.
+genus word "partiales" added (GENERA[IV]).
+
+Bug found while testing (it was already in the #1 commit): an EMPTY attribute value
+(`claritas=""`) reaches the parser with t->valor == NIHIL. stml gives boolean attributes
+the interned "true", but gives "" no value at all. Every branch dereferenced *t->valor ->
+segfault. Now one guard after the titulus/basis skip -> "valor malus aut extra fines";
+tests for claritas="", ambitus="", partiales="".

@@ -782,6 +782,157 @@ _sectio_campana (
                  == ZEPHYRUM);
 }
 
+/* amplitudo frequentiae unius (DFT singularis) in fenestra */
+interior f64
+_amplitudo_frequentiae (
+    constans f32* x,
+             i32  initium,
+             i32  numerus,
+             f64  frequentia)
+{
+    f64 re  = 0.0;
+    f64 im  = 0.0;
+    f64 w   = 6.283185307179586 * frequentia / (f64)SECUNDA;
+    i32 i;
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        re += (f64)x[initium + i] * cos(w * (f64)i);
+        im -= (f64)x[initium + i] * sin(w * (f64)i);
+    }
+    redde 2.0 * sqrt(re * re + im * im) / (f64)numerus;
+}
+
+/* organum: partiales ad rationes 1 2 3 4 cum amplitudinibus tabulae,
+ * nihil inter eas, tenet, apex <= amplitudo */
+interior vacuum
+_sectio_organum (
+    CredoContextus* c)
+{
+     constans TibiaParametra* p = tibia_praeparatum("organum");
+                         f64  a1;
+                         i32  k;
+
+    (vacuum)c;
+    CREDO_NECESSE (p != NIHIL
+                   && (s32)(p->genus + 0.5f) == TIBIA_PARTIALES);
+    _sonare(p, 57.0f, tabula_a, SECUNDA);
+    /* A3 = 220 Hz; fenestra 0.5 s (110 cycli integri) */
+    a1 = _amplitudo_frequentiae(tabula_a, SECUNDA / IV, SECUNDA / II,
+                                220.0);
+    CREDO_VERUM (a1 > 0.05);
+    per (k = I; k < IV; k++)
+    {
+        f64 inventa = _amplitudo_frequentiae(tabula_a, SECUNDA / IV,
+            SECUNDA / II, 220.0 * (f64)(k + I));
+        f64 exspectata = (f64)p->partiales[k].amplitudo
+               / (f64)p->partiales[ZEPHYRUM].amplitudo;
+
+        CREDO_VERUM (fabs(inventa / a1 - exspectata) < 0.05);
+    }
+    CREDO_VERUM (_amplitudo_frequentiae(tabula_a, SECUNDA / IV,
+        SECUNDA / II, 330.0) < 0.01 * a1);
+    /* tenet: efficax idem in 0.4 et 0.8 s */
+    CREDO_VERUM (fabs(20.0 * log10(_efficax(tabula_a, SECUNDA * II / V,
+        SECUNDA / X) / _efficax(tabula_a, SECUNDA * IV / V,
+        SECUNDA / X))) < 0.5);
+    CREDO_VERUM (_apex(tabula_a, ZEPHYRUM, SECUNDA) <= p->amplitudo
+        + 1.0e-4f);
+}
+
+/* marimba: partialis 3.9 citius cadit quam fundamentalis; fundamentalis
+ * ad 1/e post decrementum suum (+-20%); determinismus */
+interior vacuum
+_sectio_lignea (
+    CredoContextus* c)
+{
+     constans TibiaParametra* p = tibia_praeparatum("marimba");
+                         f64  f = 261.6255653;   /* C4 */
+                         f64  f1_primus;
+                         f64  f2_primus;
+                         f64  f1_serus;
+                         f64  f2_serus;
+                         f64  fund;
+                         i32  t;
+
+    (vacuum)c;
+    CREDO_NECESSE (p != NIHIL);
+    _sonare(p, 60.0f, tabula_a, TABULA_MAXIMA);
+    f1_primus = _amplitudo_frequentiae(tabula_a, SECUNDA / C,
+                                        SECUNDA / XX, f);
+    f2_primus = _amplitudo_frequentiae(tabula_a, SECUNDA / C,
+                                        SECUNDA / XX, 3.9 * f);
+    f1_serus  = _amplitudo_frequentiae(tabula_a, SECUNDA / V,
+                                        SECUNDA / XX, f);
+    f2_serus  = _amplitudo_frequentiae(tabula_a, SECUNDA / V,
+                                        SECUNDA / XX, 3.9 * f);
+    CREDO_VERUM (f2_primus > 0.0 && f1_serus > 0.0);
+    CREDO_VERUM (f2_serus / f1_serus < 0.5 * (f2_primus / f1_primus));
+    t    = (i32)(p->partiales[ZEPHYRUM].decrementum * (f32)SECUNDA);
+    fund = _amplitudo_frequentiae(tabula_a, SECUNDA / C + t,
+                                  SECUNDA / XX, f) / f1_primus;
+    CREDO_VERUM (fund > 0.8 / 2.718281828 && fund < 1.2 / 2.718281828);
+    _sonare(p, 60.0f, tabula_b, TABULA_MAXIMA);
+    CREDO_VERUM (memcmp(tabula_a, tabula_b, magnitudo(tabula_a))
+                 == ZEPHYRUM);
+}
+
+/* glockenspiel in C8: partialis 8.93 supra Nyquist omittitur - finita,
+ * apex <= amplitudo */
+interior vacuum
+_sectio_campanulae (
+    CredoContextus* c)
+{
+     constans TibiaParametra* p = tibia_praeparatum("glockenspiel");
+                         i32  i;
+                         b32  finita = VERUM;
+
+    (vacuum)c;
+    CREDO_NECESSE (p != NIHIL);
+    _sonare(p, 108.0f, tabula_a, SECUNDA);
+    per (i = ZEPHYRUM; i < SECUNDA; i++)
+    {
+        finita = finita && tabula_a[i] == tabula_a[i]
+                 && fabs(tabula_a[i]) < 10.0;
+    }
+    CREDO_VERUM (finita);
+    CREDO_VERUM (_apex(tabula_a, ZEPHYRUM, SECUNDA) <= p->amplitudo
+        + 1.0e-4f);
+    CREDO_VERUM (_apex(tabula_a, ZEPHYRUM, SECUNDA) > 0.05f);
+    /* sine aliasing: 8.93 x C8 (37.4 kHz) non reflectitur ad
+     * 48 kHz - 37.4 kHz */
+    {
+        f64 f = 4186.009045;
+        f64 fundamentum = _amplitudo_frequentiae(tabula_a, ZEPHYRUM,
+            SECUNDA / XX, f);
+
+        CREDO_VERUM (fundamentum > 0.05);
+        CREDO_VERUM (_amplitudo_frequentiae(tabula_a, ZEPHYRUM,
+            SECUNDA / XX, (f64)SECUNDA - 8.93 * f)
+            < 0.01 * fundamentum);
+    }
+}
+
+/* PARTIALES sine partialibus datis: fundamentalis sola (sinus) */
+interior vacuum
+_sectio_partiales_nulli (
+    CredoContextus* c)
+{
+    TibiaParametra p;
+
+    (vacuum)c;
+    memset(&p, ZEPHYRUM, magnitudo(p));
+    p.genus             = (f32)TIBIA_PARTIALES;
+    p.involucrum.tenor  = 1.0f;
+    p.amplitudo         = 0.5f;
+    _sonare(&p, 57.0f, tabula_a, SECUNDA);
+    CREDO_VERUM (_apex(tabula_a, ZEPHYRUM, SECUNDA) > 0.49f);
+    CREDO_VERUM (_amplitudo_frequentiae(tabula_a, SECUNDA / IV,
+        SECUNDA / II, 220.0) > 0.49);
+    CREDO_VERUM (_amplitudo_frequentiae(tabula_a, SECUNDA / IV,
+        SECUNDA / II, 440.0) < 0.001);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "tenet", _sectio_tenet, _parare, NIHIL, NIHIL, NIHIL },
     { "involucrum", _sectio_involucrum, _parare, NIHIL, NIHIL, NIHIL },
@@ -793,6 +944,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "chorda", _sectio_chorda, _parare, NIHIL, NIHIL, NIHIL },
     { "claritas", _sectio_claritas, _parare, NIHIL, NIHIL, NIHIL },
     { "campana", _sectio_campana, _parare, NIHIL, NIHIL, NIHIL },
+    { "organum", _sectio_organum, _parare, NIHIL, NIHIL, NIHIL },
+    { "marimba", _sectio_lignea, _parare, NIHIL, NIHIL, NIHIL },
+    { "glockenspiel", _sectio_campanulae, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "partiales_nulli", _sectio_partiales_nulli, _parare, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

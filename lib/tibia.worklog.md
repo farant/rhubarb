@@ -67,3 +67,28 @@ quarter-sample filter-delay compensation) and FM non-periodicity at the carrier 
 (ratio 1 would be harmonic, correlation ~1). Lint renames: TIBIA_FM -> TIBIA_MODULATIO,
 lucrum_filtri / lucrum_fractionis, test helpers _congruentia, _efficax (valor efficax =
 RMS).
+
+## 2026-10-24 - genus PARTIALES (additive), presets organum / marimba / glockenspiel
+
+Generator 3 = sum of up to TIBIA_PARTIALES_NUMERUS (VIII) sines, each {ratio, amplitudo,
+decrementum}. The count macro is TIBIA_PARTIALES_NUMERUS, not TIBIA_PARTIALES as first
+proposed: that name is the genus enum value. Each partial's phase step is the voice's
+SonusUnda increment x ratio, recomputed every sample, so glissando and vibrato carry
+over the same way they do for FM.
+
+- Active partials (ratio > 0 and amplitudo > 0) are packed in order into the voice's
+  arrays (rationes[], amplitudines[], detrimenta[], numerus_partialium). Amplitudes are
+  divided by their SUM, so peak <= 1 x amplitudo for any phase alignment.
+- Per-sample decay exp(-1/(dec*SR)); dec 0 = holds (organ). Decay runs on top of the
+  ADSR envelope.
+- A partial whose step reaches >= 2^31 (Nyquist) is skipped for that sample. Its phase
+  stays put but it keeps decaying. The guard also avoids casting an f64 >= 2^32 to an
+  unsigned i32 (UB) when the ratio is 32 at note 127.
+- No partials given (book genus="partiales" with no list, no base) = fundamental only.
+
+Presets: organum {1,2,3,4 at 1, .6, .4, .3; hold}; marimba {1, 3.9, 9.2 - the bar's
+tuned overtones; dec .6/.15/.05}; glockenspiel {1, 2.76, 5.40, 8.93 - free-bar modes;
+dec 1.5/.8/.4/.2}. Tests: single-bin DFT on 110 whole cycles (organum ratios to 0.05,
+nothing at 1.5f), marimba overtone dies faster + fundamental at 1/e after its decay
+(+-20%), glockenspiel C8 bounded with nothing at the alias 48k - 8.93f, fallback = pure
+sine. Organum joins the theremin cycle (sustains; marimba and glockenspiel decay).

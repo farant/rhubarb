@@ -25,6 +25,13 @@
  *   2 FM      sinus portans + modulans (ratio x frequentia), index
  *             modulationis decrescens exponentialiter (campana:
  *             ratio inharmonica, index magnus initio)
+ *   3 PARTIALES  summa sinuum: partialis quisque ratio (x frequentia
+ *             notae), amplitudo, decrementum (secundae ad 1/e; 0 =
+ *             manet - organum). Summa per amplitudinum summam
+ *             dividitur (apex <= amplitudo). Ratio harmonica
+ *             (organum) aut inharmonica (marimba 1 : 3.9 : 9.2;
+ *             lamina libera 1 : 2.76 : 5.40 : 8.93 - glockenspiel).
+ *             Partiales supra frequentiam Nyquist omittuntur.
  * Involucrum ADSR omnibus generibus; vibratus et glissandum omnibus.
  *
  * USUS:
@@ -42,6 +49,15 @@
 #include "latina.h"
 #include "sonus.h"
 
+/* partiales maximi per instrumentum */
+#define TIBIA_PARTIALES_NUMERUS VIII
+
+nomen structura {
+    f32 ratio;         /* 0 = finis tabulae */
+    f32 amplitudo;
+    f32 decrementum;   /* secundae ad 1/e; 0 = manet */
+} TibiaPartialis;
+
 nomen structura {
                     f32 forma;       /* SonusFormaUndae 0..3 (rotundata;
                                       * strepitus non) */
@@ -53,18 +69,21 @@ nomen structura {
                     f32 gravia;      /* limes coli gravium, cycli/s (0 =
                                       * nihil) */
                     f32 amplitudo;   /* lucrum lineare */
-                    f32 genus;       /* TibiaGenus 0..2 (rotundatum) */
+                    f32 genus;       /* TibiaGenus 0..3 (rotundatum) */
                     f32 decrementum; /* CHORDA: secundae ad -60 dB;
                                       * FM: secundae indicis ad 1/e */
                     f32 claritas;    /* CHORDA: 0..1 */
                     f32 ratio;       /* FM: modulans / portans */
                     f32 index;       /* FM: index initio */
+         TibiaPartialis partiales[TIBIA_PARTIALES_NUMERUS];
+                                     /* PARTIALES; ratio 0 = finis */
 } TibiaParametra;
 
 nomen enumeratio {
     TIBIA_UNDA,
     TIBIA_CHORDA,
-    TIBIA_MODULATIO
+    TIBIA_MODULATIO,
+    TIBIA_PARTIALES
 } TibiaGenus;
 
 /* linea morae CHORDAE: notae usque ad ~23 Hz (F#0) */
@@ -93,6 +112,13 @@ nomen structura {
                 f32 ratio;
                 f32 index;               /* FM: currens */
                 f32 index_detrimentum;   /* FM: per exemplum */
+                i32 numerus_partialium;  /* PARTIALES: activi */
+                i32 phases[TIBIA_PARTIALES_NUMERUS];
+                f32 rationes[TIBIA_PARTIALES_NUMERUS];
+                /* PARTIALES: amplitudines currentes (per summam
+                 * divisae), detrimenta per exemplum */
+                f32 amplitudines[TIBIA_PARTIALES_NUMERUS];
+                f32 detrimenta[TIBIA_PARTIALES_NUMERUS];
 } TibiaVox;
 
 /* porta APERTA: impetus incipit ad notam datam */
@@ -128,7 +154,8 @@ tibia_vox_finita (
 
 /* "aether" (sinus, impetus lenis, vibratus parvus), "quadrans" (pulsus
  * XXV%, chiptune), "triangulum" (bassus), "chorda" (Karplus-Strong:
- * citharae similis), "campana" (FM, ratio 1.4); NIHIL si ignotum */
+ * citharae similis), "campana" (FM, ratio 1.4), "organum" (8' 4' 2 2/3'
+ * 2'), "marimba", "glockenspiel" (PARTIALES); NIHIL si ignotum */
 constans TibiaParametra*
 tibia_praeparatum (
     constans character* titulus);
