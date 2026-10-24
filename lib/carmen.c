@@ -259,17 +259,25 @@ _positionem_legere (
 {
     b32 m = stml_attributum_habet(nodus, "mensura");
     b32 p = stml_attributum_habet(nodus, "pulsus");
+    b32 t = stml_attributum_habet(nodus, "ictus");
     s64 v;
 
-    si (m == p || (p && !pulsus_admissus))
+    si (m == p || ((p || t) && !pulsus_admissus))
     {
         *causa =
             pulsus_admissus ? "positio: mensura aut pulsus, altera sola"
                                  : "mutatio metri per mensuram sola";
         redde FALSUM;
     }
+    si (t && !m)
+    {
+        *causa = "ictus cum mensura solum";
+        redde FALSUM;
+    }
     si (m)
     {
+        s64 x;
+
         si (   !_s64_legere(nodus, "mensura", &v) || v < I
             || v > CMXCIX * M)
         {
@@ -279,6 +287,20 @@ _positionem_legere (
         *positio = _pulsus_mensurae(carmen->metra,
             carmen->numerus_metrorum,
             (i32)v);
+        si (t)
+        {
+            s64 ictus     = carmen_tempus_mensurae(carmen, *positio);
+            s64 longitudo = _pulsus_mensurae(carmen->metra,
+                carmen->numerus_metrorum, (i32)v + I) - *positio;
+
+            si (   !_s64_legere(nodus, "ictus", &x) || x < I
+                || (x - I) * ictus >= longitudo)
+            {
+                *causa = "ictus: 1..tempora mensurae";
+                redde FALSUM;
+            }
+            *positio += (x - I) * ictus;
+        }
         redde VERUM;
     }
     si (!_s64_legere(nodus, "pulsus", &v) || v < ZEPHYRUM)
@@ -625,6 +647,145 @@ _locus_mutationis (
         redde -I;
     }
     redde (s32)numerus;
+}
+
+/* <tempus> scriptum: valor (gradus) et usque="M" (clivus ad initium
+ * mensurae M, post positionem). Ordine positionis; nulla mutatio
+ * intra clivum priorem. Clivus eadem positione qua gradus prior eum
+ * servat (initium clivi), gradus eadem positione substituit */
+interior b32
+_tempus_scriptum_legere (
+              StmlNodus*  n,
+                 Carmen*  k,
+                    s64   positio,
+     constans character** causa)
+{
+    constans CarmenTempus* ultimum =
+        &k->tempora_scripta[k->numerus_temporum_scriptorum - I];
+                   chorda* a      = stml_attributum_capere(n, "valor");
+                      s64  usque  = ZEPHYRUM;
+                      s64  u;
+                      s32  l;
+
+    si (stml_attributum_habet(n, "usque"))
+    {
+        si (   !_s64_legere(n, "usque", &u) || u < I
+            || u > CMXCIX * M)
+        {
+            *causa = "tempus: usque non numerus mensurae";
+            redde FALSUM;
+        }
+        usque = _pulsus_mensurae(k->metra, k->numerus_metrorum, (i32)u);
+        si (usque <= positio)
+        {
+            *causa = "tempus: usque post initium clivi";
+            redde FALSUM;
+        }
+    }
+    si (ultimum->usque != ZEPHYRUM && positio < ultimum->usque)
+    {
+        *causa = "tempus: mutatio intra clivum";
+        redde FALSUM;
+    }
+    l = _locus_mutationis(ultimum->pulsus,
+        k->numerus_temporum_scriptorum, positio);
+    si (   l       >= ZEPHYRUM && usque != ZEPHYRUM
+        && positio == ultimum->pulsus)
+    {
+        l = (s32)k->numerus_temporum_scriptorum;
+    }
+    si (   l < ZEPHYRUM || !a
+        || !_tempus_legere(*a, &k->tempora_scripta[l].tempus))
+    {
+        *causa = "tempus: valor 20..400, ordine positionis";
+        redde FALSUM;
+    }
+    k->tempora_scripta[l].pulsus  = positio;
+    k->tempora_scripta[l].usque   = usque;
+    si (l == (s32)k->numerus_temporum_scriptorum)
+    {
+        k->numerus_temporum_scriptorum++;
+    }
+    redde VERUM;
+}
+
+/* gradum mappae sonandi addit; eadem positione ultimum substituit */
+interior vacuum
+_gradum_addere (
+    CantusTempus* tempora,
+             i32* numerus,
+             s64  pulsus,
+             i32  tempus)
+{
+    si (*numerus > ZEPHYRUM && tempora[*numerus - I].pulsus == pulsus)
+    {
+        tempora[*numerus - I].tempus = tempus;
+        redde;
+    }
+    tempora[*numerus].pulsus   = pulsus;
+    tempora[*numerus].tempus   = tempus;
+    tempora[*numerus].quadrum  = ZEPHYRUM;
+    (*numerus)++;
+}
+
+/* mappa sonandi ex scriptis: gradus ut sunt; clivus = gradus per
+ * CARMEN_GRADUS_TEMPORIS, tempus medii gradus (linearis in pulsibus,
+ * rotundatum), deinde valor ad usque. FALSUM: piscina exhausta */
+interior b32
+_mappam_sonandi (
+     Carmen* k,
+    Piscina* piscina)
+{
+    i32 numerus    = ZEPHYRUM;
+    i32 capacitas  = ZEPHYRUM;
+    i32 prius      = CARMEN_TEMPUS_ORDINARIUM;
+    i32 i;
+
+    per (i = ZEPHYRUM; i < k->numerus_temporum_scriptorum; i++)
+    {
+        constans CarmenTempus* t = &k->tempora_scripta[i];
+
+        capacitas += I;
+        si (t->usque != ZEPHYRUM)
+        {
+            capacitas += (i32)((t->usque - t->pulsus
+                + CARMEN_GRADUS_TEMPORIS - I) / CARMEN_GRADUS_TEMPORIS);
+        }
+    }
+    k->tempora = (CantusTempus*)piscina_allocare(piscina,
+        (memoriae_index)capacitas * magnitudo(CantusTempus));
+    si (!k->tempora)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < k->numerus_temporum_scriptorum; i++)
+    {
+        constans CarmenTempus* t = &k->tempora_scripta[i];
+                          s64  p;
+
+        si (t->usque == ZEPHYRUM)
+        {
+            _gradum_addere(k->tempora, &numerus, t->pulsus, t->tempus);
+            prius = t->tempus;
+            perge;
+        }
+        per (p = t->pulsus; p < t->usque; p += CARMEN_GRADUS_TEMPORIS)
+        {
+            s64 q = p + CARMEN_GRADUS_TEMPORIS < t->usque
+                  ? p + CARMEN_GRADUS_TEMPORIS : t->usque;
+            f64 medium = (f64)(p + q) / 2.0 - (f64)t->pulsus;
+            f64 valor  = (f64)prius + (f64)((s32)t->tempus - (s32)prius)
+                       * medium / (f64)(t->usque - t->pulsus);
+
+            _gradum_addere(k->tempora, &numerus, p,
+                           (i32)(valor + 0.5));
+        }
+        _gradum_addere(k->tempora, &numerus, t->usque, t->tempus);
+        prius = t->tempus;
+    }
+    k->numerus_temporum = numerus;
+    cantus_tempora_computare(k->tempora, k->numerus_temporum);
+    redde VERUM;
 }
 
 
@@ -1081,34 +1242,35 @@ _carmen_legere (
             "carmen sine titulo [a-z0-9_]+");
     }
     k->titulus  = *a;
-    k->tempora  = (CantusTempus*)piscina_allocare(piscina,
+    k->tempora_scripta  = (CarmenTempus*)piscina_allocare(piscina,
         (memoriae_index)(_numerare(nodus, "tempus") + I)
-        * magnitudo(CantusTempus));
+        * magnitudo(CarmenTempus));
     k->metra    = (CarmenMetrum*)piscina_allocare(piscina,
         (memoriae_index)(_numerare(nodus, "metrum") + I)
         * magnitudo(CarmenMetrum));
     k->claves   = (CarmenClavis*)piscina_allocare(piscina,
         (memoriae_index)(_numerare(nodus, "clavis") + I)
         * magnitudo(CarmenClavis));
-    si (!k->tempora || !k->metra || !k->claves)
+    si (!k->tempora_scripta || !k->metra || !k->claves)
     {
         redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
             "piscina exhausta");
     }
     /* initialia */
-    k->tempora[ZEPHYRUM].pulsus = ZEPHYRUM;
-    k->tempora[ZEPHYRUM].tempus = CARMEN_TEMPUS_ORDINARIUM;
+    k->tempora_scripta[ZEPHYRUM].pulsus = ZEPHYRUM;
+    k->tempora_scripta[ZEPHYRUM].tempus = CARMEN_TEMPUS_ORDINARIUM;
+    k->tempora_scripta[ZEPHYRUM].usque = ZEPHYRUM;
     k->metra[ZEPHYRUM].pulsus = ZEPHYRUM;
     k->metra[ZEPHYRUM].numerator = IV;
     k->metra[ZEPHYRUM].denominator = IV;
     k->claves[ZEPHYRUM].pulsus = ZEPHYRUM;
     k->claves[ZEPHYRUM].quintae = ZEPHYRUM;
     k->claves[ZEPHYRUM].minor = FALSUM;
-    k->numerus_temporum = I;
+    k->numerus_temporum_scriptorum = I;
     k->numerus_metrorum = I;
     k->numerus_clavium = I;
     a = stml_attributum_capere(nodus, "tempus");
-    si (a && !_tempus_legere(*a, &k->tempora[ZEPHYRUM].tempus))
+    si (a && !_tempus_legere(*a, &k->tempora_scripta[ZEPHYRUM].tempus))
     {
         redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
             "tempus extra 20..400");
@@ -1204,20 +1366,10 @@ _carmen_legere (
         }
         si (tempus)
         {
-            l = _locus_mutationis(
-                k->tempora[k->numerus_temporum - I].pulsus,
-                k->numerus_temporum, positio);
-            si (   l < ZEPHYRUM || !a || !_tempus_legere(*a,
-                    &k->tempora[l].tempus))
+            si (!_tempus_scriptum_legere(n, k, positio, &causa))
             {
                 redde _vitium(vitium, k->titulus, _vacua(), -I,
-                    ZEPHYRUM,
-                    "tempus: valor 20..400, ordine positionis");
-            }
-            k->tempora[l].pulsus = positio;
-            si (l == (s32)k->numerus_temporum)
-            {
-                k->numerus_temporum++;
+                    ZEPHYRUM, causa);
             }
         }
         alioquin
@@ -1239,7 +1391,11 @@ _carmen_legere (
             }
         }
     }
-    cantus_tempora_computare(k->tempora, k->numerus_temporum);
+    si (!_mappam_sonandi(k, piscina))
+    {
+        redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
+            "piscina exhausta");
+    }
     /* instrumenta: carminis propria (bases: libri et supra), deinde
      * libri - quaerendo propria vincunt */
     {

@@ -67,3 +67,11 @@ fallback: the class a semitone under the tonic is spelled on the letter under th
 (C# in D minor, F# in G minor - not Db / Gb). Tonic letter = q*4 (+5 in minor) mod 7, one
 fifth = 4 letters. It matters for classes nobody wrote (implied chord tones in
 explicatio); written letters still come first.
+
+## 2026-10-24 - bar header shows WRITTEN tempo changes (desideratum ...VG8PQ3)
+
+Carmen.tempora became the derived sounding map (a ramp = dozens of 32nd-note steps), so
+the bar header now walks Carmen.tempora_scripta: "tempus 90 usque 4 (+960)" for a ramp,
+plain "tempus 90" for a step; bars inside a ramp print nothing. The title's tempo is
+tempora_scripta[0] (a ramp from bar 1 makes tempora[0] already slower). _mensura_pulsus
+turns the ramp's end pulsus back into its bar number.

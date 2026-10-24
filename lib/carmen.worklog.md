@@ -131,3 +131,39 @@ default is threaded into _carmen_legere as two parameters.
 Gotcha: the book's second children loop (the one that reads songs) skipped only
 `instrumentum` - a book-level <reverberatio> was then read as a song and failed. Both
 loops now skip it.
+
+## 2026-10-24 - tempus continuum: rampae et ictus (desideratum ...VG8PQ3)
+
+Name: a ramp is a CLIVUS (slope) in code - "rampa" is not Latin. Model decision: the SOUNDING map stays piecewise constant. A written ramp
+`<tempus mensura="M" [ictus="N"] valor="T" usque="U"/>` (prevailing tempo -> T, linear in
+pulsus, reaching T at the downbeat of bar U) is expanded at load into steps of
+CARMEN_GRADUS_TEMPORIS = 120 pulsus (a 32nd note), each at the tempo of its midpoint,
+rounded to whole bpm, plus a hold step at U. So cantus_quadrum_pulsus/its inverse, cantor,
+auscultatio and recensio did not change, and the "no accumulated rounding" property holds
+(every step closes on its rounded quadrum). The rejected alternative - a true curve - needs
+log/exp in both directions and gives that property up. Measured: 120 -> 60 over 8 quarters
+is within 0.2% of the exact integral (8 ln 2 s).
+
+Carmen.tempora is now DERIVED; what was written lives in Carmen.tempora_scripta
+(CarmenTempus {pulsus, tempus, usque}; usque 0 = step). Everything that shows the
+"initial tempo" (partitura title, recensio text + JSON, auditio -carmina) reads
+tempora_scripta[0] - with a ramp from bar 1 the first sounding step is already slower.
+partitura's bar header prints the written change ("tempus 60 usque 4"), not the steps.
+
+Ordering rules: a step at the same position as the previous step replaces it (as before);
+a RAMP at the position of a step keeps that step as its start (ramp from bar 1 starts at
+the carmen's tempus attribute); no change may fall inside a ramp (positio < usque).
+
+ictus="N" refines mensura wherever pulsus is admitted (frustum, tempus, clavis): beat unit
+= carmen_tempus_mensurae (6/8 = dotted quarter), same as 'M:T' edit addressing. Rejected
+with pulsus, with metrum, 0, or past the bar. NOTE: unknown attributes on <tempus> were
+silently ignored before - the red tests for usque/ictus errors first came back "accepted".
+
+auditio -carmina's tempo column is the one consumer without a test (tool output).
+
+Plants 14/14 red after two rounds. One survived first: recensio's title read through the
+sounding map still said 100 because a 100 -> 60 ramp over TWO bars has its first step at
+99.7, which rounds back to 100 - the fixture now ramps over one bar (first step 99). Lesson
+for "written vs sounding" tests: make sure the first sounding step actually differs. The
+ramp-from-start carmen test likewise moved 120 -> 100: at 120 the carmen tempus equals the
+house default, so 'ramp starts from the default' was indistinguishable.

@@ -342,7 +342,7 @@ _carmen_monstrare (
               "%.3f s\n", (integer)k->titulus.mensura,
               (constans character*)k->titulus.datum, clavis,
               minor ? "minor" : "maior", numerator, denominator,
-              k->tempora[ZEPHYRUM].tempus, _mensurae(k),
+              k->tempora_scripta[ZEPHYRUM].tempus, _mensurae(k),
               (duplex)cantus_quadrum_pulsus(k->tempora,
                   k->numerus_temporum, k->pulsus)
                   / (duplex)SONUS_FREQUENTIA);

@@ -269,7 +269,7 @@ recensio_carminis_textus (
         k->metra[ZEPHYRUM].denominator) && bene;
     bene = chorda_aedificator_appendere_literis(a, ", ") && bene;
     bene = chorda_aedificator_appendere_i32(a,
-        k->tempora[ZEPHYRUM].tempus) && bene;
+        k->tempora_scripta[ZEPHYRUM].tempus) && bene;
     bene = chorda_aedificator_appendere_literis(a, ", ") && bene;
     bene = chorda_aedificator_appendere_i32(a, r->mensurae) && bene;
     bene = chorda_aedificator_appendere_literis(a, " mensurae, ")
@@ -553,7 +553,7 @@ recensio_carminis_json (
     json_objectum_ponere(o, "metrum", _chorda_json(piscina,
         chorda_aedificator_finire(a)));
     json_objectum_ponere(o, "tempus", json_integer_creare(piscina,
-        (s64)k->tempora[ZEPHYRUM].tempus));
+        (s64)k->tempora_scripta[ZEPHYRUM].tempus));
     json_objectum_ponere(o, "mensurae", json_integer_creare(piscina,
         (s64)r->mensurae));
     json_objectum_ponere(o, "secundae", _numerus_json(piscina,

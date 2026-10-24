@@ -26,9 +26,16 @@
  *
  *   positio   mensura="N" (1 = prima, ex mappa metri) aut pulsus="N" -
  *             altera sola
+ *   ictus     cum mensura, ubi pulsus admittitur (frustum, tempus,
+ *             clavis): tempus N mensurae (1 = initium; unitas =
+ *             carmen_tempus_mensurae, ut locus 'M:T' - in 6/8 octavae
+ *             tres)
  *   metrum    N/D, D potentia II (1..64), N 1..64
  *   clavis    littera [#|b] maior|minor (quintae -7..7, ut MusicXML)
- *   tempus    20..400 quartae per minutum (ordinarium CXX)
+ *   tempus    20..400 quartae per minutum (ordinarium CXX); sine
+ *             'usque' gradus; cum usque="M" clivus: a tempore vigente
+ *             ad valorem, linearis in pulsibus, finis ad initium
+ *             mensurae M (nulla mutatio intra clivum)
  *   textus    MML (cantus.h) SINE 't' - tempus carminis est; '@'
  *             praeparatum per notam (percussio sonitus) admittitur
  *   pars      instrumentum necessarium; lucrum 0..1 (1); positio
@@ -67,6 +74,11 @@
  *                 ignotum, numerus malus aut extra fines, basis
  *                 ignota, titulus iteratus in eodem gradu.
  *
+ * MAPPA SONANDI: Carmen.tempora = gradus soli (clivi per
+ * CARMEN_GRADUS_TEMPORIS pulsus - tricesima secunda - tempore medii
+ * gradus); scripta in tempora_scripta (partitura ea nominat).
+ * Analysis tempus SCRIPTUM iudicat (pulsus), numquam sonandi.
+ *
  * TOTUS LIBER IN LECTIONE IUDICATUR: vitium cum carmine, parte, frusto
  * et offset in textu frusti - numquam carmen semi-lectum.
  */
@@ -79,6 +91,9 @@
 #include "piscina.h"
 #include "cantus.h"
 #include "tibia.h"
+
+/* gradus mappae sonandi in clivo: tricesima secunda (pulsus) */
+#define CARMEN_GRADUS_TEMPORIS CXX
 
 nomen structura {
           s64 pulsus;        /* intra frustum */
@@ -127,6 +142,13 @@ nomen structura {
     b32 minor;
 } CarmenClavis;
 
+/* mutatio temporis SCRIPTA: gradus (usque 0) aut clivus */
+nomen structura {
+    s64 pulsus;     /* initium */
+    i32 tempus;     /* valor scriptus (finis clivi) */
+    s64 usque;      /* finis clivi, pulsus; 0 = gradus */
+} CarmenTempus;
+
 nomen structura {
             chorda titulus;
     TibiaParametra parametra;
@@ -136,8 +158,12 @@ nomen structura {
 
 nomen structura {
            chorda  titulus;
-     CantusTempus* tempora;           /* quadra computata */
+     CantusTempus* tempora;           /* mappa SONANDI (clivi in
+                                       * gradus), quadra computata */
               i32  numerus_temporum;
+     CarmenTempus* tempora_scripta;   /* ut in libro; primum = tempus
+                                       * carminis ad pulsum 0 */
+              i32  numerus_temporum_scriptorum;
      CarmenMetrum* metra;
               i32  numerus_metrorum;
      CarmenClavis* claves;

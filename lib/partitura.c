@@ -595,6 +595,21 @@ _positionem_scribere (
     }
 }
 
+/* numerus mensurae quae ad pulsum incipit aut eum continet */
+interior i32
+_mensura_pulsus (
+    constans Carmen* carmen,
+                s64  pulsus)
+{
+    i32 m = I;
+
+    dum (carmen_pulsus_mensurae(carmen, m + I) <= pulsus)
+    {
+        m++;
+    }
+    redde m;
+}
+
 interior vacuum
 _titulum_mensurae (
            Scriptor* s,
@@ -630,14 +645,20 @@ _titulum_mensurae (
             _positionem_scribere(s, carmen->claves[i].pulsus, initium);
         }
     }
-    per (i = I; i < carmen->numerus_temporum; i++)
+    /* tempora SCRIPTA (clivus: 'usque M'), non mappa sonandi */
+    per (i = I; i < carmen->numerus_temporum_scriptorum; i++)
     {
-        constans CantusTempus* t = &carmen->tempora[i];
+        constans CarmenTempus* t = &carmen->tempora_scripta[i];
 
         si (t->pulsus >= initium && t->pulsus < finis)
         {
             _litterae(s, "  tempus ");
             _numerus(s, (s64)t->tempus);
+            si (t->usque != ZEPHYRUM)
+            {
+                _litterae(s, " usque ");
+                _numerus(s, (s64)_mensura_pulsus(carmen, t->usque));
+            }
             _positionem_scribere(s, t->pulsus, initium);
         }
     }
@@ -751,7 +772,7 @@ partitura_scribere (
     _character(&s, '/');
     _numerus(&s, (s64)carmen->metra[ZEPHYRUM].denominator);
     _litterae(&s, ", ");
-    _numerus(&s, (s64)carmen->tempora[ZEPHYRUM].tempus);
+    _numerus(&s, (s64)carmen->tempora_scripta[ZEPHYRUM].tempus);
     _character(&s, '\n');
     per (i = ZEPHYRUM; i < carmen->numerus_partium; i++)
     {
