@@ -314,38 +314,23 @@ _lectiones_ambitus_libri (
     redde lectiones;
 }
 
-/* DEBITA NOTARE (fabrica-7 T3): post cursum membri cum debitis -
- * <area>debita.txt: "cursus\ttransiit|fractus", deinde viae debitorum
- * quas membrum USURPAVIT - photographiae ante/post mutatas ostendunt
- * aut liber lectionum nominat (fabrica_debitum_iudicare eam legit).
- * Sine photographia nihil scribitur (IGNOTUM). */
-interior vacuum
-_debita_notare (
-    constans FabricaSutura* sutura,
-     constans FabricaActio* actio,
-                    chorda  area,
-              constans Xar* ante,
-              constans Xar* post,
-                       b32  transiit,
-                   Piscina* piscina)
+/* MUTATA PHOTOGRAPHIARUM: viae quae inter 'ante' et 'post' (ordinatae
+ * per viam) apparuerunt, evanuerunt aut tempus/mensuram mutaverunt.
+ * Xar de chorda (ordine viae); NIHIL si memoria deficit */
+interior Xar*
+_mutata_photographiarum (
+    constans Xar* ante,
+    constans Xar* post,
+         Piscina* piscina)
 {
-    ChordaAedificator* a;
-                  Xar* mutata;
-               chorda  contentum;
-                  i32  i;
-                  i32  j;
-                  i32  d;
+    Xar* mutata;
+    i32  i;
+    i32  j;
 
-    si (   actio->debita              == NIHIL
-        || xar_numerus(actio->debita) == ZEPHYRUM)
+    mutata = fabricae_xar_chordarum(piscina);
+    si (mutata == NIHIL)
     {
-        redde;
-    }
-    mutata  = fabricae_xar_chordarum(piscina);
-    a       = chorda_aedificator_creare(piscina, CCLVI);
-    si (mutata == NIHIL || a == NIHIL)
-    {
-        redde;
+        redde NIHIL;
     }
     i = ZEPHYRUM;
     j = ZEPHYRUM;
@@ -379,6 +364,41 @@ _debita_notare (
             i++;
             j++;
         }
+    }
+    redde mutata;
+}
+
+/* DEBITA NOTARE (fabrica-7 T3): post cursum membri cum debitis -
+ * <area>debita.txt: "cursus\ttransiit|fractus", deinde viae debitorum
+ * quas membrum USURPAVIT - photographiae ante/post mutatas ostendunt
+ * aut liber lectionum nominat (fabrica_debitum_iudicare eam legit).
+ * Sine photographia nihil scribitur (IGNOTUM). */
+interior vacuum
+_debita_notare (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+                    chorda  area,
+              constans Xar* ante,
+              constans Xar* post,
+                       b32  transiit,
+                   Piscina* piscina)
+{
+    ChordaAedificator* a;
+                  Xar* mutata;
+               chorda  contentum;
+                  i32  i;
+                  i32  d;
+
+    si (   actio->debita              == NIHIL
+        || xar_numerus(actio->debita) == ZEPHYRUM)
+    {
+        redde;
+    }
+    mutata  = _mutata_photographiarum(ante, post, piscina);
+    a       = chorda_aedificator_creare(piscina, CCLVI);
+    si (mutata == NIHIL || a == NIHIL)
+    {
+        redde;
     }
     /* LIBER LECTIONUM quoque (fabrica-7 T4): scriptura TRANSIENS
      * (creata et deleta intra cursum - sqlite, sera, scripta ficta)
@@ -575,6 +595,79 @@ fabrica_mutata_intra_locum (
     redde VERUM;
 }
 
+interior b32
+_viam_continet (
+    constans Xar* viae,
+          chorda  via);
+
+interior Xar*
+_scripturas_notatas (
+    constans FabricaSutura* sutura,
+        constans character* liber_via,
+                   Piscina* piscina);
+
+/* VESTIGIA CONFERRE (fabrica-8 mensura; sutura->vestigia_conferre):
+ * mutata photographiarum EXTRA locum membri (area, liber, acta) contra
+ * scripturas libri (S) extra eundem. <area>vestigia_collata.txt: linea
+ * 'cursus' semper, deinde 'photographia\t<via>' = mutatum quod liber
+ * non nominat (scriptura librum fallens - lacuna vestigii fidelis) et
+ * 'liber\t<via>' = notatum quod photographia non vidit (transiens aut
+ * status idem). Iudicium membri non mutatur: mensura sola. */
+interior vacuum
+_vestigia_conferre (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+                    chorda  area,
+              constans Xar* ante,
+              constans Xar* post,
+                   Piscina* piscina)
+{
+    ChordaAedificator* a;
+                  Xar* mutata;
+                  Xar* notatae;
+               chorda  contentum;
+                  i32  k;
+
+    mutata   = _mutata_photographiarum(ante, post, piscina);
+    notatae  = _scripturas_notatas(sutura, chorda_ut_cstr(
+        fabrica_liber_via(actio->titulus, piscina), piscina), piscina);
+    a        = chorda_aedificator_creare(piscina, CCLVI);
+    si (mutata == NIHIL || notatae == NIHIL || a == NIHIL)
+    {
+        redde;
+    }
+    (vacuum)chorda_aedificator_appendere_literis(a, "cursus\n");
+    per (k = ZEPHYRUM; k < xar_numerus(mutata); k++)
+    {
+        chorda via = *(chorda*)xar_obtinere(mutata, k);
+
+        si (   !_via_membri(actio, area, via, piscina)
+            && !_viam_continet(notatae, via))
+        {
+            (vacuum)chorda_aedificator_appendere_literis(a,
+                "photographia\t");
+            (vacuum)chorda_aedificator_appendere_chorda(a, via);
+            (vacuum)chorda_aedificator_appendere_character(a, '\n');
+        }
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(notatae); k++)
+    {
+        chorda via = *(chorda*)xar_obtinere(notatae, k);
+
+        si (   !_via_membri(actio, area, via, piscina)
+            && !_viam_continet(mutata, via))
+        {
+            (vacuum)chorda_aedificator_appendere_literis(a, "liber\t");
+            (vacuum)chorda_aedificator_appendere_chorda(a, via);
+            (vacuum)chorda_aedificator_appendere_character(a, '\n');
+        }
+    }
+    contentum = chorda_aedificator_finire(a);
+    (vacuum)sutura->verdictum_ponere(sutura->datum, chorda_ut_cstr(
+        fabricae_iungere(piscina, "", area, "vestigia_collata.txt"),
+        piscina), &contentum);
+}
+
 /* MEMBRUM AGERE (T5): verdictum vetus deletum, area parata et vacua,
  * ambitus basis, genus gradus agit; deinde scriptura extra vestigium,
  * ambitus non declaratus -> FALSUM nominatum; transitus -> verdictum
@@ -584,12 +677,6 @@ fabrica_mutata_intra_locum (
  * (lineae S) eam videt. Cursus seriales libro recenti (membra gradus,
  * actiones iudicii) ita iudicantur ut undae iam iudicabantur. Restat
  * scriptura sine libro (system, sqlite, filii sine lectionibus). */
-interior Xar*
-_scripturas_notatas (
-    constans FabricaSutura* sutura,
-        constans character* liber_via,
-                   Piscina* piscina);
-
 interior chorda
 _scripturam_alienam (
      constans FabricaActio* actio,
@@ -672,6 +759,10 @@ _membrum_agere (
         && !sutura->vestigium_capere(sutura->datum, piscina, &post))
     {
         post = NIHIL;
+    }
+    si (sutura->vestigia_conferre && post != NIHIL)
+    {
+        _vestigia_conferre(sutura, actio, area, ante, post, piscina);
     }
     /* MEMORIAE (2026-10-23): sigilla et digesta octetos describunt -
      * semper vacantur (area membri mutata est). Regenerationes

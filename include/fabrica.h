@@ -481,6 +481,11 @@ nomen structura {
      * I = omnes (iudicare -audit); N = unus ex N (specimen
      * determinatum: octetus primus clavis ingressuum modulo N) */
     i32 auditus;
+    /* VESTIGIA CONFERRE (fabrica-8 mensura; probare -conferre): post
+     * membrum quodque mutata photographiarum extra locum eius contra
+     * scripturas libri (S) conferuntur, differentiae in
+     * <area>vestigia_collata.txt. FALSUM = nihil */
+    b32 vestigia_conferre;
     /* ==== IUDICIUM (spec 3 par. XII, T5b) - omnia NIHIL licent ==== */
     /* ambitus quem fabrica PORTAE dat: VERUM + valor si variabilis
      * adest. Lectio E cuius valor ab eo differt intra portam posita est

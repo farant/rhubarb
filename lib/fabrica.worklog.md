@@ -3735,3 +3735,31 @@ outside their debts; fixed by moving them into credo areas (three debts removed)
 for trace-only judgment: the 41 members that execute foreign programs (step 3 spec: trust the
 trace where it is complete, snapshot only members with P lines of untraced programs, plus a
 sampled snapshot audit).
+
+## 2026-10-24 — measurement: what do snapshots see that the trace misses? (probare -conferre)
+
+New instrument for step 3: `bin/fabrica probare -conferre` (sutura->vestigia_conferre). After each
+member's "after" snapshot, `_vestigia_conferre` diffs the snapshots (`_mutata_photographiarum`,
+now shared with `_debita_notare`) and the member's S lines, both restricted to paths OUTSIDE the
+member's location (area, liber, acta), into `<area>vestigia_collata.txt`: `photographia\t<via>`
+= the snapshot saw a change the trace never named; `liber\t<via>` = the trace named a write the
+snapshot didn't see. Verdicts unchanged.
+
+radix -vis -conferre (414 members, all green, macOS 27 / clang 21):
+- snapshot-only: 3 paths in 2 members, all under declared debts, both explained:
+  probatio_lectiones (the trace's own test points FABRICA_LECTIONES at its own file, so its writes
+  land there) and probatio_natura_glossae (bin/natura_glossae writes its HTML with a raw fopen -
+  tools/natura_glossae.c:689, on the code-96 legacy debt list).
+- trace-only: 1124 paths in 7 members - transient files (sqlite -wal/-shm/-journal created and
+  deleted within the run, temp scripts, sockets) and directories (snapshots record files only).
+  The trace sees strictly MORE than the snapshot, not just cheaper.
+- The raw remove/rename/mkdir calls found by grep produced no misses in this run: they act inside
+  areas or on files that don't survive the run. One run is not a guarantee - the lint ratchet
+  (code 96 extended to write calls) is what makes it structural.
+
+Not measured: other composites (silva, md, toml, ...) and sanare waves (one snapshot per wave).
+The 16 area dirs without a comparison file are leftovers of archived members (arbor*, lapifex).
+Test: probatio_fabrica_gradus 'debita scripturae' part VII (fake disk): unnamed write ->
+photographia; both see it -> only 'cursus'; transient S -> liber, S inside the member's area never
+listed; flag off -> no file. Plants (silva.planta) red at their assertion, then green: call
+removed, trace not consulted for snapshot changes, member location not excluded for S lines.

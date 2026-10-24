@@ -2197,6 +2197,9 @@ _probare_debita (
                "build/fabrica/area/probationes_t/a/verdictum.txt";
            constans character* VERDICTUM_B =
                "build/fabrica/area/probationes_t/b/verdictum.txt";
+           constans character* COLLATA_A =
+               "build/fabrica/area/probationes_t/a/"
+               "vestigia_collata.txt";
 
         /* I. declaratio: debita leguntur; duplex, attributum absens,
          * actio sine gradu -> recusatio nominata */
@@ -2438,6 +2441,45 @@ _probare_debita (
         _gradus_fractus  = NIHIL;
         _d_via_a         = NIHIL;
         _d_via_b         = NIHIL;
+
+        /* VII (fabrica-8 mensura). vestigia conferre: photographiae
+         * contra librum EXTRA locum membri -> vestigia_collata.txt */
+        sutura->vestigia_conferre = VERUM;
+        /* VIIa. scriptura quam liber non nominat -> photographia */
+        _d_via_a    = "build/a.db";
+        _d_liber_a  = NIHIL;
+        mundi_ponere(discus, "t/a.c", "a VIIa\n");
+        (vacuum)_s_sanare(sutura, ordo, electa, "probationes_t/a",
+            FABRICA_SANATUM, piscina);
+        CREDO_VERUM(mundi_contentum_est(discus, COLLATA_A,
+            "cursus\nphotographia\tbuild/a.db\n"));
+        /* VIIb. utraque vident -> nihil nisi 'cursus' */
+        _d_liber_a  = "S\tbuild/a.db\n";
+        mundi_ponere(discus, "t/a.c", "a VIIb\n");
+        (vacuum)_s_sanare(sutura, ordo, electa, "probationes_t/a",
+            FABRICA_SANATUM, piscina);
+        CREDO_VERUM(mundi_contentum_est(discus, COLLATA_A, "cursus\n"));
+        /* VIIc. transiens (liber solus) nominatur; scriptura in area
+         * membri numquam */
+        _d_via_a    = NIHIL;
+        _d_liber_a  = "S\tbuild/a.db\n"
+            "S\tbuild/fabrica/area/probationes_t/a/intra.tmp\n";
+        mundi_ponere(discus, "t/a.c", "a VIIc\n");
+        (vacuum)_s_sanare(sutura, ordo, electa, "probationes_t/a",
+            FABRICA_SANATUM, piscina);
+        CREDO_VERUM(mundi_contentum_est(discus, COLLATA_A,
+            "cursus\nliber\tbuild/a.db\n"));
+        /* VIId. sine vexillo: nulla plagula */
+        sutura->vestigia_conferre = FALSUM;
+        mundi_auferre(discus, COLLATA_A);
+        _d_via_a    = "build/a.db";
+        _d_liber_a  = NIHIL;
+        mundi_ponere(discus, "t/a.c", "a VIId\n");
+        (vacuum)_s_sanare(sutura, ordo, electa, "probationes_t/a",
+            FABRICA_SANATUM, piscina);
+        CREDO_FALSUM(mundi_existere(discus, COLLATA_A, piscina));
+        _d_via_a    = NIHIL;
+        _d_liber_a  = NIHIL;
     }
 }
 

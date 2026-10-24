@@ -153,6 +153,7 @@ fabrica_suturam_parare (
     sutura->radix.datum         = NIHIL;
     sutura->radix.mensura       = ZEPHYRUM;
     sutura->auditus             = ZEPHYRUM;
+    sutura->vestigia_conferre   = FALSUM;
     sutura->lectiones_ultimae   = NIHIL;
     sutura->ambitus             = NIHIL;
     sutura->species             = NIHIL;

@@ -1976,6 +1976,9 @@ _causam_imprimere (
 /* auditus sub sanare: -audit (I) aut FABRICA_AUDITUS=N */
 hic_manens i32 auditus_sanandi = ZEPHYRUM;
 
+/* probare -conferre: photographiae contra librum per membrum */
+hic_manens b32 vestigia_conferenda = FALSUM;
+
 /* cursus sanandi: sanationes et numeri earum */
 nomen structura {
     CursusFabricae  cursus;
@@ -2096,8 +2099,10 @@ _sanare_seram_capere (
     {
         auditus_sanandi = (i32)strtoul(n, NIHIL, X);
     }
-    c->sutura.auditus  = auditus_sanandi;
-    c->sutura.audita   = tabula_dispersa_creare_chorda(c->piscina, 16);
+    c->sutura.auditus            = auditus_sanandi;
+    c->sutura.audita             = tabula_dispersa_creare_chorda(
+        c->piscina, 16);
+    c->sutura.vestigia_conferre  = vestigia_conferenda;
     redde VERUM;
 }
 
@@ -2736,6 +2741,12 @@ _probare_optiones (
         {
             auditus_sanandi = I;
         }
+        alioquin si (strcmp(argv[a], "-conferre") == 0)
+        {
+            /* fabrica-8: quid photographiae vident quod liber non
+             * nominat (et vice versa) - <area>vestigia_collata.txt */
+            vestigia_conferenda = VERUM;
+        }
         alioquin si (strcmp(argv[a], "-machina") == 0)
         {
             suturae_machina = VERUM;
@@ -2759,7 +2770,7 @@ _probare_optiones (
     si (p->titulus == NIHIL)
     {
         fprintf(stderr, "usus: bin/fabrica probare [-vis] [-audit] "
-            "[-machina] COMPOSITUM [FILTRUM...]\n");
+            "[-conferre] [-machina] COMPOSITUM [FILTRUM...]\n");
         redde FALSUM;
     }
     redde VERUM;
