@@ -196,6 +196,109 @@ sonus_colum_proximum (
 
 
 /* ================================================================
+ * RESONANS - colum ordinis secundi (biquad, RBJ): gravia, acuta,
+ * media; acumen = Q (0.707 planum, magnum = resonantia acuta)
+ * ================================================================ */
+
+nomen enumeratio {
+    SONUS_RESONANS_GRAVIA = 0,  /* low-pass; apex +20 log10(Q) dB
+                                 * ad limitem */
+    SONUS_RESONANS_ACUTA,       /* high-pass */
+    SONUS_RESONANS_MEDIA        /* band-pass, apex 0 dB ad medium
+                                 * (formans) */
+} SonusGenusResonantis;
+
+nomen structura {
+    SonusGenusResonantis genus;
+                     f32 b0, b1, b2, a1, a2;   /* a0 = 1 */
+                     f32 x1, x2, y1, y2;       /* memoria */
+} SonusResonans;
+
+/* frequentia (cycli/s; <= 0 = transit), acumen (<= 0 = 0.707).
+ * Memoria reponitur */
+vacuum
+sonus_resonans_parare (
+           SonusResonans* c,
+    SonusGenusResonantis  genus,
+                     f32  frequentia,
+                     f32  acumen);
+
+/* coefficientes novi SINE memoria reposita (verrere sine crepitu) */
+vacuum
+sonus_resonans_ponere (
+    SonusResonans* c,
+              f32  frequentia,
+              f32  acumen);
+
+f32
+sonus_resonans_proximum (
+    SonusResonans* c,
+              f32  x);
+
+
+/* ================================================================
+ * REVERBERATIO - aula (Freeverb, Jezar 2000, dominii publici): per
+ * canalem VIII filtra pectinis parallela cum hebetatione, deinde IV
+ * allpass in serie; canalis dexter moris paulo longioribus (stereo).
+ * Morae ex 44.1 kHz ad SONUS_FREQUENTIA scalatae. Sine allocatione:
+ * lineae in structura (~135 KB)
+ * ================================================================ */
+
+#define SONUS_REVERBERATIO_PECTINES   VIII  /* filtra pectinis */
+#define SONUS_REVERBERATIO_TRANSITUS  IV    /* allpass in serie */
+#define SONUS_PECTEN_MAXIMUS          MDCCC /* mora maxima, exempla */
+#define SONUS_TRANSITUS_MAXIMUS       DCXL
+
+nomen structura {
+    f32 aula;        /* 0..1 magnitudo aulae (cauda longior) */
+    f32 mollities;   /* 0..1 acuta in cauda absorbentur */
+    f32 latitudo;    /* 0 mono .. 1 stereo plenum */
+} SonusReverberatioForma;
+
+nomen structura {
+    f32 linea[SONUS_PECTEN_MAXIMUS];
+    i32 longitudo;
+    i32 locus;
+    f32 memoria;     /* filtrum hebetationis */
+} SonusPecten;
+
+nomen structura {
+    f32 linea[SONUS_TRANSITUS_MAXIMUS];
+    i32 longitudo;
+    i32 locus;
+} SonusTransitus;
+
+nomen structura {
+       SonusPecten pectines[II][SONUS_REVERBERATIO_PECTINES];
+    SonusTransitus transitus[II][SONUS_REVERBERATIO_TRANSITUS];
+               f32 retro;        /* lucrum reditus pectinum */
+               f32 hebetatio;
+               f32 umidum_proprium;  /* canalis suus */
+               f32 umidum_alienum;   /* canalis alter (latitudo) */
+} SonusReverberatio;
+
+/* memoria nullata */
+vacuum
+sonus_reverberationem_parare (
+                   SonusReverberatio* r,
+     constans SonusReverberatioForma* forma);
+
+/* forma nova SINE memoria reposita */
+vacuum
+sonus_reverberationem_ponere (
+                   SonusReverberatio* r,
+     constans SonusReverberatioForma* forma);
+
+/* mono intrat, stereo exit (umidum solum, sine sicco) */
+vacuum
+sonus_reverberationis_proximum (
+    SonusReverberatio* r,
+                  f32  ingressus,
+                  f32* sinistrum,
+                  f32* dextrum);
+
+
+/* ================================================================
  * RETENTIO et COMMINUTIO - asperitas digitalis ('8-bit' ut parametra)
  * ================================================================ */
 

@@ -320,30 +320,6 @@ harmonia_scribere (
     redde bene;
 }
 
-/* tempus mensurae: 1/denominator; metra composita: tres octavae */
-interior s64
-_tempus (
-    constans Carmen* carmen,
-                s64  initium)
-{
-    constans CarmenMetrum* m = &carmen->metra[ZEPHYRUM];
-                      i32  i;
-
-    per (i = ZEPHYRUM; i < carmen->numerus_metrorum; i++)
-    {
-        si (carmen->metra[i].pulsus <= initium)
-        {
-            m = &carmen->metra[i];
-        }
-    }
-    si (   m->denominator     == VIII && m->numerator > III
-        && m->numerator % III == ZEPHYRUM)
-    {
-        redde (s64)III * CANTUS_PULSUS_INTEGRAE / VIII;
-    }
-    redde (s64)CANTUS_PULSUS_INTEGRAE / (s64)m->denominator;
-}
-
 interior b32
 _aequales (
     constans Harmonia* a,
@@ -361,7 +337,7 @@ harmonia_lineam_scribere (
                   s64  finis,
     ChordaAedificator* textus)
 {
-    s64 tempus  = _tempus(carmen, initium);
+    s64 tempus  = carmen_tempus_mensurae(carmen, initium);
     s64 t       = initium;
     b32 bene    = VERUM;
     b32 primum  = VERUM;

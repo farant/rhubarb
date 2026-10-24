@@ -28,8 +28,8 @@
  * aequalia sequentia in signum unum cum valore (D:2 G:2).
  *
  * USUS:
- *   forma.additae_titulus = "harmonia";
- *   forma.addita          = harmonia_lineam_scribere;
+ *   forma.additae[0].titulus  = "harmonia";
+ *   forma.additae[0].scribere = harmonia_lineam_scribere;
  *   (vacuum)partitura_scribere(carmen, &forma, aedificator);
  */
 /* <aedilis corpus="lib/harmonia.c"/> */
@@ -99,7 +99,8 @@ harmonia_scribere (
                    s64  pulsus,
      ChordaAedificator* textus);
 
-/* linea addita partiturae (PartituraForma.addita): ctx non adhibetur */
+/* linea addita partiturae (PartituraAddita.scribere): ctx non
+ * adhibetur */
 b32
 harmonia_lineam_scribere (
                vacuum* ctx,

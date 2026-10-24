@@ -9,6 +9,7 @@
  *
  * NOTA: capita systematis ANTE latina.h ('character' macro cum
  * CoreFoundation confligit). */
+#include "postulata_macos.h"   /* PRIMUM: ante capita Apple */
 #import <Security/Security.h>
 #include <CoreFoundation/CoreFoundation.h>
 #include <string.h>

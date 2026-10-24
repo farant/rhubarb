@@ -4,7 +4,10 @@
  * Cor systematis soni (project-specs/sonus-spec.md §IV, §VI). Omnis
  * sonus per mixturam sonat: voces (tabula immutabilis aut sonitus
  * vivus) -> greges (effectus, musica, interfacies) -> summa -> exitus
- * stereo intertextus.
+ * stereo intertextus. REVERBERATIO: voces x missio (mono) in aulam
+ * communem (sonus.h), cuius exitus stereo in summam ante lucrum
+ * summae additur - mutus summae eam quoque tacet; mutus gregis non
+ * (cauda in aula communi vivit).
  *
  * DUAE PARTES, quia auditus (S3) eas in filis duobus ponet:
  *   Mixtura        - status vocum; iubere / reddere / nuntium_legere.
@@ -90,9 +93,12 @@ nomen enumeratio {
     MIXTURA_IUSSUM_TIBIAM,        /* vox tibiae: parametra + nota,
                                    * porta aperta */
     MIXTURA_IUSSUM_NOTAM_PONERE,  /* nota tibiae cum clivo (quadra) */
-    MIXTURA_IUSSUM_PORTAM_CLAUDERE /* tibia: remissio, deinde
+    MIXTURA_IUSSUM_PORTAM_CLAUDERE, /* tibia: remissio, deinde
                                    * VOX_FINITA naturalis; vox alia:
                                    * irritum */
+    MIXTURA_IUSSUM_REVERBERATIONEM_PONERE /* aula: forma (statim, sine
+                                   * memoria reposita) et lucrum
+                                   * reditus (cum clivo) */
 } MixturaIussumGenus;
 
 /* Campi plani (non unio): quisque genus suos legit, ceteros ignorat.
@@ -107,6 +113,9 @@ nomen structura {
                    f32 lucrum;      /* lineare, >= 0 */
                    f32 positio;     /* -1 sinistra .. 0 medium .. +1
                                      * dextra (potentia constans) */
+                   f32 missio;      /* voces: pars ad reverberationem
+                                     * 0..1 (cum clivo in
+                                     * vocem_ponere) */
                    b32 mutus;       /* gregem_ponere: tempus servat,
                                      * exitum nullat */
                    i32 clivus;      /* quadra transitus lucri /
@@ -123,10 +132,12 @@ nomen structura {
     /* tibia (incipere: tibia + nota; notam_ponere: nota + clivus) */
         TibiaParametra tibia;
                    f32 nota;        /* MIDI, fractiones licent */
+    /* reverberationem_ponere (lucrum = reditus) */
+    SonusReverberatioForma reverberatio;
 } MixturaIussum;
 
-/* omnia nulla, deinde: genus, momentum, lucrum 1, positio 0, grex
- * EFFECTUS, clivus 0 */
+/* omnia nulla, deinde: genus, momentum, lucrum 1, positio 0, missio
+ * 0, grex EFFECTUS, clivus 0 */
 vacuum
 mixtura_iussum_parare (
           MixturaIussum* iussum,
@@ -216,6 +227,12 @@ mixtura_nuntium_legere (
 /* quadra reddita ab creatione */
 s64
 mixtura_momentum (
+    constans Mixtura* m);
+
+/* cauda reverberationis adhuc sonat (exitus umidus, post lucrum
+ * reditus, supra -96 dB intra C ms ultimos) */
+b32
+mixtura_cauda_vivit (
     constans Mixtura* m);
 
 

@@ -35,8 +35,8 @@
  * USUS:
  *   PartituraForma f;
  *   memset(&f, 0, magnitudo(f));  f.prima = IX;  f.ultima = XII;
- *   f.additae_titulus = "harmonia";              (* linea addita, *)
- *   f.addita = harmonia_lineam_scribere;         (* harmonia.h *)
+ *   f.additae[0].titulus  = "harmonia";    (* lineae additae: *)
+ *   f.additae[0].scribere = harmonia_lineam_scribere;    (* harmonia *)
  *   si (partitura_scribere(carmen, &f, aedificator)) ...
  */
 /* <aedilis corpus="lib/partitura.c"/> */
@@ -55,18 +55,24 @@ nomen structura {
                             * MIDI LIX) */
 } PartituraNota;
 
+#define PARTITURA_ADDITAE IV
+
+/* linea addita sub partibus (analysis: harmonia.h, explicatio.h,
+ * functio.h): titulus in columna titulorum; scribere mensuram [initium,
+ * finis) sine titulo et sine '\n'; FALSUM = memoria deest */
+nomen structura {
+    constans character* titulus;   /* NIHIL = nulla (et sequentes) */
+    b32 (*scribere)(vacuum* ctx, constans Carmen* carmen, s64 initium,
+                    s64 finis, ChordaAedificator* textus);
+    vacuum* ctx;
+} PartituraAddita;
+
 nomen structura {
        i32 prima;    /* mensura prima (1 = prima carminis; 0 = 1) */
        i32 ultima;   /* 0 = ultima carminis */
     chorda pars;     /* vacua = partes omnes */
-    /* linea addita per mensuram, post partes (analysis: harmonia.h);
-     * titulus in columna titulorum partium; NIHIL = nulla. Functio
-     * mensuram [initium, finis) pulsuum scribit, sine titulo et sine
-     * '\n'; FALSUM = memoria deest */
-    constans character* additae_titulus;
-    b32 (*addita)(vacuum* ctx, constans Carmen* carmen, s64 initium,
-                  s64 finis, ChordaAedificator* textus);
-    vacuum* additae_ctx;
+    /* lineae additae per mensuram, post partes, ordine scriptae */
+    PartituraAddita additae[PARTITURA_ADDITAE];
 } PartituraForma;
 
 /* orthographia notae; clavis ex mappa carminis ad pulsum (absolutum) */
@@ -85,6 +91,15 @@ partitura_notam_scribere (
     constans CarmenNota* nota,
                     s64  pulsus,
       ChordaAedificator* textus);
+
+/* inversa partitura_notam_scribere: "Bb4", "F#5", "C##3", "C-1" ->
+ * orthographia (littera 'A'..'G') et MIDI in *altitudo. FALSUM: forma
+ * mala (etiam '@titulus'), extra 0..127 */
+b32
+partitura_notam_legere (
+            chorda  textus,
+     PartituraNota* nota,
+               i32* altitudo);
 
 /* ambitus partis: nota infima et summa altitudinis (sonitus '@'
  * omittuntur - altitudine carent), cum pulsibus carminis ad

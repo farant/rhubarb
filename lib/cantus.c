@@ -515,6 +515,39 @@ cantus_legere (
     redde VERUM;
 }
 
+b32
+cantus_status_ad (
+          chorda  textus,
+             i32  offset,
+    CantusStatus* status,
+    CantusVitium* vitium)
+{
+    CantusLector l;
+          chorda praefixum;
+
+    si (offset > textus.mensura)
+    {
+        vitium->offset  = offset;
+        vitium->causa   = "offset ultra textum";
+        redde FALSUM;
+    }
+    /* transitus numerandi (notae, tempora, lineae NIHIL) super
+     * praefixum: idem lector, nihil allocatur */
+    praefixum.datum    = textus.datum;
+    praefixum.mensura  = offset;
+    _lectorem_parare(&l, praefixum, NIHIL, NIHIL, NIHIL, vitium);
+    si (!_currere(&l))
+    {
+        redde FALSUM;
+    }
+    status->octava       = l.octava;
+    status->ordinaria    = l.ordinaria;
+    status->lucrum       = (i32)(l.lucrum * (f32)C + 0.5f);
+    status->praeparatum  = l.praeparatum;
+    status->pulsus       = l.pulsus_totus;
+    redde VERUM;
+}
+
 
     /* ==================================================
      * IUSSA - cantilena -> iussa mixturae

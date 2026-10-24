@@ -11,10 +11,17 @@
  *                licent (harmonica, melodica)                     ORD.
  *   ambitus      nota extra ambitum instrumenti (ordinarius:
  *                aether 36..96, quadrans 48..96, triangulum
- *                24..72; ignotum tacet)                           ORD.
+ *                24..72, chorda 28..88, campana 48..96; ignotum
+ *                tacet)                                           ORD.
  *   dissonantia  secunda, septima, tritonus (etiam compositi)
  *                inter notas partium diversarum sonantes ad
- *                tempus forte                                     -
+ *                tempus forte, NISI explicata (explicatio.h): nota
+ *                par aliena explicata (transitus, vicinus, innixa,
+ *                anticipatio, effugiens), suspensio / retardatio /
+ *                septima resoluta, aut ambae acordi nominati (G#dim
+ *                tritonus suus). Causa nominatur: nota sine
+ *                explicatione, suspensio / retardatio / septima non
+ *                resoluta, acordum sine nomine                    ORD.
  *   parallelae   quintae aut octavae parallelae inter duas partes:
  *                initia sequentia, ambae motae, eodem sensu       -
  *   saltus       saltus melodicus > saltus_maximus semitonia (XII
@@ -91,9 +98,12 @@ nomen structura {
      * prior partis; NIHIL aliter */
     constans CarmenNota* nota_prior;
     constans CarmenNota* nota_altera_prior;
+    /* dissonantia: cur non explicata (statica); NIHIL aliter */
+    constans character* causa;
 } CensuraInventum;
 
-/* ORD. activae (lineae, clavis, ambitus), ambitus ordinarius */
+/* ORD. activae (lineae, clavis, ambitus, dissonantia), ambitus
+ * ordinarius */
 vacuum
 censura_ordinaria (
     CensuraForma* forma);
@@ -128,6 +138,8 @@ censura_iudicare (
 /* linea una cum '\n':
  *   mensura 3 +480 melodia: G#4 extra clavem c maior (frustum 0,
  *   offset 41)
+ *   mensura 14 melodia/bassus: G5 contra A2, septima - septima non
+ *   resoluta (frustum 0, offset 61)
  * FALSUM si memoria deest */
 b32
 censura_inventum_scribere (

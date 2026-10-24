@@ -1,0 +1,118 @@
+/* explicatio.h - Harmonia explicata: fenestrae, acorda sine notis
+ * alienis, nota quaeque cum genere suo (desideratum ...DDCMRP)
+ *
+ * FENESTRA: dum bassus TENET - classis notae infimae sonantis
+ * (partes non mutae, sine '@') eadem manet; linea mensurae fenestram
+ * secat. Bassus per octavas saliens (E2 E3 E2 E3) fenestra una est.
+ *
+ * ACORDUM fenestrae: classes omnium notarum sonantium, notis
+ * alienis remotis - pars minima notarum candidatarum (forma
+ * melodica alienae) removetur ut harmonia_ex_classibus acordum
+ * NOMINET; aequales: plures notae acordi, deinde trias/septima ante
+ * suspensam ante dyadem, deinde radix = bassus (Bb A G super C E: A
+ * removetur, C7 - non Bb, Am7/C). Bassus numquam removetur. Dyas
+ * tritoni = septima dominantis implicita, eadem magnitudine
+ * remotionis ac nomina (radix in clave: [G# D] in a minor -> E7,
+ * implicitum). Fenestra sine nomine: classes omnes praeter bassum
+ * alienae (genus per formam).
+ *
+ * BASSUS TRANSIENS: nota bassi gradu intrans et exiens (transitus aut
+ * vicinus in parte sua) cuius superiores omnes in acordo fenestrae
+ * prioris (contiguae, nominatae) sunt, acordum id servat cum basso suo
+ * (C D E sub C E tentis: "C/D", D transitus). Superiores mutati (I
+ * V6 I, sexta-quarta transiens) acordum novum nominant ut solet.
+ *
+ * SEGMENTUM: nota in fenestra una (nota per fenestras plures sonans
+ * segmenta plura habet - suspensio sic videtur). Genus per motum in
+ * parte sua (nota prior, proxima; pausa motum frangit):
+ *   acordi       classis in acordo
+ *   septima      septima acordi; resoluta = proxima gradu descendit,
+ *                aut transiens sursum (C D E super E7: gradu intrat
+ *                et exit eadem directione)
+ *   transitus    gradu intrat, gradu exit, eadem directione
+ *   vicinus      gradu exit, gradu redit ad eandem
+ *   appoggiatura saltu intrat, gradu exit
+ *   suspensio    altitudo eadem ex segmento priore ubi acordi erat;
+ *                resoluta = proxima gradu DESCENDIT
+ *   retardatio   ut suspensio, gradu ASCENDIT
+ *   anticipatio  proxima eadem altitudo, acordi in fenestra proxima
+ *   escapata     gradu intrat, saltu contrario exit
+ *   ignota       aliena sine forma
+ * gradus = I aut II semitonia; saltus >= III. Ordo probationis:
+ * suspensio, transitus, vicinus, appoggiatura, escapata, anticipatio.
+ * Tempus forte NON hic iudicatur (censura id facit, segmenti pulsus
+ * datur). Pedalis (bassus sub acordis mutatis) nondum.
+ */
+/* <aedilis corpus="lib/explicatio.c"/> */
+#ifndef EXPLICATIO_H
+#define EXPLICATIO_H
+
+#include "latina.h"
+#include "piscina.h"
+#include "chorda_aedificator.h"
+#include "carmen.h"
+#include "harmonia.h"
+
+nomen enumeratio {
+    EXPLICATIO_ACORDI,
+    EXPLICATIO_SEPTIMA,
+    EXPLICATIO_TRANSITUS,
+    EXPLICATIO_VICINUS,
+    EXPLICATIO_INNIXA,
+    EXPLICATIO_SUSPENSIO,
+    EXPLICATIO_RETARDATIO,
+    EXPLICATIO_ANTICIPATIO,
+    EXPLICATIO_EFFUGIENS,
+    EXPLICATIO_IGNOTA
+} ExplicatioGenus;
+
+nomen structura {
+         s64 initium;      /* pulsus carminis */
+         s64 finis;
+    Harmonia harmonia;     /* sine notis alienis */
+         b32 implicitum;   /* septima ex tritono sola */
+} ExplicatioFenestra;
+
+nomen structura {
+    constans CarmenNota* nota;
+                    i32  pars;        /* index in carmine */
+                    s64  pulsus;      /* initium notae, carminis */
+                    s64  initium;     /* segmenti (>= pulsus) */
+                    i32  fenestra;
+        ExplicatioGenus  genus;
+                    b32  resoluta;    /* septima, suspensio,
+                                       * retardatio, appoggiatura */
+} ExplicatioSegmentum;
+
+nomen structura {
+     ExplicatioFenestra* fenestrae;     /* ordine temporis */
+                    i32  numerus_fenestrarum;
+    ExplicatioSegmentum* segmenta;      /* ordine (initium, pars) */
+                    i32  numerus_segmentorum;
+} Explicatio;
+
+/* carmen totum. FALSUM: memoria deest */
+b32
+explicatio_carminis (
+    constans Carmen* carmen,
+            Piscina* piscina,
+         Explicatio* explicatio);
+
+/* "transitus", "septima" ... (statica) */
+constans character*
+explicatio_titulus (
+    ExplicatioGenus genus);
+
+/* linea addita partiturae (PartituraAddita.scribere, ctx =
+ * Explicatio*):
+ * per fenestram "C7:2. (A tr.)" - notae alienae abbreviatae, '*'
+ * implicitum, '!' non resoluta */
+b32
+explicatio_lineam_scribere (
+               vacuum* ctx,
+      constans Carmen* carmen,
+                  s64  initium,
+                  s64  finis,
+    ChordaAedificator* textus);
+
+#endif /* EXPLICATIO_H */

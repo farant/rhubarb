@@ -23,7 +23,18 @@
      quadrans, bassus triangulum; ad F maior per C7 (mensurae 7-8) et
      domum per A7; ritardando gradibus 63, 54. Censura +dissonantia
      septimas duas in mensura 7 nominat - consultas (septima C7
-     descendit, appoggiatura). -->
+     descendit, appoggiatura).
+
+     COMPLETORIUM: nostrum (Claudius, 2026-10-24, instrumentis novis et
+     aula compositum; Franus auscultavit): D minor, 4/4, 66, XVI
+     mensurae in aula (0.8). Mensurae 1-8 cantus solus - schola
+     (vocalis a) supra isonem (vocalis o), campanae tubulares; 9-16
+     melodia in fistula duabus octavis altius (per -copiare +14),
+     cembalo arpeggiis, pizzicato bassus: i III iv VII i III V7 I -
+     tertia Picardiae (A7 -> D maior), schola et ison 'Amen' in
+     ultima. Censura +parallelae: quintae et octavae vocum
+     extremarum emendatae; F# ultimae extra clavem nominatur -
+     consultum (desideratum ...CSJZHF). -->
 <carmina>
 
   <carmen titulus="korobeiniki" tempus="144" metrum="4/4"
@@ -70,6 +81,95 @@
     <pars titulus="bassus" instrumentum="triangulum" lucrum="0.65">
       <frustum mensura="1">
         <textus!>o3 d2. | o2 b-2. | g2 a4 | a2. | b-2. | g2. | o3 c2. | o2 f2. | g2. | a2. | o3 d2. | o2 a2 f4 | g2 a4 | a2. | a2. | d2.</textus>
+      </>
+    </>
+  </>
+
+  <carmen titulus="pastorale" tempus="90" metrum="6/8" clavis="g maior">
+    <tempus mensura="15" valor="80"/>
+    <tempus mensura="16" valor="68"/>
+    <pars titulus="melodia" instrumentum="aether" lucrum="0.55">
+      <frustum mensura="1">
+        <textus!>o5 d4 g8 b4 a8 | g4 b8 a4. | e4 g8 g4 d8 | f#4 e8 d4. | d4 g8 b4 >d8 | <b4 g8 >c4. | c4 <a8 f#4 a8 | g2. | e4 g8 >c4. | <b4 a8 g4 b8 | >c4 <b8 >d4. | <b4 g8 a4. | b4 g8 >e4 d8 | <b4 >d8 <g4 b8 | a4 >c8< a4 f#8 | g2.</textus>
+      </>
+    </>
+    <pars titulus="media" instrumentum="quadrans" lucrum="0.30">
+      <frustum mensura="1">
+        <textus!>o4 b4. g4. | b4. f#4. | g4. b4. | f#2. | b4. g4. | g4. e4. | e4. d4. | b2. | g4. e4. | d4. e4. | e4. f#4. | g4. f#4. | b4. g4. | g4. e4. | e4. f#4. | b2.</textus>
+      </>
+    </>
+    <pars titulus="bassus" instrumentum="triangulum" lucrum="0.65">
+      <frustum mensura="1">
+        <textus!>o2 g2. | g4. >d4. | c4. <g4. | >d2. | <g2. | >e4. c4. | <a4. >d4. | <g2. | >c2. | <g4. >e4. | <a4. >d4. | <g4. >d4. | <g4. >c4. | <g4. >e4. | c4. d4. | <g2.</textus>
+      </>
+    </>
+  </>
+
+  <carmen titulus="vigilia" tempus="66" metrum="4/4" clavis="e minor">
+    <tempus mensura="15" valor="60"/>
+    <tempus mensura="16" valor="50"/>
+    <pars titulus="melodia" instrumentum="campana" lucrum="0.6">
+      <frustum mensura="1">
+        <textus!>o5 b2 a4 g4 | e2. d4 | c2 <b4 a4 | >d#2.< r4 | o5 b2 a4 g4 o4 | o5 a2. g4 o4 | o5 f#2 a4 g4 o4 | o5 e1 o4 | o5 b4 g4 >d2 | o5 f#4 d4 a2 o6 | o5 e4 c4 g2 o6 | <d#2. r4 | o5 b2 a4 g4 | o5 a2. g4 | o5 f#2 a4 g4 | o5 e1</textus>
+      </>
+    </>
+    <pars titulus="chorda" instrumentum="chorda" lucrum="0.5">
+      <frustum mensura="1">
+        <textus!>o3 e8 b8 >e8 g8 b8 g8 e8 <b8 | o3 c8 g8 o4 c8 e8 g8 e8 c8 o3 g8 | o3 a8 o4 e8 a8 o5 c8 e8 c8 o4 a8 e8 o3 | o3 b8 o4 f#8 b8 o5 d#8 f#8 d#8 o4 b8 f#8 o3 | o3 e8 b8 o4 e8 g8 b8 g8 e8 o3 b8 | o3 a8 o4 e8 a8 o5 c8 e8 c8 o4 a8 e8 o3 | o3 b8 o4 f#8 b8 o5 d#8 f#8 d#8 o4 b8 f#8 o3 | o3 e8 b8 o4 e8 g8 b8 g8 e8 o3 b8 | o3 g8 o4 d8 g8 b8 o5 d8 o4 b8 g8 d8 o3 | o3 d8 a8 o4 d8 f#8 a8 f#8 d8 o3 a8 | o3 c8 g8 o4 c8 e8 g8 e8 c8 o3 g8 | o3 b8 o4 f#8 b8 o5 d#8 f#8 d#8 o4 b8 f#8 o3 | o3 e8 b8 o4 e8 g8 b8 g8 e8 o3 b8 | o3 a8 o4 e8 a8 o5 c8 e8 c8 o4 a8 e8 o3 | o3 b8 o4 f#8 b8 o5 d#8 f#8 d#8 o4 b8 f#8 o3 | o3 e8 b8 o4 e8 g8 b8 g8 e8 o3 b8</textus>
+      </>
+    </>
+    <pars titulus="bassus" instrumentum="triangulum" lucrum="0.55">
+      <frustum mensura="1">
+        <textus!>o2 e1 | c1 | a1 | b1 | e1 | a1 | b1 | e1 | g1 | o3 d1 | c1 | o2 b1 | e1 | a1 | b1 | e1</textus>
+      </>
+    </>
+  </>
+
+  <carmen titulus="completorium" tempus="66" metrum="4/4" clavis="d minor">
+    <instrumentum titulus="ison" basis="schola" vocalis="o"
+        amplitudo="0.3" vibratus="0.05"/>
+    <instrumentum titulus="pizzicato_gravis" basis="pizzicato"
+        decrementum="0.6" amplitudo="1"/>
+    <reverberatio aula="0.8" mollities="0.45" latitudo="1" lucrum="0.3"/>
+    <pars titulus="cantus" instrumentum="schola" reverberatio="0.55">
+      <frustum mensura="1">
+        <textus!>o3 d4 e4 f4 g4 | a2 g4 f4 | g4 a4 b-4 a4 | g2 e2 | f4 e4 d4 e4 | f2 a2 | g4 f4 e2 | d1</textus>
+      </>
+      <frustum mensura="16">
+        <textus!>o3 d1</textus>
+      </>
+    </>
+    <pars titulus="ison" instrumentum="ison" positio="-0.3"
+        reverberatio="0.45">
+      <frustum mensura="1">
+        <textus!>o3 d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1</textus>
+      </>
+      <frustum mensura="16">
+        <textus!>o3 d1</textus>
+      </>
+    </>
+    <pars titulus="campanae" instrumentum="campanae_tubulares" lucrum="0.7"
+        positio="0.5" reverberatio="0.7">
+      <frustum mensura="1">
+        <textus!>o4 d2 r2 | r1 | r1 | r1 | o4 a2 r2 | r1 | r1 | r1 | o4 d2 r2 | r1 | r1 | r1 | o4 a2 r2 | r1 | r1 | o4 d1</textus>
+      </>
+    </>
+    <pars titulus="fistula" instrumentum="fistula" lucrum="0.55"
+        positio="0.25" reverberatio="0.4">
+      <frustum mensura="9">
+        <textus!>o5 d4 e4 f4 g4 | o5 a2 g4 f4 | o5 g4 a4 b-4 a4 | o5 g2 e2 | o5 f4 e4 d4 e4 | o5 f2 a2 | o5 g4 f4 e2 | o5 d1</textus>
+      </>
+    </>
+    <pars titulus="cembalo" instrumentum="cembalo" lucrum="0.75"
+        positio="-0.35" reverberatio="0.25">
+      <frustum mensura="9">
+        <textus!>o4 d8 f8 a8 f8 d8 f8 a8 f8 | c8 f8 a8 f8 a8 f8 c8 f8 | o3 b-8 o4 d8 g8 d8 o3 b-8 o4 d8 b-8 g8 | c8 e8 g8 e8 c8 e8 g8 e8 | d8 f8 a8 f8 d8 f8 a8 f8 | c8 f8 a8 f8 f8 a8 c8 a8 | c#8 e8 a8 e8 c#8 e8 a8 c#8 | d8 f#8 a8 f#8 d2</textus>
+      </>
+    </>
+    <pars titulus="bassus" instrumentum="pizzicato_gravis" lucrum="0.8"
+        positio="0.1" reverberatio="0.15">
+      <frustum mensura="9">
+        <textus!>o3 d2 o2 a2 | o3 f2 c2 | o2 g1 | o3 c2 o2 g2 | o3 d2 o2 a2 | o3 f2 c2 | o2 a1 | o3 d1</textus>
       </>
     </>
   </>

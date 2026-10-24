@@ -278,6 +278,19 @@ _via_temporaria (
     redde chorda_ut_cstr(chorda_aedificator_finire(a), piscina);
 }
 
+/* signum (chorda) desinit in suffixo? */
+interior b32
+_terminatur_signo (
+                chorda  signum,
+    constans character* suffixum)
+{
+    memoriae_index n = strlen(suffixum);
+
+    redde (memoriae_index)signum.mensura >= n
+        && memcmp(signum.datum + (memoriae_index)signum.mensura - n,
+                  suffixum, n) == ZEPHYRUM;
+}
+
 /* Cursus minoritatis: clang -MM per system(), plagula temporalis.
  * Directivae redditae = viae IAM RESOLUTAE (ex_oraculo). */
 interior b32
@@ -426,6 +439,14 @@ _extractor_oraculi (
                         - (memoriae_index)signum.mensura,
                     signum.datum,
                     (memoriae_index)signum.mensura) == 0)
+            {
+                perge;
+            }
+            /* clang 21 (SDK macOS 27): -MM SDKSettings.json SDK
+             * (lectum pro disponibilitate, non #include) omni fonti
+             * addit - non caput: praeterire (porta aedilis CDXIV
+             * 'ORACULUM SOLUM' alias, 2026-10-24) */
+            si (_terminatur_signo(signum, "/SDKSettings.json"))
             {
                 perge;
             }

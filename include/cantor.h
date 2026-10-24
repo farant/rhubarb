@@ -23,8 +23,9 @@
  * nunc, nondum incepta SISTERE ad initium suum (clivo 0: nullum
  * exemplum sonat).
  *
- * Instrumenta per resolutorem (CantorResolutor): instrumentum partis ->
- * TibiaParametra, '@titulus' -> SonitusParametra; patches usoris postea
+ * Instrumenta: primum carminis ipsius (carmen_instrumentum: carminis,
+ * libri), deinde per resolutorem (CantorResolutor): instrumentum partis
+ * -> TibiaParametra, '@titulus' -> SonitusParametra; patches usoris
  * sine mutatione cantoris. NIHIL redditum = pars aut nota tacet.
  *
  * USUS:

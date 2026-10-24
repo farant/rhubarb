@@ -345,6 +345,79 @@ partitura_notam_scribere (
     redde s.bene;
 }
 
+b32
+partitura_notam_legere (
+            chorda  textus,
+     PartituraNota* nota,
+               i32* altitudo)
+{
+          s32 i = ZEPHYRUM;
+          s32 n = (s32)textus.mensura;
+          s32 g;
+          s32 alteratio  = ZEPHYRUM;
+          s32 octava     = ZEPHYRUM;
+          b32 negativa   = FALSUM;
+          s32 digiti     = ZEPHYRUM;
+          s32 m;
+    character x;
+
+    si (n < II)
+    {
+        redde FALSUM;
+    }
+    x = (character)textus.datum[ZEPHYRUM];
+    x = (x >= 'a' && x <= 'g') ? (character)(x - 'a' + 'A') : x;
+    si (x < 'A' || x > 'G')
+    {
+        redde FALSUM;
+    }
+    g = (x - 'A' + V) % VII;   /* A -> 5 */
+    per (i = I; i < n && textus.datum[i] == '#'; i++)
+    {
+        alteratio++;
+    }
+    si (alteratio == ZEPHYRUM)
+    {
+        per (; i < n && textus.datum[i] == 'b'; i++)
+        {
+            alteratio--;
+        }
+    }
+    si (alteratio > II || alteratio < -II)
+    {
+        redde FALSUM;
+    }
+    si (i < n && textus.datum[i] == '-')
+    {
+        negativa = VERUM;
+        i++;
+    }
+    per (; i < n && textus.datum[i] >= '0' && textus.datum[i] <= '9';
+         i++)
+    {
+        si (++digiti > I)
+        {
+            redde FALSUM;
+        }
+        octava = (s32)(textus.datum[i] - '0');
+    }
+    si (i != n || digiti == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    octava  = negativa ? -octava : octava;
+    m       = (octava + I) * XII + SEMITONIA[g] + alteratio;
+    si (m < ZEPHYRUM || m > CXXVII)
+    {
+        redde FALSUM;
+    }
+    nota->littera    = LITTERAE[g];
+    nota->alteratio  = alteratio;
+    nota->octava     = octava;
+    *altitudo        = (i32)m;
+    redde VERUM;
+}
+
 PartituraAmbitus
 partitura_ambitus (
     constans CarmenPars* pars)
@@ -564,12 +637,20 @@ _mensurae (
     redde m;
 }
 
-interior b32
-_additam_habet (
+/* lineae additae validae (ordine, ad primam sine titulo) */
+interior i32
+_additae (
     constans PartituraForma* forma)
 {
-    redde forma != NIHIL && forma->addita != NIHIL
-        && forma->additae_titulus != NIHIL;
+    i32 n = ZEPHYRUM;
+
+    dum (   forma                      != NIHIL && n < PARTITURA_ADDITAE
+         && forma->additae[n].titulus  != NIHIL
+         && forma->additae[n].scribere != NIHIL)
+    {
+        n++;
+    }
+    redde n;
 }
 
 interior b32
@@ -625,10 +706,12 @@ partitura_scribere (
             }
         }
     }
-    si (   _additam_habet(forma)
-        && (i32)strlen(forma->additae_titulus) > latitudo)
+    per (i = ZEPHYRUM; i < _additae(forma); i++)
     {
-        latitudo = (i32)strlen(forma->additae_titulus);
+        si ((i32)strlen(forma->additae[i].titulus) > latitudo)
+        {
+            latitudo = (i32)strlen(forma->additae[i].titulus);
+        }
     }
     si (   inventae == ZEPHYRUM && forma != NIHIL
         && forma->pars.mensura > ZEPHYRUM)
@@ -697,15 +780,16 @@ partitura_scribere (
             _partem_scribere(&s, carmen, p, initium, finis);
             _character(&s, '\n');
         }
-        si (_additam_habet(forma))
+        per (i = ZEPHYRUM; i < _additae(forma); i++)
         {
+            constans PartituraAddita* d = &forma->additae[i];
+
             _litterae(&s, "  ");
-            _litterae(&s, forma->additae_titulus);
+            _litterae(&s, d->titulus);
             s.bene = chorda_aedificator_appendere_repetita(textus, ' ',
-                latitudo - (i32)strlen(forma->additae_titulus) + II)
+                latitudo - (i32)strlen(d->titulus) + II) && s.bene;
+            s.bene = d->scribere(d->ctx, carmen, initium, finis, textus)
                 && s.bene;
-            s.bene = forma->addita(forma->additae_ctx, carmen, initium,
-                finis, textus) && s.bene;
             _character(&s, '\n');
         }
     }

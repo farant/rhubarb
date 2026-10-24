@@ -1,4 +1,5 @@
 /* Includere systemae primum ut vitare conflictos macros */
+#include "postulata_macos.h"   /* PRIMUM: ante capita Apple */
 #import <Cocoa/Cocoa.h>
 #import <Carbon/Carbon.h>
 #import <objc/runtime.h>
@@ -1937,7 +1938,8 @@ fenestra_creare_tabulam_pixelorum (
     /* Calculare dimensiones tabulae basatas in altitudine fixa */
     tabula->altitudo = altitudo_fixa;
     tabula->scala = (f32)tabula->fenestra_altitudo / (f32)altitudo_fixa;
-    tabula->latitudo = (i32)(tabula->fenestra_latitudo / tabula->scala);
+    tabula->latitudo = (i32)((f32)tabula->fenestra_latitudo
+                             / tabula->scala);
     tabula->capacitas = tabula->latitudo * tabula->altitudo;
 
     /* Allocare tabulam pixelorum */
@@ -1976,7 +1978,8 @@ fenestra_praesentare_pixela (
             VIII,  /* bits per componentem */
             tabula->latitudo * IV,  /* bytes per ordinem */
             spatium_coloris,
-            kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big
+            (CGBitmapInfo)kCGImageAlphaPremultipliedLast
+                | kCGBitmapByteOrder32Big
         );
 
         /* Creare imaginem ex contextu bitmap */

@@ -626,7 +626,7 @@
   <vocabulum lemma="checksum" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (x-amz-checksum-*; horreum)"/>
   <vocabulum lemma="mib" lingua="anglica" classis="ignotum-permissum" nota="unitas (mebibyte, MXXIV * MXXIV; horreum)"/>
   <vocabulum lemma="amz" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (praefixum x-amz-; horreum)"/>
-  <vocabulum lemma="partialis" lingua="latina" classis="adiectivum" nota="partialis, -e (Latinitas posterior: ex parte) - deletio plurium partialis (horreum)"><forma textus="partialis"/></vocabulum>
+  <vocabulum lemma="partialis" lingua="latina" classis="adiectivum" nota="partialis, -e (Latinitas posterior: ex parte) - deletio plurium partialis (horreum); partialium = genetivus pluralis (tibia: partiales soni additivi)"><forma textus="partialis"/><forma textus="partialium"/></vocabulum>
   <vocabulum lemma="praesignare" lingua="latina" classis="verbum" nota="praesigno, -are (ante signare; Plinius) - URL praesignata S3 (horreum)"><forma textus="praesignare"/><forma textus="praesignata"/><forma textus="praesignatum"/></vocabulum>
   <vocabulum lemma="ttl" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (DNS time-to-live; lib/oceanus.c)"/>
   <vocabulum lemma="csrf" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum (cross-site request forgery; lib/custodia.c)"/>
@@ -1835,6 +1835,17 @@
     <forma textus="aetherophonum" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="aetherophoni" casus="genitivus" numerus="singularis" genus="neutrum"/>
     <forma textus="aetherophono" casus="ablativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
+
+  <vocabulum lemma="acordum" lingua="latina" classis="substantivum" nota="Latina media (acordum/accordum, -i n., Du Cange: concordia, pactum): hic acordum musicum (chord) - notae simul sonantes nominatae (include/harmonia.h, include/explicatio.h); WORDS caret">
+    <forma textus="acordum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="acordi" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="acorda" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="instrumentarium" lingua="latina" classis="substantivum" nota="vox domus (-ium, -ii n., ut armamentarium, sanctuarium): locus instrumentorum - instrumenta musica domus ut data (instrumentarium.stml, include/carmen.h); WORDS caret">
+    <forma textus="instrumentarium" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="instrumentarii" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="instrumentario" casus="ablativus" numerus="singularis" genus="neutrum"/>
   </vocabulum>
 
 </glossarium>
