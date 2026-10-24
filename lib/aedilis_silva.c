@@ -276,7 +276,12 @@ _extractor_oraculi (
     constans character* via_memoriae;
 
     mandatum = chorda_aedificator_creare(piscina, 512);
-    chorda_aedificator_appendere_literis(mandatum, "clang -MM");
+    /* compilator per variantem fontis (sectio oracula, testa-ios T3):
+     * lib/X_ios.m capita UIKit ex SDK iOS trahit */
+    chorda_aedificator_appendere_chorda(mandatum,
+        aedilis_oraculum_eligere(extractoris->configuratio, via,
+            piscina));
+    chorda_aedificator_appendere_literis(mandatum, " -MM");
     numerus = xar_numerus(extractoris->configuratio->inclusa);
     per (i = 0; i < numerus; i++)
     {

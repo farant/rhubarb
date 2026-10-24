@@ -1031,6 +1031,9 @@ principale (
         "fontis trans cursus (build/aedilis/obiecta)");
     argumenta_addere_vexillum(parser, NIHIL, "--aristae",
         "Aristas graphi inclusionum imprimere (includens inclusum)");
+    argumenta_addere_vexillum(parser, NIHIL, "--nexus",
+        "Vexilla nexus clausurae imprimere, unum per lineam "
+        "(regulae aedilis.stml + annotata, deduplicata)");
     argumenta_addere_vexillum(parser, NIHIL, "--ordo",
         "Capita ordine topologico imprimere (cyclus = recusatio)");
     argumenta_addere_exemplum(parser, "aedilis lib/hospitium.c");
@@ -1282,6 +1285,27 @@ principale (
             redde 1;
         }
         _partes_imprimere(fructus, piscina);
+        redde 0;
+    }
+
+    /* testa-ios T3: consumptores sine scripto (tools/ios/app.sh) -
+     * frameworks testae iOS ex regula 'testa_ios' */
+    si (argumenta_habet_vexillum(lecta, "--nexus"))
+    {
+        Xar* vexilla;
+        i32  i;
+        i32  numerus;
+
+        vexilla = aedilis_vexilla_nexus(fructus, piscina);
+        numerus = xar_numerus(vexilla);
+        per (i = 0; i < numerus; i++)
+        {
+            chorda* v;
+
+            v = (chorda*)xar_obtinere(vexilla, i);
+            imprimere("%.*s\n", (s32)v->mensura,
+                (constans character*)v->datum);
+        }
         redde 0;
     }
 

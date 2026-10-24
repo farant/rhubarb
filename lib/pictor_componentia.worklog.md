@@ -145,3 +145,18 @@ as the aspergillum preview does); the status row shows four
 PARTES_BOTTONE nodes glutinatio.A / .B / .confirmare / .abicere
 ("textus:A[:electum]" ...) instead of the squares, the layers button
 is omitted, and no palette is composed (palette treated as "").
+
+## 2026-10-23 - status line text has consumers OUTSIDE the pictor suites (testa-ios T2)
+
+Dropping the status title ("penicillus" -> "") was green in every pictor and
+vicus suite but the commit was refused twice by suites that render the same
+layout in the terminal:
+- `ludus_tessera/probationes/probatio_ludus_tessera_pictor.c` read the title's
+  glyphs out of tessera cells (column XXIII of the status row) and grepped the
+  terminal bytes for "penicillus".
+- `probationes/probatio_tessellatio.c` section VII predicts the whole 60x30
+  scene of `probationes/pictor/pictor.arbor.stml`; the title's letters p/c/s
+  showed through between the status squares on line 29.
+Before changing anything visible in the status line (titles, widths, order),
+run `./ludus_tessera/compile_probationes.sh` and
+`./compile_tests.sh probatio_tessellatio` too, not just `pictor`/`vicus`.

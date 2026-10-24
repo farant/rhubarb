@@ -22,6 +22,7 @@
 #include "stml.h"
 
 #include <stdio.h>
+#include <string.h>
 #include <time.h>
 
 
@@ -282,6 +283,8 @@ aedilis_configurationem_legere (
         (i32)magnitudo(AedilisIrregulare));
     configuratio->regulae_compilationis = xar_creare(piscina,
         (i32)magnitudo(AedilisRegulaCompilationis));
+    configuratio->oracula = xar_creare(piscina,
+        (i32)magnitudo(AedilisOraculum));
 
     sectio = stml_invenire_liberum(radix_nodus, "inclusa");
     si (sectio != NIHIL)
@@ -346,6 +349,47 @@ aedilis_configurationem_legere (
                 regula->obiectum = *obiectum;
                 regula->vexilla = _vexilla_colligere(nodus,
                     piscina);
+            }
+        }
+    }
+
+    /* oracula -MM per variantem (testa-ios T3): varians et mandatum
+     * ambo necessaria - regula manca recusatur, numquam praeteritur */
+    sectio = stml_invenire_liberum(radix_nodus, "oracula");
+    si (sectio != NIHIL)
+    {
+        Xar* oracula;
+
+        oracula = stml_invenire_omnes_liberos(sectio, "oraculum",
+            piscina);
+        numerus = xar_numerus(oracula);
+        per (i = 0; i < numerus; i++)
+        {
+                  StmlNodus* nodus;
+                     chorda* varians;
+                     chorda* mandatum;
+            AedilisOraculum* oraculum;
+
+            nodus     = *(StmlNodus**)xar_obtinere(oracula, i);
+            varians   = stml_attributum_capere(nodus, "varians");
+            mandatum  = stml_attributum_capere(nodus, "mandatum");
+            si (   varians  == NIHIL || varians->mensura == 0
+                || mandatum == NIHIL || mandatum->mensura == 0)
+            {
+                si (causa_out != NIHIL)
+                {
+                    *causa_out = chorda_ex_literis("oraculum sine "
+                        "varians aut mandatum (sectio oracula)",
+                        piscina);
+                }
+                redde NIHIL;
+            }
+            oraculum = (AedilisOraculum*)xar_addere(
+                configuratio->oracula);
+            si (oraculum != NIHIL)
+            {
+                oraculum->varians   = *varians;
+                oraculum->mandatum  = *mandatum;
             }
         }
     }
@@ -1880,6 +1924,83 @@ _vexillum_unicum (
 }
 
 chorda
+aedilis_oraculum_eligere (
+    constans AedilisConfiguratio* configuratio,
+              constans character* via,
+                         Piscina* piscina)
+{
+    constans character* basis;
+    constans character* punctum;
+                   i32  longitudo;
+                   i32  i;
+                   i32  numerus;
+
+    basis    = strrchr(via, '/');
+    basis    = basis != NIHIL ? basis + I : via;
+    punctum  = strrchr(basis, '.');
+    longitudo = punctum != NIHIL ? (i32)(punctum - basis)
+                                 : (i32)strlen(basis);
+    numerus = configuratio != NIHIL && configuratio->oracula != NIHIL
+            ? xar_numerus(configuratio->oracula) : 0;
+    per (i = 0; i < numerus; i++)
+    {
+        AedilisOraculum* oraculum;
+                    i32  m;
+
+        oraculum = (AedilisOraculum*)xar_obtinere(configuratio->oracula,
+            i);
+        m = oraculum->varians.mensura;
+        /* "_" + varians, et basis longior ("ios.m" non congruit) */
+        si (   longitudo > m + I
+            && basis[longitudo - m - I] == '_'
+            && memcmp(basis + longitudo - m, oraculum->varians.datum,
+                   (size_t)m) == 0)
+        {
+            redde oraculum->mandatum;
+        }
+    }
+    redde chorda_ex_literis("clang", piscina);
+}
+
+Xar*
+aedilis_vexilla_nexus (
+    constans AedilisFructus* fructus,
+                    Piscina* piscina)
+{
+    Xar* vexilla;
+    i32  i;
+    i32  numerus;
+
+    vexilla = _xar_chordarum(piscina);
+    numerus = xar_numerus(fructus->obiecta);
+    per (i = 0; i < numerus; i++)
+    {
+        AedilisObiectum* obiectum;
+                    i32  k;
+                    i32  numerus_vexillorum;
+
+        obiectum = (AedilisObiectum*)xar_obtinere(fructus->obiecta, i);
+        si (obiectum->vexilla_nexus == NIHIL)
+        {
+            perge;
+        }
+        numerus_vexillorum = xar_numerus(obiectum->vexilla_nexus);
+        per (k = 0; k < numerus_vexillorum; k++)
+        {
+            _vexillum_unicum(vexilla,
+                *(chorda*)xar_obtinere(obiectum->vexilla_nexus, k));
+        }
+    }
+    numerus = xar_numerus(fructus->vexilla_annotata);
+    per (i = 0; i < numerus; i++)
+    {
+        _vexillum_unicum(vexilla,
+            *(chorda*)xar_obtinere(fructus->vexilla_annotata, i));
+    }
+    redde vexilla;
+}
+
+chorda
 aedilis_scriptum_scribere (
          constans AedilisFructus* fructus,
     constans AedilisConfiguratio* configuratio,
@@ -2121,36 +2242,7 @@ aedilis_scriptum_scribere_ad (
     {
         Xar* nexus_vexilla;
 
-        nexus_vexilla  = _xar_chordarum(piscina);
-        numerus        = xar_numerus(fructus->obiecta);
-        per (i = 0; i < numerus; i++)
-        {
-            AedilisObiectum* obiectum;
-                        i32  k;
-                        i32  numerus_vexillorum;
-
-            obiectum = (AedilisObiectum*)xar_obtinere(
-                fructus->obiecta, i);
-            si (obiectum->vexilla_nexus == NIHIL)
-            {
-                perge;
-            }
-            numerus_vexillorum = xar_numerus(
-                obiectum->vexilla_nexus);
-            per (k = 0; k < numerus_vexillorum; k++)
-            {
-                _vexillum_unicum(nexus_vexilla,
-                    *(chorda*)xar_obtinere(
-                        obiectum->vexilla_nexus, k));
-            }
-        }
-        numerus = xar_numerus(fructus->vexilla_annotata);
-        per (i = 0; i < numerus; i++)
-        {
-            _vexillum_unicum(nexus_vexilla,
-                *(chorda*)xar_obtinere(fructus->vexilla_annotata,
-                    i));
-        }
+        nexus_vexilla = aedilis_vexilla_nexus(fructus, piscina);
         si (xar_numerus(nexus_vexilla) > 0)
         {
             chorda_aedificator_appendere_literis(s, "    ");

@@ -210,9 +210,11 @@ ludus_fenestra_mora (
 /* Ansa fenestrae perscrutabilis (macOS): API publica - programmata
  * briar (.thistle) eam vocant, testa macOS (lib/testa.c) quoque. In
  * Android nulla fenestra perscrutabilis (testa_android quadra per
- * chorographum ducit): non compilatur. Restituta 2026-10-23 (fusio:
+ * chorographum ducit), in iOS nec (testa_ios per CADisplayLink;
+ * testa-ios R1): non compilatur. Restituta 2026-10-23 (fusio:
  * briar-fumus et instrumenta fracta post T1). */
-#ifndef __ANDROID__
+#if !defined(__ANDROID__) \
+    && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
 
 /* S1c: exspectatio maxima cum applicatione viva (ut terminale) */
 #define MORA_PULSUS  XVI
@@ -284,7 +286,7 @@ ludus_fenestra_currere (
 }
 
 
-#endif /* __ANDROID__ */
+#endif /* nec Android nec iOS */
 
 b32
 ludus_fenestra_imaginem_scribere (
