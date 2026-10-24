@@ -3634,3 +3634,22 @@ Memoized radix: 5.6 -> 1.9 GB peak (7.4 GB before part 3). The read happened in 
 than the two vicus checks (preview, first sanare pass, mensor-reading members), so the saving was
 bigger than the 0.7 GB predicted. Note mensurae.volumen keeps growing; anything that "touches" it
 by content scales with it.
+
+## 2026-10-23 — fix part 5: member closures derived in scratch (park …T77EH4)
+
+Memoized radix after part 4: 1.9 GB peak, of which 1.73 GB was startup. 1.45 GB of that was
+`_declarationes_colligere`: explaining radix's 411 members calls `suturae_clausura_c` per
+member, which ran `aedilis_derivare` (machina, tables, fructus, ~3.5 MB per member, vicus
+tests 13.7 MB) in the run-long piscina. Only five string lists are kept (fontes, capita,
+vexilla_nexus, facultates, instrumenta).
+
+Now `suturae_clausura_c` derives in a static scratch piscina (`_piscina_clausurae`, emptied
+before each call) and copies the lists out: `_chordam_unicam_addere` transcribes into the
+caller's piscina; facultates/instrumenta via `_chordas_transcribere`; the cause string on
+failure is transcribed too. The extractor already copies its own keys; the configuration is
+written only when read.
+
+No unit test reaches tools/ sutura code. The detector is end to end: a dangling string is zeroed
+by the next call's piscina_vacare, which breaks every member key. Manual plant (copy dropped):
+memoized radix became 410 reruns, 0 memo hits, 1 failure (probatio_xml); reverted: 411/411
+servatae. Memoized radix: 1.9 GB -> 521 MB (7.4 GB at the start of today).
