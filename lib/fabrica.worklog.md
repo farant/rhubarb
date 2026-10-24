@@ -3653,3 +3653,27 @@ No unit test reaches tools/ sutura code. The detector is end to end: a dangling 
 by the next call's piscina_vacare, which breaks every member key. Manual plant (copy dropped):
 memoized radix became 410 reruns, 0 memo hits, 1 failure (probatio_xml); reverted: 411/411
 servatae. Memoized radix: 1.9 GB -> 521 MB (7.4 GB at the start of today).
+
+## 2026-10-24 — 4GY9MJ4: transient writes judged on the serial path
+
+Before/after snapshots cannot see a file created and deleted inside one run; the read trace
+(S lines) can. The wave path already judged S lines; the serial path (`_membrum_agere`, and
+`_actionem_agere` for IUDICIUM actions, whose trace is fresh this run) did not. Now both do
+("scripsit extra vestigium (S, liber lectionum): <via>").
+
+What it found:
+- silva corpus suites: aedilis' clang -MM scratch `build/aedilis/oraculum.<pid>.tmp` ->
+  `_via_temporaria` (lib/aedilis_silva.c) now under $TMPDIR (member area under fabrica),
+  build/aedilis fallback;
+- radix -vis: machina (build/probatio_machina_plagula/) and volumen (horae/ordinarium/tmpdir/
+  vetus) -> moved into credo_area; vicus_saltus build/pmx tmux socket (sun_path 104) ->
+  own debt build/pmv/ (a path may have ONE debtor: "debitum duplex");
+- silex and thesaurus were FALSE alarms: their debts are trees, and ARBOR matching
+  excluded the root directory itself (the mkdir S line). `fabricae_locus_tangit` ARBOR now
+  contains its root (`_sub_radice`, no allocation). Snapshots list files only, so they are
+  unaffected.
+- the probatio_fabrica_iudicium transit fixture wrote S x/build/obj.o with no footprint:
+  footprint declared (the test is about S lines being omitted from reads).
+
+Note: the check reports only the FIRST alien path per member. For a full list, read the S
+lines of build/fabrica/lectiones/<actio>.tsv. Radix -vis after: 411/411.

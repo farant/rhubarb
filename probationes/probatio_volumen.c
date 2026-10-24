@@ -615,6 +615,18 @@ _sectio_praesentiae (
  * semel copiat; plagulae aliae non; plagulae ipsae manent
  * ======================================================== */
 
+/* via in area sectionis (credo_area): plagulae probationis olim sub
+ * build/ extra vestigium membri (lineae S, quaestio 4GY9MJ4) */
+interior constans character*
+_in_area (
+         CredoContextus* c,
+     constans character* titulus)
+{
+    redde chorda_ut_cstr(chorda_concatenare(chorda_ex_literis(
+        credo_area(c), c->piscina), chorda_ex_literis(titulus,
+        c->piscina), c->piscina), c->piscina);
+}
+
 interior vacuum
 _sectio_migrationis_praesentiae (
     CredoContextus* c)
@@ -623,8 +635,7 @@ _sectio_migrationis_praesentiae (
 
     piscina = c->piscina;
     {
-        constans character* via_vetus =
-            "build/probatio_volumen_vetus.db";
+        constans character* via_vetus = _in_area(c, "/vetus.db");
         constans character* constans veteres[IV] = {
             "CREATE TABLE acta ("
             " seq INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -852,8 +863,7 @@ _sectio_supplementi_horarum (
 
     piscina = c->piscina;
     {
-        constans character* via_vetus =
-            "build/probatio_volumen_horae.db";
+        constans character* via_vetus = _in_area(c, "/horae.db");
         constans character* constans veteres[IV] = {
             "CREATE TABLE acta ("
             " seq INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -1022,8 +1032,8 @@ _sectio_decima_prima (
     piscina = c->piscina;
     {
                    Volumen* ordinarium;
-        constans character* via_ord =
-            "build/probatio_volumen_ordinarium.volumen";
+        constans character* via_ord = _in_area(c,
+            "/ordinarium.volumen");
             PiscinaNotatio  nota;
                         i8* venenum;
 
@@ -1141,6 +1151,9 @@ _sectio_temporarii_ambitus (
     CredoContextus* c)
 {
     constans character* vetus;
+    constans character* dir;
+    constans character* duplex_virgula;
+    constans character* praefixum;
              character  servatum[DXII];
                    b32  habuit;
 
@@ -1150,15 +1163,17 @@ _sectio_temporarii_ambitus (
     {
         strcpy(servatum, vetus);
     }
-    CREDO_VERUM (filum_directorium_creare_cum_parentibus(
-        "build/probatio_volumen_tmpdir"));
+    /* directorium in area sectionis - via ANTE setenv computata
+     * (credo_area ex TMPDIR derivatur) */
+    dir             = _in_area(c, "/tmpdir");
+    duplex_virgula  = _in_area(c, "/tmpdir//");
+    praefixum       = _in_area(c, "/tmpdir/tmpdir_probatio-");
+    CREDO_VERUM (filum_directorium_creare_cum_parentibus(dir));
 
     /* I: directorium datum */
-    _temporarium_sub(c, "build/probatio_volumen_tmpdir",
-        "build/probatio_volumen_tmpdir/tmpdir_probatio-");
+    _temporarium_sub(c, dir, praefixum);
     /* II: virgulae finales abscinduntur (macOS TMPDIR '/' terminat) */
-    _temporarium_sub(c, "build/probatio_volumen_tmpdir//",
-        "build/probatio_volumen_tmpdir/tmpdir_probatio-");
+    _temporarium_sub(c, duplex_virgula, praefixum);
     /* III-IV: vacuum aut absens -> /tmp */
     _temporarium_sub(c, "", NIHIL);
     _temporarium_sub(c, NIHIL, NIHIL);

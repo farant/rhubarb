@@ -762,6 +762,25 @@ _probare_gradus (
             piscina));
         _gradus_alienum = NIHIL;
 
+        /* VIIb. scriptura TRANSIENS extra aream (quaestio 4GY9MJ4):
+         * creata et deleta intra cursum - photographia nihil videt,
+         * liber (S) eam nominat: FRACTUM nominatum */
+        _gradus_liber_extra = "S\tapps/transiens.tmp\n";
+        mundi_ponere(discus, "t/a.c", "a IIIb\n");
+        sanationes = fabrica_sanare(sutura, ordo, electa, FALSUM,
+            piscina, &causa);
+        sanatio = sanationes != NIHIL
+            ? mundi_sanatio_invenire(sanationes,
+            "probationes_t/a") : NIHIL;
+        CREDO_NECESSE_NON_NIHIL(sanatio);
+        CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+            (i32)FABRICA_FRACTUM);
+        CREDO_VERUM(mundi_continet(sanatio->causa,
+            "S, liber lectionum", piscina));
+        CREDO_VERUM(mundi_continet(sanatio->causa,
+            "apps/transiens.tmp", piscina));
+        _gradus_liber_extra = "";
+
         /* VIII. ambitus non declaratus: FRACTUM nominatum; basis et
          * declarata transeunt */
         _gradus_liber_extra = "E\tPATH\nE\tCREDO_FILTRUM\tx\n"

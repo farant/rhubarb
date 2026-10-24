@@ -578,6 +578,23 @@ fabrica_mutata_intra_locum (
  * ambitus basis, genus gradus agit; deinde scriptura extra vestigium,
  * ambitus non declaratus -> FALSUM nominatum; transitus -> verdictum
  * '<id>: transiit' a fabrica scriptum (post photographiam) */
+/* SCRIPTURAE TRANSIENTES (quaestio …4GY9MJ4): photographia ante/post
+ * plagulam intra cursum creatam et deletam non videt - liber lectionum
+ * (lineae S) eam videt. Cursus seriales libro recenti (membra gradus,
+ * actiones iudicii) ita iudicantur ut undae iam iudicabantur. Restat
+ * scriptura sine libro (system, sqlite, filii sine lectionibus). */
+interior Xar*
+_scripturas_notatas (
+    constans FabricaSutura* sutura,
+        constans character* liber_via,
+                   Piscina* piscina);
+
+interior chorda
+_scripturam_alienam (
+     constans FabricaActio* actio,
+              constans Xar* notatae,
+                   Piscina* piscina);
+
 interior b32
 _membrum_agere (
     constans FabricaSutura* sutura,
@@ -685,6 +702,20 @@ _membrum_agere (
         si (extra != NIHIL && xar_numerus(extra) > 0)
         {
             *causa_out = _extra_nominare(extra, piscina);
+            redde FALSUM;
+        }
+    }
+    /* transientes per librum (lineae S): photographia eas non videt */
+    {
+        chorda aliena = _scripturam_alienam(actio, _scripturas_notatas(
+            sutura, chorda_ut_cstr(fabrica_liber_via(actio->titulus,
+            piscina), piscina), piscina), piscina);
+
+        si (aliena.mensura > ZEPHYRUM)
+        {
+            *causa_out = fabricae_iungere(piscina,
+                "scripsit extra vestigium (S, liber lectionum): ",
+                aliena, "");
             redde FALSUM;
         }
     }
@@ -822,6 +853,22 @@ _actionem_agere (
             *causa_out = fabricae_iungere(piscina, "",
                 _extra_nominare(extra,
                 piscina), " - aut manu mutata dum currebat");
+            redde FALSUM;
+        }
+    }
+    /* transientes per librum (lineae S): solum actio iudicii, cuius
+     * liber hoc cursu recens est (generatoris liber iudicis manet) */
+    si (actio->genus == FABRICA_ACTIO_IUDICIUM)
+    {
+        chorda aliena = _scripturam_alienam(actio, _scripturas_notatas(
+            sutura, chorda_ut_cstr(fabrica_liber_via(actio->titulus,
+            piscina), piscina), piscina), piscina);
+
+        si (aliena.mensura > ZEPHYRUM)
+        {
+            *causa_out = fabricae_iungere(piscina,
+                "scripsit extra vestigium (S, liber lectionum): ",
+                aliena, "");
             redde FALSUM;
         }
     }
