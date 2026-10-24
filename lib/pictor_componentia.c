@@ -474,6 +474,7 @@ pictor_componere (
                  vacuum* ctx)
 {
              Componens* quadratum_stratorum;
+             Componens* quadratum_imaginis;
            InsulaRamus  ramus;
       PictorCompositio* cfg;
              Componens* radix;
@@ -507,6 +508,7 @@ pictor_componere (
         redde NIHIL;
     }
     quadratum_stratorum  = NIHIL;
+    quadratum_imaginis   = NIHIL;
     cfg                  = (PictorCompositio*)ctx;
     /* R3: status pictoris per ramum (sine eo radix repositorii) */
     ramus = cfg->ramus.repo ? cfg->ramus : insula_ramus_radix(repo);
@@ -811,6 +813,21 @@ pictor_componere (
             componens_ponere_actio(quadratum_stratorum,
                 "palette.aperire");
         }
+        /* testa-ios C1b: quadratum imaginis ad sinistram stratorum
+         * (cw inter), solum ubi hospes electionem imaginis praebet
+         * (telephonum; macOS et Android nullum) - photographia
+         * electa ut depositio redit. Filius RADICIS */
+        si (cfg->imago_eligibilis)
+        {
+            quadratum_imaginis = nodus(piscina, intern,
+                "quadratum.imago", PARTES_BOTTONE,
+                fs.x + fs.latitudo - II * cw - II * XX, fs.y + y, XX,
+                XX);
+            componens_ponere_titulum(quadratum_imaginis,
+                "imago:quadratum");
+            componens_ponere_actio(quadratum_imaginis,
+                "imago.eligere");
+        }
         si (chorda_aequalis_literis(instrumentum, "spongia"))
         {
             componens_ponere_actio(q, "");
@@ -823,6 +840,10 @@ pictor_componere (
     si (quadratum_stratorum)
     {
         componens_addere_liberum(radix, quadratum_stratorum);
+    }
+    si (quadratum_imaginis)
+    {
+        componens_addere_liberum(radix, quadratum_imaginis);
     }
     /* P1b: palette aperta - filius ULTIMUS radicis (super tabulam
      * pingitur, ictus primum capit) */

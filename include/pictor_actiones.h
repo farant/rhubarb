@@ -33,6 +33,11 @@ nomen structura {
      * clipboard_capere_imaginem ponunt, probationes fictam */
     ImagoFructus (*imago_capere)(vacuum* ctx, Piscina* piscina);
           vacuum* imago_ctx;
+    /* testa-ios C1b: electio imaginis (servitium hospitis, non
+     * obstruens - imago POSTEA ut EVENTUS_DEPOSITIO venit); NIHIL =
+     * nulla */
+             b32 (*imaginem_eligere)(vacuum* ctx);
+          vacuum* imaginem_eligere_ctx;
 } PictorActiones;
 
 vacuum
@@ -110,6 +115,19 @@ pictor_linea_ictus (
  * sine colore scribit (documentum colore fundi pingit) */
 b32
 pictor_spongia_ictus (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* <tractator/> quadratum imaginis ictum (testa-ios C1b): servitium
+ * hospitis imaginem_eligere SEMEL vocat (non obstruens - photographia
+ * electa postea ut EVENTUS_DEPOSITIO venit). Servitium NIHIL ->
+ * FALSUM, nihil. Registratur ut 'imago.eligere'. */
+b32
+pictor_imaginem_eligere (
     InsulaRepositorium* repo,
                  Motus* motus,
    constans Destinatio* destinatio,

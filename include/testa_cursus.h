@@ -19,6 +19,11 @@
 /* clipboard: idem genus ac actiones_ctx.imago_capere pictoris */
 nomen ImagoFructus (*TestaImagoCapere)(vacuum* ctx, Piscina* piscina);
 
+/* testa-ios C1b: usorem imaginem eligere sinere (non obstruens).
+ * VERUM = electio ostensa; imago, si eligitur, POSTEA ut
+ * EVENTUS_DEPOSITIO (via plagulae) venit. */
+nomen b32 (*TestaImaginemEligere)(vacuum* ctx);
+
 /* quod testa applicationi praebet */
 nomen structura {
                Piscina* piscina;            /* testa possidet et destruit */
@@ -43,6 +48,10 @@ nomen structura {
                                              * iam scalam systematis ferunt) */
       TestaImagoCapere  imago_glutinata;    /* Android B1: semper vacua */
                 vacuum* imago_ctx;
+    /* iOS solum (C1b); macOS et Android NIHIL, NUMQUAM truncus -
+     * pictor quadratum imaginis inde ostendit */
+  TestaImaginemEligere  imaginem_eligere;
+                vacuum* imaginem_eligere_ctx;
 } TestaAmbitus;
 
 /* quod applicatio testae reddit (testa eam ZEPHYRUM implet ante) */

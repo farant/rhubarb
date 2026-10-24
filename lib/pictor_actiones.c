@@ -1018,6 +1018,31 @@ pictor_instrumentum_eligere (
 
 /* <tractator/> */
 b32
+pictor_imaginem_eligere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+    PictorActiones* pa;
+
+    (vacuum)repo;
+    (vacuum)motus;
+    (vacuum)destinatio;
+    (vacuum)nodus;
+    pa = (PictorActiones*)ctx;
+    si (   !ev || ev->genus != EVENTUS_MUS_DEPRESSUS || !pa
+        || !pa->imaginem_eligere)
+    {
+        redde FALSUM;
+    }
+    redde pa->imaginem_eligere(pa->imaginem_eligere_ctx);
+}
+
+/* <tractator/> */
+b32
 pictor_palettam_aperire (
     InsulaRepositorium* repo,
                  Motus* motus,
@@ -1515,5 +1540,7 @@ pictor_actiones_registrare (
     actio_registrare(reg, "instrumentum.eligere",
                      pictor_instrumentum_eligere, ctx);
     actio_registrare(reg, "glutinatio.agere", pictor_glutinatio_agere,
+        ctx);
+    actio_registrare(reg, "imago.eligere", pictor_imaginem_eligere,
         ctx);
 }
