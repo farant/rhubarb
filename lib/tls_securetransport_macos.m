@@ -7,6 +7,7 @@
  * "character" macro conflictum habet cum CoreFoundation.
  */
 
+#include "postulata_macos.h"   /* PRIMUM: ante capita Apple */
 #import <Security/Security.h>
 #import <Security/SecureTransport.h>
 #include <string.h>

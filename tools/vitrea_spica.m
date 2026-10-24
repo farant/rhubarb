@@ -23,6 +23,7 @@
  * Verdicta -> project-specs/vitrea-calibratio.md
  */
 
+#include "postulata_macos.h"   /* PRIMUM: ante capita Apple */
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
 
@@ -36,8 +37,10 @@ static BOOL g_missum = NO;
 static void nota(NSString* fmt, ...)
 {
     va_list ap;
+    NSString* s;
+
     va_start(ap, fmt);
-    NSString* s = [[NSString alloc] initWithFormat:fmt arguments:ap];
+    s = [[NSString alloc] initWithFormat:fmt arguments:ap];
     va_end(ap);
     printf("%s\n", s.UTF8String);
     fflush(stdout);
@@ -153,6 +156,7 @@ static NSString* const PAGINA = @"<!doctype html><html><head>"
     NSData* data = nil;
     NSString* mime = @"text/plain";
     BOOL http_responsum = YES;
+    NSURLResponse* resp;
 
     nota(@"  [portitor] petitio %@  (host='%@' path='%@')",
         url.absoluteString, url.host, url.path);
@@ -173,7 +177,6 @@ static NSString* const PAGINA = @"<!doctype html><html><head>"
             code:404 userInfo:nil]];
         return;
     }
-    NSURLResponse* resp;
     if (http_responsum) {
         resp = [[NSHTTPURLResponse alloc] initWithURL:url statusCode:200
             HTTPVersion:@"HTTP/1.1" headerFields:@{
@@ -259,23 +262,29 @@ static NSString* const PAGINA = @"<!doctype html><html><head>"
 int main(void)
 {
     @autoreleasepool {
+        NSWindow* fen;
+        WKWebViewConfiguration* cfg;
+        Portitor* portitor;
+        Nuntius* nuntius;
+        WKWebView* wv;
+
         [NSApplication sharedApplication];
         [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
 
-        NSWindow* fen = [[NSWindow alloc]
+        fen = [[NSWindow alloc]
             initWithContentRect:NSMakeRect(140, 140, 560, 400)
             styleMask:(NSWindowStyleMaskTitled | NSWindowStyleMaskClosable)
             backing:NSBackingStoreBuffered defer:NO];
         fen.title = @"vitrea spica";
 
-        WKWebViewConfiguration* cfg = [WKWebViewConfiguration new];
-        Portitor* portitor = [Portitor new];
+        cfg       = [WKWebViewConfiguration new];
+        portitor  = [Portitor new];
         [cfg setURLSchemeHandler:portitor forURLScheme:@"capsula"];
-        Nuntius* nuntius = [Nuntius new];
+        nuntius   = [Nuntius new];
         [cfg.userContentController addScriptMessageHandler:nuntius
             name:@"spica"];
 
-        WKWebView* wv = [[WKWebView alloc]
+        wv = [[WKWebView alloc]
             initWithFrame:((NSView*)fen.contentView).bounds
             configuration:cfg];
         wv.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
