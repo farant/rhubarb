@@ -35,11 +35,12 @@
  *   auditio -carmen T -via x.wav       in WAV stereo, semel (non sonat)
  *   auditio -carmen T -partitura       partitura ut textus
  *       [-mensurae 9-12] [-pars P]     (partitura.h), sine sono; -pars
- *       [-harmonia | -explicatio]      hic = sola pars; -harmonia:
- *                                      linea acordorum (harmonia.h);
+ *       [-harmonia] [-explicatio]      hic = sola pars; -harmonia:
+ *       [-functio]                     linea acordorum (harmonia.h);
  *                                      -explicatio: acorda per
  *                                      fenestras bassi, notae alienae
- *                                      (explicatio.h)
+ *                                      (explicatio.h); -functio: gradus
+ *                                      Romani et cadentiae (functio.h)
  *   auditio -carmen T -censura         regulae musicae (censura.h):
  *       [-regulae +dissonantia,-ambitus]  ordinariae mutatae, aut
  *       [-regulae parallelae,lineae]      hae solae; exitus 3 si
@@ -113,6 +114,7 @@
 #include "auscultatio.h"
 #include "harmonia.h"
 #include "explicatio.h"
+#include "functio.h"
 #include "recensio_carminis.h"
 #include "emendatio.h"
 #include "carmina_infixum.h"
@@ -848,29 +850,43 @@ _partituram_scribere (
     constans character* pars,
                    b32  harmonia,
                    b32  explicare,
+                   b32  functionem,
                Piscina* piscina)
 {
        PartituraForma  forma;
     ChordaAedificator* a = chorda_aedificator_creare(piscina, M);
            Explicatio  e;
+              Functio  fx;
+                  i32  n = ZEPHYRUM;
                chorda  t;
 
     memset(&forma, ZEPHYRUM, magnitudo(forma));
+    si (   (explicare || functionem)
+        && (   !explicatio_carminis(k, piscina, &e)
+            || (functionem && !functio_carminis(k, &e, piscina, &fx))))
+    {
+        fprintf(stderr, "auditio: explicatio: memoria deest\n");
+        redde FALSUM;
+    }
+    /* lineae additae ordine: harmonia, explicatio, functio */
     si (harmonia)
     {
-        forma.additae[ZEPHYRUM].titulus   = "harmonia";
-        forma.additae[ZEPHYRUM].scribere  = harmonia_lineam_scribere;
+        forma.additae[n].titulus   = "harmonia";
+        forma.additae[n].scribere  = harmonia_lineam_scribere;
+        n++;
     }
     si (explicare)
     {
-        si (!explicatio_carminis(k, piscina, &e))
-        {
-            fprintf(stderr, "auditio: explicatio: memoria deest\n");
-            redde FALSUM;
-        }
-        forma.additae[ZEPHYRUM].titulus   = "explicatio";
-        forma.additae[ZEPHYRUM].scribere  = explicatio_lineam_scribere;
-        forma.additae[ZEPHYRUM].ctx       = &e;
+        forma.additae[n].titulus   = "explicatio";
+        forma.additae[n].scribere  = explicatio_lineam_scribere;
+        forma.additae[n].ctx       = &e;
+        n++;
+    }
+    si (functionem)
+    {
+        forma.additae[n].titulus   = "functio";
+        forma.additae[n].scribere  = functio_lineam_scribere;
+        forma.additae[n].ctx       = &fx;
     }
     forma.prima         = prima;
     forma.ultima        = ultima;
@@ -1433,6 +1449,7 @@ principale (
                      b32  partitura       = FALSUM;
                      b32  harmonia        = FALSUM;
                      b32  explicare       = FALSUM;
+                     b32  functionem      = FALSUM;
                      b32  censura         = FALSUM;
                      b32  auscultare      = FALSUM;
                      b32  recensio        = FALSUM;
@@ -1545,6 +1562,10 @@ principale (
         {
             explicare = VERUM;
         }
+        alioquin si (strcmp(argv[k], "-functio") == ZEPHYRUM)
+        {
+            functionem = VERUM;
+        }
         alioquin si (strcmp(argv[k], "-partitura") == ZEPHYRUM)
         {
             partitura = VERUM;
@@ -1620,8 +1641,8 @@ principale (
                 "-carmen (-iterare non cum -via)\n");
         redde II;
     }
-    si (   ((mensurae_datae || harmonia || explicare) && !partitura)
-        || (harmonia && explicare)
+    si (   (   (mensurae_datae || harmonia || explicare || functionem)
+            && !partitura)
         || (partitura && (iterare || via != NIHIL))
         || (regulae != NIHIL && !censura && !recensio)
         || (forma_json && !recensio)
@@ -1721,7 +1742,7 @@ principale (
         alioquin si (k != NIHIL && partitura)
         {
             bene = _partituram_scribere(k, prima, ultima, pars,
-                harmonia, explicare, piscina);
+                harmonia, explicare, functionem, piscina);
         }
         alioquin si (k != NIHIL)
         {

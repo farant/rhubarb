@@ -90,3 +90,9 @@ logic and its plants live in probatio_emendatio / probatio_cantus.
 Line from explicatio.h instead of the per-beat harmonia line (PartituraForma has ONE extra
 line slot, so -harmonia and -explicatio are exclusive - usage error with both). The
 Explicatio is computed once in _partituram_scribere and passed as additae_ctx.
+
+## 2026-10-23 - -partitura -functio (#3 F2)
+
+Lines stack now (PartituraAddita list): -harmonia -explicatio -functio in that order, any
+combination (the old "harmonia OR explicatio" usage error is gone). One Explicatio is
+computed for both explicatio and functio lines.
