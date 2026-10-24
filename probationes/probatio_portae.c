@@ -1318,7 +1318,7 @@ _sectio_contractus (
         NIHIL, recusationes, ZEPHYRUM, VERUM, c->piscina),
         "RECUSATIO\ttools/credo_fumus.sh\t2\tattributum ignotum"
         " 'tegti' in <porta> (titulus manu causa tegit currit"
-        " instrumentum genus)\n"
+        " instrumentum genus gradus legit translatio)\n"
         "RECUSATIO\t\t0\tporta 'credo' (cursor tools/credo_fumus.sh)"
         " sine annotatione <porta titulus=\"...\"/>\n"
         "RECUSATIO\t\t0\tporta 'sera' (cursor tools/sera_fumus.sh)"
@@ -1644,6 +1644,223 @@ _sectio_gradus (
         "  probationes: credo (nova)\n"));
 }
 
+/* XV. TRANSLATIO RECEPTORUM (translatio receptorum spec §II): per
+ * portam quaesitam - NUMQUAM, DEBITA (tactus idem ac debita; caeca omni
+ * viae), LECTA ('legit' congruit, debita non mutat), PORTAT; porta non
+ * declarata NULLUM; contractus machinae et linea declaratae */
+hic_manens constans PlagulaFicta _plagulae_translationis[] = {
+    { "tools/credo_fumus.sh",
+      "# <porta titulus=\"credo\" legit=\"docs/*.md lib/*.c\"/>\n" },
+    { "tools/sera_fumus.sh",
+      "# <porta titulus=\"sera\" tegit=\"tools/sera_fixa/*\"/>\n" },
+    { "tools/venenum_probare.sh",
+      "# <porta titulus=\"venenum\" translatio=\"numquam\"/>\n" },
+    { NIHIL, NIHIL }
+};
+
+hic_manens constans character* constans _paria_translationis[] = {
+    "credo=tools/credo_fumus.sh", "sera=tools/sera_fumus.sh",
+    "venenum=tools/venenum_probare.sh", NIHIL
+};
+
+hic_manens constans PlagulaFicta _effectus_translationis[] = {
+    { "tools/credo_fumus.sh", "<effectus/>" },
+    { "tools/sera_fumus.sh", "<effectus/>" },
+    { "tools/venenum_probare.sh", "<effectus/>" },
+    { NIHIL, NIHIL }
+};
+
+/* translationes portarum (lineis divisae) pro viis (lineis divisae);
+ * portae_lineis NIHIL = debita eorundem viarum (PortaeDebitum) */
+interior Xar*
+_translationes_mundi (
+           CredoContextus* c,
+    constans PlagulaFicta* effectus,
+       constans character* viae_lineis,
+       constans character* portae_lineis)
+{
+    MundusPortarum  mundus;
+      PortaeSutura  sutura;
+            chorda  causa;
+               Xar* d;
+               Xar* o;
+      PlagulaFicta  ficta;
+               Xar* viae;
+               Xar* portae;
+
+    _suturam_parare(c, &mundus, &sutura, _plagulae_translationis,
+        _paria_translationis);
+    mundus.effectus = effectus;
+    d = portae_declaratas_legere(&sutura, c->piscina, &causa, NIHIL);
+    si (d == NIHIL)
+    {
+        redde NIHIL;
+    }
+    o = portae_operturas_derivare(&sutura, d, c->piscina);
+    si (o == NIHIL)
+    {
+        redde NIHIL;
+    }
+    ficta.via     = "viae";
+    ficta.textus  = viae_lineis;
+    viae          = _lineae(&ficta, c->piscina);
+    si (portae_lineis == NIHIL)
+    {
+        redde portae_debita_computare(&sutura, o, viae, NIHIL,
+            c->piscina);
+    }
+    ficta.textus  = portae_lineis;
+    portae        = _lineae(&ficta, c->piscina);
+    redde portae_translationes_computare(&sutura, o, viae, portae,
+        c->piscina);
+}
+
+interior constans PortaeTranslatio*
+_translatio (
+                   Xar* t,
+    constans character* porta)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; t != NIHIL && i < xar_numerus(t); i++)
+    {
+        constans PortaeTranslatio* u = (constans PortaeTranslatio*)
+            xar_obtinere(t, i);
+
+        si (chorda_aequalis_literis(u->porta, porta))
+        {
+            redde u;
+        }
+    }
+    redde NIHIL;
+}
+
+interior vacuum
+_sectio_translatio (
+    CredoContextus* c)
+{
+    hic_manens constans PlagulaFicta effectus_sine_sera[] = {
+        { "tools/credo_fumus.sh", "<effectus/>" },
+        { "tools/venenum_probare.sh", "<effectus/>" },
+        { NIHIL, NIHIL }
+    };
+    hic_manens constans character* const credo_solum[] = {
+        "credo=tools/credo_fumus.sh", NIHIL
+    };
+                          Xar* t;
+    constans PortaeTranslatio* u;
+                       chorda  causa;
+                          Xar* d;
+                          Xar* o;
+      constans PortaDeclarata* v;
+
+    CREDO_GRADUS("lectio legit/translatio");
+    _recusatio_probare(c,
+        "# <porta titulus=\"credo\" translatio=\"semper\"/>\n",
+        credo_solum,
+        "tools/credo_fumus.sh:1: translatio ignota 'semper' in <porta>"
+        " (numquam)");
+    d = _legere_mundum(c, _plagulae_translationis, _paria_translationis,
+        &causa);
+    CREDO_NECESSE_NON_NIHIL(d);
+    v = _declaratio(d, "credo");
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_AEQUALIS_I32(xar_numerus(v->legit), II);
+    CREDO_FALSUM(v->translatio_numquam);
+    CREDO_VERUM(_declaratio(d, "venenum")->translatio_numquam);
+    CREDO_AEQUALIS_I32(xar_numerus(_declaratio(d, "sera")->legit),
+        ZEPHYRUM);
+
+    CREDO_GRADUS("tegit debet, ceterae portant");
+    t = _translationes_mundi(c, _effectus_translationis,
+        "tools/sera_fixa/a.txt\n", "credo\nsera\nvenenum\nnemo\n");
+    CREDO_NECESSE_NON_NIHIL(t);
+    CREDO_AEQUALIS_I32(xar_numerus(t), IV);
+    u = _translatio(t, "credo");
+    CREDO_AEQUALIS_I32((i32)u->genus, (i32)PORTAE_TRANSLATIO_PORTAT);
+    CREDO_VERUM(chorda_aequalis_literis(u->causa,
+        "1 via mutata, nulla huius portae"));
+    u = _translatio(t, "sera");
+    CREDO_AEQUALIS_I32((i32)u->genus, (i32)PORTAE_TRANSLATIO_DEBITA);
+    CREDO_VERUM(chorda_aequalis_literis(u->causa,
+        "tools/sera_fixa/a.txt congruit 'tools/sera_fixa/*' (tegit"
+        " (tools/sera_fumus.sh:1))"));
+    u = _translatio(t, "venenum");
+    CREDO_AEQUALIS_I32((i32)u->genus, (i32)PORTAE_TRANSLATIO_NUMQUAM);
+    CREDO_VERUM(chorda_aequalis_literis(u->causa,
+        "translatio=\"numquam\" (tools/venenum_probare.sh:1)"));
+    u = _translatio(t, "nemo");
+    CREDO_AEQUALIS_I32((i32)u->genus, (i32)PORTAE_TRANSLATIO_NULLUM);
+    CREDO_VERUM(u->opertura == NIHIL);
+
+    CREDO_GRADUS("legit vetat translationem, debita non mutat");
+    t = _translationes_mundi(c, _effectus_translationis,
+        "docs/x.md\ndocs/y.md\n", "credo\nsera\n");
+    CREDO_NECESSE_NON_NIHIL(t);
+    u = _translatio(t, "credo");
+    CREDO_AEQUALIS_I32((i32)u->genus, (i32)PORTAE_TRANSLATIO_LECTA);
+    CREDO_VERUM(chorda_aequalis_literis(u->causa,
+        "docs/x.md congruit 'docs/*.md' (legit"
+        " (tools/credo_fumus.sh:1)) (+1 aliae)"));
+    CREDO_AEQUALIS_I32((i32)_translatio(t, "sera")->genus,
+        (i32)PORTAE_TRANSLATIO_PORTAT);
+    /* eadem via in eodem mundo: 'credo' NON debetur (legit debita
+     * non tangit) */
+    d = _translationes_mundi(c, _effectus_translationis, "docs/x.md\n",
+        NIHIL);
+    CREDO_NECESSE_NON_NIHIL(d);
+    CREDO_VERUM(_debitum(d, "credo") == NIHIL);
+
+    CREDO_GRADUS("cursor ipse, nulla via, caeca");
+    t = _translationes_mundi(c, _effectus_translationis,
+        "tools/credo_fumus.sh\n", "credo\n");
+    CREDO_AEQUALIS_I32((i32)_translatio(t, "credo")->genus,
+        (i32)PORTAE_TRANSLATIO_DEBITA);
+    t = _translationes_mundi(c, _effectus_translationis, "",
+        "credo\nvenenum\n");
+    u = _translatio(t, "credo");
+    CREDO_AEQUALIS_I32((i32)u->genus, (i32)PORTAE_TRANSLATIO_PORTAT);
+    CREDO_VERUM(chorda_aequalis_literis(u->causa, "nulla via mutata"));
+    CREDO_AEQUALIS_I32((i32)_translatio(t, "venenum")->genus,
+        (i32)PORTAE_TRANSLATIO_NUMQUAM);
+    /* effectus sera ignotum: caeca omni viae debetur */
+    t = _translationes_mundi(c, effectus_sine_sera, "docs/z.txt\n",
+        "sera\ncredo\n");
+    CREDO_AEQUALIS_I32((i32)_translatio(t, "sera")->genus,
+        (i32)PORTAE_TRANSLATIO_DEBITA);
+    CREDO_AEQUALIS_I32((i32)_translatio(t, "credo")->genus,
+        (i32)PORTAE_TRANSLATIO_PORTAT);
+
+    CREDO_GRADUS("contractus machinae");
+    t = _translationes_mundi(c, _effectus_translationis,
+        "tools/sera_fixa/a.txt\n", "venenum\ncredo\n");
+    CREDO_VERUM(chorda_aequalis_literis(portae_translationes_scribere(t,
+        VERUM, c->piscina),
+        "TRANSLATIO\tvenenum\tnumquam\ttranslatio=\"numquam\""
+        " (tools/venenum_probare.sh:1)\n"
+        "TRANSLATIO\tcredo\tportat\t1 via mutata, nulla huius"
+        " portae\n"));
+    CREDO_VERUM(chorda_aequalis_literis(portae_translationes_scribere(t,
+        FALSUM, c->piscina),
+        "  venenum  numquam  translatio=\"numquam\""
+        " (tools/venenum_probare.sh:1)\n"
+        "  credo  portat  1 via mutata, nulla huius portae\n"));
+    o = _derivare_mundum(c, _plagulae_translationis,
+        _paria_translationis,
+        _effectus_translationis, NIHIL);
+    CREDO_NECESSE_NON_NIHIL(o);
+    {
+        chorda m = portae_declaratas_scribere(o, NIHIL, VERUM,
+            c->piscina);
+
+        CREDO_VERUM(chorda_continet(m, _ch(c,
+            "LEGIT\tcredo\tdocs/*.md\nLEGIT\tcredo\tlib/*.c\n")));
+        CREDO_VERUM(chorda_continet(m, _ch(c,
+            "TRANSLATIO\tvenenum\tnumquam\n")));
+        CREDO_VERUM(!chorda_continet(m, _ch(c, "TRANSLATIO\tcredo")));
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "lectio sana", _sectio_lectio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "genus portae", _sectio_genus, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1671,6 +1888,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "possessio instrumentorum", _sectio_possessio, NIHIL, NIHIL,
         NIHIL,
       NIHIL },
+    { "translatio receptorum", _sectio_translatio, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -38,7 +38,7 @@
 # (clausura tools/fabrica.c: lib/unitates.c) - I s, vilis.
 #
 # Exitus: 0 sanum | 1 FRACTUM | 2 bin/fabrica aut bin/canon_examen deest.
-# <porta titulus="unitates" genus="praeiudicium" tegit="unitates.stml unitates.canon unitas.canon unitas.stml */unitas.stml canones.registrum interrogationes.canon *.interrogationes.stml tools/iudex_unitatum.sh tools/iudex_unitatum.c .claude/hooks/iudex_custodum.sh .claude/hooks/examen-custos.sh .claude/hooks/censor-custos.sh .claude/hooks/formator-custos.sh .claude/hooks/canon-custos.sh" currit="tools/fabrica.c"/>
+# <porta titulus="unitates" genus="praeiudicium" tegit="unitates.stml unitates.canon unitas.canon unitas.stml */unitas.stml canones.registrum interrogationes.canon *.interrogationes.stml tools/iudex_unitatum.sh tools/iudex_unitatum.c .claude/hooks/iudex_custodum.sh .claude/hooks/examen-custos.sh .claude/hooks/censor-custos.sh .claude/hooks/formator-custos.sh .claude/hooks/canon-custos.sh" currit="tools/fabrica.c" legit="aedilis.stml archivum/lib/arbor.c knotapel/CLAUDE.md knotapel/archive-trial/demo-snapshot.c lib/cantuale_infixum.c lib/energia_posix.c lib/mensa_assets/fontes/imago.js officina/amalgama/officina.h oracula/clay/clay_vinculum.c probationes/pictor_commune.h probationes/probatio_pictor_strata.c"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2

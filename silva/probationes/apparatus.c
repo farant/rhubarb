@@ -2,6 +2,7 @@
 
 #include "postulata_posix.h"
 #include "apparatus.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "xar.h"
 #include "silva_token.h"
 #include "silva_expandere.h"
@@ -99,7 +100,7 @@ apparatus_plagulam_legere (
                 i8* buffer;
     signatus longus  mensura;
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL)
     {
         redde NIHIL;

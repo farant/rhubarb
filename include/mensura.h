@@ -173,7 +173,9 @@ mensura_annotare (
  * mensura_condere - Diarium in volumen transferre
  *
  * Omnes lineae in actis voluminis conduntur (genus "mensura"),
- * transactione una. Diarium POST successum truncatur.
+ * transactione una. Diarium POST successum DELETUR (truncatur solum
+ * si deleri nequit). Diarium absens = nihil condendum: successus,
+ * conditae nullae.
  *
  * Lineae malformatae NON silentur: numerantur et causa eas nominat.
  */

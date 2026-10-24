@@ -266,32 +266,23 @@ _probationes_c_ingressus (
         && sutura->clausura_c(sutura->datum, chorda_ut_cstr(
                membrum->fons, piscina), piscina, &clausura, &causa))
     {
-        /* fons aut caput sub build/ = productum praecondicionis
-         * (capsula speculi: tempus et commissum fert) - in clave per
-         * EXSTANTIAM solam, ut porta_aedilis (approximatio nominata,
-         * Franus 2026-10-06; fabrica-7 T4): contentum omni generatione
-         * mutatum membra semper iterum curreret */
+        /* fontes et capita OMNIA per CONTENTUM - etiam sub build/
+         * (productum praecondicionis, e.g. capsula speculi). Olim
+         * build/ omissum (exstantia sola, fabrica-7 T4): capsula tempus
+         * horologii ferebat, et mutatio fontium quos condit membra
+         * speculi non iterum currebat (quaestio …4HNHT89B). Nunc
+         * capsula deterministica (provenientia regeneratio);
+         * productum numquam iudicatum (ignota) ut ingressus a fabrica
+         * recusatur */
         per (i = ZEPHYRUM; i < xar_numerus(clausura.fontes); i++)
         {
-            chorda via = *(chorda*)xar_obtinere(clausura.fontes, i);
-
-            si (!chorda_incipit(via, chorda_ex_literis("build/",
-                    piscina)))
-            {
-                _ingressum_c_addere(ingressus_out, "fasciculus", via,
-                    piscina);
-            }
+            _ingressum_c_addere(ingressus_out, "fasciculus",
+                *(chorda*)xar_obtinere(clausura.fontes, i), piscina);
         }
         per (i = ZEPHYRUM; i < xar_numerus(clausura.capita); i++)
         {
-            chorda via = *(chorda*)xar_obtinere(clausura.capita, i);
-
-            si (!chorda_incipit(via, chorda_ex_literis("build/",
-                    piscina)))
-            {
-                _ingressum_c_addere(ingressus_out, "fasciculus", via,
-                    piscina);
-            }
+            _ingressum_c_addere(ingressus_out, "fasciculus",
+                *(chorda*)xar_obtinere(clausura.capita, i), piscina);
         }
         /* FACULTAS REPOSITORIUM (fabrica-7 T5): probatio repositorium
          * VIVUM legit (HEAD, refs, sarcinae) - currit, et clavis

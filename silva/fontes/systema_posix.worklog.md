@@ -166,3 +166,38 @@ refused.
 ## 2026-10-22 — section postulata_neon.h (sigillum)
 
 The same pattern as postulata_atomica.h. `#define __ARM_FEATURE_SHA2 1` (equal to clang's predefined value; auspex_posix asserts it; plant value 2 → auspex fails) so silva evaluates the `#if defined(__ARM_FEATURE_SHA2)` branch instead of skipping it as undefined. The vector types are C89 structs and the prototypes cover only the 10 intrinsics sigillum uses, under `#ifndef __clang__`. An intrinsic used but not declared here is an implicit call, so REICE (verified). Adding one means a line here, which is the point: the vector surface is declared, not exempt.
+
+## 2026-10-23 — NDK Android sections (testa B1 T3b)
+
+The first Android-only file (lib/testa_android.c) met examen with 43
+violations: examen judges against this lexicon, not real headers, and
+nothing here knew the NDK. Fran chose to build the lexicon (option a)
+rather than exempt the file. Sections `android/rect.h`,
+`android/asset_manager.h`, `android/native_window.h`,
+`android/looper.h`, `android/input.h` (+ keycodes the input header pulls
+in), `android/native_activity.h`, `android/choreographer.h`,
+`android/configuration.h`, `android/log.h`, `sys/system_properties.h`,
+appended in one block at the end of this file (kept here, not in a new
+file, because the path is hard-coded in examen, percursus, renominare,
+ambigua and the corpus capsule; sections are evoked only by a file's own
+includes, so nothing else sees them). examen: ACCIPE, 0 violations.
+
+Certifier `officina/auspex_android.sh` (twin of auspex_posix): two TUs
+under the NDK clang aarch64-linux-android30 - real NDK headers vs this
+file - one table: 4 struct sizes, 36 field offsets (every field the
+shell touches plus its neighbours), 22 enum/macro values. clang 18
+rejects the old `&((S*)0)->C` OFF as a constant (-Wgnu-folding-constant)
+-> `__builtin_offsetof`. Plant ANDROID_LOG_INFO 4->5: only TU nostrum
+DISSENTIT (negative array), restored green. Java fields of
+ANativeActivity (vm, env, clazz) are void* here - same size/offset,
+certified; JNI waits for B3.
+
+Latin lint: the NDK names are fixed foreign API (event, window, looper,
+activity...). Glossary entries were ruled out (real English words shadow
+the oracle - house rule); the 37 words went into the tolerated copy by
+deliberate regeneration, diff checked == exactly the expected 37. My own
+coinages were renamed instead (testa_geometriam_in_area,
+testa_congruentia_initus).
+
+A comment containing `android/*` broke auspex_posix (-Wcomment: `/*`
+inside a block comment) - the host TU compiles this whole file.

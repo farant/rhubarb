@@ -9,6 +9,7 @@
  */
 
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "credo.h"
 #include "md_arbor.h"
 #include "md_stml.h"
@@ -37,7 +38,7 @@ _plagulam_legere (
     character* memoria;
         size_t lecti;
 
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde NIHIL;
@@ -417,7 +418,7 @@ _corpus_probare (
               s64  octeti   = ZEPHYRUM;
 
         sprintf(via, "%s/md/build/corpus_md.txt", radix_viae);
-        lista = fopen(via, "r");
+        lista = lectiones_fopen(via, "r");
         si (lista == NIHIL)
         {
             CREDO_CULPA ("md/build/corpus_md.txt absens - e radice per cursorem curre");

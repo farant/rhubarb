@@ -98,3 +98,12 @@
   scripta; capsula adds 3 speculum/ meta entries; page-side plagulae
   = N+1 (fontes.txt embedded, proventus/exclusa consumed into
   structure).
+
+## 2026-10-23 — proventus semantics: commit time, input digest (deterministic capsule)
+
+speculum_generare.sh (the hospes mirror and every app mirror built by compile_tests.sh) now writes:
+- `tempus=` as the COMMIT time of HEAD, not the build's wall-clock time;
+- `digestum_fontium=<sha256>` (paths + contents of the embedded files, in fontes.txt order) instead of `sordidum=`;
+- the embedded manifest's `generatum` as the commit epoch.
+
+The mirror now says "built from commit X, inputs D", which is reproducible. Reason: fabrica can judge the capsule by regeneration, and the tests that include it key on its contents (lib/fabrica.worklog.md, question …4HNHT89B). Nothing parsed `sordidum`; probatio_speculum_fontium checks for the presence of `commissum=` and `tempus=`, both kept.

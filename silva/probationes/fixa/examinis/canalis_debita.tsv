@@ -43,14 +43,6 @@ crusta/probationes/probatio_crusta_reservatio.c	ante regulam (2026-10-14): migra
 crusta/probationes/probatio_crusta_stml.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 crusta/probationes/probatio_crusta_totalitas.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 css/instrumenta/computus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-css/probationes/probatio_css_adaptare.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-css/probationes/probatio_css_canon.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-css/probationes/probatio_css_computus.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-css/probationes/probatio_css_corpus.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-css/probationes/probatio_css_diagnostica.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-css/probationes/probatio_css_selector.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-css/probationes/probatio_css_stml.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-css/probationes/probatio_css_totalitas.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
 gesta/fontes/gesta.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 gesta/fontes/tabularium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 gesta/probationes/probatio_fori.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
@@ -72,22 +64,11 @@ lib/mensura_contextus.c	ante regulam (2026-10-14): migratio ad filum cum tactu p
 lib/via.c	canalis ipse: vocationes crudae iure - <tolera> per sedem (spec T11; lib/filum.c tactus omnia renovat)
 materia/fontes/materia_coctor.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
 materia/instrumenta/oraculum_silvae.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-materia/probationes/probatio_materia_coctor.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-materia/probationes/probatio_materia_pictor.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
 md/instrumenta/arbor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 md/instrumenta/census.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 md/instrumenta/computus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 md/instrumenta/extenta.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 md/instrumenta/html.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-md/probationes/probatio_md_arbor.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-md/probationes/probatio_md_canon.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-md/probationes/probatio_md_computus.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-md/probationes/probatio_md_exempla.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-md/probationes/probatio_md_html.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-md/probationes/probatio_md_lexema.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-md/probationes/probatio_md_oraculum.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-md/probationes/probatio_md_stml.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-md/probationes/probatio_md_totalitas.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
 officina/amalgama/officina.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/fontes/officina_indicium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/fontes/officina_machinula.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
@@ -139,10 +120,7 @@ oratio/probationes/probatio_oratio_vocabula.c	ante regulam (2026-10-14): migrati
 oratio/probationes/probatio_oratio_vocabularium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 oratio/probationes/probatio_oratio_vocabularium_en.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 oratio/probationes/probatio_oratio_vocabularium_la.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-probationes/probatio_aedilis_praefixum.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 probationes/qr_assets/qr_gyrus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-saltuarius/probationes/probatio_saltuarius_limes.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-saltuarius/probationes/probatio_saltuarius_salve.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
 silva/fontes/systema_c89.h	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 silva/instrumenta/principalia/arbor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 silva/instrumenta/principalia/auspex.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
@@ -169,29 +147,6 @@ silva/instrumenta/silva_amalgama.c	ante regulam (2026-10-14): migratio ad filum 
 silva/instrumenta/silva_canon_coquere.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 silva/instrumenta/silva_coquere.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 silva/instrumenta/silva_iudicium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-silva/probationes/apparatus.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_amalgama.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_arbor_circuitus.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_arbor_plagula.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_c89.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_canon.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_canon_corpus.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_computus.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_constructio.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_contextus.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_exemplaria_inutilia.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_exemplaria_lint.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_exemplaria_obsoleta.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_fidelitas.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_grammatica.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_impletiones.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_mensura.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_parsare.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_quaestiones.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_scribere.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_semantica.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_solarium.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-silva/probationes/probatio_silva_tabulae.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
 tessera/probationes/probatio_tessera_folium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tessera/probationes/probatio_tessera_ponere.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 toml/instrumenta/arbor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo

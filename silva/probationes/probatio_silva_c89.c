@@ -18,6 +18,7 @@
  * redit (silva_scribere_fontem), etiam segmenta ERROR.
  */
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
@@ -2662,7 +2663,7 @@ s32 principale (vacuum)
         }
         sprintf(via, "%s/silva/probationes/fixa/syntaxis_v1_corpus.txt",
             radix_env);
-        corpus = fopen(via, "rb");
+        corpus = lectiones_fopen(via, "rb");
         CREDO_NON_NIHIL (corpus);
 
         si (corpus != NIHIL)

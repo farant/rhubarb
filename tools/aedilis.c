@@ -5,7 +5,7 @@
  * (.m - clang oraculum per system() + plagulam temporalem),
  * provenientia git, emissio manifesti.
  *
- * Usus: bin/aedilis <fons.c> [--varians <verbum>]
+ * Usus: bin/aedilis <fons.c> [--varians <verbum[,verbum...]>]
  * Fructus: build/aedilis/<basis>/manifestum.stml
  * Postura defectus: RECUSARE CLAMOSE (exitus 1, causa nominata).
  *
@@ -982,7 +982,8 @@ principale (
     argumenta_ponere_descriptionem(parser,
         "aedilis - clausura dependentiarum derivata + manifestum");
     argumenta_addere_optionem(parser, NIHIL, "--varians",
-        "Varians platformae (ordinarie praelatio configurationis)");
+        "Varians aut index ordine praelationis (android,posix);"
+        " ordinarie praelatio configurationis");
     argumenta_addere_vexillum(parser, NIHIL, "--solitarius",
         "Etiam scriptum hermeticum emittere");
     argumenta_addere_vexillum(parser, NIHIL, "--currere",
@@ -1116,7 +1117,7 @@ principale (
         si (argumenta_numerus_positionalium(lecta) != 1)
         {
             fprintf(stderr,
-                "usus: aedilis <fons.c> [--varians <verbum>] | --corpus <dir> --partes | --radices\n");
+                "usus: aedilis <fons.c> [--varians <verbum[,verbum...]>] | --corpus <dir> --partes | --radices\n");
             redde 1;
         }
         scopus       = argumenta_obtinere_positionalem(lecta, 0,

@@ -50,10 +50,21 @@
 #include "silva_arbor.h"
 #include "apparatus.h"
 #include "credo.h"
+#include "iter_directoria.h"  /* canalis (examen 96) */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dirent.h>
+
+/* titulus introitus (chorda, non terminata) ut litterae C - lectio
+ * directorii per iter_directoria (liber lectionum 'D', canalis examen
+ * 96; quaestio …4XE9S9K6: opendir crudus membrum caecum faciebat) */
+interior constans character*
+_introitus_titulus (
+    constans DirectoriumIntroitus* introitus,
+                          Piscina* piscina)
+{
+    redde chorda_ut_cstr(introitus->titulus, piscina);
+}
 
 #define DIVERGENTIAE_MAX 8
 
@@ -141,49 +152,52 @@ _capita_legere (
 constans character* via,
                Xar* capita)
 {
-                 DIR* dir;
-    structura dirent* introitus;
+                 DirectoriumIterator* dir;
+                DirectoriumIntroitus* introitus;
 
-    dir = opendir(via);
+    dir = directorium_iterator_aperire(via, piscina);
     si (dir == NIHIL)
     {
         redde;
     }
-    dum ((introitus = readdir(dir)) != NIHIL)
+    dum ((introitus = directorium_iterator_proximum(dir)) != NIHIL)
     {
              character via_plena[1024];
         memoriae_index m;
 
-        si (introitus->d_name[ZEPHYRUM] == '.')
+        si (_introitus_titulus(introitus, piscina)[ZEPHYRUM] == '.')
         {
             perge;
         }
-        si (_praetermittendum(introitus->d_name))
+        si (_praetermittendum(_introitus_titulus(introitus, piscina)))
         {
             perge;
         }
-        si (strlen(via) + strlen(introitus->d_name) + II
+        si (strlen(via) + strlen(_introitus_titulus(introitus, piscina))
+            + II
             >= magnitudo(via_plena))
         {
             perge;
         }
-        sprintf(via_plena, "%s/%s", via, introitus->d_name);
-        si (introitus->d_type == DT_DIR)
+        sprintf(via_plena, "%s/%s", via, _introitus_titulus(introitus,
+            piscina));
+        si (introitus->genus == INTROITUS_DIRECTORIUM)
         {
             _capita_legere(piscina, visa, via_plena, capita);
         }
         alioquin
         {
-            m = strlen(introitus->d_name);
-            si (   m                         >= III
-                && introitus->d_name[m - II] == '.'
-                && introitus->d_name[m - I]  == 'h')
+            m = strlen(_introitus_titulus(introitus, piscina));
+            si (   m                                              >= III
+                && _introitus_titulus(introitus, piscina)[m - II] == '.'
+                && _introitus_titulus(introitus, piscina)[m - I]
+                    == 'h')
             {
                 _caput_legere(piscina, visa, via_plena, capita);
             }
         }
     }
-    closedir(dir);
+    directorium_iterator_claudere(dir);
 }
 
 /* capita lecta contextui plagulae praebere (ordine lectionis) */
@@ -720,24 +734,24 @@ interior constans character* PROBATIONES_VIVAE[] = {
 s32
 principale (vacuum)
 {
-                 Piscina* piscina;
-      constans character* radix;
-               character  via_corporis[512];
-               character  via_plagulae[1024];
-                    DIR* corpus;
-       structura dirent* introitus;
-           CorpusSilvae  corpus_silvae;
-              LintCensus census_bibliothecae;
-              LintCensus census_probationum;
-                     i8* lint_datum;
-                     i32 lint_mensura;
-                  chorda lint_textus;
-                     i8* diribitio_datum;
-                     i32 diribitio_mensura;
-                  chorda lint_diribitio;
-                     i32 i;
-                     b32 praeteritus;
-    Xar* capita;
+                                Piscina* piscina;
+                     constans character* radix;
+                              character  via_corporis[512];
+                              character  via_plagulae[1024];
+                    DirectoriumIterator* corpus;
+                   DirectoriumIntroitus* introitus;
+                           CorpusSilvae  corpus_silvae;
+                             LintCensus  census_bibliothecae;
+                             LintCensus  census_probationum;
+                                     i8* lint_datum;
+                                    i32  lint_mensura;
+                                 chorda  lint_textus;
+                                     i8* diribitio_datum;
+                                    i32  diribitio_mensura;
+                                 chorda  lint_diribitio;
+                                    i32  i;
+                                    b32  praeteritus;
+                                    Xar* capita;
 
     piscina = piscina_generare_dynamicum("probatio_lint_ii",
                                          4194304);
@@ -809,7 +823,7 @@ principale (vacuum)
     CREDO_VERUM (apparatus_corpus_parare(&corpus_silvae, radix,
         piscina));
     sprintf(via_corporis, "%s/lib", radix);
-    corpus = opendir(via_corporis);
+    corpus = directorium_iterator_aperire(via_corporis, piscina);
     si (corpus == NIHIL)
     {
         imprimere("FRACTA: corpus non apertum: %s\n", via_corporis);
@@ -817,19 +831,19 @@ principale (vacuum)
         piscina_destruere(piscina);
         redde I;
     }
-    dum ((introitus = readdir(corpus)) != NIHIL)
+    dum ((introitus = directorium_iterator_proximum(corpus)) != NIHIL)
     {
         si (!apparatus_in_corpore(&corpus_silvae, "lib",
-            introitus->d_name, piscina))
+            _introitus_titulus(introitus, piscina), piscina))
         {
             perge;
         }
         sprintf(via_plagulae, "%s/lib/%s", radix,
-                introitus->d_name);
+                _introitus_titulus(introitus, piscina));
         _plagulam_probare(via_plagulae, radix, &lint_textus,
             &lint_diribitio, &census_bibliothecae, capita);
     }
-    closedir(corpus);
+    directorium_iterator_claudere(corpus);
     _censum_referre("bibliotheca", &census_bibliothecae);
 
     /* gradus probationum (index fixus - situs vivi) */

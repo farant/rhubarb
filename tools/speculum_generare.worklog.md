@@ -83,3 +83,7 @@ capsula but do NOT relink the wearer (name doesn't match filter)
   Linked via a per-test extra-object case in compile_tests.sh (the
   generated .o lives in the staging dir, NOT build/ root — it must not
   auto-link into every binary).
+
+## 2026-10-23 — deterministic output (question …4HNHT89B)
+
+`tempus` = commit time; `digestum_fontium` replaces `sordidum`; the manifest's `generatum` is normalized to the commit epoch. Under FABRICA_SCRIPTURA/FABRICA_AGIT the script always regenerates (no mtime gate) and stages under the scratch dir, printing the canonical capsule path in exclusa.txt. Verified byte-identical across runs and in scratch. Details: lib/fabrica.worklog.md, lib/speculum.worklog.md.

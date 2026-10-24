@@ -5,7 +5,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/../tools/cursus.sh"
 
 # Effusio cursus ultimi semper in build/test_logs/saltuarius.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS servatus).
-# <porta titulus="saltuarius" tegit="saltuarius/fontes/* saltuarius/probationes/*" currit="tools/fabrica.c"/>
+# <porta titulus="saltuarius" tegit="saltuarius/fontes/* saltuarius/probationes/*" currit="tools/fabrica.c" translatio="numquam"/>
 if [ -z "${SALTUARIUS_PROBATIONES_EFFUSIO:-}" ]; then
     export SALTUARIUS_PROBATIONES_EFFUSIO=1
     # effusio in plagula TEMPORARIA extra arborem, post cursum in locum

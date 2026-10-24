@@ -43,9 +43,17 @@ else
     VEXILLA="${VEXILLA_C89[*]}"
 fi
 
-STAGE="build/speculum/$TITULUS"
+# DETERMINISTICA (quaestio …4HNHT89B, Franus 2026-10-23): capsula
+# functio pura ingressuum est - tempus = tempus COMMISSI (non horologii),
+# digestum_fontium pro 'sordidum' - ergo fabrica eam per REGENERATIONEM
+# iudicat (provenientia regeneratio) et membra probationum eam per
+# contentum clavant. Sub iudice (FABRICA_SCRIPTURA) statio in scriptura
+# fabricae, exitus ibi; via canonica in contentu eadem.
+CANON="build/speculum/$TITULUS"
+STAGE="${FABRICA_SCRIPTURA:+$FABRICA_SCRIPTURA/}$CANON"
 SECTIO="speculi_$TITULUS"
 EXITUS_C="$STAGE/capsula_${SECTIO}.c"
+EXITUS_CANON="$CANON/capsula_${SECTIO}.c"
 BASIS=$(basename "$APP" .c)
 MANIFESTUM="build/aedilis/$BASIS/manifestum.stml"
 
@@ -53,7 +61,10 @@ MANIFESTUM="build/aedilis/$BASIS/manifestum.stml"
 # porta recentiae: si nihil recentius quam capsula emissa, salta
 # (provenientia inter mutationes fontium consenescit - acceptum)
 # ------------------------------------------------------------------
-if [ -f "$EXITUS_C" ]; then
+# sub iudice et executore fabricae (FABRICA_SCRIPTURA, FABRICA_AGIT)
+# semper: recentiam fabrica iudicat, non mtime (tools/capsula_radicis.sh)
+if [ -f "$EXITUS_C" ] && [ -z "${FABRICA_SCRIPTURA:-}" ] \
+    && [ -z "${FABRICA_AGIT:-}" ]; then
     RECENTIOR=$(find "$APP" "$FABRICA" "$0" aedilis.stml include lib \
         -newer "$EXITUS_C" 2>/dev/null | head -1)
     if [ -z "$RECENTIOR" ]; then
@@ -152,24 +163,34 @@ printf '%s\n' "${OMNIA[@]}" | sort -u > "$STAGE/speculum/fontes.txt"
 # provenientia (clavis=valor; latus C in JSON transformat)
 # ------------------------------------------------------------------
 COMMISSUM=$(git rev-parse HEAD 2>/dev/null || echo "ignotum")
-SORDIDUM="falsum"
-[ -n "$(git status --porcelain 2>/dev/null)" ] && SORDIDUM="verum"
+# tempus COMMISSI, non horologii: capsula ex eisdem ingressibus eadem
+TEMPUS=$(git show -s --format=%cI HEAD 2>/dev/null || echo "ignotum")
+# digestum fontium insertorum (via + contentum, ordine fontes.txt) pro
+# 'sordidum': arbor mutata quae fontes speculi non tangit capsulam non
+# mutat, et speculum dicit QUID insertum sit, non solum 'sordidum'
+DIGESTUM_FONTIUM=$(sort -u "$STAGE/speculum/fontes.txt" | while IFS= read -r f; do
+    printf '%s\n' "$f"; cat "$f"; done | shasum -a 256 | awk '{print $1}')
 COMPILATOR=$(clang --version 2>/dev/null | head -1)
 
 {
     echo "app=$TITULUS"
     echo "plagula_app=$APP"
     echo "commissum=$COMMISSUM"
-    echo "sordidum=$SORDIDUM"
+    echo "digestum_fontium=$DIGESTUM_FONTIUM"
     echo "compilator=$COMPILATOR"
     echo "vexilla=$VEXILLA"
-    echo "tempus=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+    echo "tempus=$TEMPUS"
     echo "mandatum=bash build/aedilis/$BASIS/struere.sh (manifestum: $MANIFESTUM; regeneratio: bin/aedilis $APP)"
 } > "$STAGE/speculum/proventus.txt"
 
 # manifestum aedilis ipsum in capsulam - speculum veritatem
 # dependentiarum suarum secum fert
-cp "$MANIFESTUM" "$STAGE/speculum/manifestum.stml"
+# attributum generatum (epocha scripturae aedilis) ad epocham COMMISSI
+# normatur: speculum veritatem dependentiarum fert, non horam derivationis
+# (capsula deterministica, quaestio …4HNHT89B)
+EPOCHA_COMMISSI=$(git show -s --format=%ct HEAD 2>/dev/null || echo 0)
+sed -E "s/generatum=\"[0-9]+\"/generatum=\"$EPOCHA_COMMISSI\"/" "$MANIFESTUM" \
+    > "$STAGE/speculum/manifestum.stml"
 
 # ------------------------------------------------------------------
 # exclusa (TSV: via, magnitudo, cksum, causa)
@@ -185,7 +206,7 @@ cp "$MANIFESTUM" "$STAGE/speculum/manifestum.stml"
     fi
     if [ -n "$GENERATA" ]; then
         while IFS= read -r f; do
-            [ "$f" = "$EXITUS_C" ] && continue
+            [ "$f" = "$EXITUS_CANON" ] && continue
             if [ -f "$f" ]; then
                 printf '%s\t%s\t%s\tgeneratum (annotatio)\n' "$f" \
                     "$(wc -c < "$f" | tr -d ' ')" \
@@ -199,7 +220,7 @@ cp "$MANIFESTUM" "$STAGE/speculum/manifestum.stml"
         printf '%s\t%s\t%s\tmagnitudo>1MB\n' "$f" \
             "$(wc -c < "$f" | tr -d ' ')" "$(cksum "$f" | awk '{print $1}')"
     done
-    printf '%s\t0\t0\tgeneratum - continet hos ipsos fontes\n' "$EXITUS_C"
+    printf '%s\t0\t0\tgeneratum - continet hos ipsos fontes\n' "$EXITUS_CANON"
 } > "$STAGE/speculum/exclusa.txt"
 
 # ------------------------------------------------------------------

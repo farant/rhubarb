@@ -3449,3 +3449,207 @@ The heal after the "custodita II" commit actually RAN vates_responsum: its memo 
 Both now declare `build/aedilis/norma` and `bin/norma` as communis vestigia. Verified by appending a comment to lib/vates_responsum_norma.c → `sanare` ran the generator (SANATUM, file restored byte-identical) with no vestigium failure. No cycle.
 
 Lesson: the read guard does not cover writes. Write declarations are only exercised when sanare executes an action for real, which a memorabilis action rarely does.
+
+## 2026-10-23 — fabrica-fumus split: pura (tools/fabrica_fumus.sh) + vivus (tools/fabrica_fumus_vivus.sh)
+
+Option 1 (desideratum …VXWK8; the real migration into a fabrica composite comes later). New gate `fabrica-fumus-vivus`.
+
+**Which cases are live.**
+- Ran with FABRICA_LECTIONES and one `G` marker per output line, piped in from a `while read` loop. Markers TRAIL each case by one line, so reads "post X" belong to case X+1.
+- The cases that run `"$F"` at the repo root (not inside `(cd "$T/r" …)`) were checked by reading the script.
+- **Moved whole, verbatim, original numbers kept:** VI (the judge itself RECENS), VII (digest of the real fabrica action), VIII (judges the whole tree; writes an orphan manifest into the real build/aedilis), XI (digest == the installed binary's reported inputs), XXXIII (census), XLI (provenance families over the real aedificatio.stml + natura_quaesitor manifest).
+- **XLVII split:** its loop over `$T/r/build/fabrica.db` stays; the real `build/fabrica.db` half moved.
+- **XI was found only by a SECOND traced run.** After the first move the hermetic script still read 1,488 relative tracked paths, all "post X".
+
+**Result.**
+- pura reads 16 tracked files: the declarations and canons it copies or checks. That gives `legit="*aedificatio.stml aedificatio.canon canon.canon canones.registrum aedilis.stml fabrica.stml crusta/effectus_mandata.stml"`. Its tools are covered by owning bin/fabrica plus the binary digest.
+- vivus: `legit="*"`, `currit="tools/fabrica.c"`, so fabrica's sources owe it.
+- Case labels before = after, as a set. XLVII appears in both scripts.
+- Times: pura 46 s + vivus 21 s, against ~63 s before.
+- **New runner gotcha (again):** an untracked script is "sine annotatione" until `git add -N`.
+
+## 2026-10-23 — members blind to raw reads (question …4XE9S9K6): slice 1, md css materia saltuarius + 1 radix
+
+**Reproduced live before the fix.** `md/probationes/fixa/computus/basis.tsv` (probatio_md_computus's golden, read with raw `fopen`) was corrupted.
+- `bin/fabrica probare probationes_md probatio_md_computus` said "servatae 1/1: ingressus immutati … lectiones congruunt" and KEPT the member green.
+- `-vis` turned it red.
+- So a broken golden or fixture was committable green: the read trace (lectiones) never saw the file, and the member's static key doesn't include fixtures.
+- html, the question's original example, was already migrated: a fixture change reruns it.
+
+**Fix (decision "all file IO through the channel", examen 96).** Every raw `fopen` in the composite-member tests listed in canalis_debita.tsv becomes `lectiones_fopen` (same signature: L/A for reads, S for writes) plus `#include "lectiones.h"`. Files:
+- md 9, css 8, materia 2, saltuarius 1;
+- probationes/probatio_aedilis_praefixum.c.
+
+21 debt lines deleted, as the ratchet requires. examen ACCEPTS all of them, and formatter counts are unchanged.
+
+**After.** The same golden corruption now forces a rerun and goes red ("cursae 1"); restored, it's green. Suites green: md 14/14, css 10/10, materia 14/14, saltuarius 13/13, radix probatio_aedilis_praefixum.
+
+**Still open:** silva's 22 debt files (stat/opendir/access as well as fopen, and the shared helper silva/probationes/apparatus.c) come next. Tools (instrumenta) debts aren't composite members.
+
+## 2026-10-23 — members blind to raw reads (…4XE9S9K6): slice 2, silva (22 files): no composite member left with raw IO
+
+**Changes.**
+- 14 files had only `fopen` → `lectiones_fopen`, including the shared helper silva/probationes/apparatus.c (anchor: after `#include "apparatus.h"`; it has no latina.h line). Its `popen` is not a channel call.
+- 9 files enumerated corpus directories with opendir/readdir/closedir. Converted to `directorium_iterator_aperire`/`_proximum`/`_claudere` (iter_directoria writes the 'D' record):
+  - `introitus->d_name` → a per-file helper `_introitus_titulus()` = `chorda_ut_cstr(introitus->titulus, piscina)`;
+  - `d_type == DT_DIR` → `genus == INTROITUS_DIRECTORIUM`. genus FOLLOWS symlinks, unlike d_type; no symlinks exist under lib/ include/ probationes/fixa/ silva/probationes/fixa/.
+- The formatter rules that tripped the first attempt: a house include must precede system ones (ordo-inclusionum); 72 columns.
+- examen ACCEPTS all 22 and formatter counts equal HEAD. 22 debt lines deleted; NO composite member has a canalis debt left.
+
+**Proof.** probationes_silva 56/56. A NEW file in probationes/fixa/roundtrip (enumerated by probatio_silva_arbor_circuitus) forced a rerun, and so did removing it; before, raw opendir made the member blind.
+
+**Left over:** canalis debts remain only in suites that are not composites: oratio 18, briar 13, officina 11, crusta 7, gesta 5, tessera 2, plus tools. Those gates rerun whole, so they can't keep a stale pass, but the debts are a PREREQUISITE for converting those suites to composites (oratio next).
+
+## 2026-10-23 — speculum capsule made deterministic, members key build/ by content (question …4HNHT89B)
+
+**The gap.** `_probationes_c_ingressus` left every build/ closure file out of a member's key; existence was guaranteed by the precondition. Only 3 of 662 members are affected (probatio_speculum, probatio_speculum_fontium, probatio_vitrea_hospes), all through build/speculum/hospes/capsula_speculi_hospes.c. A change to something the capsule embeds (worklogs, scripts) never reran them.
+
+**First attempt, reverted:** keying by content. The real tree refused: "ingressus est exitus numquam iudicatus - praecondicio sola licet". The producer declared `provenientia="ignota"` because the capsule embedded wall-clock time, and fabrica rightly won't key on an unjudged artifact.
+
+**Fix (option b′, Fran approved).**
+- The capsule is now a pure function of its inputs: `tempus` = commit time (`git show -s --format=%cI HEAD`), `digestum_fontium` (sha256 over the paths and contents of the embedded files) replaces `sordidum`, and the copied aedilis manifest's `generatum` is normalized to the commit epoch. That attribute was the last per-run difference, found by diffing two stagings.
+- The generator follows tools/capsula_radicis.sh: under FABRICA_SCRIPTURA/FABRICA_AGIT it ignores its mtime gate, stages under the scratch dir, and prints the canonical capsule path in exclusa.txt.
+- The capsule is `provenientia="regeneratio"`, and members key build/ files by content.
+
+**Proof.**
+- Byte-identical across forced regenerations and in scratch.
+- `bin/fabrica iudicare -plenus` → RECENS ("regeneratio congruit").
+- probare the three: rerun once (new key), then kept.
+- An embedded worklog (lib/chorda.worklog.md) changed → capsule STALUM, the precondition regenerates it, all 3 rerun. Restored → rerun once, then kept.
+- Unit: the fake worlds now model the capsule; case VIIIc (capsule changed → b only); the earlier plant (exclusion restored) went red at the key assertion.
+
+**Concept noted:** `provenientia="ignota"` is where fabrica is guessing. There are 8 such outputs in the graph (now 6); worth a pass ("can it be judged? if not, why").
+
+## 2026-10-23 — fabrica probare memory grows ~60 MB per member (kernel panic)
+
+Panic 19:13 (watchdog, compressor segments 100%): two `fabrica` processes at 16.0 and 14.2 GiB
+(quinta radix -vis, secunda commissio radix). Measured with temporary stderr prints
+(piscina_summa_usus, malloc_zone_statistics, ru_maxrss) on `probare -vis probationes_toml`,
+13 members: RSS 401 -> 1139 MB, i.e. ~62 MB per member, never released until exit.
+
+Where it goes (per member):
+- **Tree snapshots, ~25 MB.** `vestigium_capere` (tools/fabrica_sutura.c) walks ~54.6k entries
+  (~230 B each = 12.7 MB), twice per member (before/after), into the run-long piscina from
+  tools/fabrica.c:3569. Nothing ever resets it.
+- **Compiler bookkeeping, ~20-25 MB.** `_piscina_gradus` (tools/fabrica_ansae.c, static,
+  process-long) grows ~1 MB per `compilator_compilare` call, ~20 calls per member (one per
+  object in the link closure, even on cache hits). On a hit, the compiler reads whole files
+  into `compilator->piscina`: the source (key), the index, the cached .o, and the existing .o
+  (`_collocare` compare). fabrica never calls `compilator_memoriam_incipere`, so every header
+  in every index is re-read and re-hashed on every call (memo exists, only `--plures` uses it).
+  Costs time as well as memory.
+- **Run itself (gradus agere), 2-5 MB.** Post-run checks (comparare, debita, S lines,
+  ambitus) ~1 MB.
+
+Also: ~360 MB is allocated after closure derivation and before the first member (not yet
+attributed). A dynamic piscina abandons a block's tail when a request doesn't fit (`inutilis`
+50-130 MB), but that isn't what grows.
+
+Fix direction: a scratch piscina per member (copy out causa/notes that must outlive it); the
+compiler per call, or with the header memo on and cleared by `_memorias_vacare` (generators
+can rewrite headers mid-run, so the memo must be invalidated the same way sigils are).
+
+## 2026-10-23 — fix part 1: scratch piscina per action (park …T77EH4)
+
+What has to outlive an action turned out to be small. Everything persistent is already written
+per member: the verdict file, `<area>/debita.txt`, fabrica.db rows (`_lectiones_scribere` commits
+per call), mensor spans, `cursum_inscribere`. In memory only two things must survive until exit:
+1. the `FabricaSanatio` record (reason + stale-cause strings);
+2. the sutura caches (`sigilla`, `digesta`, `regenerationes`, `audita`).
+
+Trap: `sigilla`/`digesta` are emptied after each action, but the post-condition check fills them
+again AFTER that, and the next member's staleness check reads them. `regenerationes` is kept
+across members on purpose. So all four caches need long-lived keys AND values; the hash table
+stores keys by value (no copy).
+
+Change:
+- `FabricaSutura.piscina_cursus` (NIHIL = old behaviour, nothing reset). The cache inserts and the
+  sanatio strings go through `fabricae_piscina_cursus` / `fabricae_in_cursum`.
+- `fabrica_sanare` creates one scratch piscina ("fabrica_actum") only when piscina_cursus is set
+  and not siccum. Used by `_actionem_agere` + `_post_agere` in the serial loop and `_solam_agere`,
+  and per wave by `_undam_agere`; emptied with `piscina_vacare` after each.
+- `_ante_agere` (staleness) stays long-lived: ~0.8 MB per member memoized, ~500 B under -vis.
+
+Why `piscina_vacare` and not notare/reficere: it ZEROES, so a missed copy-out reads zeros, not
+plausible stale data. That is how the test catches it: a zeroed chorda reads as mensura 0 =
+"regeneration succeeded", so the test needs a FAILED regeneration memo (`discus.fractus`) to tell
+a dangling entry from a valid one. A success memo alone was a mute plant.
+
+Measured (`probare -vis`, peak footprint): css 848 -> 560 MB, saltuarius 1080 -> 667, toml
+1201 -> 751. A/B on toml shows no time cost (noise 39-68 s both ways, syspolicyd/mds busy after
+the reboot). Still ~30 MB per member left: the compiler bookkeeping in `_piscina_gradus`
+(part 2). Radix -vis is NOT safe until then (~400 x 30 MB).
+
+## 2026-10-23 — fix part 2: compiler calls in the caller's piscina (park …T77EH4)
+
+`_piscina_gradus` grew ~1 MB per `compilator_compilare` call (~20 per member, cache hits
+included): source, index, cached .o, existing .o and every header, all read into the
+compiler's own piscina. New `compilator_compilare_in(…, piscina)` puts a call's allocations in
+the caller's piscina; `suturae_compilare_gradus` passes its own, which since part 1 is the
+action scratch. Did NOT enable `compilator_memoriam_incipere`: a memoized header read is not
+recorded in FABRICA_LECTIONES (compilator.h says fabrica must not), so member keys would
+silently lose headers.
+
+Measured per toml member (temporary prints): gradus flat at 2.6 MB; scratch capacity levels off
+at 84 MB (high-water, reused); run piscina +0.9 MB per member (staleness, records, caches). Peak
+(-vis): css 355 MB, saltuarius 451, toml 432-492 (from 848 / 1080 / 1201 before part 1).
+Leftover fixed cost: ~330 MB in the run piscina before the first member (likely ordering /
+input hashing reading files into c->piscina). One-time, not growth; follow-up.
+
+## 2026-10-23 — fix part 3: wave formation without per-pair allocation (park …T77EH4)
+
+Radix -vis after parts 1+2 (merged main 3e57280f): 411/411, 582 s, footprint ~5.7 GB, flat during
+members. RSS lies here: ps showed ~460 MB while `footprint -p` said 4 GB (macOS compresses
+cold pages). Watch phys_footprint, not RSS.
+
+A MEMOIZED radix run (every commit) peaked at 7.4 GB in 14 s; the run piscina holds ~6.8 GB,
+none of it per member: 1.8 GB before fabrica_sanare, +1.2 GB first sanare (producer
+preflight?), +1.6 GB wave formation, +0.74 GB regeneration preview of the 354-member wave,
++1.2 GB _ante_agere (probatio_vicus_saltus 349 MB, probatio_vicus_admonitiones 349 MB,
+fragmenta_silva 247 MB).
+
+The wave part was pure garbage. `_simul_possunt` (O(n^2) over a wave) rebuilt
+`_vestigium_actionis` for BOTH actions on every pair, and `_loci_concurrunt` allocated
+`via + "/"` twice per pair of paths. Now each footprint is computed once per action in
+`fabrica_undas_formare` (parallel `indices` per wave), and `_via_sub` is an allocation-free
+prefix test that keeps the '/' boundary (build/opera vs build/operae must not conflict; new
+test). Memoized radix: 7.4 -> 5.6 GB. Remaining targets: the 1.8 GB startup, the 1.2 GB first
+sanare, preview, and the vicus/fragmenta staleness costs.
+
+## 2026-10-23 — fix part 4: A/X trace lines checked without reading the file (park …T77EH4)
+
+The two vicus members' 349 MB staleness checks were `~/.rhubarb/mensurae.volumen` (348 MB, mensor's
+database). Their read trace has an `X` (exists) line for it, and `fabricae_lectionem_sigillare`
+verified A/X lines by calling `sutura->legere` (WHOLE file into the piscina) plus `enumerare`,
+then threw the content away: the sigil is only PRAESENS/ABSENS.
+
+New optional sutura callback `existere(datum, via, piscina)`: same answer as legere || enumerare
+(regular file via the '~/'-expanded path like _legere, or directory via the raw path like
+_enumerare) through `filum_status`, nothing read. NIHIL keeps the old path. The fake world has
+`mundi_existere` (does not bump `lecturae`), so every fake-world iudicium test now exercises it.
+New case VIII in probatio_fabrica_iudicium: a memo hit with an X line reads exactly one file fewer
+with existere than without (planted: branch off -> red).
+
+Memoized radix: 5.6 -> 1.9 GB peak (7.4 GB before part 3). The read happened in more places
+than the two vicus checks (preview, first sanare pass, mensor-reading members), so the saving was
+bigger than the 0.7 GB predicted. Note mensurae.volumen keeps growing; anything that "touches" it
+by content scales with it.
+
+## 2026-10-23 — fix part 5: member closures derived in scratch (park …T77EH4)
+
+Memoized radix after part 4: 1.9 GB peak, of which 1.73 GB was startup. 1.45 GB of that was
+`_declarationes_colligere`: explaining radix's 411 members calls `suturae_clausura_c` per
+member, which ran `aedilis_derivare` (machina, tables, fructus, ~3.5 MB per member, vicus
+tests 13.7 MB) in the run-long piscina. Only five string lists are kept (fontes, capita,
+vexilla_nexus, facultates, instrumenta).
+
+Now `suturae_clausura_c` derives in a static scratch piscina (`_piscina_clausurae`, emptied
+before each call) and copies the lists out: `_chordam_unicam_addere` transcribes into the
+caller's piscina; facultates/instrumenta via `_chordas_transcribere`; the cause string on
+failure is transcribed too. The extractor already copies its own keys; the configuration is
+written only when read.
+
+No unit test reaches tools/ sutura code. The detector is end to end: a dangling string is zeroed
+by the next call's piscina_vacare, which breaks every member key. Manual plant (copy dropped):
+memoized radix became 410 reruns, 0 memo hits, 1 failure (probatio_xml); reverted: 411/411
+servatae. Memoized radix: 1.9 GB -> 521 MB (7.4 GB at the start of today).

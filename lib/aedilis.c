@@ -156,6 +156,41 @@ _verba_scindere (
     }
 }
 
+/* "android,posix" -> verba ordine praelationis. Elementum vacuum
+ * ("a,,b", ",", "") = FALSUM: index malus nominatur, numquam tacite
+ * ad variantem unam cadit (android-gradus II.1) */
+interior b32
+_variantes_scindere (
+    chorda  s,
+       Xar* fructus)
+{
+    i32 i;
+    i32 initium;
+
+    si (s.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    initium = ZEPHYRUM;
+    per (i = ZEPHYRUM; i <= s.mensura; i++)
+    {
+        si (i == s.mensura || s.datum[i] == (i8)',')
+        {
+            chorda verbum;
+
+            si (i == initium)
+            {
+                redde FALSUM;
+            }
+            verbum.datum    = s.datum + initium;
+            verbum.mensura  = i - initium;
+            _chordam_addere(fructus, verbum);
+            initium = i + I;
+        }
+    }
+    redde VERUM;
+}
+
 
 /* ====================================================
  * Configuratio (aedilis.stml)
@@ -876,13 +911,23 @@ aedilis_derivare (
     machina.textualia = tabula_dispersa_creare_chorda(piscina, 32);
     machina.pendentia = _xar_chordarum(piscina);
 
-    /* variantes effectivae: -varians dato = illa sola;
-     * aliter praelatio configurationis ordine */
+    /* variantes effectivae: -varians dato = index eius ordine
+     * ("android,posix"; nomen unum = illud solum); aliter praelatio
+     * configurationis ordine */
     machina.variantes_effectivae = _xar_chordarum(piscina);
     si (varians != NIHIL)
     {
-        _chordam_addere(machina.variantes_effectivae,
-            chorda_ex_literis(varians, piscina));
+        si (!_variantes_scindere(chorda_ex_literis(varians, piscina),
+                machina.variantes_effectivae))
+        {
+            si (causa_out != NIHIL)
+            {
+                *causa_out = chorda_ex_literis("aedilis: --varians"
+                    " index malus (elementum vacuum) - forma:"
+                    " android,posix", piscina);
+            }
+            redde NIHIL;
+        }
     }
     alioquin
     {

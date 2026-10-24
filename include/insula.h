@@ -8,6 +8,10 @@
  * (historia). MOTUS non est insula - structura in memoria (motus.h),
  * in quiete huc effusa.
  *
+ * Applicationes portabiles (macOS, Android, ...): regulae in testa.h -
+ * materia communis (status hic, numquam in memoria C sola) vs
+ * compositio per superficiem (testa B1, 2026-10-23).
+ *
  * PORTA UNICA: insula_mutare (et mutare_ramum). Mutator in
  * DUPLICATO currit (scribere+legere in piscinam alteram), canon
  * iudicat, deinde permutatio - scriptura aut tota aut nulla.

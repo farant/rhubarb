@@ -13,6 +13,8 @@ acc
 accept
 accessor
 accessores
+action
+activity
 actual
 actualizare
 acus1
@@ -44,6 +46,9 @@ affordantiae
 affordantias
 after
 agibile
+ainput
+akey
+akeycode
 alarm
 albispatia
 alcuin
@@ -55,12 +60,14 @@ allocatio
 allocationis
 allocationum
 allow
+alooper
 alphanumericus
 alt
 am
 amalgamae
 amalgamator
 amb
+amotion
 amount
 ampersand
 an4
@@ -73,6 +80,7 @@ anc
 anch
 anchores
 ancorata
+and
 anglica
 angustatio
 angustationem
@@ -115,6 +123,7 @@ atof
 atoi
 atol
 atomic
+attach
 attachere
 attemptae
 attingibilitatem
@@ -127,6 +136,7 @@ aux
 available
 avanzare
 ba
+back
 backend
 background
 backlink
@@ -227,8 +237,11 @@ cal
 calc
 calcular
 callback
+callback64
+callbacks
 callee
 calloc
+cancel
 cand
 canonicalizare
 capacity
@@ -276,6 +289,7 @@ child2
 child3
 children
 chmod
+choreographer
 chosen
 chunk
 chunked
@@ -349,6 +363,7 @@ compressed
 con
 concat
 conf
+configuration
 conn
 connection
 conns
@@ -441,12 +456,14 @@ defs
 deindex
 del
 delay
+delayed64
 delem
 delim
 delimited
 deltae
 deltam
 denom
+density
 depth
 deregistrare
 derivatum2
@@ -456,6 +473,7 @@ deserialize
 dest1
 dest2
 dest3
+detach
 detail
 details
 detectare
@@ -488,6 +506,7 @@ dir1
 dirbuf
 dirs
 discardans
+dispatch
 display
 disponibile
 disponibiles
@@ -514,6 +533,7 @@ documentsymbol
 dollar
 dom
 double
+down
 dp
 dr
 draw
@@ -597,6 +617,7 @@ epsilon
 equals
 er
 erange
+eraser
 erratorem
 errno
 escape
@@ -604,6 +625,7 @@ escaped
 esdrae
 europaea
 eval
+event
 eventor
 events
 ewouldblock
@@ -677,8 +699,10 @@ filtrati
 fin
 final
 finder
+finger
 finis1
 finis2
+finish
 first
 fissio
 fix
@@ -774,6 +798,7 @@ ge
 gen1
 gen2
 geo
+geometry
 get
 getaddrinfo
 getc
@@ -848,6 +873,8 @@ hexadecimalis
 hexus
 high
 hints
+historical
+history
 hit
 hjkl
 hlit
@@ -989,6 +1016,7 @@ insignatus
 insoluta
 insolutarum
 inst
+instance
 instr
 instructione
 instructions
@@ -1167,6 +1195,7 @@ longit
 longjmp
 look
 loopback
+looper
 lorem
 low
 lower
@@ -1274,6 +1303,8 @@ monochromaticus
 monolithi
 monolithus
 monstratorius
+motion
+mouse
 mp
 mt
 mtempus
@@ -1516,6 +1547,7 @@ png
 pnum
 point
 pointee
+pointer
 pointers
 poll
 pollerr
@@ -1567,6 +1599,7 @@ praeterierunt
 praeterm
 praevalentiae
 pragma
+pre
 prefix
 prefixum
 preload
@@ -1592,6 +1625,7 @@ prof
 profundius
 pron
 prop
+property
 prosp
 prosser
 prot
@@ -2174,6 +2208,7 @@ tokeni
 tokeno
 toleram
 tolower
+tool
 toolscall
 toolslist
 top
@@ -2256,6 +2291,7 @@ unix
 unixthread
 unknown
 unlink
+unlock
 unreserved
 unsetenv
 unshift
@@ -2379,6 +2415,7 @@ width
 wifexited
 wifsignaled
 winch
+window
 windows
 wire
 with
