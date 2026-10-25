@@ -33,6 +33,13 @@
     "mensura=\"1\"><textus!>c1 | c1 | c1 | c1</textus></frustum>" \
     "</pars>"
 
+#define REPETITIO_PARTES \
+    "<pars titulus=\"m\" instrumentum=\"aether\"><frustum " \
+    "mensura=\"1\"><textus!>o4 c1 | d1</textus></frustum><frustum " \
+    "mensura=\"5\"><textus!>e1</textus></frustum></pars>" \
+    "<pars titulus=\"b\" instrumentum=\"aether\"><frustum " \
+    "mensura=\"1\"><textus!>o3 c1 | g1</textus></frustum></pars>"
+
 interior chorda
 _ch (
         CredoContextus* c,
@@ -346,6 +353,37 @@ _sectio_vitia (
             "", -I, ZEPHYRUM);
     _vitium(c, _carmen(c, "", "<dynamica mensura=\"2\" valor=\"p\" "
             "usque=\"2\"/>" PARS_IV),
+            "x", "", -I, ZEPHYRUM);
+    /* sectio et repetitio: sectio nota, meta vacua, semitonia, MIDI,
+     * usque, pars nota, titulus unus, repetitio repetitionis non */
+    _vitium(c, _carmen(c, "", "<repetitio sectio=\"z\" mensura=\"3\"/>"
+            REPETITIO_PARTES), "x", "", -I, ZEPHYRUM);
+    /* meta non vacua: sectio mensurae 1 iterata ad 2, ubi frustum
+     * scriptum (c1 | d1) sonat - sectio metam non tegit */
+    _vitium(c, _carmen(c, "", "<sectio titulus=\"a\" mensura=\"1\" "
+            "usque=\"2\"/><repetitio sectio=\"a\" mensura=\"2\"/>"
+            REPETITIO_PARTES), "x", "", -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, "", "<sectio titulus=\"a\" mensura=\"1\" "
+            "usque=\"3\"/><repetitio sectio=\"a\" mensura=\"3\" "
+            "semitonia=\"25\"/>" REPETITIO_PARTES), "x", "", -I,
+            ZEPHYRUM);
+    _vitium(c, _carmen(c, "", "<sectio titulus=\"a\" mensura=\"1\" "
+            "usque=\"2\"/><repetitio sectio=\"a\" mensura=\"3\" "
+            "semitonia=\"13\"/><pars titulus=\"p\" instrumentum="
+            "\"aether\"><frustum mensura=\"1\"><textus!>o8 g1"
+            "</textus></frustum></pars>"), "x", "", -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, "", "<sectio titulus=\"a\" mensura=\"2\" "
+            "usque=\"2\"/>" REPETITIO_PARTES), "x", "", -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, "", "<sectio titulus=\"a\" mensura=\"1\" "
+            "usque=\"3\"/><repetitio sectio=\"a\" mensura=\"3\" "
+            "partes=\"z\"/>" REPETITIO_PARTES), "x", "", -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, "", "<sectio titulus=\"a\" mensura=\"1\" "
+            "usque=\"2\"/><sectio titulus=\"a\" mensura=\"2\" "
+            "usque=\"3\"/>" REPETITIO_PARTES), "x", "", -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, "", "<sectio titulus=\"a\" mensura=\"1\" "
+            "usque=\"3\"/><repetitio sectio=\"a\" mensura=\"3\"/>"
+            "<sectio titulus=\"b\" mensura=\"3\" usque=\"5\"/>"
+            "<repetitio sectio=\"b\" mensura=\"6\"/>" REPETITIO_PARTES),
             "x", "", -I, ZEPHYRUM);
     /* ictus: cum mensura sola, 1..tempora mensurae */
     _vitium(c, _carmen(c, "", "<tempus pulsus=\"960\" ictus=\"2\" "
@@ -1302,6 +1340,52 @@ _sectio_corona (
     CREDO_VERUM (fabs(cum / sine - 2.0) < 0.0002);
 }
 
+/* sectio a (mensurae 1-2) iterata ad 3 (+2) et ad 6 (pars m sola):
+ * frusta ordine pulsus (iterata inter scripta), scriptum / repetitio,
+ * litterae ex clave, longitudo carminis */
+interior vacuum
+_sectio_repetitio (
+    CredoContextus* c)
+{
+                 Carmina  liber;
+         constans Carmen* k;
+     constans CarmenPars* m;
+     constans CarmenPars* b;
+                     s64  M1 = (s64)MMMDCCCXL;
+
+    CREDO_NECESSE (_legere(c, _carmen(c, "",
+        "<sectio titulus=\"a\" mensura=\"1\" usque=\"3\"/>"
+        "<repetitio sectio=\"a\" mensura=\"3\" semitonia=\"2\"/>"
+        "<repetitio sectio=\"a\" mensura=\"6\" partes=\"m\"/>"
+        REPETITIO_PARTES), &liber));
+    k = &liber.carmina[ZEPHYRUM];
+    CREDO_NECESSE (k->numerus_sectionum == I
+                   && k->numerus_repetitionum == II);
+    m = &k->partes[ZEPHYRUM];
+    b = &k->partes[I];
+    CREDO_NECESSE (m->numerus_frustorum == IV);
+    CREDO_VERUM (   m->frusta[ZEPHYRUM].scriptum == ZEPHYRUM
+                 && m->frusta[ZEPHYRUM].repetitio == -I);
+    CREDO_VERUM (   m->frusta[I].scriptum == -I
+                 && m->frusta[I].repetitio == ZEPHYRUM);
+    CREDO_AEQUALIS_S64 (m->frusta[I].pulsus, M1 * II);
+    CREDO_AEQUALIS_S64 (m->frusta[I].longitudo, M1 * II);
+    CREDO_NECESSE (m->frusta[I].numerus == II);
+    CREDO_AEQUALIS_I32 (m->frusta[I].notae[ZEPHYRUM].nota, LXII);
+    CREDO_AEQUALIS_I32 (m->frusta[I].notae[I].nota, LXIV);
+    CREDO_AEQUALIS_S64 (m->frusta[I].notae[I].pulsus, M1);
+    CREDO_VERUM (m->frusta[I].notae[ZEPHYRUM].littera == '\0');
+    CREDO_VERUM (   m->frusta[II].scriptum == I
+                 && m->frusta[II].pulsus == M1 * IV);
+    CREDO_VERUM (   m->frusta[III].repetitio == I
+                 && m->frusta[III].pulsus == M1 * V
+                 && m->frusta[III].notae[ZEPHYRUM].nota == LX);
+    /* b: iterata ad 3 sola (partes="m" ad 6) */
+    CREDO_NECESSE (b->numerus_frustorum == II);
+    CREDO_AEQUALIS_I32 (b->frusta[I].notae[ZEPHYRUM].nota, L);
+    CREDO_AEQUALIS_S64 (k->pulsus, M1 * VII);
+}
+
 /* valor absolutus s64 (llabs C99 est) */
 interior s64
 _absolutum (
@@ -1453,6 +1537,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "fermata", _sectio_corona, NIHIL, NIHIL, NIHIL, NIHIL },
     { "agogica", _sectio_inaequalitas, NIHIL, NIHIL, NIHIL, NIHIL },
     { "dynamica", _sectio_intensio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "repetitio", _sectio_repetitio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "instrumenta", _sectio_instrumenta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "instrumenta_vitia", _sectio_instrumenta_vitia, NIHIL, NIHIL,
         NIHIL, NIHIL },

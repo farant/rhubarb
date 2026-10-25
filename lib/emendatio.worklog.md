@@ -98,3 +98,14 @@ Plants 17/17 red (one first form did not compile: replacing the bar-count check 
 _mensurae unused); two paths got tests BEFORE planting (trailing rest in a bar; empty
 destination part = source part). Lint renames: _tonica_littera -> _finalis_littera,
 kc -> currentis.
+
+## 2026-10-24 - frusta iterata (<repetitio>): STML index by scriptum, edits refused
+
+Expanded frusta (carmen <repetitio>) now sit in CarmenPars.frusta in time order among the
+written ones, so the model index is no longer the STML <frustum> index. _librum_scribere
+takes the WRITTEN index (CarmenFrustum.scriptum) and finds the re-read frustum by scriptum,
+not by position. Edits that land in expanded material refuse with
+EMENDATIO_CAUSA_REPETITIONIS ("repetitio (frustum iteratum): muta sectionem fontis"):
+notam_ponere, mensuram_invenire (-> substituere, and copiare's destination), and
+copiare's SOURCE bars. Test: a written frustum after a repeat (model index 2, STML 1)
+edits the right <frustum>.

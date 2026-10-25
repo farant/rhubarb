@@ -91,3 +91,8 @@ even.
 
 "dynamica mf" (whole carmen), "dynamica m ff usque 4" (part, ramp) - the value as written
 (mark or number), after tempo and fermata.
+
+## 2026-10-24 - repetitio in the bar header
+
+"repetitio a +2" / "repetitio a -1" / "repetitio a" at the destination bar. Transposed
+notes carry no letter, so they are spelled from the key (E4 - 1 in C maior = D#4).

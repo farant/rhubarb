@@ -730,6 +730,24 @@ _titulum_mensurae (
             _positionem_scribere(s, d->pulsus, initium);
         }
     }
+    per (i = ZEPHYRUM; i < carmen->numerus_repetitionum; i++)
+    {
+        constans CarmenRepetitio* r = &carmen->repetitiones[i];
+
+        si (r->pulsus >= initium && r->pulsus < finis)
+        {
+            _litterae(s, "  repetitio ");
+            _chorda(s, carmen->sectiones[r->sectio].titulus);
+            si (r->semitonia != ZEPHYRUM)
+            {
+                _character(s, ' ');
+                _character(s, r->semitonia > ZEPHYRUM ? '+' : '-');
+                _numerus(s, (s64)(r->semitonia > ZEPHYRUM
+                    ? r->semitonia : -r->semitonia));
+            }
+            _positionem_scribere(s, r->pulsus, initium);
+        }
+    }
     _character(s, '\n');
 }
 

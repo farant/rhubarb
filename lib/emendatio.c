@@ -292,7 +292,13 @@ _textus_novus (
     redde r;
 }
 
-/* nodus textus frusti 'fi' textum novum accipit, scriptor non-pulcher
+/* frustum iteratum (<repetitio>): textus nullus, fons in sectione */
+#define EMENDATIO_CAUSA_REPETITIONIS \
+    "repetitio (frustum iteratum): muta sectionem fontis"
+
+/* nodus textus frusti SCRIPTI 'fi' (index inter frusta scripta, ordo
+ * STML - CarmenFrustum.scriptum) textum novum accipit, scriptor
+ * non-pulcher
  * (reliqua octetim), liber novus TOTUS iudicatur; custodia: textus
  * frusti relectus = textus scriptus. *relectum = frustum in *relectus;
  * 'offset' vitiis solum */
@@ -338,10 +344,20 @@ _librum_scribere (
     {
         redde FALSUM;
     }
-    k = carmina_invenire(relectus, carmen);
-    p = k ? _partem_invenire(k, pars) : NIHIL;
-    *relectum = p && fi < (s32)p->numerus_frustorum ? &p->frusta[fi]
-                                                    : NIHIL;
+    k          = carmina_invenire(relectus, carmen);
+    p          = k ? _partem_invenire(k, pars) : NIHIL;
+    *relectum  = NIHIL;
+    {
+        i32 j;
+
+        per (j = ZEPHYRUM; p && j < p->numerus_frustorum; j++)
+        {
+            si (p->frusta[j].scriptum == fi)
+            {
+                *relectum = &p->frusta[j];
+            }
+        }
+    }
     si (   *relectum == NIHIL || !chorda_aequalis((*relectum)->textus,
                                                textus))
     {
@@ -463,6 +479,11 @@ emendatio_notam_ponere (
             "ad locum nulla nota (pausa)");
     }
     fr  = &p->frusta[fi];
+    si (fr->repetitio >= ZEPHYRUM)
+    {
+        redde _vitium(vitium, carmen, pars, fi, ZEPHYRUM,
+            EMENDATIO_CAUSA_REPETITIONIS);
+    }
     n   = &fr->notae[ni];
     si (n->praeparatum.mensura > ZEPHYRUM)
     {
@@ -550,8 +571,9 @@ emendatio_notam_ponere (
     }
 
     /* arbor, iudicium, custodia */
-    si (!_librum_scribere(liber, carmen, pars, fi, n->offset, textus,
-                          piscina, &relectus, &scriptus, &f2, vitium))
+    si (!_librum_scribere(liber, carmen, pars, fr->scriptum, n->offset,
+                          textus, piscina, &relectus, &scriptus, &f2,
+                          vitium))
     {
         redde FALSUM;
     }
@@ -702,6 +724,11 @@ emendatio_mensuram_invenire (
             "mensura sine frusto (silentium)");
     }
     f = &p->frusta[fi];
+    si (f->repetitio >= ZEPHYRUM)
+    {
+        redde _vitium(vitium, carmen->titulus, pars, fi, ZEPHYRUM,
+            EMENDATIO_CAUSA_REPETITIONIS);
+    }
     si (b1 > f->pulsus + f->longitudo)
     {
         redde _vitium(vitium, carmen->titulus, pars, fi, ZEPHYRUM,
@@ -945,7 +972,7 @@ emendatio_mensuram_substituere (
     }
 
     /* arbor, iudicium, custodia */
-    si (!_librum_scribere(liber, carmen, pars, m.frustum, m.initium,
+    si (!_librum_scribere(liber, carmen, pars, fr->scriptum, m.initium,
                           candidatus, piscina, &relectus, &scriptus,
                           &f2, vitium))
     {
@@ -1112,6 +1139,13 @@ emendatio_mensuram_scribere (
     per (f = ZEPHYRUM; f < p->numerus_frustorum; f++)
     {
         constans CarmenFrustum* fr = &p->frusta[f];
+
+        si (   fr->repetitio >= ZEPHYRUM && fr->pulsus < b1
+            && b0 < fr->pulsus + fr->longitudo)
+        {
+            redde _vitium(vitium, carmen->titulus, pars, (s32)f,
+                ZEPHYRUM, EMENDATIO_CAUSA_REPETITIONIS);
+        }
 
         per (j = ZEPHYRUM; j < fr->numerus; j++)
         {

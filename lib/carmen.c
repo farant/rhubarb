@@ -695,6 +695,8 @@ _partem_legere (
         {
             redde FALSUM;
         }
+        pars->frusta[j].repetitio  = -I;
+        pars->frusta[j].scriptum   = (s32)j;
         /* ordine positionis, non se tegentes */
         si (   j > ZEPHYRUM
             && pars->frusta[j].pulsus < pars->frusta[j - I].pulsus
@@ -932,6 +934,366 @@ _intensionem_valere (
         redde FALSUM;
     }
     *valor = (f32)x;
+    redde VERUM;
+}
+
+/* pars in indice per titulum; -1 si ignota */
+interior s32
+_partis_index (
+    constans Carmen* k,
+             chorda  titulus)
+{
+    s32 j;
+
+    per (j = ZEPHYRUM; j < (s32)k->numerus_partium; j++)
+    {
+        si (chorda_aequalis(k->partes[j].titulus, titulus))
+        {
+            redde j;
+        }
+    }
+    redde -I;
+}
+
+/* pars in 'partes' (verba spatio separata) nominatur; partes vacua =
+ * omnes */
+interior b32
+_pars_nominata (
+    constans Carmen* k,
+             chorda* partes,
+                s32  pars)
+{
+    i32 i = ZEPHYRUM;
+
+    si (partes == NIHIL)
+    {
+        redde VERUM;
+    }
+    dum (i < partes->mensura)
+    {
+        i32 initium;
+
+        dum (i < partes->mensura && partes->datum[i] == ' ')
+        {
+            i++;
+        }
+        initium = i;
+        dum (i < partes->mensura && partes->datum[i] != ' ')
+        {
+            i++;
+        }
+        si (   i > initium
+            && chorda_aequalis(chorda_sectio(*partes, initium, i),
+                               k->partes[pars].titulus))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* nomina 'partes' omnia nota; FALSUM si quod ignotum */
+interior b32
+_partes_notae (
+    constans Carmen* k,
+             chorda  partes)
+{
+    i32 i = ZEPHYRUM;
+
+    dum (i < partes.mensura)
+    {
+        i32 initium;
+
+        dum (i < partes.mensura && partes.datum[i] == ' ')
+        {
+            i++;
+        }
+        initium = i;
+        dum (i < partes.mensura && partes.datum[i] != ' ')
+        {
+            i++;
+        }
+        si (   i > initium
+            && _partis_index(k, chorda_sectio(partes, initium, i)) < 0)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* frustum iteratum partis ex sectione ad positionem: notae scriptae
+ * quae in [s->pulsus, s->usque) incipiunt, transpositae, litterae ex
+ * clave; ordine pulsus inter frusta insertum. Nullae notae: nihil.
+ * FALSUM: causa (meta non vacua, MIDI, piscina) */
+interior b32
+_frustum_iterare (
+                   Carmen*  k,
+                      s32   pars,
+    constans CarmenSectio*  s,
+                      s32   repetitio,
+                  Piscina*  piscina,
+       constans character** causa)
+{
+    constans CarmenRepetitio* r        = &k->repetitiones[repetitio];
+                  CarmenPars* p        = &k->partes[pars];
+                         s64  spatium  = s->usque - s->pulsus;
+               CarmenFrustum  novum;
+               CarmenFrustum* frusta;
+                         i32  numerus = ZEPHYRUM;
+                         i32  f;
+                         i32  j;
+                         i32  locus;
+
+    per (f = ZEPHYRUM; f < p->numerus_frustorum; f++)
+    {
+        constans CarmenFrustum* fr = &p->frusta[f];
+
+        per (j = ZEPHYRUM; fr->repetitio < ZEPHYRUM && j < fr->numerus;
+             j++)
+        {
+            s64 a = fr->pulsus + fr->notae[j].pulsus;
+
+            si (a >= s->pulsus && a < s->usque)
+            {
+                numerus++;
+            }
+        }
+    }
+    si (numerus == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    per (f = ZEPHYRUM; f < p->numerus_frustorum; f++)
+    {
+        constans CarmenFrustum* fr = &p->frusta[f];
+
+        si (   fr->pulsus < r->pulsus + spatium
+            && r->pulsus < fr->pulsus + fr->longitudo)
+        {
+            *causa = "repetitio: pars ibi non vacua (frusta se tegunt)";
+            redde FALSUM;
+        }
+    }
+    memset(&novum, ZEPHYRUM, magnitudo(novum));
+    novum.pulsus     = r->pulsus;
+    novum.longitudo  = spatium;
+    novum.repetitio  = repetitio;
+    novum.scriptum   = -I;
+    novum.notae      = (CarmenNota*)piscina_allocare(piscina,
+        (memoriae_index)numerus * magnitudo(CarmenNota));
+    frusta = (CarmenFrustum*)piscina_allocare(piscina,
+        (memoriae_index)(p->numerus_frustorum + I)
+        * magnitudo(CarmenFrustum));
+    si (!novum.notae || !frusta)
+    {
+        *causa = "piscina exhausta";
+        redde FALSUM;
+    }
+    per (f = ZEPHYRUM; f < p->numerus_frustorum; f++)
+    {
+        constans CarmenFrustum* fr = &p->frusta[f];
+
+        per (j = ZEPHYRUM; fr->repetitio < ZEPHYRUM && j < fr->numerus;
+             j++)
+        {
+            CarmenNota x = fr->notae[j];
+                   s64 a = fr->pulsus + x.pulsus;
+                   s32 nota;
+
+            si (a < s->pulsus || a >= s->usque)
+            {
+                perge;
+            }
+            nota = (s32)x.nota + r->semitonia;
+            si (nota < ZEPHYRUM || nota > CXXVII)
+            {
+                *causa = "repetitio: nota transposita extra 0..127";
+                redde FALSUM;
+            }
+            x.nota = (i32)nota;
+            x.pulsus = a - s->pulsus;
+            x.littera = r->semitonia != ZEPHYRUM ? '\0' : x.littera;
+            novum.notae[novum.numerus++] = x;
+        }
+    }
+    /* insertio ordine pulsus */
+    locus = ZEPHYRUM;
+    dum (   locus < p->numerus_frustorum && p->frusta[locus].pulsus
+                                         < novum.pulsus)
+    {
+        locus++;
+    }
+    per (f = ZEPHYRUM; f < locus; f++)
+    {
+        frusta[f] = p->frusta[f];
+    }
+    frusta[locus] = novum;
+    per (f = locus; f < p->numerus_frustorum; f++)
+    {
+        frusta[f + I] = p->frusta[f];
+    }
+    p->frusta = frusta;
+    p->numerus_frustorum++;
+    redde VERUM;
+}
+
+/* <sectio> et <repetitio> (post partes). Sectio: titulus unus,
+ * positio, usque post initium. Repetitio: sectio nota, positio,
+ * semitonia -24..24, partes notae; expansio ordine libri; sectio
+ * frusta iterata tegere non potest (fons = scripta solum) */
+interior b32
+_repetitiones_legere (
+             StmlNodus*  nodus,
+                Carmen*  k,
+               Piscina*  piscina,
+    constans character** causa)
+{
+    i32 i;
+    i32 r;
+
+    k->sectiones = (CarmenSectio*)piscina_allocare(piscina,
+        (memoriae_index)(_numerare(nodus, "sectio") + I)
+        * magnitudo(CarmenSectio));
+    k->repetitiones = (CarmenRepetitio*)piscina_allocare(piscina,
+        (memoriae_index)(_numerare(nodus, "repetitio") + I)
+        * magnitudo(CarmenRepetitio));
+    si (!k->sectiones || !k->repetitiones)
+    {
+        *causa = "piscina exhausta";
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < stml_numerus_liberorum(nodus); i++)
+    {
+            StmlNodus* n = stml_liberum_ad_indicem(nodus, i);
+         CarmenSectio* s = &k->sectiones[k->numerus_sectionum];
+               chorda* a;
+                  s64  u;
+                  i32  j;
+
+        si (!_elementum_est(n, "sectio"))
+        {
+            perge;
+        }
+        a = stml_attributum_capere(n, "titulus");
+        si (a == NIHIL || !_signum_validum(*a))
+        {
+            *causa = "sectio sine titulo [a-z0-9_]+";
+            redde FALSUM;
+        }
+        per (j = ZEPHYRUM; j < k->numerus_sectionum; j++)
+        {
+            si (chorda_aequalis(k->sectiones[j].titulus, *a))
+            {
+                *causa = "sectio: titulus iteratus";
+                redde FALSUM;
+            }
+        }
+        s->titulus = *a;
+        si (!_positionem_legere(n, k, VERUM, &s->pulsus, causa))
+        {
+            redde FALSUM;
+        }
+        si (   !_s64_legere(n, "usque", &u) || u < I
+            || u > CMXCIX * M)
+        {
+            *causa = "sectio: usque numerus mensurae";
+            redde FALSUM;
+        }
+        s->usque = _pulsus_mensurae(k->metra, k->numerus_metrorum,
+                                    (i32)u);
+        si (s->usque <= s->pulsus)
+        {
+            *causa = "sectio: usque post initium";
+            redde FALSUM;
+        }
+        k->numerus_sectionum++;
+    }
+    per (i = ZEPHYRUM; i < stml_numerus_liberorum(nodus); i++)
+    {
+              StmlNodus* n = stml_liberum_ad_indicem(nodus, i);
+        CarmenRepetitio* x = &k->repetitiones[k->numerus_repetitionum];
+                 chorda* a;
+                 chorda* partes;
+                    s32  semitonia = ZEPHYRUM;
+                    s32  j;
+
+        si (!_elementum_est(n, "repetitio"))
+        {
+            perge;
+        }
+        a          = stml_attributum_capere(n, "sectio");
+        x->sectio  = -I;
+        per (j = ZEPHYRUM; a != NIHIL && j < (s32)k->numerus_sectionum;
+             j++)
+        {
+            si (chorda_aequalis(k->sectiones[j].titulus, *a))
+            {
+                x->sectio = j;
+            }
+        }
+        si (x->sectio < ZEPHYRUM)
+        {
+            *causa = "repetitio: sectio ignota";
+            redde FALSUM;
+        }
+        si (!_positionem_legere(n, k, VERUM, &x->pulsus, causa))
+        {
+            redde FALSUM;
+        }
+        a = stml_attributum_capere(n, "semitonia");
+        si (   a != NIHIL
+            && (!chorda_ut_s32(*a, &semitonia) || semitonia < -XXIV
+                || semitonia > XXIV))
+        {
+            *causa = "repetitio: semitonia -24..24";
+            redde FALSUM;
+        }
+        x->semitonia  = semitonia;
+        partes        = stml_attributum_capere(n, "partes");
+        si (partes != NIHIL && !_partes_notae(k, *partes))
+        {
+            *causa = "repetitio: pars ignota";
+            redde FALSUM;
+        }
+        k->numerus_repetitionum++;
+        per (j = ZEPHYRUM; j < (s32)k->numerus_partium; j++)
+        {
+            si (   _pars_nominata(k, partes, j)
+                && !_frustum_iterare(k, j, &k->sectiones[x->sectio],
+                       (s32)(k->numerus_repetitionum - I), piscina,
+                       causa))
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    /* sectio nulla frusta iterata tegit (repetitio repetitionis) */
+    per (r = ZEPHYRUM; r < k->numerus_repetitionum; r++)
+    {
+        constans CarmenSectio* s = &k->sectiones[
+            k->repetitiones[r].sectio];
+
+        per (i = ZEPHYRUM; i < k->numerus_partium; i++)
+        {
+            constans CarmenPars* p = &k->partes[i];
+                            i32  f;
+
+            per (f = ZEPHYRUM; f < p->numerus_frustorum; f++)
+            {
+                constans CarmenFrustum* fr = &p->frusta[f];
+
+                si (   fr->repetitio >= ZEPHYRUM
+                    && fr->pulsus < s->usque
+                    && s->pulsus < fr->pulsus + fr->longitudo)
+                {
+                    *causa = "sectio frusta iterata tegit (repetitio "
+                             "repetitionis non)";
+                    redde FALSUM;
+                }
+            }
+        }
+    }
     redde VERUM;
 }
 
@@ -1826,13 +2188,16 @@ _carmen_legere (
             && !_elementum_est(n, "clavis")
             && !_elementum_est(n, "fermata")
             && !_elementum_est(n, "dynamica")
+            && !_elementum_est(n, "sectio")
+            && !_elementum_est(n, "repetitio")
             && !_elementum_est(n, "pars")
             && !_elementum_est(n, "instrumentum")
             && !_elementum_est(n, "reverberatio"))
         {
             redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
                 "in carmine solum tempus, metrum, clavis, fermata, "
-                "dynamica, pars, instrumentum, reverberatio");
+                "dynamica, sectio, repetitio, pars, instrumentum, "
+                "reverberatio");
         }
         /* aula propria: tota substituit libri */
         si (_elementum_est(n, "reverberatio"))
@@ -1988,7 +2353,13 @@ _carmen_legere (
         }
         j++;
     }
-    /* longitudo: finis frusti ultimi */
+    /* sectiones et repetitiones: frusta iterata inter scripta */
+    si (!_repetitiones_legere(nodus, k, piscina, &causa))
+    {
+        redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
+            causa);
+    }
+    /* longitudo: finis frusti ultimi (ordine pulsus) */
     k->pulsus = ZEPHYRUM;
     per (i = ZEPHYRUM; i < k->numerus_partium; i++)
     {

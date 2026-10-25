@@ -250,3 +250,37 @@ CampusInstrumenti grew to CAMPI_NUMERUS = 23 (the table size and the two loops u
 literal XX before - now one constant): unisonus 1..7, dispersio 0..100 cents, mora 0..10 s
 (-> TibiaParametra.mora_vibrati). The house instrumentarium has 11 entries now (tests that
 counted V updated).
+
+## 2026-10-24 - sectio et repetitio: form without copying bars (desideratum ...67RC)
+
+`<sectio titulus="a" mensura="1" usque="9"/>` names bars 1..8; `<repetitio sectio="a"
+mensura="17" [ictus] [semitonia="2"] [partes="m b"]/>` expands, at load, every part's
+WRITTEN notes starting in the section into a new frustum at the destination (transposed;
+transposed notes lose their letter so partitura spells from the key - E4-1 in C maior
+prints D#4). Parts default to all with notes in the section. Tempo, key, dynamics,
+fermatas are NOT repeated (positional) - a refrain a step higher writes its own <clavis>
+(censura flags every note otherwise). Rules: destination empty per part (no overlap with
+any frustum), MIDI 0..127 after transposition, semitonia -24..24, usque after start,
+section titles unique, known parts, and no section may cover an expanded frustum (no
+repetition of a repetition - the source is written notes only).
+
+Model decision (deviation from the proposal, told Fran): the proposal appended expanded
+frusta AFTER the written ones so emendatio's frustum index == STML index stayed true. But
+carmen.h documents CarmenPars.frusta "ordine pulsus" and partitura's per-bar cursor relies
+on it (never goes back). So expanded frusta are INSERTED in time order, and every frustum
+carries repetitio (-1 written) and scriptum (index among written frusta = STML order, -1
+expanded). emendatio maps to STML by scriptum (_librum_scribere takes the written index
+and finds the re-read frustum by scriptum), and refuses edits landing in expanded material
+- ponere, mensuram_invenire/substituere, copiare from repeated bars - with the static
+causa "repetitio (frustum iteratum): muta sectionem fontis" (causa strings are static by
+contract, so it cannot name the section).
+
+Caveat: censura/recensio findings in a repeat report the expanded frustum's index with
+the SOURCE note's text offset ("frustum 1, offset 42" in the waltz demo: C#6 above the
+superius range in the +2 refrain - a real finding).
+
+Plants 19/19 red after two rounds. One survived first: "destination not empty" - its
+test case (section 1..3 repeated at 2) ALSO tripped the repetition-of-repetition check
+(the section covered the new copy), so it failed for the wrong reason. Isolated: section
+bar 1 repeated at bar 2, where the written c1 | d1 frustum sounds and the section does not
+reach the copy. Lesson again: an error test must fail through exactly one rule.

@@ -713,6 +713,36 @@ _sectio_ligatura (
         "  m  ~:2 E4:8t F4:8t G4:8t A4:4\n");
 }
 
+/* repetitio: titulus mensurae metae nominat sectionem et semitonia;
+ * transpositae litteras ex clave accipiunt (E4 - 1 in C maior = D#4) */
+interior vacuum
+_sectio_repetitio (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"r\">"
+        "<sectio titulus=\"a\" mensura=\"1\" usque=\"2\"/>"
+        "<repetitio sectio=\"a\" mensura=\"2\" semitonia=\"2\"/>"
+        "<repetitio sectio=\"a\" mensura=\"3\" semitonia=\"-1\"/>"
+        "<repetitio sectio=\"a\" mensura=\"4\"/>"
+        "<pars titulus=\"m\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>o4 c2 e2</textus></frustum>"
+        "</pars></carmen></carmina>");
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scribere(c, k, NIHIL),
+        "carmen r: c maior, 4/4, 120\n"
+        "  pars m: aether, lucrum 1.00\n"
+        "mensura 1\n"
+        "  m  C4:2 E4:2\n"
+        "mensura 2  repetitio a +2\n"
+        "  m  D4:2 F#4:2\n"
+        "mensura 3  repetitio a -1\n"
+        "  m  B3:2 D#4:2\n"
+        "mensura 4  repetitio a\n"
+        "  m  C4:2 E4:2\n");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "orthographia", _sectio_orthographia, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -727,6 +757,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "ambitus", _sectio_ambitus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "liber", _sectio_liber, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ligatura", _sectio_ligatura, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "repetitio", _sectio_repetitio, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

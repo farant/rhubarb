@@ -59,6 +59,18 @@
  *             Clivus cum fine 0: linearis (dB nulla). Ordine
  *             positionis per partem; clivus eadem positione qua gradus
  *             prior eum servat; nulla mutatio intra clivum
+ *   sectio    <sectio titulus="T" mensura="M" usque="U"/>: mensurae
+ *             M..U-1 nominantur - notae SCRIPTAE partium quae ibi
+ *             incipiunt
+ *   repetitio <repetitio sectio="T" mensura="M" [ictus] [semitonia="S"]
+ *             [partes="a b"]/>: notae sectionis iterum ad positionem,
+ *             transpositae per S semitonia (-24..24; litterae ex clave
+ *             - <clavis> novam auctor scribit), partes omnes sectionis
+ *             aut nominatae; partes ibi vacuae (frusta non se tegunt).
+ *             Fons = frusta scripta solum. Tempus, clavis, dynamica,
+ *             fermata NON iterantur. Frusta iterata ordine pulsus inter
+ *             scripta stant (repetitio >= 0, scriptum -1): emendatio ea
+ *             non mutat, fontem nominat
  *   textus    MML (cantus.h) SINE 't' - tempus carminis est; '@'
  *             praeparatum per notam (percussio sonitus) admittitur
  *   pars      instrumentum necessarium; lucrum 0..1 (1); positio
@@ -143,6 +155,10 @@ nomen structura {
     CantusLinea* lineae;      /* '|' scripta, pulsus intra frustum (ex
                                * cantilena lecta, eadem piscina) */
             i32 numerus_linearum;
+            s32 repetitio;    /* index in Carmen.repetitiones; -1 =
+                               * scriptum */
+            s32 scriptum;     /* index inter frusta SCRIPTA partis (ordo
+                               * STML - emendatio); -1 = iteratum */
 } CarmenFrustum;
 
 nomen structura {
@@ -175,6 +191,20 @@ nomen structura {
     s32 quintae;              /* -7 (7 b) .. 7 (7 #) */
     b32 minor;
 } CarmenClavis;
+
+/* sectio nominata: [pulsus, usque) */
+nomen structura {
+    chorda titulus;
+       s64 pulsus;
+       s64 usque;
+} CarmenSectio;
+
+/* repetitio sectionis ad positionem, transposita */
+nomen structura {
+       s32 sectio;      /* index in Carmen.sectiones */
+       s64 pulsus;      /* initium iterati */
+       s32 semitonia;   /* -24..24 */
+} CarmenRepetitio;
 
 /* dynamica SCRIPTA (<dynamica>; intensio, nomen Latinum): gradus
  * (usque 0) aut clivus aequalis in dB */
@@ -220,6 +250,10 @@ nomen structura {
               i32  numerus_coronarum;
    CarmenIntensio* intensiones;      /* <dynamica>, ordine libri */
               i32  numerus_intensionum;
+     CarmenSectio* sectiones;        /* <sectio>, ordine libri */
+              i32  numerus_sectionum;
+  CarmenRepetitio* repetitiones;     /* <repetitio>, ordine libri */
+              i32  numerus_repetitionum;
      CarmenMetrum* metra;
               i32  numerus_metrorum;
      CarmenClavis* claves;
