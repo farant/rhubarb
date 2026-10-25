@@ -365,8 +365,177 @@ _sectio_paginae (
     CREDO_AEQUALIS_I32(lector_pagina_positionis(x, X), ZEPHYRUM);
 }
 
+interior CodexSententia
+sententia_facta (
+    i32 initium,
+    i32 finis)
+{
+    CodexSententia t;
+
+    t.initium   = initium;
+    t.finis     = finis;
+    t.clausula  = ZEPHYRUM;
+    redde t;
+}
+
+/* lineae omnes intra aream (x, y, latitudo per runas) */
+interior b32
+intra_aream (
+    constans CodexCaput* k,
+                    Xar* lineae,
+                    i32  latitudo,
+                    i32  altitudo)
+{
+     constans LectorLinea* l;
+                      i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(lineae); i++)
+    {
+        l = (constans LectorLinea*)xar_obtinere(lineae, i);
+        si (   l->x < ZEPHYRUM || l->y < ZEPHYRUM
+            || l->x + (s32)(runae(k->textus, l->initium, l->finis)
+               * (i32)fons_latitudo(l->fons)) > (s32)latitudo
+            || l->y + fons_altitudo(l->fons) > (s32)altitudo)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior vacuum
+_sectio_sententia (
+    CredoContextus* c)
+{
+                  Piscina* p;
+               CodexCaput* k;
+                      Xar* x;
+     constans LectorLinea* l;
+           CodexSententia  t;
+                      b32  praecisa;
+                      i32  i;
+      constans CodexGenus  pp[] = { CODEX_PARAGRAPHUS };
+      constans CodexGenus  tp[] = { CODEX_TITULUS };
+    constans character* constans parva[] = {
+        "Primum hic. Secundum ibi. Tertium!" };
+    constans character* constans titulus[] = {
+        "Caput I\nDe Cranfordia" };
+    constans character* unus[I];
+             character  longum[CDI];
+             character  curvi[XCI];
+
+    p = c->piscina;
+
+    CREDO_GRADUS("brevis: FONS_TITULI, linea una, centrata");
+    k = caput_facere(p, pp, parva, I);
+    t = sententia_facta(ZEPHYRUM, XI);
+    x = lector_sententiam_disponere(k, &t, CCXL, CC, &praecisa, p);
+    CREDO_NECESSE_NON_NIHIL(x);
+    CREDO_FALSUM(praecisa);
+    CREDO_AEQUALIS_I32(xar_numerus(x), I);
+    l = (constans LectorLinea*)xar_obtinere(x, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(l->fons, FONS_TITULI);
+    CREDO_CHORDA_AEQUALIS_LITERIS(chorda_sectio(k->textus, l->initium,
+        l->finis), "Primum hic.");
+    CREDO_AEQUALIS_S32(l->x, (CCXL - XI * VIII) / II);
+    CREDO_AEQUALIS_S32(l->y, (CC - XVI) / II);
+
+    CREDO_GRADUS("titulus cum '\\n': lineae II, XXIV px distant");
+    k = caput_facere(p, tp, titulus, I);
+    t = sententia_facta(ZEPHYRUM, k->textus.mensura);
+    x = lector_sententiam_disponere(k, &t, CCXL, CC, &praecisa, p);
+    CREDO_AEQUALIS_I32(xar_numerus(x), II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(chorda_sectio(k->textus,
+        ((LectorLinea*)xar_obtinere(x, I))->initium, ((LectorLinea*)
+        xar_obtinere(x, I))->finis), "De Cranfordia");
+    CREDO_AEQUALIS_S32(((LectorLinea*)xar_obtinere(x, I))->y
+        - ((LectorLinea*)xar_obtinere(x, ZEPHYRUM))->y, XXIV);
+
+    CREDO_GRADUS("lineae plures: grex centratus, lineae ad sinistrum "
+        "(x idem; linea longissima XIII x VIII px)");
+    CREDO_AEQUALIS_S32(((LectorLinea*)xar_obtinere(x, ZEPHYRUM))->x,
+        (CCXL - XIII * VIII) / II);
+    CREDO_AEQUALIS_S32(((LectorLinea*)xar_obtinere(x, I))->x,
+        (CCXL - XIII * VIII) / II);
+
+    CREDO_GRADUS("involvere: fons datus (6x8 etsi 8x16 caperet), x et "
+        "y nulli, '\\n' linea nova");
+    x = lector_sententiam_involvere(k, &t, FONS_PARVUS, CCXL, p);
+    CREDO_NECESSE_NON_NIHIL(x);
+    CREDO_AEQUALIS_I32(xar_numerus(x), II);
+    l = (constans LectorLinea*)xar_obtinere(x, I);
+    CREDO_AEQUALIS_I32(l->fons, FONS_PARVUS);
+    CREDO_AEQUALIS_S32(l->x, ZEPHYRUM);
+    CREDO_AEQUALIS_S32(l->y, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(chorda_sectio(k->textus, l->initium,
+        l->finis), "De Cranfordia");
+    CREDO_GRADUS("involvere angusta: XLVIII px in 8x16 = VI cellulae, "
+        "'Caput I' in duas");
+    x = lector_sententiam_involvere(k, &t, FONS_TITULI, XLVIII, p);
+    CREDO_AEQUALIS_I32(((constans LectorLinea*)xar_obtinere(x,
+        ZEPHYRUM))->fons, FONS_TITULI);
+    CREDO_CHORDA_AEQUALIS_LITERIS(chorda_sectio(k->textus,
+        ((LectorLinea*)xar_obtinere(x, ZEPHYRUM))->initium,
+        ((LectorLinea*)xar_obtinere(x, ZEPHYRUM))->finis), "Caput");
+
+    CREDO_GRADUS("longior pro 8x16 in LX px: FONS_PARVUS, lineae XVI "
+        "px, "
+        "grex centratus");
+    per (i = ZEPHYRUM; i < LXXX; i++)
+    {
+        longum[i] = (i % VI == V) ? ' ' : 'a';
+    }
+    longum[LXXX] = '\0';
+    unus[ZEPHYRUM] = longum;
+    k = caput_facere(p, pp, unus, I);
+    t = sententia_facta(ZEPHYRUM, LXXX);
+    x = lector_sententiam_disponere(k, &t, CCXL, LX, &praecisa, p);
+    CREDO_FALSUM(praecisa);
+    /* 8x16: XXX cellulae, III lineae = LXIV px > LX; 6x8: verba V
+     * litterarum, VI per lineam XL cellularum -> III lineae, XL px */
+    CREDO_AEQUALIS_I32(xar_numerus(x), III);
+    l = (constans LectorLinea*)xar_obtinere(x, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(l->fons, FONS_PARVUS);
+    CREDO_AEQUALIS_S32(((LectorLinea*)xar_obtinere(x, I))->y - l->y,
+        XVI);
+    CREDO_AEQUALIS_S32(l->y, (LX - (II * XVI + VIII)) / II);
+    CREDO_VERUM(intra_aream(k, x, CCXL, LX));
+
+    CREDO_GRADUS("nimis alta etiam 6x8: praecisa, lineae quae capiunt");
+    per (i = ZEPHYRUM; i < CD; i++)
+    {
+        longum[i] = (i % VI == V) ? ' ' : 'a';
+    }
+    longum[CD] = '\0';
+    unus[ZEPHYRUM] = longum;
+    k = caput_facere(p, pp, unus, I);
+    t = sententia_facta(ZEPHYRUM, CD);
+    x = lector_sententiam_disponere(k, &t, CCXL, XL, &praecisa, p);
+    CREDO_VERUM(praecisa);
+    CREDO_AEQUALIS_I32(xar_numerus(x), III);
+    CREDO_VERUM(intra_aream(k, x, CCXL, XL));
+
+    CREDO_GRADUS("runae numerantur: XXX uncini curvi in linea una "
+        "8x16");
+    per (i = ZEPHYRUM; i < XXX; i++)
+    {
+        memcpy(curvi + i * III, "\xe2\x80\x9c", III);
+    }
+    curvi[XC] = '\0';
+    unus[ZEPHYRUM] = curvi;
+    k = caput_facere(p, pp, unus, I);
+    t = sententia_facta(ZEPHYRUM, XC);
+    x = lector_sententiam_disponere(k, &t, CCXL, CC, &praecisa, p);
+    CREDO_AEQUALIS_I32(xar_numerus(x), I);
+    CREDO_AEQUALIS_I32(((LectorLinea*)xar_obtinere(x, ZEPHYRUM))->fons,
+        FONS_TITULI);
+    CREDO_AEQUALIS_S32(((LectorLinea*)xar_obtinere(x, ZEPHYRUM))->x,
+        ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "paginae", _sectio_paginae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sententia", _sectio_sententia, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -20,6 +20,8 @@
       <optio>bibliotheca</optio>
       <optio>index</optio>
       <optio>pagina</optio>
+      <optio>sententia</optio>
+      <optio>favores</optio>
     </campus>
     <campus nomen="liber" typus="textus" vita="persistens"
             scriptor="lector.agere" semita="ligatio" historia="impelle"
@@ -32,12 +34,33 @@
     <campus nomen="pagina" typus="numerus" vita="transiens"
             scriptor="lector.agere" semita="status" ambitus="ligatio"
             nota="pagina intra caput"/>
+    <campus nomen="sententia" typus="numerus" vita="transiens"
+            scriptor="lector.agere" semita="status" ambitus="ligatio"
+            nota="octeti initii sententiae in textu capitis (L4; locus
+                  comitis per sententiam, L5)"/>
+    <campus nomen="cursor_findendi" typus="numerus" vita="transiens"
+            scriptor="lector.agere"
+            nota="modus findendi (i): offset verbi sub cursore; absens =
+                  modus clausus"/>
+    <campus nomen="fissurae" typus="textus" vita="transiens"
+            scriptor="lector.agere"
+            nota="fissurae pendentes in modo findendi ('31,40')"/>
     <campus nomen="electus_liber" typus="textus" vita="persistens"
             scriptor="lector.agere"
             nota="identitas libri electi (non legibilis: via fili);
                   absens = primus"/>
     <campus nomen="electus_caput" typus="numerus" vita="transiens"
             scriptor="lector.agere" nota="caput electum in indice"/>
+    <campus nomen="electus_favor" typus="numerus" vita="transiens"
+            scriptor="lector.agere"
+            nota="ordo electus in favoribus (index cursus); absens =
+                  primus"/>
+    <campus nomen="visus_prior" typus="electio" vita="transiens"
+            scriptor="lector.agere"
+            nota="quo Esc ex favoribus redit; absens = pagina">
+      <optio>pagina</optio>
+      <optio>sententia</optio>
+    </campus>
     <campus nomen="nota" typus="textus" vita="transiens"
             scriptor="lector.agere"
             nota="nuntius in linea ima ('position not found')"/>

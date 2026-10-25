@@ -109,3 +109,51 @@ the tail of its final sentence - no sentence starts there, so (Decision 1,
 accepted in the plan) reopening shows the page before. The round-trip
 test now runs in a pane with five lines per page and allows exactly that
 case on the last page only; the "first byte" plant still fails it.
+
+## 2026-10-24 - L4: sentence view, fixes, favourites (plan project-specs/lector-l4-plan.md)
+
+**Sentence view.** `lector_sententiam_disponere` picks 8x16 if the whole
+sentence fits the page view's text area, else 6x8 double-spaced, else the
+lines that fit + "..." in the footer. Multi-line sentences are a block
+centred on its longest line with lines left-aligned inside it (Fran:
+"text-align: left"). Census over 12 Gutenberg books (~105k sentences, scratch
+probe `build/sonda/sonda_codices.c`): at a 1440x860 pane every sentence is
+8x16; at 720x430 about 0.1% fall to 6x8 and 4 Hugo sentences (Les Mis,
+2.4 KB max) are cut. So 6x8 is a rare fallback, "..." rarer.
+
+**Fixes are minimal and undoable by the opposite key.** `J` at a boundary
+made by a stored split removes that split; otherwise the IUNGERE goes on
+the start of the split-only part ending at the boundary (so chains
+extend right). Split mode's Esc mirrors it: a pending split at a
+split-only part start whose previous part carries a stored IUNGERE
+removes that IUNGERE; at a part start without one, nothing; else
+FINDERE with the part's text as fingerprint. `_partes_fissae` (stored
+splits re-anchored, joins ignored) is the shared ground truth for both.
+Split mode has its own praecepta mask (`VISUS_FINDENDI`) while
+`cursor_findendi` is present, so j/k/J/* cannot fire mid-split.
+
+**Two-pane freshness** = `lector_bibliotheca_versio` (in-process counter
+bumped on fix/favourite writes) in every cache key.
+
+**Favourites list.** Built from per-sentence storage at list time;
+consecutive favourite sentences (across paragraphs, never chapters) are
+one entry (Fran), so `*` mid-run splits it. Own cache (`arca_favorum`,
+keyed by book/versio/row width); reads only chapters with stored
+favourites, fixes applied. The re-anchoring helpers now take caput +
+piscina + lost counter instead of the page cache. Browsing writes only
+`electus_favor`; Enter is the move. Esc with no `caput` (pane restored
+straight into the list) opens the book at its position.
+
+**API.** `lector_sententiam_involvere` (font given) is public now (Fran
+approved); it replaced a 1-px-short-height trick that coaxed disponere
+into 6x8 for split-mode parts.
+
+**Plants that proved nothing at first:** "Enter jumps to chapter start"
+stayed green because the opened entry started at offset 0 - test now
+opens "Tertium!"; a "runs not merged" plant crashed instead of failing -
+replaced with one that splits every run. A trailing-space trim stayed
+green under a plant because the wrapper already ends lines at the last
+word: trim removed as dead code.
+
+Selected library rows paint their dim text (author, progress,
+unreadable) in COLOR_BACKGROUND, like nomenclator (Fran).

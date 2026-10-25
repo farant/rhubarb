@@ -48,4 +48,29 @@ lector_pagina_positionis (
     Xar* paginae,
     i32  positio);
 
+/* sententia (aut cursus sententiarum: initium primae, finis ultimae)
+ * in fonte dato ad latitudinem involuta; '\n' linea nova. Xar de
+ * LectorLinea (x = y = 0) */
+Xar*
+lector_sententiam_involvere (
+        constans CodexCaput* caput,
+    constans CodexSententia* sententia,
+                        i32  fons,
+                        i32  latitudo,
+                    Piscina* piscina);
+
+/* sententia sola (visus sententiae) in area latitudo x altitudo:
+ * FONS_TITULI si tota capit, aliter FONS_PARVUS spatio duplici; grex
+ * centratus (per lineam longissimam et verticaliter), lineae intra eum
+ * ad sinistrum; '\n' (titulus, versus) linea nova. Non capit: lineae
+ * quae capiunt et *praecisa VERUM. Xar de LectorLinea (x, y in area) */
+Xar*
+lector_sententiam_disponere (
+        constans CodexCaput* caput,
+    constans CodexSententia* sententia,
+                        i32  latitudo,
+                        i32  altitudo,
+                        b32* praecisa,
+                    Piscina* piscina);
+
 #endif /* LECTOR_PAGINAE_H */

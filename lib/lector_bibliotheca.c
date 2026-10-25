@@ -22,6 +22,7 @@ structura LectorBibliotheca {
     InternamentumChorda* intern;
                 Volumen* volumen;
                     Xar* libri;    /* LiberInternus */
+                    i32  versio;   /* emendationes et favores scripti */
 };
 
 interior chorda
@@ -185,6 +186,7 @@ lector_bibliotheca_aperire (
     b->piscina  = piscina;
     b->intern   = intern;
     b->volumen  = volumen;
+    b->versio   = ZEPHYRUM;
     b->libri    = xar_creare(piscina, (i32)magnitudo(LiberInternus));
     nomina      = xar_creare(piscina, (i32)magnitudo(chorda));
     si (!b->libri || !nomina)
@@ -328,12 +330,13 @@ lector_bibliotheca_codex (
     redde li->codex;
 }
 
-/* via plagulae: "lector/positio/" + identitas, %XX extra
- * A-Za-z0-9-_.~ */
+/* via plagulae: "lector/<genus>/" + identitas, %XX extra
+ * A-Za-z0-9-_.~ (genus: positio, emendationes, favores) */
 interior chorda
-viam_positionis (
-      chorda  identitas,
-     Piscina* piscina)
+viam_plagulae (
+     constans character* genus,
+                 chorda  identitas,
+                Piscina* piscina)
 {
     hic_manens constans character  notae[] = "0123456789ABCDEF";
                 ChordaAedificator* a;
@@ -345,7 +348,9 @@ viam_positionis (
     {
         redde vacua();
     }
-    chorda_aedificator_appendere_literis(a, "lector/positio/");
+    chorda_aedificator_appendere_literis(a, "lector/");
+    chorda_aedificator_appendere_literis(a, genus);
+    chorda_aedificator_appendere_character(a, '/');
     per (i = ZEPHYRUM; i < identitas.mensura; i++)
     {
         x = identitas.datum[i];
@@ -368,6 +373,115 @@ viam_positionis (
     redde chorda_aedificator_finire(a);
 }
 
+/* vestigium ad XXXII octetos, ad runam sectum */
+interior chorda
+vestigium_secare (
+    chorda v)
+{
+    si (v.mensura > VESTIGIUM_MAXIMUM)
+    {
+        v.mensura = VESTIGIUM_MAXIMUM;
+        dum (   v.mensura > ZEPHYRUM
+             && (v.datum[v.mensura] & 0xC0) == 0x80)
+        {
+            v.mensura--;
+        }
+    }
+    redde v;
+}
+
+/* nodus ancorae: elementum 'titulus' cum attributis caput et clavis
+ * (positio), vestigium intus
+ * - vestigium ut TEXTUS (scriptor effugit): valores attributorum STML
+ *   cruda sunt, '"' ea frangeret */
+interior StmlNodus*
+ancoram_creare (
+                Piscina* t,
+    InternamentumChorda* in,
+     constans character* titulus,
+                    i32  caput,
+     constans character* clavis,
+                    i32  positio,
+                 chorda  vestigium)
+{
+     StmlNodus* n;
+     character  numerus[XXIV];
+
+    n = stml_elementum_creare(t, in, titulus);
+    si (!n)
+    {
+        redde NIHIL;
+    }
+    sprintf(numerus, "%u", (insignatus integer)caput);
+    si (!stml_attributum_addere(n, t, in, "caput", numerus))
+    {
+        redde NIHIL;
+    }
+    sprintf(numerus, "%u", (insignatus integer)positio);
+    si (!stml_attributum_addere(n, t, in, clavis, numerus))
+    {
+        redde NIHIL;
+    }
+    vestigium = vestigium_secare(vestigium);
+    si (   vestigium.mensura > ZEPHYRUM
+        && !stml_textum_addere(n, t, in, chorda_ut_cstr(vestigium, t)))
+    {
+        redde NIHIL;
+    }
+    redde n;
+}
+
+/* nodus ancorae legere; FALSUM si caput aut positio deest */
+interior b32
+ancoram_legere (
+              StmlNodus* n,
+     constans character* clavis,
+                    i32* caput,
+                    i32* positio,
+                 chorda* vestigium,
+                Piscina* piscina)
+{
+    chorda* a;
+
+    a = stml_attributum_capere(n, "caput");
+    si (!a || !chorda_ut_i32(*a, caput))
+    {
+        redde FALSUM;
+    }
+    a = stml_attributum_capere(n, clavis);
+    si (!a || !chorda_ut_i32(*a, positio))
+    {
+        redde FALSUM;
+    }
+    *vestigium = stml_textus_valor(n, piscina);
+    redde VERUM;
+}
+
+/* plagulam libri legere; radix elementi aut NIHIL (absens aut mala);
+ * *inventa = plagula exstat */
+interior StmlNodus*
+plagulam_legere (
+     LectorBibliotheca* b,
+    constans character* genus,
+                chorda  identitas,
+               Piscina* piscina,
+                   b32* inventa)
+{
+          chorda c;
+    StmlResultus r;
+
+    *inventa  = FALSUM;
+    c         = volumen_plagulam_promere(b->volumen,
+        viam_plagulae(genus,
+        identitas, piscina), piscina, inventa);
+    si (!*inventa)
+    {
+        redde NIHIL;
+    }
+    r = stml_legere(c, piscina, internamentum_creare(piscina));
+    redde r.successus ? r.elementum_radix : NIHIL;
+}
+
 b32
 lector_positionem_scribere (
          LectorBibliotheca* b,
@@ -377,9 +491,7 @@ lector_positionem_scribere (
                 Piscina* t;
     InternamentumChorda* in;
               StmlNodus* n;
-                 chorda  v;
                     b32  bene;
-              character  numerus[XXIV];
 
     si (!b || !b->volumen || !positio || identitas.mensura == ZEPHYRUM)
     {
@@ -392,30 +504,11 @@ lector_positionem_scribere (
     {
         redde FALSUM;
     }
-    in  = internamentum_creare(t);
-    n   = in ? stml_elementum_creare(t, in, "positio") : NIHIL;
-    v   = positio->vestigium;
-    si (v.mensura > VESTIGIUM_MAXIMUM)
-    {
-        v.mensura = VESTIGIUM_MAXIMUM;
-        dum (   v.mensura > ZEPHYRUM
-             && (v.datum[v.mensura] & 0xC0) == 0x80)
-        {
-            v.mensura--;
-        }
-    }
-    bene = n != NIHIL;
-    sprintf(numerus, "%u", (insignatus integer)positio->caput);
-    bene = bene && stml_attributum_addere(n, t, in, "caput", numerus);
-    sprintf(numerus, "%u", (insignatus integer)positio->initium);
-    bene = bene && stml_attributum_addere(n, t, in, "initium", numerus);
-    /* vestigium ut TEXTUS (scriptor effugit): valores attributorum
-     * STML cruda sunt - '"' ea frangeret */
-    bene = bene
-        && (v.mensura == ZEPHYRUM || stml_textum_addere(n, t, in,
-        chorda_ut_cstr(v, t)));
-    bene = bene && volumen_plagulam_condere(b->volumen,
-        viam_positionis(identitas, t), stml_scribere(n, t, FALSUM),
+    in    = internamentum_creare(t);
+    n     = in ? ancoram_creare(t, in, "positio", positio->caput,
+        "initium", positio->initium, positio->vestigium) : NIHIL;
+    bene  = n && volumen_plagulam_condere(b->volumen, viam_plagulae(
+        "positio", identitas, t), stml_scribere(n, t, FALSUM),
         "lector:positio");
     piscina_destruere(t);
     redde bene;
@@ -428,40 +521,182 @@ lector_positionem_legere (
         LectorPositio* positio,
               Piscina* piscina)
 {
-          chorda  c;
-          chorda* a;
-    StmlResultus  r;
-             b32  inventum;
+     StmlNodus* n;
+           b32  inventa;
 
     si (   !b || !b->volumen || !positio || !piscina
         || identitas.mensura == ZEPHYRUM)
     {
         redde FALSUM;
     }
-    inventum  = FALSUM;
-    c         = volumen_plagulam_promere(b->volumen, viam_positionis(
-        identitas, piscina), piscina, &inventum);
-    si (!inventum)
+    n = plagulam_legere(b, "positio", identitas, piscina, &inventa);
+    redde n && ancoram_legere(n, "initium", &positio->caput,
+        &positio->initium, &positio->vestigium, piscina);
+}
+
+/* lista ancorarum scribere: <radix><elementum .../>...</radix>; genus
+ * emendationis attributum (emendationes solae) */
+interior b32
+listam_scribere (
+       LectorBibliotheca* b,
+      constans character* genus,
+      constans character* radix,
+      constans character* elementum,
+      constans character* clavis,
+                  chorda  identitas,
+                     Xar* lista,
+                     b32  emendationes)
+{
+                     Piscina* t;
+         InternamentumChorda* in;
+                   StmlNodus* n;
+                   StmlNodus* x;
+                         i32  i;
+                         b32  bene;
+    constans LectorEmendatio* e;
+      constans LectorPositio* q;
+
+    si (   !b || !b->volumen || !lista || identitas.mensura == ZEPHYRUM)
     {
         redde FALSUM;
     }
-    r = stml_legere(c, piscina, internamentum_creare(piscina));
-    si (!r.successus || !r.elementum_radix)
+    t = piscina_generare_dynamicum("lector_lista", MXXIV);
+    si (!t)
     {
         redde FALSUM;
     }
-    a = stml_attributum_capere(r.elementum_radix, "caput");
-    si (!a || !chorda_ut_i32(*a, &positio->caput))
+    in    = internamentum_creare(t);
+    n     = in ? stml_elementum_creare(t, in, radix) : NIHIL;
+    bene  = n != NIHIL;
+    per (i = ZEPHYRUM; bene && i < xar_numerus(lista); i++)
     {
-        redde FALSUM;
+        si (emendationes)
+        {
+            e = (constans LectorEmendatio*)xar_obtinere(lista, i);
+            x = ancoram_creare(t, in, elementum, e->caput, clavis,
+                e->positio, e->vestigium);
+            bene = x && stml_attributum_addere(x, t, in, "genus",
+                e->genus == CODEX_FINDERE ? "findere" : "iungere");
+        }
+        alioquin
+        {
+            q = (constans LectorPositio*)xar_obtinere(lista, i);
+            x = ancoram_creare(t, in, elementum, q->caput, clavis,
+                q->initium, q->vestigium);
+            bene = x != NIHIL;
+        }
+        bene = bene && stml_liberum_addere(n, x);
     }
-    a = stml_attributum_capere(r.elementum_radix, "initium");
-    si (!a || !chorda_ut_i32(*a, &positio->initium))
+    bene = bene && volumen_plagulam_condere(b->volumen, viam_plagulae(
+        genus, identitas, t), stml_scribere(n, t, FALSUM),
+        "lector:lista");
+    piscina_destruere(t);
+    si (bene)
     {
-        redde FALSUM;
+        b->versio++;
     }
-    positio->vestigium = stml_textus_valor(r.elementum_radix, piscina);
-    redde VERUM;
+    redde bene;
+}
+
+i32
+lector_bibliotheca_versio (
+    constans LectorBibliotheca* b)
+{
+    redde b ? b->versio : ZEPHYRUM;
+}
+
+Xar*
+lector_emendationes_legere (
+    LectorBibliotheca* b,
+               chorda  identitas,
+              Piscina* piscina)
+{
+          StmlNodus* n;
+                Xar* nodi;
+                Xar* exitus;
+    LectorEmendatio  e;
+             chorda* g;
+                b32  inventa;
+                i32  i;
+
+    si (!b || !b->volumen || !piscina)
+    {
+        redde NIHIL;
+    }
+    exitus  = xar_creare(piscina, (i32)magnitudo(LectorEmendatio));
+    n       = plagulam_legere(b, "emendationes", identitas, piscina,
+        &inventa);
+    nodi    = n ? stml_invenire_omnes_liberos(n, "emendatio", piscina)
+        : NIHIL;
+    per (i = ZEPHYRUM; exitus && nodi && i < xar_numerus(nodi); i++)
+    {
+        n = *(StmlNodus**)xar_obtinere(nodi, i);
+        g = stml_attributum_capere(n, "genus");
+        si (   !g || !ancoram_legere(n, "positio", &e.caput, &e.positio,
+                &e.vestigium, piscina))
+        {
+            perge;
+        }
+        e.genus = chorda_aequalis_literis(*g, "findere") ? CODEX_FINDERE
+            : CODEX_IUNGERE;
+        *(LectorEmendatio*)xar_addere(exitus) = e;
+    }
+    redde exitus;
+}
+
+b32
+lector_emendationes_scribere (
+    LectorBibliotheca* b,
+               chorda  identitas,
+                  Xar* emendationes)
+{
+    redde listam_scribere(b, "emendationes", "emendationes",
+        "emendatio",
+        "positio", identitas, emendationes, VERUM);
+}
+
+Xar*
+lector_favores_legere (
+    LectorBibliotheca* b,
+               chorda  identitas,
+              Piscina* piscina)
+{
+        StmlNodus* n;
+              Xar* nodi;
+              Xar* exitus;
+    LectorPositio  q;
+              b32  inventa;
+              i32  i;
+
+    si (!b || !b->volumen || !piscina)
+    {
+        redde NIHIL;
+    }
+    exitus = xar_creare(piscina, (i32)magnitudo(LectorPositio));
+    n = plagulam_legere(b, "favores", identitas, piscina,
+        &inventa);
+    nodi    = n ? stml_invenire_omnes_liberos(n, "favor", piscina)
+        : NIHIL;
+    per (i = ZEPHYRUM; exitus && nodi && i < xar_numerus(nodi); i++)
+    {
+        si (ancoram_legere(*(StmlNodus**)xar_obtinere(nodi, i),
+            "initium",
+                &q.caput, &q.initium, &q.vestigium, piscina))
+        {
+            *(LectorPositio*)xar_addere(exitus) = q;
+        }
+    }
+    redde exitus;
+}
+
+b32
+lector_favores_scribere (
+    LectorBibliotheca* b,
+               chorda  identitas,
+                  Xar* favores)
+{
+    redde listam_scribere(b, "favores", "favores", "favor", "initium",
+        identitas, favores, FALSUM);
 }
 
 s32

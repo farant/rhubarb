@@ -244,9 +244,167 @@ _sectio_positio (
     volumen_claudere(vol);
 }
 
+interior LectorEmendatio
+emendatio (
+    CodexEmendationisGenus  genus,
+                       i32  caput,
+                       i32  positio,
+        constans character* vestigium,
+                   Piscina* p)
+{
+    LectorEmendatio x;
+
+    x.genus      = genus;
+    x.caput      = caput;
+    x.positio    = positio;
+    x.vestigium  = chorda_ex_literis(vestigium, p);
+    redde x;
+}
+
+interior b32
+emendatio_est (
+                       Xar* x,
+                       i32  k,
+    CodexEmendationisGenus  genus,
+                       i32  caput,
+                       i32  positio,
+        constans character* vestigium)
+{
+    constans LectorEmendatio* e;
+
+    si (!x || k >= xar_numerus(x))
+    {
+        redde FALSUM;
+    }
+    e = (constans LectorEmendatio*)xar_obtinere(x, k);
+    redde e->genus == genus && e->caput == caput
+        && e->positio == positio
+        && chorda_aequalis_literis(e->vestigium, vestigium);
+}
+
+interior vacuum
+_sectio_emendationes (
+    CredoContextus* c)
+{
+                 Piscina* p;
+     InternamentumChorda* in;
+                 Volumen* vol;
+       LectorBibliotheca* b;
+       LectorBibliotheca* sine;
+                  chorda  id;
+                  chorda  gutenberg;
+                     Xar* e;
+                     Xar* f;
+                     Xar* x;
+           LectorPositio  q;
+                     b32  inventum;
+
+    p    = c->piscina;
+    in   = internamentum_creare(p);
+    vol  = volumen_temporarium(p, "lector_emendationes");
+    CREDO_NECESSE_NON_NIHIL(vol);
+    b          = lector_bibliotheca_aperire(BIBLIOTHECA, vol, p, in);
+    id         = chorda_ex_literis("urn:rhubarb:alpha", p);
+    gutenberg  = chorda_ex_literis("http://www.gutenberg.org/394", p);
+
+    CREDO_GRADUS("nullae: Xar vacuum");
+    x = lector_emendationes_legere(b, id, p);
+    CREDO_NECESSE_NON_NIHIL(x);
+    CREDO_AEQUALIS_I32(xar_numerus(x), ZEPHYRUM);
+    x = lector_favores_legere(b, id, p);
+    CREDO_NECESSE_NON_NIHIL(x);
+    CREDO_AEQUALIS_I32(xar_numerus(x), ZEPHYRUM);
+
+    CREDO_GRADUS("III emendationes ordine, genus, vestigium cum '\"' "
+        "'<' "
+        "'&'");
+    e = xar_creare(p, (i32)magnitudo(LectorEmendatio));
+    *(LectorEmendatio*)xar_addere(e) = emendatio(CODEX_IUNGERE, III,
+        XIX,
+        "Primum hic.", p);
+    *(LectorEmendatio*)xar_addere(e) = emendatio(CODEX_FINDERE, III, XL,
+        "ibi.", p);
+    *(LectorEmendatio*)xar_addere(e) = emendatio(CODEX_IUNGERE, I,
+        ZEPHYRUM, "Dixit \"x\" <y> & z", p);
+    CREDO_VERUM(lector_emendationes_scribere(b, id, e));
+    x = lector_emendationes_legere(b, id, p);
+    CREDO_AEQUALIS_I32(xar_numerus(x), III);
+    CREDO_VERUM(emendatio_est(x, ZEPHYRUM, CODEX_IUNGERE, III, XIX,
+        "Primum hic."));
+    CREDO_VERUM(emendatio_est(x, I, CODEX_FINDERE, III, XL, "ibi."));
+    CREDO_VERUM(emendatio_est(x, II, CODEX_IUNGERE, I, ZEPHYRUM,
+        "Dixit \"x\" <y> & z"));
+
+    CREDO_GRADUS("bibliotheca altera eodem volumine easdem legit");
+    x = lector_emendationes_legere(lector_bibliotheca_aperire(
+        BIBLIOTHECA, vol, p, in), id, p);
+    CREDO_AEQUALIS_I32(xar_numerus(x), III);
+
+    CREDO_GRADUS("iterum: ultima vincit; lista vacua licet");
+    e = xar_creare(p, (i32)magnitudo(LectorEmendatio));
+    *(LectorEmendatio*)xar_addere(e) = emendatio(CODEX_FINDERE, II, V,
+        "Secundum", p);
+    CREDO_VERUM(lector_emendationes_scribere(b, id, e));
+    x = lector_emendationes_legere(b, id, p);
+    CREDO_AEQUALIS_I32(xar_numerus(x), I);
+    CREDO_VERUM(emendatio_est(x, ZEPHYRUM, CODEX_FINDERE, II, V,
+        "Secundum"));
+    CREDO_VERUM(lector_emendationes_scribere(b, id, xar_creare(p,
+        (i32)magnitudo(LectorEmendatio))));
+    CREDO_AEQUALIS_I32(xar_numerus(lector_emendationes_legere(b, id,
+        p)),
+        ZEPHYRUM);
+
+    CREDO_GRADUS("favores: II ordine");
+    f = xar_creare(p, (i32)magnitudo(LectorPositio));
+    q.caput = III;
+    q.initium = XIX;
+    q.vestigium = chorda_ex_literis("Primum hic.", p);
+    *(LectorPositio*)xar_addere(f) = q;
+    q.caput = I;
+    q.initium = ZEPHYRUM;
+    q.vestigium = chorda_ex_literis("Caput I", p);
+    *(LectorPositio*)xar_addere(f) = q;
+    CREDO_VERUM(lector_favores_scribere(b, id, f));
+    x = lector_favores_legere(b, id, p);
+    CREDO_AEQUALIS_I32(xar_numerus(x), II);
+    CREDO_AEQUALIS_I32(((LectorPositio*)xar_obtinere(x,
+        ZEPHYRUM))->caput,
+        III);
+    CREDO_AEQUALIS_I32(((LectorPositio*)xar_obtinere(x,
+        ZEPHYRUM))->initium, XIX);
+    CREDO_CHORDA_AEQUALIS_LITERIS(((LectorPositio*)xar_obtinere(x,
+        I))->vestigium, "Caput I");
+
+    CREDO_GRADUS("claves %XX (identitas Gutenberg) pro utroque genere");
+    CREDO_VERUM(lector_emendationes_scribere(b, gutenberg, e));
+    CREDO_VERUM(lector_favores_scribere(b, gutenberg, f));
+    inventum = FALSUM;
+    (vacuum)volumen_plagulam_promere(vol, chorda_ex_literis(
+        "lector/emendationes/http%3A%2F%2Fwww.gutenberg.org%2F394", p),
+        p, &inventum);
+    CREDO_VERUM(inventum);
+    inventum = FALSUM;
+    (vacuum)volumen_plagulam_promere(vol, chorda_ex_literis(
+        "lector/favores/http%3A%2F%2Fwww.gutenberg.org%2F394", p), p,
+        &inventum);
+    CREDO_VERUM(inventum);
+
+    CREDO_GRADUS("sine volumine: NIHIL et FALSUM");
+    sine = lector_bibliotheca_aperire(BIBLIOTHECA, NIHIL, p, in);
+    CREDO_NIHIL(lector_emendationes_legere(sine, id, p));
+    CREDO_FALSUM(lector_emendationes_scribere(sine, id, e));
+    CREDO_NIHIL(lector_favores_legere(sine, id, p));
+    CREDO_FALSUM(lector_favores_scribere(sine, id, f));
+
+    volumen_claudere(vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "bibliotheca", _sectio_bibliotheca, NIHIL, NIHIL, NIHIL, NIHIL },
     { "positio", _sectio_positio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "emendationes", _sectio_emendationes, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

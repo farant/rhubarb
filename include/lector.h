@@ -15,7 +15,27 @@
  * indicem). Omnis motus positionem libri scribit (sententia prima quae
  * in pagina incipit; nulla -> sententia continens). Liber apertus =
  * positio eius (codex_reperire); amissa -> initium capitis cum nota
- * "position not found". */
+ * "position not found". s: ad sententiam (positio libri si in pagina,
+ * aliter sententia prima paginae), f (favores).
+ * SENTENTIA (L4): sententia sola in medio (lector_sententiam_
+ * disponere), titulus capitis supra, "sentence 12/153" infra
+ * (emendationes amissae numeratae, "..." si praecisa). Claves: j k
+ * (sententia; trans capita; positio scribitur), s et Esc (ad paginam),
+ * t (index), J (iungere cum sequente in eadem clausula; limes per
+ * fissuram servatam factus fissuram tollit), * (favor vertitur; iuncta
+ * favor est si pars ulla, '*' partes omnes tollit), i (modus
+ * findendi: cursor in verbo secundo, w l / b h per verba, Enter
+ * fissuram pendentem ante verbum vertit - partes linea vacua
+ * separatae, Esc servat: fissura ubi iunctura partes coniunxit
+ * iuncturam tollit, aliter FINDERE), f (favores). Emendationes et
+ * favores libri (lector_bibliotheca) per caput applicantur; latera
+ * capita renovant cum lector_bibliotheca_versio crescit.
+ * FAVORES: per caput (titulus gregis, in pagina continuationis
+ * iteratus), sententiae involutae (6x8); favores consecutivi (etiam
+ * trans paragraphum, numquam trans caput) ordo unus - servantur per
+ * sententiam, ergo '*' in media cursum findit. Claves: j k, [ ],
+ * Enter (ad sententiam primam ordinis - motus), Esc (unde venit).
+ * Lustratio positionem non movet. */
 
 #ifndef LECTOR_H
 #define LECTOR_H

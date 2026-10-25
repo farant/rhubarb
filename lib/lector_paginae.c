@@ -111,6 +111,55 @@ runam_praeterire (
     redde (i32)(q - textus.datum);
 }
 
+/* linea proxima ab positio (spatia initialia iam praeterita) in
+ * [positio, b) cum n cellulis: verba ad spatium ASCII ultimum, verbum
+ * longius ad runam secatur. *ultimum = finis lineae sine spatiis
+ * finalibus; redde positionem post lineam */
+interior i32
+lineam_metiri (
+    chorda  textus,
+       i32  positio,
+       i32  b,
+       s32  n,
+       i32* ultimum)
+{
+    i32 finis;
+    i32 linea_finis;
+    s32 spatium;
+    s32 k;
+
+    finis    = positio;
+    k        = ZEPHYRUM;
+    spatium  = -I;
+    dum (finis < b && k < n)
+    {
+        si (textus.datum[finis] == ' ')
+        {
+            spatium = (s32)finis;
+        }
+        finis = runam_praeterire(textus, finis, b);
+        k++;
+    }
+    si (finis >= b || textus.datum[finis] == ' ')
+    {
+        linea_finis = finis >= b ? b : finis;
+    }
+    alioquin si (spatium > (s32)positio)
+    {
+        linea_finis = (i32)spatium;
+    }
+    alioquin
+    {
+        linea_finis = finis;   /* verbum linea longius */
+    }
+    *ultimum = linea_finis;
+    dum (*ultimum > positio && textus.datum[*ultimum - I] == ' ')
+    {
+        (*ultimum)--;
+    }
+    redde linea_finis;
+}
+
 /* segmentum [a, b) involvere: verba ad spatia ASCII, verbum longum ad
  * runam secatur; continuatio indentata (cellulae indentationis);
  * *intervallum ante lineam primam, deinde nihil */
@@ -126,12 +175,9 @@ segmentum_involvere (
            s32* intervallum)
 {
     i32 positio;
-    i32 finis;
     i32 linea_finis;
     i32 ultimum;
-    s32 spatium;
     s32 n;
-    s32 k;
     b32 prima;
 
     positio  = a;
@@ -151,35 +197,7 @@ segmentum_involvere (
         {
             n = I;
         }
-        finis    = positio;
-        k        = ZEPHYRUM;
-        spatium  = -I;
-        dum (finis < b && k < n)
-        {
-            si (textus.datum[finis] == ' ')
-            {
-                spatium = (s32)finis;
-            }
-            finis = runam_praeterire(textus, finis, b);
-            k++;
-        }
-        si (finis >= b || textus.datum[finis] == ' ')
-        {
-            linea_finis = finis >= b ? b : finis;
-        }
-        alioquin si (spatium > (s32)positio)
-        {
-            linea_finis = (i32)spatium;
-        }
-        alioquin
-        {
-            linea_finis = finis;   /* verbum linea longius */
-        }
-        ultimum = linea_finis;
-        dum (ultimum > positio && textus.datum[ultimum - I] == ' ')
-        {
-            ultimum--;
-        }
+        linea_finis = lineam_metiri(textus, positio, b, n, &ultimum);
         si (!lineam_ponere(d, positio, ultimum, fons, prima ? ZEPHYRUM
                 : indentatio * fons_latitudo(fons), *intervallum))
         {
@@ -280,4 +298,190 @@ lector_pagina_positionis (
         k = i;
     }
     redde k;
+}
+
+/* runae in [a, b) */
+interior s32
+runas_numerare (
+    chorda textus,
+       i32 a,
+       i32 b)
+{
+    s32 n;
+    i32 i;
+
+    n = ZEPHYRUM;
+    per (i = a; i < b; i++)
+    {
+        si ((textus.datum[i] & 0xC0) != 0x80)
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
+/* lineae sententiae fonte dato (sine positione): segmenta per '\n',
+ * involuta; Xar de LectorLinea (initium, finis, fons) */
+Xar*
+lector_sententiam_involvere (
+        constans CodexCaput* caput,
+    constans CodexSententia* t,
+                        i32  fons,
+                        i32  latitudo,
+                    Piscina* piscina)
+{
+             Xar* lineae;
+     LectorLinea* l;
+             i32  a;
+             i32  j;
+             i32  positio;
+             i32  ultimum;
+             s32  cellulae;
+
+    si (   !caput || !t || !piscina || t->finis > caput->textus.mensura
+        || t->initium > t->finis)
+    {
+        redde NIHIL;
+    }
+    lineae    = xar_creare(piscina, (i32)magnitudo(LectorLinea));
+    cellulae  = (s32)latitudo / fons_latitudo(fons);
+    si (cellulae < I)
+    {
+        cellulae = I;
+    }
+    a = t->initium;
+    per (j = t->initium; lineae && j <= t->finis; j++)
+    {
+        si (j < t->finis && caput->textus.datum[j] != '\n')
+        {
+            perge;
+        }
+        positio = a;
+        dum (VERUM)
+        {
+            dum (positio < j && caput->textus.datum[positio] == ' ')
+            {
+                positio++;
+            }
+            si (positio >= j)
+            {
+                frange;
+            }
+            l           = (LectorLinea*)xar_addere(lineae);
+            l->initium  = positio;
+            positio     = lineam_metiri(caput->textus, positio, j,
+                cellulae, &ultimum);
+            l->finis  = ultimum;
+            l->fons   = fons;
+            l->x      = ZEPHYRUM;
+            l->y      = ZEPHYRUM;
+        }
+        a = j + I;
+    }
+    redde lineae;
+}
+
+/* passus linearum sententiae: 8x16 XXIV (linea vacua VIII), 6x8 XVI
+ * (spatium duplex, ut paginae); vacua post ultimam non numeratur */
+interior s32
+passus_sententiae (
+    i32 fons)
+{
+    redde fons_altitudo(fons) + INTERVALLUM_LINEARUM;
+}
+
+Xar*
+lector_sententiam_disponere (
+        constans CodexCaput* caput,
+    constans CodexSententia* sententia,
+                        i32  latitudo,
+                        i32  altitudo,
+                        b32* praecisa,
+                    Piscina* piscina)
+{
+             Xar* lineae;
+     LectorLinea* l;
+             i32  fons;
+             i32  i;
+             i32  n;
+             s32  alta;
+             s32  lata;
+             s32  x0;
+             s32  y0;
+
+    si (praecisa)
+    {
+        *praecisa = FALSUM;
+    }
+    si (   !caput || !sententia || !piscina
+        || sententia->finis > caput->textus.mensura
+        || sententia->initium > sententia->finis)
+    {
+        redde NIHIL;
+    }
+    fons    = FONS_TITULI;
+    lineae  = lector_sententiam_involvere(caput, sententia, fons,
+        latitudo,
+        piscina);
+    alta    =
+        lineae ? (s32)xar_numerus(lineae) * passus_sententiae(fons)
+        - INTERVALLUM_LINEARUM : ZEPHYRUM;
+    si (lineae && alta > (s32)altitudo)
+    {
+        fons    = FONS_PARVUS;
+        lineae  = lector_sententiam_involvere(caput, sententia, fons,
+            latitudo, piscina);
+        alta    = lineae ? (s32)xar_numerus(lineae) * passus_sententiae(
+            fons) - INTERVALLUM_LINEARUM : ZEPHYRUM;
+    }
+    si (!lineae)
+    {
+        redde NIHIL;
+    }
+    n = xar_numerus(lineae);
+    si (alta > (s32)altitudo)
+    {
+        /* etiam 6x8 non capit: lineae quae capiunt */
+        n = (i32)(((s32)altitudo + INTERVALLUM_LINEARUM)
+            / passus_sententiae(fons));
+        si (n < I)
+        {
+            n = I;
+        }
+        (vacuum)xar_truncare(lineae, n);
+        alta = (s32)n * passus_sententiae(fons) - INTERVALLUM_LINEARUM;
+        si (praecisa)
+        {
+            *praecisa = VERUM;
+        }
+    }
+    y0 = ((s32)altitudo - alta) / II;
+    si (y0 < ZEPHYRUM)
+    {
+        y0 = ZEPHYRUM;
+    }
+    /* grex centratus per lineam longissimam; lineae ad sinistrum gregis
+     * (Franus: "text-align: left" intra gregem centratum) */
+    lata = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        l = (LectorLinea*)xar_obtinere(lineae, i);
+        si (runas_numerare(caput->textus, l->initium, l->finis) > lata)
+        {
+            lata = runas_numerare(caput->textus, l->initium, l->finis);
+        }
+    }
+    x0 = ((s32)latitudo - lata * fons_latitudo(fons)) / II;
+    si (x0 < ZEPHYRUM)
+    {
+        x0 = ZEPHYRUM;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        l     = (LectorLinea*)xar_obtinere(lineae, i);
+        l->x  = x0;
+        l->y  = y0 + (s32)i * passus_sententiae(fons);
+    }
+    redde lineae;
 }

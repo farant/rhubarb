@@ -22,6 +22,7 @@
 #include "semita.h"
 #include "organum_montatio.h"
 #include "credo.h"
+#include <stdio.h>
 #include <string.h>
 
 #define BIBLIOTHECA  "probationes/fixa/lector/bibliotheca"
@@ -192,6 +193,35 @@ pictum (
     redde FALSUM;
 }
 
+/* textus primus continens fragmentum in colore thematis dato? */
+interior b32
+pictum_in_colore (
+                  Mundus* w,
+      constans character* fragmentum,
+              ColorThema  color,
+                 Piscina* p)
+{
+               Mandata* md;
+     constans Mandatum* x;
+          ColorMandati  expectatus;
+                   i32  i;
+
+    md          = reddere(w, p);
+    expectatus  = figura_color_thematis(color);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_TEXTUS
+            && chorda_continet(x->textus, chorda_ex_literis(fragmentum,
+                p)))
+        {
+            redde x->color.genus == expectatus.genus
+                && x->color.valor == expectatus.valor;
+        }
+    }
+    redde FALSUM;
+}
+
 interior b32
 ictus_in (
                  Mundus* w,
@@ -243,6 +273,19 @@ _sectio_bibliotheca (
     CREDO_VERUM(campus_est(w, "electus_liber", "urn:rhubarb:beta"));
     CREDO_VERUM(ictus_in(w, "r2", c->piscina));
     CREDO_VERUM(campus_est(w, "electus_liber", "urn:rhubarb:alpha"));
+
+    CREDO_GRADUS("ordo electus: obscura (auctor, progressus, "
+        "unreadable) in colore fundi");
+    CREDO_VERUM(pictum_in_colore(w, "Anna Scriptrix", COLOR_BACKGROUND,
+        c->piscina));
+    CREDO_VERUM(pictum_in_colore(w, "unreadable", COLOR_TEXT_DIM,
+        c->piscina));
+    clavis(w, 'j');
+    CREDO_VERUM(pictum_in_colore(w, "Anna Scriptrix", COLOR_TEXT_DIM,
+        c->piscina));
+    CREDO_VERUM(pictum_in_colore(w, "unreadable", COLOR_BACKGROUND,
+        c->piscina));
+    clavis(w, 'k');
 
     CREDO_GRADUS("Enter in libro non legibili: nihil aperitur");
     clavis(w, 'j');
@@ -909,6 +952,526 @@ _sectio_margines (
     mundum_claudere(w);
 }
 
+#define SENTENTIA_ALPHA "lector/sententia/urn%3Arhubarb%3Aalpha"
+
+interior vacuum
+emendationem_ponere (
+                    Mundus* w,
+                       Xar* lista,
+    CodexEmendationisGenus  genus,
+                       i32  caput,
+                       i32  positio,
+        constans character* vestigium,
+                   Piscina* p)
+{
+    LectorEmendatio* e;
+
+    e             = (LectorEmendatio*)xar_addere(lista);
+    e->genus      = genus;
+    e->caput      = caput;
+    e->positio    = positio;
+    e->vestigium  = chorda_ex_literis(vestigium, p);
+    (vacuum)w;
+}
+
+interior vacuum
+_sectio_sententia (
+    CredoContextus* c)
+{
+           Mundus* w;
+           Mundus* alter;
+    LectorPositio  q;
+              Xar* lista;
+           chorda  persistens;
+              i32  primum;
+
+    w = mundus(c, BIBLIOTHECA, ALTITUDO);
+    CREDO_NECESSE_NON_NIHIL(w);
+    primum = locus_in_capite(w, III, "Primum hic.", c->piscina);
+
+    CREDO_GRADUS("s ex pagina: sententia prima paginae (titulus II)");
+    CREDO_VERUM(argumentum(w, PAGINA_ALPHA "?caput=2&pagina=0"));
+    clavis(w, 's');
+    CREDO_VERUM(campus_est(w, "visus", "sententia"));
+    CREDO_VERUM(campus_est(w, "sententia", "0"));
+    CREDO_VERUM(pictum(w, "sentence 1/2", c->piscina));
+
+    CREDO_GRADUS("j: sententia proxima, positio scripta; j trans "
+        "capita");
+    clavis(w, 'j');
+    CREDO_VERUM(pictum(w, "Secundum caput.", c->piscina));
+    CREDO_VERUM(pictum(w, "sentence 2/2", c->piscina));
+    CREDO_VERUM(positio_servata(w, "urn:rhubarb:alpha", &q,
+        c->piscina));
+    CREDO_AEQUALIS_I32(q.caput, II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(q.vestigium, "Secundum caput.");
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "caput", "3"));
+    CREDO_VERUM(campus_est(w, "sententia", "0"));
+    CREDO_VERUM(pictum(w, "line one", c->piscina));
+    CREDO_VERUM(pictum(w, "sentence 1/5", c->piscina));
+
+    CREDO_GRADUS("k trans capita retro; s ad paginam sententiae");
+    clavis(w, 'k');
+    CREDO_VERUM(campus_est(w, "caput", "2"));
+    CREDO_VERUM(pictum(w, "Secundum caput.", c->piscina));
+    clavis(w, 's');
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(campus_est(w, "caput", "2"));
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+
+    CREDO_GRADUS("s ad positionem servatam si in pagina est");
+    CREDO_VERUM(argumentum(w, SENTENTIA_ALPHA "?caput=3&sententia=0"));
+    clavis(w, 'j');
+    clavis(w, 'j');
+    clavis(w, 's');
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    clavis(w, 's');
+    CREDO_VERUM(pictum(w, "Primum hic.", c->piscina));
+
+    CREDO_GRADUS("semita sententiae; locus; semita persistens sine "
+        "sententia");
+    CREDO_VERUM(argumentum(w, SENTENTIA_ALPHA "?caput=3&sententia=31"));
+    CREDO_VERUM(campus_est(w, "visus", "sententia"));
+    CREDO_VERUM(pictum(w, "Secundum ibi.", c->piscina));
+    CREDO_VERUM(chorda_continet(lector_locus(&w->m, c->piscina),
+        chorda_ex_literis("sententia=31", c->piscina)));
+    persistens = semita_ad_uri(organa_testis, w,
+        semita_legere_persistentem(
+        organa_testis, w, &w->m.ramus, "lector", c->piscina, w->intern),
+        c->piscina);
+    CREDO_FALSUM(chorda_continet(persistens, chorda_ex_literis(
+        "sententia=", c->piscina)));
+    CREDO_VERUM(chorda_continet(persistens, chorda_ex_literis(
+        "lector/sententia/", c->piscina)));
+
+    CREDO_GRADUS("emendatio servata applicatur (iuncta: 'Primum hic. "
+        "Secundum ibi.', IV sententiae)");
+    lista = xar_creare(c->piscina, (i32)magnitudo(LectorEmendatio));
+    emendationem_ponere(w, lista, CODEX_IUNGERE, III, primum,
+        "Primum hic.", c->piscina);
+    CREDO_VERUM(lector_emendationes_scribere(w->bibliotheca,
+        chorda_ex_literis("urn:rhubarb:alpha", c->piscina), lista));
+    alter = mundus_alter(c, w);
+    CREDO_NECESSE_NON_NIHIL(alter);
+    CREDO_VERUM(argumentum(alter,
+        SENTENTIA_ALPHA "?caput=3&sententia=31"));
+    CREDO_VERUM(pictum(alter, "Primum hic. Secundum ibi.", c->piscina));
+    CREDO_VERUM(pictum(alter, "sentence 3/4", c->piscina));
+
+    CREDO_GRADUS("emendatio amissa: non applicata, numerata");
+    emendationem_ponere(w, lista, CODEX_FINDERE, III, V, "Nusquam",
+        c->piscina);
+    CREDO_VERUM(lector_emendationes_scribere(w->bibliotheca,
+        chorda_ex_literis("urn:rhubarb:alpha", c->piscina), lista));
+    alter = mundus_alter(c, w);
+    CREDO_NECESSE_NON_NIHIL(alter);
+    CREDO_VERUM(argumentum(alter,
+        SENTENTIA_ALPHA "?caput=3&sententia=0"));
+    CREDO_VERUM(pictum(alter, "1 mark lost", c->piscina));
+    CREDO_VERUM(pictum(alter, "sentence 1/4", c->piscina));
+
+    mundum_claudere(w);
+
+    CREDO_GRADUS("sententia longior latere parvo: '...' in pede");
+    w = mundus(c, "probationes/fixa/lector/longus", LXIV);
+    CREDO_NECESSE_NON_NIHIL(w);
+    CREDO_VERUM(argumentum(w,
+        "lector/sententia/urn%3Arhubarb%3Alongus?caput=3&sententia=0"));
+    CREDO_FALSUM(pictum(w, "...", c->piscina));
+    clavis(w, 'j');
+    CREDO_VERUM(pictum(w, "...", c->piscina));
+    mundum_claudere(w);
+}
+
+interior i32
+emendationes_numerus (
+                 Mundus* w,
+                Piscina* p)
+{
+    redde xar_numerus(lector_emendationes_legere(w->bibliotheca,
+        chorda_ex_literis("urn:rhubarb:alpha", p), p));
+}
+
+interior i32
+favores_numerus (
+                 Mundus* w,
+                Piscina* p)
+{
+    redde xar_numerus(lector_favores_legere(w->bibliotheca,
+        chorda_ex_literis("urn:rhubarb:alpha", p), p));
+}
+
+/* textus pictus EXACTE aequalis? (stella '*' sola) */
+interior b32
+pictum_exacte (
+                 Mundus* w,
+     constans character* textus,
+                Piscina* p)
+{
+               Mandata* md;
+     constans Mandatum* x;
+                   i32  i;
+
+    md = reddere(w, p);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_TEXTUS
+            && chorda_aequalis_literis(x->textus, textus))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior vacuum
+_sectio_emendare (
+    CredoContextus* c)
+{
+                      Mundus* w;
+                      Mundus* alter;
+               LectorPositio  q;
+                         Xar* lista;
+                         i32  ibi;
+                         i32  secundum;
+    constans LectorEmendatio* e;
+
+    w = mundus(c, BIBLIOTHECA, ALTITUDO);
+    CREDO_NECESSE_NON_NIHIL(w);
+    ibi       = locus_in_capite(w, III, "ibi.", c->piscina);
+    secundum  = locus_in_capite(w, III, "Secundum ibi.", c->piscina);
+
+    CREDO_GRADUS("*: favor scriptus, stella picta; alia sententia "
+        "sine");
+    CREDO_VERUM(argumentum(w, SENTENTIA_ALPHA "?caput=3&sententia=31"));
+    clavis(w, '*');
+    CREDO_AEQUALIS_I32(favores_numerus(w, c->piscina), I);
+    CREDO_VERUM(pictum_exacte(w, "*", c->piscina));
+    clavis(w, 'k');
+    CREDO_FALSUM(pictum_exacte(w, "*", c->piscina));
+
+    CREDO_GRADUS("J: iuncta pingitur, IUNGERE una; stella partis "
+        "(favor in 'Secundum'), positio in parte manet");
+    q.caput      = III;
+    q.initium    = (i32)secundum;
+    q.vestigium  = chorda_ex_literis("Secundum ibi.", c->piscina);
+    CREDO_VERUM(lector_positionem_scribere(w->bibliotheca,
+        chorda_ex_literis("urn:rhubarb:alpha", c->piscina), &q));
+    clavis(w, 'J');
+    CREDO_VERUM(pictum(w, "Primum hic. Secundum ibi.", c->piscina));
+    CREDO_VERUM(pictum(w, "sentence 3/4", c->piscina));
+    CREDO_AEQUALIS_I32(emendationes_numerus(w, c->piscina), I);
+    CREDO_VERUM(pictum_exacte(w, "*", c->piscina));
+    CREDO_VERUM(argumentum(w, "urn:rhubarb:alpha"));
+    clavis(w, 's');
+    CREDO_VERUM(pictum(w, "Primum hic. Secundum ibi.", c->piscina));
+    CREDO_VERUM(pictum_exacte(w, "*", c->piscina));
+
+    CREDO_GRADUS("latus alterum iam in capite: iunctam videt (versio)");
+    alter = mundus_alter(c, w);
+    CREDO_NECESSE_NON_NIHIL(alter);
+    CREDO_VERUM(argumentum(alter,
+        SENTENTIA_ALPHA "?caput=3&sententia=0"));
+    CREDO_VERUM(pictum(alter, "sentence 1/4", c->piscina));
+
+    CREDO_GRADUS("J iterum (catena): iunctura ad 'Secundum'; latus "
+        "alterum renovatur");
+    clavis(w, 'J');
+    /* XXXIV litterae: in latere angusto duae lineae */
+    CREDO_VERUM(pictum(w, "sentence 3/3", c->piscina));
+    CREDO_VERUM(pictum(w, "Tertium!", c->piscina));
+    lista = lector_emendationes_legere(w->bibliotheca,
+        chorda_ex_literis(
+        "urn:rhubarb:alpha", c->piscina), c->piscina);
+    CREDO_AEQUALIS_I32(xar_numerus(lista), II);
+    e = (constans LectorEmendatio*)xar_obtinere(lista, I);
+    CREDO_AEQUALIS_I32(e->positio, (i32)secundum);
+    CREDO_VERUM(pictum(alter, "sentence 1/3", c->piscina));
+
+    CREDO_GRADUS("J in ultima capitis: nihil");
+    clavis(w, 'J');
+    CREDO_AEQUALIS_I32(emendationes_numerus(w, c->piscina), II);
+
+    CREDO_GRADUS("J in ultima clausulae (versus 'line two' ante "
+        "paragraphum): nihil");
+    CREDO_VERUM(argumentum(w, SENTENTIA_ALPHA "?caput=3&sententia=9"));
+    CREDO_VERUM(pictum_exacte(w, "line two", c->piscina));
+    clavis(w, 'J');
+    CREDO_AEQUALIS_I32(emendationes_numerus(w, c->piscina), II);
+    CREDO_VERUM(pictum_exacte(w, "line two", c->piscina));
+    CREDO_VERUM(argumentum(w, SENTENTIA_ALPHA "?caput=3&sententia=19"));
+
+    CREDO_GRADUS("* in iuncta cum parte favorita: favores omnes "
+        "partium "
+        "tolluntur");
+    clavis(w, '*');
+    CREDO_AEQUALIS_I32(favores_numerus(w, c->piscina), ZEPHYRUM);
+    CREDO_FALSUM(pictum_exacte(w, "*", c->piscina));
+
+    CREDO_GRADUS("inversa: fissura servata ad 'ibi', J in 'Secundum' "
+        "eam "
+        "tollit (lista vacua)");
+    lista = xar_creare(c->piscina, (i32)magnitudo(LectorEmendatio));
+    emendationem_ponere(w, lista, CODEX_FINDERE, III, ibi, "ibi.",
+        c->piscina);
+    CREDO_VERUM(lector_emendationes_scribere(w->bibliotheca,
+        chorda_ex_literis("urn:rhubarb:alpha", c->piscina), lista));
+    CREDO_VERUM(argumentum(w, SENTENTIA_ALPHA "?caput=3&sententia=31"));
+    CREDO_VERUM(pictum_exacte(w, "Secundum", c->piscina));
+    clavis(w, 'J');
+    CREDO_AEQUALIS_I32(emendationes_numerus(w, c->piscina), ZEPHYRUM);
+    CREDO_VERUM(pictum(w, "Secundum ibi.", c->piscina));
+
+    mundum_claudere(w);
+}
+
+interior vacuum
+_sectio_findere (
+    CredoContextus* c)
+{
+                      Mundus* w;
+    constans LectorEmendatio* e;
+                         Xar* lista;
+                         i32  hic_locus;
+                         i32  secundum;
+                         i32  ibi;
+                   character  numerus[XVI];
+
+    w = mundus(c, BIBLIOTHECA, ALTITUDO);
+    CREDO_NECESSE_NON_NIHIL(w);
+    hic_locus  = locus_in_capite(w, III, "hic.", c->piscina);
+    secundum   = locus_in_capite(w, III, "Secundum ibi.", c->piscina);
+    ibi        = locus_in_capite(w, III, "ibi.", c->piscina);
+
+    CREDO_GRADUS("i: modus findendi, cursor in verbo secundo");
+    CREDO_VERUM(argumentum(w, SENTENTIA_ALPHA "?caput=3&sententia=31"));
+    clavis(w, 'i');
+    sprintf(numerus, "%u", (insignatus integer)ibi);
+    CREDO_VERUM(campus_est(w, "cursor_findendi", numerus));
+
+    CREDO_GRADUS("Enter bis in eodem verbo: nulla fissura; Esc nihil "
+        "servat");
+    reditus(w);
+    reditus(w);
+    effugium(w);
+    CREDO_VERUM(campus_est(w, "cursor_findendi", NIHIL));
+    CREDO_VERUM(campus_est(w, "visus", "sententia"));
+    CREDO_AEQUALIS_I32(emendationes_numerus(w, c->piscina), ZEPHYRUM);
+
+    CREDO_GRADUS("Enter: linea vacua ante verbum; Esc: FINDERE ad "
+        "verbum, duae sententiae");
+    clavis(w, 'i');
+    reditus(w);
+    CREDO_VERUM(pictum_exacte(w, "Secundum", c->piscina));
+    CREDO_VERUM(pictum_exacte(w, "ibi.", c->piscina));
+    effugium(w);
+    lista = lector_emendationes_legere(w->bibliotheca,
+        chorda_ex_literis(
+        "urn:rhubarb:alpha", c->piscina), c->piscina);
+    CREDO_AEQUALIS_I32(xar_numerus(lista), I);
+    e = (constans LectorEmendatio*)xar_obtinere(lista, ZEPHYRUM);
+    CREDO_VERUM(e->genus == CODEX_FINDERE);
+    CREDO_AEQUALIS_I32(e->positio, ibi);
+    CREDO_VERUM(pictum(w, "sentence 4/6", c->piscina));
+    CREDO_VERUM(pictum_exacte(w, "Secundum", c->piscina));
+
+    CREDO_GRADUS("J reddit (fissuram tollit); deinde J in 'Primum', i, "
+        "w, "
+        "Enter ante 'Secundum', Esc: iunctura tollitur (lista vacua)");
+    clavis(w, 'J');
+    CREDO_AEQUALIS_I32(emendationes_numerus(w, c->piscina), ZEPHYRUM);
+    clavis(w, 'k');
+    clavis(w, 'J');
+    CREDO_AEQUALIS_I32(emendationes_numerus(w, c->piscina), I);
+    clavis(w, 'i');
+    sprintf(numerus, "%u", (insignatus integer)hic_locus);
+    CREDO_VERUM(campus_est(w, "cursor_findendi", numerus));
+    clavis(w, 'w');
+    sprintf(numerus, "%u", (insignatus integer)secundum);
+    CREDO_VERUM(campus_est(w, "cursor_findendi", numerus));
+    clavis(w, 'b');
+    sprintf(numerus, "%u", (insignatus integer)hic_locus);
+    CREDO_VERUM(campus_est(w, "cursor_findendi", numerus));
+    clavis(w, 'l');
+    reditus(w);
+    CREDO_VERUM(pictum_exacte(w, "Primum hic.", c->piscina));
+    CREDO_VERUM(pictum_exacte(w, "Secundum ibi.", c->piscina));
+    effugium(w);
+    CREDO_AEQUALIS_I32(emendationes_numerus(w, c->piscina), ZEPHYRUM);
+    CREDO_VERUM(pictum(w, "sentence 3/5", c->piscina));
+    CREDO_VERUM(pictum_exacte(w, "Primum hic.", c->piscina));
+
+    CREDO_GRADUS("b in verbo secundo: manet (verbum primum non "
+        "finditur)");
+    clavis(w, 'i');
+    clavis(w, 'b');
+    clavis(w, 'h');
+    sprintf(numerus, "%u", (insignatus integer)hic_locus);
+    CREDO_VERUM(campus_est(w, "cursor_findendi", numerus));
+    effugium(w);
+
+    mundum_claudere(w);
+
+    CREDO_GRADUS("sententia in 6x8: partes in 6x8 manent, non "
+        "praecisae");
+    w = mundus(c, "probationes/fixa/lector/longus", CXII);
+    CREDO_NECESSE_NON_NIHIL(w);
+    CREDO_VERUM(argumentum(w,
+        "lector/sententia/urn%3Arhubarb%3Alongus?caput=3&sententia=0"));
+    clavis(w, 'j');
+    CREDO_VERUM(pictum_in_fonte(w, "puella", FONS_PARVUS, c->piscina));
+    CREDO_FALSUM(pictum_in_fonte(w, "puella", FONS_TITULI, c->piscina));
+    clavis(w, 'i');
+    reditus(w);
+    CREDO_VERUM(pictum_exacte(w, "Sententia", c->piscina));
+    CREDO_VERUM(pictum_in_fonte(w, "puella", FONS_PARVUS, c->piscina));
+    CREDO_FALSUM(pictum_in_fonte(w, "puella", FONS_TITULI, c->piscina));
+    CREDO_FALSUM(pictum(w, "...", c->piscina));
+    effugium(w);
+    mundum_claudere(w);
+}
+
+/* favor ad fragmentum capitis k libri Alpha in lista */
+interior vacuum
+favorem_ponere (
+                 Mundus* w,
+                    Xar* lista,
+                    i32  caput,
+     constans character* fragmentum,
+                Piscina* p)
+{
+    LectorPositio* q;
+
+    q             = (LectorPositio*)xar_addere(lista);
+    q->caput      = caput;
+    q->initium    = locus_in_capite(w, caput, fragmentum, p);
+    q->vestigium  = chorda_ex_literis(fragmentum, p);
+}
+
+/* favores Alpha: I "In primis"; III "line one", "line two", "Primum
+ * hic." (cursus trans paragraphum), "Tertium!" (solus) = ordines III */
+interior b32
+favores_libri (
+     Mundus* w,
+    Piscina* p)
+{
+    Xar* lista;
+
+    lista = xar_creare(p, (i32)magnitudo(LectorPositio));
+    favorem_ponere(w, lista, I, "In primis", p);
+    favorem_ponere(w, lista, III, "line one", p);
+    favorem_ponere(w, lista, III, "line two", p);
+    favorem_ponere(w, lista, III, "Primum hic.", p);
+    favorem_ponere(w, lista, III, "Tertium!", p);
+    redde lector_favores_scribere(w->bibliotheca, chorda_ex_literis(
+        "urn:rhubarb:alpha", p), lista);
+}
+
+interior vacuum
+_sectio_favores (
+    CredoContextus* c)
+{
+           Mundus* w;
+    LectorPositio  q;
+              i32  secundum;
+              i32  linea_altera;
+              i32  tertium;
+        character  numerus[XVI];
+
+    w = mundus(c, BIBLIOTHECA, ALTITUDO);
+    CREDO_NECESSE_NON_NIHIL(w);
+    secundum = locus_in_capite(w, III, "Secundum ibi.",
+        c->piscina);
+    linea_altera  = locus_in_capite(w, III, "line two", c->piscina);
+    tertium       = locus_in_capite(w, III, "Tertium!", c->piscina);
+
+    CREDO_GRADUS("nulli favores: 'No favourites yet'; Esc ad paginam");
+    CREDO_VERUM(argumentum(w, PAGINA_ALPHA "?caput=3&pagina=0"));
+    clavis(w, 'f');
+    CREDO_VERUM(campus_est(w, "visus", "favores"));
+    CREDO_VERUM(pictum(w, "No favourites yet", c->piscina));
+    CREDO_VERUM(chorda_continet(lector_locus_titulus(&w->m, c->piscina),
+        chorda_ex_literis(" - Favourites", c->piscina)));
+    effugium(w);
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(campus_est(w, "caput", "3"));
+
+    CREDO_GRADUS("greges II cum titulis capitum; consecutivi (etiam "
+        "trans paragraphum) ordo unus");
+    CREDO_VERUM(favores_libri(w, c->piscina));
+    CREDO_VERUM(argumentum(w, SENTENTIA_ALPHA "?caput=3&sententia=31"));
+    clavis(w, 'f');
+    CREDO_VERUM(pictum_exacte(w, "Caput I", c->piscina));
+    CREDO_VERUM(pictum_exacte(w, "Caput III", c->piscina));
+    CREDO_VERUM(pictum(w, "In primis", c->piscina));
+    CREDO_VERUM(pictum_exacte(w, "line one", c->piscina));
+    CREDO_VERUM(pictum_exacte(w, "line two", c->piscina));
+    CREDO_VERUM(pictum_exacte(w, "Primum hic.", c->piscina));
+    CREDO_VERUM(pictum_exacte(w, "Tertium!", c->piscina));
+    CREDO_FALSUM(pictum(w, "Secundum", c->piscina));
+    CREDO_VERUM(pictum(w, "3 favourites", c->piscina));
+
+    CREDO_GRADUS("j k [ ] lustrant: positio libri non movetur");
+    clavis(w, 'j');
+    clavis(w, 'j');
+    clavis(w, 'j');
+    clavis(w, 'k');
+    clavis(w, ']');
+    clavis(w, '[');
+    CREDO_VERUM(campus_est(w, "electus_favor", "1"));
+    CREDO_VERUM(positio_servata(w, "urn:rhubarb:alpha", &q,
+        c->piscina));
+    CREDO_AEQUALIS_I32(q.caput, III);
+    CREDO_AEQUALIS_I32(q.initium, secundum);
+
+    CREDO_GRADUS("Enter in 'Tertium!': ad sententiam eius (motus: "
+        "positio scribitur)");
+    clavis(w, 'j');
+    reditus(w);
+    sprintf(numerus, "%u", (insignatus integer)tertium);
+    CREDO_VERUM(campus_est(w, "visus", "sententia"));
+    CREDO_VERUM(campus_est(w, "sententia", numerus));
+    CREDO_VERUM(pictum_exacte(w, "Tertium!", c->piscina));
+    CREDO_VERUM(positio_servata(w, "urn:rhubarb:alpha", &q,
+        c->piscina));
+    CREDO_AEQUALIS_I32(q.initium, tertium);
+
+    CREDO_GRADUS("f ex sententia, Esc redit ad sententiam eandem");
+    clavis(w, 'f');
+    CREDO_VERUM(campus_est(w, "visus", "favores"));
+    effugium(w);
+    CREDO_VERUM(campus_est(w, "visus", "sententia"));
+    CREDO_VERUM(campus_est(w, "sententia", numerus));
+
+    CREDO_GRADUS("* in media cursus: cursus in duos finditur");
+    sprintf(numerus, "%u", (insignatus integer)linea_altera);
+    CREDO_VERUM(argumentum(w, SENTENTIA_ALPHA "?caput=3&sententia=9"));
+    CREDO_VERUM(campus_est(w, "sententia", numerus));
+    clavis(w, '*');
+    clavis(w, 'f');
+    CREDO_VERUM(pictum(w, "4 favourites", c->piscina));
+    CREDO_FALSUM(pictum(w, "line two", c->piscina));
+    effugium(w);
+    mundum_claudere(w);
+
+    CREDO_GRADUS("latus parvum: titulus gregis in pagina "
+        "continuationis iteratur");
+    w = mundus(c, BIBLIOTHECA, CXII);
+    CREDO_NECESSE_NON_NIHIL(w);
+    CREDO_VERUM(favores_libri(w, c->piscina));
+    CREDO_VERUM(argumentum(w, PAGINA_ALPHA "?caput=3&pagina=0"));
+    clavis(w, 'f');
+    clavis(w, 'j');
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "electus_favor", "2"));
+    CREDO_VERUM(pictum_exacte(w, "Tertium!", c->piscina));
+    CREDO_FALSUM(pictum_exacte(w, "line one", c->piscina));
+    CREDO_VERUM(pictum_exacte(w, "Caput III", c->piscina));
+    mundum_claudere(w);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "bibliotheca", _sectio_bibliotheca, NIHIL, NIHIL, NIHIL, NIHIL },
     { "paginae_ordinum", _sectio_paginae_ordinum, NIHIL, NIHIL, NIHIL,
@@ -919,6 +1482,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "rotunda", _sectio_rotunda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "semitae", _sectio_semitae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "margines", _sectio_margines, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sententia", _sectio_sententia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "emendare", _sectio_emendare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "findere", _sectio_findere, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "favores", _sectio_favores, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

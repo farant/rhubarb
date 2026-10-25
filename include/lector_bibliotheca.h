@@ -89,4 +89,50 @@ lector_progressus (
           LectorBibliotheca* b,
        constans LectorLiber* liber);
 
+/* emendatio ancorata (lector L4): genus, caput, positio (octeti in
+ * textu capitis), vestigium (octeti primi sententiae ibi incipientis,
+ * XXXII summum) */
+nomen structura {
+    CodexEmendationisGenus genus;
+                       i32 caput;
+                       i32 positio;
+                    chorda vestigium;
+} LectorEmendatio;
+
+/* emendationes libri (Xar de LectorEmendatio, ordine scripturae);
+ * vacuum si nullae; NIHIL sine volumine. Plagula "lector/emendationes/
+ * <identitas %XX>" */
+Xar*
+lector_emendationes_legere (
+    LectorBibliotheca* b,
+               chorda  identitas,
+              Piscina* piscina);
+
+/* omnes scribere (ultima vincit) */
+b32
+lector_emendationes_scribere (
+    LectorBibliotheca* b,
+               chorda  identitas,
+                  Xar* emendationes);
+
+/* favores libri (Xar de LectorPositio); plagula "lector/favores/
+ * <identitas %XX>" */
+Xar*
+lector_favores_legere (
+    LectorBibliotheca* b,
+               chorda  identitas,
+              Piscina* piscina);
+
+b32
+lector_favores_scribere (
+    LectorBibliotheca* b,
+               chorda  identitas,
+                  Xar* favores);
+
+/* versio emendationum et favorum in processu: crescit cum quaevis
+ * scribuntur (quovis latere) - latera capita in cache renovant (L4) */
+i32
+lector_bibliotheca_versio (
+    constans LectorBibliotheca* b);
+
 #endif /* LECTOR_BIBLIOTHECA_H */
