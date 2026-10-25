@@ -3197,8 +3197,15 @@ def _consilium_agere(textus, nomen):
         f.write(textus)
     r = subprocess.run([FABRICA_BIN, 'consilium', '-agere', '-machina',
                         via], cwd=RADIX, capture_output=True, text=True)
-    return (r.returncode, _machina_legere(r.stdout), r.stderr,
-            os.path.relpath(via, RADIX))
+    ordines = _machina_legere(r.stdout)
+    # DOMUS ALIENA (parcum …QX6SQ0): mutatio in ~/ observata, a gradu non
+    # notata, ubi regula domum vetat - nominatur, numquam obstat
+    for o in ordines:
+        if o[0] == 'MONITUM' and len(o) >= 3:
+            print('MONITUM consilium: %s mutata dum "%s" currebat - arbor'
+                  ' alia aut sessio alia? (non fractura: arbor secundaria'
+                  ' in domo non scribit)' % (o[2], o[1]))
+    return (r.returncode, ordines, r.stderr, os.path.relpath(via, RADIX))
 
 
 def _consilium_acta(ordines):
@@ -3215,6 +3222,8 @@ def _consilium_fracturae(ordines, stderr):
               if o[0] == 'ACTUS' and len(o) >= 7 and o[3] != 'ACTUM']
     lineae += ['  EXTRA %s %s' % (o[1], o[2]) for o in ordines
                if o[0] == 'EXTRA' and len(o) >= 3]
+    lineae += ['  MONITUM %s %s (non fractura)' % (o[1], o[2])
+               for o in ordines if o[0] == 'MONITUM' and len(o) >= 3]
     lineae += ['  ' + l for l in stderr.splitlines()
                if l.strip() and not l.startswith('  agitur ')]
     return '\n'.join(lineae)

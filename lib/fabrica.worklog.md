@@ -3794,3 +3794,12 @@ Tests: probatio_fabrica_sanare 'vestigium sanandi (AG7)' (fake world G/P/J/U; pl
 dropped, '~' kept, dedupe dropped - all red); probatio_silva_arboris: live tree gives sana
 bin/aedilis silva/build/*, fake fabrica's -vestigium output reaches the plan, broken -vestigium
 raises.
+
+## 2026-10-24 — lesson: a deferred gate hid an AG7 regression
+
+81c304ee (sanare -vestigium) broke pythonica's 'custodia: forma installatum stalum facit': its fake
+bin/fabrica is stateful (first call prints 'ante', later ones 'post'), and the new
+`sanare -vestigium` query became the first call. The pythonica gates were deferred to the merge
+tier, so the commit passed; found while running the suites by hand for the next change. Fixed in the
+fake (`-vestigium` answers nothing). Habit: when a change adds a NEW call to bin/fabrica from
+pythonica, run ./pythonica/probare.sh (both halves) before committing - fakes intercept every call.

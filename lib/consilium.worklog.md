@@ -157,3 +157,18 @@ Heal steps get vestigium `bin/*`, `build/*` plus every declared output:
 capsules, other tree binaries), and without the vestigium every such
 write would be "extra propositum". A write anywhere else (a committed
 source, home) still fails the step - which is the point.
+
+## 2026-10-24 — domus aliena: observed home changes in a worktree are warnings (park …QX6SQ0)
+
+Sexta's commits kept failing with 'sana capsula_speculi_hospes … scripsit extra propositum:
+~/.bin/terminale' although sexta never installed: main installed terminale during that minute, and
+the worktree step's before/after observation of ~/.bin blamed it. Now `consilium_exsequi` derives
+`domus_aliena` from the rules: a rule with classis DOMUS, sententia VETITUM, no pattern, verbum not
+LEGERE (= arbor_secundaria, carried by every worktree plan). In that mode an observed '~/' path
+outside the step's footprint that the step did NOT note itself goes to `actus->monita`
+(MONITUM lines in machine output and diary, a named note in the human report, printed by pythonica
+`_consilium_agere`), never `extra`. Noted '~/' writes and '/opt'-style paths stay failures; without
+the rule (main) everything is as before. Safe because the worktree cannot be the writer: plan
+refusal (S4) and tools/instituere.sh (524ba372) both stop worktree installs.
+Test: probatio_consilium 'domus aliena (QX6SQ0)'; plants (rule not recognized, notata ignored,
+'~/' test dropped) red at their own assertions.

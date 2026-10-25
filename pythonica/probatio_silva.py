@@ -3197,6 +3197,9 @@ def _custos_fabricam_scribere(ante, post):
     """celer: primum 'ante' (STALUM lineae), deinde 'post'; -plenus: 1"""
     open(_custos_fabrica, 'w').write(
         '#!/bin/bash\n'
+        # parcum …AG7: consilium 'sanare -vestigium' interrogat - statum
+        # 'ante'/'post' fictae non consumit
+        'if [ "$2" = "-vestigium" ]; then exit 0; fi\n'
         'if [ "$2" = "-plenus" ]; then printf "IUDICIUM\\tSTALUM\\tg/x.c\\tregeneratio differt\\n"; exit 1; fi\n'
         'if [ ! -e %s ]; then touch %s; printf "%%b" %s; exit 0; fi\n'
         'printf "%%b" %s\nexit 1\n'
