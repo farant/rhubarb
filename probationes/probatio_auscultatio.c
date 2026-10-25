@@ -380,6 +380,48 @@ _sectio_limitator (
     CREDO_VERUM (census.reductio < 0.70794578f);
 }
 
+/* dynamica audita: nota una (II s ad CXX) crescendo pp -> ff; ratio
+ * apicum (finis / initium) contra eandem notam sine dynamica - forma
+ * involucri tollitur, crescendum manet (fere 1/0.2) */
+interior vacuum
+_sectio_dynamica (
+    CredoContextus* c)
+{
+    constans Carmen* plana = _carmen(c,
+        "<carmina><carmen titulus=\"p\" tempus=\"120\">"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 c1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    constans Carmen* crescens = _carmen(c,
+        "<carmina><carmen titulus=\"c\" tempus=\"120\">"
+        "<dynamica pars=\"a\" mensura=\"1\" valor=\"pp\"/>"
+        "<dynamica pars=\"a\" mensura=\"1\" valor=\"ff\" usque=\"2\"/>"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 c1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    f32* x;
+    f32* y;
+    i32  n;
+    i32  m;
+    f64  r_plana;
+    f64  r_crescens;
+
+    CREDO_NECESSE (plana != NIHIL && crescens != NIHIL);
+    CREDO_NECESSE (auscultatio_reddere(plana, NIHIL, c->piscina, &x,
+        &n));
+    CREDO_NECESSE (auscultatio_reddere(crescens, NIHIL, c->piscina, &y,
+        &m));
+    /* initium: 0.25..0.5 s; finis: 1.5..1.75 s */
+    r_plana    = (f64)_apex(x, LXXII * M, LXXXIV * M)
+               / (f64)_apex(x, XII * M, XXIV * M);
+    r_crescens = (f64)_apex(y, LXXII * M, LXXXIV * M)
+               / (f64)_apex(y, XII * M, XXIV * M);
+    CREDO_VERUM (r_crescens / r_plana > 2.5);
+    /* initium crescentis: pp fere (0.2 x plana) */
+    CREDO_VERUM ((f64)_apex(y, XII * M, XXIV * M)
+                 < 0.3 * (f64)_apex(x, XII * M, XXIV * M));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "metiri", _sectio_metiri, NIHIL, NIHIL, NIHIL, NIHIL },
     { "mappae", _sectio_mappae, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -388,6 +430,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "tacitae", _sectio_tacitae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "cauda_aulae", _sectio_cauda_aulae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "limitator", _sectio_limitator, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "dynamica", _sectio_dynamica, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -8,6 +8,7 @@
  */
 #include "cantor.h"
 #include "cantus.h"
+#include <math.h>
 #include <string.h>
 
 /* prioritas vocum musicae: supra cantilenas */
@@ -18,6 +19,15 @@ nomen structura {
             s64 initium;   /* quadrum */
             s64 finis;
             b32 activa;
+            /* dynamica sequenda (tibia sola): pars, lucrum sine
+             * dynamica, spatium notae in pulsibus, transitus (basis
+             * quadrum quo iussa est - iteratio aliam habet) */
+            b32 sequitur;
+            s32 pars;
+            f32 basis;
+            s64 pulsus_initium;
+            s64 pulsus_finis;
+            s64 transitus;
 } CantorVox;
 
 structura Cantor {
@@ -192,6 +202,115 @@ _voces_tacere (
     }
 }
 
+/* punctum dynamicae proximum post pulsum x pro parte: octava
+ * proxima (CANTOR_GRADUS_INTENSIONIS) aut initium / finis clivi
+ * partis aut carminis */
+interior s64
+_proximum_intensionis (
+    constans Carmen* k,
+                s32  pars,
+                s64  x)
+{
+    s64 p = (x / CANTOR_GRADUS_INTENSIONIS + I)
+          * CANTOR_GRADUS_INTENSIONIS;
+    i32 i;
+
+    per (i = ZEPHYRUM; i < k->numerus_intensionum; i++)
+    {
+        constans CarmenIntensio* e = &k->intensiones[i];
+
+        si (e->pars != pars && e->pars != -I)
+        {
+            perge;
+        }
+        si (e->pulsus > x && e->pulsus < p)
+        {
+            p = e->pulsus;
+        }
+        si (e->usque > x && e->usque < p)
+        {
+            p = e->usque;
+        }
+    }
+    redde p;
+}
+
+/* gradus dynamicae (sine 'usque') partis aut carminis incipit ad s:
+ * saltus ibi (clivus continuus est, initium eius quoque) */
+interior b32
+_gradus_ad (
+    constans Carmen* k,
+                s32  pars,
+                s64  s)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < k->numerus_intensionum; i++)
+    {
+        constans CarmenIntensio* e = &k->intensiones[i];
+
+        si (   (e->pars == pars || e->pars == -I) && e->pulsus == s
+            && e->usque == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* lucrum vocis ad 'lucrum' cum clivo (positio et missio partis
+ * manent) */
+interior vacuum
+_vocem_ponere (
+                Cantor* c,
+    constans CantorVox* v,
+                   s64  momentum,
+                   s64  clivus,
+                   f32  lucrum)
+{
+    constans CarmenPars* pars = &c->carmen->partes[v->pars];
+          MixturaIussum  i;
+
+    mixtura_iussum_parare(&i, MIXTURA_IUSSUM_VOCEM_PONERE, momentum);
+    i.ansa     = v->ansa;
+    i.lucrum   = lucrum;
+    i.positio  = pars->positio;
+    i.missio   = pars->reverberatio;
+    i.clivus   = (i32)clivus;
+    (vacuum)concentus_iubere(c->concentus, &i);
+}
+
+/* segmentum dynamicae vocis a pulsu s ad punctum proximum: gradus ad s
+ * (evanescentia brevis) si <dynamica> sine clivo ibi incipit, deinde
+ * clivus ad valorem ante punctum proximum si differt */
+interior vacuum
+_segmentum_iubere (
+                Cantor* c,
+    constans CantorVox* v,
+                   s64  s)
+{
+    constans Carmen* k = c->carmen;
+                s64  e = _proximum_intensionis(k, v->pars, s);
+                f32  g = carmen_intensio(k, v->pars, s);
+                f32  h;
+
+    si (e > v->pulsus_finis)
+    {
+        e = v->pulsus_finis;
+    }
+    h = carmen_intensio(k, v->pars, e - I);
+    si (s > v->pulsus_initium && _gradus_ad(k, v->pars, s))
+    {
+        _vocem_ponere(c, v, _quadrum(c, s), CANTOR_EVANESCENTIA,
+                      v->basis * g);
+    }
+    si (fabs((f64)(h - g)) > 1e-6)
+    {
+        _vocem_ponere(c, v, _quadrum(c, s),
+                      _quadrum(c, e) - _quadrum(c, s), v->basis * h);
+    }
+}
+
 /* nota una (pulsus absolutus p) iubetur; sine voce aut sede omissa */
 interior vacuum
 _notam_iubere (
@@ -245,9 +364,11 @@ _notam_iubere (
         i.tibia  = *tibia;
         i.nota   = (f32)n->nota;
     }
-    i.ansa     = a;
-    i.grex     = MIXTURA_GREX_MUSICA;
-    i.lucrum   = n->lucrum * pars->lucrum;
+    i.ansa = a;
+    i.grex = MIXTURA_GREX_MUSICA;
+    i.lucrum   = n->lucrum * pars->lucrum
+               * carmen_intensio(c->carmen,
+                     (s32)(pars - c->carmen->partes), p);
     i.positio  = pars->positio;
     i.missio   = pars->reverberatio;
     si (!concentus_iubere(c->concentus, &i))
@@ -261,10 +382,55 @@ _notam_iubere (
         i.ansa = a;
         (vacuum)concentus_iubere(c->concentus, &i);
     }
-    v->ansa     = a;
-    v->initium  = initium;
-    v->finis    = finis;
-    v->activa   = VERUM;
+    v->ansa            = a;
+    v->initium         = initium;
+    v->finis           = finis;
+    v->activa          = VERUM;
+    v->sequitur        = sonitus == NIHIL;
+    v->pars            = (s32)(pars - c->carmen->partes);
+    v->basis           = n->lucrum * pars->lucrum;
+    v->pulsus_initium  = p;
+    v->pulsus_finis    = p + n->longitudo;
+    v->transitus       = c->basis_quadrum;
+    si (v->sequitur)
+    {
+        _segmentum_iubere(c, v, p);
+    }
+}
+
+/* voces sonantes huius transitus: puncta dynamicae in [infimus,
+ * summus) intra notam suam - iussa per prospectum, non praeiussa */
+interior vacuum
+_intensiones_iubere (
+    Cantor* c,
+       s64  infimus,
+       s64  summus)
+{
+    i32 i;
+
+    si (c->carmen->numerus_intensionum == ZEPHYRUM)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < CANTOR_VOCES; i++)
+    {
+        constans CantorVox* v = &c->voces[i];
+                       s64  s;
+
+        si (   !v->activa || !v->sequitur
+            || v->transitus != c->basis_quadrum)
+        {
+            perge;
+        }
+        s = infimus > v->pulsus_initium ? infimus
+            - I : v->pulsus_initium;
+        s = _proximum_intensionis(c->carmen, v->pars, s);
+        dum (s < summus && s < v->pulsus_finis)
+        {
+            _segmentum_iubere(c, v, s);
+            s = _proximum_intensionis(c->carmen, v->pars, s);
+        }
+    }
 }
 
 /* notae quarum pulsus in [infimus, summus) iubentur */
@@ -416,7 +582,10 @@ cantor_agere (
         }
         si (summus > c->iussus)
         {
+            /* notae primum: voces novae puncta sua in hoc prospectu
+             * accipiunt (initium ipsum _notam_iubere tractat) */
             _notas_iubere(c, c->iussus, summus);
+            _intensiones_iubere(c, c->iussus, summus);
             c->iussus = summus;
         }
         si (c->iussus < finis)

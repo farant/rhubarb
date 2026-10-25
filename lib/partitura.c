@@ -709,6 +709,27 @@ _titulum_mensurae (
             _positionem_scribere(s, f->pulsus, initium);
         }
     }
+    per (i = ZEPHYRUM; i < carmen->numerus_intensionum; i++)
+    {
+        constans CarmenIntensio* d = &carmen->intensiones[i];
+
+        si (d->pulsus >= initium && d->pulsus < finis)
+        {
+            _litterae(s, "  dynamica ");
+            si (d->pars >= ZEPHYRUM)
+            {
+                _chorda(s, carmen->partes[d->pars].titulus);
+                _character(s, ' ');
+            }
+            _chorda(s, d->textus);
+            si (d->usque != ZEPHYRUM)
+            {
+                _litterae(s, " usque ");
+                _numerus(s, (s64)_mensura_pulsus(carmen, d->usque));
+            }
+            _positionem_scribere(s, d->pulsus, initium);
+        }
+    }
     _character(s, '\n');
 }
 

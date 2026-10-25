@@ -28,6 +28,11 @@
     "<frustum pulsus=\"480\"><textus!>l8 c</textus></frustum>" \
     "</pars></carmen></carmina>"
 
+#define PARS_IV \
+    "<pars titulus=\"a\" instrumentum=\"aether\"><frustum " \
+    "mensura=\"1\"><textus!>c1 | c1 | c1 | c1</textus></frustum>" \
+    "</pars>"
+
 interior chorda
 _ch (
         CredoContextus* c,
@@ -317,6 +322,31 @@ _sectio_vitia (
             "1 1 1 1 1 1 1 1\"", ""), "x", "", -I, ZEPHYRUM);
     _vitium(c, _carmen(c, "", "<metrum mensura=\"2\" valor=\"3/4\" "
             "agogica=\"1 -1 1\"/>"), "x", "", -I, ZEPHYRUM);
+    /* dynamica: pars nota, valor 0..1, ordo, nulla intra clivum */
+    _vitium(c, _carmen(c, "", "<dynamica pars=\"z\" mensura=\"1\" "
+            "valor=\"p\"/>" PARS_IV),
+            "x", "", -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, "", "<dynamica mensura=\"1\" valor=\"fff\"/>"
+            PARS_IV),
+            "x", "", -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, "", "<dynamica mensura=\"1\" valor=\"1.5\"/>"
+            PARS_IV),
+            "x", "", -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, "", "<dynamica mensura=\"1\" valor=\"p\" "
+            "usque=\"3\"/><dynamica mensura=\"2\" valor=\"f\"/>"
+            PARS_IV),
+            "x", "", -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, "", "<dynamica mensura=\"2\" valor=\"p\"/>"
+            "<dynamica mensura=\"1\" valor=\"f\"/>" PARS_IV),
+            "x",
+            "", -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, "", "<dynamica mensura=\"2\" valor=\"p\"/>"
+            "<dynamica mensura=\"2\" valor=\"f\"/>" PARS_IV),
+            "x",
+            "", -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, "", "<dynamica mensura=\"2\" valor=\"p\" "
+            "usque=\"2\"/>" PARS_IV),
+            "x", "", -I, ZEPHYRUM);
     /* ictus: cum mensura sola, 1..tempora mensurae */
     _vitium(c, _carmen(c, "", "<tempus pulsus=\"960\" ictus=\"2\" "
             "valor=\"60\"/>"), "x", "", -I, ZEPHYRUM);
@@ -1327,6 +1357,58 @@ _sectio_inaequalitas (
                         F * III / II);
 }
 
+/* dynamica: carmen mf x pars (p, deinde clivus ad ff per II
+ * mensuras, aequalis in dB: medium = radix producti); numerus; finis
+ * 0 linearis; pars sine dynamica = carmen solum */
+interior vacuum
+_sectio_intensio (
+    CredoContextus* c)
+{
+            Carmina  liber;
+    constans Carmen* k;
+                s64  m = (s64)MMMDCCCXL;
+
+    CREDO_NECESSE (_legere(c, _carmen(c, "",
+        "<dynamica mensura=\"1\" valor=\"mf\"/>"
+        "<dynamica pars=\"a\" mensura=\"1\" valor=\"p\"/>"
+        "<dynamica pars=\"a\" mensura=\"2\" valor=\"ff\" usque=\"4\"/>"
+        "<dynamica pars=\"b\" mensura=\"1\" valor=\"0.5\"/>"
+        "<dynamica pars=\"b\" mensura=\"1\" valor=\"0\" usque=\"3\"/>"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>c1 | c1 | c1 | c1</textus></frustum>"
+        "</pars><pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>c1 | c1 | c1 | c1</textus></frustum>"
+        "</pars><pars titulus=\"c\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>c1</textus></frustum></pars>"),
+        &liber));
+    k = &liber.carmina[ZEPHYRUM];
+    CREDO_NECESSE (k->numerus_intensionum == V);
+    CREDO_AEQUALIS_I32 ((i32)k->intensiones[ZEPHYRUM].pars, (i32)-I);
+    CREDO_CHORDA_AEQUALIS_LITERIS (k->intensiones[I].textus, "p");
+    CREDO_AEQUALIS_I32 ((i32)k->intensiones[II].pars, ZEPHYRUM);
+    CREDO_AEQUALIS_S64 (k->intensiones[II].usque, m * III);
+    /* a: mf x p; clivus p -> ff: medium sqrt(0.32), finis 1 */
+    CREDO_VERUM (fabs(carmen_intensio(k, ZEPHYRUM, ZEPHYRUM)
+                      - 0.6 * 0.32) < 1e-5);
+    CREDO_VERUM (fabs(carmen_intensio(k, ZEPHYRUM, m)
+                      - 0.6 * 0.32) < 1e-5);
+    CREDO_VERUM (fabs(carmen_intensio(k, ZEPHYRUM, m * II)
+                      - 0.6 * sqrt(0.32)) < 1e-5);
+    CREDO_VERUM (fabs(carmen_intensio(k, ZEPHYRUM, m * III) - 0.6)
+                 < 1e-5);
+    /* b: 0.5 -> 0 linearis: medium 0.25 */
+    CREDO_VERUM (fabs(carmen_intensio(k, I, m) - 0.6 * 0.25) < 1e-5);
+    CREDO_VERUM (fabs(carmen_intensio(k, I, m * III)) < 1e-6);
+    /* c: carmen solum; sine ulla dynamica 1 */
+    CREDO_VERUM (fabs(carmen_intensio(k, II, m) - 0.6) < 1e-6);
+    CREDO_NECESSE (_legere(c, _carmen(c, "",
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>c1</textus></frustum></pars>"),
+        &liber));
+    CREDO_VERUM (carmen_intensio(&liber.carmina[ZEPHYRUM], ZEPHYRUM,
+                                 ZEPHYRUM) == 1.0f);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "legere", _sectio_legere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia", _sectio_vitia, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1337,6 +1419,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "ictus", _sectio_ictus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "fermata", _sectio_corona, NIHIL, NIHIL, NIHIL, NIHIL },
     { "agogica", _sectio_inaequalitas, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "dynamica", _sectio_intensio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "instrumenta", _sectio_instrumenta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "instrumenta_vitia", _sectio_instrumenta_vitia, NIHIL, NIHIL,
         NIHIL, NIHIL },

@@ -57,3 +57,32 @@ cantor_incipere always sends REVERBERATIONEM_PONERE with the song's form and ret
 level, 0 when the song has none. On the shared mixer that silences the previous song's
 room instead of letting it linger. Each note carries pars->positio and
 pars->reverberatio (missio).
+
+## 2026-10-24 - dynamica: note-on gain + streamed voice-gain ramps (desideratum ...16EVW)
+
+Note-on lucrum = nota x pars x carmen_intensio(at onset). Held tibia voices follow the
+dynamics with MIXTURA_IUSSUM_VOCEM_PONERE: one segment per eighth (CANTOR_GRADUS_INTENSIONIS
+= 480 pulsus) and at every dynamics start/end, each a linear clivus (frames between the
+two points) to the value just before the next point; a <dynamica> STEP starting at the
+point first jumps with CANTOR_EVANESCENTIA. Positio and missio of the part are re-sent in
+every VOCEM_PONERE (the command ramps all three - leaving them 0 would pan/dry the voice).
+
+Why STREAMED (only points inside the prospectus window each tick, after the window's
+notes so new voices get theirs): the mixer queue is bounded (auscultatio forma.iussa =
+256). Pre-scheduling every segment of a long held chord at note-on would overflow it and
+drop commands silently (census iussa_amissa).
+
+First run bug: "is this a step?" was decided by comparing the gain one pulse earlier -
+inside a smooth ramp that differs by ~1e-4, so every eighth emitted an extra jump. A step
+is structural: a <dynamica> without usque starts exactly here (_gradus_ad).
+
+CantorVox gained sequitur/pars/basis/pulsus_initium/pulsus_finis/transitus; transitus =
+basis_quadrum of the pass that started the voice - after a loop wrap, a voice still
+ringing from the previous pass must not take points of the new pass. Sonitus (one-shot
+percussion) voices do not follow.
+
+End to end (probatio_auscultatio 'dynamica'): a held c1 pp -> ff rendered: end/start peak
+ratio > 2.5x that of the same note without dynamics. Demo waltz: per-bar rms -24.5 dBFS
+(bars 1-8) rising to -17.9 (bar 13), falling after.
+
+Plants 18/18 red; one first attempt did not compile (stubbing the streaming call left the helper unused - rewritten as an empty window). Three tests were added BEFORE plants after reading the plant list: two steps at one position refused; VOCEM_PONERE keeps positio/missio; loop wrap guard (transitus).

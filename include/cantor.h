@@ -10,9 +10,12 @@
  * PROSPECTUS: omni pulsu notae quae intra CANTOR_PROSPECTUS ms
  * incipiunt iubentur - TIBIAM ad quadrum initii exactum,
  * PORTAM_CLAUDERE ad finem; nota '@praeparatum' = sonitus unicus
- * (percussio). Lucrum = nota x pars; mutus omittitur, solus (si quis)
- * alios tacet. Prioritas II: cantilenae (I) voces musicae non
- * surripiunt.
+ * (percussio). Lucrum = nota x pars x carmen_intensio (dynamica ad
+ * initium notae); voces tibiae sonantes dynamicam sequuntur:
+ * VOCEM_PONERE per octavas (et ad mutationes) intra prospectum,
+ * numquam praeiussa - iussa pendentia finita manent. Mutus omittitur,
+ * solus (si quis) alios tacet. Prioritas II: cantilenae (I) voces
+ * musicae non surripiunt.
  *
  * REGIO: [initium, finis) pulsuum; ad finem iterans basis exacte
  * longitudine regionis in quadris promovetur - sine hiatu, sine
@@ -53,6 +56,9 @@
 #define CANTOR_VOCES      LXIV
 /* evanescentia sistendi, quadra (V ms) */
 #define CANTOR_EVANESCENTIA CCXL
+
+/* gradus dynamicae vocis sonantis: octava (pulsus) */
+#define CANTOR_GRADUS_INTENSIONIS CDLXXX
 /* iterationes regionis per pulsum maximae: regio brevissima pulsum
  * vici non sistit - reliqua pulsu proximo, sine hiatu */
 #define CANTOR_ITERATIONES XVI

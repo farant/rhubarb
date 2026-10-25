@@ -86,3 +86,8 @@ the factor as an integer when whole, else to hundredths without trailing zero (1
 "carmen r: c maior, 4/4 agogica 2 1 2 1 2 1 2 1, 100" and "metrum 3/4 agogica
 vindobonensis" - the lilt is printed as written (_inaequalitatem_scribere), nothing when
 even.
+
+## 2026-10-24 - dynamica in the bar header
+
+"dynamica mf" (whole carmen), "dynamica m ff usque 4" (part, ramp) - the value as written
+(mark or number), after tempo and fermata.

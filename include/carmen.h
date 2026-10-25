@@ -48,6 +48,17 @@
  *             usque ad initium notae proximae (pars qualibet; finis
  *             carminis si nulla) factor-plo longior (1..4, ord. 2);
  *             fermatae non se tegunt
+ *   dynamica  <dynamica [pars="P"] mensura="M" [ictus] valor="mf"
+ *             [usque="U"]/>: lucrum partis (aut carminis totius sine
+ *             pars) a positione - gradus, aut clivus (crescendo /
+ *             diminuendo, aequalis in dB) ad initium mensurae U.
+ *             valor pp p mp mf f ff (0.2 0.32 0.45 0.6 0.8 1) aut
+ *             numerus 0..1; ordinarium 1. Lucrum notae = nota ('v') x
+ *             pars x dynamica partis x dynamica carminis ad initium
+ *             notae; notae sonantes clivum per tempora sequuntur.
+ *             Clivus cum fine 0: linearis (dB nulla). Ordine
+ *             positionis per partem; clivus eadem positione qua gradus
+ *             prior eum servat; nulla mutatio intra clivum
  *   textus    MML (cantus.h) SINE 't' - tempus carminis est; '@'
  *             praeparatum per notam (percussio sonitus) admittitur
  *   pars      instrumentum necessarium; lucrum 0..1 (1); positio
@@ -163,6 +174,16 @@ nomen structura {
     b32 minor;
 } CarmenClavis;
 
+/* dynamica SCRIPTA (<dynamica>; intensio, nomen Latinum): gradus
+ * (usque 0) aut clivus aequalis in dB */
+nomen structura {
+       s32 pars;       /* index partis; -1 = carmen totum */
+       s64 pulsus;     /* initium */
+       f32 valor;      /* 0..1 (finis clivi) */
+       s64 usque;      /* finis clivi, pulsus; 0 = gradus */
+    chorda textus;     /* valor ut scriptus ('mf', '0.4') */
+} CarmenIntensio;
+
 /* fermata SCRIPTA (<fermata>; corona, nomen signi Latinum): spatium
  * [pulsus, finis) factor-plo longius */
 nomen structura {
@@ -195,6 +216,8 @@ nomen structura {
               i32  numerus_temporum_scriptorum;
      CarmenCorona* coronae;          /* ordine pulsus */
               i32  numerus_coronarum;
+   CarmenIntensio* intensiones;      /* <dynamica>, ordine libri */
+              i32  numerus_intensionum;
      CarmenMetrum* metra;
               i32  numerus_metrorum;
      CarmenClavis* claves;
@@ -294,6 +317,15 @@ carmen_pulsus_mensurae (
 s64
 carmen_tempus_mensurae (
     constans Carmen* carmen,
+                s64  pulsus);
+
+/* lucrum dynamicae ad pulsum: partis 'pars' x carminis totius (1 sine
+ * <dynamica>); clivus aequalis in dB inter valorem priorem et suum
+ * (linearis si alter 0). pars extra partes: carminis solum */
+f32
+carmen_intensio (
+    constans Carmen* carmen,
+                s32  pars,
                 s64  pulsus);
 
 /* NIHIL si nec carmen nec liber definit (praeparata non hic) */

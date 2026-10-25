@@ -228,3 +228,18 @@ Bar length must split into K whole pulsus (3/4 = 2880 -> 3, 4/4 = 3840 -> 8 ok; 
 of 3/4 refused).
 
 Plants 11/11 red.
+
+## 2026-10-24 - dynamica: crescendo / diminuendo (desideratum ...16EVW)
+
+`<dynamica [pars="P"] mensura="M" [ictus] valor="mf" [usque="U"]/>`: marks pp p mp mf f ff
+= 0.2 0.32 0.45 0.6 0.8 1 (roughly 2-5 dB steps) or a number 0..1; default 1 (no
+<dynamica> = unchanged songs). Without usque a step, with usque a ramp to the downbeat of
+bar U, even in dB (v0 x (v1/v0)^t); a ramp with a 0 end is linear (dB has no 0). Per part
+(pars resolved by titulus - parsed AFTER the parts) or for the whole carmen (pars -1);
+carmen_intensio(k, pars, pulsus) = carmen value x part value. Stored as CarmenIntensio
+(intensio: "dynamica" is not classical Latin; the STML element keeps the musicians'
+word, as with <fermata>/corona). Rules per part: increasing positions, no change inside a
+ramp, at the SAME position only a ramp after a step (start p, then crescendo - like the
+tempo clivus).
+
+partitura: "dynamica mf", "dynamica m ff usque 4".

@@ -12,6 +12,7 @@
 #include "concentus.h"
 #include "carmen.h"
 #include "cantor.h"
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -779,6 +780,152 @@ _sectio_brevis (
         > (i32)(CANTOR_VOCES * IV));
 }
 
+/* VOCEM_PONERE vocis (ansae) datae, ordine iussionis: k-tum aut
+ * numerus (k < 0) */
+interior s32
+_vocem_ponere (
+               MixturaAnsa   ansa,
+                       s32   k,
+    constans MixturaIussum** iussum)
+{
+    i32 i;
+    s32 n = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < fictus.numerus; i++)
+    {
+        constans MixturaIussum* x = &fictus.iussa[i];
+
+        si (   x->genus          == MIXTURA_IUSSUM_VOCEM_PONERE
+            && x->ansa.sedes     == ansa.sedes
+            && x->ansa.generatio == ansa.generatio)
+        {
+            si (n == k && iussum != NIHIL)
+            {
+                *iussum = x;
+            }
+            n++;
+        }
+    }
+    redde n;
+}
+
+#define CARMEN_CRESCENS \
+    "<carmina><carmen titulus=\"d\" tempus=\"120\">" \
+    "<dynamica pars=\"m\" mensura=\"1\" valor=\"p\"/>" \
+    "<dynamica pars=\"m\" mensura=\"1\" valor=\"ff\" usque=\"2\"/>" \
+    "<pars titulus=\"m\" instrumentum=\"aether\" positio=\"0.5\" " \
+    "reverberatio=\"0.25\">" \
+    "<frustum mensura=\"1\"><textus!>c1 | c1</textus></frustum>" \
+    "</pars></carmen></carmina>"
+
+/* dynamica: lucrum ad initium notae ex carmen_intensio; vox sonans
+ * crescendum per octavas sequitur (VIII iussa, lucra crescentia,
+ * momenta octavarum), per prospectum - non omnia ad initium; gradus
+ * intra notam: iussum unum ad momentum suum, evanescentia brevis */
+interior vacuum
+_sectio_dynamica (
+    CredoContextus* c)
+{
+           constans Carmen* k = _carmen(c, CARMEN_CRESCENS);
+    constans MixturaIussum* prima;
+    constans MixturaIussum* secunda;
+    constans MixturaIussum* i;
+                       s64  basis;
+                       f32  prius  = 0.0f;
+                       b32  bene   = VERUM;
+                       i32  j;
+
+    CREDO_NECESSE (k != NIHIL && cantor != NIHIL);
+    cantor_regio(cantor, FALSUM, ZEPHYRUM, ZEPHYRUM);
+    CREDO_NECESSE (cantor_incipere(cantor, k, ZEPHYRUM));
+    basis = concentus_initium(concentus);
+    CREDO_VERUM (cantor_agere(cantor));
+    prima = _iussum(MIXTURA_IUSSUM_TIBIAM, ZEPHYRUM);
+    CREDO_NECESSE (prima != NIHIL);
+    CREDO_VERUM (fabs(prima->lucrum - 0.32f) < 1e-5f);
+    /* prospectus: non omnia praeiussa */
+    CREDO_VERUM (_vocem_ponere(prima->ansa, -I, NIHIL) <= II);
+    _currere(MMM);
+    CREDO_NECESSE (_vocem_ponere(prima->ansa, -I, NIHIL) == VIII);
+    per (j = ZEPHYRUM; j < VIII; j++)
+    {
+        (vacuum)_vocem_ponere(prima->ansa, (s32)j, &i);
+        bene = bene
+            && i->momentum == basis + (s64)j * (NOTA_QUARTAE / II)
+             && (s64)i->clivus == NOTA_QUARTAE / II && i->lucrum > prius
+             && i->positio == 0.5f && i->missio == 0.25f;
+        prius = i->lucrum;
+    }
+    CREDO_VERUM (bene);
+    CREDO_VERUM (prius > 0.99f && prius <= 1.0f);
+    secunda = _iussum(MIXTURA_IUSSUM_TIBIAM, I);
+    CREDO_NECESSE (secunda != NIHIL);
+    CREDO_VERUM (secunda->lucrum == 1.0f);
+    CREDO_VERUM (_vocem_ponere(secunda->ansa, -I, NIHIL) == ZEPHYRUM);
+}
+
+#define CARMEN_ITERATUM \
+    "<carmina><carmen titulus=\"i\" tempus=\"120\">" \
+    "<dynamica pars=\"m\" mensura=\"1\" valor=\"p\"/>" \
+    "<dynamica pars=\"m\" mensura=\"1\" valor=\"ff\" usque=\"2\"/>" \
+    "<pars titulus=\"m\" instrumentum=\"aether\">" \
+    "<frustum mensura=\"1\"><textus!>c1</textus></frustum>" \
+    "</pars></carmen></carmina>"
+
+/* iteratio: regio [0, 1920) super notam c1 crescentem - vox transitus
+ * prioris (sonans ultra finem regionis) puncta transitus novi non
+ * accipit: puncta eius sola 0 480 960 1440 (IV) */
+interior vacuum
+_sectio_dynamica_iteratio (
+    CredoContextus* c)
+{
+           constans Carmen* k = _carmen(c, CARMEN_ITERATUM);
+    constans MixturaIussum* prima;
+
+    CREDO_NECESSE (k != NIHIL && cantor != NIHIL);
+    cantor_regio(cantor, VERUM, ZEPHYRUM, (s64)MCMXX);
+    CREDO_NECESSE (cantor_incipere(cantor, k, ZEPHYRUM));
+    CREDO_VERUM (cantor_agere(cantor));
+    _currere(MMM);
+    prima = _iussum(MIXTURA_IUSSUM_TIBIAM, ZEPHYRUM);
+    CREDO_NECESSE (prima != NIHIL
+        && _numerus(MIXTURA_IUSSUM_TIBIAM) >= II);
+    CREDO_VERUM (_vocem_ponere(prima->ansa, -I, NIHIL) == IV);
+}
+
+#define CARMEN_GRADUS_DYN \
+    "<carmina><carmen titulus=\"g\" tempus=\"120\">" \
+    "<dynamica pars=\"m\" mensura=\"1\" ictus=\"3\" valor=\"pp\"/>" \
+    "<pars titulus=\"m\" instrumentum=\"aether\">" \
+    "<frustum mensura=\"1\"><textus!>c1</textus></frustum>" \
+    "</pars></carmen></carmina>"
+
+/* gradus intra notam sonantem: pp ad tempus III */
+interior vacuum
+_sectio_dynamica_gradus (
+    CredoContextus* c)
+{
+           constans Carmen* k = _carmen(c, CARMEN_GRADUS_DYN);
+    constans MixturaIussum* prima;
+    constans MixturaIussum* i = NIHIL;
+                       s64  basis;
+
+    CREDO_NECESSE (k != NIHIL && cantor != NIHIL);
+    cantor_regio(cantor, FALSUM, ZEPHYRUM, ZEPHYRUM);
+    CREDO_NECESSE (cantor_incipere(cantor, k, ZEPHYRUM));
+    basis = concentus_initium(concentus);
+    CREDO_VERUM (cantor_agere(cantor));
+    _currere(MMM);
+    prima = _iussum(MIXTURA_IUSSUM_TIBIAM, ZEPHYRUM);
+    CREDO_NECESSE (prima != NIHIL && prima->lucrum == 1.0f);
+    CREDO_NECESSE (_vocem_ponere(prima->ansa, -I, NIHIL) == I);
+    (vacuum)_vocem_ponere(prima->ansa, ZEPHYRUM, &i);
+    CREDO_AEQUALIS_S64 (i->momentum, basis + II * NOTA_QUARTAE);
+    CREDO_VERUM (fabs(i->lucrum - 0.2f) < 1e-6f);
+    CREDO_VERUM (   i->clivus > ZEPHYRUM
+                 && (s64)i->clivus < NOTA_QUARTAE / VIII);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "tempus", _sectio_tempus, _parare, NIHIL, NIHIL, NIHIL },
     { "mutatio", _sectio_mutatio, _parare, NIHIL, NIHIL, NIHIL },
@@ -799,6 +946,11 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "lusor", _sectio_lusor, _parare, NIHIL, NIHIL, NIHIL },
     { "prioritas", _sectio_prioritas, _parare, NIHIL, NIHIL, NIHIL },
     { "brevis", _sectio_brevis, _parare, NIHIL, NIHIL, NIHIL },
+    { "dynamica", _sectio_dynamica, _parare, NIHIL, NIHIL, NIHIL },
+    { "dynamica_gradus", _sectio_dynamica_gradus, _parare, NIHIL, NIHIL,
+        NIHIL },
+    { "dynamica_iteratio", _sectio_dynamica_iteratio, _parare, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

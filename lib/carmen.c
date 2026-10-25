@@ -10,6 +10,7 @@
 #include "carmina_infixum.h"
 #include "internamentum.h"
 #include "stml.h"
+#include <math.h>
 #include <string.h>
 
 #define CARMEN_TEMPUS_ORDINARIUM CXX
@@ -895,6 +896,188 @@ _coronas_finire (
     redde VERUM;
 }
 
+/* signa dynamicae et lucra eorum */
+nomen structura {
+    constans character* titulus;
+                   f32  valor;
+} IntensioNominata;
+
+hic_manens constans IntensioNominata INTENSIONES_NOMINATAE[] = {
+    { "pp", 0.2f }, { "p", 0.32f }, { "mp", 0.45f },
+    { "mf", 0.6f }, { "f", 0.8f },  { "ff", 1.0f }
+};
+
+/* valor dynamicae: signum (pp..ff) aut numerus 0..1 */
+interior b32
+_intensionem_valere (
+    chorda  textus,
+       f32* valor)
+{
+    i32 nomina = (i32)(magnitudo(INTENSIONES_NOMINATAE)
+               / magnitudo(INTENSIONES_NOMINATAE[ZEPHYRUM]));
+    f64 x;
+    i32 j;
+
+    per (j = ZEPHYRUM; j < nomina; j++)
+    {
+        si (chorda_aequalis_literis(textus,
+                                    INTENSIONES_NOMINATAE[j].titulus))
+        {
+            *valor = INTENSIONES_NOMINATAE[j].valor;
+            redde VERUM;
+        }
+    }
+    si (!chorda_ut_f64(textus, &x) || x < 0.0 || x > 1.0)
+    {
+        redde FALSUM;
+    }
+    *valor = (f32)x;
+    redde VERUM;
+}
+
+/* <dynamica> omnes (post partes: pars per titulum). Ordine positionis
+ * per partem; nulla mutatio intra clivum prioris; eadem positione
+ * solum clivus post gradum */
+interior b32
+_intensiones_legere (
+             StmlNodus*  nodus,
+                Carmen*  k,
+               Piscina*  piscina,
+    constans character** causa)
+{
+    i32 i;
+
+    k->intensiones = (CarmenIntensio*)piscina_allocare(piscina,
+        (memoriae_index)(_numerare(nodus, "dynamica") + I)
+        * magnitudo(CarmenIntensio));
+    si (!k->intensiones)
+    {
+        *causa = "piscina exhausta";
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < stml_numerus_liberorum(nodus); i++)
+    {
+             StmlNodus* n = stml_liberum_ad_indicem(nodus, i);
+        CarmenIntensio* x = &k->intensiones[k->numerus_intensionum];
+                chorda* a;
+                   s64  u;
+                   s32  j;
+
+        si (!_elementum_est(n, "dynamica"))
+        {
+            perge;
+        }
+        x->pars  = -I;
+        a        = stml_attributum_capere(n, "pars");
+        si (a != NIHIL)
+        {
+            per (j = ZEPHYRUM; j < (s32)k->numerus_partium; j++)
+            {
+                si (chorda_aequalis(k->partes[j].titulus, *a))
+                {
+                    x->pars = j;
+                }
+            }
+            si (x->pars < ZEPHYRUM)
+            {
+                *causa = "dynamica: pars ignota";
+                redde FALSUM;
+            }
+        }
+        si (!_positionem_legere(n, k, VERUM, &x->pulsus, causa))
+        {
+            redde FALSUM;
+        }
+        a = stml_attributum_capere(n, "valor");
+        si (a == NIHIL || !_intensionem_valere(*a, &x->valor))
+        {
+            *causa = "dynamica: valor pp p mp mf f ff aut 0..1";
+            redde FALSUM;
+        }
+        x->textus  = *a;
+        x->usque   = ZEPHYRUM;
+        si (stml_attributum_habet(n, "usque"))
+        {
+            si (   !_s64_legere(n, "usque", &u) || u < I
+                || u > CMXCIX * M)
+            {
+                *causa = "dynamica: usque non numerus mensurae";
+                redde FALSUM;
+            }
+            x->usque = _pulsus_mensurae(k->metra, k->numerus_metrorum,
+                                        (i32)u);
+            si (x->usque <= x->pulsus)
+            {
+                *causa = "dynamica: usque post initium clivi";
+                redde FALSUM;
+            }
+        }
+        /* prior eiusdem partis */
+        per (j = (s32)k->numerus_intensionum - I; j >= ZEPHYRUM; j--)
+        {
+            constans CarmenIntensio* p = &k->intensiones[j];
+
+            si (p->pars != x->pars)
+            {
+                perge;
+            }
+            si (p->usque != ZEPHYRUM && x->pulsus < p->usque)
+            {
+                *causa = "dynamica: mutatio intra clivum";
+                redde FALSUM;
+            }
+            si (   x->pulsus < p->pulsus
+                || (   x->pulsus == p->pulsus
+                    && (x->usque == ZEPHYRUM || p->usque != ZEPHYRUM)))
+            {
+                *causa = "dynamica: ordine positionis per partem";
+                redde FALSUM;
+            }
+            frange;
+        }
+        k->numerus_intensionum++;
+    }
+    redde VERUM;
+}
+
+/* valor dynamicae partis p (-1 = carminis) ad pulsum: 1 ante primam */
+interior f64
+_intensio_partis (
+    constans Carmen* k,
+                s32  pars,
+                s64  pulsus)
+{
+    f64 prior = 1.0;
+    i32 i;
+
+    per (i = ZEPHYRUM; i < k->numerus_intensionum; i++)
+    {
+        constans CarmenIntensio* e = &k->intensiones[i];
+
+        si (e->pars != pars)
+        {
+            perge;
+        }
+        si (e->pulsus > pulsus)
+        {
+            frange;
+        }
+        si (e->usque != ZEPHYRUM && pulsus < e->usque)
+        {
+            f64 t = (f64)(pulsus - e->pulsus)
+                  / (f64)(e->usque - e->pulsus);
+
+            si (prior > 0.0 && e->valor > 0.0f)
+            {
+                redde prior * pow((f64)e->valor / prior, t);
+            }
+            redde prior + ((f64)e->valor - prior) * t;
+        }
+        prior = (f64)e->valor;
+    }
+    redde prior;
+}
+
 /* gradum mappae sonandi addit; eadem positione ultimum substituit */
 interior vacuum
 _gradum_addere (
@@ -1634,13 +1817,14 @@ _carmen_legere (
             && !_elementum_est(n, "metrum")
             && !_elementum_est(n, "clavis")
             && !_elementum_est(n, "fermata")
+            && !_elementum_est(n, "dynamica")
             && !_elementum_est(n, "pars")
             && !_elementum_est(n, "instrumentum")
             && !_elementum_est(n, "reverberatio"))
         {
             redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
                 "in carmine solum tempus, metrum, clavis, fermata, "
-                "pars, instrumentum, reverberatio");
+                "dynamica, pars, instrumentum, reverberatio");
         }
         /* aula propria: tota substituit libri */
         si (_elementum_est(n, "reverberatio"))
@@ -1812,7 +1996,13 @@ _carmen_legere (
             }
         }
     }
-    /* fermatae (notae iam lectae), deinde mappa sonandi */
+    /* dynamica (partes iam lectae: nomina), fermatae (notae), deinde
+     * mappa sonandi */
+    si (!_intensiones_legere(nodus, k, piscina, &causa))
+    {
+        redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
+            causa);
+    }
     si (!_coronas_finire(k, &causa))
     {
         redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
@@ -2084,6 +2274,21 @@ carmen_pulsus_mensurae (
 {
     redde _pulsus_mensurae(carmen->metra, carmen->numerus_metrorum,
         mensura);
+}
+
+f32
+carmen_intensio (
+    constans Carmen* carmen,
+                s32  pars,
+                s64  pulsus)
+{
+    f64 v = _intensio_partis(carmen, -I, pulsus);
+
+    si (pars >= ZEPHYRUM && pars < (s32)carmen->numerus_partium)
+    {
+        v = v * _intensio_partis(carmen, pars, pulsus);
+    }
+    redde (f32)v;
 }
 
 s64
