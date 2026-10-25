@@ -709,6 +709,87 @@ _tempus_scriptum_legere (
     redde VERUM;
 }
 
+/* <fermata>: positio (mensura [ictus] aut pulsus) et factor 1..4
+ * (ordinarium II). Finis et ordo postea (_coronas_finire), cum notae
+ * lectae sunt */
+interior b32
+_coronam_legere (
+             StmlNodus*  n,
+                Carmen*  k,
+    constans character** causa)
+{
+     CarmenCorona* f       = &k->coronae[k->numerus_coronarum];
+           chorda* a       = stml_attributum_capere(n, "factor");
+              f64  factor  = 2.0;
+
+    si (!_positionem_legere(n, k, VERUM, &f->pulsus, causa))
+    {
+        redde FALSUM;
+    }
+    si (   a != NIHIL && (   !chorda_ut_f64(*a, &factor) || factor < 1.0
+                       || factor > 4.0))
+    {
+        *causa = "fermata: factor 1..4";
+        redde FALSUM;
+    }
+    f->factor  = (f32)factor;
+    f->finis   = ZEPHYRUM;
+    k->numerus_coronarum++;
+    redde VERUM;
+}
+
+/* finis fermatae: initium notae proximae post eam (pars qualibet),
+ * aut finis carminis. Fermata post finem aut ante finem prioris
+ * (intra eam aut ordine inverso - prior finis > prior initium):
+ * vitium */
+interior b32
+_coronas_finire (
+                Carmen*  k,
+    constans character** causa)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < k->numerus_coronarum; i++)
+    {
+         CarmenCorona* f = &k->coronae[i];
+                  i32  p;
+
+        si (f->pulsus >= k->pulsus)
+        {
+            *causa = "fermata post finem carminis";
+            redde FALSUM;
+        }
+        si (i > ZEPHYRUM && f->pulsus < k->coronae[i - I].finis)
+        {
+            *causa = "fermata: ordine positionis, non intra priorem";
+            redde FALSUM;
+        }
+        f->finis = k->pulsus;
+        per (p = ZEPHYRUM; p < k->numerus_partium; p++)
+        {
+            constans CarmenPars* pars = &k->partes[p];
+                            i32  r;
+
+            per (r = ZEPHYRUM; r < pars->numerus_frustorum; r++)
+            {
+                constans CarmenFrustum* fr = &pars->frusta[r];
+                                   i32  q;
+
+                per (q = ZEPHYRUM; q < fr->numerus; q++)
+                {
+                    s64 initium = fr->pulsus + fr->notae[q].pulsus;
+
+                    si (initium > f->pulsus && initium < f->finis)
+                    {
+                        f->finis = initium;
+                    }
+                }
+            }
+        }
+    }
+    redde VERUM;
+}
+
 /* gradum mappae sonandi addit; eadem positione ultimum substituit */
 interior vacuum
 _gradum_addere (
@@ -726,6 +807,78 @@ _gradum_addere (
     tempora[*numerus].tempus   = tempus;
     tempora[*numerus].quadrum  = ZEPHYRUM;
     (*numerus)++;
+}
+
+/* fermatae in mappa sonandi: lineae divisionis = gradus mappae et
+ * termini fermatarum; intra fermatam tempus gradus / factor
+ * (rotundatum, >= I), ad finem eius tempus mappae redit */
+interior b32
+_coronas_inserere (
+     Carmen* k,
+    Piscina* piscina)
+{
+    i32  capacitas = k->numerus_temporum + II * k->numerus_coronarum;
+    s64* lineae    = (s64*)piscina_allocare(piscina,
+        (memoriae_index)capacitas * magnitudo(s64));
+    CantusTempus* nova = (CantusTempus*)piscina_allocare(piscina,
+        (memoriae_index)capacitas * magnitudo(CantusTempus));
+    i32 n        = ZEPHYRUM;
+    i32 numerus  = ZEPHYRUM;
+    i32 g        = ZEPHYRUM;   /* gradus mappae veteris */
+    i32 f        = ZEPHYRUM;   /* fermata */
+    i32 i;
+
+    si (!lineae || !nova)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < k->numerus_temporum; i++)
+    {
+        lineae[n++] = k->tempora[i].pulsus;
+    }
+    per (i = ZEPHYRUM; i < k->numerus_coronarum; i++)
+    {
+        lineae[n++] = k->coronae[i].pulsus;
+        lineae[n++] = k->coronae[i].finis;
+    }
+    /* ordo insertionis: mappa iam ordinata, termini pauci */
+    per (i = I; i < n; i++)
+    {
+        s64 x = lineae[i];
+        i32 j = i;
+
+        dum (j > ZEPHYRUM && lineae[j - I] > x)
+        {
+            lineae[j] = lineae[j - I];
+            j--;
+        }
+        lineae[j] = x;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        s64 x = lineae[i];
+        f64 t;
+
+        dum (   g + I < k->numerus_temporum
+             && k->tempora[g + I].pulsus <= x)
+        {
+            g++;
+        }
+        dum (f < k->numerus_coronarum && k->coronae[f].finis <= x)
+        {
+            f++;
+        }
+        t = (f64)k->tempora[g].tempus;
+        si (f < k->numerus_coronarum && k->coronae[f].pulsus <= x)
+        {
+            t = t / (f64)k->coronae[f].factor;
+        }
+        _gradum_addere(nova, &numerus, x,
+                       t < 1.5 ? I : (i32)(t + 0.5));
+    }
+    k->tempora           = nova;
+    k->numerus_temporum  = numerus;
+    redde VERUM;
 }
 
 /* mappa sonandi ex scriptis: gradus ut sunt; clivus = gradus per
@@ -784,6 +937,11 @@ _mappam_sonandi (
         prius = t->tempus;
     }
     k->numerus_temporum = numerus;
+    si (   k->numerus_coronarum > ZEPHYRUM
+        && !_coronas_inserere(k, piscina))
+    {
+        redde FALSUM;
+    }
     cantus_tempora_computare(k->tempora, k->numerus_temporum);
     redde VERUM;
 }
@@ -1251,7 +1409,10 @@ _carmen_legere (
     k->claves   = (CarmenClavis*)piscina_allocare(piscina,
         (memoriae_index)(_numerare(nodus, "clavis") + I)
         * magnitudo(CarmenClavis));
-    si (!k->tempora_scripta || !k->metra || !k->claves)
+    k->coronae = (CarmenCorona*)piscina_allocare(piscina,
+        (memoriae_index)(_numerare(nodus, "fermata") + I)
+        * magnitudo(CarmenCorona));
+    si (!k->tempora_scripta || !k->metra || !k->claves || !k->coronae)
     {
         redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
             "piscina exhausta");
@@ -1299,13 +1460,14 @@ _carmen_legere (
         si (   !_elementum_est(n, "tempus")
             && !_elementum_est(n, "metrum")
             && !_elementum_est(n, "clavis")
+            && !_elementum_est(n, "fermata")
             && !_elementum_est(n, "pars")
             && !_elementum_est(n, "instrumentum")
             && !_elementum_est(n, "reverberatio"))
         {
             redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
-                "in carmine solum tempus, metrum, clavis, pars, "
-                "instrumentum, reverberatio");
+                "in carmine solum tempus, metrum, clavis, fermata, "
+                "pars, instrumentum, reverberatio");
         }
         /* aula propria: tota substituit libri */
         si (_elementum_est(n, "reverberatio"))
@@ -1354,6 +1516,15 @@ _carmen_legere (
          StmlNodus* n       = stml_liberum_ad_indicem(nodus, i);
                b32  tempus  = _elementum_est(n, "tempus");
 
+        si (_elementum_est(n, "fermata"))
+        {
+            si (!_coronam_legere(n, k, &causa))
+            {
+                redde _vitium(vitium, k->titulus, _vacua(), -I,
+                    ZEPHYRUM, causa);
+            }
+            perge;
+        }
         si (!tempus && !_elementum_est(n, "clavis"))
         {
             perge;
@@ -1390,11 +1561,6 @@ _carmen_legere (
                 k->numerus_clavium++;
             }
         }
-    }
-    si (!_mappam_sonandi(k, piscina))
-    {
-        redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
-            "piscina exhausta");
     }
     /* instrumenta: carminis propria (bases: libri et supra), deinde
      * libri - quaerendo propria vincunt */
@@ -1467,6 +1633,17 @@ _carmen_legere (
                 k->pulsus = finis;
             }
         }
+    }
+    /* fermatae (notae iam lectae), deinde mappa sonandi */
+    si (!_coronas_finire(k, &causa))
+    {
+        redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
+            causa);
+    }
+    si (!_mappam_sonandi(k, piscina))
+    {
+        redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
+            "piscina exhausta");
     }
     redde VERUM;
 }

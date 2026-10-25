@@ -167,3 +167,31 @@ sounding map still said 100 because a 100 -> 60 ramp over TWO bars has its first
 for "written vs sounding" tests: make sure the first sounding step actually differs. The
 ramp-from-start carmen test likewise moved 120 -> 100: at 120 the carmen tempus equals the
 house default, so 'ramp starts from the default' was indistinguishable.
+
+## 2026-10-24 - fermata (desideratum ...VG8PQ3, part II)
+
+`<fermata mensura="M" [ictus="N"] [factor="F"]/>` (or pulsus=): the span from its position
+to the next note START in any part (end of piece if none) sounds F times longer (1..4,
+default 2). Same model as the clivus: written fermatae live in Carmen.fermatae
+(CarmenFermata {pulsus, finis, factor}; finis derived); the sounding map gets breakpoints
+at every old step plus each fermata's start and end, and inside a fermata every step's
+tempo is divided by F (rounded, floor 1 bpm). So a fermata inside a ritardando stretches
+the ramp steps it covers - measured ratio 2.0 within 2%.
+
+Ordering: the map is now built AFTER the parts are read (finis needs the notes);
+nothing before that read Carmen.tempora. Fermatae must be in increasing order, start
+before the end of the piece, and not start inside the previous fermata's span. The span
+runs to the next ONSET, not the next note end: on a held chord followed by rests and then
+a new phrase, the rests stretch too (a breath) - deliberate.
+
+partitura: "fermata x2", "fermata x1.5 (+960)".
+
+Names: the STML element is <fermata> (the musicians' word, approved), but C identifiers say
+CORONA (CarmenCorona, Carmen.coronae, _coronam_legere ...) - the historical Latin name of
+the sign; "fermata" is Italian and the lint refuses it.
+
+Plants 11/11 red, plus one that survived and showed a redundant check: an explicit
+"fermatae in increasing order" test at parse time could never fire alone, because a
+fermata written before the previous one always starts before that one's finis (finis >
+pulsus), so the overlap check already refuses it. Removed; the overlap message now names
+both ("ordine positionis, non intra priorem"); the reverse-order test stays.

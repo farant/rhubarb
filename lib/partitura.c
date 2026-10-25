@@ -595,6 +595,27 @@ _positionem_scribere (
     }
 }
 
+/* factor fermatae: integer sine fractione (2), aliter ad centesimas
+ * sine zeris caudae (1.5, 1.25) */
+interior vacuum
+_factorem_scribere (
+    Scriptor* s,
+         f32  factor)
+{
+    s64 c = (s64)((f64)factor * 100.0 + 0.5);
+
+    _numerus(s, c / C);
+    si (c % C != ZEPHYRUM)
+    {
+        _character(s, '.');
+        _character(s, (character)('0' + (c % C) / X));
+        si (c % X != ZEPHYRUM)
+        {
+            _character(s, (character)('0' + c % X));
+        }
+    }
+}
+
 /* numerus mensurae quae ad pulsum incipit aut eum continet */
 interior i32
 _mensura_pulsus (
@@ -660,6 +681,17 @@ _titulum_mensurae (
                 _numerus(s, (s64)_mensura_pulsus(carmen, t->usque));
             }
             _positionem_scribere(s, t->pulsus, initium);
+        }
+    }
+    per (i = ZEPHYRUM; i < carmen->numerus_coronarum; i++)
+    {
+        constans CarmenCorona* f = &carmen->coronae[i];
+
+        si (f->pulsus >= initium && f->pulsus < finis)
+        {
+            _litterae(s, "  fermata x");
+            _factorem_scribere(s, f->factor);
+            _positionem_scribere(s, f->pulsus, initium);
         }
     }
     _character(s, '\n');

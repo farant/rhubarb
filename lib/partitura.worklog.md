@@ -75,3 +75,8 @@ the bar header now walks Carmen.tempora_scripta: "tempus 90 usque 4 (+960)" for 
 plain "tempus 90" for a step; bars inside a ramp print nothing. The title's tempo is
 tempora_scripta[0] (a ramp from bar 1 makes tempora[0] already slower). _mensura_pulsus
 turns the ramp's end pulsus back into its bar number.
+
+## 2026-10-24 - fermata in the bar header
+
+"fermata x2" / "fermata x1.5 (+960)" after the tempo changes. _factorem_scribere prints
+the factor as an integer when whole, else to hundredths without trailing zero (1.5, 1.25).

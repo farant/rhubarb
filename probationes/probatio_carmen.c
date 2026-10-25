@@ -277,6 +277,33 @@ _sectio_vitia (
             "", -I, ZEPHYRUM);
     _vitium(c, _carmen(c, "", "<tempus mensura=\"2\" valor=\"60\" "
             "usque=\"nunc\"/>"), "x", "", -I, ZEPHYRUM);
+    /* fermata: factor 1..4; non se tegunt; ante finem carminis */
+    _vitium(c, _carmen(c, "", "<fermata mensura=\"1\" factor=\"0.5\"/>"
+            "<pars titulus=\"p\" instrumentum=\"aether\"><frustum "
+            "mensura=\"1\"><textus!>c1</textus></frustum></pars>"), "x",
+            "", -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, "", "<fermata mensura=\"1\" factor=\"5\"/>"
+            "<pars titulus=\"p\" instrumentum=\"aether\"><frustum "
+            "mensura=\"1\"><textus!>c1</textus></frustum></pars>"), "x",
+            "", -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, "",
+        "<fermata mensura=\"1\" factor=\"lente\"/>"
+            "<pars titulus=\"p\" instrumentum=\"aether\"><frustum "
+            "mensura=\"1\"><textus!>c1</textus></frustum></pars>"), "x",
+            "", -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, "", "<fermata mensura=\"1\"/><fermata pulsus="
+            "\"960\"/><pars titulus=\"p\" instrumentum=\"aether\">"
+            "<frustum mensura=\"1\"><textus!>c1 | c1</textus></frustum>"
+            "</pars>"), "x", "", -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, "",
+        "<fermata mensura=\"2\"/><fermata mensura="
+            "\"1\"/><pars titulus=\"p\" instrumentum=\"aether\">"
+            "<frustum mensura=\"1\"><textus!>c1 | c1</textus></frustum>"
+            "</pars>"), "x", "", -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, "", "<fermata mensura=\"3\"/>"
+            "<pars titulus=\"p\" instrumentum=\"aether\"><frustum "
+            "mensura=\"1\"><textus!>c1 | c1</textus></frustum></pars>"),
+            "x", "", -I, ZEPHYRUM);
     /* ictus: cum mensura sola, 1..tempora mensurae */
     _vitium(c, _carmen(c, "", "<tempus pulsus=\"960\" ictus=\"2\" "
             "valor=\"60\"/>"), "x", "", -I, ZEPHYRUM);
@@ -1128,6 +1155,66 @@ _sectio_ictus (
     CREDO_AEQUALIS_S64 (k->tempora_scripta[I].pulsus, (s64)MMMDCCCXL);
 }
 
+/* fermata: spatium ad notam proximam (pars qualibet) bis longius;
+ * ultima ad finem carminis; intra clivum ratio fere II */
+interior vacuum
+_sectio_corona (
+    CredoContextus* c)
+{
+            Carmina  liber;
+    constans Carmen* k;
+                s64  a = (s64)MMMDCCCXL;
+                s64  F = (s64)SONUS_FREQUENTIA;
+                f64  cum;
+                f64  sine;
+
+    CREDO_NECESSE (_legere(c, _carmen(c, " tempus=\"120\"",
+        "<fermata mensura=\"2\" factor=\"2\"/><fermata mensura=\"3\"/>"
+        "<pars titulus=\"p\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>c1 | c2 c2 | c1</textus></frustum>"
+        "</pars><pars titulus=\"q\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>r1 | e1 | g1</textus></frustum>"
+        "</pars>"), &liber));
+    k = &liber.carmina[ZEPHYRUM];
+    CREDO_NECESSE (k->numerus_coronarum == II);
+    CREDO_AEQUALIS_S64 (k->coronae[ZEPHYRUM].pulsus, a);
+    CREDO_AEQUALIS_S64 (k->coronae[ZEPHYRUM].finis, a + MCMXX);
+    CREDO_VERUM (k->coronae[ZEPHYRUM].factor == 2.0f);
+    CREDO_AEQUALIS_S64 (k->coronae[I].pulsus, a * II);
+    CREDO_AEQUALIS_S64 (k->coronae[I].finis, a * III);
+    CREDO_VERUM (k->coronae[I].factor == 2.0f);
+    /* ante: II s; fermata: II quartae = II s; post: I s; ultima IV s */
+    CREDO_AEQUALIS_S64 (cantus_quadrum_pulsus(k->tempora,
+        k->numerus_temporum, a), F * II);
+    CREDO_AEQUALIS_S64 (cantus_quadrum_pulsus(k->tempora,
+        k->numerus_temporum, a + MCMXX), F * IV);
+    CREDO_AEQUALIS_S64 (cantus_quadrum_pulsus(k->tempora,
+        k->numerus_temporum, a * II), F * V);
+    CREDO_AEQUALIS_S64 (cantus_quadrum_pulsus(k->tempora,
+        k->numerus_temporum, a * III), F * IX);
+    /* intra clivum: spatium fermatae ~ bis longius quam sine */
+    CREDO_NECESSE (_legere(c, _carmen(c, " tempus=\"120\"",
+        "<tempus mensura=\"1\" valor=\"60\" usque=\"3\"/>"
+        "<pars titulus=\"p\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>c1 | c1 | c1</textus></frustum>"
+        "</pars>"), &liber));
+    k    = &liber.carmina[ZEPHYRUM];
+    sine = (f64)(cantus_quadrum_pulsus(k->tempora, k->numerus_temporum,
+        a * II) - cantus_quadrum_pulsus(k->tempora, k->numerus_temporum,
+        a));
+    CREDO_NECESSE (_legere(c, _carmen(c, " tempus=\"120\"",
+        "<tempus mensura=\"1\" valor=\"60\" usque=\"3\"/>"
+        "<fermata mensura=\"2\"/>"
+        "<pars titulus=\"p\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>c1 | c1 | c1</textus></frustum>"
+        "</pars>"), &liber));
+    k   = &liber.carmina[ZEPHYRUM];
+    cum = (f64)(cantus_quadrum_pulsus(k->tempora, k->numerus_temporum,
+        a * II) - cantus_quadrum_pulsus(k->tempora, k->numerus_temporum,
+        a));
+    CREDO_VERUM (fabs(cum / sine - 2.0) < 0.02);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "legere", _sectio_legere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia", _sectio_vitia, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1136,6 +1223,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "tempus", _sectio_tempus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "clivus", _sectio_clivus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ictus", _sectio_ictus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fermata", _sectio_corona, NIHIL, NIHIL, NIHIL, NIHIL },
     { "instrumenta", _sectio_instrumenta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "instrumenta_vitia", _sectio_instrumenta_vitia, NIHIL, NIHIL,
         NIHIL, NIHIL },

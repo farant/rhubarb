@@ -289,6 +289,8 @@ _sectio_mutationes (
         "<clavis mensura=\"2\" valor=\"eb maior\"/>"
         "<tempus mensura=\"2\" valor=\"160\"/>"
         "<tempus pulsus=\"4800\" valor=\"90\" usque=\"4\"/>"
+        "<fermata mensura=\"3\" ictus=\"2\" factor=\"1.5\"/>"
+        "<fermata mensura=\"4\"/>"
         "<pars titulus=\"m\" instrumentum=\"aether\">"
         "<frustum mensura=\"1\">"
         "<textus!>o4 c1 | e-2. | c2. | c2.</textus></frustum>"
@@ -303,9 +305,9 @@ _sectio_mutationes (
         "mensura 2  metrum 3/4  clavis eb maior  tempus 160  "
         "tempus 90 usque 4 (+960)\n"
         "  m  Eb4:2.\n"
-        "mensura 3\n"
+        "mensura 3  fermata x1.5 (+960)\n"
         "  m  C4:2.\n"
-        "mensura 4\n"
+        "mensura 4  fermata x2\n"
         "  m  C4:2.\n");
     /* clivus ab initio: titulus tempus SCRIPTUM (C) nominat */
     k = _carmen(c,

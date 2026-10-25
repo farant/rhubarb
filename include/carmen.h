@@ -27,15 +27,19 @@
  *   positio   mensura="N" (1 = prima, ex mappa metri) aut pulsus="N" -
  *             altera sola
  *   ictus     cum mensura, ubi pulsus admittitur (frustum, tempus,
- *             clavis): tempus N mensurae (1 = initium; unitas =
- *             carmen_tempus_mensurae, ut locus 'M:T' - in 6/8 octavae
- *             tres)
+ *             clavis, fermata): tempus N mensurae (1 = initium;
+ *             unitas = carmen_tempus_mensurae, ut locus 'M:T' - in 6/8
+ *             octavae tres)
  *   metrum    N/D, D potentia II (1..64), N 1..64
  *   clavis    littera [#|b] maior|minor (quintae -7..7, ut MusicXML)
  *   tempus    20..400 quartae per minutum (ordinarium CXX); sine
  *             'usque' gradus; cum usque="M" clivus: a tempore vigente
  *             ad valorem, linearis in pulsibus, finis ad initium
  *             mensurae M (nulla mutatio intra clivum)
+ *   fermata   <fermata mensura="16" factor="2"/>: sonus a positione
+ *             usque ad initium notae proximae (pars qualibet; finis
+ *             carminis si nulla) factor-plo longior (1..4, ord. 2);
+ *             fermatae non se tegunt
  *   textus    MML (cantus.h) SINE 't' - tempus carminis est; '@'
  *             praeparatum per notam (percussio sonitus) admittitur
  *   pars      instrumentum necessarium; lucrum 0..1 (1); positio
@@ -76,7 +80,8 @@
  *
  * MAPPA SONANDI: Carmen.tempora = gradus soli (clivi per
  * CARMEN_GRADUS_TEMPORIS pulsus - tricesima secunda - tempore medii
- * gradus); scripta in tempora_scripta (partitura ea nominat).
+ * gradus; fermatae: tempus vigens / factor intra spatium suum);
+ * scripta in tempora_scripta et fermatae (partitura ea nominat).
  * Analysis tempus SCRIPTUM iudicat (pulsus), numquam sonandi.
  *
  * TOTUS LIBER IN LECTIONE IUDICATUR: vitium cum carmine, parte, frusto
@@ -142,6 +147,14 @@ nomen structura {
     b32 minor;
 } CarmenClavis;
 
+/* fermata SCRIPTA (<fermata>; corona, nomen signi Latinum): spatium
+ * [pulsus, finis) factor-plo longius */
+nomen structura {
+    s64 pulsus;     /* initium */
+    s64 finis;      /* nota proxima aut finis carminis (derivatum) */
+    f32 factor;     /* 1..4 */
+} CarmenCorona;
+
 /* mutatio temporis SCRIPTA: gradus (usque 0) aut clivus */
 nomen structura {
     s64 pulsus;     /* initium */
@@ -164,6 +177,8 @@ nomen structura {
      CarmenTempus* tempora_scripta;   /* ut in libro; primum = tempus
                                        * carminis ad pulsum 0 */
               i32  numerus_temporum_scriptorum;
+     CarmenCorona* coronae;          /* ordine pulsus */
+              i32  numerus_coronarum;
      CarmenMetrum* metra;
               i32  numerus_metrorum;
      CarmenClavis* claves;
