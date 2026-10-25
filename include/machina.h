@@ -123,14 +123,16 @@ machina_identitas_ex_plagula (
  *   II.  Android: $HOME/.rhubarb/machina (machina_identitas_ex_plagula;
  *        cursor tabulae HOME radicem suam ponit, applicatio
  *        directorium suum privatum - identitas = haec institutio)
+ *   II'. iOS: $HOME/Library/.rhubarb/machina (idem; HOME =
+ *        receptaculum applicationis, Library/ servatur; testa-ios R2)
  *   III. Linux: /etc/machine-id
  *
  * Nullus praesto (Android sine HOME quoque)? Chorda VACUA - vide
  * RECUSAT supra.
  *
  * Stabilis per cursus, per reboot, per renovationes systematis.
- * macOS et Linux nullam plagulam status scribunt; Android plagulam
- * unam semel scribit, deinde solum legit.
+ * macOS et Linux nullam plagulam status scribunt; Android et iOS
+ * plagulam unam semel scribunt, deinde solum legunt.
  */
 chorda
 machina_identitas (

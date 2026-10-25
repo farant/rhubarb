@@ -869,7 +869,7 @@ int ALooper_addFd(ALooper* ansa, int fossa, int signum, int eventa,
 
 /* <sectio caput="android/input.h" poscit="android/looper.h"/>
  * android/input.h (+ keycodes.h, quod input.h includit) - eventus
- * initus, cauda; constantae testa_android_initus.h congruentes */
+ * initus, cauda; constantae testa_initus.h congruentes */
 typedef struct AInputEvent AInputEvent;
 typedef struct AInputQueue AInputQueue;
 enum { AINPUT_EVENT_TYPE_KEY = 1, AINPUT_EVENT_TYPE_MOTION = 2 };

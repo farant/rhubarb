@@ -924,3 +924,23 @@ Next layer (profile of the batch): silva lexing (`silva_lexare_cruda`), hash-tab
 - `_plures_currere` derives each source ONCE and serves every requested mode from the same fructus. A mode with `--partes-ad` / `--aristae-ad` goes to its own file (accumulated, then one filum_scribere); at most one mode may go to stdout.
 - silva roots, the old loop against one `--plures --partes --partes-ad … --aristae --aristae-ad … --manifesta …`: 20.4 → 1.6 s; partes (858 lines), aristae (1472 lines) and 23 manifests identical (manifests ignoring `generatum`); no stdout/stderr. `fabrica iudicare -plenus` after switching the script: 43 RECENS, including the three fontes_generata.h.
 - Guard in tools/aedilis_porta.sh extended: the batch with -ad files equals single --partes/--aristae calls. Plant (aristae routed into the partes buffer) → "FRACTA (plures partes/aristae)"; restored → bona.
+
+## 2026-10-23 - `--nexus` and per-variant `-MM` oracles (testa-ios T3)
+
+- **`--nexus`** prints the closure's link flags one per line (rules from the
+  `nexus` section, in object order, then annotated flags, deduplicated). It
+  is the same list the generated struere.sh puts on its link line: that
+  loop moved into the public `aedilis_vexilla_nexus()` and the script
+  writer calls it. Regenerated pictor's struere.sh is byte-identical.
+  First consumer: `tools/ios/app.sh` (frameworks of `testa_ios`).
+- Why not an `N` line in `--partes`: the silva conflator REFUSES unknown
+  part kinds (`genus partis ignotum`), so every closure with a framework rule
+  would have broken it. A separate opt-in flag has no old readers.
+- **`<oracula>`** in aedilis.stml: `.m` sources get their headers from
+  `clang -MM`, and plain clang only sees the macOS SDK, so `#import
+  <UIKit/UIKit.h>` failed and aedilis refused `lib/testa_ios.m` as
+  "plagula imparsabilis". `aedilis_oraculum_eligere(configuratio, via)`
+  picks the rule whose variant is the file's base-name suffix (`_ios`), else
+  "clang". A rule missing `varians` or `mandatum` refuses the whole config
+  (fixture `probationes/fixa/aedilis_oraculum_mancum/`); a plant that
+  skipped it instead went red.

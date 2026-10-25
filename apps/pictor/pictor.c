@@ -71,6 +71,17 @@ applicatio_initium (
      * novum glutinat */
     app->montatio.actiones_ctx.imago_capere  = a->imago_glutinata;
     app->montatio.actiones_ctx.imago_ctx     = a->imago_ctx;
+    /* testa-ios C1b: electio imaginis (telephonum) - quadratum
+     * imaginis solum ubi testa servitium praebet; photographia electa
+     * ut depositio redit */
+    si (a->imaginem_eligere)
+    {
+        app->montatio.actiones_ctx.imaginem_eligere      =
+            a->imaginem_eligere;
+        app->montatio.actiones_ctx.imaginem_eligere_ctx  =
+            a->imaginem_eligere_ctx;
+        app->montatio.compositio.imago_eligibilis         = VERUM;
+    }
 
     forma->titulus    = "pictor";
     forma->latitudo   = latitudo;
