@@ -319,6 +319,18 @@ if [ "$rc1" -eq 1 ] && grep -q '^STALUM ~/.bin/x - artificium absens' "$T/o" \
    && [ "$rc5" -eq 1 ] && grep -q '^FRACTUM *institutio_x .*exitus 1' "$T/o5" \
    && [ "$VERUM_ANTE" = "$VERUM_POST" ]; then echo "  XXIV copia ~/.bin (HOME redirectus)   OK"; else echo "  XXIV FRACTUM (rc=$rc1 $rc2 $rc3 $rc4 $rc5)"; cat "$T/o" "$T/o2" "$T/o3" "$T/o4" "$T/o5"; fracta=1; fi
 
+# XXIVb (decretum Frani 2026-10-24): arbor secundaria ('.git' plagula) in
+# ~/.bin numquam instituit - directe VETITUM (exitus 3), sub -si-licet
+# omissum nuntiatum (exitus 0); copia nulla, ~/.bin verum intactum
+rm -rf "$T/domus/.bin"; printf 'gitdir: /nusquam\n' > "$T/r/.git"
+(cd "$T/r" && HOME="$T/domus" ./tools/instituere.sh bin/x) > "$T/o" 2>&1; rc1=$?
+(cd "$T/r" && HOME="$T/domus" ./tools/instituere.sh -si-licet bin/x) > "$T/o2" 2>&1; rc2=$?
+rm -f "$T/r/.git"
+VERUM_POST="$(shasum "$HOME/.bin/briar" 2>/dev/null)"
+if [ "$rc1" -eq 3 ] && grep -q 'VETITUM in arbore secundaria' "$T/o" \
+   && [ "$rc2" -eq 0 ] && grep -q 'NON institutum' "$T/o2" \
+   && [ ! -e "$T/domus/.bin/x" ] && [ "$VERUM_ANTE" = "$VERUM_POST" ]; then echo "  XXIVb arbor secundaria non instituit   OK"; else echo "  XXIVb FRACTUM (rc=$rc1 $rc2)"; cat "$T/o" "$T/o2"; fracta=1; fi
+
 # XXV (1b T7): cursus - sanare scribit, -siccum aestimat
 sanare_radix ''
 printf 'D="${FABRICA_SCRIPTURA:-.}"; printf "novum\\n" > "$D/b"\n' > "$T/r/gen_b.sh"

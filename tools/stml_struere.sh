@@ -57,7 +57,7 @@ echo "aedificatum: bin/stml"
 # binarium superscriptum SIGKILL dat - inodus recens obligatorius)
 # institutio in ~/.bin: actio fabricae sua ('institutio_stml', 1b T5) -
 # sub executore (FABRICA_AGIT) hoc scriptum SOLUM nectit; manu vocatum
-# etiam instituit
+# etiam instituit - in main solo (arbor secundaria: omissum, -si-licet)
 if [ -z "${FABRICA_AGIT:-}" ]; then
-    ./tools/instituere.sh bin/stml || exit 1
+    ./tools/instituere.sh -si-licet bin/stml || exit 1
 fi

@@ -73,7 +73,7 @@ echo "aedificatum: bin/briar-spectator"
 # rm ante cp: macOS binarium superscriptum SIGKILL dat
 # institutio in ~/.bin: actio fabricae sua ('institutio_briar_spectator', 1b T5) -
 # sub executore (FABRICA_AGIT) hoc scriptum SOLUM nectit; manu vocatum
-# etiam instituit
+# etiam instituit - in main solo (arbor secundaria: omissum, -si-licet)
 if [ -z "${FABRICA_AGIT:-}" ]; then
-    ./tools/instituere.sh bin/briar-spectator || exit 1
+    ./tools/instituere.sh -si-licet bin/briar-spectator || exit 1
 fi
