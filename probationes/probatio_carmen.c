@@ -1098,6 +1098,16 @@ _sectio_clivus (
         }
     }
     CREDO_VERUM (bene);
+    /* millesimae exactae: gradus primus (medium LX pulsus) 119.53125
+     * -> 119531; tempus integrum CXX */
+    per (i = ZEPHYRUM; i < k->numerus_temporum
+                       && k->tempora[i].pulsus != a; i++)
+    {
+    }
+    CREDO_NECESSE (i < k->numerus_temporum);
+    CREDO_AEQUALIS_I32 (k->tempora[i].millesimae, (i32)(CXIX * M
+        + DXXXI));
+    CREDO_AEQUALIS_I32 (k->tempora[i].tempus, CXX);
     /* ante clivum: II s ad CXX; post: LX */
     CREDO_AEQUALIS_S64 (cantus_quadrum_pulsus(k->tempora,
         k->numerus_temporum, a), (s64)SONUS_FREQUENTIA * II);
@@ -1109,7 +1119,7 @@ _sectio_clivus (
     facta  = (f64)(cantus_quadrum_pulsus(k->tempora,
         k->numerus_temporum,
         b) - cantus_quadrum_pulsus(k->tempora, k->numerus_temporum, a));
-    CREDO_VERUM (fabs(facta - exacta) < exacta * 0.002);
+    CREDO_VERUM (fabs(facta - exacta) < exacta * 0.0002);
     /* clivus ab initio: tempus carminis (C) manet initium */
     CREDO_NECESSE (_legere(c, _carmen(c, " tempus=\"100\"",
         "<tempus mensura=\"1\" valor=\"60\" usque=\"2\"/>"
@@ -1156,7 +1166,8 @@ _sectio_ictus (
 }
 
 /* fermata: spatium ad notam proximam (pars qualibet) bis longius;
- * ultima ad finem carminis; intra clivum ratio fere II */
+ * ultima ad finem carminis; intra clivum ratio II (millesimae: intra
+ * 0.01%) */
 interior vacuum
 _sectio_corona (
     CredoContextus* c)
@@ -1212,7 +1223,7 @@ _sectio_corona (
     cum = (f64)(cantus_quadrum_pulsus(k->tempora, k->numerus_temporum,
         a * II) - cantus_quadrum_pulsus(k->tempora, k->numerus_temporum,
         a));
-    CREDO_VERUM (fabs(cum / sine - 2.0) < 0.02);
+    CREDO_VERUM (fabs(cum / sine - 2.0) < 0.0002);
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {

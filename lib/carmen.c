@@ -796,22 +796,28 @@ _gradum_addere (
     CantusTempus* tempora,
              i32* numerus,
              s64  pulsus,
-             i32  tempus)
+             f64  tempus)
 {
+    CantusTempus* t;
+
     si (*numerus > ZEPHYRUM && tempora[*numerus - I].pulsus == pulsus)
     {
-        tempora[*numerus - I].tempus = tempus;
-        redde;
+        t = &tempora[*numerus - I];
     }
-    tempora[*numerus].pulsus   = pulsus;
-    tempora[*numerus].tempus   = tempus;
-    tempora[*numerus].quadrum  = ZEPHYRUM;
-    (*numerus)++;
+    alioquin
+    {
+        t = &tempora[*numerus];
+        (*numerus)++;
+    }
+    t->pulsus      = pulsus;
+    t->tempus      = tempus < 1.5 ? I : (i32)(tempus + 0.5);
+    t->millesimae  = tempus < 0.0015 ? I : (i32)(tempus * 1000.0 + 0.5);
+    t->quadrum     = ZEPHYRUM;
 }
 
 /* fermatae in mappa sonandi: lineae divisionis = gradus mappae et
  * termini fermatarum; intra fermatam tempus gradus / factor
- * (rotundatum, >= I), ad finem eius tempus mappae redit */
+ * (millesimae, >= I), ad finem eius tempus mappae redit */
 interior b32
 _coronas_inserere (
      Carmen* k,
@@ -868,13 +874,12 @@ _coronas_inserere (
         {
             f++;
         }
-        t = (f64)k->tempora[g].tempus;
+        t = (f64)k->tempora[g].millesimae / 1000.0;
         si (f < k->numerus_coronarum && k->coronae[f].pulsus <= x)
         {
             t = t / (f64)k->coronae[f].factor;
         }
-        _gradum_addere(nova, &numerus, x,
-                       t < 1.5 ? I : (i32)(t + 0.5));
+        _gradum_addere(nova, &numerus, x, t);
     }
     k->tempora           = nova;
     k->numerus_temporum  = numerus;
@@ -883,7 +888,8 @@ _coronas_inserere (
 
 /* mappa sonandi ex scriptis: gradus ut sunt; clivus = gradus per
  * CARMEN_GRADUS_TEMPORIS, tempus medii gradus (linearis in pulsibus,
- * rotundatum), deinde valor ad usque. FALSUM: piscina exhausta */
+ * millesimae exactae), deinde valor ad usque. FALSUM: piscina
+ * exhausta */
 interior b32
 _mappam_sonandi (
      Carmen* k,
@@ -918,7 +924,8 @@ _mappam_sonandi (
 
         si (t->usque == ZEPHYRUM)
         {
-            _gradum_addere(k->tempora, &numerus, t->pulsus, t->tempus);
+            _gradum_addere(k->tempora, &numerus, t->pulsus,
+                           (f64)t->tempus);
             prius = t->tempus;
             perge;
         }
@@ -930,10 +937,9 @@ _mappam_sonandi (
             f64 valor  = (f64)prius + (f64)((s32)t->tempus - (s32)prius)
                        * medium / (f64)(t->usque - t->pulsus);
 
-            _gradum_addere(k->tempora, &numerus, p,
-                           (i32)(valor + 0.5));
+            _gradum_addere(k->tempora, &numerus, p, valor);
         }
-        _gradum_addere(k->tempora, &numerus, t->usque, t->tempus);
+        _gradum_addere(k->tempora, &numerus, t->usque, (f64)t->tempus);
         prius = t->tempus;
     }
     k->numerus_temporum = numerus;

@@ -76,9 +76,13 @@
  * cantus_tempora_computare - ut lector: segmentum claudit ad quadrum
  * suum rotundatum, ergo nulla aberratio cumulata) */
 nomen structura {
-    s64 pulsus;     /* initium segmenti, pulsus absoluti */
-    i32 tempus;     /* 20..400 */
-    s64 quadrum;    /* initium segmenti, quadra (derivatum) */
+    s64 pulsus;       /* initium segmenti, pulsus absoluti */
+    i32 tempus;       /* 20..400 (integrum: 't', ostensio) */
+    i32 millesimae;   /* tempus SONANDI in millesimis quartae per
+                       * minutum (> 0) - computatio quadrorum hoc SOLUM
+                       * legit; producens quisque implet (lector: tempus
+                       * x M; carmen: clivi, coronae, agogica exacte) */
+    s64 quadrum;      /* initium segmenti, quadra (derivatum) */
 } CantusTempus;
 
 nomen structura {

@@ -194,16 +194,19 @@ _mensuram_legere (
     redde _puncta_legere(l, pulsus);
 }
 
-/* quadra 'pulsus' pulsuum intra segmentum tempore dato, rotundata -
- * regula UNA lectoris et mappae temporis */
+/* quadra 'pulsus' pulsuum intra segmentum tempore dato (millesimae
+ * quartae per minutum), rotundata - regula UNA lectoris et mappae
+ * temporis. quadra(dp) = dp x FREQUENTIA x CCXL x M / (INTEGRAE x
+ * millesimae); 2 x numerator intra s64 dum dp < CD milliones
+ * pulsuum in segmento uno (fere LVIII horae ad CXX) */
 interior s64
 _quadra_segmenti (
     s64 pulsus,
-    i32 tempus)
+    i32 millesimae)
 {
     s64 numerator   = pulsus * (s64)SONUS_FREQUENTIA
-                    * (s64)CANTUS_SECUNDAE_INTEGRAE;
-    s64 denominator = (s64)CANTUS_PULSUS_INTEGRAE * (s64)tempus;
+                    * (s64)CANTUS_SECUNDAE_INTEGRAE * (s64)M;
+    s64 denominator = (s64)CANTUS_PULSUS_INTEGRAE * (s64)millesimae;
 
     /* (2n + d) / 2d = rotundatio n/d ad proximum (n >= 0) */
     redde ((s64)II * numerator + denominator)
@@ -216,7 +219,8 @@ _quadrum (
     constans CantusLector* l,
                       s64  pulsus)
 {
-    redde l->quadrum_segmenti + _quadra_segmenti(pulsus, l->tempus);
+    redde l->quadrum_segmenti + _quadra_segmenti(pulsus,
+                                                 l->tempus * M);
 }
 
 interior b32
@@ -391,9 +395,10 @@ _currere (
             {
                 CantusTempus* t = &l->tempora[l->numerus_temporum - I];
 
-                t->pulsus   = l->pulsus_segmenti;
-                t->tempus   = l->tempus;
-                t->quadrum  = l->quadrum_segmenti;
+                t->pulsus      = l->pulsus_segmenti;
+                t->tempus      = l->tempus;
+                t->millesimae  = l->tempus * M;
+                t->quadrum     = l->quadrum_segmenti;
             }
         }
         alioquin si (s == 'v')
@@ -453,9 +458,10 @@ _lectorem_parare (
     l->vitium               = vitium;
     si (tempora != NIHIL)
     {
-        tempora[ZEPHYRUM].pulsus   = ZEPHYRUM;
-        tempora[ZEPHYRUM].tempus   = CXX;
-        tempora[ZEPHYRUM].quadrum  = ZEPHYRUM;
+        tempora[ZEPHYRUM].pulsus      = ZEPHYRUM;
+        tempora[ZEPHYRUM].tempus      = CXX;
+        tempora[ZEPHYRUM].millesimae  = CXX * M;
+        tempora[ZEPHYRUM].quadrum     = ZEPHYRUM;
     }
 }
 
@@ -681,7 +687,7 @@ cantus_tempora_computare (
     {
         tempora[k].quadrum = tempora[k - I].quadrum + _quadra_segmenti(
             tempora[k].pulsus - tempora[k - I].pulsus,
-            tempora[k - I].tempus);
+            tempora[k - I].millesimae);
     }
 }
 
@@ -695,11 +701,11 @@ cantus_quadrum_pulsus (
 
     si (numerus == ZEPHYRUM || tempora == NIHIL)
     {
-        redde _quadra_segmenti(pulsus, CXX);
+        redde _quadra_segmenti(pulsus, CXX * M);
     }
     k = _segmentum(tempora, numerus, pulsus, FALSUM);
     redde tempora[k].quadrum + _quadra_segmenti(
-        pulsus - tempora[k].pulsus, tempora[k].tempus);
+        pulsus - tempora[k].pulsus, tempora[k].millesimae);
 }
 
 s64
@@ -708,14 +714,15 @@ cantus_pulsus_quadri (
                       i32  numerus,
                       s64  quadrum)
 {
-    /* intra segmentum (tempus t): quadra(dp) = rotundatio(dp a / b),
-     * a = FREQUENTIA x CCXL, b = INTEGRAE x t. Maximum dp cum
+    /* intra segmentum (millesimae m): quadra(dp) = rotundatio(dp a /
+     * b), a = FREQUENTIA x CCXL x M, b = INTEGRAE x m. Maximum dp cum
      * rotundatio <= r: floor((b (2r + 1) - 1) / 2a) */
-    s64 a = (s64)SONUS_FREQUENTIA * (s64)CANTUS_SECUNDAE_INTEGRAE;
+    s64 a = (s64)SONUS_FREQUENTIA * (s64)CANTUS_SECUNDAE_INTEGRAE
+          * (s64)M;
     s64 b;
     s64 r;
     s64 basis_pulsus  = ZEPHYRUM;
-    i32 tempus        = CXX;
+    i32 millesimae    = CXX * M;
     i32 k;
 
     si (quadrum < ZEPHYRUM)
@@ -727,9 +734,9 @@ cantus_pulsus_quadri (
     {
         k             = _segmentum(tempora, numerus, quadrum, VERUM);
         basis_pulsus  = tempora[k].pulsus;
-        tempus        = tempora[k].tempus;
+        millesimae    = tempora[k].millesimae;
         r             = quadrum - tempora[k].quadrum;
     }
-    b = (s64)CANTUS_PULSUS_INTEGRAE * (s64)tempus;
+    b = (s64)CANTUS_PULSUS_INTEGRAE * (s64)millesimae;
     redde basis_pulsus + (b * ((s64)II * r + I) - I) / ((s64)II * a);
 }

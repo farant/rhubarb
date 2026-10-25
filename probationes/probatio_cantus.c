@@ -785,11 +785,14 @@ _sectio_pulsus (
     CREDO_NECESSE (k.numerus_temporum == I);
     CREDO_AEQUALIS_S64 (k.tempora[ZEPHYRUM].pulsus, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (k.tempora[ZEPHYRUM].tempus, CXX);
+    CREDO_AEQUALIS_I32 (k.tempora[ZEPHYRUM].millesimae, CXX * M);
     CREDO_AEQUALIS_S64 (k.tempora[ZEPHYRUM].quadrum, ZEPHYRUM);
     CREDO_NECESSE (_legere(c, "t120 c t60 d", &k));
     CREDO_NECESSE (k.numerus_temporum == II);
     CREDO_AEQUALIS_S64 (k.tempora[I].pulsus, (s64)CMLX);
     CREDO_AEQUALIS_I32 (k.tempora[I].tempus, LX);
+    CREDO_AEQUALIS_I32 (k.tempora[I].millesimae, LX * M);
+    CREDO_AEQUALIS_I32 (k.tempora[ZEPHYRUM].millesimae, CXX * M);
     /* quarta ad t120 = 0.5 s = XXIV milia quadra */
     CREDO_AEQUALIS_S64 (k.tempora[I].quadrum, (s64)(XXIV * M));
     /* 't' initio: segmentum primum, non duo */
@@ -805,12 +808,15 @@ _sectio_pulsus (
     }
 
     CREDO_GRADUS ("computare: mappa manu scripta");
-    mappa[ZEPHYRUM].pulsus  = ZEPHYRUM;
-    mappa[ZEPHYRUM].tempus  = CXX;
-    mappa[I].pulsus         = (s64)CMLX * IV;
-    mappa[I].tempus         = LX;
-    mappa[II].pulsus        = (s64)CMLX * VI;
-    mappa[II].tempus        = CCXL;
+    mappa[ZEPHYRUM].pulsus      = ZEPHYRUM;
+    mappa[ZEPHYRUM].tempus      = CXX;
+    mappa[ZEPHYRUM].millesimae  = CXX * M;
+    mappa[I].pulsus             = (s64)CMLX * IV;
+    mappa[I].tempus             = LX;
+    mappa[I].millesimae         = LX * M;
+    mappa[II].pulsus            = (s64)CMLX * VI;
+    mappa[II].tempus            = CCXL;
+    mappa[II].millesimae        = CCXL * M;
     cantus_tempora_computare(mappa, III);
     CREDO_AEQUALIS_S64 (mappa[ZEPHYRUM].quadrum, ZEPHYRUM);
     CREDO_AEQUALIS_S64 (mappa[I].quadrum, (s64)(XCVI * M));
@@ -821,6 +827,33 @@ _sectio_pulsus (
     /* mappa vacua: CXX */
     CREDO_AEQUALIS_S64 (cantus_quadrum_pulsus(NIHIL, ZEPHYRUM,
         (s64)CMLX), (s64)(XXIV * M));
+
+    /* millesimae: quarta ad 90.5 = 0.662983 s = 31823.2 quadra;
+     * computatio millesimas legit, non tempus */
+    {
+        CantusTempus fracta[II];
+
+        fracta[ZEPHYRUM].pulsus      = ZEPHYRUM;
+        fracta[ZEPHYRUM].tempus      = XC;
+        fracta[ZEPHYRUM].millesimae  = XC * M + D;
+        fracta[I].pulsus             = (s64)CMLX;
+        fracta[I].tempus             = XC;
+        fracta[I].millesimae         = XC * M;
+        cantus_tempora_computare(fracta, II);
+        CREDO_AEQUALIS_S64 (fracta[I].quadrum, (s64)XXXI * M
+                            + DCCCXXIII);
+        CREDO_AEQUALIS_S64 (cantus_pulsus_quadri(fracta, II,
+            fracta[I].quadrum), (s64)CMLX);
+        /* inversa INTRA segmentum 90.5 (non in termino) */
+        CREDO_AEQUALIS_S64 (cantus_pulsus_quadri(fracta, II,
+            cantus_quadrum_pulsus(fracta, II, (s64)CDLXXX)),
+            (s64)CDLXXX);
+        /* longum: IV M D quartae ad 90.5 (fere L minuta) in segmento
+         * uno */
+        CREDO_AEQUALIS_S64 (cantus_quadrum_pulsus(fracta, I,
+            (s64)CMLX * (M * IV + D)), (s64)M * M * CXLIII
+            + (s64)M * CCIV + (s64)CDXX);
+    }
 
     CREDO_GRADUS ("pulsus quadri: inversa, limites segmentorum");
     CREDO_AEQUALIS_S64 (cantus_pulsus_quadri(mappa, III, ZEPHYRUM),

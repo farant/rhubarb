@@ -195,3 +195,11 @@ Plants 11/11 red, plus one that survived and showed a redundant check: an explic
 fermata written before the previous one always starts before that one's finis (finis >
 pulsus), so the overlap check already refuses it. Removed; the overlap message now names
 both ("ordine positionis, non intra priorem"); the reverse-order test stays.
+
+## 2026-10-24 - sounding map carries exact millesimae
+
+_gradum_addere now takes an f64 tempo and fills both fields: tempus (rounded, >= 1) and
+millesimae (thousandths, >= 1, used by the frame math - cantus.worklog.md). Ramp steps keep
+their exact midpoint value (120 -> 60 first step = 119.531), coronae divide the exact
+millesimae. Effect: the ramp test now holds to 0.02% of the exact integral (was 0.2%), a
+fermata inside a ramp to 0.01% of 2x (was 2%).

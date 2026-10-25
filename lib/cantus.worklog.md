@@ -168,3 +168,24 @@ range-checked by the lexer (only the next note's MIDI is), so status.octava can 
 `lucrum` is an f32 inside the lector; status rounds `lucrum * C + 0.5f` - of 0..100 only
 53 and 59 truncate wrong (0.59f * 100 = 58.999..), so the test uses v59 (v33 let the
 truncation plant survive). MML has no way to CLEAR '@' once set - emendatio relies on that.
+
+## 2026-10-24 - tempus in millesimis (praeparatio agogicae, ...4939S)
+
+CantusTempus gained `millesimae` (sounding tempo in thousandths of a quarter per minute);
+the frame math (_quadra_segmenti, cantus_tempora_computare, cantus_quadrum_pulsus,
+cantus_pulsus_quadri) reads ONLY that field. `tempus` stays the whole number ('t',
+debugging). Every producer fills both: the MML reader (tempus x M), carmen's sounding map
+(ramps, coronae, soon agogica - exact). Why: a lilt changes tempo on every beat; at whole
+bpm a 66 bpm waltz would run ~0.6% long per bar (half a second over 32 bars).
+
+Range: the numerator 2 x dp x 48000 x 240 x 1000 stays inside s64 while dp < ~4e8 pulses
+in ONE segment (~58 hours at 120 bpm) - no reduction needed. (I first added a gcd
+reduction believing a 10-minute segment overflowed; a plant that undid it stayed green,
+the arithmetic was wrong by 1000x - removed.) Same rational as before, so whole tempos
+round identically: stella/pastorale WAVs byte-identical before/after.
+
+Plants 9 + 2: two survived first and showed test gaps - the default first segment's
+millesimae was only checked on a melody starting with 't' (which overwrites it), and the
+only inverse check sat on a segment boundary where the fractional tempo cannot matter.
+
+Hand-built maps (tests) must set millesimae too - it is not derived from tempus.
