@@ -1103,6 +1103,8 @@ filum_arborem_delere (
         _filum_error_ponere("rmdir fracta");
         redde FALSUM;
     }
+    /* directorium deletum = S (ut in filum_directorium_creare) */
+    lectiones_notare(LECTIO_SCRIPSIT, via);
     redde VERUM;
 #endif
 }
@@ -1212,6 +1214,9 @@ filum_modum_ponere (
         _filum_error_ponere("chmod fracta");
         redde FALSUM;
     }
+    /* modus mutatus = scriptura in libro (fabrica-8 T1: chmod crudum
+     * extra filum vetitum, ergo canalis id nominare debet) */
+    lectiones_notare(LECTIO_SCRIPSIT, via);
 
     redde VERUM;
 }

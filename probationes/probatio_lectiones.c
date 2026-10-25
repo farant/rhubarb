@@ -251,6 +251,49 @@ _sectio_exsecutionis (
     CREDO_FALSUM(filum_existit(LIBER));
 }
 
+/* IIe. MODUS ET ARBOR (fabrica-8 T1): filum_modum_ponere et directorium
+ * a filum_arborem_delere deletum S notant (chmod/rmdir cruda extra
+ * filum vetita - canalis ea nominare debet) */
+interior vacuum
+_sectio_modi_arboris (
+    CredoContextus* c)
+{
+               Piscina* piscina;
+                chorda  liber;
+    constans character* area;
+             character  plagula[MMXLVIII];
+             character  directorium[MMXLVIII];
+             character  filius[MMXLVIII];
+
+    piscina  = c->piscina;
+    area     = credo_area(c);
+    CREDO_NECESSE(area != NIHIL
+        && strlen(area) + LXIV < magnitudo(plagula));
+    sprintf(plagula, "%s/modus.txt", area);
+    sprintf(directorium, "%s/arbor", area);
+    sprintf(filius, "%s/arbor/folium.txt", area);
+    CREDO_NECESSE(filum_scribere_literis(plagula, "m\n"));
+    CREDO_NECESSE(filum_directorium_creare(directorium));
+    CREDO_NECESSE(filum_scribere_literis(filius, "f\n"));
+    (vacuum)remove(LIBER);
+    setenv("FABRICA_LECTIONES", LIBER, I);
+    CREDO_VERUM(filum_modum_ponere(plagula, 0600));
+    CREDO_VERUM(filum_arborem_delere(directorium));
+    unsetenv("FABRICA_LECTIONES");
+    liber = filum_legere_totum(LIBER, piscina);
+    CREDO_VERUM(chorda_continet(liber, chorda_concatenare(
+        chorda_ex_literis("S\t", piscina), chorda_ex_literis(plagula,
+        piscina), piscina)));
+    CREDO_VERUM(chorda_continet(liber, chorda_concatenare(
+        chorda_ex_literis("S\t", piscina), chorda_ex_literis(filius,
+        piscina), piscina)));
+    CREDO_VERUM(chorda_continet(liber,
+        chorda_concatenare(chorda_concatenare(
+        chorda_ex_literis("S\t", piscina), chorda_ex_literis(
+        directorium, piscina), piscina), chorda_ex_literis("\n",
+        piscina), piscina)));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I. variabilis absens: nihil scribitur", _sectio_prima, NIHIL,
         NIHIL, NIHIL, NIHIL },
@@ -262,6 +305,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL, NIHIL },
     { "IIc. fopen et stat per librum (plan 5 T5a)", _sectio_quarta,
         NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IIe. modus et arbor deleta (S, fabrica-8 T1)",
+        _sectio_modi_arboris, NIHIL, NIHIL, NIHIL, NIHIL },
     { "III. filii duo paralleli: lineae integrae", _sectio_quinta,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
