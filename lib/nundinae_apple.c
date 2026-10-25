@@ -9,6 +9,7 @@
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
+#include "chorda_aedificator.h"
 #include "internamentum.h"
 #include "stml.h"
 #include "base64.h"
@@ -690,6 +691,1066 @@ NundinaeAppleApplicatio* app;
         proxima = nundinae_apple_proxima(r.corpus);
         via = proxima.mensura > ZEPHYRUM ? chorda_ut_cstr(proxima, p)
                                          : NIHIL;
+    }
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Identitas distributionis (T2): clavis RSA, petitio PKCS#10
+ * ================================================== */
+
+interior i8*
+_copia (
+    constans unsigned char* d,
+                    size_t  n,
+                   Piscina* p)
+{
+    i8* c;
+
+    c = (i8*)piscina_allocare(p,
+        (memoriae_index)(n > ZEPHYRUM ? n : I));
+    si (c && n > ZEPHYRUM)
+    {
+        memcpy(c, d, n);
+    }
+    redde c;
+}
+
+b32
+nundinae_apple_clavem_rsa_generare (
+    NundinaeAppleClavisRsa* k,
+                   Piscina* p)
+{
+     br_hmac_drbg_context fors;
+           br_prng_seeder seminator;
+       br_rsa_private_key clavis_privata;
+        br_rsa_public_key clavis_publica;
+            unsigned char privata[BR_RSA_KBUF_PRIV_SIZE(MMXLVIII)];
+            unsigned char publica[BR_RSA_KBUF_PUB_SIZE(MMXLVIII)];
+                      b32 bona;
+
+    memset(k, ZEPHYRUM, magnitudo(NundinaeAppleClavisRsa));
+    seminator = br_prng_seeder_system(NIHIL);
+    si (!seminator)
+    {
+        redde FALSUM;
+    }
+    br_hmac_drbg_init(&fors, &br_sha256_vtable, NIHIL, ZEPHYRUM);
+    si (!seminator(&fors.vtable))
+    {
+        redde FALSUM;
+    }
+    si (br_rsa_keygen_get_default()(&fors.vtable, &clavis_privata,
+        privata, &clavis_publica,
+            publica, MMXLVIII, 65537) == ZEPHYRUM)
+    {
+        memset(privata, ZEPHYRUM, magnitudo(privata));
+        redde FALSUM;
+    }
+    k->bits                 = (i32)clavis_privata.n_bitlen;
+    k->modulus              = _copia(clavis_publica.n,
+        clavis_publica.nlen, p);
+    k->modulus_mensura      = (i32)clavis_publica.nlen;
+    k->exponens             = _copia(clavis_publica.e,
+        clavis_publica.elen, p);
+    k->exponens_mensura     = (i32)clavis_publica.elen;
+    k->primus_p             = _copia(clavis_privata.p,
+        clavis_privata.plen, p);
+    k->primus_p_mensura     = (i32)clavis_privata.plen;
+    k->primus_q             = _copia(clavis_privata.q,
+        clavis_privata.qlen, p);
+    k->primus_q_mensura     = (i32)clavis_privata.qlen;
+    k->exponens_p           = _copia(clavis_privata.dp,
+        clavis_privata.dplen, p);
+    k->exponens_p_mensura   = (i32)clavis_privata.dplen;
+    k->exponens_q           = _copia(clavis_privata.dq,
+        clavis_privata.dqlen, p);
+    k->exponens_q_mensura   = (i32)clavis_privata.dqlen;
+    k->coefficiens          = _copia(clavis_privata.iq,
+        clavis_privata.iqlen, p);
+    k->coefficiens_mensura  = (i32)clavis_privata.iqlen;
+    memset(privata, ZEPHYRUM, magnitudo(privata));
+    memset(&fors, ZEPHYRUM, magnitudo(fors));
+    bona = k->modulus && k->exponens && k->primus_p && k->primus_q
+        && k->exponens_p && k->exponens_q && k->coefficiens;
+    si (!bona)
+    {
+        nundinae_apple_clavem_rsa_delere(k);
+    }
+    redde bona;
+}
+
+interior vacuum
+_partem_delere (
+    i8** d,
+   i32*  n)
+{
+    si (*d && *n > ZEPHYRUM)
+    {
+        memset(*d, ZEPHYRUM, (size_t)*n);
+    }
+    *d = NIHIL;
+    *n = ZEPHYRUM;
+}
+
+vacuum
+nundinae_apple_clavem_rsa_delere (
+    NundinaeAppleClavisRsa* k)
+{
+    _partem_delere(&k->modulus, &k->modulus_mensura);
+    _partem_delere(&k->exponens, &k->exponens_mensura);
+    _partem_delere(&k->primus_p, &k->primus_p_mensura);
+    _partem_delere(&k->primus_q, &k->primus_q_mensura);
+    _partem_delere(&k->exponens_p, &k->exponens_p_mensura);
+    _partem_delere(&k->exponens_q, &k->exponens_q_mensura);
+    _partem_delere(&k->coefficiens, &k->coefficiens_mensura);
+    k->bits = ZEPHYRUM;
+}
+
+interior vacuum
+_in_bearssl (
+    constans NundinaeAppleClavisRsa* k,
+                 br_rsa_private_key* clavis_privata,
+                  br_rsa_public_key* clavis_publica)
+{
+    clavis_privata->n_bitlen  = (uint32_t)k->bits;
+    clavis_privata->p         = k->primus_p;
+    clavis_privata->plen      = (size_t)k->primus_p_mensura;
+    clavis_privata->q         = k->primus_q;
+    clavis_privata->qlen      = (size_t)k->primus_q_mensura;
+    clavis_privata->dp        = k->exponens_p;
+    clavis_privata->dplen     = (size_t)k->exponens_p_mensura;
+    clavis_privata->dq        = k->exponens_q;
+    clavis_privata->dqlen     = (size_t)k->exponens_q_mensura;
+    clavis_privata->iq        = k->coefficiens;
+    clavis_privata->iqlen     = (size_t)k->coefficiens_mensura;
+    clavis_publica->n         = k->modulus;
+    clavis_publica->nlen      = (size_t)k->modulus_mensura;
+    clavis_publica->e         = k->exponens;
+    clavis_publica->elen      = (size_t)k->exponens_mensura;
+}
+
+chorda
+nundinae_apple_clavem_rsa_textum (
+    constans NundinaeAppleClavisRsa* k,
+                            Piscina* p)
+{
+    br_rsa_private_key  clavis_privata;
+     br_rsa_public_key  clavis_publica;
+         unsigned char  d[CCLVI];
+                size_t  mensura_exponentis;
+                size_t  n;
+                    i8* der;
+                chorda  b64;
+                chorda  vacua;
+     ChordaAedificator* a;
+                   i32  i;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    _in_bearssl(k, &clavis_privata, &clavis_publica);
+    mensura_exponentis = br_rsa_compute_privexp_get_default()(d,
+        &clavis_privata, 65537);
+    si (mensura_exponentis == ZEPHYRUM)
+    {
+        redde vacua;
+    }
+    n   = br_encode_rsa_raw_der(NIHIL, &clavis_privata, &clavis_publica,
+        d, mensura_exponentis);
+    der = (i8*)piscina_allocare(p, (memoriae_index)n);
+    si (   !der || br_encode_rsa_raw_der(der, &clavis_privata,
+        &clavis_publica, d, mensura_exponentis) != n)
+    {
+        memset(d, ZEPHYRUM, magnitudo(d));
+        redde vacua;
+    }
+    memset(d, ZEPHYRUM, magnitudo(d));
+    b64 = base64_codificare(der, (i32)n, p);
+    memset(der, ZEPHYRUM, n);
+    a = chorda_aedificator_creare(p, (i32)(b64.mensura + CXXVIII));
+    chorda_aedificator_appendere_literis(a,
+        "-----BEGIN RSA PRIVATE KEY-----\n");
+    per (i = ZEPHYRUM; i < b64.mensura; i += LXIV)
+    {
+        chorda_aedificator_appendere_chorda(a, chorda_sectio(b64, i,
+            i + LXIV < b64.mensura ? i + LXIV : b64.mensura));
+        chorda_aedificator_appendere_literis(a, "\n");
+    }
+    chorda_aedificator_appendere_literis(a,
+        "-----END RSA PRIVATE KEY-----\n");
+    memset(b64.datum, ZEPHYRUM, (size_t)b64.mensura);
+    redde chorda_aedificator_finire(a);
+}
+
+/* copia octetorum chordae in piscinam (chorda_concatenare fontes
+ * acervi non tenet) */
+interior chorda
+_chorda_copia (
+     chorda  c,
+    Piscina* p)
+{
+    chorda r;
+
+    r.datum    = (i8*)piscina_allocare(p, (memoriae_index)(c.mensura
+        > ZEPHYRUM ? c.mensura : I));
+    r.mensura  = r.datum ? c.mensura : ZEPHYRUM;
+    si (r.datum && c.mensura > ZEPHYRUM)
+    {
+        memcpy(r.datum, c.datum, (size_t)c.mensura);
+    }
+    redde r;
+}
+
+/* DER: tag + longitudo + contentum */
+interior chorda
+_der (
+      i8  tag,
+  chorda  contentum,
+ Piscina* p)
+{
+        i8 caput[V];
+       i32 k;
+    chorda c;
+
+    caput[ZEPHYRUM] = tag;
+    si (contentum.mensura < CXXVIII)
+    {
+        caput[I]  = (i8)contentum.mensura;
+        k         = II;
+    }
+    alioquin si (contentum.mensura < CCLVI)
+    {
+        caput[I]   = 0x81;
+        caput[II]  = (i8)contentum.mensura;
+        k          = III;
+    }
+    alioquin
+    {
+        caput[I]    = 0x82;
+        caput[II]   = (i8)((contentum.mensura >> VIII) & 0xFF);
+        caput[III]  = (i8)(contentum.mensura & 0xFF);
+        k           = IV;
+    }
+    c.datum    = caput;
+    c.mensura  = k;
+    redde chorda_concatenare(_chorda_copia(c, p), contentum, p);
+}
+
+/* INTEGER sine signo: zephyri praecedentes demuntur, 0x00 si bit
+ * altum */
+interior chorda
+_der_integer (
+    constans i8* v,
+            i32  n,
+        Piscina* p)
+{
+        i8* c;
+       i32  i;
+       i32  m;
+    chorda  r;
+
+    i = ZEPHYRUM;
+    dum (i < n - I && v[i] == ZEPHYRUM)
+    {
+        i++;
+    }
+    m = n - i;
+    c = (i8*)piscina_allocare(p, (memoriae_index)(m + I));
+    si (!c)
+    {
+        r.datum    = NIHIL;
+        r.mensura  = ZEPHYRUM;
+        redde r;
+    }
+    si ((v[i] & 0x80) != ZEPHYRUM)
+    {
+        c[ZEPHYRUM] = ZEPHYRUM;
+        memcpy(c + I, v + i, (size_t)m);
+        m += I;
+    }
+    alioquin
+    {
+        memcpy(c, v + i, (size_t)m);
+    }
+    r.datum    = c;
+    r.mensura  = m;
+    redde _der(0x02, r, p);
+}
+
+interior chorda
+_octeti (
+    constans character* d,
+                   i32  n,
+               Piscina* p)
+{
+    chorda c;
+
+    c.datum    = (i8*)piscina_allocare(p, (memoriae_index)n);
+    c.mensura  = c.datum ? n : ZEPHYRUM;
+    si (c.datum)
+    {
+        memcpy(c.datum, d, (size_t)n);
+    }
+    redde c;
+}
+
+chorda
+nundinae_apple_petitionem_facere (
+    constans NundinaeAppleClavisRsa* k,
+                             chorda  nomen_commune,
+                            Piscina* p)
+{
+    br_rsa_private_key clavis_privata;
+     br_rsa_public_key clavis_publica;
+     br_sha256_context h;
+         unsigned char digestum[XXXII];
+         unsigned char signatura[DXII];
+                chorda nomen_c;
+                chorda informatio_petitionis;
+                chorda informatio_clavis;
+                chorda vacua;
+                chorda bits;
+                    i8 nullum[I];
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    si (   !k->modulus || k->modulus_mensura > DXII
+        || nomen_commune.mensura
+        == ZEPHYRUM)
+    {
+        redde vacua;
+    }
+    nullum[ZEPHYRUM] = ZEPHYRUM;
+    /* Name: SEQUENCE { SET { SEQUENCE { OID 2.5.4.3, UTF8String } }
+     * } */
+    nomen_c = _der(0x30, _der(0x31, _der(0x30, chorda_concatenare(
+        _octeti("\x06\x03\x55\x04\x03", V, p), _der(0x0C, nomen_commune,
+        p), p), p), p), p);
+    /* SubjectPublicKeyInfo: rsaEncryption + BIT STRING {
+     * RSAPublicKey } */
+    bits = chorda_concatenare(_octeti("\x00", I, p), _der(0x30,
+        chorda_concatenare(_der_integer(k->modulus, k->modulus_mensura,
+            p),
+        _der_integer(k->exponens, k->exponens_mensura, p), p), p), p);
+    informatio_clavis = _der(0x30, chorda_concatenare(_octeti(
+        "\x30\x0D\x06\x09\x2A\x86\x48\x86\xF7\x0D\x01\x01\x01\x05\x00",
+        XV, p), _der(0x03, bits, p), p), p);
+    /* CertificationRequestInfo: versio 0, nomen, informatio_clavis,
+     * attributa [0] {} */
+    informatio_petitionis = _der(0x30,
+        chorda_concatenare(chorda_concatenare(_octeti(
+        "\x02\x01\x00", III, p), nomen_c, p),
+            chorda_concatenare(informatio_clavis,
+        _octeti("\xA0\x00", II, p), p), p), p);
+    br_sha256_init(&h);
+    br_sha256_update(&h, informatio_petitionis.datum,
+        (size_t)informatio_petitionis.mensura);
+    br_sha256_out(&h, digestum);
+    _in_bearssl(k, &clavis_privata, &clavis_publica);
+    si (br_rsa_pkcs1_sign_get_default()(BR_HASH_OID_SHA256, digestum,
+            XXXII, &clavis_privata, signatura) != I)
+    {
+        redde vacua;
+    }
+    (vacuum)nullum;
+    redde _der(0x30,
+        chorda_concatenare(chorda_concatenare(informatio_petitionis,
+        _octeti(
+        "\x30\x0D\x06\x09\x2A\x86\x48\x86\xF7\x0D\x01\x01\x0B\x05\x00",
+        XV, p), p), _der(0x03, chorda_concatenare(_octeti("\x00", I, p),
+        _octeti((constans character*)signatura, k->modulus_mensura, p),
+        p), p), p), p);
+}
+
+
+/* ==================================================
+ * Responsa T2 (purae)
+ * ================================================== */
+
+b32
+nundinae_apple_certificata_legere (
+    JsonValor* responsum,
+          Xar* exitus,
+      Piscina* p)
+{
+     JsonValor* data;
+        chorda  vac;
+           i32  i;
+
+    data = responsum ? json_objectum_capere(responsum, "data") : NIHIL;
+    si (!data)
+    {
+        redde FALSUM;
+    }
+    vac = chorda_ex_literis("", p);
+    per (i = ZEPHYRUM; i < json_tabulatum_numerus(data); i++)
+    {
+                    JsonValor* d;
+                    JsonValor* a;
+    NundinaeAppleCertificatum* c;
+
+        d = json_tabulatum_obtinere(data, i);
+        a = d ? json_objectum_capere(d, "attributes") : NIHIL;
+        si (   !a || !chorda_aequalis_literis(json_capere_chorda(a,
+                "certificateType", vac), "DISTRIBUTION"))
+        {
+            perge;
+        }
+        c = (NundinaeAppleCertificatum*)xar_addere(exitus);
+        si (!c)
+        {
+            redde FALSUM;
+        }
+        c->id                = json_capere_chorda(d, "id", vac);
+        c->numerus_serialis  = json_capere_chorda(a, "serialNumber",
+            vac);
+        c->titulus           = json_capere_chorda(a, "displayName",
+            vac);
+        c->exspirat          = json_capere_chorda(a, "expirationDate",
+            vac);
+        c->contentum         = json_capere_chorda(a,
+            "certificateContent",
+            vac);
+    }
+    redde VERUM;
+}
+
+chorda
+nundinae_apple_signum_invenire (
+     JsonValor* responsum,
+        chorda  identificator,
+       Piscina* p)
+{
+     JsonValor* data;
+        chorda  vac;
+           i32  i;
+
+    vac   = chorda_ex_literis("", p);
+    data  = responsum ? json_objectum_capere(responsum, "data") : NIHIL;
+    per (i = ZEPHYRUM; data && i < json_tabulatum_numerus(data); i++)
+    {
+        JsonValor* d;
+        JsonValor* a;
+
+        d = json_tabulatum_obtinere(data, i);
+        a = d ? json_objectum_capere(d, "attributes") : NIHIL;
+        si (   a && chorda_aequalis(json_capere_chorda(a, "identifier",
+            vac),
+                identificator))
+        {
+            redde json_capere_chorda(d, "id", vac);
+        }
+    }
+    redde vac;
+}
+
+chorda
+nundinae_apple_digestum_sha1 (
+     chorda  datum,
+    Piscina* p)
+{
+       br_sha1_context  h;
+         unsigned char  d[XX];
+             character  hex[XLI];
+                   i32  i;
+    constans character* digiti = "0123456789ABCDEF";
+
+    br_sha1_init(&h);
+    br_sha1_update(&h, datum.datum, (size_t)datum.mensura);
+    br_sha1_out(&h, d);
+    per (i = ZEPHYRUM; i < XX; i++)
+    {
+        hex[i * II]      = digiti[(d[i] >> IV) & 0xF];
+        hex[i * II + I]  = digiti[d[i] & 0xF];
+    }
+    hex[XL] = '\0';
+    redde chorda_ex_literis(hex, p);
+}
+
+
+/* ==================================================
+ * Res rationis (T2; rete)
+ * ================================================== */
+
+/* {"data":{"type":T,"attributes":A[,"relationships":R]}} */
+interior chorda
+_corpus_rei (
+    constans character* typus,
+             JsonValor* attributa,
+             JsonValor* relationes,
+               Piscina* p)
+{
+    JsonValor* radix;
+    JsonValor* data;
+
+    data = json_objectum_creare(p);
+    json_objectum_ponere(data, "type", json_chorda_creare_literis(p,
+        typus));
+    si (attributa)
+    {
+        json_objectum_ponere(data, "attributes", attributa);
+    }
+    si (relationes)
+    {
+        json_objectum_ponere(data, "relationships", relationes);
+    }
+    radix = json_objectum_creare(p);
+    json_objectum_ponere(radix, "data", data);
+    redde json_scribere(radix, p);
+}
+
+/* {"data":{"type":T,"id":ID}} aut {"data":[{...}]} */
+interior JsonValor*
+_relatio (
+     constans character* typus,
+                 chorda  id,
+                    b32  plures,
+                Piscina* p)
+{
+    JsonValor* r;
+    JsonValor* res;
+    JsonValor* tab;
+
+    res = json_objectum_creare(p);
+    json_objectum_ponere(res, "type", json_chorda_creare_literis(p,
+        typus));
+    json_objectum_ponere(res, "id", json_chorda_creare(p, id));
+    r = json_objectum_creare(p);
+    si (plures)
+    {
+        tab = json_tabulatum_creare(p);
+        json_tabulatum_addere(tab, res);
+        json_objectum_ponere(r, "data", tab);
+    }
+    alioquin
+    {
+        json_objectum_ponere(r, "data", res);
+    }
+    redde r;
+}
+
+/* valor pro URL: litterae, numeri, - _ . ~ manent, cetera %XX */
+interior chorda
+_url_valor (
+     chorda  v,
+    Piscina* p)
+{
+     ChordaAedificator* a;
+                   i32  i;
+             character  t[IV];
+    constans character* hex = "0123456789ABCDEF";
+
+    a = chorda_aedificator_creare(p, v.mensura * III + I);
+    per (i = ZEPHYRUM; i < v.mensura; i++)
+    {
+        character k = (character)v.datum[i];
+
+        si (   (k >= 'a' && k <= 'z') || (k >= 'A' && k <= 'Z')
+            || (k >= '0' && k <= '9') || k == '-' || k == '_' || k
+            == '.'
+            || k == '~')
+        {
+            t[ZEPHYRUM]  = k;
+            t[I]         = '\0';
+        }
+        alioquin
+        {
+            t[ZEPHYRUM]  = '%';
+            t[I]         = hex[((i8)k >> IV) & 0xF];
+            t[II]        = hex[(i8)k & 0xF];
+            t[III]       = '\0';
+        }
+        chorda_aedificator_appendere_literis(a, t);
+    }
+    redde chorda_aedificator_finire(a);
+}
+
+interior constans character*
+_via (
+               Piscina* p,
+    constans character* forma,
+                chorda  a,
+                chorda  b)
+{
+     ChordaAedificator* aed;
+    constans character* s;
+
+    aed = chorda_aedificator_creare(p, CCLVI);
+    per (s = forma; *s; s++)
+    {
+        si (*s == '%' && s[I] == 'A')
+        {
+            chorda_aedificator_appendere_chorda(aed, a);
+            s++;
+        }
+        alioquin si (*s == '%' && s[I] == 'B')
+        {
+            chorda_aedificator_appendere_chorda(aed, b);
+            s++;
+        }
+        alioquin
+        {
+            character u[II];
+
+            u[ZEPHYRUM]  = *s;
+            u[I]         = '\0';
+            chorda_aedificator_appendere_literis(aed, u);
+        }
+    }
+    redde chorda_ut_cstr(chorda_aedificator_finire(aed), p);
+}
+
+interior b32
+_vocatio_bona (
+    NundinaeAppleResponsum  r,
+                    chorda* causa)
+{
+    si (!r.successus)
+    {
+        *causa = r.causa;
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+b32
+nundinae_apple_signum_fasciculi (
+    NundinaeApple* n,
+           chorda  identificator,
+           chorda  titulus,
+           chorda* id,
+              b32* creatum,
+           chorda* causa,
+          Piscina* p)
+{
+    NundinaeAppleResponsum  r;
+                 JsonValor* a;
+                    chorda  vac;
+
+    vac = chorda_ex_literis("", p);
+    si (creatum)
+    {
+        *creatum = FALSUM;
+    }
+    r = nundinae_apple_vocare(n, HTTP_GET, _via(p,
+        "/v1/bundleIds?filter%5Bidentifier%5D=%A&limit=200",
+        _url_valor(identificator, p), vac), vac, p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    *id = nundinae_apple_signum_invenire(r.corpus, identificator, p);
+    si (id->mensura > ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    a = json_objectum_creare(p);
+    json_objectum_ponere(a, "identifier", json_chorda_creare(p,
+        identificator));
+    json_objectum_ponere(a, "name", json_chorda_creare(p, titulus));
+    json_objectum_ponere(a, "platform", json_chorda_creare_literis(p,
+        "IOS"));
+    r = nundinae_apple_vocare(n, HTTP_POST, "/v1/bundleIds",
+        _corpus_rei("bundleIds", a, NIHIL, p), p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    *id = json_capere_chorda(json_objectum_capere(r.corpus, "data"),
+        "id",
+        vac);
+    si (creatum)
+    {
+        *creatum = VERUM;
+    }
+    redde id->mensura > ZEPHYRUM;
+}
+
+b32
+nundinae_apple_certificata_distributionis (
+    NundinaeApple* n,
+              Xar* exitus,
+           chorda* causa,
+          Piscina* p)
+{
+    NundinaeAppleResponsum r;
+
+    r = nundinae_apple_vocare(n, HTTP_GET,
+        "/v1/certificates?filter%5BcertificateType%5D=DISTRIBUTION"
+        "&limit=200", chorda_ex_literis("", p), p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    redde nundinae_apple_certificata_legere(r.corpus, exitus, p);
+}
+
+b32
+nundinae_apple_certificatum_creare (
+                NundinaeApple* n,
+                       chorda  petitio_der,
+    NundinaeAppleCertificatum* exitus,
+                       chorda* causa,
+                      Piscina* p)
+{
+    NundinaeAppleResponsum  r;
+                 JsonValor* a;
+                 JsonValor* involucrum;
+                 JsonValor* tab;
+                       Xar* unum;
+
+    a = json_objectum_creare(p);
+    json_objectum_ponere(a, "certificateType",
+        json_chorda_creare_literis(p,
+        "DISTRIBUTION"));
+    json_objectum_ponere(a, "csrContent", json_chorda_creare(p,
+        base64_codificare(petitio_der.datum, petitio_der.mensura, p)));
+    r = nundinae_apple_vocare(n, HTTP_POST, "/v1/certificates",
+        _corpus_rei("certificates", a, NIHIL, p), p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    /* responsum unius rei -> forma tabulati pro certificata_legere */
+    tab = json_tabulatum_creare(p);
+    json_tabulatum_addere(tab, json_objectum_capere(r.corpus, "data"));
+    involucrum = json_objectum_creare(p);
+    json_objectum_ponere(involucrum, "data", tab);
+    unum = xar_creare(p, (i32)magnitudo(NundinaeAppleCertificatum));
+    si (   !nundinae_apple_certificata_legere(involucrum, unum, p)
+        || xar_numerus(unum) != I)
+    {
+        *causa = chorda_ex_literis(
+            "nundinae_apple: certificatum creatum sed responsum "
+                "ignotum", p);
+        redde FALSUM;
+    }
+    *exitus = *(NundinaeAppleCertificatum*)xar_obtinere(unum, ZEPHYRUM);
+    redde VERUM;
+}
+
+/* diploma 'id_diplomatis' certificatum 'id_certificati_quaesiti'
+ * continet? */
+interior b32
+_diploma_certificatum_habet (
+    NundinaeApple* n,
+           chorda  id_diplomatis,
+           chorda  id_certificati_quaesiti,
+           chorda* causa,
+          Piscina* p)
+{
+    NundinaeAppleResponsum  r;
+                 JsonValor* data;
+                       i32  i;
+
+    r = nundinae_apple_vocare(n, HTTP_GET, _via(p,
+        "/v1/profiles/%A/certificates?limit=200", id_diplomatis,
+            id_certificati_quaesiti),
+        chorda_ex_literis("", p), p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    data = json_objectum_capere(r.corpus, "data");
+    per (i = ZEPHYRUM; data && i < json_tabulatum_numerus(data); i++)
+    {
+        JsonValor* d;
+
+        d = json_tabulatum_obtinere(data, i);
+        si (chorda_aequalis(json_capere_chorda(d, "id",
+                chorda_ex_literis("", p)), id_certificati_quaesiti))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+b32
+nundinae_apple_diploma (
+    NundinaeApple* n,
+           chorda  id_signi,
+           chorda  id_certificati,
+           chorda  titulus,
+           chorda* contentum,
+              b32* creatum,
+           chorda* causa,
+          Piscina* p)
+{
+    NundinaeAppleResponsum  r;
+                 JsonValor* data;
+                 JsonValor* a;
+                 JsonValor* rel;
+                    chorda  vac;
+                       i32  i;
+
+    vac = chorda_ex_literis("", p);
+    si (creatum)
+    {
+        *creatum = FALSUM;
+    }
+    r = nundinae_apple_vocare(n, HTTP_GET, _via(p,
+        "/v1/bundleIds/%A/profiles?limit=200", id_signi, vac), vac, p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    data = json_objectum_capere(r.corpus, "data");
+    per (i = ZEPHYRUM; data && i < json_tabulatum_numerus(data); i++)
+    {
+        JsonValor* d;
+
+        d = json_tabulatum_obtinere(data, i);
+        a = d ? json_objectum_capere(d, "attributes") : NIHIL;
+        si (   a && chorda_aequalis_literis(json_capere_chorda(a,
+                   "profileType", vac), "IOS_APP_STORE")
+            && chorda_aequalis_literis(json_capere_chorda(a,
+                   "profileState", vac), "ACTIVE")
+            && _diploma_certificatum_habet(n, json_capere_chorda(d,
+                "id",
+                   vac), id_certificati, causa, p))
+        {
+            *contentum = json_capere_chorda(a, "profileContent", vac);
+            redde contentum->mensura > ZEPHYRUM;
+        }
+    }
+    a = json_objectum_creare(p);
+    json_objectum_ponere(a, "name", json_chorda_creare(p, titulus));
+    json_objectum_ponere(a, "profileType", json_chorda_creare_literis(p,
+        "IOS_APP_STORE"));
+    rel = json_objectum_creare(p);
+    json_objectum_ponere(rel, "bundleId", _relatio("bundleIds",
+        id_signi,
+        FALSUM, p));
+    json_objectum_ponere(rel, "certificates", _relatio("certificates",
+        id_certificati, VERUM, p));
+    r = nundinae_apple_vocare(n, HTTP_POST, "/v1/profiles",
+        _corpus_rei("profiles", a, rel, p), p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    *contentum =
+        json_capere_chorda(json_objectum_capere(json_objectum_capere(
+        r.corpus, "data"), "attributes"), "profileContent", vac);
+    si (creatum)
+    {
+        *creatum = VERUM;
+    }
+    redde contentum->mensura > ZEPHYRUM;
+}
+
+b32
+nundinae_apple_applicatio (
+    NundinaeApple* n,
+           chorda  signum,
+           chorda* id,
+           chorda* causa,
+          Piscina* p)
+{
+    NundinaeAppleResponsum  r;
+                 JsonValor* data;
+                    chorda  vac;
+                       i32  i;
+
+    vac = chorda_ex_literis("", p);
+    r = nundinae_apple_vocare(n, HTTP_GET, _via(p,
+        "/v1/apps?filter%5BbundleId%5D=%A&limit=200", _url_valor(signum,
+        p), vac), vac, p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    data = json_objectum_capere(r.corpus, "data");
+    per (i = ZEPHYRUM; data && i < json_tabulatum_numerus(data); i++)
+    {
+        JsonValor* d;
+
+        d = json_tabulatum_obtinere(data, i);
+        si (chorda_aequalis(json_capere_chorda(json_objectum_capere(d,
+                "attributes"), "bundleId", vac), signum))
+        {
+            *id = json_capere_chorda(d, "id", vac);
+            redde VERUM;
+        }
+    }
+    *causa = chorda_concatenare(chorda_concatenare(chorda_ex_literis(
+        "nundinae_apple: applicatio non exstat - crea eam in App Store "
+        "Connect (Apps > + > New App), bundle ID ", p), signum, p),
+        chorda_ex_literis(" (API applicationes creare nequit)", p), p);
+    redde FALSUM;
+}
+
+b32
+nundinae_apple_grex (
+    NundinaeApple* n,
+           chorda  id_applicationis,
+           chorda  titulus,
+           chorda* id,
+              b32* creatum,
+           chorda* causa,
+          Piscina* p)
+{
+    NundinaeAppleResponsum  r;
+                 JsonValor* data;
+                 JsonValor* a;
+                 JsonValor* rel;
+                    chorda  vac;
+                       i32  i;
+
+    vac = chorda_ex_literis("", p);
+    si (creatum)
+    {
+        *creatum = FALSUM;
+    }
+    r = nundinae_apple_vocare(n, HTTP_GET, _via(p,
+        "/v1/apps/%A/betaGroups?limit=200", id_applicationis, vac), vac,
+        p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    data = json_objectum_capere(r.corpus, "data");
+    per (i = ZEPHYRUM; data && i < json_tabulatum_numerus(data); i++)
+    {
+        JsonValor* d;
+
+        d = json_tabulatum_obtinere(data, i);
+        a = json_objectum_capere(d, "attributes");
+        si (   chorda_aequalis(json_capere_chorda(a, "name", vac),
+            titulus)
+            && json_ad_boolean(json_objectum_capere(a,
+                "isInternalGroup")))
+        {
+            *id = json_capere_chorda(d, "id", vac);
+            redde VERUM;
+        }
+    }
+    a = json_objectum_creare(p);
+    json_objectum_ponere(a, "name", json_chorda_creare(p, titulus));
+    json_objectum_ponere(a, "isInternalGroup", json_boolean_creare(p,
+        VERUM));
+    rel = json_objectum_creare(p);
+    json_objectum_ponere(rel, "app", _relatio("apps", id_applicationis,
+        FALSUM, p));
+    r = nundinae_apple_vocare(n, HTTP_POST, "/v1/betaGroups",
+        _corpus_rei("betaGroups", a, rel, p), p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    *id = json_capere_chorda(json_objectum_capere(r.corpus, "data"),
+        "id",
+        vac);
+    si (creatum)
+    {
+        *creatum = VERUM;
+    }
+    redde id->mensura > ZEPHYRUM;
+}
+
+b32
+nundinae_apple_tester (
+    NundinaeApple* n,
+           chorda  id_gregis,
+           chorda  email,
+              b32* creatum,
+           chorda* causa,
+          Piscina* p)
+{
+    NundinaeAppleResponsum  r;
+                 JsonValor* data;
+                 JsonValor* a;
+                 JsonValor* rel;
+                    chorda  vac;
+                    chorda  id_testeris;
+                       i32  i;
+
+    vac = chorda_ex_literis("", p);
+    si (creatum)
+    {
+        *creatum = FALSUM;
+    }
+    /* iam in grege? */
+    r = nundinae_apple_vocare(n, HTTP_GET, _via(p,
+        "/v1/betaGroups/%A/betaTesters?limit=200", id_gregis, vac), vac,
+        p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    data = json_objectum_capere(r.corpus, "data");
+    per (i = ZEPHYRUM; data && i < json_tabulatum_numerus(data); i++)
+    {
+        a = json_objectum_capere(json_tabulatum_obtinere(data, i),
+            "attributes");
+        si (chorda_aequalis(json_capere_chorda(a, "email", vac), email))
+        {
+            redde VERUM;
+        }
+    }
+    /* tester iam notus turmae -> relatio ad gregem */
+    r = nundinae_apple_vocare(n, HTTP_GET, _via(p,
+        "/v1/betaTesters?filter%5Bemail%5D=%A&limit=200",
+            _url_valor(email,
+        p), vac), vac, p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    id_testeris = json_capere_chorda(json_via(r.corpus, "data.0"), "id",
+        vac);
+    si (id_testeris.mensura > ZEPHYRUM)
+    {
+        JsonValor* radix;
+        JsonValor* tab;
+        JsonValor* res;
+
+        res = json_objectum_creare(p);
+        json_objectum_ponere(res, "type", json_chorda_creare_literis(p,
+            "betaTesters"));
+        json_objectum_ponere(res, "id", json_chorda_creare(p,
+            id_testeris));
+        tab = json_tabulatum_creare(p);
+        json_tabulatum_addere(tab, res);
+        radix = json_objectum_creare(p);
+        json_objectum_ponere(radix, "data", tab);
+        r = nundinae_apple_vocare(n, HTTP_POST, _via(p,
+            "/v1/betaGroups/%A/relationships/betaTesters", id_gregis,
+                vac),
+            json_scribere(radix, p), p);
+        si (r.successus)
+        {
+            si (creatum)
+            {
+                *creatum = VERUM;
+            }
+            redde VERUM;
+        }
+        /* 409 (vivum 2026-10-24): tester alterius applicationis
+         * gregi novo assignari nequit - via altera: tester creatus
+         * cum grege */
+        si (r.status != CDIX)
+        {
+            *causa = r.causa;
+            redde FALSUM;
+        }
+    }
+    a = json_objectum_creare(p);
+    json_objectum_ponere(a, "email", json_chorda_creare(p, email));
+    rel = json_objectum_creare(p);
+    json_objectum_ponere(rel, "betaGroups", _relatio("betaGroups",
+        id_gregis, VERUM, p));
+    r = nundinae_apple_vocare(n, HTTP_POST, "/v1/betaTesters",
+        _corpus_rei("betaTesters", a, rel, p), p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    si (creatum)
+    {
+        *creatum = VERUM;
     }
     redde VERUM;
 }

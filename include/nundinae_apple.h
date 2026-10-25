@@ -185,4 +185,166 @@ nundinae_apple_applicationes (
            chorda* causa,
           Piscina* p);
 
+
+/* ==================================================
+ * Identitas distributionis (T2): clavis RSA, petitio, certificata
+ * ================================================== */
+
+/* clavis RSA in octetis (sine typis BearSSL in capite: caput eius ANTE
+ * latina.h staret). SECRETUM: primi, exponentes, coefficiens */
+nomen structura {
+    i32  bits;
+     i8* modulus;
+    i32  modulus_mensura;
+     i8* exponens;              /* publicus (65537) */
+    i32  exponens_mensura;
+     i8* primus_p;
+    i32  primus_p_mensura;
+     i8* primus_q;
+    i32  primus_q_mensura;
+     i8* exponens_p;            /* d mod (p - 1) */
+    i32  exponens_p_mensura;
+     i8* exponens_q;            /* d mod (q - 1) */
+    i32  exponens_q_mensura;
+     i8* coefficiens;           /* q^-1 mod p */
+    i32  coefficiens_mensura;
+} NundinaeAppleClavisRsa;
+
+nomen structura {
+    chorda id;
+    chorda numerus_serialis;
+    chorda titulus;             /* displayName */
+    chorda exspirat;            /* expirationDate */
+    chorda contentum;           /* certificateContent (base64 DER) */
+} NundinaeAppleCertificatum;
+
+/* RSA MMXLVIII bits, e = 65537, fortuita systematis. FALSUM si fors aut
+ * memoria deficit */
+b32
+nundinae_apple_clavem_rsa_generare (
+    NundinaeAppleClavisRsa* k,
+                   Piscina* p);
+
+/* PKCS#1 PEM ("-----BEGIN RSA PRIVATE KEY-----", lineae LXIV) - forma
+ * quam 'security import -f openssl -t priv' legit; vacua si deficit */
+chorda
+nundinae_apple_clavem_rsa_textum (
+    constans NundinaeAppleClavisRsa* k,
+                            Piscina* p);
+
+/* omnes partes zephyrat et NIHIL ponit */
+vacuum
+nundinae_apple_clavem_rsa_delere (
+    NundinaeAppleClavisRsa* k);
+
+/* PKCS#10 DER: subiectum CN=<nomen_commune>, clavis publica RSA,
+ * signatura sha256WithRSAEncryption; vacua si deficit */
+chorda
+nundinae_apple_petitionem_facere (
+    constans NundinaeAppleClavisRsa* k,
+                             chorda  nomen_commune,
+                            Piscina* p);
+
+/* responsum GET /v1/certificates -> Xar de NundinaeAppleCertificatum
+ * (solum certificateType DISTRIBUTION) */
+b32
+nundinae_apple_certificata_legere (
+    JsonValor* responsum,
+          Xar* exitus,
+      Piscina* p);
+
+/* responsum GET /v1/bundleIds -> id cuius identifier EXACTE congruit
+ * (filtrum Apple praefixum quoque reddit), aut vacua */
+chorda
+nundinae_apple_signum_invenire (
+     JsonValor* responsum,
+        chorda  identificator,
+       Piscina* p);
+
+/* SHA-1 octetorum ut XL litterae hex MAIUSCULAE (security find-identity
+ * eas imprimit) */
+chorda
+nundinae_apple_digestum_sha1 (
+     chorda  datum,
+    Piscina* p);
+
+
+/* ==================================================
+ * Res rationis (T2; rete): quaere, deinde crea si deest. NUMQUAM delet.
+ * creatum (NIHIL licet) = VERUM si hic creatum est.
+ * ================================================== */
+
+/* signum fasciculi (bundle ID) IOS */
+b32
+nundinae_apple_signum_fasciculi (
+    NundinaeApple* n,
+           chorda  identificator,
+           chorda  titulus,
+           chorda* id,
+              b32* creatum,
+           chorda* causa,
+          Piscina* p);
+
+/* certificata DISTRIBUTION turmae -> Xar de
+ * NundinaeAppleCertificatum */
+b32
+nundinae_apple_certificata_distributionis (
+    NundinaeApple* n,
+              Xar* exitus,
+           chorda* causa,
+          Piscina* p);
+
+/* certificatum DISTRIBUTION ex petitione PKCS#10 DER */
+b32
+nundinae_apple_certificatum_creare (
+                NundinaeApple* n,
+                       chorda  petitio_der,
+    NundinaeAppleCertificatum* exitus,
+                       chorda* causa,
+                      Piscina* p);
+
+/* diploma IOS_APP_STORE (ACTIVE) signi cum certificato; contentum =
+ * profileContent (base64 .mobileprovision) */
+b32
+nundinae_apple_diploma (
+    NundinaeApple* n,
+           chorda  id_signi,
+           chorda  id_certificati,
+           chorda  titulus,
+           chorda* contentum,
+              b32* creatum,
+           chorda* causa,
+          Piscina* p);
+
+/* applicatio per signum (solum quaeritur - API eam creare nequit);
+ * absens -> FALSUM, causa Franum ad paginam mittit */
+b32
+nundinae_apple_applicatio (
+    NundinaeApple* n,
+           chorda  signum,
+           chorda* id,
+           chorda* causa,
+          Piscina* p);
+
+/* grex internus TestFlight applicationis per titulum */
+b32
+nundinae_apple_grex (
+    NundinaeApple* n,
+           chorda  id_applicationis,
+           chorda  titulus,
+           chorda* id,
+              b32* creatum,
+           chorda* causa,
+          Piscina* p);
+
+/* tester per email in grege (usor turmae pro grege interno) */
+b32
+nundinae_apple_tester (
+    NundinaeApple* n,
+           chorda  id_gregis,
+           chorda  email,
+              b32* creatum,
+           chorda* causa,
+          Piscina* p);
+
 #endif /* NUNDINAE_APPLE_H */

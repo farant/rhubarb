@@ -12,6 +12,7 @@
 #include "base64.h"
 #include "json.h"
 #include "filum.h"
+#include "xar.h"
 #include "credo.h"
 #include "nundinae_apple.h"
 #include <stdio.h>
@@ -30,27 +31,30 @@ _clavem_facere (
              Piscina* p)
 {
     br_hmac_drbg_context  fors;
-       br_ec_private_key  sk;
+       br_ec_private_key  clavis_privata;
            unsigned char  sk_capsa[BR_EC_KBUF_PRIV_MAX_SIZE];
       constans character* semen = "nundinae_apple probatio semen";
                   size_t  n;
                       i8* der;
 
     br_hmac_drbg_init(&fors, &br_sha256_vtable, semen, strlen(semen));
-    si (br_ec_keygen(&fors.vtable, br_ec_get_default(), &sk, sk_capsa,
+    si (br_ec_keygen(&fors.vtable, br_ec_get_default(), &clavis_privata,
+        sk_capsa,
             BR_EC_secp256r1) == ZEPHYRUM)
     {
         redde NIHIL;
     }
     si (br_ec_compute_pub(br_ec_get_default(), clavis_publica,
-        capsa_publica, &sk)
+        capsa_publica, &clavis_privata)
         == ZEPHYRUM)
     {
         redde NIHIL;
     }
-    n    = br_encode_ec_pkcs8_der(NIHIL, &sk, clavis_publica);
+    n    = br_encode_ec_pkcs8_der(NIHIL, &clavis_privata,
+        clavis_publica);
     der  = (i8*)piscina_allocare(p, (memoriae_index)n);
-    si (!der || br_encode_ec_pkcs8_der(der, &sk, clavis_publica) != n)
+    si (   !der || br_encode_ec_pkcs8_der(der, &clavis_privata,
+        clavis_publica) != n)
     {
         redde NIHIL;
     }
@@ -383,6 +387,175 @@ _sectio_clavis (
     (vacuum)filum_delere(via);
 }
 
+/* TLV DER ad 'd': longitudo capitis (tag + longitudo) et contenti */
+interior b32
+_elementum_der (
+    constans i8* d,
+            i32  n,
+            i32* caput,
+            i32* longitudo)
+{
+    i32 k;
+    i32 i;
+
+    si (n < II)
+    {
+        redde FALSUM;
+    }
+    si ((d[I] & 0x80) == ZEPHYRUM)
+    {
+        *caput      = II;
+        *longitudo  = (i32)d[I];
+        redde *caput + *longitudo <= n;
+    }
+    k = (i32)(d[I] & 0x7F);
+    si (k < I || k > III || II + k > n)
+    {
+        redde FALSUM;
+    }
+    *longitudo = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < k; i++)
+    {
+        *longitudo = (*longitudo << VIII) | (i32)d[II + i];
+    }
+    *caput = II + k;
+    redde *caput + *longitudo <= n;
+}
+
+interior b32
+_continet_octetos (
+    constans i8* d,
+            i32  n,
+    constans i8* acus,
+            i32  m)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i + m <= n; i++)
+    {
+        si (memcmp(d + i, acus, (size_t)m) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* C2 T2: clavis RSA, petitio PKCS#10 verificata, PEM, deletio */
+interior vacuum
+_sectio_petitio (
+    CredoContextus* c)
+{
+                   Piscina* p;
+    NundinaeAppleClavisRsa  k;
+                    chorda  petitio_der;
+                    chorda  textus_clavis;
+         br_rsa_public_key  publica;
+         br_sha256_context  h;
+             unsigned char  digestum[XXXII];
+             unsigned char  receptum[XXXII];
+                       i32  caput;
+                       i32  longitudo;
+                       i32  caput_informationis;
+                       i32  longitudo_informationis;
+                       i32  locus;
+    hic_manens constans i8  algorithmus_signi[] = { 0x2A, 0x86, 0x48,
+        0x86, 0xF7,
+        0x0D, 0x01, 0x01, 0x0B };
+
+    p = c->piscina;
+    CREDO_GRADUS("clavis RSA MMXLVIII");
+    CREDO_VERUM(nundinae_apple_clavem_rsa_generare(&k, p));
+    CREDO_AEQUALIS_I32(k.bits, MMXLVIII);
+    CREDO_AEQUALIS_I32(k.modulus_mensura, CCLVI);
+    CREDO_GRADUS("petitio: SEQUENCE { CRI, algorithmus, signatura }");
+    petitio_der = nundinae_apple_petitionem_facere(&k,
+        chorda_ex_literis(
+        "rhubarb probatio", p), p);
+    CREDO_VERUM(petitio_der.mensura > CCC && petitio_der.datum[ZEPHYRUM]
+        == 0x30);
+    CREDO_VERUM(_elementum_der(petitio_der.datum, petitio_der.mensura,
+        &caput, &longitudo)
+        && caput + longitudo == petitio_der.mensura);
+    locus = caput;
+    CREDO_VERUM(_elementum_der(petitio_der.datum + locus,
+        petitio_der.mensura - locus, &caput_informationis,
+        &longitudo_informationis) && petitio_der.datum[locus] == 0x30);
+    CREDO_GRADUS("CRI: versio 0, CN, modulus clavis");
+    CREDO_VERUM(petitio_der.datum[locus + caput_informationis] == 0x02
+        && petitio_der.datum[locus + caput_informationis + I] == 0x01
+        && petitio_der.datum[locus + caput_informationis + II] == 0x00);
+    CREDO_VERUM(_continet_octetos(petitio_der.datum + locus,
+        caput_informationis + longitudo_informationis,
+            (constans i8*)"rhubarb probatio",
+        XVI));
+    CREDO_VERUM(_continet_octetos(petitio_der.datum + locus,
+        caput_informationis + longitudo_informationis, k.modulus,
+            k.modulus_mensura));
+    CREDO_VERUM(_continet_octetos(petitio_der.datum,
+        petitio_der.mensura, algorithmus_signi,
+        IX));
+    CREDO_GRADUS("signatura PKCS#1 SHA-256 super CRI verificatur");
+    br_sha256_init(&h);
+    br_sha256_update(&h, petitio_der.datum + locus,
+        (size_t)(caput_informationis + longitudo_informationis));
+    br_sha256_out(&h, digestum);
+    publica.n     = k.modulus;
+    publica.nlen  = (size_t)k.modulus_mensura;
+    publica.e     = k.exponens;
+    publica.elen  = (size_t)k.exponens_mensura;
+    CREDO_VERUM(br_rsa_pkcs1_vrfy_get_default()(petitio_der.datum
+        + petitio_der.mensura
+        - CCLVI, CCLVI, BR_HASH_OID_SHA256, XXXII, &publica, receptum)
+        == I);
+    CREDO_VERUM(memcmp(digestum, receptum, XXXII) == ZEPHYRUM);
+    CREDO_GRADUS("PEM PKCS#1");
+    textus_clavis = nundinae_apple_clavem_rsa_textum(&k, p);
+    CREDO_VERUM(chorda_incipit(textus_clavis, chorda_ex_literis(
+        "-----BEGIN RSA PRIVATE KEY-----\n", p)));
+    CREDO_CHORDA_CONTINET(textus_clavis, chorda_ex_literis(
+        "\n-----END RSA PRIVATE KEY-----\n", p));
+    CREDO_GRADUS("deletio zephyrat");
+    nundinae_apple_clavem_rsa_delere(&k);
+    CREDO_VERUM(k.primus_p == NIHIL && k.primus_p_mensura == ZEPHYRUM);
+    CREDO_VERUM(k.modulus == NIHIL);
+}
+
+interior vacuum
+_sectio_responsa (
+    CredoContextus* c)
+{
+                    Piscina* p;
+                        Xar* certificata;
+  NundinaeAppleCertificatum* cert;
+
+    p = c->piscina;
+    CREDO_GRADUS("certificata: DISTRIBUTION sola");
+    certificata = xar_creare(p,
+        (i32)magnitudo(NundinaeAppleCertificatum));
+    CREDO_VERUM(nundinae_apple_certificata_legere(_fixum(
+        FIXA "certificata.json", p), certificata, p));
+    CREDO_AEQUALIS_I32(xar_numerus(certificata), II);
+    cert = (NundinaeAppleCertificatum*)xar_obtinere(certificata,
+        ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(cert->id, "CERT1");
+    CREDO_CHORDA_AEQUALIS_LITERIS(cert->contentum, "MIIBAA==");
+    cert = (NundinaeAppleCertificatum*)xar_obtinere(certificata, I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(cert->id, "CERT3");
+    CREDO_CHORDA_AEQUALIS_LITERIS(cert->titulus, "Xcode Cloud");
+    CREDO_GRADUS("signum fasciculi: congruentia exacta");
+    CREDO_CHORDA_AEQUALIS_LITERIS(nundinae_apple_signum_invenire(_fixum(
+        FIXA "signa.json", p), chorda_ex_literis("earth.golden.pictor",
+        p), p), "BID7");
+    CREDO_AEQUALIS_I32(nundinae_apple_signum_invenire(_fixum(
+        FIXA "signa.json", p), chorda_ex_literis("earth.golden.scriba",
+        p), p).mensura, ZEPHYRUM);
+    CREDO_GRADUS("SHA-1 hex maiusculae");
+    CREDO_CHORDA_AEQUALIS_LITERIS(nundinae_apple_digestum_sha1(
+        chorda_ex_literis("abc", p), p),
+        "A9993E364706816ABA3E25717850C26C9CD0D89D");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "tessera", _sectio_tessera, NIHIL, NIHIL, NIHIL, NIHIL },
     { "renovatio", _sectio_renovatio, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -393,6 +566,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "configuratio", _sectio_configuratio, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "clavis", _sectio_clavis, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "petitio", _sectio_petitio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "responsa", _sectio_responsa, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
