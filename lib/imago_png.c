@@ -131,10 +131,12 @@ _pars_scribere (
  * Functiones Publicae
  * ============================================================ */
 
-PngFructus
-imago_png_codificare (
+/* canales IV = RGBA (genus VI), III = RGB (genus II, alpha omissus) */
+interior PngFructus
+_codificare (
     constans Imago* imago,
-           Piscina* piscina)
+           Piscina* piscina,
+               i32  canales)
 {
         PngFructus  fructus;
     FlaturaFructus  compressa;
@@ -175,7 +177,7 @@ imago_png_codificare (
     }
 
     /* Versus quisque byte filtri praefixum habet */
-    versus_mensura = (i32)I + imago->latitudo * (i32)IV;
+    versus_mensura = (i32)I + imago->latitudo * canales;
     crudum_mensura = versus_mensura * imago->altitudo;
 
     crudum = (i8*)piscina_allocare(piscina,
@@ -194,9 +196,26 @@ imago_png_codificare (
         versus     = crudum + y * versus_mensura;
         versus[0]  = (i8)ZEPHYRUM;   /* filtrum NULLUM */
 
-        memcpy(versus + I,
-               imago->pixela + y * imago->latitudo * (i32)IV,
-               (size_t)(imago->latitudo * (i32)IV));
+        si (canales == (i32)IV)
+        {
+            memcpy(versus + I,
+                   imago->pixela + y * imago->latitudo * (i32)IV,
+                   (size_t)(imago->latitudo * (i32)IV));
+        }
+        alioquin
+        {
+            i32 x;
+
+            per (x = ZEPHYRUM; x < imago->latitudo; x++)
+            {
+                constans i8* s = imago->pixela
+                    + (y * imago->latitudo + x) * (i32)IV;
+
+                versus[I + x * III]       = s[ZEPHYRUM];
+                versus[I + x * III + I]   = s[I];
+                versus[I + x * III + II]  = s[II];
+            }
+        }
     }
 
     /* Adler super datum NON compressum */
@@ -229,7 +248,7 @@ imago_png_codificare (
     _be32_scribere(ihdr,      imago->latitudo);
     _be32_scribere(ihdr + IV, imago->altitudo);
     ihdr[VIII]  = (i8)VIII;       /* profunditas bitorum */
-    ihdr[IX]    = (i8)VI;         /* genus coloris: RGBA */
+    ihdr[IX]    = (i8)(canales == (i32)IV ? VI : II);  /* RGBA | RGB */
     ihdr[X]     = (i8)ZEPHYRUM;   /* modus compressionis */
     ihdr[XI]    = (i8)ZEPHYRUM;   /* modus filtrandi */
     ihdr[XII]   = (i8)ZEPHYRUM;   /* sine intertextura */
@@ -270,16 +289,30 @@ imago_png_codificare (
 }
 
 PngFructus
-imago_png_scribere (
-                        constans Imago* imago,
-                    constans character* via,
-                               Piscina* piscina)
+imago_png_codificare (
+    constans Imago* imago,
+           Piscina* piscina)
 {
-    PngFructus fructus;
+    redde _codificare(imago, piscina, (i32)IV);
+}
+
+PngFructus
+imago_png_codificare_rgb (
+    constans Imago* imago,
+           Piscina* piscina)
+{
+    redde _codificare(imago, piscina, (i32)III);
+}
+
+interior PngFructus
+_scribere (
+                 PngFructus  fructus,
+         constans character* via,
+                    Piscina* piscina)
+{
     FILE*      plagula;
     size_t     scripta;
 
-    fructus = imago_png_codificare(imago, piscina);
     si (!fructus.successus)
     {
         redde fructus;
@@ -313,4 +346,23 @@ imago_png_scribere (
     }
 
     redde fructus;
+}
+
+PngFructus
+imago_png_scribere (
+                        constans Imago* imago,
+                    constans character* via,
+                               Piscina* piscina)
+{
+    redde _scribere(imago_png_codificare(imago, piscina), via, piscina);
+}
+
+PngFructus
+imago_png_scribere_rgb (
+                        constans Imago* imago,
+                    constans character* via,
+                               Piscina* piscina)
+{
+    redde _scribere(imago_png_codificare_rgb(imago, piscina), via,
+        piscina);
 }

@@ -515,6 +515,67 @@ _sectio_decima (
     }
 }
 
+/* C2 T3: RGB sine alpha (icon App Store) - genus coloris II, colores
+ * servati, alpha decodificata CCLV ubique */
+interior vacuum
+_sectio_rgb (
+    CredoContextus* c)
+{
+         Piscina* p;
+           Imago  im;
+      PngFructus  f;
+    ImagoFructus  r;
+             i32  i;
+             b32  bona;
+
+    p            = c->piscina;
+    im.latitudo  = III;
+    im.altitudo  = II;
+    im.pixela    = (i8*)piscina_allocare(p, III * II * IV);
+    CREDO_NON_NIHIL(im.pixela);
+    si (!im.pixela)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < VI; i++)
+    {
+        im.pixela[i * IV]        = (i8)(i * XL);
+        im.pixela[i * IV + I]    = (i8)(CCLV - i * XX);
+        im.pixela[i * IV + II]   = (i8)(i * VII);
+        im.pixela[i * IV + III]  = (i8)(i == II ? ZEPHYRUM : CCLV);
+    }
+    f = imago_png_codificare_rgb(&im, p);
+    CREDO_VERUM(f.successus);
+    si (!f.successus)
+    {
+        redde;
+    }
+    CREDO_GRADUS("IHDR: genus coloris II");
+    CREDO_AEQUALIS_I32((i32)f.datum[XXV], II);
+    CREDO_AEQUALIS_I32((i32)imago_png_codificare(&im, p).datum[XXV],
+        VI);
+    CREDO_GRADUS("decodificata: colores idem, alpha CCLV");
+    r = imago_caricare_ex_memoria(f.datum, f.mensura, p);
+    CREDO_VERUM(r.successus && r.imago.latitudo == III
+        && r.imago.altitudo == II);
+    si (!r.successus)
+    {
+        redde;
+    }
+    bona = VERUM;
+    per (i = ZEPHYRUM; i < VI; i++)
+    {
+        si (   r.imago.pixela[i * IV]       != im.pixela[i * IV]
+            || r.imago.pixela[i * IV + I]   != im.pixela[i * IV + I]
+            || r.imago.pixela[i * IV + II]  != im.pixela[i * IV + II]
+            || r.imago.pixela[i * IV + III] != (i8)CCLV)
+        {
+            bona = FALSUM;
+        }
+    }
+    CREDO_VERUM(bona);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I. Signum et IHDR", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "II. Circuitus: VII x V", _sectio_secunda, NIHIL, NIHIL, NIHIL,
@@ -524,6 +585,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "V. Imago LXIV x XLVIII", _sectio_quinta, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "VI. Determinatio", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "C2: RGB sine alpha", _sectio_rgb, NIHIL, NIHIL, NIHIL, NIHIL },
     { "VII. Culpae", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "VIII. Plagula", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
     { "IX. Mensurae sine decodificatione", _sectio_nona, NIHIL, NIHIL,

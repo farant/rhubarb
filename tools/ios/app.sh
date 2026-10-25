@@ -119,6 +119,38 @@ sed -e "s/@TITULUS@/$TITULUS/g" -e "s/@INVOLUCRUM@/$INVOLUCRUM/g" \
     -e "s/@PLATFORMA@/$PLATFORMA/g" tools/ios/Info.forma.plist > "$APP/Info.plist"
 plutil -lint "$APP/Info.plist" > /dev/null || fractum "Info.plist invalidum"
 printf 'APPL????' > "$APP/PkgInfo"
+# icon (testa-ios C2 T3): apps/<app>/icon.png (quadratum, latus MXXIV
+# dividens) -> MXXIV RGB sine alpha (icones_amplificare) -> catalogus
+# AppIcon -> Assets.car per actool (Apple; D6) -> claves in Info.plist
+ICON="$(dirname "$FONS")/icon.png"
+if [ -f "$ICON" ]; then
+    if ! bin/icones_instrumentum 2>&1 | grep -q amplificare; then
+        ./compile_tools.sh icones_instrumentum > "$D/icones.log" 2>&1 \
+            || { tail -5 "$D/icones.log" >&2; fractum "icones_instrumentum aedificari nequit"; }
+    fi
+    CATALOGUS="$D/Assets.xcassets"
+    mkdir -p "$CATALOGUS/AppIcon.appiconset" || apparatus "$CATALOGUS creari nequit"
+    bin/icones_instrumentum -amplificare "$ICON" 1024 \
+        "$CATALOGUS/AppIcon.appiconset/icon_1024.png" > "$D/icon.log" 2>&1 \
+        || { cat "$D/icon.log" >&2; fractum "icon $ICON (quadratum, latus 1024 dividens)"; }
+    printf '%s\n' '{"info":{"author":"rhubarb","version":1}}' > "$CATALOGUS/Contents.json"
+    printf '%s\n' '{"images":[{"filename":"icon_1024.png","idiom":"universal","platform":"ios","size":"1024x1024"}],"info":{"author":"rhubarb","version":1}}' \
+        > "$CATALOGUS/AppIcon.appiconset/Contents.json"
+    xcrun actool "$CATALOGUS" --compile "$APP" --platform "$SDK" \
+        --minimum-deployment-target 17.0 --app-icon AppIcon --target-device iphone \
+        --output-partial-info-plist "$D/icon_partialis.plist" > "$D/actool.log" 2>&1 \
+        || { tail -20 "$D/actool.log" >&2; fractum "actool"; }
+    [ -f "$APP/Assets.car" ] || { tail -20 "$D/actool.log" >&2; fractum "Assets.car deest post actool"; }
+    /usr/libexec/PlistBuddy -c "Merge $D/icon_partialis.plist" "$APP/Info.plist" > /dev/null \
+        || fractum "claves iconis in Info.plist misceri nequeunt"
+    # CFBundleIconName etiam in summo (validatio Apple ITMS-90713; Xcode
+    # utrumque ponit) - actool eum solum in CFBundleIcons ponit
+    /usr/libexec/PlistBuddy -c "Add :CFBundleIconName string AppIcon" \
+        "$APP/Info.plist" > /dev/null 2>&1 \
+        || /usr/libexec/PlistBuddy -c "Set :CFBundleIconName AppIcon" \
+               "$APP/Info.plist" > /dev/null \
+        || fractum "CFBundleIconName in Info.plist poni nequit"
+fi
 if [ "$SCOPUS" = tabula ]; then
     # D7: profilum inclusum + iura ex eo (turma.involucrum, debugging)
     cp "$IOS_PROFILUM" "$APP/embedded.mobileprovision" \
