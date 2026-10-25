@@ -1309,7 +1309,9 @@ nomen structura {
                     f32  summa;
 } CampusInstrumenti;
 
-hic_manens constans CampusInstrumenti CAMPI[XX] = {
+#define CAMPI_NUMERUS XXIII
+
+hic_manens constans CampusInstrumenti CAMPI[CAMPI_NUMERUS] = {
     { "officium",    0.0f, 1.0f     },
     { "impetus",     0.0f, 60.0f    },
     { "lapsus",      0.0f, 60.0f    },
@@ -1329,7 +1331,10 @@ hic_manens constans CampusInstrumenti CAMPI[XX] = {
     { "flatus",      0.0f, 1.0f     },
     { "resonans",    0.0f, 20000.0f },
     { "acumen",      0.0f, 20.0f    },
-    { "motus",     -48.0f, 48.0f    }
+    { "motus",     -48.0f, 48.0f    },
+    { "unisonus",    1.0f, 7.0f     },
+    { "dispersio",   0.0f, 100.0f   },
+    { "mora",        0.0f, 10.0f    }   /* vibrati */
 };
 
 hic_manens constans character* VOCALES[V] = {
@@ -1345,7 +1350,7 @@ _campus (
     TibiaParametra* p,
                i32  k)
 {
-    f32* campi[XX];
+    f32* campi[CAMPI_NUMERUS];
 
     campi[0]   = &p->officium;
     campi[1]   = &p->involucrum.impetus;
@@ -1367,6 +1372,9 @@ _campus (
     campi[17]  = &p->resonans;
     campi[18]  = &p->acumen;
     campi[19]  = &p->motus;
+    campi[20]  = &p->unisonus;
+    campi[21]  = &p->dispersio;
+    campi[22]  = &p->mora_vibrati;
     redde campi[k];
 }
 
@@ -1613,14 +1621,14 @@ _instrumentum_legere (
             }
             perge;
         }
-        per (k = ZEPHYRUM; k < XX; k++)
+        per (k = ZEPHYRUM; k < CAMPI_NUMERUS; k++)
         {
             si (chorda_aequalis_literis(*t->titulus, CAMPI[k].titulus))
             {
                 frange;
             }
         }
-        si (k == XX)
+        si (k == CAMPI_NUMERUS)
         {
             redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
                 "instrumentum: attributum ignotum");

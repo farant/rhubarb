@@ -243,3 +243,10 @@ ramp, at the SAME position only a ramp after a step (start p, then crescendo - l
 tempo clivus).
 
 partitura: "dynamica mf", "dynamica m ff usque 4".
+
+## 2026-10-24 - instrument attributes unisonus, dispersio, mora (desideratum ...J8Q9H)
+
+CampusInstrumenti grew to CAMPI_NUMERUS = 23 (the table size and the two loops used the
+literal XX before - now one constant): unisonus 1..7, dispersio 0..100 cents, mora 0..10 s
+(-> TibiaParametra.mora_vibrati). The house instrumentarium has 11 entries now (tests that
+counted V updated).

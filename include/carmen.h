@@ -89,7 +89,9 @@
  *                 lapsus, tenor, remissio, vibratus, celeritas, gravia,
  *                 amplitudo, decrementum, claritas, ratio, index,
  *                 partiales="r:a:d ...", vocalis (a|e|i|o|u aut 0..4),
- *                 flatus, resonans, acumen, motus (-48..48);
+ *                 flatus, resonans, acumen, motus (-48..48),
+ *                 unisonus (1..7), dispersio (centesimae 0..100),
+ *                 mora (vibrati, secundae);
  *                 ambitus="N..M" (MIDI, censurae). Ordo quaerendi:
  *                 carminis, libri, instrumentarii (instrumentarium.stml
  *                 infixus, carmina_legere), praeparata - titulus
