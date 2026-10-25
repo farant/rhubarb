@@ -3803,3 +3803,25 @@ bin/fabrica is stateful (first call prints 'ante', later ones 'post'), and the n
 tier, so the commit passed; found while running the suites by hand for the next change. Fixed in the
 fake (`-vestigium` answers nothing). Habit: when a change adds a NEW call to bin/fabrica from
 pythonica, run ./pythonica/probare.sh (both halves) before committing - fakes intercept every call.
+
+## 2026-10-25 — fusio red: iudicium-fumus (ancestor directories) + a freeze slip
+
+fusio_probare after merging main: 51/53. iudicium-fumus: the fake judge gate porta_x runs
+bin/compilator in a fresh tree; compilator creates build/aedilis/obiecta/... via
+filum_directorium_creare_cum_parentibus, which notes S for each new directory - 'build/aedilis' and
+'build/aedilis/obiecta' are ANCESTORS of the store (fabricae_thesauri_partes), not inside it, so
+since b99fdc82 (S lines judged for iudicium actions) the gate was red; it was deferred to the merge
+tier, so no commit noticed. Fix: `_antecessor_permissus` - an S line naming a directory that is an
+ancestor of an allowed location (the action's vestigia, its exitus, the store roots) is creating the
+path there, not a foreign write; deleting such a directory hides nothing (its contents' deletions
+are their own S lines). '/' boundary kept ('build/a' is not an ancestor of build/a.db). Snapshots
+record no directories, so this only touches trace lines.
+Test: probatio_fabrica_gradus 'debita' Vc (build, build/aedilis, build/aedilis/obiecta allowed;
+build/aliud and the boundary case still FRACTUM). Plants (rule not called, '/' boundary dropped,
+store roots dropped) red.
+
+The other red, oraculum-silvae, was mine and not a code fault: I started editing
+lib/fabrica_sanare.c in the live tree WHILE fusio ran (03:03-03:05Z) - the oracle read the edited
+file (87083 vs 89086 bytes). instrumenta (03:04-03:07Z) overlapped too and passed against the edited
+file. Both read lib/fabrica_sanare.c, so the fix commit owes them again and the next fusio reruns
+them on committed code. Freeze rule: drafts go to the scratchpad as patches while ANY gates run.

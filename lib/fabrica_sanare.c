@@ -1667,6 +1667,72 @@ _scripturas_notatas (
     redde viae;
 }
 
+/* 'via' directorium MAIUS loci 'locus' (locus = via + '/' + ...)? */
+interior b32
+_via_maior (
+       chorda via,
+       chorda locus)
+{
+    redde via.mensura > ZEPHYRUM && locus.mensura > via.mensura
+        && locus.datum[via.mensura] == '/'
+        && memcmp(locus.datum, via.datum, (size_t)via.mensura)
+            == ZEPHYRUM;
+}
+
+/* idem contra litteras C (thesaurus: partes constantes) */
+interior b32
+_via_maior_literis (
+                 chorda  via,
+     constans character* locus)
+{
+    size_t longitudo = strlen(locus);
+
+    redde via.mensura > ZEPHYRUM && longitudo > (size_t)via.mensura
+        && locus[via.mensura] == '/'
+        && memcmp(locus, via.datum, (size_t)via.mensura) == ZEPHYRUM;
+}
+
+/* ANTECESSOR PERMISSUS (iudicium-fumus, 2026-10-24): linea S directorii
+ * quod maius est loco ubi actio scribere licet (vestigium, exitus,
+ * thesaurus) - creatio semitae ad eum (mkdir -p: compilator thesaurum
+ * build/aedilis/obiecta/ in arbore recenti creat). Deletio maioris
+ * damnum non celat: contenta deleta lineas S suas ferunt, quae ipsae
+ * iudicantur. Photographiae directoria non notant - lineae solae. */
+interior b32
+_antecessor_permissus (
+    constans FabricaActio* actio,
+                   chorda  via)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        si (_via_maior_literis(via, fabricae_thesauri_partes[k]))
+        {
+            redde VERUM;
+        }
+    }
+    per (k = ZEPHYRUM; actio->vestigia != NIHIL
+         && k < xar_numerus(actio->vestigia); k++)
+    {
+        si (_via_maior(via,
+            ((FabricaLocus*)xar_obtinere(actio->vestigia,
+                k))->via))
+        {
+            redde VERUM;
+        }
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(actio->exitus); k++)
+    {
+        si (_via_maior(via, ((FabricaExitus*)xar_obtinere(actio->exitus,
+                k))->via))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 /* prima via notata extra vestigium actionis (vacua = nulla) */
 interior chorda
 _scripturam_alienam (
@@ -1685,6 +1751,11 @@ _scripturam_alienam (
     {
         FabricaVestigium* v;
 
+        si (_antecessor_permissus(actio, *(chorda*)xar_obtinere(notatae,
+            i)))
+        {
+            perge;
+        }
         v = (FabricaVestigium*)xar_addere(post);
         si (v == NIHIL)
         {

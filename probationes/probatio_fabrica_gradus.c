@@ -2430,6 +2430,36 @@ _probare_debita (
             (i32)FABRICA_DEBITUM_SCRIPTUM);
         _d_liber_a = NIHIL;
 
+        /* Vc (iudicium-fumus 2026-10-24). linea S directorii MAIORIS
+         * loci licentis (debitum build/a.db -> 'build'; thesaurus
+         * build/aedilis/obiecta/... -> 'build/aedilis') = creatio
+         * semitae, non scriptura aliena; frater ('build/aliud') fractus
+         * manet */
+        _d_liber_a = "S\tbuild\nS\tbuild/aedilis\n"
+            "S\tbuild/aedilis/obiecta\n";
+        mundi_ponere(discus, "t/a.c", "a IIc\n");
+        sanatio = _s_sanare(sutura, ordo, electa, "probationes_t/a",
+            FABRICA_SANATUM, piscina);
+        CREDO_AEQUALIS_I32(sanatio != NIHIL ? (i32)sanatio->eventus
+            : (i32)XCIX, (i32)FABRICA_SANATUM);
+        _d_liber_a = "S\tbuild/aliud\n";
+        mundi_ponere(discus, "t/a.c", "a IId\n");
+        sanatio = _s_sanare(sutura, ordo, electa, "probationes_t/a",
+            FABRICA_FRACTUM, piscina);
+        CREDO_NECESSE_NON_NIHIL(sanatio);
+        CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+            (i32)FABRICA_FRACTUM);
+        CREDO_VERUM(mundi_continet(sanatio->causa, "build/aliud",
+            piscina));
+        /* limes '/': 'build/a' praefixum litterale, non maius */
+        _d_liber_a = "S\tbuild/a\n";
+        mundi_ponere(discus, "t/a.c", "a IIe\n");
+        sanatio = _s_sanare(sutura, ordo, electa, "probationes_t/a",
+            FABRICA_FRACTUM, piscina);
+        CREDO_AEQUALIS_I32(sanatio != NIHIL ? (i32)sanatio->eventus
+            : (i32)XCIX, (i32)FABRICA_FRACTUM);
+        _d_liber_a = NIHIL;
+
         /* VI. a fractum sine scriptura -> IGNOTUM (fractura non probat
          * debitum mortuum) */
         _gradus_fractus = "t/a.c";
