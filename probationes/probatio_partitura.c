@@ -689,6 +689,30 @@ _sectio_sensibilis (
     CREDO_VERUM (_aequat(&o, 'E', -I, IV));
 }
 
+/* ligatura trans lineam: nota una, '~' ad lineam; trioli '8t' */
+interior vacuum
+_sectio_ligatura (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"l\">"
+        "<pars titulus=\"m\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\">"
+        "<textus!>o4 c2 d2 & | d2 e12 f12 g12 a4</textus></frustum>"
+        "</pars></carmen></carmina>");
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_AEQUALIS_I32 (k->partes[ZEPHYRUM].frusta[ZEPHYRUM].numerus,
+                        VI);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scribere(c, k, NIHIL),
+        "carmen l: c maior, 4/4, 120\n"
+        "  pars m: aether, lucrum 1.00\n"
+        "mensura 1\n"
+        "  m  C4:2 D4:2~\n"
+        "mensura 2\n"
+        "  m  ~:2 E4:8t F4:8t G4:8t A4:4\n");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "orthographia", _sectio_orthographia, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -702,6 +726,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "lectio", _sectio_lectio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ambitus", _sectio_ambitus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "liber", _sectio_liber, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ligatura", _sectio_ligatura, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

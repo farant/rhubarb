@@ -189,3 +189,38 @@ millesimae was only checked on a melody starting with 't' (which overwrites it),
 only inverse check sat on a segment boundary where the fractional tempo cannot matter.
 
 Hand-built maps (tests) must set millesimae too - it is not derived from tempus.
+
+## 2026-10-24 - ligaturae '&' et trioli (desideratum ...MYH24)
+
+TIES: '&' after a note means the NEXT note (same MIDI pitch) continues it - the reader
+extends the previous CantusNota (pulsus_longitudo and frame longitudo, recomputed as
+_quadrum(end) - initium in the same segment) instead of emitting a new one, so analysis,
+cantor and partitura all see ONE note; partitura's existing bar split already prints
+"D4:2~ | ~:2". Between the two notes only spaces, '|' and octave marks (o N, < >) are
+allowed - in particular no 't' (a tie never spans a tempo segment, which keeps the
+frame recomputation valid), no 'r', 'l', 'v', '@'. State in CantusLector: ligata,
+post_notam (a note was the last musical token; cleared by r l t v @), nota_ultima. Errors:
+different pitch (that is legato, not a tie), '&' before a rest or at the end, '&&', '&'
+with no note before. Enharmonic ties (c#&d-) are the same MIDI pitch and allowed; the
+first note's letter wins.
+
+Caveat: emendatio / 'M:T' edit addressing works on notes by onset - the second half of a
+tie is not a note; CantusStatus does not carry 'ligata' (editing in the middle of a tie is
+not supported).
+
+TUPLETS: a length is legal iff it divides the whole note (3840 pulsus) and is 1..64:
+1 2 3 4 5 6 8 10 12 15 16 20 24 30 32 40 48 60 64 (triplets 3 6 12 24 48: c12 d12 e12 =
+three in a quarter; quintuplets 5 10 20 40). Dots stay integral for all of them. The BASIC
+PLAY convention (L3 is legal there too). Four older tests used 'c3'/'l3' as their example
+of an INVALID length (cantus, carmen, praeconium_cantus, cantuale) - switched to 7/9.
+
+Test sections: ligatura, ternarii ("trioli" is not Latin - ternarius, as partitura's existing "ternaria" flag).
+
+Plants 12/12 red after three rounds. Two showed gaps: an explicit '&&' check in the '&'
+branch could never fire (the "after '&' only spaces/bars/octaves/a note" filter rejects
+the second '&' first) - removed, the '&&' test stays; and "segment position does not
+advance after a tie" stayed green because the test checked the next note's PULSUS
+(from pulsus_totus) but not its frame onset - now k.notae[1].initium == 2 s is asserted.
+Note for plants: silva.planta matches anchors whitespace-insensitively - two lines that
+differ only in alignment ('l->ligata = FALSUM' in the reader init and in the tie block)
+count as the same anchor; give a second line of context.

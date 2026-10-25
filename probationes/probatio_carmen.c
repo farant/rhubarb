@@ -377,7 +377,7 @@ _sectio_vitia (
             "</pars>"), "x", "a", ZEPHYRUM, ZEPHYRUM);
     _vitium(c, _carmen(c, "", "<pars titulus=\"a\" instrumentum=\"q\">"
             "<frustum mensura=\"1\"><textus!>c</textus></frustum>"
-            "<frustum mensura=\"2\"><textus!>c l3 d</textus></frustum>"
+            "<frustum mensura=\"2\"><textus!>c l7 d</textus></frustum>"
             "</pars>"), "x", "a", I, III);
     _vitium(c, _carmen(c, "", "<pars titulus=\"a\" instrumentum=\"q\">"
             "<frustum mensura=\"1\"><textus!>c t90 d</textus>"

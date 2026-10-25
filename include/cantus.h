@@ -14,9 +14,17 @@
  *   cantilena := { signum }
  *   signum    := nota | pausa | mandatum | ' ' | '|'
  *   nota      := c|d|e|f|g|a|b  [ '#' | '+' | '-' ]  [ mensura ]
+ *                [ '&' ]          ligatura: nota PROXIMA eiusdem
+ *                                 altitudinis continuat (inter eas
+ *                                 spatia, '|', o N, < > soli)
  *   pausa     := r  [ mensura ]
- *   mensura   := longitudo { '.' }        1 2 4 8 16 32 64; '.' = x1.5,
- *                                         '..' = x1.75 (ad II puncta)
+ *   mensura   := longitudo { '.' }        longitudo divisor integrae
+ *                                         1..64: 1 2 4 8 16 32 64;
+ *                                         trioli 3 6 12 24 48 (c12 d12
+ *                                         e12 = tres in quarta);
+ *                                         quintoli 5 10 20 40; 15 30
+ *                                         60. '.' = x1.5, '..' = x1.75
+ *                                         (ad II puncta)
  *   mandatum  := o N      octava 0..8     (ordinarium 4; o4 c = MIDI LX,
  *                                          C medium)
  *              | > | <    octava sursum / deorsum
@@ -40,11 +48,16 @@
  * color vocantis decernit, non lector.
  *
  * VITIA: lector FALSUM reddit cum offset octeti in textu et causa
- * Latina ('longitudo 3 non est potentia II') - nihil semi-lectum.
+ * Latina ('longitudo non divisor integrae') - nihil semi-lectum.
  * Nota extra MIDI 0..127 vitium est.
  *
- * NONDUM (in PULL): ligaturae '&', triolae, 'q' (pars sonans),
- * syllabae Guidonis (ut re mi ...), voces plures simul.
+ * LIGATURA: notae ligatae UNA nota sunt (longitudo summa, littera et
+ * offset primae) - analysis, cantor, partitura ('~' trans lineam)
+ * sonum unum vident. Altitudo diversa (legato, non ligatura), '&' ante
+ * pausam aut finem, '&&': vitium.
+ *
+ * NONDUM (in PULL): 'q' (pars sonans), syllabae Guidonis (ut re mi
+ * ...), voces plures simul.
  *
  * USUS:
  *   Cantilena    c;

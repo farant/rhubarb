@@ -36,6 +36,11 @@ nomen structura {
      CantusLinea* lineae;           /* NIHIL = transitus numerandi */
              i32  numerus_linearum;
     CantusVitium* vitium;
+             /* ligatura: '&' lectum, nota proxima continuat; nota
+              * ultima (altitudo) et an signum ultimum nota fuerit */
+             b32 ligata;
+             b32 post_notam;
+             s32 nota_ultima;
 } CantusLector;
 
 /* semitonia litterarum c d e f g a b */
@@ -176,9 +181,9 @@ _mensuram_legere (
             redde FALSUM;
         }
         si (   longitudo < I || longitudo > LXIV
-            || (longitudo & (longitudo - I)) != ZEPHYRUM)
+            || (s32)CANTUS_PULSUS_INTEGRAE % longitudo != ZEPHYRUM)
         {
-            redde _vitium(l, initium, "longitudo non est potentia II "
+            redde _vitium(l, initium, "longitudo non divisor integrae "
                                       "(1..64)");
         }
         *pulsus = (i32)CANTUS_PULSUS_INTEGRAE / (i32)longitudo;
@@ -252,6 +257,29 @@ _notam_legere (
     {
         redde _vitium(l, offset, "nota extra 0..127 (MIDI)");
     }
+    l->post_notam = VERUM;
+    si (l->ligata)
+    {
+        /* continuatio: nota ultima longior, nulla nova */
+        si (nota != l->nota_ultima)
+        {
+            redde _vitium(l, offset,
+                "ligatura: nota eadem altitudine exspectata");
+        }
+        si (l->notae != NIHIL)
+        {
+            CantusNota* n = &l->notae[l->numerus - I];
+
+            n->pulsus_longitudo += (s64)pulsus;
+            n->longitudo = _quadrum(l, l->pulsus + (s64)pulsus)
+                         - n->initium;
+        }
+        l->ligata        = FALSUM;
+        l->pulsus        += (s64)pulsus;
+        l->pulsus_totus  += (s64)pulsus;
+        redde VERUM;
+    }
+    l->nota_ultima = nota;
     si (l->notae != NIHIL)
     {
         CantusNota* n = &l->notae[l->numerus];
@@ -310,8 +338,27 @@ _currere (
               s32 valor;
               i32 pulsus;
 
+        /* post '&' solum spatia, '|', octavae, nota */
+        si (   l->ligata && s != ' ' && s != '\t' && s != '\n'
+            && s != '\r' && s != '|' && s != 'o' && s != '>'
+            && s != '<' && !(s >= 'a' && s <= 'g'))
+        {
+            redde _vitium(l, offset,
+                "ligatura: nota eadem altitudine exspectata");
+        }
         si (s == ' ' || s == '\t' || s == '\n' || s == '\r')
         {
+            l->positio++;
+        }
+        alioquin si (s == '&')
+        {
+            /* '&&' iam supra reicitur (post '&' solum nota) */
+            si (!l->post_notam)
+            {
+                redde _vitium(l, offset,
+                    "ligatura: '&' post notam solum");
+            }
+            l->ligata = VERUM;
             l->positio++;
         }
         alioquin si (s == '|')
@@ -335,6 +382,7 @@ _currere (
         }
         alioquin si (s == 'r')
         {
+            l->post_notam = FALSUM;
             l->positio++;
             si (!_mensuram_legere(l, FALSUM, &pulsus))
             {
@@ -365,6 +413,7 @@ _currere (
         }
         alioquin si (s == 'l')
         {
+            l->post_notam = FALSUM;
             l->positio++;
             si (!_mensuram_legere(l, VERUM, &pulsus))
             {
@@ -374,6 +423,7 @@ _currere (
         }
         alioquin si (s == 't')
         {
+            l->post_notam = FALSUM;
             l->positio++;
             si (!_numerum_coercitum_legere(l, XX, CD,
                 "tempus extra 20..400",
@@ -403,6 +453,7 @@ _currere (
         }
         alioquin si (s == 'v')
         {
+            l->post_notam = FALSUM;
             l->positio++;
             si (!_numerum_coercitum_legere(l, ZEPHYRUM, C,
                                            "lucrum extra 0..100",
@@ -414,6 +465,7 @@ _currere (
         }
         alioquin si (s == '@')
         {
+            l->post_notam = FALSUM;
             l->positio++;
             si (!_titulum_legere(l))
             {
@@ -424,6 +476,11 @@ _currere (
         {
             redde _vitium(l, offset, "signum ignotum");
         }
+    }
+    si (l->ligata)
+    {
+        redde _vitium(l, l->positio,
+            "ligatura: nota eadem altitudine exspectata");
     }
     redde VERUM;
 }
@@ -456,6 +513,9 @@ _lectorem_parare (
     l->lineae               = lineae;
     l->numerus_linearum     = ZEPHYRUM;
     l->vitium               = vitium;
+    l->ligata               = FALSUM;
+    l->post_notam           = FALSUM;
+    l->nota_ultima          = -I;
     si (tempora != NIHIL)
     {
         tempora[ZEPHYRUM].pulsus      = ZEPHYRUM;
