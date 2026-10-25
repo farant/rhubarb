@@ -1991,6 +1991,7 @@ nomen structura {
                i32 aestimatio;    /* siccum: ex cursibus ultimis */
                i32 sine_tempore;
                b32 commissa;      /* generata in arbore mutata */
+               b32 vestigium;     /* -vestigium: exemplaria solum */
 } CursusSanandi;
 
 /* vexilla sanandi. FALSUM = vexillum ignotum */
@@ -2007,6 +2008,13 @@ _sanare_optiones (
         si (strcmp(argv[a], "-siccum") == 0)
         {
             m->siccum = VERUM;
+        }
+        alioquin si (strcmp(argv[a], "-vestigium") == 0)
+        {
+            /* parcum …AG7: quae 'sanare X' scribere potest (exitus et
+             * vestigia declarata ambitus et iudicum) - consilium
+             * producentium ex eo gradus suos format; nihil agitur */
+            m->vestigium = VERUM;
         }
         alioquin si (strcmp(argv[a], "-audit") == 0)
         {
@@ -2610,6 +2618,55 @@ _sanare_agere (
     redde VERUM;
 }
 
+/* -vestigium VIA...: exemplaria scripturae possibilis PER VIAM electam,
+ * lineae '<via>\t<exemplar>' (una vocatio pro consilio toto: initium
+ * fabricae ~VI s). Sine sera, sine stadio iudicum - nihil agitur.
+ * Exitus 0; II si via nulla aut a nulla actione producta */
+interior s32
+_sanare_vestigium (
+    CursusSanandi* m)
+{
+    CursusFabricae* c = &m->cursus;
+               i32  j;
+               i32  i;
+
+    si (c->electa == NIHIL || xar_numerus(c->electa) == ZEPHYRUM)
+    {
+        fprintf(stderr, "usus: bin/fabrica sanare -vestigium VIA...\n");
+        redde II;
+    }
+    per (j = ZEPHYRUM; j < xar_numerus(c->electa); j++)
+    {
+        chorda  via = *(chorda*)xar_obtinere(c->electa, j);
+           Xar* una;
+           Xar* exemplaria;
+
+        una = xar_creare(c->piscina, (i32)magnitudo(chorda));
+        si (una == NIHIL)
+        {
+            redde II;
+        }
+        *(chorda*)xar_addere(una) = via;
+        exemplaria = fabrica_vestigium_sanandi(c->ordo, una, c->piscina,
+            &c->causa);
+        si (exemplaria == NIHIL)
+        {
+            fprintf(stderr, "fabrica: %.*s\n", (s32)c->causa.mensura,
+                (constans character*)c->causa.datum);
+            redde II;
+        }
+        per (i = ZEPHYRUM; i < xar_numerus(exemplaria); i++)
+        {
+            chorda e = *(chorda*)xar_obtinere(exemplaria, i);
+
+            printf("%.*s\t%.*s\n", (s32)via.mensura,
+                (constans character*)via.datum, (s32)e.mensura,
+                (constans character*)e.datum);
+        }
+    }
+    redde ZEPHYRUM;
+}
+
 interior s32
 _sanare (
           s32   argc,
@@ -2631,6 +2688,12 @@ _sanare (
         redde II;
     }
     _electa_colligere(&m.cursus, argc, argv);
+    si (m.vestigium)
+    {
+        exitus = _sanare_vestigium(&m);
+        _cursum_finire(&m.cursus);
+        redde exitus;
+    }
     si (!_sanare_suturam(&m))
     {
         _cursum_finire(&m.cursus);

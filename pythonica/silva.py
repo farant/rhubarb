@@ -3074,14 +3074,44 @@ def _consilium_regulae(secundaria):
     return lineae
 
 
-def _gradus_sanationis(x, auctor, legit=(), sequitur=(), alia=()):
+def _vestigia_sanandi(viae):
+    """quae 'bin/fabrica sanare X' scribere potest, per X (parcum …AG7):
+    exitus et vestigia DECLARATA ambitus eius et iudicum, a fabrica
+    computata ('sanare -vestigium', lineae '<via>\t<exemplar>'; vocatio
+    UNA - initium fabricae ~VI s). Defectus = SilvaError, numquam
+    reditus tacitus ad bin/* build/* (consilium angustum = recusatio
+    falsa, latum sine causa = custodia mortua)."""
+    # extra arborem ('~', '/'): regulae consilii iudicant (domus VETITA
+    # in arbore secundaria) - vestigium intra arborem eas non tangit
+    viae = sorted(set(v for v in viae if not v.startswith(('~', '/'))))
+    if not viae:
+        return {}
+    r = subprocess.run([FABRICA_BIN, 'sanare', '-vestigium'] + viae,
+                       cwd=RADIX, capture_output=True, text=True)
+    if r.returncode != 0:
+        raise SilvaError('fabrica sanare -vestigium fractum (exitus %d; '
+                         'bin/fabrica vetus? ./tools/fabrica_struere.sh): %s'
+                         % (r.returncode, r.stderr.strip()[-400:]))
+    vestigia = dict((v, []) for v in viae)
+    for linea in r.stdout.splitlines():
+        via, sep, exemplar = linea.partition('\t')
+        if sep and via in vestigia:
+            vestigia[via].append(exemplar)
+    return vestigia
+
+
+def _gradus_sanationis(x, auctor, legit=(), sequitur=(), alia=(),
+                       declarata=()):
     """gradus 'sana X' cum MANDATO (consilium S5c2): iudex ipse
     (bin/fabrica) per tools/fabrica_struere.sh (in arbore, nihil
     instituit), ceteri per 'bin/fabrica sanare X'. Vestigium bin/* et
     build/* - sanatio praecondiciones suas (obiecta, capsulae, binaria
     arboris) ibi scribit; scriptura alibi (fons commissus, domus) per
     exsecutorem FRACTA nominatur. alia = exitus ceteri actionis (scribit
-    et in vestigio)."""
+    et in vestigio). declarata = exemplaria ex _vestigia_sanandi (parcum
+    …AG7): sanatio X praecondiciones et iudices stalos quoque sanat, qui
+    extra bin/ build/ scribunt (silva/build ab tabulae_silvae) - eorum
+    vestigia declarata vestigio gradus adduntur."""
     iudex = os.path.relpath(FABRICA_BIN, RADIX)
     argv = (['tools/fabrica_struere.sh'] if x == iudex
             else [iudex, 'sanare', x])
@@ -3098,8 +3128,12 @@ def _gradus_sanationis(x, auctor, legit=(), sequitur=(), alia=()):
     for v in scripta:
         lineae.append('    <effectus verbum="scribere" res="%s"'
                       ' cognitio="declaratum"/>' % v)
-    for v in ['bin/*', 'build/*'] + [v for v in scripta
-                                     if not v.startswith(('bin/', 'build/'))]:
+    exemplaria = ['bin/*', 'build/*']
+    for v in ([v for v in scripta if not v.startswith(('bin/', 'build/'))]
+              + [_attributum_consilii(v) for v in declarata]):
+        if v not in exemplaria and not v.startswith(('bin/', 'build/')):
+            exemplaria.append(v)
+    for v in exemplaria:
         lineae.append('    <vestigium exemplar="%s"/>' % v)
     for t in sequitur:
         lineae.append('    <sequitur titulus="sana %s"/>' % t)
@@ -3123,10 +3157,12 @@ def _consilium_formae(formatae, novae, secundaria):
                       % _attributum_consilii(f))
     lineae.append('  </gradus>')
     iudex = os.path.relpath(FABRICA_BIN, RADIX)
+    declarata = _vestigia_sanandi(novae)
     for x in novae:
         lineae += _gradus_sanationis(
             x, 'forma', formatae,
-            [iudex] if iudex in novae and x != iudex else [])
+            [iudex] if iudex in novae and x != iudex else [],
+            declarata=declarata.get(x, ()))
     lineae.append('</consilium>')
     return '\n'.join(lineae) + '\n'
 
@@ -3327,6 +3363,7 @@ def _consilium_producentium(malae):
     titulus = dict((a, iudex if iudex in exitus[a] else exitus[a][0])
                    for a in candidati)
     secundaria = _arbor_secundaria()
+    declarata = _vestigia_sanandi([titulus[a] for a in candidati])
 
     def documentum(producentes):
         lineae = ['<consilium>'] + _consilium_regulae(secundaria)
@@ -3335,7 +3372,8 @@ def _consilium_producentium(malae):
             lineae += _gradus_sanationis(
                 titulus[a], 'fabrica:%s' % a, (),
                 [titulus[b] for b in producentes
-                 if unda.get(b, 0) < unda.get(a, 0)], exitus[a])
+                 if unda.get(b, 0) < unda.get(a, 0)], exitus[a],
+                declarata=declarata.get(titulus[a], ()))
         lineae.append('</consilium>')
         return '\n'.join(lineae) + '\n'
 

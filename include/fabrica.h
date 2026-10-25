@@ -1092,6 +1092,33 @@ structura FabricaSanatio {
  * build/fabrica/acta/TITULUS.log.
  * Xar de FabricaSanatio (vacua = nihil agendum); NIHIL + causa si via
  * electa a nulla actione producitur. */
+/* AMBITUS SANANDI (parcum …AG7): actiones quas fabrica_sanare(electa)
+ * agere potest - productores viarum electarum (aut omnes praeter
+ * iudicia si electa NIHIL) et omnes supra eas (ingressus,
+ * praecondiciones). b32 per indicem ordinis; NIHIL + causa si via
+ * electa a nulla actione producitur. */
+b32*
+fabrica_ambitum_sanandi (
+    constans Xar* ordo,
+    constans Xar* electa,
+         Piscina* piscina,
+          chorda* causa_out);
+
+/* VESTIGIUM SANANDI (parcum …AG7, consilium producentium): exemplaria
+ * quae 'fabrica sanare <electa>' scribere potest - exitus et vestigia
+ * DECLARATA omnium actionum ambitus eius ET ambitus iudicum (stadium
+ * iudicum primum: quis stalus sit ante cursum non scitur - omnes).
+ * Intra arborem solum ('~', '/' praetermissa: regulae consilii eas
+ * iudicant). Exitus -> via; vestigium -> via et globus eius (via cum
+ * '/' et '*' adiunctis; '*' transit '/'). Xar de chorda, ordinata,
+ * unica; NIHIL + causa ut fabrica_ambitum_sanandi. */
+Xar*
+fabrica_vestigium_sanandi (
+    constans Xar* ordo,
+    constans Xar* electa,
+         Piscina* piscina,
+          chorda* causa_out);
+
 Xar*
 fabrica_sanare (
     constans FabricaSutura* sutura,

@@ -1416,3 +1416,11 @@ heal is a convenience, and the generata gate judges the real state right after. 
 the plan healed speculum (enough for generata) while its corpus_silicis step was refused
 "extra propositum" (park …AG7); raising would have blocked a merge that was actually fine.
 Tests: five cases on the step itself + case L asserts the call happens once before any gate.
+
+## 2026-10-24 — heal-plan step footprints come from fabrica (park …AG7)
+
+`_gradus_sanationis` no longer trusts bin/* build/* alone: `_vestigia_sanandi` asks
+`bin/fabrica sanare -vestigium X...` (declared exitus + vestigia of X's scope and all judges'
+scopes, computed in C) once per plan and adds those patterns to each step. Out-of-tree targets
+('~', '/') skip the query - the consilium policy rules judge them. A failing query raises
+SilvaError (an old bin/fabrica without -vestigium says so). Detail: lib/fabrica.worklog.md.

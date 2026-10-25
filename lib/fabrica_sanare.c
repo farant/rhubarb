@@ -2089,6 +2089,208 @@ _undam_agere (
     redde fractum;
 }
 
+/* AMBITUS SANANDI (fabrica.h; parcum …AG7): actiones viarum electarum
+ * (aut omnes praeter iudicia si electa NIHIL), deinde omnes supra eas
+ * (clausura per fabricae_pendet) */
+b32*
+fabrica_ambitum_sanandi (
+    constans Xar* ordo,
+    constans Xar* electa,
+         Piscina* piscina,
+          chorda* causa_out)
+{
+    b32* ambitus;
+    i32  numerus;
+    i32  i;
+    i32  j;
+    b32  mutatum;
+
+    numerus  = xar_numerus(ordo);
+    ambitus  = (b32*)piscina_allocare(piscina,
+        magnitudo(b32) * (memoriae_index)(numerus + 1));
+    si (ambitus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        /* iudicium (porta) solum NOMINATUM sanatur: 'sanare' sine
+         * argumentis suitas probationum non currit */
+        ambitus[i]  = (electa == NIHIL)
+            && (*(FabricaActio**)xar_obtinere(ordo, i))->genus
+                   != FABRICA_ACTIO_IUDICIUM;
+    }
+    per (j = ZEPHYRUM; electa != NIHIL && j < xar_numerus(electa); j++)
+    {
+        chorda via;
+           b32 inventa;
+
+        via      = *(chorda*)xar_obtinere(electa, j);
+        inventa  = FALSUM;
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            constans FabricaActio* actio;
+                              i32  k;
+
+            actio = *(FabricaActio**)xar_obtinere(ordo, i);
+            per (k = ZEPHYRUM; k < xar_numerus(actio->exitus); k++)
+            {
+                si (chorda_aequalis(((FabricaExitus*)xar_obtinere(
+                        actio->exitus, k))->via, via))
+                {
+                    ambitus[i]  = VERUM;
+                    inventa     = VERUM;
+                }
+            }
+        }
+        si (!inventa)
+        {
+            fabricae_causam_ponere(causa_out, piscina,
+                "artificium a nulla actione productum: ", via, "");
+            redde NIHIL;
+        }
+    }
+    fac
+    {
+        mutatum = FALSUM;
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            si (!ambitus[i])
+            {
+                perge;
+            }
+            per (j = ZEPHYRUM; j < numerus; j++)
+            {
+                si (   !ambitus[j]
+                    && fabricae_pendet(
+                        *(FabricaActio**)xar_obtinere(ordo, i),
+                        *(FabricaActio**)xar_obtinere(ordo, j)))
+                {
+                    ambitus[j]  = VERUM;
+                    mutatum     = VERUM;
+                }
+            }
+        }
+    }
+    dum (mutatum);
+    redde ambitus;
+}
+
+interior s32
+_chordas_comparare (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    redde chorda_comparare(*(constans chorda*)a, *(constans chorda*)b);
+}
+
+/* exemplar intra arborem? ('~' domus et '/' absolutum: regulae
+ * consilii eas iudicant, numquam vestigium) */
+interior vacuum
+_exemplar_addere (
+          Xar* exemplaria,
+       chorda  via,
+      Piscina* piscina,
+          b32  directorium)
+{
+    si (   via.mensura         == ZEPHYRUM || via.datum[ZEPHYRUM] == '~'
+        || via.datum[ZEPHYRUM] == '/')
+    {
+        redde;
+    }
+    fabricae_chordam_addere(exemplaria, via);
+    si (directorium)
+    {
+        fabricae_chordam_addere(exemplaria, fabricae_iungere(piscina,
+            "",
+            via, via.datum[via.mensura - I] == '/' ? "*" : "/*"));
+    }
+}
+
+/* VESTIGIUM SANANDI (fabrica.h; parcum …AG7) */
+Xar*
+fabrica_vestigium_sanandi (
+    constans Xar* ordo,
+    constans Xar* electa,
+         Piscina* piscina,
+          chorda* causa_out)
+{
+     b32* ambitus;
+     b32* iudicum;
+     Xar* viae_iudicum;
+     Xar* exemplaria;
+     Xar* unica;
+     i32  i;
+     i32  k;
+
+    ambitus = fabrica_ambitum_sanandi(ordo, electa, piscina, causa_out);
+    viae_iudicum = fabricae_xar_chordarum(piscina);
+    exemplaria = fabricae_xar_chordarum(piscina);
+    unica = fabricae_xar_chordarum(piscina);
+    si (   ambitus    == NIHIL || viae_iudicum == NIHIL
+        || exemplaria == NIHIL
+        || unica      == NIHIL)
+    {
+        redde NIHIL;
+    }
+    /* STADIUM IUDICUM: iudices stali ante electa sanantur; quis stalus
+     * sit ante cursum non scitur - omnes */
+    per (i = ZEPHYRUM; i < xar_numerus(ordo); i++)
+    {
+        constans FabricaActio* actio =
+            *(FabricaActio**)xar_obtinere(ordo,
+            i);
+
+        per (k = ZEPHYRUM; actio->iudex
+            && k < xar_numerus(actio->exitus);
+             k++)
+        {
+            fabricae_chordam_addere(viae_iudicum,
+                ((FabricaExitus*)xar_obtinere(actio->exitus, k))->via);
+        }
+    }
+    iudicum = (xar_numerus(viae_iudicum) > ZEPHYRUM)
+        ? fabrica_ambitum_sanandi(ordo, viae_iudicum, piscina,
+        causa_out)
+        : NIHIL;
+    per (i = ZEPHYRUM; i < xar_numerus(ordo); i++)
+    {
+        constans FabricaActio* actio =
+            *(FabricaActio**)xar_obtinere(ordo,
+            i);
+
+        si (!ambitus[i] && (iudicum == NIHIL || !iudicum[i]))
+        {
+            perge;
+        }
+        per (k = ZEPHYRUM; k < xar_numerus(actio->exitus); k++)
+        {
+            _exemplar_addere(exemplaria, ((FabricaExitus*)xar_obtinere(
+                actio->exitus, k))->via, piscina, FALSUM);
+        }
+        per (k = ZEPHYRUM; actio->vestigia != NIHIL
+             && k < xar_numerus(actio->vestigia); k++)
+        {
+            /* vestigium: plagula aut directorium - utrumque tegitur */
+            _exemplar_addere(exemplaria, ((FabricaLocus*)xar_obtinere(
+                actio->vestigia, k))->via, piscina, VERUM);
+        }
+    }
+    xar_ordinare(exemplaria, _chordas_comparare);
+    per (i = ZEPHYRUM; i < xar_numerus(exemplaria); i++)
+    {
+        chorda e = *(chorda*)xar_obtinere(exemplaria, i);
+
+        si (   xar_numerus(unica) == ZEPHYRUM
+            || !chorda_aequalis(e, *(chorda*)xar_obtinere(unica,
+                   xar_numerus(unica) - I)))
+        {
+            fabricae_chordam_addere(unica, e);
+        }
+    }
+    redde unica;
+}
+
 /* PISCINA ACTI (parcum …T77EH4): actum quodque cum post-condicione
  * sua in piscina temporaria currit, post actum vacata (photographiae
  * arboris bis, libri lectionum, acta: ~LX MB per membrum, olim usque
@@ -2442,89 +2644,28 @@ fabrica_sanare (
                i32  in_ambitu;
                i32  iudicata;
                i32  i;
-               i32  j;
-               b32  mutatum;
 
     numerus     = xar_numerus(ordo);
     sanationes  = xar_creare(piscina, (i32)magnitudo(FabricaSanatio));
-    ambitus = (b32*)piscina_allocare(piscina,
-        magnitudo(b32) * (memoriae_index)(numerus + 1));
     status = (StatusSanandi*)piscina_allocare(piscina,
         magnitudo(StatusSanandi) * (memoriae_index)(numerus + 1));
     stala = (chorda*)piscina_allocare(piscina,
         magnitudo(chorda) * (memoriae_index)(numerus + 1));
-    si (   sanationes == NIHIL || ambitus == NIHIL || status == NIHIL
-        || stala      == NIHIL)
+    si (sanationes == NIHIL || status == NIHIL || stala == NIHIL)
     {
         redde NIHIL;
     }
     memset(stala, ZEPHYRUM, magnitudo(chorda) * (memoriae_index)(numerus
         + 1));
-
-    /* ambitus: actiones viarum electarum (aut omnes), deinde omnes
-     * supra eas (clausura per fabricae_pendet) */
     per (i = ZEPHYRUM; i < numerus; i++)
     {
-        status[i]   = SANANDI_NONDUM;
-        /* iudicium (porta) solum NOMINATUM sanatur: 'sanare' sine
-         * argumentis suitas probationum non currit */
-        ambitus[i]  = (electa == NIHIL)
-            && (*(FabricaActio**)xar_obtinere(ordo, i))->genus
-                   != FABRICA_ACTIO_IUDICIUM;
+        status[i] = SANANDI_NONDUM;
     }
-    per (j = ZEPHYRUM; electa != NIHIL && j < xar_numerus(electa); j++)
+    ambitus = fabrica_ambitum_sanandi(ordo, electa, piscina, causa_out);
+    si (ambitus == NIHIL)
     {
-        chorda via;
-           b32 inventa;
-
-        via      = *(chorda*)xar_obtinere(electa, j);
-        inventa  = FALSUM;
-        per (i = ZEPHYRUM; i < numerus; i++)
-        {
-            constans FabricaActio* actio;
-                              i32  k;
-
-            actio = *(FabricaActio**)xar_obtinere(ordo, i);
-            per (k = ZEPHYRUM; k < xar_numerus(actio->exitus); k++)
-            {
-                si (chorda_aequalis(((FabricaExitus*)xar_obtinere(
-                        actio->exitus, k))->via, via))
-                {
-                    ambitus[i]  = VERUM;
-                    inventa     = VERUM;
-                }
-            }
-        }
-        si (!inventa)
-        {
-            fabricae_causam_ponere(causa_out, piscina,
-                "artificium a nulla actione productum: ", via, "");
-            redde NIHIL;
-        }
+        redde NIHIL;
     }
-    fac
-    {
-        mutatum = FALSUM;
-        per (i = ZEPHYRUM; i < numerus; i++)
-        {
-            si (!ambitus[i])
-            {
-                perge;
-            }
-            per (j = ZEPHYRUM; j < numerus; j++)
-            {
-                si (   !ambitus[j]
-                    && fabricae_pendet(
-                        *(FabricaActio**)xar_obtinere(ordo, i),
-                        *(FabricaActio**)xar_obtinere(ordo, j)))
-                {
-                    ambitus[j]  = VERUM;
-                    mutatum     = VERUM;
-                }
-            }
-        }
-    }
-    dum (mutatum);
 
     /* PISCINA ACTI: solum si quod ultra actum vivit domum habet */
     temporaria = (sutura->piscina_cursus != NIHIL && !siccum)

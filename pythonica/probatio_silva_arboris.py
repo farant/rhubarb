@@ -224,6 +224,12 @@ if os.path.exists(silva.FABRICA_BIN):
           and _undae.get('sana bin/aedilis') == 3
           and 'portae' not in _undae,
           'consilium formae: forma, iudex ipse, ceteri; portae extra', _o)
+    # parcum …AG7: sanatio bin/aedilis tabulae_silvae (supra eam) quoque
+    # sanat, quae silva/build scribit - vestigium DECLARATUM gradui adest
+    credo('<vestigium exemplar="silva/build/*"/>'
+          in _t.split('titulus="sana bin/aedilis"')[-1].split('</gradus>')[0],
+          'consilium formae: vestigium declaratum ambitus (silva/build ab'
+          ' tabulae_silvae) in gradu sana bin/aedilis', _t)
     credo('factum="verum"' in _t
           and '<argumentum valor="tools/fabrica_struere.sh"/>' in _t
           and '<argumentum valor="bin/fabrica"/><argumentum valor="sanare"/>'
@@ -259,7 +265,9 @@ if os.path.exists(silva.FABRICA_BIN):
               'UNDA\t1\tnatura\nUNDA\t2\tcanones_cocti\nUNDA\t1\tinstitue\n')
     _ficta_s3d = os.path.join(T, 'fabrica_s3d')
     with open(_ficta_s3d, 'w') as _f:
-        _f.write('#!/bin/bash\nif [ "$1" = sanare ]; then printf %%s %s; exit 0;'
+        _f.write('#!/bin/bash\nif [ "$2" = -vestigium ]; then printf'
+                 ' "bin/natura_canones\\tnatura/aedificium/*\\n"; exit 0; fi\n'
+                 'if [ "$1" = sanare ]; then printf %%s %s; exit 0;'
                  ' fi\nexec %s "$@"\n' % (repr(_facta).replace('\\t', '\t')
                                             .replace('\\n', '\n'), _fb_vera))
     os.chmod(_ficta_s3d, 0o755)
@@ -276,7 +284,8 @@ if os.path.exists(silva.FABRICA_BIN):
           == ['sana bin/natura_canones']
           and 'res="bin/natura_glossae"' in _c
           and '<argumentum valor="sanare"/><argumentum'
-              ' valor="bin/natura_canones"/>' in _c,
+              ' valor="bin/natura_canones"/>' in _c
+          and '<vestigium exemplar="natura/aedificium/*"/>' in _c,
           'consilium producentium: instrumentum sanatur (exitus omnes),'
           ' regenerator commissorum NON, institutio domus a politica'
           ' omissa', _c)
@@ -287,6 +296,20 @@ if os.path.exists(silva.FABRICA_BIN):
     silva.VIAE_COMMISSAE = _vc_vera
     credo(_c is None, 'consilium producentium: exitus commissi = nullus'
           ' producens (recusatio antiqua valet)')
+    # AG7: '-vestigium' fractum = SilvaError, numquam bin/* build/* tacite
+    _ficta_ag7 = os.path.join(T, 'fabrica_ag7')
+    with open(_ficta_ag7, 'w') as _f:
+        _f.write('#!/bin/bash\necho "vexillum ignotum -vestigium" >&2; exit 2\n')
+    os.chmod(_ficta_ag7, 0o755)
+    silva.FABRICA_BIN = _ficta_ag7
+    try:
+        silva._vestigia_sanandi(['bin/x'])
+        _ag7 = None
+    except silva.SilvaError as _e:
+        _ag7 = str(_e)
+    silva.FABRICA_BIN = _fb_vera
+    credo(_ag7 is not None and 'vexillum ignotum' in _ag7,
+          'vestigia sanandi: fabrica fracta -> SilvaError nominata', _ag7)
     # S5c2: exsecutio VERA per '-agere' (arbor viva, build/ solum):
     # scriptura proposita ACTUM, non proposita FRACTUM nominata (3)
     _d = 'build/consilium/probatio_agere'

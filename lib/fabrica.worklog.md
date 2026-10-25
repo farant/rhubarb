@@ -3770,3 +3770,27 @@ css 10, html 14, materia 14, md 14, saltuarius 13, toml 13, silva 56, veneni 16 
 zero differences in BOTH directions. Only silva has members that execute programs (5/56: /bin/sh,
 git); the other seven none. Totals across the nine composites: 554 members, 46 execute programs,
 3 snapshot-only paths (radix, both explained). Spec: project-specs/fabrica-spec-8.md.
+
+## 2026-10-24 — heal-plan footprint from declarations (park …AG7)
+
+Commits kept failing with "consilium sanationis fractum: sana bin/canon_examen scripsit extra
+propositum: silva/build/generator" (and the corpus_silicis twin). Cause: the plan (pythonica
+`_gradus_sanationis`) allowed each "sana X" step only bin/* and build/*, but `bin/fabrica sanare X`
+also heals X's stale upstream AND the stale judges first (stadium iudicum: fabrica, compilator,
+aedilis). aedilis links silva, so tabulae_silvae (`silva/generare.sh`, vestigium silva/build
+communis) runs - a DECLARED write the plan didn't know.
+
+Fix: `fabrica_ambitum_sanandi` (the scope loop, extracted from fabrica_sanare) and
+`fabrica_vestigium_sanandi` = declared exitus + vestigia of scope(X) ∪ scope(all judges) (all of
+them: which is stale isn't known when the plan is made), tree-relative only ('~', '/' left to the
+policy rules), vestigium -> path and 'path/*' (directorium_titulus_congruit's '*' crosses '/'),
+sorted, unique. `bin/fabrica sanare -vestigium X...` prints `<X>\t<exemplar>` (one process: fabrica
+startup is ~6 s). pythonica `_vestigia_sanandi` calls it once per plan and adds the patterns to
+each step on top of bin/* build/* (only ever widens, to what declarations say); failure = SilvaError,
+never a silent fallback. Out-of-tree targets skip the query. The amalgam (silva/amalgama/silva.c)
+shows up as a declared output in canon_examen's scope, so the praeco half of the park is likely
+covered too.
+Tests: probatio_fabrica_sanare 'vestigium sanandi (AG7)' (fake world G/P/J/U; plants: judges
+dropped, '~' kept, dedupe dropped - all red); probatio_silva_arboris: live tree gives sana
+bin/aedilis silva/build/*, fake fabrica's -vestigium output reaches the plan, broken -vestigium
+raises.
