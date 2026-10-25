@@ -51,3 +51,16 @@ codes read, redone.)
 
 Formatter: two `operatores` divergences at `tabula_cellula(...) != ' '`
 are a formatter false positive (silva formator worklog, same day).
+
+## 2026-10-24 - unborn documents (lector L5 / comites P6)
+
+`scriba_documentum_nasciturum`: a document in memory only. Traced first:
+`historia_creare` writes nothing (only acts are written), so the ONLY
+eager write was the manifest - an unborn document is an ordinary one
+whose manifest is not yet written. Birth is inside `committere`: on the
+first NON-empty mutation the manifest is written, then the act, then
+`natale(ctx)` once. Empty commits and undo before birth do nothing (no
+acts -> revocare is already FALSUM). Public struct gained `natum`,
+`spatium`, `natale`, `natale_ctx`; creare/aperire set `natum`. A fresh
+temporary volume does not start at 0 acts - tests compare act and
+plagula counts against a baseline.

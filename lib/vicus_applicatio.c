@@ -62,6 +62,8 @@ nomen structura {
     IussumRegistrum* iussa;
     /* comites P2: libri comites aperti (praefixum -> ScribaLiber*) */
       TabulaDispersa* libri;
+    /* lector L5: comites pigri (praefixum -> ComesPendens*) */
+      TabulaDispersa* pendentes;
              Piscina* piscina;
  InternamentumChorda* intern;
              Volumen* volumen;
@@ -74,6 +76,15 @@ nomen structura {
                  b32 (*porta_textus)(vacuum* ctx, chorda textus);
               vacuum* porta_textus_ctx;
 } ContextusScribae;
+
+/* lector L5: comes piger - nota (titulus, semita ultima) servatur donec
+ * liber nascitur (scriptura prima), tum scribitur */
+nomen structura {
+    ContextusScribae* cs;
+              chorda  praefixum;
+              chorda  titulus;
+              chorda  semita;
+} ComesPendens;
 
 /* porta textus per contextum (posita etiam post montationem) */
 interior b32
@@ -1066,8 +1077,34 @@ via_registrare (
         && iussum_registrare(r, "via", FALSUM, via_iussum, cv);
 }
 
+/* lector L5: natale libri comitis - nota servata scribitur */
+interior b32
+comitem_natum_notare (
+         vacuum* ctx,
+    ScribaLiber* liber)
+{
+    ComesPendens* cp;
+
+    (vacuum)liber;
+    cp = (ComesPendens*)ctx;
+    redde scriba_liber_comitem_notare(cp->cs->volumen, cp->cs->intern,
+        chorda_ut_cstr(cp->praefixum, cp->cs->piscina), cp->titulus,
+        cp->semita, cp->cs->piscina);
+}
+
+/* praefixum libri comitis ("comes/...")? */
+interior b32
+praefixum_comitis (
+    chorda praefixum)
+{
+    redde praefixum.mensura > (i32)strlen("comes/")
+        && memcmp(praefixum.datum, "comes/", VI) == ZEPHYRUM;
+}
+
 /* comites P2: porta librorum scribae - vacuum: communis; aliter
- * liber in spatio praefixi, semel apertus (TabulaDispersa) */
+ * liber in spatio praefixi, semel apertus (TabulaDispersa). L5: libri
+ * comitum ("comes/...") PIGRI - nihil scribitur ante scripturam
+ * primam */
 interior ScribaLiber*
 librum_scribae (
      vacuum* ctx,
@@ -1075,6 +1112,7 @@ librum_scribae (
 {
     ContextusScribae* cs;
          ScribaLiber* l;
+        ComesPendens* cp;
               vacuum* inventum;
               chorda  clavis;
 
@@ -1093,9 +1131,31 @@ librum_scribae (
         redde (ScribaLiber*)inventum;
     }
     clavis  = chorda_transcribere(praefixum, cs->piscina);
-    l       = scriba_liber_aperire_in_spatio(cs->piscina, cs->intern,
-        cs->volumen, chorda_ut_cstr(clavis, cs->piscina), cs->latitudo,
-        cs->altitudo);
+    cp      = NIHIL;
+    si (praefixum_comitis(clavis) && cs->pendentes)
+    {
+        cp = (ComesPendens*)piscina_allocare(cs->piscina,
+            magnitudo(ComesPendens));
+    }
+    si (cp)
+    {
+        memset(cp, ZEPHYRUM, magnitudo(ComesPendens));
+        cp->cs         = cs;
+        cp->praefixum  = clavis;
+        l = scriba_liber_aperire_pigre(cs->piscina, cs->intern,
+            cs->volumen, chorda_ut_cstr(clavis, cs->piscina),
+            cs->latitudo, cs->altitudo, comitem_natum_notare, cp);
+        si (l)
+        {
+            (vacuum)tabula_dispersa_inserere(cs->pendentes, clavis, cp);
+        }
+    }
+    alioquin
+    {
+        l = scriba_liber_aperire_in_spatio(cs->piscina, cs->intern,
+            cs->volumen, chorda_ut_cstr(clavis, cs->piscina),
+            cs->latitudo, cs->altitudo);
+    }
     si (l && cs->libri)
     {
         (vacuum)tabula_dispersa_inserere(cs->libri, clavis, l);
@@ -1115,6 +1175,8 @@ comitem_scribae_ponere (
 {
       ScribaMontatio* m;
     ContextusScribae* cs;
+        ComesPendens* cp;
+              vacuum* inventum;
 
     m = (ScribaMontatio*)ctx;
     si (!scriba_comitem_ponere(m, praefixum, titulus))
@@ -1122,7 +1184,31 @@ comitem_scribae_ponere (
         redde FALSUM;
     }
     cs = m ? (ContextusScribae*)m->libri_ctx : NIHIL;
-    si (cs && praefixum.mensura > ZEPHYRUM)
+    si (!cs || praefixum.mensura == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    /* L5: comes piger - nota ultima servatur; scribitur in natali (aut
+     * statim si liber iam natus) */
+    cp = NIHIL;
+    si (   cs->pendentes
+        && tabula_dispersa_invenire(cs->pendentes, praefixum,
+        &inventum))
+    {
+        cp = (ComesPendens*)inventum;
+    }
+    si (cp)
+    {
+        si (!chorda_aequalis(cp->titulus, titulus))
+        {
+            cp->titulus = chorda_transcribere(titulus, cs->piscina);
+        }
+        si (!chorda_aequalis(cp->semita, semita))
+        {
+            cp->semita = chorda_transcribere(semita, cs->piscina);
+        }
+    }
+    si (!cp || scriba_liber_natus(m->liber))
     {
         (vacuum)scriba_liber_comitem_notare(cs->volumen, cs->intern,
             chorda_ut_cstr(praefixum, cs->piscina), titulus, semita,
@@ -3722,6 +3808,8 @@ nomen structura {
       LectorBibliotheca* bibliotheca;
                     b32  temptatum;
         StatusSystemata* systemata;
+    /* L5: scheda quaestionis notarum (omni pictura vacatur) */
+                Piscina* scheda_notarum;
 } ContextusLectoris;
 
 interior LectorBibliotheca*
@@ -3755,6 +3843,40 @@ bibliotheca_lectoris (
     redde cl->bibliotheca;
 }
 
+/* L5: notas_habet lectoris - liber comitis loci ('comes/' + locus, ut
+ * comitem_sequi) in volumine vici lineam saltem unam non vacuam habet
+ * (Franus: liber vacuus - comes ante pigritiam creatus, aut notae
+ * deletae - non numeratur); lectio sola. Liber absens: exstat solum
+ * (via celeris, nullum documentum aperitur) */
+interior b32
+lectoris_notas_habere (
+    vacuum* ctx,
+    chorda  locus)
+{
+    ContextusLectoris* cl;
+                  Xar* lineae;
+            character* praefixum;
+
+    cl = (ContextusLectoris*)ctx;
+    si (!cl || !cl->scheda_notarum || locus.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    piscina_vacare(cl->scheda_notarum);
+    praefixum = chorda_ut_cstr(chorda_concatenare(chorda_ex_literis(
+        "comes/", cl->scheda_notarum), locus, cl->scheda_notarum),
+        cl->scheda_notarum);
+    si (!scriba_liber_exstat(cl->volumen, praefixum,
+        cl->scheda_notarum))
+    {
+        redde FALSUM;
+    }
+    lineae = xar_creare(cl->scheda_notarum, (i32)magnitudo(chorda));
+    redde lineae && scriba_liber_lineas_legere(cl->scheda_notarum,
+        cl->intern, cl->volumen, praefixum, I, lineae)
+        && xar_numerus(lineae) > ZEPHYRUM;
+}
+
 interior b32
 lectorem_montare_in_vico (
                  vacuum* sedes,
@@ -3780,6 +3902,13 @@ lectorem_montare_in_vico (
     {
         redde FALSUM;
     }
+    si (!cl->scheda_notarum)
+    {
+        cl->scheda_notarum = piscina_generare_dynamicum("lector_notae",
+            IV * M);
+    }
+    ((LectorMontatio*)sedes)->notas_habet      = lectoris_notas_habere;
+    ((LectorMontatio*)sedes)->notas_habet_ctx  = cl;
     /* URI, identitas libri (liber ad positionem suam); mala:
      * bibliotheca manet */
     si (argumentum && argumentum[ZEPHYRUM])
@@ -4259,12 +4388,13 @@ ContextusNomenclatoris* cn;
     cs->liber = scriba_liber_aperire(piscina, intern, volumen,
         folii_columnae(latitudo), folii_lineae(altitudo));
     /* comites P2: libri comites (porta librum_scribae) */
-    cs->libri     = tabula_dispersa_creare_chorda(piscina, XVI);
-    cs->piscina   = piscina;
-    cs->intern    = intern;
-    cs->volumen   = volumen;
-    cs->latitudo  = folii_columnae(latitudo);
-    cs->altitudo  = folii_lineae(altitudo);
+    cs->libri      = tabula_dispersa_creare_chorda(piscina, XVI);
+    cs->pendentes  = tabula_dispersa_creare_chorda(piscina, XVI);
+    cs->piscina    = piscina;
+    cs->intern     = intern;
+    cs->volumen    = volumen;
+    cs->latitudo   = folii_columnae(latitudo);
+    cs->altitudo   = folii_lineae(altitudo);
     /* S3b: iussa omnium visuum scribae */
     cs->iussa = iussum_registrum_creare(piscina);
     si (   !app->vicus || !cs->liber || !cs->iussa

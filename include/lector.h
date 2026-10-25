@@ -35,7 +35,11 @@
  * trans paragraphum, numquam trans caput) ordo unus - servantur per
  * sententiam, ergo '*' in media cursum findit. Claves: j k, [ ],
  * Enter (ad sententiam primam ordinis - motus), Esc (unde venit).
- * Lustratio positionem non movet. */
+ * Lustratio positionem non movet.
+ * NOTAE (L5): locus per visum - pagina = liber, caput, pagina;
+ * sententia = liber, caput, sententia; ceteri = liber. Comes (Cmd+T)
+ * nascitur scriptura prima; locus cum notis '\302\266' (pilcrow)
+ * obscurum in pede habet (notas_habet hospitis). */
 
 #ifndef LECTOR_H
 #define LECTOR_H
@@ -61,6 +65,10 @@ nomen structura {
     InternamentumChorda* intern;
                  vacuum* figurae_ctx;   /* privatum: codex, caput,
                                          * paginae in cache */
+    /* L5: VERUM si locus (lector_locus) notas habet - hospes (vicus:
+     * liber comes/<locus> textum habet); NIHIL = nullae notae */
+                    b32  (*notas_habet)(vacuum* ctx, chorda locus);
+                 vacuum* notas_habet_ctx;
 } LectorMontatio;
 
 /* montare in ramo <lector id="..."> (manifestum infixum); superficies

@@ -157,3 +157,26 @@ word: trim removed as dead code.
 
 Selected library rows paint their dim text (author, progress,
 unreadable) in COLOR_BACKGROUND, like nomenclator (Fran).
+
+## 2026-10-24 - L5: companions (plan project-specs/lector-l5-plan.md)
+
+Companions already worked for lector (L3 locus), but EAGERLY: showing
+one wrote the book index, page manifest, `comes` record and `/visus`, and
+follow mode did that per pulse - a notebook per page read. Laziness was
+built where it belongs (scriba_documentum, scriba_liber, the vicus gate;
+see their worklogs); lector's part:
+
+- **Loci per view.** `lector_locus` was the whole route, so stale status
+  fields leaked: a sentence locus carried `pagina=` (its notebook
+  depended on the page you came from) and favourites/contents/library
+  carried `caput`/`pagina`/`sententia`. Now the route node read for the
+  locus drops fields per view; the stored route is untouched.
+- **Note mark** "¶" (Latin-1 pilcrow, dim) appended to the page and
+  sentence footers when `notas_habet(locus)` answers yes. The host owns
+  the `comes/` key: vicus answers "notebook exists AND has a non-blank
+  line" (Fran revised from "exists" after the look - covers empty
+  notebooks left from the eager era and deleted notes). Index lookup
+  first, so places without a notebook cost one plagula probe per paint;
+  the vicus side uses its own scratch piscina, emptied per call.
+- Census (scratch build/sonda/sonda_sequela.c, real vicus + library):
+  54 followed places -> 0 `comes/` plagulae; one write -> 3.

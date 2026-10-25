@@ -259,3 +259,16 @@ notification mute is ignored on purpose. The port must now provide the
 three live-voice calls or it is refused as a whole (porta_dimidia).
 ludus_tessera's hand list gained "aetherophonum" (vicus_applicatio links
 the pane; the pane links nothing sound-related).
+
+## 2026-10-24 - lazy companions + lector note host (lector L5)
+
+The scriba book gate (`librum_scribae`) opens `comes/...` books lazily
+(other prefixes unchanged). Each gets a `ComesPendens` (prefix, latest
+title + route) in `cs->pendentes`; `comitem_scribae_ponere` updates it
+and writes the `comes` record only when the book is already born; the
+book's `natale` writes it at birth. `scriba_actiones` skips the
+`<prefix>/visus` write while unborn - showing a companion DOES write it
+(a plant proved the guard is needed). Lector's `notas_habet` =
+`lectoris_notas_habere`: "comes/" + locus (same key comitem_sequi
+builds - a Cmd+T end-to-end test pins it) has a non-blank line; scratch
+piscina `scheda_notarum` per call because it runs on every paint.

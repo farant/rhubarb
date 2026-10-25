@@ -680,21 +680,25 @@ _sectio_quaerendi (
     CREDO_NECESSE(x && x->v);
     intern = internamentum_creare(c->piscina);
 
-    CREDO_GRADUS("Cmd+T in die: nota comitis (titulus, semita)");
+    CREDO_GRADUS("Cmd+T in die: nota comitis (titulus, semita) post "
+        "scripturam primam (L5)");
     CREDO_VERUM(vicus_focum_ponere(x->v, VICUS_DEXTRUM));
     ostendere(x, "calendarium", "calendarium/dies/2026-10-22");
     dispensator_recomponere(x->app.d);
     clavis(x, 't', (i32)MOD_SUPER);
     CREDO_VERUM(comes_est(x, "comes/calendarium/dies/2026-10-22",
         "Notes \302\267 Thu 22 Oct 2026", "1"));
+    CREDO_FALSUM(scriba_liber_comitem_legere(c->piscina, intern,
+        x->volumen, "comes/calendarium/dies/2026-10-22", &titulus,
+        &semita));
+    CREDO_VERUM(comitem_scribere(x, "rhubarb crumble for Thursday",
+        c->piscina));
     CREDO_VERUM(scriba_liber_comitem_legere(c->piscina, intern,
         x->volumen, "comes/calendarium/dies/2026-10-22", &titulus,
         &semita));
     CREDO_CHORDA_AEQUALIS_LITERIS(titulus,
         "Notes \302\267 Thu 22 Oct 2026");
     CREDO_VERUM(incipit(semita, "calendarium/dies/2026-10-22"));
-    CREDO_VERUM(comitem_scribere(x, "rhubarb crumble for Thursday",
-        c->piscina));
     /* pagina secunda per librum applicationis ipsum */
     {
            ScribaMontatio* m;
@@ -743,11 +747,14 @@ _sectio_quaerendi (
     clavis(x, 't', (i32)MOD_SUPER);
     CREDO_VERUM(comes_est(x, "comes/terminale/1_dextrum_terminale",
         "Notes \302\267 Terminal", "1"));
+    CREDO_FALSUM(scriba_liber_comitem_legere(c->piscina, intern,
+        x->volumen, "comes/terminale/1_dextrum_terminale", &titulus,
+        &semita));
+    CREDO_VERUM(comitem_scribere(x, "plumber xyzzy", c->piscina));
     CREDO_VERUM(scriba_liber_comitem_legere(c->piscina, intern,
         x->volumen, "comes/terminale/1_dextrum_terminale", &titulus,
         &semita));
     CREDO_AEQUALIS_I32(semita.mensura, ZEPHYRUM);
-    CREDO_VERUM(comitem_scribere(x, "plumber xyzzy", c->piscina));
     clavis(x, 't', (i32)MOD_SUPER);
     CREDO_VERUM(vicus_focum_ponere(x->v, VICUS_DEXTRUM));
     dispensator_recomponere(x->app.d);
@@ -771,6 +778,96 @@ _sectio_quaerendi (
         "Notes \302\267 Terminal", "1"));
 }
 
+/* comes in volumine nullus: nec liber, nec nota, nec pagina visa */
+interior b32
+comes_nullus (
+                 Mundus* x,
+    InternamentumChorda* intern,
+     constans character* praefixum,
+                Piscina* piscina)
+{
+    chorda titulus;
+    chorda semita;
+       b32 inventum;
+
+    (vacuum)volumen_plagulam_promere(x->volumen, chorda_concatenare(
+        chorda_ex_literis(praefixum, piscina), chorda_ex_literis(
+        "/visus", piscina), piscina), piscina, &inventum);
+    redde !scriba_liber_exstat(x->volumen, praefixum, piscina)
+        && !scriba_liber_comitem_legere(piscina, intern, x->volumen,
+               praefixum, &titulus, &semita)
+        && !inventum;
+}
+
+/* lector L5: comites pigri - ostendere et sequi nihil scribunt;
+ * scriptura prima librum, paginam et notam (titulus, semita) nascit */
+interior vacuum
+_sectio_pigri (
+    CredoContextus* c)
+{
+                 Mundus* x;
+    InternamentumChorda* intern;
+                 chorda  titulus;
+                 chorda  semita;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x && x->v);
+    intern = internamentum_creare(c->piscina);
+
+    CREDO_GRADUS("Cmd+T et sequela (dies duo, persona): nihil "
+        "scriptum");
+    CREDO_VERUM(vicus_focum_ponere(x->v, VICUS_DEXTRUM));
+    ostendere(x, "calendarium", "calendarium/dies/2026-10-20");
+    dispensator_recomponere(x->app.d);
+    clavis(x, 't', (i32)MOD_SUPER);
+    CREDO_VERUM(comes_est(x, "comes/calendarium/dies/2026-10-20",
+        "Notes \302\267 Tue 20 Oct 2026", "1"));
+    ostendere(x, "calendarium", "calendarium/dies/2026-10-21");
+    CREDO_VERUM(comes_est(x, "comes/calendarium/dies/2026-10-21",
+        "Notes \302\267 Wed 21 Oct 2026", "1"));
+    ostendere(x, "nomenclator", "nomenclator/2");
+    CREDO_VERUM(comes_est(x, "comes/nomenclator/2",
+        "Notes \302\267 Bruno Verdi", "1"));
+    CREDO_VERUM(comes_nullus(x, intern,
+        "comes/calendarium/dies/2026-10-20",
+        c->piscina));
+    CREDO_VERUM(comes_nullus(x, intern,
+        "comes/calendarium/dies/2026-10-21",
+        c->piscina));
+    CREDO_VERUM(comes_nullus(x, intern, "comes/nomenclator/2",
+        c->piscina));
+
+    CREDO_GRADUS("scriptura in tertio: liber, pagina, nota; ceteri "
+        "nulli");
+    CREDO_VERUM(comitem_scribere(x, "lent him a ladder", c->piscina));
+    CREDO_VERUM(scriba_liber_exstat(x->volumen, "comes/nomenclator/2",
+        c->piscina));
+    CREDO_VERUM(scriba_liber_comitem_legere(c->piscina, intern,
+        x->volumen, "comes/nomenclator/2", &titulus, &semita));
+    CREDO_CHORDA_AEQUALIS_LITERIS(titulus,
+        "Notes \302\267 Bruno Verdi");
+    CREDO_VERUM(incipit(semita, "nomenclator/2"));
+    CREDO_VERUM(comes_nullus(x, intern,
+        "comes/calendarium/dies/2026-10-20",
+        c->piscina));
+    CREDO_VERUM(comes_nullus(x, intern,
+        "comes/calendarium/dies/2026-10-21",
+        c->piscina));
+
+    CREDO_GRADUS("quaestio comitem natum invenit");
+    clavis(x, 't', (i32)MOD_SUPER);
+    CREDO_VERUM(comes_est(x, "", NIHIL, "1"));
+    CREDO_VERUM(vicus_focum_ponere(x->v, VICUS_DEXTRUM));
+    ostendere(x, "calendarium", "calendarium/dies/2026-10-21");
+    dispensator_recomponere(x->app.d);
+    quaerere_et_aperire(x, "ladder");
+    CREDO_VERUM(comes_est(x, "comes/nomenclator/2",
+        "Notes \302\267 Bruno Verdi", "1"));
+    CREDO_VERUM(comes_nullus(x, intern,
+        "comes/calendarium/dies/2026-10-21",
+        c->piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "calendarium", _sectio_calendarium, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
@@ -783,6 +880,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "quaerendi", _sectio_quaerendi, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "aditus", _sectio_aditus, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "pigri", _sectio_pigri, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

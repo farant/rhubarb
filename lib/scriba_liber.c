@@ -23,6 +23,10 @@ structura ScribaLiber {
                                        * NIHIL donec apertum */
                  chorda index;       /* A6c: plagula indicis */
                  chorda spatium;     /* A6c: praefixum paginarum */
+    /* lector L5: natus = index in volumine; piger ante natalem */
+                    b32 natus;
+                    b32  (*natale)(vacuum* ctx, ScribaLiber* liber);
+                 vacuum* natale_ctx;
 };
 
 interior chorda
@@ -69,6 +73,48 @@ indicem_scribere (
     redde volumen_plagulam_condere(l->volumen,
         l->index,
         chorda_aedificator_finire(a), "scriba:paginae");
+}
+
+/* natalis libri pigri: index scribitur, natale vocatur (semel);
+ * natus: nihil */
+interior b32
+librum_nasci (
+    ScribaLiber* l)
+{
+    si (l->natus)
+    {
+        redde VERUM;
+    }
+    si (!indicem_scribere(l))
+    {
+        redde FALSUM;
+    }
+    l->natus = VERUM;
+    si (l->natale)
+    {
+        (vacuum)l->natale(l->natale_ctx, l);
+    }
+    redde VERUM;
+}
+
+/* natale documenti nascituri (ctx = liber): liber nascitur */
+interior b32
+paginam_natam (
+    vacuum* ctx)
+{
+    redde librum_nasci((ScribaLiber*)ctx);
+}
+
+/* index servatur: liber piger hoc ipso nascitur */
+interior b32
+indicem_servare (
+    ScribaLiber* l)
+{
+    si (!l->natus)
+    {
+        redde librum_nasci(l);
+    }
+    redde indicem_scribere(l);
 }
 
 /* nomina paginarum ex plagula indicis (lectio sola): Xar de chorda;
@@ -119,7 +165,8 @@ nomina_legere (
     redde nomina;
 }
 
-/* liber cum viis datis (index, praefixum paginarum) */
+/* liber cum viis datis (index, praefixum paginarum); piger: index
+ * absens non scribitur (liber nondum natus) */
 interior ScribaLiber*
 librum_aperire (
                 Piscina* piscina,
@@ -128,7 +175,8 @@ librum_aperire (
                  chorda  via_indicis,
                  chorda  spatium_paginarum,
                     i32  latitudo,
-                    i32  altitudo)
+                    i32  altitudo,
+                    b32  piger)
 {
      ScribaLiber* l;
              Xar* nomina;
@@ -160,8 +208,14 @@ librum_aperire (
     si (!inventum)
     {
         nomen_addere(l, chorda_ex_literis("1", piscina));
+        si (piger)
+        {
+            redde l;
+        }
+        l->natus = VERUM;
         redde indicem_scribere(l) ? l : NIHIL;
     }
+    l->natus = VERUM;
     si (!nomina)
     {
         redde NIHIL;
@@ -193,7 +247,7 @@ scriba_liber_aperire (
     redde librum_aperire(piscina, intern, volumen, chorda_ex_literis(
         clavis_indicis, piscina), chorda_ex_literis("paginae/",
         piscina),
-        latitudo, altitudo);
+        latitudo, altitudo, FALSUM);
 }
 
 ScribaLiber*
@@ -215,7 +269,63 @@ scriba_liber_aperire_in_spatio (
         chorda_ex_literis("/paginae", piscina), piscina);
     redde librum_aperire(piscina, intern, volumen, basis,
         chorda_concatenare(basis, chorda_ex_literis("/", piscina),
-        piscina), latitudo, altitudo);
+        piscina), latitudo, altitudo, FALSUM);
+}
+
+ScribaLiber*
+scriba_liber_aperire_pigre (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* praefixum,
+                    i32  latitudo,
+                    i32  altitudo,
+                    b32  (*natale)(vacuum* ctx, ScribaLiber* liber),
+                 vacuum* natale_ctx)
+{
+          chorda  basis;
+     ScribaLiber* l;
+
+    si (!piscina || !praefixum || !praefixum[ZEPHYRUM])
+    {
+        redde NIHIL;
+    }
+    basis = chorda_concatenare(chorda_ex_literis(praefixum, piscina),
+        chorda_ex_literis("/paginae", piscina), piscina);
+    l = librum_aperire(piscina, intern, volumen, basis,
+        chorda_concatenare(basis, chorda_ex_literis("/", piscina),
+        piscina), latitudo, altitudo, VERUM);
+    si (l)
+    {
+        l->natale      = natale;
+        l->natale_ctx  = natale_ctx;
+    }
+    redde l;
+}
+
+b32
+scriba_liber_natus (
+    constans ScribaLiber* l)
+{
+    redde l && l->natus;
+}
+
+b32
+scriba_liber_exstat (
+                Volumen* volumen,
+     constans character* praefixum,
+                Piscina* piscina)
+{
+    b32 inventum;
+
+    si (!volumen || !praefixum || !praefixum[ZEPHYRUM] || !piscina)
+    {
+        redde FALSUM;
+    }
+    (vacuum)volumen_plagulam_promere(volumen, chorda_concatenare(
+        chorda_ex_literis(praefixum, piscina), chorda_ex_literis(
+        "/paginae", piscina), piscina), piscina, &inventum);
+    redde inventum;
 }
 
 i32
@@ -279,6 +389,14 @@ scriba_liber_pagina (
     *sedes = scriba_documentum_aperire(l->piscina, l->intern,
         l->volumen,
         spatium);
+    si (!*sedes && !l->natus)
+    {
+        /* liber piger: pagina nascitura; scriptura prima librum
+         * nascit */
+        *sedes = scriba_documentum_nasciturum(l->piscina, l->intern,
+            l->volumen, spatium, l->latitudo, l->altitudo, INTERVALLUM,
+            paginam_natam, l);
+    }
     si (!*sedes)
     {
         *sedes = scriba_documentum_creare(l->piscina, l->intern,
@@ -304,7 +422,7 @@ scriba_liber_pagina_nova (
         n++;
     }
     nomen_addere(l, chorda_ex_s32(n, l->piscina));
-    si (!indicem_scribere(l))
+    si (!indicem_servare(l))
     {
         xar_truncare(l->nomina, xar_numerus(l->nomina) - I);
         xar_truncare(l->documenta, xar_numerus(l->documenta) - I);
@@ -333,6 +451,11 @@ scriba_liber_paginam_condere (
         {
             redde NIHIL;
         }
+    }
+    /* pagina nominata = propositum: liber piger nascitur */
+    si (!librum_nasci(l))
+    {
+        redde NIHIL;
     }
     si (scriba_liber_index(l, titulus) < ZEPHYRUM)
     {

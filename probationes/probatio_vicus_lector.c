@@ -11,6 +11,10 @@
 #include "vicus_applicatio.h"
 #include "lector.h"
 #include "lector_bibliotheca.h"
+#include "scriba_liber.h"
+#include "scriba_applicatio.h"
+#include "scriba_documentum.h"
+#include "tabula_characterum.h"
 #include "thema.h"
 #include "manus_ludus.h"
 #include "dispensator.h"
@@ -196,12 +200,96 @@ _probare_via (
     CREDO_VERUM(caput && chorda_aequalis_literis(*caput, "pagina"));
 }
 
+/* lector L5: notas_habet hospitis = liber 'comes/<locus>' in volumine
+ * vici TEXTUM habet (liber vacuus - comes veteris moris, aut notae
+ * deletae - non numeratur); locus alius (sententia proxima) sine
+ * notis */
+interior vacuum
+_probare_notae (
+    CredoContextus* c)
+{
+                  Mundus* x;
+                   Vicus* v;
+          LectorMontatio* l;
+     InternamentumChorda* intern;
+             ScribaLiber* liber;
+        ScribaDocumentum* d;
+       TabulaCharacterum  folium;
+                  chorda  locus;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(aedificare(x, c));
+    v       = x->app.vicus;
+    intern  = internamentum_creare(c->piscina);
+    CREDO_VERUM(vicus_acervo_aperire(v, "lector",
+        "lector/sententia/urn%3Arhubarb%3Aalpha?caput=3&sententia=19"));
+    (vacuum)vicus_pulsare(v);
+    l = lector_frontalis(v);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_NECESSE(l->notas_habet != NIHIL);
+    locus = chorda_transcribere(lector_locus(l, c->piscina),
+        c->piscina);
+    CREDO_FALSUM(l->notas_habet(l->notas_habet_ctx, locus));
+
+    CREDO_GRADUS("liber comitis vacuus (mos vetus): notae nullae");
+    liber = scriba_liber_aperire_in_spatio(c->piscina, intern,
+        x->volumen, chorda_ut_cstr(chorda_concatenare(chorda_ex_literis(
+        "comes/", c->piscina), locus, c->piscina), c->piscina), XL, X);
+    CREDO_NECESSE_NON_NIHIL(liber);
+    d = scriba_liber_pagina(liber, chorda_ex_literis("1", c->piscina));
+    CREDO_NECESSE_NON_NIHIL(d);
+    CREDO_FALSUM(l->notas_habet(l->notas_habet_ctx, locus));
+
+    CREDO_GRADUS("comes scriptus: notae; deletae: nullae; sententia "
+        "proxima sine");
+    tabula_ex_literis_cum_dimensionibus(&folium, c->piscina,
+        d->latitudo, d->altitudo, "ladder");
+    CREDO_VERUM(scriba_documentum_committere(d, &folium) > ZEPHYRUM);
+    CREDO_VERUM(l->notas_habet(l->notas_habet_ctx, locus));
+    tabula_ex_literis_cum_dimensionibus(&folium, c->piscina,
+        d->latitudo, d->altitudo, "   ");
+    CREDO_VERUM(scriba_documentum_committere(d, &folium) > ZEPHYRUM);
+    CREDO_FALSUM(l->notas_habet(l->notas_habet_ctx, locus));
+    tabula_ex_literis_cum_dimensionibus(&folium, c->piscina,
+        d->latitudo, d->altitudo, "ladder");
+    CREDO_VERUM(scriba_documentum_committere(d, &folium) > ZEPHYRUM);
+    CREDO_VERUM(l->notas_habet(l->notas_habet_ctx, locus));
+    CREDO_VERUM(lector_argumentum_ponere(l,
+        "lector/sententia/urn%3Arhubarb%3Aalpha?caput=3&sententia=31"));
+    CREDO_FALSUM(l->notas_habet(l->notas_habet_ctx, lector_locus(l,
+        c->piscina)));
+
+    CREDO_GRADUS("Cmd+T (vicus_comitem_commutare) et scriptura: clavis "
+        "comitis eadem ac notarum");
+    {
+         VicusLatus* sinister;
+     ScribaMontatio* sm;
+
+        (vacuum)vicus_pulsare(v);
+        CREDO_VERUM(vicus_comitem_commutare(v));
+        (vacuum)vicus_pulsare(v);
+        sinister = vicus_latus(vicus_activa(v), VICUS_SINISTRUM);
+        sm = sinister ? (ScribaMontatio*)sinister->montatio : NIHIL;
+        CREDO_NECESSE(sm && sm->doc);
+        CREDO_FALSUM(l->notas_habet(l->notas_habet_ctx, lector_locus(l,
+            c->piscina)));
+        tabula_ex_literis_cum_dimensionibus(&folium, c->piscina,
+            sm->doc->latitudo, sm->doc->altitudo, "plums");
+        CREDO_VERUM(scriba_documentum_committere(sm->doc, &folium)
+            > ZEPHYRUM);
+        CREDO_VERUM(l->notas_habet(l->notas_habet_ctx, lector_locus(l,
+            c->piscina)));
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latera", _probare_latera, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { "duo", _probare_duo, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { "via", _probare_via, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "notae", _probare_notae, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

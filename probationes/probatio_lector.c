@@ -1472,6 +1472,120 @@ _sectio_favores (
     mundum_claudere(w);
 }
 
+/* locus continens fragmentum? */
+interior b32
+locus_continet (
+                 Mundus* w,
+     constans character* fragmentum,
+                Piscina* p)
+{
+    redde chorda_continet(lector_locus(&w->m, p), chorda_ex_literis(
+        fragmentum, p));
+}
+
+/* lector L5: locus per visum - pagina = liber, caput, pagina;
+ * sententia = liber, caput, sententia; ceteri = liber solus */
+interior vacuum
+_sectio_loci (
+    CredoContextus* c)
+{
+     Mundus* w;
+     Mundus* alter;
+     chorda  locus;
+
+    w = mundus(c, BIBLIOTHECA, ALTITUDO);
+    CREDO_NECESSE_NON_NIHIL(w);
+
+    CREDO_GRADUS("pagina: caput et pagina, non sententia");
+    CREDO_VERUM(argumentum(w, PAGINA_ALPHA "?caput=3&pagina=0"));
+    CREDO_VERUM(locus_continet(w, PAGINA_ALPHA, c->piscina));
+    CREDO_VERUM(locus_continet(w, "caput=3", c->piscina));
+    CREDO_VERUM(locus_continet(w, "pagina=0", c->piscina));
+    CREDO_FALSUM(locus_continet(w, "sententia=", c->piscina));
+
+    CREDO_GRADUS("s: sententia sine pagina; latus alterum (semita "
+        "sententiae sola) eundem locum habet");
+    clavis(w, 's');
+    CREDO_VERUM(locus_continet(w, SENTENTIA_ALPHA, c->piscina));
+    CREDO_VERUM(locus_continet(w, "caput=3", c->piscina));
+    CREDO_VERUM(locus_continet(w, "sententia=", c->piscina));
+    CREDO_FALSUM(locus_continet(w, "pagina=", c->piscina));
+    locus = chorda_transcribere(lector_locus(&w->m, c->piscina),
+        c->piscina);
+    alter = mundus_alter(c, w);
+    CREDO_NECESSE_NON_NIHIL(alter);
+    CREDO_VERUM(argumentum(alter, chorda_ut_cstr(locus, c->piscina)));
+    CREDO_VERUM(chorda_aequalis(lector_locus(&alter->m, c->piscina),
+        locus));
+
+    CREDO_GRADUS("favores, index, bibliotheca: liber solus");
+    clavis(w, 'f');
+    CREDO_VERUM(locus_continet(w, "lector/favores/", c->piscina));
+    CREDO_FALSUM(locus_continet(w, "?", c->piscina));
+    effugium(w);
+    clavis(w, 't');
+    CREDO_VERUM(locus_continet(w, "lector/index/", c->piscina));
+    CREDO_FALSUM(locus_continet(w, "?", c->piscina));
+    effugium(w);
+    CREDO_VERUM(campus_est(w, "visus", "bibliotheca"));
+    CREDO_FALSUM(locus_continet(w, "?", c->piscina));
+    mundum_claudere(w);
+}
+
+/* hospes fictus notarum: locus notatus unus (ctx = chorda*) */
+interior b32
+notas_fictas_habere (
+    vacuum* ctx,
+    chorda  locus)
+{
+    redde chorda_aequalis(*(chorda*)ctx, locus);
+}
+
+/* lector L5: signum notarum '¶' in pede paginae et sententiae, ex
+ * hospite (notas_habet) pro locu currenti */
+interior vacuum
+_sectio_notae (
+    CredoContextus* c)
+{
+     Mundus* w;
+     chorda  notatus;
+
+    w = mundus(c, BIBLIOTHECA, ALTITUDO);
+    CREDO_NECESSE_NON_NIHIL(w);
+
+    CREDO_GRADUS("hospes nullus: signum nullum");
+    CREDO_VERUM(argumentum(w, PAGINA_ALPHA "?caput=3&pagina=0"));
+    CREDO_VERUM(pictum(w, "1/1", c->piscina));
+    CREDO_FALSUM(pictum(w, "\302\266", c->piscina));
+
+    CREDO_GRADUS("pagina cum notis: '1/1 \302\266' in pede");
+    notatus = chorda_transcribere(lector_locus(&w->m, c->piscina),
+        c->piscina);
+    w->m.notas_habet      = notas_fictas_habere;
+    w->m.notas_habet_ctx  = &notatus;
+    CREDO_VERUM(pictum(w, "1/1 \302\266", c->piscina));
+
+    CREDO_GRADUS("s: sententia sine notis; notata: signum");
+    clavis(w, 's');
+    CREDO_VERUM(pictum(w, "sentence 1/5", c->piscina));
+    CREDO_FALSUM(pictum(w, "\302\266", c->piscina));
+    notatus = chorda_transcribere(lector_locus(&w->m, c->piscina),
+        c->piscina);
+    CREDO_VERUM(pictum(w, "sentence 1/5 \302\266", c->piscina));
+
+    CREDO_GRADUS("j: proxima sine signo; k redit cum signo");
+    clavis(w, 'j');
+    CREDO_FALSUM(pictum(w, "\302\266", c->piscina));
+    clavis(w, 'k');
+    CREDO_VERUM(pictum(w, "\302\266", c->piscina));
+
+    CREDO_GRADUS("J: iuncta notas primae servat (locus = offset "
+        "primum)");
+    clavis(w, 'J');
+    CREDO_VERUM(pictum(w, "sentence 1/4 \302\266", c->piscina));
+    mundum_claudere(w);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "bibliotheca", _sectio_bibliotheca, NIHIL, NIHIL, NIHIL, NIHIL },
     { "paginae_ordinum", _sectio_paginae_ordinum, NIHIL, NIHIL, NIHIL,
@@ -1486,6 +1600,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "emendare", _sectio_emendare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "findere", _sectio_findere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "favores", _sectio_favores, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "loci", _sectio_loci, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "notae", _sectio_notae, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

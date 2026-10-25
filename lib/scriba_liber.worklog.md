@@ -68,3 +68,14 @@ RAW (only text content is escaped, `_scribere_evasus`, and unescaped on
 read). So the values are TEXT children: `<comes><titulus>..</titulus>
 <semita>..</semita></comes>`. Written only when the serialized text differs
 (follow mode would otherwise add an act per switch); empty route omitted.
+
+## 2026-10-24 - lazy books (lector L5 / comites P6)
+
+`scriba_liber_aperire_pigre`: absent index -> page "1" in memory, nothing
+written; pages are unborn documents whose `natale` gives birth to the
+book (`librum_nasci`: index, then the book's `natale`, once). New page
+saves through `indicem_servare` (birth if unborn); a NAMED page always
+gives birth first, even for the in-memory "1" (naming is intent). An
+existing book opened lazily is born and never calls `natale`.
+`scriba_liber_natus`, and `scriba_liber_exstat` (read-only index probe)
+for hosts that ask "does this notebook exist".

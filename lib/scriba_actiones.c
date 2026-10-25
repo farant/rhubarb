@@ -651,8 +651,12 @@ paginam_ponere (
     sa->inserere           = FALSUM;
     sa->insertio_commissa  = FALSUM;
     laboris_reficere(sa);
-    (vacuum)volumen_plagulam_condere(doc->volumen, sa->visus, novum,
-        "scriba:visus");
+    /* lector L5: liber piger nondum natus paginam visam non scribit */
+    si (scriba_liber_natus(sa->liber))
+    {
+        (vacuum)volumen_plagulam_condere(doc->volumen, sa->visus, novum,
+            "scriba:visus");
+    }
     st                           = status_legere(ramus, sa, &capsa);
     st.cursor_linea              = (i32)(linea < (s32)doc->altitudo
                                          ? linea : ZEPHYRUM);

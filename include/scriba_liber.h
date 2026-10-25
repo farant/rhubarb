@@ -47,8 +47,39 @@ scriba_liber_aperire_in_spatio (
                     i32  latitudo,
                     i32  altitudo);
 
+/* comites pigri (lector L5): liber in spatio sine scriptura. Index
+ * absens: pagina "1" in memoria, paginae documenta nascitura; nihil
+ * scribitur donec liber nascitur - actum primum non vacuum, pagina nova
+ * aut nominata. Natalis: index scribitur, deinde natale(ctx, liber).
+ * Index praesens: ut scriba_liber_aperire_in_spatio (natus). */
+ScribaLiber*
+scriba_liber_aperire_pigre (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* praefixum,
+                    i32  latitudo,
+                    i32  altitudo,
+                    b32  (*natale)(vacuum* ctx, ScribaLiber* liber),
+                 vacuum* natale_ctx);
+
+/* liber in volumine exstat? (aperire_in_spatio: semper; pigre: post
+ * natalem) */
+b32
+scriba_liber_natus (
+    constans ScribaLiber* l);
+
+/* LECTIO SOLA: liber in spatio exstat (plagula '<praefixum>/paginae')?
+ * Nihil aperitur, nihil scribitur */
+b32
+scriba_liber_exstat (
+                Volumen* volumen,
+     constans character* praefixum,
+                Piscina* piscina);
+
 /* documentum paginae (aperitur aut creatur, semel); NIHIL si nomen
- * ignotum */
+ * ignotum. Liber nondum natus: documentum nasciturum (scriptura prima
+ * librum nascit) */
 ScribaDocumentum*
 scriba_liber_pagina (
     ScribaLiber* l,

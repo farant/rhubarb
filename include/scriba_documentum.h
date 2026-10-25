@@ -52,6 +52,12 @@ nomen structura {
          memoriae_index  mensura;
       TabulaCharacterum  tabula;        /* proiectio (in memoria) */
                Historia* historia;
+    /* lector L5: natum = manifestum in volumine. Nasciturum: spatium
+     * et natale servata, natalis in actu primo non vacuo */
+                    b32  natum;
+     constans character* spatium;
+                    b32  (*natale)(vacuum* ctx);
+                 vacuum* natale_ctx;
 } ScribaDocumentum;
 
 
@@ -108,6 +114,27 @@ scriba_documentum_creare (
                     i32  latitudo,
                     i32  altitudo,
                     i32  intervallum);
+
+/* documentum NASCITURUM (comites pigri, lector L5): in memoria solum,
+ * NIHIL scribitur. Actum primum non vacuum (committere) manifestum et
+ * historiam condit, deinde natale(ctx) vocat; revocare et reficere ante
+ * natalem nihil agunt. Ceterum ut scriba_documentum_creare. */
+ScribaDocumentum*
+scriba_documentum_nasciturum (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* spatium,
+                    i32  latitudo,
+                    i32  altitudo,
+                    i32  intervallum,
+                    b32  (*natale)(vacuum* ctx),
+                 vacuum* natale_ctx);
+
+/* documentum in volumine exstat (creatum, apertum aut natum)? */
+b32
+scriba_documentum_natum (
+    constans ScribaDocumentum* doc);
 
 /* ex volumine exsistente (manifestum + historia) */
 ScribaDocumentum*

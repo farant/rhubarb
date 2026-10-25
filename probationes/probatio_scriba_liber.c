@@ -464,12 +464,153 @@ _sectio_textus (
     volumen_claudere(vol);
 }
 
+/* natale libri testis: vocationes numerat, liber ultimus servatur */
+nomen structura {
+            i32  numerus;
+    ScribaLiber* liber;
+} NatalesLibri;
+
+interior b32
+natale_libri (
+         vacuum* ctx,
+    ScribaLiber* liber)
+{
+    NatalesLibri* n;
+
+    n           = (NatalesLibri*)ctx;
+    n->numerus++;
+    n->liber    = liber;
+    redde VERUM;
+}
+
+/* folium paginae d cum textu (dimensiones documenti) committere */
+interior s64
+scribere_in (
+      ScribaDocumentum* d,
+    constans character* textus)
+{
+    TabulaCharacterum folium;
+
+    tabula_ex_literis_cum_dimensionibus(&folium, piscina, d->latitudo,
+        d->altitudo, textus);
+    redde scriba_documentum_committere(d, &folium);
+}
+
+/* lector L5: liber piger (comites) - nihil scribitur donec nascitur */
+interior vacuum
+_sectio_piger (
+    CredoContextus* c)
+{
+              Volumen* vol;
+          ScribaLiber* l;
+     ScribaDocumentum* d;
+         NatalesLibri  natales;
+               chorda  index;
+                  b32  inventum;
+                  s64  acta;
+                  s64  plagulae;
+
+    (vacuum)c;
+    vol = volumen_temporarium(piscina, "probatio_scriba_piger");
+    CREDO_NECESSE_NON_NIHIL(vol);
+    memset(&natales, ZEPHYRUM, magnitudo(natales));
+
+    CREDO_GRADUS("aperire pigre: pagina '1', nihil scriptum");
+    acta      = volumen_summa_actorum(vol);
+    plagulae  = volumen_summa_plagularum(vol);
+    l = scriba_liber_aperire_pigre(piscina, intern, vol, "comes/a", XL,
+        X, natale_libri, &natales);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_AEQUALIS_I32(scriba_liber_numerus(l), I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(scriba_liber_nomen(l, ZEPHYRUM), "1");
+    CREDO_CHORDA_AEQUALIS_LITERIS(scriba_liber_praefixum(l), "comes/a");
+    CREDO_FALSUM(scriba_liber_natus(l));
+    CREDO_FALSUM(scriba_liber_exstat(vol, "comes/a", piscina));
+
+    CREDO_GRADUS("pagina visa et actum vacuum: nihil scriptum");
+    d = scriba_liber_pagina(l, lit("1"));
+    CREDO_NECESSE_NON_NIHIL(d);
+    CREDO_FALSUM(scriba_documentum_natum(d));
+    CREDO_AEQUALIS_S64(scribere_in(d, ""), ZEPHYRUM);
+    CREDO_FALSUM(scriba_liber_natus(l));
+    CREDO_AEQUALIS_I32(natales.numerus, ZEPHYRUM);
+    CREDO_AEQUALIS_S64(volumen_summa_actorum(vol), acta);
+    CREDO_AEQUALIS_S64(volumen_summa_plagularum(vol), plagulae);
+
+    CREDO_GRADUS("scriptura prima: index, natale semel cum libro");
+    CREDO_VERUM(scribere_in(d, "rhubarb") > ZEPHYRUM);
+    CREDO_VERUM(scriba_liber_natus(l));
+    CREDO_VERUM(scriba_liber_exstat(vol, "comes/a", piscina));
+    CREDO_AEQUALIS_I32(natales.numerus, I);
+    CREDO_VERUM(natales.liber == l);
+    index = volumen_plagulam_promere(vol, lit("comes/a/paginae"),
+        piscina, &inventum);
+    CREDO_VERUM(inventum);
+    CREDO_CHORDA_CONTINET(index, lit("<pagina nomen=\"1\"/>"));
+    CREDO_VERUM(scribere_in(d, "rhubarb pie") > ZEPHYRUM);
+    CREDO_AEQUALIS_I32(natales.numerus, I);
+
+    CREDO_GRADUS("reapertio pigra: natus, natale numquam, textus "
+        "adest");
+    l = scriba_liber_aperire_pigre(piscina, intern, vol, "comes/a", XL,
+        X, natale_libri, &natales);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_VERUM(scriba_liber_natus(l));
+    d = scriba_liber_pagina(l, lit("1"));
+    CREDO_NECESSE_NON_NIHIL(d);
+    CREDO_VERUM(scriba_documentum_natum(d));
+    CREDO_VERUM(tabula_cellula(scriba_documentum_tabula(d), ZEPHYRUM,
+        ZEPHYRUM) == 'r');
+    CREDO_VERUM(scribere_in(d, "crumble") > ZEPHYRUM);
+    CREDO_AEQUALIS_I32(natales.numerus, I);
+
+    CREDO_GRADUS("pagina nova nascit (sine textu)");
+    l = scriba_liber_aperire_pigre(piscina, intern, vol, "comes/b", XL,
+        X, natale_libri, &natales);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_CHORDA_AEQUALIS_LITERIS(scriba_liber_pagina_nova(l), "2");
+    CREDO_VERUM(scriba_liber_natus(l));
+    CREDO_VERUM(scriba_liber_exstat(vol, "comes/b", piscina));
+    CREDO_AEQUALIS_I32(natales.numerus, II);
+    index = volumen_plagulam_promere(vol, lit("comes/b/paginae"),
+        piscina, &inventum);
+    CREDO_CHORDA_CONTINET(index, lit("<pagina nomen=\"2\"/>"));
+
+    CREDO_GRADUS("pagina nominata nascit, etiam '1' exstans");
+    l = scriba_liber_aperire_pigre(piscina, intern, vol, "comes/c", XL,
+        X, natale_libri, &natales);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_NON_NIHIL(scriba_liber_paginam_condere(l, lit("1")));
+    CREDO_VERUM(scriba_liber_natus(l));
+    CREDO_AEQUALIS_I32(natales.numerus, III);
+    l = scriba_liber_aperire_pigre(piscina, intern, vol, "comes/d", XL,
+        X, NIHIL, NIHIL);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_NON_NIHIL(scriba_liber_paginam_condere(l, lit("jam")));
+    CREDO_VERUM(scriba_liber_exstat(vol, "comes/d", piscina));
+
+    CREDO_GRADUS("exstat: lectio sola; in spatio = natus semper");
+    acta      = volumen_summa_actorum(vol);
+    plagulae  = volumen_summa_plagularum(vol);
+    CREDO_FALSUM(scriba_liber_exstat(vol, "comes/nusquam", piscina));
+    CREDO_AEQUALIS_S64(volumen_summa_actorum(vol), acta);
+    CREDO_AEQUALIS_S64(volumen_summa_plagularum(vol), plagulae);
+    l = scriba_liber_aperire_in_spatio(piscina, intern, vol, "dies/x",
+        XL,
+        X);
+    CREDO_VERUM(scriba_liber_natus(l));
+    CREDO_VERUM(scriba_liber_natus(scriba_liber_aperire(piscina, intern,
+        vol, XL, X)));
+    volumen_claudere(vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "liber paginarum (scenarium I-IX)", _sectio_prima, _parare,
         NIHIL, NIHIL, NIHIL },
     { "praefixum", _sectio_praefixum, _parare, NIHIL, NIHIL, NIHIL },
     { "comes", _sectio_comes, _parare, NIHIL, NIHIL, NIHIL },
     { "textus", _sectio_textus, _parare, NIHIL, NIHIL, NIHIL },
+    { "piger", _sectio_piger, _parare, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

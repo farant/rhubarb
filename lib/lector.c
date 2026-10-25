@@ -2927,6 +2927,16 @@ _partes_disponere (
     redde exitus;
 }
 
+/* L5: locus currens notas habet (hospes; nullus = nullae)? */
+interior b32
+_notae_loci (
+    LectorMontatio* m,
+           Piscina* piscina)
+{
+    redde m->notas_habet && m->notas_habet(m->notas_habet_ctx,
+        lector_locus(m, piscina));
+}
+
 /* sententia: sola in medio areae (lector_sententiam_disponere);
  * titulus currens supra; infra "sentence k/n", emendationes amissae,
  * "..." si praecisa */
@@ -3049,6 +3059,10 @@ _sententiam_pingere (
             {
                 strcat(textus, " - splitting");
             }
+            si (_notae_loci(m, md->piscina))
+            {
+                strcat(textus, " \302\266");   /* pilcrow: notae */
+            }
             _centrum_pingere(md, x, nota.mensura > ZEPHYRUM ? nota
                 : chorda_ex_literis(textus, md->piscina),
                 nota.mensura > ZEPHYRUM ? COLOR_ERROR : COLOR_TEXT_DIM);
@@ -3114,6 +3128,10 @@ _paginam_pingere (
             nota = _campus(m, "nota");
             sprintf(textus, "%d/%u", (integer)(k + I),
                 (insignatus integer)xar_numerus(f->paginae));
+            si (_notae_loci(m, md->piscina))
+            {
+                strcat(textus, " \302\266");   /* pilcrow: notae */
+            }
             _centrum_pingere(md, x, nota.mensura > ZEPHYRUM ? nota
                 : chorda_ex_literis(textus, md->piscina),
                 nota.mensura > ZEPHYRUM ? COLOR_ERROR : COLOR_TEXT_DIM);
@@ -3722,7 +3740,26 @@ lector_locus (
     }
     semita = semita_legere(_organa, m, &m->ramus, "lector", piscina,
         m->intern);
-    redde semita ? semita_ad_uri(_organa, m, semita, piscina) : vacua;
+    si (!semita)
+    {
+        redde vacua;
+    }
+    /* L5: locus per visum (comites, notae) - pagina = liber, caput,
+     * pagina; sententia = liber, caput, sententia; ceteri liber solus:
+     * campi status ex visu priore relicti locum non mutant */
+    si (_visus(m) != VISUS_PAGINAE)
+    {
+        (vacuum)insula_attributum_tollere(semita, "pagina");
+    }
+    si (_visus(m) != VISUS_SENTENTIAE)
+    {
+        (vacuum)insula_attributum_tollere(semita, "sententia");
+    }
+    si (_visus(m) != VISUS_PAGINAE && _visus(m) != VISUS_SENTENTIAE)
+    {
+        (vacuum)insula_attributum_tollere(semita, "caput");
+    }
+    redde semita_ad_uri(_organa, m, semita, piscina);
 }
 
 chorda
