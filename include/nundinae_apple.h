@@ -48,6 +48,10 @@ nomen structura {
                        chorda  tessera;
                           s64  exspirat_s;
            constans character* radix_url;
+    /* nuntii progressus (missio longa); NIHIL = tacitus */
+                  vacuum  (*observator)(vacuum* datum,
+                                constans character* linea);
+                       vacuum* observatoris_datum;
                       Piscina* piscina;
 } NundinaeApple;
 
@@ -346,5 +350,84 @@ nundinae_apple_tester (
               b32* creatum,
            chorda* causa,
           Piscina* p);
+
+
+/* ==================================================
+ * Distributio et missio (T4)
+ * ================================================== */
+
+nomen structura {
+    chorda titulus;             /* nomen capitis HTTP */
+    chorda valor;
+} NundinaeAppleCaput;
+
+/* operatio missionis Apple (DeliveryFileUploadOperation): methodus,
+ * url, offset/longitudo in plagula, capita (NundinaeAppleCaput) */
+nomen structura {
+    chorda  methodus;
+    chorda  url;
+       s64  offset;
+       s64  longitudo;
+       Xar* capita;
+} NundinaeAppleOperatio;
+
+/* D9: viae obiectorum clausurae (aedilis --partes 'O') quarum basis
+ * cryptographiam fert (tls, bearssl, aes, chacha, crypt...) -> nominata
+ * (Xar de chorda). VERUM si ulla adest (applicatio "non exempta"). */
+b32
+nundinae_apple_cryptographia (
+    constans chorda* obiecta,
+                i32  numerus,
+                Xar* nominata,
+            Piscina* p);
+
+/* D10 / Review Focus 2: numerus maximus inter builds (version) et
+ * buildUploads (cfBundleVersion, etiam fractae) - non numerici
+ * praetermittuntur; nullus -> 0. Uterque responsum NIHIL licet. */
+i32
+nundinae_apple_versio_maxima (
+    JsonValor* aedificationes,
+    JsonValor* missiones);
+
+/* responsum creationis buildUploadFiles -> Xar de
+ * NundinaeAppleOperatio */
+b32
+nundinae_apple_operationes_legere (
+    JsonValor* responsum,
+          Xar* operationes,
+      Piscina* p);
+
+/* MD5 ut XXXII litterae hex minusculae */
+chorda
+nundinae_apple_md5_hex (
+    constans i8* datum,
+            i64  mensura,
+        Piscina* p);
+
+/* aedificatio proxima: maximum (builds + buildUploads applicationis)
+ * + I */
+b32
+nundinae_apple_aedificationem_proximam (
+    NundinaeApple* n,
+           chorda  id_applicationis,
+              i32* proxima,
+           chorda* causa,
+          Piscina* p);
+
+/* .ipa mittere (Build Uploads): buildUpload (app, versio, aedificatio,
+ * IOS) -> buildUploadFile (com.apple.ipa) -> operationes ut datae ->
+ * commissio cum MD5 -> status missionis (COMPLETE | FAILED) -> status
+ * processus aedificationis (VALID | INVALID | FAILED). Ceilings: XXX
+ * min per gradum. id_aedificationis = build Apple. */
+b32
+nundinae_apple_mittere (
+       NundinaeApple* n,
+              chorda  id_applicationis,
+  constans character* via_archivi,
+              chorda  versio,
+                 i32  aedificatio,
+              chorda* id_aedificationis,
+              chorda* causa,
+             Piscina* p);
 
 #endif /* NUNDINAE_APPLE_H */

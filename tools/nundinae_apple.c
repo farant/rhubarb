@@ -2,7 +2,11 @@
  * mandatorum (testa-ios C2, plan R5). Verba: -status, -applicationes
  * (T1); -parare <app> [-tester <email>] (T2: signum, applicatio,
  * identitas distributionis in claviario, diploma App Store, grex
- * 'Familia', tester). Configuratio: -configuratio <via>, aliter
+ * 'Familia', tester); -proxima <app>, -mittere <app> <ipa> <versio>
+ * <aedificatio>, -cryptographia (T4: numerus aedificationis proximus,
+ * missio Build Uploads usque ad VALID, iudicium cryptographiae ex
+ * 'aedilis --partes' in stdin - sine clave). Configuratio:
+ * -configuratio <via>, aliter
  * $HOME/.rhubarb/ios/nundinae_apple.stml. Clavis secreta numquam
  * imprimitur. Exitus: 0 | 1 fractum (Apple aut rete) | 2 recusatio
  * (configuratio, clavis, usus) | 3 pactum Apple non acceptum (omnis
@@ -29,7 +33,9 @@ _usus (
 {
     fprintf(stderr, "usus: nundinae_apple [-configuratio <via>] "
         "-status | -applicationes | -parare <app> [-tester <email>] | "
-        "-quaerere </v1/...>\n");
+        "-quaerere </v1/...> | -proxima <app> | "
+        "-mittere <app> <ipa> <versio> <aedificatio> | "
+        "-cryptographia < partes.tsv\n");
     redde II;
 }
 
@@ -510,6 +516,170 @@ _parare (
     redde ZEPHYRUM;
 }
 
+/* -cryptographia: lineae 'genus<TAB>via' (aedilis --partes) aut viae
+ * nudae in stdin; solum O et V (obiecta ligata) iudicantur. 0 =
+ * munda, 2 = cryptographia nominata (recusatio missionis) */
+interior s32
+_cryptographia (
+    Piscina* p)
+{
+    character  linea[MXXIV];
+          Xar* viae;
+          Xar* nominata;
+       chorda* tabula;
+          i32  i;
+
+    viae      = xar_creare(p, (i32)magnitudo(chorda));
+    nominata  = xar_creare(p, (i32)magnitudo(chorda));
+    dum (fgets(linea, (integer)magnitudo(linea), stdin))
+    {
+                     chorda* v;
+         constans character* via;
+                  character* tab;
+                     size_t  m;
+
+        m = strlen(linea);
+        dum (   m > ZEPHYRUM && (linea[m - I] == '\n' || linea[m - I]
+            == '\r'))
+        {
+            linea[--m] = '\0';
+        }
+        tab = strchr(linea, '\t');
+        via = linea;
+        si (tab)
+        {
+            si (!(tab == linea + I && (linea[ZEPHYRUM] == 'O'
+                || linea[ZEPHYRUM] == 'V')))
+            {
+                perge;
+            }
+            via = tab + I;
+        }
+        si (*via == '\0')
+        {
+            perge;
+        }
+        v = (chorda*)xar_addere(viae);
+        si (!v)
+        {
+            redde I;
+        }
+        *v = chorda_ex_literis(via, p);
+    }
+    /* Xar segmentata, non contigua: in tabulam planam */
+    tabula = (chorda*)piscina_allocare(p,
+        (memoriae_index)(xar_numerus(viae)
+        + I) * magnitudo(chorda));
+    si (!tabula)
+    {
+        redde I;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(viae); i++)
+    {
+        tabula[i] = *(chorda*)xar_obtinere(viae, i);
+    }
+    si (!nundinae_apple_cryptographia(tabula, xar_numerus(viae),
+        nominata,
+            p))
+    {
+        imprimere("cryptographia: nulla (%d obiecta)\n",
+            (int)xar_numerus(viae));
+        redde ZEPHYRUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(nominata); i++)
+    {
+        chorda* c = (chorda*)xar_obtinere(nominata, i);
+
+        fprintf(stderr, "cryptographia: %.*s\n", (int)c->mensura,
+            (constans character*)c->datum);
+    }
+    fprintf(stderr, "nundinae_apple: applicatio cryptographiam ligat - "
+        "ITSAppUsesNonExemptEncryption falsum mendax esset; missio "
+        "recusata\n");
+    redde II;
+}
+
+/* id applicationis ex nomine (earth.golden.<app>) */
+interior b32
+_applicatio_ex_nomine (
+          NundinaeApple* n,
+     constans character* app,
+                 chorda* id_app,
+                 chorda* causa,
+                Piscina* p)
+{
+    redde nundinae_apple_applicatio(n, chorda_concatenare(
+        chorda_ex_literis("earth.golden.", p), chorda_ex_literis(app,
+        p),
+        p), id_app, causa, p);
+}
+
+interior s32
+_proxima (
+          NundinaeApple* n,
+     constans character* app,
+                Piscina* p)
+{
+    chorda id_app;
+    chorda causa;
+       i32 proxima;
+
+    si (   !_applicatio_ex_nomine(n, app, &id_app, &causa, p)
+        || !nundinae_apple_aedificationem_proximam(n, id_app, &proxima,
+               &causa, p))
+    {
+        redde _fractum(causa, p);
+    }
+    imprimere("%d\n", (int)proxima);
+    redde ZEPHYRUM;
+}
+
+interior vacuum
+_progressus (
+                vacuum* datum,
+    constans character* linea)
+{
+    (vacuum)datum;
+    fprintf(stderr, "nundinae_apple: %s\n", linea);
+}
+
+interior s32
+_mittere (
+          NundinaeApple* n,
+     constans character* app,
+     constans character* via_archivi,
+     constans character* versio,
+     constans character* aedificatio,
+                Piscina* p)
+{
+    chorda  id_app;
+    chorda  id_aedificationis;
+    chorda  causa;
+    longus  numerus;
+ character* finis;
+
+    numerus = strtol(aedificatio, &finis, X);
+    si (*finis != '\0' || numerus <= ZEPHYRUM || numerus > M * M)
+    {
+        redde _usus();
+    }
+    si (!_applicatio_ex_nomine(n, app, &id_app, &causa, p))
+    {
+        redde _fractum(causa, p);
+    }
+    n->observator = _progressus;
+    si (!nundinae_apple_mittere(n, id_app, via_archivi,
+        chorda_ex_literis(
+            versio, p), (i32)numerus, &id_aedificationis, &causa, p))
+    {
+        redde _fractum(causa, p);
+    }
+    imprimere("VALID: aedificatio %s (%s) id %.*s\n", aedificatio,
+        versio, (int)id_aedificationis.mensura,
+        (constans character*)id_aedificationis.datum);
+    redde ZEPHYRUM;
+}
+
 s32
 principale (
       integer   argc,
@@ -521,7 +691,8 @@ principale (
                       chorda  causa;
                    character  via_cfg[DXII];
           constans character* verbum;
-          constans character* positivum;
+          constans character* positiva[IV];
+                         s32  numerus_positivorum;
           constans character* email;
                      integer  i;
                          s32  exitus;
@@ -531,10 +702,10 @@ principale (
     {
         redde I;
     }
-    via_cfg[ZEPHYRUM]  = '\0';
-    verbum             = NIHIL;
-    positivum          = NIHIL;
-    email              = NIHIL;
+    via_cfg[ZEPHYRUM]    = '\0';
+    verbum               = NIHIL;
+    numerus_positivorum  = ZEPHYRUM;
+    email                = NIHIL;
     per (i = I; i < argc; i++)
     {
         si (   strcmp(argv[i], "-configuratio") == ZEPHYRUM
@@ -556,9 +727,10 @@ principale (
         {
             verbum = argv[i];
         }
-        alioquin si (verbum && !positivum && argv[i][ZEPHYRUM] != '-')
+        alioquin si (   verbum && numerus_positivorum < IV
+                     && argv[i][ZEPHYRUM] != '-')
         {
-            positivum = argv[i];
+            positiva[numerus_positivorum++] = argv[i];
         }
         alioquin
         {
@@ -568,6 +740,13 @@ principale (
     si (!verbum)
     {
         redde _usus();
+    }
+    /* iudicium locale: nec configuratio nec clavis */
+    si (strcmp(verbum, "-cryptographia") == ZEPHYRUM)
+    {
+        exitus = numerus_positivorum ? _usus() : _cryptographia(p);
+        piscina_destruere(p);
+        redde exitus;
     }
     si (via_cfg[ZEPHYRUM] == '\0')
     {
@@ -591,13 +770,26 @@ principale (
     {
         exitus = _status(&n, p);
     }
-    alioquin si (strcmp(verbum, "-quaerere") == ZEPHYRUM && positivum)
+    alioquin si (   strcmp(verbum, "-quaerere") == ZEPHYRUM
+                 && numerus_positivorum         == I)
     {
-        exitus = _quaerere(&n, positivum, p);
+        exitus = _quaerere(&n, positiva[ZEPHYRUM], p);
     }
-    alioquin si (strcmp(verbum, "-parare") == ZEPHYRUM && positivum)
+    alioquin si (   strcmp(verbum, "-parare") == ZEPHYRUM
+                 && numerus_positivorum       == I)
     {
-        exitus = _parare(&n, positivum, email, p);
+        exitus = _parare(&n, positiva[ZEPHYRUM], email, p);
+    }
+    alioquin si (   strcmp(verbum, "-proxima") == ZEPHYRUM
+                 && numerus_positivorum        == I)
+    {
+        exitus = _proxima(&n, positiva[ZEPHYRUM], p);
+    }
+    alioquin si (   strcmp(verbum, "-mittere") == ZEPHYRUM
+                 && numerus_positivorum        == IV)
+    {
+        exitus = _mittere(&n, positiva[ZEPHYRUM], positiva[I],
+            positiva[II], positiva[III], p);
     }
     alioquin si (strcmp(verbum, "-applicationes") == ZEPHYRUM)
     {

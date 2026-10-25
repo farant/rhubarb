@@ -15,6 +15,12 @@
 #               syntheticus a testa ipsa); -servare: post fumum non
 #               deinstallat. Applicatio ANTE fumum instituta numquam
 #               deinstallatur (picturae in telephono).
+#   -divulgatio (testa-ios C2 T4) aedificatio App Store: sine telephono;
+#               -profilum <p.mobileprovision> -identitas <SHA-1>
+#               -versio <1.0> -aedificatio <n> -commissum <hash> omnes
+#               necessariae. Cryptographia in clausura (nundinae_apple
+#               -cryptographia, per aedilis aedificatum) = recusatio ANTE compilationem (exitus 2).
+#               Exitus: build/ios/divulgatio/<X>/<X>.ipa
 # Simulator: IOS_SIMULATOR (UDID aut nomen), aliter is qui iam currit,
 # aliter "iPhone 15 Pro Max" (telephonum Frani) runtime novissimo.
 # Telephonum: IOS_DEVICE, IOS_PROFILUM (tools/ios/communia.sh).
@@ -28,10 +34,19 @@ apparatus () { echo "ios/app.sh: $*" >&2; exit 2; }
 fractum () { echo "ios/app.sh: FRACTUM: $*" >&2; exit 1; }
 
 SCOPUS=simulator; CURRERE=0; FUMUS=0; SERVARE=0; FONS=""
+DIVULGATIO=0; D_PROFILUM=""; D_IDENTITAS=""; VERSIO=1.0; AEDIFICATIO=1
+COMMISSUM=""
+valor () { [ $# -ge 2 ] && [ -n "$2" ] || apparatus "$1 valorem postulat"; }
 while [ $# -gt 0 ]; do
     case "$1" in
         -simulator) SCOPUS=simulator ;;
         -tabula) SCOPUS=tabula ;;
+        -divulgatio) DIVULGATIO=1 ;;
+        -profilum) valor "$@"; D_PROFILUM="$2"; shift ;;
+        -identitas) valor "$@"; D_IDENTITAS="$2"; shift ;;
+        -versio) valor "$@"; VERSIO="$2"; shift ;;
+        -aedificatio) valor "$@"; AEDIFICATIO="$2"; shift ;;
+        -commissum) valor "$@"; COMMISSUM="$2"; shift ;;
         -currere) CURRERE=1 ;;
         -fumus) FUMUS=1 ;;
         -servare) SERVARE=1 ;;
@@ -47,9 +62,23 @@ case "$TITULUS" in
     ""|*[!a-z]*) apparatus "titulus '$TITULUS': litterae minusculae solae (involucrum earth.golden.$TITULUS)" ;;
 esac
 INVOLUCRUM="earth.golden.$TITULUS"
+if [ "$DIVULGATIO" = 1 ]; then
+    [ "$CURRERE$FUMUS$SERVARE" = 000 ] && [ "$SCOPUS" = simulator ] \
+        || apparatus "-divulgatio sine -tabula/-currere/-fumus/-servare (nullum telephonum)"
+    [ -f "$D_PROFILUM" ] || apparatus "-profilum '$D_PROFILUM' deest (nundinae_apple -parare $TITULUS)"
+    printf '%s' "$D_IDENTITAS" | grep -qxE '[0-9A-F]{40}' \
+        || apparatus "-identitas: SHA-1 XL litterarum hex maiuscularum"
+    printf '%s' "$VERSIO" | grep -qxE '[0-9]+(\.[0-9]+){0,2}' \
+        || apparatus "-versio '$VERSIO': 1.0 aut 1.2.3"
+    printf '%s' "$AEDIFICATIO" | grep -qxE '[1-9][0-9]{0,8}' \
+        || apparatus "-aedificatio '$AEDIFICATIO': numerus integer > 0"
+    printf '%s' "$COMMISSUM" | grep -qxE '[0-9a-f]{7,40}' \
+        || apparatus "-commissum '$COMMISSUM': hash git"
+    SCOPUS=divulgatio
+fi
 
 # --- instrumenta -------------------------------------------------------
-if [ "$SCOPUS" = tabula ]; then
+if [ "$SCOPUS" = tabula ] || [ "$SCOPUS" = divulgatio ]; then
     SDK=iphoneos; SCOPUS_CLANG=arm64-apple-ios17.0; PLATFORMA=iPhoneOS
 else
     SDK=iphonesimulator; SCOPUS_CLANG=arm64-apple-ios17.0-simulator
@@ -61,6 +90,7 @@ xcrun --sdk "$SDK" --show-sdk-path > /dev/null 2>&1 \
 [ -x bin/aedilis ] || apparatus "bin/aedilis deest - ./tools/aedilis_struere.sh"
 command -v plutil > /dev/null || apparatus "plutil deest"
 D="build/ios/$SDK/$TITULUS"
+[ "$SCOPUS" = divulgatio ] && D="build/ios/divulgatio/$TITULUS"
 APP="$D/$TITULUS.app"
 rm -rf "$D" && mkdir -p "$D/obiecta" "$APP" || apparatus "$D creari nequit"
 
@@ -71,6 +101,21 @@ if [ "$SCOPUS" = tabula ]; then
     ios_profilum_eligere "$D"
     ios_identitatem_eligere
     echo "telephonum: $IOS_NOMEN ($IOS_MODELLUM, iOS $IOS_VERSIO); profilum $(basename "$IOS_PROFILUM"); $IOS_IDENTITAS_NOMEN"
+fi
+if [ "$SCOPUS" = divulgatio ]; then
+    # profilum App Store: turma, involucrum, iura (sine get-task-allow)
+    security cms -D -i "$D_PROFILUM" > "$D/profilum.plist" 2> /dev/null \
+        || apparatus "profilum $D_PROFILUM legi nequit (security cms -D)"
+    TURMA=$(plutil -extract TeamIdentifier.0 raw -o - "$D/profilum.plist" 2> /dev/null) \
+        || apparatus "TeamIdentifier deest in $D_PROFILUM"
+    ID_APP=$(plutil -extract Entitlements.application-identifier raw -o - "$D/profilum.plist" 2> /dev/null)
+    [ "$ID_APP" = "$TURMA.$INVOLUCRUM" ] \
+        || apparatus "profilum pro '$ID_APP', non $TURMA.$INVOLUCRUM"
+    plutil -extract ProvisionedDevices raw -o - "$D/profilum.plist" > /dev/null 2>&1 \
+        && apparatus "profilum $D_PROFILUM telephona enumerat - evolutionis/ad hoc, non App Store"
+    security find-identity -v -p codesigning | grep -qF "$D_IDENTITAS" \
+        || apparatus "identitas $D_IDENTITAS non in claviario (nundinae_apple -parare $TITULUS)"
+    echo "divulgatio: $INVOLUCRUM $VERSIO ($AEDIFICATIO) commissum $COMMISSUM; profilum $(plutil -extract Name raw -o - "$D/profilum.plist")"
 fi
 
 . tools/vexilla.sh
@@ -87,6 +132,18 @@ PARTES=$(bin/aedilis "$FONS" --varians ios,posix --partes 2>&1) \
     || apparatus "aedilis fracta: $PARTES"
 NEXUS=$(bin/aedilis "$FONS" --varians ios,posix --nexus 2>&1) \
     || apparatus "aedilis --nexus fracta: $NEXUS"
+if [ "$SCOPUS" = divulgatio ]; then
+    # Review Focus 5: ITSAppUsesNonExemptEncryption falsum solum si verum
+    # per aedilis semper (fontes > obiecta -> recompilat, ~1 s si nihil
+    # mutatum); compile_tools.sh build/*.o vetera ligat (C2 T4: missiones
+    # II et III cum bibliotheca stala)
+    NUNDINAE=build/aedilis/nundinae_apple/nundinae_apple
+    { bin/aedilis tools/nundinae_apple.c && bash build/aedilis/nundinae_apple/struere.sh; } \
+        > "$D/nundinae.log" 2>&1 \
+        || { tail -5 "$D/nundinae.log" >&2; apparatus "nundinae_apple aedificari nequit"; }
+    printf '%s\n' "$PARTES" | "$NUNDINAE" -cryptographia \
+        || apparatus "cryptographia in clausura $FONS - divulgatio recusata (vide supra)"
+fi
 OBIECTA=$(printf '%s\n' "$PARTES" | awk -F'\t' '$1 == "O" {print $2}')
 VENDITI=$(printf '%s\n' "$PARTES" | awk -F'\t' '$1 == "V" {print $2}')
 printf '%s\n' "$OBIECTA" | grep -qx 'lib/testa_ios.m' \
@@ -116,7 +173,8 @@ done <<< "$NEXUS"
     || { tail -15 "$D/nexus.log" >&2; fractum "nexus (symbolum absens = pars platformae deest)"; }
 
 sed -e "s/@TITULUS@/$TITULUS/g" -e "s/@INVOLUCRUM@/$INVOLUCRUM/g" \
-    -e "s/@PLATFORMA@/$PLATFORMA/g" tools/ios/Info.forma.plist > "$APP/Info.plist"
+    -e "s/@PLATFORMA@/$PLATFORMA/g" -e "s/@VERSIO@/$VERSIO/g" \
+    -e "s/@AEDIFICATIO@/$AEDIFICATIO/g" tools/ios/Info.forma.plist > "$APP/Info.plist"
 plutil -lint "$APP/Info.plist" > /dev/null || fractum "Info.plist invalidum"
 printf 'APPL????' > "$APP/PkgInfo"
 # icon (testa-ios C2 T3): apps/<app>/icon.png (quadratum, latus MXXIV
@@ -151,7 +209,56 @@ if [ -f "$ICON" ]; then
                "$APP/Info.plist" > /dev/null \
         || fractum "CFBundleIconName in Info.plist poni nequit"
 fi
-if [ "$SCOPUS" = tabula ]; then
+if [ "$SCOPUS" = divulgatio ]; then
+    # claves App Store (spec II.3 gradus 4): instrumenta (DT*, ut Xcode),
+    # cryptographia nulla (supra probata), commissum fontis
+    XC_VERSIO=$(xcodebuild -version 2> /dev/null | awk 'NR == 1 {print $2}')
+    XC_AEDIFICATIO=$(xcodebuild -version 2> /dev/null | awk 'NR == 2 {print $3}')
+    SDK_VERSIO=$(xcrun --sdk iphoneos --show-sdk-version)
+    SDK_AEDIFICATIO=$(xcrun --sdk iphoneos --show-sdk-build-version)
+    [ -n "$XC_VERSIO" ] && [ -n "$XC_AEDIFICATIO" ] && [ -n "$SDK_VERSIO" ] \
+        && [ -n "$SDK_AEDIFICATIO" ] || apparatus "versiones Xcode/SDK ignotae"
+    # DTXcode: 27.1 -> 2710, 16.4.1 -> 1641 (forma Xcode)
+    DT_XCODE=$(printf '%s' "$XC_VERSIO" | awk -F. '{printf "%d%d%d", $1, $2, $3}')
+    PB=/usr/libexec/PlistBuddy
+    for clavis in \
+        "ITSAppUsesNonExemptEncryption bool false" \
+        "RhubarbCommissum string $COMMISSUM" \
+        "DTPlatformName string iphoneos" \
+        "DTPlatformVersion string $SDK_VERSIO" \
+        "DTPlatformBuild string $SDK_AEDIFICATIO" \
+        "DTSDKName string iphoneos$SDK_VERSIO" \
+        "DTSDKBuild string $SDK_AEDIFICATIO" \
+        "DTXcode string $DT_XCODE" \
+        "DTXcodeBuild string $XC_AEDIFICATIO" \
+        "DTCompiler string com.apple.compilers.llvm.clang.1_0" \
+        "BuildMachineOSBuild string $(sw_vers -buildVersion)"; do
+        # shellcheck disable=SC2086
+        set -- $clavis
+        "$PB" -c "Add :$1 $2 $3" "$APP/Info.plist" > /dev/null \
+            || fractum "clavis $1 in Info.plist poni nequit"
+    done
+    plutil -lint "$APP/Info.plist" > /dev/null || fractum "Info.plist invalidum"
+    cp "$D_PROFILUM" "$APP/embedded.mobileprovision" \
+        || apparatus "profilum exscribi nequit"
+    # iura = Entitlements profili sine get-task-allow et sine catervis
+    # claviarii (asterisco; pictor claviario non utitur)
+    plutil -extract Entitlements xml1 -o "$D/iura.plist" "$D/profilum.plist" \
+        || fractum "Entitlements ex profilo extrahi nequeunt"
+    "$PB" -c "Delete :get-task-allow" "$D/iura.plist" > /dev/null 2>&1
+    "$PB" -c "Delete :keychain-access-groups" "$D/iura.plist" > /dev/null 2>&1
+    plutil -lint "$D/iura.plist" > /dev/null || fractum "iura.plist invalidum"
+    codesign --force --sign "$D_IDENTITAS" --entitlements "$D/iura.plist" \
+        --timestamp=none "$APP" > "$D/codesign.log" 2>&1 \
+        || { cat "$D/codesign.log" >&2; apparatus "codesign ($D_IDENTITAS) fractum - claviarium clausum?"; }
+    codesign --verify --strict "$APP" > /dev/null 2>&1 || fractum "codesign --verify"
+    IPA="$D/$TITULUS.ipa"
+    rm -rf "$D/involucrum" && mkdir -p "$D/involucrum/Payload" \
+        && cp -R "$APP" "$D/involucrum/Payload/" || fractum "Payload creari nequit"
+    ( cd "$D/involucrum" && zip -qry "../$TITULUS.ipa" Payload ) || fractum "zip $IPA"
+    echo "IPA: $IPA ($(du -k "$IPA" | awk '{print $1}') KiB, $VERSIO ($AEDIFICATIO), ${#OBJ[@]} obiecta)"
+    exit 0
+elif [ "$SCOPUS" = tabula ]; then
     # D7: profilum inclusum + iura ex eo (turma.involucrum, debugging)
     cp "$IOS_PROFILUM" "$APP/embedded.mobileprovision" \
         || apparatus "profilum exscribi nequit"

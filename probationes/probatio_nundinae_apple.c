@@ -556,6 +556,72 @@ _sectio_responsa (
         "A9993E364706816ABA3E25717850C26C9CD0D89D");
 }
 
+/* C2 T4: cryptographia clausurae, versio maxima, operationes, MD5 */
+interior vacuum
+_sectio_missio (
+    CredoContextus* c)
+{
+                Piscina* p;
+                 chorda  obiecta[VI];
+                    Xar* nominata;
+                    Xar* operationes;
+  NundinaeAppleOperatio* o;
+     NundinaeAppleCaput* k;
+
+    p = c->piscina;
+    CREDO_GRADUS("cryptographia: pictor nulla, tls et bearssl "
+        "nominata");
+    obiecta[ZEPHYRUM] = chorda_ex_literis("lib/pictor_componentia.c",
+        p);
+    obiecta[I]   = chorda_ex_literis("lib/sigillum.c", p);
+    obiecta[II]  = chorda_ex_literis("lib/testa_ios.m", p);
+    /* verbum Latinum 'aes...' non est AES */
+    obiecta[III]  = chorda_ex_literis("lib/aestimatio.c", p);
+    nominata      = xar_creare(p, (i32)magnitudo(chorda));
+    CREDO_FALSUM(nundinae_apple_cryptographia(obiecta, IV, nominata,
+        p));
+    CREDO_AEQUALIS_I32(xar_numerus(nominata), ZEPHYRUM);
+    obiecta[IV]  = chorda_ex_literis("lib/tls13.c", p);
+    obiecta[V]   = chorda_ex_literis("vendor/bearssl_amalgama.c", p);
+    CREDO_VERUM(nundinae_apple_cryptographia(obiecta, VI, nominata, p));
+    CREDO_AEQUALIS_I32(xar_numerus(nominata), II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(nominata,
+        ZEPHYRUM), "lib/tls13.c");
+    CREDO_GRADUS("versio maxima: builds et buildUploads (etiam "
+        "fracta)");
+    CREDO_AEQUALIS_I32(nundinae_apple_versio_maxima(_fixum(
+        FIXA "aedificationes.json", p), _fixum(FIXA "missiones.json",
+        p)),
+        XIII);
+    CREDO_AEQUALIS_I32(nundinae_apple_versio_maxima(_fixum(
+        FIXA "aedificationes.json", p), NIHIL), XII);
+    CREDO_AEQUALIS_I32(nundinae_apple_versio_maxima(NIHIL, NIHIL),
+        ZEPHYRUM);
+    CREDO_GRADUS("operationes missionis");
+    operationes = xar_creare(p, (i32)magnitudo(NundinaeAppleOperatio));
+    CREDO_VERUM(nundinae_apple_operationes_legere(_fixum(
+        FIXA "operationes.json", p), operationes, p));
+    CREDO_AEQUALIS_I32(xar_numerus(operationes), II);
+    si (xar_numerus(operationes) == II)
+    {
+        o = (NundinaeAppleOperatio*)xar_obtinere(operationes, ZEPHYRUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(o->methodus, "PUT");
+        CREDO_VERUM(o->offset == ZEPHYRUM && o->longitudo == 1048576);
+        o = (NundinaeAppleOperatio*)xar_obtinere(operationes, I);
+        CREDO_VERUM(o->offset == 1048576 && o->longitudo == MMXLVIII);
+        CREDO_CHORDA_AEQUALIS_LITERIS(o->url,
+            "https://upload.example.apple.com/p2?sig=b");
+        CREDO_AEQUALIS_I32(xar_numerus(o->capita), II);
+        k = (NundinaeAppleCaput*)xar_obtinere(o->capita, I);
+        CREDO_CHORDA_AEQUALIS_LITERIS(k->titulus, "x-amz-meta-test");
+        CREDO_CHORDA_AEQUALIS_LITERIS(k->valor, "v");
+    }
+    CREDO_GRADUS("MD5 hex");
+    CREDO_CHORDA_AEQUALIS_LITERIS(nundinae_apple_md5_hex(
+        (constans i8*)"abc", III, p),
+        "900150983cd24fb0d6963f7d28e17f72");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "tessera", _sectio_tessera, NIHIL, NIHIL, NIHIL, NIHIL },
     { "renovatio", _sectio_renovatio, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -568,6 +634,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "clavis", _sectio_clavis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "petitio", _sectio_petitio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "responsa", _sectio_responsa, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "missio", _sectio_missio, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

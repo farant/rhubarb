@@ -1848,5 +1848,10 @@
     <forma textus="instrumentarii" casus="genitivus" numerus="singularis" genus="neutrum"/>
     <forma textus="instrumentario" casus="ablativus" numerus="singularis" genus="neutrum"/>
   </vocabulum>
+  <vocabulum lemma="cryptographia" lingua="latina" classis="substantivum" nota="Latina nova (cryptographia, -ae f.; Graece kryptos + graphein, ut 'Cryptographia' Wilkins/Schott saec. XVII): ars scripturae occultae - hic cifrae in clausura applicationis (nundinae_apple_cryptographia, ITSAppUsesNonExemptEncryption); WORDS caret">
+    <forma textus="cryptographia" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="cryptographiae" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="cryptographiam" casus="accusativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
 
 </glossarium>

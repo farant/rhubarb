@@ -1,0 +1,1 @@
+{"data":[{"type":"builds","id":"B1","attributes":{"version":"1","processingState":"VALID"}},{"type":"builds","id":"B2","attributes":{"version":"12","processingState":"VALID"}},{"type":"builds","id":"B3","attributes":{"version":"3","processingState":"INVALID"}},{"type":"builds","id":"B4","attributes":{"version":"beta","processingState":"VALID"}}],"links":{"self":"x"}}

@@ -1754,3 +1754,607 @@ nundinae_apple_tester (
     }
     redde VERUM;
 }
+
+
+/* ==================================================
+ * Distributio et missio (T4) - partes purae
+ * ================================================== */
+
+b32
+nundinae_apple_cryptographia (
+    constans chorda* obiecta,
+                i32  numerus,
+                Xar* nominata,
+            Piscina* p)
+{
+    hic_manens constans character* signa[] = {
+        "tls", "bearssl", "aes_", "aesctr", "chacha", "crypt", NIHIL
+    };
+    i32 i;
+    i32 k;
+    b32 inventa;
+
+    (vacuum)p;
+    inventa = FALSUM;
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        chorda basis;
+           i32 s;
+
+        basis = obiecta[i];
+        per (s = basis.mensura - I; s >= ZEPHYRUM; s--)
+        {
+            si (basis.datum[s] == '/')
+            {
+                frange;
+            }
+        }
+        basis = chorda_sectio(basis, (i32)(s + I), basis.mensura);
+        per (k = ZEPHYRUM; signa[k]; k++)
+        {
+            i32 m = (i32)strlen(signa[k]);
+
+            si (   basis.mensura                            >= m
+                && memcmp(basis.datum, signa[k], (size_t)m) == ZEPHYRUM)
+            {
+                chorda* n;
+
+                n = (chorda*)xar_addere(nominata);
+                si (n)
+                {
+                    *n = obiecta[i];
+                }
+                inventa = VERUM;
+                frange;
+            }
+        }
+    }
+    redde inventa;
+}
+
+interior i32
+_maximum_numericum (
+             JsonValor* responsum,
+    constans character* campus)
+{
+     JsonValor* data;
+           i32  i;
+           i32  maximum;
+
+    maximum = ZEPHYRUM;
+    data = responsum ? json_objectum_capere(responsum, "data") : NIHIL;
+    per (i = ZEPHYRUM; data && i < json_tabulatum_numerus(data); i++)
+    {
+         JsonValor* a;
+         JsonValor* v;
+            chorda  t;
+               i32  n;
+               i32  k;
+               b32  numericum;
+
+        a = json_objectum_capere(json_tabulatum_obtinere(data, i),
+            "attributes");
+        v = a ? json_objectum_capere(a, campus) : NIHIL;
+        si (!v)
+        {
+            perge;
+        }
+        t = json_ad_chorda(v);
+        si (t.mensura == ZEPHYRUM || t.mensura > IX)
+        {
+            perge;
+        }
+        n          = ZEPHYRUM;
+        numericum  = VERUM;
+        per (k = ZEPHYRUM; k < t.mensura; k++)
+        {
+            si (t.datum[k] < '0' || t.datum[k] > '9')
+            {
+                numericum = FALSUM;
+                frange;
+            }
+            n = n * X + (i32)(t.datum[k] - '0');
+        }
+        si (numericum && n > maximum)
+        {
+            maximum = n;
+        }
+    }
+    redde maximum;
+}
+
+i32
+nundinae_apple_versio_maxima (
+    JsonValor* aedificationes,
+    JsonValor* missiones)
+{
+    i32 a;
+    i32 b;
+
+    a = _maximum_numericum(aedificationes, "version");
+    b = _maximum_numericum(missiones, "cfBundleVersion");
+    redde a > b ? a : b;
+}
+
+b32
+nundinae_apple_operationes_legere (
+    JsonValor* responsum,
+          Xar* operationes,
+      Piscina* p)
+{
+     JsonValor* ops;
+        chorda  vac;
+           i32  i;
+
+    vac = chorda_ex_literis("", p);
+    ops = responsum ? json_via(responsum,
+        "data.attributes.uploadOperations")
+                    : NIHIL;
+    si (!ops)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < json_tabulatum_numerus(ops); i++)
+    {
+                  JsonValor* d;
+                  JsonValor* capita;
+      NundinaeAppleOperatio* o;
+                        i32  k;
+
+        d = json_tabulatum_obtinere(ops, i);
+        o = (NundinaeAppleOperatio*)xar_addere(operationes);
+        si (!o || !d)
+        {
+            redde FALSUM;
+        }
+        o->methodus  = json_capere_chorda(d, "method", vac);
+        o->url       = json_capere_chorda(d, "url", vac);
+        o->offset     = (s64)json_ad_integer(json_objectum_capere(d,
+            "offset"));
+        o->longitudo  = (s64)json_ad_integer(json_objectum_capere(d,
+            "length"));
+        o->capita  = xar_creare(p,
+            (i32)magnitudo(NundinaeAppleCaput));
+        capita     = json_objectum_capere(d, "requestHeaders");
+        per (k = ZEPHYRUM; capita && k < json_tabulatum_numerus(capita);
+             k++)
+        {
+                     JsonValor* h;
+            NundinaeAppleCaput* c;
+
+            h = json_tabulatum_obtinere(capita, k);
+            c = (NundinaeAppleCaput*)xar_addere(o->capita);
+            si (c && h)
+            {
+                c->titulus  = json_capere_chorda(h, "name", vac);
+                c->valor    = json_capere_chorda(h, "value", vac);
+            }
+        }
+    }
+    redde json_tabulatum_numerus(ops) > ZEPHYRUM;
+}
+
+chorda
+nundinae_apple_md5_hex (
+    constans i8* datum,
+            i64  mensura,
+        Piscina* p)
+{
+        br_md5_context  h;
+         unsigned char  d[XVI];
+             character  hex[XXXIII];
+                   i32  i;
+    constans character* digiti = "0123456789abcdef";
+
+    br_md5_init(&h);
+    br_md5_update(&h, datum, (size_t)mensura);
+    br_md5_out(&h, d);
+    per (i = ZEPHYRUM; i < XVI; i++)
+    {
+        hex[i * II]      = digiti[(d[i] >> IV) & 0xF];
+        hex[i * II + I]  = digiti[d[i] & 0xF];
+    }
+    hex[XXXII] = '\0';
+    redde chorda_ex_literis(hex, p);
+}
+
+
+/* ==================================================
+ * Distributio et missio (T4) - rete
+ * ================================================== */
+
+interior vacuum
+_nuntiare (
+         NundinaeApple* n,
+    constans character* linea)
+{
+    si (n->observator)
+    {
+        n->observator(n->observatoris_datum, linea);
+    }
+}
+
+b32
+nundinae_apple_aedificationem_proximam (
+    NundinaeApple* n,
+           chorda  id_applicationis,
+              i32* proxima,
+           chorda* causa,
+          Piscina* p)
+{
+    NundinaeAppleResponsum a;
+    NundinaeAppleResponsum b;
+                    chorda vac;
+
+    vac = chorda_ex_literis("", p);
+    a = nundinae_apple_vocare(n, HTTP_GET, _via(p,
+        "/v1/builds?filter%5Bapp%5D=%A&limit=200"
+        "&fields%5Bbuilds%5D=version", id_applicationis, vac), vac, p);
+    si (!_vocatio_bona(a, causa))
+    {
+        redde FALSUM;
+    }
+    b = nundinae_apple_vocare(n, HTTP_GET, _via(p,
+        "/v1/apps/%A/buildUploads?limit=200"
+        "&fields%5BbuildUploads%5D=cfBundleVersion", id_applicationis,
+        vac), vac, p);
+    si (!_vocatio_bona(b, causa))
+    {
+        redde FALSUM;
+    }
+    *proxima = nundinae_apple_versio_maxima(a.corpus, b.corpus) + I;
+    redde VERUM;
+}
+
+interior HttpMethodus
+_methodus_ex (
+    chorda m)
+{
+    si (chorda_aequalis_literis(m, "PUT"))
+    {
+        redde HTTP_PUT;
+    }
+    si (chorda_aequalis_literis(m, "POST"))
+    {
+        redde HTTP_POST;
+    }
+    si (chorda_aequalis_literis(m, "PATCH"))
+    {
+        redde HTTP_PATCH;
+    }
+    redde HTTP_METHODUS_IGNOTUS;
+}
+
+/* pars una ad URL Apple (sine tessera): III conatus (eadem pars eodem
+ * loco - idempotens) */
+interior b32
+_partem_mittere (
+    constans NundinaeAppleOperatio* o,
+                       constans i8* datum,
+                            chorda* causa,
+                           Piscina* p)
+{
+     HttpPetitio* pet;
+    HttpResultus  res;
+             i32  conatus;
+             i32  k;
+       character  linea[CCLVI];
+    HttpMethodus  m;
+
+    m = _methodus_ex(o->methodus);
+    si (m == HTTP_METHODUS_IGNOTUS)
+    {
+        *causa = chorda_concatenare(chorda_ex_literis(
+            "nundinae_apple: methodus operationis ignota: ", p),
+            o->methodus, p);
+        redde FALSUM;
+    }
+    per (conatus = ZEPHYRUM; conatus < III; conatus++)
+    {
+        pet = http_petitio_creare(p, m, chorda_ut_cstr(o->url, p));
+        si (!pet)
+        {
+            *causa =
+                chorda_ex_literis("nundinae_apple: URL operationis "
+                "mala", p);
+            redde FALSUM;
+        }
+        per (k = ZEPHYRUM; k < xar_numerus(o->capita); k++)
+        {
+            NundinaeAppleCaput* c;
+
+            c = (NundinaeAppleCaput*)xar_obtinere(o->capita, k);
+            http_petitio_caput_addere(pet, chorda_ut_cstr(c->titulus,
+                p),
+                chorda_ut_cstr(c->valor, p));
+        }
+        http_petitio_corpus_ponere(pet, (constans character*)(datum
+            + o->offset), (i32)o->longitudo);
+        res = http_exsequi(pet, p);
+        si (   res.successus && res.responsum
+            && res.responsum->status >= CC
+            && res.responsum->status < CCC)
+        {
+            redde VERUM;
+        }
+        sprintf(linea, "nundinae_apple: pars (offset %ld, %ld octeti) "
+            "fracta: %d", (longus)o->offset, (longus)o->longitudo,
+            res.responsum ? (int)res.responsum->status : ZEPHYRUM);
+        *causa = chorda_ex_literis(linea, p);
+    }
+    redde FALSUM;
+}
+
+interior vacuum
+_dormire (
+    s32 secundae)
+{
+    structura timespec t;
+
+    t.tv_sec   = (time_t)secundae;
+    t.tv_nsec  = ZEPHYRUM;
+    (vacuum)nanosleep(&t, NIHIL);
+}
+
+/* errores statūs (StateDetail[]) in causam */
+interior chorda
+_errores_status (
+    JsonValor* status,
+      Piscina* p)
+{
+         JsonValor* e;
+ ChordaAedificator* a;
+               i32  i;
+
+    a = chorda_aedificator_creare(p, CCLVI);
+    e = status ? json_objectum_capere(status, "errors") : NIHIL;
+    per (i = ZEPHYRUM; e && i < json_tabulatum_numerus(e); i++)
+    {
+        JsonValor* d = json_tabulatum_obtinere(e, i);
+
+        chorda_aedificator_appendere_literis(a, i ? "; " : "");
+        chorda_aedificator_appendere_chorda(a, json_capere_chorda(d,
+            "code",
+            chorda_ex_literis("", p)));
+        chorda_aedificator_appendere_literis(a, ": ");
+        chorda_aedificator_appendere_chorda(a, json_capere_chorda(d,
+            "description", chorda_ex_literis("", p)));
+    }
+    redde chorda_aedificator_finire(a);
+}
+
+b32
+nundinae_apple_mittere (
+       NundinaeApple* n,
+              chorda  id_applicationis,
+  constans character* via_archivi,
+              chorda  versio,
+                 i32  aedificatio,
+              chorda* id_aedificationis,
+              chorda* causa,
+             Piscina* p)
+{
+    NundinaeAppleResponsum  r;
+                    chorda  archivum;
+                    chorda  vac;
+                    chorda  id_missionis;
+                    chorda  id_plagulae;
+                    chorda  md5;
+                    chorda  status;
+                 JsonValor* a;
+                 JsonValor* rel;
+                 JsonValor* summae;
+                 JsonValor* summa;
+                       Xar* operationes;
+                 character  numerus[XVI];
+                 character  linea[CCLVI];
+        constans character* nomen_plagulae;
+                       i32  i;
+                       i32  vices;
+
+    vac       = chorda_ex_literis("", p);
+    archivum  = filum_legere_totum(via_archivi, p);
+    si (archivum.mensura <= ZEPHYRUM)
+    {
+        *causa = chorda_concatenare(chorda_ex_literis(
+            "nundinae_apple: archivum legi nequit: ", p),
+            chorda_ex_literis(
+            via_archivi, p), p);
+        redde FALSUM;
+    }
+    nomen_plagulae = strrchr(via_archivi, '/');
+    nomen_plagulae = nomen_plagulae ? nomen_plagulae + I : via_archivi;
+    sprintf(numerus, "%d", (int)aedificatio);
+    /* I. buildUpload */
+    a = json_objectum_creare(p);
+    json_objectum_ponere(a, "cfBundleShortVersionString",
+        json_chorda_creare(
+        p, versio));
+    json_objectum_ponere(a, "cfBundleVersion",
+        json_chorda_creare_literis(p,
+        numerus));
+    json_objectum_ponere(a, "platform", json_chorda_creare_literis(p,
+        "IOS"));
+    rel = json_objectum_creare(p);
+    json_objectum_ponere(rel, "app", _relatio("apps", id_applicationis,
+        FALSUM, p));
+    r = nundinae_apple_vocare(n, HTTP_POST, "/v1/buildUploads",
+        _corpus_rei("buildUploads", a, rel, p), p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    id_missionis = json_capere_chorda(json_objectum_capere(r.corpus,
+        "data"),
+        "id", vac);
+    /* II. buildUploadFile */
+    a = json_objectum_creare(p);
+    json_objectum_ponere(a, "assetType", json_chorda_creare_literis(p,
+        "ASSET"));
+    json_objectum_ponere(a, "fileName", json_chorda_creare_literis(p,
+        nomen_plagulae));
+    json_objectum_ponere(a, "fileSize", json_integer_creare(p,
+        (s64)archivum.mensura));
+    json_objectum_ponere(a, "uti", json_chorda_creare_literis(p,
+        "com.apple.ipa"));
+    rel = json_objectum_creare(p);
+    json_objectum_ponere(rel, "buildUpload", _relatio("buildUploads",
+        id_missionis, FALSUM, p));
+    r = nundinae_apple_vocare(n, HTTP_POST, "/v1/buildUploadFiles",
+        _corpus_rei("buildUploadFiles", a, rel, p), p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    id_plagulae = json_capere_chorda(json_objectum_capere(r.corpus,
+        "data"),
+        "id", vac);
+    operationes = xar_creare(p, (i32)magnitudo(NundinaeAppleOperatio));
+    si (!nundinae_apple_operationes_legere(r.corpus, operationes, p))
+    {
+        *causa = chorda_ex_literis(
+            "nundinae_apple: nullae operationes missionis", p);
+        redde FALSUM;
+    }
+    /* III. partes */
+    per (i = ZEPHYRUM; i < xar_numerus(operationes); i++)
+    {
+        NundinaeAppleOperatio* o;
+
+        o = (NundinaeAppleOperatio*)xar_obtinere(operationes, i);
+        si (   o->offset < ZEPHYRUM || o->longitudo <= ZEPHYRUM
+            || o->offset + o->longitudo > (s64)archivum.mensura)
+        {
+            *causa = chorda_ex_literis(
+                "nundinae_apple: operatio extra plagulam", p);
+            redde FALSUM;
+        }
+        si (!_partem_mittere(o, archivum.datum, causa, p))
+        {
+            redde FALSUM;
+        }
+        sprintf(linea, "pars %d/%d missa", (int)(i + I),
+            (int)xar_numerus(operationes));
+        _nuntiare(n, linea);
+    }
+    /* IV. commissio cum MD5 plagulae: hex MAIUSCULAE ut entityTag
+     * Apple (minusculae -> 409 ATTRIBUTE.INVALID); 'composite' Apple
+     * ipse ex 'file' implet */
+    md5 = nundinae_apple_md5_hex(archivum.datum,
+        (i64)archivum.mensura, p);
+    per (i = ZEPHYRUM; i < md5.mensura; i++)
+    {
+        si (md5.datum[i] >= 'a' && md5.datum[i] <= 'f')
+        {
+            md5.datum[i] = (i8)(md5.datum[i] - 'a' + 'A');
+        }
+    }
+    summae  = json_objectum_creare(p);
+    summa   = json_objectum_creare(p);
+    json_objectum_ponere(summa, "algorithm",
+        json_chorda_creare_literis(p,
+        "MD5"));
+    json_objectum_ponere(summa, "hash", json_chorda_creare(p, md5));
+    json_objectum_ponere(summae, "file", summa);
+    a = json_objectum_creare(p);
+    json_objectum_ponere(a, "uploaded", json_boolean_creare(p, VERUM));
+    json_objectum_ponere(a, "sourceFileChecksums", summae);
+    {
+        JsonValor* radix;
+        JsonValor* data;
+
+        data = json_objectum_creare(p);
+        json_objectum_ponere(data, "type", json_chorda_creare_literis(p,
+            "buildUploadFiles"));
+        json_objectum_ponere(data, "id", json_chorda_creare(p,
+            id_plagulae));
+        json_objectum_ponere(data, "attributes", a);
+        radix = json_objectum_creare(p);
+        json_objectum_ponere(radix, "data", data);
+        r = nundinae_apple_vocare(n, HTTP_PATCH, _via(p,
+            "/v1/buildUploadFiles/%A", id_plagulae, vac),
+            json_scribere(radix,
+            p), p);
+    }
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    _nuntiare(n, "missio commissa; Apple examinat");
+    /* V. status missionis: COMPLETE (cum build) aut FAILED */
+    id_aedificationis->mensura = ZEPHYRUM;
+    per (vices = ZEPHYRUM; vices < CXX; vices++)
+    {
+        r = nundinae_apple_vocare(n, HTTP_GET, _via(p,
+            "/v1/buildUploads/%A?include=build", id_missionis, vac),
+            vac, p);
+        si (!_vocatio_bona(r, causa))
+        {
+            redde FALSUM;
+        }
+        status = json_capere_chorda(json_via(r.corpus,
+            "data.attributes.state"), "state", vac);
+        si (chorda_aequalis_literis(status, "FAILED"))
+        {
+            *causa = chorda_concatenare(chorda_ex_literis(
+                "nundinae_apple: Apple missionem refutavit: ", p),
+                _errores_status(json_via(r.corpus,
+                "data.attributes.state"),
+                p), p);
+            redde FALSUM;
+        }
+        *id_aedificationis = json_capere_chorda(json_via(r.corpus,
+            "data.relationships.build.data"), "id", vac);
+        si (   chorda_aequalis_literis(status, "COMPLETE")
+            && id_aedificationis->mensura > ZEPHYRUM)
+        {
+            frange;
+        }
+        sprintf(linea, "missio: %.*s", (int)status.mensura,
+            (constans character*)status.datum);
+        _nuntiare(n, linea);
+        _dormire(XV);
+    }
+    si (id_aedificationis->mensura == ZEPHYRUM)
+    {
+        *causa = chorda_concatenare(chorda_ex_literis(
+            "nundinae_apple: missio non perfecta intra XXX min, "
+            "status ",
+            p),
+            status, p);
+        redde FALSUM;
+    }
+    _nuntiare(n, "missio COMPLETE; aedificatio processum exspectat");
+    /* VI. processus aedificationis */
+    per (vices = ZEPHYRUM; vices < LX; vices++)
+    {
+        r = nundinae_apple_vocare(n, HTTP_GET, _via(p,
+            "/v1/builds/%A?fields%5Bbuilds%5D=processingState,version",
+            *id_aedificationis, vac), vac, p);
+        si (!_vocatio_bona(r, causa))
+        {
+            redde FALSUM;
+        }
+        status = json_capere_chorda(json_via(r.corpus,
+            "data.attributes"),
+            "processingState", vac);
+        si (chorda_aequalis_literis(status, "VALID"))
+        {
+            redde VERUM;
+        }
+        si (   chorda_aequalis_literis(status, "INVALID")
+            || chorda_aequalis_literis(status, "FAILED"))
+        {
+            *causa = chorda_concatenare(chorda_ex_literis(
+                "nundinae_apple: aedificatio ", p), status, p);
+            redde FALSUM;
+        }
+        sprintf(linea, "aedificatio: %.*s", (int)status.mensura,
+            (constans character*)status.datum);
+        _nuntiare(n, linea);
+        _dormire(XXX);
+    }
+    *causa = chorda_ex_literis(
+        "nundinae_apple: aedificatio non VALID intra XXX min", p);
+    redde FALSUM;
+}
