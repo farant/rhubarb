@@ -80,3 +80,9 @@ turns the ramp's end pulsus back into its bar number.
 
 "fermata x2" / "fermata x1.5 (+960)" after the tempo changes. _factorem_scribere prints
 the factor as an integer when whole, else to hundredths without trailing zero (1.5, 1.25).
+
+## 2026-10-24 - agogica in title and bar header
+
+"carmen r: c maior, 4/4 agogica 2 1 2 1 2 1 2 1, 100" and "metrum 3/4 agogica
+vindobonensis" - the lilt is printed as written (_inaequalitatem_scribere), nothing when
+even.

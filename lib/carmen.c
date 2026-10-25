@@ -200,6 +200,19 @@ _tempus_legere (
     redde VERUM;
 }
 
+/* agogica nominata: nomen et pondera (summa = numerus) */
+nomen structura {
+    constans character* titulus;
+                   i32  numerus;
+                   f32  pondera[III];
+} InaequalitasNominata;
+
+hic_manens constans InaequalitasNominata INAEQUALITATES_NOMINATAE[] = {
+    /* valse Vindobonensis: tempus I breve (II ante tempus venit), II
+     * longum (III paulo post) - Bengtsson et Gabrielsson */
+    { "vindobonensis", III, { 0.86f, 1.15f, 0.99f } }
+};
+
 /* pulsus mensurae metri dati */
 interior s64
 _longitudo_mensurae (
@@ -207,6 +220,98 @@ _longitudo_mensurae (
 {
     redde (s64)CANTUS_PULSUS_INTEGRAE * (s64)m->numerator
         / (s64)m->denominator;
+}
+
+/* agogica="nomen" aut "p1 p2 ... pK" (K 2..XVI, > 0): pondera normata
+ * ad summam K; mensura metri in K partes pulsuum integras. Vacua
+ * (sine attributo): aequale. FALSUM: causa in *causa */
+interior b32
+_inaequalitatem_legere (
+                chorda   valor,
+          CarmenMetrum*  m,
+    constans character** causa)
+{
+    s64 l        = _longitudo_mensurae(m);
+    f64 summa    = 0.0;
+    i32 numerus  = ZEPHYRUM;
+    i32 i        = ZEPHYRUM;
+    i32 nomina  = (i32)(magnitudo(INAEQUALITATES_NOMINATAE)
+                / magnitudo(INAEQUALITATES_NOMINATAE[ZEPHYRUM]));
+    i32 j;
+
+    m->inaequalitas = valor;
+    per (j = ZEPHYRUM; j < nomina; j++)
+    {
+        constans InaequalitasNominata* a = &INAEQUALITATES_NOMINATAE[j];
+
+        si (chorda_aequalis_literis(valor, a->titulus))
+        {
+            per (i = ZEPHYRUM; i < a->numerus; i++)
+            {
+                m->pondera[i]  = a->pondera[i];
+                summa          += (f64)a->pondera[i];
+            }
+            numerus  = a->numerus;
+            i        = (i32)valor.mensura;
+        }
+    }
+    dum (i < (i32)valor.mensura)
+    {
+        chorda verbum;
+           f64 x;
+           i32 initium;
+
+        dum (i < (i32)valor.mensura && valor.datum[i] == ' ')
+        {
+            i++;
+        }
+        si (i >= (i32)valor.mensura)
+        {
+            frange;
+        }
+        initium = i;
+        dum (i < (i32)valor.mensura && valor.datum[i] != ' ')
+        {
+            i++;
+        }
+        verbum.datum    = valor.datum + initium;
+        verbum.mensura  = (i32)(i - initium);
+        si (   numerus >= CARMEN_PONDERA_MAXIMA
+            || !chorda_ut_f64(verbum, &x) || !(x > 0.0))
+        {
+            *causa = "agogica: nomen aut pondera > 0 (II..XVI)";
+            redde FALSUM;
+        }
+        m->pondera[numerus++]  = (f32)x;
+        summa                  += x;
+    }
+    si (numerus < II || l % (s64)numerus != ZEPHYRUM)
+    {
+        *causa = "agogica: II..XVI pondera, mensura in partes integras";
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; j < numerus; j++)
+    {
+        m->pondera[j] = (f32)((f64)m->pondera[j] * (f64)numerus
+            / summa);
+    }
+    m->numerus_ponderum = numerus;
+    redde VERUM;
+}
+
+/* agogica elementi (attributum 'agogica') aut aequale si deest */
+interior b32
+_inaequalitatem_attributi (
+             StmlNodus*  nodus,
+          CarmenMetrum*  m,
+    constans character** causa)
+{
+    chorda* a = stml_attributum_capere(nodus, "agogica");
+
+    m->numerus_ponderum      = ZEPHYRUM;
+    m->inaequalitas.datum    = NIHIL;
+    m->inaequalitas.mensura  = ZEPHYRUM;
+    redde a == NIHIL || _inaequalitatem_legere(*a, m, causa);
 }
 
 /* initium mensurae ex metris [0, numerus) */
@@ -815,25 +920,51 @@ _gradum_addere (
     t->quadrum     = ZEPHYRUM;
 }
 
-/* fermatae in mappa sonandi: lineae divisionis = gradus mappae et
- * termini fermatarum; intra fermatam tempus gradus / factor
- * (millesimae, >= I), ad finem eius tempus mappae redit */
+/* longitudo mensurae metri et finis spatii eius in carmine */
+interior s64
+_finis_metri (
+    constans Carmen* k,
+                i32  i)
+{
+    redde i + I < k->numerus_metrorum ? k->metra[i + I].pulsus
+                                      : k->pulsus;
+}
+
+/* mappa sonandi MODULATA: lineae divisionis = gradus mappae, termini
+ * coronarum, partes mensurarum sub agogica. Tempus ad lineam = tempus
+ * mappae / (factor coronae x pondus partis) (millesimae, >= I) */
 interior b32
-_coronas_inserere (
+_mappam_modulare (
      Carmen* k,
     Piscina* piscina)
 {
-    i32  capacitas = k->numerus_temporum + II * k->numerus_coronarum;
-    s64* lineae    = (s64*)piscina_allocare(piscina,
-        (memoriae_index)capacitas * magnitudo(s64));
-    CantusTempus* nova = (CantusTempus*)piscina_allocare(piscina,
-        (memoriae_index)capacitas * magnitudo(CantusTempus));
+    CantusTempus* nova;
+             s64* lineae;
+             i32  capacitas = k->numerus_temporum
+                            + II * k->numerus_coronarum;
     i32 n        = ZEPHYRUM;
     i32 numerus  = ZEPHYRUM;
     i32 g        = ZEPHYRUM;   /* gradus mappae veteris */
-    i32 f        = ZEPHYRUM;   /* fermata */
+    i32 f        = ZEPHYRUM;   /* corona */
+    i32 r        = ZEPHYRUM;   /* metrum */
     i32 i;
 
+    per (i = ZEPHYRUM; i < k->numerus_metrorum; i++)
+    {
+        constans CarmenMetrum* m = &k->metra[i];
+                          s64  l = _longitudo_mensurae(m);
+                          s64  spatium = _finis_metri(k, i) - m->pulsus;
+
+        si (m->numerus_ponderum > ZEPHYRUM && spatium > ZEPHYRUM)
+        {
+            capacitas += (i32)((spatium + l - I) / l)
+                       * m->numerus_ponderum + I;
+        }
+    }
+    lineae = (s64*)piscina_allocare(piscina,
+        (memoriae_index)capacitas * magnitudo(s64));
+    nova   = (CantusTempus*)piscina_allocare(piscina,
+        (memoriae_index)capacitas * magnitudo(CantusTempus));
     si (!lineae || !nova)
     {
         redde FALSUM;
@@ -847,7 +978,25 @@ _coronas_inserere (
         lineae[n++] = k->coronae[i].pulsus;
         lineae[n++] = k->coronae[i].finis;
     }
-    /* ordo insertionis: mappa iam ordinata, termini pauci */
+    per (i = ZEPHYRUM; i < k->numerus_metrorum; i++)
+    {
+        constans CarmenMetrum* m = &k->metra[i];
+                          s64  pars;
+                          s64  p;
+
+        si (m->numerus_ponderum == ZEPHYRUM)
+        {
+            perge;
+        }
+        pars = _longitudo_mensurae(m) / (s64)m->numerus_ponderum;
+        per (p = m->pulsus; p < _finis_metri(k, i); p += pars)
+        {
+            lineae[n++] = p;
+        }
+        /* finis spatii: metrum proximum (aequale fortasse) redit */
+        lineae[n++] = _finis_metri(k, i);
+    }
+    /* ordo insertionis: catenae singulae iam ordinatae */
     per (i = I; i < n; i++)
     {
         s64 x = lineae[i];
@@ -874,10 +1023,24 @@ _coronas_inserere (
         {
             f++;
         }
+        dum (   r + I < k->numerus_metrorum
+             && k->metra[r + I].pulsus <= x)
+        {
+            r++;
+        }
         t = (f64)k->tempora[g].millesimae / 1000.0;
         si (f < k->numerus_coronarum && k->coronae[f].pulsus <= x)
         {
             t = t / (f64)k->coronae[f].factor;
+        }
+        si (k->metra[r].numerus_ponderum > ZEPHYRUM)
+        {
+            constans CarmenMetrum* m = &k->metra[r];
+                              s64  l = _longitudo_mensurae(m);
+                              s64  q = ((x - m->pulsus) % l)
+                                     / (l / (s64)m->numerus_ponderum);
+
+            t = t / (f64)m->pondera[q];
         }
         _gradum_addere(nova, &numerus, x, t);
     }
@@ -943,8 +1106,7 @@ _mappam_sonandi (
         prius = t->tempus;
     }
     k->numerus_temporum = numerus;
-    si (   k->numerus_coronarum > ZEPHYRUM
-        && !_coronas_inserere(k, piscina))
+    si (!_mappam_modulare(k, piscina))
     {
         redde FALSUM;
     }
@@ -1448,6 +1610,11 @@ _carmen_legere (
         redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
             "metrum non N/D (D potentia II)");
     }
+    si (!_inaequalitatem_attributi(nodus, &k->metra[ZEPHYRUM], &causa))
+    {
+        redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
+            causa);
+    }
     a = stml_attributum_capere(nodus, "clavis");
     si (a && !_clavem_legere(*a, &k->claves[ZEPHYRUM]))
     {
@@ -1509,6 +1676,11 @@ _carmen_legere (
         {
             redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
                 "metrum: valor N/D, ordine mensurae");
+        }
+        si (!_inaequalitatem_attributi(n, &k->metra[l], &causa))
+        {
+            redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
+                causa);
         }
         k->metra[l].pulsus = positio;
         si (l == (s32)k->numerus_metrorum)

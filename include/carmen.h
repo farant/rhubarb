@@ -31,6 +31,14 @@
  *             unitas = carmen_tempus_mensurae, ut locus 'M:T' - in 6/8
  *             octavae tres)
  *   metrum    N/D, D potentia II (1..64), N 1..64
+ *   agogica   in carmine (metro initiali) aut in <metrum>: pondera
+ *             K partium aequalium mensurae ("0.86 1.15 0.99" in 3/4;
+ *             "2 1 2 1 2 1 2 1" = octavae inaequales in 4/4), normata
+ *             ad summam K - mensura longitudine sua, partes intra eam
+ *             longius aut brevius sonant; 'vindobonensis' = "0.86 1.15
+ *             0.99". Valet usque ad metrum proximum (sine agogica =
+ *             aequale). K 2..XVI, pondera > 0, mensura in K partes
+ *             pulsuum integras divisibilis
  *   clavis    littera [#|b] maior|minor (quintae -7..7, ut MusicXML)
  *   tempus    20..400 quartae per minutum (ordinarium CXX); sine
  *             'usque' gradus; cum usque="M" clivus: a tempore vigente
@@ -80,7 +88,8 @@
  *
  * MAPPA SONANDI: Carmen.tempora = gradus soli (clivi per
  * CARMEN_GRADUS_TEMPORIS pulsus - tricesima secunda - tempore medii
- * gradus; fermatae: tempus vigens / factor intra spatium suum);
+ * gradus; fermatae: tempus vigens / factor intra spatium suum;
+ * agogica: pars mensurae tempore vigenti / pondere);
  * scripta in tempora_scripta et fermatae (partitura ea nominat).
  * Analysis tempus SCRIPTUM iudicat (pulsus), numquam sonandi.
  *
@@ -135,10 +144,17 @@ nomen structura {
                i32  numerus_frustorum;
 } CarmenPars;
 
+#define CARMEN_PONDERA_MAXIMA XVI
+
 nomen structura {
-    s64 pulsus;
-    i32 numerator;
-    i32 denominator;
+       s64 pulsus;
+       i32 numerator;
+       i32 denominator;
+       f32 pondera[CARMEN_PONDERA_MAXIMA];  /* agogica, summa =
+                                              * numerus_ponderum */
+       i32 numerus_ponderum;                 /* 0 = aequale */
+    chorda inaequalitas;                     /* 'agogica' ut scripta;
+                                              * vacua */
 } CarmenMetrum;
 
 nomen structura {

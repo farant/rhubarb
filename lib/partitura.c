@@ -595,6 +595,20 @@ _positionem_scribere (
     }
 }
 
+/* agogica metri ut scripta (' agogica vindobonensis'); nihil si
+ * aequale */
+interior vacuum
+_inaequalitatem_scribere (
+                 Scriptor* s,
+    constans CarmenMetrum* m)
+{
+    si (m->numerus_ponderum > ZEPHYRUM)
+    {
+        _litterae(s, " agogica ");
+        _chorda(s, m->inaequalitas);
+    }
+}
+
 /* factor fermatae: integer sine fractione (2), aliter ad centesimas
  * sine zeris caudae (1.5, 1.25) */
 interior vacuum
@@ -653,6 +667,7 @@ _titulum_mensurae (
             _numerus(s, (s64)m->numerator);
             _character(s, '/');
             _numerus(s, (s64)m->denominator);
+            _inaequalitatem_scribere(s, m);
             _positionem_scribere(s, m->pulsus, initium);
         }
     }
@@ -803,6 +818,7 @@ partitura_scribere (
     _numerus(&s, (s64)carmen->metra[ZEPHYRUM].numerator);
     _character(&s, '/');
     _numerus(&s, (s64)carmen->metra[ZEPHYRUM].denominator);
+    _inaequalitatem_scribere(&s, &carmen->metra[ZEPHYRUM]);
     _litterae(&s, ", ");
     _numerus(&s, (s64)carmen->tempora_scripta[ZEPHYRUM].tempus);
     _character(&s, '\n');

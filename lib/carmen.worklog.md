@@ -203,3 +203,28 @@ millesimae (thousandths, >= 1, used by the frame math - cantus.worklog.md). Ramp
 their exact midpoint value (120 -> 60 first step = 119.531), coronae divide the exact
 millesimae. Effect: the ramp test now holds to 0.02% of the exact integral (was 0.2%), a
 fermata inside a ramp to 0.01% of 2x (was 2%).
+
+## 2026-10-24 - agogica: waltz lilt / swing as weights per bar (desideratum ...4939S)
+
+`agogica` on the carmen (initial metrum) or on a `<metrum>`: K weights for K equal parts
+of the bar, normalized to sum K, so the BAR keeps its exact length and only its parts
+stretch; `vindobonensis` = 0.86 1.15 0.99 (Viennese waltz: beat 1 short so beat 2 comes
+early, beat 2 long so beat 3 is a touch late - my reading of Bengtsson & Gabrielsson,
+tune by ear); "2 1 2 1 2 1 2 1" in 4/4 = triplet swing. Valid until the next <metrum>
+(a metrum without agogica is even - restate the same meter to switch lilt on/off).
+Stored on CarmenMetrum: pondera[CARMEN_PONDERA_MAXIMA = 16], numerus_ponderum, inaequalitas
+(text as written, for partitura). Named presets live in INAEQUALITATES_NOMINATAE. Names: the
+STML attribute is `agogica` (approved); C says INAEQUALITAS (French baroque notes inegales =
+the same idea; "agogica" is a 19th-c. coinage the lint refuses).
+
+Sounding map: _coronas_inserere became _mappam_modulare - breakpoints = old steps +
+corona bounds + every part of every lilted bar + the END of each lilted span; tempo =
+map tempo / (corona factor x part weight). Needs the millesimae precision (965e7dad):
+at whole bpm a 66 bpm waltz ran ~0.6% long per bar. The end-of-span breakpoint was a
+first-run bug: without it the last lilted part's tempo carried into the next (even) bar.
+
+Analysis judges written pulsus - censura's strong beats, harmonia windows do not move.
+Bar length must split into K whole pulsus (3/4 = 2880 -> 3, 4/4 = 3840 -> 8 ok; 7 parts
+of 3/4 refused).
+
+Plants 11/11 red.

@@ -285,7 +285,8 @@ _sectio_mutationes (
 {
     constans Carmen* k = _carmen(c,
         "<carmina><carmen titulus=\"m\" clavis=\"a minor\">"
-        "<metrum mensura=\"2\" valor=\"3/4\"/>"
+        "<metrum mensura=\"2\" valor=\"3/4\" "
+        "agogica=\"vindobonensis\"/>"
         "<clavis mensura=\"2\" valor=\"eb maior\"/>"
         "<tempus mensura=\"2\" valor=\"160\"/>"
         "<tempus pulsus=\"4800\" valor=\"90\" usque=\"4\"/>"
@@ -302,7 +303,8 @@ _sectio_mutationes (
         "  pars m: aether, lucrum 1.00\n"
         "mensura 1\n"
         "  m  C4:1\n"
-        "mensura 2  metrum 3/4  clavis eb maior  tempus 160  "
+        "mensura 2  metrum 3/4 agogica vindobonensis  clavis eb maior  "
+        "tempus 160  "
         "tempus 90 usque 4 (+960)\n"
         "  m  Eb4:2.\n"
         "mensura 3  fermata x1.5 (+960)\n"
@@ -311,14 +313,15 @@ _sectio_mutationes (
         "  m  C4:2.\n");
     /* clivus ab initio: titulus tempus SCRIPTUM (C) nominat */
     k = _carmen(c,
-        "<carmina><carmen titulus=\"r\" tempus=\"100\">"
+        "<carmina><carmen titulus=\"r\" tempus=\"100\" "
+        "agogica=\"2 1 2 1 2 1 2 1\">"
         "<tempus mensura=\"1\" valor=\"60\" usque=\"2\"/>"
         "<pars titulus=\"m\" instrumentum=\"aether\">"
         "<frustum mensura=\"1\"><textus!>o4 c1 | c1</textus></frustum>"
         "</pars></carmen></carmina>");
     CREDO_NECESSE (k != NIHIL);
     CREDO_CHORDA_AEQUALIS_LITERIS (_scribere(c, k, NIHIL),
-        "carmen r: c maior, 4/4, 100\n"
+        "carmen r: c maior, 4/4 agogica 2 1 2 1 2 1 2 1, 100\n"
         "  pars m: aether, lucrum 1.00\n"
         "mensura 1  tempus 60 usque 2\n"
         "  m  C4:1\n"
