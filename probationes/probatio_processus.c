@@ -11,6 +11,7 @@
  *     concha ea interpretatur)
  */
 
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -20,6 +21,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <signal.h>
+#include <sys/types.h>
 
 /* chordam ut litterae NUL-terminatas in piscina (pro strstr/strcmp) */
 interior constans character*
@@ -1054,6 +1057,96 @@ _sectio_vicesima_nona (
     CREDO_AEQUALIS_I32 (r.codex_exitus, ZEPHYRUM);
 }
 
+/* GREX PROPRIUS (2026-10-26, mensor relictus a
+ * vicus_admonitiones): infans nepotem in tergo relinquens - cum grege
+ * proprio nepos occiditur et relicti VERUM; sine grege nepos vivit
+ * (relicti FALSUM) et probatio eum ipsa occidit */
+interior pid_t
+_nepotem_legere (
+    chorda effusio)
+{
+    pid_t pid = ZEPHYRUM;
+      i32 i;
+
+    per (i = ZEPHYRUM; i < effusio.mensura
+         && effusio.datum[i] >= '0' && effusio.datum[i] <= '9'; i++)
+    {
+        pid = pid * (pid_t)X + (pid_t)(effusio.datum[i] - '0');
+    }
+    redde pid;
+}
+
+interior vacuum
+_sectio_grex_proprius (
+    CredoContextus* c)
+{
+    constans character* argumenta[] = {
+        "/bin/sh", "-c", "sleep 30 > /dev/null 2>&1 & echo $!", NIHIL
+    };
+      ProcessusOptiones optiones;
+      ProcessusResultus r;
+                  pid_t nepos;
+
+    /* cum grege: nepos occisus, relicti */
+    memset(&optiones, ZEPHYRUM, magnitudo(optiones));
+    optiones.grex_proprius = VERUM;
+    r = processus_exsequi_cum(argumenta, &optiones, 5000, c->piscina);
+    CREDO_NECESSE(r.successus);
+    nepos = _nepotem_legere(r.effusio);
+    CREDO_NECESSE(nepos > (pid_t)ZEPHYRUM);
+    CREDO_VERUM(r.relicti);
+    /* SIGKILL datum; nepos orbatus a launchd/init metitur (zombie usque
+     * ad messem: kill(pid, 0) adhuc VERUM) - II s ad summum */
+    {
+        i32 k;
+
+        per (k = ZEPHYRUM; k < CC && kill(nepos, 0) == ZEPHYRUM; k++)
+        {
+            structura timespec t;
+
+            t.tv_sec   = 0;
+            t.tv_nsec  = 10000000L;
+            (vacuum)nanosleep(&t, NIHIL);
+        }
+    }
+    CREDO_VERUM(kill(nepos, 0) != ZEPHYRUM);
+
+    /* sine grege: nepos vivit, relicti FALSUM - deinde occisus manu */
+    memset(&optiones, ZEPHYRUM, magnitudo(optiones));
+    r = processus_exsequi_cum(argumenta, &optiones, 5000, c->piscina);
+    CREDO_NECESSE(r.successus);
+    nepos = _nepotem_legere(r.effusio);
+    CREDO_NECESSE(nepos > (pid_t)ZEPHYRUM);
+    CREDO_FALSUM(r.relicti);
+    CREDO_VERUM(kill(nepos, 0) == ZEPHYRUM);
+    (vacuum)kill(nepos, SIGKILL);
+    /* messis per launchd/init expectatur: aliter zombie in grege
+     * membri relinquitur et fabrica 'relicti' nuntiat */
+    {
+        i32 k;
+
+        per (k = ZEPHYRUM; k < CC && kill(nepos, 0) == ZEPHYRUM; k++)
+        {
+            structura timespec t;
+
+            t.tv_sec   = 0;
+            t.tv_nsec  = 10000000L;
+            (vacuum)nanosleep(&t, NIHIL);
+        }
+    }
+
+    /* grex sine relictis: relicti FALSUM */
+    {
+        constans character* simplex[] = { "/usr/bin/true", NIHIL };
+
+        memset(&optiones, ZEPHYRUM, magnitudo(optiones));
+        optiones.grex_proprius = VERUM;
+        r = processus_exsequi_cum(simplex, &optiones, 5000, c->piscina);
+        CREDO_VERUM(r.successus);
+        CREDO_FALSUM(r.relicti);
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I. exsecutio simplex", _sectio_prima, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -1108,6 +1201,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "XXVII. aetas ex etime", _sectio_vicesima_septima, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "grex proprius: relicti occisi", _sectio_grex_proprius, NIHIL,
+        NIHIL, NIHIL, NIHIL },
     { "XXVIII. vivus", _sectio_vicesima_octava, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "XXIX. tectum memoriae", _sectio_vicesima_nona, NIHIL, NIHIL,

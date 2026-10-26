@@ -89,6 +89,8 @@ structura Processus {
     b32 memoria_excessa;     /* vestigium INFANTIS supra tectum */
     b32 tempus_excessum;
     b32 abruptus;
+    b32 grex;                /* grex_proprius: pgid == pid */
+    b32 relicti;             /* grex post messem non vacuus, occisus */
     b32 occisus;
     b32 messus;
     b32 perfectus;
@@ -304,7 +306,103 @@ _resultus_vacuus (vacuum)
     r.error                     = PROCESSUS_OK;
     r.error_descriptio.datum    = NIHIL;
     r.error_descriptio.mensura  = ZEPHYRUM;
+    r.relicti                   = FALSUM;
     redde r;
+}
+
+
+/* ==================================================
+ * GREGES PROPRII (fabrica: membra relicta non supervivunt)
+ *
+ * Tabula gregum vivorum pro custodia signorum: SIGINT/SIGTERM/SIGHUP
+ * parentis greges occidit (killpg async-signal-tuta), actionem priorem
+ * restituit et signum iterat. Infantes in grege proprio Ctrl-C
+ * terminalis non accipiunt - sine hoc fabrica interrupta membra
+ * currentia relinqueret.
+ * ================================================== */
+
+#define GREGES_MAXIMI XVI
+hic_manens volatile pid_t       _greges[GREGES_MAXIMI];
+hic_manens b32                  _custodia_posita = FALSUM;
+hic_manens structura sigaction  _actio_int;
+hic_manens structura sigaction  _actio_term;
+hic_manens structura sigaction  _actio_suspensionis;
+
+interior vacuum
+_greges_occidere_signo (
+    integer signum)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < (i32)GREGES_MAXIMI; k++)
+    {
+        si (_greges[k] > (pid_t)ZEPHYRUM)
+        {
+            (vacuum)killpg(_greges[k], SIGKILL);
+        }
+    }
+    (vacuum)sigaction(SIGINT, &_actio_int, NIHIL);
+    (vacuum)sigaction(SIGTERM, &_actio_term, NIHIL);
+    (vacuum)sigaction(SIGHUP, &_actio_suspensionis, NIHIL);
+    (vacuum)raise(signum);
+}
+
+interior vacuum
+_gregem_notare (
+    pid_t grex)
+{
+    i32 k;
+
+    si (!_custodia_posita)
+    {
+        structura sigaction a;
+
+        memset(&a, ZEPHYRUM, magnitudo(a));
+        a.sa_handler = _greges_occidere_signo;
+        (vacuum)sigemptyset(&a.sa_mask);
+        (vacuum)sigaction(SIGINT, &a, &_actio_int);
+        (vacuum)sigaction(SIGTERM, &a, &_actio_term);
+        (vacuum)sigaction(SIGHUP, &a, &_actio_suspensionis);
+        _custodia_posita = VERUM;
+    }
+    per (k = ZEPHYRUM; k < (i32)GREGES_MAXIMI; k++)
+    {
+        si (_greges[k] <= (pid_t)ZEPHYRUM)
+        {
+            _greges[k] = grex;
+            redde;
+        }
+    }
+}
+
+interior vacuum
+_gregem_delere (
+    pid_t grex)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < (i32)GREGES_MAXIMI; k++)
+    {
+        si (_greges[k] == grex)
+        {
+            _greges[k] = (pid_t)ZEPHYRUM;
+        }
+    }
+}
+
+/* occisio: grex totus si proprius, aliter infans solus */
+interior vacuum
+_occidere (
+    Processus* p)
+{
+    si (p->grex)
+    {
+        (vacuum)killpg(p->pid, SIGKILL);
+    }
+    alioquin
+    {
+        (vacuum)kill(p->pid, SIGKILL);
+    }
 }
 
 interior ProcessusResultus
@@ -649,7 +747,7 @@ _perficere (
             || p->memoria_excessa)
         && !p->occisus && !p->messus)
     {
-        (vacuum)kill(p->pid, SIGKILL);
+        _occidere(p);
         p->occisus = VERUM;
     }
     /* fistulas claudere ANTE messem: infans in scriptione haerens
@@ -676,7 +774,7 @@ _perficere (
             _memoriam_custodire(p);
             si (p->tempus_excessum || p->memoria_excessa)
             {
-                (vacuum)kill(p->pid, SIGKILL);
+                _occidere(p);
                 p->occisus = VERUM;
                 frange;
             }
@@ -688,6 +786,18 @@ _perficere (
     si (!_reficere(p, obstans))
     {
         redde FALSUM;
+    }
+    /* RELICTI: grex post messem infantis non vacuus = nepotes qui eum
+     * supervixerunt (quaestio asynchrona non expectata) - occiduntur,
+     * ne membrum proximum eorum scripturas ferat */
+    si (p->grex)
+    {
+        si (killpg(p->pid, 0) == ZEPHYRUM)
+        {
+            (vacuum)killpg(p->pid, SIGKILL);
+            p->relicti = VERUM;
+        }
+        _gregem_delere(p->pid);
     }
     _exec_errno_legere(p);
     p->mora_ms    = (i32)(_tempus_ms() - p->initium);
@@ -715,6 +825,7 @@ _resultus_aedificare (
     r.effusio = _sacculum_finire(&p->sac_ef);
     r.erratum = _sacculum_finire(&p->sac_er);
     r.mora_ms = p->mora_ms;
+    r.relicti = p->relicti;
 
     si (p->exec_errno != ZEPHYRUM)
     {
@@ -912,6 +1023,11 @@ _incipere_cum (
         } u;
         integer e;
 
+        /* grex proprius PRIMUS: nepotes omnes eum hereditant */
+        si (optiones != NIHIL && optiones->grex_proprius)
+        {
+            (vacuum)setpgid(0, 0);
+        }
         close(fistula_ef[0]);
         close(fistula_er[0]);
         close(fistula_exec[0]);
@@ -965,7 +1081,14 @@ _incipere_cum (
         _exit(CXXVII);
     }
 
-    /* PARENS */
+    /* PARENS - grex etiam hic ponitur (certamen: killpg ante setpgid
+     * infantis gregem nondum inveniret) */
+    si (optiones != NIHIL && optiones->grex_proprius)
+    {
+        (vacuum)setpgid(p->pid, p->pid);
+        p->grex = VERUM;
+        _gregem_notare(p->pid);
+    }
     close(fistula_ef[I]);
     close(fistula_er[I]);
     close(fistula_exec[I]);

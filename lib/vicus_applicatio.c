@@ -3420,6 +3420,25 @@ vicus_applicatio_admonitiones_aperire (
     redde ca->sequitur;
 }
 
+vacuum
+vicus_applicatio_admonitiones_claudere (
+    VicusApplicatio* app)
+{
+    ContextusAdmonitionum* ca;
+
+    si (!app || !app->admonitionum)
+    {
+        redde;
+    }
+    ca = (ContextusAdmonitionum*)app->admonitionum;
+    si (!ca->sequitur)
+    {
+        redde;
+    }
+    colloquia_visus_fontem_finire(&ca->fons);
+    ca->sequitur = FALSUM;
+}
+
 
 /* ==================================================
  * Applicatio

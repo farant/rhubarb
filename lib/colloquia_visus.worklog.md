@@ -66,3 +66,15 @@ Two layout decisions worth remembering:
   test passed by coincidence when the plant made them RES (the last
   strip's res number equalled the last session row's).
 
+
+## 2026-10-26 colloquia_visus_fontem_finire (teardown)
+
+ColloquiorumFons starts `mensor quaestio currentes -machina` async every
+5 s via processus_incipere and had no teardown, so any owner that exited
+mid-query orphaned mensor (see lib/processus.worklog.md 2026-10-26 for
+the trace-misattribution it caused). `colloquia_visus_fontem_finire`
+aborts a pending query (processus_abrumpere), destroys the quaestionis
+and cursuum pools and NIHILs the pointers; idempotent. vicus calls it
+through `vicus_applicatio_admonitiones_claudere`. Test uses a fake mensor
+(`sleep 1; touch marker`): finire must return < 0.5 s and the marker must
+never appear.

@@ -506,12 +506,29 @@ suturae_in_area_currere (
     optiones.directorium     = NIHIL;
     optiones.ambitus         = vector;
     optiones.memoria_maxima  = _memoriam_maximam_legere();
+    /* GREX PROPRIUS (2026-10-26, vicus_admonitiones): processus quos
+     * membrum relinquit (mensor asynchronus cum libro SUO) post exitum
+     * occiduntur - aliter in libro suo scribunt dum membrum proximum
+     * currit, et photographia proximum culpat */
+    optiones.grex_proprius   = VERUM;
     (vacuum)filum_directorium_creare_cum_parentibus(chorda_ut_cstr(
         via_directorium(chorda_ex_literis(acta_via, piscina), piscina),
         piscina));
     resultus = processus_exsequi_cum(argv, &optiones,
         MORA_SANATIONIS_MS,
         piscina);
-    redde suturae_actum_complere(resultus, acta, acta_via, piscina,
-        actum_out);
+    {
+        b32 bonum = suturae_actum_complere(resultus, acta, acta_via,
+            piscina, actum_out);
+
+        si (resultus.relicti)
+        {
+            fprintf(stderr, "fabrica: MONITUM %s: processus post exitum"
+                " relicti (grex occisus)\n", argv[0]);
+            actum_out->cauda = chorda_concatenare(actum_out->cauda,
+                chorda_ex_literis(" [MONITUM: processus relicti post"
+                " exitum occisi]", piscina), piscina);
+        }
+        redde bonum;
+    }
 }
