@@ -1,5 +1,5 @@
 /* probatio_vicus_comites_terminale.c - comites P4: locus terminalis.
- * VIVUS contra servitorem tmux PROPRIUM (socket in build/pmx/,
+ * VIVUS contra servitorem tmux PROPRIUM (socket in build/pmc/,
  * TMUX_TMPDIR proprium - numquam servitor usoris; ut
  * probatio_vicus_saltus). Terminale adhaerens sessioni "alpha"
  * (fenestrae "prima", "secunda"): locus "terminale/tmux/alpha/<index
@@ -110,11 +110,11 @@ mundum_parare (
     {
         radix = cwd;
     }
-    sprintf(s->socket, "%s/build/pmx", radix ? radix : ".");
+    sprintf(s->socket, "%s/build/pmc", radix ? radix : ".");
     (vacuum)filum_directorium_creare_si_necesse(s->socket);
     sprintf(s->socket + strlen(s->socket), "/c.%d", (integer)getpid());
     /* servitor ordinarius sub TMUX_TMPDIR proprio: numquam usoris */
-    sprintf(s->tmpdir, "%s/build/pmx", radix ? radix : ".");
+    sprintf(s->tmpdir, "%s/build/pmc", radix ? radix : ".");
     (vacuum)setenv("TMUX_TMPDIR", s->tmpdir, I);
     s->m.binarium  = s->binarium;
     s->m.socket    = s->socket;

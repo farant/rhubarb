@@ -962,7 +962,22 @@ _sectio_supplementi_horarum (
  * finitur (aliter conexio sqlite non clauditur et memoria crescit)
  * ======================================================== */
 
-#define VIA_SEQ_ULTIMI "build/probatio_volumen_seq.db"
+/* via voluminis cyclorum: in TMPDIR (area membri sub fabrica, suitae
+ * sub credo) - non build/ (scriptura extra vestigium, porta radix) */
+interior vacuum
+_viam_seq_ponere (
+     character* via,
+           i32  capacitas)
+{
+    constans character* tmp;
+
+    tmp = getenv("TMPDIR");
+    si (!tmp || !tmp[ZEPHYRUM] || (i32)strlen(tmp) + XXXII >= capacitas)
+    {
+        tmp = "build";
+    }
+    sprintf(via, "%s/probatio_volumen_seq.db", tmp);
+}
 
 interior i64
 _vestigium (vacuum)
@@ -976,7 +991,8 @@ _vestigium (vacuum)
 /* aperire, seq legere (enuntiatum servatur), claudere - n vicibus */
 interior vacuum
 _seq_cyclos_currere (
-    i32 n)
+    constans character* via,
+                    i32 n)
 {
      Piscina* scheda;
      Volumen* vol;
@@ -987,7 +1003,7 @@ _seq_cyclos_currere (
         scheda = piscina_generare_dynamicum("probatio_seq",
             IV * MXXIV);
         CREDO_NECESSE_NON_NIHIL(scheda);
-        vol = volumen_aperire(scheda, VIA_SEQ_ULTIMI);
+        vol = volumen_aperire(scheda, via);
         CREDO_NECESSE_NON_NIHIL(vol);
         CREDO_NECESSE(volumen_seq_ultimum(vol) > ZEPHYRUM);
         volumen_claudere(vol);
@@ -1039,26 +1055,28 @@ _sectio_seq_ultimi (
         Volumen* vol;
             i64  ante;
             i64  post;
+      character  via[DXII];
 
         /* claudere enuntiatum servatum finit: sine eo sqlite3_close
          * BUSY reddit et conexio (cum memoria sua) manet. Cycli
          * calefacientes primum (vestigium prima vice crescit). */
-        si (filum_existit(VIA_SEQ_ULTIMI))
+        _viam_seq_ponere(via, (i32)magnitudo(via));
+        si (filum_existit(via))
         {
-            (vacuum)filum_delere(VIA_SEQ_ULTIMI);
+            (vacuum)filum_delere(via);
         }
-        vol = volumen_creare(piscina, VIA_SEQ_ULTIMI);
+        vol = volumen_creare(piscina, via);
         CREDO_NECESSE_NON_NIHIL(vol);
         volumen_claudere(vol);
-        _seq_cyclos_currere(L);
+        _seq_cyclos_currere(via, L);
         ante = _vestigium();
-        _seq_cyclos_currere(D);
+        _seq_cyclos_currere(via, D);
         post = _vestigium();
         imprimere("  seq_ultimum cycli D: vestigium %+ld KiB\n",
             (longus)((s64)post - (s64)ante) / MXXIV);
         CREDO_VERUM(post < ante
             || post - ante < (i64)II * MXXIV * MXXIV);
-        (vacuum)filum_delere(VIA_SEQ_ULTIMI);
+        (vacuum)filum_delere(via);
     }
 }
 
