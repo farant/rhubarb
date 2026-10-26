@@ -2721,9 +2721,12 @@ nomen structura {
      * (binarium; socket per sessionem) */
        ColloquiorumFons fons;
             Multiplexor multiplexor;
-    /* T6: terminalia - inspectio ultima (s), scheda sua */
+    /* T6: terminalia - inspectio ultima (s), scheda sua; quies T2:
+     * quaestiones list-clients in volatu (QuaestioClientium; NIHIL =
+     * nulla) - scheda solum sine quaestionibus vacatur */
                  time_t  terminalia_ad;
                 Piscina* scheda_terminalium;
+                    Xar* terminalia_quaestiones;
     /* sonus S4: admonitio nova pulsat */
           ContextusSoni* sonus;
     /* nuntii hospitis (toasts solae; nuntium_hospitis): index
@@ -3153,101 +3156,116 @@ nomen structura {
     chorda sessio;
 } ClientisLocus;
 
+/* quies T2: list-clients unius servitoris in volatu */
+nomen structura {
+    constans character* servitor;
+             Processus* processus;
+} QuaestioClientium;
+
+/* quies T2: list-clients servitoris ("-" = ordinarius) INCIPITUR, non
+ * exspectatur - resultus in pulsu posteriore (clientes_addere).
+ * tmux absens: nulla quaestio (ut olim: nulli clientes) */
 interior vacuum
-clientes_addere (
-                    Xar* loci,
+clientes_quaerere (
+                    Xar* quaestiones,
      constans character* servitor,
                 Piscina* p)
 {
-                   Multiplexor  mx;
-                           Xar* clientes;
-    constans MultiplexorCliens* k;
-                 ClientisLocus* locus;
-                           i32  i;
+          Multiplexor  mx;
+            Processus* pr;
+    QuaestioClientium* q;
 
     memset(&mx, ZEPHYRUM, magnitudo(mx));
     si (strcmp(servitor, "-") != ZEPHYRUM)
     {
         mx.socket = servitor;
     }
-    clientes = multiplexor_clientes(&mx, p);
+    pr  = multiplexor_clientes_incipere(&mx, p);
+    q   = pr ? (QuaestioClientium*)xar_addere(quaestiones) : NIHIL;
+    si (q)
+    {
+        q->servitor   = servitor;
+        q->processus  = pr;
+    }
+}
+
+/* quaestio PARATA metitur; clientes eius in loci (fracta: nulli) */
+interior vacuum
+clientes_addere (
+                           Xar* loci,
+    constans QuaestioClientium* q,
+                       Piscina* p)
+{
+             ProcessusResultus  r;
+                           Xar* clientes;
+    constans MultiplexorCliens* k;
+                 ClientisLocus* locus;
+                           i32  i;
+
+    r = processus_metere(q->processus);
+    si (!r.successus || r.codex_exitus != ZEPHYRUM)
+    {
+        redde;
+    }
+    clientes = multiplexor_clientes_legere(r.effusio, p);
     per (i = ZEPHYRUM; clientes && i < xar_numerus(clientes); i++)
     {
         k      = (constans MultiplexorCliens*)xar_obtinere(clientes, i);
         locus  = (ClientisLocus*)xar_addere(loci);
         si (locus)
         {
-            locus->servitor  = chorda_ex_literis(servitor, p);
+            locus->servitor  = chorda_ex_literis(q->servitor, p);
             locus->tty       = k->tty;
             locus->sessio    = k->sessio;
         }
     }
 }
 
-/* systema "terminalia" (T6, per V s): latus terminalis cuius tty
- * cliens tmux est argumentum "tmux <servitor|-> <sessio>" servat
- * (restitutio iterum adhaeret); detachatum (argumentum tmux sine
- * cliente) tollitur. Servitores sessionum (praeconium) priores,
- * ordinarius ultimus - argumentum saltus (socket plenus) manet. */
+/* quies T2: estne latus terminale vivum in aliqua tabula? */
 interior b32
-systema_terminalium (
-     Vicus* v,
-    vacuum* ctx)
+terminale_adest (
+    Vicus* v)
 {
-     ContextusAdmonitionum* ca;
-                       Xar* loci;
-                       Xar* sessiones;
+    VicusTabula* t;
+     VicusLatus* l;
+            i32  i;
+            s32  k;
+
+    per (i = ZEPHYRUM; i < (i32)vicus_numerus_tabularum(v); i++)
+    {
+        t = vicus_tabula(v, i);
+        per (k = -I; t && k < (s32)xar_numerus(t->acervus); k++)
+        {
+            l = k < ZEPHYRUM ? &t->sinistrum
+                : (VicusLatus*)xar_obtinere(t->acervus, (i32)k);
+            si (   l->montata && !l->finita
+                && chorda_aequalis_literis(l->genus, "terminale"))
+            {
+                redde VERUM;
+            }
+        }
+    }
+    redde FALSUM;
+}
+
+/* T6: latus terminalis cuius tty cliens tmux est argumentum "tmux
+ * <servitor|-> <sessio>" servat; detachatum (argumentum tmux sine
+ * cliente) tollitur; argumentum alienum non tangitur */
+interior vacuum
+terminalia_applicare (
+                    Vicus* v,
+    ContextusAdmonitionum* ca,
+                      Xar* loci)
+{
     constans ClientisLocus* locus;
                VicusTabula* t;
                 VicusLatus* l;
                     chorda  tty;
                     chorda  novum;
-                    time_t  nunc;
                        i32  i;
                        i32  j;
                        s32  k;
 
-    ca = (ContextusAdmonitionum*)ctx;
-    si (!ca->sequitur || !ca->scheda_terminalium)
-    {
-        redde FALSUM;
-    }
-    nunc = time(NIHIL);
-    si (   ca->terminalia_ad != (time_t)ZEPHYRUM
-        && nunc - ca->terminalia_ad < (time_t)V)
-    {
-        redde FALSUM;
-    }
-    ca->terminalia_ad = nunc;
-    piscina_vacare(ca->scheda_terminalium);
-    loci = xar_creare(ca->scheda_terminalium,
-        (i32)magnitudo(ClientisLocus));
-    sessiones = colloquia_status_legere(ca->fons.status,
-        ca->scheda_terminalium);
-    /* servitores sessionum distincti, deinde ordinarius */
-    per (i = ZEPHYRUM; loci && sessiones && i < xar_numerus(sessiones);
-         i++)
-    {
-        constans Colloquium* c;
-                        b32  visus;
-
-        c      = (constans Colloquium*)xar_obtinere(sessiones, i);
-        visus  = c->servitor.mensura == ZEPHYRUM;
-        per (j = ZEPHYRUM; !visus && j < i; j++)
-        {
-            visus = chorda_aequalis(((constans Colloquium*)
-                xar_obtinere(sessiones, j))->servitor, c->servitor);
-        }
-        si (!visus)
-        {
-            clientes_addere(loci, chorda_ut_cstr(c->servitor,
-                ca->scheda_terminalium), ca->scheda_terminalium);
-        }
-    }
-    si (loci)
-    {
-        clientes_addere(loci, "-", ca->scheda_terminalium);
-    }
     per (i = ZEPHYRUM; loci && i < (i32)vicus_numerus_tabularum(v); i++)
     {
         t = vicus_tabula(v, i);
@@ -3296,6 +3314,106 @@ systema_terminalium (
             }
         }
     }
+}
+
+/* systema "terminalia" (T6, per V s): clientes tmux omnium
+ * servitorum (servitores sessionum ex praeconio priores, ordinarius
+ * ultimus - argumentum saltus, socket plenus, manet), deinde
+ * terminalia_applicare. quies T2: nullus tmux sine latere terminali
+ * (nec mora consumitur: latus novum statim inspicitur); quaestiones
+ * INCIPIUNTUR et in pulsibus sequentibus pulsantur (numquam
+ * exspectantur), resultus cum omnes paratae sunt applicatur */
+interior b32
+systema_terminalium (
+     Vicus* v,
+    vacuum* ctx)
+{
+    ContextusAdmonitionum* ca;
+                      Xar* loci;
+                      Xar* quaestiones;
+                      Xar* sessiones;
+        QuaestioClientium* q;
+                   time_t  nunc;
+                      b32  paratae;
+                      i32  i;
+                      i32  j;
+
+    ca = (ContextusAdmonitionum*)ctx;
+    si (!ca->sequitur || !ca->scheda_terminalium)
+    {
+        redde FALSUM;
+    }
+    quaestiones = ca->terminalia_quaestiones;
+    si (quaestiones)
+    {
+        paratae = VERUM;
+        per (i = ZEPHYRUM; i < xar_numerus(quaestiones); i++)
+        {
+            q = (QuaestioClientium*)xar_obtinere(quaestiones, i);
+            si (processus_pulsare(q->processus) != PROCESSUS_PARATUS)
+            {
+                paratae = FALSUM;
+            }
+        }
+        si (!paratae)
+        {
+            redde FALSUM;
+        }
+        loci = xar_creare(ca->scheda_terminalium,
+            (i32)magnitudo(ClientisLocus));
+        per (i = ZEPHYRUM; loci && i < xar_numerus(quaestiones); i++)
+        {
+            clientes_addere(loci, (constans QuaestioClientium*)
+                xar_obtinere(quaestiones, i), ca->scheda_terminalium);
+        }
+        ca->terminalia_quaestiones = NIHIL;
+        si (loci)
+        {
+            terminalia_applicare(v, ca, loci);
+        }
+        redde FALSUM;
+    }
+    si (!terminale_adest(v))
+    {
+        redde FALSUM;
+    }
+    nunc = time(NIHIL);
+    si (   ca->terminalia_ad != (time_t)ZEPHYRUM
+        && nunc - ca->terminalia_ad < (time_t)V)
+    {
+        redde FALSUM;
+    }
+    ca->terminalia_ad = nunc;
+    piscina_vacare(ca->scheda_terminalium);
+    quaestiones = xar_creare(ca->scheda_terminalium,
+        (i32)magnitudo(QuaestioClientium));
+    sessiones = colloquia_status_legere(ca->fons.status,
+        ca->scheda_terminalium);
+    /* servitores sessionum distincti, deinde ordinarius */
+    per (i = ZEPHYRUM; quaestiones && sessiones
+                       && i < xar_numerus(sessiones); i++)
+    {
+        constans Colloquium* c;
+                        b32  visus;
+
+        c      = (constans Colloquium*)xar_obtinere(sessiones, i);
+        visus  = c->servitor.mensura == ZEPHYRUM;
+        per (j = ZEPHYRUM; !visus && j < i; j++)
+        {
+            visus = chorda_aequalis(((constans Colloquium*)
+                xar_obtinere(sessiones, j))->servitor, c->servitor);
+        }
+        si (!visus)
+        {
+            clientes_quaerere(quaestiones, chorda_ut_cstr(c->servitor,
+                ca->scheda_terminalium), ca->scheda_terminalium);
+        }
+    }
+    si (quaestiones)
+    {
+        clientes_quaerere(quaestiones, "-", ca->scheda_terminalium);
+    }
+    ca->terminalia_quaestiones = quaestiones;
     redde FALSUM;
 }
 

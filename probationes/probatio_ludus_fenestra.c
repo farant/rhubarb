@@ -150,6 +150,17 @@ _sectio_prima (
         CREDO_FALSUM(ludus_fenestra_pingendum(lf, FALSUM, M + D));
         ludus_fenestra_pulsum_ponere(lf, NIHIL, NIHIL);
         CREDO_VERUM(ludus_fenestra_pingendum(lf, FALSUM, M + D));
+
+        /* vicus quies T1: mensurae.pulsus = vocationes pulsatoris (sine
+         * pulsatore nihil numeratur) */
+        CREDO_AEQUALIS_S64(lf->mensurae.pulsus, (s64)pp.vocationes);
+        ludus_fenestra_pulsum_ponere(lf, pulsus_probandus, &pp);
+        (vacuum)ludus_fenestra_pingendum(lf, FALSUM, M + DC);
+        (vacuum)ludus_fenestra_pingendum(lf, FALSUM, M + DCC);
+        CREDO_AEQUALIS_S64(lf->mensurae.pulsus, (s64)pp.vocationes);
+        ludus_fenestra_pulsum_ponere(lf, NIHIL, NIHIL);
+        (vacuum)ludus_fenestra_pingendum(lf, FALSUM, M + DCCC);
+        CREDO_AEQUALIS_S64(lf->mensurae.pulsus, (s64)pp.vocationes);
     }
 
     CREDO_GRADUS("013 B3b: tabula ad fenestram (scala servata)");

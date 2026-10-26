@@ -224,6 +224,14 @@ nomen structura {
      * semitam_secuta); argumentum identitas manet (acervus, cyclus).
      * Vacua = nulla */
                  chorda semita_servata;
+    /* quies T3: semitae lateris (historia plena, semita servata)
+     * solum post scripturam in repositorio rami leguntur - versio =
+     * insula_versio cum ultimo lectae; lectae FALSUM = numquam
+     * (montatio nova eam reponit). lectiones = numerus lectionum
+     * (probationes, mensura) */
+                    b32 semitae_lectae;
+                    i32 semitae_versio;
+                    i32 semitae_lectiones;
 } VicusLatus;
 
 nomen structura {

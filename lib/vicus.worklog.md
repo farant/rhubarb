@@ -863,3 +863,82 @@ via historia_cursor instead.
   (ADITUS_REDDENDUS removed).
 - `facies.iter_semita`: a view computes an iter's route in code (same
   pattern as facies.locus); empty = the manifest's semita.
+
+## 2026-10-26 — vicus quies T1: idle baseline (before any change)
+
+Plan: project-specs/vicus-quies-plan.md. Measured on Fran's running
+vicus (pid 54176, `-volumen ~/.rhubarb/paginae-proba.volumen`, layout
+with a terminal pane), untouched:
+
+- `top -l 7 -s 5 -stats cpu,idlew,power`: CPU 4.6-5.1%, POWER ~5,
+  IDLEW 0 (top's idle-wakeup column does not see the 16 ms loop - use
+  `vicus -quies` / the exit line for the wake-up rate instead).
+- `sample 54176 10 1` (scratch copy vicus_quies_ante.txt): main thread
+  7642 samples, 7202 (94%) waiting in fenestra_expectare_eventus, ~440
+  awake - i.e. ~0.44 s CPU per 10 s. Of the awake time:
+  vicus_pulsare 401, of which terminale_pulsare 163 (pty poll every
+  pulse), insula_ramus_attributum 89 + semita_legere_plenam 57 +
+  semita_legere_persistentem 45 (per-pulse bookkeeping, Task 3),
+  systema_terminalium 58 (tmux list-clients via multiplexor_clientes ->
+  processus_metere 52, Task 2), admonitiones 28 + praeconium 19.
+  ludus_quadrum 7: almost no painting - the cost is waking 60x/s and
+  re-checking everything, not drawing.
+
+Counters added for the after-measurement: `mensurae.excitationes`
+(loop passes) and `mensurae.pulsus` (pulsator calls), both on the
+`ludus:` exit line; `vicus -quies` prints pulses/s and pulses that
+changed something every 10 s to stderr.
+
+## 2026-10-26 — vicus quies T2: tmux client check async, only with a terminal
+
+`systema_terminalium` used to run `tmux list-clients` (one per session
+server plus the default) with the blocking `processus_exsequi` every
+5 s, even when no terminal pane existed. Now:
+
+- No mounted, unfinished `terminale` pane -> return before the 5 s
+  stamp (no tmux; a pane opened later is checked on the next pulse).
+- Due -> `multiplexor_clientes_incipere` per server (new in
+  multiplexor.h), handles kept in `ca->terminalia_quaestiones`
+  (QuaestioClientium {servitor, processus}); the pulse returns.
+- Later pulses `processus_pulsare` every handle (never blocks); when
+  all are PARATUS: metere, `multiplexor_clientes_legere`, then
+  `terminalia_applicare` (the old pane loop, moved verbatim).
+- `scheda_terminalium` is only vacated when nothing is in flight - the
+  handles and servitor strings live in it.
+
+Tests: probationes/probatio_vicus_quies.c with a FAKE tmux first on
+PATH (shell script in the credo area: logs "$1 $2", sleeps, cats a
+clients file) - no real server needed. The layout is seeded via
+`volumen_praesens_ponere("vicus/latera", ...)` because the default
+layout has a terminal on tab 1. Plants: immediate processus_metere
+after incipere (async test red: 900+ ms pulse) and the terminal check
+neutralized (`&& FALSUM`; deleting it made the helper unused ->
+-Werror, plant refused by the compile pre-check).
+
+## 2026-10-26 — vicus quies T3: route bookkeeping only after an insula write
+
+Every pulse used to rebuild, for EVERY pane of every tab, the full
+route (`statum_lateris_legere`, for tab history) and the persistent
+route + URI (`semitam_servare`) - ~40% of idle awake time. Routes are
+a pure function of insula state (organa manifests are static;
+`facies.iter_semita` is only used when jumping to an iter), and vicus
+has one repository whose `versio` bumps on every successful write.
+
+- `VicusLatus` gained `semitae_lectae / semitae_versio /
+  semitae_lectiones`. `semitae_legendae`: never read, or the repo
+  version moved. A pane without a ramus is read once, then never.
+  `latus_montare` resets `semitae_lectae` (new ramus).
+- vicus_pulsare per tab: version captured BEFORE semitam_restituere
+  (a restore write in this pulse -> one more read next pulse, never a
+  missed one); servare + the history loop skip unchanged panes;
+  `semitas_notare` marks them afterwards.
+- The post-loop history paths (front pane changed, empty history)
+  read directly and are not gated.
+- Coarse by design: any write (clock once a minute) re-reads every
+  pane once. Per-branch versions would need insula changes.
+
+Measured with build/sonda/sonda_quies.c (scratch) on a `sqlite3
+.backup` COPY of Fran's paginae-proba.volumen, fake tmux first on PATH
+(copied terminal panes must not attach to the real sessions): idle
+pulse 675 us -> 213 us (-68%); insula versio +0 over 600 idle pulses,
+so nothing in the real layout writes state at idle.

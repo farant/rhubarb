@@ -332,6 +332,8 @@ latus_montare (
     }
     memset(&l->facies, ZEPHYRUM, magnitudo(VicusFacies));
     l->descriptio->describere(l->montatio, &l->facies);
+    /* quies T3: ramus novus - semitae iterum legendae */
+    l->semitae_lectae = FALSUM;
 }
 
 /* superficies montationum (T2b, S2a): applicatio superficiem ex ramo
@@ -1001,6 +1003,48 @@ signum_impulsus (
     }
 }
 
+/* quies T3: semitae lateris legendae? Numquam lectae, aut repositorium
+ * scriptum post lectionem ultimam (semitae ex statu insulae solo
+ * pendent). Latus sine ramo semel legitur, deinde numquam */
+interior b32
+semitae_legendae (
+                  Vicus* v,
+    constans VicusLatus* l)
+{
+    si (!l->montata)
+    {
+        redde FALSUM;
+    }
+    redde !l->semitae_lectae
+        || (l->facies.ramus
+            && l->semitae_versio != insula_versio(v->repo));
+}
+
+/* quies T3: latera tabulae lecta notantur ad versionem ANTE
+ * lectionem (scriptura inter lectiones -> lectio iterum pulsu
+ * proximo, numquam omissa) */
+interior vacuum
+semitas_notare (
+          Vicus* v,
+    VicusTabula* t,
+            i32  versio)
+{
+    VicusLatus* l;
+           s32  k;
+
+    per (k = -I; k < (s32)xar_numerus(t->acervus); k++)
+    {
+        l = k < ZEPHYRUM ? &t->sinistrum
+            : (VicusLatus*)xar_obtinere(t->acervus, (i32)k);
+        si (semitae_legendae(v, l))
+        {
+            l->semitae_lectae = VERUM;
+            l->semitae_versio = versio;
+            l->semitae_lectiones++;
+        }
+    }
+}
+
 /* status lateris: semita plena (NIHIL: latus sine semitis), textus,
  * signum 'impelle' - in scheda semitarum */
 interior vacuum
@@ -1233,7 +1277,8 @@ historiam_tabulae_notare (
                                : (VicusLatus*)xar_obtinere(t->acervus,
                                      k - I);
         latus  = k == ZEPHYRUM ? VICUS_SINISTRUM : VICUS_DEXTRUM;
-        si (!l->montata)
+        /* quies T3: status non mutatus - textus idem, nihil agendum */
+        si (!semitae_legendae(v, l))
         {
             perge;
         }
@@ -3999,10 +4044,16 @@ vicus_pulsare (
         servanda = FALSUM;
         per (i = ZEPHYRUM; i < xar_numerus(v->tabulae); i++)
         {
-            t = (VicusTabula*)xar_obtinere(v->tabulae, i);
+            i32 versio;
+
+            t       = (VicusTabula*)xar_obtinere(v->tabulae, i);
+            /* quies T3: lectiones solum post scripturam (versio ante
+             * restitutionem: scriptura eius pulsu proximo legitur) */
+            versio  = insula_versio(v->repo);
             /* D5: sinistrum semitam fert (scriba: pagina) */
             semitam_restituere(v, &t->sinistrum);
-            si (semitam_servare(v, &t->sinistrum))
+            si (   semitae_legendae(v, &t->sinistrum)
+                && semitam_servare(v, &t->sinistrum))
             {
                 servanda = VERUM;
             }
@@ -4010,13 +4061,14 @@ vicus_pulsare (
             {
                 l = (VicusLatus*)xar_obtinere(t->acervus, k);
                 semitam_restituere(v, l);
-                si (semitam_servare(v, l))
+                si (semitae_legendae(v, l) && semitam_servare(v, l))
                 {
                     servanda = VERUM;
                 }
             }
             /* D5: historia tabulae (linea temporis una) */
             historiam_tabulae_notare(v, t);
+            semitas_notare(v, t, versio);
         }
         si (servanda)
         {
