@@ -443,6 +443,55 @@ _sectio_serum (
     CREDO_VERUM (b.rms > AUSCULTATIO_TACITUM);
 }
 
+/* tacitae per partem: instrumentum ignotum tacet omnibus mensuris suis;
+ * pars sonans 0; pars muta 0 (non sonare debet); pars extra 0 */
+interior vacuum
+_sectio_partis_tacitae (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"t\" tempus=\"120\">"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>c1 | c1</textus></frustum></pars>"
+        "<pars titulus=\"b\" instrumentum=\"nullum_tale\"><frustum "
+        "mensura=\"1\"><textus!>c1 | c1</textus></frustum></pars>"
+        "<pars titulus=\"m\" instrumentum=\"aether\" mutus><frustum "
+        "mensura=\"1\"><textus!>c1 | c1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    AuscultatioSummarium s;
+                     i32 mensurae[VIII];
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_NECESSE (auscultatio_partem(k, I, NIHIL, c->piscina, &s));
+    CREDO_AEQUALIS_I32 (auscultatio_partis_tacitae(k, I, &s, mensurae,
+                                                   VIII), II);
+    CREDO_AEQUALIS_I32 (mensurae[ZEPHYRUM], I);
+    CREDO_AEQUALIS_I32 (mensurae[I], II);
+    CREDO_NECESSE (auscultatio_partem(k, ZEPHYRUM, NIHIL, c->piscina,
+                                      &s));
+    CREDO_AEQUALIS_I32 (auscultatio_partis_tacitae(k, ZEPHYRUM, &s,
+                                                   mensurae, VIII),
+                        ZEPHYRUM);
+    CREDO_NECESSE (auscultatio_partem(k, II, NIHIL, c->piscina, &s));
+    CREDO_AEQUALIS_I32 (auscultatio_partis_tacitae(k, II, &s, mensurae,
+                                                   VIII), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (auscultatio_partis_tacitae(k, V, &s, mensurae,
+                                                   VIII), ZEPHYRUM);
+    /* mensurae pausarum (nulla nota) tacent sed non nominantur */
+    k = _carmen(c,
+        "<carmina><carmen titulus=\"r\" tempus=\"120\">"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>c1 | r1 | r1 | r1</textus></frustum>"
+        "</pars></carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_NECESSE (auscultatio_partem(k, ZEPHYRUM, NIHIL, c->piscina,
+                                      &s));
+    CREDO_VERUM (s.mensurae[III] < AUSCULTATIO_TACITUM);
+    CREDO_AEQUALIS_I32 (auscultatio_partis_tacitae(k, ZEPHYRUM, &s,
+                                                   mensurae, VIII),
+                        ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "metiri", _sectio_metiri, NIHIL, NIHIL, NIHIL, NIHIL },
     { "mappae", _sectio_mappae, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -453,6 +502,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "limitator", _sectio_limitator, NIHIL, NIHIL, NIHIL, NIHIL },
     { "dynamica", _sectio_dynamica, NIHIL, NIHIL, NIHIL, NIHIL },
     { "serum", _sectio_serum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "partis_tacitae", _sectio_partis_tacitae, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

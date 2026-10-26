@@ -44,3 +44,11 @@ one more pulse; the CENSUS message is caught in _nuntium_legere (concentus would
 dropped it) and returned. auscultatio_reddere = the _censum variant with NIHIL.
 tonsa now counts |x| > 1.0 only: the limiter puts overs exactly on 1.0 (legal 16-bit
 maximum), and the old >= would have reported every limited peak as clipping.
+
+## 2026-10-26 - auscultatio_partis_tacitae (desideratum ...JZ3TS0T)
+
+Like auscultatio_tacitae but for ONE part against its OWN solo summary: bars where the
+part (not muted; muted parts never count) has a sounding note but the summary is below
+AUSCULTATIO_TACITUM. Out-of-range part -> 0. No carmen copy needed (unlike
+auscultatio_partem) - just _sonat on that part. Depends on the concentus hold (5925031f):
+before it, a late-entering part's solo render was silent for an unrelated reason.

@@ -414,3 +414,42 @@ auscultatio_tacitae (
     }
     redde n;
 }
+
+i32
+auscultatio_partis_tacitae (
+                  constans Carmen* carmen,
+                              i32  pars,
+    constans AuscultatioSummarium* summarium,
+                              i32* mensurae,
+                              i32  capacitas)
+{
+    constans CarmenPars* p;
+                    i32  n = ZEPHYRUM;
+                    i32  m;
+
+    si (pars >= carmen->numerus_partium)
+    {
+        redde ZEPHYRUM;
+    }
+    p = &carmen->partes[pars];
+    si (p->mutus)
+    {
+        redde ZEPHYRUM;
+    }
+    per (m = I; m <= summarium->numerus; m++)
+    {
+        s64 ab = carmen_pulsus_mensurae(carmen, m);
+        s64 ad = carmen_pulsus_mensurae(carmen, m + I);
+
+        si (   summarium->mensurae[m - I] < AUSCULTATIO_TACITUM
+            && _sonat(p, ab, ad))
+        {
+            si (n < capacitas)
+            {
+                mensurae[n] = m;
+            }
+            n++;
+        }
+    }
+    redde n;
+}

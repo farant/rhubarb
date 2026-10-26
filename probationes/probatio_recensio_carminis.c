@@ -250,6 +250,10 @@ _sectio_mala (
         "(frustum 0, offset 22)\n", c->piscina));
     CREDO_CHORDA_CONTINET (t, chorda_ex_literis("  tacitae: 4\n",
         c->piscina));
+    /* pars 'nullus' sola tacet - nominatur, sed monitum non bis
+     * (mensura 4 iam tacita mixturae totius) */
+    CREDO_CHORDA_CONTINET (t, chorda_ex_literis(
+        "  TACET 4 (tota: instrumentum?)\n", c->piscina));
     CREDO_CHORDA_INCIPIT (t,
         chorda_ex_literis("recensio mala: d maior, "
         "4/4, 120, 4 mensurae, 8.000 s; monita 2\n", c->piscina));
@@ -404,12 +408,80 @@ _sectio_clivus (
         "tempus")), (s64)C);
 }
 
+/* pars tacita: bassus instrumento ignoto tacet tota - 'TACET 1-4
+ * (tota: instrumentum?)', JSON tacitae, monitum unum plus; pars
+ * aliquibus mensuris tacita (v0): 'TACET 3 7-9' sine 'tota' */
+interior vacuum
+_sectio_pars_tacita (
+    CredoContextus* c)
+{
+            Carmina* liber;
+     CarminisVitium  vitium;
+      RecensioForma  f;
+   RecensioCarminis  r;
+   RecensioCarminis  bonus;
+          JsonValor* j;
+          JsonValor* bassus;
+             chorda  t;
+
+    liber = (Carmina*)piscina_allocare(c->piscina, magnitudo(Carmina));
+    CREDO_NECESSE (liber != NIHIL && carmina_legere(chorda_ex_literis(
+        "<carmina><carmen titulus=\"t\" tempus=\"120\">"
+        "<pars titulus=\"melodia\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o5 c1 | d1 | e1 | c1</textus></frustum>"
+        "</pars><pars titulus=\"bassus\" instrumentum=\"nullum_tale\">"
+        "<frustum mensura=\"1\"><textus!>o3 c1 | g1 | c1 | c1</textus>"
+        "</frustum></pars></carmen>"
+        "<carmen titulus=\"b\" tempus=\"120\">"
+        "<pars titulus=\"melodia\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o5 c1 | d1 | e1 | c1</textus></frustum>"
+        "</pars><pars titulus=\"bassus\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>o3 c1 | g1 | c1 | c1</textus>"
+        "</frustum></pars></carmen>"
+        "<carmen titulus=\"p\" tempus=\"120\">"
+        "<pars titulus=\"melodia\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 c1 | c2 r2 | v0 c1 | v100 c1 | c1 | "
+        "c2 r2 | v0 c1 | c1 | c1 | v100 c1</textus></frustum></pars>"
+        "</carmen></carmina>", c->piscina), c->piscina, liber,
+        &vitium));
+    recensio_carminis_ordinaria(&f);
+    CREDO_NECESSE (recensio_carminis_facere(&liber->carmina[ZEPHYRUM],
+        &f, NIHIL, c->piscina, &r));
+    CREDO_NECESSE (recensio_carminis_facere(&liber->carmina[I], &f,
+        NIHIL, c->piscina, &bonus));
+    CREDO_AEQUALIS_I32 (r.tacitae_partium[ZEPHYRUM].numerus, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (r.tacitae_partium[I].numerus, IV);
+    CREDO_VERUM (r.tacitae_partium[I].tota);
+    CREDO_AEQUALIS_I32 (recensio_carminis_monita(&r),
+                        recensio_carminis_monita(&bonus) + I);
+    t = _textus(c, &r);
+    CREDO_CHORDA_CONTINET (t, chorda_ex_literis(
+        "  TACET 1-4 (tota: instrumentum?)\n", c->piscina));
+    j = _json(c, &r);
+    CREDO_NECESSE (j != NIHIL);
+    bassus = json_tabulatum_obtinere(json_objectum_capere(j, "partes"),
+                                     I);
+    CREDO_AEQUALIS_I32 (json_tabulatum_numerus(json_objectum_capere(
+        bassus, "tacitae")), IV);
+    CREDO_AEQUALIS_S64 (json_ad_integer(json_tabulatum_obtinere(
+        json_objectum_capere(bassus, "tacitae"), III)), (s64)IV);
+    /* aliquibus mensuris: 3, 7-9 */
+    CREDO_NECESSE (recensio_carminis_facere(&liber->carmina[II], &f,
+        NIHIL, c->piscina, &r));
+    CREDO_AEQUALIS_I32 (r.tacitae_partium[ZEPHYRUM].numerus, IV);
+    CREDO_FALSUM (r.tacitae_partium[ZEPHYRUM].tota);
+    t = _textus(c, &r);
+    CREDO_CHORDA_CONTINET (t, chorda_ex_literis("  TACET 3 7-9\n",
+                                                c->piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "munda", _sectio_munda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "mala", _sectio_mala, NIHIL, NIHIL, NIHIL, NIHIL },
     { "calida", _sectio_calida, NIHIL, NIHIL, NIHIL, NIHIL },
     { "partitura", _sectio_partitura, NIHIL, NIHIL, NIHIL, NIHIL },
     { "clivus", _sectio_clivus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "pars_tacita", _sectio_pars_tacita, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

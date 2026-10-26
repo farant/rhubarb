@@ -100,4 +100,16 @@ auscultatio_tacitae (
                               i32* mensurae,
                               i32  capacitas);
 
+/* ut auscultatio_tacitae, sed pro parte UNA: mensurae in quibus notae
+ * partis 'pars' (non mutae) sonant sed summarium partis solius
+ * (auscultatio_partem) tacet - instrumentum non inventum, lucrum 0.
+ * Pars extra partes: 0 */
+i32
+auscultatio_partis_tacitae (
+                  constans Carmen* carmen,
+                              i32  pars,
+    constans AuscultatioSummarium* summarium,
+                              i32* mensurae,
+                              i32  capacitas);
+
 #endif /* AUSCULTATIO_H */

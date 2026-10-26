@@ -10,7 +10,11 @@
  * quodque in JSON 'textus' eundem fert ac linea censurae - formae duae
  * non divergunt.
  *
- * MONITA = inventa censurae + mensurae tacitae + (tonsa ? 1 : 0) +
+ * MONITA = inventa censurae + mensurae tacitae + partes tacitae (una
+ * quaeque: pars notas habens quae sola reddita aliquibus mensuris
+ * tacet, si mensuram habet quam tacitae mixturae totius non iam
+ * nominant - idem vitium non bis; linea partis 'TACET 1-16',
+ * '(tota: instrumentum?)' si sola tota tacet) + (tonsa ? 1 : 0) +
  * (limitator summae ultra -3 dB ? 1 : 0 - mixtura vere nimis
  * calida); auditio -recensio exitum 3 reddit si monita. Limitatio
  * levior (apices fortuiti) nominatur in linea soni, non monetur.
@@ -46,6 +50,13 @@ nomen structura {
              b32 harmonia;    /* cum linea harmoniae (si partitura) */
 } RecensioForma;
 
+/* mensurae (1 = prima) ubi pars sola tacet quamvis notas habeat */
+nomen structura {
+    i32* mensurae;
+    i32  numerus;
+    b32  tota;        /* pars sola tota tacet (rms < TACITUM) */
+} RecensioTacitae;
+
 nomen structura {
            constans Carmen* carmen;
              RecensioForma  forma;
@@ -61,7 +72,9 @@ nomen structura {
       AuscultatioSummarium* partes;       /* pars sola quaeque */
                        i32* tacitae;      /* mensurae (1 = prima) */
                        i32  numerus_tacitarum;
-                    chorda  partitura;    /* vacua nisi rogata */
+           RecensioTacitae* tacitae_partium; /* per partem: mensurae
+                                              * ubi sola tacet */
+                    chorda partitura;    /* vacua nisi rogata */
 } RecensioCarminis;
 
 /* censura ordinaria, sine partitura */
