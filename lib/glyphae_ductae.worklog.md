@@ -379,6 +379,7 @@ d(0x2286, '..####','.#....','.#....','.#....','..####',B,'.#####')           # �
 d(0x2287, '.####.','.....#','.....#','.....#','.####.',B,'.#####')           # ⊇ (2026-10-17)
 d(0x25B0, B,B,'..####','..####','.####.','.####.')                          # ▰ (2026-10-17)
 d(0x25B1, B,B,'..####','..#..#','.#..#.','.####.')                          # ▱ (2026-10-17)
+d(0x22EF, B,B,B,'.#.#.#')                                                   # ⋯ (2026-10-26)
 import unicodedata, sys
 out=[]
 for cp in sorted(S):
@@ -427,3 +428,13 @@ Then ⊆ ⊇: the same shape lifted to rows 0-4 with a full bar on row 6
 Fran saw ▱ as tofu; ▰ drawn with it (the pair makes progress bars,
 ▰▰▰▱▱). Four rows (II-V), slanting right: the edges move one column
 left after two rows, so a run of them reads as a bar with gaps.
+
+## 2026-10-26 - ⋯ (midline ellipsis, quarta)
+
+For pictor's ⋯ menu (pinacotheca spec D10): Fran saw ⋯ as tofu. Three
+single-pixel dots on row III - the row of ⋮'s middle dot and of the
+hyphen - at the same columns as … (row VI, `.#.#.#`), so the two
+ellipses differ only in height. 2 x 2 dots like the period do not fit
+three across in six columns. App text reaches these glyphs through
+secunda's a625afcb (fenestra_textus asks glyphae_ductae first), not yet
+in main at the time of writing.
