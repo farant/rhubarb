@@ -13,9 +13,8 @@
 #            notas scribit
 #   -notae   textus "What to Test" (sine linea commit: additur)
 # Versio: apps/<app>/versio (linea una, ut 1.2) aliter 1.0 (D10).
-# Solum main (D8): arca principalis, ramus main, arbor munda.
-# R8 (tempus evolutionis, C2): DIVULGATIO_EXTRA_MAIN=1 aliam arcam/ramum
-# admittit (arbor munda tamen); ramus in linea commit notatur.
+# Solum main (D8): arca principalis, ramus main, arbor munda. (Exceptio
+# R8 evolutionis, DIVULGATIO_EXTRA_MAIN, sublata est C2 clauso.)
 #
 # Exitus: 0 | 1 fractum (Apple, rete, aedificatio) | 2 recusatio |
 #         3 pactum Apple non acceptum
@@ -49,12 +48,8 @@ FONS="apps/$APP/$APP.c"
 RAMUS=$(git rev-parse --abbrev-ref HEAD 2> /dev/null) || apparatus "non repositorium git"
 COMMUNIS=$(cd "$(git rev-parse --git-common-dir)" && pwd -P)
 PROPRIUS=$(cd "$(git rev-parse --git-dir)" && pwd -P)
-EXTRA=0
 if [ "$COMMUNIS" != "$PROPRIUS" ] || [ "$RAMUS" != main ]; then
-    [ "${DIVULGATIO_EXTRA_MAIN:-}" = 1 ] \
-        || apparatus "solum main divulgatur (D8): haec arca $(pwd -P), ramus $RAMUS - in arca principali super main curre"
-    EXTRA=1
-    echo "R8: divulgatio extra main (ramus $RAMUS) - DIVULGATIO_EXTRA_MAIN=1"
+    apparatus "solum main divulgatur (D8): haec arca $(pwd -P), ramus $RAMUS - in arca principali super main curre"
 fi
 SORDES=$(git status --porcelain)
 [ -z "$SORDES" ] || apparatus "arbor non munda (D8: aedificatio commisso respondeat):
@@ -91,19 +86,19 @@ RC=$?
 
 if [ "$MODUS" = siccum ]; then
     echo "applicatio: $APP (earth.golden.$APP) versio $VERSIO"
-    echo "commissum: $COMMISSUM ($RAMUS)"
+    echo "commissum: $COMMISSUM"
     if [ -z "$ULTIMUM" ]; then
         echo "ultimum: nullum (prima divulgatio) - commissa recentia:"
-        git log --oneline -20
+        git log --format='%h %<(100,trunc)%s' -20
     elif ! git cat-file -e "$ULTIMUM^{commit}" 2> /dev/null; then
         echo "ultimum: $ULTIMUM IGNOTUM in hoc repositorio - commissa recentia:"
-        git log --oneline -20
+        git log --format='%h %<(100,trunc)%s' -20
     elif ! git merge-base --is-ancestor "$ULTIMUM" HEAD; then
         echo "ultimum: $ULTIMUM non antecessor HEAD - commissa ab radice communi:"
-        git log --oneline "$(git merge-base "$ULTIMUM" HEAD)..HEAD"
+        git log --format='%h %<(100,trunc)%s' "$(git merge-base "$ULTIMUM" HEAD)..HEAD"
     else
         echo "ultimum: $ULTIMUM - commissa ab eo:"
-        git log --oneline "$ULTIMUM..HEAD"
+        git log --format='%h %<(100,trunc)%s' "$ULTIMUM..HEAD"
     fi
     exit 0
 fi
@@ -134,9 +129,8 @@ D="build/ios/divulgatio/$APP"
 IPA="$D/$APP.ipa"
 [ -f "$IPA" ] || fractum "$IPA deest post app.sh"
 
-# notae + linea commit (D11; R8: ramus notatur)
+# notae + linea commit (D11)
 LINEA="commit $COMMISSUM"
-[ "$EXTRA" = 1 ] && LINEA="$LINEA ($RAMUS)"
 { cat "$NOTAE"; printf '\n\n%s\n' "$LINEA"; } > "$D/notae.txt" \
     || fractum "$D/notae.txt scribi nequit"
 

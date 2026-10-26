@@ -1,7 +1,10 @@
 # Publishing house iOS apps to TestFlight (spec C2)
 
-**Status: PROBATUM 2026-10-24** - designed in conversation with Fran
-(2026-10-24), builder-checked, approved ("that looks good for me"). Worktree quarta (= main
+**Status: IMPLETUM 2026-10-25** - designed in conversation with Fran
+(2026-10-24), builder-checked, approved ("that looks good for me"); plan
+`project-specs/testa-ios-divulgatio-plan.md`; built in T1-T5; pictor 1.0
+(5) published to TestFlight, Fran's wife invited. Section VI records
+what building decided and measured. Worktree quarta (= main
 bd438fd7 when written). Follows C1 (`project-specs/testa-ios-spec.md`,
 pictor on Fran's iPhone) and C1b (photo import), both IN MAIN. Ledger:
 mobile vision desideratum ...577GAS.
@@ -281,3 +284,65 @@ store distribution, notarized macOS apps, the pinacotheca.
   validation (`CFBundleIconName` + 1024 entry) - first upload settles it.
 - The current US export rule for apps bundling standard encryption
   (only matters for a future networked app; D9 refuses until decided).
+
+
+## VI. Built (2026-10-24 .. 25)
+
+Commits in quarta: T1 c6fa6616 (client core, `-status`), T2 ba0cffd7
+(account preparation), T3 db1096e5 (icon), T4 3bf0e836 (distribution
+build, Build Uploads), T5 38ab4dcf (TestFlight, `divulgare.sh`), close
+(this commit: R8 switch removed, this section).
+
+**Publishing now:** Fran says "publish <app>"; in main's checkout Claude
+runs `tools/ios/divulgare.sh <app> -siccum` (version, last published
+commit read from Apple, commits since), drafts the notes, then
+`tools/ios/divulgare.sh <app> -notae <file>`. Diagnostics:
+`bin/nundinae_apple -status` (agreements), `-testatores <app>`,
+`-invitare <app> <email>`, `-quaerere </v1/...>` (GET only). The CLI is
+built through aedilis (`build/aedilis/nundinae_apple/nundinae_apple`).
+
+**Rulings made while building**
+
+- **Agreements as a control-plane check (T1):** every request fails with
+  `FORBIDDEN.REQUIRED_AGREEMENTS_MISSING_OR_EXPIRED` until the account
+  holder accepts Apple's agreements; `-status` exits 3 naming it (Fran:
+  "a great kind of control plane function").
+- **Tester fallback (T2):** relating an existing team member to the
+  group gave 409 "cannot be assigned"; creating the tester with the
+  group relationship works.
+- **Icon (T3):** App Store icons may not carry alpha - an RGB PNG writer
+  was added; actool nests `CFBundleIconName` only inside
+  `CFBundleIcons`, so the build also sets it at the top level.
+- **Encryption check (T4):** prefixes `tls`, `bearssl`, `aes_`,
+  `aesctr`, `chacha`, `crypt` on the base names of linked objects (`O`,
+  `V` in `aedilis --partes`); not plain `aes`, which catches Latin
+  words (aestimatio). Pictor: 70 objects, none.
+- **Upload commit checksum (T4):** `sourceFileChecksums` = `file` only,
+  MD5 hex UPPERCASE (as the `entityTag` Apple shows after the PUT);
+  lowercase plus a composite -> 409 ATTRIBUTE.INVALID. Apple fills the
+  composite itself.
+- **Signing (T4):** entitlements = the App Store profile's minus
+  `get-task-allow` and the wildcard `keychain-access-groups`.
+- **Invitations (T5, Fran):** after the build joins Familia, testers
+  still `NOT_INVITED` get `POST /v1/betaTesterInvitations`; `REVOKED`
+  is never re-invited. On the first publish Apple had already invited
+  Fran's wife when the build joined the group (state INVITED), so no
+  second email went out.
+- **Version (T5):** `apps/<app>/versio` (one line) else 1.0; the build
+  number is automatic (D10).
+
+**Measured / checked:** suite `probatio_nundinae_apple` 12 sections
+green (plants red: broad `aes`, locale check removed); every
+`divulgare.sh` refusal shown before any network call (checkout,
+branch, dirty tree, key not 0600, usage); build 4 (test upload) and
+build 5 (first publish) processed VALID in about 9 and 12 minutes,
+`usesNonExemptEncryption` false (no export question in App Store
+Connect); ipa 1 MiB; `-ultimum` reads back the published commit;
+builds 1-3 are dead uploads (a stale binary sent the rejected checksum
+three times - `compile_tools.sh` links old `build/*.o`).
+
+**AUDIENDA answered:** request bodies read from Apple's DocC JSON
+(`developer.apple.com/tutorials/data/documentation/appstoreconnectapi/
+<page>.json`); actool alone satisfies the icon validation (builds 4
+and 5 VALID); the export rule remains open - D9 still refuses any app
+that links TLS until it is decided.

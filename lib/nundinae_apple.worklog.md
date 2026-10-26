@@ -63,3 +63,27 @@
   `TEAM.*`, unused): application-identifier, team-identifier,
   beta-reports-active. DT* keys from xcodebuild/xcrun/sw_vers;
   DTXcode for 27.1 = "2710".
+
+## 2026-10-25 - C2 T5: TestFlight, first publish
+
+- **First publish:** pictor 1.0 (5), commit 38ab4dcf, upload -> VALID in
+  ~12 min (48 polls of 15 s), notes set (500 bytes), build added to
+  Familia. Fran's wife went NOT_INVITED -> INVITED by Apple itself the
+  moment the build joined the internal group, before our check ran - so
+  the explicit `betaTesterInvitations` path did not fire. It stays as
+  the safety net (and `-invitare` resends by hand).
+- **Builds with notes:** `GET /v1/builds?filter[app]=..&sort=-uploadedDate
+  &include=betaBuildLocalizations&fields[betaBuildLocalizations]=locale,
+  whatsNew` - localization ids under data[].relationships, bodies in
+  `included`. A new build has no localization: POST
+  `/v1/betaBuildLocalizations` (locale en-US + build relationship);
+  an existing one is PATCHed.
+- **Adding a build to a group:** `POST /v1/betaGroups/{id}/relationships/
+  builds` with `{"data":[{"type":"builds","id":..}]}` (204).
+- **Testing `divulgare.sh` with a fake HOME:** git loses the global
+  ignore (`~/.config/git/ignore`, found via HOME) and the untracked
+  `.claude/settings.local.json` makes the tree "dirty". Set
+  `XDG_CONFIG_HOME=$HOME/.config GIT_CONFIG_GLOBAL=$HOME/.gitconfig`
+  (real values) alongside the fake HOME.
+- Never edit `divulgare.sh` while a publish runs: bash reads the script
+  as it goes.
