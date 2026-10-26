@@ -81,7 +81,8 @@ interior constans AmalgamaPlagula CAPITA_PROPRIA[] = {
     { "silva/fontes/silva_frons.h", NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_lexicon_c89.h", NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_limes_posix.h", NIHIL, NIHIL, FALSUM, FALSUM },
-    { "silva/fontes/silva_c89_semantica.h", NIHIL, NIHIL, FALSUM, FALSUM }
+    { "silva/fontes/silva_c89_semantica.h", NIHIL, NIHIL, FALSUM, FALSUM },
+    { "silva/fontes/silva_forma.h", NIHIL, NIHIL, FALSUM, FALSUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_PROPRIA[] = {
@@ -107,5 +108,6 @@ interior constans AmalgamaPlagula CORPORA_PROPRIA[] = {
     { "silva/fontes/silva_arbor.c", NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_arbor_aequalitas.c", NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_frons.c", NIHIL, NIHIL, VERUM, FALSUM },
-    { "silva/fontes/silva_lexicon_c89.c", NIHIL, NIHIL, VERUM, FALSUM }
+    { "silva/fontes/silva_lexicon_c89.c", NIHIL, NIHIL, VERUM, FALSUM },
+    { "silva/fontes/silva_forma.c", NIHIL, NIHIL, VERUM, FALSUM }
 };
