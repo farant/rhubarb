@@ -26,6 +26,8 @@ declare -a INCLUDE_FLAGS=(
 )
 # GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
 source "$GESTA_DIR/tabulariumd_fontes_generata.sh"
+# Linux: varians _posix pro _macos (lista ab aedile in macOS generata)
+[ "$(uname)" = "Linux" ] && RADIX_FONTES=("${RADIX_FONTES[@]/%_macos/_posix}")
 declare -a VENDOR_FLAGS=(
     "-O2" "-DSQLITE_ENABLE_FTS5" "-DSQLITE_THREADSAFE=0"
     "-DSQLITE_DQS=0" "-DSQLITE_DEFAULT_MEMSTATUS=0"
@@ -97,7 +99,7 @@ for o in $obj_files; do
 done
 if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$main_src" ] || [ -n "$obj_recentius" ] || fons_stalus tabulariumd_principale "$BIN"; then
     echo "  [nexus] tabulariumd" >&2
-    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$main_src" $obj_files -o "$BIN" >&2 || exit 1
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$main_src" $obj_files -o "$BIN" -lm >&2 || exit 1
 fi
 
 # vigilia: manifestum proprium (tabulariumd.vigilia) - resident

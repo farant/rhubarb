@@ -41,6 +41,8 @@ main_src="$GESTA_DIR/instrumenta/nota_frigida.c"
 # AB AEDILE generatus (idem quem launcher servi legit) + omnes fontes
 # gestae. Clausura huius instrumenti intra clausuram servi iacet.
 source "$GESTA_DIR/tabularium_fontes_generata.sh"
+# Linux: varians _posix pro _macos (lista ab aedile in macOS generata)
+[ "$(uname)" = "Linux" ] && RADIX_FONTES=("${RADIX_FONTES[@]/%_macos/_posix}")
 obj_files="$BUILD_DIR/sqlite3.o"
 for f in "${RADIX_FONTES[@]}"; do
     obj_files="$obj_files $BUILD_DIR/$(basename "$f").o"
@@ -55,7 +57,7 @@ for o in $obj_files; do
 done
 if [ ! -f "$BIN" ] || ! [ "$BIN" -nt "$main_src" ] || [ -n "$obj_recentius" ]; then
     echo "  [nexus] nota_frigida" >&2
-    clang "${GCC_FLAGS[@]}" -I"$RADIX_DIR/include" -I"$GESTA_DIR/fontes" "$main_src" $obj_files -o "$BIN" >&2 || exit 1
+    clang "${GCC_FLAGS[@]}" -I"$RADIX_DIR/include" -I"$GESTA_DIR/fontes" "$main_src" $obj_files -o "$BIN" -lm >&2 || exit 1
 fi
 
 cd "$RADIX_DIR" && exec "$BIN" "$@"
