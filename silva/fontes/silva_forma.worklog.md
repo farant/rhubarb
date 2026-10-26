@@ -21,3 +21,27 @@ Test: silva/probationes/probatio_silva_forma.c (4 sections, 37 assertions). Plan
 removed, empty statement counted, '$...' not recognized - each red.
 New silva/fontes file -> fontes_generata.h and the amalgam regenerate (fabrica links the amalgam:
 rebuild bin/fabrica after).
+
+## 2026-10-26 — T2: matching (silva_forma_congruit, silva_nodi_aequales)
+
+Recursive comparison of MateriaValor pairs: NODUS = same kind + same slot count + slot-wise; TOKEN =
+equal `valor` (trivia lives on the tokens, never in valor, so spacing and comments are ignored for
+free; post-expansion values make si/if and ZEPHYRUM/0 equal); LISTA = element-wise; REFERENTIA
+(identifier -> declaration links) ignored. A `forma_modus` flag separates matching (holes are
+wildcards) from pure equality (`silva_nodi_aequales`: hole names are ordinary identifiers).
+`$x` captures the SOURCE node itself (pointer identity, tested); a repeated `$x` needs an equal
+subtree - and captures are now always tracked internally, because with capturae==NIHIL the
+repeated-hole rule was silently skipped (caught by the 'x[i] + x[j]' test). `$...r` must be the
+last list element and captures the rest (MateriaValor elements, commas included); when the source
+list is exhausted, the comma before it matches empty too, so `fopen($p, $...r)` matches
+`fopen(a)` but not `fopen()`.
+
+T1 fix found here: an EXPRESSIO fragment `fopen(via)` wrapped as `fopen(via);` parsed as a
+DECLARATION (variable `via` of type `fopen` - no prototype in the wrapper). Expressions are now
+wrapped as `redde FRAG;` and read from the redde node's `valor` slot - a return value can only be
+an expression. SENTENTIA patterns keep the ambiguity for bare calls (documented LIMES in the
+header): write those as EXPRESSIO patterns; T3/T4 match them against the expression inside the
+statement. The sententia-vacua skip became dead code and was removed.
+Tests: probatio_silva_forma V-VIII (72 assertions total). Plants red: token values not compared,
+repeated hole without equality, empty-rest comma rule removed, equality treating holes as
+wildcards, expression wrapper without 'redde'.

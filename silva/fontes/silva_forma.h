@@ -43,8 +43,11 @@ nomen structura {
 
 /* Fragmentum parsare. NIHIL + causa nominata si: lacuna deformis
  * ('$' sine nomine, '$...' sine nomine), fragmentum non parsatur
- * (errores), genus non congruit (EXPRESSIO quae sententia expressionis
- * non est; SENTENTIA non una). Textus non NUL-terminatus licet. */
+ * (errores), genus non congruit (EXPRESSIO intra 'redde ...;' parsatur:
+ * sententia data ut EXPRESSIO non parsatur; SENTENTIA non una). Textus
+ * non NUL-terminatus licet. LIMES: SENTENTIA 'f($x);' nuda ambigua est
+ * (declaratio sine prototypo) - vocatio nuda forma EXPRESSIO 'f($x)'
+ * scribitur et contra expressionem sententiae congruit. */
 SilvaForma*
 silva_formam_parsare (
                 Piscina* piscina,
@@ -72,5 +75,42 @@ silva_nodi_locus (
 constans character*
 silva_nodi_genus_titulus (
     constans SilvaNodus* nodus);
+
+
+/* ==================================================
+ * Congruentia (transformare T2)
+ * ================================================== */
+
+/* captura lacunae: '$x' -> nodus (subarbor fontis ipsa, non copia);
+ * '$...r' -> elementa (Xar de MateriaValor: nodi et commata listae
+ * fontis, ordine; vacua licet) */
+nomen structura {
+                 chorda  titulus;
+                    b32  reliquum;
+    constans SilvaNodus* nodus;
+                    Xar* elementa;
+} SilvaCaptura;
+
+/* Congruitne forma cum nodo? Comparatio per genera et valores
+ * lexematum (trivia - spatia, commentaria - neglecta; arbor post
+ * expansionem: 'si'/'if' et 'ZEPHYRUM'/'0' aequalia). '$x' quemlibet
+ * nodum capit; '$x' iteratus subarborem aequalem poscit; '$...r'
+ * elementum ULTIMUM listae reliquum capit (nullum licet - tunc comma
+ * praecedens formae quoque vacuum congruit). capturae (Xar de
+ * SilvaCaptura, a vocatore creata) evacuatur et impletur; NIHIL
+ * licet. Congruentia fracta capturas partiales relinquere potest. */
+b32
+silva_forma_congruit (
+                Piscina* piscina,
+    constans SilvaForma* forma,
+    constans SilvaNodus* nodus,
+                    Xar* capturae);
+
+/* Aequalitas subarborum trivia neglecta (genera, loci, valores
+ * lexematum) - lacunae ut identificatores ordinarii */
+b32
+silva_nodi_aequales (
+    constans SilvaNodus* a,
+    constans SilvaNodus* b);
 
 #endif /* SILVA_FORMA_H */

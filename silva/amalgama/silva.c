@@ -14589,8 +14589,11 @@ nomen structura {
 
 /* Fragmentum parsare. NIHIL + causa nominata si: lacuna deformis
  * ('$' sine nomine, '$...' sine nomine), fragmentum non parsatur
- * (errores), genus non congruit (EXPRESSIO quae sententia expressionis
- * non est; SENTENTIA non una). Textus non NUL-terminatus licet. */
+ * (errores), genus non congruit (EXPRESSIO intra 'redde ...;' parsatur:
+ * sententia data ut EXPRESSIO non parsatur; SENTENTIA non una). Textus
+ * non NUL-terminatus licet. LIMES: SENTENTIA 'f($x);' nuda ambigua est
+ * (declaratio sine prototypo) - vocatio nuda forma EXPRESSIO 'f($x)'
+ * scribitur et contra expressionem sententiae congruit. */
 SilvaForma*
 silva_formam_parsare (
                 SilvaPiscina* piscina,
@@ -14618,6 +14621,43 @@ silva_nodi_locus (
 constans character*
 silva_nodi_genus_titulus (
     constans SilvaNodus* nodus);
+
+
+/* ==================================================
+ * Congruentia (transformare T2)
+ * ================================================== */
+
+/* captura lacunae: '$x' -> nodus (subarbor fontis ipsa, non copia);
+ * '$...r' -> elementa (Xar de MateriaValor: nodi et commata listae
+ * fontis, ordine; vacua licet) */
+nomen structura {
+                 SilvaChorda  titulus;
+                    b32  reliquum;
+    constans SilvaNodus* nodus;
+                    SilvaXar* elementa;
+} SilvaCaptura;
+
+/* Congruitne forma cum nodo? Comparatio per genera et valores
+ * lexematum (trivia - spatia, commentaria - neglecta; arbor post
+ * expansionem: 'si'/'if' et 'ZEPHYRUM'/'0' aequalia). '$x' quemlibet
+ * nodum capit; '$x' iteratus subarborem aequalem poscit; '$...r'
+ * elementum ULTIMUM listae reliquum capit (nullum licet - tunc comma
+ * praecedens formae quoque vacuum congruit). capturae (Xar de
+ * SilvaCaptura, a vocatore creata) evacuatur et impletur; NIHIL
+ * licet. Congruentia fracta capturas partiales relinquere potest. */
+b32
+silva_forma_congruit (
+                SilvaPiscina* piscina,
+    constans SilvaForma* forma,
+    constans SilvaNodus* nodus,
+                    SilvaXar* capturae);
+
+/* Aequalitas subarborum trivia neglecta (genera, loci, valores
+ * lexematum) - lacunae ut identificatores ordinarii */
+b32
+silva_nodi_aequales (
+    constans SilvaNodus* a,
+    constans SilvaNodus* b);
 
 #endif /* SILVA_FORMA_H */
 
@@ -119413,8 +119453,13 @@ silva_formam_parsare (
     {
         redde NIHIL;
     }
+    /* EXPRESSIO intra 'redde ...;': 'f(x);' nudum ambiguum est
+     * (declaratio 'x' generis 'f' sine prototypo) - valor reditus
+     * expressio sola esse potest */
     (vacuum)silva_chorda_aedificator_appendere_literis(a,
-        "vacuum " TITULUS_INVOLUCRI "(vacuum)\n{\n");
+        genus == SILVA_FORMA_EXPRESSIO
+        ? "vacuum " TITULUS_INVOLUCRI "(vacuum)\n{\n    redde "
+        : "vacuum " TITULUS_INVOLUCRI "(vacuum)\n{\n");
     si (!_lacunas_reponere(piscina, textus, mensura, a, lacunae,
             causa_out))
     {
@@ -119434,8 +119479,10 @@ silva_formam_parsare (
     si (   parsura == NIHIL || parsura->commissio == NIHIL
         || parsura->numerus_errorum > ZEPHYRUM)
     {
-        _causam_ponere(causa_out, piscina,
-            "forma non parsatur ut C (errores in fragmento)");
+        _causam_ponere(causa_out, piscina, genus
+            == SILVA_FORMA_EXPRESSIO
+            ? "forma non parsatur ut expressio C (errores)"
+            : "forma non parsatur ut sententia C (errores)");
         redde NIHIL;
     }
     definitio  = _involucrum_invenire(parsura->commissio->radix);
@@ -119453,11 +119500,7 @@ silva_formam_parsare (
             silva_materia_valor_lista_obtinere(*elementa,
             i);
 
-        /* sententia vacua (';' involucri post expressionem non
-         * expressionem) non numeratur */
-        si (   e != NIHIL && e->genus == SILVA_VALOR_NODUS
-            && strcmp(silva_nodi_genus_titulus(e->datum.nodus),
-                   "sententia-vacua") != ZEPHYRUM)
+        si (e != NIHIL && e->genus == SILVA_VALOR_NODUS)
         {
             sententia = e->datum.nodus;
             numerus++;
@@ -119482,14 +119525,14 @@ silva_formam_parsare (
     forma->nodus    = sententia;
     si (genus == SILVA_FORMA_EXPRESSIO)
     {
-        si (strcmp(silva_nodi_genus_titulus(sententia),
-                "sententia-expressionis") != ZEPHYRUM)
+        si (strcmp(silva_nodi_genus_titulus(sententia), "redde")
+            != ZEPHYRUM)
         {
             _causam_ponere(causa_out, piscina,
                 "forma EXPRESSIO non est expressio");
             redde NIHIL;
         }
-        forma->nodus = _nodus_loci(sententia, "expressio");
+        forma->nodus = _nodus_loci(sententia, "valor");
         si (forma->nodus == NIHIL)
         {
             _causam_ponere(causa_out, piscina,
@@ -119498,4 +119541,306 @@ silva_formam_parsare (
         }
     }
     redde forma;
+}
+
+
+/* ==================================================
+ * Congruentia (T2)
+ * ================================================== */
+
+/* forma_modus VERUM: lacunae formae agnoscuntur (congruentia);
+ * FALSUM: aequalitas pura, lacunae ut identificatores ordinarii */
+interior b32
+_valores_congruunt (
+                  SilvaPiscina* piscina,
+    constans SilvaValor* forma,
+    constans SilvaValor* fons,
+                      SilvaXar* capturae,
+                      b32  forma_modus);
+
+/* captura nominis (NIHIL si nondum) */
+interior SilvaCaptura*
+_captura (
+       SilvaXar* capturae,
+    SilvaChorda  titulus)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; capturae != NIHIL && k < silva_xar_numerus(capturae);
+         k++)
+    {
+        SilvaCaptura* c = (SilvaCaptura*)silva_xar_obtinere(capturae, k);
+
+        si (silva_chorda_aequalis(c->titulus, titulus))
+        {
+            redde c;
+        }
+    }
+    redde NIHIL;
+}
+
+/* lacuna simplex capit nodum fontis, aut iterata aequalitatem poscit */
+interior b32
+_lacunam_implere (
+                    SilvaXar* capturae,
+                 SilvaChorda  titulus,
+    constans SilvaNodus* nodus)
+{
+    SilvaCaptura* c;
+
+    si (capturae == NIHIL)
+    {
+        redde VERUM;
+    }
+    c = _captura(capturae, titulus);
+    si (c != NIHIL)
+    {
+        redde !c->reliquum && silva_nodi_aequales(c->nodus, nodus);
+    }
+    c = (SilvaCaptura*)silva_xar_addere(capturae);
+    si (c == NIHIL)
+    {
+        redde FALSUM;
+    }
+    c->titulus   = titulus;
+    c->reliquum  = FALSUM;
+    c->nodus     = nodus;
+    c->elementa  = NIHIL;
+    redde VERUM;
+}
+
+/* reliquum: elementa fontis [ab, finis) */
+interior b32
+_reliquum_implere (
+                  SilvaPiscina* piscina,
+                      SilvaXar* capturae,
+                   SilvaChorda  titulus,
+    constans SilvaValor* fons,
+                      i32  ab)
+{
+    SilvaCaptura* c;
+             i32  j;
+
+    si (capturae == NIHIL)
+    {
+        redde VERUM;
+    }
+    c = (SilvaCaptura*)silva_xar_addere(capturae);
+    si (c == NIHIL)
+    {
+        redde FALSUM;
+    }
+    c->titulus   = titulus;
+    c->reliquum  = VERUM;
+    c->nodus     = NIHIL;
+    c->elementa  = silva_xar_creare(piscina, (i32)magnitudo(SilvaValor));
+    per (j = ab; c->elementa != NIHIL
+         && j < silva_materia_valor_lista_numerus(*fons); j++)
+    {
+        *(SilvaValor*)silva_xar_addere(c->elementa) =
+            *silva_materia_valor_lista_obtinere(*fons, j);
+    }
+    redde c->elementa != NIHIL;
+}
+
+/* elementum listae formae lacuna reliqui est? */
+interior b32
+_est_reliquum (
+    constans SilvaValor* v,
+                   SilvaChorda* titulus)
+{
+    b32 reliquum = FALSUM;
+
+    redde v != NIHIL && v->genus == SILVA_VALOR_NODUS
+        && silva_lacuna_est(v->datum.nodus, titulus, &reliquum)
+        && reliquum;
+}
+
+interior b32
+_listae_congruunt (
+                  SilvaPiscina* piscina,
+    constans SilvaValor* forma,
+    constans SilvaValor* fons,
+                      SilvaXar* capturae,
+                      b32  forma_modus)
+{
+    i32 nf = silva_materia_valor_lista_numerus(*forma);
+    i32 ns = silva_materia_valor_lista_numerus(*fons);
+    i32 i;
+    i32 j = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < nf; i++)
+    {
+        constans SilvaValor* p = silva_materia_valor_lista_obtinere(*forma,
+            i);
+                       SilvaChorda titulus;
+
+        /* '$...r' ULTIMUM: reliquum capit (nullum licet) */
+        si (forma_modus && _est_reliquum(p, &titulus))
+        {
+            redde i + I == nf
+                && _reliquum_implere(piscina, capturae, titulus, fons,
+                j);
+        }
+        /* comma ante '$...r' ultimum, fons exhaustus: ambo vacua */
+        si (   forma_modus && j == ns && i + II == nf
+            && p->genus == SILVA_VALOR_TOKEN
+            && _est_reliquum(silva_materia_valor_lista_obtinere(*forma, i
+                + I),
+                   &titulus))
+        {
+            redde _reliquum_implere(piscina, capturae, titulus, fons,
+                j);
+        }
+        si (   j >= ns
+            || !_valores_congruunt(piscina, p,
+                   silva_materia_valor_lista_obtinere(*fons, j), capturae,
+                   forma_modus))
+        {
+            redde FALSUM;
+        }
+        j++;
+    }
+    redde j == ns;
+}
+
+interior b32
+_valores_congruunt (
+                  SilvaPiscina* piscina,
+    constans SilvaValor* forma,
+    constans SilvaValor* fons,
+                      SilvaXar* capturae,
+                      b32  forma_modus)
+{
+    si (forma == NIHIL || fons == NIHIL)
+    {
+        redde forma == fons;
+    }
+    si (   forma_modus && forma->genus == SILVA_VALOR_NODUS
+        && forma->datum.nodus != NIHIL)
+    {
+        SilvaChorda titulus;
+           b32 reliquum = FALSUM;
+
+        si (silva_lacuna_est(forma->datum.nodus, &titulus, &reliquum))
+        {
+            /* '$...' extra listam nihil significat */
+            redde !reliquum && fons->genus == SILVA_VALOR_NODUS
+                && fons->datum.nodus != NIHIL
+                && _lacunam_implere(capturae, titulus,
+                fons->datum.nodus);
+        }
+    }
+    si (forma->genus != fons->genus)
+    {
+        redde FALSUM;
+    }
+    commutatio (forma->genus)
+    {
+        casus SILVA_VALOR_NIHIL:
+            redde VERUM;
+        casus SILVA_VALOR_TOKEN:
+            redde forma->datum.token != NIHIL
+                && fons->datum.token != NIHIL
+                && silva_chorda_aequalis(forma->datum.token->valor,
+                       fons->datum.token->valor);
+        casus SILVA_VALOR_INDEX:
+            redde forma->datum.index == fons->datum.index;
+        casus SILVA_VALOR_REFERENTIA:
+            /* nexus lateralis (identificator -> declaratio): non pars
+             * formae */
+            redde VERUM;
+        casus SILVA_VALOR_LISTA:
+            redde _listae_congruunt(piscina, forma, fons, capturae,
+                forma_modus);
+        casus SILVA_VALOR_NODUS:
+        {
+            constans SilvaNodus* a = forma->datum.nodus;
+            constans SilvaNodus* b = fons->datum.nodus;
+                            i32  k;
+
+            si (a == NIHIL || b == NIHIL)
+            {
+                redde a == b;
+            }
+            si (   a->genus           != b->genus
+                || a->numerus_locorum != b->numerus_locorum)
+            {
+                redde FALSUM;
+            }
+            per (k = ZEPHYRUM; k < a->numerus_locorum; k++)
+            {
+                si (!_valores_congruunt(piscina, &a->loci[k],
+                    &b->loci[k],
+                        capturae, forma_modus))
+                {
+                    redde FALSUM;
+                }
+            }
+            redde VERUM;
+        }
+        ordinarius:
+            redde FALSUM;
+    }
+    redde FALSUM;
+}
+
+/* valor NODUS ex nodo constanti (unio: sine abiectione 'constans') */
+interior SilvaValor
+_valor_nodi (
+    constans SilvaNodus* nodus)
+{
+    SilvaValor v;
+    unio {
+        constans SilvaNodus* c;
+               SilvaNodus* m;
+    } u;
+
+    u.c            = nodus;
+    v.genus        = SILVA_VALOR_NODUS;
+    v.datum.nodus  = u.m;
+    redde v;
+}
+
+b32
+silva_forma_congruit (
+                SilvaPiscina* piscina,
+    constans SilvaForma* forma,
+    constans SilvaNodus* nodus,
+                    SilvaXar* capturae)
+{
+    SilvaValor p;
+    SilvaValor f;
+
+    si (forma == NIHIL || forma->nodus == NIHIL || nodus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    /* capturae semper servantur: lacuna iterata aequalitatem eius
+     * poscit etiam si vocator capturas non vult */
+    si (capturae == NIHIL)
+    {
+        capturae = silva_xar_creare(piscina, (i32)magnitudo(SilvaCaptura));
+        si (capturae == NIHIL)
+        {
+            redde FALSUM;
+        }
+    }
+    silva_xar_vacare(capturae);
+    p = _valor_nodi(forma->nodus);
+    f = _valor_nodi(nodus);
+    redde _valores_congruunt(piscina, &p, &f, capturae, VERUM);
+}
+
+b32
+silva_nodi_aequales (
+    constans SilvaNodus* a,
+    constans SilvaNodus* b)
+{
+    SilvaValor p;
+    SilvaValor f;
+
+    p = _valor_nodi(a);
+    f = _valor_nodi(b);
+    redde _valores_congruunt(NIHIL, &p, &f, NIHIL, FALSUM);
 }
