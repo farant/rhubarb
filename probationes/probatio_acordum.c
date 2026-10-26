@@ -399,6 +399,53 @@ _sectio_circuitus (
         "");
 }
 
+/* proprietates: ordines quidam; genus extra = nulla; intervalla
+ * (tertia, quinta, septima) in classibus acordi lecti (C + suffixum)
+ * - tabula proprietatum exemplaribus congruit */
+interior vacuum
+_sectio_proprietates (
+    CredoContextus* c)
+{
+    constans AcordumProprietates* p;
+                         Acordum  a;
+                       character  scriptum[XVI];
+                             i32  g;
+
+    p = acordum_proprietates(ACORDUM_SEPTIMA_MINOR);
+    CREDO_CHORDA_AEQUALIS_LITERIS (chorda_ex_literis(p->suffixum,
+        c->piscina), "m7");
+    CREDO_AEQUALIS_S32 (p->tertia, III);
+    CREDO_AEQUALIS_S32 (p->quinta, VII);
+    CREDO_AEQUALIS_S32 (p->septima, X);
+    CREDO_AEQUALIS_I32 (p->gradus, III);
+    p = acordum_proprietates(ACORDUM_DIMINUTA_SEPTIMA);
+    CREDO_AEQUALIS_S32 (p->septima, IX);
+    CREDO_CHORDA_AEQUALIS_LITERIS (chorda_ex_literis(p->numeralis,
+        c->piscina), "o");
+    p = acordum_proprietates(ACORDUM_SUSPENSA_IV);
+    CREDO_AEQUALIS_S32 (p->tertia, -I);
+    CREDO_AEQUALIS_I32 (p->gradus, II);
+    p = acordum_proprietates(ACORDUM_TERTIA_MINOR);
+    CREDO_AEQUALIS_I32 (p->gradus, I);
+    CREDO_AEQUALIS_S32 (p->quinta, -I);
+    p = acordum_proprietates((AcordumGenus)XCIX);
+    CREDO_AEQUALIS_I32 (p->gradus, ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (p->tertia, -I);
+    per (g = ZEPHYRUM; g <= (i32)ACORDUM_TERTIA_MINOR; g++)
+    {
+        p = acordum_proprietates((AcordumGenus)g);
+        sprintf(scriptum, "C%s", p->suffixum);
+        CREDO_NECESSE (_lege(c, scriptum, &a));
+        CREDO_VERUM (p->tertia < 0
+                     || (a.classes & ((i32)I << p->tertia)) != 0);
+        CREDO_VERUM (p->quinta < 0
+                     || (a.classes & ((i32)I << p->quinta)) != 0);
+        CREDO_VERUM (p->septima < 0
+                     || (a.classes & ((i32)I << p->septima)) != 0);
+        CREDO_VERUM (p->gradus > ZEPHYRUM);
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "exemplaria", _sectio_exemplaria, NIHIL, NIHIL, NIHIL, NIHIL },
     { "radices", _sectio_radices, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -409,6 +456,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "litterae", _sectio_litterae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "recusata", _sectio_recusata, NIHIL, NIHIL, NIHIL, NIHIL },
     { "circuitus", _sectio_circuitus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "proprietates", _sectio_proprietates, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

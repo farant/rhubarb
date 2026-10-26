@@ -25,3 +25,21 @@ It is `titulus`.
 Circuitus test: every named genus x every root, spelled with acordum_suffixum, must read
 back to the same genus/root AND acordum_ex_classibus of the read classes (bass = root)
 must agree - this ties the two directions of the table together.
+
+## 2026-10-26 - chord properties live in the table (43HA step 1)
+
+AcordumProprietates per genus: suffixum, numeralis (functio quality), tertia, quinta,
+septima (intervals, -1 none), gradus (explicatio naming rank). The SUFFIXA array folded
+into it - one row per genus, CLASSIS_UNA/IGNOTA/NULLA included; out-of-range genus ->
+the NULLA row. Callers that used ENUM ORDER (explicatio _gradus_generis `g <
+SUSPENSA_IV`, functio `g >= SEPTIMA && g <= DIMINUTA_SEPTIMA`, `genus <=
+DIMINUTA_SEPTIMA` for inversion figures) and the per-genus switches (explicatio
+_septima, functio quality strings, the six-genus lowercase list, comitatus _quintam)
+now read the row. Equivalences used: lowercase numeral <=> tertia == III; inversion
+figure <=> gradus == III; seventh figure <=> septima >= 0.
+
+Proof of no behavior change: auditio -partitura -harmonia -explicatio -functio for all
+seven house songs byte-identical before/after. New test 'proprietates' ties every row
+to its exemplar: the third/fifth/seventh interval of each row must be a class of the
+chord read from "C" + its suffix. functio's explicit role lists (dominant forms,
+cadence-final forms, picardy) stay code - step 2 extends them for the new genera.

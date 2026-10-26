@@ -180,8 +180,7 @@ _figura (
      AcordumGenus g,
               s32 b)
 {
-    b32 septima = g >= ACORDUM_SEPTIMA
-        && g <= ACORDUM_DIMINUTA_SEPTIMA;
+    b32 septima = acordum_proprietates(g)->septima >= ZEPHYRUM;
 
     si (b == ZEPHYRUM)
     {
@@ -244,28 +243,12 @@ _gradum_scribere (
         d             = _gradus(&k, _modulus(iv + I, XII));
     }
     g->gradus = d;
-    parvus = h->genus == ACORDUM_MINOR || h->genus == ACORDUM_DIMINUTA
-          || h->genus == ACORDUM_SEPTIMA_MINOR
-          || h->genus == ACORDUM_DIMIDIA_DIMINUTA
-          || h->genus == ACORDUM_DIMINUTA_SEPTIMA
-          || h->genus == ACORDUM_TERTIA_MINOR;
-    commutatio (h->genus)
-    {
-        casus ACORDUM_DIMINUTA:          qualitas = "o";    frange;
-        casus ACORDUM_AUCTA:             qualitas = "+";    frange;
-        casus ACORDUM_SEPTIMA_MAIOR:     qualitas = "M";    frange;
-        casus ACORDUM_DIMIDIA_DIMINUTA:  qualitas = "h";    frange;
-        casus ACORDUM_DIMINUTA_SEPTIMA:  qualitas = "o";    frange;
-        casus ACORDUM_SUSPENSA_IV:       qualitas = "sus4"; frange;
-        casus ACORDUM_SUSPENSA_II:       qualitas = "sus2"; frange;
-        casus ACORDUM_QUINTA:            qualitas = "(5)";  frange;
-        casus ACORDUM_TERTIA_MAIOR:
-        casus ACORDUM_TERTIA_MINOR:      qualitas = "(3)";  frange;
-        ordinarius:                                          frange;
-    }
-    figura = h->genus <= ACORDUM_DIMINUTA_SEPTIMA ? _figura(h->genus,
-        b)
-                                                   : "";
+    /* proprietates generis (acordum.h): numeralis parva = tertia
+     * minor; figura inversionis solum gradu III */
+    parvus    = acordum_proprietates(h->genus)->tertia == III;
+    qualitas  = acordum_proprietates(h->genus)->numeralis;
+    figura    = acordum_proprietates(h->genus)->gradus == III
+              ? _figura(h->genus, b) : "";
     si (h->genus == ACORDUM_CLASSIS_UNA)
     {
         _scribere(&x, "(");

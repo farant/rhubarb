@@ -563,23 +563,18 @@ _proxima (
     redde optima;
 }
 
-/* quinta acordi: intervallum VII, deinde VI, VIII; nulla: radix +
- * VII */
+/* quinta acordi (acordum_proprietates, si in classibus); nulla: radix
+ * + VII */
 interior i32
 _quintam (
     constans Acordum* a)
 {
-    hic_manens constans i32 GRADUS[III] = { VII, VI, VIII };
-                        i32 k;
+    s32 q = acordum_proprietates(a->genus)->quinta;
 
-    per (k = ZEPHYRUM; k < III; k++)
+    si (q >= ZEPHYRUM && (a->classes & ((i32)I << ((a->radix + (i32)q)
+                                                   % XII))))
     {
-        i32 c = (a->radix + GRADUS[k]) % XII;
-
-        si (a->classes & ((i32)I << c))
-        {
-            redde c;
-        }
+        redde (a->radix + (i32)q) % XII;
     }
     redde (a->radix + VII) % XII;
 }

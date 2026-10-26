@@ -100,4 +100,26 @@ constans character*
 acordum_suffixum (
     AcordumGenus genus);
 
+/* PROPRIETATES generis (tabula una, statica - explicatio, functio,
+ * comitatus eas legunt, numquam ordinem enumerationis): intervalla a
+ * radice tertiae, quintae, septimae (-1 nulla); gradus nominis
+ * (explicatio, nomina aequalia: III plenum - trias, septima; II
+ * suspensa; I dyas; 0 classis una, ignota, nulla); notatio numeralis
+ * (functio: "o" "+" "M" "h" "sus4" "sus2" "(5)" "(3)", "" ceteris).
+ * Numeralis parva = tertia minor. Genus septimae (figura 7 65 43 42)
+ * = septima >= 0; figura inversionis solum gradu III */
+nomen structura {
+    constans character* suffixum;    /* ut acordum_suffixum */
+    constans character* numeralis;
+                   s32  tertia;      /* III, IV; -1 nulla */
+                   s32  quinta;      /* VI, VII, VIII; -1 nulla */
+                   s32  septima;     /* IX, X, XI; -1 nulla */
+                   i32  gradus;      /* III, II, I, 0 */
+} AcordumProprietates;
+
+/* genus extra tabulam: proprietates NULLA */
+constans AcordumProprietates*
+acordum_proprietates (
+    AcordumGenus genus);
+
 #endif /* ACORDUM_H */

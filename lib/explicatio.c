@@ -123,48 +123,29 @@ _ordo_segmentorum (
     redde ZEPHYRUM;
 }
 
-/* septima acordi nominati; -I si genus septimam non habet */
+/* septima acordi nominati (acordum_proprietates); -I si genus
+ * septimam non habet */
 interior s32
 _septima (
     constans Acordum* h)
 {
-    s32 intervallum;
+    s32 intervallum = acordum_proprietates(h->genus)->septima;
 
-    commutatio (h->genus)
+    si (intervallum < ZEPHYRUM)
     {
-        casus ACORDUM_SEPTIMA:
-        casus ACORDUM_SEPTIMA_MINOR:
-        casus ACORDUM_DIMIDIA_DIMINUTA:
-            intervallum = X;
-            frange;
-        casus ACORDUM_SEPTIMA_MAIOR:
-            intervallum = XI;
-            frange;
-        casus ACORDUM_DIMINUTA_SEPTIMA:
-            intervallum = IX;
-            frange;
-        ordinarius:
-            redde -I;
+        redde -I;
     }
     redde _modulus((s32)h->radix + intervallum, XII);
 }
 
-/* gradus generis: trias/septima III, suspensa II (suspensio ante
- * acordum suspensum: G B D + C, non Gsus4 + B), dyas I, classis una
- * 0 */
+/* gradus generis (acordum_proprietates): trias/septima III, suspensa
+ * II (suspensio ante acordum suspensum: G B D + C, non Gsus4 + B),
+ * dyas I, classis una 0 */
 interior i32
 _gradus_generis (
     AcordumGenus g)
 {
-    si (g < ACORDUM_SUSPENSA_IV)
-    {
-        redde III;
-    }
-    si (g <= ACORDUM_SUSPENSA_II)
-    {
-        redde II;
-    }
-    redde g <= ACORDUM_TERTIA_MINOR ? I : ZEPHYRUM;
+    redde acordum_proprietates(g)->gradus;
 }
 
 interior b32

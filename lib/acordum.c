@@ -38,10 +38,26 @@ hic_manens constans Exemplar EXEMPLARIA[] = {
 #define ACORDUM_EXEMPLARIA \
     ((i32)(magnitudo(EXEMPLARIA) / magnitudo(EXEMPLARIA[0])))
 
-/* suffixa per genus (ordine enumerationis) */
-hic_manens constans character* SUFFIXA[] = {
-    "", "m", "dim", "aug", "7", "maj7", "m7", "m7b5", "dim7", "sus4",
-    "sus2", "(5)", "(3)", "m(3)", "", "", ""
+/* proprietates per genus (ordine enumerationis): suffixum,
+ * numeralis, tertia, quinta, septima, gradus */
+hic_manens constans AcordumProprietates PROPRIETATES[] = {
+    { "",     "",     IV,  VII,  -I,  III },  /* maior */
+    { "m",    "",     III, VII,  -I,  III },  /* minor */
+    { "dim",  "o",    III, VI,   -I,  III },  /* diminuta */
+    { "aug",  "+",    IV,  VIII, -I,  III },  /* aucta */
+    { "7",    "",     IV,  VII,  X,   III },  /* septima */
+    { "maj7", "M",    IV,  VII,  XI,  III },  /* septima maior */
+    { "m7",   "",     III, VII,  X,   III },  /* septima minor */
+    { "m7b5", "h",    III, VI,   X,   III },  /* dimidia diminuta */
+    { "dim7", "o",    III, VI,   IX,  III },  /* diminuta septima */
+    { "sus4", "sus4", -I,  VII,  -I,  II },   /* suspensa IV */
+    { "sus2", "sus2", -I,  VII,  -I,  II },   /* suspensa II */
+    { "(5)",  "(5)",  -I,  VII,  -I,  I },    /* quinta */
+    { "(3)",  "(3)",  IV,  -I,   -I,  I },    /* tertia maior */
+    { "m(3)", "(3)",  III, -I,   -I,  I },    /* tertia minor */
+    { "",     "",     -I,  -I,   -I,  ZEPHYRUM },  /* classis una */
+    { "",     "",     -I,  -I,   -I,  ZEPHYRUM },  /* ignota */
+    { "",     "",     -I,  -I,   -I,  ZEPHYRUM }   /* nulla */
 };
 
 /* gradus litterarum a radice per intervallum (semitonia 0..11) */
@@ -194,11 +210,18 @@ constans character*
 acordum_suffixum (
     AcordumGenus genus)
 {
+    redde acordum_proprietates(genus)->suffixum;
+}
+
+constans AcordumProprietates*
+acordum_proprietates (
+    AcordumGenus genus)
+{
     si ((i32)genus > (i32)ACORDUM_NULLA)
     {
-        redde "";
+        redde &PROPRIETATES[ACORDUM_NULLA];
     }
-    redde SUFFIXA[genus];
+    redde &PROPRIETATES[genus];
 }
 
 /* radix ad *i: littera magna A..G, deinde '#' '##' 'b' 'bb'. VERUM ->
@@ -276,8 +299,9 @@ acordum_legere (
     /* suffixum longissimum; aequalia: primum ordine tabulae */
     per (e = ZEPHYRUM; e < ACORDUM_EXEMPLARIA; e++)
     {
-         constans character* s = SUFFIXA[EXEMPLARIA[e].genus];
-                        i32  n = (i32)strlen(s);
+         constans character* s =
+             PROPRIETATES[EXEMPLARIA[e].genus].suffixum;
+                        i32 n = (i32)strlen(s);
 
         si (   i + n <= titulus.mensura
             && memcmp(titulus.datum + i, s, (size_t)n) == ZEPHYRUM
