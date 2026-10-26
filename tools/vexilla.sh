@@ -39,6 +39,7 @@ declare -a VEXILLA_C89=(
     "-O2"
     "-g"
 )
+[ "$(uname)" = "Linux" ] && VEXILLA_C89+=("-D_DEFAULT_SOURCE")
 
 # SIGILLUM VEXILLORUM: cursores obiecta per mtime renovant (fons aut
 # caput recentius obiecto), ergo vexillum mutatum SOLUM nihil

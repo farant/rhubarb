@@ -2041,7 +2041,7 @@ _credo_volumina_iudicare (
          tectum++)
     {
         sprintf(expressio, "sectio '%.120s': volumen temporarium non"
-            " clausum: %.200s (volumen_claudere deest)", sectio,
+            " clausum: %.190s (volumen_claudere deest)", sectio,
             appellatio);
         _credo_notare_plenum("credo_volumen", expressio, "relictum",
             "clausum", NIHIL, suita, sedes, FALSUM);
