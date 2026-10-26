@@ -1373,6 +1373,95 @@ _sectio_septima (
     }
 }
 
+/* C2 T3: amplificatio pixel art ad MXXIV, opaca super album */
+interior vacuum
+_sectio_amplificare (
+    CredoContextus* c)
+{
+     Piscina* p;
+       Imago  fons;
+       Imago  ex;
+       Imago  mala;
+         i32  x;
+         i32  y;
+         i32  k;
+
+    p              = c->piscina;
+    fons.latitudo  = CXXVIII;
+    fons.altitudo  = CXXVIII;
+    fons.pixela    = (i8*)piscina_allocare(p, CXXVIII * CXXVIII * IV);
+    CREDO_NON_NIHIL(fons.pixela);
+    si (!fons.pixela)
+    {
+        redde;
+    }
+    per (y = ZEPHYRUM; y < CXXVIII; y++)
+    {
+        per (x = ZEPHYRUM; x < CXXVIII; x++)
+        {
+            k                     = (y * CXXVIII + x) * IV;
+            fons.pixela[k]        = (i8)(x * II);
+            fons.pixela[k + I]    = (i8)(y * II);
+            fons.pixela[k + II]   = (i8)((x + y) & 0xFF);
+            fons.pixela[k + III]  = (i8)CCLV;
+        }
+    }
+    /* (5,7) perspicuum rubrum -> album; (3,4) niger dimidio alpha */
+    k                     = (VII * CXXVIII + V) * IV;
+    fons.pixela[k]        = (i8)CCLV;
+    fons.pixela[k + III]  = ZEPHYRUM;
+    k                     = (IV * CXXVIII + III) * IV;
+    fons.pixela[k]        = ZEPHYRUM;
+    fons.pixela[k + I]    = ZEPHYRUM;
+    fons.pixela[k + II]   = ZEPHYRUM;
+    fons.pixela[k + III]  = (i8)CXXVIII;
+    CREDO_GRADUS("CXXVIII -> MXXIV, factor VIII");
+    CREDO_AEQUALIS_I32((i32)icones_amplificare(&fons, M + XXIV, &ex, p),
+        (i32)ICONES_SUCCESSUS);
+    CREDO_AEQUALIS_I32(ex.latitudo, M + XXIV);
+    CREDO_AEQUALIS_I32(ex.altitudo, M + XXIV);
+    si (!ex.pixela)
+    {
+        redde;
+    }
+    CREDO_GRADUS("pixela = fontis (x / VIII, y / VIII), anguli");
+    k = ZEPHYRUM;
+    CREDO_VERUM(ex.pixela[k] == ZEPHYRUM
+        && ex.pixela[k + I] == ZEPHYRUM);
+    k = ((M + XXIII) * (M + XXIV) + M + XXIII) * IV;
+    CREDO_VERUM(ex.pixela[k] == (i8)(CXXVII * II)
+        && ex.pixela[k + I] == (i8)(CXXVII * II)
+        && ex.pixela[k + II] == (i8)((CXXVII + CXXVII) & 0xFF));
+    k = ((XX * VIII + VII) * (M + XXIV) + X * VIII + III) * IV;
+    CREDO_VERUM(ex.pixela[k] == (i8)(X * II)
+        && ex.pixela[k + I] == (i8)(XX * II)
+        && ex.pixela[k + III] == (i8)CCLV);
+    CREDO_GRADUS("perspicuum -> album, dimidium -> CXXVII");
+    k = ((VII * VIII + IV) * (M + XXIV) + V * VIII + IV) * IV;
+    CREDO_VERUM(ex.pixela[k] == (i8)CCLV && ex.pixela[k + I] == (i8)CCLV
+        && ex.pixela[k + II] == (i8)CCLV && ex.pixela[k + III]
+        == (i8)CCLV);
+    k = ((IV * VIII) * (M + XXIV) + III * VIII) * IV;
+    CREDO_VERUM(ex.pixela[k] == (i8)CXXVII
+        && ex.pixela[k + I] == (i8)CXXVII
+        && ex.pixela[k + II] == (i8)CXXVII
+        && ex.pixela[k + III] == (i8)CCLV);
+    CREDO_GRADUS("recusationes: non quadratum, latus non divisum");
+    mala           = fons;
+    mala.altitudo  = LXIV;
+    CREDO_AEQUALIS_I32((i32)icones_amplificare(&mala, M + XXIV, &ex, p),
+        (i32)ICONES_ERROR_LATERA);
+    CREDO_AEQUALIS_I32((i32)icones_amplificare(&fons, M, &ex, p),
+        (i32)ICONES_ERROR_LATERA);
+    mala.latitudo = C;
+    mala.altitudo = C;
+    CREDO_AEQUALIS_I32((i32)icones_amplificare(&mala, M + XXIV, &ex, p),
+        (i32)ICONES_ERROR_LATERA);
+    mala.pixela = NIHIL;
+    CREDO_AEQUALIS_I32((i32)icones_amplificare(&mala, M + XXIV, &ex, p),
+        (i32)ICONES_ERROR_FONS);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I1: nucleus purus", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "I3: continens .icns purus", _sectio_secunda, NIHIL, NIHIL, NIHIL,
@@ -1384,6 +1473,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "I7: qualitas contra sips congelatum", _sectio_sexta, NIHIL,
         NIHIL, NIHIL, NIHIL },
     { "I8: dimensiones exactae, recisio", _sectio_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "C2: amplificare (pixel art)", _sectio_amplificare, NIHIL, NIHIL,
         NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

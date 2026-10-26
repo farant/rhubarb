@@ -1,0 +1,24 @@
+{
+  "data": [
+    {"type": "builds", "id": "B7", "attributes": {"version": "7"},
+     "relationships": {"betaBuildLocalizations": {"data": []}}},
+    {"type": "builds", "id": "B6", "attributes": {"version": "6"},
+     "relationships": {"betaBuildLocalizations": {"data": [
+       {"type": "betaBuildLocalizations", "id": "L6f"},
+       {"type": "betaBuildLocalizations", "id": "L6"}]}}},
+    {"type": "builds", "id": "B5", "attributes": {"version": "5"},
+     "relationships": {"betaBuildLocalizations": {"data": [
+       {"type": "betaBuildLocalizations", "id": "L5"}]}}}
+  ],
+  "included": [
+    {"type": "betaBuildLocalizations", "id": "L5",
+     "attributes": {"locale": "en-US",
+                    "whatsNew": "Older notes.\n\ncommit bbbb2222"}},
+    {"type": "betaBuildLocalizations", "id": "L6f",
+     "attributes": {"locale": "fr-FR",
+                    "whatsNew": "Notes en francais.\n\ncommit ffff9999"}},
+    {"type": "betaBuildLocalizations", "id": "L6",
+     "attributes": {"locale": "en-US",
+                    "whatsNew": "Paste from the Mac.\n\ncommit cccc3333 (rhubarb-quarta)"}}
+  ]
+}

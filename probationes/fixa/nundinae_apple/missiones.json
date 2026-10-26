@@ -1,0 +1,1 @@
+{"data":[{"type":"buildUploads","id":"U1","attributes":{"cfBundleShortVersionString":"1.0","cfBundleVersion":"13","platform":"IOS","state":{"state":"FAILED"}}},{"type":"buildUploads","id":"U2","attributes":{"cfBundleShortVersionString":"1.0","cfBundleVersion":"2","platform":"IOS","state":{"state":"COMPLETE"}}}],"links":{"self":"x"}}

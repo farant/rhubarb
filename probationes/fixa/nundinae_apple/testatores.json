@@ -1,0 +1,13 @@
+{
+  "data": [
+    {"type": "betaTesters", "id": "T1",
+     "attributes": {"email": "a@example.com", "inviteType": "EMAIL",
+                    "state": "NOT_INVITED"}},
+    {"type": "betaTesters", "id": "T2",
+     "attributes": {"email": "b@example.com", "inviteType": "EMAIL",
+                    "state": "INSTALLED"}},
+    {"type": "betaTesters", "id": "T3",
+     "attributes": {"email": "c@example.com", "inviteType": "EMAIL",
+                    "state": "REVOKED"}}
+  ]
+}

@@ -131,6 +131,20 @@ icones_icns_codificare (
               IconesStatus* status,
                    Piscina* piscina);
 
+/* Amplificare (testa-ios C2 T3, icon App Store MXXIV): fons QUADRATUS
+ * cuius latus 'latus' dividit -> exitus latus x latus, proximus vicinus
+ * factore integro (pixel art manet acuta). OPACUS super album: color
+ * c -> c * a / CCLV + CCLV * (CCLV - a) / CCLV, alpha CCLV (icones App
+ * Store perspicua non admittunt). Fons non quadratus aut latus non
+ * divisum -> ICONES_ERROR_LATERA; fons vacuus -> ICONES_ERROR_FONS.
+ * PURUM. */
+IconesStatus
+icones_amplificare (
+    constans Imago* fons,
+               i32  latus,
+             Imago* exitus,
+           Piscina* piscina);
+
 b32
 icones_icns_scribere (
     constans IconesFructus* fructus,

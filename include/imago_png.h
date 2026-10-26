@@ -95,4 +95,22 @@ imago_png_scribere (
                     constans character* via,
                                Piscina* piscina);
 
+/*
+ * imago_png_codificare_rgb / imago_png_scribere_rgb - idem SINE alpha:
+ * genus coloris II (RGB), canalis alpha omissus (testa-ios C2 T3: icon
+ * App Store "neque perspicuum neque canalem alpha" habere potest).
+ * Pixela perspicua NON componuntur - vocans imaginem opacam praebet
+ * (icones_amplificare).
+ */
+PngFructus
+imago_png_codificare_rgb (
+    constans Imago* imago,
+           Piscina* piscina);
+
+PngFructus
+imago_png_scribere_rgb (
+        constans Imago* imago,
+    constans character* via,
+               Piscina* piscina);
+
 #endif /* IMAGO_PNG_H */
