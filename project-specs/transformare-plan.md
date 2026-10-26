@@ -136,3 +136,31 @@ int convention), CREDO_* macro arguments, filum's own wrappers
 plant.
 
 ## Open (decide when reached)
+
+- **Who is exempt from code 97 when it becomes VIOLATIO?** (found in
+  sweep step 1, 2026-10-26) Code 97 has NO exemption today: it fires
+  36 times inside lib/filum.c itself and in lib/credo.c. Both were
+  left out of the sweep by hand. filum.c IS the channel (it calls
+  lectiones_notare before each raw call; lectiones_fopen inside filum
+  would invert the layering and note every write twice). credo.c is
+  the test harness that probatio_filum runs under - routing its suite
+  cleanup through filum makes a filum bug corrupt the harness that
+  reports it, and adds filum + lectiones to every test binary's
+  closure. Options: an exemption by unit (filum, lectiones, credo as
+  "canalis ipse" in unitates.stml) vs debts in canalis_debita.tsv
+  (ratchet) vs TOLERA lines with causa at each site. Decide before
+  the VIOLATIO flip.
+
+## Sweep log
+
+*Step 1, lib + tools (2026-10-26):* 21 files, 47 sites, all through
+`-scribere` (guard: 97 drops by exactly the edits, nothing grows,
+clang before/after). lib: aedilis_silva, mensura, specimen (gains
+filum.h). tools: 18 files. Excluded by hand: lib/filum.c, lib/credo.c
+(see Open). Left for manual: tools/natura_examen.c (14 fopen calls
+inside its APERIRE macro), filum's recursio sites, credo mkdir with
+a non-0755 mode. GENERATUM files skipped by the tool. Nine touched
+tools have no gate (aemulator_vttest, canon_coquere,
+librarium_collector, manus_instrumentum, natura_examen, runae_corpus,
+runae_oraculum, tabula_nodorum_generare, vates_fumus): each built and
+linked by hand via aedilis.

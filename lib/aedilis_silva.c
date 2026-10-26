@@ -376,14 +376,14 @@ _extractor_oraculi (
         lectiones_notare(LECTIO_EXSECUTIO, "/bin/sh");   /* system() */
         si (system(mandatum_cstr) != 0)
         {
-            (vacuum)remove(via_temporaria);
+            (vacuum)filum_delere(via_temporaria);
             redde FALSUM;
         }
         /* filius (redirectio) scripsit: exitus cursus, non ingressus
          * (fabrica plan 5 T5b - lectio sequens aliter 'sine domino') */
         lectiones_notare(LECTIO_SCRIPSIT, via_temporaria);
         textus = filum_legere_totum(via_temporaria, piscina);
-        (vacuum)remove(via_temporaria);
+        (vacuum)filum_delere(via_temporaria);
         si (via_memoriae != NIHIL && textus.mensura > 0)
         {
             (vacuum)filum_scribere(via_memoriae, textus);

@@ -40,6 +40,7 @@
 #include "canon.h"
 #include "filum.h"
 #include "iter_directoria.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -904,7 +905,7 @@ corpus_scribere (
     FILE*     f;
     i32       ie;
 
-    f = fopen(via, "w");
+    f = lectiones_fopen(via, "w");
     si (!f)
     {
         fprintf(stderr, "natura_examen: %s scribi nequit\n", via);

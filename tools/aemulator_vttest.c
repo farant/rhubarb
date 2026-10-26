@@ -35,6 +35,7 @@
 #include "aemulator_hospes.h"
 #include "terminale.h"
 #include "tempus.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -178,7 +179,7 @@ photographiam_capere (
     textus = aemulator_textum_effundere(
         aemulator_hospes_aemulator(app->hospes), piscina);
     sprintf(via, "%s/%03u.txt", directorium, (unsigned)numerus);
-    f = fopen(via, "w");
+    f = lectiones_fopen(via, "w");
     si (!f)
     {
         redde FALSUM;
@@ -254,7 +255,7 @@ principale (
         NIHIL, NIHIL, tabula);
     scriptum = fopen(argumenta[II], "r");
     sprintf(via, "%s/index.tsv", argumenta[I]);
-    index = fopen(via, "w");
+    index = lectiones_fopen(via, "w");
     si (!lf || !scriptum || !index)
     {
         fprintf(stderr, "aemulator_vttest: scriptum aut directorium\n");
