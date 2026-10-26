@@ -926,6 +926,44 @@ _sectio_dynamica_gradus (
                  && (s64)i->clivus < NOTA_QUARTAE / VIII);
 }
 
+#define CARMEN_SERUM                                                  \
+    "<carmina><carmen titulus=\"s\" tempus=\"120\">"                  \
+    "<pars titulus=\"m\" instrumentum=\"aether\">"                    \
+    "<frustum mensura=\"19\"><textus!>c4</textus></frustum>"          \
+    "</pars></carmen></carmina>"
+
+/* cantor tenet: nota ad XXXVI s (post XXX s quietis) iubetur; post
+ * finem carminis exitus XXX s deinde clauditur; sistere demittit */
+interior vacuum
+_sectio_tenet (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c, CARMEN_SERUM);
+
+    CREDO_NECESSE (k != NIHIL && cantor != NIHIL);
+    cantor_regio(cantor, FALSUM, ZEPHYRUM, ZEPHYRUM);
+    CREDO_NECESSE (cantor_incipere(cantor, k, ZEPHYRUM));
+    _currere(XL * M);
+    CREDO_AEQUALIS_I32 (_numerus(MIXTURA_IUSSUM_TIBIAM), I);
+    CREDO_VERUM (fictus.apertum);
+    _currere(XXXII * M);
+    CREDO_FALSUM (fictus.apertum);
+    /* quaerere dum sonat: tenens non cumulatur; post finem clauditur */
+    CREDO_NECESSE (cantor_incipere(cantor, k, ZEPHYRUM));
+    _currere(M);
+    cantor_quaerere(cantor, ZEPHYRUM);
+    _currere(XL * M);
+    _currere(XXXII * M);
+    CREDO_FALSUM (fictus.apertum);
+    /* sistere demittit: sine voce XXX s deinde clauditur */
+    CREDO_NECESSE (cantor_incipere(cantor, k, ZEPHYRUM));
+    _currere(M);
+    CREDO_VERUM (fictus.apertum);
+    cantor_sistere(cantor);
+    _currere(XXXII * M);
+    CREDO_FALSUM (fictus.apertum);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "tempus", _sectio_tempus, _parare, NIHIL, NIHIL, NIHIL },
     { "mutatio", _sectio_mutatio, _parare, NIHIL, NIHIL, NIHIL },
@@ -951,6 +989,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "dynamica_iteratio", _sectio_dynamica_iteratio, _parare, NIHIL,
         NIHIL, NIHIL },
+    { "tenet", _sectio_tenet, _parare, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

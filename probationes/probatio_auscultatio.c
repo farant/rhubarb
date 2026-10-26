@@ -422,6 +422,27 @@ _sectio_dynamica (
                  < 0.3 * (f64)_apex(x, XII * M, XXIV * M));
 }
 
+/* pars sola sero intrans (mensura XIX ad CXX = XXXVI s, post XXX s
+ * quietis): reddita sonat (concentus ab cantore tenetur) */
+interior vacuum
+_sectio_serum (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"s\" tempus=\"120\">"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>c1</textus></frustum></pars>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"19\"><textus!>c1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    AuscultatioSummarium b;
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_NECESSE (auscultatio_partem(k, I, NIHIL, c->piscina, &b));
+    CREDO_VERUM (b.apex > 0.05f);
+    CREDO_VERUM (b.rms > AUSCULTATIO_TACITUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "metiri", _sectio_metiri, NIHIL, NIHIL, NIHIL, NIHIL },
     { "mappae", _sectio_mappae, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -431,6 +452,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "cauda_aulae", _sectio_cauda_aulae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "limitator", _sectio_limitator, NIHIL, NIHIL, NIHIL, NIHIL },
     { "dynamica", _sectio_dynamica, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "serum", _sectio_serum, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

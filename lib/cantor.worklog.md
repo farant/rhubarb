@@ -86,3 +86,11 @@ ratio > 2.5x that of the same note without dynamics. Demo waltz: per-bar rms -24
 (bars 1-8) rising to -17.9 (bar 13), falling after.
 
 Plants 18/18 red; one first attempt did not compile (stubbing the streaming call left the helper unused - rewritten as an empty window). Three tests were added BEFORE plants after reading the plant list: two steps at one position refused; VOCEM_PONERE keeps positio/missio; loop wrap guard (transitus).
+
+## 2026-10-26 - cantor holds the output while it has notes to send (parcum ...ZQNDJ6)
+
+_tenere(c, b): concentus_tenere once per state change (b32 tenet), so incipere/quaerere
+while already playing does not stack holds. Held from _ponere; released when the region
+ends without looping and in cantor_sistere. A looping region holds for as long as it
+loops (continuous playback). Caveat (cantor.h): a cantor dropped while playing without
+cantor_sistere keeps the device open - nothing in the house does that.

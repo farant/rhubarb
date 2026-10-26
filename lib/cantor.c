@@ -35,6 +35,7 @@ structura Cantor {
         CantorResolutor  resolutor;
         constans Carmen* carmen;
                     b32  sonat;          /* notae adhuc iubendae */
+                    b32  tenet;          /* concentus_tenere datum */
                     b32  iterare;
                     s64  regio_initium;
                     s64  regio_finis;    /* 0 = carmen totum */
@@ -491,6 +492,19 @@ _notas_iubere (
  * API
  * ================================================== */
 
+/* exitum tenet dum notae iubendae; semel (non cumulatur) */
+interior vacuum
+_tenere (
+    Cantor* c,
+       b32  tenere)
+{
+    si (c->tenet != tenere)
+    {
+        concentus_tenere(c->concentus, tenere);
+        c->tenet = tenere;
+    }
+}
+
 interior vacuum
 _ponere (
     Cantor* c,
@@ -501,6 +515,7 @@ _ponere (
     c->basis_quadrum  = concentus_initium(c->concentus);
     c->prior          = FALSUM;
     c->sonat          = VERUM;
+    _tenere(c, VERUM);
 }
 
 b32
@@ -596,6 +611,7 @@ cantor_agere (
         si (!c->iterare || finis <= c->regio_initium)
         {
             c->sonat = FALSUM;
+            _tenere(c, FALSUM);
             frange;
         }
         si (++iterationes > CANTOR_ITERATIONES)
@@ -618,6 +634,7 @@ cantor_sistere (
 {
     _voces_tacere(c);
     c->sonat = FALSUM;
+    _tenere(c, FALSUM);
 }
 
 vacuum

@@ -26,6 +26,11 @@
  * nunc, nondum incepta SISTERE ad initium suum (clivo 0: nullum
  * exemplum sonat).
  *
+ * TENET exitum (concentus_tenere) dum notas iubendas habet - ab
+ * incipere / quaerere usque ad finem regionis sine iteratione aut
+ * cantor_sistere: pausa longa exitum non claudit. Cantor sonans sine
+ * cantor_sistere relictus exitum apertum tenet.
+ *
  * Instrumenta: primum carminis ipsius (carmen_instrumentum: carminis,
  * libri), deinde per resolutorem (CantorResolutor): instrumentum partis
  * -> TibiaParametra, '@titulus' -> SonitusParametra; patches usoris
