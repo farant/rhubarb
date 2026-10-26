@@ -56,3 +56,18 @@ digits, no `;`, 0, surrogates, > U+10FFFF) stay literal like unknown
 entities. Checked that committed XML inputs of other consumers (plist
 tests, pecunia's pinned SIX lists) contain no numeric references, so no
 generated output changes.
+
+## 2026-10-26 - empty attribute values (alt="", xmlns="") are valid
+
+Fran's own EPUBs from Apple Books (The Fellowship of the Ring) failed to
+open: "malformed XML" in the OPF, though xmllint accepts it. Cause:
+`<meta xmlns="" ...>` - `_legere_valor_attributi` returned
+`chorda_internare(...)` of the finished value, and the interner refuses a
+chorda whose `datum` is NIHIL, which is exactly what an empty builder
+gives; NIHIL then read as "no value" -> XML_ERROR_ATTRIBUTUM for the whole
+document. Fix: an empty value is returned as a real empty chorda
+(datum NIHIL, mensura 0) allocated in the context's piscina, never
+interned. Test section "attributum vacuum": both quote styles, attributes
+after the empty ones still read, write-then-reread round trip keeps the
+empty value. Plant (empty -> NIHIL) red. Store EPUBs with `alt=""` or
+`xmlns=""` (common) now open; 9 checked (codex probe), all read.
