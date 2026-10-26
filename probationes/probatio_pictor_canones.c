@@ -105,9 +105,10 @@ _sectio_prima (
      * (aspergillum.ictus, in insula usque ad migrationem) + IV basis
      * (focus, focus_acervus, superficies_*: dispensator). Olim
      * XVIII: cursus, gradus (mortui) abierunt. Durabilis: olim I
-     * (sigillum, numquam scriptum), nunc nullus. */
+     * (sigillum, numquam scriptum), nunc nullus. XIX: pinacotheca T5
+     * pagina_pinacothecae (dominus pinacotheca.agere). */
     CREDO_AEQUALIS_I32(insula_dominos_legere(repo,
-                                             domini), XVIII);
+                                             domini), XIX);
     insula_scriptorem_ponere(repo,
         chorda_ex_literis("zoom.ponere", piscina));
     CREDO_FALSUM(insula_mutare(repo, ponere_zoom, NIHIL));

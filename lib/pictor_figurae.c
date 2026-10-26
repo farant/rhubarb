@@ -414,6 +414,12 @@ pictor_imago_fons (
     {
         redde pictor_documentum_proiectio(pf->doc);
     }
+    /* pinacotheca D4: "pinax:..." -> pinax (factus si deest) */
+    si (   pf->pinacotheca && provenientia.mensura > VI
+        && memcmp(provenientia.datum, "pinax:", VI) == ZEPHYRUM)
+    {
+        redde pictor_pinacotheca_pinax(pf->pinacotheca, provenientia);
+    }
     /* glutinatio pendens: "glutinatio:<sigillum>" -> praevisio modi */
     si (   pf->doc->glutinatio.pendens && provenientia.mensura > XI
         && memcmp(provenientia.datum, "glutinatio:", XI) == ZEPHYRUM)
@@ -574,6 +580,20 @@ figura_quadrati (
             VERUM);
         redde;
     }
+    /* pinacotheca D3: "pagina:p / n" - textus centratus sine margine */
+    si (   c->titulus.mensura > VII
+        && memcmp(c->titulus.datum, "pagina:", VII) == ZEPHYRUM)
+    {
+        s32 lx;
+
+        reliquum.datum = c->titulus.datum + VII;
+        reliquum.mensura = c->titulus.mensura - VII;
+        lx = (c->fines.latitudo - VI * (s32)reliquum.mensura) / II;
+        mandata_textus(m, lx < ZEPHYRUM ? ZEPHYRUM : lx,
+            (c->fines.altitudo - VIII) / II, reliquum, ZEPHYRUM,
+            figura_color_thematis(COLOR_TEXT));
+        redde;
+    }
     /* P1b: ':electum' - optio electa, margo accentus */
     t        = c->titulus;
     electum  = t.mensura > VIII
@@ -664,6 +684,40 @@ figura_quadrati (
         b.x = c->fines.latitudo - VI;
         b.y = a.y;
         mandata_linea(m, a, b, I, figura_color_thematis(COLOR_TEXT));
+        redde;
+    }
+    /* pinacotheca D4: pinax - imago (fons "pinax:..." sine
+     * ':electum') intra marginem II; margo accentus si aperta */
+    si (t.mensura > VI && memcmp(t.datum, "pinax:", VI) == ZEPHYRUM)
+    {
+        Fines g;
+
+        g.x         = II;
+        g.y         = II;
+        g.latitudo  = c->fines.latitudo - IV;
+        g.altitudo  = c->fines.altitudo - IV;
+        mandata_imago(m, t, g);
+        redde;
+    }
+    /* pinacotheca D3: sagittae paginarum - cuneus lineis duabus */
+    si (   chorda_aequalis_literis(t, "sagitta:sinistra")
+        || chorda_aequalis_literis(t, "sagitta:dextra"))
+    {
+        s32 apex;
+        s32 basis;
+
+        apex   = chorda_aequalis_literis(t, "sagitta:sinistra")
+               ? c->fines.latitudo / II - III : c->fines.latitudo / II
+                   + III;
+        basis  = chorda_aequalis_literis(t, "sagitta:sinistra")
+               ? apex + V : apex - V;
+        a.x = basis;
+        a.y = c->fines.altitudo / II - V;
+        b.x = apex;
+        b.y = c->fines.altitudo / II;
+        mandata_linea(m, a, b, II, figura_color_thematis(COLOR_TEXT));
+        a.y = c->fines.altitudo / II + V;
+        mandata_linea(m, a, b, II, figura_color_thematis(COLOR_TEXT));
         redde;
     }
     /* pinacotheca D1: icon menu - tria puncta II x II, centrata */

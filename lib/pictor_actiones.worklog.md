@@ -177,3 +177,15 @@ while New picture only looked fine because dimissio closed the menu.
 through `PictorActiones.picturam_condere/ponere` + `montatio` (filled
 by pictor_montare) because pictor_applicatio.h includes this header.
 New picture name: "pictura-<n>", n = 1 + highest existing n.
+
+## 2026-10-26 - pinacotheca.agere (T5, quarta)
+
+"Open picture…" prepares the gallery state (pictor_pinacothecam_parare:
+scratch emptied, newest-first list re-read) BEFORE switching palette,
+and resets the page. `pinacotheca.agere` owns `pagina_pinacothecae`;
+`paginam_scribere` still swaps the writer because elenchus.agere also
+calls it. Thumbnail tap: spatium parsed from the node title, palette
+closed, then picturam_ponere through the montatio. Found: with a line
+half-drawn the line tool CAPTURES the next tap anywhere and abandons
+the line (existing linea rule) - so the first tap on ⋯ only cancels the
+line; a picture switch can never carry a pending line (pinned in test).

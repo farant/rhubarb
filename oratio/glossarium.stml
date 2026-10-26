@@ -1857,6 +1857,7 @@
     <forma textus="pinax" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="pinacis" casus="genitivus" numerus="singularis" genus="masculinum"/>
     <forma textus="pinacem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="pinace" casus="ablativus" numerus="singularis" genus="masculinum"/>
     <forma textus="pinaces" casus="nominativus" numerus="pluralis" genus="masculinum"/>
     <forma textus="pinacum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
   </vocabulum>

@@ -1112,6 +1112,49 @@ palettam_scribere (
     redde scriptum;
 }
 
+/* campus 'pagina_pinacothecae' (dominus pinacotheca.agere); valor
+ * <= 0 tollit (absens = 0) */
+interior vacuum
+paginam_mutator (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+          s32 valor;
+    character t[XVI];
+
+    valor = ctx ? *(s32*)ctx : ZEPHYRUM;
+    si (valor <= ZEPHYRUM)
+    {
+        (vacuum)insula_attributum_tollere(radix, "pagina_pinacothecae");
+        redde;
+    }
+    sprintf(t, "%ld", (longus)valor);
+    insula_attributum_ponere(radix, p, in, "pagina_pinacothecae", t);
+}
+
+interior b32
+paginam_scribere (
+     InsulaRepositorium* repo,
+                 vacuum* ctx,
+                    s32  valor)
+{
+    PictorActiones* pa;
+       InsulaRamus  ramus;
+            chorda  prior;
+               b32  scriptum;
+
+    pa     = (PictorActiones*)ctx;
+    ramus  = ramus_pictoris(repo, ctx);
+    prior  = repo->scriptor;
+    insula_scriptorem_ponere(repo, chorda_ex_literis(
+        "pinacotheca.agere", pa->doc->piscina));
+    scriptum = mutare_ramum(&ramus, paginam_mutator, &valor);
+    insula_scriptorem_ponere(repo, prior);
+    redde scriptum;
+}
+
 /* <tractator/> */
 b32
 pictor_elenchum_agere (
@@ -1148,6 +1191,13 @@ pictor_elenchum_agere (
     {
         hic_manens character PINACOTHECA[] = "pinacotheca";
 
+        /* T5: status parandus ante compositionem (picturae, scheda) */
+        si (   pa->pinacotheca && !pictor_pinacothecam_parare(
+                pa->pinacotheca))
+        {
+            redde FALSUM;
+        }
+        (vacuum)paginam_scribere(repo, ctx, ZEPHYRUM);
         redde palettam_scribere(repo, ctx, PINACOTHECA);
     }
     (vacuum)palettam_scribere(repo, ctx, NIHIL);
@@ -1162,6 +1212,97 @@ pictor_elenchum_agere (
     }
     redde pa->imaginem_eligere
         && pa->imaginem_eligere(pa->imaginem_eligere_ctx);
+}
+
+/* "pinax:<lat>x<alt>:<seq>:<spatium>[:electum]" -> spatium */
+interior chorda
+spatium_ex_pinace (
+    chorda titulus)
+{
+    chorda s;
+       i32 i;
+       i32 signa;
+
+    s.datum    = titulus.datum;
+    s.mensura  = ZEPHYRUM;
+    signa      = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < titulus.mensura; i++)
+    {
+        si (titulus.datum[i] == ':' && ++signa == III)
+        {
+            s.datum    = titulus.datum + i + I;
+            s.mensura  = titulus.mensura - i - I;
+            frange;
+        }
+    }
+    si (   s.mensura >= VIII
+        && memcmp(s.datum + s.mensura - VIII, ":electum", VIII)
+           == ZEPHYRUM)
+    {
+        s.mensura -= VIII;
+    }
+    redde s;
+}
+
+/* <tractator/> */
+b32
+pictor_pinacothecam_agere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+    PictorActiones* pa;
+       InsulaRamus  ramus;
+            chorda* a;
+               s32  pagina;
+               s32  paginae;
+
+    (vacuum)motus;
+    (vacuum)destinatio;
+    pa = (PictorActiones*)ctx;
+    si (   !repo || !ev || ev->genus != EVENTUS_MUS_DEPRESSUS || !pa
+        || !pa->doc || !nodus)
+    {
+        redde FALSUM;
+    }
+    si (post_praefixum(nodus, "pinax.").mensura > ZEPHYRUM)
+    {
+        chorda spatium;
+
+        spatium = spatium_ex_pinace(nodus->titulus);
+        (vacuum)paginam_scribere(repo, ctx, ZEPHYRUM);
+        (vacuum)palettam_scribere(repo, ctx, NIHIL);
+        redde pa->picturam_ponere && pa->picturam_ponere(pa->montatio,
+            chorda_ut_cstr(spatium, pa->doc->piscina));
+    }
+    si (chorda_aequalis_literis(nodus->id, "pinacotheca.claudere"))
+    {
+        (vacuum)paginam_scribere(repo, ctx, ZEPHYRUM);
+        redde palettam_scribere(repo, ctx, NIHIL);
+    }
+    ramus   = ramus_pictoris(repo, ctx);
+    a       = insula_ramus_attributum(&ramus, "pagina_pinacothecae");
+    pagina  = ZEPHYRUM;
+    si (a)
+    {
+        (vacuum)chorda_ut_s32(*a, &pagina);
+    }
+    paginae  = (pa->pinacotheca && pa->pinacotheca->picturae)
+        ? ((s32)xar_numerus(pa->pinacotheca->picturae) + XI) / XII : I;
+    si (chorda_aequalis_literis(nodus->id, "pinacotheca.prior"))
+    {
+        redde paginam_scribere(repo, ctx, pagina > ZEPHYRUM
+            ? pagina - I : ZEPHYRUM);
+    }
+    si (chorda_aequalis_literis(nodus->id, "pinacotheca.posterior"))
+    {
+        redde paginam_scribere(repo, ctx, pagina + I < paginae
+            ? pagina + I : pagina);
+    }
+    redde FALSUM;
 }
 
 /* <tractator/> */
@@ -1667,4 +1808,7 @@ pictor_actiones_registrare (
     actio_registrare(reg, "imago.eligere", pictor_imaginem_eligere,
         ctx);
     actio_registrare(reg, "elenchus.agere", pictor_elenchum_agere, ctx);
+    actio_registrare(reg, "pinacotheca.agere",
+        pictor_pinacothecam_agere,
+        ctx);
 }

@@ -330,11 +330,459 @@ _sectio_nova (
         "pinacotheca");
 }
 
+/* ===== T5: pinacotheca ===== */
+
+/* picturae "p0".."p<n-1>" (actum unum quaeque), ante applicationem */
+interior vacuum
+picturas_facere (
+    Volumen* vol,
+        i32  n)
+{
+     PictorDocumentum* d;
+            character  spatium[XVI];
+                  i32  k;
+
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        sprintf(spatium, "p%lu", (insignatus longus)k);
+        d = pictor_documentum_creare(piscina, intern, vol, spatium, C,
+            CC, LXIV);
+        si (d)
+        {
+            (vacuum)pictor_documentum_actum(d, chorda_ex_literis(
+                "<ictus instrumentum=\"penicillus\" color=\"0\""
+                " magnitudo=\"1\"><punctum x=\"2\" y=\"2\"/></ictus>",
+                piscina));
+        }
+    }
+}
+
+interior b32
+pinacothecam_aperire (
+    PictorApplicatio* app,
+          ManusLudus* m)
+{
+    redde premere_nodum(app, m, "quadratum.elenchus")
+        && premere_nodum(app, m, "elenchus.0");
+}
+
+/* "pinax:<lat>x<alt>:<seq>:<spatium>[:electum]" -> spatium */
+interior chorda
+spatium_pinacis (
+    chorda titulus)
+{
+    chorda s;
+       i32 i;
+       i32 signa;
+
+    s.datum    = titulus.datum;
+    s.mensura  = ZEPHYRUM;
+    signa      = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < titulus.mensura; i++)
+    {
+        si (titulus.datum[i] == ':' && ++signa == III)
+        {
+            s.datum    = titulus.datum + i + I;
+            s.mensura  = titulus.mensura - i - I;
+            frange;
+        }
+    }
+    si (   s.mensura >= VIII
+        && memcmp(s.datum + s.mensura - VIII, ":electum", VIII)
+           == ZEPHYRUM)
+    {
+        s.mensura -= VIII;
+    }
+    redde s;
+}
+
+interior chorda
+titulus_nodi (
+    PictorApplicatio* app,
+  constans character* id)
+{
+    Componens* n;
+
+    n = nodus_arboris(app, id);
+    redde n ? n->titulus : chorda_ex_literis("(abest)", piscina);
+}
+
+/* pinax.<k> ad spatium in 'id'; FALSUM si nullus */
+interior b32
+pinax_spatii (
+     PictorApplicatio* app,
+   constans character* spatium,
+            character  id[XVI])
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < XII; k++)
+    {
+        sprintf(id, "pinax.%lu", (insignatus longus)k);
+        si (   nodus_arboris(app, id)
+            && chorda_aequalis_literis(spatium_pinacis(titulus_nodi(app,
+                   id)), spatium))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* rete: k columnae (pinax.0..k-1 eadem linea, pinax.k infra),
+ * omnia intra superficiem, disiuncta */
+interior b32
+rete_est (
+     PictorApplicatio* app,
+                  i32  columnae,
+                  s32  latitudo,
+                  s32  altitudo)
+{
+     Componens* a;
+     Componens* b;
+           s32  x_a;
+           s32  y_a;
+           s32  x_b;
+           s32  y_b;
+           i32  i;
+           i32  j;
+     character  id[XVI];
+     character  id2[XVI];
+
+    per (i = ZEPHYRUM; i < XII; i++)
+    {
+        sprintf(id, "pinax.%lu", (insignatus longus)i);
+        a = nodus_arboris(app, id);
+        si (!a)
+        {
+            redde FALSUM;
+        }
+        origo(a, &x_a, &y_a);
+        si (   x_a < ZEPHYRUM || y_a < ZEPHYRUM
+            || x_a + a->fines.latitudo > latitudo
+            || y_a + a->fines.altitudo > altitudo)
+        {
+            redde FALSUM;
+        }
+        per (j = i + I; j < XII; j++)
+        {
+            sprintf(id2, "pinax.%lu", (insignatus longus)j);
+            b = nodus_arboris(app, id2);
+            si (!b)
+            {
+                redde FALSUM;
+            }
+            origo(b, &x_b, &y_b);
+            si (!(   x_a + a->fines.latitudo <= x_b
+                  || x_b + b->fines.latitudo <= x_a
+                  || y_a + a->fines.altitudo <= y_b
+                  || y_b + b->fines.altitudo <= y_a))
+            {
+                redde FALSUM;
+            }
+            /* eadem linea sicut i ssi eodem ordine retis */
+            si ((i / columnae == j / columnae) != (y_a == y_b))
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    redde VERUM;
+}
+
+/* T5 (spec D3, D5, D7): rete telephoni III x IV, ordo recentiae,
+ * pictura aperta notata */
+interior vacuum
+_sectio_rete (
+    CredoContextus* c)
+{
+              Volumen* vol;
+     PictorApplicatio  app;
+           ManusLudus* m;
+                  Xar* l;
+                  i32  k;
+            character  id[XVI];
+
+    vol = (Volumen*)c->datum;
+    picturas_facere(vol, XII);
+    CREDO_NECESSE(aedificare(&app, vol, VERUM));
+    m = manus_ludus_creare(piscina, app.d);
+    CREDO_VERUM(pinacothecam_aperire(&app, m));
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"),
+        "pinacotheca");
+    CREDO_NON_NIHIL(nodus_arboris(&app, "pinacotheca"));
+
+    CREDO_GRADUS("XII pinaces, ordo recentiae");
+    l = pictor_documenta_recentia(vol, piscina);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_AEQUALIS_I32(xar_numerus(l), XIII);
+    per (k = ZEPHYRUM; k < XII; k++)
+    {
+        sprintf(id, "pinax.%lu", (insignatus longus)k);
+        CREDO_VERUM(chorda_aequalis(spatium_pinacis(titulus_nodi(&app,
+            id)), ((PictorPictura*)xar_obtinere(l, k))->spatium));
+    }
+    CREDO_VERUM(nodus_arboris(&app, "pinax.12") == NIHIL);
+
+    CREDO_GRADUS("pictura aperta notata");
+    CREDO_CHORDA_AEQUALIS_LITERIS(spatium_pinacis(titulus_nodi(&app,
+        "pinax.0")), "");
+    {
+        chorda t;
+
+        t = titulus_nodi(&app, "pinax.0");
+        CREDO_VERUM(t.mensura > VIII && memcmp(t.datum + t.mensura
+            - VIII, ":electum", VIII) == ZEPHYRUM);
+        t = titulus_nodi(&app, "pinax.1");
+        CREDO_FALSUM(t.mensura > VIII && memcmp(t.datum + t.mensura
+            - VIII, ":electum", VIII) == ZEPHYRUM);
+    }
+
+    CREDO_GRADUS("III x IV in superficie telephoni");
+    CREDO_VERUM(rete_est(&app, III, LATITUDO_TELEPHONI,
+        ALTITUDO_TELEPHONI));
+    CREDO_NON_NIHIL(nodus_arboris(&app, "pinacotheca.posterior"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(titulus_nodi(&app,
+        "pinacotheca.pagina"), "pagina:1 / 2");
+}
+
+/* T5 (spec D3): superficies lata (Fire 7, DXII x CCC) -> IV x III */
+interior vacuum
+_sectio_rete_latum (
+    CredoContextus* c)
+{
+              Volumen* vol;
+     PictorApplicatio  app;
+           ManusLudus* m;
+
+    vol = (Volumen*)c->datum;
+    picturas_facere(vol, XII);
+    thema_initiare();
+    CREDO_NECESSE(pictor_applicatio_aedificare(&app, piscina, intern,
+        vol, DXII, CCC));
+    app.montatio.compositio.elenchus_praesto = VERUM;
+    dispensator_recomponere(app.d);
+    m = manus_ludus_creare(piscina, app.d);
+    CREDO_VERUM(pinacothecam_aperire(&app, m));
+    CREDO_VERUM(rete_est(&app, IV, DXII, CCC));
+}
+
+/* T5 Review Focus 3: limites paginarum - XII = pagina una sine
+ * sagittis; XIII = duae, pagina II unam habet, ultra non it */
+interior vacuum
+_sectio_paginae (
+    CredoContextus* c)
+{
+              Volumen* vol;
+     PictorApplicatio  app;
+           ManusLudus* m;
+
+    vol = (Volumen*)c->datum;
+    picturas_facere(vol, XI);
+    CREDO_NECESSE(aedificare(&app, vol, VERUM));
+    m = manus_ludus_creare(piscina, app.d);
+
+    CREDO_GRADUS("XII: pagina una, sine sagittis");
+    CREDO_VERUM(pinacothecam_aperire(&app, m));
+    CREDO_NON_NIHIL(nodus_arboris(&app, "pinax.11"));
+    CREDO_VERUM(nodus_arboris(&app, "pinacotheca.prior") == NIHIL);
+    CREDO_VERUM(nodus_arboris(&app, "pinacotheca.posterior") == NIHIL);
+    CREDO_VERUM(premere_nodum(&app, m, "pinacotheca.claudere"));
+
+    CREDO_GRADUS("XIII: pagina II pinacem unum habet");
+    picturas_facere(vol, XII);   /* p11 nova (p0..p10 iam exstant) */
+    CREDO_VERUM(pinacothecam_aperire(&app, m));
+    CREDO_CHORDA_AEQUALIS_LITERIS(titulus_nodi(&app,
+        "pinacotheca.pagina"), "pagina:1 / 2");
+    CREDO_VERUM(premere_nodum(&app, m, "pinacotheca.posterior"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(titulus_nodi(&app,
+        "pinacotheca.pagina"), "pagina:2 / 2");
+    CREDO_NON_NIHIL(nodus_arboris(&app, "pinax.0"));
+    CREDO_VERUM(nodus_arboris(&app, "pinax.1") == NIHIL);
+
+    CREDO_GRADUS("ultra ultimam non it");
+    CREDO_VERUM(premere_nodum(&app, m, "pinacotheca.posterior"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(titulus_nodi(&app,
+        "pinacotheca.pagina"), "pagina:2 / 2");
+    CREDO_VERUM(premere_nodum(&app, m, "pinacotheca.prior"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(titulus_nodi(&app,
+        "pinacotheca.pagina"), "pagina:1 / 2");
+
+    CREDO_GRADUS("apertio iterum: pagina I");
+    CREDO_VERUM(premere_nodum(&app, m, "pinacotheca.posterior"));
+    CREDO_VERUM(premere_nodum(&app, m, "pinacotheca.claudere"));
+    CREDO_VERUM(pinacothecam_aperire(&app, m));
+    CREDO_CHORDA_AEQUALIS_LITERIS(titulus_nodi(&app,
+        "pinacotheca.pagina"), "pagina:1 / 2");
+}
+
+/* ictus (pressio et solutio) in centro tabulae */
+interior vacuum
+in_tabula_pingere (
+    PictorApplicatio* app,
+          ManusLudus* m)
+{
+    (vacuum)premere_nodum(app, m, "tabula");
+}
+
+interior vacuum
+clavis_z (
+    PictorApplicatio* app)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                      = EVENTUS_CLAVIS_DEPRESSUS;
+    e.tempus                     = M;
+    e.datum.clavis.clavis        = (clavis_t)'z';
+    e.datum.clavis.runa          = 'z';
+    e.datum.clavis.modificantes  = MOD_SUPER;
+    e.datum.clavis.actio         = EVENTUS_ACTIO_PRESSA;
+    dispensator_tractare(app->d, &e);
+    dispensator_recomponere(app->d);
+}
+
+/* picturam per pinacothecam aperire */
+interior b32
+per_pinacothecam_aperire (
+    PictorApplicatio* app,
+          ManusLudus* m,
+  constans character* spatium)
+{
+    character id[XVI];
+
+    redde pinacothecam_aperire(app, m)
+        && pinax_spatii(app, spatium, id)
+        && premere_nodum(app, m, id);
+}
+
+/* T5 (spec D7, II.3; Review Focus 1, 2, 4) */
+interior vacuum
+_sectio_aperire (
+    CredoContextus* c)
+{
+              Volumen* vol;
+     PictorApplicatio  app;
+           ManusLudus* m;
+     PictorDocumentum* radix;
+     PictorDocumentum* b;
+                  i32  vivi_radicis;
+                  i32  vivi_b;
+
+    vol = (Volumen*)c->datum;
+    picturas_facere(vol, I);   /* "p0" */
+    CREDO_NECESSE(aedificare(&app, vol, VERUM));
+    m      = manus_ludus_creare(piscina, app.d);
+    radix  = app.montatio.doc;
+
+    CREDO_GRADUS("pinax ictus picturam aperit");
+    CREDO_VERUM(per_pinacothecam_aperire(&app, m, "p0"));
+    b = app.montatio.doc;
+    CREDO_VERUM(b != radix);
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "pictura"),
+        "p0");
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"), "");
+
+    CREDO_GRADUS("ictus in pictura nova");
+    vivi_radicis  = pictor_documentum_numerus_vivorum(radix);
+    vivi_b        = pictor_documentum_numerus_vivorum(b);
+    in_tabula_pingere(&app, m);
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(b),
+        vivi_b + I);
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(radix),
+        vivi_radicis);
+
+    CREDO_GRADUS("revocatio post reditum");
+    CREDO_VERUM(per_pinacothecam_aperire(&app, m, ""));
+    CREDO_VERUM(app.montatio.doc == radix);
+    CREDO_VERUM(per_pinacothecam_aperire(&app, m, "p0"));
+    CREDO_VERUM(app.montatio.doc == b);
+    clavis_z(&app);
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(b), vivi_b);
+
+    CREDO_GRADUS("transitus mundus (linea pendens)");
+    vivi_b = pictor_documentum_numerus_vivorum(b);
+    CREDO_VERUM(manus_ludus_clavem(m, 'l', ZEPHYRUM));
+    in_tabula_pingere(&app, m);
+    CREDO_VERUM(!chorda_vacua(dispensator_motus(app.d)->captura));
+    /* ictus extra tabulam lineam pendentem abicit (linea.ictus) -
+     * ictus primus in ⋯ eam solum abicit, menu non aperit */
+    CREDO_VERUM(premere_nodum(&app, m, "quadratum.elenchus"));
+    CREDO_VERUM(chorda_vacua(dispensator_motus(app.d)->captura));
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(b), vivi_b);
+    CREDO_VERUM(per_pinacothecam_aperire(&app, m, ""));
+    CREDO_VERUM(app.montatio.doc == radix);
+    CREDO_VERUM(chorda_vacua(dispensator_motus(app.d)->captura));
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(b), vivi_b);
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(radix),
+        vivi_radicis);
+
+    CREDO_GRADUS("claudere: nihil mutat");
+    CREDO_VERUM(pinacothecam_aperire(&app, m));
+    CREDO_VERUM(premere_nodum(&app, m, "pinacotheca.claudere"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"), "");
+    CREDO_VERUM(app.montatio.doc == radix);
+}
+
+/* T5 (plan Global Constraints): scheda pinacothecae - apertiones
+ * quinque, usus non crescit */
+interior vacuum
+_sectio_memoria (
+    CredoContextus* c)
+{
+              Volumen* vol;
+     PictorApplicatio  app;
+           ManusLudus* m;
+                  i32  k;
+                  i32  j;
+               chorda  t;
+       memoriae_index  usus[V];
+            character  id[XVI];
+
+    vol = (Volumen*)c->datum;
+    picturas_facere(vol, V);
+    CREDO_NECESSE(aedificare(&app, vol, VERUM));
+    m = manus_ludus_creare(piscina, app.d);
+    per (k = ZEPHYRUM; k < V; k++)
+    {
+        CREDO_VERUM(pinacothecam_aperire(&app, m));
+        per (j = ZEPHYRUM; j < VI; j++)
+        {
+            sprintf(id, "pinax.%lu", (insignatus longus)j);
+            t = titulus_nodi(&app, id);
+            si (   t.mensura > VIII
+                && memcmp(t.datum + t.mensura - VIII, ":electum", VIII)
+                   == ZEPHYRUM)
+            {
+                t.mensura -= VIII;
+            }
+            CREDO_NON_NIHIL(pictor_pinacotheca_pinax(
+                &app.montatio.pinacotheca, t));
+        }
+        usus[k] = piscina_summa_usus(app.montatio.pinacotheca.scheda);
+        CREDO_VERUM(premere_nodum(&app, m, "pinacotheca.claudere"));
+    }
+    CREDO_VERUM(usus[ZEPHYRUM] > ZEPHYRUM);
+    per (k = I; k < V; k++)
+    {
+        CREDO_VERUM(usus[k] == usus[ZEPHYRUM]);
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "T4: quadratum et menu", _sectio_elenchus, _parare, _purgare,
         NIHIL, NIHIL },
     { "T4: New picture, Open picture", _sectio_nova, _parare, _purgare,
         NIHIL, NIHIL },
+    { "T5: rete telephoni", _sectio_rete, _parare, _purgare, NIHIL,
+        NIHIL },
+    { "T5: rete latum", _sectio_rete_latum, _parare, _purgare, NIHIL,
+        NIHIL },
+    { "T5: paginae", _sectio_paginae, _parare, _purgare, NIHIL, NIHIL },
+    { "T5: aperire, ictus, revocatio, transitus", _sectio_aperire,
+        _parare, _purgare, NIHIL, NIHIL },
+    { "T5: memoria schedae", _sectio_memoria, _parare, _purgare, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -191,3 +191,16 @@ Trap: dimissio closes every popover of the branch after a successful
 action of a `claudit` item - "Open picture…" switches `palette` to
 "pinacotheca" itself, so its item has `claudit` cleared, else the
 gallery would close the instant it opened (plant confirmed).
+
+## 2026-10-26 - gallery composition (pinacotheca T5, quarta)
+
+`palette` = "pinacotheca" composes `pinacothecam_componere` over the
+prospectus (fp): dispositio in cells - padded column = grid (rows x
+cells, all CRESCENS, gap 1) + fixed 3-cell bar (‹ page › X, arrows only
+when pages > 1). Columns from the surface's SHAPE (wider than tall ->
+4 x 3, else 3 x 4), never the platform. Each `pinax.<k>` carries its
+image as data in the title, "pinax:<w>x<h>:<seq>:<spatium>[:electum]"
+(w, h = cell minus the 2-pixel border; seq in the key, so an edited
+picture gets a new thumbnail). The list comes from the shared
+PictorPinacotheca (montatio-owned; composer, actions and figures point
+at it) - read when the gallery opens, never in the composer.

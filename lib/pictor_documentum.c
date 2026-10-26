@@ -1725,6 +1725,106 @@ pictor_pinacem_facere (
     redde VERUM;
 }
 
+b32
+pictor_pinacothecam_parare (
+    PictorPinacotheca* p)
+{
+    si (!p || !p->volumen || !p->intern)
+    {
+        redde FALSUM;
+    }
+    si (!p->scheda)
+    {
+        p->scheda = piscina_generare_dynamicum("pinacotheca",
+            (memoriae_index)LXIV * (memoriae_index)M);
+    }
+    alioquin
+    {
+        piscina_vacare(p->scheda);
+    }
+    si (!p->scheda)
+    {
+        redde FALSUM;
+    }
+    p->picturae  = pictor_documenta_recentia(p->volumen, p->scheda);
+    p->pinaces   = tabula_dispersa_creare_chorda(p->scheda, XVI);
+    redde p->picturae && p->pinaces;
+}
+
+/* numerus decimalis initio chordae, deinde signum 'finis' (consumitur);
+ * FALSUM si non */
+interior b32
+numerum_legere (
+       chorda* c,
+          i32* n,
+    character  finis)
+{
+    i32 k;
+
+    *n = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < c->mensura && c->datum[k] >= '0'
+         && c->datum[k] <= '9'; k++)
+    {
+        *n = *n * X + (i32)(c->datum[k] - '0');
+    }
+    si (k == ZEPHYRUM || k >= c->mensura || c->datum[k] != finis)
+    {
+        redde FALSUM;
+    }
+    c->datum    += k + I;
+    c->mensura  -= k + I;
+    redde VERUM;
+}
+
+constans Imago*
+pictor_pinacotheca_pinax (
+    PictorPinacotheca* p,
+               chorda  provenientia)
+{
+     vacuum* valor;
+      Imago* pinax;
+     chorda  reliquum;
+     chorda  clavis;
+        i32  latitudo;
+        i32  altitudo;
+        i32  seq;
+
+    si (!p || !p->scheda || !p->pinaces)
+    {
+        redde NIHIL;
+    }
+    si (tabula_dispersa_invenire(p->pinaces, provenientia, &valor))
+    {
+        redde (constans Imago*)valor;
+    }
+    si (   provenientia.mensura < VI
+        || memcmp(provenientia.datum, "pinax:", VI) != ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    reliquum.datum    = provenientia.datum + VI;
+    reliquum.mensura  = provenientia.mensura - VI;
+    si (   !numerum_legere(&reliquum, &latitudo, 'x')
+        || !numerum_legere(&reliquum, &altitudo, ':')
+        || !numerum_legere(&reliquum, &seq, ':'))
+    {
+        redde NIHIL;
+    }
+    pinax = (Imago*)piscina_allocare(p->scheda, magnitudo(Imago));
+    si (   !pinax
+        || !pictor_pinacem_facere(p->volumen, p->intern,
+               chorda_ut_cstr(reliquum, p->scheda), latitudo, altitudo,
+               p->scheda, pinax))
+    {
+        redde NIHIL;
+    }
+    /* clavis in scheda (provenientia vocantis transiens est) */
+    clavis = chorda_ex_literis(chorda_ut_cstr(provenientia, p->scheda),
+        p->scheda);
+    (vacuum)tabula_dispersa_inserere(p->pinaces, clavis, pinax);
+    redde pinax;
+}
+
 s32
 pictor_documentum_imaginem_inserere (
      PictorDocumentum* doc,

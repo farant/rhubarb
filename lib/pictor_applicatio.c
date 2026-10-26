@@ -230,11 +230,16 @@ pictor_montare (
     m->actiones_ctx.picturam_condere =
         picturam_condere_per_montationem;
     m->actiones_ctx.picturam_ponere = picturam_ponere_per_montationem;
+    /* pinacotheca T5: status unus, tres lectores */
+    m->pinacotheca.volumen       = volumen;
+    m->pinacotheca.intern        = intern;
+    m->actiones_ctx.pinacotheca  = &m->pinacotheca;
     pictor_actiones_registrare(m->actiones, &m->actiones_ctx);
     m->figurae                       = figura_registrum_creare(piscina);
     m->figurae_ctx.doc               = m->doc;
     m->figurae_ctx.cellula_latitudo  = CELLULA_LATITUDO;
     m->figurae_ctx.cellula_altitudo  = CELLULA_ALTITUDO;
+    m->figurae_ctx.pinacotheca       = &m->pinacotheca;
     pictor_figurae_registrare(m->figurae, ZEPHYRUM, &m->figurae_ctx);
     m->compositio.fenestra_latitudo  = latitudo;
     m->compositio.fenestra_altitudo  = altitudo;
@@ -243,6 +248,7 @@ pictor_montare (
     m->compositio.status_lineae      = STATUS_LINEAE;
     m->compositio.ramus              = m->ramus;
     m->compositio.doc                = m->doc;
+    m->compositio.pinacotheca        = &m->pinacotheca;
     redde VERUM;
 }
 

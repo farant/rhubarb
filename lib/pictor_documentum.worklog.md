@@ -442,3 +442,14 @@ unchanged after 12 thumbnails). Measured on the Mac: ~0.9 ms per
 70 x 100 thumbnail of a 100 x 200 picture with one act; real pictures
 replay from the nearest checkpoint (<= 64 acts) - Fire 7 timing is T7.
 Glossary: pinax (pinacis, pinacem...) added; oratio 19/19 unchanged.
+
+## 2026-10-26 - PictorPinacotheca (T5, quarta)
+
+Gallery state: scratch arena (`piscina_generare_dynamicum` on the
+first opening, `piscina_vacare` on every later one - memory bounded by
+one session, pinned: usage equal across 5 openings), the newest-first
+list, and a provenance -> Imago table. `pictor_pinacotheca_pinax`
+parses "pinax:<w>x<h>:<seq>:<spatium>", builds on a miss with
+pictor_pinacem_facere into the scratch, copies the key into the
+scratch (the caller's provenance is transient). The figure source
+(`pictor_imago_fons`) resolves "pinax:" through it.

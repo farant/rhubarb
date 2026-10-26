@@ -47,6 +47,8 @@ nomen structura {
                                      constans character* spatium);
              b32 (*picturam_ponere)(vacuum* montatio,
                                     constans character* spatium);
+    /* pinacotheca T5: apertio eam parat (scheda, picturae) */
+    PictorPinacotheca* pinacotheca;
 } PictorActiones;
 
 vacuum
@@ -152,6 +154,20 @@ pictor_imaginem_eligere (
  * Registratur ut 'elenchus.agere'. */
 b32
 pictor_elenchum_agere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* <tractator/> pinacotheca (spec D3, D7): 'pinax.<k>' picturam
+ * tituli ("pinax:...:<spatium>") aperit et claudit;
+ * 'pinacotheca.prior' / '.posterior' paginam mutant (intra limites);
+ * 'pinacotheca.claudere' claudit, nihil aliud. Dominus
+ * 'pagina_pinacothecae'. Registratur ut 'pinacotheca.agere'. */
+b32
+pictor_pinacothecam_agere (
     InsulaRepositorium* repo,
                  Motus* motus,
    constans Destinatio* destinatio,

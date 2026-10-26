@@ -39,6 +39,7 @@
     <actio nomen="glutinatio.agere"/>
     <!-- menu ⋯ (pinacotheca D2): Open picture, New picture, Import image -->
     <actio nomen="elenchus.agere"/>
+    <actio nomen="pinacotheca.agere"/>
     <actio nomen="motus" systema="verum"/>
   </actiones>
 
@@ -95,6 +96,10 @@
     <campus nomen="palette" typus="nomen" vita="transiens"
             aspectus="popover" scriptor="palette.aperire"
             nota="palette aperta; absens = nulla"/>
+    <campus nomen="pagina_pinacothecae" typus="numerus" vita="transiens"
+            absens="0" scriptor="pinacotheca.agere"
+            nota="pagina pinacothecae apertae (0 = prima); absens cum
+                  clauditur"/>
     <campus nomen="glutinatio" typus="nomen" vita="transiens"
             scriptor="glutinatio.agere"
             nota="glutinatio pendens: A (Atkinson) | B (exemplaria); absens =

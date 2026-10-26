@@ -57,6 +57,9 @@ nomen structura {
      * picture, Import image...) ad sinistram quadrati stratorum -
      * applicatio pictor ponit; vicus et terminalis numquam */
                            b32 elenchus_praesto;
+    /* pinacotheca D3: palette "pinacotheca" rete pinacum ex
+     * picturae (ordo recentiae) componit; NIHIL = nulla */
+    constans PictorPinacotheca* pinacotheca;
 } PictorCompositio;
 
 /* menu ⋯ (pinacotheca D2): tabula rerum UNA quam compositio, figura
