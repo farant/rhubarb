@@ -1842,6 +1842,7 @@
     <forma textus="acordum" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="acordi" casus="genitivus" numerus="singularis" genus="neutrum"/>
     <forma textus="acorda" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="acordorum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
   </vocabulum>
   <vocabulum lemma="instrumentarium" lingua="latina" classis="substantivum" nota="vox domus (-ium, -ii n., ut armamentarium, sanctuarium): locus instrumentorum - instrumenta musica domus ut data (instrumentarium.stml, include/carmen.h); WORDS caret">
     <forma textus="instrumentarium" casus="nominativus" numerus="singularis" genus="neutrum"/>

@@ -63,6 +63,7 @@ declare -a SOURCE_FILES=(
     "lib/colloquia_visus.c"
     "lib/color.c"
     "lib/coloratio.c"
+    "lib/comitatus.c"
     "lib/compilator.c"
     "lib/componens.c"
     "lib/concentus.c"

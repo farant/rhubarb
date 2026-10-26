@@ -71,6 +71,19 @@
  *             fermata NON iterantur. Frusta iterata ordine pulsus inter
  *             scripta stant (repetitio >= 0, scriptum -1): emendatio ea
  *             non mutat, fontem nominat
+ *   acorda    <acorda mensura="M" [ictus] textus="C | G7 | C"/>:
+ *             harmonia declarata (grammatica comitatus.h) a mensura
+ *             M; elementa plura non se tegunt (Carmen.acorda ordine
+ *             pulsus). NON iteratur (ut clavis)
+ *   figura    <figura titulus="valsa" textus="B:4 [1 2 3] [1 2 3]"/> in
+ *             libro aut carmine (carminis vincit); titulus [a-z0-9_]+
+ *   comitatus <comitatus figura="T" mensura="M" [usque="U"]
+ *             [ambitus="55..76"] [bassus="36..57"]/> in parte: frustum
+ *             GENERATUM [M, U) ex acordis declaratis (sine usque: finis
+ *             acordorum); frusta non se tegunt (scripta et generata).
+ *             Textus frusti = figura, offset notae = gradus eius;
+ *             lineae nullae. Repetitio ea ut scripta iterat
+ *             (transposita); emendatio non mutat (fontem nominat)
  *   textus    MML (cantus.h) SINE 't' - tempus carminis est; '@'
  *             praeparatum per notam (percussio sonitus) admittitur
  *   pars      instrumentum necessarium; lucrum 0..1 (1); positio
@@ -130,6 +143,7 @@
 #include "piscina.h"
 #include "cantus.h"
 #include "tibia.h"
+#include "comitatus.h"
 
 /* gradus mappae sonandi in clivo: tricesima secunda (pulsus) */
 #define CARMEN_GRADUS_TEMPORIS CXX
@@ -158,7 +172,10 @@ nomen structura {
             s32 repetitio;    /* index in Carmen.repetitiones; -1 =
                                * scriptum */
             s32 scriptum;     /* index inter frusta SCRIPTA partis (ordo
-                               * STML - emendatio); -1 = iteratum */
+                               * STML - emendatio); -1 = iteratum aut
+                               * generatum */
+            s32 comitatus;    /* index <comitatus> in parte; -1 =
+                               * scriptum aut iteratum */
 } CarmenFrustum;
 
 nomen structura {
@@ -254,6 +271,9 @@ nomen structura {
               i32  numerus_sectionum;
   CarmenRepetitio* repetitiones;     /* <repetitio>, ordine libri */
               i32  numerus_repetitionum;
+ ComitatusAcordum* acorda;           /* <acorda>, pulsus carminis,
+                                      * ordine */
+              i32  numerus_acordorum;
      CarmenMetrum* metra;
               i32  numerus_metrorum;
      CarmenClavis* claves;

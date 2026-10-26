@@ -296,6 +296,10 @@ _textus_novus (
 #define EMENDATIO_CAUSA_REPETITIONIS \
     "repetitio (frustum iteratum): muta sectionem fontis"
 
+/* frustum generatum (<comitatus>): fons acorda et figura */
+#define EMENDATIO_CAUSA_COMITATUS \
+    "comitatus (frustum generatum): muta acorda aut figuram"
+
 /* nodus textus frusti SCRIPTI 'fi' (index inter frusta scripta, ordo
  * STML - CarmenFrustum.scriptum) textum novum accipit, scriptor
  * non-pulcher
@@ -483,6 +487,11 @@ emendatio_notam_ponere (
     {
         redde _vitium(vitium, carmen, pars, fi, ZEPHYRUM,
             EMENDATIO_CAUSA_REPETITIONIS);
+    }
+    si (fr->comitatus >= ZEPHYRUM)
+    {
+        redde _vitium(vitium, carmen, pars, fi, ZEPHYRUM,
+            EMENDATIO_CAUSA_COMITATUS);
     }
     n   = &fr->notae[ni];
     si (n->praeparatum.mensura > ZEPHYRUM)
@@ -728,6 +737,11 @@ emendatio_mensuram_invenire (
     {
         redde _vitium(vitium, carmen->titulus, pars, fi, ZEPHYRUM,
             EMENDATIO_CAUSA_REPETITIONIS);
+    }
+    si (f->comitatus >= ZEPHYRUM)
+    {
+        redde _vitium(vitium, carmen->titulus, pars, fi, ZEPHYRUM,
+            EMENDATIO_CAUSA_COMITATUS);
     }
     si (b1 > f->pulsus + f->longitudo)
     {
@@ -1145,6 +1159,12 @@ emendatio_mensuram_scribere (
         {
             redde _vitium(vitium, carmen->titulus, pars, (s32)f,
                 ZEPHYRUM, EMENDATIO_CAUSA_REPETITIONIS);
+        }
+        si (   fr->comitatus >= ZEPHYRUM && fr->pulsus < b1
+            && b0 < fr->pulsus + fr->longitudo)
+        {
+            redde _vitium(vitium, carmen->titulus, pars, (s32)f,
+                ZEPHYRUM, EMENDATIO_CAUSA_COMITATUS);
         }
 
         per (j = ZEPHYRUM; j < fr->numerus; j++)

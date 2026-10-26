@@ -284,3 +284,25 @@ test case (section 1..3 repeated at 2) ALSO tripped the repetition-of-repetition
 (the section covered the new copy), so it failed for the wrong reason. Isolated: section
 bar 1 repeated at bar 2, where the written c1 | d1 frustum sounds and the section does not
 reach the copy. Lesson again: an error test must fail through exactly one rule.
+
+## 2026-10-26 - <acorda>, <figura>, <comitatus> (Q7G5 step 2)
+
+Declared harmony is song-level data like key and meter: Carmen.acorda (ComitatusAcordum,
+song pulses, sorted, non-overlapping) from every <acorda mensura textus> - each element's
+bars come from _initia_mensurarum (start, then the following bar starts from the metre
+map), so an <acorda> with ictus simply has a short first bar. <figura> is read at book
+and song level (_figuras_legere); the song's list is searched first, then the book's.
+<comitatus> is a child of <pars> next to <frustum>: _comitatum_legere realizes it into a
+CarmenFrustum with comitatus = its index among the part's comitatus, scriptum -1,
+repetitio -1, textus = the figure text, no lineae, note pulses relative to the frustum.
+
+Order matters: figures and acorda are read after the metre map and instruments, BEFORE
+the parts (comitatus needs both); repetitions run after the parts, and since their source
+is "frusta with repetitio < 0" generated frusta repeat (transposed) with no extra code.
+
+scriptum now counts <frustum> elements only (a separate counter): emendatio's
+_textum_frusti finds the n-th <frustum> child, so a comitatus in between must not take an
+index. Test: frustum / comitatus / frustum -> scriptum 0, -1, 1.
+
+_ambitum_legere (instrument ambitus "N..M") is reused for ambitus= and bassus=; it sits
+later in the file, so a static prototype precedes _partem_legere.

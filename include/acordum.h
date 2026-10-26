@@ -4,7 +4,7 @@
  * Quid acordum SIT: classes (XII bits), radix, bassus, genus ex tabula
  * exemplarium - et nomen eius in utramque partem: classes -> genus
  * (acordum_ex_classibus; harmonia.h quod in carmine sonat nominat) et
- * nomen -> classes (acordum_legere; comitatus acorda scripta realizat).
+ * nomen -> classes (acordum_legere; comitatus acorda scripta componit).
  * Tabula UNA utrique: vocabularium novum (sextae, nonae) hic solum
  * additur.
  *

@@ -963,9 +963,67 @@ _sectio_repetitio (
                  && strstr(vitium.causa, "repetitio") != NIHIL);
 }
 
+#define LIBER_COMITATUS \
+    "<carmina><figura titulus=\"f\" textus=\"B:2 [1 2 3]:2\"/>" \
+    "<carmen titulus=\"r\">" \
+    "<acorda mensura=\"1\" textus=\"C | G\"/>" \
+    "<pars titulus=\"m\" instrumentum=\"aether\">" \
+    "<comitatus figura=\"f\" mensura=\"1\"/>" \
+    "<frustum mensura=\"3\"><textus!>e1</textus></frustum>" \
+    "</pars></carmen></carmina>"
+
+/* comitatus: frustum generatum recusatur fontem (acorda, figura)
+ * nominans - ponere, substituere (meta), copiare (fons); frustum
+ * scriptum POST generatum (STML frustum 0) recte mutatur */
+interior vacuum
+_sectio_comitatus (
+    CredoContextus* c)
+{
+               chorda liber = chorda_ex_literis(LIBER_COMITATUS,
+                                                 c->piscina);
+               chorda novus;
+     EmendatioMutatio mutatio;
+       CarminisVitium vitium;
+       EmendatioCopia x;
+                  i32 mutatae;
+
+    CREDO_FALSUM (_ponere(c, liber, "r", "m", _locus(I, I, ZEPHYRUM),
+                          "D3", &novus, &mutatio, &vitium));
+    CREDO_VERUM (   vitium.causa != NIHIL
+                 && strstr(vitium.causa, "comitatus") != NIHIL);
+    CREDO_NECESSE (_ponere(c, liber, "r", "m", _locus(III, I, ZEPHYRUM),
+                           "F4", &novus, &mutatio, &vitium));
+    CREDO_VERUM (chorda_aequalis(novus, _exspectatus(c, liber,
+        ">e1</textus>", ">f1</textus>")));
+    memset(&vitium, ZEPHYRUM, magnitudo(vitium));
+    CREDO_FALSUM (emendatio_mensuram_substituere(liber,
+        chorda_ex_literis("r", c->piscina),
+        chorda_ex_literis("m", c->piscina), II,
+        chorda_ex_literis("e1", c->piscina), c->piscina, &novus,
+        &mutatio, &vitium));
+    CREDO_VERUM (   vitium.causa != NIHIL
+                 && strstr(vitium.causa, "comitatus") != NIHIL);
+    memset(&x, ZEPHYRUM, magnitudo(x));
+    x.pars_fons     = chorda_ex_literis("m", c->piscina);
+    x.prima         = II;
+    x.ultima        = II;
+    x.pars_meta     = chorda_ex_literis("m", c->piscina);
+    x.meta          = III;
+    x.modus         = EMENDATIO_SEMITONIA;
+    x.intervallum   = ZEPHYRUM;
+    x.repetitiones  = I;
+    memset(&vitium, ZEPHYRUM, magnitudo(vitium));
+    CREDO_FALSUM (emendatio_mensuras_copiare(liber,
+        chorda_ex_literis("r", c->piscina), &x, c->piscina, &novus,
+        &mutatae, &vitium));
+    CREDO_VERUM (   vitium.causa != NIHIL
+                 && strstr(vitium.causa, "comitatus") != NIHIL);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "locus", _sectio_locus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ponere", _sectio_ponere, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "comitatus", _sectio_comitatus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "composita", _sectio_composita, NIHIL, NIHIL, NIHIL, NIHIL },
     { "iterum", _sectio_iterum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia", _sectio_vitia, NIHIL, NIHIL, NIHIL, NIHIL },

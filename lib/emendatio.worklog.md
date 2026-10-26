@@ -109,3 +109,11 @@ EMENDATIO_CAUSA_REPETITIONIS ("repetitio (frustum iteratum): muta sectionem font
 notam_ponere, mensuram_invenire (-> substituere, and copiare's destination), and
 copiare's SOURCE bars. Test: a written frustum after a repeat (model index 2, STML 1)
 edits the right <frustum>.
+
+## 2026-10-26 - generated frusta refused (Q7G5 step 2)
+
+A frustum from <comitatus> (CarmenFrustum.comitatus >= 0) has no MML of its own: the three
+places that refuse a repeated frustum (note set, bar substitute, copy source) refuse it
+too, naming the source: "comitatus (frustum generatum): muta acorda aut figuram". The
+copy test must use the GENERATED bar as the SOURCE - with it as the target the
+substitute check fires first and the copy-source check is never exercised.
