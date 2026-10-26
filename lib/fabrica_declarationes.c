@@ -1316,9 +1316,19 @@ fabrica_composita_legere (
             artificium  = stml_attributum_capere(filius, "artificium");
             actio       = stml_attributum_capere(filius, "actio");
             aliud       = stml_attributum_capere(filius, "compositum");
-            numerus     = (artificium != NIHIL ? I : ZEPHYRUM)
-                + (actio != NIHIL ? I : ZEPHYRUM)
-                + (aliud != NIHIL ? I : ZEPHYRUM);
+            numerus = ZEPHYRUM;
+            si (artificium != NIHIL)
+            {
+                numerus++;
+            }
+            si (actio != NIHIL)
+            {
+                numerus++;
+            }
+            si (aliud != NIHIL)
+            {
+                numerus++;
+            }
             si (numerus != I)
             {
                 redde _recusare(piscina, causa_out, pars.sedes,

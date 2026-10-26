@@ -970,3 +970,22 @@ Planted faults, each red at its own fixture and green on revert:
 layout not cleared (indented list), children keep the original
 parent (multiline), `_ligamen_ponere` bypasses the copy (TRANSPARENTIA
 attributes), copy clears text values (raw-whitespace control).
+
+## 2026-10-26 - gcc-only sign-conversion in the CASUS form count
+
+First full Linux (gcc 13, glibc) sweep: one line here broke 66 of
+416 root tests. The CASUS check counted forms with
+`formae = (est != NIHIL ? I : ZEPHYRUM) + (tag != NIHIL ? I : ZEPHYRUM) + ...`
+into an `i32` (unsigned). Each ternary is `int`, so the sum is `int`.
+clang tracks value ranges, sees the sum is never negative, and stays
+quiet under -Wsign-conversion; gcc only exempts plain constants, so it
+warns (= error under -Werror). A lone `x = c ? I : ZEPHYRUM` is quiet
+in both; the `+` is what trips gcc.
+
+Fix: count with `formae++` under each `si` - no cast, says what it
+means. Same idiom fixed in lib/fabrica_declarationes.c (pars:
+artificium/actio/compositum); probatio_testa_initus.c:413 is
+arithmetic, not a count, so it got an `(i32)` cast instead.
+
+Lesson for new code: summing `I`/`ZEPHYRUM` ternaries into an `i32`
+compiles on the Mac and breaks Linux. Count with `++`.

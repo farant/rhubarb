@@ -972,11 +972,27 @@ _commutationem_perscrutari (
                                    "non-nihil") != NIHIL;
             est_forma        = _bracchii_est_forma(bracchium,
                                                    &est_nodus, &forma);
-            formae = (est != NIHIL ? I : ZEPHYRUM)
-                   + (tag != NIHIL ? I : ZEPHYRUM)
-                   + (habet_nihil ? I : ZEPHYRUM)
-                   + (habet_non_nihil ? I : ZEPHYRUM)
-                   + (est_forma != ZEPHYRUM ? I : ZEPHYRUM);
+            formae = ZEPHYRUM;
+            si (est != NIHIL)
+            {
+                formae++;
+            }
+            si (tag != NIHIL)
+            {
+                formae++;
+            }
+            si (habet_nihil)
+            {
+                formae++;
+            }
+            si (habet_non_nihil)
+            {
+                formae++;
+            }
+            si (est_forma != ZEPHYRUM)
+            {
+                formae++;
+            }
             si (formae != I || est_forma == II)
             {
                 _vitium_ponere(ctx,
