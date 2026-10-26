@@ -1,6 +1,8 @@
 /* pictor_actiones.c - tractatores pictoris */
 
 #include "pictor_actiones.h"
+#include "pictor_componentia.h"
+#include "elenchus.h"
 #include "xar.h"
 #include "exemplaria.h"
 
@@ -775,7 +777,8 @@ glutinationem_abicere (
 }
 
 /* tractus in tabula pendente: radere a puncto ultimo ad praesens
- * (pressio: punctum solum); Optio = restituere. Magnitudo = penicilli */
+ * (pressio: punctum solum); Optio = restituere. Magnitudo =
+ * penicilli */
 interior b32
 glutinationem_radere (
     InsulaRepositorium* repo,
@@ -1041,6 +1044,126 @@ pictor_imaginem_eligere (
     redde pa->imaginem_eligere(pa->imaginem_eligere_ctx);
 }
 
+/* pinacotheca D6: spatium picturae novae "pictura-<n>", n = I +
+ * maximum numerorum exstantium (nomen internum, numquam ostensum) */
+interior vacuum
+spatium_novum (
+      Volumen* volumen,
+      Piscina* piscina,
+    character  exitus[XXXII])
+{
+       Xar* l;
+    chorda  s;
+       i32  i;
+       i32  j;
+       i32  n;
+       i32  maximum;
+       b32  numeri;
+
+    maximum  = ZEPHYRUM;
+    l        = pictor_documenta_enumerare(volumen, piscina);
+    per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
+    {
+        s = *(chorda*)xar_obtinere(l, i);
+        si (   s.mensura <= VIII || s.mensura > VIII + IX
+            || memcmp(s.datum, "pictura-", VIII) != ZEPHYRUM)
+        {
+            perge;
+        }
+        n       = ZEPHYRUM;
+        numeri  = VERUM;
+        per (j = VIII; j < s.mensura; j++)
+        {
+            si (s.datum[j] < '0' || s.datum[j] > '9')
+            {
+                numeri = FALSUM;
+                frange;
+            }
+            n = n * X + (i32)(s.datum[j] - '0');
+        }
+        si (numeri && n > maximum)
+        {
+            maximum = n;
+        }
+    }
+    sprintf(exitus, "pictura-%lu", (insignatus longus)(maximum + I));
+}
+
+/* campus 'palette' sub nomine domini (palette.aperire) - res menu
+ * eum ex actione 'elenchus.agere' scribunt; NIHIL claudit */
+interior b32
+palettam_scribere (
+    InsulaRepositorium* repo,
+                vacuum* ctx,
+             character* valor)
+{
+    PictorActiones* pa;
+       InsulaRamus  ramus;
+            chorda  prior;
+               b32  scriptum;
+
+    pa     = (PictorActiones*)ctx;
+    ramus  = ramus_pictoris(repo, ctx);
+    prior  = repo->scriptor;
+    insula_scriptorem_ponere(repo, chorda_ex_literis("palette.aperire",
+        pa->doc->piscina));
+    scriptum = mutare_ramum(&ramus, palettam_mutator, valor);
+    insula_scriptorem_ponere(repo, prior);
+    redde scriptum;
+}
+
+/* <tractator/> */
+b32
+pictor_elenchum_agere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+         PictorActiones* pa;
+               Elenchus  e;
+            ElenchusRes  res[III];
+                    s32  k;
+     constans character* titulus;
+              character  spatium[XXXII];
+
+    (vacuum)motus;
+    (vacuum)destinatio;
+    pa = (PictorActiones*)ctx;
+    si (   !repo || !ev || ev->genus != EVENTUS_MUS_DEPRESSUS || !pa
+        || !pa->doc)
+    {
+        redde FALSUM;
+    }
+    pictor_elenchum_parare(pa->imaginem_eligere != NIHIL, res, &e);
+    k = elenchus_index(nodus);
+    si (k < ZEPHYRUM || k >= (s32)e.numerus)
+    {
+        redde FALSUM;
+    }
+    titulus = e.res[k].titulus;
+    si (strcmp(titulus, "pinacotheca.aperire") == ZEPHYRUM)
+    {
+        hic_manens character PINACOTHECA[] = "pinacotheca";
+
+        redde palettam_scribere(repo, ctx, PINACOTHECA);
+    }
+    (vacuum)palettam_scribere(repo, ctx, NIHIL);
+    si (strcmp(titulus, "pictura.nova") == ZEPHYRUM)
+    {
+        si (!pa->picturam_condere)
+        {
+            redde FALSUM;
+        }
+        spatium_novum(pa->doc->volumen, pa->doc->piscina, spatium);
+        redde pa->picturam_condere(pa->montatio, spatium);
+    }
+    redde pa->imaginem_eligere
+        && pa->imaginem_eligere(pa->imaginem_eligere_ctx);
+}
+
 /* <tractator/> */
 b32
 pictor_palettam_aperire (
@@ -1192,8 +1315,8 @@ pictor_magnitudinem_ponere (
         redde FALSUM;
     }
     /* P4b: instrumentum currens - penicillus diametrum, aspergillum
-     * multiplicem; ceteri (spongia) nihil. Glutinatio pendens: penicillus
-     * semper (magnitudo radendi, Franus 2026-10-13) */
+     * multiplicem; ceteri (spongia) nihil. Glutinatio pendens:
+     * penicillus semper (magnitudo radendi, Franus 2026-10-13) */
     ramus         = ramus_pictoris(repo, ctx);
     instrumentum  = insula_ramus_attributum(&ramus,
         "instrumentum");
@@ -1543,4 +1666,5 @@ pictor_actiones_registrare (
         ctx);
     actio_registrare(reg, "imago.eligere", pictor_imaginem_eligere,
         ctx);
+    actio_registrare(reg, "elenchus.agere", pictor_elenchum_agere, ctx);
 }

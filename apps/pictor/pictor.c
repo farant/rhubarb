@@ -82,6 +82,9 @@ applicatio_initium (
             a->imaginem_eligere_ctx;
         app->montatio.compositio.imago_eligibilis         = VERUM;
     }
+    /* pinacotheca D1: quadratum ⋯ (menu picturarum) in applicatione
+     * pictor ubique - vicus et terminalis id non ponunt */
+    app->montatio.compositio.elenchus_praesto = VERUM;
 
     forma->titulus    = "pictor";
     forma->latitudo   = latitudo;

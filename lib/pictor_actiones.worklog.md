@@ -165,3 +165,15 @@ red in probatio_pictor_imago.
 Fran's look (2026-10-13, ./apps/pictor/pictor.sh): Cmd+V, size square,
 drag reveals Atkinson under B, Option-drag restores, A swaps the reveal,
 OK commits as previewed - "everything seems to be working".
+
+## 2026-10-26 - elenchus.agere (pinacotheca T4, quarta)
+
+Menu handler. `palette` is owned by `palette.aperire`; a write from
+`elenchus.agere` was refused SILENTLY (the domini trap, memory
+domini-scriptor-silent-refusal) - "Open picture" left palette unchanged
+while New picture only looked fine because dimissio closed the menu.
+`palettam_scribere` sets the writer to palette.aperire for the call
+(same pattern as glutinationem_scribere). Picture switching goes
+through `PictorActiones.picturam_condere/ponere` + `montatio` (filled
+by pictor_montare) because pictor_applicatio.h includes this header.
+New picture name: "pictura-<n>", n = 1 + highest existing n.

@@ -37,6 +37,8 @@
     <actio nomen="magnitudo.ponere"/>
     <actio nomen="instrumentum.eligere"/>
     <actio nomen="glutinatio.agere"/>
+    <!-- menu ⋯ (pinacotheca D2): Open picture, New picture, Import image -->
+    <actio nomen="elenchus.agere"/>
     <actio nomen="motus" systema="verum"/>
   </actiones>
 

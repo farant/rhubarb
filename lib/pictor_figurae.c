@@ -1,6 +1,8 @@
 /* pictor_figurae.c - figurae pictoris */
 
 #include "pictor_figurae.h"
+#include "pictor_componentia.h"
+#include "elenchus.h"
 #include "thema.h"
 #include "color.h"
 #include "exemplaria.h"
@@ -664,6 +666,23 @@ figura_quadrati (
         mandata_linea(m, a, b, I, figura_color_thematis(COLOR_TEXT));
         redde;
     }
+    /* pinacotheca D1: icon menu - tria puncta II x II, centrata */
+    si (chorda_aequalis_literis(t, "elenchus:quadratum"))
+    {
+        Fines g;
+          s32 k;
+
+        per (k = ZEPHYRUM; k < III; k++)
+        {
+            g.x         = (c->fines.latitudo - X) / II + IV * k;
+            g.y         = (c->fines.altitudo - II) / II;
+            g.latitudo  = II;
+            g.altitudo  = II;
+            mandata_rectangulum(m, g, figura_color_thematis(COLOR_TEXT),
+                VERUM);
+        }
+        redde;
+    }
     /* testa-ios C1b: icon imaginis - tabula picta (margo), mons
      * duorum cacuminum et sol (II x II) */
     si (chorda_aequalis_literis(t, "imago:quadratum"))
@@ -929,8 +948,20 @@ figura_palettae (
 {
     Fines f;
 
-    (vacuum)thema;
     (vacuum)ctx;
+    /* pinacotheca D2: menu ⋯ - elenchus totum pingit; res ex tabula
+     * communi, importare ex numero liberorum (II aut III) */
+    si (chorda_aequalis_literis(c->id, "elenchus"))
+    {
+           Elenchus e;
+        ElenchusRes res[III];
+
+        pictor_elenchum_parare(c->liberi
+            && xar_numerus(c->liberi) == III, res, &e);
+        elenchus_figura(c, m, thema, &e);
+        redde;
+    }
+    (vacuum)thema;
     f.x         = ZEPHYRUM;
     f.y         = ZEPHYRUM;
     f.latitudo  = c->fines.latitudo;

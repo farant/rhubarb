@@ -38,6 +38,15 @@ nomen structura {
      * nulla */
              b32 (*imaginem_eligere)(vacuum* ctx);
           vacuum* imaginem_eligere_ctx;
+    /* pinacotheca T4: picturas mutare sine pictor_applicatio.h (id
+     * hoc caput includit) - pictor_montare implet (PictorMontatio* in
+     * 'montatio'); NIHIL (probationes sine montatione) = res menu
+     * nihil agunt */
+          vacuum* montatio;
+             b32 (*picturam_condere)(vacuum* montatio,
+                                     constans character* spatium);
+             b32 (*picturam_ponere)(vacuum* montatio,
+                                    constans character* spatium);
 } PictorActiones;
 
 vacuum
@@ -128,6 +137,21 @@ pictor_spongia_ictus (
  * FALSUM, nihil. Registratur ut 'imago.eligere'. */
 b32
 pictor_imaginem_eligere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* <tractator/> res menu ⋯ ictum ('elenchus.<k>', pinacotheca D2;
+ * tabula pictor_elenchum_parare): "Open picture…" palettam in
+ * "pinacotheca" mutat; "New picture" picturam novam "pictura-<n>" (n
+ * = I + maximum exstans) condit et ostendit, menu claudit; "Import
+ * image…" servitium imaginem_eligere vocat, menu claudit.
+ * Registratur ut 'elenchus.agere'. */
+b32
+pictor_elenchum_agere (
     InsulaRepositorium* repo,
                  Motus* motus,
    constans Destinatio* destinatio,

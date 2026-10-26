@@ -31,6 +31,7 @@
 #include "insula.h"
 #include "motus.h"
 #include "pictor_documentum.h"
+#include "elenchus.h"
 
 nomen structura {
     /* superficies si superficies_* absunt (ante nuntium glutini
@@ -49,10 +50,24 @@ nomen structura {
     /* pictor-strata L3: documentum ostensum (strata palettae) */
     constans PictorDocumentum* doc;
     /* testa-ios C1b: hospes imaginem eligere sinit (servitium
-     * imaginem_eligere) -> quadratum imaginis ad sinistram quadrati
-     * stratorum; FALSUM (ordinarium) = nullum (macOS, Android) */
+     * imaginem_eligere) -> res "Import image..." in menu ⋯
+     * (pinacotheca D2); FALSUM (ordinarium) = nulla (macOS, Android) */
                            b32 imago_eligibilis;
+    /* pinacotheca D1/D11: quadratum ⋯ (menu: Open picture..., New
+     * picture, Import image...) ad sinistram quadrati stratorum -
+     * applicatio pictor ponit; vicus et terminalis numquam */
+                           b32 elenchus_praesto;
 } PictorCompositio;
+
+/* menu ⋯ (pinacotheca D2): tabula rerum UNA quam compositio, figura
+ * et actio legunt - res[0] "pinacotheca.aperire" ("Open picture…"),
+ * res[I] "pictura.nova" ("New picture"), res[II] "imago.eligere"
+ * ("Import image…", solum si importare). e->res = res, electa -1. */
+vacuum
+pictor_elenchum_parare (
+            b32  importare,
+    ElenchusRes  res[III],
+       Elenchus* e);
 
 /* "penicillus" -> "penicillus.ictus"; ignotum -> "" */
 constans character*

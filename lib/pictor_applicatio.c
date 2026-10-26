@@ -96,6 +96,24 @@ clavis_memoriae (
         p);
 }
 
+/* pinacotheca T4: portae actionum ad montationem (PictorActiones
+ * pictor_applicatio.h non includit) */
+interior b32
+picturam_condere_per_montationem (
+                 vacuum* montatio,
+     constans character* spatium)
+{
+    redde pictor_picturam_condere((PictorMontatio*)montatio, spatium);
+}
+
+interior b32
+picturam_ponere_per_montationem (
+                 vacuum* montatio,
+     constans character* spatium)
+{
+    redde pictor_picturam_ponere((PictorMontatio*)montatio, spatium);
+}
+
 b32
 pictor_montare (
          PictorMontatio* m,
@@ -207,6 +225,11 @@ pictor_montare (
     m->actiones            = actio_registrum_creare(piscina, intern);
     m->actiones_ctx.doc    = m->doc;
     m->actiones_ctx.ramus  = m->ramus;
+    /* pinacotheca T4: res menu picturas mutant per montationem */
+    m->actiones_ctx.montatio = m;
+    m->actiones_ctx.picturam_condere =
+        picturam_condere_per_montationem;
+    m->actiones_ctx.picturam_ponere = picturam_ponere_per_montationem;
     pictor_actiones_registrare(m->actiones, &m->actiones_ctx);
     m->figurae                       = figura_registrum_creare(piscina);
     m->figurae_ctx.doc               = m->doc;
