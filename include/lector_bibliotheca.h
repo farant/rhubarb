@@ -82,8 +82,9 @@ lector_positionem_scribere (
     constans LectorPositio* positio);
 
 /* progressus 0..100 (octeti capitum ante positionem / omnes); -1 si
- * nulla positio aut liber non legitur. Longitudines capitum semel
- * mensae. */
+ * nulla positio aut liber non legitur. Longitudines capitum semel per
+ * librum mensae et in volumine servatae (plagula lector/longitudines/
+ * <id>, signum: capita et mensura fili - liber redonatus remetitur). */
 s32
 lector_progressus (
           LectorBibliotheca* b,

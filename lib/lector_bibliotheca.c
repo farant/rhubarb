@@ -699,6 +699,120 @@ lector_favores_scribere (
         identitas, favores, FALSUM);
 }
 
+/* L6: longitudines capitum in volumine servatae, plagula
+ * "lector/longitudines/<id>" = "<capita> <mensura fili> L0 L1 ...":
+ * signum (capita, mensura fili EPUB) mutatum - liber novus aut
+ * redonatus - non valet. VERUM si li->longitudines ex ea impletae */
+interior b32
+longitudines_legere (
+    LectorBibliotheca* b,
+        LiberInternus* li,
+                  i64  mensura_fili)
+{
+    Piscina* t;
+     chorda  c;
+        b32  inventa;
+        i64  valor;
+        i64  signum[II];
+        i32  numeri;
+        i32  capita;
+        i32  i;
+        b32  in_numero;
+        b32  bene;
+
+    si (!b->volumen)
+    {
+        redde FALSUM;
+    }
+    t = piscina_generare_dynamicum("lector_longitudines", MXXIV);
+    si (!t)
+    {
+        redde FALSUM;
+    }
+    c = volumen_plagulam_promere(b->volumen,
+        viam_plagulae("longitudines",
+        li->liber.identitas, t), t, &inventa);
+    capita     = codex_numerus_capitum(li->codex);
+    bene       = inventa;
+    numeri     = ZEPHYRUM;
+    valor      = ZEPHYRUM;
+    in_numero  = FALSUM;
+    li->longitudines = bene ? xar_creare(b->piscina,
+        (i32)magnitudo(i32))
+        : NIHIL;
+    per (i = ZEPHYRUM; bene && li->longitudines && i <= c.mensura; i++)
+    {
+        si (i < c.mensura && c.datum[i] >= '0' && c.datum[i] <= '9')
+        {
+            valor      = valor * X + (i64)(c.datum[i] - '0');
+            in_numero  = VERUM;
+            perge;
+        }
+        si (!in_numero)
+        {
+            perge;
+        }
+        si (numeri < II)
+        {
+            signum[numeri] = valor;
+        }
+        alioquin
+        {
+            *(i32*)xar_addere(li->longitudines) = (i32)valor;
+        }
+        numeri++;
+        valor      = ZEPHYRUM;
+        in_numero  = FALSUM;
+    }
+    piscina_destruere(t);
+    bene = bene && li->longitudines && numeri == (i32)capita + II
+        && signum[ZEPHYRUM] == (i64)capita
+        && signum[I] == mensura_fili;
+    si (!bene)
+    {
+        li->longitudines = NIHIL;
+    }
+    redde bene;
+}
+
+interior vacuum
+longitudines_scribere (
+    LectorBibliotheca* b,
+        LiberInternus* li,
+                  i64  mensura_fili)
+{
+              Piscina* t;
+    ChordaAedificator* a;
+                  i32  i;
+            character  numerus[XXIV];
+
+    si (!b->volumen || !li->longitudines)
+    {
+        redde;
+    }
+    t = piscina_generare_dynamicum("lector_longitudines", MXXIV);
+    a = t ? chorda_aedificator_creare(t, CCLVI) : NIHIL;
+    si (a)
+    {
+        sprintf(numerus, "%u %lu", (insignatus integer)xar_numerus(
+            li->longitudines), (insignatus longus)mensura_fili);
+        chorda_aedificator_appendere_literis(a, numerus);
+        per (i = ZEPHYRUM; i < xar_numerus(li->longitudines); i++)
+        {
+            sprintf(numerus, " %u", (insignatus integer)*(i32*)
+                xar_obtinere(li->longitudines, i));
+            chorda_aedificator_appendere_literis(a, numerus);
+        }
+        (vacuum)volumen_plagulam_condere(b->volumen, viam_plagulae(
+            "longitudines", li->liber.identitas, t),
+            chorda_aedificator_finire(a), "lector:longitudines");
+    }
+    si (t)
+    {
+        piscina_destruere(t);
+    }
+}
+
 s32
 lector_progressus (
           LectorBibliotheca* b,
@@ -714,6 +828,7 @@ lector_progressus (
                i32  i;
                i32  longitudo;
                b32  servata;
+               i64  mensura_fili;
 
     li = internum(b, liber);
     si (!li || !li->codex)
@@ -731,9 +846,22 @@ lector_progressus (
     {
         redde -I;
     }
+    /* L6: semel per librum (et filum): longitudines in volumine; aliter
+     * capita omnia leguntur et servantur */
+    mensura_fili = ZEPHYRUM;
     si (!li->longitudines)
     {
-        /* semel: capita omnia legere, longitudines servare */
+        t = piscina_generare_dynamicum("lector_via", CCLVI);
+        mensura_fili = t ? (i64)filum_mensura(chorda_ut_cstr(liber->via,
+            t)) : ZEPHYRUM;
+        si (t)
+        {
+            piscina_destruere(t);
+        }
+    }
+    si (   !li->longitudines
+        && !longitudines_legere(b, li, mensura_fili))
+    {
         li->longitudines = xar_creare(b->piscina, (i32)magnitudo(i32));
         per (i = ZEPHYRUM; li->longitudines
             && i < codex_numerus_capitum(li->codex); i++)
@@ -750,6 +878,7 @@ lector_progressus (
                 piscina_destruere(t);
             }
         }
+        longitudines_scribere(b, li, mensura_fili);
     }
     si (!li->longitudines)
     {

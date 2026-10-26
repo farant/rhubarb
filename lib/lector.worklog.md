@@ -180,3 +180,31 @@ see their worklogs); lector's part:
   the vicus side uses its own scratch piscina, emptied per call.
 - Census (scratch build/sonda/sonda_sequela.c, real vicus + library):
   54 followed places -> 0 `comes/` plagulae; one write -> 3.
+
+## 2026-10-26 - L6: `$epubs`, resume end-to-end, the real library (plan project-specs/lector-l6-plan.md) - ARC CLOSED
+
+- **`$epubs`** = one `aperiens_fixum_registrare` line (genus "lector", no
+  fixed argument, so `$epubs(<id or URI>)` flows to
+  `lector_argumentum_ponere` like `$via`). Note: `vicus_acervo_aperire`
+  brings a reader already in the tab's stack to the front rather than
+  mounting a second one. Test traps of the type-and-click recipe (not
+  the feature): a click ANYWHERE on a command's line runs that command,
+  and a command longer than one line of the half-width scriba page
+  (58 columns at 1440 px) wraps and is no command.
+- **Restart** was already right: vicus applies each pane's saved
+  persistent route on the first pulse, then `semitam_secuta`; lector's
+  persistent fields are visus + liber, so chapter/sentence come from the
+  BOOK's position (last mover wins across panes). Now pinned by six vicus
+  sections (library + selection, page, sentence, favourites -> Esc to
+  the position, contents, two panes, fresh tab, close + reopen).
+- **Speed** over 37 real books (scratch probes build/sonda/): opening a
+  chapter of an 85 MB EPUB ~1 ms (only that chapter is unzipped), page
+  turns 0.2-0.3 ms, sentence steps ~0.1 ms. The one slow spot was exact
+  progress: every chapter read once per book per SESSION (Anna Karenina
+  559 ms, a library page ~1.1 s). Lengths now persist in the volume
+  (`lector/longitudines/<id>` = "<chapters> <EPUB bytes> L0 ..."; a
+  signature mismatch remeasures): second session 1.8 ms for all 37. A
+  book is still measured once, the first time it shows with a position;
+  the library scan (37 OPFs) is ~160 ms once per vicus run.
+- Two plants first failed to COMPILE under -Werror (unused function /
+  variable) - planta's pre-flight caught it; rewritten to compile.

@@ -13,6 +13,7 @@
 #include "codex.h"
 #include "lector_bibliotheca.h"
 #include "credo.h"
+#include <stdio.h>
 #include <string.h>
 
 #define BIBLIOTHECA "probationes/fixa/lector/bibliotheca"
@@ -244,6 +245,118 @@ _sectio_positio (
     volumen_claudere(vol);
 }
 
+/* via plagulae longitudinum (prima "lector/longitudines/"); vacua si
+ * nulla */
+interior chorda
+via_longitudinum (
+     Volumen* vol,
+     Piscina* p)
+{
+    Xar* x;
+    i32  i;
+
+    x = volumen_plagulas_enumerare(vol, p);
+    per (i = ZEPHYRUM; x && i < xar_numerus(x); i++)
+    {
+        constans VolumenPlagula* g = (constans VolumenPlagula*)
+            xar_obtinere(x, i);
+        si (chorda_continet(g->via, chorda_ex_literis(
+                "lector/longitudines/", p)))
+        {
+            redde g->via;
+        }
+    }
+    redde chorda_ex_literis("", p);
+}
+
+/* lector L6: longitudines capitum in volumine servatae ("<capita>
+ * <mensura fili> L0 L1 ..."): bibliotheca altera eas legit, non
+ * capita; signum mutatum (capita alia) -> recomputantur */
+interior vacuum
+_sectio_longitudines (
+    CredoContextus* c)
+{
+                 Piscina* p;
+     InternamentumChorda* in;
+                 Volumen* vol;
+       LectorBibliotheca* b;
+       LectorBibliotheca* altera;
+                   Codex* x;
+           LectorPositio  q;
+                  chorda  vitium;
+                  chorda  via;
+                  chorda  servatum;
+                  chorda  textus;
+                     s32  verum;
+                     i32  n;
+                     i32  i;
+                     i64  mensura;
+                     b32  inventum;
+               character  fictum[CCLVI];
+               character  numerus[XXIV];
+
+    p    = c->piscina;
+    in   = internamentum_creare(p);
+    vol  = volumen_temporarium(p, "lector_longitudines");
+    CREDO_NECESSE_NON_NIHIL(vol);
+    b  = lector_bibliotheca_aperire(BIBLIOTHECA, vol, p, in);
+    x  = lector_bibliotheca_codex(b, lector_bibliotheca_liber(b, I),
+        &vitium);
+    CREDO_NECESSE_NON_NIHIL(x);
+    n = codex_numerus_capitum(x);
+    q = positio(n - I, ZEPHYRUM, "line one", p);
+    CREDO_VERUM(lector_positionem_scribere(b,
+        lector_bibliotheca_liber(b, I)->identitas, &q));
+
+    CREDO_GRADUS("progressus primus: longitudines in volumine "
+        "servatae");
+    verum = lector_progressus(b, lector_bibliotheca_liber(b, I));
+    CREDO_VERUM(verum > ZEPHYRUM);
+    via = chorda_transcribere(via_longitudinum(vol, p), p);
+    CREDO_VERUM(via.mensura > ZEPHYRUM);
+    servatum = chorda_transcribere(volumen_plagulam_promere(vol, via, p,
+        &inventum), p);
+    CREDO_VERUM(inventum);
+
+    CREDO_GRADUS("bibliotheca altera: longitudines ex volumine "
+        "(fictae: C per caput)");
+    /* signum servati: "<capita> <mensura>" */
+    mensura = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < servatum.mensura && servatum.datum[i] != ' ';
+        i++)
+    {
+    }
+    per (i = i + I; i < servatum.mensura && servatum.datum[i] != ' ';
+        i++)
+    {
+        mensura = mensura * X + (i64)(servatum.datum[i] - '0');
+    }
+    sprintf(fictum, "%u %lu", (insignatus integer)n,
+        (insignatus longus)mensura);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        strcat(fictum, " 100");
+    }
+    CREDO_VERUM(volumen_plagulam_condere(vol, via, chorda_ex_literis(
+        fictum, p), "probatio"));
+    altera = lector_bibliotheca_aperire(BIBLIOTHECA, vol, p, in);
+    CREDO_AEQUALIS_S32(lector_progressus(altera,
+        lector_bibliotheca_liber(altera, I)), (s32)((n - I) * C / n));
+
+    CREDO_GRADUS("signum alienum (capita alia): recomputantur et "
+        "rescribuntur");
+    sprintf(numerus, "%u %lu 1 2", (insignatus integer)(n + I),
+        (insignatus longus)mensura);
+    CREDO_VERUM(volumen_plagulam_condere(vol, via, chorda_ex_literis(
+        numerus, p), "probatio"));
+    altera = lector_bibliotheca_aperire(BIBLIOTHECA, vol, p, in);
+    CREDO_AEQUALIS_S32(lector_progressus(altera,
+        lector_bibliotheca_liber(altera, I)), verum);
+    textus = volumen_plagulam_promere(vol, via, p, &inventum);
+    CREDO_VERUM(chorda_aequalis(textus, servatum));
+    volumen_claudere(vol);
+}
+
 interior LectorEmendatio
 emendatio (
     CodexEmendationisGenus  genus,
@@ -403,6 +516,8 @@ _sectio_emendationes (
 hic_manens constans CredoSectio SECTIONES[] = {
     { "bibliotheca", _sectio_bibliotheca, NIHIL, NIHIL, NIHIL, NIHIL },
     { "positio", _sectio_positio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "longitudines", _sectio_longitudines, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "emendationes", _sectio_emendationes, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

@@ -4447,6 +4447,9 @@ ContextusNomenclatoris* cn;
         || !sanctorum
         || !aperiens_fixum_registrare(cs->iussa, app->vicus, "saints",
                "sancti", NIHIL, piscina)
+        /* lector L6: $epubs (bibliotheca), $epubs(id aut URI) */
+        || !aperiens_fixum_registrare(cs->iussa, app->vicus, "epubs",
+               "lector", NIHIL, piscina)
         || !ci
         || !via_registrare(cs->iussa, app->vicus, piscina, intern,
                &ci->via)
