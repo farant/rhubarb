@@ -87,6 +87,14 @@ vicus_applicatio_admonitiones_aperire (
         VicusApplicatio* app,
      constans character* via);
 
+/* CLAUDERE (2026-10-26): fons colloquiorum finitur (quaestio mensoris
+ * pendens abrumpitur, piscinae destruuntur) - vocator qui aperuit
+ * claudit (probationes in purgatione sectionis). Non aperta: nihil.
+ * Post claudere iterum aperiri potest. */
+vacuum
+vicus_applicatio_admonitiones_claudere (
+    VicusApplicatio* app);
+
 /* porta NIHIL = nulla; copia servatur */
 vacuum
 vicus_applicatio_quaestionis_portam_ponere (

@@ -1,0 +1,85 @@
+# transformare - plan
+
+Spec: `project-specs/transformare-spec.md` (DECIDED 2026-10-24, N1-N4;
+ledger decretum …KNW98). Inline execution, one task per checkpoint,
+Fran approves each.
+
+*Grounding (2026-10-26, read before planning):*
+- Nodes are materia nodes (`#define SilvaNodus MateriaNodus`): a
+  registered kind + slots; calls are kind `vocatio` (grammar table).
+- `silva_nodus_extensionem(nodus, fons, &min, &max)` = the node's byte
+  range in the ORIGINAL file, through macro origins;
+  `silva_nodus_geometria_fida` = tokens map 1:1 onto source (Latin
+  keyword macros si->if are 1:1 and fine; multi-token expansions are
+  not) -> the rewrite-safety test.
+- The tree is POST-expansion: a pattern written with `si`/`ZEPHYRUM`
+  and a file spelling `if`/`0` compare equal on the tree, while every
+  captured hole is copied from the file's own bytes. So the census
+  groups spellings that mean the same thing (refines spec §III, which
+  assumed literal tokens).
+- STML raw line capture (`<si! (>...`, as `<verbum! (>` in
+  aedificatio.stml) holds patterns with `<` and `"` verbatim - resolves
+  the spec's quoting AUDIENDA.
+
+## Tasks
+
+**T1 - fragment parsing (silva library).**
+`silva_fragmentum_parsare(piscina, textus, genus)` with genus
+EXPRESSIO or SENTENTIA: `$name` -> reserved identifier `__trf_name`,
+`$...name` -> `__trfv_name` (never reach a real file), wrapped as
+`void __trf(void) { (frag); }` / `{ frag }`, parsed with the house
+context (latina.h), returns the expression/statement node + the hole
+table. Test: fragments with holes, Latin keywords, string literals;
+malformed fragment = named error.
+
+**T2 - matching (silva library).**
+`silva_forma_congruit(forma, nodus, capturae)`: kind-by-kind tree
+comparison on token VALUES (trivia-blind); a hole matches any
+expression subtree and records it; a repeated hole requires equal
+subtrees (new trivia-blind subtree equality, built on
+silva_arbor_aequalitas); `$...` matches the rest of an argument list.
+Test: matches, non-matches, repeated-hole equality, `$...` tails,
+`si`/`if` and `ZEPHYRUM`/`0` equivalence.
+
+**T3 - census (tool).**
+`silva/instrumenta/principalia/transformare.c`, `./silva/transformare.sh
+-census FUNCTIO viae...`: every call to FUNCTIO whose callee token's
+root lies in the file itself (else listed as `in macro`); consumer =
+walk up through parentheses to the first node that uses the value;
+shape = the consumer's tokens with the call's arguments as $1..$n;
+rows grouped and counted with locations; `-machina` TSV. Test: a
+fixture file with each consumer kind.
+
+**T4 - rules + plan.**
+Rules STML `<transformatio functio="remove" codex="SCRIPTURA_PRAETERITA">
+<regula><si! (>PATTERN <fac! (>REPLACEMENT</regula>`; per site the first
+rule whose pattern matches the consumer (or an ancestor up to the
+statement); edit = the matched node's byte range -> replacement text
+with each hole filled by the captured subtree's ORIGINAL bytes;
+refused sites (no rule, not geometria_fida) listed by shape. Plan
+prints unified diffs, writes nothing. Test: fixture + rules ->
+expected diff; refused shapes named.
+
+**T5 - apply with guard.**
+`-scribere`: per file in memory - apply edits (back to front),
+re-parse (no new errors), re-run examen (the named code loses exactly
+the rewritten sites, no other code grows, no REICE), `clang
+-fsyntax-only` with house flags; any failure = file untouched + named
+reason; then formator on the touched lines only. Test: a rule
+producing a wrong arity is caught; a good rule writes byte-exact
+output. Plants for each guard.
+
+**T6 - wrapper + first rules library.**
+pythonica `silva.census(functio, viae)` / `silva.transformare(regulae,
+viae, scribere=False)` (argv in, TSV out); rules for the fabrica-8 sweep
+in `silva/transformationes/`: remove/unlink -> filum_delere, rename ->
+filum_movere, mkdir -> filum_directorium_creare*, rmdir -> filum_delere,
+chmod -> filum_modum_ponere, write-mode fopen -> lectiones_fopen; code
+97's message names its rules file (spec N4). Then the sweep itself
+(fabrica-8, area by area) is ordinary use of the tool.
+
+## Open (decide when reached)
+- T3: does a statement-level call (`remove(x);`) count as its own
+  consumer kind or as "expression statement" (proposed: the latter).
+- T4: when two rules match at different ancestor levels, nearest wins
+  (proposed).

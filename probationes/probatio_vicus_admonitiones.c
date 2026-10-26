@@ -57,6 +57,12 @@ mundum_purgare (
     Mundus* x;
 
     x = (Mundus*)c->datum;
+    /* quaestio mensoris pendens abrumpitur: aliter mensor (cum libro
+     * lectionum HUIUS membri) sectionem et membrum supervivebat */
+    si (x)
+    {
+        vicus_applicatio_admonitiones_claudere(&x->app);
+    }
     si (x && x->volumen)
     {
         volumen_claudere(x->volumen);
