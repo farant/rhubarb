@@ -304,6 +304,33 @@ cursus_legere (
     redde l;
 }
 
+vacuum
+colloquia_visus_fontem_finire (
+    ColloquiorumFons* f)
+{
+    si (!f)
+    {
+        redde;
+    }
+    si (f->quaestio)
+    {
+        processus_abrumpere(f->quaestio);
+        f->quaestio = NIHIL;
+    }
+    si (f->quaestionis)
+    {
+        piscina_destruere(f->quaestionis);
+        f->quaestionis = NIHIL;
+    }
+    si (f->cursuum)
+    {
+        piscina_destruere(f->cursuum);
+        f->cursuum = NIHIL;
+    }
+    f->cursus = NIHIL;
+    f->mensor = NIHIL;
+}
+
 /* T10b: quaestio incipitur (V s post ultimam) aut metitur si parata;
  * numquam obstat. VERUM si cursus mutati. Mensor fractus (exitus non
  * 0, exec fallitus) instantaneam veterem servat. */

@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <time.h>
 
 #define VIA_FIXI "probationes/fixa/colloquia/eventa.jsonl"
 
@@ -856,8 +857,72 @@ _probare_cursus_ordines (
     }
 }
 
+/* FINIRE (2026-10-26): quaestio mensoris pendens abrumpitur statim
+ * (mensor lentus II s non exspectatur), piscinae destruuntur, iterum
+ * vocata nihil agit - mensor asynchronus vocatorem non supervivit */
+interior vacuum
+_probare_finire (
+    CredoContextus* c)
+{
+    ColloquiorumFons  fons;
+           character* via;
+                 s64  nunc = (s64)CCCXX;
+             clock_t  ante;
+
+    via = (character*)piscina_allocare(c->piscina, (memoriae_index)
+        strlen(credo_area(c)) + XXXII);
+    CREDO_NECESSE(via != NIHIL);
+    sprintf(via, "%s/eventa.jsonl", credo_area(c));
+    CREDO_NECESSE(filum_scribere(via, filum_legere_totum(VIA_FIXI,
+        c->piscina)));
+    CREDO_NECESSE(colloquia_visus_fontem_initiare(&fons, c->piscina,
+        via,
+        M * M, NIHIL));
+    /* mensor fictus: post I s signum in area relinquit - si finire eum
+     * non occidit, signum post finire apparet */
+    {
+         character* mensor;
+         character* signum;
+         character  scriptum[MMXLVIII];
+
+        mensor = (character*)piscina_allocare(c->piscina,
+            (memoriae_index)strlen(credo_area(c)) + XXXII);
+        signum = (character*)piscina_allocare(c->piscina,
+            (memoriae_index)strlen(credo_area(c)) + XXXII);
+        CREDO_NECESSE(mensor != NIHIL && signum != NIHIL);
+        sprintf(mensor, "%s/mensor_vivax", credo_area(c));
+        sprintf(signum, "%s/mensor_vixit", credo_area(c));
+        CREDO_NECESSE(strlen(signum) + LXIV < magnitudo(scriptum));
+        sprintf(scriptum, "#!/bin/sh\nsleep 1\ntouch '%s'\n", signum);
+        CREDO_NECESSE(filum_scribere(mensor, chorda_ex_literis(scriptum,
+            c->piscina)));
+        CREDO_NECESSE(filum_modum_ponere(mensor, 0755));
+        colloquia_visus_fontem_mensorem_ponere(&fons, mensor);
+        (vacuum)colloquia_visus_fontem_pulsare(&fons, nunc);
+        CREDO_NECESSE(fons.quaestio != NIHIL);
+        ante = clock();
+        colloquia_visus_fontem_finire(&fons);
+        CREDO_VERUM((clock() - ante) < (clock_t)(CLOCKS_PER_SEC / II));
+        {
+            structura timespec t;
+
+            t.tv_sec   = I;
+            t.tv_nsec  = 500000000L;
+            (vacuum)nanosleep(&t, NIHIL);
+        }
+        CREDO_FALSUM(filum_existit(signum));
+    }
+    CREDO_VERUM(fons.quaestio == NIHIL);
+    CREDO_VERUM(fons.quaestionis == NIHIL);
+    CREDO_VERUM(fons.cursuum == NIHIL);
+    CREDO_VERUM(fons.mensor == NIHIL);
+    colloquia_visus_fontem_finire(&fons);
+    CREDO_VERUM(fons.quaestio == NIHIL);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "fons", _probare_fontem, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "finire", _probare_finire, NIHIL, NIHIL, NIHIL, NIHIL },
     { "greges", _probare_greges, NIHIL, NIHIL, NIHIL, NIHIL },
     { "claves", _probare_claves, NIHIL, NIHIL, NIHIL, NIHIL },
     { "stabilitas", _probare_stabilitatem, NIHIL, NIHIL, NIHIL, NIHIL },
