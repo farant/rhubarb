@@ -7,7 +7,7 @@
  *
  * ACORDUM fenestrae: classes omnium notarum sonantium, notis
  * alienis remotis - pars minima notarum candidatarum (forma
- * melodica alienae) removetur ut harmonia_ex_classibus acordum
+ * melodica alienae) removetur ut acordum_ex_classibus acordum
  * NOMINET; aequales: plures notae acordi, deinde trias/septima ante
  * suspensam ante dyadem, deinde radix = bassus (Bb A G super C E: A
  * removetur, C7 - non Bb, Am7/C). Bassus numquam removetur. Dyas
@@ -69,7 +69,7 @@ nomen enumeratio {
 nomen structura {
          s64 initium;      /* pulsus carminis */
          s64 finis;
-    Harmonia harmonia;     /* sine notis alienis */
+     Acordum harmonia;     /* sine notis alienis */
          b32 implicitum;   /* septima ex tritono sola */
 } ExplicatioFenestra;
 

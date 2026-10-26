@@ -621,7 +621,7 @@ _referenda (
 {
     constans ExplicatioSegmentum* sa;
     constans ExplicatioSegmentum* sb;
-                   HarmoniaGenus  g;
+                    AcordumGenus  g;
 
     *causa = NIHIL;
     si (iudex->explicatio == NIHIL)
@@ -644,7 +644,7 @@ _referenda (
         redde VERUM;
     }
     g = iudex->explicatio->fenestrae[sa->fenestra].harmonia.genus;
-    si (g != HARMONIA_IGNOTA && g != HARMONIA_NULLA)
+    si (g != ACORDUM_IGNOTA && g != ACORDUM_NULLA)
     {
         redde FALSUM;
     }
@@ -769,7 +769,7 @@ _fenestra_cum_tertia (
     constans Iudex* iudex,
                s64  pulsus)
 {
-    constans Harmonia* h;
+     constans Acordum* h;
                   s32  f = _fenestra_ad_pulsum(iudex, pulsus);
                   i32  radix;
 
@@ -778,7 +778,7 @@ _fenestra_cum_tertia (
         redde FALSUM;
     }
     h = &iudex->explicatio->fenestrae[f].harmonia;
-    redde !harmonia_sine_tertia(h->classes, &radix);
+    redde !acordum_sine_tertia(h->classes, &radix);
 }
 
 interior vacuum
@@ -812,7 +812,7 @@ _tertia (
             }
             prius = fortia[t];
             si (   n >= III && novum
-                && harmonia_sine_tertia(classes, &radix)
+                && acordum_sine_tertia(classes, &radix)
                 && !_fenestra_cum_tertia(iudex, fortia[t]))
             {
                 _addere(iudex, CENSURA_TERTIA, &k->partes[pars],

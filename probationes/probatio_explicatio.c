@@ -237,7 +237,7 @@ _sectio_fenestrae (
     CREDO_AEQUALIS_I32 (e->fenestrae[ZEPHYRUM].harmonia.bassus, IV);
     CREDO_AEQUALIS_I32 (e->fenestrae[III].harmonia.bassus, VII);
     CREDO_AEQUALIS_I32 ((i32)e->fenestrae[VI].harmonia.genus,
-                        (i32)HARMONIA_NULLA);
+                        (i32)ACORDUM_NULLA);
     /* segmenta ordine (initium, pars); muta et '@' nulla */
     per (i = ZEPHYRUM; i < e->numerus_segmentorum; i++)
     {

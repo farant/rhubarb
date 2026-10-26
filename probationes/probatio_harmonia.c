@@ -1,8 +1,8 @@
 /* probatio_harmonia.c - Probationes harmoniae (include/harmonia.h)
  *
  * Classes: C 0, C# 1, D 2, D# 3, E 4, F 5, F# 6, G 7, G# 8, A 9, A# 10,
- * B 11. Exemplaria omnia a C; transposita, inversiones, radices plures
- * (bassus decernit), ignota; nomina ex clave; linea per tempus.
+ * B 11. Nomina ex clave; quod sonat; linea per tempus; orthographia
+ * auctoris (agnitio ipsa: probatio_acordum.c).
  */
 #include "latina.h"
 #include "piscina.h"
@@ -49,33 +49,6 @@ _cl (
     redde b;
 }
 
-/* classes transpositae (sursum r semitonia) */
-interior i32
-_rotare_classes (
-    i32 classes,
-    i32 r)
-{
-    redde ((classes << r) | (classes >> (XII - r))) & 0xFFF;
-}
-
-interior b32
-_est (
-     constans s32* classes,
-              s32  bassus,
-    HarmoniaGenus  genus,
-              s32  radix)
-{
-    Harmonia h = harmonia_ex_classibus(_cl(classes), (i32)bassus);
-
-    si (h.genus == genus && (s32)h.radix == radix)
-    {
-        redde VERUM;
-    }
-    imprimere("  genus %u radix %u pro %u %d\n", (i32)h.genus, h.radix,
-              (i32)genus, (integer)radix);
-    redde FALSUM;
-}
-
 interior chorda
 _titulus_harmoniae (
      CredoContextus* c,
@@ -84,7 +57,7 @@ _titulus_harmoniae (
                 i32  bassus)
 {
      ChordaAedificator* a = chorda_aedificator_creare(c->piscina, LXIV);
-              Harmonia  h = harmonia_ex_classibus(classes, bassus);
+               Acordum  h = acordum_ex_classibus(classes, bassus);
                 chorda  vacua;
 
     vacua.datum    = NIHIL;
@@ -115,89 +88,6 @@ _linea (
         redde vacua;
     }
     redde chorda_aedificator_finire(a);
-}
-
-
-    /* ==================================================
-     * EXEMPLARIA: omnia a C; transposita; dyades; unum; nihil; ignotum
-     * ================================================== */
-
-interior vacuum
-_sectio_exemplaria (
-    CredoContextus* c)
-{
-    hic_manens constans s32 MAIOR[]      = { 0, 4, 7, -1 };
-    hic_manens constans s32 MINOR[]      = { 0, 3, 7, -1 };
-    hic_manens constans s32 DIM[]        = { 0, 3, 6, -1 };
-    hic_manens constans s32 AUG[]        = { 0, 4, 8, -1 };
-    hic_manens constans s32 SEPT[]       = { 0, 4, 7, 10, -1 };
-    hic_manens constans s32 SEPT_SINE[]  = { 0, 4, 10, -1 };
-    hic_manens constans s32 SEPTIMA_MAIOR_[]     = { 0, 4, 7, 11,
-        -1 };
-    hic_manens constans s32 SEPTIMA_MINOR_[]     = { 0, 3, 7, 10,
-        -1 };
-    hic_manens constans s32 SEMI[]               = { 0, 3, 6, 10, -1 };
-    hic_manens constans s32 DIMINUTA_SEPTIMA_[]  = { 0, 3, 6, 9,
-        -1 };
-    hic_manens constans s32 SUSPENSA_IV_[]  = { 0, 5, 7, -1 };
-    hic_manens constans s32 SUSPENSA_II_[]  = { 0, 2, 7, -1 };
-    hic_manens constans s32 QUINTA[]        = { 0, 7, -1 };
-    hic_manens constans s32 TERTIA[]        = { 0, 4, -1 };
-    hic_manens constans s32 TERTIA_M[]      = { 0, 3, -1 };
-    hic_manens constans s32 UNUM[]          = { 0, -1 };
-    hic_manens constans s32 NIHIL_[]        = { -1 };
-    hic_manens constans s32 IGNOTUM[]       = { 0, 1, 2, -1 };
-    hic_manens constans s32 D_MAIOR[]       = { 2, 6, 9, -1 };
-
-    (vacuum)c;
-    CREDO_VERUM (_est(MAIOR, 0, HARMONIA_MAIOR, 0));
-    CREDO_VERUM (_est(MINOR, 0, HARMONIA_MINOR, 0));
-    CREDO_VERUM (_est(DIM, 0, HARMONIA_DIMINUTA, 0));
-    CREDO_VERUM (_est(AUG, 0, HARMONIA_AUCTA, 0));
-    CREDO_VERUM (_est(SEPT, 0, HARMONIA_SEPTIMA, 0));
-    CREDO_VERUM (_est(SEPT_SINE, 0, HARMONIA_SEPTIMA, 0));
-    CREDO_VERUM (_est(SEPTIMA_MAIOR_, 0, HARMONIA_SEPTIMA_MAIOR, 0));
-    CREDO_VERUM (_est(SEPTIMA_MINOR_, 0, HARMONIA_SEPTIMA_MINOR, 0));
-    CREDO_VERUM (_est(SEMI, 0, HARMONIA_DIMIDIA_DIMINUTA, 0));
-    CREDO_VERUM (_est(DIMINUTA_SEPTIMA_, 0, HARMONIA_DIMINUTA_SEPTIMA,
-        0));
-    CREDO_VERUM (_est(SUSPENSA_IV_, 0, HARMONIA_SUSPENSA_IV, 0));
-    CREDO_VERUM (_est(SUSPENSA_II_, 0, HARMONIA_SUSPENSA_II, 0));
-    CREDO_VERUM (_est(QUINTA, 0, HARMONIA_QUINTA, 0));
-    CREDO_VERUM (_est(TERTIA, 0, HARMONIA_TERTIA_MAIOR, 0));
-    CREDO_VERUM (_est(TERTIA_M, 0, HARMONIA_TERTIA_MINOR, 0));
-    CREDO_VERUM (_est(UNUM, 0, HARMONIA_CLASSIS_UNA, 0));
-    CREDO_VERUM (_est(NIHIL_, 0, HARMONIA_NULLA, 0));
-    CREDO_VERUM (_est(IGNOTUM, 0, HARMONIA_IGNOTA, 0));
-    CREDO_VERUM (_est(D_MAIOR, 2, HARMONIA_MAIOR, 2));
-}
-
-/* radices plures: bassus decernit; inversio; sextae non (Am7, non
- * C6) */
-interior vacuum
-_sectio_radices (
-    CredoContextus* c)
-{
-    hic_manens constans s32 G_B[]              = { 7, 11, 2, -1 };
-    hic_manens constans s32 A_SEPTIMA_MINOR[]  = { 9, 0, 4, 7, -1 };
-    hic_manens constans s32 AUG[]              = { 0, 4, 8, -1 };
-    hic_manens constans s32 DIMINUTA_SEPTIMA_[]  = { 2, 5, 8, 11,
-        -1 };
-    hic_manens constans s32 SUS[]                = { 0, 2, 7, -1 };
-                   Harmonia h;
-
-    (vacuum)c;
-    CREDO_VERUM (_est(G_B, 11, HARMONIA_MAIOR, 7));
-    h = harmonia_ex_classibus((I << VII) | (I << XI) | (I << II), XI);
-    CREDO_AEQUALIS_I32 (h.bassus, XI);
-    CREDO_VERUM (_est(A_SEPTIMA_MINOR, 0, HARMONIA_SEPTIMA_MINOR, 9));
-    CREDO_VERUM (_est(A_SEPTIMA_MINOR, 9, HARMONIA_SEPTIMA_MINOR, 9));
-    CREDO_VERUM (_est(AUG, 4, HARMONIA_AUCTA, 4));
-    CREDO_VERUM (_est(DIMINUTA_SEPTIMA_, 5, HARMONIA_DIMINUTA_SEPTIMA,
-        5));
-    /* C D G: Csus2 basso C, Gsus4 basso G */
-    CREDO_VERUM (_est(SUS, 0, HARMONIA_SUSPENSA_II, 0));
-    CREDO_VERUM (_est(SUS, 7, HARMONIA_SUSPENSA_IV, 7));
 }
 
 
@@ -295,22 +185,22 @@ _sectio_sonantes (
         "mensura=\"1\"><textus!>@punctum o2 d1</textus></frustum>"
         "</pars>"
         "</carmen></carmina>");
-    Harmonia h;
+    Acordum h;
 
     CREDO_NECESSE (k != NIHIL);
     /* E_QUINTA + C3 (G mutus, D percussio): C(3) */
     h = harmonia_ad_pulsum(k, CMLX);
-    CREDO_VERUM (h.genus == HARMONIA_TERTIA_MAIOR);
+    CREDO_VERUM (h.genus == ACORDUM_TERTIA_MAIOR);
     CREDO_AEQUALIS_I32 (h.radix, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (h.bassus, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (h.classes, (I << ZEPHYRUM) | (I << IV));
     /* post finem: nihil */
     h = harmonia_ad_pulsum(k, MMMDCCCXL);
-    CREDO_VERUM (h.genus == HARMONIA_NULLA);
+    CREDO_VERUM (h.genus == ACORDUM_NULLA);
     /* melodia sola: E tantum */
     k->partes[ZEPHYRUM].solus  = VERUM;
     h                          = harmonia_ad_pulsum(k, ZEPHYRUM);
-    CREDO_VERUM (h.genus == HARMONIA_CLASSIS_UNA);
+    CREDO_VERUM (h.genus == ACORDUM_CLASSIS_UNA);
     CREDO_AEQUALIS_I32 (h.radix, IV);
 }
 
@@ -378,64 +268,6 @@ _sectio_linea (
         chorda_ex_literis("\n  harmonia  C/E:2 D:2\n", c->piscina));
 }
 
-/* sine tertia: exemplaria IV ab omni radice; propinqua cum tertia aut
- * suspensa non */
-interior vacuum
-_sectio_sine_tertia (
-    CredoContextus* c)
-{
-    hic_manens constans s32 FORMAE[IV][IV] = {
-        { 0, -1, -1, -1 },
-        { 0, 7, -1, -1 },
-        { 0, 7, 10, -1 },
-        { 0, 7, 11, -1 }
-    };
-    hic_manens constans s32 CUM_TERTIA[][V] = {
-        { 0, 4, 7, -1, -1 },
-        { 0, 3, 7, -1, -1 },
-        { 0, 4, 7, 10, -1 },
-        { 0, 4, 10, -1, -1 },
-        { 0, 4, -1, -1, -1 },
-        { 0, 3, -1, -1, -1 },
-        { 0, 2, 7, -1, -1 },
-        { 0, 5, 7, -1, -1 },
-        { 0, 10, -1, -1, -1 },
-        { 0, 1, 2, -1, -1 },
-        { -1, -1, -1, -1, -1 }
-    };
-    i32 f;
-    i32 r;
-    i32 radix;
-
-    (vacuum)c;
-    per (f = ZEPHYRUM; f < IV; f++)
-    {
-        per (r = ZEPHYRUM; r < XII; r++)
-        {
-            i32 cl = _rotare_classes(_cl(FORMAE[f]), r);
-
-            radix = XCIX;
-            CREDO_VERUM (harmonia_sine_tertia(cl, &radix));
-            CREDO_AEQUALIS_I32 (radix, r);
-        }
-    }
-    /* bits supra XII ignorantur: F (5) cum bit XIII - sine larva F
-     * et 'C#' (XIII - V = VIII) {0,8} legeretur */
-    radix = XCIX;
-    CREDO_VERUM (harmonia_sine_tertia(((i32)I << V) | ((i32)I << XIII),
-                                      &radix));
-    CREDO_AEQUALIS_I32 (radix, V);
-    per (f = ZEPHYRUM; f < (i32)(magnitudo(CUM_TERTIA)
-                                / magnitudo(CUM_TERTIA[ZEPHYRUM])); f++)
-    {
-        per (r = ZEPHYRUM; r < XII; r++)
-        {
-            CREDO_FALSUM (harmonia_sine_tertia(
-                _rotare_classes(_cl(CUM_TERTIA[f]), r), &radix));
-        }
-    }
-}
-
 /* orthographia auctoris: C#+E in D minor = C#m(3) (non Dbm); d- + f
  * scripta = Db(3); linea acordorum eadem */
 interior chorda
@@ -444,7 +276,7 @@ _ad_initium (
     constans Carmen* k)
 {
      ChordaAedificator* a = chorda_aedificator_creare(c->piscina, LXIV);
-              Harmonia  h = harmonia_ad_pulsum(k, ZEPHYRUM);
+               Acordum  h = harmonia_ad_pulsum(k, ZEPHYRUM);
                 chorda  vacua;
 
     vacua.datum    = NIHIL;
@@ -505,14 +337,10 @@ _sectio_orthographia (
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
-    { "exemplaria", _sectio_exemplaria, NIHIL, NIHIL, NIHIL, NIHIL },
-    { "radices", _sectio_radices, NIHIL, NIHIL, NIHIL, NIHIL },
     { "nomina", _sectio_nomina, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sonantes", _sectio_sonantes, NIHIL, NIHIL, NIHIL, NIHIL },
     { "linea", _sectio_linea, NIHIL, NIHIL, NIHIL, NIHIL },
     { "orthographia", _sectio_orthographia, NIHIL, NIHIL, NIHIL,
-        NIHIL },
-    { "sine_tertia", _sectio_sine_tertia, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

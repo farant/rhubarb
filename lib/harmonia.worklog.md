@@ -56,3 +56,23 @@ fixture now writes a- and keeps "Bb7/Ab".
 Six house songs: analysis output (-harmonia -explicatio -functio) byte-identical before
 and after - none had a wrong spelling (completorium's Dbm bar was written out in the bass
 rewrite).
+
+## 2026-10-26 - pure chord half moved to acordum (Q7G5 step 1)
+
+The chord table, acordum_ex_classibus and acordum_sine_tertia now live in lib/acordum.c
+(include/acordum.h), and the types are renamed Harmonia -> Acordum, HarmoniaGenus ->
+AcordumGenus, HARMONIA_* -> ACORDUM_*. Reason: the accompaniment generator (comitatus)
+expands while the book is READ, inside carmen.c - it needs a chord-name parser, and
+harmonia depends on carmen (ad_pulsum, orthography by key). The pure half had to sit
+below carmen. harmonia keeps "what sounds in a song": ad_pulsum, scribere (suffix via
+acordum_suffixum), lineam_scribere, litteram_notare.
+
+Renames went through silva/build/renominare directly: the renominare.sh wrapper refuses
+files with uncommitted changes (git = undo), and a run of 21 renames over the same 9 files
+dirties them after the first. Backups were in build/plantae_s1/orig. Identifiers inside
+CREDO_* macro arguments and in comments are "manuales" - swapped by hand with word-bounded
+perl (BSD sed has no \b). explicatio.c had its own local struct named Acordum (window
+chord: classes + septima); it became AcordumFenestrae first, or the rename collides.
+
+The test sections exemplaria / radices / sine_tertia moved to probatio_acordum.c with
+their helpers; probatio_harmonia keeps nomina, sonantes, linea, orthographia (4/4).

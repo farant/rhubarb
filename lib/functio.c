@@ -177,11 +177,11 @@ _romanum (
 /* figura inversionis: b = bassus - radix */
 interior constans character*
 _figura (
-    HarmoniaGenus g,
+     AcordumGenus g,
               s32 b)
 {
-    b32 septima = g >= HARMONIA_SEPTIMA
-        && g <= HARMONIA_DIMINUTA_SEPTIMA;
+    b32 septima = g >= ACORDUM_SEPTIMA
+        && g <= ACORDUM_DIMINUTA_SEPTIMA;
 
     si (b == ZEPHYRUM)
     {
@@ -207,7 +207,7 @@ _gradum_scribere (
                   FunctioGradus* g,
                             b32  picardia)
 {
-     constans Harmonia* h = &w->harmonia;
+      constans Acordum* h = &w->harmonia;
                 Clavis  k = _clavis(carmen, w->initium);
              Numeralis  x;
                    s32  iv;
@@ -225,12 +225,12 @@ _gradum_scribere (
     g->gradus     = ZEPHYRUM;
     g->alteratio  = ZEPHYRUM;
     g->applicata  = ZEPHYRUM;
-    si (h->genus == HARMONIA_NULLA)
+    si (h->genus == ACORDUM_NULLA)
     {
         _scribere(&x, "-");
         redde;
     }
-    si (h->genus == HARMONIA_IGNOTA)
+    si (h->genus == ACORDUM_IGNOTA)
     {
         _scribere(&x, "?");
         redde;
@@ -244,29 +244,29 @@ _gradum_scribere (
         d             = _gradus(&k, _modulus(iv + I, XII));
     }
     g->gradus = d;
-    parvus = h->genus == HARMONIA_MINOR || h->genus == HARMONIA_DIMINUTA
-          || h->genus == HARMONIA_SEPTIMA_MINOR
-          || h->genus == HARMONIA_DIMIDIA_DIMINUTA
-          || h->genus == HARMONIA_DIMINUTA_SEPTIMA
-          || h->genus == HARMONIA_TERTIA_MINOR;
+    parvus = h->genus == ACORDUM_MINOR || h->genus == ACORDUM_DIMINUTA
+          || h->genus == ACORDUM_SEPTIMA_MINOR
+          || h->genus == ACORDUM_DIMIDIA_DIMINUTA
+          || h->genus == ACORDUM_DIMINUTA_SEPTIMA
+          || h->genus == ACORDUM_TERTIA_MINOR;
     commutatio (h->genus)
     {
-        casus HARMONIA_DIMINUTA:          qualitas = "o";    frange;
-        casus HARMONIA_AUCTA:             qualitas = "+";    frange;
-        casus HARMONIA_SEPTIMA_MAIOR:     qualitas = "M";    frange;
-        casus HARMONIA_DIMIDIA_DIMINUTA:  qualitas = "h";    frange;
-        casus HARMONIA_DIMINUTA_SEPTIMA:  qualitas = "o";    frange;
-        casus HARMONIA_SUSPENSA_IV:       qualitas = "sus4"; frange;
-        casus HARMONIA_SUSPENSA_II:       qualitas = "sus2"; frange;
-        casus HARMONIA_QUINTA:            qualitas = "(5)";  frange;
-        casus HARMONIA_TERTIA_MAIOR:
-        casus HARMONIA_TERTIA_MINOR:      qualitas = "(3)";  frange;
+        casus ACORDUM_DIMINUTA:          qualitas = "o";    frange;
+        casus ACORDUM_AUCTA:             qualitas = "+";    frange;
+        casus ACORDUM_SEPTIMA_MAIOR:     qualitas = "M";    frange;
+        casus ACORDUM_DIMIDIA_DIMINUTA:  qualitas = "h";    frange;
+        casus ACORDUM_DIMINUTA_SEPTIMA:  qualitas = "o";    frange;
+        casus ACORDUM_SUSPENSA_IV:       qualitas = "sus4"; frange;
+        casus ACORDUM_SUSPENSA_II:       qualitas = "sus2"; frange;
+        casus ACORDUM_QUINTA:            qualitas = "(5)";  frange;
+        casus ACORDUM_TERTIA_MAIOR:
+        casus ACORDUM_TERTIA_MINOR:      qualitas = "(3)";  frange;
         ordinarius:                                          frange;
     }
-    figura = h->genus <= HARMONIA_DIMINUTA_SEPTIMA ? _figura(h->genus,
+    figura = h->genus <= ACORDUM_DIMINUTA_SEPTIMA ? _figura(h->genus,
         b)
                                                    : "";
-    si (h->genus == HARMONIA_CLASSIS_UNA)
+    si (h->genus == ACORDUM_CLASSIS_UNA)
     {
         _scribere(&x, "(");
         si (g->alteratio < ZEPHYRUM)
@@ -279,10 +279,10 @@ _gradum_scribere (
     }
     /* applicata: extra scalam, forma dominantis aut septimae
      * diminutae */
-    dominans  = h->genus == HARMONIA_MAIOR
-        || h->genus == HARMONIA_SEPTIMA;
-    diminuta  = h->genus == HARMONIA_DIMINUTA
-             || h->genus == HARMONIA_DIMINUTA_SEPTIMA;
+    dominans  = h->genus == ACORDUM_MAIOR
+        || h->genus == ACORDUM_SEPTIMA;
+    diminuta  = h->genus == ACORDUM_DIMINUTA
+             || h->genus == ACORDUM_DIMINUTA_SEPTIMA;
     si (   !picardia && (dominans || diminuta)
         && !_diatonicum(&k, h->classes))
     {
@@ -373,13 +373,13 @@ _adventus (
 interior b32
 _dominans (
     constans FunctioGradus* g,
-         constans Harmonia* h)
+          constans Acordum* h)
 {
     redde g->applicata == ZEPHYRUM && g->alteratio == ZEPHYRUM
         && g->gradus == V
-        && (   h->genus == HARMONIA_MAIOR
-        || h->genus == HARMONIA_SEPTIMA
-            || h->genus == HARMONIA_TERTIA_MAIOR);
+        && (   h->genus == ACORDUM_MAIOR
+        || h->genus == ACORDUM_SEPTIMA
+            || h->genus == ACORDUM_TERTIA_MAIOR);
 }
 
 /* I aut i (trias, dyas, unisonus: clausulae quintam saepe omittunt,
@@ -387,15 +387,15 @@ _dominans (
 interior b32
 _finalis (
     constans FunctioGradus* g,
-         constans Harmonia* h)
+          constans Acordum* h)
 {
     redde g->applicata == ZEPHYRUM && g->alteratio == ZEPHYRUM
         && g->gradus == I
-        && (   h->genus == HARMONIA_MAIOR || h->genus == HARMONIA_MINOR
-            || h->genus == HARMONIA_TERTIA_MAIOR
-            || h->genus == HARMONIA_TERTIA_MINOR
-            || h->genus == HARMONIA_QUINTA
-            || h->genus == HARMONIA_CLASSIS_UNA);
+        && (   h->genus == ACORDUM_MAIOR || h->genus == ACORDUM_MINOR
+            || h->genus == ACORDUM_TERTIA_MAIOR
+            || h->genus == ACORDUM_TERTIA_MINOR
+            || h->genus == ACORDUM_QUINTA
+            || h->genus == ACORDUM_CLASSIS_UNA);
 }
 
 b32
@@ -450,9 +450,9 @@ functio_carminis (
         {
             b32 a_v   = _dominans(q, &p->harmonia);
             b32 a_vii = q->applicata == ZEPHYRUM && q->gradus == VII
-                && (   p->harmonia.genus == HARMONIA_DIMINUTA
-                    || p->harmonia.genus == HARMONIA_DIMINUTA_SEPTIMA
-                    || p->harmonia.genus == HARMONIA_DIMIDIA_DIMINUTA);
+                && (   p->harmonia.genus == ACORDUM_DIMINUTA
+                    || p->harmonia.genus == ACORDUM_DIMINUTA_SEPTIMA
+                    || p->harmonia.genus == ACORDUM_DIMIDIA_DIMINUTA);
 
             si (   a_v && p->harmonia.bassus == p->harmonia.radix
                 && w->harmonia.bassus   == w->harmonia.radix
@@ -560,15 +560,15 @@ functio_tertia_picardiae (
     w = &e->fenestrae[fenestra];
     k = _clavis(carmen, w->initium);
     si (   !k.minor || (s32)w->harmonia.radix != k.tonica
-        || (   w->harmonia.genus != HARMONIA_MAIOR
-            && w->harmonia.genus != HARMONIA_TERTIA_MAIOR))
+        || (   w->harmonia.genus != ACORDUM_MAIOR
+            && w->harmonia.genus != ACORDUM_TERTIA_MAIOR))
     {
         redde FALSUM;
     }
     /* ultima sonans carminis */
     per (i = ZEPHYRUM; i < e->numerus_fenestrarum; i++)
     {
-        si (e->fenestrae[i].harmonia.genus != HARMONIA_NULLA)
+        si (e->fenestrae[i].harmonia.genus != ACORDUM_NULLA)
         {
             ultima = i;
         }

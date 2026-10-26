@@ -31,7 +31,7 @@ nomen structura {
 nomen structura {
     i32 classes;      /* acordi (bits) */
     s32 septima;      /* classis septimae; -I nulla */
-} Acordum;
+} AcordumFenestrae;
 
 hic_manens constans character* TITULI[X] = {
     "acordi", "septima", "transitus", "vicinus", "appoggiatura",
@@ -126,21 +126,21 @@ _ordo_segmentorum (
 /* septima acordi nominati; -I si genus septimam non habet */
 interior s32
 _septima (
-    constans Harmonia* h)
+    constans Acordum* h)
 {
     s32 intervallum;
 
     commutatio (h->genus)
     {
-        casus HARMONIA_SEPTIMA:
-        casus HARMONIA_SEPTIMA_MINOR:
-        casus HARMONIA_DIMIDIA_DIMINUTA:
+        casus ACORDUM_SEPTIMA:
+        casus ACORDUM_SEPTIMA_MINOR:
+        casus ACORDUM_DIMIDIA_DIMINUTA:
             intervallum = X;
             frange;
-        casus HARMONIA_SEPTIMA_MAIOR:
+        casus ACORDUM_SEPTIMA_MAIOR:
             intervallum = XI;
             frange;
-        casus HARMONIA_DIMINUTA_SEPTIMA:
+        casus ACORDUM_DIMINUTA_SEPTIMA:
             intervallum = IX;
             frange;
         ordinarius:
@@ -154,24 +154,24 @@ _septima (
  * 0 */
 interior i32
 _gradus_generis (
-    HarmoniaGenus g)
+    AcordumGenus g)
 {
-    si (g < HARMONIA_SUSPENSA_IV)
+    si (g < ACORDUM_SUSPENSA_IV)
     {
         redde III;
     }
-    si (g <= HARMONIA_SUSPENSA_II)
+    si (g <= ACORDUM_SUSPENSA_II)
     {
         redde II;
     }
-    redde g <= HARMONIA_TERTIA_MINOR ? I : ZEPHYRUM;
+    redde g <= ACORDUM_TERTIA_MINOR ? I : ZEPHYRUM;
 }
 
 interior b32
 _nominatum (
-    constans Harmonia* h)
+    constans Acordum* h)
 {
-    redde h->genus != HARMONIA_IGNOTA && h->genus != HARMONIA_NULLA;
+    redde h->genus != ACORDUM_IGNOTA && h->genus != ACORDUM_NULLA;
 }
 
 /* classis in scala clavis ad pulsum (signatura; minor = relativa) */
@@ -216,7 +216,7 @@ _implicitum (
                 s64  pulsus,
                 i32  classes,
                 i32  bassus,
-           Harmonia* h)
+            Acordum* h)
 {
     s32 x = -I;
     s32 y;
@@ -247,7 +247,7 @@ _implicitum (
     r2          = _modulus(y - IV, XII);
     d1          = _diatonica(carmen, pulsus, r1, &finalis);
     d2          = _diatonica(carmen, pulsus, r2, &finalis);
-    h->genus    = HARMONIA_SEPTIMA;
+    h->genus    = ACORDUM_SEPTIMA;
     h->classes  = classes;
     h->bassus   = bassus;
     si (d1 != d2)
@@ -371,7 +371,7 @@ _sonans (
 /* litterae notarum fenestrae in acordum (orthographia auctoris) */
 interior vacuum
 _litteras_ponere (
-                          Harmonia* h,
+                           Acordum* h,
       constans ExplicatioSegmentum* segmenta,
                                i32  primum,
                                i32  numerus)
@@ -387,13 +387,13 @@ _litteras_ponere (
 /* acordum fenestrae: remotio minima candidatarum */
 interior vacuum
 _acordum (
-                   constans Carmen* carmen,
-                   constans Locata* locatae,
-      constans ExplicatioSegmentum* segmenta,
-                               i32  primum,
-                               i32  numerus,
-                ExplicatioFenestra* f,
-                           Acordum* a)
+                            constans Carmen* carmen,
+                            constans Locata* locatae,
+               constans ExplicatioSegmentum* segmenta,
+                                        i32  primum,
+                                        i32  numerus,
+                         ExplicatioFenestra* f,
+                           AcordumFenestrae* a)
 {
          i32 classes     = ZEPHYRUM;
          i32 removendae;
@@ -404,8 +404,8 @@ _acordum (
          i32 magnitudo_s;
          i32 s;
          i32 i;
-    Harmonia h;
-    Harmonia electa;
+     Acordum h;
+     Acordum electa;
          i32 meritum_electum = ZEPHYRUM;
 
     per (i = primum; i < primum + numerus; i++)
@@ -422,7 +422,7 @@ _acordum (
     }
     removendae     = classes & ~non_cand & ~_bit(bassus);
     f->implicitum  = FALSUM;
-    electa         = harmonia_ex_classibus(classes, bassus);
+    electa         = acordum_ex_classibus(classes, bassus);
     a->classes     = classes;
     si (classes == ZEPHYRUM)
     {
@@ -445,7 +445,7 @@ _acordum (
 
                 b32 implicata = FALSUM;
 
-                h = harmonia_ex_classibus(classes & ~s, bassus);
+                h = acordum_ex_classibus(classes & ~s, bassus);
                 si (   !_nominatum(&h)
                     && _implicitum(carmen, f->initium, classes & ~s,
                                    bassus, &h))
@@ -490,7 +490,7 @@ _acordum (
         redde;
     }
     /* ignotum: classes praeter bassum alienae */
-    f->harmonia  = harmonia_ex_classibus(classes, bassus);
+    f->harmonia  = acordum_ex_classibus(classes, bassus);
     a->classes   = _bit(bassus);
     a->septima   = -I;
     _litteras_ponere(&f->harmonia, segmenta, primum, numerus);
@@ -501,12 +501,12 @@ _acordum (
  * acordum prius cum basso hoc. VERUM si sic factum */
 interior b32
 _bassus_transiens (
-                 constans Locata* locatae,
-    constans ExplicatioSegmentum* intra,
-                             i32  numerus,
-                             i32  f,
-              ExplicatioFenestra* fenestrae,
-                         Acordum* acorda)
+                          constans Locata* locatae,
+             constans ExplicatioSegmentum* intra,
+                                      i32  numerus,
+                                      i32  f,
+                       ExplicatioFenestra* fenestrae,
+                         AcordumFenestrae* acorda)
 {
      constans Locata* b           = NIHIL;
                  i32  superiores  = ZEPHYRUM;
@@ -608,21 +608,21 @@ explicatio_carminis (
             Piscina* piscina,
          Explicatio* explicatio)
 {
-                 Locata* locatae;
-                    s64* puncta;
-                    i32* infimae;
-     ExplicatioFenestra* fenestrae;
-    ExplicatioSegmentum* segmenta;
-                Acordum* acorda;
-                    i32  n      = ZEPHYRUM;
-                    i32  np     = ZEPHYRUM;
-                    i32  nf     = ZEPHYRUM;
-                    i32  ns     = ZEPHYRUM;
-                    b32  solus  = FALSUM;
-                    i32  i;
-                    i32  j;
-                    i32  f;
-                    i32  m;
+                          Locata* locatae;
+                             s64* puncta;
+                             i32* infimae;
+              ExplicatioFenestra* fenestrae;
+             ExplicatioSegmentum* segmenta;
+                AcordumFenestrae* acorda;
+                             i32  n      = ZEPHYRUM;
+                             i32  np     = ZEPHYRUM;
+                             i32  nf     = ZEPHYRUM;
+                             i32  ns     = ZEPHYRUM;
+                             b32  solus  = FALSUM;
+                             i32  i;
+                             i32  j;
+                             i32  f;
+                             i32  m;
 
     explicatio->fenestrae            = NIHIL;
     explicatio->numerus_fenestrarum  = ZEPHYRUM;
@@ -776,7 +776,7 @@ explicatio_carminis (
             fenestrae[nf].initium           = puncta[i];
             fenestrae[nf].finis             = puncta[i + I];
             fenestrae[nf].harmonia.bassus   = infimae[i];
-            fenestrae[nf].harmonia.genus    = HARMONIA_NULLA;
+            fenestrae[nf].harmonia.genus    = ACORDUM_NULLA;
             fenestrae[nf].harmonia.radix    = infimae[i];
             fenestrae[nf].harmonia.classes  = ZEPHYRUM;
             memset(fenestrae[nf].harmonia.litterae, ZEPHYRUM,
@@ -801,8 +801,8 @@ explicatio_carminis (
     }
     segmenta = (ExplicatioSegmentum*)piscina_allocare(piscina,
         (memoriae_index)(ns + I) * magnitudo(ExplicatioSegmentum));
-    acorda   = (Acordum*)piscina_allocare(piscina,
-        (memoriae_index)(nf + I) * magnitudo(Acordum));
+    acorda   = (AcordumFenestrae*)piscina_allocare(piscina,
+        (memoriae_index)(nf + I) * magnitudo(AcordumFenestrae));
     si (segmenta == NIHIL || acorda == NIHIL)
     {
         redde FALSUM;

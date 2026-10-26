@@ -31,7 +31,7 @@
  *                VII, ad XIX), ergo non ORD.                      -
  *   tertia       ad tempus forte >= III notae sonantes (partes
  *                omnes) quarum classes acordum sine tertia faciunt
- *                (harmonia_sine_tertia: D3 A4 D5, A2 G4 E5); semel
+ *                (acordum_sine_tertia: D3 A4 D5, A2 G4 E5); semel
  *                per sonum - nota aliqua post tempus forte prius
  *                incipiat (acordum sustentum non iteratur); NON si
  *                fenestra explicationis cui tempus pertinet acordum
