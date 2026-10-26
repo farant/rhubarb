@@ -90,6 +90,18 @@ come from a macro body OR a macro argument are `in macro`. Census by
 PATTERN (spec III "functio or pattern") waits for T4: the fopen census
 mixes read and write modes, a pattern `fopen($p, "w")` separates them.
 
+*T4 done (2026-10-26):* rules are tried in file order, and each rule
+from the CALL node up to the enclosing statement (nearest wins within a
+rule; first matching rule wins). Rules file = `<transformatio
+functio=..>` with `<regula>` holding raw-line `<si! (>` and `<fac! (>`
+(quotes and `<` verbatim). Safety = parts walk: between consecutive
+tokens/captures of the matched node the source holds only whitespace
+(comment/directive -> `trivia`, other text -> `non fida`, e.g.
+`remove(VIA(v))`). Added: `recursio` refusal (the substitution would
+call the function containing the site - lib/filum.c's own remove),
+`[numquam congruit]` for unused rules, bare-call SENTENTIA patterns
+work (X8 canonical reading). Exit 0 = every site covered, 1 = some
+refused. Plan output = unified diff (stdout, `patch -p1` applies) +
+summary and refusals by shape and cause (stderr).
+
 ## Open (decide when reached)
-- T4: when two rules match at different ancestor levels, nearest wins
-  (proposed).

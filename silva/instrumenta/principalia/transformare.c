@@ -2,6 +2,8 @@
  * (spec project-specs/transformare-spec.md, plan transformare-plan.md)
  *
  * Usus:  ./silva/transformare.sh -census <functio> <viae...> [-machina]
+ *        ./silva/transformare.sh -regulae <regulae.stml> <viae...>
+ *                                [-machina]
  *
  * -census: omnes vocationes functionis in plagulis datis (directoria
  *   recursive: .c et .h; occulta, build, node_modules omissa), per
@@ -12,12 +14,24 @@
  *   numquam rescribuntur). Iudicium = recipe examinis (silva_iudicium:
  *   lexicon, capita repositorii, oraculum) - 'remove(v);' vocatio est,
  *   non declaratio.
+ * -regulae: CONSILIUM (nihil scribitur). Regulae STML:
+ *     <transformatio functio="remove">
+ *       <regula>
+ *         <si! (>remove($via) != ZEPHYRUM
+ *         <fac! (>!filum_delere($via)
+ *       </regula>
+ *     </transformatio>
+ *   per situm regula prima congruens (silva_rescriptiones_parare);
+ *   differentiae unificatae in stdout (patch legit), summa et situs
+ *   recusati per formam et causam in stderr.
  * -machina: TSV, linea una per situm (ordine plagularum):
- *     situs  <via> <linea> <columna> <clavis> <scriptura>
+ *     situs  <via> <linea> <columna> <clavis> <scriptura>     (census)
  *     macro  <via> <linea> <columna> <macro>
+ *     facta|recusata <via> <linea> <columna> <regula> <causa> <clavis>
  *     fracta <via> <causa>
  *
- * Exitus: 0 situs inventi | 1 nulli | 2 usus aut apparatus
+ * Exitus census: 0 situs inventi | 1 nulli; consilium: 0 omnes situs
+ * rescriberentur | 1 aliqui recusati; 2 usus aut apparatus.
  * Ex radice repositorii currendum (transformare.sh eo migrat).
  */
 #include "postulata_posix.h"
@@ -27,6 +41,9 @@
 #include "chorda.h"
 #include "tabula_dispersa.h"
 #include "iter_directoria.h"
+#include "internamentum.h"
+#include "stml.h"
+#include "differentia.h"
 #include "silva_parsare.h"
 #include "silva_forma.h"
 #include "silva_iudicium.h"
@@ -41,12 +58,15 @@ nomen structura {
                    b32  in_macro;
                 chorda  clavis;      /* in_macro: nomen macro */
                 chorda  scriptura;
+                   s32  verdictum;   /* SilvaRescriptioVerdictum; -1 */
+                   s32  regula;      /* index regulae; -1 nulla */
 } CensusSitus;
 
 nomen structura {
     chorda  clavis;      /* in_macro: 'macro|' + nomen */
     chorda  scriptura;   /* situs primi; in_macro: nomen macro */
        b32  in_macro;
+       s32  verdictum;   /* -1 census */
        i32  aliter;      /* situs aliter scripti quam primus */
        Xar* situs;       /* i32: indices in censum */
 } CensusForma;
@@ -248,20 +268,154 @@ _fractam_nuntiare (
     }
 }
 
-/* VERUM = plagula iudicata (situs fortasse nulli) */
-interior b32
-_plagulam_censere (
-      IudiciumApparatus* app,
+/* regulae ex plagula STML; NIHIL = fractura nuntiata in stderr */
+interior Xar*
+_regulas_legere (
                 Piscina* piscina,
      constans character* via,
-                 chorda  functio,
-                    Xar* census)
+                 chorda* functio_out)
+{
+               character* textus;
+                     i32  mensura = ZEPHYRUM;
+            StmlResultus  res;
+                     Xar* liberi;
+                     Xar* regulae;
+                  chorda* functio;
+                     i32  k;
+
+    textus = silva_iudicium_plagulam_legere(piscina, via, &mensura);
+    si (textus == NIHIL)
+    {
+        fprintf(stderr, "transformare: regulae illegibiles: %s\n", via);
+        redde NIHIL;
+    }
+    res = stml_legere(chorda_ex_buffer((i8*)textus, mensura), piscina,
+        internamentum_creare(piscina));
+    si (!res.successus || res.elementum_radix == NIHIL)
+    {
+        fprintf(stderr, "transformare: %s:%u: STML fractum: %.*s\n",
+            via,
+            (insignatus integer)res.linea_erroris,
+            (integer)res.error.mensura,
+            (constans character*)res.error.datum);
+        redde NIHIL;
+    }
+    si (   res.elementum_radix->titulus == NIHIL
+        || !chorda_aequalis_literis(*res.elementum_radix->titulus,
+               "transformatio"))
+    {
+        fprintf(stderr, "transformare: %s: radix <transformatio> esse"
+            " debet\n", via);
+        redde NIHIL;
+    }
+    functio = stml_attributum_capere(res.elementum_radix, "functio");
+    si (functio == NIHIL || functio->mensura == ZEPHYRUM)
+    {
+        fprintf(stderr, "transformare: %s: <transformatio functio=...>"
+            " deest\n", via);
+        redde NIHIL;
+    }
+    *functio_out  = *functio;
+    liberi        = stml_invenire_omnes_liberos(res.elementum_radix,
+        "regula", piscina);
+    regulae       = xar_creare(piscina, (i32)magnitudo(SilvaRegula*));
+    si (   liberi              == NIHIL || regulae == NIHIL
+        || xar_numerus(liberi) == ZEPHYRUM)
+    {
+        fprintf(stderr, "transformare: %s: nulla <regula>\n", via);
+        redde NIHIL;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(liberi); k++)
+    {
+          StmlNodus* r      = *(StmlNodus**)xar_obtinere(liberi, k);
+          StmlNodus* forma  = stml_invenire_liberum(r, "si");
+          StmlNodus* subst  = stml_invenire_liberum(r, "fac");
+             chorda  causa;
+        SilvaRegula* regula;
+
+        si (forma == NIHIL || subst == NIHIL)
+        {
+            fprintf(stderr, "transformare: %s: regula %u: <si> et <fac>"
+                " requiruntur\n", via, (insignatus integer)k);
+            redde NIHIL;
+        }
+        causa  = chorda_ex_literis("", piscina);
+        regula = silva_regulam_parare(piscina,
+            stml_textus_valor(forma, piscina),
+            stml_textus_valor(subst, piscina), &causa);
+        si (regula == NIHIL)
+        {
+            fprintf(stderr, "transformare: %s: regula %u: %.*s\n", via,
+                (insignatus integer)k, (integer)causa.mensura,
+                (constans character*)causa.datum);
+            redde NIHIL;
+        }
+        *(SilvaRegula**)xar_addere(regulae) = regula;
+    }
+    redde regulae;
+}
+
+interior vacuum
+_lineam_addere (
+                      Xar* census,
+                  Piscina* piscina,
+                  Piscina* opus,
+       constans character* via,
+    constans SilvaParsura* parsura,
+      constans SilvaSitus* s,
+       constans character* fons,
+                      i32  mensura,
+                      s32  verdictum,
+                      s32  regula)
+{
+    CensusSitus* r = (CensusSitus*)xar_addere(census);
+         chorda  clavis;
+         chorda  scriptura;
+
+    si (r == NIHIL)
+    {
+        redde;
+    }
+    r->via        = via;
+    r->linea      = s->linea;
+    r->columna    = s->columna;
+    r->in_macro   = s->in_macro;
+    r->verdictum  = verdictum;
+    r->regula     = regula;
+    r->scriptura  = chorda_ex_literis("", piscina);
+    si (s->in_macro)
+    {
+        r->clavis = chorda_transcribere(s->macro, piscina);
+    }
+    alioquin si (silva_situs_forma(opus, parsura, s, fons, mensura,
+                 &clavis, &scriptura))
+    {
+        r->clavis     = chorda_transcribere(clavis, piscina);
+        r->scriptura  = chorda_transcribere(scriptura, piscina);
+    }
+    alioquin
+    {
+        r->clavis     = chorda_ex_literis("?|forma ignota", piscina);
+        r->scriptura  = chorda_ex_literis("(forma ignota)", piscina);
+    }
+}
+
+/* VERUM = plagula iudicata (situs fortasse nulli). regulae NIHIL =
+ * census; aliter consilium: differentia in stdout (non -machina) */
+interior b32
+_plagulam_tractare (
+       IudiciumApparatus* app,
+                 Piscina* piscina,
+      constans character* via,
+                  chorda  functio,
+            constans Xar* regulae,
+                     Xar* census,
+                     i32* mutatae)
 {
             Piscina* opus;
     IudiciumFructus  fr;
           character* fons;
                 i32  mensura = ZEPHYRUM;
-                Xar* situs;
                 i32  k;
 
     opus = piscina_generare_dynamicum("transformare_opus", 16777216);
@@ -285,48 +439,77 @@ _plagulam_censere (
         piscina_destruere(opus);
         redde FALSUM;
     }
-    situs = silva_situs_invenire(opus, fr.parsura, functio);
-    si (situs == NIHIL)
+    si (regulae == NIHIL)
     {
-        _fractam_nuntiare(via, "situs non collecti (memoria)");
-        piscina_destruere(opus);
-        redde FALSUM;
-    }
-    per (k = ZEPHYRUM; k < xar_numerus(situs); k++)
-    {
-        constans SilvaSitus* s =
-            (constans SilvaSitus*)xar_obtinere(situs,
-            k);
-             CensusSitus* r = (CensusSitus*)xar_addere(census);
-                  chorda  clavis;
-                  chorda  scriptura;
+        Xar* situs = silva_situs_invenire(opus, fr.parsura, functio);
 
-        si (r == NIHIL)
+        si (situs == NIHIL)
         {
-            frange;
+            _fractam_nuntiare(via, "situs non collecti (memoria)");
+            piscina_destruere(opus);
+            redde FALSUM;
         }
-        r->via        = via;
-        r->linea      = s->linea;
-        r->columna    = s->columna;
-        r->in_macro   = s->in_macro;
-        r->scriptura  = chorda_ex_literis("", piscina);
-        si (s->in_macro)
+        per (k = ZEPHYRUM; k < xar_numerus(situs); k++)
         {
-            r->clavis = chorda_transcribere(s->macro, piscina);
+            _lineam_addere(census, piscina, opus, via, fr.parsura,
+                (constans SilvaSitus*)xar_obtinere(situs, k), fons,
+                mensura, -I, -I);
         }
-        alioquin si (silva_situs_forma(opus, fr.parsura, s, fons,
-                     mensura,
-                     &clavis, &scriptura))
+    }
+    alioquin
+    {
+        Xar* rescriptiones = silva_rescriptiones_parare(opus,
+            fr.parsura,
+            fons, mensura, functio, regulae);
+        b32 facta = FALSUM;
+
+        si (rescriptiones == NIHIL)
         {
-            r->clavis     = chorda_transcribere(clavis, piscina);
-            r->scriptura  = chorda_transcribere(scriptura, piscina);
+            _fractam_nuntiare(via,
+                "rescriptiones non paratae (memoria)");
+            piscina_destruere(opus);
+            redde FALSUM;
         }
-        alioquin
+        per (k = ZEPHYRUM; k < xar_numerus(rescriptiones); k++)
         {
-            r->clavis = chorda_ex_literis("?|forma ignota",
-                piscina);
-            r->scriptura = chorda_ex_literis("(forma ignota)",
-                piscina);
+            constans SilvaRescriptio* r = (constans SilvaRescriptio*)
+                xar_obtinere(rescriptiones, k);
+
+            _lineam_addere(census, piscina, opus, via, fr.parsura,
+                &r->situs, fons, mensura, (s32)r->verdictum, r->regula);
+            si (r->verdictum == SILVA_RESCRIPTIO_FACTA)
+            {
+                facta = VERUM;
+            }
+        }
+        si (facta)
+        {
+                         chorda  ante;
+                         chorda  post;
+            DifferentiaLinearum* d;
+
+            (*mutatae)++;
+            ante  = chorda_ex_buffer((i8*)fons, mensura);
+            post  = silva_rescriptiones_applicare(opus, fons, mensura,
+                rescriptiones);
+            d     = differentia_linearum(opus, ante, post);
+            si (d != NIHIL && !machina_volo)
+            {
+                character* a = (character*)piscina_allocare(opus,
+                    strlen(via) + V);
+                character* b = (character*)piscina_allocare(opus,
+                    strlen(via) + V);
+                    chorda u;
+
+                si (a != NIHIL && b != NIHIL)
+                {
+                    sprintf(a, "a/%s", via);
+                    sprintf(b, "b/%s", via);
+                    u = differentia_unificata(opus, d, a, b, III);
+                    fwrite(u.datum, I, (memoriae_index)u.mensura,
+                        stdout);
+                }
+            }
         }
     }
     piscina_destruere(opus);
@@ -349,6 +532,10 @@ _formas_comparare (
     {
         redde x->in_macro ? I : -I;
     }
+    si (x->verdictum != y->verdictum)
+    {
+        redde x->verdictum < y->verdictum ? -I : I;
+    }
     si (nx != ny)
     {
         redde nx > ny ? -I : I;
@@ -358,6 +545,7 @@ _formas_comparare (
 
 interior vacuum
 _formam_imprimere (
+                    FILE* exitus,
     constans CensusForma* f,
                      Xar* census)
 {
@@ -365,23 +553,23 @@ _formam_imprimere (
     i32 k;
     i32 latitudo;
 
-    imprimere("%5u  ", (insignatus integer)n);
+    fprintf(exitus, "%5u  ", (insignatus integer)n);
     si (f->in_macro)
     {
-        imprimere("in macro %.*s (non rescribitur)",
+        fprintf(exitus, "in macro %.*s (non rescribitur)",
             (integer)f->scriptura.mensura,
             (constans character*)f->scriptura.datum);
         latitudo = f->scriptura.mensura + XXVII;
     }
     alioquin
     {
-        imprimere("%.*s", (integer)f->scriptura.mensura,
+        fprintf(exitus, "%.*s", (integer)f->scriptura.mensura,
             (constans character*)f->scriptura.datum);
         latitudo = f->scriptura.mensura;
     }
     dum (latitudo < XLIV)
     {
-        fputc(' ', stdout);
+        fputc(' ', exitus);
         latitudo++;
     }
     per (k = ZEPHYRUM; k < n && k < III; k++)
@@ -389,29 +577,34 @@ _formam_imprimere (
         constans CensusSitus* r = (constans CensusSitus*)xar_obtinere(
             census, *(i32*)xar_obtinere(f->situs, k));
 
-        imprimere("%s%s:%u", k > ZEPHYRUM ? ", " : "  ", r->via,
+        fprintf(exitus, "%s%s:%u", k > ZEPHYRUM ? ", " : "  ", r->via,
             (insignatus integer)r->linea);
     }
     si (n > III)
     {
-        imprimere(" (+%u)", (insignatus integer)(n - III));
+        fprintf(exitus, " (+%u)", (insignatus integer)(n - III));
     }
     si (f->aliter > ZEPHYRUM)
     {
-        imprimere("  [aliter scripti: %u]",
+        fprintf(exitus, "  [aliter scripti: %u]",
             (insignatus integer)f->aliter);
     }
-    imprimere("\n");
+    si (f->verdictum >= ZEPHYRUM && !f->in_macro)
+    {
+        fprintf(exitus, "  [%s]", silva_rescriptionis_causa(
+            (SilvaRescriptioVerdictum)f->verdictum));
+    }
+    fputc('\n', exitus);
 }
 
-/* census gregatus per clavem; formae ordinatae imprimuntur */
-interior vacuum
-_censum_imprimere (
-               Piscina* piscina,
-                   Xar* census,
-    constans character* functio,
-                   i32  plagulae,
-                   i32  fractae)
+/* lineae gregatae per clavem (et verdictum); solum_recusatae =
+ * consilium: lineae FACTAE omissae. Numerus formarum redditur. */
+interior i32
+_formas_imprimere (
+                FILE* exitus,
+             Piscina* piscina,
+                 Xar* census,
+                 b32  solum_recusatae)
 {
     TabulaDispersa* tabula = tabula_dispersa_creare_chorda(piscina,
         CCLVI);
@@ -420,12 +613,11 @@ _censum_imprimere (
        CensusForma** ordo;
                i32   n;
                i32   k;
-               i32   in_macro = ZEPHYRUM;
 
     si (tabula == NIHIL || formae == NIHIL)
     {
         fprintf(stderr, "transformare: memoria deest\n");
-        redde;
+        redde ZEPHYRUM;
     }
     per (k = ZEPHYRUM; k < xar_numerus(census); k++)
     {
@@ -434,12 +626,22 @@ _censum_imprimere (
                      chorda  clavis    = r->clavis;
                      vacuum* inventum  = NIHIL;
                 CensusForma* f;
+                  character  verdictum[XVI];
 
+        si (solum_recusatae && r->verdictum == SILVA_RESCRIPTIO_FACTA)
+        {
+            perge;
+        }
         si (r->in_macro)
         {
             clavis = chorda_concatenare(chorda_ex_literis("macro|",
                 piscina), r->clavis, piscina);
-            in_macro++;
+        }
+        alioquin si (r->verdictum >= ZEPHYRUM)
+        {
+            sprintf(verdictum, "%u|", (insignatus integer)r->verdictum);
+            clavis = chorda_concatenare(chorda_ex_literis(verdictum,
+                piscina), r->clavis, piscina);
         }
         si (tabula_dispersa_invenire(tabula, clavis, &inventum))
         {
@@ -456,17 +658,18 @@ _censum_imprimere (
                 magnitudo(CensusForma));
             si (f == NIHIL)
             {
-                redde;
+                redde ZEPHYRUM;
             }
             f->clavis     = clavis;
             f->scriptura  = r->in_macro ? r->clavis : r->scriptura;
             f->in_macro   = r->in_macro;
+            f->verdictum  = r->verdictum;
             f->aliter     = ZEPHYRUM;
             f->situs      = xar_creare(piscina, (i32)magnitudo(i32));
             si (   f->situs == NIHIL
                 || !tabula_dispersa_inserere(tabula, clavis, f))
             {
-                redde;
+                redde ZEPHYRUM;
             }
             *(CensusForma**)xar_addere(formae) = f;
         }
@@ -478,7 +681,7 @@ _censum_imprimere (
             > ZEPHYRUM ? n : I) * magnitudo(CensusForma*));
     si (ordo == NIHIL)
     {
-        redde;
+        redde ZEPHYRUM;
     }
     per (k = ZEPHYRUM; k < n; k++)
     {
@@ -486,19 +689,113 @@ _censum_imprimere (
     }
     qsort(ordo, (memoriae_index)n, magnitudo(CensusForma*),
         _formas_comparare);
-    imprimere("transformare -census %s: %u situs, %u formae, %u in"
-        " macro (%u plagulae iudicatae, %u non iudicatae)\n", functio,
-        (insignatus integer)xar_numerus(census), (insignatus integer)n,
-        (insignatus integer)in_macro, (insignatus integer)plagulae,
-        (insignatus integer)fractae);
     per (k = ZEPHYRUM; k < n; k++)
     {
-        _formam_imprimere(ordo[k], census);
+        _formam_imprimere(exitus, ordo[k], census);
     }
+    redde n;
 }
 
 interior vacuum
-_censum_machinae (
+_censum_imprimere (
+               Piscina* piscina,
+                   Xar* census,
+    constans character* functio,
+                   i32  plagulae,
+                   i32  fractae)
+{
+    i32 in_macro = ZEPHYRUM;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < xar_numerus(census); k++)
+    {
+        si (((constans CensusSitus*)xar_obtinere(census, k))->in_macro)
+        {
+            in_macro++;
+        }
+    }
+    imprimere("transformare -census %s: %u situs, %u in macro (%u"
+        " plagulae iudicatae, %u non iudicatae)\n", functio,
+        (insignatus integer)xar_numerus(census),
+        (insignatus integer)in_macro, (insignatus integer)plagulae,
+        (insignatus integer)fractae);
+    (vacuum)_formas_imprimere(stdout, piscina, census, FALSUM);
+}
+
+/* summa consilii in stderr: regulae (numquam congruentes nominatae),
+ * deinde situs recusati per formam et causam. Reddit recusatos. */
+interior i32
+_consilium_imprimere (
+               Piscina* piscina,
+                   Xar* census,
+          constans Xar* regulae,
+    constans character* via_regularum,
+                   i32  plagulae,
+                   i32  fractae,
+                   i32  mutatae)
+{
+    i32* usus = (i32*)piscina_allocare(piscina,
+        (memoriae_index)(xar_numerus(regulae) + I) * magnitudo(i32));
+    i32 factae     = ZEPHYRUM;
+    i32 recusatae  = ZEPHYRUM;
+    i32 k;
+
+    si (usus == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(regulae); k++)
+    {
+        usus[k] = ZEPHYRUM;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(census); k++)
+    {
+        constans CensusSitus* r = (constans CensusSitus*)xar_obtinere(
+            census, k);
+
+        si (r->verdictum == SILVA_RESCRIPTIO_FACTA)
+        {
+            factae++;
+        }
+        alioquin
+        {
+            recusatae++;
+        }
+        si (   r->regula >= ZEPHYRUM
+            && (i32)r->regula < xar_numerus(regulae))
+        {
+            usus[r->regula]++;
+        }
+    }
+    fprintf(stderr, "transformare -regulae %s: %u situs, %u"
+        " rescriberentur in %u plagulis, %u recusati (%u plagulae"
+        " iudicatae, %u non iudicatae; nihil scriptum)\n",
+        via_regularum,
+        (insignatus integer)xar_numerus(census),
+        (insignatus integer)factae,
+        (insignatus integer)mutatae, (insignatus integer)recusatae,
+        (insignatus integer)plagulae, (insignatus integer)fractae);
+    per (k = ZEPHYRUM; k < xar_numerus(regulae); k++)
+    {
+        constans SilvaRegula* g = *(SilvaRegula* constans*)xar_obtinere(
+            regulae, k);
+
+        fprintf(stderr, "  regula %u: %5u  %.*s%s\n",
+            (insignatus integer)k, (insignatus integer)usus[k],
+            (integer)g->titulus.mensura,
+            (constans character*)g->titulus.datum,
+            usus[k] == ZEPHYRUM ? "   [numquam congruit]" : "");
+    }
+    si (recusatae > ZEPHYRUM)
+    {
+        fprintf(stderr, "recusati:\n");
+        (vacuum)_formas_imprimere(stderr, piscina, census, VERUM);
+    }
+    redde recusatae;
+}
+
+interior vacuum
+_lineas_machinae (
     Xar* census)
 {
     i32 k;
@@ -508,15 +805,29 @@ _censum_machinae (
         constans CensusSitus* r = (constans CensusSitus*)xar_obtinere(
             census, k);
 
-        imprimere("%s\t%s\t%u\t%u\t", r->in_macro ? "macro" : "situs",
-            r->via, (insignatus integer)r->linea,
-            (insignatus integer)r->columna);
-        _campum_scribere(r->clavis);
-        si (!r->in_macro)
+        si (r->verdictum < ZEPHYRUM)
         {
-            fputc('\t', stdout);
-            _campum_scribere(r->scriptura);
+            imprimere("%s\t%s\t%u\t%u\t",
+                r->in_macro ? "macro" : "situs",
+                r->via, (insignatus integer)r->linea,
+                (insignatus integer)r->columna);
+            _campum_scribere(r->clavis);
+            si (!r->in_macro)
+            {
+                fputc('\t', stdout);
+                _campum_scribere(r->scriptura);
+            }
+            fputc('\n', stdout);
+            perge;
         }
+        imprimere("%s\t%s\t%u\t%u\t%d\t%s\t",
+            r->verdictum
+                == SILVA_RESCRIPTIO_FACTA ? "facta" : "recusata",
+            r->via, (insignatus integer)r->linea,
+            (insignatus integer)r->columna, (integer)r->regula,
+            silva_rescriptionis_causa((SilvaRescriptioVerdictum)
+                r->verdictum));
+        _campum_scribere(r->clavis);
         fputc('\n', stdout);
     }
 }
@@ -525,7 +836,9 @@ interior vacuum
 _usum_monstrare (vacuum)
 {
     fprintf(stderr, "usus: transformare -census <functio> <viae...>"
-        " [-machina]  (ex radice repositorii)\n");
+        " [-machina]\n       transformare -regulae <regulae.stml>"
+        " <viae...> [-machina]\n  (ex radice repositorii; consilium"
+        " solum - nihil scribitur)\n");
 }
 
 s32
@@ -535,14 +848,17 @@ principale (
 {
                Piscina*  piscina;
      IudiciumApparatus*  app;
-    constans character*  functio  = NIHIL;
+    constans character*  functio        = NIHIL;
+    constans character*  via_regularum  = NIHIL;
+                   Xar*  regulae        = NIHIL;
                    Xar*  viae;
                    Xar*  census;
              character** ordo;
-                   i32   numerus      = ZEPHYRUM;
-                   i32   plagulae     = ZEPHYRUM;
-                   i32   fractae      = ZEPHYRUM;
-                   b32   census_volo  = FALSUM;
+                chorda   titulus_functionis;
+                   i32   numerus   = ZEPHYRUM;
+                   i32   plagulae  = ZEPHYRUM;
+                   i32   fractae   = ZEPHYRUM;
+                   i32   mutatae   = ZEPHYRUM;
                integer   k;
 
     piscina = piscina_generare_dynamicum("transformare", 16777216);
@@ -566,8 +882,12 @@ principale (
         alioquin si (   strcmp(argv[k], "-census") == ZEPHYRUM
                      && k + I < argc)
         {
-            census_volo  = VERUM;
-            functio      = argv[++k];
+            functio = argv[++k];
+        }
+        alioquin si (   strcmp(argv[k], "-regulae") == ZEPHYRUM
+                     && k + I < argc)
+        {
+            via_regularum = argv[++k];
         }
         alioquin si (argv[k][ZEPHYRUM] == '-')
         {
@@ -590,10 +910,23 @@ principale (
             }
         }
     }
-    si (!census_volo || functio == NIHIL)
+    si ((functio == NIHIL) == (via_regularum == NIHIL))
     {
         _usum_monstrare();
         redde II;
+    }
+    si (via_regularum != NIHIL)
+    {
+        regulae = _regulas_legere(piscina, via_regularum,
+            &titulus_functionis);
+        si (regulae == NIHIL)
+        {
+            redde II;
+        }
+    }
+    alioquin
+    {
+        titulus_functionis = chorda_ex_literis(functio, piscina);
     }
     si (xar_numerus(viae) == ZEPHYRUM)
     {
@@ -611,8 +944,9 @@ principale (
     }
     per (k = ZEPHYRUM; k < (integer)numerus; k++)
     {
-        si (_plagulam_censere(app, piscina, ordo[k],
-                chorda_ex_literis(functio, piscina), census))
+        si (_plagulam_tractare(app, piscina, ordo[k],
+            titulus_functionis,
+                regulae, census, &mutatae))
         {
             plagulae++;
         }
@@ -623,9 +957,16 @@ principale (
     }
     si (machina_volo)
     {
-        _censum_machinae(census);
+        _lineas_machinae(census);
     }
-    alioquin
+    si (regulae != NIHIL)
+    {
+        i32 recusatae = _consilium_imprimere(piscina, census, regulae,
+            via_regularum, plagulae, fractae, mutatae);
+
+        redde recusatae > ZEPHYRUM ? I : ZEPHYRUM;
+    }
+    si (!machina_volo)
     {
         _censum_imprimere(piscina, census, functio, plagulae, fractae);
     }

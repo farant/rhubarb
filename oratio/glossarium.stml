@@ -1848,5 +1848,12 @@
     <forma textus="instrumentarii" casus="genitivus" numerus="singularis" genus="neutrum"/>
     <forma textus="instrumentario" casus="ablativus" numerus="singularis" genus="neutrum"/>
   </vocabulum>
+  <!-- transformare T4 (2026-10-26): rescriptio vocationum per regulas (silva/fontes/silva_forma.h) -->
+  <vocabulum lemma="rescriptio" lingua="latina" classis="substantivum" nota="Latinum serum (rescriptio, -onis f., a rescribere: responsum scriptum; Du Cange): hic rescriptio codicis - situs vocationis per regulam transformationis rescriptus (silva_rescriptiones_parare, transformare T4); WORDS caret">
+    <forma textus="rescriptio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="rescriptionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="rescriptionem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="rescriptiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
 
 </glossarium>

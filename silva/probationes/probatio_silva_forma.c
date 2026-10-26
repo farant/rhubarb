@@ -542,12 +542,210 @@ _sectio_situs (
             FIXTURA_SITUUM, mensura, &clavis, &scriptura));
         CREDO_CHORDA_AEQUALIS_LITERIS(clavis,
             "sententia-expressionis|ignota ( $1 ) ;");
+        /* congruentia per lectionem canonicam: forma 'ignota($v);'
+         * contra nodum ambiguum ipsum */
+        {
+                 chorda  causa;
+             SilvaForma* f = _forma(c, "ignota($v);",
+                 SILVA_FORMA_SENTENTIA, &causa);
+            constans SilvaNodus* amb = s->vocatio->pater != NIHIL
+                ? s->vocatio->pater->pater : NIHIL;
+
+            CREDO_NECESSE(f != NIHIL && amb != NIHIL);
+            CREDO_CHORDA_AEQUALIS_LITERIS(chorda_ex_literis(
+                silva_nodi_genus_titulus(amb), c->piscina), "ambiguus");
+            CREDO_VERUM(silva_forma_congruit(c->piscina, f, amb,
+                NIHIL));
+        }
     }
     /* functio absens: nulli situs */
     situs = silva_situs_invenire(c->piscina, fr.parsura,
         chorda_ex_literis("unlink", c->piscina));
     CREDO_NECESSE(situs != NIHIL);
     CREDO_AEQUALIS_I32(xar_numerus(situs), ZEPHYRUM);
+}
+
+/* X. regulae et rescriptio (T4): ordo regularum, ascensus ad
+ * sententiam, octeti capturarum, recusationes nominatae */
+hic_manens constans character* FIXTURA_REGULARUM =
+    "#include \"latina.h\"\n"                                 /*  1 */
+    "#include <stdio.h>\n"                                    /*  2 */
+    "#define DELE(v) remove(v)\n"                             /*  3 */
+    "#define VIA(x) x\n"                                      /*  4 */
+    "s32 g();\n"                                              /*  5 */
+    "vacuum f(constans character* v, s32 r)\n"                /*  6 */
+    "{\n"                                                     /*  7 */
+    "    s32 q = remove(v);\n"                                /*  8 */
+    "    remove(v);\n"                                        /*  9 */
+    "    (vacuum)remove( v /* via */ );\n"                    /* 10 */
+    "    si (remove(v) != ZEPHYRUM) { redde; }\n"             /* 11 */
+    "    si (remove(v) != 0) { redde; }\n"                    /* 12 */
+    "    r = remove(v);\n"                                    /* 13 */
+    "    si (remove(VIA(v)) != ZEPHYRUM) { redde; }\n"        /* 14 */
+    "    (vacuum)DELE(v);\n"                                  /* 15 */
+    "    (vacuum)q;\n"                                        /* 16 */
+    "    g(v);\n"                                             /* 17 */
+    "    g(v, 1, \"a,b\");\n"                                 /* 18 */
+    "}\n"                                                     /* 19 */
+    "b32 filum_delere(constans character* v)\n"               /* 20 */
+    "{\n"                                                     /* 21 */
+    "    remove(v);\n"                                        /* 22 */
+    "    redde VERUM;\n"                                      /* 23 */
+    "}\n";
+
+hic_manens constans character* FIXTURA_REGULARUM_POST =
+    "#include \"latina.h\"\n"
+    "#include <stdio.h>\n"
+    "#define DELE(v) remove(v)\n"
+    "#define VIA(x) x\n"
+    "s32 g();\n"
+    "vacuum f(constans character* v, s32 r)\n"
+    "{\n"
+    "    s32 q = remove(v);\n"
+    "    (vacuum)filum_delere(v);\n"
+    "    (vacuum)remove( v /* via */ );\n"
+    "    si (!filum_delere(v)) { redde; }\n"
+    "    si (!filum_delere(v)) { redde; }\n"
+    "    r = filum_delere(v) ? ZEPHYRUM : -I;\n"
+    "    si (remove(VIA(v)) != ZEPHYRUM) { redde; }\n"
+    "    (vacuum)DELE(v);\n"
+    "    (vacuum)q;\n"
+    "    g(v);\n"
+    "    g(v, 1, \"a,b\");\n"
+    "}\n"
+    "b32 filum_delere(constans character* v)\n"
+    "{\n"
+    "    remove(v);\n"
+    "    redde VERUM;\n"
+    "}\n";
+
+nomen structura {
+                         i32 linea;
+    SilvaRescriptioVerdictum verdictum;
+                         s32 regula;
+} RescriptioExspectata;
+
+interior Xar*
+_regulas_parare (
+         CredoContextus* c,
+    constans character* constans* paria,
+                    i32  numerus)
+{
+    Xar* regulae = xar_creare(c->piscina, (i32)magnitudo(SilvaRegula*));
+    i32  k;
+
+    per (k = ZEPHYRUM; regulae != NIHIL && k < numerus; k++)
+    {
+             chorda  causa;
+        SilvaRegula* r = silva_regulam_parare(c->piscina,
+            chorda_ex_literis(paria[II * k], c->piscina),
+            chorda_ex_literis(paria[II * k + I], c->piscina), &causa);
+
+        si (r == NIHIL)
+        {
+            redde NIHIL;
+        }
+        *(SilvaRegula**)xar_addere(regulae) = r;
+    }
+    redde regulae;
+}
+
+interior vacuum
+_sectio_regulae (
+    CredoContextus* c)
+{
+    hic_manens constans character* constans REGULAE_REMOVE[] = {
+        "(vacuum)remove($v);",    "(vacuum)filum_delere($v);",
+        "remove($v);",            "(vacuum)filum_delere($v);",
+        "remove($v) != ZEPHYRUM", "!filum_delere($v)",
+        "$r = remove($v)",
+            "$r = filum_delere($v) ? ZEPHYRUM : -I"
+    };
+    hic_manens constans character* constans REGULAE_G[] = {
+        "g($a, $...r);", "(vacuum)h($a, $...r);"
+    };
+    hic_manens constans RescriptioExspectata EXSPECTATAE[] = {
+        { VIII,  SILVA_RESCRIPTIO_SINE_REGULA, -I },
+        { IX,    SILVA_RESCRIPTIO_FACTA,       I },
+        { X,     SILVA_RESCRIPTIO_TRIVIA,      ZEPHYRUM },
+        { XI,    SILVA_RESCRIPTIO_FACTA,       II },
+        { XII,   SILVA_RESCRIPTIO_FACTA,       II },
+        { XIII,  SILVA_RESCRIPTIO_FACTA,       III },
+        { XIV,   SILVA_RESCRIPTIO_NON_FIDA,    II },
+        { XV,    SILVA_RESCRIPTIO_IN_MACRO,    -I },
+        { XXII,  SILVA_RESCRIPTIO_RECURSIO,    I }
+    };
+    IudiciumApparatus  app;
+      IudiciumFructus  fr;
+                  Xar* regulae;
+                  Xar* rescriptiones;
+               chorda  causa;
+               chorda  novum;
+                  i32  mensura = (i32)strlen(FIXTURA_REGULARUM);
+                  i32  numerus = (i32)(magnitudo(EXSPECTATAE)
+                      / magnitudo(EXSPECTATAE[ZEPHYRUM]));
+                  i32 k;
+
+    /* regulae malae: causae nominatae */
+    CREDO_VERUM(silva_regulam_parare(c->piscina,
+        chorda_ex_literis("remove($v)", c->piscina),
+        chorda_ex_literis("f($w)", c->piscina), &causa) == NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS(causa, "fac: lacuna non in si: $w");
+    CREDO_VERUM(silva_regulam_parare(c->piscina,
+        chorda_ex_literis("remove($v", c->piscina),
+        chorda_ex_literis("f($v)", c->piscina), &causa) == NIHIL);
+    CREDO_VERUM(causa.mensura > IV
+        && memcmp(causa.datum, "si: ", IV) == ZEPHYRUM);
+    /* sententia nuda 'remove($v);' = lectio canonica vocationis */
+    {
+        SilvaForma* f = _forma(c, "remove($v);", SILVA_FORMA_SENTENTIA,
+            &causa);
+
+        CREDO_NECESSE(f != NIHIL);
+        CREDO_CHORDA_AEQUALIS_LITERIS(chorda_ex_literis(
+            silva_nodi_genus_titulus(f->nodus), c->piscina),
+            "sententia-expressionis");
+    }
+
+    CREDO_NECESSE(_apparatum_parare(c, &app));
+    CREDO_NECESSE(silva_iudicium_iudicare(&app, c->piscina,
+        "fixa_regularum.c", FIXTURA_REGULARUM, mensura, &fr));
+    regulae = _regulas_parare(c, REGULAE_REMOVE, IV);
+    CREDO_NECESSE(regulae != NIHIL);
+    rescriptiones = silva_rescriptiones_parare(c->piscina, fr.parsura,
+        FIXTURA_REGULARUM, mensura, chorda_ex_literis("remove",
+        c->piscina), regulae);
+    CREDO_NECESSE(rescriptiones != NIHIL);
+    CREDO_AEQUALIS_I32(xar_numerus(rescriptiones), numerus);
+    per (k = ZEPHYRUM; k < numerus
+        && k < xar_numerus(rescriptiones); k++)
+    {
+        constans SilvaRescriptio* r = (constans SilvaRescriptio*)
+            xar_obtinere(rescriptiones, k);
+
+        CREDO_AEQUALIS_I32(r->situs.linea, EXSPECTATAE[k].linea);
+        CREDO_AEQUALIS_I32((i32)r->verdictum,
+            (i32)EXSPECTATAE[k].verdictum);
+        CREDO_VERUM(r->regula == EXSPECTATAE[k].regula);
+    }
+    novum = silva_rescriptiones_applicare(c->piscina, FIXTURA_REGULARUM,
+        mensura, rescriptiones);
+    CREDO_CHORDA_AEQUALIS_LITERIS(novum, FIXTURA_REGULARUM_POST);
+
+    /* '$...r': nullum (comma quoque sublatum) et plura verbatim */
+    regulae = _regulas_parare(c, REGULAE_G, I);
+    CREDO_NECESSE(regulae != NIHIL);
+    rescriptiones = silva_rescriptiones_parare(c->piscina, fr.parsura,
+        FIXTURA_REGULARUM, mensura, chorda_ex_literis("g", c->piscina),
+        regulae);
+    CREDO_NECESSE(rescriptiones != NIHIL && xar_numerus(rescriptiones)
+        == II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(((constans SilvaRescriptio*)
+        xar_obtinere(rescriptiones, ZEPHYRUM))->textus,
+        "(vacuum)h(v);");
+    CREDO_CHORDA_AEQUALIS_LITERIS(((constans SilvaRescriptio*)
+        xar_obtinere(rescriptiones, I))->textus,
+        "(vacuum)h(v, 1, \"a,b\");");
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
@@ -568,6 +766,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "VIII. latina et aequalitas", _sectio_latina, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "IX. situs per consumentem", _sectio_situs, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "X. regulae et rescriptio", _sectio_regulae, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
