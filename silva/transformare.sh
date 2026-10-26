@@ -4,7 +4,9 @@
 #
 # Usage:
 #   ./silva/transformare.sh -census <functio> <viae...> [-machina]
-# Exit:  0 situs inventi | 1 nulli | 2 apparatus/usus
+#   ./silva/transformare.sh -regulae <r.stml> <viae...> [-machina] [-scribere]
+# Exit:  census 0 situs inventi | 1 nulli; regulae 0 omnes rescripti
+#        (scripti) | 1 recusati aut non scripti; 2 apparatus/usus
 #
 # Census: omnes vocationes functionis per formam consumentis gregatae
 # (spec project-specs/transformare-spec.md III). Directoria recursive
@@ -60,12 +62,14 @@ obj_files="$obj_files $MATERIA_OBIECTA"
 TRANSFORMARE_SRC="$SILVA_DIR/instrumenta/principalia/transformare.c"
 TRANSFORMARE_BIN="$BUILD_DIR/transformare"
 source "$RADIX_DIR/tools/instrumentum_nectere.sh"
-instrumentum_nectere "$TRANSFORMARE_BIN" "$TRANSFORMARE_SRC" "$SILVA_DIR/instrumenta/silva_iudicium.c" "$SILVA_DIR/instrumenta/silva_lexicon.c" $obj_files \
+instrumentum_nectere "$TRANSFORMARE_BIN" "$TRANSFORMARE_SRC" "$SILVA_DIR/instrumenta/silva_iudicium.c" "$SILVA_DIR/instrumenta/silva_lexicon.c" "$SILVA_DIR/instrumenta/silva_emendatio.c" $obj_files \
     "$SILVA_DIR"/instrumenta/*.h "$SILVA_DIR"/instrumenta/principalia/*.h -- \
     "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
     "$TRANSFORMARE_SRC" \
     "$SILVA_DIR/instrumenta/silva_iudicium.c" \
-    "$SILVA_DIR/instrumenta/silva_lexicon.c" $obj_files || exit 2
+    "$SILVA_DIR/instrumenta/silva_lexicon.c" \
+    "$SILVA_DIR/instrumenta/silva_emendatio.c" $obj_files || exit 2
 
 cd "$RADIX_DIR"
-exec "$TRANSFORMARE_BIN" "$@"
+# -scribere: custodia clang vexillis domus et radicibus utitur
+exec "$TRANSFORMARE_BIN" "$@" -- "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}"

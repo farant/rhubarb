@@ -8,6 +8,7 @@
 #include "silva_forma.h"
 #include "materia_nodus.h"
 #include "silva_iudicium.h"
+#include "silva_emendatio.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -748,6 +749,114 @@ _sectio_regulae (
         "(vacuum)h(v, 1, \"a,b\");");
 }
 
+/* XI. custodia (T5): iudicium textus novi et clang - fixtura
+ * functionem substitutam ipsa declarat (capita: latina.h sola) */
+hic_manens constans character* FIXTURA_CUSTODIAE =
+    "#include \"latina.h\"\n"
+    "#include <stdio.h>\n"
+    "interior b32 nova_delere(constans character* v)\n"
+    "{\n"
+    "    (vacuum)v;\n"
+    "    redde VERUM;\n"
+    "}\n"
+    "interior vacuum f(constans character* v)\n"
+    "{\n"
+    "    remove(v);\n"
+    "    remove(v);\n"
+    "    (vacuum)nova_delere(v);\n"
+    "}\n"
+    "vacuum g(constans character* v);\n"
+    "vacuum g(constans character* v) { f(v); }\n";
+
+interior chorda
+_custodiae_textus (
+        CredoContextus* c,
+    constans character* vetus,
+    constans character* novum)
+{
+    redde chorda_substituere(chorda_ex_literis(FIXTURA_CUSTODIAE,
+        c->piscina), chorda_ex_literis(vetus, c->piscina),
+        chorda_ex_literis(novum, c->piscina), c->piscina);
+}
+
+interior vacuum
+_sectio_custodia (
+    CredoContextus* c)
+{
+     constans character* radix = getenv("RHUBARB_RADIX");
+              character  include[DXII];
+     constans character* vexilla[VII];
+      IudiciumApparatus  app;
+        IudiciumFructus  ante;
+     EmendatioVerdictum  v;
+                 chorda  novum;
+                 chorda  erratum;
+                    i32  mensura = (i32)strlen(FIXTURA_CUSTODIAE);
+
+    CREDO_NECESSE(_apparatum_parare(c, &app));
+    CREDO_NECESSE(silva_iudicium_iudicare(&app, c->piscina,
+        "fixa_custodiae.c", FIXTURA_CUSTODIAE, mensura, &ante));
+    /* rescriptio bona: codex 97 exacte II perdit, nihil crescit */
+    novum = _custodiae_textus(c, "    remove(v);\n",
+        "    (vacuum)nova_delere(v);\n");
+    v = silva_emendationem_iudicare(&app, c->piscina,
+        "fixa_custodiae.c",
+        &ante, (constans character*)chorda_ut_cstr(novum, c->piscina),
+        novum.mensura, (s32)EXAMEN_CODEX_SCRIPTURA_PRAETERITA, II);
+    CREDO_VERUM(v.bene);
+    CREDO_AEQUALIS_I32(v.ante, II);
+    CREDO_AEQUALIS_I32(v.post, ZEPHYRUM);
+    /* decrementum falsum: nominatur */
+    v = silva_emendationem_iudicare(&app, c->piscina,
+        "fixa_custodiae.c",
+        &ante, (constans character*)chorda_ut_cstr(novum, c->piscina),
+        novum.mensura, (s32)EXAMEN_CODEX_SCRIPTURA_PRAETERITA, I);
+    CREDO_FALSUM(v.bene);
+    CREDO_VERUM(chorda_incipit(v.causa, chorda_ex_literis("codex 97:",
+        c->piscina)));
+    /* numerus argumentorum falsus: codex alius crescit */
+    novum = _custodiae_textus(c, "    remove(v);\n",
+        "    (vacuum)nova_delere(v, I);\n");
+    v = silva_emendationem_iudicare(&app, c->piscina,
+        "fixa_custodiae.c",
+        &ante, (constans character*)chorda_ut_cstr(novum, c->piscina),
+        novum.mensura, (s32)EXAMEN_CODEX_SCRIPTURA_PRAETERITA, II);
+    CREDO_FALSUM(v.bene);
+    CREDO_VERUM(chorda_continet(v.causa, chorda_ex_literis("crevit",
+        c->piscina)));
+    /* syntaxis fracta */
+    novum = _custodiae_textus(c, "    remove(v);\n", "    remove(v;\n");
+    v = silva_emendationem_iudicare(&app, c->piscina,
+        "fixa_custodiae.c",
+        &ante, (constans character*)chorda_ut_cstr(novum, c->piscina),
+        novum.mensura, -I, ZEPHYRUM);
+    CREDO_FALSUM(v.bene);
+
+    /* clang: textus bonus tacet, numerus argumentorum falsus non */
+    si (radix == NIHIL)
+    {
+        radix = "..";
+    }
+    sprintf(include, "-I%s/include", radix);
+    vexilla[ZEPHYRUM]  = "-std=c89";
+    vexilla[I]         = "-pedantic";
+    vexilla[II]        = "-Wall";
+    vexilla[III]       = "-Werror";
+    vexilla[IV]        = "-Wno-long-long";
+    vexilla[V]         = include;
+    vexilla[VI]        = NIHIL;
+    CREDO_VERUM(silva_emendationem_compilare(c->piscina,
+        "fixa_custodiae.c",
+        FIXTURA_CUSTODIAE, mensura, vexilla, &erratum));
+    novum = _custodiae_textus(c, "    remove(v);\n",
+        "    (vacuum)nova_delere(v, I);\n");
+    CREDO_FALSUM(silva_emendationem_compilare(c->piscina,
+        "fixa_custodiae.c", (constans character*)novum.datum,
+        novum.mensura, vexilla, &erratum));
+    CREDO_VERUM(chorda_continet(erratum, chorda_ex_literis("arguments",
+        c->piscina)));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I. expressio cum lacuna", _sectio_expressio, NIHIL, NIHIL,
         NIHIL, NIHIL },
@@ -769,6 +878,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "X. regulae et rescriptio", _sectio_regulae, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "XI. custodia rescriptionis", _sectio_custodia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

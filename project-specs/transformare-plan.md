@@ -104,4 +104,14 @@ work (X8 canonical reading). Exit 0 = every site covered, 1 = some
 refused. Plan output = unified diff (stdout, `patch -p1` applies) +
 summary and refusals by shape and cause (stderr).
 
+*T5 done (2026-10-26):* `-scribere` (wrapper passes the house clang
+flags after `--`). The guard moved out of emendare.c into
+`silva/instrumenta/silva_emendatio.{h,c}` (emendare now calls it).
+Per file: examen on the new text (rules `codex="97"` - numeric, no
+public name table - loses exactly the applied edits, nothing else grows,
+no REICE), clang -fsyntax-only on the ORIGINAL (not compiling = not
+verifiable, refused) then on the new text, then `filum_scribere`.
+Formatting deliberately NOT done here: the formator has no line-range
+mode and commissio formats whole files at commit anyway.
+
 ## Open (decide when reached)
