@@ -25,6 +25,11 @@
 #include "pictor_componentia.h"
 #include "pictor_applicatio.h"
 #include "credo.h"
+#include "color.h"
+#include "lectiones.h"
+#include "tabula_pixelorum.h"
+#include "ludus_fenestra.h"
+#include "pictor_figurae.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -894,6 +899,150 @@ _sectio_absens (
     volumen_claudere(v);
 }
 
+/* ===== T7: imagines (spec II.6) ===== */
+
+/* quadratum coloris 'index' (lat x alt) in picturam apertam ad
+ * (x, y) */
+interior vacuum
+quadratum_pingere (
+     PictorApplicatio* app,
+                  i32  index,
+                  i32  lat,
+                  i32  alt,
+                  s32  x,
+                  s32  y)
+{
+    i8* indices;
+
+    indices = (i8*)piscina_allocare(piscina, (memoriae_index)(lat
+        * alt));
+    si (!indices)
+    {
+        redde;
+    }
+    memset(indices, (integer)index, (size_t)(lat * alt));
+    (vacuum)pictor_documentum_imaginem_inserere(app->montatio.doc,
+        indices, lat, alt, x, y, I);
+}
+
+/* pixela intra pinacem (margine excluso) a fundo diversa */
+interior i32
+pixela_picta (
+            PictorApplicatio* app,
+    constans TabulaPixelorum* tabula,
+          constans character* id)
+{
+     Componens* n;
+           s32  x0;
+           s32  y0;
+           s32  x;
+           s32  y;
+           i32  fundus;
+           i32  numerus;
+
+    n = nodus_arboris(app, id);
+    si (!n)
+    {
+        redde ZEPHYRUM;
+    }
+    origo(n, &x0, &y0);
+    fundus   = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+    numerus  = ZEPHYRUM;
+    per (y = y0 + III; y < y0 + n->fines.altitudo - III; y++)
+    {
+        per (x = x0 + III; x < x0 + n->fines.latitudo - III; x++)
+        {
+            si ((i32)tabula->pixela[y * (s32)tabula->latitudo + x]
+                != fundus)
+            {
+                numerus++;
+            }
+        }
+    }
+    redde numerus;
+}
+
+/* XII picturae novae (per menu) + radix, quaeque quadrato suo; rete
+ * pingitur sine fenestra; PNG solum si PINACOTHECA_IMAGINES
+ * (directorium) - porta numquam extra vestigium scribit */
+interior vacuum
+imaginem_probare (
+    CredoContextus* c,
+               s32  latitudo,
+               s32  altitudo,
+               i32  columnae)
+{
+               Volumen* vol;
+      PictorApplicatio  app;
+            ManusLudus* m;
+       TabulaPixelorum* tabula;
+         LudusFenestra* lf;
+    constans character* directorium;
+                   i32  k;
+                   i32  dl;
+                   i32  da;
+             character  via[DXII];
+
+    vol = (Volumen*)c->datum;
+    thema_initiare();
+    CREDO_NECESSE(pictor_applicatio_aedificare(&app, piscina, intern,
+        vol, (i32)latitudo, (i32)altitudo));
+    app.montatio.compositio.elenchus_praesto = VERUM;
+    dispensator_recomponere(app.d);
+    m = manus_ludus_creare(piscina, app.d);
+    per (k = ZEPHYRUM; k <= XII; k++)
+    {
+        si (k > ZEPHYRUM)
+        {
+            CREDO_VERUM(premere_nodum(&app, m, "quadratum.elenchus"));
+            CREDO_VERUM(premere_nodum(&app, m, "elenchus.1"));
+        }
+        dl = (i32)app.montatio.doc->latitudo;
+        da = (i32)app.montatio.doc->altitudo;
+        quadratum_pingere(&app, (k * V) % XVI, dl / II, da / III,
+            (s32)((k % III) * dl / IV), (s32)((k / III) * da / VI));
+        quadratum_pingere(&app, ZEPHYRUM, dl / VI, da / X,
+            (s32)(dl - dl / IV), (s32)(da - da / V));
+    }
+    CREDO_VERUM(pinacothecam_aperire(&app, m));
+    CREDO_VERUM(rete_est(&app, columnae, latitudo, altitudo));
+
+    tabula = tabula_pixelorum_creare_nuda(piscina, (i32)latitudo,
+        (i32)altitudo);
+    lf = ludus_fenestra_creare(piscina, app.d, app.figurae, ZEPHYRUM,
+        pictor_imago_fons, &app.montatio.figurae_ctx, tabula);
+    CREDO_NECESSE_NON_NIHIL(lf);
+    ludus_quadrum(lf, ZEPHYRUM);
+    ludus_quadrum(lf, C);
+    per (k = ZEPHYRUM; k < XII; k++)
+    {
+        sprintf(via, "pinax.%lu", (insignatus longus)k);
+        CREDO_VERUM(pixela_picta(&app, tabula, via) > X);
+    }
+    directorium = lectiones_ambitus("PINACOTHECA_IMAGINES");
+    si (directorium && directorium[ZEPHYRUM])
+    {
+        sprintf(via, "%s/pinacotheca_%ldx%ld.png", directorium,
+            (longus)latitudo, (longus)altitudo);
+        CREDO_VERUM(ludus_fenestra_imaginem_scribere(lf, via));
+        imprimere("  imago: %s\n", via);
+    }
+}
+
+interior vacuum
+_sectio_imago_telephoni (
+    CredoContextus* c)
+{
+    imaginem_probare(c, LATITUDO_TELEPHONI, ALTITUDO_TELEPHONI, III);
+}
+
+interior vacuum
+_sectio_imago_tabellae (
+    CredoContextus* c)
+{
+    imaginem_probare(c, DXII, CCC, IV);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "T4: quadratum et menu", _sectio_elenchus, _parare, _purgare,
         NIHIL, NIHIL },
@@ -914,6 +1063,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "T6: pictura servata absens", _sectio_absens, _parare, _purgare,
         NIHIL, NIHIL },
+    { "T7: imago telephoni CCXV x CDXIX", _sectio_imago_telephoni,
+        _parare, _purgare, NIHIL, NIHIL },
+    { "T7: imago tabellae DXII x CCC", _sectio_imago_tabellae, _parare,
+        _purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
