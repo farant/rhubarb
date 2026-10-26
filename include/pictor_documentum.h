@@ -257,6 +257,22 @@ pictor_imaginem_aptare (
                i32* lat,
                i32* alt);
 
+/* pinax (pinacotheca D4): compositum picturae 'spatium' (strata
+ * visibilia) in latitudo x altitudo "contain" (pictor_imaginem_aptare:
+ * scala et Atkinson in palettam), RGBA; extra picturam fundus
+ * thematis (COLOR_BACKGROUND). Omnia in 'piscina' (scheda vocantis);
+ * volumen non scribitur. FALSUM si pictura ignota aut magnitudo
+ * nulla. */
+b32
+pictor_pinacem_facere (
+                Volumen* volumen,
+    InternamentumChorda* intern,
+     constans character* spatium,
+                    i32  latitudo,
+                    i32  altitudo,
+                Piscina* piscina,
+                  Imago* exitus);
+
 /* indices (lat x alt, 0xFF perspicuum) in stratum NOVUM supra
  * 'supra' ad (x, y): massa deflata in volumine, acta <stratum
  * novum> + <imago> coniuncta (revocatio una). Redde id strati novi

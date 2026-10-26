@@ -23,6 +23,7 @@
 #include "xar.h"
 #include "pictor_documentum.h"
 #include "pictor_applicatio.h"
+#include "color.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -325,8 +326,147 @@ _sectio_quarta (
         ZEPHYRUM))->spatium, "p12");
 }
 
+/* pinacotheca T3: pixelum imaginis RGBA ad (x, y) */
+interior i32
+pixelum_ad (
+    constans Imago* im,
+               i32  x,
+               i32  y)
+{
+    i32 p;
+
+    memcpy(&p, im->pixela + (y * im->latitudo + x) * IV, IV);
+    redde p;
+}
+
+/* rectangulum [x0, x1) x [y0, y1) totum colore p? */
+interior b32
+area_coloris (
+    constans Imago* im,
+               i32  x0,
+               i32  y0,
+               i32  x1,
+               i32  y1,
+               i32  p)
+{
+    i32 x;
+    i32 y;
+
+    per (y = y0; y < y1; y++)
+    {
+        per (x = x0; x < x1; x++)
+        {
+            si (pixelum_ad(im, x, y) != p)
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    redde VERUM;
+}
+
+/* pinacotheca T3 (spec D4): pinax = compositum (strata visibilia)
+ * "contain" in L x L, ditheratum, colores palettae soli; fundus extra
+ * picturam; stratum occultum non videtur; nihil in volumen scribitur */
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+              Volumen* vol;
+     PictorDocumentum* d;
+                   i8* indices;
+                Imago  pinax;
+                  i32  atramentum;
+                  i32  fundus;
+                  i32  k;
+                  i32  x;
+                  i32  y;
+                  b32  palettae;
+                  b32  inventum;
+                  s64  acta_ante;
+                  s64  plagulae_ante;
+              clock_t  t0;
+
+    thema_initiare();
+    vol = (Volumen*)c->datum;
+    d   = pictor_documentum_creare(piscina, intern, vol, "t", C, CC,
+        LXIV);
+    CREDO_NECESSE_NON_NIHIL(d);
+    /* dimidium superum: quadratum C x C indicis 0 (stratum II) */
+    indices = (i8*)piscina_allocare(piscina, (memoriae_index)(C * C));
+    CREDO_NECESSE_NON_NIHIL(indices);
+    memset(indices, ZEPHYRUM, (size_t)(C * C));
+    CREDO_AEQUALIS_S32(pictor_documentum_imaginem_inserere(d, indices,
+        C, C, ZEPHYRUM, ZEPHYRUM, I), II);
+    atramentum  = color_ad_pixelum(color_ex_palette(ZEPHYRUM));
+    fundus      = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+    CREDO_VERUM(atramentum != fundus);
+
+    CREDO_GRADUS("pinax L x L, contain, centratum");
+    acta_ante      = volumen_summa_actorum(vol);
+    plagulae_ante  = volumen_summa_plagularum(vol);
+    CREDO_VERUM(pictor_pinacem_facere(vol, intern, "t", L, L, piscina,
+        &pinax));
+    CREDO_AEQUALIS_I32(pinax.latitudo, L);
+    CREDO_AEQUALIS_I32(pinax.altitudo, L);
+    /* pictura XXV x L in medio: margines [0, XI) et [XXXIX, L) */
+    CREDO_VERUM(area_coloris(&pinax, ZEPHYRUM, ZEPHYRUM, XI, L,
+        fundus));
+    CREDO_VERUM(area_coloris(&pinax, XXXIX, ZEPHYRUM, L, L, fundus));
+    CREDO_VERUM(area_coloris(&pinax, XIV, I, XXXV, XXIII, atramentum));
+    CREDO_VERUM(area_coloris(&pinax, XIV, XXVII, XXXV, L, fundus));
+    palettae = VERUM;
+    per (y = ZEPHYRUM; y < L; y++)
+    {
+        per (x = ZEPHYRUM; x < L; x++)
+        {
+            inventum = FALSUM;
+            per (k = ZEPHYRUM; k < XVI; k++)
+            {
+                si (pixelum_ad(&pinax, x, y)
+                    == color_ad_pixelum(color_ex_palette(k)))
+                {
+                    inventum = VERUM;
+                }
+            }
+            si (!inventum)
+            {
+                palettae = FALSUM;
+            }
+        }
+    }
+    CREDO_VERUM(palettae);
+
+    CREDO_GRADUS("nihil scriptum (XII pinaces)");
+    t0 = clock();
+    per (k = ZEPHYRUM; k < XII; k++)
+    {
+        CREDO_VERUM(pictor_pinacem_facere(vol, intern, "t", LXX, C,
+            piscina, &pinax));
+    }
+    imprimere("  pinax LXX x C ex C x CC: %.2f ms per pinacem\n",
+        (duplex)(clock() - t0) * 1000.0 / (duplex)CLOCKS_PER_SEC
+            / (duplex)XII);
+    CREDO_AEQUALIS_S64(volumen_summa_actorum(vol), acta_ante);
+    CREDO_AEQUALIS_S64(volumen_summa_plagularum(vol), plagulae_ante);
+
+    CREDO_GRADUS("stratum occultum non videtur");
+    (vacuum)pictor_documentum_actum(d, chorda_ex_literis(
+        "<stratum actio=\"visibile\" id=\"2\" valor=\"0\"/>", piscina));
+    CREDO_VERUM(pictor_pinacem_facere(vol, intern, "t", L, L, piscina,
+        &pinax));
+    CREDO_VERUM(area_coloris(&pinax, ZEPHYRUM, ZEPHYRUM, L, L, fundus));
+
+    CREDO_GRADUS("pictura ignota");
+    CREDO_FALSUM(pictor_pinacem_facere(vol, intern, "nulla", L, L,
+        piscina, &pinax));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "bibliotheca picturarum", _sectio_prima, _parare, _purgare, NIHIL,
+        NIHIL },
+    { "pinax (pinacotheca D4)", _sectio_quinta, _parare, _purgare,
+        NIHIL,
         NIHIL },
     { "recentia (pinacotheca D5)", _sectio_secunda, _parare, _purgare,
         NIHIL, NIHIL },

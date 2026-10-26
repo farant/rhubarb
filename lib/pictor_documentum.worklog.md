@@ -427,3 +427,18 @@ in the same volume (`x/documentum`, origin scriba) is not a picture.
 Known limit: a non-pictor root history in the same volume would share
 the bare names `ramus`/`cursor` with pictor's root - not the case in
 pictor's own volume; vicus keeps pictures under spatia.
+
+## 2026-10-26 - pictor_pinacem_facere (pinacotheca T3, quarta)
+
+Thumbnail = `pictor_documentum_aperire` into the CALLER's arena (the
+gallery's scratch; memory dies with it) -> composite projection (visible
+layers over the theme background) -> `pictor_imaginem_aptare` (contain,
+area scale, Atkinson into the 16-colour palette) -> RGBA on a
+background-filled image. No transparency trick needed: the background
+is PALETTE_WARM_GRAY, itself a palette colour, so empty areas dither to
+exactly the background (pinned: hidden layer -> all background).
+Opening writes nothing to the volume (pinned: act and plagula counts
+unchanged after 12 thumbnails). Measured on the Mac: ~0.9 ms per
+70 x 100 thumbnail of a 100 x 200 picture with one act; real pictures
+replay from the nearest checkpoint (<= 64 acts) - Fire 7 timing is T7.
+Glossary: pinax (pinacis, pinacem...) added; oratio 19/19 unchanged.

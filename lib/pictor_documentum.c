@@ -1661,6 +1661,70 @@ pictor_imaginem_aptare (
     redde df.indices;
 }
 
+b32
+pictor_pinacem_facere (
+                Volumen* volumen,
+    InternamentumChorda* intern,
+     constans character* spatium,
+                    i32  latitudo,
+                    i32  altitudo,
+                Piscina* piscina,
+                  Imago* exitus)
+{
+    PictorDocumentum* doc;
+                  i8* indices;
+                 s32  x;
+                 s32  y;
+                 i32  lat;
+                 i32  alt;
+                 i32  pixelum;
+                 i32  i;
+                 i32  j;
+
+    si (   !volumen || !intern || !spatium || !piscina || !exitus
+        || latitudo == ZEPHYRUM || altitudo == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    /* apertura in scheda vocantis: memoria cum ea perit */
+    doc = pictor_documentum_aperire(piscina, intern, volumen, spatium);
+    si (!doc)
+    {
+        redde FALSUM;
+    }
+    indices = pictor_imaginem_aptare(pictor_documentum_proiectio(doc),
+        latitudo, altitudo, piscina, &x, &y, &lat, &alt);
+    exitus->pixela = (i8*)piscina_allocare(piscina,
+        (memoriae_index)latitudo * (memoriae_index)altitudo * IV);
+    si (!indices || !exitus->pixela)
+    {
+        redde FALSUM;
+    }
+    exitus->latitudo  = latitudo;
+    exitus->altitudo  = altitudo;
+    pixelum           = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+    per (i = ZEPHYRUM; i < latitudo * altitudo; i++)
+    {
+        memcpy(exitus->pixela + i * IV, &pixelum, IV);
+    }
+    per (j = ZEPHYRUM; j < alt; j++)
+    {
+        per (i = ZEPHYRUM; i < lat; i++)
+        {
+            si (indices[j * lat + i] >= XVI)
+            {
+                perge;
+            }
+            pixelum = color_ad_pixelum(color_ex_palette(
+                (i32)indices[j * lat + i]));
+            memcpy(exitus->pixela
+                       + (((i32)y + j) * latitudo + (i32)x + i) * IV,
+                   &pixelum, IV);
+        }
+    }
+    redde VERUM;
+}
+
 s32
 pictor_documentum_imaginem_inserere (
      PictorDocumentum* doc,
