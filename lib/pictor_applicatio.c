@@ -543,6 +543,33 @@ pictor_applicatio_aedificare (
     {
         redde FALSUM;
     }
+    /* pinacotheca D8: pictura ultima ex statu restituto (conservatio);
+     * absens e bibliotheca -> recentissima; vacua -> radix ut ante.
+     * app->doc POST hoc (laqueus: post picturam_ponere vetus esset) */
+    {
+        chorda* ultima;
+        chorda  spatium;
+           Xar* l;
+
+        ultima = insula_ramus_attributum(&app->montatio.ramus,
+            "pictura");
+        si (ultima && ultima->mensura > ZEPHYRUM)
+        {
+            spatium = chorda_ex_literis(chorda_ut_cstr(*ultima,
+                piscina), piscina);
+            si (!pictor_picturam_ponere(&app->montatio,
+                    chorda_ut_cstr(spatium, piscina)))
+            {
+                l = pictor_documenta_recentia(volumen, piscina);
+                si (l && xar_numerus(l) > ZEPHYRUM)
+                {
+                    (vacuum)pictor_picturam_ponere(&app->montatio,
+                        chorda_ut_cstr(((PictorPictura*)xar_obtinere(l,
+                            ZEPHYRUM))->spatium, piscina));
+                }
+            }
+        }
+    }
     app->doc       = app->montatio.doc;
     app->actiones  = app->montatio.actiones;
     app->figurae   = app->montatio.figurae;

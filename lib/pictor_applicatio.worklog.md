@@ -48,3 +48,16 @@ drawings open in other panes; the skip lives in step 3).
 - Test note: without vicus's shared document memory a re-opened
   picture is a NEW PictorDocumentum pointer - compare dimensions, not
   pointers (probatio_pictor_semitae flores_ostensae).
+
+## 2026-10-26 - relaunch reopens the last picture (pinacotheca T6, quarta)
+
+Standalone pictor already persisted the `pictura` field (conservatio
+writes persistent fields after every successful write) but
+`pictor_montare` always mounted the root picture. `pictor_applicatio_
+aedificare` now acts on the restored field after montare: a library
+picture -> `pictor_picturam_ponere`; named but missing -> the most
+recently edited one (`pictor_documenta_recentia`); empty -> root as
+before. `app->doc` is assigned AFTER this (the audit trap: app->doc
+stays the old picture after ponere). The spatium is copied before
+ponere because ponere rewrites the field it was read from. Tests use a
+real file in `credo_area(c)` (volumen_temporarium deletes on close).

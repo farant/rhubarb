@@ -769,6 +769,131 @@ _sectio_memoria (
     }
 }
 
+/* ===== T6: reditus (spec D8) ===== */
+
+/* via voluminis veri in area sectionis (volumen temporarium in
+ * claudendo deletur - hic reapertio probatur) */
+interior constans character*
+via_voluminis (
+    CredoContextus* c)
+{
+    redde chorda_ut_cstr(chorda_concatenare(chorda_ex_literis(
+        credo_area(c), piscina), chorda_ex_literis("/reditus.vol",
+        piscina), piscina), piscina);
+}
+
+/* T6: pictura ultima post reaperturam; ictus in eam scribitur */
+interior vacuum
+_sectio_reditus (
+    CredoContextus* c)
+{
+     constans character* via;
+                Volumen* v;
+       PictorApplicatio  app;
+       PictorApplicatio  app_secunda;
+             ManusLudus* m;
+
+    via = via_voluminis(c);
+    CREDO_NECESSE_NON_NIHIL(credo_area(c));
+
+    CREDO_GRADUS("sessio prima: New picture, ictus");
+    v = volumen_aperire_aut_creare(piscina, via);
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_NECESSE(aedificare(&app, v, VERUM));
+    m = manus_ludus_creare(piscina, app.d);
+    CREDO_VERUM(premere_nodum(&app, m, "quadratum.elenchus"));
+    CREDO_VERUM(premere_nodum(&app, m, "elenchus.1"));
+    in_tabula_pingere(&app, m);
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "pictura"),
+        "pictura-1");
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(
+        app.montatio.doc), I);
+    volumen_claudere(v);
+
+    CREDO_GRADUS("sessio secunda: pictura-1 redit");
+    v = volumen_aperire(piscina, via);
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_NECESSE(aedificare(&app_secunda, v, VERUM));
+    m = manus_ludus_creare(piscina, app_secunda.d);
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app_secunda,
+        "pictura"),
+        "pictura-1");
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(
+        app_secunda.montatio.doc), I);
+    CREDO_VERUM(app_secunda.doc == app_secunda.montatio.doc);
+    CREDO_VERUM(app_secunda.montatio.actiones_ctx.doc
+        == app_secunda.montatio.doc);
+    in_tabula_pingere(&app_secunda, m);
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(
+        app_secunda.montatio.doc), II);
+    volumen_claudere(v);
+}
+
+/* T6 (Review Focus 5): numquam mutata - radix ut ante */
+interior vacuum
+_sectio_radix_manet (
+    CredoContextus* c)
+{
+     constans character* via;
+                Volumen* v;
+       PictorApplicatio  app;
+             ManusLudus* m;
+
+    via  = via_voluminis(c);
+    v    = volumen_aperire_aut_creare(piscina, via);
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_NECESSE(aedificare(&app, v, VERUM));
+    m = manus_ludus_creare(piscina, app.d);
+    in_tabula_pingere(&app, m);
+    volumen_claudere(v);
+    v = volumen_aperire(piscina, via);
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_NECESSE(aedificare(&app, v, VERUM));
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "pictura"), "");
+    CREDO_AEQUALIS_I32(numerus_picturarum(v), I);
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(
+        app.montatio.doc), I);
+    volumen_claudere(v);
+}
+
+/* T6 (spec D8): pictura servata absens -> recentissima */
+interior vacuum
+_sectio_absens (
+    CredoContextus* c)
+{
+     constans character* via;
+                Volumen* v;
+       PictorApplicatio  app;
+             ManusLudus* m;
+
+    via  = via_voluminis(c);
+    v    = volumen_aperire_aut_creare(piscina, via);
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_NECESSE(aedificare(&app, v, VERUM));
+    m = manus_ludus_creare(piscina, app.d);
+    CREDO_VERUM(premere_nodum(&app, m, "quadratum.elenchus"));
+    CREDO_VERUM(premere_nodum(&app, m, "elenchus.1"));
+    CREDO_VERUM(premere_nodum(&app, m, "quadratum.elenchus"));
+    CREDO_VERUM(premere_nodum(&app, m, "elenchus.1"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "pictura"),
+        "pictura-2");
+    volumen_claudere(v);
+    /* pictura-2 e bibliotheca tollitur (nulla deletio in app: casus
+     * corruptionis) */
+    v = volumen_aperire(piscina, via);
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_VERUM(volumen_plagulam_removere(v, chorda_ex_literis(
+        "pictura-2/documentum", piscina)));
+    volumen_claudere(v);
+    v = volumen_aperire(piscina, via);
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_NECESSE(aedificare(&app, v, VERUM));
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "pictura"),
+        "pictura-1");
+    CREDO_VERUM(app.doc == app.montatio.doc);
+    volumen_claudere(v);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "T4: quadratum et menu", _sectio_elenchus, _parare, _purgare,
         NIHIL, NIHIL },
@@ -783,6 +908,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _parare, _purgare, NIHIL, NIHIL },
     { "T5: memoria schedae", _sectio_memoria, _parare, _purgare, NIHIL,
         NIHIL },
+    { "T6: reditus picturae ultimae", _sectio_reditus, _parare,
+        _purgare, NIHIL, NIHIL },
+    { "T6: radix manet", _sectio_radix_manet, _parare, _purgare, NIHIL,
+        NIHIL },
+    { "T6: pictura servata absens", _sectio_absens, _parare, _purgare,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
