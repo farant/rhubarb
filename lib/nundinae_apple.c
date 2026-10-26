@@ -1781,15 +1781,15 @@ nundinae_apple_cryptographia (
         chorda basis;
            i32 s;
 
-        basis = obiecta[i];
-        per (s = basis.mensura - I; s >= ZEPHYRUM; s--)
+        /* nomen post ultimum '/'; i32 insignatum: s = longitudo
+         * praefixi, numquam infra ZEPHYRUM */
+        basis  = obiecta[i];
+        s      = basis.mensura;
+        dum (s > ZEPHYRUM && basis.datum[s - I] != '/')
         {
-            si (basis.datum[s] == '/')
-            {
-                frange;
-            }
+            s--;
         }
-        basis = chorda_sectio(basis, (i32)(s + I), basis.mensura);
+        basis = chorda_sectio(basis, s, basis.mensura);
         per (k = ZEPHYRUM; signa[k]; k++)
         {
             i32 m = (i32)strlen(signa[k]);

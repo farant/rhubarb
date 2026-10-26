@@ -587,6 +587,15 @@ _sectio_missio (
     CREDO_AEQUALIS_I32(xar_numerus(nominata), II);
     CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(nominata,
         ZEPHYRUM), "lib/tls13.c");
+    /* via sine '/' (nomen nudum): i32 insignatum - quaestio retrorsum
+     * ante ZEPHYRUM sistere debet */
+    CREDO_GRADUS("cryptographia: nomina nuda sine directorio");
+    nominata           = xar_creare(p, (i32)magnitudo(chorda));
+    obiecta[ZEPHYRUM]  = chorda_ex_literis("pictor.c", p);
+    obiecta[I]         = chorda_ex_literis("tls13.c", p);
+    CREDO_FALSUM(nundinae_apple_cryptographia(obiecta, I, nominata, p));
+    CREDO_VERUM(nundinae_apple_cryptographia(obiecta, II, nominata, p));
+    CREDO_AEQUALIS_I32(xar_numerus(nominata), I);
     CREDO_GRADUS("versio maxima: builds et buildUploads (etiam "
         "fracta)");
     CREDO_AEQUALIS_I32(nundinae_apple_versio_maxima(_fixum(
