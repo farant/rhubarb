@@ -113,4 +113,57 @@ silva_nodi_aequales (
     constans SilvaNodus* a,
     constans SilvaNodus* b);
 
+
+/* ==================================================
+ * Situs (transformare T3)
+ * ================================================== */
+
+/* situs: vocatio functionis cuius nomen in plagula principali ipsa
+ * scribitur (radix lexematis in fonte principali). in_macro:
+ * parentheses vocationis ex expansione macro veniunt - vocatio a macro
+ * facta,
+ * numquam rescribitur (consumens NIHIL, macro = macro exterior in
+ * plagula invocatus). Alioquin consumens = primus usor valoris:
+ * ascensus per parentheses, ambigua et conversionem '(vacuum)'
+ * (valorem abicit, non adhibet); declarator initiatus -> declaratio
+ * tota. linea/columna = sedes nominis functionis (1-basatae). */
+nomen structura {
+    constans SilvaNodus* vocatio;
+    constans SilvaNodus* consumens;
+                    b32  in_macro;
+                 chorda  macro;
+                    i32  linea;
+                    i32  columna;
+} SilvaSitus;
+
+/* Omnes vocationes 'functio' (valor nominis POST expansionem) in
+ * spina canonica arboris (ambigua per lectionem canonicam), ordine
+ * fontis. Xar de SilvaSitus (vacua licet); NIHIL = apparatus
+ * (memoria). Vocationes in plagulis aliis (capita inclusa) omissae. */
+Xar*
+silva_situs_invenire (
+                   Piscina* piscina,
+     constans SilvaParsura* parsura,
+                    chorda  functio);
+
+/* Forma situs (non in_macro). clavis = genus consumentis + valores
+ * lexematum post expansionem spatio separati, argumenta vocationis ->
+ * $1..$n, corpora sententiarum (si/dum/per/fac/commutatio) -> '...':
+ * clavis aequalis = eadem rescriptio. scriptura = consumens ut in
+ * plagula scriptus (orthographia auctoris: si, ZEPHYRUM), eisdem
+ * substitutionibus, commentaria omissa, spatia in unum contracta.
+ * fons/mensura = textus plagulae principalis. FALSUM si situs
+ * in_macro aut extentum ignotum. LIMES: invocatio macro functionalis
+ * in FINE consumentis extentum ante ')' suam finit (expansio ')'
+ * invocationis non fert). */
+b32
+silva_situs_forma (
+                  Piscina* piscina,
+    constans SilvaParsura* parsura,
+      constans SilvaSitus* situs,
+       constans character* fons,
+                      i32  mensura,
+                   chorda* clavis_out,
+                   chorda* scriptura_out);
+
 #endif /* SILVA_FORMA_H */

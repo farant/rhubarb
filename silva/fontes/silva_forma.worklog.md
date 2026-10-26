@@ -45,3 +45,49 @@ statement. The sententia-vacua skip became dead code and was removed.
 Tests: probatio_silva_forma V-VIII (72 assertions total). Plants red: token values not compared,
 repeated hole without equality, empty-rest comma rule removed, equality treating holes as
 wildcards, expression wrapper without 'redde'.
+
+## 2026-10-26 T3 situs: census of call sites by consumer
+
+`silva_situs_invenire` walks the CANONICAL spine only: at an ambiguus
+node (commissio->genus_ambigui) descend into interpretationes[canonica],
+never all branches. Two traps found while testing:
+
+- A fixture with `remove(v);` never exercises the ambiguous path: the
+  oracle already knows `remove` (system lexicon) at commit time, so the
+  ambiguity COLLAPSES and no ambiguus node survives. A plant that forced
+  interpretation 0 stayed green. Surviving ambiguity needs a name the
+  oracle does not know at commit time: an undeclared `ignota(v);`
+  survives and policy X8 makes the EXPRESSION reading canonical (index
+  1, not 0). The test asserts that case; the plant is red now.
+- Without the oracle (plain silva_c89_parsare, arbor.sh) `remove(v);`
+  canonical = the declaration reading. Census must use the examen
+  recipe (silva_iudicium), never a bare parse.
+
+in_macro = the call's `(` or `)` is not a fons token of the principal
+file. The NAME may be expanded (object-like alias `imprimere` ->
+printf is still the file's own call), but parens from a macro body
+(`DELE(v)`) or from a macro ARGUMENT copy (`VOCA(remove(v))`: argument
+tokens are copies with expansio origin) are not rewritable. macro =
+outermost name along the origin chain until the invocation is fons.
+
+Consumer = first ancestor that USES the value: parentheses, ambiguus and
+`(vacuum)` casts are see-through (a void cast discards the value; the
+spec example `(vacuum)remove($1);` is a statement row). A
+declarator-initiatus climbs to its declaratio so the row reads
+`s32 r = remove($1);`.
+
+Key vs spelling: key = consumer genus + post-expansion token values
+(ZEPHYRUM and 0 group together, matching how T2 patterns match);
+spelling = the consumer's SOURCE BYTES with argument extents -> $k and
+statement bodies -> `...`, comments dropped, whitespace collapsed,
+string literals verbatim. Token-radix spelling was rejected: a
+function-like macro's tokens all share the invocation radix, so
+`MACRO(y)` would print as `MACRO y`. LIMES kept: a function-like macro
+invocation at the END of a consumer ends the extent before its `)`.
+
+Census run 2026-10-26: remove over lib/tools/probationes = 58 sites in 3
+shapes, 82 s for 1372 files, matches git grep exactly (grep's extras:
+5 comments + 2 calls inside silex.c string literals; census extras: 3
+calls on one line). fopen over 8 trees = 264 sites, 35 shapes (mostly
+variable names), 14 via APERIRE in natura_examen.c, 1 knotapel snapshot
+RECUSO (examen size limits).

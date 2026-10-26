@@ -78,8 +78,18 @@ chmod -> filum_modum_ponere, write-mode fopen -> lectiones_fopen; code
 97's message names its rules file (spec N4). Then the sweep itself
 (fabrica-8, area by area) is ordinary use of the tool.
 
+*T3 done (2026-10-26):* statement-level calls are the "expression
+statement" consumer (`sententia-expressionis|remove ( $1 ) ;`). Also
+decided while building: `(vacuum)` casts are see-through like
+parentheses (the void cast discards the value; the row is the
+statement); an initializer's consumer is the whole declaration; bodies
+of si/dum/per/fac/commutatio print as `...`; rows group by the
+post-expansion key and show the first site's own spelling, with
+`[aliter scripti: n]` when spellings differ; calls whose parentheses
+come from a macro body OR a macro argument are `in macro`. Census by
+PATTERN (spec III "functio or pattern") waits for T4: the fopen census
+mixes read and write modes, a pattern `fopen($p, "w")` separates them.
+
 ## Open (decide when reached)
-- T3: does a statement-level call (`remove(x);`) count as its own
-  consumer kind or as "expression statement" (proposed: the latter).
 - T4: when two rules match at different ancestor levels, nearest wins
   (proposed).

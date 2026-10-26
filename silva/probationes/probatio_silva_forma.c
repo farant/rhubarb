@@ -7,6 +7,9 @@
 #include "credo.h"
 #include "silva_forma.h"
 #include "materia_nodus.h"
+#include "silva_iudicium.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 interior SilvaForma*
@@ -358,6 +361,195 @@ _sectio_latina (
     CREDO_FALSUM(silva_nodi_aequales(fons->nodus, alter->nodus));
 }
 
+/* IX. situs (T3): vocationes per consumentem. Recipe examinis
+ * (lexicon systematis + latina.h + oraculum) - sine oraculo
+ * 'remove(v);' declaratio legeretur. Lineae fixturae numeratae. */
+hic_manens constans character* FIXTURA_SITUUM =
+    "#include \"latina.h\"\n"                                 /*  1 */
+    "#include <stdio.h>\n"                                    /*  2 */
+    "#define DELE(v) remove(v)\n"                             /*  3 */
+    "#define VOCA(x) x\n"                                     /*  4 */
+    "s32 g(s32 a);\n"                                         /*  5 */
+    "vacuum f(constans character* v)\n"                       /*  6 */
+    "{\n"                                                     /*  7 */
+    "    s32 r = remove(v);\n"                                /*  8 */
+    "    remove(v);\n"                                        /*  9 */
+    "    (vacuum)remove(v);\n"                                /* 10 */
+    "    si (remove(v) != ZEPHYRUM) { redde; }\n"             /* 11 */
+    "    si (!(remove( v /* nota */ ))) { r = I; }\n"         /* 12 */
+    "    r = remove(v);\n"                                    /* 13 */
+    "    r = g(remove(v));\n"                                 /* 14 */
+    "    dum (remove(v)) { frange; }\n"                       /* 15 */
+    "    si (remove(v)) { r = I; } alioquin { r = II; }\n"    /* 16 */
+    "    (vacuum)DELE(v);\n"                                  /* 17 */
+    "    (vacuum)VOCA(remove(v));\n"                          /* 18 */
+    "    (vacuum)g(r);\n"                                     /* 19 */
+    "}\n"                                                     /* 20 */
+    "s32 h(constans character* v)\n"                          /* 21 */
+    "{\n"                                                     /* 22 */
+    "    redde remove(v);\n"                                  /* 23 */
+    "}\n"                                                     /* 24 */
+    "vacuum m(s32 v)\n"                                       /* 25 */
+    "{\n"                                                     /* 26 */
+    "    ignota(v);\n"                                        /* 27 */
+    "}\n";
+
+/* clavis NIHIL = in macro (scriptura = nomen macro) */
+nomen structura {
+                    i32  linea;
+     constans character* clavis;
+     constans character* scriptura;
+} SitusExspectatus;
+
+hic_manens constans SitusExspectatus SITUS_REMOVE[] = {
+    { VIII,   "declaratio|s32 r = remove ( $1 ) ;",
+        "s32 r = remove($1);" },
+    { IX,     "sententia-expressionis|remove ( $1 ) ;", "remove($1);" },
+    { X,      "sententia-expressionis|( void ) remove ( $1 ) ;",
+              "(vacuum)remove($1);" },
+    { XI,     "binarium|remove ( $1 ) != 0", "remove($1) != ZEPHYRUM" },
+    { XII,    "unarium|! ( remove ( $1 ) )", "!(remove( $1 ))" },
+    { XIII,   "assignatio|r = remove ( $1 )", "r = remove($1)" },
+    { XIV,    "vocatio|g ( remove ( $1 ) )", "g(remove($1))" },
+    { XV,     "dum|while ( remove ( $1 ) ) ...",
+        "dum (remove($1)) ..." },
+    { XVI,    "si|if ( remove ( $1 ) ) ...", "si (remove($1)) ..." },
+    { XVII,   NIHIL, "DELE" },
+    { XVIII,  NIHIL, "VOCA" },
+    { XXIII,  "redde|return remove ( $1 ) ;", "redde remove($1);" }
+};
+
+interior b32
+_apparatum_parare (
+       CredoContextus* c,
+    IudiciumApparatus* app)
+{
+     constans character* radix = getenv("RHUBARB_RADIX");
+              character  via[DXII];
+          IudiciumCaput* caput;
+
+    si (radix == NIHIL)
+    {
+        radix = "..";
+    }
+    app->piscina = c->piscina;
+    app->capita = xar_creare(c->piscina,
+        (i32)magnitudo(IudiciumCaput));
+    sprintf(via, "%s/silva/fontes/systema_c89.h", radix);
+    app->fons_iso = silva_iudicium_plagulam_legere(c->piscina, via,
+        &app->mensura_iso);
+    sprintf(via, "%s/silva/fontes/systema_posix.h", radix);
+    app->fons_px = silva_iudicium_plagulam_legere(c->piscina, via,
+        &app->mensura_px);
+    caput = app->capita != NIHIL
+        ? (IudiciumCaput*)xar_addere(app->capita) : NIHIL;
+    si (   caput        == NIHIL || app->fons_iso == NIHIL
+        || app->fons_px == NIHIL)
+    {
+        redde FALSUM;
+    }
+    caput->via = (character*)piscina_allocare(c->piscina, XXXII);
+    si (caput->via == NIHIL)
+    {
+        redde FALSUM;
+    }
+    strcpy(caput->via, "./include/latina.h");
+    sprintf(via, "%s/include/latina.h", radix);
+    caput->textus = silva_iudicium_plagulam_legere(c->piscina, via,
+        &caput->mensura);
+    redde caput->textus != NIHIL;
+}
+
+interior vacuum
+_sectio_situs (
+    CredoContextus* c)
+{
+    IudiciumApparatus  app;
+      IudiciumFructus  fr;
+                  Xar* situs;
+                  i32  mensura = (i32)strlen(FIXTURA_SITUUM);
+                  i32  k;
+                  i32  numerus = (i32)(magnitudo(SITUS_REMOVE)
+                      / magnitudo(SITUS_REMOVE[ZEPHYRUM]));
+
+    CREDO_NECESSE(_apparatum_parare(c, &app));
+    CREDO_NECESSE(silva_iudicium_iudicare(&app, c->piscina,
+        "fixa_situum.c", FIXTURA_SITUUM, mensura, &fr));
+    situs = silva_situs_invenire(c->piscina, fr.parsura,
+        chorda_ex_literis("remove", c->piscina));
+    CREDO_NECESSE(situs != NIHIL);
+    CREDO_AEQUALIS_I32(xar_numerus(situs), numerus);
+    per (k = ZEPHYRUM; k < numerus && k < xar_numerus(situs); k++)
+    {
+        constans SilvaSitus* s =
+            (constans SilvaSitus*)xar_obtinere(situs,
+            k);
+                     chorda clavis;
+                     chorda scriptura;
+
+        CREDO_AEQUALIS_I32(s->linea, SITUS_REMOVE[k].linea);
+        si (SITUS_REMOVE[k].clavis == NIHIL)
+        {
+            CREDO_VERUM(s->in_macro);
+            CREDO_CHORDA_AEQUALIS_LITERIS(s->macro,
+                SITUS_REMOVE[k].scriptura);
+            CREDO_FALSUM(silva_situs_forma(c->piscina, fr.parsura, s,
+                FIXTURA_SITUUM, mensura, &clavis, &scriptura));
+            perge;
+        }
+        CREDO_FALSUM(s->in_macro);
+        CREDO_NECESSE(silva_situs_forma(c->piscina, fr.parsura, s,
+            FIXTURA_SITUUM, mensura, &clavis, &scriptura));
+        CREDO_CHORDA_AEQUALIS_LITERIS(clavis, SITUS_REMOVE[k].clavis);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptura,
+            SITUS_REMOVE[k].scriptura);
+    }
+
+    /* functio alia: vocatio interior ipsa lacuna fit */
+    situs = silva_situs_invenire(c->piscina, fr.parsura,
+        chorda_ex_literis("g", c->piscina));
+    CREDO_NECESSE(situs != NIHIL && xar_numerus(situs) == II);
+    {
+        constans SilvaSitus* s =
+            (constans SilvaSitus*)xar_obtinere(situs,
+            ZEPHYRUM);
+                     chorda clavis;
+                     chorda scriptura;
+
+        CREDO_NECESSE(silva_situs_forma(c->piscina, fr.parsura, s,
+            FIXTURA_SITUUM, mensura, &clavis, &scriptura));
+        CREDO_CHORDA_AEQUALIS_LITERIS(clavis,
+            "assignatio|r = g ( $1 )");
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptura, "r = g($1)");
+    }
+    /* ambiguum superstes (functio sine prototypo): lectio canonica
+     * (politica X8: expressio) sola ambulatur - lectio prima
+     * (declaratio) vocationem non habet */
+    situs = silva_situs_invenire(c->piscina, fr.parsura,
+        chorda_ex_literis("ignota", c->piscina));
+    CREDO_NECESSE(situs != NIHIL);
+    CREDO_AEQUALIS_I32(xar_numerus(situs), I);
+    si (xar_numerus(situs) == I)
+    {
+        constans SilvaSitus* s =
+            (constans SilvaSitus*)xar_obtinere(situs,
+            ZEPHYRUM);
+                     chorda clavis;
+                     chorda scriptura;
+
+        CREDO_AEQUALIS_I32(s->linea, XXVII);
+        CREDO_NECESSE(silva_situs_forma(c->piscina, fr.parsura, s,
+            FIXTURA_SITUUM, mensura, &clavis, &scriptura));
+        CREDO_CHORDA_AEQUALIS_LITERIS(clavis,
+            "sententia-expressionis|ignota ( $1 ) ;");
+    }
+    /* functio absens: nulli situs */
+    situs = silva_situs_invenire(c->piscina, fr.parsura,
+        chorda_ex_literis("unlink", c->piscina));
+    CREDO_NECESSE(situs != NIHIL);
+    CREDO_AEQUALIS_I32(xar_numerus(situs), ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I. expressio cum lacuna", _sectio_expressio, NIHIL, NIHIL,
         NIHIL, NIHIL },
@@ -374,6 +566,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "VII. reliquum '$...'", _sectio_reliquum, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "VIII. latina et aequalitas", _sectio_latina, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "IX. situs per consumentem", _sectio_situs, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
