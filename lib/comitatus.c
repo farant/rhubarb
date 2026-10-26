@@ -594,6 +594,7 @@ _positionem (
                           i32  vox_maxima)
 {
     i32 ordo[XII];
+    s32 omissa;
     s32 optima[XII];
     s64 pretium_optimum  = -I;
     i32 k                = ZEPHYRUM;
@@ -615,12 +616,26 @@ _positionem (
     {
         p->quinta = p->bassus;
     }
-    /* classes a radice ascendentes */
+    /* classes a radice ascendentes; voces pauciores quam classes:
+     * quinta omittitur (sensibilis et septima manent) */
+    omissa = -I;
+    per (r = ZEPHYRUM; r < XII; r++)
+    {
+        si (a->classes & ((i32)I << ((a->radix + r) % XII)))
+        {
+            k++;
+        }
+    }
+    si (vox_maxima < k && (a->classes & ((i32)I << _quintam(a))))
+    {
+        omissa = (s32)_quintam(a);
+    }
+    k = ZEPHYRUM;
     per (r = ZEPHYRUM; r < XII; r++)
     {
         i32 c = (a->radix + r) % XII;
 
-        si (a->classes & ((i32)I << c))
+        si ((a->classes & ((i32)I << c)) && (s32)c != omissa)
         {
             ordo[k++] = c;
         }

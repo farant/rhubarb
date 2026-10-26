@@ -43,13 +43,16 @@
  *   medio ambitus); aequales: inferior. 'Q' proxima basso currenti in
  *   ambitu, ab eo diversa (si nulla diversa: bassus ipse).
  *   SUPERIORES: positio clausa - classes acordi ascendentes ab
- *   inversione aliqua, intra octavam. Inter inversiones et octavas
+ *   inversione aliqua, intra octavam; figura voces pauciores quam
+ *   classes adhibens (V < k) quintam acordi omittit (G7 tribus
+ *   vocibus: G B F, sensibilis manet). Inter inversiones et octavas
  *   quarum voces adhibitae (1..min(V, k); V vox maxima figurae, k
- *   classes acordi) intra ambitum stant, motus minimus (summa |a - b|
- *   vocum adhibitarum) a positione priore; primo: medium vocum medio
- *   ambitus proximum; aequales: inferior. Ambitus superiorum et bassi
- *   >= XII (octava): positio semper invenitur. Voces > k octavis supra
- *   stant (ambitum excedere licet). Positio solum cum acordo mutatur.
+ *   classes positionis) intra ambitum stant, motus minimus (summa
+ *   |a - b| vocum adhibitarum) a positione priore; primo: medium
+ *   vocum medio ambitus proximum; aequales: inferior. Ambitus
+ *   superiorum et bassi >= XII (octava): positio semper invenitur.
+ *   Voces > k octavis supra stant (ambitum excedere licet). Positio
+ *   solum cum acordo mutatur.
  *   LITTERAE ex acordo (Acordum.litterae).
  */
 /* <aedilis corpus="lib/comitatus.c"/> */

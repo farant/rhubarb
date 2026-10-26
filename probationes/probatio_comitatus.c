@@ -4,7 +4,8 @@
  * Pulsus: quarta CMLX, mensura 3/4 MMDCCCLXXX, 4/4 MMMDCCCXL. Ambitus
  * ordinarius 55..76 (superiores), 36..57 (bassus). Valsa "C | C | G7 |
  * C" manu computata: bassus C3 (48), quinta G2 (43); C 60 64 67, G7
- * motu minimo D F G (62 65 67), C rursus 60 64 67.
+ * tribus vocibus quinta omissa, motu minimo B F G (59 65 67), C rursus
+ * 60 64 67.
  */
 #include "latina.h"
 #include "piscina.h"
@@ -366,9 +367,10 @@ _sectio_saltatio (
     /* mensura 2, acordum tentum: quinta G2 */
     CREDO_VERUM (_nota(e, 7, TERTIA_QUARTA, CMLX, 43));
     CREDO_VERUM (_nota(e, 8, TERTIA_QUARTA + CMLX, CMLX, 60));
-    /* mensura 3, G7: radix (bassus G2), D F G motu minimo */
+    /* mensura 3, G7: radix (bassus G2); quinta D omissa, B F G motu
+     * minimo - sensibilis manet */
     CREDO_VERUM (_nota(e, 14, II * TERTIA_QUARTA, CMLX, 43));
-    CREDO_VERUM (_nota(e, 15, II * TERTIA_QUARTA + CMLX, CMLX, 62));
+    CREDO_VERUM (_nota(e, 15, II * TERTIA_QUARTA + CMLX, CMLX, 59));
     CREDO_VERUM (_nota(e, 16, II * TERTIA_QUARTA + CMLX, CMLX, 65));
     CREDO_VERUM (_nota(e, 17, II * TERTIA_QUARTA + CMLX, CMLX, 67));
     /* mensura 4, C novum: radix, non quinta; C 60 64 67 rursus */
@@ -426,6 +428,23 @@ _sectio_figurae (
     CREDO_NECESSE (_componere(c, "Q:2.", "Bdim", TERTIA_QUARTA,
                               &AMBITUS, &e, &n, &v));
     CREDO_AEQUALIS_I32 (e[0].nota % XII, V);
+    /* voces pauciores quam classes: quinta omittitur (C duabus: E C);
+     * voces aequales: nulla omittitur (G7 quattuor) */
+    CREDO_NECESSE (_componere(c, "[1 2]:2.", "C", TERTIA_QUARTA,
+                              &AMBITUS, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (n, II);
+    CREDO_AEQUALIS_I32 (e[0].nota, 64);
+    CREDO_AEQUALIS_I32 (e[1].nota, 72);
+    CREDO_NECESSE (_componere(c, "[1 2 3 4]:2.", "G7", TERTIA_QUARTA,
+                              &AMBITUS, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (n, IV);
+    CREDO_AEQUALIS_I32 (((i32)I << (e[0].nota % XII))
+                        | ((i32)I << (e[1].nota % XII))
+                        | ((i32)I << (e[2].nota % XII))
+                        | ((i32)I << (e[3].nota % XII)),
+                        ((i32)I << VII) | ((i32)I << XI) | ((i32)I
+                            << II)
+                        | ((i32)I << V));
     /* C/G: quinta = bassus - octava altera (43 -> 55) */
     CREDO_NECESSE (_componere(c, "B:4 Q:2", "C/G", TERTIA_QUARTA,
                               &AMBITUS, &e, &n, &v));

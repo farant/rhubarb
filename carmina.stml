@@ -34,8 +34,34 @@
      tertia Picardiae (A7 -> D maior), schola et ison 'Amen' in
      ultima. Censura +parallelae: quintae et octavae vocum
      extremarum emendatae; F# ultimae extra clavem nominatur -
-     consultum (desideratum ...CSJZHF). -->
+     consultum (desideratum ...CSJZHF).
+
+     FIGURAE domus (comitatus.h; <comitatus figura="..."> in parte,
+     harmonia ex <acorda> carminis): B bassus, Q quinta, 1..9 voces
+     superiores, [..] simul, {..} fractum, vN lucrum.
+       valsa           3/4  oom-pah-pah, bassus radix / quinta alternis
+       marcia          4/4  bassus, acordum, quinta, acordum
+       albertina       4/4  Alberti octavis (ima summa media summa)
+       harpa           4/4  acordum fractum totum, sex voces
+       harpa_ternaria  3/4  idem in mensura ternaria
+       pastorale       6/8  arpeggium octavis, sursum et deorsum
+
+     LILIA: valsa nostra (Claudius, 2026-10-26, prima figuris
+     comitandi; desideratum ...Q7G5): F maior, 3/4, 138 agogica
+     vindobonensi, XVI mensurae - melodia chordae, harpa figura valsa
+     ex acordis declaratis (I V7 I IV I V7/V ii V7 I), crescendo ad
+     XIII, diminuendo, ritardando ad fermatam; F# mensurae XII (D7,
+     dominans ad ii) extra clavem nominatur - consultum. Auribus
+     iudicanda. -->
 <carmina>
+
+  <figura titulus="valsa"
+      textus="v100 B:4 v60 [1 2 3] [1 2 3] | v100 Q:4 v60 [1 2 3] [1 2 3]"/>
+  <figura titulus="marcia" textus="v100 B:4 v60 [1 2 3] v85 Q v60 [1 2 3]"/>
+  <figura titulus="albertina" textus="1:8 3 2 3 1 3 2 3"/>
+  <figura titulus="harpa" textus="{B 1 2 3 4 5}:1"/>
+  <figura titulus="harpa_ternaria" textus="{B 1 2 3 4}:2."/>
+  <figura titulus="pastorale" textus="B:8 1 2 3 2 1"/>
 
   <carmen titulus="korobeiniki" tempus="144" metrum="4/4"
           clavis="a minor">
@@ -171,6 +197,25 @@
       <frustum mensura="9">
         <textus!>o3 d2 o2 a2 | o3 f2 c2 | o2 g1 | o3 c2 o2 g2 | o3 d2 o2 a2 | o3 f2 c2 | o2 a1 | o3 d1</textus>
       </>
+    </>
+  </>
+
+  <carmen titulus="lilia" tempus="138" metrum="3/4" clavis="f maior"
+          agogica="vindobonensis">
+    <tempus mensura="15" valor="112" usque="16"/>
+    <fermata mensura="16"/>
+    <dynamica mensura="1" valor="f"/>
+    <dynamica mensura="9" valor="1" usque="13"/>
+    <dynamica mensura="13" valor="mf" usque="16"/>
+    <acorda mensura="1"
+        textus="F | F | C7 | C7 | C7 | C7 | F | F | Bb | Bb | F | D7 | Gm | C7 | F | F"/>
+    <pars titulus="melodia" instrumentum="chordae" lucrum="1">
+      <frustum mensura="1">
+        <textus!>o4 a2 o5 c4 | o5 f2. | o5 e2 d4 | o5 c2 o4 b-4 | o4 g2 b-4 | o5 e2 d4 | o5 c2 o4 a4 | o4 f2. | o5 d2 f4 | o5 d4 c4 o4 b-4 | o4 a2 o5 c4 | o5 f#2 d4 | o5 g2 d4 | o5 c2 e4 | o5 f2 c4 | o5 f2.</textus>
+      </>
+    </>
+    <pars titulus="harpa" instrumentum="harpa" lucrum="1">
+      <comitatus figura="valsa" mensura="1" ambitus="53..72" bassus="36..55"/>
     </>
   </>
 

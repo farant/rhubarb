@@ -45,3 +45,22 @@ four-note chord the voicing uses the three LOWEST tones of the chosen close posi
 minimal motion from C E G picks D F G for G7 - the leading tone B is dropped. Standard
 practice omits the FIFTH first. Raised with Fran as a follow-up (header says voices
 1..min(V, k) of the close position).
+
+## 2026-10-26 - fifth omitted when voices < chord tones; house figures; lilia (Q7G5 step 3)
+
+Fran approved: when the figure uses fewer upper voices than the chord has classes
+(V < k) the voicing drops the chord's FIFTH (_quintam: 7, else 6/8) before choosing the
+close position - G7 in three voices is now B F G (59 65 67) from C E G, D7 is F# C D,
+C7 Bb C E. V >= k: nothing omitted (four-voice G7 keeps G B D F). Waltz test updated (bar
+3 was D F G); new tests: C in two voices -> E C (64 72), G7 in four -> all classes.
+
+Trap seen while checking: bin/auditio built BEFORE the voicing edit still printed the old
+D7 (A C D) - after touching lib/, rebuild the tool (bin/fabrica sanare bin/auditio) before
+judging its output. The same sanare also re-embeds carmina.stml (lib/carmina_infixum.c).
+
+House figures (carmina.stml, book level): valsa, marcia, albertina, harpa, harpa_ternaria,
+pastorale. First song on them: lilia (F major waltz, chordae over harpa/valsa). censura
+names the D7's F# three times (melody + two generated chord tones) - deliberate
+secondary dominant; a censura rule that accepts tones of the DECLARED chord is the
+natural follow-up (asked Fran). Mix rms about -22 dBFS vs -14 for the denser songs: the
+harp decays and the peak is already -3.4 dBFS, so it was left there.
