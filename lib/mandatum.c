@@ -190,7 +190,7 @@ mandata_imago (
     Mandatum* md;
 
     md          = mandatum_novum(m, MANDATUM_IMAGO);
-    md->textus  = fons;
+    md->textus  = chorda_transcribere(fons, m->piscina);
     md->fines   = fines;
 }
 
@@ -208,7 +208,7 @@ mandata_textus (
     md           = mandatum_novum(m, MANDATUM_TEXTUS);
     md->fines.x  = x;
     md->fines.y  = y;
-    md->textus   = textus;
+    md->textus   = chorda_transcribere(textus, m->piscina);
     md->fons     = fons;
     md->color    = color;
 }

@@ -11,7 +11,8 @@
  * mutus / admonitionum_mutus: mutum factum tacet SEMEL, eventa
  * tacent, agere pergit; sine muto iterum sonant. iussum: '$sound' et
  * '$sound(notifications)' campos vertunt, nuntium ponunt, in pagina
- * manent; '$sound(x)' error. persistens: mutus post aedificationem
+ * manent, nuntium hospitis volantem ("Sounds muted") ponunt - index
+ * communis intactus, nullus sonus; '$sound(x)' error. persistens: mutus post aedificationem
  * alteram in eodem volumine manet. porta nulla: eventa et iussa sine
  * casu. */
 #include "postulata_posix.h"
@@ -31,6 +32,8 @@
 #include "vicus.h"
 #include "vicus_applicatio.h"
 #include "vicus_sonus.h"
+#include "admonitiones.h"
+#include "admonitiones_volantes.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -482,6 +485,45 @@ _probare_admonitionum_mutum (
     _mutum_probare((Mundus*)c->datum, "sonus_admonitionum_mutus");
 }
 
+/* nuntius hospitis recentissimus (stratum volantium): titulus dato?
+ * index communis numerum datum servat */
+interior b32
+_volans_est (
+                 Mundus* s,
+     constans character* titulus,
+                    i32  communes)
+{
+    VolantiumMontatio* vm;
+
+    vm = (s->v->stratum && s->v->stratum->montata)
+        ? (VolantiumMontatio*)s->v->stratum->montatio : NIHIL;
+    si (   !vm || !vm->transientes
+        || admonitiones_numerus(vm->transientes) == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    redde chorda_aequalis_literis(admonitio(vm->transientes,
+        ZEPHYRUM)->titulus, titulus)
+        && admonitiones_numerus(vm->index) == communes;
+}
+
+/* nuntii hospitis lecti (non volant): tabellae ad dextrum (x >= 186
+ * hac latitudine) lineam III a columna XXX tegunt */
+interior vacuum
+_volantes_legere (
+    Mundus* s)
+{
+    VolantiumMontatio* vm;
+                  i32  i;
+
+    vm = (VolantiumMontatio*)s->v->stratum->montatio;
+    per (i = ZEPHYRUM; i < admonitiones_numerus(vm->transientes); i++)
+    {
+        (vacuum)admonitionem_legere_notare(vm->transientes,
+            admonitio(vm->transientes, i)->id);
+    }
+}
+
 /* "$sound $sound(notifications) $sound(x)": columnae 0, 7, 29 */
 interior vacuum
 _probare_iussum (
@@ -500,26 +542,36 @@ _probare_iussum (
     _ictus(s->m, LINEA, II);
     CREDO_VERUM(_veritas(s->v, "sonus_mutus"));
     CREDO_VERUM(_nuntius_est(s->v, s->sin, "sound off"));
+    CREDO_VERUM(_volans_est(s, "Sounds muted", ZEPHYRUM));
     CREDO_VERUM(_linea_est(s->sin, LINEA,
         "$sound $sound(notifications) $sound(x)"));
     _pulsus(s, I);
     CREDO_AEQUALIS_I32(s->ficta.taciturnitates, I);
 
-    CREDO_GRADUS("$sound iterum: sonus on");
+    CREDO_GRADUS("$sound iterum: sonus on, nuntius sine sono");
+    _ficta_vacare(s);
     _ictus(s->m, LINEA, II);
     CREDO_FALSUM(_veritas(s->v, "sonus_mutus"));
     CREDO_VERUM(_nuntius_est(s->v, s->sin, "sound on"));
+    CREDO_VERUM(_volans_est(s, "Sounds unmuted", ZEPHYRUM));
+    _pulsus(s, II);
+    CREDO_AEQUALIS_I32(s->ficta.pulsus, ZEPHYRUM);
 
     CREDO_GRADUS("$sound(notifications): admonitiones solae");
     _ictus(s->m, LINEA, X);
     CREDO_VERUM(_veritas(s->v, "sonus_admonitionum_mutus"));
     CREDO_FALSUM(_veritas(s->v, "sonus_mutus"));
     CREDO_VERUM(_nuntius_est(s->v, s->sin, "notification sounds off"));
+    CREDO_VERUM(_volans_est(s, "Notification sounds muted", ZEPHYRUM));
     _ictus(s->m, LINEA, X);
     CREDO_FALSUM(_veritas(s->v, "sonus_admonitionum_mutus"));
     CREDO_VERUM(_nuntius_est(s->v, s->sin, "notification sounds on"));
+    CREDO_VERUM(_volans_est(s, "Notification sounds unmuted",
+        ZEPHYRUM));
 
     CREDO_GRADUS("$sound(x): error, campi intacti");
+    _volantes_legere(s);
+    dispensator_recomponere(s->app.d);
     _ictus(s->m, LINEA, XXXI);
     CREDO_VERUM(_nuntius_est(s->v, s->sin,
         "sound: unknown argument (notifications): x"));

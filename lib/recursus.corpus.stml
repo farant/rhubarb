@@ -1,0 +1,156 @@
+<!-- recursus.corpus.stml - CORPUS schedularum (pensa K1; spec
+     project-specs/pensa-spec.md III.4). exemplum: phrasis, forma
+     canonica, fenestra [ab, ad] et dies EXACTI (dies vacuus nusquam:
+     attributum vacuum "true" legeretur); forma canonica iterum lecta
+     eadem dare debet. vitium: phrasis recusata, vitium incipit textu
+     dato. Formam novam docere = lineam addere, rubram videre,
+     viridem facere. Dies computati per Python datetime. -->
+<corpus>
+  <exemplum phrasis="every day" canon="Every day"
+            ab="2026-10-19" ad="2026-10-21"
+            dies="2026-10-19 2026-10-20 2026-10-21"/>
+  <exemplum phrasis="daily" canon="Every day"
+            ab="2026-10-30" ad="2026-11-01"
+            dies="2026-10-30 2026-10-31 2026-11-01"/>
+  <exemplum phrasis="  Every   Day." canon="Every day"
+            ab="2026-10-19" ad="2026-10-19" dies="2026-10-19"/>
+  <vitium phrasis="fortnightly"><@incipit=>unknown word "fortnightly"</></vitium>
+  <vitium phrasis="every day please"><@incipit=>unknown word "please"</></vitium>
+  <vitium phrasis="every"><@incipit=>can't read "every"</></vitium>
+  <exemplum phrasis="weekdays" canon="Weekdays"
+            ab="2026-10-23" ad="2026-10-27"
+            dies="2026-10-23 2026-10-26 2026-10-27"/>
+  <exemplum phrasis="weekends" canon="Weekends"
+            ab="2026-10-23" ad="2026-10-27"
+            dies="2026-10-24 2026-10-25"/>
+  <exemplum phrasis="every weekday" canon="Weekdays"
+            ab="2026-10-24" ad="2026-10-26" dies="2026-10-26"/>
+  <exemplum phrasis="mondays" canon="Mondays"
+            ab="2026-10-19" ad="2026-11-02"
+            dies="2026-10-19 2026-10-26 2026-11-02"/>
+  <exemplum phrasis="every tuesday" canon="Tuesdays"
+            ab="2026-10-19" ad="2026-10-31"
+            dies="2026-10-20 2026-10-27"/>
+  <exemplum phrasis="tues" canon="Tuesdays"
+            ab="2026-10-19" ad="2026-10-20" dies="2026-10-20"/>
+  <exemplum phrasis="mon, wed, fri" canon="Mondays, Wednesdays and Fridays"
+            ab="2026-10-19" ad="2026-10-25"
+            dies="2026-10-19 2026-10-21 2026-10-23"/>
+  <exemplum phrasis="tuesdays and thursdays" canon="Tuesdays and Thursdays"
+            ab="2026-10-19" ad="2026-10-25"
+            dies="2026-10-20 2026-10-22"/>
+  <exemplum canon="Weekends" ab="2026-10-19" ad="2026-10-25"
+            dies="2026-10-24 2026-10-25"><@phrasis=>saturdays &amp; sundays</></exemplum>
+  <exemplum phrasis="fridays" canon="Fridays"
+            ab="2026-12-28" ad="2027-01-10"
+            dies="2027-01-01 2027-01-08"/>
+  <vitium phrasis="mondays and"><@incipit=>can't read "mondays and"</></vitium>
+  <exemplum phrasis="every other monday from oct 26 2026"
+            canon="Every other Monday from Mon 26 Oct 2026"
+            ab="2026-10-20" ad="2026-11-30"
+            dies="2026-10-26 2026-11-09 2026-11-23"/>
+  <exemplum phrasis="every 2 weeks on monday from 2026-10-26"
+            canon="Every other Monday from Mon 26 Oct 2026"
+            ab="2026-10-19" ad="2026-11-10"
+            dies="2026-10-26 2026-11-09"/>
+  <exemplum phrasis="every other week on tuesdays and thursdays starting oct 27, 2026"
+            canon="Every other Tuesday and Thursday from Tue 27 Oct 2026"
+            ab="2026-10-26" ad="2026-11-13"
+            dies="2026-10-27 2026-10-29 2026-11-10 2026-11-12"/>
+  <exemplum phrasis="every other week on mondays and fridays from fri 23 oct 2026"
+            canon="Every other Monday and Friday from Fri 23 Oct 2026"
+            ab="2026-10-19" ad="2026-11-08"
+            dies="2026-10-23 2026-11-02 2026-11-06"/>
+  <exemplum phrasis="every 3 weeks on friday from 23 oct 2026"
+            canon="Every 3 weeks on Friday from Fri 23 Oct 2026"
+            ab="2026-10-19" ad="2026-11-30"
+            dies="2026-10-23 2026-11-13"/>
+  <exemplum phrasis="every 3 days from 2026-10-23"
+            canon="Every 3 days from Fri 23 Oct 2026"
+            ab="2026-10-20" ad="2026-11-01"
+            dies="2026-10-23 2026-10-26 2026-10-29 2026-11-01"/>
+  <exemplum phrasis="every other day from oct 30 2026"
+            canon="Every other day from Fri 30 Oct 2026"
+            ab="2026-10-29" ad="2026-11-04"
+            dies="2026-10-30 2026-11-01 2026-11-03"/>
+  <exemplum phrasis="every 1 week on mon" canon="Mondays"
+            ab="2026-10-19" ad="2026-10-20" dies="2026-10-19"/>
+  <exemplum phrasis="mondays from 2026-11-01"
+            canon="Mondays from Sun 1 Nov 2026"
+            ab="2026-10-19" ad="2026-11-10"
+            dies="2026-11-02 2026-11-09"/>
+  <exemplum phrasis="daily from nov 1 2026"
+            canon="Every day from Sun 1 Nov 2026"
+            ab="2026-10-31" ad="2026-11-02"
+            dies="2026-11-01 2026-11-02"/>
+  <vitium phrasis="every other monday"
+          incipit="every other monday: from which day?"/>
+  <vitium phrasis="every 3 days" incipit="every 3 days: from which day?"/>
+  <vitium phrasis="every other monday from oct 26"
+          incipit="oct 26: add the year"/>
+  <vitium phrasis="every other monday from oct 27 2026"
+          incipit="every other monday from oct 27 2026: Tue 27 Oct 2026 is not a Monday"/>
+  <vitium phrasis="every other monday from fri 26 oct 2026"
+          incipit="fri 26 oct 2026: Mon 26 Oct 2026 is a Monday"/>
+  <vitium phrasis="every 0 days from 2026-10-23"
+          incipit="every 0 days from 2026-10-23: the interval must be 1 or more"/>
+  <vitium phrasis="every 53 weeks on monday from oct 26 2026"
+          incipit="every 53 weeks on monday from oct 26 2026: the interval can be at most 52 weeks"/>
+  <vitium phrasis="every 400 days from 2026-10-23"
+          incipit="every 400 days from 2026-10-23: the interval can be at most 366 days"/>
+  <vitium phrasis="every other monday from 2026-02-30"
+          incipit="2026-02-30: no such date"/>
+  <exemplum phrasis="the 1st of the month" canon="The 1st of each month"
+            ab="2026-10-15" ad="2026-12-01"
+            dies="2026-11-01 2026-12-01"/>
+  <exemplum phrasis="monthly on the 15th" canon="The 15th of each month"
+            ab="2026-10-01" ad="2026-11-30"
+            dies="2026-10-15 2026-11-15"/>
+  <exemplum phrasis="the 31st of every month" canon="The 31st of each month"
+            ab="2026-09-01" ad="2026-12-31"
+            dies="2026-10-31 2026-12-31"/>
+  <exemplum phrasis="last day of the month" canon="The last day of each month"
+            ab="2026-10-15" ad="2027-02-28"
+            dies="2026-10-31 2026-11-30 2026-12-31 2027-01-31 2027-02-28"/>
+  <exemplum phrasis="last day of the month" canon="The last day of each month"
+            ab="2028-02-01" ad="2028-03-31"
+            dies="2028-02-29 2028-03-31"/>
+  <exemplum phrasis="first monday of the month"
+            canon="The first Monday of each month"
+            ab="2026-10-01" ad="2026-11-30"
+            dies="2026-10-05 2026-11-02"/>
+  <exemplum phrasis="the last friday of each month"
+            canon="The last Friday of each month"
+            ab="2026-10-01" ad="2026-11-30"
+            dies="2026-10-30 2026-11-27"/>
+  <exemplum phrasis="last friday of the month"
+            canon="The last Friday of each month"
+            ab="2026-12-01" ad="2026-12-31" dies="2026-12-25"/>
+  <exemplum phrasis="third thursday of the month"
+            canon="The third Thursday of each month"
+            ab="2026-10-01" ad="2026-10-31" dies="2026-10-15"/>
+  <exemplum phrasis="2nd tuesday of every month"
+            canon="The second Tuesday of each month"
+            ab="2026-10-01" ad="2026-10-31" dies="2026-10-13"/>
+  <vitium phrasis="the 32nd of the month"
+          incipit="32nd: a month has at most 31 days"/>
+  <vitium phrasis="5th monday of the month"><@incipit=>5th: at most the fourth (or "last")</></vitium>
+  <vitium phrasis="fifth monday of the month" incipit="unknown word"/>
+  <exemplum phrasis="every year on oct 14" canon="Every year on 14 October"
+            ab="2026-01-01" ad="2027-12-31"
+            dies="2026-10-14 2027-10-14"/>
+  <exemplum phrasis="yearly on october 14th" canon="Every year on 14 October"
+            ab="2026-10-14" ad="2026-10-14" dies="2026-10-14"/>
+  <exemplum phrasis="14 october every year" canon="Every year on 14 October"
+            ab="2026-10-01" ad="2026-10-31" dies="2026-10-14"/>
+  <exemplum phrasis="every year on feb 29" canon="Every year on 29 February"
+            ab="2026-01-01" ad="2028-12-31" dies="2028-02-29"/>
+  <exemplum phrasis="2026-10-30" canon="Once, Fri 30 Oct 2026"
+            ab="2026-10-01" ad="2026-12-31" dies="2026-10-30"/>
+  <exemplum phrasis="october 30, 2026" canon="Once, Fri 30 Oct 2026"
+            ab="2026-10-29" ad="2026-10-31" dies="2026-10-30"/>
+  <vitium phrasis="oct 30" incipit="oct 30: add the year"/>
+  <vitium phrasis="every year on feb 30" incipit="feb 30: no such date"/>
+  <vitium phrasis="2026-10-30 from 2026-10-01"
+          incipit="2026-10-30 from 2026-10-01: a single date can't have a start"/>
+</corpus>

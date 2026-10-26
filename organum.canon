@@ -28,6 +28,7 @@
     <liberum nomen="basis"       maximum="1"/>
     <liberum nomen="montationes" maximum="1"/>
     <liberum nomen="cognomina"   maximum="1"/>
+    <liberum nomen="aditus"      maximum="1"/>
   </elementum>
 
   <!-- ligamina: entia quae organum ostendit (props); a="parens" =
@@ -153,11 +154,26 @@
     <attributum nomen="semita" genus="textus" necessarium="verum"/>
   </elementum>
 
+  <!-- aditus (comites P5, semitae-spec VI-b): verba universalia et
+       responsio visus - semita (URI, generis cuiusvis; absens = latus
+       ipsum), advocare (latus post semitam advocatur) -->
+  <elementum nomen="aditus">
+    <liberum nomen="iter"/>
+  </elementum>
+  <elementum nomen="iter">
+    <attributum nomen="nomen" genus="electio" necessarium="verum">
+      <optio>quaestio</optio>
+    </attributum>
+    <attributum nomen="semita"   genus="textus"/>
+    <attributum nomen="advocare" genus="veritas"/>
+  </elementum>
+
   <citatio  nomen="scriptor-actio" attributum="scriptor"
     ad="actio/nomen" super="campus"/>
   <unicitas nomen="campi"    attributum="nomen" super="campus"/>
   <unicitas nomen="actiones" attributum="nomen" super="actio"/>
   <unicitas nomen="ligamina" attributum="nomen" super="ligamen"/>
   <unicitas nomen="montationes" attributum="nomen" super="montatio"/>
+  <unicitas nomen="itinera" attributum="nomen" super="iter"/>
 
 </canon>

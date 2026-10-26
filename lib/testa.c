@@ -22,6 +22,17 @@ _imaginem_glutinatam (
     redde clipboard_capere_imaginem(piscina);
 }
 
+/* porta textus - registrum scribae in clipboard systematis */
+interior b32
+_textum_exportare (
+    vacuum* ctx,
+    chorda  textus)
+{
+    (vacuum)ctx;
+    redde clipboard_textum_ponere((constans character*)textus.datum,
+        textus.mensura);
+}
+
 s32
 testa_principale (
       integer   argc,
@@ -50,12 +61,13 @@ testa_principale (
     }
     testa_optiones_legere((s32)argc, argv, &o);
     memset(&a, ZEPHYRUM, magnitudo(TestaAmbitus));
-    a.piscina          = piscina;
-    a.argc             = (s32)argc;
-    a.argv             = argv;
-    a.fumus            = o.fumus;
-    a.sedes_datorum    = ".";
-    a.imago_glutinata  = _imaginem_glutinatam;
+    a.piscina           = piscina;
+    a.argc              = (s32)argc;
+    a.argv              = argv;
+    a.fumus             = o.fumus;
+    a.sedes_datorum     = ".";
+    a.imago_glutinata   = _imaginem_glutinatam;
+    a.textum_exportare  = _textum_exportare;
     /* R5: schirmus solum extra fumum (ut vicus olim): fumus magnitudine
      * fixa, imagines certae */
     si (   !o.fumus

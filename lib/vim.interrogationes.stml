@@ -39,20 +39,25 @@
       yy, Y and visual d, x and y fill it; p and P paste below or above.
       With a NIHIL clipboard those keys still delete but nothing is
       saved or pasted. Caution (audit 2026-10-18, unfixed): yy then p
-      of a full-width 68-column line pastes only its first 67 columns.</responsum>
+      of a full-width 256-column line pastes only its first 255
+      columns.</responsum>
   </interrogatio>
 
   <interrogatio genus="possumne">
     <quaestio! (>can the clipboard hold long lines and big selections?
     <responsum symbolum="VimClipboard vim_tractare_clavem">Only
-      up to its fixed size: VIM_CLIPBOARD_LINEAE_MAXIMAE (XXXII) lines
-      of at most 67 characters (VIM_CLIPBOARD_LINEA_MAXIMA LXVIII
-      minus a NUL), so the last column of a full 68-column line is not
-      copied (the same 67-column cut applies to dd's undo copy). A
-      visual y of more than 32 lines copies only the first 32, and a
-      visual d or x of more than 32 lines DELETES only the first 32 -
-      even with no clipboard attached. Copying is line-wise only: there
-      is no y{motion}.</responsum>
+      up to its fixed size (raised 2026-10-22 from 32 x 68 for the
+      scriba-to-system-clipboard export): VIM_CLIPBOARD_LINEAE_MAXIMAE
+      (CXXVIII) lines of at most 255 characters
+      (VIM_CLIPBOARD_LINEA_MAXIMA CCLVI minus a NUL), so the last
+      column of a full 256-column line is not copied (the same cut
+      applies to dd's undo copy). A visual y of more than 128 lines
+      copies only the first 128, and a visual d or x of more than 128
+      lines DELETES only the first 128 - even with no clipboard
+      attached. Copying is line-wise only: there is no y{motion}.
+      VimClipboard.versio counts writes since vim_clipboard_initiare,
+      so a host can tell a register write happened even when the text
+      is identical (scriba exports on it).</responsum>
   </interrogatio>
 
   <interrogatio genus="possumne">

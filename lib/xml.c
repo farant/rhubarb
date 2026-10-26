@@ -961,6 +961,7 @@ _legere_valor_attributi (
             character  quota;
     ChordaAedificator* aed;
                chorda  resultus;
+               chorda* vacuus;
 
     si (ctx->positus >= ctx->input.mensura)
     {
@@ -1075,6 +1076,20 @@ _legere_valor_attributi (
     }
 
     resultus = chorda_aedificator_finire(aed);
+    si (resultus.mensura == ZEPHYRUM)
+    {
+        /* valor vacuus (alt="", xmlns="") XML validus est: chorda
+         * vacua, non NIHIL - chorda_internare datum NIHIL non recipit
+         * (EPUB OPF mercatorium olim totum recusabatur) */
+        vacuus = (chorda*)piscina_allocare(ctx->piscina,
+            magnitudo(chorda));
+        si (vacuus)
+        {
+            vacuus->datum    = NIHIL;
+            vacuus->mensura  = ZEPHYRUM;
+        }
+        redde vacuus;
+    }
     redde chorda_internare(ctx->intern, resultus);
 }
 

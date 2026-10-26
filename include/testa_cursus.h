@@ -19,6 +19,10 @@
 /* clipboard: idem genus ac actiones_ctx.imago_capere pictoris */
 nomen ImagoFructus (*TestaImagoCapere)(vacuum* ctx, Piscina* piscina);
 
+/* clipboard: textum ponere (idem genus ac actiones_ctx.textum_exportare
+ * scribae); FALSUM = non positum */
+nomen b32 (*TestaTextumPonere)(vacuum* ctx, chorda textus);
+
 /* testa-ios C1b: usorem imaginem eligere sinere (non obstruens).
  * VERUM = electio ostensa; imago, si eligitur, POSTEA ut
  * EVENTUS_DEPOSITIO (via plagulae) venit. */
@@ -48,6 +52,9 @@ nomen structura {
                                              * iam scalam systematis ferunt) */
       TestaImagoCapere  imago_glutinata;    /* Android B1: semper vacua */
                 vacuum* imago_ctx;
+     TestaTextumPonere  textum_exportare;   /* registrum scribae (yy, y,
+                                             * dd); Android: FALSUM */
+                vacuum* textus_ctx;
     /* iOS solum (C1b); macOS et Android NIHIL, NUMQUAM truncus -
      * pictor quadratum imaginis inde ostendit */
   TestaImaginemEligere  imaginem_eligere;

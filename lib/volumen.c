@@ -25,6 +25,10 @@ structura Volumen {
 
     /* D2: identitas scriptoris actuum; vacua = appendere recusatur */
                 chorda machina;
+
+    /* D4c: "max(seq)" praeparatum semel (volumen_seq_ultimum);
+     * finiendum ante scrinium_claudere, aliter sqlite3_close BUSY */
+    ScriniumEnuntiatum* seq_ultimum;
 };
 
 /* migrationes solum-appende (lex scrinii: numquam mutandae, solum
@@ -223,6 +227,7 @@ _volumen_struere (
      * currit clamat. */
     vol->temporarium  = FALSUM;
     vol->via          = NIHIL;
+    vol->seq_ultimum  = NIHIL;
     {
         /* Via COPIATUR: vocator litteras suas liberare potest, et
          * volumen temporarium eas in claudendo adhuc eget. */
@@ -346,6 +351,11 @@ volumen_claudere (
     si (volumen == NIHIL)
     {
         redde;
+    }
+    si (volumen->seq_ultimum != NIHIL)
+    {
+        scrinium_finire(volumen->seq_ultimum);
+        volumen->seq_ultimum = NIHIL;
     }
     scrinium_claudere(volumen->scrinium);
     si (volumen->temporarium && volumen->via != NIHIL)
@@ -1249,6 +1259,33 @@ _summa (
     }
     scrinium_finire(e);
     redde summa;
+}
+
+s64
+volumen_seq_ultimum (
+    Volumen* volumen)
+{
+    s64 seq;
+
+    si (volumen == NIHIL || volumen->scrinium == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    si (volumen->seq_ultimum == NIHIL)
+    {
+        volumen->seq_ultimum = scrinium_praeparare(volumen->scrinium,
+            "SELECT coalesce(max(seq), 0) FROM acta");
+        si (volumen->seq_ultimum == NIHIL)
+        {
+            redde ZEPHYRUM;
+        }
+    }
+    seq = scrinium_gradi(volumen->seq_ultimum) == SCRINIUM_ORDO
+        ? scrinium_columna_numerus(volumen->seq_ultimum, ZEPHYRUM)
+        : ZEPHYRUM;
+    /* retexere: lectio non manet aperta (scriptores alii liberi) */
+    scrinium_retexere(volumen->seq_ultimum);
+    redde seq;
 }
 
 s64

@@ -185,6 +185,17 @@ _imaginem_nullam (
     redde f;
 }
 
+/* clipboard textus Android nondum: registrum non exportatur */
+interior b32
+_textum_nullum (
+    vacuum* ctx,
+    chorda  textus)
+{
+    (vacuum)ctx;
+    (vacuum)textus;
+    redde FALSUM;
+}
+
 /* dpi schirmi (AConfiguration; Fire 7 = 160 = ACONFIGURATION_DENSITY_MEDIUM) */
 interior i32
 _densitas (
@@ -679,6 +690,7 @@ _initium_facere (
     t->ambitus.sedes_datorum         = t->activitas->internalDataPath;
     t->ambitus.densitas              = _densitas(t->activitas);
     t->ambitus.imago_glutinata       = _imaginem_nullam;
+    t->ambitus.textum_exportare      = _textum_nullum;
     si (!testa_cursum_incipere(&t->cursus, &t->ambitus,
             applicatio_initium, &causa))
     {

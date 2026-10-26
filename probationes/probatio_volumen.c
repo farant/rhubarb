@@ -11,6 +11,7 @@
 #include "machina.h"
 #include "scrinium.h"
 #include "credo.h"
+#include "memoria_processus.h"
 #include "filum.h"
 #include <string.h>
 #include <stdlib.h>
@@ -956,6 +957,131 @@ _sectio_supplementi_horarum (
 
 
 /* ========================================================
+ * PROBARE: volumen_seq_ultimum (proiectiones D4c) - sequitur
+ * appendere, ansam alteram videt, enuntiatum servatum in claudendo
+ * finitur (aliter conexio sqlite non clauditur et memoria crescit)
+ * ======================================================== */
+
+/* via voluminis cyclorum: in TMPDIR (area membri sub fabrica, suitae
+ * sub credo) - non build/ (scriptura extra vestigium, porta radix) */
+interior vacuum
+_viam_seq_ponere (
+     character* via,
+           i32  capacitas)
+{
+    constans character* tmp;
+
+    tmp = getenv("TMPDIR");
+    si (!tmp || !tmp[ZEPHYRUM] || (i32)strlen(tmp) + XXXII >= capacitas)
+    {
+        tmp = "build";
+    }
+    sprintf(via, "%s/probatio_volumen_seq.db", tmp);
+}
+
+interior i64
+_vestigium (vacuum)
+{
+    MemoriaProcessus mp;
+
+    redde memoria_processus_legere(ZEPHYRUM, &mp) ? mp.vestigium
+        : ZEPHYRUM;
+}
+
+/* aperire, seq legere (enuntiatum servatur), claudere - n vicibus */
+interior vacuum
+_seq_cyclos_currere (
+    constans character* via,
+                    i32 n)
+{
+     Piscina* scheda;
+     Volumen* vol;
+         i32  i;
+
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        scheda = piscina_generare_dynamicum("probatio_seq",
+            IV * MXXIV);
+        CREDO_NECESSE_NON_NIHIL(scheda);
+        vol = volumen_aperire(scheda, via);
+        CREDO_NECESSE_NON_NIHIL(vol);
+        CREDO_NECESSE(volumen_seq_ultimum(vol) > ZEPHYRUM);
+        volumen_claudere(vol);
+        piscina_destruere(scheda);
+    }
+}
+
+interior vacuum
+_sectio_seq_ultimi (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Volumen* vol;
+        Volumen* altera;
+            s64  seq;
+
+        vol = volumen_temporarium(piscina, "probatio_volumen_seq");
+        CREDO_NECESSE_NON_NIHIL(vol);
+        /* ortus iam scriptus: seq eius, non zephyrum */
+        CREDO_AEQUALIS_S64(volumen_seq_ultimum(vol),
+            volumen_summa_actorum(vol));
+        seq = volumen_actum_appendere(vol, "d/mutatio",
+            chorda_ex_literis("primum", piscina));
+        CREDO_NECESSE(seq > ZEPHYRUM);
+        CREDO_AEQUALIS_S64(volumen_seq_ultimum(vol), seq);
+        seq = volumen_actum_appendere(vol, "d/mutatio",
+            chorda_ex_literis("secundum", piscina));
+        CREDO_AEQUALIS_S64(volumen_seq_ultimum(vol), seq);
+
+        /* ansa altera (alius processus): scripta eius videntur, et
+         * vice versa - quaestio vera, non numerus memor */
+        altera = volumen_aperire(piscina, volumen_via(vol));
+        CREDO_NECESSE_NON_NIHIL(altera);
+        CREDO_AEQUALIS_S64(volumen_seq_ultimum(altera), seq);
+        seq = volumen_actum_appendere(altera, "d/mutatio",
+            chorda_ex_literis("ab altera", piscina));
+        CREDO_NECESSE(seq > ZEPHYRUM);
+        CREDO_AEQUALIS_S64(volumen_seq_ultimum(vol), seq);
+        seq = volumen_actum_appendere(vol, "d/mutatio",
+            chorda_ex_literis("ab prima", piscina));
+        CREDO_AEQUALIS_S64(volumen_seq_ultimum(altera), seq);
+        volumen_claudere(altera);
+        volumen_claudere(vol);
+    }
+    {
+        Volumen* vol;
+            i64  ante;
+            i64  post;
+      character  via[DXII];
+
+        /* claudere enuntiatum servatum finit: sine eo sqlite3_close
+         * BUSY reddit et conexio (cum memoria sua) manet. Cycli
+         * calefacientes primum (vestigium prima vice crescit). */
+        _viam_seq_ponere(via, (i32)magnitudo(via));
+        si (filum_existit(via))
+        {
+            (vacuum)filum_delere(via);
+        }
+        vol = volumen_creare(piscina, via);
+        CREDO_NECESSE_NON_NIHIL(vol);
+        volumen_claudere(vol);
+        _seq_cyclos_currere(via, L);
+        ante = _vestigium();
+        _seq_cyclos_currere(via, D);
+        post = _vestigium();
+        imprimere("  seq_ultimum cycli D: vestigium %+ld KiB\n",
+            (longus)((s64)post - (s64)ante) / MXXIV);
+        CREDO_VERUM(post < ante
+            || post - ante < (i64)II * MXXIV * MXXIV);
+        (vacuum)filum_delere(via);
+    }
+}
+
+
+/* ========================================================
  * PROBARE: volumen temporarium (scratch)
  * ======================================================== */
 
@@ -1216,6 +1342,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "basis actuum (D2b)", _sectio_basis,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "supplementum horarum (VII-XI)", _sectio_supplementi_horarum,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "seq_ultimum (D4c)", _sectio_seq_ultimi,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "volumen_temporarium", _sectio_decima, NIHIL, NIHIL, NIHIL,
         NIHIL },

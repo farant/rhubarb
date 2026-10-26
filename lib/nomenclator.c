@@ -43,6 +43,7 @@ nomen structura {
                     s32  altitudo_montationis;
                  Charta  notae;   /* P5b: liber "persona/<id>" */
        constans Organum* organum; /* semitae R4b: semita_legere */
+       constans Organum* organum_scribae;  /* D5 S3c: liber notae */
 } NomenclatorFigurae;
 
 
@@ -2964,6 +2965,35 @@ nomenclator_portam_diei_ponere (
     }
 }
 
+/* D5 S3c: pagina notarum semitae (campus 'pagina' scribae
+ * nidificatae) ante librum aptatum legitur, post eum ostenditur -
+ * praevalet paginae visae ultimae */
+interior vacuum
+librum_aptare_cum_pagina (
+    NomenclatorMontatio* m)
+{
+    NomenclatorFigurae* ctx;
+                chorda* a;
+                chorda  petita;
+
+    ctx             = m ? (NomenclatorFigurae*)m->figurae_ctx : NIHIL;
+    petita.datum    = NIHIL;
+    petita.mensura  = ZEPHYRUM;
+    si (ctx && ctx->notae.montata)
+    {
+        a = insula_ramus_attributum(&ctx->notae.scriba.ramus, "pagina");
+        si (a && a->mensura > ZEPHYRUM)
+        {
+            petita = chorda_transcribere(*a, m->piscina);
+        }
+    }
+    librum_aptare(m, NIHIL);
+    si (ctx && ctx->notae.montata && petita.mensura > ZEPHYRUM)
+    {
+        (vacuum)scriba_paginam_ostendere(&ctx->notae.scriba, petita);
+    }
+}
+
 /* semitae R4b: SemitaOrganum lateris - manifestum suum (liberi
  * nulli); ctx = NomenclatorMontatio* */
 interior constans Organum*
@@ -2973,12 +3003,17 @@ organa_nomenclatoris (
 {
     NomenclatorMontatio* m = (NomenclatorMontatio*)ctx;
 
-    si (   !m || !m->figurae_ctx
-        || !chorda_aequalis_literis(genus, "nomenclator"))
+    si (!m || !m->figurae_ctx)
     {
         redde NIHIL;
     }
-    redde ((NomenclatorFigurae*)m->figurae_ctx)->organum;
+    /* D5 S3c: montatio 'notae' (genus scriba) */
+    si (chorda_aequalis_literis(genus, "scriba"))
+    {
+        redde ((NomenclatorFigurae*)m->figurae_ctx)->organum_scribae;
+    }
+    redde chorda_aequalis_literis(genus, "nomenclator")
+        ? ((NomenclatorFigurae*)m->figurae_ctx)->organum : NIHIL;
 }
 
 b32
@@ -3014,8 +3049,38 @@ nomenclator_argumentum_ponere (
     {
         redde FALSUM;
     }
-    librum_aptare(m, NIHIL);
+    librum_aptare_cum_pagina(m);
     redde VERUM;
+}
+
+b32
+nomenclator_quaestionem_aperire (
+    vacuum* ctx)
+{
+    ContextusPraecepti cp;
+
+    memset(&cp, ZEPHYRUM, magnitudo(cp));
+    cp.m = (NomenclatorMontatio*)ctx;
+    cp.p = cp.m ? cp.m->piscina : NIHIL;
+    redde cp.m && fac_quaestionem(&cp);
+}
+
+chorda
+nomenclator_locus_titulus (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+     NomenclatorMontatio* m;
+        constans Persona* p;
+                  chorda* a;
+
+    m = (NomenclatorMontatio*)ctx;
+    a = m ? insula_ramus_attributum(&m->ramus,
+        "persona_aperta") : NIHIL;
+    p = (a && a->mensura > ZEPHYRUM && m->documentum)
+        ? personae_persona(m->documentum, *a) : NIHIL;
+    redde p ? persona_nomen(p, piscina)
+            : chorda_ex_literis("Contacts", piscina);
 }
 
 b32
@@ -3028,7 +3093,7 @@ nomenclator_semitam_secuta (
     {
         redde FALSUM;
     }
-    librum_aptare(m, NIHIL);
+    librum_aptare_cum_pagina(m);
     redde VERUM;
 }
 
@@ -3130,6 +3195,8 @@ nomenclator_montare (
         redde FALSUM;
     }
     ((NomenclatorFigurae*)m->figurae_ctx)->organum = organum;
+    ((NomenclatorFigurae*)m->figurae_ctx)->organum_scribae =
+        organum_legere_genus(piscina, intern, "scriba", "nomenclator");
     /* P5b: notae - liber personae apertae, aliter electae (index:
      * liber paratus ad Enter), aliter "persona/0" (index vacuus) */
     ctx      = (NomenclatorFigurae*)m->figurae_ctx;

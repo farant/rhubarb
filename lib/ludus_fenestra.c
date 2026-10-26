@@ -183,6 +183,7 @@ ludus_fenestra_pingendum (
     {
         redde VERUM;
     }
+    lf->mensurae.pulsus++;
     mutatum = lf->pulsator(lf->pulsator_ctx);
     si (eventa || mutatum || lf->mensurae.quadra == ZEPHYRUM)
     {
@@ -246,6 +247,7 @@ ludus_fenestra_currere (
             mora = MORA_PULSUS;
         }
         fenestra_expectare_eventus(fenestra, mora);
+        lf->mensurae.excitationes++;
         nunc    = fenestra_tempus_ms();
         eventa  = FALSUM;
         dum (fenestra_obtinere_eventus(fenestra, &e))
@@ -276,12 +278,15 @@ ludus_fenestra_currere (
     /* S1a: pendentia (gestus, pan/zoom) ante exitum effunduntur */
     dispensator_finire(lf->d);
     imprimere("ludus: quadra=%d compositio=%ldms pingere=%ldms"
-              " delineare=%ldms maximum=%ldms\n",
+              " delineare=%ldms maximum=%ldms excitationes=%ld"
+              " pulsus=%ld\n",
               (int)lf->mensurae.quadra,
               (long)lf->mensurae.ms_compositionis,
               (long)lf->mensurae.ms_pingendi,
               (long)lf->mensurae.ms_delineandi,
-              (long)lf->mensurae.ms_quadri_maximum);
+              (long)lf->mensurae.ms_quadri_maximum,
+              (long)lf->mensurae.excitationes,
+              (long)lf->mensurae.pulsus);
     redde ZEPHYRUM;
 }
 

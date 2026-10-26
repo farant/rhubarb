@@ -29,6 +29,14 @@
       <optio>dies</optio>
       <optio>annus</optio>
       <optio>agenda</optio>
+      <optio>monita</optio>
+    </campus>
+    <campus nomen="monita_modus" typus="electio" vita="transiens"
+            absens="lectio" scriptor="calendarium.agere"
+            nota="visus monitorum (K5): lectio sola aut editio (scriba
+                  libri pensa infra, lectio supra)">
+      <optio>lectio</optio>
+      <optio>editio</optio>
     </campus>
     <campus nomen="dies_electus" typus="dies" vita="transiens"
             scriptor="calendarium.agere" semita="ligatio"
@@ -38,7 +46,7 @@
             scriptor="calendarium.agere"
             semita="status" ambitus="ligatio"
             nota="id rei electae (ULID aut decimale vetus) in visu
-                  diei; absens = prima"/>
+                  diei, aut k<n> (pensum diei, K3); absens = prima"/>
     <campus nomen="prompta" typus="electio" vita="transiens"
             absens="nulla" scriptor="calendarium.agere">
       <optio>nulla</optio>
@@ -86,9 +94,19 @@
        kalendarium.c, ante cognomina) -->
   <cognomina>
     <cognomen nomen="agenda" semita="calendarium/agenda"/>
+    <cognomen nomen="monita" semita="calendarium/monita"/>
     <cognomen typus="dies" semita="calendarium/dies/{}"/>
   </cognomina>
 
+  <!-- comites P5: Cmd+F = quaestio intra visum -->
+  <aditus>
+    <iter nomen="quaestio" semita="indagatio?genus=res" advocare="verum"/>
+  </aditus>
+
   <basis genus="organum_commune"/>
-  <montationes/>
+  <montationes>
+    <!-- D5 S3c: liber notarum (scriba nidificata, id "<id>_notae");
+         pagina eius in semita: ?notae.pagina=2 -->
+    <montatio nomen="notae" genus="scriba"/>
+  </montationes>
 </organum>

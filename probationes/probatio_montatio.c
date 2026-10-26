@@ -250,6 +250,27 @@ _sectio_prima (
                 ZEPHYRUM, ZEPHYRUM) == 'k');
             CREDO_FALSUM(scriba_librum_ponere(&sn, NIHIL));
         }
+        /* D5: pagina nominata (scriba_paginam_ostendere): documentum,
+         * plagula visus; nomen ignotum recusatur, visus manet */
+        {
+                       chorda  secunda;
+                       chorda  visa;
+             ScribaDocumentum* d2;
+                          b32  inventum;
+
+            secunda = scriba_liber_pagina_nova(ld);
+            CREDO_NECESSE(secunda.mensura > ZEPHYRUM);
+            d2 = scriba_liber_pagina(ld, secunda);
+            CREDO_VERUM(scriba_paginam_ostendere(&sn, secunda));
+            CREDO_VERUM(sn.doc == d2);
+            CREDO_VERUM(sn.actiones_ctx.doc == d2);
+            visa = volumen_plagulam_promere(vol, chorda_ex_literis(
+                "scriba/visus/c1_notae", piscina), piscina, &inventum);
+            CREDO_VERUM(inventum && chorda_aequalis(visa, secunda));
+            CREDO_FALSUM(scriba_paginam_ostendere(&sn,
+                chorda_ex_literis("ignota", piscina)));
+            CREDO_VERUM(sn.doc == d2);
+        }
     }
 
     volumen_claudere(vol);

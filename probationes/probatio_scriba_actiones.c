@@ -5,7 +5,10 @@
  * Probat: littera semel (non bis); insertio + Esc = actum unum;
  * insertio cum pausa = frusta coniuncta, 'u' totam revocat; dd
  * statim; dd -> capsa, p glutinat; fd ex tempore eventus; finire
- * insertionem apertam servat; nullus valor vacuus in insula. */
+ * insertionem apertam servat; nullus valor vacuus in insula.
+ * Exportatio (capsa -> clipboard systematis per portam): yy, y
+ * visualis, dd exportant (iterum idem quoque), dedentatio communis,
+ * linea vacua servatur, linea longa (XC) integra; motus nihil. */
 #include "latina.h"
 #include "piscina.h"
 #include "internamentum.h"
@@ -23,6 +26,7 @@
 #include "manus_ludus.h"
 #include "scriba_documentum.h"
 #include "scriba_actiones.h"
+#include "tabula_characterum.h"
 #include "credo.h"
 #include "organum_probationis.h"
 #include <stdio.h>
@@ -269,7 +273,7 @@ _sectio_prima (
     CREDO_AEQUALIS_I32(acta_generis(vol, "mutatio"), mutationes + I);
 
     CREDO_GRADUS("IV: capsa ex dd; g p glutinat");
-    /* vim domus 'y' non habet: dd capsam implet */
+    /* dd capsam implet (ut yy) */
     CREDO_VERUM(ephemera_est(repo, "capsa", "foo"));
     CREDO_VERUM(ephemera_est(repo, "capsa_lineae", "1"));
     CREDO_VERUM(manus_ludus_scribere(m, "gp"));
@@ -330,9 +334,116 @@ _sectio_prima (
     volumen_claudere(vol);
 }
 
+/* porta exportationis ficta: textus ultimus et numerus */
+nomen structura {
+          i32 numerus;
+    character textus[DXII];
+} Exportata;
+
+interior b32
+exportare_fictum (
+     vacuum* ctx,
+     chorda  textus)
+{
+    Exportata* e;
+
+    e = (Exportata*)ctx;
+    e->numerus++;
+    sprintf(e->textus, "%.*s", (integer)(textus.mensura < DXI
+        ? textus.mensura : DXI), (constans character*)textus.datum);
+    redde VERUM;
+}
+
+/* capsa -> clipboard systematis (porta): yy, V..y, dd; dedentatio
+ * communis (lineae vacuae non numerant); linea longa integra; motus
+ * sine scriptura capsae nihil exportat */
+interior vacuum
+_sectio_exportandi (
+    CredoContextus* c)
+{
+               Volumen* vol;
+      ScribaDocumentum* doc;
+    InsulaRepositorium* repo;
+        ActioRegistrum* reg;
+        ScribaActiones  sa;
+           Dispensator* d;
+            ManusLudus* m;
+     TabulaCharacterum  folium;
+             Exportata  ex;
+             character  longa[XCI];
+             character  textus[CCLVI];
+
+    (vacuum)c;
+    memset(&ex, ZEPHYRUM, magnitudo(ex));
+    memset(longa, 'a', XC);
+    longa[XC] = '\0';
+    sprintf(textus, "    def foo():\n        return 1\n\n    pass\n%s",
+        longa);
+    vol = volumen_temporarium(piscina, "probatio_scriba_actiones");
+    doc = scriba_documentum_creare(piscina, intern, vol, "", C, VIII,
+        IV);
+    CREDO_NECESSE_NON_NIHIL(doc);
+    tabula_ex_literis_cum_dimensionibus(&folium, piscina, C, VIII,
+        textus);
+    CREDO_VERUM(scriba_documentum_committere(doc, &folium) > ZEPHYRUM);
+    repo = insula_repositorium_creare(piscina, intern,
+        "<scriba latitudo=\"100\" altitudo=\"8\" focus=\"pagina\"/>");
+    {
+            Canon* canon;
+        StmlNodus* domini;
+
+        CREDO_VERUM(organum_probationis_parare(piscina, intern,
+            "apps/scriba/organum.stml", &canon, &domini));
+        insula_ponere_canonem(repo, canon);
+        CREDO_VERUM(insula_dominos_legere(repo, domini) > ZEPHYRUM);
+    }
+    reg = actio_registrum_creare(piscina, intern);
+    scriba_actiones_initiare(&sa, doc, piscina);
+    sa.textum_exportare  = exportare_fictum;
+    sa.exportare_ctx     = &ex;
+    scriba_actiones_registrare(reg, &sa);
+    d = dispensator_creare(piscina, intern, repo, reg,
+        componere_minimum,
+        NIHIL, CCC);
+    CREDO_NECESSE_NON_NIHIL(d);
+    scriba_gestum_ponere(dispensator_motus(d), &sa);
+    m = manus_ludus_creare(piscina, d);
+
+    CREDO_GRADUS("yy: linea sine indentatione");
+    CREDO_VERUM(manus_ludus_scribere(m, "yy"));
+    CREDO_AEQUALIS_I32(ex.numerus, I);
+    CREDO_VERUM(strcmp(ex.textus, "def foo():") == ZEPHYRUM);
+
+    CREDO_GRADUS("yy iterum idem: iterum exportat; motus nihil");
+    ex.textus[ZEPHYRUM] = '\0';
+    CREDO_VERUM(manus_ludus_scribere(m, "yy"));
+    CREDO_AEQUALIS_I32(ex.numerus, II);
+    CREDO_VERUM(strcmp(ex.textus, "def foo():") == ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(m, "jk"));
+    CREDO_AEQUALIS_I32(ex.numerus, II);
+
+    CREDO_GRADUS("V y: dedentatio communis, linea vacua servatur");
+    CREDO_VERUM(manus_ludus_scribere(m, "Vjjjy"));
+    CREDO_AEQUALIS_I32(ex.numerus, III);
+    CREDO_VERUM(strcmp(ex.textus,
+        "def foo():\n    return 1\n\npass") == ZEPHYRUM);
+
+    CREDO_GRADUS("linea longa (XC) integra; dd exportat");
+    CREDO_VERUM(manus_ludus_scribere(m, "jjjjyy"));
+    CREDO_AEQUALIS_I32(ex.numerus, IV);
+    CREDO_VERUM(strcmp(ex.textus, longa) == ZEPHYRUM);
+    ex.textus[ZEPHYRUM] = '\0';
+    CREDO_VERUM(manus_ludus_scribere(m, "dd"));
+    CREDO_AEQUALIS_I32(ex.numerus, V);
+    CREDO_VERUM(strcmp(ex.textus, longa) == ZEPHYRUM);
+    volumen_claudere(vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "pagina.clavis per dispensatorem verum", _sectio_prima, _parare,
         _purgare, NIHIL, NIHIL },
+    { "exportatio", _sectio_exportandi, _parare, _purgare, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

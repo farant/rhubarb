@@ -28,14 +28,6 @@
       <optio>aetas</optio>
       <optio>congruentia</optio>
     </campus>
-    <campus nomen="origo" typus="electio" vita="transiens"
-            absens="index" scriptor="sancti.agere"
-            nota="unde visus sancti apertus: index (Esc ad indicem) aut
-                  argumentum ($saints(id), calendarium - Esc latus
-                  reddit, prius redit)">
-      <optio>index</optio>
-      <optio>argumentum</optio>
-    </campus>
     <campus nomen="electus" typus="textus" vita="persistens"
             scriptor="sancti.agere"
             nota="id sancti electi; absens = primus a hodie (ordo
@@ -69,6 +61,11 @@
     <cognomen semita="sancti/index"/>
     <cognomen typus="textus" semita="sancti/sanctus/{}"/>
   </cognomina>
+
+  <!-- comites P5: Cmd+F = quaestio intra visum -->
+  <aditus>
+    <iter nomen="quaestio" semita="sancti/index" advocare="verum"/>
+  </aditus>
 
   <basis genus="organum_commune"/>
   <montationes/>

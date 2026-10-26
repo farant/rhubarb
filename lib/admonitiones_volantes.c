@@ -84,16 +84,41 @@ volabilis (
         : VOLANTES_NUNTIUS_MS);
 }
 
-/* indices visibilium (recentissima primum) in v[]; numerus */
-interior i32
-visibiles (
+/* volabilis proxima indicis ab *i (NIHIL si nulla); *i in ea manet */
+interior constans Admonitio*
+proxima_volabilis (
     constans VolantiumMontatio* m,
-                           i32* v)
+         constans Admonitiones* ix,
+                           i32* i,
+                           s64  nunc)
 {
     constans Admonitio* x;
+
+    dum (ix && *i < admonitiones_numerus(ix))
+    {
+        x = admonitio(ix, *i);
+        si (volabilis(x, nunc) && !dimissa(m, x->id))
+        {
+            redde x;
+        }
+        (*i)++;
+    }
+    redde NIHIL;
+}
+
+/* visibiles (recentissima primum) in v[] - indicis communis et
+ * transientium per tempus mixtae; numerus */
+interior i32
+visibiles (
+    constans VolantiumMontatio*  m,
+            constans Admonitio** v)
+{
+    constans Admonitio* a;
+    constans Admonitio* b;
                    s64  nunc;
                    i32  n;
                    i32  i;
+                   i32  j;
 
     si (!m->nunc || !m->index)
     {
@@ -101,13 +126,25 @@ visibiles (
     }
     nunc  = m->nunc(m->nunc_ctx);
     n     = ZEPHYRUM;
-    per (i = ZEPHYRUM; n < VOLANTES_MAXIMUM
-                       && i < admonitiones_numerus(m->index); i++)
+    i     = ZEPHYRUM;
+    j     = ZEPHYRUM;
+    dum (n < VOLANTES_MAXIMUM)
     {
-        x = admonitio(m->index, i);
-        si (volabilis(x, nunc) && !dimissa(m, x->id))
+        a = proxima_volabilis(m, m->index, &i, nunc);
+        b = proxima_volabilis(m, m->transientes, &j, nunc);
+        si (!a && !b)
         {
-            v[n++] = i;
+            frange;
+        }
+        si (a && (!b || a->tempus >= b->tempus))
+        {
+            v[n++] = a;
+            i++;
+        }
+        alioquin
+        {
+            v[n++] = b;
+            j++;
         }
     }
     redde n;
@@ -119,7 +156,7 @@ volantes_pulsare (
 {
      VolantiumPrivatum* p;
              character  iuncti[CCCLXXXIV];
-                   i32  v[VOLANTES_MAXIMUM];
+    constans Admonitio* v[VOLANTES_MAXIMUM];
                    i32  n;
                    i32  k;
                    i32  l;
@@ -135,7 +172,7 @@ volantes_pulsare (
     iuncti[ZEPHYRUM]  = '\0';
     per (k = ZEPHYRUM; k < n; k++)
     {
-        x = admonitio(m->index, v[k]);
+        x = v[k];
         si (l + x->id.mensura + II < (i32)magnitudo(iuncti))
         {
             memcpy(iuncti + l, x->id.datum, (size_t)x->id.mensura);
@@ -199,9 +236,13 @@ dimittere (
     nunc     = m->nunc ? m->nunc(m->nunc_ctx) : ZEPHYRUM;
     valor    = chorda_transcribere(id, p);
     spatium  = chorda_ex_literis(" ", p);
-    per (i = ZEPHYRUM; i < admonitiones_numerus(m->index); i++)
+    per (i = ZEPHYRUM; i < admonitiones_numerus(m->index)
+                       + admonitiones_numerus(m->transientes); i++)
     {
-        x = admonitio(m->index, i);
+        x = i < admonitiones_numerus(m->index)
+            ? admonitio(m->index, i)
+            : admonitio(m->transientes, i - admonitiones_numerus(
+                  m->index));
         si (   !chorda_aequalis(x->id, id) && volabilis(x, nunc)
             && dimissa(m, x->id))
         {
@@ -249,7 +290,7 @@ agere (
      VolantiumMontatio* m;
      VolantiumPrivatum* p;
     constans Admonitio* x;
-                   i32  v[VOLANTES_MAXIMUM];
+    constans Admonitio* v[VOLANTES_MAXIMUM];
                    i32  n;
                    i32  k;
 
@@ -268,13 +309,18 @@ agere (
     k = numerus_tabellae(nodus->id, 'x');
     si (k > ZEPHYRUM && k <= n)
     {
-        redde dimittere(m, admonitio(m->index, v[k - I])->id,
-            p->scheda);
+        redde dimittere(m, v[k - I]->id, p->scheda);
     }
     k = numerus_tabellae(nodus->id, 'v');
     si (k > ZEPHYRUM && k <= n)
     {
-        x = admonitio(m->index, v[k - I]);
+        x = v[k - I];
+        /* nuntius hospitis: legitur, porta nulla */
+        si (   m->transientes
+            && admonitionem_legere_notare(m->transientes, x->id))
+        {
+            redde VERUM;
+        }
         si (m->agere)
         {
             (vacuum)m->agere(m->agere_ctx, x);
@@ -436,7 +482,7 @@ figura_strati (
              Componens* f;
              Componens* corpora[VOLANTES_MAXIMUM];
              Componens* clausurae[VOLANTES_MAXIMUM];
-                   i32  v[VOLANTES_MAXIMUM];
+    constans Admonitio* v[VOLANTES_MAXIMUM];
                    i32  n;
                    i32  k;
                    i32  i;
@@ -469,7 +515,7 @@ figura_strati (
         si (corpora[k] && clausurae[k])
         {
             tabellam_pingere(p->m, md, corpora[k], clausurae[k],
-                admonitio(p->m->index, v[k]));
+                v[k]);
         }
     }
 }
@@ -581,19 +627,19 @@ volantes_componere (
     InternamentumChorda* intern,
                  vacuum* ctx)
 {
-    VolantiumMontatio* m;
-            Componens* radix;
-            Disponens  dp;
-      DispositioForma  forma;
-                Fines  f;
-                  s32  columnae;
-                  s32  lineae;
-                  s32  radix_d;
-                  s32  ordo;
-                  i32  v[VOLANTES_MAXIMUM];
-                  i32  n;
-                  i32  k;
-            character  id[VIII];
+     VolantiumMontatio* m;
+             Componens* radix;
+             Disponens  dp;
+       DispositioForma  forma;
+                 Fines  f;
+                   s32  columnae;
+                   s32  lineae;
+                   s32  radix_d;
+                   s32  ordo;
+    constans Admonitio* v[VOLANTES_MAXIMUM];
+                   i32  n;
+                   i32  k;
+             character  id[VIII];
 
     (vacuum)repo;
     (vacuum)motus;

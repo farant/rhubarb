@@ -52,3 +52,27 @@ went red at the tabula-through-pannus assertion (line 148), green
 on revert. A horizontal translation case is a cheap addition for
 T2's probatio; noted there. Examen ACCIPE
 on all twelve touched files; formator 0.
+
+## 2026-10-23 — text and image source are copied (A2b closed in the library)
+
+`mandata_textus` and `mandata_imago` stored the caller's chorda BY
+REFERENCE, while `mandata_linea`/`mandata_polygonum` already copied
+their points (`puncta_copiare`). Every caller therefore had to keep the
+text alive until rasterization (kalendarium rule A2b), and it bit twice:
+10-13 weekday letters pointing at a stack buffer drew as random glyphs;
+10-23 month feast titles pointed into projection-cache entries that the
+LRU evicted before rasterization (garbage on every mouse move). Both
+were fixed at the call site and the rule written down - a discipline
+that the next caller can forget.
+
+Now both copy into `m->piscina` with `chorda_transcribere` (empty ->
+empty). The draw list owns everything it holds. Cost: the text bytes,
+once per command per frame; both hosts (ludus_fenestra,
+ludus_tessera) vacate the frame pool and create a fresh Mandata every
+frame, so nothing accumulates. Call sites that already copy now copy
+twice - harmless, left in place.
+
+Test: probatio_mandatum `possessio` - queue text and an image source
+from local buffers, overwrite the buffers, the commands still read the
+originals at other addresses. Plants: each copy removed -> red. Full
+root suite 371/371, ludus_tessera 8/8, tessera 15/15.

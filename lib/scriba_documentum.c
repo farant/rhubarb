@@ -567,6 +567,56 @@ documentum_struere (
     redde doc;
 }
 
+/* manifestum 'documentum' (dimensiones) in volumine condere */
+interior vacuum
+manifestum_condere (
+    ScribaDocumentum* doc,
+  constans character* spatium)
+{
+    ChordaAedificator* a;
+
+    a = chorda_aedificator_creare(doc->piscina, (memoriae_index)LXIV);
+    chorda_aedificator_appendere_literis(a, "<documentum latitudo=\"");
+    chorda_aedificator_appendere_i32(a, doc->latitudo);
+    chorda_aedificator_appendere_literis(a, "\" altitudo=\"");
+    chorda_aedificator_appendere_i32(a, doc->altitudo);
+    chorda_aedificator_appendere_literis(a, "\" intervallum=\"");
+    chorda_aedificator_appendere_i32(a, doc->intervallum);
+    chorda_aedificator_appendere_literis(a, "\"/>");
+    volumen_plagulam_condere(doc->volumen,
+                             clavis_manifesti(doc->piscina, spatium),
+                             chorda_aedificator_finire(a),
+                             "scriba:documentum");
+}
+
+/* documentum novum in memoria: historia vacua (historia_creare nihil
+ * scribit; acta sola scribuntur) */
+interior ScribaDocumentum*
+documentum_novum (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* spatium,
+                    i32  latitudo,
+                    i32  altitudo,
+                    i32  intervallum)
+{
+    ScribaDocumentum* doc;
+
+    doc = documentum_struere(piscina, intern, volumen, latitudo,
+                             altitudo, intervallum);
+    si (!doc)
+    {
+        redde NIHIL;
+    }
+    doc->historia = historia_creare(piscina, intern, volumen, spatium,
+        "mutatio",
+                                    "scriba:checkpoint",
+                                    doc->intervallum,
+                                    proiectio_facere(doc));
+    redde doc->historia ? doc : NIHIL;
+}
+
 ScribaDocumentum*
 scriba_documentum_creare (
                 Piscina* piscina,
@@ -577,33 +627,52 @@ scriba_documentum_creare (
                     i32  altitudo,
                     i32  intervallum)
 {
-     ScribaDocumentum* doc;
-    ChordaAedificator* a;
+    ScribaDocumentum* doc;
 
-    doc = documentum_struere(piscina, intern, volumen, latitudo,
-                             altitudo, intervallum);
+    doc = documentum_novum(piscina, intern, volumen, spatium, latitudo,
+        altitudo, intervallum);
     si (!doc)
     {
         redde NIHIL;
     }
-    a = chorda_aedificator_creare(piscina, (memoriae_index)LXIV);
-    chorda_aedificator_appendere_literis(a, "<documentum latitudo=\"");
-    chorda_aedificator_appendere_i32(a, latitudo);
-    chorda_aedificator_appendere_literis(a, "\" altitudo=\"");
-    chorda_aedificator_appendere_i32(a, altitudo);
-    chorda_aedificator_appendere_literis(a, "\" intervallum=\"");
-    chorda_aedificator_appendere_i32(a, doc->intervallum);
-    chorda_aedificator_appendere_literis(a, "\"/>");
-    volumen_plagulam_condere(volumen,
-                             clavis_manifesti(piscina, spatium),
-                             chorda_aedificator_finire(a),
-                             "scriba:documentum");
-    doc->historia = historia_creare(piscina, intern, volumen, spatium,
-        "mutatio",
-                                    "scriba:checkpoint",
-                                    doc->intervallum,
-                                    proiectio_facere(doc));
-    redde doc->historia ? doc : NIHIL;
+    manifestum_condere(doc, spatium);
+    doc->natum = VERUM;
+    redde doc;
+}
+
+ScribaDocumentum*
+scriba_documentum_nasciturum (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* spatium,
+                    i32  latitudo,
+                    i32  altitudo,
+                    i32  intervallum,
+                    b32  (*natale)(vacuum* ctx),
+                 vacuum* natale_ctx)
+{
+    ScribaDocumentum* doc;
+
+    doc = documentum_novum(piscina, intern, volumen, spatium, latitudo,
+        altitudo, intervallum);
+    si (!doc)
+    {
+        redde NIHIL;
+    }
+    doc->spatium     =
+        chorda_ut_cstr(chorda_ex_literis(spatium ? spatium
+        : "", piscina), piscina);
+    doc->natale      = natale;
+    doc->natale_ctx  = natale_ctx;
+    redde doc->spatium ? doc : NIHIL;
+}
+
+b32
+scriba_documentum_natum (
+    constans ScribaDocumentum* doc)
+{
+    redde doc && doc->natum;
 }
 
 ScribaDocumentum*
@@ -658,7 +727,12 @@ scriba_documentum_aperire (
                                      "scriba:checkpoint",
                                      doc->intervallum,
                                      proiectio_facere(doc));
-    redde doc->historia ? doc : NIHIL;
+    si (!doc->historia)
+    {
+        redde NIHIL;
+    }
+    doc->natum = VERUM;
+    redde doc;
 }
 
 
@@ -673,6 +747,8 @@ committere (
                             b32  coniunctum)
 {
     chorda mutatio;
+       s64 seq;
+       b32 natalis;
 
     si (!doc || !post)
     {
@@ -684,8 +760,23 @@ committere (
     {
         redde ZEPHYRUM;
     }
-    redde coniunctum ? historia_actum_coniunctum(doc->historia, mutatio)
+    /* nasciturum: manifestum ante actum primum (aperire id postulat) */
+    natalis = !doc->natum;
+    si (natalis)
+    {
+        manifestum_condere(doc, doc->spatium);
+    }
+    seq = coniunctum ? historia_actum_coniunctum(doc->historia, mutatio)
                      : historia_actum(doc->historia, mutatio);
+    si (natalis && seq > ZEPHYRUM)
+    {
+        doc->natum = VERUM;
+        si (doc->natale)
+        {
+            (vacuum)doc->natale(doc->natale_ctx);
+        }
+    }
+    redde seq;
 }
 
 s64

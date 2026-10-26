@@ -3,7 +3,9 @@
  * ATTENTIO XXX s, III maximum, lectae non), pulsus mutationem
  * nuntiat, 'x' dimittit (non legit), corpus portam vocat et legit,
  * sine tempore nihil, positio (ad dextrum, sub linea tabularum),
- * pictura (titulus accentu, corpus), radix 0 x 0. */
+ * pictura (titulus accentu, corpus), radix 0 x 0. Transientes
+ * (nuntii hospitis, index proprius): cum indice per tempus mixtae,
+ * corpus legit sine porta, 'x' dimittit, index communis intactus. */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -307,11 +309,51 @@ _probare_formam (
     CREDO_VERUM(componens(w, "v1", c->piscina) == NIHIL);
 }
 
+/* nuntii hospitis (index transientium): volant cum ceteris ordine
+ * temporis; corpus legit (porta non vocatur), 'x' dimittit; index
+ * communis numquam tangitur */
+interior vacuum
+_probare_transientes (
+    CredoContextus* c)
+{
+          Mundus* w;
+    Admonitiones* communis;
+          chorda* a;
+
+    w = mundus(c, II);
+    CREDO_NECESSE(w != NIHIL);
+    communis = w->index;
+    w->index = admonitiones_creare(c->piscina, VIII);
+    fictam_addere(w, "a9", (s64)MMD, ADMONITIO_NUNTIUS, c->piscina);
+    fictam_addere(w, "a8", (s64)MMDC, ADMONITIO_NUNTIUS, c->piscina);
+    w->m.transientes  = w->index;
+    w->index          = communis;
+
+    CREDO_GRADUS("mixtae per tempus, III maximum");
+    CREDO_VERUM(tabellae_sunt(w, "a8 a9 a1", c->piscina));
+
+    CREDO_GRADUS("corpus transientis: lecta, porta non vocatur");
+    CREDO_VERUM(ictus(w, "v1", c->piscina));
+    CREDO_AEQUALIS_I32(w->actae, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(admonitiones_non_lectae(w->m.transientes), I);
+    CREDO_VERUM(tabellae_sunt(w, "a9 a1 a0", c->piscina));
+
+    CREDO_GRADUS("'x' transientis: dimissa");
+    CREDO_VERUM(ictus(w, "x1", c->piscina));
+    a = insula_ramus_attributum(&w->m.ramus, "dimissae");
+    CREDO_NECESSE(a != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS(*a, "a9");
+    CREDO_VERUM(tabellae_sunt(w, "a1 a0", c->piscina));
+    CREDO_AEQUALIS_I32(admonitiones_numerus(communis), II);
+    CREDO_AEQUALIS_I32(admonitiones_non_lectae(communis), II);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "visibiles", _probare_visibiles, NIHIL, NIHIL, NIHIL, NIHIL },
     { "maximum", _probare_maximum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ictus", _probare_ictus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "forma", _probare_formam, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "transientes", _probare_transientes, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

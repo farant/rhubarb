@@ -271,3 +271,11 @@ namespace and path.
 - Plants 10 red. The unicitas line is not planted: it lives in the
   embedded canon (organum.canon -> lib/organum_canon.c), which the
   generata gate checks against its source.
+
+## 2026-10-22 - aditus / iter (comites P5a)
+
+`<aditus>` (max 1) holds `<iter nomen semita advocare>`; canon allows
+only `nomen="quaestio"` for now and `unicitas` over iter nomen.
+Loaded into `o->itinera` like cognomina; `organum_iter(o, titulus)`
+returns NIHIL when undeclared. `semita` absent reads back as an empty
+chorda (the caller treats empty = "this pane itself").

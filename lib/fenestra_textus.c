@@ -5,7 +5,88 @@
 #include "fons_8x16.h"
 #include "utf8.h"
 #include "fons.h"
+#include "glyphae_ductae.h"
 #include <string.h>
+
+/* pixelum RGBA8888 (a<<24 | b<<16 | g<<8 | r): fundus in litteram per
+ * opacitatem (0..CCLV) mixtus, canalis quisque */
+interior i32
+pixela_miscere (
+    i32 fundus,
+    i32 littera,
+    i32 opacitas)
+{
+    i32 fructus;
+    i32 k;
+    i32 a;
+    i32 b;
+
+    fructus = littera & 0xFF000000u;
+    per (k = ZEPHYRUM; k < XXIV; k += VIII)
+    {
+        a = (fundus >> k) & 0xFFu;
+        b = (littera >> k) & 0xFFu;
+        fructus |= ((a * (CCLV - opacitas) + b * opacitas) / CCLV) << k;
+    }
+    redde fructus;
+}
+
+/* runa ducta (glyphae_ductae, ut terminale: capsae, quadra, braille,
+ * symbola) in cellula cw x ch, scala: opacitas plena = color, partialis
+ * cum pixelo subiecto mixta. FALSUM si runa non ducta (vocans fontem
+ * adhibet) */
+interior b32
+glypham_ductam_pingere (
+    TabulaPixelorum* tabula,
+                i32  x,
+                i32  y,
+                s32  runa,
+                i32  cw,
+                i32  ch,
+                i32  scala,
+                i32  color)
+{
+     i8 larva[FONS_8X16_LATITUDO * FONS_8X16_ALTITUDO];
+    i32 px;
+    i32 py;
+    i32 sx;
+    i32 sy;
+    i32 v;
+    i32 qx;
+    i32 qy;
+
+    si (   runa < ZEPHYRUM || cw * ch > (i32)magnitudo(larva)
+        || !glyphae_ductae_est(runa)
+        || !glyphae_ductae_pingere(runa, cw, ch, larva))
+    {
+        redde FALSUM;
+    }
+    per (py = ZEPHYRUM; py < ch; py++)
+    {
+        per (px = ZEPHYRUM; px < cw; px++)
+        {
+            v = (i32)larva[py * cw + px];
+            si (v == ZEPHYRUM)
+            {
+                perge;
+            }
+            per (sy = ZEPHYRUM; sy < scala; sy++)
+            {
+                per (sx = ZEPHYRUM; sx < scala; sx++)
+                {
+                    qx = x + px * scala + sx;
+                    qy = y + py * scala + sy;
+                    tabula_pixelorum_ponere_pixelum(tabula, qx, qy,
+                        v == CCLV ? color : pixela_miscere(
+                        tabula_pixelorum_obtinere_pixelum(tabula, qx,
+                        qy),
+                        color, v));
+                }
+            }
+        }
+    }
+    redde VERUM;
+}
 
 /* Functio adiutorii pro pingendo characterem cum praecisione */
 interior vacuum
@@ -156,6 +237,12 @@ tabula_pixelorum_pingere_chordam (
             y += FONS_ALTITUDO;
             x = initium_x;
         }
+        /* glyphae ductae (ut terminale) ante fontem */
+        alioquin si (glypham_ductam_pingere(tabula, x, y, runa,
+                     FONS_LATITUDO, FONS_ALTITUDO, I, color))
+        {
+            x += FONS_LATITUDO;
+        }
         alioquin
         {
             /* Mappare codepoint ad glypham */
@@ -234,8 +321,12 @@ tabula_pixelorum_pingere_chordam_fonte (
             x = initium_x;
             perge;
         }
-        characterem_8x16_pingere(tabula, x, y,
-            fons_8x16_codepoint_ad_glypham(runa), color);
+        si (!glypham_ductam_pingere(tabula, x, y, runa,
+                FONS_8X16_LATITUDO, FONS_8X16_ALTITUDO, I, color))
+        {
+            characterem_8x16_pingere(tabula, x, y,
+                fons_8x16_codepoint_ad_glypham(runa), color);
+        }
         x += FONS_8X16_LATITUDO;
     }
 }
@@ -314,6 +405,11 @@ tabula_pixelorum_pingere_chordam_scalatam (
         {
             y += FONS_ALTITUDO * scala;
             x = initium_x;
+        }
+        alioquin si (glypham_ductam_pingere(tabula, x, y, runa,
+                     FONS_LATITUDO, FONS_ALTITUDO, scala, color))
+        {
+            x += FONS_LATITUDO * scala;
         }
         alioquin
         {

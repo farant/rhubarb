@@ -621,8 +621,19 @@ _probare_scribam_vivam (
            chorda* a;
            chorda* vetus;
 
-        d      = *(StmlNodus**)xar_obtinere(domini->liberi, i);
-        a      = stml_attributum_capere(d, "attributum");
+        d = *(StmlNodus**)xar_obtinere(domini->liberi, i);
+        a = stml_attributum_capere(d, "attributum");
+        novi++;
+        /* D5 S3c / comites P2-P3: campi 'pagina', 'liber',
+         * 'liber_titulus' post S6 additi - in imagine vetere desunt */
+        si (   chorda_aequalis_literis(*a, "pagina")
+            || chorda_aequalis_literis(*a, "liber")
+            || chorda_aequalis_literis(*a, "liber_titulus"))
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS(*stml_attributum_capere(d,
+                "scriptor"), "pagina.clavis");
+            perge;
+        }
         vetus  = scriptor_domini(ante, chorda_ut_cstr(*a, c->piscina));
         CREDO_NON_NIHIL(vetus);
         si (vetus)
@@ -630,7 +641,6 @@ _probare_scribam_vivam (
             CREDO_CHORDA_AEQUALIS(*vetus,
                 *stml_attributum_capere(d, "scriptor"));
         }
-        novi++;
     }
     veteres = ZEPHYRUM;
     per (i = ZEPHYRUM; i < xar_numerus(ante->liberi); i++)
@@ -648,8 +658,8 @@ _probare_scribam_vivam (
             c->piscina)));
         veteres++;
     }
-    CREDO_AEQUALIS_S32(novi, veteres);
-    CREDO_AEQUALIS_S32(novi, XVI);
+    CREDO_AEQUALIS_S32(novi, veteres + III);
+    CREDO_AEQUALIS_S32(novi, XIX);
 }
 
 
@@ -1104,6 +1114,59 @@ _probare_cognomina (
         c->piscina), c->piscina));
 }
 
+/* comites P5a: aditus (relatio visus) - iter 'quaestio' legibile
+ * (semita, advocare; semita absens = latus ipsum); nomen ignotum et
+ * iter iteratum recusantur; nullus declaratus = NIHIL */
+interior vacuum
+_probare_aditus (
+    CredoContextus* c)
+{
+     InternamentumChorda* in;
+                     Xar* vitia;
+                 Organum* o;
+    constans OrganumIter* it;
+
+    in = internamentum_creare(c->piscina);
+    o  = legere_literas(c->piscina, in,
+        "<organum genus=\"probatio\" versio=\"1\"><status/>"
+        "<aditus><iter nomen=\"quaestio\""
+        " semita=\"indagatio?genus=res\" advocare=\"verum\"/>"
+        "</aditus></organum>", &vitia);
+    vitia_imprimere(vitia);
+    CREDO_NECESSE_NON_NIHIL(o);
+    it = organum_iter(o, "quaestio");
+    CREDO_NECESSE_NON_NIHIL(it);
+    CREDO_CHORDA_AEQUALIS_LITERIS(it->titulus, "quaestio");
+    CREDO_CHORDA_AEQUALIS_LITERIS(it->semita, "indagatio?genus=res");
+    CREDO_VERUM(it->advocare);
+    CREDO_NIHIL(organum_iter(o, "hodie"));
+    /* semita absens: latus ipsum; advocare absens: FALSUM */
+    o = legere_literas(c->piscina, in,
+        "<organum genus=\"probatio\" versio=\"1\"><status/>"
+        "<aditus><iter nomen=\"quaestio\"/></aditus></organum>",
+        &vitia);
+    CREDO_NECESSE_NON_NIHIL(o);
+    it = organum_iter(o, "quaestio");
+    CREDO_NECESSE_NON_NIHIL(it);
+    CREDO_AEQUALIS_I32(it->semita.mensura, ZEPHYRUM);
+    CREDO_FALSUM(it->advocare);
+    /* sine aditu: NIHIL */
+    o = legere_literas(c->piscina, in,
+        "<organum genus=\"probatio\" versio=\"1\"><status/>"
+        "</organum>", &vitia);
+    CREDO_NECESSE_NON_NIHIL(o);
+    CREDO_NIHIL(organum_iter(o, "quaestio"));
+    /* canon: nomen ignotum, iter iteratum */
+    CREDO_NIHIL(legere_literas(c->piscina, in,
+        "<organum genus=\"probatio\" versio=\"1\"><status/>"
+        "<aditus><iter nomen=\"ignotum\"/></aditus></organum>",
+        &vitia));
+    CREDO_NIHIL(legere_literas(c->piscina, in,
+        "<organum genus=\"probatio\" versio=\"1\"><status/>"
+        "<aditus><iter nomen=\"quaestio\"/><iter nomen=\"quaestio\"/>"
+        "</aditus></organum>", &vitia));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "pictor",            _probare_pictorem,
       NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1128,6 +1191,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "cognomina",         _probare_cognomina,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "montationes",       _probare_montationes,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "aditus",            _probare_aditus,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
