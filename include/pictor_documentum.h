@@ -102,6 +102,23 @@ pictor_documenta_enumerare (
      Volumen* volumen,
      Piscina* piscina);
 
+/* pinacotheca (spec D5): pictura et seq actus sui ultimi - ictus,
+ * ramus, cursor, coniunctio historiae suae, aut conditio plagulae
+ * 'documentum' (pictura vacua) */
+nomen structura {
+    chorda spatium;   /* "" = radix */
+       s64 seq;
+} PictorPictura;
+
+/* picturae voluminis (ut pictor_documenta_enumerare), seq
+ * DESCENDENTE (aequales: ordine viae); transitus unus actorum
+ * voluminis. Aspicere (aperire) nihil appendit, ergo non movet;
+ * revocatio cursorem appendit, ergo movet. Xar de PictorPictura */
+Xar*
+pictor_documenta_recentia (
+     Volumen* volumen,
+     Piscina* piscina);
+
 /* gutta k puncti i ictus: offsetus (dx, dy) in disco radii r,
  * determinatus ex (semen, i, k) per sors */
 vacuum
@@ -142,7 +159,7 @@ nomen structura {
         Imago  praevisio[PICTOR_GLUTINATIO_MODI];  /* RGBA, alpha 0
                                                     * perspicuum */
     character sigillum[PICTOR_GLUTINATIO_MODI][SIGILLUM_HEX_MENSURA];
-                                    /* identitas imaginis praevisionis */
+                                    /* identitas praevisionis */
            i8* larva;      /* latitudo x altitudo: 1 = modus ALTER hic
                             * (radendo, Franus 2026-10-13); praevisio
                             * [m] = larva ? indices alterius : [m] */

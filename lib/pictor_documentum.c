@@ -14,6 +14,8 @@
 #include "dithering.h"
 #include "dithering_exemplaria.h"
 #include "imago_opus.h"
+#include "json.h"
+#include "tabula_dispersa.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1155,6 +1157,33 @@ proiectio_facere (
  * Vita
  * ================================================== */
 
+/* genus actorum pictoris in historia (historia_genera praefigit) */
+#define GENUS_ICTUUM "ictus"
+
+/* via plagulae: "documentum" (nuda) -> "", "<spatium>/documentum" ->
+ * "<spatium>" (in memoria viae); FALSUM aliter */
+interior b32
+spatium_documenti (
+     chorda  via,
+     chorda* spatium)
+{
+    si (chorda_aequalis_literis(via, "documentum"))
+    {
+        spatium->datum    = via.datum;
+        spatium->mensura  = ZEPHYRUM;
+        redde VERUM;
+    }
+    si (   via.mensura > XI
+        && memcmp(via.datum + via.mensura - XI, "/documentum", XI)
+               == ZEPHYRUM)
+    {
+        spatium->datum    = via.datum;
+        spatium->mensura  = via.mensura - XI;
+        redde VERUM;
+    }
+    redde FALSUM;
+}
+
 Xar*
 pictor_documenta_enumerare (
      Volumen* volumen,
@@ -1179,23 +1208,119 @@ pictor_documenta_enumerare (
         {
             perge;
         }
-        /* "documentum" (nuda) aut "<spatium>/documentum" */
-        si (chorda_aequalis_literis(pl->via, "documentum"))
-        {
-            spatium = chorda_ex_literis("", piscina);
-        }
-        alioquin si (   pl->via.mensura > XI
-                     && memcmp(pl->via.datum + pl->via.mensura - XI,
-                            "/documentum", XI) == ZEPHYRUM)
-        {
-            spatium.datum    = pl->via.datum;
-            spatium.mensura  = pl->via.mensura - XI;
-        }
-        alioquin
+        si (!spatium_documenti(pl->via, &spatium))
         {
             perge;
         }
         *(chorda*)xar_addere(l) = spatium;
+    }
+    redde l;
+}
+
+/* pinacotheca D5: acta generum picturarum (historia_genera) et
+ * conditiones plagularum - seq maximum cuiusque picturae */
+Xar*
+pictor_documenta_recentia (
+     Volumen* volumen,
+     Piscina* piscina)
+{
+                     Xar*  spatia;
+                     Xar*  l;
+                     Xar*  acta;
+          TabulaDispersa*  index;
+           PictorPictura*  p;
+           PictorPictura*  q;
+           PictorPictura   t;
+            VolumenActum*  a;
+      constans character** genera;
+      constans character*  g[IV];
+                  chorda   s;
+            JsonResultus   r;
+                  vacuum*  v;
+                     i32   i;
+                     i32   j;
+                     i32   n;
+
+    si (!volumen || !piscina)
+    {
+        redde NIHIL;
+    }
+    spatia  = pictor_documenta_enumerare(volumen, piscina);
+    l       = xar_creare(piscina, (i32)magnitudo(PictorPictura));
+    si (!spatia || !l)
+    {
+        redde NIHIL;
+    }
+    n      = xar_numerus(spatia);
+    index  = tabula_dispersa_creare_chorda(piscina, n * IV + XVI);
+    genera  = (constans character**)piscina_allocare(piscina,
+        magnitudo(character*) * (memoriae_index)(n * IV + II));
+    si (!index || !genera)
+    {
+        redde NIHIL;
+    }
+    /* genus actus -> pictura (Xar segmentatum: loca stabilia) */
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        p           = (PictorPictura*)xar_addere(l);
+        p->spatium  = *(chorda*)xar_obtinere(spatia, i);
+        p->seq      = ZEPHYRUM;
+        historia_genera(piscina, chorda_ut_cstr(p->spatium, piscina),
+            GENUS_ICTUUM, g);
+        per (j = ZEPHYRUM; j < IV; j++)
+        {
+            genera[i * IV + j] = g[j];
+            (vacuum)tabula_dispersa_inserere(index,
+                chorda_ex_literis(g[j], piscina), p);
+        }
+    }
+    genera[n * IV]      = "plagula-condita";
+    genera[n * IV + I]  = NIHIL;
+    acta = volumen_acta_generum_legere(volumen, ZEPHYRUM, genera,
+        piscina);
+    per (i = ZEPHYRUM; acta && i < xar_numerus(acta); i++)
+    {
+        a = (VolumenActum*)xar_obtinere(acta, i);
+        p = NIHIL;
+        si (chorda_aequalis_literis(a->genus, "plagula-condita"))
+        {
+            r = json_legere(a->datum, piscina);
+            si (   r.successus
+                && spatium_documenti(json_capere_chorda(r.radix, "via",
+                       chorda_ex_literis("", piscina)), &s))
+            {
+                per (j = ZEPHYRUM; j < n && !p; j++)
+                {
+                    q = (PictorPictura*)xar_obtinere(l, j);
+                    si (chorda_aequalis(q->spatium, s))
+                    {
+                        p = q;
+                    }
+                }
+            }
+        }
+        alioquin si (tabula_dispersa_invenire(index, a->genus, &v))
+        {
+            p = (PictorPictura*)v;
+        }
+        si (p && a->seq > p->seq)
+        {
+            p->seq = a->seq;
+        }
+    }
+    /* insertio stabilis, seq descendens (aequales: ordine viae) */
+    per (i = I; i < n; i++)
+    {
+        t = *(PictorPictura*)xar_obtinere(l, i);
+        j = i;
+        dum (   j > ZEPHYRUM
+             && ((PictorPictura*)xar_obtinere(l, j - I))->seq < t.seq)
+        {
+            *(PictorPictura*)xar_obtinere(l, j) =
+                *(PictorPictura*)xar_obtinere(l, j - I);
+            j--;
+        }
+        *(PictorPictura*)xar_obtinere(l, j) = t;
     }
     redde l;
 }
@@ -1294,7 +1419,7 @@ pictor_documentum_creare (
         spatium),
                              manifestum, "pictor:documentum");
     doc->historia = historia_creare(piscina, intern, volumen, spatium,
-        "ictus",
+        GENUS_ICTUUM,
                                     "pictor:checkpoint",
                                     doc->intervallum,
                                     proiectio_facere(doc));
@@ -1349,7 +1474,7 @@ pictor_documentum_aperire (
         redde NIHIL;
     }
     doc->historia = historia_aperire(piscina, intern, volumen, spatium,
-        "ictus",
+        GENUS_ICTUUM,
                                      "pictor:checkpoint",
                                      doc->intervallum,
                                      proiectio_facere(doc));

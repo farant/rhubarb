@@ -407,3 +407,23 @@ strokes and swaps which side shows ("or vice versa") with no extra code.
   no interleaving with document undo; Option-drag is the undo).
 - Plants (silva.planta): commit ignoring larva -> confirmare larva red;
   preview ignoring larva -> radere red.
+
+## 2026-10-26 - pictor_documenta_recentia (pinacotheca T2, quarta)
+
+Gallery order (spec D5) = the highest volume `seq` that belongs to a
+picture: its history's acts (`<spatium>/ictus`, `/ramus`, `/cursor`,
+`/coniunctio`; bare names for the root) or the `plagula-condita` of its
+`documentum` plagula (a new, empty picture). One read through
+`volumen_acta_generum_legere` with exactly those genera (indexed by
+genus), a genus -> PictorPictura hash table, then a stable insertion
+sort. The genus names come from the new `historia_genera` (historia.c),
+not a copy of historia's format. Measured: 13 pictures x 200 acts ->
+~2 ms on the Mac.
+
+Facts pinned by the tests: opening a picture appends nothing (viewing
+never reorders); undo appends a `cursor` act (undo counts as an edit);
+checkpoints are plagulae of other vias (ignored); a scriba document
+in the same volume (`x/documentum`, origin scriba) is not a picture.
+Known limit: a non-pictor root history in the same volume would share
+the bare names `ramus`/`cursor` with pictor's root - not the case in
+pictor's own volume; vicus keeps pictures under spatia.
