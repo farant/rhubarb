@@ -2660,7 +2660,17 @@ try:
             silva._debita_fusionis_scribere('abc1234', {'ficta-prob-2': 'y.c tegit'})
         silva.FABRICA_BIN = _fabrica_ordinis([('ficta-prae-c', 'praeiudicium', '500', 'commissio'),
                                              ('ficta-prob-2', 'probatio', '9000', 'fusio')])
-        eff, err, cursae = _fusio((True, [], 'abcdef12', ['x.c']))
+        _pfs = silva._producentes_fusionis_sanare
+        _pfs_vocata = []
+        silva._producentes_fusionis_sanare = lambda: _pfs_vocata.append(cursae_ante())
+        cursae_ante = lambda: (open(_olog).read().split() if os.path.exists(_olog) else [])
+        try:
+            eff, err, cursae = _fusio((True, [], 'abcdef12', ['x.c']))
+        finally:
+            silva._producentes_fusionis_sanare = _pfs
+        credo(_pfs_vocata == [[]],
+              'fusio: producentes sanantur SEMEL ANTE portas (parcum …J1AJ5V2)',
+              causa=repr(_pfs_vocata))
         credo(err is None and cursae == ['ficta-prae-c', 'ficta-prob-2']
               and 'DILATA' not in eff,
               'fusio: debita rami et viarum, gradus ambo cursi', causa=repr((err, cursae, eff[-400:])))
@@ -2745,6 +2755,62 @@ try:
     finally:
         silva._ramus_status = _rs
         silva.DEBITA_FUSIONIS_VIA = _dfv
+    # O. PRODUCENTES ANTE PRAEIUDICIA (parcum …J1AJ5V2): iudicare -omnia
+    # FORTASSE commissum -> consilium producentium agitur; fractum =
+    # MONITUM, numquam SilvaError (porta generata verum iudicat)
+    _cp, _ca, _vc = (silva._consilium_producentium, silva._consilium_agere,
+                     silva.VIAE_COMMISSAE)
+    _fb_o = silva.FABRICA_BIN
+
+    def _fabrica_iudicans(rc):
+        via = os.path.join(_od, 'fabrica_iudicans_%d' % rc)
+        with open(via, 'w') as f:
+            f.write('#!/bin/sh\nif [ "$1 $2 $3" = "iudicare -plenus -omnia" ]; then'
+                    ' printf "IUDICIUM\\tFORTASSE\\tgen/x.sh\\tsupra\\n"; exit %d; fi\n'
+                    'exit 0\n' % rc)
+        os.chmod(via, 0o755)
+        return via
+
+    def _producentes(rc_iud, commissa, rc_agere, consilium='<consilium/>'):
+        vocata = []
+        silva.FABRICA_BIN = _fabrica_iudicans(rc_iud)
+        silva.VIAE_COMMISSAE = lambda viae: set(viae) if commissa else set()
+        silva._consilium_producentium = lambda malae: (vocata.append(('cp', list(malae)))
+                                                       or consilium)
+        silva._consilium_agere = lambda t, n: (vocata.append(('agere', n)) or (
+            rc_agere, [('ACTUS', '1', 'sana build/cap.c', 'ACTUM', '0', '5', '')],
+            '', 'build/consilium/%s.stml' % n))
+        buf, err = io.StringIO(), None
+        with contextlib.redirect_stdout(buf):
+            try:
+                silva._producentes_fusionis_sanare()
+            except silva.SilvaError as ex:
+                err = str(ex)
+        return vocata, buf.getvalue(), err
+    try:
+        vocata, eff, err = _producentes(0, True, 0)
+        credo(vocata == [] and err is None,
+              'producentes fusionis: iudicium sanum - nihil agitur', causa=repr(vocata))
+        vocata, eff, err = _producentes(1, True, 0)
+        credo(vocata == [('cp', ['gen/x.sh']), ('agere', 'producentes_fusionis')]
+              and 'producentes stali per consilium in arbore sanati (build/cap.c' in eff
+              and err is None,
+              'producentes fusionis: FORTASSE commissum -> consilium actum', causa=repr((vocata, eff)))
+        vocata, eff, err = _producentes(1, True, 3)
+        credo(err is None and 'MONITUM fusio: consilium producentium' in eff,
+              'producentes fusionis: consilium fractum = MONITUM, fusio non sistitur',
+              causa=repr((err, eff)))
+        vocata, eff, err = _producentes(1, False, 0)
+        credo(vocata == [], 'producentes fusionis: malae non commissae - nihil agitur',
+              causa=repr(vocata))
+        vocata, eff, err = _producentes(1, True, 0, consilium=None)
+        credo(vocata == [('cp', ['gen/x.sh'])] and err is None,
+              'producentes fusionis: consilium nullum (nihil sanabile) - nihil agitur',
+              causa=repr(vocata))
+    finally:
+        silva._consilium_producentium, silva._consilium_agere = _cp, _ca
+        silva.VIAE_COMMISSAE = _vc
+        silva.FABRICA_BIN = _fb_o
 finally:
     silva.FABRICA_BIN = _of_fb
     silva._fabricam_exigere = _of_fe
@@ -3131,6 +3197,9 @@ def _custos_fabricam_scribere(ante, post):
     """celer: primum 'ante' (STALUM lineae), deinde 'post'; -plenus: 1"""
     open(_custos_fabrica, 'w').write(
         '#!/bin/bash\n'
+        # parcum …AG7: consilium 'sanare -vestigium' interrogat - statum
+        # 'ante'/'post' fictae non consumit
+        'if [ "$2" = "-vestigium" ]; then exit 0; fi\n'
         'if [ "$2" = "-plenus" ]; then printf "IUDICIUM\\tSTALUM\\tg/x.c\\tregeneratio differt\\n"; exit 1; fi\n'
         'if [ ! -e %s ]; then touch %s; printf "%%b" %s; exit 0; fi\n'
         'printf "%%b" %s\nexit 1\n'

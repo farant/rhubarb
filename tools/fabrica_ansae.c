@@ -275,6 +275,7 @@ suturae_compilare_gradus (
     constans character* obiectum,
           constans Xar* vexilla_addita,
                Piscina* piscina,
+                chorda* obiectum_out,
                 chorda* erratum_out)
 {
      constans AedilisConfiguratio*  c;
@@ -376,7 +377,10 @@ suturae_compilare_gradus (
     /* piscina vocationis (actum membri, temporaria): lectiones
      * thesauri cum membro vacantur, non in _piscina_gradus crescunt
      * (~I MB per compilationem, parcum …T77EH4) */
-    r = compilator_compilare_in(_compilator_gradus, argv,
+    /* NEXUS EX THESAURO: in hit nulla copia in area membri - blobus
+     * thesauri directe nectitur (olim XII milia obiectorum radicis in
+     * areis, photographia et IO per membrum) */
+    r = compilator_compilare_sine_collocatione(_compilator_gradus, argv,
         (i32)xar_numerus(verba), piscina);
     si (r.codex != ZEPHYRUM)
     {
@@ -385,6 +389,7 @@ suturae_compilare_gradus (
             ? r.erratum : r.effusio, V);
         redde FALSUM;
     }
+    *obiectum_out = r.via;
     redde VERUM;
 }
 

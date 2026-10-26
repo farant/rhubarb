@@ -442,7 +442,9 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "credo: titulus '--- ... ---' manu impressus in sectione (credo"
       " titulum imprimit; gradus = CREDO_GRADUS)", EXAMEN_DOMESTICUM },
     { "vocatio IO cruda extra canalem lectionum (filum) - fabrica"
-      " ingressum non videt", EXAMEN_VIOLATIO }
+      " ingressum non videt", EXAMEN_VIOLATIO },
+    { "scriptura cruda extra canalem lectionum (filum) - fabrica"
+      " scripturam non videt", EXAMEN_DOMESTICUM }
 };
 
 /* prototypa: sedes 89 (typus alienus, acies flexibilis) ante
@@ -1166,7 +1168,10 @@ interior constans ExamenTolerabilis _tolerabiles[] = {
       (s32)EXAMEN_CODEX_CREDO_TITULUS_IMPRESSUS },
     /* canalis lectionum (96): sine nodo, absorptio per sedem ut 91 */
     { "CANALIS_PRAETERITUS",
-      (s32)EXAMEN_CODEX_CANALIS_PRAETERITUS }
+      (s32)EXAMEN_CODEX_CANALIS_PRAETERITUS },
+    /* scriptura cruda (97): ut 96, absorptio per sedem */
+    { "SCRIPTURA_PRAETERITA",
+      (s32)EXAMEN_CODEX_SCRIPTURA_PRAETERITA }
     /* familia portabilitatis (85-88) CONSULTO abest: emissio eius
      * positione manuali sine nodo fit - _tolera_absorbere nodum
      * petit, ergo tolera numquam absorberet et IRRITUM putresceret.
@@ -6248,6 +6253,7 @@ _elementum_ambulare (
 nomen structura {
        b32 vernaculum;   /* FALSUM = obsoletum */
        b32 canalis;      /* IO cruda extra canalem (codex 96) */
+       b32 scriptura;    /* scriptura cruda extra canalem (codex 97) */
     chorda pro;          /* vicarius; mensura 0 = nullus */
 } GradusPortabilitatis;
 
@@ -6361,6 +6367,7 @@ _portabilitas_trivium (
         }
         gp->vernaculum   = _chorda_par_literis(genus_g, "vernaculum");
         gp->canalis      = _chorda_par_literis(genus_g, "canalis");
+        gp->scriptura    = _chorda_par_literis(genus_g, "scriptura");
         gp->pro.mensura  = ZEPHYRUM;
         gp->pro.datum    = NIHIL;
         si (vicarius.mensura > ZEPHYRUM)
@@ -7083,9 +7090,10 @@ _portabilitatem_examinare (
         {
             constans GradusPortabilitatis* gp =
                 (constans GradusPortabilitatis*)datum_g;
-            /* canalis (96) vocationes solas iudicat, examine suo
-             * (_canalem_examinare) - hic tacet */
-            character* nuntius = gp->canalis ? NIHIL :
+            /* canalis (96) et scriptura (97) vocationes solas
+             * iudicant, examine suo (_canalem_examinare) - hic tacet */
+            character* nuntius = (gp->canalis
+                || gp->scriptura) ? NIHIL :
                 (character*)piscina_allocare(sem->piscina,
                     (memoriae_index)t->valor.mensura
                     + (memoriae_index)gp->pro.mensura
@@ -7220,10 +7228,75 @@ _portabilitatem_examinare (
  * sedem ut 91 - ANTE toleras irritas vocandum.
  * ================================================== */
 
+/* SCRIBENS (97): fopen/freopen cuius argumentum secundum littera
+ * chordae est cum 'w', 'a' aut '+' - modus non litteralis (variabilis)
+ * hic tacet (96 vocationem tamen nominat). i = index nominis in fluxu,
+ * i + I = '(' */
+interior b32
+_modus_scribens (
+    constans Xar* fluxus,
+             i32  i)
+{
+    i32 m = xar_numerus(fluxus);
+    i32 j;
+    i32 profunditas = ZEPHYRUM;
+
+    per (j = i + II; j < m; j++)
+    {
+        SilvaToken* t = *(SilvaToken**)xar_obtinere(fluxus, j);
+
+        si (t == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (t->genus == SILVA_LEX_PAREN_APERTA)
+        {
+            profunditas++;
+        }
+        alioquin si (t->genus == SILVA_LEX_PAREN_CLAUSA)
+        {
+            si (profunditas == ZEPHYRUM)
+            {
+                redde FALSUM;   /* argumentum unum tantum */
+            }
+            profunditas--;
+        }
+        alioquin si (   t->genus    == SILVA_LEX_COMMA
+                     && profunditas == ZEPHYRUM)
+        {
+            SilvaToken* modus = (j + I < m)
+                ? *(SilvaToken**)xar_obtinere(fluxus, j + I) : NIHIL;
+                    i32 k;
+
+            si (   modus        == NIHIL
+                || modus->genus != SILVA_LEX_STRING_LIT
+                || modus->valor.mensura < II)
+            {
+                redde FALSUM;
+            }
+            si (   modus->valor.datum[I] == 'w'
+                || modus->valor.datum[I] == 'a')
+            {
+                redde VERUM;
+            }
+            per (k = I; k < modus->valor.mensura; k++)
+            {
+                si (modus->valor.datum[k] == '+')
+                {
+                    redde VERUM;
+                }
+            }
+            redde FALSUM;
+        }
+    }
+    redde FALSUM;
+}
+
 interior vacuum
 _canalem_examinare (
            SilvaSemantica* sem,
-    constans SilvaParsura* parsura)
+    constans SilvaParsura* parsura,
+                      s32  codex)
 {
       Xar* fluxus;
       Xar* visa;
@@ -7263,7 +7336,21 @@ _canalem_examinare (
             perge;
         }
         gp = (constans GradusPortabilitatis*)datum_g;
-        si (gp == NIHIL || !gp->canalis)
+        si (gp == NIHIL)
+        {
+            perge;
+        }
+        si (   codex == (s32)EXAMEN_CODEX_CANALIS_PRAETERITUS
+            && !gp->canalis)
+        {
+            perge;
+        }
+        si (   codex == (s32)EXAMEN_CODEX_SCRIPTURA_PRAETERITA
+            && !gp->scriptura
+            && !(   gp->canalis
+                 && (   chorda_aequalis_literis(t0->valor, "fopen")
+                     || chorda_aequalis_literis(t0->valor, "freopen"))
+                 && i + I < m && _modus_scribens(fluxus, i)))
         {
             perge;
         }
@@ -7302,7 +7389,7 @@ _canalem_examinare (
             *locus = t->columna;
         }
         si (_tolera_absorbere_sedem(sem, t->fons_index, t->linea,
-                (s32)EXAMEN_CODEX_CANALIS_PRAETERITUS))
+            codex))
         {
             perge;
         }
@@ -7313,17 +7400,34 @@ _canalem_examinare (
         {
             perge;
         }
-        sprintf(nuntius, "'%.*s' canalem lectionum praeterit (liber"
-            " lectionum vocationem non videt - fabrica ingressum"
-            " nescit, transitus vetus servaretur)%s%.*s%s",
-            (int)t0->valor.mensura,
-            (constans character*)t0->valor.datum,
-            gp->pro.mensura > ZEPHYRUM ? " - pro eo '" : "",
-            (int)gp->pro.mensura,
-            (constans character*)gp->pro.datum,
-            gp->pro.mensura > ZEPHYRUM ? "'" : "");
-        _portabilitatis_diagnosticum(sem, parsura, t,
-            (s32)EXAMEN_CODEX_CANALIS_PRAETERITUS, nuntius);
+        si (codex == (s32)EXAMEN_CODEX_SCRIPTURA_PRAETERITA)
+        {
+            sprintf(nuntius, "'%.*s' scripturam extra canalem"
+                " lectionum facit (liber lectionum eam non videt -"
+                " fabrica membrum ex libro solo iudicare nequit,"
+                " fabrica-8)%s%.*s%s",
+                (int)t0->valor.mensura,
+                (constans character*)t0->valor.datum,
+                gp->scriptura && gp->pro.mensura > ZEPHYRUM
+                    ? " - pro eo '" : (gp->scriptura ? ""
+                    : " - pro eo 'lectiones_fopen' (eadem forma)"),
+                gp->scriptura ? (int)gp->pro.mensura : ZEPHYRUM,
+                (constans character*)gp->pro.datum,
+                gp->scriptura && gp->pro.mensura > ZEPHYRUM ? "'" : "");
+        }
+        alioquin
+        {
+            sprintf(nuntius, "'%.*s' canalem lectionum praeterit (liber"
+                " lectionum vocationem non videt - fabrica ingressum"
+                " nescit, transitus vetus servaretur)%s%.*s%s",
+                (int)t0->valor.mensura,
+                (constans character*)t0->valor.datum,
+                gp->pro.mensura > ZEPHYRUM ? " - pro eo '" : "",
+                (int)gp->pro.mensura,
+                (constans character*)gp->pro.datum,
+                gp->pro.mensura > ZEPHYRUM ? "'" : "");
+        }
+        _portabilitatis_diagnosticum(sem, parsura, t, codex, nuntius);
     }
 }
 
@@ -9329,7 +9433,11 @@ silva_c89_semantica_analysare_cum_systemate (
     _mores_credo_examinare(sem, parsura);
     /* canalis lectionum (96): ANTE toleras irritas - absorptio usum
      * notat */
-    _canalem_examinare(sem, parsura);
+    _canalem_examinare(sem, parsura,
+        (s32)EXAMEN_CODEX_CANALIS_PRAETERITUS);
+    /* scriptura cruda (97, fabrica-8): eadem ambulatio, tabula sua */
+    _canalem_examinare(sem, parsura,
+        (s32)EXAMEN_CODEX_SCRIPTURA_PRAETERITA);
     /* TOLERA irrita (gradus severi): suppressiones quae nihil
      * absorbuerunt aut sine causa - post ambulationem totam */
     _toleras_irritas_examinare(sem, parsura);

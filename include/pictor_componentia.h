@@ -48,6 +48,10 @@ nomen structura {
     InsulaRamus ramus;
     /* pictor-strata L3: documentum ostensum (strata palettae) */
     constans PictorDocumentum* doc;
+    /* testa-ios C1b: hospes imaginem eligere sinit (servitium
+     * imaginem_eligere) -> quadratum imaginis ad sinistram quadrati
+     * stratorum; FALSUM (ordinarium) = nullum (macOS, Android) */
+                           b32 imago_eligibilis;
 } PictorCompositio;
 
 /* "penicillus" -> "penicillus.ictus"; ignotum -> "" */

@@ -17,6 +17,7 @@
 #include "postulata_posix.h"
 #include "processus.h"
 #include "memoria_processus.h"
+#include "lectiones.h"
 
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -888,6 +889,9 @@ _incipere_cum (
     /* CLOEXEC: exec felix fistulam tacite claudit = signum */
     (vacuum)fcntl(fistula_exec[I], F_SETFD, FD_CLOEXEC);
 
+    /* EXSECUTIO in libro (P): ANTE fork - etiam exec fractum notatur
+     * (conservativum: iudex alienum suspicatur) */
+    lectiones_notare(LECTIO_EXSECUTIO, argumenta[0]);
     p->initium  = _tempus_ms();
     p->pid      = fork();
     si (p->pid < 0)
@@ -1120,6 +1124,7 @@ processus_transformare (
         redde FALSUM;
     }
     u.c = argumenta;
+    lectiones_notare(LECTIO_EXSECUTIO, argumenta[0]);
     (vacuum)execvp(argumenta[0], u.m);
     redde FALSUM;   /* exec felix numquam huc redit */
 }

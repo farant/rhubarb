@@ -138,6 +138,8 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(OFF(stat, st_mtime) == 48 && OFF(stat, st_atime) == 32);"
     echo "IUNGO_ASSERTA(O_WRONLY == 0x0001 && O_CREAT == 0x0200 && O_TRUNC == 0x0400);"
     echo "IUNGO_ASSERTA(O_APPEND == 0x0008);"
+    # liber lectionum (lectiones.c, 2026-10-24): descriptor non hereditatur
+    echo "IUNGO_ASSERTA(O_CLOEXEC == 0x01000000);"
     echo "IUNGO_ASSERTA(O_RDONLY == 0x0000 && O_RDWR == 0x0002);"
     # *at (oraculum effectuum, effectus T5, 2026-10-05)
     echo "IUNGO_ASSERTA(AT_FDCWD == -2);"

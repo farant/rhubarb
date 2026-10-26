@@ -1,12 +1,14 @@
-#ifndef TESTA_ANDROID_INITUS_H
-#define TESTA_ANDROID_INITUS_H
+#ifndef TESTA_INITUS_H
+#define TESTA_INITUS_H
 
-/* testa_android_initus.h - partes PURAE testae Android (testa-spec
- * II.5-II.6): geometria (scala, margo), tactus -> Eventus, decisio
- * quadri, transfusio pixelorum. Valores plani intrant et exeunt -
- * nullum caput NDK: in hospite et in tabula probantur. Constantae
- * NDK hic reddita (android/input.h, NDK r27d); lib/testa_android.c
- * congruentiam in compilatione probat. */
+/* testa_initus.h - partes PURAE testarum Android et iOS (testa-spec
+ * II.5-II.6; testa-ios-spec II.2): geometria (scala, margo), tactus ->
+ * Eventus, phases UITouch -> actiones, decisio quadri, transfusio
+ * pixelorum. Valores plani intrant et exeunt - nullum caput NDK aut
+ * UIKit: in hospite et in tabula probantur. Constantae NDK et UIKit
+ * hic redditae (android/input.h NDK r27d; UITouchPhase);
+ * lib/testa_android.c et lib/testa_ios.m congruentiam in compilatione
+ * probant. Olim testa_android_initus (testa-ios T1). */
 
 #include "latina.h"
 #include "eventus.h"
@@ -18,7 +20,7 @@
 #define TESTA_TACTUS_LIBERATIO              I         /* _UP */
 #define TESTA_TACTUS_MOTUS                  II        /* _MOVE */
 #define TESTA_TACTUS_ABRUPTIO               III       /* _CANCEL */
-#define TESTA_TACTUS_INDICATOR_DEPRESSIO    V         /* _POINTER_DOWN */
+#define TESTA_TACTUS_INDICATOR_DEPRESSIO    V        /* _POINTER_DOWN */
 #define TESTA_TACTUS_INDICATOR_LIBERATIO    VI        /* _POINTER_UP */
 
 /* AMOTION_EVENT_TOOL_TYPE_* */
@@ -26,6 +28,14 @@
 #define TESTA_INSTRUMENTUM_STILUS   II    /* _STYLUS */
 #define TESTA_INSTRUMENTUM_MUS      III   /* _MOUSE */
 #define TESTA_INSTRUMENTUM_GUMMI    IV    /* _ERASER (stili cauda) */
+
+/* UITouchPhase (UIKit, iOS 17+: Began 0, Moved 1, Stationary 2,
+ * Ended 3, Cancelled 4) - lib/testa_ios.m congruentiam probat */
+#define TESTA_PHASIS_INCIPIT        ZEPHYRUM
+#define TESTA_PHASIS_MOVETUR        I
+#define TESTA_PHASIS_QUIESCIT       II
+#define TESTA_PHASIS_FINIT          III
+#define TESTA_PHASIS_ABRUPTA        IV
 
 #define TESTA_INDICATORES_MAXIMI    X     /* plures praetermittuntur */
 
@@ -119,6 +129,31 @@ testa_tactum_vertere (
        constans TestaGeometria* g,
                        Eventus* ev);
 
+/* phasis tactus unius (UITouch) -> actio machinae tactus
+ * (TESTA_TACTUS_*): activi_ante / activi_post = tactus activi ante et
+ * post mutationem huius - primus DEPRESSIO, sequentes
+ * INDICATOR_DEPRESSIO, ultimus sublatus LIBERATIO, alius sublatus
+ * INDICATOR_LIBERATIO, abrupta semper ABRUPTIO. -I = nihil tradendum
+ * (quiescit, phasis ignota). */
+s32
+testa_actio_ex_phase (
+    i32 phasis,
+    i32 activi_ante,
+    i32 activi_post);
+
+/* mensurae imaginis intra 'maxima' (testa-ios C1b R4: photographia
+ * electa, latus longius <= MXXIV): utraque <= maxima -> immutatae;
+ * aliter latus longius = maxima, alterum proportione, rotundatum
+ * (dimidium sursum), minimum I. FALSUM si latitudo, altitudo aut
+ * maxima ZEPHYRUM. */
+b32
+testa_mensuras_aptare (
+    i32  latitudo,
+    i32  altitudo,
+    i32  maxima,
+    i32* lat,
+    i32* alt);
+
 /* EVENTUS_FACULTATES tactus: super (hover) FALSUM, pressio FALSUM
  * (pressio digiti Fire 0.10 synthetica, spica) */
 vacuum
@@ -173,4 +208,4 @@ testa_pixela_transferre (
                          i32  gradus,
                          i32  color_marginis);
 
-#endif /* TESTA_ANDROID_INITUS_H */
+#endif /* TESTA_INITUS_H */

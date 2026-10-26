@@ -270,3 +270,12 @@ tools/linux/probatio.sh because the container mounts the tree READ-ONLY
 and the lock file lives in build/ (by design: two trees must not share a
 /tmp lock). Environmental, older than this change; the new section passes
 on musl and glibc.
+
+## 2026-10-24 — S lines for chmod and directory removal (fabrica-8 T1.1)
+
+`filum_modum_ponere` now notes S (a mode change is a write: fabrica-8 forbids raw chmod outside
+filum, so the trace must name it), and `filum_arborem_delere` notes S for the directory itself after
+rmdir (its children were already noted; `filum_directorium_creare` notes creation). No new delete
+function needed for raw rmdir: `filum_delere` uses remove(), which removes an empty directory too.
+Test: probatio_lectiones 'IIe. modus et arbor deleta' (paths in the credo area); plants removing
+either notare line are red at their own assertion.

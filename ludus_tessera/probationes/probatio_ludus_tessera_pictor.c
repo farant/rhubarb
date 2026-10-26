@@ -7,8 +7,9 @@
  * notata per terminalem iterantur: codificator (cellula VI x VIII) ->
  * octeti -> rivus (modi ut ludus_tessera_currere) ->
  * ludus_tessera_tractare. Status idem: sigillum documenti, cursor
- * actorum, insulae ambae. Quadrum glutini titulum status
- * ("penicillus") in cellulas pingit.
+ * actorum, insulae ambae. Quadrum glutini lineam status in cellulas
+ * pingit: quadratum stratorum in margine dextro, nomen instrumenti
+ * nullum (testa-ios D6).
  */
 #include "latina.h"
 #include "piscina.h"
@@ -220,7 +221,9 @@ _sessionem_probare (
     CREDO_GRADUS ("III. quadrum in cellulas");
     ludus_tessera_quadrum(lt, M + C);
     CREDO_VERUM (tessera_praesentare(opus));
-    CREDO_VERUM (_continet(tessera_pons_memoriae_captum(pm),
+    /* testa-ios D6: nomen instrumenti ("penicillus") ex linea status
+     * sublatum - nec in octetis terminalis */
+    CREDO_FALSUM (_continet(tessera_pons_memoriae_captum(pm),
         "penicillus"));
     /* 013 B3c: pagina (imago) SUPRA mensam - ordo pictoris in
      * tessellatione (olim mensa paginam et ictus celabat) */
@@ -232,11 +235,13 @@ _sessionem_probare (
         CREDO_VERUM (tessera_cellulam_legere(opus, VI, V).color_fundi
             != color_mensae);
     }
-    /* 013 B3 / P1a: linea status in lineis III ULTIMIS; titulus in
-     * media (centratus), post quadrata V (P4a: x CXXXVI -> columna
-     * XXIII, proxima; P3 CX = XVIII; olim LXXXIV = XIV) */
+    /* 013 B3 / P1a: linea status in lineis III ULTIMIS. testa-ios D6:
+     * columna XXIII (olim titulus, 'p') vacua; quadratum stratorum
+     * (icon, XX latum) in columnis LXXVI-LXXVIII */
     CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, XXIII,
-        LINEAE - II).signum, (i32)'p');
+        LINEAE - II).signum, (i32)' ');
+    CREDO_VERUM (tessera_cellulam_legere(opus, LXXVI,
+        LINEAE - II).signum != (i32)' ');
 
     CREDO_GRADUS ("IV. amplitudo mutata: linea status sequitur");
     {
@@ -251,8 +256,10 @@ _sessionem_probare (
         ludus_tessera_quadrum(lt, M + CC);
         CREDO_VERUM (tessera_praesentare(opus));
         CREDO_AEQUALIS_I32 ((i32)tessera_altitudo(opus), XX);
-        CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, XXIII,
-            XVIII).signum, (i32)'p');
+        /* quadratum stratorum lineam status sequitur (linea XVIII
+         * ante mutationem pagina vacua erat) */
+        CREDO_VERUM (tessera_cellulam_legere(opus, LXXVI,
+            XVIII).signum != (i32)' ');
     }
 
     /* volumina temporaria claudenda: aliter /tmp/lt_pictor_*-N

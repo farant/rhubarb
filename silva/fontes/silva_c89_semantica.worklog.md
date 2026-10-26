@@ -1010,3 +1010,19 @@ one. The macro site is only reached on examen's real path (lexicon via
 test that used only the system parse (macros are expanded before the
 semantic token scan) - XI was rebuilt on the real path, calibrated
 (ordinary macro after the limit fires), and the plant went red.
+
+## 2026-10-24 — code 97 SCRIPTURA_PRAETERITA (fabrica-8 T1.2)
+
+Raw writes outside filum: `remove rename` (systema_c89.h), `unlink rmdir mkdir chmod symlink
+utime` (systema_posix.h) as `<gradus genus="scriptura" pro="...">` rows, plus fopen/freopen whose
+SECOND argument is a string literal starting with 'w'/'a' or containing '+' (`_modus_scribens`; a
+non-literal mode stays silent here - 96 still names the call). Same walk as 96: code 96's scan
+became `_canalem_examinare(sem, parsura, codex)`, called once per code with its own seen-sites
+list, so `fopen(p, "w")` carries both 96 and 97. scriptura rows are silent in the 86/87
+portability pass, like canalis rows. Severity DOMESTICUM while the sweep runs (decision: no debt
+list - every occurrence is fixed, then the severity flips to VIOLATIO; only filum/lectiones keep
+per-site <tolera>). Gradus rows wrap across comment lines; attribute values must stay on one line
+(`_gradus_attributum` reads to the closing quote).
+Tests: examen_vectis 'scriptura cruda (97)' - sites wb, a+, macro, unlink, rename; rb, function
+pointer, tolerated mkdir silent; 86/87 silent. Plants (w not recognized, scriptura not parsed,
+86/87 not silenced) red. Amalgam: enum hand-added to silva/amalgama/silva.h, regenerated.

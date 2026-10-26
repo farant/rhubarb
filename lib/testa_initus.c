@@ -1,7 +1,7 @@
-/* testa_android_initus.c - partes purae testae Android (testa-spec
- * II.5-II.6; testa_android_initus.h) */
+/* testa_initus.c - partes purae testae Android (testa-spec
+ * II.5-II.6; testa_initus.h) */
 
-#include "testa_android_initus.h"
+#include "testa_initus.h"
 
 #include <string.h>
 
@@ -268,9 +268,71 @@ testa_tactum_vertere (
             redde VERUM;
 
         ordinarius:
-            /* POINTER_DOWN (digitus secundus), HOVER, OUTSIDE: B1 nihil */
+            /* POINTER_DOWN (digitus II), HOVER, OUTSIDE: nihil */
             redde FALSUM;
     }
+}
+
+s32
+testa_actio_ex_phase (
+    i32 phasis,
+    i32 activi_ante,
+    i32 activi_post)
+{
+    commutatio (phasis)
+    {
+        casus TESTA_PHASIS_INCIPIT:
+            redde activi_ante == ZEPHYRUM
+                ? TESTA_TACTUS_DEPRESSIO
+                : TESTA_TACTUS_INDICATOR_DEPRESSIO;
+        casus TESTA_PHASIS_MOVETUR:
+            redde TESTA_TACTUS_MOTUS;
+        casus TESTA_PHASIS_FINIT:
+            redde activi_post == ZEPHYRUM
+                ? TESTA_TACTUS_LIBERATIO
+                : TESTA_TACTUS_INDICATOR_LIBERATIO;
+        casus TESTA_PHASIS_ABRUPTA:
+            redde TESTA_TACTUS_ABRUPTIO;
+        ordinarius:
+            redde -I;
+    }
+}
+
+b32
+testa_mensuras_aptare (
+    i32  latitudo,
+    i32  altitudo,
+    i32  maxima,
+    i32* lat,
+    i32* alt)
+{
+    i32 longius;
+    i32 brevius;
+    i32 aptatum;
+
+    si (   latitudo == ZEPHYRUM || altitudo == ZEPHYRUM
+        || maxima   == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (latitudo <= maxima && altitudo <= maxima)
+    {
+        *lat = latitudo;
+        *alt = altitudo;
+        redde VERUM;
+    }
+    longius = latitudo >= altitudo ? latitudo : altitudo;
+    brevius = latitudo >= altitudo ? altitudo : latitudo;
+    /* brevius * maxima / longius, dimidium sursum; i64 ne superfluat */
+    aptatum  = (i32)(((i64)brevius * (i64)maxima + (i64)(longius / II))
+             / (i64)longius);
+    si (aptatum < I)
+    {
+        aptatum = I;
+    }
+    *lat = latitudo >= altitudo ? maxima : aptatum;
+    *alt = latitudo >= altitudo ? aptatum : maxima;
+    redde VERUM;
 }
 
 vacuum

@@ -67,6 +67,10 @@ nomen structura {
         TabulaDispersa* sigilla_capitum;
         TabulaDispersa* existentiae;
                Piscina* piscina_memoriae;
+    /* SINE COLLOCATIONE (nexus ex thesauro): hit -> via_obiecti =
+     * blobus, nihil legitur nec scribitur */
+                   b32 sine_collocatione;
+                chorda via_obiecti;
 } Compilatio;
 
 structura Compilator {
@@ -818,8 +822,12 @@ _invenire (
     {
         redde FALSUM;
     }
-    si (!_collocare(c, filum_legere_totum(
-            chorda_ut_cstr(via_obiecti, c->piscina), c->piscina)))
+    si (c->sine_collocatione)
+    {
+        c->via_obiecti = via_obiecti;
+    }
+    alioquin si (!_collocare(c, filum_legere_totum(
+                 chorda_ut_cstr(via_obiecti, c->piscina), c->piscina)))
     {
         redde FALSUM;
     }
@@ -848,9 +856,11 @@ _compilationem_parare (
     c->numerus    = (integer)numerus;
     c->radices    = xar_creare(piscina,
         (i32)magnitudo(constans character*));
-    c->sigilla_capitum   = compilator->sigilla_capitum;
-    c->existentiae       = compilator->existentiae;
-    c->piscina_memoriae  = compilator->piscina_memoriae;
+    c->sigilla_capitum    = compilator->sigilla_capitum;
+    c->existentiae        = compilator->existentiae;
+    c->piscina_memoriae   = compilator->piscina_memoriae;
+    c->sine_collocatione  = FALSUM;
+    c->via_obiecti        = chorda_ex_literis("", piscina);
 }
 
 vacuum
@@ -961,12 +971,14 @@ compilator_compilare (
         compilator->piscina);
 }
 
-CompilatorResultus
-compilator_compilare_in (
+/* communis: compilare_in et compilare_sine_collocatione */
+interior CompilatorResultus
+_compilare_communis (
                       Compilator* compilator,
     constans character* constans* argumenta,
                               i32 numerus,
-                         Piscina* piscina)
+                         Piscina* piscina,
+                              b32 sine_collocatione)
 {
     CompilatorResultus r;
             Compilatio c;
@@ -977,7 +989,9 @@ compilator_compilare_in (
     r.ex_thesauro  = FALSUM;
     r.effusio      = chorda_ex_literis("", piscina);
     r.erratum      = chorda_ex_literis("", piscina);
+    r.via          = chorda_ex_literis("", piscina);
     _compilationem_parare(compilator, argumenta, numerus, piscina, &c);
+    c.sine_collocatione = sine_collocatione;
     si (   !_argumenta_parare(&c)
         || !_identitas_compilatoris(&c, &identitas)
         || !_clavem_capitis(&c, &identitas, &caput))
@@ -991,8 +1005,36 @@ compilator_compilare_in (
     {
         r.codex        = ZEPHYRUM;
         r.ex_thesauro  = VERUM;
+        r.via          = c.sine_collocatione ? c.via_obiecti
+            : chorda_ex_literis(c.exitus, piscina);
         redde r;
     }
     r.codex = _compilare(&c, &caput, &r);
+    si (r.codex == ZEPHYRUM)
+    {
+        r.via = chorda_ex_literis(c.exitus, piscina);
+    }
     redde r;
+}
+
+CompilatorResultus
+compilator_compilare_in (
+                      Compilator* compilator,
+    constans character* constans* argumenta,
+                              i32 numerus,
+                         Piscina* piscina)
+{
+    redde _compilare_communis(compilator, argumenta, numerus, piscina,
+        FALSUM);
+}
+
+CompilatorResultus
+compilator_compilare_sine_collocatione (
+                      Compilator* compilator,
+    constans character* constans* argumenta,
+                              i32 numerus,
+                         Piscina* piscina)
+{
+    redde _compilare_communis(compilator, argumenta, numerus, piscina,
+        VERUM);
 }

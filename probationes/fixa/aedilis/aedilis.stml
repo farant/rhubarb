@@ -8,6 +8,9 @@
     <vexillum! (>-Wall
   </vexilla>
   <variantes praelatio="macos posix"/>
+  <oracula>
+    <oraculum varians="ios" mandatum="xcrun --sdk iphonesimulator clang"/>
+  </oracula>
   <nexus>
     <regula obiectum="beta_macos">
       <vexillum! (>-framework Cocoa

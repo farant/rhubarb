@@ -160,7 +160,9 @@ _sectio_secunda (
     CREDO_VERUM(c->partes == PARTES_TITULUS);
     CREDO_AEQUALIS_S32(c->fines.y, CCXL - VIII);
     CREDO_AEQUALIS_S32(c->fines.altitudo, VIII);
-    CREDO_CHORDA_AEQUALIS_LITERIS(c->titulus, "penicillus");
+    /* testa-ios D6: nomen instrumenti non iam in linea status -
+     * quadratum instrumenti id dicit */
+    CREDO_CHORDA_AEQUALIS_LITERIS(c->titulus, "");
     CREDO_FALSUM(c->focusabilis);
 }
 
@@ -192,7 +194,7 @@ _sectio_tertia (
     CREDO_VERUM(chorda_vacua(c->actio));
     c = componens_invenire_per_id(arbor2, chorda_ex_literis("status",
                                                             piscina));
-    CREDO_CHORDA_AEQUALIS_LITERIS(c->titulus, "ignotum");
+    CREDO_CHORDA_AEQUALIS_LITERIS(c->titulus, ""); /* D6 */
     {
         InsulaRepositorium* repo2;
         repo2 = insula_repositorium_creare(piscina, intern,
@@ -203,7 +205,7 @@ _sectio_tertia (
         CREDO_AEQUALIS_I32(c->scala, I);
         c = componens_invenire_per_id(arbor2,
                 chorda_ex_literis("status", piscina));
-        CREDO_CHORDA_AEQUALIS_LITERIS(c->titulus, "nihil");
+        CREDO_CHORDA_AEQUALIS_LITERIS(c->titulus, ""); /* D6 */
     }
 }
 

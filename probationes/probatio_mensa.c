@@ -11,7 +11,20 @@
 
 #include <stdio.h>
 
-#define VIA_PROBATIONIS "build/probatio_mensa.db"
+/* volumen in area sectionis (credo_area): olim build/probatio_mensa.db
+ * extra vestigium membri (-journal per VFS vestigii notatum) */
+interior constans character*
+_via_probationis (
+    CredoContextus* c);
+
+interior constans character*
+_via_probationis (
+    CredoContextus* c)
+{
+    redde chorda_ut_cstr(chorda_concatenare(chorda_ex_literis(
+        credo_area(c), c->piscina), chorda_ex_literis(
+        "/probatio_mensa.db", c->piscina), c->piscina), c->piscina);
+}
 
 interior s64
 _actum (
@@ -32,7 +45,7 @@ _actum (
 }
 
 
-/* Volumen recens ad VIA_PROBATIONIS: quaeque sectio suum aperit et
+/* Volumen recens in area sua: quaeque sectio suum aperit et
  * claudit (sectiones ordine liberae, credo v2) */
 
 
@@ -47,12 +60,8 @@ _sectio_prima (
     Piscina* piscina;
     Volumen* vol;
 
-    piscina = c->piscina;
-    si (filum_existit(VIA_PROBATIONIS))
-    {
-        filum_delere(VIA_PROBATIONIS);
-    }
-    vol = volumen_creare(piscina, VIA_PROBATIONIS);
+    piscina  = c->piscina;
+    vol      = volumen_creare(piscina, _via_probationis(c));
 
     {
                  Xar* acta;
@@ -90,12 +99,8 @@ _sectio_secunda (
     Piscina* piscina;
     Volumen* vol;
 
-    piscina = c->piscina;
-    si (filum_existit(VIA_PROBATIONIS))
-    {
-        filum_delere(VIA_PROBATIONIS);
-    }
-    vol = volumen_creare(piscina, VIA_PROBATIONIS);
+    piscina  = c->piscina;
+    vol      = volumen_creare(piscina, _via_probationis(c));
 
     {
               chorda  status;
@@ -168,12 +173,8 @@ _sectio_tertia (
     Piscina* piscina;
     Volumen* vol;
 
-    piscina = c->piscina;
-    si (filum_existit(VIA_PROBATIONIS))
-    {
-        filum_delere(VIA_PROBATIONIS);
-    }
-    vol = volumen_creare(piscina, VIA_PROBATIONIS);
+    piscina  = c->piscina;
+    vol      = volumen_creare(piscina, _via_probationis(c));
 
     {
               chorda  status;

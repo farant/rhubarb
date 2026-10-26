@@ -31,7 +31,6 @@
   <componens
               id="status"
           partes="titulus"
-         titulus="penicillus"
                x="0"
                y="232"
         latitudo="320"

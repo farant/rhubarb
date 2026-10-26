@@ -664,6 +664,63 @@ figura_quadrati (
         mandata_linea(m, a, b, I, figura_color_thematis(COLOR_TEXT));
         redde;
     }
+    /* testa-ios C1b: icon imaginis - tabula picta (margo), mons
+     * duorum cacuminum et sol (II x II) */
+    si (chorda_aequalis_literis(t, "imago:quadratum"))
+    {
+          Fines g;
+        Punctum p[V];
+            s32 k;
+
+        g.x         = IV;
+        g.y         = V;
+        g.latitudo  = XII;
+        g.altitudo  = X;
+        mandata_rectangulum(m, g, figura_color_thematis(COLOR_TEXT),
+            FALSUM);
+        p[ZEPHYRUM].x  = V;
+        p[ZEPHYRUM].y  = XIII;
+        p[I].x         = VIII;
+        p[I].y         = IX;
+        p[II].x        = X;
+        p[II].y        = XI;
+        p[III].x       = XII;
+        p[III].y       = VIII;
+        p[IV].x        = XIV;
+        p[IV].y        = XIII;
+        per (k = ZEPHYRUM; k < IV; k++)
+        {
+            mandata_linea(m, p[k], p[k + I], I,
+                figura_color_thematis(COLOR_TEXT));
+        }
+        g.x         = VI;
+        g.y         = VII;
+        g.latitudo  = II;
+        g.altitudo  = II;
+        mandata_rectangulum(m, g, figura_color_thematis(COLOR_TEXT),
+            VERUM);
+        redde;
+    }
+    /* testa-ios D6: icon stratorum - tres folia sibi superposita,
+     * a tergo ad frontem (fundus deinde margo: anterius tegit) */
+    si (chorda_aequalis_literis(t, "strata:quadratum"))
+    {
+        Fines g;
+          s32 k;
+
+        per (k = ZEPHYRUM; k < III; k++)
+        {
+            g.x         = IV + II * k;
+            g.y         = IV + III * k;
+            g.latitudo  = IX;
+            g.altitudo  = VI;
+            mandata_rectangulum(m, g,
+                figura_color_thematis(COLOR_BACKGROUND), VERUM);
+            mandata_rectangulum(m, g, figura_color_thematis(COLOR_TEXT),
+                FALSUM);
+        }
+        redde;
+    }
     si (t.mensura > VII && memcmp(t.datum, "strata:", VII) == ZEPHYRUM)
     {
         reliquum.datum    = t.datum + VII;
