@@ -94,3 +94,19 @@ while already playing does not stack holds. Held from _ponere; released when the
 ends without looping and in cantor_sistere. A looping region holds for as long as it
 loops (continuous playback). Caveat (cantor.h): a cantor dropped while playing without
 cantor_sistere keeps the device open - nothing in the house does that.
+
+## 2026-10-26 - portamento: one voice through glided notes (RTB1F)
+
+Iussa cannot be revoked, so the decision is made when the SOURCE is iussed: a
+`continuatur` note sends no PORTAM_CLAUDERE and its CantorVox remembers `continuatur`.
+When the target (illapsus > 0) is iussed, _vocem_continuatam finds the voice (same
+part, pulsus_finis == onset, same transitus, still alive) and _illapsum_iubere sends
+NOTAM_PONERE at the onset (clivus = glide pulses -> quadra), VOCEM_PONERE if the note's
+gain differs, extends finis/pulsus_finis, and closes the gate at the target's end unless
+it continues too. No voice found (seek, loop, earlier part muted) = an ordinary new note.
+
+Safety net beyond the approved header (told to Fran): _orbas_claudere after every
+prospectus window closes any continuing voice of the current transitus whose end is
+inside the window (its target would have been iussed in this same window) or at/after
+the region end. This covers mute toggles, model edits, a '@' target, and region ends
+with one rule, so no voice ever hangs with an open gate.

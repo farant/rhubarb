@@ -28,6 +28,9 @@ nomen structura {
             s64 pulsus_initium;
             s64 pulsus_finis;
             s64 transitus;
+            /* portamentum: porta aperta, nota proxima vocem hanc
+             * glissando continuat */
+            b32 continuatur;
 } CantorVox;
 
 structura Cantor {
@@ -312,6 +315,103 @@ _segmentum_iubere (
     }
 }
 
+/* vox continuata partis quae ad pulsum p desinit (transitus currens);
+ * NIHIL nulla */
+interior CantorVox*
+_vocem_continuatam (
+    Cantor* c,
+       s32  pars,
+       s64  p)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < CANTOR_VOCES; k++)
+    {
+        CantorVox* v = &c->voces[k];
+
+        si (   v->activa && v->continuatur && v->pars == pars
+            && v->pulsus_finis == p && v->transitus == c->basis_quadrum
+            && concentus_vox_vivit(c->concentus, v->ansa))
+        {
+            redde v;
+        }
+    }
+    redde NIHIL;
+}
+
+/* portam vocis ad finem eius claudit */
+interior vacuum
+_portam_claudere (
+       Cantor* c,
+    CantorVox* v)
+{
+    MixturaIussum i;
+
+    mixtura_iussum_parare(&i, MIXTURA_IUSSUM_PORTAM_CLAUDERE, v->finis);
+    i.ansa = v->ansa;
+    (vacuum)concentus_iubere(c->concentus, &i);
+    v->continuatur = FALSUM;
+}
+
+/* nota cum portamento vocem continuatam glissando sumit: altitudo,
+ * lucrum si differt, finis novus, porta (nisi ipsa continuatur) */
+interior vacuum
+_illapsum_iubere (
+                 Cantor* c,
+              CantorVox* v,
+    constans CarmenPars* pars,
+    constans CarmenNota* n,
+                    s64  p)
+{
+    MixturaIussum i;
+              s64 initium  = _quadrum(c, p);
+              f32 basis    = n->lucrum * pars->lucrum;
+
+    mixtura_iussum_parare(&i, MIXTURA_IUSSUM_NOTAM_PONERE, initium);
+    i.ansa    = v->ansa;
+    i.nota    = (f32)n->nota;
+    i.clivus  = (i32)(_quadrum(c, p + n->illapsus) - initium);
+    (vacuum)concentus_iubere(c->concentus, &i);
+    v->pulsus_initium  = p;
+    v->pulsus_finis    = p + n->longitudo;
+    v->finis           = _quadrum(c, p + n->longitudo);
+    v->continuatur     = n->continuatur;
+    si (fabs((f64)(basis - v->basis)) > 1e-6)
+    {
+        v->basis = basis;
+        _vocem_ponere(c, v, initium, CANTOR_EVANESCENTIA,
+                      basis * carmen_intensio(c->carmen, v->pars, p));
+    }
+    si (!v->continuatur)
+    {
+        _portam_claudere(c, v);
+    }
+    _segmentum_iubere(c, v, p);
+}
+
+/* post prospectum: vox continuata cuius proxima non venit (finis intra
+ * iussa aut ad finem regionis) ad finem suum clauditur */
+interior vacuum
+_orbas_claudere (
+    Cantor* c,
+       s64  summus)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < CANTOR_VOCES; k++)
+    {
+        CantorVox* v = &c->voces[k];
+
+        si (   v->activa && v->continuatur
+            && v->transitus == c->basis_quadrum
+            && (v->pulsus_finis < summus
+            || v->pulsus_finis >= _finis(c)))
+        {
+            _portam_claudere(c, v);
+        }
+    }
+}
+
 /* nota una (pulsus absolutus p) iubetur; sine voce aut sede omissa */
 interior vacuum
 _notam_iubere (
@@ -340,6 +440,17 @@ _notam_iubere (
     alioquin si (tibia == NIHIL)
     {
         redde;
+    }
+    alioquin si (n->illapsus > ZEPHYRUM)
+    {
+        CantorVox* prior = _vocem_continuatam(c,
+            (s32)(pars - c->carmen->partes), p);
+
+        si (prior != NIHIL)
+        {
+            _illapsum_iubere(c, prior, pars, n, p);
+            redde;
+        }
     }
     si (v == NIHIL)
     {
@@ -376,13 +487,14 @@ _notam_iubere (
     {
         redde;
     }
-    si (sonitus == NIHIL)
+    si (sonitus == NIHIL && !n->continuatur)
     {
         mixtura_iussum_parare(&i, MIXTURA_IUSSUM_PORTAM_CLAUDERE,
             finis);
         i.ansa = a;
         (vacuum)concentus_iubere(c->concentus, &i);
     }
+    v->continuatur     = sonitus == NIHIL && n->continuatur;
     v->ansa            = a;
     v->initium         = initium;
     v->finis           = finis;
@@ -601,6 +713,7 @@ cantor_agere (
              * accipiunt (initium ipsum _notam_iubere tractat) */
             _notas_iubere(c, c->iussus, summus);
             _intensiones_iubere(c, c->iussus, summus);
+            _orbas_claudere(c, summus);
             c->iussus = summus;
         }
         si (c->iussus < finis)

@@ -96,3 +96,9 @@ even.
 
 "repetitio a +2" / "repetitio a -1" / "repetitio a" at the destination bar. Transposed
 notes carry no letter, so they are spelled from the key (E4 - 1 in C maior = D#4).
+
+## 2026-10-26 - '/' mark for portamento (RTB1F)
+
+A note with `continuatur` prints '/' after its value where it ENDS ("C4:4/"; a note
+crossing a bar line prints "E4:2~" then "~:2/"). Chords never carry it (MML parts are
+monophonic; generated accompaniment never sets it).

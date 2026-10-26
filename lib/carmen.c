@@ -530,6 +530,8 @@ _frustum_legere (
         n->littera      = k.notae[i].littera;
         n->praeparatum  = k.notae[i].praeparatum;
         n->offset       = k.notae[i].offset;
+        n->illapsus     = k.notae[i].illapsus;
+        n->continuatur  = k.notae[i].continuatur;
     }
     frustum->numerus           = k.numerus;
     frustum->longitudo         = k.pulsus;
@@ -783,6 +785,8 @@ _comitatum_legere (
         n->littera      = notae[i].littera;
         n->praeparatum  = _vacua();
         n->offset       = notae[i].offset;
+        n->illapsus     = ZEPHYRUM;
+        n->continuatur  = FALSUM;
     }
     frustum->pulsus     = ab;
     frustum->textus     = figura->textus;
@@ -1525,6 +1529,29 @@ _frustum_iterare (
             x.pulsus = a - s->pulsus;
             x.littera = r->semitonia != ZEPHYRUM ? '\0' : x.littera;
             novum.notae[novum.numerus++] = x;
+        }
+    }
+    /* portamentum sectione sectum: par (continuatur, portamentum)
+     * manet solum si ambae iteratae et contiguae */
+    per (j = ZEPHYRUM; j < novum.numerus; j++)
+    {
+        CarmenNota* x = &novum.notae[j];
+
+        si (   x->continuatur
+            && (   j + I >= novum.numerus
+                || novum.notae[j + I].illapsus == ZEPHYRUM
+                || novum.notae[j + I].pulsus != x->pulsus
+                    + x->longitudo))
+        {
+            x->continuatur = FALSUM;
+        }
+    }
+    per (j = ZEPHYRUM; j < novum.numerus; j++)
+    {
+        si (   novum.notae[j].illapsus > ZEPHYRUM
+            && (j == ZEPHYRUM || !novum.notae[j - I].continuatur))
+        {
+            novum.notae[j].illapsus = ZEPHYRUM;
         }
     }
     /* insertio ordine pulsus */

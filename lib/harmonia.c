@@ -93,6 +93,8 @@ _classem_scribere (
     n.praeparatum.datum = NIHIL;
     n.praeparatum.mensura = ZEPHYRUM;
     n.offset = ZEPHYRUM;
+    n.illapsus = ZEPHYRUM;
+    n.continuatur = FALSUM;
     o = partitura_orthographia(carmen, &n, pulsus);
     bene = chorda_aedificator_appendere_character(textus, o.littera);
     per (k = ZEPHYRUM; k < o.alteratio; k++)

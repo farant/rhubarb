@@ -41,6 +41,10 @@ nomen structura {
              b32 ligata;
              b32 post_notam;
              s32 nota_ultima;
+             /* portamentum: '/' lectum - pulsus glissandi notae
+              * proximae (0 = nullum) et offset signi */
+             s64 illapsus_proximus;
+             i32 offset_glissandi;
 } CantusLector;
 
 /* semitonia litterarum c d e f g a b */
@@ -279,13 +283,23 @@ _notam_legere (
         l->pulsus_totus  += (s64)pulsus;
         redde VERUM;
     }
+    si (l->illapsus_proximus > ZEPHYRUM && nota == l->nota_ultima)
+    {
+        redde _vitium(l, offset,
+            "portamentum ad altitudinem eandem ('&' scribe)");
+    }
     l->nota_ultima = nota;
     si (l->notae != NIHIL)
     {
         CantusNota* n = &l->notae[l->numerus];
 
-        n->nota     = (i32)nota;
-        n->initium  = _quadrum(l, l->pulsus);
+        /* glissandum notam proximam non excedit */
+        n->illapsus = l->illapsus_proximus
+            < (s64)pulsus ? l->illapsus_proximus
+                                                     : (s64)pulsus;
+        n->continuatur  = FALSUM;
+        n->nota         = (i32)nota;
+        n->initium      = _quadrum(l, l->pulsus);
         n->longitudo = _quadrum(l, l->pulsus + (s64)pulsus)
             - n->initium;
         n->lucrum            = l->lucrum;
@@ -295,9 +309,40 @@ _notam_legere (
         n->pulsus            = l->pulsus_totus;
         n->pulsus_longitudo  = (s64)pulsus;
     }
+    l->illapsus_proximus = ZEPHYRUM;
     l->numerus++;
     l->pulsus        += (s64)pulsus;
     l->pulsus_totus  += (s64)pulsus;
+    redde VERUM;
+}
+
+/* '/' [longitudo]: nota ultima in proximam pergit */
+interior b32
+_illapsum_legere (
+    CantusLector* l)
+{
+    i32 offset = l->positio;
+    i32 pulsus = (i32)CANTUS_PULSUS_INTEGRAE / (i32)XVI;
+
+    si (!l->post_notam)
+    {
+        redde _vitium(l, offset, "portamentum: '/' post notam solum");
+    }
+    l->positio++;
+    si (_cifra(_signum(l, l->positio)))
+    {
+        si (!_mensuram_legere(l, VERUM, &pulsus))
+        {
+            redde FALSUM;
+        }
+    }
+    si (l->notae != NIHIL)
+    {
+        l->notae[l->numerus - I].continuatur = VERUM;
+    }
+    l->post_notam         = FALSUM;
+    l->illapsus_proximus  = (s64)pulsus;
+    l->offset_glissandi   = offset;
     redde VERUM;
 }
 
@@ -361,6 +406,13 @@ _currere (
             l->ligata = VERUM;
             l->positio++;
         }
+        alioquin si (s == '/')
+        {
+            si (!_illapsum_legere(l))
+            {
+                redde FALSUM;
+            }
+        }
         alioquin si (s == '|')
         {
             si (l->lineae != NIHIL)
@@ -382,6 +434,11 @@ _currere (
         }
         alioquin si (s == 'r')
         {
+            si (l->illapsus_proximus > ZEPHYRUM)
+            {
+                redde _vitium(l, l->offset_glissandi,
+                    "portamentum: nota proxima exspectata (non pausa)");
+            }
             l->post_notam = FALSUM;
             l->positio++;
             si (!_mensuram_legere(l, FALSUM, &pulsus))
@@ -482,6 +539,11 @@ _currere (
         redde _vitium(l, l->positio,
             "ligatura: nota eadem altitudine exspectata");
     }
+    si (l->illapsus_proximus > ZEPHYRUM)
+    {
+        redde _vitium(l, l->offset_glissandi,
+            "portamentum: nota proxima exspectata");
+    }
     redde VERUM;
 }
 
@@ -516,6 +578,8 @@ _lectorem_parare (
     l->ligata               = FALSUM;
     l->post_notam           = FALSUM;
     l->nota_ultima          = -I;
+    l->illapsus_proximus    = ZEPHYRUM;
+    l->offset_glissandi     = ZEPHYRUM;
     si (tempora != NIHIL)
     {
         tempora[ZEPHYRUM].pulsus      = ZEPHYRUM;

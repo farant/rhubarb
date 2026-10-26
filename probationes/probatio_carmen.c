@@ -1588,6 +1588,40 @@ _sectio_comitatus_vitia (
         "</pars>"), "x", "s", I, ZEPHYRUM);
 }
 
+/* portamentum notis copiatur; repetitio par sectione sectum solvit
+ * (continuatur sine proxima, portamentum sine priore), par totum
+ * servat */
+interior vacuum
+_sectio_illapsus (
+    CredoContextus* c)
+{
+                 Carmina  liber;
+     constans CarmenPars* p;
+
+    CREDO_NECESSE (_legere(c, _carmen(c, "",
+        "<sectio titulus=\"a\" mensura=\"1\" usque=\"2\"/>"
+        "<sectio titulus=\"b\" mensura=\"2\" usque=\"3\"/>"
+        "<sectio titulus=\"t\" mensura=\"1\" usque=\"3\"/>"
+        "<repetitio sectio=\"a\" mensura=\"3\"/>"
+        "<repetitio sectio=\"b\" mensura=\"4\"/>"
+        "<repetitio sectio=\"t\" mensura=\"5\"/>"
+        "<pars titulus=\"m\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>c2 e2/ | g1</textus></frustum>"
+        "</pars>"), &liber));
+    p = &liber.carmina[ZEPHYRUM].partes[ZEPHYRUM];
+    CREDO_NECESSE (p->numerus_frustorum == IV);
+    /* scriptum */
+    CREDO_VERUM (p->frusta[0].notae[I].continuatur);
+    CREDO_AEQUALIS_S64 (p->frusta[0].notae[II].illapsus, CCXL);
+    /* a (c e): e sine proxima */
+    CREDO_FALSUM (p->frusta[1].notae[I].continuatur);
+    /* b (g): sine priore */
+    CREDO_AEQUALIS_S64 (p->frusta[2].notae[0].illapsus, ZEPHYRUM);
+    /* t (c e g): par manet */
+    CREDO_VERUM (p->frusta[3].notae[I].continuatur);
+    CREDO_AEQUALIS_S64 (p->frusta[3].notae[II].illapsus, CCXL);
+}
+
 /* valor absolutus s64 (llabs C99 est) */
 interior s64
 _absolutum (
@@ -1740,6 +1774,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "agogica", _sectio_inaequalitas, NIHIL, NIHIL, NIHIL, NIHIL },
     { "dynamica", _sectio_intensio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "repetitio", _sectio_repetitio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "portamentum", _sectio_illapsus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "comitatus", _sectio_comitatus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "comitatus_vitia", _sectio_comitatus_vitia, NIHIL, NIHIL, NIHIL,
         NIHIL },

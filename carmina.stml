@@ -50,7 +50,8 @@
      comitandi; desideratum ...Q7G5): F maior, 3/4, 138 agogica
      vindobonensi, XVI mensurae - melodia chordae, harpa figura valsa
      ex acordis declaratis (I V7 I IV I V7/V ii V7 I), crescendo ad
-     XIII, diminuendo, ritardando ad fermatam; F# mensurae XII (D7,
+     XIII, diminuendo, ritardando ad fermatam; portamenta chordarum in
+     saltibus (mensurae 1-2, 8-9, 12-13); F# mensurae XII (D7,
      dominans ad ii) extra clavem nominatur - consultum. Auribus
      iudicanda. -->
 <carmina>
@@ -211,7 +212,7 @@
         textus="F | F | C7 | C7 | C7 | C7 | F | F | Bb | Bb | F | D7 | Gm | C7 | F | F"/>
     <pars titulus="melodia" instrumentum="chordae" lucrum="1">
       <frustum mensura="1">
-        <textus!>o4 a2 o5 c4 | o5 f2. | o5 e2 d4 | o5 c2 o4 b-4 | o4 g2 b-4 | o5 e2 d4 | o5 c2 o4 a4 | o4 f2. | o5 d2 f4 | o5 d4 c4 o4 b-4 | o4 a2 o5 c4 | o5 f#2 d4 | o5 g2 d4 | o5 c2 e4 | o5 f2 c4 | o5 f2.</textus>
+        <textus!>o4 a2 o5 c4/8 | o5 f2. | o5 e2 d4 | o5 c2 o4 b-4 | o4 g2 b-4 | o5 e2 d4 | o5 c2 o4 a4 | o4 f2./8 | o5 d2 f4 | o5 d4 c4 o4 b-4 | o4 a2 o5 c4 | o5 f#2 d4/ | o5 g2 d4 | o5 c2 e4 | o5 f2 c4 | o5 f2.</textus>
       </>
     </>
     <pars titulus="harpa" instrumentum="harpa" lucrum="1">

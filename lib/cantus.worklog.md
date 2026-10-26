@@ -224,3 +224,17 @@ advance after a tie" stayed green because the test checked the next note's PULSU
 Note for plants: silva.planta matches anchors whitespace-insensitively - two lines that
 differ only in alignment ('l->ligata = FALSUM' in the reader init and in the tie block)
 count as the same anchor; give a second line of context.
+
+## 2026-10-26 - portamento '/' (RTB1F)
+
+`/` [length] after a note: the note's voice continues into the NEXT note and glides to
+its pitch from that note's onset over the length (MML divisor, default 16, capped at the
+next note's length). CantusNota gains `continuatur` (on the source) and `portamentum`
+(pulses, on the target). Reader state: `illapsus_proximus` pending + its offset. Errors: '/'
+not right after a note (post_notam false - so '//' and 'v50 /' fail too), a rest or the
+end before the next note, the same pitch (write '&'), '&/' (the tie rule's own message).
+Spaces, '|', o/</>, l, v, @ may sit between '/' and its note.
+
+Test lesson: "c4/ r4" alone did NOT prove the rest check - without it the end-of-text
+check fires at the same offset 2. "c4/ r4 e4" does. Same trap as before: an error test
+must fail through exactly one rule.

@@ -306,3 +306,12 @@ index. Test: frustum / comitatus / frustum -> scriptum 0, -1, 1.
 
 _ambitum_legere (instrument ambitus "N..M") is reused for ambitus= and bassus=; it sits
 later in the file, so a static prototype precedes _partem_legere.
+
+## 2026-10-26 - portamento fields; repeats heal cut glides (RTB1F)
+
+CarmenNota copies `illapsus` / `continuatur` from cantus (comitatus and harmonia's
+scratch notes set them 0). A <sectio> boundary can cut a glide: _frustum_iterare keeps the
+pair only when BOTH notes were copied and are contiguous (pass 1 clears continuatur
+without a gliding next note, pass 2 clears illapsus without a continuing previous).
+cantor's orphan sweep would catch a dangling one anyway, but partitura would print a
+false '/'.

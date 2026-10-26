@@ -158,6 +158,9 @@ nomen structura {
        chorda praeparatum;   /* '@' (percussio: sonitus pro nota);
                                * vacua = instrumentum partis */
           i32 offset;        /* in textu frusti */
+          s64 illapsus;      /* pulsus glissandi IN hanc notam (nota
+                               * priore '/', cantus.h); 0 = nullum */
+          b32 continuatur;   /* '/': vox in notam proximam pergit */
 } CarmenNota;
 
 nomen structura {

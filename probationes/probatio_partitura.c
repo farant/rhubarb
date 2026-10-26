@@ -245,6 +245,34 @@ _sectio_ligaturae (
 }
 
 
+/* portamentum: '/' post valorem ubi nota desinit (trans lineam: post
+ * residuum) */
+interior vacuum
+_sectio_illapsus (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"p\">"
+        "<pars titulus=\"a\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\">"
+        "<textus!>o4 c4/ e4 g2/ | e1/8 | c2 e1/ g2</textus></frustum>"
+        "</pars></carmen></carmina>");
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scribere(c, k, NIHIL),
+        "carmen p: c maior, 4/4, 120\n"
+        "  pars a: aether, lucrum 1.00\n"
+        "mensura 1\n"
+        "  a  C4:4/ E4:4 G4:2/\n"
+        "mensura 2\n"
+        "  a  E4:1/\n"
+        "mensura 3\n"
+        "  a  C4:2 E4:2~\n"
+        "mensura 4\n"
+        "  a  ~:2/ G4:2\n");
+}
+
+
     /* ==================================================
      * SIMUL: acervi, percussio, mutus et solus
      * ================================================== */
@@ -749,6 +777,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "sensibilis", _sectio_sensibilis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "valores", _sectio_valores, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ligaturae", _sectio_ligaturae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "portamentum", _sectio_illapsus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "simul", _sectio_simul, NIHIL, NIHIL, NIHIL, NIHIL },
     { "mutationes", _sectio_mutationes, NIHIL, NIHIL, NIHIL, NIHIL },
     { "forma", _sectio_forma, NIHIL, NIHIL, NIHIL, NIHIL },

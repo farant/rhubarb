@@ -568,6 +568,10 @@ _partem_scribere (
             {
                 _character(s, '~');
             }
+            alioquin si (numerus == I && n->continuatur)
+            {
+                _character(s, '/');
+            }
             si ((ad < finis ? ad : finis) > cursor)
             {
                 cursor = ad < finis ? ad : finis;

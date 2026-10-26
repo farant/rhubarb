@@ -31,6 +31,17 @@
  * cantor_sistere: pausa longa exitum non claudit. Cantor sonans sine
  * cantor_sistere relictus exitum apertum tenet.
  *
+ * PORTAMENTUM: nota 'continuatur' portam non claudit; nota proxima
+ * vocem eius (pars eadem, finis = initium suum, transitus idem) per
+ * NOTAM_PONERE ad initium suum glissat (clivus = portamentum in
+ * quadris), lucrum suum per VOCEM_PONERE si differt, portam ad finem
+ * suum claudit (nisi ipsa continuatur). Vox non inventa (quaerere,
+ * iteratio, prior tacita) = nota ut solet incipit. Nota continuata ad
+ * finem regionis (proxima extra) portam ut solet claudit - vox numquam
+ * pendet: post prospectum quemque vox continuata cuius proxima non
+ * venit (pars muta, exemplar mutatum, '@') ad finem suum clauditur.
+ * Sonitus ('@') non glissant.
+ *
  * Instrumenta: primum carminis ipsius (carmen_instrumentum: carminis,
  * libri), deinde per resolutorem (CantorResolutor): instrumentum partis
  * -> TibiaParametra, '@titulus' -> SonitusParametra; patches usoris

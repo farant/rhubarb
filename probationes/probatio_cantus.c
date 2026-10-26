@@ -447,6 +447,59 @@ _sectio_ligatura (
 }
 
 
+/* portamentum: '/' [longitudo] - nota continuatur, proxima glissandum
+ * suum fert (ordinarium sedecima, nota proxima non longius) */
+interior vacuum
+_sectio_illapsus (
+    CredoContextus* c)
+{
+    Cantilena k;
+
+    CREDO_NECESSE (_legere(c, "c4 e4", &k));
+    CREDO_VERUM (   !k.notae[ZEPHYRUM].continuatur
+                 && k.notae[I].illapsus == ZEPHYRUM);
+    CREDO_NECESSE (_legere(c, "e4/ g4", &k));
+    CREDO_NECESSE (k.numerus == II);
+    CREDO_VERUM (k.notae[ZEPHYRUM].continuatur);
+    CREDO_AEQUALIS_S64 (k.notae[ZEPHYRUM].illapsus, ZEPHYRUM);
+    CREDO_AEQUALIS_S64 (k.notae[I].illapsus, CCXL);
+    CREDO_FALSUM (k.notae[I].continuatur);
+    /* longitudo data, puncta; nota proxima brevior: tota */
+    CREDO_NECESSE (_legere(c, "e4/8 g4", &k));
+    CREDO_AEQUALIS_S64 (k.notae[I].illapsus, CDLXXX);
+    CREDO_NECESSE (_legere(c, "e4/8. g2", &k));
+    CREDO_AEQUALIS_S64 (k.notae[I].illapsus, DCCXX);
+    CREDO_NECESSE (_legere(c, "e4/2 g8", &k));
+    CREDO_AEQUALIS_S64 (k.notae[I].illapsus, CDLXXX);
+    /* catena; ligatura ante; trans lineam et mandata */
+    CREDO_NECESSE (_legere(c, "c4/ e4 g4", &k));
+    CREDO_AEQUALIS_S64 (k.notae[II].illapsus, ZEPHYRUM);
+    CREDO_NECESSE (_legere(c, "c4/ e4/ g4", &k));
+    CREDO_VERUM (   k.notae[I].continuatur
+                 && k.notae[I].illapsus == CCXL
+                 && k.notae[II].illapsus == CCXL);
+    CREDO_NECESSE (_legere(c, "c4&c4/ e4", &k));
+    CREDO_NECESSE (k.numerus == II);
+    CREDO_AEQUALIS_S64 (k.notae[ZEPHYRUM].pulsus_longitudo, MCMXX);
+    CREDO_VERUM (k.notae[ZEPHYRUM].continuatur);
+    CREDO_NECESSE (_legere(c, "e4 / | o5 v50 c4", &k));
+    CREDO_AEQUALIS_I32 (k.notae[I].nota, LXXII);
+    CREDO_AEQUALIS_S64 (k.notae[I].illapsus, CCXL);
+    CREDO_F32_PROXIMUS (k.notae[I].lucrum, 0.5f, 0.0001f);
+    /* vitia: sine nota priore, ante pausam, ad finem, altitudo eadem,
+     * '&/', '//', longitudo mala, post mandatum */
+    _vitium(c, "/c4", ZEPHYRUM);
+    _vitium(c, "r4/ c4", II);
+    _vitium(c, "c4/ r4 e4", II);
+    _vitium(c, "c4/", II);
+    _vitium(c, "c4/ c4", IV);
+    _vitium(c, "c4&/ c4", III);
+    _vitium(c, "c4// e4", III);
+    _vitium(c, "c4/65 e4", III);
+    _vitium(c, "c4 v50 / e4", VII);
+}
+
+
     /* ==================================================
      * TRIOLI: longitudo divisor integrae 1..64
      * ================================================== */
@@ -1125,6 +1178,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "mandata", _sectio_mandata, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia", _sectio_vitia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ligatura", _sectio_ligatura, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "portamentum", _sectio_illapsus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ternarii", _sectio_ternarii, NIHIL, NIHIL, NIHIL, NIHIL },
     { "lineae", _sectio_lineae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "iussa", _sectio_iussa, NIHIL, NIHIL, NIHIL, NIHIL },

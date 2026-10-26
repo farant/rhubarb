@@ -17,6 +17,12 @@
  *                [ '&' ]          ligatura: nota PROXIMA eiusdem
  *                                 altitudinis continuat (inter eas
  *                                 spatia, '|', o N, < > soli)
+ *                [ '/' [ longitudo ] ]  PORTAMENTUM: vox in notam
+ *                                 PROXIMAM pergit et ad altitudinem
+ *                                 eius glissat - ab initio eius per
+ *                                 longitudinem (divisor integrae ut
+ *                                 infra, ordinaria 16; longior nota
+ *                                 proxima: tota)
  *   pausa     := r  [ mensura ]
  *   mensura   := longitudo { '.' }        longitudo divisor integrae
  *                                         1..64: 1 2 4 8 16 32 64;
@@ -55,6 +61,13 @@
  * offset primae) - analysis, cantor, partitura ('~' trans lineam)
  * sonum unum vident. Altitudo diversa (legato, non ligatura), '&' ante
  * pausam aut finem, '&&': vitium.
+ *
+ * PORTAMENTUM: nota cum '/' porta aperta in proximam transit (sonus
+ * unus, altitudo glissans - chorda non iterum vellitur, vox non
+ * iterum incipit); proxima notam suam servat (analysis, partitura
+ * notas duas vident). '/' ante pausam aut finem, ad altitudinem eandem
+ * ('&' scribe), '&/', '//': vitium. Iussa (cantus_iussa_parare,
+ * sonitus singuli): '/' ignoratur.
  *
  * NONDUM (in PULL): 'q' (pars sonans), syllabae Guidonis (ut re mi
  * ...), voces plures simul.
@@ -110,6 +123,9 @@ nomen structura {
          chorda praeparatum;    /* '@titulus' (scissura textus) aut
                                  * vacua = ordinarium vocantis */
             i32 offset;         /* octetus notae in textu */
+            s64 illapsus;       /* pulsus glissandi IN hanc notam (nota
+                                 * priore '/'); 0 = nullum */
+            b32 continuatur;    /* '/': vox in notam proximam pergit */
 } CantusNota;
 
 /* linea mensurae scripta ('|') */
