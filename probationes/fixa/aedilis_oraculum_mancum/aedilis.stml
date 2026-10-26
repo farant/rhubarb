@@ -1,0 +1,6 @@
+<aedilis>
+  <!-- oraculum sine mandato: configuratio RECUSATUR (testa-ios T3) -->
+  <oracula>
+    <oraculum varians="ios"/>
+  </oracula>
+</aedilis>

@@ -481,6 +481,11 @@ nomen structura {
      * I = omnes (iudicare -audit); N = unus ex N (specimen
      * determinatum: octetus primus clavis ingressuum modulo N) */
     i32 auditus;
+    /* VESTIGIA CONFERRE (fabrica-8 mensura; probare -conferre): post
+     * membrum quodque mutata photographiarum extra locum eius contra
+     * scripturas libri (S) conferuntur, differentiae in
+     * <area>vestigia_collata.txt. FALSUM = nihil */
+    b32 vestigia_conferre;
     /* ==== IUDICIUM (spec 3 par. XII, T5b) - omnia NIHIL licent ==== */
     /* ambitus quem fabrica PORTAE dat: VERUM + valor si variabilis
      * adest. Lectio E cuius valor ab eo differt intra portam posita est
@@ -546,11 +551,13 @@ nomen structura {
      * NIHIL = nulla; gradus variantis, e.g. sanitatores et
      * -DPISCINA_VENENUM=1 - 2026-10-22) - thesaurus mandatum totum
      * sigillat, ergo obiecta variantis sua sunt. FALSUM + erratum
-     * clang. */
+     * clang. obiectum_out: via NECTENDA - 'obiectum' si compilatum,
+     * blobus thesauri si inventum (nexus ex thesauro: nulla copia in
+     * area membri). */
     b32 (*compilare)(vacuum* datum, constans character* fons,
                      constans character* obiectum,
                      constans Xar* vexilla_addita, Piscina* piscina,
-                     chorda* erratum_out);
+                     chorda* obiectum_out, chorda* erratum_out);
     /* GRADUS SOLUS (cursores ad gradus T3b): titulus actionis gradus
      * cuius SOLIUS membra fabrica_gradus_explicare facit (clausurae
      * ceterorum non computantur); ceterae actiones gradus parentes
@@ -1085,6 +1092,33 @@ structura FabricaSanatio {
  * build/fabrica/acta/TITULUS.log.
  * Xar de FabricaSanatio (vacua = nihil agendum); NIHIL + causa si via
  * electa a nulla actione producitur. */
+/* AMBITUS SANANDI (parcum …AG7): actiones quas fabrica_sanare(electa)
+ * agere potest - productores viarum electarum (aut omnes praeter
+ * iudicia si electa NIHIL) et omnes supra eas (ingressus,
+ * praecondiciones). b32 per indicem ordinis; NIHIL + causa si via
+ * electa a nulla actione producitur. */
+b32*
+fabrica_ambitum_sanandi (
+    constans Xar* ordo,
+    constans Xar* electa,
+         Piscina* piscina,
+          chorda* causa_out);
+
+/* VESTIGIUM SANANDI (parcum …AG7, consilium producentium): exemplaria
+ * quae 'fabrica sanare <electa>' scribere potest - exitus et vestigia
+ * DECLARATA omnium actionum ambitus eius ET ambitus iudicum (stadium
+ * iudicum primum: quis stalus sit ante cursum non scitur - omnes).
+ * Intra arborem solum ('~', '/' praetermissa: regulae consilii eas
+ * iudicant). Exitus -> via; vestigium -> via et globus eius (via cum
+ * '/' et '*' adiunctis; '*' transit '/'). Xar de chorda, ordinata,
+ * unica; NIHIL + causa ut fabrica_ambitum_sanandi. */
+Xar*
+fabrica_vestigium_sanandi (
+    constans Xar* ordo,
+    constans Xar* electa,
+         Piscina* piscina,
+          chorda* causa_out);
+
 Xar*
 fabrica_sanare (
     constans FabricaSutura* sutura,

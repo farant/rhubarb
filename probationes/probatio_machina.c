@@ -9,6 +9,7 @@
 
 #include "latina.h"
 #include "piscina.h"
+#include "chorda.h"
 #include "credo.h"
 #include "machina.h"
 #include "filum.h"
@@ -218,6 +219,19 @@ _sectio_quinta (
      * rescribitur: identitas mutata acta machinarum confunderet.
      * ======================================================== */
 
+/* via in area sectionis (credo_area; sub fabrica intra aream membri -
+ * olim build/probatio_machina_plagula/, extra vestigium: quaestio
+ * 4GY9MJ4) */
+interior constans character*
+_in_area (
+         CredoContextus* c,
+     constans character* titulus)
+{
+    redde chorda_ut_cstr(chorda_concatenare(chorda_ex_literis(
+        credo_area(c), c->piscina), chorda_ex_literis(titulus,
+        c->piscina), c->piscina), c->piscina);
+}
+
 interior vacuum
 _sectio_sexta (
     CredoContextus* c)
@@ -226,19 +240,21 @@ _sectio_sexta (
 
     piscina = c->piscina;
     {
-        constans character* dir = "build/probatio_machina_plagula";
-        constans character* via =
-            "build/probatio_machina_plagula/machina";
-        constans character* altera =
-            "build/probatio_machina_plagula/altera";
-        constans character* curta =
-            "build/probatio_machina_plagula/curta";
-                    chorda a;
-                    chorda b;
-                    chorda alia;
-                    chorda contentum;
-               FilumStatus status;
+        constans character* dir;
+        constans character* via;
+        constans character* altera;
+        constans character* curta;
+                    chorda  a;
+                    chorda  b;
+                    chorda  alia;
+                    chorda  contentum;
+               FilumStatus  status;
 
+        dir     = credo_area(c);
+        via     = _in_area(c, "/machina");
+        altera  = _in_area(c, "/altera");
+        curta   = _in_area(c, "/curta");
+        CREDO_NECESSE(dir != NIHIL);
         CREDO_VERUM(filum_directorium_creare_cum_parentibus(dir));
         (vacuum)filum_delere(via);
         (vacuum)filum_delere(altera);
@@ -275,13 +291,8 @@ _sectio_sexta (
             machina_identitas_ex_plagula(NIHIL, piscina).mensura,
             ZEPHYRUM);
 
-        (vacuum)filum_delere(via);
-        (vacuum)filum_delere(altera);
-        (vacuum)filum_delere(curta);
-        /* serae numquam a filum deletae (filum.h): hic purgantur */
-        (vacuum)filum_delere("build/probatio_machina_plagula/machina.sera");
-        (vacuum)filum_delere("build/probatio_machina_plagula/altera.sera");
-        (vacuum)filum_delere("build/probatio_machina_plagula/curta.sera");
+        /* plagulae et serae (numquam a filum deletae, filum.h): area
+         * tota post sectionem deletur (credo II) */
     }
 }
 

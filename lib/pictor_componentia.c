@@ -142,7 +142,10 @@ hic_manens constans s32 magnitudines_lineae[V] = {
  * optiones XX x XX, II inter, IV margo, VI per lineam (exemplaria X).
  * genus 'instrumentum', 'color_primus'/'color_secundus' aut
  * 'exemplar' (P3; optiones coloribus primo et secundo, ut
- * quadratum); electum = valor currens (titulus ':electum') */
+ * quadratum); electum = valor currens (titulus ':electum').
+ * Palette intra [limes_x0, limes_x1) superficiei manet: angusta
+ * (telephonum, CCXV) optiones pauciores per lineam habet, deinde
+ * sinistrorsum movetur (Franus 2026-10-24, testa-ios T4) */
 interior Componens*
 palettam_componere (
                 Piscina* piscina,
@@ -150,6 +153,8 @@ palettam_componere (
                  chorda  genus,
                     s32  x,
                     s32  y_quadrati,
+                    s32  limes_x0,
+                    s32  limes_x1,
                  chorda  instrumentum,
                     s32  color_currens,
                     s32  primus,
@@ -163,6 +168,7 @@ palettam_componere (
                     b32  aspergilli;
                     s32  n;
                     s32  per_lineam;
+                    s32  capacitas;
                     s32  k;
                     s32  latitudo;
                     s32  altitudo;
@@ -192,10 +198,23 @@ palettam_componere (
     /* P3: exemplaria (IV lineae) et magnitudines X per lineam, cetera
      * VI */
     per_lineam  = (exemplaria || mensurae) ? X : VI;
+    capacitas   = (limes_x1 - limes_x0 - VIII + II) / (XX + II);
+    si (capacitas >= I && per_lineam > capacitas)
+    {
+        per_lineam = capacitas;
+    }
     latitudo = IV + (n < per_lineam ? n : per_lineam) * (XX + II) - II
              + IV;
     altitudo = IV + ((n + per_lineam - I) / per_lineam) * (XX + II) - II
              + IV;
+    si (x + latitudo > limes_x1)
+    {
+        x = limes_x1 - latitudo;
+    }
+    si (x < limes_x0)
+    {
+        x = limes_x0;
+    }
     palette   = nodus(piscina, intern, "palette", PARTES_DIALOGUS, x,
         y_quadrati - altitudo - II, latitudo, altitudo);
     per (k = ZEPHYRUM; k < n; k++)
@@ -379,7 +398,8 @@ indicem_tractus_addere (
 /* L3: palette stratorum (PARTES_DIALOGUS 'palette') supra quadratum,
  * margine dextro ad dextrum eius (x_dextrum): ordines summo primo -
  * oculus (XX x XX, 'oculus.<id>', "oculus:<0|1>") et nomen (C x XX,
- * 'stratum.<id>', "stratum:<id>[:electum]"); infra '+' et '-' */
+ * 'stratum.<id>', "stratum:<id>[:electum]"); infra '+' et '-'.
+ * Intra [limes_x0, ...) manet (testa-ios T4: margo sinister) */
 interior Componens*
 strata_palettam_componere (
                     Piscina* piscina,
@@ -387,7 +407,8 @@ strata_palettam_componere (
   constans PictorDocumentum* doc,
                         s32  currens,
                         s32  x_dextrum,
-                        s32  y_quadrati)
+                        s32  y_quadrati,
+                        s32  limes_x0)
 {
                Componens* palette;
                Componens* o;
@@ -404,8 +425,9 @@ strata_palettam_componere (
     latitudo  = IV + XX + II + C + IV;
     altitudo  = IV + ((s32)n + I) * (XX + II) - II + IV;
     palette   = nodus(piscina, intern, "palette", PARTES_DIALOGUS,
-        x_dextrum - latitudo, y_quadrati - altitudo - II, latitudo,
-        altitudo);
+        x_dextrum - latitudo < limes_x0 ? limes_x0
+                                        : x_dextrum - latitudo,
+        y_quadrati - altitudo - II, latitudo, altitudo);
     per (k = ZEPHYRUM; k < n; k++)
     {
         /* summum primum */
@@ -452,6 +474,7 @@ pictor_componere (
                  vacuum* ctx)
 {
              Componens* quadratum_stratorum;
+             Componens* quadratum_imaginis;
            InsulaRamus  ramus;
       PictorCompositio* cfg;
              Componens* radix;
@@ -485,6 +508,7 @@ pictor_componere (
         redde NIHIL;
     }
     quadratum_stratorum  = NIHIL;
+    quadratum_imaginis   = NIHIL;
     cfg                  = (PictorCompositio*)ctx;
     /* R3: status pictoris per ramum (sine eo radix repositorii) */
     ramus = cfg->ramus.repo ? cfg->ramus : insula_ramus_radix(repo);
@@ -670,10 +694,10 @@ pictor_componere (
     status = nodus(piscina, intern, "status", PARTES_TITULUS, fs.x,
         fs.y,
                    fs.latitudo, fs.altitudo);
-    componens_ponere_titulum(status,
-        chorda_vacua(instrumentum) ? "nihil"
-                                   : chorda_ut_cstr(instrumentum,
-                                   piscina));
+    /* testa-ios D6: nomen instrumenti non iam in linea - quadratum
+     * instrumenti id dicit (linea angusta in telephono; Franus
+     * 2026-10-23) */
+    componens_ponere_titulum(status, "");
 
     /* glutinatio pendens: A / B / OK / X loco quadratorum */
     si (pendens)
@@ -774,22 +798,35 @@ pictor_componere (
         }
         q = quadratum_addere(piscina, intern, status,
             "quadratum.magnitudo", V * cw + IV * XX, y, t);
-        /* L3: quadratum stratorum ad dextrum lineae (LXX latum): nomen
-         * strati currentis; palettam 'strata' aperit. Filius RADICIS,
-         * non lineae status: figura tituli textum post quadratum
-         * ultimum lineae ponit */
+        /* L3: quadratum stratorum ad dextrum lineae - testa-ios D6:
+         * ICON (XX x XX, "strata:quadratum"), stratum currens in
+         * palette (Franus 2026-10-23: linea in telephono angusta);
+         * palettam 'strata' aperit. Filius RADICIS, non lineae
+         * status */
         si (cfg->doc)
         {
-            sprintf(t, "strata:stratum %d", (integer)
-                stratum_currens_compositum(&ramus, cfg->doc));
-            /* variabilis propria: q (quadratum magnitudinis) infra
-             * actionem vacuam spongiae accipit */
             quadratum_stratorum = nodus(piscina, intern,
                 "quadratum.strata", PARTES_BOTTONE,
-                fs.x + fs.latitudo - cw - LXX, fs.y + y, LXX, XX);
-            componens_ponere_titulum(quadratum_stratorum, t);
+                fs.x + fs.latitudo - cw - XX, fs.y + y, XX, XX);
+            componens_ponere_titulum(quadratum_stratorum,
+                "strata:quadratum");
             componens_ponere_actio(quadratum_stratorum,
                 "palette.aperire");
+        }
+        /* testa-ios C1b: quadratum imaginis ad sinistram stratorum
+         * (cw inter), solum ubi hospes electionem imaginis praebet
+         * (telephonum; macOS et Android nullum) - photographia
+         * electa ut depositio redit. Filius RADICIS */
+        si (cfg->imago_eligibilis)
+        {
+            quadratum_imaginis = nodus(piscina, intern,
+                "quadratum.imago", PARTES_BOTTONE,
+                fs.x + fs.latitudo - II * cw - II * XX, fs.y + y, XX,
+                XX);
+            componens_ponere_titulum(quadratum_imaginis,
+                "imago:quadratum");
+            componens_ponere_actio(quadratum_imaginis,
+                "imago.eligere");
         }
         si (chorda_aequalis_literis(instrumentum, "spongia"))
         {
@@ -803,6 +840,10 @@ pictor_componere (
     si (quadratum_stratorum)
     {
         componens_addere_liberum(radix, quadratum_stratorum);
+    }
+    si (quadratum_imaginis)
+    {
+        componens_addere_liberum(radix, quadratum_imaginis);
     }
     /* P1b: palette aperta - filius ULTIMUS radicis (super tabulam
      * pingitur, ictus primum capit) */
@@ -834,7 +875,7 @@ pictor_componere (
 
             ps = strata_palettam_componere(piscina, intern, cfg->doc,
                 stratum_currens_compositum(&ramus, cfg->doc),
-                fs.x + fs.latitudo - cw, qy);
+                fs.x + fs.latitudo - cw, qy, ZEPHYRUM);
             indicem_tractus_addere(piscina, intern, ps, motus,
                 cfg->doc);
             componens_addere_liberum(radix, ps);
@@ -846,7 +887,8 @@ pictor_componere (
             || chorda_aequalis_literis(palette, "magnitudo"))
         {
             componens_addere_liberum(radix, palettam_componere(piscina,
-                intern, palette, fs.x + qx, qy, instrumentum,
+                intern, palette, fs.x + qx, qy, ZEPHYRUM, latitudo,
+                instrumentum,
                 attributum_s32(&ramus,
                     chorda_aequalis_literis(palette, "magnitudo")
                     ? (chorda_aequalis_literis(instrumentum,

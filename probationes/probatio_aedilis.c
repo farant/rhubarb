@@ -716,6 +716,48 @@ _sectio_septima (
             *(chorda*)xar_obtinere(fructus->vexilla_annotata,
                 ZEPHYRUM), "-DPROBA");
 
+        /* oraculum -MM per variantem (sectio oracula, testa-ios T3):
+         * suffixum "_ios" basis -> mandatum regulae; ceteri "clang";
+         * basis "ios" sola (sine '_') non congruit */
+        CREDO_AEQUALIS_I32(xar_numerus(configuratio->oracula), I);
+        CREDO_CHORDA_AEQUALIS_LITERIS(aedilis_oraculum_eligere(
+            configuratio, "lib/beta_ios.m", piscina),
+            "xcrun --sdk iphonesimulator clang");
+        CREDO_CHORDA_AEQUALIS_LITERIS(aedilis_oraculum_eligere(
+            configuratio, "lib/beta_macos.m", piscina), "clang");
+        CREDO_CHORDA_AEQUALIS_LITERIS(aedilis_oraculum_eligere(
+            configuratio, "lib/ios.m", piscina), "clang");
+        CREDO_CHORDA_AEQUALIS_LITERIS(aedilis_oraculum_eligere(
+            configuratio, "beta_ios", piscina),
+            "xcrun --sdk iphonesimulator clang");
+        /* regula manca (sine mandato) recusatur, numquam praeteritur
+         * - aliter .m iOS tacite per clang macOS iret */
+        {
+            chorda causa_mancae;
+
+            causa_mancae.datum    = NIHIL;
+            causa_mancae.mensura  = ZEPHYRUM;
+            CREDO_NIHIL(aedilis_configurationem_legere(piscina,
+                "probationes/fixa/aedilis_oraculum_mancum/aedilis.stml",
+                &causa_mancae));
+            CREDO_CHORDA_CONTINET(causa_mancae,
+                chorda_ex_literis("oraculum", piscina));
+        }
+
+        /* vexilla nexus clausurae (aedilis --nexus, testa-ios T3):
+         * regulae obiectorum primum, deinde annotata */
+        {
+            Xar* vexilla;
+
+            vexilla = aedilis_vexilla_nexus(fructus, piscina);
+            CREDO_AEQUALIS_I32(xar_numerus(vexilla), II);
+            CREDO_CHORDA_AEQUALIS_LITERIS(
+                *(chorda*)xar_obtinere(vexilla, ZEPHYRUM),
+                "-framework Cocoa");
+            CREDO_CHORDA_AEQUALIS_LITERIS(
+                *(chorda*)xar_obtinere(vexilla, I), "-DPROBA");
+        }
+
         /* aristae graphi inclusionum: beta -> gamma (recordata
          * etiam cum gamma iam viso - dedup capitum aristas non
          * devorat); alpha ambulatum sine directivis = NIHIL */

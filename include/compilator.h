@@ -28,6 +28,10 @@ nomen structura {
        b32 ex_thesauro;    /* hit */
     chorda effusio;        /* stdout clang (vacua in hit) */
     chorda erratum;        /* stderr clang (vacua in hit) */
+    chorda via;            /* obiectum nectendum (codex 0): exitus '-o'
+                            * (collocatum aut compilatum), aut - sine
+                            * collocatione, in hit - blobus thesauri
+                            * ipse; vacua aliter */
 } CompilatorResultus;
 
 /* thesaurum aperire; clang NIHIL = FABRICA_CLANG aut "clang".
@@ -70,6 +74,20 @@ compilator_compilare (
  * piscina temporaria agit) */
 CompilatorResultus
 compilator_compilare_in (
+                      Compilator* compilator,
+    constans character* constans* argumenta,
+                              i32 numerus,
+                         Piscina* piscina);
+
+/* idem ac compilator_compilare_in, sed in hit obiectum NON collocatur
+ * (nec legitur nec in exitum '-o' scribitur): resultus.via = blobus
+ * thesauri, quem vocans directe nectit (clang plagulam sine suffixo
+ * ut obiectum accipit). In miss compilatur in exitum ut olim (via =
+ * exitus). Fabrica membra sic nectit - olim obiecta cuiusque membri in
+ * area eius copiabantur (XII milia plagularum radicis, I.V GB; parcum
+ * nexus ex thesauro). */
+CompilatorResultus
+compilator_compilare_sine_collocatione (
                       Compilator* compilator,
     constans character* constans* argumenta,
                               i32 numerus,

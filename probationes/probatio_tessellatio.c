@@ -816,11 +816,14 @@ _sectio_octava (
          * P3 LXXXIV exemplar, P4a CX magnitudo) ut
          * fines (figura_finium probationis) - margines summi super
          * titulum (figura tituli probationis textum non promovet;
-         * linea status hic VIII alta, quadrata infra eam exeunt) */
+         * linea status hic VIII alta, quadrata infra eam exeunt).
+         * testa-ios D6: titulus status vacuus - litterae "penicillus"
+         * (p, c, s) inter quadrata olim apparebant; quadratum
+         * stratorum extra prospectum LX columnarum cadit */
         exspectata[XXIX] =
-            "p\xE2\x94\x8C\xE2\x94\x80\xE2\x94\x90"
-            "c\xE2\x94\x8C\xE2\x94\x80\xE2\x94\x80\xE2\x94\x90"
-            "s\xE2\x94\x8C\xE2\x94\x80\xE2\x94\x90"
+            " \xE2\x94\x8C\xE2\x94\x80\xE2\x94\x90"
+            " \xE2\x94\x8C\xE2\x94\x80\xE2\x94\x80\xE2\x94\x90"
+            " \xE2\x94\x8C\xE2\x94\x80\xE2\x94\x90"
             " \xE2\x94\x8C\xE2\x94\x80\xE2\x94\x90"
             " \xE2\x94\x8C\xE2\x94\x80\xE2\x94\x80\xE2\x94\x90"
             "                                      ";

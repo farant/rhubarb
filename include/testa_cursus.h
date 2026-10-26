@@ -23,6 +23,11 @@ nomen ImagoFructus (*TestaImagoCapere)(vacuum* ctx, Piscina* piscina);
  * scribae); FALSUM = non positum */
 nomen b32 (*TestaTextumPonere)(vacuum* ctx, chorda textus);
 
+/* testa-ios C1b: usorem imaginem eligere sinere (non obstruens).
+ * VERUM = electio ostensa; imago, si eligitur, POSTEA ut
+ * EVENTUS_DEPOSITIO (via plagulae) venit. */
+nomen b32 (*TestaImaginemEligere)(vacuum* ctx);
+
 /* quod testa applicationi praebet */
 nomen structura {
                Piscina* piscina;            /* testa possidet et destruit */
@@ -50,6 +55,10 @@ nomen structura {
      TestaTextumPonere  textum_exportare;   /* registrum scribae (yy, y,
                                              * dd); Android: FALSUM */
                 vacuum* textus_ctx;
+    /* iOS solum (C1b); macOS et Android NIHIL, NUMQUAM truncus -
+     * pictor quadratum imaginis inde ostendit */
+  TestaImaginemEligere  imaginem_eligere;
+                vacuum* imaginem_eligere_ctx;
 } TestaAmbitus;
 
 /* quod applicatio testae reddit (testa eam ZEPHYRUM implet ante) */

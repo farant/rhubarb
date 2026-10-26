@@ -256,9 +256,15 @@ extern FILE* stderr;
 #define _IOLBF       1
 #define _IONBF       2
 
+/* scriptura cruda extra canalem (codex 97, fabrica-8): liber lectionum
+ * deletionem et motum per filum solum videt */
+/* <gradus titulus="remove" genus="scriptura"
+ *  pro="filum_delere (directorium vacuum quoque)"/> (codex 97) */
 int
 remove (
     const char* via);
+/* <gradus titulus="rename" genus="scriptura" pro="filum_movere"/>
+ * (codex 97) */
 int
 rename (
     const char* vetus,

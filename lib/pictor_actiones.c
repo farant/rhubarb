@@ -609,10 +609,30 @@ glutinationem_scribere (
     redde scriptum;
 }
 
-/* L5 + glutinatio pendens (Franus 2026-10-13): Cmd+V - imago e porta
- * (clipboard) aptatur et bis ditheratur in documento, EXTRA acta;
- * campus 'glutinatio' = "B" (exemplaria). Iterum Cmd+V: prior
- * abicitur. Stratum nascitur solum per glutinationem_confirmare. */
+/* L5 + glutinatio pendens (Franus 2026-10-13): imago aptatur et bis
+ * ditheratur in documento, EXTRA acta; campus 'glutinatio' = "B"
+ * (exemplaria). Iterum: prior abicitur. Stratum nascitur solum per
+ * glutinationem_confirmare. Commune Cmd+V et depositioni (C1b T1):
+ * parare quod servat in piscinam DOCUMENTI exscribit - fons ipse post
+ * reditum liberari potest */
+interior b32
+_imaginem_glutinare_ex (
+    InsulaRepositorium* repo,
+                vacuum* ctx,
+        constans Imago* imago)
+{
+    PictorActiones* pa;
+
+    pa = (PictorActiones*)ctx;
+    si (   !pa || !pa->doc
+        || !pictor_documentum_glutinationem_parare(pa->doc, imago))
+    {
+        redde FALSUM;
+    }
+    redde glutinationem_scribere(repo, ctx, litterae_glutinatio_b);
+}
+
+/* Cmd+V - imago e porta (clipboard) */
 interior b32
 imaginem_glutinare (
     InsulaRepositorium* repo,
@@ -627,12 +647,74 @@ imaginem_glutinare (
         redde FALSUM;
     }
     f = pa->imago_capere(pa->imago_ctx, pa->doc->piscina);
-    si (   !f.successus
-        || !pictor_documentum_glutinationem_parare(pa->doc, &f.imago))
+    si (!f.successus)
     {
         redde FALSUM;
     }
-    redde glutinationem_scribere(repo, ctx, litterae_glutinatio_b);
+    redde _imaginem_glutinare_ex(repo, ctx, &f.imago);
+}
+
+/* depositio viarum (testa-ios C1b T1: photographia electa in
+ * telephono = plagula deposita, D2): prima via quae ut imago legitur
+ * glutinatur, ut Cmd+V. Viae chorda sunt ('\n' inter eas, sine
+ * NUL): quaeque in buffer NUL-terminatum exscribitur. Imago in
+ * piscina TEMPORARIA decoditur (photographia MXXIV ~ IV MiB) et post
+ * parare destruitur. Nulla legibilis -> FALSUM, nihil mutatur. */
+interior b32
+imaginem_depositam_glutinare (
+    InsulaRepositorium* repo,
+                vacuum* ctx,
+      constans Eventus* ev)
+{
+    PictorActiones* pa;
+           Piscina* temporaria;
+            chorda  viae;
+      ImagoFructus  f;
+         character  via[MXXIV];
+               i32  initium;
+               i32  finis;
+               b32  lecta;
+               b32  factum;
+
+    pa = (PictorActiones*)ctx;
+    si (!pa || !pa->doc || !ev)
+    {
+        redde FALSUM;
+    }
+    temporaria = piscina_generare_dynamicum("pictor_depositio",
+        (memoriae_index)(M * M));
+    si (!temporaria)
+    {
+        redde FALSUM;
+    }
+    viae     = ev->datum.depositio.viae;
+    lecta    = FALSUM;
+    factum   = FALSUM;
+    initium  = ZEPHYRUM;
+    dum (!lecta && viae.datum && initium < viae.mensura)
+    {
+        finis = initium;
+        dum (finis < viae.mensura && viae.datum[finis] != '\n')
+        {
+            finis++;
+        }
+        si (   finis > initium
+            && (memoriae_index)(finis - initium) < magnitudo(via))
+        {
+            memcpy(via, viae.datum + initium, (size_t)(finis
+                - initium));
+            via[finis - initium] = '\0';
+            f = imago_caricare_ex_file(via, temporaria);
+            si (f.successus)
+            {
+                lecta   = VERUM;
+                factum  = _imaginem_glutinare_ex(repo, ctx, &f.imago);
+            }
+        }
+        initium = finis + I;
+    }
+    piscina_destruere(temporaria);
+    redde factum;
 }
 
 /* OK: modus campi in stratum novum supra currens, quod currens fit
@@ -841,6 +923,12 @@ pictor_instrumentum_eligere (
         redde mutare_ramum(&ramus, instrumentum_ponere,
             litterae_instrumenti(nomen_instrumenti));
     }
+    /* C1b T1: depositio (radici venit - nec indicator nec focus) =
+     * glutinatio imaginis depositae */
+    si (ev->genus == EVENTUS_DEPOSITIO)
+    {
+        redde imaginem_depositam_glutinare(repo, ctx, ev);
+    }
     si (ev->genus != EVENTUS_CLAVIS_DEPRESSUS)
     {
         redde FALSUM;
@@ -926,6 +1014,31 @@ pictor_instrumentum_eligere (
                                            : litterae_spongia);
     }
     redde FALSUM;
+}
+
+/* <tractator/> */
+b32
+pictor_imaginem_eligere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+    PictorActiones* pa;
+
+    (vacuum)repo;
+    (vacuum)motus;
+    (vacuum)destinatio;
+    (vacuum)nodus;
+    pa = (PictorActiones*)ctx;
+    si (   !ev || ev->genus != EVENTUS_MUS_DEPRESSUS || !pa
+        || !pa->imaginem_eligere)
+    {
+        redde FALSUM;
+    }
+    redde pa->imaginem_eligere(pa->imaginem_eligere_ctx);
 }
 
 /* <tractator/> */
@@ -1427,5 +1540,7 @@ pictor_actiones_registrare (
     actio_registrare(reg, "instrumentum.eligere",
                      pictor_instrumentum_eligere, ctx);
     actio_registrare(reg, "glutinatio.agere", pictor_glutinatio_agere,
+        ctx);
+    actio_registrare(reg, "imago.eligere", pictor_imaginem_eligere,
         ctx);
 }

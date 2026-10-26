@@ -1,7 +1,7 @@
 /* testa_android.c - testa Android (testa-spec II.4): NativeActivity in
  * filo principali SOLO (nullum filum alterum, D1). Vocationes
  * systematis -> cursus communis (testa_cursus) et partes purae
- * (testa_android_initus); applicatio_initium ad fenestram primam
+ * (testa_initus); applicatio_initium ad fenestram primam
  * (magnitudo vera). Effusio (stdout/stderr) per fistulam in logcat.
  * Proprietates: debug.rhubarb.fumus = N quadra (deinde fumus.png,
  * EXITUS=, finis), debug.rhubarb.scala = scala imposita (mensura T3). */
@@ -10,7 +10,7 @@
 #include "postulata_android.h"
 
 #include "testa.h"
-#include "testa_android_initus.h"
+#include "testa_initus.h"
 #include "filum.h"
 #include "thema.h"
 #include "color.h"
@@ -34,7 +34,7 @@
 #define TESTA_TITULUS "applicatio"   /* apk.sh: -DTESTA_TITULUS="X" */
 #endif
 
-/* constantae testa_android_initus.h == NDK (compilatio frangitur si
+/* constantae testa_initus.h == NDK (compilatio frangitur si
  * differunt: magnitudo negativa) */
 externus character testa_congruentia_initus[
     (   AMOTION_EVENT_ACTION_DOWN == TESTA_TACTUS_DEPRESSIO

@@ -97,7 +97,7 @@ echo "aedificatum: bin/briar"
 # dat - inodus recens obligatorius)
 # institutio in ~/.bin: actio fabricae sua ('institutio_briar', 1b T5) -
 # sub executore (FABRICA_AGIT) hoc scriptum SOLUM nectit; manu vocatum
-# etiam instituit
+# etiam instituit - in main solo (arbor secundaria: omissum, -si-licet)
 if [ -z "${FABRICA_AGIT:-}" ]; then
-    ./tools/instituere.sh bin/briar || exit 1
+    ./tools/instituere.sh -si-licet bin/briar || exit 1
 fi

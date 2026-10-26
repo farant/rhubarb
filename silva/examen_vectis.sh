@@ -545,6 +545,45 @@ _loca "canalis: tolera absorpta (nulla TOLERA_IRRITUM)" \
     "0" "$(awk -F'\t' -v c="$CIRR" '$5==c' "$SILVA_DIR/$LOCA/canalis.tsv" | wc -l | tr -d ' ')"
 rm -rf "$SILVA_DIR/$LOCA"
 
+# scriptura cruda (97, fabrica-8): fopen modo 'wb'/'a+' (non 'rb'),
+# remove per macrum (sedes = usus), unlink, rename; 'remove' ut
+# monstrator tacet; mkdir tolerata absorbetur. Sedes 9 11 14 15 18.
+echo "--- scriptura cruda (97) ---"
+mkdir -p "$SILVA_DIR/$LOCA"
+cat > "$SILVA_DIR/$LOCA/scriptura.c" <<'FIXA'
+#include "postulata_posix.h"
+#include <stdio.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#define DELERE(v) remove(v)
+int principalis(const char* v);
+int principalis(const char* v)
+{
+    FILE* f = fopen(v, "wb");
+    FILE* g = fopen(v, "rb");
+    FILE* h = fopen(v, "a+");
+    int (*rm)(const char*) = remove;
+    (void)rm;
+    (void)DELERE(v);
+    (void)unlink(v);
+    (void)mkdir(v, 0755); /* <tolera codex="SCRIPTURA_PRAETERITA" (>fixtura: tolerata */
+    if (f) { fclose(f); } if (g) { fclose(g); } if (h) { fclose(h); }
+    return rename(v, "x");
+}
+FIXA
+( cd "$RADIX_DIR" && ./silva/examen.sh "silva/$LOCA/scriptura.c" -machina ) \
+    > "$SILVA_DIR/$LOCA/scriptura.tsv" 2>/dev/null
+C97="$(_codex SCRIPTURA_PRAETERITA)"
+_loca "scriptura: sedes 9 (wb) 11 (a+) 14 (macrum) 15 (unlink) 18 (rename) - rb, monstrator, tolerata tacent" \
+    "9:$C97 11:$C97 14:$C97 15:$C97 18:$C97" \
+    "$(awk -F'\t' -v c="$C97" '$5==c{print $2":"$5}' "$SILVA_DIR/$LOCA/scriptura.tsv" | sort -n | tr '\n' ' ' | sed 's/ $//')"
+_loca "scriptura: tolera absorpta (nulla TOLERA_IRRITUM)" \
+    "0" "$(awk -F'\t' -v c="$CIRR" '$5==c' "$SILVA_DIR/$LOCA/scriptura.tsv" | wc -l | tr -d ' ')"
+C86="$(_codex VERNACULUM_ADHIBITUM)"; C87="$(_codex OBSOLETUM_ADHIBITUM)"
+_loca "scriptura: portabilitas (86/87) tacet in tabula scripturae" \
+    "0" "$(awk -F'\t' -v a="$C86" -v b="$C87" '$5==a || $5==b' "$SILVA_DIR/$LOCA/scriptura.tsv" | wc -l | tr -d ' ')"
+rm -rf "$SILVA_DIR/$LOCA"
+
 # ③ -corpus: columna verdicti percursus contra exclusiones pinnatas
 #    + plagulae INFRA (annotatio/compositio/praeparatio fracta):
 #    praefixo FRACTA in tabulam intrant - annotatio fracta oraculo

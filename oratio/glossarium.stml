@@ -1103,6 +1103,7 @@
   <vocabulum lemma="assert" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="macrum ISO C89 assert.h; systema_c89.h 2026-09-25 silva-migratio T16a"/>
   <vocabulum lemma="menu" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen rei interfaciei (menu applicationis macOS), ut plist; fenestra_menu_addere et EVENTUS_MENU 2026-09-14 (plan 8)"/>
   <vocabulum lemma="android" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium systematis (Android, Google), ut plist; postulata_android.h, testa_android 2026-10-23 (testa B1)"/>
+  <vocabulum lemma="ios" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium systematis (iOS, Apple), ut android; postulata_ios.h, testa_ios 2026-10-23 (testa-ios T3)"/>
 
   <!-- dlfcn.h (runae U3, 2026-09-28): nomina POSIX fixa in lexico examinis
        (silva/fontes/systema_posix.h) - non vertenda; 'lazy'/'now' SOLUM ut

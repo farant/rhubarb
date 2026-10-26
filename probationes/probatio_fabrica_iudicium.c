@@ -1291,6 +1291,21 @@ _probare_transitum (
             "porta_sh", "porta.sh", VERDICTUM, "verdictum");
         actiones_transitus[0]->genus      = FABRICA_ACTIO_IUDICIUM;
         actiones_transitus[0]->lectiones  = VERUM;
+        /* scriptura S x/build/obj.o (LIBER_BONUS) intra vestigium
+         * declaratum - aliter 'scripsit extra vestigium (S, liber
+         * lectionum)' (quaestio 4GY9MJ4: via serialis S iudicat) */
+        {
+            FabricaLocus* locus;
+
+            actiones_transitus[0]->vestigia = xar_creare(piscina,
+                (i32)magnitudo(FabricaLocus));
+            locus = (FabricaLocus*)xar_addere(
+                actiones_transitus[0]->vestigia);
+            CREDO_NECESSE(locus != NIHIL);
+            locus->forma    = FABRICA_LOCUS_ARBOR;
+            locus->via      = chorda_ex_literis("x/build", piscina);
+            locus->suffixa  = chorda_ex_literis("", piscina);
+        }
         mundi_ingressum_addere(actiones_transitus[0], "effectus",
             "porta.sh",
             piscina);
@@ -1738,6 +1753,74 @@ _mundum_reponere (
     mundi_via_absens_ficta  = NIHIL;
 }
 
+/* SCRIPTURAE TRANSIENTES (quaestio 4GY9MJ4): via SERIALIS (iudicium
+ * per _actionem_agere) lineas S libri iudicat - plagula intra cursum
+ * creata et deleta photographiam fallit, liber eam nominat. S extra
+ * vestigium -> FRACTUM nominans; S in exitu proprio non obstat */
+interior FabricaSanatio*
+_portam_transeuntem_sanare (
+             DiscusFictus* discus,
+            FabricaSutura* sutura,
+       constans character* liber,
+                  Piscina* piscina)
+{
+      constans character* VERDICTUM = "build/fabrica/verdicta/x.txt";
+            FabricaActio* actiones[I];
+                     Xar* ordo;
+                     Xar* electa;
+                     Xar* sanationes;
+                  chorda  causa;
+
+    causa.datum    = NIHIL;
+    causa.mensura  = ZEPHYRUM;
+    mundi_discum_parare(discus, sutura, piscina);
+    mundi_memorias_parare(sutura, piscina);
+    mundi_ponere(discus, "porta.sh", "echo porta\n");
+    mundi_scriptum_addere(discus, "porta_sh", VERDICTUM, NIHIL,
+        "x: transiit\n", 0, FALSUM);
+    actiones[0] = mundi_actio_scripta(piscina, "porta_x", "porta_sh",
+        "porta.sh", VERDICTUM, "verdictum");
+    actiones[0]->genus      = FABRICA_ACTIO_IUDICIUM;
+    actiones[0]->lectiones  = VERUM;
+    /* liber cursus: plagula S iam deleta (transiens) */
+    mundi_ponere(discus, "build/fabrica/lectiones/porta_x.tsv", liber);
+    ordo    = mundi_ordinare_fictas(piscina, actiones, I);
+    electa  = xar_creare(piscina, (i32)magnitudo(chorda));
+    *(chorda*)xar_addere(electa) = chorda_ex_literis(VERDICTUM,
+        piscina);
+    sanationes = fabrica_sanare(sutura, ordo, electa, FALSUM, piscina,
+        &causa);
+    redde (sanationes != NIHIL)
+        ? mundi_sanatio_invenire(sanationes, "porta_x") : NIHIL;
+}
+
+interior vacuum
+_probare_scripturas_transientes (
+    CredoContextus* c)
+{
+           Piscina* piscina = c->piscina;
+      DiscusFictus  discus;
+     FabricaSutura  sutura;
+    FabricaSanatio* sanatio;
+
+    /* I. S extra vestigium, plagula absens post cursum: FRACTUM */
+    sanatio = _portam_transeuntem_sanare(&discus, &sutura,
+        "L\tporta.sh\nS\tapps/transiens.tmp\n", piscina);
+    CREDO_NECESSE(sanatio != NIHIL);
+    CREDO_AEQUALIS_I32((i32)sanatio->eventus, (i32)FABRICA_FRACTUM);
+    CREDO_VERUM(mundi_continet(sanatio->causa, "S, liber lectionum",
+        piscina));
+    CREDO_VERUM(mundi_continet(sanatio->causa, "apps/transiens.tmp",
+        piscina));
+
+    /* II. S in exitu proprio (verdictum): non obstat */
+    sanatio = _portam_transeuntem_sanare(&discus, &sutura,
+        "L\tporta.sh\nS\tbuild/fabrica/verdicta/x.txt\n", piscina);
+    CREDO_NECESSE(sanatio != NIHIL);
+    CREDO_FALSUM(mundi_continet(sanatio->causa, "S, liber lectionum",
+        piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "regenerationem",
       _probare_regenerationem,
@@ -1774,6 +1857,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "signum (verdictum in C)",
       _probare_signum,
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
+    { "scripturae transientes",
+      _probare_scripturas_transientes,
       NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

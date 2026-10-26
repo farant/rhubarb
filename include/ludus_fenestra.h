@@ -97,7 +97,11 @@ Mora
 ludus_fenestra_mora (
     constans LudusFenestra* lf);
 
-#ifndef __ANDROID__
+/* nec Android nec iOS (testa-ios R1: clang praedefinit
+ * __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ in machina et in
+ * simulatore): testae eorum quadra per systema ducunt */
+#if !defined(__ANDROID__) \
+    && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
 /* ansa vera: exspectare (ludus_fenestra_mora), tractare, quadrum,
  * praesentare; finis in EVENTUS_CLAUDERE aut post quadra_maxima
  * (> 0), deinde dispensator_finire (pendentia effunduntur).
@@ -107,7 +111,7 @@ ludus_fenestra_currere (
     LudusFenestra* lf,
          Fenestra* fenestra,
               i32  quadra_maxima);
-#endif /* __ANDROID__ */
+#endif /* nec Android nec iOS */
 
 /* Quadrum ultimum (tabulam) in plagulam PNG scribere - pixela ipsa
  * quae fenestrae praesentata sunt aut praesentarentur (etiam sine

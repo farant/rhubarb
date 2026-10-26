@@ -21,7 +21,11 @@
 #include <unistd.h>
 #include <sys/utsname.h>
 
-#ifdef __APPLE__
+/* iOS (machina et simulator): clang praedefinit
+ * __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__; gethostuuid ibi deest
+ * (testa-ios R1) - ramus plagulae ut Android */
+#if defined(__APPLE__) \
+    && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
 #include <uuid/uuid.h>
 #endif
 
@@ -170,7 +174,8 @@ machina_identitas (
         redde vacua;
     }
 
-#ifdef __APPLE__
+#if defined(__APPLE__) \
+    && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
     {
         uuid_t          id;
         structura timespec mora;
@@ -186,12 +191,16 @@ machina_identitas (
             redde machina_identitas_ex_fonte(fons, piscina);
         }
     }
-#elif defined(__ANDROID__)
+#elif defined(__ANDROID__) \
+    || defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
     {
         /* Android: nec gethostuuid nec /etc/machine-id. Identitas
          * persistens sub $HOME/.rhubarb/machina - cursor tabulae HOME
          * radicem suam ponit, applicatio directorium suum privatum
-         * (identitas = haec institutio; android-gradus T4) */
+         * (identitas = haec institutio; android-gradus T4). iOS
+         * (testa-ios R2): HOME = receptaculum applicationis, cuius
+         * Library/ scribi potest et servatur:
+         * $HOME/Library/.rhubarb */
         constans character* domus;
                  character  directorium[DXII];
                  character  via[DXII];
@@ -199,7 +208,11 @@ machina_identitas (
         domus = getenv("HOME");
         si (domus != NIHIL && domus[0] != '\0' && strlen(domus) < CDXL)
         {
+#ifdef __ANDROID__
             sprintf(directorium, "%s/.rhubarb", domus);
+#else
+            sprintf(directorium, "%s/Library/.rhubarb", domus);
+#endif
             sprintf(via, "%s/machina", directorium);
             si (filum_directorium_creare_cum_parentibus(directorium))
             {
