@@ -39,3 +39,25 @@ libraries.ts ulid ported: same-ms monotonicity via static state,
 randomness from /dev/urandom via plain stdio (LCG mix fallback).
 
 Names scrinium/sigillum are WORKING NAMES, unsealed (gradus doc).
+
+## 2026-10-24 — trace VFS (sqlite reads/writes in fabrica's trace)
+
+sqlite does its own open/read/write below filum, so fabrica's trace (FABRICA_LECTIONES) never
+saw database files: a member reading a .db had an incomplete trace, and writes were only caught
+by the before/after tree snapshots. scrinium_aperire_cum now opens through a wrapper VFS,
+"rhubarb-vestigium" (registered once, non-default; a copy of the default VFS struct with
+xOpen/xDelete overridden and pAppData = the real VFS). Each opened file is a FilumVestigii:
+our sqlite3_file header, then the real VFS's file right after it (szOsFile = ours + theirs).
+Methods forward; xRead and xFetch note L once per file, xWrite and xTruncate note S once,
+xDelete notes S. Without FABRICA_LECTIONES lectiones_notare is a no-op, so the cost outside
+fabrica is one flag check per call.
+
+Gotchas:
+- WAL's -shm file is written through mmap, never xWrite: S for `via + "-shm"` is noted at
+  xShmMap (the test plants this away and goes red).
+- Only set pMethods when the real xOpen set it: sqlite calls xClose iff pMethods != NULL after
+  a failed open.
+- sqlite canonicalizes paths (/var -> /private/var), so tests match trace lines by suffix.
+- Journal/WAL siblings show up as their own S lines, so three tests that kept dbs under build/
+  (mensa, volumen, scrinium) were caught writing -journal/-wal files their debts didn't cover.
+  Moved all into credo areas and dropped the three debitum_scripturae lines.

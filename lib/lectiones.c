@@ -29,6 +29,7 @@ _littera (
         casus LECTIO_ENUMERAVIT:  redde 'D';
         casus LECTIO_SCRIPSIT:    redde 'S';
         casus LECTIO_AMBITUS:     redde 'E';
+        casus LECTIO_EXSECUTIO:   redde 'P';
     }
     redde '?';
 }
@@ -70,7 +71,11 @@ lectiones_notare (
         {
             redde;
         }
-        _descriptor = open(liber, O_WRONLY | O_APPEND | O_CREAT, 0644);
+        /* CLOEXEC: programma exsecutum (alienum quoque) descriptorem
+         * libri non hereditat; filii sine exec (fork) eum
+         * communicant */
+        _descriptor = open(liber, O_WRONLY | O_APPEND | O_CREAT
+            | O_CLOEXEC, 0644);
         si (_descriptor < 0)
         {
             redde;

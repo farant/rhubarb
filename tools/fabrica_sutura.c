@@ -1172,8 +1172,57 @@ _vestigium_ex_introitu (
     v->mensura    = (s64)introitus->mensura;
 }
 
+/* 'directorium/titulus' UNA allocatione, NUL terminata (iterator et
+ * lstat eam ut via C accipiunt sine copia) - olim per introitum chordae
+ * III et copiae II (photographia: ~XLIV milia introituum, bis per
+ * membrum) */
+interior chorda
+_viam_iungere (
+      chorda  directorium,
+      chorda  titulus,
+     Piscina* piscina)
+{
+            chorda  via;
+                i8* datum;
+    memoriae_index  basis;
+    memoriae_index  mensura;
+
+    basis    = (directorium.mensura > 0)
+        ? (memoriae_index)directorium.mensura + I : ZEPHYRUM;
+    mensura      = basis + (memoriae_index)titulus.mensura;
+    datum        = (i8*)piscina_allocare(piscina, mensura + I);
+    via.datum    = datum;
+    via.mensura  = (i32)mensura;
+    si (datum == NIHIL)
+    {
+        via.mensura = ZEPHYRUM;
+        redde via;
+    }
+    si (basis > ZEPHYRUM)
+    {
+        memcpy(datum, directorium.datum, (size_t)directorium.mensura);
+        datum[directorium.mensura] = '/';
+    }
+    memcpy(datum + basis, titulus.datum, (size_t)titulus.mensura);
+    datum[mensura] = '\0';
+    redde via;
+}
+
+/* praefixum litterale sine allocatione */
+interior b32
+_incipit_literis (
+                 chorda  via,
+     constans character* praefixum)
+{
+    size_t longitudo = strlen(praefixum);
+
+    redde (size_t)via.mensura >= longitudo
+        && memcmp(via.datum, praefixum, longitudo) == ZEPHYRUM;
+}
+
 /* arbor recursive (nexus symbolici non sequuntur; .git radicis
- * praetermittitur) */
+ * praetermittitur). Directorium ex _viam_iungere (NUL terminatum) aut
+ * vacuum (radix) */
 interior vacuum
 _arborem_photographare (
       chorda  directorium,
@@ -1184,7 +1233,7 @@ _arborem_photographare (
     DirectoriumIntroitus* introitus;
 
     iterator = directorium_iterator_aperire(directorium.mensura > 0
-        ? chorda_ut_cstr(directorium, piscina) : ".", piscina);
+        ? (constans character*)directorium.datum : ".", piscina);
     si (iterator == NIHIL)
     {
         redde;
@@ -1200,11 +1249,11 @@ _arborem_photographare (
         {
             perge;
         }
-        via = (directorium.mensura > 0)
-            ? chorda_concatenare(chorda_concatenare(directorium,
-                  chorda_ex_literis("/", piscina), piscina),
-                  introitus->titulus, piscina)
-            : chorda_transcribere(introitus->titulus, piscina);
+        via = _viam_iungere(directorium, introitus->titulus, piscina);
+        si (via.datum == NIHIL)
+        {
+            perge;
+        }
         /* LOCI RESIDENTIUM: gesta/annales (entia .md, acta .jsonl) et in
          * radice tabularium.db* / forum.db* (proiectiones sqlite, -wal,
          * -shm) - residentes tabularii et fori eas QUOVIS tempore
@@ -1225,10 +1274,8 @@ _arborem_photographare (
         }
         si (   chorda_aequalis_literis(via, "gesta/annales")
             || (   directorium.mensura == 0
-                && (   chorda_incipit(via, chorda_ex_literis(
-                           "tabularium.db", piscina))
-                    || chorda_incipit(via, chorda_ex_literis("forum.db",
-                           piscina)))))
+                && (   _incipit_literis(via, "tabularium.db")
+                    || _incipit_literis(via, "forum.db"))))
         {
             perge;   /* et proiectiones residentium (sqlite, -wal, -shm) */
         }
@@ -1254,8 +1301,8 @@ _arborem_photographare (
         }
         alioquin
         {
-            _vestigium_addere(vestigia, via, chorda_ut_cstr(via,
-                piscina));
+            _vestigium_addere(vestigia, via,
+                (constans character*)via.datum);
         }
     }
     directorium_iterator_claudere(iterator);

@@ -144,7 +144,12 @@ struct stat {
 
 /* <gradus titulus="stat" genus="canalis" pro="lectiones_stat (eadem forma), filum_status, filum_existit, filum_mensura"/> (codex 96) */
 int stat(const char* via, struct stat* sedes);
+/* <gradus titulus="mkdir" genus="scriptura"
+ *  pro="filum_directorium_creare (aut _si_necesse, _cum_modo)"/>
+ * (codex 97) */
 int mkdir(const char* via, mode_t modus);
+/* <gradus titulus="chmod" genus="scriptura"
+ *  pro="filum_modum_ponere"/> (codex 97) */
 int chmod(const char* via, mode_t modus);
 /* lstat: nexum IPSUM describit, non destinationem
  * (filum_arborem_delere, 2026-09-14) */
@@ -166,9 +171,16 @@ int fstat(int fossa, struct stat* sedes);
  * ================================================== */
 
 char* getcwd(char* sedes, size_t mensura);
+/* <gradus titulus="unlink" genus="scriptura" pro="filum_delere"/>
+ * (codex 97) */
 int   unlink(const char* via);
 /* rmdir + symlink: filum_arborem_delere et probatio (2026-09-14) */
+/* <gradus titulus="rmdir" genus="scriptura"
+ *  pro="filum_delere (directorium vacuum), filum_arborem_delere"/>
+ * (codex 97) */
 int   rmdir(const char* via);
+/* <gradus titulus="symlink" genus="scriptura"/> (codex 97;
+ * fixurae probationum: tolera per sedem) */
 int   symlink(const char* fons, const char* nexus);
 
 
@@ -269,6 +281,7 @@ int WTERMSIG(int status);
 #define O_TRUNC    0x0400
 #define O_EXCL     0x0800
 #define O_NOFOLLOW 0x0100
+#define O_CLOEXEC  0x01000000
 #define F_GETFL    3
 #define F_SETFL    4
 #define F_SETFD    2
@@ -562,6 +575,8 @@ struct utimbuf {
     time_t modtime;
 };
 
+/* utime tempus plagulae mutat - photographiae fabricae id comparant */
+/* <gradus titulus="utime" genus="scriptura"/> (codex 97) */
 int utime(const char* via, const struct utimbuf* tempora);
 
 /* <sectio caput="stdio.h"/> stdio.h POSIX (FILE* ex fossa; snprintf

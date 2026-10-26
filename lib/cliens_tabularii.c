@@ -8,6 +8,7 @@
 
 #include "cliens_tabularii.h"
 #include "tcp.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -75,6 +76,7 @@ _conectere_aut_gignere (
             (int)cliens->portus);
         sprintf(imperium, "%s -portus %d > /dev/null 2>&1 &",
             cliens->launcher, (int)cliens->portus);
+        lectiones_notare(LECTIO_EXSECUTIO, "/bin/sh");   /* system() */
         (vacuum)system(imperium);
     }
     /* CC ms per gradum; gradus = mora_excitationis_ms / CC (V s
@@ -82,6 +84,7 @@ _conectere_aut_gignere (
      * brevem ponit ne V s dormiat. */
     per (k = ZEPHYRUM; k < cliens->mora_excitationis_ms / CC; k++)
     {
+        lectiones_notare(LECTIO_EXSECUTIO, "/bin/sh");   /* system() */
         (vacuum)system("sleep 0.2");
         rc = tcp_connectere("127.0.0.1", cliens->portus, pn);
         si (rc.successus)

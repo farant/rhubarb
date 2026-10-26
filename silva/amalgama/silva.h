@@ -1918,6 +1918,10 @@ typedef enum {
      * extra canalem lectionum (filum) - violatio domus; debita per
      * silva_c89_semantica_debita_applicare ad domesticum */
     EXAMEN_CODEX_CANALIS_PRAETERITUS,
+    /* 97 (2026-10-24, fabrica-8): scriptura cruda extra canalem
+     * lectionum (remove, unlink, rename, mkdir, rmdir, chmod, symlink,
+     * utime; fopen modo 'w'/'a'/'+') - sine debitis */
+    EXAMEN_CODEX_SCRIPTURA_PRAETERITA,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

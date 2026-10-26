@@ -14,6 +14,7 @@
 #include "chorda_aedificator.h"
 #include "credo.h"
 #include "compilator.h"
+#include "filum.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -159,12 +160,67 @@ _sectio_erratum (
     piscina_destruere(propria);
 }
 
+/* III. SINE COLLOCATIONE (nexus ex thesauro): miss compilat in exitum
+ * (via = exitus); hit exitum NON scribit, via = blobus thesauri;
+ * compilare (cum collocatione) exitum ut olim scribit */
+interior vacuum
+_sectio_sine_collocatione (
+    CredoContextus* c)
+{
+               Piscina* propria;
+               Piscina* vocatio;
+            Compilator* compilator;
+    CompilatorResultus  r;
+    constans character* argv[VII];
+    constans character* exitus;
+                   i32  numerus;
+
+    exitus  = _via(c, "z.o");
+    numerus = _argumenta(c, _plagula(c, "z.c",
+        "int z(void) { return 3; }\n"), exitus, argv);
+    propria = piscina_generare_dynamicum("compilator_proprius", 65536);
+    vocatio = piscina_generare_dynamicum("compilator_vocatio", 65536);
+    CREDO_NECESSE(propria != NIHIL && vocatio != NIHIL);
+    compilator = compilator_aperire(propria, _via(c, "thesaurus"),
+        NIHIL);
+    CREDO_NECESSE(compilator != NIHIL);
+
+    /* miss: compilatur in exitum */
+    r = compilator_compilare_sine_collocatione(compilator, argv,
+        numerus, vocatio);
+    CREDO_VERUM(r.codex == ZEPHYRUM && !r.ex_thesauro);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.via, exitus);
+    CREDO_VERUM(filum_existit(exitus));
+
+    /* hit: exitus deletus NON rescribitur, via = blobus */
+    (vacuum)filum_delere(exitus);
+    r = compilator_compilare_sine_collocatione(compilator, argv,
+        numerus, vocatio);
+    CREDO_VERUM(r.codex == ZEPHYRUM && r.ex_thesauro);
+    CREDO_FALSUM(filum_existit(exitus));
+    CREDO_VERUM(strstr(chorda_ut_cstr(r.via, vocatio), "/blobi/")
+        != NIHIL);
+    CREDO_VERUM(filum_existit(chorda_ut_cstr(r.via, vocatio)));
+
+    /* cum collocatione (ut olim): exitus scribitur, via = exitus */
+    r = compilator_compilare_in(compilator, argv, numerus, vocatio);
+    CREDO_VERUM(r.codex == ZEPHYRUM && r.ex_thesauro);
+    CREDO_VERUM(filum_existit(exitus));
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.via, exitus);
+
+    piscina_destruere(vocatio);
+    piscina_destruere(propria);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "piscina vocantis",
       _sectio_piscina_vocantis,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "erratum",
       _sectio_erratum,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sine collocatione",
+      _sectio_sine_collocatione,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

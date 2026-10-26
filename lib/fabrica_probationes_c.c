@@ -1005,14 +1005,16 @@ _probationes_c_agere (
     {
         chorda fons = *(chorda*)xar_obtinere(clausura.fontes, i);
         chorda obiectum;
+        chorda nectendum;
 
         obiectum = chorda_concatenare(fabricae_iungere(piscina, "",
             area_c,
             "obiecta/"), _obiectum_nominare(fons, piscina), piscina);
-        erratum = chorda_ex_literis("", piscina);
+        erratum    = chorda_ex_literis("", piscina);
+        nectendum  = obiectum;
         si (!sutura->compilare(sutura->datum, chorda_ut_cstr(fons,
                 piscina), chorda_ut_cstr(obiectum, piscina), vexilla,
-                piscina, &erratum))
+                piscina, &nectendum, &erratum))
         {
             actum_out->codex  = I;
             actum_out->cauda  =
@@ -1020,7 +1022,10 @@ _probationes_c_agere (
                 "compilatio fracta: ", fons, ": "), erratum, piscina);
             redde VERUM;
         }
-        fabricae_chordam_addere(argv, obiectum);
+        /* via quam sutura reddit: blobus thesauri si inventum (nulla
+         * copia in area), aliter obiectum compilatum */
+        fabricae_chordam_addere(argv, nectendum.mensura > ZEPHYRUM
+            ? nectendum : obiectum);
     }
     /* vexilla nexus: verba spatio separata ("-framework Cocoa") */
     per (i = ZEPHYRUM; i < xar_numerus(clausura.vexilla_nexus); i++)

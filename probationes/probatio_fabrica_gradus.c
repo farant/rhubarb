@@ -343,6 +343,12 @@ hic_manens constans character* _c_fractus_cursus      = NIHIL;
 
 hic_manens constans character* _c_fractus_compilatio  = NIHIL;
 
+/* NEXUS EX THESAURO: compilatio ficta viam thesauri reddit (non
+ * obiectum areae) - nexus eam ferre debet; argv nexus ultimi */
+hic_manens                  b32 _c_obiectum_thesauri  = FALSUM;
+
+hic_manens            character _c_nexus_argv_ultimus[MMXLVIII];
+
 interior vacuum
 _c_addere (
                    Xar* xar,
@@ -414,12 +420,21 @@ _compilare_fictum (
     constans character* obiectum,
           constans Xar* vexilla_addita,
                Piscina* piscina,
+                chorda* obiectum_out,
                 chorda* erratum_out)
 {
     character contentum[CCLVI];
           i32 i;
 
     _c_compilationes++;
+    *obiectum_out = chorda_ex_literis(obiectum, piscina);
+    si (_c_obiectum_thesauri)
+    {
+        *obiectum_out = chorda_concatenare(chorda_ex_literis(
+            "build/aedilis/obiecta/blobi/fictum/", piscina),
+            chorda_ex_literis(strrchr(obiectum, '/') ? strrchr(obiectum,
+            '/') + I : obiectum, piscina), piscina);
+    }
     _c_vexilla_ultima[0] = '\0';
     per (i = ZEPHYRUM; vexilla_addita != NIHIL
          && i < xar_numerus(vexilla_addita); i++)
@@ -469,6 +484,19 @@ _in_area_currere_c (
         b32 cocoa     = FALSUM;
 
         _c_nexus++;
+        _c_nexus_argv_ultimus[0] = '\0';
+        per (i = ZEPHYRUM; i < xar_numerus(argv); i++)
+        {
+            chorda v = *(constans chorda*)xar_obtinere(argv, i);
+
+            si (strlen(_c_nexus_argv_ultimus) + (size_t)v.mensura + II
+                < magnitudo(_c_nexus_argv_ultimus))
+            {
+                sprintf(_c_nexus_argv_ultimus
+                    + strlen(_c_nexus_argv_ultimus), "%.*s ",
+                    (integer)v.mensura, (constans character*)v.datum);
+            }
+        }
         mundi_ponere(discus, liber_via, "");
         per (i = ZEPHYRUM; i + I < xar_numerus(argv); i++)
         {
@@ -761,6 +789,25 @@ _probare_gradus (
             "data/alienum.txt",
             piscina));
         _gradus_alienum = NIHIL;
+
+        /* VIIb. scriptura TRANSIENS extra aream (quaestio 4GY9MJ4):
+         * creata et deleta intra cursum - photographia nihil videt,
+         * liber (S) eam nominat: FRACTUM nominatum */
+        _gradus_liber_extra = "S\tapps/transiens.tmp\n";
+        mundi_ponere(discus, "t/a.c", "a IIIb\n");
+        sanationes = fabrica_sanare(sutura, ordo, electa, FALSUM,
+            piscina, &causa);
+        sanatio = sanationes != NIHIL
+            ? mundi_sanatio_invenire(sanationes,
+            "probationes_t/a") : NIHIL;
+        CREDO_NECESSE_NON_NIHIL(sanatio);
+        CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+            (i32)FABRICA_FRACTUM);
+        CREDO_VERUM(mundi_continet(sanatio->causa,
+            "S, liber lectionum", piscina));
+        CREDO_VERUM(mundi_continet(sanatio->causa,
+            "apps/transiens.tmp", piscina));
+        _gradus_liber_extra = "";
 
         /* VIII. ambitus non declaratus: FRACTUM nominatum; basis et
          * declarata transeunt */
@@ -1320,6 +1367,24 @@ _probare_probationes_c (
         CREDO_AEQUALIS_I32(_c_nexus, nexus + I);
         CREDO_AEQUALIS_I32(_c_cursus, cursus + I);
         CREDO_VERUM(strstr(_c_cursus_ultimus, "probatio_a") != NIHIL);
+        /* obiecta areae nectuntur (sutura viam obiecti sui reddit) */
+        CREDO_VERUM(strstr(_c_nexus_argv_ultimus, "probatio_a/obiecta/")
+            != NIHIL);
+
+        /* Vb. NEXUS EX THESAURO: sutura viam thesauri reddit -> nexus
+         * eam fert, nullum obiectum areae (nulla copia in area) */
+        _c_obiectum_thesauri = VERUM;
+        mundi_ponere(discus, "lib/x.c", "x thesauri\n");
+        (vacuum)fabrica_sanare(sutura, ordo, electa, FALSUM, piscina,
+            &causa);
+        _c_obiectum_thesauri = FALSUM;
+        CREDO_AEQUALIS_I32(_c_nexus, nexus + II);
+        CREDO_VERUM(strstr(_c_nexus_argv_ultimus,
+            "build/aedilis/obiecta/blobi/fictum/") != NIHIL);
+        CREDO_VERUM(strstr(_c_nexus_argv_ultimus, "probatio_a/obiecta/")
+            == NIHIL);
+        nexus++;   /* Vb: a iterum nexum et cursum */
+        cursus++;
 
         /* VI. caput b solius: b solum */
         mundi_ponere(discus, "include/y.h", "yh II\n");
@@ -2132,6 +2197,9 @@ _probare_debita (
                "build/fabrica/area/probationes_t/a/verdictum.txt";
            constans character* VERDICTUM_B =
                "build/fabrica/area/probationes_t/b/verdictum.txt";
+           constans character* COLLATA_A =
+               "build/fabrica/area/probationes_t/a/"
+               "vestigia_collata.txt";
 
         /* I. declaratio: debita leguntur; duplex, attributum absens,
          * actio sine gradu -> recusatio nominata */
@@ -2362,6 +2430,36 @@ _probare_debita (
             (i32)FABRICA_DEBITUM_SCRIPTUM);
         _d_liber_a = NIHIL;
 
+        /* Vc (iudicium-fumus 2026-10-24). linea S directorii MAIORIS
+         * loci licentis (debitum build/a.db -> 'build'; thesaurus
+         * build/aedilis/obiecta/... -> 'build/aedilis') = creatio
+         * semitae, non scriptura aliena; frater ('build/aliud') fractus
+         * manet */
+        _d_liber_a = "S\tbuild\nS\tbuild/aedilis\n"
+            "S\tbuild/aedilis/obiecta\n";
+        mundi_ponere(discus, "t/a.c", "a IIc\n");
+        sanatio = _s_sanare(sutura, ordo, electa, "probationes_t/a",
+            FABRICA_SANATUM, piscina);
+        CREDO_AEQUALIS_I32(sanatio != NIHIL ? (i32)sanatio->eventus
+            : (i32)XCIX, (i32)FABRICA_SANATUM);
+        _d_liber_a = "S\tbuild/aliud\n";
+        mundi_ponere(discus, "t/a.c", "a IId\n");
+        sanatio = _s_sanare(sutura, ordo, electa, "probationes_t/a",
+            FABRICA_FRACTUM, piscina);
+        CREDO_NECESSE_NON_NIHIL(sanatio);
+        CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+            (i32)FABRICA_FRACTUM);
+        CREDO_VERUM(mundi_continet(sanatio->causa, "build/aliud",
+            piscina));
+        /* limes '/': 'build/a' praefixum litterale, non maius */
+        _d_liber_a = "S\tbuild/a\n";
+        mundi_ponere(discus, "t/a.c", "a IIe\n");
+        sanatio = _s_sanare(sutura, ordo, electa, "probationes_t/a",
+            FABRICA_FRACTUM, piscina);
+        CREDO_AEQUALIS_I32(sanatio != NIHIL ? (i32)sanatio->eventus
+            : (i32)XCIX, (i32)FABRICA_FRACTUM);
+        _d_liber_a = NIHIL;
+
         /* VI. a fractum sine scriptura -> IGNOTUM (fractura non probat
          * debitum mortuum) */
         _gradus_fractus = "t/a.c";
@@ -2373,6 +2471,45 @@ _probare_debita (
         _gradus_fractus  = NIHIL;
         _d_via_a         = NIHIL;
         _d_via_b         = NIHIL;
+
+        /* VII (fabrica-8 mensura). vestigia conferre: photographiae
+         * contra librum EXTRA locum membri -> vestigia_collata.txt */
+        sutura->vestigia_conferre = VERUM;
+        /* VIIa. scriptura quam liber non nominat -> photographia */
+        _d_via_a    = "build/a.db";
+        _d_liber_a  = NIHIL;
+        mundi_ponere(discus, "t/a.c", "a VIIa\n");
+        (vacuum)_s_sanare(sutura, ordo, electa, "probationes_t/a",
+            FABRICA_SANATUM, piscina);
+        CREDO_VERUM(mundi_contentum_est(discus, COLLATA_A,
+            "cursus\nphotographia\tbuild/a.db\n"));
+        /* VIIb. utraque vident -> nihil nisi 'cursus' */
+        _d_liber_a  = "S\tbuild/a.db\n";
+        mundi_ponere(discus, "t/a.c", "a VIIb\n");
+        (vacuum)_s_sanare(sutura, ordo, electa, "probationes_t/a",
+            FABRICA_SANATUM, piscina);
+        CREDO_VERUM(mundi_contentum_est(discus, COLLATA_A, "cursus\n"));
+        /* VIIc. transiens (liber solus) nominatur; scriptura in area
+         * membri numquam */
+        _d_via_a    = NIHIL;
+        _d_liber_a  = "S\tbuild/a.db\n"
+            "S\tbuild/fabrica/area/probationes_t/a/intra.tmp\n";
+        mundi_ponere(discus, "t/a.c", "a VIIc\n");
+        (vacuum)_s_sanare(sutura, ordo, electa, "probationes_t/a",
+            FABRICA_SANATUM, piscina);
+        CREDO_VERUM(mundi_contentum_est(discus, COLLATA_A,
+            "cursus\nliber\tbuild/a.db\n"));
+        /* VIId. sine vexillo: nulla plagula */
+        sutura->vestigia_conferre = FALSUM;
+        mundi_auferre(discus, COLLATA_A);
+        _d_via_a    = "build/a.db";
+        _d_liber_a  = NIHIL;
+        mundi_ponere(discus, "t/a.c", "a VIId\n");
+        (vacuum)_s_sanare(sutura, ordo, electa, "probationes_t/a",
+            FABRICA_SANATUM, piscina);
+        CREDO_FALSUM(mundi_existere(discus, COLLATA_A, piscina));
+        _d_via_a    = NIHIL;
+        _d_liber_a  = NIHIL;
     }
 }
 
@@ -2744,6 +2881,11 @@ _mundum_purgare (
     _d_via_b                = NIHIL;
     _d_liber_a              = NIHIL;
     mundi_ambitus_ficti[0]  = NIHIL;
+
+    /* nexus ex thesauro (sectio Vb) */
+    _c_obiectum_thesauri      = FALSUM;
+    _c_nexus_argv_ultimus[0]  = '\0';
+
     /* numeratores et 'ultima' quoque (credo II T6: CREDO_ORDO=mixtus
      * eos invenit - ordine tabulae sectio quae eos legit prima
      * currebat, ergo ZEPHYRUM fortuito videbat) */

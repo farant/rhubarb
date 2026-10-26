@@ -120,3 +120,11 @@ allocates in its own piscina only on a store (miss) and in GC. Test:
 probationes/probatio_compilator.c (needs lib/compilator.c in compile_tests_fontes_generata.sh,
 regenerated). argv is WITHOUT a leading 'clang', or it counts as a second source and the call
 is "non cacheabilia".
+
+## 2026-10-24 — compilator_compilare_sine_collocatione
+
+A hit returns the thesaurus blob path in `CompilatorResultus.via` and neither reads nor writes
+the `-o` output; a miss compiles into the output as before (via = output). `via` is now also
+set by compilare/compilare_in (the output path). fabrica uses it to link members directly from
+the cache; bin/compilator (--plures, compile_tests) keeps copying. Test: probatio_compilator
+section 'sine collocatione'.

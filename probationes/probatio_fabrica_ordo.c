@@ -211,6 +211,16 @@ _probare_vestigia_et_undas (
         CREDO_NON_NIHIL(extra);
         CREDO_AEQUALIS_I32(xar_numerus(extra), ZEPHYRUM);
 
+        /* radix arboris IPSA (mkdir/rmdir: linea S libri) intra
+         * vestigium - debitum 'dir/' aliter recusaretur (4GY9MJ4) */
+        ante = _photographia(&sutura, piscina);
+        mundi_ponere(&discus, "build/a", "radix\n");
+        extra = fabrica_vestigia_comparare(a, ante,
+            _photographia(&sutura, piscina), piscina);
+        CREDO_NON_NIHIL(extra);
+        CREDO_AEQUALIS_I32(xar_numerus(extra), ZEPHYRUM);
+        mundi_auferre(&discus, "build/a");
+
         /* extra: plagula nova, deleta, rescripta octetis eisdem,
          * plagulae suffixo non congruens aut gradu altiore,
          * provenientia ACTIONIS ALTERIUS */

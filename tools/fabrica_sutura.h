@@ -197,6 +197,7 @@ suturae_compilare_gradus (
     constans character* obiectum,
           constans Xar* vexilla_addita,
                Piscina* piscina,
+                chorda* obiectum_out,
                 chorda* erratum_out);
 
 /* bin/fabrica portae debitae|declaratae (tools/fabrica_portae.c) */

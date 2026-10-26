@@ -1397,3 +1397,30 @@ Option 1 of the composite discussion (desideratum …VXWK8: the real fabrica mig
 - `sine_debitis` → printed, and the commit proceeds.
 
 **Plant**, by hand (silva.planta can't anchor in .py, park …4Z416NN): put the old `return list(portae)` back → red at exactly that assertion; restored with cp + touch → green. Both halves of the suite green.
+
+## 2026-10-24 — fusio_probare heals stale producers before praeiudicia (park …J1AJ5V2)
+
+The 10-23 merge's first fusio_probare stopped at praeiudicium generata: compile_tests_fontes_generata.sh
+FORTASSE because the speculum_hospes capsule (build/, not committed) was stale. Since b71fcc72 the
+capsule embeds the commit time, so it is stale after EVERY commit. commissio heals stale
+producers before its gates (`_fabricam_exigere` -> `_consilium_producentium` -> `consilium
+-agere`); fusio_probare only healed gate instruments.
+
+New `_producentes_fusionis_sanare()` (phase 'producentes', after instruments, before gates):
+`bin/fabrica iudicare -plenus -omnia -machina` (the SAME scope as the generata gate, not -tacta:
+a branch need not touch the capsule's consumers); if committed artifacts are STALUM/IGNOTUM/
+FORTASSE, the same `_consilium_producentium` plan (uncommitted producers only, policy-judged)
+runs via `_consilium_agere`. Unlike `_fabricam_exigere` it never regenerates COMMITTED
+artifacts (fusio judges the committed tree). A failed plan is a MONITUM, not an error: the
+heal is a convenience, and the generata gate judges the real state right after. Observed live:
+the plan healed speculum (enough for generata) while its corpus_silicis step was refused
+"extra propositum" (park …AG7); raising would have blocked a merge that was actually fine.
+Tests: five cases on the step itself + case L asserts the call happens once before any gate.
+
+## 2026-10-24 — heal-plan step footprints come from fabrica (park …AG7)
+
+`_gradus_sanationis` no longer trusts bin/* build/* alone: `_vestigia_sanandi` asks
+`bin/fabrica sanare -vestigium X...` (declared exitus + vestigia of X's scope and all judges'
+scopes, computed in C) once per plan and adds those patterns to each step. Out-of-tree targets
+('~', '/') skip the query - the consilium policy rules judge them. A failing query raises
+SilvaError (an old bin/fabrica without -vestigium says so). Detail: lib/fabrica.worklog.md.

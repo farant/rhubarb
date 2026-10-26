@@ -3653,3 +3653,175 @@ No unit test reaches tools/ sutura code. The detector is end to end: a dangling 
 by the next call's piscina_vacare, which breaks every member key. Manual plant (copy dropped):
 memoized radix became 410 reruns, 0 memo hits, 1 failure (probatio_xml); reverted: 411/411
 servatae. Memoized radix: 1.9 GB -> 521 MB (7.4 GB at the start of today).
+
+## 2026-10-24 — 4GY9MJ4: transient writes judged on the serial path
+
+Before/after snapshots cannot see a file created and deleted inside one run; the read trace
+(S lines) can. The wave path already judged S lines; the serial path (`_membrum_agere`, and
+`_actionem_agere` for IUDICIUM actions, whose trace is fresh this run) did not. Now both do
+("scripsit extra vestigium (S, liber lectionum): <via>").
+
+What it found:
+- silva corpus suites: aedilis' clang -MM scratch `build/aedilis/oraculum.<pid>.tmp` ->
+  `_via_temporaria` (lib/aedilis_silva.c) now under $TMPDIR (member area under fabrica),
+  build/aedilis fallback;
+- radix -vis: machina (build/probatio_machina_plagula/) and volumen (horae/ordinarium/tmpdir/
+  vetus) -> moved into credo_area; vicus_saltus build/pmx tmux socket (sun_path 104) ->
+  own debt build/pmv/ (a path may have ONE debtor: "debitum duplex");
+- silex and thesaurus were FALSE alarms: their debts are trees, and ARBOR matching
+  excluded the root directory itself (the mkdir S line). `fabricae_locus_tangit` ARBOR now
+  contains its root (`_sub_radice`, no allocation). Snapshots list files only, so they are
+  unaffected.
+- the probatio_fabrica_iudicium transit fixture wrote S x/build/obj.o with no footprint:
+  footprint declared (the test is about S lines being omitted from reads).
+
+Note: the check reports only the FIRST alien path per member. For a full list, read the S
+lines of build/fabrica/lectiones/<actio>.tsv. Radix -vis after: 411/411.
+
+## 2026-10-24 — members link straight from the compile cache (no per-area object copies)
+
+Profiling (sample, toml -vis): fabrica's own active time is mostly file-system work. The tree
+snapshot (`_arborem_photographare`: getattrlistbulk + directory opens) was ~16% of the
+composite's wall; the compile-cache path (whole-file reads + existence checks) came next. Radix
+-vis: 582 s wall, only 233 s inside the tests.
+
+40% of the snapshot was build/fabrica, and inside it every member area held its OWN copy of
+each linked object (12,195 .o across radix, 1.5 GB). Each run wiped the area and copied every
+object back (`_collocare`: read the cached object, compare, temp write, rename).
+
+Now `sutura->compilare` returns the path to link (`obiectum_out`), and the real sutura uses
+`compilator_compilare_sine_collocatione`: on a cache hit nothing is read or written and the
+thesaurus blob path is returned; clang links extensionless blobs as objects. A miss still
+compiles into <area>obiecta/. Thesaurus reads are already skipped as inputs in read traces
+(`_in_thesauro`), so member keys are unchanged.
+
+Radix -vis 582 -> 520 s; area objects 12,195 -> 295; area 1.5 GB -> 706 MB; snapshot entries
+~60.6k -> ~49.1k; memoized radix still 411/411 servatae. What's left of the overhead is mostly
+the two snapshots per member (216 s sys in the -vis run): next candidates are sharing one
+member's 'post' as the next member's 'ante', or FSEvents.
+
+## 2026-10-24 — exec recording (P lines) + snapshot bookkeeping trim
+
+Toward trace-only judgment (snapshots only where the trace can't be complete): the trace now
+records every program executed. `LECTIO_EXSECUTIO` = 'P', argv[0] as given, logged BEFORE
+fork (a failed exec is still recorded, conservatively) in processus_posix.c (both exec paths),
+pseudoterminale_posix.c, and the three system() calls (cliens_tabularii x2, aedilis_silva
+oracle) as /bin/sh. fabrica's parsers deliberately do NOT know 'P' (skipped as input; the
+sigillare switch puts it with S/E as not verifiable); `_debita_notare` skips it. No verdict
+or key changes.
+
+Measured (radix -vis): only 41 of 411 members executed anything; ~370 (~90%) executed nothing,
+so their trace is complete except for sqlite (VFS shim, next). Of the 41: /bin/sh 24, fixture
+scripts (tls/generare.sh 8), tmux 4, chmod, curl, git, clang, plus house bins (bin/natura*,
+~/.bin/mensor) and test-built fakes (trace themselves).
+
+Bug found on the way: the trace descriptor (opened once per process, kept) lacked O_CLOEXEC,
+so every exec'd program, foreign ones included, inherited it. Fixed. probatio_pseudoterminale
+counts fds around pseudoterminal creation; under fabrica its first trace line (the new P) opened
+the descriptor inside the count. The test now opens the trace first (filum_existit of its own
+source; NOT lectiones_ambitus - an undeclared E input is refused).
+
+Also in this commit, the snapshot bookkeeping trim (tools/fabrica_sutura.c `_viam_iungere`, one
+allocation per entry, NUL-terminated so no per-dir chorda_ut_cstr; `_in_thesauro` /
+`fabrica_via_thesauri` allocation-free). Old/new oracle: identical path sets (43,924). Not a speed
+win: the kernel walk is ~90% of the ~190 ms snapshot (bare walk ~170 ms, sort 8 ms).
+
+## 2026-10-24 — step 2: sqlite in the trace (see lib/scrinium.worklog.md)
+
+The trace VFS in lib/scrinium.c closes the second gap in trace completeness (after P lines):
+database reads are now L inputs of the member's memo key, and writes are S lines judged like any
+filum write. The first -vis run with it found three tests writing sqlite siblings under build/
+outside their debts; fixed by moving them into credo areas (three debts removed). Remaining gap
+for trace-only judgment: the 41 members that execute foreign programs (step 3 spec: trust the
+trace where it is complete, snapshot only members with P lines of untraced programs, plus a
+sampled snapshot audit).
+
+## 2026-10-24 — measurement: what do snapshots see that the trace misses? (probare -conferre)
+
+New instrument for step 3: `bin/fabrica probare -conferre` (sutura->vestigia_conferre). After each
+member's "after" snapshot, `_vestigia_conferre` diffs the snapshots (`_mutata_photographiarum`,
+now shared with `_debita_notare`) and the member's S lines, both restricted to paths OUTSIDE the
+member's location (area, liber, acta), into `<area>vestigia_collata.txt`: `photographia\t<via>`
+= the snapshot saw a change the trace never named; `liber\t<via>` = the trace named a write the
+snapshot didn't see. Verdicts unchanged.
+
+radix -vis -conferre (414 members, all green, macOS 27 / clang 21):
+- snapshot-only: 3 paths in 2 members, all under declared debts, both explained:
+  probatio_lectiones (the trace's own test points FABRICA_LECTIONES at its own file, so its writes
+  land there) and probatio_natura_glossae (bin/natura_glossae writes its HTML with a raw fopen -
+  tools/natura_glossae.c:689, on the code-96 legacy debt list).
+- trace-only: 1124 paths in 7 members - transient files (sqlite -wal/-shm/-journal created and
+  deleted within the run, temp scripts, sockets) and directories (snapshots record files only).
+  The trace sees strictly MORE than the snapshot, not just cheaper.
+- The raw remove/rename/mkdir calls found by grep produced no misses in this run: they act inside
+  areas or on files that don't survive the run. One run is not a guarantee - the lint ratchet
+  (code 96 extended to write calls) is what makes it structural.
+
+Not measured: other composites (silva, md, toml, ...) and sanare waves (one snapshot per wave).
+The 16 area dirs without a comparison file are leftovers of archived members (arbor*, lapifex).
+Test: probatio_fabrica_gradus 'debita scripturae' part VII (fake disk): unnamed write ->
+photographia; both see it -> only 'cursus'; transient S -> liber, S inside the member's area never
+listed; flag off -> no file. Plants (silva.planta) red at their assertion, then green: call
+removed, trace not consulted for snapshot changes, member location not excluded for S lines.
+
+## 2026-10-24 — -conferre over all composites
+
+css 10, html 14, materia 14, md 14, saltuarius 13, toml 13, silva 56, veneni 16 (all green):
+zero differences in BOTH directions. Only silva has members that execute programs (5/56: /bin/sh,
+git); the other seven none. Totals across the nine composites: 554 members, 46 execute programs,
+3 snapshot-only paths (radix, both explained). Spec: project-specs/fabrica-spec-8.md.
+
+## 2026-10-24 — heal-plan footprint from declarations (park …AG7)
+
+Commits kept failing with "consilium sanationis fractum: sana bin/canon_examen scripsit extra
+propositum: silva/build/generator" (and the corpus_silicis twin). Cause: the plan (pythonica
+`_gradus_sanationis`) allowed each "sana X" step only bin/* and build/*, but `bin/fabrica sanare X`
+also heals X's stale upstream AND the stale judges first (stadium iudicum: fabrica, compilator,
+aedilis). aedilis links silva, so tabulae_silvae (`silva/generare.sh`, vestigium silva/build
+communis) runs - a DECLARED write the plan didn't know.
+
+Fix: `fabrica_ambitum_sanandi` (the scope loop, extracted from fabrica_sanare) and
+`fabrica_vestigium_sanandi` = declared exitus + vestigia of scope(X) ∪ scope(all judges) (all of
+them: which is stale isn't known when the plan is made), tree-relative only ('~', '/' left to the
+policy rules), vestigium -> path and 'path/*' (directorium_titulus_congruit's '*' crosses '/'),
+sorted, unique. `bin/fabrica sanare -vestigium X...` prints `<X>\t<exemplar>` (one process: fabrica
+startup is ~6 s). pythonica `_vestigia_sanandi` calls it once per plan and adds the patterns to
+each step on top of bin/* build/* (only ever widens, to what declarations say); failure = SilvaError,
+never a silent fallback. Out-of-tree targets skip the query. The amalgam (silva/amalgama/silva.c)
+shows up as a declared output in canon_examen's scope, so the praeco half of the park is likely
+covered too.
+Tests: probatio_fabrica_sanare 'vestigium sanandi (AG7)' (fake world G/P/J/U; plants: judges
+dropped, '~' kept, dedupe dropped - all red); probatio_silva_arboris: live tree gives sana
+bin/aedilis silva/build/*, fake fabrica's -vestigium output reaches the plan, broken -vestigium
+raises.
+
+## 2026-10-24 — lesson: a deferred gate hid an AG7 regression
+
+81c304ee (sanare -vestigium) broke pythonica's 'custodia: forma installatum stalum facit': its fake
+bin/fabrica is stateful (first call prints 'ante', later ones 'post'), and the new
+`sanare -vestigium` query became the first call. The pythonica gates were deferred to the merge
+tier, so the commit passed; found while running the suites by hand for the next change. Fixed in the
+fake (`-vestigium` answers nothing). Habit: when a change adds a NEW call to bin/fabrica from
+pythonica, run ./pythonica/probare.sh (both halves) before committing - fakes intercept every call.
+
+## 2026-10-25 — fusio red: iudicium-fumus (ancestor directories) + a freeze slip
+
+fusio_probare after merging main: 51/53. iudicium-fumus: the fake judge gate porta_x runs
+bin/compilator in a fresh tree; compilator creates build/aedilis/obiecta/... via
+filum_directorium_creare_cum_parentibus, which notes S for each new directory - 'build/aedilis' and
+'build/aedilis/obiecta' are ANCESTORS of the store (fabricae_thesauri_partes), not inside it, so
+since b99fdc82 (S lines judged for iudicium actions) the gate was red; it was deferred to the merge
+tier, so no commit noticed. Fix: `_antecessor_permissus` - an S line naming a directory that is an
+ancestor of an allowed location (the action's vestigia, its exitus, the store roots) is creating the
+path there, not a foreign write; deleting such a directory hides nothing (its contents' deletions
+are their own S lines). '/' boundary kept ('build/a' is not an ancestor of build/a.db). Snapshots
+record no directories, so this only touches trace lines.
+Test: probatio_fabrica_gradus 'debita' Vc (build, build/aedilis, build/aedilis/obiecta allowed;
+build/aliud and the boundary case still FRACTUM). Plants (rule not called, '/' boundary dropped,
+store roots dropped) red.
+
+The other red, oraculum-silvae, was mine and not a code fault: I started editing
+lib/fabrica_sanare.c in the live tree WHILE fusio ran (03:03-03:05Z) - the oracle read the edited
+file (87083 vs 89086 bytes). instrumenta (03:04-03:07Z) overlapped too and passed against the edited
+file. Both read lib/fabrica_sanare.c, so the fix commit owes them again and the next fusio reruns
+them on committed code. Freeze rule: drafts go to the scratchpad as patches while ANY gates run.

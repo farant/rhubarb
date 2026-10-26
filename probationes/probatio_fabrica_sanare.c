@@ -1574,6 +1574,117 @@ _probare_piscinam_acti (
     }
 }
 
+
+/* ==================================================
+ * VESTIGIUM SANANDI (parcum …AG7): quae 'sanare X' scribere potest =
+ * exitus et vestigia declarata ambitus X (et quae supra) ET ambitus
+ * iudicum; '~' praetermissum; ordinata, unica; via ignota = NIHIL
+ * ================================================== */
+
+/* quoties exemplar in Xar de chorda? */
+interior i32
+_exemplaria_numerare (
+          constans Xar* exemplaria,
+    constans character* exemplar)
+{
+    i32 i;
+    i32 n;
+
+    n = ZEPHYRUM;
+    per (i = ZEPHYRUM; exemplaria != NIHIL
+        && i < xar_numerus(exemplaria);
+         i++)
+    {
+        si (chorda_aequalis_literis(*(chorda*)xar_obtinere(exemplaria,
+            i),
+                exemplar))
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
+interior vacuum
+_vestigium_addere_ficto (
+          FabricaActio* actio,
+    constans character* via,
+               Piscina* piscina)
+{
+    FabricaLocus* l;
+
+    si (actio->vestigia == NIHIL)
+    {
+        actio->vestigia = xar_creare(piscina,
+            (i32)magnitudo(FabricaLocus));
+    }
+    l = (FabricaLocus*)xar_addere(actio->vestigia);
+    memset(l, ZEPHYRUM, magnitudo(FabricaLocus));
+    l->forma  = FABRICA_LOCUS_ARBOR;
+    l->via    = chorda_ex_literis(via, piscina);
+}
+
+interior vacuum
+_probare_vestigium_sanandi (
+    CredoContextus* c)
+{
+          Piscina* piscina = c->piscina;
+     FabricaActio* actiones[IV];
+              Xar* ordo;
+              Xar* electa;
+              Xar* v;
+           chorda  causa;
+
+    /* G generator (silva/build, domus), P supra G, J iudex, U alius */
+    actiones[0] = mundi_actio_scripta(piscina, "G", "gen_g", "g.src",
+        "gen.out", "regeneratio");
+    _vestigium_addere_ficto(actiones[0], "silva/build", piscina);
+    _vestigium_addere_ficto(actiones[0], "~/domus", piscina);
+    actiones[I] = mundi_actio_scripta(piscina, "P", "gen_p", "gen.out",
+        "bin/x", "regeneratio");
+    _vestigium_addere_ficto(actiones[I], "build/p", piscina);
+    _vestigium_addere_ficto(actiones[I], "silva/build", piscina);
+    actiones[II] = mundi_actio_scripta(piscina, "J", "gen_j", "j.src",
+        "bin/iudex", "regeneratio");
+    actiones[II]->iudex = VERUM;
+    _vestigium_addere_ficto(actiones[II], "iudicis/build", piscina);
+    actiones[III] = mundi_actio_scripta(piscina, "U", "gen_u", "u.src",
+        "u.out", "regeneratio");
+    _vestigium_addere_ficto(actiones[III], "alienum/build", piscina);
+    ordo = mundi_ordinare_fictas(piscina, actiones, IV);
+    CREDO_NECESSE(ordo != NIHIL);
+    electa = xar_creare(piscina, (i32)magnitudo(chorda));
+    *(chorda*)xar_addere(electa) = chorda_ex_literis("bin/x", piscina);
+    causa = chorda_ex_literis("", piscina);
+    v = fabrica_vestigium_sanandi(ordo, electa, piscina, &causa);
+    CREDO_NECESSE(v != NIHIL);
+    /* ambitus: P ipse et G supra eum */
+    CREDO_AEQUALIS_I32(_exemplaria_numerare(v, "bin/x"), I);
+    CREDO_AEQUALIS_I32(_exemplaria_numerare(v, "gen.out"), I);
+    CREDO_AEQUALIS_I32(_exemplaria_numerare(v, "build/p"), I);
+    CREDO_AEQUALIS_I32(_exemplaria_numerare(v, "build/p/*"), I);
+    /* vestigium commune G et P semel (unica) */
+    CREDO_AEQUALIS_I32(_exemplaria_numerare(v, "silva/build"), I);
+    CREDO_AEQUALIS_I32(_exemplaria_numerare(v, "silva/build/*"), I);
+    /* stadium iudicum: J quamvis non supra P */
+    CREDO_AEQUALIS_I32(_exemplaria_numerare(v, "bin/iudex"), I);
+    CREDO_AEQUALIS_I32(_exemplaria_numerare(v, "iudicis/build/*"), I);
+    /* alienus non; domus numquam */
+    CREDO_AEQUALIS_I32(_exemplaria_numerare(v, "u.out"), ZEPHYRUM);
+    CREDO_AEQUALIS_I32(_exemplaria_numerare(v, "alienum/build"),
+        ZEPHYRUM);
+    CREDO_AEQUALIS_I32(_exemplaria_numerare(v, "~/domus"), ZEPHYRUM);
+    CREDO_AEQUALIS_I32(_exemplaria_numerare(v, "~/domus/*"), ZEPHYRUM);
+    /* via a nulla actione producta: NIHIL nominatum */
+    electa = xar_creare(piscina, (i32)magnitudo(chorda));
+    *(chorda*)xar_addere(electa) = chorda_ex_literis("nusquam.out",
+        piscina);
+    causa = chorda_ex_literis("", piscina);
+    CREDO_NIHIL(fabrica_vestigium_sanandi(ordo, electa, piscina,
+        &causa));
+    CREDO_VERUM(mundi_continet(causa, "nusquam.out", piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "sanare",
       _probare_sanare,
@@ -1592,6 +1703,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "piscina acti",
       _probare_piscinam_acti,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "vestigium sanandi (AG7)",
+      _probare_vestigium_sanandi,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

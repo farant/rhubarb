@@ -6,6 +6,7 @@
 #include "../vendor/sqlite3.h"
 
 #include "scrinium.h"
+#include "lectiones.h"
 #include "moneta.h"
 
 #include <string.h>
@@ -24,6 +25,332 @@ structura ScriniumMassa {
     sqlite3_blob* ansa;
 };
 
+
+/* ==================================================
+ * VFS VESTIGII (iudicium per librum solum, nota …NS2M): sqlite IO
+ * suum CRUDUM agit - liber lectionum (lectiones) eius lectiones et
+ * scripturas non videbat. VFS involvens "rhubarb-vestigium" omnia ad
+ * VFS ordinarium (unix) transmittit et notat: lectio prima (xRead,
+ * xFetch) L, scriptura prima aut truncatio S, deletio S, xShmMap
+ * primum S pro '<db>-shm' (WAL memoriam communem per mmap scribit,
+ * numquam per xWrite). Plagulae sine nomine (temporariae) non
+ * notantur; xAccess non notatur (sqlite diaria calida assidue
+ * quaerit - absentia eorum ingressus non est). Sine FABRICA_LECTIONES
+ * lectiones_notare nihil agit. Structura VFS ordinarii copiatur:
+ * functiones unix praeter xOpen/xDelete argumentum VFS non adhibent.
+ * ================================================== */
+
+nomen structura {
+           sqlite3_file  basis;     /* pMethods = &_methodi_vestigii */
+           sqlite3_file* verum;     /* plagula VFS ordinarii sequens */
+     constans character* via;       /* zName (vivit usque ad xClose) */
+                    b32  lectum;
+                    b32  scriptum;
+                    b32  communis;  /* -shm notatum */
+} FilumVestigii;
+
+interior vacuum
+_notare_semel (
+                    b32* signum,
+            LectioGenus  genus,
+     constans character* via)
+{
+    si (!*signum && via != NIHIL)
+    {
+        *signum = VERUM;
+        lectiones_notare(genus, via);
+    }
+}
+
+interior sqlite3_file*
+_verum (
+    sqlite3_file* f)
+{
+    redde ((FilumVestigii*)f)->verum;
+}
+
+interior integer
+_fv_claudere (
+    sqlite3_file* f)
+{
+    redde _verum(f)->pMethods->xClose(_verum(f));
+}
+
+interior integer
+_fv_legere (
+      sqlite3_file* f,
+            vacuum* capsa,
+           integer  n,
+     sqlite3_int64  offset)
+{
+    FilumVestigii* p = (FilumVestigii*)f;
+
+    _notare_semel(&p->lectum, LECTIO_LEGIT, p->via);
+    redde p->verum->pMethods->xRead(p->verum, capsa, n, offset);
+}
+
+interior integer
+_fv_scribere (
+       sqlite3_file* f,
+    constans vacuum* octeti,
+            integer  n,
+      sqlite3_int64  offset)
+{
+    FilumVestigii* p = (FilumVestigii*)f;
+
+    _notare_semel(&p->scriptum, LECTIO_SCRIPSIT, p->via);
+    redde p->verum->pMethods->xWrite(p->verum, octeti, n, offset);
+}
+
+interior integer
+_fv_truncare (
+     sqlite3_file* f,
+    sqlite3_int64  mensura)
+{
+    FilumVestigii* p = (FilumVestigii*)f;
+
+    _notare_semel(&p->scriptum, LECTIO_SCRIPSIT, p->via);
+    redde p->verum->pMethods->xTruncate(p->verum, mensura);
+}
+
+interior integer
+_fv_firmare (
+    sqlite3_file* f,
+         integer  vexilla)
+{
+    redde _verum(f)->pMethods->xSync(_verum(f), vexilla);
+}
+
+interior integer
+_fv_mensura (
+     sqlite3_file* f,
+    sqlite3_int64* mensura)
+{
+    redde _verum(f)->pMethods->xFileSize(_verum(f), mensura);
+}
+
+interior integer
+_fv_claustrum (
+    sqlite3_file* f,
+         integer  gradus)
+{
+    redde _verum(f)->pMethods->xLock(_verum(f), gradus);
+}
+
+interior integer
+_fv_reserare (
+    sqlite3_file* f,
+         integer  gradus)
+{
+    redde _verum(f)->pMethods->xUnlock(_verum(f), gradus);
+}
+
+interior integer
+_fv_reservatum (
+    sqlite3_file* f,
+         integer* fructus)
+{
+    redde _verum(f)->pMethods->xCheckReservedLock(_verum(f), fructus);
+}
+
+interior integer
+_fv_imperium (
+    sqlite3_file* f,
+         integer  mandatum,
+          vacuum* argumentum)
+{
+    redde _verum(f)->pMethods->xFileControl(_verum(f), mandatum,
+        argumentum);
+}
+
+interior integer
+_fv_sector (
+    sqlite3_file* f)
+{
+    redde _verum(f)->pMethods->xSectorSize(_verum(f));
+}
+
+interior integer
+_fv_proprietates (
+    sqlite3_file* f)
+{
+    redde _verum(f)->pMethods->xDeviceCharacteristics(_verum(f));
+}
+
+/* memoria communis WAL: '<db>-shm' a VFS ordinario ipso aperitur et
+ * per mmap scribitur - nota S semel, ante mappam */
+interior integer
+_fv_communem_mappare (
+            sqlite3_file*  f,
+                 integer   pagina,
+                 integer   mensura_paginae,
+                 integer   extendere,
+        vacuum volatilis** mappa)
+{
+    FilumVestigii* p = (FilumVestigii*)f;
+
+    si (!p->communis && p->via != NIHIL)
+    {
+        character via_communis[MMXLVIII];
+           size_t longitudo = strlen(p->via);
+
+        p->communis = VERUM;
+        si (longitudo + V < magnitudo(via_communis))
+        {
+            memcpy(via_communis, p->via, longitudo);
+            memcpy(via_communis + longitudo, "-shm", V);
+            lectiones_notare(LECTIO_SCRIPSIT, via_communis);
+        }
+    }
+    redde p->verum->pMethods->xShmMap(p->verum, pagina, mensura_paginae,
+        extendere, mappa);
+}
+
+interior integer
+_fv_communem_claudere (
+    sqlite3_file* f,
+         integer  offset,
+         integer  n,
+         integer  vexilla)
+{
+    redde _verum(f)->pMethods->xShmLock(_verum(f), offset, n, vexilla);
+}
+
+interior vacuum
+_fv_communem_saepire (
+    sqlite3_file* f)
+{
+    _verum(f)->pMethods->xShmBarrier(_verum(f));
+}
+
+interior integer
+_fv_communem_solvere (
+    sqlite3_file* f,
+         integer  delere)
+{
+    redde _verum(f)->pMethods->xShmUnmap(_verum(f), delere);
+}
+
+interior integer
+_fv_capere (
+      sqlite3_file*  f,
+     sqlite3_int64   offset,
+           integer   n,
+            vacuum** pp)
+{
+    FilumVestigii* p = (FilumVestigii*)f;
+
+    _notare_semel(&p->lectum, LECTIO_LEGIT, p->via);
+    redde p->verum->pMethods->xFetch(p->verum, offset, n, pp);
+}
+
+interior integer
+_fv_dimittere (
+     sqlite3_file* f,
+    sqlite3_int64  offset,
+           vacuum* pagina)
+{
+    redde _verum(f)->pMethods->xUnfetch(_verum(f), offset, pagina);
+}
+
+hic_manens constans sqlite3_io_methods _methodi_vestigii = {
+    III,
+    _fv_claudere,
+    _fv_legere,
+    _fv_scribere,
+    _fv_truncare,
+    _fv_firmare,
+    _fv_mensura,
+    _fv_claustrum,
+    _fv_reserare,
+    _fv_reservatum,
+    _fv_imperium,
+    _fv_sector,
+    _fv_proprietates,
+    _fv_communem_mappare,
+    _fv_communem_claudere,
+    _fv_communem_saepire,
+    _fv_communem_solvere,
+    _fv_capere,
+    _fv_dimittere
+};
+
+interior integer
+_systema_aperire (
+         sqlite3_vfs* systema,
+    sqlite3_filename  via,
+        sqlite3_file* f,
+             integer  vexilla,
+             integer* vexilla_out)
+{
+    FilumVestigii* p      = (FilumVestigii*)f;
+      sqlite3_vfs* basis  = (sqlite3_vfs*)systema->pAppData;
+          integer  rc;
+
+    p->basis.pMethods  = NIHIL;
+    p->verum           = (sqlite3_file*)(vacuum*)((i8*)(vacuum*)p
+        + magnitudo(FilumVestigii));
+    p->verum->pMethods = NIHIL;
+    p->via = via;
+    p->lectum = FALSUM;
+    p->scriptum = FALSUM;
+    p->communis = FALSUM;
+    rc = basis->xOpen(basis, via, p->verum, vexilla, vexilla_out);
+    /* methodi solum si plagula vera eas habet: sqlite tum xClose
+     * vocat, etiam post defectum */
+    si (p->verum->pMethods != NIHIL)
+    {
+        p->basis.pMethods = &_methodi_vestigii;
+    }
+    redde rc;
+}
+
+interior integer
+_systema_delere (
+            sqlite3_vfs* systema,
+     constans character* via,
+                integer  directorium_firmare)
+{
+    sqlite3_vfs* basis = (sqlite3_vfs*)systema->pAppData;
+
+    lectiones_notare(LECTIO_SCRIPSIT, via);
+    redde basis->xDelete(basis, via, directorium_firmare);
+}
+
+hic_manens sqlite3_vfs _systema_vestigii;
+hic_manens         b32 _systema_paratum = FALSUM;
+
+/* nomen VFS vestigii, semel inscripti; NIHIL = VFS ordinarius (si
+ * inscriptio deficit, sqlite ut olim) */
+interior constans character*
+_systema_vestigii_nomen (vacuum)
+{
+    sqlite3_vfs* basis;
+
+    si (!_systema_paratum)
+    {
+        basis = sqlite3_vfs_find(NIHIL);
+        si (basis == NIHIL)
+        {
+            redde NIHIL;
+        }
+        _systema_vestigii           = *basis;
+        _systema_vestigii.pNext     = NIHIL;
+        _systema_vestigii.zName     = "rhubarb-vestigium";
+        _systema_vestigii.pAppData  = basis;
+        _systema_vestigii.szOsFile  = (integer)magnitudo(FilumVestigii)
+            + basis->szOsFile;
+        _systema_vestigii.xOpen    = _systema_aperire;
+        _systema_vestigii.xDelete  = _systema_delere;
+        si (sqlite3_vfs_register(&_systema_vestigii, 0) != SQLITE_OK)
+        {
+            redde NIHIL;
+        }
+        _systema_paratum = VERUM;
+    }
+    redde _systema_vestigii.zName;
+}
+
 Scrinium*
 scrinium_aperire (
                Piscina* piscina,
@@ -41,7 +368,10 @@ scrinium_aperire_cum (
     Scrinium* s;
      sqlite3* ansa = NIHIL;
 
-    si (sqlite3_open(via, &ansa) != SQLITE_OK)
+    /* VFS vestigii: lectiones et scripturae sqlite in libro
+     * (sqlite3_open eadem vexilla: READWRITE | CREATE) */
+    si (sqlite3_open_v2(via, &ansa, SQLITE_OPEN_READWRITE
+        | SQLITE_OPEN_CREATE, _systema_vestigii_nomen()) != SQLITE_OK)
     {
         si (ansa != NIHIL)
         {

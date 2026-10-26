@@ -350,6 +350,15 @@ nomen structura {
                          Xar* extra;      /* chorda: observatae extra
                                            * propositum (vacua =
                                            * sanum) */
+                         Xar* monita;     /* chorda: DOMUS ALIENA
+                                           * (parcum …QX6SQ0): ubi
+                                           * regula scripturam in domo
+                                           * VETAT (arbor secundaria),
+                                           * mutatio in '~/' OBSERVATA
+                                           * nec a gradu notata alterius
+                                           * est (arbor alia, sessio) -
+                                           * monitum, numquam fractura;
+                                           * notata manet extra */
 } ConsiliumActus;
 
 nomen structura {
@@ -401,6 +410,7 @@ consilium_eventus_titulus (
 /* acta legibilia (homo) aut TSV (machina):
  *   ACTUS unda titulus eventus codex duratio_ms causa
  *   EXTRA titulus via
+ *   MONITUM titulus via   (domus aliena, …QX6SQ0: non fractura)
  * summa ultima: 'SUMMA acta N fracta N omissa N' */
 chorda
 consilium_acta_scribere (

@@ -3076,14 +3076,44 @@ def _consilium_regulae(secundaria):
     return lineae
 
 
-def _gradus_sanationis(x, auctor, legit=(), sequitur=(), alia=()):
+def _vestigia_sanandi(viae):
+    """quae 'bin/fabrica sanare X' scribere potest, per X (parcum …AG7):
+    exitus et vestigia DECLARATA ambitus eius et iudicum, a fabrica
+    computata ('sanare -vestigium', lineae '<via>\t<exemplar>'; vocatio
+    UNA - initium fabricae ~VI s). Defectus = SilvaError, numquam
+    reditus tacitus ad bin/* build/* (consilium angustum = recusatio
+    falsa, latum sine causa = custodia mortua)."""
+    # extra arborem ('~', '/'): regulae consilii iudicant (domus VETITA
+    # in arbore secundaria) - vestigium intra arborem eas non tangit
+    viae = sorted(set(v for v in viae if not v.startswith(('~', '/'))))
+    if not viae:
+        return {}
+    r = subprocess.run([FABRICA_BIN, 'sanare', '-vestigium'] + viae,
+                       cwd=RADIX, capture_output=True, text=True)
+    if r.returncode != 0:
+        raise SilvaError('fabrica sanare -vestigium fractum (exitus %d; '
+                         'bin/fabrica vetus? ./tools/fabrica_struere.sh): %s'
+                         % (r.returncode, r.stderr.strip()[-400:]))
+    vestigia = dict((v, []) for v in viae)
+    for linea in r.stdout.splitlines():
+        via, sep, exemplar = linea.partition('\t')
+        if sep and via in vestigia:
+            vestigia[via].append(exemplar)
+    return vestigia
+
+
+def _gradus_sanationis(x, auctor, legit=(), sequitur=(), alia=(),
+                       declarata=()):
     """gradus 'sana X' cum MANDATO (consilium S5c2): iudex ipse
     (bin/fabrica) per tools/fabrica_struere.sh (in arbore, nihil
     instituit), ceteri per 'bin/fabrica sanare X'. Vestigium bin/* et
     build/* - sanatio praecondiciones suas (obiecta, capsulae, binaria
     arboris) ibi scribit; scriptura alibi (fons commissus, domus) per
     exsecutorem FRACTA nominatur. alia = exitus ceteri actionis (scribit
-    et in vestigio)."""
+    et in vestigio). declarata = exemplaria ex _vestigia_sanandi (parcum
+    …AG7): sanatio X praecondiciones et iudices stalos quoque sanat, qui
+    extra bin/ build/ scribunt (silva/build ab tabulae_silvae) - eorum
+    vestigia declarata vestigio gradus adduntur."""
     iudex = os.path.relpath(FABRICA_BIN, RADIX)
     argv = (['tools/fabrica_struere.sh'] if x == iudex
             else [iudex, 'sanare', x])
@@ -3100,8 +3130,12 @@ def _gradus_sanationis(x, auctor, legit=(), sequitur=(), alia=()):
     for v in scripta:
         lineae.append('    <effectus verbum="scribere" res="%s"'
                       ' cognitio="declaratum"/>' % v)
-    for v in ['bin/*', 'build/*'] + [v for v in scripta
-                                     if not v.startswith(('bin/', 'build/'))]:
+    exemplaria = ['bin/*', 'build/*']
+    for v in ([v for v in scripta if not v.startswith(('bin/', 'build/'))]
+              + [_attributum_consilii(v) for v in declarata]):
+        if v not in exemplaria and not v.startswith(('bin/', 'build/')):
+            exemplaria.append(v)
+    for v in exemplaria:
         lineae.append('    <vestigium exemplar="%s"/>' % v)
     for t in sequitur:
         lineae.append('    <sequitur titulus="sana %s"/>' % t)
@@ -3125,10 +3159,12 @@ def _consilium_formae(formatae, novae, secundaria):
                       % _attributum_consilii(f))
     lineae.append('  </gradus>')
     iudex = os.path.relpath(FABRICA_BIN, RADIX)
+    declarata = _vestigia_sanandi(novae)
     for x in novae:
         lineae += _gradus_sanationis(
             x, 'forma', formatae,
-            [iudex] if iudex in novae and x != iudex else [])
+            [iudex] if iudex in novae and x != iudex else [],
+            declarata=declarata.get(x, ()))
     lineae.append('</consilium>')
     return '\n'.join(lineae) + '\n'
 
@@ -3163,8 +3199,15 @@ def _consilium_agere(textus, nomen):
         f.write(textus)
     r = subprocess.run([FABRICA_BIN, 'consilium', '-agere', '-machina',
                         via], cwd=RADIX, capture_output=True, text=True)
-    return (r.returncode, _machina_legere(r.stdout), r.stderr,
-            os.path.relpath(via, RADIX))
+    ordines = _machina_legere(r.stdout)
+    # DOMUS ALIENA (parcum …QX6SQ0): mutatio in ~/ observata, a gradu non
+    # notata, ubi regula domum vetat - nominatur, numquam obstat
+    for o in ordines:
+        if o[0] == 'MONITUM' and len(o) >= 3:
+            print('MONITUM consilium: %s mutata dum "%s" currebat - arbor'
+                  ' alia aut sessio alia? (non fractura: arbor secundaria'
+                  ' in domo non scribit)' % (o[2], o[1]))
+    return (r.returncode, ordines, r.stderr, os.path.relpath(via, RADIX))
 
 
 def _consilium_acta(ordines):
@@ -3181,6 +3224,8 @@ def _consilium_fracturae(ordines, stderr):
               if o[0] == 'ACTUS' and len(o) >= 7 and o[3] != 'ACTUM']
     lineae += ['  EXTRA %s %s' % (o[1], o[2]) for o in ordines
                if o[0] == 'EXTRA' and len(o) >= 3]
+    lineae += ['  MONITUM %s %s (non fractura)' % (o[1], o[2])
+               for o in ordines if o[0] == 'MONITUM' and len(o) >= 3]
     lineae += ['  ' + l for l in stderr.splitlines()
                if l.strip() and not l.startswith('  agitur ')]
     return '\n'.join(lineae)
@@ -3329,6 +3374,7 @@ def _consilium_producentium(malae):
     titulus = dict((a, iudex if iudex in exitus[a] else exitus[a][0])
                    for a in candidati)
     secundaria = _arbor_secundaria()
+    declarata = _vestigia_sanandi([titulus[a] for a in candidati])
 
     def documentum(producentes):
         lineae = ['<consilium>'] + _consilium_regulae(secundaria)
@@ -3337,7 +3383,8 @@ def _consilium_producentium(malae):
             lineae += _gradus_sanationis(
                 titulus[a], 'fabrica:%s' % a, (),
                 [titulus[b] for b in producentes
-                 if unda.get(b, 0) < unda.get(a, 0)], exitus[a])
+                 if unda.get(b, 0) < unda.get(a, 0)], exitus[a],
+                declarata=declarata.get(titulus[a], ()))
         lineae.append('</consilium>')
         return '\n'.join(lineae) + '\n'
 
@@ -3868,6 +3915,48 @@ def portae_debitae_ramus(basis='main'):
     return '\n'.join(lineae) + '\n'
 
 
+def _producentes_fusionis_sanare():
+    """PRODUCENTES ANTE PRAEIUDICIA (parcum …J1AJ5V2): artificia commissa
+    FORTASSE/STALUM/IGNOTUM quia producens NON commissus supra stalus est
+    (capsula speculi: tempus commissi, stala post commissionem quamque) -
+    porta generata (iudicare -plenus -omnia) fusionem frustra sistebat.
+    Ambitus idem ac porta generata (-omnia); consilium producentium idem
+    ac commissio (producentes non commissi soli, politica iudicat) -
+    artificia COMMISSA numquam hic regenerantur (fusio commissum iudicat):
+    stala vera portam generata ut antea frangunt."""
+    if not os.path.exists(FABRICA_BIN):
+        return
+    r = subprocess.run([FABRICA_BIN, 'iudicare', '-plenus', '-omnia',
+                        '-machina'], cwd=RADIX, capture_output=True,
+                       text=True)
+    if r.returncode != 1:
+        return
+    malae = [o[2] for o in _machina_legere(r.stdout)
+             if o[0] == 'IUDICIUM' and len(o) >= 3
+             and o[1] in ('STALUM', 'IGNOTUM', 'FORTASSE')]
+    if not malae or not VIAE_COMMISSAE(malae):
+        return
+    consilium = _consilium_producentium(malae)
+    if consilium is None:
+        return
+    rc_c, acta_c, err_c, via_c = _consilium_agere(consilium,
+                                                  'producentes_fusionis')
+    sanatae = _consilium_acta(acta_c)
+    if sanatae:
+        print('fusio: producentes stali per consilium in arbore sanati'
+              ' (%s; %s)' % (', '.join(sanatae), via_c))
+    # MONITUM, non obstaculum: sanatio commoditas est ante iudicium;
+    # porta generata statim verum iudicat (gradus fractus, e.g. corpus
+    # silicis 'extra propositum', parcum …AG7, fusionem non sistit si
+    # artificia commissa iam recentia sunt)
+    if rc_c != 0:
+        print('MONITUM fusio: consilium producentium (%s) %s - porta'
+              ' generata iudicabit:\n%s'
+              % (via_c, 'sine iudicio exsequi NON licet'
+                 if rc_c in (1, 2) else 'non totum actum',
+                 _consilium_fracturae(acta_c, err_c)))
+
+
 def fusio_probare(basis='main', frigida=True, recepta=True):
     """FUSIO (gradus-portarum T4, spec §III): ramus ante fusionem in basis.
     1. basis antecessor HEAD esse debet ('merge main first'), arbor munda
@@ -3906,6 +3995,8 @@ def fusio_probare(basis='main', frigida=True, recepta=True):
                                                       recepta=recepta)
     with _phasis('instrumenta portarum'):
         _instrumenta_portarum_sanare(binaria)
+    with _phasis('producentes'):
+        _producentes_fusionis_sanare()
     try:
         _portas_currere(portae, genera, viae, recepta, pergere=True)
     except PortaeFractae as ex:
