@@ -96959,6 +96959,21 @@ _modus_scribens (
     redde FALSUM;
 }
 
+/* functiones quarum emendatio mechanica in silva/transformationes/
+ * <functio>.stml stat (transformare T6; nuntius 97 eam nominat) */
+interior b32
+_regulae_mechanicae (
+    SilvaChorda titulus)
+{
+    redde silva_chorda_aequalis_literis(titulus, "remove")
+        || silva_chorda_aequalis_literis(titulus, "unlink")
+        || silva_chorda_aequalis_literis(titulus, "rmdir")
+        || silva_chorda_aequalis_literis(titulus, "rename")
+        || silva_chorda_aequalis_literis(titulus, "chmod")
+        || silva_chorda_aequalis_literis(titulus, "mkdir")
+        || silva_chorda_aequalis_literis(titulus, "fopen");
+}
+
 interior vacuum
 _canalem_examinare (
            SilvaSemantica* sem,
@@ -97061,8 +97076,8 @@ _canalem_examinare (
             perge;
         }
         nuntius = (character*)silva_piscina_allocare(sem->piscina,
-            (memoriae_index)t0->valor.mensura
-            + (memoriae_index)gp->pro.mensura + (memoriae_index)CCLVI);
+            (memoriae_index)II * t0->valor.mensura
+            + (memoriae_index)gp->pro.mensura + (memoriae_index)DXII);
         si (nuntius == NIHIL)
         {
             perge;
@@ -97081,6 +97096,17 @@ _canalem_examinare (
                 gp->scriptura ? (int)gp->pro.mensura : ZEPHYRUM,
                 (constans character*)gp->pro.datum,
                 gp->scriptura && gp->pro.mensura > ZEPHYRUM ? "'" : "");
+            /* N4 (transformare): emendatio mechanica nominata -
+             * regulae silva/transformationes/<functio>.stml */
+            si (_regulae_mechanicae(t0->valor))
+            {
+                sprintf(nuntius + strlen(nuntius),
+                    "; emendatio mechanica:"
+                    " ./silva/transformare.sh -regulae"
+                    " silva/transformationes/%.*s.stml <viae>",
+                    (int)t0->valor.mensura,
+                    (constans character*)t0->valor.datum);
+            }
         }
         alioquin
         {

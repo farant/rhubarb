@@ -114,4 +114,25 @@ verifiable, refused) then on the new text, then `filum_scribere`.
 Formatting deliberately NOT done here: the formator has no line-range
 mode and commissio formats whole files at commit anyway.
 
+*T6 done (2026-10-26):* pythonica `silva.census(functio, viae)` ->
+Census(situs, fractae) and `silva.transformare(regulae, viae,
+scribere=False)` -> Transformatio(rescriptiones, fractae, nuntii, rc).
+Rules library `silva/transformationes/` = remove, unlink, rmdir,
+rename, chmod, mkdir (mode 0755 only), fopen (write-mode literals ->
+lectiones_fopen, call level), each header naming where behaviour
+differs. Tool: GENERATUM files never rewritten; `<inclusio>` adds the
+replacement's header. code 97's message names the rules file
+(N4). Dry run over the whole tree (minus vendor/archivum/reference),
+2026-10-26: 341 sites rewritable - remove 133/135, unlink 33/34, rename
+6/9, mkdir 34/40, rmdir 20/23, chmod 13/16, fopen 102 write-mode (194
+fopen refusals are mostly read mode = code 96, not this sweep). Manual:
+officina machinula (implements remove/rename/... for its interpreter,
+int convention), CREDO_* macro arguments, filum's own wrappers
+(recursio), mkdir modes other than 0755.
+
+**Next: the sweep (fabrica-8), area by area**, each a normal commit:
+`./silva/transformare.sh -regulae silva/transformationes/X.stml AREA
+-scribere`, then the manual leftovers, then code 97 -> VIOLATIO with a
+plant.
+
 ## Open (decide when reached)

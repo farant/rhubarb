@@ -31,6 +31,10 @@
  *   compilans = non verificabilis, recusatur) et post; deinde scribit.
  *   Fractura = plagula intacta, causa nominata. Formator non currit
  *   (commissio plagulas totas format).
+ * <inclusio>filum.h</inclusio> in regulis: plagula rescripta sine eo
+ *   '#include "filum.h"' accipit (post '#include "..."' ultimam ante
+ *   rescriptionem primam). Plagulae GENERATUM (linea prima) numquam
+ *   rescribuntur - generator eiusve fontes.
  * -machina: TSV, linea una per situm (ordine plagularum):
  *     situs  <via> <linea> <columna> <clavis> <scriptura>     (census)
  *     macro  <via> <linea> <columna> <macro>
@@ -87,6 +91,10 @@ hic_manens b32 scribere_volo = FALSUM;
  * clang post '--' (transformare.sh vexilla domus et radices tradit) */
 hic_manens s32 codex_scopi = -I;
 hic_manens constans character* constans* vexilla_clang = NIHIL;
+
+/* <inclusio>filum.h</inclusio>: caput quod substitutio postulat;
+ * plagulae rescriptae sine eo linea '#include "caput"' additur */
+hic_manens chorda inclusio_regularum;
 
 
 /* ==================================================
@@ -323,6 +331,17 @@ _regulas_legere (
             " debet\n", via);
         redde NIHIL;
     }
+    {
+        StmlNodus* inclusio = stml_invenire_liberum(res.elementum_radix,
+            "inclusio");
+
+        inclusio_regularum.mensura  = ZEPHYRUM;
+        inclusio_regularum.datum    = NIHIL;
+        si (inclusio != NIHIL)
+        {
+            inclusio_regularum = stml_textus_valor(inclusio, piscina);
+        }
+    }
     functio = stml_attributum_capere(res.elementum_radix, "functio");
     si (functio == NIHIL || functio->mensura == ZEPHYRUM)
     {
@@ -438,6 +457,127 @@ _lineam_addere (
     }
 }
 
+/* initium rescriptionis FACTAE primae (ordine fontis) */
+interior s32
+_limes_primus (
+    constans Xar* rescriptiones)
+{
+    s32 limes = -I;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < xar_numerus(rescriptiones); k++)
+    {
+        constans SilvaRescriptio* r = (constans SilvaRescriptio*)
+            xar_obtinere(rescriptiones, k);
+
+        si (   r->verdictum == SILVA_RESCRIPTIO_FACTA
+            && (limes < ZEPHYRUM || r->initium < limes))
+        {
+            limes = r->initium;
+        }
+    }
+    redde limes;
+}
+
+/* linea prima 'GENERATUM' fert? (plagula generata: generator eiusve
+ * fontes rescribendi, numquam ipsa) */
+interior b32
+_generata_est (
+    constans character* fons,
+                   i32  mensura)
+{
+    i32 finis = ZEPHYRUM;
+    i32 k;
+
+    dum (finis < mensura && fons[finis] != '\n')
+    {
+        finis++;
+    }
+    per (k = ZEPHYRUM; k + IX <= finis; k++)
+    {
+        si (memcmp(fons + k, "GENERATUM", IX) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* '#include "caput"' addere si deest: post lineam '#include "..."'
+ * ultimam ante limitem (rescriptionem primam), aliter post '#include
+ * <...>' ultimam, aliter in capite */
+interior chorda
+_caput_addere (
+         Piscina* piscina,
+          chorda  textus,
+          chorda  caput,
+             s32  limes)
+{
+     ChordaAedificator* a;
+                chorda  linea;
+                   s32  post_quotam   = -I;
+                   s32  post_angulum  = -I;
+                   s32  locus;
+                   s32  k;
+
+    si (caput.mensura == ZEPHYRUM)
+    {
+        redde textus;
+    }
+    a = chorda_aedificator_creare(piscina,
+        (memoriae_index)caput.mensura + XXIV);
+    si (a == NIHIL)
+    {
+        redde textus;
+    }
+    (vacuum)chorda_aedificator_appendere_literis(a, "#include \"");
+    (vacuum)chorda_aedificator_appendere_chorda(a, caput);
+    (vacuum)chorda_aedificator_appendere_literis(a, "\"\n");
+    linea = chorda_aedificator_finire(a);
+    si (chorda_continet(textus, chorda_sectio(linea, ZEPHYRUM,
+            linea.mensura - I)))
+    {
+        redde textus;
+    }
+    per (k = ZEPHYRUM; k < limes && k < (s32)textus.mensura; k++)
+    {
+        si (k > ZEPHYRUM && textus.datum[k - I] != '\n')
+        {
+            perge;
+        }
+        si (   k + X <= (s32)textus.mensura
+            && memcmp(textus.datum + k, "#include \"", X) == ZEPHYRUM)
+        {
+            post_quotam = k;
+        }
+        alioquin si (   k + X <= (s32)textus.mensura
+                     && memcmp(textus.datum + k, "#include <", X)
+                         == ZEPHYRUM)
+        {
+            post_angulum = k;
+        }
+    }
+    locus = post_quotam >= ZEPHYRUM ? post_quotam : post_angulum;
+    si (locus >= ZEPHYRUM)
+    {
+        dum (locus < (s32)textus.mensura && textus.datum[locus] != '\n')
+        {
+            locus++;
+        }
+        si (locus < (s32)textus.mensura)
+        {
+            locus++;
+        }
+    }
+    alioquin
+    {
+        locus = ZEPHYRUM;
+    }
+    redde chorda_concatenare(chorda_concatenare(chorda_sectio(textus,
+        ZEPHYRUM, (i32)locus), linea, piscina), chorda_sectio(textus,
+        (i32)locus, textus.mensura), piscina);
+}
+
 /* custodia et scriptio unius plagulae; nuntius in stderr */
 interior b32
 _plagulam_scribere (
@@ -550,6 +690,13 @@ _plagulam_tractare (
         piscina_destruere(opus);
         redde FALSUM;
     }
+    si (regulae != NIHIL && _generata_est(fons, mensura))
+    {
+        fprintf(stderr, "transformare: %s: GENERATUM - non rescribitur"
+            " (generatorem eiusve fontes rescribe)\n", via);
+        piscina_destruere(opus);
+        redde VERUM;
+    }
     si (!silva_iudicium_iudicare(app, opus, via, fons, mensura, &fr))
     {
         _fractam_nuntiare(via, fr.recusatum
@@ -611,6 +758,8 @@ _plagulam_tractare (
             ante  = chorda_ex_buffer((i8*)fons, mensura);
             post  = silva_rescriptiones_applicare(opus, fons, mensura,
                 rescriptiones);
+            post  = _caput_addere(opus, post, inclusio_regularum,
+                _limes_primus(rescriptiones));
             si (scribere_volo)
             {
                 si (_plagulam_scribere(app, opus, via, &fr, fons,
