@@ -430,4 +430,101 @@ nundinae_apple_mittere (
               chorda* causa,
              Piscina* p);
 
+
+/* ==================================================
+ * TestFlight: notae, grex, testatores (T5)
+ * ================================================== */
+
+/* testator grex: id, email, status (NOT_INVITED | INVITED | ACCEPTED |
+ * INSTALLED | REVOKED) */
+nomen structura {
+    chorda id;
+    chorda email;
+    chorda status;
+} NundinaeAppleTestator;
+
+/* hash ex ultima linea 'commit <hash>' notarum (D11); vacua si nulla.
+ * Purum. */
+chorda
+nundinae_apple_commissum_ultimum (
+     chorda  notae,
+    Piscina* p);
+
+/* responsum builds (sort -uploadedDate, include
+ * betaBuildLocalizations): commissum notarum en-US aedificationis
+ * recentissimae quae lineam commit habet; vacua si nulla. Purum. */
+chorda
+nundinae_apple_commissum_ex_aedificationibus (
+    JsonValor* responsum,
+      Piscina* p);
+
+/* responsum betaTesters -> Xar de NundinaeAppleTestator. Purum. */
+b32
+nundinae_apple_testatores_legere (
+    JsonValor* responsum,
+          Xar* testatores,
+      Piscina* p);
+
+/* invitatio mittenda? solum NOT_INVITED (REVOKED = remotus consulto,
+ * numquam sponte) */
+b32
+nundinae_apple_invitandus (
+    constans NundinaeAppleTestator* t);
+
+/* commissum ultimae divulgationis applicationis (per D11, ex Apple) */
+b32
+nundinae_apple_ultimum (
+    NundinaeApple* n,
+           chorda  id_applicationis,
+           chorda* commissum,
+           chorda* causa,
+          Piscina* p);
+
+/* id build Apple ex numero aedificationis (CFBundleVersion) */
+b32
+nundinae_apple_aedificationem_invenire (
+    NundinaeApple* n,
+           chorda  id_applicationis,
+              i32  aedificatio,
+           chorda* id_aedificationis,
+           chorda* causa,
+          Piscina* p);
+
+/* "What to Test" (betaBuildLocalizations en-US whatsNew): creat aut
+ * renovat; notae > MMMM characteres -> FALSUM */
+b32
+nundinae_apple_notas_ponere (
+    NundinaeApple* n,
+           chorda  id_aedificationis,
+           chorda  notae,
+           chorda* causa,
+          Piscina* p);
+
+/* aedificatio in gregem (POST betaGroups/{id}/relationships/builds) */
+b32
+nundinae_apple_gregi_addere (
+    NundinaeApple* n,
+           chorda  id_gregis,
+           chorda  id_aedificationis,
+           chorda* causa,
+          Piscina* p);
+
+/* testatores gregis cum statu */
+b32
+nundinae_apple_testatores (
+    NundinaeApple* n,
+           chorda  id_gregis,
+              Xar* testatores,
+           chorda* causa,
+          Piscina* p);
+
+/* invitatio (mittere aut iterum mittere) testatori ad applicationem */
+b32
+nundinae_apple_invitare (
+    NundinaeApple* n,
+           chorda  id_applicationis,
+           chorda  id_testatoris,
+           chorda* causa,
+          Piscina* p);
+
 #endif /* NUNDINAE_APPLE_H */

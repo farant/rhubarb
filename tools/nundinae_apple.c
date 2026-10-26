@@ -5,7 +5,10 @@
  * 'Familia', tester); -proxima <app>, -mittere <app> <ipa> <versio>
  * <aedificatio>, -cryptographia (T4: numerus aedificationis proximus,
  * missio Build Uploads usque ad VALID, iudicium cryptographiae ex
- * 'aedilis --partes' in stdin - sine clave). Configuratio:
+ * 'aedilis --partes' in stdin - sine clave); -ultimum <app>,
+ * -distribuere <app> <aedificatio> -notae <plagula>, -testatores <app>,
+ * -invitare <app> <email> (T5: commissum ultimum ex notis Apple, notae
+ * "What to Test" + grex Familia + invitationes). Configuratio:
  * -configuratio <via>, aliter
  * $HOME/.rhubarb/ios/nundinae_apple.stml. Clavis secreta numquam
  * imprimitur. Exitus: 0 | 1 fractum (Apple aut rete) | 2 recusatio
@@ -35,7 +38,9 @@ _usus (
         "-status | -applicationes | -parare <app> [-tester <email>] | "
         "-quaerere </v1/...> | -proxima <app> | "
         "-mittere <app> <ipa> <versio> <aedificatio> | "
-        "-cryptographia < partes.tsv\n");
+        "-cryptographia < partes.tsv | -ultimum <app> | "
+        "-distribuere <app> <aedificatio> -notae <plagula> | "
+        "-testatores <app> | -invitare <app> <email>\n");
     redde II;
 }
 
@@ -680,6 +685,210 @@ _mittere (
     redde ZEPHYRUM;
 }
 
+/* -ultimum: commissum ultimae divulgationis (vacuum si nulla) */
+interior s32
+_ultimum (
+          NundinaeApple* n,
+     constans character* app,
+                Piscina* p)
+{
+    chorda id_app;
+    chorda commissum;
+    chorda causa;
+
+    si (   !_applicatio_ex_nomine(n, app, &id_app, &causa, p)
+        || !nundinae_apple_ultimum(n, id_app, &commissum, &causa, p))
+    {
+        redde _fractum(causa, p);
+    }
+    imprimere("%.*s\n", (int)commissum.mensura,
+        (constans character*)commissum.datum);
+    redde ZEPHYRUM;
+}
+
+/* testatores gregis Familia cum statu; invitandi invitantur si
+ * 'invitare' */
+interior s32
+_testatores_tractare (
+          NundinaeApple* n,
+                 chorda  id_app,
+                    b32  invitare,
+                Piscina* p)
+{
+                   chorda  id_gregis;
+                   chorda  causa;
+                      Xar* testatores;
+                      b32  creatus;
+                      i32  i;
+
+    si (!nundinae_apple_grex(n, id_app, chorda_ex_literis("Familia", p),
+            &id_gregis, &creatus, &causa, p))
+    {
+        redde _fractum(causa, p);
+    }
+    testatores = xar_creare(p, (i32)magnitudo(NundinaeAppleTestator));
+    si (!nundinae_apple_testatores(n, id_gregis, testatores, &causa, p))
+    {
+        redde _fractum(causa, p);
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(testatores); i++)
+    {
+        NundinaeAppleTestator* t;
+
+        t = (NundinaeAppleTestator*)xar_obtinere(testatores, i);
+        si (invitare && nundinae_apple_invitandus(t))
+        {
+            si (!nundinae_apple_invitare(n, id_app, t->id, &causa, p))
+            {
+                redde _fractum(causa, p);
+            }
+            imprimere("tester: %.*s NOT_INVITED -> invitatio missa\n",
+                (int)t->email.mensura,
+                (constans character*)t->email.datum);
+        }
+        alioquin
+        {
+            imprimere("tester: %.*s %.*s\n", (int)t->email.mensura,
+                (constans character*)t->email.datum,
+                (int)t->status.mensura,
+                (constans character*)t->status.datum);
+        }
+    }
+    si (xar_numerus(testatores) == ZEPHYRUM)
+    {
+        imprimere("tester: nullus in grege Familia\n");
+    }
+    redde ZEPHYRUM;
+}
+
+interior s32
+_testatores (
+          NundinaeApple* n,
+     constans character* app,
+                Piscina* p)
+{
+    chorda id_app;
+    chorda causa;
+
+    si (!_applicatio_ex_nomine(n, app, &id_app, &causa, p))
+    {
+        redde _fractum(causa, p);
+    }
+    redde _testatores_tractare(n, id_app, FALSUM, p);
+}
+
+/* -invitare: invitatio (iterum) uni testatori gregis, per email */
+interior s32
+_invitare (
+          NundinaeApple* n,
+     constans character* app,
+     constans character* email,
+                Piscina* p)
+{
+                   chorda  id_app;
+                   chorda  id_gregis;
+                   chorda  causa;
+                      Xar* testatores;
+                      b32  creatus;
+                      i32  i;
+
+    si (   !_applicatio_ex_nomine(n, app, &id_app, &causa, p)
+        || !nundinae_apple_grex(n, id_app, chorda_ex_literis("Familia",
+        p),
+               &id_gregis, &creatus, &causa, p))
+    {
+        redde _fractum(causa, p);
+    }
+    testatores = xar_creare(p, (i32)magnitudo(NundinaeAppleTestator));
+    si (!nundinae_apple_testatores(n, id_gregis, testatores, &causa, p))
+    {
+        redde _fractum(causa, p);
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(testatores); i++)
+    {
+        NundinaeAppleTestator* t;
+
+        t = (NundinaeAppleTestator*)xar_obtinere(testatores, i);
+        si (chorda_aequalis_literis(t->email, email))
+        {
+            si (!nundinae_apple_invitare(n, id_app, t->id, &causa, p))
+            {
+                redde _fractum(causa, p);
+            }
+            imprimere("invitatio missa: %s (status erat %.*s)\n", email,
+                (int)t->status.mensura,
+                (constans character*)t->status.datum);
+            redde ZEPHYRUM;
+        }
+    }
+    fprintf(stderr,
+        "nundinae_apple: %s non in grege Familia (-parare %s "
+        "-tester %s)\n", email, app, email);
+    redde II;
+}
+
+/* -distribuere: notae "What to Test" + aedificatio in Familia +
+ * invitationes */
+interior s32
+_distribuere (
+          NundinaeApple* n,
+     constans character* app,
+     constans character* aedificatio,
+     constans character* via_notarum,
+                Piscina* p)
+{
+        chorda  id_app;
+        chorda  id_aedificationis;
+        chorda  id_gregis;
+        chorda  causa;
+        chorda  notae;
+           b32  creatus;
+        longus  numerus;
+     character* finis;
+
+    numerus = strtol(aedificatio, &finis, X);
+    si (   *finis != '\0' || numerus <= ZEPHYRUM || numerus > M * M
+        || !via_notarum)
+    {
+        redde _usus();
+    }
+    notae = filum_legere_totum(via_notarum, p);
+    si (notae.mensura == ZEPHYRUM)
+    {
+        fprintf(stderr, "nundinae_apple: notae vacuae aut illegibiles: "
+            "%s\n", via_notarum);
+        redde II;
+    }
+    si (nundinae_apple_commissum_ultimum(notae, p).mensura == ZEPHYRUM)
+    {
+        fprintf(stderr,
+            "nundinae_apple: notae sine linea 'commit <hash>' "
+            "(D11: divulgatio proxima eam legit)\n");
+        redde II;
+    }
+    si (   !_applicatio_ex_nomine(n, app, &id_app, &causa, p)
+        || !nundinae_apple_aedificationem_invenire(n, id_app,
+        (i32)numerus,
+               &id_aedificationis, &causa, p)
+        || !nundinae_apple_notas_ponere(n, id_aedificationis, notae,
+               &causa, p))
+    {
+        redde _fractum(causa, p);
+    }
+    imprimere("notae: \"What to Test\" (en-US, %d octeti) posita\n",
+        (int)notae.mensura);
+    si (   !nundinae_apple_grex(n, id_app, chorda_ex_literis("Familia",
+        p),
+               &id_gregis, &creatus, &causa, p)
+        || !nundinae_apple_gregi_addere(n, id_gregis, id_aedificationis,
+               &causa, p))
+    {
+        redde _fractum(causa, p);
+    }
+    imprimere("grex: aedificatio %s in Familia\n", aedificatio);
+    redde _testatores_tractare(n, id_app, VERUM, p);
+}
+
 s32
 principale (
       integer   argc,
@@ -694,6 +903,7 @@ principale (
           constans character* positiva[IV];
                          s32  numerus_positivorum;
           constans character* email;
+          constans character* notae;
                      integer  i;
                          s32  exitus;
 
@@ -706,6 +916,7 @@ principale (
     verbum               = NIHIL;
     numerus_positivorum  = ZEPHYRUM;
     email                = NIHIL;
+    notae                = NIHIL;
     per (i = I; i < argc; i++)
     {
         si (   strcmp(argv[i], "-configuratio") == ZEPHYRUM
@@ -722,6 +933,11 @@ principale (
                      && i + I < argc)
         {
             email = argv[++i];
+        }
+        alioquin si (   strcmp(argv[i], "-notae") == ZEPHYRUM
+                     && i + I < argc)
+        {
+            notae = argv[++i];
         }
         alioquin si (argv[i][ZEPHYRUM] == '-' && !verbum)
         {
@@ -790,6 +1006,28 @@ principale (
     {
         exitus = _mittere(&n, positiva[ZEPHYRUM], positiva[I],
             positiva[II], positiva[III], p);
+    }
+    alioquin si (   strcmp(verbum, "-ultimum") == ZEPHYRUM
+                 && numerus_positivorum        == I)
+    {
+        exitus = _ultimum(&n, positiva[ZEPHYRUM], p);
+    }
+    alioquin si (   strcmp(verbum, "-testatores") == ZEPHYRUM
+                 && numerus_positivorum           == I)
+    {
+        exitus = _testatores(&n, positiva[ZEPHYRUM], p);
+    }
+    alioquin si (   strcmp(verbum, "-invitare") == ZEPHYRUM
+                 && numerus_positivorum         == II)
+    {
+        exitus = _invitare(&n, positiva[ZEPHYRUM], positiva[I], p);
+    }
+    alioquin si (   strcmp(verbum, "-distribuere") == ZEPHYRUM
+                 && numerus_positivorum            == II)
+    {
+        exitus = _distribuere(&n, positiva[ZEPHYRUM], positiva[I],
+            notae,
+            p);
     }
     alioquin si (strcmp(verbum, "-applicationes") == ZEPHYRUM)
     {

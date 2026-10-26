@@ -622,6 +622,55 @@ _sectio_missio (
         "900150983cd24fb0d6963f7d28e17f72");
 }
 
+/* C2 T5: commissum notarum, ultimum ex Apple, testatores */
+interior vacuum
+_sectio_distributio (
+    CredoContextus* c)
+{
+                Piscina* p;
+                    Xar* testatores;
+  NundinaeAppleTestator* t;
+
+    p = c->piscina;
+    CREDO_GRADUS("commissum: linea ultima 'commit <hash>'");
+    CREDO_CHORDA_AEQUALIS_LITERIS(nundinae_apple_commissum_ultimum(
+        chorda_ex_literis("Nova: tabula.\n\ncommit 0e4434b7", p), p),
+        "0e4434b7");
+    CREDO_CHORDA_AEQUALIS_LITERIS(nundinae_apple_commissum_ultimum(
+        chorda_ex_literis("commit aaaa1111\nmedia\ncommit bbbb2222 "
+        "(rhubarb-quarta)\n", p), p), "bbbb2222");
+    CREDO_AEQUALIS_I32(nundinae_apple_commissum_ultimum(
+        chorda_ex_literis("commits since last time\nnulla linea\n", p),
+        p).mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(nundinae_apple_commissum_ultimum(
+        chorda_ex_literis("commit \n", p), p).mensura, ZEPHYRUM);
+    CREDO_GRADUS("ultimum: recentissima cum notis en-US");
+    CREDO_CHORDA_AEQUALIS_LITERIS(
+        nundinae_apple_commissum_ex_aedificationibus(_fixum(
+        FIXA "aedificationes_notae.json", p), p), "cccc3333");
+    CREDO_AEQUALIS_I32(nundinae_apple_commissum_ex_aedificationibus(
+        _fixum(FIXA "aedificationes.json", p), p).mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(nundinae_apple_commissum_ex_aedificationibus(
+        NIHIL, p).mensura, ZEPHYRUM);
+    CREDO_GRADUS("testatores: status, invitandi");
+    testatores = xar_creare(p, (i32)magnitudo(NundinaeAppleTestator));
+    CREDO_VERUM(nundinae_apple_testatores_legere(_fixum(
+        FIXA "testatores.json", p), testatores, p));
+    CREDO_AEQUALIS_I32(xar_numerus(testatores), III);
+    si (xar_numerus(testatores) == III)
+    {
+        t = (NundinaeAppleTestator*)xar_obtinere(testatores, ZEPHYRUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(t->id, "T1");
+        CREDO_CHORDA_AEQUALIS_LITERIS(t->email, "a@example.com");
+        CREDO_VERUM(nundinae_apple_invitandus(t));
+        t = (NundinaeAppleTestator*)xar_obtinere(testatores, I);
+        CREDO_CHORDA_AEQUALIS_LITERIS(t->status, "INSTALLED");
+        CREDO_FALSUM(nundinae_apple_invitandus(t));
+        t = (NundinaeAppleTestator*)xar_obtinere(testatores, II);
+        CREDO_FALSUM(nundinae_apple_invitandus(t));
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "tessera", _sectio_tessera, NIHIL, NIHIL, NIHIL, NIHIL },
     { "renovatio", _sectio_renovatio, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -635,6 +684,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "petitio", _sectio_petitio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "responsa", _sectio_responsa, NIHIL, NIHIL, NIHIL, NIHIL },
     { "missio", _sectio_missio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "distributio", _sectio_distributio, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

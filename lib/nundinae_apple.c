@@ -2358,3 +2358,381 @@ nundinae_apple_mittere (
         "nundinae_apple: aedificatio non VALID intra XXX min", p);
     redde FALSUM;
 }
+
+
+/* ==================================================
+ * TestFlight: notae, grex, testatores (T5)
+ * ================================================== */
+
+interior b32
+_hex_minuscula (
+    i8 c)
+{
+    redde (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f');
+}
+
+chorda
+nundinae_apple_commissum_ultimum (
+     chorda  notae,
+    Piscina* p)
+{
+    chorda ultimum;
+       i32 i;
+       i32 initium;
+
+    ultimum = chorda_ex_literis("", p);
+    initium = ZEPHYRUM;
+    per (i = ZEPHYRUM; i <= notae.mensura; i++)
+    {
+        si (i < notae.mensura && notae.datum[i] != '\n')
+        {
+            perge;
+        }
+        /* linea [initium, i): 'commit ' + hex VII..XL, deinde finis aut
+         * spatium */
+        si (   i - initium > VII
+            && memcmp(notae.datum + initium, "commit ", VII)
+                == ZEPHYRUM)
+        {
+            i32 k;
+
+            k = initium + VII;
+            dum (k < i && _hex_minuscula(notae.datum[k]))
+            {
+                k++;
+            }
+            si (   k - (initium + VII) >= VII
+                && k - (initium + VII) <= XL
+                && (k == i || notae.datum[k] == ' '
+                    || notae.datum[k] == '\r'))
+            {
+                ultimum = chorda_sectio(notae, initium + VII, k);
+            }
+        }
+        initium = i + I;
+    }
+    redde ultimum;
+}
+
+/* localizatio en-US in 'included' per id */
+interior JsonValor*
+_inclusum (
+     JsonValor* inclusa,
+        chorda  id,
+       Piscina* p)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; inclusa && i < json_tabulatum_numerus(inclusa);
+         i++)
+    {
+        JsonValor* r = json_tabulatum_obtinere(inclusa, i);
+
+        si (chorda_aequalis(json_capere_chorda(r, "id",
+            chorda_ex_literis(
+                "", p)), id))
+        {
+            redde r;
+        }
+    }
+    redde NIHIL;
+}
+
+chorda
+nundinae_apple_commissum_ex_aedificationibus (
+    JsonValor* responsum,
+      Piscina* p)
+{
+     JsonValor* data;
+     JsonValor* inclusa;
+        chorda  vac;
+           i32  i;
+
+    vac   = chorda_ex_literis("", p);
+    data  = responsum ? json_objectum_capere(responsum, "data") : NIHIL;
+    inclusa = responsum ? json_objectum_capere(responsum, "included")
+                        : NIHIL;
+    per (i = ZEPHYRUM; data && i < json_tabulatum_numerus(data); i++)
+    {
+         JsonValor* loc;
+               i32  k;
+
+        loc = json_via(json_tabulatum_obtinere(data, i),
+            "relationships.betaBuildLocalizations.data");
+        per (k = ZEPHYRUM; loc && k < json_tabulatum_numerus(loc); k++)
+        {
+             JsonValor* r;
+             JsonValor* a;
+                chorda  c;
+
+            r = _inclusum(inclusa, json_capere_chorda(
+                json_tabulatum_obtinere(loc, k), "id", vac), p);
+            a = r ? json_objectum_capere(r, "attributes") : NIHIL;
+            si (   !a
+                || !chorda_aequalis_literis(json_capere_chorda(a,
+                       "locale", vac), "en-US"))
+            {
+                perge;
+            }
+            c = nundinae_apple_commissum_ultimum(json_capere_chorda(a,
+                "whatsNew", vac), p);
+            si (c.mensura > ZEPHYRUM)
+            {
+                redde c;
+            }
+        }
+    }
+    redde vac;
+}
+
+b32
+nundinae_apple_testatores_legere (
+    JsonValor* responsum,
+          Xar* testatores,
+      Piscina* p)
+{
+     JsonValor* data;
+        chorda  vac;
+           i32  i;
+
+    vac   = chorda_ex_literis("", p);
+    data  = responsum ? json_objectum_capere(responsum, "data") : NIHIL;
+    si (!data)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < json_tabulatum_numerus(data); i++)
+    {
+                    JsonValor* d;
+                    JsonValor* a;
+        NundinaeAppleTestator* t;
+
+        d = json_tabulatum_obtinere(data, i);
+        a = json_objectum_capere(d, "attributes");
+        t = (NundinaeAppleTestator*)xar_addere(testatores);
+        si (!t)
+        {
+            redde FALSUM;
+        }
+        t->id      = json_capere_chorda(d, "id", vac);
+        t->email   = a ? json_capere_chorda(a, "email", vac) : vac;
+        t->status  = a ? json_capere_chorda(a, "state", vac) : vac;
+    }
+    redde VERUM;
+}
+
+b32
+nundinae_apple_invitandus (
+    constans NundinaeAppleTestator* t)
+{
+    redde chorda_aequalis_literis(t->status, "NOT_INVITED");
+}
+
+b32
+nundinae_apple_ultimum (
+    NundinaeApple* n,
+           chorda  id_applicationis,
+           chorda* commissum,
+           chorda* causa,
+          Piscina* p)
+{
+    NundinaeAppleResponsum r;
+                    chorda vac;
+
+    vac = chorda_ex_literis("", p);
+    r = nundinae_apple_vocare(n, HTTP_GET, _via(p,
+        "/v1/builds?filter%5Bapp%5D=%A&sort=-uploadedDate&limit=50"
+        "&fields%5Bbuilds%5D=version,betaBuildLocalizations"
+        "&include=betaBuildLocalizations"
+        "&fields%5BbetaBuildLocalizations%5D=locale,whatsNew",
+        id_applicationis, vac), vac, p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    *commissum = nundinae_apple_commissum_ex_aedificationibus(r.corpus,
+        p);
+    redde VERUM;
+}
+
+b32
+nundinae_apple_aedificationem_invenire (
+    NundinaeApple* n,
+           chorda  id_applicationis,
+              i32  aedificatio,
+           chorda* id_aedificationis,
+           chorda* causa,
+          Piscina* p)
+{
+    NundinaeAppleResponsum  r;
+                    chorda  vac;
+                 JsonValor* data;
+                 character  numerus[XVI];
+
+    vac = chorda_ex_literis("", p);
+    sprintf(numerus, "%d", (int)aedificatio);
+    r = nundinae_apple_vocare(n, HTTP_GET, _via(p,
+        "/v1/builds?filter%5Bapp%5D=%A&filter%5Bversion%5D=%B&limit=2"
+        "&fields%5Bbuilds%5D=version,processingState", id_applicationis,
+        chorda_ex_literis(numerus, p)), vac, p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    data = json_objectum_capere(r.corpus, "data");
+    si (!data || json_tabulatum_numerus(data) != I)
+    {
+        *causa = chorda_concatenare(chorda_ex_literis(
+            "nundinae_apple: aedificatio non inventa (aut non unica): ",
+            p),
+            chorda_ex_literis(numerus, p), p);
+        redde FALSUM;
+    }
+    *id_aedificationis =
+        json_capere_chorda(json_tabulatum_obtinere(data,
+        ZEPHYRUM), "id", vac);
+    redde id_aedificationis->mensura > ZEPHYRUM;
+}
+
+b32
+nundinae_apple_notas_ponere (
+    NundinaeApple* n,
+           chorda  id_aedificationis,
+           chorda  notae,
+           chorda* causa,
+          Piscina* p)
+{
+    NundinaeAppleResponsum  r;
+                    chorda  vac;
+                    chorda  id_loc;
+                 JsonValor* data;
+                 JsonValor* a;
+                 JsonValor* rel;
+                       i32  i;
+
+    vac = chorda_ex_literis("", p);
+    si (notae.mensura == ZEPHYRUM || notae.mensura > IV * M)
+    {
+        *causa = chorda_ex_literis("nundinae_apple: notae vacuae aut "
+            "longiores quam MMMM octeti (limes Apple whatsNew)", p);
+        redde FALSUM;
+    }
+    r = nundinae_apple_vocare(n, HTTP_GET, _via(p,
+        "/v1/builds/%A/betaBuildLocalizations?limit=50",
+        id_aedificationis, vac), vac, p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    id_loc  = vac;
+    data    = json_objectum_capere(r.corpus, "data");
+    per (i = ZEPHYRUM; data && i < json_tabulatum_numerus(data); i++)
+    {
+        JsonValor* d = json_tabulatum_obtinere(data, i);
+
+        a = json_objectum_capere(d, "attributes");
+        si (a && chorda_aequalis_literis(json_capere_chorda(a, "locale",
+                vac), "en-US"))
+        {
+            id_loc = json_capere_chorda(d, "id", vac);
+        }
+    }
+    a = json_objectum_creare(p);
+    json_objectum_ponere(a, "whatsNew", json_chorda_creare(p, notae));
+    si (id_loc.mensura > ZEPHYRUM)
+    {
+        JsonValor* radix;
+        JsonValor* d;
+
+        d = json_objectum_creare(p);
+        json_objectum_ponere(d, "type", json_chorda_creare_literis(p,
+            "betaBuildLocalizations"));
+        json_objectum_ponere(d, "id", json_chorda_creare(p, id_loc));
+        json_objectum_ponere(d, "attributes", a);
+        radix = json_objectum_creare(p);
+        json_objectum_ponere(radix, "data", d);
+        r = nundinae_apple_vocare(n, HTTP_PATCH, _via(p,
+            "/v1/betaBuildLocalizations/%A", id_loc, vac),
+            json_scribere(
+            radix, p), p);
+    }
+    alioquin
+    {
+        json_objectum_ponere(a, "locale", json_chorda_creare_literis(p,
+            "en-US"));
+        rel = json_objectum_creare(p);
+        json_objectum_ponere(rel, "build", _relatio("builds",
+            id_aedificationis, FALSUM, p));
+        r = nundinae_apple_vocare(n, HTTP_POST,
+            "/v1/betaBuildLocalizations",
+            _corpus_rei("betaBuildLocalizations", a, rel, p), p);
+    }
+    redde _vocatio_bona(r, causa);
+}
+
+b32
+nundinae_apple_gregi_addere (
+    NundinaeApple* n,
+           chorda  id_gregis,
+           chorda  id_aedificationis,
+           chorda* causa,
+          Piscina* p)
+{
+    NundinaeAppleResponsum r;
+
+    r = nundinae_apple_vocare(n, HTTP_POST, _via(p,
+        "/v1/betaGroups/%A/relationships/builds", id_gregis,
+        chorda_ex_literis("", p)), json_scribere(_relatio("builds",
+        id_aedificationis, VERUM, p), p), p);
+    redde _vocatio_bona(r, causa);
+}
+
+b32
+nundinae_apple_testatores (
+    NundinaeApple* n,
+           chorda  id_gregis,
+              Xar* testatores,
+           chorda* causa,
+          Piscina* p)
+{
+    NundinaeAppleResponsum r;
+                    chorda vac;
+
+    vac = chorda_ex_literis("", p);
+    r = nundinae_apple_vocare(n, HTTP_GET, _via(p,
+        "/v1/betaGroups/%A/betaTesters?limit=200"
+        "&fields%5BbetaTesters%5D=email,state", id_gregis, vac), vac,
+        p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    si (!nundinae_apple_testatores_legere(r.corpus, testatores, p))
+    {
+        *causa = chorda_ex_literis(
+            "nundinae_apple: responsum betaTesters sine data", p);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+b32
+nundinae_apple_invitare (
+    NundinaeApple* n,
+           chorda  id_applicationis,
+           chorda  id_testatoris,
+           chorda* causa,
+          Piscina* p)
+{
+    NundinaeAppleResponsum  r;
+                 JsonValor* rel;
+
+    rel = json_objectum_creare(p);
+    json_objectum_ponere(rel, "app", _relatio("apps", id_applicationis,
+        FALSUM, p));
+    json_objectum_ponere(rel, "betaTester", _relatio("betaTesters",
+        id_testatoris, FALSUM, p));
+    r = nundinae_apple_vocare(n, HTTP_POST, "/v1/betaTesterInvitations",
+        _corpus_rei("betaTesterInvitations", NIHIL, rel, p), p);
+    redde _vocatio_bona(r, causa);
+}
