@@ -12,6 +12,7 @@
 #include "mensura.h"
 #include "volumen.h"
 #include "lectiones.h"
+#include "filum.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -238,7 +239,7 @@ _sectio_sexta (
     Piscina* piscina;
 
     piscina = c->piscina;
-    remove(DIARIUM);
+    (vacuum)filum_delere(DIARIUM);
     {
         Mensura prima, altera;
 
@@ -313,7 +314,7 @@ _sectio_septima (
                Mensura  bona;
         FILE*          f;
 
-        remove(DIARIUM);
+        (vacuum)filum_delere(DIARIUM);
 
         bona = _mensura_ficta(piscina, "bona", 3.0);
         CREDO_VERUM(mensura_annotare(DIARIUM, &bona, piscina));
@@ -338,7 +339,7 @@ _sectio_septima (
             volumen_claudere(vol);
         }
 
-        remove(DIARIUM);
+        (vacuum)filum_delere(DIARIUM);
     }
 }
 

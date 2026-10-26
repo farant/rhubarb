@@ -420,7 +420,7 @@ _sectio_sexta (
 
     sprintf(via, "/tmp/probatio_vates_rationarium_%ld.jsonl",
         (longus)getpid());
-    (vacuum)unlink(via);
+    (vacuum)filum_delere(via);
     pretium.exemplar      = "fictus";
     pretium.input         = IV * M * M;      /* $4 / MTok */
     pretium.output        = XX * M * M;
@@ -455,7 +455,7 @@ _sectio_sexta (
     CREDO_AEQUALIS_I32(vates_fictus_petitiones_numerus(v), I);
     CREDO_CHORDA_AEQUALIS(vates_fictus_petitio(v, 0),
         vates_anthropic_corpus(p, piscina));
-    (vacuum)unlink(via);
+    (vacuum)filum_delere(via);
 }
 
 interior vacuum
@@ -471,7 +471,7 @@ _sectio_septima (
 
     sprintf(via, "/tmp/probatio_vates_iter_%ld.jsonl",
         (longus)getpid());
-    (vacuum)unlink(via);
+    (vacuum)filum_delere(via);
     o.mora_iterandi_ms  = I;
     o.rationarium_via   = via;
     memset(&u, 0, magnitudo(u));
@@ -517,7 +517,7 @@ _sectio_septima (
         piscina);
     CREDO_VERUM(r->error == VATES_ERROR_RETE);
     CREDO_AEQUALIS_I32(r->conatus, III);
-    (vacuum)unlink(via);
+    (vacuum)filum_delere(via);
 }
 
 interior vacuum
@@ -608,7 +608,7 @@ _sectio_decima (
         (longus)getpid());
     sprintf(via_herbarii, "/tmp/probatio_vates_herb_%ld",
         (longus)getpid());
-    (vacuum)unlink(via_rationarii);
+    (vacuum)filum_delere(via_rationarii);
     scripta[0].status       = DXXIX;
     scripta[0].corpus       = _onustus;
     scripta[0].retry_after  = NIHIL;
@@ -660,15 +660,15 @@ _sectio_decima (
                     h->variantes_index);
             CREDO_FALSUM(chorda_continet(filum_legere_totum(via,
                 piscina), clavis));
-            (vacuum)unlink(via);
+            (vacuum)filum_delere(via);
         }
     }
     sprintf(via, "%s/index.jsonl", via_herbarii);
-    (vacuum)unlink(via);
+    (vacuum)filum_delere(via);
     sprintf(via, "%s/specimina", via_herbarii);
-    (vacuum)rmdir(via);
-    (vacuum)rmdir(via_herbarii);
-    (vacuum)unlink(via_rationarii);
+    (vacuum)filum_delere(via);
+    (vacuum)filum_delere(via_herbarii);
+    (vacuum)filum_delere(via_rationarii);
 }
 
 interior vacuum
@@ -710,14 +710,14 @@ _sectio_decima_prima (
             (integer)h->sigillum.mensura,
                 (constans character*)h->sigillum.datum,
                 h->variantes_index);
-        (vacuum)unlink(via);
+        (vacuum)filum_delere(via);
     }
     CREDO_VERUM(inventa);
     sprintf(via, "%s/index.jsonl", via_herbarii);
-    (vacuum)unlink(via);
+    (vacuum)filum_delere(via);
     sprintf(via, "%s/specimina", via_herbarii);
-    (vacuum)rmdir(via);
-    (vacuum)rmdir(via_herbarii);
+    (vacuum)filum_delere(via);
+    (vacuum)filum_delere(via_herbarii);
 }
 
 
@@ -795,10 +795,10 @@ _sectio_decima_tertia (
     CREDO_AEQUALIS_I32(xar_numerus(herbarium_enumerare(piscina,
         via_herbarii)), 0);
     sprintf(via, "%s/index.jsonl", via_herbarii);
-    (vacuum)unlink(via);
+    (vacuum)filum_delere(via);
     sprintf(via, "%s/specimina", via_herbarii);
-    (vacuum)rmdir(via);
-    (vacuum)rmdir(via_herbarii);
+    (vacuum)filum_delere(via);
+    (vacuum)filum_delere(via_herbarii);
 }
 
 
@@ -848,10 +848,10 @@ _sectio_decima_quarta (
     CREDO_AEQUALIS_I32(xar_numerus(herbarium_enumerare(piscina,
         via_herbarii)), 0);
     sprintf(via, "%s/index.jsonl", via_herbarii);
-    (vacuum)unlink(via);
+    (vacuum)filum_delere(via);
     sprintf(via, "%s/specimina", via_herbarii);
-    (vacuum)rmdir(via);
-    (vacuum)rmdir(via_herbarii);
+    (vacuum)filum_delere(via);
+    (vacuum)filum_delere(via_herbarii);
 }
 
 /* norma-plan-3 A6: plagula .norma forma pulchra et lectori grata.
@@ -897,14 +897,14 @@ _acervum_purgare (
         sprintf(plena, "%s/specimina/%.*s-%u.json", via,
             (integer)h->sigillum.mensura,
             (constans character*)h->sigillum.datum, h->variantes_index);
-        (vacuum)unlink(plena);
+        (vacuum)filum_delere(plena);
     }
     sprintf(via, "%s/%s/index.jsonl", radix, hospes);
-    (vacuum)unlink(via);
+    (vacuum)filum_delere(via);
     sprintf(via, "%s/%s/specimina", radix, hospes);
-    (vacuum)rmdir(via);
+    (vacuum)filum_delere(via);
     sprintf(via, "%s/%s", radix, hospes);
-    (vacuum)rmdir(via);
+    (vacuum)filum_delere(via);
 }
 
 /* causa inter specimina acervi */
@@ -1059,7 +1059,7 @@ _suitam_parare (
      * ~/.rhubarb/herbarium veram scribunt: sedes temporaria per ambitum */
     sprintf(_sedes_temporaria, "/tmp/probatio_vates_sedes_%ld",
         (longus)getpid());
-    (vacuum)mkdir(_sedes_temporaria, 0755);
+    (vacuum)filum_directorium_creare(_sedes_temporaria);
     (vacuum)setenv("RHUBARB_HERBARIUM", _sedes_temporaria, I);
     c->datum = _sedes_temporaria;
 }
@@ -1074,7 +1074,7 @@ _suitam_purgare (
     _acervum_purgare(_sedes_temporaria, "fictus", c->piscina);
     _acervum_purgare(_sedes_temporaria, "api.anthropic.com",
         c->piscina);
-    (vacuum)rmdir(_sedes_temporaria);
+    (vacuum)filum_delere(_sedes_temporaria);
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {

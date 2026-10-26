@@ -164,3 +164,26 @@ tools have no gate (aemulator_vttest, canon_coquere,
 librarium_collector, manus_instrumentum, natura_examen, runae_corpus,
 runae_oraculum, tabula_nodorum_generare, vates_fumus): each built and
 linked by hand via aedilis.
+
+Step 1 took four commissio attempts, none from a wrong rewrite: (a) my
+hand link check via `build/aedilis/X/struere.sh` left strays in
+build/aedilis/obiecta that the canon action then "wrote outside its
+trace"; (b) hand-written link lists (tabula_nodorum_generare.sh,
+runae_oraculum.sh) lacked lib/lectiones.c - the guard's clang
+-fsyntax-only cannot see linking; (c) the 96 debt ratchet: six tools
+had no raw IO left, so their canalis_debita.tsv lines had to go.
+Pre-commit routine since: examen over every touched file, debts,
+`bin/fabrica sanare` of the in-tree producers, grep the build scripts
+for hand link lists.
+
+*Step 2, probationes (2026-10-26):* 10 files, 63 sites. Tests:
+imago_png, mensura, specimen, vigilia, entitas_repositorium, herbarium,
+vates, vicus_quaestio_interna, praeconium (all nine suites green after)
++ qr_assets/qr_gyrus.c (hand link list in probatio_qr_gyrus.sh and its
+porta `currit=` gained lib/lectiones.c; oracle 40/40; its 96 debt
+paid). Excluded: all of probationes/fixa/ (sondae_auditus = frozen
+audit probes, evidence of filed defects; many probe filum itself and
+must stay raw - the 97 exemption question covers them too) and
+probatio_lectiones.c (tests the channel: toggles FABRICA_LECTIONES and
+forks writers into its own book). Left in macros: CREDO_AEQUALIS_S32
+around rename in probatio_specimen.c.

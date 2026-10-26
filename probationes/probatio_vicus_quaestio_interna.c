@@ -14,6 +14,7 @@
 #include "vicus_quaestio.h"
 #include "vicus_quaestio_interna.h"
 #include "servus_scriptus.h"
+#include "filum.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -220,7 +221,7 @@ _sectio_bonum (
     servum_scriptum_claudere(s);
     CREDO_AEQUALIS_I32(reactor_numerus_fd(r), ZEPHYRUM);
     CREDO_AEQUALIS_I32(reactor_numerus_timer(r), ZEPHYRUM);
-    (vacuum)unlink(via);
+    (vacuum)filum_delere(via);
 }
 
 interior vacuum
@@ -267,7 +268,7 @@ _sectio_mors (
     CREDO_VERUM(_sine_clave(x.error, c->piscina));
     CREDO_CHORDA_AEQUALIS_LITERIS(x.textus, "Pars");
     servum_scriptum_claudere(s);
-    (vacuum)unlink(via);
+    (vacuum)filum_delere(via);
 }
 
 interior vacuum
@@ -299,7 +300,7 @@ _sectio_error (
     CREDO_VERUM(_sine_clave(x.error, c->piscina));
     CREDO_AEQUALIS_I32(x.textus.mensura, ZEPHYRUM);
     servum_scriptum_claudere(s);
-    (vacuum)unlink(via);
+    (vacuum)filum_delere(via);
 }
 
 /* octeti non SSE post capita rivi: error nominatus */
@@ -329,7 +330,7 @@ _sectio_pravum (
     CREDO_VERUM(x.finitus);
     CREDO_VERUM(x.error.mensura > ZEPHYRUM);
     servum_scriptum_claudere(s);
-    (vacuum)unlink(via);
+    (vacuum)filum_delere(via);
 }
 
 /* textus primus, deinde silentium; abrumpere finit statim */
@@ -366,7 +367,7 @@ _sectio_lente (
     servum_scriptum_claudere(s);
     CREDO_AEQUALIS_I32(reactor_numerus_fd(r), ZEPHYRUM);
     CREDO_AEQUALIS_I32(reactor_numerus_timer(r), ZEPHYRUM);
-    (vacuum)unlink(via);
+    (vacuum)filum_delere(via);
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
