@@ -1194,3 +1194,34 @@ Test: probatio_vicus_quies section eventus_tmux (shell in front, no 5 s
 rule): a `status` event starts no query in 1 s; a `tmux` event starts
 one within 500 ms (red before). Plant (scan short-circuited) red at
 that step. vicus 29/29.
+
+## 2026-10-27 — comites P9: Ctrl+1…9 switches the focused terminal's tmux window
+
+New VicusFacies hook `clavem_sumere(ctx, ev, agere)` (Fran approved
+the header): a FOCUSED pane can claim a key before vicus routes it.
+Two steps - destinare asks with agere=FALSUM (no side effects) and, if
+claimed, routes the event (down AND up) to the root instead of the
+pane; the root handler calls again with agere=VERUM on key-down; the
+key-up is swallowed (same shape as Cmd+digits).
+
+Terminal: claims Ctrl+0..9 (exactly Ctrl among Shift/Ctrl/Alt/Cmd -
+side-flags ignored) only when its cache says tmux is attached
+(memoria.nota) - answered from memory, no process. Acting:
+multiplexor_fenestram_eligere on the cached server/session (Ctrl+0 =
+window 10, like Cmd+0 = tenth tab); success sets renovandum so the
+locus refreshes at once even without the P8 hooks; a missing window
+does nothing (Fran) but the key is still claimed. No tmux -> not
+claimed -> the shell gets it as before. macOS sends no text event
+while Ctrl/Cmd is held (fenestra_macos.m), so only key-down/up need
+swallowing.
+
+Test: probatio_vicus_comites_terminale section claves (private
+server, real key events through manus_ludus): Ctrl+<secunda> -> tmux
+window switched and locus within 200 ms; Ctrl+9 -> nothing; a plain
+terminal in front -> window unchanged. Plants red: root action off;
+refresh off. NOT covered: the destinare routing - the terminal today
+does not consume Ctrl+digit, so the key bubbles to the root anyway
+(plant stayed green). Kept as the header's guarantee (the pane never
+sees a claimed key) in case the terminal ever encodes Ctrl+digit. The
+"plain terminal" step only shows the window did not change, not that
+the shell received the key.

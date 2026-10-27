@@ -4,6 +4,7 @@
 #include "filum.h"
 #include "processus.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -406,6 +407,32 @@ multiplexor_argumenta_adhaerendi (
     imperium[II]        = sessio_exacta(sessio, piscina);
     imperium[III]       = NIHIL;
     redde imperium[II] ? vectorem_struere(m, piscina, imperium) : NIHIL;
+}
+
+b32
+multiplexor_fenestram_eligere (
+    constans Multiplexor* m,
+                  chorda  sessio,
+                     s32  index,
+                 Piscina* piscina)
+{
+    constans character* imperium[IV];
+             character* scopus;
+
+    scopus = (character*)piscina_allocare(piscina, (memoriae_index)
+        sessio.mensura + XXIV);
+    si (!scopus || sessio.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    /* "=sessio:index": scopus exactus (praefixum non congruit) */
+    sprintf(scopus, "=%.*s:%d", (integer)sessio.mensura,
+        (constans character*)sessio.datum, (integer)index);
+    imperium[ZEPHYRUM]  = "select-window";
+    imperium[I]         = "-t";
+    imperium[II]        = scopus;
+    imperium[III]       = NIHIL;
+    redde currere(m, piscina, imperium, NIHIL);
 }
 
 b32

@@ -83,3 +83,9 @@ the tests silently depended on Fran's `base-index 1` /
 the harness failed to start. All three harnesses now pass
 `-f probationes/fixa/multiplexor/servitor.conf` (just those two
 settings).
+
+## 2026-10-27 — `multiplexor_fenestram_eligere` (comites P9)
+
+`select-window -t =<sessio>:<index>` - exact session (a prefix does
+not match), missing window or session -> FALSUM. Section
+fenestram_eligere on the private server.

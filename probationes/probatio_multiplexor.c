@@ -518,6 +518,42 @@ _probare_hamos_praeconis (
         c->piscina), c->piscina));
 }
 
+/* comites P9: fenestra per indicem (Ctrl+N in vico); scopus exactus
+ * sessionis; fenestra aut sessio absens: FALSUM */
+interior vacuum
+_probare_fenestram_eligere (
+    CredoContextus* c)
+{
+    Minister* s;
+         Xar* l;
+
+    s = (Minister*)c->datum;
+    CREDO_NECESSE(s && s->paratus);
+    l = multiplexor_panelli(&s->m, c->piscina);
+    CREDO_NECESSE(panellus_ad(l, I, I) && panellus_ad(l, I, I)
+        ->fenestra_activa);
+
+    CREDO_GRADUS("alpha:2 eligitur");
+    CREDO_VERUM(multiplexor_fenestram_eligere(&s->m, chorda_ex_literis(
+        "alpha", c->piscina), II, c->piscina));
+    l = multiplexor_panelli(&s->m, c->piscina);
+    CREDO_VERUM(panellus_ad(l, II, I) && panellus_ad(l, II, I)
+        ->fenestra_activa);
+    CREDO_VERUM(panellus_ad(l, I, I) && !panellus_ad(l, I, I)
+        ->fenestra_activa);
+
+    CREDO_GRADUS("fenestra IX, sessio nulla, praefixum: FALSUM");
+    CREDO_FALSUM(multiplexor_fenestram_eligere(&s->m,
+        chorda_ex_literis("alpha", c->piscina), IX, c->piscina));
+    CREDO_FALSUM(multiplexor_fenestram_eligere(&s->m,
+        chorda_ex_literis("nulla", c->piscina), I, c->piscina));
+    CREDO_FALSUM(multiplexor_fenestram_eligere(&s->m,
+        chorda_ex_literis("alp", c->piscina), I, c->piscina));
+    l = multiplexor_panelli(&s->m, c->piscina);
+    CREDO_VERUM(panellus_ad(l, II, I) && panellus_ad(l, II, I)
+        ->fenestra_activa);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "panellos_legere", _probare_panellos_legere, NIHIL, NIHIL, NIHIL,
       NIHIL },
@@ -530,6 +566,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "panellos_incipere", _probare_panellos_incipere, NIHIL, NIHIL,
       NIHIL, NIHIL },
     { "hami_praeconis", _probare_hamos_praeconis, ministrum_parare,
+      ministrum_purgare, NIHIL, NIHIL },
+    { "fenestram_eligere", _probare_fenestram_eligere, ministrum_parare,
       ministrum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

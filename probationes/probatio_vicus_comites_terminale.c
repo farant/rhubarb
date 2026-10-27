@@ -25,6 +25,8 @@
 #include "multiplexor.h"
 #include "insula.h"
 #include "dispensator.h"
+#include "manus_ludus.h"
+#include "eventus.h"
 #include "vicus.h"
 #include "vicus_applicatio.h"
 #include "terminale.h"
@@ -399,6 +401,92 @@ _sectio_tmux (
     CREDO_VERUM(comes_sinister_est(s, comes));
 }
 
+/* comites P9: fenestra activa sessionis alpha; -1 si nulla */
+interior s32
+fenestra_activa (
+     Mundus* s,
+    Piscina* p)
+{
+                             Xar* l;
+    constans MultiplexorPanellus* q;
+                             i32  i;
+
+    l = multiplexor_panelli(&s->m, p);
+    per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
+    {
+        q = (constans MultiplexorPanellus*)xar_obtinere(l, i);
+        si (   q->fenestra_activa && chorda_aequalis_literis(q->sessio,
+                "alpha"))
+        {
+            redde q->fenestra;
+        }
+    }
+    redde -I;
+}
+
+/* comites P9: Ctrl+N in terminali focato cum tmux fenestram N eligit
+ * (locus statim sequitur); fenestra absens: nihil; terminale sine
+ * tmux: clavis ad concham (fenestra non mutatur) */
+interior vacuum
+_sectio_claves (
+    CredoContextus* c)
+{
+          Mundus* s;
+      VicusLatus* l;
+      ManusLudus* manus;
+       character  argumentum[CD];
+       character  locus[CCLVI];
+             s32  prima;
+             s32  secunda;
+
+    s = (Mundus*)c->datum;
+    CREDO_NECESSE(s && s->paratus);
+    manus = manus_ludus_creare(c->piscina, s->app.d);
+    CREDO_NECESSE(manus != NIHIL);
+    prima    = index_fenestrae(s, "prima", c->piscina);
+    secunda  = index_fenestrae(s, "secunda", c->piscina);
+    CREDO_NECESSE(prima >= I && secunda >= I && secunda <= IX);
+    sprintf(argumentum, "tmux %s alpha", s->socket);
+    CREDO_NECESSE(vicus_acervo_aperire(s->app.vicus, "terminale",
+        argumentum));
+    (vacuum)vicus_pulsare(s->app.vicus);
+    l = vicus_latus(vicus_activa(s->app.vicus), VICUS_DEXTRUM);
+    CREDO_NECESSE(l && l->montata
+        && chorda_aequalis_literis(l->genus, "terminale"));
+    CREDO_NECESSE(adhaerere(s, terminale_tty((constans
+        TerminaleApplicatio*)l->montatio), c->piscina));
+    sprintf(locus, "terminale/tmux/alpha/%d", (integer)prima);
+    CREDO_NECESSE(locum_exspectare(s, locus, "alpha / prima", III * M,
+        c->piscina));
+    CREDO_NECESSE(vicus_focum_ponere(s->app.vicus, VICUS_DEXTRUM));
+    CREDO_NECESSE(fenestra_activa(s, c->piscina) == prima);
+
+    CREDO_GRADUS("Ctrl+<secunda>: fenestra secunda, locus statim");
+    CREDO_VERUM(manus_ludus_clavem(manus, (character)('0' + secunda),
+        (i32)MOD_IMPERIUM));
+    (vacuum)vicus_pulsare(s->app.vicus);
+    CREDO_AEQUALIS_S32(fenestra_activa(s, c->piscina), secunda);
+    sprintf(locus, "terminale/tmux/alpha/%d", (integer)secunda);
+    CREDO_VERUM(locum_exspectare(s, locus, "alpha / secunda", CC,
+        c->piscina));
+
+    CREDO_GRADUS("Ctrl+9 (fenestra nulla): nihil");
+    CREDO_VERUM(manus_ludus_clavem(manus, '9', (i32)MOD_IMPERIUM));
+    (vacuum)vicus_pulsare(s->app.vicus);
+    CREDO_AEQUALIS_S32(fenestra_activa(s, c->piscina), secunda);
+
+    CREDO_GRADUS("terminale sine tmux: Ctrl+<prima> fenestram non "
+        "mutat");
+    CREDO_NECESSE(vicus_acervo_aperire(s->app.vicus, "terminale",
+        "p0"));
+    (vacuum)vicus_pulsare(s->app.vicus);
+    CREDO_NECESSE(vicus_focum_ponere(s->app.vicus, VICUS_DEXTRUM));
+    CREDO_VERUM(manus_ludus_clavem(manus, (character)('0' + prima),
+        (i32)MOD_IMPERIUM));
+    (vacuum)vicus_pulsare(s->app.vicus);
+    CREDO_AEQUALIS_S32(fenestra_activa(s, c->piscina), secunda);
+}
+
 /* comites P7: sessio Claude in panello activo fenestrae activae */
 interior vacuum
 _sectio_claude (
@@ -499,6 +587,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "sine_tmux", _sectio_sine_tmux, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "claude", _sectio_claude, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "claves", _sectio_claves, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

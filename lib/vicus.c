@@ -634,6 +634,27 @@ est_imperium_quaestionis (
         && ev->datum.clavis.runa == 'f';
 }
 
+/* comites P9: latus focatum clavem sibi sumit? (quaestio sola, sine
+ * effectu - facies.clavem_sumere cum agere FALSUM) */
+interior b32
+clavis_sumpta (
+      constans Vicus* v,
+    constans Eventus* ev)
+{
+    VicusLatus* l;
+
+    si (   !v || !ev
+        || (   ev->genus != EVENTUS_CLAVIS_DEPRESSUS
+            && ev->genus != EVENTUS_CLAVIS_LIBERATUS))
+    {
+        redde FALSUM;
+    }
+    l = vicus_latus_focatum(v);
+    redde l && l->montata && l->facies.clavem_sumere
+        && l->facies.clavem_sumere(l->facies.clavem_sumere_ctx, ev,
+               FALSUM);
+}
+
 /* D5: brevitas hospitis eventus clavis (depressi aut liberati); NIHIL
  * si nulla */
 interior constans Brevitas*
@@ -756,7 +777,8 @@ destinare (
     si (arbor && (   est_imperium_tabulae(ev) || est_imperium_cycli(ev)
                   || est_imperium_comitis(ev)
                   || est_imperium_quaestionis(ev)
-                  || brevitatem_invenire((constans Vicus*)ctx, ev)))
+                  || brevitatem_invenire((constans Vicus*)ctx, ev)
+                  || clavis_sumpta((constans Vicus*)ctx, ev)))
     {
         redde destinatio_ex_componente(arbor, piscina);
     }
@@ -1730,6 +1752,18 @@ radicem_tractare (
         si (ev->genus == EVENTUS_CLAVIS_DEPRESSUS)
         {
             (vacuum)vicus_aditum_sequi(v, "quaestio");
+        }
+        redde VERUM;
+    }
+    /* comites P9: clavis a latere focato sumpta (terminale cum tmux:
+     * Ctrl+N) - depressa latus agit, liberata devoratur */
+    si (clavis_sumpta(v, ev))
+    {
+        l = vicus_latus_focatum(v);
+        si (ev->genus == EVENTUS_CLAVIS_DEPRESSUS)
+        {
+            (vacuum)l->facies.clavem_sumere(
+                l->facies.clavem_sumere_ctx, ev, VERUM);
         }
         redde VERUM;
     }

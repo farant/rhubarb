@@ -2065,6 +2065,54 @@ terminalis_locum_renovare (
     ((TerminaleInVico*)ctx)->renovandum = VERUM;
 }
 
+/* comites P9: Ctrl+1..9 (Ctrl+0 = X) in latere cum tmux (memoria
+ * nota): fenestra sessionis eligitur et locus statim renovatur;
+ * fenestra absens: nihil (clavis tamen sumpta). Sine tmux aut aliis
+ * modificatoribus: FALSUM - clavis ad concham */
+interior b32
+terminalis_clavem_sumere (
+               vacuum* ctx,
+     constans Eventus* ev,
+                  b32  agere)
+{
+    TerminaleInVico* t;
+        Multiplexor  mx;
+            Piscina* scheda;
+                s32  runa;
+                b32  electa;
+
+    t     = (TerminaleInVico*)ctx;
+    runa  = ev ? ev->datum.clavis.runa : ZEPHYRUM;
+    si (   !t || !ev || !t->memoria.nota || runa < '0' || runa > '9'
+        || (ev->datum.clavis.modificantes
+            & (MOD_SHIFT | MOD_IMPERIUM | MOD_ALT | MOD_SUPER))
+           != MOD_IMPERIUM)
+    {
+        redde FALSUM;
+    }
+    si (!agere)
+    {
+        redde VERUM;
+    }
+    scheda = piscina_generare_dynamicum("clavis_terminalis", IV * M);
+    si (!scheda)
+    {
+        redde VERUM;
+    }
+    mx = t->mx;
+    mx.socket = strcmp(t->memoria.servitor, "-") == ZEPHYRUM
+        ? NIHIL : t->memoria.servitor;
+    electa = multiplexor_fenestram_eligere(&mx, chorda_ex_literis(
+        t->memoria.sessio, scheda), runa == '0' ? X : runa - '0',
+        scheda);
+    piscina_destruere(scheda);
+    si (electa)
+    {
+        t->renovandum = VERUM;
+    }
+    redde VERUM;
+}
+
 interior chorda
 terminalis_locus (
      vacuum* ctx,
@@ -2201,6 +2249,9 @@ terminale_describere (
     f->locus_titulus_ctx   = montatio;
     f->locum_renovare      = terminalis_locum_renovare;
     f->locum_renovare_ctx  = montatio;
+    /* comites P9: Ctrl+N fenestram tmux eligit */
+    f->clavem_sumere      = terminalis_clavem_sumere;
+    f->clavem_sumere_ctx  = montatio;
 }
 
 /* nomenclator-plan P2: nomenclator - documentum personarum UNUM per

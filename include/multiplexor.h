@@ -141,6 +141,16 @@ multiplexor_argumenta_adhaerendi (
                   chorda  sessio,
                  Piscina* piscina);
 
+/* fenestram sessionis per indicem eligere (select-window -t
+ * =<sessio>:<index>): clientes sessioni adhaerentes eam monstrant;
+ * FALSUM si fenestra abest */
+b32
+multiplexor_fenestram_eligere (
+    constans Multiplexor* m,
+                  chorda  sessio,
+                     s32  index,
+                 Piscina* piscina);
+
 /* fasciculum configurationis in servitore legere (source-file): hami
  * statim valent, servitor non renovatur */
 b32
