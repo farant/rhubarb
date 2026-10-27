@@ -6266,13 +6266,40 @@ structura OfficinaPiscina {
  * ADIUTORES INTERNI
  * =========================================================== */
 
-interior memoriae_index
-_proxima_ordinatio (
-        memoriae_index ptr,
-        memoriae_index ordinatio)
+#define MEMORIAE_INDEX_MAXIMUS \
+    ((memoriae_index)~(memoriae_index)ZEPHYRUM)
+
+/* Sedes allocationis in alveo: offset ad ordinationem promotus
+ * (*ordinatus) et finis allocationis (*necessaria). FALSUM si
+ * ordinatio nulla aut summa circumiret (parcum …1Q6158) - vocans ut
+ * defectum tractat, nihil mutatum. Probatio per spatium RELIQUUM
+ * (a > MAXIMUS - b), numquam per summam: summa insignata tacite
+ * circumit et 'capit' falso dicit (offset retro, allocatio proxima
+ * vivam superponebat). */
+interior b32
+_sedem_computare (
+    memoriae_index  offset,
+    memoriae_index  ordinatio,
+    memoriae_index  mensura,
+    memoriae_index* ordinatus,
+    memoriae_index* necessaria)
 {
-    memoriae_index ordinatus = ptr + (ordinatio - I);
-    redde ordinatus - (ordinatus % ordinatio);
+    memoriae_index promotus;
+
+    si (   ordinatio == ZEPHYRUM
+        || ordinatio - I > MEMORIAE_INDEX_MAXIMUS - offset)
+    {
+        redde FALSUM;
+    }
+    promotus = offset + (ordinatio - I);
+    promotus -= promotus % ordinatio;
+    si (mensura > MEMORIAE_INDEX_MAXIMUS - promotus)
+    {
+        redde FALSUM;
+    }
+    *ordinatus   = promotus;
+    *necessaria  = promotus + mensura;
+    redde VERUM;
 }
 
 interior vacuum
@@ -6341,6 +6368,25 @@ _catena_alveus_destruere (
  * ALLOCATIO FUNDAMENTALIS LOGICA
  * =========================================================== */
 
+/* petitio quae circumiret (aut ordinatio nulla): ut defectus -
+ * fatalis exit, conari NIHIL; piscina intacta */
+interior vacuum*
+_exundatio (
+    constans OfficinaPiscina* piscina,
+      memoriae_index  mensura,
+                 b32  fatalis)
+{
+    si (fatalis)
+    {
+        imprimere("ALLOCATIO PISCINAE FRACTA: %s (exundatio: mensura"
+                  " %lu aut ordinatio nulla)\n",
+                  piscina->titulus ? piscina->titulus : "nemo",
+                  (insignatus longus)mensura);
+        exire(I);
+    }
+    redde NIHIL;
+}
+
 interior vacuum*
 _allocare_interna (
                OfficinaPiscina* piscina,
@@ -6354,9 +6400,11 @@ _allocare_interna (
 
     si (!piscina || mensura == ZEPHYRUM) redde NIHIL;
 
-    ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset,
-        ordinatio);
-    necessaria = ordinatus_offset + mensura;
+    si (!_sedem_computare(piscina->nunc->offset, ordinatio, mensura,
+        &ordinatus_offset, &necessaria))
+    {
+        redde _exundatio(piscina, mensura, fatalis);
+    }
 
     /* Si allocatio in alveum nunc non capit, invenire vel generare alveum novum */
     dum (necessaria > piscina->nunc->capacitas)
@@ -6365,9 +6413,11 @@ _allocare_interna (
         {
             /* Transire ad alveum sequentem */
             piscina->nunc = piscina->nunc->sequens;
-            ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset,
-                ordinatio);
-            necessaria = ordinatus_offset + mensura;
+            si (!_sedem_computare(piscina->nunc->offset, ordinatio,
+                mensura, &ordinatus_offset, &necessaria))
+            {
+                redde _exundatio(piscina, mensura, fatalis);
+            }
         }
         alioquin si (piscina->est_dynamicum)
         {
@@ -6375,7 +6425,10 @@ _allocare_interna (
 
             /* Generare alveum novum */
             memoriae_index capacitas_nova =
-                piscina->mensura_alvei_initia * II;
+                piscina->mensura_alvei_initia
+                    > MEMORIAE_INDEX_MAXIMUS / II
+                ? piscina->mensura_alvei_initia
+                : piscina->mensura_alvei_initia * II;
 
             /* Petitio maior quam duplum: alveus ad mensuram petitionis
              * (+ basis), BASIS INTACTA. Olim basis ad hanc mensuram
@@ -6384,6 +6437,15 @@ _allocare_interna (
              * XXXIX% otiosum (RP §6, 2026-09-02). */
             si (necessaria > capacitas_nova)
             {
+                /* necessaria + basis circumiret: petitio numquam
+                 * satisfieri potest - refutatur ANTE malloc (olim
+                 * alveus minimus et gyrus sine fine; sub ASan malloc
+                 * immanis abortat) */
+                si (   necessaria > MEMORIAE_INDEX_MAXIMUS
+                                    - piscina->mensura_alvei_initia)
+                {
+                    redde _exundatio(piscina, mensura, fatalis);
+                }
                 capacitas_nova = necessaria
                     + piscina->mensura_alvei_initia;
             }
@@ -6403,9 +6465,10 @@ _allocare_interna (
             piscina->nunc->sequens  = alveus_novum;
             piscina->nunc           = alveus_novum;
 
-            ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset,
-                ordinatio);
-            necessaria = ordinatus_offset + mensura;
+            /* alveus novus vacuus: capacitas >= necessaria prior >=
+             * ordinatio - I + mensura, ergo sedes semper computatur */
+            (vacuum)_sedem_computare(piscina->nunc->offset, ordinatio,
+                mensura, &ordinatus_offset, &necessaria);
 
             _debug_imprimere(
                     piscina->titulus ? piscina->titulus : "nemo",
@@ -6584,7 +6647,7 @@ officina_piscina_conari_ampliare (
     }
 
     /* I. in loco */
-    si (alveus->offset + incrementum <= alveus->capacitas)
+    si (incrementum <= alveus->capacitas - alveus->offset)
     {
         alveus->offset += incrementum;
         _usum_augere(piscina, incrementum);

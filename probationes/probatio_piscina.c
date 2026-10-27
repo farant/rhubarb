@@ -769,6 +769,114 @@ _sectio_decima_nona (
     }
 }
 
+
+    /* ==================================================
+     * PROBARE: exundatio mensurae (parcum …1Q6158) - petitio
+     * prope maximum memoriae_index NIHIL reddit, piscina intacta;
+     * olim offset + mensura circumibat: offset retro, allocatio
+     * proxima vivam superponebat (aut alvei minimi sine fine)
+     * ================================================== */
+
+interior vacuum
+_exundationes_corpus (
+    CredoContextus* c)
+{
+               Piscina* p;
+                    i8* a;
+                    i8* b;
+        memoriae_index  maximus;
+        memoriae_index  usus;
+        memoriae_index  alvei;
+                   i32  k;
+
+    (vacuum)c;
+    maximus = (memoriae_index)~(memoriae_index)ZEPHYRUM;
+
+    /* I. offset + mensura circumiret: NIHIL, usus et alvei idem,
+     *    allocatio viva intacta post allocationem proximam */
+    p = piscina_generare_dynamicum("exundatio", CCLVI);
+    CREDO_NECESSE_NON_NIHIL (p);
+    a = (i8*)piscina_allocare(p, LXIV);
+    memset(a, 0x5A, LXIV);
+    usus   = piscina_summa_usus(p);
+    alvei  = (memoriae_index)piscina_numerus_alveorum(p);
+    CREDO_NIHIL (piscina_conari_allocare(p, maximus - XV));
+    CREDO_NIHIL (piscina_conari_allocare(p, maximus));
+    CREDO_VERUM (piscina_summa_usus(p) == usus);
+    CREDO_VERUM ((memoriae_index)piscina_numerus_alveorum(p) == alvei);
+    b = (i8*)piscina_allocare(p, LXIV);
+    CREDO_NECESSE_NON_NIHIL (b);
+    memset(b, 0x33, LXIV);
+    per (k = ZEPHYRUM; k < LXIV && a[k] == 0x5A; k++)
+    {
+    }
+    CREDO_AEQUALIS_I32 (k, LXIV);
+
+    /* III. ordinatio immanis (offset + ordinatio - I circumiret) */
+    CREDO_NIHIL (piscina_conari_allocare_ordinatum(p, VIII, maximus));
+    CREDO_NIHIL (piscina_conari_allocare_ordinatum(p, VIII,
+        maximus / II + I));
+    CREDO_VERUM (piscina_summa_usus(p) == usus + LXIV);
+    piscina_destruere(p);
+
+    /* II. ab offset nullo: necessaria (= mensura) capit, sed
+     *     capacitas nova (necessaria + basis) circumiret - olim
+     *     alveus parvus et gyrus sine fine. Et ordinatio nulla:
+     *     solum ad offset nullum non a spatio reliquo capitur
+     *     (ordinatio - I = maximus), ergo divisio per nihil */
+    p = piscina_generare_dynamicum("exundatio_nova", CCLVI);
+    CREDO_NECESSE_NON_NIHIL (p);
+    CREDO_NIHIL (piscina_conari_allocare(p, maximus - C));
+    CREDO_NIHIL (piscina_conari_allocare_ordinatum(p, VIII, ZEPHYRUM));
+    CREDO_VERUM (piscina_summa_usus(p) == ZEPHYRUM);
+    CREDO_AEQUALIS_I32 ((i32)piscina_numerus_alveorum(p), I);
+    piscina_destruere(p);
+
+    /* IV. certae magnitudinis: eadem refutatio, nihil motum */
+    p = piscina_generare_certae_magnitudinis("exundatio_fixa", CCLVI);
+    CREDO_NECESSE_NON_NIHIL (p);
+    a = (i8*)piscina_allocare(p, LXIV);
+    memset(a, 0x5A, LXIV);
+    CREDO_NIHIL (piscina_conari_allocare(p, maximus - XV));
+    b = (i8*)piscina_conari_allocare(p, LXIV);
+    CREDO_NECESSE_NON_NIHIL (b);
+    memset(b, 0x33, LXIV);
+    per (k = ZEPHYRUM; k < LXIV && a[k] == 0x5A; k++)
+    {
+    }
+    CREDO_AEQUALIS_I32 (k, LXIV);
+    piscina_destruere(p);
+
+    /* V. ampliare: offset + incrementum circumiret - NIHIL,
+     *    allocatio et usus intacta */
+    p = piscina_generare_certae_magnitudinis("exundatio_ampliare",
+        CCLVI);
+    CREDO_NECESSE_NON_NIHIL (p);
+    /* allocatio prior: 'a' ad offset LXIV, ergo LXIV + (maximus -
+     * LXIV) + LXIV circumit (ad offset nullum summa = maximus) */
+    (vacuum)piscina_allocare(p, LXIV);
+    a     = (i8*)piscina_allocare(p, LXIV);
+    usus  = piscina_summa_usus(p);
+    CREDO_NIHIL (piscina_conari_ampliare(p, a, LXIV, maximus));
+    CREDO_VERUM (piscina_summa_usus(p) == usus);
+    piscina_destruere(p);
+}
+
+/* corpus in filio primum (gyrus sine fine aut SIGFPE = fractura
+ * nominata, non suita mortua), in parente solum si filius transiit */
+interior vacuum
+_sectio_vicesima (
+    CredoContextus* c)
+{
+    memoriae_index fracti_ante = credo_numerus_fracti();
+
+    CREDO_NON_PENDET (_exundationes_corpus(c), V * M);
+    si (credo_numerus_fracti() == fracti_ante)
+    {
+        _exundationes_corpus(c);
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "piscina_generare_dynamicum", _sectio_prima, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -807,6 +915,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "piscina_conari_ampliare", _sectio_decima_nona, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "exundatio mensurae", _sectio_vicesima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

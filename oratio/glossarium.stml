@@ -273,6 +273,12 @@
     <forma textus="ordinationem" casus="accusativus" numerus="singularis" genus="femininum"/>
     <forma textus="ordinationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="exundatio" lingua="latina" classis="substantivum" nota="Latina classica (Plinius: exundatio fluminis); domus: exundatio mensurae insignatae (summa circumit) - lib/piscina.c, parcum …1Q6158 (2026-10-27)">
+    <forma textus="exundatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="exundationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="exundationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="exundationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="orientatio" lingua="latina" classis="substantivum" nota="Neolatina: orientatio (situs orientationis, praedicata geometrica); WORDS caret">
     <forma textus="orientatio" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="orientationis" casus="genitivus" numerus="singularis" genus="femininum"/>
