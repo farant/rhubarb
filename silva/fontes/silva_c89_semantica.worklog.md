@@ -1026,3 +1026,15 @@ per-site <tolera>). Gradus rows wrap across comment lines; attribute values must
 Tests: examen_vectis 'scriptura cruda (97)' - sites wb, a+, macro, unlink, rename; rb, function
 pointer, tolerated mkdir silent; 86/87 silent. Plants (w not recognized, scriptura not parsed,
 86/87 not silenced) red. Amalgam: enum hand-added to silva/amalgama/silva.h, regenerated.
+
+## 2026-10-26 - tolera covers the line after its comment ends
+
+`_tolera_absorbere_sedem` matched the comment's START line or the line
+after it. A multi-line comment holding two `<tolera>` elements (one per
+code: 96 + 97 on the same write-mode fopen in filum/credo) therefore
+covered nothing - both elements carry the comment's start line, two
+lines above the call ("TOLERA irritum" twice, tried on filum.c:771).
+`ExamenTolera.linea_finis` = start + newlines in `a->crudum`; the line
+right after it also matches. A blank line in between still does not
+(test). Each element is still judged on its own: an unused second code
+stays IRRITUM. Plant (match clause -> FALSUM) red at the new cases.

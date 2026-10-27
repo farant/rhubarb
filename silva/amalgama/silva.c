@@ -90776,7 +90776,8 @@ _macros_domestica_in_alienis_examinare (
  * ================================================== */
 
 nomen structura {
-    i32 linea;          /* commentarii ipsius */
+    i32 linea;          /* commentarii ipsius (initium) */
+    i32 linea_finis;    /* commentarii finis (plurium linearum) */
     s32 fons_index;
     s32 codex;          /* -I = ignotus -> IRRITUM */
     b32 habet_causam;
@@ -90940,7 +90941,15 @@ _toleram_ex_elemento (
         {
             redde;
         }
-        e->linea         = a->linea;
+        e->linea        = a->linea;
+        e->linea_finis  = a->linea;
+        per (k = ZEPHYRUM; k < a->crudum.mensura; k++)
+        {
+            si (a->crudum.datum[k] == '\n')
+            {
+                e->linea_finis++;
+            }
+        }
         e->fons_index    = a->fons_index;
         e->codex         = codex;
         e->habet_causam  = causam;
@@ -91028,7 +91037,10 @@ _toleras_colligere (
 }
 
 /* suppressio per SEDEM: TOLERA cum causa, codice congruente, in
- * fonte eodem, linea firing aut praecedente. Absorbens usum notat.
+ * fonte eodem, linea firing aut praecedente - aut linea STATIM post
+ * finem commentarii sui (commentarium plurium linearum supra
+ * sententiam eam tegit: codices duo eidem sedi, 2026-10-26).
+ * Absorbens usum notat.
  * Congruentia semper per lineam fuit - nodus sedem solum dabat;
  * inventa sine nodo (EXTENSIO_COMPILATORIS, T17b) hic directe
  * intrant (porta quam familia portabilitatis nominat). */
@@ -91053,7 +91065,8 @@ _tolera_absorbere_sedem (
 
         si (   e != NIHIL && e->codex == codex && e->habet_causam
             && e->fons_index == fons_index
-            && (e->linea == linea || e->linea + I == linea))
+            && (   e->linea == linea || e->linea + I == linea
+                || e->linea_finis + I == linea))
         {
             e->usus = VERUM;
             redde VERUM;

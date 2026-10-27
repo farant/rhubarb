@@ -263,6 +263,12 @@ or the line before (`_tolera_absorbere_sedem`,
 `silva_c89_semantica.c:1347`); the corpus exclusions are whole-file
 REICE pins, so the ratchet gets its own list (§I Ratchet).
 
+*2026-10-26:* the window grew by one case - the line right after the
+END of the tolera's comment also matches, so a multi-line comment
+directly above a statement covers it. Needed where 96 and 97 fire on
+the same call (write-mode fopen in filum/credo): one comment, two
+`<tolera>` elements (decision …24P17, test in probatio_silva_examen).
+
 Still open:
 - how examen finds `canalis_debita.tsv` (it judges one file; the
   repository root it already receives for headers is the candidate);
