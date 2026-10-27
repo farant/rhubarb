@@ -291,3 +291,24 @@ calls tolerated (Fran: utime = mtime only, content unchanged - a traced
 wrapper would flag touching a committed fixture dir as a write outside
 the trace). Debt paid: natura_examen.
 **Code 97 is now clean on live code.** Next: flip 97 to VIOLATIO.
+
+*Code 97 -> VIOLATIO (2026-10-27):* the `_codices` entry flipped; a raw
+write without `<tolera>` now blocks a commit. Vectis asserts the level
+(violatio) and the verdict (REICE) of the 97 fixture. The flip exposed
+a detector bug shared with 96: any listed name followed by '(' counted
+as a call, so the DECLARATIONS in examen's own system model
+(silva/fontes/systema_c89.h: remove, rename; fopen, freopen for 96)
+fired - masked for 96 by a debt line. `_declaratum_est`: the token
+before the name (stars skipped) is a type keyword, storage class or
+identifier (typedef name) = a declaration, not a call (LIMIT: `n *
+remove(v)` would read as a declaration - nowhere in real code). The
+fixture gained declarations after its function; systema_c89.h's debt
+line deleted. Three audit probes (filum_r5, via_absoluta_cwd,
+via_cwd_longus) newly REICE - pinned with their reason, fixtures stay
+judged. Plants: level -> DOMESTICUM red at "gradus violatio";
+declaration skip disabled red at the site list and "declarationes
+tacent". Corpus: 77 pins, all known.
+
+**fabrica-8 step 3 (transformare + the write sweep) is complete.**
+Other worktrees: code written there with a raw write will be refused
+once they merge this - the message names the rules file to run.

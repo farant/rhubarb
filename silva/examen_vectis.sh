@@ -570,6 +570,8 @@ int principalis(const char* v)
     if (f) { fclose(f); } if (g) { fclose(g); } if (h) { fclose(h); }
     return rename(v, "x");
 }
+int rename(const char* a, const char* b);
+FILE* fopen(const char* p, const char* m);
 FIXA
 ( cd "$RADIX_DIR" && ./silva/examen.sh "silva/$LOCA/scriptura.c" -machina ) \
     > "$SILVA_DIR/$LOCA/scriptura.tsv" 2>/dev/null
@@ -577,6 +579,14 @@ C97="$(_codex SCRIPTURA_PRAETERITA)"
 _loca "scriptura: sedes 9 (wb) 11 (a+) 14 (macrum) 15 (unlink) 18 (rename) - rb, monstrator, tolerata tacent" \
     "9:$C97 11:$C97 14:$C97 15:$C97 18:$C97" \
     "$(awk -F'\t' -v c="$C97" '$5==c{print $2":"$5}' "$SILVA_DIR/$LOCA/scriptura.tsv" | sort -n | tr '\n' ' ' | sed 's/ $//')"
+# VIOLATIO (2026-10-27, verritio fabrica-8 perfecta): scriptura cruda
+# sine <tolera> commissionem obstat - plagula REICE
+_loca "scriptura: gradus violatio (non domesticum)" \
+    "violatio" "$(awk -F'\t' -v c="$C97" '$5==c{print $4}' "$SILVA_DIR/$LOCA/scriptura.tsv" | sort -u | tr '\n' ' ' | sed 's/ $//')"
+_loca "scriptura: verdictum REICE" \
+    "REICE" "$(awk -F'\t' '$1=="VERDICTUM"{print $2}' "$SILVA_DIR/$LOCA/scriptura.tsv")"
+_loca "scriptura: declarationes (rename, fopen post functionem) tacent" \
+    "0" "$(awk -F'\t' -v a="$C97" -v b="$C96" '($5==a || $5==b) && $2>=20' "$SILVA_DIR/$LOCA/scriptura.tsv" | wc -l | tr -d ' ')"
 _loca "scriptura: tolera absorpta (nulla TOLERA_IRRITUM)" \
     "0" "$(awk -F'\t' -v c="$CIRR" '$5==c' "$SILVA_DIR/$LOCA/scriptura.tsv" | wc -l | tr -d ' ')"
 C86="$(_codex VERNACULUM_ADHIBITUM)"; C87="$(_codex OBSOLETUM_ADHIBITUM)"
