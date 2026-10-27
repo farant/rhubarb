@@ -361,3 +361,16 @@ Worth a future censura hint: "repetitio sine acordis" when the source section ha
 Remaining: ambulatio 20 blue notes out of key (blues mode, next arc) + 4 cornu above range
 (bars 6/18, a real finding); nocturnum 5 tensions out of key + 2 'suspensio non resoluta' on a
 G7 9th - J2 frees only shapeless tensions; extending clavis/dissonantia is a design question.
+
+## 2026-10-27 - C3: ambulatio's left hand and bass generated (house jazz figures)
+
+House figures: charleston (rootless, 1 and the "and" of 2), pulsus_bini (rootless, 1 and 3 -
+for bars whose chord changes mid-bar), ambulans "B:4 T Q A", ambulans_bina "B:4 A B A".
+ambulatio: four hand-written laeva parts + written bass -> one laeva part and one bassus part,
+each nine contiguous <comitatus> split only by chords-per-bar; <repetitio> now repeats the
+melody only, so the second chorus is GENERATED too (a repeat replays bar 1's notes, which an
+'A' in bar 12 cannot predict). The generated rootless voicings match what I had voiced by hand
+(F7 A D Eb G), the seams are continuous since ComitatusStatus. censura 0 -> 2: the walking
+bass's chromatic approach C#3 over Gm7 (bars 12, 24) is out of key - chromatic approach tones
+are not yet recognized (open chromatic-lines park). Hand version kept as a WAV in the session
+scratchpad for comparison, not in the tree.

@@ -45,6 +45,12 @@
        harpa           4/4  acordum fractum totum, sex voces
        harpa_ternaria  3/4  idem in mensura ternaria
        pastorale       6/8  arpeggium octavis, sursum et deorsum
+       charleston      4/4  iazz: acordum sine radice in 1 et "et" 2
+       pulsus_bini     4/4  iazz: sine radice in 1 et 3 (acorda bina)
+       ambulans        4/4  bassus ambulans: radix, tertia, quinta,
+                            accessus chromaticus ad bassum proximum
+       ambulans_bina   4/4  idem acordis binis: radix, accessus, radix,
+                            accessus
 
      LILIA: valsa nostra (Claudius, 2026-10-26, prima figuris
      comitandi; desideratum ...Q7G5): F maior, 3/4, 138 agogica
@@ -73,6 +79,12 @@
   <figura titulus="harpa" textus="{B 1 2 3 4 5}:1"/>
   <figura titulus="harpa_ternaria" textus="{B 1 2 3 4}:2."/>
   <figura titulus="pastorale" textus="B:8 1 2 3 2 1"/>
+  <figura titulus="charleston" textus="v90 [1 2 3 4]:4. v70 [1 2 3 4]:8 r:2"
+      positio="sine_radice"/>
+  <figura titulus="pulsus_bini" textus="v85 [1 2 3 4]:4 r:4 [1 2 3 4]:4 r:4"
+      positio="sine_radice"/>
+  <figura titulus="ambulans" textus="B:4 T Q A"/>
+  <figura titulus="ambulans_bina" textus="B:4 A B A"/>
 
   <carmen titulus="korobeiniki" tempus="144" metrum="4/4"
           clavis="a minor">
@@ -345,6 +357,12 @@
     </pars>
   </carmen>
 
+  <!-- ambulatio: blues in F (clavis caerulea), XII mensurae bis et
+       finis. Melodia scripta; laeva et bassus GENERATI ex acordis:
+       charleston / pulsus_bini sine radice (acorda bina), bassus
+       ambulans "B:4 T Q A" / "B:4 A B A"; comitatus contigui statum
+       continuant. Accessus C#3 super Gm7 (mensurae 12, 24) extra
+       clavem nominatur - accessus chromaticus nondum agnoscitur. -->
   <carmen titulus="ambulatio" stylus="iazz" tempus="160" metrum="4/4" clavis="f maior caerulea"
           agogica="2 1 2 1 2 1 2 1">
     <reverberatio aula="0.4" mollities="0.6" latitudo="1" lucrum="0.25"/>
@@ -352,31 +370,35 @@
     <acorda mensura="1" textus="F7 | Bb7 | F7 | Cm7:2 F7:2 | Bb7 | Bdim7 | F7 | D7b9 | Gm7 | C7 | F7:2 D7b9:2 | Gm7:2 C7:2"/>
     <!-- acorda non iterantur: chorus secundus et finis declarantur -->
     <acorda mensura="13" textus="F7 | Bb7 | F7 | Cm7:2 F7:2 | Bb7 | Bdim7 | F7 | D7b9 | Gm7 | C7 | F7:2 D7b9:2 | Gm7:2 C7:2 | F7"/>
-    <repetitio sectio="chorus" mensura="13" partes="melodia laeva1 laeva2 laeva3 laeva4 bassus"/>
+    <repetitio sectio="chorus" mensura="13" partes="melodia"/>
     <fermata mensura="25"/>
     <pars titulus="melodia" instrumentum="cornu" lucrum="0.7" reverberatio="0.3">
       <frustum mensura="1"><textus!>o4 c8 e-8 f8 a-8 a4 f4 | o4 r8 f8 a-8 b-8 o5 d4 r4 | o5 c8 e-8 c8 o4 a-8 a4 f4 | o5 e-4 d8 c8 o4 a4 f4 | o4 d8 f8 a-8 b-8 o5 d4 o4 b-4 | o4 b8 o5 d8 f8 d8 o4 a-4 b4 | o5 c4 o4 a4 f8 a8 o5 c4 | o5 c8 o4 a8 f#8 d8 e-4 d4 | o4 b-4 g4 d4 g4 | o4 c8 e8 g8 b-8 o5 c4 o4 b-8 g8 | o4 a4 f4 f#4 a4 | o4 g4 b-4 e4 r4</textus></frustum>
       <frustum mensura="25"><textus!>o4 f1</textus></frustum>
     </pars>
-    <pars titulus="laeva1" instrumentum="piano_electricum" lucrum="0.35" reverberatio="0.25">
-      <frustum mensura="1"><textus!>o3 a4. a8 r2 | o3 a-4. a-8 r2 | o3 a4. a8 r2 | o3 b-4 r4 o3 a4 r4 | o3 a-4. a-8 r2 | o3 g#4. g#8 r2 | o3 a4. a8 r2 | o4 c4. c8 r2 | o3 b-4. b-8 r2 | o3 b-4. b-8 r2 | o3 a4 r4 o4 c4 r4 | o3 b-4 r4 o3 b-4 r4</textus></frustum>
-      <frustum mensura="25"><textus!>o3 a1</textus></frustum>
-    </pars>
-    <pars titulus="laeva2" instrumentum="piano_electricum" lucrum="0.35" reverberatio="0.25">
-      <frustum mensura="1"><textus!>o4 d4. d8 r2 | o4 c4. c8 r2 | o4 d4. d8 r2 | o4 d4 r4 o4 d4 r4 | o4 c4. c8 r2 | o3 b4. b8 r2 | o4 d4. d8 r2 | o4 e-4. e-8 r2 | o4 d4. d8 r2 | o4 d4. d8 r2 | o4 d4 r4 o4 e-4 r4 | o4 d4 r4 o4 d4 r4</textus></frustum>
-      <frustum mensura="25"><textus!>o4 d1</textus></frustum>
-    </pars>
-    <pars titulus="laeva3" instrumentum="piano_electricum" lucrum="0.35" reverberatio="0.25">
-      <frustum mensura="1"><textus!>o4 e-4. e-8 r2 | o4 d4. d8 r2 | o4 e-4. e-8 r2 | o4 e-4 r4 o4 e-4 r4 | o4 d4. d8 r2 | o4 d4. d8 r2 | o4 e-4. e-8 r2 | o4 f#4. f#8 r2 | o4 f4. f8 r2 | o4 e4. e8 r2 | o4 e-4 r4 o4 f#4 r4 | o4 f4 r4 o4 e4 r4</textus></frustum>
-      <frustum mensura="25"><textus!>o4 e-1</textus></frustum>
-    </pars>
-    <pars titulus="laeva4" instrumentum="piano_electricum" lucrum="0.35" reverberatio="0.25">
-      <frustum mensura="1"><textus!>o4 g4. g8 r2 | o4 g4. g8 r2 | o4 g4. g8 r2 | o4 g4 r4 o4 g4 r4 | o4 g4. g8 r2 | o4 f4. f8 r2 | o4 g4. g8 r2 | o4 b4. b8 r2 | o4 a4. a8 r2 | o4 a4. a8 r2 | o4 g4 r4 o4 b4 r4 | o4 a4 r4 o4 a4 r4</textus></frustum>
-      <frustum mensura="25"><textus!>o4 g1</textus></frustum>
+    <figura titulus="tenuta" textus="[1 2 3 4]:1" positio="sine_radice"/>
+    <figura titulus="bassus_finis" textus="B:1"/>
+    <pars titulus="laeva" instrumentum="piano_electricum" lucrum="0.35" reverberatio="0.25">
+      <comitatus figura="charleston" mensura="1" usque="4" ambitus="55..72" bassus="36..55"/>
+      <comitatus figura="pulsus_bini" mensura="4" usque="5" ambitus="55..72" bassus="36..55"/>
+      <comitatus figura="charleston" mensura="5" usque="11" ambitus="55..72" bassus="36..55"/>
+      <comitatus figura="pulsus_bini" mensura="11" usque="13" ambitus="55..72" bassus="36..55"/>
+      <comitatus figura="charleston" mensura="13" usque="16" ambitus="55..72" bassus="36..55"/>
+      <comitatus figura="pulsus_bini" mensura="16" usque="17" ambitus="55..72" bassus="36..55"/>
+      <comitatus figura="charleston" mensura="17" usque="23" ambitus="55..72" bassus="36..55"/>
+      <comitatus figura="pulsus_bini" mensura="23" usque="25" ambitus="55..72" bassus="36..55"/>
+      <comitatus figura="tenuta" mensura="25" usque="26" ambitus="55..72" bassus="36..55"/>
     </pars>
     <pars titulus="bassus" instrumentum="pizzicato" lucrum="1" reverberatio="0.15">
-      <frustum mensura="1"><textus!>o2 f4 o2 a4 o3 c4 o2 a4 | o2 b-4 o3 d4 o2 f4 o2 e4 | o2 f4 o2 a4 o3 c4 o2 b4 | o3 c4 o2 e4 o2 f4 o2 a4 | o2 b-4 o3 d4 o2 f4 o2 a#4 | o2 b4 o3 d4 o2 f4 o2 e4 | o2 f4 o2 a4 o3 c4 o3 c#4 | o3 d4 o2 f#4 o2 a4 o2 f#4 | o2 g4 o2 b-4 o3 d4 o2 b4 | o3 c4 o2 e4 o2 g4 o2 e4 | o2 f4 o2 c#4 o2 d4 o2 f#4 | o2 g4 o2 b4 o3 c4 o2 e4</textus></frustum>
-      <frustum mensura="25"><textus!>o2 f1</textus></frustum>
+      <comitatus figura="ambulans" mensura="1" usque="4" ambitus="55..72" bassus="36..55"/>
+      <comitatus figura="ambulans_bina" mensura="4" usque="5" ambitus="55..72" bassus="36..55"/>
+      <comitatus figura="ambulans" mensura="5" usque="11" ambitus="55..72" bassus="36..55"/>
+      <comitatus figura="ambulans_bina" mensura="11" usque="13" ambitus="55..72" bassus="36..55"/>
+      <comitatus figura="ambulans" mensura="13" usque="16" ambitus="55..72" bassus="36..55"/>
+      <comitatus figura="ambulans_bina" mensura="16" usque="17" ambitus="55..72" bassus="36..55"/>
+      <comitatus figura="ambulans" mensura="17" usque="23" ambitus="55..72" bassus="36..55"/>
+      <comitatus figura="ambulans_bina" mensura="23" usque="25" ambitus="55..72" bassus="36..55"/>
+      <comitatus figura="bassus_finis" mensura="25" usque="26" ambitus="55..72" bassus="36..55"/>
     </pars>
     <pars titulus="tympana" instrumentum="aether" lucrum="0.3">
       <frustum mensura="1"><textus!>@passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 r2.</textus></frustum>
