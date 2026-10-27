@@ -1909,6 +1909,18 @@ _sectio_stili (
         "<stylus titulus=\"y\" basis=\"x\"/>"
         "<carmen titulus=\"f\"></carmen></carmina>",
         "stylus: catena circularis"));
+    CREDO_NECESSE (_legere(c,
+        "<carmina><stylus titulus=\"jazz\" intentiones=\"liberae\"/>"
+        "<carmen titulus=\"j\" stylus=\"jazz\"></carmen></carmina>",
+        &liber));
+    CREDO_AEQUALIS_S32 (
+        liber.carmina[ZEPHYRUM].stili[ZEPHYRUM].intentiones, I);
+    CREDO_AEQUALIS_S32 (
+        liber.carmina[ZEPHYRUM].stili[ZEPHYRUM].septimae, -I);
+    CREDO_VERUM (_causa_est(c,
+        "<carmina><stylus titulus=\"x\" intentiones=\"saepe\"/>"
+        "<carmen titulus=\"k\"></carmen></carmina>",
+        "stylus: intentiones liberae aut vetitae"));
     CREDO_VERUM (_causa_est(c,
         "<carmina><stylus titulus=\"x\" septimae=\"saepe\"/>"
         "<carmen titulus=\"g\"></carmen></carmina>",

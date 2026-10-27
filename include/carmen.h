@@ -80,7 +80,8 @@
  *             pulsus). NON iteratur (ut clavis)
  *   stylus    <stylus titulus="popularis" [basis="classicus"]
  *             [regulae="-parallelae,+tertia"]
- *             [septimae="liberae"|"resolvendae"]/> in libro aut
+ *             [septimae="liberae"|"resolvendae"]
+ *             [intentiones="liberae"|"vetitae"]/> in libro aut
  *             carmine (carminis vincit, ut figurae): praesettum
  *             censurae nominatum; basis catena (classicus = forma
  *             ordinaria, semper notus, non redefinitur), attributa
@@ -88,7 +89,8 @@
  *             (ordinarius classicus). <censura regulae="..."/> in
  *             carmine (semel): regulae super stylum. Vitia lectionis:
  *             stylus aut basis ignota, catena circularis, valor
- *             septimae ignotus (nomina regularum censura iudicat -
+ *             septimae aut intentionum ignotus (nomina regularum
+ *             censura iudicat -
  *             carmen eam non novit)
  *   figura    <figura titulus="valsa" textus="B:4 [1 2 3] [1 2 3]"/> in
  *             libro aut carmine (carminis vincit); titulus [a-z0-9_]+
@@ -285,6 +287,7 @@ nomen structura {
     chorda basis;      /* vacua = classicus */
     chorda regulae;    /* "-parallelae,+tertia"; vacua */
        s32 septimae;   /* -1 a basi, 0 resolvendae, 1 liberae */
+       s32 intentiones;  /* -1 a basi, 0 vetitae, 1 liberae */
 } CarmenStylus;
 
 nomen structura {

@@ -20,7 +20,7 @@
 hic_manens constans character* TITULI[CENSURA_REGULAE] = {
     "lineae", "clavis", "ambitus", "dissonantia", "parallelae",
         "saltus",
-    "tertia", "acorda"
+    "tertia", "acorda", "evitanda"
 };
 
 nomen structura {
@@ -226,6 +226,10 @@ censura_carminis_forma (
         si (s->septimae >= ZEPHYRUM)
         {
             forma->septimae_liberae = s->septimae == I;
+        }
+        si (s->intentiones >= ZEPHYRUM)
+        {
+            forma->intentiones_liberae = s->intentiones == I;
         }
     }
     redde carmen->censura_regulae.mensura == ZEPHYRUM
@@ -737,6 +741,26 @@ _explicat (
     }
 }
 
+/* bits a radice (intentiones, evitandae) ad classes rotati */
+interior i32
+_rotare (
+    i32 bits,
+    i32 radix)
+{
+    redde ((bits << radix) | (bits >> (XII - radix))) & 0xFFF;
+}
+
+/* classis c tonus tensionis licitae acordi h (acordum.h intentiones) */
+interior b32
+_intentio (
+    constans Acordum* h,
+                 i32  c)
+{
+    redde h->genus != ACORDUM_IGNOTA && h->genus != ACORDUM_NULLA
+        && (_rotare(acordum_proprietates(h->genus)->intentiones,
+                    h->radix) & ((i32)I << c));
+}
+
 /* culpa notae (statica); NIHIL si nulla */
 interior constans character*
 _culpa (
@@ -761,6 +785,25 @@ _culpa (
 
 /* VERUM: dissonantia referenda (causa in *causa; NIHIL sine
  * explicatione - ut ante N2); FALSUM: explicata */
+/* culpa segmenti sub forma: tensio licita (intentiones_liberae) nulla,
+ * ceterum _culpa */
+interior constans character*
+_culpa_notae (
+                           Iudex* iudex,
+    constans ExplicatioSegmentum* s)
+{
+    constans Acordum* h = &iudex->explicatio->fenestrae[s->fenestra]
+                                .harmonia;
+
+    si (   iudex->forma->intentiones_liberae
+        && s->genus == EXPLICATIO_IGNOTA
+        && _intentio(h, s->nota->nota % XII))
+    {
+        redde NIHIL;
+    }
+    redde _culpa(s, iudex->forma->septimae_liberae);
+}
+
 interior b32
 _referenda (
                   Iudex*  iudex,
@@ -788,9 +831,9 @@ _referenda (
     {
         redde FALSUM;
     }
-    *causa = _culpa(sa, iudex->forma->septimae_liberae) != NIHIL
-           ? _culpa(sa, iudex->forma->septimae_liberae)
-           : _culpa(sb, iudex->forma->septimae_liberae);
+    /* stylus iazzicus: tensio licita acordi fenestrae culpa caret */
+    *causa = _culpa_notae(iudex, sa) != NIHIL ? _culpa_notae(iudex, sa)
+                                              : _culpa_notae(iudex, sb);
     si (*causa != NIHIL)
     {
         redde VERUM;
@@ -1218,8 +1261,11 @@ _acorda_regula (
             {
                 infima = s;
             }
-            /* ignota = extra classes declaratas, sine forma */
-            si (s->genus == EXPLICATIO_IGNOTA && numerus < II)
+            /* ignota = extra classes declaratas, sine forma; tensio
+             * licita sub stylo iazzico non */
+            si (   s->genus == EXPLICATIO_IGNOTA && numerus < II
+                && !(   iudex->forma->intentiones_liberae
+                     && _intentio(d, c)))
             {
                 alienae[numerus++] = s;
             }
@@ -1262,6 +1308,43 @@ _acorda_regula (
     }
 }
 
+/* evitanda: nota evitanda acordi fenestrae tenta (sine forma) */
+interior vacuum
+_evitanda_regula (
+    Iudex* iudex)
+{
+        constans Carmen* k = iudex->carmen;
+    constans Explicatio* e = iudex->explicatio;
+                    i32  i;
+
+    si (e == NIHIL)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < e->numerus_segmentorum; i++)
+    {
+        constans ExplicatioSegmentum* s = &e->segmenta[i];
+                    constans Acordum* h =
+                        &e->fenestrae[s->fenestra].harmonia;
+                                  i32 n = iudex->numerus;
+
+        si (   s->genus != EXPLICATIO_IGNOTA
+            || h->genus == ACORDUM_IGNOTA || h->genus == ACORDUM_NULLA
+            || !(_rotare(acordum_proprietates(h->genus)->evitandae,
+                         h->radix) & ((i32)I << (s->nota->nota % XII))))
+        {
+            perge;
+        }
+        _addere(iudex, CENSURA_EVITANDA, &k->partes[s->pars],
+            _frustum_notae(&k->partes[s->pars], s->nota), s->initium,
+            s->nota->offset, s->nota, NIHIL, NIHIL, NIHIL, NIHIL);
+        si (n < iudex->capacitas)
+        {
+            iudex->inventa[n].sonans = *h;
+        }
+    }
+}
+
 i32
 censura_iudicare (
            constans Carmen* carmen,
@@ -1290,7 +1373,8 @@ censura_iudicare (
     si (   forma->activae[CENSURA_DISSONANTIA]
         || forma->activae[CENSURA_CLAVIS]
         || forma->activae[CENSURA_TERTIA]
-        || forma->activae[CENSURA_ACORDA])
+        || forma->activae[CENSURA_ACORDA]
+        || forma->activae[CENSURA_EVITANDA])
     {
         /* explicatio in piscina propria: inventa notas carminis et
          * causas staticas tenent, nihil ex ea (clavis: tertia
@@ -1333,6 +1417,10 @@ censura_iudicare (
     si (forma->activae[CENSURA_ACORDA])
     {
         _acorda_regula(&iudex);
+    }
+    si (forma->activae[CENSURA_EVITANDA])
+    {
+        _evitanda_regula(&iudex);
     }
     /* ordinatio stabilis (insertio) per mensuram, pulsum */
     x = iudex.numerus < capacitas ? iudex.numerus : capacitas;
@@ -1551,6 +1639,21 @@ censura_inventum_scribere (
             }
             bene = chorda_aedificator_appendere_character(textus, ')')
                 && bene;
+            frange;
+        }
+        casus CENSURA_EVITANDA:
+        {
+            s32 iv = _modulus((s32)(x->nota->nota % XII)
+                              - (s32)x->sonans.radix, XII);
+
+            bene = harmonia_scribere(carmen, &x->sonans, pulsus, textus)
+                && bene;
+            bene = chorda_aedificator_appendere_literis(textus,
+                ": nota evitanda ") && bene;
+            bene = partitura_notam_scribere(carmen, x->nota, pulsus,
+                textus) && bene;
+            bene = chorda_aedificator_appendere_literis(textus,
+                iv == V ? " (11)" : iv == IV ? " (3)" : " (?)") && bene;
             frange;
         }
         casus CENSURA_TERTIA:

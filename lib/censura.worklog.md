@@ -152,3 +152,19 @@ tone, popularis); a dissonance against a shapeless foreign note is still flagged
 lesson: C E B without G is "C(3) with B foreign", not Cmaj7 - the seventh rule needs the named
 chord. The application loop was rewritten with an explicit index so "base first" is plantable.
 Plants 9/9 first try.
+
+## 2026-10-27 - J2: jazz tensions (intentiones_liberae) and the 'evitanda' rule
+
+Second step of the jazz preset (J1 put intentiones/evitandae in AcordumProprietates).
+- carmen: <stylus intentiones="liberae"|"vetitae">, CarmenStylus.intentiones (-1 inherit).
+- CensuraForma.intentiones_liberae: a shapeless (EXPLICATIO_IGNOTA) note whose class is a
+  licensed tension of its window's chord (rotated from root-relative bits) is not foreign:
+  _culpa_notae replaces _culpa in _referenda, and the 'acorda' rule skips it. Shaped
+  non-chord tones (passing, neighbour) were never at issue - they keep their own rules.
+- evitanda (not ORD.): a shapeless note on the window chord's avoid class (11 over maj/dom,
+  3 over sus) -> "Fmaj7: nota evitanda Bb4 (11)". A passing Bb is shaped, so it is silent:
+  the avoid-note rule is about HELD notes, as in the jazz pedagogy it comes from.
+- Fixture lesson: a declared G7 with a held E5 counts as foreign under septimae_liberae alone
+  (the 13th is not a seventh); only intentiones_liberae clears it - the two switches are
+  independent, and the test asserts both sides.
+Plants 10/10.

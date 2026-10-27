@@ -1136,11 +1136,12 @@ _stilos_legere (
                     "stylus: titulus iteratus");
             }
         }
-        s[n].titulus   = *a;
-        s[n].basis     = _vacua();
-        s[n].regulae   = _vacua();
-        s[n].septimae  = -I;
-        a              = stml_attributum_capere(l, "basis");
+        s[n].titulus      = *a;
+        s[n].basis        = _vacua();
+        s[n].regulae      = _vacua();
+        s[n].septimae     = -I;
+        s[n].intentiones  = -I;
+        a                 = stml_attributum_capere(l, "basis");
         si (a != NIHIL)
         {
             s[n].basis = *a;
@@ -1165,6 +1166,23 @@ _stilos_legere (
             {
                 redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
                     "stylus: septimae liberae aut resolvendae");
+            }
+        }
+        a = stml_attributum_capere(l, "intentiones");
+        si (a != NIHIL)
+        {
+            si (chorda_aequalis_literis(*a, "liberae"))
+            {
+                s[n].intentiones = I;
+            }
+            alioquin si (chorda_aequalis_literis(*a, "vetitae"))
+            {
+                s[n].intentiones = ZEPHYRUM;
+            }
+            alioquin
+            {
+                redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
+                    "stylus: intentiones liberae aut vetitae");
             }
         }
         n++;

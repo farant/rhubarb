@@ -105,6 +105,8 @@ _sectio_ordinaria (
     CREDO_FALSUM (f.activae[CENSURA_SALTUS]);
     CREDO_FALSUM (f.activae[CENSURA_TERTIA]);
     CREDO_VERUM (f.activae[CENSURA_ACORDA]);
+    CREDO_FALSUM (f.activae[CENSURA_EVITANDA]);
+    CREDO_FALSUM (f.intentiones_liberae);
     CREDO_AEQUALIS_I32 (f.saltus_maximus, ZEPHYRUM);
     CREDO_VERUM (f.ambitus == NIHIL);
     per (r = CENSURA_LINEAE; r < CENSURA_REGULAE;
@@ -971,6 +973,102 @@ _sectio_stili (
     CREDO_VERUM (censura_iudicare(k, &f, inv, CAPACITAS) > ZEPHYRUM);
 }
 
+/* stylus iazzicus: tensiones licitae acordi (13 super G7) tacent;
+ * evitanda: 11 tenta super Fmaj7 nominatur, transiens non; tertia
+ * super C7sus4 */
+interior vacuum
+_sectio_intentiones (
+    CredoContextus* c)
+{
+       CensuraForma  f;
+             chorda  ignota;
+    constans Carmen* k;
+    CensuraInventum  inv[CAPACITAS];
+
+    k = _carmen(c,
+        "<carmina><stylus titulus=\"popularis\" septimae=\"liberae\"/>"
+        "<stylus titulus=\"jazz\" basis=\"popularis\" "
+        "intentiones=\"liberae\" regulae=\"+evitanda\"/>"
+        "<carmen titulus=\"a\" stylus=\"jazz\"></carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_VERUM (censura_carminis_forma(k, &f, &ignota));
+    CREDO_VERUM (f.intentiones_liberae && f.septimae_liberae);
+    CREDO_VERUM (f.activae[CENSURA_EVITANDA]);
+    /* G7 declaratum cum 13 (E5) tenta */
+    k = _carmen(c, "<carmina><carmen titulus=\"g\">"
+        "<acorda mensura=\"1\" textus=\"G7\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o2 g1</textus></frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 b1</textus></frustum></pars>"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 f1</textus></frustum></pars>"
+        "<pars titulus=\"s\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o5 e1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    censura_ordinaria(&f);
+    memset(f.activae, ZEPHYRUM, magnitudo(f.activae));
+    f.activae[CENSURA_DISSONANTIA]  = VERUM;
+    f.activae[CENSURA_ACORDA]       = VERUM;
+    f.septimae_liberae              = VERUM;
+    CREDO_VERUM (censura_iudicare(k, &f, inv, CAPACITAS) > ZEPHYRUM);
+    f.intentiones_liberae = VERUM;
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS),
+                        ZEPHYRUM);
+    /* Fmaj7 cum Bb tenta: evitanda */
+    k = _carmen(c, "<carmina><carmen titulus=\"f\">"
+        "<acorda mensura=\"1\" textus=\"Fmaj7\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o2 f1</textus></frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 a1</textus></frustum></pars>"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 e1</textus></frustum></pars>"
+        "<pars titulus=\"s\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 b-1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    f                      = _sola(CENSURA_EVITANDA);
+    f.intentiones_liberae  = VERUM;
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == I);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[ZEPHYRUM]),
+        "mensura 1 s: Fmaj7: nota evitanda Bb4 (11) (frustum 0, offset "
+        "3)\n");
+    /* Bb transiens: licet */
+    k = _carmen(c, "<carmina><carmen titulus=\"p\">"
+        "<acorda mensura=\"1\" textus=\"Fmaj7\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o2 f1</textus></frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 a1</textus></frustum></pars>"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 e1</textus></frustum></pars>"
+        "<pars titulus=\"s\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 a4 b-4 o5 c2</textus></frustum>"
+        "</pars>"
+        "</carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS),
+                        ZEPHYRUM);
+    /* C7sus4 cum E tenta: tertia evitanda */
+    k = _carmen(c, "<carmina><carmen titulus=\"s\">"
+        "<acorda mensura=\"1\" textus=\"C7sus4\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 c1</textus></frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 b-1</textus></frustum></pars>"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 f1</textus></frustum></pars>"
+        "<pars titulus=\"s\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 e1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == I);
+    CREDO_CHORDA_CONTINET (_linea(c, k, &inv[ZEPHYRUM]),
+        chorda_ex_literis("nota evitanda E4 (3)", c->piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ordinaria", _sectio_ordinaria, NIHIL, NIHIL, NIHIL, NIHIL },
     { "lineae", _sectio_lineae, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -983,6 +1081,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "tertia", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "acorda", _sectio_acorda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "stili", _sectio_stili, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "iazz", _sectio_intentiones, NIHIL, NIHIL, NIHIL, NIHIL },
     { "fractum", _sectio_fractum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "explicata", _sectio_explicata, NIHIL, NIHIL, NIHIL, NIHIL },
     { "capacitas", _sectio_capacitas, NIHIL, NIHIL, NIHIL, NIHIL },

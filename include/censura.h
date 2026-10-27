@@ -44,6 +44,11 @@
  *                tertia declarata nusquam in fenestra sonans. Semel
  *                per fenestram: "D declaratum, sonat Gmaj9/D (G5
  *                B5)"                                             ORD.
+ *   evitanda     nota evitanda ("avoid note", acordum.h evitandae)
+ *                acordi fenestrae tenta (sine forma alienae): 11
+ *                super maiorem aut dominantem, tertia super
+ *                suspensam; transiens licet. "Fmaj7: nota evitanda
+ *                Bb4 (11)"                                        -
  *
  * STYLUS (censura_carminis_forma, carmen.h <stylus>): forma ordinaria
  * (classicus), deinde stylus carminis per catenam basium (basis prior:
@@ -53,6 +58,9 @@
  * septimae_liberae: septima acordi nominati (et nona, sexta - toni
  * acordi) resolutionem non postulat (dissonantia: causa 'septima non
  * resoluta' tacet); dissonantia notarum alienarum manet.
+ * intentiones_liberae (stylus iazzicus): tonus tensionis licitae acordi
+ * fenestrae (declarati aut nominati; acordum.h intentiones) acordi est
+ * - dissonantia et acorda eum non nominant.
  *
  * TEMPUS FORTE: initium mensurae; in 4/x etiam medium; in metris
  * compositis (6/8, 9/8, 12/8) omnis tertia octava. Percussio ('@')
@@ -88,6 +96,7 @@ nomen enumeratio {
     CENSURA_SALTUS,
     CENSURA_TERTIA,
     CENSURA_ACORDA,
+    CENSURA_EVITANDA,
     CENSURA_REGULAE
 } CensuraRegula;
 
@@ -102,6 +111,8 @@ nomen structura {
     i32 saltus_maximus;
     /* septima acordi resolutionem non postulat (stylus popularis) */
     b32 septimae_liberae;
+    /* tensiones licitae acordi toni acordi sunt (stylus iazzicus) */
+    b32 intentiones_liberae;
 } CensuraForma;
 
 nomen structura {
