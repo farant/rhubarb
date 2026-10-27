@@ -661,6 +661,7 @@ _comitatum_legere (
             constans Carmen* carmen,
     constans FiguraNominata* figurae,
                         i32  numerus_figurarum,
+                        b32  bassus_sonat,
                      chorda  titulus_partis,
                         s32  index,
                     Piscina* piscina,
@@ -757,7 +758,8 @@ _comitatum_legere (
     si (!comitatus_componere(&figura->figura, carmen->acorda,
                              carmen->numerus_acordorum, initia,
                              mensurae,
-                             &ambitus, piscina, &notae, &numerus, &cv))
+                             &ambitus, bassus_sonat, piscina, &notae,
+                             &numerus, &cv))
     {
         redde _vitium(vitium, carmen->titulus, titulus_partis, index,
             cv.offset, cv.causa);
@@ -797,12 +799,55 @@ _comitatum_legere (
     redde VERUM;
 }
 
+/* aliquis <comitatus> partium carminis figuram cum voce 'B' adhibet */
+interior b32
+_bassus_comitatus (
+                  StmlNodus* nodus,
+    constans FiguraNominata* figurae,
+                        i32  numerus_figurarum)
+{
+    i32 i;
+    i32 j;
+    i32 f;
+
+    per (i = ZEPHYRUM; i < stml_numerus_liberorum(nodus); i++)
+    {
+        StmlNodus* pars = stml_liberum_ad_indicem(nodus, i);
+
+        si (!_elementum_est(pars, "pars"))
+        {
+            perge;
+        }
+        per (j = ZEPHYRUM; j < stml_numerus_liberorum(pars); j++)
+        {
+            StmlNodus* l = stml_liberum_ad_indicem(pars, j);
+               chorda* a;
+
+            si (!_elementum_est(l, "comitatus"))
+            {
+                perge;
+            }
+            a = stml_attributum_capere(l, "figura");
+            per (f = ZEPHYRUM; a != NIHIL && f < numerus_figurarum; f++)
+            {
+                si (   chorda_aequalis(figurae[f].titulus, *a)
+                    && figurae[f].figura.bassus)
+                {
+                    redde VERUM;
+                }
+            }
+        }
+    }
+    redde FALSUM;
+}
+
 interior b32
 _partem_legere (
                   StmlNodus* nodus,
             constans Carmen* carmen,
     constans FiguraNominata* figurae,
                         i32  numerus_figurarum,
+                        b32  bassus_sonat,
                     Piscina* piscina,
                  CarmenPars* pars,
              CarminisVitium* vitium)
@@ -906,7 +951,7 @@ _partem_legere (
         si (_elementum_est(l, "comitatus"))
         {
             si (!_comitatum_legere(l, carmen, figurae,
-                numerus_figurarum,
+                numerus_figurarum, bassus_sonat,
                                    pars->titulus, (s32)j, piscina,
                                    &pars->frusta[j], vitium))
             {
@@ -2551,6 +2596,7 @@ _carmen_legere (
                    b32  aula_propria = FALSUM;
         FiguraNominata* figurae;
                    i32  numerus_figurarum;
+                   b32  bassus_sonat;
 
     memset(k, ZEPHYRUM, magnitudo(Carmen));
     k->reverberatio = *aula_libri;
@@ -2792,6 +2838,10 @@ _carmen_legere (
     {
         redde FALSUM;
     }
+    /* bassus comitatus: figura alicuius <comitatus> carminis vocem 'B'
+     * habet - radicem in superioribus omittere licet (lilia:
+     * harpa_bassus) */
+    bassus_sonat = _bassus_comitatus(nodus, figurae, numerus_figurarum);
     /* partes */
     k->numerus_partium = _numerare(nodus, "pars");
     si (k->numerus_partium > ZEPHYRUM)
@@ -2814,8 +2864,9 @@ _carmen_legere (
         {
             perge;
         }
-        si (!_partem_legere(n, k, figurae, numerus_figurarum, piscina,
-                            &k->partes[j], vitium))
+        si (!_partem_legere(n, k, figurae, numerus_figurarum,
+                            bassus_sonat, piscina, &k->partes[j],
+                            vitium))
         {
             redde FALSUM;
         }

@@ -93,3 +93,26 @@ fifth' step planted out (A D chosen by motion alone), same trap as C7/C9 in step
 '!conversus' guard on the later root step was redundant (removed). Plants 4/4.
 probatio_carmen's embedded-book check now expects lilia's three parts (16 bass notes, 96
 chord notes).
+
+## 2026-10-26 - review batch 1.1: the root only goes when a bass plays it; altered fifths stay; re-root
+
+From the 4-reviewer sexta review (findings comitatus 1, 2, 8; Fran decided 8 = re-root).
+(1) "drop the root, the bass has it" was false for slash chords (F6/A -> C D A, no F
+anywhere) and figures without 'B' (albertina: C9 -> D Bb E). A 3x20k fuzz found ~7.5k
+rootless bars per seed, all slash chords. Now the root may go only if the chord's bass IS its
+root and a bass sounds: a 'B' voice in this figure (ComitatusFigura.bassus, set while
+parsing) or `bassus_sonat` - new comitatus_componere parameter; carmen computes it as "some
+<comitatus> in the song uses a figure with 'B'" (_bassus_comitatus), which keeps lilia's
+split harp (chords part has no B, harpa_bassus has it) unchanged. A kept root must also be
+among the voices actually used: with V < k the old search took the lowest V of ANY inversion,
+which could still leave it out - now inversions without the root are skipped.
+(2) fifth-first omission removed the defining altered fifth (Caug -> C(3)/E, C7#5 -> C7):
+an altered fifth (proprietates quinta != VII: o, +, h7, o7, 7#5) is never omitted, so the root
+goes instead (Caug two voices E G#; Cm7b5 two voices Eb Gb). An explicit 'altered => root
+first' clause was REDUNDANT (blocking the fifth already forces the later root step; plant
+survived) - removed; the 2-voice four-note case (Cm7b5, C7#5) is the only one where the fifth
+block is observable, so that is the test.
+(3) figure bar: new chord = differs from the chord at the start of the PREVIOUS bar (was: the
+chord sounding just before the bar), so "C:2 G:2 | G" puts G (root) in bar 2's bass.
+Plants 11/11 (two rewritten to compile, one redundant clause removed). House songs
+byte-identical (swap built with the objects deleted - see …VWJKVB).

@@ -34,10 +34,12 @@
  *
  * COMPOSITIO (comitatus_componere):
  *   MENSURA FIGURAE: prima ubi acordum ad initium mensurae carminis
- *   differt ab acordo ante sonanti (aut primo); aliter sequens
- *   (circulo): radix in acordo novo, 'Q' in tento. Mensura figurae
- *   longitudinem mensurae carminis aequat (vitium aliter, offset in
- *   figura).
+ *   differt ab acordo ad initium mensurae PRIORIS (aut primo) -
+ *   acordum intra mensuram mutatum et tentum radicem in mensura
+ *   proxima accipit (C:2 G:2 | G: G in basso mensurae II); aliter
+ *   sequens (circulo): radix in acordo novo, 'Q' in tento. Mensura
+ *   figurae longitudinem mensurae carminis aequat (vitium aliter,
+ *   offset in figura).
  *   ACORDUM GRADUS = acordum ad initium gradus; nullum: gradus tacet.
  *   BASSUS: classis bassi in ambitu bassi, proxima basso priori (primo:
  *   medio ambitus); aequales: inferior. 'Q' proxima basso currenti in
@@ -45,14 +47,19 @@
  *   SUPERIORES: positio clausa - classes acordi ascendentes ab
  *   inversione aliqua, intra octavam; figura voces pauciores quam
  *   classes adhibens (V < k) quintam acordi omittit (G7 tribus
- *   vocibus: G B F, sensibilis manet), deinde radicem si adhuc
- *   pauciores (bassus eam tenet: C7 duabus E Bb, C9 tribus E Bb
- *   D). Acorda cum tono addito sine septima (6, m6, add9) ordine
- *   converso: radix prius, deinde quinta - quinta ea a cognatis
- *   distinguit (F6 tribus A C D, non A D F = Dm/F; Bbadd9 tribus C D
- *   F). Inter inversiones et octavas quarum voces adhibitae
- *   (1..min(V, k); V vox maxima figurae, k classes positionis)
- *   intra ambitum stant, motus minimus (summa
+ *   vocibus: G B F, sensibilis manet) - quintam ALTERATAM (o, +, h7,
+ *   o7, 7#5) numquam: ea acordum facit; deinde radicem si adhuc
+ *   pauciores, SOLUM si bassus eam sonat: radix in basso acordi (non
+ *   C7/E, F6/A) et vox 'B' in figura aut bassus_sonat (comitatus alius
+ *   carminis, lilia: harpa_bassus) - C7 duabus E Bb, C9 tribus E Bb
+ *   D. Radix non omissa inter voces adhibitas semper stat. Acorda cum
+ *   tono addito sine septima (6, m6, add9) et acorda quinta alterata
+ *   ordine converso: radix prius (eadem condicione), deinde quinta -
+ *   quinta ea a cognatis distinguit (F6 tribus A C D, non A D F =
+ *   Dm/F; Bbadd9 tribus C D F; Caug duabus E G#). Inter inversiones
+ *   et octavas quarum voces adhibitae (1..min(V, k); V vox maxima
+ *   figurae, k classes positionis) intra ambitum stant, motus minimus
+ *   (summa
  *   |a - b| vocum adhibitarum) a positione priore; primo: medium
  *   vocum medio ambitus proximum; aequales: inferior. Ambitus
  *   superiorum et bassi >= XII (octava): positio semper invenitur.
@@ -95,6 +102,7 @@ nomen structura {
                 i32* primi;             /* gradus primus per mensuram */
                 i32  numerus_mensurarum;
                 i32  vox_maxima;        /* V (0 si superiores nullae) */
+                b32  bassus;            /* vox 'B' in figura */
 } ComitatusFigura;
 
 nomen structura {
@@ -145,7 +153,9 @@ comitatus_figuram_legere (
 
 /* notae spatii [ab, ad): acorda (ordine, non se tegentia; lacunae =
  * nullum), initia mensurarum carminis spatium tegentia (numerus + 1).
- * FALSUM: mensura figurae non congruit, ambitus < XII, memoria */
+ * bassus_sonat: bassus in parte alia sonat (radicem omittere licet
+ * etiam figura sine 'B'). FALSUM: mensura figurae non congruit,
+ * ambitus < XII, memoria */
 b32
 comitatus_componere (
       constans ComitatusFigura*  figura,
@@ -154,6 +164,7 @@ comitatus_componere (
                   constans s64*  initia,
                            i32   numerus_mensurarum,
      constans ComitatusAmbitus*  ambitus,
+                           b32   bassus_sonat,
                        Piscina*  piscina,
                  ComitatusNota** notae,
                            i32*  numerus,

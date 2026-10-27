@@ -1508,6 +1508,36 @@ _sectio_comitatus (
     CREDO_AEQUALIS_S32 (p->frusta[1].comitatus, -I);
     CREDO_AEQUALIS_I32 (p->frusta[1].numerus, XIV);
     CREDO_AEQUALIS_I32 (p->frusta[1].notae[0].nota, L);
+    /* bassus comitatus: figura sine 'B' sola - radix C9 superior
+     * manet; comitatus alius cum 'B' (bassus in parte alia) - radix
+     * omittitur (E Bb D) */
+    CREDO_NECESSE (_legere(c, _liber_ternarius(c,
+        "<figura titulus=\"sup\" textus=\"[1 2 3]:2.\"/>"
+        "<acorda mensura=\"1\" textus=\"C9\"/>"
+        "<pars titulus=\"s\" instrumentum=\"aether\">"
+        "<comitatus figura=\"sup\" mensura=\"1\"/></pars>"), &liber));
+    p = &liber.carmina[ZEPHYRUM].partes[ZEPHYRUM];
+    CREDO_NECESSE (p->frusta[0].numerus == III);
+    CREDO_VERUM (   p->frusta[0].notae[0].nota % XII == ZEPHYRUM
+                 || p->frusta[0].notae[I].nota % XII == ZEPHYRUM
+                 || p->frusta[0].notae[II].nota % XII == ZEPHYRUM);
+    CREDO_NECESSE (_legere(c, _liber_ternarius(c,
+        "<figura titulus=\"sup\" textus=\"[1 2 3]:2.\"/>"
+        "<figura titulus=\"bas\" textus=\"B:2.\"/>"
+        "<acorda mensura=\"1\" textus=\"C9\"/>"
+        "<pars titulus=\"s\" instrumentum=\"aether\">"
+        "<comitatus figura=\"sup\" mensura=\"1\"/></pars>"
+        "<pars titulus=\"b\" instrumentum=\"aether\">"
+        "<comitatus figura=\"bas\" mensura=\"1\"/></pars>"),
+        &liber));
+    p = &liber.carmina[ZEPHYRUM].partes[ZEPHYRUM];
+    CREDO_NECESSE (p->frusta[0].numerus == III);
+    CREDO_AEQUALIS_I32 (((i32)I << (p->frusta[0].notae[0].nota % XII))
+                        | ((i32)I << (p->frusta[0].notae[I].nota % XII))
+                        | ((i32)I << (p->frusta[0].notae[II].nota
+                            % XII)),
+                        ((i32)I << IV) | ((i32)I << X) | ((i32)I
+                            << II));
 }
 
 interior vacuum

@@ -471,6 +471,10 @@ comitatus_figuram_legere (
                 {
                     figura->vox_maxima = (i32)s->voces[k];
                 }
+                si (s->voces[k] == COMITATUS_VOX_BASSI)
+                {
+                    figura->bassus = VERUM;
+                }
             }
         }
         t += valor;
@@ -586,12 +590,14 @@ _positionem (
                       Positio* p,
              constans Acordum* a,
     constans ComitatusAmbitus* ambitus,
-                          i32  vox_maxima)
+                          i32  vox_maxima,
+                          b32  radix_licet)
 {
     i32 ordo[XII];
     s32 omissa;
     s32 radix_omissa;
     b32 conversus;
+    b32 quinta_mutata;
     s32 optima[XII];
     s64 pretium_optimum  = -I;
     i32 k                = ZEPHYRUM;
@@ -623,25 +629,32 @@ _positionem (
             k++;
         }
     }
-    /* tonus additus sine septima (6, m6, add9): radix prius - quinta
-     * eos a cognatis distinguit (F6 A C D, non A D F = Dm/F) */
+    /* quinta alterata (o, +, h7, o7, 7#5) acordum facit: numquam
+     * omittitur (radix igitur sola cedit). Tonus additus sine septima
+     * (6, m6, add9): quinta eos a cognatis distinguit (F6 A C D, non A
+     * D F = Dm/F) - radix prius. Radix solum si bassus eam sonat
+     * (radix_licet) */
+    quinta_mutata = acordum_proprietates(a->genus) != NIHIL
+        && acordum_proprietates(a->genus)->quinta >= ZEPHYRUM
+        && acordum_proprietates(a->genus)->quinta != VII;
     conversus     = acordum_proprietates(a->genus) != NIHIL
         && acordum_proprietates(a->genus)->additae != ZEPHYRUM
         && acordum_proprietates(a->genus)->septima < ZEPHYRUM;
     radix_omissa  = -I;
-    si (conversus && vox_maxima < k)
+    si (conversus && radix_licet && vox_maxima < k)
     {
         radix_omissa = (s32)a->radix;
         k--;
     }
-    si (vox_maxima < k && (a->classes & ((i32)I << _quintam(a))))
+    si (   !quinta_mutata && vox_maxima < k
+        && (a->classes & ((i32)I << _quintam(a))))
     {
         omissa = (s32)_quintam(a);
         k--;
     }
-    /* adhuc pauciores: radix quoque (bassus eam tenet) - C7 duabus
+    /* adhuc pauciores: radix quoque si bassus eam sonat - C7 duabus
      * vocibus E Bb, C9 tribus E Bb D */
-    si (vox_maxima < k)
+    si (radix_licet && vox_maxima < k)
     {
         radix_omissa = (s32)a->radix;
     }
@@ -670,6 +683,23 @@ _positionem (
             si ((i32)n0 % XII != ordo[prima])
             {
                 perge;
+            }
+            /* radix non omissa inter voces adhibitas */
+            si (radix_omissa < ZEPHYRUM && adhibitae < k)
+            {
+                b32 adest = FALSUM;
+
+                per (j = ZEPHYRUM; j < adhibitae; j++)
+                {
+                    si (ordo[(prima + j) % k] == a->radix)
+                    {
+                        adest = VERUM;
+                    }
+                }
+                si (!adest)
+                {
+                    perge;
+                }
             }
             v[0] = n0;
             per (j = I; j < k; j++)
@@ -730,6 +760,7 @@ comitatus_componere (
                   constans s64*  initia,
                            i32   numerus_mensurarum,
      constans ComitatusAmbitus*  ambitus,
+                          b32   bassus_sonat,
                       Piscina*   piscina,
                 ComitatusNota**  notae,
                           i32*   numerus,
@@ -783,9 +814,11 @@ comitatus_componere (
         longitudo  = initia[m + I] - initia[m];
         nunc       = _ad(acorda, numerus_acordorum, initia[m]);
 
+        /* acordum novum: aliud ac ad initium mensurae PRIORIS (mutatum
+         * intra eam et tentum radicem accipit) */
         si (   m == ZEPHYRUM
             || !_aequalia(nunc,
-                   _ad(acorda, numerus_acordorum, initia[m] - I)))
+                   _ad(acorda, numerus_acordorum, initia[m - I])))
         {
             mensura_figurae = ZEPHYRUM;
         }
@@ -816,7 +849,9 @@ comitatus_componere (
             si (!p.sonat || !_acorda_aequalia(&p.acordum, &a->acordum))
             {
                 _positionem(&p, &a->acordum, ambitus,
-                    figura->vox_maxima);
+                    figura->vox_maxima,
+                    (bassus_sonat || figura->bassus)
+                        && a->acordum.bassus == a->acordum.radix);
             }
             per (j = ZEPHYRUM; j < g->numerus_vocum; j++)
             {

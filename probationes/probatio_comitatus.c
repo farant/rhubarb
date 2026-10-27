@@ -59,14 +59,16 @@ _acorda (
     redde a;
 }
 
-/* figura et acorda -> notae; FALSUM cum vitio impresso */
+/* figura et acorda -> notae; FALSUM cum vitio impresso.
+ * bassus_sonat: bassus in parte alia */
 interior b32
-_componere (
+_componere_basso (
                CredoContextus*  c,
            constans character*  figura_textus,
            constans character*  acorda_textus,
                           s64   longitudo,
     constans ComitatusAmbitus*  ambitus,
+                          b32   bassus_sonat,
                 ComitatusNota** notae,
                           i32*  numerus,
               ComitatusVitium*  vitium)
@@ -92,8 +94,41 @@ _componere (
         redde FALSUM;
     }
     redde comitatus_componere(&f, a, n, _initia(c, m, longitudo), m,
-                              ambitus, c->piscina, notae, numerus,
-                              vitium);
+                              ambitus, bassus_sonat, c->piscina, notae,
+                              numerus, vitium);
+}
+
+/* ut _componere_basso, bassus in parte alia (lilia) */
+interior b32
+_componere (
+               CredoContextus*  c,
+           constans character*  figura_textus,
+           constans character*  acorda_textus,
+                          s64   longitudo,
+    constans ComitatusAmbitus*  ambitus,
+                ComitatusNota** notae,
+                          i32*  numerus,
+              ComitatusVitium*  vitium)
+{
+    redde _componere_basso(c, figura_textus, acorda_textus, longitudo,
+                           ambitus, VERUM, notae, numerus, vitium);
+}
+
+/* classes notarum [a, b) (bits) */
+interior i32
+_classes (
+    constans ComitatusNota* e,
+                       i32  a,
+                       i32  b)
+{
+    i32 r = ZEPHYRUM;
+    i32 i;
+
+    per (i = a; i < b; i++)
+    {
+        r |= (i32)I << (e[i].nota % XII);
+    }
+    redde r;
 }
 
 /* nota k: pulsus, longitudo, altitudo */
@@ -552,11 +587,17 @@ _sectio_tempus (
     CREDO_VERUM (_nota(e, 5, MMDCCCLXXX, CMLX, 59));
     CREDO_VERUM (_nota(e, 6, MMDCCCLXXX, CMLX, 62));
     CREDO_VERUM (_nota(e, 7, MMDCCCLXXX, CMLX, 67));
-    /* G tentum trans lineam: mensura secunda figurae (quinta D2) */
+    /* G intra mensuram mutatum et tentum: mensura proxima figurae
+     * prima, radix G2 in basso (non quinta D2) */
     CREDO_NECESSE (_componere(c, "B:1 | Q:1", "C:2 G:2 | G",
                               QUARTA_QUARTA, &AMBITUS, &e, &n, &v));
     CREDO_AEQUALIS_I32 (n, II);
-    CREDO_VERUM (_nota(e, 1, QUARTA_QUARTA, QUARTA_QUARTA, 38));
+    CREDO_VERUM (_nota(e, 1, QUARTA_QUARTA, QUARTA_QUARTA, 43));
+    /* tentum per mensuras: circulo (C | C: B, deinde Q) */
+    CREDO_NECESSE (_componere(c, "B:1 | Q:1", "C | C",
+                              QUARTA_QUARTA, &AMBITUS, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (n, II);
+    CREDO_VERUM (_nota(e, 1, QUARTA_QUARTA, QUARTA_QUARTA, 43));
 }
 
 interior vacuum
@@ -590,7 +631,90 @@ _sectio_compositio_vitia (
         "nota extra MIDI");
 }
 
+/* radix omittitur solum si bassus eam sonat; quinta alterata numquam */
+interior vacuum
+_sectio_radix_sonans (
+    CredoContextus* c)
+{
+      ComitatusNota* e;
+    ComitatusVitium  v;
+                i32  n;
+
+    /* acordum cum basso alieno (Am7/G): radix A superior manet */
+    CREDO_NECESSE (_componere_basso(c, "B:4 [1 2]:2", "Am7/G",
+                                    TERTIA_QUARTA, &AMBITUS, FALSUM, &e,
+                                    &n, &v));
+    CREDO_AEQUALIS_I32 (n, III);
+    CREDO_VERUM ((_classes(e, I, III) & ((i32)I << IX)) != ZEPHYRUM);
+    /* figura sine 'B' nec bassus alibi: C9 tribus radicem tenet */
+    CREDO_NECESSE (_componere_basso(c, "[1 2 3]:2.", "C9",
+                                    TERTIA_QUARTA, &AMBITUS, FALSUM, &e,
+                                    &n, &v));
+    CREDO_AEQUALIS_I32 (n, III);
+    CREDO_VERUM ((_classes(e, ZEPHYRUM, III) & I) != ZEPHYRUM);
+    /* bassus alibi sed C7/E: bassus E, radix C superior */
+    CREDO_NECESSE (_componere(c, "[1 2]:2.", "C7/E", TERTIA_QUARTA,
+                              &AMBITUS, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (n, II);
+    CREDO_VERUM ((_classes(e, ZEPHYRUM, II) & I) != ZEPHYRUM);
+    /* figura cum 'B' sine bassus_sonat: radix omittitur (B tenet) */
+    CREDO_NECESSE (_componere_basso(c, "B:4 [1 2]:2", "C7",
+                                    TERTIA_QUARTA, &AMBITUS, FALSUM, &e,
+                                    &n, &v));
+    CREDO_AEQUALIS_I32 (n, III);
+    CREDO_AEQUALIS_I32 (_classes(e, I, III),
+                        ((i32)I << IV) | ((i32)I << X));
+    /* quinta alterata manet, radix prius: Caug, Cdim duabus; C7#5,
+     * Cm7b5, Cdim7 tribus */
+    CREDO_NECESSE (_componere(c, "[1 2]:2.", "Caug", TERTIA_QUARTA,
+                              &AMBITUS, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (_classes(e, ZEPHYRUM, n),
+                        ((i32)I << IV) | ((i32)I << VIII));
+    CREDO_NECESSE (_componere(c, "[1 2]:2.", "Cdim", TERTIA_QUARTA,
+                              &AMBITUS, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (_classes(e, ZEPHYRUM, n),
+                        ((i32)I << III) | ((i32)I << VI));
+    CREDO_NECESSE (_componere(c, "[1 2 3]:2.", "C7#5", TERTIA_QUARTA,
+                              &AMBITUS, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (_classes(e, ZEPHYRUM, n),
+                        ((i32)I << IV) | ((i32)I << VIII)
+                        | ((i32)I << X));
+    CREDO_NECESSE (_componere(c, "[1 2 3]:2.", "Cm7b5", TERTIA_QUARTA,
+                              &AMBITUS, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (_classes(e, ZEPHYRUM, n),
+                        ((i32)I << III) | ((i32)I << VI)
+                        | ((i32)I << X));
+    CREDO_NECESSE (_componere(c, "[1 2 3]:2.", "Cdim7", TERTIA_QUARTA,
+                              &AMBITUS, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (_classes(e, ZEPHYRUM, n),
+                        ((i32)I << III) | ((i32)I << VI)
+                        | ((i32)I << IX));
+    /* quaternae alteratae duabus: radix cedit, quinta manet (Cm7b5 Eb
+     * Gb, non Eb Bb; C7#5 E G#) */
+    CREDO_NECESSE (_componere(c, "B:4 [1 2]:2", "Cm7b5", TERTIA_QUARTA,
+                              &AMBITUS, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (_classes(e, I, n),
+                        ((i32)I << III) | ((i32)I << VI));
+    CREDO_NECESSE (_componere(c, "B:4 [1 2]:2", "C7#5", TERTIA_QUARTA,
+                              &AMBITUS, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (_classes(e, I, n),
+                        ((i32)I << IV) | ((i32)I << VIII));
+    /* ComitatusFigura.bassus: vox 'B' in figura */
+    {
+        ComitatusFigura f;
+
+        CREDO_NECESSE (comitatus_figuram_legere(chorda_ex_literis(
+            "r:4 [1 2] | B:2.", c->piscina), c->piscina, &f, &v));
+        CREDO_VERUM (f.bassus);
+        CREDO_NECESSE (comitatus_figuram_legere(chorda_ex_literis(
+            "Q:4 [1 2]:2", c->piscina), c->piscina, &f, &v));
+        CREDO_VERUM (!f.bassus);
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
+    { "radix_sonans", _sectio_radix_sonans, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "mensurae", _sectio_mensurae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "acorda", _sectio_acorda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "acorda_vitia", _sectio_acorda_vitia, NIHIL, NIHIL, NIHIL,
