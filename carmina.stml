@@ -400,8 +400,76 @@
       <comitatus figura="ambulans_bina" mensura="23" usque="25" ambitus="55..72" bassus="36..55"/>
       <comitatus figura="bassus_finis" mensura="25" usque="26" ambitus="55..72" bassus="36..55"/>
     </pars>
-    <pars titulus="tympana" instrumentum="aether" lucrum="0.3">
-      <frustum mensura="1"><textus!>@passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 r2.</textus></frustum>
+    <pars titulus="cymbalum" instrumentum="aether" lucrum="0.6">
+      <frustum mensura="1"><textus!>@cymbalum o8 c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c4 c8 c8 c4 c8 c8 | c1</textus></frustum>
+    </pars>
+    <pars titulus="pedis" instrumentum="aether" lucrum="0.5">
+      <frustum mensura="1"><textus!>@cymbalum_pedis o7 r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r4 c4 r4 c4 | r1</textus></frustum>
+    </pars>
+  </carmen>
+
+  <!-- litus: bossa nova in D maior (originalis), XVI mensurae bis et
+       finis. Cithara (chorda) comitans sine radice: bossa / bossa_bina;
+       bassus radix et quinta (bossa_bassus / bossa_bassus_bina);
+       baculum clavis bossae (3-3-2 | 2-3), quassatio octavis, tympanum
+       grave molle. Melodia intentionibus: 9 super Imaj9, #11 longa
+       super A7#11, b9 super B7b9; Gm11 C9 = iv bVII9 (ianua postica),
+       Ab7#11 = subV7#11/IV. -->
+  <carmen titulus="litus" stylus="iazz" tempus="128" metrum="4/4" clavis="d maior">
+    <reverberatio aula="0.5" mollities="0.6" latitudo="1" lucrum="0.25"/>
+    <sectio titulus="forma" mensura="1" usque="17"/>
+    <acorda mensura="1" textus="Dmaj9 | D6/9 | E9 | E9 | Em9 | A7#11 | F#m9:2 B7b9:2 | Em9:2 Ab7#11:2 | Gmaj9 | Gm11:2 C9:2 | F#m9 | B7b9 | Em9 | A7#11 | D6/9 | Em9:2 A13:2"/>
+    <acorda mensura="17" textus="Dmaj9 | D6/9 | E9 | E9 | Em9 | A7#11 | F#m9:2 B7b9:2 | Em9:2 Ab7#11:2 | Gmaj9 | Gm11:2 C9:2 | F#m9 | B7b9 | Em9 | A7#11 | D6/9 | Em9:2 A13:2 | D6/9"/>
+    <repetitio sectio="forma" mensura="17" partes="melodia"/>
+    <fermata mensura="33"/>
+    <figura titulus="bossa" textus="v80 [1 2 3 4]:8 r:8 r:8 v65 [1 2 3 4]:8 r:8 r:8 v70 [1 2 3 4]:8 r:8 | r:8 r:8 v70 [1 2 3 4]:8 r:8 v65 [1 2 3 4]:8 r:8 r:8 r:8" positio="sine_radice"/>
+    <figura titulus="bossa_bina" textus="v80 [1 2 3 4]:8 r:8 r:8 v65 [1 2 3 4]:8 v80 [1 2 3 4]:8 r:8 r:8 v65 [1 2 3 4]:8" positio="sine_radice"/>
+    <figura titulus="bossa_finis" textus="{1 2 3 4}:1" positio="sine_radice"/>
+    <figura titulus="bossa_bassus" textus="B:4. Q:8 Q:2"/>
+    <figura titulus="bossa_bassus_bina" textus="B:4. Q:8 B:4. Q:8"/>
+    <figura titulus="bossa_bassus_finis" textus="B:1"/>
+    <pars titulus="melodia" instrumentum="fistula" lucrum="0.5" reverberatio="0.3">
+      <frustum mensura="1"><textus!>r8 o5 e4. c#8 e8 f#4 | e2 r8 o4 b4. | r8 o5 f#4. g#8 f#8 e4 | d2. r4 | r8 f#4. g8 f#8 e4 | d#2. r8 c#8 | c#4 e8 g#4 r8 c8 o4 b8 | o5 f#4. e8 f4 d8 r8 | f#2. a8 f#8 | f4 d8 c8 o4 b-4 o5 d4 | c#2. e8 g#8 | a2 g#8 f#8 d#4 | e4. f#8 g4 b4 | o6 c#4. o5 b8 a8 g8 e4 | f#2. e8 d8 | e4. f#8 g4 f#4</textus></frustum>
+      <frustum mensura="33"><textus!>o5 e1</textus></frustum>
+    </pars>
+    <pars titulus="cithara" instrumentum="chorda" lucrum="0.28" reverberatio="0.25">
+      <comitatus figura="bossa" mensura="1" usque="7" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa_bina" mensura="7" usque="9" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa" mensura="9" usque="10" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa_bina" mensura="10" usque="11" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa" mensura="11" usque="16" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa_bina" mensura="16" usque="17" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa" mensura="17" usque="23" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa_bina" mensura="23" usque="25" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa" mensura="25" usque="26" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa_bina" mensura="26" usque="27" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa" mensura="27" usque="32" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa_bina" mensura="32" usque="33" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa_finis" mensura="33" usque="34" ambitus="55..72" bassus="38..57"/>
+    </pars>
+    <pars titulus="bassus" instrumentum="pizzicato" lucrum="0.75" reverberatio="0.15">
+      <comitatus figura="bossa_bassus" mensura="1" usque="7" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa_bassus_bina" mensura="7" usque="9" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa_bassus" mensura="9" usque="10" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa_bassus_bina" mensura="10" usque="11" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa_bassus" mensura="11" usque="16" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa_bassus_bina" mensura="16" usque="17" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa_bassus" mensura="17" usque="23" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa_bassus_bina" mensura="23" usque="25" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa_bassus" mensura="25" usque="26" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa_bassus_bina" mensura="26" usque="27" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa_bassus" mensura="27" usque="32" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa_bassus_bina" mensura="32" usque="33" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa_bassus_finis" mensura="33" usque="34" ambitus="55..72" bassus="38..57"/>
+    </pars>
+    <pars titulus="baculum" instrumentum="aether" lucrum="0.5">
+      <frustum mensura="1"><textus!>@baculum o6 c8 r8 r8 c8 r8 r8 c8 r8 | r8 r8 c8 r8 c8 r8 r8 r8 | c8 r8 r8 c8 r8 r8 c8 r8 | r8 r8 c8 r8 c8 r8 r8 r8 | c8 r8 r8 c8 r8 r8 c8 r8 | r8 r8 c8 r8 c8 r8 r8 r8 | c8 r8 r8 c8 r8 r8 c8 r8 | r8 r8 c8 r8 c8 r8 r8 r8 | c8 r8 r8 c8 r8 r8 c8 r8 | r8 r8 c8 r8 c8 r8 r8 r8 | c8 r8 r8 c8 r8 r8 c8 r8 | r8 r8 c8 r8 c8 r8 r8 r8 | c8 r8 r8 c8 r8 r8 c8 r8 | r8 r8 c8 r8 c8 r8 r8 r8 | c8 r8 r8 c8 r8 r8 c8 r8 | r8 r8 c8 r8 c8 r8 r8 r8 | c8 r8 r8 c8 r8 r8 c8 r8 | r8 r8 c8 r8 c8 r8 r8 r8 | c8 r8 r8 c8 r8 r8 c8 r8 | r8 r8 c8 r8 c8 r8 r8 r8 | c8 r8 r8 c8 r8 r8 c8 r8 | r8 r8 c8 r8 c8 r8 r8 r8 | c8 r8 r8 c8 r8 r8 c8 r8 | r8 r8 c8 r8 c8 r8 r8 r8 | c8 r8 r8 c8 r8 r8 c8 r8 | r8 r8 c8 r8 c8 r8 r8 r8 | c8 r8 r8 c8 r8 r8 c8 r8 | r8 r8 c8 r8 c8 r8 r8 r8 | c8 r8 r8 c8 r8 r8 c8 r8 | r8 r8 c8 r8 c8 r8 r8 r8 | c8 r8 r8 c8 r8 r8 c8 r8 | r8 r8 c8 r8 c8 r8 r8 r8 | r1</textus></frustum>
+    </pars>
+    <pars titulus="quassatio" instrumentum="aether" lucrum="0.9">
+      <frustum mensura="1"><textus!>@quassatio o8 v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | v90 c8 v50 c8 v70 c8 v50 c8 v90 c8 v50 c8 v70 c8 v50 c8 | r1</textus></frustum>
+    </pars>
+    <pars titulus="tympanum" instrumentum="aether" lucrum="0.4">
+      <frustum mensura="1"><textus!>@tympanum_grave o3 v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c4. v50 c8 v70 c4. v50 c8 | v80 c1</textus></frustum>
     </pars>
   </carmen>
 

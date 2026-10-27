@@ -374,3 +374,17 @@ melody only, so the second chorus is GENERATED too (a repeat replays bar 1's not
 bass's chromatic approach C#3 over Gm7 (bars 12, 24) is out of key - chromatic approach tones
 are not yet recognized (open chromatic-lines park). Hand version kept as a WAV in the session
 scratchpad for comparison, not in the tree.
+
+## 2026-10-27 - house book: ambulatio drums (ride + foot hat), new song litus (bossa nova)
+
+ambulatio: the "@passus c4" click replaced by two parts - @cymbalum o8 "ding ding-a" (the
+agogica swing makes the 8th pairs long-short) and @cymbalum_pedis o7 on 2 and 4.
+litus (13th house song): original bossa nova in D major, 128, straight eighths, 16-bar form
+twice + final D6/9. Harmony exercises the jazz arc: Imaj9 I6/9 V9/V ii9 V7#11 iii9 V7b9/ii,
+Em9 Ab7#11 (subV7#11/IV) into Gmaj9, Gm11 C9 (iv bVII9 backdoor), ii9 V13. Generated parts:
+chorda comping (rootless, 2-bar bossa rhythm 3-3-2 | 2-3 that continues over a held chord;
+bossa_bina for two-chord bars), pizzicato root-fifth bass; written baculum clave, quassatio
+8ths, soft kick. censura 0. Composition fixes found by the tools: Eb7#11 before Gmaj9 read
+bII7#11 (a tritone sub must fall a semitone to its target - Ab7#11 does), and an octave slip
+in bar 10 (Bb5 for Bb4). Mix: per-part peaks measured (pluck and bass ~0.49 each summed to 3
+clipped samples) -> rebalanced, peak 0.86. Generator: build/plantae_s4/iazz/litus.py.
