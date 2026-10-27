@@ -16,6 +16,12 @@
  *       clientem currit: -semel = sine mora usque ad quietem (exitus 0
  *       si sine errore), aliter semper (tractio dilata), status per
  *       mutationem
+ *   communio inscribere -servus URL -email ADDR -tessera FILUM
+ *           -titulus NOMEN
+ *       apparatum per epistulam inscribit (plan-3 T6): tesseram novam
+ *       in FILUM cudit, servus epistulam cum nexu et codice mittit (si
+ *       ADDR permissa est); codex hic scribitur AUT nexus aperitur -
+ *       utrumque prius sufficit. Post XV minuta exitus I.
  */
 #include "postulata_posix.h"
 #include "latina.h"
@@ -27,6 +33,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <poll.h>
 
 #define GYRI_SEMEL_MAXIMI ((i32)DC * (i32)C)   /* X ms: ~X minuta */
 
@@ -36,7 +43,9 @@ _usus (vacuum)
     fprintf(stderr, "usus: communio tessera -via FILUM\n"
         "       communio replica -volumen V [-creare]\n"
         "       communio currere -volumen V -servus URL -tessera FILUM"
-        " [-semel] [-creare]\n");
+        " [-semel] [-creare]\n"
+        "       communio inscribere -servus URL -email ADDR -tessera"
+        " FILUM -titulus NOMEN\n");
     redde II;
 }
 
@@ -161,6 +170,96 @@ constans character* via_tesserae,
     redde exitus;
 }
 
+#define INSCRIPTIO_GYRI ((i32)CDL)   /* II s quisque: XV minuta */
+
+/* inscriptio: codex in stdin aut nexus apertus, utrum prius */
+interior s32
+_inscribere (
+            Piscina* p,
+constans character* servus,
+constans character* epistula,
+constans character* via_tesserae,
+constans character* titulus)
+{
+           Reactor* r;
+         character  aditus[MONETA_ULID_MENSURA];
+         character  apparatus[MONETA_ULID_MENSURA];
+         character  linea[LXIV];
+     structura pollfd  pf;
+               i32 gyri;
+               b32 stdin_apertum;
+               s32 rc;
+
+    r = reactor_creare(p);
+    si (   !r
+        || !communio_inscriptionem_petere(r, servus, chorda_ex_literis(
+            epistula, p), via_tesserae, chorda_ex_literis(titulus, p),
+            aditus, p))
+    {
+        redde I;
+    }
+    printf("communio: epistula missa ad %s (si permissa est).\n"
+        "Codicem scribe (XXXX-XXXX) et Enter, aut nexum in epistula "
+        "aperi.\n", epistula);
+    fflush(stdout);
+    stdin_apertum = VERUM;
+    per (gyri = ZEPHYRUM; gyri < INSCRIPTIO_GYRI; gyri++)
+    {
+        pf.fd       = ZEPHYRUM;
+        pf.events   = POLLIN;
+        pf.revents  = ZEPHYRUM;
+        si (stdin_apertum && poll(&pf, I, (integer)MM) > ZEPHYRUM)
+        {
+            si (!fgets(linea, (integer)magnitudo(linea), stdin))
+            {
+                stdin_apertum = FALSUM;
+            }
+            alioquin
+            {
+                linea[strcspn(linea, "\r\n")] = '\0';
+                si (linea[ZEPHYRUM])
+                {
+                    rc = communio_inscriptionem_confirmare(r, servus,
+                        chorda_ex_literis(aditus, p), chorda_ex_literis(
+                        linea, p), apparatus, p);
+                    si (rc == ZEPHYRUM)
+                    {
+                        printf("communio: apparatus inscriptus: %s\n",
+                            apparatus);
+                        reactor_destruere(r);
+                        redde ZEPHYRUM;
+                    }
+                    si (rc == -II)
+                    {
+                        printf("communio: rete deficit - iterum"
+                            " tempta\n");
+                    }
+                    alioquin
+                    {
+                        printf("communio: codex non valet - iterum"
+                            " scribe\n");
+                    }
+                    fflush(stdout);
+                }
+            }
+        }
+        alioquin si (!stdin_apertum)
+        {
+            (vacuum)reactor_poll(r, (i32)MM);
+        }
+        si (communio_tessera_valet(r, servus, via_tesserae, p))
+        {
+            printf("communio: apparatus inscriptus (per nexum)\n");
+            reactor_destruere(r);
+            redde ZEPHYRUM;
+        }
+    }
+    fprintf(stderr,
+        "communio: XV minuta transierunt - aditus expiravit\n");
+    reactor_destruere(r);
+    redde I;
+}
+
 s32
 principale (
       integer   argc,
@@ -178,6 +277,28 @@ principale (
     si (argc < II)
     {
         redde _usus();
+    }
+    si (strcmp(argv[I], "inscribere") == ZEPHYRUM)
+    {
+        constans character* servus_i   = _optio(argc, argv, "-servus");
+        constans character* epistula   = _optio(argc, argv, "-email");
+        constans character* tessera_i  = _optio(argc, argv, "-tessera");
+        constans character* titulus    = _optio(argc, argv, "-titulus");
+
+        si (!servus_i || !epistula || !tessera_i || !titulus)
+        {
+            redde _usus();
+        }
+        p = piscina_generare_dynamicum("communio",
+            (memoriae_index)LXIV *
+            (memoriae_index)MXXIV);
+        exitus = p ? _inscribere(p, servus_i, epistula, tessera_i,
+                         titulus) : I;
+        si (p)
+        {
+            piscina_destruere(p);
+        }
+        redde exitus;
     }
     si (strcmp(argv[I], "tessera") == ZEPHYRUM)
     {

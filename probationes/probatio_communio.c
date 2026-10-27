@@ -16,9 +16,12 @@
 #include "moneta.h"
 #include "reactor.h"
 #include "hospitium.h"
+#include "http.h"
+#include "http_vocatio.h"
 #include "communio_servus.h"
 #include "communio_cliens.h"
 #include "communio_forma.h"
+#include "epistula.h"
 #include "sigillum.h"
 #include "lectiones.h"
 #include "filum.h"
@@ -690,6 +693,9 @@ nomen structura {
           character  basis[LXIV];
           character  ta[XLIV];
           character  tb[XLIV];
+    /* plan-3 T6: personae (ad indicem permissorum) */
+             chorda civis_primus;
+             chorda civis_secunda;
 } Orbis;
 
 nomen structura {
@@ -771,6 +777,7 @@ orbem_parare (
         NIHIL);
     o->reactor = reactor_creare(piscina);
     redde o->servus && o->reactor && hospitium_aperire(o)
+        && (o->civis_primus = primus, o->civis_secunda = amanda, VERUM)
         && apparatum_dare(o, primus, o->ta)
         && apparatum_dare(o, amanda, o->tb);
 }
@@ -1515,6 +1522,256 @@ _sectio_derivata_multa (
     orbem_purgare(&o);
 }
 
+
+/* ==================================================
+ * plan-3 T6: communio inscribere (apparatus se ipse inscribit)
+ * ================================================== */
+
+/* epistularius fictus in servo orbis; epistula Francisci permissa */
+interior Epistularius*
+inscriptionem_parare (
+    Orbis* o)
+{
+    Epistularius* e;
+
+    e = epistularium_aperire(piscina, o->reactor, "fictus",
+        chorda_ex_literis("", piscina), NIHIL);
+    communio_servum_epistularium_ponere(o->servus, e,
+        "communio@example.org", o->basis);
+    si (   !e
+        || !communio_epistulam_permittere(o->servus, chorda_ex_literis(
+            "fran@example.org", piscina), o->civis_primus,
+            chorda_ex_literis("familia", piscina)))
+    {
+        redde NIHIL;
+    }
+    redde e;
+}
+
+interior chorda
+post_signum_textus (
+                chorda  textus,
+    constans character* signum)
+{
+    chorda r;
+       i32 n;
+       i32 i;
+       i32 j;
+
+    r.datum    = NIHIL;
+    r.mensura  = ZEPHYRUM;
+    n          = (i32)strlen(signum);
+    per (i = ZEPHYRUM; i + n <= textus.mensura; i++)
+    {
+        si (memcmp(textus.datum + i, signum, (size_t)n) == ZEPHYRUM)
+        {
+            j = i + n;
+            dum (j < textus.mensura && textus.datum[j] != '\n')
+            {
+                j++;
+            }
+            r.datum    = textus.datum + i + n;
+            r.mensura  = j - (i + n);
+            redde r;
+        }
+    }
+    redde r;
+}
+
+interior vacuum
+_finis_simplex (
+         vacuum* datum,
+    HttpVocatio* vocatio)
+{
+    (vacuum)vocatio;
+    *(b32*)datum = VERUM;
+}
+
+/* GET simplex (nexus epistulae aperitur ut in navigatro) */
+interior i32
+aperire_nexum (
+       Orbis* o,
+      chorda  url)
+{
+     HttpPetitio* pet;
+     HttpVocatio* v;
+    HttpResultus  res;
+             b32  finita;
+             i32  gyri;
+
+    pet = http_petitio_creare(piscina, HTTP_GET, chorda_ut_cstr(url,
+        piscina));
+    finita = FALSUM;
+    v = pet ? http_vocare(o->reactor, pet, NIHIL, NIHIL, _finis_simplex,
+            &finita, NIHIL, piscina) : NIHIL;
+    per (gyri = ZEPHYRUM; v && !finita && gyri < D; gyri++)
+    {
+        (vacuum)reactor_poll(o->reactor, X);
+    }
+    si (!v || !finita)
+    {
+        redde ZEPHYRUM;
+    }
+    res = http_vocatio_resultus(v);
+    redde (res.successus && res.responsum) ? res.responsum->status
+                                           : ZEPHYRUM;
+}
+
+interior vacuum
+via_tesserae_facere (
+    character* via)
+{
+    character moneta[MONETA_ULID_MENSURA];
+
+    moneta_ulid(moneta);
+    sprintf(via, "/tmp/probatio_communio_inscriptio_%s", moneta);
+}
+
+interior vacuum
+_sectio_inscribere_codice (
+    CredoContextus* c)
+{
+              Orbis  o;
+       Epistularius* e;
+    EpistulaNuntius  n;
+            Volumen* va;
+     CommunioCliens* ca;
+          character  via[CXXVIII];
+          character  aditus[MONETA_ULID_MENSURA];
+          character  apparatus[MONETA_ULID_MENSURA];
+          character  tessera[XLIV];
+             chorda  codex;
+                i32  gyri;
+
+    (vacuum)c;
+    CREDO_NECESSE(orbem_parare(&o));
+    e = inscriptionem_parare(&o);
+    CREDO_NECESSE_NON_NIHIL(e);
+    via_tesserae_facere(via);
+    CREDO_NECESSE(communio_inscriptionem_petere(o.reactor, o.basis,
+        chorda_ex_literis("fran@example.org", piscina), via,
+        chorda_ex_literis("Macintosh", piscina), aditus, piscina));
+    CREDO_AEQUALIS_I32((i32)strlen(aditus), XXVI);
+    CREDO_FALSUM(communio_tessera_valet(o.reactor, o.basis, via,
+        piscina));
+    per (gyri = ZEPHYRUM; epistularius_fictus_numerus(e) == ZEPHYRUM
+         && gyri < C; gyri++)
+    {
+        (vacuum)reactor_poll(o.reactor, X);
+    }
+    CREDO_NECESSE(epistularius_fictus_nuntius(e, ZEPHYRUM, &n));
+    codex = post_signum_textus(n.textus, "Code: ");
+    CREDO_AEQUALIS_S64((s64)communio_inscriptionem_confirmare(o.reactor,
+        o.basis, chorda_ex_literis(aditus, piscina), codex, apparatus,
+        piscina), ZEPHYRUM);
+    CREDO_AEQUALIS_I32((i32)strlen(apparatus), XXVI);
+    CREDO_VERUM(communio_tessera_valet(o.reactor, o.basis, via,
+        piscina));
+
+    CREDO_GRADUS("tessera nova cliente communicat");
+    va = volumen_temporarium(piscina, "probatio_communio_ia");
+    CREDO_NECESSE_NON_NIHIL(va);
+    CREDO_NECESSE(volumen_actum_appendere(va, "x/actum",
+        chorda_ex_literis(
+        "{}", piscina)) > ZEPHYRUM);
+    CREDO_NECESSE(communio_tesseram_legere(via, tessera));
+    ca = clientem(&o, va, tessera, NIHIL);
+    CREDO_NECESSE_NON_NIHIL(ca);
+    communio_cliens_moram_ponere(ca, ZEPHYRUM);
+    communio_cliens_incipere(ca);
+    CREDO_VERUM(donec_otiosus(&o, ca, M * V));
+    CREDO_AEQUALIS_I32(communio_cliens_status(ca).error.mensura,
+        ZEPHYRUM);
+    CREDO_VERUM(communio_cliens_status(ca).missa > ZEPHYRUM);
+
+    CREDO_GRADUS("codex falsus: -1");
+    CREDO_AEQUALIS_S64((s64)communio_inscriptionem_confirmare(o.reactor,
+        o.basis, chorda_ex_literis(aditus, piscina), chorda_ex_literis(
+        "ZZZZ-ZZZZ", piscina), apparatus, piscina), -I);
+    communio_clientem_destruere(ca);
+    volumen_claudere(va);
+    (vacuum)filum_delere(via);
+    orbem_purgare(&o);
+}
+
+interior vacuum
+_sectio_inscribere_nexu (
+    CredoContextus* c)
+{
+              Orbis  o;
+       Epistularius* e;
+    EpistulaNuntius  n;
+          character  via[CXXVIII];
+          character  aditus[MONETA_ULID_MENSURA];
+             chorda  nexus;
+                i32  gyri;
+
+    (vacuum)c;
+    CREDO_NECESSE(orbem_parare(&o));
+    e = inscriptionem_parare(&o);
+    CREDO_NECESSE_NON_NIHIL(e);
+    via_tesserae_facere(via);
+    CREDO_NECESSE(communio_inscriptionem_petere(o.reactor, o.basis,
+        chorda_ex_literis("fran@example.org", piscina), via,
+        chorda_ex_literis("iPhone", piscina), aditus, piscina));
+    per (gyri = ZEPHYRUM; epistularius_fictus_numerus(e) == ZEPHYRUM
+         && gyri < C; gyri++)
+    {
+        (vacuum)reactor_poll(o.reactor, X);
+    }
+    CREDO_NECESSE(epistularius_fictus_nuntius(e, ZEPHYRUM, &n));
+    nexus = post_signum_textus(n.textus,
+        "Open this link to confirm:\n");
+    CREDO_NECESSE(nexus.mensura > ZEPHYRUM);
+    CREDO_FALSUM(communio_tessera_valet(o.reactor, o.basis, via,
+        piscina));
+    CREDO_AEQUALIS_I32(aperire_nexum(&o, nexus), CC);
+    CREDO_VERUM(communio_tessera_valet(o.reactor, o.basis, via,
+        piscina));
+    (vacuum)filum_delere(via);
+    orbem_purgare(&o);
+}
+
+interior vacuum
+_sectio_inscribere_ignota (
+    CredoContextus* c)
+{
+            Orbis  o;
+     Epistularius* e;
+        character  via[CXXVIII];
+        character  aditus[MONETA_ULID_MENSURA];
+        character  ante[XLIV];
+        character  post[XLIV];
+              i32  gyri;
+
+    (vacuum)c;
+    CREDO_NECESSE(orbem_parare(&o));
+    e = inscriptionem_parare(&o);
+    CREDO_NECESSE_NON_NIHIL(e);
+    via_tesserae_facere(via);
+    CREDO_VERUM(communio_inscriptionem_petere(o.reactor, o.basis,
+        chorda_ex_literis("ignota@example.org", piscina), via,
+        chorda_ex_literis("x", piscina), aditus, piscina));
+    per (gyri = ZEPHYRUM; gyri < XX; gyri++)
+    {
+        (vacuum)reactor_poll(o.reactor, X);
+    }
+    CREDO_AEQUALIS_I32(epistularius_fictus_numerus(e), ZEPHYRUM);
+    CREDO_FALSUM(communio_tessera_valet(o.reactor, o.basis, via,
+        piscina));
+
+    CREDO_GRADUS("tessera exsistens: recusatur, filum intactum");
+    CREDO_NECESSE(communio_tesseram_legere(via, ante));
+    CREDO_FALSUM(communio_inscriptionem_petere(o.reactor, o.basis,
+        chorda_ex_literis("fran@example.org", piscina), via,
+        chorda_ex_literis("x", piscina), aditus, piscina));
+    CREDO_NECESSE(communio_tesseram_legere(via, post));
+    CREDO_AEQUALIS_I32((i32)memcmp(ante, post, (size_t)XLIII),
+        ZEPHYRUM);
+    (vacuum)filum_delere(via);
+    orbem_purgare(&o);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "transferre, iterum, idempotens", _sectio_transferre, _parare,
         _purgare, NIHIL, NIHIL },
@@ -1553,6 +1810,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _parare, _purgare, NIHIL, NIHIL },
     { "derivata multa (recensio)", _sectio_derivata_multa, _parare,
         _purgare, NIHIL, NIHIL },
+    { "inscribere per codicem (plan-3)", _sectio_inscribere_codice,
+        _parare, _purgare, NIHIL, NIHIL },
+    { "inscribere per nexum (plan-3)", _sectio_inscribere_nexu, _parare,
+        _purgare, NIHIL, NIHIL },
+    { "inscribere: ignota, tessera exsistens (plan-3)",
+        _sectio_inscribere_ignota, _parare, _purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
