@@ -351,6 +351,8 @@ Largest coefficient at 201 crossings: 31–39 bits against a bound of 402.
 
 Projection for the original T5 target (12 strands, ~800 crossings, greedy apex 2^26–2^28 per the design review): ~40,000 contractions at minutes each, i.e. weeks of CPU with today's engine. Not attempted. Levers 1–3 together are what would make it hours.
 
+**Lever 2 taken (T5a, 2026-10-27).** The coefficient bound is now Σ|cₖ| ≤ τ(Tait graph) ≤ Π deg (signed Thistlethwaite expansion; contractio-plan §T5a), min over both colours. Same seeds: contractions and primes ~2.1–2.4× fewer (c = 800 sums 8.6 → 4.9 s; braids 8 × 201 43 → 21 s; 10 × 201 projected 77 → 34 min). Remaining slack ~4× on braids (limes ~150 vs ~35 bits used): cancellation, invisible to any counting bound.
+
 **Incident.** The first braid run asked for 4 strands × 50 crossings, which cannot close to one component (an n-cycle needs word length ≡ n − 1 mod 2). The generator retried forever, allocating each time, and reached ~120 GB before macOS killed it; an RSS-based watcher did not see it (compressed pages). Fixed (parity, arena reset per attempt, 1,000-attempt cap), and long runs now go through `tools/custos.sh`, which kills on phys_footprint (compressed included).
 
 ## 12. Experiment families *(rev. 10-27)*

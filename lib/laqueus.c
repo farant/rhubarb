@@ -2123,6 +2123,10 @@ structura LaqueusModulusVertex {
                  i32* potentiae;          /* omega^j, j in [-E, E] */
                  i32  primus;             /* primus currens, 0 nullus */
                  i32  radix_i;            /* i^2 = -1 modulo primum */
+                 i32  limes;              /* bita B (T5a) */
+               Magnus limes_exactus;      /* B = min Pi gradus */
+                 i32  aestimationes;      /* vocationes aestimare */
+                 i32  mutationes_primi;   /* primi novi in aestimare */
 };
 
 /* residuum non negativum s64 modulo IV */
@@ -2136,17 +2140,19 @@ _modulo_quattuor (
 }
 
 /* gyrationes t per os (a -> b) ex aequationibus facierum per arborem
- * dualem (BFS a facie 0, folia primum). ora 0-basata, codex planus.
+ * dualem (BFS a facie 0, folia primum); *faciei_exitus = facies per
+ * positionem (0..c+1, orbita sequentis). ora 0-basata, codex planus.
  * FALSUM si aequatio non integra aut residuum manet (codex non planus:
  * non accidit post _pd_legere). */
 interior b32
 _gyrationes (
-    constans i32* ora,
-             i32  c,
-    constans i32* finis_a,
-    constans i32* finis_b,
-         Piscina* piscina,
-             s32* gyrationes)
+    constans i32*  ora,
+             i32   c,
+    constans i32*  finis_a,
+    constans i32*  finis_b,
+         Piscina*  piscina,
+             s32*  gyrationes,
+             i32** faciei_exitus)
 {
     i32  n = IV * c;
     i32  m = II * c;
@@ -2168,6 +2174,7 @@ _gyrationes (
     i32  l;
     i32  f;
 
+    *faciei_exitus = faciei;
     per (l = ZEPHYRUM; l < m; l++)
     {
         alter[finis_a[l]] = finis_b[l];
@@ -2318,6 +2325,134 @@ _gyrationes (
     redde VERUM;
 }
 
+/* factorem in productum: acervus u64 (< 2^32 ante multiplicationem,
+ * factor < 2^31, ergo < 2^63) in Magnus solum cum crescit effunditur */
+interior vacuum
+_productum_addere (
+        i64* acervus,
+     Magnus* productum,
+        i32  factor,
+    Piscina* piscina)
+{
+    *acervus *= (i64)factor;
+    si (*acervus >= ((i64)I << XXXII))
+    {
+        *productum = magnus_multiplica(*productum,
+            magnus_ex_s64((s64)*acervus), piscina);
+        *acervus = I;
+    }
+}
+
+/* limes coefficientium uncinus (contractio-plan T5a): Sigma |c_k| <=
+ * tau(G) <= Pi_{v != r} gradus(v) super graphum Tait utriusque
+ * coloris; *limes_exitus = bita minimi, *exactus = minimum. Anguli
+ * (k, j) = regio inter arma j et j+1 = faciei[4k + (j+1) % 4]; colores
+ * per unionem-inventionem angulorum OPPOSITORUM (0~2, 1~3), non per
+ * regulam paritatis (quae in diagrammatibus non alternantibus fallit).
+ * Gradus sine colore: per transitum, si anguli oppositi regiones
+ * diversae sunt, utraque +1 (ansae Tait excluduntur). FALSUM nisi
+ * exacte duae classes et anguli vicini in classibus diversis. */
+interior b32
+_limes_arborum (
+     constans i32* faciei,
+              i32  c,
+          Piscina* piscina,
+           Magnus* exactus,
+              i32* limes_exitus)
+{
+    i32  F       = c + II;
+    i32* pater   = (i32*)piscina_allocare(piscina, (memoriae_index)F
+        * magnitudo(i32));
+    i32* gradus  = (i32*)piscina_allocare(piscina, (memoriae_index)F
+        * magnitudo(i32));
+       i32 radices[II];
+       i32 numerus_radicum = ZEPHYRUM;
+    Magnus producta[II];
+       i32 q;
+       i32 k;
+       i32 j;
+       i32 f;
+
+    per (f = ZEPHYRUM; f < F; f++)
+    {
+        pater[f]   = f;
+        gradus[f]  = ZEPHYRUM;
+    }
+    per (k = ZEPHYRUM; k < c; k++)
+    {
+        per (j = ZEPHYRUM; j < II; j++)
+        {
+            i32 a = faciei[IV * k + (j + I) % IV];
+            i32 b = faciei[IV * k + (j + III) % IV];
+
+            pater[_radix(pater, a)] = _radix(pater, b);
+            si (a != b)
+            {
+                gradus[a]++;
+                gradus[b]++;
+            }
+        }
+    }
+    per (f = ZEPHYRUM; f < F; f++)
+    {
+        si (_radix(pater, f) == f)
+        {
+            si (numerus_radicum == II)
+            {
+                redde FALSUM;
+            }
+            radices[numerus_radicum++] = f;
+        }
+    }
+    si (numerus_radicum != II)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < c; k++)
+    {
+        per (j = ZEPHYRUM; j < IV; j++)
+        {
+            si (_radix(pater, faciei[IV * k + (j + I) % IV])
+                == _radix(pater, faciei[IV * k + (j + II) % IV]))
+            {
+                redde FALSUM;
+            }
+        }
+    }
+
+    /* per colorem: radix arboris = vertex gradus maximi exclusus */
+    per (q = ZEPHYRUM; q < II; q++)
+    {
+        i32 maximus = F;
+        i64 acervus = I;
+
+        producta[q] = magnus_ex_s64((s64)I);
+        per (f = ZEPHYRUM; f < F; f++)
+        {
+            si (   _radix(pater, f) == radices[q]
+                && (maximus == F || gradus[f] > gradus[maximus]))
+            {
+                maximus = f;
+            }
+        }
+        per (f = ZEPHYRUM; f < F; f++)
+        {
+            si (_radix(pater, f) == radices[q] && f != maximus)
+            {
+                _productum_addere(&acervus, &producta[q],
+                    gradus[f] > ZEPHYRUM ? gradus[f] : I, piscina);
+            }
+        }
+        producta[q] = magnus_multiplica(producta[q],
+            magnus_ex_s64((s64)acervus), piscina);
+    }
+    *exactus = magnus_compara(producta[ZEPHYRUM], producta[I])
+        <= ZEPHYRUM
+        ? producta[ZEPHYRUM] : producta[I];
+    *limes_exitus = magnus_bitorum(*exactus);
+    redde VERUM;
+}
+
 /* termini tensoris transitus k: omnes spins ossium distinctorum in
  * transitu (ansa R1: ambo arma idem os, summatur), elementum ex
  * spinibus ossium externorum (ordine armorum; spin -1 = bitum 1,
@@ -2454,6 +2589,7 @@ laqueus_modulus_vertex_creare (
                      s32* signa;
                      i32* finis_a;
                      i32* finis_b;
+                     i32* faciei;
                      i32* index_ossis;
                      i32* pater;
                      i32  c = transitus;
@@ -2492,12 +2628,18 @@ laqueus_modulus_vertex_creare (
             finis_b[ora[k]] = k;
         }
     }
-    mv->transitus  = c;
-    mv->primus     = ZEPHYRUM;
-    mv->radix_i    = ZEPHYRUM;
+    mv->transitus         = c;
+    mv->primus            = ZEPHYRUM;
+    mv->radix_i           = ZEPHYRUM;
+    mv->aestimationes     = ZEPHYRUM;
+    mv->mutationes_primi  = ZEPHYRUM;
     mv->gyrationes  = (s32*)piscina_allocare(piscina, (memoriae_index)m
         * magnitudo(s32));
-    si (!_gyrationes(ora, c, finis_a, finis_b, piscina, mv->gyrationes))
+    si (   !_gyrationes(ora, c, finis_a, finis_b, piscina,
+        mv->gyrationes,
+               &faciei)
+        || !_limes_arborum(faciei, c, piscina, &mv->limes_exactus,
+               &mv->limes))
     {
         redde NIHIL;
     }
@@ -2654,6 +2796,7 @@ laqueus_modulus_vertex_aestimare (
     {
         redde INTERPOLATIO_ERRATUM;
     }
+    mv->aestimationes++;
     si (p != mv->primus)
     {
         /* primus PROBATUS ante quaestionem g: modulus compositus 3 | p
@@ -2680,6 +2823,7 @@ laqueus_modulus_vertex_aestimare (
         }
         mv->radix_i  = congruentia_potentia(g, (i64)((p - I) / IV), p);
         mv->primus   = p;
+        mv->mutationes_primi++;
     }
     w = omega % p;
     si (w == ZEPHYRUM || !congruentia_inversa(w, p, &w_inversa))
@@ -2750,6 +2894,42 @@ laqueus_modulus_vertex_sumptus (
     redde contractio_sumptus(mv == NIHIL ? NIHIL : mv->ordo);
 }
 
+i32
+laqueus_modulus_vertex_limes (
+    constans LaqueusModulusVertex* mv)
+{
+    redde mv == NIHIL ? ZEPHYRUM : mv->limes;
+}
+
+b32
+laqueus_modulus_vertex_limes_exactus (
+    constans LaqueusModulusVertex* mv,
+                           Magnus* exitus)
+{
+    si (mv == NIHIL || exitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    *exitus = mv->limes_exactus;
+    redde VERUM;
+}
+
+vacuum
+laqueus_modulus_vertex_vocationes (
+    constans LaqueusModulusVertex* mv,
+                              i32* aestimationes,
+                              i32* primi)
+{
+    si (aestimationes != NIHIL)
+    {
+        *aestimationes = mv == NIHIL ? ZEPHYRUM : mv->aestimationes;
+    }
+    si (primi != NIHIL)
+    {
+        *primi = mv == NIHIL ? ZEPHYRUM : mv->mutationes_primi;
+    }
+}
+
 /* aestimator interpolationis: omega = index + 2 */
 interior s32
 _aestimator_verticis (
@@ -2764,8 +2944,9 @@ _aestimator_verticis (
         valor);
 }
 
-/* uncinus exactus: puncta in classe 3w (passus 4), limes 2c bitorum
- * (|coefficiens| < 4^c), primi 1 modulo 4 */
+/* uncinus exactus: puncta in classe 3w (passus 4), limes = bita
+ * minimi Pi gradus super graphos Tait (T5a: Sigma |c_k| <= arbores
+ * extensae <= Pi gradus; numquam > 2c), primi 1 modulo 4 */
 interior b32
 _uncinus_per_rete (
     LaqueusModulusVertex* mv,
@@ -2777,7 +2958,7 @@ _uncinus_per_rete (
     q.gradus_imus     = mv->imus;
     q.gradus_summus   = mv->summus;
     q.passus          = IV;
-    q.limes_bitorum   = II * mv->transitus;
+    q.limes_bitorum   = mv->limes;
     q.residuum_primi  = I;
     q.modulus_primi   = IV;
     q.puncta_addita   = II;
@@ -2785,6 +2966,19 @@ _uncinus_per_rete (
         + LXIV;
     redde interpolatio_polynomium(_aestimator_verticis, mv, &q, piscina,
         exitus);
+}
+
+b32
+laqueus_modulus_vertex_uncinus (
+    LaqueusModulusVertex* mv,
+                 Piscina* piscina,
+              Polynomium* exitus)
+{
+    si (mv == NIHIL || piscina == NIHIL || exitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    redde _uncinus_per_rete(mv, piscina, exitus);
 }
 
 interior vacuum

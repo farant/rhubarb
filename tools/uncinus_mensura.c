@@ -12,10 +12,11 @@
  *   IV   clausurae tricarum n = 4 .. 12 filorum: latitudo, officina,
  *        tempus per punctum, contractiones et totum PRAEDICTA (totum
  *        cursum solum si coniectura < LX s)
- * Tempus = tempus PROCESSORIS (clock). Driver interpolationis hic
- * iteratus (idem ac laqueus _uncinus_per_rete) ut contractiones
- * numerentur; sectio I effectum eius cum laqueus_uncinus_ex_pd
- * comparat.
+ * Tempus = tempus PROCESSORIS (clock). Driver bibliothecae
+ * (laqueus_modulus_vertex_uncinus); aestimationes et primi ex
+ * numeratoribus structurae (laqueus_modulus_vertex_vocationes); sectio
+ * I effectum cum laqueus_uncinus_ex_pd comparat. Columna limes = bita
+ * limitis coefficientium (T5a), bita = coefficiens maximus verus.
  *
  * Clausura tricae (verbum in +-1..+-(n-1)) hic scripta pro mensura;
  * laqueus_pd_ex_plexu (T5) eam postea in bibliothecam ducet.
@@ -412,63 +413,30 @@ _fenestra (
     *summus  -= (s32)_modulo_quattuor((s64)*summus - (s64)classis);
 }
 
-nomen structura {
-    LaqueusModulusVertex* mv;
-                     i32  vocationes;
-                     i32  utiles;
-                     i32  primi;
-                     i32  primus_ultimus;
-} Numerator;
-
-interior s32
-_aestimator (
-     vacuum* contextus,
-        i32  index,
-        i32  p,
-        i32* punctum,
-        i32* valor)
-{
-    Numerator* n = (Numerator*)contextus;
-          s32  status;
-
-    si (p != n->primus_ultimus)
-    {
-        n->primi++;
-        n->primus_ultimus = p;
-    }
-    n->vocationes++;
-    status = laqueus_modulus_vertex_aestimare(n->mv, index + II, p,
-        punctum, valor);
-    si (status == INTERPOLATIO_UTILE)
-    {
-        n->utiles++;
-    }
-    redde status;
-}
-
-/* uncinus per driver numerantem; FALSUM si refutatum */
+/* uncinus per driver BIBLIOTHECAE (laqueus_modulus_vertex_uncinus) in
+ * structura nova: aestimationes et primi ex numeratoribus eius (T5a:
+ * limes per arbores extensas). FALSUM si refutatum. */
 interior b32
-_uncinus_numeratus (
-    constans i32* pd,
-             i32  c,
-         Piscina* piscina,
-       Numerator* n,
-      Polynomium* exitus)
+_uncinus_bibliothecae (
+          constans i32*  pd,
+                   i32   c,
+               Piscina*  piscina,
+    LaqueusModulusVertex** mv_exitus,
+                   i32*  aestimationes,
+                   i32*  primi,
+            Polynomium*  exitus)
 {
-    InterpolatioQuaestio q = interpolatio_quaestio_ordinaria();
-                     s32 imus;
-                     s32 summus;
+    LaqueusModulusVertex* mv = laqueus_modulus_vertex_creare(pd, c,
+        OCTETI_MAXIMI, piscina);
 
-    _fenestra(pd, c, piscina, &imus, &summus);
-    q.gradus_imus     = imus;
-    q.gradus_summus   = summus;
-    q.passus          = IV;
-    q.limes_bitorum   = II * c;
-    q.residuum_primi  = I;
-    q.modulus_primi   = IV;
-    q.puncta_addita   = II;
-    q.conatus_maximi  = (i32)((summus - imus) / IV) + I + II + LXIV;
-    redde interpolatio_polynomium(_aestimator, n, &q, piscina, exitus);
+    *mv_exitus = mv;
+    si (   mv == NIHIL
+        || !laqueus_modulus_vertex_uncinus(mv, piscina, exitus))
+    {
+        redde FALSUM;
+    }
+    laqueus_modulus_vertex_vocationes(mv, aestimationes, primi);
+    redde VERUM;
 }
 
 
@@ -520,41 +488,40 @@ _sectio_comparationis (vacuum)
             constans i32* pd  = genus == ZEPHYRUM
                 ? _summa_fortuita(&s, c, piscina)
                 : _plexus_fortuitus(&s, V, &c, piscina);
-                   Polynomium status;
-                   Polynomium rete;
-                    Numerator n;
-                      clock_t t0;
-                          f64 tempus_status;
-                          f64 tempus_rete;
-                          b32 aequalis;
-            ContractioSumptus sumptus;
+                   Polynomium  status;
+                   Polynomium  rete;
+         LaqueusModulusVertex* mv      = NIHIL;
+                          i32  puncta  = ZEPHYRUM;
+                          i32  primi   = ZEPHYRUM;
+                      clock_t  t0;
+                          f64  tempus_status;
+                          f64  tempus_rete;
+                          b32  aequalis;
+            ContractioSumptus  sumptus;
 
             t0 = clock();
             aequalis = laqueus_uncinus_ex_pd(pd, c, piscina, &status);
             tempus_status = _secundae(t0);
-            memset(&n, 0, magnitudo(n));
-            t0   = clock();
-            n.mv = laqueus_modulus_vertex_creare(pd, c, OCTETI_MAXIMI,
-                piscina);
-            aequalis = aequalis && n.mv != NIHIL
-                && _uncinus_numeratus(pd, c, piscina, &n, &rete)
+            t0 = clock();
+            aequalis = aequalis && _uncinus_bibliothecae(pd, c, piscina,
+                &mv, &puncta, &primi, &rete)
                 && polynomium_aequalis(rete, status);
             tempus_rete  = _secundae(t0);
-            sumptus      = laqueus_modulus_vertex_sumptus(n.mv);
+            sumptus      = laqueus_modulus_vertex_sumptus(mv);
             si (machina)
             {
                 imprimere("MENSURA I genus=%s c=%u status_s=%.4f "
                     "rete_s=%.4f puncta=%u primi=%u latitudo=%u "
                     "aequalis=%u\n", genus == ZEPHYRUM ? "summa"
                     : "plexus5", c, tempus_status, tempus_rete,
-                    n.vocationes, n.primi, sumptus.latitudo,
+                    puncta, primi, sumptus.latitudo,
                     (i32)aequalis);
             }
             alioquin
             {
                 imprimere("   %-7s %2u  %8.3f %8.4f   %5u  %4u    %4u     "
                     " %s\n", genus == ZEPHYRUM ? "summa" : "plexus5", c,
-                    tempus_status, tempus_rete, n.vocationes, n.primi,
+                    tempus_status, tempus_rete, puncta, primi,
                     sumptus.latitudo, aequalis ? "ita" : "NON");
             }
             piscina_destruere(piscina);
@@ -665,6 +632,7 @@ _metiri (
                   s32 imus;
                   s32 summus;
                   i32 bita = ZEPHYRUM;
+                  i32 limes;
 
     si (mv == NIHIL)
     {
@@ -676,25 +644,24 @@ _metiri (
     sumptus = laqueus_modulus_vertex_sumptus(mv);
     punctum = _tempus_puncti(mv, III);
     _fenestra(pd, c, piscina, &imus, &summus);
-    /* coniectura: (K + 2) puncta per primum, primi ~ (2c + 1)/31 + 1 */
+    limes = laqueus_modulus_vertex_limes(mv);
+    /* coniectura: (K + 3) puncta per primum, primi = ceil((limes +
+     * 1)/31) + 1 (limes T5a) */
     coniectura = punctum * (f64)((summus - imus) / IV + I + II)
-        * (f64)((II * c + I) / XXXI + II);
+        * (f64)((limes + I + XXX) / XXXI + I);
     si (coniectura < limes_s)
     {
-         Numerator n;
-        Polynomium uncinus;
-               s32 e;
+         LaqueusModulusVertex* mv_cursus;
+                   Polynomium  uncinus;
+                          s32  e;
 
-        memset(&n, 0, magnitudo(n));
-        n.mv       = mv;
         usus_ante  = piscina_summa_usus(piscina);
         t0         = clock();
-        si (_uncinus_numeratus(pd, c, piscina, &n, &uncinus))
+        si (_uncinus_bibliothecae(pd, c, piscina, &mv_cursus,
+            &contractiones, &primi, &uncinus))
         {
-            totum          = _secundae(t0);
-            contractiones  = n.utiles;
-            primi          = n.primi;
-            usus           = piscina_summa_usus(piscina) - usus_ante;
+            totum  = _secundae(t0);
+            usus   = piscina_summa_usus(piscina) - usus_ante;
             per (e = polynomium_gradus_imus(uncinus);
                  e <= polynomium_gradus_summus(uncinus); e++)
             {
@@ -713,14 +680,15 @@ _metiri (
         imprimere("MENSURA %s titulus=%s c=%u latitudo=%u apex=%llu "
             "octeti=%llu multiplicationes=%llu aedificatio_s=%.4f "
             "punctum_s=%.6f ns_mult=%.3f praedictio_s=%.2f totum_s=%.3f "
-            "contractiones=%u primi=%u octeti_piscinae=%llu bita=%u\n",
+            "contractiones=%u primi=%u octeti_piscinae=%llu bita=%u "
+            "limes=%u\n",
             sectio, titulus, c, sumptus.latitudo,
             (unsigned long long)sumptus.apex,
             (unsigned long long)sumptus.octeti_officinae,
             (unsigned long long)sumptus.multiplicationes, aedificatio,
             punctum, 1e9 * punctum / (f64)sumptus.multiplicationes,
             coniectura, totum, contractiones, primi,
-            (unsigned long long)usus, bita);
+            (unsigned long long)usus, bita, limes);
     }
     alioquin
     {
@@ -731,12 +699,14 @@ _metiri (
             coniectura);
         si (totum >= 0.0)
         {
-            imprimere("%8.2f  %6u  %3u  %8.1f  %4u\n", totum,
-                contractiones, primi, (f64)usus / 1048576.0, bita);
+            imprimere("%8.2f  %6u  %3u  %8.1f  %4u  %4u\n", totum,
+                contractiones, primi, (f64)usus / 1048576.0, bita,
+                limes);
         }
         alioquin
         {
-            imprimere("       -\n");
+            imprimere("       -                              %4u\n",
+                limes);
         }
     }
     fflush(stdout);
@@ -751,7 +721,7 @@ _titulus_columnarum (
         imprimere("\n%s\n", titulus);
         imprimere("   reticulum      c  lat       apex   aedif ms   "
             "punctum s  ns/mult  praedictio s  totum s  contr  primi  "
-            "MB pisc  bita\n");
+            "MB pisc  bita  limes\n");
     }
 }
 

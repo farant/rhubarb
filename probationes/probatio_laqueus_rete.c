@@ -262,6 +262,64 @@ _jones_comparare (
 }
 
 
+/* summa valorum absolutorum coefficientium */
+interior Magnus
+_summa_absoluta (
+    Polynomium  q,
+       Piscina* piscina)
+{
+    Magnus summa = magnus_ex_s64((s64)ZEPHYRUM);
+       s32 e;
+
+    si (polynomium_est_nullum(q))
+    {
+        redde summa;
+    }
+    per (e = polynomium_gradus_imus(q); e
+        <= polynomium_gradus_summus(q);
+         e++)
+    {
+        summa = magnus_adde(summa, magnus_absolutum(
+            polynomium_coefficiens(q, e), piscina), piscina);
+    }
+    redde summa;
+}
+
+/* Sigma |c_k| (Jones = uncinus in valoribus absolutis) <= B, limes =
+ * bita(B) <= 2c; si limes_exspectatus != 0, aequalis */
+interior vacuum
+_limitem_probare (
+    constans i32* pd,
+             i32  c,
+       Polynomium jones,
+             i32  limes_exspectatus,
+             s64  b_exspectatum,
+         Piscina* piscina)
+{
+    LaqueusModulusVertex* mv = laqueus_modulus_vertex_creare(pd, c,
+        OCTETI_MAXIMI, piscina);
+    Magnus b;
+       i32 limes;
+
+    CREDO_NECESSE_NON_NIHIL(mv);
+    CREDO_NECESSE(laqueus_modulus_vertex_limes_exactus(mv, &b));
+    limes = laqueus_modulus_vertex_limes(mv);
+    CREDO_AEQUALIS_I32(limes, magnus_bitorum(b));
+    CREDO_VERUM(magnus_compara(_summa_absoluta(jones, piscina), b)
+        <= ZEPHYRUM);
+    CREDO_VERUM(limes <= II * c);
+    si (c >= III)
+    {
+        CREDO_VERUM(limes < II * c);
+    }
+    si (limes_exspectatus != ZEPHYRUM)
+    {
+        CREDO_AEQUALIS_I32(limes, limes_exspectatus);
+        CREDO_VERUM(magnus_aequalis(b, magnus_ex_s64(b_exspectatum)));
+    }
+}
+
+
 /* ==================================================
  * Codices manu et tabula
  * ================================================== */
@@ -408,6 +466,8 @@ _probare_ansas (
         _permiscere(pd, transitus, &s);
         _jones_comparare(pd, transitus, _polynomium_textus(n->jones,
             piscina), piscina);
+        _limitem_probare(pd, transitus, _polynomium_textus(n->jones,
+            piscina), ZEPHYRUM, ZEPHYRUM, piscina);
         _uncinum_comparare(pd, transitus, piscina);
         CREDO_NECESSE(laqueus_pd_simplificare(pd, transitus, piscina,
             &simplex, &transitus_simplex));
@@ -617,6 +677,8 @@ _probare_summas (
         CREDO_NECESSE(laqueus_jones_ex_pd_rete(novum, transitus,
             OCTETI_MAXIMI, piscina, &jones, NIHIL));
         CREDO_VERUM(polynomium_aequalis(jones, exspectatum));
+        _limitem_probare(novum, transitus, jones, ZEPHYRUM, ZEPHYRUM,
+            piscina);
         si (magna)
         {
             i32 bita = ZEPHYRUM;
@@ -952,6 +1014,289 @@ _probare_refutationes (
 
 
 /* ==================================================
+ * Limes arborum (contractio-plan T5a)
+ * ================================================== */
+
+/* clausura tricae (verbum in +-1..+-(n-1)): sigma_i positivum [b, a,
+ * c', d'], negativum [a, c', d', b] (arma contra horologium a sinistro
+ * superiore), ora per percursum renumerata. NIHIL si componentes
+ * plures. (Idem ac tools/uncinus_mensura.c.) */
+interior i32*
+_plexus_pd (
+    constans s32* verbum,
+             i32  longitudo,
+             i32  n,
+         Piscina* piscina)
+{
+    i32  c    = longitudo;
+    i32  ora  = n + II * c;
+    i32* x        = (i32*)piscina_allocare(piscina, (memoriae_index)IV
+        * c * magnitudo(i32));
+    i32* currens  = (i32*)piscina_allocare(piscina, (memoriae_index)n
+        * magnitudo(i32));
+    i32* idem     = (i32*)piscina_allocare(piscina, (memoriae_index)ora
+        * magnitudo(i32));
+    i32* caput    = (i32*)piscina_allocare(piscina, (memoriae_index)ora
+        * magnitudo(i32));
+    i32* titulus  = (i32*)piscina_allocare(piscina, (memoriae_index)ora
+        * magnitudo(i32));
+    i32* pd       = (i32*)piscina_allocare(piscina, (memoriae_index)IV
+        * c * magnitudo(i32));
+    i32 proximum  = n;
+    i32 numerus   = ZEPHYRUM;
+    i32 e;
+    i32 k;
+    i32 j;
+
+    per (j = ZEPHYRUM; j < n; j++)
+    {
+        currens[j] = j;
+    }
+    per (k = ZEPHYRUM; k < c; k++)
+    {
+        i32 i = (i32)(verbum[k] > ZEPHYRUM ? verbum[k] : -verbum[k])
+            - I;
+        i32 a   = currens[i];
+        i32 b   = currens[i + I];
+        i32 cn  = proximum++;
+        i32 dn  = proximum++;
+
+        si (verbum[k] > ZEPHYRUM)
+        {
+            x[IV * k] = b; x[IV * k + I] = a;
+            x[IV * k + II] = cn; x[IV * k + III] = dn;
+        }
+        alioquin
+        {
+            x[IV * k] = a; x[IV * k + I] = cn;
+            x[IV * k + II] = dn; x[IV * k + III] = b;
+        }
+        currens[i]      = cn;
+        currens[i + I]  = dn;
+    }
+    per (e = ZEPHYRUM; e < ora; e++)
+    {
+        idem[e]     = e;
+        titulus[e]  = ZEPHYRUM;
+    }
+    per (j = ZEPHYRUM; j < n; j++)
+    {
+        si (currens[j] == j)
+        {
+            redde NIHIL;
+        }
+        idem[currens[j]] = j;
+    }
+    per (k = ZEPHYRUM; k < IV * c; k++)
+    {
+        x[k] = idem[x[k]];
+    }
+    per (k = ZEPHYRUM; k < c; k++)
+    {
+        caput[x[IV * k]] = IV * k;
+        caput[verbum[k] > ZEPHYRUM ? x[IV * k + I] : x[IV * k + III]] =
+            verbum[k] > ZEPHYRUM ? IV * k + I : IV * k + III;
+    }
+    e = ZEPHYRUM;
+    fac
+    {
+        i32 positio  = caput[e];
+        i32 arma     = positio % IV;
+
+        titulus[e] = ++numerus;
+        e = x[IV * (positio / IV) + (arma == ZEPHYRUM ? II
+            : (arma == I ? III : I))];
+    }
+    dum (e != ZEPHYRUM && numerus <= II * c);
+    si (numerus != II * c)
+    {
+        redde NIHIL;
+    }
+    per (k = ZEPHYRUM; k < IV * c; k++)
+    {
+        pd[k] = titulus[x[k]];
+    }
+    redde pd;
+}
+
+/* torus T(2, n): clausura sigma_1^n (n impar; n < 0: sigma_1^-|n|) */
+interior i32*
+_torus_duo (
+         s32  n,
+     Piscina* piscina)
+{
+    i32  longitudo = (i32)(n > ZEPHYRUM ? n : -n);
+    s32* verbum    = (s32*)piscina_allocare(piscina,
+        (memoriae_index)longitudo * magnitudo(s32));
+    i32 k;
+
+    per (k = ZEPHYRUM; k < longitudo; k++)
+    {
+        verbum[k] = n > ZEPHYRUM ? (s32)I : -(s32)I;
+    }
+    redde _plexus_pd(verbum, longitudo, II, piscina);
+}
+
+/* valores manu (recensio T5a): stricti T(2,31) et T(2,7) # T(2,-9),
+ * ubi Sigma |c| = B = 2^limes - 1; nodi parvi; ansa; summa trifolii */
+interior vacuum
+_probare_limitem_manu (
+    CredoContextus* c)
+{
+         Piscina* piscina  = c->piscina;
+    constans i32  u1[]     = { I, I, II, IV, II, IV, III, III };
+    constans i32  t1[] = { I, VII, II, VI, VII, III, VIII, II, III, I,
+        IV,
+        VIII, IV, VI, V, V };
+    constans character* nomina[] = { "3_1", "4_1", "5_1", "5_2",
+        "7_1" };
+             constans s64  b_tabulae[]  = { III, VI, V, VIII, VII };
+             constans i32  limites[]    = { II, III, III, IV, III };
+               Polynomium  jones;
+                      i32* pd;
+                      i32* septem;
+                      i32* novem;
+    constans NodusTabulae* trifolium = tabula_nodorum_quaere("3_1");
+                      i32  k;
+
+    pd = _torus_duo((s32)XXXI, piscina);
+    CREDO_NECESSE_NON_NIHIL(pd);
+    CREDO_NECESSE(laqueus_jones_ex_pd_rete(pd, XXXI, OCTETI_MAXIMI,
+        piscina, &jones, NIHIL));
+    CREDO_VERUM(magnus_aequalis(_summa_absoluta(jones, piscina),
+        magnus_ex_s64((s64)XXXI)));
+    _limitem_probare(pd, XXXI, jones, V, (s64)XXXI, piscina);
+
+    septem  = _torus_duo((s32)VII, piscina);
+    novem   = _torus_duo(-(s32)IX, piscina);
+    CREDO_NECESSE_NON_NIHIL(septem);
+    CREDO_NECESSE_NON_NIHIL(novem);
+    pd = (i32*)piscina_allocare(piscina, (memoriae_index)IV * XVI
+        * magnitudo(i32));
+    _summam_connexam(septem, VII, novem, IX, pd);
+    CREDO_NECESSE(laqueus_jones_ex_pd_rete(pd, XVI, OCTETI_MAXIMI,
+        piscina, &jones, NIHIL));
+    CREDO_VERUM(magnus_aequalis(_summa_absoluta(jones, piscina),
+        magnus_ex_s64((s64)LXIII)));
+    _limitem_probare(pd, XVI, jones, VI, (s64)LXIII, piscina);
+
+    _limitem_probare(u1, II, polynomium_constans(magnus_ex_s64(I),
+        piscina), I, (s64)I, piscina);
+    _limitem_probare(t1, IV, _polynomium_textus(trifolium->jones,
+        piscina), II, (s64)III, piscina);
+    per (k = ZEPHYRUM; k < V; k++)
+    {
+        constans NodusTabulae* n = tabula_nodorum_quaere(nomina[k]);
+
+        _limitem_probare(tabula_nodorum_pd(n, piscina), n->transitus,
+            _polynomium_textus(n->jones, piscina), limites[k],
+            b_tabulae[k],
+            piscina);
+    }
+    {
+        constans i32* p3 = tabula_nodorum_pd(trifolium, piscina);
+
+        pd = (i32*)piscina_allocare(piscina, (memoriae_index)IV * VI
+            * magnitudo(i32));
+        _summam_connexam(p3, III, p3, III, pd);
+        CREDO_NECESSE(polynomium_multiplica(_polynomium_textus(
+            trifolium->jones, piscina), _polynomium_textus(
+            trifolium->jones, piscina), piscina, &jones));
+        _limitem_probare(pd, VI, jones, IV, (s64)IX, piscina);
+    }
+}
+
+/* omnes nodi tabulae: Sigma |c| <= B, limes < 2c */
+interior vacuum
+_probare_limitem_tabulae (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        i32  k;
+
+    per (k = ZEPHYRUM; k < tabula_nodorum_numerus(); k++)
+    {
+        constans NodusTabulae* n = tabula_nodorum_nodus(k);
+               PiscinaNotatio  nota;
+
+        si (n->transitus < II)
+        {
+            perge;
+        }
+        nota = piscina_notare(piscina);
+        _limitem_probare(tabula_nodorum_pd(n, piscina), n->transitus,
+            _polynomium_textus(n->jones, piscina), ZEPHYRUM, ZEPHYRUM,
+            piscina);
+        piscina_reficere(piscina, nota);
+    }
+}
+
+/* clausurae tricarum fortuitae (3..6 fila, 21..81 transitus): Sigma
+ * |c| <= B; et limes VERE in usu: primi = ceil((limes + 1)/31) + 1
+ * (omnes primi > 2^31, unus additus), pauciores quam 2c poscit */
+interior vacuum
+_probare_limitem_tricarum (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+       Sors  s;
+        i32  t;
+
+    sors_seminare(&s, (i64)MMXXXI, ZEPHYRUM);
+    per (t = ZEPHYRUM; t < XL; t++)
+    {
+        PiscinaNotatio  nota       = piscina_notare(piscina);
+                   i32  fila       = III + sors_intra(&s, IV);
+                   i32  longitudo  = XXI + sors_intra(&s, LXI);
+                   s32* verbum;
+                   i32* pd = NIHIL;
+                   i32  conatus;
+                   i32  k;
+
+        si ((longitudo + fila - I) % II != ZEPHYRUM)
+        {
+            longitudo++;
+        }
+        verbum = (s32*)piscina_allocare(piscina,
+            (memoriae_index)longitudo * magnitudo(s32));
+        per (conatus = ZEPHYRUM; conatus < M && pd == NIHIL; conatus++)
+        {
+            per (k = ZEPHYRUM; k < longitudo; k++)
+            {
+                s32 g = (s32)(I + sors_intra(&s, fila - I));
+
+                verbum[k] = sors_intra(&s, II) == ZEPHYRUM ? g : -g;
+            }
+            pd = _plexus_pd(verbum, longitudo, fila, piscina);
+        }
+        CREDO_NECESSE_NON_NIHIL(pd);
+        {
+            LaqueusModulusVertex* mv = laqueus_modulus_vertex_creare(pd,
+                longitudo, OCTETI_MAXIMI, piscina);
+            Polynomium uncinus;
+                   i32 limes;
+                   i32 primi;
+
+            CREDO_NECESSE_NON_NIHIL(mv);
+            CREDO_NECESSE(laqueus_modulus_vertex_uncinus(mv, piscina,
+                &uncinus));
+            limes = laqueus_modulus_vertex_limes(mv);
+            laqueus_modulus_vertex_vocationes(mv, NIHIL, &primi);
+            CREDO_AEQUALIS_I32(primi, (limes + I + XXX) / XXXI + I);
+            CREDO_VERUM(primi < (II * longitudo + I + XXX) / XXXI + I);
+            _limitem_probare(pd, longitudo, uncinus, ZEPHYRUM, ZEPHYRUM,
+                piscina);
+            si (longitudo <= XVI)
+            {
+                _uncinum_comparare(pd, longitudo, piscina);
+            }
+        }
+        piscina_reficere(piscina, nota);
+    }
+}
+
+
+/* ==================================================
  * Suita
  * ================================================== */
 
@@ -970,6 +1315,11 @@ interior constans CredoSectio SECTIONES[] = {
     { "gyrationes", _probare_gyrationes, NIHIL, NIHIL, NIHIL, NIHIL },
     { "puncta", _probare_puncta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "refutationes", _probare_refutationes, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "limes manu", _probare_limitem_manu, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "limes tabulae", _probare_limitem_tabulae, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "limes tricarum", _probare_limitem_tricarum, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "tabula tota", _probare_tabulam_totam, NIHIL, NIHIL, NIHIL,
       NIHIL },

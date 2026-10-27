@@ -500,3 +500,59 @@ MB at c = 803, 78 MB at 1606), almost all of it interpolatio's
 scratch, which shares the caller's piscina with `exitus`.
 
 Tests now: 10 sections, 56,344 checks, 2.2 s.
+
+## 2026-10-27 — T5a: coefficient bound by spanning trees (fewer primes)
+
+`_uncinus_per_rete` now passes limes = bits(B) instead of 2c, where B =
+min over the two Tait graphs of Π_{v≠r} deg(v) (loops excluded, r a
+vertex of maximal degree). Σ|cₖ| ≤ τ(G) ≤ B by the signed
+Thistlethwaite expansion (smoothings are deletion/contraction in the
+Tait graph; bridges and loops collapse to −A^(±3); leaves = spanning
+trees) and the parent-edge injection. Proof, data and design review in
+project-specs/contractio-plan.md §T5a.
+
+**Colours by union-find, not a parity rule.** Region of corner (k, j)
+(between arms j and j+1) = `faciei[4k + (j+1) % 4]`, the face numbering
+`_gyrationes` already computes (now exported). Opposite corners (0~2,
+1~3) are joined; the two classes are the colours. `_limes_arborum`
+refuses unless there are exactly two classes and adjacent corners lie
+in different ones. Degrees need no colour: per crossing, if two
+opposite corners are different regions, each gets +1. Why: my first
+Python version assumed corners 0, 2 always share the global colour —
+false for non-alternating diagrams (which pair is "black" flips from
+crossing to crossing) — and the design review simulated that bug: only
+2 of 12,965 knots went red under a bits-only check.
+
+Products: factors multiply into a u64 (< 2^32 before, factor < 2^31)
+and flush into a Magnus only when the accumulator passes 2^32, so the
+arena sees ~c/30 Magnus multiplications instead of ~c/2.
+
+New API: `laqueus_modulus_vertex_limes` (bits), `_limes_exactus` (B as
+Magnus), `_vocationes` (aestimare calls and prime changes since
+creation), `_uncinus` (the bracket driver on a network the caller
+holds). The last two exist so a test can see the bound in use.
+
+**Tests** (probatio_laqueus_rete, 13 sections, 149,220 checks, 3.5 s):
+Σ|cₖ| ≤ B (exact Magnus) and limes < 2c for c ≥ 3 on every table knot,
+the kinked knots, the connected sums, and 40 random braid closures
+(3–6 strands × 21–82 crossings); exact hand values from the review,
+including the tight T(2,31) (B = 31 = Σ|c|, limes 5) and T(2,7) #
+T(2,−9) (B = 63 = Σ|c|, limes 6); wiring: primes used = ceil((limes +
+1)/31) + 1 and fewer than 2c would need. `_plexus_pd` (braid closure)
+now lives in the test as well as the tool.
+
+**Plants (radix/laqueus_rete), 6/6 red:** limes − 1; degree counted at
+one end only; two vertices excluded per colour; adjacent corners joined
+(the colouring fault: refused as one class); 2c passed instead of limes
+(caught only by the wiring test); last u64 flush dropped. First form of
+the flush plant did not compile (i64 → s64 conversion); rewritten with
+a cast.
+
+**Measured** (tools/uncinus_mensura, same seeds as f8563c60, now on the
+library driver): contractions and primes fall ~2.1–2.4×. Connected sums
+c = 800: 40,651 → 16,874 contractions, 53 → 22 primes, 8.6 → 4.9 s,
+arena 10 → 3.2 MB. Braids 6 × 201: 4.8 → 2.1 s; 8 × 201: 43 → 21 s;
+12 × 201 projected 215 → 99 s; 10 × 201 projected 77 → 34 min. Section
+I (c = 12–24): 3 → 2 primes, all still equal to the state sum. The
+remaining gap (limes 121–171 vs actual 31–39 bits at 201 crossings) is
+cancellation, which no counting bound sees.

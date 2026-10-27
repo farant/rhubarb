@@ -263,7 +263,8 @@ laqueus_alexander_ex_pd (
  * dualis (facies externa +4, ceterae -4), tensor per transitum; rete
  * per contractio (ordo avidus, officina una) modulo primos 1 mod 4 ad
  * puncta A = i omega^2 aestimatur, uncinus per interpolatio
- * restituitur EXACTE (limes probatus |coefficiens| < 4^c, fenestra
+ * restituitur EXACTE (limes probatus per arbores extensas graphorum
+ * Tait, numquam > 2c bitorum; fenestra
  * Kauffman in classe 3w modulo 4, passus 4). Nullus limes transituum
  * praeter octeti_maximi (officina). Vide
  * project-specs/contractio-plan.md.
@@ -305,6 +306,39 @@ laqueus_modulus_vertex_gyrationes (
 ContractioSumptus
 laqueus_modulus_vertex_sumptus (
     constans LaqueusModulusVertex* mv);
+
+/* limes coefficientium uncinus (contractio-plan T5a): B = minimum
+ * super duos graphos Tait (regiones unius coloris, arcus per
+ * transitum) producti Pi_{v != r} gradus(v) (ansis exclusis, r vertex
+ * gradus maximi). Sigma_k |c_k| <= arbores extensae <= B (expansio
+ * Thistlethwaite signata), ergo |c_k| < 2^limes. _limes = bita(B)
+ * (0 si mv NIHIL; numquam > 2c); _limes_exactus = B ipse. */
+i32
+laqueus_modulus_vertex_limes (
+    constans LaqueusModulusVertex* mv);
+
+b32
+laqueus_modulus_vertex_limes_exactus (
+    constans LaqueusModulusVertex* mv,
+                           Magnus* exitus);
+
+/* uncinus exactus in structura iam aedificata (ut
+ * laqueus_uncinus_ex_pd_rete, sine aedificatione iterata). FALSUM si
+ * restitutio refutat (exitus non tangitur). */
+b32
+laqueus_modulus_vertex_uncinus (
+    LaqueusModulusVertex* mv,
+                 Piscina* piscina,
+              Polynomium* exitus);
+
+/* vocationes laqueus_modulus_vertex_aestimare (validae) et mutationes
+ * primi ab creatione - ut probationes limitem in usu videant.
+ * Exitus NIHIL licet. */
+vacuum
+laqueus_modulus_vertex_vocationes (
+    constans LaqueusModulusVertex* mv,
+                              i32* aestimationes,
+                              i32* primi);
 
 /* uncinus Kauffman et Jones ex codice PD per modulum vertex; codex ut
  * laqueus_uncinus_ex_pd (transitus 0 -> 1; transitus unus refutatur).
