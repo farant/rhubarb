@@ -280,3 +280,87 @@ Prototype: scratchpad/recensio_contractio_t3/var/contractio_b.c
 (session 2026-10-27).
 
 Tests now: 21 sections, 153,949 checks, 0.11 s.
+
+## 2026-10-27 — T5b: CONTRACTIO_OPTIMUS, best of several orders by exact cost
+
+`contractio_ordinare` is now *candidates → step lists → simulation →
+materialize the winner*. A `StatusOrdinis` holds the order under
+construction (`_statum_incipere`, `_gradum_facere`, `_statum_finire`);
+`_gradum_facere` builds loop plans only when materializing and returns
+FALSUM once the running multiplication count exceeds a limit (pruning).
+AVIDUS = candidate 1 materialized directly: same code path and results
+as before (all T2/T3 tests unchanged). The default stays AVIDUS
+(decision 01M5ZGH8; same answers either way).
+
+**Candidates** (review M2): 1 AVIDUS (T2 key); 2 size-reduction key
+E_r − E_a − E_b (s64, each E clamped at 2^62, shifted by 2^63 so the
+unsigned compare keeps the signed order); 3 min-fill on the line graph;
+4.. `conatus` min-fill runs whose ties among equal (fill, degree) are
+broken by `sors_intra(semen, run)`. Union-first key, min-degree and
+randomized greedy were dropped after the design review measured them
+adding nothing.
+
+**Min-fill, online.** Line graph = indices adjacent if they share a
+tensor (neighbour arrays grown in the candidate's arena region; an
+adjacency test is a stamp array). Per step: the 64 live vertices with
+smallest (degree, id) (insertion into a sorted 64-array), fill counted
+for each, choose min (fill, degree, id) — or a random one among equal
+(fill, degree). Eliminating v adds the clique on N(v), removes v,
+contracts v's two tensors (sinister < dexter, effectus = n + s), and
+removes from the graph every index that contraction closed (their
+neighbourhoods are already inside the clique: no fill). Leftovers
+(scalars, disconnected pieces) by the T2 key. The 64-candidate cap
+costs nothing measurable (review).
+
+**Choice and memory.** Each candidate runs inside
+`piscina_notare/reficere`; only its step pairs are copied out when it
+becomes the incumbent. Rule: fits under `octeti_maximi` first; then
+(multiplications, slab bytes, candidate number); a candidate is pruned
+when its partial count exceeds the incumbent's (strict, so ties still
+reach the slab tie-break). The winner's steps are replayed with loop
+plans. One first-fit slab routine serves simulation and
+materialization.
+
+**Limen** (review L8, measured): with all candidates on, the laqueus
+suite went 2.9 → 10.4 s — table-sized knots paid ~19 orderings for
+microsecond contractions. Option `limen` (default 2^20
+multiplications, ~1 ms per contraction): if AVIDUS needs fewer, the
+other candidates are not evaluated. Suite back to 2.9 s; braids of 8+
+strands are above it.
+
+New API: options `conatus` (16), `semen` (CONTRACTIO_SEMEN_ORDINARIUM),
+`octeti_maximi` (SATURATUM = none), `candidatus` (OMNES or one
+forced), `limen`; `contractio_ordo_candidatus`,
+`contractio_ordo_candidati(k)` (simulated cost; FALSUM if pruned or
+not run). Invalid methodus is now III (II = OPTIMUS).
+
+**Tests** (26 sections, 193,060 checks): candidates 1–3 on five
+in-test braid networks equal an independent Python port exactly
+(multiplications, slab, apex, latitudo) with the port's winner, incl.
+one where min-fill wins and a 768-byte cap flips the winner to the size
+key; forced candidate = simulated cost; pruned candidates cost more
+than the winner; OPTIMUS ≤ AVIDUS on 60 random networks, identical
+steps when candidate 1 wins, deterministic per seed, valid under the
+independent checker (greedy-key assertion off); hot tier = brute force
+on 100 small networks under OPTIMUS; a counting anulus through the
+reference tier: calls to `multiplica` = `sumptus.multiplicationes`
+exactly; options refused (conatus > M, candidatus > 3 + conatus) and
+the limen honoured.
+
+**Plants 7/7 red** (radix/contractio and laqueus_rete): selection picks
+the dearest; simulated cost +1; wrong owner in min-fill (crash);
+degree before fill; pruning at half the incumbent; limen inverted;
+laqueus passing AVIDUS (caught only by the laqueus wiring test).
+
+Trap hit: `casus` (a test variable) is the latina.h macro for `case` —
+examen refused it; renamed `exemplum`. A global in a test section must
+be reset in its `purgare` hook (credo rule).
+
+**Measured** (tools/uncinus_mensura, same seeds as T5a; quiet run):
+braids 8 × 201 6.9 s (T5a 20.9), 6 × 201 1.1 s (2.1), 12 × 201 9.2 s
+(projected 99), 10 × 201 12.5 s (projected ~34 min: per point 1.98 s →
+12 ms, apex 2^20 → 2^16). Winners: size key (6 × 201), min-fill
+(10 × 201), randomized min-fill (8 × 201, 12 × 201). Sums and small
+braids unchanged (below the limen). Ordering a 201-crossing braid:
+~25–50 ms. A later run on a busier machine was uniformly ~1.4× slower
+(state sum 6.2 s instead of 4.2–5.3) — compare within a run only.

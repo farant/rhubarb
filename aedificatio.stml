@@ -526,6 +526,8 @@
     <ingressus genus="fasciculus" via="lib/contractio.c"/>
     <ingressus genus="fasciculus" via="lib/interpolatio.c"/>
     <ingressus genus="fasciculus" via="lib/xar.c"/>
+    <ingressus genus="fasciculus" via="include/sors.h"/>
+    <ingressus genus="fasciculus" via="lib/sors.c"/>
     <exitus via="lib/tabula_nodorum_data.c" provenientia="regeneratio"/>
   </actio>
   <!-- data ex tabula html.entities PYTHONIS legitur: ingressus EXTRA

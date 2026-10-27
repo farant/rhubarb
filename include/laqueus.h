@@ -307,6 +307,12 @@ ContractioSumptus
 laqueus_modulus_vertex_sumptus (
     constans LaqueusModulusVertex* mv);
 
+/* ordo contractionis retis (CONTRACTIO_OPTIMUS: contractio_ordo_
+ * candidatus et _candidati legi possunt); NIHIL si mv NIHIL */
+constans ContractioOrdo*
+laqueus_modulus_vertex_ordo (
+    constans LaqueusModulusVertex* mv);
+
 /* limes coefficientium uncinus (contractio-plan T5a): B = minimum
  * super duos graphos Tait (regiones unius coloris, arcus per
  * transitum) producti Pi_{v != r} gradus(v) (ansis exclusis, r vertex

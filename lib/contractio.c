@@ -8,6 +8,7 @@
 #include "contractio.h"
 #include "xar.h"
 #include "magnus.h"
+#include "sors.h"
 
 /* id tensoris nullus (possessor absens) */
 #define CONTRACTIO_NULLUS      ((i32)0xFFFFFFFFUL)
@@ -69,6 +70,10 @@ structura ContractioOrdo {
               TensorOrdinis* tensores;           /* n + gradus */
                         b32  tabula_saturata;
           ContractioSumptus  sumptus;
+                        i32  candidatus;           /* victor (T5b) */
+                        i32  numerus_candidatorum;
+          ContractioSumptus* candidati;            /* simulati, 1.. */
+                        b32* candidati_aestimati;
 };
 
 structura ContractioOfficina {
@@ -299,7 +304,12 @@ contractio_optiones_ordinariae (vacuum)
 {
     ContractioOptiones o;
 
-    o.methodus = CONTRACTIO_AVIDUS;
+    o.methodus       = CONTRACTIO_AVIDUS;
+    o.conatus        = XVI;
+    o.semen          = CONTRACTIO_SEMEN_ORDINARIUM;
+    o.octeti_maximi  = CONTRACTIO_SATURATUM;
+    o.candidatus     = CONTRACTIO_CANDIDATUS_OMNES;
+    o.limen          = CONTRACTIO_LIMEN_ORDINARIUM;
     redde o;
 }
 
@@ -374,6 +384,36 @@ _clavis_minor (
     redde b < optimus_b;
 }
 
+/* clavis paris: AVIDUS (T2) = elementa effectus (i64 saturata);
+ * REDUCTIO = E_r - E_a - E_b (quisque E ad 2^62 limitatus, s64),
+ * translata (+ 2^63) ut ordo i64 sine signo ordinem s64 servet */
+interior i64
+_clavis_paris (
+    constans TensorOrdinis* tensores,
+              constans i32* possessores,
+              constans i32* dimensiones,
+                       i32  genus,
+                       i32  a,
+                       i32  b)
+{
+    i64 effectus = _elementa_effectus(tensores, possessores,
+        dimensiones,
+        a, b);
+    i64 limes = (i64)I << LXII;
+    s64 clavis;
+
+    si (genus != CONTRACTIO_CANDIDATUS_REDUCTIO)
+    {
+        redde effectus;
+    }
+    clavis = (s64)(effectus < limes ? effectus : limes)
+        - (s64)(tensores[a].elementa
+        < limes ? tensores[a].elementa : limes)
+        - (s64)(tensores[b].elementa
+        < limes ? tensores[b].elementa : limes);
+    redde (i64)clavis ^ ((i64)I << LXIII);
+}
+
 /* par eligere: primum inter paria indicem communem habentia; si
  * nullum, inter omnia paria (vivi ascendentes, ergo a < b) */
 interior vacuum
@@ -383,6 +423,7 @@ _par_eligere (
               constans i32* dimensiones,
               constans i32* vivi,
                        i32  numerus_vivorum,
+                       i32  genus,
                        i32* sinister,
                        i32* dexter)
 {
@@ -407,8 +448,8 @@ _par_eligere (
             {
                 perge;
             }
-            elementa = _elementa_effectus(tensores, possessores,
-                dimensiones, a, b);
+            elementa = _clavis_paris(tensores, possessores, dimensiones,
+                genus, a, b);
             si (   !inventum
                 || _clavis_minor(elementa, a, b, optima, oa, ob))
             {
@@ -444,8 +485,8 @@ _par_eligere (
         {
             per (y = x + I; y < numerus_vivorum; y++)
             {
-                i64 elementa = _elementa_effectus(tensores, possessores,
-                    dimensiones, vivi[x], vivi[y]);
+                i64 elementa = _clavis_paris(tensores, possessores,
+                    dimensiones, genus, vivi[x], vivi[y]);
 
                 si (   !inventum
                     || _clavis_minor(elementa, vivi[x], vivi[y],
@@ -825,34 +866,39 @@ _latitudo (
     redde latitudo;
 }
 
-ContractioOrdo*
-contractio_ordinare (
-                ContractioRete* rete,
-    constans ContractioOptiones* optiones,
-                       Piscina* piscina)
+
+/* ==================================================
+ * Constructio ordinis (communis omnibus methodis)
+ * ================================================== */
+
+/* status constructionis: ordo crescens, possessores indicum, vivi */
+nomen structura {
+    ContractioOrdo* ordo;
+              i32* possessores;
+              i32* dimensiones;
+              i32* vivi;
+              i32  numerus_vivorum;
+              i32  gradus_facti;
+              i64* passus_a;            /* NIHIL: sine consiliis ansae */
+              i64* passus_b;
+              i64  limes;               /* abicere si multiplicationes > */
+} StatusOrdinis;
+
+/* ordo novus cum tensoribus initialibus; consilia: passus pro consiliis
+ * ansae (materializatio), aliter simulatio sola */
+interior vacuum
+_statum_incipere (
+    constans ContractioRete* rete,
+                        b32  consilia,
+                        i64  limes,
+                   Piscina* piscina,
+             StatusOrdinis* st)
 {
     ContractioOrdo* ordo;
-               i32* possessores;
-               i32* dimensiones;
-               i32* vivi;
-               i64* passus_a;
-               i64* passus_b;
-               i32  numerus_vivorum;
-               i32  n;
-               i32  m;
-               i32  s;
+               i32  n = xar_numerus(rete->tensores);
+               i32  m = xar_numerus(rete->indices);
                i32  j;
                i32  k;
-
-    si (   rete == NIHIL || optiones == NIHIL || piscina == NIHIL
-        || optiones->methodus != CONTRACTIO_AVIDUS
-        || !contractio_rete_clausum(rete))
-    {
-        redde NIHIL;
-    }
-    rete->ordinatum  = VERUM;
-    n                = xar_numerus(rete->tensores);
-    m                = xar_numerus(rete->indices);
 
     ordo = (ContractioOrdo*)piscina_allocare(piscina,
         magnitudo(ContractioOrdo));
@@ -866,9 +912,22 @@ contractio_ordinare (
     ordo->sumptus.octeti_officinae  = ZEPHYRUM;
     ordo->sumptus.multiplicationes  = ZEPHYRUM;
     ordo->sumptus.latitudo          = ZEPHYRUM;
+    ordo->candidatus                = CONTRACTIO_CANDIDATUS_AVIDUS;
+    ordo->numerus_candidatorum      = ZEPHYRUM;
+    ordo->candidati                 = NIHIL;
+    ordo->candidati_aestimati       = NIHIL;
+    st->ordo                        = ordo;
+    st->possessores                 = NIHIL;
+    st->dimensiones                 = NIHIL;
+    st->vivi                        = NIHIL;
+    st->numerus_vivorum             = n;
+    st->gradus_facti                = ZEPHYRUM;
+    st->passus_a                    = NIHIL;
+    st->passus_b                    = NIHIL;
+    st->limes                       = limes;
     si (n == ZEPHYRUM)
     {
-        redde ordo;
+        redde;
     }
     ordo->tensores = (TensorOrdinis*)piscina_allocare(piscina,
         (memoriae_index)(n + ordo->numerus_graduum)
@@ -879,15 +938,11 @@ contractio_ordinare (
             (memoriae_index)ordo->numerus_graduum
             * magnitudo(GradusOrdinis));
     }
-
-    /* dimensiones et possessores (clausum: duo per indicem) */
-    dimensiones = NIHIL;
-    possessores = NIHIL;
     si (m > ZEPHYRUM)
     {
-        dimensiones = (i32*)piscina_allocare(piscina,
+        st->dimensiones = (i32*)piscina_allocare(piscina,
             (memoriae_index)m * magnitudo(i32));
-        possessores = (i32*)piscina_allocare(piscina,
+        st->possessores = (i32*)piscina_allocare(piscina,
             (memoriae_index)m * II * magnitudo(i32));
     }
     per (j = ZEPHYRUM; j < m; j++)
@@ -895,12 +950,10 @@ contractio_ordinare (
         constans IndexRetis* index = (constans IndexRetis*)xar_obtinere(
             rete->indices, j);
 
-        dimensiones[j]           = index->dimensio;
-        possessores[II * j]      = CONTRACTIO_NULLUS;
-        possessores[II * j + I]  = CONTRACTIO_NULLUS;
+        st->dimensiones[j]           = index->dimensio;
+        st->possessores[II * j]      = CONTRACTIO_NULLUS;
+        st->possessores[II * j + I]  = CONTRACTIO_NULLUS;
     }
-
-    /* tensores initiales */
     per (k = ZEPHYRUM; k < n; k++)
     {
         constans TensorRetis* tr = (constans TensorRetis*)xar_obtinere(
@@ -922,82 +975,586 @@ contractio_ordinare (
         {
             i32 index = t->indices[j];
 
-            si (possessores[II * index] == CONTRACTIO_NULLUS)
+            si (st->possessores[II * index] == CONTRACTIO_NULLUS)
             {
-                possessores[II * index] = k;
+                st->possessores[II * index] = k;
             }
             alioquin
             {
-                possessores[II * index + I] = k;
+                st->possessores[II * index + I] = k;
             }
             t->elementa = _multiplicare_saturate(t->elementa,
-                dimensiones[index]);
+                st->dimensiones[index]);
         }
     }
-
-    /* passus per indicem in operandis gradus currentis (0 = absens) */
-    passus_a = NIHIL;
-    passus_b = NIHIL;
-    si (m > ZEPHYRUM)
+    si (consilia && m > ZEPHYRUM)
     {
-        passus_a = (i64*)piscina_allocare(piscina,
+        st->passus_a = (i64*)piscina_allocare(piscina,
             (memoriae_index)m * magnitudo(i64));
-        passus_b = (i64*)piscina_allocare(piscina,
+        st->passus_b = (i64*)piscina_allocare(piscina,
             (memoriae_index)m * magnitudo(i64));
         per (j = ZEPHYRUM; j < m; j++)
         {
-            passus_a[j] = ZEPHYRUM;
-            passus_b[j] = ZEPHYRUM;
+            st->passus_a[j] = ZEPHYRUM;
+            st->passus_b[j] = ZEPHYRUM;
         }
     }
-
-    /* gradus avidi */
-    vivi = (i32*)piscina_allocare(piscina,
+    st->vivi = (i32*)piscina_allocare(piscina,
         (memoriae_index)n * magnitudo(i32));
     per (k = ZEPHYRUM; k < n; k++)
     {
-        vivi[k] = k;
+        st->vivi[k] = k;
     }
-    numerus_vivorum = n;
-    per (s = ZEPHYRUM; s < ordo->numerus_graduum; s++)
+}
+
+/* gradus unus: a < b vivi in c = n + s contrahuntur. FALSUM si
+ * multiplicationes summae limitem superant (candidatus abicitur). */
+interior b32
+_gradum_facere (
+    StatusOrdinis* st,
+              i32  a,
+              i32  b,
+          Piscina* piscina)
+{
+    ContractioOrdo* ordo  = st->ordo;
+               i32  s     = st->gradus_facti;
+               i32  c     = ordo->initiales + s;
+               i64  multiplicationes;
+               i32  j;
+               i32  k;
+
+    multiplicationes = _contrahere(ordo->tensores, st->possessores,
+        st->dimensiones, a, b, c, piscina);
+    ordo->gradus[s].sinister  = a;
+    ordo->gradus[s].dexter    = b;
+    ordo->gradus[s].effectus  = c;
+    si (st->passus_a != NIHIL)
+    {
+        _gradum_parare(ordo->tensores, st->dimensiones, st->passus_a,
+            st->passus_b, &ordo->gradus[s], piscina);
+    }
+    alioquin
+    {
+        ordo->gradus[s].externi          = ZEPHYRUM;
+        ordo->gradus[s].interni          = ZEPHYRUM;
+        ordo->gradus[s].dimensiones      = NIHIL;
+        ordo->gradus[s].passus_sinistri  = NIHIL;
+        ordo->gradus[s].passus_dextri    = NIHIL;
+    }
+    ordo->sumptus.multiplicationes = _addere_saturate(
+        ordo->sumptus.multiplicationes, multiplicationes);
+    si (ordo->tensores[c].elementa > ordo->sumptus.apex)
+    {
+        ordo->sumptus.apex = ordo->tensores[c].elementa;
+    }
+    k = ZEPHYRUM;
+    per (j = ZEPHYRUM; j < st->numerus_vivorum; j++)
+    {
+        si (st->vivi[j] != a && st->vivi[j] != b)
+        {
+            st->vivi[k++] = st->vivi[j];
+        }
+    }
+    st->vivi[k++]        = c;
+    st->numerus_vivorum  = k;
+    st->gradus_facti++;
+    redde ordo->sumptus.multiplicationes <= st->limes;
+}
+
+interior vacuum
+_statum_finire (
+    StatusOrdinis* st,
+          Piscina* piscina)
+{
+    _tabulam_disponere(st->ordo, piscina);
+    st->ordo->sumptus.latitudo = _latitudo(st->ordo, st->dimensiones,
+        piscina);
+}
+
+/* producens avidus: clavis genere (AVIDUS: T2; REDUCTIO) */
+interior b32
+_avide_producere (
+    StatusOrdinis* st,
+              i32  genus,
+          Piscina* piscina)
+{
+    dum (st->numerus_vivorum > I)
     {
         i32 a;
         i32 b;
-        i32 c = n + s;
-        i64 multiplicationes;
 
-        _par_eligere(ordo->tensores, possessores, dimensiones, vivi,
-            numerus_vivorum, &a, &b);
-        multiplicationes = _contrahere(ordo->tensores, possessores,
-            dimensiones, a, b, c, piscina);
-        ordo->gradus[s].sinister  = a;
-        ordo->gradus[s].dexter    = b;
-        ordo->gradus[s].effectus  = c;
-        _gradum_parare(ordo->tensores, dimensiones, passus_a, passus_b,
-            &ordo->gradus[s], piscina);
-        ordo->sumptus.multiplicationes = _addere_saturate(
-            ordo->sumptus.multiplicationes, multiplicationes);
-        si (ordo->tensores[c].elementa > ordo->sumptus.apex)
+        _par_eligere(st->ordo->tensores, st->possessores,
+            st->dimensiones,
+            st->vivi, st->numerus_vivorum, genus, &a, &b);
+        si (!_gradum_facere(st, a, b, piscina))
         {
-            ordo->sumptus.apex = ordo->tensores[c].elementa;
+            redde FALSUM;
         }
+    }
+    redde VERUM;
+}
 
-        /* vivi: a et b exeunt, c (id maximum) in fine */
-        k = ZEPHYRUM;
-        per (j = ZEPHYRUM; j < numerus_vivorum; j++)
+
+/* ==================================================
+ * Min-fill in graphe linearum (indices vicini si tensorem communem
+ * habent); eliminatio indicis = contractio duorum tensorum eius
+ * (online), indices communes clausi e graphe statim tolluntur (vicini
+ * eorum iam clique sunt: nulla impletio). Candidati per gradum: LXIV
+ * vertices (gradus, id) minimi; electio (impletio, gradus, id) aut,
+ * cum sorte, fortuita inter aequales (impletio, gradus).
+ * ================================================== */
+
+#define IMPLETIO_CANDIDATI LXIV
+
+nomen structura {
+    i32* vicini;
+    i32  numerus;
+    i32  capacitas;
+} VicinitasIndicis;
+
+interior vacuum
+_vicinum_addere (
+    VicinitasIndicis* v,
+                 i32  index,
+             Piscina* piscina)
+{
+    si (v->numerus == v->capacitas)
+    {
+        i32 capacitas = v->capacitas
+            == ZEPHYRUM ? VIII : II * v->capacitas;
+        i32* nova      = (i32*)piscina_allocare(piscina,
+            (memoriae_index)capacitas * magnitudo(i32));
+        i32 j;
+
+        per (j = ZEPHYRUM; j < v->numerus; j++)
         {
-            si (vivi[j] != a && vivi[j] != b)
+            nova[j] = v->vicini[j];
+        }
+        v->vicini     = nova;
+        v->capacitas  = capacitas;
+    }
+    v->vicini[v->numerus++] = index;
+}
+
+interior vacuum
+_vicinum_tollere (
+    VicinitasIndicis* v,
+                 i32  index)
+{
+    i32 j;
+
+    per (j = ZEPHYRUM; j < v->numerus; j++)
+    {
+        si (v->vicini[j] == index)
+        {
+            v->vicini[j] = v->vicini[--v->numerus];
+            redde;
+        }
+    }
+}
+
+/* clique super vicinos ipsius v (praeter v): margines absentes
+ * adduntur; si numerare, solum numerantur (nihil additur) */
+interior i32
+_impletio (
+    VicinitasIndicis* vicinitates,
+                 i32* signa,
+                 i32* signum,
+                 i32  v,
+                 b32  addere,
+             Piscina* piscina)
+{
+    VicinitasIndicis* nv        = &vicinitates[v];
+                 i32  impletio  = ZEPHYRUM;
+                 i32  p;
+                 i32  q;
+
+    per (p = ZEPHYRUM; p < nv->numerus; p++)
+    {
+        i32 x = nv->vicini[p];
+        i32 j;
+
+        (*signum)++;
+        per (j = ZEPHYRUM; j < vicinitates[x].numerus; j++)
+        {
+            signa[vicinitates[x].vicini[j]] = *signum;
+        }
+        per (q = addere ? ZEPHYRUM : p + I; q < nv->numerus; q++)
+        {
+            i32 y = nv->vicini[q];
+
+            si (y != x && signa[y] != *signum)
             {
-                vivi[k++] = vivi[j];
+                si (addere)
+                {
+                    _vicinum_addere(&vicinitates[x], y, piscina);
+                }
+                alioquin
+                {
+                    impletio++;
+                }
             }
         }
-        vivi[k++]        = c;
-        numerus_vivorum  = k;
+    }
+    redde impletio;
+}
+
+interior vacuum
+_verticem_tollere (
+    VicinitasIndicis* vicinitates,
+                 b32* vivus,
+                 i32  v)
+{
+    i32 j;
+
+    per (j = ZEPHYRUM; j < vicinitates[v].numerus; j++)
+    {
+        _vicinum_tollere(&vicinitates[vicinitates[v].vicini[j]], v);
+    }
+    vicinitates[v].numerus  = ZEPHYRUM;
+    vivus[v]                = FALSUM;
+}
+
+interior b32
+_implendo_producere (
+    StatusOrdinis* st,
+             Sors* sors,
+          Piscina* piscina)
+{
+    constans ContractioRete* rete         = st->ordo->rete;
+                        i32  m            = xar_numerus(rete->indices);
+                        i32  n            = st->ordo->initiales;
+           VicinitasIndicis* vicinitates  = NIHIL;
+                        b32* vivus        = NIHIL;
+                        i32* signa        = NIHIL;
+                        i32  signum       = ZEPHYRUM;
+                        i32  reliqui      = m;
+                        i32  k;
+                        i32  j;
+
+    si (m > ZEPHYRUM)
+    {
+        vicinitates = (VicinitasIndicis*)piscina_allocare(piscina,
+            (memoriae_index)m * magnitudo(VicinitasIndicis));
+        vivus   = (b32*)piscina_allocare(piscina, (memoriae_index)m
+            * magnitudo(b32));
+        signa   = (i32*)piscina_allocare(piscina, (memoriae_index)m
+            * magnitudo(i32));
+        per (j = ZEPHYRUM; j < m; j++)
+        {
+            vicinitates[j].vicini     = NIHIL;
+            vicinitates[j].numerus    = ZEPHYRUM;
+            vicinitates[j].capacitas  = ZEPHYRUM;
+            vivus[j]                  = VERUM;
+            signa[j]                  = ZEPHYRUM;
+        }
+        /* margines: paria indicum cuiusque tensoris initialis */
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            constans TensorOrdinis* t = &st->ordo->tensores[k];
+                               i32  p;
+                               i32  q;
+
+            per (p = ZEPHYRUM; p < t->numerus; p++)
+            {
+                i32 x = t->indices[p];
+
+                signum++;
+                per (j = ZEPHYRUM; j < vicinitates[x].numerus; j++)
+                {
+                    signa[vicinitates[x].vicini[j]] = signum;
+                }
+                per (q = ZEPHYRUM; q < t->numerus; q++)
+                {
+                    i32 y = t->indices[q];
+
+                    si (y != x && signa[y] != signum)
+                    {
+                        _vicinum_addere(&vicinitates[x], y, piscina);
+                        signa[y] = signum;
+                    }
+                }
+            }
+        }
     }
 
-    _tabulam_disponere(ordo, piscina);
-    ordo->sumptus.latitudo = _latitudo(ordo, dimensiones, piscina);
-    redde ordo;
+    dum (reliqui > ZEPHYRUM)
+    {
+        i32 candidati[IMPLETIO_CANDIDATI];
+        i32 numerus_candidatorum = ZEPHYRUM;
+        i32 v;
+        i32 optima_impletio  = ZEPHYRUM;
+        i32 optimus_gradus   = ZEPHYRUM;
+        i32 aequales         = ZEPHYRUM;
+        i32 electio;
+        i32 a;
+        i32 b;
+
+        /* LXIV vertices vivi (gradus, id) minimi, ordine ascendente */
+        per (v = ZEPHYRUM; v < m; v++)
+        {
+            i32 p;
+
+            si (!vivus[v])
+            {
+                perge;
+            }
+            si (   numerus_candidatorum == IMPLETIO_CANDIDATI
+                && vicinitates[candidati[numerus_candidatorum
+                    - I]].numerus
+                   <= vicinitates[v].numerus)
+            {
+                perge;
+            }
+            p = numerus_candidatorum < IMPLETIO_CANDIDATI
+                ? numerus_candidatorum++ : IMPLETIO_CANDIDATI - I;
+            dum (   p > ZEPHYRUM
+                 && vicinitates[candidati[p - I]].numerus
+                    > vicinitates[v].numerus)
+            {
+                candidati[p] = candidati[p - I];
+                p--;
+            }
+            candidati[p] = v;
+        }
+
+        /* (impletio, gradus) minimi; aequales ordine candidatorum */
+        per (j = ZEPHYRUM; j < numerus_candidatorum; j++)
+        {
+            i32 w = candidati[j];
+            i32 f = _impletio(vicinitates, signa, &signum, w, FALSUM,
+                piscina);
+            i32 g = vicinitates[w].numerus;
+
+            si (   j == ZEPHYRUM || f < optima_impletio
+                || (f == optima_impletio && g < optimus_gradus))
+            {
+                optima_impletio  = f;
+                optimus_gradus   = g;
+                aequales         = ZEPHYRUM;
+            }
+            si (f == optima_impletio && g == optimus_gradus)
+            {
+                candidati[aequales++] = w;
+            }
+        }
+        electio = sors != NIHIL && aequales > I
+            ? sors_intra(sors, aequales) : ZEPHYRUM;
+        v = candidati[electio];
+
+        /* eliminatio: tensores duo indicis v contrahuntur */
+        a = st->possessores[II * v];
+        b = st->possessores[II * v + I];
+        (vacuum)_impletio(vicinitates, signa, &signum, v, VERUM,
+            piscina);
+        _verticem_tollere(vicinitates, vivus, v);
+        reliqui--;
+        si (!_gradum_facere(st, a < b ? a : b, a < b ? b : a, piscina))
+        {
+            redde FALSUM;
+        }
+        /* indices communes, nunc clausi: e graphe sine impletione */
+        per (j = ZEPHYRUM; j < st->ordo->tensores[a].numerus; j++)
+        {
+            i32 u   = st->ordo->tensores[a].indices[j];
+            i32 o0  = st->possessores[II * u];
+            i32 o1  = st->possessores[II * u + I];
+
+            si (   vivus[u] && (o0 == a || o0 == b)
+                && (o1 == a || o1 == b))
+            {
+                _verticem_tollere(vicinitates, vivus, u);
+                reliqui--;
+            }
+        }
+    }
+
+    /* reliqui tensores (partes disiunctae, scalares): clavis T2 */
+    redde _avide_producere(st, CONTRACTIO_CANDIDATUS_AVIDUS, piscina);
+}
+
+/* candidatus k: producere et finire in statu novo */
+interior b32
+_candidatum_currere (
+        constans ContractioRete* rete,
+                            i32  k,
+    constans ContractioOptiones* optiones,
+                            b32  consilia,
+                            i64  limes,
+                        Piscina* piscina,
+                  StatusOrdinis* st)
+{
+     b32 bene;
+    Sors sors;
+
+    _statum_incipere(rete, consilia, limes, piscina, st);
+    si (   k == CONTRACTIO_CANDIDATUS_AVIDUS
+        || k == CONTRACTIO_CANDIDATUS_REDUCTIO)
+    {
+        bene = _avide_producere(st, k, piscina);
+    }
+    alioquin si (k == CONTRACTIO_CANDIDATUS_IMPLETIO)
+    {
+        bene = _implendo_producere(st, NIHIL, piscina);
+    }
+    alioquin
+    {
+        sors_seminare(&sors, optiones->semen,
+            (i64)(k - CONTRACTIO_CANDIDATUS_FORTUITUS));
+        bene = _implendo_producere(st, &sors, piscina);
+    }
+    si (bene)
+    {
+        _statum_finire(st, piscina);
+    }
+    redde bene;
+}
+
+/* clavis electionis: aptus (octeti <= limes) ante non aptum; inter
+ * aptos (multiplicationes, octeti, k); inter non aptos (octeti, k) */
+interior b32
+_melior (
+    constans ContractioSumptus* s,
+                           i32  k,
+    constans ContractioSumptus* optimus,
+                           i32  optimus_k,
+                           i64  octeti_maximi)
+{
+    b32 aptus          = s->octeti_officinae <= octeti_maximi;
+    b32 optimus_aptus  = optimus->octeti_officinae <= octeti_maximi;
+
+    si (aptus != optimus_aptus)
+    {
+        redde aptus;
+    }
+    si (aptus && s->multiplicationes != optimus->multiplicationes)
+    {
+        redde s->multiplicationes < optimus->multiplicationes;
+    }
+    si (s->octeti_officinae != optimus->octeti_officinae)
+    {
+        redde s->octeti_officinae < optimus->octeti_officinae;
+    }
+    redde k < optimus_k;
+}
+
+ContractioOrdo*
+contractio_ordinare (
+                ContractioRete* rete,
+    constans ContractioOptiones* optiones,
+                       Piscina* piscina)
+{
+        StatusOrdinis  st;
+    ContractioSumptus* candidati;
+                  b32* aestimati;
+                  i32* optimi_gradus;
+                  i32  numerus;
+                  i32  optimus_k = ZEPHYRUM;
+                  i32  k;
+                  i32  s;
+
+    si (   rete == NIHIL || optiones == NIHIL || piscina == NIHIL
+        || (   optiones->methodus != CONTRACTIO_AVIDUS
+            && optiones->methodus != CONTRACTIO_OPTIMUS)
+        || (   optiones->methodus == CONTRACTIO_OPTIMUS
+            && (   optiones->conatus > CONTRACTIO_CONATUS_MAXIMI
+                || optiones->candidatus > CONTRACTIO_CANDIDATUS_IMPLETIO
+                   + optiones->conatus))
+        || !contractio_rete_clausum(rete))
+    {
+        redde NIHIL;
+    }
+    rete->ordinatum = VERUM;
+
+    si (optiones->methodus == CONTRACTIO_AVIDUS)
+    {
+        (vacuum)_candidatum_currere(rete, CONTRACTIO_CANDIDATUS_AVIDUS,
+            optiones, VERUM, CONTRACTIO_SATURATUM, piscina, &st);
+        st.ordo->numerus_candidatorum  = I;
+        st.ordo->candidati             = (ContractioSumptus*)
+            piscina_allocare(piscina, magnitudo(ContractioSumptus));
+        st.ordo->candidati_aestimati   = (b32*)piscina_allocare(piscina,
+            magnitudo(b32));
+        st.ordo->candidati[ZEPHYRUM]            = st.ordo->sumptus;
+        st.ordo->candidati_aestimati[ZEPHYRUM]  = VERUM;
+        redde st.ordo;
+    }
+
+    /* OPTIMUS: candidati in regione refecta, gradus victoris servati */
+    numerus        = CONTRACTIO_CANDIDATUS_IMPLETIO + optiones->conatus;
+    candidati      = (ContractioSumptus*)piscina_allocare(piscina,
+        (memoriae_index)numerus * magnitudo(ContractioSumptus));
+    aestimati      = (b32*)piscina_allocare(piscina,
+        (memoriae_index)numerus * magnitudo(b32));
+    optimi_gradus  = (i32*)piscina_allocare(piscina,
+        (memoriae_index)(II * xar_numerus(rete->tensores) + I)
+        * magnitudo(i32));
+    per (k = I; k <= numerus; k++)
+    {
+        PiscinaNotatio nota;
+                   i64 limes = CONTRACTIO_SATURATUM;
+
+        aestimati[k - I] = FALSUM;
+        si (   optiones->candidatus != CONTRACTIO_CANDIDATUS_OMNES
+            && optiones->candidatus != k)
+        {
+            perge;
+        }
+        si (   optimus_k != ZEPHYRUM
+            && candidati[optimus_k - I].octeti_officinae
+               <= optiones->octeti_maximi)
+        {
+            limes = candidati[optimus_k - I].multiplicationes;
+        }
+        nota = piscina_notare(piscina);
+        si (_candidatum_currere(rete, k, optiones, FALSUM, limes,
+            piscina,
+            &st))
+        {
+            candidati[k - I] = st.ordo->sumptus;
+            aestimati[k - I] = VERUM;
+            si (   optimus_k == ZEPHYRUM
+                || _melior(&candidati[k - I], k,
+                       &candidati[optimus_k - I], optimus_k,
+                       optiones->octeti_maximi))
+            {
+                optimus_k = k;
+                per (s = ZEPHYRUM; s < st.ordo->numerus_graduum; s++)
+                {
+                    optimi_gradus[II * s] =
+                        st.ordo->gradus[s].sinister;
+                    optimi_gradus[II * s + I] =
+                        st.ordo->gradus[s].dexter;
+                }
+            }
+        }
+        piscina_reficere(piscina, nota);
+        si (   k == CONTRACTIO_CANDIDATUS_AVIDUS && aestimati[ZEPHYRUM]
+            && optiones->candidatus == CONTRACTIO_CANDIDATUS_OMNES
+            && candidati[ZEPHYRUM].multiplicationes < optiones->limen)
+        {
+            /* ordo avidus iam vilis: ceteri non aestimantur */
+            per (k = k + I; k <= numerus; k++)
+            {
+                aestimati[k - I] = FALSUM;
+            }
+            frange;
+        }
+    }
+
+    /* victor materializatur: gradus iterantur cum consiliis ansae */
+    _statum_incipere(rete, VERUM, CONTRACTIO_SATURATUM, piscina, &st);
+    per (s = ZEPHYRUM; s < st.ordo->numerus_graduum; s++)
+    {
+        (vacuum)_gradum_facere(&st, optimi_gradus[II * s],
+            optimi_gradus[II * s + I], piscina);
+    }
+    _statum_finire(&st, piscina);
+    st.ordo->candidatus            = optimus_k;
+    st.ordo->numerus_candidatorum  = numerus;
+    st.ordo->candidati             = candidati;
+    st.ordo->candidati_aestimati   = aestimati;
+    redde st.ordo;
 }
 
 ContractioSumptus
@@ -1080,6 +1637,29 @@ contractio_ordo_indices (
     }
     *indices = ordo->tensores[tensor].indices;
     *numerus = ordo->tensores[tensor].numerus;
+    redde VERUM;
+}
+
+i32
+contractio_ordo_candidatus (
+    constans ContractioOrdo* ordo)
+{
+    redde ordo == NIHIL ? ZEPHYRUM : ordo->candidatus;
+}
+
+b32
+contractio_ordo_candidati (
+    constans ContractioOrdo* ordo,
+                        i32  k,
+          ContractioSumptus* simulatus)
+{
+    si (   ordo == NIHIL || simulatus == NIHIL || k == ZEPHYRUM
+        || k > ordo->numerus_candidatorum
+        || !ordo->candidati_aestimati[k - I])
+    {
+        redde FALSUM;
+    }
+    *simulatus = ordo->candidati[k - I];
     redde VERUM;
 }
 

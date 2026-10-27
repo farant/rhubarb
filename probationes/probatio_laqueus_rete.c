@@ -1303,6 +1303,59 @@ _probare_limitem_tricarum (
 }
 
 
+/* ordo optimus VERE in usu (contractio-plan T5b): clausura tricae VIII
+ * filorum supra limen - victor non avidus, sumptus retis = simulatus
+ * victoris < avidi; uncinus = Jones per idem rete iterum */
+interior vacuum
+_probare_ordinem_optimum (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+       Sors  s;
+        s32  verbum[CLI];
+        i32* pd = NIHIL;
+        i32  conatus;
+        i32  k;
+
+    sors_seminare(&s, (i64)MMXXXV, ZEPHYRUM);
+    per (conatus = ZEPHYRUM; conatus < M && pd == NIHIL; conatus++)
+    {
+        per (k = ZEPHYRUM; k < CLI; k++)
+        {
+            s32 g = (s32)(I + sors_intra(&s, VII));
+
+            verbum[k] = sors_intra(&s, II) == ZEPHYRUM ? g : -g;
+        }
+        pd = _plexus_pd(verbum, CLI, VIII, piscina);
+    }
+    CREDO_NECESSE_NON_NIHIL(pd);
+    {
+        LaqueusModulusVertex* mv = laqueus_modulus_vertex_creare(pd,
+            CLI,
+            OCTETI_MAXIMI, piscina);
+        constans ContractioOrdo* ordo;
+              ContractioSumptus  avidus;
+              ContractioSumptus  victoris;
+                            i32  victor;
+
+        CREDO_NECESSE_NON_NIHIL(mv);
+        ordo    = laqueus_modulus_vertex_ordo(mv);
+        victor  = contractio_ordo_candidatus(ordo);
+        CREDO_NECESSE(contractio_ordo_candidati(ordo,
+            CONTRACTIO_CANDIDATUS_AVIDUS, &avidus));
+        CREDO_NECESSE(avidus.multiplicationes
+            >= CONTRACTIO_LIMEN_ORDINARIUM);
+        CREDO_VERUM(victor != CONTRACTIO_CANDIDATUS_AVIDUS);
+        CREDO_NECESSE(contractio_ordo_candidati(ordo, victor,
+            &victoris));
+        CREDO_AEQUALIS_I64(laqueus_modulus_vertex_sumptus(mv).multiplicationes,
+            victoris.multiplicationes);
+        CREDO_VERUM(victoris.multiplicationes
+            < avidus.multiplicationes);
+    }
+}
+
+
 /* ==================================================
  * Suita
  * ================================================== */
@@ -1327,6 +1380,8 @@ interior constans CredoSectio SECTIONES[] = {
     { "limes tabulae", _probare_limitem_tabulae, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "limes tricarum", _probare_limitem_tricarum, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "ordo optimus", _probare_ordinem_optimum, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "tabula tota", _probare_tabulam_totam, NIHIL, NIHIL, NIHIL,
       NIHIL },

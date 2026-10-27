@@ -153,6 +153,11 @@ _probare_optiones (
 
     (vacuum)c;
     CREDO_AEQUALIS_I32(o.methodus, CONTRACTIO_AVIDUS);
+    CREDO_AEQUALIS_I32(o.conatus, XVI);
+    CREDO_AEQUALIS_I64(o.semen, CONTRACTIO_SEMEN_ORDINARIUM);
+    CREDO_AEQUALIS_I64(o.octeti_maximi, CONTRACTIO_SATURATUM);
+    CREDO_AEQUALIS_I32(o.candidatus, CONTRACTIO_CANDIDATUS_OMNES);
+    CREDO_AEQUALIS_I64(o.limen, CONTRACTIO_LIMEN_ORDINARIUM);
 }
 
 /* v0(a) M1(a,b) M2(b,c) v3(c), dimensiones 2, 3, 4: paria (0,1) et
@@ -516,7 +521,8 @@ _bita (
 interior vacuum
 _independens_probare (
     constans ContractioOrdo* ordo,
-          constans Fortuitum* f)
+          constans Fortuitum* f,
+                         b32  clavis_avida)
 {
                   i32 masca[II * FORTUITI_TENSORES];
                   b32 vivus[II * FORTUITI_TENSORES];
@@ -571,6 +577,13 @@ _independens_probare (
 
         /* clavis avida: nullum par candidatum minus */
         clavis = _productum(f, masca[a] ^ masca[b]);
+        si (!clavis_avida)
+        {
+            /* ordo non avidus (T5b): solum pars et sumptus probantur */
+            vicini = FALSUM;
+        }
+        alioquin
+        {
         per (x = ZEPHYRUM; x < e; x++)
         {
             per (y = x + I; y < e; y++)
@@ -600,6 +613,7 @@ _independens_probare (
                 CREDO_VERUM(k2 > clavis
                     || (k2 == clavis && (x > a || (x == a && y >= b))));
             }
+        }
         }
 
         masca[e]          = masca[a] ^ masca[b];
@@ -715,6 +729,14 @@ _independens_probare (
 }
 
 interior vacuum
+_independens_probare_avide (
+     constans ContractioOrdo* ordo,
+          constans Fortuitum* f)
+{
+    _independens_probare(ordo, f, VERUM);
+}
+
+interior vacuum
 _probare_fortuita (
     CredoContextus* c)
 {
@@ -728,7 +750,8 @@ _probare_fortuita (
         Fortuitum f;
 
         _fortuitum(&s, &f);
-        _independens_probare(_ordinare(_rete_fortuitum(piscina, &f),
+        _independens_probare_avide(_ordinare(_rete_fortuitum(piscina,
+            &f),
             piscina), &f);
     }
 }
@@ -896,7 +919,7 @@ _probare_refutationes (
     /* optiones invalidae: refutatae ante congelationem */
     o.methodus = 0;
     CREDO_NIHIL(contractio_ordinare(rete, &o, piscina));
-    o.methodus = II;
+    o.methodus = III;
     CREDO_NIHIL(contractio_ordinare(rete, &o, piscina));
     CREDO_NIHIL(contractio_ordinare(rete, NIHIL, piscina));
     o = contractio_optiones_ordinariae();
@@ -1704,6 +1727,481 @@ _probare_anulum_saturatum (
 
 
 /* ==================================================
+ * Ordo optimus (contractio-plan T5b)
+ * ================================================== */
+
+/* rete tricae: n fila, verbum in +-1..+-(n-1); indices 0..n-1
+ * initiales, deinde bini per transitum (ordine p = i, i+1) nisi
+ * transitus ultimus in positione p - tunc index initialis p
+ * (clausura). Tensor transitus: [ingressus i, ingressus i+1, exitus
+ * i, exitus i+1], dimensiones 2. Idem ac portus Pythonicus
+ * (scratchpad ordo_t5/portus.py, braid_net). */
+interior ContractioRete*
+_rete_tricae (
+         Piscina* piscina,
+             i32  n,
+    constans s32* verbum,
+             i32  longitudo)
+{
+    ContractioRete* rete = contractio_rete_creare(piscina);
+               i32  ultimus[XVI];
+               i32  currens[XVI];
+               i32  k;
+               i32  j;
+               i32  id;
+
+    per (j = ZEPHYRUM; j < n; j++)
+    {
+        CREDO_NECESSE(contractio_index_addere(rete, II, &id));
+        currens[j] = j;
+        ultimus[j] = longitudo;
+    }
+    per (k = ZEPHYRUM; k < longitudo; k++)
+    {
+        i32 i = (i32)(verbum[k] > ZEPHYRUM ? verbum[k] : -verbum[k])
+            - I;
+
+        ultimus[i]      = k;
+        ultimus[i + I]  = k;
+    }
+    per (k = ZEPHYRUM; k < longitudo; k++)
+    {
+        i32 i = (i32)(verbum[k] > ZEPHYRUM ? verbum[k] : -verbum[k])
+            - I;
+        i32 exitus[II];
+        i32 indices[IV];
+        i32 q;
+
+        per (q = ZEPHYRUM; q < II; q++)
+        {
+            si (ultimus[i + q] == k)
+            {
+                exitus[q] = i + q;
+            }
+            alioquin
+            {
+                CREDO_NECESSE(contractio_index_addere(rete, II,
+                    &exitus[q]));
+            }
+        }
+        indices[0]    = currens[i];
+        indices[I]    = currens[i + I];
+        indices[II]   = exitus[0];
+        indices[III]  = exitus[I];
+        CREDO_NECESSE(contractio_tensor_addere(rete, indices, IV, &id));
+        currens[i]      = exitus[0];
+        currens[i + I]  = exitus[I];
+    }
+    redde rete;
+}
+
+interior ContractioOrdo*
+_ordinare_optime (
+    ContractioRete* rete,
+               i32  conatus,
+               i64  octeti_maximi,
+               i32  candidatus,
+          Piscina* piscina)
+{
+    ContractioOptiones  o    = contractio_optiones_ordinariae();
+        ContractioOrdo* ordo;
+
+    o.methodus       = CONTRACTIO_OPTIMUS;
+    o.conatus        = conatus;
+    o.octeti_maximi  = octeti_maximi;
+    o.candidatus     = candidatus;
+    o.limen          = ZEPHYRUM;
+    ordo             = contractio_ordinare(rete, &o, piscina);
+    CREDO_NECESSE_NON_NIHIL(ordo);
+    redde ordo;
+}
+
+interior vacuum
+_sumptus_aequales (
+    ContractioSumptus a,
+    ContractioSumptus b)
+{
+    CREDO_AEQUALIS_I64(a.multiplicationes, b.multiplicationes);
+    CREDO_AEQUALIS_I64(a.octeti_officinae, b.octeti_officinae);
+    CREDO_AEQUALIS_I64(a.apex, b.apex);
+    CREDO_AEQUALIS_I32(a.latitudo, b.latitudo);
+}
+
+nomen structura {
+    i32 fila;
+    i32 longitudo;
+    s32 verbum[XC];
+    i64 valores[III][IV];   /* per candidatum: mult, octeti, apex, lat */
+    i32 victor;
+} CasusTricae;
+
+/* valores ex portu Pythonico independenti (conatus 0) */
+interior constans CasusTricae CASUS_TRICARUM[] = {
+    { V, XXX, { -1, -1, 2, 2, 2, 2, 1, -2, 4, 1, -1, 3, -2, -4, 2, -2,
+        1,
+        -2, 2, -2, 1, 4, -2, 3, 3, 4, -3, -3, -4, 3 },
+      { { 4928, 2688, 64, 6 }, { 4496, 1408, 64, 6 },
+        { 5056, 2560, 64, 6 } }, II },
+    { VI, XL, { -1, -2, 1, 2, -5, -1, -3, 2, 4, -3, 4, 5, 3, 1, -2, 2,
+        4,
+        -4, -3, 5, -1, -2, -1, -4, 3, 1, -4, 4, 1, 1, 5, -2, -2, -5, 2,
+            -5,
+        -3, 3, 3, -5 },
+      { { 72064, 18048, 1024, 10 }, { 14016, 4480, 256, 8 },
+        { 15936, 5888, 256, 8 } }, II },
+    { VIII, LX, { 6, -3, 5, 1, -6, 2, -2, 3, -4, 5, -7, 6, -1, -5, 3,
+        -4,
+        -2, -1, 4, 2, -3, -3, 1, 1, -5, -4, -6, 6, 4, -1, -2, -7, 7, -1,
+        -4, -7, 3, -5, 4, 2, -7, 7, 6, -1, -5, -3, -5, -3, 4, 5, -7, 1,
+            6,
+        -1, -6, 3, 7, 3, -6, -7 },
+      { { 213760, 46272, 4096, 12 }, { 84416, 16576, 1024, 10 },
+        { 88704, 18496, 1024, 10 } }, II },
+    { VIII, XC, { 2, -3, 7, 4, -5, 5, 1, -4, -4, -4, 6, -6, 2, -1, -7,
+        -1,
+        -7, -5, -2, 2, -6, -1, -4, -2, 4, -5, 7, 4, -2, 7, -2, 4, -3,
+            -3,
+        -7, -7, -5, -7, 3, 2, 3, 1, -6, -3, 4, 1, -3, -4, -2, 4, -1, -5,
+        -3, 5, -7, 1, 5, 3, -5, -7, -5, -5, -7, 6, 6, 2, 4, -4, 2, 4,
+            -6,
+        -7, 4, -7, 3, -4, 6, 6, -4, 2, 6, -6, -5, 3, 7, -7, 7, 1, 1,
+            -7 },
+      { { 72896, 18496, 1024, 10 }, { 37632, 10816, 1024, 10 },
+        { 46912, 11904, 1024, 10 } }, II },
+    { VI, XXIV, { -3, 2, -2, 2, -5, -1, -5, -2, -2, 2, -2, 2, -5, 3, -1,
+        -4, -2, -4, 3, 2, -2, -2, -2, 5 },
+      { { 2000, 1088, 64, 6 }, { 1824, 768, 64, 6 },
+        { 1808, 976, 64, 6 } }, III },
+};
+
+/* candidati 1..3 (conatus 0) = portus Pythonicus exacte; victor;
+ * ordo materializatus = simulatus victoris; candidatus coactus =
+ * simulatus; limes octetorum 768 in casu ultimo victorem mutat */
+interior vacuum
+_probare_optimum_exactum (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        i32  t;
+
+    per (t = ZEPHYRUM; t < V; t++)
+    {
+        constans CasusTricae* exemplum = &CASUS_TRICARUM[t];
+        ContractioOrdo* ordo = _ordinare_optime(_rete_tricae(piscina,
+            exemplum->fila, exemplum->verbum, exemplum->longitudo),
+            ZEPHYRUM,
+            CONTRACTIO_SATURATUM, CONTRACTIO_CANDIDATUS_OMNES, piscina);
+        ContractioSumptus simulatus;
+                      i32 k;
+
+        CREDO_AEQUALIS_I32(contractio_ordo_candidatus(ordo),
+            exemplum->victor);
+        per (k = I; k <= III; k++)
+        {
+            /* coactus: nulla abiectio, sumptus plenus = portus */
+            ContractioOrdo* coactus = _ordinare_optime(_rete_tricae(
+                piscina, exemplum->fila, exemplum->verbum,
+                exemplum->longitudo), ZEPHYRUM, CONTRACTIO_SATURATUM, k,
+                piscina);
+            ContractioSumptus plenus = contractio_sumptus(coactus);
+
+            CREDO_AEQUALIS_I32(contractio_ordo_candidatus(coactus), k);
+            CREDO_AEQUALIS_I64(plenus.multiplicationes,
+                (i64)exemplum->valores[k - I][0]);
+            CREDO_AEQUALIS_I64(plenus.octeti_officinae,
+                (i64)exemplum->valores[k - I][I]);
+            CREDO_AEQUALIS_I64(plenus.apex, (i64)exemplum->valores[k
+                - I][II]);
+            CREDO_AEQUALIS_I32(plenus.latitudo,
+                (i32)exemplum->valores[k - I][III]);
+            CREDO_NECESSE(contractio_ordo_candidati(coactus, k,
+                &simulatus));
+            _sumptus_aequales(plenus, simulatus);
+            /* in cursu omnium: aestimatus -> idem; abiectus -> victore
+             * carior */
+            si (contractio_ordo_candidati(ordo, k, &simulatus))
+            {
+                _sumptus_aequales(plenus, simulatus);
+            }
+            alioquin
+            {
+                CREDO_VERUM(plenus.multiplicationes
+                    > (i64)exemplum->valores[
+                    exemplum->victor - I][0]);
+            }
+        }
+        CREDO_FALSUM(contractio_ordo_candidati(ordo, IV, &simulatus));
+        CREDO_NECESSE(contractio_ordo_candidati(ordo, exemplum->victor,
+            &simulatus));
+        _sumptus_aequales(contractio_sumptus(ordo), simulatus);
+    }
+    {
+        constans CasusTricae* exemplum = &CASUS_TRICARUM[IV];
+        ContractioOrdo* ordo = _ordinare_optime(_rete_tricae(piscina,
+            exemplum->fila, exemplum->verbum, exemplum->longitudo),
+            ZEPHYRUM,
+            (i64)768UL, CONTRACTIO_CANDIDATUS_OMNES, piscina);
+
+        CREDO_AEQUALIS_I32(contractio_ordo_candidatus(ordo), II);
+        CREDO_AEQUALIS_I64(contractio_sumptus(ordo).octeti_officinae,
+            (i64)768UL);
+    }
+}
+
+/* retia fortuita et tricae (conatus IV): omnis candidatus aestimatus =
+ * coactus; abiecti coacti victorem superant; victor minimus; OPTIMUS
+ * <= AVIDUS; victor 1 -> ordo idem ac AVIDUS; ordo validus (probatio
+ * independens sine clave avida); exsecutio idem reddit; semen idem ->
+ * ordo idem */
+interior vacuum
+_probare_optimum_fortuitum (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+       Sors  s;
+        i32  t;
+
+    sors_seminare(&s, (i64)MMXXXII, ZEPHYRUM);
+    per (t = ZEPHYRUM; t < LX; t++)
+    {
+           PiscinaNotatio  nota = piscina_notare(piscina);
+                Fortuitum  f;
+           ContractioOrdo* avidus;
+           ContractioOrdo* optimus;
+           ContractioOrdo* iterum;
+        ContractioSumptus  victoris;
+                      i32  victor;
+                      i32  k;
+                      i32  g;
+
+        _fortuitum(&s, &f);
+        avidus  = _ordinare(_rete_fortuitum(piscina, &f), piscina);
+        optimus = _ordinare_optime(_rete_fortuitum(piscina, &f), IV,
+            CONTRACTIO_SATURATUM, CONTRACTIO_CANDIDATUS_OMNES, piscina);
+        iterum  = _ordinare_optime(_rete_fortuitum(piscina, &f), IV,
+            CONTRACTIO_SATURATUM, CONTRACTIO_CANDIDATUS_OMNES, piscina);
+        victor  = contractio_ordo_candidatus(optimus);
+        CREDO_NECESSE(contractio_ordo_candidati(optimus, victor,
+            &victoris));
+        _sumptus_aequales(contractio_sumptus(optimus), victoris);
+        CREDO_VERUM(contractio_sumptus(optimus).multiplicationes
+            <= contractio_sumptus(avidus).multiplicationes);
+        _independens_probare(optimus, &f, FALSUM);
+        per (k = I; k <= VII; k++)
+        {
+            ContractioSumptus  simulatus;
+               ContractioOrdo* coactus =
+                   _ordinare_optime(_rete_fortuitum(
+                   piscina, &f), IV, CONTRACTIO_SATURATUM, k, piscina);
+
+            si (contractio_ordo_candidati(optimus, k, &simulatus))
+            {
+                _sumptus_aequales(contractio_sumptus(coactus),
+                    simulatus);
+                CREDO_VERUM(simulatus.multiplicationes
+                    >= victoris.multiplicationes);
+            }
+            alioquin
+            {
+                CREDO_VERUM(contractio_sumptus(coactus).multiplicationes
+                    > victoris.multiplicationes);
+            }
+        }
+        per (g = ZEPHYRUM; g
+            < contractio_ordo_gradus_numerus(optimus); g++)
+        {
+            i32 a1;
+            i32 b1;
+            i32 e1;
+            i32 a2;
+            i32 b2;
+            i32 e2;
+
+            CREDO_NECESSE(contractio_ordo_gradus(optimus, g, &a1, &b1,
+                &e1));
+            CREDO_NECESSE(contractio_ordo_gradus(iterum, g, &a2, &b2,
+                &e2));
+            CREDO_AEQUALIS_I32(a1, a2);
+            CREDO_AEQUALIS_I32(b1, b2);
+            si (victor == CONTRACTIO_CANDIDATUS_AVIDUS)
+            {
+                CREDO_NECESSE(contractio_ordo_gradus(avidus, g, &a2,
+                    &b2,
+                    &e2));
+                CREDO_AEQUALIS_I32(a1, a2);
+                CREDO_AEQUALIS_I32(b1, b2);
+            }
+        }
+        piscina_reficere(piscina, nota);
+    }
+}
+
+/* exsecutio sub ordine optimo = vis bruta (retia parva) */
+interior vacuum
+_probare_optimum_exsecutionem (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+       Sors  s;
+        i32  t;
+
+    sors_seminare(&s, (i64)MMXXXIII, ZEPHYRUM);
+    per (t = ZEPHYRUM; t < C; t++)
+    {
+            PiscinaNotatio   nota = piscina_notare(piscina);
+                 Fortuitum   f;
+                       i32   p    = (i32)998244353UL;
+            ContractioRete*  rete;
+            ContractioOrdo*  ordo;
+        ContractioOfficina*  officina;
+                       i32** valores;
+                       i32   calidum = (i32)0xDEADUL;
+
+        _fortuitum_parvum(&s, &f);
+        rete     = _rete_fortuitum(piscina, &f);
+        ordo     = _ordinare_optime(rete, IV, CONTRACTIO_SATURATUM,
+            CONTRACTIO_CANDIDATUS_OMNES, piscina);
+        officina = contractio_officina_creare(ordo,
+            CONTRACTIO_SATURATUM,
+            piscina);
+        CREDO_NECESSE_NON_NIHIL(officina);
+        valores = _valores_parare(&f, piscina);
+        _valores_implere(&s, &f, valores, p);
+        CREDO_NECESSE(contractio_exsequi_modulo(rete, ordo, officina,
+            (constans i32* constans*)valores, p, &calidum));
+        CREDO_AEQUALIS_I32(calidum, _vis_bruta(&f, valores, p));
+        piscina_reficere(piscina, nota);
+    }
+}
+
+/* anulus numerans: multiplica per anulum residuorum, vocationes
+ * numerantur; per gradum referentiae numerus = multiplicationes
+ * relatae EXACTE (sub ordine avido et optimo) */
+interior i64              numerus_multiplicationum;
+interior constans Anulus* anulus_subiectus;
+
+interior b32
+_multiplica_numerans (
+    constans Anulus* anulus,
+    constans vacuum* a,
+    constans vacuum* b,
+            Piscina* piscina,
+             vacuum* exitus)
+{
+    (vacuum)anulus;
+    numerus_multiplicationum++;
+    redde anulus_subiectus->multiplica(anulus_subiectus, a, b, piscina,
+        exitus);
+}
+
+interior vacuum
+_purgare_anulum_numerantem (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    numerus_multiplicationum  = ZEPHYRUM;
+    anulus_subiectus          = NIHIL;
+}
+
+interior vacuum
+_probare_anulum_numerantem (
+    CredoContextus* c)
+{
+    Piscina* piscina  = c->piscina;
+        i32  p        = (i32)998244353UL;
+     Anulus  numerans;
+       Sors  s;
+        i32  t;
+
+    anulus_subiectus     = anulus_residuorum(p, piscina);
+    numerans             = *anulus_subiectus;
+    numerans.multiplica  = _multiplica_numerans;
+    sors_seminare(&s, (i64)MMXXXIV, ZEPHYRUM);
+    per (t = ZEPHYRUM; t < II * IV; t++)
+    {
+        constans CasusTricae* exemplum = &CASUS_TRICARUM[t % V];
+        ContractioRete* rete = _rete_tricae(piscina, exemplum->fila,
+            exemplum->verbum, exemplum->longitudo);
+        ContractioOrdo* ordo = t < V ? _ordinare(rete, piscina)
+            : _ordinare_optime(rete, IV, CONTRACTIO_SATURATUM,
+                CONTRACTIO_CANDIDATUS_OMNES, piscina);
+        ContractioOfficina* officina = contractio_officina_creare(ordo,
+            CONTRACTIO_SATURATUM, piscina);
+        i32** valores = (i32**)piscina_allocare(piscina,
+            (memoriae_index)exemplum->longitudo * magnitudo(i32*));
+        i32 referentia  = ZEPHYRUM;
+        i32 calidum     = ZEPHYRUM;
+        i32 k;
+        i32 j;
+
+        CREDO_NECESSE_NON_NIHIL(officina);
+        per (k = ZEPHYRUM; k < exemplum->longitudo; k++)
+        {
+            valores[k] = (i32*)piscina_allocare(piscina,
+                (memoriae_index)XVI * magnitudo(i32));
+            per (j = ZEPHYRUM; j < XVI; j++)
+            {
+                valores[k][j] = sors_intra(&s, p);
+            }
+        }
+        numerus_multiplicationum = ZEPHYRUM;
+        CREDO_NECESSE(contractio_exsequi_anulo(rete, ordo,
+            (constans vacuum* constans*)valores, &numerans, piscina,
+            &referentia));
+        CREDO_AEQUALIS_I64(numerus_multiplicationum,
+            contractio_sumptus(ordo).multiplicationes);
+        CREDO_NECESSE(contractio_exsequi_modulo(rete, ordo, officina,
+            (constans i32* constans*)valores, p, &calidum));
+        CREDO_AEQUALIS_I32(calidum, referentia);
+    }
+}
+
+/* optiones OPTIMUS invalidae; limen: AVIDUS vilis -> ceteri non
+ * aestimantur */
+interior vacuum
+_probare_optimum_optiones (
+    CredoContextus* c)
+{
+                 Piscina* piscina   = c->piscina;
+    constans CasusTricae* exemplum  = &CASUS_TRICARUM[0];
+      ContractioOptiones  o          =
+          contractio_optiones_ordinariae();
+          ContractioOrdo* ordo;
+       ContractioSumptus  simulatus;
+
+    o.methodus  = CONTRACTIO_OPTIMUS;
+    o.conatus   = CONTRACTIO_CONATUS_MAXIMI + I;
+    CREDO_NIHIL(contractio_ordinare(_rete_tricae(piscina,
+        exemplum->fila,
+        exemplum->verbum, exemplum->longitudo), &o, piscina));
+    o.conatus     = II;
+    o.candidatus  = VI;
+    CREDO_NIHIL(contractio_ordinare(_rete_tricae(piscina,
+        exemplum->fila,
+        exemplum->verbum, exemplum->longitudo), &o, piscina));
+    o.candidatus  = V;
+    CREDO_NON_NIHIL(contractio_ordinare(_rete_tricae(piscina,
+        exemplum->fila,
+        exemplum->verbum, exemplum->longitudo), &o, piscina));
+
+    /* limen ordinarium (2^20) > 4928: solus AVIDUS aestimatur */
+    o           = contractio_optiones_ordinariae();
+    o.methodus  = CONTRACTIO_OPTIMUS;
+    ordo = contractio_ordinare(_rete_tricae(piscina, exemplum->fila,
+        exemplum->verbum, exemplum->longitudo), &o, piscina);
+    CREDO_NECESSE_NON_NIHIL(ordo);
+    CREDO_AEQUALIS_I32(contractio_ordo_candidatus(ordo),
+        CONTRACTIO_CANDIDATUS_AVIDUS);
+    CREDO_VERUM(contractio_ordo_candidati(ordo, I, &simulatus));
+    CREDO_FALSUM(contractio_ordo_candidati(ordo, II, &simulatus));
+    o.limen = ZEPHYRUM;
+    ordo = contractio_ordinare(_rete_tricae(piscina, exemplum->fila,
+        exemplum->verbum, exemplum->longitudo), &o, piscina);
+    CREDO_AEQUALIS_I32(contractio_ordo_candidatus(ordo), II);
+}
+
+
+/* ==================================================
  * Suita
  * ================================================== */
 
@@ -1743,6 +2241,18 @@ interior constans CredoSectio SECTIONES[] = {
     { "retia minima", _probare_retia_minima, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "anulus saturatus", _probare_anulum_saturatum, NIHIL, NIHIL,
+        NIHIL,
+      NIHIL },
+    { "optimus exactus", _probare_optimum_exactum, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "optimus fortuitus", _probare_optimum_fortuitum, NIHIL, NIHIL,
+        NIHIL,
+      NIHIL },
+    { "optimus exsecutio", _probare_optimum_exsecutionem, NIHIL, NIHIL,
+      NIHIL, NIHIL },
+    { "anulus numerans", _probare_anulum_numerantem, NIHIL,
+      _purgare_anulum_numerantem, NIHIL, NIHIL },
+    { "optimus optiones", _probare_optimum_optiones, NIHIL, NIHIL,
         NIHIL,
       NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

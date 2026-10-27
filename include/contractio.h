@@ -101,20 +101,53 @@ contractio_rete_clausum (
  * Ordo
  * ================================================== */
 
-#define CONTRACTIO_AVIDUS I
+/* methodi: AVIDUS = clavis T2 (ordinaria; ordo manu probabilis,
+ * invarians sub renumeratione indicum). OPTIMUS (contractio-plan T5b) =
+ * plures candidati, vilissimus per multiplicationes EXACTAS (deinde
+ * octeti tabulae, deinde numerus candidati); effectus contractionis
+ * idem, solum tempus et memoria mutantur. OPTIMUS deterministicus pro
+ * semine et conatibus datis; sub renumeratione indicum non invarians
+ * (min-fill nexus per id indicum frangit). */
+#define CONTRACTIO_AVIDUS  I
+#define CONTRACTIO_OPTIMUS II
+
+/* candidati OPTIMUS, ordine fixo (numeri 1, 2, 3, 4 .. 3 + conatus) */
+#define CONTRACTIO_CANDIDATUS_OMNES     ZEPHYRUM
+#define CONTRACTIO_CANDIDATUS_AVIDUS    I    /* clavis T2 */
+#define CONTRACTIO_CANDIDATUS_REDUCTIO  II   /* clavis E_r - E_a - E_b */
+#define CONTRACTIO_CANDIDATUS_IMPLETIO  III  /* min-fill, nexus (gradus, id) */
+#define CONTRACTIO_CANDIDATUS_FORTUITUS IV   /* + k: min-fill, nexus fortuiti */
+
+/* conatus maximi (cursus min-fill fortuiti) et semen ordinarium */
+#define CONTRACTIO_CONATUS_MAXIMI    M
+#define CONTRACTIO_SEMEN_ORDINARIUM  ((i64)MMXXVI)
+/* 2^20 multiplicationes ~ 1 ms per contractionem: infra, candidati
+ * ceteri plus constant quam lucrari possunt (nodi tabulae: IV x
+ * tempus probationum sine limine) */
+#define CONTRACTIO_LIMEN_ORDINARIUM  ((i64)I << XX)
+
+/* sumptus: omnia i64 SATURANTUR ad CONTRACTIO_SATURATUM (2^64 - 1);
+ * latitudo ex magnitudinibus EXACTIS, non ex apice saturato */
+#define CONTRACTIO_SATURATUM ((i64)~(i64)ZEPHYRUM)
 
 nomen structura {
-    i32 methodus;             /* CONTRACTIO_AVIDUS (v1 solus) */
+    i32 methodus;      /* CONTRACTIO_AVIDUS (ordinarius) | _OPTIMUS */
+    i32 conatus;       /* OPTIMUS: cursus min-fill fortuiti (XVI) */
+    i64 semen;         /* OPTIMUS: semen sortis (SEMEN_ORDINARIUM) */
+    i64 octeti_maximi; /* OPTIMUS: candidati cum tabula maiore omittuntur
+                        * (ordinarie CONTRACTIO_SATURATUM: nullus limes);
+                        * si omnes maiores, tabula minima */
+    i32 candidatus;    /* OPTIMUS: CANDIDATUS_OMNES aut unus coactus */
+    i64 limen;         /* OPTIMUS (OMNES): si AVIDUS < limen multiplicationes
+                        * poscit, ceteri non aestimantur - ordo vilis
+                        * iam est (ordinarie CONTRACTIO_LIMEN_ORDINARIUM;
+                        * 0 = omnes semper) */
 } ContractioOptiones;
 
 /* vocans SEMPER ab hac incipit: membra postea addita valores
  * ordinarios habent */
 ContractioOptiones
 contractio_optiones_ordinariae (vacuum);
-
-/* sumptus: omnia i64 SATURANTUR ad CONTRACTIO_SATURATUM (2^64 - 1);
- * latitudo ex magnitudinibus EXACTIS, non ex apice saturato */
-#define CONTRACTIO_SATURATUM ((i64)~(i64)ZEPHYRUM)
 
 nomen structura {
     i64 apex;                 /* elementa tensoris intermedii maximi
@@ -130,7 +163,8 @@ nomen structura {
  * tabulae: offsets per vitam, primum aptum (effectus gradus non
  * superponitur operandis eius). Rete post hoc immutabile. NIHIL si
  * rete non clausum (v1; rete tunc mutabile manet) aut optiones
- * invalidae. Rete vacuum aut tensor solus: ordo sine gradibus.
+ * invalidae (methodus ignota; OPTIMUS: conatus > CONATUS_MAXIMI aut
+ * candidatus > 3 + conatus). Rete vacuum aut tensor solus: ordo sine gradibus.
  * Memoria ordinis (magnitudine retis, non tensorum) per
  * piscina_allocare: in piscina certae magnitudinis defectus fatalis
  * est, non NIHIL. */
@@ -148,6 +182,20 @@ contractio_sumptus (
 /* ==================================================
  * Inspectio ordinis (probationes, mensura)
  * ================================================== */
+
+/* candidatus victor (1 pro AVIDUS; 0 si ordo NIHIL) */
+i32
+contractio_ordo_candidatus (
+    constans ContractioOrdo* ordo);
+
+/* sumptus SIMULATUS candidati k (1 ..): FALSUM si k ignotus aut non
+ * aestimatus (OPTIMUS: candidatus abiectus quia multiplicationes eius
+ * victorem iam superabant; aut candidatus alius coactus). */
+b32
+contractio_ordo_candidati (
+    constans ContractioOrdo* ordo,
+                        i32  k,
+          ContractioSumptus* simulatus);
 
 /* numerus graduum: n - 1 pro n >= 1 tensoribus, 0 pro rete vacuo */
 i32

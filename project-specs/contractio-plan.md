@@ -643,6 +643,8 @@ Dropped after review: union-first key, min-degree, randomized greedy (they add n
 - A winner can occasionally have a slightly larger slab (worst seen +7%); `octeti_maximi` bounds it.
 - Ordering cost on very wide networks is bounded by incumbent pruning; measured before relying on it for phase 2.
 
+*(2026-10-27: landed. As designed, plus the `limen` option (default 2^20 multiplications: below it only AVIDUS is evaluated — without it the laqueus suite went 2.9 → 10.4 s) and `laqueus_modulus_vertex_ordo` for the wiring test and the tool. 26 sections, 193,060 checks: candidates equal an independent Python port exactly, forced = simulated, counting anulus = multiplications; 7 plants red. Measured, same seeds: braids 8 × 201 20.9 → 6.9 s, 12 × 201 ~99 → 9.2 s, 10 × 201 ~34 min → 12.5 s; sums unchanged. See lib/contractio.worklog.md.)*
+
 **Design review (2026-10-27): approve after fixes, no H.** M1 evidence replaced by multi-seed totals, memory reading corrected (here and brainstorm §11); M2 candidate set (AVIDUS, size key, MF64, 16 randomized MF64); M3 forced-candidate equality, counting anulus, one first-fit routine; M4 laqueus wiring test; M5 exact winners at conatus = 0, properties otherwise, braid networks built in-test; M6 candidates in a reset arena region, online conversion with incumbent pruning, bucket queue; L1 invalid methodus III; L2 octeti_maximi default SATURATUM; L3 `contractio_ordo_candidatus`, named default semen; L4 size key exact definition; L5 cap kept; L6 multiplications are the right objective; L7 refactor traps checked; L8 laqueus test time measured; L9 AVIDUS stays default. Review scripts: scratchpad/recensio_t5b/ (session of 2026-10-27).
 
 ## Not in v1

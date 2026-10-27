@@ -635,6 +635,7 @@ _metiri (
                   s32 summus;
                   i32 bita = ZEPHYRUM;
                   i32 limes;
+                  i32 candidatus;
 
     si (mv == NIHIL)
     {
@@ -647,6 +648,8 @@ _metiri (
     punctum = _tempus_puncti(mv, III);
     _fenestra(pd, c, piscina, &imus, &summus);
     limes = laqueus_modulus_vertex_limes(mv);
+    candidatus =
+        contractio_ordo_candidatus(laqueus_modulus_vertex_ordo(mv));
     /* coniectura: (K + 3) puncta per primum, primi = ceil((limes +
      * 1)/31) + 1 (limes T5a) */
     coniectura = punctum * (f64)((summus - imus) / IV + I + II)
@@ -691,14 +694,14 @@ _metiri (
             "octeti=%llu multiplicationes=%llu aedificatio_s=%.4f "
             "punctum_s=%.6f ns_mult=%.3f praedictio_s=%.2f totum_s=%.3f "
             "contractiones=%u primi=%u octeti_piscinae=%llu bita=%u "
-            "limes=%u\n",
+            "limes=%u candidatus=%u\n",
             sectio, titulus, c, sumptus.latitudo,
             (unsigned long long)sumptus.apex,
             (unsigned long long)sumptus.octeti_officinae,
             (unsigned long long)sumptus.multiplicationes, aedificatio,
             punctum, 1e9 * punctum / (f64)sumptus.multiplicationes,
             coniectura, totum, contractiones, primi,
-            (unsigned long long)usus, bita, limes);
+            (unsigned long long)usus, bita, limes, candidatus);
     }
     alioquin
     {
@@ -709,14 +712,14 @@ _metiri (
             coniectura);
         si (totum >= 0.0)
         {
-            imprimere("%8.2f  %6u  %3u  %8.1f  %4u  %4u\n", totum,
+            imprimere("%8.2f  %6u  %3u  %8.1f  %4u  %4u  %3u\n", totum,
                 contractiones, primi, (f64)usus / 1048576.0, bita,
-                limes);
+                limes, candidatus);
         }
         alioquin
         {
-            imprimere("       -                              %4u\n",
-                limes);
+            imprimere("       -                              %4u  %3u\n",
+                limes, candidatus);
         }
     }
     fflush(stdout);
@@ -731,7 +734,7 @@ _titulus_columnarum (
         imprimere("\n%s\n", titulus);
         imprimere("   reticulum      c  lat       apex   aedif ms   "
             "punctum s  ns/mult  praedictio s  totum s  contr  primi  "
-            "MB pisc  bita  limes\n");
+            "MB pisc  bita  limes  cand\n");
     }
 }
 

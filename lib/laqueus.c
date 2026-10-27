@@ -2710,6 +2710,10 @@ laqueus_modulus_vertex_creare (
     mv->exponens_maximus = e_max;
     mv->potentiae        = (i32*)piscina_allocare(piscina,
         (memoriae_index)(II * e_max + I) * magnitudo(i32));
+    /* ordo optimus inter candidatos (contractio-plan T5b): idem
+     * uncinus, tempus per punctum saepe multo minus in tricis */
+    optiones.methodus = CONTRACTIO_OPTIMUS;
+    optiones.octeti_maximi = octeti_maximi;
     mv->ordo = contractio_ordinare(mv->rete, &optiones, piscina);
     si (mv->ordo == NIHIL)
     {
@@ -2892,6 +2896,13 @@ laqueus_modulus_vertex_sumptus (
     constans LaqueusModulusVertex* mv)
 {
     redde contractio_sumptus(mv == NIHIL ? NIHIL : mv->ordo);
+}
+
+constans ContractioOrdo*
+laqueus_modulus_vertex_ordo (
+    constans LaqueusModulusVertex* mv)
+{
+    redde mv == NIHIL ? NIHIL : mv->ordo;
 }
 
 i32
