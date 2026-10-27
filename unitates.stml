@@ -24,6 +24,11 @@
   <genus via="/fabricatio/adscitio"                      cura="aliena"/>
 
   <!-- munera: prima regula congruens vincit -->
+  <!-- testimonium = imago congelata: demonstratio knotapel cum clausura
+       bibliothecarum aetatis suae in plagula una (knotapel/archive.sh,
+       GENERATUM); numquam tangitur, iudices domus eam non iudicant.
+       Per nomen plagulae, ante 'fons' (decretum …0X3C2, 2026-10-26) -->
+  <munus titulus="testimonium" plagula="demo-snapshot.c"/>
   <munus titulus="fixtura"     segmentum="fixa"/>
   <munus titulus="assets"      segmentum="assets" segmenti_suffixum="_assets"/>
   <!-- amalgama = productum distribuendum (generatum + capita vanilla manu
@@ -109,6 +114,12 @@
          munera="fons scriptum" provenientiae="manu" indoles="codex data"
          linguae="c89 thistle"
          descriptio="porta instrumentorum (unitates-codicis U5 b): omnis introitus programmatis domesticus manu scriptus aedificatur - C per recipe aedilis (--exitus, numquam curritur), thistle per briar -struere et regio probationis per -probatio; fixturae (adversa) non"/>
+
+  <iudex titulus="examen_corporis"
+         curae="domestica remissa aliena" vitae="viva vetusta"
+         munera="fons caput probatio fixtura assets amalgama interrogationes documentum declaratio scriptum" provenientiae="manu generatum" indoles="codex data"
+         linguae="c89 objc"
+         descriptio="porta examen-corpus (silva/examen_vectis.sh -corpus): verdicta REICE corporis contra exclusiones pinnatas solum pro plagulis quas iudicat - testimonia (imagines congelatae) et archivata extra; percursus tamen omnia legit (FRACTA semper nominatur). Fixturae, vendor, oracula iudicata manent cum pinnis suis (decretum …0X3C2, 2026-10-26)"/>
 
   <!-- indoles: SIGNUM DATORUM (verbum 'DATA' in linea signorum, ut
        GENERATUM) -> data; aliter codex. Franus 2026-10-21: tabulae

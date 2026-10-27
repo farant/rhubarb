@@ -53,7 +53,6 @@ gesta/probationes/probatio_tabulariumd.c	ante regulam (2026-10-14): migratio ad 
 html/instrumenta/arbor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 html/instrumenta/computus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 knotapel/demo_125_exact_crossing_depth/demo-snapshot.c	knotapel/ extra examen commissionis (Fran 2026-10-03): corpus solum, tactus non solvit
-knotapel/demo_125_exact_crossing_depth/main.c	knotapel/ extra examen commissionis (Fran 2026-10-03): corpus solum, tactus non solvit
 lib/compilator.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 lib/herbarium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 lib/mensura_contextus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo

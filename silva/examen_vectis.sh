@@ -595,7 +595,29 @@ if [ "${1:-}" = "-corpus" ]; then
                    sub(/.*\[verdictum REICE\] /, ""); print; next }
                /\[(externa|compositio|praeparatio) fracta\] / {
                    sub(/.*fracta\] /, ""); print "FRACTA " $0 }' \
-        | sort > "$SILVA_DIR/build/reice_currentes.txt"
+        | sort > "$SILVA_DIR/build/reice_omnes.txt"
+    # iudex examen_corporis (unitates.stml): verdicta REICE solum
+    # plagularum quas iudicat contra pinnas comparantur - testimonia
+    # (imagines congelatae knotapel) et archivata extra (decretum
+    # …0X3C2). FRACTA (annotatio/compositio fracta) SEMPER intrant:
+    # examen quod plagulam legere nequit numquam tacet. Iudex fractus
+    # = porta fracta (tabula vacua tacite omnia celaret).
+    if ! iudicatae="$(grep -v '^FRACTA ' "$SILVA_DIR/build/reice_omnes.txt" \
+            | sed 's|^\./||' \
+            | "$RADIX_DIR/tools/iudex_unitatum.sh" examen_corporis)"; then
+        echo "  FRACTA: iudex examen_corporis (tools/iudex_unitatum.sh)"
+        fracta=1
+        iudicatae=""
+    fi
+    printf '%s\n' $iudicatae | sed '/^$/d; s|^|./|' \
+        > "$SILVA_DIR/build/reice_iudicatae.txt"
+    { grep '^FRACTA ' "$SILVA_DIR/build/reice_omnes.txt"
+      grep -Fx -f "$SILVA_DIR/build/reice_iudicatae.txt" \
+          "$SILVA_DIR/build/reice_omnes.txt"
+    } | sort > "$SILVA_DIR/build/reice_currentes.txt"
+    extra="$(grep -vc '^FRACTA ' "$SILVA_DIR/build/reice_omnes.txt")"
+    extra=$((extra - $(wc -l < "$SILVA_DIR/build/reice_iudicatae.txt")))
+    echo "  REICE extra iudicem (testimonia, archivata): $extra"
     # forma pinnae: via<TAB>causa (lineae '#' = commentaria) -
     # columna prima sola contra sweep diffatur; causa documentum est
     if ! grep -v '^#' "$FIXA/exclusiones.txt" | cut -f1 \

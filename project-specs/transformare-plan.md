@@ -212,3 +212,17 @@ comment - the include was swallowed, lectiones_fopen undeclared, the
 guard refused (code 44). `_directivae_finis` now skips a trailing
 comment to its end; pythonica test + plant (red at the new check, read
 from the acta - the compendium quirk again).
+
+*Step 4, knotapel (2026-10-26):* one site - demo_125/main.c's
+D125_VICTORES write (env-gated, so the live-vs-snapshot regression
+output cannot change; built and linked via a redirected aedilis
+script). Snapshots (demo-snapshot.c, GENERATUM) are never rewritten
+and are now frozen by declaration: role `testimonium` via the new
+`<munus plagula=...>` (exact file name), and examen-corpus asks the
+judge `examen_corporis`, which leaves out testimonia and archivata
+(decision …0X3C2; pins for 130-133 + archivum glr_quaestio removed;
+fixtures stay judged). Gate plant (testimonium back into the judge's
+roles) red naming exactly the four snapshots.
+Routine fix: format with `tools/formare_viae.sh` (the commit judge),
+never `formator.sh` over every changed file - it reformatted
+knotapel's remissa main.c wholesale (restored, re-applied).

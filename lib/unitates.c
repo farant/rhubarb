@@ -25,7 +25,9 @@ nomen structura {
     chorda segmenti_suffixum; /* '_assets': segmentum ita finiens
                                 * quoque congruit; vacuum = nullum */
        Xar* extensiones;   /* chorda; vacuus = quaevis */
-       i32  ordo;          /* I-basatus */
+    chorda plagula;       /* nomen plagulae EXACTUM ('demo-snapshot.c');
+                           * vacuum = quodvis */
+       i32 ordo;          /* I-basatus */
 } UnitatesMunus;
 
 nomen structura {
@@ -409,7 +411,8 @@ hic_manens constans character* constans _attributa_generis[] = {
     "via", "cura", "descriptio", NIHIL
 };
 hic_manens constans character* constans _attributa_muneris[] = {
-    "titulus", "segmentum", "segmenti_suffixum", "extensiones", NIHIL
+    "titulus", "segmentum", "segmenti_suffixum", "extensiones",
+        "plagula", NIHIL
 };
 hic_manens constans character* constans _attributa_linguae[] = {
     "titulus", "extensiones", NIHIL
@@ -517,13 +520,16 @@ _politicam_legere (
             m->segmentum          = _valor(n, "segmentum");
             m->segmenti_suffixum  = _valor(n, "segmenti_suffixum");
             m->extensiones        = _verba(ext, piscina);
+            m->plagula            = _valor(n, "plagula");
             m->ordo               = ++ordo;
             si (   m->segmentum.mensura         == ZEPHYRUM
                 && m->segmenti_suffixum.mensura == ZEPHYRUM
-                && xar_numerus(m->extensiones)  == ZEPHYRUM)
+                && xar_numerus(m->extensiones)  == ZEPHYRUM
+                && m->plagula.mensura           == ZEPHYRUM)
             {
                 _causa(k, via, n->linea, "regula munus '", m->titulus,
-                    "' vacua (nec segmentum nec extensiones)");
+                    "' vacua (nec segmentum nec extensiones nec"
+                    " plagula)");
             }
             si (   m->titulus.mensura > ZEPHYRUM
                 && !_in_indice(u->munerum_tituli, m->titulus))
@@ -1628,7 +1634,9 @@ _respondere (
                           m->segmenti_suffixum))
                       && (xar_numerus(m->extensiones) == ZEPHYRUM
                       || _extensio_congruit(m->extensiones, basis,
-                      NIHIL));
+                      NIHIL))
+                      && (m->plagula.mensura == ZEPHYRUM
+                      || chorda_aequalis(basis, m->plagula));
 
         si (congruit)
         {
@@ -1655,6 +1663,7 @@ _respondere (
                     chorda_aedificator_appendere_literis(c, ", ");
                 }
             }
+
             si (xar_numerus(m->extensiones) > ZEPHYRUM)
             {
                 i32 j;
@@ -1668,6 +1677,17 @@ _respondere (
                     chorda_aedificator_appendere_chorda(c,
                         *(chorda*)xar_obtinere(m->extensiones, j));
                 }
+            }
+            si (m->plagula.mensura > ZEPHYRUM)
+            {
+                si (   m->segmentum.mensura > ZEPHYRUM
+                    || m->segmenti_suffixum.mensura > ZEPHYRUM
+                    || xar_numerus(m->extensiones) > ZEPHYRUM)
+                {
+                    chorda_aedificator_appendere_literis(c, ", ");
+                }
+                chorda_aedificator_appendere_literis(c, "plagula ");
+                chorda_aedificator_appendere_chorda(c, m->plagula);
             }
             chorda_aedificator_appendere_literis(c, ")");
             r->munus.valor = m->titulus;

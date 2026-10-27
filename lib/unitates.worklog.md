@@ -204,3 +204,24 @@ admit ALL provenances AND all natures?" (`_omnes_admittit`). Test section
 become library units and move the census section's pinned output; that
 world must still include include/imago.h because POLITICA declares
 familia imago (unitates refuses a family without its library).
+
+## 2026-10-26 - munus by file name (`plagula`), role `testimonium`, judge `examen_corporis`
+
+A role rule could only match a directory segment or an extension, and
+`vita` is per unit, so "knotapel's demo-snapshot.c is frozen evidence"
+could not be said without moving files (and a snapshot cannot be
+regenerated: it is the freeze). `<munus plagula="...">` matches the
+EXACT basename (alia-demo-snapshot.c does not); combined with segment
+or extensions all must hold; the reason prints "plagula X" last. Rule
+`testimonium` sits FIRST in unitates.stml (before fixa and .c).
+
+Why: examen-corpus diffed every REICE against per-file pins; the four
+snapshots 130-133 were pinned because each embeds a pre-tolera copy of
+lib/filum.c (96 violations), and code 97 -> VIOLATIO would add demo
+125 and every later snapshot. Now `silva/examen_vectis.sh -corpus`
+asks `<iudex titulus="examen_corporis">` (all cures/roles except
+testimonium; vita viva/vetusta) which REICE to compare; FRACTA lines
+always count; a failing judge query fails the gate. Pins removed: the
+four snapshots and archivum/tools/glr_quaestio.c (vita archivata).
+Fixtures stay judged (Fran: some exercise examen on hostile code).
+Plant (plagula clause -> FALSUM) red at the testimonium assertion.
