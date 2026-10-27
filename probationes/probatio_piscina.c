@@ -813,9 +813,10 @@ _exundationes_corpus (
     CREDO_AEQUALIS_I32 (k, LXIV);
 
     /* III. ordinatio immanis (offset + ordinatio - I circumiret) */
+    /* (ordinatio maximus / II + I NON circumit: petitio legitima sed
+     * immanis - malloc deficit, sub ASan abortat; non custodia
+     * exundationis, ergo non probatur) */
     CREDO_NIHIL (piscina_conari_allocare_ordinatum(p, VIII, maximus));
-    CREDO_NIHIL (piscina_conari_allocare_ordinatum(p, VIII,
-        maximus / II + I));
     CREDO_VERUM (piscina_summa_usus(p) == usus + LXIV);
     piscina_destruere(p);
 
