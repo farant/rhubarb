@@ -138,3 +138,17 @@ D03TB part 1 + the new disagreement rule (Fran approved, Q1-Q3 of the declared-i
 House songs: no-<acorda> songs 0; campus 1 (Bm vs a held melody A - the author could declare
 Bm7); proelium +3 of the same kind; oppidum 44 -> 40. recensio tests pinned the default rule
 list (now 5). Plants 8/8 after two rewrites (one non-compiling form, one redundant check).
+
+## 2026-10-27 - step 3b: censura reads the song's style (presets as data, layered)
+
+censura_carminis_forma = censura_ordinaria (classicus), then the song's stylus chain applied
+BASE FIRST (basis, then the derived style: regulae + septimae), then the song's <censura
+regulae>; the caller's CLI -regulae last (auditio _formam_censurae, which replaced its private
+_regulas_legere - the grammar now lives in censura_regulas_legere: "+a,-b" changes the given
+form, "a,b" only these; unknown name -> FALSUM + *ignota). Rule names inside a style are judged
+here, not at book read time (carmen cannot know censura). New meaning switch
+CensuraForma.septimae_liberae: _culpa gives no 'septima non resoluta' (the seventh is a chord
+tone, popularis); a dissonance against a shapeless foreign note is still flagged. Test fixture
+lesson: C E B without G is "C(3) with B foreign", not Cmaj7 - the seventh rule needs the named
+chord. The application loop was rewritten with an explicit index so "base first" is plantable.
+Plants 9/9 first try.

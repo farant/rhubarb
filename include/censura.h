@@ -45,6 +45,15 @@
  *                per fenestram: "D declaratum, sonat Gmaj9/D (G5
  *                B5)"                                             ORD.
  *
+ * STYLUS (censura_carminis_forma, carmen.h <stylus>): forma ordinaria
+ * (classicus), deinde stylus carminis per catenam basium (basis prior:
+ * regulae, septimae), deinde <censura regulae> carminis; vocans
+ * (auditio -regulae) postremo (censura_regulas_legere). REGULAE:
+ * "+a,-b" formam datam mutat; "a,b" (sine signis) hae solae.
+ * septimae_liberae: septima acordi nominati (et nona, sexta - toni
+ * acordi) resolutionem non postulat (dissonantia: causa 'septima non
+ * resoluta' tacet); dissonantia notarum alienarum manet.
+ *
  * TEMPUS FORTE: initium mensurae; in 4/x etiam medium; in metris
  * compositis (6/8, 9/8, 12/8) omnis tertia octava. Percussio ('@')
  * regulas notarum non subit.
@@ -91,6 +100,8 @@ nomen structura {
     vacuum* ctx;
     /* saltus maximus licitus, semitonia; 0 = XII (octava) */
     i32 saltus_maximus;
+    /* septima acordi resolutionem non postulat (stylus popularis) */
+    b32 septimae_liberae;
 } CensuraForma;
 
 nomen structura {
@@ -131,6 +142,22 @@ b32
 censura_regulam_invenire (
            chorda  titulus,
     CensuraRegula* regula);
+
+/* regulae "+a,-b" (formam mutat) aut "a,b" (hae solae). FALSUM:
+ * regula ignota (*ignota = titulus eius, forma partim mutata) */
+b32
+censura_regulas_legere (
+          chorda  regulae,
+    CensuraForma* forma,
+          chorda* ignota);
+
+/* forma carminis: ordinaria, stylus (catena basium), <censura
+ * regulae>. FALSUM: regula ignota in stylo aut carmine (*ignota) */
+b32
+censura_carminis_forma (
+    constans Carmen* carmen,
+       CensuraForma* forma,
+             chorda* ignota);
 
 /* tabula ordinaria; ctx non adhibetur */
 b32

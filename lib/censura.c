@@ -122,6 +122,118 @@ censura_regulam_invenire (
 }
 
 b32
+censura_regulas_legere (
+          chorda  regulae,
+    CensuraForma* forma,
+          chorda* ignota)
+{
+    i32 p = ZEPHYRUM;
+
+    si (   regulae.mensura > ZEPHYRUM && regulae.datum[ZEPHYRUM] != '+'
+        && regulae.datum[ZEPHYRUM] != '-')
+    {
+        memset(forma->activae, ZEPHYRUM, magnitudo(forma->activae));
+    }
+    dum (p < regulae.mensura)
+    {
+                  b32 accendere = VERUM;
+                  i32 q;
+        CensuraRegula r;
+               chorda t;
+
+        si (regulae.datum[p] == '+' || regulae.datum[p] == '-')
+        {
+            accendere = regulae.datum[p] == '+';
+            p++;
+        }
+        q = p;
+        dum (q < regulae.mensura && regulae.datum[q] != ',')
+        {
+            q++;
+        }
+        t.datum    = regulae.datum + p;
+        t.mensura  = q - p;
+        si (!censura_regulam_invenire(t, &r))
+        {
+            si (ignota != NIHIL)
+            {
+                *ignota = t;
+            }
+            redde FALSUM;
+        }
+        forma->activae[r]  = accendere;
+        p                  = q < regulae.mensura ? q + I : q;
+    }
+    redde VERUM;
+}
+
+b32
+censura_carminis_forma (
+    constans Carmen* carmen,
+       CensuraForma* forma,
+             chorda* ignota)
+{
+    s32 catena[XVI];
+    i32 n = ZEPHYRUM;
+    s32 x = -I;
+    i32 i;
+
+    censura_ordinaria(forma);
+    /* catena a stylo carminis ad basim ultimam (carmen eam iudicavit:
+     * nota, non circularis) */
+    si (   carmen->stylus.mensura > ZEPHYRUM
+        && !chorda_aequalis_literis(carmen->stylus, "classicus"))
+    {
+        per (i = ZEPHYRUM; i < carmen->numerus_stilorum; i++)
+        {
+            si (chorda_aequalis(carmen->stili[i].titulus,
+                carmen->stylus))
+            {
+                x = (s32)i;
+                frange;
+            }
+        }
+    }
+    dum (x >= ZEPHYRUM && n < XVI)
+    {
+        constans CarmenStylus* s = &carmen->stili[x];
+
+        catena[n++]  = x;
+        x            = -I;
+        si (   s->basis.mensura > ZEPHYRUM
+            && !chorda_aequalis_literis(s->basis, "classicus"))
+        {
+            per (i = ZEPHYRUM; i < carmen->numerus_stilorum; i++)
+            {
+                si (chorda_aequalis(carmen->stili[i].titulus, s->basis))
+                {
+                    x = (s32)i;
+                    frange;
+                }
+            }
+        }
+    }
+    /* basis prior: a fine catenae ad stylum carminis */
+    per (i = n; i > ZEPHYRUM; i--)
+    {
+        constans CarmenStylus* s = &carmen->stili[catena[i - I]];
+
+        si (   s->regulae.mensura > ZEPHYRUM
+            && !censura_regulas_legere(s->regulae, forma, ignota))
+        {
+            redde FALSUM;
+        }
+        si (s->septimae >= ZEPHYRUM)
+        {
+            forma->septimae_liberae = s->septimae == I;
+        }
+    }
+    redde carmen->censura_regulae.mensura == ZEPHYRUM
+        || censura_regulas_legere(carmen->censura_regulae, forma,
+                                  ignota);
+}
+
+b32
 censura_ambitus_ordinarius (
      vacuum* ctx,
      chorda  instrumentum,
@@ -628,7 +740,8 @@ _explicat (
 /* culpa notae (statica); NIHIL si nulla */
 interior constans character*
 _culpa (
-    constans ExplicatioSegmentum* s)
+    constans ExplicatioSegmentum* s,
+                             b32  septimae_liberae)
 {
     commutatio (s->genus)
     {
@@ -639,7 +752,8 @@ _culpa (
         casus EXPLICATIO_RETARDATIO:
             redde "retardatio non resoluta";
         casus EXPLICATIO_SEPTIMA:
-            redde "septima non resoluta";
+            /* stylus popularis: septima tonus acordi est */
+            redde septimae_liberae ? NIHIL : "septima non resoluta";
         ordinarius:
             redde NIHIL;
     }
@@ -674,7 +788,9 @@ _referenda (
     {
         redde FALSUM;
     }
-    *causa = _culpa(sa) != NIHIL ? _culpa(sa) : _culpa(sb);
+    *causa = _culpa(sa, iudex->forma->septimae_liberae) != NIHIL
+           ? _culpa(sa, iudex->forma->septimae_liberae)
+           : _culpa(sb, iudex->forma->septimae_liberae);
     si (*causa != NIHIL)
     {
         redde VERUM;

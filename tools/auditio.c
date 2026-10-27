@@ -791,62 +791,44 @@ _auscultare (
 }
 
 
-/* "-regulae": "+a,-b" ordinarias mutat; "a,b" (sine signis) hae solae.
- * FALSUM: regula ignota (monstrata) */
+/* forma censurae: carminis (ordinaria, stylus, <censura regulae>;
+ * censura.h STYLUS), deinde "-regulae" vocantis ("+a,-b" mutat, "a,b"
+ * hae solae). FALSUM: regula ignota (monstrata) */
 interior b32
-_regulas_legere (
+_formam_censurae (
+       constans Carmen* k,
     constans character* index,
           CensuraForma* forma,
                Piscina* piscina)
 {
-     constans character* p = index;
-                    b32  solae = index[ZEPHYRUM] != '+'
-                        && index[ZEPHYRUM] != '-';
+    chorda ignota;
 
-    censura_ordinaria(forma);
-    si (solae)
+    si (!censura_carminis_forma(k, forma, &ignota))
     {
-        memset(forma->activae, ZEPHYRUM, magnitudo(forma->activae));
+        fprintf(stderr,
+            "auditio: regula ignota '%.*s' in stylo carminis\n",
+                (integer)ignota.mensura,
+                (constans character*)ignota.datum);
+        redde FALSUM;
     }
-    dum (*p != '\0')
+    si (   index != NIHIL
+        && !censura_regulas_legere(chorda_ex_literis(index, piscina),
+        forma,
+                                   &ignota))
     {
-         constans character* q          = p;
-                        b32  accendere  = VERUM;
-              CensuraRegula  r;
-                     chorda  t;
+        CensuraRegula g;
 
-        si (*q == '+' || *q == '-')
+        fprintf(stderr, "auditio: regula ignota '%.*s' (",
+                (integer)ignota.mensura,
+                (constans character*)ignota.datum);
+        per (g = CENSURA_LINEAE; g < CENSURA_REGULAE;
+             g = (CensuraRegula)(g + I))
         {
-            accendere = *q == '+';
-            q++;
+            fprintf(stderr, "%s%s", g == CENSURA_LINEAE ? "" : ", ",
+                    censura_titulus(g));
         }
-        p = q;
-        dum (*p != '\0' && *p != ',')
-        {
-            p++;
-        }
-        t          = chorda_ex_literis(q, piscina);
-        t.mensura  = (i32)(p - q);
-        si (!censura_regulam_invenire(t, &r))
-        {
-            CensuraRegula g;
-
-            fprintf(stderr, "auditio: regula ignota '%.*s' (",
-                    (integer)t.mensura, (constans character*)t.datum);
-            per (g = CENSURA_LINEAE; g < CENSURA_REGULAE;
-                 g = (CensuraRegula)(g + I))
-            {
-                fprintf(stderr, "%s%s", g == CENSURA_LINEAE ? "" : ", ",
-                        censura_titulus(g));
-            }
-            fprintf(stderr, ")\n");
-            redde FALSUM;
-        }
-        forma->activae[r] = accendere;
-        si (*p == ',')
-        {
-            p++;
-        }
+        fprintf(stderr, ")\n");
+        redde FALSUM;
     }
     redde VERUM;
 }
@@ -918,8 +900,7 @@ _recensere (
               chorda t;
 
     recensio_carminis_ordinaria(&f);
-    si (   regulae != NIHIL && !_regulas_legere(regulae, &f.censura,
-                                             piscina))
+    si (!_formam_censurae(k, regulae, &f.censura, piscina))
     {
         redde II;
     }
@@ -2014,9 +1995,7 @@ principale (
         {
             CensuraForma forma;
 
-            censura_ordinaria(&forma);
-            si (   regulae != NIHIL && !_regulas_legere(regulae, &forma,
-                                                     piscina))
+            si (!_formam_censurae(k, regulae, &forma, piscina))
             {
                 piscina_destruere(piscina);
                 redde II;
