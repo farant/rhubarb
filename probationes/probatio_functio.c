@@ -642,6 +642,154 @@ _linea_functionis (
     redde chorda_aedificator_finire(a);
 }
 
+/* acordum commune (functio.h MUTATIO CLAVIS): D Bm E A, D -> A -
+ * <clavis> ad Bm aut ad E: linea eadem "vi=A: ii"; reditus A -> D per
+ * A (I=V); ii-V in F "iii7=G: ii7 V7"; nulla aliena (C -> G per
+ * diatonica): nullum commune, "G:" ad mutationem; ultima veteris
+ * aliena (A7 in C): nullum commune */
+interior vacuum
+_sectio_communis (
+    CredoContextus* c)
+{
+    constans character* partes[V];
+       constans Carmen* k;
+               Functio* f;
+                chorda  t;
+                   i32  i;
+
+    partes[4] = NIHIL;
+    partes[0] = "o3 d1 | o2 b1 | e1 | a1";
+    partes[1] = "o3 a1 | f#1 | g#1 | a1";
+    partes[2] = "o4 f#1 | d1 | e1 | e1";
+    partes[3] = "o5 d1 | o4 b1 | b1 | o5 c#1";
+    k = _carmen_mutatum(c, "d maior",
+        "<clavis mensura=\"2\" valor=\"a maior\"/>", partes);
+    f = _functio(c, k);
+    CREDO_NECESSE (f != NIHIL && f->numerus == IV);
+    CREDO_LITERAE_AEQUALES (f->gradus[I].numeralis, "ii");
+    CREDO_LITERAE_AEQUALES (f->gradus[I].communis, "vi");
+    CREDO_VERUM (f->gradus[I].communis_vetus);
+    CREDO_AEQUALIS_S32 (f->gradus[I].clavis_nova, I);
+    CREDO_AEQUALIS_S32 (f->gradus[II].clavis_nova, -I);
+    CREDO_AEQUALIS_S32 (f->gradus[ZEPHYRUM].clavis_nova, -I);
+    t = _linea_functionis(c, k, f);
+    CREDO_CHORDA_CONTINET (t, chorda_ex_literis(
+        "  functio  vi=A: ii:1\n", c->piscina));
+    CREDO_CHORDA_CONTINET (t,
+        chorda_ex_literis("  functio  V:1 [dimid.]\n",
+        c->piscina));
+    k = _carmen_mutatum(c, "d maior",
+        "<clavis mensura=\"3\" valor=\"a maior\"/>", partes);
+    f = _functio(c, k);
+    CREDO_NECESSE (f != NIHIL && f->numerus == IV);
+    CREDO_LITERAE_AEQUALES (f->gradus[I].numeralis, "vi");
+    CREDO_LITERAE_AEQUALES (f->gradus[I].communis, "ii");
+    CREDO_FALSUM (f->gradus[I].communis_vetus);
+    CREDO_AEQUALIS_S32 (f->gradus[I].clavis_nova, I);
+    CREDO_AEQUALIS_S32 (f->gradus[II].clavis_nova, -I);
+    t = _linea_functionis(c, k, f);
+    CREDO_CHORDA_CONTINET (t, chorda_ex_literis(
+        "  functio  vi=A: ii:1\n", c->piscina));
+    CREDO_CHORDA_CONTINET (t,
+        chorda_ex_literis("  functio  V:1 [dimid.]\n",
+        c->piscina));
+    /* reditus: E A A7 D in A -> D (<clavis> ad A7): A = I=V */
+    partes[0] = "o2 e1 | a1 | a1 | o3 d1";
+    partes[1] = "o3 b1 | a1 | g1 | f#1";
+    partes[2] = "o4 e1 | e1 | e1 | d1";
+    partes[3] = "o4 g#1 | c#1 | c#1 | d1";
+    k = _carmen_mutatum(c, "a maior",
+        "<clavis mensura=\"3\" valor=\"d maior\"/>", partes);
+    f = _functio(c, k);
+    CREDO_NECESSE (f != NIHIL && f->numerus == IV);
+    t = _linea_functionis(c, k, f);
+    CREDO_CHORDA_CONTINET (t, chorda_ex_literis(
+        "  functio  I=D: V:1 [imperf.]\n", c->piscina));
+    CREDO_CHORDA_CONTINET (t,
+        chorda_ex_literis("  functio  V7:1 [dimid.]\n",
+        c->piscina));
+    /* ii-V in F ante G: Am7 commune (iii7 manet numeralis) */
+    partes[0] = "o3 a2 d2 | g1";
+    partes[1] = "o4 c2 c2 | <b1";
+    partes[2] = "o4 e2 f#2 | d1";
+    partes[3] = "o5 g2 a2 | g1";
+    partes[4] = NIHIL;
+    k = _carmen_mutatum(c, "f maior",
+        "<clavis mensura=\"2\" valor=\"g maior\"/>", partes);
+    f = _functio(c, k);
+    CREDO_NECESSE (f != NIHIL && f->numerus == III);
+    CREDO_LITERAE_AEQUALES (f->gradus[ZEPHYRUM].numeralis, "iii7");
+    CREDO_LITERAE_AEQUALES (f->gradus[ZEPHYRUM].communis, "ii7");
+    CREDO_CHORDA_CONTINET (_linea_functionis(c, k, f),
+        chorda_ex_literis(
+        "  functio  iii7=G: ii7:2 V7:2\n", c->piscina));
+    /* C Am | G C in C -> G: nulla aliena - nullum commune */
+    partes[0] = "o3 c1 | a1 | g1 | c1";
+    partes[1] = "o4 e1 | e1 | d1 | e1";
+    partes[2] = "o4 g1 | a1 | b1 | g1";
+    partes[3] = "o5 c1 | c1 | d1 | c1";
+    k = _carmen_mutatum(c, "c maior",
+        "<clavis mensura=\"3\" valor=\"g maior\"/>", partes);
+    f = _functio(c, k);
+    CREDO_NECESSE (f != NIHIL && f->numerus == IV);
+    per (i = ZEPHYRUM; i < IV; i++)
+    {
+        CREDO_LITERAE_AEQUALES (f->gradus[i].communis, "");
+    }
+    CREDO_AEQUALIS_S32 (f->gradus[II].clavis_nova, I);
+    CREDO_CHORDA_CONTINET (_linea_functionis(c, k, f),
+        chorda_ex_literis(
+        "  functio  G: I:1\n", c->piscina));
+    /* C A7 | D G in C -> G: A7 (ultima veteris) aliena - nullum
+     * commune, "G:" ad D */
+    partes[0] = "o3 c1 | a1 | d1 | g1";
+    partes[1] = "o4 e1 | e1 | f#1 | d1";
+    partes[2] = "o4 g1 | g1 | a1 | g1";
+    partes[3] = "o5 c1 | c#1 | d1 | b1";
+    k = _carmen_mutatum(c, "c maior",
+        "<clavis mensura=\"3\" valor=\"g maior\"/>", partes);
+    f = _functio(c, k);
+    CREDO_NECESSE (f != NIHIL && f->numerus == IV);
+    per (i = ZEPHYRUM; i < IV; i++)
+    {
+        CREDO_LITERAE_AEQUALES (f->gradus[i].communis, "");
+    }
+    CREDO_CHORDA_CONTINET (_linea_functionis(c, k, f),
+        chorda_ex_literis(
+        "  functio  G: V:1 [dimid.]\n", c->piscina));
+    /* D G | E A in D -> A: G ante E in A non diatonicum - nullum
+     * commune */
+    partes[0] = "o3 d1 | g1 | e1 | a1";
+    partes[1] = "o3 a1 | b1 | g#1 | a1";
+    partes[2] = "o4 f#1 | d1 | e1 | e1";
+    partes[3] = "o5 d1 | d1 | b1 | c#1";
+    k = _carmen_mutatum(c, "d maior",
+        "<clavis mensura=\"3\" valor=\"a maior\"/>", partes);
+    f = _functio(c, k);
+    CREDO_NECESSE (f != NIHIL && f->numerus == IV);
+    CREDO_LITERAE_AEQUALES (f->gradus[I].communis, "");
+    CREDO_CHORDA_CONTINET (_linea_functionis(c, k, f),
+        chorda_ex_literis(
+        "  functio  A: V:1", c->piscina));
+    /* C Am | G C | Bb F: C -> G sine aliena ante mutationem proximam
+     * (F) - "G:" ad G; G -> F per C (IV=F: V) */
+    partes[0] = "o3 c1 | a1 | g1 | c1 | b-1 | f1";
+    partes[1] = "o4 e1 | e1 | d1 | e1 | d1 | c1";
+    partes[2] = "o4 g1 | a1 | b1 | g1 | f1 | f1";
+    partes[3] = "o5 c1 | c1 | d1 | c1 | b-1 | a1";
+    partes[4] = NIHIL;
+    k = _carmen_mutatum(c, "c maior",
+        "<clavis mensura=\"3\" valor=\"g maior\"/>"
+        "<clavis mensura=\"5\" valor=\"f maior\"/>", partes);
+    f = _functio(c, k);
+    CREDO_NECESSE (f != NIHIL && f->numerus == VI);
+    t = _linea_functionis(c, k, f);
+    CREDO_CHORDA_CONTINET (t, chorda_ex_literis("  functio  G: I:1",
+        c->piscina));
+    CREDO_CHORDA_CONTINET (t, chorda_ex_literis("  functio  IV=F: V:1",
+        c->piscina));
+}
+
 /* dominans praevia: D7 ante G maior in F maior = V7 (G:), adventus
  * perfecta; viio7 imperfecta; ii-V: Am7 manet iii7 in F; ad minorem
  * "e:"; C7 (non dominans G) in F manet */
@@ -1018,6 +1166,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "linea", _sectio_linea, NIHIL, NIHIL, NIHIL, NIHIL },
     { "picardia", _sectio_picardia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "modulatio", _sectio_modulatio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "communis", _sectio_communis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "modulatio_finalis", _sectio_modulatio_finalis, NIHIL, NIHIL,
         NIHIL,
         NIHIL },

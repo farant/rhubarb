@@ -173,3 +173,20 @@ a barline split of a held chord can start strictly inside, and its prior window 
 chord (never a cadence); kept <= (header: "initium FERMATA tegit"). (2) "summa >= 0" under a
 fermata: only a silent window has no note starting, and silence gets neither cadence nor
 Picardy - guard removed.
+
+## 2026-10-27 - key changes named on the line; pivot chords "vi=A: ii" (modulation study, gaps 2+3)
+
+_communia (after the per-window passes, before cadences) walks the sounding windows: a change
+of READING key (tonic + mode; praevia included) against the previous sounding window (first
+window: the song's starting key) is a key change. Pivot search starts at the old key's last
+window b and runs forward (not past the next change) to x, the first chord not diatonic in the
+old key; p = the window just before x, if diatonic in the new key too. The pivot keeps its own
+numeral (gradus, cadence, censura untouched) and gains `communis` (numeral in the other key) +
+`communis_vetus`; the line prints old=Key: new at p and names the key nowhere else for that
+change. No pivot -> the key label goes on the change window (`clavis_nova`, index into
+Carmen.claves; replaces the line writer's praevia special case - "G: V7:1" still prints because
+a first-window praevia differs from the song's key). peregrinatio reads identically with
+<clavis> at the pivot, after it, or (return) on the pivot A itself: "vi=A: ii", "I=D: V".
+Simplification: "x > b" became "x >= 0" (x == b leaves p unset). Book diff: campus only -
+"E: I" at its bar-25 transposed repeat (D -> E direct, bar 24 D(5) is not in E: no pivot). My
+"no house song changes key" was stale (that note predates campus).

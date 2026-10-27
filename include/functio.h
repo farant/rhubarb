@@ -51,6 +51,24 @@
  * in C maior ante F maior manet I cum clausula sua; D post A7 in d
  * minor ante G maior Picardia est.
  *
+ * MUTATIO CLAVIS: fenestra cuius clavis lectionis (tonica, modus) alia
+ * est ac fenestrae sonantis prioris (prima: clavis carminis) clavem
+ * novam incipit; linea eam
+ * nominat ("A: V:4"; praevia quoque: "G: V7:1").
+ * ACORDUM COMMUNE (pivot): a fenestra sonante ultima clavis veteris
+ * fenestrae percurruntur ad primam cuius acordum in clave vetere
+ * diatonicum non est (E in D maior: G#), non ultra mutationem
+ * proximam. Fenestra sonans ante eam - ultima clavis veteris aut post
+ * eam - si acordum eius in clave utraque diatonicum est, commune est:
+ * numeralis in clave lectionis suae manet (gradus, clausula, censura
+ * non mutantur); communis = numeralis in clave altera. Linea
+ * "vetus=Clavis: nova" et clavem ibi solum nominat: Bm in D -> A
+ * "vi=A: ii:4"; A in A -> D "I=D: V:4"; Am7 D7 | G in F "iii7=G:
+ * ii7:1 V7:1 | I:1". Locus <clavis> (ante aut post commune) lineam
+ * non mutat. Prima fenestra clavis novae iam extra veterem (ultima
+ * veteris aliena) aut nulla aliena ante mutationem proximam: nullum
+ * commune, clavis ad mutationem nominatur.
+ *
  * CLAUSULA (cadentia): ADVENTUS = fenestra cuius initium FERMATA tegit
  * (corona: finis phrasis ab auctore signatus - choralis: D A7 D sub
  * fermata in tempore tertio), aut sine signo (heuristica): fenestra
@@ -99,6 +117,14 @@ nomen structura {
     FunctioClausula clausula;        /* in fenestra adventus */
                 b32 praevia;         /* in clave proxima lecta
                                        * (dominans praevia) */
+          character communis[XVI];   /* acordum commune: numeralis in
+                                       * clave altera; "" nullum */
+                b32 communis_vetus;  /* communis in clave VETERE
+                                       * (fenestra in nova lecta) */
+                s32 clavis_nova;     /* index in Carmen.claves clavis
+                                       * quam linea hic nominat
+                                       * (mutatio aut commune); -1
+                                       * nulla */
                 b32 substituta;      /* subV (tritonus substitutus);
                                        * applicata = meta (0: I) */
 } FunctioGradus;
