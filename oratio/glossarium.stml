@@ -1078,6 +1078,7 @@
   <vocabulum lemma="uint64" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="uint64_t stdint.h (C99 latitudo exacta); systema_posix.h 2026-10-15 pro vendor/bearssl_amalgama.h (tls-bearssl T1 R3)"/>
   <vocabulum lemma="rsa" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="RSA (Rivest-Shamir-Adleman) - algorithmus clavis publicae; folia probationis TLS et vectura BearSSL (tls-bearssl T2 R12, 2026-10-15)"/>
   <vocabulum lemma="securetransport" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="SecureTransport (Apple, Security.framework) - nomen proprium; vectura TLS vetus (tls-bearssl T3, 2026-10-15)"/>
+  <vocabulum lemma="be16" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="big-endian XVI bita - lib/git.c _be16 (index git, fabrica-plan-8 G2); frater be32 in copia tolerata"/>
   <vocabulum lemma="bearssl" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="BearSSL (Thomas Pornin) - nomen proprium; vectura TLS (vendor/bearssl, tls-bearssl T3, 2026-10-15)"/>
   <vocabulum lemma="tls13" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="TLS 1.3 (RFC 8446) - nomen protocolli; cliens proprius lib/tls13*.c (tls13 T1, 2026-10-16)"/>
   <vocabulum lemma="rfc" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="RFC (Request for Comments, IETF) - abbreviatio; textus normarum ut oracula (tls13 T1, 2026-10-16)"/>

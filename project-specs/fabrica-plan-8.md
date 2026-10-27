@@ -45,13 +45,13 @@ annals; fumus LXVII (planted). First reading, `probare -vis
 probationes_toml`: median 452 ms per member = ~0.23 s per snapshot.
 The tracked-snapshot fact (`fabrica.trackata`) comes with T2.
 
-**G1 - lib/git opens a worktree.** `git_aperire` follows a `.git`
+**G1 - lib/git opens a worktree.** ALREADY DONE (059fe759, found 2026-10-27): `git_aperire` follows `gitdir:` and `commondir`; probatio_git 'arborem operis' 9/9; fabrica's `_repositorium` resolves HEAD through it in quinta daily. Ledger …NGCM closed (was stale). Original scope: `git_aperire` follows a `.git`
 FILE (`gitdir: <path>`) and the worktree's `commondir` (objects and refs
 live in the main repository; HEAD and the index in the worktree's own
 gitdir). Ledger …NGCM. Test: probatio_git with a fixture worktree
 (plain files, no git binary): HEAD resolves, an object reads.
 
-**G2 - lib/git reads the index.** `git_indicem_legere` -> paths (and
+**G2 - lib/git reads the index.** DONE 2026-10-27: `git_indicem_legere` (v2/v3, v4 refused, trailer verified, extensions skipped); oracle `git ls-files -s` over the real index + hand-built indexes; 3 plants. Original scope: `git_indicem_legere` -> paths (and
 mode, size, mtime as stored) from `.git/index` v2 (and v3/v4 if present:
 v4 prefix-compresses paths - refuse loudly rather than misread).
 Checksum verified (SHA-1 trailer). Test: a fixture index written by real

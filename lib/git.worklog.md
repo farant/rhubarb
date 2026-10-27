@@ -143,3 +143,23 @@ officina and tessera amalgams regenerated together; the oracle's pinned
 side now transplants today's latina (materia/instrumenta/
 oraculum_silvae.worklog.md). probatio_git's `git show HEAD:` oracle
 from 09-24 is what let the commit through its own gate.
+
+## 2026-10-27 - index reader (fabrica-plan-8 G2)
+
+`git_indicem_legere` reads `<via_git>/index` - in a worktree that is the
+worktree's OWN gitdir (G1's split, already in place since 059fe759), so
+fabrica gets the tracked set of the tree it is judging without running
+`git ls-files`. Versions 2 and 3 only: v3 adds two flag bytes when bit
+0x4000 is set (`git add -N`); v4 prefix-compresses paths and is REFUSED
+(NIHIL) rather than half-understood. The SHA-1 trailer is verified with
+the file's own `_sha1`; entry size = (path offset + length + 8) & ~7;
+extensions (TREE, REUC, ...) are skipped but their sizes are bounds-
+checked. Absent index (fresh repository) = empty list, not NIHIL.
+
+Oracle: `git ls-files -s -z` over the real index (12.5k entries in
+quinta), every "<mode> <sha> <stage>\t<path>" equal and in order - plus
+hand-built indexes (v2 fields, v3 extended entry followed by a normal
+one, stages 1-3, TREE extension, refusals: v4, bad trailer, count past
+the body, wrong signature; a synthetic worktree whose gitdir index is
+read). Plants: trailer check skipped, v4 accepted, v3 extra bytes not
+skipped - each red at its own assertion.

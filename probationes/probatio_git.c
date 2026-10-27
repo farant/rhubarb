@@ -27,6 +27,7 @@
 #include "git.h"
 #include "credo.h"
 #include "processus.h"
+#include "friatio.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -570,6 +571,314 @@ _sectio_differentia (
     CREDO_AEQUALIS_I32(via_mutata->sha_novus.mensura, (i32)0);
 }
 
+
+/* ==================================================
+ * INDEX (fabrica-plan-8 G2)
+ * ================================================== */
+
+/* ORACULUM: 'git ls-files -s -z' (git ipsum) contra indicem verum
+ * arboris huius - introitus quisque "<modus> <sha> <gradus>\t<via>"
+ * idem et ordine eodem (XII milia et ultra) */
+interior vacuum
+_sectio_index (
+    CredoContextus* c)
+{
+     constans MundusGit* m        = (constans MundusGit*)c->suita;
+                Piscina* piscina  = c->piscina;
+     constans character* argumenta[V];
+      ProcessusResultus  r;
+                    Xar* index;
+                    i32  i;
+                    i32  initium;
+                    i32  k;
+                    b32  discordia;
+
+    index = git_indicem_legere(m->repositorium, piscina);
+    CREDO_NECESSE_NON_NIHIL(index);
+    argumenta[ZEPHYRUM] = "git";
+    argumenta[I] = "ls-files";
+    argumenta[II] = "-s";
+    argumenta[III] = "-z";
+    argumenta[IV] = NIHIL;
+    r = processus_exsequi(argumenta, (i32)30000, piscina);
+    CREDO_NECESSE(r.successus && r.codex_exitus == ZEPHYRUM);
+    CREDO_VERUM(xar_numerus(index) > (i32)M);
+    initium    = ZEPHYRUM;
+    k          = ZEPHYRUM;
+    discordia  = FALSUM;
+    per (i = ZEPHYRUM; i < r.effusio.mensura; i++)
+    {
+        constans GitIndexIntroitus* e;
+                         character  linea[CCLVI];
+                            chorda  oraculum;
+                            chorda  nostrum;
+
+        si (r.effusio.datum[i] != '\0')
+        {
+            perge;
+        }
+        oraculum  = chorda_sectio(r.effusio, initium, i);
+        initium   = i + I;
+        si (k >= xar_numerus(index))
+        {
+            k++;
+            perge;
+        }
+        e = (constans GitIndexIntroitus*)xar_obtinere(index, k);
+        sprintf(linea, "%06o %s %d\t", (insignatus integer)e->modus,
+            e->sha, (integer)e->gradus);
+        nostrum = chorda_concatenare(chorda_ex_literis(linea, piscina),
+            e->via, piscina);
+        si (!discordia && !chorda_aequalis(nostrum, oraculum))
+        {
+            discordia = VERUM;
+            imprimere("  index: %.*s\n  git:   %.*s\n",
+                (integer)nostrum.mensura, (constans character*)
+                nostrum.datum, (integer)oraculum.mensura,
+                (constans character*)oraculum.datum);
+        }
+        k++;
+    }
+    CREDO_AEQUALIS_I32(k, xar_numerus(index));
+    CREDO_FALSUM(discordia);
+}
+
+/* introitus ficti in indicem (forma git: ctime, mtime, dev, ino,
+ * modus, uid, gid, mensura, sha, vexilla [, vexilla extensa], via,
+ * NUL ad multiplum VIII) */
+interior vacuum
+_be32_scribere (
+    ChordaAedificator* a,
+                  i32  valor)
+{
+    (vacuum)chorda_aedificator_appendere_character(a,
+        (character)((valor >> 24) & 0xFF));
+    (vacuum)chorda_aedificator_appendere_character(a,
+        (character)((valor >> 16) & 0xFF));
+    (vacuum)chorda_aedificator_appendere_character(a,
+        (character)((valor >> 8) & 0xFF));
+    (vacuum)chorda_aedificator_appendere_character(a,
+        (character)(valor & 0xFF));
+}
+
+interior vacuum
+_introitum_fingere (
+      ChordaAedificator* a,
+     constans character* via,
+                    i32  modus,
+                    i32  gradus,
+                    b32  extensus,
+                    i32  mensura,
+                    i32  signum_sha)
+{
+    i32 longitudo = (i32)strlen(via);
+    i32 octeti;
+    i32 k;
+
+    _be32_scribere(a, ZEPHYRUM);           /* ctime s */
+    _be32_scribere(a, ZEPHYRUM);           /* ctime ns */
+    _be32_scribere(a, (i32)1700000000);    /* mtime s */
+    _be32_scribere(a, (i32)123456789);     /* mtime ns */
+    _be32_scribere(a, ZEPHYRUM);           /* dev */
+    _be32_scribere(a, ZEPHYRUM);           /* ino */
+    _be32_scribere(a, modus);
+    _be32_scribere(a, ZEPHYRUM);           /* uid */
+    _be32_scribere(a, ZEPHYRUM);           /* gid */
+    _be32_scribere(a, mensura);
+    per (k = ZEPHYRUM; k < XX; k++)
+    {
+        (vacuum)chorda_aedificator_appendere_character(a,
+            (character)((signum_sha + k) & 0xFF));
+    }
+    k = (gradus << XII)
+        | (longitudo < (i32)0xFFF ? longitudo : (i32)0xFFF);
+    si (extensus)
+    {
+        k |= (i32)0x4000;
+    }
+    (vacuum)chorda_aedificator_appendere_character(a,
+        (character)((k >> 8) & 0xFF));
+    (vacuum)chorda_aedificator_appendere_character(a,
+        (character)(k & 0xFF));
+    octeti = LXII;
+    si (extensus)
+    {
+        /* intent-to-add (git add -N) */
+        (vacuum)chorda_aedificator_appendere_character(a,
+            (character)0x20);
+        (vacuum)chorda_aedificator_appendere_character(a, (character)0);
+        octeti += II;
+    }
+    (vacuum)chorda_aedificator_appendere_literis(a, via);
+    octeti += longitudo;
+    per (k = ((octeti + VIII) & ~(i32)VII) - octeti; k > ZEPHYRUM; k--)
+    {
+        (vacuum)chorda_aedificator_appendere_character(a, (character)0);
+    }
+}
+
+/* caput + corpus + trailer SHA-1 -> '<gitdir>/index'; repositorium
+ * fictum cuius via_git = gitdir */
+interior b32
+_indicem_ponere (
+     constans character* gitdir,
+                 chorda  corpus,
+                    i32  versio,
+                    i32  numerus,
+                    b32  digestum_falsum,
+                Piscina* piscina)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina, CCLVI);
+                   i8  digestum[SHA1_DIGEST_MENSURA];
+               chorda  totum;
+                  i32  k;
+
+    (vacuum)chorda_aedificator_appendere_literis(a, "DIRC");
+    _be32_scribere(a, versio);
+    _be32_scribere(a, numerus);
+    (vacuum)chorda_aedificator_appendere_chorda(a, corpus);
+    totum = chorda_aedificator_spectare(a);
+    sha1_friare(totum.datum, totum.mensura, digestum);
+    si (digestum_falsum)
+    {
+        digestum[ZEPHYRUM] = (i8)(digestum[ZEPHYRUM] ^ 0x01);
+    }
+    per (k = ZEPHYRUM; k < SHA1_DIGEST_MENSURA; k++)
+    {
+        (vacuum)chorda_aedificator_appendere_character(a,
+            (character)digestum[k]);
+    }
+    redde filum_scribere(_serere(piscina, gitdir, "/index", ""),
+        chorda_aedificator_finire(a));
+}
+
+interior vacuum
+_sectio_index_fictus (
+    CredoContextus* c)
+{
+            constans MundusGit* m =
+                (constans MundusGit*)c->suita;
+                       Piscina* piscina = c->piscina;
+            constans character* gitdir;
+            constans character* arbor;
+               GitRepositorium  fictum;
+               GitRepositorium* r;
+             ChordaAedificator* a;
+                        chorda  duo;
+                           Xar* index;
+    constans GitIndexIntroitus* e;
+
+    gitdir  = _serere(piscina, credo_area(c), "/gd", "");
+    arbor   = _serere(piscina, credo_area(c), "/arbor", "");
+    CREDO_NECESSE(filum_directorium_creare_cum_parentibus(gitdir));
+    CREDO_NECESSE(filum_directorium_creare_cum_parentibus(arbor));
+    fictum          = *m->repositorium;
+    fictum.via_git  = gitdir;
+
+    /* absens: Xar vacuum, non NIHIL */
+    index = git_indicem_legere(&fictum, piscina);
+    CREDO_NECESSE_NON_NIHIL(index);
+    CREDO_AEQUALIS_I32(xar_numerus(index), ZEPHYRUM);
+
+    /* II: duo introitus, campi omnes */
+    a = chorda_aedificator_creare(piscina, CCLVI);
+    _introitum_fingere(a, "a.c", (i32)0100644, ZEPHYRUM, FALSUM, V,
+        0x10);
+    _introitum_fingere(a, "dir/b", (i32)0100755, ZEPHYRUM, FALSUM,
+        (i32)70000, 0x20);
+    duo = chorda_aedificator_finire(a);
+    CREDO_NECESSE(_indicem_ponere(gitdir, duo, II, II, FALSUM,
+        piscina));
+    index = git_indicem_legere(&fictum, piscina);
+    CREDO_NECESSE_NON_NIHIL(index);
+    CREDO_NECESSE(xar_numerus(index) == II);
+    e = (constans GitIndexIntroitus*)xar_obtinere(index, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(e->via, "a.c");
+    CREDO_AEQUALIS_I32(e->modus, (i32)0100644);
+    CREDO_AEQUALIS_I32(e->gradus, ZEPHYRUM);
+    CREDO_VERUM(e->mensura == (s64)V);
+    CREDO_VERUM(e->tempus_ns == (s64)1700000000 * (s64)1000000000
+        + (s64)123456789);
+    CREDO_VERUM(strcmp(e->sha,
+        "101112131415161718191a1b1c1d1e1f20212223") == ZEPHYRUM);
+    e = (constans GitIndexIntroitus*)xar_obtinere(index, I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(e->via, "dir/b");
+    CREDO_AEQUALIS_I32(e->modus, (i32)0100755);
+    CREDO_VERUM(e->mensura == (s64)70000);
+
+    /* III: introitus extensus (git add -N) - II octeti plus; si non
+     * omittuntur, via et introitus sequens male leguntur */
+    a = chorda_aedificator_creare(piscina, CCLVI);
+    _introitum_fingere(a, "novum.c", (i32)0100644, ZEPHYRUM, VERUM,
+        ZEPHYRUM, 0x30);
+    _introitum_fingere(a, "zeta", (i32)0100644, ZEPHYRUM, FALSUM, I,
+        0x40);
+    CREDO_NECESSE(_indicem_ponere(gitdir, chorda_aedificator_finire(a),
+        III, II, FALSUM, piscina));
+    index = git_indicem_legere(&fictum, piscina);
+    CREDO_NECESSE_NON_NIHIL(index);
+    CREDO_NECESSE(xar_numerus(index) == II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(((constans GitIndexIntroitus*)
+        xar_obtinere(index, ZEPHYRUM))->via, "novum.c");
+    CREDO_CHORDA_AEQUALIS_LITERIS(((constans GitIndexIntroitus*)
+        xar_obtinere(index, I))->via, "zeta");
+
+    /* gradus conflictus 1-3 */
+    a = chorda_aedificator_creare(piscina, CCLVI);
+    _introitum_fingere(a, "c", (i32)0100644, I, FALSUM, I, 1);
+    _introitum_fingere(a, "c", (i32)0100644, II, FALSUM, I, 2);
+    _introitum_fingere(a, "c", (i32)0100644, III, FALSUM, I, 3);
+    CREDO_NECESSE(_indicem_ponere(gitdir, chorda_aedificator_finire(a),
+        II, III, FALSUM, piscina));
+    index = git_indicem_legere(&fictum, piscina);
+    CREDO_NECESSE_NON_NIHIL(index);
+    CREDO_NECESSE(xar_numerus(index) == III);
+    CREDO_AEQUALIS_I32(((constans GitIndexIntroitus*)xar_obtinere(
+        index, II))->gradus, III);
+
+    /* extensio (TREE) ante trailer praeteritur */
+    a = chorda_aedificator_creare(piscina, CCLVI);
+    (vacuum)chorda_aedificator_appendere_chorda(a, duo);
+    (vacuum)chorda_aedificator_appendere_literis(a, "TREE");
+    _be32_scribere(a, IV);
+    (vacuum)chorda_aedificator_appendere_literis(a, "xyzw");
+    CREDO_NECESSE(_indicem_ponere(gitdir, chorda_aedificator_finire(a),
+        II, II, FALSUM, piscina));
+    index = git_indicem_legere(&fictum, piscina);
+    CREDO_NECESSE_NON_NIHIL(index);
+    CREDO_AEQUALIS_I32(xar_numerus(index), II);
+
+    /* RECUSATIONES: IV, trailer falsus, numerus ultra corpus, signum */
+    CREDO_NECESSE(_indicem_ponere(gitdir, duo, IV, II, FALSUM,
+        piscina));
+    CREDO_NIHIL(git_indicem_legere(&fictum, piscina));
+    CREDO_NECESSE(_indicem_ponere(gitdir, duo, II, II, VERUM, piscina));
+    CREDO_NIHIL(git_indicem_legere(&fictum, piscina));
+    CREDO_NECESSE(_indicem_ponere(gitdir, duo, II, III, FALSUM,
+        piscina));
+    CREDO_NIHIL(git_indicem_legere(&fictum, piscina));
+    CREDO_NECESSE(filum_scribere_literis(_serere(piscina, gitdir,
+        "/index", ""), "DIRX\0\0\0\2\0\0\0\0"));
+    CREDO_NIHIL(git_indicem_legere(&fictum, piscina));
+
+    /* ARBOR OPERIS: index gitdir PROPRII legitur, non communis */
+    CREDO_NECESSE(_indicem_ponere(gitdir, duo, II, II, FALSUM,
+        piscina));
+    CREDO_NECESSE(filum_scribere(_serere(piscina, gitdir, "/HEAD", ""),
+        filum_legere_totum(_serere(piscina, m->repositorium->via_git,
+            "/HEAD", ""), piscina)));
+    CREDO_NECESSE(filum_scribere_literis(_serere(piscina, gitdir,
+        "/commondir", ""), _serere(piscina,
+        m->repositorium->via_communis, "\n", "")));
+    CREDO_NECESSE(filum_scribere_literis(_serere(piscina, arbor,
+        "/.git", ""), _serere(piscina, "gitdir: ", gitdir, "\n")));
+    r = git_aperire(piscina, arbor);
+    CREDO_NECESSE_NON_NIHIL(r);
+    index = git_indicem_legere(r, piscina);
+    CREDO_NECESSE_NON_NIHIL(index);
+    CREDO_AEQUALIS_I32(xar_numerus(index), II);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "apertionem", _sectio_apertio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "resolutionem refum", _sectio_resolutio, NIHIL, NIHIL, NIHIL,
@@ -578,6 +887,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _sectio_arbor_operis,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "commissum", _sectio_commissum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "indicem (oraculum git ls-files -s)", _sectio_index, NIHIL,
+      NIHIL, NIHIL, NIHIL },
+    { "indicem fictum (II, III, gradus, extensio, recusationes, arbor "
+      "operis)", _sectio_index_fictus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "arborem", _sectio_arbor, NIHIL, NIHIL, NIHIL, NIHIL },
     { "massam per viam (oraculum disci)", _sectio_massa, NIHIL, NIHIL,
       NIHIL, NIHIL },
