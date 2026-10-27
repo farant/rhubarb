@@ -326,6 +326,8 @@ _sectio_pictura_aliena (
                     s64  cursor;
                  chorda  sig_a;
                  chorda  sig_radicis;
+                 chorda  sig_cognominis;
+                    Xar* recentia_ante;
                     s64  numerus;
                     i32  k;
 
@@ -358,6 +360,9 @@ _sectio_pictura_aliena (
     }
     sig_radicis = pictor_documentum_sigillum_compositi_hex(radix_b,
         piscina);
+    sig_cognominis = pictor_documentum_sigillum_compositi_hex(homonyma,
+        piscina);
+    recentia_ante = pictor_documenta_recentia(b, piscina);
 
     cursor = ZEPHYRUM;
     CREDO_VERUM(communio_transferre(a, b, &cursor, NIHIL, piscina));
@@ -390,6 +395,24 @@ _sectio_pictura_aliena (
     CREDO_CHORDA_AEQUALIS(pictor_documentum_sigillum_compositi_hex(
         radix_b, piscina), sig_radicis);
 
+    CREDO_GRADUS("homonyma propria intacta (recensio C1)");
+    homonyma = pictor_documentum_aperire(piscina, intern, b, "p");
+    CREDO_NECESSE_NON_NIHIL(homonyma);
+    CREDO_CHORDA_AEQUALIS(pictor_documentum_sigillum_compositi_hex(
+        homonyma, piscina), sig_cognominis);
+    l = pictor_documenta_recentia(b, piscina);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_NECESSE_NON_NIHIL(recentia_ante);
+    CREDO_AEQUALIS_I32(xar_numerus(l), xar_numerus(recentia_ante));
+    per (k = ZEPHYRUM; k < xar_numerus(l); k++)
+    {
+        CREDO_CHORDA_AEQUALIS(((PictorPictura*)xar_obtinere(l, k))
+            ->spatium, ((PictorPictura*)xar_obtinere(recentia_ante, k))
+            ->spatium);
+        CREDO_AEQUALIS_S64(((PictorPictura*)xar_obtinere(l, k))->seq,
+            ((PictorPictura*)xar_obtinere(recentia_ante, k))->seq);
+    }
+
     CREDO_GRADUS("scriptura in alienam recusatur");
     numerus = volumen_summa_actorum(b);
     CREDO_AEQUALIS_S64(ictus(aliena, V, V, I), (s64)ZEPHYRUM);
@@ -397,6 +420,16 @@ _sectio_pictura_aliena (
     CREDO_AEQUALIS_S64(volumen_summa_actorum(b), numerus);
     volumen_claudere(a);
     volumen_claudere(b);
+}
+
+/* recensio I3: observator historiae vocationes numerat */
+interior vacuum
+observator_numerans (
+    Historia* h,
+      vacuum* ctx)
+{
+    (vacuum)h;
+    *(i32*)ctx += I;
 }
 
 /* T5: picturam A in B sequi - sigillum aequale */
@@ -422,9 +455,11 @@ _sectio_sequi (
        PictorDocumentum* da;
        PictorDocumentum* aliena;
        PictorDocumentum* recens;
+                    i32  vocationes;
                     s64  cursor;
 
     (vacuum)c;
+    vocationes = ZEPHYRUM;
     thema_initiare();
     intern  = internamentum_creare(piscina);
     a       = volumen_temporarium(piscina, "probatio_communio_sa");
@@ -444,11 +479,14 @@ _sectio_sequi (
     CREDO_GRADUS("nihil novum");
     CREDO_FALSUM(pictor_documentum_sequi(aliena));
 
-    CREDO_GRADUS("sequitur: ictus novi");
+    CREDO_GRADUS("sequitur: ictus novi; observatores vocati");
+    CREDO_VERUM(historia_observatorem_addere(aliena->historia,
+        observator_numerans, &vocationes));
     CREDO_NECESSE(ictus(da, LXX, XXX, IX) > ZEPHYRUM);
     CREDO_NECESSE(ictus(da, LXXX, XXX, X) > ZEPHYRUM);
     CREDO_NECESSE(communio_transferre(a, b, &cursor, NIHIL, piscina));
     CREDO_VERUM(pictor_documentum_sequi(aliena));
+    CREDO_VERUM(vocationes > ZEPHYRUM);
     CREDO_VERUM(aequales(da, aliena));
     CREDO_FALSUM(pictor_documentum_sequi(aliena));
 

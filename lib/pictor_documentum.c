@@ -1282,8 +1282,13 @@ pictor_documenta_recentia (
     }
     genera[n * IV]      = "plagula-condita";
     genera[n * IV + I]  = NIHIL;
-    acta = volumen_acta_generum_legere(volumen, ZEPHYRUM, genera,
-        piscina);
+    /* recensio C1: acta propria sola - pictura homonyma alterius
+     * machinae recentiam localem non movet */
+    acta = volumen_replica(volumen).mensura > ZEPHYRUM
+         ? volumen_acta_generum_replicae_legere(volumen,
+               volumen_replica(volumen), ZEPHYRUM, genera, piscina)
+         : volumen_acta_generum_legere(volumen, ZEPHYRUM, genera,
+               piscina);
     per (i = ZEPHYRUM; acta && i < xar_numerus(acta); i++)
     {
         a = (VolumenActum*)xar_obtinere(acta, i);

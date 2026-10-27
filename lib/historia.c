@@ -94,8 +94,17 @@ acta_generum (
 
     si (h->replica.mensura == ZEPHYRUM)
     {
-        redde volumen_acta_generum_legere(h->volumen, post, genera,
-            h->piscina);
+        /* recensio C1: documentum PROPRIUM acta replicae propriae sola
+         * legit - acta importata eiusdem generis (pictura homonyma
+         * alterius machinae) numquam miscentur. Sine replica (volumen
+         * sine machina) lectio vetus. */
+        si (volumen_replica(h->volumen).mensura == ZEPHYRUM)
+        {
+            redde volumen_acta_generum_legere(h->volumen, post, genera,
+                h->piscina);
+        }
+        redde volumen_acta_generum_replicae_legere(h->volumen,
+            volumen_replica(h->volumen), post, genera, h->piscina);
     }
     l = volumen_acta_generum_replicae_legere(h->volumen, h->replica,
         post, genera, h->piscina);
@@ -678,6 +687,10 @@ historia_aperire_alienam (
         genus, origo_checkpoint, intervallum, proiectio);
 }
 
+interior vacuum
+observatores_vocare (
+    Historia* h);
+
 b32
 historia_sequi (
     Historia* h)
@@ -725,6 +738,8 @@ historia_sequi (
     {
         proicere_ad(h, h->cursor, FALSUM);
     }
+    /* recensio I3: observatores (S5b) ut post actum */
+    observatores_vocare(h);
     redde VERUM;
 }
 

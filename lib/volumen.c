@@ -125,9 +125,26 @@ _replicam_parare (
         &inventum);
     si (!inventum || vol->replica.mensura != XXVI)
     {
+        /* recensio I2: duo processus volumen novum simul aperientes -
+         * INSERT OR IGNORE, deinde quod servatum est adoptatur (numquam
+         * duae replicae in plagula una) */
         moneta_ulid(ulid);
-        vol->replica = chorda_ex_literis(ulid, vol->piscina);
-        si (!volumen_praesens_ponere(vol, clavis, vol->replica))
+        e = scrinium_praeparare(vol->scrinium,
+            "INSERT OR IGNORE INTO praesentia (clavis, valor)"
+            " VALUES (?, ?)");
+        si (e == NIHIL)
+        {
+            redde FALSUM;
+        }
+        scrinium_ligare_textum(e, 1, clavis);
+        scrinium_ligare_massam(e, 2, chorda_ex_literis(ulid,
+            vol->piscina));
+        bene = scrinium_gradi(e) == SCRINIUM_FACTUM;
+        scrinium_finire(e);
+        vol->replica = volumen_praesens_legere(vol, clavis,
+            vol->piscina,
+            &inventum);
+        si (!bene || !inventum || vol->replica.mensura != XXVI)
         {
             redde FALSUM;
         }
@@ -281,6 +298,10 @@ _volumen_struere (
     vol->temporarium  = FALSUM;
     vol->via          = NIHIL;
     vol->seq_ultimum  = NIHIL;
+    /* recensio I1: replica vacua donec _replicam_parare (sine machina
+     * numquam paratur) */
+    vol->replica.datum    = NIHIL;
+    vol->replica.mensura  = ZEPHYRUM;
     {
         /* Via COPIATUR: vocator litteras suas liberare potest, et
          * volumen temporarium eas in claudendo adhuc eget. */
@@ -664,6 +685,7 @@ volumen_actum_importare (
        VolumenImportatio  exitus;
 
     si (   !volumen || !actum || actum->identitas.hora <= ZEPHYRUM
+        || volumen->replica.mensura         == ZEPHYRUM
         || actum->identitas.replica.mensura == ZEPHYRUM
         || actum->genus.mensura             == ZEPHYRUM
         || chorda_aequalis(actum->identitas.replica, volumen->replica))
