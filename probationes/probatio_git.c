@@ -28,6 +28,7 @@
 #include "credo.h"
 #include "processus.h"
 #include "friatio.h"
+#include "flatura.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -879,6 +880,175 @@ _sectio_index_fictus (
     CREDO_AEQUALIS_I32(xar_numerus(index), II);
 }
 
+/* SARCINA MAGNA (2026-10-27): obiectum cuius forma compressa > LXIV K
+ * in sarcina. lib/git fenestram LXIV K legit et SOLUM si flatura
+ * INCOMPLETUS dicit quadruplicat - flatura olim fluxum truncatum ut
+ * corruptum referebat, ergo obiectum tale numquam legebatur (massa
+ * DXXXVII K post 'git gc' in repositorio vero: differre_git fractum).
+ * Sarcina synthetica una (obiectum unum, idx v2) in area - hermetica. */
+interior vacuum
+_sarcinam_scribere_i32 (
+    ChordaAedificator* a,
+                  i32  valor)
+{
+    (vacuum)chorda_aedificator_appendere_character(a,
+        (character)((valor >> 24) & 0xFF));
+    (vacuum)chorda_aedificator_appendere_character(a,
+        (character)((valor >> 16) & 0xFF));
+    (vacuum)chorda_aedificator_appendere_character(a,
+        (character)((valor >> 8) & 0xFF));
+    (vacuum)chorda_aedificator_appendere_character(a,
+        (character)(valor & 0xFF));
+}
+
+interior vacuum
+_sectio_sarcina_magna (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    constans character* radix;
+    constans character* via_pack;
+                    i8* massa;
+                   i32  mensura  = (i32)CCC * (i32)MXXIV;
+                   i32  semen    = (i32)4242;
+                   i32  k;
+                   i32  adler_a = I;
+                   i32  adler_b = ZEPHYRUM;
+                   i32  m;
+                    i8  sha_massae[SHA1_DIGEST_MENSURA];
+                    i8  sha_sarcinae[SHA1_DIGEST_MENSURA];
+                    i8  sha_indicis[SHA1_DIGEST_MENSURA];
+             character  sha_hex[GIT_SHA_HEX_MENSURA];
+             character  pack_hex[GIT_SHA_HEX_MENSURA];
+        FlaturaFructus  compressa;
+     ChordaAedificator* a;
+                chorda  caput_massae;
+                chorda  sarcina;
+                chorda  obiectum_crudum;
+                chorda  index;
+       GitRepositorium* r;
+           GitObiectum  o;
+
+    massa = (i8*)piscina_allocare(piscina, (memoriae_index)mensura);
+    CREDO_NECESSE_NON_NIHIL(massa);
+    per (k = ZEPHYRUM; k < mensura; k++)
+    {
+        semen     = semen * (i32)1103515245 + (i32)12345;
+        massa[k]  = (i8)('a' + (character)((semen >> XVI) % XXVI));
+    }
+    /* sha obiecti git: "blob <mensura>\0" + contentum */
+    a = chorda_aedificator_creare(piscina, CCLVI);
+    {
+        character caput[XXXII];
+
+        sprintf(caput, "blob %d", (integer)mensura);
+        (vacuum)chorda_aedificator_appendere_literis(a, caput);
+        (vacuum)chorda_aedificator_appendere_character(a, '\0');
+    }
+    (vacuum)chorda_aedificator_appendere_chorda(a, chorda_ex_buffer(
+        massa, mensura));
+    caput_massae = chorda_aedificator_finire(a);
+    sha1_friare(caput_massae.datum, caput_massae.mensura, sha_massae);
+    per (k = ZEPHYRUM; k < XX; k++)
+    {
+        sprintf(sha_hex + k * II, "%02x",
+            (insignatus integer)sha_massae[k]);
+    }
+    /* zlib: caput 78 9C + deflatum + adler32 */
+    compressa = flatura_deflare(massa, mensura,
+        FLATURA_COMPRESSIO_ORDINARIA, piscina);
+    CREDO_NECESSE((i32)compressa.status == (i32)FLATURA_STATUS_OK);
+    CREDO_VERUM(compressa.mensura > (i32)65536);   /* fenestra crescat */
+    per (k = ZEPHYRUM; k < mensura; k++)
+    {
+        adler_a = (adler_a + (i32)massa[k]) % (i32)65521;
+        adler_b = (adler_b + adler_a) % (i32)65521;
+    }
+    a = chorda_aedificator_creare(piscina, CCLVI);
+    /* caput obiecti sarcinae: genus III (blob), mensura varint */
+    m = mensura;
+    (vacuum)chorda_aedificator_appendere_character(a, (character)(
+        (III << IV) | (m & 0x0F) | (m > 0x0F ? 0x80 : 0)));
+    m >>= IV;
+    dum (m > ZEPHYRUM)
+    {
+        (vacuum)chorda_aedificator_appendere_character(a, (character)(
+            (m & 0x7F) | (m > 0x7F ? 0x80 : 0)));
+        m >>= VII;
+    }
+    (vacuum)chorda_aedificator_appendere_character(a, (character)0x78);
+    (vacuum)chorda_aedificator_appendere_character(a, (character)0x9C);
+    (vacuum)chorda_aedificator_appendere_chorda(a, chorda_ex_buffer(
+        compressa.datum, compressa.mensura));
+    _sarcinam_scribere_i32(a, (adler_b << XVI) | adler_a);
+    obiectum_crudum = chorda_aedificator_finire(a);
+    /* sarcina: PACK v2, obiectum unum, trailer SHA-1 */
+    a = chorda_aedificator_creare(piscina, CCLVI);
+    (vacuum)chorda_aedificator_appendere_literis(a, "PACK");
+    _sarcinam_scribere_i32(a, II);
+    _sarcinam_scribere_i32(a, I);
+    (vacuum)chorda_aedificator_appendere_chorda(a, obiectum_crudum);
+    sarcina = chorda_aedificator_finire(a);
+    sha1_friare(sarcina.datum, sarcina.mensura, sha_sarcinae);
+    a = chorda_aedificator_creare(piscina, CCLVI);
+    (vacuum)chorda_aedificator_appendere_chorda(a, sarcina);
+    (vacuum)chorda_aedificator_appendere_chorda(a, chorda_ex_buffer(
+        sha_sarcinae, XX));
+    sarcina = chorda_aedificator_finire(a);
+    /* idx v2: magia, versio, fanout, sha, crc, offset, trailer */
+    a = chorda_aedificator_creare(piscina, CCLVI);
+    (vacuum)chorda_aedificator_appendere_character(a, (character)0xFF);
+    (vacuum)chorda_aedificator_appendere_literis(a, "tOc");
+    _sarcinam_scribere_i32(a, II);
+    per (k = ZEPHYRUM; k < CCLVI; k++)
+    {
+        _sarcinam_scribere_i32(a, k >= (i32)sha_massae[ZEPHYRUM]
+            ? I : ZEPHYRUM);
+    }
+    (vacuum)chorda_aedificator_appendere_chorda(a, chorda_ex_buffer(
+        sha_massae, XX));
+    _sarcinam_scribere_i32(a, flatura_crc32(obiectum_crudum.datum,
+        obiectum_crudum.mensura));
+    _sarcinam_scribere_i32(a, XII);
+    (vacuum)chorda_aedificator_appendere_chorda(a, chorda_ex_buffer(
+        sha_sarcinae, XX));
+    index = chorda_aedificator_finire(a);
+    sha1_friare(index.datum, index.mensura, sha_indicis);
+    a = chorda_aedificator_creare(piscina, CCLVI);
+    (vacuum)chorda_aedificator_appendere_chorda(a, index);
+    (vacuum)chorda_aedificator_appendere_chorda(a, chorda_ex_buffer(
+        sha_indicis, XX));
+    index = chorda_aedificator_finire(a);
+    /* repositorium syntheticum */
+    per (k = ZEPHYRUM; k < XX; k++)
+    {
+        sprintf(pack_hex + k * II, "%02x",
+            (insignatus integer)sha_sarcinae[k]);
+    }
+    radix     = _serere(piscina, credo_area(c), "/magna", "");
+    via_pack  = _serere(piscina, radix, "/.git/objects/pack/pack-",
+        pack_hex);
+    CREDO_NECESSE(filum_directorium_creare_cum_parentibus(_serere(
+        piscina, radix, "/.git/objects/pack", "")));
+    CREDO_NECESSE(filum_scribere_literis(_serere(piscina, radix,
+        "/.git/HEAD", ""), "ref: refs/heads/principalis\n"));
+    CREDO_NECESSE(filum_scribere(_serere(piscina, via_pack, ".pack",
+        ""),
+        sarcina));
+    CREDO_NECESSE(filum_scribere(_serere(piscina, via_pack, ".idx", ""),
+        index));
+    r = git_aperire(piscina, radix);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_AEQUALIS_I32(xar_numerus(r->sarcinae), I);
+    o = git_obiectum_legere(r, sha_hex, piscina);
+    CREDO_VERUM(o.successus);
+    CREDO_AEQUALIS_I32((i32)o.genus, (i32)GIT_OBIECTUM_MASSA);
+    CREDO_AEQUALIS_I32(o.datum.mensura, mensura);
+    CREDO_VERUM(o.successus && o.datum.mensura == mensura
+        && memcmp(o.datum.datum, massa, (memoriae_index)mensura)
+            == ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "apertionem", _sectio_apertio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "resolutionem refum", _sectio_resolutio, NIHIL, NIHIL, NIHIL,
@@ -887,6 +1057,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _sectio_arbor_operis,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "commissum", _sectio_commissum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sarcinam magnam (compressa > LXIV K)", _sectio_sarcina_magna,
+      NIHIL, NIHIL, NIHIL, NIHIL },
     { "indicem (oraculum git ls-files -s)", _sectio_index, NIHIL,
       NIHIL, NIHIL, NIHIL },
     { "indicem fictum (II, III, gradus, extensio, recusationes, arbor "
