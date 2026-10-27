@@ -68,3 +68,33 @@ for gradus III rows WITHOUT additae (Iadd9 over E: no figure - "Iadd9 6" would m
 Role lists extended: dominant forms (applicata and cadence) += 9, 7b9; cadence-final +=
 6, m6, add9; picardy += 6, add9. Operetta endings (V7 -> Iadd6) are perfect cadences.
 Plants 4/4 red first time.
+
+## 2026-10-26 - 43HA step 3: key changes (dominans praevia)
+
+Probe: a refrain in F, D7 bar, refrain repeated +2 in G (<clavis> + <repetitio
+semitonia>). The repeat read right in G already (functio takes the key per window), but
+the pivot D7 read V7/ii in F, and D7 -> G (tonic on top) got NO cadence: the arrival's
+prior window was an applied chord, so _dominans failed.
+
+Rule: the last window before a key change, if it is the new key's dominant (V/7/9/7b9/(3)
+on the new fifth, or o/o7/h7 a semitone under the new tonic), is read in the NEW key
+(`_clavis_fenestrae`, FunctioGradus.praevia). The line names the key before it: "G: V7:1"
+(minor lowercase, "e: V7:1"). ii-V before the change: only the V moves (Am7 stays iii7).
+
+Picardia: prior and proxima are now read in the key of the judged window (dominant OF
+THIS key, IV OF THIS key) instead of each in its own key - matters only around key changes
+(A7 before d minor -> D is Picardy; G7 pivoting to C after D in d minor is still IV7 ->
+no Picardy). A pivot window itself needs no extra check: its key is the new one, where
+its root is never the tonic (first plant of a 'praevia ||' guard survived for exactly
+that reason - removed). The cadence loop keeps _clavis(w->initium): a window reading as I
+can never be a pivot, so the two are equivalent.
+
+House songs: none changes key; all seven byte-identical before/after.
+
+TRAP (ledger …VWJKVB, links …MQ7RN9): a debug-printf swap and restore within the same
+second left the DEBUG object linked (aedilis vetustum() is mtime -nt) while provenance
+recorded the clean digest - fabrica then called the stale binary fresh, and my first
+before/after comparison silently compared new vs new. Check with `strings bin/auditio`,
+fix by deleting build/aedilis/obiecta/lib__functio.o.
+
+Plants 10/10 red (the redundant guard's plant replaced by one on the key choice).

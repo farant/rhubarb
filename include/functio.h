@@ -15,6 +15,17 @@
  * "(I)"; ignotum "?"; silentium "-". Sextae augmentatae et cetera
  * chromatica: nondum.
  *
+ * CLAVIS: clavis ad initium fenestrae (<clavis> carminis), praeter
+ * DOMINANTEM PRAEVIAM - fenestra ultima ante mutationem clavis
+ * (fenestra proxima in clave alia incipit) cuius acordum dominans
+ * clavis novae est (forma dominantis: maior, 7, 9, 7b9, (3) in
+ * quinta tonicae novae; aut o, o7, h7 semitonio infra eam) in clave
+ * nova legitur: D7 ante G maior in F maior = V7, non V7/ii - sic
+ * clausula in tonicam novam invenitur (D7 -> G, summa G: perfecta).
+ * Linea functionis clavem novam ante dominantem praeviam nominat
+ * ("G: V7:1"; minor littera parva: "e: V7:1"). Alia acorda ante
+ * mutationem (ii-V: Am7 D7 | G) in clave vetere manent.
+ *
  * CLAUSULA (cadentia; heuristica, sine signis formae): ADVENTUS =
  * fenestra quae in initio mensurae incipit et ad finem eius manet, et
  * pars summa (notae summae in initio) nullam notam in dimidia
@@ -58,6 +69,8 @@ nomen structura {
                                        * nulla */
           character numeralis[XVI];  /* "V7/V", "bII6", "viio7" */
     FunctioClausula clausula;        /* in fenestra adventus */
+                b32 praevia;         /* in clave proxima lecta
+                                       * (dominans praevia) */
 } FunctioGradus;
 
 nomen structura {
@@ -92,9 +105,10 @@ functio_lineam_scribere (
 /* tertia Picardiae: clavis minor, acordum fenestrae MAIUS in finali
  * (trias maior aut tertia maior), et fenestra aut ultima sonans
  * carminis, aut adventus post dominantem (V, V7) cuius fenestra
- * proxima non in gradu IV stat (ubi V/iv verum est). Ut I legitur
- * (clausula servatur); censura tertiam eius clavem non violare
- * iudicat */
+ * proxima non in gradu IV stat (ubi V/iv verum est) - prior et
+ * proxima in clave FENESTRAE leguntur; dominans praevia (CLAVIS)
+ * numquam Picardia. Ut I legitur (clausula servatur); censura tertiam
+ * eius clavem non violare iudicat */
 b32
 functio_tertia_picardiae (
         constans Carmen* carmen,
