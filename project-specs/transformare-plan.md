@@ -255,3 +255,13 @@ officina's amalgam policy gains lectiones as an excludable base
 filum; officina/build/mech_lectiones.o warmed once. Debts paid:
 machinula, renovatio. Left: chmod inside CREDO_VERUM (renovatio),
 a few macro/shape refusals in legatus/cursor tests.
+
+*Step 7, apps (2026-10-27):* only apps/forum/forum.c - most apps keep
+their logic in lib (already swept). Rewritten: the background image
+(privata/forum/tergale.imago: two mkdir 0755, its write, its remove).
+Kept raw on purpose: forum's auth token ~/.rhubarb/forum.tessera
+(mkdir 0700, write, read, chmod 0600) - a secret never goes through
+lectiones (fabrica would fingerprint it); per-site `<tolera>` "secretum
+servi", the custodia.c/horreum.c precedent (the write carries both 96
+and 97 in one comment). Built and linked in the scratchpad; the manual
+gate apps/forum/fumus.sh (runs the server) left for Fran.
