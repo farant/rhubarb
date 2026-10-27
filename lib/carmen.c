@@ -1083,6 +1083,217 @@ _figuras_legere (
     redde VERUM;
 }
 
+/* <stylus titulus [basis] [regulae] [septimae]/> liberi nodi (libri
+ * aut carminis): tituli [a-z0-9_]+ non iterati, classicus non
+ * redefinitur; septimae liberae / resolvendae / absens (-1) */
+interior b32
+_stilos_legere (
+         StmlNodus*  nodus,
+            chorda   carmen,
+           Piscina*  piscina,
+      CarmenStylus** stili,
+               i32*  numerus,
+    CarminisVitium*  vitium)
+{
+    CarmenStylus* s;
+             i32  n = ZEPHYRUM;
+             i32  i;
+             i32  j;
+
+    s = (CarmenStylus*)piscina_allocare(piscina,
+        (memoriae_index)(_numerare(nodus, "stylus") + I)
+        * magnitudo(CarmenStylus));
+    si (s == NIHIL)
+    {
+        redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
+            "piscina exhausta");
+    }
+    per (i = ZEPHYRUM; i < stml_numerus_liberorum(nodus); i++)
+    {
+        StmlNodus* l = stml_liberum_ad_indicem(nodus, i);
+           chorda* a;
+
+        si (!_elementum_est(l, "stylus"))
+        {
+            perge;
+        }
+        a = stml_attributum_capere(l, "titulus");
+        si (a == NIHIL || !_signum_validum(*a))
+        {
+            redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
+                "stylus sine titulo [a-z0-9_]+");
+        }
+        si (chorda_aequalis_literis(*a, "classicus"))
+        {
+            redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
+                "stylus: classicus non redefinitur");
+        }
+        per (j = ZEPHYRUM; j < n; j++)
+        {
+            si (chorda_aequalis(s[j].titulus, *a))
+            {
+                redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
+                    "stylus: titulus iteratus");
+            }
+        }
+        s[n].titulus   = *a;
+        s[n].basis     = _vacua();
+        s[n].regulae   = _vacua();
+        s[n].septimae  = -I;
+        a              = stml_attributum_capere(l, "basis");
+        si (a != NIHIL)
+        {
+            s[n].basis = *a;
+        }
+        a = stml_attributum_capere(l, "regulae");
+        si (a != NIHIL)
+        {
+            s[n].regulae = *a;
+        }
+        a = stml_attributum_capere(l, "septimae");
+        si (a != NIHIL)
+        {
+            si (chorda_aequalis_literis(*a, "liberae"))
+            {
+                s[n].septimae = I;
+            }
+            alioquin si (chorda_aequalis_literis(*a, "resolvendae"))
+            {
+                s[n].septimae = ZEPHYRUM;
+            }
+            alioquin
+            {
+                redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
+                    "stylus: septimae liberae aut resolvendae");
+            }
+        }
+        n++;
+    }
+    *stili    = s;
+    *numerus  = n;
+    redde VERUM;
+}
+
+/* stylus titulo t in indice (primus vincit); -I ignotus */
+interior s32
+_stylum_invenire (
+    constans CarmenStylus* stili,
+                      i32  numerus,
+                   chorda  t)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        si (chorda_aequalis(stili[i].titulus, t))
+        {
+            redde (s32)i;
+        }
+    }
+    redde -I;
+}
+
+/* stili carminis (carminis, deinde libri), catenae basium, <carmen
+ * stylus>, <censura regulae> semel */
+interior b32
+_stilos_carminis (
+                StmlNodus* nodus,
+    constans CarmenStylus* libri,
+                      i32  numerus_libri,
+                  Piscina* piscina,
+                   Carmen* k,
+           CarminisVitium* vitium)
+{
+    CarmenStylus* proprii;
+             i32  n;
+             i32  i;
+          chorda* a;
+             i32  censurae = ZEPHYRUM;
+
+    si (!_stilos_legere(nodus, k->titulus, piscina, &proprii, &n,
+                        vitium))
+    {
+        redde FALSUM;
+    }
+    k->stili = (CarmenStylus*)piscina_allocare(piscina,
+        (memoriae_index)(n + numerus_libri + I)
+        * magnitudo(CarmenStylus));
+    si (k->stili == NIHIL)
+    {
+        redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
+            "piscina exhausta");
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        k->stili[i] = proprii[i];
+    }
+    per (i = ZEPHYRUM; i < numerus_libri; i++)
+    {
+        k->stili[n + i] = libri[i];
+    }
+    k->numerus_stilorum = n + numerus_libri;
+    /* catenae: basis nota, non circularis */
+    per (i = ZEPHYRUM; i < k->numerus_stilorum; i++)
+    {
+        s32 x       = (s32)i;
+        i32 gradus  = ZEPHYRUM;
+
+        dum (   k->stili[x].basis.mensura > ZEPHYRUM
+             && !chorda_aequalis_literis(k->stili[x].basis,
+             "classicus"))
+        {
+            x = _stylum_invenire(k->stili, k->numerus_stilorum,
+                                 k->stili[x].basis);
+            si (x < ZEPHYRUM)
+            {
+                redde _vitium(vitium, k->titulus, _vacua(), -I,
+                    ZEPHYRUM, "stylus: basis ignota");
+            }
+            si (++gradus > k->numerus_stilorum)
+            {
+                redde _vitium(vitium, k->titulus, _vacua(), -I,
+                    ZEPHYRUM, "stylus: catena circularis");
+            }
+        }
+    }
+    k->stylus  = _vacua();
+    a          = stml_attributum_capere(nodus, "stylus");
+    si (a != NIHIL)
+    {
+        si (   !chorda_aequalis_literis(*a, "classicus")
+            && _stylum_invenire(k->stili, k->numerus_stilorum, *a)
+               < ZEPHYRUM)
+        {
+            redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
+                "stylus ignotus");
+        }
+        k->stylus = *a;
+    }
+    k->censura_regulae = _vacua();
+    per (i = ZEPHYRUM; i < stml_numerus_liberorum(nodus); i++)
+    {
+        StmlNodus* l = stml_liberum_ad_indicem(nodus, i);
+
+        si (!_elementum_est(l, "censura"))
+        {
+            perge;
+        }
+        a = stml_attributum_capere(l, "regulae");
+        si (++censurae > I)
+        {
+            redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
+                "censura iterata");
+        }
+        si (a == NIHIL)
+        {
+            redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
+                "censura sine regulis");
+        }
+        k->censura_regulae = *a;
+    }
+    redde VERUM;
+}
+
 /* <acorda> omnia (mappa metri plena): positio, textus in mensuras;
  * Carmen.acorda ordine pulsus, non se tegentia */
 interior b32
@@ -2605,6 +2816,8 @@ _carmen_legere (
                                 i32  numerus_libri,
             constans FiguraNominata* figurae_libri,
                                 i32  numerus_figurarum_libri,
+              constans CarmenStylus* stili_libri,
+                                i32  numerus_stilorum_libri,
     constans SonusReverberatioForma* aula_libri,
                                 f32  lucrum_aulae_libri,
                             Piscina* piscina,
@@ -2706,12 +2919,14 @@ _carmen_legere (
             && !_elementum_est(n, "instrumentum")
             && !_elementum_est(n, "reverberatio")
             && !_elementum_est(n, "acorda")
-            && !_elementum_est(n, "figura"))
+            && !_elementum_est(n, "figura")
+            && !_elementum_est(n, "stylus")
+            && !_elementum_est(n, "censura"))
         {
             redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
                 "in carmine solum tempus, metrum, clavis, fermata, "
                 "dynamica, sectio, repetitio, pars, instrumentum, "
-                "reverberatio, acorda, figura");
+                "reverberatio, acorda, figura, stylus, censura");
         }
         /* aula propria: tota substituit libri */
         si (_elementum_est(n, "reverberatio"))
@@ -2829,6 +3044,12 @@ _carmen_legere (
         }
         k->instrumenta             = propria;
         k->numerus_instrumentorum  = n + numerus_libri;
+    }
+    /* stili censurae: carminis, deinde libri */
+    si (!_stilos_carminis(nodus, stili_libri, numerus_stilorum_libri,
+                          piscina, k, vitium))
+    {
+        redde FALSUM;
     }
     /* figurae: carminis propriae primum (quaerendo vincunt), deinde
      * libri; acorda (mappa metri plena) ante partes */
@@ -2972,6 +3193,8 @@ carmina_legere_cum (
                        b32  aula_libri    = FALSUM;
             FiguraNominata* figurae;
                        i32  numerus_figurarum;
+              CarmenStylus* stili;
+                       i32  numerus_stilorum;
 
     aula.aula = 0.5f;
     aula.mollities = 0.5f;
@@ -2999,7 +3222,8 @@ carmina_legere_cum (
             perge;
         }
         si (   _elementum_est(n, "instrumentum")
-            || _elementum_est(n, "figura"))
+            || _elementum_est(n, "figura")
+            || _elementum_est(n, "stylus"))
         {
             perge;
         }
@@ -3026,7 +3250,7 @@ carmina_legere_cum (
         {
             redde _vitium(vitium, _vacua(), _vacua(), -I, ZEPHYRUM,
                 "in carminibus solum carmina, instrumenta, figurae, "
-                "reverberatio");
+                "stili, reverberatio");
         }
         numerus++;
     }
@@ -3040,6 +3264,11 @@ carmina_legere_cum (
     }
     si (!_figuras_legere(radix, _vacua(), piscina, &figurae,
                          &numerus_figurarum, vitium))
+    {
+        redde FALSUM;
+    }
+    si (!_stilos_legere(radix, _vacua(), piscina, &stili,
+                        &numerus_stilorum, vitium))
     {
         redde FALSUM;
     }
@@ -3078,6 +3307,7 @@ carmina_legere_cum (
         si (   n->genus != STML_NODUS_ELEMENTUM
             || _elementum_est(n, "instrumentum")
             || _elementum_est(n, "figura")
+            || _elementum_est(n, "stylus")
             || _elementum_est(n, "reverberatio"))
         {
             perge;
@@ -3085,6 +3315,7 @@ carmina_legere_cum (
         si (!_carmen_legere(n, visibilia,
                             numerus_libri + numerus_instrumentarii,
                             figurae, numerus_figurarum,
+                            stili, numerus_stilorum,
                             &aula, lucrum_aulae,
                             piscina, &carmina[j], vitium))
         {

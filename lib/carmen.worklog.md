@@ -337,3 +337,14 @@ past the section's end (`d1 & | d1` ending a section) ran past the repeat's end 
 a written frustum after it (two notes at once in one part, no error - the overlap check only
 compares frustum spans). Copied notes are now cut at s->usque. Plants 2/2. Generated-chord
 spelling under non-octave transposition (E7b9 -> Ab) filed as a park, not changed.
+
+## 2026-10-27 - step 3a: style presets as data (<stylus>, <carmen stylus>, <censura regulae>)
+
+Step 3 of the declared-intent plan (Fran: "a layer where you can define additional style presets
+as our rules expand"). carmen only READS: CarmenStylus {titulus, basis, regulae, septimae
+(-1 inherit / 0 resolvendae / 1 liberae)}, book and song level (song first, like figures),
+Carmen.stylus and Carmen.censura_regulae as raw text. Read-time checks: titles unique, 'classicus'
+reserved (= censura_ordinaria, always known), basis resolves, no circular chain, septimae value,
+<carmen stylus> resolves, one <censura> per song. Rule NAMES are judged by censura (step 3b) -
+carmen cannot know them (censura depends on carmen). Plants 7/7 (merge-order and loop-guard
+plants skipped: they would read past an array / hang; the chain plant covers both chain errors).

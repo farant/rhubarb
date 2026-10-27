@@ -1855,6 +1855,74 @@ _sectio_repetitio_limites (
     CREDO_AEQUALIS_S64 (m->frusta[I].notae[I].longitudo, M1);
 }
 
+/* stili libri et carminis, stylus carminis, censura regulae carminis;
+ * vitia lectionis per causam */
+interior vacuum
+_sectio_stili (
+    CredoContextus* c)
+{
+            Carmina  liber;
+    constans Carmen* k;
+
+    CREDO_NECESSE (_legere(c,
+        "<carmina><stylus titulus=\"popularis\" septimae=\"liberae\"/>"
+        "<stylus titulus=\"jazz\" basis=\"popularis\" "
+        "regulae=\"+parallelae\"/>"
+        "<carmen titulus=\"a\" stylus=\"jazz\">"
+        "<censura regulae=\"-ambitus\"/>"
+        "<pars titulus=\"m\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>c1</textus></frustum></pars>"
+        "</carmen></carmina>", &liber));
+    k = &liber.carmina[ZEPHYRUM];
+    CREDO_CHORDA_AEQUALIS_LITERIS (k->stylus, "jazz");
+    CREDO_CHORDA_AEQUALIS_LITERIS (k->censura_regulae, "-ambitus");
+    CREDO_NECESSE (k->numerus_stilorum == II);
+    CREDO_CHORDA_AEQUALIS_LITERIS (k->stili[ZEPHYRUM].titulus,
+                                   "popularis");
+    CREDO_AEQUALIS_S32 (k->stili[ZEPHYRUM].septimae, I);
+    CREDO_CHORDA_AEQUALIS_LITERIS (k->stili[I].basis, "popularis");
+    CREDO_CHORDA_AEQUALIS_LITERIS (k->stili[I].regulae, "+parallelae");
+    CREDO_AEQUALIS_S32 (k->stili[I].septimae, -I);
+    /* carminis stylus vincit: primus in indice */
+    CREDO_NECESSE (_legere(c,
+        "<carmina><stylus titulus=\"popularis\" septimae=\"liberae\"/>"
+        "<carmen titulus=\"b\" stylus=\"popularis\">"
+        "<stylus titulus=\"popularis\" septimae=\"resolvendae\"/>"
+        "</carmen></carmina>", &liber));
+    k = &liber.carmina[ZEPHYRUM];
+    CREDO_NECESSE (k->numerus_stilorum == II);
+    CREDO_AEQUALIS_S32 (k->stili[ZEPHYRUM].septimae, ZEPHYRUM);
+    /* sine stylo: classicus (vacua) */
+    CREDO_NECESSE (_legere(c,
+        "<carmina><carmen titulus=\"c\"></carmen></carmina>", &liber));
+    CREDO_AEQUALIS_I32 (liber.carmina[ZEPHYRUM].stylus.mensura,
+                        ZEPHYRUM);
+    CREDO_VERUM (_causa_est(c,
+        "<carmina><carmen titulus=\"d\" stylus=\"nullus\"></carmen>"
+        "</carmina>", "stylus ignotus"));
+    CREDO_VERUM (_causa_est(c,
+        "<carmina><stylus titulus=\"x\" basis=\"nullus\"/>"
+        "<carmen titulus=\"e\"></carmen></carmina>",
+        "stylus: basis ignota"));
+    CREDO_VERUM (_causa_est(c,
+        "<carmina><stylus titulus=\"x\" basis=\"y\"/>"
+        "<stylus titulus=\"y\" basis=\"x\"/>"
+        "<carmen titulus=\"f\"></carmen></carmina>",
+        "stylus: catena circularis"));
+    CREDO_VERUM (_causa_est(c,
+        "<carmina><stylus titulus=\"x\" septimae=\"saepe\"/>"
+        "<carmen titulus=\"g\"></carmen></carmina>",
+        "stylus: septimae liberae aut resolvendae"));
+    CREDO_VERUM (_causa_est(c,
+        "<carmina><stylus titulus=\"classicus\"/>"
+        "<carmen titulus=\"h\"></carmen></carmina>",
+        "stylus: classicus non redefinitur"));
+    CREDO_VERUM (_causa_est(c,
+        "<carmina><carmen titulus=\"i\"><censura regulae=\"-ambitus\"/>"
+        "<censura regulae=\"-lineae\"/></carmen></carmina>",
+        "censura iterata"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "legere", _sectio_legere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia", _sectio_vitia, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1871,6 +1939,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "repetitio", _sectio_repetitio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "repetitio_limites", _sectio_repetitio_limites, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "stili", _sectio_stili, NIHIL, NIHIL, NIHIL, NIHIL },
     { "portamentum", _sectio_illapsus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "comitatus", _sectio_comitatus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "comitatus_vitia", _sectio_comitatus_vitia, NIHIL, NIHIL, NIHIL,
