@@ -691,9 +691,40 @@ _sectio_tentae (
     CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I), "G:1 (A4 tr.)");
 }
 
+/* suspensio partium ordine non pendet: C5 tentum super G (praeparatum,
+ * ad B resolutum), F4 transiens in alto - soprano primo aut ultimo */
+interior vacuum
+_sectio_suspensio_ordo (
+    CredoContextus* c)
+{
+    constans character* partes[IV];
+       constans Carmen* k;
+            Explicatio* e;
+
+    partes[0]  = "o5 c1. o4 b2 o5 c1";
+    partes[1]  = "o3 c1 | g1 | c1";
+    partes[2]  = "o4 e2 e4 f4 | g1 | g1";
+    partes[3]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, II),
+        chorda_ex_literis("G(3):1 (C5 susp.)", c->piscina));
+    partes[0]  = "o3 c1 | g1 | c1";
+    partes[1]  = "o4 e2 e4 f4 | g1 | g1";
+    partes[2]  = "o5 c1. o4 b2 o5 c1";
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, II),
+        chorda_ex_literis("G(3):1 (C5 susp.)", c->piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "additae", _sectio_additae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tentae", _sectio_tentae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "suspensio_ordo", _sectio_suspensio_ordo, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "fenestrae", _sectio_fenestrae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "acorda", _sectio_acorda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "genera", _sectio_genera, NIHIL, NIHIL, NIHIL, NIHIL },

@@ -275,6 +275,28 @@ nomen structura {
     s32 d2;           /* proxima - altitudo */
 } Motus;
 
+/* segmentum ultimum notae x ante segmentum s (segmenta ordine
+ * (initium, pars) - notae eiusdem segmenta non contigua; campus
+ * fenestra iam fenestram tenet, non locatam: per notam, quae in parte
+ * sua unica est); -I nullum */
+interior s32
+_segmentum_prius (
+    constans ExplicatioSegmentum* segmenta,
+                             i32  s,
+                 constans Locata* x)
+{
+    s32 j;
+
+    per (j = (s32)s - I; j >= ZEPHYRUM; j--)
+    {
+        si (segmenta[j].nota == x->nota)
+        {
+            redde j;
+        }
+    }
+    redde -I;
+}
+
 /* motus segmenti; praeparatio ex generibus iam datis (segmenta
  * priora ordine temporis) */
 interior Motus
@@ -296,22 +318,24 @@ _motus (
                               : ZEPHYRUM;
     si (segmenta[s].initium > n->initium)
     {
-        /* nota tenta: segmentum prius eiusdem notae */
+        /* nota tenta: segmentum prius EIUSDEM notae */
+        s32 j = _segmentum_prius(segmenta, s, n);
+
         m.prior       = VERUM;
-        m.praeparata  = segmenta[s - I].genus == EXPLICATIO_ACORDI
-                     || segmenta[s - I].genus == EXPLICATIO_SEPTIMA;
+        m.praeparata  = j >= ZEPHYRUM
+            && (   segmenta[j].genus == EXPLICATIO_ACORDI
+                || segmenta[j].genus == EXPLICATIO_SEPTIMA);
     }
     alioquin si (n->prior >= ZEPHYRUM)
     {
-                     constans Locata* p = &locatae[n->prior];
-        constans ExplicatioSegmentum* u =
-            &segmenta[p->segmentum + p->segmenta - I];
+        constans Locata* p = &locatae[n->prior];
+                    s32  j = _segmentum_prius(segmenta, s, p);
 
         m.prior  = VERUM;
         m.d1     = a - (s32)p->nota->nota;
-        m.praeparata  = m.d1 == ZEPHYRUM
-                     && (   u->genus == EXPLICATIO_ACORDI
-                         || u->genus == EXPLICATIO_SEPTIMA);
+        m.praeparata  = m.d1 == ZEPHYRUM && j >= ZEPHYRUM
+                     && (   segmenta[j].genus == EXPLICATIO_ACORDI
+                         || segmenta[j].genus == EXPLICATIO_SEPTIMA);
     }
     redde m;
 }
@@ -849,8 +873,8 @@ explicatio_carminis (
     }
     qsort(segmenta, (size_t)ns, magnitudo(ExplicatioSegmentum),
           _ordo_segmentorum);
-    /* locatae: segmentum primum et numerus; ordo notae intra se
-     * crescens per initium */
+    /* locatae: segmentum primum et numerus (segmenta notae non
+     * contigua: ordo (initium, pars) - _segmentum_prius ea quaerit) */
     per (i = ZEPHYRUM; i < n; i++)
     {
         locatae[i].segmenta = ZEPHYRUM;

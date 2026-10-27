@@ -64,9 +64,12 @@
  *             incipiunt
  *   repetitio <repetitio sectio="T" mensura="M" [ictus] [semitonia="S"]
  *             [partes="a b"]/>: notae sectionis iterum ad positionem,
- *             transpositae per S semitonia (-24..24; litterae ex clave
- *             - <clavis> novam auctor scribit), partes omnes sectionis
- *             aut nominatae; partes ibi vacuae (frusta non se tegunt).
+ *             transpositae per S semitonia (-24..24; litterae: S
+ *             octavarum (S % 12 = 0) servantur, aliter ex clave -
+ *             <clavis> novam auctor scribit), partes omnes sectionis
+ *             aut nominatae; partes ibi vacuae (frusta non se tegunt);
+ *             nota sectionis finem transiens (ligatura) ad finem
+ *             sectionis truncatur.
  *             Fons = frusta scripta solum. Tempus, clavis, dynamica,
  *             fermata NON iterantur. Frusta iterata ordine pulsus inter
  *             scripta stant (repetitio >= 0, scriptum -1): emendatio ea

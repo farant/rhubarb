@@ -1570,9 +1570,16 @@ _frustum_iterare (
                 *causa = "repetitio: nota transposita extra 0..127";
                 redde FALSUM;
             }
-            x.nota = (i32)nota;
-            x.pulsus = a - s->pulsus;
-            x.littera = r->semitonia != ZEPHYRUM ? '\0' : x.littera;
+            x.nota    = (i32)nota;
+            x.pulsus  = a - s->pulsus;
+            /* octavae litteras servant; aliter ex clave */
+            x.littera = r->semitonia % XII != ZEPHYRUM ? '\0'
+                                                       : x.littera;
+            /* nota finem sectionis transiens (ligatura) truncatur */
+            si (a + x.longitudo > s->usque)
+            {
+                x.longitudo = s->usque - a;
+            }
             novum.notae[novum.numerus++] = x;
         }
     }

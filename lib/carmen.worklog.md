@@ -326,3 +326,14 @@ s64 past the buffer; inside a piscina it landed silently in padding / nova[0], s
 see it. Fix: the +1 is counted for every agogica metrum. To make it provable without ASan the
 write loop now checks n < capacitas and fails cleanly (FALSUM -> 'piscina exhausta') - with the
 +1 planted out, the new empty-span tests fail instead of corrupting memory. Plant 1/1.
+
+## 2026-10-26 - review batch 3: octave repeats keep letters; a tie past the section end is cut
+
+From the sexta review (comitatus findings 3, 4). (3) _frustum_iterare cleared every note letter
+for any non-zero semitonia, so `semitonia="-12"` printed F#5 as Gb4 (and a generated D7b9's
+F# as Gb). Octave shifts (S % 12 == 0) now keep the written letters; other shifts still take
+them from the key (header rule). (4) Notes were copied with their full length, so a note tied
+past the section's end (`d1 & | d1` ending a section) ran past the repeat's end and overlapped
+a written frustum after it (two notes at once in one part, no error - the overlap check only
+compares frustum spans). Copied notes are now cut at s->usque. Plants 2/2. Generated-chord
+spelling under non-octave transposition (E7b9 -> Ab) filed as a park, not changed.

@@ -1814,6 +1814,43 @@ _sectio_inaequalitas_vacua (
         &liber));
 }
 
+/* repetitio per octavas litteras servat (F# manet F#); nota sectionis
+ * finem transiens ad finem truncatur (frustum scriptum post non
+ * tegitur) */
+interior vacuum
+_sectio_repetitio_limites (
+    CredoContextus* c)
+{
+                 Carmina  liber;
+     constans CarmenPars* m;
+                     s64  M1 = (s64)MMMDCCCXL;
+
+    CREDO_NECESSE (_legere(c, _carmen(c, "",
+        "<sectio titulus=\"a\" mensura=\"1\" usque=\"3\"/>"
+        "<repetitio sectio=\"a\" mensura=\"3\" semitonia=\"-12\"/>"
+        "<pars titulus=\"m\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o5 f#1 | g1</textus></frustum></pars>"),
+        &liber));
+    m = &liber.carmina[ZEPHYRUM].partes[ZEPHYRUM];
+    CREDO_NECESSE (m->numerus_frustorum == II && m->frusta[I].numerus
+                   == II);
+    CREDO_AEQUALIS_I32 (m->frusta[I].notae[ZEPHYRUM].nota, LXVI);
+    CREDO_VERUM (m->frusta[I].notae[ZEPHYRUM].littera == 'f');
+    /* d1 & d1 trans finem sectionis: iterata ad M1 truncata */
+    CREDO_NECESSE (_legere(c, _carmen(c, "",
+        "<sectio titulus=\"a\" mensura=\"1\" usque=\"3\"/>"
+        "<repetitio sectio=\"a\" mensura=\"5\"/>"
+        "<pars titulus=\"m\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 c1 | d1 & | d1 | e1</textus>"
+        "</frustum><frustum mensura=\"7\"><textus!>g1</textus>"
+        "</frustum></pars>"), &liber));
+    m = &liber.carmina[ZEPHYRUM].partes[ZEPHYRUM];
+    CREDO_NECESSE (m->numerus_frustorum == III && m->frusta[I].numerus
+                   == II);
+    CREDO_AEQUALIS_S64 (m->frusta[I].notae[I].pulsus, M1);
+    CREDO_AEQUALIS_S64 (m->frusta[I].notae[I].longitudo, M1);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "legere", _sectio_legere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia", _sectio_vitia, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1828,6 +1865,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "dynamica", _sectio_intensio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "repetitio", _sectio_repetitio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "repetitio_limites", _sectio_repetitio_limites, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { "portamentum", _sectio_illapsus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "comitatus", _sectio_comitatus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "comitatus_vitia", _sectio_comitatus_vitia, NIHIL, NIHIL, NIHIL,

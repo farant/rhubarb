@@ -98,3 +98,16 @@ try (+1 re-plant on the macro form). House songs byte-identical.
 Formatter quirk: a PROPRIETATES row wrapped onto a second line got 'spatium unicum ante
 operatorem binarium' on its leading `-I` (read as binary minus) - routed around with the
 ADDITAE_SUSPENSAE macro; filed.
+
+## 2026-10-26 - review batch 3: suspension detection no longer depends on part order
+
+From the sexta review (harmony finding 4, pre-existing since N1). _motus read
+`segmenta[s - 1]` as "the same note's previous segment" and `segmentum + segmenta - 1` as "the
+prior note's last segment", assuming a note's segments are adjacent - but segmenta are qsorted
+by (initium, pars, pulsus) across ALL parts, so those slots often held another part's note.
+The same 4-3 suspension read "C5 susp." with the soprano listed last and "C5 ?" with it first
+(the alto's passing F4 sat at s-1). _segmentum_prius now searches backwards for the same
+CarmenNota. First attempt matched on the segment's `fenestra` field (the locata index during
+segment building) and found nothing: the second pass overwrites that field with the WINDOW
+index as it goes. The note pointer is stable and unique within a part, so no part check is
+needed. House songs byte-identical (censura too). Plant 1/1.
