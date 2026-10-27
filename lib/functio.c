@@ -70,6 +70,19 @@ _clavis (
     redde c;
 }
 
+/* forma dominantis: trias maior, septima, nonae, 13, 7#9, 7#11 (sine
+ * dyade tertiae - vocantes eam addunt ubi licet) */
+interior b32
+_forma_dominantis (
+    constans Acordum* h)
+{
+    redde h->genus == ACORDUM_MAIOR || h->genus == ACORDUM_SEPTIMA
+        || h->genus == ACORDUM_NONA || h->genus == ACORDUM_NONA_MINOR
+        || h->genus == ACORDUM_TERTIA_DECIMA
+        || h->genus == ACORDUM_NONA_AUCTA
+        || h->genus == ACORDUM_UNDECIMA_AUCTA;
+}
+
 /* acordum dominans clavis: forma dominantis in quinta tonicae, aut
  * diminuta semitonio infra eam */
 interior b32
@@ -79,9 +92,7 @@ _dominans_clavis (
 {
     s32 iv = _modulus((s32)h->radix - k->tonica, XII);
 
-    si (   h->genus == ACORDUM_MAIOR || h->genus == ACORDUM_SEPTIMA
-        || h->genus == ACORDUM_NONA || h->genus == ACORDUM_NONA_MINOR
-        || h->genus == ACORDUM_TERTIA_MAIOR)
+    si (_forma_dominantis(h) || h->genus == ACORDUM_TERTIA_MAIOR)
     {
         redde iv == VII;
     }
@@ -335,9 +346,7 @@ _gradum_scribere (
     }
     /* applicata: extra scalam, forma dominantis aut septimae
      * diminutae */
-    dominans  = h->genus == ACORDUM_MAIOR
-        || h->genus == ACORDUM_SEPTIMA || h->genus == ACORDUM_NONA
-        || h->genus == ACORDUM_NONA_MINOR;
+    dominans  = _forma_dominantis(h);
     diminuta  = h->genus == ACORDUM_DIMINUTA
              || h->genus == ACORDUM_DIMINUTA_SEPTIMA;
     si (   !picardia && (dominans || diminuta)
@@ -426,7 +435,8 @@ _adventus (
     redde VERUM;
 }
 
-/* V (trias, septima, nona, dyas tertiae) sine applicatione */
+/* V (trias, septima, nona, 13, 7#9, 7#11, dyas tertiae) sine
+ * applicatione */
 interior b32
 _dominans (
     constans FunctioGradus* g,
@@ -434,16 +444,12 @@ _dominans (
 {
     redde g->applicata == ZEPHYRUM && g->alteratio == ZEPHYRUM
         && g->gradus == V
-        && (   h->genus == ACORDUM_MAIOR
-        || h->genus == ACORDUM_SEPTIMA
-            || h->genus == ACORDUM_NONA
-            || h->genus == ACORDUM_NONA_MINOR
-            || h->genus == ACORDUM_TERTIA_MAIOR);
+        && (_forma_dominantis(h) || h->genus == ACORDUM_TERTIA_MAIOR);
 }
 
-/* I aut i (trias, sexta aut nona addita - operetta in Iadd6 desinit,
- * dyas, unisonus: clausulae quintam saepe omittunt,
- * duae voces in unisono desinunt) */
+/* I aut i (trias, sexta aut nona addita, 6/9 - operetta in Iadd6
+ * desinit, iazz in I6/9; dyas, unisonus: clausulae quintam saepe
+ * omittunt, duae voces in unisono desinunt) */
 interior b32
 _finalis (
     constans FunctioGradus* g,
@@ -455,6 +461,7 @@ _finalis (
             || h->genus == ACORDUM_SEXTA
             || h->genus == ACORDUM_SEXTA_MINOR
             || h->genus == ACORDUM_NONA_ADDITA
+            || h->genus == ACORDUM_SEXTA_NONA
             || h->genus == ACORDUM_TERTIA_MAIOR
             || h->genus == ACORDUM_TERTIA_MINOR
             || h->genus == ACORDUM_QUINTA

@@ -53,7 +53,8 @@
  *   C7/E, F6/A) et vox 'B' in figura aut bassus_sonat (comitatus alius
  *   carminis, lilia: harpa_bassus) - C7 duabus E Bb, C9 tribus E Bb
  *   D. Radix non omissa inter voces adhibitas semper stat. Acorda cum
- *   tono addito sine septima (6, m6, add9) et acorda quinta alterata
+ *   tono addito sine septima (6, m6, add9, 6/9) et acorda quinta
+ *   alterata
  *   ordine converso: radix prius (eadem condicione), deinde quinta -
  *   quinta ea a cognatis distinguit (F6 tribus A C D, non A D F =
  *   Dm/F; Bbadd9 tribus C D F; Caug duabus E G#). Inter inversiones

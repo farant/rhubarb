@@ -22,6 +22,19 @@
  *   7b9    {0,4,7,10,1} et {0,4,10,1}
  *   maj9   {0,4,7,11,2} m9     {0,3,7,10,2}
  *   7sus4  {0,5,7,10}   7#5    {0,4,8,10}
+ *   13     {0,4,7,10,2,9} et {0,4,10,2,9} et {0,4,10,9}
+ *          (3 7 13 sine radice et quinta: vox iazzica; forma
+ *          {0,4,10,9} radix in basso solum)
+ *   6/9    {0,4,7,9,2}
+ *   m11    {0,3,7,10,2,5} et {0,3,7,10,5} (hoc radix in basso
+ *          solum - aliter 6/9: D F G A C super D = Dm11, super F
+ *          = F6/9; "So What" E A D G B = Em11)
+ *   7#9    {0,4,7,10,3} et {0,4,10,3}
+ *   7#11   {0,4,7,10,6} et {0,4,10,6} (sine quinta radices duae
+ *          - C7#11 = F#7#11, tritonus substitutus)
+ *   Formae tenues (quattuor classes sine quinta: 13 {0,4,10,9}, 7#9,
+ *   7#11) radix in basso solum - melodia saltans super pedale eas
+ *   facit (D F# B super C non D13/C).
  * dyades in parenthesi: 'A5' notam A5 legeretur (grammatica eadem ac
  * partitura)
  * Radices plures (aug, dim7, dyades): radix = bassus si congruit,
@@ -31,7 +44,8 @@
  *   nomen := radix suffixum [ '/' radix ]
  *   radix := A..G (magna) [ '#' | '##' | 'b' | 'bb' ]
  *   suffixum ex tabula, LONGISSIMUM congruens ("m7b5" ante "m7" ante
- *   "m"); exemplar PRIMUM generis legitur ("7" = {0,4,7,10})
+ *   "m"; "6/9" ante '/' bassi: C6/9/E, C6/G = C6 super G); exemplar
+ *   PRIMUM generis legitur ("7" = {0,4,7,10})
  *   "C" "Bbm7b5" "F#dim7" "G/B" "C/D" "A(5)" "Em(3)"
  * Bassus post '/' extra classes stare potest ("C/D": D transiens) -
  * classes = exemplar solum. Non hic: "(E)", "[C E F#]", "r"
@@ -39,7 +53,8 @@
  * LITTERAE ex nomine: radix et bassus ut scripti; ceterae per gradus
  * litterarum exemplaris (tonus quisque suum: IX semitonia sexta +5 in
  * 6, septima diminuta +6 in dim7) - C#m -> E G#; Bdim7 -> D F Ab;
- * Caug -> G#; Bbm6 -> G; C7b9 -> Db; F#7#5 -> C##.
+ * Caug -> G#; Bbm6 -> G; C7b9 -> Db; F#7#5 -> C##; C7#9 -> D# (non
+ * Eb); C7#11 -> F#; C13 -> D A; Dm11 -> E G.
  *
  * NOTA ADDITA (explicatio.h): tonus additus (sexta, nona, nona minor;
  * quinta aucta in 7#5; in 7sus4 omnes praeter radicem - quarta,
@@ -81,6 +96,11 @@ nomen enumeratio {
     ACORDUM_NONA_MOLLIS,          /* m9 */
     ACORDUM_SEPTIMA_SUSPENSA,
     ACORDUM_SEPTIMA_AUCTA,
+    ACORDUM_TERTIA_DECIMA,        /* 13 */
+    ACORDUM_SEXTA_NONA,           /* 6/9 */
+    ACORDUM_UNDECIMA_MOLLIS,      /* m11 */
+    ACORDUM_NONA_AUCTA,           /* 7#9 */
+    ACORDUM_UNDECIMA_AUCTA,       /* 7#11 */
     ACORDUM_CLASSIS_UNA,
     ACORDUM_IGNOTA,
     ACORDUM_NULLA
@@ -136,8 +156,10 @@ acordum_suffixum (
  * TENSIONES (usus iazzicus; bits a radice, extra classes acordi):
  * maior 9 #11 13 (et 7, 6 triadi); minor 9 11 13 (et b7 triadi);
  * dominans b9 9 #9 #11 b13 13; 7sus4 9 13; m7b5 9 11 b13; diminuta
- * toni toni supra (9 11 b13 7). EVITANDAE ("avoid notes"): 11 super
- * maiorem et dominantem, tertia super suspensam. Censura (stylus
+ * toni toni supra (9 11 b13 7); 13 b9 #9 #11; 6/9 #11 7; m11 13;
+ * 7#9 b9 #11 b13; 7#11 b9 9 #9 13. EVITANDAE ("avoid notes"): 11
+ * super maiorem et dominantem (et 13, 6/9, 7#9), tertia super
+ * suspensam. Censura (stylus
  * tensiones="liberae", regula evitanda) eas legit */
 nomen structura {
     constans character* suffixum;    /* ut acordum_suffixum */

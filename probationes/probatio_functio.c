@@ -790,6 +790,44 @@ _sectio_duplex (
     CREDO_LITERAE_AEQUALES (f->gradus[ZEPHYRUM].numeralis, "ii65");
 }
 
+/* vocabula nova: V13, V7#9, V7#11, ii11; applicatae V13/V, V7#9/V,
+ * V7#11/V (forma dominantis); V13 -> I6/9 perfecta */
+interior vacuum
+_sectio_vocabularium_novum (
+    CredoContextus* c)
+{
+    constans character* undecima[] = {
+        "o3 d1", "o3 a1", "o4 c1", "o4 f1", "o4 g1", NIHIL
+    };
+    constans character* clausula[] = {
+        "o2 g1 | o3 c1", "o3 b1 | o4 e1", "o4 f1 | g1", "o4 a1 | a1",
+        "o5 e1 | d1", "o5 g1 | o6 c1", NIHIL
+    };
+    Functio* f;
+
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "c maior", "o2 g1",
+        "o3 b1", "o4 f1", "o4 e1"), "V13");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "c maior", "o2 g1",
+        "o3 b1", "o4 f1", "o4 a#1"), "V7#9");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "c maior", "o2 g1",
+        "o3 b1", "o4 f1", "o5 c#1"), "V7#11");
+    /* D13 in C: applicata */
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "c maior", "o3 d1",
+        "o3 f#1", "o4 c1", "o4 b1"), "V13/V");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "c maior", "o3 d1",
+        "o3 f#1", "o4 c1", "o4 f1"), "V7#9/V");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "c maior", "o3 d1",
+        "o3 f#1", "o4 c1", "o4 g#1"), "V7#11/V");
+    f = _functio(c, _carmen(c, "c maior", undecima));
+    CREDO_NECESSE (f != NIHIL && f->numerus >= I);
+    CREDO_LITERAE_AEQUALES (f->gradus[ZEPHYRUM].numeralis, "ii11");
+    f = _functio(c, _carmen(c, "c maior", clausula));
+    CREDO_NECESSE (f != NIHIL && f->numerus >= II);
+    CREDO_LITERAE_AEQUALES (f->gradus[I].numeralis, "I6/9");
+    CREDO_AEQUALIS_I32 ((i32)f->gradus[I].clausula,
+                        (i32)FUNCTIO_PERFECTA);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "vocabularium", _sectio_vocabularium, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -807,6 +845,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL,
         NIHIL },
     { "duplex", _sectio_duplex, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "vocabularium novum", _sectio_vocabularium_novum, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

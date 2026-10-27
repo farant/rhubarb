@@ -19,7 +19,9 @@ nomen structura {
                                   * tonum (sexta +5, septima diminuta
                                   * +6: intervallum IX ambiguum) */
              b32 radix_basso;    /* nomen solum radice in basso (6, m6:
-                                  * classes m7 / m7b5 eaedem) */
+                                  * classes m7 / m7b5 eaedem; formae
+                                  * tenues 13, 7#9, 7#11 sine quinta -
+                                  * melodia super pedale eas facit) */
 } Exemplar;
 
 hic_manens constans Exemplar EXEMPLARIA[] = {
@@ -74,7 +76,27 @@ hic_manens constans Exemplar EXEMPLARIA[] = {
     { ACORDUM_SEPTIMA_SUSPENSA, { 0, 5, 7, 10, -1, -1 },
                                 { 0, 3, 4, 6, -1, -1 }, VERUM },
     { ACORDUM_SEPTIMA_AUCTA,    { 0, 4, 8, 10, -1, -1 },
-                                { 0, 2, 4, 6, -1, -1 }, FALSUM }
+                                { 0, 2, 4, 6, -1, -1 }, FALSUM },
+    { ACORDUM_TERTIA_DECIMA,    { 0, 4, 7, 10, 2, 9 },
+                                { 0, 2, 4, 6, 1, 5 }, FALSUM },
+    { ACORDUM_TERTIA_DECIMA,    { 0, 4, 10, 2, 9, -1 },
+                                { 0, 2, 6, 1, 5, -1 }, FALSUM },
+    { ACORDUM_TERTIA_DECIMA,    { 0, 4, 10, 9, -1, -1 },
+                                { 0, 2, 6, 5, -1, -1 }, VERUM },
+    { ACORDUM_SEXTA_NONA,       { 0, 4, 7, 9, 2, -1 },
+                                { 0, 2, 4, 5, 1, -1 }, FALSUM },
+    { ACORDUM_UNDECIMA_MOLLIS,  { 0, 3, 7, 10, 2, 5 },
+                                { 0, 2, 4, 6, 1, 3 }, FALSUM },
+    { ACORDUM_UNDECIMA_MOLLIS,  { 0, 3, 7, 10, 5, -1 },
+                                { 0, 2, 4, 6, 3, -1 }, VERUM },
+    { ACORDUM_NONA_AUCTA,       { 0, 4, 7, 10, 3, -1 },
+                                { 0, 2, 4, 6, 1, -1 }, FALSUM },
+    { ACORDUM_NONA_AUCTA,       { 0, 4, 10, 3, -1, -1 },
+                                { 0, 2, 6, 1, -1, -1 }, VERUM },
+    { ACORDUM_UNDECIMA_AUCTA,   { 0, 4, 7, 10, 6, -1 },
+                                { 0, 2, 4, 6, 3, -1 }, FALSUM },
+    { ACORDUM_UNDECIMA_AUCTA,   { 0, 4, 10, 6, -1, -1 },
+                                { 0, 2, 6, 3, -1, -1 }, VERUM }
 };
 
 #define ACORDUM_EXEMPLARIA \
@@ -86,6 +108,9 @@ hic_manens constans Exemplar EXEMPLARIA[] = {
 #define ABSENS (-I)
 /* 7sus4: omnes praeter radicem tenendae (quarta, quinta, septima) */
 #define ADDITAE_SUSPENSAE (ADDITUM(V) | ADDITUM(VII) | ADDITUM(X))
+/* 13, 6/9: sexta et nona; m11: nona et undecima */
+#define ADDITAE_SEXTAE_NONAE (ADDITUM(II) | ADDITUM(IX))
+#define ADDITAE_UNDECIMAE (ADDITUM(II) | ADDITUM(V))
 
 /* proprietates per genus (ordine enumerationis): suffixum,
  * numeralis, tertia, quinta, septima, gradus, additae; tensiones,
@@ -128,6 +153,14 @@ hic_manens constans Exemplar EXEMPLARIA[] = {
     (ADDITUM(II) | ADDITUM(IX))
 #define INTENTIONES_SEPTIMAE_AUCTAE \
     (ADDITUM(I) | ADDITUM(II) | ADDITUM(III) | ADDITUM(VI))
+#define INTENTIONES_TERTIAE_DECIMAE \
+    (ADDITUM(I) | ADDITUM(III) | ADDITUM(VI))
+#define INTENTIONES_SEXTAE_NONAE \
+    (ADDITUM(VI) | ADDITUM(XI))
+#define INTENTIONES_NONAE_AUCTAE \
+    (ADDITUM(I) | ADDITUM(VI) | ADDITUM(VIII))
+#define INTENTIONES_UNDECIMAE_AUCTAE \
+    (ADDITUM(I) | ADDITUM(II) | ADDITUM(III) | ADDITUM(IX))
 
 hic_manens constans AcordumProprietates PROPRIETATES[] = {
     /* maior */
@@ -199,6 +232,21 @@ hic_manens constans AcordumProprietates PROPRIETATES[] = {
     /* septima aucta */
     { "7#5", "+7", IV, VIII, X, III, ADDITUM(VIII),
       INTENTIONES_SEPTIMAE_AUCTAE, ADDITUM(V) },
+    /* tertia decima */
+    { "13", "13", IV, VII, X, III, ADDITAE_SEXTAE_NONAE,
+      INTENTIONES_TERTIAE_DECIMAE, ADDITUM(V) },
+    /* sexta et nona */
+    { "6/9", "6/9", IV, VII, ABSENS, III, ADDITAE_SEXTAE_NONAE,
+      INTENTIONES_SEXTAE_NONAE, ADDITUM(V) },
+    /* undecima mollis */
+    { "m11", "11", III, VII, X, III, ADDITAE_UNDECIMAE,
+      ADDITUM(IX), ZEPHYRUM },
+    /* nona aucta */
+    { "7#9", "7#9", IV, VII, X, III, ADDITUM(III),
+      INTENTIONES_NONAE_AUCTAE, ADDITUM(V) },
+    /* undecima aucta */
+    { "7#11", "7#11", IV, VII, X, III, ADDITUM(VI),
+      INTENTIONES_UNDECIMAE_AUCTAE, ZEPHYRUM },
     /* classis una */
     { "", "", ABSENS, ABSENS, ABSENS, ZEPHYRUM, ZEPHYRUM,
       ZEPHYRUM, ZEPHYRUM },

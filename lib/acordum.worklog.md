@@ -78,3 +78,23 @@ Formatter: wrapped initializer rows trip -vitia twice now - a leading '-I' (…9
 '|' on the continuation line (columns measured wrongly; -scribere's own output is rejected).
 Routed around: '-I' in the table -> ABSENS, tension sets as named macros (INTENTIONES_*), so the
 continuation lines hold single tokens. Plants 5/5.
+
+## 2026-10-27 - V1: jazz vocabulary - 13, 6/9, m11, 7#9, 7#11
+
+Five genera appended before CLASSIS_UNA (circuitus/proprietates loops cover them for free):
+13 (full, no-5th, and the 3-7-13 shell), 6/9, m11 (full; no-9th form root-in-bass only - else
+it is 6/9: D F G A C = Dm11 over D, F6/9 otherwise; "So What" E A D G B = Em11), 7#9, 7#11.
+"6/9" parses fine: longest suffix wins before '/' is looked at (C6/9/E; C6/G stays C6).
+Spelling: #9 is a second-degree letter (C7#9 -> D#, not Eb), #11 a fourth (F#).
+DEVIATION from the approved header, found by a censura fixture: the thin 4-class no-5th shapes
+(13 {0,4,10,9}, 7#9 {0,4,10,3}, 7#11 {0,4,10,6}) are radix_basso. Without that, a classical
+melody D F# B leaping over a held C read as D13/C and the bass C became an "unresolved
+seventh". Same policy as m6/7sus4: melody over a pedal easily forms these sets. The fuller
+forms (5-6 classes) are not restricted - none of the house-song gains used a thin shape.
+functio: the dominant-shape genus list existed in three copies (_dominans_clavis, applicata,
+_dominans), differing only in the (3) dyad -> one _forma_dominantis (+13, 7#9, 7#11), callers
+add (3) where they did. _finalis admits 6/9. Lesson: a bare numeral test ("V7#9") does not
+prove dominant-ness - the numeral is degree + suffix; applicata (V7#9/V) does. Two plants
+survived until those tests were added. 7#5 and 7sus4 are still not dominant-shaped (open).
+House songs: censura counts unchanged; harmony lines now name C13, G13, Bb13, Gb13, F13, F13/A
+(walking bass on the 3rd), F6/9 where they were [..] before. Plants 12/12.

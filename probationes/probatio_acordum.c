@@ -528,6 +528,117 @@ _sectio_proprietates (
     CREDO_AEQUALIS_I32 (p->intentiones | p->evitandae, ZEPHYRUM);
 }
 
+/* vocabula nova (usus iazzicus): 13 (et formae sine radice et
+ * quinta), 6/9, m11 (forma sine nona radice in basso solum - aliter
+ * 6/9), 7#9, 7#11 (sine quinta radices duae) */
+interior vacuum
+_sectio_vocabula_nova (
+    CredoContextus* c)
+{
+    hic_manens constans s32 TREDECIM[]         = { 0, 4, 7, 10, 2, 9,
+        -1 };
+    hic_manens constans s32 TREDECIM_NONA[]  = { 0, 4, 10, 2, 9, -1 };
+    hic_manens constans s32 TREDECIM_NUDA[]  = { 0, 4, 10, 9, -1 };
+    hic_manens constans s32 SEXTA_NONA[]     = { 0, 4, 7, 9, 2, -1 };
+    hic_manens constans s32 UNDECIMA[]         = { 2, 5, 9, 0, 4, 7,
+        -1 };
+    hic_manens constans s32 D_F_G_A_C[]        = { 2, 5, 7, 9, 0, -1 };
+    hic_manens constans s32 QUID_ERGO[]        = { 4, 9, 2, 7, 11, -1 };
+    hic_manens constans s32 NONA_AUCTA[]       = { 0, 4, 7, 10, 3, -1 };
+    hic_manens constans s32 NONA_AUCTA_NUDA[]  = { 0, 4, 10, 3, -1 };
+    hic_manens constans s32 UNDECIMA_AUCTA[]   = { 0, 4, 7, 10, 6, -1 };
+    hic_manens constans s32 UNDECIMA_NUDA[]    = { 0, 4, 6, 10,
+        -1 };
+    hic_manens constans s32 C_SEXTA_NONA[]     = { 0, 4, 7, 9, 2, -1 };
+    hic_manens constans s32 TREDECIM_PEDALE[]  = { 2, 6, 0, 11, -1 };
+                    Acordum a;
+
+    CREDO_VERUM (_est(TREDECIM, 0, ACORDUM_TERTIA_DECIMA, 0));
+    CREDO_VERUM (_est(TREDECIM_NONA, 0, ACORDUM_TERTIA_DECIMA, 0));
+    CREDO_VERUM (_est(TREDECIM_NUDA, 0, ACORDUM_TERTIA_DECIMA, 0));
+    CREDO_VERUM (_est(SEXTA_NONA, 0, ACORDUM_SEXTA_NONA, 0));
+    CREDO_VERUM (_est(UNDECIMA, 2, ACORDUM_UNDECIMA_MOLLIS, 2));
+    CREDO_VERUM (_est(NONA_AUCTA, 0, ACORDUM_NONA_AUCTA, 0));
+    CREDO_VERUM (_est(NONA_AUCTA_NUDA, 0, ACORDUM_NONA_AUCTA, 0));
+    CREDO_VERUM (_est(NONA_AUCTA_NUDA, 4, ACORDUM_IGNOTA, 4));
+    CREDO_VERUM (_est(UNDECIMA_AUCTA, 0, ACORDUM_UNDECIMA_AUCTA, 0));
+    /* D F G A C: Dm11 super D, F6/9 aliter */
+    CREDO_VERUM (_est(D_F_G_A_C, 2, ACORDUM_UNDECIMA_MOLLIS, 2));
+    CREDO_VERUM (_est(D_F_G_A_C, 5, ACORDUM_SEXTA_NONA, 5));
+    CREDO_VERUM (_est(D_F_G_A_C, 7, ACORDUM_SEXTA_NONA, 5));
+    /* "So What": E A D G B super E = Em11 */
+    CREDO_VERUM (_est(QUID_ERGO, 4, ACORDUM_UNDECIMA_MOLLIS, 4));
+    /* C E F# Bb: C7#11 = F#7#11 - bassus decernit; forma tenuis
+     * radice in basso solum: super E nullum nomen */
+    CREDO_VERUM (_est(UNDECIMA_NUDA, 6, ACORDUM_UNDECIMA_AUCTA, 6));
+    CREDO_VERUM (_est(UNDECIMA_NUDA, 0, ACORDUM_UNDECIMA_AUCTA, 0));
+    CREDO_VERUM (_est(UNDECIMA_NUDA, 4, ACORDUM_IGNOTA, 4));
+    /* D F# C B super C: melodia super pedale, non D13/C */
+    CREDO_VERUM (_est(TREDECIM_PEDALE, 0, ACORDUM_IGNOTA, 0));
+    CREDO_VERUM (_est(TREDECIM_PEDALE, 2, ACORDUM_TERTIA_DECIMA, 2));
+    /* lectio: 6/9 ante '/' bassi; C6/G manet C6 */
+    CREDO_VERUM (_lectum(c, "C6/9", ACORDUM_SEXTA_NONA, 0, 0,
+                         C_SEXTA_NONA));
+    CREDO_VERUM (_lectum(c, "C6/9/E", ACORDUM_SEXTA_NONA, 0, 4, NIHIL));
+    CREDO_VERUM (_lectum(c, "C6/G", ACORDUM_SEXTA, 0, 7, NIHIL));
+    CREDO_VERUM (_lectum(c, "G13", ACORDUM_TERTIA_DECIMA, 7, 7, NIHIL));
+    CREDO_VERUM (_lectum(c, "Dm11", ACORDUM_UNDECIMA_MOLLIS, 2, 2,
+                         NIHIL));
+    CREDO_VERUM (_lectum(c, "C7#9", ACORDUM_NONA_AUCTA, 0, 0, NIHIL));
+    CREDO_VERUM (_lectum(c, "C7#11", ACORDUM_UNDECIMA_AUCTA, 0, 0,
+                         NIHIL));
+    /* litterae: #9 D# (non Eb), #11 F#, 13 A, 11 G */
+    CREDO_NECESSE (_lege(c, "C7#9", &a));
+    CREDO_AEQUALIS_I32 ((i32)a.litterae[3], (i32)'d');
+    CREDO_NECESSE (_lege(c, "C7#11", &a));
+    CREDO_AEQUALIS_I32 ((i32)a.litterae[6], (i32)'f');
+    CREDO_NECESSE (_lege(c, "C13", &a));
+    CREDO_AEQUALIS_I32 ((i32)a.litterae[9], (i32)'a');
+    CREDO_AEQUALIS_I32 ((i32)a.litterae[2], (i32)'d');
+    CREDO_NECESSE (_lege(c, "Dm11", &a));
+    CREDO_AEQUALIS_I32 ((i32)a.litterae[7], (i32)'g');
+    CREDO_NECESSE (_lege(c, "C6/9", &a));
+    CREDO_AEQUALIS_I32 ((i32)a.litterae[9], (i32)'a');
+    CREDO_AEQUALIS_I32 ((i32)a.litterae[2], (i32)'d');
+}
+
+/* proprietates vocabulorum novorum: numeralia, additae, intentiones,
+ * evitandae */
+interior vacuum
+_sectio_proprietates_novae (
+    CredoContextus* c)
+{
+    constans AcordumProprietates* p;
+
+    (vacuum)c;
+    p = acordum_proprietates(ACORDUM_TERTIA_DECIMA);
+    CREDO_LITERAE_AEQUALES (p->numeralis, "13");
+    CREDO_AEQUALIS_I32 (p->additae, ((i32)I << II) | ((i32)I << IX));
+    CREDO_AEQUALIS_I32 (p->intentiones,
+        ((i32)I << I) | ((i32)I << III) | ((i32)I << VI));
+    CREDO_AEQUALIS_I32 (p->evitandae, (i32)I << V);
+    p = acordum_proprietates(ACORDUM_SEXTA_NONA);
+    CREDO_LITERAE_AEQUALES (p->numeralis, "6/9");
+    CREDO_AEQUALIS_S32 (p->septima, -I);
+    CREDO_AEQUALIS_I32 (p->intentiones,
+        ((i32)I << VI) | ((i32)I << XI));
+    p = acordum_proprietates(ACORDUM_UNDECIMA_MOLLIS);
+    CREDO_LITERAE_AEQUALES (p->numeralis, "11");
+    CREDO_AEQUALIS_I32 (p->additae, ((i32)I << II) | ((i32)I << V));
+    CREDO_AEQUALIS_I32 (p->evitandae, ZEPHYRUM);
+    p = acordum_proprietates(ACORDUM_NONA_AUCTA);
+    CREDO_LITERAE_AEQUALES (p->numeralis, "7#9");
+    CREDO_AEQUALIS_S32 (p->tertia, IV);
+    CREDO_AEQUALIS_I32 (p->intentiones,
+        ((i32)I << I) | ((i32)I << VI) | ((i32)I << VIII));
+    p = acordum_proprietates(ACORDUM_UNDECIMA_AUCTA);
+    CREDO_LITERAE_AEQUALES (p->numeralis, "7#11");
+    CREDO_AEQUALIS_I32 (p->intentiones,
+        ((i32)I << I) | ((i32)I << II) | ((i32)I << III)
+        | ((i32)I << IX));
+    CREDO_AEQUALIS_I32 (p->evitandae, ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "exemplaria", _sectio_exemplaria, NIHIL, NIHIL, NIHIL, NIHIL },
     { "radices", _sectio_radices, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -540,6 +651,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "circuitus", _sectio_circuitus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "proprietates", _sectio_proprietates, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "vocabula nova", _sectio_vocabula_nova, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "proprietates novae", _sectio_proprietates_novae, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
