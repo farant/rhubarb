@@ -165,6 +165,16 @@ dispensator_pulsare (
     Dispensator* d,
             s64  tempus);
 
+/* vicus quies T5: ms usque ad effusionem quietis proximam (pan/zoom
+ * aut gestus sordidus, quies_ms post mutationem ultimam); ZEPHYRUM si
+ * iam debita; -1 si nihil pendet. Effusio recusata tempus renovat:
+ * iterum post quies_ms, numquam statim (ansa quieta aliter sine mora
+ * circumiret). */
+s64
+dispensator_mora_proxima (
+    constans Dispensator* d,
+                     s64  nunc);
+
 vacuum
 dispensator_recomponere (
     Dispensator* d);

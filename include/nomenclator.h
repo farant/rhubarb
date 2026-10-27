@@ -80,6 +80,12 @@ b32
 nomenclator_reficere (
     NomenclatorMontatio* m);
 
+/* vicus quies T6: VERUM dum opus aut iussum dilatum in notis pendet
+ * (pulsus crebri necessarii) */
+b32
+nomenclator_occupatus (
+    constans NomenclatorMontatio* m);
+
 /* P5b: gestus scribae notarum Motui addicitur (focus lateris) -
  * ctx = NomenclatorMontatio* */
 vacuum

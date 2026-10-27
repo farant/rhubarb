@@ -499,7 +499,25 @@ nomen structura {
           chorda  titulus;
     VicusSystema  systema;
           vacuum* ctx;
+            Mora  (*mora)(vacuum* ctx);   /* quies T6: NIHIL = XVI */
+             s32  (*fossa)(vacuum* ctx, i32* eventus);  /* T6c */
 } SystemaHospitis;
+
+/* quies T6: fossa lateris in reactore hospitis inscripta */
+nomen structura {
+    integer fd;
+        i32 eventus;
+} FossaVici;
+
+/* quies T6: latus sine mora declarata dum pulsatur (mos vetus) */
+#define MORA_IGNOTA  XVI
+/* fossae laterum simul (ultra: MORA_IGNOTA, ne fossa ignota dormiat) */
+#define FOSSAE_VICI_MAXIMA  LXIV
+
+/* in vicus_pulsare vocatur, infra definitur */
+interior vacuum
+fossas_renovare (
+    Vicus* v);
 
 /* S7a: radicem ut scriptor datus mutare (actio aut systema; domini ex
  * manifesto); scriptor prior restituitur */
@@ -2240,6 +2258,7 @@ vicus_creare (
         (i32)magnitudo(PetitioAcervi));
     v->systemata_hospitis = xar_creare(piscina,
         (i32)magnitudo(SystemaHospitis));
+    v->fossae = xar_creare(piscina, (i32)magnitudo(FossaVici));
     redde v;
 }
 
@@ -2400,6 +2419,7 @@ vicus_horologium_locale (
     tempus->dies_hebdomadis  = (s32)t->tm_wday;
     tempus->hora             = (s32)t->tm_hour;
     tempus->minutum          = (s32)t->tm_min;
+    tempus->secundum         = (s32)t->tm_sec;
 }
 
 b32
@@ -2488,6 +2508,18 @@ vicus_systema_addere (
            VicusSystema  systema,
                  vacuum* ctx)
 {
+    redde vicus_systema_cum_mora_addere(v, titulus, systema, NIHIL,
+        ctx);
+}
+
+b32
+vicus_systema_cum_mora_addere (
+                  Vicus* v,
+     constans character* titulus,
+           VicusSystema  systema,
+                   Mora  (*mora)(vacuum* ctx),
+                 vacuum* ctx)
+{
     SystemaHospitis* s;
              chorda  t;
                 i32  i;
@@ -2513,7 +2545,36 @@ vicus_systema_addere (
     s->titulus  = t;
     s->systema  = systema;
     s->ctx      = ctx;
+    s->mora     = mora;
+    s->fossa    = NIHIL;
     redde VERUM;
+}
+
+b32
+vicus_systema_fossam_ponere (
+                  Vicus* v,
+     constans character* titulus,
+                    s32  (*fossa)(vacuum* ctx, i32* eventus))
+{
+    SystemaHospitis* s;
+             chorda  t;
+                i32  i;
+
+    si (!v || !v->systemata_hospitis || !titulus)
+    {
+        redde FALSUM;
+    }
+    t = internare(v, titulus);
+    per (i = ZEPHYRUM; i < xar_numerus(v->systemata_hospitis); i++)
+    {
+        s = (SystemaHospitis*)xar_obtinere(v->systemata_hospitis, i);
+        si (chorda_aequalis(s->titulus, t))
+        {
+            s->fossa = fossa;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
 }
 
 b32
@@ -4075,7 +4136,329 @@ vicus_pulsare (
             (vacuum)indicem_scribere(v);
         }
     }
+    /* quies T6: fossae laterum in reactore hospitis */
+    fossas_renovare(v);
     redde pingendum;
+}
+
+/* ===== vicus quies T6: morae et fossae quae vicum excitant ===== */
+
+/* latus pulsatur (regula latus_pulsare): montatum, vivum, pulsum
+ * habens, visibile aut in fundo vivens */
+interior b32
+latus_pulsandum (
+    constans VicusLatus* l,
+                    b32  visibile)
+{
+    redde l && l->montata && !l->finita && l->facies.pulsare
+        && (visibile || l->facies.vivit_in_fundo);
+}
+
+nomen vacuum (*LatusVisitor)(VicusLatus* l, vacuum* ctx);
+
+/* latera quae vicus_pulsare pulsat: stratum, deinde omnium tabularum
+ * sinistrum et acervus (visibile = tabula activa et frons) */
+interior vacuum
+latera_pulsanda_visitare (
+           Vicus* v,
+    LatusVisitor  visitor,
+          vacuum* ctx)
+{
+    VicusTabula* t;
+     VicusLatus* d;
+     VicusLatus* l;
+            i32  i;
+            i32  k;
+            b32  activa;
+
+    si (latus_pulsandum(v->stratum, VERUM))
+    {
+        visitor(v->stratum, ctx);
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(v->tabulae); i++)
+    {
+        t       = (VicusTabula*)xar_obtinere(v->tabulae, i);
+        activa  = chorda_aequalis(t->id, v->activa);
+        d       = frons_acervi(t);
+        si (latus_pulsandum(&t->sinistrum, activa))
+        {
+            visitor(&t->sinistrum, ctx);
+        }
+        per (k = ZEPHYRUM; k < xar_numerus(t->acervus); k++)
+        {
+            l = (VicusLatus*)xar_obtinere(t->acervus, k);
+            si (latus_pulsandum(l, activa && l == d))
+            {
+                visitor(l, ctx);
+            }
+        }
+    }
+}
+
+/* minimum duarum morarum; -1 = nulla */
+interior Mora
+moram_minuere (
+    Mora a,
+    Mora b)
+{
+    si (a < ZEPHYRUM)
+    {
+        redde b;
+    }
+    si (b < ZEPHYRUM)
+    {
+        redde a;
+    }
+    redde a < b ? a : b;
+}
+
+/* collectio morae laterum (et numerus fossarum declaratarum) */
+nomen structura {
+    Mora mora;
+     i32 fossae;
+} MoraLaterum;
+
+interior vacuum
+lateris_moram_colligere (
+    VicusLatus* l,
+        vacuum* ctx)
+{
+    MoraLaterum* ml = (MoraLaterum*)ctx;
+            i32  eventus;
+
+    si (   l->facies.fossa
+        && l->facies.fossa(l->facies.pulsare_ctx, &eventus) >= ZEPHYRUM)
+    {
+        ml->fossae++;
+    }
+    ml->mora = moram_minuere(ml->mora, l->facies.mora
+        ? l->facies.mora(l->facies.pulsare_ctx) : MORA_IGNOTA);
+}
+
+/* horologium: usque ad minutum proximum (lectio cum minuto mutatur) */
+interior Mora
+horologii_mora (
+    Vicus* v)
+{
+    VicusTempus t;
+
+    si (!v->horologium)
+    {
+        redde -I;
+    }
+    memset(&t, ZEPHYRUM, magnitudo(t));
+    v->horologium(v->horologium_ctx, &t);
+    si (t.secundum < ZEPHYRUM || t.secundum >= LX)
+    {
+        t.secundum = LIX;
+    }
+    redde (Mora)(LX - t.secundum) * M;
+}
+
+Mora
+vicus_mora_proxima (
+    Vicus* v)
+{
+    MoraLaterum ml;
+            i32 i;
+
+    si (!v)
+    {
+        redde -I;
+    }
+    /* res pulsui proximo pendentes: statim */
+    si (v->petitiones && xar_numerus(v->petitiones) > ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(v->tabulae); i++)
+    {
+        si (((constans VicusTabula*)xar_obtinere(v->tabulae,
+            i))->focus_differtus)
+        {
+            redde ZEPHYRUM;
+        }
+    }
+    ml.mora    = horologii_mora(v);
+    ml.fossae  = ZEPHYRUM;
+    per (i = ZEPHYRUM; v->systemata_hospitis
+                       && i < xar_numerus(v->systemata_hospitis); i++)
+    {
+        constans SystemaHospitis* sh;
+
+        sh = (constans SystemaHospitis*)xar_obtinere(
+            v->systemata_hospitis, i);
+        ml.mora = moram_minuere(ml.mora, sh->mora ? sh->mora(sh->ctx)
+            : MORA_IGNOTA);
+    }
+    latera_pulsanda_visitare(v, lateris_moram_colligere, &ml);
+    si (ml.fossae > FOSSAE_VICI_MAXIMA)
+    {
+        ml.mora = moram_minuere(ml.mora, MORA_IGNOTA);
+    }
+    redde ml.mora;
+}
+
+/* fossae laterum nunc declaratae (ad FOSSAE_VICI_MAXIMA) */
+nomen structura {
+    FossaVici fossae[FOSSAE_VICI_MAXIMA];
+          i32 numerus;
+} FossaeVici;
+
+/* fossam (lateris aut systematis) colligere; NIHIL aut -1: nulla */
+interior vacuum
+fossam_colligere (
+    FossaeVici* fv,
+           s32  (*fossa)(vacuum* ctx, i32* eventus),
+        vacuum* ctx)
+{
+       integer fd;
+           i32 eventus;
+           i32 k;
+
+    si (!fossa || fv->numerus >= FOSSAE_VICI_MAXIMA)
+    {
+        redde;
+    }
+    eventus  = REACTOR_LEGERE;
+    fd       = (integer)fossa(ctx, &eventus);
+    si (fd < ZEPHYRUM)
+    {
+        redde;
+    }
+    per (k = ZEPHYRUM; k < fv->numerus; k++)
+    {
+        si (fv->fossae[k].fd == fd)
+        {
+            fv->fossae[k].eventus |= eventus;
+            redde;
+        }
+    }
+    fv->fossae[fv->numerus].fd       = fd;
+    fv->fossae[fv->numerus].eventus  = eventus;
+    fv->numerus++;
+}
+
+interior vacuum
+lateris_fossam_colligere (
+    VicusLatus* l,
+        vacuum* ctx)
+{
+    fossam_colligere((FossaeVici*)ctx, l->facies.fossa,
+        l->facies.pulsare_ctx);
+}
+
+/* callback inane: latus ipsum in pulsu legit - reactor solum
+ * expergefacit (fossa in ansa fenestrae) */
+interior vacuum
+fossa_inanis (
+    integer  fd,
+        i32  eventus,
+     vacuum* data)
+{
+    (vacuum)fd;
+    (vacuum)eventus;
+    (vacuum)data;
+}
+
+interior b32
+fossa_inter (
+    constans FossaVici* fossae,
+                   i32  numerus,
+    constans FossaVici* f)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        si (fossae[k].fd == f->fd && fossae[k].eventus == f->eventus)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* fossae laterum in reactore: tollere evanidas, inscribere novas -
+ * reactor_versio_fossarum solum cum mutantur crescit */
+interior vacuum
+fossas_renovare (
+    Vicus* v)
+{
+    FossaeVici fv;
+    FossaeVici priores;   /* Xar segmentata: copia plana */
+           i32 k;
+
+    si (!v->reactor || !v->fossae)
+    {
+        redde;
+    }
+    fv.numerus       = ZEPHYRUM;
+    priores.numerus  = ZEPHYRUM;
+    /* T6c: systemata (liber praeconii), deinde latera */
+    per (k = ZEPHYRUM; v->systemata_hospitis
+                       && k < xar_numerus(v->systemata_hospitis); k++)
+    {
+        constans SystemaHospitis* sh;
+
+        sh = (constans SystemaHospitis*)xar_obtinere(
+            v->systemata_hospitis, k);
+        fossam_colligere(&fv, sh->fossa, sh->ctx);
+    }
+    latera_pulsanda_visitare(v, lateris_fossam_colligere, &fv);
+    per (k = ZEPHYRUM; k < xar_numerus(v->fossae)
+                       && k < FOSSAE_VICI_MAXIMA; k++)
+    {
+        priores.fossae[k] =
+            *(constans FossaVici*)xar_obtinere(v->fossae,
+            k);
+        priores.numerus++;
+    }
+    per (k = ZEPHYRUM; k < priores.numerus; k++)
+    {
+        si (!fossa_inter(fv.fossae, fv.numerus, &priores.fossae[k]))
+        {
+            (vacuum)reactor_removere(v->reactor, priores.fossae[k].fd);
+        }
+    }
+    per (k = ZEPHYRUM; k < fv.numerus; k++)
+    {
+        si (!fossa_inter(priores.fossae, priores.numerus,
+            &fv.fossae[k]))
+        {
+            (vacuum)reactor_adicere(v->reactor, fv.fossae[k].fd,
+                fv.fossae[k].eventus, fossa_inanis, NIHIL);
+        }
+    }
+    xar_vacare(v->fossae);
+    per (k = ZEPHYRUM; k < fv.numerus; k++)
+    {
+        *(FossaVici*)xar_addere(v->fossae) = fv.fossae[k];
+    }
+}
+
+vacuum
+vicus_reactor_ponere (
+      Vicus* v,
+    Reactor* reactor)
+{
+    i32 k;
+
+    si (!v)
+    {
+        redde;
+    }
+    si (v->reactor && v->reactor != reactor && v->fossae)
+    {
+        per (k = ZEPHYRUM; k < xar_numerus(v->fossae); k++)
+        {
+            (vacuum)reactor_removere(v->reactor,
+                ((constans FossaVici*)xar_obtinere(v->fossae,
+                k))->fd);
+        }
+        xar_vacare(v->fossae);
+    }
+    v->reactor = reactor;
 }
 
 vacuum

@@ -116,6 +116,19 @@ s32
 aemulator_hospes_fossa (
     constans AemulatorHospes* h);
 
+/* vicus quies T6b: mora (ms) usque ad pulsum proximum necessarium -
+ * XVI dum cauda ad infantem non vacua aut infans clausit sed nondum
+ * messus; -1 aliter (fossa legenda expergefacit) */
+s32
+aemulator_hospes_mora (
+    constans AemulatorHospes* h);
+
+/* vicus quies T2b: grex frontalis infantis (pt->grex_frontalis); -1 si
+ * ignotus aut clausum */
+s32
+aemulator_hospes_grex_frontalis (
+    constans AemulatorHospes* h);
+
 /* VERUM si infans exivit (exitus impletur) */
 b32
 aemulator_hospes_exitus (

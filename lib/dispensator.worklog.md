@@ -238,3 +238,17 @@ unguarded second mechanism.
 Tests: probatio_vicus_kalendarium `visus_post_notas` - notes ->
 Agenda -> + New -> "pane" Enter creates the item; notes -> Month -> L
 moves to November. Plants red: no cut; cut with empty focus.
+
+## 2026-10-26 - dispensator_mora_proxima + refused-flush retry (vicus quies T5)
+
+`ludus_fenestra_mora` used to return `quies_ms` (vicus: 300) every
+pass, pending or not - a ~3/s wake floor once the 16 ms cap goes.
+`quies_ms` is really "flush pan/zoom 300 ms after the last movement",
+so the honest deadline is: motus sordida -> tempus_ultimae + quies_ms;
+gestus sordidus -> gestus.tempus + gestus.quies_ms; neither -> -1.
+
+Trap found on the way: `motus_effundere` / `motus_gestum_effundere`
+clear the dirty flag only when the write succeeds. A refused flush left
+the deadline at 0 forever - harmless under the old 16 ms cap, a CPU
+spin in quiet mode. `dispensator_tractare` now restamps the time on
+refusal (retry after quies_ms). Plant: restamp removed -> red l.387.

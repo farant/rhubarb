@@ -192,6 +192,35 @@ pictor_documentum_creare (
                     i32  altitudo,
                     i32  intervallum);
 
+/* communio T4: pictura ALTERIUS machinae (acta importata, manifestum
+ * sub "aliena/<replica>/..."): SOLUM LEGITUR (historia_aperire_
+ * alienam) - actum, revocare, reficere recusantur. NIHIL si ignota */
+PictorDocumentum*
+pictor_documentum_aperire_alienum (
+                 Piscina* piscina,
+     InternamentumChorda* intern,
+                 Volumen* volumen,
+                  chorda  replica,
+      constans character* spatium);
+
+/* communio T5: acta advecta sequi (historia_sequi; strata et
+ * compositum per proiectionem renovantur). VERUM si mutata */
+b32
+pictor_documentum_sequi (
+    PictorDocumentum* doc);
+
+/* picturae aliae machinae in volumine (manifestum "aliena/<replica>/
+ * [<spatium>/]documentum", origo pictor:documentum) */
+nomen structura {
+    chorda replica;
+    chorda spatium;   /* "" = radix illius machinae */
+} PictorPicturaAliena;
+
+Xar*   /* de PictorPicturaAliena */
+pictor_documenta_aliena_enumerare (
+     Volumen* volumen,
+     Piscina* piscina);
+
 /* ex volumine exsistente: dimensiones ex plagula 'documentum',
  * proiectio ex checkpoint proximo + actis */
 PictorDocumentum*

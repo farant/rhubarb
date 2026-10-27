@@ -4830,6 +4830,17 @@ kalendarium_reficere (
                   | charta_reficere(&ctx->pensorum));
 }
 
+b32
+kalendarium_occupatum (
+    constans KalendariumMontatio* m)
+{
+    constans KalendariumFigurae* ctx;
+
+    ctx = m ? (constans KalendariumFigurae*)m->figurae_ctx : NIHIL;
+    redde ctx && (   charta_occupata(&ctx->notae)
+                  || charta_occupata(&ctx->pensorum));
+}
+
 vacuum
 kalendarium_gestum_ponere (
      Motus* motus,

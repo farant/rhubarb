@@ -38,6 +38,8 @@
 #include "dispensator.h"
 #include "delineare_mandata.h"
 #include "organum_montatio.h"
+#include "fasti.h"      /* Mora */
+#include "reactor.h"    /* vicus quies T6: fossae laterum */
 #include "semita.h"
 #include "tabula_dispersa.h"
 
@@ -99,8 +101,15 @@ nomen structura {
               vacuum* gestum_ctx;
        VicusPulsator  pulsare;        /* NIHIL = non vivit */
               vacuum* pulsare_ctx;
-                 b32  vivit_in_fundo; /* pulsatur etiam non activa */
-                 b32  focus_in_apertura; /* latus hoc focum capit cum
+    /* vicus quies T6: mora (ms) usque ad pulsum proximum necessarium
+     * (ctx = pulsare_ctx); -1 = nullus (solum eventus aut fossa);
+     * NIHIL = ignota -> XVI ms dum latus pulsatur (mos vetus, tutus) */
+                 Mora  (*mora)(vacuum* ctx);
+    /* fossa quae latus expergefacit (pty; ctx = pulsare_ctx), eventus
+     * REACTOR_*; -1 = nulla. Vicus eam in reactore suo inscribit */
+                  s32  (*fossa)(vacuum* ctx, i32* eventus);
+                 b32 vivit_in_fundo; /* pulsatur etiam non activa */
+                 b32 focus_in_apertura; /* latus hoc focum capit cum
                                           * vicus aperitur (terminale:
                                           * programma statim scribendum;
                                           * Franus 2026-10-09) */
@@ -297,6 +306,7 @@ nomen structura {
     s32 dies_hebdomadis;  /* 0 dominica - 6 sabbatum */
     s32 hora;             /* 0-23 */
     s32 minutum;          /* 0-59 */
+    s32 secundum;         /* 0-59 (vicus quies T6: minutum proximum) */
 } VicusTempus;
 
 nomen vacuum (*VicusHorologium) (vacuum* ctx, VicusTempus* tempus);
@@ -338,6 +348,9 @@ nomen structura {
                 Piscina* scheda_semitarum;   /* per pulsum vacatur */
                     Xar* brevitates;  /* D5: brevitates hospitis
                                        * (privatum); NIHIL = nullae */
+                Reactor* reactor;     /* quies T6: NIHIL = nullus */
+                    Xar* fossae;      /* quies T6: in reactore
+                                       * inscriptae (privatum) */
 } Vicus;
 
 /* T4a (colloquia-plan): systema hospitis - in omni vicus_pulsare
@@ -385,6 +398,43 @@ vicus_systema_addere (
      constans character* titulus,
            VicusSystema  systema,
                  vacuum* ctx);
+
+/* systema cum mora sua: ut vicus_systema_addere, et mora(ctx) = ms
+ * usque ad vocationem proximam necessariam (-1 = nulla). Sine mora
+ * (vicus_systema_addere): XVI */
+b32
+vicus_systema_cum_mora_addere (
+                  Vicus* v,
+     constans character* titulus,
+           VicusSystema  systema,
+                   Mora  (*mora)(vacuum* ctx),
+                 vacuum* ctx);
+
+/* quies T6c: fossa systematis (ut facies.fossa, ctx systematis): in
+ * reactore hospitis inscribitur (vicus_reactor_ponere). FALSUM si
+ * titulus ignotus */
+b32
+vicus_systema_fossam_ponere (
+                  Vicus* v,
+     constans character* titulus,
+                    s32  (*fossa)(vacuum* ctx, i32* eventus));
+
+/* vicus quies T6: mora usque ad pulsum proximum necessarium (ms) -
+ * minimum: horologium (minutum proximum), systemata (sine mora: XVI),
+ * latera quae pulsantur (visibilia aut vivit_in_fundo; sine mora:
+ * XVI), res pulsui proximo pendentes (petitiones, focus differtus: 0).
+ * -1 = nihil debitum */
+Mora
+vicus_mora_proxima (
+    Vicus* v);
+
+/* reactor hospitis: fossae laterum (facies.fossa) in eo inscribuntur
+ * et tolluntur cum mutantur (vicus_pulsare), callback inane - latus
+ * ipsum in pulsu legit. NIHIL = nullae */
+vacuum
+vicus_reactor_ponere (
+      Vicus* v,
+    Reactor* reactor);
 
 /* campum radicis scribere scriptore dato (valor NIHIL = tollere);
  * FALSUM si recusatum (domini) */

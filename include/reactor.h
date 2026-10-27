@@ -259,4 +259,48 @@ reactor_numerus_timer (
     Reactor* reactor);
 
 
+/* ========================================================================
+ * FUNCTIONES - HOSPES CUM ANSA SUA (vicus quies T4)
+ *
+ * Hospes qui ansam suam habet (fenestra) reactorem non currit sed
+ * poscit (reactor_poll cum mora ZEPHYRI). Ut otiosus dormiat, scire
+ * debet QUANDO reactor iterum poscendus sit et QUAE fossae eum
+ * expergefacere debeant.
+ * ======================================================================== */
+
+/* Mora usque ad opus proximum (ms):
+ *   0  si labor pendet aut timer iam debitus;
+ *   n  ms usque ad timer proximum;
+ *  -1  si nec timer nec labor (solae fossae expergefaciunt).
+ * Hospes exspectat minimum huius et morarum suarum. */
+s32
+reactor_mora_proxima (
+    constans Reactor* reactor);
+
+/* Visitator fossae: fossa activa cum eventibus petitis
+ * (REACTOR_LEGERE | REACTOR_SCRIBERE) */
+nomen vacuum (*ReactorFossaVisitor)(
+     vacuum* ctx,
+    integer  fd,
+        i32  eventus);
+
+/* Fossas activas omnes visitare - etiam fistulam signorum internam
+ * (signum venit -> fistula legenda -> hospes expergiscitur), quamquam
+ * reactor_numerus_fd eam non numerat. Hospes eas ansae suae addit
+ * (macOS: CFFileDescriptor). */
+vacuum
+reactor_fossas_visitare (
+       constans Reactor* reactor,
+    ReactorFossaVisitor  visitor,
+                 vacuum* ctx);
+
+/* Versio fossarum: crescit omni adiectione, modificatione, remotione
+ * successa (non poll, non timers, non labores). Versio eadem = fossae
+ * eaedem cum eisdem eventibus - hospes solum tunc renovat cum
+ * mutatur. */
+i32
+reactor_versio_fossarum (
+    constans Reactor* reactor);
+
+
 #endif /* REACTOR_H */

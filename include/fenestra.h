@@ -169,7 +169,9 @@ fenestra_perscrutari_eventus (
  * ApplicationDefined (typus 15) pumpam expergefacit et a
  * translatore voratur - contractus excitationis vitreae.
  *
- * fenestra:   fenestra
+ * fenestra:   fenestra; NIHIL = ansa sola exspectatur, nihil
+ *             perscrutatur (probationes sine fenestra; NSApp sine
+ *             icone creatur si deest) - vicus quies T5
  * ms_maximae: mora maxima in millisecundis (0 = statim, ut
  *             perscrutari; pabulum: tempestivum_proxima_meta_ms)
  */
@@ -177,6 +179,26 @@ vacuum
 fenestra_expectare_eventus (
     Fenestra* fenestra,
         Mora  ms_maximae);
+
+/* vicus quies T5: fossae quae ansam expergefaciunt. Post hanc
+ * vocationem fenestra_expectare_eventus etiam redit cum fossa ulla
+ * parata fit (eventus petiti). Processui toti pertinent (ansa una):
+ * index totus substituitur, numerus ZEPHYRUM = nullae. Fenestra fossas
+ * non possidet nec claudit - vocator renovat antequam claudit.
+ * macOS: CFFileDescriptor in ansa, callback eventum ApplicationDefined
+ * ponit (voratur, ut excitatio vitreae). FALSUM si systema recusat. */
+#define FENESTRA_FOSSA_LEGERE    0x01u
+#define FENESTRA_FOSSA_SCRIBERE  0x02u
+
+nomen structura {
+    integer fd;
+        i32 eventus;
+} FenestraFossa;
+
+b32
+fenestra_fossas_ponere (
+    constans FenestraFossa* fossae,
+                       i32  numerus);
 
 /* Obtinere eventum proximum ex cauda
  *

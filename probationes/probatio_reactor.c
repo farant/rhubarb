@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <signal.h>
+#include <string.h>
 
 
 /* ========================================================================
@@ -889,6 +891,211 @@ _sectio_decima_nona (
 }
 
 
+/* ========================================================================
+ * HOSPES CUM ANSA SUA (vicus quies T4)
+ * ======================================================================== */
+
+/* fossae a reactor_fossas_visitare visae */
+nomen structura {
+        i32 numerus;
+    integer fossae[VIII];
+        i32 eventus[VIII];
+} FossaeVisae;
+
+interior vacuum
+fossam_colligere (
+     vacuum* ctx,
+    integer  fd,
+        i32  eventus)
+{
+    FossaeVisae* fv = (FossaeVisae*)ctx;
+
+    si (fv->numerus < VIII)
+    {
+        fv->fossae[fv->numerus]   = fd;
+        fv->eventus[fv->numerus]  = eventus;
+    }
+    fv->numerus++;
+}
+
+interior FossaeVisae
+fossas_videre (
+    constans Reactor* reactor)
+{
+    FossaeVisae fv;
+
+    memset(&fv, ZEPHYRUM, magnitudo(fv));
+    reactor_fossas_visitare(reactor, fossam_colligere, &fv);
+    redde fv;
+}
+
+/* eventus fossae visae, aut ZEPHYRUM si non visa */
+interior i32
+fossae_eventus (
+    constans FossaeVisae* fv,
+                 integer  fd)
+{
+    i32 k;
+
+    per (k = 0; k < fv->numerus && k < VIII; k++)
+    {
+        si (fv->fossae[k] == fd)
+        {
+            redde fv->eventus[k];
+        }
+    }
+    redde ZEPHYRUM;
+}
+
+/* labor gradus unius */
+interior b32
+labor_semel (
+    vacuum* datum)
+{
+    (*(i32*)datum)++;
+    redde VERUM;
+}
+
+interior vacuum
+signum_nullum (
+    vacuum* datum)
+{
+    (vacuum)datum;
+}
+
+interior vacuum
+_sectio_mora_proxima (
+    CredoContextus* c)
+{
+     Observatio  o;
+        Reactor* reactor;
+            s32  mora;
+            i32  gradus;
+ ReactorTimerId  id;
+
+    reset_globals(&o);
+    reactor = reactor_creare(c->piscina);
+    CREDO_NON_NIHIL(reactor);
+
+    CREDO_GRADUS("nihil pendet: -1");
+    CREDO_AEQUALIS_S64((s64)reactor_mora_proxima(reactor), (s64)-I);
+    CREDO_AEQUALIS_S64((s64)reactor_mora_proxima(NIHIL), (s64)-I);
+
+    CREDO_GRADUS("timer in CCL ms: mora ~CCL");
+    (vacuum)reactor_timer_adicere(reactor, CCL, FALSUM,
+        callback_timer, &o);
+    mora = reactor_mora_proxima(reactor);
+    CREDO_VERUM(mora > CC && mora <= CCL);
+
+    CREDO_GRADUS("labor pendens: 0; labore finito iterum ~CCL");
+    gradus = ZEPHYRUM;
+    CREDO_VERUM(reactor_laborem_adicere(reactor, labor_semel, &gradus));
+    CREDO_AEQUALIS_S64((s64)reactor_mora_proxima(reactor), ZEPHYRUM);
+    (vacuum)reactor_poll(reactor, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(gradus, I);
+    mora = reactor_mora_proxima(reactor);
+    CREDO_VERUM(mora > CC && mora <= CCL);
+
+    CREDO_GRADUS("timer debitus: 0");
+    id = reactor_timer_adicere(reactor, ZEPHYRUM, FALSUM,
+        callback_timer, &o);
+    CREDO_AEQUALIS_S64((s64)reactor_mora_proxima(reactor), ZEPHYRUM);
+    CREDO_VERUM(reactor_timer_cancellare(reactor, id));
+    mora = reactor_mora_proxima(reactor);
+    CREDO_VERUM(mora > CC && mora <= CCL);
+
+    reactor_destruere(reactor);
+}
+
+interior vacuum
+_sectio_fossae_versio (
+    CredoContextus* c)
+{
+     Observatio  o;
+        Reactor* reactor;
+        integer  a[II];
+        integer  b[II];
+            i32  v;
+            i32  gradus;
+    FossaeVisae  fv;
+
+    reset_globals(&o);
+    reactor = reactor_creare(c->piscina);
+    CREDO_NON_NIHIL(reactor);
+    CREDO_VERUM(pipe(a) == 0);
+    CREDO_VERUM(pipe(b) == 0);
+
+    CREDO_GRADUS("adicere: versio crescit, fossae visae cum eventibus");
+    fv = fossas_videre(reactor);
+    CREDO_AEQUALIS_I32(fv.numerus, ZEPHYRUM);
+    v = reactor_versio_fossarum(reactor);
+    CREDO_VERUM(reactor_adicere(reactor, a[0], REACTOR_LEGERE,
+        callback_simplex, &o));
+    CREDO_VERUM(reactor_versio_fossarum(reactor) != v);
+    v = reactor_versio_fossarum(reactor);
+    CREDO_VERUM(reactor_adicere(reactor, b[I], REACTOR_SCRIBERE,
+        callback_simplex, &o));
+    CREDO_VERUM(reactor_versio_fossarum(reactor) != v);
+    fv = fossas_videre(reactor);
+    CREDO_AEQUALIS_I32(fv.numerus, II);
+    CREDO_AEQUALIS_I32(fossae_eventus(&fv, a[0]), REACTOR_LEGERE);
+    CREDO_AEQUALIS_I32(fossae_eventus(&fv, b[I]), REACTOR_SCRIBERE);
+
+    CREDO_GRADUS("poll, timer, labor: versio eadem");
+    v = reactor_versio_fossarum(reactor);
+    (vacuum)reactor_poll(reactor, ZEPHYRUM);
+    (vacuum)reactor_timer_adicere(reactor, M, FALSUM, callback_timer,
+        &o);
+    gradus = ZEPHYRUM;
+    (vacuum)reactor_laborem_adicere(reactor, labor_semel, &gradus);
+    (vacuum)reactor_poll(reactor, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(reactor_versio_fossarum(reactor), v);
+
+    CREDO_GRADUS("modificare: versio crescit, eventus novi visi");
+    CREDO_VERUM(reactor_modificare(reactor, a[0],
+        REACTOR_LEGERE | REACTOR_SCRIBERE));
+    CREDO_VERUM(reactor_versio_fossarum(reactor) != v);
+    fv = fossas_videre(reactor);
+    CREDO_AEQUALIS_I32(fossae_eventus(&fv, a[0]),
+        REACTOR_LEGERE | REACTOR_SCRIBERE);
+
+    CREDO_GRADUS("removere: versio crescit, fossa abest");
+    v = reactor_versio_fossarum(reactor);
+    CREDO_VERUM(reactor_removere(reactor, b[I]));
+    CREDO_VERUM(reactor_versio_fossarum(reactor) != v);
+    fv = fossas_videre(reactor);
+    CREDO_AEQUALIS_I32(fv.numerus, I);
+    CREDO_AEQUALIS_I32(fossae_eventus(&fv, b[I]), ZEPHYRUM);
+
+    CREDO_GRADUS("removere frustra: versio eadem");
+    v = reactor_versio_fossarum(reactor);
+    CREDO_FALSUM(reactor_removere(reactor, b[I]));
+    CREDO_AEQUALIS_I32(reactor_versio_fossarum(reactor), v);
+
+    CREDO_GRADUS("signum: fistula interna visa (legenda)");
+    CREDO_VERUM(reactor_signum_adicere(reactor, SIGUSR2, signum_nullum,
+        NIHIL));
+    CREDO_VERUM(reactor_versio_fossarum(reactor) != v);
+    fv = fossas_videre(reactor);
+    CREDO_AEQUALIS_I32(fv.numerus, II);
+    {
+        /* fossa altera = fistula signorum (non a[0], legenda) */
+        integer fistula = fv.fossae[0] == a[0] ? fv.fossae[I]
+                                               : fv.fossae[0];
+
+        CREDO_VERUM(fistula >= 0 && fistula != a[0]);
+        CREDO_AEQUALIS_I32(fossae_eventus(&fv, fistula),
+            REACTOR_LEGERE);
+    }
+
+    reactor_destruere(reactor);
+    close(a[0]);
+    close(a[I]);
+    close(b[0]);
+    close(b[I]);
+}
+
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "creare et destruere", _sectio_prima, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -918,6 +1125,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "callback reentrans", _sectio_decima_octava, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "poll error", _sectio_decima_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "hospes: mora proxima", _sectio_mora_proxima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "hospes: fossae et versio", _sectio_fossae_versio, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

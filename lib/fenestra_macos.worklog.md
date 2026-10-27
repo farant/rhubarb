@@ -142,3 +142,23 @@ too, from the NSEvent type. derivare takes its button from the PRESS,
 so drag recognition in other apps is unaffected. Fran verified both
 cases; probatio_terminale pins the chain below the window (press,
 button-held motion, release -> SGR drag report).
+
+## 2026-10-26 - wake fds: fenestra_fossas_ponere (vicus quies T5)
+
+One `CFFileDescriptor` + run-loop source per fd, added to
+`kCFRunLoopCommonModes` (so live resize / menu tracking still wake),
+`closeOnInvalidate` false (the caller owns the fd). The callback posts
+the same synthetic `ApplicationDefined` event vitrea uses; perscrutari
+already swallows it. CF callbacks are ONE-SHOT: every
+`fenestra_expectare_eventus` re-enables them first - an fd still ready
+fires again at once (level semantics, like poll), a drained one doesn't.
+Plant "not re-armed" -> the child-writes-later test times out.
+
+`fenestra_expectare_eventus(NIHIL, ms)` now waits on the loop alone
+(creates NSApp with activation policy Prohibited if none) and drains
+the queue itself - makes the wake path testable without a window. The
+first wait after NSApp creation costs ~70 ms (>100 under load): the
+suite warms up before timing.
+
+examen REICEs this .m before and after (ObjC `@`, Apple constants) -
+.m files are not judged at commit.

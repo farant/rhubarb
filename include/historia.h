@@ -105,6 +105,10 @@ structura Historia {
                     i32  numerus_vivorum;  /* acta viva ad cursor */
                Sigillum  sigillum;         /* proiectionis currentis */
                     Xar* observatores;     /* S5b: NIHIL donec primus */
+    /* communio T4: replica documenti ALIENI (vacua = proprium);
+     * alienum solum legitur, in numeratione scriptoris, sine
+     * checkpoints */
+                 chorda replica;
 };
 
 
@@ -136,6 +140,32 @@ historia_creare (
      constans character* origo_checkpoint,
                     i32  intervallum,
       HistoriaProiectio  proiectio);
+
+/* communio T4: documentum ALTERIUS replicae (acta importata) ex
+ * volumine: acta eius replicae sola, in numeratione scriptoris
+ * (seq_originis); SOLUM LEGITUR - historia_actum, _coniunctum,
+ * revocare, reficere recusant (0 / FALSUM, nihil scriptum);
+ * checkpoints nec leguntur (picturae localis eiusdem spatii essent)
+ * nec scribuntur: proiectio ex vacuo. */
+Historia*
+historia_aperire_alienam (
+                 Piscina* piscina,
+     InternamentumChorda* intern,
+                 Volumen* volumen,
+                  chorda  replica,
+      constans character* spatium,
+      constans character* genus,
+      constans character* origo_checkpoint,
+                     i32  intervallum,
+       HistoriaProiectio  proiectio);
+
+/* communio T5: acta post aperturam (aut sequi priorem) advecta
+ * sequi - status idem ac apertura recens; VERUM si mutatus.
+ * Incrementalis si acta nova simplicia sunt et cursor in fine, aliter
+ * proiectio tota. */
+b32
+historia_sequi (
+    Historia* h);
 
 /* ex volumine exsistente: finis = actum vivum ultimum, cursor =
  * finis, proiectio ex checkpoint proximo vivo + actis */

@@ -3107,6 +3107,16 @@ nomenclator_reficere (
     redde ctx && charta_reficere(&ctx->notae);
 }
 
+b32
+nomenclator_occupatus (
+    constans NomenclatorMontatio* m)
+{
+    constans NomenclatorFigurae* ctx;
+
+    ctx = m ? (constans NomenclatorFigurae*)m->figurae_ctx : NIHIL;
+    redde ctx && charta_occupata(&ctx->notae);
+}
+
 vacuum
 nomenclator_gestum_ponere (
      Motus* motus,

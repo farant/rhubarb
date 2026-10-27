@@ -32,6 +32,7 @@ nomen structura {
                 i32  frustum;     /* octeti per lectionem; 0 = omnes */
                 i32  morae;       /* lectiones cum mora non nulla */
                 i32  quota;       /* octeti adhuc accipiendi */
+                s32  grex;        /* quies T2b: grex frontalis */
                  i8  captum[MXXIV];
                 i32  capti;
 } Obstinatus;
@@ -155,6 +156,13 @@ obstinatus_claudere (
     vacuum* datum)
 {
     (vacuum)datum;
+}
+
+interior s32
+obstinatus_grex (
+    vacuum* datum)
+{
+    redde ((Obstinatus*)datum)->grex;
 }
 
 interior Pseudoterminale*
@@ -597,6 +605,56 @@ _sectio_quarta (
     aemulator_hospes_claudere(h);
 }
 
+/* vicus quies T6b: mora (cauda plena, infans nondum messus) et grex
+ * frontalis per hospitem */
+interior vacuum
+_sectio_mora (
+    CredoContextus* c)
+{
+         Obstinatus  o;
+    Pseudoterminale* pt;
+    AemulatorHospes* h;
+
+    (vacuum)c;
+    pt  = obstinatum_creare(&o);
+    h   = hospitem_creare(pt, LXXX, XXIV, ZEPHYRUM, ZEPHYRUM);
+    CREDO_NECESSE(h);
+
+    CREDO_GRADUS("otiosus: -1");
+    (vacuum)aemulator_hospes_pulsare(h, ZEPHYRUM);
+    CREDO_AEQUALIS_S32(aemulator_hospes_mora(h), -I);
+
+    CREDO_GRADUS("cauda ad infantem pendens: XVI, missa: -1");
+    o.quota = ZEPHYRUM;
+    CREDO_AEQUALIS_I32(aemulator_hospes_scribere(h, (constans i8*)"abc",
+        III), III);
+    (vacuum)aemulator_hospes_pulsare(h, ZEPHYRUM);
+    CREDO_AEQUALIS_S32(aemulator_hospes_mora(h), XVI);
+    o.quota = C;
+    (vacuum)aemulator_hospes_pulsare(h, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(o.capti, III);
+    CREDO_AEQUALIS_S32(aemulator_hospes_mora(h), -I);
+
+    CREDO_GRADUS("grex: sine functione -1, deinde per pontem");
+    CREDO_AEQUALIS_S32(aemulator_hospes_grex_frontalis(h), -I);
+    o.grex                 = DCCLXXVII;
+    o.pons.grex_frontalis  = obstinatus_grex;
+    CREDO_AEQUALIS_S32(aemulator_hospes_grex_frontalis(h), DCCLXXVII);
+
+    CREDO_GRADUS("infans clausit, nondum messus: XVI; messus: -1");
+    o.finis = VERUM;
+    (vacuum)aemulator_hospes_pulsare(h, ZEPHYRUM);
+    CREDO_AEQUALIS_S32(aemulator_hospes_mora(h), XVI);
+    o.mortuus = VERUM;
+    CREDO_VERUM(aemulator_hospes_pulsare(h, ZEPHYRUM).finitus);
+    CREDO_AEQUALIS_S32(aemulator_hospes_mora(h), -I);
+
+    CREDO_GRADUS("clausum: -1, grex -1");
+    aemulator_hospes_claudere(h);
+    CREDO_AEQUALIS_S32(aemulator_hospes_mora(h), -I);
+    CREDO_AEQUALIS_S32(aemulator_hospes_grex_frontalis(h), -I);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I: configuratio", _sectio_prima, _parare, _purgare, NIHIL,
         NIHIL },
@@ -607,6 +665,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "IV: concha vera", _sectio_quarta, _parare, _purgare, NIHIL,
         NIHIL },
+    { "V: mora et grex (quies T6b)", _sectio_mora, _parare, _purgare,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

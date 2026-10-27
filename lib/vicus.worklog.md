@@ -942,3 +942,101 @@ Measured with build/sonda/sonda_quies.c (scratch) on a `sqlite3
 (copied terminal panes must not attach to the real sessions): idle
 pulse 675 us -> 213 us (-68%); insula versio +0 over 600 idle pulses,
 so nothing in the real layout writes state at idle.
+
+## 2026-10-26 - quies T6a: parts declare their wake sources
+
+`vicus_mora_proxima` = min over: clock (to the next minute - needs the
+new `VicusTempus.secundum`), host systems (`vicus_systema_cum_mora_addere`;
+plain `vicus_systema_addere` = 16 ms), every PULSED pane (same rule as
+`latus_pulsare`: visible or `vivit_in_fundo`; `facies.mora` NIHIL = 16
+ms), and 0 while petitions or a deferred focus wait for the next pulse.
+The pulsed-pane walk lives in one visitor (`latera_pulsanda_visitare`)
+used by both the deadline and the fd sync, so they can't disagree.
+
+Pane fds (`facies.fossa`) go into the host reactor
+(`vicus_reactor_ponere`) with an empty callback - the pane reads in its
+own pulse; the reactor only exists to wake the window. Synced at the end
+of `vicus_pulsare`: removals first, then additions, so the reactor's fd
+version moves only on real change. Xar is SEGMENTED - the registered set
+is copied into a flat array before comparing (first draft read
+`xar_obtinere(x, 0)` as an array).
+
+scriba / kalendarium / nomenclator: -1 idle, 16 while a job (`opus`) or
+a deferred command (`dilatum`) is pending. Plants: undeclared pane as
+idle (red l.624), clock ignored (l.599), fd not removed (l.707).
+
+## 2026-10-26 - quies T6b: terminal wakes on its pty; tmux on foreground change (T2b)
+
+Terminal panes now declare `facies.fossa` (pty master, LEGERE) and
+`facies.mora` (16 ms only while input is queued for the child or the
+child closed the pty but isn't reaped yet; -1 otherwise).
+
+The `terminalia` system (tmux list-clients, keeps restore arguments
+current) used to run every 5 s whenever any terminal existed. Now:
+`frontes_signare` folds every live terminal pane's foreground process
+group (tcgetpgrp) into one i64 signature (unsigned: wraparound is
+defined). Query when the signature changes (program started/ended,
+attach/detach, pane opened/closed), and every 5 s only while a VISIBLE
+pane's argument says "tmux ..." (session switches inside tmux change
+nothing we can see).
+
+Race found by probatio_vicus_saltus (real tmux): after `tmux attach` is
+typed, the client process is in front a moment BEFORE it registers
+with the server; the query fired by that change returns no client, and
+since nothing changes again (hidden pane) the argument never gets set.
+The old 5 s poll hid this. Fix: each signature-triggered query
+schedules one confirmation query 1 s later (`terminalia_confirmanda`).
+
+Pre-existing flake, not ours: `sine_exspectatione`'s fake tmux slept
+0.8 s, but `multiplexor_clientes_incipere` gives the query a HARD 1 s
+limit (processus kills on overrun) - under load the fake was killed,
+output empty, argument never set (5/8 failures with 6 spinning
+processes, before this change). Fake now sleeps 0.4 s (still far over
+the 150 ms pulse bound); residual under extreme load: 1/10, where the
+kill lands before the fake even logs.
+
+## 2026-10-26 - quies T6c: the notifications log wakes vicus
+
+Host systems can now declare an fd (`vicus_systema_fossam_ponere`); the
+reactor sync collects system fds before pane fds. The admonitiones
+system registers the log's `specula` fd, drains it every pulse, and
+reports deadline -1 (16 ms if no watch could be made). The log read
+itself is unchanged - incremental from the last position, cheap once
+pulses only happen on wakes. One unexplained failure of
+probatio_vicus_admonitiones in a 4-suite run while other worktrees ran
+gates; not reproduced in 7 reruns.
+
+## 2026-10-26 - quies T6d: everything declared
+
+Flyers (`volantes_mora`: earliest expiry of the visible toasts, 8 s
+notice / 30 s attention), `$sessions` (`colloquia_visus_mora`: 16 while
+the gate-run query is in flight, else the next 5 s panes/runs check -
+only while the pane is visible, since it is not `vivit_in_fundo`) and
+the sound system (`VicusPortaSoni.mora`). Sound detail: the output
+stays open CONCENTUS_QUIES (30 s) after the last voice and only a pulse
+closes it, so the port asks for that wake; concentus counts its quiet
+from its own clock slightly after our last busy `agere`, so past the
+deadline the port answers 16 (not 0, which would spin) until it closes.
+probatio_vicus_quies `otium`: the whole test app world idles at -1.
+
+## 2026-10-26 - quies T6e: measured after (vs T1 baseline)
+
+Secunda build (bash build/aedilis/vicus/struere.sh), `-volumen` on a
+sqlite `.backup` copy of paginae-proba.volumen, `-quies`, default
+layout with terminal + clock, real notifications log (read-only).
+
+| | before (T1, live vicus) | after |
+|---|---|---|
+| idle wake-ups (pulses) | ~60/s, constant | 1 per 14-19 s |
+| idle CPU (`top`) | 4.6-5.1% | 0.0-0.1% |
+| hook event in the log | (lost in the 60/s) | one short wake |
+| notification chime | (lost in the 60/s) | ~2 s at 16 ms, then idle |
+
+Start-up (history load) still costs ~10 s at 70-90% CPU - unchanged,
+not this arc. Plant (T5's, moved here): old 16 ms cap re-added in
+quiet mode -> 54 pulses/s, ~6% CPU - the measurement sees it.
+
+LESSON: `bin/aedilis apps/x/x.c` only WRITES build/aedilis/x/struere.sh
+- it does not compile. My 6a-6d "vicus builds / smoke run" used a
+binary from before the arc (the first after-measurement showed the old
+60/s for that reason). Build = `bash build/aedilis/x/struere.sh`.
