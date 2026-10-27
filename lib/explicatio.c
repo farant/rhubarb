@@ -644,6 +644,28 @@ _genus_alienum (
     redde EXPLICATIO_IGNOTA;
 }
 
+/* acordum declaratum (Carmen.acorda, non 'r') sonans ad pulsum t:
+ * index; -I nullum */
+interior s32
+_declaratum (
+    constans Carmen* carmen,
+                s64  t)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < carmen->numerus_acordorum; i++)
+    {
+        constans ComitatusAcordum* a = &carmen->acorda[i];
+
+        si (   !a->nullum && a->pulsus <= t
+            && t < a->pulsus + a->longitudo)
+        {
+            redde (s32)i;
+        }
+    }
+    redde -I;
+}
+
 b32
 explicatio_carminis (
     constans Carmen* carmen,
@@ -653,6 +675,7 @@ explicatio_carminis (
                           Locata* locatae;
                              s64* puncta;
                              i32* infimae;
+                             s32* declarata;
               ExplicatioFenestra* fenestrae;
              ExplicatioSegmentum* segmenta;
                 AcordumFenestrae* acorda;
@@ -703,7 +726,9 @@ explicatio_carminis (
     locatae  = (Locata*)piscina_allocare(piscina,
         (memoriae_index)(n + I) * magnitudo(Locata));
     puncta   = (s64*)piscina_allocare(piscina,
-        (memoriae_index)(II * n + m + II) * magnitudo(s64));
+        (memoriae_index)(II * n + m + II
+                         + II * carmen->numerus_acordorum)
+        * magnitudo(s64));
     si (locatae == NIHIL || puncta == NIHIL)
     {
         redde FALSUM;
@@ -762,6 +787,13 @@ explicatio_carminis (
     {
         puncta[np++] = carmen_pulsus_mensurae(carmen, (i32)(i + I));
     }
+    /* mutationes harmoniae declaratae fenestras secant */
+    per (i = ZEPHYRUM; i < carmen->numerus_acordorum; i++)
+    {
+        puncta[np++] = carmen->acorda[i].pulsus;
+        puncta[np++] = carmen->acorda[i].pulsus
+                     + carmen->acorda[i].longitudo;
+    }
     puncta[np++] = ZEPHYRUM;
     qsort(puncta, (size_t)np, magnitudo(s64), _ordo_punctorum);
     j = ZEPHYRUM;
@@ -786,9 +818,11 @@ explicatio_carminis (
      * mensuram */
     infimae    = (i32*)piscina_allocare(piscina,
         (memoriae_index)(np + I) * magnitudo(i32));
+    declarata  = (s32*)piscina_allocare(piscina,
+        (memoriae_index)(np + I) * magnitudo(s32));
     fenestrae  = (ExplicatioFenestra*)piscina_allocare(piscina,
         (memoriae_index)(np + I) * magnitudo(ExplicatioFenestra));
-    si (infimae == NIHIL || fenestrae == NIHIL)
+    si (infimae == NIHIL || declarata == NIHIL || fenestrae == NIHIL)
     {
         redde FALSUM;
     }
@@ -814,10 +848,15 @@ explicatio_carminis (
         {
             mensura_i++;
         }
+        /* iunctio: intra mensuram, acordo declarato eodem (bassus
+         * quilibet) aut, sine declarato, basso eodem */
         si (   nf > ZEPHYRUM
-            && (i32)fenestrae[nf - I].harmonia.bassus == infimae[i]
             && carmen_pulsus_mensurae(carmen, (i32)mensura_i)
-                   <= fenestrae[nf - I].initium)
+                   <= fenestrae[nf - I].initium
+            && _declaratum(carmen, puncta[i]) == declarata[nf - I]
+            && (   declarata[nf - I] >= ZEPHYRUM
+                || (i32)fenestrae[nf - I].harmonia.bassus
+                   == infimae[i]))
         {
             fenestrae[nf - I].finis = puncta[i + I];
         }
@@ -831,7 +870,10 @@ explicatio_carminis (
             fenestrae[nf].harmonia.classes  = ZEPHYRUM;
             memset(fenestrae[nf].harmonia.litterae, ZEPHYRUM,
                    magnitudo(fenestrae[nf].harmonia.litterae));
-            fenestrae[nf].implicitum        = FALSUM;
+            fenestrae[nf].implicitum = FALSUM;
+            fenestrae[nf].declaratum = FALSUM;
+            declarata[nf]                   = _declaratum(carmen,
+                                                          puncta[i]);
             nf++;
         }
     }
@@ -927,6 +969,23 @@ explicatio_carminis (
                 acorda[f].septima             = -I;
                 fenestrae[f].harmonia.bassus  = ZEPHYRUM;
                 fenestrae[f].harmonia.radix   = ZEPHYRUM;
+                perge;
+            }
+            /* acordum declaratum: id nominatur, notae ad id iudicantur;
+             * bassus = infima ad initium (extra classes: declaratus) */
+            si (declarata[f] >= ZEPHYRUM)
+            {
+                Acordum h = carmen->acorda[declarata[f]].acordum;
+                    i32 b = fenestrae[f].harmonia.bassus;
+
+                si (h.classes & _bit(b))
+                {
+                    h.bassus = b;
+                }
+                fenestrae[f].harmonia    = h;
+                fenestrae[f].declaratum  = VERUM;
+                acorda[f].classes        = h.classes;
+                acorda[f].septima        = _septima(&h);
                 perge;
             }
             si (_bassus_transiens(locatae, intra, k, f, fenestrae,

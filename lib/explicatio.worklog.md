@@ -130,3 +130,21 @@ chords over one held bass (proelium bar 16 B7sus4:2 B7:2, oppidum bar 4 C7sus4:2
 unnamed - before it named the second chord only because the sus tone looked like a passing
 note. Side observation: comitatus matches voices BY RANK, so G7 -> C moves the seventh F up
 to G, not down to E (voice-leading quality, not analysis). Plants 5/5.
+
+## 2026-10-27 - step 2a: declared harmony anchors the windows (D03TB redesigned, Fran approved Q1-Q3)
+
+Principle: where the author declared a chord (<acorda>), that chord IS the reading and the
+sound is judged against it; the 'harmonia' line stays literal; elsewhere inference as before.
+- Window cuts: declared chord starts and ends join the slice points; slices merge within a bar
+  while the declared chord is the same, whatever the bass does (alternating bass = one chord).
+  Outside declared spans the old "same bass" merge rule stands.
+- A declared window takes the declared Acordum (author's letters); its bass = the lowest note
+  at the window start if that is a chord tone (C over E -> C/E), else the declared bass (a
+  passing D under C stays C). Minimal removal and bassus transiens are skipped there; notes are
+  classified against the declared classes (chord tones / shapes).
+House songs: the six without <acorda> and lilia identical. Fixed: proelium bar 16 (B7sus4:2
+B7:2, final cadence [perf.] back), oppidum bar 4 (C7sus4 C7), proelium bar 7 (D with G tr. B
+vic., was Gmaj9/D - park ...37ERWF #3/#4/#5 resolved where declared). New, by design (Q2): a
+held melody seventh over a declared triad (campus Bm with A, proelium Em/C/Am) now reads '?'
+against the declared chord - 2b's 'acorda' rule reports it. Plants 6/6 (the boundary plant had
+to remove both start and end points: a chord's end is the next chord's start).

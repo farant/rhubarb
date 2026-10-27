@@ -17,6 +17,16 @@
  * alienae (genus per formam) - nomen a tono addito non tento
  * reiectum non redit (acordum.h NOTA ADDITA).
  *
+ * ACORDA DECLARATA (Carmen.acorda, <acorda>): intra spatium acordi
+ * declarati (non 'r') fenestrae ad mutationes eius et lineas
+ * mensurae secantur, NON ad bassum - bassus inter classes acordi
+ * motus fenestram non mutat (bassus alternans: I, non I I64);
+ * acordum fenestrae = declaratum (litterae auctoris), bassus = nota
+ * infima ad initium fenestrae (inversio; extra classes acordi:
+ * bassus declaratus); notae ad acordum declaratum iudicantur (classes
+ * eius acordi; ceterae per formam). Remotio minima et bassus transiens
+ * ibi non adhibentur. Extra spatia (aut sine <acorda>) ut supra.
+ *
  * BASSUS TRANSIENS: nota bassi gradu intrans et exiens (transitus aut
  * vicinus in parte sua) cuius superiores omnes in acordo fenestrae
  * prioris (contiguae, nominatae) sunt, acordum id servat cum basso suo
@@ -76,6 +86,7 @@ nomen structura {
          s64 finis;
      Acordum harmonia;     /* sine notis alienis */
          b32 implicitum;   /* septima ex tritono sola */
+         b32 declaratum;   /* acordum ex <acorda> (non inventum) */
 } ExplicatioFenestra;
 
 nomen structura {
