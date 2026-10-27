@@ -40,6 +40,7 @@ clang "${VEXILLA_C89[@]}" -Iinclude tools/tabula_nodorum_generare.c \
     lib/laqueus.c lib/situs.c lib/polynomium.c lib/matrix.c \
     lib/congruentia.c lib/anulus.c lib/fractio.c lib/magnus.c \
     lib/chorda.c lib/chorda_aedificator.c lib/piscina.c \
+    lib/contractio.c lib/interpolatio.c lib/xar.c \
     -o "$BIN" || exit 2
 
 case "$MODUS" in

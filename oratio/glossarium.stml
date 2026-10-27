@@ -423,6 +423,14 @@
     <forma textus="tensorum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
     <forma textus="tensoribus" casus="ablativus" numerus="pluralis" genus="masculinum"/>
   </vocabulum>
+  <vocabulum lemma="gyratio" lingua="latina" classis="substantivum" nota="Latina posterior: gyratio, -onis f., circumactio (gyrus, gyrare); mathematica: summa conversionum (quartarum) curvae in plano, numerus gyrationis (lib/laqueus.c, modulus vertex)">
+    <forma textus="gyratio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="gyrationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="gyrationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="gyrationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="gyrationum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+    <forma textus="gyrationibus" casus="ablativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="vectorizare" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus technicus domus: ansam in instructiones vectoris (SIMD) vertere (lib/agmen.c, tools/agmen_vectorizatio.sh)"/>
   <vocabulum lemma="exhaustivus" lingua="latina" classis="adiectivum"
     nota="Latinitas nova (exhaurire): exhaustive - vox domus (cellae.h: activatio_exhaustiva, quaestio per omnes copias); WORDS caret">

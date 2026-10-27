@@ -32,6 +32,7 @@
 #include "fractio.h"
 #include "situs.h"
 #include "polynomium.h"
+#include "contractio.h"
 
 /* transitus plures uncinus per summam statuum (2^c) non computat */
 #define LAQUEUS_TRANSITUS_MAXIMI XXIV
@@ -253,6 +254,79 @@ laqueus_alexander_ex_pd (
              i32  transitus,
          Piscina* piscina,
       Polynomium* exitus);
+
+
+/* ==================================================
+ * Uncinus per modulum vertex et contractionem (sine limite 2^c)
+ *
+ * Spin +-1 per os (index dimensionis 2), gyrationes ossium ex arbore
+ * dualis (facies externa +4, ceterae -4), tensor per transitum; rete
+ * per contractio (ordo avidus, officina una) modulo primos 1 mod 4 ad
+ * puncta A = i omega^2 aestimatur, uncinus per interpolatio
+ * restituitur EXACTE (limes probatus |coefficiens| < 4^c, fenestra
+ * Kauffman in classe 3w modulo 4, passus 4). Nullus limes transituum
+ * praeter octeti_maximi (officina). Vide
+ * project-specs/contractio-plan.md.
+ * ================================================== */
+
+nomen structura LaqueusModulusVertex LaqueusModulusVertex; /* opacum */
+
+/* structura semel: gyrationes, rete, ordo, officina (<= octeti_maximi
+ * octeti). Validatio eadem ac laqueus_uncinus_ex_pd; NIHIL etiam si
+ * transitus < 2 aut officina refutata. Memoria in piscina. */
+LaqueusModulusVertex*
+laqueus_modulus_vertex_creare (
+    constans i32* pd,
+             i32  transitus,
+             i64  octeti_maximi,
+         Piscina* piscina);
+
+/* uncinus <D> in puncto: A = i omega^2 (i = g^((p-1)/4), g non
+ * residuum quadraticum minimum), valor = <D>(A) modulo p.
+ * INTERPOLATIO_UTILE (punctum = A); INTERPOLATIO_INUTILE si omega = 0
+ * aut d = omega^4 + omega^-4 = 0 (A^4 = -1); INTERPOLATIO_ERRATUM si
+ * p < 5, p non 1 modulo 4, aut p non primus deprehensus. Nihil
+ * allocat (officina reutitur); primus mutatus i recomputat. */
+s32
+laqueus_modulus_vertex_aestimare (
+    LaqueusModulusVertex* mv,
+                     i32  omega,
+                     i32  p,
+                     i32* punctum,
+                     i32* valor);
+
+/* gyrationes (quartae) per os 0..2c-1, directione a primo occursu in
+ * codice ad secundum; memoria structurae */
+constans s32*
+laqueus_modulus_vertex_gyrationes (
+    constans LaqueusModulusVertex* mv);
+
+ContractioSumptus
+laqueus_modulus_vertex_sumptus (
+    constans LaqueusModulusVertex* mv);
+
+/* uncinus Kauffman et Jones ex codice PD per modulum vertex; codex ut
+ * laqueus_uncinus_ex_pd (transitus 0 -> 1; transitus unus refutatur).
+ * sumptus NIHIL licet (aliter sumptus contractionis; 0 pro transitu
+ * 0). FALSUM si codex invalidus aut officina > octeti_maximi (exitus
+ * non tangitur). */
+b32
+laqueus_uncinus_ex_pd_rete (
+         constans i32* pd,
+                  i32  transitus,
+                  i64  octeti_maximi,
+              Piscina* piscina,
+           Polynomium* exitus,
+    ContractioSumptus* sumptus);
+
+b32
+laqueus_jones_ex_pd_rete (
+         constans i32* pd,
+                  i32  transitus,
+                  i64  octeti_maximi,
+              Piscina* piscina,
+           Polynomium* exitus,
+    ContractioSumptus* sumptus);
 
 /* codex PD per motus Reidemeister I et II simplificatus: dum motus
  * aliquis applicari potest, transitus removentur (R1: ansa - transitus

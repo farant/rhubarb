@@ -452,6 +452,16 @@ Fran's go-ahead.
     M8); exponents ≡ 3w (mod 4) on the state-sum side;
   - d = 0 point (p = 17, A = 2) returned INUTILE;
   - invalid and non-planar codes refused as before; c = 0 → 1.
+  *(2026-10-27: landed. API as planned plus an opaque reusable
+  `LaqueusModulusVertex` (`_creare`, `_aestimare(ω, p)`, `_gyrationes`,
+  `_sumptus`): the d = 0 check and the loop check need a single point
+  and the turning numbers. Crossing tensors stored symbolically
+  (A^±1·ω^e terms, kinks summed at build). 9 sections, 55,960 checks,
+  2.0 s: all 12,966 table Jones, all 249 knots ≤ 10 against the state
+  sum, R1 kinks, 28-crossing knots (state sum refuses), random polygons,
+  loops ±4, single points, d = 0. Random R2 insertions not written —
+  bigons covered by table and polygon diagrams. 17 plants red.
+  Glossary: gyratio. See lib/laqueus.worklog.md.)*
 - **T5. Measurement and braids.** First, from the T3 review: the hot kernel
   spends its time in the per-entry odometer (interni loops of length 2
   on braid networks, 1.3–1.8 ns per multiplication); a prototype with

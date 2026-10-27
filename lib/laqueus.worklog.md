@@ -368,3 +368,79 @@ Plants: E1 (planarity check skipped) red. E2 (faces traced with the slot
 BEFORE instead of after) survives, and that is correct: sigma^-1 alpha traces
 the faces of the mirrored rotation system, which has the same count. It is
 an equivalent implementation, not a bug.
+
+## 2026-10-27 — Kauffman bracket by vertex model and contraction (contractio-plan T4)
+
+New: `laqueus_uncinus_ex_pd_rete`, `laqueus_jones_ex_pd_rete`, and under
+them an opaque reusable `LaqueusModulusVertex` (`_creare`,
+`_aestimare(omega, p)`, `_gyrationes`, `_sumptus`). No crossing limit
+except the officina's byte ceiling; the state sum stays the oracle up to
+LAQUEUS_TRANSITUS_MAXIMI (24).
+
+**Model** (project-specs/contractio-plan.md, "The vertex model" and
+"Why it is correct"): one dimension-2 index per PD edge, spin +1 = the
+loop runs from the edge's first occurrence in the code (end a) to its
+second (end b). Turning numbers t (quarter turns, a → b) come from the
+face equations — face 0 = orbit of position 0, target +4; every other
+face −4; each corner −1 — solved by a BFS spanning tree of the dual
+graph, leaves first, non-tree edges m = 0. Crossing tensor = A·[(X0
+X1)(X2 X3)] + A⁻¹·[(X0 X3)(X1 X2)]; a pair is nonzero only if one end
+enters and the other leaves, with ω⁻¹ for arm p → p+1, else ω⁺¹; the
+edge factor ω^(σt) sits at end b. Contraction = d·⟨D⟩ with A = i·ω²,
+d = ω⁴ + ω⁻⁴ = −A² − A⁻².
+
+**Kinks (R1 loops):** an edge with both ends on one crossing is not an
+index; its spin is summed inside that crossing's tensor at build time.
+Each crossing's tensor is stored symbolically as ≤ 32 terms (entry,
+A^±1, ω exponent), so a point only fills numbers in: no allocation per
+point (ω powers in a table of size 2E + 1, E = max |exponent| ≥ 4).
+
+**Points:** ω = index + 2 (the interpolatio aestimator), A = i·ω² with
+i = g^((p−1)/4), g the least quadratic non-residue, cached per prime.
+INUTILE at ω ≡ 0 and at d = 0 (A⁴ = −1); ERRATUM for p < 5, p ≢ 1
+(mod 4), or i² ≠ −1 (p not prime). Duplicate y = ω⁸ among small ω are
+rare and the driver skips them.
+
+**Interpolation:** window [−c − 2|s_B| + 2, c + 2|s_A| − 2] rounded
+inward to the class 3w mod 4 (|s_A|, |s_B| = loops of the all-A / all-B
+states by union-find), passus 4, limes 2c bits (|coefficient| < 4^c),
+primes ≡ 1 mod 4, two extra points per prime. Jones from the bracket
+with the PD writhe and the existing `_jones_ex_uncino`.
+
+**Tests** (probationes/probatio_laqueus_rete.c, 9 sections, 55,960
+checks, 2.0 s): hand codes — both 2-crossing kinked unknots and the
+stabilized trefoil with its negative twin — against the state sum and
+the table; all 249 table knots of 3–10 crossings, bracket = state sum
+and every state-sum exponent ≡ 3w (mod 4); all 12,966 table knots'
+Jones; 200 table knots (2–9 crossings) with 1–3 random R1 kinks (4
+kinds), Jones = table, bracket = state sum, `laqueus_pd_simplificare`
+back to ≤ c; four 13-crossing knots with 15 kinks (28 crossings): the
+state sum refuses, the network gives the table's Jones; random polygonal
+knots (8–11 vertices in [−12, 12]³, 2–16 crossings, ≥ 50 tested) against
+`diagramma_jones`; every loop of 20 random states on 100 kinked table
+knots turns ±4 (computed from the PD and t alone — Umlaufsatz, not the
+solver's equations); single points equal the state sum evaluated at A
+mod p, a prime switch recomputes i, p = 17 with ω = 5 (A = 2) is
+INUTILE; refusals (c = 1, non-planar, bad labels, officina too small)
+leave exitus untouched; c = 0 → 1.
+
+R1 insertion (test helper): splitting edge e, labels > e shift by 2,
+the incoming occurrence of e becomes e + 2, and the new crossing is one
+of [e, e+2, e+1, e+1] (under first, positive), [e, e+1, e+1, e+2]
+(under, negative), [e+1, e+1, e+2, e] (over, positive), [e+1, e, e+2,
+e+1] (over, negative). All four are planar and accepted by
+`_pd_legere`.
+
+**Deviation from the plan's credo:** random R2 insertions were not
+written (a PD-level R2 needs the face structure to stay planar). Bigons
+are covered by the table diagrams (twist regions) and by the polygonal
+knots, whose generic projections are full of bigons and monogons.
+
+**Plants (radix/laqueus_rete), 17/17 red:** outer-face target sign;
+corner term dropped; basis without +2; tree solve sign; enter/leave at
+the wrong end; crossing turn sign; edge factor sign; kink not folded;
+imus off the 3w class; summus window too narrow; limes 2 bits; no
+division by d; A⁻¹ sign; d = 0 not INUTILE; i not recomputed on a prime
+change; class w instead of 3w; Jones writhe sign. Most are caught inside
+the driver (the extra points and extra prime refuse the inconsistent
+interpolant); the A⁻¹ and writhe plants by the oracle comparisons.
