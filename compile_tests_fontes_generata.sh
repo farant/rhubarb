@@ -109,6 +109,7 @@ declare -a SOURCE_FILES=(
     "lib/entitas_repositorium_impl.c"
     "lib/entitates_html.c"
     "lib/entitates_html_tabula.c"
+    "lib/epistula.c"
     "lib/eventus_cauda.c"
     "lib/eventus_conformitas.c"
     "lib/eventus_stml.c"

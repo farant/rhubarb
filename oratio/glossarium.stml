@@ -1879,6 +1879,13 @@
     <forma textus="pinacum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
   </vocabulum>
 
+  <vocabulum lemma="epistularius" lingua="latina" classis="substantivum" nota="epistularius, -i m. (ex epistula; cf. 'ab epistulis', scriba epistularum): qui epistulas mittit - hic Epistularius, missor epistularum electronicarum per provisorem (lib/epistula.c, communio-plan-3 T2)">
+    <forma textus="epistularius" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="epistularii" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="epistularium" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="epistulario" casus="dativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="resend" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Resend, provisor epistularum (api.resend.com; epistula_resend_corpus, communio D7)"/>
   <vocabulum lemma="replica" lingua="latina" classis="substantivum" nota="replica, -ae f. (ex replicare, 'iterum plicare'; Latinitas recentior): exemplar documenti quod scriptor proprium tenet - hic volumen ut scriptor actuum (communio D2b, volumen_replica); WORDS caret">
     <forma textus="replica" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="replicae" casus="genitivus" numerus="singularis" genus="femininum"/>
