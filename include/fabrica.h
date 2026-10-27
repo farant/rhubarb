@@ -434,6 +434,14 @@ nomen structura {
      * strangulat: linea una per secundam summum). NIHIL licet. */
     vacuum (*progressum_notare)(vacuum* datum, i32 iudicata,
                                 i32 ambitus, i32 unda, i32 undae);
+    /* TEMPUS PHOTOGRAPHIAE (fabrica-plan-8 T1): horologium (ms) et
+     * notatio ambulationum arboris membri (ante + post, ms) - tools
+     * factum 'fabrica.photographia' cursui membri adhaerens scribunt.
+     * Nucleus horologium non habet (sutura ficta: NIHIL, nihil
+     * mensum). */
+    s64 (*momentum_ms)(vacuum* datum);
+    vacuum (*photographiam_notare)(vacuum* datum, chorda titulus,
+                                   i32 ms);
     /* vestigia lectionum (plan 2 T2): clavis = (titulus, via exitus,
      * sigillum ingressuum declaratorum, sigillum artificii) - vestigium
      * ULTIMUM per (titulus, exitus): actio exituum multorum (fragmenta

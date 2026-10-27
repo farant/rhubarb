@@ -594,6 +594,39 @@ _memoriam_sectionis_scribere (
     (vacuum)mensura_annotare(diarium, &m, memoria->piscina);
 }
 
+/* TEMPUS PHOTOGRAPHIAE in annalibus (fabrica-plan-8 T1): factum
+ * fabrica.photographia (ms) cursui membri adhaerens, si nucleus id
+ * notavit; deinde deletur (cursus proximus eiusdem tituli suum fert) */
+interior vacuum
+_photographiam_annalibus_inscribere (
+                   Memoria* memoria,
+    constans CursusInitium* membrum,
+        constans character* diarium,
+                       s64  momentum)
+{
+    Mensura  m;
+     vacuum* valor;
+
+    si (   memoria->photographiae == NIHIL
+        || !tabula_dispersa_invenire(memoria->photographiae,
+               membrum->titulus, &valor))
+    {
+        redde;
+    }
+    memset(&m, ZEPHYRUM, magnitudo(m));
+    m.sessio  = membrum->sessio;
+    m.id      = mensura_id_novum(memoria->piscina);
+    m.parens  = membrum->id;
+    m.titulus   = chorda_ex_literis(MENSURA_PHOTOGRAPHIA,
+        memoria->piscina);
+    m.valor     = (duplex)*(i32*)valor;
+    m.unitas    = chorda_ex_literis("ms", memoria->piscina);
+    m.momentum  = momentum;
+    (vacuum)mensura_annotare(diarium, &m, memoria->piscina);
+    (vacuum)tabula_dispersa_delere(memoria->photographiae,
+        membrum->titulus);
+}
+
 /* SECTIONES IN ANNALIBUS (analytica T3b): membrum quod cucurrit
  * plagulam credo <area>/credo.tsv habet (CREDO_VERDICTA; lector idem ac
  * 'probare'); sectio quaeque = cursus FILIUS cursus membri, titulus
@@ -838,6 +871,8 @@ _cursum_annalibus_inscribere (
     (vacuum)mensura_cursum_incipere(diarium, &initium,
         memoria->piscina);
     (vacuum)mensura_cursum_finire(diarium, &finis, memoria->piscina);
+    _photographiam_annalibus_inscribere(memoria, &initium, diarium,
+        finis.momentum);
     si (   sanatio->eventus == FABRICA_SANATUM
         || sanatio->eventus == FABRICA_FRACTUM)
     {
@@ -1017,6 +1052,40 @@ _progressum_notare (
     memoria->progressus_ultimus = nunc;
 }
 
+/* TEMPUS PHOTOGRAPHIAE (fabrica-plan-8 T1): nucleus ms ambulationum
+ * membri notat; annales factum cursui membri addunt, deinde delent */
+interior s64
+_momentum_ms (
+    vacuum* datum)
+{
+    (vacuum)datum;
+    redde mensura_momentum_nunc();
+}
+
+interior vacuum
+_photographiam_notare (
+     vacuum* datum,
+     chorda  titulus,
+        i32  ms)
+{
+    Memoria* memoria = (Memoria*)datum;
+        i32* locus;
+
+    si (memoria->photographiae == NIHIL)
+    {
+        memoria->photographiae = tabula_dispersa_creare_chorda(
+            memoria->piscina, XVI);
+    }
+    locus = (i32*)piscina_allocare(memoria->piscina, magnitudo(i32));
+    si (memoria->photographiae == NIHIL || locus == NIHIL)
+    {
+        redde;
+    }
+    *locus = ms;
+    (vacuum)tabula_dispersa_inserere(memoria->photographiae,
+        chorda_transcribere(titulus, memoria->piscina), locus);
+}
+
 /* MEMORIA VERA in sutura (fabrica-6 H4): datum = memoria, ansae
  * memoriae omnes (cursum_legere solum sanare legit) */
 vacuum
@@ -1024,17 +1093,19 @@ suturae_memoriam_nectere (
     FabricaSutura* sutura,
           Memoria* memoria)
 {
-    sutura->datum                = memoria;
-    memoria->sutura              = sutura;
-    sutura->meminisse            = _meminisse;
-    sutura->inscribere           = _inscribere;
-    sutura->cursum_inscribere    = _cursum_inscribere;
-    sutura->cursum_legere        = _cursum_legere;
-    sutura->progressum_notare    = _progressum_notare;
-    sutura->lectiones_legere     = _lectiones_legere;
-    sutura->lectiones_scribere   = _lectiones_scribere;
-    sutura->lectiones_ultimae    = suturae_lectiones_ultimae;
-    sutura->particulas_scribere  = _particulas_scribere;
-    sutura->particulas_legere    = _particulas_legere;
-    sutura->verdictum_ponere     = _verdictum_ponere;
+    sutura->datum                 = memoria;
+    memoria->sutura               = sutura;
+    sutura->meminisse             = _meminisse;
+    sutura->inscribere            = _inscribere;
+    sutura->cursum_inscribere     = _cursum_inscribere;
+    sutura->cursum_legere         = _cursum_legere;
+    sutura->progressum_notare     = _progressum_notare;
+    sutura->momentum_ms           = _momentum_ms;
+    sutura->photographiam_notare  = _photographiam_notare;
+    sutura->lectiones_legere      = _lectiones_legere;
+    sutura->lectiones_scribere    = _lectiones_scribere;
+    sutura->lectiones_ultimae     = suturae_lectiones_ultimae;
+    sutura->particulas_scribere   = _particulas_scribere;
+    sutura->particulas_legere     = _particulas_legere;
+    sutura->verdictum_ponere      = _verdictum_ponere;
 }

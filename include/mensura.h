@@ -307,6 +307,9 @@ mensura_cursus_legere (
 #define MENSURA_UNDAE     "fabrica.undae"     /* undae formatae */
 #define MENSURA_IUDICATA  "fabrica.iudicata"  /* membra iudicata
                                                * hucusque (per undam) */
+#define MENSURA_PHOTOGRAPHIA "fabrica.photographia" /* ms ambulationum
+                                               * arboris membri (ante +
+                                               * post; fabrica-plan-8) */
 #define MENSURA_PORTAE    "consilium.portae"  /* commissio: portae
                                                * debitae */
 #define MENSURA_COLLOQUIUM  "colloquium:"   /* + id sessionis Claude

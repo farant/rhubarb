@@ -140,6 +140,9 @@
 #        sigillum 'D' mutatum, regeneratio; verdictum stalum);
 #        plagula vera addita -> STALUM; scripta DURANTE actionem ->
 #        SANATUM (olim 'scripsit extra vestigium')
+#   LXVII tempus photographiae (fabrica-plan-8 T1): cursus membri
+#        quisque (transiens et fractus) factum fabrica.photographia (ms)
+#        habet - ambulationes arboris ante + post
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # PARS PURA (2026-10-23, desideratum …VXWK8): casus arborem VIVAM
@@ -1249,6 +1252,22 @@ if [ "$rcs" -eq 0 ] && [ "$rc1" -eq 0 ] && grep -q '^RECENS b - lectiones congru
    && [ "$rc2" -eq 1 ] && grep -q '^STALUM b ' "$T/lxvi_2" \
    && [ "$rc3" -eq 0 ] && grep -q '^SANATUM *g ' "$T/lxvi_3" && [ -e "$T/r/d2/.DS_Store" ]; then echo "  LXVI .DS_Store: vestigium manet, plagula vera STALUM, scripta durante SANATUM OK"; else echo "  LXVI FRACTUM (sanare rc=$rcs, DS rc=$rc1, y.c rc=$rc2, durante rc=$rc3)"; sed 's/^/      /' "$T/lxvi_1" "$T/lxvi_2" "$T/lxvi_3" | grep -E 'RECENS|STALUM|SANATUM|FRACTUM' | head -6; fracta=1; fi
 
+# LXVII (2026-10-27, fabrica-plan-8 T1): TEMPUS PHOTOGRAPHIAE - ambulationes
+# arboris (ante + post) membri olim nusquam mensae (sample solum): factum
+# fabrica.photographia (ms) cursui membri adhaerens, etiam membro fracto
+# (photographia post statim capitur).
+radix_c
+printf 'int main(void) { return 1; }\n' > "$T/r/t/probatio_d.c"
+RP=$(cd "$T/r" && pwd -P)
+(cd "$T/r" && MENSOR_PARENS=fumus-lxvii MENSOR_COMMISSUM=commissum-lxvii MENSOR_SESSIO=sessio-lxvii \
+    MENSOR_ARBOR="$RP" "$F" probare -vis probationes_t) > "$T/lxvii.e" 2>&1
+awk -F'\t' -v p=fumus-lxvii '$1 == "cursus" && $2 == "initium" && $4 == p && $6 ~ /probatio_[ad]$/ { t[$3] = $6 }
+    $1 != "cursus" && $4 == "fabrica.photographia" && $6 == "ms" && $5 >= 0 { f[$3] = 1 }
+    END { for (i in t) print t[i] "\t" ((i in f) ? "photographia" : "nulla") }' \
+    "$MENSOR_DIARIUM" 2>/dev/null | sort > "$T/lxvii"
+printf 'probationes_t/probatio_a\tphotographia\nprobationes_t/probatio_d\tphotographia\n' > "$T/lxvii.exp"
+if cmp -s "$T/lxvii" "$T/lxvii.exp"; then echo "  LXVII tempus photographiae: factum fabrica.photographia (ms) per cursum membri, fracto quoque OK"; else echo "  LXVII FRACTUM"; sed 's/^/      lectum: /' "$T/lxvii"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (pars pura: casus LX; vivi VII, XLVII arboris in tools/fabrica_fumus_vivus.sh)"
+echo "fumus fabricae: sanum (pars pura: casus LXI; vivi VII, XLVII arboris in tools/fabrica_fumus_vivus.sh)"
 exit 0

@@ -3846,3 +3846,18 @@ call: other tools still see the file): `_enumerare`, the tree snapshot, the
 both effects (relative `d` in the D line: an ABSOLUTE path under a temp root
 is ambient, never an input, so the trace never congruent there); hand plants
 on the two fabrica sites each red at LXVI.
+
+## 2026-10-27 - snapshot time in mensor (fabrica-plan-8 T1)
+
+The before/after tree walks of a member run were measured nowhere (my
+first figure came from `sample`: ~0.42 s per snapshot, inflated by other
+sessions' load). Now `_membrum_agere` times both walks through two new
+sutura hooks - `momentum_ms` (the core keeps no clock; fake suturae
+leave it NIHIL) and `photographiam_notare(titulus, ms)` - and the
+memory layer writes fact `fabrica.photographia` (ms) under the member's
+run in the annals (`_photographiam_annalibus_inscribere`, the same
+attach-to-run pattern as credo memory facts). First real reading
+(`probare -vis probationes_toml`, 13 members): median 452 ms per member
+= ~0.23 s per snapshot (min 449, first member 1196 - cold), 7.3 s of
+the run. Query: grep fabrica.photographia ~/.rhubarb/mensurae.diarium
+(column 5 = ms, column 3 = the member run's id).

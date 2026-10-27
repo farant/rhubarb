@@ -683,6 +683,15 @@ _scripturam_alienam (
               constans Xar* notatae,
                    Piscina* piscina);
 
+/* horologium suturae (ms); ZEPHYRUM sine eo (sutura ficta) */
+interior s64
+_momentum_ms (
+    constans FabricaSutura* sutura)
+{
+    redde sutura->momentum_ms != NIHIL
+        ? sutura->momentum_ms(sutura->datum) : (s64)ZEPHYRUM;
+}
+
 interior b32
 _membrum_agere (
     constans FabricaSutura* sutura,
@@ -701,6 +710,8 @@ _membrum_agere (
                        Xar* alieni;
                        b32  incepit;
                  character  numerus[XXXII];
+                       s64  photographia_ms;
+                       s64  t0;
 
     *duratio_out = ZEPHYRUM;
     si (   actio->gradus == NIHIL || actio->gradus->agere == NIHIL
@@ -734,11 +745,14 @@ _membrum_agere (
             piscina);
         redde FALSUM;
     }
-    ante = NIHIL;
-    post = NIHIL;
+    ante             = NIHIL;
+    post             = NIHIL;
+    photographia_ms  = ZEPHYRUM;
     si (sutura->vestigium_capere != NIHIL)
     {
+        t0 = _momentum_ms(sutura);
         (vacuum)sutura->vestigium_capere(sutura->datum, piscina, &ante);
+        photographia_ms += _momentum_ms(sutura) - t0;
     }
     actum.codex       = -I;
     actum.duratio_ms  = ZEPHYRUM;
@@ -755,10 +769,18 @@ _membrum_agere (
     }
     /* photographia post STATIM (fabrica-7 T3): debita notantur etiam
      * cursu fracto (fractura debitum mortuum non probat) */
+    t0 = _momentum_ms(sutura);
     si (   ante != NIHIL
         && !sutura->vestigium_capere(sutura->datum, piscina, &post))
     {
         post = NIHIL;
+    }
+    photographia_ms += _momentum_ms(sutura) - t0;
+    si (   ante != NIHIL && sutura->momentum_ms != NIHIL
+        && sutura->photographiam_notare != NIHIL)
+    {
+        sutura->photographiam_notare(sutura->datum, actio->titulus,
+            (i32)photographia_ms);
     }
     si (sutura->vestigia_conferre && post != NIHIL)
     {
