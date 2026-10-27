@@ -38,8 +38,15 @@ nomen structura {
                i32  erratum_ad;          /* vocatio erronea (1-basata), 0 nulla */
                b32  inutile_semper;
                b32  puncta_iterata;      /* x = index/2 + 1 */
-               i32  primi_visi[XVI];
-               i32  numerus_primorum;
+               b32  oppositi;            /* x = j, deinde p - j */
+               i32  vitium_ad;           /* vocatio vitiosa (1-basata), 0 nulla */
+               i32  vitium_genus;        /* 0 punctum 0, 1 punctum p, 2 valor p,
+                                          * 3 status ignotus */
+               i32 inutile_a_primo;     /* primus ordine (1-basatus) INUTILE totus */
+               i32 erratum_a_primo;     /* ERRATUM in vocatione prima huius primi */
+               i32 vocationes_primi;
+               i32 primi_visi[XVI];
+               i32 numerus_primorum;
 } Contextus;
 
 /* x^e mod p, e signatus (x != 0) */
@@ -101,6 +108,19 @@ _aestimator (
             c->primi_visi[c->numerus_primorum] = p;
         }
         c->numerus_primorum++;
+        c->vocationes_primi = ZEPHYRUM;
+    }
+    c->vocationes_primi++;
+    si (   c->erratum_a_primo  != ZEPHYRUM
+        && c->numerus_primorum == c->erratum_a_primo
+        && c->vocationes_primi == I)
+    {
+        redde INTERPOLATIO_ERRATUM;
+    }
+    si (   c->inutile_a_primo  != ZEPHYRUM
+        && c->numerus_primorum == c->inutile_a_primo)
+    {
+        redde INTERPOLATIO_INUTILE;
     }
     si (c->erratum_ad != ZEPHYRUM && c->vocationes == c->erratum_ad)
     {
@@ -111,11 +131,38 @@ _aestimator (
         redde INTERPOLATIO_INUTILE;
     }
     x = c->puncta_iterata ? index / II + I : index + I;
+    si (c->oppositi)
+    {
+        x = index / II + I;
+        si (x < p && index % II == I)
+        {
+            x = p - x;
+        }
+    }
     si (x >= p)
     {
         redde INTERPOLATIO_INUTILE;
     }
     v = _aestima_notum(c->notum, x, p);
+    si (c->vitium_ad != ZEPHYRUM && c->vocationes == c->vitium_ad)
+    {
+        si (c->vitium_genus == ZEPHYRUM)
+        {
+            x = ZEPHYRUM;
+        }
+        alioquin si (c->vitium_genus == I)
+        {
+            x = p;
+        }
+        alioquin si (c->vitium_genus == II)
+        {
+            v = p;
+        }
+        alioquin
+        {
+            redde VII;
+        }
+    }
     si (c->mendax_primus != ZEPHYRUM && p == c->mendax_primus)
     {
         v = congruentia_adde(v, I, p);
@@ -144,6 +191,12 @@ _contextus_initium (
     c->erratum_ad            = ZEPHYRUM;
     c->inutile_semper        = FALSUM;
     c->puncta_iterata        = FALSUM;
+    c->oppositi              = FALSUM;
+    c->vitium_ad             = ZEPHYRUM;
+    c->vitium_genus          = ZEPHYRUM;
+    c->inutile_a_primo       = ZEPHYRUM;
+    c->erratum_a_primo       = ZEPHYRUM;
+    c->vocationes_primi      = ZEPHYRUM;
     c->numerus_primorum      = ZEPHYRUM;
     per (j = ZEPHYRUM; j < XVI; j++)
     {
@@ -343,6 +396,23 @@ _probare_lagrange_refutationes (
     CREDO_FALSUM(interpolatio_lagrange_modulo(x_bona, y_bona, ZEPHYRUM,
         XVII, piscina, r));
     CREDO_AEQUALIS_I32(r[ZEPHYRUM], 99U);
+    /* XVIII puncta modulo XVII: iteratum necessario */
+    {
+        i32 x18[XVIII];
+        i32 y18[XVIII];
+        i32 r18[XVIII];
+        i32 j;
+
+        per (j = ZEPHYRUM; j < XVIII; j++)
+        {
+            x18[j] = j % XVII;
+            y18[j] = j % XVII;
+            r18[j] = 99U;
+        }
+        CREDO_FALSUM(interpolatio_lagrange_modulo(x18, y18, XVIII, XVII,
+            piscina, r18));
+        CREDO_AEQUALIS_I32(r18[ZEPHYRUM], 99U);
+    }
     CREDO_VERUM(interpolatio_lagrange_modulo(x_bona, y_bona, III, XVII,
         piscina, r));
     /* 5, 6, 7 in 1, 2, 3: recta 4 + t */
@@ -702,8 +772,393 @@ _probare_quaestiones_invalidas (
         &f));
     q = _quaestio_noti(&n, X);
     CREDO_FALSUM(interpolatio_polynomium(NIHIL, &ctx, &q, piscina, &f));
+    /* recensio T1: puncta_addita exundans (M1), fenestra extra fines
+     * exponentium (M5), limes nimius (L1), filtrum non admissibile (M4) */
+    q                = _quaestio_noti(&n, X);
+    q.puncta_addita  = (i32)0xFFFFFFFFUL;
+    CREDO_FALSUM(interpolatio_polynomium(_aestimator, &ctx, &q, piscina,
+        &f));
+    q              = _quaestio_noti(&n, X);
+    q.gradus_imus  = -(s32)POLYNOMIUM_EXPONENS_MAXIMUS - II;
+    CREDO_FALSUM(interpolatio_polynomium(_aestimator, &ctx, &q, piscina,
+        &f));
+    q                = _quaestio_noti(&n, X);
+    q.gradus_summus  = (s32)POLYNOMIUM_EXPONENS_MAXIMUS + II;
+    CREDO_FALSUM(interpolatio_polynomium(_aestimator, &ctx, &q, piscina,
+        &f));
+    q                = _quaestio_noti(&n, X);
+    q.gradus_imus    = (s32)(-(s64)0x7FFFFFFFL - (s64)I);
+    q.gradus_summus  = (s32)0x7FFFFFFFL;
+    q.passus         = I;
+    CREDO_FALSUM(interpolatio_polynomium(_aestimator, &ctx, &q, piscina,
+        &f));
+    q                = _quaestio_noti(&n, X);
+    q.limes_bitorum  = (i32)0xFFFFFFFFUL;
+    CREDO_FALSUM(interpolatio_polynomium(_aestimator, &ctx, &q, piscina,
+        &f));
+    q                = _quaestio_noti(&n, X);
+    q.limes_bitorum  = INTERPOLATIO_LIMES_MAXIMUS + I;
+    CREDO_FALSUM(interpolatio_polynomium(_aestimator, &ctx, &q, piscina,
+        &f));
+    q                 = _quaestio_noti(&n, X);
+    q.residuum_primi  = II;
+    q.modulus_primi   = IV;
+    CREDO_FALSUM(interpolatio_polynomium(_aestimator, &ctx, &q, piscina,
+        &f));
+    q                 = _quaestio_noti(&n, X);
+    q.residuum_primi  = ZEPHYRUM;
+    q.modulus_primi   = IV;
+    CREDO_FALSUM(interpolatio_polynomium(_aestimator, &ctx, &q, piscina,
+        &f));
     CREDO_VERUM(polynomium_aequalis(f, signum));
     CREDO_AEQUALIS_I32(ctx.vocationes, ZEPHYRUM);
+}
+
+/* recensio T1 M3: margo limitis primorum. Primi parvi (263, 257, 251,
+ * 241) bitum superfluum primorum prope 2^32 non habent: summa floor(log2)
+ * 8 + 8 + 7 >= 17 = limes + 1 tres primos poscit; laxitas nulla aut
+ * log2 sursum duos tantum daret et primus additus refutaret. */
+interior vacuum
+_probare_marginem_primorum (
+    CredoContextus* c)
+{
+                 Piscina* piscina = c->piscina;
+                  Magnus  coef[II];
+                   Notum  n;
+               Contextus  ctx;
+    InterpolatioQuaestio  q;
+              Polynomium  expectatum;
+              Polynomium  f;
+
+    coef[ZEPHYRUM]   = magnus_ex_s64(LXV * M + DXXXV);
+    coef[I]          = magnus_ex_s64(-(s64)(LXV * M + DXXXV));
+    n.coefficientes  = coef;
+    n.numerus        = II;
+    n.imus           = ZEPHYRUM;
+    n.passus         = I;
+    CREDO_NECESSE(_notum_ad_polynomium(&n, piscina, &expectatum));
+    _contextus_initium(&ctx, &n);
+    q               = _quaestio_noti(&n, XVI);
+    q.primus_limes  = CCLXIV;
+    CREDO_NECESSE(interpolatio_polynomium(_aestimator, &ctx, &q,
+        piscina,
+        &f));
+    CREDO_VERUM(polynomium_aequalis(f, expectatum));
+    CREDO_AEQUALIS_I32(ctx.numerus_primorum, IV);
+    CREDO_AEQUALIS_I32(ctx.primi_visi[ZEPHYRUM], CCLXIII);
+    CREDO_AEQUALIS_I32(ctx.primi_visi[I], CCLVII);
+    CREDO_AEQUALIS_I32(ctx.primi_visi[II], CCLI);
+    CREDO_AEQUALIS_I32(ctx.primi_visi[III], CCXLI);
+}
+
+/* recensio T1 M4, L2: residuum >= modulus reducitur (5 mod 4 = 1 mod
+ * 4); primi qui satis y distincta non dant omittuntur (passus 8: 17 dat
+ * 16/8 = 2 < 3) */
+interior vacuum
+_probare_filtrum_et_aptitudinem (
+    CredoContextus* c)
+{
+                 Piscina* piscina = c->piscina;
+                  Magnus  coef[II];
+                   Notum  n;
+               Contextus  ctx;
+    InterpolatioQuaestio  q;
+              Polynomium  expectatum;
+              Polynomium  f;
+
+    coef[ZEPHYRUM]   = magnus_ex_s64(-I);
+    coef[I]          = magnus_ex_s64(I);
+    n.coefficientes  = coef;
+    n.numerus        = II;
+    n.imus           = ZEPHYRUM;
+    n.passus         = I;
+    CREDO_NECESSE(_notum_ad_polynomium(&n, piscina, &expectatum));
+    _contextus_initium(&ctx, &n);
+    q                 = _quaestio_noti(&n, II);
+    q.residuum_primi  = V;
+    q.modulus_primi   = IV;
+    q.primus_limes    = XVIII;
+    CREDO_NECESSE(interpolatio_polynomium(_aestimator, &ctx, &q,
+        piscina,
+        &f));
+    CREDO_VERUM(polynomium_aequalis(f, expectatum));
+    CREDO_AEQUALIS_I32(ctx.numerus_primorum, II);
+    CREDO_AEQUALIS_I32(ctx.primi_visi[ZEPHYRUM], XVII);
+    CREDO_AEQUALIS_I32(ctx.primi_visi[I], XIII);
+
+    /* 3 + 5 t^8, passus 8: 17 omittitur; 13 (3 bita), 11 (3) >= 5;
+     * additus 7 */
+    coef[ZEPHYRUM]  = magnus_ex_s64(III);
+    coef[I]         = magnus_ex_s64(V);
+    n.passus        = VIII;
+    CREDO_NECESSE(_notum_ad_polynomium(&n, piscina, &expectatum));
+    _contextus_initium(&ctx, &n);
+    q                 = _quaestio_noti(&n, IV);
+    q.primus_limes    = XVIII;
+    q.conatus_maximi  = C;
+    CREDO_NECESSE(interpolatio_polynomium(_aestimator, &ctx, &q,
+        piscina,
+        &f));
+    CREDO_VERUM(polynomium_aequalis(f, expectatum));
+    CREDO_AEQUALIS_I32(ctx.numerus_primorum, III);
+    CREDO_AEQUALIS_I32(ctx.primi_visi[ZEPHYRUM], XIII);
+    CREDO_AEQUALIS_I32(ctx.primi_visi[I], XI);
+    CREDO_AEQUALIS_I32(ctx.primi_visi[II], VII);
+}
+
+/* recensio T1 L3a, N2: x et p - x idem y (passus 2) - omittitur, sed
+ * valor congruere debet; passus falsus (exponens -2 extra classem)
+ * statim in pari primo refutatur */
+interior vacuum
+_probare_oppositos (
+    CredoContextus* c)
+{
+                 Piscina* piscina = c->piscina;
+                  Magnus  coef[IV];
+                   Notum  n;
+               Contextus  ctx;
+    InterpolatioQuaestio  q;
+              Polynomium  expectatum;
+              Polynomium  f;
+                  Magnus  densa[VII];
+                     i32  k;
+
+    coef[ZEPHYRUM]   = magnus_ex_s64(V);
+    coef[I]          = magnus_ex_s64(-II);
+    coef[II]         = magnus_ex_s64(VII);
+    coef[III]        = magnus_ex_s64(I);
+    n.coefficientes  = coef;
+    n.numerus        = IV;
+    n.imus           = -III;
+    n.passus         = II;
+    CREDO_NECESSE(_notum_ad_polynomium(&n, piscina, &expectatum));
+    _contextus_initium(&ctx, &n);
+    ctx.oppositi  = VERUM;
+    q             = _quaestio_noti(&n, IV);
+    CREDO_NECESSE(interpolatio_polynomium(_aestimator, &ctx, &q,
+        piscina,
+        &f));
+    CREDO_VERUM(polynomium_aequalis(f, expectatum));
+    CREDO_AEQUALIS_I32(ctx.vocationes, XVIII);
+
+    /* 5 t^-3 + t^-2 + t^3 cum passu 2 declarato: x et -x different */
+    per (k = ZEPHYRUM; k < VII; k++)
+    {
+        densa[k] = magnus_ex_s64(ZEPHYRUM);
+    }
+    densa[ZEPHYRUM]  = magnus_ex_s64(V);
+    densa[I]         = magnus_ex_s64(I);
+    densa[VI]        = magnus_ex_s64(I);
+    n.coefficientes  = densa;
+    n.numerus        = VII;
+    n.imus           = -III;
+    n.passus         = I;
+    _contextus_initium(&ctx, &n);
+    ctx.oppositi  = VERUM;
+    q             = _quaestio_noti(&n, IV);
+    q.passus      = II;
+    CREDO_FALSUM(interpolatio_polynomium(_aestimator, &ctx, &q, piscina,
+        &f));
+    CREDO_AEQUALIS_I32(ctx.vocationes, II);
+}
+
+/* recensio T1 L3b: punctum 0 omittitur (INUTILE, M2); punctum p, valor
+ * p, status ignotus = ERRATUM post duas vocationes */
+interior vacuum
+_probare_puncta_vitiosa (
+    CredoContextus* c)
+{
+                 Piscina* piscina = c->piscina;
+                  Magnus  coef[III];
+                   Notum  n;
+               Contextus  ctx;
+    InterpolatioQuaestio  q;
+              Polynomium  expectatum;
+              Polynomium  f;
+              Polynomium  signum;
+                     i32  mundae;
+                     i32  genus;
+
+    coef[ZEPHYRUM]   = magnus_ex_s64(IV);
+    coef[I]          = magnus_ex_s64(ZEPHYRUM);
+    coef[II]         = magnus_ex_s64(-IX);
+    n.coefficientes  = coef;
+    n.numerus        = III;
+    n.imus           = -I;
+    n.passus         = I;
+    signum           = polynomium_constans(magnus_ex_s64(DCLXVI),
+        piscina);
+    CREDO_NECESSE(_notum_ad_polynomium(&n, piscina, &expectatum));
+    q = _quaestio_noti(&n, VIII);
+
+    _contextus_initium(&ctx, &n);
+    CREDO_NECESSE(interpolatio_polynomium(_aestimator, &ctx, &q,
+        piscina,
+        &f));
+    mundae = ctx.vocationes;
+
+    _contextus_initium(&ctx, &n);
+    ctx.vitium_ad     = II;
+    ctx.vitium_genus  = ZEPHYRUM;
+    CREDO_NECESSE(interpolatio_polynomium(_aestimator, &ctx, &q,
+        piscina,
+        &f));
+    CREDO_VERUM(polynomium_aequalis(f, expectatum));
+    CREDO_AEQUALIS_I32(ctx.vocationes, mundae + I);
+
+    per (genus = I; genus <= III; genus++)
+    {
+        f = signum;
+        _contextus_initium(&ctx, &n);
+        ctx.vitium_ad     = II;
+        ctx.vitium_genus  = genus;
+        CREDO_FALSUM(interpolatio_polynomium(_aestimator, &ctx, &q,
+            piscina, &f));
+        CREDO_AEQUALIS_I32(ctx.vocationes, II);
+        CREDO_VERUM(polynomium_aequalis(f, signum));
+    }
+}
+
+/* recensio T1 L3c-e, L3g: polynomium nullum; coefficiens unus extra 0;
+ * exponentes magni; sine punctis additis */
+interior vacuum
+_probare_formas_extremas (
+    CredoContextus* c)
+{
+                 Piscina* piscina = c->piscina;
+                  Magnus  coef[III];
+                   Notum  n;
+               Contextus  ctx;
+    InterpolatioQuaestio  q;
+              Polynomium  expectatum;
+              Polynomium  f;
+                     s32  initia[II];
+                     i32  j;
+
+    /* nullum, limes 0 et X */
+    coef[ZEPHYRUM]   = magnus_ex_s64(ZEPHYRUM);
+    coef[I]          = magnus_ex_s64(ZEPHYRUM);
+    coef[II]         = magnus_ex_s64(ZEPHYRUM);
+    n.coefficientes  = coef;
+    n.numerus        = III;
+    n.imus           = -II;
+    n.passus         = I;
+    _contextus_initium(&ctx, &n);
+    q = _quaestio_noti(&n, ZEPHYRUM);
+    CREDO_NECESSE(interpolatio_polynomium(_aestimator, &ctx, &q,
+        piscina,
+        &f));
+    CREDO_VERUM(polynomium_est_nullum(f));
+    _contextus_initium(&ctx, &n);
+    q = _quaestio_noti(&n, X);
+    CREDO_NECESSE(interpolatio_polynomium(_aestimator, &ctx, &q,
+        piscina,
+        &f));
+    CREDO_VERUM(polynomium_est_nullum(f));
+
+    /* K = 1: -3 t^-7 et 2^90 t^9 */
+    coef[ZEPHYRUM]  = magnus_ex_s64(-III);
+    n.numerus       = I;
+    n.imus          = -VII;
+    CREDO_NECESSE(_notum_ad_polynomium(&n, piscina, &expectatum));
+    _contextus_initium(&ctx, &n);
+    q = _quaestio_noti(&n, II);
+    CREDO_NECESSE(interpolatio_polynomium(_aestimator, &ctx, &q,
+        piscina,
+        &f));
+    CREDO_VERUM(polynomium_aequalis(f, expectatum));
+    coef[ZEPHYRUM]  = magnus_potentia(magnus_ex_s64(II), XC, piscina);
+    n.imus          = IX;
+    CREDO_NECESSE(_notum_ad_polynomium(&n, piscina, &expectatum));
+    _contextus_initium(&ctx, &n);
+    q = _quaestio_noti(&n, XCI);
+    CREDO_NECESSE(interpolatio_polynomium(_aestimator, &ctx, &q,
+        piscina,
+        &f));
+    CREDO_VERUM(polynomium_aequalis(f, expectatum));
+
+    /* exponentes magni, passus 4, K = 3: imus -1000001 et +999999 */
+    initia[ZEPHYRUM]  = -(s32)(M * M + I);
+    initia[I]         = (s32)(M * M - I);
+    per (j = ZEPHYRUM; j < II; j++)
+    {
+        coef[ZEPHYRUM]  = magnus_ex_s64(VII);
+        coef[I]         = magnus_ex_s64(-III);
+        coef[II]        = magnus_ex_s64(XI);
+        n.numerus       = III;
+        n.imus          = initia[j];
+        n.passus        = IV;
+        CREDO_NECESSE(_notum_ad_polynomium(&n, piscina, &expectatum));
+        _contextus_initium(&ctx, &n);
+        q = _quaestio_noti(&n, V);
+        CREDO_NECESSE(interpolatio_polynomium(_aestimator, &ctx, &q,
+            piscina, &f));
+        CREDO_VERUM(polynomium_aequalis(f, expectatum));
+    }
+
+    /* sine punctis additis: K vocationes per primum exacte */
+    n.imus    = -II;
+    n.passus  = I;
+    CREDO_NECESSE(_notum_ad_polynomium(&n, piscina, &expectatum));
+    _contextus_initium(&ctx, &n);
+    q                = _quaestio_noti(&n, XL);
+    q.puncta_addita  = ZEPHYRUM;
+    CREDO_NECESSE(interpolatio_polynomium(_aestimator, &ctx, &q,
+        piscina,
+        &f));
+    CREDO_VERUM(polynomium_aequalis(f, expectatum));
+    CREDO_AEQUALIS_I32(ctx.vocationes, III * ctx.numerus_primorum);
+}
+
+/* recensio T1 L3f: defectus in primo ADDITO: INUTILE totus (conatus
+ * consumuntur), ERRATUM in vocatione eius prima */
+interior vacuum
+_probare_defectum_additi (
+    CredoContextus* c)
+{
+                 Piscina* piscina = c->piscina;
+                  Magnus  coef[II];
+                   Notum  n;
+               Contextus  ctx;
+    InterpolatioQuaestio  q;
+              Polynomium  f;
+              Polynomium  signum;
+                     i32  primi;
+                     i32  restitutionis;
+
+    coef[ZEPHYRUM]   = magnus_ex_s64(XIII);
+    coef[I]          = magnus_ex_s64(-I);
+    n.coefficientes  = coef;
+    n.numerus        = II;
+    n.imus           = ZEPHYRUM;
+    n.passus         = I;
+    signum           = polynomium_constans(magnus_ex_s64(DCLXVI),
+        piscina);
+    q                 = _quaestio_noti(&n, LXX);
+    q.conatus_maximi  = XL;
+
+    _contextus_initium(&ctx, &n);
+    CREDO_NECESSE(interpolatio_polynomium(_aestimator, &ctx, &q,
+        piscina,
+        &f));
+    primi          = ctx.numerus_primorum;
+    restitutionis  = primi - I;
+    CREDO_NECESSE(primi >= II);
+
+    f = signum;
+    _contextus_initium(&ctx, &n);
+    ctx.inutile_a_primo = primi;
+    CREDO_FALSUM(interpolatio_polynomium(_aestimator, &ctx, &q, piscina,
+        &f));
+    CREDO_AEQUALIS_I32(ctx.vocationes, restitutionis * III + XL);
+    CREDO_VERUM(polynomium_aequalis(f, signum));
+
+    _contextus_initium(&ctx, &n);
+    ctx.erratum_a_primo = primi;
+    CREDO_FALSUM(interpolatio_polynomium(_aestimator, &ctx, &q, piscina,
+        &f));
+    CREDO_AEQUALIS_I32(ctx.vocationes, restitutionis * III + I);
+    CREDO_VERUM(polynomium_aequalis(f, signum));
 }
 
 
@@ -732,6 +1187,18 @@ interior constans CredoSectio SECTIONES[] = {
         NIHIL,
       NIHIL },
     { "scalaris", _probare_scalarem, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "margo primorum", _probare_marginem_primorum, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "filtrum et aptitudo", _probare_filtrum_et_aptitudinem, NIHIL,
+      NIHIL, NIHIL, NIHIL },
+    { "puncta opposita", _probare_oppositos, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "puncta vitiosa", _probare_puncta_vitiosa, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "formae extremae", _probare_formas_extremas, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "defectus additi", _probare_defectum_additi, NIHIL, NIHIL, NIHIL,
+      NIHIL },
     { "quaestiones invalidae", _probare_quaestiones_invalidas, NIHIL,
       NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

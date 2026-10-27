@@ -360,6 +360,13 @@ Fran's go-ahead.
   prime also catches; it is now constant across primes, so the
   extra-point check is tested on its own. 9 plants red. Glossary:
   interpolatio, lagrange. See lib/interpolatio.worklog.md.)*
+  *(2026-10-27, independent review of e8a13213: no H; M1-M5 fixed —
+  puncta_addita wrap, x = 0 restored to INUTILE as planned, a test at
+  the margin of the prime bound (slack-0 and ceil(log2) plants used to
+  survive), residue filter stepping by the modulus with inadmissible
+  filters refused, windows validated up front and output sized from
+  its nonzero span — plus L1, L2, L4, N2. 17 sections, 15,997 checks;
+  15 plants red.)*
 - **T2. contractio structure, greedy order and slab.** Header with the
   whole v1 API (execution refuses until T3). Greedy key, exactly: among
   pairs of live tensors sharing at least one index, minimize (result

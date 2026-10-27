@@ -144,27 +144,84 @@ _bita_infra (
     redde bita;
 }
 
-/* primus proximus < limes filtro residui; 0 si nullus */
+/* maximus divisor communis; (0, 0) -> 0 */
+interior i32
+_divisor_communis (
+    i32 a,
+    i32 b)
+{
+    dum (b != ZEPHYRUM)
+    {
+        i32 t = a % b;
+
+        a = b;
+        b = t;
+    }
+    redde a;
+}
+
+/* primus p satis y distincta dat: y = x^passus, x != 0, sumit (p - 1) /
+ * mdc(passus, p - 1) valores; minus quam necessaria -> primus omittitur
+ * (aliter conatus toti consumerentur) */
+interior b32
+_primus_aptus (
+    constans InterpolatioQuaestio* q,
+                              i32  p,
+                              s64  necessaria)
+{
+    redde (s64)((p - I) / _divisor_communis(q->passus, p - I))
+        >= necessaria;
+}
+
+/* primus proximus < limes: filtro residui (gradibus moduli, non omnes
+ * impares - filtrum admissibile a vocante probatum) et aptus; 0 si
+ * nullus. Idem semper pro eisdem argumentis (duo transitus). */
 interior i32
 _primus_proximus (
     constans InterpolatioQuaestio* q,
-                              i32  limes)
+                              i32  limes,
+                              s64  necessaria)
 {
-    i32 p = limes;
-
-    per (;;)
+    si (q->modulus_primi < II)
     {
-        p = congruentia_primus_infra(p);
-        si (p == ZEPHYRUM)
+        i32 p = limes;
+
+        per (;;)
+        {
+            p = congruentia_primus_infra(p);
+            si (p == ZEPHYRUM)
+            {
+                redde ZEPHYRUM;
+            }
+            si (_primus_aptus(q, p, necessaria))
+            {
+                redde p;
+            }
+        }
+    }
+    alioquin
+    {
+        s64 m = (s64)q->modulus_primi;
+        s64 r = (s64)(q->residuum_primi % q->modulus_primi);
+        s64 n;
+
+        si (limes == ZEPHYRUM)
         {
             redde ZEPHYRUM;
         }
-        si (   q->modulus_primi < II
-            || p % q->modulus_primi == q->residuum_primi
-                % q->modulus_primi)
+        /* maximus n < limes cum n = r (mod m) */
+        n = (s64)limes - (s64)I;
+        n = n - ((n % m - r + m) % m);
+        dum (n >= (s64)II)
         {
-            redde p;
+            si (   congruentia_est_primus((i32)n)
+                && _primus_aptus(q, (i32)n, necessaria))
+            {
+                redde (i32)n;
+            }
+            n -= m;
         }
+        redde ZEPHYRUM;
     }
 }
 
@@ -187,9 +244,11 @@ _horner (
     redde valor;
 }
 
-/* coefficientes g in y = x^passus pro uno primo: puncta colliguntur,
- * Lagrange in primis K, addita probantur. FALSUM si ERRATUM, conatus
- * exhausti aut probatio discordat. */
+/* coefficientes g in y = x^passus pro uno primo: puncta colliguntur
+ * (x == 0 et y iteratum omissa; y iteratum valorem eundem dare debet),
+ * Lagrange in primis K, addita probantur. FALSUM si ERRATUM, punctum
+ * aut valor >= p, conatus exhausti, allocatio deficit aut probatio
+ * discordat. */
 interior b32
 _primum_aestimare (
            InterpolatioAestimator  aestimare,
@@ -201,14 +260,18 @@ _primum_aestimare (
                               i32* coefficientes)
 {
     i32  necessaria = numerus_coefficientium + q->puncta_addita;
-    i32* puncta_y   = (i32*)piscina_allocare(piscina,
+    i32* puncta_y   = (i32*)piscina_conari_allocare(piscina,
         (memoriae_index)necessaria * magnitudo(i32));
-    i32* valores_g  = (i32*)piscina_allocare(piscina,
+    i32* valores_g  = (i32*)piscina_conari_allocare(piscina,
         (memoriae_index)necessaria * magnitudo(i32));
     i32 collecta   = ZEPHYRUM;
     i32 index;
     i32 j;
 
+    si (puncta_y == NIHIL || valores_g == NIHIL)
+    {
+        redde FALSUM;
+    }
     per (index = ZEPHYRUM; index < q->conatus_maximi && collecta
         < necessaria; index++)
     {
@@ -223,23 +286,15 @@ _primum_aestimare (
         {
             perge;
         }
-        si (   status  != INTERPOLATIO_UTILE
-            || punctum == ZEPHYRUM || punctum >= p || valor >= p)
+        si (status != INTERPOLATIO_UTILE || punctum >= p || valor >= p)
         {
             redde FALSUM;
         }
+        si (punctum == ZEPHYRUM)
+        {
+            perge;                  /* x^passus nihil distinguit */
+        }
         y = congruentia_potentia(punctum, (i64)q->passus, p);
-        per (j = ZEPHYRUM; j < collecta; j++)
-        {
-            si (puncta_y[j] == y)
-            {
-                iteratum = VERUM;
-            }
-        }
-        si (iteratum)
-        {
-            perge;
-        }
         /* g(y) = x^(-imus) f(x) */
         si (q->gradus_imus <= ZEPHYRUM)
         {
@@ -256,6 +311,21 @@ _primum_aestimare (
             }
             g = congruentia_multiplica(valor, congruentia_potentia(
                 inversa, (i64)q->gradus_imus, p), p);
+        }
+        per (j = ZEPHYRUM; j < collecta; j++)
+        {
+            si (puncta_y[j] == y)
+            {
+                si (valores_g[j] != g)
+                {
+                    redde FALSUM;   /* passus aut fenestra falsa */
+                }
+                iteratum = VERUM;
+            }
+        }
+        si (iteratum)
+        {
+            perge;
         }
         puncta_y[collecta]   = y;
         valores_g[collecta]  = g;
@@ -282,6 +352,42 @@ _primum_aestimare (
     redde VERUM;
 }
 
+/* quaestio valida? Omnia ante primam aestimationem iudicantur. */
+interior b32
+_quaestio_valida (
+    constans InterpolatioQuaestio* q)
+{
+    s64 imus     = (s64)q->gradus_imus;
+    s64 summus   = (s64)q->gradus_summus;
+    s64 maximus  = (s64)POLYNOMIUM_EXPONENS_MAXIMUS;
+
+    si (   q->passus == ZEPHYRUM || q->conatus_maximi == ZEPHYRUM
+        || summus < imus || imus < -maximus || summus > maximus
+        || q->limes_bitorum > INTERPOLATIO_LIMES_MAXIMUS)
+    {
+        redde FALSUM;
+    }
+    si ((summus - imus) % (s64)q->passus != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (   (summus - imus) / (s64)q->passus + (s64)I
+        + (s64)q->puncta_addita
+        > (s64)0x7FFFFFFFL)
+    {
+        redde FALSUM;
+    }
+    si (   q->modulus_primi >= II
+        && _divisor_communis(q->residuum_primi % q->modulus_primi,
+        q->modulus_primi)
+        != I)
+    {
+        redde FALSUM;               /* filtrum nullos primos (praeter
+                                     * fortasse unum) admittit */
+    }
+    redde VERUM;
+}
+
 b32
 interpolatio_polynomium (
            InterpolatioAestimator  aestimare,
@@ -290,44 +396,43 @@ interpolatio_polynomium (
                           Piscina* piscina,
                        Polynomium* exitus)
 {
-       s64  amplitudo;
        i32  numerus_coefficientium;
+       s64  necessaria;
        i32  numerus_primorum;      /* primi restitutionis, sine addito */
        i32* primi;
        i32* residua;               /* [primus][coefficiens] */
        i32* columna;
     Magnus* coefficientes;
-       i32  bita;
+    Magnus* densa;
+       s64  bita;
+       s64  primus_nonnullus;
+       s64  ultimus_nonnullus;
+       s64  amplitudo;
        i32  p;
        i32  j;
        i32  k;
 
-    si (   aestimare == NIHIL || q->passus == ZEPHYRUM
-        || q->gradus_summus < q->gradus_imus || q->conatus_maximi
-        == ZEPHYRUM)
+    si (aestimare == NIHIL || !_quaestio_valida(q))
     {
         redde FALSUM;
     }
-    amplitudo = (s64)q->gradus_summus - (s64)q->gradus_imus;
-    si (amplitudo % (s64)q->passus != ZEPHYRUM)
-    {
-        redde FALSUM;
-    }
-    numerus_coefficientium = (i32)(amplitudo / (s64)q->passus) + I;
+    numerus_coefficientium = (i32)(((s64)q->gradus_summus
+        - (s64)q->gradus_imus) / (s64)q->passus + (s64)I);
+    necessaria = (s64)numerus_coefficientium + (s64)q->puncta_addita;
 
-    /* primi: summa floor(log2 p) >= limes + 2 => productum > 2^(limes
-     * + 1); deinde unus additus */
+    /* primi: summa floor(log2 p) >= limes + 1 => productum >= 2^(limes +
+     * 1) > 2 max |c| (|c| <= 2^limes - 1); deinde unus additus */
     numerus_primorum  = ZEPHYRUM;
     bita              = ZEPHYRUM;
     p                 = q->primus_limes;
-    dum (bita < q->limes_bitorum + II)
+    dum (bita < (s64)q->limes_bitorum + (s64)I)
     {
-        p = _primus_proximus(q, p);
+        p = _primus_proximus(q, p, necessaria);
         si (p == ZEPHYRUM)
         {
             redde FALSUM;
         }
-        bita += _bita_infra(p);
+        bita += (s64)_bita_infra(p);
         numerus_primorum++;
     }
     primi = (i32*)piscina_allocare(piscina, (memoriae_index)(
@@ -335,7 +440,7 @@ interpolatio_polynomium (
     p = q->primus_limes;
     per (j = ZEPHYRUM; j <= numerus_primorum; j++)
     {
-        p = _primus_proximus(q, p);
+        p = _primus_proximus(q, p, necessaria);
         si (p == ZEPHYRUM)
         {
             redde FALSUM;
@@ -343,9 +448,13 @@ interpolatio_polynomium (
         primi[j] = p;
     }
 
-    residua = (i32*)piscina_allocare(piscina, (memoriae_index)(
+    residua = (i32*)piscina_conari_allocare(piscina, (memoriae_index)(
         numerus_primorum + I) * (memoriae_index)numerus_coefficientium
         * magnitudo(i32));
+    si (residua == NIHIL)
+    {
+        redde FALSUM;
+    }
     per (j = ZEPHYRUM; j <= numerus_primorum; j++)
     {
         si (!_primum_aestimare(aestimare, contextus, q,
@@ -359,12 +468,14 @@ interpolatio_polynomium (
     /* restitutio et probatio per primum additum et limitem */
     columna       = (i32*)piscina_allocare(piscina,
         (memoriae_index)numerus_primorum * magnitudo(i32));
-    coefficientes = (Magnus*)piscina_allocare(piscina,
-        (memoriae_index)(amplitudo + I) * magnitudo(Magnus));
-    per (k = ZEPHYRUM; k <= (i32)amplitudo; k++)
+    coefficientes = (Magnus*)piscina_conari_allocare(piscina,
+        (memoriae_index)numerus_coefficientium * magnitudo(Magnus));
+    si (coefficientes == NIHIL)
     {
-        coefficientes[k] = magnus_ex_s64(ZEPHYRUM);
+        redde FALSUM;
     }
+    primus_nonnullus   = (s64)-I;
+    ultimus_nonnullus  = (s64)-I;
     per (k = ZEPHYRUM; k < numerus_coefficientium; k++)
     {
         Magnus c;
@@ -389,10 +500,43 @@ interpolatio_polynomium (
         {
             redde FALSUM;
         }
-        coefficientes[(memoriae_index)k * (memoriae_index)q->passus] =
-            c;
+        coefficientes[k] = c;
+        si (magnus_signum(c) != ZEPHYRUM)
+        {
+            si (primus_nonnullus < ZEPHYRUM)
+            {
+                primus_nonnullus = (s64)k;
+            }
+            ultimus_nonnullus = (s64)k;
+        }
     }
-    redde polynomium_ex_coefficientibus(coefficientes, (i32)amplitudo
-        + I,
-        q->gradus_imus, piscina, exitus);
+
+    /* densum solum a coefficiente non nullo primo ad ultimum: memoria ex
+     * effectu, non ex fenestra */
+    si (primus_nonnullus < ZEPHYRUM)
+    {
+        *exitus = polynomium_nullum();
+        redde VERUM;
+    }
+    amplitudo = (ultimus_nonnullus - primus_nonnullus) * (s64)q->passus
+        + (s64)I;
+    densa = (Magnus*)piscina_conari_allocare(piscina,
+        (memoriae_index)amplitudo * magnitudo(Magnus));
+    si (densa == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; (s64)k < amplitudo; k++)
+    {
+        densa[k] = magnus_ex_s64(ZEPHYRUM);
+    }
+    per (k = (i32)primus_nonnullus; (s64)k <= ultimus_nonnullus; k++)
+    {
+        densa[(memoriae_index)((s64)k - primus_nonnullus)
+            * (memoriae_index)q->passus] = coefficientes[k];
+    }
+    redde polynomium_ex_coefficientibus(densa, (i32)amplitudo, (s32)(
+        (s64)q->gradus_imus + primus_nonnullus * (s64)q->passus),
+        piscina,
+        exitus);
 }
