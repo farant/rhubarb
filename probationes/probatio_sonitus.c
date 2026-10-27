@@ -8,6 +8,7 @@
 #include "latina.h"
 #include "credo.h"
 #include "sonitus.h"
+#include <stdio.h>
 #include <stddef.h>
 
 /* IV secundae: crepitus (III s) et ventus (II.V s) capit */
@@ -191,8 +192,8 @@ _sectio_praeparata (
     b32 omnes = VERUM;
 
     (vacuum)c;
-    CREDO_AEQUALIS_I32 (sonitus_praeparatorum_numerus(), IX);
-    per (k = ZEPHYRUM; k < IX; k++)
+    CREDO_AEQUALIS_I32 (sonitus_praeparatorum_numerus(), XVII);
+    per (k = ZEPHYRUM; k < XVII; k++)
     {
         constans character* titulus = sonitus_praeparati_titulus(k);
 
@@ -202,7 +203,7 @@ _sectio_praeparata (
         }
     }
     CREDO_VERUM (omnes);
-    CREDO_VERUM (sonitus_praeparati_titulus(IX) == NIHIL);
+    CREDO_VERUM (sonitus_praeparati_titulus(XVII) == NIHIL);
     CREDO_VERUM (sonitus_praeparatum("nullum") == NIHIL);
     CREDO_VERUM (sonitus_praeparatum("radius") != NIHIL);
     CREDO_VERUM (sonitus_praeparatum("radius")
@@ -233,6 +234,74 @@ _sectio_praeparata (
             CREDO_VERUM (t->remissio > 0.0f);
         }
     }
+}
+
+
+    /* ==================================================
+     * PERCUSSIO (instrumenta musicae): genera, ordo remissionum,
+     * cola - altitudo a nota scripta venit (cantor), praeparatum
+     * timbrum et involucrum dat
+     * ================================================== */
+
+/* praeparatum percussionis: forma et remissio intra [imum, summum] */
+interior b32
+_percussio (
+    constans character* titulus,
+                   f32  forma,
+                   f32  imum,
+                   f32  summum)
+{
+    constans SonitusParametra* p = sonitus_praeparatum(titulus);
+
+    si (p == NIHIL)
+    {
+        imprimere("  %s: nullum\n", titulus);
+        redde FALSUM;
+    }
+    si (   p->forma != forma || p->remissio < imum
+        || p->remissio > summum)
+    {
+        imprimere("  %s: forma %.0f remissio %.3f\n", titulus,
+                  (duplex)p->forma, (duplex)p->remissio);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+interior vacuum
+_sectio_percussio (
+    CredoContextus* c)
+{
+    constans SonitusParametra* cymbalum;
+    constans SonitusParametra* clausum;
+    constans SonitusParametra* scopae;
+    constans SonitusParametra* grave;
+
+    (vacuum)c;
+    /* strepitus: cymbala, scopae, laqueus, quassatio */
+    CREDO_VERUM (_percussio("cymbalum", 4.0f, 0.6f, 1.5f));
+    CREDO_VERUM (_percussio("cymbalum_clausum", 4.0f, 0.02f, 0.08f));
+    CREDO_VERUM (_percussio("cymbalum_pedis", 4.0f, 0.01f, 0.06f));
+    CREDO_VERUM (_percussio("scopae", 4.0f, 0.08f, 0.3f));
+    CREDO_VERUM (_percussio("laqueus", 4.0f, 0.08f, 0.25f));
+    CREDO_VERUM (_percussio("quassatio", 4.0f, 0.03f, 0.1f));
+    /* tympanum grave sinus cum clivo deorsum; baculum pulsus brevis */
+    CREDO_VERUM (_percussio("tympanum_grave", 3.0f, 0.12f, 0.4f));
+    CREDO_VERUM (_percussio("baculum", 0.0f, 0.01f, 0.06f));
+    cymbalum  = sonitus_praeparatum("cymbalum");
+    clausum   = sonitus_praeparatum("cymbalum_clausum");
+    scopae    = sonitus_praeparatum("scopae");
+    grave     = sonitus_praeparatum("tympanum_grave");
+    CREDO_NECESSE (   cymbalum != NIHIL && clausum != NIHIL
+                   && scopae != NIHIL && grave != NIHIL);
+    /* cymbala acuta transmittunt (colum acutorum > 3 kHz) */
+    CREDO_VERUM (cymbalum->acuta > 3000.0f && clausum->acuta > 3000.0f);
+    /* scopae: impetus lentus (susurrus), non ictus */
+    CREDO_VERUM (scopae->impetus > 0.03f && scopae->impetus > cymbalum
+                 ->impetus * X);
+    /* tympanum grave: altitudo deorsum, gravia transmittit */
+    CREDO_VERUM (grave->clivus < -II);
+    CREDO_VERUM (grave->gravia > 0.0f && grave->gravia < 1000.0f);
 }
 
 
@@ -561,6 +630,8 @@ _sectio_sine_sutura (
 hic_manens constans CredoSectio SECTIONES[] = {
     { "schema", _sectio_schema, _tabulas_parare, NIHIL, NIHIL, NIHIL },
     { "praeparata", _sectio_praeparata, _tabulas_parare, NIHIL, NIHIL,
+        NIHIL },
+    { "percussio", _sectio_percussio, _tabulas_parare, NIHIL, NIHIL,
         NIHIL },
     { "longitudo", _sectio_longitudo, _tabulas_parare, NIHIL, NIHIL,
         NIHIL },

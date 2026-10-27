@@ -245,6 +245,34 @@ _sectio_ligaturae (
 }
 
 
+/* portamentum: '/' post valorem ubi nota desinit (trans lineam: post
+ * residuum) */
+interior vacuum
+_sectio_illapsus (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"p\">"
+        "<pars titulus=\"a\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\">"
+        "<textus!>o4 c4/ e4 g2/ | e1/8 | c2 e1/ g2</textus></frustum>"
+        "</pars></carmen></carmina>");
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scribere(c, k, NIHIL),
+        "carmen p: c maior, 4/4, 120\n"
+        "  pars a: aether, lucrum 1.00\n"
+        "mensura 1\n"
+        "  a  C4:4/ E4:4 G4:2/\n"
+        "mensura 2\n"
+        "  a  E4:1/\n"
+        "mensura 3\n"
+        "  a  C4:2 E4:2~\n"
+        "mensura 4\n"
+        "  a  ~:2/ G4:2\n");
+}
+
+
     /* ==================================================
      * SIMUL: acervi, percussio, mutus et solus
      * ================================================== */
@@ -285,24 +313,50 @@ _sectio_mutationes (
 {
     constans Carmen* k = _carmen(c,
         "<carmina><carmen titulus=\"m\" clavis=\"a minor\">"
-        "<metrum mensura=\"2\" valor=\"3/4\"/>"
+        "<metrum mensura=\"2\" valor=\"3/4\" "
+        "agogica=\"vindobonensis\"/>"
         "<clavis mensura=\"2\" valor=\"eb maior\"/>"
         "<tempus mensura=\"2\" valor=\"160\"/>"
-        "<tempus pulsus=\"4800\" valor=\"90\"/>"
+        "<tempus pulsus=\"4800\" valor=\"90\" usque=\"4\"/>"
+        "<fermata mensura=\"3\" ictus=\"2\" factor=\"1.5\"/>"
+        "<fermata mensura=\"4\"/>"
+        "<dynamica mensura=\"1\" valor=\"mf\"/>"
+        "<dynamica pars=\"m\" mensura=\"3\" valor=\"ff\" usque=\"4\"/>"
         "<pars titulus=\"m\" instrumentum=\"aether\">"
         "<frustum mensura=\"1\">"
-        "<textus!>o4 c1 | e-2.</textus></frustum>"
+        "<textus!>o4 c1 | e-2. | c2. | c2.</textus></frustum>"
         "</pars></carmen></carmina>");
 
     CREDO_NECESSE (k != NIHIL);
     CREDO_CHORDA_AEQUALIS_LITERIS (_scribere(c, k, NIHIL),
         "carmen m: a minor, 4/4, 120\n"
         "  pars m: aether, lucrum 1.00\n"
-        "mensura 1\n"
+        "mensura 1  dynamica mf\n"
         "  m  C4:1\n"
-        "mensura 2  metrum 3/4  clavis eb maior  tempus 160  "
-        "tempus 90 (+960)\n"
-        "  m  Eb4:2.\n");
+        "mensura 2  metrum 3/4 agogica vindobonensis  clavis eb maior  "
+        "tempus 160  "
+        "tempus 90 usque 4 (+960)\n"
+        "  m  Eb4:2.\n"
+        "mensura 3  fermata x1.5 (+960)  dynamica m ff usque 4\n"
+        "  m  C4:2.\n"
+        "mensura 4  fermata x2\n"
+        "  m  C4:2.\n");
+    /* clivus ab initio: titulus tempus SCRIPTUM (C) nominat */
+    k = _carmen(c,
+        "<carmina><carmen titulus=\"r\" tempus=\"100\" "
+        "agogica=\"2 1 2 1 2 1 2 1\">"
+        "<tempus mensura=\"1\" valor=\"60\" usque=\"2\"/>"
+        "<pars titulus=\"m\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>o4 c1 | c1</textus></frustum>"
+        "</pars></carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scribere(c, k, NIHIL),
+        "carmen r: c maior, 4/4 agogica 2 1 2 1 2 1 2 1, 100\n"
+        "  pars m: aether, lucrum 1.00\n"
+        "mensura 1  tempus 60 usque 2\n"
+        "  m  C4:1\n"
+        "mensura 2\n"
+        "  m  C4:1\n");
 }
 
 
@@ -639,11 +693,91 @@ _sectio_lectio (
     }
 }
 
+/* sine littera: sensibilis clavis minoris = gradus VII elevatus (C# in
+ * D minor, non Db); chroma aliud regulam priorem servat (Eb) */
+interior vacuum
+_sectio_sensibilis (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"x\" clavis=\"d minor\">"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>c</textus></frustum></pars>"
+        "</carmen></carmina>");
+       CarmenNota n;
+    PartituraNota o;
+
+    CREDO_NECESSE (k != NIHIL);
+    memset(&n, ZEPHYRUM, magnitudo(n));
+    n.nota  = LXI;
+    o       = partitura_orthographia(k, &n, ZEPHYRUM);
+    CREDO_VERUM (_aequat(&o, 'C', I, IV));
+    n.nota  = LXIII;
+    o       = partitura_orthographia(k, &n, ZEPHYRUM);
+    CREDO_VERUM (_aequat(&o, 'E', -I, IV));
+}
+
+/* ligatura trans lineam: nota una, '~' ad lineam; trioli '8t' */
+interior vacuum
+_sectio_ligatura (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"l\">"
+        "<pars titulus=\"m\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\">"
+        "<textus!>o4 c2 d2 & | d2 e12 f12 g12 a4</textus></frustum>"
+        "</pars></carmen></carmina>");
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_AEQUALIS_I32 (k->partes[ZEPHYRUM].frusta[ZEPHYRUM].numerus,
+                        VI);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scribere(c, k, NIHIL),
+        "carmen l: c maior, 4/4, 120\n"
+        "  pars m: aether, lucrum 1.00\n"
+        "mensura 1\n"
+        "  m  C4:2 D4:2~\n"
+        "mensura 2\n"
+        "  m  ~:2 E4:8t F4:8t G4:8t A4:4\n");
+}
+
+/* repetitio: titulus mensurae metae nominat sectionem et semitonia;
+ * transpositae litteras ex clave accipiunt (E4 - 1 in C maior = D#4) */
+interior vacuum
+_sectio_repetitio (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"r\">"
+        "<sectio titulus=\"a\" mensura=\"1\" usque=\"2\"/>"
+        "<repetitio sectio=\"a\" mensura=\"2\" semitonia=\"2\"/>"
+        "<repetitio sectio=\"a\" mensura=\"3\" semitonia=\"-1\"/>"
+        "<repetitio sectio=\"a\" mensura=\"4\"/>"
+        "<pars titulus=\"m\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>o4 c2 e2</textus></frustum>"
+        "</pars></carmen></carmina>");
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scribere(c, k, NIHIL),
+        "carmen r: c maior, 4/4, 120\n"
+        "  pars m: aether, lucrum 1.00\n"
+        "mensura 1\n"
+        "  m  C4:2 E4:2\n"
+        "mensura 2  repetitio a +2\n"
+        "  m  D4:2 F#4:2\n"
+        "mensura 3  repetitio a -1\n"
+        "  m  B3:2 D#4:2\n"
+        "mensura 4  repetitio a\n"
+        "  m  C4:2 E4:2\n");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "orthographia", _sectio_orthographia, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "sensibilis", _sectio_sensibilis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "valores", _sectio_valores, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ligaturae", _sectio_ligaturae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "portamentum", _sectio_illapsus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "simul", _sectio_simul, NIHIL, NIHIL, NIHIL, NIHIL },
     { "mutationes", _sectio_mutationes, NIHIL, NIHIL, NIHIL, NIHIL },
     { "forma", _sectio_forma, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -651,6 +785,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "lectio", _sectio_lectio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ambitus", _sectio_ambitus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "liber", _sectio_liber, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ligatura", _sectio_ligatura, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "repetitio", _sectio_repetitio, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

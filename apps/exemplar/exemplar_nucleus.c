@@ -1131,9 +1131,14 @@ _creatio_fracta (
     Exemplar* e)
 {
     mcp_canalis_claudere(e->canalis);
+    communio_servum_destruere(e->communio);
     si (e->hospitium)
     {
         hospitium_destruere(e->hospitium);
+    }
+    si (e->communio_volumen)
+    {
+        volumen_claudere(e->communio_volumen);
     }
     si (e->volumen)
     {
@@ -1263,6 +1268,18 @@ exemplar_creare (
         fprintf(stderr, "exemplar: ianua montari nequit\n");
         redde _creatio_fracta(e);
     }
+    /* communio plan-2 T7: servus actorum in volumine suo (C1); cives
+     * ianuae personas iudicant; /communio/ sub location / nginx */
+    si (   !_via(via, configuratio->via_datorum, "communio.volumen")
+        || !(e->communio_volumen = volumen_aperire_aut_creare_cum(
+               piscina, via, &optiones_voluminis))
+        || !(e->communio = communio_servum_creare(piscina,
+               e->communio_volumen, ianua_cives(e->ianua), NIHIL))
+        || !communio_servum_montare(e->communio, e->hospitium))
+    {
+        fprintf(stderr, "exemplar: servus communionis deficit\n");
+        redde _creatio_fracta(e);
+    }
     si (configuratio->basis)
     {
         si (strlen(configuratio->basis) >= EXEMPLAR_VIA_MAXIMA)
@@ -1346,11 +1363,20 @@ exemplar_claudere (
         redde;
     }
     mcp_canalis_claudere(exemplar->canalis);
+    /* ANTE hospitium: horae exspectantium cancellandae */
+    communio_servum_destruere(exemplar->communio);
     hospitium_destruere(exemplar->hospitium);
     /* WAL in plagulam principalem: copia (cp) post clausuram integra */
     (vacuum)scrinium_exsequi(volumen_scrinium(exemplar->volumen),
         "PRAGMA wal_checkpoint(TRUNCATE)");
     volumen_claudere(exemplar->volumen);
+    si (exemplar->communio_volumen)
+    {
+        (vacuum)scrinium_exsequi(volumen_scrinium(
+            exemplar->communio_volumen),
+            "PRAGMA wal_checkpoint(TRUNCATE)");
+        volumen_claudere(exemplar->communio_volumen);
+    }
     si (exemplar->reactor_proprius)
     {
         reactor_destruere(exemplar->reactor);

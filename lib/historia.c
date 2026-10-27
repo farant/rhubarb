@@ -724,11 +724,19 @@ historia_sequi (
     genera[II]        = h->genus_coniunctionis;
     genera[III]       = NIHIL;
     notae             = acta_generum(h, finis_prior, genera);
+    /* plan-2 T1 (M1): acta nova omnia post finem priorem esse debent -
+     * actum serius advectum sed numeratione minor (extra ordinem) vivos
+     * auget sine actu post finem priorem: tum proiectio tota */
+    viva = NIHIL;
     si (   cursor_prior == finis_prior && h->cursor == h->finis
         && notae && xar_numerus(notae) == ZEPHYRUM)
     {
         viva = acta_viva(h, finis_prior, h->finis, NIHIL);
-        per (i = ZEPHYRUM; viva && i < xar_numerus(viva); i++)
+    }
+    si (   viva
+        && vivi_prior + xar_numerus(viva) == h->numerus_vivorum)
+    {
+        per (i = ZEPHYRUM; i < xar_numerus(viva); i++)
         {
             applicare(h, ((VolumenActum*)xar_obtinere(viva, i))->datum);
         }

@@ -37,6 +37,15 @@
  *             vocalis fracta formantes inter vicinas linealiter ducit.
  *             Formantes fixi (vocalis), non notam sequuntur - vox
  *             cantans (schola)
+ * UNISONUS (UNDA, FORMANTES): unda in 'unisonus' exemplaria (I..VII)
+ * per 'dispersio' centesimas semitonii aequaliter dispersa (+/-
+ * dimidium), phasis initii 0 omnibus (phases dispersae fundamentalem
+ * delerent; initium plenum, dispersio deinde pulsat; WAV
+ * deterministicum); summa / N (apex <= amplitudo). Sectio chordarum,
+ * chorus vocum. Ceteris generibus unisonus ignoratur.
+ * MORA VIBRATI: profunditas vibrati ab 0 linealiter per 'mora_vibrati'
+ * secundas post initium notae (cantor et fidicen vibratum post sonum
+ * addunt); 0 = statim.
  * Involucrum ADSR omnibus generibus; vibratus et glissandum omnibus.
  * Omnibus etiam: FLATUS (strepitus per colum medium circa notam,
  * deterministicus - semen ex nota) et COLUM RESONANS gravium (limes,
@@ -64,6 +73,9 @@
 
 /* formantes per vocem (FORMANTES) */
 #define TIBIA_FORMANTES_NUMERUS V
+
+/* exemplaria undae in unisono (UNDA, FORMANTES) */
+#define TIBIA_UNISONI_MAXIMI VII
 
 nomen structura {
     f32 ratio;         /* 0 = finis tabulae */
@@ -102,6 +114,12 @@ nomen structura {
                     f32 motus;       /* semitonia quibus involucrum
                                       * limitem attollit (pad: tenor
                                       * aperit) */
+                    f32 unisonus;    /* UNDA, FORMANTES: exemplaria
+                                      * undae 1..7 (0 = 1) */
+                    f32 dispersio;   /* latitudo unisoni, centesimae
+                                      * semitonii (+/- dimidium) */
+                    f32 mora_vibrati; /* secundae ad vibratum plenum (0
+                                       * = statim) */
 } TibiaParametra;
 
 nomen enumeratio {
@@ -158,6 +176,14 @@ nomen structura {
                 f32 motus;
                 f32 involucrum_ultimum;  /* motus: ultimum valor */
                 i32 reliqua_moderationis; /* cola per XXXII exempla */
+                /* UNISONUS: exemplaria 1.. (0 = unda), semitonia
+                 * dispersionis cuiusque */
+                i32 numerus_unisonorum;
+          SonusUnda unisoni[TIBIA_UNISONI_MAXIMI - I];
+                f32 dispersiones[TIBIA_UNISONI_MAXIMI];
+                /* MORA VIBRATI: quadra acta et tota (0 = statim) */
+                i32 quadra_vibrati;
+                i32 mora_vibrati;
 } TibiaVox;
 
 /* porta APERTA: impetus incipit ad notam datam */

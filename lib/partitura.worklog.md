@@ -59,3 +59,46 @@ the forma (all 7 did); the title column widens to the longest title. All callers
 in one commit (harmonia/explicatio docs, recensio, auditio, three suites); output
 byte-identical. Plants 3/3 red ('dum' -> 'si' = one line only; width ignoring the extra
 titles; ctx not passed - caught by the explicatio suite, which is the one that uses ctx).
+
+## 2026-10-24 - leading tone spelled as the raised 7th when no letter is written
+
+partitura_orthographia, after the in-scale lookup and before the natural/sharp/flat
+fallback: the class a semitone under the tonic is spelled on the letter under the tonic
+(C# in D minor, F# in G minor - not Db / Gb). Tonic letter = q*4 (+5 in minor) mod 7, one
+fifth = 4 letters. It matters for classes nobody wrote (implied chord tones in
+explicatio); written letters still come first.
+
+## 2026-10-24 - bar header shows WRITTEN tempo changes (desideratum ...VG8PQ3)
+
+Carmen.tempora became the derived sounding map (a ramp = dozens of 32nd-note steps), so
+the bar header now walks Carmen.tempora_scripta: "tempus 90 usque 4 (+960)" for a ramp,
+plain "tempus 90" for a step; bars inside a ramp print nothing. The title's tempo is
+tempora_scripta[0] (a ramp from bar 1 makes tempora[0] already slower). _mensura_pulsus
+turns the ramp's end pulsus back into its bar number.
+
+## 2026-10-24 - fermata in the bar header
+
+"fermata x2" / "fermata x1.5 (+960)" after the tempo changes. _factorem_scribere prints
+the factor as an integer when whole, else to hundredths without trailing zero (1.5, 1.25).
+
+## 2026-10-24 - agogica in title and bar header
+
+"carmen r: c maior, 4/4 agogica 2 1 2 1 2 1 2 1, 100" and "metrum 3/4 agogica
+vindobonensis" - the lilt is printed as written (_inaequalitatem_scribere), nothing when
+even.
+
+## 2026-10-24 - dynamica in the bar header
+
+"dynamica mf" (whole carmen), "dynamica m ff usque 4" (part, ramp) - the value as written
+(mark or number), after tempo and fermata.
+
+## 2026-10-24 - repetitio in the bar header
+
+"repetitio a +2" / "repetitio a -1" / "repetitio a" at the destination bar. Transposed
+notes carry no letter, so they are spelled from the key (E4 - 1 in C maior = D#4).
+
+## 2026-10-26 - '/' mark for portamento (RTB1F)
+
+A note with `continuatur` prints '/' after its value where it ENDS ("C4:4/"; a note
+crossing a bar line prints "E4:2~" then "~:2/"). Chords never carry it (MML parts are
+monophonic; generated accompaniment never sets it).

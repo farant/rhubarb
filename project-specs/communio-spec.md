@@ -296,3 +296,30 @@ checkpoints; local listings must skip `aliena/`; a manifest change
 needs its blob first (`VOLUMEN_MASSA_DEEST`). Next: phase 2 (server act
 store + protocol).
 
+
+## VII. Phase 2 built (2026-10-27, quarta -> main f7fcba7f)
+
+Plan `project-specs/communio-plan-2.md`, tasks T1-T7 + final review
+(fable: 0 critical, 6 important, all fixed). The household server is
+exemplar with a second volume `<data>/communio.volumen` (imported acts
+never mix with notes and users); routes under `/communio/` (nginx
+`location /` already forwards them); every route requires a device
+token. Devices MINT their own token (`communio tessera`), the admin
+registers only its SHA-256 over the admin channel (handle + space +
+title + digest) - no secret ever crosses the channel or a chat. The
+server announces its volume's replica: a replaced or restored server
+makes clients reset their cursors and re-sync (deleting
+`communio.volumen` is a safe reset). One blob limit on both sides
+(16 MB). Client: two lanes (push, long-poll pull) on the reactor,
+cursors in the volume's praesentia, all HTTP in one function (phase 5
+swaps in URLSession).
+
+Live (Task 8, 2026-10-27, with Fran): deployed (backup
+`exemplar.volumen.ante-communio`); Fran in "familia"; device
+"Macintosh" (main checkout's `pictor.volumen`: one picture, 11 strokes)
+pushed 13 acts over HTTPS; a scratch device pulled them and the
+picture's composite fingerprint matched exactly (02aad7f4...); the
+scratch device was revoked and its token then got 401. Not yet: iPhone
+and Amanda (phase 5), email sign-in (phase 3), backups (phase 4),
+background sync. Deferred minors: see the plan-2 ledger note on desideratum
+...GRTKH (lane quarantine is the one to watch).

@@ -1676,6 +1676,89 @@ _sectio_temporarii_ambitus (
 }
 
 
+/* communio plan-2 T2: acta replicarum selectarum post seq locale,
+ * ordine seq, limite servato (tractio servi) */
+interior vacuum
+_sectio_replicarum_selectarum (
+    CredoContextus* c)
+{
+      Piscina* piscina;
+      Volumen* fontes[III];
+      Volumen* d;
+       chorda  selectae[II];
+          Xar* l;
+          i32  i;
+          i32  k;
+          s64  prior;
+    character  titulus[XXXII];
+
+    piscina  = c->piscina;
+    d        = volumen_temporarium(piscina, "probatio_volumen_sel_d");
+    CREDO_NECESSE_NON_NIHIL(d);
+    per (i = ZEPHYRUM; i < III; i++)
+    {
+        sprintf(titulus, "probatio_volumen_sel_%d", (integer)i);
+        fontes[i] = volumen_temporarium(piscina, titulus);
+        CREDO_NECESSE_NON_NIHIL(fontes[i]);
+    }
+    /* acta alternata: A B C A B C, quaeque in D importata */
+    per (k = ZEPHYRUM; k < II; k++)
+    {
+        per (i = ZEPHYRUM; i < III; i++)
+        {
+            VolumenActum a;
+
+            CREDO_NECESSE(volumen_actum_appendere(fontes[i], "x/actum",
+                chorda_ex_literis("{}", piscina)) > ZEPHYRUM);
+            a = actum_ultimum(fontes[i], piscina);
+            CREDO_NECESSE((i32)volumen_actum_importare(d, &a)
+                == (i32)VOLUMEN_IMPORTATUM);
+        }
+    }
+    selectae[ZEPHYRUM]  = volumen_replica(fontes[ZEPHYRUM]);
+    selectae[I]         = volumen_replica(fontes[II]);
+
+    CREDO_GRADUS("solae selectae, ordine seq");
+    l = volumen_acta_replicarum_legere(d, ZEPHYRUM, selectae, II, X,
+        piscina);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_AEQUALIS_I32(xar_numerus(l), IV);
+    prior = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(l); i++)
+    {
+        VolumenActum* a = (VolumenActum*)xar_obtinere(l, i);
+
+        CREDO_VERUM(   chorda_aequalis(a->identitas.replica,
+                           selectae[ZEPHYRUM])
+                    || chorda_aequalis(a->identitas.replica,
+                           selectae[I]));
+        CREDO_VERUM(a->seq > prior);
+        prior = a->seq;
+    }
+
+    CREDO_GRADUS("limes et post_seq");
+    l = volumen_acta_replicarum_legere(d, ZEPHYRUM, selectae, II, III,
+        piscina);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_AEQUALIS_I32(xar_numerus(l), III);
+    prior = ((VolumenActum*)xar_obtinere(l, II))->seq;
+    l = volumen_acta_replicarum_legere(d, prior, selectae, II, X,
+        piscina);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_AEQUALIS_I32(xar_numerus(l), I);
+
+    CREDO_GRADUS("nulla replica: vacuum");
+    l = volumen_acta_replicarum_legere(d, ZEPHYRUM, selectae, ZEPHYRUM,
+        X, piscina);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_AEQUALIS_I32(xar_numerus(l), ZEPHYRUM);
+    per (i = ZEPHYRUM; i < III; i++)
+    {
+        volumen_claudere(fontes[i]);
+    }
+    volumen_claudere(d);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "volumen_creare", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "aperire_aut_creare", _sectio_secunda, NIHIL, NIHIL, NIHIL,
@@ -1720,6 +1803,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "plagula aliena", _sectio_plagulae_alienae, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "replicae selectae", _sectio_replicarum_selectarum, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { "volumen_temporarium", _sectio_decima, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "volumen_temporarium sub TMPDIR", _sectio_temporarii_ambitus,

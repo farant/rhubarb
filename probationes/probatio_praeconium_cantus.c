@@ -109,7 +109,7 @@ _probare_vitia (
     _eventum_parare(c, &e);
     vitium.offset  = CMXCIX;
     vitium.causa   = NIHIL;
-    CREDO_FALSUM(praeconium_cantum_parare(chorda_ex_literis("t180 l3 c",
+    CREDO_FALSUM(praeconium_cantum_parare(chorda_ex_literis("t180 l7 c",
         c->piscina), FALSUM, &e, c->piscina, &vitium));
     CREDO_AEQUALIS_S32((s32)vitium.offset, VI);
     CREDO_VERUM(vitium.causa != NIHIL);

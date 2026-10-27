@@ -1627,6 +1627,79 @@ _probare_quaerenda (
     conspectus_registrum_destruere(r);
 }
 
+/* actum alterius replicae (communio) importare: genus datum */
+interior VolumenImportatio
+alienum_importare (
+                Mundus* m,
+                chorda  replica,
+    constans character* genus,
+               Piscina* piscina)
+{
+             Xar* propria;
+    VolumenActum  f;
+    VolumenActum* ultimum;
+
+    propria = volumen_acta_legere(m->volumen, ZEPHYRUM, piscina);
+    si (!propria || xar_numerus(propria) == ZEPHYRUM)
+    {
+        redde VOLUMEN_IMPORTATIO_MALA;
+    }
+    ultimum = (VolumenActum*)xar_obtinere(propria,
+        xar_numerus(propria) - I);
+    memset(&f, ZEPHYRUM, magnitudo(f));
+    f.genus              = lit(genus, piscina);
+    f.datum              = lit("<mutatio/>", piscina);
+    f.momentum           = ultimum->momentum;
+    f.identitas.hora     = ultimum->identitas.hora;
+    f.identitas.machina  = lit("aliena", piscina);
+    f.identitas.replica  = replica;
+    f.seq_originis       = I;
+    redde volumen_actum_importare(m->volumen, &f);
+}
+
+/* communio plan-2 T1: acta ALIENA (importata, alterius replicae)
+ * conspectus localem non irritant - nec spatium diei nec documentum
+ * 'omnia'; cursor tamen ad finem voluminis pervenit */
+interior vacuum
+_probare_alienum (
+    CredoContextus* c)
+{
+       Mundus* m;
+    character  replica[MONETA_ULID_MENSURA];
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->repertorium);
+    moneta_ulid(replica);
+    (vacuum)dies_legere(m, XIX, c->piscina);
+    (vacuum)dies_legere(m, XX, c->piscina);
+    CREDO_AEQUALIS_I32((i32)alienum_importare(m, lit(replica,
+        c->piscina), "dies/2026-10-19/paginae/1/scriba", c->piscina),
+        (i32)VOLUMEN_IMPORTATUM);
+    CREDO_AEQUALIS_I32((i32)status_diei(m, XIX, c->piscina),
+        (i32)CONSPECTUS_RECENS);
+    CREDO_AEQUALIS_I32((i32)status_diei(m, XX, c->piscina),
+        (i32)CONSPECTUS_RECENS);
+
+    CREDO_GRADUS("documentum 'omnia' alienum");
+    moneta_ulid(replica);
+    CREDO_AEQUALIS_I32((i32)alienum_importare(m, lit(replica,
+        c->piscina), "personae/ignota/actum", c->piscina),
+        (i32)VOLUMEN_IMPORTATUM);
+    CREDO_AEQUALIS_I32((i32)status_diei(m, XX, c->piscina),
+        (i32)CONSPECTUS_RECENS);
+
+    CREDO_GRADUS("cursor ad finem");
+    CREDO_AEQUALIS_S64(conspectus_renovare(m->repertorium),
+        volumen_seq_ultimum(m->volumen));
+
+    CREDO_GRADUS("proprium tamen irritat");
+    CREDO_MAIOR_S64(volumen_actum_appendere(m->volumen,
+        "dies/2026-10-19/paginae/1/scriba", lit("<mutatio/>",
+        c->piscina)), ZEPHYRUM);
+    CREDO_AEQUALIS_I32((i32)status_diei(m, XIX, c->piscina),
+        (i32)CONSPECTUS_STALUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "declaratio",   _probare_declarationem,  mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -1651,6 +1724,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "memoria",      _probare_memoriam,       mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "quaerenda",    _probare_quaerenda,      mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "acta aliena",  _probare_alienum,        mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

@@ -1,0 +1,87 @@
+# communio_servus worklog
+
+## 2026-10-27 - device registry (communio plan-2 T3)
+
+The server is just another volume; its device registry lives in two tables of
+that volume (`communio_membra`, `communio_apparatus`). Design calls (plan C2-C4):
+
+- The DEVICE mints its token (`communio_tesseram_facere`: 32 random bytes,
+  base64url via the piscina-free `base64url_scribere`, 43 chars) and shows only
+  its SHA-256 hex; the admin registers the digest. The token never reaches the
+  server's disk, an act, a log or a chat. Lookup by digest + constant-time
+  compare (pattern from lib/admissio.c).
+- `replica TEXT UNIQUE` allows many NULLs in SQLite (unbound devices); binding
+  is a separate step on first contact and appends `communio.replica-ligata`.
+- A long-running server must not grow memory per call: every writing function
+  marks/resets a private scratch pool (`tempus`); `communio_servum_destruere`
+  releases it (T5 will also cancel long-poll timers there).
+- Writes join the caller's transaction when one is open (the cives convention),
+  else open their own.
+
+Plants (silva.planta, porta radix): verification without the person-active
+check and without the revoked check both turned the suite red.
+
+## 2026-10-27 - the protocol on hospitium (plan-2 T4)
+
+Seven routes under /communio/, all behind `Authorization: Bearer` (401 +
+`WWW-Authenticate: Bearer` otherwise; the bearer check runs BEFORE any 404, so
+an outsider cannot probe which blobs exist). Calls made while building:
+
+- A push with ANY invalid act is refused whole (400 + cause, nothing imported).
+  communio_acta_legere validates every act (T2), so a per-act
+  `refusum.causa: invalidum` would never be reached; whole-batch refusal is also
+  the simpler contract for the client. `invalidum` stays as the name for an
+  import that returns VOLUMEN_IMPORTATIO_MALA.
+- Replica check happens before any import: one act of another replica -> 403 for
+  the whole batch.
+- PUT of a blob hashes the bytes FIRST and stores only on a match (in memory);
+  above 1 MB hospitium spools to a file and volumen_massam_condere_ex_filo
+  re-verifies. A mismatch never leaves a blob behind.
+- Pull lists, per act, the 64-hex runs the server holds (deduplicated) so the
+  client knows which blobs to fetch before importing.
+- Test harness: hospitium with `cfg.reactor` shared with `http_vocare`, pumped by
+  `reactor_poll(r, X)` until the call's finis fires - server and client in one
+  thread, real sockets on 127.0.0.1.
+
+Plants (porta radix): replica check off, blob hash check off, own replica not
+excluded from a pull, space filter off - all four turned the suite red.
+
+## 2026-10-27 - live pull / long-poll (plan-2 T5)
+
+`GET /communio/acta?post=N&mora=S` (S capped at XXV s, under hospitium's 30 s
+deferred limit) defers when nothing is there. Waiters live in a FIXED array of
+LXIV slots inside the server (no allocation per wait; when full the request is
+simply answered at once). Each slot holds the deferred handle, a copy of the
+caller's CommunioApparatus (its chordae point into the deferred request's pool,
+which lives as long as the deferral - only read after dilatum_colloquium
+confirms it is still alive), the cursor, and one non-repeating reactor timer.
+
+A push that IMPORTED something (not only "already present") wakes the waiters of
+the same space; each gets a fresh pull body, and only if it now has acts. Dead
+slots (client gone, handle invalid) are released on the next wake or the next
+wait. communio_servum_destruere cancels every live timer - exemplar must destroy
+the server BEFORE the hospitium (a timer firing into a destroyed hospitium would
+touch freed memory).
+
+Plant note: "the pusher's own waiter is skipped" is a shortcut only - _tractio
+already excludes the caller's replica, so a woken own-waiter finds nothing and
+stays deferred. The plant removing the shortcut stayed green by design; the test
+"propria non excitat" pins the behaviour, not the shortcut. The plant removing
+timer cancellation in destruere turned red.
+
+## 2026-10-27 - final review fixes (plan-2)
+
+- Per-request leak: `communio_apparatum_verificare` -> `_persona_activa` ->
+  `cives_per_id` allocated into the server's scratch pool on EVERY request and
+  never reset (every other writer marks/resets). Now marked/reset around it;
+  `communio_servi_usus` exposes the pool size and a test proves it flat over
+  500 verifications.
+- Read-after-reset: `colloquium_respondere` may drain synchronously and recycle
+  the colloquium pool (hospitium `_paratus_novae`), and `_excitare` then read
+  a.spatium/a.replica from it. Wake the waiters BEFORE responding. The same
+  family: `communio_replicam_ligare` compared the stored replica after
+  `piscina_reficere`. Both found/proved by adding probatio_communio_servus to the
+  `probationes_veneni` gate (PISCINA_VENENUM + ASan) - it stays there.
+- Server identity: bind + pull responses carry "servus" (this volume's replica)
+  so clients can tell a replaced/restored communio.volumen from the same one.
+- One blob limit: COMMUNIO_MASSA_MAXIMA (16 MB = http lector cap) -> PUT 413.

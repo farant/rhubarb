@@ -356,11 +356,26 @@ volumen_actum_importare (
     constans VolumenActum* actum);
 
 /* communio: acta PROPRIA (replicae huius voluminis) post seq locale,
- * ordine seq - quod communicatur (aliena numquam reexportantur) */
+ * ordine seq - quod communicatur (aliena numquam reexportantur).
+ * LEX (communio plan-2 T1): lector qui statum LOCALEM ex actis
+ * derivat (conspectus, historia propria, pictor recentia) sola acta
+ * propria legit - hoc aut volumen_acta_generum_replicae_legere cum
+ * replica sua; lector sine filtro solum si replica vacua est. */
 Xar*
 volumen_acta_propria_legere (
     Volumen* volumen,
         s64  post_seq,
+    Piscina* piscina);
+
+/* communio plan-2 T2 (tractio servi): acta replicarum datarum post seq
+ * locale, ordine seq, 'limes' ad plurimum; numerus 0 = Xar vacuum */
+Xar*
+volumen_acta_replicarum_legere (
+    Volumen* volumen,
+        s64  post_seq,
+     chorda* replicae,
+        i32  numerus,
+        i32  limes,
     Piscina* piscina);
 
 /* communio T4: acta generum datorum REPLICAE datae in numeratione

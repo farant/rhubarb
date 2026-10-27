@@ -1,19 +1,11 @@
 /* communio.c - acta et massae inter volumina (gradus I sine rete) */
 
 #include "communio.h"
+#include "communio_forma.h"
 #include "json.h"
 #include "xar.h"
 
 #include <string.h>
-
-#define SIGILLUM_HEX_LONGITUDO LXIV
-
-interior b32
-hex_minuscula (
-    i8 c)
-{
-    redde (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f');
-}
 
 /* chorda finitur in 'cauda'? */
 interior b32
@@ -32,8 +24,8 @@ desinit (
 /* derivatum (genera-datorum VIII-b, regula gradus I usque ad
  * registrum D6): plagula-condita cuius origo in ":checkpoint" desinit,
  * aut plagula-remota viae ".../checkpoint/<n>" */
-interior b32
-derivatum (
+b32
+communio_actum_derivatum (
     constans VolumenActum* a,
                   Piscina* piscina)
 {
@@ -72,56 +64,45 @@ derivatum (
  * deficit. */
 interior b32
 massas_mittere (
-             Volumen* fons,
-             Volumen* destinatio,
-              chorda  datum,
-     CommunioRelatio* relatio,
-             Piscina* piscina)
+                  Volumen* fons,
+                  Volumen* destinatio,
+    constans VolumenActum* actum,
+          CommunioRelatio* relatio,
+                  Piscina* piscina)
 {
-       chorda hex;
-       chorda contentum;
-          b32 inventum;
-          i32 i;
-          i32 j;
-    character novum[SIGILLUM_HEX_MENSURA];
+          Xar* nominatae;
+       chorda  contentum;
+          b32  inventum;
+          i32  i;
+    character  novum[SIGILLUM_HEX_MENSURA];
 
-    i = ZEPHYRUM;
-    dum (i < datum.mensura)
+    nominatae = communio_massas_nominatas(actum, piscina);
+    si (!nominatae)
     {
-        si (!hex_minuscula(datum.datum[i]))
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(nominatae); i++)
+    {
+        chorda hex = *(chorda*)xar_obtinere(nominatae, i);
+
+        si (   !volumen_massam_habet(fons, hex)
+            || volumen_massam_habet(destinatio, hex))
         {
-            i++;
             perge;
         }
-        j = i;
-        dum (j < datum.mensura && hex_minuscula(datum.datum[j]))
+        contentum = volumen_massam_promere(fons, hex, piscina,
+            &inventum);
+        si (   !inventum
+            || !volumen_massam_condere(destinatio, contentum, novum)
+            || memcmp(novum, hex.datum, (size_t)hex.mensura)
+                   != ZEPHYRUM)
         {
-            j++;
+            redde FALSUM;
         }
-        si (j - i == SIGILLUM_HEX_LONGITUDO)
+        si (relatio)
         {
-            hex.datum    = datum.datum + i;
-            hex.mensura  = SIGILLUM_HEX_LONGITUDO;
-            si (   volumen_massam_habet(fons, hex)
-                && !volumen_massam_habet(destinatio, hex))
-            {
-                contentum = volumen_massam_promere(fons, hex, piscina,
-                    &inventum);
-                si (   !inventum
-                    || !volumen_massam_condere(destinatio, contentum,
-                           novum)
-                    || memcmp(novum, hex.datum,
-                           (size_t)SIGILLUM_HEX_LONGITUDO) != ZEPHYRUM)
-                {
-                    redde FALSUM;
-                }
-                si (relatio)
-                {
-                    relatio->massae++;
-                }
-            }
+            relatio->massae++;
         }
-        i = j;
     }
     redde VERUM;
 }
@@ -158,9 +139,9 @@ communio_transferre (
     per (i = ZEPHYRUM; i < xar_numerus(acta); i++)
     {
         a = (VolumenActum*)xar_obtinere(acta, i);
-        si (!derivatum(a, piscina))
+        si (!communio_actum_derivatum(a, piscina))
         {
-            si (!massas_mittere(fons, destinatio, a->datum, relatio,
+            si (!massas_mittere(fons, destinatio, a, relatio,
                     piscina))
             {
                 relatio->refusa = I;

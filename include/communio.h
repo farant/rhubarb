@@ -27,6 +27,15 @@ nomen structura {
     i32 refusa;        /* 0 aut I: transitus ad primum refusum sistit */
 } CommunioRelatio;
 
+/* derivatum (genera-datorum VIII-b; regula usque ad registrum D6):
+ * plagula-condita cuius origo in ":checkpoint" desinit, aut
+ * plagula-remota viae ".../checkpoint/<n>" - numquam communicatur
+ * (transferre, cliens retis). */
+b32
+communio_actum_derivatum (
+    constans VolumenActum* actum,
+                  Piscina* piscina);
+
 /* acta propria fontis post *cursor (seq locale fontis) in
  * destinationem: derivata praetermittuntur (cursor ea praeterit);
  * massae nominatae prius (quaeque series LXIV characterum hex

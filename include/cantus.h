@@ -14,9 +14,23 @@
  *   cantilena := { signum }
  *   signum    := nota | pausa | mandatum | ' ' | '|'
  *   nota      := c|d|e|f|g|a|b  [ '#' | '+' | '-' ]  [ mensura ]
+ *                [ '&' ]          ligatura: nota PROXIMA eiusdem
+ *                                 altitudinis continuat (inter eas
+ *                                 spatia, '|', o N, < > soli)
+ *                [ '/' [ longitudo ] ]  PORTAMENTUM: vox in notam
+ *                                 PROXIMAM pergit et ad altitudinem
+ *                                 eius glissat - ab initio eius per
+ *                                 longitudinem (divisor integrae ut
+ *                                 infra, ordinaria 16; longior nota
+ *                                 proxima: tota)
  *   pausa     := r  [ mensura ]
- *   mensura   := longitudo { '.' }        1 2 4 8 16 32 64; '.' = x1.5,
- *                                         '..' = x1.75 (ad II puncta)
+ *   mensura   := longitudo { '.' }        longitudo divisor integrae
+ *                                         1..64: 1 2 4 8 16 32 64;
+ *                                         trioli 3 6 12 24 48 (c12 d12
+ *                                         e12 = tres in quarta);
+ *                                         quintoli 5 10 20 40; 15 30
+ *                                         60. '.' = x1.5, '..' = x1.75
+ *                                         (ad II puncta)
  *   mandatum  := o N      octava 0..8     (ordinarium 4; o4 c = MIDI LX,
  *                                          C medium)
  *              | > | <    octava sursum / deorsum
@@ -40,11 +54,23 @@
  * color vocantis decernit, non lector.
  *
  * VITIA: lector FALSUM reddit cum offset octeti in textu et causa
- * Latina ('longitudo 3 non est potentia II') - nihil semi-lectum.
+ * Latina ('longitudo non divisor integrae') - nihil semi-lectum.
  * Nota extra MIDI 0..127 vitium est.
  *
- * NONDUM (in PULL): ligaturae '&', triolae, 'q' (pars sonans),
- * syllabae Guidonis (ut re mi ...), voces plures simul.
+ * LIGATURA: notae ligatae UNA nota sunt (longitudo summa, littera et
+ * offset primae) - analysis, cantor, partitura ('~' trans lineam)
+ * sonum unum vident. Altitudo diversa (legato, non ligatura), '&' ante
+ * pausam aut finem, '&&': vitium.
+ *
+ * PORTAMENTUM: nota cum '/' porta aperta in proximam transit (sonus
+ * unus, altitudo glissans - chorda non iterum vellitur, vox non
+ * iterum incipit); proxima notam suam servat (analysis, partitura
+ * notas duas vident). '/' ante pausam aut finem, ad altitudinem eandem
+ * ('&' scribe), '&/', '//': vitium. Iussa (cantus_iussa_parare,
+ * sonitus singuli): '/' ignoratur.
+ *
+ * NONDUM (in PULL): 'q' (pars sonans), syllabae Guidonis (ut re mi
+ * ...), voces plures simul.
  *
  * USUS:
  *   Cantilena    c;
@@ -76,9 +102,13 @@
  * cantus_tempora_computare - ut lector: segmentum claudit ad quadrum
  * suum rotundatum, ergo nulla aberratio cumulata) */
 nomen structura {
-    s64 pulsus;     /* initium segmenti, pulsus absoluti */
-    i32 tempus;     /* 20..400 */
-    s64 quadrum;    /* initium segmenti, quadra (derivatum) */
+    s64 pulsus;       /* initium segmenti, pulsus absoluti */
+    i32 tempus;       /* 20..400 (integrum: 't', ostensio) */
+    i32 millesimae;   /* tempus SONANDI in millesimis quartae per
+                       * minutum (> 0) - computatio quadrorum hoc SOLUM
+                       * legit; producens quisque implet (lector: tempus
+                       * x M; carmen: clivi, coronae, agogica exacte) */
+    s64 quadrum;      /* initium segmenti, quadra (derivatum) */
 } CantusTempus;
 
 nomen structura {
@@ -93,6 +123,9 @@ nomen structura {
          chorda praeparatum;    /* '@titulus' (scissura textus) aut
                                  * vacua = ordinarium vocantis */
             i32 offset;         /* octetus notae in textu */
+            s64 illapsus;       /* pulsus glissandi IN hanc notam (nota
+                                 * priore '/'); 0 = nullum */
+            b32 continuatur;    /* '/': vox in notam proximam pergit */
 } CantusNota;
 
 /* linea mensurae scripta ('|') */

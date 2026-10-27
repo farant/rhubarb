@@ -10,6 +10,11 @@
  *   QUIESCERE - mutus factus: clauditur cum primum nulla vox vivit,
  *     post evanescentiam (sine crepitu), non post XXX s; vox alterius
  *     clientis viva exitum apertum tenet.
+ *   TENERE - cliens qui notas FUTURAS habet (cantor sonans) exitum
+ *     tenet: concentus_tenere(c, VERUM) ... (c, FALSUM), numerus
+ *     tenentium; dum tenetur quies XXX s non numeratur (pausa longa in
+ *     carmine, pars sola sero intrans). QUIESCERE (mutus) tenentes non
+ *     curat.
  *   NUNTII - concentus SOLUS legit (agere) et rectori tradit; cliens
  *     vocem suam per concentus_vox_vivit interrogat (sine reditibus).
  *   PRIORITAS per sedem (mixtura_rector_capere): vox altior
@@ -114,6 +119,13 @@ concentus_vox_vivit (
 vacuum
 concentus_quiescere (
     Concentus* c);
+
+/* tenens unus addit (VERUM) aut demit (FALSUM; numquam infra 0) -
+ * dum tenentes > 0 quies non numeratur */
+vacuum
+concentus_tenere (
+    Concentus* c,
+          b32  tenere);
 
 b32
 concentus_apertum (
