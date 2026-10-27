@@ -1,6 +1,7 @@
 /* articulus.h - articulus interretis in forma domus (navigator N1;
  * project-specs/navigator-spec.md). DATA SOLA: adaptatores situum
  * (vicipaedia.h) implent, navigator paginat; nullum rete, nulla UI.
+ * Praeter data: forma canonica et sigillum (N2, comparatio versionum).
  *
  * TEXTUS: clausula quaeque textum planum suum habet (UTF-8, entitates
  * decoctae, spatia contracta, sine notis referentiarum); notae (nexus,
@@ -14,6 +15,9 @@
 #include "latina.h"
 #include "chorda.h"
 #include "xar.h"
+#include "piscina.h"
+
+/* <aedilis corpus="lib/articulus.c"/> */
 
 nomen enumeratio {
     ARTICULUS_TITULUS = ZEPHYRUM,  /* h2-h6; gradus II..VI */
@@ -63,5 +67,25 @@ nomen structura {
     chorda  fons;                  /* URL canonica */
        Xar* sectiones;             /* ArticulusSectio; [0] prooemium */
 } Articulus;
+
+/* forma canonica contenti (navigator N2): textus quo versiones
+ * comparantur. Omnia exemplaris intrant ordine suo - titulus,
+ * sectiones (titulus, ancora), clausulae (genus, gradus, clavis,
+ * textus), notae (genus, initium, finis, scopus), adiuncta; fons
+ * NON intrat (eadem pagina per URL aliam = idem contentum). Campi
+ * longitudine praefixi ("<n>:<octeti>"), ergo concatenatio numquam
+ * ambigua. Forma non servatur sed semper recomputatur - mutari
+ * licet. */
+chorda
+articulus_canonicum (
+    constans Articulus* articulus,
+               Piscina* piscina);
+
+/* SHA-256 formae canonicae, hex minusculae; effusio >=
+ * SIGILLUM_HEX_MENSURA. Aequalia = idem contentum. */
+vacuum
+articulus_sigillum (
+    constans Articulus* articulus,
+             character* effusio);
 
 #endif /* ARTICULUS_H */

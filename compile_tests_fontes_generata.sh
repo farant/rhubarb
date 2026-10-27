@@ -31,6 +31,7 @@ declare -a SOURCE_FILES=(
     "lib/anulus.c"
     "lib/argon2id.c"
     "lib/argumenta.c"
+    "lib/articulus.c"
     "lib/arx_caeli.c"
     "lib/atomus.c"
     "lib/atrium.c"
