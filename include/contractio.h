@@ -203,11 +203,14 @@ contractio_officina_creare (
                         i64  octeti_maximi,
                     Piscina* piscina);
 
-/* valores[k] = elementa tensoris k, 0 <= v < modulus (praesumptum,
- * non probatum in ansa calida), 2 <= modulus < 2^32. exitus = tensor
- * densus super indices APERTOS ordine id (v1: unum elementum; rete
- * vacuum: 1). Nulla allocatio. FALSUM si ordo non huius retis aut
- * officina non huius ordinis. (T2: nondum exsequitur - FALSUM.) */
+/* valores[k] = elementa tensoris k (ordine indicum vocantis, index
+ * ultimus celerrimus), 0 <= v < modulus (praesumptum, non probatum in
+ * ansa calida), 2 <= modulus < 2^32 (primus non necessarius). exitus
+ * = tensor densus super indices APERTOS ordine id (v1: unum
+ * elementum; rete vacuum: 1; tensor solus: valores[0][0]). Nulla
+ * allocatio; accumulator duorum verborum, exactus pro omni
+ * longitudine summae. FALSUM si ordo non huius retis, officina non
+ * huius ordinis, modulus < 2, aut valores (vel valores[k]) NIHIL. */
 b32
 contractio_exsequi_modulo (
       constans ContractioRete*  rete,
@@ -217,10 +220,14 @@ contractio_exsequi_modulo (
                         i32     modulus,
                         i32*    exitus);
 
-/* gradus referentiae: piscina temporaria per gradum
- * (notare/reficere), effectus per anulus->transcribe in piscinam
- * exitus. Ad retia parva: nullus limes octetorum. (T2: nondum
- * exsequitur - FALSUM.) */
+/* gradus referentiae: valores[k] = tabula elementorum anuli
+ * (anulus->mensura octeti quisque), eadem dispositio. Intermedii in
+ * piscina privata, summae in altera per elementum refecta; effectus
+ * per anulus->transcribe in piscinam exitus. Ad retia parva: nullus
+ * limes octetorum praeter allocationes conatas. FALSUM (exitus non
+ * tactus) si ordo non huius retis, sumptus saturati (multiplicationes
+ * aut apex - hic nulla officina custodit), allocatio aut operatio
+ * anuli deficit, aut valores NIHIL. */
 b32
 contractio_exsequi_anulo (
       constans ContractioRete*  rete,

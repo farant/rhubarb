@@ -14,6 +14,9 @@
 #include "piscina.h"
 #include "credo.h"
 #include "sors.h"
+#include "magnus.h"
+#include "polynomium.h"
+#include "congruentia.h"
 #include "contractio.h"
 
 
@@ -922,20 +925,12 @@ _probare_officinam (
         ContractioRete* rete     = _rete(piscina, d, III, p, l, IV);
         ContractioOrdo* ordo     = _ordinare(rete, piscina);
     ContractioOfficina* officina;
-                   i32  exitus = (i32)0xDEADUL;
 
     CREDO_NIHIL(contractio_officina_creare(ordo, XXVII, piscina));
     CREDO_NIHIL(contractio_officina_creare(NIHIL, C, piscina));
     CREDO_NIHIL(contractio_officina_creare(ordo, C, NIHIL));
     officina = contractio_officina_creare(ordo, XXVIII, piscina);
     CREDO_NON_NIHIL(officina);
-
-    /* T2: exsecutio nondum - refutatur, exitus intactus */
-    CREDO_FALSUM(contractio_exsequi_modulo(rete, ordo, officina, NIHIL,
-        XVII, &exitus));
-    CREDO_FALSUM(contractio_exsequi_anulo(rete, ordo, NIHIL, NIHIL,
-        piscina, &exitus));
-    CREDO_AEQUALIS_I32(exitus, (i32)0xDEADUL);
 }
 
 /* cauda scalarium: ordo septem (paria id minimorum) et 4000 scalares
@@ -975,6 +970,701 @@ _probare_vacuos_multos (
 
 
 /* ==================================================
+ * Exsecutio (T3)
+ * ================================================== */
+
+#define PARVI_TENSORES VII
+#define PARVI_INDICES  IX
+
+/* rete parvum pro vi bruta: n tensores (1..7), m indices (0..9; n ==
+ * 1 -> 0) dimensionis 1..3 */
+interior vacuum
+_fortuitum_parvum (
+         Sors* s,
+    Fortuitum* f)
+{
+    i32 tabula[PARVI_TENSORES][II * PARVI_INDICES];
+    i32 numeri[PARVI_TENSORES];
+    i32 j;
+    i32 k;
+    i32 initium = ZEPHYRUM;
+
+    f->numerus_tensorum = I + sors_intra(s, PARVI_TENSORES);
+    f->numerus_indicum  = f->numerus_tensorum == I ? ZEPHYRUM
+        : sors_intra(s, PARVI_INDICES + I);
+    per (k = ZEPHYRUM; k < f->numerus_tensorum; k++)
+    {
+        numeri[k] = ZEPHYRUM;
+    }
+    per (j = ZEPHYRUM; j < f->numerus_indicum; j++)
+    {
+        i32 a = sors_intra(s, f->numerus_tensorum);
+        i32 b = sors_intra(s, f->numerus_tensorum - I);
+
+        si (b >= a)
+        {
+            b++;
+        }
+        f->dimensiones[j]       = I + sors_intra(s, III);
+        tabula[a][numeri[a]++]  = j;
+        tabula[b][numeri[b]++]  = j;
+    }
+    per (k = ZEPHYRUM; k < f->numerus_tensorum; k++)
+    {
+        per (j = numeri[k]; j > I; j--)
+        {
+            i32 r = sors_intra(s, j);
+            i32 x = tabula[k][j - I];
+
+            tabula[k][j - I]  = tabula[k][r];
+            tabula[k][r]      = x;
+        }
+        f->longitudines[k] = numeri[k];
+        per (j = ZEPHYRUM; j < numeri[k]; j++)
+        {
+            f->plani[initium++] = tabula[k][j];
+        }
+    }
+}
+
+/* elementa tensoris k */
+interior i64
+_elementa_tensoris (
+    constans Fortuitum* f,
+                   i32  k)
+{
+    i64 e        = I;
+    i32 initium  = ZEPHYRUM;
+    i32 j;
+
+    per (j = ZEPHYRUM; j < k; j++)
+    {
+        initium += f->longitudines[j];
+    }
+    per (j = ZEPHYRUM; j < f->longitudines[k]; j++)
+    {
+        e *= f->dimensiones[f->plani[initium + j]];
+    }
+    redde e;
+}
+
+/* tabulae valorum (vacuae) pro omnibus tensoribus, elementa i32 */
+interior i32**
+_valores_parare (
+    constans Fortuitum* f,
+               Piscina* piscina)
+{
+    i32** v = (i32**)piscina_allocare(piscina,
+        (memoriae_index)(f->numerus_tensorum + I) * magnitudo(i32*));
+    i32 k;
+
+    per (k = ZEPHYRUM; k < f->numerus_tensorum; k++)
+    {
+        v[k] = (i32*)piscina_allocare(piscina,
+            (memoriae_index)_elementa_tensoris(f, k) * magnitudo(i32));
+    }
+    redde v;
+}
+
+interior vacuum
+_valores_implere (
+                  Sors*  s,
+    constans Fortuitum*  f,
+                   i32** valores,
+                   i32   modulus)
+{
+    i32 k;
+    i64 j;
+
+    per (k = ZEPHYRUM; k < f->numerus_tensorum; k++)
+    {
+        per (j = ZEPHYRUM; j < _elementa_tensoris(f, k); j++)
+        {
+            valores[k][j] = sors_intra(s, modulus);
+        }
+    }
+}
+
+/* vis bruta: summa super OMNES assignationes indicum producti
+ * elementorum, modulo p (oraculum sine ordine et sine tabula) */
+interior i32
+_vis_bruta (
+    constans Fortuitum* f,
+           i32* constans* valores,
+                    i32  modulus)
+{
+    i32 assignatio[FORTUITI_INDICES];
+    i64 summa     = ZEPHYRUM;
+    b32 reliquum  = VERUM;
+    i32 j;
+
+    per (j = ZEPHYRUM; j < f->numerus_indicum; j++)
+    {
+        assignatio[j] = ZEPHYRUM;
+    }
+    dum (reliquum)
+    {
+        i64 productum  = I % (i64)modulus;
+        i32 initium    = ZEPHYRUM;
+        i32 k;
+
+        per (k = ZEPHYRUM; k < f->numerus_tensorum; k++)
+        {
+            i64 offset = ZEPHYRUM;
+
+            per (j = ZEPHYRUM; j < f->longitudines[k]; j++)
+            {
+                i32 index = f->plani[initium + j];
+
+                offset = offset * f->dimensiones[index]
+                    + assignatio[index];
+            }
+            productum  = productum * valores[k][offset] % modulus;
+            initium    += f->longitudines[k];
+        }
+        summa = (summa + productum) % modulus;
+
+        reliquum  = FALSUM;
+        j         = f->numerus_indicum;
+        dum (j > ZEPHYRUM)
+        {
+            j--;
+            assignatio[j]++;
+            si (assignatio[j] < f->dimensiones[j])
+            {
+                reliquum = VERUM;
+                frange;
+            }
+            assignatio[j] = ZEPHYRUM;
+        }
+    }
+    redde (i32)summa;
+}
+
+/* CC retia parva: gradus calidus = vis bruta = gradus referentiae
+ * super Z/n, n a 2 usque ad 2^32 - 1 (non primus quoque) */
+interior vacuum
+_probare_vim_brutam (
+    CredoContextus* c)
+{
+         Piscina* piscina = c->piscina;
+    constans i32  moduli[] = { II, XVII, (i32)998244353UL,
+        (i32)4294967291UL, (i32)0xFFFFFFFFUL };
+    Sors s;
+     i32 t;
+
+    sors_seminare(&s, (i64)MMXXVIII, ZEPHYRUM);
+    per (t = ZEPHYRUM; t < CC; t++)
+    {
+                 Fortuitum  f;
+                       i32  p = moduli[t % V];
+           constans Anulus* anulus_modulo = anulus_residuorum(p,
+               piscina);
+            ContractioRete*  rete;
+            ContractioOrdo*  ordo;
+        ContractioOfficina*  officina;
+                       i32** valores;
+                       i32   calidum     = (i32)0xDEADUL;
+                       i32   referentia  = (i32)0xDEADUL;
+
+        _fortuitum_parvum(&s, &f);
+        rete = _rete_fortuitum(piscina, &f);
+        ordo = _ordinare(rete, piscina);
+        officina = contractio_officina_creare(ordo,
+            CONTRACTIO_SATURATUM,
+            piscina);
+        CREDO_NECESSE_NON_NIHIL(officina);
+        valores = _valores_parare(&f, piscina);
+        _valores_implere(&s, &f, valores, p);
+        CREDO_NECESSE(contractio_exsequi_modulo(rete, ordo, officina,
+            (constans i32* constans*)valores, p, &calidum));
+        CREDO_AEQUALIS_I32(calidum, _vis_bruta(&f, valores, p));
+        CREDO_NECESSE(contractio_exsequi_anulo(rete, ordo,
+            (constans vacuum* constans*)valores, anulus_modulo, piscina,
+            &referentia));
+        CREDO_AEQUALIS_I32(referentia, calidum);
+    }
+}
+
+/* polynomium Laurentianum modulo p in x (x invertibilis) */
+interior i32
+_aestimare_modulo (
+    Polynomium q,
+           i32 x,
+           i32 p)
+{
+    i32 summa = ZEPHYRUM;
+    i32 inversa;
+    s32 e;
+
+    si (polynomium_est_nullum(q))
+    {
+        redde ZEPHYRUM;
+    }
+    CREDO_NECESSE(congruentia_inversa(x, p, &inversa));
+    per (e = polynomium_gradus_imus(q); e
+        <= polynomium_gradus_summus(q);
+         e++)
+    {
+        i32 coefficiens =
+            magnus_residuum_parvum(polynomium_coefficiens(q,
+            e), p);
+        i32 potentia = e >= ZEPHYRUM
+            ? congruentia_potentia(x, (i64)e, p)
+            : congruentia_potentia(inversa, (i64)(-e), p);
+
+        summa = congruentia_adde(summa,
+            congruentia_multiplica(coefficiens,
+            potentia, p), p);
+    }
+    redde summa;
+}
+
+/* gradus referentiae super Z et Z[t, t^-1]: effectus exactus
+ * reductus (aut aestimatus in x) modulo p = gradus calidus super
+ * valores reductos */
+interior vacuum
+_probare_anulos (
+    CredoContextus* c)
+{
+    Piscina* piscina  = c->piscina;
+        i32  p        = (i32)998244353UL;
+        i32  x        = (i32)12345UL;
+       Sors  s;
+        i32  t;
+
+    sors_seminare(&s, (i64)MMXXIX, ZEPHYRUM);
+    per (t = ZEPHYRUM; t < LX; t++)
+    {
+                 Fortuitum   f;
+            ContractioRete*  rete;
+            ContractioOrdo*  ordo;
+        ContractioOfficina*  officina;
+                    Magnus** integri;
+                Polynomium** polynomia;
+                       i32** residua;
+                    Magnus   effectus_z;
+                Polynomium   effectus_t;
+                       i32   calidum;
+                       i32   k;
+                       i64   j;
+
+        _fortuitum_parvum(&s, &f);
+        rete = _rete_fortuitum(piscina, &f);
+        ordo = _ordinare(rete, piscina);
+        officina = contractio_officina_creare(ordo,
+            CONTRACTIO_SATURATUM,
+            piscina);
+        CREDO_NECESSE_NON_NIHIL(officina);
+        residua   = _valores_parare(&f, piscina);
+        integri   = (Magnus**)piscina_allocare(piscina,
+            (memoriae_index)f.numerus_tensorum * magnitudo(Magnus*));
+        polynomia = (Polynomium**)piscina_allocare(piscina,
+            (memoriae_index)f.numerus_tensorum * magnitudo(Polynomium*));
+
+        /* Z: valores in [-50, 50] */
+        per (k = ZEPHYRUM; k < f.numerus_tensorum; k++)
+        {
+            i64 e = _elementa_tensoris(&f, k);
+
+            integri[k] = (Magnus*)piscina_allocare(piscina,
+                (memoriae_index)e * magnitudo(Magnus));
+            per (j = ZEPHYRUM; j < e; j++)
+            {
+                s64 v = (s64)sors_intra(&s, CI) - (s64)L;
+
+                integri[k][j] = magnus_ex_s64(v);
+                residua[k][j] = (i32)(v < ZEPHYRUM ? (s64)p + v : v);
+            }
+        }
+        CREDO_NECESSE(contractio_exsequi_anulo(rete, ordo,
+            (constans vacuum* constans*)integri, &ANULUS_INTEGRORUM,
+            piscina, &effectus_z));
+        CREDO_NECESSE(contractio_exsequi_modulo(rete, ordo, officina,
+            (constans i32* constans*)residua, p, &calidum));
+        CREDO_AEQUALIS_I32(magnus_residuum_parvum(effectus_z, p),
+            calidum);
+
+        /* Z[t, t^-1]: coefficientes in [-3, 3] ad t^-2 .. t^2 */
+        per (k = ZEPHYRUM; k < f.numerus_tensorum; k++)
+        {
+            i64 e = _elementa_tensoris(&f, k);
+
+            polynomia[k] = (Polynomium*)piscina_allocare(piscina,
+                (memoriae_index)e * magnitudo(Polynomium));
+            per (j = ZEPHYRUM; j < e; j++)
+            {
+                Magnus coefficientes[V];
+                   i32 i;
+
+                per (i = ZEPHYRUM; i < V; i++)
+                {
+                    coefficientes[i] = magnus_ex_s64(
+                        (s64)sors_intra(&s, VII) - (s64)III);
+                }
+                CREDO_NECESSE(polynomium_ex_coefficientibus(coefficientes,
+                    V, -(s32)II, piscina, &polynomia[k][j]));
+                residua[k][j] = _aestimare_modulo(polynomia[k][j], x,
+                    p);
+            }
+        }
+        CREDO_NECESSE(contractio_exsequi_anulo(rete, ordo,
+            (constans vacuum* constans*)polynomia, &ANULUS_POLYNOMIORUM,
+            piscina, &effectus_t));
+        CREDO_NECESSE(contractio_exsequi_modulo(rete, ordo, officina,
+            (constans i32* constans*)residua, p, &calidum));
+        CREDO_AEQUALIS_I32(_aestimare_modulo(effectus_t, x, p),
+            calidum);
+    }
+}
+
+/* omnia valores n - 1 ((n-1)^2 = 2^64 - 2^33 + 1 ad n = 2^32 - 1):
+ * portatio in omni fere addito. v(a) w(a), a = 4096: 4096; v(a)
+ * M(a,b) N(b,c) u(c), 3 x 2048 x 5: 30720 */
+interior vacuum
+_probare_modulos_magnos (
+    CredoContextus* c)
+{
+         Piscina* piscina   = c->piscina;
+    constans i32  moduli[]  = { (i32)4294967291UL, (i32)0xFFFFFFFFUL };
+    constans i32  d1[]      = { (i32)4096UL };
+    constans i32  p1[]      = { 0, 0 };
+    constans i32  l1[]      = { I, I };
+    constans i32  d2[]      = { III, (i32)2048UL, V };
+    constans i32  p2[]      = { 0, 0, I, I, II, II };
+    constans i32  l2[]      = { I, II, II, I };
+    constans i32  e2[]      = { III, (i32)6144UL, (i32)10240UL, V };
+             i32  t;
+
+    per (t = ZEPHYRUM; t < II; t++)
+    {
+                       i32  n = moduli[t];
+           constans Anulus* anulus_modulo = anulus_residuorum(n,
+               piscina);
+            ContractioRete* rete;
+            ContractioOrdo* ordo;
+        ContractioOfficina* officina;
+                       i32* valores[IV];
+                       i32  calidum;
+                       i32  referentia;
+                       i32  k;
+                       i32  j;
+
+        rete      = _rete(piscina, d1, I, p1, l1, II);
+        ordo      = _ordinare(rete, piscina);
+        officina  = contractio_officina_creare(ordo, C, piscina);
+        CREDO_NECESSE_NON_NIHIL(officina);
+        per (k = ZEPHYRUM; k < II; k++)
+        {
+            valores[k] = (i32*)piscina_allocare(piscina,
+                (memoriae_index)4096UL * magnitudo(i32));
+            per (j = ZEPHYRUM; j < (i32)4096UL; j++)
+            {
+                valores[k][j] = n - I;
+            }
+        }
+        CREDO_NECESSE(contractio_exsequi_modulo(rete, ordo, officina,
+            (constans i32* constans*)valores, n, &calidum));
+        CREDO_AEQUALIS_I32(calidum, (i32)4096UL);
+        CREDO_NECESSE(contractio_exsequi_anulo(rete, ordo,
+            (constans vacuum* constans*)valores, anulus_modulo, piscina,
+            &referentia));
+        CREDO_AEQUALIS_I32(referentia, (i32)4096UL);
+
+        rete = _rete(piscina, d2, III, p2, l2, IV);
+        ordo = _ordinare(rete, piscina);
+        officina = contractio_officina_creare(ordo,
+            CONTRACTIO_SATURATUM,
+            piscina);
+        CREDO_NECESSE_NON_NIHIL(officina);
+        per (k = ZEPHYRUM; k < IV; k++)
+        {
+            valores[k] = (i32*)piscina_allocare(piscina,
+                (memoriae_index)e2[k] * magnitudo(i32));
+            per (j = ZEPHYRUM; j < e2[k]; j++)
+            {
+                valores[k][j] = n - I;
+            }
+        }
+        CREDO_NECESSE(contractio_exsequi_modulo(rete, ordo, officina,
+            (constans i32* constans*)valores, n, &calidum));
+        CREDO_AEQUALIS_I32(calidum, (i32)30720UL);
+        CREDO_NECESSE(contractio_exsequi_anulo(rete, ordo,
+            (constans vacuum* constans*)valores, anulus_modulo, piscina,
+            &referentia));
+        CREDO_AEQUALIS_I32(referentia, (i32)30720UL);
+    }
+}
+
+/* reductio prope 2^64: n = 3 * 2^30 (2^64 mod n = 2^30), v . w cum
+ * w[3] = 1789569713: summa = 2^65 - 715827886, portatio 1, humile
+ * intra 2^30 sub 2^64 - humile ante additionem reducendum est
+ * (exspectatum 1431655762, Python exacte) */
+interior vacuum
+_probare_marginem_verbi (
+    CredoContextus* c)
+{
+               Piscina* piscina  = c->piscina;
+          constans i32  n        = (i32)3221225472UL;
+          constans i32  d[]      = { IV };
+          constans i32  p[]      = { 0, 0 };
+          constans i32  l[]      = { I, I };
+                   i32  v[IV];
+                   i32  w[IV];
+                   i32* valores[II];
+                   i32  calidum;
+                   i32  referentia;
+                   i32  k;
+        ContractioRete* rete = _rete(piscina, d, I, p, l, II);
+        ContractioOrdo* ordo = _ordinare(rete, piscina);
+    ContractioOfficina* officina = contractio_officina_creare(ordo, C,
+        piscina);
+
+    CREDO_NECESSE_NON_NIHIL(officina);
+    per (k = ZEPHYRUM; k < IV; k++)
+    {
+        v[k] = n - I;
+        w[k] = n - I;
+    }
+    w[III]      = (i32)1789569713UL;
+    valores[0]  = v;
+    valores[I]  = w;
+    CREDO_NECESSE(contractio_exsequi_modulo(rete, ordo, officina,
+        (constans i32* constans*)valores, n, &calidum));
+    CREDO_AEQUALIS_I32(calidum, (i32)1431655762UL);
+    CREDO_NECESSE(contractio_exsequi_anulo(rete, ordo,
+        (constans vacuum* constans*)valores, anulus_residuorum(n,
+        piscina),
+        piscina, &referentia));
+    CREDO_AEQUALIS_I32(referentia, (i32)1431655762UL);
+}
+
+/* officina reutilis: C exsecutiones, piscina vocantis non crescit;
+ * refutationes (ordo alieni retis, officina alieni ordinis, modulus,
+ * valores, exitus) exitum non tangunt */
+interior vacuum
+_probare_iterationem (
+    CredoContextus* c)
+{
+               Piscina*  piscina = c->piscina;
+             Fortuitum   f;
+                  Sors   s;
+        ContractioRete*  rete;
+        ContractioRete*  rete_alterum;
+        ContractioOrdo*  ordo;
+        ContractioOrdo*  ordo_alter;
+    ContractioOfficina*  officina;
+    ContractioOfficina*  officina_altera;
+                   i32** valores;
+                   i32*  servatum;
+                   i32   calidum  = ZEPHYRUM;
+                   i32   exitus   = (i32)0xDEADUL;
+        memoriae_index   usus;
+                   i32   t;
+
+    /* catena v0(a) M1(a,b) M2(b,c) v3(c), dimensiones 2, 3, 4 */
+    f.numerus_indicum    = III;
+    f.numerus_tensorum   = IV;
+    f.dimensiones[0]     = II;
+    f.dimensiones[I]     = III;
+    f.dimensiones[II]    = IV;
+    f.plani[0]           = 0;
+    f.plani[I]           = 0;
+    f.plani[II]          = I;
+    f.plani[III]         = I;
+    f.plani[IV]          = II;
+    f.plani[V]           = II;
+    f.longitudines[0]    = I;
+    f.longitudines[I]    = II;
+    f.longitudines[II]   = II;
+    f.longitudines[III]  = I;
+
+    rete      = _rete_fortuitum(piscina, &f);
+    ordo      = _ordinare(rete, piscina);
+    officina  = contractio_officina_creare(ordo, XXVIII, piscina);
+    CREDO_NECESSE_NON_NIHIL(officina);
+    valores = _valores_parare(&f, piscina);
+    sors_seminare(&s, (i64)MMXXX, ZEPHYRUM);
+
+    usus = piscina_summa_usus(piscina);
+    per (t = ZEPHYRUM; t < C; t++)
+    {
+        _valores_implere(&s, &f, valores, XVII);
+        CREDO_NECESSE(contractio_exsequi_modulo(rete, ordo, officina,
+            (constans i32* constans*)valores, XVII, &calidum));
+        CREDO_AEQUALIS_I32(calidum, _vis_bruta(&f, valores, XVII));
+    }
+    CREDO_AEQUALIS_I64((i64)piscina_summa_usus(piscina), (i64)usus);
+
+    rete_alterum  = _rete_fortuitum(piscina, &f);
+    ordo_alter    = _ordinare(rete_alterum, piscina);
+    officina_altera = contractio_officina_creare(ordo_alter, XXVIII,
+        piscina);
+    CREDO_NECESSE_NON_NIHIL(officina_altera);
+    CREDO_FALSUM(contractio_exsequi_modulo(rete_alterum, ordo, officina,
+        (constans i32* constans*)valores, XVII, &exitus));
+    CREDO_FALSUM(contractio_exsequi_modulo(rete, ordo, officina_altera,
+        (constans i32* constans*)valores, XVII, &exitus));
+    CREDO_FALSUM(contractio_exsequi_modulo(rete, ordo, officina,
+        (constans i32* constans*)valores, I, &exitus));
+    CREDO_FALSUM(contractio_exsequi_modulo(rete, ordo, officina,
+        (constans i32* constans*)valores, ZEPHYRUM, &exitus));
+    CREDO_FALSUM(contractio_exsequi_modulo(rete, ordo, officina, NIHIL,
+        XVII, &exitus));
+    CREDO_FALSUM(contractio_exsequi_modulo(rete, ordo, officina,
+        (constans i32* constans*)valores, XVII, NIHIL));
+    CREDO_FALSUM(contractio_exsequi_modulo(rete, ordo, NIHIL,
+        (constans i32* constans*)valores, XVII, &exitus));
+    servatum     = valores[II];
+    valores[II]  = NIHIL;
+    CREDO_FALSUM(contractio_exsequi_modulo(rete, ordo, officina,
+        (constans i32* constans*)valores, XVII, &exitus));
+    CREDO_FALSUM(contractio_exsequi_anulo(rete, ordo,
+        (constans vacuum* constans*)valores,
+        anulus_residuorum(XVII, piscina), piscina, &exitus));
+    valores[II] = servatum;
+    CREDO_AEQUALIS_I32(exitus, (i32)0xDEADUL);
+
+    CREDO_FALSUM(contractio_exsequi_anulo(rete_alterum, ordo,
+        (constans vacuum* constans*)valores,
+        anulus_residuorum(XVII, piscina), piscina, &exitus));
+    CREDO_FALSUM(contractio_exsequi_anulo(rete, ordo,
+        (constans vacuum* constans*)valores, NIHIL, piscina, &exitus));
+    CREDO_FALSUM(contractio_exsequi_anulo(rete, ordo,
+        (constans vacuum* constans*)valores,
+        anulus_residuorum(XVII, piscina), NIHIL, &exitus));
+    CREDO_FALSUM(contractio_exsequi_anulo(rete, ordo, NIHIL,
+        anulus_residuorum(XVII, piscina), piscina, &exitus));
+    CREDO_AEQUALIS_I32(exitus, (i32)0xDEADUL);
+}
+
+/* C indices dimensionis 1 communes et unus dimensionis 3: odometrum
+ * solum super indicem dimensionis 3 (1*4 + 2*5 + 3*6 = 32) */
+interior vacuum
+_probare_dimensiones_unas (
+    CredoContextus* c)
+{
+               Piscina* piscina  = c->piscina;
+        ContractioRete* rete     = contractio_rete_creare(piscina);
+        ContractioOrdo* ordo;
+    ContractioOfficina* officina;
+                   i32  sinister[CI];
+                   i32  dexter[CI];
+                   i32  v0[] = { I, II, III };
+                   i32  v1[] = { IV, V, VI };
+                   i32* valores[II];
+                   i32  calidum;
+                   i32  referentia;
+                   i32  id;
+                   i32  j;
+
+    per (j = ZEPHYRUM; j < CI; j++)
+    {
+        CREDO_NECESSE(contractio_index_addere(rete, j == L ? III : I,
+            &id));
+        sinister[j]    = j;
+        dexter[C - j]  = j;
+    }
+    CREDO_NECESSE(contractio_tensor_addere(rete, sinister, CI, &id));
+    CREDO_NECESSE(contractio_tensor_addere(rete, dexter, CI, &id));
+    ordo      = _ordinare(rete, piscina);
+    officina  = contractio_officina_creare(ordo, C, piscina);
+    CREDO_NECESSE_NON_NIHIL(officina);
+    valores[0] = v0;
+    valores[I] = v1;
+    CREDO_NECESSE(contractio_exsequi_modulo(rete, ordo, officina,
+        (constans i32* constans*)valores, XCVII, &calidum));
+    CREDO_AEQUALIS_I32(calidum, XXXII);
+    CREDO_NECESSE(contractio_exsequi_anulo(rete, ordo,
+        (constans vacuum* constans*)valores,
+        anulus_residuorum(XCVII, piscina), piscina, &referentia));
+    CREDO_AEQUALIS_I32(referentia, XXXII);
+}
+
+/* rete vacuum: 1; tensor solus: valor eius */
+interior vacuum
+_probare_retia_minima (
+    CredoContextus* c)
+{
+               Piscina* piscina  = c->piscina;
+          constans i32  nulli[]  = { 0 };
+          constans i32  l1[]     = { 0 };
+        ContractioRete* rete;
+        ContractioOrdo* ordo;
+    ContractioOfficina* officina;
+                   i32  septem   = VII;
+                   i32* valores[I];
+                Magnus  septem_z = magnus_ex_s64((s64)VII);
+                Magnus* valores_z[I];
+                Magnus  effectus_z;
+                   i32  calidum;
+
+    rete      = contractio_rete_creare(piscina);
+    ordo      = _ordinare(rete, piscina);
+    officina  = contractio_officina_creare(ordo, 0, piscina);
+    CREDO_NECESSE(contractio_exsequi_modulo(rete, ordo, officina, NIHIL,
+        XVII, &calidum));
+    CREDO_AEQUALIS_I32(calidum, I);
+    CREDO_NECESSE(contractio_exsequi_anulo(rete, ordo, NIHIL,
+        &ANULUS_INTEGRORUM, piscina, &effectus_z));
+    CREDO_VERUM(magnus_aequalis(effectus_z, magnus_ex_s64((s64)I)));
+
+    rete        = _rete(piscina, nulli, 0, nulli, l1, I);
+    ordo        = _ordinare(rete, piscina);
+    officina    = contractio_officina_creare(ordo, 0, piscina);
+    valores[0]  = &septem;
+    CREDO_NECESSE(contractio_exsequi_modulo(rete, ordo, officina,
+        (constans i32* constans*)valores, XVII, &calidum));
+    CREDO_AEQUALIS_I32(calidum, VII);
+    valores_z[0] = &septem_z;
+    CREDO_NECESSE(contractio_exsequi_anulo(rete, ordo,
+        (constans vacuum* constans*)valores_z, &ANULUS_INTEGRORUM,
+        piscina, &effectus_z));
+    CREDO_VERUM(magnus_aequalis(effectus_z, septem_z));
+}
+
+/* gradus referentiae sine officina: sumptus saturati refutantur ante
+ * omnem lectionem valorum (tabulae hic unius elementi tantum) */
+interior vacuum
+_probare_anulum_saturatum (
+    CredoContextus* c)
+{
+           Piscina* piscina  = c->piscina;
+      constans i32  t        = (i32)3486784401UL;
+      constans i32  tricies  = (i32)0x40000000UL;
+      constans i32  tres[]   = { t, t, t, t };
+      constans i32  ps[]     = { 0, I, II, III, 0, I, II, III };
+      constans i32  ls[]     = { IV, I, I, I, I };
+      constans i32  dn[]     = { tricies, tricies, tricies };
+      constans i32  pn[]     = { 0, I, II, 0, I, II };
+      constans i32  ln[]     = { III, III };
+               i32  unum     = I;
+               i32* valores[V];
+               i32  exitus = (i32)0xDEADUL;
+               i32  k;
+    ContractioRete* rete;
+
+    per (k = ZEPHYRUM; k < V; k++)
+    {
+        valores[k] = &unum;
+    }
+    /* multiplicationes 2^90, apex 1 */
+    rete = _rete(piscina, dn, III, pn, ln, II);
+    CREDO_FALSUM(contractio_exsequi_anulo(rete, _ordinare(rete,
+        piscina),
+        (constans vacuum* constans*)valores,
+        anulus_residuorum(XVII, piscina), piscina, &exitus));
+    /* apex 3^60 */
+    rete = _rete(piscina, tres, IV, ps, ls, V);
+    CREDO_FALSUM(contractio_exsequi_anulo(rete, _ordinare(rete,
+        piscina),
+        (constans vacuum* constans*)valores,
+        anulus_residuorum(XVII, piscina), piscina, &exitus));
+    CREDO_AEQUALIS_I32(exitus, (i32)0xDEADUL);
+}
+
+
+/* ==================================================
  * Suita
  * ================================================== */
 
@@ -997,6 +1687,24 @@ interior constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "officina", _probare_officinam, NIHIL, NIHIL, NIHIL, NIHIL },
     { "scalares multi", _probare_vacuos_multos, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "vis bruta", _probare_vim_brutam, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "anuli Z et Z[t]", _probare_anulos, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "moduli magni", _probare_modulos_magnos, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "reductio prope 2^64", _probare_marginem_verbi, NIHIL, NIHIL,
+        NIHIL,
+      NIHIL },
+    { "reusus et refutationes", _probare_iterationem, NIHIL, NIHIL,
+        NIHIL,
+      NIHIL },
+    { "dimensiones unae", _probare_dimensiones_unas, NIHIL, NIHIL,
+        NIHIL,
+      NIHIL },
+    { "retia minima", _probare_retia_minima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "anulus saturatus", _probare_anulum_saturatum, NIHIL, NIHIL,
+        NIHIL,
       NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

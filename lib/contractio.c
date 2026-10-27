@@ -48,10 +48,17 @@ nomen structura {
     i64  offset;         /* in tabula (elementa i32); solum intermedii */
 } TensorOrdinis;
 
+/* gradus cum consilio ansae: solum indices dimensionis >= 2 (indices
+ * dimensionis 1 offset numquam movent et numero non finiuntur) */
 nomen structura {
-    i32 sinister;
-    i32 dexter;
-    i32 effectus;
+    i32  sinister;
+    i32  dexter;
+    i32  effectus;
+    i32  externi;            /* indices effectus, ordine effectus */
+    i32  interni;            /* indices communes, ordine sinistri */
+    i32* dimensiones;        /* externi + interni */
+    i64* passus_sinistri;    /* passus in sinistro; 0 si ibi absens */
+    i64* passus_dextri;      /* passus in dextro; 0 si ibi absens */
 } GradusOrdinis;
 
 structura ContractioOrdo {
@@ -560,6 +567,116 @@ _contrahere (
     redde _multiplicare_saturate(multiplicationes, t->elementa);
 }
 
+/* index dimensionis 1 offset numquam movet: e consilio ansae omittitur */
+interior b32
+_movet (
+    i32 dimensio)
+{
+    redde dimensio > I;
+}
+
+/* passus indicum tensoris (index ultimus celerrimus) in tabulam per
+ * indicem scribere (valor > 0), aut delere (ZEPHYRUM) */
+interior vacuum
+_passus_ponere (
+    constans TensorOrdinis* t,
+              constans i32* dimensiones,
+                       i64* passus,
+                       b32  ponere)
+{
+    i64 p = I;
+    i32 j = t->numerus;
+
+    dum (j > ZEPHYRUM)
+    {
+        j--;
+        passus[t->indices[j]] = ponere ? p : ZEPHYRUM;
+        p = _multiplicare_saturate(p, dimensiones[t->indices[j]]);
+    }
+}
+
+/* consilium ansae gradus: externi = indices effectus dimensionis >= 2
+ * (ordine effectus: offset effectus tunc simpliciter crescit),
+ * interni = indices communes dimensionis >= 2 (ordine sinistri),
+ * passus in utroque operando. Tabulae passus_a/passus_b nullae ante
+ * et post. */
+interior vacuum
+_gradum_parare (
+     constans TensorOrdinis* tensores,
+               constans i32* dimensiones,
+                        i64* passus_a,
+                        i64* passus_b,
+              GradusOrdinis* g,
+                    Piscina* piscina)
+{
+    constans TensorOrdinis* a = &tensores[g->sinister];
+    constans TensorOrdinis* b = &tensores[g->dexter];
+    constans TensorOrdinis* c = &tensores[g->effectus];
+                       i32  numerus;
+                       i32  j;
+                       i32  k = ZEPHYRUM;
+
+    _passus_ponere(a, dimensiones, passus_a, VERUM);
+    _passus_ponere(b, dimensiones, passus_b, VERUM);
+    g->externi = ZEPHYRUM;
+    g->interni = ZEPHYRUM;
+    per (j = ZEPHYRUM; j < c->numerus; j++)
+    {
+        si (_movet(dimensiones[c->indices[j]]))
+        {
+            g->externi++;
+        }
+    }
+    per (j = ZEPHYRUM; j < a->numerus; j++)
+    {
+        i32 index = a->indices[j];
+
+        si (passus_b[index] != ZEPHYRUM && _movet(dimensiones[index]))
+        {
+            g->interni++;
+        }
+    }
+    numerus             = g->externi + g->interni;
+    g->dimensiones      = NIHIL;
+    g->passus_sinistri  = NIHIL;
+    g->passus_dextri    = NIHIL;
+    si (numerus > ZEPHYRUM)
+    {
+        g->dimensiones = (i32*)piscina_allocare(piscina,
+            (memoriae_index)numerus * magnitudo(i32));
+        g->passus_sinistri = (i64*)piscina_allocare(piscina,
+            (memoriae_index)numerus * magnitudo(i64));
+        g->passus_dextri = (i64*)piscina_allocare(piscina,
+            (memoriae_index)numerus * magnitudo(i64));
+    }
+    per (j = ZEPHYRUM; j < c->numerus; j++)
+    {
+        i32 index = c->indices[j];
+
+        si (_movet(dimensiones[index]))
+        {
+            g->dimensiones[k]      = dimensiones[index];
+            g->passus_sinistri[k]  = passus_a[index];
+            g->passus_dextri[k]    = passus_b[index];
+            k++;
+        }
+    }
+    per (j = ZEPHYRUM; j < a->numerus; j++)
+    {
+        i32 index = a->indices[j];
+
+        si (passus_b[index] != ZEPHYRUM && _movet(dimensiones[index]))
+        {
+            g->dimensiones[k]      = dimensiones[index];
+            g->passus_sinistri[k]  = passus_a[index];
+            g->passus_dextri[k]    = passus_b[index];
+            k++;
+        }
+    }
+    _passus_ponere(a, dimensiones, passus_a, FALSUM);
+    _passus_ponere(b, dimensiones, passus_b, FALSUM);
+}
+
 /* tabula: intermedii ordine graduum; effectus gradus primo apto
  * ponitur dum operandi eius adhuc vivunt, deinde operandi liberantur */
 interior vacuum
@@ -718,6 +835,8 @@ contractio_ordinare (
                i32* possessores;
                i32* dimensiones;
                i32* vivi;
+               i64* passus_a;
+               i64* passus_b;
                i32  numerus_vivorum;
                i32  n;
                i32  m;
@@ -816,6 +935,22 @@ contractio_ordinare (
         }
     }
 
+    /* passus per indicem in operandis gradus currentis (0 = absens) */
+    passus_a = NIHIL;
+    passus_b = NIHIL;
+    si (m > ZEPHYRUM)
+    {
+        passus_a = (i64*)piscina_allocare(piscina,
+            (memoriae_index)m * magnitudo(i64));
+        passus_b = (i64*)piscina_allocare(piscina,
+            (memoriae_index)m * magnitudo(i64));
+        per (j = ZEPHYRUM; j < m; j++)
+        {
+            passus_a[j] = ZEPHYRUM;
+            passus_b[j] = ZEPHYRUM;
+        }
+    }
+
     /* gradus avidi */
     vivi = (i32*)piscina_allocare(piscina,
         (memoriae_index)n * magnitudo(i32));
@@ -838,6 +973,8 @@ contractio_ordinare (
         ordo->gradus[s].sinister  = a;
         ordo->gradus[s].dexter    = b;
         ordo->gradus[s].effectus  = c;
+        _gradum_parare(ordo->tensores, dimensiones, passus_a, passus_b,
+            &ordo->gradus[s], piscina);
         ordo->sumptus.multiplicationes = _addere_saturate(
             ordo->sumptus.multiplicationes, multiplicationes);
         si (ordo->tensores[c].elementa > ordo->sumptus.apex)
@@ -999,6 +1136,131 @@ contractio_officina_creare (
     redde officina;
 }
 
+/* numeratores odometri: < 64 indices dimensionis >= 2 per gradum
+ * (multiplicationes non saturatae, vide supra) */
+#define CONTRACTIO_NUMERATORES LXIV
+
+/* odometrum super indices consilii [primus, finis): assignatio
+ * proxima, offsets in operandis renovati. FALSUM si exhaustum -
+ * numeratores tunc nulli et offsets ad initium redierunt. */
+interior b32
+_numeratores_promovere (
+    constans GradusOrdinis* g,
+                       i32* numeratores,
+                       i32  primus,
+                       i32  finis,
+                       i64* offset_a,
+                       i64* offset_b)
+{
+    i32 k = finis;
+
+    dum (k > primus)
+    {
+        k--;
+        numeratores[k]++;
+        *offset_a += g->passus_sinistri[k];
+        *offset_b += g->passus_dextri[k];
+        si (numeratores[k] < g->dimensiones[k])
+        {
+            redde VERUM;
+        }
+        *offset_a       -= g->passus_sinistri[k] * g->dimensiones[k];
+        *offset_b       -= g->passus_dextri[k] * g->dimensiones[k];
+        numeratores[k]  = ZEPHYRUM;
+    }
+    redde FALSUM;
+}
+
+/* gradus calidus: pro quoque elemento effectus summa productorum in
+ * accumulatore duorum verborum (humile + numerus portationum: exacta
+ * pro omni longitudine), reductio semel: (portatio * 2^64 + humile)
+ * mod n, residuum_verbi = 2^64 mod n */
+interior vacuum
+_gradum_modulo (
+    constans GradusOrdinis* g,
+              constans i32* sinister,
+              constans i32* dexter,
+                       i32* effectus,
+                       i64  elementa,
+                       i64  modulus,
+                       i64  residuum_verbi)
+{
+    i32 numeratores[CONTRACTIO_NUMERATORES];
+    i32 summus  = g->externi + g->interni;
+    i64 oa      = ZEPHYRUM;
+    i64 ob      = ZEPHYRUM;
+    i64 o;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < summus; k++)
+    {
+        numeratores[k] = ZEPHYRUM;
+    }
+    per (o = ZEPHYRUM; o < elementa; o++)
+    {
+        i64 humile    = ZEPHYRUM;
+        i64 portatio  = ZEPHYRUM;
+
+        si (g->interni == ZEPHYRUM)
+        {
+            humile = (i64)sinister[oa] * (i64)dexter[ob];
+        }
+        alioquin
+        {
+            /* index communis ultimus in ansa stricta, ceteri per
+             * odometrum */
+            i32 ultimus  = summus - I;
+            i32 d        = g->dimensiones[ultimus];
+            i64 pa       = g->passus_sinistri[ultimus];
+            i64 pb       = g->passus_dextri[ultimus];
+            i64 ia       = oa;
+            i64 ib       = ob;
+
+            fac
+            {
+                i64 xa = ia;
+                i64 xb = ib;
+                i32 j;
+
+                per (j = ZEPHYRUM; j < d; j++)
+                {
+                    i64 productum = (i64)sinister[xa] * (i64)dexter[xb];
+
+                    humile += productum;
+                    si (humile < productum)
+                    {
+                        portatio++;
+                    }
+                    xa += pa;
+                    xb += pb;
+                }
+            }
+            dum (_numeratores_promovere(g, numeratores, g->externi,
+                ultimus, &ia, &ib));
+        }
+        effectus[o] = (i32)(((portatio % modulus) * residuum_verbi
+            % modulus
+            + humile % modulus) % modulus);
+        (vacuum)_numeratores_promovere(g, numeratores, ZEPHYRUM,
+            g->externi, &oa, &ob);
+    }
+}
+
+/* operandum calidum: initialis ex valoribus, intermedius ex tabula */
+interior constans i32*
+_operandum_modulo (
+       constans ContractioOrdo* ordo,
+    constans ContractioOfficina* officina,
+         constans i32* constans* valores,
+                            i32  tensor)
+{
+    si (tensor < ordo->initiales)
+    {
+        redde valores[tensor];
+    }
+    redde officina->tabula + ordo->tensores[tensor].offset;
+}
+
 b32
 contractio_exsequi_modulo (
       constans ContractioRete*  rete,
@@ -1008,13 +1270,190 @@ contractio_exsequi_modulo (
                         i32     modulus,
                         i32*    exitus)
 {
-    (vacuum)rete;
-    (vacuum)ordo;
-    (vacuum)officina;
-    (vacuum)valores;
-    (vacuum)modulus;
-    (vacuum)exitus;
-    redde FALSUM;
+    i64 residuum_verbi;
+    i32 n;
+    i32 s;
+    i32 k;
+
+    si (   rete           == NIHIL || ordo == NIHIL || officina == NIHIL
+        || exitus         == NIHIL || ordo->rete != rete
+        || officina->ordo != ordo || modulus < II)
+    {
+        redde FALSUM;
+    }
+    n = ordo->initiales;
+    si (n == ZEPHYRUM)
+    {
+        *exitus = I;
+        redde VERUM;
+    }
+    si (valores == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        si (valores[k] == NIHIL)
+        {
+            redde FALSUM;
+        }
+    }
+    si (ordo->numerus_graduum == ZEPHYRUM)
+    {
+        *exitus = valores[ZEPHYRUM][ZEPHYRUM];
+        redde VERUM;
+    }
+    residuum_verbi = (CONTRACTIO_SATURATUM % (i64)modulus + I)
+        % (i64)modulus;
+    per (s = ZEPHYRUM; s < ordo->numerus_graduum; s++)
+    {
+        constans GradusOrdinis* g = &ordo->gradus[s];
+        constans TensorOrdinis* c = &ordo->tensores[g->effectus];
+
+        _gradum_modulo(g,
+            _operandum_modulo(ordo, officina, valores, g->sinister),
+            _operandum_modulo(ordo, officina, valores, g->dexter),
+            officina->tabula + c->offset, c->elementa, (i64)modulus,
+            residuum_verbi);
+    }
+    *exitus = officina->tabula[ordo->tensores[ordo->gradus[
+        ordo->numerus_graduum - I].effectus].offset];
+    redde VERUM;
+}
+
+/* elementum anuli ad indicem in tabula elementorum */
+interior constans vacuum*
+_elementum (
+    constans vacuum* tabula,
+                i64  index,
+     memoriae_index  mensura)
+{
+    redde (constans character*)tabula + (memoriae_index)index * mensura;
+}
+
+/* gradus referentiae: eadem ansa, operationes anuli; summa cuiusque
+ * elementi in scrinio, transcripta in servatam, scrinium refectum */
+interior b32
+_gradum_anulo (
+    constans GradusOrdinis* g,
+           constans vacuum* sinister,
+           constans vacuum* dexter,
+                 character* effectus,
+                       i64  elementa,
+           constans Anulus* anulus,
+                   Piscina* servata,
+                   Piscina* scrinium,
+                 character* officium)
+{
+    memoriae_index mensura = anulus->mensura;
+               i32 numeratores[CONTRACTIO_NUMERATORES];
+               i32 summus  = g->externi + g->interni;
+               i64 oa      = ZEPHYRUM;
+               i64 ob      = ZEPHYRUM;
+               i64 o;
+               i32 k;
+
+    per (k = ZEPHYRUM; k < summus; k++)
+    {
+        numeratores[k] = ZEPHYRUM;
+    }
+    per (o = ZEPHYRUM; o < elementa; o++)
+    {
+         PiscinaNotatio  nota       = piscina_notare(scrinium);
+              character* summa      = officium;
+              character* altera     = officium + mensura;
+              character* productum  = officium + II * mensura;
+                    i64  ia         = oa;
+                    i64  ib         = ob;
+
+        anulus->nullum(anulus, summa);
+        fac
+        {
+            character* t;
+
+            si (   !anulus->multiplica(anulus,
+                       _elementum(sinister, ia, mensura),
+                       _elementum(dexter, ib, mensura), scrinium,
+                       productum)
+                || !anulus->adde(anulus, summa, productum, scrinium,
+                       altera))
+            {
+                piscina_reficere(scrinium, nota);
+                redde FALSUM;
+            }
+            t       = summa;
+            summa   = altera;
+            altera  = t;
+        }
+        dum (_numeratores_promovere(g, numeratores, g->externi, summus,
+            &ia, &ib));
+        anulus->transcribe(anulus, summa, servata,
+            effectus + (memoriae_index)o * mensura);
+        piscina_reficere(scrinium, nota);
+        (vacuum)_numeratores_promovere(g, numeratores, ZEPHYRUM,
+            g->externi, &oa, &ob);
+    }
+    redde VERUM;
+}
+
+/* intermedii in 'servata', operationes in 'scrinio'; FALSUM si
+ * allocatio aut operatio anuli deficit */
+interior b32
+_exsequi_anulo_intra (
+           constans ContractioOrdo* ordo,
+         constans vacuum* constans* valores,
+                   constans Anulus* anulus,
+                           Piscina* servata,
+                           Piscina* scrinium,
+                           Piscina* piscina,
+                            vacuum* exitus)
+{
+     memoriae_index   mensura = anulus->mensura;
+     memoriae_index   maximum = ~(memoriae_index)ZEPHYRUM;
+    constans vacuum** data;
+          character*  officium;
+                i32   totales = ordo->initiales + ordo->numerus_graduum;
+                i32   s;
+                i32   k;
+
+    data = (constans vacuum**)piscina_conari_allocare(servata,
+        (memoriae_index)totales * magnitudo(constans vacuum*));
+    officium = (character*)piscina_conari_allocare(servata,
+        III * mensura);
+    si (data == NIHIL || officium == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < ordo->initiales; k++)
+    {
+        data[k] = valores[k];
+    }
+    per (s = ZEPHYRUM; s < ordo->numerus_graduum; s++)
+    {
+        constans GradusOrdinis* g = &ordo->gradus[s];
+                           i64  elementa =
+                               ordo->tensores[g->effectus].elementa;
+                     character* effectus;
+
+        si (elementa > (i64)(maximum / mensura))
+        {
+            redde FALSUM;
+        }
+        effectus = (character*)piscina_conari_allocare(servata,
+            (memoriae_index)elementa * mensura);
+        si (   effectus == NIHIL
+            || !_gradum_anulo(g, data[g->sinister], data[g->dexter],
+                   effectus, elementa, anulus, servata, scrinium,
+                   officium))
+        {
+            redde FALSUM;
+        }
+        data[g->effectus] = effectus;
+    }
+    anulus->transcribe(anulus,
+        data[ordo->gradus[ordo->numerus_graduum - I].effectus], piscina,
+        exitus);
+    redde VERUM;
 }
 
 b32
@@ -1026,11 +1465,52 @@ contractio_exsequi_anulo (
                     Piscina*    piscina,
                      vacuum*    exitus)
 {
-    (vacuum)rete;
-    (vacuum)ordo;
-    (vacuum)valores;
-    (vacuum)anulus;
-    (vacuum)piscina;
-    (vacuum)exitus;
-    redde FALSUM;
+     Piscina* servata;
+     Piscina* scrinium;
+         b32  bene;
+         i32  k;
+
+    si (   rete == NIHIL || ordo == NIHIL || anulus == NIHIL
+        || piscina == NIHIL || exitus == NIHIL || ordo->rete != rete
+        || ordo->sumptus.multiplicationes == CONTRACTIO_SATURATUM
+        || ordo->sumptus.apex == CONTRACTIO_SATURATUM)
+    {
+        redde FALSUM;
+    }
+    si (ordo->initiales == ZEPHYRUM)
+    {
+        anulus->unum(anulus, piscina, exitus);
+        redde VERUM;
+    }
+    si (valores == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < ordo->initiales; k++)
+    {
+        si (valores[k] == NIHIL)
+        {
+            redde FALSUM;
+        }
+    }
+    si (ordo->numerus_graduum == ZEPHYRUM)
+    {
+        anulus->transcribe(anulus, valores[ZEPHYRUM], piscina, exitus);
+        redde VERUM;
+    }
+    servata   = piscina_generare_dynamicum("contractio_servata", 4096);
+    scrinium  = piscina_generare_dynamicum("contractio_scrinium", 4096);
+    bene     = servata != NIHIL && scrinium != NIHIL
+        && _exsequi_anulo_intra(ordo, valores, anulus, servata,
+        scrinium,
+               piscina, exitus);
+    si (servata != NIHIL)
+    {
+        piscina_destruere(servata);
+    }
+    si (scrinium != NIHIL)
+    {
+        piscina_destruere(scrinium);
+    }
+    redde bene;
 }

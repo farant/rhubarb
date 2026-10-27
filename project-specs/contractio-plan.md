@@ -416,6 +416,16 @@ Fran's go-ahead.
   → `valores[0][0]`, n = 0 → 1; strides per operand (inputs keep the
   caller's order, intermediates are sorted); check `officina->ordo ==
   ordo` and `ordo->rete == rete`.
+  *(2026-10-27: landed. Loop plan per step built at `ordinare`
+  (dimension ≥ 2 indices only, strides per operand); hot tier with the
+  two-word accumulator and a tight inner loop, no allocation; reference
+  tier over any anulus with two private arenas. 21 sections, 118,633
+  checks: brute force on 200 networks at five moduli up to 0xFFFFFFFF,
+  Z and Z[t, t⁻¹] against the hot tier, every value n − 1, a
+  constructed near-2^64 reduction (plant "low word unreduced" survived
+  random data), 100 reuses with no arena growth. 15 of 16 plants red;
+  the survivor is a deliberately redundant guard. See
+  lib/contractio.worklog.md.)*
 - **T4. Vertex-model bracket in laqueus.** Turning numbers, network
   builder (kink folding), `laqueus_uncinus_ex_pd_rete`,
   `laqueus_jones_ex_pd_rete`.

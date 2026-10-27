@@ -160,3 +160,73 @@ intermediate lists not sorted (survived before), P23 `ordo_indices`
 one past the end.
 
 Tests now: 13 sections, 106,758 checks, 0.09 s.
+
+## 2026-10-27 — T3: execution (hot tier and reference tier)
+
+**Loop plan built at `ordinare`, not per execution.** Each step stores
+its *externi* (result indices of dimension ≥ 2, in the result's order)
+and *interni* (shared indices of dimension ≥ 2, in the left operand's
+order), with their dimensions and strides in both operands (stride 0 =
+index absent from that operand). Dimension-1 indices never enter the
+plan (one helper, `_movet`, decides it in all four places), which is
+the review's M2: they never move an offset and can be arbitrarily many.
+With multiplications unsaturated the plan has ≤ 63 entries, so the
+counters are a 64-entry stack array. Strides are per operand: inputs
+keep the caller's index order, intermediates are sorted.
+
+**Hot tier.** Externi are walked in the result's own order, so the
+result offset is just o = 0, 1, 2, ...; an odometer over externi moves
+the two operand offsets. Per result entry, the innermost shared index
+runs as a tight loop and the rest by odometer. Accumulation is two
+words: `humile += a·b; if (humile < a·b) portatio++` (a·b < 2^64 since
+a, b < 2^32), reduced once as ((portatio mod n)·(2^64 mod n) mod n +
+humile mod n) mod n — exact for any sum length and any 2 ≤ n < 2^32.
+No allocation: intermediates live in the officina's slab at T2's
+offsets. n = 0 gives 1, a single scalar gives valores[0][0].
+
+**Reference tier.** The same plan and odometer over any anulus. Two
+private dynamic arenas: *servata* holds every intermediate (memory =
+sum of intermediates; reference tier is for small networks), and
+*scrinium* holds each entry's partial sums and products, reset after
+the entry's sum is transcribed into servata. The result is transcribed
+into the caller's arena. Refusals before any value is read:
+multiplications or apex saturated (the review's M3 — no officina guards
+this tier); each intermediate's byte size is checked against overflow
+and allocated with `piscina_conari_allocare`.
+
+**Tests** (21 sections, 118,633 checks, 0.07 s): 200 small random
+networks (1–7 tensors, 0–9 indices of dimension 1–3) where the hot
+tier equals brute-force summation over every index assignment and
+equals the reference tier over Z/n, for n = 2, 17, 998244353,
+4294967291 and 0xFFFFFFFF; 60 networks over Z and over Z[t, t⁻¹]
+(reference result reduced mod p, or evaluated at x = 12345 mod p,
+equals the hot tier on reduced values); every value n − 1 with a
+shared dimension of 4096, and a 3 × 2048 × 5 chain, at both large
+moduli; one officina reused for 100 executions with no growth of the
+caller's arena; every refusal leaves `exitus` untouched; 100 shared
+dimension-1 indices plus one of dimension 3; n = 0 and n = 1 on both
+tiers; the reference tier refuses saturated networks before reading
+values.
+
+**Near-2^64 reduction.** Plant Q3 (adding `humile` unreduced) survived
+the first suite: it only overflows when humile + (portatio part) ≥
+2^64, which random data essentially never hits. Constructed case: n =
+3·2^30 (2^64 mod n = 2^30), v·w over dimension 4 with three products
+(n − 1)^2 and the fourth (n − 1)·1789569713: sum = 2^65 − 715827886,
+portatio 1, humile within 2^30 of 2^64. Expected 1431655762 (Python,
+exact). New section "reductio prope 2^64"; Q3 now red.
+
+**Plants (radix/contractio), 15/16 red:** Q1 carry dropped; Q2 2^64
+mod n off by one; Q3 low word unreduced (red after the new section);
+Q4 odometer reset; Q5 dimension-1 indices in the plan (stack overrun,
+red); Q6 inner stride from the wrong operand; Q7 all strides 1; Q8
+wrong operand chosen (crash); Q9 result read from the first step; Q10
+single tensor; Q11 empty network; Q12 rete check removed; Q13 officina
+check removed; Q15 reference sums transcribed into the scratch arena;
+Q16 reference tier's multiplication guard removed (crash on 2^90
+iterations). Q14 (reference tier's apex guard removed) survives: a
+saturated apex also fails the per-intermediate size check. Kept
+anyway — with a 1-byte element the size check would pass a size near
+2^64 to piscina, which wraps there (tabularium 01M5YW4S...).
+First forms of Q6, Q7, Q15 left a variable unused (-Werror) and Q16's
+multi-line anchor changed the line count; rewritten.
