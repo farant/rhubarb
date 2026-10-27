@@ -1,0 +1,10 @@
+<!-- conspectus_personae.stml - genus quaerendum 'personae': personae
+     cum libro notarum suo, inventum unum per personam (indagatio S2;
+     C: lib/indagatio_genera.c). Infixa in lib/conspectus_infixa.c per
+     tools/conspectus_infigere.sh. -->
+<conspectus nomen="personae" versio="1">
+  <clavis typus="nomen"/>
+  <fons documentum="personae" irritat="per-rem"/>
+  <fons spatium="persona/{clavis}"/>
+  <quaerendum genus="Contacts"/>
+</conspectus>

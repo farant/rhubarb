@@ -2,13 +2,17 @@
 
 # Effusio cursus ultimi semper in build/test_logs/briar.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS servatus).
-# <porta titulus="briar" tegit="briar/facies/* briar/fontes/* briar/grammatica/* briar/probationes/* materia/fontes/* md/fontes/*"/>
+# <porta titulus="briar" tegit="briar/facies/* briar/fontes/* briar/grammatica/* briar/probationes/* materia/fontes/* md/fontes/*" legit="md/html/md-html.stml silva/fontes/systema_c89.h silva/fontes/systema_posix.h"/>
 if [ -z "${BRIAR_PROBATIONES_EFFUSIO:-}" ]; then
     export BRIAR_PROBATIONES_EFFUSIO=1
     mkdir -p "$(dirname "$0")/../build/test_logs"
     "$0" "$@" 2>&1 | tee "$(dirname "$0")/../build/test_logs/briar.log"
     exit "${PIPESTATUS[0]}"
 fi
+# initium scripti (2026-10-22): mensor_suitae 'totum' hinc metitur, ut
+# praevolatus (totum - compilatio - cursus) PRAEPARATIONEM obiectorum
+# ante ansam probationum nominet (olim ab ansa ipsa - invisa)
+SUITA_INITIUM="$(perl -MTime::HiRes -e 'print Time::HiRes::time')"
 
 # briar/compile_probationes.sh - Probationes thistle (cliens materiae; md consumit)
 #
@@ -86,6 +90,7 @@ declare -a RADIX_FONTES=(
     "similitudo"
     "canon"
     "credo"
+    "memoria_processus_macos"   # credo memoria T2 (2026-10-19)
     # clausura silicis (bin/aedilis lib/silex.c --partes, 2026-09-05):
     # nexus regiones C per silvam parsat capitibus e FONTE silicis
     "filum"
@@ -103,6 +108,8 @@ declare -a RADIX_FONTES=(
     "moneta"
     "fasti"
     "volumen"
+    "hora_hybrida"   # volumen D2: identitas actuum
+    "machina_posix"
     "silex"
     # briar -app (spec par. 4.8): fasciculum et quae trahit
     # (bin/aedilis lib/fasciculum.c --partes, 2026-09-14)
@@ -324,7 +331,7 @@ done
 # metra suitae in volumen mensoris (tools/mensor_suitae.sh; praefixum
 # "md." - silva.mensurae('md.', n) eas legit); numquam suitam frangit
 source "$RADIX_DIR/tools/mensor_suitae.sh"
-mensor_suitae_incipere "briar."
+mensor_suitae_incipere "briar." "$SUITA_INITIUM"
 total=0 ; passed=0 ; failed_names=""
 if [ "$OBIECTA" -eq 1 ]; then
     echo "obiecta briar parata"

@@ -69,3 +69,13 @@ neuter noun (three forms); oratio stayed 19/19 (no pins moved).
 **Lint index was stale.** The first lint run said "nihil novi"; after
 `./silva/nexus.sh pseudoterminale_posix_creare` it found 12 new words.
 Refresh the index before trusting a clean lint on new files.
+
+## 2026-10-26 - grex_frontalis (vicus quies T2b)
+
+New table slot `grex_frontalis`: tcgetpgrp on the master (posix), -1 for
+the memory bridge and after close. A table built by hand (tests'
+`Obstinatus`) may leave it NIHIL - `aemulator_hospes_grex_frontalis`
+checks the pointer. Test: `/bin/sh -i` is its own foreground group;
+`sleep 1` moves the foreground to a new group and back. `tcgetpgrp` had
+to be declared in silva/fontes/systema_posix.h (examen called it
+implicit) and got an ignotum-permissum glossary line, like lstat/rmdir.

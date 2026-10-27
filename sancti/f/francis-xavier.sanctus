@@ -1,0 +1,49 @@
+<sanctus id="francis-xavier" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Francis Xavier</nomen>
+  <ortus annus="1506" mensis="4" dies="7" locus="Castle of Xavier, near Sanguesa, Navarre" fontes="ce"/>
+  <obitus annus="1552" mensis="12" dies="2" locus="Island of Sancian, near the coast of China" fontes="ce mr2"/>
+  <canonizatio modus="formalis" annus="1622" papa="Gregory XV" fontes="ce"/>
+  <festum calendarium="generale" mensis="12" dies="3" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="12" dies="2" nota="his death; the entry refers his festival to the 3rd by order of Alexander VII" fontes="mr2"/>
+  <festum calendarium="martyrologium" mensis="12" dies="3" nota="festival" fontes="mr3"/>
+  <munus fontes="us ce">priest</munus>
+  <munus fontes="mr2 ce">Jesuit</munus>
+  <munus fontes="ce">missionary</munus>
+  <patrocinium fontes="mr2">Society for the Propagation of the Faith</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">Francis Xavier was born at the castle of Xavier in Navarre on 7 April 1506. In 1525 he went to Paris, to the college of Sainte-Barbe, where he became friends with Pierre Favre; Ignatius of Loyola, then planning the Society of Jesus, won the confidence of both, and they joined him; on 15 August 1534 he was one of the seven who made the vow of Montmartre. He was ordained with Ignatius on 24 June 1537. At the request of King John III of Portugal he was sent to the East Indies, sailed from Lisbon on 7 April 1541 and landed at Goa on 6 May 1542.</paragraphus>
+    <paragraphus fontes="ce mr2">At Goa he walked the streets ringing a little bell to gather children for catechism. He then preached for almost three years in western India, reaching Ceylon, and afterwards at Malacca and in the Moluccas; that he ever landed in the Philippines has not been proved. On 15 August 1549 he landed at Kagoshima and spent about two and a half years in Japan, founding several Christian communities. Setting out for China, he reached the island of Sancian, fell ill, and died in a rough hut on 2 December 1552. He was canonized with Ignatius in 1622, and Pius X named him patron of the Society for the Propagation of the Faith.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Francis Xavier" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Francis_Xavier">
+    <excerptum>Born in the Castle of Xavier near Sanguesa, in Navarre, 7 April, 1506; died on the Island of Sancian near the coast of China, 2 December, 1552.</excerptum>
+    <excerptum>In 1525, having completed a preliminary course of studies in his own country, Francis Xavier went to Paris, where he entered the collège de Sainte-Barbe. Here he met the Savoyard, Pierre Favre, and a warm personal friendship sprang up between them.</excerptum>
+    <excerptum>Ignatius Loyola, who was already planning the foundation of the Society of Jesus, resided for a time as a guest in 1529. He soon won the confidence of the two young men</excerptum>
+    <excerptum>first Favre and later Xavier offered themselves with him in the formation of the Society.</excerptum>
+    <excerptum>the seven made the famous vow of Montmartre, 15 Aug., 1534.</excerptum>
+    <excerptum>On 24 June, 1537, he received Holy orders with St. Ignatius.</excerptum>
+    <excerptum>at the earnest solicitation of the John III, King of Portugal, to evangelize the people of the East Indies.</excerptum>
+    <excerptum>On 7 April, 1541, he embarked in a sailing vessel for India, and after a tedious and dangerous voyage landed at Goa, 6 May, 1542.</excerptum>
+    <excerptum>He would go through the streets ringing a little bell and inviting the children to hear the word of God.</excerptum>
+    <excerptum>He devoted almost three years to the work of preaching to the people of Western India, converting many, and reaching in his journeys even the Island of Ceylon.</excerptum>
+    <excerptum>In the spring of 1545 Xavier started for Malacca.</excerptum>
+    <excerptum>About January, 1546, Xavier left Malacca and went to Molucca Islands</excerptum>
+    <excerptum>up to the present time it has not been proved absolutely that St. Francis Xavier ever landed in the Philippines.</excerptum>
+    <excerptum>They landed at the city of Kagoshima in Japan, 15 Aug., 1549.</excerptum>
+    <excerptum>After working about two years and a half in Japan he left this mission in charge of Father Cosme de Torres</excerptum>
+    <excerptum>during 1551 preached in some important cities, forming the nucleus of several Christian communities</excerptum>
+    <excerptum>in the autumn he arrived in a Portuguese vessel at the small island of Sancian near the coast of China. While planning the best means for reaching the mainland, he was taken ill</excerptum>
+    <excerptum>he was removed to the land, where a rude hut had been built to shelter him. In these wretched surroundings he breathed his last.</excerptum>
+    <excerptum>St. Francis Xavier is considered the greatest missionary since the time of the Apostles</excerptum>
+    <excerptum>He was canonized with St. Ignatius in 1622, although on account of the death of Gregory XV, the Bull of canonization was not published until the following year.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="2 December">
+    <excerptum>In Sancian, a Chinese island, St. Francis Xavier, of the Society of Jesus, renowned for the conversions he made among the Gentiles, and for supernatural gifts and miracles.</excerptum>
+    <excerptum>Pius X. selected and appointed this holy man to be the heavenly patron of the Society for the Propagation of the Faith and its work. His festival, however, is kept on the 3d of this month by order of Alexander VII.</excerptum>
+  </fons>
+  <fons id="mr3" opus="mr1916" locus="3 December">
+    <excerptum>FRANCIS XAVIER, confessor, of the Society of Jesus, who died on the 2d of this month.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="3 December">
+    <excerptum>Saint Francis Xavier, Priest</excerptum>
+  </fons>
+</sanctus>

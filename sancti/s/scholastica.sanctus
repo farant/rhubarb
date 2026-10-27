@@ -1,0 +1,33 @@
+<sanctus id="scholastica" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Scholastica</nomen>
+  <nomen lingua="la" principale="verum">Scholastica</nomen>
+  <obitus annus="543" circa="verum" fontes="bu"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="2" dies="10" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="2" dies="10" fontes="mr"/>
+  <munus fontes="mr us">virgin</munus>
+  <munus fontes="bu">abbess</munus>
+  <descriptio>
+    <paragraphus fontes="bu">Scholastica was the sister of Saint Benedict and, according to Gregory the Great, was consecrated to God from her earliest youth. Where her first monastery stood is not recorded; after Benedict moved to Monte Cassino she settled at Plombariola nearby, where she founded and governed a convent of nuns some five miles from her brother's monastery. Once a year she visited him at a house a little way from the monastery, since she could not enter it.</paragraphus>
+    <paragraphus fontes="bu mr">Gregory tells of their last meeting: when Benedict refused to stay the night, she prayed with tears and so violent a storm broke that he and his monks could not leave, and they spent the night speaking of the life of heaven. Three days later she died, and Benedict saw her soul rise to heaven in the form of a dove. He had her buried in the tomb he had prepared for himself. Butler places her death about the year 543.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="10 February">
+    <excerptum>AN Mount Cassino, St. Scholastica, a virgin, whose soul her brother, St. Benedict, the abbot, saw leaving her body in the form of a dove, and ascending to heaven.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v02 Feb. 10 St. Scholastica, Virgin">
+    <excerptum>This saint was sister to the great St. Benedict. She consecrated herself to God from her earliest youth, as St. Gregory testifies.</excerptum>
+    <excerptum>monastery was situated is not mentioned: but after her brother removed to Mount Cassino, she chose her retreat at Plombariola, in that neighbourhood, where she founded and governed a nunnery about five miles distant to the south from St. Benedict's monastery.</excerptum>
+    <excerptum>She visited her holy brother once a year, and as she was not allowed to enter his monastery, he went out with some of his monks to meet her at a house at some small distance.</excerptum>
+    <excerptum>St. Gregory relates a remarkable circumstance of the last of these visits.</excerptum>
+    <excerptum>St. Benedict, unwilling to transgress his rule, told her he could not pass a night out of his monastery</excerptum>
+    <excerptum>with many tears, begged of Almighty God to interpose in her behalf. Her prayer was scarce ended, when there happened such a storm of rain, thunder, aad lightning, that neither St. Benedict nor any of his companions could set a foot out of doors.</excerptum>
+    <excerptum>they spent the night in conferences on pious subjects, chiefly on the felicity of the blessed</excerptum>
+    <excerptum>his sister must have been their abbess, under his rule and direction.</excerptum>
+    <excerptum>The next morning they parted, and three days after St. Scholastica died in her solitude.</excerptum>
+    <excerptum>he saw the soul of his sister ascending thither in the shape of a dove.</excerptum>
+    <excerptum>where he caused it to be laid in the tomb which he had prepared for himself. She must have died about the year 543.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="10 February">
+    <excerptum>Saint Scholastica, Virgin</excerptum>
+  </fons>
+</sanctus>

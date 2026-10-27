@@ -1297,6 +1297,82 @@ _sectio_factum (
         c->piscina), s1));
 }
 
+/* DOMUS ALIENA (parcum …QX6SQ0): regula domum vetante (arbor
+ * secundaria) mutatio in '~/' observata nec a gradu notata MONITUM est,
+ * non fractura (main instituens dum gradus currit); notata et extra
+ * domum ('/opt') manent fractura; sine regula omnia ut antea */
+interior vacuum
+_sectio_domus_aliena (
+    CredoContextus* c)
+{
+          Consilium* k   = consilium_creare(c->piscina);
+    ConsiliumGradus* a1  = _gradus(c, k, "A");
+    ConsiliumGradus* b1  = _gradus(c, k, "B");
+    ConsiliumGradus* c1  = _gradus(c, k, "C");
+             Mundus  m;
+    ConsiliumSutura  s;
+                Xar* regulae = xar_creare(c->piscina,
+                    (i32)magnitudo(ConsiliumRegula));
+                Xar* acta;
+             chorda  causa;
+             chorda  t;
+    constans character* constans scripturae[] = {
+        "A", "build/a", "A", "~/.bin/alienum",
+        "B", "build/b", "B", "~/.bin/b",
+        "C", "build/c", "C", "/opt/x", NIHIL
+    };
+    constans character* constans notatae[] = {
+        "B", "~/.bin/b", NIHIL
+    };
+
+    _effectus(c, k, a1, CONSILIUM_SCRIBERE, "build/a");
+    _effectus(c, k, b1, CONSILIUM_SCRIBERE, "build/b");
+    _effectus(c, k, c1, CONSILIUM_SCRIBERE, "build/c");
+    *(ConsiliumRegula*)xar_addere(regulae) =
+        consilium_regula_arboris_secundariae(c->piscina);
+    _mundum_parare(c, &m);
+    m.scripturae  = scripturae;
+    m.notatae     = notatae;
+    s             = _sutura(&m);
+    acta = consilium_exsequi(k, regulae, &s, CONSILIUM_PERGERE, NIHIL,
+        c->piscina, &causa);
+    CREDO_NECESSE_NON_NIHIL(acta);
+    /* A: domus mutata, non notata -> ACTUM cum monito */
+    CREDO_AEQUALIS_I32((i32)_actus(acta, "A")->eventus,
+        (i32)CONSILIUM_ACTUM);
+    CREDO_AEQUALIS_I32(xar_numerus(_actus(acta, "A")->monita), I);
+    CREDO_AEQUALIS_I32(xar_numerus(_actus(acta, "A")->extra), ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(
+        _actus(acta, "A")->monita, ZEPHYRUM), "~/.bin/alienum");
+    /* B: gradus ipse notat -> scriptura sua, FRACTUM */
+    CREDO_AEQUALIS_I32((i32)_actus(acta, "B")->eventus,
+        (i32)CONSILIUM_FRACTUM);
+    CREDO_AEQUALIS_I32(xar_numerus(_actus(acta, "B")->monita),
+        ZEPHYRUM);
+    /* C: extra domum (/opt) -> FRACTUM */
+    CREDO_AEQUALIS_I32((i32)_actus(acta, "C")->eventus,
+        (i32)CONSILIUM_FRACTUM);
+    CREDO_AEQUALIS_I32(xar_numerus(_actus(acta, "C")->monita),
+        ZEPHYRUM);
+    t = consilium_acta_scribere(acta, VERUM, c->piscina);
+    CREDO_VERUM(chorda_continet(t, CH("MONITUM\tA\t~/.bin/alienum\n")));
+    t = consilium_acta_scribere(acta, FALSUM, c->piscina);
+    CREDO_VERUM(chorda_continet(t, CH("MONITUM, domus mutata")));
+
+    /* sine regula (arbor principalis): A fractum ut antea */
+    _mundum_parare(c, &m);
+    m.scripturae  = scripturae;
+    m.notatae     = notatae;
+    s             = _sutura(&m);
+    acta = consilium_exsequi(k, NIHIL, &s, CONSILIUM_PERGERE, NIHIL,
+        c->piscina, &causa);
+    CREDO_NECESSE_NON_NIHIL(acta);
+    CREDO_AEQUALIS_I32((i32)_actus(acta, "A")->eventus,
+        (i32)CONSILIUM_FRACTUM);
+    CREDO_AEQUALIS_I32(xar_numerus(_actus(acta, "A")->monita),
+        ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ordo ex datis", _sectio_data, NIHIL, NIHIL, NIHIL, NIHIL },
     { "lectio sua et absentia", _sectio_lectio_sua, NIHIL, NIHIL, NIHIL,
@@ -1314,6 +1390,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "domus", _sectio_domus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "exsecutio", _sectio_exsecutio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "fractura", _sectio_fractura, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "domus aliena (QX6SQ0)", _sectio_domus_aliena, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { "extra propositum", _sectio_extra_propositum, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "recusatio ante actum", _sectio_recusatio, NIHIL, NIHIL, NIHIL,

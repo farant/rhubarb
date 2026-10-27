@@ -543,15 +543,19 @@ _sectio_non_ducenti (
 
 #define FORAMEN_OCCUPATAE CCCXX
 
-/* "foramen nigrum" localis sine rete: auscultator (tergum 0) numquam
- * accipit; connexiones non-blocantes implentur donec una PENDET
- * (macOS: kern.ipc.somaxconn) - deinde omnis connexio nova ad eum
- * portum pendet, ut addressus IPv6 in reticulo fracto */
+/* "foramen nigrum" localis sine rete: addressus cuius SYN numquam
+ * respondetur, ut addressus IPv6 in reticulo fracto. PRIMUM 127.0.0.2
+ * (macOS: 127/8 per lo0, solus 127.0.0.1 configuratus - SYN tacite
+ * perit); si respondet (Linux: 127/8 totum localis), auscultator
+ * (tergum 0) implendus donec connexio PENDET. macOS 27 tergum plenum
+ * RST reddit (non iam SYN tacet: 2026-10-24, CLXVII connexae, CLIII
+ * RST, nulla pendens) - via secunda ibi non iam valet */
 nomen structura {
              TcpServus* servus;
            TcpConnexio* occupatae[FORAMEN_OCCUPATAE];
                    i32  numerus;
                    i32  portus;
+       NominaAddressus  addressus;   /* foramen ipsum */
 } Foramen;
 
 nomen structura {
@@ -576,25 +580,35 @@ _nominatum (
     }
 }
 
-/* 127.0.0.1:portus ut addressus crudus (IP litteralis per nomina) */
+/* ip:portus ut addressus crudus (IP litteralis per nomina) */
 interior NominaAddressus
-_addressus_localis (
-    Reactor* r,
-        i32  portus,
-    Piscina* p)
+_addressus_ip (
+               Reactor* r,
+    constans character* ip,
+                   i32  portus,
+               Piscina* p)
 {
     Nominatum x;
        chorda error;
 
     memset(&x, ZEPHYRUM, magnitudo(x));
-    (vacuum)nomina_quaerere_incipere(r, chorda_ex_literis("127.0.0.1",
-        p),
+    (vacuum)nomina_quaerere_incipere(r, chorda_ex_literis(ip, p),
         portus, _nominatum, &x, p, &error);
     dum (x.vocatus == ZEPHYRUM)
     {
         (vacuum)reactor_poll(r, X);
     }
     redde x.addressus;
+}
+
+/* 127.0.0.1:portus */
+interior NominaAddressus
+_addressus_localis (
+    Reactor* r,
+        i32  portus,
+    Piscina* p)
+{
+    redde _addressus_ip(r, "127.0.0.1", portus, p);
 }
 
 interior b32
@@ -608,6 +622,28 @@ _foramen_parare (
       NominaAddressus a;
 
     memset(f, ZEPHYRUM, magnitudo(*f));
+    /* via prima: 127.0.0.2 (connexio sonda manet in occupatis,
+     * clauditur cum foramine) */
+    a = _addressus_ip(r, "127.0.0.2", IX, p);
+    {
+        TcpResultus res = tcp_incipere(a.octeti, a.mensura, p);
+
+        si (res.successus)
+        {
+            structura pollfd pf;
+
+            f->occupatae[f->numerus++] = res.connexio;
+            pf.fd = (integer)tcp_obtinere_fd(res.connexio);
+            pf.events = POLLOUT;
+            pf.revents = 0;
+            si (poll(&pf, I, (integer)C) == ZEPHYRUM)
+            {
+                f->addressus = a;
+                redde VERUM;
+            }
+        }
+    }
+    /* via secunda: auscultator tergo 0 impletus */
     sr = tcp_servus_creare_cum_optionibus("127.0.0.1", ZEPHYRUM, &o, p);
     si (   !sr.successus || tcp_servus_auscultare(sr.servus, ZEPHYRUM)
             != TCP_OK)
@@ -634,6 +670,7 @@ _foramen_parare (
         si (poll(&pf, I, (integer)C) == ZEPHYRUM)
         {
             /* haec pendet: foramen paratum */
+            f->addressus = a;
             redde VERUM;
         }
     }
@@ -699,7 +736,7 @@ _sectio_foramen (
     g[ZEPHYRUM].claudere  = FALSUM;
     s                     = servum_scriptum_creare(r, g, I, c->piscina);
     CREDO_NECESSE_NON_NIHIL(s);
-    a[ZEPHYRUM]  = _addressus_localis(r, f.portus, c->piscina);
+    a[ZEPHYRUM]  = f.addressus;
     a[I]         = _addressus_localis(r, s->portus, c->piscina);
     initium      = _ms_nunc();
     v            = _vocare_ad(r, a, II, III * M, &o, c->piscina);
@@ -779,7 +816,7 @@ _sectio_omnes_mortui (
              s64  initium;
 
     CREDO_NECESSE(_foramen_parare(&f, r, c->piscina));
-    a[ZEPHYRUM]  = _addressus_localis(r, f.portus, c->piscina);
+    a[ZEPHYRUM]  = f.addressus;
     a[I]         = a[ZEPHYRUM];
     initium      = _ms_nunc();
     v            = _vocare_ad(r, a, II, D, &o, c->piscina);

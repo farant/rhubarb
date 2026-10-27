@@ -1,0 +1,39 @@
+<sanctus id="lucy-of-syracuse" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Lucy of Syracuse</nomen>
+  <nomen lingua="la" principale="verum" fontes="ce">Lucia</nomen>
+  <ortus annus="283" circa="verum" fontes="ce"/>
+  <obitus annus="303" locus="Syracuse, Sicily" martyrium="verum" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="12" dies="13" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="12" dies="13" fontes="mr"/>
+  <munus fontes="us ce mr">virgin</munus>
+  <munus fontes="us ce mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Lucy was a virgin and martyr of Syracuse in Sicily, honoured by Latins and Greeks alike on 13 December. The traditional story, which goes back to Acts probably of the fifth century, says that she was born of rich and noble parents about 283, consecrated her virginity to God, and, after her mother Eutychia was cured on a pilgrimage to the relics of St. Agatha at Catania, gave much of her wealth to the poor. The young man to whom she had been unwillingly betrothed then denounced her to Paschasius, governor of Sicily, in 303, during the persecution of Diocletian.</paragraphus>
+    <paragraphus fontes="mr ce">The Martyrology relates that she was sentenced to be dishonoured, but no ropes or oxen could move her; burning pitch and boiling oil did her no harm, and she died by the sword. The Catholic Encyclopedia warns that these details may repeat other accounts of virgin martyrs and cannot be accepted uncritically, but holds that the place and time of her death can hardly be questioned. The early Church venerated her greatly: she is one of the few women saints named in the canon of St. Gregory.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Lucy" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Lucy">
+    <excerptum>A virgin and martyr of Syracuse in Sicily, whose feast is celebrated by Latins and Greeks alike on 13 Dec.</excerptum>
+    <excerptum>According to the traditional story, she was born of rich and noble parents about the year 283.</excerptum>
+    <excerptum>her mother, whose name, Eutychia, seems to indicate that she came of Greek stock. Like so many of the early martyrs, Lucy had consecrated her virginity to God</excerptum>
+    <excerptum>Eutychia was therefore persuaded to make a pilgrimage to Catania, in the hope of being cured or a haemorrhage</excerptum>
+    <excerptum>attracting numerous visitors to her relics at Catania</excerptum>
+    <excerptum>There she was in fact cured, and Lucy, availing herself of the opportunity, persuaded her mother to allow her to distribute a great part of her riches among the poor.</excerptum>
+    <excerptum>The largess stirred the greed of the unworthy youth to whom Lucy had been unwillingly betrothed, and he denounced her to Paschasius, the Governor of Sicily. It was in the year 303, during the fierce persecution of Diocletian.</excerptum>
+    <excerptum>This beautiful story cannot unfortunately be accepted without criticism. The details may be only a repetition of similar accounts of a virgin martyr's life and death.</excerptum>
+    <excerptum>Among these, the place and time of her death can hardly be questioned</excerptum>
+    <excerptum>The story, such as we have given it, is to be traced back to the Acta, and these probably belong to the fifth century.</excerptum>
+    <excerptum>there can be no doubt of the great veneration that was shown to St. Lucy by the early church.</excerptum>
+    <excerptum>She is one of those few female saints whose names occur in the canon of St. Gregory</excerptum>
+    <excerptum>Sigebert (1030-1112), a monk of Gembloux, in his "sermo de Sancta Lucia"</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="13 December">
+    <excerptum>At Syracuse, in Sicily, the birthday of St. Lucy, virgin and martyr, in the persecution of Diocletian.</excerptum>
+    <excerptum>By the order of the ex-consul Paschasius, she was delivered to profligates, that her chastity might be insulted; but when they attempted to lead</excerptum>
+    <excerptum>her away, they could not succeed, either with ropes or with many yoke of oxen.</excerptum>
+    <excerptum>Then pouring hot pitch, rosin, and boiling oil over her body without injuring her, they finally plunged a sword into her throat, and thus completed her martyrdom.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="13 December">
+    <excerptum>Saint Lucy, Virgin and Martyr</excerptum>
+  </fons>
+</sanctus>

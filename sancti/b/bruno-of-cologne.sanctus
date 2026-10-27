@@ -1,0 +1,48 @@
+<sanctus id="bruno-of-cologne" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Bruno of Cologne</nomen>
+  <ortus annus="1030" circa="verum" locus="Cologne" fontes="ce"/>
+  <obitus annus="1101" mensis="10" dies="6" locus="Calabria" fontes="ce mr"/>
+  <canonizatio modus="aequipollens" annus="1514" papa="Leo X" fontes="ce"/>
+  <festum calendarium="generale" mensis="10" dies="6" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="10" dies="6" fontes="mr"/>
+  <munus fontes="us ce">priest</munus>
+  <munus fontes="mr ce">founder</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Bruno was born at Cologne about 1030 and finished his education at Reims. After a canonry at St. Cunibert's in Cologne, where he was most probably ordained priest about 1055, he was recalled to Reims and from 1057 to 1075 headed its episcopal school; among his pupils was Eudes of Châtillon, later Pope Urban II. As chancellor of the church of Reims he joined in the complaint against the unworthy prelate Manasses. In 1077 he and two friends vowed to leave the world, and in 1084 Bishop Hugh of Grenoble installed him and six companions at a wild spot in the Alps called Chartreuse, where they lived in poverty, prayer and study.</paragraphus>
+    <paragraphus fontes="ce mr">In 1090 Urban II called his former master to the papal court. Bruno declined the archbishopric of Reggio and obtained leave to return to solitude, though the pope kept him in Italy; with some followers he settled in a forest valley in the diocese of Squillace in Calabria, where Count Roger befriended and endowed them. Before his death on 6 October 1101 he made a profession of the Catholic faith before his brethren. He was never formally canonized: Leo X authorized his cult for the Carthusians in 1514, and Gregory XV extended it to the whole Church in 1623.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="6 October">
+    <excerptum>TN Calabria, St. Bruno, confessor, founder of the Carthusian Order.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Bruno (2)" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Bruno_(2)">
+    <excerptum>Confessor, ecclesiastical writer, and founder of the Carthusian Order. He was born at Cologne about the year 1030; died 6 October, 1101.</excerptum>
+    <excerptum>While still quite young (a pueris) he went to complete his education at Reims</excerptum>
+    <excerptum>St. Bruno returned to Cologne, where he was provided with a canonry at St. Cunibert's, and, according to the most probable opinion, was elevated to the priestly dignity. This was about the year 1055.</excerptum>
+    <excerptum>In 1056 Bishop Gervais recalled him to Reims, to aid his former master Heriman in the direction of the school.</excerptum>
+    <excerptum>St. Bruno found himself head of the episcopal school, or écolâtre</excerptum>
+    <excerptum>For about twenty years, from 1057 to 1075, he maintained the prestige which the school of Reims has attained under its former masters</excerptum>
+    <excerptum>amongst whom were Eudes of Châtillon, afterwards Urban II</excerptum>
+    <excerptum>In 1075 St. Bruno was appointed chancellor of the church of Reims</excerptum>
+    <excerptum>Manasses de Gournai, who quickly became odious for his impiety and violence. The chancellor and two other canons were commissioned to bear to the papal legate, Hugh of Die, the complaints of the indignant clergy</excerptum>
+    <excerptum>when in conversation with two of his friends, Raoul and Fulcius, canons of Reims like himself</excerptum>
+    <excerptum>they had made a vow to abandon the world and to embrace the religious life. This vow, uttered in 1077, could not be put into execution until 1080</excerptum>
+    <excerptum>betook himself with six others to Hugh of Châteauneuf, Bishop of Grenoble</excerptum>
+    <excerptum>conducted and installed them himself (1084) in a wild spot on the Alps of Dauphiné named Chartreuse</excerptum>
+    <excerptum>They built a little monastery where they lived in deep retreat and poverty, entirely occupied in prayer and study</excerptum>
+    <excerptum>he sought to surround himself with devoted allies and called his ancient master ad Sedis Apostolicae servitium.</excerptum>
+    <excerptum>followed by a part of his community, who could not make up their minds to live separated from him (1090).</excerptum>
+    <excerptum>the clergy of Reggio in further Calabria, which had just lost its archbishop Arnulph (1090), and their votes were given to him.</excerptum>
+    <excerptum>this time he again escaped by causing Rangier, one of his former pupils, to be elected</excerptum>
+    <excerptum>He begged, therefore, and after much trouble obtained, the pope's permission to return again to his solitary life.</excerptum>
+    <excerptum>But the will of Urban II kept him in Italy, near the papal court</excerptum>
+    <excerptum>The place chosen for his new retreat by St. Bruno and some followers who had joined him was in the Diocese of Squillace, on the eastern slope of the great chain which crosses Calabria from north to south, and in a high valley three miles long and two in width, covered with forest.</excerptum>
+    <excerptum>it was probably upon his invitation that the new solitaries settled upon his domains.</excerptum>
+    <excerptum>Roger, Great Count of Sicily and Calabria</excerptum>
+    <excerptum>That same year (1091) he visited them, made them a grant of the lands they occupied, and a close friendship was formed between them.</excerptum>
+    <excerptum>Before his death he gathered for the last time his brethren round him and made in their presence a profession of the Catholic Faith</excerptum>
+    <excerptum>He had never been formally canonized. His cult, authorized for the Carthusian Order by Leo X in 1514, was extended to the whole church by Gregory XV, 17 February, 1623</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="6 October">
+    <excerptum>Saint Bruno, Priest</excerptum>
+  </fons>
+</sanctus>

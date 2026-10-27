@@ -7,7 +7,8 @@
 #        NECESSE in adiutore (purgare tamen, sequentia non), VACUA,
 #        titulus cum tabulatione effugitus, NECESSE in filio
 #        CREDO_NON_RUIT (filius exit, suita reliqua SEMEL), exitus I
-#   II   plagula: SECTIO X campi, SUITA VIII campi, linea per sectionem
+#   II   plagula: SECTIO XIV campi (credo memoria T2: + memoria KiB),
+#        SUITA VIII campi, linea per sectionem
 #   III  suita sana: exitus 0, SUITA TRANSIIT, compendium ut olim
 #   IV   filtrum CREDO_SECTIO: sectio sola; ignotum -> I, nominatum
 #   V    sine CREDO_VERDICTA: nulla plagula
@@ -41,7 +42,7 @@
 #        et in filio creata), nulla sine usu
 #
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
-# <porta titulus="credo" gradus="fusio" tegit="probationes/fixa/credo_convertere/*"/>
+# <porta titulus="credo" gradus="fusio" tegit="probationes/fixa/credo_convertere/*" translatio="numquam"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2
@@ -53,6 +54,7 @@ fracta=0
 credo () { if [ "$1" -eq 0 ]; then echo "  ok   $2"; else echo "  FRACTUM $2"; fracta=$((fracta + 1)); fi; }
 struere () {   # $1 = fons in $T, $2 = binarium
     clang "${VEXILLA_C89[@]}" -Iinclude "$T/$1" lib/credo.c lib/piscina.c \
+        lib/memoria_processus_macos.c \
         lib/chorda.c lib/chorda_aedificator.c -o "$T/$2" > "$T/$2.err" 2>&1
 }
 
@@ -671,9 +673,9 @@ grep -q "^SECTIO	mixta	cum\\\\ttabulatione	TRANSIIT	" "$V"; credo $? "I titulus 
 [ "$(grep -c 'POST FILIUM$' "$T/o_mixta")" -eq 1 ] && [ "$(grep -c -- '--- Probans ultima ---' "$T/o_mixta")" -eq 1 ]; credo $? "I NECESSE in filio: filius exit, suita reliqua SEMEL (non in filio)"
 linea filius | grep -q "	TRANSIIT	1	1	"; credo $? "I filius: CREDO_NON_RUIT transiit (filius normaliter exiit)"
 grep -q "^SUITA	mixta	FRACTA	4	7	8	10	" "$V"; credo $? "I SUITA FRACTA 4/7 sectiones, 8/10 assertiones"
-mali=$(awk -F'\t' '($1 == "SECTIO" && NF != 11) || ($1 == "SUITA" && NF != 8) || ($1 == "INCIPIT" && NF != 3) || ($1 == "SECTIONES" && NF != 3) || ($1 != "SECTIO" && $1 != "SUITA" && $1 != "INCIPIT" && $1 != "SECTIONES")' "$V" | wc -l | tr -d ' ')
+mali=$(awk -F'\t' '($1 == "SECTIO" && NF != 14) || ($1 == "SUITA" && NF != 8) || ($1 == "INCIPIT" && NF != 3) || ($1 == "SECTIONES" && NF != 3) || ($1 != "SECTIO" && $1 != "SUITA" && $1 != "INCIPIT" && $1 != "SECTIONES")' "$V" | wc -l | tr -d ' ')
 [ "$mali" -eq 0 ] && [ "$(grep -c '^SECTIO	' "$V")" -eq 7 ] && [ "$(grep -c '^INCIPIT	' "$V")" -eq 7 ] \
-    && [ "$(head -1 "$V")" = "SECTIONES	mixta	7" ]; credo $? "II campi: SECTIO XI (gradus, credo II), SUITA VIII, INCIPIT III per sectionem, SECTIONES III primum, VII lineae SECTIO ($mali malae)"
+    && [ "$(head -1 "$V")" = "SECTIONES	mixta	7" ]; credo $? "II campi: SECTIO XIV (gradus credo II + memoria), SUITA VIII, INCIPIT III per sectionem, SECTIONES III primum, VII lineae SECTIO ($mali malae)"
 grep -q -- '--- Probans fracta ---' "$T/o_mixta" && grep -q ' FRACTA (credo_aequalis): I == II at ' "$T/o_mixta" \
     && grep -q '^=== SECTIONES: ' "$T/o_mixta" && grep -q '^Totalis:' "$T/o_mixta" && grep -q '^Conditio: FRACTA$' "$T/o_mixta"; credo $? "I effusio humana ut olim (Probans, FRACTA at, compendium)"
 
@@ -712,7 +714,7 @@ V="$T/v_om.tsv"
 [ "$rc" -eq 0 ] && grep -q "^SECTIO	signata	localis	TRANSIIT	1	1	" "$V" \
     && grep -q "^SECTIO	signata	retis	OMISSA	0	0	" "$V" && grep -q "^SECTIO	signata	lenta	OMISSA	0	0	" "$V" \
     && grep -q "^SUITA	signata	TRANSIIT	1	1	" "$V"; credo $? "VII CREDO_SIGNA_OMITTE=rete: II OMISSA in plagula, suita transit cursa I (erat $rc)"
-mali=$(awk -F'\t' '($1 == "SECTIO" && NF != 11) || ($1 == "SUITA" && NF != 8)' "$V" | wc -l | tr -d ' ')
+mali=$(awk -F'\t' '($1 == "SECTIO" && NF != 14) || ($1 == "SUITA" && NF != 8)' "$V" | wc -l | tr -d ' ')
 [ "$mali" -eq 0 ]; credo $? "VII lineae OMISSA campos XI ferunt ($mali malae)"
 grep -q "OMISSA retis (signum rete)" "$T/o_om" && grep -q "OMISSA lenta (signum rete)" "$T/o_om" \
     && ! grep -q -- '--- Probans retis ---' "$T/o_om"; credo $? "VII omissa in effusione nominatae, non cursae"
@@ -771,7 +773,7 @@ CREDO_VERDICTA="$T/v_sf.tsv" "$T/suita_fracta" > "$T/o_sf" 2>&1; rc=$?
 CREDO_VERDICTA="$T/v_gr.tsv" "$T/gradus" > "$T/o_gr" 2>&1; rc=$?
 V="$T/v_gr.tsv"
 [ "$rc" -eq 1 ] && awk -F'\t' '$1 == "SECTIO" && $3 == "scaena" && $4 == "FRACTA" && $5 == 1 && $6 == 3 && $10 == "I == II" && $11 == "II: secundus"' "$V" | grep -q .; credo $? "X fractura prima gradum suum fert (campus XI) (erat $rc)"
-awk -F'\t' '$1 == "SECTIO" && ($3 == "sine_gradu" || $3 == "post") && NF == 11 && $11 == ""' "$V" | wc -l | grep -q '^ *2$'; credo $? "X sine gradu campus vacuus; gradus sectionis prioris non manet"
+awk -F'\t' '$1 == "SECTIO" && ($3 == "sine_gradu" || $3 == "post") && NF == 14 && $11 == ""' "$V" | wc -l | grep -q '^ *2$'; credo $? "X sine gradu campus vacuus; gradus sectionis prioris non manet"
 grep -q ' FRACTA (credo_aequalis): I == II at .*gradus.c:[0-9]* (in gradu II: secundus)$' "$T/o_gr" \
     && grep -q -- '-- gradus I: primus --' "$T/o_gr" && grep -q -- '-- gradus III: tertius --' "$T/o_gr"; credo $? "X effusio: gradus nominati, fractura 'in gradu'"
 
@@ -954,6 +956,318 @@ nota="$(python3 -c "
 import sys; sys.path.insert(0, 'pythonica'); import silva
 for l in silva.notae_convertibilium(['$T/conv/probationes/probatio_nota.c', 'probationes/probatio_xar.c', 'lib/xar.c']): print(l)" 2>&1)"
 [ "$(printf '%s\n' "$nota" | grep -c 'convertibilis')" -eq 1 ] && printf '%s\n' "$nota" | grep -q 'probatio_nota.c convertibilis (forma A, 2 sectiones)'; credo $? "XIII nota commissionis: convertibilis sola nominata ($(printf '%s' "$nota" | cut -c1-60))"
+
+# XIV (credo III, 2026-10-19): VALORES IN FRACTURA - chordae (aequalis,
+# continet, literis) valores ambos citant (effugia, mensura, NUL intra,
+# fenestra circa differentiam primam pro longis, nulla truncatio tacita),
+# linea 'Differentia:' (octetus primus, speratus/receptus, finis);
+# LITERAE (NIHIL tutum), OCTETI (hex, [octetus diversus]), I32 insignatum
+# >= 2^31, familiae S64/I64 (memoriae_index sine casti), F32, F64
+# RELATIVE (limes nominatus), F64 ULP (-0 == +0, NaN numquam)
+cat > "$T/valores.c" <<'FONS'
+#include "credo.h"
+#include <stdio.h>
+#include <string.h>
+
+interior vacuum _fracturae (CredoContextus* c)
+{
+                chorda  a;
+                chorda  b;
+                chorda  x;
+                chorda  y;
+             character  n1[IV];
+             character  n2[IV];
+             character  longa_r[CCC];
+             character  longa_s[CCC];
+                    i8  o1[XL];
+                    i8  o2[XL];
+                   i32  k;
+     volatilis     f64  zephyrum_f = 0.0;
+                   f64  nan_f;
+
+    a = chorda_ex_literis("salve\tmunde", c->piscina);
+    b = chorda_ex_literis("salve munde", c->piscina);
+    CREDO_CHORDA_AEQUALIS(b, a);
+
+    memcpy(n1, "ab\0c", IV);
+    memcpy(n2, "ab\0d", IV);
+    x.datum = (i8*)n1; x.mensura = IV;
+    y.datum = (i8*)n2; y.mensura = IV;
+    CREDO_CHORDA_AEQUALIS(x, y);
+
+    CREDO_CHORDA_AEQUALIS(chorda_ex_literis("abc", c->piscina),
+        chorda_ex_literis("abcd", c->piscina));
+
+    memset(longa_r, 'x', CCC);
+    memset(longa_s, 'x', CCC);
+    longa_r[CCL] = 'y';
+    x.datum = (i8*)longa_r; x.mensura = CCC;
+    y.datum = (i8*)longa_s; y.mensura = CCC;
+    CREDO_CHORDA_AEQUALIS(x, y);
+
+    CREDO_CHORDA_CONTINET(b, chorda_ex_literis("vale", c->piscina));
+
+    x.datum = (i8*)longa_s; x.mensura = CCC;
+    CREDO_CHORDA_AEQUALIS_LITERIS(x, "xxy");
+
+    CREDO_LITERAE_AEQUALES(NIHIL, "a");
+
+    per (k = ZEPHYRUM; k < XL; k++)
+    {
+        o1[k] = (i8)k;
+        o2[k] = (i8)k;
+    }
+    o2[XX] = (i8)0xff;
+    CREDO_OCTETI_AEQUALES(o1, o2, XL);
+
+    CREDO_AEQUALIS_I32((i32)I << XXXI, I);
+    CREDO_MAIOR_S64((s64)-V, (s64)III);
+    CREDO_AEQUALIS_I64(magnitudo(i64), (i64)IX);
+    CREDO_F64_PROXIMUS(1.0, 1.1, 0.01);
+    CREDO_F32_PROXIMUS(1.0f, 1.5f, 0.25f);
+    CREDO_F64_RELATIVE(1000.0, 1001.0, 0.0001);
+    CREDO_F64_ULP(0.1 + 0.2, 0.3, ZEPHYRUM);
+    nan_f = zephyrum_f / zephyrum_f;
+    CREDO_F64_ULP(nan_f, nan_f, M);
+}
+
+interior vacuum _transeuntes (CredoContextus* c)
+{
+    i8 o1[IV];
+    i8 o2[IV];
+
+    memcpy(o1, "abcd", IV);
+    memcpy(o2, "abcd", IV);
+    CREDO_CHORDA_AEQUALIS(chorda_ex_literis("ab", c->piscina),
+        chorda_ex_literis("ab", c->piscina));
+    CREDO_CHORDA_CONTINET(chorda_ex_literis("salve munde", c->piscina),
+        chorda_ex_literis("mun", c->piscina));
+    CREDO_CHORDA_INCIPIT(chorda_ex_literis("salve", c->piscina),
+        chorda_ex_literis("sal", c->piscina));
+    CREDO_CHORDA_TERMINATUR(chorda_ex_literis("salve", c->piscina),
+        chorda_ex_literis("lve", c->piscina));
+    CREDO_CHORDA_AEQUALIS_LITERIS(chorda_ex_literis("ab", c->piscina), "ab");
+    CREDO_LITERAE_AEQUALES(NIHIL, NIHIL);
+    CREDO_LITERAE_AEQUALES("a", "a");
+    CREDO_OCTETI_AEQUALES(o1, o2, IV);
+    CREDO_INAEQUALITAS_S64((s64)-I, (s64)I);
+    CREDO_MINOR_S64((s64)-V, (s64)III);
+    CREDO_MAIOR_AUT_AEQUALIS_S64((s64)III, (s64)III);
+    CREDO_MINOR_AUT_AEQUALIS_S64((s64)II, (s64)III);
+    CREDO_INAEQUALITAS_I64(magnitudo(i64), (i64)IX);
+    CREDO_MAIOR_I64((i64)X, (i64)IX);
+    CREDO_MINOR_I64((i64)VIII, (i64)IX);
+    CREDO_MAIOR_AUT_AEQUALIS_I64((i64)IX, (i64)IX);
+    CREDO_MINOR_AUT_AEQUALIS_I64((i64)IX, (i64)IX);
+    CREDO_F32_PROXIMUS(1.0f, 1.125f, 0.25f);
+    CREDO_F64_RELATIVE(1e20, 1e20 * (1.0 + 1e-12), 1e-9);
+    CREDO_F64_ULP(0.1 + 0.2, 0.3, I);
+    CREDO_F64_ULP(-0.0, 0.0, ZEPHYRUM);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "fracturae", _fracturae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "transeuntes", _transeuntes, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("valores", SECTIONES);
+}
+FONS
+if struere valores.c valores; then
+    CREDO_VERDICTA="$T/valores.tsv" "$T/valores" > "$T/valores.out" 2>&1; rcv=$?
+else
+    rcv=99; cp "$T/valores.err" "$T/valores.out"
+fi
+habet () { grep -qxF -- "$1" "$T/valores.out"; }
+X=$(printf 'x%.0s' $(seq 1 110)); X60=$(printf 'x%.0s' $(seq 1 60)); X49=$(printf 'x%.0s' $(seq 1 49)); X160=$(printf 'x%.0s' $(seq 1 160))
+H1="$(printf '%02x ' $(seq 4 19))[14] $(printf '%02x ' $(seq 21 35) | sed 's/ $//')"
+H2="$(printf '%02x ' $(seq 4 19))[ff] $(printf '%02x ' $(seq 21 35) | sed 's/ $//')"
+[ "$rcv" -eq 1 ] && grep -q "^SECTIO	valores	fracturae	FRACTA	" "$T/valores.tsv" \
+    && grep -q "^SECTIO	valores	transeuntes	TRANSIIT	21	21	" "$T/valores.tsv" \
+    && grep -q '^Fracti:     16$' "$T/valores.out"; credo $? "XIV valores: XVI fracturae nominatae, transeuntes XXI/XXI (rc $rcv)"
+habet '  Speratus: "salve\tmunde" (11 octeti)' && habet '  Receptus: "salve munde" (11 octeti)' \
+    && habet '  Differentia: octetus 5 - speratus '"'"'\t'"'"' 0x09, receptus '"'"' '"'"' 0x20'; credo $? "XIV chorda aequalis: valores ambi effugiti + Differentia octeti V"
+habet '  Speratus: "ab\x00d" (4 octeti)' && habet '  Receptus: "ab\x00c" (4 octeti)'; credo $? "XIV chorda cum NUL intra: per mensuram, \\x00 effugitum"
+habet '  Differentia: octetus 3 - speratus '"'"'d'"'"' 0x64, receptus finit'; credo $? "XIV praefixum: receptus finit nominatur"
+habet "  Speratus: …\"$X\" (300 octeti, fenestra [190, 300))" && habet "  Receptus: …\"${X60}y${X49}\" (300 octeti, fenestra [190, 300))" \
+    && habet '  Differentia: octetus 250 - speratus '"'"'x'"'"' 0x78, receptus '"'"'y'"'"' 0x79'; credo $? "XIV longa: fenestra circa differentiam (CXC-CCC), non truncatio"
+grep -qF ' FRACTA (credo_chorda_continet): b continet chorda_ex_literis("vale", c->piscina) at ' "$T/valores.out" \
+    && habet '  Speratus: "vale" (4 octeti)' && habet '  Receptus: "salve munde" (11 octeti)'; credo $? "XIV continet: fenum ut Receptus, acus ut Speratus"
+habet "  Receptus: \"$X160\"… (300 octeti, fenestra [0, 160))" && habet '  Speratus: "xxy" (3 octeti)' \
+    && habet '  Differentia: octetus 2 - speratus '"'"'y'"'"' 0x79, receptus '"'"'x'"'"' 0x78'; credo $? "XIV aequalis literis: CCC octeti non CCLV truncati - fenestra nominata"
+grep -qF ' FRACTA (credo_literae_aequales): NIHIL == "a" at ' "$T/valores.out" && habet '  Receptus: NIHIL' && habet '  Speratus: "a" (1 octetus)'; credo $? "XIV literae: NIHIL tutum et nominatum"
+habet "  Speratus: …${H2}… (40 octeti, fenestra [4, 36))" && habet "  Receptus: …${H1}… (40 octeti, fenestra [4, 36))" \
+    && habet '  Differentia: octetus 20 - speratus 0xff, receptus 0x14'; credo $? "XIV octeti: hex cum [octeto diverso], Differentia"
+habet '  Receptus: 2147483648' && habet '  Speratus: 1'; credo $? "XIV I32 >= 2^31 insignatum (%u, non negativum)"
+grep -qF ' FRACTA (credo_maior): (s64)-V > (s64)III at ' "$T/valores.out" && habet '  Receptus: -5' && habet '  Speratus: 3'; credo $? "XIV MAIOR_S64 cum signo"
+habet '  Receptus: 8' && habet '  Speratus: 9'; credo $? "XIV AEQUALIS_I64 super magnitudo() sine casti"
+habet '  Differentia: 0.1 (ε 0.01)' && habet '  Differentia: 0.5 (ε 0.25)'; credo $? "XIV F64/F32 PROXIMUS: Differentia nominata"
+habet '  Speratus: 1001 (relative 0.0001)' && habet '  Differentia: |a-b| 1, limes 0.1001'; credo $? "XIV F64 RELATIVE: limes r*max nominatus"
+habet '  Speratus: 0.29999999999999999 (0 ULP)' && habet '  Receptus: 0.30000000000000004' && habet '  Differentia: 1 ULP'; credo $? "XIV F64 ULP: distantia in ULP"
+habet '  Differentia: NaN - numquam aequalis'; credo $? "XIV F64 ULP: NaN numquam aequalis"
+
+# XV (credo memoria T2, 2026-10-19): MEMORIA PER SECTIONEM - campi XII-XIV
+# plagulae (KiB): apex arenae (piscina sectionis), vestigium in fine,
+# incrementum apicis vitae processus. Sectio gravis XXXII MiB in piscina
+# sua tangit; levis nihil. Effusio humana immutata (aurea officinae).
+cat > "$T/memoria.c" <<'FONS'
+#include "credo.h"
+#include <string.h>
+
+interior vacuum _gravis (CredoContextus* c)
+{
+    i8* alveus;
+
+    alveus = (i8*)piscina_allocare(c->piscina,
+        (memoriae_index)XXXII * MXXIV * MXXIV);
+    CREDO_NECESSE_NON_NIHIL(alveus);
+    memset(alveus, 0x5a, (memoriae_index)XXXII * MXXIV * MXXIV);
+    CREDO_VERUM(alveus[MXXIV] == 0x5a);
+}
+
+interior vacuum _levis (CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_VERUM(I == I);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "gravis", _gravis, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "levis", _levis, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("memoria", SECTIONES);
+}
+FONS
+struere memoria.c memoria || cat "$T/memoria.err"
+CREDO_VERDICTA="$T/memoria.tsv" "$T/memoria" > "$T/memoria.out" 2>&1; rcm=$?
+[ "$rcm" -eq 0 ] && awk -F'\t' '$1 == "SECTIO" && $3 == "gravis" && NF == 14 && $12 >= 32768 && $13 > 0 && $14 >= 30000' "$T/memoria.tsv" | grep -q .; credo $? "XV gravis: apex arenae >= XXXII MiB, vestigium > 0, apex auctus >= XXX MiB (rc $rcm: $(awk -F'\t' '$1 == "SECTIO" && $3 == "gravis" {print $12, $13, $14}' "$T/memoria.tsv"))"
+awk -F'\t' '$1 == "SECTIO" && $3 == "levis" && NF == 14 && $12 < 1024 && $13 > 0 && $14 < 4096' "$T/memoria.tsv" | grep -q .; credo $? "XV levis: apex arenae < I MiB, apex auctus parvus (apex vitae non reficitur: levis gravem non hereditat) ($(awk -F'\t' '$1 == "SECTIO" && $3 == "levis" {print $12, $13, $14}' "$T/memoria.tsv"))"
+! grep -q -E 'KiB|memoria|vestigium' "$T/memoria.out"; credo $? "XV effusio humana sine memoria (aurea officinae immutata)"
+
+# XVI (credo memoria T4, 2026-10-20): TECTUM MEMORIAE - sectio 'magna'
+# (XXXII MiB) sub CREDO_MEMORIA_MB=16 FRACTA nominata 'credo_memoria'
+# (plagula et effusio), suita I; 'magna gravis' (signum gravis) tectum
+# MXXIV MiB servat; ordinarium (CCLVI) et 0 nihil frangunt;
+# CREDO_SIGNA_OMITTE=gravis verbum novit
+cat > "$T/tectum.c" <<'FONS'
+#include "credo.h"
+#include <string.h>
+
+interior vacuum _magna (CredoContextus* c)
+{
+    i8* alveus;
+
+    alveus = (i8*)piscina_allocare(c->piscina,
+        (memoriae_index)XXXII * MXXIV * MXXIV);
+    CREDO_NECESSE_NON_NIHIL(alveus);
+    memset(alveus, 0x5a, (memoriae_index)XXXII * MXXIV * MXXIV);
+    CREDO_VERUM(alveus[MXXIV] == 0x5a);
+}
+
+interior vacuum _parva (CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_VERUM(I == I);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "magna", _magna, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "magna gravis", _magna, NIHIL, NIHIL, "gravis", NIHIL },
+    { "parva", _parva, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("tectum", SECTIONES);
+}
+FONS
+struere tectum.c tectum || cat "$T/tectum.err"
+CREDO_MEMORIA_MB=16 CREDO_VERDICTA="$T/tectum1.tsv" "$T/tectum" > "$T/tectum1.out" 2>&1; rt1=$?
+exitus_t () { awk -F'\t' -v t="$2" '$1 == "SECTIO" && $3 == t { print $4 }' "$1"; }
+[ "$rt1" -eq 1 ] && [ "$(exitus_t "$T/tectum1.tsv" magna)" = FRACTA ] \
+  && awk -F'\t' '$1 == "SECTIO" && $3 == "magna" && $9 == "credo_memoria" && $10 ~ /^sectio .magna. apex (arenae|auctus) 32\.[0-9] MiB > tectum 16 MiB \(signum gravis abest\)$/' "$T/tectum1.tsv" | grep -q . \
+  && [ "$(exitus_t "$T/tectum1.tsv" 'magna gravis')" = TRANSIIT ] && [ "$(exitus_t "$T/tectum1.tsv" parva)" = TRANSIIT ] \
+  && grep -qE "FRACTA \(credo_memoria\): sectio 'magna' apex (arenae|auctus) 32\.[0-9] MiB > tectum 16 MiB" "$T/tectum1.out"
+credo $? "XVI tectum 16: magna FRACTA nominata (credo_memoria, plagula + effusio), magna gravis et parva transeunt, rc 1 (rc $rt1: $(awk -F'\t' '$1 == "SECTIO" && $3 == "magna" {print $4, $9, $10}' "$T/tectum1.tsv"))"
+"$T/tectum" > "$T/tectum2.out" 2>&1; rt2=$?
+CREDO_MEMORIA_MB=0 "$T/tectum" > "$T/tectum3.out" 2>&1; rt3=$?
+CREDO_SIGNA_OMITTE=gravis CREDO_VERDICTA="$T/tectum4.tsv" "$T/tectum" > "$T/tectum4.out" 2>&1; rt4=$?
+[ "$rt2" -eq 0 ] && [ "$rt3" -eq 0 ] && [ "$rt4" -eq 0 ] && [ "$(exitus_t "$T/tectum4.tsv" 'magna gravis')" = OMISSA ] \
+  && ! grep -q credo_memoria "$T/tectum2.out"
+credo $? "XVI ordinarium CCLVI et 0 nihil frangunt; CREDO_SIGNA_OMITTE=gravis OMISSA (rc $rt2 $rt3 $rt4)"
+
+# XVII (credo memoria T4, 2026-10-20, porta venenum): SUB ASAN tectum
+# arenam SOLAM iudicat - quarantina ASan (CCLVI MB) et umbra in vestigio
+# sunt, incrementum apicis sectionis non est (plexus: auctus 268.9 MiB
+# cum quarantina, 38.7 sine; arena 37.3 utrimque). Quarantina ipsa in
+# fixa reproduci nequit (paginae otiosae uniformes comprimuntur: auctus
+# ~1 MiB, mensuratum), ergo 'quarantina' incrementum EXTRA arenam
+# fabricat: LXIV MiB malloc forma non uniformi, arena nulla - sub tecto 16
+# transit; 'magna' XXXII MiB in piscina: FRACTA apex arenae etiam sub ASan
+cat > "$T/asan.c" <<'FONS'
+#include "credo.h"
+#include <stdlib.h>
+#include <string.h>
+
+interior vacuum _quarantina (CredoContextus* c)
+{
+    memoriae_index  k;
+         character* b;
+
+    (vacuum)c;
+    b = (character*)malloc((memoriae_index)LXIV * MXXIV * MXXIV);
+    CREDO_NECESSE_NON_NIHIL(b);
+    per (k = ZEPHYRUM; k < (memoriae_index)LXIV * MXXIV * MXXIV; k++)
+    {
+        b[k] = (character)((k * XXXI) ^ (k >> VIII));
+    }
+    CREDO_VERUM(b[MXXIV] == (character)((MXXIV * XXXI) ^ (MXXIV >> VIII)));
+    free(b);
+}
+
+interior vacuum _magna (CredoContextus* c)
+{
+    i8* alveus;
+
+    alveus = (i8*)piscina_allocare(c->piscina,
+        (memoriae_index)XXXII * MXXIV * MXXIV);
+    CREDO_NECESSE_NON_NIHIL(alveus);
+    memset(alveus, 0x5a, (memoriae_index)XXXII * MXXIV * MXXIV);
+    CREDO_VERUM(alveus[MXXIV] == 0x5a);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "quarantina", _quarantina, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "magna", _magna, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("asan", SECTIONES);
+}
+FONS
+clang "${VEXILLA_C89[@]}" -Iinclude -g -O1 -fsanitize=address -Wno-deprecated-declarations \
+    "$T/asan.c" lib/credo.c lib/piscina.c lib/memoria_processus_macos.c \
+    lib/chorda.c lib/chorda_aedificator.c -o "$T/asan" > "$T/asan.err" 2>&1 || cat "$T/asan.err"
+CREDO_MEMORIA_MB=16 CREDO_VERDICTA="$T/asan.tsv" "$T/asan" > "$T/asan.out" 2>&1; ra=$?
+[ "$ra" -eq 1 ] && [ "$(exitus_t "$T/asan.tsv" quarantina)" = TRANSIIT ] \
+  && awk -F'\t' '$1 == "SECTIO" && $3 == "quarantina" && $14 > 65536' "$T/asan.tsv" | grep -q . \
+  && [ "$(exitus_t "$T/asan.tsv" magna)" = FRACTA ] \
+  && grep -qE "FRACTA \(credo_memoria\): sectio 'magna' apex arenae 32\.[0-9] MiB > tectum 16 MiB" "$T/asan.out"
+credo $? "XVII sub ASan: quarantina (auctus $(awk -F'\t' '$1 == "SECTIO" && $3 == "quarantina" {print $14}' "$T/asan.tsv") KiB, arena 0) transit, magna FRACTA apex arenae (rc $ra)"
 
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus credo: sanum"; exit 0; fi

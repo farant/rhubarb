@@ -78,6 +78,14 @@ nomen structura {
        Xar* obiecta;    /* chorda: fontes obiectorum */
 } AedilisIrregulare;
 
+/* Oraculum -MM per variantem (sectio 'oracula', testa-ios T3): fontes
+ * .m silva non parsat - clang -MM capita eorum dicit, sed clang nudus
+ * capita macOS solum videt (UIKit in SDK iOS solo) */
+nomen structura {
+    chorda varians;    /* e.g. "ios" - suffixum basis "_ios" */
+    chorda mandatum;   /* compilator pro "clang" (sine -MM) */
+} AedilisOraculum;
+
 nomen structura {
     chorda  radix;      /* directorium aedilis.stml (radix probarum) */
        Xar* inclusa;    /* chorda: directoria -I, ordine */
@@ -87,6 +95,7 @@ nomen structura {
        Xar* regulae_vendor;  /* AedilisRegulaVendor (valore) */
        Xar* regulae_compilationis; /* AedilisRegulaCompilationis */
        Xar* irregularia;     /* AedilisIrregulare (valore) */
+       Xar* oracula;         /* AedilisOraculum (valore) */
 } AedilisConfiguratio;
 
 /* Legere configurationem ex via data; radix = directorium eius.
@@ -96,6 +105,15 @@ aedilis_configurationem_legere (
                Piscina* piscina,
     constans character* via_stml,
                 chorda* causa_out);
+
+/* Compilator oraculi -MM pro fonte .m: mandatum regulae 'oracula'
+ * cuius varians suffixum basis est ("lib/testa_ios.m" -> regula
+ * "ios"); nulla congruit -> "clang" (capita macOS). */
+chorda
+aedilis_oraculum_eligere (
+    constans AedilisConfiguratio* configuratio,
+              constans character* via,
+                         Piscina* piscina);
 
 
 /* ====================================================
@@ -173,7 +191,9 @@ nomen structura {
 } AedilisFructus;
 
 /* Clausuram scopi derivare (punctum fixum trans plagulas).
- * varians NIHIL = praelatio prima configurationis.
+ * varians: nomen unum ("posix") aut index ordine praelationis
+ * ("android,posix": X_android, aliter X_posix); NIHIL = praelatio
+ * configurationis. Index malus (elementum vacuum) = recusatio.
  * NIHIL + causa in recusatione - nullus fructus partialis. */
 AedilisFructus*
 aedilis_derivare (
@@ -212,6 +232,16 @@ aedilis_nexum_purum_probare (
                 AedilisExtractor  extractor,
                           vacuum* extractor_datum,
                           chorda* causa_out);
+
+/* Vexilla nexus clausurae: regulae obiectorum (aedilis.stml sectio
+ * 'nexus', ordine obiectorum) deinde annotata, deduplicata - eadem
+ * quae linea nexus scripti fert. Xar de chorda (vacuum licet).
+ * Consumptores sine scripto (tools/ios/app.sh per 'aedilis --nexus',
+ * testa-ios T3) ea legunt. */
+Xar*
+aedilis_vexilla_nexus (
+    constans AedilisFructus* fructus,
+                    Piscina* piscina);
 
 /* Fructum ut manifestum STML scribere (chorda emissa).
  * commissum NIHIL = attributum omissum. */

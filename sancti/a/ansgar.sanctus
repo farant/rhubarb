@@ -1,0 +1,52 @@
+<sanctus id="ansgar" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Ansgar</nomen>
+  <nomen lingua="la" principale="verum">Anscharius</nomen>
+  <nomen lingua="la" fontes="ce">Ansgarius</nomen>
+  <nomen lingua="alia" fontes="ce">Anschar</nomen>
+  <nomen lingua="de" fontes="bu">Scharies</nomen>
+  <ortus annus="801" mensis="9" dies="8" locus="Picardy" fontes="ce"/>
+  <obitus annus="865" mensis="2" dies="5" locus="Bremen" fontes="bu ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="2" dies="3" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="2" dies="3" fontes="mr"/>
+  <munus fontes="bu us">bishop</munus>
+  <munus fontes="bu ce">monk</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu mr">Ansgar, called the Apostle of the North, was born in Picardy on 8 September 801 and became a Benedictine monk of Corbie, afterwards of Little Corbie in Saxony. He went to Denmark with the newly baptized King Harold and founded a school at Schleswig, then preached in Sweden, where the royal counsellor Herigar was converted and built the first church in the country. Gregory IV made him bishop of Hamburg and legate to the northern nations; the Martyrology remembers him as the bishop of Bremen who converted the Swedes and the Danes.</paragraphus>
+    <paragraphus fontes="ce bu">In 845 a Danish fleet destroyed Hamburg and he was for a time a fugitive. The see of Bremen was then united to Hamburg, in 847 with papal confirmation in 857 according to the Catholic Encyclopedia, in 849 according to Butler. He returned to Denmark and Sweden, built churches, and persuaded the Danish king to soften the slave trade. He lived austerely, built hospitals and ransomed captives, and regretted that he was not found worthy of martyrdom. He died on 5 February 865; Butler places his death at Bremen in his sixty-seventh year.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="3 February">
+    <excerptum>The same day, St. Anscharius, bishop of Bremen, who converted the Swedes and the Danes to the faith of Christ.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v02 Feb. 3 St. Anscharius, Archbishop of Hamburg and Bremen">
+    <excerptum>He was a monk, first of Old Corbie in France, afterward of Little Corbie in Saxony.</excerptum>
+    <excerptum>prince of Denmark, having been baptized in the court of the emperor Lewis Debonnair, Anscarius preached the faith with fjreat success, first to the Danes, afterward to the Swedes, and lastly in the north of Germany.</excerptum>
+    <excerptum>In 832, he was made archbishop of Hamburg, and legate of the holy see, by pope Gregory IV.</excerptum>
+    <excerptum>till in 849, the see of Bremen becoming vacant, pope Nicholas united it to that of Hamburg, and appointed him bishop of both.</excerptum>
+    <excerptum>Denmark and Sweden had relapsed into idolatry</excerptum>
+    <excerptum>His presence soon made the faith flourish again m Denmark, under the protection of king Horick</excerptum>
+    <excerptum>lots whether he should be admitted or no.</excerptum>
+    <excerptum>and the bishop converted many of th lower rank, and established many churches there</excerptum>
+    <excerptum>He wore a rough hair shirt</excerptum>
+    <excerptum>he washed their feet, and waited on them at table. He ascribed it to his sins, that he never met with the glory of martyrdom</excerptum>
+    <excerptum>Anscharius died at Bremen in the year 865, the sixty-seventh of his age, and thirty-fourth of his episcopal dignity</excerptum>
+    <excerptum>In the German language he is called St. Sciiaries</excerptum>
+    <excerptum>name was rather Ansgar, as it is written in his own 'letter</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Anschar" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Anschar">
+    <excerptum>Anschar (or Ansgarius), Saint, called the Apostle of the North, was b. in Picardy, 8 September. 801; d. 5 February, 865. He became a Benedictine of Corbie</excerptum>
+    <excerptum>With Harold, the newly baptized King of Denmark who had been expelled from his kingdom but was now returning, he and Autbert went to preach the Faith in that country</excerptum>
+    <excerptum>Anschar founded a school at Schleswig</excerptum>
+    <excerptum>The chief of the royal counsellors, Herigar, was converted, and built the first church of Sweden.</excerptum>
+    <excerptum>returning was made bishop of the new see of Hamburg, and appointed by Gregory IV legate of the northern nations.</excerptum>
+    <excerptum>In 845 Eric, the King of Jutland, appeared off Hamburg with a fleet of 600 vessels, and destroyed the city. Anschar was for some time a fugitive</excerptum>
+    <excerptum>The bishopric of Bremen which had been the See of Leudric, his enemy, was at the same time united to Hamburg, but though the arrangement was made in 847 it was not confirmed by the Pope until 857</excerptum>
+    <excerptum>In 854 we find him back in Denmark, where he succeeded in changing the enmity of King Eric into friendship.</excerptum>
+    <excerptum>He built a church at Schleswig and afterwards went as Danish ambassador to his old mission of Sweden.</excerptum>
+    <excerptum>he also induced the king to mitigate the horrors of the slave-trade.</excerptum>
+    <excerptum>he built hospitals, ransomed captives, sent immense alms abroad, and regretted only that he had not been found worthy of martyrdom.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="3 February">
+    <excerptum>Saint Ansgar, Bishop</excerptum>
+  </fons>
+</sanctus>

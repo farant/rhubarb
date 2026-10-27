@@ -1,0 +1,39 @@
+<sanctus id="joseph-calasanz" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Joseph Calasanz</nomen>
+  <nomen lingua="en" fontes="ce">Joseph Calasanctius</nomen>
+  <ortus annus="1556" mensis="9" dies="11" locus="castle of Calasanza, Aragon" fontes="ce"/>
+  <obitus annus="1648" mensis="8" dies="25" locus="Rome" fontes="ce"/>
+  <beatificatio annus="1748" mensis="8" dies="7" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1767" mensis="7" dies="16" papa="Clement XIII" fontes="ce"/>
+  <festum calendarium="generale" mensis="8" dies="25" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="8" dies="27" fontes="mr"/>
+  <munus fontes="us ce">priest</munus>
+  <munus fontes="ce mr">founder</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Joseph Calasanz was born on 11 September 1556 at the castle of Calasanza in Aragon, the youngest of five children. He studied philosophy and law at Lérida, taking a doctorate in law, and theology at Valencia and Alcalá. His father wished him to marry, but after a grave illness in 1582 he was ordained priest in December 1583, and served bishops in Spain as theologian, secretary and vicar-general. In 1592 he went to Rome, where Cardinal Marcantonio Colonna made him his theologian and his nephew's tutor.</paragraphus>
+    <paragraphus fontes="ce mr">Rome offered a wide field for the instruction of neglected and homeless children. He joined a Confraternity of Christian Doctrine, gathered children from the streets for school and, when the poorly paid teachers refused the extra work, opened in November 1597 what the Catholic Encyclopedia calls the first public free school in Europe; soon he had about a thousand children in his care. In 1602 he began a common life with his helpers, the foundation of the Order of the Piarists, the Poor Clerks Regular of the Pious Schools, and in religion he was called "a Matre Dei". He met much envy and opposition. He died at Rome on 25 August 1648, was beatified in 1748, and was canonized by Clement XIII in 1767.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Joseph Calasanctius" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Joseph_Calasanctius">
+    <excerptum>Called in religion "a Matre Dei", founder of the Piarists, b. 11 Sept., 1556, at the castle of Calasanza near Petralta de la Sal in Aragon; d. 25 Aug., 1648, at Rome; feast 27 Aug.</excerptum>
+    <excerptum>His parents, Don Pedro Calasanza and Donna Maria Gastonia, gave Joseph, the youngest of five children, a good education at home</excerptum>
+    <excerptum>he took up philosophy and jurisprudence at Lerida and merited the degree of Doctor of Laws, and then with honours completed his theological course at Valencia and Alcalá de Henares.</excerptum>
+    <excerptum>Don Pedro wanted Joseph to marry and perpetuate the family. God interfered by sending a sickness in 1582</excerptum>
+    <excerptum>On his recovery he was ordained priest 17 Dec., 1583</excerptum>
+    <excerptum>Bishop della Figuera appointed him his theologian and confessor, synodal examiner, and procurator</excerptum>
+    <excerptum>Joseph accompanied him as secretary</excerptum>
+    <excerptum>He was then called by his Bishop of Urgel to act as vicar-general for the district of Trempe.</excerptum>
+    <excerptum>In 1592 he embarked for Rome, where he found a protector in Cardinal Marcantonio Colonna who chose him as his theologian and instructor to his nephew.</excerptum>
+    <excerptum>Rome offered a splendid field for works of charity, especially for the instruction of neglected and homeless children, many of whom had lost their parents. Joseph joined a Confraternity of Christian Doctrine and gathered the boys and girls from the streets and brought them to school.</excerptum>
+    <excerptum>The teachers, being poorly paid, refused to accept the additional labour without remuneration.</excerptum>
+    <excerptum>Joseph, in November, 1597, opened the first public free school in Europe.</excerptum>
+    <excerptum>so that in a short time Joseph had about a thousand children under his charge. In 1602 he rented a house at S. Andrea della Valle and commenced a community life with his assistants and laid the foundation of the Order of Piarists.</excerptum>
+    <excerptum>Much envy and opposition arose against him and his new institute</excerptum>
+    <excerptum>His beatification was solemnized on 7 Aug., 1748, and his canonization by Clement XIII, 16 July, 1767.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="27 August">
+    <excerptum>Rome, the demise of St. Joseph, confessor, illustrious by the innocence of his life and miracles, who, to instruct youth in piety and letters, founded the Order of the Poor Clerks Regular of the pious Schools of the Mother of God.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="25 August">
+    <excerptum>Saint Joseph Calasanz, Priest</excerptum>
+  </fons>
+</sanctus>

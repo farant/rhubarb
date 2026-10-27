@@ -35,6 +35,10 @@
  * 7 ~2^-25); limes vitium in ansam lentam (minuta) non vertit */
 #define LIMES_PROFUNDITATIS  4096      /* bisectiones VCA */
 #define LIMES_BISECTIONUM    2048      /* angustatio per radicem */
+/* bisectiones ambarum ante probationem aequalitatis (comparatio):
+ * radices diversae sed propinquae plerumque sic separantur, sine
+ * divisore communi et testibus Cartesii (vide _compara_intra) */
+#define LIMES_SECTIONUM_PRIMARUM XVI
 
 
 /* ==================================================
@@ -873,11 +877,39 @@ _compara_intra (
         redde radix_signum_polynomii(radix_ex_fractione(b.infra,
             opus).f, a, opus, exitus);
     }
+    /* PRAESECTIO (2026-10-23): ambae bisectae dum intervalla
+     * disiungantur - diversae plerumque intra paucas bisectiones
+     * separantur (Horner bis per bisectionem), signum f_b in a autem
+     * divisorem communem et testes Cartesii (translationes Taylor in
+     * magnis) postulat. Aequales aut exacta factae: via plena infra,
+     * effectus idem (probatio_cellae: LXXII -> LVI s) */
+    basis = piscina_notare(opus);
+    per (iteratio = ZEPHYRUM; iteratio < LIMES_SECTIONUM_PRIMARUM
+         && !_est_exacta(a, opus) && !_est_exacta(b, opus); iteratio++)
+    {
+        si (   !_seca_medio(&a, opus, status)
+            || !_seca_medio(&b, opus, status))
+        {
+            redde FALSUM;
+        }
+        piscina_reficere(opus, basis);
+        ordo = _ordo_intervallorum(a, b, opus);
+        si (ordo != 0)
+        {
+            *exitus = ordo;
+            redde VERUM;
+        }
+    }
+    si (_est_exacta(a, opus) || _est_exacta(b, opus))
+    {
+        /* terminus rationalis radix: viae exactae supra (profunditas
+         * summa II) */
+        redde _compara_intra(a, b, status, opus, exitus);
+    }
     si (!radix_signum_polynomii(b.f, a, opus, &s))
     {
         redde FALSUM;
     }
-    basis = piscina_notare(opus);
     per (iteratio = ZEPHYRUM; iteratio
         < II * LIMES_BISECTIONUM; iteratio++)
     {

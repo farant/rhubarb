@@ -1,0 +1,43 @@
+<sanctus id="paul-of-the-cross" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Paul of the Cross</nomen>
+  <nomen lingua="en" fontes="ce">Paul Francis Danei</nomen>
+  <ortus annus="1694" mensis="1" dies="3" locus="Ovada, Genoa" fontes="ce"/>
+  <obitus annus="1775" mensis="10" dies="18" locus="Rome" fontes="ce mr"/>
+  <beatificatio annus="1852" mensis="10" dies="1" papa="Pius IX" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1867" mensis="6" dies="29" papa="Pius IX" fontes="ce mr"/>
+  <festum calendarium="usa" mensis="10" dies="20" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="10" dies="18" nota="his death; the Martyrology refers his festival to 28 April" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="4" dies="28" nota="feast" fontes="mr28"/>
+  <munus fontes="us">priest</munus>
+  <munus fontes="mr ce">founder</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Paul Francis Danei was born at Ovada, Genoa, on 3 January 1694; the Catholic Encyclopedia prints the surname Daneii, his father's name as Danei. From childhood, the Catholic Encyclopedia says, the crucifix was his book; he was schooled by a priest at Cremolino and at fifteen returned home to Castellazzo. As a young man he turned down an honourable marriage and an inheritance from a priest uncle, keeping only the uncle's breviary. Resolving to found a religious order in honour of the Passion, he was clothed in a black tunic by the Bishop of Alessandria and, alone in a narrow cell, wrote the rules of the new congregation according to a plan he said had been shown him in a vision.</paragraphus>
+    <paragraphus fontes="ce mr">After the rules were approved, the first general chapter of the Passionists met on Mount Argentaro in 1747 and elected him superior general against his wishes; he held the office until his death. Though busy governing the congregation and founding its houses, he never stopped preaching, in the words of Pius IX's brief of beatification; he kept his austere way of life to the end, and prayed for fifty years for the conversion of England. He died in Rome on 18 October 1775 and lies in the Basilica of SS. John and Paul. Pius IX beatified him on 1 October 1852 and canonized him on 29 June 1867, for his remarkable innocence of life and penitential spirit, as the Martyrology says.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Paul of the Cross" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Paul_of_the_Cross">
+    <excerptum>Paul Francis Daneii, born at Ovada, Genoa, Italy, 3 January, 1694; died in Rome, 18 October, 1775.</excerptum>
+    <excerptum>His parents, Luke Danei and Anna Maria Massari, were exemplary Catholics.</excerptum>
+    <excerptum>From his earliest years the crucifix was his book, and the Crucified his model.</excerptum>
+    <excerptum>Paul received his early education from a priest who kept a school for boys, in Cremolino, Lombardy.</excerptum>
+    <excerptum>At the age of fifteen he left school and returned to his home at Castellazzo</excerptum>
+    <excerptum>In early manhood he renounced the offer of an honourable marriage; also a good inheritance left him by an uncle who was a priest. He kept for himself only the priest's Breviary.</excerptum>
+    <excerptum>he formed the idea of instituting a religious order in honour of the Passion. Vested in a black tunic by the Bishop of Alessandria</excerptum>
+    <excerptum>he retired to a narrow cell where he drew up the Rules of the new congregation according to the plan made known to him in a vision</excerptum>
+    <excerptum>After the approbation of the Rules and the institute the first general chapter was held at the Retreat of the Presentation on Mount Argentaro on 10 April, 1747. At this chapter, St. Paul, against his wishes, was unanimously elected first superior general, which office he held until the day of his death.</excerptum>
+    <excerptum>Sacred missions were instituted and numerous conversions were made.</excerptum>
+    <excerptum>never, even to his last hour, remitted anything of his austere manner of life</excerptum>
+    <excerptum>For fifty years he prayed for the conversion of England</excerptum>
+    <excerptum>The body of St. Paul lies in the Basilica of SS. John and Paul, Rome. He was beatified on 1 October, 1852, and canonized on 29 June, 1867.</excerptum>
+    <excerptum>Although continually occupied with the cares of governing his religious society, and of founding everywhere new houses for it, yet he never left off preaching the word of God</excerptum>
+    <excerptum>(Brief of Pius IX for St. Paul's Beatification, 1 Oct., 1852)</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="18 October">
+    <excerptum>At Koine, the birthday of St. Paul of the Cross, confessor, founder of the Congregation of the Cross and Passion of Our Lord Jesus Christ, whom Pius IX. canonized on account of his remarkable innocence of life and his penitential spirit, assigning the 28th of April as the day of his festival.</excerptum>
+  </fons>
+  <fons id="mr28" opus="mr1916" locus="28 April">
+    <excerptum>T. PAUL of the Cross, a man remarkable for innocence of life and for the spirit of penance, and Founder of the Congregation of the Cross and Passion of our Lord Jesus Christ.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="20 October">
+    <excerptum>Saint Paul of the Cross, Priest</excerptum>
+  </fons>
+</sanctus>

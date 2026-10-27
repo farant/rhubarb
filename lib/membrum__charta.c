@@ -266,6 +266,13 @@ charta_reficere (
     redde scriba_reficere(&c->scriba);
 }
 
+b32
+charta_occupata (
+    constans Charta* c)
+{
+    redde c && c->montata && scriba_occupata(&c->scriba);
+}
+
 vacuum
 charta_gestum_ponere (
     Charta* c,

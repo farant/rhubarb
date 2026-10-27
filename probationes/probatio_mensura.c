@@ -17,6 +17,21 @@
 
 #define DIARIUM "/tmp/probatio_mensura_diarium.tsv"
 
+interior b32
+_existit (
+    constans character* via)
+{
+    FILE* f;
+
+    f = lectiones_fopen(via, "rb");
+    si (f == NIHIL)
+    {
+        redde FALSUM;
+    }
+    fclose(f);
+    redde VERUM;
+}
+
 interior Mensura
 _mensura_ficta (
                Piscina* piscina,
@@ -262,9 +277,18 @@ _sectio_sexta (
             CREDO_AEQUALIS_I32(fructus.conditae, (i32)II);
             CREDO_VERUM(volumen_summa_actorum(vol) > (s64)0);
 
-            /* Diarium TRUNCATUM est: aliter conditio proxima
-             * easdem mensuras iterum conderet */
+            /* Diarium DELETUM est (non solum truncatum - diaria
+             * sessionum vacua in /tmp cumulabantur, ...BPYFX):
+             * aliter conditio proxima easdem mensuras iterum
+             * conderet */
             CREDO_AEQUALIS_I32(_lineas_numerare(DIARIUM), ZEPHYRUM);
+            CREDO_FALSUM(_existit(DIARIUM));
+
+            /* conditio iterata: diarium absens = nihil condendum,
+             * successus (non fractura) */
+            fructus = mensura_condere(DIARIUM, vol, piscina);
+            CREDO_VERUM(fructus.successus);
+            CREDO_AEQUALIS_I32(fructus.conditae, ZEPHYRUM);
 
             volumen_claudere(vol);
         }

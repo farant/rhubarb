@@ -1,0 +1,71 @@
+<sanctus id="peter-the-apostle" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Peter the Apostle</nomen>
+  <nomen lingua="la" principale="verum" fontes="ce">Petrus</nomen>
+  <nomen lingua="alia" fontes="ce">Simon</nomen>
+  <nomen lingua="alia" fontes="ce">Cephas</nomen>
+  <ortus locus="Bethsaida" fontes="ce"/>
+  <obitus saeculum="1" locus="Rome" martyrium="verum" fontes="ce mr3"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="2" dies="22" gradus="festum" nota="Cathedra Sancti Petri" fontes="us"/>
+  <festum calendarium="generale" mensis="6" dies="29" gradus="sollemnitas" nota="Sanctorum Petri et Pauli" fontes="us2"/>
+  <festum calendarium="martyrologium" mensis="1" dies="18" nota="Cathedra Romae" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="2" dies="22" nota="Cathedra Antiochiae" fontes="mr2"/>
+  <festum calendarium="martyrologium" mensis="6" dies="29" nota="dies natalis cum Paulo" fontes="mr3"/>
+  <munus fontes="us mr3 ce">apostle</munus>
+  <munus fontes="mr3 ce">martyr</munus>
+  <munus fontes="bu mr">bishop of Rome</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Peter's original name was Simon. The son of Jona and brother of the Apostle Andrew, he was born at Bethsaida on the Lake of Genesareth and later settled at Capharnaum, where he was married and lived with his mother-in-law, working as a fisherman. With Andrew he was drawn to the preaching of John the Baptist; Andrew brought him to Jesus, who named him Cephas, rendered Petros in Greek and Petrus in Latin, and later called him to be a fisher of men. Despite denying Christ during the Passion, he was confirmed by the risen Lord as head of the Apostles.</paragraphus>
+    <paragraphus fontes="ce cp bu bu2 mr">After the Ascension he baptized the centurion Cornelius, the first non-Jewish convert, and worked for a time at Antioch, whose church tradition held he founded; he then went to Rome, where he established his episcopal chair. The Church of Rome kept two feasts of his chair, on 18 January and 22 February; the 22 February feast stands in the calendar of Philocalus of 354.</paragraphus>
+    <paragraphus fontes="ce mr3">He died a martyr at Rome under Nero. The year is uncertain: Eusebius, followed by Jerome, gave 67-68, the date generally held, while the Catholic Encyclopedia leaves open the period between July 64 and early 68, and says 29 June, his feast since the fourth century, cannot be proved to be the day of his death. Origen records that he was crucified head downwards at his own wish; he was buried on the Vatican, where Constantine built a basilica over his grave.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="18 January">
+    <excerptum>Chair of the apostle St. Peter. This festival was instituted to commemorate the establishment of the Holy See at Rome.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="22 February">
+    <excerptum>THE Chair of St. Peter at Antioch, where the disciples were first called Christians.</excerptum>
+  </fons>
+  <fons id="mr3" opus="mr1916" locus="29 June">
+    <excerptum>AT Rome, the birthday of the holy apostles Peter and Paul, who suffered martyrdom on the same day, under the emperor Nero.</excerptum>
+    <excerptum>former was crucified with his dead downwards, and buried in the Vatican, near the Triumphal way, where he is venerated by the whole world.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Peter" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Peter">
+    <excerptum>St. Peter's true and original name was Simon, sometimes occurring in the form Symeon.</excerptum>
+    <excerptum>He was the son of Jona (Johannes) and was born in Bethsaida (John 1:42, 44), a town on Lake Genesareth</excerptum>
+    <excerptum>The Apostle Andrew was his brother</excerptum>
+    <excerptum>Simon settled in Capharnaum, where he was living with his mother-in-law in his own house</excerptum>
+    <excerptum>Simon was thus married, and, according to Clement of Alexandria</excerptum>
+    <excerptum>Simon pursued in Capharnaum the profitable occupation of fisherman in Lake Genesareth, possessing his own boat</excerptum>
+    <excerptum>he was attracted by the Baptist's preaching of penance and was, with his brother Andrew, among John's associates</excerptum>
+    <excerptum>Later, meeting his brother. Simon, Andrew said "We have found the Messias", and brought him to Jesus, who, looking upon him, said: "Thou art Simon the son of Jona: thou shalt be called Cephas, which is interpreted Peter"</excerptum>
+    <excerptum>the Saviour foretold the change of Simon's name to Cephas (Kephas; Aramaic Kipha, rock), which is translated Petros (Lat., Petrus)</excerptum>
+    <excerptum>Come ye after me, and I will make you to be fishers of men</excerptum>
+    <excerptum>there denied Christ, asserting explicitly and swearing that he knew Him not</excerptum>
+    <excerptum>his position as head of the Apostles was later confirmed by Jesus, and his precedence was not less conspicuous after the Resurrection than before.</excerptum>
+    <excerptum>he baptized and received into the Church the first non-Jewish Christians, the centurion Cornelius and his kinsmen</excerptum>
+    <excerptum>that Peter founded the Church of Antioch, indicates the fact that he laboured a long period there</excerptum>
+    <excerptum>It is certain that he remained for a time at Antioch; he may even have returned thither several times.</excerptum>
+    <excerptum>In the "Chronicle" of Eusebius the thirteenth or fourteenth year of Nero is given as that of the death of Peter and Paul (67-68); this date, accepted by Jerome, is that generally held</excerptum>
+    <excerptum>the period between July, 64 (outbreak of the Neronian persecution), and the beginning of 68 (on 9 July Nero fled from Rome and committed suicide) must be left open for the date of his death.</excerptum>
+    <excerptum>29 June, the accepted day of his feast since the fourth century, cannot be proved to be the day of his death</excerptum>
+    <excerptum>Origen says: "Peter was crucified at Rome with his head downwards, as he himself had desired to suffer"</excerptum>
+    <excerptum>Constantine the Great had a magnificent basilica erected over the grave of St. Peter at the foot of the Vatican Hill.</excerptum>
+  </fons>
+  <fons id="cp" opus="ce1913" locus="Chair of Peter" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Chair_of_Peter">
+    <excerptum>From the earliest times the Church at Rome celebrated on 18 January the memory of the day when the Apostle held his first service with the faithful of the Eternal City.</excerptum>
+    <excerptum>Calendar of Philocalus drawn up in the year 354, and going back to the year 311; it makes no mention of the January feast but speaks thus of 22 February</excerptum>
+    <excerptum>The Roman Church, therefore, at an early date celebrated a first and a second assumption of the episcopal office in Rome by St. Peter.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v01 Jan. 18 St. Peter's Chair at Rome">
+    <excerptum>preached the faith and established his Episcopal chair, whose successors the bishops of Rome have been accounted.</excerptum>
+  </fons>
+  <fons id="bu2" opus="butler1812" locus="v02 Feb. 22 The Chair of Saint Peter at Antioch">
+    <excerptum>That Saint Peter, before he went to Rome, founded the see of Antioch is attested by Eiisebius</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="22 February">
+    <excerptum>The Chair of Saint Peter the Apostle</excerptum>
+  </fons>
+  <fons id="us2" opus="usccb2026" locus="29 June">
+    <excerptum>SAINTS PETER AND PAUL, APOSTLES</excerptum>
+  </fons>
+</sanctus>

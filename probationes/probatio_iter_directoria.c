@@ -4,10 +4,12 @@
 #include "piscina.h"
 #include "credo.h"
 #include "filum.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 /* Via ad directorium temporarium pro probationibus */
 hic_manens constans character* VIA_PROBATIONIS =
@@ -543,6 +545,112 @@ _sectio_decima_tertia (
     }
 }
 
+
+/* ==================================================
+ * ENUMERATIO UNO VOCAMINE (2026-10-22): omnis campus introitus contra
+ * stat() - genera, nexus (ad filum, ad directorium, fractus), fistula,
+ * nomen longum, et MD fila (massa XXXII KiB pluries impletur)
+ * ================================================== */
+
+interior vacuum
+_sectio_enumerationis (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+              character  radix[CCLVI];
+              character  mandatum[MXXIV];
+              character  via[MXXIV];
+    DirectoriumIterator* it;
+   DirectoriumIntroitus* in;
+                    i32  numerus        = ZEPHYRUM;
+                    i32  discrepantiae  = ZEPHYRUM;
+                    i32  nexus_visi     = ZEPHYRUM;
+                    b32  fractus_visus  = FALSUM;
+                    b32  fistula_visa   = FALSUM;
+                    b32  longum_visum   = FALSUM;
+
+    sprintf(radix, "/tmp/rhubarb_iter_enumeratio_%d",
+        (integer)getpid());
+    sprintf(mandatum, "rm -rf %s && mkdir -p %s/sub && cd %s && "
+        "echo abc > filum && echo de > sub/intus && "
+        "ln -s filum nexus_fili && ln -s sub nexus_dir && "
+        "ln -s absens nexus_fractus && mkfifo fistula && "
+        ": > %0200d && touch $(seq -f m%%g 1 1500)",
+        radix, radix, radix, 7);
+    CREDO_AEQUALIS_I32 ((i32)system(mandatum), ZEPHYRUM);
+
+    it = directorium_iterator_aperire(radix, piscina);
+    CREDO_NECESSE_NON_NIHIL (it);
+    dum ((in = directorium_iterator_proximum(it)) != NIHIL)
+    {
+        structura stat st;
+              integer r;
+
+        numerus++;
+        sprintf(via, "%s/%.*s", radix, (integer)in->titulus.mensura,
+            (constans character*)in->titulus.datum);
+        r = lectiones_stat(via, &st);
+        si (r != 0)
+        {
+            /* solum nexus fractus stat fallit: IGNOTUS, nexus */
+            fractus_visus = (b32)(in->genus == INTROITUS_IGNOTUS
+                && in->est_nexus && in->mensura == 0
+                && in->tempus_ns == 0);
+            si (!fractus_visus)
+            {
+                discrepantiae++;
+            }
+            perge;
+        }
+        si (   in->mensura != (memoriae_index)st.st_size
+            || in->tempus_ns != (s64)st.st_mtimespec.tv_sec
+                * (s64)M * (s64)M * (s64)M
+                + (s64)st.st_mtimespec.tv_nsec
+            || in->genus != (S_ISREG(st.st_mode) ? INTROITUS_FILUM
+                : S_ISDIR(st.st_mode) ? INTROITUS_DIRECTORIUM
+                : INTROITUS_ALIUS))
+        {
+            discrepantiae++;
+        }
+        si (in->est_nexus)
+        {
+            nexus_visi++;
+        }
+        si (   in->titulus.mensura                       == VII
+            && memcmp(in->titulus.datum, "fistula", VII) == 0)
+        {
+            fistula_visa = (b32)(in->genus == INTROITUS_ALIUS
+                && !in->est_nexus);
+        }
+        si (in->titulus.mensura == CC)
+        {
+            longum_visum = VERUM;
+        }
+        /* nexus secutus: ad filum FILUM, ad directorium DIRECTORIUM */
+        si (   in->titulus.mensura                        == X
+            && memcmp(in->titulus.datum, "nexus_fili", X) == 0)
+        {
+            CREDO_VERUM (in->est_nexus && in->genus == INTROITUS_FILUM);
+        }
+        si (   in->titulus.mensura                        == IX
+            && memcmp(in->titulus.datum, "nexus_dir", IX) == 0)
+        {
+            CREDO_VERUM (in->est_nexus
+                && in->genus == INTROITUS_DIRECTORIUM);
+        }
+    }
+    directorium_iterator_claudere(it);
+    /* filum, sub, III nexus, fistula, nomen longum, MD */
+    CREDO_AEQUALIS_I32 (numerus, (i32)(VII + MD));
+    CREDO_AEQUALIS_I32 (discrepantiae, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (nexus_visi, II);
+    CREDO_VERUM (fractus_visus);
+    CREDO_VERUM (fistula_visa);
+    CREDO_VERUM (longum_visum);
+    sprintf(mandatum, "rm -rf %s", radix);
+    (vacuum)system(mandatum);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "iterationem simplicem", _sectio_prima, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -568,6 +676,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "profunditatem maximam", _sectio_decima_tertia, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "enumerationem uno vocamine", _sectio_enumerationis, NIHIL,
+        NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

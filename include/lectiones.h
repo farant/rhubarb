@@ -23,7 +23,14 @@ nomen enumeratio {
     LECTIO_EXSTAT,        /* 'X' exstare confirmata, non lecta */
     LECTIO_ENUMERAVIT,    /* 'D' directorium enumeratum */
     LECTIO_SCRIPSIT,      /* 'S' plagula scripta, deleta, mota */
-    LECTIO_AMBITUS        /* 'E' variabilis ambitus lecta */
+    LECTIO_AMBITUS,       /* 'E' variabilis ambitus lecta */
+    LECTIO_EXSECUTIO      /* 'P' programma exsecutum (exec): via =
+                           * argv[0] ut datum, ANTE fork notatum.
+                           * Liber completus est solum si programmata
+                           * omnia domus sunt (lectiones ipsa notant) -
+                           * alienum (sh, git, clang) scripturas suas
+                           * non notat (iudicium per librum solum,
+                           * consilium) */
 } LectioGenus;
 
 /* lineam unam appendere; nihil si variabilis absens aut via nimis

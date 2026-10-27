@@ -12,7 +12,7 @@
  */
 
 #include "latina.h"
-#include "lectiones.h"   /* lectiones_fopen: canalis lectionum (examen 96) */
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "credo.h"
 #include "html_arbor.h"
 #include "html_registrum.h"
@@ -136,27 +136,21 @@ _plagulam_probare (
     redde CORPUS_IDEM;
 }
 
-integer
-principale (vacuum)
+interior vacuum
+_corpus_probare (
+    CredoContextus* c)
 {
-                Piscina* piscina;
-                    b32  praeteritus;
+                Piscina* piscina = c->piscina;
      constans character* radix;
                     i32  i;
                     i32  lectae  = ZEPHYRUM;
                     i32  idem    = ZEPHYRUM;
                     i32  octeti  = ZEPHYRUM;
 
-    piscina = piscina_generare_dynamicum("probatio_html_corpus", 65536);
-    credo_aperire(piscina);
-
     radix = getenv("RHUBARB_RADIX");
     si (radix == NIHIL)
     { radix = ".";
     }
-
-    imprimere("\n--- PORTA: corpus HTML octetim (%d plagulae) ---\n",
-        (integer)NUMERUS_CORPORIS);
 
     per (i = ZEPHYRUM; i < NUMERUS_CORPORIS; i++)
     {
@@ -199,10 +193,16 @@ principale (vacuum)
     CREDO_MAIOR_I32 (octeti, (i32)(C * M));
     imprimere("  summa: %d plagulae, %d octeti\n", (integer)lectae,
         (integer)octeti);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "porta corporis: corpus HTML octetim", _corpus_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("html_corpus", SECTIONES);
 }

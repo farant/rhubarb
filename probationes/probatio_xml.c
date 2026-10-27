@@ -831,6 +831,76 @@ _sectio_vicesima_tertia (
     }
 }
 
+/* referentiae numericae (&#D; &#xH;) in textu et attributis, SEMEL
+ * decodificatae: "&amp;#67;" textus litteralis "&#67;" manet
+ * (recensio horrei I3) */
+interior vacuum
+_sectio_referentiae_numerorum (
+    CredoContextus* c)
+{
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_creare(piscina);
+            XmlResultus  res;
+
+    res = xml_legere_ex_literis(
+        "<d a=\"&#65;&#x42;&amp;#67;\">&#65;&#x42;&amp;#67;"
+        "&#x1234;&#13;|&#;&#xZZ;&#1114112;&#65</d>", piscina, intern);
+    CREDO_NECESSE(res.successus);
+    CREDO_CHORDA_AEQUALIS_LITERIS(xml_textus_internus(res.radix,
+        piscina),
+        "AB&#67;\xE1\x88\xB4\r|&#;&#xZZ;&#1114112;&#65");
+    CREDO_CHORDA_AEQUALIS_LITERIS(*xml_attributum_capere(res.radix,
+        "a"),
+        "AB&#67;");
+}
+
+/* attributum vacuum (xmlns="", alt='') XML validum est - EPUB
+ * mercatoria id habent (OPF "Fellowship of the Ring": meta cum
+ * xmlns=""); olim XML_ERROR_ATTRIBUTUM. Valor vacuus, non NIHIL;
+ * attributa sequentia leguntur; scriptura et relectio idem dant. */
+interior vacuum
+_sectio_attributum_vacuum (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+            XmlResultus  res;
+            XmlResultus  iterum;
+                 chorda* val;
+                 chorda  scriptum;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+
+    CREDO_GRADUS("xmlns=\"\" et alt='': legitur, valores vacui");
+    res = xml_legere_ex_literis(
+        "<meta xmlns=\"\" alt='' name=\"cover\" content=\"c\"/>",
+        piscina, intern);
+    CREDO_VERUM(res.successus);
+    CREDO_NECESSE_NON_NIHIL(res.radix);
+    val = xml_attributum_capere(res.radix, "xmlns");
+    CREDO_NON_NIHIL(val);
+    CREDO_AEQUALIS_I32(val ? val->mensura : I, ZEPHYRUM);
+    val = xml_attributum_capere(res.radix, "alt");
+    CREDO_NON_NIHIL(val);
+    CREDO_AEQUALIS_I32(val ? val->mensura : I, ZEPHYRUM);
+    val = xml_attributum_capere(res.radix, "content");
+    CREDO_NON_NIHIL(val);
+    CREDO_VERUM(_chorda_ptr_eq_literis(val, "c"));
+
+    CREDO_GRADUS("scriptum et relectum: attributum vacuum manet");
+    scriptum = xml_scribere(res.radix, piscina, FALSUM);
+    CREDO_CHORDA_NON_VACUA(scriptum);
+    iterum = xml_legere(scriptum, piscina, intern);
+    CREDO_VERUM(iterum.successus);
+    CREDO_NECESSE_NON_NIHIL(iterum.radix);
+    val = xml_attributum_capere(iterum.radix, "alt");
+    CREDO_NON_NIHIL(val);
+    CREDO_AEQUALIS_I32(val ? val->mensura : I, ZEPHYRUM);
+    val = xml_attributum_capere(iterum.radix, "name");
+    CREDO_VERUM(_chorda_ptr_eq_literis(val, "cover"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "xml_elementum_creare", _sectio_prima, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -876,6 +946,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "xml_invenire_omnes_liberos", _sectio_vicesima_secunda, NIHIL,
         NIHIL, NIHIL, NIHIL },
     { "DOCTYPE in prologo", _sectio_vicesima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "referentiae_numerorum", _sectio_referentiae_numerorum, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "attributum vacuum", _sectio_attributum_vacuum, NIHIL, NIHIL,
         NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

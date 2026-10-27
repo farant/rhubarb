@@ -410,6 +410,94 @@ piscina_conari_allocare_ordinatum (
 }
 
 
+/* ==================================================
+ * AMPLIATIO (2026-10-21) - vide caput
+ * ================================================== */
+
+interior vacuum
+_usum_augere (
+           Piscina* piscina,
+    memoriae_index  incrementum)
+{
+    piscina->usus_currens += incrementum;
+    si (piscina->usus_currens > piscina->maximus_usus)
+    {
+        piscina->maximus_usus = piscina->usus_currens;
+    }
+}
+
+vacuum*
+piscina_conari_ampliare (
+           Piscina* piscina,
+            vacuum* datum,
+    memoriae_index  mensura_vetus,
+    memoriae_index  mensura_nova)
+{
+            Alveus* alveus;
+    memoriae_index  incrementum;
+            vacuum* buffer_novum;
+
+    si (   !piscina || !piscina->nunc || !datum
+        || mensura_nova < mensura_vetus)
+    {
+        redde NIHIL;
+    }
+    alveus       = piscina->nunc;
+    incrementum  = mensura_nova - mensura_vetus;
+
+    /* ULTIMA alvei currentis? (aequalitas monstratorum tantum) */
+    si ((i8*)datum + mensura_vetus != (i8*)alveus->buffer
+        + alveus->offset)
+    {
+        redde NIHIL;
+    }
+
+    /* I. in loco */
+    si (alveus->offset + incrementum <= alveus->capacitas)
+    {
+        alveus->offset += incrementum;
+        _usum_augere(piscina, incrementum);
+        redde datum;
+    }
+
+    /* II. SOLA alvei: nemo alius in eum monstrat, ergo alveus ipse
+     * moveri potest. Piscina certae magnitudinis numquam crescit. */
+    si (!piscina->est_dynamicum || datum != alveus->buffer)
+    {
+        redde NIHIL;
+    }
+    si (PISCINA_VENENUM)
+    {
+        /* semper movere, vetus veneno implere: spectatio pendens
+         * venenum legit, non contenta vetera quae recte viderentur */
+        buffer_novum = memoriae_allocare(mensura_nova);
+        si (!buffer_novum)
+        {
+            redde NIHIL;
+        }
+        memcpy(buffer_novum, alveus->buffer, mensura_vetus);
+        memset(alveus->buffer, PISCINA_OCTETUS_VENENI,
+            alveus->capacitas);
+        liberare(alveus->buffer);
+    }
+    alioquin
+    {
+        buffer_novum = realloc(alveus->buffer, mensura_nova);
+        si (!buffer_novum)
+        {
+            redde NIHIL;
+        }
+    }
+    alveus->buffer     = buffer_novum;
+    alveus->capacitas  = mensura_nova;
+    alveus->offset     = mensura_nova;
+    _usum_augere(piscina, incrementum);
+    _debug_imprimere(piscina->titulus ? piscina->titulus : "nemo",
+        "ampliare (alveus motus)", mensura_nova);
+    redde buffer_novum;
+}
+
+
 /* ===========================================================
  * CYCLUS VITAE
  * =========================================================== */

@@ -34,6 +34,14 @@
  *            aut 'fusio' (obligatoria solum in fusione in main; inter
  *            commissiones debitum rami notatur) - gradus-portarum
  *            spec, decretum Frani ...GDFF4J. Valor alius = recusatio
+ *   legit    exemplaria viarum quas porta LEGIT ultra derivationem
+ *            (corpus, prosa, arbor tota): SOLUM ad translationem
+ *            receptorum valent - debita numquam mutant (translatio
+ *            receptorum spec §I, decretum ...DC4A8Z)
+ *   translatio  'numquam': verdictum numquam portatur (porta cuius
+ *            verdictum IUDICIUM FABRICAE est - compositum, generata;
+ *            memoria fabricae subtilior manet auctoritas). Valor alius
+ *            = recusatio
  * Vocabulum CLAUSUM: attributum aliud = recusatio (error scribae).
  *
  * MACHINA PURA: ingressus et egressus per suturam (exemplar
@@ -111,8 +119,10 @@ nomen structura {
         Xar* tegit;      /* chorda: exemplaria viarum */
         Xar* currit;     /* chorda: programmata */
         Xar* instrumenta; /* chorda: binaria domus possessa */
+        Xar* legit;      /* chorda: exemplaria lectionis (translatio) */
  PortaGenus  genus;      /* PORTA_PROBATIO nisi 'genus' aliter */
 PortaGradus  gradus;      /* PORTA_COMMISSIO nisi 'gradus' aliter */
+        b32  translatio_numquam;   /* translatio="numquam" */
 } PortaDeclarata;
 
 /* recusatio una: locus (via vacua = registrum aut fundamentum; linea
@@ -303,11 +313,18 @@ portae_debita_computare (
  *     INSTRUMENTUM <porta> <binarium possessum>
  *     GENUS      <porta>  praeiudicium   (solum si non ordinarium)
  *     GRADUS     <porta>  fusio          (solum si non ordinarium)
+ *     LEGIT      <porta>  <exemplar>     (una per exemplar 'legit')
+ *     TRANSLATIO <porta>  numquam        (si translatio="numquam")
  *     TEGIT      <porta>  <via|globus|praefixum>  <exemplar>  <ratio>
  *     CLAUSURA   <porta>  <fons>      <ratio>
  *     IGNOTUM    <porta>  <textus>
  *     NOTA       <porta>  <textus>
  *     RECUSATIO  <via>    <linea|0>   <causa>
+ *   portae translatio (translatio receptorum spec §II):
+ *     ARBOR        <arbor praesens>              (CLI: git tree)
+ *     INSTRUMENTA  <porta>  <digestum>      (CLI: binaria quae currit)
+ *     TRANSLATIO   <porta>  <genus>  <causa>   (genus: portat debita
+ *                  lecta numquam instrumenta nullum)
  *
  * Forma hominis (machina FALSUM): PORTAE DEBITAE (N viae) / MANU (homo
  * currit) / INTECTA (nulla porta) - forma silva.portae_debitae_relatio.
@@ -382,6 +399,57 @@ portae_ordinare (
 chorda
 portae_ordinem_scribere (
     constans Xar* ordo,
+             b32  machina,
+         Piscina* piscina);
+
+
+/* ==================================================
+ * TRANSLATIO RECEPTORUM (translatio receptorum spec §II, decretum
+ * ...DC4A8Z): verdictum VIRIDE portae ad arborem praesentem portari
+ * potest? Viae = mutatae inter arborem recepti et praesentem. Ordo
+ * iudicii per portam: NUMQUAM (translatio="numquam"), DEBITA (tactus
+ * idem ac 'portae debitae' - opertura caeca omni viae debetur), LECTA
+ * ('legit' congruit), PORTAT. NULLUM (receptum absens aut porta non
+ * declarata) et INSTRUMENTA (binarium quod porta currit mutatum) a
+ * vocante ponuntur (status disci, non repositorii); ignota -> NULLUM.
+ * ================================================== */
+
+nomen enumeratio {
+    PORTAE_TRANSLATIO_PORTAT = ZEPHYRUM, /* nihil portae tangitur */
+    PORTAE_TRANSLATIO_DEBITA,            /* via portam debet (tactus) */
+    PORTAE_TRANSLATIO_LECTA,             /* via 'legit' congruit */
+    PORTAE_TRANSLATIO_NUMQUAM,           /* translatio="numquam" */
+    PORTAE_TRANSLATIO_INSTRUMENTA,       /* binarium mutatum (vocans) */
+    PORTAE_TRANSLATIO_NULLUM             /* receptum nullum / ignota */
+} PortaeTranslatioGenus;
+
+nomen structura {
+                     chorda  porta;
+      PortaeTranslatioGenus  genus;
+                     chorda  causa;   /* ratio prima, '(+N aliae)' */
+    constans PortaeOpertura* opertura;  /* NIHIL si porta ignota */
+} PortaeTranslatio;
+
+/* Xar de PortaeTranslatio, ordine 'portae' (Xar de chorda: tituli).
+ * NIHIL = memoria deficit. */
+Xar*
+portae_translationes_computare (
+    constans PortaeSutura* sutura,
+             constans Xar* operturae,
+             constans Xar* viae,
+             constans Xar* portae,
+                  Piscina* piscina);
+
+/* verbum generis: portat debita lecta numquam instrumenta nullum */
+constans character*
+portae_translationis_nomen (
+    PortaeTranslatioGenus genus);
+
+/* TRANSLATIO <porta> <genus> <causa> per lineam (machina); homo:
+ * '  <porta>  <genus>  <causa>' */
+chorda
+portae_translationes_scribere (
+    constans Xar* translationes,
              b32  machina,
          Piscina* piscina);
 

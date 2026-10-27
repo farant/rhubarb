@@ -523,7 +523,8 @@ dispensator_creare (
     }
     d->repo = repo;
     d->actiones = actiones;
-    d->strategia = destinatio_geometrica;
+    d->strategia = NIHIL;
+    d->strategia_ctx = NIHIL;
     d->componere = componere;
     d->componere_ctx = componere_ctx;
     d->super = chorda_nulla();
@@ -541,13 +542,15 @@ dispensator_creare (
 vacuum
 dispensator_ponere_strategiam (
             Dispensator* d,
-    DestinatioStrategia  strategia)
+    DestinatioStrategia  strategia,
+                 vacuum* ctx)
 {
-    si (!d || !strategia)
+    si (!d)
     {
         redde;
     }
-    d->strategia = strategia;
+    d->strategia      = strategia;
+    d->strategia_ctx  = strategia ? ctx : NIHIL;
 }
 
 
@@ -889,7 +892,11 @@ tractare_unum (
         superficiem_scribere(d, e);
     }
     focus = dispensator_focus(d);
-    des = d->strategia(d->arbor, &d->motus, focus, e, d->scratch);
+    des = d->strategia
+        ? d->strategia(d->arbor, &d->motus, focus, e, d->scratch,
+              d->strategia_ctx)
+        : destinatio_geometrica(d->arbor, &d->motus, focus, e,
+              d->scratch);
     destinatum = destinatio_componens(&des);
     si (crudus && d->notata)
     {
@@ -1006,13 +1013,18 @@ dispensator_tractare (
     /* sedes quietis: pan/zoom (quies dispensatoris) et gestus
      * applicationis (quies sua, S1a) - tempore eventus, ergo
      * replicatio eadem */
-    si (motus_quies(&d->motus, ev->tempus, d->quies_ms))
+    si (   motus_quies(&d->motus, ev->tempus, d->quies_ms)
+        && !motus_effundere(&d->motus, d->repo))
     {
-        motus_effundere(&d->motus, d->repo);
+        /* recusata (vicus quies T5): iterum post quies_ms, numquam
+         * statim - dispensator_mora_proxima aliter ZEPHYRUM semper
+         * redderet et ansa quieta sine mora circumiret */
+        d->motus.tempus_ultimae_mutationis = ev->tempus;
     }
-    si (motus_gestus_quies(&d->motus, ev->tempus))
+    si (   motus_gestus_quies(&d->motus, ev->tempus)
+        && !motus_gestum_effundere(&d->motus, d->repo))
     {
-        (vacuum)motus_gestum_effundere(&d->motus, d->repo);
+        d->motus.gestus.tempus = ev->tempus;
     }
     xar_vacare(d->effusio);
     derivare(&d->derivator, ev, d->effusio);
@@ -1079,6 +1091,44 @@ dispensator_pulsare (
     e.genus   = EVENTUS_NIHIL;
     e.tempus  = tempus;
     dispensator_tractare(d, &e);
+}
+
+s64
+dispensator_mora_proxima (
+    constans Dispensator* d,
+                     s64  nunc)
+{
+    constans Motus* m;
+               s64  mora;
+               s64  gestus;
+
+    si (!d)
+    {
+        redde -I;
+    }
+    m     = &d->motus;
+    mora  = -I;
+    si (m->sordida)
+    {
+        mora = m->tempus_ultimae_mutationis + d->quies_ms - nunc;
+        si (mora < ZEPHYRUM)
+        {
+            mora = ZEPHYRUM;
+        }
+    }
+    si (m->gestus.status && m->gestus.sordidus)
+    {
+        gestus = m->gestus.tempus + m->gestus.quies_ms - nunc;
+        si (gestus < ZEPHYRUM)
+        {
+            gestus = ZEPHYRUM;
+        }
+        si (mora < ZEPHYRUM || gestus < mora)
+        {
+            mora = gestus;
+        }
+    }
+    redde mora;
 }
 
 

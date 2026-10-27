@@ -1,5 +1,5 @@
 /* probatio_vicus_saltus.c - saltus ad colloquium (colloquia-plan T4c),
- * VIVUS contra servitorem tmux PROPRIUM (socket in build/pmx/,
+ * VIVUS contra servitorem tmux PROPRIUM (socket in build/pmv/,
  * numquam servitor usoris): admonitio volans pro panello fenestrae
  * "secunda" sessionis alpha; ictus in ea -> nullum terminale vici
  * adhaeret: terminale novum in acervo tabulae activae ("tmux <socket>
@@ -126,22 +126,22 @@ mundum_parare (
     {
         redde;
     }
-    /* socket in build/pmx/ (debitum_scripturae): via $TMPDIR portae
+    /* socket in build/pmv/ (debitum_scripturae): via $TMPDIR portae
      * > CIV octeti (sun_path macOS) */
     radix = getenv("RHUBARB_RADIX");
     si (!radix && getcwd(cwd, magnitudo(cwd)))
     {
         radix = cwd;
     }
-    sprintf(s->socket, "%s/build/pmx", radix ? radix : ".");
+    sprintf(s->socket, "%s/build/pmv", radix ? radix : ".");
     (vacuum)filum_directorium_creare_si_necesse(s->socket);
     sprintf(s->socket + strlen(s->socket), "/v.%d", (integer)getpid());
     /* T6: TMUX_TMPDIR proprium - "tmux attach" sine -S servitorem
-     * ordinarium hic quaerit, numquam usoris. build/pmx IPSUM (sine
+     * ordinarium hic quaerit, numquam usoris. build/pmv IPSUM (sine
      * gradu "t.<pid>"): via socket "<tmpdir>/tmux-<uid>/default" in
      * clone frigida (radix LXXI octeti) CIV octetos (sun_path macOS)
      * excedebat - tmux new-session deficiebat (10-16) */
-    sprintf(s->tmpdir, "%s/build/pmx", radix ? radix : ".");
+    sprintf(s->tmpdir, "%s/build/pmv", radix ? radix : ".");
     (vacuum)setenv("TMUX_TMPDIR", s->tmpdir, I);
     s->m.binarium  = s->binarium;
     s->m.socket    = s->socket;

@@ -92,6 +92,16 @@ colloquia_visus_fontem_mensorem_ponere (
        ColloquiorumFons* f,
      constans character* binarium);
 
+/* FINIRE (2026-10-26): quaestio mensoris pendens ABRUMPITUR (SIGKILL +
+ * messis) et piscinae fontis (cursuum, quaestionis) destruuntur.
+ * Sine hoc mensor asynchronus vocatorem supervivebat - sub fabrica
+ * cum libro lectionum membri, cuius scripturae membrum PROXIMUM
+ * culpabant (vicus_admonitiones -> vicus_claves). Iterum vocata nihil
+ * agit; fons post finire iterum initiari potest. */
+vacuum
+colloquia_visus_fontem_finire (
+    ColloquiorumFons* f);
+
 /* instantanea cursuum: Xar de CursusCurrensLinea (chordae in piscina
  * fontis - valent usque ad lectionem proximam); NIHIL = nondum lecti */
 constans Xar*
@@ -164,5 +174,13 @@ colloquia_visus_componere (
 b32
 colloquia_visus_reficere (
     ColloquiorumMontatio* m);
+
+/* vicus quies T6d: ms usque ad pulsum proximum necessarium - XVI dum
+ * quaestio cursuum volat; aliter usque ad panellos aut cursus (V s
+ * post ultimos); -1 si fons nec multiplexorem nec mensorem habet.
+ * Eventus libri per speculam vici expergefaciunt (non hic) */
+s64
+colloquia_visus_mora (
+    constans ColloquiorumMontatio* m);
 
 #endif /* COLLOQUIA_VISUS_H */

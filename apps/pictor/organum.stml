@@ -37,6 +37,9 @@
     <actio nomen="magnitudo.ponere"/>
     <actio nomen="instrumentum.eligere"/>
     <actio nomen="glutinatio.agere"/>
+    <!-- menu ⋯ (pinacotheca D2): Open picture, New picture, Import image -->
+    <actio nomen="elenchus.agere"/>
+    <actio nomen="pinacotheca.agere"/>
     <actio nomen="motus" systema="verum"/>
   </actiones>
 
@@ -80,10 +83,23 @@
     <campus nomen="pan_y" typus="numerus" vita="persistens"
             rhythmus="mobilis" absens="0" scriptor="motus"/>
 
+    <!-- semitae R4c: pictura ostensa (spatium in volumine); pictor
+         scribit in montatione et cum pictura mutatur -->
+    <campus nomen="pictura" typus="textus" vita="persistens"
+            semita="ligatio" historia="impelle"
+            nota="spatium picturae ostensae (id lateris aut pictura
+                  bibliothecae); persistens: post initium pictura
+                  ultima redit (semita servata); absens = pictor sine
+                  vico (radix)"/>
+
     <!-- transiens -->
     <campus nomen="palette" typus="nomen" vita="transiens"
             aspectus="popover" scriptor="palette.aperire"
             nota="palette aperta; absens = nulla"/>
+    <campus nomen="pagina_pinacothecae" typus="numerus" vita="transiens"
+            absens="0" scriptor="pinacotheca.agere"
+            nota="pagina pinacothecae apertae (0 = prima); absens cum
+                  clauditur"/>
     <campus nomen="glutinatio" typus="nomen" vita="transiens"
             scriptor="glutinatio.agere"
             nota="glutinatio pendens: A (Atkinson) | B (exemplaria); absens =

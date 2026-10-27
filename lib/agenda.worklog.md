@@ -81,3 +81,31 @@ Plant: oldest first -> red.
 rubrica_valida, rubricas_comparare, rubricas_legere, rubricas_iungere
 left agenda.c for the shared library include/rubrica.h (nomenclator-plan
 P1a; contacts is the next consumer). Same code; agenda 11/11 unchanged.
+
+## 2026-10-20 - genera-datorum D3: ids are ULIDs (text), not max + 1
+
+Ids are now `chorda` (interned in the document's intern), minted by
+a mint hook (`agenda_monetam_ponere`, `MonetaFons` in moneta.h) that
+defaults to `moneta_ulid`. Old decimal ids ("17") stay valid as text:
+act format unchanged (`id="..."`), no migration. Valid id = [0-9A-Z],
+1..26 chars; acts with any other id are skipped on replay. A minted id
+already present in the projection (deleted included) or malformed is
+refused (create returns an empty chorda).
+
+Order is CREATION order (records are appended per "nova" act), never
+id order: "9" > "17" as text. `AgendaRes.ordo` = creation ordinal
+(1-based, deleted counted) breaks ties (perfectae: newer first) and is
+what kalendarium hands the album as `res` (album keeps `s32 res`;
+mapping ids to rows by scanning text would be quadratic on the
+ever-growing done list). The ordinal was a forced deviation from the
+first approved header text (Fran approved it mid-slice).
+
+Canonical state lost `proximum` (no counter needed); decodificare
+ignores it in old checkpoints rather than refusing them. NOT tested:
+seeding an old-form checkpoint needs a hand-made massa + plagula; a
+refusal would only cost a full replay (historia falls back), so the
+observable state is the same either way.
+
+Tests set `moneta_numerator` ("1", "2", ...) so the suites keep their
+shape; the clock-port doctrine extended to ids (replay reads acts,
+only creation reads the mint).

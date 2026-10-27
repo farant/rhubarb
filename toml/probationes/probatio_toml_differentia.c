@@ -317,45 +317,37 @@ _visor (
  * Principale
  * ================================================== */
 
-s32
-principale (vacuum)
-{
-                     b32  praeteritus;
-                 Piscina* piscina;
-                 Piscina* opus;
-                  Status  st;
-        TomlCorpusNumeri  nn;
-               character  via[MXXIV];
-                     i32  k;
-      constans character* radix =
-          lectiones_ambitus("RHUBARB_RADIX");
-      constans character* TITULI[] = { "toml-test", "silvestria" };
-                     i32  clausulae[II];
+/* FIXURA SUITAE: aurea tomllib semel lecta (toml-test et silvestria);
+ * sectio ea per Status localem LEGIT (visor numeros in Status sectionis
+ * scribit, numquam in fixura). */
+nomen structura {
+    TabulaDispersa* aurum[II];
+} FixuraAuri;
 
-    piscina = piscina_generare_dynamicum("probatio_toml_differentia",
-        4194304);
-    opus    =
-        piscina_generare_dynamicum("probatio_toml_differentia_opus",
-        4194304);
-    si (!piscina || !opus)
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+              FixuraAuri* f;
+               character  via[MXXIV];
+                     i32  clausulae[II];
+      constans character* radix = lectiones_ambitus("RHUBARB_RADIX");
+
+    f = (FixuraAuri*)piscina_allocare(c->piscina,
+        magnitudo(FixuraAuri));
+    si (f == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    credo_aperire(piscina);
     si (radix == NIHIL)
     {
         radix = ".";
     }
-    memset(&st, ZEPHYRUM, magnitudo(st));
-    st.domus = lectiones_ambitus("HOME");
-
-    imprimere("\n--- Legens aurea tomllib ---\n");
     sprintf(via, "%s/toml/probationes/fixa/tomllib/aurum.txt", radix);
-    clausulae[ZEPHYRUM] = _aurum_legere(piscina, via,
-        &st.aurum[ZEPHYRUM]);
+    clausulae[ZEPHYRUM] = _aurum_legere(c->piscina, via,
+        &f->aurum[ZEPHYRUM]);
     sprintf(via, "%s/toml/build/aurum_silvestre.txt", radix);
-    clausulae[I] = _aurum_legere(piscina, via, &st.aurum[I]);
+    clausulae[I] = _aurum_legere(c->piscina, via, &f->aurum[I]);
     imprimere("  aurum toml-test: %u clausulae; silvestre: %u\n",
         clausulae[ZEPHYRUM], clausulae[I]);
     CREDO_AEQUALIS_I32 (clausulae[ZEPHYRUM], (i32)DCLXXIX);
@@ -365,9 +357,41 @@ principale (vacuum)
             "-silvestre (cursor id regenerat)\n");
     }
     CREDO_MAIOR_I32 (clausulae[I], ZEPHYRUM);
+    c->datum = f;
+}
 
-    imprimere("\n--- Probans differentiam ---\n");
-    toml_corpus_ambulare(piscina, opus, radix, _visor, &st, &nn);
+interior vacuum
+_differentiam_probare (
+    CredoContextus* c)
+{
+     constans FixuraAuri* f = (constans FixuraAuri*)c->suita;
+                 Piscina* opus;
+                  Status  st;
+        TomlCorpusNumeri  nn;
+                     i32  k;
+      constans character* radix =
+          lectiones_ambitus("RHUBARB_RADIX");
+      constans character* TITULI[] = { "toml-test", "silvestria" };
+
+    si (f == NIHIL)
+    {
+        redde;
+    }
+    si (radix == NIHIL)
+    {
+        radix = ".";
+    }
+    opus = piscina_generare_dynamicum("probatio_toml_differentia_opus",
+        4194304);
+    si (opus == NIHIL)
+    {
+        redde;
+    }
+    memset(&st, ZEPHYRUM, magnitudo(st));
+    st.domus            = lectiones_ambitus("HOME");
+    st.aurum[ZEPHYRUM]  = f->aurum[ZEPHYRUM];
+    st.aurum[I]         = f->aurum[I];
+    toml_corpus_ambulare(c->piscina, opus, radix, _visor, &st, &nn);
     per (k = ZEPHYRUM; k < II; k++)
     {
         Numeri* nu = &st.numeri[k];
@@ -387,11 +411,18 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (st.numeri[I].verdicto_discordes, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (st.numeri[I].valore_discordes, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (st.numeri[I].sine_auro, ZEPHYRUM);
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(opus);
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "differentia contra aurea tomllib", _differentiam_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("toml_differentia", SECTIONES,
+        _suitam_parare, NIHIL);
 }

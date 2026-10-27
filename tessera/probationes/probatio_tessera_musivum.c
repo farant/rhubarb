@@ -60,56 +60,82 @@ _linea_operis (
     exitus[n] = '\0';
 }
 
-s32
-principale (vacuum)
+/* Opus probationis (VIII x II, pons memoriae): sectio quaeque suum
+ * aperit (cellulae scribuntur - status nullus communis); creatio semel
+ * ASSERITUR in parare_suitae. NIHIL = creatio fracta. */
+interior TesseraOpus*
+_opus_aperire (
+    Piscina* piscina)
 {
-                Piscina* piscina;
-    InternamentumChorda* intern;
+    TesseraPonsMemoriae* pm = tessera_pons_memoriae_creare(piscina,
+        VIII, II);
+
+    si (pm == NIHIL)
+    {
+        redde NIHIL;
+    }
+    redde tessera_aperire(piscina, &pm->pons);
+}
+
+/* thema_initiare (status bibliothecae globalis, idempotens) semel ante
+ * omnes sectiones, quovis ordine; creatio operis semel asserta (ut olim
+ * ante blocos) */
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
     TesseraPonsMemoriae* pm;
             TesseraOpus* opus;
 
-    piscina = piscina_generare_dynamicum("probatio_tessera_musivum",
-        16777216);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    intern  = internamentum_creare(piscina);
     thema_initiare();
-    pm    = tessera_pons_memoriae_creare(piscina, VIII, II);
-    opus  = tessera_aperire(piscina, &pm->pons);
+    pm    = tessera_pons_memoriae_creare(c->piscina, VIII, II);
+    opus  = tessera_aperire(c->piscina, &pm->pons);
     CREDO_NON_NIHIL (opus);
+}
 
-    imprimere("\n--- I. Cellulae ponuntur ---\n");
+
+/* ==================================================
+ * PROBARE: I. musivum_pingere - unitas, lata + continuatio,
+ * junctura, vacua
+ * ================================================== */
+
+interior vacuum
+_cellulas_probare (
+    CredoContextus* c)
+{
+    TesseraOpus* opus = _opus_aperire(c->piscina);
+
+    si (opus == NIHIL)
     {
-        TessellatioCellula c[V];
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    {
+        TessellatioCellula cellulae[V];
                         i8 octeti[VIII];
                        i32 k;
 
-        memset(c, ZEPHYRUM, magnitudo(c));
+        memset(cellulae, ZEPHYRUM, magnitudo(cellulae));
         per (k = ZEPHYRUM; k < V; k++)
         {
-            c[k].latitudo = I;
+            cellulae[k].latitudo = I;
         }
-        c[0].unitas          = (constans i8*)"a";
-        c[0].mensura         = I;
-        c[0].color_litterae  = 0xFFFFFF;
-        c[0].color_fundi     = 0x0000FF;
-        c[1].unitas          = (constans i8*)"\xE4\xB8\xAD";
-        c[1].mensura         = III;
-        c[1].latitudo        = II;
-        c[1].color_litterae  = 0xFFFFFF;
-        c[1].color_fundi     = 0x0000FF;
-        c[2].latitudo        = ZEPHYRUM;            /* continuatio */
-        c[2].color_fundi     = 0x0000FF;
-        c[3].juncturae       = XV;
-        c[3].color_litterae  = 0xFFFF00;
-        c[3].color_fundi     = 0x000000;
-        c[4].color_litterae  = 0x00FF00;
-        c[4].color_fundi     = 0x00FF00;
-        musivum_pingere(opus, I, ZEPHYRUM, c, V, I);
+        cellulae[0].unitas          = (constans i8*)"a";
+        cellulae[0].mensura         = I;
+        cellulae[0].color_litterae  = 0xFFFFFF;
+        cellulae[0].color_fundi     = 0x0000FF;
+        cellulae[1].unitas          = (constans i8*)"\xE4\xB8\xAD";
+        cellulae[1].mensura         = III;
+        cellulae[1].latitudo        = II;
+        cellulae[1].color_litterae  = 0xFFFFFF;
+        cellulae[1].color_fundi     = 0x0000FF;
+        cellulae[2].latitudo        = ZEPHYRUM;     /* continuatio */
+        cellulae[2].color_fundi     = 0x0000FF;
+        cellulae[3].juncturae       = XV;
+        cellulae[3].color_litterae  = 0xFFFF00;
+        cellulae[3].color_fundi     = 0x000000;
+        cellulae[4].color_litterae  = 0x00FF00;
+        cellulae[4].color_fundi     = 0x00FF00;
+        musivum_pingere(opus, I, ZEPHYRUM, cellulae, V, I);
         CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, I,
             ZEPHYRUM).signum, 0x61);
         CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, I,
@@ -133,15 +159,34 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, V,
             ZEPHYRUM).color_fundi, 0x00FF00);
     }
+}
 
-    imprimere("\n--- II. Via tota ---\n");
+
+/* ==================================================
+ * PROBARE: II. Via tota - Mandata -> tessellatio_computare ->
+ * musivum_pingere -> octeti relecti per lineam (internamentum
+ * proprium sectionis: mandata in eo internant)
+ * ================================================== */
+
+interior vacuum
+_viam_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_creare(piscina);
+            TesseraOpus* opus     = _opus_aperire(piscina);
+
+    si (opus == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     {
                    Mandata* m;
                    Modulus  modulus;
                      Fines  f;
                    Punctum  a;
                    Punctum  b;
-        TessellatioCellula  c[XVI];
+        TessellatioCellula  cellulae[XVI];
                  character  linea[CXXVIII];
 
         m           = mandata_creare(piscina, intern);
@@ -157,8 +202,8 @@ principale (vacuum)
         mandata_linea(m, a, b, I, _rgba(0xFFFF00));
         modulus = modulus_creare(VI, VIII, XLVIII, XVI);   /* 8 x 2 */
         tessellatio_computare(m, &modulus, RUNAE_POLITICA_GRAPHEMATUM,
-            0x000000, NIHIL, NIHIL, NIHIL, c);
-        musivum_pingere(opus, ZEPHYRUM, ZEPHYRUM, c, VIII, II);
+            0x000000, NIHIL, NIHIL, NIHIL, cellulae);
+        musivum_pingere(opus, ZEPHYRUM, ZEPHYRUM, cellulae, VIII, II);
         _linea_operis(opus, ZEPHYRUM, VIII, linea);
         CREDO_VERUM (strcmp(linea, " ok     ") == ZEPHYRUM);
         _linea_operis(opus, I, VIII, linea);
@@ -171,8 +216,18 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, IV,
             ZEPHYRUM).color_fundi, 0x000000);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. Cellulae ponuntur", _cellulas_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "II. Via tota", _viam_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("tessera_musivum", SECTIONES,
+        _suitam_parare, NIHIL);
 }

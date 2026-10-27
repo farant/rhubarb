@@ -30,6 +30,11 @@
  *   uno - genus actorum, notae (ramus, coniunctio) et claves
  *   checkpointorum praefixum 'spatium/' ferunt; historia sua sola
  *   legit. Spatium vacuum = nomina nuda (octeti veteres).
+ * - BASIS (D2b): actum documenti identitatem actus ad cursorem
+ *   nominat (volumen_actum_super_appendere) - statum contra quem
+ *   factum est; post revocationem basis prior est. Notae (ramus,
+ *   coniunctio, cursor) basim non ferunt. Furca = acta duo eiusdem
+ *   basis, inter machinas quoque; ramus ab="seq" localis manet.
  *
  * Historia volumen non describit: manifestum documenti (dimensiones,
  * intervallum) res clientis est. */
@@ -106,6 +111,18 @@ structura Historia {
 /* ==================================================
  * Vita
  * ================================================== */
+
+/* genera actorum historiae in spatio (fons unus nominum, quae
+ * historia_creare/aperire ponunt): genera[0] genus clientis, [I] rami,
+ * [II] cursoris, [III] coniunctionis - "spatium/<nomen>", spatio
+ * vacuo (aut NIHIL) nuda. Pinacotheca acta picturae sic agnoscit
+ * sine historia aperienda. */
+vacuum
+historia_genera (
+                Piscina* piscina,
+     constans character* spatium,
+     constans character* genus,
+     constans character* genera[IV]);
 
 /* historia nova: proiectio vacatur, cursor 0. Volumen non tangitur.
  * intervallum <= 0 -> LXIV. NIHIL si argumenta mala. */

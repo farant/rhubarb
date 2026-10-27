@@ -27,6 +27,8 @@
     <liberum nomen="status"      minimum="1" maximum="1"/>
     <liberum nomen="basis"       maximum="1"/>
     <liberum nomen="montationes" maximum="1"/>
+    <liberum nomen="cognomina"   maximum="1"/>
+    <liberum nomen="aditus"      maximum="1"/>
   </elementum>
 
   <!-- ligamina: entia quae organum ostendit (props); a="parens" =
@@ -105,6 +107,20 @@
       <optio>nullum</optio>
     </attributum>
     <attributum nomen="nota"       genus="textus"/>
+    <!-- semitae (project-specs/semitae-spec.md R0): pars semitae;
+         ambitus resetus; historia impelle | substitue -->
+    <attributum nomen="semita"     genus="electio">
+      <optio>ligatio</optio>
+      <optio>status</optio>
+    </attributum>
+    <attributum nomen="ambitus"    genus="electio">
+      <optio>ligatio</optio>
+      <optio>organum</optio>
+    </attributum>
+    <attributum nomen="historia"   genus="electio">
+      <optio>impelle</optio>
+      <optio>substitue</optio>
+    </attributum>
     <liberum nomen="optio"/>
   </elementum>
   <elementum nomen="optio" textus="verum"/>
@@ -123,10 +139,41 @@
     <attributum nomen="genus" genus="nomen" necessarium="verum"/>
   </elementum>
 
+  <!-- cognomina (semitae R4e): argumentum nudum -> semita. Fixum
+       (nomen), typatum (typus; "{}" in semita = argumentum), neutrum =
+       argumentum vacuum; ordine manifesti tentantur -->
+  <elementum nomen="cognomina">
+    <liberum nomen="cognomen"/>
+  </elementum>
+  <elementum nomen="cognomen">
+    <attributum nomen="nomen"  genus="textus"/>
+    <attributum nomen="typus"  genus="electio">
+      <optio>textus</optio><optio>nomen</optio><optio>numerus</optio>
+      <optio>veritas</optio><optio>dies</optio>
+    </attributum>
+    <attributum nomen="semita" genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <!-- aditus (comites P5, semitae-spec VI-b): verba universalia et
+       responsio visus - semita (URI, generis cuiusvis; absens = latus
+       ipsum), advocare (latus post semitam advocatur) -->
+  <elementum nomen="aditus">
+    <liberum nomen="iter"/>
+  </elementum>
+  <elementum nomen="iter">
+    <attributum nomen="nomen" genus="electio" necessarium="verum">
+      <optio>quaestio</optio>
+    </attributum>
+    <attributum nomen="semita"   genus="textus"/>
+    <attributum nomen="advocare" genus="veritas"/>
+  </elementum>
+
   <citatio  nomen="scriptor-actio" attributum="scriptor"
     ad="actio/nomen" super="campus"/>
   <unicitas nomen="campi"    attributum="nomen" super="campus"/>
   <unicitas nomen="actiones" attributum="nomen" super="actio"/>
   <unicitas nomen="ligamina" attributum="nomen" super="ligamen"/>
+  <unicitas nomen="montationes" attributum="nomen" super="montatio"/>
+  <unicitas nomen="itinera" attributum="nomen" super="iter"/>
 
 </canon>

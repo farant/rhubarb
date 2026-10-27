@@ -1,7 +1,8 @@
 <!-- organum.stml - manifestum calendarii (agenda-plan A2). Pagina una
-     (genus calendarium) cuius visus mutatur: mensis (A2), dies (A3),
-     annus (A5). Contentum (res, perfectio) in documento agendae
-     (volumen vici, spatium "agenda"), commune omnibus lateribus
+     (genus calendarium) cuius visus mutatur: mensis (A2), hebdomas
+     (dies VII cum rebus apertis et notis diei), dies (A3), annus (A5).
+     Contentum (res, perfectio) in documento agendae (volumen vici,
+     spatium "agenda"), commune omnibus lateribus
      calendarii et agendae - hic solum status visus. Hodie ex porta
      horologii (radix vici, tempus_*), numquam ex systemate. -->
 <organum genus="calendarium" versio="1">
@@ -21,18 +22,31 @@
 
   <status>
     <campus nomen="visus" typus="electio" vita="persistens"
-            absens="mensis" scriptor="calendarium.agere">
+            absens="mensis" scriptor="calendarium.agere"
+            semita="ligatio" historia="impelle">
       <optio>mensis</optio>
+      <optio>hebdomas</optio>
       <optio>dies</optio>
       <optio>annus</optio>
       <optio>agenda</optio>
+      <optio>monita</optio>
     </campus>
-    <campus nomen="dies_electus" typus="textus" vita="transiens"
+    <campus nomen="monita_modus" typus="electio" vita="transiens"
+            absens="lectio" scriptor="calendarium.agere"
+            nota="visus monitorum (K5): lectio sola aut editio (scriba
+                  libri pensa infra, lectio supra)">
+      <optio>lectio</optio>
+      <optio>editio</optio>
+    </campus>
+    <campus nomen="dies_electus" typus="dies" vita="transiens"
+            scriptor="calendarium.agere" semita="ligatio"
+            nota="YYYY-MM-DD; absens = hodie (semita
+                  'calendarium/dies' = dies hodierna semper)"/>
+    <campus nomen="res_electa" typus="nomen" vita="transiens"
             scriptor="calendarium.agere"
-            nota="YYYY-MM-DD; absens = hodie"/>
-    <campus nomen="res_electa" typus="numerus" vita="transiens"
-            scriptor="calendarium.agere"
-            nota="id rei electae in visu diei; absens = prima"/>
+            semita="status" ambitus="ligatio"
+            nota="id rei electae (ULID aut decimale vetus) in visu
+                  diei, aut k<n> (pensum diei, K3); absens = prima"/>
     <campus nomen="prompta" typus="electio" vita="transiens"
             absens="nulla" scriptor="calendarium.agere">
       <optio>nulla</optio>
@@ -50,11 +64,12 @@
     <campus nomen="prompta_cursor" typus="numerus" vita="transiens"
             scriptor="calendarium.agere"/>
     <campus nomen="rubrica_filtrum" typus="textus" vita="persistens"
-            scriptor="calendarium.agere"
+            scriptor="calendarium.agere" semita="status"
             nota="visus agendae: una rubrica (kebab: '-' in typo nomen
                   non licet); absens = omnes"/>
     <campus nomen="pagina" typus="numerus" vita="transiens"
             scriptor="calendarium.agere"
+            semita="status" ambitus="ligatio"
             nota="pagina indicis (visus diei et agendae; 0 = prima);
                   ad 0 redit cum dies aut visus mutatur"/>
     <campus nomen="elenchus" typus="textus" vita="transiens"
@@ -75,6 +90,23 @@
                   mensis mutatus, menu apertum)"/>
   </status>
 
+  <!-- semitae R4e: argumentum nudum -> semita ("YYYY-MM" computatum in
+       kalendarium.c, ante cognomina) -->
+  <cognomina>
+    <cognomen nomen="agenda" semita="calendarium/agenda"/>
+    <cognomen nomen="monita" semita="calendarium/monita"/>
+    <cognomen typus="dies" semita="calendarium/dies/{}"/>
+  </cognomina>
+
+  <!-- comites P5: Cmd+F = quaestio intra visum -->
+  <aditus>
+    <iter nomen="quaestio" semita="indagatio?genus=res" advocare="verum"/>
+  </aditus>
+
   <basis genus="organum_commune"/>
-  <montationes/>
+  <montationes>
+    <!-- D5 S3c: liber notarum (scriba nidificata, id "<id>_notae");
+         pagina eius in semita: ?notae.pagina=2 -->
+    <montatio nomen="notae" genus="scriba"/>
+  </montationes>
 </organum>

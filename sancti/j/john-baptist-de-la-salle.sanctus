@@ -1,0 +1,41 @@
+<sanctus id="john-baptist-de-la-salle" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">John Baptist de La Salle</nomen>
+  <ortus annus="1651" mensis="4" dies="30" locus="Reims" fontes="ce"/>
+  <obitus annus="1719" mensis="4" dies="7" locus="Saint-Yon, Rouen" fontes="ce mr"/>
+  <canonizatio modus="formalis" annus="1900" mensis="5" dies="24" papa="Leo XIII" fontes="ce"/>
+  <festum calendarium="generale" mensis="4" dies="7" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="5" dies="15" fontes="mr"/>
+  <munus fontes="us ce">priest</munus>
+  <descriptio>
+    <paragraphus fontes="ce">John Baptist de la Salle was born at Reims in 1651, the eldest child of Louis de la Salle and Nicolle de Moet de Brouillet. His father hoped he would study law, but he chose the Church: he became a canon of Reims as a young man, studied at Saint-Sulpice and the Sorbonne, and after his parents' deaths took charge of his younger brothers and sisters. He was ordained priest in 1678 and took a doctorate in theology in 1680.</paragraphus>
+    <paragraphus fontes="ce mr">Helping to open free schools for poor children at Reims, he began to guide, house and support their discouraged teachers, and from this fellowship grew the Brothers of the Christian Schools. He resigned his canonry in 1683 and gave his fortune to the poor, saying that he must do the work of God even if they had to beg. A pioneer of teaching, he based instruction on the vernacular rather than Latin and opened a training school for teachers at Reims in 1684. He died at Saint-Yon near Rouen on Good Friday, 7 April 1719; Benedict XIII approved his institute in 1725, and Leo XIII canonized him in 1900.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="15 May">
+    <excerptum>At Rouen, St. John Baptist de la Salle, confessor, who deserved well both of religion and society by his labors for the education of youth, especially of the poor, and by the founding of the Society of the Brothers of the Christian Schools.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. John Baptist de la Salle" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._John_Baptist_de_la_Salle">
+    <excerptum>Founder of the Institute of the Brothers of the Christian Schools, educational reformer, and father of modern pedagogy, was born at Reims, 30 April, 1651, and died at Saint-Yon, Rouen, on Good Friday, 7 April, 1719.</excerptum>
+    <excerptum>John Baptist was the eldest child of Louis de la Salle and Nicolle de Moet de Brouillet.</excerptum>
+    <excerptum>Louis de la Salle, however, cherished the hope that John Baptist would select the profession of law</excerptum>
+    <excerptum>But young de la Salle insisted that he was called to serve the Church</excerptum>
+    <excerptum>installed as a canon of the metropolitan See of Reims, 7 January, 1667.</excerptum>
+    <excerptum>he was sent to Paris to enter the Seminary of Saint-Sulpice on 18 October, 1670. While residing here he attended the lectures in theology at the Sorbonne.</excerptum>
+    <excerptum>Nine months after his arrival in Paris, his mother died, 19 July, 1671, and on 9 April, 1672, his father died.</excerptum>
+    <excerptum>He was now twenty-one, the head of the family, and as such had the responsibility of educating his brothers and sisters.</excerptum>
+    <excerptum>He was ordained priest by the Archbishop of Reims, on Holy Saturday, 9 April, 1678.</excerptum>
+    <excerptum>In June, 1680, he submitted to his final examination and took his doctorate in theology.</excerptum>
+    <excerptum>Although instrumental in opening these elementary free schools at Reims</excerptum>
+    <excerptum>But when he found that the teachers became discouraged, owing to the lack of proper guidance after school hours, he undertook to house them</excerptum>
+    <excerptum>forming an intimate fellowship with the teachers of the poor.</excerptum>
+    <excerptum>He resigned his canonry in July, 1683, and he distributed his fortune to the poor</excerptum>
+    <excerptum>I must do the work of God, and if the worst should come to pass, we shall have to beg alms.</excerptum>
+    <excerptum>In making the vernacular the basis of all instruction, de la Salle appealed to the intelligence of the child</excerptum>
+    <excerptum>With true scientific insight he perceived the absurdity of retaining Latin texts to teach the art of reading.</excerptum>
+    <excerptum>The normal school was opened at Reims in 1684.</excerptum>
+    <excerptum>on 26 February, 1725, Benedict XIII, by his Bull, "In apostolicae dignitatis solio", placed the seal of approbation upon the institute</excerptum>
+    <excerptum>He was canonized by Leo XIII on 24 May 1900.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="7 April">
+    <excerptum>Saint John Baptist de la Salle, Priest</excerptum>
+  </fons>
+</sanctus>

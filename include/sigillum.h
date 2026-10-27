@@ -44,6 +44,15 @@ sigillum_computare (
     constans vacuum* datum,
      memoriae_index  mensura);
 
+/* VIA PORTABILIS sola (C89 purum), etiam ubi compilator instructiones
+ * SHA2 praebet - testis: sigillum_computare per viam velociorem
+ * octetim idem reddere debet (probatio_sigillum). Usus ordinarius:
+ * sigillum_computare. */
+Sigillum
+sigillum_computare_portabile (
+    constans vacuum* datum,
+     memoriae_index  mensura);
+
 /* incrementaliter */
 vacuum
 sigillum_incipere (

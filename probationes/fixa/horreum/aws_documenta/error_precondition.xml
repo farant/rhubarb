@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Error>
+  <Code>PreconditionFailed</Code>
+  <Message>At least one of the pre-conditions you specified did not hold</Message>
+  <Condition>If-None-Match</Condition>
+  <RequestId>A1B2C3D4E5F6</RequestId>
+</Error>

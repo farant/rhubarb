@@ -9,6 +9,7 @@
  */
 #include "postulata_posix.h"
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
@@ -26,11 +27,22 @@
 #include "silva_c89_oraculum.h"
 #include "silva_scribere.h"
 #include "credo.h"
+#include "iter_directoria.h"  /* canalis (examen 96) */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <dirent.h>  /* probatio solum - macOS/POSIX */
+
+/* titulus introitus (chorda, non terminata) ut litterae C - lectio
+ * directorii per iter_directoria (liber lectionum 'D', canalis examen
+ * 96; quaestio …4XE9S9K6: opendir crudus membrum caecum faciebat) */
+interior constans character*
+_introitus_titulus (
+    constans DirectoriumIntroitus* introitus,
+                          Piscina* piscina)
+{
+    redde chorda_ut_cstr(introitus->titulus, piscina);
+}
 
 #define VIA_MAXIMA 1024
 
@@ -56,7 +68,7 @@ _plagulam_legere (
     i8* buffer;
     signatus longus mensura;
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL)
     {
         redde NIHIL;
@@ -115,30 +127,30 @@ _est_c_vel_h (
 
 s32 principale (vacuum)
 {
-                   b32  praeteritus;
-               Piscina* piscina;
-    constans character* radix;
-                   b32  verbosa;
-             character  via_corporis[VIA_MAXIMA];
-             character  via_plagulae[VIA_MAXIMA];
-    DIR* corpus;
-    structura dirent* introitus;
-    i32 numerus;
-    duplex summa_octetorum;
-    duplex summa_lexare_ms;
-    duplex summa_expandere_ms;
-    duplex summa_parsare_ms;
-    duplex summa_scribere_ms;
-    duplex summa_apex_octetorum;
-    duplex apex_maximus;
-    i32 summa_errorum;
-    i32 frons_maxima;
-    i32 fideles_arboris;
-    SilvaContextus* ctx_latinus;
-    duplex summa_parsare_c89_ms;
-    i32 summa_errorum_c89;
-    i32 frons_maxima_c89;
-    i32 fideles_arboris_c89;
+                     b32  praeteritus;
+                 Piscina* piscina;
+      constans character* radix;
+                     b32  verbosa;
+               character  via_corporis[VIA_MAXIMA];
+               character  via_plagulae[VIA_MAXIMA];
+     DirectoriumIterator* corpus;
+    DirectoriumIntroitus* introitus;
+                     i32  numerus;
+                  duplex  summa_octetorum;
+                  duplex  summa_lexare_ms;
+                  duplex  summa_expandere_ms;
+                  duplex  summa_parsare_ms;
+                  duplex  summa_scribere_ms;
+                  duplex  summa_apex_octetorum;
+                  duplex  apex_maximus;
+                     i32  summa_errorum;
+                     i32  frons_maxima;
+                     i32  fideles_arboris;
+          SilvaContextus* ctx_latinus;
+                  duplex  summa_parsare_c89_ms;
+                     i32  summa_errorum_c89;
+                     i32  frons_maxima_c89;
+                     i32  fideles_arboris_c89;
 
     piscina = piscina_generare_dynamicum("probatio_silva_mensura",
         262144);
@@ -186,7 +198,7 @@ s32 principale (vacuum)
         }
     }
 
-    corpus = opendir(via_corporis);
+    corpus = directorium_iterator_aperire(via_corporis, piscina);
     si (corpus == NIHIL)
     {
         imprimere("FRACTA: corpus non apertum: %s\n", via_corporis);
@@ -195,7 +207,7 @@ s32 principale (vacuum)
         redde I;
     }
 
-    dum ((introitus = readdir(corpus)) != NIHIL)
+    dum ((introitus = directorium_iterator_proximum(corpus)) != NIHIL)
     {
         Piscina* piscina_plagulae;
              i8* fons;
@@ -214,11 +226,12 @@ s32 principale (vacuum)
          duplex  scribere_ms;
          duplex  apex;
 
-        si (!_est_c_vel_h(introitus->d_name))
+        si (!_est_c_vel_h(_introitus_titulus(introitus, piscina)))
         {
             perge;
         }
-        sprintf(via_plagulae, "%s/%s", via_corporis, introitus->d_name);
+        sprintf(via_plagulae, "%s/%s", via_corporis,
+            _introitus_titulus(introitus, piscina));
 
         piscina_plagulae =
             piscina_generare_dynamicum("mensura_plagulae",
@@ -244,7 +257,8 @@ s32 principale (vacuum)
             SilvaExpansio* exp;
 
             exp = silva_expansio_creare(piscina_plagulae);
-            silva_fons_addere(exp, introitus->d_name, FALSUM);
+            silva_fons_addere(exp, _introitus_titulus(introitus,
+                piscina), FALSUM);
             reliqua = silva_expansio_directivas_processare(exp,
                 lexemata,
                 NIHIL);
@@ -264,7 +278,8 @@ s32 principale (vacuum)
             SilvaParsura* parsura;
 
             parsura = silva_parsare(piscina_plagulae,
-                introitus->d_name, (constans character*)fons, mensura,
+                _introitus_titulus(introitus, piscina),
+                (constans character*)fons, mensura,
                 &GRAMMATICA_SCELETI, NIHIL, NIHIL, NIHIL);
             t3 = clock();
             si (parsura != NIHIL && parsura->successus)
@@ -308,7 +323,8 @@ s32 principale (vacuum)
             {
                 c0 = clock();
                 parsura = silva_c89_parsare_cum_contextu(
-                    piscina_c89, ctx_latinus, introitus->d_name,
+                    piscina_c89, ctx_latinus,
+                    _introitus_titulus(introitus, piscina),
                     (constans character*)fons, mensura, NIHIL);
                 c1 = clock();
                 summa_parsare_c89_ms += (duplex)(c1 - c0) * 1000.0
@@ -324,7 +340,7 @@ s32 principale (vacuum)
                     {
                         imprimere("  [c89 errores %d] %s\n",
                             (int)parsura->numerus_errorum,
-                            introitus->d_name);
+                            _introitus_titulus(introitus, piscina));
                     }
                     si ((i32)parsura->frons_maxima > frons_maxima_c89)
                     {
@@ -371,13 +387,14 @@ s32 principale (vacuum)
         si (verbosa)
         {
             imprimere("  %-36s %7d B  lex %7.3f ms  exp %7.3f ms  pars %7.3f ms  scr %7.3f ms  apex %9.0f B\n",
-                introitus->d_name, mensura, lexare_ms, expandere_ms,
+                _introitus_titulus(introitus, piscina), mensura,
+                lexare_ms, expandere_ms,
                 parsare_ms, scribere_ms, apex);
         }
 
         piscina_destruere(piscina_plagulae);
     }
-    closedir(corpus);
+    directorium_iterator_claudere(corpus);
 
     imprimere("  plagulae: %d, octeti: %.0f\n", numerus,
         summa_octetorum);

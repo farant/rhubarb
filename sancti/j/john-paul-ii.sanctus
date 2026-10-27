@@ -1,0 +1,42 @@
+<sanctus id="john-paul-ii" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">John Paul II</nomen>
+  <nomen lingua="alia" fontes="bio">Karol Józef Wojtyła</nomen>
+  <ortus annus="1920" mensis="5" dies="18" locus="Wadowice, Poland" fontes="bio"/>
+  <obitus annus="2005" mensis="4" dies="2" locus="Apostolic Palace" fontes="bio"/>
+  <beatificatio annus="2011" mensis="5" dies="1" papa="Benedict XVI" fontes="bio"/>
+  <canonizatio modus="formalis" annus="2014" mensis="4" dies="27" papa="Francis" fontes="bio hom"/>
+  <festum calendarium="generale" mensis="10" dies="22" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us bio">pope</munus>
+  <munus fontes="bio">bishop</munus>
+  <munus fontes="bio">priest</munus>
+  <descriptio>
+    <paragraphus fontes="bio">Karol Józef Wojtyła was born at Wadowice in Poland on 18 May 1920. When the Nazi occupiers closed the Jagellonian University in 1939 he worked in a quarry and then in a chemical factory, and from 1942 he studied for the priesthood in the clandestine seminary of Krakow. Ordained on 1 November 1946, he took a doctorate in theology in Rome, later taught moral theology and ethics, and became auxiliary bishop of Krakow in 1958, archbishop in 1964 and a cardinal in 1967. He took part in the Second Vatican Council.</paragraphus>
+    <paragraphus fontes="bio hom">Elected pope on 16 October 1978, he made 104 international journeys, survived an attempt on his life in Saint Peter's Square on 3 May 1981 and forgave his attacker, promulgated the Codes of Canon Law and the Catechism of the Catholic Church, and began World Youth Day. He died in the Apostolic Palace on 2 April 2005, the vigil of Divine Mercy Sunday, which he had instituted. Benedict XVI beatified him on 1 May 2011, and Pope Francis canonized him with John XXIII on 27 April 2014, calling him "the pope of the family".</paragraphus>
+  </descriptio>
+  <fons id="bio" opus="sedes" locus="Biographical profile of John Paul II, from the booklet for the canonization, 27 April 2014" url="https://www.vatican.va/content/john-paul-ii/en/biografia/documents/hf_jp-ii_spe_20190722_biografia.html">
+    <excerptum>Karol Józef Wojtyła, elected Pope on 16 October 1978, was born in Wadowice, Poland, on 18 May 1920.</excerptum>
+    <excerptum>After completing high school in Wadowice, he enrolled in the Jagellonian University of Krakow in 1938.</excerptum>
+    <excerptum>When the occupying Nazi forces closed the University in 1939, Karol worked (1940-1944) in a quarry and then in the Solvay chemical factory</excerptum>
+    <excerptum>Feeling called to the priesthood, he began his studies in 1942 in the clandestine major seminary of Krakow</excerptum>
+    <excerptum>until his priestly ordination in Krakow on 1 November 1946. Father Wojtyła was then sent by Cardinal Sapieha to Rome, where he attained a doctorate in theology (1948).</excerptum>
+    <excerptum>Later he became professor of moral theology and ethics in the major seminary of Krakow and in the theology faculty of Lublin.</excerptum>
+    <excerptum>On 4 July 1958, Pope Pius XII appointed Father Wojtyła auxiliary bishop of Krakow</excerptum>
+    <excerptum>On 13 January 1964, Pope Paul VI appointed Bishop Wojtyła as Archbishop of Krakow and subsequently, on 26 June 1967, created him a Cardinal.</excerptum>
+    <excerptum>Bishop Wojtyła took part in the Second Vatican Council (1962- 1965)</excerptum>
+    <excerptum>His international apostolic journeys numbered 104</excerptum>
+    <excerptum>On 3 May 1981, an attempt was made on Pope John Paul II's life in Saint Peter's Square.</excerptum>
+    <excerptum>he forgave the attempted assassin</excerptum>
+    <excerptum>by promulgating Codes of Canon Law for the Latin and the Oriental Churches, as well as the Catechism of the Catholic Church.</excerptum>
+    <excerptum>He also attracted young people by beginning the celebration of World Youth Day.</excerptum>
+    <excerptum>Pope John Paul II died in the Apostolic Palace at 9:37 p.m. on Saturday, 2 April 2005, the vigil of Sunday in albis or Divine Mercy Sunday, which he had instituted.</excerptum>
+    <excerptum>John Paul II was beatified in Saint Peter's Square on 1 May 2011 by Pope Benedict XVI</excerptum>
+    <excerptum>He was canonised on 27 April 2014, together with Pope John XXIII, by Pope Francis.</excerptum>
+  </fons>
+  <fons id="hom" opus="sedes" locus="Francis, homily at the canonization of John XXIII and John Paul II, 27 April 2014" url="https://www.vatican.va/content/francesco/en/homilies/2014/documents/papa-francesco_20140427_omelia-canonizzazioni.html">
+    <excerptum>HOLY MASS AND RITE OF CANONIZATION OF BLESSEDS JOHN XXIII AND JOHN PAUL II</excerptum>
+    <excerptum>In his own service to the People of God, Saint John Paul II was the pope of the family.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="22 October">
+    <excerptum>Saint John Paul II, Pope</excerptum>
+  </fons>
+</sanctus>

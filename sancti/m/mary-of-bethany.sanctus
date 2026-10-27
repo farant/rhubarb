@@ -1,0 +1,36 @@
+<sanctus id="mary-of-bethany" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Mary of Bethany</nomen>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="7" dies="29" gradus="memoria" fontes="us"/>
+  <munus fontes="bu">disciple</munus>
+  <descriptio>
+    <paragraphus fontes="cem bu ce">Mary of Bethany was the sister of Martha and Lazarus, with whom she lived at Bethany near Jerusalem, a house Christ often visited; St. John records that Jesus loved Martha, her sister and Lazarus. When Christ came to their house she sat at his feet listening to his teaching while Martha served, and he praised her choice of the one thing necessary over her sister's busy care. At the raising of Lazarus, Martha went and called her secretly with the words "The Master is come, and calleth for thee." At the supper in Bethany shortly before the Passion she poured costly ointment on the Lord's feet and wiped them with her hair, and Christ defended the act against Judas as done for his burial.</paragraphus>
+    <paragraphus fontes="ce mr">Her identity is disputed. St. John clearly identifies her with the woman who anointed Christ's feet. The Greek Fathers as a whole distinguish her both from the "sinner" of Luke 7 and from Mary Magdalen, while most of the Latins hold the three to be one person. The Catholic Encyclopedia grants that the identity cannot be demonstrated, yet argues that St. John's Gospel makes it almost impossible to deny that Mary of Bethany is Mary Magdalen; the 1916 Martyrology likewise calls Martha's sister blessed Mary Magdalen.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Mary Magdalen" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Mary_Magdalen">
+    <excerptum>The Greek Fathers, as a whole, distinguish the three persons: the "sinner" of Luke 7:36-50; the sister of Martha and Lazarus, Luke 10:38-42 and John 11; and Mary Magdalen.</excerptum>
+    <excerptum>On the other hand most of the Latins hold that these three were one and the same. Protestant critics, however, believe there were two, if not three, distinct persons. It is impossible to demonstrate the identity of the three</excerptum>
+    <excerptum>St. John, however, clearly identifies Mary of Bethany with the woman who anointed Christ's feet</excerptum>
+    <excerptum>But an examination of St. John's Gospel makes it almost impossible to deny the identity of Mary of Bethany with Mary Magdalen.</excerptum>
+    <excerptum>"she hath wrought a good work upon Me . . . in pouring this ointment upon My body she hath done it for My burial</excerptum>
+  </fons>
+  <fons id="cem" opus="ce1913" locus="St. Martha" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Martha">
+    <excerptum>Mary, Martha, and Lazarus are represented by St. John as living at Bethania</excerptum>
+    <excerptum>"Jesus loved Martha, and her sister Mary, and Lazarus" (11:5).</excerptum>
+    <excerptum>"When she had said these things, she went and called her sister Mary secretly, saying: The Master is come, and calleth for thee."</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v07 July 29 St. Martha, V.">
+    <excerptum>was sister to Mary and Lazarus, and lived with them at ' Bethania, a small town two miles distant from Jerusalem, a little beyond mount Olivet.</excerptum>
+    <excerptum>he frequented the house of these three holy disciples.</excerptum>
+    <excerptum>Mary sat all the while at our Saviour’s feet, feeding her soul with his heavenly doctrine.</excerptum>
+    <excerptum>he commended more the quiet repose with which Mary attended only to that which is of the greatest importance, the spiritual improvement of her soul.</excerptum>
+    <excerptum>Christ was again at Bethania, at the house of Simon the Leper, six days before his passion.</excerptum>
+    <excerptum>Martha waited at table; and Mary poured a box of costly ointments on our Lord’s feet, which she wiped with the hair of her head. Judas Iscariot complained of this waste</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="29 July">
+    <excerptum>AT Tarascon, in France, St. Martha, virgin, the hostess of our Saviour, and sister of blessed Mary Magdalen and St. Lazarus.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="29 July">
+    <excerptum>Saints Martha, Mary, and Lazarus</excerptum>
+  </fons>
+</sanctus>

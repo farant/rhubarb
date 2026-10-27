@@ -1,0 +1,41 @@
+<sanctus id="ephrem-the-syrian" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Ephrem the Syrian</nomen>
+  <nomen lingua="alia" fontes="ce">Ephraem</nomen>
+  <ortus saeculum="4" locus="Nisibis" fontes="ce"/>
+  <obitus annus="373" mensis="6" locus="Edessa" fontes="ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="6" dies="9" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="2" dies="1" fontes="mr"/>
+  <munus fontes="ce mr us">deacon</munus>
+  <munus fontes="us">doctor of the Church</munus>
+  <munus fontes="ce">hermit</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Ephrem was born at Nisibis, then under Roman rule, early in the fourth century, the son of a pagan priest. He was taught the faith by St. James, Bishop of Nisibis, and was baptized at eighteen (or twenty-eight), and the bishop made use of him to renew the moral life of the city, especially during the sieges of 338, 346 and 350. When Nisibis was ceded to Persia in 363, he left with the Christian population and settled at last in Edessa, where he spent his final ten years as a hermit of severe asceticism, contending against the heretical sects of the city. He died in June 373. Several ancient writers call him a deacon; the story that St. Basil ordained him is not certain.</paragraphus>
+    <paragraphus fontes="ce mr">Apart from some poems written at Nisibis, nearly all his writings, sermons, hymns and exegetical works, date from his years at Edessa, and most of his sermons are in verse. The Catholic Encyclopedia calls him a pioneer of genius in Syriac poetry, and his memory was revered by Orthodox, Monophysites and Nestorians alike, who called him the "harp of the Holy Spirit". St. Jerome wrote that his works were read publicly in some churches after the Scriptures. The 1916 Martyrology commemorates him on 1 February as deacon of the church of Edessa.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Ephraem" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Ephraem">
+    <excerptum>Ephraem (Ephrem, Ephraim), Saint, b. at Nisibis, then under Roman rule, early in the fourth century; d. June, 373.</excerptum>
+    <excerptum>The name of his father is unknown, but he was a pagan and a priest of the goddess Abnil or Abizal.</excerptum>
+    <excerptum>Ephraem was instructed in the Christian mysteries by St. James, the famous Bishop of Nisibis, and was baptized at the age of eighteen (or twenty-eight).</excerptum>
+    <excerptum>who availed himself of the services of Ephraem to renew the moral life of the citizens of Nisibis, especially during the sieges of 338, 346, and 350.</excerptum>
+    <excerptum>among the cities retroceded to Persia was Nisibis (363).</excerptum>
+    <excerptum>Ephraem went with his people, and settled first at Beit-Garbaya, then at Amid, finally at Edessa, the capital of Osrhoene, where he spent the remaining ten years of his life, a hermit remarkable for his severe asceticism.</excerptum>
+    <excerptum>Several ancient writers say that he was a deacon</excerptum>
+    <excerptum>At this time some ten heretical sects were active in Edessa; Ephraem contended vigorously with all of them</excerptum>
+    <excerptum>To this period belongs neary all his literary work; apart from some poems composed at Nisibis, the rest of his writings—sermons, hymns, exegetical treatises—date from his sojourn at Edessa.</excerptum>
+    <excerptum>his memory was revered by all, Orthodox, Monophysites, and Nestorians.</excerptum>
+    <excerptum>Twenty years after the latter's death St. Jerome mentions him as follows in his catalogue of illustrious Christians</excerptum>
+    <excerptum>He was warmly received and was ordained deacon by St. Basil</excerptum>
+    <excerptum>some good critics, however, hold the evidence insufficient, and therefore reject it, or at least withhold their adhesion.</excerptum>
+    <excerptum>They call him the "sun of the Syrians," the "column of the Church", the "harp of the Holy Spirit".</excerptum>
+    <excerptum>and became so famous that his writings are publicly read in some churches after the Sacred Scriptures.</excerptum>
+    <excerptum>Most of Ephraem's sermons and exhortations are in verse, though a few sermons in prose have been preserved.</excerptum>
+    <excerptum>In Syriac poetry St. Ephraem is a pioneer of genius, the master often imitated but never equalled.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="1 February">
+    <excerptum>St. Ephrem, deacon of the church of Edessa, in the time of the emperor Valens. After suffering many trials for the faith of Christ and gaining great renown for holiness and learning, he went to rest in the Lord.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="9 June">
+    <excerptum>Saint Ephrem, Deacon and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

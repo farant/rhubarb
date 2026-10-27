@@ -27,6 +27,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
+#include "processus.h"
 
 nomen structura {
     constans character* binarium;   /* NIHIL = quaerere */
@@ -81,6 +82,16 @@ multiplexor_panelli (
 /* exsequi: omnes clientes servitoris; NIHIL ut supra */
 Xar*
 multiplexor_clientes (
+    constans Multiplexor* m,
+                 Piscina* piscina);
+
+/* incipere sine exspectatione (vicus quies T2): list-clients ut
+ * multiplexor_clientes, sed processus STATIM redditur - vocator
+ * pulsat (processus_pulsare), metit (processus_metere), effusionem
+ * per multiplexor_clientes_legere legit. NIHIL si tmux non
+ * invenitur */
+Processus*
+multiplexor_clientes_incipere (
     constans Multiplexor* m,
                  Piscina* piscina);
 

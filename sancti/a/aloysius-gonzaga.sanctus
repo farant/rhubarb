@@ -1,0 +1,31 @@
+<sanctus id="aloysius-gonzaga" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Aloysius Gonzaga</nomen>
+  <ortus annus="1568" mensis="3" dies="9" locus="Castiglione" fontes="ce"/>
+  <obitus annus="1591" mensis="6" dies="21" locus="Rome" fontes="ce mr"/>
+  <beatificatio annus="1621" papa="Gregory XV" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1726" papa="Benedict XIII" fontes="ce"/>
+  <festum calendarium="generale" mensis="6" dies="21" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="6" dies="21" fontes="mr"/>
+  <munus fontes="ce mr us">religious</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Aloysius Gonzaga was born in the castle of Castiglione on 9 March 1568. As a boy he lived at the courts of Florence and Mantua, received his First Communion from St. Charles Borromeo at Brescia, and served in Spain as a page of James, son of Philip II, where he resolved to become a Jesuit. After much difficulty in winning his father's consent he renounced his inheritance in favour of his brother on 2 November 1585, and on 25 November presented himself to Claudius Acquaviva, General of the Society of Jesus.</paragraphus>
+    <paragraphus fontes="ce mr">He took his vows on 25 November 1587 and began the study of theology. In 1591, during his fourth year, famine and plague broke out in Italy; though in delicate health he gave himself to the care of the sick, fell ill on 3 March, and died on 21 June 1591. The Martyrology, which places him at Rome, remembers him for his contempt of princely rank and the innocence of his life. Gregory XV beatified him in 1621 and Benedict XIII canonized him in 1726; his remains lie in the church of Sant'Ignazio in Rome.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Aloysius Gonzaga" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Aloysius_Gonzaga">
+    <excerptum>Aloysius Gonzaga, Saint, b. in the castle of Castiglione, 9 March, 1568; d. 21 June, 1591.</excerptum>
+    <excerptum>At eight he was placed in the court of Francesco de' Medici in Florence, where he remained for two years, going then to Mantua.</excerptum>
+    <excerptum>At Brescia, when he was twelve, he came under the spiritual guidance of St. Charles Borromeo, and from him received First Communion. In 1581 he went with his father to Spain</excerptum>
+    <excerptum>he and his brother were made pages of James, the son of Philip II. While there he formed the resolution of becoming a Jesuit</excerptum>
+    <excerptum>after much difficulty in securing his father's consent, renounced his heritage in favour of his brother, 2 November, 1585</excerptum>
+    <excerptum>He presented himself to Father Claudius Acquaviva, who was then General of the Society, 25 November, 1585.</excerptum>
+    <excerptum>He made his vows 25 November, 1587. Immediately after, he began his theological studies.</excerptum>
+    <excerptum>In 1591 when in his fourth year of theology a famine and pestilence broke out in Italy. Though in delicate health, he devoted himself to the care of the sick, but on March 3 he fell ill and died 21 June, 1591.</excerptum>
+    <excerptum>He was beatified by Gregory XV in 1621 and canonized by Benedict XIII in 1726. His remains are in the church of St. Ignazio in Rome</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="21 June">
+    <excerptum>AT Rome, St. Aloysius Gonzaga, of the Society of Jesus, most renowned for his contempt of the princely dignity, and the innocence of his life.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="21 June">
+    <excerptum>Saint Aloysius Gonzaga, Religious</excerptum>
+  </fons>
+</sanctus>

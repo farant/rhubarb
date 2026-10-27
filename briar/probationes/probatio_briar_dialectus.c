@@ -110,24 +110,18 @@ _linea_longissima (
     redde maxima;
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: charta ex fixura
+ * ================================================== */
+
+interior vacuum
+_chartam_fixurae_probare (
+    CredoContextus* c)
 {
-     Piscina* pn;
-         b32  praeteritus;
-      chorda  charta;
-      chorda  latina;
+    Piscina* pn = c->piscina;
+     chorda  charta;
 
-    pn = piscina_generare_dynamicum("probatio_briar_dialectus",
-        262144);
-    si (!pn)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(pn);
-
-    imprimere("\n--- Probans chartam ex fixura ---\n");
     charta = briar_dialectus_charta(chorda_ex_literis(FIXURA, pn),
         VEXILLA_PLANA, VEXILLA_VITREA, pn);
     CREDO_VERUM (charta.mensura > ZEPHYRUM);
@@ -177,8 +171,21 @@ principale (vacuum)
         VEXILLA_PLANA, VEXILLA_VITREA, pn);
     CREDO_VERUM (_linea_habet(charta, "numeri:", "(11)"));
     CREDO_FALSUM (_linea_habet(charta, "selecti tantum", ""));
+}
 
-    imprimere("\n--- Probans chartam ex latina.h VIVA ---\n");
+
+/* ==================================================
+ * PROBARE: charta ex latina.h VIVA
+ * ================================================== */
+
+interior vacuum
+_chartam_vivam_probare (
+    CredoContextus* c)
+{
+    Piscina* pn = c->piscina;
+     chorda  charta;
+     chorda  latina;
+
     latina = filum_legere_totum("include/latina.h", pn);
     CREDO_VERUM (latina.mensura > ZEPHYRUM);
     charta = briar_dialectus_charta(latina, VEXILLA_PLANA,
@@ -197,9 +204,18 @@ principale (vacuum)
         "MMMCMXCIX=3999 (4000)"));
     CREDO_FALSUM (_linea_habet(charta, "selecti tantum", ""));
     CREDO_VERUM (_linea_longissima(charta) <= (i32)LXXII);
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(pn);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "chartam ex fixura", _chartam_fixurae_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "chartam ex latina.h VIVA", _chartam_vivam_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("briar_dialectus", SECTIONES);
 }

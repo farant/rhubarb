@@ -214,6 +214,10 @@ structura SilvaExpansio {
                Xar* fontes;     /* Xar de SilvaFons (per valorem) */
     TabulaDispersa* macros;     /* status vivus - via defalta */
                Xar* acta;       /* Xar de SilvaEventum (per valorem) */
+               Xar* definitiones; /* Xar de i32: indices eventorum
+                                   * DEFINITIO in acta, ordine - macro
+                                   * k-a sine percursu actorum
+                                   * (2026-10-23) */
                Xar* rami;       /* Xar de SilvaRamus* - tabula conditio_id */
                Xar* regiones;   /* Xar de SilvaRegio* - regiones supremae */
     TabulaDispersa* includenda; /* via (chorda) -> SilvaIncludendum* */
@@ -514,7 +518,8 @@ silva_ramus_vista (
            SilvaRamusVista* vista_out);
 
 /* Definitiones UT ACTAE (acta = fructus: #undef historiam non
- * delet); O(acta) per vocatum - satis ad mensuram v1 */
+ * delet); O(1) per vocatum per exp->definitiones (olim O(acta):
+ * percursus nexus quadraticus, 2026-10-23) */
 i32
 silva_macros_numerus (
     constans SilvaExpansio* exp);

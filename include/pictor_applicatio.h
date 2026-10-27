@@ -45,6 +45,8 @@ nomen structura {
                                        * (picturae iam ostensae) */
         StatusSystemata systemata;   /* S5b: relatio ad ligationem
                                        * novam (picturam_ponere) */
+      PictorPinacotheca pinacotheca; /* T5: compositio, actiones,
+                                       * figurae in eam monstrant */
 } PictorMontatio;
 
 nomen structura {
@@ -61,8 +63,8 @@ nomen structura {
 
 /* S3e: picturam spatii (exsistentem) in montatione ostendere -
  * documentum ex memoria aut apertum; contextus actionum et figurarum
- * et dimensiones in insula (latitudo, altitudo) aptantur. FALSUM si
- * nullum documentum ibi. */
+ * et dimensiones in insula (latitudo, altitudo; semitae R4c: pictura)
+ * aptantur. FALSUM si nullum documentum ibi. */
 b32
 pictor_picturam_ponere (
          PictorMontatio* m,
@@ -76,6 +78,23 @@ b32
 pictor_picturam_condere (
          PictorMontatio* m,
      constans character* spatium);
+
+/* semitae R4c: argumentum lateris - URI ("pictor/flores") picturam
+ * EXSTANTEM ostendit (semita numquam condit); cognomen "<spatium>" ut
+ * ante: exstans ostenditur, ignota conditur si condere (S3f,
+ * $pictor-new). FALSUM si semita mala aut pictura ignota. */
+b32
+pictor_argumentum_ponere (
+          PictorMontatio* m,
+      constans character* argumentum,
+                     b32  condere);
+
+/* semitae R4c (facies.semitam_secuta): post semitam a vico applicatam
+ * (historia) documentum campum pictura sequitur; FALSUM si latus
+ * nullum aut pictura ignota */
+b32
+pictor_semitam_secuta (
+    vacuum* ctx);
 
 /* pictorem montare: id NIHIL = radix repositorii (elementum radicis
  * 'pictor' iam exstat); aliter liberum <pictor id> creatur si abest.
@@ -98,6 +117,16 @@ pictor_montare (
                     i32  latitudo,
                     i32  altitudo,
         StatusSystemata* systemata);
+
+/* pinacotheca D8: picturam ultimam ex statu restituto (campus
+ * 'pictura', conservatio) ostendere - pictura bibliothecae ponitur;
+ * absens -> recentissima (pictor_documenta_recentia); vacua -> radix
+ * manet. app->doc (et actiones, figurae) post hoc renovantur. Solum
+ * applicatio fenestrae (apps/pictor/pictor.c) post aedificare vocat;
+ * pictor terminalis numquam (spec D11). FALSUM si app NIHIL. */
+b32
+pictor_picturam_restituere (
+    PictorApplicatio* app);
 
 /* Argumenta communia: -fumus (volumen temporarium), -volumen <via>
  * (ordinarie "pictor.volumen"). Reddit volumen apertum aut NIHIL. */

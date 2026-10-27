@@ -49,26 +49,18 @@ _instructio (
     redde instructio;
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: $summa - exemplum vocabularii §VIII per fabricam
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
     Piscina* piscina;
-        b32  praeteritus;
 
-    piscina = piscina_generare_dynamicum("probatio_medulla",
-        16777216);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ========================================================
-     * PROBARE: $summa - exemplum vocabularii §VIII per fabricam
-     * ======================================================== */
-
+    piscina = c->piscina;
     {
         MedullaModulus* modulus = medulla_modulum_creare(piscina,
             _ch("probatio.c"));
@@ -83,7 +75,6 @@ principale (vacuum)
                       s32  b_finis;
         MedullaInstructio  instructio;
 
-        imprimere("\n--- Probans $summa (fabrica) ---\n");
         CREDO_NON_NIHIL (modulus);
         functio = medulla_functionem_creare(modulus, _ch("summa"),
             MEDULLA_TYPUS_S32, FALSUM);
@@ -224,12 +215,20 @@ principale (vacuum)
         CREDO_VERUM (!medulla_op_terminator(MEDULLA_OP_VOCARE));
         CREDO_VERUM (!medulla_op_terminator(MEDULLA_OP_ADDERE));
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: symbola internata + vocare cum stiva + sistere
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: symbola internata + vocare cum stiva + sistere
+ * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         MedullaModulus* modulus = medulla_modulum_creare(piscina,
             _ch("probatio2.c"));
@@ -240,7 +239,6 @@ principale (vacuum)
                       s32  causa;
         MedullaInstructio  instructio;
 
-        imprimere("\n--- Probans symbola + vocare + sistere ---\n");
         CREDO_NON_NIHIL (modulus);
 
         /* internare: idem titulus -> idem index; EXTERNUM initio */
@@ -329,19 +327,26 @@ principale (vacuum)
             CREDO_CHORDA_AEQUALIS_LITERIS (*titulus, "t0");
         }
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: data + imago + relocationes (C8)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: data + imago + relocationes (C8)
+ * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         MedullaModulus* modulus = medulla_modulum_creare(piscina,
             _ch("probatio3.c"));
         MedullaDatum* datum;
                  s32  s_finis;
 
-        imprimere("\n--- Probans data + relocationes ---\n");
         CREDO_NON_NIHIL (modulus);
 
         datum = medulla_datum_creare(modulus, _ch("tabula"), XVI,
@@ -388,14 +393,19 @@ principale (vacuum)
         CREDO_NIHIL (medulla_datum_creare(modulus, _ch("vacua"),
             ZEPHYRUM, IV));
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "$summa (fabrica)", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "symbola + vocare + sistere", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "data + relocationes", _sectio_tertia, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    redde I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("officina_medulla", SECTIONES);
 }

@@ -35,3 +35,16 @@ comments `<!-- x -->`; `<!DOCTYPE html>`; template children under a
 `body` (the simple builder never does — spec §11 H4), and their values
 are COOKED (ours are byte-faithful): the oracle gate derives a cooked
 view and unwraps (ledger 01M2KPNTT0).
+
+## Congelata domestica (not external)
+
+`briar_facies_{salve,circulus,fragmenta}_2026-10-19.html` are byte copies
+of briar's golden pages (`briar/probationes/fixa/facies/*.html`) as they
+stood at HEAD fdb4f8c3, before credo started linking `memoria_processus`.
+`probatio_html_totalitas` mutates them with fixed seeds. It used to read
+the LIVE goldens, so every change to briar's output (here, two new
+`<li>` lines in the closure footer) moved the mutations. On 2026-10-19
+that move exposed a real round-trip bug, parked as 01M5BG6Y5BA4 with
+repro `probationes/fixa/sondae_auditus/html_rotunda.c`. A test's input is
+frozen; the bug is fixed in its own park. Refresh these copies only on
+purpose, as a named change to the totalitas gate.

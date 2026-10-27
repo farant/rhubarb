@@ -1,0 +1,72 @@
+<!-- organum.stml - manifestum bibliothecae sanctorum (genus "sancti";
+     iussum $saints): index paginatus et visus sancti. Contentum
+     (corpus sanctorum, directorium sancti/) per ligamen a parente,
+     commune omnibus lateribus - hic solum status visus. -->
+<organum genus="sancti" versio="1">
+
+  <ligamina>
+    <ligamen nomen="corpus" genus="sancti" a="parens"/>
+  </ligamina>
+
+  <actiones>
+    <actio nomen="sancti.agere"/>
+  </actiones>
+
+  <status>
+    <campus nomen="visus" typus="electio" vita="persistens"
+            absens="index" scriptor="sancti.agere"
+            semita="ligatio" historia="impelle">
+      <optio>index</optio>
+      <optio>sanctus</optio>
+    </campus>
+    <campus nomen="ordo" typus="electio" vita="persistens"
+            absens="calendarium" scriptor="sancti.agere" semita="status"
+            nota="congruentia (optimum primum) solum cum quaestione;
+                  sine ea ut calendarium">
+      <optio>calendarium</optio>
+      <optio>nomen</optio>
+      <optio>aetas</optio>
+      <optio>congruentia</optio>
+    </campus>
+    <campus nomen="electus" typus="textus" vita="persistens"
+            scriptor="sancti.agere"
+            nota="id sancti electi; absens = primus a hodie (ordo
+                  calendarii) aut primus indicis"/>
+    <campus nomen="pagina" typus="numerus" vita="transiens"
+            scriptor="sancti.agere" nota="electus paginam sequitur"/>
+    <campus nomen="quaestio" typus="textus" vita="persistens"
+            scriptor="sancti.agere" semita="status"
+            nota="absens = nulla; persistens (semitae R2: Franus)"/>
+    <campus nomen="sanctus_apertus" typus="textus" vita="persistens"
+            scriptor="sancti.agere" semita="ligatio" historia="impelle"
+            nota="id in visu sancti; ad indicem tollitur (semita indicis
+                  sine sancto)"/>
+    <campus nomen="pagina_textus" typus="numerus" vita="persistens"
+            scriptor="sancti.agere" semita="status" ambitus="ligatio"
+            nota="sancto mutato ad absens (semitae R2)"/>
+    <campus nomen="prompta" typus="electio" vita="transiens"
+            absens="nulla" scriptor="sancti.agere">
+      <optio>nulla</optio>
+      <optio>quaestio</optio>
+    </campus>
+    <campus nomen="prompta_textus" typus="textus" vita="transiens"
+            scriptor="sancti.agere"/>
+    <campus nomen="prompta_cursor" typus="numerus" vita="transiens"
+            scriptor="sancti.agere"/>
+  </status>
+
+  <!-- semitae R4e: argumentum nudum -> semita (id sancti textus est:
+       lineolae nomini non licent) -->
+  <cognomina>
+    <cognomen semita="sancti/index"/>
+    <cognomen typus="textus" semita="sancti/sanctus/{}"/>
+  </cognomina>
+
+  <!-- comites P5: Cmd+F = quaestio intra visum -->
+  <aditus>
+    <iter nomen="quaestio" semita="sancti/index" advocare="verum"/>
+  </aditus>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>

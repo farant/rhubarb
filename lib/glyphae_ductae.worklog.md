@@ -367,6 +367,19 @@ d(0x221A, '.....#','.....#','....#.','....#.','.#.#..','..##..','...#..')  # √
 d(0x221B, '.##..#','..#..#','.##.#.','....#.','.#.#..','..##..','...#..')  # ∛
 d(0x226A, B,'...#.#','..#.#.','.#.#..','..#.#.','...#.#')                  # ≪
 d(0x226B, B,'.#.#..','..#.#.','...#.#','..#.#.','.#.#..')                  # ≫
+d(0x2295, '..###.','.#.#.#','.#.#.#','.#####','.#.#.#','.#.#.#','..###.')  # ⊕ (2026-10-16)
+d(0x2297, '..###.','.#...#','.##.##','.#.#.#','.##.##','.#...#','..###.')  # ⊗ (2026-10-16)
+d(0x2296, '..###.','.#...#','.#...#','.#####','.#...#','.#...#','..###.')  # ⊖ (2026-10-16)
+d(0x2298, '..###.','.#...#','.#..##','.#.#.#','.##..#','.#...#','..###.')  # ⊘ (2026-10-16)
+d(0x2299, '..###.','.#...#','.#...#','.#.#.#','.#...#','.#...#','..###.')  # ⊙ (2026-10-16)
+d(0x203B, '...#..',B,'..#.#.','.#.#.#','..#.#.',B,'...#..')                 # ※ (2026-10-16)
+d(0x2282, B,'..####','.#....','.#....','.#....','..####',B)                 # ⊂ (2026-10-17)
+d(0x2283, B,'.####.','.....#','.....#','.....#','.####.',B)                 # ⊃ (2026-10-17)
+d(0x2286, '..####','.#....','.#....','.#....','..####',B,'.#####')           # ⊆ (2026-10-17)
+d(0x2287, '.####.','.....#','.....#','.....#','.####.',B,'.#####')           # ⊇ (2026-10-17)
+d(0x25B0, B,B,'..####','..####','.####.','.####.')                          # ▰ (2026-10-17)
+d(0x25B1, B,B,'..####','..#..#','.#..#.','.####.')                          # ▱ (2026-10-17)
+d(0x22EF, B,B,B,'.#.#.#')                                                   # ⋯ (2026-10-26)
 import unicodedata, sys
 out=[]
 for cp in sorted(S):
@@ -389,3 +402,66 @@ with open('/private/tmp/claude-501/-Users-francisarant-Documents-projects-rhubar
         f.write('  '.join(('U+%04X'%c)[2:].ljust(6) for c in grp)+'\n\n')
 ```
 
+## 2026-10-16 - ⊗ ⊕ ⊖ ⊘ ⊙ ※ (circled operators, reference mark)
+
+Fran saw tofu for ⊗ in vicus (Claude Code output). Drawn like ◯ (seven
+rows, columns I-V) with the X's arms touching the rim - at 6x8 a 3x3 X
+inside the five-row ○ merges into a blob. Added to symbola.py above
+(table regenerable) and to the v3 test section (exact picture). ⊕ the
+same way right after Fran's look (plus arms touch the rim too).
+Then ⊖ ⊘ ⊙ in the same large-circle style (⊘'s slash upper right to
+lower left, touching the rim) and ※: a SMALL X (3x3) with a dot in each
+gap - a full 5x5 X with dots between its arms is a checkerboard at 6x8.
+
+
+## 2026-10-17 - ⊂ ⊃ (subset, superset)
+
+Fran saw tofu for ⊂ in vicus; ⊃ drawn with it as the mirror. Five rows
+(1-5) like ≡, open side flat: the vertical sits in column I (⊂) or V
+(⊃) and the arms run four pixels to the other side, so the curve is
+only implied by the arms starting one column in.
+Then ⊆ ⊇: the same shape lifted to rows 0-4 with a full bar on row 6
+(one empty row between, as in ≤ ≥).
+
+## 2026-10-17 - ▰ ▱ (parallelograms)
+
+Fran saw ▱ as tofu; ▰ drawn with it (the pair makes progress bars,
+▰▰▰▱▱). Four rows (II-V), slanting right: the edges move one column
+left after two rows, so a run of them reads as a bar with gaps.
+
+## 2026-10-23 — drawn glyphs in the general text path too
+
+Fran saw tofu in notifications for the Claude Code symbols terminale
+draws. terminale asks `glyphae_ductae` per cell before the font; the
+general pixel text path (`fenestra_textus.c`: plain 6x8
+`tabula_pixelorum_pingere_chordam`, the 8x16 title path in
+`_chordam_fonte`, and `_chordam_scalatam`) went straight to the bitmap
+font and fell back to FONS_TOFU. Now each of those loops tries
+`glypham_ductam_pingere` first: the opacity mask at the cell size (6x8
+or 8x16), scaled, full opacity = text colour, partial = blended with
+the pixel underneath (the shades ░▒▓ now really shade, better than
+terminale's mix with a fixed background). Everything drawing through
+mandata (vicus notifications, calendar, scriba chrome) gets the same
+symbols as terminale. Side effect: – — … were mapped by the font to
+'-' '-' '.'; they now draw as glyphae_ductae draws them.
+The tessera rasterizer needs nothing: it places whole characters into
+real terminal cells, so the host terminal draws them. The clipped
+`_chordam_praecisum` has no users and was left alone.
+Test: probatio_delineare_mandata section "glyphae ductae (non TOFU)" -
+every pixel of the drawn cell against glyphae_ductae's own mask (6x8,
+8x16, scaled x2), shades blended. Plants (one per path + blend) red.
+tessera's hand list and musivum_fontes_generata.sh gained
+glyphae_ductae (fenestra_textus now links it; tessera failed to link).
+Not covered (separate project): scriba stores one BYTE per cell and
+drops input bytes >= 0x80, so these symbols cannot be typed or stored
+in scriba documents yet.
+
+## 2026-10-26 - ⋯ (midline ellipsis, quarta)
+
+For pictor's ⋯ menu (pinacotheca spec D10): Fran saw ⋯ as tofu. Three
+single-pixel dots on row III - the row of ⋮'s middle dot and of the
+hyphen - at the same columns as … (row VI, `.#.#.#`), so the two
+ellipses differ only in height. 2 x 2 dots like the period do not fit
+three across in six columns. App text reaches these glyphs through
+secunda's a625afcb (fenestra_textus asks glyphae_ductae first) - merged
+into quarta with main the same day (entry above).

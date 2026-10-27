@@ -209,6 +209,9 @@ interior b32
 _chorda_par_literis (
                 chorda  s,
     constans character* litterae);
+interior b32
+_nomen_reservatum (
+    chorda titulus);
 interior vacuum
 _intervalla_computare (
                SilvaSemantica* sem,
@@ -434,11 +437,14 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "credo: sectio nullam assertionem attingit (VACUA)",
                                                   EXAMEN_VIOLATIO },
     { "credo: c->suita mutatum (sectiones statum suitae legunt, numquam"
-      " mutant)",                               EXAMEN_VIOLATIO },
+      " mutant; internatio in internamentum fixurae sola licet)",
+                                                  EXAMEN_VIOLATIO },
     { "credo: titulus '--- ... ---' manu impressus in sectione (credo"
       " titulum imprimit; gradus = CREDO_GRADUS)", EXAMEN_DOMESTICUM },
     { "vocatio IO cruda extra canalem lectionum (filum) - fabrica"
-      " ingressum non videt", EXAMEN_VIOLATIO }
+      " ingressum non videt", EXAMEN_VIOLATIO },
+    { "scriptura cruda extra canalem lectionum (filum) - fabrica"
+      " scripturam non videt", EXAMEN_DOMESTICUM }
 };
 
 /* prototypa: sedes 89 (typus alienus, acies flexibilis) ante
@@ -1162,7 +1168,10 @@ interior constans ExamenTolerabilis _tolerabiles[] = {
       (s32)EXAMEN_CODEX_CREDO_TITULUS_IMPRESSUS },
     /* canalis lectionum (96): sine nodo, absorptio per sedem ut 91 */
     { "CANALIS_PRAETERITUS",
-      (s32)EXAMEN_CODEX_CANALIS_PRAETERITUS }
+      (s32)EXAMEN_CODEX_CANALIS_PRAETERITUS },
+    /* scriptura cruda (97): ut 96, absorptio per sedem */
+    { "SCRIPTURA_PRAETERITA",
+      (s32)EXAMEN_CODEX_SCRIPTURA_PRAETERITA }
     /* familia portabilitatis (85-88) CONSULTO abest: emissio eius
      * positione manuali sine nodo fit - _tolera_absorbere nodum
      * petit, ergo tolera numquam absorberet et IRRITUM putresceret.
@@ -3314,7 +3323,7 @@ _symbolum_registrare (
             post_limitem = (constans character*)titulus.datum
                 > sem->limes_posix_datum;
         }
-        si (post_limitem)
+        si (post_limitem && !_nomen_reservatum(copia))
         {
             (vacuum)tabula_dispersa_inserere(sem->posix_nomina,
                 copia, NIHIL);
@@ -6244,6 +6253,7 @@ _elementum_ambulare (
 nomen structura {
        b32 vernaculum;   /* FALSUM = obsoletum */
        b32 canalis;      /* IO cruda extra canalem (codex 96) */
+       b32 scriptura;    /* scriptura cruda extra canalem (codex 97) */
     chorda pro;          /* vicarius; mensura 0 = nullus */
 } GradusPortabilitatis;
 
@@ -6357,6 +6367,7 @@ _portabilitas_trivium (
         }
         gp->vernaculum   = _chorda_par_literis(genus_g, "vernaculum");
         gp->canalis      = _chorda_par_literis(genus_g, "canalis");
+        gp->scriptura    = _chorda_par_literis(genus_g, "scriptura");
         gp->pro.mensura  = ZEPHYRUM;
         gp->pro.datum    = NIHIL;
         si (vicarius.mensura > ZEPHYRUM)
@@ -7009,7 +7020,8 @@ _portabilitatem_examinare (
             {
                 perge;
             }
-            si (e->def->linea_def <= sem->limes_posix_linea)
+            si (   e->def->linea_def <= sem->limes_posix_linea
+                || _nomen_reservatum(*e->def->titulus))
             {
                 perge;
             }
@@ -7078,9 +7090,10 @@ _portabilitatem_examinare (
         {
             constans GradusPortabilitatis* gp =
                 (constans GradusPortabilitatis*)datum_g;
-            /* canalis (96) vocationes solas iudicat, examine suo
-             * (_canalem_examinare) - hic tacet */
-            character* nuntius = gp->canalis ? NIHIL :
+            /* canalis (96) et scriptura (97) vocationes solas
+             * iudicant, examine suo (_canalem_examinare) - hic tacet */
+            character* nuntius = (gp->canalis
+                || gp->scriptura) ? NIHIL :
                 (character*)piscina_allocare(sem->piscina,
                     (memoriae_index)t->valor.mensura
                     + (memoriae_index)gp->pro.mensura
@@ -7215,10 +7228,75 @@ _portabilitatem_examinare (
  * sedem ut 91 - ANTE toleras irritas vocandum.
  * ================================================== */
 
+/* SCRIBENS (97): fopen/freopen cuius argumentum secundum littera
+ * chordae est cum 'w', 'a' aut '+' - modus non litteralis (variabilis)
+ * hic tacet (96 vocationem tamen nominat). i = index nominis in fluxu,
+ * i + I = '(' */
+interior b32
+_modus_scribens (
+    constans Xar* fluxus,
+             i32  i)
+{
+    i32 m = xar_numerus(fluxus);
+    i32 j;
+    i32 profunditas = ZEPHYRUM;
+
+    per (j = i + II; j < m; j++)
+    {
+        SilvaToken* t = *(SilvaToken**)xar_obtinere(fluxus, j);
+
+        si (t == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (t->genus == SILVA_LEX_PAREN_APERTA)
+        {
+            profunditas++;
+        }
+        alioquin si (t->genus == SILVA_LEX_PAREN_CLAUSA)
+        {
+            si (profunditas == ZEPHYRUM)
+            {
+                redde FALSUM;   /* argumentum unum tantum */
+            }
+            profunditas--;
+        }
+        alioquin si (   t->genus    == SILVA_LEX_COMMA
+                     && profunditas == ZEPHYRUM)
+        {
+            SilvaToken* modus = (j + I < m)
+                ? *(SilvaToken**)xar_obtinere(fluxus, j + I) : NIHIL;
+                    i32 k;
+
+            si (   modus        == NIHIL
+                || modus->genus != SILVA_LEX_STRING_LIT
+                || modus->valor.mensura < II)
+            {
+                redde FALSUM;
+            }
+            si (   modus->valor.datum[I] == 'w'
+                || modus->valor.datum[I] == 'a')
+            {
+                redde VERUM;
+            }
+            per (k = I; k < modus->valor.mensura; k++)
+            {
+                si (modus->valor.datum[k] == '+')
+                {
+                    redde VERUM;
+                }
+            }
+            redde FALSUM;
+        }
+    }
+    redde FALSUM;
+}
+
 interior vacuum
 _canalem_examinare (
            SilvaSemantica* sem,
-    constans SilvaParsura* parsura)
+    constans SilvaParsura* parsura,
+                      s32  codex)
 {
       Xar* fluxus;
       Xar* visa;
@@ -7258,7 +7336,21 @@ _canalem_examinare (
             perge;
         }
         gp = (constans GradusPortabilitatis*)datum_g;
-        si (gp == NIHIL || !gp->canalis)
+        si (gp == NIHIL)
+        {
+            perge;
+        }
+        si (   codex == (s32)EXAMEN_CODEX_CANALIS_PRAETERITUS
+            && !gp->canalis)
+        {
+            perge;
+        }
+        si (   codex == (s32)EXAMEN_CODEX_SCRIPTURA_PRAETERITA
+            && !gp->scriptura
+            && !(   gp->canalis
+                 && (   chorda_aequalis_literis(t0->valor, "fopen")
+                     || chorda_aequalis_literis(t0->valor, "freopen"))
+                 && i + I < m && _modus_scribens(fluxus, i)))
         {
             perge;
         }
@@ -7297,7 +7389,7 @@ _canalem_examinare (
             *locus = t->columna;
         }
         si (_tolera_absorbere_sedem(sem, t->fons_index, t->linea,
-                (s32)EXAMEN_CODEX_CANALIS_PRAETERITUS))
+            codex))
         {
             perge;
         }
@@ -7308,17 +7400,34 @@ _canalem_examinare (
         {
             perge;
         }
-        sprintf(nuntius, "'%.*s' canalem lectionum praeterit (liber"
-            " lectionum vocationem non videt - fabrica ingressum"
-            " nescit, transitus vetus servaretur)%s%.*s%s",
-            (int)t0->valor.mensura,
-            (constans character*)t0->valor.datum,
-            gp->pro.mensura > ZEPHYRUM ? " - pro eo '" : "",
-            (int)gp->pro.mensura,
-            (constans character*)gp->pro.datum,
-            gp->pro.mensura > ZEPHYRUM ? "'" : "");
-        _portabilitatis_diagnosticum(sem, parsura, t,
-            (s32)EXAMEN_CODEX_CANALIS_PRAETERITUS, nuntius);
+        si (codex == (s32)EXAMEN_CODEX_SCRIPTURA_PRAETERITA)
+        {
+            sprintf(nuntius, "'%.*s' scripturam extra canalem"
+                " lectionum facit (liber lectionum eam non videt -"
+                " fabrica membrum ex libro solo iudicare nequit,"
+                " fabrica-8)%s%.*s%s",
+                (int)t0->valor.mensura,
+                (constans character*)t0->valor.datum,
+                gp->scriptura && gp->pro.mensura > ZEPHYRUM
+                    ? " - pro eo '" : (gp->scriptura ? ""
+                    : " - pro eo 'lectiones_fopen' (eadem forma)"),
+                gp->scriptura ? (int)gp->pro.mensura : ZEPHYRUM,
+                (constans character*)gp->pro.datum,
+                gp->scriptura && gp->pro.mensura > ZEPHYRUM ? "'" : "");
+        }
+        alioquin
+        {
+            sprintf(nuntius, "'%.*s' canalem lectionum praeterit (liber"
+                " lectionum vocationem non videt - fabrica ingressum"
+                " nescit, transitus vetus servaretur)%s%.*s%s",
+                (int)t0->valor.mensura,
+                (constans character*)t0->valor.datum,
+                gp->pro.mensura > ZEPHYRUM ? " - pro eo '" : "",
+                (int)gp->pro.mensura,
+                (constans character*)gp->pro.datum,
+                gp->pro.mensura > ZEPHYRUM ? "'" : "");
+        }
+        _portabilitatis_diagnosticum(sem, parsura, t, codex, nuntius);
     }
 }
 
@@ -7665,6 +7774,11 @@ _professionem_examinare (
  *   - vocationes (93/95): symbolum vocati per nexum semanticae;
  *   - mutatio suitae (94): typus conversionis (explicitae aut
  *     scopo applicatae) - monstrator ad NON constans = mutabile.
+ *     PROFUNDUM (gradus I migrationis subsystematum): membra
+ *     monstratoria fixurae per 'constans T*' lecta (o->lista)
+ *     per stirpem fluxus datorum - vide '94 PROFUNDUM' infra.
+ *     Exceptio decreta (Franus 2026-10-19, include/credo.h):
+ *     InternamentumChorda* fixurae quovis vocato traditum licet.
  * Tabula per syntaxin (typus-nominatus CredoSectio): nomen typi est
  * contractus API credo.
  * ================================================== */
@@ -7674,6 +7788,13 @@ nomen structura {
                  chorda  titulus;
     constans SilvaNodus* nodus;       /* scriptio prima */
 } CredoScriptio;
+
+/* sedes 94 profundi: vocatum = functio cui membrum fixurae datur
+ * (vacuum = scriptio per catenam) */
+nomen structura {
+    constans SilvaNodus* nodus;
+                 chorda  vocatum;
+} CredoSedesProfunda;
 
 nomen structura {
                        chorda  titulus;
@@ -7686,8 +7807,12 @@ nomen structura {
                                               * vocandae */
                        Xar* scripta;         /* CredoScriptio */
                        Xar* suita_mutata;    /* constans SilvaNodus* */
+                       Xar* suita_profunda;  /* CredoSedesProfunda:
+                                              * fixura per membra
+                                              * mutata (94 profundum) */
                        Xar* tituli_impressi; /* constans SilvaNodus* */
                        b32  assertio;        /* vocatio assertionis */
+                       b32  suita_tacta;     /* ->suita in corpore */
 } CredoFunctioFacta;
 
 /* ordo tabulae: titulus sectionis (vacuus si ignotus), functiones
@@ -7837,6 +7962,29 @@ _credo_monstrator_mutabilis (
             != ZEPHYRUM);
 }
 
+/* typus: monstrator ad structuram InternamentumChorda (exceptio
+ * decreta 94 - internatio in internamentum fixurae licet) */
+interior b32
+_credo_internamentum_est (
+    constans TypusC89* t)
+{
+    dum (t != NIHIL && t->genus == TYPUS_C89_QUALIFICATUS)
+    {
+        t = t->datum.qualificatus.internum;
+    }
+    si (t == NIHIL || t->genus != TYPUS_C89_MONSTRATOR)
+    {
+        redde FALSUM;
+    }
+    t = t->datum.monstrator.internum;
+    dum (t != NIHIL && t->genus == TYPUS_C89_QUALIFICATUS)
+    {
+        t = t->datum.qualificatus.internum;
+    }
+    redde t != NIHIL && t->genus == TYPUS_C89_STRUCTURA
+        && _credo_par(t->datum.tag.titulus, "InternamentumChorda");
+}
+
 /* accessus 'x->suita' */
 interior b32
 _credo_est_suita (
@@ -7967,6 +8115,10 @@ _credo_scandere (
     {
         redde;
     }
+    si (_credo_est_suita(nodus))
+    {
+        f->suita_tacta = VERUM;   /* 94 profundum: radix intra corpus */
+    }
     si (nodus->genus == (s32)SILVA_C89_GENUS_VOCATIO)
     {
         chorda titulus;
@@ -8072,6 +8224,472 @@ _credo_scandere (
     per (k = ZEPHYRUM; k < nodus->numerus_locorum; k++)
     {
         _credo_scandere_valorem(sem, nodus->loci[k], f);
+    }
+}
+
+
+/* ==================================================
+ * 94 PROFUNDUM (gradus I migrationis subsystematum, Franus
+ * 2026-10-20): fixura per membra monstratoria mutata. 94 primus
+ * c->suita ipsum iudicat; 'constans T* o = c->suita' membra
+ * monstratoria (o->lista: Xar*) mutabilia relinquit.
+ *
+ * Provenientia per stirpem fluxus datorum (exemplar codicis 82,
+ * _signata_fluxus_examinare): c->suita = radix
+ * (FLUXUS_STIRPS_PRIMA); via ab ea (->, ., [], *, &, conversio) et
+ * variabilis cuius stirps currens PRIMA est radicem ferunt. Iunctio
+ * dissentiens = AMISSA, effugium (&o) = silens: stratum silet,
+ * numquam mentitur. Pinna 'sagitta numquam' datorum VALORES
+ * pointee vetat, non provenientiam - catena ab hoc iudice
+ * ascenditur, non a fluxu.
+ *
+ * Sedes iudicii per ascensum a folio USUS radicem ferente: catena
+ * ad summum, deinde
+ *   - scriptio (assignatio, ++/--) per catenam cum dereferentia
+ *     (o->m->x = 1, *o->p = 1);
+ *   - argumentum typi monstratoris NON constantis ad parametrum
+ *     prototypatum NON constans (ignotum, K&R, cauda variadica =
+ *     silet: printf("%s", o->titulus) licet).
+ * EXCEPTIO decreta (include/credo.h): argumentum typi
+ * InternamentumChorda* (internamentum fixurae) quovis vocato
+ * traditur - TYPO, non titulo vocati (canon_legere(..., intern)
+ * internat quoque).
+ * Intra functionem solum (v1): fixura adiutori per parametrum
+ * tradita non sequitur.
+ * ================================================== */
+
+interior b32
+_credo_operator (
+             SilvaValor  t,
+     constans character* signum)
+{
+    redde t.genus == SILVA_VALOR_TOKEN && t.datum.token != NIHIL
+        && _credo_par(t.datum.token->valor, signum);
+}
+
+/* stirps variabilis currens (tabula replay aut fixpuncti) */
+interior s32
+_credo_stirps_variabilis (
+             SilvaSemantica* sem,
+        constans SilvaNodus* folium,
+     constans FluxusDatorum* datorum,
+               constans s32* stirpes)
+{
+    constans SemanticaSymbolum* s;
+                           i32  n_var;
+                           i32  i;
+
+    si (datorum == NIHIL || stirpes == NIHIL)
+    {
+        redde (s32)FLUXUS_STIRPS_NEUTRA;
+    }
+    s = silva_c89_symbolum_nodi(sem, folium);
+    si (s == NIHIL)
+    {
+        redde (s32)FLUXUS_STIRPS_NEUTRA;
+    }
+    n_var = xar_numerus(datorum->variabiles);
+    per (i = ZEPHYRUM; i < n_var; i++)
+    {
+        constans FluxusVariabilis* var = (constans FluxusVariabilis*)
+            xar_obtinere(datorum->variabiles, i);
+
+        si (   var            != NIHIL && !var->membrum_est
+            && !var->effugit
+            && var->identitas == (constans vacuum*)s
+            && stirpes[i]     == (s32)FLUXUS_STIRPS_PRIMA)
+        {
+            redde (s32)FLUXUS_STIRPS_PRIMA;
+        }
+    }
+    redde (s32)FLUXUS_STIRPS_NEUTRA;
+}
+
+/* classificatio: valor a c->suita derivatus? PRIMA aut NEUTRA */
+interior s32
+_credo_stirps (
+             SilvaSemantica* sem,
+        constans SilvaNodus* nodus,
+     constans FluxusDatorum* datorum,
+               constans s32* stirpes)
+{
+    i32 custos;
+
+    per (custos = ZEPHYRUM; custos < LXIV; custos++)
+    {
+        nodus = _credo_nudum(nodus);
+        si (nodus == NIHIL)
+        {
+            frange;
+        }
+        commutatio (nodus->genus)
+        {
+            casus (s32)SILVA_C89_GENUS_ACCESSUS:
+                si (_credo_est_suita(nodus))
+                {
+                    redde (s32)FLUXUS_STIRPS_PRIMA;
+                }
+                nodus = _credo_nodus_valoris(
+                    silva_c89_accessus_basis(nodus));
+                frange;
+            casus (s32)SILVA_C89_GENUS_SUBSCRIPTIO:
+                nodus = _credo_nodus_valoris(
+                    silva_c89_subscriptio_basis(nodus));
+                frange;
+            casus (s32)SILVA_C89_GENUS_CONVERSIO:
+                nodus = _credo_nodus_valoris(
+                    silva_c89_conversio_internum(nodus));
+                frange;
+            casus (s32)SILVA_C89_GENUS_UNARIUM:
+                si (   !_credo_operator(
+                            silva_c89_unarium_tok_operator(nodus), "*")
+                    && !_credo_operator(
+                            silva_c89_unarium_tok_operator(nodus), "&"))
+                {
+                    redde (s32)FLUXUS_STIRPS_NEUTRA;
+                }
+                nodus = _credo_nodus_valoris(
+                    silva_c89_unarium_internum(nodus));
+                frange;
+            casus (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR:
+                redde _credo_stirps_variabilis(sem, nodus, datorum,
+                    stirpes);
+            ordinarius:
+                redde (s32)FLUXUS_STIRPS_NEUTRA;
+        }
+    }
+    redde (s32)FLUXUS_STIRPS_NEUTRA;
+}
+
+interior s32
+_credo_stirps_ligamen (
+                 vacuum* contextus,
+    constans SilvaNodus* expressio)
+{
+    redde _credo_stirps((SilvaSemantica*)contextus, expressio, NIHIL,
+        NIHIL);
+}
+
+interior s32
+_credo_stirps_ambitu_ligamen (
+                    vacuum* contextus,
+       constans SilvaNodus* expressio,
+    constans FluxusDatorum* datorum,
+              constans s32* stirpes)
+{
+    redde _credo_stirps((SilvaSemantica*)contextus, expressio, datorum,
+        stirpes);
+}
+
+/* parametrum prototypatum index-tum monstrator ad NON constans?
+ * ignotum, K&R, cauda variadica = FALSUM (silet) */
+interior b32
+_credo_parametrum_mutabile (
+         SilvaSemantica* sem,
+    constans SilvaNodus* functio_folium,
+                    i32  index)
+{
+    constans SemanticaSymbolum* s = silva_c89_symbolum_nodi(sem,
+        functio_folium);
+    constans TypusC89* t;
+
+    si (s == NIHIL)
+    {
+        redde FALSUM;
+    }
+    t = s->typus;
+    dum (t != NIHIL && t->genus == TYPUS_C89_QUALIFICATUS)
+    {
+        t = t->datum.qualificatus.internum;
+    }
+    si (   t     == NIHIL || t->genus != TYPUS_C89_FUNCTIO
+        || !t->datum.functio.est_prototypata
+        || index >= t->datum.functio.numerus_parametrorum)
+    {
+        redde FALSUM;
+    }
+    redde _credo_monstrator_mutabilis(
+        t->datum.functio.parametra[index]);
+}
+
+/* n est valor v (nudi comparati)? */
+interior b32
+_credo_filius (
+             SilvaValor  v,
+    constans SilvaNodus* n)
+{
+    redde _credo_nodus_valoris(v) == _credo_nudum(n);
+}
+
+interior vacuum
+_credo_profundum_addere (
+      CredoFunctioFacta* f,
+    constans SilvaNodus* nodus,
+                 chorda  vocatum)
+{
+    CredoSedesProfunda* sedes;
+                   i32  j;
+
+    per (j = ZEPHYRUM; j < xar_numerus(f->suita_profunda); j++)
+    {
+        si (((constans CredoSedesProfunda*)xar_obtinere(
+                f->suita_profunda, j))->nodus == nodus)
+        {
+            redde;
+        }
+    }
+    sedes = (CredoSedesProfunda*)xar_addere(f->suita_profunda);
+    si (sedes != NIHIL)
+    {
+        sedes->nodus    = nodus;
+        sedes->vocatum  = vocatum;
+    }
+}
+
+/* ascensus a folio radicem ferente: catena (->, ., [], *, &,
+ * conversio, parentheses) ad summum, deinde sedes iudicatur */
+interior vacuum
+_credo_sedem_profundam_iudicare (
+         SilvaSemantica* sem,
+    constans SilvaNodus* folium,
+      CredoFunctioFacta* f)
+{
+    constans SilvaNodus* summum    = folium;
+    constans SilvaNodus* pater;
+                    b32  profunda  = FALSUM;
+                    i32  custos;
+                    i32  k;
+
+    per (custos = ZEPHYRUM; custos < LXIV; custos++)
+    {
+        pater = summum->pater;
+        si (pater == NIHIL)
+        {
+            redde;
+        }
+        si (   pater->genus == (s32)SILVA_C89_GENUS_PARENTHESIS
+            || pater->genus == (s32)SILVA_C89_GENUS_CONVERSIO
+            || pater->genus == (s32)SILVA_C89_GENUS_AMBIGUUS)
+        {
+            summum = pater;
+            perge;
+        }
+        si (   pater->genus == (s32)SILVA_C89_GENUS_ACCESSUS
+            && _credo_filius(silva_c89_accessus_basis(pater), summum))
+        {
+            si (_credo_operator(silva_c89_accessus_tok_operator(pater),
+                    "->"))
+            {
+                profunda = VERUM;
+            }
+            summum = pater;
+            perge;
+        }
+        si (   pater->genus == (s32)SILVA_C89_GENUS_SUBSCRIPTIO
+            && _credo_filius(silva_c89_subscriptio_basis(pater),
+                   summum))
+        {
+            profunda  = VERUM;
+            summum    = pater;
+            perge;
+        }
+        si (   pater->genus == (s32)SILVA_C89_GENUS_UNARIUM
+            && _credo_operator(silva_c89_unarium_tok_operator(pater),
+                   "*"))
+        {
+            profunda  = VERUM;
+            summum    = pater;
+            perge;
+        }
+        si (   pater->genus == (s32)SILVA_C89_GENUS_UNARIUM
+            && _credo_operator(silva_c89_unarium_tok_operator(pater),
+                   "&"))
+        {
+            summum = pater;
+            perge;
+        }
+        frange;
+    }
+    pater = summum->pater;
+    si (pater == NIHIL)
+    {
+        redde;
+    }
+    si (pater->genus == (s32)SILVA_C89_GENUS_ASSIGNATIO)
+    {
+        si (   profunda
+            && _credo_filius(silva_c89_assignatio_sinister(pater),
+                   summum))
+        {
+            _credo_profundum_addere(f, summum, _chorda_vacua());
+        }
+        redde;
+    }
+    si (   pater->genus == (s32)SILVA_C89_GENUS_POSTCREMENTUM
+        || (   pater->genus == (s32)SILVA_C89_GENUS_UNARIUM
+            && (   _credo_operator(silva_c89_unarium_tok_operator(
+                       pater), "++")
+                || _credo_operator(silva_c89_unarium_tok_operator(
+                       pater), "--"))))
+    {
+        si (profunda)
+        {
+            _credo_profundum_addere(f, summum, _chorda_vacua());
+        }
+        redde;
+    }
+    si (pater->genus == (s32)SILVA_C89_GENUS_VOCATIO)
+    {
+        constans SilvaNodus* functio = _credo_nodus_valoris(
+            silva_c89_vocatio_functio(pater));
+                     chorda titulus = _chorda_vacua();
+
+        si (   functio == NIHIL
+            || functio->genus
+                != (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR
+            || _credo_filius(silva_c89_vocatio_functio(pater), summum)
+            || !_credo_monstrator_mutabilis(
+                   silva_c89_typus_expressionis(sem, summum)))
+        {
+            redde;
+        }
+        si (_credo_internamentum_est(silva_c89_typus_expressionis(sem,
+                summum)))
+        {
+            redde;   /* exceptio decreta: internatio in fixura */
+        }
+        (vacuum)_credo_vocatum(sem, pater, &titulus);
+        per (k = ZEPHYRUM; ; k++)
+        {
+            constans SilvaNodus* a = _credo_argumentum(pater, k);
+
+            si (a == NIHIL)
+            {
+                redde;
+            }
+            si (a == _credo_nudum(summum))
+            {
+                si (_credo_parametrum_mutabile(sem, functio, k))
+                {
+                    _credo_profundum_addere(f, summum, titulus);
+                }
+                redde;
+            }
+        }
+    }
+}
+
+/* fluxus datorum sub politica 94 profundi (locales tractatae, stirps
+ * credo), deinde replay per blocos attingibiles */
+interior vacuum
+_credo_suitam_profundam_colligere (
+         SilvaSemantica* sem,
+      CredoFunctioFacta* f)
+{
+    FluxusDatorumAuxilia  aux;
+           FluxusDatorum* d;
+                     s32* stirpes;
+                     i32  n_var;
+                     i32  b;
+
+    si (!f->suita_tacta || f->fluxus == NIHIL)
+    {
+        redde;
+    }
+    aux.symbolum               = _datorum_symbolum_ligamen;
+    aux.parametrum_constans    = _datorum_parametrum_constans_ligamen;
+    aux.parametrum_accumulat   = _fluxus_accumulat_ligamen;
+    aux.expressio_acies        = _datorum_expressio_acies_ligamen;
+    aux.stirps_valoris         = _credo_stirps_ligamen;
+    aux.stirps_valoris_ambitu  = _credo_stirps_ambitu_ligamen;
+    aux.canonicum              = _fluxus_canonicum_ligamen;
+    aux.contextus              = sem;
+    d = silva_c89_fluxus_datorum_aedificare(sem->piscina, f->fluxus,
+        &aux);
+    si (d == NIHIL)
+    {
+        redde;
+    }
+    n_var = xar_numerus(d->variabiles);
+    si (n_var == ZEPHYRUM)
+    {
+        redde;
+    }
+    stirpes = (s32*)piscina_allocare(sem->piscina,
+        (memoriae_index)n_var * magnitudo(s32));
+    si (stirpes == NIHIL)
+    {
+        redde;
+    }
+    per (b = ZEPHYRUM; b < xar_numerus(d->bloci); b++)
+    {
+        constans FluxusBlocus* fb = (constans FluxusBlocus*)
+            xar_obtinere(f->fluxus->bloci, b);
+        constans FluxusDatorumBlocus* db =
+            (constans FluxusDatorumBlocus*)xar_obtinere(d->bloci, b);
+        i32 e;
+        i32 v;
+
+        si (fb == NIHIL || db == NIHIL || !fb->attingibilis)
+        {
+            perge;
+        }
+        per (v = ZEPHYRUM; v < n_var; v++)
+        {
+            stirpes[v] = db->stirpes_introitus[v];
+        }
+        per (e = ZEPHYRUM; e < xar_numerus(db->eventa); e++)
+        {
+            constans FluxusEventum* ev = (constans FluxusEventum*)
+                xar_obtinere(db->eventa, e);
+            constans FluxusVariabilis* var;
+
+            si (   ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO
+                || ev->genus == (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO)
+            {
+                /* eadem ac _stirpes_exitum_computare datorum */
+                si (ev->variabilis < ZEPHYRUM)
+                {
+                    per (v = ZEPHYRUM; v < n_var; v++)
+                    {
+                        stirpes[v] = (s32)FLUXUS_STIRPS_AMISSA;
+                    }
+                    perge;
+                }
+                si (ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO)
+                {
+                    per (v = ZEPHYRUM; v < n_var; v++)
+                    {
+                        constans FluxusVariabilis* vv =
+                            (constans FluxusVariabilis*)xar_obtinere(
+                                d->variabiles, v);
+
+                        si (   vv        != NIHIL && vv->membrum_est
+                            && vv->basis == ev->variabilis)
+                        {
+                            stirpes[v] = (s32)FLUXUS_STIRPS_AMISSA;
+                        }
+                    }
+                }
+                stirpes[ev->variabilis] = _credo_stirps(sem,
+                    ev->fons_valoris, d, stirpes);
+                perge;
+            }
+            si (   ev->genus != (s32)FLUXUS_EVENTUM_USUS
+                || ev->variabilis < ZEPHYRUM
+                || stirpes[ev->variabilis]
+                    != (s32)FLUXUS_STIRPS_PRIMA)
+            {
+                perge;
+            }
+            var = (constans FluxusVariabilis*)xar_obtinere(
+                d->variabiles, (i32)ev->variabilis);
+            si (   var != NIHIL && !var->membrum_est && !var->effugit
+                && ev->nodus != NIHIL)
+            {
+                _credo_sedem_profundam_iudicare(sem, ev->nodus, f);
+            }
+        }
     }
 }
 
@@ -8553,11 +9171,14 @@ _mores_credo_examinare (
             (i32)magnitudo(CredoScriptio));
         f->suita_mutata     = xar_creare(sem->piscina,
             (i32)magnitudo(constans SilvaNodus*));
+        f->suita_profunda   = xar_creare(sem->piscina,
+            (i32)magnitudo(CredoSedesProfunda));
         f->tituli_impressi  = xar_creare(sem->piscina,
             (i32)magnitudo(constans SilvaNodus*));
         _credo_scandere_valorem(sem,
             silva_c89_definitio_functionis_corpus(fl->definitio), f);
         _credo_scripta_colligere(sem, f);
+        _credo_suitam_profundam_colligere(sem, f);
     }
     n = xar_numerus(facta);
     si (n == ZEPHYRUM)
@@ -8699,8 +9320,28 @@ _mores_credo_examinare (
                 _credo_nuntium(sem,
                 "credo: c->suita mutatum in %.*s%.*s"
                     " (sectiones statum suitae legunt, numquam mutant;"
-                    " lege per monstratorem constantem)", f->titulus,
+                    " lege per monstratorem constantem; internatio in"
+                    " internamentum fixurae sola licet)", f->titulus,
                     chorda_ex_literis("", sem->piscina)));
+        }
+        per (j = ZEPHYRUM; j < xar_numerus(f->suita_profunda); j++)
+        {
+            constans CredoSedesProfunda* sedes =
+                (constans CredoSedesProfunda*)xar_obtinere(
+                    f->suita_profunda, j);
+
+            _credo_emittere(sem, sedes->nodus,
+                (s32)EXAMEN_CODEX_CREDO_SUITA_MUTATA,
+                _credo_nuntium(sem, sedes->vocatum.mensura > ZEPHYRUM
+                    ? "credo: fixura suitae per membrum mutata in %.*s:"
+                      " membrum monstratorium datur ad %.*s (parametrum"
+                      " non constans; internatio in internamentum"
+                      " fixurae sola licet)"
+                    : "credo: fixura suitae per membrum mutata in %.*s:"
+                      " scriptio per monstratorem fixurae%.*s",
+                    f->titulus, sedes->vocatum.mensura > ZEPHYRUM
+                        ? sedes->vocatum
+                        : chorda_ex_literis("", sem->piscina)));
         }
         per (j = ZEPHYRUM; j < xar_numerus(f->tituli_impressi); j++)
         {
@@ -8792,7 +9433,11 @@ silva_c89_semantica_analysare_cum_systemate (
     _mores_credo_examinare(sem, parsura);
     /* canalis lectionum (96): ANTE toleras irritas - absorptio usum
      * notat */
-    _canalem_examinare(sem, parsura);
+    _canalem_examinare(sem, parsura,
+        (s32)EXAMEN_CODEX_CANALIS_PRAETERITUS);
+    /* scriptura cruda (97, fabrica-8): eadem ambulatio, tabula sua */
+    _canalem_examinare(sem, parsura,
+        (s32)EXAMEN_CODEX_SCRIPTURA_PRAETERITA);
     /* TOLERA irrita (gradus severi): suppressiones quae nihil
      * absorbuerunt aut sine causa - post ambulationem totam */
     _toleras_irritas_examinare(sem, parsura);
@@ -14723,6 +15368,18 @@ _chorda_par_literis (
 
     redde s.mensura == m
         && memcmp(s.datum, litterae, (memoriae_index)m) == ZEPHYRUM;
+}
+
+/* nomen implementationi reservatum ('__' initio, C89 7.1.3):
+ * praedefinita et builtin compilatoris (__ATOMIC_ACQUIRE,
+ * __atomic_load_n), numquam nomina POSIX quae glibc celat - ergo
+ * codex 85 ea non censet (sonus spec X.7, 2026-10-21) */
+interior b32
+_nomen_reservatum (
+    chorda titulus)
+{
+    redde titulus.mensura >= II && titulus.datum != NIHIL
+        && titulus.datum[ZEPHYRUM] == '_' && titulus.datum[I] == '_';
 }
 
 /* lectores C sine limite: larva positionum argumentorum quae

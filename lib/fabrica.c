@@ -85,6 +85,28 @@ fabricae_xar_chordarum (
     redde xar_creare(piscina, (i32)magnitudo(chorda));
 }
 
+Piscina*
+fabricae_piscina_cursus (
+    constans FabricaSutura* sutura,
+                   Piscina* piscina)
+{
+    redde (sutura->piscina_cursus != NIHIL) ? sutura->piscina_cursus
+        : piscina;
+}
+
+chorda
+fabricae_in_cursum (
+    constans FabricaSutura* sutura,
+                    chorda  valor,
+                   Piscina* piscina)
+{
+    Piscina* cursus;
+
+    cursus = fabricae_piscina_cursus(sutura, piscina);
+    redde (cursus == piscina) ? valor : chorda_transcribere(valor,
+        cursus);
+}
+
 vacuum
 fabricae_chordam_addere (
        Xar* xar,
@@ -110,6 +132,7 @@ fabrica_suturam_parare (
     sutura->datum               = NIHIL;
     sutura->legere              = NIHIL;
     sutura->enumerare           = NIHIL;
+    sutura->existere            = NIHIL;
     sutura->currere             = NIHIL;
     sutura->rogare              = NIHIL;
     sutura->meminisse           = NIHIL;
@@ -117,6 +140,7 @@ fabrica_suturam_parare (
     sutura->sigilla             = NIHIL;
     sutura->regenerationes      = NIHIL;
     sutura->digesta             = NIHIL;
+    sutura->piscina_cursus      = NIHIL;
     sutura->agere               = NIHIL;
     sutura->agere_simul         = NIHIL;
     sutura->currere_simul       = NIHIL;
@@ -129,6 +153,7 @@ fabrica_suturam_parare (
     sutura->radix.datum         = NIHIL;
     sutura->radix.mensura       = ZEPHYRUM;
     sutura->auditus             = ZEPHYRUM;
+    sutura->vestigia_conferre   = FALSUM;
     sutura->lectiones_ultimae   = NIHIL;
     sutura->ambitus             = NIHIL;
     sutura->species             = NIHIL;
@@ -395,13 +420,15 @@ fabricae_actionem_sigillare_semel (
         sigillum_out, causa_out);
     si (sutura->digesta != NIHIL)
     {
-        locus = (DigestumMemoratum*)piscina_allocare(piscina,
+        locus = (DigestumMemoratum*)piscina_allocare(
+            fabricae_piscina_cursus(sutura, piscina),
             magnitudo(DigestumMemoratum));
         si (locus != NIHIL)
         {
             locus->bonum     = bonum;
             locus->sigillum  = *sigillum_out;
-            locus->causa     = *causa_out;
+            locus->causa     = fabricae_in_cursum(sutura, *causa_out,
+                piscina);
             (vacuum)tabula_dispersa_inserere(sutura->digesta,
                 actio->titulus, locus);
         }
@@ -412,17 +439,47 @@ fabricae_actionem_sigillare_semel (
 /* Clavis memoriae: sigillum ingressuum ET mandati (verbum NUL ...).
  * Radix nova in mandato declarata ingressus nondum mutat (manifesta
  * eius nondum scripta) - sine mandato verificatio vetus congrueret.
- * Digesta institutionum (relatio) intacta manent. */
+ * Digesta institutionum (relatio) intacta manent.
+ * MEMORABILIS (2026-10-23): versio 'custodita II' (memoriae ante
+ * custodiam scriptae numquam congruunt - semel regenerantur sub
+ * custodia) et valores ambitus declarati (<ambitus>: variatio eius
+ * memoriam veterem non reddit); membra et ceterae intactae. */
 Sigillum
 fabricae_clavem_memoriae (
-    constans FabricaActio* actio,
-        constans Sigillum* ingressus)
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+         constans Sigillum* ingressus,
+                   Piscina* piscina)
 {
     SigillumContextus contextus;
                   i32 i;
 
     sigillum_incipere(&contextus);
     sigillum_addere(&contextus, ingressus->octeti, SIGILLUM_OCTETI);
+    si (actio->memorabilis)
+    {
+        sigillum_addere(&contextus, "memoria custodita II", XX);
+        per (i = ZEPHYRUM; actio->ambitus != NIHIL
+             && i < xar_numerus(actio->ambitus); i++)
+        {
+            chorda titulus = *(constans chorda*)xar_obtinere(
+                actio->ambitus, i);
+            chorda valor;
+
+            valor = chorda_ex_literis("\001absens", piscina);
+            si (sutura->ambitus != NIHIL)
+            {
+                (vacuum)sutura->ambitus(sutura->datum, chorda_ut_cstr(
+                    titulus, piscina), piscina, &valor);
+            }
+            sigillum_addere(&contextus, titulus.datum,
+                (memoriae_index)titulus.mensura);
+            sigillum_addere(&contextus, "=", I);
+            sigillum_addere(&contextus, valor.datum,
+                (memoriae_index)valor.mensura);
+            sigillum_addere(&contextus, "", 1);
+        }
+    }
     per (i = ZEPHYRUM; i < xar_numerus(actio->mandatum); i++)
     {
         chorda verbum;
@@ -463,6 +520,8 @@ constans character* constans fabricae_thesauri_partes[III] = {
     "build/aedilis/obiecta/generationes/"
 };
 
+/* SINE ALLOCATIONE (photographia: vocatur per directorium arboris; olim
+ * chorda nova per partem et per vocationem) */
 interior b32
 _in_thesauro (
       chorda  via,
@@ -470,11 +529,14 @@ _in_thesauro (
 {
     i32 k;
 
+    (vacuum)piscina;
     per (k = ZEPHYRUM; k < III; k++)
     {
-        si (chorda_incipit(via,
-            chorda_ex_literis(fabricae_thesauri_partes[k],
-                piscina)))
+        size_t longitudo = strlen(fabricae_thesauri_partes[k]);
+
+        si (   (size_t)via.mensura >= longitudo
+            && memcmp(via.datum, fabricae_thesauri_partes[k], longitudo)
+               == ZEPHYRUM)
         {
             redde VERUM;
         }
@@ -482,13 +544,31 @@ _in_thesauro (
     redde FALSUM;
 }
 
+/* directorium 'via' in thesauro: via + '/' partem thesauri incipit
+ * (partes in '/' desinunt) - sine chorda nova */
 b32
 fabrica_via_thesauri (
       chorda  via,
      Piscina* piscina)
 {
-    redde _in_thesauro(chorda_concatenare(via, chorda_ex_literis("/",
-        piscina), piscina), piscina);
+    i32 k;
+
+    (vacuum)piscina;
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        size_t longitudo = strlen(fabricae_thesauri_partes[k]);
+
+        si (   (   (size_t)via.mensura >= longitudo
+                && memcmp(via.datum, fabricae_thesauri_partes[k],
+                       longitudo) == ZEPHYRUM)
+            || (   (size_t)via.mensura + I == longitudo
+                && memcmp(via.datum, fabricae_thesauri_partes[k],
+                       longitudo - I) == ZEPHYRUM))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
 }
 
 hic_manens constans character* constans SIGNUM_ABSENS   = "\001absens";
@@ -557,16 +637,28 @@ fabricae_lectionem_sigillare (
             (memoriae_index)contentum.mensura);
         si (sutura->sigilla != NIHIL)
         {
-            Sigillum* locus = (Sigillum*)piscina_allocare(piscina,
+            Sigillum* locus = (Sigillum*)piscina_allocare(
+                fabricae_piscina_cursus(sutura, piscina),
                 magnitudo(Sigillum));
 
             si (locus != NIHIL)
             {
                 *locus = *sigillum_out;
-                (vacuum)tabula_dispersa_inserere(sutura->sigilla, via,
-                    locus);
+                (vacuum)tabula_dispersa_inserere(sutura->sigilla,
+                    fabricae_in_cursum(sutura, via, piscina), locus);
             }
         }
+        redde VERUM;
+    }
+    /* A/X: praesentia sola - sine lectione si sutura eam praebet */
+    si (   (genus == LECTIO_ABSENS || genus == LECTIO_EXSTAT)
+        && sutura->existere != NIHIL)
+    {
+        *sigillum_out = sutura->existere(sutura->datum, via_cstr,
+            piscina)
+            ? sigillum_computare(SIGNUM_PRAESENS,
+                  strlen(SIGNUM_PRAESENS))
+            : sigillum_computare(SIGNUM_ABSENS, strlen(SIGNUM_ABSENS));
         redde VERUM;
     }
     legibile     = sutura->legere(sutura->datum, via_cstr, piscina,
@@ -616,6 +708,7 @@ fabricae_lectionem_sigillare (
             redde VERUM;
         casus LECTIO_SCRIPSIT:
         casus LECTIO_AMBITUS:
+        casus LECTIO_EXSECUTIO:   /* P: non ingressus verificabilis */
             redde FALSUM;
     }
     redde FALSUM;
@@ -991,14 +1084,18 @@ _genus_litterae (
  * ingressus); radix absoluta et './' demuntur; scriptura iudicis,
  * libri ipsi et viae absolutae extra arborem praetermittuntur;
  * (genus, via) semel. FALSUM = liber absens aut lectio non
- * verificabilis (E) - nullum vestigium (regeneratio semper). */
+ * verificabilis (E) - nullum vestigium (regeneratio semper).
+ * ambitus_tolerare: E praetermittitur (custodia memorabilium viis solis
+ * utitur; ambitus per <ambitus> declaratur) */
 interior b32
 _lectiones_colligere (
     constans FabricaSutura*  sutura,
         constans character*  liber_via,
                     chorda   scriptura_dir,
+                       b32   ambitus_tolerare,
                    Piscina*  piscina,
-                       Xar** lectiones_out)
+                       Xar** lectiones_out,
+                       Xar** scripta_out)
 {
              chorda  liber;
                 Xar* lectiones;
@@ -1036,11 +1133,11 @@ _lectiones_colligere (
             perge;
         }
         genus = _genus_litterae((character)linea.datum[0], &notum);
-        si (!notum || genus == LECTIO_SCRIPSIT)
+        si (!notum)
         {
             perge;
         }
-        si (genus == LECTIO_AMBITUS)
+        si (genus == LECTIO_AMBITUS && !ambitus_tolerare)
         {
             redde FALSUM;   /* ambitus a nucleo non verificatur */
         }
@@ -1066,6 +1163,15 @@ _lectiones_colligere (
         {
             perge;
         }
+        /* S: exitus, non ingressus - solum in scripta (custodia) */
+        si (genus == LECTIO_SCRIPSIT)
+        {
+            si (scripta_out != NIHIL && *scripta_out != NIHIL)
+            {
+                fabricae_chordam_addere(*scripta_out, via);
+            }
+            perge;
+        }
         {
             chorda clavis;
 
@@ -1085,6 +1191,12 @@ _lectiones_colligere (
         }
         lectio->genus  = genus;
         lectio->via    = via;
+        /* ambitus (custodia, tolerans): nomen solum, sine sigillo */
+        si (genus == LECTIO_AMBITUS)
+        {
+            memset(&lectio->sigillum, ZEPHYRUM, magnitudo(Sigillum));
+            perge;
+        }
         si (!fabricae_lectionem_sigillare(sutura, genus, via, piscina,
                 &lectio->sigillum))
         {
@@ -1209,10 +1321,12 @@ _regenerare (
     }
     si (sutura->regenerationes != NIHIL)
     {
-        locus = (chorda*)piscina_allocare(piscina, magnitudo(chorda));
+        locus =
+            (chorda*)piscina_allocare(fabricae_piscina_cursus(sutura,
+            piscina), magnitudo(chorda));
         si (locus != NIHIL)
         {
-            *locus = *causa_out;
+            *locus = fabricae_in_cursum(sutura, *causa_out, piscina);
             (vacuum)tabula_dispersa_inserere(sutura->regenerationes,
                 actio->titulus, locus);
         }
@@ -1361,10 +1475,12 @@ fabrica_regenerationes_praevidere (
         {
             causae[i] = chorda_ex_literis("causa ignota", piscina);
         }
-        locus = (chorda*)piscina_allocare(piscina, magnitudo(chorda));
+        locus =
+            (chorda*)piscina_allocare(fabricae_piscina_cursus(sutura,
+            piscina), magnitudo(chorda));
         si (locus != NIHIL)
         {
-            *locus = causae[i];
+            *locus = fabricae_in_cursum(sutura, causae[i], piscina);
             (vacuum)tabula_dispersa_inserere(sutura->regenerationes,
                 membra[i]->titulus, locus);
         }
@@ -1402,6 +1518,162 @@ _relatione_iudicare (
     redde _relationem_iudicare(sutura, exitus, ingressus, piscina);
 }
 
+/* PROBATIONES MEMORIAE (2026-10-23): memoria actionis memorabilis
+ * (non lectiones) cum probationibus quaesitis absentibus (A) cursus
+ * custoditi et artificio ipso (X - ne tabula vacua 'nulla' legatur)
+ * per lectiones_scribere; in ictu iterum sigillantur. Via quaesita
+ * absens nunc praesens (obumbratio) aut nulla tabula -> regeneratio. */
+interior vacuum
+_probationes_scribere (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+    constans FabricaExitus* exitus,
+         constans Sigillum* clavis,
+         constans Sigillum* artificium,
+              constans Xar* lectae,
+                   Piscina* piscina)
+{
+              Xar* probationes;
+    FabricaLectio* artificii;
+
+    i32 i;
+
+    si (sutura->lectiones_scribere == NIHIL)
+    {
+        redde;
+    }
+    probationes = xar_creare(piscina, (i32)magnitudo(FabricaLectio));
+    si (probationes == NIHIL)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; lectae != NIHIL && i < xar_numerus(lectae); i++)
+    {
+        constans FabricaLectio* lectio = (constans FabricaLectio*)
+            xar_obtinere(lectae, i);
+
+        si (lectio->genus == LECTIO_ABSENS)
+        {
+            *(FabricaLectio*)xar_addere(probationes) = *lectio;
+        }
+    }
+    artificii = (FabricaLectio*)xar_addere(probationes);
+    si (   artificii == NIHIL
+        || !fabricae_lectionem_sigillare(sutura, LECTIO_EXSTAT,
+               exitus->via, piscina, &artificii->sigillum))
+    {
+        redde;
+    }
+    artificii->genus  = LECTIO_EXSTAT;
+    artificii->via    = exitus->via;
+    sutura->lectiones_scribere(sutura->datum,
+        chorda_ut_cstr(actio->titulus, piscina),
+        chorda_ut_cstr(exitus->via, piscina), clavis, artificium,
+        probationes);
+}
+
+interior b32
+_probationes_congruunt (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+    constans FabricaExitus* exitus,
+         constans Sigillum* clavis,
+         constans Sigillum* artificium,
+                   Piscina* piscina)
+{
+    Xar* probationes;
+
+    si (actio->lectiones || sutura->lectiones_legere == NIHIL)
+    {
+        redde VERUM;   /* lectiones: vestigium plenum supra */
+    }
+    si (!sutura->lectiones_legere(sutura->datum,
+            chorda_ut_cstr(actio->titulus, piscina),
+            chorda_ut_cstr(exitus->via, piscina), clavis, artificium,
+            piscina, &probationes))
+    {
+        redde FALSUM;
+    }
+    redde _lectiones_congruunt(sutura, probationes, piscina);
+}
+
+/* CUSTODIA MEMORABILIUM (2026-10-23): regeneratio actionis memorabilis
+ * quae legit quod ingressus declarati non tegunt -> memoria NEGATA
+ * (clavis mutationem eius celaret). Reddit causam ('MEMORIA NEGATA
+ * ...') aut chordam vacuam (memoria licet: nihil alienum, aut liber
+ * absens - generator sine lectionibus domus nihil probat) */
+interior chorda
+_memoriam_negare (
+    constans FabricaSutura*  sutura,
+     constans FabricaActio*  actio,
+        constans character*  liber_via,
+                    chorda   scriptura_dir,
+                   Piscina*  piscina,
+                       Xar** lectiones_out)
+{
+    ChordaAedificator* nuntius;
+                  Xar* lectiones;
+                  Xar* scripta;
+                  Xar* alienae;
+               chorda  vacua;
+                  i32  i;
+
+    vacua.datum     = NIHIL;
+    vacua.mensura   = ZEPHYRUM;
+    scripta         = fabricae_xar_chordarum(piscina);
+    *lectiones_out  = NIHIL;
+    si (   liber_via == NIHIL || scripta == NIHIL
+        || !_lectiones_colligere(sutura, liber_via, scriptura_dir,
+               VERUM, piscina, &lectiones, &scripta))
+    {
+        redde vacua;
+    }
+    *lectiones_out = lectiones;
+    alienae = fabrica_lectiones_non_declaratae(sutura, actio, lectiones,
+        scripta, piscina);
+    /* ambitus lectus nec basis nec <ambitus> declaratus: valor eius
+     * clavem non intrat - memoria eam mutationem celaret */
+    {
+        Xar* nomina = fabrica_ambitum_non_declaratum(actio, lectiones,
+            piscina);
+
+        per (i = ZEPHYRUM; alienae != NIHIL && nomina != NIHIL
+             && i < xar_numerus(nomina); i++)
+        {
+            fabricae_chordam_addere(alienae, chorda_concatenare(
+                chorda_ex_literis("$", piscina),
+                *(chorda*)xar_obtinere(nomina, i), piscina));
+        }
+    }
+    si (alienae == NIHIL || xar_numerus(alienae) == ZEPHYRUM)
+    {
+        redde vacua;
+    }
+    nuntius = chorda_aedificator_creare(piscina, CCLVI);
+    si (nuntius == NIHIL)
+    {
+        redde chorda_ex_literis("MEMORIA NEGATA", piscina);
+    }
+    (vacuum)chorda_aedificator_appendere_literis(nuntius,
+        "MEMORIA NEGATA - lectiones non declaratae "
+        "(declara <ingressus>):");
+    per (i = ZEPHYRUM; i < xar_numerus(alienae) && i < V; i++)
+    {
+        (vacuum)chorda_aedificator_appendere_literis(nuntius, " ");
+        (vacuum)chorda_aedificator_appendere_chorda(nuntius,
+            *(chorda*)xar_obtinere(alienae, i));
+    }
+    si (xar_numerus(alienae) > V)
+    {
+        character numerus[XXXII];
+
+        sprintf(numerus, " (+%u)",
+            (insignatus integer)(xar_numerus(alienae) - V));
+        (vacuum)chorda_aedificator_appendere_literis(nuntius, numerus);
+    }
+    redde chorda_aedificator_finire(nuntius);
+}
+
 /* REGENERATIO, memoria ante eam (actionibus memorabilibus solis) */
 interior FabricaIudicium
 _regeneratione_iudicare (
@@ -1435,7 +1707,8 @@ _regeneratione_iudicare (
     }
     artificium = sigillum_computare(commissum.datum,
         (memoriae_index)commissum.mensura);
-    clavis      = fabricae_clavem_memoriae(actio, ingressus);
+    clavis      = fabricae_clavem_memoriae(sutura, actio, ingressus,
+        piscina);
     ex_memoria  = FALSUM;
     /* VESTIGIUM LECTIONUM (plan 2 T2): actio lectiones="verum" quam
      * cursus congruens sub eadem clave ingressuum et eodem artificio
@@ -1469,10 +1742,18 @@ _regeneratione_iudicare (
     {
         si (!_auditum_eligere(sutura, plenus, &clavis))
         {
-            redde fabricae_iudicium(exitus->via, FABRICA_RECENS,
-                chorda_ex_literis("memoria", piscina));
+            si (_probationes_congruunt(sutura, actio, exitus, &clavis,
+                    &artificium, piscina))
+            {
+                redde fabricae_iudicium(exitus->via, FABRICA_RECENS,
+                    chorda_ex_literis("memoria", piscina));
+            }
+            /* probatio mutata aut nulla: regeneratur (sine auditu) */
         }
-        ex_memoria = VERUM;
+        alioquin
+        {
+            ex_memoria = VERUM;
+        }
     }
     /* celer: regeneratio omissa nisi actio 'celer' (vilis) sit */
     si ((!plenus && !actio->celer) || sutura->currere == NIHIL)
@@ -1487,7 +1768,8 @@ _regeneratione_iudicare (
     scriptura_dir = fabricae_iungere(piscina,
         "build/fabrica/scriptura/",
         actio->titulus, "");
-    liber_via = actio->lectiones
+    /* liber etiam memorabilibus: custodia lectionum non declaratarum */
+    liber_via = (actio->lectiones || actio->memorabilis)
         ? chorda_ut_cstr(fabricae_iungere(piscina, LIBRI_DIRECTORIUM,
               actio->titulus, ".tsv"), piscina)
         : NIHIL;
@@ -1516,7 +1798,7 @@ _regeneratione_iudicare (
         si (   actio->lectiones && liber_via != NIHIL
             && sutura->lectiones_scribere != NIHIL
             && _lectiones_colligere(sutura, liber_via, scriptura_dir,
-                   piscina, &vestigium))
+                   FALSUM, piscina, &vestigium, NIHIL))
         {
             sutura->lectiones_scribere(sutura->datum,
                 chorda_ut_cstr(actio->titulus, piscina),
@@ -1525,6 +1807,25 @@ _regeneratione_iudicare (
         }
         si (actio->memorabilis && sutura->inscribere != NIHIL)
         {
+            chorda  negata;
+               Xar* lectae;
+
+            negata = _memoriam_negare(sutura, actio, liber_via,
+                scriptura_dir, piscina, &lectae);
+            si (negata.mensura > ZEPHYRUM)
+            {
+                /* verdictum verum (regeneratio congruit), memoria NON
+                 * scripta: clavis ingressus quod legit non tegit */
+                redde fabricae_iudicium(exitus->via, FABRICA_RECENS,
+                    negata);
+            }
+            /* PROBATIONES (A) cum memoria: in ictu iterum verificandae
+             * (via quaesita absens nunc praesens = obumbratio) */
+            si (!actio->lectiones)
+            {
+                _probationes_scribere(sutura, actio, exitus, &clavis,
+                    &artificium, lectae, piscina);
+            }
             sutura->inscribere(sutura->datum,
                 chorda_ut_cstr(actio->titulus, piscina), &clavis,
                 &artificium);
@@ -1805,7 +2106,8 @@ _verdicto_iudicare (
     }
     artificium  = sigillum_computare(verdictum.datum,
         (memoriae_index)verdictum.mensura);
-    clavis      = fabricae_clavem_memoriae(actio, ingressus);
+    clavis      = fabricae_clavem_memoriae(sutura, actio, ingressus,
+        piscina);
     si (   sutura->lectiones_legere == NIHIL
         || !sutura->lectiones_legere(sutura->datum,
                chorda_ut_cstr(actio->titulus, piscina),

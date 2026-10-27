@@ -5,7 +5,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/../tools/cursus.sh"
 
 # Effusio cursus ultimi semper in build/test_logs/html.log
 # radicis (stdout + stderr; codex exitus per PIPESTATUS servatus).
-# <porta titulus="html" tegit="html/fontes/* html/grammatica/* html/probationes/* materia/fontes/* md/fontes/*" currit="tools/fabrica.c"/>
+# <porta titulus="html" tegit="html/fontes/* html/grammatica/* html/probationes/* materia/fontes/* md/fontes/*" currit="tools/fabrica.c" translatio="numquam"/>
 if [ -z "${HTML_PROBATIONES_EFFUSIO:-}" ]; then
     export HTML_PROBATIONES_EFFUSIO=1
     # effusio in plagula TEMPORARIA extra arborem, post cursum in locum

@@ -4,15 +4,18 @@
  * ferente (SecPolicyCreateSSL), ancora SOLA si data,
  * SecTrustEvaluateWithError; causa ex CFError nominata. Ex tls_macos.m
  * translata: lectio ancorae, iudicium SecTrust (politia expressa),
- * _tempus_ex_valore, _proprietatem_capere.
+ * _tempus_ex_valore, _proprietatem_capere. Indicium diffisarum domus
+ * (fiducia_diffisa.h, fiducia-linux T2) ANTE SecTrust consulitur.
  *
  * NOTA: capita systematis ANTE latina.h ('character' macro cum
  * CoreFoundation confligit). */
+#include "postulata_macos.h"   /* PRIMUM: ante capita Apple */
 #import <Security/Security.h>
 #include <CoreFoundation/CoreFoundation.h>
 #include <string.h>
 
 #include "fiducia.h"
+#include "fiducia_diffisa.h"
 #include "filum.h"
 
 interior SecCertificateRef
@@ -111,6 +114,13 @@ fiducia_iudicare (
         *causa = chorda_ex_literis("fiducia: argumenta invalida", piscina);
         redde FALSUM;
     }
+    /* indicium diffisarum domus PRIMUM (fiducia-linux T2): diffisa
+     * causam suam fert, ante iudicium SecTrust */
+    si (!fiducia_diffisas_iudicare(catena, (i32)numerus, NIHIL, 0, causa,
+            piscina))
+    {
+        redde FALSUM;
+    }
     certa     = CFArrayCreateMutable(NULL, (CFIndex)numerus,
         &kCFTypeArrayCallBacks);
     hospes_cf = CFStringCreateWithCString(NULL, hospes,
@@ -201,6 +211,37 @@ fiducia_iudicare (
         CFRelease(certa);
     }
     redde bene;
+}
+
+b32
+fiducia_fasciculum_describere (
+    constans character* via,
+                   i32* ancorae,
+                   i32* omissae,
+                chorda* via_usa,
+                chorda* causa,
+               Piscina* piscina)
+{
+    (vacuum)via;
+    si (ancorae)
+    {
+        *ancorae = 0;
+    }
+    si (omissae)
+    {
+        *omissae = 0;
+    }
+    si (via_usa)
+    {
+        via_usa->datum    = NIHIL;
+        via_usa->mensura  = 0;
+    }
+    si (causa && piscina)
+    {
+        *causa = chorda_ex_literis("fasciculus: solum POSIX (macOS: "
+            "SecTrust, repositorium systematis)", piscina);
+    }
+    redde FALSUM;
 }
 
 /* CFAbsoluteTime (secunda ab 2001-01-01) -> epocha unix.

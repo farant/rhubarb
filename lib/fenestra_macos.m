@@ -1,4 +1,5 @@
 /* Includere systemae primum ut vitare conflictos macros */
+#include "postulata_macos.h"   /* PRIMUM: ante capita Apple */
 #import <Cocoa/Cocoa.h>
 #import <Carbon/Carbon.h>
 #import <objc/runtime.h>
@@ -1025,6 +1026,115 @@ fenestra_perscrutari_eventus (
     }
 }
 
+/* vicus quies T5: fossae expergefacientes - processui toti (ansa
+ * principalis una). CFFileDescriptor callbacks semel tantum vocat:
+ * ante omnem exspectationem rearmantur (fossa adhuc parata statim
+ * iterum vocat - semantica gradus, ut poll). Fontes in modis
+ * communibus: etiam in tractu (magnitudo, menu) expergefaciunt. */
+#define FOSSAE_MAXIMA  CXXVIII
+
+nomen structura {
+    CFFileDescriptorRef  cf;
+     CFRunLoopSourceRef  fons;
+           CFOptionFlags  vexilla;
+} FossaCF;
+
+hic_manens FossaCF  _fossae[FOSSAE_MAXIMA];
+hic_manens     i32  _fossae_numerus = 0;
+
+/* fossa parata: eventum syntheticum ponere - pumpa obstructa
+ * expergiscitur, perscrutari eum vorat (ut excitatio vitreae) */
+interior vacuum
+_fossa_parata (
+    CFFileDescriptorRef  cf,
+          CFOptionFlags  genera,
+                 vacuum* info)
+{
+    (vacuum)cf;
+    (vacuum)genera;
+    (vacuum)info;
+    @autoreleasepool {
+        NSEvent* e;
+
+        e = [NSEvent otherEventWithType:NSEventTypeApplicationDefined
+                               location:NSZeroPoint
+                          modifierFlags:0
+                              timestamp:0
+                           windowNumber:0
+                                context:nil
+                                subtype:0
+                                  data1:0
+                                  data2:0];
+        [NSApp postEvent:e atStart:NO];
+    }
+}
+
+interior vacuum
+_fossas_dimittere (vacuum)
+{
+    i32 k;
+
+    per (k = 0; k < _fossae_numerus; k++)
+    {
+        CFRunLoopRemoveSource(CFRunLoopGetMain(), _fossae[k].fons,
+            kCFRunLoopCommonModes);
+        CFFileDescriptorInvalidate(_fossae[k].cf);
+        CFRelease(_fossae[k].fons);
+        CFRelease(_fossae[k].cf);
+    }
+    _fossae_numerus = 0;
+}
+
+b32
+fenestra_fossas_ponere (
+    constans FenestraFossa* fossae,
+    i32 numerus)
+{
+    i32 k;
+
+    _fossas_dimittere();
+    si (numerus > FOSSAE_MAXIMA || (numerus > 0 && !fossae))
+    {
+        redde FALSUM;
+    }
+    per (k = 0; k < numerus; k++)
+    {
+        FossaCF* f = &_fossae[k];
+
+        f->vexilla = 0;
+        si (fossae[k].eventus & FENESTRA_FOSSA_LEGERE)
+        {
+            f->vexilla |= kCFFileDescriptorReadCallBack;
+        }
+        si (fossae[k].eventus & FENESTRA_FOSSA_SCRIBERE)
+        {
+            f->vexilla |= kCFFileDescriptorWriteCallBack;
+        }
+        /* closeOnInvalidate FALSUM: fossa vocatoris est */
+        f->cf = CFFileDescriptorCreate(kCFAllocatorDefault,
+            fossae[k].fd, false, _fossa_parata, NULL);
+        si (!f->cf)
+        {
+            _fossas_dimittere();
+            redde FALSUM;
+        }
+        f->fons = CFFileDescriptorCreateRunLoopSource(
+            kCFAllocatorDefault, f->cf, 0);
+        si (!f->fons)
+        {
+            CFFileDescriptorInvalidate(f->cf);
+            CFRelease(f->cf);
+            _fossas_dimittere();
+            redde FALSUM;
+        }
+        CFRunLoopAddSource(CFRunLoopGetMain(), f->fons,
+            kCFRunLoopCommonModes);
+        CFFileDescriptorEnableCallBacks(f->cf, f->vexilla);
+        _fossae_numerus = k + 1;
+    }
+    redde VERUM;
+}
+
 vacuum
 fenestra_expectare_eventus (
     Fenestra* fenestra,
@@ -1033,8 +1143,22 @@ fenestra_expectare_eventus (
     @autoreleasepool {
         NSEvent* primus;
         NSTimeInterval secundae;
+        i32 k;
 
-        si (!fenestra) redde;
+        /* NIHIL: ansa sola (probationes sine fenestra) - NSApp sine
+         * icone si deest */
+        si (!fenestra && !NSApp)
+        {
+            [NSApplication sharedApplication];
+            [NSApp setActivationPolicy:
+                NSApplicationActivationPolicyProhibited];
+        }
+        /* fossae rearmantur (callback semel vocatur) */
+        per (k = 0; k < _fossae_numerus; k++)
+        {
+            CFFileDescriptorEnableCallBacks(_fossae[k].cf,
+                _fossae[k].vexilla);
+        }
         secundae = (NSTimeInterval)ms_maximae / 1000.0;
         si (secundae < 0.0)
         {
@@ -1057,6 +1181,18 @@ fenestra_expectare_eventus (
              * UNUS manet (nulla duplicatio status magnitudinis aut
              * commutationis). */
             [NSApp postEvent:primus atStart:YES];
+        }
+        si (!fenestra)
+        {
+            /* nemo perscrutatur: eventus (excitatio syntheticus)
+             * hic voratur */
+            dum ((primus = [NSApp nextEventMatchingMask:NSEventMaskAny
+                untilDate:[NSDate distantPast]
+                inMode:NSDefaultRunLoopMode
+                dequeue:YES]) != nil)
+            {
+            }
+            redde;
         }
     }
     fenestra_perscrutari_eventus(fenestra);
@@ -1937,7 +2073,8 @@ fenestra_creare_tabulam_pixelorum (
     /* Calculare dimensiones tabulae basatas in altitudine fixa */
     tabula->altitudo = altitudo_fixa;
     tabula->scala = (f32)tabula->fenestra_altitudo / (f32)altitudo_fixa;
-    tabula->latitudo = (i32)(tabula->fenestra_latitudo / tabula->scala);
+    tabula->latitudo = (i32)((f32)tabula->fenestra_latitudo
+                             / tabula->scala);
     tabula->capacitas = tabula->latitudo * tabula->altitudo;
 
     /* Allocare tabulam pixelorum */
@@ -1976,7 +2113,8 @@ fenestra_praesentare_pixela (
             VIII,  /* bits per componentem */
             tabula->latitudo * IV,  /* bytes per ordinem */
             spatium_coloris,
-            kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big
+            (CGBitmapInfo)kCGImageAlphaPremultipliedLast
+                | kCGBitmapByteOrder32Big
         );
 
         /* Creare imaginem ex contextu bitmap */

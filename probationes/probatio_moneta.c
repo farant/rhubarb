@@ -391,6 +391,27 @@ _sectio_octava (
     CREDO_AEQUALIS_I32((i32)(i8)effusio[ZEPHYRUM], ZEPHYRUM);
 }
 
+/* moneta_numerator (D3): "1", "2", ... ex ctx; ctx positum sequitur
+ * (fons praevisibilis probationum agendae et personarum) */
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+    character effusio[MONETA_ULID_MENSURA];
+          i32 ultimum;
+
+    (vacuum)c;
+    ultimum = ZEPHYRUM;
+    moneta_numerator(&ultimum, effusio);
+    CREDO_VERUM(strcmp(effusio, "1") == ZEPHYRUM);
+    moneta_numerator(&ultimum, effusio);
+    CREDO_VERUM(strcmp(effusio, "2") == ZEPHYRUM);
+    CREDO_AEQUALIS_I32(ultimum, II);
+    ultimum = XCIX;
+    moneta_numerator(&ultimum, effusio);
+    CREDO_VERUM(strcmp(effusio, "100") == ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "moneta_ulid", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "moneta_ulid_fortuita", _sectio_secunda, NIHIL, NIHIL, NIHIL,
@@ -406,6 +427,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "recusationes nanoid", _sectio_octava, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "moneta_numerator", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

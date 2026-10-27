@@ -1,0 +1,46 @@
+<sanctus id="andrew-kim-tae-gon-and-companions" versio="1" genus="coetus" status="sanctus">
+  <nomen lingua="en" principale="verum">Andrew Kim Tae-gŏn and Companions</nomen>
+  <nomen lingua="it" fontes="cs">Andrea Kim Taegon e 102 Soci</nomen>
+  <obitus saeculum="19" locus="Korea" martyrium="verum" fontes="cs hom"/>
+  <canonizatio modus="formalis" annus="1984" mensis="5" dies="6" papa="John Paul II" fontes="hom cs"/>
+  <festum calendarium="generale" mensis="9" dies="20" gradus="memoria" fontes="us"/>
+  <munus fontes="us hom">martyrs</munus>
+  <socius fontes="cs fr f14">Andrew Kim Taegon</socius>
+  <socius fontes="cs f14">Paul Chong Hasang</socius>
+  <socius fontes="hom">Peter Yu</socius>
+  <socius fontes="hom">Mark Chong</socius>
+  <socius fontes="hom">Agatha Yi</socius>
+  <descriptio>
+    <paragraphus fontes="hom cs">The Christian faith reached Korea through books brought from China, and in 1784 the Koreans sent one of their own to Peking, where he was baptized; the community that grew from this was founded entirely by lay people. It withstood repeated persecutions, and John Paul II named the years 1791, 1801, 1827, 1839, 1846 and 1866. Of some ten thousand Korean martyrs, the martyrdom of one hundred and three is documented, among them three bishops, eight priests and lay people married and unmarried, old and young. Ten were French missionaries of the Paris Foreign Missions, including the first bishops of the Church in Korea. John Paul II canonized them together at Seoul on 6 May 1984.</paragraphus>
+    <paragraphus fontes="cs fr hom">The list is headed by Andrew Kim Taegon, the first Korean priest, followed by Paul Chong Ha-sang. Pope Francis recalled that as a seminarian Andrew had to find secret ways of receiving missionaries from abroad, and that as a priest he sought out the scattered members of his flock, who had to hide their identity for fear of arrest, until he died a martyr. The others range from the thirteen-year-old Peter Yu to the seventy-two-year-old Mark Chong; among them is the seventeen-year-old Agatha Yi, canonized with her parents.</paragraphus>
+  </descriptio>
+  <fons id="hom" opus="sedes" locus="Homily of John Paul II, canonization of the Korean Martyrs, Seoul, 6 May 1984" url="https://www.vatican.va/content/john-paul-ii/en/homilies/1984/documents/hf_jp-ii_hom_19840506_martiri-coreani.html">
+    <excerptum>MASS FOR THE CANONIZATION OF KOREAN MARTYRS HOMILY OF POPE JOHN PAUL II Youido Place - Seoul Sunday, 6 May 1984</excerptum>
+    <excerptum>The truth about Jesus Christ also reached Korean soil. It came by means of books brought from China.</excerptum>
+    <excerptum>your ancestors sent one of their own in 1784 to Peking, where he was baptized. From this good seed was born the first Christian community in Korea, a community unique in the history of the Church by reason of the fact that it was founded entirely by lay people.</excerptum>
+    <excerptum>The years 1791, 1801, 1827, 1839, 1846 and 1866 are forever signed with the holy blood of your Martyrs</excerptum>
+    <excerptum>through this Liturgy of Canonization the Blessed Korean Martyrs are inscribed in the list of the Saints of the Catholic Church.</excerptum>
+    <excerptum>From the thirteen-year-old Peter Yu to the seventy-two-year-old Mark Chong, men and women, clergy and laity, rich and poor, ordinary people and nobles</excerptum>
+    <excerptum>And what did the seventeen-year-old Agatha Yi say</excerptum>
+    <excerptum>Agatha, her parents and those other six are all being canonized today.</excerptum>
+  </fons>
+  <fons id="cs" opus="sedes" locus="Dicastero delle Cause dei Santi, Andrea Kim Taegon e 102 Soci" url="https://www.causesanti.va/it/santi-e-beati/andrea-kim-taegon.html">
+    <excerptum>Tutti questi atleti di Cristo, di cui tre vescovi, otto sacerdoti e tutti gli altri laici, tra i quali alcuni coniugati altri no, vecchi, giovani e fanciulli</excerptum>
+    <excerptum>Del numero globale di martiri coreani, che viene calcolato intorno a diecimila, è conosciuto e documentato il martirio di centotré persone, che ho avuto la gioia di iscrivere insieme nell’albo dei santi a Seoul il 6 maggio</excerptum>
+    <excerptum>Come primo in questo numero è nominato Andrea Kim Taegon, il primo sacerdote coreano, poi vi è Paolo Chong Ha-sang, poi vengono gli altri, qualificati con la denominazione comune di “socii”</excerptum>
+    <excerptum>In mezzo ai martiri coreani vi sono dieci missionari francesi (della “Mission etrangère de Paris”) tra i quali i primi vescovi della Chiesa in Corea.</excerptum>
+    <excerptum>Leggendo gli “Acta martyrum” del XIX secolo nella terra coreana</excerptum>
+  </fons>
+  <fons id="fr" opus="sedes" locus="Pope Francis, General Audience of 24 May 2023, catechesis on Saint Andrew Kim Tae-gon" url="https://www.vatican.va/content/francesco/en/audiences/2023/documents/20230524-udienza-generale.html">
+    <excerptum>we now turn to Saint Andrew Kim Taegon, the first native priest of Korea and a martyr for the faith.</excerptum>
+    <excerptum>Saint Andrew courageously sought out the scattered members of his flock who, for fear of arrest, were forced to keep their identity secret.</excerptum>
+    <excerptum>When he was still a seminarian, Saint Andrew had to find a way to secretly welcome missionaries from abroad.</excerptum>
+    <excerptum>In the end, his perseverance in following Christ and serving his people led to his death as a martyr.</excerptum>
+  </fons>
+  <fons id="f14" opus="sedes" locus="Homily of Pope Francis, beatification of Paul Yun Ji-chung and companions, Seoul, 16 August 2014" url="https://www.vatican.va/content/francesco/en/homilies/2014/documents/papa-francesco_20140816_corea-omelia-beatificazione.html">
+    <excerptum>Their names now stand alongside those of the holy martyrs Andrew Kim Taegon, Paul Chong Hasang and companions</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="20 September">
+    <excerptum>Saints Andrew Kim Tae-gŏn, Priest, and Paul Chŏng Ha-sang, and Companions, Martyrs</excerptum>
+  </fons>
+</sanctus>

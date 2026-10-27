@@ -121,27 +121,32 @@ _emissionem_probare (
     CREDO_VERUM (bona);
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: I. PLENI (ordinaria) - 38;2 / 48;2 immota
+ * ================================================== */
+
+interior vacuum
+_plenos_probare (
+    CredoContextus* c)
 {
-         b32  praeteritus;
-     Piscina* piscina;
-
-    piscina = piscina_generare_dynamicum("probatio_tessera_colores",
-        16777216);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- I. PLENI ---\n");
-    _emissionem_probare(piscina, TESSERA_COLORES_PLENI, 0xFF0000,
+    _emissionem_probare(c->piscina, TESSERA_COLORES_PLENI, 0xFF0000,
         0x336699,
         "\033[0;38;2;255;0;0;48;2;51;102;153m", "pleni");
+}
 
-    imprimere("\n--- II. CCLVI ---\n");
+
+/* ==================================================
+ * PROBARE: II. CCLVI - puncta manu computata, nativus,
+ * cellula RGB verum servat
+ * ================================================== */
+
+interior vacuum
+_tabulam_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     _emissionem_probare(piscina, TESSERA_COLORES_CCLVI, 0xFF0000,
         0x808080,
         "\033[0;38;5;196;48;5;244m", "rubrum et griseus exactus");
@@ -172,8 +177,20 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, ZEPHYRUM,
             ZEPHYRUM).color_litterae, 0x336699);
     }
+}
 
-    imprimere("\n--- III. Ambitus ---\n");
+
+/* ==================================================
+ * PROBARE: III. Ambitus - COLORTERM et TERM_PROGRAM
+ * (profunditas, politica latitudinis); ambitum ipsa
+ * ponit (unsetenv primum), ergo ab ordine libera
+ * ================================================== */
+
+interior vacuum
+_ambitum_probare (
+    CredoContextus* c)
+{
+    (vacuum)c;
     unsetenv("COLORTERM");
     unsetenv("TERM_PROGRAM");
     CREDO_AEQUALIS_I32 ((i32)tessera_colores_ambitus(),
@@ -199,8 +216,20 @@ principale (vacuum)
     unsetenv("COLORTERM");
     CREDO_AEQUALIS_I32 ((i32)tessera_colores_ambitus(),
         (i32)TESSERA_COLORES_PLENI);
+}
 
-    imprimere("\n--- IV. Ornamenta ---\n");
+
+/* ==================================================
+ * PROBARE: IV. Ornamenta - octeti singulorum sex et
+ * omnium cum coloribus (XVII parametra)
+ * ================================================== */
+
+interior vacuum
+_ornamenta_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     {
         constans i32 nativus = (i32)TESSERA_COLOR_NATIVUS;
         constans i32 omnia = TESSERA_ORNAMENTUM_CRASSUM
@@ -228,9 +257,18 @@ principale (vacuum)
         _ornatam_probare(piscina, TESSERA_COLORES_CCLVI, 0xFF0000,
             0x808080, omnia, "\033[0;1;2;3;4;7;9;38;5;196;48;5;244m");
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. PLENI", _plenos_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "II. CCLVI", _tabulam_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III. Ambitus", _ambitum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IV. Ornamenta", _ornamenta_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("tessera_colores", SECTIONES);
 }

@@ -1,18 +1,28 @@
 /* probatio_volumen.c - Probationes Voluminis (documentum = plagula
  * sqlite una; acta veritas, plagulae/massae proiectio) */
 
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
 #include "filum.h"
 #include "volumen.h"
+#include "hora_hybrida.h"
+#include "machina.h"
+#include "scrinium.h"
 #include "credo.h"
+#include "memoria_processus.h"
 #include "filum.h"
 #include <string.h>
+#include <stdlib.h>
 
 #include <stdio.h>
 
-#define VIA_PROBATIONIS "build/probatio_volumen.db"
+/* plagula communis sectionum in area SUITAE (credo_area contextus
+ * suitae, per sectiones viva; via per c->suita, lectio sola): olim
+ * build/probatio_volumen.db extra vestigium membri (-journal per VFS
+ * vestigii notatum) */
+#define VIA_PROBATIONIS ((constans character*)c->suita)
 
 interior b32
 _continet (
@@ -22,17 +32,15 @@ _continet (
     redde (strstr(fenum, acus) != NIHIL) ? VERUM : FALSUM;
 }
 
-/* tabula rasa (percursus prior); sectiones sequentes plagulam
- * VIA_PROBATIONIS ordine tabulae aedificant */
+/* area suitae recens; sectiones sequentes plagulam VIA_PROBATIONIS
+ * ordine tabulae aedificant */
 interior vacuum
 _suitam_parare (
     CredoContextus* c)
 {
-    (vacuum)c;
-    si (filum_existit(VIA_PROBATIONIS))
-    {
-        filum_delere(VIA_PROBATIONIS);
-    }
+    c->datum = chorda_ut_cstr(chorda_concatenare(chorda_ex_literis(
+        credo_area(c), c->piscina), chorda_ex_literis(
+        "/probatio_volumen.db", c->piscina), c->piscina), c->piscina);
 }
 
 
@@ -88,17 +96,14 @@ _sectio_secunda (
         CREDO_AEQUALIS_S64(volumen_summa_actorum(vol), (s64)1);
         volumen_claudere(vol);
 
-        /* absens: creat */
-        si (filum_existit("build/probatio_volumen_aut.db"))
-        {
-            filum_delere("build/probatio_volumen_aut.db");
-        }
-        vol = volumen_aperire_aut_creare(piscina,
-            "build/probatio_volumen_aut.db");
+        /* absens (area sectionis recens): creat */
+        vol = volumen_aperire_aut_creare(piscina, chorda_ut_cstr(
+            chorda_concatenare(chorda_ex_literis(credo_area(c),
+            piscina), chorda_ex_literis("/probatio_volumen_aut.db",
+            piscina), piscina), piscina));
         CREDO_NON_NIHIL(vol);
         CREDO_AEQUALIS_S64(volumen_summa_actorum(vol), (s64)1);
         volumen_claudere(vol);
-        filum_delere("build/probatio_volumen_aut.db");
     }
 }
 
@@ -459,9 +464,626 @@ _sectio_nona (
 }
 
 
-    /* ========================================================
-     * PROBARE: volumen temporarium (scratch)
-     * ======================================================== */
+/* ========================================================
+ * PROBARE: acta generum datorum (historia documenti sui sola) -
+ * ordo seq, post_seq exclusivum, genera exacta (non praefixa),
+ * index acta_genus in plagula
+ * ======================================================== */
+
+interior vacuum
+_sectio_acta_generum (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+                   Volumen* vol;
+                       Xar* x;
+                  Scrinium* s;
+        ScriniumEnuntiatum* e;
+                       s64  primum;
+        constans character* genera[III];
+        constans character* nulla[I];
+
+        genera[ZEPHYRUM] = "d/mutatio";
+        genera[I] = "d/ramus";
+        genera[II] = NIHIL;
+        nulla[ZEPHYRUM] = NIHIL;
+        vol = volumen_temporarium(piscina, "probatio_volumen_genera");
+        CREDO_NECESSE_NON_NIHIL(vol);
+        primum = volumen_actum_appendere(vol, "d/mutatio",
+            chorda_ex_literis("a1", piscina));
+        (vacuum)volumen_actum_appendere(vol, "e/mutatio",
+            chorda_ex_literis("alienum", piscina));
+        (vacuum)volumen_actum_appendere(vol, "d/ramus",
+            chorda_ex_literis("r", piscina));
+        (vacuum)volumen_actum_appendere(vol, "d/mutationes",
+            chorda_ex_literis("praefixum", piscina));
+        (vacuum)volumen_actum_appendere(vol, "d/mutatio",
+            chorda_ex_literis("a2", piscina));
+        x = volumen_acta_generum_legere(vol, ZEPHYRUM, genera, piscina);
+        CREDO_NECESSE_NON_NIHIL(x);
+        CREDO_AEQUALIS_I32(xar_numerus(x), III);
+        CREDO_CHORDA_AEQUALIS_LITERIS(((VolumenActum*)xar_obtinere(x,
+            ZEPHYRUM))->datum, "a1");
+        CREDO_CHORDA_AEQUALIS_LITERIS(((VolumenActum*)xar_obtinere(x,
+            I))
+            ->genus, "d/ramus");
+        CREDO_CHORDA_AEQUALIS_LITERIS(((VolumenActum*)xar_obtinere(x,
+            II))
+            ->datum, "a2");
+        CREDO_VERUM(((VolumenActum*)xar_obtinere(x, ZEPHYRUM))->seq
+            < ((VolumenActum*)xar_obtinere(x, I))->seq);
+        /* post_seq exclusivum */
+        x = volumen_acta_generum_legere(vol, primum, genera, piscina);
+        CREDO_AEQUALIS_I32(xar_numerus(x), II);
+        CREDO_CHORDA_AEQUALIS_LITERIS(((VolumenActum*)xar_obtinere(x,
+            ZEPHYRUM))->datum, "r");
+        /* genera nulla: nihil */
+        x = volumen_acta_generum_legere(vol, ZEPHYRUM, nulla, piscina);
+        CREDO_NECESSE_NON_NIHIL(x);
+        CREDO_AEQUALIS_I32(xar_numerus(x), ZEPHYRUM);
+        /* index in plagula (migratio) */
+        s = scrinium_aperire(piscina, volumen_via(vol));
+        CREDO_NECESSE_NON_NIHIL(s);
+        e = scrinium_praeparare(s, "SELECT COUNT(*) FROM sqlite_master"
+            " WHERE type = 'index' AND name = 'acta_genus'");
+        CREDO_NECESSE_NON_NIHIL(e);
+        CREDO_VERUM(scrinium_gradi(e) == SCRINIUM_ORDO);
+        CREDO_AEQUALIS_S64(scrinium_columna_numerus(e, ZEPHYRUM),
+            (s64)I);
+        scrinium_finire(e);
+        scrinium_claudere(s);
+        volumen_claudere(vol);
+    }
+}
+
+
+/* ========================================================
+ * PROBARE: praesentia (D1) - ponere/legere, scriptor ultimus
+ * vincit, valor vacuus legitimus, NEC acta NEC massae crescunt
+ * ======================================================== */
+
+interior vacuum
+_sectio_praesentiae (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Volumen* vol;
+         chorda  relatum;
+         chorda  vacua;
+            b32  inventum;
+            s64  acta_ante;
+            s64  massae_ante;
+
+
+        vol = volumen_temporarium(piscina, "probatio_volumen_praesens");
+        CREDO_NECESSE_NON_NIHIL(vol);
+        acta_ante    = volumen_summa_actorum(vol);
+        massae_ante  = volumen_summa_massarum(vol);
+
+        relatum = volumen_praesens_legere(vol,
+            chorda_ex_literis("status/a", piscina), piscina, &inventum);
+        CREDO_FALSUM(inventum);
+
+        CREDO_VERUM(volumen_praesens_ponere(vol,
+            chorda_ex_literis("status/a", piscina),
+            chorda_ex_literis("primum", piscina)));
+        CREDO_VERUM(volumen_praesens_ponere(vol,
+            chorda_ex_literis("status/b", piscina),
+            chorda_ex_literis("alterum", piscina)));
+        CREDO_VERUM(volumen_praesens_ponere(vol,
+            chorda_ex_literis("status/a", piscina),
+            chorda_ex_literis("secundum", piscina)));
+
+        relatum = volumen_praesens_legere(vol,
+            chorda_ex_literis("status/a", piscina), piscina, &inventum);
+        CREDO_VERUM(inventum);
+        CREDO_CHORDA_AEQUALIS_LITERIS(relatum, "secundum");
+        relatum = volumen_praesens_legere(vol,
+            chorda_ex_literis("status/b", piscina), piscina, &inventum);
+        CREDO_VERUM(inventum);
+        CREDO_CHORDA_AEQUALIS_LITERIS(relatum, "alterum");
+
+        /* valor vacuus: inventus, mensura nulla */
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
+        CREDO_VERUM(volumen_praesens_ponere(vol,
+            chorda_ex_literis("status/vacua", piscina), vacua));
+        relatum = volumen_praesens_legere(vol,
+            chorda_ex_literis("status/vacua", piscina), piscina,
+            &inventum);
+        CREDO_VERUM(inventum);
+        CREDO_AEQUALIS_I32(relatum.mensura, (i32)ZEPHYRUM);
+
+        /* extra acta: diarium et massae intacta, manifestum quoque */
+        CREDO_AEQUALIS_S64(volumen_summa_actorum(vol), acta_ante);
+        CREDO_AEQUALIS_S64(volumen_summa_massarum(vol), massae_ante);
+        CREDO_AEQUALIS_S64(volumen_summa_plagularum(vol), (s64)0);
+        volumen_claudere(vol);
+    }
+}
+
+
+/* ========================================================
+ * PROBARE: migratio VI - volumen formae veteris (migrationes
+ * I-IV tantum) instantanea status/ et vicus/latera in praesentiam
+ * semel copiat; plagulae aliae non; plagulae ipsae manent
+ * ======================================================== */
+
+/* via in area sectionis (credo_area): plagulae probationis olim sub
+ * build/ extra vestigium membri (lineae S, quaestio 4GY9MJ4) */
+interior constans character*
+_in_area (
+         CredoContextus* c,
+     constans character* titulus)
+{
+    redde chorda_ut_cstr(chorda_concatenare(chorda_ex_literis(
+        credo_area(c), c->piscina), chorda_ex_literis(titulus,
+        c->piscina), c->piscina), c->piscina);
+}
+
+interior vacuum
+_sectio_migrationis_praesentiae (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        constans character* via_vetus = _in_area(c, "/vetus.db");
+        constans character* constans veteres[IV] = {
+            "CREATE TABLE acta ("
+            " seq INTEGER PRIMARY KEY AUTOINCREMENT,"
+            " momentum TEXT NOT NULL"
+            "   DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),"
+            " genus TEXT NOT NULL,"
+            " datum TEXT NOT NULL)",
+            "CREATE TABLE massae ("
+            " sigillum TEXT PRIMARY KEY,"
+            " contentum BLOB NOT NULL)",
+            "CREATE TABLE plagulae ("
+            " via TEXT PRIMARY KEY,"
+            " sigillum TEXT NOT NULL REFERENCES massae(sigillum),"
+            " origo TEXT NOT NULL,"
+            " momentum TEXT NOT NULL"
+            "   DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')))",
+            "CREATE INDEX acta_genus ON acta (genus, seq)"
+        };
+         Scrinium* s;
+          Volumen* vol;
+           chorda  relatum;
+              b32  inventum;
+
+
+        si (filum_existit(via_vetus))
+        {
+            filum_delere(via_vetus);
+        }
+        s = scrinium_aperire(piscina, via_vetus);
+        CREDO_NECESSE_NON_NIHIL(s);
+        CREDO_VERUM(scrinium_migrare(s, veteres, IV));
+        CREDO_VERUM(scrinium_exsequi(s,
+            "INSERT INTO massae (sigillum, contentum) VALUES"
+            " ('s1', 'status-contentum'), ('s2', 'index-laterum'),"
+            " ('s3', 'alienum')"));
+        CREDO_VERUM(scrinium_exsequi(s,
+            "INSERT INTO plagulae (via, sigillum, origo) VALUES"
+            " ('status/x', 's1', 'conservatio'),"
+            " ('vicus/latera', 's2', 'vicus'),"
+            " ('lib/a.c', 's3', 'genita'),"
+            " ('statusque', 's3', 'genita')"));
+        scrinium_claudere(s);
+
+        vol = volumen_aperire(piscina, via_vetus);
+        CREDO_NECESSE_NON_NIHIL(vol);
+        relatum = volumen_praesens_legere(vol,
+            chorda_ex_literis("status/x", piscina), piscina, &inventum);
+        CREDO_VERUM(inventum);
+        CREDO_CHORDA_AEQUALIS_LITERIS(relatum, "status-contentum");
+        relatum = volumen_praesens_legere(vol,
+            chorda_ex_literis("vicus/latera", piscina), piscina,
+            &inventum);
+        CREDO_VERUM(inventum);
+        CREDO_CHORDA_AEQUALIS_LITERIS(relatum, "index-laterum");
+        (vacuum)volumen_praesens_legere(vol,
+            chorda_ex_literis("lib/a.c", piscina), piscina, &inventum);
+        CREDO_FALSUM(inventum);
+        (vacuum)volumen_praesens_legere(vol,
+            chorda_ex_literis("statusque", piscina), piscina,
+            &inventum);
+        CREDO_FALSUM(inventum);
+
+        /* plagula vetus manet (acta eius historia sunt) */
+        relatum = volumen_plagulam_promere(vol,
+            chorda_ex_literis("status/x", piscina), piscina, &inventum);
+        CREDO_VERUM(inventum);
+        CREDO_CHORDA_AEQUALIS_LITERIS(relatum, "status-contentum");
+
+        /* semel: valor novus apertione iterata non obruitur */
+        CREDO_VERUM(volumen_praesens_ponere(vol,
+            chorda_ex_literis("status/x", piscina),
+            chorda_ex_literis("novum", piscina)));
+        volumen_claudere(vol);
+        vol = volumen_aperire(piscina, via_vetus);
+        CREDO_NECESSE_NON_NIHIL(vol);
+        relatum = volumen_praesens_legere(vol,
+            chorda_ex_literis("status/x", piscina), piscina, &inventum);
+        CREDO_VERUM(inventum);
+        CREDO_CHORDA_AEQUALIS_LITERIS(relatum, "novum");
+        volumen_claudere(vol);
+        filum_delere(via_vetus);
+    }
+}
+
+
+/* ========================================================
+ * PROBARE: identitas actus (D2) - hora stricte crescens ordine
+ * seq etiam intra millisecundam, prope tempus parietis; machina
+ * = identitas huius machinae
+ * ======================================================== */
+
+interior vacuum
+_sectio_horae (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+              Volumen* vol;
+                  Xar* acta;
+         VolumenActum* a;
+               chorda  machina;
+                  i32  i;
+                  s64  prior;
+             Momentum  nunc;
+
+
+        vol = volumen_temporarium(piscina, "probatio_volumen_hora");
+        CREDO_NECESSE_NON_NIHIL(vol);
+        per (i = ZEPHYRUM; i < L; i++)
+        {
+            CREDO_VERUM(volumen_actum_appendere(vol, "celere",
+                chorda_ex_literis("{}", piscina)) > ZEPHYRUM);
+        }
+        nunc     = hora_hybrida_physica();
+        machina  = machina_identitas(piscina);
+        CREDO_NECESSE(machina.mensura > ZEPHYRUM);
+        acta = volumen_acta_legere(vol, ZEPHYRUM, piscina);
+        CREDO_NECESSE_NON_NIHIL(acta);
+        CREDO_AEQUALIS_I32(xar_numerus(acta), (i32)LI);
+        prior = ZEPHYRUM;
+        per (i = ZEPHYRUM; i < xar_numerus(acta); i++)
+        {
+            a = (VolumenActum*)xar_obtinere(acta, i);
+            CREDO_VERUM(a->identitas.hora > prior);
+            CREDO_CHORDA_AEQUALIS(a->identitas.machina, machina);
+            CREDO_VERUM(hora_hybrida_momentum(a->identitas.hora) > nunc
+                - LX * M);
+            CREDO_VERUM(hora_hybrida_momentum(a->identitas.hora)
+                <= nunc);
+            prior = a->identitas.hora;
+        }
+        volumen_claudere(vol);
+    }
+}
+
+
+/* ========================================================
+ * PROBARE: basis actus (D2b) - super_appendere basim servat,
+ * appendere simplex sine basi; identitas per seq lectori aequalis
+ * ======================================================== */
+
+interior vacuum
+_sectio_basis (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+                 Volumen* vol;
+                     Xar* acta;
+            VolumenActum* a;
+        VolumenIdentitas  prima;
+        VolumenIdentitas  iterum;
+                     s64  seq_primum;
+                     s64  seq_secundum;
+
+
+        vol = volumen_temporarium(piscina, "probatio_volumen_basis");
+        CREDO_NECESSE_NON_NIHIL(vol);
+        seq_primum = volumen_actum_appendere(vol, "d/mutatio",
+            chorda_ex_literis("primum", piscina));
+        CREDO_NECESSE(seq_primum > ZEPHYRUM);
+        CREDO_NECESSE(volumen_actum_identitas(vol, seq_primum, piscina,
+            &prima));
+        CREDO_VERUM(prima.hora > ZEPHYRUM);
+        CREDO_CHORDA_AEQUALIS(prima.machina,
+            machina_identitas(piscina));
+        seq_secundum = volumen_actum_super_appendere(vol, "d/mutatio",
+            chorda_ex_literis("secundum", piscina), prima);
+        CREDO_NECESSE(seq_secundum > seq_primum);
+        /* seq ignotum */
+        CREDO_FALSUM(volumen_actum_identitas(vol, seq_secundum + C,
+            piscina, &iterum));
+        /* actum non ultimum: identitas SUA, non posterioris */
+        CREDO_NECESSE(volumen_actum_identitas(vol, seq_primum, piscina,
+            &iterum));
+        CREDO_AEQUALIS_S64(iterum.hora, prima.hora);
+
+        acta = volumen_acta_legere(vol, seq_primum - I, piscina);
+        CREDO_NECESSE_NON_NIHIL(acta);
+        CREDO_NECESSE(xar_numerus(acta) == II);
+        a = (VolumenActum*)xar_obtinere(acta, ZEPHYRUM);
+        CREDO_AEQUALIS_S64(a->identitas.hora, prima.hora);
+        CREDO_AEQUALIS_S64(a->basis.hora, (s64)ZEPHYRUM);
+        a = (VolumenActum*)xar_obtinere(acta, I);
+        CREDO_AEQUALIS_S64(a->basis.hora, prima.hora);
+        CREDO_CHORDA_AEQUALIS(a->basis.machina, prima.machina);
+        CREDO_NECESSE(volumen_actum_identitas(vol, seq_secundum,
+            piscina,
+            &iterum));
+        CREDO_AEQUALIS_S64(iterum.hora, a->identitas.hora);
+        CREDO_CHORDA_AEQUALIS(iterum.machina, a->identitas.machina);
+        /* lector generum basim quoque fert */
+        {
+            constans character* genera[II];
+
+            genera[ZEPHYRUM]  = "d/mutatio";
+            genera[I]         = NIHIL;
+            acta = volumen_acta_generum_legere(vol, seq_primum, genera,
+                piscina);
+            CREDO_NECESSE(acta && xar_numerus(acta) == I);
+            CREDO_AEQUALIS_S64(((VolumenActum*)xar_obtinere(acta,
+                ZEPHYRUM))->basis.hora, prima.hora);
+        }
+        volumen_claudere(vol);
+    }
+}
+
+
+/* ========================================================
+ * PROBARE: migratio VII-IX - acta vetera supplentur ordine seq:
+ * millisecunda eadem et horologium retro saltans numeratorem
+ * augent; actum a codice vetere post migrationem scriptum (hora
+ * NIHIL) apertione sequenti suppletur
+ * ======================================================== */
+
+interior vacuum
+_sectio_supplementi_horarum (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        constans character* via_vetus = _in_area(c, "/horae.db");
+        constans character* constans veteres[IV] = {
+            "CREATE TABLE acta ("
+            " seq INTEGER PRIMARY KEY AUTOINCREMENT,"
+            " momentum TEXT NOT NULL"
+            "   DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),"
+            " genus TEXT NOT NULL,"
+            " datum TEXT NOT NULL)",
+            "CREATE TABLE massae ("
+            " sigillum TEXT PRIMARY KEY,"
+            " contentum BLOB NOT NULL)",
+            "CREATE TABLE plagulae ("
+            " via TEXT PRIMARY KEY,"
+            " sigillum TEXT NOT NULL REFERENCES massae(sigillum),"
+            " origo TEXT NOT NULL,"
+            " momentum TEXT NOT NULL"
+            "   DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')))",
+            "CREATE INDEX acta_genus ON acta (genus, seq)"
+        };
+            Scrinium* s;
+             Volumen* vol;
+                 Xar* acta;
+        VolumenActum* a;
+              chorda  machina;
+            Momentum  decima;
+
+
+        decima   = (Momentum)1792490400 * M;   /* MMXXVI-X-XX X:00 */
+        machina  = machina_identitas(piscina);
+        si (filum_existit(via_vetus))
+        {
+            filum_delere(via_vetus);
+        }
+        s = scrinium_aperire(piscina, via_vetus);
+        CREDO_NECESSE_NON_NIHIL(s);
+        CREDO_VERUM(scrinium_migrare(s, veteres, IV));
+        CREDO_VERUM(scrinium_exsequi(s,
+            "INSERT INTO acta (momentum, genus, datum) VALUES"
+            " ('2026-10-20T10:00:00.000Z', 'a', '{}'),"
+            " ('2026-10-20T10:00:00.000Z', 'b', '{}'),"
+            " ('2026-10-20T09:59:59.000Z', 'c', '{}'),"
+            " ('2026-10-20T10:00:05.250Z', 'd', '{}')"));
+        scrinium_claudere(s);
+
+        vol = volumen_aperire(piscina, via_vetus);
+        CREDO_NECESSE_NON_NIHIL(vol);
+        acta = volumen_acta_legere(vol, ZEPHYRUM, piscina);
+        CREDO_NECESSE_NON_NIHIL(acta);
+        CREDO_AEQUALIS_I32(xar_numerus(acta), IV);
+        a = (VolumenActum*)xar_obtinere(acta, ZEPHYRUM);
+        CREDO_AEQUALIS_S64(a->identitas.hora,
+            hora_hybrida_componere(decima,
+            ZEPHYRUM));
+        /* acta ante D2b: basis ignota */
+        CREDO_AEQUALIS_S64(a->basis.hora, (s64)ZEPHYRUM);
+        CREDO_CHORDA_AEQUALIS(a->identitas.machina, machina);
+        a = (VolumenActum*)xar_obtinere(acta, I);
+        CREDO_AEQUALIS_S64(a->identitas.hora,
+            hora_hybrida_componere(decima, I));
+        /* horologium retro: millisecunda prior, numerator tamen */
+        a = (VolumenActum*)xar_obtinere(acta, II);
+        CREDO_AEQUALIS_S64(a->identitas.hora,
+            hora_hybrida_componere(decima, II));
+        a = (VolumenActum*)xar_obtinere(acta, III);
+        CREDO_AEQUALIS_S64(a->identitas.hora,
+            hora_hybrida_componere(decima
+            + V * M + CCL, ZEPHYRUM));
+        CREDO_CHORDA_AEQUALIS(a->identitas.machina, machina);
+        volumen_claudere(vol);
+
+        /* codex vetus post migrationem: hora et machina NIHIL */
+        s = scrinium_aperire(piscina, via_vetus);
+        CREDO_NECESSE_NON_NIHIL(s);
+        CREDO_VERUM(scrinium_exsequi(s,
+            "INSERT INTO acta (momentum, genus, datum) VALUES"
+            " ('2026-10-20T09:00:00.000Z', 'e', '{}')"));
+        scrinium_claudere(s);
+        vol = volumen_aperire(piscina, via_vetus);
+        CREDO_NECESSE_NON_NIHIL(vol);
+        acta = volumen_acta_legere(vol, ZEPHYRUM, piscina);
+        CREDO_NECESSE_NON_NIHIL(acta);
+        CREDO_AEQUALIS_I32(xar_numerus(acta), V);
+        a = (VolumenActum*)xar_obtinere(acta, IV);
+        CREDO_AEQUALIS_S64(a->identitas.hora,
+            hora_hybrida_componere(decima
+            + V * M + CCL, I));
+        CREDO_CHORDA_AEQUALIS(a->identitas.machina, machina);
+        volumen_claudere(vol);
+        filum_delere(via_vetus);
+    }
+}
+
+
+/* ========================================================
+ * PROBARE: volumen_seq_ultimum (proiectiones D4c) - sequitur
+ * appendere, ansam alteram videt, enuntiatum servatum in claudendo
+ * finitur (aliter conexio sqlite non clauditur et memoria crescit)
+ * ======================================================== */
+
+/* via voluminis cyclorum: in TMPDIR (area membri sub fabrica, suitae
+ * sub credo) - non build/ (scriptura extra vestigium, porta radix) */
+interior vacuum
+_viam_seq_ponere (
+     character* via,
+           i32  capacitas)
+{
+    constans character* tmp;
+
+    tmp = getenv("TMPDIR");
+    si (!tmp || !tmp[ZEPHYRUM] || (i32)strlen(tmp) + XXXII >= capacitas)
+    {
+        tmp = "build";
+    }
+    sprintf(via, "%s/probatio_volumen_seq.db", tmp);
+}
+
+interior i64
+_vestigium (vacuum)
+{
+    MemoriaProcessus mp;
+
+    redde memoria_processus_legere(ZEPHYRUM, &mp) ? mp.vestigium
+        : ZEPHYRUM;
+}
+
+/* aperire, seq legere (enuntiatum servatur), claudere - n vicibus */
+interior vacuum
+_seq_cyclos_currere (
+    constans character* via,
+                    i32 n)
+{
+     Piscina* scheda;
+     Volumen* vol;
+         i32  i;
+
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        scheda = piscina_generare_dynamicum("probatio_seq",
+            IV * MXXIV);
+        CREDO_NECESSE_NON_NIHIL(scheda);
+        vol = volumen_aperire(scheda, via);
+        CREDO_NECESSE_NON_NIHIL(vol);
+        CREDO_NECESSE(volumen_seq_ultimum(vol) > ZEPHYRUM);
+        volumen_claudere(vol);
+        piscina_destruere(scheda);
+    }
+}
+
+interior vacuum
+_sectio_seq_ultimi (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        Volumen* vol;
+        Volumen* altera;
+            s64  seq;
+
+        vol = volumen_temporarium(piscina, "probatio_volumen_seq");
+        CREDO_NECESSE_NON_NIHIL(vol);
+        /* ortus iam scriptus: seq eius, non zephyrum */
+        CREDO_AEQUALIS_S64(volumen_seq_ultimum(vol),
+            volumen_summa_actorum(vol));
+        seq = volumen_actum_appendere(vol, "d/mutatio",
+            chorda_ex_literis("primum", piscina));
+        CREDO_NECESSE(seq > ZEPHYRUM);
+        CREDO_AEQUALIS_S64(volumen_seq_ultimum(vol), seq);
+        seq = volumen_actum_appendere(vol, "d/mutatio",
+            chorda_ex_literis("secundum", piscina));
+        CREDO_AEQUALIS_S64(volumen_seq_ultimum(vol), seq);
+
+        /* ansa altera (alius processus): scripta eius videntur, et
+         * vice versa - quaestio vera, non numerus memor */
+        altera = volumen_aperire(piscina, volumen_via(vol));
+        CREDO_NECESSE_NON_NIHIL(altera);
+        CREDO_AEQUALIS_S64(volumen_seq_ultimum(altera), seq);
+        seq = volumen_actum_appendere(altera, "d/mutatio",
+            chorda_ex_literis("ab altera", piscina));
+        CREDO_NECESSE(seq > ZEPHYRUM);
+        CREDO_AEQUALIS_S64(volumen_seq_ultimum(vol), seq);
+        seq = volumen_actum_appendere(vol, "d/mutatio",
+            chorda_ex_literis("ab prima", piscina));
+        CREDO_AEQUALIS_S64(volumen_seq_ultimum(altera), seq);
+        volumen_claudere(altera);
+        volumen_claudere(vol);
+    }
+    {
+        Volumen* vol;
+            i64  ante;
+            i64  post;
+      character  via[DXII];
+
+        /* claudere enuntiatum servatum finit: sine eo sqlite3_close
+         * BUSY reddit et conexio (cum memoria sua) manet. Cycli
+         * calefacientes primum (vestigium prima vice crescit). */
+        _viam_seq_ponere(via, (i32)magnitudo(via));
+        si (filum_existit(via))
+        {
+            (vacuum)filum_delere(via);
+        }
+        vol = volumen_creare(piscina, via);
+        CREDO_NECESSE_NON_NIHIL(vol);
+        volumen_claudere(vol);
+        _seq_cyclos_currere(via, L);
+        ante = _vestigium();
+        _seq_cyclos_currere(via, D);
+        post = _vestigium();
+        imprimere("  seq_ultimum cycli D: vestigium %+ld KiB\n",
+            (longus)((s64)post - (s64)ante) / MXXIV);
+        CREDO_VERUM(post < ante
+            || post - ante < (i64)II * MXXIV * MXXIV);
+        (vacuum)filum_delere(via);
+    }
+}
+
+
+/* ========================================================
+ * PROBARE: volumen temporarium (scratch)
+ * ======================================================== */
 
 interior vacuum
 _sectio_decima (
@@ -535,8 +1157,8 @@ _sectio_decima_prima (
     piscina = c->piscina;
     {
                    Volumen* ordinarium;
-        constans character* via_ord =
-            "/tmp/probatio_volumen_ordinarium.volumen";
+        constans character* via_ord = _in_area(c,
+            "/ordinarium.volumen");
             PiscinaNotatio  nota;
                         i8* venenum;
 
@@ -572,6 +1194,126 @@ _sectio_decima_prima (
     }
 }
 
+/* volumen_in_transactione: vocator transactionem tenetne? (canalis T4
+ * - admissio eam iungit) */
+interior vacuum
+_sectio_in_transactione (
+    CredoContextus* c)
+{
+    Volumen* v = volumen_temporarium(c->piscina, "probatio_volumen_tr");
+
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_FALSUM(volumen_in_transactione(v));
+    CREDO_NECESSE(volumen_transactionem_incipere(v));
+    CREDO_VERUM(volumen_in_transactione(v));
+    CREDO_NECESSE(volumen_transactionem_committere(v));
+    CREDO_FALSUM(volumen_in_transactione(v));
+    CREDO_NECESSE(volumen_transactionem_incipere(v));
+    CREDO_NECESSE(volumen_transactionem_revolvere(v));
+    CREDO_FALSUM(volumen_in_transactione(v));
+    CREDO_FALSUM(volumen_in_transactione(NIHIL));
+    volumen_claudere(v);
+}
+
+
+/* ========================================================
+ * PROBARE: volumen temporarium sub $TMPDIR (android-gradus II.2)
+ *
+ * Android /tmp caret; cursor tabulae TMPDIR sub radice sua
+ * ponit. Basis: $TMPDIR non vacuum (virgulae finales abscissae),
+ * aliter /tmp - regula credo (lib/credo.c).
+ * ======================================================== */
+
+interior b32
+_incipit (
+    constans character* via,
+    constans character* praefixum)
+{
+    redde strncmp(via, praefixum, strlen(praefixum)) == ZEPHYRUM;
+}
+
+/* casus unus: TMPDIR = valor (NIHIL = absens) -> volumen sub
+ * 'exspectatum'; exspectatum NIHIL = basis /tmp, quae in Android
+ * deest - ibi volumen nasci NON debet (nec alibi) */
+interior vacuum
+_temporarium_sub (
+        CredoContextus* c,
+    constans character* valor,
+    constans character* exspectatum)
+{
+      Volumen* vol;
+    character  via[DXII];
+
+    si (valor != NIHIL)
+    {
+        (vacuum)setenv("TMPDIR", valor, I);
+    }
+    alioquin
+    {
+        (vacuum)unsetenv("TMPDIR");
+    }
+    vol = volumen_temporarium(c->piscina, "tmpdir_probatio");
+    si (exspectatum == NIHIL && !filum_directorium_existit("/tmp"))
+    {
+        CREDO_NIHIL (vol);
+        redde;
+    }
+    CREDO_NON_NIHIL (vol);
+    si (vol == NIHIL)
+    {
+        redde;
+    }
+    strcpy(via, volumen_via(vol));
+    CREDO_VERUM (_incipit(via, exspectatum != NIHIL ? exspectatum
+        : "/tmp/tmpdir_probatio-"));
+    CREDO_VERUM (filum_existit(via));
+    volumen_claudere(vol);
+    CREDO_FALSUM (filum_existit(via));
+}
+
+interior vacuum
+_sectio_temporarii_ambitus (
+    CredoContextus* c)
+{
+    constans character* vetus;
+    constans character* dir;
+    constans character* duplex_virgula;
+    constans character* praefixum;
+             character  servatum[DXII];
+                   b32  habuit;
+
+    vetus   = getenv("TMPDIR");
+    habuit  = vetus != NIHIL && strlen(vetus) < DXII;
+    si (habuit)
+    {
+        strcpy(servatum, vetus);
+    }
+    /* directorium in area sectionis - via ANTE setenv computata
+     * (credo_area ex TMPDIR derivatur) */
+    dir             = _in_area(c, "/tmpdir");
+    duplex_virgula  = _in_area(c, "/tmpdir//");
+    praefixum       = _in_area(c, "/tmpdir/tmpdir_probatio-");
+    CREDO_VERUM (filum_directorium_creare_cum_parentibus(dir));
+
+    /* I: directorium datum */
+    _temporarium_sub(c, dir, praefixum);
+    /* II: virgulae finales abscinduntur (macOS TMPDIR '/' terminat) */
+    _temporarium_sub(c, duplex_virgula, praefixum);
+    /* III-IV: vacuum aut absens -> /tmp */
+    _temporarium_sub(c, "", NIHIL);
+    _temporarium_sub(c, NIHIL, NIHIL);
+
+    si (habuit)
+    {
+        (vacuum)setenv("TMPDIR", servatum, I);
+    }
+    alioquin
+    {
+        (vacuum)unsetenv("TMPDIR");
+    }
+}
+
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "volumen_creare", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "aperire_aut_creare", _sectio_secunda, NIHIL, NIHIL, NIHIL,
@@ -589,10 +1331,28 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "plicam_ad (iter temporis)", _sectio_nona, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "acta_generum_legere", _sectio_acta_generum,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "praesentia (D1)", _sectio_praesentiae,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "migratio praesentiae (V-VI)", _sectio_migrationis_praesentiae,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "hora actorum (D2)", _sectio_horae,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "basis actuum (D2b)", _sectio_basis,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "supplementum horarum (VII-XI)", _sectio_supplementi_horarum,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "seq_ultimum (D4c)", _sectio_seq_ultimi,
+        NIHIL, NIHIL, NIHIL, NIHIL },
     { "volumen_temporarium", _sectio_decima, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "volumen_temporarium sub TMPDIR", _sectio_temporarii_ambitus,
+        NIHIL, NIHIL, NIHIL, NIHIL },
     { "volumen ordinarium SUPERSTES", _sectio_decima_prima, NIHIL,
         NIHIL, NIHIL, NIHIL },
+    { "in_transactione", _sectio_in_transactione, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

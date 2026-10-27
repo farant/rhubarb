@@ -1,0 +1,41 @@
+<sanctus id="stanislaus-of-krakow" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Stanislaus of Kraków</nomen>
+  <nomen lingua="alia" fontes="ce">Szczepanowski</nomen>
+  <ortus annus="1030" mensis="7" dies="26" locus="Szczepanów" fontes="ce bu"/>
+  <obitus annus="1079" mensis="5" dies="8" locus="Kraków" martyrium="verum" fontes="ce mr"/>
+  <canonizatio modus="formalis" annus="1253" papa="Innocent IV" fontes="ce bu"/>
+  <festum calendarium="generale" mensis="4" dies="11" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="5" dies="7" fontes="mr"/>
+  <munus fontes="ce mr">bishop</munus>
+  <munus fontes="ce mr">martyr</munus>
+  <patrocinium fontes="ce">Poland</patrocinium>
+  <patrocinium fontes="ce">Kraków</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce bu">Stanislaus was born at Szczepanów in the diocese of Kraków in 1030. No contemporary life of him survives; the life written at the time of his canonization contains much legend. After the death of his parents he gave his inheritance to the poor. Bishop Lambert Zula of Kraków ordained him priest and made him canon, preacher and later vicar-general. Elected bishop after Lambert's death, he accepted only at the explicit command of Pope Alexander II.</paragraphus>
+    <paragraphus fontes="ce mr bu">As bishop he preached against vice in high and low alike. King Boleslaw II sullied the fame of his wars by cruelty and lust, and the bishop also had serious disputes with him over church land the king unjustly claimed. When tears, prayers and admonitions failed to change the king's life, the king was excommunicated, and Stanislaus withdrew to the chapel of St. Michael near Kraków. The guards sent to kill him did not dare, and the king slew him himself during Mass; the Martyrology says simply that he was murdered by King Boleslas. His body, first buried in the chapel, was moved to the cathedral in 1088, and Innocent IV canonized him at Assisi in 1253. He is patron of Poland and of Kraków.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="7 May">
+    <excerptum>AT Cracow, in Poland, the birthday of St. Stanislaus, bishop and martyr, who was murdered by the wicked king Boleslas.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Stanislaus of Cracow" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Stanislaus_of_Cracow">
+    <excerptum>Bishop and martyr, born at Szczepanów (hence called Szczepanowski), in the Diocese of Cracow, 26 July, 1030; died at Cracow, 8 May, 1079</excerptum>
+    <excerptum>patron of Poland and the city and Diocese of Cracow; invoked in battle.</excerptum>
+    <excerptum>No contemporary biography of the saint is in existence. At the time of his canonization a life appeared written by a Dominican</excerptum>
+    <excerptum>which contains much legendary matter.</excerptum>
+    <excerptum>After the death of his parents he distributed his ample inheritance among the poor. Lambert Zula, Bishop of Cracow, ordained him priest</excerptum>
+    <excerptum>canon and preacher at the cathedral, and later, vicar-general. After the death of Lambert he was elected bishop, but accepted only on explicit command of Pope Alexander II.</excerptum>
+    <excerptum>He worked with his wonted energy for his diocese, and inveighed against vices among high and low, regardless of consequences.</excerptum>
+    <excerptum>Boleslaw II had become King of Poland.</excerptum>
+    <excerptum>the renown he had gained by his successful wars he now sullied by atrocious cruelty and unbridled lust. Moreover the bishop had several serious disputes with the king about a piece of land belonging to the Church which was unjustly claimed by Boleslaw</excerptum>
+    <excerptum>Stanislaus spared neither tears nor prayers and admonitions to bring the king to lead a more Christian life. All being in vain, Boleslaw was excommunicated</excerptum>
+    <excerptum>Stanislaus retired to the Chapel of St. Michael in a suburb of Cracow. The king was furious and followed the bishop with his guards, some of whom he sent to kill the saint. These dared not obey, so Boleslaw slew him during the Holy Sacrifice.</excerptum>
+    <excerptum>The body was at first buried in the chapel, but in 1088 it was transferred to the cathedral by Bishop Lambert II. St. Stanislaus was canonized 1253 by Innocent IV at Assisi.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v05 May 7 S. Stanislas, B. M.">
+    <excerptum>STANISLAS SEZEPANOWSKI was born on the twenty-sixth of July, 1030, at Sezapanow, in the diocess of Cracow.</excerptum>
+    <excerptum>He was solemnly canonized by Innocent [V.in 1253.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="11 April">
+    <excerptum>Saint Stanislaus, Bishop and Martyr</excerptum>
+  </fons>
+</sanctus>

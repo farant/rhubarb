@@ -1,0 +1,38 @@
+<sanctus id="john-i" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">John I</nomen>
+  <obitus annus="526" mensis="5" locus="Ravenna" martyrium="verum" fontes="ce bu mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="5" dies="18" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="5" dies="27" fontes="mr"/>
+  <munus fontes="us mr ce">pope</munus>
+  <munus fontes="us mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">John, a Tuscan and the son of Constantius, was an archdeacon of the Roman clergy when he was elected pope on 13 August 523. Almost nothing is known of his administration; the two letters that bear his name are judged spurious. Early in 525 Theodoric, the Arian king of the Ostrogoths and of Italy, angered by the Emperor Justin's decree against the Arians, forced the pope to lead an embassy of senators to Constantinople to obtain its withdrawal.</paragraphus>
+    <paragraphus fontes="ce bu mr">In the East John was received with great honour: the people of Constantinople came out in throngs to meet him, the emperor prostrated himself before him, and he celebrated Easter at St. Sophia in the Latin rite. On his return Theodoric, who had just put Boethius to death, had him arrested and imprisoned at Ravenna, where, worn out by the journey and harsh confinement, he soon died in 526. The Catholic Encyclopedia gives 18 or 19 May as the commonly reckoned day, while Butler gives 27 May. His body was taken to Rome and buried in St. Peter's, and the Latin Church counts him among its martyrs.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="27 May">
+    <excerptum>The birthday of St. John, pope and martyr, who was called to Kavenna by the Arian king of Italy, Theodoric, and after languishing a long time in prison for the orthodox faith, terminated his life.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="Pope St. John I" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Pope_St._John_I">
+    <excerptum>Died at Ravenna on 18 or 19 May (according to the most popular calculation), 526. A Tuscan by birth and the son of Constantius, he was, after an interregnum of seven days, elected on 13 August, 523</excerptum>
+    <excerptum>We know nothing of the matter of his administration, for his Bullarium contains only the two letters addressed to an Archbishop Zacharias and to the bishops of Italy respectively, and it is very certain that both are apocryphal.</excerptum>
+    <excerptum>The Emperor Justin, in his zeal for orthodoxy, had issued in 523 a severe decree against the Arians</excerptum>
+    <excerptum>Theodoric, King of the Ostrogoths and of Italy, the ardent defender of Arianism, keenly resented these measures directed against his coreligionists in the Orient</excerptum>
+    <excerptum>Theodoric sent to him early in 525 an embassy composed of Roman senators, of which he obliged the pope to assume the direction, and imposed on the latter the task of securing a withdrawal of the Edict of 523</excerptum>
+    <excerptum>The inhabitants of Constantinople went out in throngs to meet John. The Emperor Justin on meeting him prostrated himself</excerptum>
+    <excerptum>solemnly officiated at St. Sophia in the Latin Rite on Easter Day</excerptum>
+    <excerptum>had just stained his hands with the murder of Boethius, the great philosopher</excerptum>
+    <excerptum>As soon as John, returning from the East, had landed in Italy, Theodoric caused him to be arrested and incarcerated at Ravenna. Worn out by the fatigues of the journey, and subjected to severe privations, John soon died in prison.</excerptum>
+    <excerptum>His body was transported to Rome and buried in the Basilica of St. Peter.</excerptum>
+    <excerptum>The Latin Church has placed him among its martyrs, and commemorates him on 27 May</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v05 May 27 St. John, Pope, M.">
+    <excerptum>Pops Joun was by birth a Tuscan. He distinguished himself from his youth in the Roman clergy, of which he became the oracle and the model. He was archdeacon when, after the death of Hormisdas in 523, he was chosen pope.</excerptum>
+    <excerptum>the good pope died at Ravenna on the twenty-seventh of</excerptum>
+    <excerptum>May 526, soon after the cruel execution of Boétius, having sat two years and nine months.</excerptum>
+    <excerptum>The two letters which bear his name are supposititious</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="18 May">
+    <excerptum>Saint John I, Pope and Martyr</excerptum>
+  </fons>
+</sanctus>

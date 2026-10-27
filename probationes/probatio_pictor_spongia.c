@@ -196,8 +196,9 @@ _sectio_prima (
     CREDO_CHORDA_AEQUALIS_LITERIS(nodus_arboris(piscina, &app,
         "tabula")->actio,
         "spongia.ictus");
+    /* testa-ios D6 */
     CREDO_CHORDA_AEQUALIS_LITERIS(nodus_arboris(piscina, &app,
-        "status")->titulus, "spongia");
+        "status")->titulus, "");
     CREDO_CHORDA_AEQUALIS_LITERIS(nodus_arboris(piscina, &app,
         "quadratum.instrumentum")->titulus, "instrumentum:spongia");
 

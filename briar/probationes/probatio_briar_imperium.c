@@ -33,23 +33,18 @@ _legere (
     redde briar_imperium_legere(piscina, n + I, argv, imp);
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: formae imperii
+ * ================================================== */
+
+interior vacuum
+_formas_probare (
+    CredoContextus* c)
 {
-              b32  praeteritus;
-          Piscina* piscina;
+          Piscina* piscina = c->piscina;
     BriarImperium  imp;
 
-    piscina = piscina_generare_dynamicum("probatio_briar_imperium",
-        1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- Probans formae imperii ---\n");
     /* briar x.thistle a b : currere, reliqua II */
     CREDO_VERUM (_legere(piscina, &imp, III, "x.thistle", "a", "b"));
     CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_CURRERE);
@@ -294,8 +289,20 @@ principale (vacuum)
         NIHIL));
     CREDO_AEQUALIS_S32 ((s32)imp.actio, (s32)BRIAR_ACTIO_CURRERE);
     CREDO_AEQUALIS_I32 (imp.numerus_reliquorum, I);
+}
 
-    imprimere("\n--- Probans recusationes ---\n");
+
+/* ==================================================
+ * PROBARE: recusationes
+ * ================================================== */
+
+interior vacuum
+_recusationes_probare (
+    CredoContextus* c)
+{
+          Piscina* piscina = c->piscina;
+    BriarImperium  imp;
+
     CREDO_FALSUM (_legere(piscina, &imp, II, "-ignotum", "x.thistle",
         NIHIL));
     CREDO_VERUM (imp.causa.mensura > ZEPHYRUM);
@@ -307,8 +314,19 @@ principale (vacuum)
     CREDO_FALSUM (_legere(piscina, &imp, II, "-f", "x.thistle", NIHIL));
     CREDO_FALSUM (_legere(piscina, &imp, III, "-probatio", "-struere",
         "x.thistle"));
+}
 
-    imprimere("\n--- Probans domus, stampa, sigillum ---\n");
+
+/* ==================================================
+ * PROBARE: domus, stampa, sigillum
+ * ================================================== */
+
+interior vacuum
+_domum_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     {
         constans character* d;
                  character  hex[17];
@@ -344,8 +362,20 @@ principale (vacuum)
             CREDO_VERUM (strcmp(s1, s2) != ZEPHYRUM);
         }
     }
+}
 
-    imprimere("\n--- Probans vexilla atrii ante plagulam ---\n");
+
+/* ==================================================
+ * PROBARE: vexilla atrii ante plagulam
+ * ================================================== */
+
+interior vacuum
+_vexilla_atrii_probare (
+    CredoContextus* c)
+{
+          Piscina* piscina = c->piscina;
+    BriarImperium  imp;
+
     /* manus incipere briar x.thistle: '-vivum -portus N' post binarium
      * inserit, ANTE plagulam (lapide feature-requests/023) - vexilla
      * programmatis vitrei, programmati praemittuntur */
@@ -379,9 +409,21 @@ principale (vacuum)
     CREDO_VERUM (_legere(piscina, &imp, II, "x.thistle", "-vivum",
         NIHIL));
     CREDO_AEQUALIS_I32 (imp.numerus_reliquorum, I);
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "formae imperii", _formas_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "recusationes", _recusationes_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "domus, stampa, sigillum", _domum_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "vexilla atrii ante plagulam", _vexilla_atrii_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("briar_imperium", SECTIONES);
 }

@@ -65,6 +65,7 @@ declare -a RADIX_FONTES=(
     "tabula_dispersa"
     "friatio"
     "credo"
+    "memoria_processus_macos"   # credo memoria T2 (2026-10-19)
     "internamentum"
     "json"
     "utf8"         # json lexema UTF-8 validat (2026-09-22)

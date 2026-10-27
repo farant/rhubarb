@@ -145,3 +145,62 @@ as the aspergillum preview does); the status row shows four
 PARTES_BOTTONE nodes glutinatio.A / .B / .confirmare / .abicere
 ("textus:A[:electum]" ...) instead of the squares, the layers button
 is omitted, and no palette is composed (palette treated as "").
+
+## 2026-10-23 - status line text has consumers OUTSIDE the pictor suites (testa-ios T2)
+
+Dropping the status title ("penicillus" -> "") was green in every pictor and
+vicus suite but the commit was refused twice by suites that render the same
+layout in the terminal:
+- `ludus_tessera/probationes/probatio_ludus_tessera_pictor.c` read the title's
+  glyphs out of tessera cells (column XXIII of the status row) and grepped the
+  terminal bytes for "penicillus".
+- `probationes/probatio_tessellatio.c` section VII predicts the whole 60x30
+  scene of `probationes/pictor/pictor.arbor.stml`; the title's letters p/c/s
+  showed through between the status squares on line 29.
+Before changing anything visible in the status line (titles, widths, order),
+run `./ludus_tessera/compile_probationes.sh` and
+`./compile_tests.sh probatio_tessellatio` too, not just `pictor`/`vicus`.
+
+## 2026-10-24 - palettes stay inside the surface (testa-ios T4)
+
+On the phone (215 wide) the palettes ran off the right edge: they start at
+their square's x and grow right, and pattern/size (X per row = 226 px)
+were wider than the whole surface. `palettam_componere` now takes
+`limes_x0, limes_x1` (the surface, `[0, latitudo)`): first fewer options
+per row if X do not fit (capacitas = (width - 8 + 2) / 22), then the
+palette is shifted left. `strata_palettam_componere` (right-aligned to
+the layers square) is clamped on the left. Desktop 640 never hits either
+limit, so desktop composition is unchanged. Test: probatio_pictor_strata_ui
+"palettae intra telephonum" opens all six palettes at 187 wide (iPhone
+SE) - red on the old code for color_secundus, exemplar, magnitudo.
+
+## 2026-10-26 - ⋯ square and menu (pinacotheca T4, quarta)
+
+C1b's photo square becomes the ⋯ square `quadratum.elenchus` (same
+place, left of the layers square), shown only when the app sets
+`PictorCompositio.elenchus_praesto` (apps/pictor/pictor.c does, on every
+platform; vicus's pane and the terminal pictor never do).
+`imago_eligibilis` now only adds the "Import image…" item.
+The menu is the house `elenchus`: `palette` = "elenchus" (opened by
+`palette.aperire` from the square's id, no new opener), composed above
+the square by giving `elenchus_fines` an area that ends just above it
+(so it always flips upward). One item table, `pictor_elenchum_parare`,
+is read by composer, figure (`figura_palettae` dispatches node id
+"elenchus" to `elenchus_figura`; importare = 3 children) and action.
+Trap: dimissio closes every popover of the branch after a successful
+action of a `claudit` item - "Open picture…" switches `palette` to
+"pinacotheca" itself, so its item has `claudit` cleared, else the
+gallery would close the instant it opened (plant confirmed).
+
+## 2026-10-26 - gallery composition (pinacotheca T5, quarta)
+
+`palette` = "pinacotheca" composes `pinacothecam_componere` over the
+prospectus (fp): dispositio in cells - padded column = grid (rows x
+cells, all CRESCENS, gap 1) + fixed 3-cell bar (‹ page › X, arrows only
+when pages > 1). Columns from the surface's SHAPE (wider than tall ->
+4 x 3, else 3 x 4), never the platform. Each `pinax.<k>` carries its
+image as data in the title, "pinax:<w>x<h>:<seq>:<spatium>[:electum]"
+(w, h = cell minus the 2-pixel border; seq in the key, so an edited
+picture gets a new thumbnail). The list comes from the shared
+PictorPinacotheca (montatio-owned; composer, actions and figures point
+at it) - read when the gallery opens, never in the composer.

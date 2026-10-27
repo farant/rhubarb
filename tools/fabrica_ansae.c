@@ -58,6 +58,12 @@ hic_manens AedilisConfiguratio* _configuratio_gradus = NIHIL;
 hic_manens        AedilisSilva* _extractor_gradus    = NIHIL;
 hic_manens          Compilator* _compilator_gradus   = NIHIL;
 hic_manens              chorda  _causa_gradus;
+/* CLAUSURA TEMPORARIA (parcum T77EH4): derivatio aedilis (machina,
+ * tabulae, fructus) ~III.V MB per membrum - CCCCXI membra radicis =
+ * I.IV GB in piscina cursus, olim usque ad finem servata. Hic
+ * derivatur, vacatur ante vocationem quamque; listae solae
+ * transcribuntur */
+hic_manens            Piscina* _piscina_clausurae   = NIHIL;
 
 /* clavis thesauri extractoris (P1): digestum infixum, aliter
  * binarium - UNA sedes pro extractore gradus et 'clavis-thesauri' */
@@ -130,10 +136,12 @@ _gradus_parare (
     redde VERUM;
 }
 
+/* valor in 'piscina' transcriptus (fructus derivationis temporarius) */
 interior vacuum
 _chordam_unicam_addere (
-       Xar* xar,
-    chorda  valor)
+        Xar* xar,
+     chorda  valor,
+    Piscina* piscina)
 {
     i32 i;
 
@@ -144,7 +152,30 @@ _chordam_unicam_addere (
             redde;
         }
     }
-    *(chorda*)xar_addere(xar) = valor;
+    *(chorda*)xar_addere(xar) = chorda_transcribere(valor, piscina);
+}
+
+/* Xar chordarum in 'piscina' transcripta (NIHIL -> NIHIL) - fructus
+ * derivationis in piscina temporaria vivit */
+interior Xar*
+_chordas_transcribere (
+    constans Xar* chordae,
+         Piscina* piscina)
+{
+    Xar* nova;
+    i32  i;
+
+    si (chordae == NIHIL)
+    {
+        redde NIHIL;
+    }
+    nova = xar_creare(piscina, (i32)magnitudo(chorda));
+    per (i = ZEPHYRUM; nova != NIHIL && i < xar_numerus(chordae); i++)
+    {
+        *(chorda*)xar_addere(nova) = chorda_transcribere(
+            *(constans chorda*)xar_obtinere(chordae, i), piscina);
+    }
+    redde nova;
 }
 
 b32
@@ -156,6 +187,7 @@ suturae_clausura_c (
                 chorda* causa_out)
 {
     AedilisFructus* fructus;
+           Piscina* derivatio;
                i32  i;
                i32  k;
 
@@ -164,10 +196,22 @@ suturae_clausura_c (
     {
         redde FALSUM;
     }
-    fructus = aedilis_derivare(piscina, _configuratio_gradus, scopus,
+    si (_piscina_clausurae == NIHIL)
+    {
+        _piscina_clausurae = piscina_generare_dynamicum(
+            "fabrica_clausura", 4194304);
+    }
+    derivatio = (_piscina_clausurae != NIHIL) ? _piscina_clausurae
+        : piscina;
+    si (derivatio != piscina)
+    {
+        piscina_vacare(derivatio);
+    }
+    fructus = aedilis_derivare(derivatio, _configuratio_gradus, scopus,
         NIHIL, aedilis_silva_extrahere, _extractor_gradus, causa_out);
     si (fructus == NIHIL)
     {
+        *causa_out = chorda_transcribere(*causa_out, piscina);
         redde FALSUM;
     }
     clausura_out->fontes         = xar_creare(piscina,
@@ -176,42 +220,48 @@ suturae_clausura_c (
         (i32)magnitudo(chorda));
     clausura_out->vexilla_nexus  = xar_creare(piscina,
         (i32)magnitudo(chorda));
-    clausura_out->facultates   = fructus->facultates;
-    clausura_out->instrumenta  = fructus->instrumenta;
+    clausura_out->facultates   = _chordas_transcribere(
+        fructus->facultates, piscina);
+    clausura_out->instrumenta  = _chordas_transcribere(
+        fructus->instrumenta, piscina);
     /* scopus PRIMUS: fructus eum inter obiecta non fert (struere.sh
      * aedilis eum post obiecta compilat) */
     _chordam_unicam_addere(clausura_out->fontes,
-        chorda_ex_literis(scopus,
-        piscina));
+        chorda_ex_literis(scopus, derivatio), piscina);
     per (i = ZEPHYRUM; i < xar_numerus(fructus->obiecta); i++)
     {
         constans AedilisObiectum* obiectum = (constans AedilisObiectum*)
             xar_obtinere(fructus->obiecta, i);
 
-        _chordam_unicam_addere(clausura_out->fontes, obiectum->via);
+        _chordam_unicam_addere(clausura_out->fontes, obiectum->via,
+            piscina);
         per (k = ZEPHYRUM; obiectum->vexilla_nexus != NIHIL
              && k < xar_numerus(obiectum->vexilla_nexus); k++)
         {
             _chordam_unicam_addere(clausura_out->vexilla_nexus,
-                *(chorda*)xar_obtinere(obiectum->vexilla_nexus, k));
+                *(chorda*)xar_obtinere(obiectum->vexilla_nexus, k),
+                piscina);
         }
     }
     per (i = ZEPHYRUM; i < xar_numerus(fructus->vendores); i++)
     {
         _chordam_unicam_addere(clausura_out->fontes,
             ((constans AedilisVendor*)xar_obtinere(fructus->vendores,
-            i))->fons);
+            i))->fons,
+            piscina);
     }
     per (i = ZEPHYRUM; i < xar_numerus(fructus->capita); i++)
     {
         _chordam_unicam_addere(clausura_out->capita,
             ((constans AedilisCaput*)xar_obtinere(fructus->capita,
-            i))->via);
+            i))->via,
+            piscina);
     }
     per (i = ZEPHYRUM; i < xar_numerus(fructus->vexilla_annotata); i++)
     {
         _chordam_unicam_addere(clausura_out->vexilla_nexus,
-            *(chorda*)xar_obtinere(fructus->vexilla_annotata, i));
+            *(chorda*)xar_obtinere(fructus->vexilla_annotata, i),
+            piscina);
     }
     redde VERUM;
 }
@@ -223,7 +273,9 @@ suturae_compilare_gradus (
                 vacuum* datum,
     constans character* fons,
     constans character* obiectum,
+          constans Xar* vexilla_addita,
                Piscina* piscina,
+                chorda* obiectum_out,
                 chorda* erratum_out)
 {
      constans AedilisConfiguratio*  c;
@@ -293,6 +345,14 @@ suturae_compilare_gradus (
             }
         }
     }
+    /* vexilla variantis (gradus, 2026-10-22) post domus: ultima
+     * vincunt (-O1 super -O2) */
+    per (i = ZEPHYRUM; vexilla_addita != NIHIL
+         && i < xar_numerus(vexilla_addita); i++)
+    {
+        *(chorda*)xar_addere(verba) = *(constans chorda*)xar_obtinere(
+            vexilla_addita, i);
+    }
     *(chorda*)xar_addere(verba) = chorda_ex_literis("-c", piscina);
     *(chorda*)xar_addere(verba) = fons_c;
     *(chorda*)xar_addere(verba) = chorda_ex_literis("-o", piscina);
@@ -314,8 +374,14 @@ suturae_compilare_gradus (
         piscina);
     (vacuum)filum_directorium_creare_cum_parentibus(chorda_ut_cstr(
         directorium, piscina));
-    r = compilator_compilare(_compilator_gradus, argv,
-        (i32)xar_numerus(verba));
+    /* piscina vocationis (actum membri, temporaria): lectiones
+     * thesauri cum membro vacantur, non in _piscina_gradus crescunt
+     * (~I MB per compilationem, parcum …T77EH4) */
+    /* NEXUS EX THESAURO: in hit nulla copia in area membri - blobus
+     * thesauri directe nectitur (olim XII milia obiectorum radicis in
+     * areis, photographia et IO per membrum) */
+    r = compilator_compilare_sine_collocatione(_compilator_gradus, argv,
+        (i32)xar_numerus(verba), piscina);
     si (r.codex != ZEPHYRUM)
     {
         *erratum_out = suturae_ultimae_lineae(r.erratum.mensura
@@ -323,6 +389,7 @@ suturae_compilare_gradus (
             ? r.erratum : r.effusio, V);
         redde FALSUM;
     }
+    *obiectum_out = r.via;
     redde VERUM;
 }
 
@@ -342,6 +409,24 @@ suturae_area_parare (
     sprintf(tmp, "%stmp", area);
     redde filum_arborem_delere(area)
         && filum_directorium_creare_cum_parentibus(tmp);
+}
+
+/* tectum memoriae membri (credo memoria T6): FABRICA_MEMORIA_MB aut
+ * FABRICA_MEMORIA_ORDINARIA_MB, in octetis; 0 = nullum */
+interior i64
+_memoriam_maximam_legere (vacuum)
+{
+     constans character* valor = getenv("FABRICA_MEMORIA_MB");
+                    s64  mb;
+
+    mb = (valor != NIHIL && valor[ZEPHYRUM] != '\0')
+        ? (s64)strtol(valor, NIHIL, X)
+        : (s64)FABRICA_MEMORIA_ORDINARIA_MB;
+    si (mb <= (s64)ZEPHYRUM)
+    {
+        redde (i64)ZEPHYRUM;
+    }
+    redde (i64)mb * (i64)MXXIV * (i64)MXXIV;
 }
 
 b32
@@ -417,14 +502,33 @@ suturae_in_area_currere (
         piscina), piscina);
     vector[xar_numerus(ambitus) + I]  = NIHIL;
     /* cwd = radix (fabrica ipsa); ambitus exactus */
-    optiones.directorium  = NIHIL;
-    optiones.ambitus      = vector;
+    memset(&optiones, ZEPHYRUM, magnitudo(optiones));
+    optiones.directorium     = NIHIL;
+    optiones.ambitus         = vector;
+    optiones.memoria_maxima  = _memoriam_maximam_legere();
+    /* GREX PROPRIUS (2026-10-26, vicus_admonitiones): processus quos
+     * membrum relinquit (mensor asynchronus cum libro SUO) post exitum
+     * occiduntur - aliter in libro suo scribunt dum membrum proximum
+     * currit, et photographia proximum culpat */
+    optiones.grex_proprius   = VERUM;
     (vacuum)filum_directorium_creare_cum_parentibus(chorda_ut_cstr(
         via_directorium(chorda_ex_literis(acta_via, piscina), piscina),
         piscina));
     resultus = processus_exsequi_cum(argv, &optiones,
         MORA_SANATIONIS_MS,
         piscina);
-    redde suturae_actum_complere(resultus, acta, acta_via, piscina,
-        actum_out);
+    {
+        b32 bonum = suturae_actum_complere(resultus, acta, acta_via,
+            piscina, actum_out);
+
+        si (resultus.relicti)
+        {
+            fprintf(stderr, "fabrica: MONITUM %s: processus post exitum"
+                " relicti (grex occisus)\n", argv[0]);
+            actum_out->cauda = chorda_concatenare(actum_out->cauda,
+                chorda_ex_literis(" [MONITUM: processus relicti post"
+                " exitum occisi]", piscina), piscina);
+        }
+        redde bonum;
+    }
 }

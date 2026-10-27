@@ -366,9 +366,10 @@ _sectio_secunda (
     CREDO_CHORDA_AEQUALIS_LITERIS(nodus_arboris(piscina, &app,
         "tabula")->actio,
         "aspergillum.ictus");
+    /* testa-ios D6: nomen instrumenti non iam in linea status */
     CREDO_CHORDA_AEQUALIS_LITERIS(nodus_arboris(piscina, &app,
         "status")->titulus,
-        "aspergillum");
+        "");
     CREDO_VERUM(manus_ludus_clavem(m, 'p', ZEPHYRUM));
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(piscina, &app,
         "instrumentum"),
@@ -451,7 +452,9 @@ _sectio_secunda (
         CREDO_AEQUALIS_I32(icon, XLIV + IV);
         CREDO_AEQUALIS_I32(crux, II);
         CREDO_AEQUALIS_I32(impletum, II);
-        CREDO_AEQUALIS_S32(textus_x, CXXXVI);
+        /* testa-ios D6: nomen 'aspergillum' non iam pingitur (olim
+         * post quadrata, x CXXXVI) */
+        CREDO_AEQUALIS_S32(textus_x, -I);
     }
 
     CREDO_GRADUS("VII: praevisio ante solutionem");

@@ -1,0 +1,33 @@
+<sanctus id="francis-xavier-seelos" versio="1" genus="persona" status="beatus">
+  <nomen lingua="en" principale="verum">Francis Xavier Seelos</nomen>
+  <nomen lingua="de" fontes="cs">Franz Xaver Seelos</nomen>
+  <nomen lingua="it" fontes="cs">Francesco Saverio Seelos</nomen>
+  <ortus annus="1819" mensis="1" dies="11" locus="Füssen" fontes="cs"/>
+  <obitus annus="1867" mensis="10" dies="4" fontes="cs"/>
+  <beatificatio annus="2000" mensis="4" dies="9" papa="John Paul II" fontes="hom"/>
+  <festum calendarium="usa" mensis="10" dies="5" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us hom">priest</munus>
+  <munus fontes="cs hom">religious</munus>
+  <descriptio>
+    <paragraphus fontes="cs hom">Franz Xaver Seelos was born at Füssen in Bavaria on 11 January 1819. After finishing his studies in philosophy he entered the diocesan seminary in 1842, and then chose to join the missionaries of the Congregation of the Most Holy Redeemer, the Redemptorists, to help and evangelize the less fortunate. Leaving his native Bavaria, he gave himself generously and joyfully to the missionary apostolate among the immigrant communities of the United States.</paragraphus>
+    <paragraphus fontes="cs hom">Wherever he worked he brought enthusiasm, a spirit of sacrifice and apostolic zeal, and was always attentive to the needs of children, young people and immigrants. He preached to the abandoned and the lost, and in the hours he spent in the confessional brought many back to God. He caught yellow fever and, after a long ordeal and not yet fifty, died on 4 October 1867. John Paul II beatified him on 9 April 2000, holding him up as an invitation to deeper union with Christ in the sacraments of Penance and the Eucharist.</paragraphus>
+  </descriptio>
+  <fons id="cs" opus="sedes" locus="Dicastero delle Cause dei Santi, Francesco Saverio Seelos" url="https://www.causesanti.va/it/santi-e-beati/francesco-saverio-seelos.html">
+    <excerptum>Sacerdote della Congregazione del Santissimo Redentore, originario della Baviera, sempre attento alle necessità dei fanciulli, dei giovani e degli immigrati</excerptum>
+    <excerptum>Franz Xaver Seelos nacque l'11 gennaio 1819 a Füssen (Germania).</excerptum>
+    <excerptum>Nel 1842, dopo aver ultimato gl studi in Filosifia, entrò nel seminario diocesano e, successivamente decise di far parte dei missionari della Congregazione del SS. Redentore, per aiutare ed evangelizzare i meno fortunati.</excerptum>
+    <excerptum>Nel 1866 contrasse la febbre gialla e, dopo un lungo calvario, nemmeno cinquantenne, venne a mancare il 4 ottobre 1867.</excerptum>
+    <excerptum>Francesco Saverio Seelos, Sacerdote professo della Congregazione del Santissimo Redentore</excerptum>
+  </fons>
+  <fons id="hom" opus="sedes" locus="Homily of John Paul II, beatification of five servants of God, 9 April 2000" url="https://www.vatican.va/content/john-paul-ii/en/homilies/2000/documents/hf_jp-ii_hom_20000409_beatifications.html">
+    <excerptum>HOMILY OF THE HOLY FATHER BEATIFICATION OF 5 SERVANTS OF GOD Sunday, 9 April 2000</excerptum>
+    <excerptum>Faithful to the spirit and charism of the Redemptorist Congregation to which he belonged, Fr Francis Xavier Seelos often meditated upon these words</excerptum>
+    <excerptum>Fr Seelos left his native Bavaria and committed himself generously and joyfully to the missionary apostolate among immigrant communities in the United States.</excerptum>
+    <excerptum>In the various places where he worked, Fr Francis Xavier brought his enthusiasm, spirit of sacrifice and apostolic zeal. To the abandoned and the lost he preached the message of Jesus Christ</excerptum>
+    <excerptum>and in the hours spent in the confessional he convinced many to return to God.</excerptum>
+    <excerptum>Today, Bl. Francis Xavier Seelos invites the members of the Church to deepen their union with Christ in the sacraments of Penance and the Eucharist.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="5 October">
+    <excerptum>Blessed Francis Xavier Seelos, Priest</excerptum>
+  </fons>
+</sanctus>

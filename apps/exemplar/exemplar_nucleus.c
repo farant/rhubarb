@@ -1,12 +1,17 @@
 /* exemplar_nucleus.c - applicatio probans (vide exemplar_nucleus.h)
  *
- * Status in memoria (tabulae usorum et sessionum, ordo notarum) ex
- * actis voluminis replicatur ad initium; omnis mutatio prius actum
- * scribit, deinde memoriam mutat. Opera dilata (inscriptio, intratio)
- * in tabula fixa: tessera ibi copiata dum hash currit, deinde
- * deleta. */
+ * Rationes per ianuam (lib/ianua: cives, credentialia, invitationes,
+ * sessiones in tabulis - ianua T5). Status in memoria solum ordo
+ * notarum, ex actis replicatus ad initium (nota.scripta cum civi;
+ * acta vetera cum nomine per exemplar_nomina_vetera); omnis mutatio
+ * prius actum scribit, deinde memoriam mutat. Volumen ante ianuam
+ * SEMEL migratur (_cives_migrare), transactione una. */
 #include "postulata_posix.h"
+#define EXEMPLAR_PROBATIO
 #include "exemplar_nucleus.h"
+#include "exemplar_internum.h"
+#include "exemplar_mcp.h"
+#include "exemplar_administratio.h"
 #include "custodia.h"
 #include "crustula.h"
 #include "volumen.h"
@@ -14,7 +19,6 @@
 #include "filum.h"
 #include "json.h"
 #include "chorda_aedificator.h"
-#include "tabula_dispersa.h"
 #include "xar.h"
 #include "sigillum.h"
 
@@ -23,81 +27,10 @@
 #include <string.h>
 #include <time.h>
 
-#define EXEMPLAR_PETITIO_MAXIMA  (LXIV * MXXIV * MXXIV)
-#define EXEMPLAR_SESSIO_VITA_S   2592000      /* XXX dies */
-#define EXEMPLAR_OPERA           LXIV
-#define EXEMPLAR_NOMEN_MAXIMUM   XXXII
-#define EXEMPLAR_TEXTUS_MAXIMUS  (XVI * MXXIV)
-#define EXEMPLAR_VIA_MAXIMA      CCLVI
-
-
-/* ==================================================
- * STATUS
- * ================================================== */
-
-nomen structura {
-    chorda nomen_usoris;
-    chorda phc;
-} Usor;
-
-nomen structura {
-    chorda usor;
-       s64 expirat_ms;
-} Sessio;
-
-nomen structura {
-       s64 id;          /* seq acti nota.scripta */
-    chorda usor;
-    chorda textus;
-    chorda sigillum;    /* fili, vacua si nullum */
-    chorda titulus;
-    chorda mimen;
-       i64 mensura;
-       b32 deleta;
-} Nota;
-
-nomen enumeratio {
-    OPUS_LIBERUM = 0,
-    OPUS_INSCRIBERE,
-    OPUS_INTRARE
-} OpusGenus;
-
-nomen structura {
-             Exemplar* exemplar;
-            OpusGenus  genus;
-     HospitiumDilatum  d;
-            character  nomen_usoris[EXEMPLAR_NOMEN_MAXIMUM + I];
-                   i8  tessera[CUSTODIA_TESSERA_MAXIMA];
-                  i32  tn;
-            character  clavis_paris[LXXX];
-            character  clavis_usoris[LXXX];
-} Opus;
-
-structura Exemplar {
-                 Piscina* piscina;
-    ExemplarConfiguratio  cfg;
-                 Reactor* reactor;
-                     b32  reactor_proprius;
-               Hospitium* hospitium;
-                 Volumen* volumen;
-                Custodia* custodia;
-          TabulaDispersa* usores;      /* nomen -> Usor* */
-          TabulaDispersa* sessiones;   /* hex sigilli -> Sessio* */
-                     Xar* notae;       /* Nota */
-                    Opus  opera[EXEMPLAR_OPERA];
-               character  via_temporaria[EXEMPLAR_VIA_MAXIMA];
-};
-
 
 /* ==================================================
  * AUXILIA
  * ================================================== */
-
-interior s64
-_nunc_ms (vacuum)
-{
-    redde (s64)time(NIHIL) * M;
-}
 
 interior chorda
 _copia (
@@ -114,52 +47,6 @@ _copia (
     }
     c.datum[s.mensura] = '\0';
     redde c;
-}
-
-/* aequalitas temporis constantis (invitatio) */
-interior b32
-_aequale_constans (
-                chorda  a,
-    constans character* b)
-{
-    i32 n = (i32)strlen(b);
-    i32 i;
-     i8 diff = 0;
-
-    si (a.mensura != n || n == 0)
-    {
-        redde FALSUM;
-    }
-    per (i = 0; i < n; i++)
-    {
-        diff = (i8)(diff | (a.datum[i] ^ (i8)b[i]));
-    }
-    redde diff == 0;
-}
-
-/* nomen usoris: 1..XXXII signa [a-z0-9._-] */
-interior b32
-_nomen_validum (
-    chorda n)
-{
-    i32 i;
-
-    si (   n.datum == NIHIL || n.mensura < I || n.mensura
-        > EXEMPLAR_NOMEN_MAXIMUM)
-    {
-        redde FALSUM;
-    }
-    per (i = 0; i < n.mensura; i++)
-    {
-        i8 c = n.datum[i];
-
-        si (!((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')
-              || c == '.' || c == '_' || c == '-'))
-        {
-            redde FALSUM;
-        }
-    }
-    redde VERUM;
 }
 
 /* EVASIO HTML UNA: omnis textus usoris per hanc */
@@ -201,17 +88,6 @@ _evadere (
     }
 }
 
-interior chorda
-_hex_sigilli (
-    constans Sigillum* s,
-              Piscina* p)
-{
-    character hex[SIGILLUM_HEX_MENSURA];
-
-    sigillum_hex(s, hex);
-    redde chorda_ex_literis(hex, p);
-}
-
 
 /* ==================================================
  * ACTA
@@ -239,60 +115,6 @@ _ponere (
     json_objectum_ponere(o, clavis, json_chorda_creare(p, valor));
 }
 
-interior vacuum
-_usor_ponere (
-     Exemplar* e,
-       chorda  nomen_usoris,
-       chorda  phc)
-{
-    vacuum* inventus = NIHIL;
-      Usor* u;
-
-    si (tabula_dispersa_invenire(e->usores, nomen_usoris, &inventus))
-    {
-        u = (Usor*)inventus;
-    }
-    alioquin
-    {
-        u = (Usor*)piscina_allocare(e->piscina,
-            (i64)magnitudo(Usor));
-        u->nomen_usoris = _copia(nomen_usoris, e->piscina);
-        (vacuum)tabula_dispersa_inserere(e->usores, u->nomen_usoris, u);
-    }
-    u->phc = _copia(phc, e->piscina);
-}
-
-interior Usor*
-_usor (
-     Exemplar* e,
-       chorda  nomen_usoris)
-{
-    vacuum* u = NIHIL;
-
-    si (   nomen_usoris.mensura == 0
-        || !tabula_dispersa_invenire(e->usores, nomen_usoris, &u))
-    {
-        redde NIHIL;
-    }
-    redde (Usor*)u;
-}
-
-interior vacuum
-_sessionem_ponere (
-     Exemplar* e,
-       chorda  hex,
-       chorda  usor,
-          s64  expirat_ms)
-{
-    Sessio* s = (Sessio*)piscina_allocare(e->piscina,
-                    (i64)magnitudo(Sessio));
-
-    s->usor        = _copia(usor, e->piscina);
-    s->expirat_ms  = expirat_ms;
-    (vacuum)tabula_dispersa_inserere(e->sessiones, _copia(hex,
-        e->piscina), s);
-}
-
 interior Nota*
 _nota (
      Exemplar* e,
@@ -312,7 +134,31 @@ _nota (
     redde NIHIL;
 }
 
-/* status ex actis replicatus */
+/* civis notae veteris: ULID ex mappa nominum (migratio T5) */
+interior chorda
+_civis_veteris (
+     Exemplar* e,
+       chorda  nomen_usoris,
+      Piscina* p)
+{
+    ScriniumEnuntiatum* q = scrinium_praeparare(volumen_scrinium(
+        e->volumen), "SELECT civis FROM exemplar_nomina_vetera"
+        " WHERE nomen_usoris = ?");
+                 chorda civis = chorda_ex_literis("", p);
+
+    si (q)
+    {
+        scrinium_ligare_textum(q, I, nomen_usoris);
+        si (scrinium_gradi(q) == SCRINIUM_ORDO)
+        {
+            civis = scrinium_columna_textus(q, ZEPHYRUM, p);
+        }
+        scrinium_finire(q);
+    }
+    redde civis;
+}
+
+/* notae ex actis replicatae (post migrationem) */
 interior vacuum
 _replicare (
     Exemplar* e)
@@ -328,12 +174,7 @@ _replicare (
         VolumenActum* a = (VolumenActum*)xar_obtinere(acta, i);
         JsonResultus  r;
 
-        si (   !chorda_incipit(a->genus, chorda_ex_literis("usor.", p))
-            && !chorda_incipit(a->genus, chorda_ex_literis("tessera.",
-            p))
-            && !chorda_incipit(a->genus, chorda_ex_literis("sessio.",
-            p))
-            && !chorda_incipit(a->genus, chorda_ex_literis("nota.", p)))
+        si (!chorda_incipit(a->genus, chorda_ex_literis("nota.", p)))
         {
             perge;
         }
@@ -342,32 +183,20 @@ _replicare (
         {
             perge;
         }
-        si (   chorda_aequalis_literis(a->genus, "usor.creatus")
-            || chorda_aequalis_literis(a->genus, "tessera.mutata"))
+        si (chorda_aequalis_literis(a->genus, "nota.scripta"))
         {
-            _usor_ponere(e, json_capere_chorda(r.radix, "usor",
-                vacua),
-                json_capere_chorda(r.radix, "phc", vacua));
-        }
-        alioquin si (chorda_aequalis_literis(a->genus, "sessio.creata"))
-        {
-            _sessionem_ponere(e, json_capere_chorda(r.radix, "sigillum",
-                vacua), json_capere_chorda(r.radix, "usor", vacua),
-                json_capere_integer(r.radix, "expirat", 0));
-        }
-        alioquin si (chorda_aequalis_literis(a->genus, "sessio.deleta"))
-        {
-            tabula_dispersa_delere(e->sessiones, json_capere_chorda(
-                r.radix, "sigillum", vacua));
-        }
-        alioquin si (chorda_aequalis_literis(a->genus, "nota.scripta"))
-        {
-            Nota* n = (Nota*)xar_addere(e->notae);
+              Nota* n = (Nota*)xar_addere(e->notae);
+            chorda  civis = json_capere_chorda(r.radix, "civis",
+                vacua);
 
+            si (civis.mensura == ZEPHYRUM)
+            {
+                civis = _civis_veteris(e, json_capere_chorda(r.radix,
+                    "usor", vacua), p);
+            }
             memset(n, 0, magnitudo(*n));
-            n->id       = a->seq;
-            n->usor     = _copia(json_capere_chorda(r.radix, "usor",
-                vacua), e->piscina);
+            n->id     = a->seq;
+            n->civis  = _copia(civis, e->piscina);
             n->textus   = _copia(json_capere_chorda(r.radix, "textus",
                 vacua), e->piscina);
             n->sigillum = _copia(json_capere_chorda(r.radix, "sigillum",
@@ -480,13 +309,29 @@ _csrf_campus (
 
 
 /* ==================================================
- * SESSIO ET CUSTODES PETITIONIS
+ * IANUA (rationes - ianua T5)
  * ================================================== */
 
+/* pagina ianuae in fabrica exemplaris (stilus, capita tuta) */
+interior vacuum
+_pagina_ianuae (
+                 vacuum* datum,
+    HospitiumColloquium* col,
+                    i32  status,
+     constans character* titulus,
+                 chorda  corpus)
+{
+    ChordaAedificator* a = _paginam_incipere(col, titulus);
+
+    (vacuum)datum;
+    chorda_aedificator_appendere_chorda(a, corpus);
+    _paginam_mittere(col, status, a);
+}
+
+/* intratus: civis (activus) + signum CSRF sessionis */
 nomen structura {
-      Sessio* sessio;
-    Sigillum  sigillum;
-      chorda  hex;
+     Civis civis;
+    chorda csrf;
 } Intratus;
 
 interior b32
@@ -495,23 +340,7 @@ _intratus (
     HospitiumColloquium* col,
                Intratus* exitus)
 {
-     chorda  signum  = colloquium_crustulum(col, "sid");
-     vacuum* s       = NIHIL;
-
-    si (signum.datum == NIHIL || signum.mensura != XLIII)
-    {
-        redde FALSUM;
-    }
-    exitus->sigillum = custodia_signi_sigillum(signum);
-    exitus->hex = _hex_sigilli(&exitus->sigillum,
-        colloquium_piscina(col));
-    si (!tabula_dispersa_invenire(e->sessiones, exitus->hex, &s))
-    {
-        redde FALSUM;
-    }
-    exitus->sessio = (Sessio*)s;
-    redde exitus->sessio->expirat_ms > _nunc_ms()
-        && _usor(e, exitus->sessio->usor) != NIHIL;
+    redde ianua_intratus(e->ianua, col, &exitus->civis, &exitus->csrf);
 }
 
 /* Origin == schema://Host (methodi non tutae) */
@@ -523,475 +352,26 @@ _origo_bona (
         colloquium_schema(col), colloquium_caput(col, "Host"));
 }
 
+/* Origo + sessio + CSRF formae (ianua_custos_postis) */
 interior b32
 _csrf_bonum (
                Exemplar* e,
     HospitiumColloquium* col,
                Intratus* i)
 {
-    redde custodia_csrf_verificare(e->custodia, &i->sigillum,
-        colloquium_forma(col, "csrf"));
+    (vacuum)i;
+    redde ianua_custos_postis(e->ianua, col, NIHIL);
 }
-
-interior b32
-_crustulum_ponere (
-    HospitiumColloquium* col,
-     constans character* signum,
-                    s64  aetas_s)
-{
-    CrustulumOptiones o;
-
-    memset(&o, 0, magnitudo(o));
-    o.max_aetas_s  = aetas_s;
-    o.http_solum   = VERUM;
-    o.securum      = colloquium_schema(col).mensura == V;   /* https */
-    o.eadem        = CRUSTULUM_EADEM_LAXA;
-    redde colloquium_crustulum_ponere(col, "sid", chorda_ex_literis(
-        signum, colloquium_piscina(col)), &o);
-}
-
-
-/* ==================================================
- * OPERA DILATA (inscriptio, intratio)
- * ================================================== */
-
-interior Opus*
-_opus_capere (
-               Exemplar* e,
-              OpusGenus  genus,
-    HospitiumColloquium* col,
-                 chorda  nomen_usoris,
-                 chorda  tessera)
-{
-    i32 i;
-
-    si (   tessera.mensura > CUSTODIA_TESSERA_MAXIMA
-        || nomen_usoris.mensura > EXEMPLAR_NOMEN_MAXIMUM)
-    {
-        redde NIHIL;
-    }
-    per (i = 0; i < EXEMPLAR_OPERA; i++)
-    {
-        Opus* o = &e->opera[i];
-
-        si (o->genus == OPUS_LIBERUM)
-        {
-            memset(o, 0, magnitudo(*o));
-            o->exemplar  = e;
-            o->genus     = genus;
-            o->tn        = tessera.mensura;
-            memcpy(o->tessera, tessera.datum, (size_t)tessera.mensura);
-            memcpy(o->nomen_usoris, nomen_usoris.datum,
-                (size_t)nomen_usoris.mensura);
-            o->d = colloquium_differre(col);
-            redde o;
-        }
-    }
-    redde NIHIL;
-}
-
-interior vacuum
-_opus_liberare (
-    Opus* o)
-{
-    memset(o->tessera, 0, magnitudo(o->tessera));
-    o->genus = OPUS_LIBERUM;
-}
-
-interior chorda
-_tessera_operis (
-    Opus* o)
-{
-    redde chorda_ex_buffer(o->tessera, o->tn);
-}
-
-/* ---- inscriptio ---- */
-interior vacuum
-_inscriptio_facta (
-     vacuum* datum,
-     chorda  phc)
-{
-                   Opus* o = (Opus*)datum;
-               Exemplar* e = o->exemplar;
-    HospitiumColloquium* col;
-                 chorda  nomen_usoris;
-                Piscina* p;
-
-    col = dilatum_colloquium(o->d);
-    nomen_usoris = chorda_ex_literis(o->nomen_usoris, e->piscina);
-    p = piscina_generare_dynamicum("exemplar_actum", MMXLVIII);
-
-    si (phc.mensura == 0 || _usor(e, nomen_usoris) != NIHIL)
-    {
-        si (col)
-        {
-            _errare(col, phc.mensura == 0 ? D : CDIX,
-                phc.mensura == 0 ? "error servi" : "nomen iam captum");
-        }
-    }
-    alioquin
-    {
-        JsonValor* a = json_objectum_creare(p);
-
-        _ponere(a, "usor", nomen_usoris, p);
-        _ponere(a, "phc", phc, p);
-        si (_actum(e, "usor.creatus", a, p) == 0)
-        {
-            si (col)
-            {
-                _errare(col, D, "volumen scribi nequit");
-            }
-        }
-        alioquin
-        {
-            _usor_ponere(e, nomen_usoris, phc);
-            si (col)
-            {
-                colloquium_redirigere(col, CCCIII, "/intrare");
-            }
-        }
-    }
-    piscina_destruere(p);
-    _opus_liberare(o);
-}
-
-interior vacuum
-_inscribere_post (
-    HospitiumColloquium* col)
-{
-     Exemplar* e             = (Exemplar*)colloquium_datum(col);
-       chorda  nomen_usoris  = colloquium_forma(col, "nomen");
-       chorda  tessera       = colloquium_forma(col, "tessera");
-         Opus* o;
-
-    si (!_origo_bona(col))
-    {
-        _errare(col, CDIII, "origo aliena");
-        redde;
-    }
-    si (   !e->cfg.invitatio
-        || !_aequale_constans(colloquium_forma(col, "invitatio"),
-               e->cfg.invitatio))
-    {
-        _errare(col, CDIII, "invitatio necessaria");
-        redde;
-    }
-    si (!_nomen_validum(nomen_usoris))
-    {
-        _errare(col, CD, "nomen: I-XXXII signa a-z 0-9 . _ -");
-        redde;
-    }
-    si (!custodia_tessera_valida(tessera))
-    {
-        _errare(col, CD, "tessera: VIII-MXXIV octeti");
-        redde;
-    }
-    si (_usor(e, nomen_usoris) != NIHIL)
-    {
-        _errare(col, CDIX, "nomen iam captum");
-        redde;
-    }
-    o = _opus_capere(e, OPUS_INSCRIBERE, col, nomen_usoris, tessera);
-    si (!o)
-    {
-        _errare(col, DIII, "occupatum - iterum tempta");
-        redde;
-    }
-    si (!custodia_tesseram_digerere(e->custodia, tessera,
-        _inscriptio_facta, o))
-    {
-        HospitiumColloquium* c = dilatum_colloquium(o->d);
-
-        _opus_liberare(o);
-        si (c)
-        {
-            _errare(c, DIII, "occupatum - iterum tempta");
-        }
-    }
-}
-
-/* ---- intratio ---- */
-interior vacuum
-_renovatio_facta (
-     vacuum* datum,
-     chorda  phc)
-{
-        Opus* o = (Opus*)datum;
-    Exemplar* e = o->exemplar;
-
-    si (phc.mensura > 0)
-    {
-         Piscina* p = piscina_generare_dynamicum("exemplar_actum",
-                          MMXLVIII);
-         JsonValor* a = json_objectum_creare(p);
-            chorda  n = chorda_ex_literis(o->nomen_usoris, p);
-
-        _ponere(a, "usor", n, p);
-        _ponere(a, "phc", phc, p);
-        si (_actum(e, "tessera.mutata", a, p) > 0)
-        {
-            _usor_ponere(e, n, phc);
-        }
-        piscina_destruere(p);
-    }
-    _opus_liberare(o);
-}
-
-interior vacuum
-_verificatio_facta (
-     vacuum* datum,
-        b32  bona,
-        b32  renovanda)
-{
-                   Opus* o = (Opus*)datum;
-               Exemplar* e = o->exemplar;
-    HospitiumColloquium* col;
-                    s64  nunc = _nunc_ms();
-                Piscina* p;
-                 chorda  n;
-
-    col  = dilatum_colloquium(o->d);
-    p    = piscina_generare_dynamicum("exemplar_actum", MMXLVIII);
-    n    = chorda_ex_literis(o->nomen_usoris, p);
-
-    custodia_frenum_notare(e->custodia,
-        chorda_ex_literis(o->clavis_paris,
-        p), bona, nunc);
-    custodia_frenum_notare(e->custodia, chorda_ex_literis(
-        o->clavis_usoris, p), bona, nunc);
-    si (!bona)
-    {
-        si (col)
-        {
-            _errare(col, CDIII, "nomen aut tessera falsa");
-        }
-    }
-    alioquin
-    {
-        CustodiaSessio  s;
-             JsonValor* a = json_objectum_creare(p);
-                chorda  hex;
-                   s64  expirat = nunc
-                       + (s64)EXEMPLAR_SESSIO_VITA_S * M;
-
-        si (!custodia_sessionem_creare(&s))
-        {
-            si (col)
-            {
-                _errare(col, D, "fons fortuitus deficit");
-            }
-            piscina_destruere(p);
-            _opus_liberare(o);
-            redde;
-        }
-        hex = _hex_sigilli(&s.sigillum, p);
-        /* SIGILLUM signi in actis, numquam signum ipsum */
-        _ponere(a, "sigillum", hex, p);
-        _ponere(a, "usor", n, p);
-        json_objectum_ponere(a, "expirat", json_integer_creare(p,
-            expirat));
-        si (_actum(e, "sessio.creata", a, p) == 0)
-        {
-            si (col)
-            {
-                _errare(col, D, "volumen scribi nequit");
-            }
-        }
-        alioquin
-        {
-            _sessionem_ponere(e, hex, n, expirat);
-            si (col)
-            {
-                (vacuum)_crustulum_ponere(col, s.signum,
-                    (s64)EXEMPLAR_SESSIO_VITA_S);
-                colloquium_redirigere(col, CCCIII, "/notae");
-            }
-        }
-        memset(&s, 0, magnitudo(s));
-        si (   renovanda && custodia_tesseram_digerere(e->custodia,
-            _tessera_operis(o), _renovatio_facta, o))
-        {
-            piscina_destruere(p);
-            redde;   /* opus manet usque ad renovationem */
-        }
-    }
-    piscina_destruere(p);
-    _opus_liberare(o);
-}
-
-interior vacuum
-_verificare_incipere (
-    Opus* o)
-{
-     Exemplar* e = o->exemplar;
-      Piscina* p = piscina_generare_dynamicum("exemplar_verif", CCLVI);
-         Usor* u = _usor(e, chorda_ex_literis(o->nomen_usoris, p));
-       chorda  phc = u ? u->phc : chorda_ex_literis("", p);
-
-    si (!custodia_tesseram_verificare(e->custodia, phc,
-        _tessera_operis(o),
-        _verificatio_facta, o))
-    {
-        HospitiumColloquium* col = dilatum_colloquium(o->d);
-
-        si (col)
-        {
-            _errare(col, DIII, "occupatum - iterum tempta");
-        }
-        _opus_liberare(o);
-    }
-    piscina_destruere(p);
-}
-
-interior vacuum
-_mora_finita (
-    vacuum* datum)
-{
-    _verificare_incipere((Opus*)datum);
-}
-
-interior vacuum
-_intrare_post (
-    HospitiumColloquium* col)
-{
-      Exemplar* e             = (Exemplar*)colloquium_datum(col);
-        chorda  nomen_usoris  = colloquium_forma(col, "nomen");
-        chorda  tessera       = colloquium_forma(col, "tessera");
-        chorda  par           = colloquium_cliens(col);
-     character  clavis_paris[LXXX];
-     character  clavis_usoris[LXXX];
-           s64  nunc = _nunc_ms();
-           s32  mora_a;
-           s32  mora_b;
-          Opus* o;
-
-    si (!_origo_bona(col))
-    {
-        _errare(col, CDIII, "origo aliena");
-        redde;
-    }
-    si (   nomen_usoris.mensura > EXEMPLAR_NOMEN_MAXIMUM
-        || tessera.mensura > CUSTODIA_TESSERA_MAXIMA
-        || par.mensura > LX)
-    {
-        _errare(col, CD, "petitio mala");
-        redde;
-    }
-    sprintf(clavis_paris, "par:%.*s", (int)par.mensura,
-        (constans character*)par.datum);
-    sprintf(clavis_usoris, "usor:%.*s", (int)nomen_usoris.mensura,
-        nomen_usoris.datum ? (constans character*)nomen_usoris.datum
-        : "");
-    mora_a = custodia_frenum(e->custodia,
-        chorda_ex_literis(clavis_paris,
-        colloquium_piscina(col)), nunc);
-    mora_b = custodia_frenum(e->custodia, chorda_ex_literis(
-        clavis_usoris, colloquium_piscina(col)), nunc);
-    si (mora_a < 0 || mora_b < 0)
-    {
-        _errare(col, CDXXIX, "conatus nimis multi - postea tempta");
-        redde;
-    }
-    o = _opus_capere(e, OPUS_INTRARE, col, nomen_usoris, tessera);
-    si (!o)
-    {
-        _errare(col, DIII, "occupatum - iterum tempta");
-        redde;
-    }
-    strcpy(o->clavis_paris, clavis_paris);
-    strcpy(o->clavis_usoris, clavis_usoris);
-    si (mora_a > 0 || mora_b > 0)
-    {
-        /* mora DIFFERTUR (timer), numquam obstat */
-        (vacuum)reactor_timer_adicere(e->reactor,
-            (i32)(mora_a > mora_b ? mora_a : mora_b), FALSUM,
-            _mora_finita, o);
-        redde;
-    }
-    _verificare_incipere(o);
-}
-
-
-/* ==================================================
- * VIAE
- * ================================================== */
 
 interior vacuum
 _radix (
     HospitiumColloquium* col)
 {
-     Exemplar* e = (Exemplar*)colloquium_datum(col);
-     Intratus  i;
+    Exemplar* e = (Exemplar*)colloquium_datum(col);
 
-    colloquium_redirigere(col, CCCIII, _intratus(e, col, &i) ? "/notae"
-        : "/intrare");
-}
-
-interior vacuum
-_inscribere_get (
-    HospitiumColloquium* col)
-{
-    ChordaAedificator* a = _paginam_incipere(col, "Inscribere");
-
-    chorda_aedificator_appendere_literis(a,
-        "<form method=\"post\" action=\"/inscribere\">"
-        "<label>nomen <input name=\"nomen\" maxlength=\"32\" required>"
-        "</label><label>tessera <input type=\"password\" "
-        "name=\"tessera\""
-        " minlength=\"8\" required></label><label>invitatio "
-        "<input name=\"invitatio\" required></label>"
-        "<button>inscribere</button></form>"
-        "<p><a href=\"/intrare\">intrare</a></p>");
-    _paginam_mittere(col, CC, a);
-}
-
-interior vacuum
-_intrare_get (
-    HospitiumColloquium* col)
-{
-    ChordaAedificator* a = _paginam_incipere(col, "Intrare");
-
-    chorda_aedificator_appendere_literis(a,
-        "<form method=\"post\" action=\"/intrare\">"
-        "<label>nomen <input name=\"nomen\" required></label>"
-        "<label>tessera <input type=\"password\" name=\"tessera\" "
-        "required></label><button>intrare</button></form>"
-        "<p><a href=\"/inscribere\">inscribere</a></p>");
-    _paginam_mittere(col, CC, a);
-}
-
-interior vacuum
-_exire_post (
-    HospitiumColloquium* col)
-{
-     Exemplar* e = (Exemplar*)colloquium_datum(col);
-     Intratus  i;
-
-    si (!_origo_bona(col))
-    {
-        _errare(col, CDIII, "origo aliena");
-        redde;
-    }
-    si (_intratus(e, col, &i))
-    {
-         Piscina* p;
-       JsonValor* a;
-
-        si (!_csrf_bonum(e, col, &i))
-        {
-            _errare(col, CDIII, "signum formae deest");
-            redde;
-        }
-        p = colloquium_piscina(col);
-        a = json_objectum_creare(p);
-        _ponere(a, "sigillum", i.hex, p);
-        si (_actum(e, "sessio.deleta", a, p) > 0)
-        {
-            tabula_dispersa_delere(e->sessiones, i.hex);
-        }
-    }
-    (vacuum)_crustulum_ponere(col, "", 0);
-    colloquium_redirigere(col, CCCIII, "/intrare");
+    colloquium_redirigere(col, CCCIII, ianua_intratus(e->ianua, col,
+        NIHIL,
+        NIHIL) ? "/notae" : "/intrare");
 }
 
 interior vacuum
@@ -1009,11 +389,10 @@ _notae_get (
         colloquium_redirigere(col, CCCIII, "/intrare");
         redde;
     }
-    csrf = custodia_csrf(e->custodia, &i.sigillum,
-        colloquium_piscina(col));
-    a = _paginam_incipere(col, "Notae");
+    csrf  = i.csrf;
+    a     = _paginam_incipere(col, "Notae");
     chorda_aedificator_appendere_literis(a, "<p>salve, ");
-    _evadere(a, i.sessio->usor);
+    _evadere(a, i.civis.titulus);
     chorda_aedificator_appendere_literis(a, "</p>"
         "<form method=\"post\" action=\"/notae\" "
         "enctype=\"multipart/form-data\">");
@@ -1027,7 +406,7 @@ _notae_get (
              Nota* n = (Nota*)xar_obtinere(e->notae, (i32)k);
         character  id[XXIV];
 
-        si (n->deleta || !chorda_aequalis(n->usor, i.sessio->usor))
+        si (n->deleta || !chorda_aequalis(n->civis, i.civis.id))
         {
             perge;
         }
@@ -1059,6 +438,7 @@ _notae_get (
             "<button>delere</button></form></div>");
     }
     chorda_aedificator_appendere_literis(a,
+        "<p><a href=\"/applicationes\">applicationes connexae</a></p>"
         "<form method=\"post\" action=\"/exire\">");
     _csrf_campus(a, csrf);
     chorda_aedificator_appendere_literis(a,
@@ -1123,8 +503,9 @@ _notae_post (HospitiumColloquium* col)
         redde;
     }
     a = json_objectum_creare(p);
-    _ponere(a, "usor", i.sessio->usor, p);
+    _ponere(a, "civis", i.civis.id, p);
     _ponere(a, "textus", textus, p);
+    _ponere(a, "via", chorda_ex_literis("retis", p), p);
     si (filum)
     {
          JsonValor* f    = json_objectum_creare(p);
@@ -1137,7 +518,7 @@ _notae_post (HospitiumColloquium* col)
             _errare(col, D, "filum servari nequit");
             redde;
         }
-        _ponere(f, "usor", i.sessio->usor, p);
+        _ponere(f, "civis", i.civis.id, p);
         _ponere(f, "sigillum", sig, p);
         _ponere(f, "titulus", filum->titulus_fili, p);
         _ponere(f, "mimen", filum->mimen, p);
@@ -1167,7 +548,7 @@ _notae_post (HospitiumColloquium* col)
 
         memset(n, 0, magnitudo(*n));
         n->id      = id;
-        n->usor    = _copia(i.sessio->usor, e->piscina);
+        n->civis   = _copia(i.civis.id, e->piscina);
         n->textus  = _copia(textus, e->piscina);
         si (filum)
         {
@@ -1216,23 +597,17 @@ _nota_delere (
     id_l[id_ch.mensura]  = '\0';
     id                   = (s64)atol(id_l);
     n                    = _nota(e, id);
-    si (!n || n->deleta || !chorda_aequalis(n->usor, i.sessio->usor))
+    si (!n || n->deleta || !chorda_aequalis(n->civis, i.civis.id))
     {
         _errare(col, CDIV, "nota ignota");
         redde;
     }
+    si (!exemplar_notam_delere(e, i.civis.id, id,
+            colloquium_piscina(col)))
     {
-          Piscina* p = colloquium_piscina(col);
-        JsonValor* a = json_objectum_creare(p);
-
-        json_objectum_ponere(a, "id", json_integer_creare(p, id));
-        si (_actum(e, "nota.deleta", a, p) == 0)
-        {
-            _errare(col, D, "volumen scribi nequit");
-            redde;
-        }
+        _errare(col, D, "volumen scribi nequit");
+        redde;
     }
-    n->deleta = VERUM;
     colloquium_redirigere(col, CCCIII, "/notae");
 }
 
@@ -1305,7 +680,7 @@ _filum_get (
         Nota* x = (Nota*)xar_obtinere(e->notae, (i32)k);
 
         si (   !x->deleta && chorda_aequalis(x->sigillum, sig)
-            && chorda_aequalis(x->usor, i.sessio->usor))
+            && chorda_aequalis(x->civis, i.civis.id))
         {
             n = x;
             frange;
@@ -1335,6 +710,171 @@ _filum_get (
     fons.datum     = l;
     colloquium_respondere_fontem(col, CC, "application/octet-stream",
         fons);
+}
+
+s64
+exemplar_notam_scribere (
+    Exemplar* e,
+       chorda  civis,
+       chorda  textus,
+       chorda  cliens,
+     Piscina* p)
+{
+    JsonValor* a;
+          s64  id;
+         Nota* n;
+
+    si (   !e || textus.mensura == 0
+        || textus.mensura > EXEMPLAR_TEXTUS_MAXIMUS)
+    {
+        redde 0;
+    }
+    a = json_objectum_creare(p);
+    _ponere(a, "civis", civis, p);
+    _ponere(a, "textus", textus, p);
+    _ponere(a, "via", chorda_ex_literis("claude", p), p);
+    _ponere(a, "cliens", cliens, p);
+    id = _actum(e, "nota.scripta", a, p);
+    si (id == 0)
+    {
+        redde 0;
+    }
+    n = (Nota*)xar_addere(e->notae);
+    memset(n, 0, magnitudo(*n));
+    n->id        = id;
+    n->civis     = _copia(civis, e->piscina);
+    n->textus    = _copia(textus, e->piscina);
+    n->sigillum  = _copia(chorda_ex_literis("", p), e->piscina);
+    redde id;
+}
+
+b32
+exemplar_notam_delere (
+     Exemplar* e,
+       chorda  civis,
+          s64  id,
+      Piscina* p)
+{
+         Nota* n = e ? _nota(e, id) : NIHIL;
+    JsonValor* a;
+
+    si (!n || n->deleta || !chorda_aequalis(n->civis, civis))
+    {
+        redde FALSUM;
+    }
+    a = json_objectum_creare(p);
+    json_objectum_ponere(a, "id", json_integer_creare(p, id));
+    si (_actum(e, "nota.deleta", a, p) == 0)
+    {
+        redde FALSUM;
+    }
+    n->deleta = VERUM;
+    redde VERUM;
+}
+
+/* momentum (ms) ut "AAAA-MM-DD HH:MM UTC" */
+interior vacuum
+_momentum_scribere (
+    character* exitus,
+          s64  ms)
+{
+         time_t t    = (time_t)(ms / M);
+    structura tm* g  = gmtime(&t);
+
+    si (!g)
+    {
+        strcpy(exitus, "?");
+        redde;
+    }
+    sprintf(exitus, "%04d-%02d-%02d %02d:%02d UTC", g->tm_year + MCM,
+        g->tm_mon + I, g->tm_mday, g->tm_hour, g->tm_min);
+}
+
+/* /applicationes: connexiones personae (Claude etc.), revocare */
+interior vacuum
+_applicationes_get (
+    HospitiumColloquium* col)
+{
+             Exemplar* e = (Exemplar*)colloquium_datum(col);
+             Intratus  i;
+    ChordaAedificator* a;
+               chorda  csrf;
+                  Xar* lista;
+                  i32  k;
+
+    si (!_intratus(e, col, &i))
+    {
+        colloquium_redirigere(col, CCCIII,
+            "/intrare?redire=%2Fapplicationes");
+        redde;
+    }
+    csrf   = i.csrf;
+    lista  = e->admissio ? admissio_concessiones(e->admissio,
+        i.civis.id, colloquium_piscina(col)) : NIHIL;
+    a = _paginam_incipere(col, "Applicationes");
+    si (!lista || xar_numerus(lista) == 0)
+    {
+        chorda_aedificator_appendere_literis(a,
+            "<p>nullae applicationes connexae</p>");
+    }
+    per (k = 0; lista && k < xar_numerus(lista); k++)
+    {
+        AdmissioConcessio* g = (AdmissioConcessio*)xar_obtinere(lista,
+            k);
+                character m[LXIV];
+
+        chorda_aedificator_appendere_literis(a,
+            "<div class=\"nota\"><p><b>");
+        _evadere(a, g->titulus_clientis.mensura
+            > 0 ? g->titulus_clientis
+            : g->cliens);
+        chorda_aedificator_appendere_literis(a, "</b></p><p>scopi: ");
+        _evadere(a, g->scopi);
+        chorda_aedificator_appendere_literis(a, "</p><p>creata: ");
+        _momentum_scribere(m, g->creata_ms);
+        chorda_aedificator_appendere_literis(a, m);
+        chorda_aedificator_appendere_literis(a,
+            " &middot; usus ultimus: ");
+        _momentum_scribere(m, g->usus_ultimus_ms);
+        chorda_aedificator_appendere_literis(a, m);
+        chorda_aedificator_appendere_literis(a,
+            "</p><form method=\"post\" action=\"/applicationes/");
+        _evadere(a, g->id);
+        chorda_aedificator_appendere_literis(a, "/revocare\">");
+        _csrf_campus(a, csrf);
+        chorda_aedificator_appendere_literis(a,
+            "<button>revocare</button></form></div>");
+    }
+    chorda_aedificator_appendere_literis(a,
+        "<p><a href=\"/notae\">notae</a></p>");
+    _paginam_mittere(col, CC, a);
+}
+
+interior vacuum
+_applicationem_revocare (
+    HospitiumColloquium* col)
+{
+    Exemplar* e = (Exemplar*)colloquium_datum(col);
+    Intratus  i;
+
+    si (!_origo_bona(col))
+    {
+        _errare(col, CDIII, "origo aliena");
+        redde;
+    }
+    si (!_intratus(e, col, &i) || !_csrf_bonum(e, col, &i))
+    {
+        _errare(col, CDIII, "intrare necesse");
+        redde;
+    }
+    si (   !e->admissio
+        || !admissio_revocare(e->admissio, i.civis.id,
+               colloquium_param(col, "id")))
+    {
+        _errare(col, CDIV, "applicatio ignota");
+        redde;
+    }
+    colloquium_redirigere(col, CCCIII, "/applicationes");
 }
 
 interior vacuum
@@ -1370,6 +910,243 @@ _via (
     redde VERUM;
 }
 
+/* ---- migratio civium (ianua T5): volumen ante ianuam ---- */
+
+hic_manens constans character* constans SCHEMA_EXEMPLARIS[] = {
+    "CREATE TABLE IF NOT EXISTS exemplar_migrationes"
+    " (titulus TEXT PRIMARY KEY, facta_ms INTEGER NOT NULL)",
+    "CREATE TABLE IF NOT EXISTS exemplar_nomina_vetera"
+    " (nomen_usoris TEXT PRIMARY KEY, civis TEXT NOT NULL)",
+    NIHIL
+};
+
+nomen structura {
+    chorda nomen_usoris;
+    chorda phc;
+} UsorVetus;
+
+interior b32
+_sententia (
+               Scrinium* s,
+     constans character* sql,
+                 chorda  a,
+                 chorda  b)
+{
+     ScriniumEnuntiatum* q = scrinium_praeparare(s, sql);
+                    b32  bene;
+
+    si (!q)
+    {
+        redde FALSUM;
+    }
+    scrinium_ligare_textum(q, I, a);
+    scrinium_ligare_textum(q, II, b);
+    bene = scrinium_gradi(q) == SCRINIUM_FACTUM;
+    scrinium_finire(q);
+    redde bene;
+}
+
+/* VERUM si migratio facta (aut iam facta); FALSUM = nihil mutatum,
+ * causa ad stderr. Transactione UNA: civis + tessera ultima per
+ * nomen vetus, mappa nominum, concessiones/codices admissionis
+ * re-clavati, actum exemplar.migratio, signum migrationis. */
+interior b32
+_cives_migrare (
+    Exemplar* e)
+{
+           Scrinium* s = volumen_scrinium(e->volumen);
+            Piscina* p = piscina_generare_dynamicum("exemplar_migratio",
+                             CXXVIII * MXXIV);
+                   Xar* acta;
+                   Xar* veteres;
+    ScriniumEnuntiatum* q;
+             JsonValor* mappa;
+             JsonValor* d;
+    constans character* causa = NIHIL;
+                   i32  k;
+                   i32  j;
+                   b32  facta = FALSUM;
+
+    si (!p)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; SCHEMA_EXEMPLARIS[k]; k++)
+    {
+        si (!scrinium_exsequi(s, SCHEMA_EXEMPLARIS[k]))
+        {
+            piscina_destruere(p);
+            redde FALSUM;
+        }
+    }
+    q = scrinium_praeparare(s,
+        "SELECT count(*) FROM exemplar_migrationes"
+        " WHERE titulus = 'cives'");
+    si (q && scrinium_gradi(q) == SCRINIUM_ORDO)
+    {
+        facta = scrinium_columna_numerus(q, ZEPHYRUM) > ZEPHYRUM;
+    }
+    si (q)
+    {
+        scrinium_finire(q);
+    }
+    si (facta)
+    {
+        piscina_destruere(p);
+        redde VERUM;
+    }
+    /* tessera ULTIMA per nomen, ordine primae apparitionis */
+    acta     = volumen_acta_legere(e->volumen, ZEPHYRUM, p);
+    veteres  = xar_creare(p, (i32)magnitudo(UsorVetus));
+    per (k = ZEPHYRUM; acta && veteres && k < xar_numerus(acta); k++)
+    {
+        VolumenActum* a = (VolumenActum*)xar_obtinere(acta, k);
+        JsonResultus  r;
+              chorda  n;
+              chorda  phc;
+           UsorVetus* u = NIHIL;
+
+        si (   !chorda_aequalis_literis(a->genus, "usor.creatus")
+            && !chorda_aequalis_literis(a->genus, "tessera.mutata"))
+        {
+            perge;
+        }
+        r = json_legere(a->datum, p);
+        si (!r.successus)
+        {
+            perge;
+        }
+        n    = json_capere_chorda(r.radix, "usor", chorda_ex_literis("",
+            p));
+        phc  = json_capere_chorda(r.radix, "phc", chorda_ex_literis("",
+            p));
+        per (j = ZEPHYRUM; j < xar_numerus(veteres); j++)
+        {
+            UsorVetus* x = (UsorVetus*)xar_obtinere(veteres, j);
+
+            si (chorda_aequalis(x->nomen_usoris, n))
+            {
+                u = x;
+            }
+        }
+        si (!u)
+        {
+            u                = (UsorVetus*)xar_addere(veteres);
+            u->nomen_usoris  = n;
+        }
+        u->phc = phc;
+    }
+    si (!veteres || !volumen_transactionem_incipere(e->volumen))
+    {
+        fprintf(stderr, "exemplar: migratio civium fracta: volumen "
+            "occupatum\n");
+        piscina_destruere(p);
+        redde FALSUM;
+    }
+    mappa = json_objectum_creare(p);
+    per (k = ZEPHYRUM; !causa && k < xar_numerus(veteres); k++)
+    {
+         UsorVetus* u = (UsorVetus*)xar_obtinere(veteres, k);
+            chorda  id;
+
+        si (!cives_creare(ianua_cives(e->ianua), u->nomen_usoris,
+            u->nomen_usoris, &id, p))
+        {
+            causa = "civis creari nequit (nomen iam civis?)";
+        }
+        alioquin si (!credentialia_tesseram_ponere(ianua_credentialia(
+                     e->ianua), id, u->phc))
+        {
+            causa = "tessera poni nequit";
+        }
+        alioquin si (   !_sententia(s,
+                     "INSERT INTO exemplar_nomina_vetera"
+                         " (nomen_usoris, civis) VALUES (?, ?)",
+                         u->nomen_usoris, id)
+                     || !_sententia(s, "UPDATE admissio_concessiones"
+                         " SET usor = ? WHERE usor = ?", id,
+                         u->nomen_usoris)
+                     || !_sententia(s, "UPDATE admissio_codices"
+                         " SET usor = ? WHERE usor = ?", id,
+                         u->nomen_usoris))
+        {
+            causa = "mappa aut admissio re-clavari nequit";
+        }
+        alioquin
+        {
+            json_objectum_ponere(mappa, chorda_ut_cstr(u->nomen_usoris,
+                p),
+                json_chorda_creare(p, id));
+        }
+    }
+    si (!causa && xar_numerus(veteres) > ZEPHYRUM)
+    {
+        d = json_objectum_creare(p);
+        json_objectum_ponere(d, "cives", mappa);
+        si (volumen_actum_appendere(e->volumen, "exemplar.migratio",
+            json_scribere(d, p)) == ZEPHYRUM)
+        {
+            causa = "actum scribi nequit";
+        }
+    }
+    si (!causa)
+    {
+        q = scrinium_praeparare(s, "INSERT INTO exemplar_migrationes"
+            " (titulus, facta_ms) VALUES ('cives', ?)");
+        si (q)
+        {
+            scrinium_ligare_numerum(q, I, (s64)time(NIHIL) * (s64)M);
+            facta = scrinium_gradi(q) == SCRINIUM_FACTUM;
+            scrinium_finire(q);
+        }
+        si (!q || !facta)
+        {
+            causa = "signum migrationis scribi nequit";
+        }
+    }
+    si (!causa && !volumen_transactionem_committere(e->volumen))
+    {
+        causa = "commissio fracta";
+    }
+    si (causa)
+    {
+        (vacuum)volumen_transactionem_revolvere(e->volumen);
+        fprintf(stderr, "exemplar: migratio civium fracta: %s\n",
+            causa);
+        piscina_destruere(p);
+        redde FALSUM;
+    }
+    si (xar_numerus(veteres) > ZEPHYRUM)
+    {
+        fprintf(stderr, "exemplar: migratio civium facta (%u)\n",
+            (insignatus integer)xar_numerus(veteres));
+    }
+    piscina_destruere(p);
+    redde VERUM;
+}
+
+/* creatio fracta: quod iam stat destruitur, sera liberatur */
+interior Exemplar*
+_creatio_fracta (
+    Exemplar* e)
+{
+    mcp_canalis_claudere(e->canalis);
+    si (e->hospitium)
+    {
+        hospitium_destruere(e->hospitium);
+    }
+    si (e->volumen)
+    {
+        volumen_claudere(e->volumen);
+    }
+    si (e->reactor && e->reactor_proprius)
+    {
+        reactor_destruere(e->reactor);
+    }
+    filum_seram_liberare(e->sera);
+    redde NIHIL;
+}
+
 Exemplar*
 exemplar_creare (
     constans ExemplarConfiguratio* configuratio,
@@ -1380,6 +1157,7 @@ exemplar_creare (
     CustodiaConfiguratio  cfg_custodiae;
          VolumenOptiones  optiones_voluminis;
    HospitiumConfiguratio  cfg_hospitii;
+           IanuaOptiones  optiones_ianuae;
 
     si (!configuratio || !configuratio->via_datorum || !piscina)
     {
@@ -1389,11 +1167,6 @@ exemplar_creare (
     memset(e, 0, magnitudo(*e));
     e->piscina  = piscina;
     e->cfg      = *configuratio;
-    si (configuratio->invitatio)
-    {
-        e->cfg.invitatio = chorda_ut_cstr(chorda_ex_literis(
-            configuratio->invitatio, piscina), piscina);
-    }
 
     /* data 0700, tmp 0700 (idem systema filorum) */
     si (   !filum_directorium_creare_cum_modo(configuratio->via_datorum,
@@ -1405,6 +1178,14 @@ exemplar_creare (
             configuratio->via_datorum);
         redde NIHIL;
     }
+    /* scriptor UNUS (ianua P1): servus alter aut -invitare currens */
+    si (   !_via(via, configuratio->via_datorum, "sera")
+        || !(e->sera = filum_seram_capere(via, ZEPHYRUM, piscina)))
+    {
+        fprintf(stderr, "exemplar: alius processus data tenet (%s) - "
+            "servus iam currit?\n", configuratio->via_datorum);
+        redde NIHIL;
+    }
 
     memset(&cfg_custodiae, 0, magnitudo(cfg_custodiae));
     si (   !_via(via, configuratio->via_datorum, "secretum")
@@ -1413,7 +1194,7 @@ exemplar_creare (
         fprintf(stderr,
             "exemplar: secretum servi (data/secretum, 0600) "
             "legi aut creari nequit\n");
-        redde NIHIL;
+        redde _creatio_fracta(e);
     }
     cfg_custodiae.frenum_conatus = configuratio->frenum_conatus;
 
@@ -1426,7 +1207,7 @@ exemplar_creare (
         fprintf(stderr, "exemplar: volumen aperiri nequit\n");
         memset(cfg_custodiae.secretum, 0,
             magnitudo(cfg_custodiae.secretum));
-        redde NIHIL;
+        redde _creatio_fracta(e);
     }
 
     e->reactor_proprius = configuratio->reactor == NIHIL;
@@ -1435,16 +1216,19 @@ exemplar_creare (
     e->custodia = custodia_creare(&cfg_custodiae, e->reactor, piscina);
     memset(cfg_custodiae.secretum, 0,
         magnitudo(cfg_custodiae.secretum));
-    e->usores     = tabula_dispersa_creare_chorda(piscina, LXIV);
-    e->sessiones  = tabula_dispersa_creare_chorda(piscina, LXIV);
-    e->notae      = xar_creare(piscina, (i32)magnitudo(Nota));
-    si (   !e->reactor || !e->custodia || !e->usores || !e->sessiones
-        || !e->notae)
+    e->notae = xar_creare(piscina, (i32)magnitudo(Nota));
+    memset(&optiones_ianuae, ZEPHYRUM, magnitudo(optiones_ianuae));
+    optiones_ianuae.via_post_intrationem  = "/notae";
+    optiones_ianuae.invitatio_necessaria  = VERUM;
+    optiones_ianuae.pagina                = _pagina_ianuae;
+    optiones_ianuae.datum                 = e;
+    e->ianua = e->reactor && e->custodia ? ianua_creare(e->volumen,
+        e->custodia, e->reactor, &optiones_ianuae, piscina) : NIHIL;
+    si (!e->reactor || !e->custodia || !e->notae || !e->ianua)
     {
-        volumen_claudere(e->volumen);
-        redde NIHIL;
+        fprintf(stderr, "exemplar: custodia aut ianua deficit\n");
+        redde _creatio_fracta(e);
     }
-    _replicare(e);
 
     memset(&cfg_hospitii, 0, magnitudo(cfg_hospitii));
     cfg_hospitii.hospes                   = configuratio->hospes;
@@ -1460,20 +1244,9 @@ exemplar_creare (
     si (!e->hospitium)
     {
         fprintf(stderr, "exemplar: portus ligari nequit\n");
-        volumen_claudere(e->volumen);
-        redde NIHIL;
+        redde _creatio_fracta(e);
     }
     (vacuum)hospitium_praebere(e->hospitium, HTTP_GET, "/", _radix, e);
-    (vacuum)hospitium_praebere(e->hospitium, HTTP_GET, "/inscribere",
-        _inscribere_get, e);
-    (vacuum)hospitium_praebere(e->hospitium, HTTP_POST, "/inscribere",
-        _inscribere_post, e);
-    (vacuum)hospitium_praebere(e->hospitium, HTTP_GET, "/intrare",
-        _intrare_get, e);
-    (vacuum)hospitium_praebere(e->hospitium, HTTP_POST, "/intrare",
-        _intrare_post, e);
-    (vacuum)hospitium_praebere(e->hospitium, HTTP_POST, "/exire",
-        _exire_post, e);
     (vacuum)hospitium_praebere(e->hospitium, HTTP_GET, "/notae",
         _notae_get, e);
     (vacuum)hospitium_praebere(e->hospitium, HTTP_POST, "/notae",
@@ -1485,6 +1258,68 @@ exemplar_creare (
         _filum_get, e);
     (vacuum)hospitium_praebere(e->hospitium, HTTP_GET, "/salus", _salus,
         e);
+    si (!ianua_montare(e->ianua, e->hospitium))
+    {
+        fprintf(stderr, "exemplar: ianua montari nequit\n");
+        redde _creatio_fracta(e);
+    }
+    si (configuratio->basis)
+    {
+        si (strlen(configuratio->basis) >= EXEMPLAR_VIA_MAXIMA)
+        {
+            fprintf(stderr, "exemplar: basis nimis longa\n");
+            redde _creatio_fracta(e);
+        }
+        strcpy(e->basis, configuratio->basis);
+        /* auctoritas sine '/' finali (RFC 8414 issuer) */
+        dum (   strlen(e->basis) > ZEPHYRUM
+             && e->basis[strlen(e->basis) - I] == '/')
+        {
+            e->basis[strlen(e->basis) - I] = '\0';
+        }
+    }
+    alioquin
+    {
+        sprintf(e->basis, "http://%s:%u", configuratio->hospes
+            ? configuratio->hospes : "127.0.0.1",
+            (insignatus integer)hospitium_portus(e->hospitium));
+    }
+    (vacuum)hospitium_praebere(e->hospitium, HTTP_GET, "/applicationes",
+        _applicationes_get, e);
+    (vacuum)hospitium_praebere(e->hospitium, HTTP_POST,
+        "/applicationes/:id/revocare", _applicationem_revocare, e);
+    si (!exemplar_mcp_praebere(e))
+    {
+        fprintf(stderr, "exemplar: servus MCP aut admissio deficit\n");
+        redde _creatio_fracta(e);
+    }
+    /* post admissionem (tabulae eius re-clavantur), ante replicationem
+     * (mappa nominum veterum) */
+    si (!_cives_migrare(e))
+    {
+        redde _creatio_fracta(e);
+    }
+    /* canalis administrationis (canalis T4): sera iam tenetur, ergo
+     * socket vetus deleri tuto potest; defectus = servus non incipit */
+    {
+        chorda error = chorda_ex_literis("via canalis nimis longa",
+            piscina);
+
+        e->administratio = exemplar_administrationem_creare(e, piscina);
+        e->canalis = e->administratio
+            && _via(via, configuratio->via_datorum,
+            EXEMPLAR_VIA_CANALIS)
+            ? mcp_canalis_praebere(e->administratio, e->reactor, via,
+                  &error, piscina) : NIHIL;
+        si (!e->canalis)
+        {
+            fprintf(stderr, "exemplar: canalis fractus: %.*s\n",
+                (integer)error.mensura,
+                (constans character*)error.datum);
+            redde _creatio_fracta(e);
+        }
+    }
+    _replicare(e);
     redde e;
 }
 
@@ -1510,6 +1345,7 @@ exemplar_claudere (
     {
         redde;
     }
+    mcp_canalis_claudere(exemplar->canalis);
     hospitium_destruere(exemplar->hospitium);
     /* WAL in plagulam principalem: copia (cp) post clausuram integra */
     (vacuum)scrinium_exsequi(volumen_scrinium(exemplar->volumen),
@@ -1519,4 +1355,123 @@ exemplar_claudere (
     {
         reactor_destruere(exemplar->reactor);
     }
+    filum_seram_liberare(exemplar->sera);
+}
+
+s32
+exemplar_invitare (
+     constans character* via_datorum,
+     constans character* nota,
+                 chorda* codex_exitus,
+                Piscina* piscina)
+{
+           FilumSera* sera;
+             Volumen* v;
+        Invitationes* inv;
+     VolumenOptiones  optiones;
+              chorda  id;
+           character  via[EXEMPLAR_VIA_MAXIMA];
+                 b32  bene = FALSUM;
+
+    si (!via_datorum || !codex_exitus || !piscina)
+    {
+        redde I;
+    }
+    /* servus currens per canalem (canalis P9); II = nemo audit -> via
+     * serae infra (sera arbitratur) */
+    si (_via(via, via_datorum, EXEMPLAR_VIA_CANALIS))
+    {
+         JsonValor* a = json_objectum_creare(piscina);
+            chorda  textus;
+               s32  r;
+
+        json_objectum_ponere(a, "nota", json_chorda_creare_literis(
+            piscina, nota ? nota : ""));
+        r = mcp_canalis_vocare(via, "invitare", a, &textus, piscina);
+        si (r == ZEPHYRUM)
+        {
+            JsonResultus j = json_legere(textus, piscina);
+
+            *codex_exitus = j.successus ? json_capere_chorda(j.radix,
+                "codex", chorda_ex_literis("", piscina))
+                : chorda_ex_literis("", piscina);
+            redde codex_exitus->mensura > ZEPHYRUM ? ZEPHYRUM : I;
+        }
+        si (r != II)
+        {
+            redde I;
+        }
+    }
+    si (   !filum_directorium_creare_cum_modo(via_datorum, 0700)
+        || !_via(via, via_datorum, "sera"))
+    {
+        redde I;
+    }
+    sera = filum_seram_capere(via, ZEPHYRUM, piscina);
+    si (!sera)
+    {
+        redde II;
+    }
+    memset(&optiones, ZEPHYRUM, magnitudo(optiones));
+    optiones.durabilitas_plena = VERUM;
+    v = _via(via, via_datorum, "exemplar.volumen")
+        ? volumen_aperire_aut_creare_cum(piscina, via,
+        &optiones) : NIHIL;
+    inv = v ? invitationes_aperire(v, NIHIL, piscina) : NIHIL;
+    si (inv && volumen_transactionem_incipere(v))
+    {
+        bene = invitationes_creare(inv, chorda_ex_literis("", piscina),
+            chorda_ex_literis(nota ? nota : "", piscina), ZEPHYRUM,
+            ZEPHYRUM, codex_exitus, &id, piscina)
+            && volumen_transactionem_committere(v);
+        si (!bene)
+        {
+            (vacuum)volumen_transactionem_revolvere(v);
+        }
+    }
+    si (v)
+    {
+        (vacuum)scrinium_exsequi(volumen_scrinium(v),
+            "PRAGMA wal_checkpoint(TRUNCATE)");
+        volumen_claudere(v);
+    }
+    filum_seram_liberare(sera);
+    redde bene ? ZEPHYRUM : I;
+}
+
+s32
+exemplar_administrare (
+    constans character* via_datorum)
+{
+    character via[EXEMPLAR_VIA_MAXIMA];
+
+    si (!via_datorum || !_via(via, via_datorum, EXEMPLAR_VIA_CANALIS))
+    {
+        redde II;
+    }
+    redde mcp_canalis_pons(via, ZEPHYRUM, I);
+}
+
+b32
+exemplar_invitationem_probationis (
+    Exemplar* e,
+      chorda* codex_exitus,
+     Piscina* piscina)
+{
+    chorda id;
+       b32 bene;
+
+    si (!e || !volumen_transactionem_incipere(e->volumen))
+    {
+        redde FALSUM;
+    }
+    bene = invitationes_creare(ianua_invitationes(e->ianua),
+        chorda_ex_literis("", piscina), chorda_ex_literis("", piscina),
+        ZEPHYRUM, ZEPHYRUM, codex_exitus, &id, piscina)
+        && volumen_transactionem_committere(e->volumen);
+    si (!bene)
+    {
+        (vacuum)volumen_transactionem_revolvere(e->volumen);
+    }
+    redde bene;
 }

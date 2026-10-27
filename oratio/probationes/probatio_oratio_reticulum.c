@@ -237,31 +237,33 @@ _causam_probare (
     CREDO_VERUM (_aequalis(exitus.causa, exspectata));
 }
 
-s32
-principale (vacuum)
-{
-                     Piscina* piscina;
-          constans character* radix;
-                   character  via_proba[1024];
-                   character  via_exspectata[1024];
-                   character  via_paritas[1024];
-                   character  via_exspectata_paritas[1024];
-                      chorda  proba;
-                      chorda  exspectata;
-                      chorda  paritas;
-                      chorda  exspectata_paritas;
-     OratioReticulumOptiones  optiones;
-       OratioReticulumExitus  exitus;
-                         b32  praeteritus;
+/* FIXURA SUITAE: praeludium semel factum (parare_suitae;
+ * assertiones eius ibi); sectiones id per monstratorem
+ * constantem LEGUNT. */
+nomen structura {
+    chorda proba;
+    chorda exspectata;
+    chorda paritas;
+    chorda exspectata_paritas;
+} FixuraReticuli;
 
-    piscina = piscina_generare_dynamicum("probatio_oratio_reticulum",
-        16777216);
-    si (!piscina)
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+        FixuraReticuli* f;
+    constans character* radix;
+             character  via_proba[1024];
+             character  via_exspectata[1024];
+             character  via_paritas[1024];
+             character  via_exspectata_paritas[1024];
+
+    f = (FixuraReticuli*)piscina_allocare(c->piscina,
+        magnitudo(FixuraReticuli));
+    si (f == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    credo_aperire(piscina);
     radix = getenv("RHUBARB_RADIX");
     si (radix == NIHIL)
     {
@@ -276,38 +278,69 @@ principale (vacuum)
     sprintf(via_exspectata_paritas,
         "%s/oratio/probationes/fixa/reticulum/exspectata_paritas.tsv",
         radix);
-    CREDO_VERUM (_plagulam_legere(piscina, via_proba, &proba));
-    CREDO_VERUM (_plagulam_legere(piscina, via_exspectata,
-        &exspectata));
-    CREDO_VERUM (_plagulam_legere(piscina, via_paritas, &paritas));
-    CREDO_VERUM (_plagulam_legere(piscina, via_exspectata_paritas,
-        &exspectata_paritas));
-    si (   proba.datum   == NIHIL || exspectata.datum == NIHIL
-        || paritas.datum == NIHIL || exspectata_paritas.datum == NIHIL)
+    CREDO_VERUM (_plagulam_legere(c->piscina, via_proba, &f->proba));
+    CREDO_VERUM (_plagulam_legere(c->piscina, via_exspectata,
+        &f->exspectata));
+    CREDO_VERUM (_plagulam_legere(c->piscina, via_paritas,
+        &f->paritas));
+    CREDO_VERUM (_plagulam_legere(c->piscina, via_exspectata_paritas,
+        &f->exspectata_paritas));
+    si (   f->proba.datum == NIHIL || f->exspectata.datum == NIHIL
+        || f->paritas.datum == NIHIL
+        || f->exspectata_paritas.datum == NIHIL)
     {
-        credo_imprimere_compendium();
-        redde I;
+        redde;
     }
+    c->datum = f;
+}
 
-    imprimere("\n--- I. Fixtura: ordines machinae ---\n");
+interior vacuum
+_ordines_machinae_probare (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+    constans FixuraReticuli* fixura =
+        (constans FixuraReticuli*)c->suita;
+    OratioReticulumOptiones optiones;
+      OratioReticulumExitus exitus;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     _optiones_basis(piscina, &optiones);
     optiones.machina = VERUM;
-    exitus = oratio_reticulum_currere(piscina, proba, "fixa",
+    exitus = oratio_reticulum_currere(piscina, fixura->proba, "fixa",
         &optiones);
     CREDO_VERUM (exitus.iudicatum);
     si (exitus.iudicatum)
     {
-        CREDO_VERUM (_lineas_conferre(exitus.relatio, exspectata));
+        CREDO_VERUM (_lineas_conferre(exitus.relatio,
+            fixura->exspectata));
     }
     alioquin
     {
         imprimere("  causa |%.*s|\n", (integer)exitus.causa.mensura,
             (constans character*)exitus.causa.datum);
     }
+}
 
-    imprimere("\n--- II. Relatio humana ---\n");
+interior vacuum
+_relationem_humanam_probare (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+    constans FixuraReticuli* fixura =
+        (constans FixuraReticuli*)c->suita;
+    OratioReticulumOptiones optiones;
+      OratioReticulumExitus exitus;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     _optiones_basis(piscina, &optiones);
-    exitus = oratio_reticulum_currere(piscina, proba, "fixa",
+    exitus = oratio_reticulum_currere(piscina, fixura->proba, "fixa",
         &optiones);
     CREDO_VERUM (exitus.iudicatum);
     si (exitus.iudicatum)
@@ -334,10 +367,24 @@ principale (vacuum)
     }
     _optiones_basis(piscina, &optiones);
     optiones.sortes = "h";
-    _causam_probare(oratio_reticulum_currere(piscina, proba, "fixa",
+    _causam_probare(oratio_reticulum_currere(piscina, fixura->proba,
+        "fixa",
         &optiones), "reticulum: sortes pauciores quam II: 1");
+}
 
-    imprimere("\n--- III. Recusationes nominatae ---\n");
+interior vacuum
+_recusationes_probare (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+    constans FixuraReticuli* fixura =
+        (constans FixuraReticuli*)c->suita;
+    OratioReticulumOptiones optiones;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     _optiones_basis(piscina, &optiones);
     _causam_probare(oratio_reticulum_currere(piscina,
         chorda_ex_literis("fixa\tALIUD\t1\n", piscina), "fixa",
@@ -361,85 +408,124 @@ principale (vacuum)
 
     _optiones_basis(piscina, &optiones);
     _ubi_addere(piscina, optiones.ubi, "zz", "1");
-    _causam_probare(oratio_reticulum_currere(piscina, proba, "fixa",
+    _causam_probare(oratio_reticulum_currere(piscina, fixura->proba,
+        "fixa",
         &optiones), "reticulum: titulus ignotus: zz");
 
     _optiones_basis(piscina, &optiones);
     optiones.aurum = "thesaurus";
-    _causam_probare(oratio_reticulum_currere(piscina, proba, "fixa",
+    _causam_probare(oratio_reticulum_currere(piscina, fixura->proba,
+        "fixa",
         &optiones),
         "reticulum: columna auri praefixum aurum- non fert: thesaurus");
 
     _optiones_basis(piscina, &optiones);
     _titulum_addere(piscina, optiones.columnae, "aurum-x");
-    _causam_probare(oratio_reticulum_currere(piscina, proba, "fixa",
+    _causam_probare(oratio_reticulum_currere(piscina, fixura->proba,
+        "fixa",
         &optiones), "reticulum: columna aurea ut nota: aurum-x");
 
     _optiones_basis(piscina, &optiones);
     _titulum_addere(piscina, optiones.gradus, "f");
-    _causam_probare(oratio_reticulum_currere(piscina, proba, "fixa",
+    _causam_probare(oratio_reticulum_currere(piscina, fixura->proba,
+        "fixa",
         &optiones),
         "reticulum: gradus in valore non numerico: f, linea 3");
 
     _optiones_basis(piscina, &optiones);
     _ubi_addere(piscina, optiones.ubi, "f", "w");
-    _causam_probare(oratio_reticulum_currere(piscina, proba, "fixa",
+    _causam_probare(oratio_reticulum_currere(piscina, fixura->proba,
+        "fixa",
         &optiones), "reticulum: nulli ordines post -ubi");
 
     /* T36 b: profunditas, initium, greges initium */
     _optiones_basis(piscina, &optiones);
     optiones.profunditas = V;
-    _causam_probare(oratio_reticulum_currere(piscina, proba, "fixa",
+    _causam_probare(oratio_reticulum_currere(piscina, fixura->proba,
+        "fixa",
         &optiones), "reticulum: profunditas maior quam IV: 5");
 
     _optiones_basis(piscina, &optiones);
     _titulum_addere(piscina, optiones.initium, "zz");
-    _causam_probare(oratio_reticulum_currere(piscina, proba, "fixa",
+    _causam_probare(oratio_reticulum_currere(piscina, fixura->proba,
+        "fixa",
         &optiones), "reticulum: titulus ignotus: zz");
 
     _optiones_basis(piscina, &optiones);
     _titulum_addere(piscina, optiones.initium, "aurum-x");
-    _causam_probare(oratio_reticulum_currere(piscina, proba, "fixa",
+    _causam_probare(oratio_reticulum_currere(piscina, fixura->proba,
+        "fixa",
         &optiones), "reticulum: columna aurea ut initium: aurum-x");
 
     _optiones_basis(piscina, &optiones);
     _titulum_addere(piscina, optiones.initium, "thesaurus");
-    _causam_probare(oratio_reticulum_currere(piscina, proba, "fixa",
+    _causam_probare(oratio_reticulum_currere(piscina, fixura->proba,
+        "fixa",
         &optiones),
         "reticulum: columna non inter notas ut initium: thesaurus");
 
     _optiones_basis(piscina, &optiones);
     _titulum_addere(piscina, optiones.initium, "h");
-    _causam_probare(oratio_reticulum_currere(piscina, proba, "fixa",
+    _causam_probare(oratio_reticulum_currere(piscina, fixura->proba,
+        "fixa",
         &optiones), "reticulum: columna constans ut initium: h");
 
     _optiones_basis(piscina, &optiones);
     optiones.greges = "initium";
-    _causam_probare(oratio_reticulum_currere(piscina, proba, "fixa",
+    _causam_probare(oratio_reticulum_currere(piscina, fixura->proba,
+        "fixa",
         &optiones), "reticulum: greges initium sine -initium");
+}
 
-    imprimere("\n--- IV. -ubi f=u ---\n");
+interior vacuum
+_ubi_probare (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+    constans FixuraReticuli* fixura =
+        (constans FixuraReticuli*)c->suita;
+    OratioReticulumOptiones optiones;
+      OratioReticulumExitus exitus;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     _optiones_basis(piscina, &optiones);
     optiones.machina = VERUM;
     _ubi_addere(piscina, optiones.ubi, "f", "u");
-    exitus = oratio_reticulum_currere(piscina, proba, "fixa",
+    exitus = oratio_reticulum_currere(piscina, fixura->proba, "fixa",
         &optiones);
     CREDO_VERUM (exitus.iudicatum);
     CREDO_VERUM (exitus.iudicatum
         && _continet(exitus.relatio,
         "fixa\tRETICULUM-COLUMNA\th\t1\t12\t"));
+}
 
-    imprimere("\n--- V. Paritas: infima profunditate III ---\n");
+interior vacuum
+_paritatem_probare (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+    constans FixuraReticuli* fixura =
+        (constans FixuraReticuli*)c->suita;
+    OratioReticulumOptiones optiones;
+      OratioReticulumExitus exitus;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     _optiones_basis(piscina, &optiones);
     optiones.machina      = VERUM;
     optiones.profunditas  = III;
-    exitus = oratio_reticulum_currere(piscina, paritas, "fixa",
+    exitus = oratio_reticulum_currere(piscina, fixura->paritas, "fixa",
         &optiones);
     CREDO_VERUM (exitus.iudicatum);
     si (exitus.iudicatum)
     {
         CREDO_VERUM (_lineas_conferre(exitus.relatio,
-            exspectata_paritas));
+            fixura->exspectata_paritas));
     }
     alioquin
     {
@@ -448,7 +534,7 @@ principale (vacuum)
     }
     _optiones_basis(piscina, &optiones);
     optiones.profunditas = III;
-    exitus = oratio_reticulum_currere(piscina, paritas, "fixa",
+    exitus = oratio_reticulum_currere(piscina, fixura->paritas, "fixa",
         &optiones);
     CREDO_VERUM (exitus.iudicatum);
     si (exitus.iudicatum)
@@ -466,13 +552,27 @@ principale (vacuum)
         CREDO_VERUM  (_continet(exitus.relatio, "  nulla\n"));
         CREDO_FALSUM (_continet(exitus.relatio, "sortes:"));
     }
+}
 
-    imprimere("\n--- VI. Semen f,g: catena h accipit ---\n");
+interior vacuum
+_semen_probare (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+    constans FixuraReticuli* fixura =
+        (constans FixuraReticuli*)c->suita;
+    OratioReticulumOptiones optiones;
+      OratioReticulumExitus exitus;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     _optiones_basis(piscina, &optiones);
     optiones.machina = VERUM;
     _titulum_addere(piscina, optiones.initium, "f");
     _titulum_addere(piscina, optiones.initium, "g");
-    exitus = oratio_reticulum_currere(piscina, paritas, "fixa",
+    exitus = oratio_reticulum_currere(piscina, fixura->paritas, "fixa",
         &optiones);
     CREDO_VERUM (exitus.iudicatum);
     CREDO_VERUM (exitus.iudicatum
@@ -485,7 +585,7 @@ principale (vacuum)
     _titulum_addere(piscina, optiones.initium, "f");
     _titulum_addere(piscina, optiones.initium, "g");
     optiones.greges = "initium";
-    exitus = oratio_reticulum_currere(piscina, paritas, "fixa",
+    exitus = oratio_reticulum_currere(piscina, fixura->paritas, "fixa",
         &optiones);
     CREDO_VERUM (exitus.iudicatum);
     CREDO_VERUM (exitus.iudicatum
@@ -498,12 +598,26 @@ principale (vacuum)
         && _continet(exitus.relatio, "ceterae 2 lucro deficientes"));
     CREDO_VERUM (exitus.iudicatum
         && !_continet(exitus.relatio, "recusatae:"));
+}
 
-    imprimere("\n--- VII. Ordines testimonii GREX, GREX-SORS ---\n");
+interior vacuum
+_greges_probare (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+    constans FixuraReticuli* fixura =
+        (constans FixuraReticuli*)c->suita;
+    OratioReticulumOptiones optiones;
+      OratioReticulumExitus exitus;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     _optiones_basis(piscina, &optiones);
     optiones.machina  = VERUM;
     optiones.greges   = "f";
-    exitus = oratio_reticulum_currere(piscina, proba, "fixa",
+    exitus = oratio_reticulum_currere(piscina, fixura->proba, "fixa",
         &optiones);
     CREDO_VERUM (exitus.iudicatum);
     si (exitus.iudicatum)
@@ -529,7 +643,7 @@ principale (vacuum)
     }
     _optiones_basis(piscina, &optiones);
     optiones.greges = "f";
-    exitus = oratio_reticulum_currere(piscina, proba, "fixa",
+    exitus = oratio_reticulum_currere(piscina, fixura->proba, "fixa",
         &optiones);
     CREDO_VERUM (exitus.iudicatum);
     si (exitus.iudicatum)
@@ -545,7 +659,7 @@ principale (vacuum)
     optiones.greges   = "catena";
     _titulum_addere(piscina, optiones.initium, "f");
     _titulum_addere(piscina, optiones.initium, "g");
-    exitus = oratio_reticulum_currere(piscina, paritas, "fixa",
+    exitus = oratio_reticulum_currere(piscina, fixura->paritas, "fixa",
         &optiones);
     CREDO_VERUM (exitus.iudicatum);
     si (exitus.iudicatum)
@@ -564,13 +678,27 @@ principale (vacuum)
             "fixa\tRETICULUM-GREX-SORS\tcatena\t0+1+1\tB\t2\tS\t2\t1"
             "\t1\n"));
     }
+}
 
-    imprimere("\n--- VIII. Sortes alternae II ---\n");
+interior vacuum
+_sortes_alternas_probare (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+    constans FixuraReticuli* fixura =
+        (constans FixuraReticuli*)c->suita;
+    OratioReticulumOptiones optiones;
+      OratioReticulumExitus exitus;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     _optiones_basis(piscina, &optiones);
     optiones.machina   = VERUM;
     optiones.sortes    = NIHIL;
     optiones.alternae  = II;
-    exitus = oratio_reticulum_currere(piscina, proba, "fixa",
+    exitus = oratio_reticulum_currere(piscina, fixura->proba, "fixa",
         &optiones);
     CREDO_VERUM (exitus.iudicatum);
     si (exitus.iudicatum)
@@ -604,21 +732,37 @@ principale (vacuum)
     _optiones_basis(piscina, &optiones);
     optiones.sortes    = NIHIL;
     optiones.alternae  = I;
-    _causam_probare(oratio_reticulum_currere(piscina, proba, "fixa",
+    _causam_probare(oratio_reticulum_currere(piscina, fixura->proba,
+        "fixa",
         &optiones), "reticulum: sortes alternae pauciores quam II: 1");
     _optiones_basis(piscina, &optiones);
     optiones.alternae = II;
-    _causam_probare(oratio_reticulum_currere(piscina, proba, "fixa",
+    _causam_probare(oratio_reticulum_currere(piscina, fixura->proba,
+        "fixa",
         &optiones), "reticulum: ambae -sortes et -sortes-alternae");
+}
 
-    imprimere("\n--- IX. -exempla: ordines primi gregum ---\n");
+interior vacuum
+_exempla_probare (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+    constans FixuraReticuli* fixura =
+        (constans FixuraReticuli*)c->suita;
+    OratioReticulumOptiones optiones;
+      OratioReticulumExitus exitus;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     /* T37 b: proba.tsv linea 3 = ordo u primus, linea 7 = ordo v
      * primus; tituli tres primi (f h thesaurus - sors inter eos semel);
      * paritas seminata: linea 3 = 0 0 0 A */
     _optiones_basis(piscina, &optiones);
     optiones.greges   = "f";
     optiones.exempla  = II;
-    exitus = oratio_reticulum_currere(piscina, proba, "fixa",
+    exitus = oratio_reticulum_currere(piscina, fixura->proba, "fixa",
         &optiones);
     CREDO_VERUM (exitus.iudicatum);
     si (exitus.iudicatum)
@@ -642,7 +786,7 @@ principale (vacuum)
     optiones.exempla  = I;
     _titulum_addere(piscina, optiones.initium, "f");
     _titulum_addere(piscina, optiones.initium, "g");
-    exitus = oratio_reticulum_currere(piscina, paritas, "fixa",
+    exitus = oratio_reticulum_currere(piscina, fixura->paritas, "fixa",
         &optiones);
     CREDO_VERUM (exitus.iudicatum);
     CREDO_VERUM (exitus.iudicatum
@@ -652,10 +796,32 @@ principale (vacuum)
         "    linea 3: f=0 g=0 h=0 thesaurus=A\n"));
     CREDO_VERUM (exitus.iudicatum
         && _quotiens_continet(exitus.relatio, "    linea ") == VIII);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. Fixtura: ordines machinae", _ordines_machinae_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "II. Relatio humana", _relationem_humanam_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "III. Recusationes nominatae", _recusationes_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "IV. -ubi f=u", _ubi_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "V. Paritas: infima profunditate III", _paritatem_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "VI. Semen f,g: catena h accipit", _semen_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "VII. Ordines testimonii GREX, GREX-SORS", _greges_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "VIII. Sortes alternae II", _sortes_alternas_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "IX. -exempla: ordines primi gregum", _exempla_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("oratio_reticulum", SECTIONES,
+        _suitam_parare, NIHIL);
 }

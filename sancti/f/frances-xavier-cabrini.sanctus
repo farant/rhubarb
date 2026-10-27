@@ -1,0 +1,35 @@
+<sanctus id="frances-xavier-cabrini" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Frances Xavier Cabrini</nomen>
+  <nomen lingua="it" fontes="cs">Francesca Saverio Cabrini</nomen>
+  <nomen lingua="it" fontes="cs">Maria Francesca Cabrini</nomen>
+  <ortus annus="1850" mensis="7" dies="15" locus="Sant'Angelo Lodigiano, Lombardy" fontes="cs"/>
+  <obitus annus="1917" mensis="12" dies="22" locus="Chicago" fontes="cs"/>
+  <beatificatio annus="1938" mensis="11" dies="13" papa="Pius XI" fontes="cs"/>
+  <canonizatio modus="formalis" annus="1946" mensis="7" dies="7" papa="Pius XII" fontes="cs"/>
+  <festum calendarium="usa" mensis="11" dies="13" gradus="memoria" fontes="us"/>
+  <munus fontes="us cs">virgin</munus>
+  <munus fontes="cs">religious</munus>
+  <munus fontes="cs">foundress</munus>
+  <patrocinium fontes="cs">emigrants</patrocinium>
+  <descriptio>
+    <paragraphus fontes="cs">Maria Francesca Cabrini was born at Sant'Angelo Lodigiano in Lombardy on 15 July 1850. Orphaned of both parents, she wished to enter a convent but was refused because of her poor health, and she took charge of an orphanage instead. Newly qualified as a teacher, she gathered companions into the first nucleus of the Missionary Sisters of the Sacred Heart, placed under the protection of St. Francis Xavier, whose name she took when she made her vows. In a letter to her sisters, Pope Francis wrote that she had received from God a particular missionary vocation: to form consecrated women and send them throughout the world, with a charism of their own.</paragraphus>
+    <paragraphus fontes="cs">That calling took her to the United States to help the Italians who had emigrated there; on the first of her many ocean crossings she shared the hardships of people who had left everything behind. She also cared for orphans and the sick, and she began works in Italy, France, Spain, Great Britain, many parts of the United States, Central America, Argentina and Brazil. She became an American citizen and died on 22 December 1917 in the hospital for migrants she had built in Chicago. Pius XII canonized her on 7 July 1946, and in 1950 she was named heavenly patroness of all emigrants.</paragraphus>
+  </descriptio>
+  <fons id="cs" opus="sedes" locus="Dicastero delle Cause dei Santi, Francesca Saverio Cabrini" url="https://www.causesanti.va/it/santi-e-beati/francesca-saverio-cabrini.html">
+    <excerptum>Vergine e religiosa italiana naturalizzata statunitense, a Chicago in Illinois negli Stati Uniti d’America, fondò l’Istituto delle Missionarie del Sacratissimo Cuore di Gesù e si adoperò in tutti i modi nell’assistere gli emigrati con insigne carità</excerptum>
+    <excerptum>Maria Francesca Cabrini nacque a Sant'Angelo Lodigiano, in Lombardia, il 15 luglio 1850 e rimasta orfana di padre e di madre, avrebbe voluto ritirarsi in convento, ma la sua richiesta non fu accettata per via della sua salute cagionevole.</excerptum>
+    <excerptum>Si dedicò allora a curare un orfanotrofio. Da poco diplomata maestra, con alcune compagne formò il primo nucleo delle Suore missionarie del Sacro Cuore, sotto la protezione del Santo missionario Francesco Saverio: quando più tardi pronunciò i voti religiosi, Francesca ne assunse il nome.</excerptum>
+    <excerptum>Questo uno dei caratteri di Santa Francesca Saverio Cabrini che emerge dalle riflessioni di Papa Francesco.</excerptum>
+    <excerptum>In una Lettera alle missionarie del Sacro Cuore di Gesù, il Pontefice sottolinea come Santa Francesca abbia “accolto da Dio una vocazione missionaria” particolare</excerptum>
+    <excerptum>formare e inviare per tutto il mondo donne consacrate, con un orizzonte missionario senza limiti</excerptum>
+    <excerptum>ma con un proprio carisma di consacrazione femminile</excerptum>
+    <excerptum>Proprio il carisma missionario la portò negli Stati Uniti, ad assistere gli italiani che lì cercavano fortuna. Anch’ella, nella prima delle sue tante traversate oceaniche, condivise disagi, problemi e incertezze di chi lasciava tutto</excerptum>
+    <excerptum>Si occupò anche di orfani e ammalati.</excerptum>
+    <excerptum>Avviò opere in Italia, Francia, Spagna, Gran Bretagna, varie zone degli Stati Uniti, America Centrale, Argentina e Brasile. Proclamata Santa da Pio XII il 7 luglio 1946, grazie al suo impegno nel 1950 diventò la “Celeste Patrona di tutti gli Emigranti”.</excerptum>
+    <excerptum>Beatificazione: 13 novembre 1938 Papa Pio XI Celebrazione Canonizzazione: 07 luglio 1946 Papa Pio XII</excerptum>
+    <excerptum>Morì il 22 dicembre 1917 nell’ospedale per i migranti che aveva costruito a Chicago.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="13 November">
+    <excerptum>Saint Frances Xavier Cabrini, Virgin</excerptum>
+  </fons>
+</sanctus>

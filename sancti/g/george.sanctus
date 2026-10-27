@@ -1,0 +1,36 @@
+<sanctus id="george" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">George</nomen>
+  <obitus locus="at or near Lydda (Diospolis), Palestine" martyrium="verum" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="4" dies="23" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="4" dies="23" fontes="mr"/>
+  <munus fontes="ce mr">martyr</munus>
+  <patrocinium fontes="ce">England</patrocinium>
+  <patrocinium fontes="ce">Order of the Garter</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce mr">George was a martyr who suffered at or near Lydda (Diospolis) in Palestine, probably before the time of Constantine; the Catholic Encyclopedia, following the Bollandist Delehaye, says this is all that can safely be affirmed of him. His Acts, ancient and preserved in many languages, are full of incredible marvels and give no reliable account of his life. The Martyrology says only that his martyrdom is honoured by the Church among those of the other crowned martyrs.</paragraphus>
+    <paragraphus fontes="ce bu">The Catholic Encyclopedia nonetheless sees no ground to doubt that he existed, since an ancient cult tied to a definite place is a strong historical argument: pilgrims of the sixth to eighth centuries name Lydda as the seat of his veneration and the resting-place of his remains. The Greeks count him among the greatest of the martyrs. The story of the dragon is a late development, not traceable before the twelfth or thirteenth century; it is found in the Golden Legend. He became patron of England and principal patron of the Order of the Garter, and in 1415 his day, 23 April, was raised in England to one of the greatest feasts.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="23 April">
+    <excerptum>birthday of St. George, whose illustrious martyrdom is honored by the Church of God among the combats of other crowned martyrs.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. George" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._George">
+    <excerptum>Martyr, patron of England, suffered at or near Lydda, also known as Diospolis, in Palestine, probably before the time of Constantine.</excerptum>
+    <excerptum>According to the very careful investigation of the whole question recently instituted by Father Delehaye, the Bollandist, in the light of modern sources of information, the above statement sums up all that can safely be affirmed about St. George</excerptum>
+    <excerptum>the earliest narrative known to us, even though fragments of it may be read in a palimpsest of the fifth century, is full beyond belief of extravagances and of quite incredible marvels.</excerptum>
+    <excerptum>the Acts of St. George, though ancient in date and preserved to us (with endless variations) in many different languages, afford absolutely no indication at all for arriving at the saint's authentic history.</excerptum>
+    <excerptum>There seems, therefore, no ground for doubting the historical existence of St. George</excerptum>
+    <excerptum>An ancient cultus, going back to a very early epoch and connected with a definite locality, in itself constitutes a strong historical argument.</excerptum>
+    <excerptum>The narratives of the early pilgrims, Theodosius, Antoninus, and Arculphus, from the sixth to the eighth century, all speak of Lydda or Diospolis as the seat of the veneration of St. George, and as the resting-place of his remains</excerptum>
+    <excerptum>In the East, St. George (ho megalomartyr), has from the beginning been classed among the greatest of the martyrs.</excerptum>
+    <excerptum>This episode of the dragon is in fact a very late development, which cannot be traced further back than the twelfth or thirteenth century. It is found in the Golden Legend</excerptum>
+    <excerptum>Edward III had founded (c. 1347) the Order of the Garter, an order of knighthood of which St. George was the principal patron.</excerptum>
+    <excerptum>In 1415, the Constitution of Archbishop Chichele raised St. George's day to the rank of one of the greatest feasts</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v04 April 23 Saint George, Martyr">
+    <excerptum>The Greeks have long distinguished him by the title of The Great Martyr</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="23 April">
+    <excerptum>Saint George, Martyr</excerptum>
+  </fons>
+</sanctus>

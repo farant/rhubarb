@@ -49,6 +49,16 @@ interior constans character* FIXURA =
     "\n"
     "#endif\n";
 
+/* FIXURA SUITAE: FIXURA semel parsa (silva + semantica), asserta in
+ * parare_suitae ut olim ante blocos; sectiones parsuram et semanticam
+ * per monstratorem constantem LEGUNT (compendium_declarationes
+ * constans accipit) - declarationes quaeque sectio suas extrahit. */
+nomen structura {
+      SilvaPiscina* sp;
+      SilvaParsura* parsura;
+    SilvaSemantica* sem;
+} FixuraParsurae;
+
 /* declaratio tituli (prima registratio) aut NIHIL */
 interior constans CompendiumDeclaratio*
 _invenire (
@@ -96,40 +106,68 @@ _contractum (
         d->corpus_finis), tectum, pn);
 }
 
-s32
-principale (vacuum)
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-         Piscina* pn;
-    SilvaPiscina* sp;
-   SilvaExpansio* exp;
-    SilvaParsura* parsura;
-  SilvaSemantica* sem;
-             Xar* declarationes;
-             Xar* ordo;
-             b32  praeteritus;
-    constans CompendiumDeclaratio* d;
+    FixuraParsurae* f;
+     SilvaExpansio* exp;
 
-    pn = piscina_generare_dynamicum("probatio_officina_compendium",
-        (memoriae_index)1048576);
-    sp = silva_piscina_generare_dynamicum("probatio_compendium",
+    f = (FixuraParsurae*)piscina_allocare(c->piscina,
+        magnitudo(FixuraParsurae));
+    si (f == NIHIL)
+    {
+        redde;
+    }
+    f->sp = silva_piscina_generare_dynamicum("probatio_compendium",
         (size_t)8388608);
-    si (pn == NIHIL || sp == NIHIL)
+    si (f->sp == NIHIL)
     {
         imprimere("FRACTA: piscina\n");
-        redde I;
+        redde;
     }
-    credo_aperire(pn);
-    exp      = silva_expansio_creare(sp);
-    parsura  = silva_parsare_cum_expansione(sp, exp, "x.h", FIXURA,
-        (insignatus integer)strlen(FIXURA), &SILVA_C89_GRAMMATICA,
-        NIHIL, NIHIL, NIHIL);
-    CREDO_VERUM (parsura != NIHIL && parsura->numerus_errorum
+    c->datum  = f;
+    exp       = silva_expansio_creare(f->sp);
+    f->parsura  = silva_parsare_cum_expansione(f->sp, exp, "x.h",
+        FIXURA, (insignatus integer)strlen(FIXURA),
+        &SILVA_C89_GRAMMATICA, NIHIL, NIHIL, NIHIL);
+    CREDO_VERUM (f->parsura != NIHIL && f->parsura->numerus_errorum
         == ZEPHYRUM);
-    sem = silva_c89_semantica_analysare(sp, parsura);
-    CREDO_VERUM (sem != NIHIL);
+    f->sem = silva_c89_semantica_analysare(f->sp, f->parsura);
+    CREDO_VERUM (f->sem != NIHIL);
+}
 
-    imprimere("\n--- Probans declarationes ---\n");
-    declarationes = compendium_declarationes(parsura, sem, pn);
+interior vacuum
+_suitam_purgare (
+    CredoContextus* c)
+{
+    FixuraParsurae* f = (FixuraParsurae*)c->datum;
+
+    si (f != NIHIL && f->sp != NIHIL)
+    {
+        silva_piscina_destruere(f->sp);
+    }
+}
+
+
+/* ==================================================
+ * PROBARE: declarationes gradus supremi + contractio
+ * ================================================== */
+
+interior vacuum
+_declarationes_probare (
+    CredoContextus* c)
+{
+    constans FixuraParsurae* f   = (constans FixuraParsurae*)c->suita;
+                    Piscina* pn  = c->piscina;
+                       Xar* declarationes;
+    constans CompendiumDeclaratio* d;
+
+    si (f == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    declarationes = compendium_declarationes(f->parsura, f->sem, pn);
     CREDO_VERUM (declarationes != NIHIL);
     CREDO_VERUM (_invenire(declarationes, "Color") != NIHIL);
     CREDO_VERUM (_invenire(declarationes, "RUBER") != NIHIL);
@@ -199,8 +237,32 @@ principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS (_contractum(d, XII, pn),
             "int punctum_ ...");
     }
+}
 
-    imprimere("\n--- Probans ordinem ---\n");
+
+/* ==================================================
+ * PROBARE: ordo plagulae
+ * ================================================== */
+
+interior vacuum
+_ordinem_probare (
+    CredoContextus* c)
+{
+    constans FixuraParsurae* f   = (constans FixuraParsurae*)c->suita;
+                    Piscina* pn  = c->piscina;
+                       Xar* declarationes;
+                       Xar* ordo;
+
+    si (f == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    /* sine assertione: sectio 'declarationes' eas iudicat */
+    declarationes = compendium_declarationes(f->parsura, f->sem, pn);
+    si (declarationes == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     ordo = compendium_ordo(declarationes, pn);
     CREDO_VERUM (ordo != NIHIL);
     /* Color (RUBER, VIRIDIS eodem corpore - semel, typus primus),
@@ -228,10 +290,18 @@ principale (vacuum)
             CREDO_CHORDA_AEQUALIS_LITERIS (e->titulus, sperata[i]);
         }
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    silva_piscina_destruere(sp);
-    piscina_destruere(pn);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "declarationes", _declarationes_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "ordinem", _ordinem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("officina_compendium", SECTIONES,
+        _suitam_parare, _suitam_purgare);
 }

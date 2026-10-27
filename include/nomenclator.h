@@ -80,6 +80,12 @@ b32
 nomenclator_reficere (
     NomenclatorMontatio* m);
 
+/* vicus quies T6: VERUM dum opus aut iussum dilatum in notis pendet
+ * (pulsus crebri necessarii) */
+b32
+nomenclator_occupatus (
+    constans NomenclatorMontatio* m);
+
 /* P5b: gestus scribae notarum Motui addicitur (focus lateris) -
  * ctx = NomenclatorMontatio* */
 vacuum
@@ -95,18 +101,40 @@ nomenclator_portam_diei_ponere (
     NomenclatorDiemAperire  porta,
                     vacuum* ctx);
 
-/* P6b: argumentum lateris (vicus_acervo_mutare / montatio): "<id>"
- * personam aperit (visus personae, campus primus); "" aut NIHIL ad
- * indicem; FALSUM si id malum aut persona ignota (status non
- * mutatur) */
+/* argumentum lateris (vicus_acervo_mutare / montatio; semitae R4b):
+ * semita nomenclatoris - URI ("nomenclator/7", "nomenclator/01JC9X...",
+ * "nomenclator?quaestio=anna") aut cognomen: "<id>" ->
+ * nomenclator/<id>, "" aut NIHIL -> index (persona_aperta sublata).
+ * FALSUM si semita mala aut persona ignota (status non mutatur) */
 b32
 nomenclator_argumentum_ponere (
      NomenclatorMontatio* m,
       constans character* argumentum);
 
+/* comites P5 (facies.advocatum; ctx = NomenclatorMontatio*): prompta
+ * "quaestio" (quaestione commissa praeimpleta) - ut praeceptum eius */
+b32
+nomenclator_quaestionem_aperire (
+    vacuum* ctx);
+
+/* comites P1 (facies.locus_titulus; ctx = NomenclatorMontatio*):
+ * nomen personae apertae ("Anna Rossi"), index "Contacts" */
+chorda
+nomenclator_locus_titulus (
+     vacuum* ctx,
+    Piscina* piscina);
+
+/* semitae R4b (facies.semitam_secuta): post semitam a vico applicatam
+ * (historia) liber notarum personam apertam sequitur; D5 S3c: pagina
+ * notarum semitae (notae.pagina) praevalet paginae visae ultimae.
+ * FALSUM si latus nullum */
+b32
+nomenclator_semitam_secuta (
+    vacuum* ctx);
+
 /* persona electa: campus persona_electa si viva, aliter prima indicis;
- * 0 si nulla */
-s32
+ * chorda vacua si nulla (id in intern documenti) */
+chorda
 nomenclator_persona_electa (
     constans NomenclatorMontatio* m);
 

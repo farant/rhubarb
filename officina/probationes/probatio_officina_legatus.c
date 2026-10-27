@@ -370,7 +370,7 @@ _diagnosticum_continet (
 
 interior vacuum
 probatio_ordo_plenus (
-    Piscina* p)
+    CredoContextus* c)
 {
                    FILE* intra = tmpfile();
                    FILE* extra = tmpfile();
@@ -379,8 +379,8 @@ probatio_ordo_plenus (
                     s32  exitus;
                     b32  bene = FALSUM;
      TabellariusNuntius  n;
+                Piscina* p = c->piscina;
 
-    imprimere("--- Probans ordinem plenum ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
 
     /* 1: initialize (utf-8 oblatum) */
@@ -678,7 +678,7 @@ _sedes_prima (
 
 interior vacuum
 probatio_hover_symbola (
-    Piscina* p)
+    CredoContextus* c)
 {
                    FILE* intra = tmpfile();
                    FILE* extra = tmpfile();
@@ -686,8 +686,8 @@ probatio_hover_symbola (
     LegatusConfiguratio  cfg;
                     b32  bene = FALSUM;
      TabellariusNuntius  n;
+                Piscina* p = c->piscina;
 
-    imprimere("--- Probans hover + documentSymbol ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
 
     sprintf(corpus,
@@ -1087,7 +1087,7 @@ probatio_hover_symbola (
 
 interior vacuum
 probatio_definitio_capitis (
-    Piscina* p)
+    CredoContextus* c)
 {
                    FILE* intra = tmpfile();
                    FILE* extra = tmpfile();
@@ -1095,8 +1095,8 @@ probatio_definitio_capitis (
     LegatusConfiguratio  cfg;
                     b32  bene = FALSUM;
      TabellariusNuntius  n;
+                Piscina* p = c->piscina;
 
-    imprimere("--- Probans definitionem in caput ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
 
     sprintf(corpus,
@@ -1180,7 +1180,7 @@ probatio_definitio_capitis (
 
 interior vacuum
 probatio_utf16 (
-    Piscina* p)
+    CredoContextus* c)
 {
                    FILE* intra = tmpfile();
                    FILE* extra = tmpfile();
@@ -1188,8 +1188,8 @@ probatio_utf16 (
     LegatusConfiguratio  cfg;
                     b32  bene = FALSUM;
      TabellariusNuntius  n;
+                Piscina* p = c->piscina;
 
-    imprimere("--- Probans remappam utf-16 ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
 
     /* initialize SINE positionEncodings -> utf-16 obligatorius */
@@ -1284,7 +1284,7 @@ probatio_utf16 (
 
 interior vacuum
 probatio_syntaxis_posita (
-    Piscina* p)
+    CredoContextus* c)
 {
                    FILE* intra = tmpfile();
                    FILE* extra = tmpfile();
@@ -1292,8 +1292,8 @@ probatio_syntaxis_posita (
     LegatusConfiguratio  cfg;
                     b32  bene = FALSUM;
      TabellariusNuntius  n;
+                Piscina* p = c->piscina;
 
-    imprimere("--- Probans syntaxim positam ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
 
     sprintf(corpus,
@@ -1370,7 +1370,7 @@ probatio_syntaxis_posita (
 
 interior vacuum
 probatio_caput_servatum (
-    Piscina* p)
+    CredoContextus* c)
 {
                    FILE* intra = tmpfile();
                    FILE* extra = tmpfile();
@@ -1378,8 +1378,8 @@ probatio_caput_servatum (
     LegatusConfiguratio  cfg;
                     b32  bene = FALSUM;
      TabellariusNuntius  n;
+                Piscina* p = c->piscina;
 
-    imprimere("--- Probans caput servatum ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
 
     sprintf(corpus,
@@ -1455,7 +1455,7 @@ probatio_caput_servatum (
 
 interior vacuum
 probatio_ante_initium (
-    Piscina* p)
+    CredoContextus* c)
 {
                    FILE* intra = tmpfile();
                    FILE* extra = tmpfile();
@@ -1463,8 +1463,8 @@ probatio_ante_initium (
                     s32  exitus;
                     b32  bene = FALSUM;
      TabellariusNuntius  n;
+                Piscina* p = c->piscina;
 
-    imprimere("--- Probans ante initium ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
 
     _scribe(intra, p,
@@ -1499,13 +1499,14 @@ probatio_ante_initium (
  * ================================================== */
 
 interior vacuum
-probatio_fluxus_vacuus (vacuum)
+probatio_fluxus_vacuus (
+    CredoContextus* c)
 {
                    FILE* intra = tmpfile();
                    FILE* extra = tmpfile();
     LegatusConfiguratio  cfg;
 
-    imprimere("--- Probans fluxum vacuum ---\n");
+    (vacuum)c;
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
     memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
     CREDO_VERUM(legatus_currere(intra, extra, &cfg) == I);
@@ -1520,15 +1521,15 @@ probatio_fluxus_vacuus (vacuum)
 
 interior vacuum
 probatio_quisquiliae (
-    Piscina* p)
+    CredoContextus* c)
 {
                    FILE* intra = tmpfile();
                    FILE* extra = tmpfile();
     LegatusConfiguratio  cfg;
                     b32  bene = FALSUM;
      TabellariusNuntius  n;
+                Piscina* p = c->piscina;
 
-    imprimere("--- Probans quisquilias ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
 
     _scribe(intra, p, "hoc non est json");
@@ -1559,7 +1560,7 @@ probatio_quisquiliae (
 
 interior vacuum
 probatio_macra (
-    Piscina* p)
+    CredoContextus* c)
 {
                    FILE* intra = tmpfile();
                    FILE* extra = tmpfile();
@@ -1567,8 +1568,8 @@ probatio_macra (
     LegatusConfiguratio  cfg;
                     b32  bene = FALSUM;
      TabellariusNuntius  n;
+                Piscina* p = c->piscina;
 
-    imprimere("--- Probans macra (index v0.2) ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
 
     sprintf(corpus,
@@ -1900,14 +1901,13 @@ _vigilia_agere (
 
 interior vacuum
 probatio_vigilia (
-    Piscina* p)
+    CredoContextus* c)
 {
     constans character* via_binarii =
         "officina/build/probatio_vigilia_binarium";
     constans character* via_manifesti =
         "officina/build/probatio_vigilia_manifestum";
-
-    imprimere("--- Probans vigiliam sui (excubitor chunk 3) ---\n");
+    Piscina* p = c->piscina;
 
     /* manifestum fictum: fons verus legati (recens per se) */
     {
@@ -1958,7 +1958,7 @@ probatio_vigilia (
  * textualis, quinta sedes vitata). */
 interior vacuum
 probatio_praeparatio_derivata (
-    Piscina* p)
+    CredoContextus* c)
 {
     constans character* fons_posix_utens =
         "#include <sys/time.h>\n"
@@ -1975,8 +1975,7 @@ probatio_praeparatio_derivata (
     PraeparatorConfiguratio  cfg;
                     Piscina* piscina_capitum;
 
-    (vacuum)p;
-    imprimere("--- Probans derivationem lexici (design B) ---\n");
+    (vacuum)c;
 
     piscina_capitum = piscina_generare_dynamicum(
         "probatio_derivationis", 8388608);
@@ -2067,7 +2066,7 @@ probatio_praeparatio_derivata (
  * videre non possunt */
 interior vacuum
 probatio_capita_nova (
-    Piscina* p)
+    CredoContextus* c)
 {
     constans character* via_capitis =
         "officina/probationes/fixa/specimen_caput_novum.h";
@@ -2075,8 +2074,7 @@ probatio_capita_nova (
     PraeparatorConfiguratio  cfg;
                     Piscina* piscina_capitum;
 
-    (vacuum)p;
-    imprimere("--- Probans inventionem capitum novorum ---\n");
+    (vacuum)c;
     remove(via_capitis);
 
     piscina_capitum = piscina_generare_dynamicum(
@@ -2226,7 +2224,7 @@ _vocata_numerus (
 
 interior vacuum
 probatio_recensio (
-    Piscina* p)
+    CredoContextus* c)
 {
                    FILE* intra = tmpfile();
                    FILE* extra = tmpfile();
@@ -2235,8 +2233,8 @@ probatio_recensio (
     LegatusConfiguratio  cfg;
                     b32  bene = FALSUM;
      TabellariusNuntius  n;
+                Piscina* p = c->piscina;
 
-    imprimere("--- Probans recensionem (gradus III) ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
 
     sprintf(via_stalae, "%s/officina/build/probatio_stala_f.c",
@@ -2348,15 +2346,15 @@ probatio_recensio (
 
 interior vacuum
 probatio_mcp (
-    Piscina* p)
+    CredoContextus* c)
 {
                    FILE* intra = tmpfile();
                    FILE* extra = tmpfile();
     LegatusConfiguratio  cfg;
                     b32  bene = FALSUM;
      TabellariusNuntius  n;
+                Piscina* p = c->piscina;
 
-    imprimere("--- Probans modum MCP (LEGATI) ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
 
     _scribe_lineam(intra, p,
@@ -2832,47 +2830,57 @@ probatio_mcp (
     fclose(extra);
 }
 
+/* gravis OMNIBUS: legatus_currere in processu (XV vicibus) indicem
+ * nexus totum onerat - RSS maximum DCCVIII MiB in HEAD (2026-10-21).
+ * Apex vitae semel crescit: sumptum fert sectio quae PRIMA currit
+ * (ordo mixtus alteram eligit), ergo signum in omnibus. Memoria hic
+ * probatur, non effluit. Praerequisitum: build/nexus.tsv (./silva/
+ * nexus.sh -renovare) - in arbore recenti sine eo rubra. */
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "ordinem plenum", probatio_ordo_plenus, NIHIL, NIHIL, "gravis",
+        NIHIL },
+    { "hover + documentSymbol", probatio_hover_symbola, NIHIL, NIHIL,
+        "gravis", NIHIL },
+    { "macra (index v0.2)", probatio_macra, NIHIL, NIHIL, "gravis",
+        NIHIL },
+    { "vigiliam sui (excubitor chunk 3)", probatio_vigilia, NIHIL,
+        NIHIL, "gravis", NIHIL },
+    { "derivationem lexici (design B)", probatio_praeparatio_derivata,
+        NIHIL, NIHIL, "gravis", NIHIL },
+    { "inventionem capitum novorum", probatio_capita_nova, NIHIL, NIHIL,
+        "gravis", NIHIL },
+    { "definitionem in caput", probatio_definitio_capitis, NIHIL, NIHIL,
+        "gravis", NIHIL },
+    { "remappam utf-16", probatio_utf16, NIHIL, NIHIL, "gravis",
+        NIHIL },
+    { "syntaxim positam", probatio_syntaxis_posita, NIHIL, NIHIL,
+        "gravis", NIHIL },
+    { "caput servatum", probatio_caput_servatum, NIHIL, NIHIL, "gravis",
+        NIHIL },
+    { "ante initium", probatio_ante_initium, NIHIL, NIHIL, "gravis",
+        NIHIL },
+    { "fluxum vacuum", probatio_fluxus_vacuus, NIHIL, NIHIL, "gravis",
+        NIHIL },
+    { "quisquilias", probatio_quisquiliae, NIHIL, NIHIL, "gravis",
+        NIHIL },
+    { "recensionem (gradus III)", probatio_recensio, NIHIL, NIHIL,
+        "gravis", NIHIL },
+    { "modum MCP (LEGATI)", probatio_mcp, NIHIL, NIHIL, "gravis",
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+
 integer
 principale (vacuum)
 {
-    Piscina* piscina;
+    s32 exitus;
 
     imprimere("\n========================================\n");
     imprimere("PROBATIO OFFICINA LEGATUS\n");
     imprimere("========================================\n\n");
 
-    piscina = piscina_generare_dynamicum("probatio_legatus",
-        CDLVI);
-    si (piscina == NIHIL)
-    {
-        imprimere("piscina generari non potuit\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    probatio_ordo_plenus(piscina);
-    probatio_hover_symbola(piscina);
-    probatio_macra(piscina);
-    probatio_vigilia(piscina);
-    probatio_praeparatio_derivata(piscina);
-    probatio_capita_nova(piscina);
-    probatio_definitio_capitis(piscina);
-    probatio_utf16(piscina);
-    probatio_syntaxis_posita(piscina);
-    probatio_caput_servatum(piscina);
-    probatio_ante_initium(piscina);
-    probatio_fluxus_vacuus();
-    probatio_quisquiliae(piscina);
-    probatio_recensio(piscina);
-    probatio_mcp(piscina);
-
-    credo_imprimere_compendium();
-
-    {
-        b32 omnia = credo_omnia_praeterierunt();
-
-        piscina_destruere(piscina);
-        imprimere("========================================\n\n");
-        redde omnia ? ZEPHYRUM : I;
-    }
+    exitus = credo_suitam_currere("officina_legatus", SECTIONES);
+    imprimere("========================================\n\n");
+    redde (integer)exitus;
 }

@@ -19,9 +19,11 @@
 #
 # CUSTODIAE (2026-10-19: sondae involutionis i32 GB veros tangebant, una
 # XXXIV horas pendebat; probatio_arbor_syntaxis conversa XLIX G
-# COMPRESSA tenebat cum RSS CCLXI M): vestigium memoriae (MEM ex top:
-# residens + compressa - macOS comprimit, RSS mentitur) > SONDA_MEMORIA_MB
-# (IV M MB)
+# COMPRESSA tenebat cum RSS CCLXI M): vestigium memoriae (bin/mensor
+# memoria = memoria_processus, lector UNUS custodiarum omnium - credo T4,
+# processus T5, fabrica T6; olim 'top -stats mem' interpretatum, credo
+# memoria T7; compressa inclusa - macOS comprimit, RSS mentitur) >
+# SONDA_MEMORIA_MB (IV M MB)
 # -> SIGKILL et 'memoria excessa'; tempus > SONDA_MORA s (CXX) ->
 # 'mora excessa'. Sub ASan etiam hard_rss_limit_mb/malloc_limit_mb (ASan
 # ipse nominat allocationem nimiam). Sonda quae limitem tangit vitium
@@ -43,6 +45,7 @@ VIA="${1:-}"
 [ -n "$VIA" ] && [ -f "$VIA" ] || { echo "usus: $0 [-nudus | -domus] VIA.c [argumenta...]" >&2; exit 2; }
 shift
 [ -x bin/aedilis ] || { echo "sonda: bin/aedilis deest (./tools/aedilis_struere.sh)" >&2; exit 2; }
+[ -x bin/mensor ] || { echo "sonda: bin/mensor deest (./tools/mensor_struere.sh) - custos memoriae eo legit" >&2; exit 2; }
 T=$(basename "$VIA" .c)
 D="$RADIX/build/sonda/$T"
 O="$D/obiecta$([ "$NUDUS" -eq 1 ] && echo _nuda)$([ "$DOMUS" -eq 1 ] && echo _domus)"
@@ -82,10 +85,9 @@ PID=$!
 custodia=""
 initium=$(date +%s)
 while kill -0 "$PID" 2>/dev/null; do
-    mem=$(top -l 1 -pid "$PID" -stats mem 2>/dev/null | tail -1 | tr -d ' +-')
-    mb=$(echo "$mem" | awk '/[0-9]+K$/ {printf "%d", $0/1024} /[0-9]+M$/ {printf "%d", $0+0} /[0-9]+G$/ {printf "%d", ($0+0)*1024} /[0-9]+T$/ {printf "%d", ($0+0)*1048576}')
-    if [ -n "$mb" ] && [ "$mb" -gt "$LIMES_MB" ]; then
-        kill -9 "$PID" 2>/dev/null; custodia="memoria excessa ($mem > $LIMES_MB MB, residens + compressa)"; break
+    octeti=$(bin/mensor memoria "$PID" -machina 2>/dev/null | awk -F'\t' '$1 == "MEMORIA" { print $3 }')
+    if [ -n "$octeti" ] && [ $(( octeti / 1048576 )) -gt "$LIMES_MB" ]; then
+        kill -9 "$PID" 2>/dev/null; custodia="memoria excessa (vestigium $(( octeti / 1048576 )) MB > $LIMES_MB MB, compressa inclusa)"; break
     fi
     if [ $(( $(date +%s) - initium )) -gt "$MORA" ]; then
         kill -9 "$PID" 2>/dev/null; custodia="mora excessa (> $MORA s)"; break

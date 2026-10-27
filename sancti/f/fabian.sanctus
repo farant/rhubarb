@@ -1,0 +1,34 @@
+<sanctus id="fabian" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Fabian</nomen>
+  <nomen lingua="la" principale="verum" fontes="ce">Fabianus</nomen>
+  <obitus annus="250" mensis="1" dies="20" locus="Rome" martyrium="verum" fontes="ce bu mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="1" dies="20" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="1" dies="20" fontes="mr"/>
+  <munus fontes="us ce mr">pope</munus>
+  <munus fontes="us ce mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Fabian was pope from 236 to 250, succeeding Anterus. Eusebius relates the circumstances of his election: he had come into Rome from his farm, and while the names of illustrious men were being considered a dove suddenly descended on his head, though no one had thought of him, and he was chosen with joyful unanimity. Butler adds that he was then a layman and a stranger.</paragraphus>
+    <paragraphus fontes="ce mr">Little is known of his pontificate, which fell in a lull of persecution. The Liber Pontificalis says he divided Rome into seven districts, each under a deacon, and appointed subdeacons to collect the acts of the martyrs; much work was done in the catacombs, and he had the body of Pope Pontianus brought from Sardinia to the catacomb of St. Callistus. He died a martyr on 20 January 250 at the beginning of the persecution of Decius and was buried in the Crypt of the Popes in the same catacomb, where De Rossi found his Greek epitaph in 1850.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Pope St. Fabian" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Pope_St._Fabian">
+    <excerptum>(FABIANUS) Pope (236-250), the extraordinary circumstances of whose election is related by Eusebius</excerptum>
+    <excerptum>After the death of Anterus he had come to Rome, with some others, from his farm and was in the city when the new election began.</excerptum>
+    <excerptum>While the names of several illustrious and noble persons were being considered, a dove suddenly descended upon the head of Fabian, of whom no one had even thought.</excerptum>
+    <excerptum>they chose Fabian with joyous unanimity and placed him in the Chair of Peter. During his reign of fourteen years there was a lull in the storm of persecution. Little is known of his pontificate.</excerptum>
+    <excerptum>The "Liber Pontificalis" says that he divided Rome into seven districts, each supervised by a deacon, and appointed seven subdeacons, to collect, in conjunction with other notaries, the "acta" of the martyrs</excerptum>
+    <excerptum>Under him considerable work was done in the catacombs. He caused the body of Pope St. Pontianus to be exhumed, in Sardinia, and transferred to the catacomb of St. Callistus at Rome.</excerptum>
+    <excerptum>Fabian died a martyr (20 Jan., 250) at the beginning of the Decian persecution, and was buried in the Crypt of the Popes in the catacomb of St. Callistus, where in recent times (1850) De Rossi discovered his Greek epitaph</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v01 Jan. 20 S. Fabian">
+    <excerptum>He succeeded St. Anterus in the pontificate, in the year 236.</excerptum>
+    <excerptum>though not thought of before, as being a layman and a stranger.</excerptum>
+    <excerptum>St. Fabian died a glorious martyr in the persecution of Decius, in 250, as St. Cyprian and St. Jerom witness.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="20 January">
+    <excerptum>AT Rome, the birthday of St. Fabian, pope, who suffered martyrdom in the time of Decius, and was buried in the cemetery of Callistus.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="20 January">
+    <excerptum>Saint Fabian, Pope and Martyr</excerptum>
+  </fons>
+</sanctus>

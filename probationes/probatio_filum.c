@@ -9,6 +9,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/socket.h>
+#include <sys/un.h>
 
 
     /* ==================================================
@@ -1484,6 +1486,57 @@ _sectio_tricesima_tertia (
     }
 }
 
+    /* ---- status: modus (bits permissionum) et socket (canalis T1) ---- */
+
+interior vacuum
+_sectio_tricesima_quarta (
+    CredoContextus* c)
+{
+    constans character* via_fili =
+        "/tmp/probatio_filum_modus_status.txt";
+    constans character* via_dir   = "/tmp/probatio_filum_modus_dir";
+    constans character* via_sock  = "/tmp/probatio_filum_modus_dir/s";
+     structura sockaddr_un  a;
+                FilumStatus st;
+                    integer fd;
+
+    (vacuum)c;
+    (vacuum)filum_delere(via_fili);
+    (vacuum)filum_arborem_delere(via_dir);
+
+    /* filum regulare: modus exactus, non socket */
+    CREDO_VERUM(filum_scribere_literis(via_fili, "x"));
+    CREDO_VERUM(filum_modum_ponere(via_fili, 0640));
+    CREDO_VERUM(filum_status(via_fili, &st));
+    CREDO_AEQUALIS_S32((s32)st.modus, (s32)0640);
+    CREDO_VERUM(st.est_filum);
+    CREDO_FALSUM(st.est_socket);
+
+    /* directorium: modus 0700, non socket */
+    CREDO_VERUM(filum_directorium_creare_cum_modo(via_dir, 0700));
+    CREDO_VERUM(filum_status(via_dir, &st));
+    CREDO_AEQUALIS_S32((s32)st.modus, (s32)0700);
+    CREDO_VERUM(st.est_directorium);
+    CREDO_FALSUM(st.est_socket);
+
+    /* socket AF_UNIX: est_socket, nec filum nec directorium */
+    fd = socket(AF_UNIX, SOCK_STREAM, ZEPHYRUM);
+    CREDO_NECESSE(fd >= ZEPHYRUM);
+    memset(&a, ZEPHYRUM, magnitudo(a));
+    a.sun_family = AF_UNIX;
+    strcpy(a.sun_path, via_sock);
+    CREDO_NECESSE(bind(fd, (structura sockaddr*)(vacuum*)&a,
+        (socklen_t)magnitudo(a)) == ZEPHYRUM);
+    CREDO_VERUM(filum_status(via_sock, &st));
+    CREDO_VERUM(st.est_socket);
+    CREDO_FALSUM(st.est_filum);
+    CREDO_FALSUM(st.est_directorium);
+
+    close(fd);
+    (vacuum)filum_delere(via_fili);
+    (vacuum)filum_arborem_delere(via_dir);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "filum_scribere et filum_legere_totum", _sectio_prima, NIHIL,
         NIHIL, NIHIL, NIHIL },
@@ -1543,6 +1596,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL, NIHIL },
     { "filum_appendere_firmiter", _sectio_tricesima_tertia, NIHIL,
         NIHIL, NIHIL, NIHIL },
+    { "status modus et socket", _sectio_tricesima_quarta, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

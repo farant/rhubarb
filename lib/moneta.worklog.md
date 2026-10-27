@@ -96,3 +96,11 @@ the installed binaries: `tools/briar_fumus.sh` sanum (stages I–X),
 - The binaries were linked from the working tree, which held another
   session's uncommitted materia edits (5 files, +66/−17); the briar
   suite and both fumus gates were green with them in.
+
+## 2026-10-20 - MonetaFons + moneta_numerator (genera-datorum D3)
+
+Documents (agenda, personae) take a mint hook `MonetaFons` (NIHIL =
+moneta_ulid), the id analogue of the clock port: replay reads acts,
+only creation reads the mint. `moneta_numerator` (ctx = i32* last
+minted) writes "1", "2", ... for tests - never in real use, a reopened
+document would repeat ids (documents refuse an id already present).

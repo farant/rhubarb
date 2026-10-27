@@ -537,3 +537,509 @@ fork-unsafety.
 - `_credo_arborem_delere` builds child paths with memcpy after the
   existing length check: gcc -O2 under musl/glibc reports
   -Wformat-overflow on the sprintf because it cannot prove the bound.
+
+## 2026-10-19 - credo III slice A: values in failures
+
+Wish 01M5B3DF4Z29 (parent 01M5B3AQ1RXB). Before: CREDO_CHORDA_AEQUALIS,
+_CONTINET, _INCIPIT, _TERMINATUR were thin wrappers over CREDO_VERUM, so a
+failure printed only the expression and an empty Speratus (484 uses);
+CREDO_CHORDA_AEQUALIS_LITERIS copied Receptus into a 256-byte buffer and
+silently cut it at 255; AEQUALIS_I32 / INAEQUALITAS_I32 printed unsigned
+i32 with %d (>= 2^31 showed negative); F64_PROXIMUS never printed the
+difference.
+
+Now: one renderer (`_credo_chordam_reddere`) - by length, quoted, escaped
+(\t \n \r \\ \" and \xNN for bytes < 0x20 and 0x7f; bytes >= 0x80 raw so
+UTF-8 stays readable - the Differentia line carries hex), windowed around
+the first difference when > CLX octets ("fenestra [a, b)"). A third line
+`Differentia:` via `_credo_notare_plenum` (the old `_credo_notare` is a
+wrapper, so manus.c and every other caller are unchanged). New:
+LITERAE_AEQUALES, OCTETI_AEQUALES (hex window, `[ff]` marks the byte),
+full S64 and I64 families, F32_PROXIMUS, F64_RELATIVE, F64_ULP (IEEE
+ordering trick: sign-magnitude -> monotone u64, so -0.0 == +0.0; NaN never).
+
+Gotcha caught by the test: helper macros that stringify (`#a`) must do it
+in the OUTER macro - arguments handed to an inner macro are already
+expanded, so `(s64)-V` printed as `(s64)-5`.
+
+Naming: `CREDO_REDDITIO` (redditio is real Latin but unknown to the lint
+lexicon) renamed `CREDO_ALVEUS_EFFUSIONIS` rather than glossed; `ulp` got
+an `ignotum-permissum` glossary entry (not a word in either corpus).
+Test: tools/credo_fumus.sh stage XIV (red first: rc 99 before the
+macros existed), 16 named failures + 21 passing forms.
+
+## 2026-10-19 - credo memoria T2: memory per section
+
+project-specs/credo-memoria-spec.md par. III. Each section's SECTIO line
+gains three KiB fields (XII-XIV): arena peak (`piscina_summa_apex_usus`
+of the section's own piscina, read before `piscina_destruere`), process
+footprint at section end, and the rise of the lifetime peak while the
+section ran (via `memoria_processus_legere(ZEPHYRUM, ...)` before
+`_credo_sectionem_agere` and after `purgare`). KiB, not octets, because
+fabrica's `_numerum_legere` accepts at most nine digits (49 GB in octets
+is eleven; nine digits of KiB is ~950 GB). The fabrica reader now accepts
+X | XI | XIV fields in the SAME commit - before, any other count made the
+whole member "deformis".
+
+Gotchas: the OMISSA path reuses the previous section's `summa`, so it
+zeroes the memory fields itself; credo now links `memoria_processus`, so
+every hand-written dependency list that names "credo" needed
+"memoria_processus_macos" too (briar, ludus_tessera, officina, oratio,
+tessera, credo_fumus struere, venenum BASIS; gesta regenerated).
+Measured in credo_fumus XV: a 32 MiB section reads 32768 / 33824 / 32800,
+the light section after it 0 / 1056 / 0.
+
+## 2026-10-20 - memory ceiling per section (credo memoria T4)
+
+Defaults come from the T3 measurement (`mensor quaestio graves` after a
+forced run of the root suites and the seven subsystem composites):
+3116 sections, the heaviest normal one is 135 MiB, and two are over 256
+(probatio_cellae phasis 389, pictor_imago IV 317). Fran chose ordinary
+256 / gravis 1024, with those two tagged `gravis`.
+
+The check sits between `purgare` and `_credo_sectionem_summare`, which
+is why the memory readings moved before the summary: the failure is
+recorded with `_credo_notare_plenum` while the section's notations are
+still open, so the summary, exit code and SECTIO fracture all pick it
+up with no new path. filum = suite title, versus = section number, so
+the line reads `at <suite>:<n>`. The message names whichever of arena
+peak / peak rise is larger: in the fumus fixture the rise (32800 KiB)
+beat the arena (32768), and my first regex wrongly required "arenae".
+
+Semantics chosen where the spec was ambiguous: `CREDO_MEMORIA_MB`
+replaces only the ordinary ceiling (0 disables it); gravis always uses
+GRAVIS. strtol garbage reads as 0 = off.
+
+Rename slip: a regex rename `vestigium_kib -> vestigium` with
+lookbehind `[\w.>]` protected `summa.vestigium_kib` but not the struct
+field's own declaration. The compile caught it. For locals next to
+same-named members, rename by sites, not by pattern.
+
+The subsystem suites (133) are all v1 (SYNTHETICA), so they're
+invisible here; whole-process `/usr/bin/time -l` shows six silva corpus
+suites at 4.1-7.6 GB (park 01M5CQYDD841) - relevant for T6, not T4.
+
+## 2026-10-20 - the ceiling under AddressSanitizer
+
+The quinta merge check went 42/43; venenum was red: probatio_plexus
+"partitio contra Artin" had a 269 MiB peak rise against 256 MiB. In the
+plain root run the same section is 37 MiB. Same binary, two runs: arena
+37.3 MiB both times; rise 268.9 MiB with ASan's default quarantine, 38.7
+MiB with `ASAN_OPTIONS=quarantine_size_mb=0`. ASan's quarantine and
+shadow memory are in the process footprint, so "how much the process
+peak rose" isn't a property of the section under a sanitizer. My T4
+design didn't consider that.
+
+Fix: compile-time `CREDO_SUB_ASAN` (`__SANITIZE_ADDRESS__`, or
+`__has_feature(address_sanitizer)` behind `defined(__has_feature)` so
+non-clang compilers and silva's model skip it), and under it the weight
+is the arena peak alone. The parameter then goes unused, which
+-Werror rejects, so the ASan branch has `(vacuum)auctus;`. The first
+ASan fixture build caught this, and venenum's build would have failed
+on it the same way.
+
+Fixture lesson: a fixture can't produce a quarantine-sized rise. 16 MiB
+blocks bypassed the quarantine (rise 0), and 4096 × 32 KiB freed blocks
+gave about 1 MiB, presumably because idle uniform pages get compressed.
+The stage instead makes the rise outside the arena directly (64 MiB
+malloc, non-uniform fill, held for the section), which tests what
+matters: under ASan, the rise isn't judged.
+
+## 2026-10-20 — suite fixture: the interning exception, and how deep examen 94 looks
+
+Step 0 of the subsystem migration (01M5B3BT9R71) was to write down Fran's
+10-19 decree (01M5B814PFMY): the suite fixture is read-only except that
+sections may intern into the fixture's own interning table. Interned
+strings are compared by pointer, so a per-section table would silently
+break identity with the fixture's names. Interning is also order-free:
+the same text gives the same chorda whichever section interns it first.
+
+While reading the examen rule I found that code 94 only checks the first
+level. It flags `c->suita` being assigned, or converted (explicitly or
+by scope) to a pointer to non-const. Every fixture suite reads through
+`constans T* o = (constans T*)c->suita;`, and `constans` on the struct
+doesn't reach its pointer members: `o->lista` is still `Xar*`, so
+`xar_addere(o->lista, ...)` compiles and examen says nothing. The
+exception is already in use this way: probatio_natura_canones.c passes
+`ex->intern` from its fixture into canon_* / stml_legere in sections.
+
+Fran chose (a) for now: document the exception (credo.h, examen's
+credo-rules comment, the 94 message and English gloss) and say that 94
+is first-level only. The deeper rule is (b), with the exception built
+in, as part of step 1: track locals that come from c->suita, and flag
+writes through their member chains plus mutable-pointer members passed
+to non-const pointer parameters, unless the callee is internamentum_*.
+Its false-positive rate depends on how const-correct the house APIs are.
+That has to be measured on the root fixture suites before deciding how
+strict to make it.
+
+## 2026-10-20 — examen 94 now follows the fixture's pointer members ("94 profundum")
+
+Step 1 (b) of the subsystem migration. Code 94 used to stop at `c->suita`
+itself. It now also follows pointer members through dataflow provenance.
+Same pattern as code 82: `c->suita` is the root (FLUXUS_STIRPS_PRIMA),
+carried through locals, `->`/`.`/`[]`/`*`/`&`/casts; a join where paths
+disagree is AMISSA and silent, and so is an escaped variable. At each
+use of a fixture-rooted local the chain is followed up to its outermost
+expression, which is flagged if it is:
+- a write through a dereference (`o->p[0] = 1`, `*o->p = 2`, `++`), or
+- a mutable pointer passed to a prototyped non-const parameter.
+Unknown, K&R and variadic callees stay silent. Limit (pinned by a test):
+a helper that receives the fixture as a parameter isn't followed, so the
+rule works within one function only.
+
+The decree's exception is keyed on the ARGUMENT TYPE, not the callee's
+name. Passing the fixture's `InternamentumChorda*` anywhere is allowed:
+canon_legere(..., intern) and stml_legere(..., intern) intern too. The
+first draft keyed on `internamentum_*` and flagged ~20 legitimate sites.
+
+Measured over all 344 v2 suites: 80 hits in 5 suites, then 58 after
+the type-keyed exception. All of them are call arguments; there were no
+direct writes. Classification:
+- Pure reads behind a non-const API:
+  - `insula_attributum` now takes `constans InsulaRepositorium*` (Fran
+    OK'd it; the body is unchanged because const is shallow:
+    `repo->radix` stays `StmlNodus*`).
+  - Three test helpers in probatio_natura_canones.c went const.
+  - `_documentum_iudicare` (forwards `Canon*` into
+    canon_iudicare → nodum_iudicare) and `_titulo_colligere` (its Xar
+    consumer calls stml_attributum_capere) can't go const without
+    library changes. They are tolerated, park 01M5DWFJ3YVRT9HSBRYKEA7J8D.
+- Real hidden mutation:
+  - git read functions allocate scratch in `repositorium->piscina`;
+  - pictor_imago_fons allocates in `pf->doc->piscina`.
+  So every section reading a git object grows the fixture's arena. The
+  tests stay deterministic, which is why nothing failed. 30 sites are
+  tolerated in probatio_git.c and probatio_pictor_figurae.c, park
+  01M5DWCWHCV4Q1Q8Z8767WTA47 (library fix: scratch memory into the
+  caller's piscina).
+A tolerated site that stops firing turns IRRITUM, so once a library is
+fixed the tolerations have to be removed. After that, all 344 suites
+pass with 0 hits and 0 IRRITUM.
+
+Plants: disabling the collector turns exactly the 4 firing cases red;
+disabling the type exception turns exactly the interner case red.
+
+## 2026-10-21 — conversion checker for the subsystem migration (tools/credo_conversionem_probare.py)
+
+Step 1's other half. The audit's verifier (scratchpad, 10-17) built a
+private copy of a root suite with `sonda.sh -domus`. Subsystem suites
+need their subsystem's include and link lists, so this checker builds
+both versions through the subsystem's own runner. To get the HEAD
+numbers, it puts the HEAD text in the file, builds and runs it, then
+restores the converted text in a `finally` (plain write + utime, never
+`cp -p`).
+
+It runs the built binary itself from the root, with RHUBARB_RADIX and
+CREDO_VERDICTA set: `<sub>/build/<suite>` for direct runners,
+`build/fabrica/area/probationes_<sub>/<suite>/<suite>` for composites,
+`build/probationes/<suite>` for root, choosing whichever was built after
+the run started. Reasons:
+- the runners filter by substring (`probatio_gesta` builds 3 suites,
+  `probatio_silva_arbor` 5), so their output can't be attributed;
+- fabrica passes an env allowlist (`<ambitus>`), so CREDO_ORDO never
+  reaches a composite member.
+v1 binaries don't write CREDO_VERDICTA (only credo_suitam_currere does),
+so v1 numbers come from the compendium. "Totalis:" is taken from its
+LAST occurrence anywhere on the line, since progress dots share lines.
+
+Policy built in: **a conversion keeps the counts.** The static CREDO_*
+count and the run's Totalis/Praeteriti must equal HEAD's. Splitting a
+loop into per-item sections changes Totalis, so restructuring goes in a
+separate commit after the conversion. That way the checker proves
+nothing was lost. A memory hit (SECTIO failure genus credo_memoria) has
+its own verdict, MEMORIA: the suite is pulled out for hands-on work and
+never handed to an agent (Fran 10-20).
+
+css pilot finding: credo_convertere refuses all 10 css suites. Most
+build a lexicon `ratum` before their blocks (fixture needed), and
+corpus/computus/canon have no '--- Probans ---' titles. css is hand
+conversion. First one: probatio_css_corpus, one section (one loop
+with tallies), BONUM 7>7 assertions, 24>24 Totalis, 3 mixed seeds.
+
+Plants on the converted suite, each through silva.planta, red then
+green after revert:
+- drop an assertion: MALUM 7->6, 24->23.
+- two sections sharing a static: mixed order breaks on seeds 1,3,4,8
+  of 8, and examen independently rejects it (92).
+- 300 MiB in the section's piscina: MEMORIA, the section is named.
+
+## 2026-10-21 — css pilot done: 10 suites, 43 sections, all BONUM (briefing for step 3)
+
+All 10 css suites converted by hand. credo_convertere refused every
+one. Every result was BONUM under tools/credo_conversionem_probare.py:
+equal assertion count and Totalis, k/k sections, 3 mixed seeds, examen
+ACCIPE. Sections per suite: corpus 1, computus 2, registrum 5,
+diagnostica 3, stml 3, totalitas 1, selector 8, adaptare 10, canon 2,
+arbor 8. The checker takes ~20-35 s per suite.
+
+Patterns, roughly in order of frequency:
+- **Prelude before the blocks** (lexicon `ratum`, `consilium`, canon
+  loading, interner): becomes the fixture in `parare_suitae`, with
+  `c->datum = f` set only on success. Sections read it as
+  `constans FixuraX* f = c->suita`. The prelude's assertions move with
+  it and still count toward Totalis. If only ONE block uses the prelude
+  value (arbor: ratum only in the STML block), that section builds it
+  itself and there's no fixture.
+- **Guarding the fixture allocation:** a plain `si (f == NIHIL) redde;`
+  in parare, and `si (c->suita == NIHIL) redde;` in sections. That
+  gives VACUA sections and the suite FRACTA. NOT CREDO_NECESSE: it's
+  counted (the checker caught 13->14 on computus).
+- **File-scope statics written between blocks:** examen 92 flags them
+  in sections.
+  - Counters (stml SEDES_ELEMENTA): become per-section locals passed
+    by pointer.
+  - Configuration (totalitas RADIX_VIAE): becomes a function.
+  - Globals read by helpers (selector canon/intern/consilium): go into
+    the fixture, passed to helpers as `constans FixuraX*`.
+- **Aggregate assertions across blocks** ("cases >= CC", "documenta >
+  VI"): the blocks they span stay ONE section (totalitas, canon's
+  iudicium). Splitting is a separate commit that decides where the
+  floor lives. stml's "elementa > 0" moved into the corpus section
+  instead (stricter, same count).
+- **Several '--- Probans ---' titles in one block:** the first becomes
+  the section title (better: the banner's words), the rest become
+  `CREDO_GRADUS ("...")`. Not counted, and examen 95 flags hand-printed
+  titles.
+- **A block-local `c`** (MateriaNodus* c, MateriaArborConsilium c)
+  shadows the section's parameter: rename it (compositus, consilium).
+- **C89:** declarations go before the NIHIL guard (-Wdeclaration-after-
+  statement). A section that doesn't use piscina/ratum mustn't declare
+  them (-Wunused-variable, -Wunused-but-set-variable). Detecting
+  variables by word match catches comments too ("spatia significantia").
+- **Helper signatures:** a fixture member passed to a non-const helper
+  parameter trips 94-deep. canon's `_documentum_iudicare` took
+  `Canon*` and now takes `constans Canon*`.
+- **Before commissio:** run `VOCABULA_VIAE_ADDITAE=... ./oratio/
+  vocabula.sh -nova`. New section names hit unknown words 5 times
+  (rancorem, inlineos, adaptationis, derivae, nidificationem). The
+  formator wraps table rows badly after a rename, so write those rows
+  by hand. Banners are exactly 50 '='.
+
+## 2026-10-21 — toml and saltuarius done; step 2 complete
+
+toml (13) and saltuarius (13) are v2. Every suite is BONUM under the
+checker (same counts as HEAD, k/k sections, 3 mixed seeds). Step 2 is
+finished: css 10 + toml 13 + saltuarius 13 = 36 suites converted by
+hand or semi-mechanically. Only toml_api and saltuarius_res converted
+with credo_convertere.
+
+New patterns beyond the css list above:
+- **The prelude builds a mutable world** (nexus, liber, origo):
+  `parare_suitae` asserts its creation once on a throwaway instance,
+  and each section builds its own through a non-asserting helper
+  (`_mundum_parare`). A fixture can't hold it, because examen 94
+  forbids sections mutating fixture state.
+- **A later block depends on an earlier block's state on purpose**
+  (bibl LRU: "a b iam insunt"): the section rebuilds that state with
+  non-asserting calls. Counts are equal, and mixed order proves it.
+- **Scenario suites** (quaestio, claves, visum, columnae, limes,
+  structura): an interactive session where every block continues the
+  last. These are ONE section, with the sub-titles as CREDO_GRADUS.
+  Replaying the session per section would be verbose and fragile.
+- **Disk fixture at a fixed /tmp path** (salve, with a cross-block
+  file): moved into `credo_area(c)` in parare_suitae. The path is
+  private to the run and deleted after purgare. It used to be shared
+  across concurrent runs.
+- **Static counters that only label failures** (toml arbor): removed;
+  the failure message names the case's source text.
+- **A hidden order dependence found by the checker** (saltuarius
+  liber): 'iunctio' only parsed because 'strata' had prepared silva on
+  the SHARED nexus earlier. In v2, mixed order breaks it on every seed.
+  The section now prepares silva on its own nexus.
+
+Tooling (scratchpad, session-local; promote for step 3):
+- conv_sectiones.py: banner + block, optional ratum fixture, -opus,
+  -nexus.
+- conv_unus.py: whole main into one section.
+Bug found in my own tool: renaming a shadowing local `c` also hit a
+string literal ("/a/b/c.txt" -> "/a/b/compositus.txt"), and the
+checker caught it as a failed assertion. The rename now skips string
+literals. An audit of literals added or removed, across all 36
+conversions against 7f1c85c5, found only intended changes and one
+lost print, restored (toml canon "canon ABEST").
+
+Memory: toml_stml was the only MEMORIA hit. It was handled hands-on
+(xar's growable segment table, fac4fc74).
+
+## 2026-10-21 — converters promoted to tools/ (step 3 prerequisite)
+
+The scratchpad converters are now house tools, so step 3 agents in
+their own worktrees can use them (Fran's OK, 10-21):
+- `tools/credo_convertere_sectiones.py`: banner + block -> sections.
+  Optional ratum fixture (LEXICON), `-opus=T,N`, `-nexus`.
+- `tools/credo_convertere_scaenam.py`: scenario suite -> ONE section.
+Each header lists what the tool doesn't handle (the manual patterns in
+the 10-21 entries above) and the after-steps: formator, the checker,
+the Latin lint. Regression: re-running on the v1 text of toml
+registrum (fixture), toml coctum (-opus) and saltuarius nexus (-nexus)
+reproduces the committed conversions byte for byte. saltuarius
+structura (scaenam) differs by one blank line after the declarations,
+because the committed file predates that fix; the new output is the
+house style. Refusals are named (exit 1, nothing written) where the
+scratch versions asserted.
+
+## 2026-10-21 — step 3 batch 1 (agents) and converter fixes
+
+Four agents (html, materia, md, gesta), one subsystem each in its own
+worktree. 46 of 49 suites converted and BONUM; 3 MEMORIA pulled out for
+hands-on work:
+- gesta tabularium: arena 294.5 MiB, one world through 55 headings;
+- html html_md: arena 259 MiB, "porta: initus md per html";
+- md md_stml: footprint +308 MiB, corpus STML circuit (a twin of toml_stml).
+Two more hidden order dependences were found and fixed: materia pictor
+(block II read block I's aurum_mensura) and md census ('cumulationem'
+continues block 1).
+
+Setup trap: the agent worktrees were cut from the main checkout at
+91907748, not from quinta, so 81 commits were missing (tools, checker,
+examen 94). The html agent caught it. All four moved their clean
+branches forward with `git reset --keep 8d1a7b31` before any edit.
+Future briefs: check the base first.
+
+Converter bugs the agents found, now fixed (refuse rather than drop
+anything silently):
+- credo_convertere_sectiones.py:
+  - Two-line titles ("..." "---\n") were missed. Worse, "remove the
+    first title" then deleted the first single-line STEP title (html
+    arbor O7b/O7c). The counts didn't show it; a title audit did.
+    Titles are now joined across literals.
+  - A main prelude (radix_viae, a variable reached through a macro)
+    was dropped while the tool reported success. Now: a prelude or tail
+    holding anything beyond the known boilerplate is REFUSED, naming
+    the lines. Known: piscina setup, credo_aperire, the ratum lines
+    with LEXICON, radix via RHUBARB_RADIX, opus with -opus, nexus with
+    -nexus; on the tail side, compendium, destruction, redde.
+  - `(vacuum)c` is decided from the final generated text.
+  - Title removal no longer leaves two blank lines.
+  - A shadowing local `c` needs `-c=NAME` (a name that fits its type),
+    or the tool refuses. It no longer renames to `compositus` blindly.
+- credo_convertere_scaenam.py:
+  - Every "FRACTA: piscina..." guard variant is stripped.
+  - A tail with statements after the compendium (frigida's _purgare)
+    is refused; such cleanup belongs in a purgare slot, by hand.
+  - No blank line before the closing brace.
+  - `-c=NAME`, as above.
+Regression: toml coctum reproduces byte for byte. toml registrum and
+saltuarius nexus differ only where the committed files carry the old
+double-blank bug. md lexema v1 is refused, naming its radix_viae
+prelude. html arbor v1 converts with 48 CREDO_GRADUS and 0 hand-printed
+titles left.
+
+Also reported, not fixed here: the post-edit EXAMEN hook says REICE in
+agent worktrees, because its path (with the .claude/worktrees/ prefix)
+doesn't match the canalis_debita keys; ./silva/examen.sh says ACCIPE.
+The scratchpad is shared between agents (two overwrote each other's
+helper scripts). The worktree sandbox blocks bash arguments containing
+'|' or 'git'.
+
+## 2026-10-21 — step 3 batch 2: oratio, crusta, officina, briar, tessera, ludus_tessera
+
+Six agents. Converted and BONUM:
+- oratio 16/19, crusta 19/20, officina 13/15;
+- briar 19/20, tessera 15/15, ludus_tessera 8/8.
+Each was re-verified in quinta before its commit.
+
+Hidden order dependences and shared state found and fixed:
+- officina compendium ('ordinem' used block 1's declarations);
+- officina puncta (the instruction count came from fundamentum);
+- briar plagulae (block 4 changed block 1's `membra` in place);
+- oratio resolutio (a `hic_manens` text buffer written from two
+  sections; examen 92 caught it).
+
+MEMORIA, pulled out:
+- STML circuit: oratio_stml (+831 MiB), md_stml (+308).
+- In-process legati index: officina renovatio (+405), legatus (RSS 708).
+- Accumulation candidates: crusta effectus (+1370, every house .sh in
+  one piscina), briar amalgama (+321), oratio_partes (+390).
+- oratio_vocabula (268): a shared vocabulary fixture is blocked by the
+  non-const `oratio_vocabula_creare`.
+Done by hand earlier (ac76e355): html_md and gesta tabularium, both
+accumulation (a piscina never reset, or the suite piscina handed to an
+API as its ephemeral per-message one).
+
+Converter fix (credo_convertere_scaenam.py), from tessera's report:
+- A print starting "\n--- " became a CREDO_GRADUS even when it was
+  data output ("\n--- intrati:" before a number loop, tessera modi).
+  That silently changed the output; the counts can't see it, a literal
+  audit can.
+- Now only text that ends in "---\n" and has no '%' is a title. A
+  title still left behind is refused.
+- The block-scoped tail `{ b32 praeteritus = ...; }` (most oratio
+  suites) is accepted.
+Still open: credo_convertere.py requires "Probans" in titles, so the
+roman-numbered "--- I. x ---" form (oratio, ludus_tessera) is refused;
+the agents converted those by hand.
+
+## 2026-10-21 — step 3 leftovers: gravis where the memory IS the test, and a file that grew with the repo
+
+Fran approved `gravis` for four MEMORIA suites (md_stml, oratio_stml,
+officina renovatio, officina legatus) and the const change for
+oratio_vocabula. All five are now v2 and BONUM (counts == HEAD, mixed
+order sound).
+
+**gravis goes on EVERY section that can run first, not just the one that
+tripped.** renovatio and legatus run `legatus_currere` in-process, and it
+loads the whole nexus index. The cost shows up in `apex_auctus` (lifetime
+peak growth), which rises only once per process. So whichever section runs
+first pays it: in table order that was 'renovare recentem'; under
+CREDO_ORDO=mixtus another section paid. A signum on the first table row
+alone would pass in table order and fail at random under mixed order. The
+rule: if the cost is process-wide (an index, a cache, RSS high water),
+mark every section that touches it, and say why in the source comment.
+
+**oratio_vocabula IV was not "a big corpus", it was one 172 MB read.**
+The section read build/nexus.tsv whole into its piscina: 209 MiB of
+arena, 268 MiB of peak growth. That file grows with the tree, so the
+section would have crossed any ceiling eventually. The fix: stream it
+through a 16 MiB buffer (`filum_octeti_*`), line-aligned chunks into both
+vocabularies. `oratio_vocabula_symbola` keeps nothing from its input:
+verb, path and identifier are all copied. The result is 19 MiB arena and
+122 MiB peak growth, and it now stays flat as the repo grows. Assertion
+count is unchanged: each chunk's result is ANDed and asserted once per
+vocabulary, as in HEAD. The vocabulary + glossary + Moby moved into a
+suite fixture, possible only because `oratio_vocabula_creare(_anglice)`
+now takes const tables. The two Moby load assertions moved from VI to
+parare_suitae.
+
+The lint tool (oratio/instrumenta/vocabula.c, run on every commit) reads
+nexus.tsv the same whole-file way. Parked rather than fixed: the right
+fix is a streaming entry point in oratio_vocabula that both share
+(library API).
+
+The ceiling also caught an agent's coinage: the md_stml draft had
+`_casus_inlineos_probare`, and the live-tree lint inside oratio_vocabula
+IV b flagged it as IGNOTA NOVA. HEAD went red on the same tree, because
+the suite reads the live index. Renamed `_casus_intra_lineam_probare`.
+
+## 2026-10-21 — briar amalgama and crusta effectus: accumulation, plus a latent chorda bug
+
+Both hit MEMORIA in step 3 because of the html_md / tabularium pattern:
+a loop over real inputs allocating everything into the one section
+piscina.
+- crusta effectus X/XI derives + judges every house `.sh`. A per-script
+  `opus` pool, destroyed each iteration, takes peak growth from 1370 to
+  36 MiB.
+- briar amalgama "corpus verum" fabricates + amalgamates three real
+  fixtures. A per-fixture pool takes it from 321 to 128 MiB.
+  `silex_fons_disci` keeps no cache; it reads into the caller's piscina,
+  which is what made the per-fixture pool sufficient.
+
+The effectus draft also had sections come back VACUA at random (XIII,
+XIX, XX on different runs). The world setup copies
+crusta/effectus_mandata.stml into the section's fake tree as
+`filum_legere_totum(...).datum` cast to a C string, but a chorda is NOT
+null-terminated. HEAD did this once, on fresh zeroed pages, so it always
+worked. Per section in a reused arena, the bytes after the file were
+leftover data, and the STML table sometimes parsed as garbage. Fix:
+`chorda_ut_cstr`. The world-setup failure now prints its cause; it had
+been a silent VACUA. Takeaway: rebuilding a world per section is where
+latent "works on fresh memory" bugs surface. A VACUA section that comes
+and goes points at uninitialised or unterminated data before it points
+at order dependence.
+
+Own slip worth recording: in the amalgama loop I renamed `piscina` ->
+`opus` with a blanket replace, and it hit two string literals the test
+asserts on (`_allocare_interna_piscina`, `#undef _credo_piscina`). The
+checker caught it (MALUM, 6 failed asserts). Same trap as the converter's
+`c` rename: never substitute identifiers without skipping literals.

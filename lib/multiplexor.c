@@ -284,6 +284,24 @@ multiplexor_clientes (
     redde multiplexor_clientes_legere(effusio, piscina);
 }
 
+Processus*
+multiplexor_clientes_incipere (
+    constans Multiplexor* m,
+                 Piscina* piscina)
+{
+    constans character* imperium[] = { "list-clients", "-F",
+        FORMA_CLIENTIUM, NIHIL };
+    constans character** v;
+
+    v = vectorem_struere(m, piscina, imperium);
+    si (!v)
+    {
+        redde NIHIL;
+    }
+    redde processus_incipere(v, m && m->mora_ms > ZEPHYRUM
+        ? (i32)m->mora_ms : (i32)M, piscina);
+}
+
 constans MultiplexorPanellus*
 multiplexor_panellum_invenire (
        Xar* panelli,

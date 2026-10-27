@@ -661,8 +661,12 @@ _sententiam_imprimere (
     commutatio (sententia->iudicium.status)
     {
         casus FABRICA_RECENS:
-            /* machina: RECENS semper (consumptor omnia videt) */
-            si (!omnia && !suturae_machina)
+            /* machina: RECENS semper (consumptor omnia videt);
+             * MEMORIA NEGATA (custodia memorabilium) semper:
+             * declaratio fracta */
+            si (   !omnia && !suturae_machina
+                && !chorda_incipit(sententia->iudicium.causa,
+                       chorda_ex_literis("MEMORIA NEGATA", piscina)))
             {
                 redde;
             }
@@ -981,6 +985,12 @@ nomen structura {
                i32  ignota;
                i32  non_iudicata;
                i32  supra;         /* FORTASSE: producens non recens */
+               /* PROGRESSUS (colloquia T10d): per actionem ordinis */
+               b32* tangit;        /* -tacta: actio tacta; NIHIL =
+                                    * omnes */
+               b32* numeranda;     /* exitus iudicandus aliquis */
+               i32  ambitus;       /* actiones numerandae */
+               i32  iudicata;
 } CursusIudicandi;
 
 /* vexilla iudicandi et viae tactae. FALSUM = vexillum ignotum */
@@ -1086,6 +1096,9 @@ _iudicare_suturam (
         64);
     /* sigillum ingressuum semel per actionem */
     c->sutura.digesta = tabula_dispersa_creare_chorda(c->piscina, 128);
+    /* quod ultra actum vivit: piscina cursus (acta piscinam
+     * temporariam suam habent, parcum …T77EH4) */
+    c->sutura.piscina_cursus = c->piscina;
     redde VERUM;
 }
 
@@ -1206,6 +1219,114 @@ _iudicare_iudices (
     }
 }
 
+/* exitus in stadio sententiarum iudicandus (aut sub iudice stalo NON
+ * IUDICATUS) - regula UNA sententiarum et progressus (T10d) */
+interior b32
+_exitus_iudicandus (
+           constans CursusIudicandi* t,
+             constans FabricaExitus* exitus,
+              constans FabricaActio* actio)
+{
+    si (!exitus->strategia->iudicatur)
+    {
+        redde FALSUM;
+    }
+    si (t->tacta)
+    {
+        /* commissa generata solum: strategia quae octetis comparat */
+        si (!exitus->strategia->octetis_comparat)
+        {
+            redde FALSUM;
+        }
+    }
+    alioquin si (!_electum(t->cursus.electa, exitus->via))
+    {
+        redde FALSUM;
+    }
+    /* iudicium (porta, spec 3 par. XII) solum NOMINATUM iudicatur:
+     * verritio sine argumentis id omittit */
+    redde t->cursus.electa != NIHIL
+        || actio->genus != FABRICA_ACTIO_IUDICIUM;
+}
+
+/* PROGRESSUS (colloquia T10d): actiones ordinis quibus exitus
+ * iudicandus est (ambitus) - semel ante praevisionem; tactio (-tacta)
+ * hic semel computatur, sententiae eam legunt. Notatio initialis
+ * (iudicata ZEPHYRUM, undae nullae: iudex undas non habet) */
+interior vacuum
+_iudicare_ambitum (
+    CursusIudicandi* t)
+{
+    CursusFabricae* c = &t->cursus;
+               i32  n;
+               i32  i;
+               i32  j;
+
+    n             = xar_numerus(c->ordo);
+    t->numeranda  = (b32*)piscina_allocare(c->piscina,
+        (memoriae_index)(n * magnitudo(b32) + I));
+    t->tangit     = t->tacta ? (b32*)piscina_allocare(c->piscina,
+        (memoriae_index)(n * magnitudo(b32) + I)) : NIHIL;
+    si (t->numeranda == NIHIL || (t->tacta && t->tangit == NIHIL))
+    {
+        t->numeranda  = NIHIL;
+        redde;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        FabricaActio* actio;
+
+        actio            = *(FabricaActio**)xar_obtinere(c->ordo, i);
+        t->numeranda[i]  = FALSUM;
+        si (t->tangit)
+        {
+            t->tangit[i] = fabrica_actio_tacta(&c->sutura, actio,
+                t->viae_tactae, c->piscina);
+            si (!t->tangit[i])
+            {
+                perge;
+            }
+        }
+        per (j = ZEPHYRUM; j < xar_numerus(actio->exitus); j++)
+        {
+            si (_exitus_iudicandus(t, (FabricaExitus*)xar_obtinere(
+                    actio->exitus, j), actio))
+            {
+                t->numeranda[i] = VERUM;
+            }
+        }
+        si (t->numeranda[i])
+        {
+            t->ambitus++;
+        }
+    }
+    si (c->sutura.progressum_notare != NIHIL)
+    {
+        c->sutura.progressum_notare(c->sutura.datum, ZEPHYRUM,
+            t->ambitus, ZEPHYRUM, ZEPHYRUM);
+    }
+}
+
+/* actio ordinis i perfecta: iudicata (si numeranda) notantur */
+interior vacuum
+_iudicatam_notare (
+    CursusIudicandi* t,
+                i32  i)
+{
+    CursusFabricae* c = &t->cursus;
+
+    si (t->numeranda == NIHIL || !t->numeranda[i])
+    {
+        redde;
+    }
+    t->iudicata++;
+    si (c->sutura.progressum_notare != NIHIL)
+    {
+        c->sutura.progressum_notare(c->sutura.datum, t->iudicata,
+            t->ambitus, ZEPHYRUM, ZEPHYRUM);
+    }
+}
+
 /* sententiae ordine dependentiae: electa (aut tacta generata); sub
  * iudice stalo ceterae NON IUDICATAE */
 interior vacuum
@@ -1223,11 +1344,13 @@ _iudicare_sententias (
         actio = *(FabricaActio**)xar_obtinere(c->ordo, i);
         si (actio == t->iudex_actio)
         {
+            _iudicatam_notare(t, i);
             perge;   /* sententia eius iam prima */
         }
         si (   t->tacta
-            && !fabrica_actio_tacta(&c->sutura, actio, t->viae_tactae,
-            c->piscina))
+            && (t->tangit != NIHIL ? !t->tangit[i]
+                : !fabrica_actio_tacta(&c->sutura, actio,
+                      t->viae_tactae, c->piscina)))
         {
             perge;
         }
@@ -1258,23 +1381,7 @@ _iudicare_sententias (
                 }
                 perge;
             }
-            si (t->tacta)
-            {
-                /* commissa generata solum: strategia quae octetis
-                 * comparat */
-                si (!exitus->strategia->octetis_comparat)
-                {
-                    perge;
-                }
-            }
-            alioquin si (!_electum(c->electa, exitus->via))
-            {
-                perge;
-            }
-            /* iudicium (porta, spec 3 par. XII) solum NOMINATUM
-             * iudicatur: verritio sine argumentis id omittit */
-            si (   c->electa    == NIHIL
-                && actio->genus == FABRICA_ACTIO_IUDICIUM)
+            si (!_exitus_iudicandus(t, exitus, actio))
             {
                 perge;
             }
@@ -1292,6 +1399,7 @@ _iudicare_sententias (
             sententia->iudicium = fabrica_iudicare(&c->sutura, actio,
                 exitus, t->plenus, c->piscina);
         }
+        _iudicatam_notare(t, i);
     }
 }
 
@@ -1773,6 +1881,7 @@ _iudicare (
         _cursum_finire(&t.cursus);
         redde II;
     }
+    _iudicare_ambitum(&t);
     _iudicare_praevidere(&t);
     _iudicare_iudices(&t);
     _iudicare_sententias(&t);
@@ -1867,6 +1976,9 @@ _causam_imprimere (
 /* auditus sub sanare: -audit (I) aut FABRICA_AUDITUS=N */
 hic_manens i32 auditus_sanandi = ZEPHYRUM;
 
+/* probare -conferre: photographiae contra librum per membrum */
+hic_manens b32 vestigia_conferenda = FALSUM;
+
 /* cursus sanandi: sanationes et numeri earum */
 nomen structura {
     CursusFabricae  cursus;
@@ -1879,6 +1991,7 @@ nomen structura {
                i32 aestimatio;    /* siccum: ex cursibus ultimis */
                i32 sine_tempore;
                b32 commissa;      /* generata in arbore mutata */
+               b32 vestigium;     /* -vestigium: exemplaria solum */
 } CursusSanandi;
 
 /* vexilla sanandi. FALSUM = vexillum ignotum */
@@ -1895,6 +2008,13 @@ _sanare_optiones (
         si (strcmp(argv[a], "-siccum") == 0)
         {
             m->siccum = VERUM;
+        }
+        alioquin si (strcmp(argv[a], "-vestigium") == 0)
+        {
+            /* parcum …AG7: quae 'sanare X' scribere potest (exitus et
+             * vestigia declarata ambitus et iudicum) - consilium
+             * producentium ex eo gradus suos format; nihil agitur */
+            m->vestigium = VERUM;
         }
         alioquin si (strcmp(argv[a], "-audit") == 0)
         {
@@ -1987,8 +2107,10 @@ _sanare_seram_capere (
     {
         auditus_sanandi = (i32)strtoul(n, NIHIL, X);
     }
-    c->sutura.auditus  = auditus_sanandi;
-    c->sutura.audita   = tabula_dispersa_creare_chorda(c->piscina, 16);
+    c->sutura.auditus            = auditus_sanandi;
+    c->sutura.audita             = tabula_dispersa_creare_chorda(
+        c->piscina, 16);
+    c->sutura.vestigia_conferre  = vestigia_conferenda;
     redde VERUM;
 }
 
@@ -2354,6 +2476,7 @@ _sanare_suturam (
     c->sutura.regenerationes  = tabula_dispersa_creare_chorda(
         c->piscina, 64);
     c->sutura.digesta = tabula_dispersa_creare_chorda(c->piscina, 128);
+    c->sutura.piscina_cursus = c->piscina;
     redde _sanare_iudicem_ipsum(m) && _sanare_seram_capere(m);
 }
 
@@ -2495,6 +2618,55 @@ _sanare_agere (
     redde VERUM;
 }
 
+/* -vestigium VIA...: exemplaria scripturae possibilis PER VIAM electam,
+ * lineae '<via>\t<exemplar>' (una vocatio pro consilio toto: initium
+ * fabricae ~VI s). Sine sera, sine stadio iudicum - nihil agitur.
+ * Exitus 0; II si via nulla aut a nulla actione producta */
+interior s32
+_sanare_vestigium (
+    CursusSanandi* m)
+{
+    CursusFabricae* c = &m->cursus;
+               i32  j;
+               i32  i;
+
+    si (c->electa == NIHIL || xar_numerus(c->electa) == ZEPHYRUM)
+    {
+        fprintf(stderr, "usus: bin/fabrica sanare -vestigium VIA...\n");
+        redde II;
+    }
+    per (j = ZEPHYRUM; j < xar_numerus(c->electa); j++)
+    {
+        chorda  via = *(chorda*)xar_obtinere(c->electa, j);
+           Xar* una;
+           Xar* exemplaria;
+
+        una = xar_creare(c->piscina, (i32)magnitudo(chorda));
+        si (una == NIHIL)
+        {
+            redde II;
+        }
+        *(chorda*)xar_addere(una) = via;
+        exemplaria = fabrica_vestigium_sanandi(c->ordo, una, c->piscina,
+            &c->causa);
+        si (exemplaria == NIHIL)
+        {
+            fprintf(stderr, "fabrica: %.*s\n", (s32)c->causa.mensura,
+                (constans character*)c->causa.datum);
+            redde II;
+        }
+        per (i = ZEPHYRUM; i < xar_numerus(exemplaria); i++)
+        {
+            chorda e = *(chorda*)xar_obtinere(exemplaria, i);
+
+            printf("%.*s\t%.*s\n", (s32)via.mensura,
+                (constans character*)via.datum, (s32)e.mensura,
+                (constans character*)e.datum);
+        }
+    }
+    redde ZEPHYRUM;
+}
+
 interior s32
 _sanare (
           s32   argc,
@@ -2516,6 +2688,12 @@ _sanare (
         redde II;
     }
     _electa_colligere(&m.cursus, argc, argv);
+    si (m.vestigium)
+    {
+        exitus = _sanare_vestigium(&m);
+        _cursum_finire(&m.cursus);
+        redde exitus;
+    }
     si (!_sanare_suturam(&m))
     {
         _cursum_finire(&m.cursus);
@@ -2626,6 +2804,12 @@ _probare_optiones (
         {
             auditus_sanandi = I;
         }
+        alioquin si (strcmp(argv[a], "-conferre") == 0)
+        {
+            /* fabrica-8: quid photographiae vident quod liber non
+             * nominat (et vice versa) - <area>vestigia_collata.txt */
+            vestigia_conferenda = VERUM;
+        }
         alioquin si (strcmp(argv[a], "-machina") == 0)
         {
             suturae_machina = VERUM;
@@ -2649,7 +2833,7 @@ _probare_optiones (
     si (p->titulus == NIHIL)
     {
         fprintf(stderr, "usus: bin/fabrica probare [-vis] [-audit] "
-            "[-machina] COMPOSITUM [FILTRUM...]\n");
+            "[-conferre] [-machina] COMPOSITUM [FILTRUM...]\n");
         redde FALSUM;
     }
     redde VERUM;
@@ -3102,6 +3286,10 @@ _digestum (
         redde II;
     }
     suturae_legentem_parare(&sutura);
+    /* lectores ingressuum IUDICIS (identitas clang, ambitus, species,
+     * effectus, repositorium): sine eis actio cum tali ingressu 'sutura
+     * sine identitate clang' recusabatur (bearssl_amalgama, 10-17) */
+    suturae_iudicii_parare(&sutura, actiones, piscina);
     /* memoria sigillorum per cursum: communis semel sigillatur */
     sutura.sigilla    = tabula_dispersa_creare_chorda(piscina, 1024);
     per (i = ZEPHYRUM; i < xar_numerus(actiones); i++)
@@ -3423,6 +3611,8 @@ _usus (vacuum)
         "      bin/fabrica portae debitae [-machina] -portae TSV "
         "VIA...\n"
         "      bin/fabrica portae declaratae [-machina] -portae TSV\n"
+        "      bin/fabrica portae translatio [-machina] -portae TSV "
+        "[-receptum PORTA ARBOR DIGESTUM]... PORTA...\n"
         "      bin/fabrica quid [-machina] [-iudex TITULUS] VIA... "
         "| -omnes\n"
         "(ex radice repositorii; exitus 0 sanum, 1 stalum/ignotum, "

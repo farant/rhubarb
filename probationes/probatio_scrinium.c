@@ -5,7 +5,9 @@
 #include "chorda.h"
 #include "credo.h"
 #include "scrinium.h"
+#include "filum.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 interior chorda
@@ -215,13 +217,16 @@ _sectio_quarta (
 
     piscina = c->piscina;
     {
-        constans character* via = "build/probatio_scrinium.db";
+        constans character* area = credo_area(c);
+                 character  via[MMXLVIII];
                   Scrinium* s;
         ScriniumEnuntiatum* e;
 
-        remove(via);
-        remove("build/probatio_scrinium.db-wal");
-        remove("build/probatio_scrinium.db-shm");
+        /* in area sectionis: olim build/ extra vestigium membri (S per
+         * VFS vestigii; -wal et -shm cum area purgantur) */
+        CREDO_NECESSE(area != NIHIL
+            && strlen(area) + LXIV < magnitudo(via));
+        sprintf(via, "%s/scrinium_perennis.db", area);
 
         s = scrinium_aperire(piscina, via);
         CREDO_NON_NIHIL (s);
@@ -254,10 +259,6 @@ _sectio_quarta (
         }
         scrinium_finire(e);
         scrinium_claudere(s);
-
-        remove(via);
-        remove("build/probatio_scrinium.db-wal");
-        remove("build/probatio_scrinium.db-shm");
     }
 }
 
@@ -309,6 +310,101 @@ _sectio_quinta (
     }
 }
 
+
+/* ==================================================
+ * PROBARE: VFS vestigii - lectiones et scripturae sqlite in libro
+ * lectionum (iudicium per librum solum, nota …NS2M)
+ * ================================================== */
+
+/* linea '<littera>\t...<suffixum>' in libro? (sqlite viam
+ * canonicam reddit: /var -> /private/var, ergo suffixum) */
+interior b32
+_lineam_habet (
+                 chorda  liber,
+              character  littera,
+     constans character* suffixum)
+{
+       i32 initium = ZEPHYRUM;
+       i32 i;
+    size_t n = strlen(suffixum);
+
+    per (i = ZEPHYRUM; i <= liber.mensura; i++)
+    {
+        si (i == liber.mensura || liber.datum[i] == '\n')
+        {
+            i32 longitudo = i - initium;
+
+            si (   longitudo > II
+                && liber.datum[initium]     == (i8)littera
+                && liber.datum[initium + I] == '\t'
+                && (size_t)longitudo        >= n + II
+                && memcmp(liber.datum + i - (i32)n, suffixum, n)
+                   == ZEPHYRUM)
+            {
+                redde VERUM;
+            }
+            initium = i + I;
+        }
+    }
+    redde FALSUM;
+}
+
+interior vacuum
+_sectio_vestigii (
+    CredoContextus* c)
+{
+               Piscina* piscina  = c->piscina;
+    constans character* area     = credo_area(c);
+             character  via[MMXLVIII];
+             character  liber[MMXLVIII];
+              Scrinium* s;
+    ScriniumEnuntiatum* e;
+                chorda  textus;
+
+    CREDO_NECESSE(area != NIHIL
+        && strlen(area) + LXIV < magnitudo(via));
+    sprintf(via, "%s/scrinium_vestigii.db", area);
+    sprintf(liber, "%s/liber.tsv", area);
+
+    /* I. scriptura: S pro db, -wal, -shm (WAL per mmap) */
+    setenv("FABRICA_LECTIONES", liber, I);
+    s = scrinium_aperire(piscina, via);
+    CREDO_NECESSE(s != NIHIL);
+    CREDO_VERUM(scrinium_exsequi(s, "CREATE TABLE t (x TEXT)"));
+    CREDO_VERUM(scrinium_exsequi(s, "INSERT INTO t VALUES ('a')"));
+    scrinium_claudere(s);
+    unsetenv("FABRICA_LECTIONES");
+    textus = filum_legere_totum(liber, piscina);
+    CREDO_VERUM(_lineam_habet(textus, 'S', "/scrinium_vestigii.db"));
+    CREDO_VERUM(_lineam_habet(textus, 'S',
+        "/scrinium_vestigii.db-wal"));
+    CREDO_VERUM(_lineam_habet(textus, 'S',
+        "/scrinium_vestigii.db-shm"));
+
+    /* II. lectio sola: L pro db, NULLA S pro db ipso */
+    (vacuum)filum_delere(liber);
+    setenv("FABRICA_LECTIONES", liber, I);
+    s = scrinium_aperire(piscina, via);
+    CREDO_NECESSE(s != NIHIL);
+    e = scrinium_praeparare(s, "SELECT x FROM t");
+    CREDO_NECESSE(e != NIHIL);
+    CREDO_AEQUALIS_I32((i32)scrinium_gradi(e), (i32)SCRINIUM_ORDO);
+    scrinium_finire(e);
+    scrinium_claudere(s);
+    unsetenv("FABRICA_LECTIONES");
+    textus = filum_legere_totum(liber, piscina);
+    CREDO_VERUM(_lineam_habet(textus, 'L', "/scrinium_vestigii.db"));
+    CREDO_FALSUM(_lineam_habet(textus, 'S', "/scrinium_vestigii.db"));
+
+    /* III. sine libro: nihil notatur */
+    (vacuum)filum_delere(liber);
+    s = scrinium_aperire(piscina, via);
+    CREDO_NECESSE(s != NIHIL);
+    CREDO_VERUM(scrinium_exsequi(s, "INSERT INTO t VALUES ('b')"));
+    scrinium_claudere(s);
+    CREDO_FALSUM(filum_existit(liber));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "circuitum fundamentalem", _sectio_prima, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -316,6 +412,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "FTS5", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "persistentiam WAL", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ULID", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "liber lectionum (VFS vestigii)", _sectio_vestigii, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

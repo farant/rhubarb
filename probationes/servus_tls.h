@@ -1,6 +1,7 @@
 /* servus_tls.h - servus HTTPS localis pro probationibus TLS sine rete
  *
- * ORACULUM: /opt/homebrew/bin/openssl s_server ut processus filius (non
+ * ORACULUM: openssl s_server (Homebrew in macOS, /usr/bin in imaginibus
+ * Linux - fiducia-linux T3) ut processus filius (non
  * nexus - ut bash pro crusta). '-WWW' fasciculos directorii (TMPDIR)
  * per HTTPS reddit ("HTTP/1.0 200 ok", corpus usque ad clausuram);
  * certificata ex probationes/fixa/tls (tools/tls_fixa_generare.sh, CA
@@ -22,7 +23,26 @@
 #include <string.h>
 #include <unistd.h>
 
-#define SERVUS_TLS_ORACULUM "/opt/homebrew/bin/openssl"
+/* oracula ordine: Homebrew (macOS; LibreSSL systematis -WWW aliter
+ * tractat), deinde systematis (imagines Linux) */
+interior constans character*
+_servi_tls_oraculum (vacuum)
+{
+    hic_manens constans character* constans viae[] = {
+        "/opt/homebrew/bin/openssl", "/usr/bin/openssl", NIHIL
+    };
+    FilumStatus status;
+            i32 i;
+
+    per (i = ZEPHYRUM; viae[i] != NIHIL; i++)
+    {
+        si (filum_status(viae[i], &status) && status.potest_exsequi)
+        {
+            redde viae[i];
+        }
+    }
+    redde NIHIL;
+}
 
 nomen structura {
     Processus* processus;
@@ -89,11 +109,10 @@ servum_tls_incipere_modo (
      constans character* argumenta[V];
                     i32  conatus;
                     i32  k;
-            FilumStatus  status;
+     constans character* oraculum = _servi_tls_oraculum();
 
     memset(s, ZEPHYRUM, magnitudo(*s));
-    si (   !filum_status(SERVUS_TLS_ORACULUM, &status)
-        || !status.potest_exsequi)
+    si (oraculum == NIHIL)
     {
         redde FALSUM;
     }
@@ -101,9 +120,10 @@ servum_tls_incipere_modo (
     {
         s->portus = _servi_tls_portus(p);
         sprintf(portus_c, "%u", (insignatus integer)s->portus);
-        sprintf(mandatum, "cd '%s' && exec " SERVUS_TLS_ORACULUM
+        sprintf(mandatum, "cd '%s' && exec %s"
             " s_server -accept %s -cert '%s/%s.pem' -key '%s/%s.key'"
-            " %s -quiet %s", dir, portus_c, fixa, certificatum, fixa,
+            " %s -quiet %s", dir, oraculum, portus_c, fixa,
+            certificatum, fixa,
             certificatum, modus, additamenta ? additamenta : "");
         argumenta[ZEPHYRUM]  = "/bin/sh";
         argumenta[I]         = "-c";

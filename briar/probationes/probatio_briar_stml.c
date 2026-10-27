@@ -166,33 +166,56 @@ _circuitum_probare (
     redde VERUM;
 }
 
-s32
-principale (vacuum)
+
+/* FIXURA SUITAE: lexicon et consilium proiectionis semel facta
+ * (parare_suitae; assertio eorum ibi); sectiones ea per monstratorem
+ * constantem LEGUNT. */
+nomen structura {
+      MateriaLexiconRatum ratum;
+    MateriaArborConsilium consilium;
+} FixuraProiectionis;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                      b32  praeteritus;
-                  Piscina* piscina;
-      MateriaLexiconRatum  ratum;
-       MateriaLexIudicium  iudicium;
-    MateriaArborConsilium  consilium;
-                      i32  i;
+    FixuraProiectionis* f;
+    MateriaLexIudicium  iudicium;
 
-    piscina = piscina_generare_dynamicum("probatio_briar_stml",
-        4194304);
-    si (!piscina)
+    f = (FixuraProiectionis*)piscina_allocare(c->piscina,
+        magnitudo(FixuraProiectionis));
+    si (f == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    credo_aperire(piscina);
-    CREDO_VERUM (materia_lexicon_ratum_facere(&ratum, &BRIAR_LEXICON,
+    c->datum = f;
+    CREDO_VERUM (materia_lexicon_ratum_facere(&f->ratum, &BRIAR_LEXICON,
         &iudicium));
-    briar_stml_consilium(&consilium, &ratum);
+    briar_stml_consilium(&f->consilium, &f->ratum);
+}
 
-    imprimere("\n--- Probans casus inlineares ---\n");
+
+/* ==================================================
+ * PROBARE: casus inlineares
+ * ================================================== */
+
+interior vacuum
+_inlineares_probare (
+    CredoContextus* c)
+{
+    constans FixuraProiectionis* f;
+                        Piscina* piscina = c->piscina;
+                            i32  i;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f = (constans FixuraProiectionis*)c->suita;
     per (i = ZEPHYRUM; i < (i32)(magnitudo(INLINEARES)
         / magnitudo(INLINEARES[0])); i++)
     {
-        b32 bene = _circuitum_probare(piscina, &consilium,
+        b32 bene = _circuitum_probare(piscina, &f->consilium,
             INLINEARES[i],
             (i32)strlen(INLINEARES[i]));
 
@@ -202,8 +225,26 @@ principale (vacuum)
         }
         CREDO_VERUM (bene);
     }
+}
 
-    imprimere("\n--- Probans fixa ---\n");
+
+/* ==================================================
+ * PROBARE: fixa
+ * ================================================== */
+
+interior vacuum
+_fixa_probare (
+    CredoContextus* c)
+{
+    constans FixuraProiectionis* f;
+                        Piscina* piscina = c->piscina;
+                            i32  i;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    f = (constans FixuraProiectionis*)c->suita;
     per (i = ZEPHYRUM; i < (i32)(magnitudo(FIXA)
         / magnitudo(FIXA[0])); i++)
     {
@@ -217,17 +258,26 @@ principale (vacuum)
         {
             perge;
         }
-        bene = _circuitum_probare(piscina, &consilium, textus, mensura);
+        bene = _circuitum_probare(piscina, &f->consilium, textus,
+            mensura);
         si (!bene)
         {
             imprimere("  FRACTA: %s\n", FIXA[i]);
         }
         CREDO_VERUM (bene);
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "casus inlineares", _inlineares_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fixa", _fixa_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("briar_stml", SECTIONES,
+        _suitam_parare, NIHIL);
 }

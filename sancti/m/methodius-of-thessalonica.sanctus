@@ -1,0 +1,46 @@
+<sanctus id="methodius-of-thessalonica" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Methodius of Thessalonica</nomen>
+  <nomen lingua="la" principale="verum" fontes="mr">Methodius</nomen>
+  <ortus annus="826" locus="Thessalonica" fontes="ce"/>
+  <obitus annus="885" mensis="4" dies="6" fontes="ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="2" dies="14" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="3" dies="9" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="7" dies="7" nota="festum ex praecepto Leonis XIII" fontes="mr mr2"/>
+  <munus fontes="us mr ce">bishop</munus>
+  <munus fontes="bu">monk</munus>
+  <munus fontes="ce">missionary</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Methodius, brother of Cyril, was born at Thessalonica in 826 to a senatorial family; both gave up secular honours and became priests. He was living as a monk on the Bosphorus when he accompanied Cyril on his mission to the Khazars, and he went with him to Moravia in 863 at the request of the Moravians for preachers in the Slavonic tongue, helping him translate the Gospels and liturgy into Slavonic. In Rome Adrian II approved their work, and at the request of the Slav princes he created an archdiocese of Moravia and Pannonia, independent of the German Church, with Methodius as archbishop.</paragraphus>
+    <paragraphus fontes="ce bu">In 870 the German bishops deposed him at a synod at Ratisbon and imprisoned him; after three years Pope John VIII had him freed and restored. Summoned to Rome again after the German priest Wiching questioned his orthodoxy and his use of Slavonic, he satisfied John VIII, who confirmed its use, with the Gospel at Mass read first in Latin and then in Slavonic. He completed a translation of the Scriptures, except the Books of Maccabees, and died on 6 April 885, naming his disciple Gorazd as his successor.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="9 March">
+    <excerptum>In Moravia, the saintly bishops Cyril and Methodius,who brought to the faith of Christ many nations in those regions with their kings. Leo XIII. prescribed that their feast should be celebrated on the seventh of July.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="7 July">
+    <excerptum>holy bishops Cyril and Methodius, who are mentioned on the 9th of March.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="Sts. Cyril and Methodius" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Sts._Cyril_and_Methodius">
+    <excerptum>These brothers, the Apostles of the Slavs, were born in Thessalonica, in 827 and 826 respectively. Though belonging to a senatorial family they renounced secular honours and became priests.</excerptum>
+    <excerptum>They were living in a monastery on the Bosphorous, when the Khazars sent to Constantinople for a Christian teacher. Cyril was selected and was accompanied by his brother.</excerptum>
+    <excerptum>The Moravians wished a teacher who could instruct them and conduct Divine service in the Slavonic tongue.</excerptum>
+    <excerptum>In preparation for it Cyril invented an alphabet and, with the help of Methodius, translated the Gospels and the necessary liturgical books into Slavonic. They went to Moravia in 863, and laboured for four and a half years.</excerptum>
+    <excerptum>On this account the brothers were summoned to Rome by Nicholas I, who died, however, before their arrival. His successor, Adrian II, received them kindly.</excerptum>
+    <excerptum>he commended their missionary activity, sanctioned the Slavonic Liturgy, and ordained Cyril and Methodius bishops.</excerptum>
+    <excerptum>At the request of the Moravian princes, Rastislav and Svatopluk, and the Slav Prince Kocel of Pannonia, Adrian II formed an Archdiocese of Moravia and Pannonia, made it independent of the German Church, and appointed Methodius archbishop.</excerptum>
+    <excerptum>In 870 King Louis and the German bishops summoned Methodius to a synod at Ratisbon. Here he was deposed and condemned to prison. After three years he was liberated at the command of Pope John VIII and reinstated as Archbishop of Moravia.</excerptum>
+    <excerptum>he was summoned to Rome again in consequence of the allegations of the German priest Wiching, who impugned his orthodoxy, and objected to the use of Slavonic in the liturgy.</excerptum>
+    <excerptum>But John VIII, after an inquiry, sanctioned the Slavonic Liturgy, decreeing, however, that in the Mass the Gospel should be read first in Latin and then in Slavonic.</excerptum>
+    <excerptum>he completed the translation of the Holy Scriptures, with the exception of the Books of Machabees.</excerptum>
+    <excerptum>he died 6 April, 885, recommending as his successor Gorazd, a Moravian Slav who had been his disciple.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v12 Dec. 22 SS. Cyril and Methodius, CC.">
+    <excerptum>The saint's second mission was to the Bulgarians, i in which his devout brother Methodius, a monk, was his chief assistant.</excerptum>
+    <excerptum>Methodius your archbishop ordained by our predecessor Adrian</excerptum>
+    <excerptum>Cyril and Methodius translated the liturgy into the Sclavonian tongue, and instituted mass to be said in the same.</excerptum>
+    <excerptum>Methodius obeyed, and repairing to Rome, gave ample satisfaction to the pope, who confirmed to him the privileges of the archiepiscopal see of the Moravians</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="14 February">
+    <excerptum>Saints Cyril, Monk, and Methodius, Bishop</excerptum>
+  </fons>
+</sanctus>

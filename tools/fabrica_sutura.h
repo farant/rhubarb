@@ -35,6 +35,14 @@
  * frigida ~150 s); termini per actionem non in 1b */
 #define MORA_SANATIONIS_MS  1800000
 
+/* tectum memoriae membri gradus (credo memoria T6, decretum
+ * 01M5CV9RETJA): FABRICA_MEMORIA_MB ex ambitu FABRICAE (non membri;
+ * 0 = nullum), aliter hoc - XVI GiB, circa bis suitae verae
+ * gravissimae (silva corporis VII.VI G, parcum 01M5CQYDD841);
+ * minuendum cum illae emendantur. Tecta per sectionem credo sunt
+ * (credo.h, T4) - hoc fugam solum sistit. */
+#define FABRICA_MEMORIA_ORDINARIA_MB  (XVI * MXXIV)
+
 /* memoria verificationum (tools/fabrica_memoria.c) */
 nomen structura {
                   Scrinium* scrinium;
@@ -187,7 +195,9 @@ suturae_compilare_gradus (
                 vacuum* datum,
     constans character* fons,
     constans character* obiectum,
+          constans Xar* vexilla_addita,
                Piscina* piscina,
+                chorda* obiectum_out,
                 chorda* erratum_out);
 
 /* bin/fabrica portae debitae|declaratae (tools/fabrica_portae.c) */

@@ -1,0 +1,37 @@
+<sanctus id="joachim" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Joachim</nomen>
+  <nomen lingua="la" principale="verum" fontes="mr">Joachim</nomen>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="7" dies="26" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="3" dies="20" nota="festum 16 Augusti (mr1916)" fontes="mr"/>
+  <munus fontes="ce mr us">father of the Blessed Virgin Mary</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Joachim is honoured as the father of the Blessed Virgin Mary. The Gospels say nothing of him; the tradition that names Joachim and Anne as Mary's parents is very old, but seems to rest in the end on apocryphal writings such as the "Gospel of James", which the Catholic Encyclopedia warns contain legend alongside some historical data. That Joachim is the Heli of St. Luke's genealogy, that he was Joseph's brother, or that he owned great herds are all judged doubtful. The Gospel of James tells how, in their old age, Joachim and Anne were given a child in answer to their prayers.</paragraphus>
+    <paragraphus fontes="ce bu mr">By tradition the couple lived first in Galilee and later settled in Jerusalem, where Mary was born and where they died and were buried; a fourth-century church stood on the site of their house, and the crypt that held their tombs was rediscovered in 1889. The Greeks honoured Joachim early, but the Latins were slow to keep his feast, which moved between several dates before Clement XII fixed it on the Sunday after the Assumption; the 1916 Martyrology names him on 20 March and gives his festival as 16 August. Butler notes that St. John Damascene extolled the virtue of Joachim and Anne.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Joachim" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Joachim">
+    <excerptum>Joachim (whose name means Yahweh prepares), was the father of the Blessed Virgin Mary.</excerptum>
+    <excerptum>those things that the Evangelists did not deem it advisable to relate, and, in particular, about the parents of the Blessed Virgin</excerptum>
+    <excerptum>Tradition nevertheless, grounded on very old testimonies, very early hailed Saints Joachim and Anne as the father and mother of the Mother of God.</excerptum>
+    <excerptum>this tradition seems to rest ultimately on the so-called "Gospel of James", the "Gospel of the Nativity of the Blessed Mary", and the Pseudo-Matthew</excerptum>
+    <excerptum>side by side, indeed, with unwarranted and legendary facts, they contain some historical data borrowed from reliable traditions or documents</excerptum>
+    <excerptum>That such is the purpose and the meaning of the Evangelist is very doubtful, and so is the identification proposed between the two names Heli and Joachim.</excerptum>
+    <excerptum>Neither can it be asserted with certainty, in spite of the authority of the Bollandists, that Joachim was Heli's son and Joseph's brother; nor, as is sometimes affirmed, from sources of very doubtful value, that he had large possessions in herds and flocks.</excerptum>
+    <excerptum>describes how, in their old age, Joachim and Anne received the reward of their prayers to obtain issue.</excerptum>
+    <excerptum>Tradition has it that the parents of the Blessed Virgin, who, apparently, first lived in Galilee, came later on to settle in Jerusalem; there the Blessed Virgin was born and reared; there also they died and were buried.</excerptum>
+    <excerptum>was built during the fourth century, possibly by St. Helena, on the site of the house of St. Joachim and St. Anne</excerptum>
+    <excerptum>The crypt which formerly contained the holy tombs was rediscovered on 18 March, 1889.</excerptum>
+    <excerptum>St. Joachim was honoured very early by the Greeks, who celebrate his feast on the day following the Blessed Virgin's birthday; the Latins were slow to admit it to their calendar</excerptum>
+    <excerptum>where it found place sometimes on 16 Sept. and sometimes on 9 Dec. Assigned by Julius II to 20 March, the solemnity was suppressed some fifty years later, restored by Gregory XV (1622)</excerptum>
+    <excerptum>fixed by Clement XII (1738) on the Sunday after the Assumption</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="20 March">
+    <excerptum>TN Judea, St. Joachim, father of the Most Blessed Virgin Mary, Mother of God, whose festival is kept on the 16th of August.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v07 July 26 S. Anne, Mother of the Blessed Virgin">
+    <excerptum>St. Joachim and St. Anne, the parents of the Blessed Virgin Mary, are justly honoured in the church, and their virtue is highly extolled by St. John Damascen.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="26 July">
+    <excerptum>Saints Joachim and Anne, Parents of the Blessed Virgin Mary</excerptum>
+  </fons>
+</sanctus>

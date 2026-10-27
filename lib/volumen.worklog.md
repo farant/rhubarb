@@ -136,6 +136,92 @@ pendens (probatio quae claudere omisit) nomen suum RETINET, et qui in
 /tmp inspicit videt quot cursus reliquerint. Tempus aut fors nomina
 nova semper daret, et reliquiae silentio congererentur.
 
+## 2026-10-19 — acta index (genus, seq) + volumen_acta_generum_legere
+
+Fran: the calendar week view lagged. Measured on a COPY of the live
+volume (~/.rhubarb/paginae-proba.volumen, 87 MB, 30,251 acts, 16.7 MB
+of act text - mostly pictor strokes): opening ANY history document
+cost ~33 ms because `historia` read every act of the volume
+(`volumen_acta_legere(post 0)`) and filtered by genus in C. The week
+view opens seven day books per frame -> 210 ms/frame.
+
+sqlite3 on the copy: full read 33 ms; `genus IN (...)` without index
+6 ms; with `CREATE INDEX acta_genus ON acta (genus, seq)` 0.1 ms.
+
+Fix: migration 4 (the index - existing volumes get it on next open,
+append-only migrations) and `volumen_acta_generum_legere(vol, post,
+genera, p)` (NIHIL-terminated list, `seq > ? AND genus IN (?, ...)
+ORDER BY seq`). After, same copy: week 210 -> 2.7 ms/frame, month
+7.6 -> 2.1 ms, one day book ~30 -> 0.15-0.7 ms. Plants 4 red (index,
+filter, post_seq, order).
+
+Not changed: `volumen_acta_legere` (mensura, silex, mensa still read
+everything - they want everything). `volumen_summa_actorum` is a
+COUNT(*) per open (cheap at 30k rows; MAX(seq) would be the indexed
+form if it ever shows up).
+
+## 2026-10-20 - praesentia (genera-datorum D1)
+
+App state left the journal. On Fran's real volume 58 % of acts were
+`status/` snapshots and 11 % the vicus layout index, each one a
+`plagula-condita` act + a fresh massa per change. New table
+`praesentia(clavis, valor, momentum)`, last write wins, written by
+`volumen_praesens_ponere` with no act and no massa.
+
+- Migration 5 creates the table; migration 6 copies existing
+  `status/%` and `vicus/latera` plagulae across ONCE (the library now
+  names two app keys in a migration - accepted over a read-fallback
+  that would keep the coupling in code forever). Old plagulae stay:
+  their acts are history, deleting them without an act would make the
+  manifest disagree with replay.
+- Measured with a throwaway probe (60 layout changes in vicus_applicatio):
+  HEAD 69 acts / 41 massae / 60 KB of blobs; now 0 / 0 / 0.
+- Older code opening a migrated volume: scrinium_migrare sees
+  max(versio) >= its count and proceeds; it keeps reading/writing the
+  old plagulae, so its view is frozen at migration time and its writes
+  are invisible to new code. Harmless, but not two-way.
+- Test for migration 6 builds an old-shape volume by running the four
+  original statements through scrinium_migrare itself.
+
+## 2026-10-20 - act identity (genera-datorum D2)
+
+Acts gain `hora` (hybrid logical clock, `lib/hora_hybrida.c`) and
+`machina` (`machina_identitas()`, 16 hex of the hardware UUID's
+SHA-256). Migrations 7-9: two ALTER TABLE + UNIQUE index (hora,
+machina).
+
+- The clock state IS the table: the INSERT computes
+  `MAX(physical << 16, MAX(hora) + 1)` in one statement, so two
+  processes on one machine cannot mint the same stamp, restarts keep
+  the clock, and imported remote acts will push it forward for free.
+  The same rule lives in C as `hora_hybrida_proxima` (tests + backfill).
+- Backfill runs on EVERY open, not in a migration: SQL cannot express
+  "never decrease in seq order" nor know the machine id. Rows are
+  collected first, then updated (the update moves the index the select
+  walks). Side effect: acts appended by older code (main's vicus) on a
+  migrated volume come in with NULL hora and get stamped on the next
+  open by new code. Cost on a synthetic 35k-act volume: 128 ms once,
+  then 1 ms (the NULL check is an index probe).
+- Old acts are attributed to the machine that opens the volume - a
+  volume made elsewhere and copied over cannot be told apart.
+- Empty machine identity: volume opens and reads, appends refuse
+  ("machina ignota") - machina.h's refuse-don't-degrade rule.
+- Hand lists that name volumen's closure grew: ludus_tessera and
+  briar compile_probationes.sh (+ briar MUTATIONES line).
+
+## 2026-10-20 - act base (genera-datorum D2b)
+
+Migrations 10-11: `basis_hora`, `basis_machina` (NULL = no base or
+unknown; old acts stay NULL - no reconstruction from ramus notes).
+`volumen_actum_super_appendere` takes a `VolumenIdentitas`; the plain
+append is now a wrapper with an empty base. `volumen_actum_identitas`
+= PK lookup by seq. `VolumenActum`'s D2 fields moved under
+`identitas`, next to `basis`.
+
+A plant that made the identity lookup return the LAST act >= seq
+stayed green: every lookup in the test happened to target the newest
+act. Tightened with a lookup of the first act after the second exists.
+
 ## 2026-10-17 - durable option + streamed massae (hospitium v3 T6)
 
 - `VolumenOptiones.durabilitas_plena` -> `synchronous=FULL` (via
@@ -156,3 +242,11 @@ nova semper daret, et reliquiae silentio congererentur.
   download. Re-opening per 16-64 KB chunk costs microseconds.
 - SQLite blobs cap at ~1 GB (SQLITE_MAX_LENGTH); the API refuses > 2 GB
   up front, sqlite refuses beyond its own limit.
+
+## 2026-10-21 - volumen_in_transactione (canalis T4)
+
+Public read of the existing `in_transactione` flag, so a library that
+would otherwise open its own transaction can join the caller's instead
+(sqlite forbids nesting). First user: admissio_revocare, called inside
+the exemplar suspension transaction. Section "in_transactione" (begin,
+commit, rollback, NIHIL).

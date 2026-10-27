@@ -33,6 +33,22 @@ nomen structura {
      * clipboard_capere_imaginem ponunt, probationes fictam */
     ImagoFructus (*imago_capere)(vacuum* ctx, Piscina* piscina);
           vacuum* imago_ctx;
+    /* testa-ios C1b: electio imaginis (servitium hospitis, non
+     * obstruens - imago POSTEA ut EVENTUS_DEPOSITIO venit); NIHIL =
+     * nulla */
+             b32 (*imaginem_eligere)(vacuum* ctx);
+          vacuum* imaginem_eligere_ctx;
+    /* pinacotheca T4: picturas mutare sine pictor_applicatio.h (id
+     * hoc caput includit) - pictor_montare implet (PictorMontatio* in
+     * 'montatio'); NIHIL (probationes sine montatione) = res menu
+     * nihil agunt */
+          vacuum* montatio;
+             b32 (*picturam_condere)(vacuum* montatio,
+                                     constans character* spatium);
+             b32 (*picturam_ponere)(vacuum* montatio,
+                                    constans character* spatium);
+    /* pinacotheca T5: apertio eam parat (scheda, picturae) */
+    PictorPinacotheca* pinacotheca;
 } PictorActiones;
 
 vacuum
@@ -110,6 +126,48 @@ pictor_linea_ictus (
  * sine colore scribit (documentum colore fundi pingit) */
 b32
 pictor_spongia_ictus (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* <tractator/> quadratum imaginis ictum (testa-ios C1b): servitium
+ * hospitis imaginem_eligere SEMEL vocat (non obstruens - photographia
+ * electa postea ut EVENTUS_DEPOSITIO venit). Servitium NIHIL ->
+ * FALSUM, nihil. Registratur ut 'imago.eligere'. */
+b32
+pictor_imaginem_eligere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* <tractator/> res menu ⋯ ictum ('elenchus.<k>', pinacotheca D2;
+ * tabula pictor_elenchum_parare): "Open picture…" palettam in
+ * "pinacotheca" mutat; "New picture" picturam novam "pictura-<n>" (n
+ * = I + maximum exstans) condit et ostendit, menu claudit; "Import
+ * image…" servitium imaginem_eligere vocat, menu claudit.
+ * Registratur ut 'elenchus.agere'. */
+b32
+pictor_elenchum_agere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* <tractator/> pinacotheca (spec D3, D7): 'pinax.<k>' picturam
+ * tituli ("pinax:...:<spatium>") aperit et claudit;
+ * 'pinacotheca.prior' / '.posterior' paginam mutant (intra limites);
+ * 'pinacotheca.claudere' claudit, nihil aliud. Dominus
+ * 'pagina_pinacothecae'. Registratur ut 'pinacotheca.agere'. */
+b32
+pictor_pinacothecam_agere (
     InsulaRepositorium* repo,
                  Motus* motus,
    constans Destinatio* destinatio,

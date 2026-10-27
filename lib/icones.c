@@ -880,3 +880,66 @@ icones_icns_scribere (
     }
     redde VERUM;
 }
+
+
+/* ==================================================
+ * Amplificatio (testa-ios C2 T3)
+ * ================================================== */
+
+IconesStatus
+icones_amplificare (
+    constans Imago* fons,
+               i32  latus,
+             Imago* exitus,
+           Piscina* piscina)
+{
+    i32 factor;
+    i32 x;
+    i32 y;
+    i32 a;
+    i32 m;
+
+    si (!fons || !exitus || !piscina)
+    {
+        redde ICONES_ERROR_DESUNT;
+    }
+    si (   !fons->pixela || fons->latitudo == ZEPHYRUM
+        || fons->altitudo == ZEPHYRUM)
+    {
+        redde ICONES_ERROR_FONS;
+    }
+    si (   fons->latitudo         != fons->altitudo || latus == ZEPHYRUM
+        || latus % fons->latitudo != ZEPHYRUM)
+    {
+        redde ICONES_ERROR_LATERA;
+    }
+    factor            = latus / fons->latitudo;
+    exitus->latitudo  = latus;
+    exitus->altitudo  = latus;
+    exitus->pixela    = (i8*)piscina_allocare(piscina,
+        (memoriae_index)latus * (memoriae_index)latus * IV);
+    si (!exitus->pixela)
+    {
+        redde ICONES_ERROR_MEMORIA;
+    }
+    per (y = ZEPHYRUM; y < latus; y++)
+    {
+        per (x = ZEPHYRUM; x < latus; x++)
+        {
+            constans i8* s;
+                     i8* d;
+
+            s = fons->pixela + ((y / factor) * fons->latitudo + x
+                / factor)
+                * IV;
+            d = exitus->pixela + (y * latus + x) * IV;
+            a = (i32)s[III];
+            per (m = ZEPHYRUM; m < III; m++)
+            {
+                d[m] = (i8)(((i32)s[m] * a + CCLV * (CCLV - a)) / CCLV);
+            }
+            d[III] = (i8)CCLV;
+        }
+    }
+    redde ICONES_SUCCESSUS;
+}

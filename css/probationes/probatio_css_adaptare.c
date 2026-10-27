@@ -20,6 +20,7 @@
  */
 
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "credo.h"
 #include "css_adaptare.h"
 #include "css_lexicon.h"
@@ -183,7 +184,7 @@ _plagulam_legere (
     character* memoria;
     size_t lecti;
 
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     { redde NIHIL;
     }
@@ -208,29 +209,46 @@ _plagulam_legere (
     redde memoria;
 }
 
-integer
-principale (vacuum)
+
+/* FIXURA SUITAE: ratum lexici semel factum; sectiones id per
+ * monstratorem constantem LEGUNT. */
+nomen structura {
+    MateriaLexiconRatum ratum;
+} FixuraLexici;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                Piscina* piscina;
-    MateriaLexiconRatum  ratum;
-     MateriaLexIudicium  iudicium;
-                    b32  praeteritus;
+          FixuraLexici* f;
+    MateriaLexIudicium  iudicium;
 
-    piscina = piscina_generare_dynamicum("probatio_css_adaptare",
-        65536);
-    credo_aperire(piscina);
-
-    si (!materia_lexicon_ratum_facere(&ratum, &CSS_LEXICON, &iudicium))
+    f = (FixuraLexici*)piscina_allocare(c->piscina,
+        magnitudo(FixuraLexici));
+    si (f == NIHIL)
+    {
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
+    }
+    si (!materia_lexicon_ratum_facere(&f->ratum, &CSS_LEXICON,
+        &iudicium))
     {
         imprimere("LEXICON CSS RECUSATUM: %s\n",
             materia_lexicon_vitium_nomen((MateriaLexVitium)iudicium.vitium));
-        redde I;
+        redde;
     }
+    c->datum = f;
+}
 
 
-    /* ========================================================
-     * PROBARE: adaptatio UNUM PRO UNO
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: adaptatio UNUM PRO UNO
+ * ================================================== */
+
+interior vacuum
+_unum_pro_uno (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         constans character* fons     = "a { color : red }";
@@ -239,7 +257,6 @@ principale (vacuum)
                        Xar* plana;
                        i32  i;
 
-        imprimere("\n--- Probans adaptationem unum-pro-uno ---\n");
 
         lexemata = css_lexare(piscina, fons, mensura);
         CREDO_NON_NIHIL (lexemata);
@@ -281,221 +298,330 @@ principale (vacuum)
             CREDO_FALSUM (materia_token_initium_lineae(token));
         }
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: regula divisionis, omnes rami
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: regula divisionis, omnes rami
+ * ================================================== */
 
+interior vacuum
+_divisio_sine_linea (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+                             Xar* significantia;
+                    MateriaToken* t;
+
+    si (c->suita == NIHIL)
     {
-        Xar* significantia;
-        MateriaToken* t;
-
-        imprimere("\n--- Probans divisionem: sine linea nova ---\n");
-        {
-            /* 'a { color : red }' uno in versu: nullum spatium
-             * lineam novam fert, ergo OMNIA priori ut 'post'. */
-            constans character* fons = "a { color : red }";
-            significantia = _parare(piscina, &ratum, fons,
-                (i32)strlen(fons), REGIMEN_STRUCTURALE, NIHIL);
-            CREDO_NON_NIHIL (significantia);
-
-            t = *(MateriaToken**)xar_obtinere(significantia, ZEPHYRUM);
-            CREDO_AEQUALIS_S32 (t->genus, (s32)CSS_LEX_IDENTIFICATOR);
-            CREDO_AEQUALIS_S32 (t->byte_offset, ZEPHYRUM);
-            CREDO_AEQUALIS_I32 (t->numerus_post, I);   /* spatium post 'a' */
-            CREDO_AEQUALIS_I32 (t->numerus_ante, ZEPHYRUM);
-
-            /* et sequens ergo NIHIL ante habet */
-            t = *(MateriaToken**)xar_obtinere(significantia, I);
-            CREDO_AEQUALIS_S32 (t->genus, (s32)CSS_LEX_BRACE_APERTA);
-            CREDO_AEQUALIS_I32 (t->numerus_ante, ZEPHYRUM);
-        }
-
-        imprimere("\n--- Probans divisionem: sine priore ---\n");
-        {
-            /* Trivia ducentia priorem non habent, ergo OMNIA
-             * sequenti ut 'ante'. */
-            constans character* fons = "\n\n  a{}";
-            significantia = _parare(piscina, &ratum, fons,
-                (i32)strlen(fons), REGIMEN_STRUCTURALE, NIHIL);
-            CREDO_NON_NIHIL (significantia);
-
-            t = *(MateriaToken**)xar_obtinere(significantia, ZEPHYRUM);
-            CREDO_AEQUALIS_S32 (t->genus, (s32)CSS_LEX_IDENTIFICATOR);
-            CREDO_AEQUALIS_I32 (t->numerus_ante, I);
-            CREDO_AEQUALIS_I32 (t->numerus_post, ZEPHYRUM);
-        }
-
-        imprimere("\n--- Probans divisionem: scissio vera ---\n");
-        {
-            /* 'a{} /' '* n *' '/\n  b{}' - pendentia TRIA:
-             * SPATIA(" "), COMMENTARIUM, SPATIA("\n  ").
-             * Divisor primum SPATIUM lineam novam ferens = index II.
-             * Ergo duo priori, unum sequenti - commentarium apud
-             * lineam SUAM manet, indentatio apud lexema SUUM. */
-            constans character* fons = "a{} /* n */\n  b{}";
-            significantia = _parare(piscina, &ratum, fons,
-                (i32)strlen(fons), REGIMEN_STRUCTURALE, NIHIL);
-            CREDO_NON_NIHIL (significantia);
-
-            /* significantia: a { } b { } FINIS */
-            CREDO_AEQUALIS_I32 (xar_numerus(significantia), VII);
-
-            t = *(MateriaToken**)xar_obtinere(significantia, II);
-            CREDO_AEQUALIS_S32 (t->genus, (s32)CSS_LEX_BRACE_CLAUSA);
-            CREDO_AEQUALIS_I32 (t->numerus_post, II);
-            CREDO_AEQUALIS_S32 (t->spatia_post[I]->genus,
-                (s32)CSS_LEX_COMMENTARIUM);
-
-            t = *(MateriaToken**)xar_obtinere(significantia, III);
-            CREDO_AEQUALIS_S32 (t->genus, (s32)CSS_LEX_IDENTIFICATOR);
-            CREDO_AEQUALIS_I32 (t->numerus_ante, I);
-        }
-
-        imprimere("\n--- Probans divisionem: commentarium multilineum NON divisor ---\n");
-        {
-            /* Silvae COMMENTUM_CLAUSUM lexema NOVA_LINEA non est,
-             * ergo commentarium multilineum divisionem non facit et
-             * apud lexema PRAECEDENS manet. Nos idem: divisor munus
-             * SPATIUM ferre DEBET. Sine hac condicione commentarium
-             * ad 'b' migraret - lectio FALSA, et octetim invisibilis. */
-            constans character* fons = "a{} /* n\np */ b{}";
-            significantia = _parare(piscina, &ratum, fons,
-                (i32)strlen(fons), REGIMEN_STRUCTURALE, NIHIL);
-            CREDO_NON_NIHIL (significantia);
-
-            t = *(MateriaToken**)xar_obtinere(significantia, II);
-            CREDO_AEQUALIS_S32 (t->genus, (s32)CSS_LEX_BRACE_CLAUSA);
-            CREDO_AEQUALIS_I32 (t->numerus_post, III);
-
-            t = *(MateriaToken**)xar_obtinere(significantia, III);
-            CREDO_AEQUALIS_S32 (t->genus, (s32)CSS_LEX_IDENTIFICATOR);
-            CREDO_AEQUALIS_I32 (t->numerus_ante, ZEPHYRUM);
-        }
-
-        imprimere("\n--- Probans trivia trans SEGMENTA xar ---\n");
-        {
-            /* Xar SEGMENTATUS est, primo segmento XVI elementa
-             * (xar.h:26). Series triviorum LONGIOR quam XVI ergo
-             * segmenta TRANSIT, et xar_obtinere ut initium seriei
-             * contiguae tractare memoriam ALIENAM legeret. Casus
-             * hic ligatorem trans limitem illum trahit - sine eo
-             * copia plana defensiva sola esset, non probata. */
-            constans character* fons =
-                "a /*a*/ /*b*/ /*c*/ /*d*/ /*e*/ /*f*/ /*g*/ /*h*/"
-                " /*i*/ /*j*/ /*k*/ b{}";
-            significantia = _parare(piscina, &ratum, fons,
-                (i32)strlen(fons), REGIMEN_STRUCTURALE, NIHIL);
-            CREDO_NON_NIHIL (significantia);
-
-            /* nulla linea nova: OMNIA priori. XI commentaria +
-             * XII spatia = XXIII trivia, super XVI segmenti primi. */
-            t = *(MateriaToken**)xar_obtinere(significantia, ZEPHYRUM);
-            CREDO_AEQUALIS_S32 (t->genus, (s32)CSS_LEX_IDENTIFICATOR);
-            CREDO_AEQUALIS_I32 (t->numerus_post, XXIII);
-            CREDO_MAIOR_I32 (t->numerus_post, (i32)XVI);
-            /* ultimum trivium legibile esse DEBET - hic copia
-             * plana fallax memoriam alienam redderet */
-            CREDO_AEQUALIS_S32 (t->spatia_post[XXII]->genus,
-                (s32)CSS_LEX_SPATIA);
-            CREDO_AEQUALIS_S32 (t->spatia_post[XXI]->genus,
-                (s32)CSS_LEX_COMMENTARIUM);
-            CREDO_VERUM (_tegumentum_probare(piscina, &ratum, fons,
-                (i32)strlen(fons), REGIMEN_STRUCTURALE));
-        }
-
-        imprimere("\n--- Probans contractum: Xar CONTIGUUS NON EST ---\n");
-        {
-            /* CASUS SUPRA VITIUM PLANTATUM NON CEPIT, et causa
-             * MENSURATA est: piscina segmentum secundum IMMEDIATE
-             * post primum ponit (delta = CXXVIII = XVI * VIII),
-             * ergo lectio ultra limitem in segmentum secundum
-             * CASU cadit. Fortuna, non contractus - eadem forma
-             * quam materia_token.h de ordinatione notat.
-             *
-             * Hic contractum ipsum probamus: inter cumulationes
-             * ALIUD ex eadem piscina allocamus, ut segmenta
-             * DISIUNGANTUR. Tunc series plana LOCUM TENET, et
-             * vitium plantatum ardet. */
-            constans character* fons =
-                "a /*a*/ /*b*/ /*c*/ /*d*/ /*e*/ /*f*/ /*g*/ /*h*/"
-                " /*i*/ /*j*/ /*k*/ b{}";
-                     Xar* plana;
-              CssLigator  ligator;
-            MateriaToken* ultimum_trivium  = NIHIL;
-            MateriaToken* significans      = NIHIL;
-                     i32  i;
-
-            plana = css_adaptare(piscina,
-                css_lexare(piscina, fons, (i32)strlen(fons)), &FORMA);
-            CREDO_NON_NIHIL (plana);
-
-            css_ligator_incipere(&ligator, piscina, &ratum);
-            per (i = I; i < xar_numerus(plana); i++)
-            {
-                MateriaToken* token;
-                token = *(MateriaToken**)xar_obtinere(plana, i);
-                si (materia_lexicon_trivium_est(&ratum, token->genus))
-                {
-                    CREDO_VERUM (css_ligator_cumulare(&ligator, token));
-                    ultimum_trivium = token;
-                    /* DISIUNCTOR: allocatio aliena inter elementa */
-                    (vacuum)piscina_allocare(piscina,
-                        (memoriae_index)LXIV);
-                }
-                alioquin
-                { significans = token; frange;
-                }
-            }
-            CREDO_NON_NIHIL (significans);
-            CREDO_NON_NIHIL (ultimum_trivium);
-
-            /* prior NIHIL est (a primo trivio incepimus), ergo OMNIA
-             * sequenti ut 'ante' - et ultimum eorum idem OBIECTUM
-             * esse debet quod cumulavimus. Lectio ultra segmentum
-             * punctatorem ALIENUM redderet. */
-            CREDO_VERUM (css_ligator_solvere(&ligator, significans));
-            CREDO_AEQUALIS_I32 (significans->numerus_ante, XXIII);
-            CREDO_AEQUALIS_PTR (
-                significans->spatia_ante[significans->numerus_ante - I],
-                ultimum_trivium);
-        }
-
-        imprimere("\n--- Probans regimen CONTENTUM (D7) ---\n");
-        {
-            /* Idem fons, regimine contenti: spatia significantia
-             * fiunt, ergo in serie apparent et trivia nulla sunt.
-             * Haec est via quam parsator intra praeludia adhibet. */
-            constans character* fons = "1px 2px";
-                           Xar* structurale;
-                           Xar* contentum;
-
-            structurale = _parare(piscina, &ratum, fons,
-                (i32)strlen(fons), REGIMEN_STRUCTURALE, NIHIL);
-            contentum = _parare(piscina, &ratum, fons,
-                (i32)strlen(fons), REGIMEN_CONTENTUM, NIHIL);
-            CREDO_NON_NIHIL (structurale);
-            CREDO_NON_NIHIL (contentum);
-
-            /* structurale: 1px 2px FINIS = III (spatium absorptum) */
-            CREDO_AEQUALIS_I32 (xar_numerus(structurale), III);
-            /* contentum: 1px SPATIUM 2px FINIS = IV */
-            CREDO_AEQUALIS_I32 (xar_numerus(contentum), IV);
-
-            t = *(MateriaToken**)xar_obtinere(contentum, I);
-            CREDO_AEQUALIS_S32 (t->genus, (s32)CSS_LEX_SPATIA);
-            /* et NIHIL absorbuit - spatium se ipsum est */
-            CREDO_AEQUALIS_I32 (t->numerus_ante, ZEPHYRUM);
-            CREDO_AEQUALIS_I32 (t->numerus_post, ZEPHYRUM);
-        }
+        redde;
     }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        /* 'a { color : red }' uno in versu: nullum spatium
+         * lineam novam fert, ergo OMNIA priori ut 'post'. */
+        constans character* fons = "a { color : red }";
+        significantia = _parare(piscina, ratum, fons,
+            (i32)strlen(fons), REGIMEN_STRUCTURALE, NIHIL);
+        CREDO_NON_NIHIL (significantia);
+
+        t = *(MateriaToken**)xar_obtinere(significantia, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (t->genus, (s32)CSS_LEX_IDENTIFICATOR);
+        CREDO_AEQUALIS_S32 (t->byte_offset, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (t->numerus_post, I);   /* spatium post 'a' */
+        CREDO_AEQUALIS_I32 (t->numerus_ante, ZEPHYRUM);
+
+        /* et sequens ergo NIHIL ante habet */
+        t = *(MateriaToken**)xar_obtinere(significantia, I);
+        CREDO_AEQUALIS_S32 (t->genus, (s32)CSS_LEX_BRACE_APERTA);
+        CREDO_AEQUALIS_I32 (t->numerus_ante, ZEPHYRUM);
+    }
+}
 
 
-    /* ========================================================
-     * PORTA: TEGUMENTUM OCTETORUM (spec par. IX.7)
-     * ======================================================== */
+interior vacuum
+_divisio_sine_priore (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+                             Xar* significantia;
+                    MateriaToken* t;
 
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        /* Trivia ducentia priorem non habent, ergo OMNIA
+         * sequenti ut 'ante'. */
+        constans character* fons = "\n\n  a{}";
+        significantia = _parare(piscina, ratum, fons,
+            (i32)strlen(fons), REGIMEN_STRUCTURALE, NIHIL);
+        CREDO_NON_NIHIL (significantia);
+
+        t = *(MateriaToken**)xar_obtinere(significantia, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (t->genus, (s32)CSS_LEX_IDENTIFICATOR);
+        CREDO_AEQUALIS_I32 (t->numerus_ante, I);
+        CREDO_AEQUALIS_I32 (t->numerus_post, ZEPHYRUM);
+    }
+}
+
+
+interior vacuum
+_divisio_scissio (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+                             Xar* significantia;
+                    MateriaToken* t;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        /* 'a{} /' '* n *' '/\n  b{}' - pendentia TRIA:
+         * SPATIA(" "), COMMENTARIUM, SPATIA("\n  ").
+         * Divisor primum SPATIUM lineam novam ferens = index II.
+         * Ergo duo priori, unum sequenti - commentarium apud
+         * lineam SUAM manet, indentatio apud lexema SUUM. */
+        constans character* fons = "a{} /* n */\n  b{}";
+        significantia = _parare(piscina, ratum, fons,
+            (i32)strlen(fons), REGIMEN_STRUCTURALE, NIHIL);
+        CREDO_NON_NIHIL (significantia);
+
+        /* significantia: a { } b { } FINIS */
+        CREDO_AEQUALIS_I32 (xar_numerus(significantia), VII);
+
+        t = *(MateriaToken**)xar_obtinere(significantia, II);
+        CREDO_AEQUALIS_S32 (t->genus, (s32)CSS_LEX_BRACE_CLAUSA);
+        CREDO_AEQUALIS_I32 (t->numerus_post, II);
+        CREDO_AEQUALIS_S32 (t->spatia_post[I]->genus,
+            (s32)CSS_LEX_COMMENTARIUM);
+
+        t = *(MateriaToken**)xar_obtinere(significantia, III);
+        CREDO_AEQUALIS_S32 (t->genus, (s32)CSS_LEX_IDENTIFICATOR);
+        CREDO_AEQUALIS_I32 (t->numerus_ante, I);
+    }
+}
+
+
+interior vacuum
+_divisio_commentarium (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+                             Xar* significantia;
+                    MateriaToken* t;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        /* Silvae COMMENTUM_CLAUSUM lexema NOVA_LINEA non est,
+         * ergo commentarium multilineum divisionem non facit et
+         * apud lexema PRAECEDENS manet. Nos idem: divisor munus
+         * SPATIUM ferre DEBET. Sine hac condicione commentarium
+         * ad 'b' migraret - lectio FALSA, et octetim invisibilis. */
+        constans character* fons = "a{} /* n\np */ b{}";
+        significantia = _parare(piscina, ratum, fons,
+            (i32)strlen(fons), REGIMEN_STRUCTURALE, NIHIL);
+        CREDO_NON_NIHIL (significantia);
+
+        t = *(MateriaToken**)xar_obtinere(significantia, II);
+        CREDO_AEQUALIS_S32 (t->genus, (s32)CSS_LEX_BRACE_CLAUSA);
+        CREDO_AEQUALIS_I32 (t->numerus_post, III);
+
+        t = *(MateriaToken**)xar_obtinere(significantia, III);
+        CREDO_AEQUALIS_S32 (t->genus, (s32)CSS_LEX_IDENTIFICATOR);
+        CREDO_AEQUALIS_I32 (t->numerus_ante, ZEPHYRUM);
+    }
+}
+
+
+interior vacuum
+_trivia_segmenta (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+                             Xar* significantia;
+                    MateriaToken* t;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        /* Xar SEGMENTATUS est, primo segmento XVI elementa
+         * (xar.h:26). Series triviorum LONGIOR quam XVI ergo
+         * segmenta TRANSIT, et xar_obtinere ut initium seriei
+         * contiguae tractare memoriam ALIENAM legeret. Casus
+         * hic ligatorem trans limitem illum trahit - sine eo
+         * copia plana defensiva sola esset, non probata. */
+        constans character* fons =
+            "a /*a*/ /*b*/ /*c*/ /*d*/ /*e*/ /*f*/ /*g*/ /*h*/"
+            " /*i*/ /*j*/ /*k*/ b{}";
+        significantia = _parare(piscina, ratum, fons,
+            (i32)strlen(fons), REGIMEN_STRUCTURALE, NIHIL);
+        CREDO_NON_NIHIL (significantia);
+
+        /* nulla linea nova: OMNIA priori. XI commentaria +
+         * XII spatia = XXIII trivia, super XVI segmenti primi. */
+        t = *(MateriaToken**)xar_obtinere(significantia, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (t->genus, (s32)CSS_LEX_IDENTIFICATOR);
+        CREDO_AEQUALIS_I32 (t->numerus_post, XXIII);
+        CREDO_MAIOR_I32 (t->numerus_post, (i32)XVI);
+        /* ultimum trivium legibile esse DEBET - hic copia
+         * plana fallax memoriam alienam redderet */
+        CREDO_AEQUALIS_S32 (t->spatia_post[XXII]->genus,
+            (s32)CSS_LEX_SPATIA);
+        CREDO_AEQUALIS_S32 (t->spatia_post[XXI]->genus,
+            (s32)CSS_LEX_COMMENTARIUM);
+        CREDO_VERUM (_tegumentum_probare(piscina, ratum, fons,
+            (i32)strlen(fons), REGIMEN_STRUCTURALE));
+    }
+}
+
+
+interior vacuum
+_contractum_xar (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        /* CASUS SUPRA VITIUM PLANTATUM NON CEPIT, et causa
+         * MENSURATA est: piscina segmentum secundum IMMEDIATE
+         * post primum ponit (delta = CXXVIII = XVI * VIII),
+         * ergo lectio ultra limitem in segmentum secundum
+         * CASU cadit. Fortuna, non contractus - eadem forma
+         * quam materia_token.h de ordinatione notat.
+         *
+         * Hic contractum ipsum probamus: inter cumulationes
+         * ALIUD ex eadem piscina allocamus, ut segmenta
+         * DISIUNGANTUR. Tunc series plana LOCUM TENET, et
+         * vitium plantatum ardet. */
+        constans character* fons =
+            "a /*a*/ /*b*/ /*c*/ /*d*/ /*e*/ /*f*/ /*g*/ /*h*/"
+            " /*i*/ /*j*/ /*k*/ b{}";
+                 Xar* plana;
+          CssLigator  ligator;
+        MateriaToken* ultimum_trivium  = NIHIL;
+        MateriaToken* significans      = NIHIL;
+                 i32  i;
+
+        plana = css_adaptare(piscina,
+            css_lexare(piscina, fons, (i32)strlen(fons)), &FORMA);
+        CREDO_NON_NIHIL (plana);
+
+        css_ligator_incipere(&ligator, piscina, ratum);
+        per (i = I; i < xar_numerus(plana); i++)
+        {
+            MateriaToken* token;
+            token = *(MateriaToken**)xar_obtinere(plana, i);
+            si (materia_lexicon_trivium_est(ratum, token->genus))
+            {
+                CREDO_VERUM (css_ligator_cumulare(&ligator, token));
+                ultimum_trivium = token;
+                /* DISIUNCTOR: allocatio aliena inter elementa */
+                (vacuum)piscina_allocare(piscina,
+                    (memoriae_index)LXIV);
+            }
+            alioquin
+            { significans = token; frange;
+            }
+        }
+        CREDO_NON_NIHIL (significans);
+        CREDO_NON_NIHIL (ultimum_trivium);
+
+        /* prior NIHIL est (a primo trivio incepimus), ergo OMNIA
+         * sequenti ut 'ante' - et ultimum eorum idem OBIECTUM
+         * esse debet quod cumulavimus. Lectio ultra segmentum
+         * punctatorem ALIENUM redderet. */
+        CREDO_VERUM (css_ligator_solvere(&ligator, significans));
+        CREDO_AEQUALIS_I32 (significans->numerus_ante, XXIII);
+        CREDO_AEQUALIS_PTR (
+            significans->spatia_ante[significans->numerus_ante - I],
+            ultimum_trivium);
+    }
+}
+
+
+interior vacuum
+_regimen_contentum (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+                    MateriaToken* t;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        /* Idem fons, regimine contenti: spatia significantia
+         * fiunt, ergo in serie apparent et trivia nulla sunt.
+         * Haec est via quam parsator intra praeludia adhibet. */
+        constans character* fons = "1px 2px";
+                       Xar* structurale;
+                       Xar* contentum;
+
+        structurale = _parare(piscina, ratum, fons,
+            (i32)strlen(fons), REGIMEN_STRUCTURALE, NIHIL);
+        contentum = _parare(piscina, ratum, fons,
+            (i32)strlen(fons), REGIMEN_CONTENTUM, NIHIL);
+        CREDO_NON_NIHIL (structurale);
+        CREDO_NON_NIHIL (contentum);
+
+        /* structurale: 1px 2px FINIS = III (spatium absorptum) */
+        CREDO_AEQUALIS_I32 (xar_numerus(structurale), III);
+        /* contentum: 1px SPATIUM 2px FINIS = IV */
+        CREDO_AEQUALIS_I32 (xar_numerus(contentum), IV);
+
+        t = *(MateriaToken**)xar_obtinere(contentum, I);
+        CREDO_AEQUALIS_S32 (t->genus, (s32)CSS_LEX_SPATIA);
+        /* et NIHIL absorbuit - spatium se ipsum est */
+        CREDO_AEQUALIS_I32 (t->numerus_ante, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (t->numerus_post, ZEPHYRUM);
+    }
+}
+
+
+/* ==================================================
+ * PORTA: TEGUMENTUM OCTETORUM (spec par. IX.7)
+ * ================================================== */
+
+interior vacuum
+_tegumentum_casuum (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
     {
         hic_manens constans character* CASUS[] = {
             "",
@@ -521,14 +647,13 @@ principale (vacuum)
         i32 i;
         i32 probata = ZEPHYRUM;
 
-        imprimere("\n--- PORTA: tegumentum octetorum, casus inlinei ---\n");
 
         per (i = ZEPHYRUM; i < numerus_casuum; i++)
         {
             i32 mensura = (i32)strlen(CASUS[i]);
-            CREDO_VERUM (_tegumentum_probare(piscina, &ratum, CASUS[i],
+            CREDO_VERUM (_tegumentum_probare(piscina, ratum, CASUS[i],
                 mensura, REGIMEN_STRUCTURALE));
-            CREDO_VERUM (_tegumentum_probare(piscina, &ratum, CASUS[i],
+            CREDO_VERUM (_tegumentum_probare(piscina, ratum, CASUS[i],
                 mensura, REGIMEN_CONTENTUM));
             probata = probata + I;
         }
@@ -537,7 +662,7 @@ principale (vacuum)
         {
             hic_manens constans character NUL_CASUS[] =
                 "a{b:\0c}";
-            CREDO_VERUM (_tegumentum_probare(piscina, &ratum, NUL_CASUS,
+            CREDO_VERUM (_tegumentum_probare(piscina, ratum, NUL_CASUS,
                 (i32)VII, REGIMEN_STRUCTURALE));
             probata = probata + I;
         }
@@ -546,12 +671,25 @@ principale (vacuum)
          * significare potest 'numquam apparuit'. */
         CREDO_MAIOR_S32 ((s32)probata, (s32)X);
     }
+}
 
 
-    /* ========================================================
-     * PORTA: TEGUMENTUM super CORPUS VERUM
-     * ======================================================== */
+/* ==================================================
+ * PORTA: TEGUMENTUM super CORPUS VERUM
+ * ================================================== */
 
+interior vacuum
+_tegumentum_corporis (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
     {
         hic_manens constans character* PLAGULAE[] = {
             "probationes/fixa/css/componentia_2026-08-18.css",
@@ -566,7 +704,6 @@ principale (vacuum)
                        i32  i;
                        i32  lectae = ZEPHYRUM;
 
-        imprimere("\n--- PORTA: tegumentum super corpus verum ---\n");
 
         radix = getenv("RHUBARB_RADIX");
         si (radix == NIHIL)
@@ -588,9 +725,9 @@ principale (vacuum)
             }
             imprimere("  %s (%d octeti)\n", PLAGULAE[i],
                 (integer)mensura);
-            CREDO_VERUM (_tegumentum_probare(piscina, &ratum, textus,
+            CREDO_VERUM (_tegumentum_probare(piscina, ratum, textus,
                 mensura, REGIMEN_STRUCTURALE));
-            CREDO_VERUM (_tegumentum_probare(piscina, &ratum, textus,
+            CREDO_VERUM (_tegumentum_probare(piscina, ratum, textus,
                 mensura, REGIMEN_CONTENTUM));
             lectae = lectae + I;
         }
@@ -599,12 +736,36 @@ principale (vacuum)
          * potest cum nihil legerit. */
         CREDO_MAIOR_S32 ((s32)lectae, (s32)II);
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "adaptatio unum pro uno", _unum_pro_uno,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "divisio: sine linea nova", _divisio_sine_linea,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "divisio: sine priore", _divisio_sine_priore,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "divisio: scissio vera", _divisio_scissio,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "divisio: commentarium multilineum non divisor",
+        _divisio_commentarium,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "trivia trans segmenta xar", _trivia_segmenta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "contractum: Xar contiguus non est", _contractum_xar,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "regimen contentum (D7)", _regimen_contentum,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "porta: tegumentum octetorum, casus breves", _tegumentum_casuum,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "porta: tegumentum super corpus verum", _tegumentum_corporis,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("css_adaptare", SECTIONES,
+        _suitam_parare, NIHIL);
 }

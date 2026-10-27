@@ -127,6 +127,21 @@ chorda
 terminale_tty (
     constans TerminaleApplicatio* app);
 
+/* vicus quies T6b: fossa magistri (aemulator_hospes_fossa), mora
+ * (aemulator_hospes_mora), grex frontalis - ansa hospitis (vicus) in
+ * fossa exspectat */
+s32
+terminale_fossa (
+    constans TerminaleApplicatio* app);
+
+s32
+terminale_mora (
+    constans TerminaleApplicatio* app);
+
+s32
+terminale_grex_frontalis (
+    constans TerminaleApplicatio* app);
+
 /* componere hospitis (dispensator.h Componere), ctx =
  * TerminaleApplicatio* */
 Componens*

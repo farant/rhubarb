@@ -28,7 +28,7 @@ nomen structura {
     chorda titulus;         /* "Anna Rossi" */
        s32 annus_originis;  /* natalis: annus nativitatis; 0 ignotus */
     chorda fons;            /* titulus fontis (a portu ponitur) */
-       s32 referentia;      /* id in fonte (persona) - ad aperiendum */
+    chorda referentia;      /* id in fonte (persona) - ad aperiendum */
 } FastiIntroitus;
 
 /* fons: introitus intervalli in exitus (Xar de FastiIntroitus) addit */
@@ -76,6 +76,15 @@ b32
 fasti_fontes_aperire (
           constans FastiFontes* f,
        constans FastiIntroitus* introitus);
+
+/* textus introitus pro ordine: natalis "Anna Rossi turns 40" (annus
+ * originis notus) aut "Anna Rossi's birthday"; genus ignotum: titulus
+ * ipse (D4b: ex kalendarium.c translatum - conspectus 'dies' et
+ * pictura idem textum habent) */
+chorda
+fasti_introitum_textus (
+    constans FastiIntroitus* introitus,
+                    Piscina* piscina);
 
 /* annuum (mensis, dies) in [prima, ultima]: dies concreti in
  * exitus[maximum] ordine; 29 II in anno communi -> 28 II; redde

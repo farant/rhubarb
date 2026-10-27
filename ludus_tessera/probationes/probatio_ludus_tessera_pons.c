@@ -103,26 +103,16 @@ _paria (
     redde VERUM;
 }
 
-s32
-principale (vacuum)
+interior vacuum
+_compositionem_probare (
+    CredoContextus* c)
 {
-                b32  praeteritus;
-            Piscina* piscina;
+            Piscina* piscina = c->piscina;
                  i8  intrandi[LUDUS_TESSERA_MODI_MAXIMI];
                  i8  exeundi[LUDUS_TESSERA_MODI_MAXIMI];
                 i32  mi;
                 i32  me;
 
-    piscina = piscina_generare_dynamicum("probatio_ludus_tessera_pons",
-        262144);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- I. compositio exacta (MUS + GLUTINUM) ---\n");
     {
         RivusTerminalis* rivus = rivus_creare(piscina, VI, VIII);
 
@@ -140,8 +130,18 @@ principale (vacuum)
         CREDO_FALSUM (ludus_tessera_modos_componere(NIHIL,
             RIVUS_MODUS_MUS, intrandi, &mi, exeundi, &me));
     }
+}
 
-    imprimere("\n--- II. lex parium, modi omnes ---\n");
+interior vacuum
+_paria_probare (
+    CredoContextus* c)
+{
+            Piscina* piscina = c->piscina;
+                 i8  intrandi[LUDUS_TESSERA_MODI_MAXIMI];
+                 i8  exeundi[LUDUS_TESSERA_MODI_MAXIMI];
+                i32  mi;
+                i32  me;
+
     {
         RivusTerminalis* rivus = rivus_creare(piscina, VI, VIII);
                     s32  p_mille_quadraginta_novem;
@@ -168,8 +168,13 @@ principale (vacuum)
             > _positio(exeundi, me, "\033[?1004l"));
         CREDO_VERUM (_positio(intrandi, mi, "\033[?1049h") == ZEPHYRUM);
     }
+}
 
-    imprimere("\n--- III. pons super terminalis ---\n");
+interior vacuum
+_pontem_probare (
+    CredoContextus* c)
+{
+    (vacuum)c;
     {
                 TesseraPons pons;
                   character via[] = "/tmp/ludus_tessera_ponsXXXXXX";
@@ -226,9 +231,21 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (altitudo, (i32)amplitudo.lineae);
         CREDO_VERUM (latitudo > ZEPHYRUM && altitudo > ZEPHYRUM);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. compositio exacta (MUS + GLUTINUM)", _compositionem_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "II. lex parium, modi omnes", _paria_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "III. pons super terminalis", _pontem_probare, NIHIL, NIHIL,
+        NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("ludus_tessera_pons", SECTIONES);
 }

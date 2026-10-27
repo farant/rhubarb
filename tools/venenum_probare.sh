@@ -12,7 +12,7 @@
 # I.  specimen: lectio post refectionem 0xA5 (CLXV) videt sub veneno et
 #     valorem veterem sine eo - modus vivus et ordinarie extinctus
 #     (porta muta hic caperetur);
-# II. suitae quae piscinas notant et reficiunt in ansis calidis:
+# II. suitae (compositum probationes_veneni) quae piscinas notant et reficiunt in ansis calidis:
 #     piscina, magnus (Euclides alternus), fractio, situs, polynomium
 #     (officinae), matrix (Bareiss in officinis alternis), laqueus,
 #     extensio (inversa et norma per Bareiss), quaternio (nullam
@@ -20,10 +20,12 @@
 #     sanitatores agit), radices (acervus VCA per notas LIFO, opus post
 #     quodque opus et quamque bisectionem refectum), cellae (candidata
 #     catalogi refutata piscinam ad notam reficiunt), reticulum (officina
-#     per vocationem publicam, effecta transcripta), sub veneno et
-#     sanitatoribus.
+#     per vocationem publicam, effecta transcripta), chorda_aedificator
+#     (piscina_conari_ampliare via II sub veneno SEMPER movet: appendix
+#     sui sine re-derivatione fontis venenum legeret, 2026-10-21), sub
+#     veneno et sanitatoribus.
 # Exitus 0 sana | 1 FRACTA | 2 nihil actum.
-# <porta titulus="venenum" gradus="fusio" tegit="probationes/probatio_extensio.c probationes/probatio_fractio.c probationes/probatio_laqueus.c probationes/probatio_magnus.c probationes/probatio_matrix.c probationes/probatio_piscina.c probationes/probatio_polynomium.c probationes/probatio_quaternio.c probationes/probatio_radices.c probationes/probatio_reticulum.c probationes/probatio_situs.c probationes/probatio_cellae.c probationes/probatio_plexus.c probationes/probatio_nervus.c probationes/probatio_dependentia.c" currit="lib/anulus.c lib/congruentia.c lib/cyclotomia.c lib/extensio.c lib/fractio.c lib/laqueus.c lib/magnus.c lib/matrix.c lib/polynomium.c lib/quaternio.c lib/radices.c lib/reticulum.c lib/situs.c lib/cellae.c lib/surdus.c lib/plexus.c lib/nervus.c lib/dependentia.c"/>
+# <porta titulus="venenum" gradus="fusio" tegit="probationes/probatio_extensio.c probationes/probatio_fractio.c probationes/probatio_laqueus.c probationes/probatio_magnus.c probationes/probatio_matrix.c probationes/probatio_piscina.c probationes/probatio_polynomium.c probationes/probatio_quaternio.c probationes/probatio_radices.c probationes/probatio_reticulum.c probationes/probatio_situs.c probationes/probatio_cellae.c probationes/probatio_plexus.c probationes/probatio_nervus.c probationes/probatio_dependentia.c probationes/probatio_chorda_aedificator.c" currit="tools/fabrica.c lib/anulus.c lib/congruentia.c lib/cyclotomia.c lib/extensio.c lib/fractio.c lib/laqueus.c lib/magnus.c lib/matrix.c lib/polynomium.c lib/quaternio.c lib/radices.c lib/reticulum.c lib/situs.c lib/cellae.c lib/surdus.c lib/plexus.c lib/nervus.c lib/dependentia.c" translatio="numquam"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2
@@ -36,7 +38,7 @@ T=$(mktemp -d); trap 'rm -rf "$T"' EXIT
 # sprintf domus legitimum est (cyclotomia, extensio)
 SANITAS=("-g" "-O1" "-fsanitize=address,undefined" "-fno-sanitize-recover=all"
     "-Wno-deprecated-declarations")
-BASIS=(lib/piscina.c lib/chorda.c lib/chorda_aedificator.c lib/credo.c lib/sors.c)
+# (eadem vexilla in actione probationes_veneni - mutata utrimque mutanda)
 
 # I. specimen
 cat > "$T/specimen.c" <<'FONS'
@@ -64,50 +66,18 @@ clang "${VEXILLA_C89[@]}" -Iinclude "${SANITAS[@]}" \
 [ "$("$T/specimen_venenatum" 2>&1)" = "165" ]; credo $? "sub veneno lectio post refectionem 0xA5 videt"
 [ "$("$T/specimen_purum" 2>&1)" = "42" ]; credo $? "sine veneno valor vetus (modus ordinarie extinctus)"
 
-# II. suitae
-for suita in "piscina:" "magnus:lib/magnus.c" \
-    "fractio:lib/magnus.c lib/fractio.c" \
-    "situs:lib/magnus.c lib/fractio.c lib/situs.c" \
-    "polynomium:lib/magnus.c lib/fractio.c lib/polynomium.c" \
-    "matrix:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
-lib/anulus.c lib/matrix.c" \
-    "laqueus:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
-lib/anulus.c lib/matrix.c lib/situs.c lib/laqueus.c" \
-    "extensio:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
-lib/anulus.c lib/matrix.c lib/cyclotomia.c lib/extensio.c" \
-    "quaternio:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
-lib/anulus.c lib/matrix.c lib/cyclotomia.c lib/extensio.c lib/quaternio.c" \
-    "radices:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
-lib/anulus.c lib/matrix.c lib/cyclotomia.c lib/extensio.c lib/radices.c" \
-    "cellae:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
-lib/anulus.c lib/matrix.c lib/cyclotomia.c lib/extensio.c lib/quaternio.c \
-lib/friatio.c lib/tabula_dispersa.c lib/radices.c lib/surdus.c lib/cellae.c" \
-    "reticulum:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
-lib/anulus.c lib/matrix.c lib/reticulum.c" \
-    "plexus:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
-lib/anulus.c lib/matrix.c lib/cyclotomia.c lib/extensio.c lib/radices.c \
-lib/tabula_nodorum_data.c lib/friatio.c lib/tabula_dispersa.c \
-lib/nervus.c lib/plexus.c" \
-    "nervus:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
-lib/anulus.c lib/matrix.c lib/friatio.c lib/tabula_dispersa.c lib/nervus.c" \
-    "dependentia:lib/dependentia.c"; do
-    titulus="${suita%%:*}"
-    read -r -a fontes <<< "${suita#*:}"
-    if ! clang "${VEXILLA_C89[@]}" -Wno-overlength-strings -Iinclude \
-        "${SANITAS[@]}" -DPISCINA_VENENUM=1 -o "$T/$titulus" \
-        "probationes/probatio_$titulus.c" ${fontes[@]+"${fontes[@]}"} \
-        "${BASIS[@]}" > "$T/$titulus.aedificatio" 2>&1; then
-        head -5 "$T/$titulus.aedificatio"
-        credo 1 "probatio_$titulus aedificata"
-        continue
-    fi
-    "$T/$titulus" > "$T/$titulus.log" 2>&1
-    exitus=$?
-    if [ "$exitus" -ne 0 ]; then
-        grep -a "FRACTA\|ERROR\|runtime error" "$T/$titulus.log" | head -5
-    fi
-    credo "$exitus" "probatio_$titulus sub veneno ($(grep -a -o 'Totalis: *[0-9]*' "$T/$titulus.log" | tr -s ' '))"
-done
+# II. suitae: compositum probationes_veneni (aedificatio.stml, 2026-10-22)
+# - membra nominata, vexilla variantis in clave membri: obiecta sub
+# sanitatoribus per thesaurum compilatoris SEMEL structa (olim suita
+# quaeque catenam suam iterum compilabat: ~CDLXXXVII s), membra quorum
+# ingressus immutati sunt servantur (~I s). Membra et fontes eorum
+# clausura aedilis dat, non lista manu.
+[ -x bin/fabrica ] || ./tools/fabrica_struere.sh >&2 \
+    || { echo "venenum: bin/fabrica struere nequit - NULLA PROBATIO CURSA"; exit 2; }
+bin/fabrica probare probationes_veneni
+exitus=$?
+[ "$exitus" -eq 2 ] && { echo "venenum: NULLA PROBATIO CURSA (fabrica exitus 2)"; exit 2; }
+credo "$exitus" "probationes_veneni (fabrica probare)"
 echo
 if [ "$fracta" -eq 0 ]; then echo "venenum: sana"; exit 0; fi
 echo "venenum: FRACTA ($fracta)"; exit 1

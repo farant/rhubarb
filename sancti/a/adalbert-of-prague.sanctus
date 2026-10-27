@@ -1,0 +1,39 @@
+<sanctus id="adalbert-of-prague" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Adalbert of Prague</nomen>
+  <nomen lingua="alia" fontes="ce">Wojtech</nomen>
+  <ortus saeculum="10" locus="Bohemia" fontes="ce bu"/>
+  <obitus annus="997" mensis="4" dies="23" locus="Prussia" martyrium="verum" fontes="ce bu mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="4" dies="23" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="4" dies="23" fontes="mr"/>
+  <munus fontes="mr ce">bishop</munus>
+  <munus fontes="mr">martyr</munus>
+  <munus fontes="ce">missionary</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Adalbert, baptized Wojtech, was born of a noble Bohemian family; the Catholic Encyclopedia gives the year as 939, Butler as 956. He studied at Magdeburg under Archbishop Adalbert, whose name he took, and was elected Bishop of Prague and consecrated in 983. His efforts to reform the clergy of his diocese made enemies and forced him to flee to Rome, where Pope John XV released him from his see and he lived in a monastery doing its humblest tasks. Recalled by his people, he was driven out a second time and returned to Rome.</paragraphus>
+    <paragraphus fontes="ce mr bu">He then worked as a missionary among the Hungarians, probably baptizing King Geysa and King Stephen, and among the Poles, becoming Archbishop of Gniezno. Leaving that see too, he went to preach to the pagans of Prussia. After early success, his commanding manner angered them, and at the instigation of a pagan priest he was killed with lances on 23 April 997. He is called the Apostle of Prussia; Boleslas I of Poland is said to have ransomed his body for its weight in gold.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="23 April">
+    <excerptum>In Prussia, the birthday of St. Adalbert, bishop of Prague, and martyr, who preached the Gospel to the Poles and Hungarians.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Adalbert (of Bohemia)" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Adalbert_(of_Bohemia)">
+    <excerptum>Adalbert, Saint, b. 939 of a noble Bohemian family; d. 997. He assumed the name of the Archbishop Adalbert (his name had been Wojtech). under whom he studied at Magdeburg.</excerptum>
+    <excerptum>He became Bishop of Prague, whence he was obliged to flee on account of the enmity he had aroused by his efforts to reform the clergy of his diocese.</excerptum>
+    <excerptum>He betook himself to Rome, and when released by Pope John XV from his episcopal obligations, withdrew to a monastery and occupied himself in the most humble duties of the house.</excerptum>
+    <excerptum>Recalled by his people, who received him with great demonstrations of joy, he was nevertheless expelled a second time and returned to Rome.</excerptum>
+    <excerptum>The people of Hungary were just then turning towards Christianity.</excerptum>
+    <excerptum>Adalbert went among them as a missionary and probably baptized King Geysa and his family, and King Stephen. He afterwards evangelized the Poles, and was made Archbishop of Gnesen.</excerptum>
+    <excerptum>But he again relinquished his see, and set out to preach to the idolatrous inhabitants of what is now the Kingdom of Prussia.</excerptum>
+    <excerptum>Success attended his efforts at first, but his imperious manner in commanding them to abandon paganism irritated them, and at the instigation of one of the pagan priests he was killed.</excerptum>
+    <excerptum>he is called the Apostle of Prussia. Boleslas I. Prince of Poland, is said to have ransomed his body for an equivalent weight of gold.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v04 April 23 St. Adalbert, Bishop of Prague, Martyr">
+    <excerptum>He was born of noble parentage in Bohemia, in 956, and received at Baptism the name of Woytiech</excerptum>
+    <excerptum>Adalbert's opposition proving ineffectual to prevent his election to the vacant bishopric, he received episcopal ordination at the hands of the archbishop of Mentz, in 983.</excerptum>
+    <excerptum>The priest of the idols first pierced him in the breast with his lance</excerptum>
+    <excerptum>Six others gave him each a stab with their lances; of which seven wounds he died on the 23rd of April, 997.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="23 April">
+    <excerptum>Saint Adalbert, Bishop and Martyr</excerptum>
+  </fons>
+</sanctus>

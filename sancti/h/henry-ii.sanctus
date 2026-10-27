@@ -1,0 +1,36 @@
+<sanctus id="henry-ii" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Henry II</nomen>
+  <ortus annus="972" fontes="bu"/>
+  <obitus annus="1024" mensis="7" dies="14" locus="Grone, near Halberstadt" fontes="bu"/>
+  <canonizatio modus="formalis" annus="1152" papa="Eugenius III" fontes="bu"/>
+  <festum calendarium="generale" mensis="7" dies="13" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="7" dies="15" fontes="mr"/>
+  <munus fontes="mr bu">emperor</munus>
+  <descriptio>
+    <paragraphus fontes="bu">Henry, surnamed the Pious and the Lame, was the son of Henry, duke of Bavaria, and was born in 972. He was taught by Wolfgang, bishop of Ratisbon, until Wolfgang's death in 994, succeeded his father in the duchy of Bavaria the next year, and on the death of his cousin Otto III in 1002 was chosen emperor and crowned king of Germany at Mainz. He had a national council of the bishops of his dominions meet at Dortmund in 1005 to regulate points of church discipline. After twice putting down the revolt of Ardoin (Ardovinus), who had had himself crowned king at Milan, he was crowned emperor at Rome by Pope Benedict VIII in 1014. He built churches and two monasteries at Bamberg and sent preachers to the Bohemians and the Poles.</paragraphus>
+    <paragraphus fontes="bu mr">He married Cunegunde and, according to both Butler and the Martyrology, lived with her in perpetual chastity by mutual vow. The Martyrology credits him with bringing Stephen, king of Hungary, and nearly all his kingdom to the faith; Butler calls this a mistake, since Stephen was born of Christian parents, though he says Henry supported Stephen's work. Henry died at the castle of Grone near Halberstadt on 14 July 1024, was buried in the cathedral at Bamberg, and was canonized by Eugenius III in 1152.</paragraphus>
+  </descriptio>
+  <fons id="bu" opus="butler1812" locus="v07 Jul. 15 St. Henry II, Emperor">
+    <excerptum>Sr. Henry surnamed the Pious and the Lame, was son of Henry duke of Bavaria, and of Gisella, daughter of Conrad king of Burgundy, and was born in 972.</excerptum>
+    <excerptum>St. Wolfgang the bishop of Ratisbon, being a prelate the most eminent in all Germany for learning, piety, and zeal, our young prince was put under his tuition</excerptum>
+    <excerptum>The death of his dear master and spiritual guide, which happened in 994</excerptum>
+    <excerptum>In the following year he succeeded his father in the dutchy of Bavaria, and in 1002, upon the death of his cousin Otho IIT. he was chosen emperor. He was the same year crowned king of Germany at Mentz</excerptum>
+    <excerptum>He procured a national council of the bishops of all his dominions, which was assembled at Dortmund in Westphalia in 1005, in order to regulate many points of discipline</excerptum>
+    <excerptum>he quelled another rebellion in Italy, when Ardovinus or Hardwic, a Lombard Jord, had caused himself to be crowned king at Milan.</excerptum>
+    <excerptum>When he had afterward revolted a second time, the emperor marched again into Italy, vanquished him in battle, and deprived him of his territories</excerptum>
+    <excerptum>After this second victory, St. Henry went in triumph to Rome, where, in 1014, he was crowned emperor with great. solemnity by pope Benedict VIII.</excerptum>
+    <excerptum>he built and endowed other churches with the two monasteries at Bamberg</excerptum>
+    <excerptum>He procured holy preachers to be sent to instruct the Bohemians and Polanders in the faith.</excerptum>
+    <excerptum>Those have been mistaken who pretend that St. Henry converted St. Stephen king of Hungary; for that prince was born of Christian parents. But our saint promoted his zealous endeavours</excerptum>
+    <excerptum>He had matried St. Cunegonda, but lived with her in perpetual chastity, to which they had mutually bound themselves by vow.</excerptum>
+    <excerptum>His health decayed some years before his:death, which happened at the castle of Grone near Halberstadt, in 1024, on the fourteenth of July</excerptum>
+    <excerptum>His body was interred in the cathedral at Bamberg with the greatest pomp</excerptum>
+    <excerptum>procured his canonization which was performed by Eugenius III. in 1152.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="15 July">
+    <excerptum>T Bamberg, St. Henry 1., emperor, who kept perpetual chastity with his wife Cunegunde, and induced St. Stephen, king of Hungary, with nearly all his kingdom, to receive the faith of Christ.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="13 July">
+    <excerptum>Saint Henry</excerptum>
+  </fons>
+</sanctus>

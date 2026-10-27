@@ -37,7 +37,7 @@
 # Usus: ./tools/instrumenta_fumus.sh
 # Exitus: 0 sanum · 1 FRACTUM (nominata) · 2 iudicare nequit (bin/aedilis,
 #         bin/briar aut iudex deest, nihil iudicatum)
-# <porta titulus="instrumenta" gradus="fusio" tegit="tools/instrumenta_fumus.sh unitates.stml" currit="tools/aedilis.c tools/briar.c"/>
+# <porta titulus="instrumenta" gradus="fusio" tegit="tools/instrumenta_fumus.sh unitates.stml" currit="tools/aedilis.c tools/briar.c" legit="*.c *.h *.m *.stml *.thistle"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2

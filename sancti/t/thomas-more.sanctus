@@ -1,0 +1,43 @@
+<sanctus id="thomas-more" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Thomas More</nomen>
+  <ortus annus="1478" mensis="2" dies="7" locus="London" fontes="ce sed"/>
+  <obitus annus="1535" mensis="7" dies="6" locus="Tower Hill, London" martyrium="verum" fontes="ce"/>
+  <beatificatio annus="1886" mensis="12" dies="29" papa="Leo XIII" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1935" papa="Pius XI" fontes="sed"/>
+  <festum calendarium="generale" mensis="6" dies="22" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="sed">layman</munus>
+  <munus fontes="ce sed">Lord Chancellor</munus>
+  <munus fontes="ce us">martyr</munus>
+  <patrocinium fontes="sed">statesmen and politicians</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce sed">Thomas More was born in London on 7 February 1478 (the Catholic Encyclopedia gives 1477-78), son of the lawyer and judge Sir John More. As a boy he served in the household of John Morton, Archbishop of Canterbury, then studied law at Oxford and London, mastered Greek, and became a close friend of Erasmus. For a time he lived near the London Charterhouse and weighed a call to the priesthood or religious life, but chose marriage: in 1505 he married Jane Colt, who bore him four children, and after her death in 1511 he married the widow Alice Middleton.</paragraphus>
+    <paragraphus fontes="ce sed">His fame as a lawyer grew great; he entered royal service, was knighted, became Speaker of the House of Commons in 1523, and in October 1529 succeeded Wolsey as Lord Chancellor, the first layman to hold the office. His firm opposition to the king's designs on the divorce, the papal supremacy and the laws against heretics cost him the royal favour, and he resigned in May 1532. Refusing the oath under the Act of Succession, he was sent to the Tower in April 1534, condemned for high treason, and beheaded on Tower Hill on 6 July 1535. Leo XIII beatified him in 1886 and Pius XI canonized him with John Fisher in 1935. In 2000 John Paul II declared him the patron of statesmen and politicians.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Bl. Thomas More" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Bl._Thomas_More">
+    <excerptum>Thomas More, Blessed, knight, Lord Chancellor of England, author and martyr, born in London, 7 February, 1477-78; executed at Tower Hill, 6 July, 1535.</excerptum>
+    <excerptum>He was the sole surviving son of Sir John More, barrister and later judge</excerptum>
+    <excerptum>It is certain that he went to live near the London Charterhouse and often joined in the spiritual exercises of the monks there.</excerptum>
+    <excerptum>he abandoned the hope of becoming a priest or religious</excerptum>
+    <excerptum>In October, 1529, More succeeded Wolsey as Chancellor of England, a post never before held by a layman.</excerptum>
+    <excerptum>in May, 1532, he resigned his post of Lord Chancellor after holding it less than three years.</excerptum>
+    <excerptum>More's fame as a lawyer was now very great.</excerptum>
+    <excerptum>His firm opposition to Henry's designs in regard to the divorce, the papal supremacy, and the laws against heretics, speedily lost him the royal favour</excerptum>
+    <excerptum>In March, 1534, the Act of Succession was passed which required all who should be called upon to take an oath</excerptum>
+    <excerptum>On 14 April, More was summoned to Lambeth to take the oath and, on his refusal, was committed to the custody of the Abbot of Westminster. Four days later he was removed to the Tower</excerptum>
+    <excerptum>On 1 July, More was indicted for high treason at Westminster Hall</excerptum>
+    <excerptum>The execution took place on Tower Hill "before nine of the clock" on 6 July</excerptum>
+    <excerptum>Thomas More was formally beatified by Pope Leo XIII, in the Decree of 29 December, 1886.</excerptum>
+  </fons>
+  <fons id="sed" opus="sedes" locus="John Paul II, Apostolic Letter E Sancti Thomae Mori, 31 October 2000" url="https://www.vatican.va/content/john-paul-ii/en/motu_proprio/documents/hf_jp-ii_motu-proprio_20001031_thomas-more.html">
+    <excerptum>Born in London in 1478 of a respectable family, as a young boy he was placed in the service of the Archbishop of Canterbury, John Morton, Lord Chancellor of the Realm. He then studied law at Oxford and London</excerptum>
+    <excerptum>He mastered Greek and enjoyed the company and friendship of important figures of Renaissance culture, including Desiderius Erasmus of Rotterdam.</excerptum>
+    <excerptum>Feeling himself called to marriage, family life and dedication as a layman, in 1505 he married Jane Colt, who bore him four children. Jane died in 1511 and Thomas then married Alice Middleton, a widow with one daughter.</excerptum>
+    <excerptum>Having been made a member of the King's Council, presiding judge of an important tribunal, deputy treasurer and a knight, in 1523 he became Speaker of the House of Commons.</excerptum>
+    <excerptum>The first layman to occupy this position</excerptum>
+    <excerptum>Thomas More, together with 53 other martyrs, including Bishop John Fisher, was beatified by Pope Leo XIII in 1886. And with John Fisher, he was canonized by Pius XI in 1935, on the fourth centenary of his martyrdom.</excerptum>
+    <excerptum>I establish and declare Saint Thomas More the heavenly Patron of Statesmen and Politicians</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="22 June">
+    <excerptum>Saints John Fisher, Bishop, and Thomas More, Martyrs</excerptum>
+  </fons>
+</sanctus>

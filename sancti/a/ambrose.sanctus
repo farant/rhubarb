@@ -1,0 +1,50 @@
+<sanctus id="ambrose" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Ambrose</nomen>
+  <nomen lingua="la" principale="verum" fontes="ce">Ambrosius</nomen>
+  <ortus annus="340" circa="verum" fontes="ce"/>
+  <obitus annus="397" mensis="4" dies="4" locus="Milan" fontes="ce mr2"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="12" dies="7" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="4" dies="4" fontes="mr2"/>
+  <festum calendarium="martyrologium" mensis="12" dies="7" nota="his consecration as bishop" fontes="mr"/>
+  <munus fontes="us ce">bishop</munus>
+  <munus fontes="us ce mr">doctor of the Church</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Ambrose was born probably in 340; Trier, Arles and Lyons each claim to be his birthplace. His father, also named Ambrosius, was Prefect of Gaul. After his father's death the family moved to Rome, and Ambrose trained in the law until the emperor made him consular governor of Liguria and Aemilia, residing at Milan. When the Arian bishop Auxentius died in 374, Ambrose went to the basilica to keep order at the election and was himself acclaimed bishop, although he was still only a catechumen. He was baptized and, eight days later, on 7 December 374, consecrated bishop.</paragraphus>
+    <paragraphus fontes="ce mr2">He gave his property to the poor and to the Church and studied Scripture and the Fathers to make up for his lack of theological training. His preaching helped bring about the conversion of Augustine. After the massacre at Thessalonica he urged the emperor Theodosius to do penance, and the emperor did so publicly. The Martyrology credits his labours with returning almost all Italy to the Catholic faith while Arianism was widespread.</paragraphus>
+    <paragraphus fontes="ce">He died on Good Friday, 4 April 397, and was buried beside the martyrs Gervasius and Protasius. He shares with Jerome, Augustine and Gregory the title of Doctor of the Church in the West.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Ambrose" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Ambrose">
+    <excerptum>Ambrose, Saint, Bishop of Milan from 374 to 397; b. probably 340, at Trier, Arles, or Lyons; d. 4 April, 397.</excerptum>
+    <excerptum>At the time of his birth his father, likewise named Ambrosius, was Prefect of Gallia</excerptum>
+    <excerptum>Trier, Arles, and Lyons, the three principal cities of the province, contend for the honour of having given birth to the Saint.</excerptum>
+    <excerptum>About the year 354 Ambrosius, the father, died, whereupon the family removed to Rome.</excerptum>
+    <excerptum>the Saint devoted his attention to the study and practice of the law</excerptum>
+    <excerptum>later obtained for him from the Emperor Valentinian the office of consular governor of Liguria and Æmilia, with residence in Milan.</excerptum>
+    <excerptum>had been occupied by the intruded Cappadocian, Auxentius, an Arian filled with bitter hatred of the Catholic Faith</excerptum>
+    <excerptum>It devolved upon Ambrose, therefore, to maintain order in the city at this perilous juncture. Proceeding to the basilica in which the disunited clergy and people were assembled</excerptum>
+    <excerptum>To the great relief of the Catholics, the death of the petty tyrant in 374 ended a bondage which had lasted nearly twenty years.</excerptum>
+    <excerptum>The cry was instantly repeated by the entire assembly, and Ambrose, to his surprise and dismay, was unanimously pronounced elected.</excerptum>
+    <excerptum>he was still only a catechumen, and by a wise provision of the canons ineligible to the episcopate.</excerptum>
+    <excerptum>The Saint finally acquiesced, received baptism at the hands of a Catholic bishop, and eight days later, 7 December 374, the day on which East and West annually honour his memory, after the necessary preliminary degrees was consecrated bishop.</excerptum>
+    <excerptum>His personal property he gave to the poor; he made over his landed possessions to the Church</excerptum>
+    <excerptum>In order to supply the lack of an early theological training, he devoted himself assiduously to the study of Scripture and the Fathers</excerptum>
+    <excerptum>His power as an orator is attested not only by the repeated eulogies, but yet more by the conversion of the skilled rhetorician Augustine.</excerptum>
+    <excerptum>When the news reached Milan that the seditious Thessalonians had killed the Emperor's officials</excerptum>
+    <excerptum>Theodosius, yielding to the suggestions of Rufinose and other courtiers, ordered an indiscriminate massacre of the citizens, in which seven thousand perished.</excerptum>
+    <excerptum>exhorting the Emperor to repair his crime by an exemplary penance.</excerptum>
+    <excerptum>"he publicly in church bewailed his sin. That public penance, which private individuals shrink from, an Emperor was not ashamed to perform</excerptum>
+    <excerptum>He died on Good Friday. The following day five bishops found difficulty in baptizing the crowd</excerptum>
+    <excerptum>It was the fourth of April, 397. He was interred as he had desired, in his beloved basilica, by the side of the holy martyrs, Gervasius and Protasius</excerptum>
+    <excerptum>the title of Doctor of the Church, which from time immemorial he has shared in the West with St. Jerome, St. Augustine, and St. Gregory.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="7 December">
+    <excerptum>At Milan, the consecration of St. Ambrose, bishop and doctor of the Church, who has ennobled the universal Church by his holiness and teaching.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="4 April">
+    <excerptum>At Milan, the demise of St. Ambrose, bishop and confessor, through whose labors, learning and miracles, almost all Italy returned to the Catholic faith, at the time when the perfidious Arian heresy was widely diffused.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="7 December">
+    <excerptum>Saint Ambrose, Bishop and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

@@ -156,6 +156,56 @@ sha256_friare_chorda (
 
 
 /* ==================================================
+ * MD5 (RFC 1321)
+ *
+ * NON secura (collisiones notae) - numquam pro securitate!
+ * Producit 128 bits (16 bytes) digest
+ * Usus: Content-MD5 S3 (DeleteObjects), ETag partis unius
+ *       (horreum-spec II.5)
+ * ================================================== */
+
+#define MD5_DIGEST_MENSURA   XVI   /* 16 bytes */
+
+/* Contextus MD5 pro hashing incrementale */
+nomen structura {
+    i32 status[IV];           /* A, B, C, D */
+    i32 numerus[II];          /* Bit count (low, high) */
+     i8 buffer[LXIV];         /* Input buffer */
+} MD5Contextus;
+
+/* Initiare contextum MD5 */
+vacuum
+md5_initiare (
+    MD5Contextus* ctx);
+
+/* Addere data ad hash (potest vocare multiple) */
+vacuum
+md5_addere (
+    MD5Contextus* ctx,
+     constans i8* data,
+             i32  mensura);
+
+/* Finire et obtinere digest (16 bytes) */
+vacuum
+md5_finire (
+    MD5Contextus* ctx,
+              i8  digest[MD5_DIGEST_MENSURA]);
+
+/* Convenientia: hash data in uno passu */
+vacuum
+md5_friare (
+    constans i8* data,
+            i32  mensura,
+             i8  digest[MD5_DIGEST_MENSURA]);
+
+/* Convenientia: hash chorda in uno passu */
+vacuum
+md5_friare_chorda (
+    chorda clavis,
+        i8 digest[MD5_DIGEST_MENSURA]);
+
+
+/* ==================================================
  * CRC32 (Cyclic Redundancy Check)
  *
  * Non-cryptographica, pro integritate datorum

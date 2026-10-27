@@ -1243,6 +1243,7 @@ nomen structura {
              ConsiliumEventus* status;    /* per ordo_additionis */
                           b32* facti;
                           b32  fractum;
+                          b32  domus_aliena;  /* regula domum vetat */
 } ConsiliumCursus;
 
 /* prior fractus aut omissus per arcum intrantem: titulus eius */
@@ -1327,10 +1328,22 @@ _gradum_agere (
     {
         chorda via = *(chorda*)xar_obtinere(observata, i);
 
-        si (!_intra_propositum(actus->gradus, via))
+        si (_intra_propositum(actus->gradus, via))
         {
-            *(chorda*)xar_addere(actus->extra) = via;
+            perge;
         }
+        /* DOMUS ALIENA: scriptura in domo hic vetita est (et ante
+         * actum recusatur), ergo mutatio ibi observata sed a gradu non
+         * notata alterius est - main instituens dum gradus currit */
+        si (   k->domus_aliena && via.mensura > I
+            && via.datum[ZEPHYRUM] == '~' && via.datum[I] == '/'
+            && (   actus->actum.notata == NIHIL
+                || !_continet(actus->actum.notata, via)))
+        {
+            *(chorda*)xar_addere(actus->monita) = via;
+            perge;
+        }
+        *(chorda*)xar_addere(actus->extra) = via;
     }
     causa = chorda_aedificator_creare(k->piscina, (memoriae_index)LXIV);
     si (!incepit)
@@ -1463,11 +1476,27 @@ consilium_exsequi (
         }
         redde NIHIL;
     }
-    k.sutura   = sutura;
-    k.piscina  = piscina;
-    k.modus    = modus;
-    k.ordo     = ordo;
-    k.fractum  = FALSUM;
+    k.sutura        = sutura;
+    k.piscina       = piscina;
+    k.modus         = modus;
+    k.ordo          = ordo;
+    k.fractum       = FALSUM;
+    k.domus_aliena  = FALSUM;
+    per (m = ZEPHYRUM; regulae != NIHIL
+        && m < xar_numerus(regulae); m++)
+    {
+        constans ConsiliumRegula* r = (constans ConsiliumRegula*)
+            xar_obtinere(regulae, m);
+
+        si (   r->classis          == (s32)CONSILIUM_DOMUS
+            && r->sententia        == CONSILIUM_VETITUM
+            && (   r->verbum == CONSILIUM_OMNIA
+                || r->verbum != (s32)CONSILIUM_LEGERE)
+            && r->exemplar.mensura == ZEPHYRUM)
+        {
+            k.domus_aliena = VERUM;
+        }
+    }
     k.status   = (ConsiliumEventus*)piscina_allocare(piscina,
         (memoriae_index)(n + I) * (memoriae_index)magnitudo(
         ConsiliumEventus));
@@ -1498,6 +1527,7 @@ consilium_exsequi (
             actus->actum.notata = NIHIL;
             actus->observata = NIHIL;
             actus->extra = xar_creare(piscina, (i32)magnitudo(chorda));
+            actus->monita = xar_creare(piscina, (i32)magnitudo(chorda));
             si (g->factum)
             {
                 actus->eventus      = CONSILIUM_ACTUM;
@@ -1598,6 +1628,17 @@ consilium_acta_scribere (
                     xar_obtinere(x->extra, j));
                 chorda_aedificator_appendere_character(a, '\n');
             }
+            per (j = ZEPHYRUM; x->monita != NIHIL
+                 && j < xar_numerus(x->monita); j++)
+            {
+                chorda_aedificator_appendere_literis(a, "MONITUM\t");
+                chorda_aedificator_appendere_chorda(a,
+                    x->gradus->titulus);
+                chorda_aedificator_appendere_character(a, '\t');
+                chorda_aedificator_appendere_chorda(a, *(chorda*)
+                    xar_obtinere(x->monita, j));
+                chorda_aedificator_appendere_character(a, '\n');
+            }
             perge;
         }
         chorda_aedificator_appendere_literis(a, "unda ");
@@ -1625,6 +1666,14 @@ consilium_acta_scribere (
             chorda_aedificator_appendere_chorda(a, _nominare(
                 "extra propositum, non promissum: ", x->extra,
                 piscina));
+            chorda_aedificator_appendere_literis(a, ")");
+        }
+        si (x->monita != NIHIL && xar_numerus(x->monita) > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(a, "  (");
+            chorda_aedificator_appendere_chorda(a, _nominare(
+                "MONITUM, domus mutata dum gradus currit - arbor alia "
+                "aut sessio alia? ", x->monita, piscina));
             chorda_aedificator_appendere_literis(a, ")");
         }
         chorda_aedificator_appendere_character(a, '\n');
@@ -1830,6 +1879,15 @@ consilium_diarium_actus (
         _campum_appendere(a, *(chorda*)xar_obtinere(actus->extra, j));
         chorda_aedificator_appendere_character(a, '\n');
     }
+    per (j = ZEPHYRUM; actus->monita != NIHIL
+         && j < xar_numerus(actus->monita); j++)
+    {
+        chorda_aedificator_appendere_literis(a, "MONITUM\t");
+        _campum_appendere(a, actus->gradus->titulus);
+        chorda_aedificator_appendere_character(a, '\t');
+        _campum_appendere(a, *(chorda*)xar_obtinere(actus->monita, j));
+        chorda_aedificator_appendere_character(a, '\n');
+    }
     chorda_aedificator_appendere_literis(a, "ARBOR\t");
     _campum_appendere(a, arbor);
     chorda_aedificator_appendere_character(a, '\n');
@@ -1969,7 +2027,8 @@ consilium_diarium_resumere (
             }
         }
         alioquin si (   chorda_aequalis_literis(genus, "INCEPIT")
-                     || chorda_aequalis_literis(genus, "EXTRA"))
+                     || chorda_aequalis_literis(genus, "EXTRA")
+                     || chorda_aequalis_literis(genus, "MONITUM"))
         {
             deformis = xar_numerus(campi) != III;
         }

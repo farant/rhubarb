@@ -1,51 +1,83 @@
 /* probatio_saltuarius_limes.c - Limes disci: probatio integrationis
  * (Chunk A3)
  *
- * UNICA probatio quae discum verum tangit (arbor ficta /tmp -
- * praecedens domus: probatio_iter_directoria). Probantur: indices
+ * UNICA probatio quae discum verum tangit (arbor ficta in AREA credo
+ * sectionis - praecedens domus: probatio_iter_directoria). Probantur:
+ * indices
  * ex disco (ordinati, parens selectum per titulum), praevisus
  * omnium generum (directorium/textus/magnum/binarium/vacuum/non
  * intrabile/non legibile), selectandum in ascensu, MEMORIA FRENATA
  * (refectio arenae: usus non crescit trans refectiones), IMAGINES
  * (quadrans Q7: photographia -> cellulae ad pannum aptatae; JPEG
  * fractum -> nuntius; amplitudo ignota -> nuntius).
+ *
+ * AREA, NON /tmp (2026-10-23, parcum ...BPYFX): arbor olim sub /tmp
+ * fixa erat, ergo columna parentis /tmp IPSUM indicabat - plus quam
+ * SALT_INTROITUS_MAXIMI (4096) introitus (diaria mensoris vacua
+ * cumulata) fixum ex indice expellebant et porta frigida rubuit. In
+ * area propria parens solum fixa nostra continet; cursus paralleli se
+ * non conturbant; credo aream post sectionem delet.
  */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
 #include "credo.h"
+#include "lectiones.h"
 #include "saltuarius_limes.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-#define FIXUM "/tmp/saltuarius_limes_fixum"
-#define FIXUM_IMAGINUM "/tmp/saltuarius_limes_imagines"
+/* 'radix/relativa' scribendum aperire */
+interior FILE*
+_aperire (
+    constans character* radix,
+    constans character* relativa)
+{
+    character via[DXII + CXXVIII];
 
+    sprintf(via, "%s/%s", radix, relativa);
+    redde lectiones_fopen(via, "wb");
+}
+
+/* mandatum conchae cum via fixi semel inserta (%s in forma) */
 interior vacuum
-_arborem_figere (vacuum)
+_mandare (
+    constans character* forma,
+    constans character* radix)
+{
+    character mandatum[MXXIV + DXII];
+
+    sprintf(mandatum, forma, radix);
+    (vacuum)system(mandatum);
+}
+
+/* arbor ficta sub 'fixum' (in area sectionis, credo_area) */
+interior vacuum
+_arborem_figere (
+    constans character* fixum)
 {
     FILE* f;
     i32 k;
 
-    (vacuum)system("rm -rf " FIXUM
-        " && mkdir -p " FIXUM "/alpha " FIXUM "/beta");
-    f = fopen(FIXUM "/alpha/x.c", "wb");
+    _mandare("mkdir -p '%s/alpha'", fixum);
+    _mandare("mkdir -p '%s/beta'", fixum);
+    f = _aperire(fixum, "alpha/x.c");
     si (f)
     { fputs("x\n", f); fclose(f);
     }
-    f = fopen(FIXUM "/alpha/y.c", "wb");
+    f = _aperire(fixum, "alpha/y.c");
     si (f)
     { fputs("y\n", f); fclose(f);
     }
-    f = fopen(FIXUM "/planus.txt", "wb");
+    f = _aperire(fixum, "planus.txt");
     si (f)
     { fputs("salve\nmunde\n", f); fclose(f);
     }
-    f = fopen(FIXUM "/.occultum", "wb");
+    f = _aperire(fixum, ".occultum");
     si (f)
     { fputs("celatum\n", f); fclose(f);
     }
-    f = fopen(FIXUM "/binarius.dat", "wb");
+    f = _aperire(fixum, "binarius.dat");
     si (f)
     {
         fputs("ab", f);
@@ -54,7 +86,7 @@ _arborem_figere (vacuum)
         fclose(f);
     }
     /* magnus: sparsus, mensura MAXIMUS + I */
-    f = fopen(FIXUM "/magnus.bin", "wb");
+    f = _aperire(fixum, "magnus.bin");
     si (f)
     {
         fseek(f, (longus)SALT_PRAEVISUS_MAXIMUS, SEEK_SET);
@@ -64,29 +96,30 @@ _arborem_figere (vacuum)
     (vacuum)k;
 }
 
-s32
-principale (vacuum)
+/* Sectio UNA: probatio scaenica - blocci statum priorum ex proposito
+ * continuant; gradus (CREDO_GRADUS) fracturam nominant. */
+interior vacuum
+_scaenam_probare (
+    CredoContextus* c)
 {
-                     b32  praeteritus;
-                 Piscina* piscina;
+            Piscina* piscina = c->piscina;
            SaltuariusRes* res;
       SaltuariusColumnae* columnae;
     SaltuariusTabularium* parens;
     SaltuariusTabularium* currens;
     SaltuariusTabularium* praevisus;
          SaltuariusLimes* limes;
+     constans character* area;
+               character  fixum[DXII];
+               character  fixum_imaginum[DXII];
 
-    piscina = piscina_generare_dynamicum("probatio_salt_limes",
-        4194304);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    _arborem_figere();
+    area = credo_area(c);
+    CREDO_NECESSE_NON_NIHIL (area);
+    sprintf(fixum, "%.400s/saltuarius_limes_fixum", area);
+    sprintf(fixum_imaginum, "%.400s/saltuarius_limes_imagines", area);
+    _arborem_figere(fixum);
 
-    res        = saltuarius_res_creare(piscina, FIXUM);
+    res        = saltuarius_res_creare(piscina, fixum);
     columnae   = saltuarius_columnae_creare(piscina);
     parens     = saltuarius_tabularium_creare(piscina);
     currens    = saltuarius_tabularium_creare(piscina);
@@ -102,7 +135,7 @@ principale (vacuum)
      * ======================================================== */
 
     {
-        imprimere("\n--- Probans indices ex disco ---\n");
+        CREDO_GRADUS ("indices ex disco");
 
         CREDO_VERUM (saltuarius_limes_indices(limes, res, columnae,
             NIHIL));
@@ -121,7 +154,7 @@ principale (vacuum)
             currens->introitus[IV].titulus, "planus.txt");
         CREDO_AEQUALIS_S32 (currens->selectio, ZEPHYRUM);
 
-        /* parens = /tmp; introitus fixi selectus */
+        /* parens = area sectionis; introitus fixi selectus */
         CREDO_NON_NIHIL (columnae->parens);
         CREDO_NON_NIHIL (saltuarius_tabularium_selectum(parens));
         CREDO_CHORDA_AEQUALIS_LITERIS (
@@ -135,7 +168,7 @@ principale (vacuum)
      * ======================================================== */
 
     {
-        imprimere("\n--- Probans praevisum generum ---\n");
+        CREDO_GRADUS ("praevisum generum");
 
         /* directorium (alpha): index x.c y.c */
         currens->selectio = ZEPHYRUM;
@@ -187,7 +220,7 @@ principale (vacuum)
         memoriae_index usus_prior;
                    i32 k;
 
-        imprimere("\n--- Probans memoriam frenatam ---\n");
+        CREDO_GRADUS ("memoriam frenatam");
 
         currens->selectio = IV;   /* planus.txt */
         saltuarius_limes_praevisum(limes, res, columnae);
@@ -209,7 +242,7 @@ principale (vacuum)
     {
         chorda selectandum;
 
-        imprimere("\n--- Probans descensum et ascensum ---\n");
+        CREDO_GRADUS ("descensum et ascensum");
 
         saltuarius_res_intrare(res,
             chorda_ex_literis("alpha", piscina));
@@ -235,9 +268,9 @@ principale (vacuum)
      * ======================================================== */
 
     {
-        imprimere("\n--- Probans non legibile ---\n");
+        CREDO_GRADUS ("non legibile");
 
-        (vacuum)system("chmod 000 " FIXUM "/beta");
+        _mandare("chmod 000 '%s/beta'", fixum);
 
         /* praevisus in beta */
         currens->selectio = I;
@@ -254,7 +287,7 @@ principale (vacuum)
             NIHIL));
         CREDO_AEQUALIS_I32 ((i32)currens->numerus, ZEPHYRUM);
 
-        (vacuum)system("chmod 755 " FIXUM "/beta");
+        _mandare("chmod 755 '%s/beta'", fixum);
     }
 
 
@@ -267,10 +300,10 @@ principale (vacuum)
            SaltuariusLiber* liber;
         constans character* causa;
 
-        imprimere("\n--- Probans librum aperire ---\n");
+        CREDO_GRADUS ("librum aperire");
 
-        (vacuum)system("chmod 755 " FIXUM "/beta");
-        saltuarius_res_ascendere(res);   /* retro ad FIXUM */
+        _mandare("chmod 755 '%s/beta'", fixum);
+        saltuarius_res_ascendere(res);   /* retro ad fixum */
         CREDO_VERUM (saltuarius_limes_indices(limes, res, columnae,
             NIHIL));
 
@@ -313,7 +346,7 @@ principale (vacuum)
             (constans vacuum*)NIHIL);
     }
 
-    (vacuum)system("rm -rf " FIXUM);
+    _mandare("rm -rf '%s'", fixum);
 
 
     /* ========================================================
@@ -322,25 +355,26 @@ principale (vacuum)
      * ======================================================== */
 
     {
-                 character  mandatum[DXII];
+                 character  mandatum[MXXIV + DXII];
         constans character* radix = getenv("RHUBARB_RADIX");
         SaltuariusRes* res_imaginum;
         SaltuariusMetra metra;
         FILE* f;
 
-        imprimere("\n--- Probans imagines ---\n");
-        sprintf(mandatum, "rm -rf " FIXUM_IMAGINUM " && mkdir -p "
-            FIXUM_IMAGINUM " && cp '%s/probationes/fixa/quadrans/"
-            "christus_sculptus.jpg' " FIXUM_IMAGINUM "/pictura.jpg",
-            radix != NIHIL ? radix : "..");
+        CREDO_GRADUS ("imagines");
+        sprintf(mandatum,
+            "mkdir -p '%s' && cp '%.400s/probationes/fixa/"
+            "quadrans/christus_sculptus.jpg' '%s/pictura.jpg'",
+            fixum_imaginum, radix != NIHIL ? radix : "..",
+            fixum_imaginum);
         (vacuum)system(mandatum);
-        f = fopen(FIXUM_IMAGINUM "/fracta.jpg", "wb");
+        f = _aperire(fixum_imaginum, "fracta.jpg");
         si (f)
         {
             fputs("\xFF\xD8\xFF\xE0 non est imago", f);
             fclose(f);
         }
-        res_imaginum = saltuarius_res_creare(piscina, FIXUM_IMAGINUM);
+        res_imaginum = saltuarius_res_creare(piscina, fixum_imaginum);
         CREDO_VERUM (saltuarius_limes_indices(limes, res_imaginum,
             columnae, NIHIL));
         /* fracta.jpg (0) pictura.jpg (I) */
@@ -381,9 +415,15 @@ principale (vacuum)
     }
 
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    saltuarius_limes_destruere(limes);
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "limes: sessio", _scaenam_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("saltuarius_limes", SECTIONES);
 }

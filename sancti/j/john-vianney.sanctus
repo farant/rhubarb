@@ -1,0 +1,47 @@
+<sanctus id="john-vianney" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">John Vianney</nomen>
+  <nomen lingua="fr" fontes="ce">Jean-Baptiste-Marie Vianney</nomen>
+  <nomen lingua="en" fontes="ce enc">Curé of Ars</nomen>
+  <ortus annus="1786" mensis="5" dies="8" locus="Dardilly, near Lyons, France" fontes="ce"/>
+  <obitus annus="1859" mensis="8" dies="4" locus="Ars, France" fontes="ce enc"/>
+  <beatificatio annus="1905" mensis="1" dies="8" papa="Pius X" fontes="ce enc"/>
+  <canonizatio modus="formalis" annus="1925" mensis="5" papa="Pius XI" fontes="enc"/>
+  <festum calendarium="generale" mensis="8" dies="4" gradus="memoria" fontes="us"/>
+  <munus fontes="us ce">priest</munus>
+  <munus fontes="ce">parish priest</munus>
+  <patrocinium fontes="enc">pastors</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">Jean-Baptiste-Marie Vianney was born at Dardilly near Lyons on 8 May 1786. In 1806 he was sent to the school for ecclesiastical students opened by M. Balley, curé of Ecully; his schooling had been meagre and he found Latin excessively hard. Drafted into Napoleon's army, he missed his regiment's departure and, misled by a guide, spent fourteen months hidden as a schoolmaster among deserters, until his younger brother took his place. He failed the entrance examinations of the seminary at first, but was ordained priest on 13 August 1815 and served as Balley's assistant. In 1818 he became parish priest of Ars, a village not far from Lyons, where he founded an orphanage for destitute girls called The Providence and catechized daily.</paragraphus>
+    <paragraphus fontes="ce enc">His chief labour was the direction of souls. Penitents came from all of France and beyond, by 1855 some twenty thousand pilgrims a year, and in his last ten years he spent sixteen to eighteen hours a day in the confessional. For forty years his food and sleep were barely enough to sustain life. He died at Ars on 4 August 1859. He was declared Venerable in 1874 and beatified on 8 January 1905. Pius XI canonized him toward the end of May 1925 and soon after named him heavenly patron of all pastors.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="Bl. Jean-Baptiste-Marie Vianney" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Bl._Jean-Baptiste-Marie_Vianney">
+    <excerptum>Curé of Ars, born at Dardilly, near Lyons, France, on 8 May, 1786; died at Ars, 4 August, 1859</excerptum>
+    <excerptum>In 1806, the curé at Ecully, M. Balley, opened a school for ecclesiastical students, and Jean-Marie was sent to him.</excerptum>
+    <excerptum>he found learning, especially the study of Latin, excessively difficult.</excerptum>
+    <excerptum>Young Vianney was drawn in the conscription, the war with Spain and the urgent need of recruits having caused Napoleon to withdraw the exemption enjoyed by the ecclesiastical students</excerptum>
+    <excerptum>The morning of departure, Jean-Baptiste went to church to pray, and on his return to the barracks found that his comrades had already left.</excerptum>
+    <excerptum>At nightfall he met a young man who volunteered to guide him to his fellow-soldiers, but led him to Noes, where some deserters had gathered. The mayor persuaded him to remain there, under an assumed name, as schoolmaster. After fourteen months, he was able to communicate with his family.</excerptum>
+    <excerptum>the matter was settled by his younger brother offering to serve in his stead and being accepted.</excerptum>
+    <excerptum>He failed to pass the examinations for entrance to the seminary proper, but on re-examination three months later succeeded. On 13 August, 1815, he was ordained priest by Mgr. Simon, Bishop of Grenoble.</excerptum>
+    <excerptum>a lack accounted for by the meagreness of his early schooling</excerptum>
+    <excerptum>He was sent to Ecully as assistant to M. Balley</excerptum>
+    <excerptum>In 1818, after the death of M. Balley, M. Vianney was made parish priest of Ars, a village not very far from Lyons.</excerptum>
+    <excerptum>he founded a sort of orphanage for destitute girls. It was called "The Providence"</excerptum>
+    <excerptum>these catechetical instructions came to be so popular that at last they were given every day in the church to large crowds.</excerptum>
+    <excerptum>But the chief labour of the Curé d'Ars was the direction of souls. He had not been long at Ars when people began coming to him from other parishes, then from distant places, then from all parts of France, and finally from other countries.</excerptum>
+    <excerptum>During the last ten years of his life, he spent from sixteen to eighteen hours a day in the confessional.</excerptum>
+    <excerptum>In 1855, the number of pilgrims had reached twenty thousand a year.</excerptum>
+    <excerptum>for forty years his food and sleep were insufficient, humanly speaking, to sustain life.</excerptum>
+    <excerptum>On 3 October, 1874 Jean-Baptiste-Marie Vianney was proclaimed Venerable by Pius IX and on 8 January, 1905, he was enrolled among the Blessed.</excerptum>
+  </fons>
+  <fons id="enc" opus="sedes" locus="John XXIII, encyclical Sacerdotii Nostri Primordia, 1 August 1959" url="https://www.vatican.va/content/john-xxiii/en/encyclicals/documents/hf_j-xxiii_enc_19590801_sacerdotii.html">
+    <excerptum>the sacred ceremonies that were carried out so majestically in the Basilica of St. Peter's on January 8, 1905, when John Mary Baptist Vianney, a very humble French priest, was enrolled in the lists of the Blessed in Heaven.</excerptum>
+    <excerptum>to see the delight of Our predecessor of happy memory, St. Pius X (who had once been the parish priest of the town of Salzano), as he offered this wonderful model of priestly virtues to all those entrusted with the care of souls</excerptum>
+    <excerptum>the year in which We became a Bishop— 1925—was the very one in which, toward the end of May, the Supreme Pontiff of happy memory, Pius XI, accorded the honors of sainthood to the humble Cure of Ars.</excerptum>
+    <excerptum>A short while after, this same predecessor of Ours took the occasion of the 50th anniversary of his own ordination to the priesthood to designate St. John Mary Vianney (to whose patronage St. Pius X had previously committed all of the shepherds of souls in France) as the heavenly patron of all "pastors, to promote their spiritual welfare throughout the world."</excerptum>
+    <excerptum>now that We are approaching the 100th anniversary of the day—August 4, 1859—on which this holy man, completely broken from forty years of the most tireless and exhausting labors</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="4 August">
+    <excerptum>Saint John Vianney, Priest</excerptum>
+  </fons>
+</sanctus>

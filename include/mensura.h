@@ -173,7 +173,9 @@ mensura_annotare (
  * mensura_condere - Diarium in volumen transferre
  *
  * Omnes lineae in actis voluminis conduntur (genus "mensura"),
- * transactione una. Diarium POST successum truncatur.
+ * transactione una. Diarium POST successum DELETUR (truncatur solum
+ * si deleri nequit). Diarium absens = nihil condendum: successus,
+ * conditae nullae.
  *
  * Lineae malformatae NON silentur: numerantur et causa eas nominat.
  */
@@ -311,6 +313,18 @@ mensura_cursus_legere (
                                              * (CLAUDE_CODE_SESSION_ID);
                                              * cursui SUMMO solum, valor I
                                              * (colloquia T9) */
+
+/* MEMORIA SECTIONIS (credo memoria T3): facta cursui sectionis
+ * (<membrum>#<sectio>) adhaerentia, unitas "octeti" - ex campis XII-XIV
+ * lineae SECTIO credo (ibi KiB). Sectio non mensa (plagula X/XI
+ * camporum) nulla facta habet. */
+#define MENSURA_CREDO        "credo."             /* praefixum */
+#define MENSURA_ARENA_APEX   "credo.arena_apex"   /* apex piscinae
+                                                   * sectionis */
+#define MENSURA_APEX_AUCTUS  "credo.apex_auctus"  /* quantum apex vitae
+                                                   * processus crevit */
+#define MENSURA_VESTIGIUM    "credo.vestigium"    /* vestigium in fine
+                                                   * sectionis */
 
 /* mensurae ex actis voluminis (genus "mensura") quarum titulus
  * 'praefixum' incipit (vacuum = omnes), ordine actorum. Xar de

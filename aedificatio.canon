@@ -133,6 +133,16 @@
             ('*' globus), e.g. toml/probationes/probatio_*.c"/>
     <attributum nomen="praeter" genus="textus"
       nota="forma nominum exclusorum, e.g. *_benchmark.c"/>
+    <attributum nomen="membra" genus="textus"
+      nota="VARIANTES (2026-10-22): nomina membrorum spatio separata
+            (sine .c) - exemplar directorium dat, membra solum
+            nominata; nomen exemplari non congruens = recusatio"/>
+    <attributum nomen="vexilla" genus="textus"
+      nota="vexilla compilationis ADDITA post domus (ultima vincunt),
+            e.g. sanitatores; in clave membri - obiecta variantis per
+            thesaurum sua"/>
+    <attributum nomen="vexilla_nexus" genus="textus"
+      nota="vexilla nexus addita (ante -o); in clave membri"/>
   </elementum>
 
   <elementum nomen="debitum_scripturae"

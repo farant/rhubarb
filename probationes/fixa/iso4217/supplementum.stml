@@ -1,0 +1,33 @@
+<!-- supplementum.stml - monetae quas indices ISO fixi (2026-09-17/)
+     non collocant (pecunia-plan T1; pecunia-spec II.9).
+
+     HISTORICA: in indice tertio (retractae) sine unitate minore - exponens
+     ex ULTIMO indice uno archivato qui codicem tenuit (Wayback Machine,
+     fons in attributo). EXTRA_ISO: emissiones locales sterlingae (pari
+     valore cum GBP) - exponens = GBP in indice uno fixo (2), fons =
+     gubernatio emittens. Lecta 2026-10-19.
+
+     Generator recusat ordinem cuius codex iam in indice uno stat cum
+     exponente diverso. Crypto (BTC ETH) extra ambitum (decretum ...JBC). -->
+<supplementum>
+  <moneta codex="ANG" exponens="2" status="historica" titulus="Netherlands Antillean Guilder"
+          fons="https://web.archive.org/web/20221107144009/https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml (Pblshd 2022-09-23)"/>
+  <moneta codex="BGN" exponens="2" status="historica" titulus="Bulgarian Lev"
+          fons="https://web.archive.org/web/20221107144009/https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml (Pblshd 2022-09-23)"/>
+  <moneta codex="CUC" exponens="2" status="historica" titulus="Peso Convertible"
+          fons="https://web.archive.org/web/20221107144009/https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml (Pblshd 2022-09-23)"/>
+  <moneta codex="HRK" exponens="2" status="historica" titulus="Kuna"
+          fons="https://web.archive.org/web/20221107144009/https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml (Pblshd 2022-09-23)"/>
+  <moneta codex="LTL" exponens="2" status="historica" titulus="Lithuanian Litas"
+          fons="https://web.archive.org/web/20131001235407/http://www.currency-iso.org:80/dam/downloads/table_a1.xml (Pblshd 2013-04-09)"/>
+  <moneta codex="LVL" exponens="2" status="historica" titulus="Latvian Lats"
+          fons="https://web.archive.org/web/20131001235407/http://www.currency-iso.org:80/dam/downloads/table_a1.xml (Pblshd 2013-04-09)"/>
+  <moneta codex="MRO" exponens="2" status="historica" titulus="Ouguiya"
+          fons="https://web.archive.org/web/20170422215735/https://www.currency-iso.org/dam/downloads/lists/list_one.xml (Pblshd 2017-01-01)"/>
+  <moneta codex="GGP" exponens="2" status="extra_iso" titulus="Guernsey Pound"
+          fons="https://gov.gg/CHttpHandler.ashx?id=113527&amp;p=0 (States of Guernsey: banknotes and coins issued in its name, sterling at par)"/>
+  <moneta codex="IMP" exponens="2" status="extra_iso" titulus="Isle of Man Pound"
+          fons="https://www.gov.im/media/1377060/currency-angel-coins-determination-2022.pdf (Treasury, Currency Act 1992 issues, sterling at par)"/>
+  <moneta codex="JEP" exponens="2" status="extra_iso" titulus="Jersey Pound"
+          fons="https://www.gov.je/Leisure/Jersey/pages/profile.aspx (British pound sterling or Jersey currency of same value)"/>
+</supplementum>

@@ -252,3 +252,30 @@ absent directory). Plants: O_APPEND -> O_TRUNC red at :1301/:1307; open
 failure returning VERUM red at :1312. NOT provable by a test: the fsync
 itself (would need a crash) - the claim rests on reading the code.
 silva's amalgam regenerated: no diff (it does not embed this part).
+
+## 2026-10-21 - FilumStatus.modus + est_socket (canalis T1)
+
+canalis must refuse a parent directory with any group/other bit and must
+tell a stale socket from a regular file, and examen code 96 forbids a raw
+`stat` outside filum - so `FilumStatus` grew two fields at the END
+(`integer modus` = st_mode & 07777, `b32 est_socket` = S_ISSOCK; Windows:
+& 0777, FALSUM). No caller builds a FilumStatus by initializer, so the
+addition is source-compatible. Section "status modus et socket": file
+0640, directory 0700, a bound AF_UNIX socket -> est_socket, neither file
+nor directory. Note `filum_existit` (fopen "r") reports a socket as
+absent - use `filum_status` to ask "is anything there".
+
+Linux: filum_seram_capere's 7 assertions fail under
+tools/linux/probatio.sh because the container mounts the tree READ-ONLY
+and the lock file lives in build/ (by design: two trees must not share a
+/tmp lock). Environmental, older than this change; the new section passes
+on musl and glibc.
+
+## 2026-10-24 — S lines for chmod and directory removal (fabrica-8 T1.1)
+
+`filum_modum_ponere` now notes S (a mode change is a write: fabrica-8 forbids raw chmod outside
+filum, so the trace must name it), and `filum_arborem_delere` notes S for the directory itself after
+rmdir (its children were already noted; `filum_directorium_creare` notes creation). No new delete
+function needed for raw rmdir: `filum_delere` uses remove(), which removes an empty directory too.
+Test: probatio_lectiones 'IIe. modus et arbor deleta' (paths in the credo area); plants removing
+either notare line are red at their own assertion.

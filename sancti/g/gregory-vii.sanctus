@@ -1,0 +1,56 @@
+<sanctus id="gregory-vii" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Gregory VII</nomen>
+  <nomen lingua="en" fontes="ce bu">Hildebrand</nomen>
+  <ortus saeculum="11" locus="Soana, Tuscany" fontes="ce"/>
+  <obitus annus="1085" mensis="5" dies="25" locus="Salerno" fontes="ce bu mr"/>
+  <beatificatio annus="1584" papa="Gregory XIII" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1728" papa="Benedict XIII" fontes="ce"/>
+  <festum calendarium="generale" mensis="5" dies="25" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="5" dies="25" fontes="mr"/>
+  <munus fontes="us mr ce">pope</munus>
+  <munus fontes="ce">monk</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Hildebrand was born at Soana in Tuscany between 1020 and 1025, of humble origin, and was educated at Rome in the monastery of Santa Maria on the Aventine, where his uncle was abbot. The Catholic Encyclopedia holds that he made his monastic profession at Rome and not at Cluny, as Butler states, though he did live at Cluny for over a year after 1047. Under Leo IX he was made a cardinal-subdeacon and administrator of the patrimony of St. Peter, and was put in charge of the monastery of St. Paul, where he restored the ancient rule. He went to France as papal legate in 1054 and was made archdeacon in 1059; for more than twenty years he was the most prominent figure in the Church and chiefly instrumental in choosing its popes.</paragraphus>
+    <paragraphus fontes="ce bu mr">Acclaimed by the clergy and people at his predecessor's funeral, he was elected pope on 22 April 1073 and took the name Gregory. He fought simony and clerical incontinence and forbade lay investiture, which brought him into long conflict with Henry IV of Germany; he excommunicated the king, who did penance at Canossa in 1077, but the struggle resumed and Henry set up an antipope and took Rome in 1084. Rescued by Robert Guiscard, Gregory withdrew to Salerno, where he died on 25 May 1085, saying that he had loved justice and hated iniquity and therefore died in exile. He was beatified in 1584 and canonized by Benedict XIII in 1728.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="25 May">
+    <excerptum>At Salerno, the demise of the blessed pope Gregory VII., a most zealous protector and champion of ecclesiastical liberty.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="Pope St. Gregory VII" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Pope_St._Gregory_VII">
+    <excerptum>born between the years 1020 and 1025, at Soana, or Ravacum, in Tuscany; died 25 May, 1085, at Salerno.</excerptum>
+    <excerptum>That he was of humble origin—vir de plebe, as he is styled in the letter of a contemporary abbot—can scarcely be doubted.</excerptum>
+    <excerptum>At a tender age he came to Rome to be educated in the monastery of Santa Maria on the Aventine Hill, over which his maternal uncle Laurentius presided as abbot.</excerptum>
+    <excerptum>Early in life he made his religious profession as a Benedictine monk at Rome (not in Cluny)</excerptum>
+    <excerptum>remaining with Gregory at Cologne until the death of the deposed pontiff in 1047, when he withdrew to Cluny. Here he resided for more than a year.</excerptum>
+    <excerptum>Created a cardinal-subdeacon, shortly after Leo's accession, and appointed administrator of the Patrimony of St. Peter's</excerptum>
+    <excerptum>By Leo IX he was also appointed propositus or promisor (not abbot) of the monastery of St. Paul extra Mucros.</excerptum>
+    <excerptum>By rigorous reforms and a wise administration Hildebrand succeeded in restoring the ancient rule of the abbey</excerptum>
+    <excerptum>In 1054 he was sent to France as papal legate to examine the cause of Berengarius.</excerptum>
+    <excerptum>By Nicholas II, in 1059, Hildebrand had been raised to the dignity and office of Archdeacon of the Holy Roman Church</excerptum>
+    <excerptum>Hildebrand, who for more than twenty years had been the most prominent figure in the Church, who had been chiefly instrumental in the selection of her rulers</excerptum>
+    <excerptum>On the day following the death of Alexander II, as the obsequies of the deceased pontiff were being performed in the Lateran basilica, there arose, of a sudden, a loud outcry from the whole multitude of clergy and people: "Let Hildebrand be pope!"</excerptum>
+    <excerptum>our Archdeacon Hildebrand to be pope and successor to the Apostle, and to bear henceforward and forever the name of Gregory" (22 April, 1073)</excerptum>
+    <excerptum>In sending the formal announcement of his elevation to Henry IV of Germany</excerptum>
+    <excerptum>Gregory made every effort to stamp out of the Church the two comsuming evils of the age, simony and clerical incontinency</excerptum>
+    <excerptum>In 1075 a synod held at Rome excommunicated "any person, even if he were emperor or king, who should confer an investiture in connection with any ecclesiastical office"</excerptum>
+    <excerptum>he excommunicated Henry and all his ecclesiastical supporters, and released his subjects from their oath of allegiance</excerptum>
+    <excerptum>retired to the castle of Canossa. Thither Henry followed him</excerptum>
+    <excerptum>Stript of his royal robes, and clad as a penitent, Henry had to come barefooted mid ice and snow</excerptum>
+    <excerptum>finally on 28 January, 1077, he was received by the pontiff and absolved from censure</excerptum>
+    <excerptum>selected Gilbert, the excommunicated simoniacal Archbishop of Ravenna, as pope under the title of Clement III.</excerptum>
+    <excerptum>In 1081 he marched on Rome, but failed to force his way into the city, which he finally accomplished only in 1084.</excerptum>
+    <excerptum>Robert Guiscard, Duke of Normandy, with whom Gregory had formed an alliance, was already marching on the city</excerptum>
+    <excerptum>Disappointed and sorrowing he withdrew to Monte Cassino, and later to the castle of Salerno by the sea, where he died in the following year.</excerptum>
+    <excerptum>His last words were: "I have loved justice and hated iniquity, therefore I die in exile."</excerptum>
+    <excerptum>He was beatified by Gregory XIII in 1584, and canonized in 1728 by Benedict XIII.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v05 May 25 St. Gregory VII. Pope, C.">
+    <excerptum>Before his exaltation to the popedom, he was called Hildebrand. He was born in Tuscany, and educated at Rome</excerptum>
+    <excerptum>He went afterward into France, and embraced the monastic state at Cluni.</excerptum>
+    <excerptum>Duke Robert having rescued him from his enemies, conducted him for greater safety from Rome to Monte Cassino, and thence to Salerno</excerptum>
+    <excerptum>mortal life for immortality, on the twenty-fifth of May 1085, in the twelfth year of his pontificate.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="25 May">
+    <excerptum>Saint Gregory VII, Pope</excerptum>
+  </fons>
+</sanctus>

@@ -28,11 +28,17 @@
 # numeri, silva.h superficies) signum capitis non ferunt - campus V
 # 'splicita' lineae IUDICIUM eas nominat.
 #
+# CUSTODIA MEMORABILIUM (2026-10-23): actio memorabilis cuius
+# regeneratio legit quod ingressus declarati non tegunt -> verdictum
+# RECENS cum causa 'MEMORIA NEGATA ...' (lib/fabrica.c): declaratio
+# fracta, hic FRACTA nominata. GENERATA_AUDITUS=1 -> iudicare -audit:
+# omnis memorabilis regeneratur et custoditur (lentius - auditus plenus).
+#
 # Usus: ./tools/generata_iudicare.sh
 # Exitus: 0 omnia commissa recentia · 1 aliquod non recens (nominatur)
 #         · 2 iudicare nequit (bin/fabrica deest, declarationes fractae,
 #         sera tenta).
-# <porta titulus="generata" genus="praeiudicium" tegit="*/aedificatio.stml aedificatio.canon aedificatio.stml fabrica.canon fabrica.stml" currit="tools/fabrica.c"/>
+# <porta titulus="generata" genus="praeiudicium" tegit="*/aedificatio.stml aedificatio.canon aedificatio.stml fabrica.canon fabrica.stml" currit="tools/fabrica.c" translatio="numquam"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2
@@ -44,7 +50,9 @@ fi
 T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT
 
-bin/fabrica iudicare -plenus -omnia -machina > "$T/fabrica" 2>&1
+AUDITUS=()
+[ "${GENERATA_AUDITUS:-0}" = 1 ] && AUDITUS=(-audit)
+bin/fabrica iudicare -plenus -omnia -machina ${AUDITUS[@]+"${AUDITUS[@]}"} > "$T/fabrica" 2>&1
 rc=$?
 if [ "$rc" -eq 2 ]; then
     echo "  FRACTUM bin/fabrica iudicare nequit (exitus 2):"
@@ -105,8 +113,13 @@ while IFS= read -r via; do
 done < "$T/commissa"
 
 iudicata=0
+negatae=0
 malae=$((sine_iudicio + sine_signo))
 while IFS='	' read -r via verdictum causa; do
+    if [[ "$causa" == "MEMORIA NEGATA"* ]]; then
+        echo "  DECLARATIO FRACTA $via - $causa"
+        negatae=$((negatae + 1))
+    fi
     grep -qxF "$via" "$T/commissa" || continue
     iudicata=$((iudicata + 1))
     if [ "$verdictum" != "RECENS" ]; then
@@ -114,6 +127,7 @@ while IFS='	' read -r via verdictum causa; do
         malae=$((malae + 1))
     fi
 done < "$T/verdicta.tsv"
+malae=$((malae + negatae))
 non_commissa=$(( $(wc -l < "$T/verdicta.tsv") - iudicata ))
 
 if [ "$iudicata" -eq 0 ]; then
@@ -122,10 +136,10 @@ if [ "$iudicata" -eq 0 ]; then
     echo "generata: FRACTA"
     exit 2
 fi
-echo "  artificia commissa: $iudicata iudicata, $((malae - sine_iudicio - sine_signo))" \
+echo "  artificia commissa: $iudicata iudicata, $((malae - negatae - sine_iudicio - sine_signo))" \
     "non recentia, $sine_iudicio GENERATUM sine iudicio, $sine_signo sine" \
     "signo ($(wc -l < "$T/splicita" | tr -d ' ') splicita; non commissa:" \
-    "$non_commissa, numero solo)"
+    "$non_commissa, numero solo); memoria negata: $negatae"
 if [ "$malae" -eq 0 ]; then
     echo "generata: sana"
     exit 0

@@ -43,6 +43,19 @@ _crescere (
         capacitas_nova = _proxima_capacitas(capacitas_nova);
     }
 
+    /* AMPLIATIO primum (2026-10-21): buffer allocatio ultima aut sola
+     * alvei est - augetur sine copia, buffer vetus non relinquitur
+     * (duplicatio in arena olim ~II x finalem otiosum relinquebat).
+     * NIHIL = non potest: allocare et copiare ut antea. */
+    buffer_novum = (i8*)piscina_conari_ampliare(aedificator->piscina,
+        aedificator->buffer, aedificator->capacitas, capacitas_nova);
+    si (buffer_novum != NIHIL)
+    {
+        aedificator->buffer     = buffer_novum;
+        aedificator->capacitas  = capacitas_nova;
+        redde VERUM;
+    }
+
     buffer_novum = (i8*)piscina_allocare(aedificator->piscina,
         capacitas_nova);
     si (!buffer_novum) redde FALSUM;
@@ -65,6 +78,8 @@ _appendere_interna (
        memoriae_index  mensura)
 {
     memoriae_index necessaria;
+    memoriae_index locus;
+               b32 intra;
 
     /* Appendix vacua bona est */
     si (!aedificator || !datum || mensura == ZEPHYRUM)
@@ -76,7 +91,21 @@ _appendere_interna (
 
     si (necessaria > aedificator->capacitas)
     {
+        /* APPENDIX SUI (spectatio aedificatoris ipsius): crescentia
+         * buffer movere potest (piscina_conari_ampliare via II
+         * liberat vetus), ergo fons ut offset servatur et post
+         * crescentiam re-derivatur */
+        intra = (   aedificator->buffer != NIHIL
+                 && datum >= aedificator->buffer
+                 && datum < aedificator->buffer
+                     + aedificator->capacitas);
+        locus = intra ? (memoriae_index)(datum - aedificator->buffer)
+                      : ZEPHYRUM;
         si (!_crescere(aedificator, necessaria)) redde FALSUM;
+        si (intra)
+        {
+            datum = aedificator->buffer + locus;
+        }
     }
 
     memcpy(aedificator->buffer + aedificator->offset, datum, mensura);

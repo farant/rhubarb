@@ -48,9 +48,12 @@ typedef struct SilvaXar {
     unsigned int  numerus_segmentorum;
     unsigned int  capacitas_totalis;
     unsigned int  vexilla;
-    unsigned int  segmenta_maxima;   /* mensura tabulae (XXIV | LXIV) */
+    unsigned int  segmenta_maxima;   /* fines tabulae (XXIV | LXIV) */
+    unsigned int  mensura_tabulae;   /* tabula currens: 2, deinde fines */
     SilvaPiscina* piscina;
-    void**        segmenta;          /* tabula post caput, una allocatione */
+    void**        segmenta;          /* -> segmenta_inlinea, aut tabula
+                                      * plena (segmento tertio petito) */
+    void*         segmenta_inlinea[2];
 } SilvaXar;
 
 /* Vacare: cursor ad initium, ALVEI RETENTI (nullum unmap) - reusus
@@ -1915,6 +1918,10 @@ typedef enum {
      * extra canalem lectionum (filum) - violatio domus; debita per
      * silva_c89_semantica_debita_applicare ad domesticum */
     EXAMEN_CODEX_CANALIS_PRAETERITUS,
+    /* 97 (2026-10-24, fabrica-8): scriptura cruda extra canalem
+     * lectionum (remove, unlink, rename, mkdir, rmdir, chmod, symlink,
+     * utime; fopen modo 'w'/'a'/'+') - sine debitis */
+    EXAMEN_CODEX_SCRIPTURA_PRAETERITA,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
@@ -2259,12 +2266,12 @@ silva_stml_invenire_liberum (
         const char* titulus);
 SilvaChorda*
 silva_stml_attributum_capere (
-    SilvaStmlNodus* nodus,
-        const char* titulus);
+    const SilvaStmlNodus* nodus,
+              const char* titulus);
 int
 silva_stml_attributum_habet (
-    SilvaStmlNodus* nodus,
-        const char* titulus);
+    const SilvaStmlNodus* nodus,
+              const char* titulus);
 SilvaChorda
 silva_stml_textus_internus (
     SilvaStmlNodus* nodus,

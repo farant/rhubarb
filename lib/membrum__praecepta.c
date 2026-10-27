@@ -73,13 +73,24 @@ praecepta_clavis_congruit (
     {
         redde ev->datum.clavis.clavis == CLAVIS_EFFUGIUM;
     }
+    /* D5: sagittae sine modificatoribus */
+    si (   strcmp(forma, "Up")   == ZEPHYRUM
+        || strcmp(forma, "Down") == ZEPHYRUM)
+    {
+        redde !(mod & (i32)(MOD_SHIFT | MOD_IMPERIUM | MOD_ALT
+            | MOD_SUPER))
+            && ev->datum.clavis.clavis == (forma[ZEPHYRUM] == 'U'
+                   ? CLAVIS_SURSUM : CLAVIS_DEORSUM);
+    }
     si (forma[ZEPHYRUM] == 'C' && forma[I] == '-')
     {
         redde (mod & (i32)MOD_IMPERIUM)
             && ev->datum.clavis.runa == (s32)(insignatus character)
             forma[II];
     }
-    redde !(mod & (i32)(MOD_IMPERIUM | MOD_SUPER))
+    /* character unus solum (forma longior ignota: nihil congruit) */
+    redde forma[ZEPHYRUM] != '\0' && forma[I] == '\0'
+        && !(mod & (i32)(MOD_IMPERIUM | MOD_SUPER))
         && ev->datum.clavis.producta == (s32)(insignatus character)
         forma[ZEPHYRUM];
 }

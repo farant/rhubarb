@@ -68,24 +68,12 @@ _quadrum (
     redde opus;
 }
 
-s32
-principale (vacuum)
+interior vacuum
+_politicam_probare (
+    CredoContextus* c)
 {
-                    b32  praeteritus;
-                Piscina* piscina;
-    InternamentumChorda* intern;
+    Piscina* piscina = c->piscina;
 
-    piscina = piscina_generare_dynamicum(
-        "probatio_ludus_tessera_demissio", 16777216);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
-
-    imprimere("\n--- I. politica runarum ex opere ---\n");
     {
         TesseraPonsMemoriae* pm = tessera_pons_memoriae_creare(piscina,
             IV, I);
@@ -98,8 +86,15 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)ludus_tessera_politica_runarum(opus),
             (i32)RUNAE_POLITICA_SIMPLEX);
     }
+}
 
-    imprimere("\n--- II. familia ZWJ sub utraque politica ---\n");
+interior vacuum
+_familiam_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_creare(piscina);
+
     {
                 b32  bona = FALSUM;
         TesseraOpus* opus = _quadrum(piscina, intern,
@@ -132,8 +127,15 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, VI,
             ZEPHYRUM).signum, (i32)'x');
     }
+}
 
-    imprimere("\n--- III. fundus et argumenta ---\n");
+interior vacuum
+_fundum_probare (
+    CredoContextus* c)
+{
+                Piscina* piscina  = c->piscina;
+    InternamentumChorda* intern   = internamentum_creare(piscina);
+
     {
                 b32  bona = FALSUM;
         TesseraOpus* opus = _quadrum(piscina, intern,
@@ -150,9 +152,20 @@ principale (vacuum)
         CREDO_FALSUM (ludus_tessera_demittere(opus, NIHIL, &modulus,
             ZEPHYRUM, NIHIL, NIHIL, piscina));
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. politica runarum ex opere", _politicam_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "II. familia ZWJ sub utraque politica", _familiam_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "III. fundus et argumenta", _fundum_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("ludus_tessera_demissio", SECTIONES);
 }

@@ -1,0 +1,35 @@
+<sanctus id="gregory-nazianzen" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Gregory Nazianzen</nomen>
+  <nomen lingua="en" fontes="ce">Gregory of Nazianzus</nomen>
+  <ortus annus="325" circa="verum" locus="Arianzus" fontes="ce"/>
+  <obitus annus="389" circa="verum" locus="Arianzus" fontes="ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="1" dies="2" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="5" dies="9" fontes="mr"/>
+  <munus fontes="us mr">bishop</munus>
+  <munus fontes="us mr ce">doctor of the Church</munus>
+  <descriptio>
+    <paragraphus fontes="ce mr">Gregory, whom the Martyrology calls the Theologian for his knowledge of divinity, was born at Arianzus in Asia Minor about 325, a son of Gregory, Bishop of Nazianzus, and of Nonna. His friendship with Basil began at school in Caesarea and was renewed at Athens, where the two studied rhetoric together. His father pressed him into the priesthood, probably at Christmas 361, and Basil later had him consecrated, greatly against his will, as first bishop of the new see of Sasima; before long Gregory abandoned it and returned to Nazianzus to assist his father.</paragraphus>
+    <paragraphus fontes="mr ce">At Constantinople, the Martyrology says, he restored the Catholic faith when it was fast waning. He held that see for only a few months: in June 381 he preached a farewell sermon before the council and resigned. He spent his remaining years in retirement and writing at Arianzus. The exact date of his death is unknown; it is placed in 389 or 390.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Gregory of Nazianzus" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Gregory_of_Nazianzus">
+    <excerptum>Doctor of the Church, born at Arianzus, in Asia Minor, c. 325; died at the same place, 389.</excerptum>
+    <excerptum>He was son — one of three children — of Gregory, Bishop of Nazianzus (329-374), in the south-west of Cappadocia, and of Nonna</excerptum>
+    <excerptum>were sent to a famous school at Caesarea, capital of Cappadocia</excerptum>
+    <excerptum>Here commenced the friendship between Basil and Gregory which intimately affected both their lives</excerptum>
+    <excerptum>At Athens Gregory and Basil, who had parted at Caesarea, met again, renewed their youthful friendship, and studied rhetoric together</excerptum>
+    <excerptum>overruled his scrupulous shrinking from the priesthood, and forced him to accept ordination (probably at Christmas, 361).</excerptum>
+    <excerptum>To strengthen his position Basil founded a new see at Sasima, resolved to have Gregory as its first bishop, and accordingly had him consecrated, though greatly against his will.</excerptum>
+    <excerptum>it was not long before he abandoned his diocese and returned to Nazianzus as coadjutor to his father.</excerptum>
+    <excerptum>his resignation of the See of Constantinople, which he had held for only a few months.</excerptum>
+    <excerptum>In June, 381, he preached a farewell sermon before the council</excerptum>
+    <excerptum>immediately withdrew to Arianzus, the scene of his birth and his childhood, where he spent the remaining years of his life in retirement, and in the literary labours</excerptum>
+    <excerptum>The exact date of his death is unknown, but from a passage in Jerome (De Script. Eccl.) it may be assigned, with tolerable certainty, to the year 389 or 390.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="9 May">
+    <excerptum>At Nazianzus, the birthday of St. Gregory, bishop and doctor of the church, surnamed the Theologian, because of his remarkable knowledge of divinity. At Constantinople, he restored the Catholic faith, which was fast waning, and repressed the rising heresies.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="2 January">
+    <excerptum>Saints Basil the Great and Gregory Nazianzen, Bishops and Doctors of the Church</excerptum>
+  </fons>
+</sanctus>

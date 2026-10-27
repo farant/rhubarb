@@ -136,3 +136,17 @@ Side find the same day (not a fenestra bug): a GUI app that gets
 mouse but never keys, even after a click, was launched inside an
 ORPHANED tmux server (its original terminal app had quit). From a
 fresh Ghostty tab the same binary types fine.
+
+## 2026-10-26 - quiet mode (vicus quies T5)
+
+`ludus_fenestra_quietem_ponere(lf, mora, ctx, reactor)`: the loop waits
+until min(app deadline, `reactor_mora_proxima`,
+`dispensator_mora_proxima`) instead of capping at 16 ms; -1 everywhere
+-> MORA_SINE_FINE (1 h; an event or fd comes first). Reactor fds go to
+`fenestra_fossas_ponere` only when `reactor_versio_fossarum` moves; if
+that hand-off fails (>128 fds, CF refuses) the loop falls back to 16 ms
+rather than sleep through an fd it can't see. Without the call nothing
+changes (scriba, pictor, iOS/Android shells).
+
+Not unit-testable: the cap decision in `ludus_fenestra_currere` (needs a
+real window). T6 checks it in vicus via `excitationes`.

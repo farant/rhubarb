@@ -8,6 +8,7 @@
  */
 
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "credo.h"
 #include "md_exempla.h"
 #include "md_arbor.h"
@@ -32,7 +33,7 @@ _plagulam_legere (
     character* memoria;
         size_t lecti;
 
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde NIHIL;
@@ -172,30 +173,19 @@ _plagula (
     redde exempla;
 }
 
-s32
-principale (vacuum)
+interior constans character*
+_radix_viae (vacuum)
 {
-                   b32  praeteritus;
-               Piscina* piscina;
-    constans character* radix_viae;
-                   Xar* cm;
-                   Xar* gfm;
+    constans character* radix_viae = getenv("RHUBARB_RADIX");
 
-    piscina = piscina_generare_dynamicum("probatio_md_exempla",
-        1048576);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    radix_viae = getenv("RHUBARB_RADIX");
-    si (radix_viae == NIHIL)
-    {
-        radix_viae = ".";
-    }
+    redde radix_viae != NIHIL ? radix_viae : ".";
+}
 
-    imprimere("\n--- Probans lectorem: forma exempli ---\n");
+interior vacuum
+_lectorem_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
     {
         constans character* f =
             "# S\n\n## T\n\n"
@@ -225,9 +215,16 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (e->markdown.mensura, ZEPHYRUM);
         CREDO_AEQUALIS_I32 (e->html.mensura, ZEPHYRUM);
     }
+}
 
-    imprimere("\n--- CommonMark 0.31.2 ---\n");
-    cm = _plagula(piscina, radix_viae,
+interior vacuum
+_normam_communem_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        Xar* cm;
+
+    cm = _plagula(piscina, _radix_viae(),
         "md/probationes/fixa/commonmark/spec.txt",
         (i32)204857, (i32)652);
     si (cm != NIHIL)
@@ -240,9 +237,16 @@ principale (vacuum)
         CREDO_VERUM (_aequalis(e->html,
             "<pre><code>foo\tbaz\t\tbim\n</code></pre>\n"));
     }
+}
 
-    imprimere("\n--- GFM 0.29 ---\n");
-    gfm = _plagula(piscina, radix_viae,
+interior vacuum
+_gfm_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        Xar* gfm;
+
+    gfm = _plagula(piscina, _radix_viae(),
         "md/probationes/fixa/gfm/spec.txt",
         (i32)216680, (i32)672);
     si (gfm != NIHIL)
@@ -279,10 +283,20 @@ principale (vacuum)
         CREDO_MAIOR_I32 (autonexus, ZEPHYRUM);
         CREDO_AEQUALIS_I32 (cum_extensione, (i32)24);   /* DCLXXII - DCXLVIII */
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "lectorem: forma exempli", _lectorem_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "CommonMark 0.31.2", _normam_communem_probare, NIHIL, NIHIL,
+        NIHIL,
+        NIHIL },
+    { "GFM 0.29", _gfm_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("md_exempla", SECTIONES);
 }

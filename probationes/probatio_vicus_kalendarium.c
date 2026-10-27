@@ -13,6 +13,7 @@
 #include "agenda.h"
 #include "personae.h"
 #include "nomenclator.h"
+#include "sancti_visus.h"
 #include "thema.h"
 #include "manus_ludus.h"
 #include "insula.h"
@@ -21,6 +22,9 @@
 #include "tabula_characterum.h"
 #include "dispensator.h"
 #include "motus.h"
+#include "figura.h"
+#include "mandatum.h"
+#include "pensa.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -50,6 +54,9 @@ mundum_parare (
     memset(x, ZEPHYRUM, magnitudo(Mundus));
     thema_initiare();
     (vacuum)setenv("SHELL", "/bin/sh", I);
+    /* sancti (fons dierum): fixtura - XXI I agnes, XXVIII I thomas, III
+     * VI charles; nullus in X (natales soli) */
+    (vacuum)setenv("RHUBARB_SANCTI", "probationes/fixa/sancti", I);
     x->volumen = volumen_temporarium(c->piscina,
         "probatio_vicus_kalendarium");
     c->datum = x;
@@ -253,6 +260,16 @@ _probare_notas (
             dispensator_motus(x->app.d)->spatium_intimum);
         a  = insula_ramus_attributum(&rs, "pagina_positio");
         CREDO_VERUM(a && chorda_aequalis_literis(*a, "2"));
+        /* D5 S3c: pagina notarum in semita calendarii - Ctrl+O ad
+         * paginam I (historia dextra), Ctrl+I ad II */
+        (vacuum)manus_ludus_clavem(m, 'o', MOD_IMPERIUM);
+        (vacuum)vicus_pulsare(v);
+        a  = insula_ramus_attributum(&rs, "pagina_positio");
+        CREDO_VERUM(a && chorda_aequalis_literis(*a, "1"));
+        (vacuum)manus_ludus_clavem(m, 'i', MOD_IMPERIUM);
+        (vacuum)vicus_pulsare(v);
+        a  = insula_ramus_attributum(&rs, "pagina_positio");
+        CREDO_VERUM(a && chorda_aequalis_literis(*a, "2"));
     }
 }
 
@@ -374,23 +391,26 @@ _probare_natales (
               ManusLudus* m;
       PersonaeDocumentum* doc;
                     Dies  d;
-                     s32  id;
+                  chorda  id;
+                     i32  numerator;
 
     x = (Mundus*)c->datum;
     CREDO_NECESSE(x && x->volumen);
     doc = personae_aperire(c->piscina, internamentum_creare(c->piscina),
         x->volumen, "personae", ZEPHYRUM);
     CREDO_NECESSE_NON_NIHIL(doc);
+    numerator = ZEPHYRUM;
+    personae_monetam_ponere(doc, moneta_numerator, &numerator);
     id = personae_hominem_creare(doc, chorda_ex_literis("Anna",
         c->piscina), chorda_ex_literis("Rossi", c->piscina));
     d  = fasti_dies(MCMLXXXVI, X, XIV);
-    CREDO_NECESSE(id > ZEPHYRUM && personae_natalem_ponere(doc, id, &d)
-        > ZEPHYRUM);
+    CREDO_NECESSE(id.mensura > ZEPHYRUM && personae_natalem_ponere(doc,
+        id, &d) > ZEPHYRUM);
     id = personae_hominem_creare(doc, chorda_ex_literis("Luca",
         c->piscina), chorda_ex_literis("Bianchi", c->piscina));
     d  = fasti_dies(ZEPHYRUM, X, XX);
-    CREDO_NECESSE(id == II && personae_natalem_ponere(doc, id, &d)
-        > ZEPHYRUM);
+    CREDO_NECESSE(chorda_aequalis_literis(id, "2")
+        && personae_natalem_ponere(doc, id, &d) > ZEPHYRUM);
     CREDO_NECESSE(vicus_applicatio_aedificare(&x->app, c->piscina,
         internamentum_creare(c->piscina), x->volumen, CDLXXX,
         CDLXXX + VICUS_ALTITUDO_TABULARUM));
@@ -452,6 +472,144 @@ _probare_natales (
         r = ((NomenclatorMontatio*)l->montatio)->ramus;
         a = insula_ramus_attributum(&r, "persona_aperta");
         CREDO_VERUM(a && chorda_aequalis_literis(*a, "2"));
+    }
+}
+
+/* textus pictus vici continens fragmentum? */
+interior b32
+pictum_in_vico (
+                 Mundus* x,
+     constans character* fragmentum,
+                Piscina* p)
+{
+               Mandata* md;
+     constans Mandatum* t;
+                   i32  i;
+
+    md = mandata_creare(p, x->app.intern);
+    pingere(dispensator_arbor(x->app.d), vicus_figurae(x->app.vicus),
+        ZEPHYRUM, md);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        t = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   t->genus == MANDATUM_TEXTUS
+            && chorda_continet(t->textus, chorda_ex_literis(fragmentum,
+                p)))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* sancti-plan V2: fons dierum sanctorum - festum (generale/usa) in
+ * visu diei ordo signatus; duplex latus sanctorum cum sancto aperit
+ * (origo argumentum), Esc latus tollit et calendarium (dies idem)
+ * redit */
+interior vacuum
+_probare_sanctos (
+    CredoContextus* c)
+{
+                  Mundus* x;
+                   Vicus* v;
+              ManusLudus* m;
+     KalendariumMontatio* k;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x && x->volumen);
+    CREDO_NECESSE(vicus_applicatio_aedificare(&x->app, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CDLXXX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    v                 = x->app.vicus;
+    x->tempus.annus   = MMXXVI;
+    x->tempus.mensis  = I;
+    x->tempus.dies    = XXV;
+    vicus_horologium_ponere(v, horologium_fictum, &x->tempus);
+    /* visus diei XXV (argumentum ISO): nullus sanctus */
+    CREDO_VERUM(vicus_acervo_aperire(v, "calendarium", "2026-01-25"));
+    (vacuum)vicus_pulsare(v);
+    m = manus_ludus_creare(c->piscina, x->app.d);
+    dispensator_recomponere(x->app.d);
+    k = kalendarium_frontale(v);
+    CREDO_NECESSE_NON_NIHIL(k);
+    CREDO_VERUM(dies_est(kalendarium_dies_electus(k), MMXXVI, I, XXV));
+    CREDO_NECESSE(manus_ludus_premere(m, "#kalendarium"));
+    CREDO_FALSUM(manus_ludus_invenire(m, "#n0") != NIHIL);
+    /* XXVIII: thomas (pulsus: historia diem XXVIII notat) */
+    CREDO_VERUM(manus_ludus_scribere(m, "lll"));
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(x->app.d);
+    CREDO_VERUM(manus_ludus_invenire(m, "#n0") != NIHIL);
+    CREDO_FALSUM(manus_ludus_invenire(m, "#n1") != NIHIL);
+    /* titulus: nomen et aetas */
+    CREDO_VERUM(pictum_in_vico(x, "Thomas Aquinas \302\267 c. 1225"
+        "\342\200\2231274", c->piscina));
+    CREDO_NECESSE(manus_ludus_premere(m, "#n0"));
+    CREDO_NECESSE(manus_ludus_premere(m, "#n0"));
+    (vacuum)vicus_pulsare(v);
+    {
+          VicusLatus* l;
+         InsulaRamus  r;
+              chorda* a;
+
+        l = vicus_latus(vicus_activa(v), VICUS_DEXTRUM);
+        CREDO_NECESSE(l && l->montata);
+        CREDO_CHORDA_AEQUALIS_LITERIS(l->genus, "sancti");
+        r = ((SanctorumMontatio*)l->montatio)->ramus;
+        a = insula_ramus_attributum(&r, "sanctus_apertus");
+        CREDO_VERUM(a && chorda_aequalis_literis(*a, "thomas-aquinas"));
+    }
+    /* Esc: index sanctorum (Franus 2026-10-22 - Esc non est "latus
+     * prius"); Ctrl+O bis: sanctus, deinde calendarium (XXVIII) */
+    dispensator_recomponere(x->app.d);
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(x->app.d);
+    {
+          VicusLatus* l;
+         InsulaRamus  r;
+              chorda* a;
+
+        l = vicus_latus(vicus_activa(v), VICUS_DEXTRUM);
+        CREDO_NECESSE(l && l->montata);
+        CREDO_CHORDA_AEQUALIS_LITERIS(l->genus, "sancti");
+        r = ((SanctorumMontatio*)l->montatio)->ramus;
+        a = insula_ramus_attributum(&r, "visus");
+        CREDO_VERUM(!a || chorda_aequalis_literis(*a, "index"));
+    }
+    CREDO_VERUM(manus_ludus_clavem(m, 'o', (i32)MOD_IMPERIUM));
+    (vacuum)vicus_pulsare(v);
+    CREDO_VERUM(manus_ludus_clavem(m, 'o', (i32)MOD_IMPERIUM));
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(x->app.d);
+    k = kalendarium_frontale(v);
+    CREDO_NECESSE_NON_NIHIL(k);
+    CREDO_VERUM(dies_est(kalendarium_dies_electus(k), MMXXVI, I,
+        XXVIII));
+    /* latus sanctorum iam praesens (index): XXI agnes, duplex -
+     * argumentum_ponere lateris exstantis */
+    CREDO_VERUM(vicus_acervo_aperire(v, "sancti", NIHIL));
+    (vacuum)vicus_pulsare(v);
+    CREDO_VERUM(vicus_acervo_aperire(v, "calendarium", "2026-01-21"));
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(x->app.d);
+    /* agnes: festum martyrologii eodem die ordinem alterum non facit */
+    CREDO_VERUM(manus_ludus_invenire(m, "#n0") != NIHIL);
+    CREDO_FALSUM(manus_ludus_invenire(m, "#n1") != NIHIL);
+    CREDO_NECESSE(manus_ludus_premere(m, "#n0"));
+    CREDO_NECESSE(manus_ludus_premere(m, "#n0"));
+    (vacuum)vicus_pulsare(v);
+    {
+          VicusLatus* l;
+         InsulaRamus  r;
+              chorda* a;
+
+        l = vicus_latus(vicus_activa(v), VICUS_DEXTRUM);
+        CREDO_NECESSE(l && l->montata);
+        CREDO_CHORDA_AEQUALIS_LITERIS(l->genus, "sancti");
+        r = ((SanctorumMontatio*)l->montatio)->ramus;
+        a = insula_ramus_attributum(&r, "sanctus_apertus");
+        CREDO_VERUM(a && chorda_aequalis_literis(*a, "agnes-of-rome"));
     }
 }
 
@@ -552,10 +710,182 @@ _probare_visus_post_notas (
         XIV));
 }
 
+/* K3: calendarium vici: liber "pensa" voluminis vici, visus diei XIV
+ * (Enter in mense, hodie), x signum in volumine ponit (documentum
+ * alterum videt) */
+interior vacuum
+_probare_pensa (
+    CredoContextus* c)
+{
+               Mundus* x;
+                Vicus* v;
+           ManusLudus* m;
+          ScribaLiber* l;
+     ScribaDocumentum* d;
+    TabulaCharacterum  folium;
+      PensaDocumentum* b;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x && x->volumen);
+    l = scriba_liber_aperire_in_spatio(c->piscina,
+        internamentum_creare(c->piscina), x->volumen, "pensa", XL, X);
+    d = l ? scriba_liber_pagina(l, chorda_ex_literis("1", c->piscina))
+          : NIHIL;
+    CREDO_NECESSE_NON_NIHIL(d);
+    tabula_ex_literis_cum_dimensionibus(&folium, c->piscina,
+        d->latitudo, d->altitudo, "vitamins");
+    CREDO_NECESSE(scriba_documentum_committere(d, &folium) > ZEPHYRUM);
+    CREDO_NECESSE(vicus_applicatio_aedificare(&x->app, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CDLXXX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    v                 = x->app.vicus;
+    x->tempus.annus   = MMXXVI;
+    x->tempus.mensis  = X;
+    x->tempus.dies    = XIV;
+    vicus_horologium_ponere(v, horologium_fictum, &x->tempus);
+    CREDO_VERUM(vicus_acervo_aperire(v, "calendarium", "2026-10"));
+    (vacuum)vicus_pulsare(v);
+    CREDO_NECESSE_NON_NIHIL(kalendarium_frontale(v));
+    m = manus_ludus_creare(c->piscina, x->app.d);
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(manus_ludus_premere(m, "#kalendarium"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XIII, ZEPHYRUM));
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(manus_ludus_premere(m, "#k0"));
+    CREDO_VERUM(manus_ludus_clavem(m, 'x', ZEPHYRUM));
+    b = pensa_aperire(c->piscina, internamentum_creare(c->piscina),
+        x->volumen);
+    CREDO_NECESSE_NON_NIHIL(b);
+    CREDO_VERUM(pensa_factum(b, fasti_dies(MMXXVI, X, XIV),
+        chorda_ex_literis("vitamins", c->piscina)));
+}
+
+/* K4: calendarium vici: globulus Reminders (verbum aut campana) visum
+ * monita aperit; forma libri "pensa" voluminis vici in ordinibus */
+interior vacuum
+_probare_monita (
+    CredoContextus* c)
+{
+               Mundus* x;
+                Vicus* v;
+           ManusLudus* m;
+          ScribaLiber* l;
+     ScribaDocumentum* d;
+    TabulaCharacterum  folium;
+  KalendariumMontatio* k;
+               chorda* a;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x && x->volumen);
+    l = scriba_liber_aperire_in_spatio(c->piscina,
+        internamentum_creare(c->piscina), x->volumen, "pensa", XL, XL);
+    d = l ? scriba_liber_pagina(l, chorda_ex_literis("1", c->piscina))
+          : NIHIL;
+    CREDO_NECESSE_NON_NIHIL(d);
+    tabula_ex_literis_cum_dimensionibus(&folium, c->piscina,
+        d->latitudo, d->altitudo,
+        "vitamins\n\nweekends\n  mow the lawn");
+    CREDO_NECESSE(scriba_documentum_committere(d, &folium) > ZEPHYRUM);
+    /* CMLX: latus ~CDLXXX (ut schermus Frani). In CDLXXX latus ~CCL
+     * est - barra ne campanam quidem capit, globulus comprimitur
+     * (latitudo negativa; Agenda iam ante K4 compressa) */
+    CREDO_NECESSE(vicus_applicatio_aedificare(&x->app, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CMLX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    v                 = x->app.vicus;
+    x->tempus.annus   = MMXXVI;
+    x->tempus.mensis  = X;
+    x->tempus.dies    = XIV;
+    vicus_horologium_ponere(v, horologium_fictum, &x->tempus);
+    CREDO_VERUM(vicus_acervo_aperire(v, "calendarium", "2026-10"));
+    (vacuum)vicus_pulsare(v);
+    k = kalendarium_frontale(v);
+    CREDO_NECESSE_NON_NIHIL(k);
+    m = manus_ludus_creare(c->piscina, x->app.d);
+    dispensator_recomponere(x->app.d);
+    /* ictus primus latus focat; deinde globulus */
+    CREDO_NECESSE(manus_ludus_premere(m, "#kalendarium"));
+    CREDO_NECESSE(manus_ludus_premere(m, "#visus-monita"));
+    dispensator_recomponere(x->app.d);
+    a = insula_ramus_attributum(&k->ramus, "visus");
+    CREDO_VERUM(a && chorda_aequalis_literis(*a, "monita"));
+    CREDO_NON_NIHIL(manus_ludus_invenire(m, "#h1"));
+    CREDO_NON_NIHIL(manus_ludus_invenire(m, "#u1-0"));
+}
+
+/* K5: vicus - Reminders, Edit, ictus in forma, scriptura (gestus per
+ * focum lateris et actum Edit editori formae addictus); liber pensa
+ * habet; lectio statim titulum et vitium gregis novi monstrat */
+interior vacuum
+_probare_monita_editionem (
+    CredoContextus* c)
+{
+               Mundus* x;
+                Vicus* v;
+           ManusLudus* m;
+          ScribaLiber* l;
+     ScribaDocumentum* d;
+    TabulaCharacterum  folium;
+            Componens* forma;
+              Punctum  locale;
+              Punctum  schirmus;
+
+    x = (Mundus*)c->datum;
+    CREDO_NECESSE(x && x->volumen);
+    l = scriba_liber_aperire_in_spatio(c->piscina,
+        internamentum_creare(c->piscina), x->volumen, "pensa", XL, XL);
+    d = l ? scriba_liber_pagina(l, chorda_ex_literis("1", c->piscina))
+          : NIHIL;
+    CREDO_NECESSE_NON_NIHIL(d);
+    tabula_ex_literis_cum_dimensionibus(&folium, c->piscina,
+        d->latitudo, d->altitudo, "vitamins");
+    CREDO_NECESSE(scriba_documentum_committere(d, &folium) > ZEPHYRUM);
+    CREDO_NECESSE(vicus_applicatio_aedificare(&x->app, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CMLX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    v                 = x->app.vicus;
+    x->tempus.annus   = MMXXVI;
+    x->tempus.mensis  = X;
+    x->tempus.dies    = XIV;
+    vicus_horologium_ponere(v, horologium_fictum, &x->tempus);
+    CREDO_VERUM(vicus_acervo_aperire(v, "calendarium", "2026-10"));
+    (vacuum)vicus_pulsare(v);
+    CREDO_NECESSE_NON_NIHIL(kalendarium_frontale(v));
+    m = manus_ludus_creare(c->piscina, x->app.d);
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(manus_ludus_premere(m, "#kalendarium"));
+    CREDO_NECESSE(manus_ludus_premere(m, "#visus-monita"));
+    dispensator_recomponere(x->app.d);
+    CREDO_NECESSE(manus_ludus_premere(m, "#edere"));
+    dispensator_recomponere(x->app.d);
+    forma = manus_ludus_invenire(m, "#forma");
+    CREDO_NECESSE_NON_NIHIL(forma);
+    locale.x = XL;
+    locale.y = XXX;
+    schirmus = manus_ludus_ad_schirmum(m, forma, locale);
+    CREDO_VERUM(manus_ludus_premere_ad(m, schirmus.x, schirmus.y));
+    /* craticula: gg, jj, i ... Esc, j0i ... Esc */
+    CREDO_VERUM(manus_ludus_scribere(m, "ggjjievery fortnight"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    CREDO_VERUM(manus_ludus_scribere(m, "j0i  water plants"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    (vacuum)motus_gestum_effundere(dispensator_motus(x->app.d),
+        x->app.vicus->repo);
+    CREDO_VERUM(chorda_continet(pensa_textum_legere(x->volumen,
+        internamentum_creare(c->piscina), c->piscina),
+        chorda_ex_literis(
+        "every fortnight", c->piscina)));
+    dispensator_recomponere(x->app.d);
+    CREDO_NON_NIHIL(manus_ludus_invenire(m, "#h1"));
+    CREDO_NON_NIHIL(manus_ludus_invenire(m, "#v1"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latera",  _probare_latera,  mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { "natales", _probare_natales, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "sancti",  _probare_sanctos, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { "agenda",  _probare_agendam, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
@@ -564,6 +894,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "elenchus", _probare_elenchum, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "visus_post_notas", _probare_visus_post_notas, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "pensa", _probare_pensa, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "monita", _probare_monita, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
+    { "monita_editio", _probare_monita_editionem, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

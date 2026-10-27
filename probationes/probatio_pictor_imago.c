@@ -736,11 +736,116 @@ _sectio_secunda (
     volumen_claudere(vol);
 }
 
+/* depositio viarum (EVENTUS_DEPOSITIO, '\n' inter vias) ad radicem -
+ * testa-ios C1b: photographia electa = plagula deposita */
+interior vacuum
+depositio (
+     PictorApplicatio* app,
+               chorda  viae)
+{
+    Eventus e;
+        i32 n;
+        i32 i;
+
+    n = viae.mensura > ZEPHYRUM ? I : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < viae.mensura; i++)
+    {
+        si (viae.datum[i] == '\n')
+        {
+            n++;
+        }
+    }
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                    = EVENTUS_DEPOSITIO;
+    e.tempus                   = M;
+    e.datum.depositio.viae     = viae;
+    e.datum.depositio.numerus  = n;
+    dispensator_tractare(app->d, &e);
+    dispensator_recomponere(app->d);
+}
+
+/* C1b T1: imago deposita = glutinatio ut Cmd+V (A / B / OK / X) */
+interior vacuum
+_sectio_depositio (
+    CredoContextus* c)
+{
+              Volumen* vol;
+     PictorApplicatio  app;
+     PictorDocumentum* doc;
+               chorda  via;
+            character  sigillum_parvae[SIGILLUM_HEX_MENSURA];
+            character  sigillum_magnae[SIGILLUM_HEX_MENSURA];
+
+    (vacuum)c;
+    vol = volumen_temporarium(piscina, "probatio_pictor_depositio");
+    /* magnitudo telephoni (CCXV x CDXIX, iPhone 15 Pro Max scala II) -
+     * CDLXXX quadratum arenam IV glutinationum ultra tectum ducebat */
+    CREDO_VERUM(pictor_applicatio_aedificare(&app, piscina, intern, vol,
+        CCXV, CDXIX));
+    doc = app.doc;
+
+    CREDO_GRADUS("via in chorda longiore (sine NUL): pendens");
+    via = chorda_ex_literis("probationes/fixa/icones/sips_16.pngXYZ",
+        piscina);
+    via.mensura -= III;
+    depositio(&app, via);
+    CREDO_VERUM(doc->glutinatio.pendens);
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "glutinatio"),
+        "B");
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_stratorum(doc), I);
+    CREDO_VERUM(nodus_arboris(&app, "quadratum.strata") == NIHIL);
+
+    CREDO_GRADUS("OK: stratum novum");
+    CREDO_VERUM(nodum_premere(&app, "glutinatio.confirmare"));
+    CREDO_FALSUM(doc->glutinatio.pendens);
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_stratorum(doc), II);
+
+    CREDO_GRADUS("via absens: nihil mutatur");
+    depositio(&app, chorda_ex_literis("/nusquam/nihil.png", piscina));
+    CREDO_FALSUM(doc->glutinatio.pendens);
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "glutinatio"),
+        "");
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_stratorum(doc), II);
+
+    CREDO_GRADUS("viae plures: prima legibilis adhibetur");
+    depositio(&app, chorda_ex_literis(
+        "probationes/probatio_pictor_imago.c\n"
+        "probationes/fixa/icones/sips_16.png", piscina));
+    CREDO_VERUM(doc->glutinatio.pendens);
+    memcpy(sigillum_parvae,
+        doc->glutinatio.sigillum[PICTOR_GLUTINATIO_EXEMPLARIA],
+        SIGILLUM_HEX_MENSURA);
+
+    CREDO_GRADUS("depositio dum pendet: glutinationem reponit");
+    depositio(&app, chorda_ex_literis(
+        "probationes/fixa/icones/fons_256.png", piscina));
+    CREDO_VERUM(doc->glutinatio.pendens);
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_stratorum(doc), II);
+    memcpy(sigillum_magnae,
+        doc->glutinatio.sigillum[PICTOR_GLUTINATIO_EXEMPLARIA],
+        SIGILLUM_HEX_MENSURA);
+    CREDO_VERUM(memcmp(sigillum_parvae, sigillum_magnae,
+        SIGILLUM_HEX_MENSURA) != ZEPHYRUM);
+    /* eadem imago sola (post Esc) = eadem praevisio */
+    clavem_premere(&app, CLAVIS_EFFUGIUM);
+    CREDO_FALSUM(doc->glutinatio.pendens);
+    depositio(&app, chorda_ex_literis(
+        "probationes/fixa/icones/fons_256.png", piscina));
+    CREDO_VERUM(doc->glutinatio.pendens);
+    CREDO_VERUM(memcmp(sigillum_magnae,
+        doc->glutinatio.sigillum[PICTOR_GLUTINATIO_EXEMPLARIA],
+        SIGILLUM_HEX_MENSURA) == ZEPHYRUM);
+    volumen_claudere(vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I: aptare (contain)", _sectio_prima, _parare, NIHIL, NIHIL,
         NIHIL },
+    /* gravis (credo memoria T4): CCCXVII MiB arenae, 2026-10-20 */
     { "IV: sine porta, porta vacua - nihil", _sectio_secunda, _parare,
-        NIHIL, NIHIL, NIHIL },
+        NIHIL, "gravis", NIHIL },
+    { "V: depositio imaginis", _sectio_depositio, _parare, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

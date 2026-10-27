@@ -96,7 +96,15 @@ _visor (
     }
 }
 
-hic_manens constans character* radix_repositorii = ".";
+/* radix repositorii (RHUBARB_RADIX, aliter "."): functio, non
+ * staticum scriptum - status nullus inter sectiones */
+interior constans character*
+_radix_repositorii (vacuum)
+{
+    constans character* radix = lectiones_ambitus("RHUBARB_RADIX");
+
+    redde radix != NIHIL ? radix : ".";
+}
 
 interior vacuum
 _currere (
@@ -112,7 +120,8 @@ _currere (
 
     memset(&st, ZEPHYRUM, magnitudo(st));
     st.loqui = asserere;
-    toml_corpus_ambulare(piscina, opus, radix_repositorii, _visor, &st,
+    toml_corpus_ambulare(piscina, opus, _radix_repositorii(), _visor,
+        &st,
         &nn);
     si (!asserere)
     {
@@ -141,39 +150,50 @@ _currere (
     CREDO_AEQUALIS_I32 (silva->idem, silva->plagulae);
 }
 
+/* piscina 'opus' sectionis propria (ambulator eam inter plagulas
+ * purgat) - creatur et destruitur intra sectionem */
+interior vacuum
+_corpora_probare (
+    CredoContextus* c)
+{
+    Piscina* opus =
+        piscina_generare_dynamicum("probatio_toml_corpus_opus",
+        1048576);
+
+    si (opus == NIHIL)
+    {
+        redde;
+    }
+    _currere(c->piscina, opus, VERUM);
+    piscina_destruere(opus);
+}
+
+interior vacuum
+_custodem_ruinae_probare (
+    CredoContextus* c)
+{
+    Piscina* opus =
+        piscina_generare_dynamicum("probatio_toml_corpus_opus",
+        1048576);
+
+    si (opus == NIHIL)
+    {
+        redde;
+    }
+    CREDO_NON_RUIT (_currere(c->piscina, opus, FALSUM));
+    piscina_destruere(opus);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "corpora (lex octetorum)", _corpora_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "custos ruinae (cursus totus)", _custodem_ruinae_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
 s32
 principale (vacuum)
 {
-                    b32  praeteritus;
-                Piscina* piscina;
-                Piscina* opus;
-     constans character* radix = lectiones_ambitus("RHUBARB_RADIX");
-
-    piscina = piscina_generare_dynamicum("probatio_toml_corpus",
-        262144);
-    opus = piscina_generare_dynamicum("probatio_toml_corpus_opus",
-        1048576);
-    si (!piscina || !opus)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-    si (radix != NIHIL)
-    {
-        radix_repositorii = radix;
-    }
-
-    imprimere("\n--- Probans corpora (lex octetorum) ---\n");
-    _currere(piscina, opus, VERUM);
-
-    imprimere("\n--- Probans custodem ruinae (cursus totus) ---\n");
-    CREDO_NON_RUIT (_currere(piscina, opus, FALSUM));
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(opus);
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+    redde credo_suitam_currere("toml_corpus", SECTIONES);
 }

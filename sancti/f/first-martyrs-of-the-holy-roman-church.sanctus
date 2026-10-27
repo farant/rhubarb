@@ -1,0 +1,21 @@
+<sanctus id="first-martyrs-of-the-holy-roman-church" versio="1" genus="coetus" status="sanctus">
+  <nomen lingua="en" principale="verum">First Martyrs of the Holy Roman Church</nomen>
+  <obitus locus="Rome" martyrium="verum" fontes="mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="6" dies="30" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="6" dies="24" fontes="mr"/>
+  <munus fontes="mr">martyrs</munus>
+  <descriptio>
+    <paragraphus fontes="mr">The Roman Martyrology of 1916 commemorates these martyrs on 24 June: many Christians of Rome who, in the time of Nero, were accused of having set fire to the city and were cruelly put to death in various ways by the emperor's order. Some were covered with the skins of wild beasts and torn by dogs, some were fastened to crosses, and others were burned as torches in the night.</paragraphus>
+    <paragraphus fontes="mr">The Martyrology calls them disciples of the Apostles and the first fruits of the martyrs, offered to God by the Roman Church before the death of the Apostles. The sources consulted give no names for them.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="24 June">
+    <excerptum>At Rome, in the time of Nero, the commemoration of many holy martyrs, who were accused of having set fire to the city, and cruelly put to death in various manners by the emperor's order.</excerptum>
+    <excerptum>Some were covered with the skins of wild beasts and</excerptum>
+    <excerptum>lacerated by dogs; others were fastened to crosses, others again were delivered to the flames to serve as torches in the night.</excerptum>
+    <excerptum>All these were disciples of the Apostles, and the first fruits of the martyrs, which the Roman Church, a field so fertile in martyrs, offered to God before the death of the Apostles.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="30 June">
+    <excerptum>The First Martyrs of the Holy Roman Church</excerptum>
+  </fons>
+</sanctus>

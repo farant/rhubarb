@@ -1,0 +1,49 @@
+<sanctus id="gregory-the-great" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Gregory the Great</nomen>
+  <nomen lingua="en" fontes="ce">Pope Gregory I</nomen>
+  <ortus annus="540" circa="verum" locus="Rome" fontes="ce"/>
+  <obitus annus="604" mensis="3" dies="12" locus="Rome" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="9" dies="3" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="3" dies="12" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="9" dies="3" nota="raising to the Sovereign Pontificate" fontes="mr3"/>
+  <munus fontes="us mr ce">pope</munus>
+  <munus fontes="us mr ce">doctor of the Church</munus>
+  <munus fontes="ce">monk</munus>
+  <munus fontes="ce">abbot</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Gregory was born at Rome about 540, son of the wealthy patrician Gordianus and of Silvia, who is honoured as a saint. About 573, little more than thirty, he was prefect of the city of Rome, but most probably in 574 he gave up everything to become a monk: his Sicilian estates founded six monasteries, and his house on the Caelian Hill became the monastery of St. Andrew. In 578 the pope ordained him, against his will, one of the seven deacons of Rome, and Pelagius II then sent him as his permanent ambassador to the imperial court at Byzantium, where he gave the lectures on the Book of Job that became his Moralia. Back in Rome he became abbot of St. Andrew's.</paragraphus>
+    <paragraphus fontes="ce mr mr3">When Pelagius II died in February 590, the clergy and people of Rome elected Gregory. He shrank from the office but was consecrated on 3 September 590, a day the Martyrology also commemorates. Though almost always ill, he provided for the refugees who crowded Rome, preached, and wrote the Pastoral Rule, the Dialogues and many letters. His care for the conversion of the English earned him the name Apostle of the English, and his deeds the title "the Great". He died on 12 March 604 and was buried at St. Peter's.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="12 March">
+    <excerptum>At Rome, St Gregory, pope and eminent doctor of the Chnrch, who on account of his illustrious deeds, and the conversion of the English to the faith of Christ was snrnamed the Great, and called the Apostle of England.</excerptum>
+  </fons>
+  <fons id="mr3" opus="mr1916" locus="3 September">
+    <excerptum>At Rome, the raising to the Sovereign Pontificate of St. Gregory the Great, an incomparable man, who, being forced to take that burden upon himself</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="Pope St. Gregory I" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Pope_St._Gregory_I">
+    <excerptum>Doctor of the Church; born at Rome about 540; died 12 March 604.</excerptum>
+    <excerptum>Gregory's father was Gordianus, a wealthy patrician</excerptum>
+    <excerptum>His mother Silvia appears also to have been of good family, but very little is known of her life. She is honoured as a saint</excerptum>
+    <excerptum>we find him about the year 573, when little more than thirty years old, filling the important office of prefect of the city of Rome.</excerptum>
+    <excerptum>This event took place most probably in 574.</excerptum>
+    <excerptum>His Sicilian estates were given up to found six monasteries there, and his home on the Caelian Hill was converted into another under the patronage of St. Andrew. Here he himself took the cowl</excerptum>
+    <excerptum>when, in 578, the pope ordained him, much against his will, as one of the seven deacons (regionarii) of Rome.</excerptum>
+    <excerptum>Popo Pelagius II accordingly dispatched a special embassy to Tiberius, and sent Gregory along with it as his apocrisiarius, or permanent ambassador to the Court of Byzantium.</excerptum>
+    <excerptum>one result of which remains in his "Morals", or series of lectures on the Book of Job</excerptum>
+    <excerptum>and with the greatest joy returned to St. Andrew's, of which he became abbot soon afterwards.</excerptum>
+    <excerptum>Then, in February, 590, as if to fill the cup of misery to the brim, Pelagius II died. The choice of a successor lay with the clergy and people of Rome, and without any hesitation they elected Gregory</excerptum>
+    <excerptum>In spite of their unanimity Gregory shrank from the dignity thus offered him.</excerptum>
+    <excerptum>carried to the Basilica of St. Peter, and there consecrated pope on 3 September, 590.</excerptum>
+    <excerptum>multitude of indigent refugees, for whose support Gregory made provision</excerptum>
+    <excerptum>Gregory did not neglect their spiritual wants, and a large number of his sermons have come down to us.</excerptum>
+    <excerptum>He suffered almost continually from indigestion and, at intervals, from attacks of slow fever, while for the last half of his pontificate he was a martyr to gout.</excerptum>
+    <excerptum>"Moralium Libri XXXV"; "Regulae Pastoralis Liber"; "Dialogorum Libri IV"; "Homiliarum in Ezechielem Prophetam Lobri II"; "Homiliarum in Evangelia Libri II"; "Epistolarum Libri XIV"</excerptum>
+    <excerptum>while his influence in Britain was such that he is justly called the Apostle of the English.</excerptum>
+    <excerptum>Achievements so varied have won for Gregory the title of "the Great"</excerptum>
+    <excerptum>The end came on 12 March, 604, and on the same day his body was laid to rest in front of the sacristy in the portico of St. Peter's Basilica.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="3 September">
+    <excerptum>Saint Gregory the Great, Pope and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

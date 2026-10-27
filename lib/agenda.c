@@ -29,8 +29,9 @@ structura AgendaDocumentum {
                 Piscina* status;
                 Piscina* scheda;
                 Piscina* acta;
-                    Xar* recorda;    /* Recordum, ordine id */
-                    s32  proximum;   /* id rei novae */
+                    Xar* recorda;    /* Recordum, ordine creationis */
+             MonetaFons  fons;       /* NIHIL = moneta_ulid */
+                 vacuum* fons_ctx;
 };
 
 
@@ -41,16 +42,16 @@ structura AgendaDocumentum {
 interior Recordum*
 recordum (
     constans AgendaDocumentum* doc,
-                          s32  id)
+                       chorda  id)
 {
     Recordum* r;
          i32  i;
 
-    per (i = ZEPHYRUM; doc->recorda
+    per (i = ZEPHYRUM; doc->recorda && id.mensura > ZEPHYRUM
         && i < xar_numerus(doc->recorda); i++)
     {
         r = (Recordum*)xar_obtinere(doc->recorda, i);
-        si (r->res.id == id)
+        si (chorda_aequalis(r->res.id, id))
         {
             redde r;
         }
@@ -62,7 +63,7 @@ recordum (
 interior Recordum*
 vivum (
     constans AgendaDocumentum* doc,
-                          s32  id)
+                       chorda  id)
 {
     Recordum* r;
 
@@ -150,7 +151,7 @@ elementum_rei (
                 Piscina* p,
     InternamentumChorda* in,
      constans character* actio,
-                    s32  id)
+                 chorda  id)
 {
     StmlNodus* n;
 
@@ -163,23 +164,51 @@ elementum_rei (
     {
         (vacuum)stml_attributum_addere(n, p, in, "actio", actio);
     }
-    attributum_ponere(n, p, in, "id", chorda_ex_s32(id, p));
+    attributum_ponere(n, p, in, "id", id);
     redde n;
 }
 
-interior s32
+/* id validum (D3): signa [0-9A-Z], I..XXVI - ULID aut decimale vetus */
+interior b32
+id_validum (
+    chorda id)
+{
+    i32 i;
+
+    si (id.mensura < I || id.mensura > XXVI)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < id.mensura; i++)
+    {
+        si (!(   (id.datum[i] >= '0' && id.datum[i] <= '9')
+              || (id.datum[i] >= 'A' && id.datum[i] <= 'Z')))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* id attributi in intern documenti; chorda vacua si abest aut malum */
+interior chorda
 attributum_id (
-    StmlNodus* n)
+      AgendaDocumentum* doc,
+             StmlNodus* n)
 {
     chorda* a;
-       s32  v;
+    chorda* t;
+    chorda  vacua;
 
-    a = stml_attributum_capere(n, "id");
-    si (a && chorda_ut_s32(*a, &v))
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    a              = stml_attributum_capere(n, "id");
+    si (!a || !id_validum(*a))
     {
-        redde v;
+        redde vacua;
     }
-    redde ZEPHYRUM;
+    t = chorda_internare(doc->intern, *a);
+    redde t ? *t : vacua;
 }
 
 
@@ -192,16 +221,15 @@ statum_vacare (
     AgendaDocumentum* doc)
 {
     piscina_vacare(doc->status);
-    doc->recorda   = xar_creare(doc->status, (i32)magnitudo(Recordum));
-    doc->proximum  = I;
+    doc->recorda = xar_creare(doc->status, (i32)magnitudo(Recordum));
 }
 
-/* recordum novum ordine id (id > omnibus: append; decodificatio ordine
+/* recordum novum ordine creationis (append; decodificatio ordine
  * canonico) */
 interior Recordum*
 recordum_addere (
     AgendaDocumentum* doc,
-                 s32  id,
+              chorda  id,
               chorda  titulus)
 {
     Recordum* r;
@@ -209,14 +237,11 @@ recordum_addere (
     r = (Recordum*)xar_addere(doc->recorda);
     memset(r, ZEPHYRUM, magnitudo(Recordum));
     r->res.id        = id;
+    r->res.ordo      = (i32)xar_numerus(doc->recorda);
     r->res.titulus   = chorda_transcribere(titulus, doc->status);
     r->res.rubricae  = xar_creare(doc->status, (i32)magnitudo(chorda));
     r->res.notae     = xar_creare(doc->status,
         (i32)magnitudo(AgendaNota));
-    si (id >= doc->proximum)
-    {
-        doc->proximum = id + I;
-    }
     redde r;
 }
 
@@ -272,14 +297,14 @@ proiectio_applicare (
     vacuum* ctx,
     chorda  actum)
 {
-    AgendaDocumentum* doc;
-        StmlResultus  res;
-           StmlNodus* n;
-              chorda* actio;
-              chorda* t;
-            Recordum* r;
-                 s32  id;
-                Dies  dies;
+     AgendaDocumentum* doc;
+         StmlResultus  res;
+            StmlNodus* n;
+               chorda* actio;
+               chorda* t;
+             Recordum* r;
+               chorda  id;
+                 Dies  dies;
 
     doc = (AgendaDocumentum*)ctx;
     piscina_vacare(doc->scheda);
@@ -292,8 +317,8 @@ proiectio_applicare (
         redde;
     }
     actio  = stml_attributum_capere(n, "actio");
-    id     = attributum_id(n);
-    si (!actio || id <= ZEPHYRUM)
+    id     = attributum_id(doc, n);
+    si (!actio || id.mensura == ZEPHYRUM)
     {
         redde;
     }
@@ -359,9 +384,47 @@ proiectio_applicare (
     }
 }
 
-/* status canonicus: <agenda proximum><res id [dies] [rubricae]
- * [perfecta]><@titulus=>..</><nota dies>..</nota>..</res>..</agenda>;
- * deletae absunt (proximum eas numerat) */
+/* elementum rei in statu canonico: <res id [dies] [rubricae]
+ * [perfecta]><@titulus=>..</><nota dies>..</nota>..</res> - status
+ * canonicus et agenda_rem_codificare (D4b) idem scribunt */
+interior StmlNodus*
+elementum_rei_plenum (
+       constans AgendaDocumentum* doc,
+              constans AgendaRes* res,
+                         Piscina* piscina)
+{
+     StmlNodus* e;
+     StmlNodus* nota;
+    AgendaNota* an;
+           i32  k;
+
+    e = elementum_rei(piscina, doc->intern, NIHIL, res->id);
+    si (res->dies_posita)
+    {
+        diem_ponere(e, piscina, doc->intern, "dies", res->dies);
+    }
+    attributum_ponere(e, piscina, doc->intern, "rubricae",
+        rubricas_iungere(res->rubricae, piscina));
+    si (res->perfecta)
+    {
+        diem_ponere(e, piscina, doc->intern, "perfecta",
+            res->dies_perfectionis);
+    }
+    titulum_addere(e, piscina, doc->intern, res->titulus);
+    per (k = ZEPHYRUM; k < xar_numerus(res->notae); k++)
+    {
+        an    = (AgendaNota*)xar_obtinere(res->notae, k);
+        nota  = stml_elementum_creare(piscina, doc->intern, "nota");
+        diem_ponere(nota, piscina, doc->intern, "dies", an->dies);
+        (vacuum)stml_liberum_addere(nota,
+            stml_textum_creare_ex_chorda(piscina, doc->intern,
+            an->textus));
+        (vacuum)stml_liberum_addere(e, nota);
+    }
+    redde e;
+}
+
+/* status canonicus: <agenda><res .../>..</agenda>; deletae absunt */
 interior chorda
 proiectio_codificare (
      vacuum* ctx,
@@ -369,17 +432,11 @@ proiectio_codificare (
 {
     AgendaDocumentum* doc;
            StmlNodus* radix;
-           StmlNodus* e;
-           StmlNodus* nota;
             Recordum* r;
-          AgendaNota* an;
                  i32  i;
-                 i32  k;
 
     doc    = (AgendaDocumentum*)ctx;
     radix  = stml_elementum_creare(piscina, doc->intern, "agenda");
-    attributum_ponere(radix, piscina, doc->intern, "proximum",
-        chorda_ex_s32(doc->proximum, piscina));
     per (i = ZEPHYRUM; i < xar_numerus(doc->recorda); i++)
     {
         r = (Recordum*)xar_obtinere(doc->recorda, i);
@@ -387,30 +444,8 @@ proiectio_codificare (
         {
             perge;
         }
-        e = elementum_rei(piscina, doc->intern, NIHIL, r->res.id);
-        si (r->res.dies_posita)
-        {
-            diem_ponere(e, piscina, doc->intern, "dies", r->res.dies);
-        }
-        attributum_ponere(e, piscina, doc->intern, "rubricae",
-            rubricas_iungere(r->res.rubricae, piscina));
-        si (r->res.perfecta)
-        {
-            diem_ponere(e, piscina, doc->intern, "perfecta",
-                r->res.dies_perfectionis);
-        }
-        titulum_addere(e, piscina, doc->intern, r->res.titulus);
-        per (k = ZEPHYRUM; k < xar_numerus(r->res.notae); k++)
-        {
-            an    = (AgendaNota*)xar_obtinere(r->res.notae, k);
-            nota  = stml_elementum_creare(piscina, doc->intern, "nota");
-            diem_ponere(nota, piscina, doc->intern, "dies", an->dies);
-            (vacuum)stml_liberum_addere(nota,
-                stml_textum_creare_ex_chorda(piscina, doc->intern,
-                an->textus));
-            (vacuum)stml_liberum_addere(e, nota);
-        }
-        (vacuum)stml_liberum_addere(radix, e);
+        (vacuum)stml_liberum_addere(radix, elementum_rei_plenum(doc,
+            &r->res, piscina));
     }
     redde stml_scribere(radix, piscina, FALSUM);
 }
@@ -439,17 +474,17 @@ proiectio_decodificare (
     vacuum* ctx,
     chorda  codex)
 {
-    AgendaDocumentum* doc;
-        StmlResultus  res;
-           StmlNodus* radix;
-           StmlNodus* e;
-           StmlNodus* nota;
-            Recordum* r;
-              chorda* t;
-                 s32  proximum;
-                 i32  i;
-                 i32  k;
-                Dies  dies;
+     AgendaDocumentum* doc;
+         StmlResultus  res;
+            StmlNodus* radix;
+            StmlNodus* e;
+            StmlNodus* nota;
+             Recordum* r;
+               chorda* t;
+               chorda  id;
+                  i32  i;
+                  i32  k;
+                 Dies  dies;
 
     doc = (AgendaDocumentum*)ctx;
     piscina_vacare(doc->scheda);
@@ -461,11 +496,8 @@ proiectio_decodificare (
     {
         redde FALSUM;
     }
-    t = stml_attributum_capere(radix, "proximum");
-    si (!t || !chorda_ut_s32(*t, &proximum) || proximum < I)
-    {
-        redde FALSUM;
-    }
+    /* attributum 'proximum' checkpointorum veterum (ante D3)
+     * ignoratur */
     statum_vacare(doc);
     per (i = ZEPHYRUM; i < stml_numerus_liberorum(radix); i++)
     {
@@ -475,12 +507,13 @@ proiectio_decodificare (
         {
             perge;
         }
-        t = stml_attributum_capere(e, "titulus");
-        si (attributum_id(e) <= ZEPHYRUM || !t)
+        t   = stml_attributum_capere(e, "titulus");
+        id  = attributum_id(doc, e);
+        si (id.mensura == ZEPHYRUM || !t)
         {
             redde FALSUM;
         }
-        r = recordum_addere(doc, attributum_id(e), *t);
+        r = recordum_addere(doc, id, *t);
         r->res.dies_posita = dies_legere(stml_attributum_capere(e,
             "dies"), &dies);
         si (r->res.dies_posita)
@@ -514,7 +547,6 @@ proiectio_decodificare (
                 doc->scheda));
         }
     }
-    doc->proximum = proximum;
     redde VERUM;
 }
 
@@ -605,9 +637,9 @@ actum_mittere (
 /* actum de re viva: elementum paratum aut NIHIL */
 interior StmlNodus*
 actum_rei (
-      AgendaDocumentum* doc,
-    constans character* actio,
-                   s32  id)
+       AgendaDocumentum* doc,
+     constans character* actio,
+                 chorda  id)
 {
     si (!doc || !vivum(doc, id))
     {
@@ -617,33 +649,81 @@ actum_rei (
     redde elementum_rei(doc->acta, doc->intern, actio, id);
 }
 
-s32
+/* id novum ex fonte monetae (D3); NIHIL si malum aut iam praesens
+ * (etiam deletum) */
+interior chorda*
+id_cudere (
+    AgendaDocumentum* doc)
+{
+    character effusio[MONETA_ULID_MENSURA];
+       chorda cusum;
+
+    effusio[ZEPHYRUM] = '\0';
+    si (doc->fons)
+    {
+        doc->fons(doc->fons_ctx, effusio);
+    }
+    alioquin
+    {
+        moneta_ulid(effusio);
+    }
+    effusio[MONETA_ULID_MENSURA - I]  = '\0';
+    cusum                             = chorda_ex_literis(effusio,
+        doc->acta);
+    si (!id_validum(cusum) || recordum(doc, cusum))
+    {
+        redde NIHIL;
+    }
+    redde chorda_internare(doc->intern, cusum);
+}
+
+vacuum
+agenda_monetam_ponere (
+     AgendaDocumentum* doc,
+           MonetaFons  fons,
+               vacuum* ctx)
+{
+    si (doc)
+    {
+        doc->fons      = fons;
+        doc->fons_ctx  = ctx;
+    }
+}
+
+chorda
 agenda_rem_creare (
     AgendaDocumentum* doc,
               chorda  titulus)
 {
     StmlNodus* n;
-          s32  id;
+       chorda  vacua;
+       chorda* id;
 
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
     si (!doc || !plenus(titulus))
     {
-        redde ZEPHYRUM;
+        redde vacua;
     }
     piscina_vacare(doc->acta);
-    id  = doc->proximum;
-    n   = elementum_rei(doc->acta, doc->intern, "nova", id);
+    id = id_cudere(doc);
+    si (!id)
+    {
+        redde vacua;
+    }
+    n = elementum_rei(doc->acta, doc->intern, "nova", *id);
     si (!n)
     {
-        redde ZEPHYRUM;
+        redde vacua;
     }
     titulum_addere(n, doc->acta, doc->intern, titulus);
-    redde actum_mittere(doc, n) > ZEPHYRUM ? id : ZEPHYRUM;
+    redde actum_mittere(doc, n) > ZEPHYRUM ? *id : vacua;
 }
 
 s64
 agenda_titulum_ponere (
     AgendaDocumentum* doc,
-                 s32  id,
+              chorda  id,
               chorda  titulus)
 {
     StmlNodus* n;
@@ -664,7 +744,7 @@ agenda_titulum_ponere (
 s64
 agenda_diem_ponere (
     AgendaDocumentum* doc,
-                 s32  id,
+              chorda  id,
        constans Dies* dies)
 {
     StmlNodus* n;
@@ -684,7 +764,7 @@ agenda_diem_ponere (
 s64
 agenda_rubricas_ponere (
     AgendaDocumentum* doc,
-                 s32  id,
+              chorda  id,
               chorda  rubricae)
 {
     StmlNodus* n;
@@ -708,7 +788,7 @@ agenda_rubricas_ponere (
 s64
 agenda_notam_addere (
     AgendaDocumentum* doc,
-                 s32  id,
+              chorda  id,
                 Dies  dies,
               chorda  textus)
 {
@@ -732,7 +812,7 @@ agenda_notam_addere (
 s64
 agenda_perficere (
     AgendaDocumentum* doc,
-                 s32  id,
+              chorda  id,
                 Dies  dies)
 {
     StmlNodus* n;
@@ -753,7 +833,7 @@ agenda_perficere (
 s64
 agenda_perfectionem_tollere (
     AgendaDocumentum* doc,
-                 s32  id)
+              chorda  id)
 {
     redde actum_mittere(doc, actum_rei(doc, "aperta", id));
 }
@@ -761,7 +841,7 @@ agenda_perfectionem_tollere (
 s64
 agenda_rem_delere (
     AgendaDocumentum* doc,
-                 s32  id)
+              chorda  id)
 {
     redde actum_mittere(doc, actum_rei(doc, "deleta", id));
 }
@@ -830,6 +910,26 @@ agenda_numerus_rerum (
     redde n;
 }
 
+chorda
+agenda_rem_codificare (
+    constans AgendaDocumentum* doc,
+                          i32  index,
+                      Piscina* piscina)
+{
+     constans AgendaRes* res;
+                 chorda  c;
+
+    res = agenda_res_index(doc, index);
+    si (!res)
+    {
+        c.mensura  = ZEPHYRUM;
+        c.datum    = NIHIL;
+        redde c;
+    }
+    redde stml_scribere(elementum_rei_plenum(doc, res, piscina),
+        piscina, FALSUM);
+}
+
 constans AgendaRes*
 agenda_res_index (
     constans AgendaDocumentum* doc,
@@ -859,7 +959,7 @@ agenda_res_index (
 constans AgendaRes*
 agenda_res (
     constans AgendaDocumentum* doc,
-                          s32  id)
+                       chorda  id)
 {
     Recordum* r;
 
@@ -882,7 +982,7 @@ dies_aequales (
 }
 
 /* res vivae quibus 'congruit' (perfectae: dies perfectionis; aliter:
- * dies assignata) == dies, ordine id */
+ * dies assignata) == dies, ordine creationis */
 interior Xar*
 res_colligere (
     constans AgendaDocumentum* doc,
@@ -984,21 +1084,16 @@ agenda_signa_mensis (
  * Quaestiones (A4)
  * ================================================== */
 
-/* a ante b in historia perfectarum: dies perfectionis descendens,
- * deinde id descendens */
+/* a (recentior: insertio ordine creationis) ante b in historia
+ * perfectarum: dies perfectionis descendens, deinde creatione
+ * descendens - die aequali recentior prior */
 interior b32
 perfecta_ante (
     constans AgendaRes* a,
     constans AgendaRes* b)
 {
-    s32 c;
-
-    c = fasti_comparare(a->dies_perfectionis, b->dies_perfectionis);
-    si (c != ZEPHYRUM)
-    {
-        redde c > ZEPHYRUM;
-    }
-    redde a->id > b->id;
+    redde fasti_comparare(a->dies_perfectionis, b->dies_perfectionis)
+        >= ZEPHYRUM;
 }
 
 Xar*

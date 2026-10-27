@@ -312,3 +312,62 @@ aut tolera, aut vexilla laxata per-platformam. CONSULTO non sanatum
   the fd readable on a closed pipe.
 - Child-side `write(errno)` before `_exit`: value assigned to a
   variable (glibc _FORTIFY_SOURCE warn_unused_result).
+
+## 2026-10-20 - memory ceiling for a child (credo memoria T5)
+
+`ProcessusOptiones.memoria_maxima` (bytes, 0 = none) and
+`PROCESSUS_ERROR_MEMORIA`, appended after IO so no value renumbers. The
+footprint comes from `memoria_processus_legere(pid)` (proc_pid_rusage,
+compressed pages included), throttled to one read per 20 ms because a
+chatty child makes poll return immediately. Read sites mirror the time
+limit's: before poll in `_ansam_pulsare` (an early return like
+tempus_excessum), the "no pipes" check in `_perficere`, and the
+blocking WNOHANG reap loop. That loop used to run only with a time
+limit; now a memory limit alone enables it, otherwise a child that
+closed its pipes and kept allocating would be waited on forever. Kill
+and result reuse the time-limit path (`occisus`, partial output kept).
+
+Name clash avoided: `memoria_fracta` already meant "our piscina is
+exhausted" (an IO error). The new flag is `memoria_excessa`, and
+both are commented.
+
+Caller audit: only lib/mensura_contextus.c memset its options. Adding
+a field to a struct that callers fill by hand makes every such caller
+read garbage, a random limit. fabrica_ansae.c and four
+probatio_processus sections now memset, and the header says to.
+
+Test child: `/bin/dd if=/dev/zero of=/dev/null bs=256m count=N`
+allocates and fills a 256 MiB buffer (footprint 257 MiB per
+/usr/bin/time -l), and count=400 runs it about 5 s. Core POSIX, offline,
+no perl. Under 64 MiB it died within one poll step (section 179 ms).
+
+## 2026-10-26 grex_proprius: process groups + leftover reaping
+
+Why: vicus test suites were blamed (radix snapshot, "scripsit extra
+vestigium") for writes to probatio_vicus_admonitiones.tsv. Cause: the
+admonitiones test exited with an async `~/.bin/mensor quaestio currentes`
+still pending (colloquia_visus had no teardown). The orphan inherited
+admonitiones' FABRICA_LECTIONES and kept writing P (/bin/ps) and S
+(~/.rhubarb/mensurae.volumen) lines into that trace while claves and
+commutatio ran later. It surfaced after the main merge because the
+reinstalled mensor now emits P and VFS S lines.
+
+Fix A (here): `ProcessusOptiones.grex_proprius`. Child does setpgid(0,0)
+first; parent also setpgid(pid,pid) (race-free either way). After the
+leader is reaped, `killpg(pid, 0) == 0` means members survive -> SIGKILL
+the group and set `resultus.relicti`. Timeout/memory/abort kill the
+group via `_occidere`. A small registry (`_greges[XVI]`) plus
+SIGINT/SIGTERM/SIGHUP handlers kill live groups if the parent itself is
+interrupted, then restore the prior action and re-raise.
+
+fabrica (`suturae_in_area_currere`) turns it on for every member and
+prints `fabrica: MONITUM <argv0>: processus post exitum relicti` - a
+warning, not a failure: leftovers no longer pollute later traces.
+
+Gotcha in the test: after SIGKILL the grandchild is a zombie until init
+reaps it, and kill(pid,0) still succeeds on a zombie - wait for reaping
+(up to 2 s) before asserting it is gone.
+
+Side finding: older sections of probatio_processus itself leave
+`sleep 30` x2 and `sleep 3` x2 behind - the new MONITUM correctly names
+it (parked).

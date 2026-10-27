@@ -165,11 +165,11 @@ vitium_addere (
                  i32  limes);
 interior CanonElementum*
 elementum_quaerere (
-        Canon* c,
-    StmlNodus* n);
+    constans Canon* c,
+         StmlNodus* n);
 interior CanonElementum*
 _elementum_quaerere_vi (
-              Canon* c,
+     constans Canon* c,
           StmlNodus* n,
     constans chorda* parens_vi);
 interior chorda
@@ -179,7 +179,7 @@ clavis_scopi (
     constans chorda* titulus);
 interior vacuum
 nodum_iudicare (
-               Canon* c,
+      constans Canon* c,
            StmlNodus* n,
                  Xar* vitia,
              Piscina* piscina,
@@ -187,7 +187,7 @@ nodum_iudicare (
     CanonTransclusio* tr);
 interior vacuum
 _augmenta_cusasque_colligere (
-             Canon* c,
+    constans Canon* c,
          StmlNodus* n,
          StmlNodus* infixus,
                Xar* augmenta,
@@ -195,12 +195,12 @@ _augmenta_cusasque_colligere (
            Piscina* piscina);
 interior b32
 _clavigerum_stellae (
-              Canon* c,
+     constans Canon* c,
           StmlNodus* n,
     constans chorda* attributum);
 interior vacuum
 _augmentum_iudicare (
-              Canon* c,
+     constans Canon* c,
           StmlNodus* a,
      TabulaDispersa* cusa,
                 Xar* vitia,
@@ -917,7 +917,7 @@ clavis_scopi (
  * arboris (mos ordinarius). */
 interior CanonElementum*
 _elementum_quaerere_vi (
-              Canon* c,
+     constans Canon* c,
           StmlNodus* n,
     constans chorda* parens_vi)
 {
@@ -958,8 +958,8 @@ _elementum_quaerere_vi (
 
 interior CanonElementum*
 elementum_quaerere (
-        Canon* c,
-    StmlNodus* n)
+    constans Canon* c,
+         StmlNodus* n)
 {
     redde _elementum_quaerere_vi(c, n, NIHIL);
 }
@@ -1205,7 +1205,7 @@ _causa_regulae (
  * quaestio est an ULLA definitio attributum ferat, non quae. */
 interior b32
 _attributum_declaratum (
-              Canon* c,
+     constans Canon* c,
              chorda  attr,
                 Xar* scopus)
 {
@@ -1979,7 +1979,7 @@ canon_ex_nodo (
  * nunc cusae domesticae + claves externae id complent. */
 interior b32
 _clavigerum_stellae (
-              Canon* c,
+     constans Canon* c,
           StmlNodus* n,
     constans chorda* attributum)
 {
@@ -2016,7 +2016,7 @@ _clavigerum_stellae (
  * colliguntur). */
 interior vacuum
 _augmenta_cusasque_colligere (
-             Canon* c,
+    constans Canon* c,
          StmlNodus* n,
          StmlNodus* infixus,
                Xar* augmenta,
@@ -3307,7 +3307,7 @@ _transclusiones_resolvere (
  * liberum adstrictum = pugna, ignotum = vitium ordinarium. */
 interior vacuum
 _augmentum_iudicare (
-              Canon* c,
+     constans Canon* c,
           StmlNodus* a,
      TabulaDispersa* cusa,
                 Xar* vitia,
@@ -3559,7 +3559,7 @@ _attributum_praesens_iudicare (
  * augmentationum, quibus genus destinatum traditur. */
 interior vacuum
 nodum_iudicare (
-               Canon* c,
+      constans Canon* c,
            StmlNodus* n,
                  Xar* vitia,
              Piscina* piscina,
@@ -3876,9 +3876,9 @@ nodum_iudicare (
 
 Xar*
 canon_iudicare (
-        Canon* canon,
-    StmlNodus* radix,
-      Piscina* piscina)
+    constans Canon* canon,
+         StmlNodus* radix,
+           Piscina* piscina)
 {
                  Xar* vitia;
            StmlNodus* elementum_radix;
@@ -4492,7 +4492,7 @@ _vitia_expansionis_fractae (
 
 Xar*
 canon_iudicare_expansum (
-                  Canon* canon,
+         constans Canon* canon,
               StmlNodus* radix,
                 Piscina* piscina,
     InternamentumChorda* intern)
@@ -4524,7 +4524,7 @@ canon_iudicare_expansum (
 
 Xar*
 canon_iudicare_distributum (
-                  Canon* canon,
+         constans Canon* canon,
               StmlNodus* radix,
                 Piscina* piscina,
     InternamentumChorda* intern)

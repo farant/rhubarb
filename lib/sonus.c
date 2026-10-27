@@ -1,0 +1,572 @@
+/* sonus.c - Primitiva soni (vide include/sonus.h)
+ *
+ * Arithmetica f32 per exemplum; f64 solum ubi parametra in statum
+ * convertuntur (incrementum phasis, coefficiens coli). Vide
+ * lib/sonus.worklog.md.
+ */
+#include "sonus.h"
+#include <math.h>
+#include <string.h>
+
+/* 2^32: cyclus unus phasis */
+#define SONUS_CYCLUS     4294967296.0
+#define SONUS_DUO_PI     6.28318530717958647692
+/* strepitus: valor novus quoties tres bita summa phasis mutantur */
+#define SONUS_PARS_OCTAVA(p)  ((p) >> XXIX)
+
+interior f32
+_coercere (
+    f32 v,
+    f32 imum,
+    f32 summum)
+{
+    si (v < imum)
+    {
+        redde imum;
+    }
+    si (v > summum)
+    {
+        redde summum;
+    }
+    redde v;
+}
+
+interior f32
+_strepitum_trahere (
+    Sors* s)
+{
+    redde sors_f32(s) * 2.0f - 1.0f;
+}
+
+
+    /* ==================================================
+     * UNDA
+     * ================================================== */
+
+vacuum
+sonus_unda_parare (
+          SonusUnda* u,
+    SonusFormaUndae  forma,
+                i64  semen)
+{
+    u->forma        = forma;
+    u->phasis       = ZEPHYRUM;
+    u->incrementum  = ZEPHYRUM;
+    u->officium     = 0x80000000U;
+    sors_seminare(&u->sors, semen, ZEPHYRUM);
+    u->retentum    = 0.0f;
+    si (forma == SONUS_UNDA_STREPITUS)
+    {
+        u->retentum = _strepitum_trahere(&u->sors);
+    }
+}
+
+vacuum
+sonus_unda_frequentiam_ponere (
+    SonusUnda* u,
+          f32  frequentia)
+{
+    f64 f = (f64)_coercere(frequentia, 0.0f,
+                           (f32)SONUS_FREQUENTIA / 2.0f);
+
+    /* rotundatum: CDXL cycli/s -> CDXL circumvolutiones in secundo,
+     * non CDXXXIX (truncatio inferius cadit) */
+    u->incrementum = (i32)(f / (f64)SONUS_FREQUENTIA * SONUS_CYCLUS
+        + 0.5);
+}
+
+vacuum
+sonus_unda_officium_ponere (
+    SonusUnda* u,
+          f32  ratio)
+{
+    u->officium = (i32)((f64)_coercere(ratio, 0.01f,
+        0.99f) * SONUS_CYCLUS);
+}
+
+f32
+sonus_unda_proximum (
+    SonusUnda* u)
+{
+    i32 ante = u->phasis;
+    f32 p;
+    f32 x;
+
+    si (u->incrementum == ZEPHYRUM)
+    {
+        redde 0.0f;
+    }
+    u->phasis  = ante + u->incrementum;   /* circumvolutio insignata */
+    p          = (f32)((f64)ante / SONUS_CYCLUS);
+
+    commutatio (u->forma)
+    {
+        casus SONUS_UNDA_PULSUS:
+            x = ante < u->officium ? 1.0f : -1.0f;
+            frange;
+        casus SONUS_UNDA_SERRA:
+            x = 2.0f * p - 1.0f;
+            frange;
+        casus SONUS_UNDA_TRIANGULUM:
+            x = p < 0.5f ? 4.0f * p - 1.0f : 3.0f - 4.0f * p;
+            frange;
+        casus SONUS_UNDA_SINUS:
+            x = (f32)sin(SONUS_DUO_PI * (f64)p);
+            frange;
+        casus SONUS_UNDA_STREPITUS:
+            x = u->retentum;
+            si (SONUS_PARS_OCTAVA(ante) != SONUS_PARS_OCTAVA(u->phasis))
+            {
+                u->retentum = _strepitum_trahere(&u->sors);
+            }
+            frange;
+        ordinarius:
+            x = 0.0f;
+            frange;
+    }
+    redde x;
+}
+
+
+    /* ==================================================
+     * INVOLUCRUM
+     *
+     * Impetus et lapsus = CLIVI fixi (impetus 1/n per exemplum), ergo
+     * repercussio a 0.25 citius ad 1 pervenit. Remissio = TEMPUS fixum
+     * a valore currente (valor/n), ergo remissio semper 'remissio'
+     * secundas durat.
+     * ================================================== */
+
+/* mutatio per exemplum ut 'amplitudo' in 'secundae' transeat;
+ * secundae minores exemplo uno = saltus totus statim */
+interior f32
+_passus_involucri (
+    f32 secundae,
+    f32 amplitudo)
+{
+    f32 n = secundae * (f32)SONUS_FREQUENTIA;
+
+    si (n < 1.0f)
+    {
+        redde amplitudo;
+    }
+    redde amplitudo / n;
+}
+
+vacuum
+sonus_involucrum_parare (
+                 SonusInvolucrum* inv,
+    constans SonusInvolucriForma* forma)
+{
+    inv->forma.impetus  = forma->impetus < 0.0f ? 0.0f : forma->impetus;
+    inv->forma.lapsus   = forma->lapsus < 0.0f ? 0.0f : forma->lapsus;
+    inv->forma.tenor    = _coercere(forma->tenor, 0.0f, 1.0f);
+    inv->forma.remissio = forma->remissio
+        < 0.0f ? 0.0f : forma->remissio;
+    inv->gradus  = SONUS_INVOLUCRUM_QUIESCIT;
+    inv->valor   = 0.0f;
+    inv->passus  = 0.0f;
+}
+
+vacuum
+sonus_involucrum_aperire (
+    SonusInvolucrum* inv)
+{
+    inv->gradus = SONUS_INVOLUCRUM_IMPETUS;
+    inv->passus = _passus_involucri(inv->forma.impetus, 1.0f);
+}
+
+vacuum
+sonus_involucrum_claudere (
+    SonusInvolucrum* inv)
+{
+    si (inv->gradus == SONUS_INVOLUCRUM_QUIESCIT)
+    {
+        redde;
+    }
+    si (inv->valor <= 0.0f)
+    {
+        inv->valor   = 0.0f;
+        inv->gradus  = SONUS_INVOLUCRUM_QUIESCIT;
+        redde;
+    }
+    inv->gradus = SONUS_INVOLUCRUM_REMISSIO;
+    inv->passus = _passus_involucri(inv->forma.remissio, inv->valor);
+}
+
+f32
+sonus_involucrum_proximum (
+    SonusInvolucrum* inv)
+{
+    commutatio (inv->gradus)
+    {
+        casus SONUS_INVOLUCRUM_IMPETUS:
+            inv->valor += inv->passus;
+            si (inv->valor >= 1.0f)
+            {
+                inv->valor   = 1.0f;
+                inv->gradus  = SONUS_INVOLUCRUM_LAPSUS;
+                inv->passus = _passus_involucri(inv->forma.lapsus,
+                                                1.0f
+                                                    - inv->forma.tenor);
+            }
+            frange;
+        casus SONUS_INVOLUCRUM_LAPSUS:
+            inv->valor -= inv->passus;
+            si (inv->valor <= inv->forma.tenor)
+            {
+                inv->valor   = inv->forma.tenor;
+                inv->gradus  = SONUS_INVOLUCRUM_TENOR;
+            }
+            frange;
+        casus SONUS_INVOLUCRUM_TENOR:
+            inv->valor = inv->forma.tenor;
+            frange;
+        casus SONUS_INVOLUCRUM_REMISSIO:
+            inv->valor -= inv->passus;
+            si (inv->valor <= 0.0f)
+            {
+                inv->valor   = 0.0f;
+                inv->gradus  = SONUS_INVOLUCRUM_QUIESCIT;
+            }
+            frange;
+        casus SONUS_INVOLUCRUM_QUIESCIT:
+        ordinarius:
+            inv->valor = 0.0f;
+            frange;
+    }
+    redde inv->valor;
+}
+
+b32
+sonus_involucrum_quiescit (
+    constans SonusInvolucrum* inv)
+{
+    redde inv->gradus == SONUS_INVOLUCRUM_QUIESCIT;
+}
+
+
+    /* ==================================================
+     * COLUM: y += a (x - y), a = 1 - e^(-2 pi fc / fs)
+     * ================================================== */
+
+vacuum
+sonus_colum_parare (
+        SonusColum* c,
+    SonusGenusColi  genus,
+               f32  frequentia)
+{
+    c->genus    = genus;
+    c->memoria  = 0.0f;
+    sonus_colum_frequentiam_ponere(c, frequentia);
+}
+
+vacuum
+sonus_colum_frequentiam_ponere (
+    SonusColum* c,
+           f32  frequentia)
+{
+    f64 f;
+
+    si (frequentia <= 0.0f)
+    {
+        c->coefficiens = 0.0f;
+        redde;
+    }
+    f = (f64)_coercere(frequentia, 0.0f, (f32)SONUS_FREQUENTIA / 2.0f);
+    c->coefficiens = (f32)(1.0 - exp(-SONUS_DUO_PI * f
+                                     / (f64)SONUS_FREQUENTIA));
+}
+
+f32
+sonus_colum_proximum (
+    SonusColum* c,
+           f32  x)
+{
+    si (c->coefficiens == 0.0f)
+    {
+        redde x;
+    }
+    c->memoria += c->coefficiens * (x - c->memoria);
+    si (c->genus == SONUS_COLUM_ACUTA)
+    {
+        redde x - c->memoria;
+    }
+    redde c->memoria;
+}
+
+
+    /* ==================================================
+     * RESONANS
+     * ================================================== */
+
+vacuum
+sonus_resonans_parare (
+           SonusResonans* c,
+    SonusGenusResonantis  genus,
+                     f32  frequentia,
+                     f32  acumen)
+{
+    c->genus  = genus;
+    c->x1     = 0.0f;
+    c->x2     = 0.0f;
+    c->y1     = 0.0f;
+    c->y2     = 0.0f;
+    sonus_resonans_ponere(c, frequentia, acumen);
+}
+
+vacuum
+sonus_resonans_ponere (
+    SonusResonans* c,
+              f32  frequentia,
+              f32  acumen)
+{
+    f64 w;
+    f64 cw;
+    f64 alpha;
+    f64 a0;
+    f64 q = acumen > 0.0f ? (f64)acumen : 0.70710678118654752;
+
+    si (frequentia <= 0.0f)
+    {
+        c->b0 = 1.0f;
+        c->b1 = 0.0f;
+        c->b2 = 0.0f;
+        c->a1 = 0.0f;
+        c->a2 = 0.0f;
+        redde;
+    }
+    /* sub Nyquist coercitum (w = pi degenerat) */
+    w      = SONUS_DUO_PI * (f64)_coercere(frequentia, 1.0f,
+             0.49f * (f32)SONUS_FREQUENTIA) / (f64)SONUS_FREQUENTIA;
+    cw     = cos(w);
+    alpha  = sin(w) / (2.0 * q);
+    a0     = 1.0 + alpha;
+    si (c->genus == SONUS_RESONANS_MEDIA)
+    {
+        c->b0 = (f32)(alpha / a0);
+        c->b1 = 0.0f;
+        c->b2 = (f32)(-alpha / a0);
+    }
+    alioquin si (c->genus == SONUS_RESONANS_ACUTA)
+    {
+        c->b0 = (f32)((1.0 + cw) / 2.0 / a0);
+        c->b1 = (f32)(-(1.0 + cw) / a0);
+        c->b2 = c->b0;
+    }
+    alioquin
+    {
+        c->b0 = (f32)((1.0 - cw) / 2.0 / a0);
+        c->b1 = (f32)((1.0 - cw) / a0);
+        c->b2 = c->b0;
+    }
+    c->a1 = (f32)(-2.0 * cw / a0);
+    c->a2 = (f32)((1.0 - alpha) / a0);
+}
+
+f32
+sonus_resonans_proximum (
+    SonusResonans* c,
+              f32  x)
+{
+    f32 y = c->b0 * x + c->b1 * c->x1 + c->b2 * c->x2
+          - c->a1 * c->y1 - c->a2 * c->y2;
+
+    c->x2 = c->x1;
+    c->x1 = x;
+    c->y2 = c->y1;
+    c->y1 = y;
+    redde y;
+}
+
+
+    /* ==================================================
+     * REVERBERATIO
+     * ================================================== */
+
+/* morae Freeverb ad 44.1 kHz (Jezar): pectines, allpass, et
+ * extensio stereo canalis dextri */
+hic_manens constans i32 MORAE_PECTINUM[SONUS_REVERBERATIO_PECTINES] = {
+    1116U, 1188U, 1277U, 1356U, 1422U, 1491U, 1557U, 1617U
+};
+hic_manens constans i32 MORAE_TRANSITUUM[SONUS_REVERBERATIO_TRANSITUS] =
+    {
+    556U, 441U, 341U, 225U
+};
+#define SONUS_EXTENSIO_DEXTRA XXIII
+#define SONUS_LUCRUM_INGRESSUS 0.015f   /* Freeverb 'fixedgain' */
+
+/* mora ad SONUS_FREQUENTIA scalata, ad lineam coercita */
+interior i32
+_mora_scalata (
+    i32 mora,
+    i32 maxima)
+{
+    i32 n = (i32)((f64)mora * (f64)SONUS_FREQUENTIA / 44100.0 + 0.5);
+
+    redde n > maxima ? maxima : (n < I ? I : n);
+}
+
+vacuum
+sonus_reverberationem_parare (
+                   SonusReverberatio* r,
+     constans SonusReverberatioForma* forma)
+{
+    i32 c;
+    i32 k;
+
+    memset(r, ZEPHYRUM, magnitudo(SonusReverberatio));
+    per (c = ZEPHYRUM; c < II; c++)
+    {
+        per (k = ZEPHYRUM; k < SONUS_REVERBERATIO_PECTINES; k++)
+        {
+            r->pectines[c][k].longitudo = _mora_scalata(
+                MORAE_PECTINUM[k] + c * SONUS_EXTENSIO_DEXTRA,
+                SONUS_PECTEN_MAXIMUS);
+        }
+        per (k = ZEPHYRUM; k < SONUS_REVERBERATIO_TRANSITUS; k++)
+        {
+            r->transitus[c][k].longitudo = _mora_scalata(
+                MORAE_TRANSITUUM[k] + c * SONUS_EXTENSIO_DEXTRA,
+                SONUS_TRANSITUS_MAXIMUS);
+        }
+    }
+    sonus_reverberationem_ponere(r, forma);
+}
+
+/* Freeverb: retro = 0.7 + 0.28 aula (aula 1 -> 0.98, stabilis),
+ * hebetatio = 0.4 mollities; latitudo miscet canales */
+vacuum
+sonus_reverberationem_ponere (
+                   SonusReverberatio* r,
+     constans SonusReverberatioForma* forma)
+{
+    f32 aula       = _coercere(forma->aula, 0.0f, 1.0f);
+    f32 mollities  = _coercere(forma->mollities, 0.0f, 1.0f);
+    f32 latitudo   = _coercere(forma->latitudo, 0.0f, 1.0f);
+
+    r->retro            = 0.7f + 0.28f * aula;
+    r->hebetatio        = 0.4f * mollities;
+    r->umidum_proprium  = 0.5f + 0.5f * latitudo;
+    r->umidum_alienum   = 0.5f - 0.5f * latitudo;
+}
+
+vacuum
+sonus_reverberationis_proximum (
+    SonusReverberatio* r,
+                  f32  ingressus,
+                  f32* sinistrum,
+                  f32* dextrum)
+{
+    f32 x = ingressus * SONUS_LUCRUM_INGRESSUS;
+    f32 exitus[II];
+    i32 c;
+    i32 k;
+
+    per (c = ZEPHYRUM; c < II; c++)
+    {
+        f32 y = 0.0f;
+
+        /* pectines paralleli: linea per filtrum hebetationis redit */
+        per (k = ZEPHYRUM; k < SONUS_REVERBERATIO_PECTINES; k++)
+        {
+             SonusPecten* p       = &r->pectines[c][k];
+                     f32  lectum  = p->linea[p->locus];
+
+            p->memoria = lectum * (1.0f - r->hebetatio)
+                       + p->memoria * r->hebetatio;
+            /* subnormalia vitantur (cauda longa) */
+            si (p->memoria < 1.0e-25f && p->memoria > -1.0e-25f)
+            {
+                p->memoria = 0.0f;
+            }
+            p->linea[p->locus] = x + p->memoria * r->retro;
+            p->locus = p->locus + I == p->longitudo ? ZEPHYRUM
+                                                    : p->locus + I;
+            y += lectum;
+        }
+        /* allpass in serie (retro 0.5) */
+        per (k = ZEPHYRUM; k < SONUS_REVERBERATIO_TRANSITUS; k++)
+        {
+             SonusTransitus* t       = &r->transitus[c][k];
+                        f32  lectum  = t->linea[t->locus];
+
+            t->linea[t->locus] = y + lectum * 0.5f;
+            t->locus = t->locus + I == t->longitudo ? ZEPHYRUM
+                                                    : t->locus + I;
+            y = lectum - y;
+        }
+        exitus[c] = y;
+    }
+    *sinistrum  = exitus[ZEPHYRUM] * r->umidum_proprium
+                + exitus[I] * r->umidum_alienum;
+    *dextrum    = exitus[I] * r->umidum_proprium
+                + exitus[ZEPHYRUM] * r->umidum_alienum;
+}
+
+
+    /* ==================================================
+     * RETENTIO et COMMINUTIO
+     * ================================================== */
+
+vacuum
+sonus_retentio_parare (
+    SonusRetentio* r,
+              i32  spatium)
+{
+    r->spatium  = spatium;
+    r->reliqua  = ZEPHYRUM;
+    r->valor    = 0.0f;
+}
+
+f32
+sonus_retentio_proximum (
+    SonusRetentio* r,
+              f32  x)
+{
+    si (r->spatium < II)
+    {
+        redde x;
+    }
+    si (r->reliqua == ZEPHYRUM)
+    {
+        r->valor    = x;
+        r->reliqua  = r->spatium;
+    }
+    r->reliqua--;
+    redde r->valor;
+}
+
+f32
+sonus_comminuere (
+    f32 x,
+    i32 gradus)
+{
+    f32 dimidium;
+
+    si (gradus < II)
+    {
+        redde x;
+    }
+    dimidium = (f32)gradus / 2.0f;
+    redde (f32)floor((f64)(x * dimidium) + 0.5) / dimidium;
+}
+
+
+    /* ==================================================
+     * ALTITUDO
+     * ================================================== */
+
+f32
+sonus_ratio_semitoniorum (
+    f32 semitonia)
+{
+    redde (f32)pow(2.0, (f64)semitonia / 12.0);
+}
+
+f32
+sonus_notae_frequentia (
+    f32 nota)
+{
+    redde 440.0f * sonus_ratio_semitoniorum(nota - 69.0f);
+}

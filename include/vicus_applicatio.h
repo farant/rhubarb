@@ -24,6 +24,7 @@
 #include "vicus.h"
 #include "imago.h"
 #include "vicus_quaestio.h"   /* porta $question (typi) */
+#include "vicus_sonus.h"      /* porta soni (typi) */
 
 nomen structura {
                 Piscina* piscina;
@@ -36,6 +37,9 @@ nomen structura {
                  vacuum* quaestionis; /* $question: contextus (opacus) -
                                        * porta quaestionis */
                  vacuum* admonitionum; /* T4a: contextus (opacus) */
+                 vacuum* soni;         /* sonus S4: contextus opacus */
+                 vacuum* scribae;      /* contextus scribae (opacus) -
+                                        * porta textus */
 } VicusApplicatio;
 
 
@@ -68,6 +72,16 @@ vicus_applicatio_imaginis_portam_ponere (
         ImagoFructus (*porta)(vacuum* ctx, Piscina* piscina),
               vacuum* ctx);
 
+/* porta textus (2026-10-22): registrum scribae scriptum (yy, y, dd)
+ * -> clipboard systematis, omnium laterum scribae (etiam iam
+ * montatorum) - NIHIL = nulla (gemellus terminalis, probationes);
+ * applicatio fenestrae clipboard_textum_ponere ponit */
+vacuum
+vicus_applicatio_textus_portam_ponere (
+     VicusApplicatio* app,
+                 b32 (*porta)(vacuum* ctx, chorda textus),
+              vacuum* ctx);
+
 /* T4a (colloquia-plan): fontes libri praeconii (via; applicationes
  * praeconium_via dant) - sequax admonitionum (systema 'admonitiones'
  * in pulsu) et T5 fons sessionum (lateribus $sessions visibilibus
@@ -85,11 +99,34 @@ vicus_applicatio_admonitiones_aperire (
         VicusApplicatio* app,
      constans character* via);
 
+/* CLAUDERE (2026-10-26): fons colloquiorum finitur (quaestio mensoris
+ * pendens abrumpitur, piscinae destruuntur) - vocator qui aperuit
+ * claudit (probationes in purgatione sectionis). Non aperta: nihil.
+ * Post claudere iterum aperiri potest. */
+vacuum
+vicus_applicatio_admonitiones_claudere (
+    VicusApplicatio* app);
+
 /* porta NIHIL = nulla; copia servatur */
 vacuum
 vicus_applicatio_quaestionis_portam_ponere (
                    VicusApplicatio* app,
     constans VicusPortaQuaestionis* porta);
+
+/* sonus S4: porta soni (vicus_sonus.h) - NIHIL = nulla (silentium);
+ * copia servatur. '$sound' (mutus totus) et '$sound(notifications)'
+ * (admonitiones solae) campos radicis sonus_mutus et
+ * sonus_admonitionum_mutus (persistentes) vertunt, etiam sine porta.
+ * Admonitio nova (systema 'admonitiones') genus recentissimae pulsat
+ * nisi muta; systema 'sonus' omni pulsu mutum factum tacet, deinde
+ * agit. Eventus 'cantus' libri praeconii (praeco cantus: nuntius =
+ * MML, genus "intactus" aut vacuum) recentissimus canitur, nisi mutus
+ * QUILIBET; cum admonitione nova eodem pulsu, ordine temporis
+ * (posterior vincit). */
+vacuum
+vicus_applicatio_soni_portam_ponere (
+            VicusApplicatio* app,
+    constans VicusPortaSoni* porta);
 
 /* textus planatus -> lineae paginae latitudinis w intra l lineas
  * ("<answer>" ... "</>", margines, praecisio ad finem sententiae), '\n'

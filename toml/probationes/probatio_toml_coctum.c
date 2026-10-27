@@ -373,39 +373,39 @@ _visor (
  * Principale
  * ================================================== */
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * Valida: valores per viam
+ * ================================================== */
+
+interior vacuum
+_valida_probare (
+    CredoContextus* c)
 {
-                    b32  praeteritus;
-                Piscina* piscina;
-                Piscina* opus;
-     constans character* radix = lectiones_ambitus("RHUBARB_RADIX");
+               Piscina* opus;
+    constans character* radix = lectiones_ambitus("RHUBARB_RADIX");
+    (vacuum)c;
 
-    piscina = piscina_generare_dynamicum("probatio_toml_coctum",
-        262144);
-    opus    = piscina_generare_dynamicum("probatio_toml_coctum_opus",
-        1048576);
-    si (!piscina || !opus)
+    si (radix == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        radix = ".";
     }
-    credo_aperire(piscina);
-
-
-    /* ==================================================
-     * Valida: valores per viam
-     * ================================================== */
-
+    opus = piscina_generare_dynamicum("probatio_toml_coctum_opus",
+        1048576);
+    si (opus == NIHIL)
+    {
+        redde;
+    }
     {
         i32 k;
 
-        imprimere("\n--- Probans valida ---\n");
         per (k = ZEPHYRUM; VALIDA[k].fons != NIHIL; k++)
         {
-                    TomlCoctum  c = _coquere(opus, VALIDA[k].fons);
-            constans TomlValor* v = _quaerere(c.radix, VALIDA[k].via);
-                           b32  bene = c.sanum && v != NIHIL
+                    TomlCoctum compositus = _coquere(opus,
+                        VALIDA[k].fons);
+            constans TomlValor* v = _quaerere(compositus.radix,
+                VALIDA[k].via);
+                           b32 bene = compositus.sanum && v != NIHIL
                                && v->genus == TOML_VALOR_INTEGER
                                && v->datum.integer_valor
                                  == VALIDA[k].valor;
@@ -413,71 +413,112 @@ principale (vacuum)
             si (!bene)
             {
                 imprimere("    casus %u (%s): sanum %d, valor %s\n", k,
-                    VALIDA[k].via, (integer)c.sanum,
+                    VALIDA[k].via, (integer)compositus.sanum,
                     v == NIHIL ? "NIHIL" : "alius");
-                _diagnostica_imprimere(&c);
+                _diagnostica_imprimere(&compositus);
             }
             CREDO_VERUM (bene);
             piscina_vacare(opus);
         }
     }
+    piscina_destruere(opus);
+}
 
 
-    /* ==================================================
-     * Modi, genera, definitiones
-     * ================================================== */
+/* ==================================================
+ * Modi, genera, definitiones
+ * ================================================== */
 
+interior vacuum
+_modos_probare (
+    CredoContextus* c)
+{
+               Piscina* opus;
+    constans character* radix = lectiones_ambitus("RHUBARB_RADIX");
+    (vacuum)c;
+
+    si (radix == NIHIL)
     {
-                TomlCoctum  c;
+        radix = ".";
+    }
+    opus = piscina_generare_dynamicum("probatio_toml_coctum_opus",
+        1048576);
+    si (opus == NIHIL)
+    {
+        redde;
+    }
+    {
+                TomlCoctum  compositus;
         constans TomlValor* v;
 
-        imprimere("\n--- Probans modos tabularum ---\n");
-        c = _coquere(opus, "a.b = 1\n[x.y]\n[[s]]\ni = {k = 1}\n");
-        CREDO_VERUM (c.sanum);
-        v = _quaerere(c.radix, "a");
+        compositus = _coquere(opus,
+            "a.b = 1\n[x.y]\n[[s]]\ni = {k = 1}\n");
+        CREDO_VERUM (compositus.sanum);
+        v = _quaerere(compositus.radix, "a");
         CREDO_NON_NIHIL (v);
         CREDO_AEQUALIS_S32 ((s32)v->datum.tabula.modus,
             (s32)TOML_TABULA_PUNCTATA);
-        v = _quaerere(c.radix, "x");
+        v = _quaerere(compositus.radix, "x");
         CREDO_AEQUALIS_S32 ((s32)v->datum.tabula.modus,
             (s32)TOML_TABULA_IMPLICITA);
-        v = _quaerere(c.radix, "x.y");
+        v = _quaerere(compositus.radix, "x.y");
         CREDO_AEQUALIS_S32 ((s32)v->datum.tabula.modus,
             (s32)TOML_TABULA_EXPLICITA);
-        v = _quaerere(c.radix, "s");
+        v = _quaerere(compositus.radix, "s");
         CREDO_AEQUALIS_S32 ((s32)v->genus, (s32)TOML_VALOR_SERIES);
         CREDO_VERUM (v->series_tabularum);
-        v = _quaerere(c.radix, "s#0.i");
+        v = _quaerere(compositus.radix, "s#0.i");
         CREDO_AEQUALIS_S32 ((s32)v->datum.tabula.modus,
             (s32)TOML_TABULA_INLINEA);
         CREDO_NON_NIHIL (v->nodus);
         CREDO_NON_NIHIL (v->definitio);
-        v = _quaerere(c.radix, "a.b");
+        v = _quaerere(compositus.radix, "a.b");
         CREDO_NON_NIHIL (v->nodus);
         CREDO_NON_NIHIL (v->definitio);
         piscina_vacare(opus);
     }
+    piscina_destruere(opus);
+}
 
 
-    /* ==================================================
-     * Ordo clavium = ordo fontis
-     * ================================================== */
+/* ==================================================
+ * Ordo clavium = ordo fontis
+ * ================================================== */
 
+interior vacuum
+_ordinem_probare (
+    CredoContextus* c)
+{
+               Piscina* opus;
+    constans character* radix = lectiones_ambitus("RHUBARB_RADIX");
+    (vacuum)c;
+
+    si (radix == NIHIL)
     {
-                TomlCoctum  c;
+        radix = ".";
+    }
+    opus = piscina_generare_dynamicum("probatio_toml_coctum_opus",
+        1048576);
+    si (opus == NIHIL)
+    {
+        redde;
+    }
+    {
+                TomlCoctum  compositus;
         constans character* EXSPECTATAE[] = { "z", "a", "m", "a.b" };
                        i32  k;
 
-        imprimere("\n--- Probans ordinem clavium ---\n");
-        c = _coquere(opus, "z = 1\na = 2\nm = 3\n\"a.b\" = 4\n");
-        CREDO_VERUM (c.sanum);
-        CREDO_AEQUALIS_I32 (xar_numerus(c.radix->datum.tabula.claves),
+        compositus = _coquere(opus,
+            "z = 1\na = 2\nm = 3\n\"a.b\" = 4\n");
+        CREDO_VERUM (compositus.sanum);
+        CREDO_AEQUALIS_I32 (xar_numerus(compositus.radix->datum.tabula.claves),
             IV);
         per (k = ZEPHYRUM; k < IV
-             && k < xar_numerus(c.radix->datum.tabula.claves); k++)
+             && k
+                 < xar_numerus(compositus.radix->datum.tabula.claves); k++)
         {
             chorda* cl = (chorda*)xar_obtinere(
-                c.radix->datum.tabula.claves, k);
+                compositus.radix->datum.tabula.claves, k);
 
             CREDO_AEQUALIS_I32 (cl->mensura,
                 (i32)strlen(EXSPECTATAE[k]));
@@ -486,33 +527,50 @@ principale (vacuum)
         }
         piscina_vacare(opus);
     }
+    piscina_destruere(opus);
+}
 
 
-    /* ==================================================
-     * Vitia structurae: codex, sedes, sedes relata
-     * ================================================== */
+/* ==================================================
+ * Vitia structurae: codex, sedes, sedes relata
+ * ================================================== */
 
+interior vacuum
+_vitia_probare (
+    CredoContextus* c)
+{
+    Piscina* opus;
+    (vacuum)c;
+
+    opus = piscina_generare_dynamicum("probatio_toml_coctum_opus",
+        1048576);
+    si (opus == NIHIL)
+    {
+        redde;
+    }
     {
         i32 k;
 
-        imprimere("\n--- Probans vitia structurae ---\n");
         per (k = ZEPHYRUM; VITIA[k].fons != NIHIL; k++)
         {
-             constans CasusVitii* cv  = &VITIA[k];
-                      TomlCoctum  c   = _coquere(opus, cv->fons);
-                             i32  n   = xar_numerus(c.diagnostica);
-                             b32  bene;
+             constans CasusVitii* cv = &VITIA[k];
+                      TomlCoctum  compositus = _coquere(opus,
+                          cv->fons);
+                             i32 n =
+                                 xar_numerus(compositus.diagnostica);
+                             b32 bene;
 
-            bene = !c.sanum && n == I
-                && strcmp(_diagnosticum(c.diagnostica, ZEPHYRUM)->codex,
+            bene = !compositus.sanum && n == I
+                && strcmp(_diagnosticum(compositus.diagnostica,
+                ZEPHYRUM)->codex,
                     cv->codex) == ZEPHYRUM
-                && _diagnosticum(c.diagnostica,
+                && _diagnosticum(compositus.diagnostica,
                 ZEPHYRUM)->tractus.initium
                     == cv->initium;
             si (bene && cv->relatum >= ZEPHYRUM)
             {
                 constans MateriaDiagnosticum* d =
-                    _diagnosticum(c.diagnostica, ZEPHYRUM);
+                    _diagnosticum(compositus.diagnostica, ZEPHYRUM);
 
                 bene = d->numerus_relatorum == I
                     && d->relata[ZEPHYRUM].tractus.initium
@@ -524,20 +582,40 @@ principale (vacuum)
                     k,
                     cv->fons, cv->codex, (integer)cv->initium,
                     (integer)cv->relatum);
-                _diagnostica_imprimere(&c);
+                _diagnostica_imprimere(&compositus);
             }
             CREDO_VERUM (bene);
             piscina_vacare(opus);
         }
     }
+    piscina_destruere(opus);
+}
 
 
-    /* ==================================================
-     * Omnia errata simul, per initium ordinata
-     * ================================================== */
+/* ==================================================
+ * Omnia errata simul, per initium ordinata
+ * ================================================== */
 
+interior vacuum
+_errata_probare (
+    CredoContextus* c)
+{
+               Piscina* opus;
+    constans character* radix = lectiones_ambitus("RHUBARB_RADIX");
+    (vacuum)c;
+
+    si (radix == NIHIL)
     {
-                TomlCoctum  c;
+        radix = ".";
+    }
+    opus = piscina_generare_dynamicum("probatio_toml_coctum_opus",
+        1048576);
+    si (opus == NIHIL)
+    {
+        redde;
+    }
+    {
+                TomlCoctum  compositus;
         constans character* CODICES[] = { TOML_CODEX_CLAVIS_ITERATA,
             TOML_CODEX_EXTRA_FINES, "malum" };
         s32 INITIA[III];
@@ -546,39 +624,59 @@ principale (vacuum)
         INITIA[ZEPHYRUM]  = VI;
         INITIA[I]         = XVI;
         INITIA[II]        = XL;
-        imprimere("\n--- Probans errata omnia ---\n");
-        c = _coquere(opus,
+        compositus = _coquere(opus,
             "a = 1\na = 2\nb = 9223372036854775808\nc = ?\n");
-        CREDO_FALSUM (c.sanum);
-        CREDO_AEQUALIS_I32 (xar_numerus(c.diagnostica), III);
-        si (xar_numerus(c.diagnostica) != III)
+        CREDO_FALSUM (compositus.sanum);
+        CREDO_AEQUALIS_I32 (xar_numerus(compositus.diagnostica), III);
+        si (xar_numerus(compositus.diagnostica) != III)
         {
-            _diagnostica_imprimere(&c);
+            _diagnostica_imprimere(&compositus);
         }
         per (k = ZEPHYRUM; k < III
-            && k < xar_numerus(c.diagnostica); k++)
+            && k < xar_numerus(compositus.diagnostica); k++)
         {
-            CREDO_VERUM (strcmp(_diagnosticum(c.diagnostica, k)->codex,
+            CREDO_VERUM (strcmp(_diagnosticum(compositus.diagnostica,
+                k)->codex,
                 CODICES[k]) == ZEPHYRUM);
             CREDO_AEQUALIS_S32 (
-                _diagnosticum(c.diagnostica, k)->tractus.initium,
+                _diagnosticum(compositus.diagnostica,
+                k)->tractus.initium,
                 INITIA[k]);
         }
         /* documentum cum vitiis tamen coquitur */
-        CREDO_NON_NIHIL (_quaerere(c.radix, "a"));
+        CREDO_NON_NIHIL (_quaerere(compositus.radix, "a"));
         piscina_vacare(opus);
     }
+    piscina_destruere(opus);
+}
 
 
-    /* ==================================================
-     * Corpora
-     * ================================================== */
+/* ==================================================
+ * Corpora
+ * ================================================== */
 
+interior vacuum
+_corpora_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+               Piscina* opus;
+    constans character* radix = lectiones_ambitus("RHUBARB_RADIX");
+
+    si (radix == NIHIL)
+    {
+        radix = ".";
+    }
+    opus = piscina_generare_dynamicum("probatio_toml_coctum_opus",
+        1048576);
+    si (opus == NIHIL)
+    {
+        redde;
+    }
     {
                   Status st;
         TomlCorpusNumeri nn;
 
-        imprimere("\n--- Probans corpora ---\n");
         memset(&st, ZEPHYRUM, magnitudo(st));
         toml_corpus_ambulare(piscina, opus, radix
             != NIHIL ? radix : ".",
@@ -598,11 +696,27 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (st.domus_sana, st.domus);
         CREDO_AEQUALIS_I32 (st.ordo_ruptus, ZEPHYRUM);
     }
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(opus);
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "valida: valores per viam", _valida_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "modi, genera, definitiones", _modos_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ordo clavium = ordo fontis", _ordinem_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "vitia structurae: codex, sedes, sedes relata", _vitia_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "omnia errata simul, per initium ordinata", _errata_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "corpora", _corpora_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("toml_coctum", SECTIONES);
 }

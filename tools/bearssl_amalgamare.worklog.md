@@ -38,3 +38,37 @@ walk itself is ledgered as tool debt.
 FABRICA_SCRIPTURA honoured (inputs from the tree, outputs under the
 scratch root) - without it fabrica judged IGNOTUM "generator nihil
 scripsit".
+
+## 2026-10-17 - complete inputs, memorabilis (81 s off every plenus judge)
+
+The generata gate spent 81 of its 157 s regenerating this action: it was
+not `memorabilis`, so `iudicare -plenus` re-ran it every time. It could
+not simply be marked: its declared `plagulae vendor/bearssl/src` covers
+directory LEVEL 0 only (3 files), while `os.walk` reads 293 more in 12
+subdirectories - the input key ignored them (shown with `bin/fabrica
+digestum` before the fix: an edit in src/ssl/ and a new subdirectory
+left the key unchanged). Now each subdirectory is a `plagulae` input,
+`directorium vendor/bearssl/src` covers the names, and the action is
+`memorabilis="verum"`. Measured: judge 65 s -> 5 s ("memoria"); an edit
+in src/ssl/ -> STALUM (regenerated, differs). A NEW subdirectory would
+change the key only once and then hide its contents again, so the
+generator now refuses unless src's subdirectories are exactly the
+declared twelve (SUBDIRECTORIA) and src is one level deep - output
+byte-identical. A general fix is an `arbor` input kind (whole tree by
+suffix; FABRICA_LOCUS_ARBOR exists) - parked.
+
+## 2026-10-23 — per-source name cache (62 s → 0.15 s)
+
+The full memorabilis audit (`GENERATA_AUDITUS=1`) spent 62 of its ~144 s here. It runs `clang -fsyntax-only -Xclang -ast-dump=json` on all ~290 sources (already in a thread pool) and parses the whole JSON AST just to collect each file's own top-level names.
+
+`nomina_interiora` now goes through `build/bearssl_amalgama_promptuarium/<sha256>.json`. The key covers:
+- the source's bytes;
+- every `.h` under vendor/bearssl (header macros can create definitions);
+- the clang arguments with RELATIVE paths, so worktrees share entries;
+- `clang --version`.
+
+Writes are atomic (temp + `os.replace`, since thread-pool callers race). The cache lives in the real tree, not under FABRICA_SCRIPTURA, so scratch regenerations reuse it. It is declared as the action's vestigium.
+
+**Measured:** cold 56 s, warm 0.15 s, both byte-identical to the committed amalgam.
+
+**Plant:** `static int planta_promptuarii;` appended to src/codec/ccopy.c → only that file recomputed (0.38 s) and the name appears in the amalgam. Restored → byte-identical.

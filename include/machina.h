@@ -92,17 +92,47 @@ machina_identitas_ex_fonte (
             Piscina* piscina);
 
 /*
+ * machina_identitas_ex_plagula - Identitas PERSISTENS in plagula
+ *
+ * Fons ubi systema nullum praebet (Android: nec gethostuuid nec
+ * /etc/machine-id - android-gradus T4, Franus 2026-10-23). Idem quod
+ * /etc/machine-id Linux EST: fortuitum SEMEL scriptum, deinde lectum.
+ *
+ *   'via' abest -> sub sera (via + ".sera") XVI octeti fortuiti
+ *   (moneta_octeti_fortuiti, sine reservo) ut XXXII litterae hex in
+ *   plagulam temporariam, modus 0600, deinde renominatio atomica.
+ *   'via' adest -> legitur.
+ *   Plagula praesens sed brevior XVI octetis -> chorda VACUA et
+ *   plagula NUMQUAM rescribitur: identitas mutata acta machinarum
+ *   confunderet (RECUSAT supra).
+ *
+ * Directorium plagulae vocans praebet. Redde: XVI litterae hex (per
+ * machina_identitas_ex_fonte), aut vacua (via NIHIL, fortuita absentia,
+ * scriptura fracta, plagula curta).
+ */
+chorda
+machina_identitas_ex_plagula (
+    constans character* via,
+               Piscina* piscina);
+
+/*
  * machina_identitas - Identitas huius machinae
  *
  * Scala fontium (primus qui respondet vincit):
- *   I.  macOS: gethostuuid()
- *   II. Linux: /etc/machine-id
+ *   I.   macOS: gethostuuid()
+ *   II.  Android: $HOME/.rhubarb/machina (machina_identitas_ex_plagula;
+ *        cursor tabulae HOME radicem suam ponit, applicatio
+ *        directorium suum privatum - identitas = haec institutio)
+ *   II'. iOS: $HOME/Library/.rhubarb/machina (idem; HOME =
+ *        receptaculum applicationis, Library/ servatur; testa-ios R2)
+ *   III. Linux: /etc/machine-id
  *
- * Neuter praesto? Chorda VACUA - vide RECUSAT supra.
+ * Nullus praesto (Android sine HOME quoque)? Chorda VACUA - vide
+ * RECUSAT supra.
  *
  * Stabilis per cursus, per reboot, per renovationes systematis.
- * Nullam plagulam status scribit, ergo nec perire nec divergere
- * potest.
+ * macOS et Linux nullam plagulam status scribunt; Android et iOS
+ * plagulam unam semel scribunt, deinde solum legunt.
  */
 chorda
 machina_identitas (

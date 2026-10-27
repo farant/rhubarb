@@ -5,13 +5,25 @@
 #include "scriba_applicatio.h"
 #include "terminale.h"
 #include "kalendarium.h"
+#include "conspectus_dies.h"
+#include "calendarium_liturgicum.h"
 #include "nomenclator.h"
 #include "iussum.h"
 #include "admonitiones_visus.h"
 #include "admonitiones_volantes.h"
 #include "colloquia_visus.h"
+#include "sancti_visus.h"
+#include "lector.h"
+#include "lectiones.h"
+#include "indagatio.h"
+#include "indagatio_genera.h"
+#include "indagatio_visus.h"
 #include "multiplexor.h"
+#include "fenestra_tempus.h"
+#include "praeconium.h"
+#include "aetherophonum.h"
 #include "filum.h"
+#include "specula.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -49,10 +61,44 @@
 nomen structura {
         ScribaLiber* liber;
     IussumRegistrum* iussa;
+    /* comites P2: libri comites aperti (praefixum -> ScribaLiber*) */
+      TabulaDispersa* libri;
+    /* lector L5: comites pigri (praefixum -> ComesPendens*) */
+      TabulaDispersa* pendentes;
+             Piscina* piscina;
+ InternamentumChorda* intern;
+             Volumen* volumen;
+                 i32  latitudo;
+                 i32  altitudo;
     /* status-plan S6b: systemata repositorii vici, communia cum
      * contextu pictoris (S7b: vicus_aperire ea creat) */
     StatusSystemata* systemata;
+    /* porta textus (registrum -> clipboard systematis); NIHIL nulla */
+                 b32 (*porta_textus)(vacuum* ctx, chorda textus);
+              vacuum* porta_textus_ctx;
 } ContextusScribae;
+
+/* lector L5: comes piger - nota (titulus, semita ultima) servatur donec
+ * liber nascitur (scriptura prima), tum scribitur */
+nomen structura {
+    ContextusScribae* cs;
+              chorda  praefixum;
+              chorda  titulus;
+              chorda  semita;
+} ComesPendens;
+
+/* porta textus per contextum (posita etiam post montationem) */
+interior b32
+textum_scribae_exportare (
+     vacuum* ctx,
+     chorda  textus)
+{
+    ContextusScribae* cs;
+
+    cs = (ContextusScribae*)ctx;
+    redde cs && cs->porta_textus
+        && cs->porta_textus(cs->porta_textus_ctx, textus);
+}
 
 /* S3b: '$dies' -> dies hodiernus "MM/DD/YYYY" (forma concha vetus;
  * consumens, ut prunifex). S3b-2: '$dies(N)' = N dies ab hodie
@@ -855,6 +901,362 @@ aperiens_fixum_registrare (
     redde iussum_registrare(r, verbum, FALSUM, aperire_iussum, ca);
 }
 
+/* semitae R3: organa vici (genus -> manifestum infixum cum basi),
+ * cache per genus; SemitaOrganum vici et $via */
+nomen structura {
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                    Xar* genera;      /* chorda */
+                    Xar* organa;      /* constans Organum* */
+} ContextusOrganorum;
+
+interior constans Organum*
+organa_vici (
+     vacuum* ctx,
+     chorda  genus)
+{
+    ContextusOrganorum* co;
+      constans Organum* o;
+                   i32  i;
+
+    co = (ContextusOrganorum*)ctx;
+    si (!co || genus.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(co->genera); i++)
+    {
+        si (chorda_aequalis(*(chorda*)xar_obtinere(co->genera, i),
+            genus))
+        {
+            redde *(constans Organum**)xar_obtinere(co->organa, i);
+        }
+    }
+    o = organum_legere_genus(co->piscina, co->intern, chorda_ut_cstr(
+        genus, co->piscina), "vicus");
+    si (o)
+    {
+        *(chorda*)xar_addere(co->genera) = chorda_transcribere(genus,
+            co->piscina);
+        *(constans Organum**)xar_addere(co->organa) = o;
+    }
+    redde o;
+}
+
+/* genus campos semitae habet? */
+interior b32
+semitas_accipit (
+    constans Organum* o)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; o && i < organum_numerus_camporum(o); i++)
+    {
+        si (organum_campus_index(o, i)->semita != ORGANUM_SEMITA_NULLA)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+nomen structura {
+                 Vicus* vicus;
+    ContextusOrganorum* organa;
+} ContextusViae;
+
+/* semita (URI) in latus generis sui: frons in acervo cum semita
+ * (vicus_acervo_mutare - argumentum lateris = URI). Iudicium ante
+ * petitionem: genus ignotum, genus sine semitis, semita mala -
+ * FALSUM et *vitium (nuntius $via). ($via, porta indagationis D5) */
+interior b32
+semitam_aperire (
+    constans ContextusViae* cv,
+                    chorda  uri,
+                   Piscina* piscina,
+                    chorda* vitium)
+{
+                    chorda  genus;
+                    chorda  causa;
+          constans Organum* o;
+                       i32  i;
+
+    genus = uri;
+    per (i = ZEPHYRUM; i < uri.mensura; i++)
+    {
+        si (uri.datum[i] == '/' || uri.datum[i] == '?')
+        {
+            genus.mensura = i;
+            frange;
+        }
+    }
+    o = organa_vici(cv->organa, genus);
+    si (!o)
+    {
+        *vitium = chorda_concatenare(chorda_ex_literis(
+            "via: genus ignotum: ", piscina), genus, piscina);
+        redde FALSUM;
+    }
+    si (!semitas_accipit(o))
+    {
+        *vitium = chorda_concatenare(genus, chorda_ex_literis(
+            ": semitas nondum accipit", piscina), piscina);
+        redde FALSUM;
+    }
+    si (!semita_ex_uri(organa_vici, cv->organa, uri, piscina,
+            cv->organa->intern, &causa))
+    {
+        *vitium = chorda_concatenare(chorda_ex_literis("via: ",
+            piscina), causa, piscina);
+        redde FALSUM;
+    }
+    si (!vicus_acervo_mutare(cv->vicus, chorda_ut_cstr(genus, piscina),
+            chorda_ut_cstr(uri, piscina)))
+    {
+        *vitium = chorda_concatenare(genus, chorda_ex_literis(
+            ": aperiri non potest", piscina), piscina);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+/* $via(uri): semitam_aperire; vitium = nuntius */
+interior b32
+via_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* piscina,
+     IussumEffectus* effectus)
+{
+    chorda vitium;
+
+    si (iussum->numerus_argumentorum != I)
+    {
+        effectus->error =
+            chorda_ex_literis("via: unum argumentum (semita)",
+            piscina);
+        redde VERUM;
+    }
+    si (!semitam_aperire((constans ContextusViae*)ctx,
+            iussum->argumenta[ZEPHYRUM], piscina, &vitium))
+    {
+        effectus->error = vitium;
+    }
+    redde VERUM;
+}
+
+/* organa vici ponere (historia laterum) et $via registrare; D5:
+ * contextus viae in *exitus (porta indagationis) */
+interior b32
+via_registrare (
+        IussumRegistrum*  r,
+                  Vicus*  v,
+                Piscina*  piscina,
+    InternamentumChorda*  intern,
+          ContextusViae** exitus)
+{
+    ContextusOrganorum* co;
+         ContextusViae* cv;
+
+    co = (ContextusOrganorum*)piscina_allocare(piscina,
+        magnitudo(ContextusOrganorum));
+    cv = (ContextusViae*)piscina_allocare(piscina,
+        magnitudo(ContextusViae));
+    si (!co || !cv)
+    {
+        redde FALSUM;
+    }
+    co->piscina  = piscina;
+    co->intern   = intern;
+    co->genera   = xar_creare(piscina, (i32)magnitudo(chorda));
+    co->organa   = xar_creare(piscina, (i32)magnitudo(Organum*));
+    cv->vicus    = v;
+    cv->organa   = co;
+    *exitus      = cv;
+    vicus_organa_ponere(v, organa_vici, co);
+    redde co->genera && co->organa
+        && iussum_registrare(r, "via", FALSUM, via_iussum, cv);
+}
+
+/* lector L5: natale libri comitis - nota servata scribitur */
+interior b32
+comitem_natum_notare (
+         vacuum* ctx,
+    ScribaLiber* liber)
+{
+    ComesPendens* cp;
+
+    (vacuum)liber;
+    cp = (ComesPendens*)ctx;
+    redde scriba_liber_comitem_notare(cp->cs->volumen, cp->cs->intern,
+        chorda_ut_cstr(cp->praefixum, cp->cs->piscina), cp->titulus,
+        cp->semita, cp->cs->piscina);
+}
+
+/* praefixum libri comitis ("comes/...")? */
+interior b32
+praefixum_comitis (
+    chorda praefixum)
+{
+    redde praefixum.mensura > (i32)strlen("comes/")
+        && memcmp(praefixum.datum, "comes/", VI) == ZEPHYRUM;
+}
+
+/* comites P2: porta librorum scribae - vacuum: communis; aliter
+ * liber in spatio praefixi, semel apertus (TabulaDispersa). L5: libri
+ * comitum ("comes/...") PIGRI - nihil scribitur ante scripturam
+ * primam */
+interior ScribaLiber*
+librum_scribae (
+     vacuum* ctx,
+     chorda  praefixum)
+{
+    ContextusScribae* cs;
+         ScribaLiber* l;
+        ComesPendens* cp;
+              vacuum* inventum;
+              chorda  clavis;
+
+    cs = (ContextusScribae*)ctx;
+    si (!cs)
+    {
+        redde NIHIL;
+    }
+    si (praefixum.mensura == ZEPHYRUM)
+    {
+        redde cs->liber;
+    }
+    si (   cs->libri && tabula_dispersa_invenire(cs->libri, praefixum,
+            &inventum))
+    {
+        redde (ScribaLiber*)inventum;
+    }
+    clavis  = chorda_transcribere(praefixum, cs->piscina);
+    cp      = NIHIL;
+    si (praefixum_comitis(clavis) && cs->pendentes)
+    {
+        cp = (ComesPendens*)piscina_allocare(cs->piscina,
+            magnitudo(ComesPendens));
+    }
+    si (cp)
+    {
+        memset(cp, ZEPHYRUM, magnitudo(ComesPendens));
+        cp->cs         = cs;
+        cp->praefixum  = clavis;
+        l = scriba_liber_aperire_pigre(cs->piscina, cs->intern,
+            cs->volumen, chorda_ut_cstr(clavis, cs->piscina),
+            cs->latitudo, cs->altitudo, comitem_natum_notare, cp);
+        si (l)
+        {
+            (vacuum)tabula_dispersa_inserere(cs->pendentes, clavis, cp);
+        }
+    }
+    alioquin
+    {
+        l = scriba_liber_aperire_in_spatio(cs->piscina, cs->intern,
+            cs->volumen, chorda_ut_cstr(clavis, cs->piscina),
+            cs->latitudo, cs->altitudo);
+    }
+    si (l && cs->libri)
+    {
+        (vacuum)tabula_dispersa_inserere(cs->libri, clavis, l);
+    }
+    redde l;
+}
+
+/* comites P3: facies scribae - liber comes et praefixum currens;
+ * P5b: nota comitis (titulus, semita visus) in spatio libri - porta
+ * librorum (ContextusScribae) volumen fert, montatio non */
+interior b32
+comitem_scribae_ponere (
+     vacuum* ctx,
+     chorda  praefixum,
+     chorda  titulus,
+     chorda  semita)
+{
+      ScribaMontatio* m;
+    ContextusScribae* cs;
+        ComesPendens* cp;
+              vacuum* inventum;
+
+    m = (ScribaMontatio*)ctx;
+    si (!scriba_comitem_ponere(m, praefixum, titulus))
+    {
+        redde FALSUM;
+    }
+    cs = m ? (ContextusScribae*)m->libri_ctx : NIHIL;
+    si (!cs || praefixum.mensura == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    /* L5: comes piger - nota ultima servatur; scribitur in natali (aut
+     * statim si liber iam natus) */
+    cp = NIHIL;
+    si (   cs->pendentes
+        && tabula_dispersa_invenire(cs->pendentes, praefixum,
+        &inventum))
+    {
+        cp = (ComesPendens*)inventum;
+    }
+    si (cp)
+    {
+        si (!chorda_aequalis(cp->titulus, titulus))
+        {
+            cp->titulus = chorda_transcribere(titulus, cs->piscina);
+        }
+        si (!chorda_aequalis(cp->semita, semita))
+        {
+            cp->semita = chorda_transcribere(semita, cs->piscina);
+        }
+    }
+    si (!cp || scriba_liber_natus(m->liber))
+    {
+        (vacuum)scriba_liber_comitem_notare(cs->volumen, cs->intern,
+            chorda_ut_cstr(praefixum, cs->piscina), titulus, semita,
+            cs->piscina);
+    }
+    redde VERUM;
+}
+
+/* comites P5b: Cmd+F in comite = liber ipse (genus comitum, clavis =
+ * locus); liber domus: semita manifesti (indagatio?genus=liber) */
+interior chorda
+iter_scribae (
+                 vacuum* ctx,
+     constans character* titulus,
+                Piscina* piscina)
+{
+    ScribaMontatio* m;
+            chorda  pr;
+
+    m   = (ScribaMontatio*)ctx;
+    pr  = (m && m->liber) ? scriba_liber_praefixum(m->liber)
+                          : chorda_ex_literis("", piscina);
+    si (   strcmp(titulus, "quaestio")    != ZEPHYRUM
+        || pr.mensura                     <= (i32)strlen("comes/")
+        || memcmp(pr.datum, "comes/", VI) != ZEPHYRUM)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    pr.datum    += VI;
+    pr.mensura  -= VI;
+    redde chorda_concatenare(chorda_ex_literis(
+        "indagatio?genus=comites&clavis=", piscina), pr, piscina);
+}
+
+interior chorda
+comitem_scribae_currentem (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    ScribaMontatio* m;
+
+    m = (ScribaMontatio*)ctx;
+    redde (m && m->liber)
+        ? chorda_transcribere(scriba_liber_praefixum(m->liber), piscina)
+        : chorda_ex_literis("", piscina);
+}
+
 interior b32
 scribam_montare (
                  vacuum* sedes,
@@ -903,8 +1305,13 @@ scribam_montare (
         redde FALSUM;
     }
     m->actiones_ctx.iussa = cs->iussa;
+    /* comites P2: libri comites per portam */
+    scriba_libros_ponere(m, librum_scribae, cs);
     /* S7b: registrum vim unum applicationis - radix hospitis */
     m->actiones_ctx.ramus_capsae = insula_ramus_radix(repo);
+    /* registrum scriptum -> clipboard systematis (porta applicationis) */
+    m->actiones_ctx.textum_exportare  = textum_scribae_exportare;
+    m->actiones_ctx.exportare_ctx     = cs;
     redde VERUM;
 }
 
@@ -933,6 +1340,17 @@ scribam_pulsare (
     p.mutatum = scriba_reficere((ScribaMontatio*)ctx);
     p.finitus = FALSUM;
     redde p;
+}
+
+/* quies T6: pulsus crebri solum dum opus aut iussum dilatum pendet */
+#define MORA_OCCUPATA  XVI
+
+interior Mora
+scribam_morari (
+    vacuum* ctx)
+{
+    redde scriba_occupata((constans ScribaMontatio*)ctx) ? MORA_OCCUPATA
+                                                         : -I;
 }
 
 /* ictus primus (Franus): ictus qui latus scribae focat iussum sub se
@@ -997,8 +1415,67 @@ scribam_describere (
     f->gestum_ctx        = m;
     f->pulsare           = scribam_pulsare;
     f->pulsare_ctx       = m;
+    f->mora              = scribam_morari;
     f->ictus_primus      = scribae_ictus_primus;
     f->ictus_primus_ctx  = m;
+    /* D5 S3c: pagina = semita (scriba/<pagina>) - historia lateris,
+     * $via, restitutio */
+    f->ramus               = &m->ramus;
+    f->semitam_secuta      = scriba_semitam_secuta;
+    f->semitam_secuta_ctx  = m;
+    /* comites P3: liber comes (Cmd+T, sequela) */
+    f->comitem_ponere      = comitem_scribae_ponere;
+    f->comitem_ponere_ctx  = m;
+    f->comes_currens       = comitem_scribae_currentem;
+    f->comes_currens_ctx   = m;
+    /* comites P3b: liber quisque historiam suam habet */
+    f->historiae_ambitus      = comitem_scribae_currentem;
+    f->historiae_ambitus_ctx  = m;
+    /* comites P5b: Cmd+F in comite = liber ipse */
+    f->iter_semita      = iter_scribae;
+    f->iter_semita_ctx  = m;
+}
+
+/* comites P1: tituli locorum laterum sine titulo proprio */
+interior chorda
+titulus_quaestionis (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    (vacuum)ctx;
+    redde chorda_ex_literis("Search", piscina);
+}
+
+interior chorda
+titulus_admonitionum (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    (vacuum)ctx;
+    redde chorda_ex_literis("Notifications", piscina);
+}
+
+interior chorda
+titulus_colloquiorum (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    (vacuum)ctx;
+    redde chorda_ex_literis("Sessions", piscina);
+}
+
+/* pictura lateris (campus 'pictura') */
+interior chorda
+titulus_picturae (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    chorda* a;
+
+    a = insula_ramus_attributum(&((PictorMontatio*)ctx)->ramus,
+        "pictura");
+    redde a ? chorda_transcribere(*a, piscina)
+            : chorda_ex_literis("Picture", piscina);
 }
 
 interior b32
@@ -1047,11 +1524,12 @@ pictorem_montare (
             m->documenta = cp->documenta;
         }
     }
-    /* S3e: argumentum picturam bibliothecae nominans ostenditur;
-     * aliter (S3c, identitas sola) pictura lateris ipsius */
+    /* S3e: argumentum (semita aut picturam bibliothecae nominans)
+     * ostenditur; aliter (S3c, identitas sola) pictura lateris ipsius;
+     * semitae R4c: montatio non condit */
     si (argumentum && argumentum[ZEPHYRUM])
     {
-        (vacuum)pictor_picturam_ponere(m, argumentum);
+        (vacuum)pictor_argumentum_ponere(m, argumentum, FALSUM);
     }
     redde VERUM;
 }
@@ -1063,8 +1541,8 @@ pictoris_argumentum_ponere (
      constans character* argumentum)
 {
     /* S3f: pictura ignota ($pictor-new) conditur */
-    redde pictor_picturam_ponere((PictorMontatio*)ctx, argumentum)
-        || pictor_picturam_condere((PictorMontatio*)ctx, argumentum);
+    redde pictor_argumentum_ponere((PictorMontatio*)ctx, argumentum,
+        VERUM);
 }
 
 interior vacuum
@@ -1083,16 +1561,34 @@ pictorem_describere (
     f->fons_ctx               = &m->figurae_ctx;
     f->argumentum_ponere      = pictoris_argumentum_ponere;
     f->argumentum_ponere_ctx  = m;
+    /* semitae R4c: historia lateris et $via; documentum campum
+     * pictura sequitur post semitam a vico applicatam */
+    f->ramus               = &m->ramus;
+    f->semitam_secuta      = pictor_semitam_secuta;
+    f->semitam_secuta_ctx  = m;
+    /* comites P1: titulus loci = pictura */
+    f->locus_titulus      = titulus_picturae;
+    f->locus_titulus_ctx  = montatio;
 }
 
-/* S3e: pictura lateris pictoris: argumentum si picturam bibliothecae
+/* S3e: pictura lateris pictoris: semitae R4c - campus pictura (verus
+ * etiam post historiam); aliter argumentum si picturam bibliothecae
  * nominat, aliter id lateris */
 interior chorda
 pictura_lateris (
        constans VicusLatus* l,
               constans Xar* bibliotheca)
 {
-    i32 i;
+     chorda* pictura;
+        i32  i;
+
+    pictura = l->montata ? insula_ramus_attributum(
+        &((constans PictorMontatio*)l->montatio)->ramus, "pictura")
+        : NIHIL;
+    si (pictura && pictura->mensura > ZEPHYRUM)
+    {
+        redde *pictura;
+    }
 
     per (i = ZEPHYRUM; !chorda_vacua(l->argumentum)
                        && i < xar_numerus(bibliotheca); i++)
@@ -1384,6 +1880,128 @@ argumenta_terminalis (
  * T4c: argumentum "tmux <servitor> <sessio>" sessioni adhaeret (et
  * post restitutionem iterum). ctx = systemata vici (S7c-3: organum,
  * ut scriba et pictor) */
+/* comites P4: latus terminalis in vico - applicatio PRIMA (casus ad
+ * TerminaleApplicatio* manent), deinde locus eius: tmux - sessio et
+ * fenestra activa clientis cuius tty pty lateris est (servitor ex
+ * argumento "tmux <servitor> <sessio>", aliter ordinarius); sine tmux
+ * - id lateris. Inspectio tmux processum incipit: memoria M ms;
+ * facies.locum_renovare (Cmd+T, focus sinister) eam abicit */
+#define MEMORIA_LOCI_TERMINALIS_MS  M
+
+nomen structura {
+    TerminaleApplicatio app;
+              character id[LXIV];
+              character servitor[CCLVI];   /* vacuus = ordinarius */
+            Multiplexor mx;
+              character locus[CCLVI];
+              character titulus[CXXVIII];
+                    s64 tempus_ms;         /* inspectio ultima */
+                    b32 inspectum;
+} TerminaleInVico;
+
+/* locum et titulum terminalis (re)computare, memoria D ms */
+interior vacuum
+locum_terminalis_inspicere (
+    TerminaleInVico* t)
+{
+                       Piscina* scheda;
+                           Xar* clientes;
+                           Xar* panelli;
+    constans MultiplexorCliens* cl;
+  constans MultiplexorPanellus* q;
+                        chorda  tty;
+                        chorda  sessio;
+                           s64  nunc;
+                           i32  i;
+
+    nunc = fenestra_tempus_ms();
+    si (   t->inspectum
+        && nunc - t->tempus_ms < MEMORIA_LOCI_TERMINALIS_MS)
+    {
+        redde;
+    }
+    t->inspectum = VERUM;
+    t->tempus_ms = nunc;
+    sprintf(t->locus, "terminale/%s", t->id);
+    strcpy(t->titulus, "Terminal");
+    tty = terminale_tty(&t->app);
+    si (tty.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    scheda = piscina_generare_dynamicum("locus_terminalis", XVI * M);
+    si (!scheda)
+    {
+        redde;
+    }
+    sessio.datum    = NIHIL;
+    sessio.mensura  = ZEPHYRUM;
+    clientes        = multiplexor_clientes(&t->mx, scheda);
+    per (i = ZEPHYRUM; clientes && i < xar_numerus(clientes); i++)
+    {
+        cl = (constans MultiplexorCliens*)xar_obtinere(clientes, i);
+        si (chorda_aequalis(cl->tty, tty))
+        {
+            sessio = cl->sessio;
+            frange;
+        }
+    }
+    panelli = sessio.mensura > ZEPHYRUM
+            ? multiplexor_panelli(&t->mx, scheda) : NIHIL;
+    per (i = ZEPHYRUM; panelli && i < xar_numerus(panelli); i++)
+    {
+        q = (constans MultiplexorPanellus*)xar_obtinere(panelli, i);
+        si (   q->fenestra_activa && q->activus
+            && chorda_aequalis(q->sessio, sessio)
+            && sessio.mensura < C && q->fenestra_titulus.mensura < LX)
+        {
+            sprintf(t->locus, "terminale/tmux/%.*s/%d",
+                (int)sessio.mensura, (constans character*)sessio.datum,
+                (integer)q->fenestra);
+            sprintf(t->titulus, "%.*s / %.*s", (int)sessio.mensura,
+                (constans character*)sessio.datum,
+                (int)q->fenestra_titulus.mensura,
+                (constans character*)q->fenestra_titulus.datum);
+            frange;
+        }
+    }
+    piscina_destruere(scheda);
+}
+
+/* comites P4: memoria abicitur - lectio proxima tmux interrogat */
+interior vacuum
+terminalis_locum_renovare (
+    vacuum* ctx)
+{
+    ((TerminaleInVico*)ctx)->inspectum = FALSUM;
+}
+
+interior chorda
+terminalis_locus (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    TerminaleInVico* t;
+
+    t = (TerminaleInVico*)ctx;
+    locum_terminalis_inspicere(t);
+    redde chorda_transcribere(chorda_ex_literis(t->locus, piscina),
+        piscina);
+}
+
+interior chorda
+terminalis_locus_titulus (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    TerminaleInVico* t;
+
+    t = (TerminaleInVico*)ctx;
+    locum_terminalis_inspicere(t);
+    redde chorda_transcribere(chorda_ex_literis(t->titulus, piscina),
+        piscina);
+}
+
 interior b32
 terminale_montare_in_vico (
                  vacuum* sedes,
@@ -1397,13 +2015,60 @@ terminale_montare_in_vico (
                     i32  altitudo,
                  vacuum* ctx)
 {
+    TerminaleInVico* t;
+          character* finis;
+
     (vacuum)volumen;
-    redde terminale_montare((TerminaleApplicatio*)sedes, piscina,
-        intern, repo, id, argumenta_terminalis(argumentum, piscina),
-        (StatusSystemata*)ctx, latitudo, altitudo);
+    t = (TerminaleInVico*)sedes;
+    si (!terminale_montare(&t->app, piscina, intern, repo, id,
+            argumenta_terminalis(argumentum, piscina),
+            (StatusSystemata*)ctx, latitudo, altitudo))
+    {
+        redde FALSUM;
+    }
+    /* comites P4: id et servitor ("tmux <servitor> <sessio>"; "-" =
+     * ordinarius) pro loco */
+    memset(t->id, ZEPHYRUM, magnitudo(t->id));
+    memset(t->servitor, ZEPHYRUM, magnitudo(t->servitor));
+    memset(&t->mx, ZEPHYRUM, magnitudo(t->mx));
+    t->inspectum = FALSUM;
+    strncpy(t->id, id ? id : "terminale", magnitudo(t->id) - I);
+    si (   argumentum && strncmp(argumentum, "tmux ", V) == ZEPHYRUM
+        && strlen(argumentum + V) < magnitudo(t->servitor))
+    {
+        strcpy(t->servitor, argumentum + V);
+        finis = strchr(t->servitor, ' ');
+        si (finis)
+        {
+            *finis = '\0';
+        }
+        si (strcmp(t->servitor, "-") == ZEPHYRUM)
+        {
+            t->servitor[ZEPHYRUM] = '\0';
+        }
+    }
+    t->mx.socket = t->servitor[ZEPHYRUM] ? t->servitor : NIHIL;
+    redde VERUM;
 }
 
 /* pulsus sine mora: ansa hospitis XVI ms ipsa exspectat */
+/* quies T6b: mora et fossa lateris terminalis (pty) */
+interior Mora
+terminale_morari (
+    vacuum* ctx)
+{
+    redde (Mora)terminale_mora((constans TerminaleApplicatio*)ctx);
+}
+
+interior s32
+terminale_fossam (
+    vacuum* ctx,
+       i32* eventus)
+{
+    *eventus = REACTOR_LEGERE;
+    redde terminale_fossa((constans TerminaleApplicatio*)ctx);
+}
+
 interior VicusPulsus
 terminale_pulsare_in_vico (
     vacuum* ctx)
@@ -1432,8 +2097,45 @@ terminale_describere (
     f->pulsare         = terminale_pulsare_in_vico;
     f->pulsare_ctx     = m;
     f->vivit_in_fundo  = VERUM;
+    /* quies T6b: pty expergefacit; XVI solum dum cauda aut messis
+     * pendet */
+    f->mora   = terminale_morari;
+    f->fossa  = terminale_fossam;
     /* Franus: 'tmux a' statim post aperturam ad concham, non scribam */
     f->focus_in_apertura = VERUM;
+    /* comites P4: locus per fenestram tmux aut latus */
+    f->locus               = terminalis_locus;
+    f->locus_ctx           = montatio;
+    f->locus_titulus       = terminalis_locus_titulus;
+    f->locus_titulus_ctx   = montatio;
+    f->locum_renovare      = terminalis_locum_renovare;
+    f->locum_renovare_ctx  = montatio;
+}
+
+/* nomenclator-plan P2: nomenclator - documentum personarum UNUM per
+ * volumen vici (spatium "personae"), pigre apertum, commune omnibus
+ * lateribus nomenclatoris */
+nomen structura {
+                  Vicus* vicus;
+                Volumen* volumen;
+                Piscina* piscina;
+    InternamentumChorda* intern;
+     PersonaeDocumentum* documentum;
+        StatusSystemata* systemata;
+} ContextusNomenclatoris;
+
+/* D5: documentum personarum commune, pigre apertum (nomenclator,
+ * natales, indagatio); NIHIL si deficit */
+interior PersonaeDocumentum*
+personas_aperire (
+    ContextusNomenclatoris* cn)
+{
+    si (cn && !cn->documentum)
+    {
+        cn->documentum = personae_aperire(cn->piscina, cn->intern,
+            cn->volumen, "personae", ZEPHYRUM);
+    }
+    redde cn ? cn->documentum : NIHIL;
 }
 
 /* agenda-plan A2: calendarium - documentum agendae UNUM per volumen
@@ -1447,6 +2149,22 @@ nomen structura {
        AgendaDocumentum* documentum;
             FastiFontes* fontes;     /* P6: natales nomenclatoris */
         StatusSystemata* systemata;
+    /* proiectiones D4c: registrum conspectuum UNUM per volumen vici,
+     * omnibus lateribus calendarii commune, cum agenda pigre creatum;
+     * fontes diei eius hic vivunt (vivant dum registrum). D5
+     * (indagatio S3b): idem registrum genera quaerenda tenet (fontes
+     * quaerendi: agenda haec, personae nomenclatoris), index
+     * quaestionis super eo pigre creatur (latus indagationis
+     * primum) */
+             DiesFontes  diei;
+        IndagatioFontes  quaerendi;
+    ConspectusRegistrum* conspectus;
+ ContextusNomenclatoris* nomenclatoris;
+              Indagatio* index;
+    /* D5 S4: corpus sanctorum (genus quaerendum 'sancti'), pigre per
+     * contextum sanctorum */
+    constans SanctiCorpus* (*sancti)(vacuum* ctx);
+                   vacuum* sancti_ctx;
 } ContextusKalendarii;
 
 /* porta 'hodie' calendarii: horologium vici (fons ipse lectionis
@@ -1470,6 +2188,57 @@ hodie_vici (
     redde fasti_dies_valida(*hodie);
 }
 
+/* registrum commune: conspectus 'dies' super agendam communem et (D5)
+ * genera quaerenda (res, notae, liber, personae); NIHIL si deficit
+ * (latera tum f directe vocant) */
+interior vacuum
+conspectum_communem_parare (
+    ContextusKalendarii* ck)
+{
+    Xar* vitia;
+
+    ck->quaerendi.agenda    = ck->documentum;
+    ck->quaerendi.personae  = personas_aperire(ck->nomenclatoris);
+    ck->quaerendi.volumen   = ck->volumen;
+    ck->quaerendi.intern    = ck->intern;
+    ck->quaerendi.sancti    = ck->sancti ? ck->sancti(ck->sancti_ctx)
+                                         : NIHIL;
+    ck->diei.agenda    = ck->documentum;
+    ck->diei.fontes    = ck->fontes;
+    ck->diei.liturgia  = calendarium_creare(ck->piscina);
+    ck->diei.volumen   = ck->volumen;
+    ck->diei.intern    = ck->intern;
+    ck->conspectus     = conspectus_registrum_creare(ck->piscina,
+        ck->intern, ck->volumen, ZEPHYRUM);
+    si (   ck->conspectus
+        && (   !conspectus_dies_registrare(ck->conspectus, &ck->diei,
+                   &vitia)
+            || !indagatio_genera_registrare(ck->conspectus,
+                   &ck->quaerendi, &vitia)
+            || !conspectus_parare(ck->conspectus, &vitia)))
+    {
+        conspectus_registrum_destruere(ck->conspectus);
+        ck->conspectus = NIHIL;
+    }
+}
+
+/* agenda communis et registrum commune, pigre (calendarium,
+ * indagatio) */
+interior vacuum
+agendam_et_registrum_parare (
+    ContextusKalendarii* ck)
+{
+    si (!ck->documentum)
+    {
+        ck->documentum = agenda_aperire(ck->piscina, ck->intern,
+            ck->volumen, "agenda", ZEPHYRUM);
+    }
+    si (ck->documentum && ck->volumen && !ck->conspectus)
+    {
+        conspectum_communem_parare(ck);
+    }
+}
+
 interior b32
 kalendarium_montare_in_vico (
                  vacuum* sedes,
@@ -1490,18 +2259,17 @@ kalendarium_montare_in_vico (
     {
         redde FALSUM;
     }
-    si (!ck->documentum)
+    agendam_et_registrum_parare(ck);
+    si (!kalendarium_montare((KalendariumMontatio*)sedes, piscina,
+            intern, repo, id, (argumentum && argumentum[ZEPHYRUM])
+            ? argumentum : NIHIL, ck->documentum, ck->fontes, volumen,
+            latitudo, altitudo, hodie_vici, ck->vicus, ck->systemata))
     {
-        ck->documentum = agenda_aperire(ck->piscina, ck->intern,
-            ck->volumen, "agenda", ZEPHYRUM);
+        redde FALSUM;
     }
-    redde kalendarium_montare((KalendariumMontatio*)sedes, piscina,
-        intern, repo, id, (argumentum && argumentum[ZEPHYRUM])
-        ? argumentum : NIHIL, ck->documentum, ck->fontes, volumen,
-        latitudo,
-        altitudo, hodie_vici,
-        ck->vicus,
-        ck->systemata);
+    kalendarium_conspectum_ponere((KalendariumMontatio*)sedes,
+        ck->conspectus);
+    redde VERUM;
 }
 
 interior b32
@@ -1525,6 +2293,14 @@ kalendarii_pulsare (
     redde p;
 }
 
+interior Mora
+kalendarium_morari (
+    vacuum* ctx)
+{
+    redde kalendarium_occupatum((constans KalendariumMontatio*)ctx)
+        ? MORA_OCCUPATA : -I;
+}
+
 interior vacuum
 kalendarium_describere (
          vacuum* montatio,
@@ -1545,19 +2321,18 @@ kalendarium_describere (
     /* A6e: pulsus - indicium paginae notarum */
     f->pulsare      = kalendarii_pulsare;
     f->pulsare_ctx  = m;
+    f->mora         = kalendarium_morari;
+    /* semitae R4: historia lateris et $via; liber notarum diem sequitur
+     * post semitam a vico applicatam */
+    f->ramus               = &m->ramus;
+    f->semitam_secuta      = kalendarium_semitam_secuta;
+    f->semitam_secuta_ctx  = m;
+    /* comites P1: locus rotundatus ad unitatem visus */
+    f->locus              = kalendarium_locus;
+    f->locus_ctx          = m;
+    f->locus_titulus      = kalendarium_locus_titulus;
+    f->locus_titulus_ctx  = m;
 }
-
-/* nomenclator-plan P2: nomenclator - documentum personarum UNUM per
- * volumen vici (spatium "personae"), pigre apertum, commune omnibus
- * lateribus nomenclatoris */
-nomen structura {
-                  Vicus* vicus;
-                Volumen* volumen;
-                Piscina* piscina;
-    InternamentumChorda* intern;
-     PersonaeDocumentum* documentum;
-        StatusSystemata* systemata;
-} ContextusNomenclatoris;
 
 /* P6c: porta diei nomenclatoris - latus calendarii in frontem acervi,
  * visus diei in eo die (vicus_acervo_mutare "YYYY-MM-DD"; petitio
@@ -1596,16 +2371,7 @@ nomenclatorem_montare_in_vico (
     ContextusNomenclatoris* cn;
 
     cn = (ContextusNomenclatoris*)ctx;
-    si (!cn)
-    {
-        redde FALSUM;
-    }
-    si (!cn->documentum)
-    {
-        cn->documentum = personae_aperire(cn->piscina, cn->intern,
-            cn->volumen, "personae", ZEPHYRUM);
-    }
-    si (   !cn->documentum
+    si (   !cn || !personas_aperire(cn)
         || !nomenclator_montare((NomenclatorMontatio*)sedes, piscina,
                intern, repo, id, cn->documentum, volumen, hodie_vici,
                cn->vicus, latitudo, altitudo, cn->systemata))
@@ -1645,6 +2411,14 @@ nomenclatoris_pulsare (
     redde p;
 }
 
+interior Mora
+nomenclatorem_morari (
+    vacuum* ctx)
+{
+    redde nomenclator_occupatus((constans NomenclatorMontatio*)ctx)
+        ? MORA_OCCUPATA : -I;
+}
+
 interior vacuum
 nomenclatorem_describere (
          vacuum* montatio,
@@ -1662,9 +2436,20 @@ nomenclatorem_describere (
     f->gestum_ctx     = m;
     f->pulsare        = nomenclatoris_pulsare;
     f->pulsare_ctx    = m;
+    f->mora           = nomenclatorem_morari;
     /* P6b: "<id>" personam aperit (natalis ex calendario) */
     f->argumentum_ponere      = nomenclatoris_argumentum_ponere;
     f->argumentum_ponere_ctx  = m;
+    /* semitae R4b: historia lateris et $via; liber notarum personam
+     * sequitur post semitam a vico applicatam */
+    f->ramus               = &m->ramus;
+    f->semitam_secuta      = nomenclator_semitam_secuta;
+    f->semitam_secuta_ctx  = m;
+    /* comites P1: titulus loci = nomen personae */
+    f->locus_titulus      = nomenclator_locus_titulus;
+    f->locus_titulus_ctx  = m;
+    f->advocatum          = nomenclator_quaestionem_aperire;
+    f->advocatum_ctx      = m;
 }
 
 /* P6: fons dierum calendarii - natales ex documento personarum
@@ -1681,16 +2466,8 @@ natales_legere (
     ContextusNomenclatoris* cn;
 
     cn = (ContextusNomenclatoris*)ctx;
-    si (!cn)
-    {
-        redde FALSUM;
-    }
-    si (!cn->documentum)
-    {
-        cn->documentum = personae_aperire(cn->piscina, cn->intern,
-            cn->volumen, "personae", ZEPHYRUM);
-    }
-    redde cn->documentum && personae_fasti_legere(cn->documentum, prima,
+    redde personas_aperire(cn)
+        && personae_fasti_legere(cn->documentum, prima,
         ultima, exitus, piscina);
 }
 
@@ -1702,15 +2479,19 @@ natalem_aperire (
     constans FastiIntroitus* introitus)
 {
     ContextusNomenclatoris* cn;
-                 character  numerus[XVI];
+                 character  id[XXXII];
 
     cn = (ContextusNomenclatoris*)ctx;
-    si (!cn || !introitus || introitus->referentia <= ZEPHYRUM)
+    si (   !cn || !introitus
+        || introitus->referentia.mensura == ZEPHYRUM
+        || introitus->referentia.mensura >= (i32)magnitudo(id))
     {
         redde FALSUM;
     }
-    sprintf(numerus, "%d", (integer)introitus->referentia);
-    redde vicus_acervo_mutare(cn->vicus, "nomenclator", numerus);
+    memcpy(id, introitus->referentia.datum,
+        (memoriae_index)introitus->referentia.mensura);
+    id[introitus->referentia.mensura] = '\0';
+    redde vicus_acervo_mutare(cn->vicus, "nomenclator", id);
 }
 
 /* folium paginae novae (S2b): lateris sinistri cellulae (dimidium
@@ -1739,6 +2520,259 @@ folii_lineae (
 
 
 /* ==================================================
+ * Sonus (sonus S4 gradus IV)
+ * ================================================== */
+
+/* porta (vicus_sonus.h; posita = applicatio dedit) et mutus pulsus
+ * prioris: tacere solum in transitu ad mutum */
+nomen structura {
+    VicusPortaSoni porta;
+               b32 posita;
+               b32 mutus_prior;
+    /* S5c: aetherophonum - mutus in vocatione, systemata montationis */
+             Vicus* vicus;
+   StatusSystemata* systemata;
+} ContextusSoni;
+
+/* campus veritatis radicis; absens = FALSUM */
+interior b32
+veritas_radicis_vici (
+                 Vicus* v,
+    constans character* titulus)
+{
+    chorda* a;
+
+    a = insula_attributum(v->repo, titulus);
+    redde a && chorda_aequalis_literis(*a, "verum");
+}
+
+interior b32
+sonus_mutus (
+    Vicus* v)
+{
+    redde veritas_radicis_vici(v, "sonus_mutus")
+        || veritas_radicis_vici(v, "sonus_admonitionum_mutus");
+}
+
+/* admonitio nova: genus eius pulsatur nisi muta aut porta nulla
+ * (genus sine cantione: porta FALSUM reddit, nihil sonat) */
+interior vacuum
+sonum_admonitionis (
+     ContextusSoni* soni,
+             Vicus* v,
+            chorda  genus)
+{
+    si (!soni || !soni->posita || sonus_mutus(v))
+    {
+        redde;
+    }
+    (vacuum)soni->porta.pulsare(soni->porta.ctx, genus);
+}
+
+/* praeco cantus: textus MML in nuntio, genus "intactus" aut vacuum */
+interior vacuum
+sonum_cantus (
+                 ContextusSoni* soni,
+                         Vicus* v,
+    constans PraeconiumEventus* e)
+{
+    si (!soni || !soni->posita || sonus_mutus(v))
+    {
+        redde;
+    }
+    (vacuum)soni->porta.canere(soni->porta.ctx, e->nuntius,
+        chorda_aequalis_literis(e->genus, "intactus"));
+}
+
+/* eventus 'cantus' recentissimus pulsus (ultimus ordine libri); NIHIL
+ * si nullus */
+interior constans PraeconiumEventus*
+cantum_recentissimum (
+    Xar* eventus)
+{
+    constans PraeconiumEventus* e;
+                           i32  i;
+
+    per (i = eventus ? xar_numerus(eventus) : ZEPHYRUM; i > ZEPHYRUM;
+         i--)
+    {
+        e = (constans PraeconiumEventus*)xar_obtinere(eventus, i - I);
+        si (chorda_aequalis_literis(e->eventus, "cantus"))
+        {
+            redde e;
+        }
+    }
+    redde NIHIL;
+}
+
+/* pulsus soni: admonitio nova et cantus eodem pulsu ordine temporis -
+ * posterior ultimus vocatur, ergo in tintinnabulo vincit */
+interior vacuum
+sonum_pulsus (
+                 ContextusSoni* soni,
+                         Vicus* v,
+            constans Admonitio* nova,
+    constans PraeconiumEventus* cantus)
+{
+    si (nova && cantus && cantus->tempus < nova->tempus)
+    {
+        sonum_cantus(soni, v, cantus);
+        sonum_admonitionis(soni, v, nova->genus);
+        redde;
+    }
+    si (nova)
+    {
+        sonum_admonitionis(soni, v, nova->genus);
+    }
+    si (cantus)
+    {
+        sonum_cantus(soni, v, cantus);
+    }
+}
+
+/* systema "sonus" (pulsus vici, post admonitiones): mutum factum
+ * (quovis scriptore) sonantem tacet SEMEL; deinde porta agit (exitus
+ * piger, exspectata). Nihil pingendum. */
+interior b32
+systema_soni (
+     Vicus* v,
+    vacuum* ctx)
+{
+    ContextusSoni* soni;
+              b32  mutus;
+
+    soni   = (ContextusSoni*)ctx;
+    mutus  = sonus_mutus(v);
+    si (soni->posita)
+    {
+        si (mutus && !soni->mutus_prior)
+        {
+            soni->porta.tacere(soni->porta.ctx);
+        }
+        soni->porta.agere(soni->porta.ctx);
+    }
+    soni->mutus_prior = mutus;
+    redde FALSUM;
+}
+
+/* quies T6d: mora portae (sonus, exitus apertus); sine porta nihil;
+ * porta sine mora: XVI (mos vetus) */
+#define MORA_SONI_IGNOTA  XVI
+
+interior Mora
+soni_morari (
+    vacuum* ctx)
+{
+    constans ContextusSoni* soni;
+
+    soni = (constans ContextusSoni*)ctx;
+    si (!soni->posita)
+    {
+        redde -I;
+    }
+    redde soni->porta.mora ? (Mora)soni->porta.mora(soni->porta.ctx)
+                           : MORA_SONI_IGNOTA;
+}
+
+/* S5c: porta aetherophoni - mutus TOTUS vocem negat (mutus
+ * admonitionum non: aetherophonum admonitio non est); porta soni
+ * nulla = 0 */
+interior i64
+aetheri_incipere (
+                 vacuum* ctx,
+     constans character* tibia,
+                    b32  vibratus,
+                    f32  nota,
+                    f32  lucrum)
+{
+    ContextusSoni* soni = (ContextusSoni*)ctx;
+
+    si (   !soni->posita || !soni->vicus
+        || veritas_radicis_vici(soni->vicus, "sonus_mutus"))
+    {
+        redde ZEPHYRUM;
+    }
+    redde soni->porta.vocem_incipere(soni->porta.ctx, tibia, vibratus,
+        nota, lucrum);
+}
+
+interior vacuum
+aetheri_ponere (
+    vacuum* ctx,
+       i64  vox,
+       f32  nota,
+       f32  lucrum,
+       i32  ms)
+{
+    ContextusSoni* soni = (ContextusSoni*)ctx;
+
+    si (soni->posita)
+    {
+        soni->porta.vocem_ponere(soni->porta.ctx, vox, nota, lucrum,
+            ms);
+    }
+}
+
+interior vacuum
+aetheri_dimittere (
+    vacuum* ctx,
+       i64  vox)
+{
+    ContextusSoni* soni = (ContextusSoni*)ctx;
+
+    si (soni->posita)
+    {
+        soni->porta.vocem_dimittere(soni->porta.ctx, vox);
+    }
+}
+
+interior b32
+aetherophonum_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+        ContextusSoni* soni = (ContextusSoni*)ctx;
+    AetherophoniPorta  porta;
+
+    (vacuum)volumen;
+    (vacuum)argumentum;
+    porta.incipere   = aetheri_incipere;
+    porta.ponere     = aetheri_ponere;
+    porta.dimittere  = aetheri_dimittere;
+    porta.ctx        = soni;
+    redde soni && aetherophonum_montare((AetherophoniMontatio*)sedes,
+        piscina, intern, repo, id, &porta, latitudo, altitudo,
+        soni->systemata);
+}
+
+interior vacuum
+aetherophonum_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    AetherophoniMontatio* m = (AetherophoniMontatio*)montatio;
+
+    f->actiones       = m->actiones;
+    f->figurae        = m->figurae;
+    f->componere      = aetherophonum_componere;
+    f->componere_ctx  = m;
+    /* Esc sine voce tenta: latus prius */
+    f->effugium_redit  = VERUM;
+    /* theremin uno ictu sonat (focus et vox simul) */
+    f->ictus_primus      = aetherophonum_ictus_primus;
+    f->ictus_primus_ctx  = m;
+}
+
+
+/* ==================================================
  * Admonitiones (colloquia-plan T4a)
  * ================================================== */
 
@@ -1758,9 +2792,29 @@ nomen structura {
      * (binarium; socket per sessionem) */
        ColloquiorumFons fons;
             Multiplexor multiplexor;
-    /* T6: terminalia - inspectio ultima (s), scheda sua */
-                 time_t  terminalia_ad;
+    /* T6: terminalia - inspectio ultima (ms fenestrae; quies T2b),
+     * scheda sua; quies T2: quaestiones list-clients in volatu
+     * (QuaestioClientium; NIHIL = nulla) - scheda solum sine
+     * quaestionibus vacatur. signum = frontes ad quaestionem ultimam
+     * (frontes_signare); confirmanda = quaestio altera post frontes
+     * mutatas (ms fenestrae; 0 = nulla) */
+                    s64  terminalia_ad;
+                    i64  terminalia_signum;
+                    s64  terminalia_confirmanda;
                 Piscina* scheda_terminalium;
+                    Xar* terminalia_quaestiones;
+    /* quies T6c: specula libri praeconii - scriptura vicum
+     * expergefacit (NIHIL: platforma sine specula, XVI ms) */
+                Specula* specula;
+    /* sonus S4: admonitio nova pulsat */
+          ContextusSoni* sonus;
+    /* nuntii hospitis (toasts solae; nuntium_hospitis): index
+     * proprius - centrum, numerus, sonus eos non vident; tempus
+     * ultimum (stricte crescens: hora secundorum aequalis ordinem
+     * non confundit) */
+           Admonitiones* transientes;
+                    s64  transiens_ultimum;
+                    i32  transientium;
 } ContextusAdmonitionum;
 
 interior s64
@@ -1769,6 +2823,98 @@ nunc_vici (
 {
     (vacuum)ctx;
     redde (s64)time(NIHIL) * (s64)M;
+}
+
+/* nuntius hospitis volans ("Sounds muted"): NUNTIUS in indice
+ * transientium (non in centro, non numeratus, sine sono) */
+interior b32
+nuntium_hospitis (
+    ContextusAdmonitionum* ca,
+       constans character* titulus)
+{
+    Admonitio x;
+    character id[XXXII];
+          s64 nunc;
+
+    si (!ca || !ca->transientes || !titulus)
+    {
+        redde FALSUM;
+    }
+    nunc = nunc_vici(NIHIL);
+    si (nunc <= ca->transiens_ultimum)
+    {
+        nunc = ca->transiens_ultimum + I;
+    }
+    ca->transiens_ultimum = nunc;
+    sprintf(id, "vicus:%d", (integer)++ca->transientium);
+    memset(&x, ZEPHYRUM, magnitudo(x));
+    x.id.datum    = (i8*)id;
+    x.id.mensura  = (i32)strlen(id);
+    x.fons        = chorda_ex_literis("vicus", ca->piscina);
+    x.titulus     = chorda_ex_literis(titulus, ca->piscina);
+    x.tempus      = nunc;
+    x.gradus      = ADMONITIO_NUNTIUS;
+    redde admonitiones_addere(ca->transientes, &x);
+}
+
+/* '$sound' -> sonus_mutus vertitur; '$sound(notifications)' ->
+ * sonus_admonitionum_mutus. Non consumens (bulla manet); status in
+ * nuntio. Sine porta quoque: campi persistentes sunt. */
+interior b32
+sonus_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* piscina,
+     IussumEffectus* effectus)
+{
+    ContextusAdmonitionum* ca;
+                    Vicus* v;
+       constans character* campus;
+       constans character* titulus;
+                      b32  mutus;
+
+    ca  = (ContextusAdmonitionum*)ctx;
+    v   = ca->vicus;
+    si (iussum->numerus_argumentorum > I)
+    {
+        effectus->error = chorda_ex_literis(
+            "sound: one argument at most (notifications)", piscina);
+        redde VERUM;
+    }
+    si (iussum->numerus_argumentorum == ZEPHYRUM)
+    {
+        campus   = "sonus_mutus";
+        titulus  = "sound";
+    }
+    alioquin si (chorda_aequalis_literis(iussum->argumenta[ZEPHYRUM],
+                 "notifications"))
+    {
+        campus   = "sonus_admonitionum_mutus";
+        titulus  = "notification sounds";
+    }
+    alioquin
+    {
+        effectus->error = chorda_concatenare(chorda_ex_literis(
+            "sound: unknown argument (notifications): ", piscina),
+            iussum->argumenta[ZEPHYRUM], piscina);
+        redde VERUM;
+    }
+    mutus = !veritas_radicis_vici(v, campus);
+    si (!vicus_radicem_scribere(v, "sonus.agere", campus,
+            mutus ? "verum" : "falsum"))
+    {
+        redde FALSUM;
+    }
+    effectus->nuntius = chorda_concatenare(chorda_ex_literis(titulus,
+        piscina), chorda_ex_literis(mutus ? " off" : " on", piscina),
+        piscina);
+    /* nuntius volans: ictus responsum videt (Franus 2026-10-22) */
+    (vacuum)nuntium_hospitis(ca, strcmp(campus, "sonus_mutus")
+        == ZEPHYRUM
+        ? (mutus ? "Sounds muted" : "Sounds unmuted")
+        : (mutus ? "Notification sounds muted"
+                 : "Notification sounds unmuted"));
+    redde VERUM;
 }
 
 /* T4c: latus terminalis cuius tty cliens sessionis est; NIHIL si
@@ -1925,6 +3071,7 @@ systema_admonitionum (
     vacuum* ctx)
 {
     ContextusAdmonitionum* ca;
+       constans Admonitio* nova;
                    chorda* a;
                    chorda  recentissima;
                       s64  lectae_ad;
@@ -1934,10 +3081,14 @@ systema_admonitionum (
 
     ca       = (ContextusAdmonitionum*)ctx;
     mutatum  = FALSUM;
+    nova     = NIHIL;
     si (!ca->sequitur)
     {
         redde FALSUM;
     }
+    /* quies T6c: notae speculae exhauriuntur (fossa iterum quieta);
+     * liber deinde legitur ut semper - lectio a positione, vilis */
+    (vacuum)specula_exhaurire(ca->specula);
     si (!ca->applicatae)
     {
         a = insula_attributum(v->repo, "admonitiones_lectae_ad");
@@ -1954,7 +3105,11 @@ systema_admonitionum (
             "admonitio_nova", chorda_ut_cstr(recentissima,
             ca->sequax.scheda));
         mutatum = VERUM;
+        /* sonus S4: recentissima sola - plures uno pulsu, sonus unus */
+        nova = admonitio(ca->index, ZEPHYRUM);
     }
+    sonum_pulsus(ca->sonus, v, nova,
+        cantum_recentissimum(ca->sequax.eventus));
     u = (s32)admonitiones_non_lectae(ca->index);
     si (u != ca->non_lectae)
     {
@@ -1965,6 +3120,36 @@ systema_admonitionum (
         mutatum         = VERUM;
     }
     redde mutatum;
+}
+
+/* quies T6c: liber per speculam - nihil debitum (scriptura
+ * expergefacit); sine specula (platforma) pulsus crebri ut olim */
+#define MORA_SINE_SPECULA  XVI
+
+interior Mora
+admonitiones_morari (
+    vacuum* ctx)
+{
+    constans ContextusAdmonitionum* ca;
+
+    ca = (constans ContextusAdmonitionum*)ctx;
+    si (!ca->sequitur)
+    {
+        redde -I;
+    }
+    redde ca->specula ? -I : MORA_SINE_SPECULA;
+}
+
+interior s32
+admonitionum_fossa (
+    vacuum* ctx,
+       i32* eventus)
+{
+    constans ContextusAdmonitionum* ca;
+
+    ca        = (constans ContextusAdmonitionum*)ctx;
+    *eventus  = REACTOR_LEGERE;
+    redde ca->sequitur ? specula_fossa(ca->specula) : -I;
 }
 
 interior b32
@@ -2012,6 +3197,8 @@ admonitiones_describere (
     f->componere_ctx  = m;
     /* T4d: Esc ad latus prius */
     f->effugium_redit = VERUM;
+    /* comites P1 */
+    f->locus_titulus  = titulus_admonitionum;
 }
 
 /* T4b: volantes (toasts) - stratum vici, index et porta communes */
@@ -2042,8 +3229,17 @@ volantes_montare_in_vico (
     {
         redde FALSUM;
     }
-    m->nunc = nunc_vici;
+    m->nunc         = nunc_vici;
+    m->transientes  = ca->transientes;
     redde VERUM;
+}
+
+/* quies T6d: usque ad exspirationem volantis proximae */
+interior Mora
+volantes_morari (
+    vacuum* ctx)
+{
+    redde (Mora)volantes_mora((constans VolantiumMontatio*)ctx);
 }
 
 interior VicusPulsus
@@ -2071,6 +3267,7 @@ volantes_describere (
     f->componere_ctx  = m;
     f->pulsare        = volantes_pulsare_in_vico;
     f->pulsare_ctx    = m;
+    f->mora           = volantes_morari;
 }
 
 /* T6: cliens tmux cum servitore suo ("-" = ordinarius) */
@@ -2080,101 +3277,89 @@ nomen structura {
     chorda sessio;
 } ClientisLocus;
 
+/* quies T2: list-clients unius servitoris in volatu */
+nomen structura {
+    constans character* servitor;
+             Processus* processus;
+} QuaestioClientium;
+
+/* quies T2: list-clients servitoris ("-" = ordinarius) INCIPITUR, non
+ * exspectatur - resultus in pulsu posteriore (clientes_addere).
+ * tmux absens: nulla quaestio (ut olim: nulli clientes) */
 interior vacuum
-clientes_addere (
-                    Xar* loci,
+clientes_quaerere (
+                    Xar* quaestiones,
      constans character* servitor,
                 Piscina* p)
 {
-                   Multiplexor  mx;
-                           Xar* clientes;
-    constans MultiplexorCliens* k;
-                 ClientisLocus* locus;
-                           i32  i;
+          Multiplexor  mx;
+            Processus* pr;
+    QuaestioClientium* q;
 
     memset(&mx, ZEPHYRUM, magnitudo(mx));
     si (strcmp(servitor, "-") != ZEPHYRUM)
     {
         mx.socket = servitor;
     }
-    clientes = multiplexor_clientes(&mx, p);
+    pr  = multiplexor_clientes_incipere(&mx, p);
+    q   = pr ? (QuaestioClientium*)xar_addere(quaestiones) : NIHIL;
+    si (q)
+    {
+        q->servitor   = servitor;
+        q->processus  = pr;
+    }
+}
+
+/* quaestio PARATA metitur; clientes eius in loci (fracta: nulli) */
+interior vacuum
+clientes_addere (
+                           Xar* loci,
+    constans QuaestioClientium* q,
+                       Piscina* p)
+{
+             ProcessusResultus  r;
+                           Xar* clientes;
+    constans MultiplexorCliens* k;
+                 ClientisLocus* locus;
+                           i32  i;
+
+    r = processus_metere(q->processus);
+    si (!r.successus || r.codex_exitus != ZEPHYRUM)
+    {
+        redde;
+    }
+    clientes = multiplexor_clientes_legere(r.effusio, p);
     per (i = ZEPHYRUM; clientes && i < xar_numerus(clientes); i++)
     {
         k      = (constans MultiplexorCliens*)xar_obtinere(clientes, i);
         locus  = (ClientisLocus*)xar_addere(loci);
         si (locus)
         {
-            locus->servitor  = chorda_ex_literis(servitor, p);
+            locus->servitor  = chorda_ex_literis(q->servitor, p);
             locus->tty       = k->tty;
             locus->sessio    = k->sessio;
         }
     }
 }
 
-/* systema "terminalia" (T6, per V s): latus terminalis cuius tty
- * cliens tmux est argumentum "tmux <servitor|-> <sessio>" servat
- * (restitutio iterum adhaeret); detachatum (argumentum tmux sine
- * cliente) tollitur. Servitores sessionum (praeconium) priores,
- * ordinarius ultimus - argumentum saltus (socket plenus) manet. */
-interior b32
-systema_terminalium (
-     Vicus* v,
-    vacuum* ctx)
+/* T6: latus terminalis cuius tty cliens tmux est argumentum "tmux
+ * <servitor|-> <sessio>" servat; detachatum (argumentum tmux sine
+ * cliente) tollitur; argumentum alienum non tangitur */
+interior vacuum
+terminalia_applicare (
+                    Vicus* v,
+    ContextusAdmonitionum* ca,
+                      Xar* loci)
 {
-     ContextusAdmonitionum* ca;
-                       Xar* loci;
-                       Xar* sessiones;
     constans ClientisLocus* locus;
                VicusTabula* t;
                 VicusLatus* l;
                     chorda  tty;
                     chorda  novum;
-                    time_t  nunc;
                        i32  i;
                        i32  j;
                        s32  k;
 
-    ca = (ContextusAdmonitionum*)ctx;
-    si (!ca->sequitur || !ca->scheda_terminalium)
-    {
-        redde FALSUM;
-    }
-    nunc = time(NIHIL);
-    si (   ca->terminalia_ad != (time_t)ZEPHYRUM
-        && nunc - ca->terminalia_ad < (time_t)V)
-    {
-        redde FALSUM;
-    }
-    ca->terminalia_ad = nunc;
-    piscina_vacare(ca->scheda_terminalium);
-    loci = xar_creare(ca->scheda_terminalium,
-        (i32)magnitudo(ClientisLocus));
-    sessiones = colloquia_status_legere(ca->fons.status,
-        ca->scheda_terminalium);
-    /* servitores sessionum distincti, deinde ordinarius */
-    per (i = ZEPHYRUM; loci && sessiones && i < xar_numerus(sessiones);
-         i++)
-    {
-        constans Colloquium* c;
-                        b32  visus;
-
-        c      = (constans Colloquium*)xar_obtinere(sessiones, i);
-        visus  = c->servitor.mensura == ZEPHYRUM;
-        per (j = ZEPHYRUM; !visus && j < i; j++)
-        {
-            visus = chorda_aequalis(((constans Colloquium*)
-                xar_obtinere(sessiones, j))->servitor, c->servitor);
-        }
-        si (!visus)
-        {
-            clientes_addere(loci, chorda_ut_cstr(c->servitor,
-                ca->scheda_terminalium), ca->scheda_terminalium);
-        }
-    }
-    si (loci)
-    {
-        clientes_addere(loci, "-", ca->scheda_terminalium);
-    }
     per (i = ZEPHYRUM; loci && i < (i32)vicus_numerus_tabularum(v); i++)
     {
         t = vicus_tabula(v, i);
@@ -2223,7 +3408,254 @@ systema_terminalium (
             }
         }
     }
+}
+
+/* systema "terminalia" (T6, per V s): clientes tmux omnium
+ * servitorum (servitores sessionum ex praeconio priores, ordinarius
+ * ultimus - argumentum saltus, socket plenus, manet), deinde
+ * terminalia_applicare. quies T2: nullus tmux sine latere terminali
+ * (nec mora consumitur: latus novum statim inspicitur); quaestiones
+ * INCIPIUNTUR et in pulsibus sequentibus pulsantur (numquam
+ * exspectantur), resultus cum omnes paratae sunt applicatur */
+/* quies T2b: tmux iterum per V s solum latere visibili cum tmux in
+ * fronte (sessio intra tmux mutari potest sine signo nostro) */
+#define TERMINALIA_MS  ((s64)V * (s64)M)
+/* quaestio in volatu: processus pulsandus */
+#define MORA_TERMINALIUM_VOLANTIUM  XVI
+/* quaestio altera post frontes mutatas: 'tmux attach' in fronte est
+ * PAULO ANTE quam cliens apud servitorem inscribitur - quaestio prima
+ * eum non videt, et frons iterum non mutatur (vicus_saltus I) */
+#define TERMINALIA_CONFIRMATIO_MS  ((s64)M)
+
+/* quies T2b: signum frontium - grex frontalis omnium laterum
+ * terminalium vivorum (ordine tabularum); mutatur cum programma
+ * incipit aut finit (tmux attach, detach) aut latus aperitur aut
+ * clauditur. *numerus = latera terminalia; *tmux_visibile = latus
+ * visibile cuius argumentum "tmux ..." est */
+interior i64
+frontes_signare (
+    Vicus* v,
+      i32* numerus,
+      b32* tmux_visibile)
+{
+    VicusTabula* t;
+    VicusTabula* activa;
+     VicusLatus* l;
+     VicusLatus* frons;
+            i64  signum;
+            i32  i;
+            s32  k;
+
+    signum          = ZEPHYRUM;
+    *numerus        = ZEPHYRUM;
+    *tmux_visibile  = FALSUM;
+    activa          = vicus_activa(v);
+    per (i = ZEPHYRUM; i < (i32)vicus_numerus_tabularum(v); i++)
+    {
+        t      = vicus_tabula(v, i);
+        frons  = t ? vicus_latus(t, VICUS_DEXTRUM) : NIHIL;
+        per (k = -I; t && k < (s32)xar_numerus(t->acervus); k++)
+        {
+            l = k < ZEPHYRUM ? &t->sinistrum
+                : (VicusLatus*)xar_obtinere(t->acervus, (i32)k);
+            si (   !l->montata || l->finita
+                || !chorda_aequalis_literis(l->genus, "terminale"))
+            {
+                perge;
+            }
+            (*numerus)++;
+            /* i64 insignatum: circuitio definita */
+            signum = signum * (i64)MXXIV * (i64)MXXIV + (i64)I
+                + (i64)(insignatus integer)terminale_grex_frontalis(
+                    (constans TerminaleApplicatio*)l->montatio);
+            si (   t == activa && (k < ZEPHYRUM || l == frons)
+                && l->argumentum.mensura > IV
+                && memcmp(l->argumentum.datum, "tmux ", V)
+                   == ZEPHYRUM)
+            {
+                *tmux_visibile = VERUM;
+            }
+        }
+    }
+    redde signum;
+}
+
+/* quies T2b: quaestio debita? frontes mutatae (aut latus primum;
+ * *mutatae), confirmatio debita, aut tmux visibilis et V s elapsa.
+ * Nullum latus terminale: numquam (T2) */
+interior b32
+terminalia_debita (
+                    Vicus* v,
+    ContextusAdmonitionum* ca,
+                      i64* signum,
+                      b32* mutatae)
+{
+    i32 numerus;
+    b32 tmux_visibile;
+    s64 nunc;
+
+    *signum   = frontes_signare(v, &numerus, &tmux_visibile);
+    *mutatae  = FALSUM;
+    si (numerus == ZEPHYRUM)
+    {
+        ca->terminalia_signum       = ZEPHYRUM;
+        ca->terminalia_confirmanda  = ZEPHYRUM;
+        redde FALSUM;
+    }
+    nunc      = fenestra_tempus_ms();
+    *mutatae  = *signum != ca->terminalia_signum;
+    redde *mutatae
+        || (   ca->terminalia_confirmanda != ZEPHYRUM
+            && nunc >= ca->terminalia_confirmanda)
+        || (tmux_visibile && nunc - ca->terminalia_ad >= TERMINALIA_MS);
+}
+
+interior b32
+systema_terminalium (
+     Vicus* v,
+    vacuum* ctx)
+{
+    ContextusAdmonitionum* ca;
+                      Xar* loci;
+                      Xar* quaestiones;
+                      Xar* sessiones;
+        QuaestioClientium* q;
+                      i64  signum;
+                      b32  mutatae;
+                      b32  paratae;
+                      i32  i;
+                      i32  j;
+
+    ca = (ContextusAdmonitionum*)ctx;
+    si (!ca->sequitur || !ca->scheda_terminalium)
+    {
+        redde FALSUM;
+    }
+    quaestiones = ca->terminalia_quaestiones;
+    si (quaestiones)
+    {
+        paratae = VERUM;
+        per (i = ZEPHYRUM; i < xar_numerus(quaestiones); i++)
+        {
+            q = (QuaestioClientium*)xar_obtinere(quaestiones, i);
+            si (processus_pulsare(q->processus) != PROCESSUS_PARATUS)
+            {
+                paratae = FALSUM;
+            }
+        }
+        si (!paratae)
+        {
+            redde FALSUM;
+        }
+        loci = xar_creare(ca->scheda_terminalium,
+            (i32)magnitudo(ClientisLocus));
+        per (i = ZEPHYRUM; loci && i < xar_numerus(quaestiones); i++)
+        {
+            clientes_addere(loci, (constans QuaestioClientium*)
+                xar_obtinere(quaestiones, i), ca->scheda_terminalium);
+        }
+        ca->terminalia_quaestiones = NIHIL;
+        si (loci)
+        {
+            terminalia_applicare(v, ca, loci);
+        }
+        redde FALSUM;
+    }
+    si (!terminalia_debita(v, ca, &signum, &mutatae))
+    {
+        redde FALSUM;
+    }
+    ca->terminalia_signum  = signum;
+    ca->terminalia_ad      = fenestra_tempus_ms();
+    ca->terminalia_confirmanda  = mutatae
+        ? ca->terminalia_ad + TERMINALIA_CONFIRMATIO_MS : ZEPHYRUM;
+    piscina_vacare(ca->scheda_terminalium);
+    quaestiones = xar_creare(ca->scheda_terminalium,
+        (i32)magnitudo(QuaestioClientium));
+    sessiones = colloquia_status_legere(ca->fons.status,
+        ca->scheda_terminalium);
+    /* servitores sessionum distincti, deinde ordinarius */
+    per (i = ZEPHYRUM; quaestiones && sessiones
+                       && i < xar_numerus(sessiones); i++)
+    {
+        constans Colloquium* c;
+                        b32  visus;
+
+        c      = (constans Colloquium*)xar_obtinere(sessiones, i);
+        visus  = c->servitor.mensura == ZEPHYRUM;
+        per (j = ZEPHYRUM; !visus && j < i; j++)
+        {
+            visus = chorda_aequalis(((constans Colloquium*)
+                xar_obtinere(sessiones, j))->servitor, c->servitor);
+        }
+        si (!visus)
+        {
+            clientes_quaerere(quaestiones, chorda_ut_cstr(c->servitor,
+                ca->scheda_terminalium), ca->scheda_terminalium);
+        }
+    }
+    si (quaestiones)
+    {
+        clientes_quaerere(quaestiones, "-", ca->scheda_terminalium);
+    }
+    ca->terminalia_quaestiones = quaestiones;
     redde FALSUM;
+}
+
+/* quies T2b: mora systematis terminalium - XVI dum quaestio volat, 0
+ * si frontes mutatae, deinde minimum confirmationis et V s (si tmux
+ * visibilis); aliter -1 (fossa pty mutationem frontis cum effusione
+ * affert) */
+interior Mora
+terminalia_morari (
+    vacuum* ctx)
+{
+    ContextusAdmonitionum* ca;
+                      i64  signum;
+                      i32  numerus;
+                      b32  tmux_visibile;
+                      s64  reliquum;
+                      s64  nunc;
+                     Mora  mora;
+
+    ca = (ContextusAdmonitionum*)ctx;
+    si (!ca->sequitur || !ca->scheda_terminalium || !ca->vicus)
+    {
+        redde -I;
+    }
+    si (ca->terminalia_quaestiones)
+    {
+        redde MORA_TERMINALIUM_VOLANTIUM;
+    }
+    signum = frontes_signare(ca->vicus, &numerus, &tmux_visibile);
+    si (numerus == ZEPHYRUM)
+    {
+        redde -I;
+    }
+    si (signum != ca->terminalia_signum)
+    {
+        redde ZEPHYRUM;
+    }
+    nunc = fenestra_tempus_ms();
+    mora = -I;
+    si (ca->terminalia_confirmanda != ZEPHYRUM)
+    {
+        reliquum  = ca->terminalia_confirmanda - nunc;
+        mora      = reliquum > ZEPHYRUM ? (Mora)reliquum : ZEPHYRUM;
+    }
+    si (tmux_visibile)
+    {
+        reliquum = ca->terminalia_ad + TERMINALIA_MS - nunc;
+        si (reliquum < ZEPHYRUM)
+        {
+            reliquum = ZEPHYRUM;
+        }
+        si (mora < ZEPHYRUM || (Mora)reliquum < mora)
+        {
+            mora = (Mora)reliquum;
+        }
+    }
+    redde mora;
 }
 
 /* T5: visus sessionum - fons communis, saltus. Fons SEMPER datur
@@ -2260,6 +3692,15 @@ colloquia_montare_in_vico (
     redde VERUM;
 }
 
+/* quies T6d: panelli et cursus per V s dum latus visibile */
+interior Mora
+colloquia_morari (
+    vacuum* ctx)
+{
+    redde (Mora)colloquia_visus_mora(
+        (constans ColloquiorumMontatio*)ctx);
+}
+
 interior VicusPulsus
 colloquia_pulsare_in_vico (
     vacuum* ctx)
@@ -2285,8 +3726,11 @@ colloquia_describere (
     f->componere_ctx  = m;
     f->pulsare        = colloquia_pulsare_in_vico;
     f->pulsare_ctx    = m;
+    f->mora           = colloquia_morari;
     /* T4d: Esc ad latus prius */
     f->effugium_redit = VERUM;
+    /* comites P1 */
+    f->locus_titulus  = titulus_colloquiorum;
 }
 
 /* T10b: mensor pro cursibus currentibus - RHUBARB_MENSOR (probationes,
@@ -2339,10 +3783,32 @@ vicus_applicatio_admonitiones_aperire (
                CCLVI * M, &ca->multiplexor);
     si (ca->sequitur)
     {
+        ca->specula = specula_creare(ca->piscina, via);
         colloquia_visus_fontem_mensorem_ponere(&ca->fons,
             mensorem_quaerere(ca->piscina));
     }
     redde ca->sequitur;
+}
+
+vacuum
+vicus_applicatio_admonitiones_claudere (
+    VicusApplicatio* app)
+{
+    ContextusAdmonitionum* ca;
+
+    si (!app || !app->admonitionum)
+    {
+        redde;
+    }
+    ca = (ContextusAdmonitionum*)app->admonitionum;
+    si (!ca->sequitur)
+    {
+        redde;
+    }
+    colloquia_visus_fontem_finire(&ca->fons);
+    specula_claudere(ca->specula);
+    ca->specula   = NIHIL;
+    ca->sequitur  = FALSUM;
 }
 
 
@@ -2405,6 +3871,46 @@ vicus_applicatio_quaestionis_portam_ponere (
 }
 
 vacuum
+vicus_applicatio_soni_portam_ponere (
+            VicusApplicatio* app,
+    constans VicusPortaSoni* porta)
+{
+    ContextusSoni* soni;
+
+    si (!app || !app->soni)
+    {
+        redde;
+    }
+    soni = (ContextusSoni*)app->soni;
+    si (   !porta || !porta->pulsare || !porta->agere || !porta->tacere
+        || !porta->canere || !porta->vocem_incipere
+        || !porta->vocem_ponere || !porta->vocem_dimittere)
+    {
+        soni->posita = FALSUM;
+        redde;
+    }
+    soni->porta   = *porta;
+    soni->posita  = VERUM;
+}
+
+vacuum
+vicus_applicatio_textus_portam_ponere (
+     VicusApplicatio* app,
+                 b32 (*porta)(vacuum* ctx, chorda textus),
+              vacuum* ctx)
+{
+    ContextusScribae* cs;
+
+    si (!app || !app->scribae)
+    {
+        redde;
+    }
+    cs                    = (ContextusScribae*)app->scribae;
+    cs->porta_textus      = porta;
+    cs->porta_textus_ctx  = ctx;
+}
+
+vacuum
 vicus_applicatio_imaginis_portam_ponere (
      VicusApplicatio* app,
         ImagoFructus (*porta)(vacuum* ctx, Piscina* piscina),
@@ -2420,6 +3926,686 @@ vicus_applicatio_imaginis_portam_ponere (
     cp->porta      = porta;
     cp->porta_ctx  = ctx;
 }
+
+/* bibliotheca sanctorum (sancti_visus): corpus UNUM per vicum, pigre
+ * apertum ex RHUBARB_SANCTI aut "sancti" (radix repositorii - vicus.sh
+ * ibi currit), commune omnibus lateribus; absens = latus "No saints
+ * found" dicit */
+nomen structura {
+                  Vicus* vicus;
+                Piscina* piscina;
+    InternamentumChorda* intern;
+           SanctiCorpus* corpus;
+                    b32  temptatum;
+        StatusSystemata* systemata;
+} ContextusSanctorum;
+
+/* porta hodie sanctorum: horologium vici; nullum = FALSUM */
+interior b32
+hodie_sanctorum (
+    vacuum* ctx,
+       s32* mensis,
+       s32* dies)
+{
+          Vicus* v;
+    VicusTempus  t;
+
+    v = (Vicus*)ctx;
+    si (!v || !v->horologium)
+    {
+        redde FALSUM;
+    }
+    memset(&t, ZEPHYRUM, magnitudo(t));
+    v->horologium(v->horologium_ctx, &t);
+    si (t.mensis < I || t.dies < I)
+    {
+        redde FALSUM;
+    }
+    *mensis  = t.mensis;
+    *dies    = t.dies;
+    redde VERUM;
+}
+
+/* corpus pigre apertum (semel temptatum); NIHIL si absens */
+interior SanctiCorpus*
+corpus_sanctorum (
+    ContextusSanctorum* cs)
+{
+    constans character* directorium;
+
+    si (!cs->temptatum)
+    {
+        directorium    = getenv("RHUBARB_SANCTI");
+        cs->corpus     = sancti_corpus_aperire(directorium
+            && directorium[ZEPHYRUM] ? directorium : "sancti",
+            cs->piscina, cs->intern);
+        cs->temptatum  = VERUM;
+    }
+    redde cs->corpus;
+}
+
+/* D5 S4: corpus pro registro communi (ContextusKalendarii.sancti) */
+interior constans SanctiCorpus*
+corpus_sanctorum_communis (
+    vacuum* ctx)
+{
+    redde corpus_sanctorum((ContextusSanctorum*)ctx);
+}
+
+/* festum generale aut usa? (calendaria visus diei) */
+interior b32
+festum_diei (
+    constans SanctiFestum* f)
+{
+    redde f->calendarium == SANCTI_CALENDARIUM_GENERALE
+        || f->calendarium == SANCTI_CALENDARIUM_USA;
+}
+
+/* titulus ordinis calendarii: nomen et aetas ("Thomas Aquinas ·
+ * c. 1225–1274"); aetate ignota nomen solum */
+interior chorda
+_titulum_sancti (
+    constans Sanctus* s,
+             Piscina* piscina)
+{
+    chorda aetas;
+
+    aetas = sancti_aetas_textus(s, piscina);
+    si (aetas.mensura == ZEPHYRUM)
+    {
+        redde s->titulus;
+    }
+    redde chorda_concatenare(chorda_concatenare(s->titulus,
+        chorda_ex_literis(" \302\267 ", piscina), piscina), aetas,
+        piscina);
+}
+
+/* sancti-plan V2: fons dierum calendarii - sancti quorum festum
+ * (generale aut usa) in [prima, ultima] cadit;
+ * titulus "Thomas Aquinas · c. 1225–1274", referentia = index in
+ * corpore; ctx = ContextusSanctorum* */
+interior b32
+sanctos_legere (
+      vacuum* ctx,
+        Dies  prima,
+        Dies  ultima,
+         Xar* exitus,
+     Piscina* piscina)
+{
+    ContextusSanctorum* cs;
+          SanctiCorpus* corpus;
+                  Dies  dies[XVI];
+                   i32  i;
+                   i32  j;
+                   i32  k;
+                   i32  n;
+
+    cs = (ContextusSanctorum*)ctx;
+    si (!cs || !exitus)
+    {
+        redde FALSUM;
+    }
+    corpus = corpus_sanctorum(cs);
+    si (!corpus)
+    {
+        redde VERUM;   /* bibliotheca absens: dies sine sanctis */
+    }
+    per (i = ZEPHYRUM; i < sancti_numerus(corpus); i++)
+    {
+        constans Sanctus* s = sancti_ad_indicem(corpus, i);
+                  chorda  titulus;
+
+        titulus.datum    = NIHIL;
+        titulus.mensura  = ZEPHYRUM;
+        per (j = ZEPHYRUM; j < xar_numerus(s->festa); j++)
+        {
+            constans SanctiFestum* f = (constans SanctiFestum*)
+                xar_obtinere(s->festa, j);
+
+            si (!festum_diei(f))
+            {
+                perge;
+            }
+            n = fasti_annuum_expandere(f->mensis, f->dies, prima,
+                ultima,
+                dies, XVI);
+            per (k = ZEPHYRUM; k < n; k++)
+            {
+                FastiIntroitus* t = (FastiIntroitus*)xar_addere(exitus);
+
+                si (!t)
+                {
+                    redde FALSUM;
+                }
+                si (!titulus.datum)
+                {
+                    titulus = _titulum_sancti(s, piscina);
+                }
+                memset(t, ZEPHYRUM, magnitudo(FastiIntroitus));
+                t->dies        = dies[k];
+                t->genus       = chorda_ex_literis("sanctus", piscina);
+                t->titulus     = titulus;
+                t->referentia  = s->id;
+            }
+        }
+    }
+    redde VERUM;
+}
+
+/* introitum sancti aperire: latus sanctorum in frontem acervi cum
+ * sancto (vicus_acervo_mutare; Esc ad indicem, Ctrl+O calendarium) */
+interior b32
+sanctum_aperire (
+                     vacuum* ctx,
+    constans FastiIntroitus* introitus)
+{
+    ContextusSanctorum* cs;
+             character  id[CXXVIII];
+
+    cs = (ContextusSanctorum*)ctx;
+    si (   !cs || !introitus
+        || introitus->referentia.mensura == ZEPHYRUM
+        || introitus->referentia.mensura >= (i32)magnitudo(id))
+    {
+        redde FALSUM;
+    }
+    memcpy(id, introitus->referentia.datum,
+        (memoriae_index)introitus->referentia.mensura);
+    id[introitus->referentia.mensura] = '\0';
+    redde vicus_acervo_mutare(cs->vicus, "sancti", id);
+}
+
+interior b32
+sanctos_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+    ContextusSanctorum* cs;
+
+    (vacuum)volumen;
+    cs = (ContextusSanctorum*)ctx;
+    si (!cs)
+    {
+        redde FALSUM;
+    }
+    (vacuum)corpus_sanctorum(cs);
+    si (!sancti_visus_montare((SanctorumMontatio*)sedes, piscina,
+        intern,
+            repo, id, cs->corpus, hodie_sanctorum, cs->vicus, latitudo,
+            altitudo, cs->systemata))
+    {
+        redde FALSUM;
+    }
+    /* "<id>" sanctum aperit (ignotum: index manet) */
+    si (argumentum && argumentum[ZEPHYRUM])
+    {
+        (vacuum)sancti_visus_argumentum_ponere(
+            (SanctorumMontatio*)sedes, argumentum);
+    }
+    redde VERUM;
+}
+
+interior b32
+sanctorum_argumentum_ponere (
+                 vacuum* ctx,
+     constans character* argumentum)
+{
+    redde sancti_visus_argumentum_ponere((SanctorumMontatio*)ctx,
+        argumentum);
+}
+
+interior vacuum
+sanctos_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    SanctorumMontatio* m;
+
+    m                         = (SanctorumMontatio*)montatio;
+    f->actiones               = m->actiones;
+    f->figurae                = m->figurae;
+    f->componere              = sancti_visus_componere;
+    f->componere_ctx          = m;
+    f->argumentum_ponere      = sanctorum_argumentum_ponere;
+    f->argumentum_ponere_ctx  = m;
+    /* semitae R3: historia lateris et $via */
+    f->ramus                  = &m->ramus;
+    /* Esc quod index non consumpsit (quaestio nulla): latus prius */
+    f->effugium_redit         = VERUM;
+    /* comites P1: titulus loci = sanctus apertus */
+    f->locus_titulus      = sancti_visus_locus_titulus;
+    f->locus_titulus_ctx  = m;
+    f->advocatum          = sancti_visus_quaestionem_aperire;
+    f->advocatum_ctx      = m;
+}
+
+
+/* lector (lector L3): bibliotheca codicum UNA per vicum, pigre aperta
+ * ex RHUBARB_CODICES aut ~/.rhubarb/codices, communis omnibus
+ * lateribus; positiones in volumine vici */
+nomen structura {
+                  Vicus* vicus;
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                Volumen* volumen;
+      LectorBibliotheca* bibliotheca;
+                    b32  temptatum;
+        StatusSystemata* systemata;
+    /* L5: scheda quaestionis notarum (omni pictura vacatur) */
+                Piscina* scheda_notarum;
+} ContextusLectoris;
+
+interior LectorBibliotheca*
+bibliotheca_lectoris (
+    ContextusLectoris* cl)
+{
+    constans character* directorium;
+    constans character* domus;
+             character* via;
+
+    si (!cl->temptatum)
+    {
+        cl->temptatum  = VERUM;
+        directorium    = lectiones_ambitus("RHUBARB_CODICES");
+        si (!directorium || !directorium[ZEPHYRUM])
+        {
+            domus = lectiones_ambitus("HOME");
+            via   = (character*)piscina_allocare(cl->piscina,
+                (memoriae_index)(domus ? strlen(domus) : ZEPHYRUM)
+                + XXXII);
+            si (!via)
+            {
+                redde NIHIL;
+            }
+            sprintf(via, "%s/.rhubarb/codices", domus ? domus : ".");
+            directorium = via;
+        }
+        cl->bibliotheca = lector_bibliotheca_aperire(directorium,
+            cl->volumen, cl->piscina, cl->intern);
+    }
+    redde cl->bibliotheca;
+}
+
+/* L5: notas_habet lectoris - liber comitis loci ('comes/' + locus, ut
+ * comitem_sequi) in volumine vici lineam saltem unam non vacuam habet
+ * (Franus: liber vacuus - comes ante pigritiam creatus, aut notae
+ * deletae - non numeratur); lectio sola. Liber absens: exstat solum
+ * (via celeris, nullum documentum aperitur) */
+interior b32
+lectoris_notas_habere (
+    vacuum* ctx,
+    chorda  locus)
+{
+    ContextusLectoris* cl;
+                  Xar* lineae;
+            character* praefixum;
+
+    cl = (ContextusLectoris*)ctx;
+    si (!cl || !cl->scheda_notarum || locus.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    piscina_vacare(cl->scheda_notarum);
+    praefixum = chorda_ut_cstr(chorda_concatenare(chorda_ex_literis(
+        "comes/", cl->scheda_notarum), locus, cl->scheda_notarum),
+        cl->scheda_notarum);
+    si (!scriba_liber_exstat(cl->volumen, praefixum,
+        cl->scheda_notarum))
+    {
+        redde FALSUM;
+    }
+    lineae = xar_creare(cl->scheda_notarum, (i32)magnitudo(chorda));
+    redde lineae && scriba_liber_lineas_legere(cl->scheda_notarum,
+        cl->intern, cl->volumen, praefixum, I, lineae)
+        && xar_numerus(lineae) > ZEPHYRUM;
+}
+
+interior b32
+lectorem_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+    ContextusLectoris* cl;
+
+    (vacuum)volumen;
+    cl = (ContextusLectoris*)ctx;
+    si (   !cl
+        || !lector_montare((LectorMontatio*)sedes, piscina, intern,
+        repo,
+               id, bibliotheca_lectoris(cl), latitudo, altitudo,
+               cl->systemata))
+    {
+        redde FALSUM;
+    }
+    si (!cl->scheda_notarum)
+    {
+        cl->scheda_notarum = piscina_generare_dynamicum("lector_notae",
+            IV * M);
+    }
+    ((LectorMontatio*)sedes)->notas_habet      = lectoris_notas_habere;
+    ((LectorMontatio*)sedes)->notas_habet_ctx  = cl;
+    /* URI, identitas libri (liber ad positionem suam); mala:
+     * bibliotheca manet */
+    si (argumentum && argumentum[ZEPHYRUM])
+    {
+        (vacuum)lector_argumentum_ponere((LectorMontatio*)sedes,
+            argumentum);
+    }
+    redde VERUM;
+}
+
+interior b32
+lectoris_argumentum_ponere (
+                 vacuum* ctx,
+     constans character* argumentum)
+{
+    redde lector_argumentum_ponere((LectorMontatio*)ctx, argumentum);
+}
+
+interior vacuum
+lectorem_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    LectorMontatio* m;
+
+    m                 = (LectorMontatio*)montatio;
+    f->actiones       = m->actiones;
+    f->figurae        = m->figurae;
+    f->componere      = lector_componere;
+    f->componere_ctx  = m;
+    f->ramus          = &m->ramus;
+    /* Esc quod bibliotheca non consumpsit: latus prius */
+    f->effugium_redit = VERUM;
+    /* $via, historia, restitutio: semita sine capite = positio libri */
+    f->argumentum_ponere      = lectoris_argumentum_ponere;
+    f->argumentum_ponere_ctx  = m;
+    f->semitam_secuta         = lector_semitam_secuta;
+    f->semitam_secuta_ctx     = m;
+    /* comites: locus paginae (cum capite et pagina), titulus humanus */
+    f->locus              = lector_locus;
+    f->locus_ctx          = m;
+    f->locus_titulus      = lector_locus_titulus;
+    f->locus_titulus_ctx  = m;
+}
+
+
+/* ==================================================
+ * Indagatio (genera-datorum D5, S3b)
+ * ================================================== */
+
+/* latus indagationis: index super registro communi calendarii (pigre,
+ * latere primo); porta per semitas vici */
+nomen structura {
+      ContextusKalendarii* kalendarii;
+            ContextusViae* via;
+                    Vicus* vicus;
+                  Piscina* piscina;
+} ContextusIndagationis;
+
+/* porta inventi: semita ut $via (vitium omissum: latus manet); liber
+ * communis "scriba/<nomen>" nondum semita (S3c): pagina in latere
+ * sinistro tabulae activae (Franus 2026-10-22), focus ibi; sinistrum
+ * non scriba - ut '$scriba(nomen)' in acervo */
+/* comites P5b: inventum comitis ("scriba/<pagina>?liber=comes/..."):
+ * visus comitatus dexter ex nota comitis (petitio; semita nulla aut
+ * mala - dexter manet), comes in sinistro ad paginam, focus sinister
+ * post petitiones (vicus_comitem_ostendere) */
+interior b32
+comitem_inventum_aperire (
+    ContextusIndagationis* ci,
+               VicusLatus* sinistrum,
+                   chorda  liber,
+                   chorda  pagina,
+                  Piscina* scheda)
+{
+      ScribaMontatio* m;
+    ContextusScribae* cs;
+              chorda  titulus;
+              chorda  semita;
+              chorda  vitium;
+
+    si (   !sinistrum || !sinistrum->montata
+        || !chorda_aequalis_literis(sinistrum->genus, "scriba"))
+    {
+        redde FALSUM;
+    }
+    m   = (ScribaMontatio*)sinistrum->montatio;
+    cs  = (ContextusScribae*)m->libri_ctx;
+    si (!cs)
+    {
+        redde FALSUM;
+    }
+    (vacuum)scriba_liber_comitem_legere(scheda, cs->intern, cs->volumen,
+        chorda_ut_cstr(liber, scheda), &titulus, &semita);
+    si (semita.mensura > ZEPHYRUM)
+    {
+        (vacuum)semitam_aperire(ci->via, semita, scheda, &vitium);
+    }
+    redde vicus_comitem_ostendere(ci->vicus, liber, titulus, semita)
+        && scriba_paginam_ostendere(m, pagina);
+}
+
+interior b32
+inventum_aperire (
+     vacuum* ctx,
+     chorda  semita)
+{
+    ContextusIndagationis* ci;
+                  Piscina* scheda;
+               VicusLatus* sinistrum;
+                   chorda  titulus;
+                   chorda  vitium;
+                   chorda  liber;
+                      i32  i;
+
+    ci = (ContextusIndagationis*)ctx;
+    si (!ci || !ci->via)
+    {
+        redde FALSUM;
+    }
+    scheda = ci->vicus->scheda_semitarum ? ci->vicus->scheda_semitarum
+                                         : ci->piscina;
+    si (   semita.mensura > VII
+        && memcmp(semita.datum, "scriba/", VII) == ZEPHYRUM)
+    {
+        titulus.datum    = semita.datum + VII;
+        titulus.mensura  = semita.mensura - VII;
+        /* P5b: "?liber=<praefixum>" - pagina libri comitis */
+        liber.datum    = NIHIL;
+        liber.mensura  = ZEPHYRUM;
+        per (i = ZEPHYRUM; i < titulus.mensura; i++)
+        {
+            si (titulus.datum[i] == '?')
+            {
+                liber.datum      = titulus.datum + i + I;
+                liber.mensura    = titulus.mensura - i - I;
+                titulus.mensura  = i;
+                frange;
+            }
+        }
+        si (   liber.mensura > VI
+            && memcmp(liber.datum, "liber=", VI) == ZEPHYRUM)
+        {
+            liber.datum    += VI;
+            liber.mensura  -= VI;
+        }
+        alioquin
+        {
+            liber.mensura = ZEPHYRUM;
+        }
+        si (!nomen_paginae_validum(titulus))
+        {
+            redde FALSUM;
+        }
+        sinistrum = vicus_latus(vicus_activa(ci->vicus),
+            VICUS_SINISTRUM);
+        si (liber.mensura > ZEPHYRUM)
+        {
+            redde comitem_inventum_aperire(ci, sinistrum, liber,
+                titulus,
+                scheda);
+        }
+        si (   sinistrum && sinistrum->montata
+            && chorda_aequalis_literis(sinistrum->genus, "scriba")
+            && scriba_paginam_ostendere(
+                   (ScribaMontatio*)sinistrum->montatio, titulus))
+        {
+            redde vicus_focum_ponere(ci->vicus, VICUS_SINISTRUM);
+        }
+        redde vicus_acervo_aperire(ci->vicus, "scriba",
+            chorda_ut_cstr(titulus, scheda));
+    }
+    redde semitam_aperire(ci->via, semita, scheda, &vitium);
+}
+
+interior b32
+indagationem_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+    ContextusIndagationis* ci;
+      ContextusKalendarii* ck;
+
+    (vacuum)volumen;
+    ci = (ContextusIndagationis*)ctx;
+    ck = ci ? ci->kalendarii : NIHIL;
+    si (!ck)
+    {
+        redde FALSUM;
+    }
+    agendam_et_registrum_parare(ck);
+    si (!ck->index && ck->conspectus)
+    {
+        ck->index = indagatio_creare(ck->piscina, ck->conspectus);
+    }
+    si (   !ck->index
+        || !indagatio_visus_montare((IndagatioMontatio*)sedes, piscina,
+               intern, repo, id, ck->index, inventum_aperire, ci,
+               latitudo, altitudo, ck->systemata))
+    {
+        redde FALSUM;
+    }
+    si (argumentum && argumentum[ZEPHYRUM])
+    {
+        (vacuum)indagatio_visus_argumentum_ponere(
+            (IndagatioMontatio*)sedes, argumentum);
+    }
+    redde VERUM;
+}
+
+interior b32
+indagationis_argumentum_ponere (
+                 vacuum* ctx,
+     constans character* argumentum)
+{
+    redde indagatio_visus_argumentum_ponere((IndagatioMontatio*)ctx,
+        argumentum);
+}
+
+/* advocatum (Cmd+Shift+F, '$search'): prompta cum q currente */
+interior b32
+indagationem_advocare (
+    vacuum* ctx)
+{
+    redde indagatio_visus_quaestionem_aperire((IndagatioMontatio*)ctx);
+}
+
+interior vacuum
+indagationem_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    IndagatioMontatio* m;
+
+    m                         = (IndagatioMontatio*)montatio;
+    f->actiones               = m->actiones;
+    f->figurae                = m->figurae;
+    f->componere              = indagatio_visus_componere;
+    f->componere_ctx          = m;
+    f->argumentum_ponere      = indagationis_argumentum_ponere;
+    f->argumentum_ponere_ctx  = m;
+    f->ramus                  = &m->ramus;
+    /* Esc quod latus non consumpsit (q vacua): latus prius */
+    f->effugium_redit         = VERUM;
+    /* quaestio in semita servata, non in identitate: latus unum */
+    f->argumentum_transiens  = VERUM;
+    f->advocatum             = indagationem_advocare;
+    f->advocatum_ctx         = m;
+    /* comites P1 */
+    f->locus_titulus  = titulus_quaestionis;
+}
+
+/* '$search': latus advocatur (prompta); '$search(verba)': ut $via,
+ * verba in latus (vicus_acervo_mutare; latus novum focum capit,
+ * praesens non). Argumenta plura (commata in verbis) iunguntur. */
+interior b32
+quaerere_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* piscina,
+     IussumEffectus* effectus)
+{
+     Vicus* v;
+    chorda  verba;
+       i32  i;
+       b32  bene;
+
+    v = (Vicus*)ctx;
+    si (iussum->numerus_argumentorum == ZEPHYRUM)
+    {
+        bene = vicus_advocare(v, "indagatio");
+    }
+    alioquin
+    {
+        verba = iussum->argumenta[ZEPHYRUM];
+        per (i = I; i < (i32)iussum->numerus_argumentorum; i++)
+        {
+            verba = chorda_concatenare(chorda_concatenare(verba,
+                chorda_ex_literis(", ", piscina), piscina),
+                iussum->argumenta[i], piscina);
+        }
+        bene = vicus_acervo_mutare(v, "indagatio",
+            chorda_ut_cstr(verba, piscina));
+    }
+    si (!bene)
+    {
+        effectus->error = chorda_ex_literis(
+            "search: aperiri non potest", piscina);
+    }
+    redde VERUM;
+}
+
+/* T4f (colloquia-plan): Cmd+] / Cmd+[ - domus -> admonitiones ->
+ * colloquia -> agenda -> indagatio (D5) -> domus */
+hic_manens constans character* cyclus_dexter[] = {
+    "admonitiones", "colloquia", "calendarium", "indagatio" };
+hic_manens constans character* argumenta_cycli[] = {
+    NIHIL, NIHIL, "agenda", NIHIL };
 
 b32
 vicus_applicatio_aedificare (
@@ -2437,6 +4623,10 @@ vicus_applicatio_aedificare (
 ContextusNomenclatoris* cn;
   ContextusQuaestionis* cq;
  ContextusAdmonitionum* cad;
+         ContextusSoni* soni;
+    ContextusSanctorum* sanctorum;
+     ContextusLectoris* lectoris;
+ ContextusIndagationis* ci;
        StatusSystemata* systemata;
 
     si (!app || !piscina || !intern || !volumen)
@@ -2493,10 +4683,52 @@ ContextusNomenclatoris* cn;
         cn->intern     = intern;
         cn->systemata  = systemata;
     }
+    /* bibliotheca sanctorum - corpus commune, pigre apertum */
+    sanctorum = (ContextusSanctorum*)piscina_allocare(piscina,
+        magnitudo(ContextusSanctorum));
+    si (sanctorum)
+    {
+        memset(sanctorum, ZEPHYRUM, magnitudo(ContextusSanctorum));
+        sanctorum->vicus      = app->vicus;
+        sanctorum->piscina    = piscina;
+        sanctorum->intern     = intern;
+        sanctorum->systemata  = systemata;
+    }
+    /* lector: bibliotheca codicum communis, pigre aperta */
+    lectoris = (ContextusLectoris*)piscina_allocare(piscina,
+        magnitudo(ContextusLectoris));
+    si (lectoris)
+    {
+        memset(lectoris, ZEPHYRUM, magnitudo(ContextusLectoris));
+        lectoris->vicus      = app->vicus;
+        lectoris->piscina    = piscina;
+        lectoris->intern     = intern;
+        lectoris->volumen    = volumen;
+        lectoris->systemata  = systemata;
+    }
+    /* D5 S4: registrum commune sanctos quaerit (corpus pigre) */
+    si (ck && sanctorum)
+    {
+        ck->sancti      = corpus_sanctorum_communis;
+        ck->sancti_ctx  = sanctorum;
+    }
     /* P6: fontes dierum calendarii (natales nomenclatoris) */
     si (ck)
     {
-        ck->fontes = fasti_fontes_creare(piscina);
+        ck->fontes         = fasti_fontes_creare(piscina);
+        /* D5: registrum commune personas nomenclatoris legit */
+        ck->nomenclatoris  = cn;
+    }
+    /* D5: indagatio - index super registro communi calendarii; via
+     * (porta) a via_registrare */
+    ci = (ContextusIndagationis*)piscina_allocare(piscina,
+        magnitudo(ContextusIndagationis));
+    si (ci)
+    {
+        memset(ci, ZEPHYRUM, magnitudo(ContextusIndagationis));
+        ci->kalendarii  = ck;
+        ci->vicus       = app->vicus;
+        ci->piscina     = piscina;
     }
     /* $question: porta nulla donec applicatio fenestrae ponit */
     cq = (ContextusQuaestionis*)piscina_allocare(piscina,
@@ -2513,22 +4745,47 @@ ContextusNomenclatoris* cn;
     si (cad)
     {
         memset(cad, ZEPHYRUM, magnitudo(ContextusAdmonitionum));
-        cad->index       = admonitiones_creare(piscina, CC);
-        cad->non_lectae  = -I;
-        cad->systemata   = systemata;
-        cad->piscina     = piscina;
-        cad->vicus       = app->vicus;
+        cad->index        = admonitiones_creare(piscina, CC);
+        cad->transientes  = admonitiones_creare(piscina, XVI);
+        cad->non_lectae   = -I;
+        cad->systemata    = systemata;
+        cad->piscina      = piscina;
+        cad->vicus        = app->vicus;
         cad->scheda      = piscina_generare_dynamicum(
             "admonitiones_saltus", XVI * M);
         cad->scheda_terminalium = piscina_generare_dynamicum(
             "terminalia", XVI * M);
     }
     app->admonitionum = cad;
+    /* sonus S4: porta nulla donec applicatio ponit */
+    soni = (ContextusSoni*)piscina_allocare(piscina,
+        magnitudo(ContextusSoni));
+    si (soni)
+    {
+        memset(soni, ZEPHYRUM, magnitudo(ContextusSoni));
+        soni->vicus      = app->vicus;
+        soni->systemata  = systemata;
+    }
+    si (cad)
+    {
+        cad->sonus = soni;
+    }
+    app->soni = soni;
     cs = (ContextusScribae*)piscina_allocare(piscina,
         magnitudo(ContextusScribae));
-    cs->systemata = systemata;
+    memset(cs, ZEPHYRUM, magnitudo(ContextusScribae));
+    app->scribae   = cs;
+    cs->systemata  = systemata;
     cs->liber = scriba_liber_aperire(piscina, intern, volumen,
         folii_columnae(latitudo), folii_lineae(altitudo));
+    /* comites P2: libri comites (porta librum_scribae) */
+    cs->libri      = tabula_dispersa_creare_chorda(piscina, XVI);
+    cs->pendentes  = tabula_dispersa_creare_chorda(piscina, XVI);
+    cs->piscina    = piscina;
+    cs->intern     = intern;
+    cs->volumen    = volumen;
+    cs->latitudo   = folii_columnae(latitudo);
+    cs->altitudo   = folii_lineae(altitudo);
     /* S3b: iussa omnium visuum scribae */
     cs->iussa = iussum_registrum_creare(piscina);
     si (   !app->vicus || !cs->liber || !cs->iussa
@@ -2537,6 +4794,9 @@ ContextusNomenclatoris* cn;
                quaestionem_iussum, cq)
         || !iussum_registrare(cs->iussa, "dies", VERUM, dies_iussum,
                NIHIL)
+        || !soni || !cad || !cad->transientes
+        || !iussum_registrare(cs->iussa, "sound", FALSUM, sonus_iussum,
+               cad)
         || !aperiens_registrare(cs->iussa, app->vicus, "terminale",
                piscina)
         || !aperiens_registrare(cs->iussa, app->vicus, "scriba",
@@ -2554,6 +4814,19 @@ ContextusNomenclatoris* cn;
                "notifications", "admonitiones", NIHIL, piscina)
         || !aperiens_fixum_registrare(cs->iussa, app->vicus,
                "sessions", "colloquia", NIHIL, piscina)
+        || !aperiens_fixum_registrare(cs->iussa, app->vicus,
+               "theremin", "aetherophonum", NIHIL, piscina)
+        || !sanctorum
+        || !aperiens_fixum_registrare(cs->iussa, app->vicus, "saints",
+               "sancti", NIHIL, piscina)
+        /* lector L6: $epubs (bibliotheca), $epubs(id aut URI) */
+        || !aperiens_fixum_registrare(cs->iussa, app->vicus, "epubs",
+               "lector", NIHIL, piscina)
+        || !ci
+        || !via_registrare(cs->iussa, app->vicus, piscina, intern,
+               &ci->via)
+        || !iussum_registrare(cs->iussa, "search", FALSUM,
+               quaerere_iussum, app->vicus)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-next", I,
                piscina)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-prev", -I,
@@ -2567,7 +4840,7 @@ ContextusNomenclatoris* cn;
                magnitudo(PictorMontatio), pictorem_montare,
                pictorem_describere, cp)
         || !vicus_genus_addere(app->vicus, "terminale",
-               magnitudo(TerminaleApplicatio),
+               magnitudo(TerminaleInVico),
                terminale_montare_in_vico, terminale_describere,
                systemata)
         || !ck
@@ -2578,6 +4851,9 @@ ContextusNomenclatoris* cn;
         || !ck->fontes
         || !fasti_fontes_addere(ck->fontes, "nomenclator",
                natales_legere, natalem_aperire, cn)
+        || !sanctorum
+        || !fasti_fontes_addere(ck->fontes, "sancti", sanctos_legere,
+               sanctum_aperire, sanctorum)
         || !vicus_genus_addere(app->vicus, "nomenclator",
                magnitudo(NomenclatorMontatio),
                nomenclatorem_montare_in_vico, nomenclatorem_describere,
@@ -2586,17 +4862,39 @@ ContextusNomenclatoris* cn;
                magnitudo(AdmonitionumMontatio),
                admonitiones_montare_in_vico, admonitiones_describere,
                cad)
+        || !vicus_genus_addere(app->vicus, "aetherophonum",
+               magnitudo(AetherophoniMontatio),
+               aetherophonum_montare_in_vico, aetherophonum_describere,
+               soni)
+        || !vicus_genus_addere(app->vicus, "sancti",
+               magnitudo(SanctorumMontatio), sanctos_montare_in_vico,
+               sanctos_describere, sanctorum)
+        || !vicus_genus_addere(app->vicus, "lector",
+               magnitudo(LectorMontatio), lectorem_montare_in_vico,
+               lectorem_describere, lectoris)
         || !vicus_genus_addere(app->vicus, "colloquia",
                magnitudo(ColloquiorumMontatio),
                colloquia_montare_in_vico,
                colloquia_describere, cad)
+        || !vicus_genus_addere(app->vicus, "indagatio",
+               magnitudo(IndagatioMontatio),
+               indagationem_montare_in_vico, indagationem_describere,
+               ci)
+        || !vicus_brevitatem_addere(app->vicus, 'f', (i32)MOD_SHIFT,
+               "indagatio")
+        || !vicus_cyclum_ponere(app->vicus, cyclus_dexter,
+               argumenta_cycli, IV)
         || !vicus_genus_addere(app->vicus, "volantes",
                magnitudo(VolantiumMontatio), volantes_montare_in_vico,
                volantes_describere, cad)
-        || !vicus_systema_addere(app->vicus, "admonitiones",
-               systema_admonitionum, cad)
-        || !vicus_systema_addere(app->vicus, "terminalia",
-               systema_terminalium, cad)
+        || !vicus_systema_cum_mora_addere(app->vicus, "admonitiones",
+               systema_admonitionum, admonitiones_morari, cad)
+        || !vicus_systema_fossam_ponere(app->vicus, "admonitiones",
+               admonitionum_fossa)
+        || !vicus_systema_cum_mora_addere(app->vicus, "terminalia",
+               systema_terminalium, terminalia_morari, cad)
+        || !vicus_systema_cum_mora_addere(app->vicus, "sonus",
+               systema_soni, soni_morari, soni)
         || !vicus_aperire(app->vicus, INDEX_ORDINARIUS)
         || !vicus_stratum_addere(app->vicus, "volantes"))
     {

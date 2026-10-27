@@ -1,0 +1,50 @@
+<sanctus id="anthony-of-padua" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Anthony of Padua</nomen>
+  <nomen lingua="alia" fontes="ce">Ferdinand</nomen>
+  <ortus annus="1195" locus="Lisbon" fontes="ce"/>
+  <obitus annus="1231" mensis="6" dies="13" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1232" mensis="5" dies="30" papa="Gregory IX" fontes="ce"/>
+  <festum calendarium="generale" mensis="6" dies="13" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="6" dies="13" fontes="mr"/>
+  <munus fontes="ce us">priest</munus>
+  <munus fontes="ce mr">religious</munus>
+  <munus fontes="us">doctor of the Church</munus>
+  <patrocinium fontes="ce">recovery of lost things</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">Anthony was born at Lisbon in 1195 and baptized Ferdinand. At fifteen he joined the Canons Regular of St. Augustine and studied Scripture and the Fathers at Coimbra. In 1220, moved by the bodies of the first Franciscan martyrs, killed in Morocco, he joined the Friars Minor, took the name Anthony, and set out for Morocco, but illness forced him back and a storm drove his ship to Sicily. He lived unnoticed at the hermitage of Montepaolo until, called on without warning to preach at an ordination at Forli, he astonished his hearers; St. Francis then charged him to teach theology to the brethren.</paragraphus>
+    <paragraphus fontes="ce mr">He became above all a preacher, combating luxury, avarice and tyranny and the heresies of the Cathars, which earned him the title Hammer of the Heretics. After serving in the Limousin and as Minister Provincial of Emilia, he retired to the convent of Padua, which he had founded, and preached his last Lent there in 1231 to crowds that often reached 30,000. He died on 13 June 1231, aged thirty-six. Gregory IX, who had called him the "Ark of the Covenant", inscribed him among the saints on 30 May 1232. The Catholic Encyclopedia calls him the greatest wonder-worker of the time, especially invoked for the recovery of lost things.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Anthony of Padua" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Anthony_of_Padua">
+    <excerptum>Anthony of Padua, Saint, Franciscan Thaumaturgist, b. at Lisbon. 1195; d. at Vercelli, 13 June, 1231.</excerptum>
+    <excerptum>He received in baptism the name of Ferdinand.</excerptum>
+    <excerptum>Ferdinand, at the age of fifteen, joined the Canons Regular of St. Augustine</excerptum>
+    <excerptum>he betook himself with permission of his superior to the Convent of Santa Croce in Cóimbra (1212), where he remained for eight years, occupying his time mainly with study and prayer.</excerptum>
+    <excerptum>he soon gathered from the Sacred Scriptures and the writings of the Holy Fathers a treasure of theological knowledge.</excerptum>
+    <excerptum>In the year 1220, having seen conveyed into the Church of Santa Croce the bodies of the first Franciscan martyrs, who had suffered death at Morocco</excerptum>
+    <excerptum>Thus Ferdinand left the Canons Regular of St. Augustine to join the Order of Friars Minor, taking at the same time the new name of Anthony</excerptum>
+    <excerptum>Anthony started for Morocco, but, stricken down by a severe illness</excerptum>
+    <excerptum>His ship, however, was overtaken by a violent storm and driven upon the coast of Sicily</excerptum>
+    <excerptum>being just at that time in need of a priest for the hermitage of Montepaolo (near Forli), sent him thither</excerptum>
+    <excerptum>When the time for ordination had arrived, it was found that no one had been appointed to preach.</excerptum>
+    <excerptum>In their emergency they then chose Anthony, whom they thought only able to read the Missal and Breviary</excerptum>
+    <excerptum>he began to explain the most hidden sense of Holy Scripture with such profound erudition and sublime doctrine that all were struck with astonishment.</excerptum>
+    <excerptum>St. Francis, informed of his learning, directed him by the following letter to teach theology to the brethren</excerptum>
+    <excerptum>It was as an orator, however, rather than as professor, that Anthony reaped his richest harvest.</excerptum>
+    <excerptum>he undertook to reform the morality of his time by combating in an especial manner the vices of luxury, avarice, and tyranny.</excerptum>
+    <excerptum>notably that of the Cathares and the Patarines</excerptum>
+    <excerptum>rendered him worthy of the glorious title of Malleus hereticorum (Hammer of the Heretics).</excerptum>
+    <excerptum>we find Anthony in the year 1226, Custos Provincial in the province of Limousin.</excerptum>
+    <excerptum>Anthony was elected Minister Provincial of Emilia.</excerptum>
+    <excerptum>retired to the Convent of Padua, which he had himself founded. The last Lent he preached was that of 1231; the crowd of people which came from all parts to hear him, frequently numbered 30,000 and more.</excerptum>
+    <excerptum>he died at the age of thirty-six years, on 13 June, 1231.</excerptum>
+    <excerptum>Gregory IX, firmly persuaded of his sanctity by the numerous miracles he had wrought, inscribed him within a year of his death (Pentecost, 30 May, 1232), in the calendar of saints of the Cathedral of Spoleto.</excerptum>
+    <excerptum>we know that the same pontiff, having heard one of his sermons at Rome, and astonished at his profound knowledge of the Holy Scriptures called him: "Ark of the Covenant".</excerptum>
+    <excerptum>he is acknowledged as the greatest thaumaturgist of the times. He is especially invoked for the recovery of things lost</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="13 June">
+    <excerptum>At Padua, St. Anthony, a native of Portugal, confessor of the Order of Minorites, illustrious for the sanctity of his life, his miracles, and his preaching.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="13 June">
+    <excerptum>Saint Anthony of Padua, Priest and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

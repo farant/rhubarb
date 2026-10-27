@@ -1,0 +1,39 @@
+<sanctus id="cosmas" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Cosmas</nomen>
+  <obitus annus="287" circa="verum" locus="Aegea, Cilicia" martyrium="verum" fontes="mr ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="9" dies="26" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="9" dies="27" fontes="mr"/>
+  <munus fontes="mr us ce">martyr</munus>
+  <munus fontes="ce bu">physician</munus>
+  <patrocinium fontes="ce">physicians and surgeons</patrocinium>
+  <socius ad="damian" fontes="mr ce">Damian</socius>
+  <descriptio>
+    <paragraphus fontes="ce bu">Cosmas and his brother Damian were Christian physicians and martyrs of the early Church. The Catholic Encyclopedia calls them twins born in Arabia; Butler says they studied in Syria. They practised medicine at Aegea in Cilicia and took no payment for it, so that the Greeks called them anargyroi, "without silver", and through their work they brought many to the faith.</paragraphus>
+    <paragraphus fontes="mr ce bu">In the persecution of Diocletian the governor Lysias had them arrested. The Martyrology tells that they came through many torments unharmed before they were beheaded, and that three of their brothers, Anthimus, Leontius and Euprepius, are said to have died with them. The date is uncertain: the Catholic Encyclopedia gives 27 September, probably in 287, while Butler puts it about 303. They were buried at Cyrus in Syria; the emperor Justinian, cured of a dangerous illness through their intercession, rebuilt their church at Constantinople, and Pope Felix IV built a church in their honour at Rome. Their names are invoked in the Canon of the Mass, and they are honoured as patrons of physicians and surgeons.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="27 September">
+    <excerptum>A T 2Egea, during the persecution of Diocletian, the birthday of the holy martyrs Cosmas and Damian, brothers.</excerptum>
+    <excerptum>After miraculously overcoming many torments from bonds, imprisonment, fire, crucifixion, stoning, arrows, and from being cast into the sea, they received capital punishment.</excerptum>
+    <excerptum>With them are said to have also suffered three of their brothers, Anthimus, Leontius, and Euprepius.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="Sts. Cosmas and Damian" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Sts._Cosmas_and_Damian">
+    <excerptum>Early Christian physicians and martyrs whose feast is celebrated on 27 September. They were twins, born in Arabia, and practised the art of healing in the seaport Ægea, now Ayash (Ajass), on the Gulf of Iskanderun in Cilicia, Asia Minor</excerptum>
+    <excerptum>They accepted no pay for their services and were, therefore, called anargyroi, "the silverless". In this way they brought many to the Catholic Faith.</excerptum>
+    <excerptum>When the Diocletian persecution began, the Prefect Lysias had Cosmas and Damian arrested, and ordered them to recant.</excerptum>
+    <excerptum>were finally beheaded with the sword. Their three brothers, Anthimus, Leontius, and Euprepius died as martyrs with them. The execution took place 27 September, probably in the year 287.</excerptum>
+    <excerptum>The remains of the martyrs were buried in the city of Cyrus in Syria</excerptum>
+    <excerptum>Having been cured of a dangerous illness by the intercession of Cosmas and Damian, Justinian, in gratitude for their aid, rebuilt and adorned their church at Constantinople</excerptum>
+    <excerptum>At Rome Pope Felix IV (526-530) erected a church in their honour</excerptum>
+    <excerptum>Cosmas and Damian are regarded as the patrons of physicians and surgeons</excerptum>
+    <excerptum>They are invoked in the Canon of the Mass and in the Litany of the Saints.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v09 Sept. 27 SS. Cosmas and Damian, Martyrs">
+    <excerptum>About the year 303. Saints Cosmas and Damian were brothers, and born in Arabia, but studied the sciences in Syria, and became eminent for their skill in physic.</excerptum>
+    <excerptum>on which account they are styled by the Greeks Anargyri, that is, without fees, because they took no money.</excerptum>
+    <excerptum>They were therefore apprehended by the order of Lysias, governor of Cilicia, and after various torments were beheaded for the faith. Their bodies were carried into Syria, and buried at Cyrus.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="26 September">
+    <excerptum>Saints Cosmas and Damian, Martyrs</excerptum>
+  </fons>
+</sanctus>

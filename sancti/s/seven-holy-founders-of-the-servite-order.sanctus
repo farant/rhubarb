@@ -1,0 +1,37 @@
+<sanctus id="seven-holy-founders-of-the-servite-order" versio="1" genus="coetus" status="sanctus">
+  <nomen lingua="en" principale="verum">Seven Holy Founders of the Servite Order</nomen>
+  <obitus locus="Monte Senario, Tuscany" fontes="mr"/>
+  <canonizatio modus="formalis" papa="Leo XIII" fontes="mr"/>
+  <festum calendarium="generale" mensis="2" dies="17" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="2" dies="12" fontes="mr"/>
+  <munus fontes="mr ce">founders</munus>
+  <munus fontes="ce">religious</munus>
+  <socius fontes="ce">Buonfiglio dei Monaldi (Bonfilius)</socius>
+  <socius fontes="ce">Giovanni di Buonagiunta (Bonajuncta)</socius>
+  <socius fontes="ce">Bartolomeo degli Amidei (Amideus)</socius>
+  <socius fontes="ce">Ricovero dei Lippi-Ugguccioni (Hugh)</socius>
+  <socius fontes="ce">Benedetto dell' Antella (Manettus)</socius>
+  <socius fontes="ce">Gherardino di Sostegno (Sosteneus)</socius>
+  <socius fontes="ce">Alessio de' Falconieri (Alexius)</socius>
+  <descriptio>
+    <paragraphus fontes="ce">The seven founders were young men of seven patrician families of Florence who belonged to a lay confraternity devoted to the praise of Mary. The Catholic Encyclopedia relates that on the feast of the Assumption in 1233 the Virgin appeared to them and urged them to leave the world. They settled first at La Camarzia, a suburb of Florence, and then, seeking stricter seclusion, withdrew to Monte Senario, eleven miles to the north, where in 1240 they took a black habit and the Rule of Saint Augustine and founded the Servants of Mary, electing a superior and taking vows.</paragraphus>
+    <paragraphus fontes="ce mr">The order received its first official approval in 1249, survived a threat of suppression in 1276, and was definitively approved only by the bull Dum levamus of 1304; of the seven, Alexis alone lived to see it, dying in 1310. The Martyrology records that after an austere life they died with a reputation for holiness and wonders, and that, since the people honoured them together, Leo XIII enrolled them together among the saints.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="12 February">
+    <excerptum>TN Tuscany, on Mount Senario, the seven Holy Founders of the Order of Servites of the Blessed Virgin Mary. After a most austere kind of life, they died a death precious in the Lord, with a reputation for merits and prodigies.</excerptum>
+    <excerptum>as the people joined them together in the same veneration after death, Leo. XIII. placed them together in the catalogue of the Saints.</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="Order of Servites" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Order_of_Servites">
+    <excerptum>To the city of Florence belongs the glory of giving to the Church the seven youths who formed the nucleus of the order: Buonfiglio dei Monaldi (Bonfilius), Giovanni di Buonagiunta (Bonajuncta), Bartolomeo degli Amidei (Amideus), Ricovero dei Lippi-Ugguccioni (Hugh), Benedetto dell' Antella (Manettus), Gherardino di Sostegno (Sosteneus), and Alessio de' Falconieri (Alexius)</excerptum>
+    <excerptum>they belonged to seven patrician families of that city, and had early formed a confraternity of laymen, known as the Laudesi, or Praisers of Mary.</excerptum>
+    <excerptum>While engaged in the exercises of the confraternity on the feast of the Assumption, 1233, the Blessed Virgin appeared to them, advised them to withdraw from the world and devote themselves entirely to eternal things.</excerptum>
+    <excerptum>They obeyed, and established themselves close to the convent of the Friars Minor at La Camarzia, a suburb of Florence. Desiring stricter seclusion than that offered at La Camarzia,</excerptum>
+    <excerptum>they withdrew to Monte Senario, eleven miles north of Florence. Here the Blessed Virgin again appeared to them, conferred on them a black habit, instructed them to follow the Rule of St. Augustine and to found the order of her servants (15 April, 1240). The brethren elected a superior, took the vows of obedience, chastity, and poverty, and admitted associates.</excerptum>
+    <excerptum>it was not until 13 March, 1249, that the first official approval of the order was obtained</excerptum>
+    <excerptum>in the year 1276 Innocent V in a letter to St. Philip declared the order suppressed.</excerptum>
+    <excerptum>it was not definitively approved until Benedict IX issued the Bull, "Dum levamus" (11 Feb., 1304). Of the seven founders, St. Alexis alone lived to see their foundation raised to the dignity of an order. He died in 1310.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="17 February">
+    <excerptum>The Seven Holy Founders of the Servite Order</excerptum>
+  </fons>
+</sanctus>

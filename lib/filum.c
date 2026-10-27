@@ -1103,6 +1103,8 @@ filum_arborem_delere (
         _filum_error_ponere("rmdir fracta");
         redde FALSUM;
     }
+    /* directorium deletum = S (ut in filum_directorium_creare) */
+    lectiones_notare(LECTIO_SCRIPSIT, via);
     redde VERUM;
 #endif
 }
@@ -1212,6 +1214,9 @@ filum_modum_ponere (
         _filum_error_ponere("chmod fracta");
         redde FALSUM;
     }
+    /* modus mutatus = scriptura in libro (fabrica-8 T1: chmod crudum
+     * extra filum vetitum, ergo canalis id nominare debet) */
+    lectiones_notare(LECTIO_SCRIPSIT, via);
 
     redde VERUM;
 }
@@ -1461,12 +1466,16 @@ filum_status (
     status_out->potest_legere   = (st.st_mode & _S_IREAD) != ZEPHYRUM;
     status_out->potest_scribere = (st.st_mode & _S_IWRITE) != ZEPHYRUM;
     status_out->potest_exsequi  = (st.st_mode & _S_IEXEC) != ZEPHYRUM;
+    status_out->modus           = (integer)(st.st_mode & 0777);
+    status_out->est_socket      = FALSUM;
 #else
     status_out->est_directorium  = S_ISDIR(st.st_mode);
     status_out->est_filum        = S_ISREG(st.st_mode);
     status_out->potest_legere    = (st.st_mode & S_IRUSR) != ZEPHYRUM;
     status_out->potest_scribere  = (st.st_mode & S_IWUSR) != ZEPHYRUM;
     status_out->potest_exsequi   = (st.st_mode & S_IXUSR) != ZEPHYRUM;
+    status_out->modus            = (integer)(st.st_mode & 07777);
+    status_out->est_socket       = S_ISSOCK(st.st_mode);
 #endif
 
     redde VERUM;

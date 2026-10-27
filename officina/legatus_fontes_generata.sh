@@ -8,6 +8,7 @@ declare -a RADIX_FONTES=(
     "internamentum"
     "json"
     "lectiones"
+    "memoria_processus_macos"
     "piscina"
     "processus_posix"
     "sigillum"

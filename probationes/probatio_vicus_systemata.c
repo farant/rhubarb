@@ -244,7 +244,7 @@ _probare_argumentum (
     l = vicus_latus(vicus_activa(x->v), VICUS_DEXTRUM);
     CREDO_NECESSE(l != NIHIL);
     CREDO_CHORDA_AEQUALIS_LITERIS(l->argumentum, "tmux - alpha");
-    servata = volumen_plagulam_promere(x->volumen, chorda_ex_literis(
+    servata = volumen_praesens_legere(x->volumen, chorda_ex_literis(
         "vicus/latera", c->piscina), c->piscina, &inventum);
     CREDO_VERUM(inventum);
     CREDO_VERUM(chorda_continet(servata, chorda_ex_literis(
@@ -264,7 +264,7 @@ _probare_argumentum (
     /* "" tollit */
     CREDO_VERUM(vicus_latus_argumentum_ponere(x->v, "A_dextrum_quietus",
         ""));
-    servata = volumen_plagulam_promere(x->volumen, chorda_ex_literis(
+    servata = volumen_praesens_legere(x->volumen, chorda_ex_literis(
         "vicus/latera", c->piscina), c->piscina, &inventum);
     CREDO_FALSUM(chorda_continet(servata,
         chorda_ex_literis("argumentum",
@@ -300,7 +300,7 @@ _probare_redire (
         VICUS_DEXTRUM)->argumentum.mensura,
         ZEPHYRUM);
     CREDO_AEQUALIS_I32(t->focus, VICUS_DEXTRUM);
-    servata = volumen_plagulam_promere(x->volumen, chorda_ex_literis(
+    servata = volumen_praesens_legere(x->volumen, chorda_ex_literis(
         "vicus/latera", c->piscina), c->piscina, &inventum);
     CREDO_VERUM(inventum);
     CREDO_FALSUM(chorda_continet(servata, chorda_ex_literis("secundum",

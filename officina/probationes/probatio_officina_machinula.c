@@ -96,26 +96,18 @@ _machinulam_parare (
     redde machinula_creare(piscina, conexio, regio);
 }
 
-s32
-principale (vacuum)
+
+/* ==================================================
+ * PROBARE: fixturae per-familiam - omnes $main -> 42
+ * ================================================== */
+
+interior vacuum
+_sectio_prima (
+    CredoContextus* c)
 {
     Piscina* piscina;
-        b32  praeteritus;
 
-    piscina = piscina_generare_dynamicum("probatio_machinula",
-        33554432);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ========================================================
-     * PROBARE: fixturae per-familiam - omnes $main -> 42
-     * ======================================================== */
-
+    piscina = c->piscina;
     {
         constans character* fixturae[] = {
             "officina/probationes/fixa/machinula/arithmetica.medulla",
@@ -131,11 +123,10 @@ principale (vacuum)
         i32 numerus_fixturarum = IX;
         i32 i;
 
-        imprimere("\n--- Probans fixturas (exsecutio -> 42) ---\n");
         per (i = ZEPHYRUM; i < numerus_fixturarum; i++)
         {
-            chorda textus  = _plagulam_legere(piscina, fixturae[i]);
-            Regio* regio   = NIHIL;
+            chorda  textus  = _plagulam_legere(piscina, fixturae[i]);
+             Regio* regio   = NIHIL;
             Machinula* machinula;
             MachinulaExitus exitus;
 
@@ -161,12 +152,20 @@ principale (vacuum)
             regio_destruere(regio);
         }
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: sistere exsecutum - halitus cum causa
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: sistere exsecutum - halitus cum causa
+ * ================================================== */
 
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda textus = _plagulam_legere(piscina,
             "officina/probationes/fixa/machinula/sistere.medulla");
@@ -175,7 +174,6 @@ principale (vacuum)
             &regio);
         MachinulaExitus exitus;
 
-        imprimere("\n--- Probans sistere exsecutum ---\n");
         CREDO_NON_NIHIL (machinula);
         exitus = machinula_currere(machinula, _ch("cade"));
         CREDO_AEQUALIS_S32 (exitus.genus, MACHINULA_SISTERE);
@@ -183,12 +181,20 @@ principale (vacuum)
             "probatio halitus"));
         regio_destruere(regio);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: decipula vocata + exit aedificatum + stiva
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: decipula vocata + exit aedificatum + stiva
+ * ================================================== */
 
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* textus_literis =
             "modulus \"halitus.medulla\"\n"
@@ -213,7 +219,6 @@ principale (vacuum)
             &regio);
         MachinulaExitus exitus;
 
-        imprimere("\n--- Probans halitus honestos ---\n");
         CREDO_NON_NIHIL (machinula);
 
         exitus = machinula_currere(machinula, _ch("main"));
@@ -232,13 +237,21 @@ principale (vacuum)
 
         regio_destruere(regio);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: aedificata memoriae + formator (snprintf in
-     * regionem)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: aedificata memoriae + formator (snprintf in
+ * regionem)
+ * ================================================== */
 
+interior vacuum
+_sectio_quarta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* textus_literis =
             "modulus \"aedificata.medulla\"\n"
@@ -264,7 +277,6 @@ principale (vacuum)
             &regio);
         MachinulaExitus exitus;
 
-        imprimere("\n--- Probans aedificata + formatorem ---\n");
         CREDO_NON_NIHIL (machinula);
         exitus = machinula_currere(machinula, _ch("main"));
         CREDO_AEQUALIS_S32 (exitus.genus, MACHINULA_BENE);
@@ -273,14 +285,22 @@ principale (vacuum)
             == IV);
         regio_destruere(regio);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: time aedificatum (ISO) - scriptura per
-     * monstratorem eodem valore ac fructus (vocatio UNA, ergo
-     * determinatum); valor post 2020; ordo monotonus
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: time aedificatum (ISO) - scriptura per
+ * monstratorem eodem valore ac fructus (vocatio UNA, ergo
+ * determinatum); valor post 2020; ordo monotonus
+ * ================================================== */
 
+interior vacuum
+_sectio_quinta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* textus_literis =
             "modulus \"tempus.medulla\"\n"
@@ -304,7 +324,6 @@ principale (vacuum)
             &regio);
         MachinulaExitus exitus;
 
-        imprimere("\n--- Probans time aedificatum ---\n");
         CREDO_NON_NIHIL (machinula);
         exitus = machinula_currere(machinula, _ch("main"));
         CREDO_AEQUALIS_S32 (exitus.genus, MACHINULA_BENE);
@@ -313,15 +332,23 @@ principale (vacuum)
             == II);
         regio_destruere(regio);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: ansae plagularum (M2d) - vita tota: fopen/fputc/
-     * fwrite/ftell/fclose -> stat(st_size @96!) -> fopen/fread ->
-     * remove -> gettimeofday/getcwd. 'A'+'B'+'C' = 198; omnia
-     * recta -> 42. Via sub officina/build/ (CWD = radix).
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: ansae plagularum (M2d) - vita tota: fopen/fputc/
+ * fwrite/ftell/fclose -> stat(st_size @96!) -> fopen/fread ->
+ * remove -> gettimeofday/getcwd. 'A'+'B'+'C' = 198; omnia
+ * recta -> 42. Via sub officina/build/ (CWD = radix).
+ * ================================================== */
 
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         constans character* textus_literis =
             "modulus \"ansae.medulla\"\n"
@@ -401,7 +428,6 @@ principale (vacuum)
             &regio);
         MachinulaExitus exitus;
 
-        imprimere("\n--- Probans ansas plagularum ---\n");
         CREDO_NON_NIHIL (machinula);
         exitus = machinula_currere(machinula, _ch("main"));
         CREDO_AEQUALIS_S32 (exitus.genus, MACHINULA_BENE);
@@ -410,12 +436,20 @@ principale (vacuum)
             == XII);
         regio_destruere(regio);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: numeratores + apex stivae
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: numeratores + apex stivae
+ * ================================================== */
 
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         chorda textus = _plagulam_legere(piscina,
             "officina/probationes/fixa/machinula/fluxus.medulla");
@@ -424,7 +458,6 @@ principale (vacuum)
             &regio);
         MachinulaExitus exitus;
 
-        imprimere("\n--- Probans numeratores ---\n");
         exitus = machinula_currere(machinula, _ch("main"));
         CREDO_AEQUALIS_S32 (exitus.genus, MACHINULA_BENE);
         /* ansa 6 iterationum: addere bis per iterationem + semel */
@@ -437,14 +470,24 @@ principale (vacuum)
         CREDO_VERUM (machinula_stiva_apex(machinula) > ZEPHYRUM);
         regio_destruere(regio);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "fixturas (exsecutio -> 42)", _sectio_prima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "sistere exsecutum", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "halitus honestos", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "aedificata + formatorem", _sectio_quarta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "time aedificatum", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ansas plagularum", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "numeratores", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    redde I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("officina_machinula", SECTIONES);
 }

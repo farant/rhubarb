@@ -161,63 +161,88 @@ _frons_dissentiens (
     redde FALSUM;
 }
 
-s32
-principale (vacuum)
+
+/* FIXURA SUITAE: ratum lexici semel factum (parare_suitae; assertio
+ * eius ibi); sectiones id per monstratorem constantem LEGUNT. */
+nomen structura {
+    MateriaLexiconRatum ratum;
+} FixuraLexici;
+
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                b32  praeteritus;
-            Piscina* piscina;
-MateriaLexiconRatum  ratum;
- MateriaLexIudicium  iudicium;
+          FixuraLexici* f;
+    MateriaLexIudicium  iudicium;
 
-    piscina = piscina_generare_dynamicum("probatio_materia_arbor",
-        65536);
-    si (!piscina)
+    f = (FixuraLexici*)piscina_allocare(c->piscina,
+        magnitudo(FixuraLexici));
+    si (f == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    credo_aperire(piscina);
-
-    CREDO_VERUM (materia_lexicon_ratum_facere(&ratum, &LEXICON,
+    c->datum = f;
+    CREDO_VERUM (materia_lexicon_ratum_facere(&f->ratum, &LEXICON,
         &iudicium));
+}
 
 
-    /* ========================================================
-     * PROBARE: mangulatio tagorum, utroque modo
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: mangulatio tagorum, utroque modo
+ * ================================================== */
 
+interior vacuum
+_tagos_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
     {
         character tag[MATERIA_ARBOR_TAG_CAPACITAS];
 
-        imprimere("\n--- Probans tagos ---\n");
-
-        CREDO_VERUM (materia_arbor_lexema_tag(&ratum, (s32)G_NOVA_LINEA,
+        CREDO_VERUM (materia_arbor_lexema_tag(ratum, (s32)G_NOVA_LINEA,
             tag, (i32)magnitudo(tag)) > ZEPHYRUM);
         CREDO_VERUM (strcmp(tag, "lex-nova-linea") == ZEPHYRUM);
 
         /* Inversum per mangulationem ANTRORSAM - directiones
          * divergere non possunt */
-        CREDO_AEQUALIS_S32 (materia_arbor_lexema_ex_tag(&ratum,
+        CREDO_AEQUALIS_S32 (materia_arbor_lexema_ex_tag(ratum,
             "lex-nova-linea", (i32)14), (s32)G_NOVA_LINEA);
-        CREDO_AEQUALIS_S32 (materia_arbor_lexema_ex_tag(&ratum,
+        CREDO_AEQUALIS_S32 (materia_arbor_lexema_ex_tag(ratum,
             "lex-ignotum", (i32)11), (s32)G_NUMERUS_GENERUM);
-        CREDO_AEQUALIS_I32 (materia_arbor_lexema_tag(&ratum, (s32)-I,
+        CREDO_AEQUALIS_I32 (materia_arbor_lexema_tag(ratum, (s32)-I,
             tag, (i32)magnitudo(tag)), ZEPHYRUM);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: formae triviorum EX SPECIE
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: formae triviorum EX SPECIE
+ * ================================================== */
 
+interior vacuum
+_formas_triviorum_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        MateriaArborConsilium c;
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        MateriaArborConsilium consilium;
                  MateriaNodus* n;
                  MateriaToken* t;
                  MateriaToken* tr[3];
         MateriaArborScriptura  s;
-
-        imprimere("\n--- Probans formas triviorum ---\n");
 
         t = _lex(piscina, (s32)G_IDENT, "x", (s32)6, (i32)I,
             (i32)7);
@@ -237,8 +262,9 @@ MateriaLexiconRatum  ratum;
         CREDO_VERUM (materia_nodus_appendere(piscina, n, ZEPHYRUM,
             materia_valor_token(t), MATERIA_LOCUS_LISTA_MIXTA));
 
-        materia_arbor_consilium_nudum(&c, &REG, &ratum, "probatio");
-        s = materia_arbor_scribere_nodum(piscina, n, &c);
+        materia_arbor_consilium_nudum(&consilium, &REG, ratum,
+            "probatio");
+        s = materia_arbor_scribere_nodum(piscina, n, &consilium);
         CREDO_VERUM (s.successus);
         CREDO_VERUM (s.textus.mensura > ZEPHYRUM);
 
@@ -261,18 +287,31 @@ MateriaLexiconRatum  ratum;
             CREDO_NON_NIHIL (strstr(txt, "registrum-sigillum="));
         }
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: LEX ANCORAE - ambo casus
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: LEX ANCORAE - ambo casus
+ * ================================================== */
 
+interior vacuum
+_legem_ancorae_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        MateriaArborConsilium c;
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        MateriaArborConsilium consilium;
         MateriaArborScriptura s;
 
-        imprimere("\n--- Probans legem ancorae ---\n");
-        materia_arbor_consilium_nudum(&c, &REG, &ratum, "probatio");
+        materia_arbor_consilium_nudum(&consilium, &REG, ratum,
+            "probatio");
 
         /* CASUS I: lexema primum SINE triviis ducentibus, offset 0.
          * Hic vitium EVANESCIT - probatio quae hoc solum probat de
@@ -285,7 +324,7 @@ MateriaLexiconRatum  ratum;
                 materia_valor_token(_lex(piscina, (s32)G_IDENT, "a",
                     ZEPHYRUM, (i32)I, (i32)I)),
                 MATERIA_LOCUS_LISTA_MIXTA));
-            s = materia_arbor_scribere_nodum(piscina, n, &c);
+            s = materia_arbor_scribere_nodum(piscina, n, &consilium);
             CREDO_VERUM (s.successus);
             CREDO_NON_NIHIL (strstr((character*)s.textus.datum,
                 "b=\"0\""));
@@ -311,7 +350,7 @@ MateriaLexiconRatum  ratum;
             CREDO_VERUM (materia_nodus_appendere(piscina, n, ZEPHYRUM,
                 materia_valor_token(t), MATERIA_LOCUS_LISTA_MIXTA));
 
-            s = materia_arbor_scribere_nodum(piscina, n, &c);
+            s = materia_arbor_scribere_nodum(piscina, n, &consilium);
             CREDO_VERUM (s.successus);
             CREDO_NON_NIHIL (strstr((character*)s.textus.datum,
                 "b=\"4\""));
@@ -321,19 +360,30 @@ MateriaLexiconRatum  ratum;
                 "columna=\"1\""));
         }
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: fragmentum et transclusio (identitas, non copia)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: fragmentum et transclusio (identitas, non copia)
+ * ================================================== */
 
+interior vacuum
+_fragmentum_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        MateriaArborConsilium c;
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        MateriaArborConsilium consilium;
                  MateriaNodus* n;
                  MateriaToken* t;
         MateriaArborScriptura  s;
-
-        imprimere("\n--- Probans fragmentum/transclusionem ---\n");
 
         t = _lex(piscina, (s32)G_IDENT, "z", ZEPHYRUM, (i32)I, (i32)I);
         n = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
@@ -343,8 +393,9 @@ MateriaLexiconRatum  ratum;
         CREDO_VERUM (materia_nodus_appendere(piscina, n, ZEPHYRUM,
             materia_valor_token(t), MATERIA_LOCUS_LISTA_MIXTA));
 
-        materia_arbor_consilium_nudum(&c, &REG, &ratum, "probatio");
-        s = materia_arbor_scribere_nodum(piscina, n, &c);
+        materia_arbor_consilium_nudum(&consilium, &REG, ratum,
+            "probatio");
+        s = materia_arbor_scribere_nodum(piscina, n, &consilium);
         CREDO_VERUM (s.successus);
         {
             character* txt = (character*)s.textus.datum;
@@ -353,68 +404,95 @@ MateriaLexiconRatum  ratum;
             CREDO_NON_NIHIL (strstr(txt, "#lex1"));      /* transclusio */
         }
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: custodiae
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: custodiae
+ * ================================================== */
 
+interior vacuum
+_custodias_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        MateriaArborConsilium c;
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        MateriaArborConsilium consilium;
         MateriaArborScriptura s;
                  MateriaNodus* n;
           MateriaLexiconRatum  irritum;
 
-        imprimere("\n--- Probans custodias ---\n");
-
         n = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
-        materia_arbor_consilium_nudum(&c, &REG, &ratum, "probatio");
+        materia_arbor_consilium_nudum(&consilium, &REG, ratum,
+            "probatio");
 
         /* grammatica innominata */
-        c.grammatica  = NIHIL;
-        s             = materia_arbor_scribere_nodum(piscina, n, &c);
+        consilium.grammatica = NIHIL;
+        s = materia_arbor_scribere_nodum(piscina, n,
+            &consilium);
         CREDO_FALSUM (s.successus);
-        c.grammatica = "probatio";
+        consilium.grammatica = "probatio";
 
         /* lexicon NON RATUM - porta oneris non transita */
         irritum.lexicon = &LEXICON;
         irritum.munera_praesentia = ZEPHYRUM;
         irritum.ratum = FALSUM;
-        c.lexicon = &irritum;
-        s = materia_arbor_scribere_nodum(piscina, n, &c);
+        consilium.lexicon = &irritum;
+        s = materia_arbor_scribere_nodum(piscina, n, &consilium);
         CREDO_FALSUM (s.successus);
         CREDO_NON_NIHIL (s.causa);
-        c.lexicon = &ratum;
+        consilium.lexicon = ratum;
 
         /* genus ignotum: fractura cum SEDE */
-        n->genus  = (s32)99;
-        s         = materia_arbor_scribere_nodum(piscina, n, &c);
+        n->genus = (s32)99;
+        s = materia_arbor_scribere_nodum(piscina, n,
+            &consilium);
         CREDO_FALSUM (s.successus);
         CREDO_AEQUALIS_PTR ((constans vacuum*)s.sedes,
             (constans vacuum*)n);
         n->genus = ZEPHYRUM;
 
         /* argumenta nulla */
-        s = materia_arbor_scribere_nodum(piscina, NIHIL, &c);
+        s = materia_arbor_scribere_nodum(piscina, NIHIL, &consilium);
         CREDO_FALSUM (s.successus);
         s = materia_arbor_scribere_nodum(piscina, n, NIHIL);
         CREDO_FALSUM (s.successus);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: CIRCUITUS - scribe, lege, scribe iterum
-     *
-     * DUO circuitus, non unus. Vitium quod se COMPOUNDAT (sedes
-     * per unum octetum lapsae, trivium amissum) primo circuitu
-     * saepe latet et secundo apparet: 'scribe -> lege' semel
-     * documentum SUUM reddit, bis documentum SUI DOCUMENTI.
-     * (Lex ex stml-text-semantics: 'circuitus unus testimonium
-     * NON est cum vitium compoundat'.)
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: CIRCUITUS - scribe, lege, scribe iterum
+ *
+ * DUO circuitus, non unus. Vitium quod se COMPOUNDAT (sedes
+ * per unum octetum lapsae, trivium amissum) primo circuitu
+ * saepe latet et secundo apparet: 'scribe -> lege' semel
+ * documentum SUUM reddit, bis documentum SUI DOCUMENTI.
+ * (Lex ex stml-text-semantics: 'circuitus unus testimonium
+ * NON est cum vitium compoundat'.)
+ * ================================================== */
 
+interior vacuum
+_circuitum_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        MateriaArborConsilium c;
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        MateriaArborConsilium consilium;
                  MateriaNodus* n;
                  MateriaToken* t1;
                  MateriaToken* t2;
@@ -425,8 +503,6 @@ MateriaLexiconRatum  ratum;
                  MateriaNodus* lecta;
                  MateriaNodus* lecta2;
            MateriaArborVitium  vitium;
-
-        imprimere("\n--- Probans circuitum (BIS) ---\n");
 
         /* '    a+b' : trivium ducens, duo lexemata, unum fixum */
         tr[0] = _lex(piscina, (s32)G_SPATIA, "    ", ZEPHYRUM, (i32)I,
@@ -444,16 +520,18 @@ MateriaLexiconRatum  ratum;
         CREDO_VERUM (materia_nodus_appendere(piscina, n, ZEPHYRUM,
             materia_valor_token(t2), MATERIA_LOCUS_LISTA_MIXTA));
 
-        materia_arbor_consilium_nudum(&c, &REG, &ratum, "probatio");
-        s1 = materia_arbor_scribere_nodum(piscina, n, &c);
+        materia_arbor_consilium_nudum(&consilium, &REG, ratum,
+            "probatio");
+        s1 = materia_arbor_scribere_nodum(piscina, n, &consilium);
         CREDO_VERUM (s1.successus);
 
-        lecta = materia_arbor_legere(piscina, NIHIL, s1.textus, &c,
+        lecta = materia_arbor_legere(piscina, NIHIL, s1.textus,
+            &consilium,
             &vitium);
         CREDO_NON_NIHIL (lecta);
         CREDO_NIHIL (vitium.causa);
 
-        s2 = materia_arbor_scribere_nodum(piscina, lecta, &c);
+        s2 = materia_arbor_scribere_nodum(piscina, lecta, &consilium);
         CREDO_VERUM (s2.successus);
         CREDO_AEQUALIS_I32 (s2.textus.mensura, s1.textus.mensura);
         CREDO_VERUM (memcmp(s1.textus.datum, s2.textus.datum,
@@ -465,10 +543,10 @@ MateriaLexiconRatum  ratum;
          * scribere_nodum arborem suam quoque fert (campus ultimus) */
         {
             MateriaArborScriptura p = materia_arbor_proicere_nodum(
-                piscina, n, &c);
+                piscina, n, &consilium);
             chorda t;
 
-            imprimere("\n--- Probans arborem traditam ---\n");
+            CREDO_GRADUS ("arborem traditam");
             CREDO_VERUM (p.successus);
             CREDO_NON_NIHIL (p.arbor);
             CREDO_AEQUALIS_I32 (p.textus.mensura, ZEPHYRUM);
@@ -488,7 +566,7 @@ MateriaLexiconRatum  ratum;
             b32* admissi = (b32*)piscina_allocare(piscina,
                 (memoriae_index)REG.numerus_locorum
                 * (memoriae_index)magnitudo(b32));
-            MateriaArborConsilium cv = c;
+            MateriaArborConsilium cv = consilium;
             MateriaArborScriptura v;
                MateriaArborVitium vit;
                      MateriaNodus* lv;
@@ -496,7 +574,7 @@ MateriaLexiconRatum  ratum;
                            chorda* omissa;
                               i32  k;
 
-            imprimere("\n--- Probans visionem ---\n");
+            CREDO_GRADUS ("visionem");
             CREDO_NON_NIHIL (admissi);
             per (k = ZEPHYRUM; k < REG.numerus_locorum; k++)
             {
@@ -520,7 +598,8 @@ MateriaLexiconRatum  ratum;
                 stml_primus_liberum(v.arbor)), ZEPHYRUM);
             tv = stml_scribere(v.arbor, piscina, VERUM);
             CREDO_VERUM (tv.mensura < s1.textus.mensura);
-            lv = materia_arbor_legere(piscina, NIHIL, tv, &c, &vit);
+            lv = materia_arbor_legere(piscina, NIHIL, tv, &consilium,
+                &vit);
             CREDO_NIHIL (lv);
             CREDO_NON_NIHIL (vit.causa);
             si (vit.causa != NIHIL)
@@ -537,10 +616,11 @@ MateriaLexiconRatum  ratum;
         }
 
         /* CIRCUITUS SECUNDUS */
-        lecta2 = materia_arbor_legere(piscina, NIHIL, s2.textus, &c,
+        lecta2 = materia_arbor_legere(piscina, NIHIL, s2.textus,
+            &consilium,
             &vitium);
         CREDO_NON_NIHIL (lecta2);
-        s3 = materia_arbor_scribere_nodum(piscina, lecta2, &c);
+        s3 = materia_arbor_scribere_nodum(piscina, lecta2, &consilium);
         CREDO_VERUM (s3.successus);
         CREDO_AEQUALIS_I32 (s3.textus.mensura, s1.textus.mensura);
         CREDO_VERUM (memcmp(s1.textus.datum, s3.textus.datum,
@@ -568,44 +648,59 @@ MateriaLexiconRatum  ratum;
             CREDO_NIHIL (lecta->pater);
         }
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: custodiae lectoris
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: custodiae lectoris
+ * ================================================== */
 
+interior vacuum
+_custodias_lectoris_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        MateriaArborConsilium c;
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        MateriaArborConsilium consilium;
            MateriaArborVitium vitium;
                  MateriaNodus* n;
         MateriaArborScriptura  s;
 
-        imprimere("\n--- Probans custodias lectoris ---\n");
-        materia_arbor_consilium_nudum(&c, &REG, &ratum, "probatio");
+        materia_arbor_consilium_nudum(&consilium, &REG, ratum,
+            "probatio");
 
         n = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
         CREDO_VERUM (materia_nodus_appendere(piscina, n, ZEPHYRUM,
             materia_valor_token(_lex(piscina, (s32)G_IDENT, "q",
                 ZEPHYRUM, (i32)I, (i32)I)), MATERIA_LOCUS_LISTA_MIXTA));
-        s = materia_arbor_scribere_nodum(piscina, n, &c);
+        s = materia_arbor_scribere_nodum(piscina, n, &consilium);
         CREDO_VERUM (s.successus);
 
         /* STML pravum */
         CREDO_NIHIL (materia_arbor_legere(piscina, NIHIL,
-            chorda_ex_literis("<arbor", piscina), &c, &vitium));
+            chorda_ex_literis("<arbor", piscina), &consilium, &vitium));
         CREDO_NON_NIHIL (vitium.causa);
 
         /* involucrum alienum */
         CREDO_NIHIL (materia_arbor_legere(piscina, NIHIL,
-            chorda_ex_literis("<aliud/>", piscina), &c, &vitium));
+            chorda_ex_literis("<aliud/>", piscina), &consilium,
+            &vitium));
         CREDO_NON_NIHIL (vitium.causa);
 
         /* grammatica dispar - documentum sanum, nomen aliud */
-        c.grammatica = "aliud";
-        CREDO_NIHIL (materia_arbor_legere(piscina, NIHIL, s.textus, &c,
+        consilium.grammatica = "aliud";
+        CREDO_NIHIL (materia_arbor_legere(piscina, NIHIL, s.textus,
+            &consilium,
             &vitium));
         CREDO_NON_NIHIL (vitium.causa);
-        c.grammatica = "probatio";
+        consilium.grammatica = "probatio";
 
         /* SIGILLUM: registrum ALIUD, arbor eadem. Vocabulario falso
          * iudicata arbor mendacium est - ergo recusatur. */
@@ -620,35 +715,48 @@ MateriaLexiconRatum  ratum;
                 G2, (i32)I, L2, (i32)I
             };
 
-            c.tabularium = &REG2;
+            consilium.tabularium = &REG2;
             CREDO_NIHIL (materia_arbor_legere(piscina, NIHIL, s.textus,
-                &c, &vitium));
+                &consilium, &vitium));
             CREDO_NON_NIHIL (vitium.causa);
-            c.tabularium = &REG;
+            consilium.tabularium = &REG;
         }
 
         /* sanum iterum - custodiae statum non corruperunt */
         CREDO_NON_NIHIL (materia_arbor_legere(piscina, NIHIL, s.textus,
-            &c, &vitium));
+            &consilium, &vitium));
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: spatium album VERBATIM per crudum (2026-08-28)
-     *
-     * Contractus prius NIMIS LATUS erat UTRAQUE parte: scriptor
-     * valorem albi-solius refutabat, lector eum praeteribat, et
-     * partes CONGRUEBANT - sed congruentia partium veritatem non
-     * probat. Pulcher dispositionem possidet EXTRA crudum; intra
-     * crudum octeti verbatim sunt.
-     *
-     * Sine hac emendatione lingua cuius spatium genus VERBATIM est
-     * (CSS) plagulam quamlibet spatium ferentem proicere NON
-     * POTERAT - centesimam partem CSS veri.
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: spatium album VERBATIM per crudum (2026-08-28)
+ *
+ * Contractus prius NIMIS LATUS erat UTRAQUE parte: scriptor
+ * valorem albi-solius refutabat, lector eum praeteribat, et
+ * partes CONGRUEBANT - sed congruentia partium veritatem non
+ * probat. Pulcher dispositionem possidet EXTRA crudum; intra
+ * crudum octeti verbatim sunt.
+ *
+ * Sine hac emendatione lingua cuius spatium genus VERBATIM est
+ * (CSS) plagulam quamlibet spatium ferentem proicere NON
+ * POTERAT - centesimam partem CSS veri.
+ * ================================================== */
 
+interior vacuum
+_spatium_album_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        MateriaArborConsilium c;
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        MateriaArborConsilium consilium;
            MateriaArborVitium vitium;
         MateriaArborScriptura s1;
         MateriaArborScriptura s2;
@@ -656,8 +764,6 @@ MateriaLexiconRatum  ratum;
                  MateriaNodus* lecta;
                  MateriaToken* ident;
                  MateriaToken* album;
-
-        imprimere("\n--- Probans spatium album VERBATIM (crudum) ---\n");
 
         album = _lex(piscina, (s32)G_ALBUM, "\n\n  ", ZEPHYRUM,
             (i32)I, (i32)I);
@@ -670,8 +776,9 @@ MateriaLexiconRatum  ratum;
         CREDO_VERUM (materia_nodus_appendere(piscina, radix, ZEPHYRUM,
             materia_valor_token(ident), MATERIA_LOCUS_LISTA_MIXTA));
 
-        materia_arbor_consilium_nudum(&c, &REG, &ratum, "probatio");
-        s1 = materia_arbor_scribere_nodum(piscina, radix, &c);
+        materia_arbor_consilium_nudum(&consilium, &REG, ratum,
+            "probatio");
+        s1 = materia_arbor_scribere_nodum(piscina, radix, &consilium);
         CREDO_VERUM (s1.successus);
         si (!s1.successus)
         {
@@ -683,7 +790,8 @@ MateriaLexiconRatum  ratum;
         CREDO_NON_NIHIL (strstr((character*)s1.textus.datum,
             "lex-album!"));
 
-        lecta = materia_arbor_legere(piscina, NIHIL, s1.textus, &c,
+        lecta = materia_arbor_legere(piscina, NIHIL, s1.textus,
+            &consilium,
             &vitium);
         CREDO_NON_NIHIL (lecta);
         CREDO_NIHIL (vitium.causa);
@@ -706,7 +814,7 @@ MateriaLexiconRatum  ratum;
 
         /* CIRCUITUS SECUNDUS: vitium compoundens circuitum unum
          * superat */
-        s2 = materia_arbor_scribere_nodum(piscina, lecta, &c);
+        s2 = materia_arbor_scribere_nodum(piscina, lecta, &consilium);
         CREDO_VERUM (s2.successus);
         CREDO_AEQUALIS_I32 (s2.textus.mensura, s1.textus.mensura);
         CREDO_VERUM (memcmp(s1.textus.datum, s2.textus.datum,
@@ -747,7 +855,7 @@ MateriaLexiconRatum  ratum;
             CREDO_VERUM (materia_nodus_appendere(piscina, r2, ZEPHYRUM,
                 materia_valor_token(cum_nul_lex),
                 MATERIA_LOCUS_LISTA_MIXTA));
-            s3 = materia_arbor_scribere_nodum(piscina, r2, &c);
+            s3 = materia_arbor_scribere_nodum(piscina, r2, &consilium);
             CREDO_VERUM (s3.successus);
             si (!s3.successus)
             {
@@ -759,7 +867,7 @@ MateriaLexiconRatum  ratum;
                 "nul="));
 
             r2_lecta = materia_arbor_legere(piscina, NIHIL, s3.textus,
-                &c, &v3);
+                &consilium, &v3);
             CREDO_NON_NIHIL (r2_lecta);
             CREDO_NIHIL (v3.causa);
             si (r2_lecta != NIHIL)
@@ -813,7 +921,7 @@ MateriaLexiconRatum  ratum;
             CREDO_VERUM (materia_nodus_appendere(piscina, r3, ZEPHYRUM,
                 materia_valor_token(ambo_lex),
                 MATERIA_LOCUS_LISTA_MIXTA));
-            s4 = materia_arbor_scribere_nodum(piscina, r3, &c);
+            s4 = materia_arbor_scribere_nodum(piscina, r3, &consilium);
             CREDO_VERUM (s4.successus);
             si (s4.successus)
             {
@@ -823,7 +931,7 @@ MateriaLexiconRatum  ratum;
                     "nul="));
 
                 r3_lecta = materia_arbor_legere(piscina, NIHIL,
-                    s4.textus, &c, &v4);
+                    s4.textus, &consilium, &v4);
                 CREDO_NON_NIHIL (r3_lecta);
                 CREDO_NIHIL (v4.causa);
                 si (r3_lecta != NIHIL)
@@ -849,21 +957,34 @@ MateriaLexiconRatum  ratum;
             }
         }
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: REFERENTIAE (2026-09-10)
-     *
-     * Nexus lateralis super arborem: scopus id="nodN", locus
-     * '#nodN'. Antrorsum ET in circuitu (A -> B, B -> A) - quod
-     * transclusio fragmentorum dare non potest ('ante usum',
-     * circuitus recusatus). Lector post arborem totam solvit;
-     * circuitus bis (vitium compoundens); permutatio listae
-     * referentias INTACTAS relinquit - ipsa causa speciei.
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: REFERENTIAE (2026-09-10)
+ *
+ * Nexus lateralis super arborem: scopus id="nodN", locus
+ * '#nodN'. Antrorsum ET in circuitu (A -> B, B -> A) - quod
+ * transclusio fragmentorum dare non potest ('ante usum',
+ * circuitus recusatus). Lector post arborem totam solvit;
+ * circuitus bis (vitium compoundens); permutatio listae
+ * referentias INTACTAS relinquit - ipsa causa speciei.
+ * ================================================== */
 
+interior vacuum
+_referentias_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        MateriaArborConsilium c;
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        MateriaArborConsilium consilium;
            MateriaArborVitium vitium;
         MateriaArborScriptura s1;
         MateriaArborScriptura s2;
@@ -875,7 +996,6 @@ MateriaLexiconRatum  ratum;
                  MateriaNodus* lecta2;
       MateriaArborDifferentia  d;
 
-        imprimere("\n--- Probans referentias (circuitus) ---\n");
 
         radix  = materia_nodus_creare(piscina, (s32)GR_RADIX, (i32)I);
         a      = _filium_struere(piscina, (s32)I);
@@ -895,8 +1015,9 @@ MateriaLexiconRatum  ratum;
         CREDO_VERUM (materia_nodus_ponere(b, (i32)LR_SOCIUS - I,
             materia_valor_referentia(a), MATERIA_LOCUS_REFERENTIA));
 
-        materia_arbor_consilium_nudum(&c, &REG_REF, &ratum, "probatio");
-        s1 = materia_arbor_scribere_nodum(piscina, radix, &c);
+        materia_arbor_consilium_nudum(&consilium, &REG_REF, ratum,
+            "probatio");
+        s1 = materia_arbor_scribere_nodum(piscina, radix, &consilium);
         CREDO_VERUM (s1.successus);
         si (!s1.successus)
         {
@@ -929,7 +1050,8 @@ MateriaLexiconRatum  ratum;
         }
 
         /* LECTIO: identitas soluta - A' -> B', B' -> A' */
-        lecta = materia_arbor_legere(piscina, NIHIL, s1.textus, &c,
+        lecta = materia_arbor_legere(piscina, NIHIL, s1.textus,
+            &consilium,
             &vitium);
         CREDO_NON_NIHIL (lecta);
         CREDO_NIHIL (vitium.causa);
@@ -963,15 +1085,16 @@ MateriaLexiconRatum  ratum;
         }
 
         /* CIRCUITUS BIS */
-        s2 = materia_arbor_scribere_nodum(piscina, lecta, &c);
+        s2 = materia_arbor_scribere_nodum(piscina, lecta, &consilium);
         CREDO_VERUM (s2.successus);
         CREDO_AEQUALIS_I32 (s2.textus.mensura, s1.textus.mensura);
         CREDO_VERUM (memcmp(s1.textus.datum, s2.textus.datum,
             (size_t)s1.textus.mensura) == ZEPHYRUM);
-        lecta2 = materia_arbor_legere(piscina, NIHIL, s2.textus, &c,
+        lecta2 = materia_arbor_legere(piscina, NIHIL, s2.textus,
+            &consilium,
             &vitium);
         CREDO_NON_NIHIL (lecta2);
-        s3 = materia_arbor_scribere_nodum(piscina, lecta2, &c);
+        s3 = materia_arbor_scribere_nodum(piscina, lecta2, &consilium);
         CREDO_VERUM (s3.successus);
         CREDO_AEQUALIS_I32 (s3.textus.mensura, s1.textus.mensura);
         CREDO_VERUM (memcmp(s1.textus.datum, s3.textus.datum,
@@ -992,7 +1115,8 @@ MateriaLexiconRatum  ratum;
             CREDO_AEQUALIS_PTR (_socium_filii(a), b);
             CREDO_AEQUALIS_PTR (_socium_filii(b), a);
 
-            s4 = materia_arbor_scribere_nodum(piscina, radix, &c);
+            s4 = materia_arbor_scribere_nodum(piscina, radix,
+                &consilium);
             CREDO_VERUM (s4.successus);
             {
                 character* textus_permutatus =
@@ -1011,7 +1135,7 @@ MateriaLexiconRatum  ratum;
                     && f1 < g2 && g2 < f2);
             }
             lecta_permutata = materia_arbor_legere(piscina, NIHIL,
-                s4.textus, &c,
+                s4.textus, &consilium,
                 &vitium);
             CREDO_NON_NIHIL (lecta_permutata);
             si (lecta_permutata != NIHIL)
@@ -1043,7 +1167,7 @@ MateriaLexiconRatum  ratum;
                      MateriaNodus* solus;
 
             /* subarbor A sola: socius B EXTRA - recusatur cum sede */
-            s5 = materia_arbor_scribere_nodum(piscina, a, &c);
+            s5 = materia_arbor_scribere_nodum(piscina, a, &consilium);
             CREDO_FALSUM (s5.successus);
             CREDO_NON_NIHIL (s5.causa);
             CREDO_AEQUALIS_PTR ((constans vacuum*)s5.sedes,
@@ -1056,7 +1180,8 @@ MateriaLexiconRatum  ratum;
             CREDO_VERUM (materia_nodus_ponere(solus, (i32)LR_SOCIUS - I,
                 materia_valor_referentia(NIHIL),
                 MATERIA_LOCUS_REFERENTIA));
-            s5 = materia_arbor_scribere_nodum(piscina, solus, &c);
+            s5 = materia_arbor_scribere_nodum(piscina, solus,
+                &consilium);
             CREDO_VERUM (s5.successus);
             si (s5.successus)
             {
@@ -1067,7 +1192,7 @@ MateriaLexiconRatum  ratum;
                 CREDO_NON_NIHIL (strstr((character*)s5.textus.datum,
                     "<gradus(> 3"));
                 lectus = materia_arbor_legere(piscina, NIHIL, s5.textus,
-                    &c, &vitium);
+                    &consilium, &vitium);
                 CREDO_NON_NIHIL (lectus);
                 si (lectus != NIHIL)
                 {
@@ -1101,7 +1226,7 @@ MateriaLexiconRatum  ratum;
                 (int)sigillum.mensura,
                 (constans character*)sigillum.datum);
             CREDO_NIHIL (materia_arbor_legere(piscina, NIHIL,
-                chorda_ex_literis(doc, piscina), &c, &vitium));
+                chorda_ex_literis(doc, piscina), &consilium, &vitium));
             CREDO_NON_NIHIL (vitium.causa);
             CREDO_NON_NIHIL (strstr(vitium.causa, "ignotam"));
 
@@ -1116,7 +1241,7 @@ MateriaLexiconRatum  ratum;
                 (int)sigillum.mensura,
                 (constans character*)sigillum.datum);
             CREDO_NIHIL (materia_arbor_legere(piscina, NIHIL,
-                chorda_ex_literis(doc, piscina), &c, &vitium));
+                chorda_ex_literis(doc, piscina), &consilium, &vitium));
             CREDO_NON_NIHIL (vitium.causa);
             CREDO_NON_NIHIL (strstr(vitium.causa, "duplex"));
 
@@ -1130,7 +1255,7 @@ MateriaLexiconRatum  ratum;
                 (int)sigillum.mensura,
                 (constans character*)sigillum.datum);
             CREDO_NIHIL (materia_arbor_legere(piscina, NIHIL,
-                chorda_ex_literis(doc, piscina), &c, &vitium));
+                chorda_ex_literis(doc, piscina), &consilium, &vitium));
             CREDO_NON_NIHIL (vitium.causa);
 
             /* sanum: se ipsum referens (circuitus minimus) */
@@ -1145,7 +1270,8 @@ MateriaLexiconRatum  ratum;
             {
                 MateriaNodus* ipse = materia_arbor_legere(piscina,
                     NIHIL,
-                    chorda_ex_literis(doc, piscina), &c, &vitium);
+                    chorda_ex_literis(doc, piscina), &consilium,
+                    &vitium);
 
                 CREDO_NON_NIHIL (ipse);
                 si (ipse != NIHIL)
@@ -1157,23 +1283,36 @@ MateriaLexiconRatum  ratum;
             }
         }
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: SESSIONES (silva-migratio T10a)
-     *
-     * Documentum cuius involucrum CLIENS componit - C89 <parsura>
-     * nodos supremos PLURES inter directivas fert. Tria portant:
-     *   1. numeratio fragmentorum DOCUMENTO-scopata: lexema in
-     *      nodis supremis DUOBUS communicatum semel definitur;
-     *   2. sedes valorum iunctae (materia paria colligebat sed
-     *      numquam iungebat) et REPUNCTAE post substitutionem;
-     *   3. lectio speculo: transclusio in nodo secundo OBIECTUM
-     *      nodi primi invenit.
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: SESSIONES (silva-migratio T10a)
+ *
+ * Documentum cuius involucrum CLIENS componit - C89 <parsura>
+ * nodos supremos PLURES inter directivas fert. Tria portant:
+ *   1. numeratio fragmentorum DOCUMENTO-scopata: lexema in
+ *      nodis supremis DUOBUS communicatum semel definitur;
+ *   2. sedes valorum iunctae (materia paria colligebat sed
+ *      numquam iungebat) et REPUNCTAE post substitutionem;
+ *   3. lectio speculo: transclusio in nodo secundo OBIECTUM
+ *      nodi primi invenit.
+ * ================================================== */
 
+interior vacuum
+_sessiones_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        MateriaArborConsilium c;
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        MateriaArborConsilium consilium;
          MateriaArborScriptor* sc;
         MateriaArborScriptura  s;
           constans character* causa = NIHIL;
@@ -1188,8 +1327,6 @@ MateriaLexiconRatum  ratum;
                     StmlNodus* dir;
                     StmlNodus* le;
                     character  buf[4096];
-
-        imprimere("\n--- Probans sessionem scripturae ---\n");
 
         intern  = internamentum_creare(piscina);
         commune = _lex(piscina, (s32)G_IDENT, "c", ZEPHYRUM, (i32)I,
@@ -1210,11 +1347,12 @@ MateriaLexiconRatum  ratum;
         d = _lex(piscina, (s32)G_COMMENTUM, "/*d*/", (s32)6, (i32)I,
             (i32)7);
 
-        materia_arbor_consilium_nudum(&c, &REG, &ratum, "probatio");
-        c.intern           = intern;
-        c.sedes_colligere  = VERUM;
+        materia_arbor_consilium_nudum(&consilium, &REG, ratum,
+            "probatio");
+        consilium.intern           = intern;
+        consilium.sedes_colligere  = VERUM;
 
-        sc = materia_arbor_scriptor_creare(piscina, &c, &causa);
+        sc = materia_arbor_scriptor_creare(piscina, &consilium, &causa);
         CREDO_NON_NIHIL (sc);
         CREDO_NIHIL (causa);
         materia_arbor_scriptor_numerare(sc, materia_valor_nodus(n1));
@@ -1303,10 +1441,11 @@ MateriaLexiconRatum  ratum;
                   MateriaNodus* r2;
                   MateriaToken* rd;
 
-            imprimere("\n--- Probans sessionem lectionis ---\n");
+            CREDO_GRADUS ("sessionem lectionis");
             r = stml_legere(s.textus, piscina, intern);
             CREDO_VERUM (r.successus);
-            lector = materia_arbor_lector_creare(piscina, intern, &c,
+            lector = materia_arbor_lector_creare(piscina, intern,
+                &consilium,
                 &vitium);
             CREDO_NON_NIHIL (lector);
             r1 = materia_arbor_nodum_legere(lector,
@@ -1345,8 +1484,9 @@ MateriaLexiconRatum  ratum;
                        i32  k;
                        b32  inventum = FALSUM;
 
-            imprimere("\n--- Probans repunctionem sedium ---\n");
-            sc = materia_arbor_scriptor_creare(piscina, &c, &causa);
+            CREDO_GRADUS ("repunctionem sedium");
+            sc = materia_arbor_scriptor_creare(piscina, &consilium,
+                &causa);
             materia_arbor_scriptor_numerare(sc,
                 materia_valor_nodus(n1));
             materia_arbor_scriptor_numerare(sc,
@@ -1390,20 +1530,33 @@ MateriaLexiconRatum  ratum;
             CREDO_VERUM (inventum);
         }
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: FIXURA publica - ancora per liberum, lacunae, et
-     * RE-QUAESITIO indicis lacunarum (silva T7: liberi supremi
-     * ordine ARBORIS, ancora cursorem RETRO ponit)
-     *
-     * Fons: "a#d\nb      c" - 'a' ad 0, lacuna directivae [1,4),
-     * 'b' ad 4 (linea II), 'c' ad XI. Ordo documenti: nodus 'c'
-     * PRIMUS (ut contentum capitis), deinde nodus 'a b'.
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: FIXURA publica - ancora per liberum, lacunae, et
+ * RE-QUAESITIO indicis lacunarum (silva T7: liberi supremi
+ * ordine ARBORIS, ancora cursorem RETRO ponit)
+ *
+ * Fons: "a#d\nb      c" - 'a' ad 0, lacuna directivae [1,4),
+ * 'b' ad 4 (linea II), 'c' ad XI. Ordo documenti: nodus 'c'
+ * PRIMUS (ut contentum capitis), deinde nodus 'a b'.
+ * ================================================== */
 
+interior vacuum
+_fixuram_publicam_probare (
+    CredoContextus* c)
+{
+    constans MateriaLexiconRatum* ratum;
+                         Piscina* piscina = c->piscina;
+
+    si (c->suita == NIHIL)
     {
-        MateriaArborConsilium c;
+        redde;
+    }
+    ratum = &((constans FixuraLexici*)c->suita)->ratum;
+    {
+        MateriaArborConsilium consilium;
            MateriaArborFixura fx;
                           Xar* lacunae;
                 MateriaLacuna* lac;
@@ -1416,8 +1569,8 @@ MateriaLexiconRatum  ratum;
                     StmlNodus* ancora_ab;
           InternamentumChorda* intern = internamentum_creare(piscina);
 
-        imprimere("\n--- Probans fixuram publicam ---\n");
-        materia_arbor_consilium_nudum(&c, &REG, &ratum, "probatio");
+        materia_arbor_consilium_nudum(&consilium, &REG, ratum,
+            "probatio");
 
         ta = _lex(piscina, (s32)G_IDENT, "a", (s32)-I, ZEPHYRUM,
             ZEPHYRUM);
@@ -1457,7 +1610,7 @@ MateriaLexiconRatum  ratum;
         stml_attributum_addere(ancora_ab, piscina, intern, "columna",
             "1");
 
-        materia_arbor_fixura_initiare(&fx, &c, lacunae);
+        materia_arbor_fixura_initiare(&fx, &consilium, lacunae);
         materia_arbor_fixura_ancoram_legere(&fx, ancora_c);
         materia_arbor_positiones_nodi(&fx, nc);
         CREDO_AEQUALIS_S32 (tc->byte_offset, (s32)11);
@@ -1469,11 +1622,18 @@ MateriaLexiconRatum  ratum;
         CREDO_AEQUALIS_I32 (tb->linea, (i32)II);
         CREDO_AEQUALIS_I32 (tb->columna, (i32)I);
     }
+}
 
 
-    /* ========================================================
-     * PROBARE: uncus comparationis frontis
-     * ======================================================== */
+/* ==================================================
+ * PROBARE: uncus comparationis frontis
+ * ================================================== */
+
+interior vacuum
+_uncum_frontis_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaArborComparatioFrons fr;
@@ -1481,7 +1641,6 @@ MateriaLexiconRatum  ratum;
                        MateriaNodus* na;
                        MateriaNodus* nb;
 
-        imprimere("\n--- Probans uncum comparationis frontis ---\n");
         na = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
         nb = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
         CREDO_VERUM (materia_nodus_appendere(piscina, na, ZEPHYRUM,
@@ -1511,10 +1670,37 @@ MateriaLexiconRatum  ratum;
         CREDO_VERUM (materia_arbor_aequalis_fronte(na, nb,
             MATERIA_ARBOR_COMPARATIO_FIDELITAS, &fr, &df));
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "mangulatio tagorum, utroque modo", _tagos_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "formae triviorum ex specie", _formas_triviorum_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "lex ancorae: ambo casus", _legem_ancorae_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "fragmentum et transclusio", _fragmentum_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "custodiae scriptoris", _custodias_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "circuitus bis", _circuitum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "custodiae lectoris", _custodias_lectoris_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "spatium album verbatim per crudum", _spatium_album_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "referentiae", _referentias_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sessiones scripturae", _sessiones_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "fixura publica", _fixuram_publicam_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "uncus comparationis frontis", _uncum_frontis_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("materia_arbor", SECTIONES,
+        _suitam_parare, NIHIL);
 }

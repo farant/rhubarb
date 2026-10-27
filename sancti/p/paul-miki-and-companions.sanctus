@@ -1,0 +1,42 @@
+<sanctus id="paul-miki-and-companions" versio="1" genus="coetus" status="sanctus">
+  <nomen lingua="en" principale="verum">Paul Miki and Companions</nomen>
+  <nomen lingua="alia" fontes="bu">The Martyrs of Japan</nomen>
+  <obitus annus="1597" mensis="2" dies="5" locus="Nagasaki, Japan" martyrium="verum" fontes="ce bu mr"/>
+  <canonizatio modus="formalis" annus="1862" papa="Pius IX" fontes="mr"/>
+  <festum calendarium="generale" mensis="2" dies="6" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="2" dies="5" fontes="mr"/>
+  <munus fontes="mr us">martyr</munus>
+  <socius fontes="bu">Paul Miki</socius>
+  <socius fontes="bu">Peter Baptist</socius>
+  <socius fontes="bu">John Goto</socius>
+  <socius fontes="bu">James Kisai</socius>
+  <descriptio>
+    <paragraphus fontes="bu ce">Christianity had spread widely in Japan after Francis Xavier arrived in 1549, but persecution followed, and the emperor was persuaded that the missionaries were preparing a Portuguese or Spanish conquest. In 1597 twenty-six Christians were crucified on a hill near Nagasaki: six Franciscans, led by Peter Baptist, commissary of his order and a native of Avila; three Jesuits; and a number of Japanese lay converts, among them boys who served the friars at Mass; Butler gives their ages as fifteen, fifteen and twelve, the Catholic Encyclopedia names a child of thirteen and one of twelve. The Catholic Encyclopedia dates the crucifixion to 5 February 1597.</paragraphus>
+    <paragraphus fontes="bu mr">Of the Jesuits, Paul Miki was a noble Japanese and a noted preacher, then thirty-three years old; John Goto and James Kisai were received into the Society in prison shortly before their deaths. Twenty-four of them had part of the left ear cut off at Meaco and were led through many towns. At the place of execution they were bound to crosses set in a row and all pierced with lances at a signal. Butler records that Urban VIII ranked them among the martyrs; the Martyrology adds that Pius IX canonized them in 1862.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="5 February">
+    <excerptum>In the kingdom of Japan, the passion of twenty-six</excerptum>
+    <excerptum>martyrs, who, by being crucified for the Catholic faith, and pierced with lances, gloriously died in praising God and preaching that same faith. Pius IX. canonized them in 1862.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v02 Feb. 5 The Martyrs of Japan">
+    <excerptum>Francis Xavier arrived in Japan in 1549, baptized ereat numbers, and whole provinces received the faith.</excerptum>
+    <excerptum>The emperor Tagcosa^'^ia, one of the proudest and most vicious of men, was worked up into racre and jealousy by a suspicion suggested by certain European merchants desirous of the monopoly of this trade, that the view of the missionaries in loreaching</excerptum>
+    <excerptum>tlie Christian faith was to facilitate the conquest of their country by the Portuguese or Spaniards. Three Jesuits and six Franciscans were crucified on a hill near Nangasaqui in 1597.</excerptum>
+    <excerptum>had at their head F. Peter Baptist, commissary of his Order, a native of Avila, in Spain. As to the Jesuits, one was Paul Michi, a noble Japanese and an eminent preacher, at that time thirty-three years old. The other two, John Gotto and</excerptum>
+    <excerptum>James Kisai, were admitted into the Society in</excerptum>
+    <excerptum>prison a little before they suffered. Several Japanese converts suffered with them. The martyrs were twenty-six in number, and among them were three boys who used to serve the friars at mass; two of them were fifteen years of age, and the third only twelve</excerptum>
+    <excerptum>twenty-four had been brought to Meaco, where only a part of their left ears was cut off</excerptum>
+    <excerptum>They were conducted through many towns and public places</excerptum>
+    <excerptum>The crosses were planted in a row, about four feet asunder, and each martyr had an executioner near him with a spear ready to pierce his side</excerptum>
+    <excerptum>the executioners lifted up their lances, and at a signal given, all pierced the martyrs almost in the same</excerptum>
+    <excerptum>Urban VIII. ranked them among the martyrs, and they are honoured on the 5th of February</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="Japanese Martyrs" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/Japanese_Martyrs">
+    <excerptum>It was not until 1587, when there were 200,000 Christians in Japan, that an edict of persecution, or rather of prescription, was passed</excerptum>
+    <excerptum>The first bloody persecution dates from 1597.</excerptum>
+    <excerptum>on 5 Feb., 1597, 26 Christians, among whom were 6 Fransciscan missionaries, were crucified at Nagasaki. Among the 20 native Christians there was one, a child of 13, and another of 12 years.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="6 February">
+    <excerptum>Saint Paul Miki and Companions, Martyrs</excerptum>
+  </fons>
+</sanctus>

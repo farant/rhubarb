@@ -6,6 +6,7 @@
 #include "chorda.h"
 #include "credo.h"
 #include <stdio.h>
+#include <string.h>
 
 interior ColorMandati
 color_thema (
@@ -220,6 +221,49 @@ _sectio_sexta (
     CREDO_AEQUALIS_I32 (mandata_numerus(m), ZEPHYRUM);
 }
 
+/* textus et fons imaginis in piscinam mandatorum copiantur: vocans
+ * memoriam suam statim reddere potest (buffer acervi, introitus
+ * conspectus eiectus - kalendarium 10-13 et 10-23) */
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                 Mandata* m;
+       constans Mandatum* y;
+               character  buffer[XVI];
+               character  fons[XVI];
+                  chorda  textus;
+                  chorda  via;
+                   Fines  f;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    m        = mandata_creare(piscina, intern);
+    memcpy(buffer, "Servare", VII);
+    memcpy(fons, "imago.png", IX);
+    textus.datum    = (i8*)buffer;
+    textus.mensura  = VII;
+    via.datum       = (i8*)fons;
+    via.mensura     = IX;
+    f.x             = ZEPHYRUM;
+    f.y             = ZEPHYRUM;
+    f.latitudo      = X;
+    f.altitudo      = X;
+    mandata_textus(m, I, I, textus, ZEPHYRUM, color_thema(I));
+    mandata_imago(m, via, f);
+    memset(buffer, 'x', magnitudo(buffer));
+    memset(fons, 'x', magnitudo(fons));
+
+    y = mandata_obtinere(m, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(y->textus, "Servare");
+    CREDO_VERUM((constans character*)y->textus.datum != buffer);
+    y = mandata_obtinere(m, I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(y->textus, "imago.png");
+    CREDO_VERUM((constans character*)y->textus.datum != fons);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "emissionem et spatia coetuum", _sectio_prima, NIHIL, NIHIL,
         NIHIL, NIHIL },
@@ -230,6 +274,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "exemplar (indicium foci)", _sectio_quinta, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "vacare", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "possessio (textus copiatur)", _sectio_septima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

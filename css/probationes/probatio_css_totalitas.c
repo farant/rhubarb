@@ -35,6 +35,7 @@
  */
 
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "credo.h"
 #include "css_arbor.h"
 #include "css_registrum.h"
@@ -72,8 +73,15 @@ hic_manens constans character* CAUSAE[] = {
     "emissio a fonte dispar"
 };
 
-hic_manens constans character* RADIX_VIAE = ".";
+/* radix arboris (RHUBARB_RADIX, aliter "."): functio, non staticum
+ * scriptum - status nullus inter sectiones */
+interior constans character*
+_radix_viae (vacuum)
+{
+    constans character* radix = getenv("RHUBARB_RADIX");
 
+    redde radix != NIHIL ? radix : ".";
+}
 
 interior character*
 _plagulam_legere (
@@ -86,7 +94,7 @@ _plagulam_legere (
     character* memoria;
         size_t lecti;
 
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde NIHIL;
@@ -176,9 +184,10 @@ _fractum_scribere (
     }
     alioquin
     {
-        sprintf(via, "%s/css/build/totalitas_fractum.css", RADIX_VIAE);
+        sprintf(via, "%s/css/build/totalitas_fractum.css",
+            _radix_viae());
     }
-    f = fopen(via, "wb");
+    f = lectiones_fopen(via, "wb");
     si (f == NIHIL)
     {
         redde;
@@ -305,12 +314,14 @@ _nidos_probare (
     }
 }
 
-integer
-principale (vacuum)
+/* Sectio UNA (conversio fidelis): pavimentum tegumenti 'casus >= CC'
+ * classes IV simul numerat - divisio in sectiones commissione sua
+ * (ubi pavimentum habitet decernendum). */
+interior vacuum
+_totalitatem_probare (
+    CredoContextus* c)
 {
-               Piscina* piscina;
-    constans character* radix_viae;
-                   b32  praeteritus;
+               Piscina* piscina = c->piscina;
                    i32  numerus_corporis;
                    i32  plagulae_lectae;
                    i32  casus_fortuiti;
@@ -318,16 +329,6 @@ principale (vacuum)
                    i32  casus_truncati;
                    i32  casus_nidorum;
                    i32  i;
-
-    piscina = piscina_generare_dynamicum("probatio_css_totalitas",
-        1048576);
-    credo_aperire(piscina);
-
-    radix_viae = getenv("RHUBARB_RADIX");
-    si (radix_viae != NIHIL)
-    {
-        RADIX_VIAE = radix_viae;
-    }
 
     numerus_corporis  = (i32)(magnitudo(CORPUS) / magnitudo(CORPUS[0]));
     plagulae_lectae   = ZEPHYRUM;
@@ -341,7 +342,6 @@ principale (vacuum)
      * OCTETI FORTUITI: semina I..XXXII, LXIV..MMXLVIII octeti
      * ================================================== */
 
-    imprimere("\n--- Probans octetos fortuitos ---\n");
     per (i = I; i <= XXXII; i++)
     {
               Sors  s;
@@ -366,7 +366,6 @@ principale (vacuum)
      * CORPUS MUTATUM + TRUNCATUM: VI plagulae verae
      * ================================================== */
 
-    imprimere("\n--- Probans corpus mutatum et truncatum ---\n");
     per (i = ZEPHYRUM; i < numerus_corporis; i++)
     {
         character  via[DXII];
@@ -376,7 +375,7 @@ principale (vacuum)
               i32  semen;
               i32  gradus;
 
-        sprintf(via, "%s/%s", RADIX_VIAE, CORPUS[i]);
+        sprintf(via, "%s/%s", _radix_viae(), CORPUS[i]);
         textus = _plagulam_legere(piscina, via, &mensura);
         si (textus == NIHIL)
         {
@@ -430,7 +429,6 @@ principale (vacuum)
      * NIDIFICATIO: formae VI x {clausa, aperta} x {I, X, C, M}
      * ================================================== */
 
-    imprimere("\n--- Probans nidificationem ---\n");
     {
         i32 numerus_formarum;
         i32 f;
@@ -450,7 +448,7 @@ principale (vacuum)
      * Rubet cum remedium veniat; tunc in NON_RUIT promovenda.
      * ================================================== */
 
-    imprimere("\n--- Pinna: ruina profunditatis nota (01M1FAD8) ---\n");
+    imprimere("\n  pinna: ruina profunditatis nota (01M1FAD8)\n");
     {
               i32  mensura = ZEPHYRUM;
         character* fons = _nidum_struere(piscina, &FORMAE[ZEPHYRUM],
@@ -467,11 +465,16 @@ principale (vacuum)
     CREDO_MAIOR_I32 (casus_nidorum,   ZEPHYRUM);
     CREDO_MAIOR_I32 (casus_fortuiti + casus_mutati + casus_truncati
         + casus_nidorum, (i32)CC);
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "totalitas: fortuiti, mutati, truncati, nidi",
+        _totalitatem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("css_totalitas", SECTIONES);
 }

@@ -5,6 +5,7 @@
  */
 
 /* Includere systemae primum ut vitare conflictos macros */
+#include "postulata_macos.h"   /* PRIMUM: ante capita Apple */
 #import <Cocoa/Cocoa.h>
 #include "clipboard_platform.h"
 #include "chorda.h"
@@ -186,7 +187,7 @@ clipboard_capere_imaginem(Piscina* piscina)
                 [NSGraphicsContext setCurrentContext:ctx];
 
                 /* Draw original into RGBA context */
-                tempImage = [[NSImage alloc] initWithSize:NSMakeSize(latitudo, altitudo)];
+                tempImage = [[NSImage alloc] initWithSize:NSMakeSize((CGFloat)latitudo, (CGFloat)altitudo)];
                 [tempImage addRepresentation:rep];
                 [tempImage drawAtPoint:NSZeroPoint fromRect:NSZeroRect operation:NSCompositingOperationCopy fraction:1.0];
 
@@ -222,4 +223,34 @@ clipboard_capere_imaginem(Piscina* piscina)
 
         redde fructus;
     }
+}
+
+/* ============================================================
+ * clipboard_textum_ponere
+ * ============================================================ */
+
+b32
+clipboard_textum_ponere(constans character* textus, i32 mensura)
+{
+    b32 positus;
+
+    si (!textus)
+    {
+        redde FALSUM;
+    }
+    positus = FALSUM;
+    @autoreleasepool {
+        NSPasteboard* pb = [NSPasteboard generalPasteboard];
+        NSString* s = [[NSString alloc] initWithBytes:textus
+            length:(NSUInteger)mensura encoding:NSUTF8StringEncoding];
+
+        si (s)
+        {
+            [pb clearContents];
+            positus = [pb setString:s forType:NSPasteboardTypeString]
+                ? VERUM : FALSUM;
+            [s release];
+        }
+    }
+    redde positus;
 }

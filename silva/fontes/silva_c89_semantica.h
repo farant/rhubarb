@@ -565,7 +565,11 @@ nomen enumeratio {
      *      - VACUA ante cursum;
      * 94 = c->suita mutatum: assignatum, aut conversum/initiatum/
      *      assignatum ad monstratorem NON constantem (sectiones
-     *      statum suitae legunt, numquam mutant - credo II Q3);
+     *      statum suitae legunt, numquam mutant - credo II Q3;
+     *      ITEM membra monstratoria fixurae scripta aut ad
+     *      parametrum non constans tradita (94 profundum, fluxus
+     *      datorum); InternamentumChorda* fixurae exceptum,
+     *      decretum 2026-10-19);
      * 95 = titulus '--- ... ---' manu impressus in clausura sectionis
      *      (DOMESTICUM, monitum): credo titulum ipse imprimit,
      *      gradus = CREDO_GRADUS. */
@@ -587,6 +591,16 @@ nomen enumeratio {
      * silva_c89_semantica_debita_applicare ad DOMESTICUM demittuntur.
      * 96 = vocatio IO cruda extra canalem - vicarius nominatur. */
     EXAMEN_CODEX_CANALIS_PRAETERITUS,         /* VIOLATIO domus */
+    /* SCRIPTURA PRAETERITA (fabrica-8 T1, decretum Frani 2026-10-24):
+     * scriptura cruda (remove unlink rename mkdir rmdir chmod symlink;
+     * fopen/freopen cum modo litterali 'w'/'a'/'+') extra filum - liber
+     * lectionum eam non videt, fabrica membrum ex libro solo iudicare
+     * nequit. Tabula = tagi <gradus genus="scriptura" pro="vicarius">
+     * in lexico systematis (ut 96); vocationes solae, lexema EXPANSUM,
+     * sedes = radix in fonte principali. SINE DEBITIS: occurrentiae
+     * omnes una emendantur; <tolera> per sedem solum in filo ipso
+     * (canalis). DOMESTICUM dum emendatio currit, deinde VIOLATIO. */
+    EXAMEN_CODEX_SCRIPTURA_PRAETERITA,        /* DOMESTICUM (mox) */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

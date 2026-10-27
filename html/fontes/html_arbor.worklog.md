@@ -1009,3 +1009,7 @@ Fix: `_acervum_reponere` takes `constans Xar* novi` and indexes it
 read at this site. No permanent test: a guard needs the segments
 apart, and no public input can force that (the tiny-piscina attempt
 stayed green without the fix — mute, removed).
+
+## 2026-10-22 — adversarius_2 again: +1 allocation from StmlNodus 152 -> 144 B
+
+The StmlNodus reorder (padding removed, lib/stml.worklog.md 2026-10-22) moved `allocationes_arboris` on `adversarius_2` by +1 (41096 -> 41097), the only cell that moved across all seven client goldens. Controlled experiment (probe build/sonda_partes/sonda_html_alloc.c, gitignored): HEAD order at 152 B gives 41096; the new order at 144 B gives 41097; the new order padded back to 152 B gives 41096. So it is size-dependent, not order-dependent: the same arena-boundary effect as 2026-09-19. Since piscina_conari_ampliare (10-21), whether a builder grows in place depends on room left in the current block, so allocation counts in this pool now follow layout. Golden moved by exactly that number.

@@ -1,0 +1,37 @@
+<sanctus id="januarius" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Januarius</nomen>
+  <obitus annus="305" circa="verum" locus="Pozzuoli" martyrium="verum" fontes="ce mr bu"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="9" dies="19" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="9" dies="19" fontes="mr"/>
+  <munus fontes="us mr ce">bishop</munus>
+  <munus fontes="us mr ce">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce mr bu">Januarius was Bishop of Benevento and is believed to have died in the persecution of Diocletian, about 305. The Catholic Encyclopedia warns that almost nothing is known of his life and that all the surviving Acts are late and untrustworthy. Butler notes that some made him a native of Naples, others of Benevento. According to the Martyrology he was beheaded at Pozzuoli in Campania with his deacon Festus, the lector Desiderius, the deacons Sosius and Proculus, and Eutychius and Acutius, after chains and imprisonment. The longer account in the Breviary adds that the flames of a furnace and the wild beasts of the amphitheatre did not harm him.</paragraphus>
+    <paragraphus fontes="ce mr">His body was finally brought to Naples. There a phial of his blood is kept, dried and solid, which liquefies when it is shown near a silver bust believed to contain his head. This has happened at frequent intervals for more than four hundred years, at the expositions in May, on his feast of 19 September with its octave, and on 16 December, when it fails more often than not. The Catholic Encyclopedia judges any deliberate trick to be out of the question, and notes that opponents of a supernatural explanation disagree among themselves on how to account for it.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="19 September">
+    <excerptum>4 T Puzzoli, in Campania, the holy martyrs Januarius, bishop of Benevento, Festus, his deacon, and Desiderius, lector, together with Sosius, deacon of the church of Misenum, Proculus, deacon of Puzzoli, Eutychius and Acutius, who were bound and imprisoned and then beheaded during the reign of Diocletian.</excerptum>
+    <excerptum>The body of St. Januarius was brought to Naples, and buried in the church with due honors, where even now the blood of the blessed martyr is kept in a vial</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Januarius" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Januarius">
+    <excerptum>Martyr, Bishop of Beneventum. St. Januarius is believed to have suffered in the persecution of Diocletian, c. 305. With regard to the history of his life and martyrdom, we know next to nothing.</excerptum>
+    <excerptum>are all extremely late and untrustworthy.</excerptum>
+    <excerptum>In the Breviary a longer account is given.</excerptum>
+    <excerptum>that Januarius was thrown into a fiery furnace, but that the flames would not touch him, and that the saint and his companions were afterwards exposed in the amphitheatre to wild beasts without any effect.</excerptum>
+    <excerptum>By God's will, the relics of Januarius were taken to Naples at last</excerptum>
+    <excerptum>when the blood of St. Januarius, kept dried up in a small glass phial, is put in sight of the head of the same martyr, it is wont to melt and bubble</excerptum>
+    <excerptum>Let it at once be said that the supposition of any trick or deliberate imposture is out of the question</excerptum>
+    <excerptum>For more than four hundred years this liquefaction has taken place at frequent intervals.</excerptum>
+    <excerptum>the rationalistic opponents of a supernatural explanation are entirely disagreed as to how the phenomenon is to be accounted for.</excerptum>
+    <excerptum>on the Saturday before the first Sunday in May and the eight following days, (2) on the feast of St. Januarius (19 Sept.) and during the octave, and (3) on 16 December</excerptum>
+    <excerptum>a silver bust believed to contain the head of St. Januarius is exposed upon the altar</excerptum>
+    <excerptum>but in that of 16 December the mass remains solid more frequently than not.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v09 Sept. 19 St. Januarius, Bishop of Benevento, and his Companions, Martyrs">
+    <excerptum>A. D. 305. Sr. JANvarius, a native some say of Naples, others of Benevento, was bishop of this latter city, when the persecution of Dioclesian broke out.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="19 September">
+    <excerptum>Saint Januarius, Bishop and Martyr</excerptum>
+  </fons>
+</sanctus>

@@ -573,3 +573,470 @@ gate run said the vates_responsum generator "wrote nothing" while
 the generator's output was byte-identical and the gate passed alone
 right after - transient, likely bin/norma rebuilt mid-gate by a
 parallel gate. Not chased.
+
+## 2026-10-17 - T4f: Cmd+] / Cmd+[ cycle the right stack
+
+`vicus_cyclum_ponere` registers the cycle types (vicus_applicatio:
+admonitiones, colloquia); Cmd+] / Cmd+[ queue a PetitioAcervi with
+`gradus` +1/-1, applied in vicus_pulsare in order, so each step reads
+the real stack (two presses in one frame = two steps). Home = topmost
+non-cycle pane (none: the bottom one; a step to the home's own type is
+skipped). Going home truncates the cycle panes above it (like Esc) and
+restores `focus_domus`, which `petitionem_applicare` records whenever
+a request moves the front off home - so the badge and
+`$notifications` start a cycle too.
+
+Pre-existing bug found on the way: `petitionem_applicare` called
+`id_novum` AFTER `xar_addere`, and after a truncation (Esc, or the
+cycle going home) the reused slot still holds the old pane - so its id
+was "taken" and a reopened notifications pane became
+`3_dextrum_admonitiones_2` (fresh mount, new ramus). id now chosen
+before the slot is added.
+
+Plants (silva.planta, radix filtrum vicus_acervus): 7 red (focus not
+restored / not recorded, home type not skipped, direction inverted,
+home always the bottom, id after xar_addere, unknown type accepted).
+GREEN, unobservable: dropping the `destinare` route for Cmd+[ ] - the
+focused panes (scriba, pictor) pass the chord up unconsumed and the
+root handler sees it anyway; kept as the same guard Cmd+digits have.
+
+## 2026-10-17 - T4f: agenda in the cycle (entries = type + argument)
+
+Fran wanted the agenda as the last stop. `$agenda` is calendarium with
+argument "agenda", so a type-only cycle would open the plain calendar
+and count ANY calendar pane (a month view kept as home) as a cycle
+pane. Cycle entries are now `LatusCycli` (genus + argumentum, the S3c
+identity) everywhere: membership, the home skip, and the open request.
+Plants (4, all red): identity ignoring the argument, argument not
+passed to the open, `argumenta` ignored by vicus_cyclum_ponere, home
+skip by type only.
+
+## 2026-10-19 — semitae R3: per-pane history, $via (project-specs/semitae-spec.md)
+
+- `VicusFacies.ramus` = a pane opts into routes (history, `$via`). The
+  saints pane is the first; the others follow in R4.
+- Recording: at the end of every `vicus_pulsare`, each opted-in pane's
+  FULL route (`semita_legere_plenam`, defaults explicit - canonical
+  routes omit defaults and "absent = keep", so they cannot restore
+  "back to the list") is compared with the entry at the pane's cursor:
+  equal -> nothing; same `historia="impelle"` fields (a "signum" of
+  their values, children included) -> the entry is replaced; otherwise
+  forward entries are dropped and a new entry pushed (cap C, oldest
+  dropped). Reads go to `v->scheda_semitarum`, cleared every pulse;
+  only recorded entries are copied into the vicus arena.
+- Entries keep a DEEP COPY of the route tree (`stml_duplicare`) for
+  applying, plus its text for comparing. Found by the test: STML
+  writes an empty attribute value as a bare attribute and reads it
+  back as boolean "true", so a text round trip turns "explicitly
+  empty" (`quaestio=""`) into `quaestio="true"` - which the
+  pagina_textus number check then refused. Text is fine for
+  comparison (both sides lose the same way), not for applying.
+- Ctrl+O / Ctrl+I in `radicem_tractare`, i.e. only after the focused
+  pane did not consume the key; acts on the FOCUSED pane and only if
+  it opted in (scriba keeps vim's Ctrl+O, the terminal its keys).
+  Applying makes the next pulse find the cursor entry equal, so it
+  records nothing.
+- Plants 9 red (one test tightened first: the "calendarium: semitas
+  nondum accipit" message, not just "calendarium"). Not planted: the
+  early "unchanged" exit (removing it replaces an equal entry -
+  harmless) and the start/end bounds (removing them crashes).
+
+## 2026-10-20 — semitae R4d: saved route beside the argument (restart)
+
+- `l->argumentum` is IDENTITY (acervus reuse, Cmd+]/[ cycle match
+  genus+argument) - overwriting it with the route would open a second
+  agenda calendar. The persistent route lives in `semita_servata`,
+  saved in the index as `semita="..."`.
+- Restore is LAZY: panes mount inside vicus_creare, before
+  vicus_organa_ponere, so `semitam_restituere` runs on the pane's first
+  pulse (history still NIHIL), then `semitam_secuta`.
+- `semitam_servare` writes the index once per pulse when any pane's
+  persistent route changed. First computation for a pane WITHOUT an
+  argument is silent: writing it appended an act on every launch, and
+  probatio_vicus_iussa / _quaestio broke because scriba's "cursor" is a
+  VOLUME SEQ (they assume no other act lands between) - that was the
+  symptom; the cause was a pointless startup write. Direct guard:
+  probatio_vicus_semitae `initium_tacitum` (acta count unchanged).
+
+## 2026-10-22 — D5 S3b: host shortcuts, advocare, transient argument
+
+- **Host shortcuts need the routing step, not the root handler.** Keys
+  the host wants FIRST (Cmd+1..9, Cmd+]/[, now Cmd+Shift+F) must be
+  claimed in `destinare` (the DestinatioStrategia), because the
+  terminal pane consumes every Cmd chord and nothing bubbles back.
+  The old checks were stateless (shape of the event); a registered
+  shortcut is data on one Vicus, so `DestinatioStrategia` gained a
+  `ctx` (dispensator_ponere_strategiam(d, s, ctx); NIHIL strategy =
+  destinatio_geometrica called directly, so its 18 test call sites
+  kept their signature). manus_ludus calls the strategy directly for
+  replay divergence - it got the same NIHIL/ctx handling.
+  Test guard: probatio_vicus_indagatio "terminale focatum" (tab 1,
+  terminal pane focused); with scriba focused the chord bubbles to
+  the root anyway, so that step alone would not catch a missing
+  routing check.
+- Modifiers match EXACTLY over Shift/Ctrl/Alt (Caps Lock, Num Lock and
+  side bits ignored); Cmd+F must not fire Cmd+Shift+F. Runa is the
+  unshifted key ('f'), as fenestra delivers it.
+- `vicus_advocare` = an S3c petition (genus, no argument) plus an
+  `advocare` flag; after front + focus, `facies.advocatum` runs (the
+  search pane opens its prompt). Applied in the pulse like every
+  petition, so the hook writes outside event handling.
+- `argumentum_transiens`: identity is genus + argument (R4d note
+  above). `$search(words)` / `$via(indagatio?q=..)` go through
+  vicus_acervo_mutare, which overwrote the argument - the next
+  Cmd+Shift+F or Cmd+]/[ (both look for "indagatio" WITHOUT argument)
+  would then mount a second search pane. With the flag the pane keeps
+  an empty argument both in the mutare branch and after a new mount
+  (montare still received the argument). Its state survives a restart
+  through semita_servata, as for every pane with routes.
+- Unchanged semantics worth knowing: vicus_acervo_mutare focuses a
+  NEW pane (S3c path) but keeps focus when the genus is already in the
+  stack - so the first `$search(words)` focuses the search pane, later
+  ones leave focus where it was.
+- Plants (silva.planta): see vicus_applicatio worklog (one list for
+  S3b).
+
+## 2026-10-22 — D5: one Ctrl+O timeline per tab (Fran)
+
+Fran, after S3b: Ctrl+O could not get back from search to the
+terminal underneath - history was per pane (R3) and changing the
+stack's front pane was recorded nowhere. Now VicusTabula holds the
+list (LocusTabulae: pane id, genus, argument, side, full route).
+
+- Recording (historiam_tabulae_notare, per tab per pulse): every pane's
+  state is read (so R4d's restore-once flag, now `historia_visa`, is
+  set for hidden panes too), but only VISIBLE panes (left, stack
+  front) make entries; an impelle change pushes, a substitue change
+  rewrites the current entry if it is that pane's; a new front id
+  pushes (front pane with its route); an empty list seeds the front.
+- Stepping is a PETITION (reordering/mounting inside event handling is
+  not allowed), the cursor moves at once so several presses before a
+  pulse add up. Applied: pane found BY ID first (pictor's argument is
+  identity and changes with $pictor-next - genus+argument would mount
+  a second pictor), else reopened by genus+argument; route applied,
+  semitam_secuta, focus to the entry's side; the pane's seen state and
+  the tab's front id are updated so the next pulse adds nothing.
+- Correction to what I told Fran: scriba does NOT consume Ctrl+O (the
+  old R3 code returned FALSUM for a route-less focused pane and the key
+  fell through). So Ctrl+O from the left scriba steps the tab - which
+  makes "notebook hit opened on the left, Ctrl+O back to the search"
+  work. The terminal does consume it.
+- Tests that open a pane before the first pulse miss the starting
+  entry (the first pulse records whatever is front then). The real app
+  pulses before any input; probatio_vicus_semitae's mundum_struere now
+  pulses once. Seeding earlier (in petitionem_applicare) would mark
+  panes seen before their saved route is restored - rejected.
+- Plants (silva.planta, vicus_semitae), all red: front change not
+  recorded, impelle replaces, substitue not refreshing the current
+  entry, futures kept, cap ignored, pane not brought forward, closed
+  pane not reopened, route not applied, focus not following, seen
+  state not set after a step, front id not set after a step, no
+  starting entry. Not planted: hidden-pane changes making entries
+  (no test drives a hidden pane), several presses before one pulse.
+
+## 2026-10-22 — two histories per tab, one per side (Fran)
+
+Fran wanted Ctrl+O in scriba to go back to the previous PAGE, which a
+single tab timeline cannot promise (a calendar step in between would
+win). Now `historia[II]` / `historia_cursor[II]`, indexed by
+VICUS_SINISTRUM / VICUS_DEXTRUM; Ctrl+O steps the focused side's list
+(`t->focus`). Left: route changes of the left pane (scriba page). Right:
+front changes and the front pane's route changes. Each side seeds its
+first entry from its current state. The left pane's saved route is now
+also saved/restored (semitam_servare/restituere for sinistrum) and read
+back from the index (`semita` on the left <latus> was written but never
+read). Earlier note's "Ctrl+O from scriba steps the tab" is superseded:
+from scriba it steps the left list.
+
+Plants (vicus_semitae), all red: left steps filed on the right, steps
+always on the right, left route never saved, no first left entry; in
+scriba: page field never written, route not followed, wrong writer for
+the field; vicus: scriba pane without `ramus`. The 12 single-timeline
+plants above were not re-run on this shape (their anchors changed);
+the same behaviours are covered by the same tests on the right side.
+
+## 2026-10-22 — locus of a pane (comites P1)
+
+`vicus_latus_locus` / `_titulus`: facies.locus if the pane supplies
+one (calendar), else `semita_locus` over its ramus, else the genus
+(notifications, sessions, terminal until P4). Title: facies hook, else
+the locus itself. Views supply titles through hooks in
+vicus_applicatio (search, notifications, sessions, picture) or their
+own headers (calendar, contacts, saints). The calendar computes its
+locus in code, not by manifest rounding: an absent day MEANS today
+(not a symbolic value a resolver could see), and week rounding needs
+the calendar's Sunday start. History entries renamed StatioHistoriae
+(was LocusTabulae). Plants red: facies.locus ignored, title hook
+ignored.
+
+## 2026-10-22 — Cmd+T companion notebooks (comites P3)
+
+Cmd+T is the host's own key (like Cmd+1..9 and Cmd+]/[): claimed in
+`destinare`, exact modifiers (Cmd+Shift+T does nothing). vicus knows no
+apps, so the left pane exposes `facies.comitem_ponere` (book prefix +
+bar title) and `facies.comes_currens` (its current prefix). Follow mode
+has NO extra state: a companion is active when the left book's prefix
+starts with "comes/"; each pulse, if active and the right front's
+"comes/" + locus differs from `t->comes_secutus`, the left pane is
+re-pointed. After a restart `comes_secutus` is empty, so the first
+pulse re-applies the companion with its (transient) bar title. Focus
+goes left on Cmd+T both ways. Consequence found in tests: any book
+whose prefix starts with "comes/" is treated as a companion and will
+follow - P2's test used such a prefix by hand and now uses "alius/".
+Plants red: Cmd+T not routed (terminal focused), modifiers ignored
+(after adding a Cmd+Shift+T check), no follow, focus not left, title
+without the location's label, toggle not returning to the home book.
+
+## 2026-10-22 — a history per book (comites P3b, Fran)
+
+Fran, after trying P3: Ctrl+O inside a companion walked back into OTHER
+companions' pages (and switched the book while the right pane stayed).
+Links (#tags, page numbers) are local to a book; history must be too.
+New `facies.historiae_ambitus`: a side's history is kept per SCOPE
+(scriba: its book prefix). On a scope change the current list is
+stored under the old scope and the new scope's list (or none: first
+entry seeded) becomes current; the change itself makes no entry.
+`historia[] / historia_cursor[]` stay "the list in use", so callers and
+tests did not change shape. Trap: the common book's scope is "" and
+TabulaDispersa keys cannot be empty - keys are "#" + scope (plant
+red). P2's test that stepped back ACROSS a book switch now checks the
+opposite. Plants red: scope ignored, scope change makes an entry,
+stored history not restored, empty key, scriba without a scope.
+
+## 2026-10-22 - comites P5a: Cmd+F = aditus "quaestio"
+
+Cmd+F (exact: no Shift/Ctrl/Alt) is a host key like Cmd+T: claimed in
+`destinare`, handled in `radicem_tractare`, ALWAYS swallowed (a pane
+with no `<aditus>` - the terminal - gets nothing, by Fran's decision).
+`vicus_aditum_sequi` looks up the FOCUSED pane's manifest iter: a
+`semita` becomes a mutare petition (genus = URI up to '/' or '?') with
+`advocare` set; no `semita` calls that pane's `facies.advocatum` at
+once (focus stays).
+
+The mutare-existing branch of `petitionem_applicare` used to keep focus
+and never advocated (D5 only advocated on the open/new path). With
+`p->advocare` it now sets focus right and calls the front's advocatum
+after `motum_aptare`. The plant that proved this needed a NEW test step
+(Cmd+F from the left scriba while a search pane is already in the
+stack) - every earlier step focused right first, so the focus plant
+stayed green.
+
+The D5 S3b test "Cmd+F without Shift: nothing" moved to Cmd+Alt+F
+(still proves the Cmd+Shift+F brevitas needs exact modifiers).
+
+## 2026-10-22 - P5a: Esc cancels a summoned search (one key, not Esc + Ctrl+O)
+
+Fran: after Cmd+F from scriba, getting the old right pane back took Esc
+(close prompt) then Ctrl+O. Now an advocating petition (vicus_aditum_sequi
+with a semita, and vicus_advocare = Cmd+Shift+F / `$search`) records on the
+tab: focus side + right history cursor BEFORE (`aditum_notare`). When it is
+applied and the summoned pane's prompt is open, the tab goes PENDENS
+(`aditum_pendere`, both advocatum sites in petitionem_applicare).
+
+Detection lives in `destinare` (`aditum_observare`): it sees every event
+before the panes. Esc with the summoned pane focused and its prompt open ->
+REVOCANDUS (the pane still gets the Esc and closes its own prompt - no pane
+code changed). Mouse down -> NULLUS. Next pulse, before petitions:
+`aditum_revocare` queues a right-history petition back to the saved cursor
+(only if history moved past it), state REDDENDUS; after petitions
+`aditum_finire` restores focus to the saved side. PENDENS also ends when
+front/focus changes or the prompt closes any other way (Enter).
+
+Host reads the prompt through membrum__prompta's `prompta_aperta` on the
+pane's ramus - vicus now includes membrum__prompta.h (the `prompta` field
+convention is shared by indagatio, sancti, nomenclator).
+
+Test trap: the D5 history test pressed Ctrl+I on a focused TERMINAL to
+check history - the terminal eats Ctrl+I (Tab). Checked the forward entry
+via historia_cursor instead.
+
+## 2026-10-22 - P5b host pieces
+
+- `facies.comitem_ponere` gained the paired route; `comitem_sequi` passes
+  the front's canonical route (`semitam_lateris_legere`: semita_legere ->
+  semita_ad_uri, empty for views without routes).
+- `vicus_comitem_ostendere`: show a GIVEN companion (search result) - seeds
+  `comes_secutus` from the current front so follow reacts only to later
+  front changes; focus left is DEFERRED (`focus_differtus`) to after the
+  next pulse's petitions, because opening a new pane forces focus right.
+  The Esc-cancel focus restore now uses the same deferred step
+  (ADITUS_REDDENDUS removed).
+- `facies.iter_semita`: a view computes an iter's route in code (same
+  pattern as facies.locus); empty = the manifest's semita.
+
+## 2026-10-26 — vicus quies T1: idle baseline (before any change)
+
+Plan: project-specs/vicus-quies-plan.md. Measured on Fran's running
+vicus (pid 54176, `-volumen ~/.rhubarb/paginae-proba.volumen`, layout
+with a terminal pane), untouched:
+
+- `top -l 7 -s 5 -stats cpu,idlew,power`: CPU 4.6-5.1%, POWER ~5,
+  IDLEW 0 (top's idle-wakeup column does not see the 16 ms loop - use
+  `vicus -quies` / the exit line for the wake-up rate instead).
+- `sample 54176 10 1` (scratch copy vicus_quies_ante.txt): main thread
+  7642 samples, 7202 (94%) waiting in fenestra_expectare_eventus, ~440
+  awake - i.e. ~0.44 s CPU per 10 s. Of the awake time:
+  vicus_pulsare 401, of which terminale_pulsare 163 (pty poll every
+  pulse), insula_ramus_attributum 89 + semita_legere_plenam 57 +
+  semita_legere_persistentem 45 (per-pulse bookkeeping, Task 3),
+  systema_terminalium 58 (tmux list-clients via multiplexor_clientes ->
+  processus_metere 52, Task 2), admonitiones 28 + praeconium 19.
+  ludus_quadrum 7: almost no painting - the cost is waking 60x/s and
+  re-checking everything, not drawing.
+
+Counters added for the after-measurement: `mensurae.excitationes`
+(loop passes) and `mensurae.pulsus` (pulsator calls), both on the
+`ludus:` exit line; `vicus -quies` prints pulses/s and pulses that
+changed something every 10 s to stderr.
+
+## 2026-10-26 — vicus quies T2: tmux client check async, only with a terminal
+
+`systema_terminalium` used to run `tmux list-clients` (one per session
+server plus the default) with the blocking `processus_exsequi` every
+5 s, even when no terminal pane existed. Now:
+
+- No mounted, unfinished `terminale` pane -> return before the 5 s
+  stamp (no tmux; a pane opened later is checked on the next pulse).
+- Due -> `multiplexor_clientes_incipere` per server (new in
+  multiplexor.h), handles kept in `ca->terminalia_quaestiones`
+  (QuaestioClientium {servitor, processus}); the pulse returns.
+- Later pulses `processus_pulsare` every handle (never blocks); when
+  all are PARATUS: metere, `multiplexor_clientes_legere`, then
+  `terminalia_applicare` (the old pane loop, moved verbatim).
+- `scheda_terminalium` is only vacated when nothing is in flight - the
+  handles and servitor strings live in it.
+
+Tests: probationes/probatio_vicus_quies.c with a FAKE tmux first on
+PATH (shell script in the credo area: logs "$1 $2", sleeps, cats a
+clients file) - no real server needed. The layout is seeded via
+`volumen_praesens_ponere("vicus/latera", ...)` because the default
+layout has a terminal on tab 1. Plants: immediate processus_metere
+after incipere (async test red: 900+ ms pulse) and the terminal check
+neutralized (`&& FALSUM`; deleting it made the helper unused ->
+-Werror, plant refused by the compile pre-check).
+
+## 2026-10-26 — vicus quies T3: route bookkeeping only after an insula write
+
+Every pulse used to rebuild, for EVERY pane of every tab, the full
+route (`statum_lateris_legere`, for tab history) and the persistent
+route + URI (`semitam_servare`) - ~40% of idle awake time. Routes are
+a pure function of insula state (organa manifests are static;
+`facies.iter_semita` is only used when jumping to an iter), and vicus
+has one repository whose `versio` bumps on every successful write.
+
+- `VicusLatus` gained `semitae_lectae / semitae_versio /
+  semitae_lectiones`. `semitae_legendae`: never read, or the repo
+  version moved. A pane without a ramus is read once, then never.
+  `latus_montare` resets `semitae_lectae` (new ramus).
+- vicus_pulsare per tab: version captured BEFORE semitam_restituere
+  (a restore write in this pulse -> one more read next pulse, never a
+  missed one); servare + the history loop skip unchanged panes;
+  `semitas_notare` marks them afterwards.
+- The post-loop history paths (front pane changed, empty history)
+  read directly and are not gated.
+- Coarse by design: any write (clock once a minute) re-reads every
+  pane once. Per-branch versions would need insula changes.
+
+Measured with build/sonda/sonda_quies.c (scratch) on a `sqlite3
+.backup` COPY of Fran's paginae-proba.volumen, fake tmux first on PATH
+(copied terminal panes must not attach to the real sessions): idle
+pulse 675 us -> 213 us (-68%); insula versio +0 over 600 idle pulses,
+so nothing in the real layout writes state at idle.
+
+## 2026-10-26 - quies T6a: parts declare their wake sources
+
+`vicus_mora_proxima` = min over: clock (to the next minute - needs the
+new `VicusTempus.secundum`), host systems (`vicus_systema_cum_mora_addere`;
+plain `vicus_systema_addere` = 16 ms), every PULSED pane (same rule as
+`latus_pulsare`: visible or `vivit_in_fundo`; `facies.mora` NIHIL = 16
+ms), and 0 while petitions or a deferred focus wait for the next pulse.
+The pulsed-pane walk lives in one visitor (`latera_pulsanda_visitare`)
+used by both the deadline and the fd sync, so they can't disagree.
+
+Pane fds (`facies.fossa`) go into the host reactor
+(`vicus_reactor_ponere`) with an empty callback - the pane reads in its
+own pulse; the reactor only exists to wake the window. Synced at the end
+of `vicus_pulsare`: removals first, then additions, so the reactor's fd
+version moves only on real change. Xar is SEGMENTED - the registered set
+is copied into a flat array before comparing (first draft read
+`xar_obtinere(x, 0)` as an array).
+
+scriba / kalendarium / nomenclator: -1 idle, 16 while a job (`opus`) or
+a deferred command (`dilatum`) is pending. Plants: undeclared pane as
+idle (red l.624), clock ignored (l.599), fd not removed (l.707).
+
+## 2026-10-26 - quies T6b: terminal wakes on its pty; tmux on foreground change (T2b)
+
+Terminal panes now declare `facies.fossa` (pty master, LEGERE) and
+`facies.mora` (16 ms only while input is queued for the child or the
+child closed the pty but isn't reaped yet; -1 otherwise).
+
+The `terminalia` system (tmux list-clients, keeps restore arguments
+current) used to run every 5 s whenever any terminal existed. Now:
+`frontes_signare` folds every live terminal pane's foreground process
+group (tcgetpgrp) into one i64 signature (unsigned: wraparound is
+defined). Query when the signature changes (program started/ended,
+attach/detach, pane opened/closed), and every 5 s only while a VISIBLE
+pane's argument says "tmux ..." (session switches inside tmux change
+nothing we can see).
+
+Race found by probatio_vicus_saltus (real tmux): after `tmux attach` is
+typed, the client process is in front a moment BEFORE it registers
+with the server; the query fired by that change returns no client, and
+since nothing changes again (hidden pane) the argument never gets set.
+The old 5 s poll hid this. Fix: each signature-triggered query
+schedules one confirmation query 1 s later (`terminalia_confirmanda`).
+
+Pre-existing flake, not ours: `sine_exspectatione`'s fake tmux slept
+0.8 s, but `multiplexor_clientes_incipere` gives the query a HARD 1 s
+limit (processus kills on overrun) - under load the fake was killed,
+output empty, argument never set (5/8 failures with 6 spinning
+processes, before this change). Fake now sleeps 0.4 s (still far over
+the 150 ms pulse bound); residual under extreme load: 1/10, where the
+kill lands before the fake even logs.
+
+## 2026-10-26 - quies T6c: the notifications log wakes vicus
+
+Host systems can now declare an fd (`vicus_systema_fossam_ponere`); the
+reactor sync collects system fds before pane fds. The admonitiones
+system registers the log's `specula` fd, drains it every pulse, and
+reports deadline -1 (16 ms if no watch could be made). The log read
+itself is unchanged - incremental from the last position, cheap once
+pulses only happen on wakes. One unexplained failure of
+probatio_vicus_admonitiones in a 4-suite run while other worktrees ran
+gates; not reproduced in 7 reruns.
+
+## 2026-10-26 - quies T6d: everything declared
+
+Flyers (`volantes_mora`: earliest expiry of the visible toasts, 8 s
+notice / 30 s attention), `$sessions` (`colloquia_visus_mora`: 16 while
+the gate-run query is in flight, else the next 5 s panes/runs check -
+only while the pane is visible, since it is not `vivit_in_fundo`) and
+the sound system (`VicusPortaSoni.mora`). Sound detail: the output
+stays open CONCENTUS_QUIES (30 s) after the last voice and only a pulse
+closes it, so the port asks for that wake; concentus counts its quiet
+from its own clock slightly after our last busy `agere`, so past the
+deadline the port answers 16 (not 0, which would spin) until it closes.
+probatio_vicus_quies `otium`: the whole test app world idles at -1.
+
+## 2026-10-26 - quies T6e: measured after (vs T1 baseline)
+
+Secunda build (bash build/aedilis/vicus/struere.sh), `-volumen` on a
+sqlite `.backup` copy of paginae-proba.volumen, `-quies`, default
+layout with terminal + clock, real notifications log (read-only).
+
+| | before (T1, live vicus) | after |
+|---|---|---|
+| idle wake-ups (pulses) | ~60/s, constant | 1 per 14-19 s |
+| idle CPU (`top`) | 4.6-5.1% | 0.0-0.1% |
+| hook event in the log | (lost in the 60/s) | one short wake |
+| notification chime | (lost in the 60/s) | ~2 s at 16 ms, then idle |
+
+Start-up (history load) still costs ~10 s at 70-90% CPU - unchanged,
+not this arc. Plant (T5's, moved here): old 16 ms cap re-added in
+quiet mode -> 54 pulses/s, ~6% CPU - the measurement sees it.
+
+LESSON: `bin/aedilis apps/x/x.c` only WRITES build/aedilis/x/struere.sh
+- it does not compile. My 6a-6d "vicus builds / smoke run" used a
+binary from before the arc (the first after-measurement showed the old
+60/s for that reason). Build = `bash build/aedilis/x/struere.sh`.

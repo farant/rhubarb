@@ -26,3 +26,56 @@ were constants; they are now fields of ScribaLiber filled by an internal
 '<prefix>/paginae/<name>' - the calendar's day book is
 "dies/2026-10-14". Test VIII: day page text is separate from the shared
 page '1' and from another day. Plant: prefix ignored -> red.
+
+## 2026-10-19 — scriba_liber_lineas_legere (calendar week view)
+
+Read-only lines of a day book. The trap it exists for: opening a book
+(`scriba_liber_aperire_in_spatio`) WRITES page "1" when the index is
+absent, and `scriba_liber_pagina` CREATES a missing page document - a
+week view opening seven books the normal way would litter every day
+you scroll past. The reader checks the index plagula exists, parses it
+with the same helper `librum_aperire` now uses (`nomina_legere`), and
+opens page documents with `scriba_documentum_aperire` only. Line text
+follows libro_paginarum's serialization: cells up to the end of
+content, `\0` / tab continuation / tab shown as spaces; lines of
+spaces only are dropped.
+Probed (2026-10-19): a reopened page never contains `\0` cells - the
+projection writes spaces - so the `\0` mapping is a guard only (a NUL
+byte must never reach the text). Tabs DO survive (`\t` + continuation
+cell) and a tab-only line becomes spaces-only, which is the case the
+"spaces only = blank" check really catches (plain spaces never count
+as content in `tabula_invenire_finem_contenti`). Both are tested.
+
+## 2026-10-21 — read-only page names and single pages (indagatio S2)
+
+`scriba_liber_nomina_legere` and `scriba_liber_paginam_legere`: search
+(lib indagatio_genera) needs a notebook's page names and ONE page's
+lines with nothing written - `scriba_liber_aperire*` write page "1"
+when the index is absent, and `lineas_legere` flattens every page.
+praefixum NIHIL = the common book (its old layout: index
+`scriba/paginae`, pages `paginae/<n>`, not `<p>/paginae/<n>`), resolved
+in one helper `vias_libri`. `lineas_legere` now runs on the same
+internals (`nomina_legere` + `paginam_legere`), behaviour unchanged
+(steps IX pass as before). Step X checks volumen_summa_actorum and
+_plagularum are unchanged across every read.
+
+## 2026-10-22 - companion record (comites P5b)
+
+`scriba_liber_comitem_notare/legere`: plagula `<prefix>/comes` holding the
+companion label and the paired view's route. First version used attributes
+and broke on a route containing `"`: the STML writer emits attribute values
+RAW (only text content is escaped, `_scribere_evasus`, and unescaped on
+read). So the values are TEXT children: `<comes><titulus>..</titulus>
+<semita>..</semita></comes>`. Written only when the serialized text differs
+(follow mode would otherwise add an act per switch); empty route omitted.
+
+## 2026-10-24 - lazy books (lector L5 / comites P6)
+
+`scriba_liber_aperire_pigre`: absent index -> page "1" in memory, nothing
+written; pages are unborn documents whose `natale` gives birth to the
+book (`librum_nasci`: index, then the book's `natale`, once). New page
+saves through `indicem_servare` (birth if unborn); a NAMED page always
+gives birth first, even for the in-memory "1" (naming is intent). An
+existing book opened lazily is born and never calls `natale`.
+`scriba_liber_natus`, and `scriba_liber_exstat` (read-only index probe)
+for hosts that ask "does this notebook exist".

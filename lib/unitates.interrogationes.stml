@@ -16,12 +16,13 @@
     <quaestio! (>how do I make my tool skip vendor, fixtures and generated files without a path list?
     <responsum symbolum="unitates_iudicat unitates_viae_iudicatae" via="unitates.stml tools/iudex_unitatum.sh">Add
       an iudex line to unitates.stml (titulus, descriptio, and the
-      curae, vitae, munera, provenientiae and linguae it accepts, each
+      curae, vitae, munera, provenientiae, indoles and linguae it
+      accepts, each
       a space-separated list of known values), then ask it:
       unitates_iudicat(u, iudex, via, ...) per path,
       unitates_viae_iudicatae for a newline-separated list, or
       tools/iudex_unitatum.sh [-causae] JUDGE from a shell script. A file
-      is judged only if ALL five properties are in the judge's lists; a
+      is judged only if ALL six properties are in the judge's lists; a
       file with no munus is never judged. Do not add an exclusion regex
       or path list: the judges replace the nine exclusion lists the
       spec counted.</responsum>
@@ -74,6 +75,19 @@
       fixed on purpose: a hand-written header that mentions GENERATUM
       in its prose on line 2 stays manu. A judge that admits both
       provenances never reads the file at all.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I mark a big table of data (string literals, initializers) so code judges like silva's corpus gates skip it?
+    <responsum symbolum="unitates_quid unitates_iudicat UnitatisResponsum" via="unitates.stml lib/biblia_dr.c">Put
+      the whole word DATA in the same signature line as GENERATUM (first
+      line, or second after a required declaration), e.g.
+      /* DATA: biblia_dr.c - ... */ or /* GENERATUM DATA: generator - ...
+      */. bin/fabrica quid then reports indoles data, and a judge whose
+      indoles list is "codex" (corpus_silvae) refuses the file with that
+      cause. DATA is independent of GENERATUM: hand-written data needs
+      no generator. Keep logic out of a DATA file (lib/biblia.c holds the
+      Bible's accessors, biblia_dr.c only its tables).</responsum>
   </interrogatio>
 
   <interrogatio genus="quomodo">
@@ -137,9 +151,9 @@
     <responsum symbolum="UnitatisResponsum UnitatesProprietas" via="lib/unitates.worklog.md">They
       are open sets declared in unitates.stml, so adding a role or a
       language is a policy edit, not a C change; an unknown value is a
-      refusal listing the known ones. provenientia is the one closed
-      set (manu, generatum), because it is derived from the GENERATUM
-      marker rather than declared.</responsum>
+      refusal listing the known ones. provenientia (manu, generatum) and
+      indoles (codex, data) are the closed sets, because they are derived
+      from the GENERATUM and DATA markers rather than declared.</responsum>
   </interrogatio>
 
 </interrogationes>

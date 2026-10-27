@@ -1,0 +1,49 @@
+<sanctus id="catherine-of-alexandria" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Catherine of Alexandria</nomen>
+  <nomen lingua="en" fontes="bu mr">Catharine</nomen>
+  <nomen lingua="el" fontes="bu">Acatherina</nomen>
+  <obitus locus="Alexandria" martyrium="verum" fontes="mr bu"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="11" dies="25" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="11" dies="25" fontes="mr"/>
+  <munus fontes="us mr ce">virgin</munus>
+  <munus fontes="us mr ce">martyr</munus>
+  <patrocinium fontes="ce">young maidens and female students</patrocinium>
+  <patrocinium fontes="ce">wheelwrights and mechanics</patrocinium>
+  <patrocinium fontes="ce">theologians and philosophers</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce mr bu">According to her Acts, Catherine was of noble birth and learned, and at eighteen confronted the emperor Maximinus, then persecuting the Christians. He summoned scholars to argue her out of the faith; several of them, won over by her eloquence, declared themselves Christians and were put to death. She was scourged and imprisoned, converted the empress and the officer Porphyry, and was condemned to the wheel, which broke at her touch; she was then beheaded, and angels were said to have carried her body to Mount Sinai. Butler places her confession at Alexandria under Maximinus II.</paragraphus>
+    <paragraphus fontes="bu ce">Butler already judged the Acts so corrupted that little use could be made of them; Joseph Assemani thought the only reliable account was Eusebius's story of an unnamed Christian woman of Alexandria, noble and learned, who resisted the lust of the tyrant Maximin. The Catholic Encyclopedia rejects most of the details and discourses as invention, noting that ancient pilgrims to Sinai never mention the translation of her body, while not doubting that she existed.</paragraphus>
+    <paragraphus fontes="ce">Her cult was immense in the Middle Ages: she was counted among the fourteen most helpful saints, invoked by young women and female students, by wheelwrights and mechanics because of the spiked wheel, and by theologians and philosophers; it was rumoured that she had appeared to Joan of Arc.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Catherine of Alexandria" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Catherine_of_Alexandria">
+    <excerptum>A virgin and martyr whose feast is celebrated in the Latin Church and in the various Oriental churches on 25 November, and who for almost six centuries was the object of a very popular devotion.</excerptum>
+    <excerptum>Of noble birth and learned in the sciences, when only eighteen years old, Catherine presented herself to the Emperor Maximinus who was violently persecuting the Christians</excerptum>
+    <excerptum>summoned numerous scholars whom he commanded to use all their skill in specious reasoning that thereby Catherine might be led to apostatize.</excerptum>
+    <excerptum>Several of her adversaries, conquered by her eloquence, declared themselves Christians and were at once put to death. Furious at being baffled, Maximinus had Catherine scourged and then imprisoned.</excerptum>
+    <excerptum>the empress, eager to see so extraordinary a young woman, went with Porphyry, the head of the troops, to visit her in her dungeon, when they in turn yielded to Catherine's exhortations</excerptum>
+    <excerptum>was condemned to die on the wheel, but, at her touch, this instrument of torture was miraculously destroyed. The emperor, enraged beyond control, then had her beheaded and angels carried her body to Mount Sinai</excerptum>
+    <excerptum>So far the Acts of St. Catherine.</excerptum>
+    <excerptum>the multitude of details by which these facts are almost obscured, most of the wonderful narratives with which they are embellished, and the long discourses that are put into the mouth of St. Catherine, are to be rejected as inventions, pure and simple.</excerptum>
+    <excerptum>it is not therefore meant to cast even the shadow of a doubt around the existence of the saint.</excerptum>
+    <excerptum>the itineraries of the ancient pilgrims who visited Sinai do not contain the slightest allusion to it.</excerptum>
+    <excerptum>Ranked with St. Margaret and St. Barbara as one of the fourteen most helpful saints in heaven</excerptum>
+    <excerptum>St. Catherine became the patroness of young maidens and female students.</excerptum>
+    <excerptum>The spiked wheel having become emblematic of the saint, wheelwrights and mechanics placed themselves under her patronage.</excerptum>
+    <excerptum>her intercession was implored by theologians, apologists, pulpit orators, and philosophers.</excerptum>
+    <excerptum>when it was rumoured that she had appeared to Joan of Arc</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v11 Nov. 25 St. Catharine, V. M.">
+    <excerptum>whom the Greeks call Acatherina, glorified God by an illustrious confession of the faith of Christ, at Alexandria, under Maximinus II. Her acts are so much adulterated that little use can be made of them.</excerptum>
+    <excerptum>The learned Joseph Assemani thinks that all the account we have of the particulars relating to this saint, upon which we can depend, is what we meet with in Eusebius, though. that historian mentions not her name.</excerptum>
+    <excerptum>There was a certain woman, a Christian, and the richest and most noble of all the ladies of Alexandria, who, when the rest suffered themselves to be deflowered by the tyrant (Maximin,) resisted and vanquished his unbounded and worse that beastly lust.</excerptum>
+    <excerptum>This lady was most illustrious for her high birth, and great wealth; and likewise for her singular learning</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="25 November">
+    <excerptum>birthday of St. Catharine, virgin and martyr, under the emperor Maximinus. For the confession of the Christian faith, she was cast into prison at Alexandria</excerptum>
+    <excerptum>finally ended her martyrdom by decapitation. Her body was miraculously conveyed by angels to Mount Sinai</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="25 November">
+    <excerptum>Saint Catherine of Alexandria, Virgin and Martyr</excerptum>
+  </fons>
+</sanctus>

@@ -44,3 +44,30 @@ the formatter, so the commit carries many `cosmetica` rewraps beside the
 two substantive changes (`XmlStatus`, `xml_legere`). One pre-existing
 call near `:1234` came out with odd continuation alignment — inherited
 from its previous layout, valid C, not touched by hand.
+
+## 2026-10-22 - numeric character references (horreum review I3)
+
+The reader decoded only the five named entities; `&#D;` / `&#xH;` were
+left raw, so horreum decoded them afterwards - a second pass that turned
+the literal key `&#65;` (on the wire `&amp;#65;`) into `A`. Now
+`_referentiam_numeri_legere` decodes them in the SAME pass as named
+entities, in text and attribute values; malformed ones (`&#;`, bad
+digits, no `;`, 0, surrogates, > U+10FFFF) stay literal like unknown
+entities. Checked that committed XML inputs of other consumers (plist
+tests, pecunia's pinned SIX lists) contain no numeric references, so no
+generated output changes.
+
+## 2026-10-26 - empty attribute values (alt="", xmlns="") are valid
+
+Fran's own EPUBs from Apple Books (The Fellowship of the Ring) failed to
+open: "malformed XML" in the OPF, though xmllint accepts it. Cause:
+`<meta xmlns="" ...>` - `_legere_valor_attributi` returned
+`chorda_internare(...)` of the finished value, and the interner refuses a
+chorda whose `datum` is NIHIL, which is exactly what an empty builder
+gives; NIHIL then read as "no value" -> XML_ERROR_ATTRIBUTUM for the whole
+document. Fix: an empty value is returned as a real empty chorda
+(datum NIHIL, mensura 0) allocated in the context's piscina, never
+interned. Test section "attributum vacuum": both quote styles, attributes
+after the empty ones still read, write-then-reread round trip keeps the
+empty value. Plant (empty -> NIHIL) red. Store EPUBs with `alt=""` or
+`xmlns=""` (common) now open; 9 checked (codex probe), all read.

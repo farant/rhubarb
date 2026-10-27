@@ -246,16 +246,49 @@ _annotationem_extrahere (
  * effusum alienum accepit: plagula sine clausura parsata, porta
  * apparatus (latinizatae 155/156) recusavit. Nomen cum PID, plagula
  * post lectionem deleta. */
+/* SUB $TMPDIR (quaestio …4GY9MJ4): sub fabrica TMPDIR = area membri -
+ * plagula transiens in build/aedilis/ extra vestigium membri scribebat
+ * (lineae S libri; probationes corporis silvae fractae). Sine TMPDIR
+ * (aut vacuo): build/aedilis/ ut olim. */
 interior constans character*
 _via_temporaria (
     constans character* basis,
                Piscina* piscina)
 {
-    character buffer[128];
+      ChordaAedificator* a;
+     constans character* directorium;
+              character  numerus[XXXII];
+                 size_t  longitudo;
 
-    sprintf(buffer, "build/aedilis/%s.%ld.tmp", basis,
-        (longus)getpid());
-    redde chorda_ut_cstr(chorda_ex_literis(buffer, piscina), piscina);
+    directorium = getenv("TMPDIR");
+    si (directorium == NIHIL || directorium[0] == '\0')
+    {
+        directorium = "build/aedilis";
+    }
+    a = chorda_aedificator_creare(piscina, 256);
+    chorda_aedificator_appendere_literis(a, directorium);
+    longitudo = strlen(directorium);
+    si (directorium[longitudo - I] != '/')
+    {
+        chorda_aedificator_appendere_literis(a, "/");
+    }
+    chorda_aedificator_appendere_literis(a, basis);
+    sprintf(numerus, ".%ld.tmp", (longus)getpid());
+    chorda_aedificator_appendere_literis(a, numerus);
+    redde chorda_ut_cstr(chorda_aedificator_finire(a), piscina);
+}
+
+/* signum (chorda) desinit in suffixo? */
+interior b32
+_terminatur_signo (
+                chorda  signum,
+    constans character* suffixum)
+{
+    memoriae_index n = strlen(suffixum);
+
+    redde (memoriae_index)signum.mensura >= n
+        && memcmp(signum.datum + (memoriae_index)signum.mensura - n,
+                  suffixum, n) == ZEPHYRUM;
 }
 
 /* Cursus minoritatis: clang -MM per system(), plagula temporalis.
@@ -276,7 +309,12 @@ _extractor_oraculi (
     constans character* via_memoriae;
 
     mandatum = chorda_aedificator_creare(piscina, 512);
-    chorda_aedificator_appendere_literis(mandatum, "clang -MM");
+    /* compilator per variantem fontis (sectio oracula, testa-ios T3):
+     * lib/X_ios.m capita UIKit ex SDK iOS trahit */
+    chorda_aedificator_appendere_chorda(mandatum,
+        aedilis_oraculum_eligere(extractoris->configuratio, via,
+            piscina));
+    chorda_aedificator_appendere_literis(mandatum, " -MM");
     numerus = xar_numerus(extractoris->configuratio->inclusa);
     per (i = 0; i < numerus; i++)
     {
@@ -335,6 +373,7 @@ _extractor_oraculi (
     }
     alioquin
     {
+        lectiones_notare(LECTIO_EXSECUTIO, "/bin/sh");   /* system() */
         si (system(mandatum_cstr) != 0)
         {
             (vacuum)remove(via_temporaria);
@@ -405,6 +444,14 @@ _extractor_oraculi (
                         - (memoriae_index)signum.mensura,
                     signum.datum,
                     (memoriae_index)signum.mensura) == 0)
+            {
+                perge;
+            }
+            /* clang 21 (SDK macOS 27): -MM SDKSettings.json SDK
+             * (lectum pro disponibilitate, non #include) omni fonti
+             * addit - non caput: praeterire (porta aedilis CDXIV
+             * 'ORACULUM SOLUM' alias, 2026-10-24) */
+            si (_terminatur_signo(signum, "/SDKSettings.json"))
             {
                 perge;
             }

@@ -9,8 +9,10 @@
 
 #include "latina.h"
 #include "piscina.h"
+#include "chorda.h"
 #include "credo.h"
 #include "machina.h"
+#include "filum.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -207,6 +209,93 @@ _sectio_quinta (
     }
 }
 
+
+    /* ========================================================
+     * VI. Identitas ex plagula (Android: nullus fons systematis;
+     *     android-gradus T4, Franus 2026-10-23 optio I)
+     *
+     * Fortuitum SEMEL scriptum, deinde lectum - id quod
+     * /etc/machine-id Linux est. Plagula brevis numquam
+     * rescribitur: identitas mutata acta machinarum confunderet.
+     * ======================================================== */
+
+/* via in area sectionis (credo_area; sub fabrica intra aream membri -
+ * olim build/probatio_machina_plagula/, extra vestigium: quaestio
+ * 4GY9MJ4) */
+interior constans character*
+_in_area (
+         CredoContextus* c,
+     constans character* titulus)
+{
+    redde chorda_ut_cstr(chorda_concatenare(chorda_ex_literis(
+        credo_area(c), c->piscina), chorda_ex_literis(titulus,
+        c->piscina), c->piscina), c->piscina);
+}
+
+interior vacuum
+_sectio_sexta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        constans character* dir;
+        constans character* via;
+        constans character* altera;
+        constans character* curta;
+                    chorda  a;
+                    chorda  b;
+                    chorda  alia;
+                    chorda  contentum;
+               FilumStatus  status;
+
+        dir     = credo_area(c);
+        via     = _in_area(c, "/machina");
+        altera  = _in_area(c, "/altera");
+        curta   = _in_area(c, "/curta");
+        CREDO_NECESSE(dir != NIHIL);
+        CREDO_VERUM(filum_directorium_creare_cum_parentibus(dir));
+        (vacuum)filum_delere(via);
+        (vacuum)filum_delere(altera);
+        (vacuum)filum_delere(curta);
+
+        /* abest -> creatur: XVI hex, plagula 0600 */
+        a = machina_identitas_ex_plagula(via, piscina);
+        CREDO_AEQUALIS_I32(a.mensura, XVI);
+        CREDO_VERUM(filum_existit(via));
+        CREDO_VERUM(filum_status(via, &status));
+        CREDO_AEQUALIS_I32((i32)status.modus, (i32)0600);
+        contentum = filum_legere_totum(via, piscina);
+        CREDO_VERUM(contentum.mensura >= XXXII);
+
+        /* adest -> eadem (persistens, non iterum fortuita) */
+        b = machina_identitas_ex_plagula(via, piscina);
+        CREDO_VERUM(chorda_aequalis(a, b));
+
+        /* plagula altera -> identitas altera (fortuitum verum) */
+        alia = machina_identitas_ex_plagula(altera, piscina);
+        CREDO_AEQUALIS_I32(alia.mensura, XVI);
+        CREDO_FALSUM(chorda_aequalis(a, alia));
+
+        /* curta -> recusatio, plagula intacta */
+        CREDO_VERUM(filum_scribere_literis(curta, "abc"));
+        CREDO_AEQUALIS_I32(
+            machina_identitas_ex_plagula(curta, piscina).mensura,
+            ZEPHYRUM);
+        contentum = filum_legere_totum(curta, piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(contentum, "abc");
+
+        /* via NIHIL -> vacua */
+        CREDO_AEQUALIS_I32(
+            machina_identitas_ex_plagula(NIHIL, piscina).mensura,
+            ZEPHYRUM);
+
+        /* plagulae et serae (numquam a filum deletae, filum.h): area
+         * tota post sectionem deletur (credo II) */
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I. Fontes diversi -> identitates diversae", _sectio_prima, NIHIL,
         NIHIL, NIHIL, NIHIL },
@@ -215,6 +304,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "IV. Nota plena", _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "V. Piscina absens", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VI. Identitas ex plagula", _sectio_sexta, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

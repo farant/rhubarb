@@ -9,6 +9,7 @@
  * FONS), corpus syntaxis v1 totum (125 lineae).
  */
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
@@ -67,7 +68,7 @@ _plagulam_legere (
     i8* buffer;
     signatus longus mensura;
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL)
     {
         redde NIHIL;
@@ -711,7 +712,7 @@ s32 principale (vacuum)
         }
         sprintf(via, "%s/silva/probationes/fixa/syntaxis_v1_corpus.txt",
             radix_env);
-        corpus = fopen(via, "rb");
+        corpus = lectiones_fopen(via, "rb");
         CREDO_NON_NIHIL (corpus);
 
         si (corpus != NIHIL)

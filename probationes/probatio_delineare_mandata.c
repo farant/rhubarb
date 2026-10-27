@@ -13,6 +13,9 @@
 #include "exemplaria.h"
 #include "imago_typus.h"
 #include "specimen.h"
+#include "glyphae_ductae.h"
+#include "fons.h"
+#include "tabula_pixelorum.h"
 #include "credo.h"
 #include <stdio.h>
 
@@ -683,6 +686,118 @@ _sectio_septima (
     }
 }
 
+/* glyphae ductae (terminale: capsae, quadra, braille, symbola) etiam in
+ * textu mandatorum et tabulae: pixela ex larva glyphae_ductae, non
+ * TOFU. Plenum = color litterae, vacuum = fundus, partiale = mixtum */
+interior b32
+larvam_congruere (
+    TabulaPixelorum* t,
+                i32  x,
+                i32  y,
+                s32  runa,
+                i32  cw,
+                i32  ch,
+                i32  scala,
+                i32  littera,
+                i32  fundus)
+{
+     i8 larva[CXXVIII];
+    i32 px;
+    i32 py;
+    i32 p;
+
+    si (!glyphae_ductae_pingere(runa, cw, ch, larva))
+    {
+        redde FALSUM;
+    }
+    per (py = ZEPHYRUM; py < ch; py++)
+    {
+        per (px = ZEPHYRUM; px < cw; px++)
+        {
+            p = tabula_pixelorum_obtinere_pixelum(t, x + px * scala,
+                y + py * scala);
+            si (larva[py * cw + px] == (i8)0xFF && p != littera)
+            {
+                redde FALSUM;
+            }
+            si (larva[py * cw + px] == ZEPHYRUM && p != fundus)
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    redde VERUM;
+}
+
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+         TabulaPixelorum* t;
+                 Mandata* m;
+                     i32  albus;
+                     i32  niger;
+                     i32  p;
+                     i32  mixta;
+                     i32  px;
+                     i32  py;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    t        = tabula_pixelorum_creare_nuda(piscina, LXIV, XLVIII);
+    niger    = color_ad_pixelum(color_ex_rgb((i8)ZEPHYRUM, (i8)ZEPHYRUM,
+        (i8)ZEPHYRUM));
+    albus    = color_ad_pixelum(color_ex_rgb((i8)CCLV, (i8)CCLV,
+        (i8)CCLV));
+    tabula_pixelorum_vacare(t, niger);
+    m = mandata_creare(piscina, intern);
+    /* U+2713 check mark, U+2591 umbra levis */
+    mandata_textus(m, ZEPHYRUM, ZEPHYRUM,
+        chorda_ex_literis("\xE2\x9C\x93",
+        piscina), FONS_PARVUS, rgba((i8)CCLV, (i8)CCLV, (i8)CCLV));
+    mandata_textus(m, ZEPHYRUM, XVI, chorda_ex_literis("\xE2\x9C\x93",
+        piscina), FONS_TITULI, rgba((i8)CCLV, (i8)CCLV, (i8)CCLV));
+    mandata_textus(m, XX, ZEPHYRUM, chorda_ex_literis("\xE2\x96\x91",
+        piscina), FONS_PARVUS, rgba((i8)CCLV, (i8)CCLV, (i8)CCLV));
+    delineare_mandata(m, t, NIHIL, NIHIL);
+
+    CREDO_GRADUS("check mark VI x VIII ex larva");
+    CREDO_VERUM(larvam_congruere(t, ZEPHYRUM, ZEPHYRUM, 0x2713, VI,
+        VIII,
+        I, albus, niger));
+
+    CREDO_GRADUS("check mark VIII x XVI (fons titulorum) ex larva");
+    CREDO_VERUM(larvam_congruere(t, ZEPHYRUM, XVI, 0x2713, VIII, XVI, I,
+        albus, niger));
+
+    CREDO_GRADUS("umbra: pixela mixta (nec fundus nec littera)");
+    mixta = ZEPHYRUM;
+    per (py = ZEPHYRUM; py < VIII; py++)
+    {
+        per (px = ZEPHYRUM; px < VI; px++)
+        {
+            p = tabula_pixelorum_obtinere_pixelum(t, XX + px, py);
+            si (p != albus && p != niger)
+            {
+                mixta++;
+            }
+        }
+    }
+    CREDO_VERUM(mixta > ZEPHYRUM);
+
+    CREDO_GRADUS("chorda scalata II: larva in quadris II x II");
+    tabula_pixelorum_vacare(t, niger);
+    tabula_pixelorum_pingere_chordam_scalatam(t, ZEPHYRUM, ZEPHYRUM,
+        chorda_ex_literis("\xE2\x9C\x93", piscina), albus, II);
+    CREDO_VERUM(larvam_congruere(t, ZEPHYRUM, ZEPHYRUM, 0x2713, VI,
+        VIII,
+        II, albus, niger));
+    CREDO_VERUM(larvam_congruere(t, I, I, 0x2713, VI, VIII, II, albus,
+        niger));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "Tabula nuda", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "Asserta pixelorum (sine exemplari)", _sectio_secunda, NIHIL,
@@ -697,6 +812,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "exemplar (indicium foci): tabulae alligatum", _sectio_septima,
         NIHIL, NIHIL, NIHIL, NIHIL },
+    { "glyphae ductae (non TOFU)", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

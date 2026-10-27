@@ -9,7 +9,7 @@
 # quaevis plagulam obruit - cursus ultimus vincit. Schema:
 # build/test_logs/<cursor>.log, cursor quisque suam (radix,
 # silva, officina, gesta, saltuarius, tessera, linux).
-# <porta titulus="radix" tegit="aedificatio.stml probationes/* tools/compile_tests_fontes_generare.sh" currit="tools/compilator.c tools/fabrica.c"/>
+# <porta titulus="radix" tegit="aedificatio.stml probationes/* tools/compile_tests_fontes_generare.sh" currit="tools/compilator.c tools/fabrica.c" translatio="numquam"/>
 if [ -z "${COMPILE_TESTS_EFFUSIO:-}" ]; then
     export COMPILE_TESTS_EFFUSIO=1
     mkdir -p "$(dirname "$0")/build/test_logs"
@@ -108,9 +108,15 @@ COMPILE_TIMES_FILE=$(mktemp)
 # mensoris '|| true' fert et defectus tacet.
 # MENSOR_TACET=1 metra omnino claudit.
 MENSOR=""
-if [ -z "${MENSOR_TACET:-}" ] && [ -x "./bin/mensor" ]; then
-    if eval "$(./bin/mensor sessio 2>/dev/null)" 2>/dev/null; then
-        MENSOR="./bin/mensor"
+# in arbore FRIGIDA (clone recenti) bin/mensor nondum structum:
+# MENSOR_BINARIUM a vocante datum (tools/frigida_probare.sh, 2026-10-22)
+_MENSOR_VIA="./bin/mensor"
+if [ ! -x "$_MENSOR_VIA" ] && [ -x "${MENSOR_BINARIUM:-}" ]; then
+    _MENSOR_VIA="$MENSOR_BINARIUM"
+fi
+if [ -z "${MENSOR_TACET:-}" ] && [ -x "$_MENSOR_VIA" ]; then
+    if eval "$("$_MENSOR_VIA" sessio 2>/dev/null)" 2>/dev/null; then
+        MENSOR="$_MENSOR_VIA"
     fi
 fi
 
@@ -181,11 +187,12 @@ compile_libraries() {
     # Obiectum identicum NON rescribitur: inodi ante et post comparati
     # = obiecta hoc cursu mutata (LIBS_COMPILED, metrum frigidi).
     #
-    # PARALLELE per FILA fila (xargs -L 1): CCXXV hits seriatim ~VII s
-    # (compilator ~XXX ms per vocationem, dimidium in 'clang
-    # -print-prog-name'); mandata una tabula, linea quaeque vocatio
-    # integra (viae et vexilla sine spatiis). Fractum: clang ipse fontem
-    # nominat.
+    # PROCESSU UNO (bin/compilator --plures, 2026-10-23): linea quaeque
+    # vocatio integra (viae et vexilla sine spatiis); thesaurus,
+    # identitas clang et capita communia SEMEL per processum. Olim xargs
+    # -P FILA, processus per vocationem (~XXII ms): CCCLII hits 1.8-2.2 s
+    # parallele, nunc ~0.3 s seriatim. Fractum: clang ipse fontem
+    # nominat; lineae omnes curruntur, exitus I si qua fracta.
     cursor_instrumenta_parare || return 1
     : > "$CLAUSURAE_DIR/mandata.tsv"
     local ante post numerus vocationes
@@ -210,7 +217,7 @@ compile_libraries() {
     done
     numerus=$(grep -c . "$vocationes")
 
-    if ! xargs -P "$FILA" -L 1 "$COMPILATOR" < "$vocationes" 2>&1; then
+    if ! "$COMPILATOR" --plures "$vocationes" 2>&1; then
         echo -e "${RED}✗ FAILED: bibliothecae (fons a clang supra nominatus)${RESET}"
         return 1
     fi
@@ -460,19 +467,26 @@ run_generare() {
         return 0
     fi
 
-    # Currere generare solum in filis quae compilabuntur
+    # Currere generare solum in filis quae compilabuntur - PER FASCES C
+    # (2026-10-23): generare vias multas accipit (positionalia summum
+    # CXXVIII, argumenta.h) et ad primam fractam desinit, eam nominans
+    # ('terminatur propter fracta in <via>'); olim processus per filum
+    # (CCCLXXVII, ~I.VII s portae radicis omni cursu)
     echo -e "${BLUE}Running generare on test files${RESET}"
+    local -a gen_lista=()
     while IFS= read -r gen_file; do
         [ -z "$gen_file" ] && continue
         # Saltare probatio_generare.c — continet directivas probationis in literis
         if [[ "$gen_file" == *"probatio_generare.c" ]]; then
             continue
         fi
-        if ! ./bin/generare "$gen_file" 2>&1; then
-            echo -e "${RED}✗ generare failed for $gen_file${RESET}"
-            return 1
-        fi
+        gen_lista+=("$gen_file")
     done <<< "$gen_files"
+    if [ "${#gen_lista[@]}" -gt 0 ] \
+        && ! printf '%s\n' "${gen_lista[@]}" | xargs -n 100 ./bin/generare 2>&1; then
+        echo -e "${RED}✗ generare failed (plagula supra nominata)${RESET}"
+        return 1
+    fi
     echo ""
 
     return 0
@@ -584,7 +598,10 @@ run_speculum() {
     # Oraculum gyri QR: qr.c scribit, CoreImage (decodator alienus)
     # legit. probatio_qr.c FORMAM probat; bits solum hoc probat -
     # bibliotheca V4+ fracta LXVI casus structurales praeteribat.
-    if [ -x "probationes/probatio_qr_gyrus.sh" ]; then
+    # Sub --residua (porta radix) OMISSUM: porta sua 'qr-gyrus' eum
+    # currit cum qr aut clausura eius mutatur (2026-10-23, ~IV.VIII s
+    # omni commissione olim); cursus plenus (frigida) eum retinet.
+    if [ "$RESIDUA_MODE" -eq 0 ] && [ -x "probationes/probatio_qr_gyrus.sh" ]; then
         if ! ./probationes/probatio_qr_gyrus.sh > /dev/null 2>&1; then
             echo -e "${RED}✗ qr gyrus fractus (curre: ./probationes/probatio_qr_gyrus.sh)${RESET}"
             return 1

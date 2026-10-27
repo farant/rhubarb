@@ -5,6 +5,7 @@
 
 /* capita systematis ANTE latina.h: macra eius ('character', numeri
  * Romani) capita CoreFoundation alioquin corrumpunt */
+#include "postulata_macos.h"   /* PRIMUM: ante capita Apple */
 #include <CoreFoundation/CoreFoundation.h>
 #include <IOKit/ps/IOPowerSources.h>
 #include <IOKit/ps/IOPSKeys.h>

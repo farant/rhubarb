@@ -95,13 +95,14 @@ _particulam_legere (
         {
             Sigillum* locus;
 
-            locus = (Sigillum*)piscina_allocare(piscina,
+            locus = (Sigillum*)piscina_allocare(
+                fabricae_piscina_cursus(sutura, piscina),
                 magnitudo(Sigillum));
             si (locus != NIHIL)
             {
                 *locus = octeti;
-                (vacuum)tabula_dispersa_inserere(sutura->sigilla, via,
-                    locus);
+                (vacuum)tabula_dispersa_inserere(sutura->sigilla,
+                    fabricae_in_cursum(sutura, via, piscina), locus);
             }
         }
     }
@@ -242,13 +243,13 @@ _directorium_explicare (
     {
         Sigillum* locus;
 
-        locus = (Sigillum*)piscina_allocare(piscina,
-            magnitudo(Sigillum));
+        locus = (Sigillum*)piscina_allocare(fabricae_piscina_cursus(
+            sutura, piscina), magnitudo(Sigillum));
         si (locus != NIHIL)
         {
             *locus = particula->octeti;
-            (vacuum)tabula_dispersa_inserere(sutura->sigilla, clavis,
-                locus);
+            (vacuum)tabula_dispersa_inserere(sutura->sigilla,
+                fabricae_in_cursum(sutura, clavis, piscina), locus);
         }
     }
     redde VERUM;
@@ -1590,6 +1591,19 @@ fabricae_viam_dividere (
 }
 
 /* VERUM si via (cum directorio et titulo suo) in loco cadit */
+/* via sub 'radix/' (radix + '/' praefixum eius), sine allocatione */
+interior b32
+_sub_radice (
+    chorda via,
+    chorda radix)
+{
+    redde via.mensura > radix.mensura
+        && via.datum[radix.mensura] == '/'
+        && (radix.mensura == ZEPHYRUM
+            || memcmp(via.datum, radix.datum,
+            (memoriae_index)radix.mensura) == ZEPHYRUM);
+}
+
 b32
 fabricae_locus_tangit (
     constans FabricaLocus* locus,
@@ -1605,10 +1619,13 @@ fabricae_locus_tangit (
         casus FABRICA_LOCUS_PLAGULAE:
             redde chorda_aequalis(locus->via, directorium)
                 && _suffixo_congruit(titulus, locus->suffixa);
+        /* ARBOR radicem suam continet (mkdir/rmdir ipsius: linea S
+         * libri, quaestio 4GY9MJ4 - debitum 'dir/' alias recusaretur)
+         * et quae sub 'radix/' sunt; sine allocatione */
         casus FABRICA_LOCUS_ARBOR:
-            redde chorda_incipit(via, fabricae_iungere(piscina, "",
-                locus->via,
-                "/"));
+            (vacuum)piscina;
+            redde chorda_aequalis(via, locus->via)
+                || _sub_radice(via, locus->via);
         ordinarius:
             redde FALSUM;
     }

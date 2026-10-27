@@ -82,6 +82,7 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(S_IFMT  == 0170000);"
     echo "IUNGO_ASSERTA(S_IFDIR == 0040000);"
     echo "IUNGO_ASSERTA(S_IFREG == 0100000);"
+    echo "IUNGO_ASSERTA(S_IFLNK == 0120000);"
     echo "IUNGO_ASSERTA(S_IRUSR == 0400);"
     echo "IUNGO_ASSERTA(S_IWUSR == 0200);"
     echo "IUNGO_ASSERTA(S_ISDIR(0040755) && !S_ISDIR(0100644));"
@@ -117,11 +118,13 @@ emittere_asserta() {
         echo "IUNGO_ASSERTA(sizeof(((struct dirent*)0)->$campus) == $mensura);"
     done <<< "$TABULA_DIRENT"
     echo "IUNGO_ASSERTA(DT_DIR == 4);"
+    echo "IUNGO_ASSERTA(DT_UNKNOWN == 0 && DT_LNK == 10);"
     echo "IUNGO_ASSERTA(PROT_READ == 0x01 && PROT_WRITE == 0x02);"
     # dlfcn (runae U3, 2026-09-28)
     echo "IUNGO_ASSERTA(RTLD_LAZY == 0x1 && RTLD_NOW == 0x2);"
     echo "IUNGO_ASSERTA(RTLD_LOCAL == 0x4 && RTLD_GLOBAL == 0x8);"
     echo "IUNGO_ASSERTA(MAP_PRIVATE == 0x0002 && MAP_ANON == 0x1000);"
+    echo "IUNGO_ASSERTA(MAP_SHARED == 0x0001);"   # sonus S3a 2026-10-21
     echo "IUNGO_ASSERTA(sizeof(struct termios) == 72);"
     while read -r campus off mensura; do
         echo "IUNGO_ASSERTA(OFF(termios, $campus) == $off);"
@@ -135,12 +138,25 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(OFF(stat, st_mtime) == 48 && OFF(stat, st_atime) == 32);"
     echo "IUNGO_ASSERTA(O_WRONLY == 0x0001 && O_CREAT == 0x0200 && O_TRUNC == 0x0400);"
     echo "IUNGO_ASSERTA(O_APPEND == 0x0008);"
+    # liber lectionum (lectiones.c, 2026-10-24): descriptor non hereditatur
+    echo "IUNGO_ASSERTA(O_CLOEXEC == 0x01000000);"
     echo "IUNGO_ASSERTA(O_RDONLY == 0x0000 && O_RDWR == 0x0002);"
     # *at (oraculum effectuum, effectus T5, 2026-10-05)
     echo "IUNGO_ASSERTA(AT_FDCWD == -2);"
     # flock (filum_seram_capere, 2026-09-29)
     echo "IUNGO_ASSERTA(LOCK_SH == 0x01 && LOCK_EX == 0x02);"
     echo "IUNGO_ASSERTA(LOCK_NB == 0x04 && LOCK_UN == 0x08);"
+    # kqueue (specula, vicus quies T6c 2026-10-26)
+    echo "IUNGO_ASSERTA(O_EVTONLY == 0x8000);"
+    echo "IUNGO_ASSERTA(sizeof(struct kevent) == 32);"
+    echo "IUNGO_ASSERTA(OFF(kevent, ident) == 0 && OFF(kevent, filter) == 8);"
+    echo "IUNGO_ASSERTA(OFF(kevent, flags) == 10 && OFF(kevent, fflags) == 12);"
+    echo "IUNGO_ASSERTA(OFF(kevent, data) == 16 && OFF(kevent, udata) == 24);"
+    echo "IUNGO_ASSERTA(sizeof(((struct kevent*)0)->ident) == 8);"
+    echo "IUNGO_ASSERTA(EVFILT_VNODE == -4 && EV_ADD == 0x1 && EV_DELETE == 0x2);"
+    echo "IUNGO_ASSERTA(EV_CLEAR == 0x20);"
+    echo "IUNGO_ASSERTA(NOTE_DELETE == 0x1 && NOTE_WRITE == 0x2 && NOTE_EXTEND == 0x4);"
+    echo "IUNGO_ASSERTA(NOTE_RENAME == 0x20);"
     # ifaddrs (rete_posix.c, 2026-08-01): forma catenae +
     # vexilla. ifa_data ULTIMUM utroque in systemate; campos
     # post ifa_netmask non tangimus, sed offsets priores
@@ -170,6 +186,8 @@ emittere_asserta() {
         echo "IUNGO_ASSERTA(sizeof(((struct addrinfo*)0)->$campus) == $mensura);"
     done <<< "$TABULA_ADDRINFO"
     echo "IUNGO_ASSERTA(AF_UNSPEC == 0 && AF_INET == 2 && SOCK_STREAM == 1);"
+    echo "IUNGO_ASSERTA(AI_NUMERICHOST == 0x4 && AI_NUMERICSERV == 0x1000);"
+    echo "IUNGO_ASSERTA(EAI_NONAME == 8);"
     echo "IUNGO_ASSERTA(SO_RCVTIMEO == 0x1006 && SO_SNDTIMEO == 0x1005);"
     echo "IUNGO_ASSERTA(INADDR_ANY == 0u);"
     echo "IUNGO_ASSERTA(sizeof(struct pollfd) == 8);"
@@ -197,6 +215,14 @@ emittere_asserta() {
     # filum_arborem_delere (2026-09-14): lstat ENOENT = nihil delendum
     echo "IUNGO_ASSERTA(ENOENT == 2);"
     echo "IUNGO_ASSERTA(EINPROGRESS == 36);"
+    # canalis T1 (2026-10-21): AF_UNIX, sockaddr_un, S_ISSOCK, ECONNABORTED
+    echo "IUNGO_ASSERTA(AF_UNIX == 1 && ECONNABORTED == 53);"
+    echo "IUNGO_ASSERTA(SHUT_RD == 0 && SHUT_WR == 1 && SHUT_RDWR == 2);"
+    echo "IUNGO_ASSERTA(MSG_NOSIGNAL == 0x80000);"
+    echo "IUNGO_ASSERTA(S_IFSOCK == 0140000 && S_ISSOCK(0140600) && !S_ISSOCK(0100644));"
+    echo "IUNGO_ASSERTA(sizeof(struct sockaddr_un) == 106);"
+    echo "IUNGO_ASSERTA(OFF(sockaddr_un, sun_family) == 1 && OFF(sockaddr_un, sun_path) == 2);"
+    echo "IUNGO_ASSERTA(sizeof(((struct sockaddr_un*)0)->sun_path) == 104);"
     echo "IUNGO_ASSERTA(EINTR == 4 && EAGAIN == 35 && EISCONN == 56);"
     # analytica T2 (2026-10-13): horologium monotonum + usus prolis
     echo "IUNGO_ASSERTA(CLOCK_REALTIME == 0 && CLOCK_MONOTONIC == 6);"
@@ -207,13 +233,29 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(sizeof(struct rusage) == 144);"
     echo "IUNGO_ASSERTA(OFF(rusage, ru_utime) == 0 && OFF(rusage, ru_stime) == 16);"
     echo "IUNGO_ASSERTA(OFF(rusage, ru_maxrss) == 32 && OFF(rusage, ru_nivcsw) == 136);"
+    # credo memoria T1 (2026-10-19): rusage_info_v4 (proc_pid_rusage)
+    echo "IUNGO_ASSERTA(RUSAGE_INFO_V4 == 4);"
+    echo "IUNGO_ASSERTA(sizeof(struct rusage_info_v4) == 296);"
+    echo "IUNGO_ASSERTA(OFF(rusage_info_v4, ri_resident_size) == 64 && OFF(rusage_info_v4, ri_phys_footprint) == 72);"
+    echo "IUNGO_ASSERTA(OFF(rusage_info_v4, ri_lifetime_max_phys_footprint) == 240);"
+    # sonus S3 (2026-10-21): ordo memoriae __atomic (sectio
+    # postulata_atomica.h); in TU nostro redefinitio nostra praedefinitum
+    # clang AEQUALE esse debet (aliter -Werror 'macro redefined')
+    echo "IUNGO_ASSERTA(__ATOMIC_ACQUIRE == 2 && __ATOMIC_RELEASE == 3);"
+    # sigillum (2026-10-22): sectio postulata_neon.h __ARM_FEATURE_SHA2
+    # definit ut silva ramum vectorum examinet - praedefinitum clang
+    # AEQUALE esse debet
+    echo "IUNGO_ASSERTA(__ARM_FEATURE_SHA2 == 1);"
 }
 
+# OFF per __builtin_offsetof (2026-10-26): forma vetus
+# ((unsigned long)&((struct S*)0)->C) sub clang 21 -Wgnu-folding-constant
+# rubra erat (tabula longitudinis variabilis) - porta in HEAD fracta
 PRAEAMBULUM='#define IUNGO2(a,b) a##b
 #define IUNGO(a,b) IUNGO2(a,b)
 #define IUNGO_ASSERTA(cond) \
     typedef char IUNGO(assertum_, __LINE__)[(cond) ? 1 : -1]
-#define OFF(S, C) ((unsigned long)&(((struct S*)0)->C))'
+#define OFF(S, C) __builtin_offsetof(struct S, C)'
 
 # TU verum
 {
@@ -221,6 +263,7 @@ PRAEAMBULUM='#define IUNGO2(a,b) a##b
     echo "#include <sys/stat.h>"
     echo "#include <sys/time.h>"
     echo "#include <sys/socket.h>"
+    echo "#include <sys/un.h>"
     echo "#include <sys/wait.h>"
     echo "#include <netinet/in.h>"
     echo "#include <netinet/tcp.h>"
@@ -244,6 +287,8 @@ PRAEAMBULUM='#define IUNGO2(a,b) a##b
     echo "#include <util.h>"
     echo "#include <time.h>"
     echo "#include <sys/resource.h>"
+    echo "#include <libproc.h>"
+    echo "#include <sys/event.h>"
     echo "$PRAEAMBULUM"
     emittere_asserta
 } > "$GEN_DIR/verum.c"
@@ -272,7 +317,7 @@ for tu in verum nostrum; do
 done
 
 if [ $BENE -eq 1 ]; then
-    echo "auspex_posix: FORMAE CERTIFICATAE (stat 144 + timeval/timespec 16 + dirent 1048 + termios 72 + winsize/utimbuf/sigaction/rusage + macra)"
+    echo "auspex_posix: FORMAE CERTIFICATAE (stat 144 + timeval/timespec 16 + dirent 1048 + termios 72 + winsize/utimbuf/sigaction/rusage + kevent 32 + macra)"
     exit 0
 fi
 exit 1

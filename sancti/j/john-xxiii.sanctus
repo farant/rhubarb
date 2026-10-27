@@ -1,0 +1,45 @@
+<sanctus id="john-xxiii" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">John XXIII</nomen>
+  <nomen lingua="it" fontes="cs">Giovanni XXIII</nomen>
+  <nomen lingua="it" fontes="cs">Angelo Giuseppe Roncalli</nomen>
+  <ortus annus="1881" mensis="11" dies="25" locus="Sotto il Monte" fontes="cs"/>
+  <obitus annus="1963" mensis="6" dies="3" fontes="cs"/>
+  <beatificatio annus="2000" mensis="9" dies="3" papa="John Paul II" fontes="cs"/>
+  <canonizatio modus="formalis" annus="2014" mensis="4" dies="27" papa="Francis" fontes="cs hom"/>
+  <festum calendarium="generale" mensis="10" dies="11" gradus="memoria-ad-libitum" fontes="us"/>
+  <munus fontes="us cs">pope</munus>
+  <descriptio>
+    <paragraphus fontes="cs">Angelo Giuseppe Roncalli was born at Sotto il Monte, near Bergamo, on 25 November 1881, the fourth of thirteen children, and was baptized the same day. He entered the seminary of Bergamo in 1892, began as a boy of fourteen the spiritual notes later gathered as the Journal of a Soul, and was ordained priest in Rome on 1 August 1904. For nearly ten years he was secretary to Bishop Radini Tedeschi of Bergamo, and in the First World War served as a medical sergeant and military chaplain. Called to Rome in 1921 to work for the Propagation of the Faith, he was made a bishop in 1925 with the motto "Oboedientia et pax" and served the Holy See in Bulgaria, then in Turkey and Greece, where during the Second World War he saved many Jews with the Delegation's transit visas, and from 1944 as nuncio in Paris.</paragraphus>
+    <paragraphus fontes="cs hom">Created cardinal and named Patriarch of Venice in 1953, he was elected pope on 28 October 1958 and took the name John XXIII. He visited prisoners and the sick, wrote the encyclicals Mater et magistra and Pacem in terris, and convoked the Second Vatican Council; the people called him "the Pope of goodness". He died on the evening of 3 June 1963. John Paul II beatified him on 3 September 2000, and Pope Francis canonized him on 27 April 2014, calling him the pope of openness to the Holy Spirit.</paragraphus>
+  </descriptio>
+  <fons id="cs" opus="sedes" locus="Dicastero delle Cause dei Santi, Giovanni XXIII" url="https://www.causesanti.va/it/santi-e-beati/giovanni-xxiii.html">
+    <excerptum>Angelo Giuseppe Roncalli nacque a Sotto il Monte, diocesi e provincia di Bergamo, il 25 novembre 1881. Venne battezzato lo stesso giorno, quartogenito di tredici figli.</excerptum>
+    <excerptum>entrò nel Seminario di Bergamo nel 1892</excerptum>
+    <excerptum>Giovanetto quattordicenne iniziò la stesura degli appunti spirituali che lo accompagneranno, con diverse modalità, fino alla morte, e che sono raccolti nel Giornale dell'anima.</excerptum>
+    <excerptum>Venne ordinato sacerdote il 1° agosto 1904 a Roma</excerptum>
+    <excerptum>Nel 1905 divenne segretario del nuovo Vescovo di Bergamo, mons. Giacomo Maria Radini Tedeschi. Fino al 1914 tenne tale ufficio</excerptum>
+    <excerptum>All'ingresso dell'Italia in guerra nel 1915 fu richiamato come sergente di sanità. L'anno dopo divenne cappellano militare</excerptum>
+    <excerptum>Nel 1921 iniziò la seconda parte della sua vita: quella a servizio della Santa Sede. Chiamato a Roma da Benedetto XV come Presidente per l'Italia del Consiglio centrale della Pontificia Opera per la Propagazione della Fede</excerptum>
+    <excerptum>Nel 1925 Pio XI lo nominò Visitatore Apostolico per la Bulgaria, elevandolo all'episcopato con il titolo di Areopoli. Scelse come motto episcopale «Oboedientia et pax»</excerptum>
+    <excerptum>Il 27 novembre 1935 venne nominato Delegato Apostolico in Turchia e Grecia.</excerptum>
+    <excerptum>Allo scoppio della seconda guerra mondiale fu presente in Grecia devastata dai combattimenti.</excerptum>
+    <excerptum>mise in salvo molti ebrei servendosi del «visto di transito» della Delegazione Apostolica. Il 20 dicembre 1944 Pio XII lo nominò Nunzio Apostolico a Parigi.</excerptum>
+    <excerptum>Il 12 gennaio 1953 fu creato Cardinale e il 25 promosso Patriarca a Venezia.</excerptum>
+    <excerptum>Alla morte di Pio XII fu eletto Papa il 28 ottobre 1958 e assunse il nome di Giovanni XXIII.</excerptum>
+    <excerptum>visitando i carcerati e gli ammalati</excerptum>
+    <excerptum>Il suo magistero sociale è contenuto nelle Encicliche «Mater et magistra» (1961) e «Pacem in terris» (1963).</excerptum>
+    <excerptum>convocò il Concilio Ecumenico Vaticano II.</excerptum>
+    <excerptum>Il popolo vide in lui un raggio della benignitas evangelica e lo chiamò «il Papa della bontà».</excerptum>
+    <excerptum>Morì la sera del 3 giugno 1963, all'indomani della Pentecoste</excerptum>
+    <excerptum>Giovanni XXIII fu dichiarato beato da Papa Giovanni Paolo II, il 3 settembre 2000 in Piazza San Pietro</excerptum>
+    <excerptum>Il 27 aprile 2014 Giovanni XXIII è stato canonizzato da Papa Francesco.</excerptum>
+  </fons>
+  <fons id="hom" opus="sedes" locus="Homily of Pope Francis, canonization of John XXIII and John Paul II, 27 April 2014" url="https://www.vatican.va/content/francesco/en/homilies/2014/documents/papa-francesco_20140427_omelia-canonizzazioni.html">
+    <excerptum>HOLY MASS AND RITE OF CANONIZATION OF BLESSEDS JOHN XXIII AND JOHN PAUL II</excerptum>
+    <excerptum>In convening the Council, Saint John XXIII showed an exquisite openness to the Holy Spirit.</excerptum>
+    <excerptum>for this reason I like to think of him as the the pope of openness to the Holy Spirit.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="11 October">
+    <excerptum>Saint John XXIII, Pope</excerptum>
+  </fons>
+</sanctus>

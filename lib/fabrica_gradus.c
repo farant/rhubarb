@@ -425,6 +425,31 @@ _membrum_actionem_facere (
                 " absens"));
         }
     }
+    /* ATTRIBUTA IN CLAVE (2026-10-22): attributa quae gradus declarat
+     * effectum mutare (vexilla variantis) in mandato, ut ambitus supra
+     * - variatio ea membra frescit; gradus sine eis claves non mutat */
+    per (i = ZEPHYRUM; parens->gradus->attributa_clavis != NIHIL
+         && parens->gradus->attributa_clavis[i] != NIHIL; i++)
+    {
+        i32 k;
+
+        per (k = ZEPHYRUM; parens->attributa != NIHIL
+             && k < xar_numerus(parens->attributa); k++)
+        {
+            constans FabricaAttributum* a;
+
+            a = (constans FabricaAttributum*)xar_obtinere(
+                parens->attributa, k);
+            si (chorda_aequalis_literis(a->titulus,
+                    parens->gradus->attributa_clavis[i]))
+            {
+                fabricae_chordam_addere(actio_out->mandatum,
+                    chorda_concatenare(fabricae_iungere(piscina,
+                    "attributum:", a->titulus, "="), a->valor,
+                    piscina));
+            }
+        }
+    }
     causa = chorda_ex_literis("", piscina);
     si (   parens->gradus->ingressus != NIHIL
         && !parens->gradus->ingressus(sutura, parens, copia, piscina,

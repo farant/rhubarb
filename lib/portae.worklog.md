@@ -365,3 +365,55 @@ MONITUM (order as given), so a stale tree bin/fabrica degrades instead
 of silently treating everything as commit tier. Spec
 project-specs/gradus-portarum-spec.md §VII.
 
+
+## 2026-10-23 — translatio receptorum T1: `legit`, `translatio="numquam"`, portae_translationes_computare
+
+Spec: project-specs/translatio-receptorum-spec.md (decretum …DC4A8Z, Fran approved interfaces A and B).
+
+**Why.** A merge that goes red once reruns every uncached gate. The live receipt is keyed on the whole-tree sigil, so a one-file golden fix cost 27.6 min (pass 2, 10-23). Carrying a green verdict forward needs to know what a gate *depends on*, not only what it is *responsible for*.
+
+**What.**
+- Two new attributes in the closed vocabulary:
+  - `legit`: patterns the gate reads beyond derivation (corpus, prose). It counts ONLY for carrying receipts; owed sets never change.
+  - `translatio="numquam"`: never carry; for gates whose verdict is a fabrica judgment. Any other value is refused by name.
+- `portae_translationes_computare` judges per gate, in order: NUMQUAM, DEBITA (the SAME `portae_tactus_computare` as debita, so blind openings are owed by every path), LECTA, PORTAT.
+  - An undeclared gate gets NULLUM.
+  - INSTRUMENTA and "no record" belong to the CLI (disk state).
+- The declaratae output gains `LEGIT <porta> <exemplar>` and `TRANSLATIO <porta> numquam`, and the attribute-list message now names the whole vocabulary. The old list was missing `gradus`, and a pinned test caught the change.
+
+**Test** "translatio receptorum" (probatio_portae.c XV). Cases:
+- refusal of `translatio="semper"`;
+- tegit → DEBITA, others PORTAT, venenum NUMQUAM, unknown NULLUM;
+- legit → LECTA with "(+1 aliae)", and the same path in the same world does NOT owe the gate;
+- the runner itself → DEBITA; empty diff → PORTAT "nulla via mutata";
+- blind gate → DEBITA;
+- exact machine and human lines.
+
+**Plants**, each red at its own assertion and reverted green: legit ignored, numquam ignored, debita ignored.
+
+## 2026-10-23 — translatio receptorum T2: `bin/fabrica portae translatio`
+
+CLI in tools/fabrica_portae.c; contract in include/portae.h (ARBOR / INSTRUMENTA / TRANSLATIO).
+
+**ARBOR, the state of the work.**
+- The real index is copied to `<git-path index>.translatio.<pid>`. Then `env GIT_INDEX_FILE=… git add -A -- .` and `git write-tree` run, and the copy is deleted.
+- `env` is used because `ProcessusOptiones.ambitus` is the child's EXACT environment, with no inheritance.
+- If there's no index (a fresh repo), the copy starts empty.
+- **The bug the smoke test caught:** the first version kept the temporary index under `build/portae/translatio/` INSIDE the worktree. In the smoke test's world `build/` isn't ignored, so `git add -A` added the index file to its own tree: "5 viae mutatae" where 1 was right. The real repo ignores build/, which was luck. It now lives next to the real index in the git dir.
+- Re-planted by hand (silva.planta is mute here: the gate runs the installed bin/fabrica): red at "causa g '5 viae…'", restored, green.
+
+**Diffs.**
+- `git diff --name-only --no-renames <a> <b>`, so a rename lists BOTH names.
+- An unknown or pruned tree → DEBITA "arbor recepti ignota".
+- Gates are grouped by record tree, so the tactus and closures are computed once per tree.
+
+**Digests.** Sigillum over each `bin/x` in `PortaeOpertura.binaria`: path, newline, contents ("\001absens" if missing). The CLI turns PORTAT into INSTRUMENTA when the record's digest differs. A gate with no record gets NULLUM, except NUMQUAM and undeclared gates.
+
+**Timing:** ~2.6 s for a call over 4 gates on the real tree.
+
+**Smoke test** portae-declaratae IV (temporary git world: g tegit lib/*, h legit docs/*, n numquam):
+- no records → nullum/nullum/numquam;
+- a NEW untracked docs/x.md → ARBOR changes, the real index stays untouched ('?? docs/'), g portat "1 via mutata", h lecta;
+- lib/a.c changed → g debita;
+- unknown tree → debita;
+- same tree with a foreign digest → instrumenta.

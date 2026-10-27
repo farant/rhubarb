@@ -1,0 +1,41 @@
+<sanctus id="lazarus-of-bethany" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Lazarus of Bethany</nomen>
+  <obitus saeculum="1" fontes="ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="7" dies="29" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="12" dies="17" fontes="mr"/>
+  <munus fontes="bu">disciple</munus>
+  <descriptio>
+    <paragraphus fontes="cem bu">Lazarus was the brother of Martha and Mary of Bethany, a family Christ often visited; St. John records that Jesus loved Martha, her sister and Lazarus. When Lazarus fell sick, his sisters sent word to Christ, who was then away, saying only "he whom thou lovest is sick". Christ delayed some days and then came to Bethany, and the sisters saw their brother restored to life after he had been four days in the grave. Lazarus was afterwards among the guests at the supper in Bethany six days before the Passion.</paragraphus>
+    <paragraphus fontes="ce mr">A later tradition made him the first bishop of Marseilles: put out to sea with his sisters and other disciples, he landed in Provence, converted many at Marseilles, and was beheaded under Domitian. The 1916 Martyrology keeps this, commemorating him on 17 December at Marseilles as a bishop raised from the dead by our Lord. The Catholic Encyclopedia judges the tradition without solid foundation: there is no trace of it before the middle of the eleventh century, the Greek Church held that his body was taken to Constantinople, and the legend probably arose from a fifth-century Lazarus, bishop of Aix, who was buried at Marseilles. It records him only as having died in the second half of the first century.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Lazarus of Bethany" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Lazarus_of_Bethany">
+    <excerptum>Lazarus of Bethany, Saint.—Reputed first Bishop of Marseilles, died in the second half of the first century.</excerptum>
+    <excerptum>the members of the family at Bethany, the friends of Christ, together with some holy women and others of His disciples, were put out to sea by the Jews hostile to Christianity in a vessel without sails, oars, or helm, and after a miraculous voyage landed in Provence</excerptum>
+    <excerptum>Lazarus of whom alone we have to treat here, went to Marseilles, and, having converted a number of its inhabitants to Christianity, became their first pastor.</excerptum>
+    <excerptum>During the new persecution of Domitian he was cast into prison and beheaded</excerptum>
+    <excerptum>this tradition, which was believed for several centuries and which still finds some advocates, has no solid foundation.</excerptum>
+    <excerptum>Before the middle of the eleventh century there does not seem to be the slightest trace of the tradition according to which the Palestinian saints came to Provence.</excerptum>
+    <excerptum>according to a tradition of the Greek Church, the body of St. Lazarus had been brought to Constantinople</excerptum>
+    <excerptum>In the crypt of St.-Victor at Marseilles an epitaph of the of the fifth century has been discovered, which informs us that a bishop named Lazarus was buried there.</excerptum>
+    <excerptum>this personage is Lazarus, Bishop of Aix, who was consecrated at Marseilles about 407</excerptum>
+    <excerptum>It is more than likely that it is the name of this bishop and his return from Palestine, that gave rise to the legend of the coming of the Biblical Lazarus to Provence</excerptum>
+  </fons>
+  <fons id="cem" opus="ce1913" locus="St. Martha" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Martha">
+    <excerptum>"Jesus loved Martha, and her sister Mary, and Lazarus" (11:5).</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v07 July 29 St. Martha, V.">
+    <excerptum>was sister to Mary and Lazarus, and lived with them at ' Bethania</excerptum>
+    <excerptum>he frequented the house of these three holy disciples.</excerptum>
+    <excerptum>When he fell sick, the pious sisters sent to inform .Christ, who was then absent in Galilee. They said no more in their message than this; He whom thou lovest is sick.</excerptum>
+    <excerptum>Jesus, however, deferred setting out two or three days</excerptum>
+    <excerptum>the sisters had the joy to see their brother again restored to life when he had been four days in the grave.</excerptum>
+    <excerptum>Christ was again at Bethania, at the house of Simon the Leper, six days before his passion. Lazarus was one of the suests.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="17 December">
+    <excerptum>At Marseilles, in France, blessed Lazarus, bishop, who was raised from the dead by our Lord, as we read in the Gospel.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="29 July">
+    <excerptum>Saints Martha, Mary, and Lazarus</excerptum>
+  </fons>
+</sanctus>

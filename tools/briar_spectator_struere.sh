@@ -46,15 +46,39 @@ for o in briar/build/*.o; do
 done
 
 # obiecta radicis quae briar/build NON habet (fenestra, vitrea, atrium,
-# thema, imago... et quidquid clausura eorum poscit)
+# thema, imago... et quidquid clausura eorum poscit) - EX CLAUSURA
+# (bin/aedilis --partes, ut stml_struere.sh), numquam build/*.o
+# universum: obiectum plagulae renominatae aut deletae in build/ manet
+# et symbola duplicata nectebat (parcum …QBDJVE1, testa_android_initus
+# -> testa_initus 2026-10-24)
+if [ ! -x bin/aedilis ]; then
+    echo "briar_spectator_struere: bin/aedilis deest - ./tools/aedilis_struere.sh prius" >&2
+    exit 1
+fi
 ADDITA=""
-for o in build/*.o; do
-    b="$(basename "$o")"
-    case "$b" in probatio_*) continue ;; esac
-    if [ ! -f "briar/build/$b" ]; then
-        ADDITA="$ADDITA $o"
+NUMERUS_PARTIUM=0
+while IFS=$'\t' read -r genus pars; do
+    # O = partes domus, V = vendita (sqlite3, bearssl: obiecta sua)
+    [ "$genus" = "O" ] || [ "$genus" = "V" ] || continue
+    # fontes GENERATI sub build/ (provenientia, capsula corporis)
+    # infra in linea clang ipsa compilantur
+    case "$pars" in build/*) continue ;; esac
+    NUMERUS_PARTIUM=$((NUMERUS_PARTIUM + 1))
+    b="$(basename "${pars%.*}").o"
+    [ -f "briar/build/$b" ] && continue
+    # amalgamata in briar/build nomine 'amalgama_X.o' (silva.c ->
+    # amalgama_silva.o) - iam in $OBJ nexa
+    [ -f "briar/build/amalgama_$b" ] && continue
+    if [ ! -f "build/$b" ]; then
+        echo "briar_spectator_struere: build/$b deest (pars $pars) - ./compile_tests.sh prius" >&2
+        exit 1
     fi
-done
+    ADDITA="$ADDITA build/$b"
+done < <(./bin/aedilis tools/briar_spectator.c --partes)
+if [ "$NUMERUS_PARTIUM" -eq 0 ]; then
+    echo "briar_spectator_struere: clausura vacua - aedilis defecit?" >&2
+    exit 1
+fi
 
 mkdir -p bin
 # provenientia (fabrica T7)
@@ -73,7 +97,7 @@ echo "aedificatum: bin/briar-spectator"
 # rm ante cp: macOS binarium superscriptum SIGKILL dat
 # institutio in ~/.bin: actio fabricae sua ('institutio_briar_spectator', 1b T5) -
 # sub executore (FABRICA_AGIT) hoc scriptum SOLUM nectit; manu vocatum
-# etiam instituit
+# etiam instituit - in main solo (arbor secundaria: omissum, -si-licet)
 if [ -z "${FABRICA_AGIT:-}" ]; then
-    ./tools/instituere.sh bin/briar-spectator || exit 1
+    ./tools/instituere.sh -si-licet bin/briar-spectator || exit 1
 fi

@@ -1,0 +1,44 @@
+<!-- instrumentarium.stml - instrumenta domus (include/carmen.h), in
+     binarium infixa per tools/carmina_infigere.sh.
+
+     Gradus inter librum et praeparata (tibia.h): quaeritur carmen,
+     liber, instrumentarium, praeparata. Liber titulum redefinire potest
+     (suum vincit). Grammatica eadem ac <instrumentum> libri: basis =
+     praeparatum aut instrumentum SUPRA; ambitus censurae.
+
+     Praeparata nova sine codice (desideratum ...FABF6Q, 2026-10-24):
+
+     CEMBALO: chorda clarissima, decrementum breve - pinna chordam
+     vellit (clavicembalum F1..F6).
+     PIZZICATO: chorda obscura et brevissima - digitus chordam
+     arcus vellit (contrabassus E1 .. violinum).
+     PIANO_ELECTRICUM: FM ratio 1:1, index decrescens (lamella
+     metallica sub malleo - Rhodes), sine tenore.
+     TINTINNABULA: FM ratio 3.5 inharmonica, alta, brevis.
+     CAMPANAE_TUBULARES: partiales modorum IV-VII laminae liberae
+     ((2n+1)^2: 2.0 2.99 4.17 5.56 ad notam) - nota percepta est
+     fundamentalis ABSENS harmonicorum 2:3:4 (tonus ictus); modus III
+     (1.21) debilis. Approximatio, auribus iudicanda. -->
+<instrumentarium>
+
+  <instrumentum titulus="cembalo" basis="chorda" claritas="0.95"
+      decrementum="1.2" remissio="0.05" amplitudo="0.8"
+      ambitus="29..89"/>
+
+  <instrumentum titulus="pizzicato" basis="chorda" claritas="0.25"
+      decrementum="0.35" remissio="0.04" amplitudo="0.9"
+      ambitus="28..96"/>
+
+  <instrumentum titulus="piano_electricum" genus="modulatio" ratio="1"
+      index="2.5" decrementum="1.0" impetus="0.002" lapsus="2.5"
+      tenor="0" remissio="0.3" amplitudo="0.5" ambitus="28..100"/>
+
+  <instrumentum titulus="tintinnabula" genus="modulatio" ratio="3.5"
+      index="4" decrementum="0.25" impetus="0.001" lapsus="1.2"
+      tenor="0" remissio="0.4" amplitudo="0.35" ambitus="72..108"/>
+
+  <instrumentum titulus="campanae_tubulares" genus="partiales"
+      partiales="1.21:0.3:1.0 2.0:1.0:4.0 2.99:0.8:3.0 4.17:0.6:2.5 5.56:0.3:1.5"
+      impetus="0.001" remissio="2.0" amplitudo="0.5" ambitus="60..77"/>
+
+</instrumentarium>

@@ -145,9 +145,8 @@ actarius_conservationis (
         {
             perge;
         }
-        si (volumen_plagulam_condere(c->volumen,
-                via_status(rc->clavis, c->scheda), status,
-                "conservatio") <= ZEPHYRUM)
+        si (!volumen_praesens_ponere(c->volumen,
+                via_status(rc->clavis, c->scheda), status))
         {
             fprintf(stderr, "conservatio: status %.*s non conditus\n",
                 (int)rc->clavis.mensura,
@@ -383,7 +382,7 @@ conservatio_ramum_addere (
      * inter insulas evanesceret. */
     restituti  = ZEPHYRUM;
     p          = conservatio->piscina;
-    fons = volumen_plagulam_promere(conservatio->volumen,
+    fons = volumen_praesens_legere(conservatio->volumen,
         via_status(rc.clavis, p), p, &inventum);
     si (inventum)
     {

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- tools/ios/Info.forma.plist - forma Info.plist applicationis testae
+     iOS (testa-ios-spec II.4): tools/ios/app.sh @TITULUS@,
+     @INVOLUCRUM@, @PLATFORMA@, @VERSIO@, @AEDIFICATIO@ substituit
+     (C2: -divulgatio claves App Store addit). Situs erectus solus (D5),
+     scaena una (D9: TestaScaenaDelegatus in lib/testa_ios.m). -->
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleExecutable</key>
+	<string>@TITULUS@</string>
+	<key>CFBundleIdentifier</key>
+	<string>@INVOLUCRUM@</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>@TITULUS@</string>
+	<key>CFBundleDisplayName</key>
+	<string>@TITULUS@</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>@VERSIO@</string>
+	<key>CFBundleVersion</key>
+	<string>@AEDIFICATIO@</string>
+	<key>CFBundleSupportedPlatforms</key>
+	<array>
+		<string>@PLATFORMA@</string>
+	</array>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>MinimumOSVersion</key>
+	<string>17.0</string>
+	<key>UIDeviceFamily</key>
+	<array>
+		<integer>1</integer>
+	</array>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>arm64</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UILaunchScreen</key>
+	<dict/>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneConfigurationName</key>
+					<string>Default</string>
+					<key>UISceneDelegateClassName</key>
+					<string>TestaScaenaDelegatus</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
+</dict>
+</plist>

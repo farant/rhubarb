@@ -1,0 +1,42 @@
+<sanctus id="anthony-zaccaria" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Anthony Zaccaria</nomen>
+  <nomen lingua="it" fontes="ce">Antonio Maria Zaccaria</nomen>
+  <nomen lingua="en" fontes="mr">Anthony Mary Zaccaria</nomen>
+  <ortus annus="1502" locus="Cremona, Italy" fontes="ce"/>
+  <obitus mensis="7" dies="5" locus="Cremona" fontes="ce"/>
+  <beatificatio annus="1849" papa="Pius IX" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1897" mensis="5" dies="15" papa="Leo XIII" fontes="ce mr"/>
+  <festum calendarium="generale" mensis="7" dies="5" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="7" dies="5" fontes="mr"/>
+  <munus fontes="us ce">priest</munus>
+  <munus fontes="ce mr">founder</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Antonio Maria Zaccaria was born at Cremona in 1502. His father died while he was an infant, and his mother, who made him her almoner, taught him compassion for the poor. He studied philosophy and then medicine at Padua, took his doctorate in medicine at twenty-two and practised at Cremona, then turned to theology and was ordained in 1528, devoting himself to the sick in hospitals and to prisoners.</paragraphus>
+    <paragraphus fontes="ce mr">At Milan, with two priests, he founded the Clerks Regular of St. Paul, sanctioned by Clement VII in 1533 and later called Barnabites from their church of St. Barnabas, where his body is venerated; he also founded the Angelicals of St. Paul, a congregation of nuns. He preached the Passion in the streets with a crucifix in hand and introduced the Forty Hours' devotion at Vicenza. Worn out, he died in his mother's house at Cremona on 5 July. The Catholic Encyclopedia gives the year as 1559 but also says he died at thirty-seven, which with a birth in 1502 does not agree; the year is therefore left open here. Pius IX beatified him in 1849 and Leo XIII canonized him on 15 May 1897.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Antonio Maria Zaccaria" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Antonio_Maria_Zaccaria">
+    <excerptum>Antonio Maria Zaccaria, Saint, founder of the Clerks Regular of St. Paul, commonly known as the Barnabites; b. in Cremona, Italy, 1502; d. 5 July, 1559.</excerptum>
+    <excerptum>While he was still an infant his father died, leaving the care of the child's education to his mother, who taught him compassion for the poor and suffering by making him her almoner.</excerptum>
+    <excerptum>he was sent to Padua for his philosophy, and in 1520, when he had finished this course, began the study of medicine in the university at that place.</excerptum>
+    <excerptum>At the age of twenty-two he received his degree of Doctor of Medicine and returned to Cremona to practise his profession.</excerptum>
+    <excerptum>Three years later he began to study theology and received holy orders in 1528.</excerptum>
+    <excerptum>visiting and consoling the sick in hospitals and poor-prisons</excerptum>
+    <excerptum>He went to the populous city of Milan, of which he was a burgess, and entered the Confraternity of Eternal Wisdom.</excerptum>
+    <excerptum>he allied himself with two priests, Fathers Ferrari and Morigia, and told them of his idea of founding a congregation of secular clergy.</excerptum>
+    <excerptum>which began with five members, was canonically sanctioned by Pope Clement VII in 1533.</excerptum>
+    <excerptum>he went into the streets of the city with crucifix in hand, and produced great fruit in souls by preaching on the Passion and Death of Christ</excerptum>
+    <excerptum>a congregation of nuns "The Angelicals of St. Paul", which he had founded in Milan. He introduced, also, the devotion of the "Forty Hours' Prayers", in Vicenza.</excerptum>
+    <excerptum>From this church of St. Barnabas, the Congregation received the name by which its members are commonly known, i.e. Barnabites.</excerptum>
+    <excerptum>Worn out by his voluntary penences, as well as by his untiring labours of charity, he was attacked by fever during one of his mission.</excerptum>
+    <excerptum>he had himself brought to his native city, Cremona. There, in his mother's house, he received the last sacraments and peacefully expired at the early age of thirty-seven.</excerptum>
+    <excerptum>He was declared Blessed by Pope Pius IX in 1849.</excerptum>
+    <excerptum>On 15 May, 1897, he was solemnly canonized in St. Peter's, Rome, by Pope Leo XIII.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="5 July">
+    <excerptum>AT Cremona, in Insubria, St. Anthony Mary Zaccaria, confessor, founder of the Barnabites and the Angelic Virgins.</excerptum>
+    <excerptum>he was placed among the Saints by Leo XIII. His body is venerated in the church of St. Barnabas, at Milan.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="5 July">
+    <excerptum>Saint Anthony Zaccaria, Priest</excerptum>
+  </fons>
+</sanctus>

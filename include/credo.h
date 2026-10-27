@@ -206,6 +206,9 @@ credo_invenire_fractos (
             __LINE__ \
     )
 
+/* NOMEN FALLIT: litteras C (character*) accipit, non chordas - forma
+ * nova CREDO_LITERAE_AEQUALES (NIHIL tuta, valores effugiti). Manet ut
+ * suitae veteres currant. */
 #define CREDO_CHORDAE_AEQUALES(s1, s2) \
     _credo_notare_chorda( \
             "credo_chordae_aequales", \
@@ -221,17 +224,59 @@ credo_invenire_fractos (
  * Macros - Chorda Convenientiae
  * ============================================ */
 
+/* credo III (2026-10-19): valores AMBO in fractura citantur (olim per
+ * CREDO_VERUM: expressio sola). Receptus = primum argumentum, Speratus
+ * = secundum (acus, prefixum, suffixum). Chorda per MENSURAM legitur
+ * (NUL intra licet), effugitur, longa per fenestram circa differentiam
+ * primam ostenditur; aequalitas lineam 'Differentia:' addit. */
+#define CREDO_COMPARATIO_AEQUALIS    0
+#define CREDO_COMPARATIO_CONTINET    1
+#define CREDO_COMPARATIO_INCIPIT     2
+#define CREDO_COMPARATIO_TERMINATUR  3
+
 #define CREDO_CHORDA_AEQUALIS(a, b) \
-    CREDO_VERUM(chorda_aequalis((a), (b)))
+    _credo_notare_chordae( \
+            "credo_chorda_aequalis", \
+            #a " == " #b, \
+            (a), \
+            (b), \
+            CREDO_COMPARATIO_AEQUALIS, \
+            __FILE__, \
+            __LINE__ \
+    )
 
 #define CREDO_CHORDA_CONTINET(fenum, acus) \
-    CREDO_VERUM(chorda_continet((fenum), (acus)))
+    _credo_notare_chordae( \
+            "credo_chorda_continet", \
+            #fenum " continet " #acus, \
+            (fenum), \
+            (acus), \
+            CREDO_COMPARATIO_CONTINET, \
+            __FILE__, \
+            __LINE__ \
+    )
 
 #define CREDO_CHORDA_INCIPIT(s, prefixum) \
-    CREDO_VERUM(chorda_incipit((s), (prefixum)))
+    _credo_notare_chordae( \
+            "credo_chorda_incipit", \
+            #s " incipit " #prefixum, \
+            (s), \
+            (prefixum), \
+            CREDO_COMPARATIO_INCIPIT, \
+            __FILE__, \
+            __LINE__ \
+    )
 
 #define CREDO_CHORDA_TERMINATUR(s, suffixum) \
-    CREDO_VERUM(chorda_terminatur((s), (suffixum)))
+    _credo_notare_chordae( \
+            "credo_chorda_terminatur", \
+            #s " terminatur " #suffixum, \
+            (s), \
+            (suffixum), \
+            CREDO_COMPARATIO_TERMINATUR, \
+            __FILE__, \
+            __LINE__ \
+    )
 
 #define CREDO_CHORDA_AEQUALIS_LITERIS(s, literis) \
     _credo_notare_chorda_literis( \
@@ -362,6 +407,127 @@ credo_invenire_fractos (
             (a), \
             (b), \
             (epsilon), \
+            __FILE__, \
+            __LINE__ \
+    )
+
+
+/* ==================================================
+ * Macros - credo III (2026-10-19)
+ * ================================================== */
+
+/* Litterae C (character*), NIHIL tutae: ambae NIHIL = aequales, una
+ * NIHIL = fracta ('NIHIL' citatum). */
+#define CREDO_LITERAE_AEQUALES(a, b) \
+    _credo_notare_literae( \
+            "credo_literae_aequales", \
+            #a " == " #b, \
+            (a), \
+            (b), \
+            __FILE__, \
+            __LINE__ \
+    )
+
+/* n octeti ut memcmp; fractura offset primae differentiae et
+ * fenestram hex ('[ff]' = octetus diversus) nominat. */
+#define CREDO_OCTETI_AEQUALES(a, b, n) \
+    _credo_notare_octeti( \
+            "credo_octeti_aequales", \
+            #a " == " #b " (" #n " octeti)", \
+            (a), \
+            (b), \
+            (memoriae_index)(n), \
+            __FILE__, \
+            __LINE__ \
+    )
+
+/* Familiae LXIV: S64 cum signo, I64 sine (memoriae_index eiusdem
+ * latitudinis sine casti accipitur). */
+#define CREDO_RELATIO_AEQUALIS            0
+#define CREDO_RELATIO_INAEQUALIS          1
+#define CREDO_RELATIO_MAIOR               2
+#define CREDO_RELATIO_MINOR               3
+#define CREDO_RELATIO_MAIOR_AUT_AEQUALIS  4
+#define CREDO_RELATIO_MINOR_AUT_AEQUALIS  5
+
+/* expressio in macro EXTERIORE stringificatur: argumenta macro
+ * interiori data iam expansa sunt (V -> 5) */
+#define CREDO_S64_INTERNUM(genus, expressio, relatio, a, b) \
+    _credo_notare_s64(genus, expressio, (a), (b), relatio, __FILE__, \
+        __LINE__)
+#define CREDO_I64_INTERNUM(genus, expressio, relatio, a, b) \
+    _credo_notare_i64(genus, expressio, (a), (b), relatio, __FILE__, \
+        __LINE__)
+
+#define CREDO_INAEQUALITAS_S64(a, b) \
+    CREDO_S64_INTERNUM("credo_inaequalitas", #a " != " #b,\
+        CREDO_RELATIO_INAEQUALIS, a, b)
+#define CREDO_MAIOR_S64(a, b) \
+    CREDO_S64_INTERNUM("credo_maior", #a " > " #b,\
+        CREDO_RELATIO_MAIOR, a, b)
+#define CREDO_MINOR_S64(a, b) \
+    CREDO_S64_INTERNUM("credo_minor", #a " < " #b,\
+        CREDO_RELATIO_MINOR, a, b)
+#define CREDO_MAIOR_AUT_AEQUALIS_S64(a, b) \
+    CREDO_S64_INTERNUM("credo_maior_aut_aequalis", #a " >= " #b, \
+        CREDO_RELATIO_MAIOR_AUT_AEQUALIS, a, b)
+#define CREDO_MINOR_AUT_AEQUALIS_S64(a, b) \
+    CREDO_S64_INTERNUM("credo_minor_aut_aequalis", #a " <= " #b, \
+        CREDO_RELATIO_MINOR_AUT_AEQUALIS, a, b)
+
+#define CREDO_AEQUALIS_I64(a, b) \
+    CREDO_I64_INTERNUM("credo_aequalis", #a " == " #b,\
+        CREDO_RELATIO_AEQUALIS, a, b)
+#define CREDO_INAEQUALITAS_I64(a, b) \
+    CREDO_I64_INTERNUM("credo_inaequalitas", #a " != " #b,\
+        CREDO_RELATIO_INAEQUALIS, a, b)
+#define CREDO_MAIOR_I64(a, b) \
+    CREDO_I64_INTERNUM("credo_maior", #a " > " #b,\
+        CREDO_RELATIO_MAIOR, a, b)
+#define CREDO_MINOR_I64(a, b) \
+    CREDO_I64_INTERNUM("credo_minor", #a " < " #b,\
+        CREDO_RELATIO_MINOR, a, b)
+#define CREDO_MAIOR_AUT_AEQUALIS_I64(a, b) \
+    CREDO_I64_INTERNUM("credo_maior_aut_aequalis", #a " >= " #b, \
+        CREDO_RELATIO_MAIOR_AUT_AEQUALIS, a, b)
+#define CREDO_MINOR_AUT_AEQUALIS_I64(a, b) \
+    CREDO_I64_INTERNUM("credo_minor_aut_aequalis", #a " <= " #b, \
+        CREDO_RELATIO_MINOR_AUT_AEQUALIS, a, b)
+
+/* f32: per f64 comparatur (promotio exacta). */
+#define CREDO_F32_PROXIMUS(a, b, epsilon) \
+    _credo_notare_f64_proximus( \
+            "credo_f32_proximus", \
+            #a " ≈ " #b, \
+            (f64)(a), \
+            (f64)(b), \
+            (f64)(epsilon), \
+            __FILE__, \
+            __LINE__ \
+    )
+
+/* |a - b| <= r * max(|a|, |b|): epsilon absolutum pro magnitudinibus
+ * extremis falsum est (gtest, Catch2 Approx). */
+#define CREDO_F64_RELATIVE(a, b, r) \
+    _credo_notare_f64_relative( \
+            "credo_f64_relative", \
+            #a " ≈ " #b, \
+            (a), \
+            (b), \
+            (r), \
+            __FILE__, \
+            __LINE__ \
+    )
+
+/* distantia in numeris repraesentabilibus (ULP) <= n; -0.0 == +0.0,
+ * NaN numquam aequalis (gtest: IV ULP ordinarium). */
+#define CREDO_F64_ULP(a, b, n) \
+    _credo_notare_f64_ulp( \
+            "credo_f64_ulp", \
+            #a " ≈ " #b, \
+            (a), \
+            (b), \
+            (i64)(n), \
             __FILE__, \
             __LINE__ \
     )
@@ -518,6 +684,75 @@ _credo_notare_integrum_minor_aut_aequalis_i32 (
                                      s32  versus);
 
 vacuum
+_credo_notare_chordae (
+                      constans character* genus,
+                      constans character* expressio,
+                                  chorda  receptus,
+                                  chorda  speratus,
+                                     s32  comparatio,
+                      constans character* filum,
+                                     s32  versus);
+
+vacuum
+_credo_notare_literae (
+                      constans character* genus,
+                      constans character* expressio,
+                      constans character* receptus,
+                      constans character* speratus,
+                      constans character* filum,
+                                     s32  versus);
+
+vacuum
+_credo_notare_octeti (
+                        constans character* genus,
+                        constans character* expressio,
+                           constans vacuum* receptus,
+                           constans vacuum* speratus,
+                            memoriae_index  mensura,
+                        constans character* filum,
+                                       s32  versus);
+
+vacuum
+_credo_notare_s64 (
+                      constans character* genus,
+                      constans character* expressio,
+                                     s64  valor_primus,
+                                     s64  valor_secundus,
+                                     s32  relatio,
+                      constans character* filum,
+                                     s32  versus);
+
+vacuum
+_credo_notare_i64 (
+                      constans character* genus,
+                      constans character* expressio,
+                                     i64  valor_primus,
+                                     i64  valor_secundus,
+                                     s32  relatio,
+                      constans character* filum,
+                                     s32  versus);
+
+vacuum
+_credo_notare_f64_relative (
+                      constans character* genus,
+                      constans character* expressio,
+                                     f64  valor_primus,
+                                     f64  valor_secundus,
+                                     f64  relativa,
+                      constans character* filum,
+                                     s32  versus);
+
+vacuum
+_credo_notare_f64_ulp (
+                      constans character* genus,
+                      constans character* expressio,
+                                     f64  valor_primus,
+                                     f64  valor_secundus,
+                                     i64  distantia,
+                      constans character* filum,
+                                     s32  versus);
+
+vacuum
 _credo_notare_f64_proximus (
                       constans character* genus,
                       constans character* expressio,
@@ -641,7 +876,10 @@ nomen structura CredoContextus {
      constans character* titulus;   /* sectio currens */
                  vacuum* suita;     /* (II) datum parare_suitae;
                                      * sectiones LEGUNT, numquam mutant
-                                     * (lint); NIHIL sine fixura */
+                                     * (examen 94) praeter internationem
+                                     * in internamentum fixurae (vide
+                                     * credo_suitam_currere_cum); NIHIL
+                                     * sine fixura */
 } CredoContextus;
 
 nomen vacuum (*CredoFunctio)(CredoContextus* c);
@@ -656,7 +894,10 @@ nomen structura CredoSectio {
     constans character* signa;             /* (II) verba spatio separata
                                             * ex vocabulario CLAUSO:
                                             * lentus rete fenestra
-                                            * repositorium; ignotum ->
+                                            * repositorium gravis
+                                            * (tectum memoriae
+                                            * CREDO_MEMORIA_GRAVIS_MB);
+                                            * ignotum ->
                                             * suita FRACTA nominans.
                                             * CREDO_SIGNA_OMITTE="rete"
                                             * -> sectio OMISSA (in
@@ -672,6 +913,18 @@ nomen structura CredoSectio {
                                             * tools/credo_fracturae_
                                             * notae.py */
 } CredoSectio;
+
+/* TECTUM MEMORIAE (credo memoria T4): sectione finita pondus = maior
+ * apicis arenae et incrementi apicis vitae; pondus > tectum = fractura
+ * nominata 'credo_memoria' (sectio FRACTA, suita I). Tectum: signum
+ * 'gravis' -> CREDO_MEMORIA_GRAVIS_MB; ceterae CREDO_MEMORIA_MB ex
+ * ambitu si ponitur (0 = sine tecto), aliter ORDINARIA. Valores ex
+ * mensura 2026-10-20 (mensor quaestio graves, MMMCXVI sectiones):
+ * sectio normalis gravissima CXXXV MiB, duae supra CCLVI signum
+ * gravis ferunt. Fugam intra sectionem NON sistit (credo solum in
+ * fine imperium habet) - id custos cursoris est (spec C2). */
+#define CREDO_MEMORIA_ORDINARIA_MB  CCLVI
+#define CREDO_MEMORIA_GRAVIS_MB     MXXIV
 
 /* Suitam currere: sectiones ordine usque ad titulum NIHIL. Ambitus:
  *   CREDO_SECTIO=<titulus>  sectio sola (ceterae non currunt, non
@@ -689,6 +942,9 @@ nomen structura CredoSectio {
  *                           ordinarium. "tabula"/vacuum = ordo tabulae;
  *                           valor alius = I, nihil cursum, nominatum
  *   CREDO_VERDICTA=<via>    plagula verdictorum (TSV) scribitur
+ *   CREDO_MEMORIA_MB=<n>    tectum memoriae sectionum ordinariarum
+ *                           (credo memoria T4; 0 = nullum); signum
+ *                           gravis CREDO_MEMORIA_GRAVIS_MB servat
  * Plagula: linea per sectionem STATIM post eam (effluxa), deinde linea
  * SUITA - linea SUITA absens = suita ruit (sectiones priores tamen
  * notae). Campi tabulatione separati; '\t' '\n' '\\' in valoribus
@@ -696,6 +952,10 @@ nomen structura CredoSectio {
  *   SECTIO  suita  titulus  exitus  praeteriti  totales  ms
  *           filum:versus  genus  expressio  gradus  (fractura prima;
  *           vacua si transiit; gradus = CREDO_GRADUS currens, credo II)
+ *           arena_kib  vestigium_kib  apex_auctus_kib  (credo memoria
+ *           T2: apex usus piscinae sectionis, vestigium processus in
+ *           fine, incrementum apicis vitae dum sectio currit - KiB;
+ *           0 si omissa; effusio humana NIHIL de memoria dicit)
  *   SUITA   suita  exitus  transeuntes  sectiones  praeteriti  totales
  *           ms
  *   ORDO    suita  mixtus  semen          (credo II; ante sectiones,
@@ -735,7 +995,18 @@ credo_gradum_ponere (
  * ad vocationem primam (eadem via deinde), deletur tota post purgare
  * (etiam post NECESSE, etiam si filius CREDO_NON_RUIT eam creavit).
  * Sub fabrica TMPDIR = area membri. NIHIL si creari non potest aut c
- * contextus currens non est. Via usque ad deletionem valet. */
+ * contextus currens non est. Via usque ad deletionem valet.
+ *
+ * TMPDIR SUITAE (2026-10-23): credo_suitam_currere[_cum] TMPDIR in
+ * aream SUITAE ponit (filii hereditant) et post suitam restituit -
+ * quidquid temporarium suita creat suum est, suitae parallelae se non
+ * vident. Post sectionem quamque '*.volumen' ibi relictum = fractura
+ * 'credo_volumen' ILLIUS sectionis (volumen temporarium non clausum),
+ * deinde deletum; volumina post parare_suitae viva (fixurae suitae)
+ * sectionibus praetereuntur et post purgare_suitae iudicantur
+ * ('(suita)'). Pretium ~XXX-XL us per sectionem (mensuratum: chorda
+ * L sectiones +8.3 M instructiones). Suitae extra credo_suitam_currere
+ * (credo_aperire nudum) TMPDIR intactum habent. */
 constans character*
 credo_area (
     CredoContextus* c);
@@ -747,7 +1018,24 @@ credo_area (
  * (assertio aut NECESSE) -> nulla sectio currit, '(parare suitae)' in
  * plagula notatur, suita FRACTA. NIHIL licet (= credo_suitam_currere).
  * Fixura cara (daemon, applicatio) semel aedificatur; sectiones tamen
- * ordine liberae manent quia statum suitae non mutant. */
+ * ordine liberae manent quia statum suitae non mutant.
+ *
+ * LECTIO SOLA, EXCEPTIO UNA (decretum Frani 2026-10-19): sectiones in
+ * internamentum FIXURAE internare licet (InternamentumChorda* quod
+ * parare_suitae creavit, quovis vocato traditum). Chordae internatae per
+ * monstratorem comparantur, ergo internamentum proprium sectionis
+ * identitatem cum nominibus fixurae tacite frangeret; et internatio
+ * ordine libera est (textus idem -> chorda eadem, quaecumque sectio
+ * prima internat). Ubi comparatio per contentum fit, internamentum
+ * proprium sectionis (in c->piscina) ordinarium manet. Cetera mutatio
+ * fixurae vetita.
+ * Examen 94 c->suita ipsum (gradus primus) ET membra monstratoria
+ * fixurae (Xar*, Piscina*, ... per 'constans T*' lecta) intra
+ * sectionem iudicat: scriptio per ea aut traditio ad parametrum non
+ * constans accusatur. LIMES: fixura adiutori per parametrum tradita
+ * non sequitur; mutatio celata intra bibliothecam (arena possessoris
+ * crescens) per vocatum solum videtur - CREDO_ORDO=mixtus
+ * dependentiam ordinis prodit. */
 s32
 credo_suitam_currere_cum (
       constans character* titulus_suitae,

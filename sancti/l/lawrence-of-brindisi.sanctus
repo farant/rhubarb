@@ -1,0 +1,37 @@
+<sanctus id="lawrence-of-brindisi" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Lawrence of Brindisi</nomen>
+  <ortus annus="1559" locus="Brindisi" fontes="bx"/>
+  <obitus annus="1619" locus="Lisbon" fontes="bx mr"/>
+  <canonizatio modus="formalis" annus="1881" papa="Leo XIII" fontes="bx mr"/>
+  <festum calendarium="generale" mensis="7" dies="21" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="7" dies="22" nota="the Martyrology says Leo XIII appointed 7 July for his feast" fontes="mr"/>
+  <munus fontes="us bx">priest</munus>
+  <munus fontes="us bx">doctor of the Church</munus>
+  <munus fontes="bx mr">religious</munus>
+  <descriptio>
+    <paragraphus fontes="bx">Lawrence was born at Brindisi in 1559 and named Julius Caesar Russo; Lawrence was the name he took on entering the Capuchin Order. His father died when he was seven, and his mother entrusted him to the Friars Minor Conventual of his home town; later the two moved to Venice, where he came to know the Capuchins. He was professed in 1575 and ordained priest in 1582. He learned Greek, Hebrew and Syriac as well as French and German, and his knowledge of the Bible and of rabbinic literature won the respect even of rabbis. To Christians who had adhered to the Reformation, especially in Germany, he set out the biblical and patristic grounds of the doctrines disputed by Luther.</paragraphus>
+    <paragraphus fontes="bx mr">While preaching without interruption in many cities and countries, he served his Order as professor of theology, novice master, provincial and definitor general, and was minister general from 1602 to 1605. Popes and Catholic princes sent him on diplomatic missions to settle disputes among European states threatened by the Ottoman Empire. On one of these missions he died at Lisbon in 1619, having gone to plead with Philip III of Spain for the oppressed subjects of Naples. Leo XIII canonized him in 1881, and in 1959, the fourth centenary of his birth, John XXIII conferred on him the title of "Apostolic Doctor"; his writings include the Marian sermons called the Mariale.</paragraphus>
+  </descriptio>
+  <fons id="bx" opus="sedes" locus="Benedict XVI, General Audience, 23 March 2011" url="https://www.vatican.va/content/benedict-xvi/en/audiences/2011/documents/hf_ben-xvi_aud_20110323.html">
+    <excerptum>It was in this city that in 1559 was born a distinguished Doctor of the Church, St Lawrence of Brindisi, the name that Julius Caesar Russo took upon entering the Capuchin Order.</excerptum>
+    <excerptum>his father died when he was seven years old and his mother entrusted him to the care of the Friars Minor Conventual in his hometown.</excerptum>
+    <excerptum>Lawrence and his mother moved to Venice and it was precisely there that he became acquainted with the Capuchins</excerptum>
+    <excerptum>With his religious profession in 1575, Lawrence became a Capuchin friar and in 1582 he was ordained a priest.</excerptum>
+    <excerptum>He learned with ease the ancient languages, such as Greek, Hebrew and Syriac, as well as modern languages, such as French and German.</excerptum>
+    <excerptum>his knowledge, not only of the Bible but also of the rabbinic literature was so profound that even the Rabbis, impressed and full of admiration, treated him with esteem and respect.</excerptum>
+    <excerptum>he was also able to illustrate Catholic doctrine in an exemplary manner to Christians who, especially in Germany, had adhered to the Reformation.</excerptum>
+    <excerptum>he demonstrated the biblical and patristic foundation of all the articles of faith disputed by Martin Luther.</excerptum>
+    <excerptum>was able to continue without interruption his work as an appreciated and unflagging preacher in many cities of Italy and in different countries</excerptum>
+    <excerptum>within the Order of Capuchins he was professor of theology, novice master, for several mandates minister provincial and definitor general, and finally, from 1602 to 1605, minister general.</excerptum>
+    <excerptum>Time and again both Supreme Pontiffs and Catholic Princes entrusted him with important diplomatic missions, to settle controversies and to encourage harmony among the European States, threatened in those days by the Ottoman Empire.</excerptum>
+    <excerptum>It was precisely on the occasion of one of these diplomatic missions that Lawrence's earthly life ended, in 1619 in Lisbon, where he had gone to see King Philip iii of Spain, to plead the cause of the Neapolitan subjects oppressed by the local authorities.</excerptum>
+    <excerptum>He was canonized in 1881, and his vigorous and intense activity, his vast and harmonious knowledge, earned him the title of Doctor Apostolicus, “Apostolic Doctor”. The title was conferred on him by Bl. Pope John XXIII in 1959, on the occasion of the fourth centenary of his birth.</excerptum>
+    <excerptum>the author of a collection of sermons on Our Lady entitled “Mariale”</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="22 July">
+    <excerptum>At Lisbon, St. Lawrence of Brindisi, confessor, su- perior general of the Capuchin Minorites of St. Francis. Illustrious by his preaching and his ardu- ous labor for the glory of God, he was canonized by Leo XIII., who appointed the 7th of July for his feast day.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="21 July">
+    <excerptum>Saint Lawrence of Brindisi, Priest and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

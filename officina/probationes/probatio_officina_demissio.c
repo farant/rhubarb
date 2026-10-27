@@ -119,13 +119,12 @@ _plagulam_probare (
     constans character* via_aurei,
     constans character* titulus)
 {
-            chorda  fons = _plagulam_legere(piscina, via_fontis);
+            chorda fons = _plagulam_legere(piscina, via_fontis);
     MedullaModulus* modulus;
             chorda  scriptura;
                i32  i;
                i32  m;
 
-    imprimere("\n--- Probans demissionem: %s ---\n", via_fontis);
     CREDO_VERUM (fons.mensura > ZEPHYRUM);
     modulus = _demittere(piscina, piscina_silvae, fons, titulus);
     CREDO_NON_NIHIL (modulus);
@@ -179,51 +178,108 @@ _plagulam_probare (
     }
 }
 
-s32
-principale (vacuum)
+/* piscina silvae PROPRIA sectionis (olim una omnibus blocis) */
+interior vacuum
+_silvam_parare (
+    CredoContextus* c)
 {
-    Piscina* piscina;
-    SilvaPiscina* piscina_silvae;
-    b32 praeteritus;
-
-    piscina = piscina_generare_dynamicum("probatio_demissio",
-        33554432);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina\n");
-        redde I;
-    }
-    piscina_silvae = silva_piscina_generare_dynamicum(
+    c->datum = silva_piscina_generare_dynamicum(
         "probatio_demissio_silva", 33554432);
-    si (!piscina_silvae)
+    si (c->datum == NIHIL)
     {
         imprimere("FRACTA: piscina silvae\n");
-        redde I;
     }
-    credo_aperire(piscina);
+}
 
-    _plagulam_probare(piscina, piscina_silvae,
+interior vacuum
+_silvam_purgare (
+    CredoContextus* c)
+{
+    si (c->datum != NIHIL)
+    {
+        silva_piscina_destruere((SilvaPiscina*)c->datum);
+    }
+}
+
+
+/* ==================================================
+ * PROBARE: plagulae demissae, aureae, vectis lectoris
+ * ================================================== */
+
+interior vacuum
+_scalaria_probare (
+    CredoContextus* c)
+{
+    si (c->datum == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    _plagulam_probare(c->piscina, (SilvaPiscina*)c->datum,
         "officina/probationes/fixa/scalaria.c",
         "officina/probationes/fixa/scalaria.medulla", "scalaria.c");
-    _plagulam_probare(piscina, piscina_silvae,
+}
+
+interior vacuum
+_fluxum_probare (
+    CredoContextus* c)
+{
+    si (c->datum == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    _plagulam_probare(c->piscina, (SilvaPiscina*)c->datum,
         "officina/probationes/fixa/fluxus.c",
         "officina/probationes/fixa/fluxus.medulla", "fluxus.c");
-    _plagulam_probare(piscina, piscina_silvae,
+}
+
+interior vacuum
+_aggregata_probare (
+    CredoContextus* c)
+{
+    si (c->datum == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    _plagulam_probare(c->piscina, (SilvaPiscina*)c->datum,
         "officina/probationes/fixa/aggregata.c",
-        "officina/probationes/fixa/aggregata.medulla",
-        "aggregata.c");
-    _plagulam_probare(piscina, piscina_silvae,
+        "officina/probationes/fixa/aggregata.medulla", "aggregata.c");
+}
+
+interior vacuum
+_statica_probare (
+    CredoContextus* c)
+{
+    si (c->datum == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    _plagulam_probare(c->piscina, (SilvaPiscina*)c->datum,
         "officina/probationes/fixa/statica.c",
         "officina/probationes/fixa/statica.medulla", "statica.c");
+}
 
-    /* structura directa: duplum = functio prima scalariae */
+
+/* ==================================================
+ * PROBARE: structura directa: duplum = functio prima scalariae
+ * ================================================== */
+
+interior vacuum
+_structuram_probare (
+    CredoContextus* c)
+{
+         Piscina* piscina         = c->piscina;
+    SilvaPiscina* piscina_silvae  = (SilvaPiscina*)c->datum;
+
+    si (piscina_silvae == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     {
         chorda fons = _plagulam_legere(piscina,
             "officina/probationes/fixa/scalaria.c");
         MedullaModulus* modulus = _demittere(piscina,
             piscina_silvae, fons, "scalaria.c");
 
-        imprimere("\n--- Probans structuram (duplum) ---\n");
         CREDO_NON_NIHIL (modulus);
         si (modulus != NIHIL)
         {
@@ -246,8 +302,24 @@ principale (vacuum)
             CREDO_AEQUALIS_S32 (ultima->op, MEDULLA_OP_REDDE);
         }
     }
+}
 
-    /* distillatio linearum (M2a): origo -> (via, linea) */
+
+/* ==================================================
+ * PROBARE: distillatio linearum (M2a): origo -> (via, linea)
+ * ================================================== */
+
+interior vacuum
+_distillationem_probare (
+    CredoContextus* c)
+{
+         Piscina* piscina         = c->piscina;
+    SilvaPiscina* piscina_silvae  = (SilvaPiscina*)c->datum;
+
+    si (piscina_silvae == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
     {
         chorda fons = _plagulam_legere(piscina,
             "officina/probationes/fixa/scalaria.c");
@@ -258,7 +330,6 @@ principale (vacuum)
         MedullaModulus* modulus;
         MedullaLineae* lineae;
 
-        imprimere("\n--- Probans distillationem linearum ---\n");
         CREDO_NON_NIHIL (parsura);
         sem = silva_c89_semantica_analysare(piscina_silvae, parsura);
         CREDO_NON_NIHIL (sem);
@@ -292,15 +363,30 @@ principale (vacuum)
                     &via, NIHIL, NIHIL));
         }
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    silva_piscina_destruere(piscina_silvae);
-    piscina_destruere(piscina);
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "demissionem: officina/probationes/fixa/scalaria.c",
+        _scalaria_probare, _silvam_parare, _silvam_purgare, NIHIL,
+        NIHIL },
+    { "demissionem: officina/probationes/fixa/fluxus.c",
+        _fluxum_probare, _silvam_parare, _silvam_purgare, NIHIL,
+        NIHIL },
+    { "demissionem: officina/probationes/fixa/aggregata.c",
+        _aggregata_probare, _silvam_parare, _silvam_purgare, NIHIL,
+        NIHIL },
+    { "demissionem: officina/probationes/fixa/statica.c",
+        _statica_probare, _silvam_parare, _silvam_purgare, NIHIL,
+        NIHIL },
+    { "structuram (duplum)", _structuram_probare, _silvam_parare,
+        _silvam_purgare, NIHIL, NIHIL },
+    { "distillationem linearum", _distillationem_probare,
+        _silvam_parare, _silvam_purgare, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    redde I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("officina_demissio", SECTIONES);
 }

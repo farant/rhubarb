@@ -1,0 +1,54 @@
+<sanctus id="alphonsus-liguori" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Alphonsus Liguori</nomen>
+  <nomen lingua="en" fontes="mr">Alphonsus Maria de Liguori</nomen>
+  <ortus annus="1696" mensis="9" dies="27" locus="Marianella, near Naples" fontes="ce"/>
+  <obitus annus="1787" mensis="8" dies="1" locus="Nocera de' Pagani" fontes="ce"/>
+  <beatificatio annus="1816" fontes="ce"/>
+  <canonizatio modus="formalis" annus="1839" mensis="5" dies="26" papa="Gregory XVI" fontes="ce mr"/>
+  <festum calendarium="generale" mensis="8" dies="1" gradus="memoria" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="8" dies="2" fontes="mr"/>
+  <munus fontes="us mr ce">bishop</munus>
+  <munus fontes="us mr ce">doctor of the Church</munus>
+  <munus fontes="mr ce">founder of the Congregation of the Most Holy Redeemer</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Alphonsus was born at Marianella near Naples on 27 September 1696, the eldest of seven children of an old and noble family; his father was a naval officer. Taught at home by tutors, he became a Doctor of Laws at sixteen and for eight years was a brilliantly successful advocate. In 1723, having lost an important case through misreading a document, he left the courts, and soon after, while visiting the sick in the Hospital for Incurables, heard an interior voice bidding him leave the world. Over his father's opposition he became a cleric and was ordained priest in December 1726. After six years of missions around Naples, on 9 November 1732 he began at Scala the Congregation of the Most Holy Redeemer, whose rule Benedict XIV approved in 1749.</paragraphus>
+    <paragraphus fontes="ce mr">Above all a missionary, he was also the prince of moral theologians, and wrote many devotional works, among them the Glories of Mary. In 1762 obedience to the pope compelled him to accept the small see of St. Agatha of the Goths, which he governed for thirteen years, though a long illness left him paralyzed. He resigned in 1775. In his last years a papal decree recognized only the houses in the Papal States as the Redemptorist Congregation, leaving him cut off from his own order, and he suffered fearful temptations. He died at Nocera on 1 August 1787, nearly ninety-one, was beatified in 1816, canonized in 1839 and declared a Doctor of the Church in 1871.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Alphonsus Liguori" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Alphonsus_Liguori">
+    <excerptum>Alphonsus Liguori, Saint, b. at Marianella, near Naples, 27 September, 1696; d. at Nocera de' Pagani, 1 August, 1787.</excerptum>
+    <excerptum>The family was an old and noble one, though the branch to which the Saint belonged had become somewhat impoverished. Alphonsus's father, Don Joseph de' Liguori was a naval officer and Captain of the Royal Galleys.</excerptum>
+    <excerptum>He was the eldest of seven children and the hope of his house.</excerptum>
+    <excerptum>Alphonsus was not sent to school but was educated by tutors under his father's eye. At the age of sixteen, on 21 January, 1713, he took his degree as Doctor of Laws</excerptum>
+    <excerptum>In the eight years of his career as advocate, years crowded with work, he is said never to have lost a case.</excerptum>
+    <excerptum>In 1723 there was a lawsuit in the courts between a Neapolitan nobleman, whose name has not come down to us, and the Grand Duke of Tuscany</excerptum>
+    <excerptum>A piece of evidence was handed to him which he had read and re-read many times, but always in a sense the exact contrary of that which he now saw it to have.</excerptum>
+    <excerptum>"You are right. I have been mistaken. This document gives you the case."</excerptum>
+    <excerptum>left the court almost beside himself, saying: "World, I know you now. Courts, you shall never see me more."</excerptum>
+    <excerptum>the young advocate had gone to perform a favourite act of charity by visiting the sick in the Hospital for Incurables. Suddenly he found himself surrounded by a mysterious light; the house seemed to rock, and an interior voice said: "Leave the world and give thyself to Me."</excerptum>
+    <excerptum>was likely to offer a strenuous opposition to his leaving the world</excerptum>
+    <excerptum>He had to endure a real persecution for two months. In the end a compromise was arrived at. Don Joseph agreed to allow his son to become a priest</excerptum>
+    <excerptum>On 6 April, 1726, he was ordained deacon</excerptum>
+    <excerptum>On 21 December of the same year, at the age of thirty, he was ordained priest. For six years he laboured in and around Naples, giving missions for the Propaganda</excerptum>
+    <excerptum>9 November, 1732, the "Congregation of the Most Holy Redeemer", or as it was called for seventeen years, "of the Most Holy Saviour", was begun in a little hospice belonging to the nuns of Scala.</excerptum>
+    <excerptum>In 1749, the Rule and Institute of men were approved by Pope Benedict XIV</excerptum>
+    <excerptum>Alphonsus was lawyer, founder, religious superior, bishop, theologian, and mystic, but he was above all a missionary</excerptum>
+    <excerptum>In 1762, there was no escape and he was constrained by formal obedience to the Pope to accept the Bishopric of St. Agatha of the Goths, a very small Neapolitan diocese</excerptum>
+    <excerptum>he wept and prayed and spent days and nights in unremitting labour for thirteen years.</excerptum>
+    <excerptum>an attack which lasted from May, 1768, to June, 1769, and left him paralyzed to the end of his days.</excerptum>
+    <excerptum>In February, 1775, however, Pius VI was elected Pope, and the following May he permitted the Saint to resign his see.</excerptum>
+    <excerptum>recognized the houses in the Papal States as alone constituting the Redemptorist Congregation</excerptum>
+    <excerptum>So the Saint was cut off from his own Order by the Pope who was to declare him "Venerable".</excerptum>
+    <excerptum>Fearful temptations against every virtue crowded upon him</excerptum>
+    <excerptum>on 1 August, 1787, as the midday Angelus was ringing, the Saint passed peacefully to his reward. He had nearly completed his ninety-first year. He was declared "Venerable", 4 May, 1796; was beatified in 1816, and canonized in 1839. In 1871, he was declared a Doctor of the Church.</excerptum>
+    <excerptum>Both of them were canonized on the same day as the Holy Doctor, 26 May, 1839.</excerptum>
+    <excerptum>It was this which made him the prince of moral theologians</excerptum>
+    <excerptum>Besides his Moral Theology, the Saint wrote a large number of dogmatic and ascetical works nearly all in the vernacular. The "Glories of Mary"</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="2 August">
+    <excerptum>IT Nocera-de-Pagani, St. Alphonsus Maria de Liguori, bishop of St. Agatha of the Goths, and founder of the Congregation of the Most Holy Redeemer, distinguished by his zeal for the salvation of souls, by his writings, his preaching, and his example.</excerptum>
+    <excerptum>He was inscribed on the calendar of the saints by pope Gregory XVI., in the year 1839, the fifty-second after his happy death, and was declared Doctor of the Universal Church by Pius IX.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="1 August">
+    <excerptum>Saint Alphonsus Liguori, Bishop and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

@@ -27,6 +27,11 @@
 #include "scriba_figurae.h"
 #include "organum_montatio.h"
 
+/* comites P2: porta librorum hospitis - praefixum -> liber (aperitur
+ * aut creatur semel; hospes tenet); vacuum -> liber montationis.
+ * NIHIL si aperiri nequit. */
+nomen ScribaLiber* (*ScribaLibrorum)(vacuum* ctx, chorda praefixum);
+
 /* MONTATIO (insula-rami-plan T1a): scriba in repositorio dato, ramo
  * <scriba id> (aut radice): documentum in spatio id, canones et
  * domini in ramo, contextus (ramus intus), registra propria. Contextus
@@ -43,6 +48,12 @@ nomen structura {
      * doc = pagina CURRENS - scriba_reficere eum cum actionibus
      * concordat post navigationem */
             ScribaLiber* liber;
+    /* comites P2: liber montationis (domus), porta librorum hospitis,
+     * clavis visus montationis (comes: '<praefixum>/visus') */
+             ScribaLiber* liber_domus;
+          ScribaLibrorum  libri;
+                  vacuum* libri_ctx;
+                  chorda  visus_domus;
 } ScribaMontatio;
 
 nomen structura {
@@ -107,6 +118,49 @@ scriba_librum_ponere (
     ScribaMontatio* m,
        ScribaLiber* liber);
 
+/* D5: visum montatum ad paginam nominatam libri sui vertere (plagula
+ * visus scribitur, ut navigatio). FALSUM si liber NIHIL aut nomen
+ * ignotum. */
+b32
+scriba_paginam_ostendere (
+    ScribaMontatio* m,
+            chorda  titulus);
+
+/* portam ponere (vicus: latus sinistrum); NIHIL = campus 'liber'
+ * neglegitur */
+vacuum
+scriba_libros_ponere (
+     ScribaMontatio* m,
+     ScribaLibrorum  porta,
+             vacuum* ctx);
+
+/* comites P2: visum ad librum praefixi vertere (vacuum = liber
+ * montationis). Pagina: comes - pagina visa ultima EIUS libri
+ * (plagula '<praefixum>/visus'); liber montationis - plagula visus
+ * montationis (ut prius), ita pagina communis non perditur. Campus
+ * 'liber' scribitur. FALSUM si porta nulla aut liber aperiri nequit. */
+b32
+scriba_librum_praefixi_ponere (
+    ScribaMontatio* m,
+            chorda  praefixum);
+
+/* comites P3: librum praefixi ostendere cum titulo vectis (campus
+ * 'liber_titulus'; vacuum = vectis nulla): scriba_librum_praefixi_
+ * ponere et titulus. FALSUM ut ille. */
+b32
+scriba_comitem_ponere (
+    ScribaMontatio* m,
+            chorda  praefixum,
+            chorda  titulus);
+
+/* D5 S3c: post semitam a vico applicatam (campus 'pagina', semita
+ * scriba/<pagina>): visus ad paginam eam vertitur
+ * (scriba_paginam_ostendere). ctx = ScribaMontatio*. FALSUM si liber
+ * nullus aut pagina ignota. */
+b32
+scriba_semitam_secuta (
+    vacuum* ctx);
+
 /* Visus stalus reficitur (vicus-latera S2b): si alius visus paginam
  * commisit (cursor documenti != cursor_laboris), folium laboris ex
  * proiectione - visus sine gestu pendente solum (commissio in omni
@@ -116,6 +170,12 @@ scriba_librum_ponere (
 b32
 scriba_reficere (
     ScribaMontatio* m);
+
+/* vicus quies T6: VERUM dum opus aut iussum dilatum pendet (pulsus
+ * crebri necessarii) */
+b32
+scriba_occupata (
+    constans ScribaMontatio* m);
 
 /* Argumenta communia: -fumus (volumen temporarium), -volumen <via>
  * (ordinarie "scriba.volumen"). Reddit volumen apertum aut NIHIL. */

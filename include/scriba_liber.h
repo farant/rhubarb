@@ -19,6 +19,7 @@
 #include "internamentum.h"
 #include "volumen.h"
 #include "scriba_documentum.h"
+#include "xar.h"
 
 nomen structura ScribaLiber ScribaLiber;
 
@@ -46,8 +47,39 @@ scriba_liber_aperire_in_spatio (
                     i32  latitudo,
                     i32  altitudo);
 
+/* comites pigri (lector L5): liber in spatio sine scriptura. Index
+ * absens: pagina "1" in memoria, paginae documenta nascitura; nihil
+ * scribitur donec liber nascitur - actum primum non vacuum, pagina nova
+ * aut nominata. Natalis: index scribitur, deinde natale(ctx, liber).
+ * Index praesens: ut scriba_liber_aperire_in_spatio (natus). */
+ScribaLiber*
+scriba_liber_aperire_pigre (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* praefixum,
+                    i32  latitudo,
+                    i32  altitudo,
+                    b32  (*natale)(vacuum* ctx, ScribaLiber* liber),
+                 vacuum* natale_ctx);
+
+/* liber in volumine exstat? (aperire_in_spatio: semper; pigre: post
+ * natalem) */
+b32
+scriba_liber_natus (
+    constans ScribaLiber* l);
+
+/* LECTIO SOLA: liber in spatio exstat (plagula '<praefixum>/paginae')?
+ * Nihil aperitur, nihil scribitur */
+b32
+scriba_liber_exstat (
+                Volumen* volumen,
+     constans character* praefixum,
+                Piscina* piscina);
+
 /* documentum paginae (aperitur aut creatur, semel); NIHIL si nomen
- * ignotum */
+ * ignotum. Liber nondum natus: documentum nasciturum (scriptura prima
+ * librum nascit) */
 ScribaDocumentum*
 scriba_liber_pagina (
     ScribaLiber* l,
@@ -82,5 +114,88 @@ ScribaDocumentum*
 scriba_liber_paginam_condere (
     ScribaLiber* l,
          chorda  titulus);
+
+/* lineae textus libri in spatio dato (e.g. "dies/2026-10-19"),
+ * LECTIO SOLA: liber absens = nullae lineae, nihil scribitur (index
+ * non creatur - scriba_liber_aperire_in_spatio paginam "1" scriberet).
+ * Paginae ordine indicis; lineae vacuae (aut spatiis solis) omissae;
+ * maximum = lineae summae (0 = omnes). Xar de chorda in exitus. */
+b32
+scriba_liber_lineas_legere (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* praefixum,
+                    i32  maximum,
+                    Xar* exitus);
+
+/* D5 (indagatio S2): nomina paginarum, LECTIO SOLA, ordine indicis;
+ * praefixum NIHIL = liber communis vici (index 'scriba/paginae').
+ * Liber absens = nulla (VERUM); FALSUM si index malus. Xar de chorda
+ * in exitus. */
+b32
+scriba_liber_nomina_legere (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* praefixum,
+                    Xar* exitus);
+
+/* D5: lineae paginae unius, LECTIO SOLA (vacuae omissae, ut
+ * scriba_liber_lineas_legere); praefixum NIHIL = liber communis.
+ * Pagina absens = nullae lineae. */
+b32
+scriba_liber_paginam_legere (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* praefixum,
+                 chorda  titulus,
+                    Xar* exitus);
+
+/* comites P2: praefixum libri ("comes/nomenclator/1"; liber in spatio
+ * aperto, scriba_liber_aperire_in_spatio); liber communis (index
+ * 'scriba/paginae'): vacuum */
+chorda
+scriba_liber_praefixum (
+    constans ScribaLiber* l);
+
+/* comites P5b: nota libri comitis in plagula '<praefixum>/comes'
+ * (<comes><titulus>..</titulus><semita>..</semita></comes>; textus
+ * liberorum, non attributa - scriptor attributa cruda scribit): titulus comitis ("Notes ·
+ * Thursday, October 22") et semita PLENA visus comitati (vacua: visus
+ * sine semitis, e.g. terminale - attributum omittitur). Scribitur
+ * solum si mutata (sequela actum non addit). */
+b32
+scriba_liber_comitem_notare (
+                Volumen* volumen,
+    InternamentumChorda* intern,
+     constans character* praefixum,
+                 chorda  titulus,
+                 chorda  semita,
+                Piscina* piscina);
+
+/* LECTIO SOLA; nota absens aut mala: FALSUM, *titulus et *semita
+ * vacuae */
+b32
+scriba_liber_comitem_legere (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* praefixum,
+                 chorda* titulus,
+                 chorda* semita);
+
+/* pensa K2: textus libri TOTUS cum lineis vacuis (sectiones separant),
+ * LECTIO SOLA: pagina quaeque lineis suis (vacuae finales demptae),
+ * paginae "\n\n" separatae; liber absens = textus vacuus (VERUM);
+ * FALSUM si index malus. praefixum NIHIL = liber communis */
+b32
+scriba_liber_textum_legere (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* praefixum,
+                 chorda* exitus);
 
 #endif /* SCRIBA_LIBER_H */

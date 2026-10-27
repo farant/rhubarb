@@ -1,0 +1,43 @@
+<sanctus id="cyril-of-alexandria" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Cyril of Alexandria</nomen>
+  <obitus annus="444" mensis="6" locus="Alexandria" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="6" dies="27" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="1" dies="28" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="2" dies="9" fontes="mr2"/>
+  <munus fontes="ce mr us">bishop</munus>
+  <munus fontes="ce mr2 us">doctor of the Church</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Cyril was the nephew of Theophilus, Patriarch of Alexandria, whom he accompanied to the Synod of the Oak in 402, and may for a time have been a monk. On 18 October 412, three days after his uncle's death and only after a riot between his supporters and those of a rival, he was consecrated patriarch. His early years were stormy: he shut the churches of the Novatians, drove the Jews from the city after they had massacred Christians, and clashed with the prefect Orestes. A mob led by a lector murdered the philosopher Hypatia; Socrates says this brought great disgrace on the Church of Alexandria and its bishop, but does not suggest that Cyril himself was to blame.</paragraphus>
+    <paragraphus fontes="ce mr">From 429 he defended the title Theotokos against Nestorius of Constantinople and, with the authority of Pope Celestine, presided over the Council of Ephesus, which deposed Nestorius; the Catholic Encyclopedia judges his opening it before John of Antioch arrived an error with disastrous results. He was later reconciled with John. He died in June 444, on the 9th or the 27th, after nearly thirty-two years as bishop. Renowned for his teaching on the hypostatic union, he was honoured in the East as one of the greatest Doctors, and Leo XIII approved his Mass and Office as a Doctor of the Church in 1883.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Cyril of Alexandria" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Cyril_of_Alexandria">
+    <excerptum>was the son of the brother of Theophilus, Patriarch of Alexandria; if he is the Cyril addressed by Isidore of Pelusium in Ep. xxv of Bk. I, he was for a time a monk.</excerptum>
+    <excerptum>He accompanied Theophilus to Constantinople when that bishop held the "Synod of the Oak" in 402</excerptum>
+    <excerptum>Theophilus died 15 Oct., 412, and on the 18th Cyril was consecrated his uncle's successor, but only after a riot between his supporters and those of his rival Timotheus.</excerptum>
+    <excerptum>one of his first acts was to plunder and shut the churches of the Novatians. He also drove out of Alexandria the Jews</excerptum>
+    <excerptum>But they had caused tumults and had massacred the Christians</excerptum>
+    <excerptum>the Prefect of Egypt, Orestes, who was very angry at the expulsion of the Jews was also jealous of the power of Cyril</excerptum>
+    <excerptum>A mob led by a lector, named Peter, dragged her to a church and tore her flesh with potsherds til she died. This brought great disgrace, says Socrates, on the Church of Alexandria and on its bishop</excerptum>
+    <excerptum>and Socrates does not suggest that Cyril himself was to blame.</excerptum>
+    <excerptum>the Antiochene Nestorius became Patriarch of Constantinople.</excerptum>
+    <excerptum>Against him Cyril taught the use of the term Theotokus in his Paschal letter for 429</excerptum>
+    <excerptum>He therefore took the place of president, not only as the highest of rank, but also as still holding the place of Celestine</excerptum>
+    <excerptum>he opened the council without John, on 22 June, in spite of the request of sixty-eight bishops for a delay. This was an initial error, which had disastrous results.</excerptum>
+    <excerptum>The council declared that it was "of necessity impelled" by the canons and by the letter of Celestine to declare Nestorius deposed and excommunicated.</excerptum>
+    <excerptum>John sent Paul, Bishop of Emesa, as his plenipotentiary to Alexandria, and he patched up reconciliation with Cyril.</excerptum>
+    <excerptum>He died on the 9th or the 27th of June, 444, after an episcopate of nearly thirty-two years.</excerptum>
+    <excerptum>St. Cyril taught the personal, or hypostatic, union in the plainest terms</excerptum>
+    <excerptum>In the East he was always honoured as one of the greatest of the Doctors. His Mass and Office as a Doctor of the Church were approved by Leo XIII in 1883.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="28 January">
+    <excerptum>At Alexandria, the commemoration of many holy martyrs</excerptum>
+    <excerptum>Also, St. Cyril, bishop of the same city, a most celebrated defender of the Catholic faith, who rested in peace with a great reputation for learning and sanctity.</excerptum>
+  </fons>
+  <fons id="mr2" opus="mr1916" locus="9 February">
+    <excerptum>At Alexandria, St. Cyril, bishop and doctor of the church. He is mentioned on the 28th of January.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="27 June">
+    <excerptum>Saint Cyril of Alexandria, Bishop and Doctor of the Church</excerptum>
+  </fons>
+</sanctus>

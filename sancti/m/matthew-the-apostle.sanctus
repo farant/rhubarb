@@ -1,0 +1,42 @@
+<sanctus id="matthew-the-apostle" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Matthew the Apostle</nomen>
+  <nomen lingua="alia" fontes="ce">Levi</nomen>
+  <obitus martyrium="verum" fontes="mr ce"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="9" dies="21" gradus="festum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="9" dies="21" fontes="mr"/>
+  <festum calendarium="martyrologium" mensis="5" dies="6" nota="translation of his relics to Salerno" fontes="mrt"/>
+  <munus fontes="us mr ce">apostle</munus>
+  <munus fontes="us mr ce">evangelist</munus>
+  <munus fontes="mr">martyr</munus>
+  <descriptio>
+    <paragraphus fontes="ce">Matthew, named in the lists of the Apostles, was a tax-gatherer at Capharnaum who collected customs for Herod Antipas. He is the man the Gospels of Mark and Luke call Levi, "sitting at the receipt of custom"; Levi was his original name, and he was afterwards called Matthew. When Jesus called him he rose, followed Him and gave a feast in his house, where publicans and sinners sat at table with Christ, and Jesus answered the Pharisees' complaint: "I came not to call the just, but sinners". He followed Christ to the Passion, was a witness of the Resurrection and was present at the Ascension.</paragraphus>
+    <paragraphus fontes="ce mr mrt">Of his later life the Catholic Encyclopedia finds only inaccurate or legendary reports. Irenaeus says he preached to the Hebrews, and Eusebius that he gave them his Gospel in their own tongue before going to other countries; ancient writers differ on where he preached, but almost all name Ethiopia, which the Catholic Encyclopedia takes to be a land south of the Caspian Sea, not Ethiopia in Africa. The Martyrology records that he suffered martyrdom in Ethiopia while preaching, but the place and manner of his death are disputed, and one ancient writer, Heracleon, denied that he died a martyr, against all other ancient testimony. The Martyrology also commemorates the translation of his body to Salerno. He is shown as a winged man.</paragraphus>
+  </descriptio>
+  <fons id="mr" opus="mr1916" locus="21 September">
+    <excerptum>birthday of St. Matthew, apostle and evangelist, who suffered martyrdom in Ethiopia, while engaged in preaching.</excerptum>
+    <excerptum>The Gospel written by him in Hebrew was, by his own revelation, found in the time of the emperor Zeno</excerptum>
+  </fons>
+  <fons id="mrt" opus="mr1916" locus="6 May">
+    <excerptum>At Salerno, the Translation of St. Matthew, apostle. His sacred body previously transferred from Ethiopia to various countries, was finally taken to Salerno</excerptum>
+  </fons>
+  <fons id="ce" opus="ce1913" locus="St. Matthew" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Matthew">
+    <excerptum>Apostle and evangelist. The name Matthew is derived from the Hebrew Mattija</excerptum>
+    <excerptum>and then four times in the list of the Apostles</excerptum>
+    <excerptum>The man designated in Matthew 9:9, as "sitting in the custom house", and "named Matthew" is the same as Levi, recorded in Mark 2:14, and Luke 5:27, as "sitting at the receipt of custom".</excerptum>
+    <excerptum>Hence Levi was the original name of the man who was subsequently called Matthew</excerptum>
+    <excerptum>As tax-gatherer at Capharnaum, he collected custom duties for Herod Antipas</excerptum>
+    <excerptum>When summoned by Jesus, Matthew arose and followed Him and tendered Him a feast in his house, where tax-gatherers and sinners sat at table with Christ and His disciples.</excerptum>
+    <excerptum>This drew forth a protest from the Pharisees whom Jesus rebuked in these consoling words: "I came not to call the just, but sinners".</excerptum>
+    <excerptum>accompanying Him up to the time of His Passion and, in Galilee, was one of the witnesses of His Resurrection. He was also amongst the Apostles who were present at the Ascension</excerptum>
+    <excerptum>Of Matthew's subsequent career we have only inaccurate or legendary data. St. Irenæus tells us that Matthew preached the Gospel among the Hebrews</excerptum>
+    <excerptum>Eusebius maintains that, before going into other countries, he gave them his Gospel in the mother tongue.</excerptum>
+    <excerptum>Ancient writers are not as one as to the countries evangelized by Matthew, but almost all mention Ethiopia to the south of the Caspian Sea (not Ethiopia in Africa)</excerptum>
+    <excerptum>According to Heracleon, who is quoted by Clement of Alexandria, Matthew did not die a martyr, but this opinion conflicts with all other ancient testimony.</excerptum>
+    <excerptum>There is a disagreement as to the place of St. Matthew's martyrdom and the kind of torture inflicted on him, therefore it is not known whether he was burned, stoned, or beheaded.</excerptum>
+    <excerptum>St. Matthew is represented under the symbol of a winged man</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="21 September">
+    <excerptum>Saint Matthew, Apostle and Evangelist</excerptum>
+  </fons>
+</sanctus>

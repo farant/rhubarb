@@ -547,15 +547,21 @@ _auctor_est (
 }
 
 /* T32 f / T38 c: programma stellae verbi minimum - obiectum verbi ANTE
- * subiectum (gradus II, strictus, omnes), fiducia a vocante ponenda */
+ * subiectum (gradus II, strictus, omnes), fiducia a vocante ponenda.
+ * Textus in piscina vocantis (non staticus: sectiones statum communem
+ * non scribunt; programma textum fortasse non copiat). */
 interior OratioProgramma*
 _programma_stellae (
                      Piscina* piscina,
          InternamentumChorda* intern,
     OratioVocabulariumVitium* vitium)
 {
-    hic_manens character textus[4096];
+    character* textus = (character*)piscina_allocare(piscina, 4096);
 
+    si (textus == NIHIL)
+    {
+        redde NIHIL;
+    }
     textus[0] = '\0';
     strcat(textus,
         "<regula titulus=\"umbra-obiectum-verbi-praecedente-proximo\" gradus=\"2\"><EXEMPLAR cursus=\"strictus\" quaesitio=\"omnes\" output=\"$umbra_obiectum_verbi_praecedente_proximo\"><elementa><vocabulum n=\"$w\"><analyses><* n=\"$b\"><casus>3</casus></></analyses></vocabulum><vocabulum n=\"$v\"><analyses><analysis-verbi n=\"$a\"><umbrae><umbra n=\"$u\"><relatio>4</relatio><casus>3</casus></umbra>");
@@ -765,82 +771,105 @@ _index_regulae (
     redde (s32)-I;
 }
 
+/* FIXURA SUITAE: praeludium semel factum (parare_suitae;
+ * assertiones eius ibi); sectiones id per monstratorem
+ * constantem LEGUNT. */
+nomen structura {
+     constans character* radix;
+      OratioVocabularia  vocabularia;
+    InternamentumChorda* intern;
+    MateriaLexiconRatum  ratum;
+        OratioProgramma* programma;
+} FixuraResolutionis;
 
-s32
-principale (vacuum)
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
 {
-                     Piscina* piscina;
-          constans character* radix;
-           OratioVocabularia  vocabularia;
+          FixuraResolutionis* f;
     OratioVocabulariumVitium  vitium;
-         InternamentumChorda* intern;
-         MateriaLexiconRatum  ratum;
           MateriaLexIudicium  iudicium;
-             OratioProgramma* programma;
 
-    piscina = piscina_generare_dynamicum("probatio_oratio_resolutio",
-        268435456);
-    credo_aperire(piscina);
-    radix = getenv("RHUBARB_RADIX");
-    si (radix == NIHIL)
+    f = (FixuraResolutionis*)piscina_allocare(c->piscina,
+        magnitudo(FixuraResolutionis));
+    si (f == NIHIL)
     {
-        radix = ".";
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    CREDO_VERUM (oratio_vocabularia_onerare(piscina, radix,
-        &vocabularia,
+    f->radix = getenv("RHUBARB_RADIX");
+    si (f->radix == NIHIL)
+    {
+        f->radix = ".";
+    }
+    CREDO_VERUM (oratio_vocabularia_onerare(c->piscina, f->radix,
+        &f->vocabularia,
         &vitium));
-    intern = internamentum_creare(piscina);
-    CREDO_NON_NIHIL (intern);
-    CREDO_VERUM (materia_lexicon_ratum_facere(&ratum, &ORATIO_LEXICON,
+    f->intern = internamentum_creare(c->piscina);
+    CREDO_NON_NIHIL (f->intern);
+    CREDO_VERUM (materia_lexicon_ratum_facere(&f->ratum,
+        &ORATIO_LEXICON,
         &iudicium));
-    si (vocabularia.la == NIHIL || intern == NIHIL)
+    si (f->vocabularia.la == NIHIL || f->intern == NIHIL)
     {
-        credo_imprimere_compendium();
-        redde I;
+        redde;
     }
-
-    imprimere("\n--- I. Programma ---\n");
-    programma = oratio_resolutio_programma_onerare(piscina, intern,
-        radix,
+    f->programma = oratio_resolutio_programma_onerare(c->piscina,
+        f->intern,
+        f->radix,
         &vitium);
-    CREDO_NON_NIHIL (programma);
-    si (programma == NIHIL)
+    CREDO_NON_NIHIL (f->programma);
+    si (f->programma == NIHIL)
     {
         imprimere("  %s:%d %s\n", vitium.plagula ? vitium.plagula : "?",
             (integer)vitium.linea, vitium.causa ? vitium.causa : "-");
-        credo_imprimere_compendium();
-        redde I;
+        redde;
+    }
+    c->datum = f;
+}
+
+interior vacuum
+_programma_probare (
+    CredoContextus* c)
+{
+                        Piscina* piscina = c->piscina;
+    constans FixuraResolutionis* fixura =
+        (constans FixuraResolutionis*)c->suita;
+       OratioVocabulariumVitium vitium;
+
+    si (fixura == NIHIL)
+    {
+        redde;
     }
         /* T18: regula linguae PRIMA (prioritas: lingua documenti ante
      * casus), deinde adpositiones */
         /* T19b: regulae priorum classium (XI, lingua custodita) ANTE
      * regulam linguae (prima quae valet vincit), casus post; ordo per
      * TITULOS iudicatur, non per indices literales */
-    CREDO_VERUM (xar_numerus(programma->regulae) >= (i32)XIV);
+    CREDO_VERUM (xar_numerus(fixura->programma->regulae) >= (i32)XIV);
     {
-                s32 auxiliare_la   = _index_regulae(programma,
+                s32 auxiliare_la   = _index_regulae(fixura->programma,
                     "auxiliare-primum-latinum");
-        s32 auxiliare_en   = _index_regulae(programma,
+        s32 auxiliare_en   = _index_regulae(fixura->programma,
             "auxiliare-primum-anglicum");
-        s32 supra          = _index_regulae(programma,
+        s32 supra          = _index_regulae(fixura->programma,
             "supra-adverbium-latinum");
-        s32 adpositio_la   = _index_regulae(programma,
+        s32 adpositio_la   = _index_regulae(fixura->programma,
             "adpositio-prima-latina");
-        s32 subordinans_la = _index_regulae(programma,
+        s32 subordinans_la = _index_regulae(fixura->programma,
             "subordinans-prima-latina");
-        s32 numerale_en    = _index_regulae(programma,
+        s32 numerale_en    = _index_regulae(fixura->programma,
             "numerale-primum-anglicum");
-        s32 lingua         = _index_regulae(programma,
+        s32 lingua         = _index_regulae(fixura->programma,
             "lingua-documenti-anglica");
-                s32 accusativum    = _index_regulae(programma,
+                s32 accusativum    = _index_regulae(fixura->programma,
                     "umbra-obiectum-accusativi");
-        s32 ablativum      = _index_regulae(programma,
+        s32 ablativum      = _index_regulae(fixura->programma,
             "umbra-obiectum-ablativi");
 
 
         /* T19e: regulae Anglicae testimonii IV in capite (exceptio a,
          * nomen proprium capitale, umbrae verbi II) ANTE priores */
-        CREDO_AEQUALIS_S32 (_index_regulae(programma,
+        CREDO_AEQUALIS_S32 (_index_regulae(fixura->programma,
             "a-determinans-anglicum"), ZEPHYRUM);
         CREDO_AEQUALIS_S32 (auxiliare_la, (s32)IV);
         CREDO_AEQUALIS_S32 (auxiliare_en, (s32)V);
@@ -857,17 +886,17 @@ principale (vacuum)
          * gradus I = XIX regulae (0..XVIII) */
                 /* T19i: prior determinantium certorum XVII ante umbras obiecti
          * (caput lectionis determinantis ligatur) */
-        CREDO_AEQUALIS_S32 (_index_regulae(programma,
+        CREDO_AEQUALIS_S32 (_index_regulae(fixura->programma,
             "determinans-primum-latinum"), (s32)XVII);
         CREDO_AEQUALIS_S32 (accusativum, (s32)XVIII);
         CREDO_AEQUALIS_S32 (ablativum, (s32)XIX);
         /* T19f: implentes casus ignoti (nomen proprium capitale) -
          * obiectum XX (gradus I), capita post (gradus II/III) */
-                CREDO_AEQUALIS_S32 (_index_regulae(programma,
+                CREDO_AEQUALIS_S32 (_index_regulae(fixura->programma,
                     "umbra-obiectum-incerti-proprii"), (s32)XX);
                 /* T19k: implens ignotus XXI (gradus I); capita ignoti mensurata
          * et ablata (53-57 % chartis) */
-        CREDO_AEQUALIS_S32 (_index_regulae(programma,
+        CREDO_AEQUALIS_S32 (_index_regulae(fixura->programma,
             "umbra-obiectum-ignoti"), (s32)XXI);
                 /* T19h: IANUA STRICTA capitum - regulae capitis XVI cursu
          * stricto gradu II (XX..XXXV, titulo -proximo), eaedem cursu
@@ -875,16 +904,17 @@ principale (vacuum)
          * gradu I: strictae XXI..XXXVI, laxae XXXVII..LII) */
                 /* T27: gradus strictus unitus XIV -> II: regulae XLII
                  * (strictae XXII..XXV cum incertis, laxae XXVI..XLI) */
-                CREDO_AEQUALIS_I32 (xar_numerus(programma->regulae),
+                CREDO_AEQUALIS_I32 (xar_numerus(fixura->programma->regulae),
                                 (i32)XLVIII);   /* T31 a: + subiectum IV; T31 b: + obiectum verbi II (strictae; laxae recusatae) */
         {
             i32 k;
 
-            per (k = ZEPHYRUM; k < xar_numerus(programma->regulae); k++)
+            per (k = ZEPHYRUM; k
+                < xar_numerus(fixura->programma->regulae); k++)
             {
                 constans OratioRegula* r =
                     (constans OratioRegula*)xar_obtinere(
-                    programma->regulae, k);
+                    fixura->programma->regulae, k);
 
                                                 CREDO_AEQUALIS_I32 (r->gradus,
                                                     k <= (i32)XXI ? I
@@ -894,11 +924,11 @@ principale (vacuum)
             {
                 constans OratioRegula* prima =
                     (constans OratioRegula*)xar_obtinere(
-                                                            programma->regulae,
+                                                            fixura->programma->regulae,
                                                             (i32)XXII);
                 constans OratioRegula* laxa =
                     (constans OratioRegula*)xar_obtinere(
-                                        programma->regulae,
+                                        fixura->programma->regulae,
                                         (i32)XXX);   /* T31 a/b: laxa prima post subiecta et obiecta stricta */
 
                 CREDO_VERUM (_aequalis(prima->titulus,
@@ -910,30 +940,35 @@ principale (vacuum)
     }
 
     CREDO_VERUM (((constans OratioRegula*)xar_obtinere(
-        programma->regulae, ZEPHYRUM))->textus.mensura > (i32)100);
+        fixura->programma->regulae, ZEPHYRUM))->textus.mensura
+            > (i32)100);
 
     imprimere("  regulae %d\n",
-        (integer)xar_numerus(programma->regulae));
+        (integer)xar_numerus(fixura->programma->regulae));
     /* programma malum: sine titulo -> linea; textus non STML */
     {
         OratioProgramma* malum =
             oratio_resolutio_programma_legere(piscina,
-            intern, _l("<regula><consilium/></regula>\n"), &vitium);
+            fixura->intern, _l("<regula><consilium/></regula>\n"),
+            &vitium);
 
         CREDO_NIHIL (malum);
         CREDO_VERUM (vitium.causa != NIHIL
             && strstr(vitium.causa, "titulo") != NIHIL);
         CREDO_AEQUALIS_I32 (vitium.linea, I);
-        malum = oratio_resolutio_programma_legere(piscina, intern,
+        malum = oratio_resolutio_programma_legere(piscina,
+            fixura->intern,
             _l("<regula titulus=\"x\">\n"), &vitium);
         CREDO_NIHIL (malum);
-        malum = oratio_resolutio_programma_legere(piscina, intern,
+        malum = oratio_resolutio_programma_legere(piscina,
+            fixura->intern,
             _l("<nihil/>\n"), &vitium);
         CREDO_NON_NIHIL (malum);
         CREDO_AEQUALIS_I32 (malum == NIHIL ? (i32)-I
             : xar_numerus(malum->regulae), ZEPHYRUM);
         /* radix absens */
-        CREDO_NIHIL (oratio_resolutio_programma_onerare(piscina, intern,
+        CREDO_NIHIL (oratio_resolutio_programma_onerare(piscina,
+            fixura->intern,
             "/nemo/hic", &vitium));
         CREDO_VERUM (vitium.causa != NIHIL
             && strcmp(vitium.causa, "plagula absens") == ZEPHYRUM);
@@ -954,16 +989,31 @@ principale (vacuum)
     /* T38 a: CONTEXTUS DECLARATUS - aditus novus cum {lingua, dialectus,
      * forma} et vetus (classicus, prosa delegans) arborem eandem
      * reddunt: nihil contextum legit ante decretorem (T38 c) */
-    imprimere("\n--- I b. Contextus declaratus (T38 a) ---\n");
+}
+
+interior vacuum
+_contextum_probare (
+    CredoContextus* c)
+{
+                        Piscina* piscina = c->piscina;
+    constans FixuraResolutionis* fixura =
+        (constans FixuraResolutionis*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
            OratioPartesCensus  census_a;
            OratioPartesCensus  census_b;
         OratioResolutioCensus  ca;
         OratioResolutioCensus  cb;
               OratioContextus  contextus;
-                 MateriaNodus* a = _documentum(piscina, &vocabularia,
+                 MateriaNodus* a = _documentum(piscina,
+                     &fixura->vocabularia,
                      "Puella bona ambulat.\n", &census_a);
-                MateriaNodus* b = _documentum(piscina, &vocabularia,
+                MateriaNodus* b = _documentum(piscina,
+                    &fixura->vocabularia,
                     "Puella bona ambulat.\n", &census_b);
                           i32 k;
 
@@ -977,11 +1027,13 @@ principale (vacuum)
         contextus.forma      = (s32)ORATIO_FORMA_PROSA;
         oratio_resolutio_census_vacare(&ca);
         oratio_resolutio_census_vacare(&cb);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "latina", a, &ca));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "latina", a, &ca));
         CREDO_VERUM (oratio_resolutio_applicare_contextu(piscina,
-            intern,
-            &ratum, programma, (s32)-I, &contextus, b, &cb));
+            fixura->intern,
+            &fixura->ratum, fixura->programma, (s32)-I, &contextus, b,
+            &cb));
         per (k = ZEPHYRUM; k < (i32)III; k++)
         {
             CREDO_AEQUALIS_S32 (_casus(_vocabulum(a, k), ZEPHYRUM),
@@ -1004,7 +1056,20 @@ principale (vacuum)
      * cum linea; fixtura exspectata (LII ordines manu derivati in
      * worklog resolutionis; generator pondera.py aequalis per portam
      * pythonicam); limen ordinarium XX */
-    imprimere("\n--- I c. Tabula ponderum (T38 b) ---\n");
+}
+
+interior vacuum
+_pondera_probare (
+    CredoContextus* c)
+{
+                        Piscina* piscina = c->piscina;
+    constans FixuraResolutionis* fixura =
+        (constans FixuraResolutionis*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
                  OratioProgramma  tabula;
         OratioVocabulariumVitium  vitium_ponderum;
@@ -1015,7 +1080,7 @@ principale (vacuum)
         memset(&tabula, ZEPHYRUM, magnitudo(tabula));
         sprintf(via,
             "%s/oratio/probationes/fixa/pondera/exspectata.tsv",
-            radix);
+            fixura->radix);
         CREDO_VERUM (_plagulam_legere(piscina, via, &fons));
         CREDO_VERUM (oratio_resolutio_pondera_legere(piscina, &tabula,
             fons, &vitium_ponderum));
@@ -1077,12 +1142,26 @@ principale (vacuum)
                 == ZEPHYRUM);
         CREDO_AEQUALIS_I32 (oratio_resolutio_pondera_limen(), (i32)XX);
     }
+}
 
-    imprimere("\n--- II. Skeleton: adpositio casum regit ---\n");
+interior vacuum
+_adpositionem_casum_probare (
+    CredoContextus* c)
+{
+                        Piscina* piscina = c->piscina;
+    constans FixuraResolutionis* fixura =
+        (constans FixuraResolutionis*)c->suita;
+       OratioVocabulariumVitium vitium;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
            OratioPartesCensus  census_partium;
         OratioResolutioCensus  census;
-                 MateriaNodus* doc = _documentum(piscina, &vocabularia,
+                 MateriaNodus* doc = _documentum(piscina,
+                     &fixura->vocabularia,
                      "Cum puella ambulat.\n", &census_partium);
         MateriaNodus* puella;
 
@@ -1095,8 +1174,9 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (_casus(puella, (i32)II),
             (s32)ORATIO_CASUS_ABLATIVUS);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I,
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I,
             oratio_resolutio_lingua_censu(census_partium.vocabula_linguarum),
             doc,
             &census));
@@ -1191,22 +1271,25 @@ principale (vacuum)
 
         /* idempotens: cursus alter nihil mutat */
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "latina", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "latina", doc, &census));
         CREDO_AEQUALIS_I32 (census.ordines, (i32)IV);   /* T31 a: + ordines subiecti ambulat II (puella ablativa vindicata) */
         CREDO_AEQUALIS_I32 (census.applicatae, ZEPHYRUM);
 
         CREDO_AEQUALIS_S32 (_casus(puella, ZEPHYRUM),
             (s32)ORATIO_CASUS_ABLATIVUS);
         /* regulae 0 = nihil */
-        doc = _documentum(piscina, &vocabularia,
+        doc = _documentum(piscina, &fixura->vocabularia,
             "Cum puella ambulat.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-                CREDO_VERUM (oratio_resolutio_applicare(piscina, intern,
-                    &ratum,
-                    programma, ZEPHYRUM, "latina", doc, &census));
+                CREDO_VERUM (oratio_resolutio_applicare(piscina,
+                    fixura->intern,
+                    &fixura->ratum,
+                    fixura->programma, ZEPHYRUM, "latina", doc,
+                    &census));
         /* T24: regula nulla (ordines 0), sed prior casuum verbum apertum
          * ordinat - ablativus ante nominativum (abl nom voc) */
         CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, I), ZEPHYRUM),
@@ -1216,34 +1299,40 @@ principale (vacuum)
                 /* regula prima sola (T19b: auxiliare-primum-latinum - sine
          * auxiliari nihil): cum puella intacta */
         oratio_resolutio_census_vacare(&census);
-                CREDO_VERUM (oratio_resolutio_applicare(piscina, intern,
-                    &ratum,
-                    programma, I, "latina", doc, &census));
+                CREDO_VERUM (oratio_resolutio_applicare(piscina,
+                    fixura->intern,
+                    &fixura->ratum,
+                    fixura->programma, I, "latina", doc, &census));
         CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, I), ZEPHYRUM),
             (s32)ORATIO_CASUS_ABLATIVUS);   /* T24: prior, non regula */
         CREDO_AEQUALIS_I32 (census.ordines, ZEPHYRUM);
 
         /* In urbem venit: accusativus iam primus - ordo lectus, nihil
          * permutatum */
-        doc = _documentum(piscina, &vocabularia, "In urbem venit.\n",
+        doc = _documentum(piscina, &fixura->vocabularia,
+            "In urbem venit.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-                CREDO_VERUM (oratio_resolutio_applicare(piscina, intern,
-                    &ratum,
-                    programma, (s32)-I, "latina", doc, &census));
+                CREDO_VERUM (oratio_resolutio_applicare(piscina,
+                    fixura->intern,
+                    &fixura->ratum,
+                    fixura->programma, (s32)-I, "latina", doc,
+                    &census));
         CREDO_AEQUALIS_I32 (census.ordines, (i32)III);   /* T19b: + In; T31 b: + ordo obiecti venit (recusatus: lex carrier) */
         CREDO_AEQUALIS_I32 (census.applicatae, ZEPHYRUM);
         CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, I), ZEPHYRUM),
             (s32)ORATIO_CASUS_ACCUSATIVUS);
 
         /* sine praepositione: nihil */
-        doc = _documentum(piscina, &vocabularia, "Puella ambulat.\n",
+        doc = _documentum(piscina, &fixura->vocabularia,
+            "Puella ambulat.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "latina", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "latina", doc, &census));
                 CREDO_AEQUALIS_I32 (census.sententiae, I);
         /* T31 a: ordines subiecti II (strictus, laxus), Puella
          * NOMINATIVA per subiectum ambulat - pretium T24 (abl ante nom)
@@ -1254,12 +1343,14 @@ principale (vacuum)
         /* programma sine regulis: nihil, nulla fractura */
         {
             OratioProgramma* vacuum_programma =
-                oratio_resolutio_programma_legere(piscina, intern,
+                oratio_resolutio_programma_legere(piscina,
+                fixura->intern,
                 _l("<nihil/>\n"), &vitium);
 
             oratio_resolutio_census_vacare(&census);
-            CREDO_VERUM (oratio_resolutio_applicare(piscina, intern,
-                &ratum,
+            CREDO_VERUM (oratio_resolutio_applicare(piscina,
+                fixura->intern,
+                &fixura->ratum,
                 vacuum_programma, (s32)-I, "latina", doc, &census));
             CREDO_AEQUALIS_I32 (census.ordines, ZEPHYRUM);
         }
@@ -1270,11 +1361,25 @@ principale (vacuum)
      * GEN DAT NOM VOC LOC, post priorem GEN NOM DAT VOC LOC (gradus
      * abl > acc > gen > nom > dat > voc > loc); nihil deletum, classis
      * immota, census.prior_casuum numerat */
-    imprimere("\n--- II b. Prior casuum (T24) ---\n");
+}
+
+interior vacuum
+_priorem_casuum_probare (
+    CredoContextus* c)
+{
+                        Piscina* piscina = c->piscina;
+    constans FixuraResolutionis* fixura =
+        (constans FixuraResolutionis*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
            OratioPartesCensus  census_partium;
         OratioResolutioCensus  census;
-                 MateriaNodus* doc = _documentum(piscina, &vocabularia,
+                 MateriaNodus* doc = _documentum(piscina,
+                     &fixura->vocabularia,
                      "Puellae rosam dat.\n", &census_partium);
                  MateriaNodus* puellae;
                           i32  n_ante;
@@ -1286,8 +1391,9 @@ principale (vacuum)
             puellae->loci[ORATIO_VOCABULUM_ANALYSES]);
         CREDO_VERUM (n_ante >= (i32)IV);
                 oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I,
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I,
             oratio_resolutio_lingua_censu(census_partium.vocabula_linguarum),
             doc,
             &census));
@@ -1308,18 +1414,33 @@ principale (vacuum)
      * (Terra puella non magna est: non inter puellam et magnam) ordine
      * exemplaris ad PRIMUM (Terra, remotius) ligabatur; politica ordines
      * regulae intra (carrier, umbra) proximo primo ordinat -> puella (I) */
-    imprimere("\n--- II c. Politica parium (T25) ---\n");
+}
+
+interior vacuum
+_politicam_parium_probare (
+    CredoContextus* c)
+{
+                        Piscina* piscina = c->piscina;
+    constans FixuraResolutionis* fixura =
+        (constans FixuraResolutionis*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
            OratioPartesCensus  census_partium;
         OratioResolutioCensus  census;
-                 MateriaNodus* doc = _documentum(piscina, &vocabularia,
+                 MateriaNodus* doc = _documentum(piscina,
+                     &fixura->vocabularia,
                      "Terra puella non magna est.\n", &census_partium);
         constans MateriaNodus* magna;
 
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I,
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I,
             oratio_resolutio_lingua_censu(census_partium.vocabula_linguarum),
             doc,
             &census));
@@ -1346,7 +1467,20 @@ principale (vacuum)
      * vera (subiectum 705 > obiectum 555): 'Bellum videt' - obiectum
      * primum, petitio subiecti posterior fidelior RECUSATA (accusativus
      * manet). Culpa plantata (lex sublata: fiducia revocat) RUBRA. */
-    imprimere("\n--- II d. Contentio lectionis in stella verbi (T32 f) ---\n");
+}
+
+interior vacuum
+_contentionem_lectionis_probare (
+    CredoContextus* c)
+{
+                        Piscina* piscina = c->piscina;
+    constans FixuraResolutionis* fixura =
+        (constans FixuraResolutionis*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
              OratioPartesCensus census_partium;
           OratioResolutioCensus census;
@@ -1354,21 +1488,24 @@ principale (vacuum)
                 OratioProgramma* minimum;
                  MateriaNodus* doc;
 
-        minimum = _programma_stellae(piscina, intern, &vitium_minimi);
+        minimum = _programma_stellae(piscina, fixura->intern,
+            &vitium_minimi);
         CREDO_NON_NIHIL (minimum);
         CREDO_AEQUALIS_I32 (minimum == NIHIL ? ZEPHYRUM
             : xar_numerus(minimum->regulae), (i32)II);
         si (minimum != NIHIL)
         {
-            minimum->fiducia = programma->fiducia;   /* tabula vera */
+            minimum->fiducia = fixura->programma->fiducia;   /* tabula vera */
         }
-        doc = _documentum(piscina, &vocabularia, "Bellum videt.\n",
+        doc = _documentum(piscina, &fixura->vocabularia,
+            "Bellum videt.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
         /* T38 c: lex exsecutoris sola - decretor abrogatus */
         setenv("ORATIO_DECRETOR", "0", I);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
             minimum, (s32)-I, "latina", doc, &census));
         unsetenv("ORATIO_DECRETOR");
         CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, ZEPHYRUM), ZEPHYRUM),
@@ -1388,7 +1525,20 @@ principale (vacuum)
      * (3) tabula nulla = contentio lectionis sine fiducia (R19):
      * exsecutor manet, apertus; (4) ORATIO_DECRETOR=0 nihil tangit.
      * CULPA PLANTATA: ordo ponderum ascendens -> (2) RUBRA. */
-    imprimere("\n--- II d bis. Decretor (T38 c) ---\n");
+}
+
+interior vacuum
+_decretorem_probare (
+    CredoContextus* c)
+{
+                        Piscina* piscina = c->piscina;
+    constans FixuraResolutionis* fixura =
+        (constans FixuraResolutionis*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
              OratioPartesCensus census_partium;
           OratioResolutioCensus census;
@@ -1411,27 +1561,27 @@ principale (vacuum)
             "\tsingularis\t100\t70\t700\n";
         character tabula[1024];
 
-        minimum = _programma_stellae(piscina, intern,
+        minimum = _programma_stellae(piscina, fixura->intern,
             &vitium_decretoris);
         CREDO_NON_NIHIL (minimum);
         si (minimum == NIHIL)
         {
-            credo_imprimere_compendium();
-            redde I;
+            redde;
         }
-        minimum->fiducia = programma->fiducia;
+        minimum->fiducia = fixura->programma->fiducia;
         setenv("ORATIO_DECRETOR", "1", I);   /* explicite (ordinarium activus) */
         /* (1) tabula obiecti */
         strcpy(tabula, caput_tabulae);
         strcat(tabula, tabula_obiecti);
         CREDO_VERUM (oratio_resolutio_pondera_legere(piscina, minimum,
             _l(tabula), &vitium_decretoris));
-        doc = _documentum(piscina, &vocabularia,
+        doc = _documentum(piscina, &fixura->vocabularia,
             "Puella bellum videt.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
             minimum, (s32)-I, "latina", doc, &census));
         imprimere("    (1) bellum casus %d  contestatae %d  decretae %d"
             "  habitus %d/%d/%d\n",
@@ -1470,12 +1620,13 @@ principale (vacuum)
         strcat(tabula, tabula_subiecti);
         CREDO_VERUM (oratio_resolutio_pondera_legere(piscina, minimum,
             _l(tabula), &vitium_decretoris));
-        doc = _documentum(piscina, &vocabularia,
+        doc = _documentum(piscina, &fixura->vocabularia,
             "Puella bellum videt.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
             minimum, (s32)-I, "latina", doc, &census));
         imprimere("    (2) bellum casus %d  decretae %d  subiectum videt <- %d"
             "  obiectum %d  alternae decretae %d\n",
@@ -1505,12 +1656,13 @@ principale (vacuum)
         CREDO_VERUM (_auctor_est(_vocabulum(doc, I), "decretor"));
         /* (3) tabula nulla: contentio lectionis fiducia tacet */
         minimum->pondera = NIHIL;
-        doc = _documentum(piscina, &vocabularia,
+        doc = _documentum(piscina, &fixura->vocabularia,
             "Puella bellum videt.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
             minimum, (s32)-I, "latina", doc, &census));
         CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, I), ZEPHYRUM),
             (s32)ORATIO_CASUS_ACCUSATIVUS);
@@ -1519,12 +1671,13 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (census.habitus[ORATIO_HABITUS_APERTUS], I);
         /* (4) decretor abrogatus (ORATIO_DECRETOR=0; ordinarium ACTIVUS) */
         setenv("ORATIO_DECRETOR", "0", I);
-        doc = _documentum(piscina, &vocabularia,
+        doc = _documentum(piscina, &fixura->vocabularia,
             "Puella bellum videt.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
             minimum, (s32)-I, "latina", doc, &census));
         CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, I), ZEPHYRUM),
             (s32)ORATIO_CASUS_ACCUSATIVUS);
@@ -1545,8 +1698,20 @@ principale (vacuum)
      * (pugnat <- miles) REVOCABAT et ipsa numquam ligabatur - arcus
      * periit. POST T34: ordo contentionem non intrat, ambo arcus
      * manent, numerator recusatae_scriptae eum notat. */
-    imprimere("\n--- II e. Umbra gradu priore scripta non contendit"
-        " (T34) ---\n");
+}
+
+interior vacuum
+_umbram_priorem_probare (
+    CredoContextus* c)
+{
+                        Piscina* piscina = c->piscina;
+    constans FixuraResolutionis* fixura =
+        (constans FixuraResolutionis*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
              OratioPartesCensus census_partium;
           OratioResolutioCensus census;
@@ -1565,19 +1730,20 @@ principale (vacuum)
         strcat(textus_custodiae,
             "<vocabulum n=\"$w\"><analyses><* n=\"$b\"><casus>0</casus><numerus>$num</numerus></></analyses></vocabulum></elementa></EXEMPLAR><consilium><PER congruentia=\"$umbra_subiectum_sequente_proximo\"><impletio vocabulum=\"&@v;\" analysis=\"&@a;\" umbra=\"&@u;\" ad-vocabulum=\"&@w;\" ad-analysis=\"&@b;\" regula=\"umbra-subiectum-sequente-proximo\"/></PER></consilium></regula>\n");
         programma_custodiae = oratio_resolutio_programma_legere(piscina,
-            intern, _l(textus_custodiae), &vitium_custodiae);
+            fixura->intern, _l(textus_custodiae), &vitium_custodiae);
         CREDO_NON_NIHIL (programma_custodiae);
         CREDO_AEQUALIS_I32 (programma_custodiae == NIHIL ? ZEPHYRUM
             : xar_numerus(programma_custodiae->regulae), (i32)II);
         si (programma_custodiae != NIHIL)
         {
-            programma_custodiae->fiducia = programma->fiducia;
+            programma_custodiae->fiducia = fixura->programma->fiducia;
         }
-        doc = _documentum(piscina, &vocabularia,
+        doc = _documentum(piscina, &fixura->vocabularia,
             "Puella currit miles pugnat.\n", &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
             programma_custodiae, (s32)-I, "latina", doc, &census));
         imprimere("    currit -> %d   pugnat -> %d   recusatae"
             " scriptae %d   revocatae %d\n",
@@ -1598,12 +1764,25 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (_impletio_subiecti(_vocabulum(doc,
             (i32)III)), (s32)II);
     }
+}
 
-    imprimere("\n--- III. Planum iudicatum; ordo malus recusatus"
-        " ---\n");
+interior vacuum
+_planum_iudicatum_probare (
+    CredoContextus* c)
+{
+                        Piscina* piscina = c->piscina;
+    constans FixuraResolutionis* fixura =
+        (constans FixuraResolutionis*)c->suita;
+       OratioVocabulariumVitium vitium;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
         OratioPartesCensus  census_partium;
-              MateriaNodus* doc = _documentum(piscina, &vocabularia,
+              MateriaNodus* doc = _documentum(piscina,
+                  &fixura->vocabularia,
                   "Cum puella ambulat.\n", &census_partium);
         MateriaNodus* sententia;
         OratioStmlOrnatus ornatus;
@@ -1619,14 +1798,17 @@ principale (vacuum)
         CREDO_NON_NIHIL (sententia);
         CREDO_AEQUALIS_S32 (sententia->genus,
             (s32)ORATIO_GENUS_SENTENTIA);
-        oratio_stml_consilium_ornatum(&consilium, &ratum, &ornatus,
+        oratio_stml_consilium_ornatum(&consilium, &fixura->ratum,
+            &ornatus,
             "latina");
         scriptura = materia_arbor_scribere_nodum(piscina, sententia,
             &consilium);
         CREDO_VERUM (scriptura.successus);
-        sprintf(via, "%s/oratio/grammatica/oratio.canon", radix);
+        sprintf(via, "%s/oratio/grammatica/oratio.canon",
+            fixura->radix);
         CREDO_VERUM (_plagulam_legere(piscina, via, &fons_canonis));
-        canon = canon_legere(fons_canonis, piscina, intern, &causa);
+        canon = canon_legere(fons_canonis, piscina, fixura->intern,
+            &causa);
         CREDO_NON_NIHIL (canon);
         si (scriptura.successus && canon != NIHIL)
         {
@@ -1637,17 +1819,17 @@ principale (vacuum)
              * accusativi, umbra obiecti ablativi (T19d) */
 
             constans OratioRegula* r0 =
-                (constans OratioRegula*)xar_obtinere(programma->regulae,
-                (i32)_index_regulae(programma,
+                (constans OratioRegula*)xar_obtinere(fixura->programma->regulae,
+                (i32)_index_regulae(fixura->programma,
                 "lingua-documenti-anglica"));
             constans OratioRegula* r1 =
-                (constans OratioRegula*)xar_obtinere(programma->regulae,
-                                (i32)_index_regulae(programma,
+                (constans OratioRegula*)xar_obtinere(fixura->programma->regulae,
+                                (i32)_index_regulae(fixura->programma,
                     "umbra-obiectum-accusativi"));
 
             constans OratioRegula* r2 =
-                (constans OratioRegula*)xar_obtinere(programma->regulae,
-                                (i32)_index_regulae(programma,
+                (constans OratioRegula*)xar_obtinere(fixura->programma->regulae,
+                                (i32)_index_regulae(fixura->programma,
                     "umbra-obiectum-ablativi"));
 
 
@@ -1673,9 +1855,10 @@ principale (vacuum)
             fons = _l(textus);
             CREDO_VERUM (strstr(textus, " n=\"1\"") != NIHIL);
             CREDO_VERUM (strstr(textus, "lingua=\"latina\"") != NIHIL);
-            lectio = stml_legere(fons, piscina, intern);
+            lectio = stml_legere(fons, piscina, fixura->intern);
             CREDO_VERUM (lectio.successus);
-            expansio = stml_expandere(lectio.radix, piscina, intern);
+            expansio = stml_expandere(lectio.radix, piscina,
+                fixura->intern);
             CREDO_VERUM (expansio.successus);
             si (expansio.successus)
             {
@@ -1724,7 +1907,8 @@ principale (vacuum)
             OratioResolutioCensus census;
                   OratioProgramma* malum;
 
-            malum = oratio_resolutio_programma_legere(piscina, intern,
+            malum = oratio_resolutio_programma_legere(piscina,
+                fixura->intern,
                 _l(
                 "<regula titulus=\"malus\"><consilium>"
                 "<praelatio vocabulum=\"1\" analysis=\"9\"/>"
@@ -1735,8 +1919,9 @@ principale (vacuum)
 
             CREDO_NON_NIHIL (malum);
             oratio_resolutio_census_vacare(&census);
-            CREDO_VERUM (oratio_resolutio_applicare(piscina, intern,
-                &ratum,
+            CREDO_VERUM (oratio_resolutio_applicare(piscina,
+                fixura->intern,
+                &fixura->ratum,
                 malum, (s32)-I, "latina", doc, &census));
             CREDO_AEQUALIS_I32 (census.recusatae, (i32)III);
             CREDO_AEQUALIS_I32 (census.ordines, I);
@@ -1745,11 +1930,24 @@ principale (vacuum)
                 (s32)ORATIO_CASUS_ABLATIVUS);
         }
     }
+}
 
-    imprimere("\n--- IV. Verbum: permutatio probata ---\n");
+interior vacuum
+_permutationem_probare (
+    CredoContextus* c)
+{
+                        Piscina* piscina = c->piscina;
+    constans FixuraResolutionis* fixura =
+        (constans FixuraResolutionis*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
         OratioPartesCensus  census_partium;
-              MateriaNodus* doc = _documentum(piscina, &vocabularia,
+              MateriaNodus* doc = _documentum(piscina,
+                  &fixura->vocabularia,
                   "Puella ambulat.\n", &census_partium);
         MateriaNodus* puella;
         i32 ordo[III];
@@ -1769,13 +1967,25 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (_casus(puella, ZEPHYRUM),
             (s32)ORATIO_CASUS_VOCATIVUS);
     }
+}
 
-        imprimere("\n--- V. Regula linguae: documentum Anglicum lectiones"
-            " Anglicas praefert (T18) ---\n");
+interior vacuum
+_regulam_linguae_probare (
+    CredoContextus* c)
+{
+                        Piscina* piscina = c->piscina;
+    constans FixuraResolutionis* fixura =
+        (constans FixuraResolutionis*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
            OratioPartesCensus  census_partium;
         OratioResolutioCensus  census;
-                 MateriaNodus* doc = _documentum(piscina, &vocabularia,
+                 MateriaNodus* doc = _documentum(piscina,
+                     &fixura->vocabularia,
                      "The cat sat in the house.\n", &census_partium);
         MateriaNodus* adpositio;
         MateriaNodus* sat;
@@ -1808,8 +2018,9 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(
             adpositio->loci[ORATIO_VOCABULUM_ANALYSES]), (i32)VII);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "anglica", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "anglica", doc, &census));
         /* Anglica prima; 'in' ADPOSITIO (lex casus: in\PvAN ante In\N
          * indium), Latinae sequuntur ordine suo, nihil deletum */
         CREDO_AEQUALIS_S32 (_lingua(adpositio, ZEPHYRUM),
@@ -1853,8 +2064,9 @@ principale (vacuum)
 
         /* idempotens */
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "anglica", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "anglica", doc, &census));
         CREDO_AEQUALIS_S32 (_lingua(adpositio, ZEPHYRUM),
             (s32)ORATIO_LINGUA_ANGLICA);
         CREDO_AEQUALIS_I32 (census.applicatae, ZEPHYRUM);
@@ -1866,7 +2078,7 @@ principale (vacuum)
            OratioPartesCensus  census_latinum;
         OratioResolutioCensus  census;
                  MateriaNodus* documentum_latinum = _documentum(piscina,
-                     &vocabularia, "Cum puella ambulat.\n",
+                     &fixura->vocabularia, "Cum puella ambulat.\n",
                      &census_latinum);
         MateriaNodus* puella;
 
@@ -1876,14 +2088,28 @@ principale (vacuum)
         CREDO_VERUM (strcmp(oratio_resolutio_lingua_censu(
             census_latinum.vocabula_linguarum), "latina") == ZEPHYRUM);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)I, "latina", documentum_latinum, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)I, "latina", documentum_latinum,
+            &census));
                 CREDO_AEQUALIS_I32 (census.ordines, ZEPHYRUM);
         CREDO_AEQUALIS_S32 (_casus(puella, ZEPHYRUM),
             (s32)ORATIO_CASUS_ABLATIVUS);   /* T24: prior casuum */
     }
+}
 
-        imprimere("\n--- VI. Umbrae capitis, gradus II ---\n");
+interior vacuum
+_umbras_capitis_probare (
+    CredoContextus* c)
+{
+                        Piscina* piscina = c->piscina;
+    constans FixuraResolutionis* fixura =
+        (constans FixuraResolutionis*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
            OratioPartesCensus census_partium;
         OratioResolutioCensus census;
@@ -1893,7 +2119,7 @@ principale (vacuum)
 
         /* concordantia nominativa: bona (substantivum crudum primum) ->
          * adiectivum NOM S F per caput Puella */
-        doc = _documentum(piscina, &vocabularia,
+        doc = _documentum(piscina, &fixura->vocabularia,
             "Puella bona ambulat.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
@@ -1901,8 +2127,9 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (_classis_analysis(bona, ZEPHYRUM),
             (s32)ORATIO_CLASSIS_SUBSTANTIVUM);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "latina", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "latina", doc, &census));
         CREDO_AEQUALIS_S32 (_classis_analysis(bona, ZEPHYRUM),
             (s32)ORATIO_CLASSIS_ADIECTIVUM);
         /* T27 b: ABLATIVA - regula stricta unita (quaesitio omnes) paria
@@ -1915,27 +2142,29 @@ principale (vacuum)
         CREDO_VERUM (census.impletae >= I);
         /* gradus I solus (regulae XV primae): umbrae capitis absunt -
          * bona substantivum manet */
-        doc = _documentum(piscina, &vocabularia,
+        doc = _documentum(piscina, &fixura->vocabularia,
             "Puella bona ambulat.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)XV, "latina", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)XV, "latina", doc, &census));
         CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, I),
             ZEPHYRUM), (s32)ORATIO_CLASSIS_SUBSTANTIVUM);
         CREDO_AEQUALIS_I32 (census.impletae, ZEPHYRUM);
         /* gradus II proiectionem NOVAM videt: cum puella (ablativa
          * gradu I) bona -> ablativa per caput, NON nominativa (lex
          * vocabuli vindicati: lectio prima sola implet) */
-        doc = _documentum(piscina, &vocabularia,
+        doc = _documentum(piscina, &fixura->vocabularia,
             "Cum puella bona ambulat.\n", &census_partium);
         CREDO_NON_NIHIL (doc);
         puella  = _vocabulum(doc, I);
         bona    = _vocabulum(doc, (i32)II);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "latina", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "latina", doc, &census));
         CREDO_AEQUALIS_S32 (_casus(puella, ZEPHYRUM),
             (s32)ORATIO_CASUS_ABLATIVUS);
         CREDO_AEQUALIS_S32 (_classis_analysis(bona, ZEPHYRUM),
@@ -1953,12 +2182,14 @@ principale (vacuum)
         /* determinans per caput: hoc templum (templum GEN P crudum
          * primum - lectio NOM per caput inventa et praelata); hoc solum
          * pronomen manet */
-        doc = _documentum(piscina, &vocabularia, "Hoc templum est.\n",
+        doc = _documentum(piscina, &fixura->vocabularia,
+            "Hoc templum est.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "latina", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "latina", doc, &census));
         CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, ZEPHYRUM),
             ZEPHYRUM), (s32)ORATIO_CLASSIS_DETERMINANS);
         /* T27 b: neutrum NOM/ACC aeque vicinum - gradus casuum accusativum
@@ -1968,12 +2199,13 @@ principale (vacuum)
             (s32)ORATIO_CASUS_ACCUSATIVUS);
         CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, I), ZEPHYRUM),
             (s32)ORATIO_CASUS_ACCUSATIVUS);
-        doc = _documentum(piscina, &vocabularia, "Hoc est.\n",
+        doc = _documentum(piscina, &fixura->vocabularia, "Hoc est.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "latina", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "latina", doc, &census));
                 /* T19i: hic DET sine exceptione thesauris tribus (CIRCSE CI, LLCT
          * CCCLII; PRON 0) - prior determinantium certorum; umbra vacua
          * manet (inventum) */
@@ -1983,9 +2215,20 @@ principale (vacuum)
             (s32)ORATIO_DECISIO_PRAELATIO);
         CREDO_AEQUALIS_I32 (census.impletae, ZEPHYRUM);
     }
+}
 
+interior vacuum
+_legem_umbrarum_probare (
+    CredoContextus* c)
+{
+                        Piscina* piscina = c->piscina;
+    constans FixuraResolutionis* fixura =
+        (constans FixuraResolutionis*)c->suita;
 
-        imprimere("\n--- VII. Lex umbrarum (T19d gamma) ---\n");
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
            OratioPartesCensus census_partium;
         OratioResolutioCensus census;
@@ -1998,15 +2241,17 @@ principale (vacuum)
          * caput terra (vicina) lectionem adiectivam implet - lex eam
          * primam facit; ligatio obiecti in substantivum remissa
          * manet */
-        doc = _documentum(piscina, &vocabularia, "In bona terra est.\n",
+        doc = _documentum(piscina, &fixura->vocabularia,
+            "In bona terra est.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         verbum = _vocabulum(doc, I);
         CREDO_AEQUALIS_S32 (_classis_analysis(verbum, ZEPHYRUM),
             (s32)ORATIO_CLASSIS_SUBSTANTIVUM);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "latina", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "latina", doc, &census));
         CREDO_AEQUALIS_S32 (_classis_analysis(verbum, ZEPHYRUM),
             (s32)ORATIO_CLASSIS_ADIECTIVUM);
         CREDO_VERUM (census.umbris_ordinata >= I);
@@ -2027,13 +2272,15 @@ principale (vacuum)
             > ZEPHYRUM);
         /* decisio EXPLICITA manet: supra adverbium (exceptio T19b)
          * quamvis umbra obiecti dicto accusativo vicino impleta */
-        doc = _documentum(piscina, &vocabularia, "Supra dictum est.\n",
+        doc = _documentum(piscina, &fixura->vocabularia,
+            "Supra dictum est.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         verbum = _vocabulum(doc, ZEPHYRUM);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "latina", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "latina", doc, &census));
         CREDO_AEQUALIS_S32 (_classis_analysis(verbum, ZEPHYRUM),
             (s32)ORATIO_CLASSIS_ADVERBIUM);
         CREDO_AEQUALIS_S32 (_classis_analysis(verbum, I),
@@ -2045,13 +2292,14 @@ principale (vacuum)
         /* implens REMOTUS non tollit: bona (obiectum 'in', substantivum
          * prima) lectionem adiectivam ablativam a terra (distantia III)
          * impletam habet, substantivum manet */
-        doc = _documentum(piscina, &vocabularia,
+        doc = _documentum(piscina, &fixura->vocabularia,
             "In bona sunt et terra.\n", &census_partium);
         CREDO_NON_NIHIL (doc);
         verbum = _vocabulum(doc, I);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "latina", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "latina", doc, &census));
         CREDO_AEQUALIS_S32 (_classis_analysis(verbum, ZEPHYRUM),
             (s32)ORATIO_CLASSIS_SUBSTANTIVUM);
         CREDO_AEQUALIS_I32 (census.umbris_ordinata, ZEPHYRUM);
@@ -2075,13 +2323,14 @@ principale (vacuum)
         /* documentum Anglicum: 'a' determinans (exceptio + regula
          * linguae) manet quamvis adpositio Latina ablativa 'die'
          * ablativo Latino vicino impleta */
-        doc = _documentum(piscina, &vocabularia,
+        doc = _documentum(piscina, &fixura->vocabularia,
             "I saw a die today. The rest is fine.\n", &census_partium);
         CREDO_NON_NIHIL (doc);
         verbum = _vocabulum(doc, (i32)II);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "anglica", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "anglica", doc, &census));
         CREDO_AEQUALIS_S32 (_classis_analysis(verbum, ZEPHYRUM),
             (s32)ORATIO_CLASSIS_DETERMINANS);
         CREDO_AEQUALIS_S32 (_lingua(verbum, ZEPHYRUM),
@@ -2111,13 +2360,15 @@ principale (vacuum)
         /* remissio indicum: hoc templum - lectio determinantis
          * ACCUSATIVA secunda, umbra eius in lectionem templi
          * ACCUSATIVAM (index post permutationem) */
-        doc = _documentum(piscina, &vocabularia, "Hoc templum est.\n",
+        doc = _documentum(piscina, &fixura->vocabularia,
+            "Hoc templum est.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         verbum = _vocabulum(doc, ZEPHYRUM);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "latina", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "latina", doc, &census));
                 /* T19i: hoc prior explicitus (classis), casus per regulam
          * nominativi strictam refinitus (lex classis explicitae) -
          * lectio determinantis ACCUSATIVA quaeritur, non secunda */
@@ -2163,19 +2414,22 @@ principale (vacuum)
                   i32  discordes  = ZEPHYRUM;
 
             sprintf(via_hilarii,
-                "%s/oratio/probationes/fixa/txt/hilarius.txt", radix);
+                "%s/oratio/probationes/fixa/txt/hilarius.txt",
+                fixura->radix);
             CREDO_VERUM (_plagulam_legere(piscina, via_hilarii, &fons));
             textus = (character*)piscina_allocare(piscina,
                 (memoriae_index)fons.mensura + I);
             CREDO_NON_NIHIL (textus);
             memcpy(textus, fons.datum, (size_t)fons.mensura);
             textus[fons.mensura] = '\0';
-            doc = _documentum(piscina, &vocabularia, textus,
+            doc = _documentum(piscina, &fixura->vocabularia, textus,
                 &census_partium);
             CREDO_NON_NIHIL (doc);
             oratio_resolutio_census_vacare(&census);
-            CREDO_VERUM (oratio_resolutio_applicare(piscina, intern,
-                &ratum, programma, (s32)-I, "latina", doc, &census));
+            CREDO_VERUM (oratio_resolutio_applicare(piscina,
+                fixura->intern,
+                &fixura->ratum, fixura->programma, (s32)-I, "latina",
+                doc, &census));
             _umbras_probare(doc, &ligatae, &discordes);
             imprimere("  hilarius: umbrae ligatae %d, discordes %d, "
                 "vocabula umbris ordinata %d\n", (integer)ligatae,
@@ -2185,9 +2439,20 @@ principale (vacuum)
             CREDO_VERUM (census.umbris_ordinata >= I);
         }
     }
+}
 
-    imprimere("\n--- VIII. Anglica: nomen proprium capitale, umbrae "
-        "per classem (T19e) ---\n");
+interior vacuum
+_anglica_probare (
+    CredoContextus* c)
+{
+                        Piscina* piscina = c->piscina;
+    constans FixuraResolutionis* fixura =
+        (constans FixuraResolutionis*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
            OratioPartesCensus census_partium;
         OratioResolutioCensus census;
@@ -2199,13 +2464,14 @@ principale (vacuum)
         /* Debra initiale substantivum manet (exclusum), Bush nomen
          * proprium; 'to the' adpositio (umbra particulae vacua), 'to
          * buy' particula umbra verbo proximo impleta, buy verbum */
-        doc = _documentum(piscina, &vocabularia,
+        doc = _documentum(piscina, &fixura->vocabularia,
             "Debra saw Bush go to the store to buy food.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "anglica", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "anglica", doc, &census));
         CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, ZEPHYRUM),
             ZEPHYRUM), (s32)ORATIO_CLASSIS_SUBSTANTIVUM);
         CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, (i32)II),
@@ -2238,13 +2504,14 @@ principale (vacuum)
         CREDO_VERUM (census.impletae >= I);
         /* have + been: auxiliare (implens auxiliare verum ante verbum:
          * been auxiliare manet) */
-        doc = _documentum(piscina, &vocabularia,
+        doc = _documentum(piscina, &fixura->vocabularia,
             "We have been there.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "anglica", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "anglica", doc, &census));
         CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, I),
             ZEPHYRUM), (s32)ORATIO_CLASSIS_AUXILIARE);
         CREDO_AEQUALIS_S32 (_umbra_impletio_vocabulum(_analysis(
@@ -2254,12 +2521,14 @@ principale (vacuum)
         /* have a car: 'a' determinans per exceptionem (explicita) -
          * lectio verbi Moby 'a' umbram 'have' non implet (lex implentis
          * intra gradum), have verbum per regulam linguae */
-        doc = _documentum(piscina, &vocabularia, "I have a car.\n",
+        doc = _documentum(piscina, &fixura->vocabularia,
+            "I have a car.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "anglica", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "anglica", doc, &census));
         CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, I),
             ZEPHYRUM), (s32)ORATIO_CLASSIS_VERBUM);
         CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, (i32)II),
@@ -2267,17 +2536,30 @@ principale (vacuum)
         CREDO_VERUM (census.repetitae >= I);
         /* contractio: It's auxiliare per priorem contractionum, numquam
          * nomen proprium (regula capitalis: lectio pronominis) */
-        doc = _documentum(piscina, &vocabularia, "It's done.\n",
+        doc = _documentum(piscina, &fixura->vocabularia, "It's done.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "anglica", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "anglica", doc, &census));
         CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, ZEPHYRUM),
             ZEPHYRUM), (s32)ORATIO_CLASSIS_AUXILIARE);
     }
+}
 
-    imprimere("\n--- IX. Implentes casus ignoti (T19f) ---\n");
+interior vacuum
+_implentes_ignoti_probare (
+    CredoContextus* c)
+{
+                        Piscina* piscina = c->piscina;
+    constans FixuraResolutionis* fixura =
+        (constans FixuraResolutionis*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
            OratioPartesCensus census_partium;
         OratioResolutioCensus census;
@@ -2287,12 +2569,14 @@ principale (vacuum)
         /* In Lucca: nomen proprium regulae capitalis (sine casu)
          * umbram ablativam 'in' implet - lectio ablativa prima, Lucca
          * nomen proprium prima */
-        doc = _documentum(piscina, &vocabularia, "In Lucca est.\n",
+        doc = _documentum(piscina, &fixura->vocabularia,
+            "In Lucca est.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "latina", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "latina", doc, &census));
         CREDO_AEQUALIS_S32 (_classis_analysis(_vocabulum(doc, ZEPHYRUM),
             ZEPHYRUM), (s32)ORATIO_CLASSIS_ADPOSITIO);
         CREDO_AEQUALIS_S32 (_casus(_vocabulum(doc, ZEPHYRUM), ZEPHYRUM),
@@ -2305,8 +2589,20 @@ principale (vacuum)
             ZEPHYRUM), (s32)ORATIO_CLASSIS_NOMEN_PROPRIUM);
         CREDO_VERUM (census.impletae >= I);
     }
+}
 
-            imprimere("\n--- XI. Lectio ignoti (T19k) ---\n");
+interior vacuum
+_lectionem_ignoti_probare (
+    CredoContextus* c)
+{
+                        Piscina* piscina = c->piscina;
+    constans FixuraResolutionis* fixura =
+        (constans FixuraResolutionis*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
            OratioPartesCensus census_partium;
         OratioResolutioCensus census;
@@ -2316,7 +2612,8 @@ principale (vacuum)
         /* In xyzzy est: vocabulum ignotum lectionem ignoti fert (una,
          * classis ignotum, lingua non scripta) quam umbra obiecti 'in'
          * implet (regula ignoti); decisio in xyzzy nulla (lectio una) */
-        doc = _documentum(piscina, &vocabularia, "In xyzzy est.\n",
+        doc = _documentum(piscina, &fixura->vocabularia,
+            "In xyzzy est.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         CREDO_AEQUALIS_I32 (_numerus_analysium(_vocabulum(doc, I)), I);
@@ -2324,8 +2621,9 @@ principale (vacuum)
             ZEPHYRUM),
             (s32)ORATIO_CLASSIS_IGNOTUM);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "latina", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "latina", doc, &census));
         lectio = _analysis(_vocabulum(doc, ZEPHYRUM), ZEPHYRUM);
         CREDO_NON_NIHIL (lectio);
         CREDO_AEQUALIS_S32 (_umbra_impletio_vocabulum(lectio, ZEPHYRUM),
@@ -2337,8 +2635,20 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (_decisio(_vocabulum(doc, I)), (s32)-I);
         CREDO_VERUM (census.impletae >= I);
     }
+}
 
-    imprimere("\n--- X. Decisio in arbore (T19g, decretum SUDOKU) ---\n");
+interior vacuum
+_decisionem_probare (
+    CredoContextus* c)
+{
+                        Piscina* piscina = c->piscina;
+    constans FixuraResolutionis* fixura =
+        (constans FixuraResolutionis*)c->suita;
+
+    si (fixura == NIHIL)
+    {
+        redde;
+    }
     {
            OratioPartesCensus census_partium;
         OratioResolutioCensus census;
@@ -2348,14 +2658,15 @@ principale (vacuum)
         /* Puella bona ambulat: bona (carrier) et Puella (implens) per
          * ordinem IMPLETIONIS decisae, auctor = titulus regulae capitis
          * nominativi praecedentis; ambulat a nemine (loci non scripti) */
-        doc = _documentum(piscina, &vocabularia,
+        doc = _documentum(piscina, &fixura->vocabularia,
             "Puella bona ambulat.\n", &census_partium);
         CREDO_NON_NIHIL (doc);
         verbum = _vocabulum(doc, I);
         CREDO_AEQUALIS_S32 (_decisio(verbum), (s32)-I);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "latina", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "latina", doc, &census));
         CREDO_AEQUALIS_S32 (_decisio(verbum),
             (s32)ORATIO_DECISIO_IMPLETIO);
                 CREDO_VERUM (_aequalis(_compendium(verbum,
@@ -2376,8 +2687,9 @@ principale (vacuum)
             ZEPHYRUM);
         /* cursus alter idem reponit: decisio immota */
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "latina", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "latina", doc, &census));
         CREDO_AEQUALIS_S32 (_decisio(verbum),
             (s32)ORATIO_DECISIO_IMPLETIO);
         CREDO_AEQUALIS_I32 (census.decisae[ORATIO_DECISIO_IMPLETIO],
@@ -2388,7 +2700,8 @@ principale (vacuum)
             MateriaArborConsilium consilium;
             MateriaArborScriptura scriptura;
 
-            oratio_stml_consilium_ornatum(&consilium, &ratum, &ornatus,
+            oratio_stml_consilium_ornatum(&consilium, &fixura->ratum,
+                &ornatus,
                 "latina");
             scriptura = materia_arbor_scribere_nodum(piscina, doc,
                 &consilium);
@@ -2407,12 +2720,14 @@ principale (vacuum)
          * PRAELATIONEM prioris adpositionis Latinae (index X), non per
          * impletionem obiecti (XVIII) - prior Latinus ante testimonium
          * loquitur (ordo Anglicus inversus est); mensurandum */
-        doc = _documentum(piscina, &vocabularia, "In bona terra est.\n",
+        doc = _documentum(piscina, &fixura->vocabularia,
+            "In bona terra est.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "latina", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "latina", doc, &census));
         CREDO_AEQUALIS_S32 (_decisio(_vocabulum(doc, I)),
             (s32)ORATIO_DECISIO_UMBRA);
         CREDO_VERUM (_aequalis(_compendium(_vocabulum(doc, I),
@@ -2429,27 +2744,64 @@ principale (vacuum)
             (i32)ORATIO_VOCABULUM_AUCTOR), "auxiliare-primum-latinum"));
         CREDO_AEQUALIS_I32 (census.decisae[ORATIO_DECISIO_UMBRA], I);
         /* Supra dictum est: exceptio = praelatio auctore suo */
-        doc = _documentum(piscina, &vocabularia, "Supra dictum est.\n",
+        doc = _documentum(piscina, &fixura->vocabularia,
+            "Supra dictum est.\n",
             &census_partium);
         CREDO_NON_NIHIL (doc);
         oratio_resolutio_census_vacare(&census);
-        CREDO_VERUM (oratio_resolutio_applicare(piscina, intern, &ratum,
-            programma, (s32)-I, "latina", doc, &census));
+        CREDO_VERUM (oratio_resolutio_applicare(piscina, fixura->intern,
+            &fixura->ratum,
+            fixura->programma, (s32)-I, "latina", doc, &census));
         CREDO_AEQUALIS_S32 (_decisio(_vocabulum(doc, ZEPHYRUM)),
             (s32)ORATIO_DECISIO_PRAELATIO);
         CREDO_VERUM (_aequalis(_compendium(_vocabulum(doc, ZEPHYRUM),
             (i32)ORATIO_VOCABULUM_AUCTOR), "supra-adverbium-latinum"));
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. Programma", _programma_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "I b. Contextus declaratus (T38 a)", _contextum_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "I c. Tabula ponderum (T38 b)", _pondera_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "II. Skeleton: adpositio casum regit",
+        _adpositionem_casum_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "II b. Prior casuum (T24)", _priorem_casuum_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "II c. Politica parium (T25)", _politicam_parium_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "II d. Contentio lectionis in stella verbi (T32 f)",
+        _contentionem_lectionis_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "II d bis. Decretor (T38 c)", _decretorem_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "II e. Umbra gradu priore scripta non contendit (T34)",
+        _umbram_priorem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "III. Planum iudicatum; ordo malus recusatus",
+        _planum_iudicatum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IV. Verbum: permutatio probata", _permutationem_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "V. Regula linguae: documentum Anglicum lectiones Anglicas praefert (T18)",
+        _regulam_linguae_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "VI. Umbrae capitis, gradus II", _umbras_capitis_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "VII. Lex umbrarum (T19d gamma)", _legem_umbrarum_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "VIII. Anglica: nomen proprium capitale, umbrae per classem (T19e)",
+        _anglica_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IX. Implentes casus ignoti (T19f)", _implentes_ignoti_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XI. Lectio ignoti (T19k)", _lectionem_ignoti_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "X. Decisio in arbore (T19g, decretum SUDOKU)",
+        _decisionem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-
-    {
-        b32 praeteritus = credo_omnia_praeterierunt();
-
-        credo_claudere();
-        piscina_destruere(piscina);
-        redde praeteritus ? ZEPHYRUM : I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("oratio_resolutio", SECTIONES,
+        _suitam_parare, NIHIL);
 }

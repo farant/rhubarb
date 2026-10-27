@@ -1,0 +1,49 @@
+<sanctus id="cajetan" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Cajetan</nomen>
+  <nomen lingua="it" fontes="ce">Gaetano</nomen>
+  <nomen lingua="en" fontes="bu">Cajetan of Thienna</nomen>
+  <ortus annus="1480" mensis="10" locus="Vicenza" fontes="ce bu"/>
+  <obitus annus="1547" mensis="8" dies="7" locus="Naples" fontes="ce bu"/>
+  <beatificatio annus="1629" papa="Urban VIII" fontes="ce bu"/>
+  <canonizatio modus="formalis" annus="1671" papa="Clement X" fontes="ce bu mr"/>
+  <festum calendarium="generale" mensis="8" dies="7" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="8" dies="7" fontes="mr"/>
+  <munus fontes="us ce">priest</munus>
+  <munus fontes="ce mr">founder of the Theatines</munus>
+  <descriptio>
+    <paragraphus fontes="ce bu">Cajetan (Gaetano) was born at Vicenza in 1480, the son of Gaspar, lord of Thienna, and Mary Porta, of noble family; the day of his birth is not known exactly, though the Catholic Encyclopedia gives October. He took his doctorate in civil and canon law at Padua. In 1506 he became a prothonotary apostolic at the court of Julius II in Rome, where, according to Butler, he enrolled in the confraternity "Of the Love of God"; the Catholic Encyclopedia credits him with founding the Oratory of Divine Love. He was not ordained priest until 1516. At Vicenza he founded a hospital for incurables.</paragraphus>
+    <paragraphus fontes="ce bu mr">Moved by the spiritual diseases that infected the clergy of all ranks in his time, he set out to reform them through a body of regular clergy joining the monastic spirit to active ministry. With four companions, among them Giovanni Pietro Caraffa, bishop of Chieti (Theate) and later Pope Paul IV, he founded the congregation approved by Clement VII in 1524; Caraffa was its first superior, and from his see it took the name Theatines. The Theatines fled to Venice at the sack of Rome in 1527; in 1533 Cajetan founded a house at Naples. The Martyrology praises the trust in God by which he made his disciples live the primitive life of the Apostles. Worn out by austerities, he died at Naples on 7 August 1547, having insisted on dying on ashes. Urban VIII beatified him in 1629 and Clement X canonized him in 1671.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Cajetan" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Cajetan">
+    <excerptum>(GAETANO.) Founder of the Theatines, born October, 1480 at Vicenza in Venetian territory; died at Naples in 1547.</excerptum>
+    <excerptum>Under the care of a pious mother he passed a studious and exemplary youth, and took his degree as doctor utriusque juris at Padua in his twenty-fourth year.</excerptum>
+    <excerptum>In 1506 he became at Rome a prothonotary Apostolic in the court of Julius II</excerptum>
+    <excerptum>is credited with founding, shortly after, an association of pious priests and prelates called the Oratory of Divine Love</excerptum>
+    <excerptum>Though remarkable for his intense love of God, he did not advance to the priesthood till 1516. Recalled to Vicenza in the following year by the death of his mother, he founded there a hospital for incurables</excerptum>
+    <excerptum>But his zeal was more deeply moved by the spiritual diseases that, in those days of political disorder, infected the clergy of all ranks</excerptum>
+    <excerptum>he strove to reform them by instituting a body of regular clergy, who should combine the spirit of monasticism with the exercises of the active ministry.</excerptum>
+    <excerptum>which was canonically erected by Clement VII in 1524. One of his four companions was Giovanni Pietro Caraffa, Bishop of Chieti (in Latin Theate), afterwards Paul IV, who was elected first superior, and from whose title arose the name Theatines.</excerptum>
+    <excerptum>During the sack of Rome in 1527 the Theatines, then twelve in number, escaped to Venice</excerptum>
+    <excerptum>In 1533 Cajetan founded a house in Naples</excerptum>
+    <excerptum>He was beatified by Urban VIII in 1629, and canonized by Clement X in 1671.</excerptum>
+  </fons>
+  <fons id="bu" opus="butler1812" locus="v08 Aug. 7 St. Cajetan of Thienna, C.">
+    <excerptum>was son of Gaspar, lord of Thienna, and Mary Porta, persons of the first rank among the nobility of the territory of Vicenza</excerptum>
+    <excerptum>All the historians of his life are unanimous that he was born at Vicenza; nevertheless the day of his birth is not exactly known</excerptum>
+    <excerptum>in which faculty he took the degree of doctor with great applause at Padua.</excerptum>
+    <excerptum>Being much delighted with the end proposed by the confraternity in Romie, called Of the Love of God</excerptum>
+    <excerptum>to labour with all their power to promote the divine honour, he enrolled himself in it.</excerptum>
+    <excerptum>Order therefore was approved by Clement VII. in 1524, and Caraffa was chosen the first general.</excerptum>
+    <excerptum>Being worn out by austerities, labours, and a lingering distemper, he at length perceived his last hour to approach.</excerptum>
+    <excerptum>My Saviour died on a cross, suffer me at least to die on ashes. His importunity prevailing</excerptum>
+    <excerptum>he was laid on a sackcloth spread on the floor, and strewed with ashes ; and in that penitential posture he received the last sacraments, and calmly expired in the greatest sentiments of compunction on the seventh of August 1547.</excerptum>
+    <excerptum>St. Cajetan was beatified by Urban VIII. in 1629, and canonized by Clement X. in 1671.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="7 August">
+    <excerptum>AT Naples, in Campania, St. Cajetan of Tiene, confessor, founder of the Theatines, who, through singular confidence in God, made his disciples practise the primitive mode of life of the Apostles.</excerptum>
+    <excerptum>Being renowned for miracles, he was ranked among the saints by Clement X.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="7 August">
+    <excerptum>Saint Cajetan, Priest</excerptum>
+  </fons>
+</sanctus>

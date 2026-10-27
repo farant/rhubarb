@@ -1,0 +1,28 @@
+<sanctus id="sebastian" versio="1" genus="persona" status="sanctus">
+  <nomen lingua="en" principale="verum">Sebastian</nomen>
+  <obitus locus="Rome" martyrium="verum" fontes="ce mr"/>
+  <canonizatio modus="ante-congregationem"/>
+  <festum calendarium="generale" mensis="1" dies="20" gradus="memoria-ad-libitum" fontes="us"/>
+  <festum calendarium="martyrologium" mensis="1" dies="20" fontes="mr"/>
+  <munus fontes="us ce mr">martyr</munus>
+  <patrocinium fontes="ce">protection against the plague</patrocinium>
+  <descriptio>
+    <paragraphus fontes="ce">Sebastian was a Roman martyr, but little more than the fact of his martyrdom can be proved. The Roman list of martyrs' burials from 354 records that he was buried on the Via Appia, and St. Ambrose says he came from Milan, where he was already venerated in Ambrose's time. A basilica, one of the seven chief churches of Rome, was built over his grave in 367.</paragraphus>
+    <paragraphus fontes="ce mr">His Acts, probably written in the early fifth century, make him an officer of the imperial bodyguard who was shot with arrows, nursed back to health by the widow Irene, and finally clubbed to death; the Catholic Encyclopedia judges these stories unhistorical. The Martyrology follows this tradition, calling him commander of the first cohort under Diocletian. The young saint pierced by arrows is an image from Renaissance art. He is invoked as a protector against the plague.</paragraphus>
+  </descriptio>
+  <fons id="ce" opus="ce1913" locus="St. Sebastian" url="https://en.wikisource.org/wiki/Catholic_Encyclopedia_(1913)/St._Sebastian">
+    <excerptum>Roman martyr; little more than the fact of his martyrdom can be proved about St. Sebastian. In the "Depositio martyrum" of the chronologer of 354 it is mentioned that Sebastian was buried on the Via Appia.</excerptum>
+    <excerptum>St. Ambrose ("In Psalmum cxviii"; "Sermo", XX, no. sliv in PL, XV, 1497) states that Sebastian came from Milan and even in the time of St. Ambrose was venerated there.</excerptum>
+    <excerptum>The Acts, probably written at the beginning of the fifth century and formerly ascribed erroneously to Ambrose, relate that he was an officer in the imperial bodyguard</excerptum>
+    <excerptum>he was handed over to the Mauretanian archers, who pierced him with arrows; he was healed, however, by the widowed St. Irene. He was finally killed by the blows of a club. These stories are unhistorical and not worthy of belief.</excerptum>
+    <excerptum>It was the art of the Renaissance that first portrayed him as a youth pierced by arrows. In 367 a basilica which was one of the seven chief churches of Rome was built over his grave.</excerptum>
+    <excerptum>Sebastian is considered a protector against the plague.</excerptum>
+  </fons>
+  <fons id="mr" opus="mr1916" locus="20 January">
+    <excerptum>In the same place, in the catacombs, the martyr St. Sebastian. He was commander of the first cohort, under the emperor Diocletian, but for professing Christianity he was bound to a tree in the centre of a vast field, shot with arrows by the soldiers, and</excerptum>
+    <excerptum>beaten with clubs until he expired.</excerptum>
+  </fons>
+  <fons id="us" opus="usccb2026" locus="20 January">
+    <excerptum>Saint Sebastian, Martyr</excerptum>
+  </fons>
+</sanctus>

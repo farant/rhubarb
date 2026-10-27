@@ -425,37 +425,58 @@ _aurum_conferre (
     }
 }
 
-s32
-principale (vacuum)
-{
-                    b32  praeteritus;
-                Piscina* piscina;
+/* FIXURA SUITAE: internamentum et fons corporis (silex_fons_disci)
+ * semel facta; sectiones per monstratorem constantem LEGUNT -
+ * internatio in internamentum fixurae sola licet (decretum
+ * 2026-10-19). */
+nomen structura {
     InternamentumChorda* intern;
-     constans character* radix;
               SilexFons* fons;
               SilexFons* fons_fictus;
+} FixuraAmalgamae;
 
-    piscina = piscina_generare_dynamicum("probatio_briar_amalgama",
-        134217728);
-    si (!piscina)
+interior vacuum
+_suitam_parare (
+    CredoContextus* c)
+{
+       FixuraAmalgamae* f;
+    constans character* radix;
+
+    f = (FixuraAmalgamae*)piscina_allocare(c->piscina,
+        magnitudo(FixuraAmalgamae));
+    si (f == NIHIL)
     {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
+        redde;   /* c->suita NIHIL: sectiones VACUAE, suita FRACTA */
     }
-    credo_aperire(piscina);
     silex_monitiones_tacere(VERUM);
-    intern  = internamentum_creare(piscina);
-    radix   = getenv("RHUBARB_RADIX");
+    f->intern  = internamentum_creare(c->piscina);
+    radix      = getenv("RHUBARB_RADIX");
     si (radix == NIHIL)
     {
         radix = ".";
     }
-    fons         = silex_fons_disci(piscina, radix);
-    fons_fictus  = silex_fons_disci(piscina, FABRICA_FICTA);
-    CREDO_NON_NIHIL (fons);
-    CREDO_NON_NIHIL (fons_fictus);
+    f->fons         = silex_fons_disci(c->piscina, radix);
+    f->fons_fictus  = silex_fons_disci(c->piscina, FABRICA_FICTA);
+    CREDO_NON_NIHIL (f->fons);
+    CREDO_NON_NIHIL (f->fons_fictus);
+    si (f->fons == NIHIL || f->fons_fictus == NIHIL)
+    {
+        redde;
+    }
+    c->datum = f;
+}
 
-    imprimere("\n--- Probans inclusio localis (lector linearum) ---\n");
+
+/* ==================================================
+ * PROBARE: inclusio localis (lector linearum)
+ * ================================================== */
+
+interior vacuum
+_inclusio_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+
     {
         chorda n;
 
@@ -478,9 +499,29 @@ principale (vacuum)
         CREDO_FALSUM (briar_amalgama_inclusio_localis(
             chorda_ex_literis("", piscina), &n));
     }
+}
 
-    imprimere("\n--- Probans gamma (fabrica ficta): aurum, ordo,"
-        " involucra ---\n");
+
+/* ==================================================
+ * PROBARE: gamma (fabrica ficta): aurum, ordo, involucra
+ * ================================================== */
+
+interior vacuum
+_fabricam_fictam_probare (
+    CredoContextus* c)
+{
+    constans FixuraAmalgamae* fx;
+                     Piscina* piscina = c->piscina;
+         InternamentumChorda* intern;
+          constans SilexFons* fons_fictus;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    fx           = (constans FixuraAmalgamae*)c->suita;
+    intern       = fx->intern;
+    fons_fictus  = fx->fons_fictus;
     {
                          Xar* nexus;
          BriarFabricaFructus  fab = _fabricare(piscina, intern,
@@ -562,9 +603,28 @@ principale (vacuum)
         }
         briar_silvam_solvere(nexus);
     }
+}
 
-    imprimere("\n--- Probans corpus verum: salve (+ probatio),"
-        " derivatum, punctum ---\n");
+
+/* ==================================================
+ * PROBARE: corpus verum: salve (+ probatio), derivatum, punctum
+ * ================================================== */
+
+interior vacuum
+_corpus_verum_probare (
+    CredoContextus* c)
+{
+    constans FixuraAmalgamae* fx;
+         InternamentumChorda* intern;
+          constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    fx      = (constans FixuraAmalgamae*)c->suita;
+    intern  = fx->intern;
+    fons    = fx->fons;
     {
         constans character* fixa[3];
                        i32  k;
@@ -574,62 +634,94 @@ principale (vacuum)
         fixa[2] = "punctum";
         per (k = ZEPHYRUM; k < III; k++)
         {
+            /* piscina PER FIXUM: fabrica et amalgama corporis veri
+             * (silex legit in piscinam vocantis, nullus thesaurus)
+             * post iudicium non leguntur - olim tria in piscina
+             * sectionis (+CCCXXI MiB) */
+                         Piscina* opus = piscina_generare_dynamicum(
+                             "amalgama_fixum", 1048576);
                              Xar* nexus;
-             BriarFabricaFructus  fab = _fabricare(piscina, intern,
-                 fons,
-                 _texere(piscina, "briar/probationes/fixa/thistle/",
-                 fixa[k], ".thistle"), &nexus);
+             BriarFabricaFructus  fab;
             BriarAmalgamaFructus  am;
            constans BriarPlagula* p;
            constans BriarPlagula* prob;
 
+            si (opus == NIHIL)
+            {
+                perge;
+            }
+            fab = _fabricare(opus, intern, fons,
+                _texere(opus, "briar/probationes/fixa/thistle/",
+                fixa[k], ".thistle"), &nexus);
+
             imprimere("  %s\n", fixa[k]);
             CREDO_VERUM (fab.successus);
-            am = briar_amalgamare(piscina, &fab, fons, fixa[k]);
+            am = briar_amalgamare(opus, &fab, fons, fixa[k]);
             CREDO_VERUM (am.successus);
             CREDO_AEQUALIS_I32 (xar_numerus(am.plagulae), II);
-            p     = _plagula(&am, _texere(piscina, fixa[k], ".c",
+            p     = _plagula(&am, _texere(opus, fixa[k], ".c",
                 NIHIL));
-            prob  = _plagula(&am, _texere(piscina, "probatio_", fixa[k],
+            prob  = _plagula(&am, _texere(opus, "probatio_", fixa[k],
                 ".c"));
             CREDO_NON_NIHIL (p);
             CREDO_NON_NIHIL (prob);
             si (p != NIHIL && prob != NIHIL)
             {
                 constans character* signum_probationis =
-                    _texere(piscina,
+                    _texere(opus,
                     "#line 1 \"probationes/probatio_", fixa[k],
                     ".c\"\n");
                 constans character* signum_principalis =
-                    _texere(piscina,
+                    _texere(opus,
                     "#line 1 \"fontes/", fixa[k], ".c\"\n");
 
-                _structuram_probare(piscina, &fab, p->contentum);
-                _structuram_probare(piscina, &fab, prob->contentum);
-                CREDO_VERUM (_continet(piscina, p->contentum,
+                _structuram_probare(opus, &fab, p->contentum);
+                _structuram_probare(opus, &fab, prob->contentum);
+                CREDO_VERUM (_continet(opus, p->contentum,
                     signum_principalis));
-                CREDO_FALSUM (_continet(piscina, p->contentum,
+                CREDO_FALSUM (_continet(opus, p->contentum,
                     signum_probationis));
-                CREDO_VERUM (_continet(piscina, prob->contentum,
+                CREDO_VERUM (_continet(opus, prob->contentum,
                     signum_probationis));
-                CREDO_FALSUM (_continet(piscina, prob->contentum,
+                CREDO_FALSUM (_continet(opus, prob->contentum,
                     signum_principalis));
-                CREDO_VERUM (_continet(piscina, prob->contentum,
+                CREDO_VERUM (_continet(opus, prob->contentum,
                     "#line 1 \"lib/credo.c\"\n"));
-                CREDO_VERUM (_continet(piscina, p->contentum,
+                CREDO_VERUM (_continet(opus, p->contentum,
                     "#define _allocare_interna"
                     " _allocare_interna_piscina\n"));
-                CREDO_VERUM (_continet(piscina, p->contentum,
+                CREDO_VERUM (_continet(opus, p->contentum,
                     "#undef _allocare_interna\n"));
-                CREDO_VERUM (_continet(piscina, prob->contentum,
+                CREDO_VERUM (_continet(opus, prob->contentum,
                     "#undef _credo_piscina\n"));
             }
             briar_silvam_solvere(nexus);
+            piscina_destruere(opus);
         }
     }
+}
 
-    imprimere("\n--- Probans membra: statica_a (statica duo nomina"
-        " eadem) ---\n");
+
+/* ==================================================
+ * PROBARE: membra: statica_a (statica duo nomina eadem)
+ * ================================================== */
+
+interior vacuum
+_statica_probare (
+    CredoContextus* c)
+{
+    constans FixuraAmalgamae* fx;
+                     Piscina* piscina = c->piscina;
+         InternamentumChorda* intern;
+          constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    fx      = (constans FixuraAmalgamae*)c->suita;
+    intern  = fx->intern;
+    fons    = fx->fons;
     {
                          Xar* nexus;
                          Xar* membra;
@@ -712,8 +804,29 @@ principale (vacuum)
         }
         briar_silvam_solvere(nexus);
     }
+}
 
-    imprimere("\n--- Probans membra: radix (rhombus, probatio) ---\n");
+
+/* ==================================================
+ * PROBARE: membra: radix (rhombus, probatio)
+ * ================================================== */
+
+interior vacuum
+_radicem_probare (
+    CredoContextus* c)
+{
+    constans FixuraAmalgamae* fx;
+                     Piscina* piscina = c->piscina;
+         InternamentumChorda* intern;
+          constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    fx      = (constans FixuraAmalgamae*)c->suita;
+    intern  = fx->intern;
+    fons    = fx->fons;
     {
                          Xar* nexus;
                          Xar* membra;
@@ -770,8 +883,29 @@ principale (vacuum)
         }
         briar_silvam_solvere(nexus);
     }
+}
 
-    imprimere("\n--- Probans recusationes: vitrea, venditorium ---\n");
+
+/* ==================================================
+ * PROBARE: recusationes: vitrea, venditorium
+ * ================================================== */
+
+interior vacuum
+_recusationes_probare (
+    CredoContextus* c)
+{
+    constans FixuraAmalgamae* fx;
+                     Piscina* piscina = c->piscina;
+         InternamentumChorda* intern;
+          constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    fx      = (constans FixuraAmalgamae*)c->suita;
+    intern  = fx->intern;
+    fons    = fx->fons;
     {
                          Xar* nexus;
          BriarFabricaFructus  fab = _fabricare(piscina, intern, fons,
@@ -806,9 +940,29 @@ principale (vacuum)
             "venditorium in clausura: vendor/"));
         briar_silvam_solvere(nexus);
     }
+}
 
-    imprimere("\n--- Probans scriptor: genita superscribitur, aliena"
-        " non ---\n");
+
+/* ==================================================
+ * PROBARE: scriptor: genita superscribitur, aliena non
+ * ================================================== */
+
+interior vacuum
+_scriptorem_probare (
+    CredoContextus* c)
+{
+    constans FixuraAmalgamae* fx;
+                     Piscina* piscina = c->piscina;
+         InternamentumChorda* intern;
+          constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    fx      = (constans FixuraAmalgamae*)c->suita;
+    intern  = fx->intern;
+    fons    = fx->fons;
     {
                          Xar* nexus;
          BriarFabricaFructus  fab = _fabricare(piscina, intern, fons,
@@ -844,9 +998,30 @@ principale (vacuum)
         (vacuum)filum_delere(via);
         briar_silvam_solvere(nexus);
     }
+}
 
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "inclusio localis (lector linearum)", _inclusio_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "gamma (fabrica ficta): aurum, ordo, involucra",
+        _fabricam_fictam_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "corpus verum: salve (+ probatio), derivatum, punctum",
+        _corpus_verum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "membra: statica_a (statica duo nomina eadem)", _statica_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "membra: radix (rhombus, probatio)", _radicem_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "recusationes: vitrea, venditorium", _recusationes_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "scriptor: genita superscribitur, aliena non",
+        _scriptorem_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("briar_amalgama", SECTIONES,
+        _suitam_parare, NIHIL);
 }

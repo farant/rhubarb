@@ -60,6 +60,11 @@
     <vexillum! (>-g
   </vexilla>
   <variantes praelatio="macos posix"/>
+  <!-- fontes .m capita per clang -MM: lib/X_ios.m UIKit ex SDK iOS
+       trahit (testa-ios T3); ceteri "clang" (macOS) -->
+  <oracula>
+    <oraculum varians="ios" mandatum="xcrun --sdk iphonesimulator clang -target arm64-apple-ios17.0-simulator"/>
+  </oracula>
   <nexus>
     <regula obiectum="fenestra_macos">
       <vexillum! (>-framework Cocoa
@@ -82,6 +87,17 @@
     <regula obiectum="energia_macos">
       <vexillum! (>-framework IOKit
       <vexillum! (>-framework CoreFoundation
+    </regula>
+    <regula obiectum="auditus_macos">
+      <vexillum! (>-framework AudioToolbox
+      <vexillum! (>-framework CoreAudio
+    </regula>
+    <regula obiectum="testa_ios">
+      <vexillum! (>-framework UIKit
+      <vexillum! (>-framework QuartzCore
+      <vexillum! (>-framework CoreGraphics
+      <vexillum! (>-framework Foundation
+      <vexillum! (>-framework PhotosUI
     </regula>
   </nexus>
   <vendor>

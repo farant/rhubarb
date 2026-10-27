@@ -51,11 +51,18 @@
 
   <interrogatio genus="quomodo">
     <quaestio! (>how do I read the Speratus and Receptus lines of a failure?
-    <responsum symbolum="_credo_notare _credo_notare_integrum">The
+    <responsum symbolum="_credo_notare _credo_notare_integrum _credo_notare_chordae">The
       comparison macros take (received, expected): CREDO_AEQUALIS_S32(a,
       b) prints a as Receptus and b as Speratus, so put the computed
-      value first and the expected constant second. Every failure line
-      is flushed immediately, so it survives a crash a few lines later
+      value first and the expected constant second. Strings are quoted
+      and escaped (\t, \n, \xNN for control bytes, NUL included) with
+      their length in octets; a value longer than 160 octets shows a
+      window around the first difference, named as "fenestra [a, b)",
+      never a silent cut. Equality of strings or bytes adds a third
+      line, Differentia, naming the first differing octet on both
+      sides (or "finit" where one side ends); float comparisons name
+      the difference and the tolerance there. Every failure line is
+      flushed immediately, so it survives a crash a few lines later
       even through a pipe. Passing assertions print a dot with no
       newline, so a failure's F, or any line the test prints itself,
       follows the dots on the same line: never grep output with a
@@ -64,12 +71,66 @@
 
   <interrogatio genus="possumne">
     <quaestio! (>can I trust the numbers CREDO_AEQUALIS_I32 prints for large unsigned values?
-    <responsum symbolum="_credo_notare_integrum_i32 _credo_notare_integrum_inaequalitas_i32 _credo_notare_integrum_maior_i32">The
-      verdict yes, the message no. i32 is unsigned, but the equality
-      and inequality helpers format it with %d, so a value at or above
-      2^31 prints as a negative number; the MAIOR/MINOR _I32 helpers
-      use %u and print correctly. For 64 bits only CREDO_AEQUALIS_S64
-      exists (signed).</responsum>
+    <responsum symbolum="_credo_notare_integrum_i32 _credo_notare_integrum_inaequalitas_i32 _credo_notare_i64">Yes,
+      since credo III (2026-10-19): every _I32 helper prints with %u,
+      so a value at or above 2^31 no longer shows as negative (before
+      that the equality and inequality helpers used %d). For 64 bits
+      there are full families: CREDO_*_S64 (signed) and CREDO_*_I64
+      (unsigned), each with AEQUALIS, INAEQUALITAS, MAIOR, MINOR and the
+      AUT_AEQUALIS forms; a memoriae_index goes into the _I64 forms
+      without a cast.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>which assertion should I use for strings, byte buffers and floats?
+    <responsum symbolum="_credo_notare_chordae _credo_notare_literae _credo_notare_octeti _credo_notare_f64_relative _credo_notare_f64_ulp">Chordas:
+      CREDO_CHORDA_AEQUALIS, _CONTINET, _INCIPIT, _TERMINATUR, and
+      CREDO_CHORDA_AEQUALIS_LITERIS against a C literal. Two C strings:
+      CREDO_LITERAE_AEQUALES (NIHIL-safe; CREDO_CHORDAE_AEQUALES takes C
+      strings too, despite its name, and is kept for old suites). Raw
+      bytes: CREDO_OCTETI_AEQUALES(a, b, n), which names the first
+      differing offset in hex. Floats: CREDO_F64_PROXIMUS and
+      CREDO_F32_PROXIMUS for an absolute epsilon; CREDO_F64_RELATIVE(a,
+      b, r) when magnitudes are very large or very small (|a-b| &lt;=
+      r * max(|a|, |b|)); CREDO_F64_ULP(a, b, n) for "within n
+      representable doubles" (-0.0 equals 0.0, NaN never equals
+      anything). Prefer these over CREDO_VERUM(strcmp(...) == 0): a
+      failing CREDO_VERUM can only print its expression, these print
+      both values.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>how do I see how much memory each section used?
+    <responsum symbolum="credo_suitam_currere memoria_processus_legere">Run
+      the suite with CREDO_VERDICTA=file (fabrica always does): every
+      SECTIO line ends with three numbers in KiB - the peak use of the
+      section's own piscina, the process footprint when the section
+      ended, and how much the process's lifetime peak rose while it ran
+      (the footprint counts compressed pages, which RSS hides). The
+      lifetime peak never resets, so a light section after a heavy one
+      shows a rise of 0, not the heavy one's peak. Nothing is printed to
+      the human output: officina compares stdout with golden files.
+      fabrica copies the three numbers into the annals as facts on each
+      section's run; bin/mensor quaestio graves lists the heaviest
+      sections across the tree.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>why did a section fail with credo_memoria, and how do I let a heavy section through?
+    <responsum symbolum="credo_suitam_currere CREDO_MEMORIA_ORDINARIA_MB CREDO_MEMORIA_GRAVIS_MB">After
+      each section credo compares the larger of its arena peak and the
+      rise in the process's lifetime peak against a ceiling:
+      CREDO_MEMORIA_ORDINARIA_MB (256) normally, CREDO_MEMORIA_GRAVIS_MB
+      (1024) for a section whose signa include "gravis". Going over is
+      an ordinary failure named credo_memoria, so the section is FRACTA
+      and the suite exits 1. If the section really needs the memory,
+      add "gravis" to its signa field; CREDO_SIGNA_OMITTE=gravis then
+      skips such sections. CREDO_MEMORIA_MB=N replaces the ordinary
+      ceiling for one run (0 turns it off). The check runs only when a
+      section ends, so it can't stop a runaway loop. When credo is
+      compiled under AddressSanitizer only the arena peak is judged:
+      ASan's quarantine (256 MB by default) and shadow memory sit in the
+      process footprint, so the rise there isn't the section's.</responsum>
   </interrogatio>
 
   <interrogatio genus="quomodo">

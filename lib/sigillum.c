@@ -1,9 +1,15 @@
 /* sigillum.c - SHA-256 (FIPS 180-4) - vide sigillum.h */
 
+#include "postulata_posix.h"
+#include "postulata_neon.h"
 #include "sigillum.h"
 
 #include <string.h>
 #include <stdio.h>
+
+#if defined(__ARM_FEATURE_SHA2)
+#include <arm_neon.h>
+#endif
 
 /* constantes rotundarum (radices cubicae primorum 64, pars
  * fractionalis - FIPS 180-4 §4.2.2) */
@@ -28,9 +34,9 @@ hic_manens constans i32 SIGILLUM_K[64] = {
 
 #define SIGILLUM_ROTR(x, n) (((x) >> (n)) | ((x) << (32 - (n))))
 
-/* bloccum unum (64 octeti) comprimere */
+/* bloccum unum (64 octeti) comprimere - via portabilis */
 hic_manens vacuum
-_bloccum_comprimere (
+_bloccum_comprimere_portabile (
             i32* status,
     constans i8* bloccus)
 {
@@ -104,6 +110,80 @@ _bloccum_comprimere (
     status[7] += h;
 }
 
+/* bloccos 'numerus' contiguos (64 octeti quisque) - via portabilis */
+hic_manens vacuum
+_bloccos_comprimere_portabile (
+               i32* status,
+       constans i8* bloccos,
+    memoriae_index  numerus)
+{
+    memoriae_index k;
+
+    per (k = 0; k < numerus; k++)
+    {
+        _bloccum_comprimere_portabile(status, bloccos + k * 64);
+    }
+}
+
+#if defined(__ARM_FEATURE_SHA2)
+/* VIA INSTRUCTIONUM ARMv8 SHA2 (2026-10-22): sha256h/h2 rotundas
+ * quattuor uno ictu faciunt, sha256su0/su1 schedulam nuntii - status
+ * in registris per bloccos contiguos manet. ~VII.VIII x via portabilis
+ * (1787 contra 228 MB/s, sonda build/sonda_partes/sonda_sigillum.c);
+ * sigilla OCTETIM eadem (probatio_sigillum 'via portabilis ='). Sub
+ * postulata_neon.h: silva hunc ramum EXAMINAT (non exemptio). */
+hic_manens vacuum
+_bloccos_comprimere_arm (
+              i32* status,
+      constans i8* bloccos,
+    memoriae_index  numerus)
+{
+        uint32x4_t  s0;
+        uint32x4_t  s1;
+        uint32x4_t  m[4];
+    memoriae_index  k;
+           integer  j;
+
+    s0 = vld1q_u32(status);
+    s1 = vld1q_u32(status + 4);
+    per (k = 0; k < numerus; k++)
+    {
+        constans i8* b  = bloccos + k * 64;
+          uint32x4_t a0 = s0;
+          uint32x4_t a1 = s1;
+
+        m[0] = vreinterpretq_u32_u8(vrev32q_u8(vld1q_u8(b)));
+        m[1] = vreinterpretq_u32_u8(vrev32q_u8(vld1q_u8(b + 16)));
+        m[2] = vreinterpretq_u32_u8(vrev32q_u8(vld1q_u8(b + 32)));
+        m[3] = vreinterpretq_u32_u8(vrev32q_u8(vld1q_u8(b + 48)));
+        per (j = 0; j < 16; j++)
+        {
+            uint32x4_t t = vaddq_u32(m[j & 3],
+                vld1q_u32(&SIGILLUM_K[4 * j]));
+            uint32x4_t p = s0;
+
+            s0 = vsha256hq_u32(s0, s1, t);
+            s1 = vsha256h2q_u32(s1, p, t);
+            /* schedula: W[4j+16..] ex W[4j..], W[4j+4..], W[4j+8..],
+             * W[4j+12..] - in loco quem quadrigae j relinquunt */
+            si (j < 12)
+            {
+                m[j & 3] = vsha256su1q_u32(
+                    vsha256su0q_u32(m[j & 3], m[(j + 1) & 3]),
+                    m[(j + 2) & 3], m[(j + 3) & 3]);
+            }
+        }
+        s0 = vaddq_u32(s0, a0);
+        s1 = vaddq_u32(s1, a1);
+    }
+    vst1q_u32(status, s0);
+    vst1q_u32(status + 4, s1);
+}
+#define _bloccos_comprimere _bloccos_comprimere_arm
+#else
+#define _bloccos_comprimere _bloccos_comprimere_portabile
+#endif
+
 vacuum
 sigillum_incipere (
     SigillumContextus* contextus)
@@ -129,52 +209,77 @@ sigillum_addere (
 {
        constans i8* octeti  = (constans i8*)datum;
     memoriae_index  k       = 0;
+    memoriae_index  pars;
+    memoriae_index  integra;
 
     contextus->totalis += (i64)mensura;
-    dum (k < mensura)
+    /* VIA CELER (2026-10-22): massa prius impletur, deinde blocci
+     * integri DIRECTE ex ingressu comprimuntur (olim octetus quisque
+     * per massam ibat), cauda in massam - eadem sigilla */
+    si (contextus->massa_mensura > 0)
     {
-        contextus->massa[contextus->massa_mensura] = octeti[k];
-        contextus->massa_mensura++;
-        k++;
-        si (contextus->massa_mensura == 64)
+        pars = (memoriae_index)(64 - contextus->massa_mensura);
+        si (pars > mensura)
         {
-            _bloccum_comprimere(contextus->status, contextus->massa);
-            contextus->massa_mensura = 0;
+            pars = mensura;
         }
+        memcpy(contextus->massa + contextus->massa_mensura, octeti,
+            pars);
+        contextus->massa_mensura  += (i32)pars;
+        k                         = pars;
+        si (contextus->massa_mensura < 64)
+        {
+            redde;
+        }
+        _bloccos_comprimere(contextus->status, contextus->massa, 1);
+        contextus->massa_mensura = 0;
+    }
+    integra = (mensura - k) / 64;
+    si (integra > 0)
+    {
+        _bloccos_comprimere(contextus->status, octeti + k, integra);
+        k += integra * 64;
+    }
+    si (k < mensura)
+    {
+        memcpy(contextus->massa, octeti + k, mensura - k);
+        contextus->massa_mensura = (i32)(mensura - k);
     }
 }
 
-Sigillum
-sigillum_finire (
-    SigillumContextus* contextus)
+/* farcimen et effusio, compressore dato (via ordinaria aut
+ * portabilis) - una definitio pro ambabus */
+hic_manens Sigillum
+_finire (
+    SigillumContextus* contextus,
+                vacuum (*comprimere)(i32*, constans i8*,
+                    memoriae_index))
 {
     Sigillum fructus;
          i64 bitae = contextus->totalis * 8;
      integer k;
 
     /* farcimen: 0x80, deinde zephyra usque ad 56 mod 64, deinde
-     * longitudo bitarum 64-bitis maiore-fine */
+     * longitudo bitarum 64-bitis maiore-fine - in massa directe */
+    contextus->massa[contextus->massa_mensura] = 0x80;
+    contextus->massa_mensura++;
+    si (contextus->massa_mensura > 56)
     {
-        i8 unus = 0x80;
-
-        sigillum_addere(contextus, &unus, 1);
+        memset(contextus->massa + contextus->massa_mensura, 0,
+            (memoriae_index)(64 - contextus->massa_mensura));
+        comprimere(contextus->status, contextus->massa, 1);
+        contextus->massa_mensura = 0;
     }
-    {
-        i8 zephyrum_o = 0;
-
-        dum (contextus->massa_mensura != 56)
-        {
-            sigillum_addere(contextus, &zephyrum_o, 1);
-        }
-    }
-    /* longitudo manu (sigillum_addere totalis augeret) */
+    memset(contextus->massa + contextus->massa_mensura, 0,
+        (memoriae_index)(56 - contextus->massa_mensura));
+    contextus->massa_mensura = 56;
     per (k = 7; k >= 0; k--)
     {
         contextus->massa[contextus->massa_mensura] =
             (i8)((bitae >> (k * 8)) & 0xffUL);
         contextus->massa_mensura++;
     }
-    _bloccum_comprimere(contextus->status, contextus->massa);
+    comprimere(contextus->status, contextus->massa, 1);
 
     per (k = 0; k < 8; k++)
     {
@@ -191,6 +296,13 @@ sigillum_finire (
 }
 
 Sigillum
+sigillum_finire (
+    SigillumContextus* contextus)
+{
+    redde _finire(contextus, _bloccos_comprimere);
+}
+
+Sigillum
 sigillum_computare (
     constans vacuum* datum,
      memoriae_index  mensura)
@@ -200,6 +312,25 @@ sigillum_computare (
     sigillum_incipere(&contextus);
     sigillum_addere(&contextus, datum, mensura);
     redde sigillum_finire(&contextus);
+}
+
+Sigillum
+sigillum_computare_portabile (
+    constans vacuum* datum,
+     memoriae_index  mensura)
+{
+    /* via portabilis TOTA - testis contra viam instructionum */
+    SigillumContextus  contextus;
+          constans i8* octeti   = (constans i8*)datum;
+       memoriae_index  integra  = mensura / 64;
+
+    sigillum_incipere(&contextus);
+    _bloccos_comprimere_portabile(contextus.status, octeti, integra);
+    contextus.totalis        = (i64)mensura;
+    contextus.massa_mensura  = (i32)(mensura - integra * 64);
+    memcpy(contextus.massa, octeti + integra * 64,
+        (memoriae_index)contextus.massa_mensura);
+    redde _finire(&contextus, _bloccos_comprimere_portabile);
 }
 
 vacuum

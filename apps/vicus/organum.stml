@@ -18,6 +18,8 @@
          capsa: valet etiam centro non aperto) -->
     <actio nomen="admonitiones" systema="verum"/>
     <actio nomen="admonitiones.agere"/>
+    <!-- sonus S4: iussa $sound et $sound(notifications) muta vertunt -->
+    <actio nomen="sonus.agere"/>
   </actiones>
 
   <status>
@@ -65,6 +67,14 @@
     <campus nomen="admonitiones_lectae_ad" typus="numerus"
             vita="persistens" scriptor="admonitiones.agere"
             nota="ms: omnes non recentiores lectae (X in centro)"/>
+
+    <!-- sonus S4: muta, persistentia (vicus iterum apertus mutus
+         manet); systema sonus ea legit, porta soni ea non novit -->
+    <campus nomen="sonus_mutus" typus="veritas" vita="persistens"
+            scriptor="sonus.agere" nota="$sound: nullus sonus"/>
+    <campus nomen="sonus_admonitionum_mutus" typus="veritas"
+            vita="persistens" scriptor="sonus.agere"
+            nota="$sound(notifications): admonitiones tacent"/>
   </status>
 
   <basis genus="organum_commune"/>

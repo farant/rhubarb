@@ -13,6 +13,7 @@
  */
 
 #include "latina.h"
+#include "lectiones.h"   /* lectiones_fopen: canalis (examen 96) */
 #include "credo.h"
 #include "materia_coctor.h"
 #include "materia_nodus.h"
@@ -217,20 +218,20 @@ _coquere (
     redde f;
 }
 
-s32
-principale (vacuum)
-{
-    Piscina* piscina = piscina_generare_dynamicum("probatio_coctor",
-        4194304);
-         b32 praeteritus;
 
-    credo_aperire(piscina);
-    imprimere("=== Probatio materia_coctor ===\n");
+/* ==================================================
+ * PROBARE: tituli specierum == enumeratio
+ * ================================================== */
+
+interior vacuum
+_titulos_specierum_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         s32 k;
 
-        imprimere("\n--- I. Tituli specierum == enumeratio ---\n");
         per (k = ZEPHYRUM; k < (s32)MATERIA_LOCUS_NUMERUS_SPECIERUM;
              k++)
         {
@@ -252,11 +253,22 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (materia_locus_species_ex_titulo(
             chorda_ex_literis("lista", piscina)), (s32)-I);
     }
+}
+
+
+/* ==================================================
+ * PROBARE: comparator: recens aut rancidus
+ * ================================================== */
+
+interior vacuum
+_comparatorem_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         i32 linea;
 
-        imprimere("\n--- II. Comparator: recens aut rancidus ---\n");
         CREDO_VERUM (materia_coctio_aequalis(
             chorda_ex_literis("a\nb\nc\n", piscina),
             chorda_ex_literis("a\nb\nc\n", piscina), &linea));
@@ -275,11 +287,22 @@ principale (vacuum)
             chorda_ex_literis("a\nb\n", piscina), &linea));
         CREDO_AEQUALIS_I32 (linea, (i32)II);
     }
+}
+
+
+/* ==================================================
+ * PROBARE: declaratio in textus exspectatos
+ * ================================================== */
+
+interior vacuum
+_declarationem_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaCoctio coctio;
 
-        imprimere("\n--- III. Declaratio in textus exspectatos ---\n");
         CREDO_VERUM (_coquere(piscina, DECLARATIO, &coctio));
         CREDO_AEQUALIS_I32 (coctio.numerus_generum, (i32)II);
         CREDO_AEQUALIS_I32 (coctio.numerus_locorum, (i32)VII);
@@ -299,11 +322,22 @@ principale (vacuum)
         CREDO_NON_NIHIL (strstr(chorda_ut_cstr(coctio.fons, piscina),
             "{ \"folium-parvum\", (i32)3, (i32)4 },"));
     }
+}
+
+
+/* ==================================================
+ * PROBARE: recusationes nominatae
+ * ================================================== */
+
+interior vacuum
+_recusationes_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaCoctio coctio;
 
-        imprimere("\n--- IV. Recusationes nominatae ---\n");
         /* titulus loci iteratus intra genus */
         CREDO_FALSUM (_coquere(piscina,
             "<registrum grammatica=\"p\" praefixum=\"P\" typus=\"PG\"\n"
@@ -413,11 +447,22 @@ principale (vacuum)
         CREDO_NON_NIHIL (strstr(chorda_ut_cstr(coctio.fons, piscina),
             "{ \"h\", (i32)0, (i32)1 },"));
     }
+}
+
+
+/* ==================================================
+ * PROBARE: tituli cum subducto (css: tok_nomen)
+ * ================================================== */
+
+interior vacuum
+_subductum_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaCoctio coctio;
 
-        imprimere("\n--- V. Tituli cum subducto (css: tok_nomen) ---\n");
         CREDO_VERUM (_coquere(piscina,
             "<registrum grammatica=\"p\" praefixum=\"P\" typus=\"PG\"\n"
             "  sedes=\"p\">\n"
@@ -431,6 +476,18 @@ principale (vacuum)
         CREDO_NON_NIHIL (strstr(chorda_ut_cstr(coctio.caput, piscina),
             "P_GENUS_REGULA_APUD = 0,"));
     }
+}
+
+
+/* ==================================================
+ * PROBARE: porta rancoris: recens, rancida, absens
+ * ================================================== */
+
+interior vacuum
+_plagulas_generatas_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         constans character* radix  = getenv("RHUBARB_RADIX");
@@ -440,7 +497,6 @@ principale (vacuum)
              MateriaRancor  rancor;
                       FILE* f;
 
-        imprimere("\n--- VI. Porta rancoris: recens, rancida, absens ---\n");
         /* declaratio et plagulae generatae in RADIX/materia/build
          * (sedes). Radix = TMPDIR (cursores ad gradus 2026-10-14: in
          * gradu area membri - scriptura in arbore extra aream vetita;
@@ -456,7 +512,7 @@ principale (vacuum)
             radix = radix_temporaria;
         }
         sprintf(via, "%s/materia/build/proba.registrum.stml", radix);
-        f = fopen(via, "wb");
+        f = lectiones_fopen(via, "wb");
         CREDO_NON_NIHIL (f);
         si (f != NIHIL)
         {
@@ -480,7 +536,7 @@ principale (vacuum)
         /* scriptae ex redditione: recens */
         sprintf(via, "%s/materia/build/proba_registrum_coctum.h",
             radix);
-        f = fopen(via, "wb");
+        f = lectiones_fopen(via, "wb");
         CREDO_NON_NIHIL (f);
         si (f != NIHIL)
         {
@@ -490,7 +546,7 @@ principale (vacuum)
         }
         sprintf(via, "%s/materia/build/proba_registrum_coctum.c",
             radix);
-        f = fopen(via, "wb");
+        f = lectiones_fopen(via, "wb");
         CREDO_NON_NIHIL (f);
         si (f != NIHIL)
         {
@@ -502,7 +558,7 @@ principale (vacuum)
             "materia/build/proba.registrum.stml", &rancor));
         CREDO_VERUM (rancor.recens);
         /* fons manu tactus: rancidus cum linea */
-        f = fopen(via, "ab");
+        f = lectiones_fopen(via, "ab");
         CREDO_NON_NIHIL (f);
         si (f != NIHIL)
         {
@@ -521,12 +577,23 @@ principale (vacuum)
         CREDO_CHORDA_CONTINET (rancor.causa,
             chorda_ex_literis("absens", piscina));
     }
+}
+
+
+/* ==================================================
+ * PROBARE: diagnostica declarata (sedes B1)
+ * ================================================== */
+
+interior vacuum
+_diagnostica_probare (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
 
     {
         MateriaCoctio  coctio;
             character* fons;
 
-        imprimere("\n--- VII. Diagnostica declarata (sedes B1) ---\n");
         CREDO_VERUM (_coquere(piscina, DECLARATIO_DIAGNOSTICA,
             &coctio));
         CREDO_AEQUALIS_I32 (coctio.numerus_diagnosticorum, (i32)III);
@@ -610,9 +677,29 @@ principale (vacuum)
             chorda_ex_literis("causa cum charactere moderationis:",
                 piscina));
     }
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    redde praeteritus ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "tituli specierum == enumeratio", _titulos_specierum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "comparator: recens aut rancidus", _comparatorem_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "declaratio in textus exspectatos", _declarationem_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "recusationes nominatae", _recusationes_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "tituli cum subducto (css: tok_nomen)", _subductum_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "porta rancoris: recens, rancida, absens",
+        _plagulas_generatas_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "diagnostica declarata (sedes B1)", _diagnostica_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("materia_coctor", SECTIONES);
 }

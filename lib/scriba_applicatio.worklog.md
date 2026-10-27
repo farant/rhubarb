@@ -89,3 +89,44 @@ dimensions follow. Writes go to the scriba branch, whose owners admit
 only `pagina.clavis` - the caller is calendarium.agere, so the writer
 is set to pagina.clavis for the call and restored (memory: domini refuse
 silently). Registries and contexts stay; nothing is remounted.
+
+## 2026-10-22 — page as route state (D5 S3c, scriba half)
+
+Manifest field `pagina` (textus, persistens, semita ligatio, historia
+impelle, writer pagina.clavis) + cognomen `scriba/{}`. Truth stays the
+plagula `scriba/visus/<id>`; `paginam_indicare` (called at mount and by
+scriba_reficere after every navigation - next/prev, #links, search,
+librum_ponere) now also writes the page NAME into the field, under the
+writer `pagina.clavis` (callers are the pulse or other actions; the
+owner rules would silently refuse otherwise - plant red).
+`scriba_semitam_secuta`: after vicus applies a route (Ctrl+O/I,
+restart) the view switches to the field's page via
+scriba_paginam_ostendere. probatio_organum's pre-S6 owner snapshot gets
+one known addition (pagina -> pagina.clavis), 17 rules.
+
+## 2026-10-22 — companion books (comites P2)
+
+A mounted scriba view can switch to another BOOK by prefix
+(`scriba_librum_praefixi_ponere`; "" = its own home book); the host
+supplies a book lookup (`scriba_libros_ponere`, porta ScribaLibrorum).
+Field `liber` (status, impelle) carries the prefix, so routes keep their
+old form (`scriba/2`) and a companion page is `scriba/2?liber=comes%2F
+nomenclator%2F1`. The viewed-page key (`sa->visus`) is switched along:
+home book -> the view's `scriba/visus/<id>` (as before), companion ->
+`<prefix>/visus` inside the companion's own space - otherwise turning a
+companion page would overwrite the common book's remembered page.
+`scriba_semitam_secuta` reads `pagina` and `liber` BEFORE switching
+(the switch rewrites `pagina`), switches book, then shows the page.
+Clearing `liber` REMOVES the attribute: an empty STML value reads back
+as boolean "true" (plant red). Plants red: prefix always empty,
+companion page under the view's key, field not written, empty not
+removed, route's book ignored, no lookup set in vicus.
+
+## 2026-10-22 — companion bar (comites P3)
+
+`scriba_comitem_ponere` = book switch + transient field
+`liber_titulus` ("Notes · Anna Rossi"; removed when empty). The bar is
+a `vectis` component (PARTES_ITEM, scriba's registry had no ITEM
+figure) in the page's top margin row, drawn over the prospect so the
+page size does not change: accent-coloured band, text in the background
+colour. Plants red: bar never drawn, empty title not removed.

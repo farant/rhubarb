@@ -28,6 +28,10 @@ nomen structura {
        b32 ex_thesauro;    /* hit */
     chorda effusio;        /* stdout clang (vacua in hit) */
     chorda erratum;        /* stderr clang (vacua in hit) */
+    chorda via;            /* obiectum nectendum (codex 0): exitus '-o'
+                            * (collocatum aut compilatum), aut - sine
+                            * collocatione, in hit - blobus thesauri
+                            * ipse; vacua aliter */
 } CompilatorResultus;
 
 /* thesaurum aperire; clang NIHIL = FABRICA_CLANG aut "clang".
@@ -55,11 +59,49 @@ compilator_clavem (
                         Sigillum* clavis_out);
 
 /* compilare per thesaurum; effusio et erratum clang in resultu (vocans
- * ea imprimit aut servat) */
+ * ea imprimit aut servat). Allocationes in piscina compilatoris: per
+ * vocationem crescit (~I MB ex thesauro: fons, index, obiecta lecta) */
 CompilatorResultus
 compilator_compilare (
                       Compilator* compilator,
     constans character* constans* argumenta,
                               i32 numerus);
+
+/* idem, sed allocationes VOCATIONIS (plagulae lectae, argumenta,
+ * effusio, erratum) in 'piscina' vocantis - resultus in ea vivit; eam
+ * post vocationem vacare licet. Thesaurus et memoria per processum in
+ * piscinis suis manent (parcum …T77EH4: fabrica membrum quodque in
+ * piscina temporaria agit) */
+CompilatorResultus
+compilator_compilare_in (
+                      Compilator* compilator,
+    constans character* constans* argumenta,
+                              i32 numerus,
+                         Piscina* piscina);
+
+/* idem ac compilator_compilare_in, sed in hit obiectum NON collocatur
+ * (nec legitur nec in exitum '-o' scribitur): resultus.via = blobus
+ * thesauri, quem vocans directe nectit (clang plagulam sine suffixo
+ * ut obiectum accipit). In miss compilatur in exitum ut olim (via =
+ * exitus). Fabrica membra sic nectit - olim obiecta cuiusque membri in
+ * area eius copiabantur (XII milia plagularum radicis, I.V GB; parcum
+ * nexus ex thesauro). */
+CompilatorResultus
+compilator_compilare_sine_collocatione (
+                      Compilator* compilator,
+    constans character* constans* argumenta,
+                              i32 numerus,
+                         Piscina* piscina);
+
+/* MEMORIA PER PROCESSUM (2026-10-23): capita indicis sigillata et
+ * existentiae obumbrationis memorantur (via -> sigillum / praesens):
+ * vocatio quaeque post primam capita communia nec legit nec quaerit.
+ * Solum ubi capita intra processum non mutantur ET liber lectionum
+ * (FABRICA_LECTIONES) per vocationem non postulatur - lectio memorata
+ * liber non notat. Vocat 'bin/compilator --plures'; fabrica (membra
+ * in processu uno, liber per membrum) NON. */
+vacuum
+compilator_memoriam_incipere (
+    Compilator* compilator);
 
 #endif /* COMPILATOR_H */

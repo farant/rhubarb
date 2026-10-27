@@ -20,6 +20,7 @@ monitum functionis non adhibitae tacet). Fons ipse C99: nihil mutatur.
 Usus: tools/bearssl_amalgamare.py [radix]
 """
 import concurrent.futures
+import hashlib
 import json
 import os
 import re
@@ -75,7 +76,61 @@ def definitiones(textus):
     return d
 
 
+# PROMPTUARIUM (2026-10-23): nomina per fontem memorata - clang
+# -ast-dump=json per CCXC fontes ~LXII s (auditus plenus generatorum:
+# XLIII% totius). Clavis = octeti fontis + capita omnia arboris (macra
+# definitiones creare possunt) + argumenta clang (viae RELATIVAE: arbores
+# operis communicant) + versio clang. In arbore (non in scriptura), ut
+# regenerationes in scriptura eo utantur; vestigium actionis.
+PROMPTUARIUM = os.path.join(RADIX, 'build', 'bearssl_amalgama_promptuarium')
+_CLAVIS_COMMUNIS = None
+
+
+def _clavis_communis():
+    """capita arboris + argumenta + versio clang, semel per cursum"""
+    global _CLAVIS_COMMUNIS
+    if _CLAVIS_COMMUNIS is None:
+        h = hashlib.sha256()
+        for d, sub, fs in sorted(os.walk(ARBOR)):
+            sub.sort()
+            for f in sorted(fs):
+                if f.endswith('.h'):
+                    via = os.path.join(d, f)
+                    h.update(os.path.relpath(via, ARBOR).encode())
+                    with open(via, 'rb') as fh:
+                        h.update(fh.read())
+        h.update(' '.join(['-std=c99', '-Iinc', '-Isrc', '-fsyntax-only',
+                           '-ast-dump=json']).encode())
+        r = subprocess.run(['clang', '--version'], capture_output=True,
+                           text=True)
+        h.update(r.stdout.encode())
+        _CLAVIS_COMMUNIS = h.hexdigest()
+    return _CLAVIS_COMMUNIS
+
+
 def nomina_interiora(via):
+    """nomina_interiora_clang per promptuarium (fons et capita immutata
+    -> sine clang)"""
+    with open(via, 'rb') as fh:
+        h = hashlib.sha256(fh.read())
+    h.update(_clavis_communis().encode())
+    plagula = os.path.join(PROMPTUARIUM, h.hexdigest() + '.json')
+    try:
+        with open(plagula, encoding='utf-8') as fh:
+            return set(json.load(fh))
+    except (OSError, ValueError):
+        pass
+    nomina = nomina_interiora_clang(via)
+    os.makedirs(PROMPTUARIUM, exist_ok=True)
+    temporaria = '%s.%d.%d' % (plagula, os.getpid(),
+                               abs(hash(via)) % 1000000)
+    with open(temporaria, 'w', encoding='utf-8') as fh:
+        json.dump(sorted(nomina), fh)
+    os.replace(temporaria, plagula)
+    return nomina
+
+
+def nomina_interiora_clang(via):
     """nomina gradus plagulae in fonte IPSO definita (clang)."""
     r = subprocess.run(CLANG + ['-fsyntax-only', '-Xclang',
                                 '-ast-dump=json', via],
@@ -129,7 +184,24 @@ def caput_planum():
     return textus, visa
 
 
+# subdirectoria src in aedificatio.stml singula declarata (plagulae
+# gradu 0 tegunt; actio memorabilis): novum aut absens = declaratio
+# vetus, clavis fabricae contenta eius non videret (2026-10-17)
+SUBDIRECTORIA = {'aead', 'codec', 'ec', 'hash', 'int', 'kdf', 'mac',
+                 'rand', 'rsa', 'ssl', 'symcipher', 'x509'}
+
+
 def main():
+    src = os.path.join(ARBOR, 'src')
+    for d, sub, _ in os.walk(src):
+        if d != src and sub:
+            fracta('src gradu altiore quam I: ' + os.path.relpath(d, src))
+    praesentia = {e for e in os.listdir(src)
+                  if os.path.isdir(os.path.join(src, e))}
+    if praesentia != SUBDIRECTORIA:
+        fracta('subdirectoria src ab aedificatio.stml differunt: '
+               + ' '.join(sorted(praesentia ^ SUBDIRECTORIA))
+               + ' (declara in actione bearssl_amalgama)')
     fontes = sorted(
         os.path.relpath(os.path.join(d, f), os.path.join(ARBOR, 'src'))
         for d, _, fs in os.walk(os.path.join(ARBOR, 'src'))
@@ -137,6 +209,7 @@ def main():
     if not fontes:
         fracta('vendor/bearssl/src vacuum')
     viae = [os.path.join(ARBOR, 'src', s) for s in fontes]
+    _clavis_communis()   # semel, ante fila
     with concurrent.futures.ThreadPoolExecutor(os.cpu_count() or 4) as ex:
         nomina = dict(zip(fontes, ex.map(nomina_interiora, viae)))
     textus = {s: legere(v) for s, v in zip(fontes, viae)}
